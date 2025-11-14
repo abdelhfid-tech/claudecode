@@ -1,0 +1,81 @@
+# ==========================================
+# Fichiers et dossiers à ignorer
+# ==========================================
+
+# Dépendances
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Fichiers de configuration locaux
+.env
+.env.local
+.env.*.local
+config.local.js
+
+# Fichiers systèmes
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Éditeurs et IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Fichiers temporaires
+tmp/
+temp/
+*.tmp
+*.bak
+*.cache
+
+# Fichiers de build (si vous utilisez un bundler plus tard)
+dist/
+build/
+*.min.js
+*.min.css
+
+# Fichiers de test
+coverage/
+.nyc_output/
+
+# Sauvegardes de bases de données
+*.sql
+*.sqlite
+*.db
+
+# Fichiers sensibles
+*.pem
+*.key
+*.cert
+credentials.json
+.htpasswd
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# Fichiers spécifiques au projet
+deploy-config.json
+ftp-credentials.txt
