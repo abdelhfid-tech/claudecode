@@ -1,0 +1,504 @@
+================================================================================
+TITRE DU FORMULAIRE
+================================================================================
+Projet Commercial Familial - Notre Avenir Ensemble
+مشروع تجاري عائلي - مستقبلنا معاً
+
+================================================================================
+DESCRIPTION
+================================================================================
+بسم الله الرحمن الرحيم
+Au nom d'Allah, le Tout Miséricordieux, le Très Miséricordieux
+
+Chers parents / والدينا الأعزاء
+
+Ce questionnaire a pour but de nous aider à mieux comprendre votre vision et vos souhaits concernant notre projet de boutique au Maroc. C'est une opportunité pour construire ensemble quelque chose de beau pour notre famille.
+
+Il n'y a pas de bonne ou mauvaise réponse. Prenez votre temps et partagez vos vraies pensées. C'est un dialogue, pas un interrogatoire.
+
+هذا الاستبيان يهدف لمساعدتنا على فهم رؤيتكم ورغباتكم بخصوص مشروع المحل التجاري في المغرب. هذه فرصة لبناء شيء جميل معاً لعائلتنا.
+
+لا توجد إجابة صحيحة أو خاطئة. خذوا وقتكم وشاركونا أفكاركم الحقيقية. هذا حوار وليس استجواباً.
+
+Merci de votre confiance ❤️
+شكراً لثقتكم ❤️
+
+================================================================================
+SECTION 1 : INFORMATIONS GÉNÉRALES / القسم الأول: معلومات عامة
+================================================================================
+
+[Question choix multiple - obligatoire]
+Qui remplit ce formulaire ? / من يملأ هذا الاستبيان؟
+
+○ Papa / الأب
+○ Maman / الأم
+○ Maman répondant aussi pour Papa / الأم تجيب أيضاً عن الأب
+○ Les deux ensemble / الاثنان معاً
+
+================================================================================
+SECTION 2 : INVENTAIRE DU PATRIMOINE AU MAROC / القسم الثاني: جرد الممتلكات في المغرب
+================================================================================
+
+[Texte de section]
+Cette partie nous aide à comprendre votre situation globale. Ce n'est pas pour contrôler, mais pour mieux planifier notre projet ensemble.
+
+هذا الجزء يساعدنا على فهم وضعكم العام. ليس للمراقبة، ولكن للتخطيط الأفضل لمشروعنا معاً.
+
+---
+
+[Question choix multiple]
+Combien de biens immobiliers possédez-vous au Maroc (approximativement) ? / كم عدد العقارات التي تملكونها في المغرب (تقريباً)؟
+
+○ 1-2 عقارات / biens
+○ 3-5 عقارات / biens
+○ 6-10 عقارات / biens
+○ Plus de 10 / أكثر من 10
+○ Je ne sais pas exactement / لا أعرف بالضبط
+○ Je préfère ne pas répondre / أفضل عدم الإجابة
+
+[Question paragraphe]
+Si vous souhaitez préciser (localisation, type...) :
+إذا كنتم ترغبون في التوضيح (الموقع، النوع...):
+
+---
+
+[Question choix multiple]
+Ces biens sont-ils : / هذه الممتلكات هي:
+
+○ À mon nom uniquement / باسمي فقط
+○ En copropriété avec mes frères / ملكية مشتركة مع إخوتي
+○ Répartis (certains à moi, certains partagés) / مقسمة (بعضها لي، بعضها مشترك)
+○ Je ne suis pas sûr(e) de tous les détails / لست متأكداً من جميع التفاصيل
+○ Autre / أخرى
+
+[Question paragraphe]
+Précisions si nécessaire :
+توضيحات إن لزم الأمر:
+
+---
+
+[Question choix multiple]
+Avez-vous des parts dans des entreprises familiales au Maroc ? / هل لديكم حصص في شركات عائلية في المغرب؟
+
+○ Oui / نعم
+○ Non / لا
+○ Je ne sais pas / لا أعرف
+○ Je préfère ne pas répondre / أفضل عدم الإجابة
+
+[Question paragraphe - Affichée si réponse = "Oui"]
+Type d'entreprise et pourcentage approximatif si vous le savez :
+نوع الشركة والنسبة التقريبية إن كنتم تعرفون:
+
+---
+
+[Question choix multiple]
+Y a-t-il des arrangements verbaux ou accords non écrits avec vos frères concernant ces biens ? / هل هناك ترتيبات شفوية أو اتفاقات غير مكتوبة مع إخوتك بخصوص هذه الممتلكات؟
+
+○ Oui, plusieurs / نعم، عديدة
+○ Quelques-uns / بعضها
+○ Non, tout est clair et documenté / لا، كل شيء واضح وموثق
+○ Je ne sais pas / لا أعرف
+○ C'est compliqué / الوضع معقد
+
+[Question paragraphe]
+Si vous souhaitez expliquer :
+إذا كنتم ترغبون في الشرح:
+
+---
+
+[Question choix multiple]
+Comment vous sentez-vous par rapport à la gestion de votre patrimoine au Maroc ? / كيف تشعرون بخصوص إدارة ممتلكاتكم في المغرب؟
+
+○ Je maîtrise bien la situation / أتحكم جيداً في الوضع
+○ C'est à peu près clair / الأمور واضحة نوعاً ما
+○ C'est un peu confus / الوضع مربك قليلاً
+○ Je me sens perdu(e) / أشعر بالضياع
+○ J'ai besoin d'aide pour y voir plus clair / أحتاج مساعدة لتوضيح الأمور
+
+[Question paragraphe]
+Vos pensées ou préoccupations :
+أفكاركم أو مخاوفكم:
+
+================================================================================
+SECTION 3 : LE LOCAL COMMERCIAL SPÉCIFIQUE / القسم الثالث: المحل التجاري المحدد
+================================================================================
+
+[Question choix multiple]
+Le local que nous souhaitons exploiter : / المحل الذي نرغب في استغلاله:
+
+○ M'appartient à 100% / ملكي بنسبة 100%
+○ M'appartient en partie (copropriété) / ملكي جزئياً (ملكية مشتركة)
+○ Appartient à la famille / ملك العائلة
+○ Je ne suis pas certain / لست متأكداً
+
+[Question paragraphe - Affichée si "copropriété"]
+Qui sont les autres propriétaires et leurs parts :
+من هم الملاك الآخرون وحصصهم:
+
+---
+
+[Question choix multiple]
+Vos frères ont-ils leur mot à dire sur l'utilisation de ce local ? / هل لإخوتك رأي في استعمال هذا المحل؟
+
+○ Oui, ils doivent donner leur accord / نعم، يجب أن يوافقوا
+○ Un peu, par courtoisie / قليلاً، من باب الاحترام
+○ Non, c'est ma décision / لا، القرار قراري
+○ Je ne sais pas / لا أعرف
+○ C'est compliqué / الوضع معقد
+
+[Question paragraphe]
+Précisions :
+توضيحات:
+
+================================================================================
+SECTION 4 : LE PROJET DE BOUTIQUE / القسم الرابع: مشروع المحل
+================================================================================
+
+[Texte de section]
+Nous souhaitons créer une boutique "bazar chic maison" - des articles de décoration, accessoires maison de qualité.
+
+نرغب في إنشاء محل "بازار شيك منزلي" - مواد ديكور، إكسسوارات منزلية راقية.
+
+---
+
+[Question choix multiple]
+Quelle est votre première réaction à ce projet ? / ما هو رد فعلكم الأول على هذا المشروع؟
+
+○ Très enthousiaste / متحمس جداً
+○ Intéressé(e) / مهتم
+○ Neutre / محايد
+○ Inquiet/inquiète / قلق
+○ Opposé(e) / معارض
+○ J'ai besoin de plus d'informations / أحتاج المزيد من المعلومات
+
+[Question paragraphe]
+Partagez vos premières pensées :
+شاركونا أفكاركم الأولى:
+
+---
+
+[Question choix multiple - OBLIGATOIRE]
+Donnez-vous votre accord de principe pour ce projet ? / هل توافقون من حيث المبدأ على هذا المشروع؟
+
+○ Oui, totalement / نعم، تماماً
+○ Oui, avec des conditions / نعم، بشروط
+○ Peut-être, j'ai des questions / ربما، لدي أسئلة
+○ Pas encore, j'ai besoin de réfléchir / ليس بعد، أحتاج للتفكير
+○ Non / لا
+
+[Question paragraphe - Affichée si "conditions" ou "questions"]
+Quelles sont vos conditions ou questions :
+ما هي شروطكم أو أسئلتكم:
+
+---
+
+[Question choix multiple]
+Votre bénédiction et soutien moral sont importants pour nous. Pouvons-nous compter dessus ? / بركتكم ودعمكم المعنوي مهمان لنا. هل يمكننا الاعتماد عليهما؟
+
+○ Oui, vous avez ma bénédiction totale / نعم، لديكم بركتي الكاملة
+○ Oui, si le projet est bien structuré / نعم، إذا كان المشروع منظماً جيداً
+○ J'ai besoin d'en discuter avec vous / أحتاج لمناقشته معكم
+○ J'ai des réserves / لدي تحفظات
+
+[Question paragraphe]
+Vos pensées :
+أفكاركم:
+
+================================================================================
+SECTION 5 : STRUCTURE ET CONDITIONS FINANCIÈRES / القسم الخامس: الهيكل والشروط المالية
+================================================================================
+
+[Texte de section]
+Nous pensons à : / نفكر في:
+- Moi (votre fils) : 25% / أنا (ابنكم): 25%
+- Mon épouse : 25% / زوجتي: 25%
+- Maman : 25% / أمي: 25%
+- Le reste (25%) : à définir / الباقي (25%): للتحديد
+
+---
+
+[Question choix multiple]
+Que pensez-vous de cette répartition ? / ما رأيكم في هذا التقسيم؟
+
+○ Parfait / ممتاز
+○ Acceptable / مقبول
+○ À revoir / يحتاج مراجعة
+○ Je propose autre chose / أقترح شيئاً آخر
+○ Je ne veux pas être associé(e) / لا أريد أن أكون شريكاً
+
+[Question paragraphe]
+Votre proposition ou commentaires :
+اقتراحكم أو تعليقاتكم:
+
+---
+
+[Question choix multiple]
+Pour les 25% restants, que souhaitez-vous ? / بالنسبة لل 25% الباقية، ماذا تريدون؟
+
+○ Je les garde (Papa associé à 25%) / أحتفظ بها (الأب شريك ب 25%)
+○ À partager entre Papa et Maman / تقسم بين الأب والأم
+○ Que mon épouse (Maman) les ait (elle aurait 50%) / أن تكون لزوجتي (الأم) (ستملك 50%)
+○ À répartir différemment / توزيع مختلف
+○ Je ne veux rien, c'est pour vous / لا أريد شيئاً، هذا لكم
+
+[Question paragraphe]
+Précisions :
+توضيحات:
+
+---
+
+[Question choix multiple]
+Souhaitez-vous un loyer pour l'utilisation du local ? / هل تريدون إيجاراً لاستعمال المحل؟
+
+○ Oui, un loyer mensuel normal / نعم، إيجار شهري عادي
+○ Oui, mais symbolique (prix familial) / نعم، ولكن رمزي (سعر عائلي)
+○ Non, pas de loyer / لا، بدون إيجار
+○ Franchise de loyer les premières années / إعفاء من الإيجار السنوات الأولى
+○ À discuter ensemble / للمناقشة معاً
+
+[Question réponse courte - Affichée si "loyer"]
+Montant mensuel souhaité (en MAD ou EUR) :
+المبلغ الشهري المرغوب (بالدرهم أو اليورو):
+
+---
+
+[Question choix multiple - Affichée si "franchise de loyer"]
+Si franchise de loyer, pour combien de temps ? / إذا إعفاء من الإيجار، لكم من الوقت؟
+
+○ 6 mois / 6 أشهر
+○ 1 an / سنة
+○ 2 ans / سنتان
+○ 3 ans / 3 سنوات
+○ Jusqu'à rentabilité du commerce / حتى يصبح المشروع مربحاً
+○ Non applicable / غير مطبق
+
+---
+
+[Question choix multiple]
+Préférez-vous : / تفضلون:
+
+○ Être associé(e) sans loyer / أن تكونوا شركاء بدون إيجار
+○ Recevoir un loyer sans être associé(e) / تلقي إيجار دون أن تكونوا شركاء
+○ Les deux : associé(e) ET loyer / الاثنان: شركاء وإيجار
+○ Ni l'un ni l'autre, c'est votre projet / لا هذا ولا ذاك، هذا مشروعكم
+○ Je ne sais pas encore / لا أعرف بعد
+
+[Question paragraphe]
+Expliquez votre choix :
+اشرحوا اختياركم:
+
+================================================================================
+SECTION 6 : VOS ATTENTES ET PRÉOCCUPATIONS / القسم السادس: توقعاتكم ومخاوفكم
+================================================================================
+
+[Question cases à cocher - Plusieurs réponses possibles]
+Qu'attendez-vous de ce projet ? / ماذا تتوقعون من هذا المشروع؟
+
+☐ Que mes enfants réussissent / أن ينجح أبنائي
+☐ Un revenu supplémentaire / دخل إضافي
+☐ Valoriser mon patrimoine / تثمين ممتلكاتي
+☐ Renforcer les liens familiaux / تقوية الروابط العائلية
+☐ Créer quelque chose pour les générations futures / خلق شيء للأجيال القادمة
+☐ Autre
+
+[Question paragraphe]
+Précisions :
+توضيحات:
+
+---
+
+[Question cases à cocher - Plusieurs réponses possibles]
+Quelles sont vos principales craintes ou préoccupations ? / ما هي مخاوفكم أو مخاوفكم الرئيسية؟
+
+☐ Que le projet échoue / أن يفشل المشروع
+☐ Des conflits familiaux / صراعات عائلية
+☐ Des problèmes avec mes frères / مشاكل مع إخوتي
+☐ Perdre le contrôle du bien / فقدان السيطرة على الملك
+☐ Problèmes financiers / مشاكل مالية
+☐ L'éloignement (je suis en France) / البعد (أنا في فرنسا)
+☐ Autre
+
+[Question paragraphe]
+Exprimez vos craintes librement :
+عبروا عن مخاوفكم بحرية:
+
+---
+
+[Question cases à cocher - Plusieurs réponses possibles]
+De quoi avez-vous besoin pour vous sentir en confiance avec ce projet ? / ما الذي تحتاجونه للشعور بالثقة في هذا المشروع؟
+
+☐ Un business plan détaillé / خطة عمل مفصلة
+☐ Des rencontres régulières pour suivre / اجتماعات منتظمة للمتابعة
+☐ L'avis d'un expert / رأي خبير
+☐ Des garanties légales claires / ضمانات قانونية واضحة
+☐ Juste votre confiance en nous / فقط ثقتكم بنا
+☐ Autre
+
+[Question paragraphe]
+Détails :
+تفاصيل:
+
+================================================================================
+SECTION 7 : GESTION ET IMPLICATION / القسم السابع: الإدارة والمشاركة
+================================================================================
+
+[Question choix multiple]
+Souhaitez-vous être impliqué(e) dans la gestion du commerce ? / هل تريدون المشاركة في إدارة المحل؟
+
+○ Oui, activement / نعم، بنشاط
+○ Oui, mais de loin (conseils) / نعم، ولكن من بعيد (نصائح)
+○ Un peu, pour suivre / قليلاً، للمتابعة
+○ Non, je vous fais confiance / لا، أثق بكم
+○ Je ne sais pas / لا أعرف
+
+---
+
+[Question cases à cocher - Plusieurs réponses possibles]
+Comment souhaitez-vous recevoir les nouvelles du projet ? / كيف تريدون تلقي أخبار المشروع؟
+
+☐ Appels téléphoniques réguliers / مكالمات هاتفية منتظمة
+☐ Messages WhatsApp / رسائل واتساب
+☐ Rapports mensuels écrits / تقارير شهرية مكتوبة
+☐ Réunions famille (visio ou en personne) / اجتماعات عائلية (فيديو أو شخصياً)
+☐ Seulement en cas de problème / فقط في حالة مشكلة
+☐ À ma demande / عند طلبي
+
+[Question réponse courte]
+Fréquence souhaitée :
+التواتر المرغوب:
+
+================================================================================
+SECTION 8 : VOTRE VISION ET VOS RÊVES / القسم الثامن: رؤيتكم وأحلامكم
+================================================================================
+
+[Question paragraphe]
+Si ce projet réussit, qu'est-ce qui vous rendrait le plus fier/fière ? / إذا نجح هذا المشروع، ما الذي سيجعلكم الأكثر فخراً؟
+
+Partagez votre vision :
+شاركونا رؤيتكم:
+
+---
+
+[Question paragraphe]
+Y a-t-il quelque chose que nous n'avons pas abordé et que vous aimeriez partager ? / هل هناك شيء لم نتناوله وتودون مشاركته؟
+
+Vos pensées, espoirs, conseils, tout ce qui vous tient à cœur :
+أفكاركم، آمالكم، نصائحكم، كل ما يهمكم:
+
+---
+
+[Question paragraphe]
+Un message pour nous ? / رسالة لنا؟
+
+Ce que vous voulez nous dire :
+ما تريدون قوله لنا:
+
+================================================================================
+SECTION 9 : POUR MAMAN SPÉCIFIQUEMENT / القسم التاسع: للأم خصوصاً
+================================================================================
+
+[Texte de section]
+Maman, cette section est uniquement pour toi. Ton avis, tes sentiments et tes espoirs comptent énormément.
+
+أمي، هذا القسم لك فقط. رأيك، مشاعرك وآمالك مهمة جداً.
+
+---
+
+[Question choix multiple]
+Maman, comment te sens-tu à l'idée d'être associée à ce projet avec nous ? / أمي، كيف تشعرين بفكرة أن تكوني شريكة في هذا المشروع معنا؟
+
+○ Très heureuse et honorée / سعيدة جداً ومتشرفة
+○ Contente mais un peu anxieuse / مسرورة لكن قلقة قليلاً
+○ J'ai besoin d'en savoir plus / أحتاج لمعرفة المزيد
+○ Je préférerais ne pas être associée / أفضل عدم الشراكة
+○ Je ne sais pas encore / لا أعرف بعد
+
+[Question paragraphe]
+Tes sentiments :
+مشاعرك:
+
+---
+
+[Question paragraphe]
+Maman, quelles sont tes craintes spécifiques pour ce projet ? / أمي، ما هي مخاوفك المحددة لهذا المشروع؟
+
+Parle-nous librement :
+تحدثي معنا بحرية:
+
+---
+
+[Question paragraphe]
+Maman, qu'est-ce qui te rendrait la plus heureuse dans ce projet ? / أمي، ما الذي سيجعلك الأكثر سعادة في هذا المشروع؟
+
+Tes espoirs :
+آمالك:
+
+---
+
+[Question choix multiple]
+Maman, si tu réponds aussi pour Papa, penses-tu qu'il : / أمي، إذا كنت تجيبين أيضاً عن الأب، هل تعتقدين أنه:
+
+○ Est totalement d'accord avec ce projet / يوافق تماماً على هذا المشروع
+○ Est d'accord mais a des hésitations / يوافق لكن لديه تردد
+○ N'a pas encore d'avis clair / ليس لديه رأي واضح بعد
+○ A besoin qu'on en parle ensemble / يحتاج أن نتحدث معاً
+○ Je ne sais pas ce qu'il pense vraiment / لا أعرف ما يفكر فيه حقاً
+
+[Question paragraphe]
+Ce que tu ressens de sa position :
+ما تشعرين به من موقفه:
+
+---
+
+[Question paragraphe]
+Maman, un dernier mot juste pour toi ? / أمي، كلمة أخيرة فقط لك؟
+
+Ce que tu veux nous dire :
+ما تريدين قوله لنا:
+
+================================================================================
+SECTION FINALE : PROCHAINES ÉTAPES / القسم الأخير: الخطوات القادمة
+================================================================================
+
+[Question choix multiple]
+Quelle serait la meilleure prochaine étape selon vous ? / ما هي أفضل خطوة قادمة برأيكم؟
+
+○ Une réunion famille en visio / اجتماع عائلي عبر الفيديو
+○ Une visite du local ensemble / زيارة للمحل معاً
+○ Vous envoyer un business plan détaillé / إرسال خطة عمل مفصلة لكم
+○ Consulter un notaire/avocat ensemble / استشارة موثق/محامي معاً
+○ Prendre le temps de réfléchir / أخذ وقت للتفكير
+○ Autre
+
+[Question paragraphe]
+Vos suggestions :
+اقتراحاتكم:
+
+================================================================================
+MESSAGE DE CONFIRMATION (après soumission)
+================================================================================
+Merci du fond du cœur d'avoir pris le temps de répondre à ces questions.
+
+Votre opinion et vos sentiments sont précieux pour nous. Ce projet n'a de sens que s'il nous rapproche et s'il vous rend fiers.
+
+Nous vous aimons et respectons profondément vos décisions.
+
+شكراً من القلب على وقتكم في الإجابة على هذه الأسئلة.
+
+رأيكم ومشاعركم ثمينة بالنسبة لنا. هذا المشروع له معنى فقط إذا قربنا وجعلكم فخورين.
+
+نحبكم ونحترم قراراتكم بعمق.
+
+Vos enfants qui vous aiment ❤️
+أبناؤكم الذين يحبونكم ❤️
+
+================================================================================
+FIN DU FORMULAIRE
+================================================================================
+
+INSTRUCTIONS :
+1. Copiez chaque section et collez-la dans Google Forms
+2. Respectez les types de questions indiqués
+3. Configurez les questions conditionnelles comme indiqué
+4. Activez "Limiter à 1 réponse" dans les paramètres
+5. Testez le formulaire avant de l'envoyer
