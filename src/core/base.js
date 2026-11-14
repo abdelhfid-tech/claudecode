@@ -34,7 +34,7 @@
   const KEY = {
     ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right',
     Enter: 'ok', Space: 'ok', KeyZ: 'ok', KeyE: 'ok', NumpadEnter: 'ok',
-    Escape: 'cancel', KeyX: 'cancel', Backspace: 'cancel', KeyM: 'menu', Tab: 'menu', KeyB: 'build', KeyC: 'prev', KeyV: 'next'
+    Escape: 'cancel', KeyX: 'cancel', Backspace: 'cancel', KeyM: 'menu', Tab: 'menu', KeyB: 'build', KeyC: 'prev', KeyV: 'next', KeyH: 'help', F1: 'help'
   };
   function emit(a) {
     I.audio.unlock();

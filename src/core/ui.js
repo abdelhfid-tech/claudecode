@@ -81,6 +81,8 @@
     btns.push(mk('Son : ' + (I.audio.on ? 'activé' : 'coupé'), b => { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = 'Son : ' + (I.audio.on ? 'activé' : 'coupé'); }));
     btns.push(mk('Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'), b => { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'); }));
     btns.push(mk('Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'); }));
+    const TZ = ['normal', 'grand', 'très grand'];
+    btns.push(mk('Texte : ' + TZ[sv.opts.tz || 0], b => { sv.opts.tz = ((sv.opts.tz || 0) + 1) % 3; I.save.store(); U.applyOpts(); b.textContent = 'Texte : ' + TZ[sv.opts.tz]; }));
     btns.push(mk('Plein écran', () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } }));
     screen('#title', true); fl = focusList(btns);
   };
@@ -227,21 +229,31 @@
     const build = (items, o) => { if (fl) fl.destroy(); side.innerHTML = ''; const btns = []; items.forEach(it => { if (it.cat) { side.appendChild(I.el('div', 'cat', it.cat)); return; } const b = mkb(it.label, it.fn); b._show = it.show; side.appendChild(b); btns.push(b); }); fl = focusList(btns, Object.assign({ onSel: b => { if (b._show) pane.innerHTML = b._show(); } }, o)); };
     const party = () => (W.saga && W.party.length) ? W.party.map(id => { const h = W.hero(id), st = I.calc.hero(h.def, h.lvl), e = D.ELEMENTS[h.def.el]; return `<div class="stat"><span class="seal" style="background-image:url(${G.sealURL(h.def.arabic, e.color)})"></span><img class="fig" alt="" src="${G.charURL(Object.assign({ kind: 'compagnon' }, h.def.look))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> ${h.def.title ? '<em>' + I.esc(h.def.title) + '</em>' : ''} <small>· niveau ${h.lvl} · ${e.name}</small><br><small>Constance ${Math.ceil(h.hp)}/${st.hp} · Souffle ${h.sp}/${st.sp} · Force ${Math.round(st.atk)} · Esprit ${Math.round(st.mag)} · Garde ${Math.round(st.def)} · Élan ${Math.round(st.spd)}</small><div class="sk">${h.def.skills.filter(k => k.lvl <= h.lvl).map(k => I.esc(k.name)).join(' · ')}</div></div></div>`; }).join('') : '<p>Aucun groupe pour l’instant.</p>';
     const bag = () => '<h3>Besace</h3>' + (Object.keys(D.ITEMS).filter(k => (sv.items[k] || 0) > 0).map(k => `<p><b>${D.ITEMS[k].name}</b> ×${sv.items[k]}<br><small>${D.ITEMS[k].desc}</small></p>`).join('') || '<p>La besace est vide.</p>') + '<p class="src">Les objets s’utilisent en combat. Le groupe reprend des forces après chaque victoire.</p>';
-    const help = () => `<h3>Commandes</h3><p><kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : se déplacer, naviguer · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : menu, retour. Sur écran tactile : croix et boutons à l’écran, et tout est cliquable.</p>
-      <h3>Combat</h3><p>On n’affronte jamais des personnes, seulement des <em>égrégores</em> : les idoles que les cœurs fabriquent ensemble. Chaque égrégore est protégé par des <b>voiles</b> (⛊). Frappe-le avec la <b>vertu</b> qui est sa faille pour retirer un voile ; à zéro, il est <b>dévoilé</b> : il perd son tour et subit bien plus.</p>
-      <p><b>Niyya</b> (l’intention) : un point par tour ; dépense-en jusqu’à trois (◂ ▸) pour multiplier les coups ou renforcer une vertu. <b>Sakîna</b> : la jauge dorée ; pleine, elle ouvre l’acte ultime du Compagnon.</p>
-      <h3>La parole avant le sabre</h3><p>Un <b>pourparler</b> se gagne manche après manche : chaque argument fait monter ou baisser la confiance. Les meilleurs demandent un <b>savoir</b> (✧) appris d’un savant, d’un feuillet, d’un témoin. Avoir <b>prié</b> dans le chapitre donne la sérénité : +1 de confiance. Si la parole échoue, le récit continue, mais il en coûte.</p>\n      <h3>Les étoiles</h3><p>On s’oriente au ciel. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche : <b>al-Jady</b> (la Polaire) au nord, <b>Suhayl</b> au sud, <b>an-Nasr at-Tâ’ir</b> à l’est et à l’ouest, <b>al-’Ayyûq</b> et <b>al-’Aqrab</b> entre eux. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>\n      <h3>Caravanes</h3><p>Aux ballots du souk ou du camp, on vend, on achète, et l’on confie une cargaison à une caravane : elle revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue, que des pactes sont noués et que des méharistes la gardent. Si elle est pillée, on lève des renforts, on parle d’abord, et l’on rend à chacun ce qui lui revient.</p>\n      <h3>Bâtir</h3><p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose devant soi, case par case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>\n      <h3>Sauvegarder</h3><p>On ne sauvegarde que <b>dans les mosquées</b>, sur la natte au cœur de l’étoile, et à la natte des Archives depuis l’écran de la Chaîne. Trois emplacements. Fermer la page sans sauvegarder fait perdre ce qui a été joué depuis.</p>\n      <h3>La Chaîne</h3><p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>`;
-    const journal = () => { const o = W.cur && W.cur(); return `<h3>${W.ch ? I.esc(W.ch.title) : 'Journal'}</h3><p class="src">${W.ch ? I.esc(W.ch.sub) : ''}</p><p>${o && o.text ? '◆ ' + I.esc(o.text) : 'Aucun objectif en cours.'}</p><p class="src">Fidélité à la Chaîne : ${sv.isnad.ok} / ${sv.isnad.total} · Lumières : ${sv.lights.map(l => D.ELEMENTS[l].name).join(', ') || 'aucune'}</p>`; };
+    const journal = () => { const o = W.cur && W.cur(); return `<h3>${W.ch ? I.esc(W.ch.title) : 'Journal'}</h3><p class="src">${W.ch ? I.esc(W.ch.sub) : ''}</p><p>${o && o.text ? '◆ ' + I.esc(o.text) : 'Aucun objectif en cours.'}</p><p class="src">Le bouton <b>?</b> explique l’objectif et peut montrer le chemin.</p><p class="src">Fidélité à la Chaîne : ${sv.isnad.ok} / ${sv.isnad.total} · Lumières : ${sv.lights.map(l => D.ELEMENTS[l].name).join(', ') || 'aucune'}</p>`; };
+    const pillars = () => { const P = W.pillars(); const eff = { priere: 'Sakîna au début des combats ; sérénité dans les pourparlers', savoir: 'failles révélées d’emblée ; arguments ouverts par le savoir', justice: 'dégâts reçus réduits', lien: 'dégâts infligés accrus ; renforts d’alliés' }; return `<h3>${W.saga && W.saga.veillees ? 'La Citadelle du Caïd' : 'Ce que ce règne a bâti'}</h3>` + Object.keys(D.PILLARS).map(k => `<p><b>${D.PILLARS[k].glyph} ${D.PILLARS[k].name}</b> ${'◆'.repeat(P[k] || 0)}${'◇'.repeat(5 - (P[k] || 0))}<br><small>${eff[k]}</small></p>`).join('') + '<p class="src">Les piliers montent par la prière tenue, le savoir appris, la justice rendue et les pactes noués ; ils descendent quand la parole échoue.</p>'; };
+    const toggle = (name, get, set, txt) => ({ label: name + ' : ' + get(), fn(b) { set(); I.save.store(); b.textContent = name + ' : ' + get(); }, show: () => `<h3>${name}</h3><p>${txt}</p>` });
     const root = () => {
-      const inWorld = I.scene === W;
-      const items = [{ label: 'Reprendre', fn: close, show: journal }, { label: 'Groupe', fn() {}, show: () => '<h3>Groupe</h3>' + party() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` }, { label: 'Citadelle', fn() {}, show: () => { const P = W.pillars(); const eff = { priere: 'Sakîna au début des combats ; sérénité dans les pourparlers', savoir: 'failles révélées d’emblée ; arguments ouverts par le savoir', justice: 'dégâts reçus réduits', lien: 'dégâts infligés accrus ; renforts d’alliés' }; return `<h3>${W.saga && W.saga.veillees ? 'La Citadelle du Caïd' : 'Ce que ce règne a bâti'}</h3>` + Object.keys(D.PILLARS).map(k => `<p><b>${D.PILLARS[k].glyph} ${D.PILLARS[k].name}</b> ${'◆'.repeat(P[k] || 0)}${'◇'.repeat(5 - (P[k] || 0))}<br><small>${eff[k]}</small></p>`).join('') + '<p class="src">Les piliers montent par la prière tenue, le savoir appris, la justice rendue et les pactes noués ; ils descendent quand la parole échoue.</p>'; } },
-        { label: 'Commandes', fn() {}, show: help },
-        { label: 'Son : ' + (I.audio.on ? 'activé' : 'coupé'), fn(b) { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = 'Son : ' + (I.audio.on ? 'activé' : 'coupé'); }, show: () => '<h3>Son</h3><p>Coupe ou rétablit tout le son : ambiances, bruitages et musique.</p>' },
-        { label: 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'), fn(b) { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'); }, show: () => '<h3>Musique</h3><p>Bande-son originale synthétisée, une piste par ambiance. Coupée, il reste les ambiances, les percussions de duff et les bruitages.</p>' },
-        { label: 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'), fn(b) { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'); }, show: () => '<h3>Rendu</h3><p>Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.</p>' }];
-      if (inWorld) items.push({ label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre au dernier objectif atteint, tant que la page reste ouverte. Rien n’est écrit tant que tu n’as pas sauvegardé dans une mosquée ou à la natte des Archives.</p>' });
+      const inWorld = I.scene === W, o = sv.opts;
+      const items = [{ label: 'Reprendre', fn: close, show: journal }];
+      if (inWorld) items.push({ label: 'Que faire ?', fn() { close(); U.guide(); }, show: () => '<h3>Que faire ?</h3><p>L’objectif expliqué, sa direction, et le chemin montré au sol si tu le demandes. Le même bouton <b>?</b> est toujours en haut de l’écran.</p>' });
+      items.push({ cat: 'Le groupe' }, { label: 'Compagnons', fn() {}, show: () => '<h3>Le groupe</h3>' + party() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Piliers', fn() {}, show: pillars });
+      items.push({ cat: 'Le savoir' }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` },
+        { label: 'Aide du jeu', fn: aide, show: () => '<h3>Aide du jeu</h3><p>Les règles, thème par thème : ' + U.AIDE.map(a => a[0].toLowerCase()).join(', ') + '.</p>' });
+      items.push({ cat: 'Réglages' },
+        toggle('Texte', () => ['normal', 'grand', 'très grand'][o.tz || 0], () => { o.tz = ((o.tz || 0) + 1) % 3; U.applyOpts(); }, 'Taille des caractères dans les dialogues, les menus et les combats.'),
+        toggle('Croix tactile', () => o.pad ? 'affichée' : 'masquée', () => { o.pad = !o.pad; U.applyOpts(); }, 'Sur un écran tactile, on se déplace en touchant la scène. La croix directionnelle reste disponible pour qui la préfère.'),
+        toggle('Son', () => I.audio.on ? 'activé' : 'coupé', () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, 'Coupe ou rétablit tout le son : ambiances, bruitages et musique.'),
+        toggle('Musique', () => I.audio.musicOn ? 'activée' : 'coupée', () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, 'Bande-son originale synthétisée, une piste par ambiance. Coupée, il reste les ambiances, les percussions de duff et les bruitages.'),
+        toggle('Rendu', () => G.low ? '2D simple' : 'rétro-HD', () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, 'Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.'));
+      if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre au dernier objectif atteint, tant que la page reste ouverte. Rien n’est écrit tant que tu n’as pas sauvegardé dans une mosquée ou à la natte des Archives.</p>' });
       $('#menu h2').textContent = 'Halte';
       build(items, { onCancel: close });
+    };
+    const aide = () => {
+      const back = mode === 'aide' ? close : root, items = [{ label: '◂ Retour', fn: back, show: () => '<h3>Aide du jeu</h3><p>Choisis un thème.</p>' }];
+      U.AIDE.forEach(a => items.push({ label: a[0], fn() {}, show: () => `<h3>${a[0]}</h3>${a[1]}` }));
+      $('#menu h2').textContent = 'Aide du jeu';
+      build(items, { onCancel: back });
     };
     const codex = () => {
       const es = sv.codex.map(U.codexEntry).filter(Boolean), items = [{ label: '◂ Retour', fn: mode === 'codex' ? close : root, show: () => '<h3>Le Recueil</h3><p>Choisis une entrée.</p>' }];
@@ -249,15 +261,83 @@
       $('#menu h2').textContent = 'Le Recueil';
       build(items, { onCancel: mode === 'codex' ? close : root });
     };
-    screen('#menu', true); if (mode === 'codex') codex(); else root();
+    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'aide') aide(); else root();
+  };
+
+  /* ---------- l'aide du jeu, thème par thème ---------- */
+  U.AIDE = [
+    ['Se déplacer, agir', '<p><b>Au doigt ou à la souris.</b> Touche un endroit : le héros s’y rend. Garde le doigt posé : il te suit. Touche un personnage pour lui parler ; touche un coffre, une natte, un palmier, un rocher ou un puits pour t’en servir.</p><p><b>Au clavier.</b> <kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : marcher, naviguer · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : halte, retour · <kbd>H</kbd> : que faire ? · <kbd>B</kbd> : bâtir.</p><p>Le bouton <b>?</b> dit toujours ce qu’il y a à faire, dans quelle direction, et peut montrer le chemin ou t’y conduire.</p>'],
+    ['Combat', '<p>On n’affronte jamais des personnes, seulement des <em>égrégores</em> : les idoles que les cœurs fabriquent ensemble. Chaque égrégore est protégé par des <b>voiles</b> (⛊). Frappe-le avec la <b>vertu</b> qui est sa faille pour retirer un voile ; à zéro, il est <b>dévoilé</b> : il perd son tour et subit bien plus.</p><p><b>Niyya</b> (l’intention) : un point par tour ; dépense-en jusqu’à trois (◂ ▸) pour multiplier les coups ou renforcer une vertu. <b>Sakîna</b> : la jauge dorée ; pleine, elle ouvre l’acte ultime du Compagnon.</p>'],
+    ['La parole avant le sabre', '<p>Un <b>pourparler</b> se gagne manche après manche : chaque argument fait monter ou baisser la confiance. Les meilleurs demandent un <b>savoir</b> (✧) appris d’un savant, d’un feuillet, d’un témoin. Avoir <b>prié</b> dans le chapitre donne la sérénité : +1 de confiance. Si la parole échoue, le récit continue, mais il en coûte.</p>'],
+    ['Prier et sauvegarder', '<p>La natte d’une mosquée, au cœur de l’étoile à huit branches : on y <b>prie</b> (le groupe se repose, la Sakîna descend) et l’on y <b>sauvegarde</b>. On ne sauvegarde que là, et à la natte des Archives depuis l’écran de la Chaîne. Trois emplacements. Fermer la page sans sauvegarder fait perdre ce qui a été joué depuis.</p>'],
+    ['Les étoiles', '<p>On s’oriente au ciel. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche : <b>al-Jady</b> (la Polaire) au nord, <b>Suhayl</b> au sud, <b>an-Nasr at-Tâ’ir</b> à l’est et à l’ouest, <b>al-’Ayyûq</b> et <b>al-’Aqrab</b> entre eux. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>'],
+    ['Caravanes', '<p>Aux ballots du souk ou du camp, on vend, on achète, et l’on confie une cargaison à une caravane : elle revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue, que des pactes sont noués et que des méharistes la gardent. Si elle est pillée, on lève des renforts, on parle d’abord, et l’on rend à chacun ce qui lui revient.</p>'],
+    ['Bâtir', '<p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose case par case, devant soi ou en touchant la case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>'],
+    ['La Chaîne', '<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>']
+  ];
+
+  /* ---------- « Que faire ? » : l'objectif expliqué, sa direction, le chemin ---------- */
+  const CAPS = ['à l’est', 'au sud-est', 'au sud', 'au sud-ouest', 'à l’ouest', 'au nord-ouest', 'au nord', 'au nord-est'];
+  U.guideLines = function () {
+    const o = W.cur(), tg = W.target(), p = W.player, touch = document.body.classList.contains('touch'), out = [];
+    if (!o) return ['Le chapitre s’achève : laisse le récit se dérouler.'];
+    const n = o.talk && W.npcs.find(x => x.id === o.talk);
+    out.push('<b>◆ ' + I.esc(o.text || 'Poursuis.') + (o.build ? I.esc(I.build.objectiveText(o.build)) : '') + '</b>');
+    if (o.hint) out.push(I.fmt(o.hint));
+    if (o.goto) out.push('Rends-toi à l’endroit marqué d’un <em>anneau doré</em> au sol.');
+    else if (o.talk) out.push('Va parler à <em>' + I.esc((n && n.name) || 'celui qui t’attend') + '</em> : un losange doré flotte au-dessus de lui. ' + (touch ? 'Touche-le du doigt.' : 'Clique sur lui, ou place-toi devant lui puis <kbd>Entrée</kbd>.'));
+    else if (o.foe) out.push('Une idole barre le passage : c’est la lueur qui flotte. Marche jusqu’à elle pour l’affronter.');
+    else if (o.build) out.push(o.build.site ? 'Un chantier est ouvert : le rectangle en pointillés. Ouvre le mode Bâtir (▦), choisis une pièce et pose-la à l’intérieur ; le compte est rappelé à côté de l’objectif.' : 'Ouvre le mode Bâtir (▦), à ciel ouvert, et pose ce qui est demandé. Les matériaux se récoltent sur les palmiers, les rochers et les puits.');
+    if (tg) {
+      const dx = tg.gx - p.x, dy = tg.gy - p.y, d = Math.hypot(dx, dy), st = I.trade && I.trade.bearing();
+      out.push(d < 44 ? 'C’est tout près.' : 'C’est ' + CAPS[((Math.round(Math.atan2(dy, dx) / (Math.PI / 4)) % 8) + 8) % 8] + ', à ' + Math.round(d / 16) + ' pas' + (st ? ' : cap sur ' + (st.way ? 'le ' : '') + I.esc(I.trade.starText(st)) + ', l’étoile qui brille au cadran.' : '.'));
+    }
+    const tired = W.party.some(id => { const h = W.hero(id); return h.hp < I.calc.hero(h.def, h.lvl).hp * 0.5; });
+    if (tired) out.push('Le groupe est éprouvé : la natte d’une mosquée, au cœur de l’étoile à huit branches, le repose.');
+    else if (o.foe && !S.flags._prayed && W.prayerPts().length) out.push('Avant l’épreuve, une prière sur la natte donne la Sakîna au groupe.');
+    if ((W.unsaved || 0) > 300) out.push('Tu n’as pas sauvegardé depuis un moment : cela se fait sur la natte d’une mosquée.');
+    return out;
+  };
+  U.guide = async function () {
+    if (I.scene !== W || S.busy || W.lock || U.menuOpen || !W.ch) return;
+    const tg = W.target(), opts = [];
+    if (tg) opts.push({ t: 'Montrer le chemin', k: 'way' }, { t: 'M’y conduire', k: 'go' });
+    opts.push({ t: 'Toute l’aide du jeu', k: 'aide' }, { t: 'Reprendre', k: '' });
+    let k = '';
+    S.depth++;
+    try { const i = await S.menuPick({ cls: 'guide', html: '<span class="gt">Que faire ?</span>' + U.guideLines().map(x => '<span class="gl">' + x + '</span>').join('') }, opts); k = opts[i].k; }
+    finally { S.depth--; S.hideDialog(); }
+    if (k === 'way') W.wayT = W.t + 16;
+    else if (k === 'go') { W.wayT = W.t + 16; W.lead(); }
+    else if (k === 'aide') U.pause('aide');
+  };
+
+  /* ---------- réglages d'affichage ---------- */
+  U.applyOpts = function () {
+    const o = I.save.data.opts;
+    document.documentElement.style.setProperty('--tz', [1, 1.16, 1.34][o.tz || 0]);
+    document.body.classList.toggle('padon', !!o.pad);
+    layout();
   };
 
   /* ---------- mise en page et démarrage ---------- */
+  let cvEl = null;
   function layout() {
     const app = $('#app'), st = $('#stage'), aw = app.clientWidth, ah = app.clientHeight, portrait = ah > aw * 1.12;
     document.body.classList.toggle('portrait', portrait);
-    const w = Math.max(240, Math.floor(Math.min(aw, (portrait ? ah * 0.46 : ah) * 16 / 9)));
-    st.style.width = w + 'px'; st.style.height = Math.round(w * 9 / 16) + 'px'; G.resize();
+    // en hauteur, pendant l'exploration : la scène s'élargit en hauteur et ne montre qu'une partie de la largeur, agrandie
+    const zoom = portrait && (I.scene === W || I.battle.active);
+    let w, h;
+    if (zoom) { w = aw; h = Math.round(Math.max(Math.min(aw, ah * 0.47), aw * 9 / 16)); }
+    else { w = Math.max(240, Math.floor(Math.min(aw, (portrait ? ah * 0.46 : ah) * 16 / 9))); h = Math.round(w * 9 / 16); }
+    st.style.width = w + 'px'; st.style.height = h + 'px';
+    if (cvEl) cvEl.style.width = Math.max(w, Math.round(h * 16 / 9)) + 'px';
+    U.zoom = zoom; U.scale = h / G.PH;
+    const vw = Math.min(G.PW, w / U.scale);
+    const changed = Math.abs(G.view.w - vw) > 0.5; G.view.w = vw;
+    if (I.scene !== W) { G.view.x = G.view.t = Math.round((G.PW - vw) / 2); if (changed && I.battle.active) I.battle.relayout(); } else if (changed && W.map) W.updateCam(true);
+    document.body.classList.toggle('zoom', vw < G.PW - 0.5);
+    G.resize();
   }
   function pad() {
     const hold = (sel, dir) => { const b = $(sel); const dn = e => { e.preventDefault(); b.classList.add('down'); I.input.held[dir] = true; I.input.emit(dir); }; const up = e => { e.preventDefault(); b.classList.remove('down'); I.input.held[dir] = false; }; b.addEventListener('pointerdown', dn); ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => b.addEventListener(n, up)); };
@@ -267,27 +347,58 @@
     if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) document.body.classList.add('touch');
     window.addEventListener('touchstart', () => document.body.classList.add('touch'), { once: true, passive: true });
   }
+  /* ----- toucher la scène : aller là, suivre le doigt ; pendant un dialogue, valider ----- */
+  let ptr = null;
+  function pointer() {
+    const cv = cvEl, st = $('#stage'), bare = e => e.target === cv || e.target === st || e.target.id === 'ui' || e.target.id === 'view', free = () => I.scene === W && !S.busy && !W.lock && !U.menuOpen && !I.debug.auto && !I.debug.walk;
+    const where = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * G.PW + Math.round(W.cam.x), (e.clientY - r.top) / r.height * G.PH + Math.round(W.cam.y)]; };
+    st.addEventListener('pointerdown', e => {
+      if (e.button || !bare(e)) return;
+      I.audio.unlock();
+      ptr = { id: e.pointerId, world: free(), x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t0: performance.now(), hold: false, last: 0 };
+      if (ptr.world) { e.preventDefault(); try { st.setPointerCapture(e.pointerId); } catch (x) { /* sans capture : le relâchement suffit */ } }
+    });
+    st.addEventListener('pointermove', e => { if (!ptr || ptr.id !== e.pointerId) return; ptr.x = e.clientX; ptr.y = e.clientY; if (Math.hypot(e.clientX - ptr.x0, e.clientY - ptr.y0) > 14) ptr.hold = true; });
+    const up = e => {
+      if (!ptr || ptr.id !== e.pointerId) return;
+      const q = ptr; ptr = null;
+      if (!q.world) { if (q.dead || e.type === 'pointercancel' || !$('#choice').hidden || I.battle.active || U.menuOpen) return; I.input.emit('ok'); return; }
+      if (!free()) return;
+      if (q.hold || e.type === 'pointercancel') W.stop(); else { const p = where(e); W.tap(p[0], p[1]); }
+    };
+    st.addEventListener('pointerup', up); st.addEventListener('pointercancel', up);
+    // doigt maintenu : le héros le suit
+    U.pointerTick = now => {
+      if (!ptr || !ptr.world) return;
+      if (!free()) { ptr.world = false; ptr.dead = true; return; }
+      if (!ptr.hold && now - ptr.t0 > 280) ptr.hold = true;
+      if (ptr.hold && now - ptr.last > 110 && !(I.build && I.build.on)) { ptr.last = now; const p = where({ clientX: ptr.x, clientY: ptr.y }); W.goTo(p[0], p[1], { quiet: true }); }
+    };
+  }
   U.boot = function () {
-    G.init($('#cv')); layout(); window.addEventListener('resize', layout);
+    cvEl = $('#cv'); G.init(cvEl); layout(); window.addEventListener('resize', layout);
     if (window.ResizeObserver) new ResizeObserver(layout).observe($('#app'));
     I.save.load(); I.audio.on = I.save.data.opts.sound !== false; I.audio.musicOn = I.save.data.opts.music !== false; if (I.save.data.opts.low) { G.low = true; G.resize(); }
+    U.applyOpts();
     I.input.push(a => W.onInput(a));
     $('#dialog').addEventListener('click', () => I.input.emit('ok'));
     $('#card').addEventListener('click', () => I.input.emit('ok'));
-    $('#cv').addEventListener('click', () => { if (!$('#choice').hidden || I.battle.active || U.menuOpen) return; I.input.emit('ok'); });
     $('#battle .banner').addEventListener('click', () => I.input.emit('ok'));
     $('#menubtn').addEventListener('click', e => { e.stopPropagation(); if (I.scene === W && !S.busy) U.pause(); });
-    $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); I.build.set(!I.build.on); });
-    pad();
+    $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); I.build.set(!I.build.on); });
+    $('#helpbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.guide(); });
+    pad(); pointer();
     let last = performance.now();
     (function frame(now) {
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
       if (sc) { try {
-        if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) W.walkStep(); W.update(1 / 60); } I.input.clearHeld(); }
-        else if (sc.update) sc.update(dt);
+        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW)) { U.zoomW = sc === W; layout(); }
+        if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) { if (I.debug.walk === 'tap') W.tapStep(); else W.walkStep(); } W.update(1 / 60); } I.input.clearHeld(); }
+        else { U.pointerTick(now); if (sc.update) sc.update(dt); }
         G.present(dt, sc.render(dt) || {});
       } catch (e) { if (!U._err) { U._err = e; console.error(e); } } }
-      $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden);
+      const tx = U.zoom ? -G.view.x * U.scale : 0; if (tx !== U._tx) { U._tx = tx; cvEl.style.transform = tx ? 'translateX(' + tx + 'px)' : ''; }
+      $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden); $('#helpbtn').hidden = $('#menubtn').hidden;
       $('#buildbtn').hidden = $('#menubtn').hidden || !W.saga || (W.saga.frame && !W.saga.veillees) || !I.build.outdoor(W.map.id);
       if (I.build.on) $('#buildbar').hidden = S.busy || I.scene !== W;
       I.trade.drawCompass(now / 1000);

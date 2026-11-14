@@ -45,7 +45,7 @@
     if (I.debug.auto) await I.sleep(30); else await I.input.wait(['ok', 'cancel']);
     I.audio.sfx('blip');
   }
-  S.hideDialog = function () { $('#dialog').hidden = true; document.body.classList.remove('in-dialog'); };
+  S.hideDialog = function () { $('#dialog').hidden = true; document.body.classList.remove('in-dialog'); if (S.depth === 0 && I.world) I.world.focus = null; };
 
   /* ----- cartons ----- */
   async function card(cls, html, auto) {
@@ -68,7 +68,7 @@
       const box = $('#choice'); box.hidden = false; box.innerHTML = '';
       document.body.classList.add('in-dialog');
       if (head) box.appendChild(I.el('div', 'phead', head));
-      box.appendChild(I.el('div', 'prompt', I.fmt(prompt)));
+      box.appendChild(typeof prompt === 'object' ? I.el('div', 'prompt ' + (prompt.cls || ''), prompt.html) : I.el('div', 'prompt', I.fmt(prompt))); box.scrollTop = 0;
       let idx = 0; const btns = [];
       const locked = o => o.need !== undefined && !known(o.need);
       const sel = i => { idx = (i + btns.length) % btns.length; btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); };
@@ -138,8 +138,8 @@
   async function exec(op) {
     const W = I.world, a = op[1], b = op[2], c = op[3];
     switch (op[0]) {
-      case 'say': await showLine('say', speaker(a), b); break;
-      case 'nar': await showLine('nar', null, a); break;
+      case 'say': W.focus = (W.npcs && W.map && W.npcs.find(n => n.id === a && !n.hidden && n.map === W.map.id && n.placed)) || null; await showLine('say', speaker(a), b); break;
+      case 'nar': W.focus = null; await showLine('nar', null, a); break;
       case 'quote': S.hideDialog(); I.audio.sfx('light'); await card('quote', `<div class="orn">❖</div><blockquote>${I.fmt(a.replace(/^«\s*/, '').replace(/\s*»$/, ''))}</blockquote><cite>${I.fmt(b)}</cite><div class="hint">▼</div>`); break;
       case 'title': S.hideDialog(); I.audio.sfx('roll'); await card('title', `<h1>${I.fmt(a)}</h1>${b ? `<p>${I.fmt(b)}</p>` : ''}<div class="rule"></div>`, 3000); break;
       case 'choice': {

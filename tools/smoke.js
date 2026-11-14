@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /* Test de fumée : lance le jeu dans Chromium, capture des écrans, puis joue automatiquement
    le prologue, les cinq sagas et l'épilogue (mode ISNAD.debug.auto).
-   Usage : node tools/smoke.js [shots|auto|walk|wrong|all] [dossier de sortie]
+   Usage : node tools/smoke.js [shots|auto|walk|tap|wrong|all] [dossier de sortie]
    auto : saute d'objectif en objectif · walk : marche réellement (clavier simulé, vraies collisions)
+   tap : marche comme au doigt (chemin tracé jusqu'à l'objectif, vraies collisions)
    wrong : choisit d'abord toutes les mauvaises réponses avant la bonne */
 const { chromium } = require('playwright');
 const path = require('path');
@@ -62,11 +63,11 @@ const url = 'file://' + path.join(__dirname, '../index.html');
     await m.close();
   }
 
-  if (mode === 'auto' || mode === 'walk' || mode === 'wrong' || mode === 'all') {
+  if (mode === 'auto' || mode === 'walk' || mode === 'tap' || mode === 'wrong' || mode === 'all') {
     const page = await mkPage({ width: 960, height: 540 });
     const res = await page.evaluate(async (walk) => {
       const I = window.ISNAD, W = I.world, log = I.debug.log = [], stats = [];
-      I.debug.auto = true; I.debug.walk = walk === 'walk'; I.debug.pickWrong = walk === 'wrong'; I.speed = 40; I.audio.setOn(false);
+      I.debug.auto = true; I.debug.walk = walk === 'walk' ? true : walk === 'tap' ? 'tap' : false; I.debug.pickWrong = walk === 'wrong'; I.speed = 40; I.audio.setOn(false);
       I.save.reset(); I.save.data.started = true;
       const hide = () => document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
       // instrumentation des combats

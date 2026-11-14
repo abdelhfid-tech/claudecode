@@ -28,8 +28,10 @@ em { font-style: italic; color: #fff3d0; }
 #app { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
 body.portrait #app { justify-content: flex-start; padding-top: 6px; }
 #stage { position: relative; flex: none; background: #000; box-shadow: 0 0 0 1px rgba(233, 200, 119, .18), 0 30px 80px rgba(0, 0, 0, .7); }
-#cv { width: 100%; height: 100%; display: block; }
-#ui { position: absolute; inset: 0; font-size: max(13px, calc(var(--u) * 7.2)); line-height: 1.32; }
+#view { position: absolute; inset: 0; overflow: hidden; }
+#cv { width: 100%; height: 100%; display: block; touch-action: none; }
+#stage { touch-action: none; }
+#ui { position: absolute; inset: 0; font-size: calc(max(13px, var(--u) * 7.2) * var(--tz, 1)); line-height: 1.32; }
 #fade { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 40; }
 
 /* ---------- HUD ---------- */
@@ -39,7 +41,8 @@ body.portrait #app { justify-content: flex-start; padding-top: 6px; }
 body[data-theme="cyber"] #hud .sub { font-family: var(--f-mono); }
 #hud .obj { margin-top: .35em; display: inline-block; padding: .22em .7em .26em .6em; background: linear-gradient(90deg, rgba(10, 8, 20, .82), rgba(10, 8, 20, .35)); border-left: 2px solid var(--acc); font-size: .86em; }
 #hud .obj::before { content: "◆ "; color: var(--acc); font-size: .8em; }
-#menubtn { position: absolute; right: 2%; top: 3%; width: 2.4em; height: 2.4em; border-radius: 50%; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; }
+#menubtn, #helpbtn { position: absolute; right: 2%; top: 3%; width: 2.4em; height: 2.4em; border-radius: 50%; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; padding: 0; }
+#helpbtn { right: calc(2% + 2.9em); font-family: var(--f-display); font-weight: 700; }
 #toasts { position: absolute; right: 2%; top: 14%; display: flex; flex-direction: column; gap: .4em; align-items: flex-end; pointer-events: none; z-index: 30; }
 .toast { padding: .32em .8em; background: var(--panel); border-right: 2px solid var(--acc); font-size: .82em; animation: tin .3s ease; transition: opacity .4s, transform .4s; max-width: 22em; }
 .toast b { color: var(--acc); }
@@ -62,13 +65,16 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 @keyframes bob { 50% { transform: translateY(.25em); } }
 
 /* ---------- choix ---------- */
-#choice { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: min(86%, 34em); display: flex; flex-direction: column; gap: .45em; z-index: 25; }
+#choice { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: min(86%, 34em); display: flex; flex-direction: column; gap: .45em; z-index: 25; max-height: 96%; overflow-y: auto; scrollbar-width: thin; }
+#choice .prompt.guide { text-align: left; font-family: var(--f-body); letter-spacing: 0; color: var(--sand); display: flex; flex-direction: column; gap: .35em; padding: .7em 1em; border: 1px solid var(--line); background: var(--panel2); }
+#choice .prompt.guide .gt { font-family: var(--f-display); letter-spacing: .14em; color: var(--acc); font-size: .9em; }
+#choice .prompt.guide .gl b { color: #fff6dc; } #choice .prompt.guide kbd { font-size: .8em; }
 #choice .prompt { text-align: center; font-family: var(--f-display); letter-spacing: .05em; font-size: .95em; color: var(--acc); padding: .5em 1em; background: var(--panel); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: .2em; }
 #choice .opt { text-align: left; padding: .5em .9em; background: var(--panel); border: 1px solid rgba(255, 255, 255, .14); border-left: 3px solid transparent; font-size: .95em; transition: transform .12s, border-color .12s, background .12s; }
 #choice .opt.sel { border-left-color: var(--acc); border-color: var(--line); background: var(--panel2); transform: translateX(.5em); color: #fff; }
 
 /* ---------- cartons ---------- */
-#card { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6vh max(24px, 8vw); background: radial-gradient(ellipse at center, rgba(8, 7, 18, .82), rgba(4, 3, 10, .96)); opacity: 0; transition: opacity .28s; z-index: 35; cursor: pointer; font-size: clamp(15px, 2.3vmin + 6px, 26px); }
+#card { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6vh max(24px, 8vw); background: radial-gradient(ellipse at center, rgba(8, 7, 18, .82), rgba(4, 3, 10, .96)); opacity: 0; transition: opacity .28s; z-index: 35; cursor: pointer; font-size: calc(clamp(16.5px, 2.3vmin + 7.5px, 26px) * var(--tz, 1)); }
 #card.on { opacity: 1; }
 #card h1 { font-family: var(--f-display); font-weight: 700; letter-spacing: .14em; font-size: 2em; margin: .1em 0; color: var(--gold); text-wrap: balance; text-shadow: 0 0 30px rgba(233, 200, 119, .35); }
 #card p { margin: .3em 0; max-width: 34em; }
@@ -86,7 +92,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 #card.victory li { padding: .16em 0; }
 #card.victory li b { color: var(--gold); }
 #card.defeat h1 { color: #c9b8ff; }
-#card.credits { justify-content: flex-start; overflow-y: auto; font-size: clamp(14px, 1.6vmin + 6px, 20px); }
+#card.credits { justify-content: flex-start; overflow-y: auto; font-size: calc(clamp(15px, 1.6vmin + 7px, 20px) * var(--tz, 1)); }
 #card.credits p { text-align: left; }
 
 /* ---------- combat ---------- */
@@ -145,7 +151,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 @keyframes fl { 0% { opacity: 0; transform: translate(-50%, 0) scale(.6); } 15% { opacity: 1; transform: translate(-50%, -60%) scale(1.15); } 100% { opacity: 0; transform: translate(-50%, -190%) scale(1); } }
 
 /* ---------- écrans : titre, chaîne, menu ---------- */
-.screen { position: fixed; inset: 0; z-index: 30; display: flex; flex-direction: column; align-items: center; overflow-y: auto; padding: max(16px, 4vh) max(16px, 5vw); font-size: clamp(14px, 1.7vmin + 6px, 21px); }
+.screen { position: fixed; inset: 0; z-index: 30; display: flex; flex-direction: column; align-items: center; overflow-y: auto; padding: max(16px, 4vh) max(16px, 5vw); font-size: calc(clamp(15.5px, 1.7vmin + 7px, 21px) * var(--tz, 1)); }
 #title { justify-content: center; background: radial-gradient(ellipse at 50% 38%, rgba(7, 6, 13, .2), rgba(7, 6, 13, .78)); text-align: center; }
 #title .ar { font-family: var(--f-ar); font-size: 2.2em; color: var(--gold); opacity: .9; text-shadow: 0 0 30px rgba(233, 200, 119, .5); line-height: 1; }
 #title h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(3.2em, 15vmin, 7.4em); letter-spacing: .3em; margin: 0 0 0 .3em; line-height: 1; color: #fff6dc; text-shadow: 0 0 2px #fff, 0 0 40px rgba(233, 200, 119, .55), .04em .04em 0 rgba(255, 79, 216, .5), -.04em -.02em 0 rgba(57, 230, 255, .5); }
@@ -195,7 +201,8 @@ kbd { font-family: var(--f-mono); font-size: .86em; padding: .05em .4em; border:
 #pad { display: none; position: fixed; left: 0; right: 0; bottom: max(14px, env(safe-area-inset-bottom, 0px)); padding: 0 max(18px, env(safe-area-inset-left, 0px)); justify-content: space-between; align-items: flex-end; z-index: 15; pointer-events: none; }
 body.touch #pad { display: flex; }
 body.in-dialog #pad, body.in-battle #pad, body.in-screen #pad { display: none; }
-#pad .dpad { position: relative; width: 132px; height: 132px; pointer-events: auto; }
+#pad .dpad { position: relative; width: 132px; height: 132px; pointer-events: auto; visibility: hidden; }
+body.padon #pad .dpad { visibility: visible; }
 #pad .dpad button { position: absolute; width: 44px; height: 44px; background: rgba(20, 16, 36, .55); border: 1px solid rgba(233, 200, 119, .45); color: var(--gold); border-radius: 8px; font-size: 16px; touch-action: none; }
 #pad .dpad .u { left: 44px; top: 0; } #pad .dpad .d { left: 44px; top: 88px; } #pad .dpad .l { left: 0; top: 44px; } #pad .dpad .r { left: 88px; top: 44px; }
 #pad .ab { display: flex; gap: 14px; align-items: flex-end; pointer-events: auto; }
@@ -204,15 +211,25 @@ body.in-dialog #pad, body.in-battle #pad, body.in-screen #pad { display: none; }
 #pad button.down { background: rgba(233, 200, 119, .35); }
 
 /* ---------- portrait étroit : dialogue et commandes sous la scène ---------- */
-body.portrait #ui { font-size: 14px; }
-body.portrait #dialog { top: calc(100% + 10px); bottom: auto; left: 0; right: 0; min-height: 8.5em; padding-left: 5.4em; }
+body.portrait { padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+body.portrait #ui { font-size: calc(16.5px * var(--tz, 1)); }
+body.portrait #dialog { top: calc(100% + 10px); bottom: auto; left: 6px; right: 6px; min-height: 8.5em; padding-left: 5.4em; }
+body.portrait #dialog .text { font-size: 1.04em; line-height: 1.4; }
 body.portrait #dialog .seal { width: 3.8em; height: 3.8em; margin-top: -1.9em; left: .7em; }
 body.portrait #dialog.nar { padding-left: 1.2em; }
-body.portrait #choice { top: calc(100% + 10px); transform: translateX(-50%); width: 100%; }
+body.portrait #choice { top: calc(100% + 10px); transform: translateX(-50%); width: calc(100% - 12px); max-height: calc(100vh - 100% - 30px); max-height: calc(100dvh - 100% - 30px); }
+body.portrait #choice .opt { padding: .7em .9em; }
 body.portrait #battle .panel { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; grid-template-columns: 1fr; }
-body.portrait #battle .order { font-size: 9px; } body.portrait .plate { font-size: 9px; min-width: 6.4em; } body.portrait #battle .banner { font-size: 12px; }
-body.portrait #hud { font-size: 11px; max-width: 80%; } body.portrait .fl { font-size: 13px; }
-body.portrait .mlist { max-height: 12em; }
+body.portrait #battle .order { font-size: calc(10.5px * var(--tz, 1)); } body.portrait .plate { font-size: calc(10.5px * var(--tz, 1)); min-width: 6.4em; } body.portrait #battle .banner { font-size: calc(13.5px * var(--tz, 1)); }
+body.portrait .fl { font-size: calc(15px * var(--tz, 1)); }
+body.portrait .mlist { max-height: 13em; } body.portrait .mi { padding: .5em .6em; } body.portrait .hrow { padding: .4em .55em; }
+/* l'objectif et les piliers passent sous la scène : la vue reste dégagée */
+body.portrait #hud { top: calc(100% + 8px); left: 8px; right: 8px; max-width: none; font-size: calc(14.5px * var(--tz, 1)); text-shadow: none; }
+body.portrait #hud .obj { display: block; background: var(--panel); border: 1px solid rgba(255, 255, 255, .1); border-left: 3px solid var(--acc); padding: .45em .7em; font-size: 1em; }
+body.portrait.in-dialog #hud, body.portrait.in-build #hud { visibility: hidden; }
+body.portrait #menubtn, body.portrait #helpbtn, body.portrait #buildbtn { font-size: 1.1em; }
+body.portrait #toasts { top: 3.6em; right: 2%; left: 30%; } body.portrait .toast { max-width: none; font-size: .78em; }
+body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 @media (prefers-reduced-motion: reduce) { .toast, .fl, #card, .link { animation-duration: .01s; transition: none; } }
 
 @media (orientation: landscape) and (max-height: 480px) { #ui { font-size: max(11px, calc(var(--u) * 6.4)); } .hrow { padding: .12em .5em; } #battle .cmd { padding: .25em .4em; } .mi { padding: .16em .5em; } #dialog { min-height: 30%; } }
@@ -234,7 +251,7 @@ body.portrait .mlist { max-height: 12em; }
 #card.parley h1 { font-size: 1.6em; }
 
 /* ---------- bâtir ---------- */
-#buildbtn { position: absolute; right: calc(2% + 2.9em); top: 3%; width: 2.4em; height: 2.4em; border-radius: 6px; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; }
+#buildbtn { position: absolute; right: calc(2% + 5.8em); top: 3%; width: 2.4em; height: 2.4em; border-radius: 6px; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; padding: 0; }
 body.in-build #buildbtn { background: var(--acc); color: #0b0a14; }
 #buildbar { position: absolute; left: 2%; right: 2%; bottom: 2.5%; z-index: 9; background: var(--panel); border: 1px solid var(--line); border-radius: 3px; padding: .4em .6em; display: flex; flex-direction: column; gap: .3em; font-size: .8em; }
 #buildbar .mats { display: flex; flex-wrap: wrap; gap: .3em 1em; font-family: var(--f-mono); color: var(--dim); font-size: .9em; }
@@ -256,15 +273,17 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
 #compass .lab b { font-family: var(--f-display); font-size: .74em; letter-spacing: .05em; color: #fff6dc; font-weight: 500; }
 #compass .lab small { font-size: .66em; color: var(--sand); letter-spacing: .12em; text-transform: uppercase; }
 body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) #compass { top: 24%; }
+body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
 
 </style>
 <div id="app">
   <div id="stage">
-    <canvas id="cv" aria-label="Scène de jeu"></canvas>
+    <div id="view"><canvas id="cv" aria-label="Scène de jeu"></canvas></div>
     <div id="ui">
       <div id="hud" hidden><div class="chap"></div><div class="sub"></div><div class="obj"></div><div class="pil"></div></div>
       <button id="menubtn" type="button" aria-label="Menu" hidden>☰</button>
       <button id="buildbtn" type="button" aria-label="Bâtir" hidden>▦</button>
+      <button id="helpbtn" type="button" aria-label="Que faire ?" hidden>?</button>
       <div id="compass" hidden><canvas aria-label="Cadran des étoiles"></canvas><div class="lab"></div></div>
       <div id="toasts"></div>
       <div id="battle" hidden>
@@ -288,7 +307,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
   <h1>ISNAD</h1>
   <div class="tag">Chroniques des Compagnons</div>
   <div class="vmenu"></div>
-  <p class="foot">Un JRPG rétro-HD en cinq sagas, de la mort du Prophète ﷺ à la fin du califat bien guidé. Fiction inspirée de sources historiques ; le Prophète ﷺ n’est jamais représenté et aucun personnage n’a de visage.<br><kbd>Flèches</kbd>/<kbd>ZQSD</kbd> se déplacer · <kbd>Entrée</kbd> valider · <kbd>Échap</kbd> menu · tactile pris en charge</p>
+  <p class="foot">Un JRPG rétro-HD en cinq sagas, de la mort du Prophète ﷺ à la fin du califat bien guidé. Fiction inspirée de sources historiques ; le Prophète ﷺ n’est jamais représenté et aucun personnage n’a de visage.<br><kbd>Flèches</kbd>/<kbd>ZQSD</kbd> ou clic : se déplacer · <kbd>Entrée</kbd> valider · <kbd>Échap</kbd> halte · <kbd>H</kbd> que faire ? · au doigt sur écran tactile</p>
 </section>
 <section id="chain" class="screen" hidden>
   <header><h2>La Chaîne</h2><p></p></header>
@@ -475,7 +494,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
   const KEY = {
     ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right',
     Enter: 'ok', Space: 'ok', KeyZ: 'ok', KeyE: 'ok', NumpadEnter: 'ok',
-    Escape: 'cancel', KeyX: 'cancel', Backspace: 'cancel', KeyM: 'menu', Tab: 'menu', KeyB: 'build', KeyC: 'prev', KeyV: 'next'
+    Escape: 'cancel', KeyX: 'cancel', Backspace: 'cancel', KeyM: 'menu', Tab: 'menu', KeyB: 'build', KeyC: 'prev', KeyV: 'next', KeyH: 'help', F1: 'help'
   };
   function emit(a) {
     I.audio.unlock();
@@ -961,10 +980,13 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     G.lcv = mk(G.PW / 2, G.PH / 2); G.lx = G.lcv.getContext('2d');
     G.resize();
   };
+  // fenêtre visible, en pixels logiques : sur un écran en hauteur, on ne montre qu'une partie de la largeur, agrandie
+  G.view = { x: 0, w: G.PW, t: 0 };
   G.resize = function () {
-    const st = G.cv.parentElement, w = st.clientWidth, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    G.k = Math.max(2, Math.min(G.low ? 2 : 4, Math.ceil(w * dpr / G.PW)));
-    G.cv.width = G.PW * G.k; G.cv.height = G.PH * G.k;
+    const st = document.getElementById('stage') || G.cv.parentElement, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = st.clientHeight * G.PW / G.PH > st.clientWidth + 1 ? st.clientHeight * G.PW / G.PH : st.clientWidth, coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    G.k = Math.max(2, Math.min(G.low ? 2 : coarse ? 3 : 4, Math.ceil(w * dpr / G.PW)));
+    if (G.cv.width !== G.PW * G.k) { G.cv.width = G.PW * G.k; G.cv.height = G.PH * G.k; }
     st.style.setProperty('--u', (st.clientHeight / G.PH) + 'px');
   };
   // particules et effets HD (coordonnées en pixels logiques)
@@ -1082,7 +1104,8 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     if (o.scan) { c.globalAlpha = 0.07; c.fillStyle = '#000'; for (let y = 0; y < H; y += k * 2) c.fillRect(0, y, W, k); c.globalAlpha = 1;
       if (Math.random() < 0.02) { const y = Math.random() * H, h = 4 * k; c.drawImage(G.cv, 0, y, W, h, (Math.random() - 0.5) * 20 * k, y, W, h); } }
     // vignette
-    const vg = c.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, H * 0.95); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(4,3,12,${o.vignette === undefined ? 0.55 : o.vignette})`);
+    const vcx = (G.view.x + G.view.w / 2) * k, vr = Math.hypot(G.view.w / 2, G.PH / 2) / Math.hypot(G.PW / 2, G.PH / 2);
+    const vg = c.createRadialGradient(vcx, H / 2, H * 0.35 * vr, vcx, H / 2, H * 0.95 * vr); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(4,3,12,${o.vignette === undefined ? 0.55 : o.vignette})`);
     c.fillStyle = vg; c.fillRect(0, 0, W, H);
     if (G.flashA > 0) { c.globalAlpha = G.flashA; c.fillStyle = G.flashC; c.fillRect(0, 0, W, H); c.globalAlpha = 1; G.flashA -= dt * 2.4; }
   };
@@ -1745,7 +1768,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     if (I.debug.auto) await I.sleep(30); else await I.input.wait(['ok', 'cancel']);
     I.audio.sfx('blip');
   }
-  S.hideDialog = function () { $('#dialog').hidden = true; document.body.classList.remove('in-dialog'); };
+  S.hideDialog = function () { $('#dialog').hidden = true; document.body.classList.remove('in-dialog'); if (S.depth === 0 && I.world) I.world.focus = null; };
 
   /* ----- cartons ----- */
   async function card(cls, html, auto) {
@@ -1768,7 +1791,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
       const box = $('#choice'); box.hidden = false; box.innerHTML = '';
       document.body.classList.add('in-dialog');
       if (head) box.appendChild(I.el('div', 'phead', head));
-      box.appendChild(I.el('div', 'prompt', I.fmt(prompt)));
+      box.appendChild(typeof prompt === 'object' ? I.el('div', 'prompt ' + (prompt.cls || ''), prompt.html) : I.el('div', 'prompt', I.fmt(prompt))); box.scrollTop = 0;
       let idx = 0; const btns = [];
       const locked = o => o.need !== undefined && !known(o.need);
       const sel = i => { idx = (i + btns.length) % btns.length; btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); };
@@ -1838,8 +1861,8 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
   async function exec(op) {
     const W = I.world, a = op[1], b = op[2], c = op[3];
     switch (op[0]) {
-      case 'say': await showLine('say', speaker(a), b); break;
-      case 'nar': await showLine('nar', null, a); break;
+      case 'say': W.focus = (W.npcs && W.map && W.npcs.find(n => n.id === a && !n.hidden && n.map === W.map.id && n.placed)) || null; await showLine('say', speaker(a), b); break;
+      case 'nar': W.focus = null; await showLine('nar', null, a); break;
       case 'quote': S.hideDialog(); I.audio.sfx('light'); await card('quote', `<div class="orn">❖</div><blockquote>${I.fmt(a.replace(/^«\s*/, '').replace(/\s*»$/, ''))}</blockquote><cite>${I.fmt(b)}</cite><div class="hint">▼</div>`); break;
       case 'title': S.hideDialog(); I.audio.sfx('roll'); await card('title', `<h1>${I.fmt(a)}</h1>${b ? `<p>${I.fmt(b)}</p>` : ''}<div class="rule"></div>`, 3000); break;
       case 'choice': {
@@ -1986,7 +2009,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     W.foes.forEach(f => { if (f.map === id && !f.placed) { const p = W.resolve(f.at, id, f); if (p) { f.x = p[0]; f.y = p[1]; f.placed = true; } } });
     W.chests.forEach(c => { if (c.map === id && !c.placed) { const p = W.resolve(c.at, id, c); if (p) { c.x = p[0]; c.y = p[1]; c.placed = true; } } });
     if (spot) { const p = Array.isArray(spot) && typeof spot[0] === 'number' ? spot : W.resolve(spot, id, W.player); W.player.x = p[0]; W.player.y = p[1]; }
-    W.resetTrail(); W.tint = null; W.pose = []; W.updateCam(true);
+    W.resetTrail(); W.tint = null; W.pose = []; W.dest = null; W.focus = null; W._way = null; W.updateCam(true);
     document.body.dataset.theme = (id === 'noos' || id === 'cite' || id === 'archives') ? 'cyber' : (id === 'romaine' || id === 'palais') ? 'roman' : 'orient';
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
@@ -2026,6 +2049,14 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     let cx = mw <= G.PW ? (mw - G.PW) / 2 : I.clamp(W.player.x - G.PW / 2, 0, mw - G.PW);
     let cy = mh <= G.PH ? (mh - G.PH) / 2 : I.clamp(W.player.y - G.PH / 2 - 8, 0, mh - G.PH);
     if (snap) { W.cam.x = cx; W.cam.y = cy; } else { W.cam.x += (cx - W.cam.x) * 0.14; W.cam.y += (cy - W.cam.y) * 0.14; }
+    // fenêtre visible (écran en hauteur) : elle suit le héros, se tourne vers celui qui parle et s'arrête aux bords de la carte
+    const V = G.view;
+    if (V.w < G.PW) {
+      const f = W.focus, half = V.w / 2 - 22, off = f && f.map === m.id && !f.hidden && f.placed ? I.clamp((f.x - W.player.x) / 2, -half, half) : 0;
+      W.foff = snap ? off : (W.foff || 0) + (off - (W.foff || 0)) * 0.1;
+      const lo = Math.max(0, -cx), hi = Math.min(G.PW, mw - cx) - V.w, want = hi < lo ? (lo + hi) / 2 : I.clamp(W.player.x + W.foff - cx - V.w / 2, lo, hi);
+      V.t = snap ? want : V.t + (want - V.t) * 0.14; V.x = Math.round(V.t);
+    } else { V.x = 0; V.t = 0; }
   };
 
   /* ----- chapitres et objectifs ----- */
@@ -2059,7 +2090,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
       await S.fade('in', 500);
       if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); }
       if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) { I.build.yields(); await I.trade.resolve(); } }
-      if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Croix : marcher · <b>OK</b> : parler, valider · <b>MENU</b> : halte' : '<b>Flèches</b> ou <b>ZQSD</b> : marcher · <b>Entrée</b> : parler · <b>Échap</b> : menu', 9000);
+      if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Touche un endroit pour t’y rendre, un personnage pour lui parler · <b>?</b> : que faire' : '<b>Flèches</b>, <b>ZQSD</b> ou clic : marcher · <b>Entrée</b> : parler · <b>H</b> ou <b>?</b> : que faire · <b>Échap</b> : halte', 10000);
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
   };
@@ -2125,7 +2156,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
   };
 
   /* ----- interaction ----- */
-  W.interact = async function () {
+  W.interact = async function (who) {
     if (S.busy || W.lock) return;
     const p = W.player, fx = [0, -1, 1, 0][p.dir], fy = [1, 0, 0, -1][p.dir];
     const px = p.x + fx * 12, py = p.y + fy * 12;
@@ -2136,6 +2167,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     // sur la natte, la prière et la sauvegarde passent avant un voisin que l'on ne regarde pas en face
     const onMat = W.nearPrayer() && !(o0 && o0.talk && best && best.id === o0.talk);
     if (onMat && best && bd > 13) best = null;
+    if (who && W.npcs.includes(who) && !who.hidden && who.map === W.map.id && Math.hypot(who.x - p.x, who.y - p.y) < 34) best = who; // celui que l'on a touché du doigt
     if (best) {
       const dx = p.x - best.x, dy = p.y - best.y; best.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0);
       const o = W.cur();
@@ -2143,7 +2175,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
       if (best.talk) { I.audio.sfx('blip'); await S.run(best.talk); }
       return;
     }
-    const c = W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
+    const c = who && W.chests.includes(who) && !who.open && Math.hypot(who.x - p.x, who.y - p.y) < 30 ? who : W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
       await S.run([['ask', 'Une natte tournée vers La Mecque, au cœur de l’étoile.', [{ t: 'Prier : le groupe se repose, la Sakîna descend', r: [['pray']] }, { t: 'Sauvegarder la partie', r: [['save']] }, { t: 'Plus tard', r: [] }]]]);
@@ -2164,8 +2196,9 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     if (I.scene !== W || S.busy || W.lock) return false;
     if (a === 'build') { I.build.set(!I.build.on); return true; }
     if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel') { I.build.set(false); return true; } if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
-    if (a === 'ok') { W.interact(); return true; }
-    if (a === 'menu' || a === 'cancel') { I.ui.pause(); return true; }
+    if (a === 'ok') { W.stop(); W.interact(); return true; }
+    if (a === 'help') { W.stop(); I.ui.guide(); return true; }
+    if (a === 'menu' || a === 'cancel') { W.stop(); I.ui.pause(); return true; }
     return false;
   };
   W.update = function (dt) {
@@ -2176,17 +2209,13 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     if (can) {
       let dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0);
       if (dx || dy) {
-        const crowd = W.npcs.some(n => !n.hidden && n.map === W.map.id && n.placed && Math.abs(n.x - p.x) < 8 && Math.abs(n.y - p.y) < 6);
-        const sp = 82 * dt * (dx && dy ? 0.7071 : 1) * (crowd ? 0.55 : 1);
+        W.dest = null; if (I.build) I.build.aim = null;
+        const sp = 82 * dt * (dx && dy ? 0.7071 : 1) * (crowded() ? 0.55 : 1);
         p.dir = dx < 0 ? 1 : dx > 0 ? 2 : dy < 0 ? 3 : 0;
-        const tryMove = (mx, my) => {
-          const nx = p.x + mx, ny = p.y + my;
-          if (W.solidAt(nx - 4, ny - 5) || W.solidAt(nx + 4, ny - 5) || W.solidAt(nx - 4, ny) || W.solidAt(nx + 4, ny)) return false;
-          p.x = nx; p.y = ny; return true;
-        };
         const m1 = dx && tryMove(dx * sp, 0), m2 = dy && tryMove(0, dy * sp);
         p.moving = !!(m1 || m2); if (p.moving) { pushTrail(); if (Math.floor(W.t * 5) !== Math.floor((W.t - dt) * 5)) I.audio.sfx('step'); }
-      } else p.moving = false;
+      } else if (W.dest) follow(dt);
+      else p.moving = false;
       const o = W.cur();
       if (o && o.goto) { const s = W.spotPx(o.goto), pr = W.map.spots.priere, near = pr && s && Math.hypot(pr[0] * T + 8 - s[0], pr[1] * T + 13 - s[1]) < 70; if (s && Math.hypot(s[0] - p.x, s[1] - p.y) < (near ? 20 : 36)) W.complete(); }
       // rappel : on ne sauvegarde que dans les mosquées
@@ -2197,8 +2226,98 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
         if (d < 15) { W.fight(f); break; }
         if (d < 72 && !f.boss) { const vx = (p.x - f.x) / d * 22 * dt, vy = (p.y - f.y) / d * 22 * dt, m2 = W.map, stop = (x, y) => W.solidAt(x, y) || (m2.trench && m2.trench.has(Math.floor(y / T) * m2.w + Math.floor(x / T))); if (!stop(f.x + vx, f.y)) f.x += vx; if (!stop(f.x, f.y + vy)) f.y += vy; }
       }
-    } else if (!p.scripted) p.moving = false;
+    } else { W.dest = null; if (!p.scripted) p.moving = false; }
     W.updateCam();
+  };
+
+  /* ----- déplacement au doigt ou à la souris : on touche un endroit, le héros s'y rend ----- */
+  const DX = [1, -1, 0, 0], DY = [0, 0, 1, -1];
+  const boxFree = (x, y) => !(W.solidAt(x - 4, y - 5) || W.solidAt(x + 4, y - 5) || W.solidAt(x - 4, y) || W.solidAt(x + 4, y));
+  function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) return false; p.x = nx; p.y = ny; return true; }
+  function crowded() { const p = W.player; return W.npcs.some(n => !n.hidden && n.map === W.map.id && n.placed && Math.abs(n.x - p.x) < 8 && Math.abs(n.y - p.y) < 6); }
+  // ligne droite praticable entre deux points : sert à couper les angles d'un chemin
+  function clearLine(x0, y0, x1, y1) { const n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 3); for (let i = 1; i <= n; i++) { const f = i / n; if (!boxFree(x0 + (x1 - x0) * f, y0 + (y1 - y0) * f)) return false; } return true; }
+  // chemin jusqu'à la case praticable la plus proche du point visé (parcours en largeur sur la grille)
+  W.route = function (x1, y1, from) {
+    const m = W.map, p = from || W.player, w = m.w, sx = I.clamp(Math.floor(p.x / T), 0, w - 1), sy = I.clamp(Math.floor((p.y - 2) / T), 0, m.h - 1), ex = I.clamp(Math.floor(x1 / T), 0, w - 1), ey = I.clamp(Math.floor((y1 - 2) / T), 0, m.h - 1);
+    const s = sy * w + sx, prev = new Int32Array(w * m.h).fill(-1), q = new Int32Array(w * m.h); let qh = 0, qt = 0, best = s, bd = 1e9;
+    prev[s] = s; q[qt++] = s;
+    while (qh < qt) {
+      const i = q[qh++], x = i % w, y = (i - x) / w, d = (x - ex) * (x - ex) + (y - ey) * (y - ey);
+      if (d < bd) { bd = d; best = i; if (!d) break; }
+      for (let k = 0; k < 4; k++) { const nx = x + DX[k], ny = y + DY[k]; if (nx < 0 || ny < 0 || nx >= w || ny >= m.h) continue; const j = ny * w + nx; if (prev[j] >= 0 || m.solid[j]) continue; prev[j] = i; q[qt++] = j; }
+    }
+    const path = []; for (let i = best; prev[i] !== i; i = prev[i]) path.unshift([(i % w) * T + 8, Math.floor(i / w) * T + 11]);
+    return path;
+  };
+  // o : { ent (cible mobile), stop (distance d'arrêt), then (à l'arrivée), quiet (pas de repère au sol) }
+  W.goTo = function (x, y, o) {
+    o = o || {}; const p = W.player, path = W.route(x, y);
+    if (!o.ent && !o.then && boxFree(x, y)) { const l = path.length ? path[path.length - 1] : [p.x, p.y]; if (Math.hypot(l[0] - x, l[1] - y) < 14) path.push([x, y]); } // jusqu'au point exact, s'il est libre
+    W.dest = { x, y, path, ent: o.ent || null, stop: o.stop || 0, then: o.then || null, mark: !o.quiet && !o.ent, stall: 0, raw: false };
+  };
+  W.stop = function () { if (W.dest) { W.dest = null; W.player.moving = false; } };
+  function follow(dt) {
+    const d = W.dest, p = W.player;
+    if (I.build) I.build.aim = null;
+    if (d.ent) { if (d.ent.hidden || d.ent.done || d.ent.map !== W.map.id) return W.stop(); if (Math.hypot(d.ent.x - d.x, d.ent.y - d.y) > 12) { d.x = d.ent.x; d.y = d.ent.y; d.path = W.route(d.x, d.y); } }
+    const arrive = () => { const th = d.then; W.dest = null; p.moving = false; if (th) th(); };
+    if (d.stop && Math.hypot(d.x - p.x, d.y - p.y) <= d.stop) return arrive();
+    if (!d.raw) for (let j = Math.min(d.path.length - 1, 6); j > 0; j--) if (clearLine(p.x, p.y, d.path[j][0], d.path[j][1])) { d.path.splice(0, j); break; }
+    while (d.path.length && Math.hypot(d.path[0][0] - p.x, d.path[0][1] - p.y) < 1.2) d.path.shift();
+    if (!d.path.length) return arrive();
+    const wp = d.path[0], vx = wp[0] - p.x, vy = wp[1] - p.y, L = Math.hypot(vx, vy), sp = Math.min(L, 82 * dt * (crowded() ? 0.55 : 1)), mx = vx / L * sp, my = vy / L * sp, x0 = p.x, y0 = p.y;
+    if (boxFree(p.x + mx, p.y + my)) { p.x += mx; p.y += my; } else { tryMove(mx, 0); tryMove(0, my); }
+    const moved = Math.hypot(p.x - x0, p.y - y0);
+    if (Math.abs(vx) > Math.abs(vy) * 1.25) p.dir = vx < 0 ? 1 : 2; else if (Math.abs(vy) > Math.abs(vx) * 1.25) p.dir = vy < 0 ? 3 : 0;
+    p.moving = moved > 0.01;
+    if (p.moving) { pushTrail(); if (Math.floor(W.t * 5) !== Math.floor((W.t - dt) * 5)) I.audio.sfx('step'); }
+    if (moved < sp * 0.3) { if (++d.stall > 14) { if (d.raw) return arrive(); d.raw = true; d.stall = 0; d.path = W.route(d.x, d.y); } } else d.stall = 0;
+  }
+  // conduit le héros jusqu'à l'objectif : l'aide « M'y conduire », et le test « au doigt »
+  W.lead = function () {
+    const tg = W.target(), p = W.player; if (!tg) return false;
+    const face = e => { const dx = e.x - p.x, dy = e.y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
+    if (tg.kind === 'talk') W.goTo(tg.gx, tg.gy, { ent: tg.ent, stop: 21, then() { face(tg.ent); W.interact(tg.ent); } });
+    else if (tg.kind === 'foe') W.goTo(tg.gx, tg.gy, { ent: tg.ent, stop: 3 });
+    else W.goTo(tg.gx, tg.gy);
+    return true;
+  };
+  W.tapStep = function () {
+    const o = W.cur(), p = W.player, log = I.debug.log || (I.debug.log = []), st = W._tap || (W._tap = {});
+    if (!o || o.auto) return;
+    if (o.build && I.debug.noBuild) return;
+    if (o.build) { if (!W._bb) { W._bb = true; I.build.autoBuild(o.build); I.build.after().then(() => { W._bb = false; }, e => { log.push('ERR bâtir ' + e.message); W._bb = false; }); } return; }
+    const key = W.saga.id + W.ch.id + W.objIndex + W.map.id, tg = W.target();
+    if (st.key !== key) { st.key = key; st.n = 0; st.led = 0; }
+    if (!tg) { if (!st.gone) { st.gone = key; log.push((o.talk ? 'PNJ ABSENT ' : o.foe ? 'FOE ABSENT ' : 'CIBLE ABSENTE ') + key); } if (o.foe) { const f = W.foes.find(f => f.id === o.foe); if (f) f.done = true; } W.complete(); return; }
+    if (++st.n > 60000 || st.led > 12) { log.push('COINCÉ (au doigt) ' + key + ' à ' + Math.round(Math.hypot(tg.gx - p.x, tg.gy - p.y)) + ' px'); p.x = tg.gx; p.y = tg.gy + (tg.kind === 'goto' ? 0 : 14); W.resetTrail(); W.dest = null; st.key = null; if (tg.kind === 'talk') W.complete(); return; }
+    if (!W.dest) { st.led++; W.lead(); }
+  };
+  // un toucher sur la scène, en coordonnées de la carte : aller là, parler à celui qu'on touche, agir sur ce qu'on touche
+  W.tap = function (wx, wy) {
+    if (I.scene !== W || S.busy || W.lock || I.ui.menuOpen || I.debug.auto || I.debug.walk) return false;
+    const p = W.player, m = W.map, here = e => !e.hidden && e.map === m.id && e.placed;
+    const face = (x, y) => { const dx = x - p.x, dy = y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
+    if (I.build && I.build.on) {
+      const tx = Math.floor(wx / T), ty = Math.floor(wy / T), put = () => { face(tx * T + 8, ty * T + 11); I.build.aim = [tx, ty]; I.build.place(); };
+      if (Math.max(Math.abs(tx - Math.floor(p.x / T)), Math.abs(ty - Math.floor((p.y - 3) / T))) <= 2) put(); else W.goTo(tx * T + 8, ty * T + 11, { stop: 27, then: put });
+      return true;
+    }
+    const n = W.npcs.find(n => here(n) && Math.abs(n.x - wx) < 10 && wy > n.y - 27 && wy < n.y + 6);
+    if (n) { W.goTo(n.x, n.y, { ent: n, stop: 21, then() { face(n.x, n.y); W.interact(n); } }); return true; }
+    const f = W.foes.find(f => !f.done && f.map === m.id && f.placed && Math.abs(f.x - wx) < 15 && wy > f.y - 36 && wy < f.y + 6);
+    if (f) { W.goTo(f.x, f.y, { ent: f, stop: 3 }); return true; }
+    const c = W.chests.find(c => !c.open && c.map === m.id && c.placed && Math.abs(c.x - wx) < 10 && Math.abs(c.y - 6 - wy) < 11);
+    if (c) { W.goTo(c.x, c.y, { stop: 17, then() { face(c.x, c.y); W.interact(c); } }); return true; }
+    if (Math.abs(wx - p.x) < 9 && wy > p.y - 24 && wy < p.y + 5) { W.stop(); W.interact(); return true; } // se toucher soi-même : agir devant soi
+    const mat = W.prayerPts().find(sp => Math.hypot(sp[0] * T + 8 - wx, sp[1] * T + 9 - wy) < 13);
+    if (mat) { W.goTo(mat[0] * T + 8, mat[1] * T + 13, { stop: 7, then() { W.interact(); } }); return true; }
+    const cs = m.spots.comptoir;
+    if (cs && I.trade && W.saga && (!W.saga.frame || W.saga.veillees) && Math.hypot(cs[0] * T + 8 - wx, cs[1] * T + 9 - wy) < 15) { W.goTo(cs[0] * T + 8, cs[1] * T + 13, { stop: 24, then() { W.interact(); } }); return true; }
+    if (W.solidAt(wx, wy)) W.goTo(wx, wy, { then() { face(wx, wy); W.interact(); } }); // un palmier, un rocher, un puits : on s'en approche et l'on s'y adresse
+    else W.goTo(wx, wy);
+    return true;
   };
   // tests : chemin praticable (BFS sur la grille) puis saut à l'objectif
   W.reach = function (x0, y0, x1, y1) {
@@ -2254,10 +2373,10 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
   W.spotPx = function (at) { const m = W.map, name = Array.isArray(at) ? at[0] : at, s = m.spots[name]; if (!s) return null; return [(s[0] + (Array.isArray(at) ? at[1] : 0)) * T + 8, (s[1] + (Array.isArray(at) ? at[2] : 0)) * T + 13]; };
   W.target = function () {
     const o = W.cur(); if (!o) return null;
-    if (o.goto) { const s = W.spotPx(o.goto); return s && { x: s[0], y: s[1], kind: 'goto' }; }
-    if (o.build) { const st = o.build.site && I.build.sites()[o.build.site]; return st && st.map === W.map.id ? { x: (st.x + st.w / 2) * T, y: (st.y + st.h / 2) * T, kind: 'goto' } : null; }
-    if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); return n && !n.hidden && n.map === W.map.id && n.placed ? { x: n.x, y: n.y - 26, kind: 'talk' } : null; }
-    if (o.foe) { const f = W.foes.find(f => f.id === o.foe); return f && !f.done && f.map === W.map.id && f.placed ? { x: f.x, y: f.y - 30, kind: 'foe' } : null; }
+    if (o.goto) { const s = W.spotPx(o.goto); return s && { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto' }; }
+    if (o.build) { const st = o.build.site && I.build.sites()[o.build.site]; return st && st.map === W.map.id ? { x: (st.x + st.w / 2) * T, y: (st.y + st.h / 2) * T, gx: (st.x + st.w / 2) * T, gy: (st.y + st.h) * T + 8, kind: 'goto', site: true } : null; }
+    if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); return n && !n.hidden && n.map === W.map.id && n.placed ? { x: n.x, y: n.y - 26, gx: n.x, gy: n.y, kind: 'talk', ent: n } : null; }
+    if (o.foe) { const f = W.foes.find(f => f.id === o.foe); return f && !f.done && f.map === W.map.id && f.placed ? { x: f.x, y: f.y - 30, gx: f.x, gy: f.y, kind: 'foe', ent: f } : null; }
     return null;
   };
 
@@ -2283,6 +2402,13 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     // marqueur d'objectif au sol
     const tg = W.target();
     if (tg && tg.kind === 'goto') { const rr = 9 + Math.sin(t * 4) * 2; c.strokeStyle = 'rgba(255,224,138,.9)'; c.lineWidth = 1; c.beginPath(); c.ellipse(tg.x - cx, tg.y - cy, rr, rr * 0.45, 0, 0, 6.3); c.stroke(); c.fillStyle = 'rgba(255,224,138,.25)'; c.fill(); if (Math.random() < 0.3) G.spawn({ x: tg.x - cx + (Math.random() - 0.5) * 14, y: tg.y - cy, vy: -18, life: 1.2, size: 0.7, color: '#ffe08a', type: 'mote' }); }
+    // chemin montré par l'aide : des points d'or du héros à l'objectif
+    if (W.wayT > t && tg) {
+      if (!W._way || t - W._wayAt > 0.35) { W._way = W.route(tg.gx, tg.gy); W._wayAt = t; }
+      W._way.forEach((q, i) => { const ph = (i - Math.floor(t * 7)) % 4; c.fillStyle = ph === 0 ? 'rgba(255,246,220,.95)' : 'rgba(255,224,138,.55)'; c.fillRect(q[0] - cx - 1, q[1] - cy - 1, 2, 2); });
+    } else W._way = null;
+    // repère de l'endroit touché
+    if (W.dest && W.dest.mark) { const d = W.dest, rr = 4.5 + Math.sin(t * 9) * 1.2; c.strokeStyle = 'rgba(255,246,220,.9)'; c.lineWidth = 1; c.beginPath(); c.ellipse(d.x - cx, d.y - cy, rr, rr * 0.5, 0, 0, 6.3); c.stroke(); }
     // éléments triés par profondeur
     const list = [];
     for (const o of m.objs) { if (o.x + o.w < cx || o.x - o.w > cx + G.PW || o.y < cy - 4 || o.y - o.h > cy + G.PH) continue; list.push({ y: o.y, o }); }
@@ -2305,8 +2431,9 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     if (tg) {
       const sx = tg.x - cx, sy = tg.y - cy;
       if (tg.kind !== 'goto' && sx > 0 && sx < G.PW && sy > 0 && sy < G.PH) { const by = sy + Math.sin(t * 5) * 2; c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(sx, by + 4); c.lineTo(sx - 4, by - 2); c.lineTo(sx, by - 6); c.lineTo(sx + 4, by - 2); c.fill(); c.fillStyle = '#fff6dc'; c.fillRect(sx - 1, by - 3, 2, 3); }
-      if (sx < 6 || sx > G.PW - 6 || sy < 6 || sy > G.PH - 6) {
-        const ang = Math.atan2(sy - G.PH / 2, sx - G.PW / 2), ex = I.clamp(sx, 12, G.PW - 12), ey = I.clamp(sy, 22, G.PH - 12), pu = 1 + Math.sin(t * 6) * 0.2;
+      const v0 = G.view.x, v1 = G.view.x + G.view.w;
+      if (sx < v0 + 6 || sx > v1 - 6 || sy < 6 || sy > G.PH - 6) {
+        const ang = Math.atan2(sy - G.PH / 2, sx - (v0 + v1) / 2), ex = I.clamp(sx, v0 + 12, v1 - 12), ey = I.clamp(sy, 22, G.PH - 12), pu = 1 + Math.sin(t * 6) * 0.2;
         c.save(); c.translate(ex, ey); c.rotate(ang); c.scale(pu, pu); c.rotate(-ang + t * 0.6); const star = (r, col) => { c.fillStyle = col; c.beginPath(); for (let q = 0; q < 8; q++) { const rr = q % 2 ? r * 0.3 : r, aa = q * Math.PI / 4; c.lineTo(Math.cos(aa) * rr, Math.sin(aa) * rr); } c.closePath(); c.fill(); }; star(8, '#1a1420'); star(6.5, '#ffe9a8'); star(2.5, '#fff'); c.restore(); lights.push({ x: ex, y: ey, r: 16, color: '#ffe9a8', a: 0.7 });
       }
     }
@@ -2327,7 +2454,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     if (la > 0) for (const L of m.lights) { const x = L.x - cx, y = L.y - cy; if (x < -L.r || y < -L.r || x > G.PW + L.r || y > G.PH + L.r) continue; lights.push({ x, y, r: L.r, color: L.color, a: la * (1 - L.flicker * (0.5 + 0.5 * Math.sin(t * 9 + L.x))) }); }
     // mini-carte (hors dialogue)
     if (!S.busy && m.mini) {
-      const mw = m.w, mh = m.h, mx = G.PW - mw - 30, my = 6; c.globalAlpha = 0.82; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, mw + 4, mh + 4); c.drawImage(m.mini, mx, my); c.globalAlpha = 1;
+      const mw = m.w, mh = m.h, crop = G.view.w < G.PW, mx = crop ? G.view.x + 5 : G.PW - mw - 30, my = crop ? 5 : 6; c.globalAlpha = 0.82; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, mw + 4, mh + 4); c.drawImage(m.mini, mx, my); c.globalAlpha = 1;
       c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = 1; c.strokeRect(mx - 1.5, my - 1.5, mw + 3, mh + 3);
       if (tg && Math.floor(t * 3) % 2) { c.fillStyle = '#ffe08a'; c.fillRect(mx + Math.floor(tg.x / T) - 1, my + Math.floor((tg.kind === 'goto' ? tg.y : tg.y + 28) / T) - 1, 3, 3); }
       W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) { c.fillStyle = '#ff6a8a'; c.fillRect(mx + Math.floor(f.x / T), my + Math.floor(f.y / T), 1, 1); } });
@@ -2372,7 +2499,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
   };
 
   /* ----- règles ----- */
-  Bd.target = function () { const p = W.player; return [Math.floor(p.x / T) + [0, -1, 1, 0][p.dir], Math.floor((p.y - 3) / T) + [1, 0, 0, -1][p.dir]]; };
+  Bd.target = function () { if (Bd.aim) return Bd.aim; const p = W.player; return [Math.floor(p.x / T) + [0, -1, 1, 0][p.dir], Math.floor((p.y - 3) / T) + [1, 0, 0, -1][p.dir]]; };
   function waterNear(tx, ty) {
     const m = W.map;
     if ((Bd.peek(m.id) || []).some(e => e.t === 'puits' && Math.abs(e.x - tx) <= 6 && Math.abs(e.y - ty) <= 6)) return true;
@@ -2757,10 +2884,14 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
   /* ================= mise en place ================= */
   const FOE_POS = { 1: [[112, 146]], 2: [[80, 126], [154, 150]], 3: [[62, 122], [140, 128], [100, 156]], 4: [[54, 120], [128, 116], [86, 154], [164, 152]] };
   const HERO_POS = [[270, 120], [306, 132], [342, 144]];
+  // écran en hauteur : la fenêtre visible est plus étroite, les deux camps se rapprochent du centre
+  const bx = x => G.view.w < G.PW ? Math.round(G.PW / 2 + (x - G.PW / 2) * I.clamp((G.view.w - 20) / 350, 0.5, 1)) : x;
+  const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
+  B.relayout = function () { if (!C) return; C.all.forEach(e => { e.x = bx(e.x0); }); refresh(); };
   function mkHero(id, i) {
     const h = I.world.hero(id), st = I.calc.hero(h.def, h.lvl);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
-      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(Object.assign({ kind: 'compagnon' }, h.def.look)), color: D.ELEMENTS[h.def.el].color };
+      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(Object.assign({ kind: 'compagnon' }, h.def.look)), color: D.ELEMENTS[h.def.el].color };
   }
   // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
   function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, W.hero(W.party[0]).lvl) }) : d; }
@@ -2768,7 +2899,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     const def = foeDef(id), st = I.calc.enemy(def, nH, n), sc = def.scale || (def.tier === 'boss' ? 3 : def.tier === 'elite' ? 2 : 1);
     const pos = n === 1 && sc >= 3 ? [118, 156] : FOE_POS[n][i];
     return { side: 'foe', id, name: def.name, def, lvl: def.lvl, max: { hp: st.hp, sp: 0 }, hp: st.hp, sp: 0, atk: st.atk, mag: st.mag, df: st.def, spd: st.spd, buffs: {}, st: {}, veils: def.veils, veilsMax: def.veils, broken: false,
-      known: {}, tried: {}, phase: 0, skills: (def.skills || []).slice(), x: pos[0], y: pos[1], ox: 0, flash: 0, ct: 0, alive: true, spr: G.enemy(def.art, def.hue, sc, 0), size: sc >= 3 ? 112 : sc === 2 ? 80 : 52, ph: Math.random() * 6, fade: 1 };
+      known: {}, tried: {}, phase: 0, skills: (def.skills || []).slice(), x: bx(pos[0]), x0: pos[0], y: pos[1], ox: 0, flash: 0, ct: 0, alive: true, spr: G.enemy(def.art, def.hue, sc, 0), size: sc >= 3 ? 112 : sc === 2 ? 80 : 52, ph: Math.random() * 6, fade: 1 };
   }
   const eff = (e, k) => { const bv = e.buffs[k]; const v = k === 'df' ? e.df : e[k]; return v * (bv ? (bv.v > 0 ? 1.3 : 0.72) : 1); };
   const alive = side => C.all.filter(e => e.side === side && e.alive);
@@ -3121,7 +3252,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
   }
   function floater(e, text, cls) {
     const p = pos(e), f = I.el('div', 'fl ' + (cls || ''), String(text));
-    f.style.left = ((p.x + (Math.random() - 0.5) * 14) / G.PW * 100) + '%'; f.style.top = ((p.y - 6 - (e._fl = ((e._fl || 0) + 1) % 3) * 9) / G.PH * 100) + '%';
+    f.style.left = pctX(p.x + (Math.random() - 0.5) * 14); f.style.top = ((p.y - 6 - (e._fl = ((e._fl || 0) + 1) % 3) * 9) / G.PH * 100) + '%';
     $('#floaters').appendChild(f); setTimeout(() => f.remove(), 1100);
   }
   const readTime = txt => I.clamp(1800 + String(txt).length * 48, 2400, 7500);
@@ -3145,7 +3276,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
       const weak = e.def.weak.map(w => e.known[w] ? `<i style="color:${D.ELEMENTS[w].color}" title="${D.ELEMENTS[w].name}">${D.ELEMENTS[w].glyph}</i>` : '<i class="unk">?</i>').join('') + (e.def.immune || []).filter(w => e.known[w] === 'x').map(w => `<i class="imm" title="Insensible : ${D.ELEMENTS[w].name}">${D.ELEMENTS[w].glyph}</i>`).join('');
       const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${STN[k === 'df' ? 'def' : k]}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="dn">${STN[k] || k}</b>`).join('');
       const d = I.el('button', 'plate' + (C.cursor === e ? ' cur' : '') + (e.broken ? ' brk' : ''), `<span class="nm">${I.esc(e.name)}</span><span class="bar"><i style="width:${Math.max(0, e.hp / e.max.hp * 100)}%"></i></span><span class="row"><span class="veil">${e.broken ? 'DÉVOILÉ' : '⛊ ' + e.veils}</span><span class="wk">${weak}</span></span>${sts ? `<span class="sts">${sts}</span>` : ''}`);
-      d.type = 'button'; d.style.left = (e.x / G.PW * 100) + '%'; d.style.top = (Math.max(44, e.y - e.size - 4) / G.PH * 100) + '%';
+      d.type = 'button'; d.style.left = pctX(e.x); d.style.top = (Math.max(44, e.y - e.size - 4) / G.PH * 100) + '%';
       d.onclick = ev => { ev.stopPropagation(); if (C.pickCb) C.pickCb(e); };
       pl.appendChild(d);
     });
@@ -3292,6 +3423,8 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     btns.push(mk('Son : ' + (I.audio.on ? 'activé' : 'coupé'), b => { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = 'Son : ' + (I.audio.on ? 'activé' : 'coupé'); }));
     btns.push(mk('Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'), b => { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'); }));
     btns.push(mk('Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'); }));
+    const TZ = ['normal', 'grand', 'très grand'];
+    btns.push(mk('Texte : ' + TZ[sv.opts.tz || 0], b => { sv.opts.tz = ((sv.opts.tz || 0) + 1) % 3; I.save.store(); U.applyOpts(); b.textContent = 'Texte : ' + TZ[sv.opts.tz]; }));
     btns.push(mk('Plein écran', () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } }));
     screen('#title', true); fl = focusList(btns);
   };
@@ -3438,21 +3571,31 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     const build = (items, o) => { if (fl) fl.destroy(); side.innerHTML = ''; const btns = []; items.forEach(it => { if (it.cat) { side.appendChild(I.el('div', 'cat', it.cat)); return; } const b = mkb(it.label, it.fn); b._show = it.show; side.appendChild(b); btns.push(b); }); fl = focusList(btns, Object.assign({ onSel: b => { if (b._show) pane.innerHTML = b._show(); } }, o)); };
     const party = () => (W.saga && W.party.length) ? W.party.map(id => { const h = W.hero(id), st = I.calc.hero(h.def, h.lvl), e = D.ELEMENTS[h.def.el]; return `<div class="stat"><span class="seal" style="background-image:url(${G.sealURL(h.def.arabic, e.color)})"></span><img class="fig" alt="" src="${G.charURL(Object.assign({ kind: 'compagnon' }, h.def.look))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> ${h.def.title ? '<em>' + I.esc(h.def.title) + '</em>' : ''} <small>· niveau ${h.lvl} · ${e.name}</small><br><small>Constance ${Math.ceil(h.hp)}/${st.hp} · Souffle ${h.sp}/${st.sp} · Force ${Math.round(st.atk)} · Esprit ${Math.round(st.mag)} · Garde ${Math.round(st.def)} · Élan ${Math.round(st.spd)}</small><div class="sk">${h.def.skills.filter(k => k.lvl <= h.lvl).map(k => I.esc(k.name)).join(' · ')}</div></div></div>`; }).join('') : '<p>Aucun groupe pour l’instant.</p>';
     const bag = () => '<h3>Besace</h3>' + (Object.keys(D.ITEMS).filter(k => (sv.items[k] || 0) > 0).map(k => `<p><b>${D.ITEMS[k].name}</b> ×${sv.items[k]}<br><small>${D.ITEMS[k].desc}</small></p>`).join('') || '<p>La besace est vide.</p>') + '<p class="src">Les objets s’utilisent en combat. Le groupe reprend des forces après chaque victoire.</p>';
-    const help = () => `<h3>Commandes</h3><p><kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : se déplacer, naviguer · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : menu, retour. Sur écran tactile : croix et boutons à l’écran, et tout est cliquable.</p>
-      <h3>Combat</h3><p>On n’affronte jamais des personnes, seulement des <em>égrégores</em> : les idoles que les cœurs fabriquent ensemble. Chaque égrégore est protégé par des <b>voiles</b> (⛊). Frappe-le avec la <b>vertu</b> qui est sa faille pour retirer un voile ; à zéro, il est <b>dévoilé</b> : il perd son tour et subit bien plus.</p>
-      <p><b>Niyya</b> (l’intention) : un point par tour ; dépense-en jusqu’à trois (◂ ▸) pour multiplier les coups ou renforcer une vertu. <b>Sakîna</b> : la jauge dorée ; pleine, elle ouvre l’acte ultime du Compagnon.</p>
-      <h3>La parole avant le sabre</h3><p>Un <b>pourparler</b> se gagne manche après manche : chaque argument fait monter ou baisser la confiance. Les meilleurs demandent un <b>savoir</b> (✧) appris d’un savant, d’un feuillet, d’un témoin. Avoir <b>prié</b> dans le chapitre donne la sérénité : +1 de confiance. Si la parole échoue, le récit continue, mais il en coûte.</p>\n      <h3>Les étoiles</h3><p>On s’oriente au ciel. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche : <b>al-Jady</b> (la Polaire) au nord, <b>Suhayl</b> au sud, <b>an-Nasr at-Tâ’ir</b> à l’est et à l’ouest, <b>al-’Ayyûq</b> et <b>al-’Aqrab</b> entre eux. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>\n      <h3>Caravanes</h3><p>Aux ballots du souk ou du camp, on vend, on achète, et l’on confie une cargaison à une caravane : elle revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue, que des pactes sont noués et que des méharistes la gardent. Si elle est pillée, on lève des renforts, on parle d’abord, et l’on rend à chacun ce qui lui revient.</p>\n      <h3>Bâtir</h3><p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose devant soi, case par case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>\n      <h3>Sauvegarder</h3><p>On ne sauvegarde que <b>dans les mosquées</b>, sur la natte au cœur de l’étoile, et à la natte des Archives depuis l’écran de la Chaîne. Trois emplacements. Fermer la page sans sauvegarder fait perdre ce qui a été joué depuis.</p>\n      <h3>La Chaîne</h3><p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>`;
-    const journal = () => { const o = W.cur && W.cur(); return `<h3>${W.ch ? I.esc(W.ch.title) : 'Journal'}</h3><p class="src">${W.ch ? I.esc(W.ch.sub) : ''}</p><p>${o && o.text ? '◆ ' + I.esc(o.text) : 'Aucun objectif en cours.'}</p><p class="src">Fidélité à la Chaîne : ${sv.isnad.ok} / ${sv.isnad.total} · Lumières : ${sv.lights.map(l => D.ELEMENTS[l].name).join(', ') || 'aucune'}</p>`; };
+    const journal = () => { const o = W.cur && W.cur(); return `<h3>${W.ch ? I.esc(W.ch.title) : 'Journal'}</h3><p class="src">${W.ch ? I.esc(W.ch.sub) : ''}</p><p>${o && o.text ? '◆ ' + I.esc(o.text) : 'Aucun objectif en cours.'}</p><p class="src">Le bouton <b>?</b> explique l’objectif et peut montrer le chemin.</p><p class="src">Fidélité à la Chaîne : ${sv.isnad.ok} / ${sv.isnad.total} · Lumières : ${sv.lights.map(l => D.ELEMENTS[l].name).join(', ') || 'aucune'}</p>`; };
+    const pillars = () => { const P = W.pillars(); const eff = { priere: 'Sakîna au début des combats ; sérénité dans les pourparlers', savoir: 'failles révélées d’emblée ; arguments ouverts par le savoir', justice: 'dégâts reçus réduits', lien: 'dégâts infligés accrus ; renforts d’alliés' }; return `<h3>${W.saga && W.saga.veillees ? 'La Citadelle du Caïd' : 'Ce que ce règne a bâti'}</h3>` + Object.keys(D.PILLARS).map(k => `<p><b>${D.PILLARS[k].glyph} ${D.PILLARS[k].name}</b> ${'◆'.repeat(P[k] || 0)}${'◇'.repeat(5 - (P[k] || 0))}<br><small>${eff[k]}</small></p>`).join('') + '<p class="src">Les piliers montent par la prière tenue, le savoir appris, la justice rendue et les pactes noués ; ils descendent quand la parole échoue.</p>'; };
+    const toggle = (name, get, set, txt) => ({ label: name + ' : ' + get(), fn(b) { set(); I.save.store(); b.textContent = name + ' : ' + get(); }, show: () => `<h3>${name}</h3><p>${txt}</p>` });
     const root = () => {
-      const inWorld = I.scene === W;
-      const items = [{ label: 'Reprendre', fn: close, show: journal }, { label: 'Groupe', fn() {}, show: () => '<h3>Groupe</h3>' + party() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` }, { label: 'Citadelle', fn() {}, show: () => { const P = W.pillars(); const eff = { priere: 'Sakîna au début des combats ; sérénité dans les pourparlers', savoir: 'failles révélées d’emblée ; arguments ouverts par le savoir', justice: 'dégâts reçus réduits', lien: 'dégâts infligés accrus ; renforts d’alliés' }; return `<h3>${W.saga && W.saga.veillees ? 'La Citadelle du Caïd' : 'Ce que ce règne a bâti'}</h3>` + Object.keys(D.PILLARS).map(k => `<p><b>${D.PILLARS[k].glyph} ${D.PILLARS[k].name}</b> ${'◆'.repeat(P[k] || 0)}${'◇'.repeat(5 - (P[k] || 0))}<br><small>${eff[k]}</small></p>`).join('') + '<p class="src">Les piliers montent par la prière tenue, le savoir appris, la justice rendue et les pactes noués ; ils descendent quand la parole échoue.</p>'; } },
-        { label: 'Commandes', fn() {}, show: help },
-        { label: 'Son : ' + (I.audio.on ? 'activé' : 'coupé'), fn(b) { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = 'Son : ' + (I.audio.on ? 'activé' : 'coupé'); }, show: () => '<h3>Son</h3><p>Coupe ou rétablit tout le son : ambiances, bruitages et musique.</p>' },
-        { label: 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'), fn(b) { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'); }, show: () => '<h3>Musique</h3><p>Bande-son originale synthétisée, une piste par ambiance. Coupée, il reste les ambiances, les percussions de duff et les bruitages.</p>' },
-        { label: 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'), fn(b) { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'); }, show: () => '<h3>Rendu</h3><p>Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.</p>' }];
-      if (inWorld) items.push({ label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre au dernier objectif atteint, tant que la page reste ouverte. Rien n’est écrit tant que tu n’as pas sauvegardé dans une mosquée ou à la natte des Archives.</p>' });
+      const inWorld = I.scene === W, o = sv.opts;
+      const items = [{ label: 'Reprendre', fn: close, show: journal }];
+      if (inWorld) items.push({ label: 'Que faire ?', fn() { close(); U.guide(); }, show: () => '<h3>Que faire ?</h3><p>L’objectif expliqué, sa direction, et le chemin montré au sol si tu le demandes. Le même bouton <b>?</b> est toujours en haut de l’écran.</p>' });
+      items.push({ cat: 'Le groupe' }, { label: 'Compagnons', fn() {}, show: () => '<h3>Le groupe</h3>' + party() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Piliers', fn() {}, show: pillars });
+      items.push({ cat: 'Le savoir' }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` },
+        { label: 'Aide du jeu', fn: aide, show: () => '<h3>Aide du jeu</h3><p>Les règles, thème par thème : ' + U.AIDE.map(a => a[0].toLowerCase()).join(', ') + '.</p>' });
+      items.push({ cat: 'Réglages' },
+        toggle('Texte', () => ['normal', 'grand', 'très grand'][o.tz || 0], () => { o.tz = ((o.tz || 0) + 1) % 3; U.applyOpts(); }, 'Taille des caractères dans les dialogues, les menus et les combats.'),
+        toggle('Croix tactile', () => o.pad ? 'affichée' : 'masquée', () => { o.pad = !o.pad; U.applyOpts(); }, 'Sur un écran tactile, on se déplace en touchant la scène. La croix directionnelle reste disponible pour qui la préfère.'),
+        toggle('Son', () => I.audio.on ? 'activé' : 'coupé', () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, 'Coupe ou rétablit tout le son : ambiances, bruitages et musique.'),
+        toggle('Musique', () => I.audio.musicOn ? 'activée' : 'coupée', () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, 'Bande-son originale synthétisée, une piste par ambiance. Coupée, il reste les ambiances, les percussions de duff et les bruitages.'),
+        toggle('Rendu', () => G.low ? '2D simple' : 'rétro-HD', () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, 'Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.'));
+      if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre au dernier objectif atteint, tant que la page reste ouverte. Rien n’est écrit tant que tu n’as pas sauvegardé dans une mosquée ou à la natte des Archives.</p>' });
       $('#menu h2').textContent = 'Halte';
       build(items, { onCancel: close });
+    };
+    const aide = () => {
+      const back = mode === 'aide' ? close : root, items = [{ label: '◂ Retour', fn: back, show: () => '<h3>Aide du jeu</h3><p>Choisis un thème.</p>' }];
+      U.AIDE.forEach(a => items.push({ label: a[0], fn() {}, show: () => `<h3>${a[0]}</h3>${a[1]}` }));
+      $('#menu h2').textContent = 'Aide du jeu';
+      build(items, { onCancel: back });
     };
     const codex = () => {
       const es = sv.codex.map(U.codexEntry).filter(Boolean), items = [{ label: '◂ Retour', fn: mode === 'codex' ? close : root, show: () => '<h3>Le Recueil</h3><p>Choisis une entrée.</p>' }];
@@ -3460,15 +3603,83 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
       $('#menu h2').textContent = 'Le Recueil';
       build(items, { onCancel: mode === 'codex' ? close : root });
     };
-    screen('#menu', true); if (mode === 'codex') codex(); else root();
+    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'aide') aide(); else root();
+  };
+
+  /* ---------- l'aide du jeu, thème par thème ---------- */
+  U.AIDE = [
+    ['Se déplacer, agir', '<p><b>Au doigt ou à la souris.</b> Touche un endroit : le héros s’y rend. Garde le doigt posé : il te suit. Touche un personnage pour lui parler ; touche un coffre, une natte, un palmier, un rocher ou un puits pour t’en servir.</p><p><b>Au clavier.</b> <kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : marcher, naviguer · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : halte, retour · <kbd>H</kbd> : que faire ? · <kbd>B</kbd> : bâtir.</p><p>Le bouton <b>?</b> dit toujours ce qu’il y a à faire, dans quelle direction, et peut montrer le chemin ou t’y conduire.</p>'],
+    ['Combat', '<p>On n’affronte jamais des personnes, seulement des <em>égrégores</em> : les idoles que les cœurs fabriquent ensemble. Chaque égrégore est protégé par des <b>voiles</b> (⛊). Frappe-le avec la <b>vertu</b> qui est sa faille pour retirer un voile ; à zéro, il est <b>dévoilé</b> : il perd son tour et subit bien plus.</p><p><b>Niyya</b> (l’intention) : un point par tour ; dépense-en jusqu’à trois (◂ ▸) pour multiplier les coups ou renforcer une vertu. <b>Sakîna</b> : la jauge dorée ; pleine, elle ouvre l’acte ultime du Compagnon.</p>'],
+    ['La parole avant le sabre', '<p>Un <b>pourparler</b> se gagne manche après manche : chaque argument fait monter ou baisser la confiance. Les meilleurs demandent un <b>savoir</b> (✧) appris d’un savant, d’un feuillet, d’un témoin. Avoir <b>prié</b> dans le chapitre donne la sérénité : +1 de confiance. Si la parole échoue, le récit continue, mais il en coûte.</p>'],
+    ['Prier et sauvegarder', '<p>La natte d’une mosquée, au cœur de l’étoile à huit branches : on y <b>prie</b> (le groupe se repose, la Sakîna descend) et l’on y <b>sauvegarde</b>. On ne sauvegarde que là, et à la natte des Archives depuis l’écran de la Chaîne. Trois emplacements. Fermer la page sans sauvegarder fait perdre ce qui a été joué depuis.</p>'],
+    ['Les étoiles', '<p>On s’oriente au ciel. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche : <b>al-Jady</b> (la Polaire) au nord, <b>Suhayl</b> au sud, <b>an-Nasr at-Tâ’ir</b> à l’est et à l’ouest, <b>al-’Ayyûq</b> et <b>al-’Aqrab</b> entre eux. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>'],
+    ['Caravanes', '<p>Aux ballots du souk ou du camp, on vend, on achète, et l’on confie une cargaison à une caravane : elle revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue, que des pactes sont noués et que des méharistes la gardent. Si elle est pillée, on lève des renforts, on parle d’abord, et l’on rend à chacun ce qui lui revient.</p>'],
+    ['Bâtir', '<p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose case par case, devant soi ou en touchant la case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>'],
+    ['La Chaîne', '<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>']
+  ];
+
+  /* ---------- « Que faire ? » : l'objectif expliqué, sa direction, le chemin ---------- */
+  const CAPS = ['à l’est', 'au sud-est', 'au sud', 'au sud-ouest', 'à l’ouest', 'au nord-ouest', 'au nord', 'au nord-est'];
+  U.guideLines = function () {
+    const o = W.cur(), tg = W.target(), p = W.player, touch = document.body.classList.contains('touch'), out = [];
+    if (!o) return ['Le chapitre s’achève : laisse le récit se dérouler.'];
+    const n = o.talk && W.npcs.find(x => x.id === o.talk);
+    out.push('<b>◆ ' + I.esc(o.text || 'Poursuis.') + (o.build ? I.esc(I.build.objectiveText(o.build)) : '') + '</b>');
+    if (o.hint) out.push(I.fmt(o.hint));
+    if (o.goto) out.push('Rends-toi à l’endroit marqué d’un <em>anneau doré</em> au sol.');
+    else if (o.talk) out.push('Va parler à <em>' + I.esc((n && n.name) || 'celui qui t’attend') + '</em> : un losange doré flotte au-dessus de lui. ' + (touch ? 'Touche-le du doigt.' : 'Clique sur lui, ou place-toi devant lui puis <kbd>Entrée</kbd>.'));
+    else if (o.foe) out.push('Une idole barre le passage : c’est la lueur qui flotte. Marche jusqu’à elle pour l’affronter.');
+    else if (o.build) out.push(o.build.site ? 'Un chantier est ouvert : le rectangle en pointillés. Ouvre le mode Bâtir (▦), choisis une pièce et pose-la à l’intérieur ; le compte est rappelé à côté de l’objectif.' : 'Ouvre le mode Bâtir (▦), à ciel ouvert, et pose ce qui est demandé. Les matériaux se récoltent sur les palmiers, les rochers et les puits.');
+    if (tg) {
+      const dx = tg.gx - p.x, dy = tg.gy - p.y, d = Math.hypot(dx, dy), st = I.trade && I.trade.bearing();
+      out.push(d < 44 ? 'C’est tout près.' : 'C’est ' + CAPS[((Math.round(Math.atan2(dy, dx) / (Math.PI / 4)) % 8) + 8) % 8] + ', à ' + Math.round(d / 16) + ' pas' + (st ? ' : cap sur ' + (st.way ? 'le ' : '') + I.esc(I.trade.starText(st)) + ', l’étoile qui brille au cadran.' : '.'));
+    }
+    const tired = W.party.some(id => { const h = W.hero(id); return h.hp < I.calc.hero(h.def, h.lvl).hp * 0.5; });
+    if (tired) out.push('Le groupe est éprouvé : la natte d’une mosquée, au cœur de l’étoile à huit branches, le repose.');
+    else if (o.foe && !S.flags._prayed && W.prayerPts().length) out.push('Avant l’épreuve, une prière sur la natte donne la Sakîna au groupe.');
+    if ((W.unsaved || 0) > 300) out.push('Tu n’as pas sauvegardé depuis un moment : cela se fait sur la natte d’une mosquée.');
+    return out;
+  };
+  U.guide = async function () {
+    if (I.scene !== W || S.busy || W.lock || U.menuOpen || !W.ch) return;
+    const tg = W.target(), opts = [];
+    if (tg) opts.push({ t: 'Montrer le chemin', k: 'way' }, { t: 'M’y conduire', k: 'go' });
+    opts.push({ t: 'Toute l’aide du jeu', k: 'aide' }, { t: 'Reprendre', k: '' });
+    let k = '';
+    S.depth++;
+    try { const i = await S.menuPick({ cls: 'guide', html: '<span class="gt">Que faire ?</span>' + U.guideLines().map(x => '<span class="gl">' + x + '</span>').join('') }, opts); k = opts[i].k; }
+    finally { S.depth--; S.hideDialog(); }
+    if (k === 'way') W.wayT = W.t + 16;
+    else if (k === 'go') { W.wayT = W.t + 16; W.lead(); }
+    else if (k === 'aide') U.pause('aide');
+  };
+
+  /* ---------- réglages d'affichage ---------- */
+  U.applyOpts = function () {
+    const o = I.save.data.opts;
+    document.documentElement.style.setProperty('--tz', [1, 1.16, 1.34][o.tz || 0]);
+    document.body.classList.toggle('padon', !!o.pad);
+    layout();
   };
 
   /* ---------- mise en page et démarrage ---------- */
+  let cvEl = null;
   function layout() {
     const app = $('#app'), st = $('#stage'), aw = app.clientWidth, ah = app.clientHeight, portrait = ah > aw * 1.12;
     document.body.classList.toggle('portrait', portrait);
-    const w = Math.max(240, Math.floor(Math.min(aw, (portrait ? ah * 0.46 : ah) * 16 / 9)));
-    st.style.width = w + 'px'; st.style.height = Math.round(w * 9 / 16) + 'px'; G.resize();
+    // en hauteur, pendant l'exploration : la scène s'élargit en hauteur et ne montre qu'une partie de la largeur, agrandie
+    const zoom = portrait && (I.scene === W || I.battle.active);
+    let w, h;
+    if (zoom) { w = aw; h = Math.round(Math.max(Math.min(aw, ah * 0.47), aw * 9 / 16)); }
+    else { w = Math.max(240, Math.floor(Math.min(aw, (portrait ? ah * 0.46 : ah) * 16 / 9))); h = Math.round(w * 9 / 16); }
+    st.style.width = w + 'px'; st.style.height = h + 'px';
+    if (cvEl) cvEl.style.width = Math.max(w, Math.round(h * 16 / 9)) + 'px';
+    U.zoom = zoom; U.scale = h / G.PH;
+    const vw = Math.min(G.PW, w / U.scale);
+    const changed = Math.abs(G.view.w - vw) > 0.5; G.view.w = vw;
+    if (I.scene !== W) { G.view.x = G.view.t = Math.round((G.PW - vw) / 2); if (changed && I.battle.active) I.battle.relayout(); } else if (changed && W.map) W.updateCam(true);
+    document.body.classList.toggle('zoom', vw < G.PW - 0.5);
+    G.resize();
   }
   function pad() {
     const hold = (sel, dir) => { const b = $(sel); const dn = e => { e.preventDefault(); b.classList.add('down'); I.input.held[dir] = true; I.input.emit(dir); }; const up = e => { e.preventDefault(); b.classList.remove('down'); I.input.held[dir] = false; }; b.addEventListener('pointerdown', dn); ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => b.addEventListener(n, up)); };
@@ -3478,27 +3689,58 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) document.body.classList.add('touch');
     window.addEventListener('touchstart', () => document.body.classList.add('touch'), { once: true, passive: true });
   }
+  /* ----- toucher la scène : aller là, suivre le doigt ; pendant un dialogue, valider ----- */
+  let ptr = null;
+  function pointer() {
+    const cv = cvEl, st = $('#stage'), bare = e => e.target === cv || e.target === st || e.target.id === 'ui' || e.target.id === 'view', free = () => I.scene === W && !S.busy && !W.lock && !U.menuOpen && !I.debug.auto && !I.debug.walk;
+    const where = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * G.PW + Math.round(W.cam.x), (e.clientY - r.top) / r.height * G.PH + Math.round(W.cam.y)]; };
+    st.addEventListener('pointerdown', e => {
+      if (e.button || !bare(e)) return;
+      I.audio.unlock();
+      ptr = { id: e.pointerId, world: free(), x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t0: performance.now(), hold: false, last: 0 };
+      if (ptr.world) { e.preventDefault(); try { st.setPointerCapture(e.pointerId); } catch (x) { /* sans capture : le relâchement suffit */ } }
+    });
+    st.addEventListener('pointermove', e => { if (!ptr || ptr.id !== e.pointerId) return; ptr.x = e.clientX; ptr.y = e.clientY; if (Math.hypot(e.clientX - ptr.x0, e.clientY - ptr.y0) > 14) ptr.hold = true; });
+    const up = e => {
+      if (!ptr || ptr.id !== e.pointerId) return;
+      const q = ptr; ptr = null;
+      if (!q.world) { if (q.dead || e.type === 'pointercancel' || !$('#choice').hidden || I.battle.active || U.menuOpen) return; I.input.emit('ok'); return; }
+      if (!free()) return;
+      if (q.hold || e.type === 'pointercancel') W.stop(); else { const p = where(e); W.tap(p[0], p[1]); }
+    };
+    st.addEventListener('pointerup', up); st.addEventListener('pointercancel', up);
+    // doigt maintenu : le héros le suit
+    U.pointerTick = now => {
+      if (!ptr || !ptr.world) return;
+      if (!free()) { ptr.world = false; ptr.dead = true; return; }
+      if (!ptr.hold && now - ptr.t0 > 280) ptr.hold = true;
+      if (ptr.hold && now - ptr.last > 110 && !(I.build && I.build.on)) { ptr.last = now; const p = where({ clientX: ptr.x, clientY: ptr.y }); W.goTo(p[0], p[1], { quiet: true }); }
+    };
+  }
   U.boot = function () {
-    G.init($('#cv')); layout(); window.addEventListener('resize', layout);
+    cvEl = $('#cv'); G.init(cvEl); layout(); window.addEventListener('resize', layout);
     if (window.ResizeObserver) new ResizeObserver(layout).observe($('#app'));
     I.save.load(); I.audio.on = I.save.data.opts.sound !== false; I.audio.musicOn = I.save.data.opts.music !== false; if (I.save.data.opts.low) { G.low = true; G.resize(); }
+    U.applyOpts();
     I.input.push(a => W.onInput(a));
     $('#dialog').addEventListener('click', () => I.input.emit('ok'));
     $('#card').addEventListener('click', () => I.input.emit('ok'));
-    $('#cv').addEventListener('click', () => { if (!$('#choice').hidden || I.battle.active || U.menuOpen) return; I.input.emit('ok'); });
     $('#battle .banner').addEventListener('click', () => I.input.emit('ok'));
     $('#menubtn').addEventListener('click', e => { e.stopPropagation(); if (I.scene === W && !S.busy) U.pause(); });
-    $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); I.build.set(!I.build.on); });
-    pad();
+    $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); I.build.set(!I.build.on); });
+    $('#helpbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.guide(); });
+    pad(); pointer();
     let last = performance.now();
     (function frame(now) {
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
       if (sc) { try {
-        if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) W.walkStep(); W.update(1 / 60); } I.input.clearHeld(); }
-        else if (sc.update) sc.update(dt);
+        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW)) { U.zoomW = sc === W; layout(); }
+        if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) { if (I.debug.walk === 'tap') W.tapStep(); else W.walkStep(); } W.update(1 / 60); } I.input.clearHeld(); }
+        else { U.pointerTick(now); if (sc.update) sc.update(dt); }
         G.present(dt, sc.render(dt) || {});
       } catch (e) { if (!U._err) { U._err = e; console.error(e); } } }
-      $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden);
+      const tx = U.zoom ? -G.view.x * U.scale : 0; if (tx !== U._tx) { U._tx = tx; cvEl.style.transform = tx ? 'translateX(' + tx + 'px)' : ''; }
+      $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden); $('#helpbtn').hidden = $('#menubtn').hidden;
       $('#buildbtn').hidden = $('#menubtn').hidden || !W.saga || (W.saga.frame && !W.saga.veillees) || !I.build.outdoor(W.map.id);
       if (I.build.on) $('#buildbar').hidden = S.busy || I.scene !== W;
       I.trade.drawCompass(now / 1000);

@@ -60,10 +60,14 @@
   /* ================= mise en place ================= */
   const FOE_POS = { 1: [[112, 146]], 2: [[80, 126], [154, 150]], 3: [[62, 122], [140, 128], [100, 156]], 4: [[54, 120], [128, 116], [86, 154], [164, 152]] };
   const HERO_POS = [[270, 120], [306, 132], [342, 144]];
+  // écran en hauteur : la fenêtre visible est plus étroite, les deux camps se rapprochent du centre
+  const bx = x => G.view.w < G.PW ? Math.round(G.PW / 2 + (x - G.PW / 2) * I.clamp((G.view.w - 20) / 350, 0.5, 1)) : x;
+  const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
+  B.relayout = function () { if (!C) return; C.all.forEach(e => { e.x = bx(e.x0); }); refresh(); };
   function mkHero(id, i) {
     const h = I.world.hero(id), st = I.calc.hero(h.def, h.lvl);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
-      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(Object.assign({ kind: 'compagnon' }, h.def.look)), color: D.ELEMENTS[h.def.el].color };
+      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(Object.assign({ kind: 'compagnon' }, h.def.look)), color: D.ELEMENTS[h.def.el].color };
   }
   // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
   function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, W.hero(W.party[0]).lvl) }) : d; }
@@ -71,7 +75,7 @@
     const def = foeDef(id), st = I.calc.enemy(def, nH, n), sc = def.scale || (def.tier === 'boss' ? 3 : def.tier === 'elite' ? 2 : 1);
     const pos = n === 1 && sc >= 3 ? [118, 156] : FOE_POS[n][i];
     return { side: 'foe', id, name: def.name, def, lvl: def.lvl, max: { hp: st.hp, sp: 0 }, hp: st.hp, sp: 0, atk: st.atk, mag: st.mag, df: st.def, spd: st.spd, buffs: {}, st: {}, veils: def.veils, veilsMax: def.veils, broken: false,
-      known: {}, tried: {}, phase: 0, skills: (def.skills || []).slice(), x: pos[0], y: pos[1], ox: 0, flash: 0, ct: 0, alive: true, spr: G.enemy(def.art, def.hue, sc, 0), size: sc >= 3 ? 112 : sc === 2 ? 80 : 52, ph: Math.random() * 6, fade: 1 };
+      known: {}, tried: {}, phase: 0, skills: (def.skills || []).slice(), x: bx(pos[0]), x0: pos[0], y: pos[1], ox: 0, flash: 0, ct: 0, alive: true, spr: G.enemy(def.art, def.hue, sc, 0), size: sc >= 3 ? 112 : sc === 2 ? 80 : 52, ph: Math.random() * 6, fade: 1 };
   }
   const eff = (e, k) => { const bv = e.buffs[k]; const v = k === 'df' ? e.df : e[k]; return v * (bv ? (bv.v > 0 ? 1.3 : 0.72) : 1); };
   const alive = side => C.all.filter(e => e.side === side && e.alive);
@@ -424,7 +428,7 @@
   }
   function floater(e, text, cls) {
     const p = pos(e), f = I.el('div', 'fl ' + (cls || ''), String(text));
-    f.style.left = ((p.x + (Math.random() - 0.5) * 14) / G.PW * 100) + '%'; f.style.top = ((p.y - 6 - (e._fl = ((e._fl || 0) + 1) % 3) * 9) / G.PH * 100) + '%';
+    f.style.left = pctX(p.x + (Math.random() - 0.5) * 14); f.style.top = ((p.y - 6 - (e._fl = ((e._fl || 0) + 1) % 3) * 9) / G.PH * 100) + '%';
     $('#floaters').appendChild(f); setTimeout(() => f.remove(), 1100);
   }
   const readTime = txt => I.clamp(1800 + String(txt).length * 48, 2400, 7500);
@@ -448,7 +452,7 @@
       const weak = e.def.weak.map(w => e.known[w] ? `<i style="color:${D.ELEMENTS[w].color}" title="${D.ELEMENTS[w].name}">${D.ELEMENTS[w].glyph}</i>` : '<i class="unk">?</i>').join('') + (e.def.immune || []).filter(w => e.known[w] === 'x').map(w => `<i class="imm" title="Insensible : ${D.ELEMENTS[w].name}">${D.ELEMENTS[w].glyph}</i>`).join('');
       const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${STN[k === 'df' ? 'def' : k]}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="dn">${STN[k] || k}</b>`).join('');
       const d = I.el('button', 'plate' + (C.cursor === e ? ' cur' : '') + (e.broken ? ' brk' : ''), `<span class="nm">${I.esc(e.name)}</span><span class="bar"><i style="width:${Math.max(0, e.hp / e.max.hp * 100)}%"></i></span><span class="row"><span class="veil">${e.broken ? 'DÉVOILÉ' : '⛊ ' + e.veils}</span><span class="wk">${weak}</span></span>${sts ? `<span class="sts">${sts}</span>` : ''}`);
-      d.type = 'button'; d.style.left = (e.x / G.PW * 100) + '%'; d.style.top = (Math.max(44, e.y - e.size - 4) / G.PH * 100) + '%';
+      d.type = 'button'; d.style.left = pctX(e.x); d.style.top = (Math.max(44, e.y - e.size - 4) / G.PH * 100) + '%';
       d.onclick = ev => { ev.stopPropagation(); if (C.pickCb) C.pickCb(e); };
       pl.appendChild(d);
     });

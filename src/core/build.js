@@ -32,7 +32,7 @@
   };
 
   /* ----- règles ----- */
-  Bd.target = function () { const p = W.player; return [Math.floor(p.x / T) + [0, -1, 1, 0][p.dir], Math.floor((p.y - 3) / T) + [1, 0, 0, -1][p.dir]]; };
+  Bd.target = function () { if (Bd.aim) return Bd.aim; const p = W.player; return [Math.floor(p.x / T) + [0, -1, 1, 0][p.dir], Math.floor((p.y - 3) / T) + [1, 0, 0, -1][p.dir]]; };
   function waterNear(tx, ty) {
     const m = W.map;
     if ((Bd.peek(m.id) || []).some(e => e.t === 'puits' && Math.abs(e.x - tx) <= 6 && Math.abs(e.y - ty) <= 6)) return true;

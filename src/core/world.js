@@ -83,7 +83,7 @@
     W.foes.forEach(f => { if (f.map === id && !f.placed) { const p = W.resolve(f.at, id, f); if (p) { f.x = p[0]; f.y = p[1]; f.placed = true; } } });
     W.chests.forEach(c => { if (c.map === id && !c.placed) { const p = W.resolve(c.at, id, c); if (p) { c.x = p[0]; c.y = p[1]; c.placed = true; } } });
     if (spot) { const p = Array.isArray(spot) && typeof spot[0] === 'number' ? spot : W.resolve(spot, id, W.player); W.player.x = p[0]; W.player.y = p[1]; }
-    W.resetTrail(); W.tint = null; W.pose = []; W.updateCam(true);
+    W.resetTrail(); W.tint = null; W.pose = []; W.dest = null; W.focus = null; W._way = null; W.updateCam(true);
     document.body.dataset.theme = (id === 'noos' || id === 'cite' || id === 'archives') ? 'cyber' : (id === 'romaine' || id === 'palais') ? 'roman' : 'orient';
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
@@ -123,6 +123,14 @@
     let cx = mw <= G.PW ? (mw - G.PW) / 2 : I.clamp(W.player.x - G.PW / 2, 0, mw - G.PW);
     let cy = mh <= G.PH ? (mh - G.PH) / 2 : I.clamp(W.player.y - G.PH / 2 - 8, 0, mh - G.PH);
     if (snap) { W.cam.x = cx; W.cam.y = cy; } else { W.cam.x += (cx - W.cam.x) * 0.14; W.cam.y += (cy - W.cam.y) * 0.14; }
+    // fenêtre visible (écran en hauteur) : elle suit le héros, se tourne vers celui qui parle et s'arrête aux bords de la carte
+    const V = G.view;
+    if (V.w < G.PW) {
+      const f = W.focus, half = V.w / 2 - 22, off = f && f.map === m.id && !f.hidden && f.placed ? I.clamp((f.x - W.player.x) / 2, -half, half) : 0;
+      W.foff = snap ? off : (W.foff || 0) + (off - (W.foff || 0)) * 0.1;
+      const lo = Math.max(0, -cx), hi = Math.min(G.PW, mw - cx) - V.w, want = hi < lo ? (lo + hi) / 2 : I.clamp(W.player.x + W.foff - cx - V.w / 2, lo, hi);
+      V.t = snap ? want : V.t + (want - V.t) * 0.14; V.x = Math.round(V.t);
+    } else { V.x = 0; V.t = 0; }
   };
 
   /* ----- chapitres et objectifs ----- */
@@ -156,7 +164,7 @@
       await S.fade('in', 500);
       if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); }
       if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) { I.build.yields(); await I.trade.resolve(); } }
-      if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Croix : marcher · <b>OK</b> : parler, valider · <b>MENU</b> : halte' : '<b>Flèches</b> ou <b>ZQSD</b> : marcher · <b>Entrée</b> : parler · <b>Échap</b> : menu', 9000);
+      if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Touche un endroit pour t’y rendre, un personnage pour lui parler · <b>?</b> : que faire' : '<b>Flèches</b>, <b>ZQSD</b> ou clic : marcher · <b>Entrée</b> : parler · <b>H</b> ou <b>?</b> : que faire · <b>Échap</b> : halte', 10000);
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
   };
@@ -222,7 +230,7 @@
   };
 
   /* ----- interaction ----- */
-  W.interact = async function () {
+  W.interact = async function (who) {
     if (S.busy || W.lock) return;
     const p = W.player, fx = [0, -1, 1, 0][p.dir], fy = [1, 0, 0, -1][p.dir];
     const px = p.x + fx * 12, py = p.y + fy * 12;
@@ -233,6 +241,7 @@
     // sur la natte, la prière et la sauvegarde passent avant un voisin que l'on ne regarde pas en face
     const onMat = W.nearPrayer() && !(o0 && o0.talk && best && best.id === o0.talk);
     if (onMat && best && bd > 13) best = null;
+    if (who && W.npcs.includes(who) && !who.hidden && who.map === W.map.id && Math.hypot(who.x - p.x, who.y - p.y) < 34) best = who; // celui que l'on a touché du doigt
     if (best) {
       const dx = p.x - best.x, dy = p.y - best.y; best.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0);
       const o = W.cur();
@@ -240,7 +249,7 @@
       if (best.talk) { I.audio.sfx('blip'); await S.run(best.talk); }
       return;
     }
-    const c = W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
+    const c = who && W.chests.includes(who) && !who.open && Math.hypot(who.x - p.x, who.y - p.y) < 30 ? who : W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
       await S.run([['ask', 'Une natte tournée vers La Mecque, au cœur de l’étoile.', [{ t: 'Prier : le groupe se repose, la Sakîna descend', r: [['pray']] }, { t: 'Sauvegarder la partie', r: [['save']] }, { t: 'Plus tard', r: [] }]]]);
@@ -261,8 +270,9 @@
     if (I.scene !== W || S.busy || W.lock) return false;
     if (a === 'build') { I.build.set(!I.build.on); return true; }
     if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel') { I.build.set(false); return true; } if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
-    if (a === 'ok') { W.interact(); return true; }
-    if (a === 'menu' || a === 'cancel') { I.ui.pause(); return true; }
+    if (a === 'ok') { W.stop(); W.interact(); return true; }
+    if (a === 'help') { W.stop(); I.ui.guide(); return true; }
+    if (a === 'menu' || a === 'cancel') { W.stop(); I.ui.pause(); return true; }
     return false;
   };
   W.update = function (dt) {
@@ -273,17 +283,13 @@
     if (can) {
       let dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0);
       if (dx || dy) {
-        const crowd = W.npcs.some(n => !n.hidden && n.map === W.map.id && n.placed && Math.abs(n.x - p.x) < 8 && Math.abs(n.y - p.y) < 6);
-        const sp = 82 * dt * (dx && dy ? 0.7071 : 1) * (crowd ? 0.55 : 1);
+        W.dest = null; if (I.build) I.build.aim = null;
+        const sp = 82 * dt * (dx && dy ? 0.7071 : 1) * (crowded() ? 0.55 : 1);
         p.dir = dx < 0 ? 1 : dx > 0 ? 2 : dy < 0 ? 3 : 0;
-        const tryMove = (mx, my) => {
-          const nx = p.x + mx, ny = p.y + my;
-          if (W.solidAt(nx - 4, ny - 5) || W.solidAt(nx + 4, ny - 5) || W.solidAt(nx - 4, ny) || W.solidAt(nx + 4, ny)) return false;
-          p.x = nx; p.y = ny; return true;
-        };
         const m1 = dx && tryMove(dx * sp, 0), m2 = dy && tryMove(0, dy * sp);
         p.moving = !!(m1 || m2); if (p.moving) { pushTrail(); if (Math.floor(W.t * 5) !== Math.floor((W.t - dt) * 5)) I.audio.sfx('step'); }
-      } else p.moving = false;
+      } else if (W.dest) follow(dt);
+      else p.moving = false;
       const o = W.cur();
       if (o && o.goto) { const s = W.spotPx(o.goto), pr = W.map.spots.priere, near = pr && s && Math.hypot(pr[0] * T + 8 - s[0], pr[1] * T + 13 - s[1]) < 70; if (s && Math.hypot(s[0] - p.x, s[1] - p.y) < (near ? 20 : 36)) W.complete(); }
       // rappel : on ne sauvegarde que dans les mosquées
@@ -294,8 +300,98 @@
         if (d < 15) { W.fight(f); break; }
         if (d < 72 && !f.boss) { const vx = (p.x - f.x) / d * 22 * dt, vy = (p.y - f.y) / d * 22 * dt, m2 = W.map, stop = (x, y) => W.solidAt(x, y) || (m2.trench && m2.trench.has(Math.floor(y / T) * m2.w + Math.floor(x / T))); if (!stop(f.x + vx, f.y)) f.x += vx; if (!stop(f.x, f.y + vy)) f.y += vy; }
       }
-    } else if (!p.scripted) p.moving = false;
+    } else { W.dest = null; if (!p.scripted) p.moving = false; }
     W.updateCam();
+  };
+
+  /* ----- déplacement au doigt ou à la souris : on touche un endroit, le héros s'y rend ----- */
+  const DX = [1, -1, 0, 0], DY = [0, 0, 1, -1];
+  const boxFree = (x, y) => !(W.solidAt(x - 4, y - 5) || W.solidAt(x + 4, y - 5) || W.solidAt(x - 4, y) || W.solidAt(x + 4, y));
+  function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) return false; p.x = nx; p.y = ny; return true; }
+  function crowded() { const p = W.player; return W.npcs.some(n => !n.hidden && n.map === W.map.id && n.placed && Math.abs(n.x - p.x) < 8 && Math.abs(n.y - p.y) < 6); }
+  // ligne droite praticable entre deux points : sert à couper les angles d'un chemin
+  function clearLine(x0, y0, x1, y1) { const n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 3); for (let i = 1; i <= n; i++) { const f = i / n; if (!boxFree(x0 + (x1 - x0) * f, y0 + (y1 - y0) * f)) return false; } return true; }
+  // chemin jusqu'à la case praticable la plus proche du point visé (parcours en largeur sur la grille)
+  W.route = function (x1, y1, from) {
+    const m = W.map, p = from || W.player, w = m.w, sx = I.clamp(Math.floor(p.x / T), 0, w - 1), sy = I.clamp(Math.floor((p.y - 2) / T), 0, m.h - 1), ex = I.clamp(Math.floor(x1 / T), 0, w - 1), ey = I.clamp(Math.floor((y1 - 2) / T), 0, m.h - 1);
+    const s = sy * w + sx, prev = new Int32Array(w * m.h).fill(-1), q = new Int32Array(w * m.h); let qh = 0, qt = 0, best = s, bd = 1e9;
+    prev[s] = s; q[qt++] = s;
+    while (qh < qt) {
+      const i = q[qh++], x = i % w, y = (i - x) / w, d = (x - ex) * (x - ex) + (y - ey) * (y - ey);
+      if (d < bd) { bd = d; best = i; if (!d) break; }
+      for (let k = 0; k < 4; k++) { const nx = x + DX[k], ny = y + DY[k]; if (nx < 0 || ny < 0 || nx >= w || ny >= m.h) continue; const j = ny * w + nx; if (prev[j] >= 0 || m.solid[j]) continue; prev[j] = i; q[qt++] = j; }
+    }
+    const path = []; for (let i = best; prev[i] !== i; i = prev[i]) path.unshift([(i % w) * T + 8, Math.floor(i / w) * T + 11]);
+    return path;
+  };
+  // o : { ent (cible mobile), stop (distance d'arrêt), then (à l'arrivée), quiet (pas de repère au sol) }
+  W.goTo = function (x, y, o) {
+    o = o || {}; const p = W.player, path = W.route(x, y);
+    if (!o.ent && !o.then && boxFree(x, y)) { const l = path.length ? path[path.length - 1] : [p.x, p.y]; if (Math.hypot(l[0] - x, l[1] - y) < 14) path.push([x, y]); } // jusqu'au point exact, s'il est libre
+    W.dest = { x, y, path, ent: o.ent || null, stop: o.stop || 0, then: o.then || null, mark: !o.quiet && !o.ent, stall: 0, raw: false };
+  };
+  W.stop = function () { if (W.dest) { W.dest = null; W.player.moving = false; } };
+  function follow(dt) {
+    const d = W.dest, p = W.player;
+    if (I.build) I.build.aim = null;
+    if (d.ent) { if (d.ent.hidden || d.ent.done || d.ent.map !== W.map.id) return W.stop(); if (Math.hypot(d.ent.x - d.x, d.ent.y - d.y) > 12) { d.x = d.ent.x; d.y = d.ent.y; d.path = W.route(d.x, d.y); } }
+    const arrive = () => { const th = d.then; W.dest = null; p.moving = false; if (th) th(); };
+    if (d.stop && Math.hypot(d.x - p.x, d.y - p.y) <= d.stop) return arrive();
+    if (!d.raw) for (let j = Math.min(d.path.length - 1, 6); j > 0; j--) if (clearLine(p.x, p.y, d.path[j][0], d.path[j][1])) { d.path.splice(0, j); break; }
+    while (d.path.length && Math.hypot(d.path[0][0] - p.x, d.path[0][1] - p.y) < 1.2) d.path.shift();
+    if (!d.path.length) return arrive();
+    const wp = d.path[0], vx = wp[0] - p.x, vy = wp[1] - p.y, L = Math.hypot(vx, vy), sp = Math.min(L, 82 * dt * (crowded() ? 0.55 : 1)), mx = vx / L * sp, my = vy / L * sp, x0 = p.x, y0 = p.y;
+    if (boxFree(p.x + mx, p.y + my)) { p.x += mx; p.y += my; } else { tryMove(mx, 0); tryMove(0, my); }
+    const moved = Math.hypot(p.x - x0, p.y - y0);
+    if (Math.abs(vx) > Math.abs(vy) * 1.25) p.dir = vx < 0 ? 1 : 2; else if (Math.abs(vy) > Math.abs(vx) * 1.25) p.dir = vy < 0 ? 3 : 0;
+    p.moving = moved > 0.01;
+    if (p.moving) { pushTrail(); if (Math.floor(W.t * 5) !== Math.floor((W.t - dt) * 5)) I.audio.sfx('step'); }
+    if (moved < sp * 0.3) { if (++d.stall > 14) { if (d.raw) return arrive(); d.raw = true; d.stall = 0; d.path = W.route(d.x, d.y); } } else d.stall = 0;
+  }
+  // conduit le héros jusqu'à l'objectif : l'aide « M'y conduire », et le test « au doigt »
+  W.lead = function () {
+    const tg = W.target(), p = W.player; if (!tg) return false;
+    const face = e => { const dx = e.x - p.x, dy = e.y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
+    if (tg.kind === 'talk') W.goTo(tg.gx, tg.gy, { ent: tg.ent, stop: 21, then() { face(tg.ent); W.interact(tg.ent); } });
+    else if (tg.kind === 'foe') W.goTo(tg.gx, tg.gy, { ent: tg.ent, stop: 3 });
+    else W.goTo(tg.gx, tg.gy);
+    return true;
+  };
+  W.tapStep = function () {
+    const o = W.cur(), p = W.player, log = I.debug.log || (I.debug.log = []), st = W._tap || (W._tap = {});
+    if (!o || o.auto) return;
+    if (o.build && I.debug.noBuild) return;
+    if (o.build) { if (!W._bb) { W._bb = true; I.build.autoBuild(o.build); I.build.after().then(() => { W._bb = false; }, e => { log.push('ERR bâtir ' + e.message); W._bb = false; }); } return; }
+    const key = W.saga.id + W.ch.id + W.objIndex + W.map.id, tg = W.target();
+    if (st.key !== key) { st.key = key; st.n = 0; st.led = 0; }
+    if (!tg) { if (!st.gone) { st.gone = key; log.push((o.talk ? 'PNJ ABSENT ' : o.foe ? 'FOE ABSENT ' : 'CIBLE ABSENTE ') + key); } if (o.foe) { const f = W.foes.find(f => f.id === o.foe); if (f) f.done = true; } W.complete(); return; }
+    if (++st.n > 60000 || st.led > 12) { log.push('COINCÉ (au doigt) ' + key + ' à ' + Math.round(Math.hypot(tg.gx - p.x, tg.gy - p.y)) + ' px'); p.x = tg.gx; p.y = tg.gy + (tg.kind === 'goto' ? 0 : 14); W.resetTrail(); W.dest = null; st.key = null; if (tg.kind === 'talk') W.complete(); return; }
+    if (!W.dest) { st.led++; W.lead(); }
+  };
+  // un toucher sur la scène, en coordonnées de la carte : aller là, parler à celui qu'on touche, agir sur ce qu'on touche
+  W.tap = function (wx, wy) {
+    if (I.scene !== W || S.busy || W.lock || I.ui.menuOpen || I.debug.auto || I.debug.walk) return false;
+    const p = W.player, m = W.map, here = e => !e.hidden && e.map === m.id && e.placed;
+    const face = (x, y) => { const dx = x - p.x, dy = y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
+    if (I.build && I.build.on) {
+      const tx = Math.floor(wx / T), ty = Math.floor(wy / T), put = () => { face(tx * T + 8, ty * T + 11); I.build.aim = [tx, ty]; I.build.place(); };
+      if (Math.max(Math.abs(tx - Math.floor(p.x / T)), Math.abs(ty - Math.floor((p.y - 3) / T))) <= 2) put(); else W.goTo(tx * T + 8, ty * T + 11, { stop: 27, then: put });
+      return true;
+    }
+    const n = W.npcs.find(n => here(n) && Math.abs(n.x - wx) < 10 && wy > n.y - 27 && wy < n.y + 6);
+    if (n) { W.goTo(n.x, n.y, { ent: n, stop: 21, then() { face(n.x, n.y); W.interact(n); } }); return true; }
+    const f = W.foes.find(f => !f.done && f.map === m.id && f.placed && Math.abs(f.x - wx) < 15 && wy > f.y - 36 && wy < f.y + 6);
+    if (f) { W.goTo(f.x, f.y, { ent: f, stop: 3 }); return true; }
+    const c = W.chests.find(c => !c.open && c.map === m.id && c.placed && Math.abs(c.x - wx) < 10 && Math.abs(c.y - 6 - wy) < 11);
+    if (c) { W.goTo(c.x, c.y, { stop: 17, then() { face(c.x, c.y); W.interact(c); } }); return true; }
+    if (Math.abs(wx - p.x) < 9 && wy > p.y - 24 && wy < p.y + 5) { W.stop(); W.interact(); return true; } // se toucher soi-même : agir devant soi
+    const mat = W.prayerPts().find(sp => Math.hypot(sp[0] * T + 8 - wx, sp[1] * T + 9 - wy) < 13);
+    if (mat) { W.goTo(mat[0] * T + 8, mat[1] * T + 13, { stop: 7, then() { W.interact(); } }); return true; }
+    const cs = m.spots.comptoir;
+    if (cs && I.trade && W.saga && (!W.saga.frame || W.saga.veillees) && Math.hypot(cs[0] * T + 8 - wx, cs[1] * T + 9 - wy) < 15) { W.goTo(cs[0] * T + 8, cs[1] * T + 13, { stop: 24, then() { W.interact(); } }); return true; }
+    if (W.solidAt(wx, wy)) W.goTo(wx, wy, { then() { face(wx, wy); W.interact(); } }); // un palmier, un rocher, un puits : on s'en approche et l'on s'y adresse
+    else W.goTo(wx, wy);
+    return true;
   };
   // tests : chemin praticable (BFS sur la grille) puis saut à l'objectif
   W.reach = function (x0, y0, x1, y1) {
@@ -351,10 +447,10 @@
   W.spotPx = function (at) { const m = W.map, name = Array.isArray(at) ? at[0] : at, s = m.spots[name]; if (!s) return null; return [(s[0] + (Array.isArray(at) ? at[1] : 0)) * T + 8, (s[1] + (Array.isArray(at) ? at[2] : 0)) * T + 13]; };
   W.target = function () {
     const o = W.cur(); if (!o) return null;
-    if (o.goto) { const s = W.spotPx(o.goto); return s && { x: s[0], y: s[1], kind: 'goto' }; }
-    if (o.build) { const st = o.build.site && I.build.sites()[o.build.site]; return st && st.map === W.map.id ? { x: (st.x + st.w / 2) * T, y: (st.y + st.h / 2) * T, kind: 'goto' } : null; }
-    if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); return n && !n.hidden && n.map === W.map.id && n.placed ? { x: n.x, y: n.y - 26, kind: 'talk' } : null; }
-    if (o.foe) { const f = W.foes.find(f => f.id === o.foe); return f && !f.done && f.map === W.map.id && f.placed ? { x: f.x, y: f.y - 30, kind: 'foe' } : null; }
+    if (o.goto) { const s = W.spotPx(o.goto); return s && { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto' }; }
+    if (o.build) { const st = o.build.site && I.build.sites()[o.build.site]; return st && st.map === W.map.id ? { x: (st.x + st.w / 2) * T, y: (st.y + st.h / 2) * T, gx: (st.x + st.w / 2) * T, gy: (st.y + st.h) * T + 8, kind: 'goto', site: true } : null; }
+    if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); return n && !n.hidden && n.map === W.map.id && n.placed ? { x: n.x, y: n.y - 26, gx: n.x, gy: n.y, kind: 'talk', ent: n } : null; }
+    if (o.foe) { const f = W.foes.find(f => f.id === o.foe); return f && !f.done && f.map === W.map.id && f.placed ? { x: f.x, y: f.y - 30, gx: f.x, gy: f.y, kind: 'foe', ent: f } : null; }
     return null;
   };
 
@@ -380,6 +476,13 @@
     // marqueur d'objectif au sol
     const tg = W.target();
     if (tg && tg.kind === 'goto') { const rr = 9 + Math.sin(t * 4) * 2; c.strokeStyle = 'rgba(255,224,138,.9)'; c.lineWidth = 1; c.beginPath(); c.ellipse(tg.x - cx, tg.y - cy, rr, rr * 0.45, 0, 0, 6.3); c.stroke(); c.fillStyle = 'rgba(255,224,138,.25)'; c.fill(); if (Math.random() < 0.3) G.spawn({ x: tg.x - cx + (Math.random() - 0.5) * 14, y: tg.y - cy, vy: -18, life: 1.2, size: 0.7, color: '#ffe08a', type: 'mote' }); }
+    // chemin montré par l'aide : des points d'or du héros à l'objectif
+    if (W.wayT > t && tg) {
+      if (!W._way || t - W._wayAt > 0.35) { W._way = W.route(tg.gx, tg.gy); W._wayAt = t; }
+      W._way.forEach((q, i) => { const ph = (i - Math.floor(t * 7)) % 4; c.fillStyle = ph === 0 ? 'rgba(255,246,220,.95)' : 'rgba(255,224,138,.55)'; c.fillRect(q[0] - cx - 1, q[1] - cy - 1, 2, 2); });
+    } else W._way = null;
+    // repère de l'endroit touché
+    if (W.dest && W.dest.mark) { const d = W.dest, rr = 4.5 + Math.sin(t * 9) * 1.2; c.strokeStyle = 'rgba(255,246,220,.9)'; c.lineWidth = 1; c.beginPath(); c.ellipse(d.x - cx, d.y - cy, rr, rr * 0.5, 0, 0, 6.3); c.stroke(); }
     // éléments triés par profondeur
     const list = [];
     for (const o of m.objs) { if (o.x + o.w < cx || o.x - o.w > cx + G.PW || o.y < cy - 4 || o.y - o.h > cy + G.PH) continue; list.push({ y: o.y, o }); }
@@ -402,8 +505,9 @@
     if (tg) {
       const sx = tg.x - cx, sy = tg.y - cy;
       if (tg.kind !== 'goto' && sx > 0 && sx < G.PW && sy > 0 && sy < G.PH) { const by = sy + Math.sin(t * 5) * 2; c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(sx, by + 4); c.lineTo(sx - 4, by - 2); c.lineTo(sx, by - 6); c.lineTo(sx + 4, by - 2); c.fill(); c.fillStyle = '#fff6dc'; c.fillRect(sx - 1, by - 3, 2, 3); }
-      if (sx < 6 || sx > G.PW - 6 || sy < 6 || sy > G.PH - 6) {
-        const ang = Math.atan2(sy - G.PH / 2, sx - G.PW / 2), ex = I.clamp(sx, 12, G.PW - 12), ey = I.clamp(sy, 22, G.PH - 12), pu = 1 + Math.sin(t * 6) * 0.2;
+      const v0 = G.view.x, v1 = G.view.x + G.view.w;
+      if (sx < v0 + 6 || sx > v1 - 6 || sy < 6 || sy > G.PH - 6) {
+        const ang = Math.atan2(sy - G.PH / 2, sx - (v0 + v1) / 2), ex = I.clamp(sx, v0 + 12, v1 - 12), ey = I.clamp(sy, 22, G.PH - 12), pu = 1 + Math.sin(t * 6) * 0.2;
         c.save(); c.translate(ex, ey); c.rotate(ang); c.scale(pu, pu); c.rotate(-ang + t * 0.6); const star = (r, col) => { c.fillStyle = col; c.beginPath(); for (let q = 0; q < 8; q++) { const rr = q % 2 ? r * 0.3 : r, aa = q * Math.PI / 4; c.lineTo(Math.cos(aa) * rr, Math.sin(aa) * rr); } c.closePath(); c.fill(); }; star(8, '#1a1420'); star(6.5, '#ffe9a8'); star(2.5, '#fff'); c.restore(); lights.push({ x: ex, y: ey, r: 16, color: '#ffe9a8', a: 0.7 });
       }
     }
@@ -424,7 +528,7 @@
     if (la > 0) for (const L of m.lights) { const x = L.x - cx, y = L.y - cy; if (x < -L.r || y < -L.r || x > G.PW + L.r || y > G.PH + L.r) continue; lights.push({ x, y, r: L.r, color: L.color, a: la * (1 - L.flicker * (0.5 + 0.5 * Math.sin(t * 9 + L.x))) }); }
     // mini-carte (hors dialogue)
     if (!S.busy && m.mini) {
-      const mw = m.w, mh = m.h, mx = G.PW - mw - 30, my = 6; c.globalAlpha = 0.82; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, mw + 4, mh + 4); c.drawImage(m.mini, mx, my); c.globalAlpha = 1;
+      const mw = m.w, mh = m.h, crop = G.view.w < G.PW, mx = crop ? G.view.x + 5 : G.PW - mw - 30, my = crop ? 5 : 6; c.globalAlpha = 0.82; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, mw + 4, mh + 4); c.drawImage(m.mini, mx, my); c.globalAlpha = 1;
       c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = 1; c.strokeRect(mx - 1.5, my - 1.5, mw + 3, mh + 3);
       if (tg && Math.floor(t * 3) % 2) { c.fillStyle = '#ffe08a'; c.fillRect(mx + Math.floor(tg.x / T) - 1, my + Math.floor((tg.kind === 'goto' ? tg.y : tg.y + 28) / T) - 1, 3, 3); }
       W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) { c.fillStyle = '#ff6a8a'; c.fillRect(mx + Math.floor(f.x / T), my + Math.floor(f.y / T), 1, 1); } });

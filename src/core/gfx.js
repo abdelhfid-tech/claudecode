@@ -231,10 +231,13 @@
     G.lcv = mk(G.PW / 2, G.PH / 2); G.lx = G.lcv.getContext('2d');
     G.resize();
   };
+  // fenêtre visible, en pixels logiques : sur un écran en hauteur, on ne montre qu'une partie de la largeur, agrandie
+  G.view = { x: 0, w: G.PW, t: 0 };
   G.resize = function () {
-    const st = G.cv.parentElement, w = st.clientWidth, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    G.k = Math.max(2, Math.min(G.low ? 2 : 4, Math.ceil(w * dpr / G.PW)));
-    G.cv.width = G.PW * G.k; G.cv.height = G.PH * G.k;
+    const st = document.getElementById('stage') || G.cv.parentElement, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = st.clientHeight * G.PW / G.PH > st.clientWidth + 1 ? st.clientHeight * G.PW / G.PH : st.clientWidth, coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    G.k = Math.max(2, Math.min(G.low ? 2 : coarse ? 3 : 4, Math.ceil(w * dpr / G.PW)));
+    if (G.cv.width !== G.PW * G.k) { G.cv.width = G.PW * G.k; G.cv.height = G.PH * G.k; }
     st.style.setProperty('--u', (st.clientHeight / G.PH) + 'px');
   };
   // particules et effets HD (coordonnées en pixels logiques)
@@ -352,7 +355,8 @@
     if (o.scan) { c.globalAlpha = 0.07; c.fillStyle = '#000'; for (let y = 0; y < H; y += k * 2) c.fillRect(0, y, W, k); c.globalAlpha = 1;
       if (Math.random() < 0.02) { const y = Math.random() * H, h = 4 * k; c.drawImage(G.cv, 0, y, W, h, (Math.random() - 0.5) * 20 * k, y, W, h); } }
     // vignette
-    const vg = c.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, H * 0.95); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(4,3,12,${o.vignette === undefined ? 0.55 : o.vignette})`);
+    const vcx = (G.view.x + G.view.w / 2) * k, vr = Math.hypot(G.view.w / 2, G.PH / 2) / Math.hypot(G.PW / 2, G.PH / 2);
+    const vg = c.createRadialGradient(vcx, H / 2, H * 0.35 * vr, vcx, H / 2, H * 0.95 * vr); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(4,3,12,${o.vignette === undefined ? 0.55 : o.vignette})`);
     c.fillStyle = vg; c.fillRect(0, 0, W, H);
     if (G.flashA > 0) { c.globalAlpha = G.flashA; c.fillStyle = G.flashC; c.fillRect(0, 0, W, H); c.globalAlpha = 1; G.flashA -= dt * 2.4; }
   };
