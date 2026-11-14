@@ -452,15 +452,23 @@ body.portrait .mlist { max-height: 12em; }
       items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
       opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, parley: { won: 0, total: 0 } };
   }
+  // La progression ne s'écrit que dans une mosquée (trois emplacements). Les options, elles, se gardent à part.
+  const OKEY = 'isnad.opts.v1', SLOT = n => 'isnad.slot.' + n;
   I.save = {
     data: fresh(),
+    slots() { return [1, 2, 3].map(n => { try { const d = JSON.parse(localStorage.getItem(SLOT(n)) || 'null'); return d && d.v === 1 ? d : null; } catch (e) { return null; } }); },
     load() {
-      try { const raw = localStorage.getItem(SKEY); if (raw) { const d = JSON.parse(raw); if (d && d.v === 1) { const f = fresh(); this.data = Object.assign(f, d); this.data.opts = Object.assign(fresh().opts, d.opts || {}); return true; } } } catch (e) { /* stockage indisponible */ }
-      return false;
+      try {
+        const o = JSON.parse(localStorage.getItem(OKEY) || 'null'); if (o) Object.assign(this.data.opts, o);
+        const old = localStorage.getItem(SKEY); // reprise d'une partie de la version précédente (sauvegarde automatique)
+        if (old) { const d = JSON.parse(old); if (d && d.v === 1 && d.started && !this.slots().some(Boolean)) { d.meta = { label: 'Partie de la version précédente', when: Date.now() }; localStorage.setItem(SLOT(1), JSON.stringify(d)); if (d.opts && !o) Object.assign(this.data.opts, d.opts); } localStorage.removeItem(SKEY); }
+      } catch (e) { /* stockage indisponible */ }
+      return this.slots().some(Boolean);
     },
-    store() { try { localStorage.setItem(SKEY, JSON.stringify(this.data)); } catch (e) { /* ignore */ } },
-    reset() { const o = this.data.opts; this.data = fresh(); this.data.opts = Object.assign(this.data.opts, o); this.store(); },
-    exists() { try { return !!localStorage.getItem(SKEY) && this.data.started; } catch (e) { return false; } }
+    store() { try { localStorage.setItem(OKEY, JSON.stringify(this.data.opts)); } catch (e) { /* ignore */ } },
+    write(n, meta) { this.data.meta = Object.assign({ when: Date.now() }, meta || {}); this.data.started = true; try { localStorage.setItem(SLOT(n), JSON.stringify(this.data)); return true; } catch (e) { return false; } },
+    read(n) { const d = this.slots()[n - 1]; if (!d) return false; const o = this.data.opts; this.data = Object.assign(fresh(), d); this.data.opts = o; return true; },
+    reset() { const o = this.data.opts; this.data = fresh(); this.data.opts = Object.assign(this.data.opts, o); }
   };
 
   /* ---------- son : ambiances (bruit filtré) + percussions (duff) + bruitages. Pas d'instrument mélodique. ---------- */
@@ -692,8 +700,8 @@ body.portrait .mlist { max-height: 12em; }
     wall(c, r) { speck(c, r, P.adobe, 22); R(c, '#e2bd8a', 0, 0, 16, 1); R(c, '#a07a4c', 0, 15, 16, 1); c.fillStyle = '#b08a59'; c.fillRect(0, 5, 16, 1); c.fillRect(0, 10, 16, 1); },
     roof(c, r) { speck(c, r, P.roof, 20); c.fillStyle = '#86693f'; for (let y = 2; y < 16; y += 4) for (let x = (y % 8 ? 0 : 2); x < 16; x += 4) c.fillRect(x, y, 3, 1); },
     roofedge(c, r) { TILE.roof(c, r); R(c, '#d7b684', 0, 13, 16, 2); R(c, '#7a5f3a', 0, 15, 16, 1); },
-    door(c, r) { TILE.wall(c, r); R(c, '#4a3220', 4, 3, 8, 13); R(c, '#6b4a2e', 5, 4, 6, 12); R(c, '#3a2616', 7, 4, 1, 12); R(c, '#d9b45a', 9, 10, 1, 1); },
-    window(c, r) { TILE.wall(c, r); R(c, '#3a2a1c', 6, 5, 4, 5); R(c, '#e8b860', 7, 6, 2, 3); },
+    door(c, r) { TILE.wall(c, r); R(c, '#4a3220', 4, 4, 8, 12); c.fillStyle = '#4a3220'; c.beginPath(); c.arc(8, 5, 4, Math.PI, 0); c.fill(); R(c, '#6b4a2e', 5, 5, 6, 11); c.fillStyle = '#6b4a2e'; c.beginPath(); c.arc(8, 5, 3, Math.PI, 0); c.fill(); R(c, '#3a2616', 8, 3, 1, 13); c.fillStyle = '#d9b45a'; [[6, 7], [10, 7], [6, 11], [10, 11], [6, 14], [10, 14]].forEach(q => c.fillRect(q[0], q[1], 1, 1)); },
+    window(c, r) { TILE.wall(c, r); R(c, '#3a2a1c', 5, 3, 6, 8); R(c, '#e8b860', 6, 4, 4, 6); c.fillStyle = '#3a2a1c'; for (let k = 0; k < 4; k++) { c.fillRect(6 + k, 4 + k, 1, 1); c.fillRect(9 - k, 4 + k, 1, 1); c.fillRect(6 + k, 9 - k, 1, 1); c.fillRect(9 - k, 9 - k, 1, 1); } R(c, '#d9b37f', 5, 2, 6, 1); },
     thatch(c, r) { speck(c, r, ['#8d7a3e', '#7c6a34', '#a08c4a', '#6b5a2a'], 24); c.fillStyle = '#5d4e24'; for (let x = 1; x < 16; x += 3) c.fillRect(x, 0, 1, 16); },
     marble(c, r) { speck(c, r, P.marble, 8); R(c, '#c4bcad', 0, 15, 16, 1); R(c, '#c4bcad', 15, 0, 1, 16); R(c, '#f7f3ea', 0, 0, 15, 1); },
     mosaic(c, r) { R(c, '#e0d9ca', 0, 0, 16, 16); const cs = ['#2f6f8f', '#b5553a', '#d9b45a', '#3d8a6a', '#e9e2d0']; for (let y = 0; y < 16; y += 2) for (let x = 0; x < 16; x += 2) { const d = Math.abs(x - 7) + Math.abs(y - 7); R(c, cs[(d >> 1) % cs.length], x, y, 2, 2); } c.fillStyle = 'rgba(60,50,40,.25)'; for (let i = 0; i < 16; i += 2) { c.fillRect(i, 0, 1, 16); c.fillRect(0, i, 16, 1); } },
@@ -715,9 +723,14 @@ body.portrait .mlist { max-height: 12em; }
     nfloor(c, r, v, hue) { R(c, '#0c0f2c', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,65%,.55)`; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = `hsla(${hue},90%,70%,.14)`; c.fillRect(1, 1, 15, 15); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.8)`; if (r() < 0.35) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); },
     nbridge(c, r, v, hue) { R(c, '#080a20', 0, 0, 16, 16); c.fillStyle = `hsla(${(hue + 150) % 360},100%,70%,.75)`; c.fillRect(0, 3, 16, 1); c.fillRect(0, 12, 16, 1); c.fillStyle = `hsla(${(hue + 150) % 360},100%,70%,.18)`; c.fillRect(0, 4, 16, 8); },
     void(c, r) { R(c, '#04051a', 0, 0, 16, 16); if (r() < 0.3) R(c, '#3b3f8a', Math.floor(r() * 16), Math.floor(r() * 16), 1, 1); if (r() < 0.08) R(c, '#cfd6ff', Math.floor(r() * 16), Math.floor(r() * 16), 1, 1); },
+    // zellige « étoile et croix » : l'étoile à huit branches naît de deux carrés superposés
+    zellij(c, r, v) { const pal = v % 2 ? ['#d8c08a', '#2d7f8f', '#f1e7cc', '#c9a13f'] : ['#d8c08a', '#27608f', '#f1e7cc', '#b5553a']; R(c, pal[0], 0, 0, 16, 16); c.fillStyle = pal[1]; c.fillRect(3, 3, 10, 10); c.beginPath(); c.moveTo(8, 1); c.lineTo(15, 8); c.lineTo(8, 15); c.lineTo(1, 8); c.fill(); c.fillStyle = pal[2]; c.beginPath(); c.moveTo(8, 4); c.lineTo(12, 8); c.lineTo(8, 12); c.lineTo(4, 8); c.fill(); R(c, pal[3], 7, 7, 2, 2); R(c, pal[3], 0, 0, 1, 1); R(c, pal[3], 15, 0, 1, 1); R(c, pal[3], 0, 15, 1, 1); R(c, pal[3], 15, 15, 1, 1); },
+    zsand(c, r) { R(c, '#d4b47c', 0, 0, 16, 16); c.fillStyle = '#c29b62'; c.fillRect(3, 3, 10, 10); c.beginPath(); c.moveTo(8, 1); c.lineTo(15, 8); c.lineTo(8, 15); c.lineTo(1, 8); c.fill(); c.fillStyle = '#e6cf9c'; c.beginPath(); c.moveTo(8, 4); c.lineTo(12, 8); c.lineTo(8, 12); c.lineTo(4, 8); c.fill(); R(c, '#a8824f', 7, 7, 2, 2); },
+    gwall(c, r) { TILE.wall(c, r); R(c, '#f1e0b8', 0, 2, 16, 5); c.fillStyle = '#2d7f8f'; for (let x = 0; x < 16; x += 4) { c.beginPath(); c.moveTo(x, 4.5); c.lineTo(x + 2, 2); c.lineTo(x + 4, 4.5); c.lineTo(x + 2, 7); c.fill(); } c.fillStyle = '#c9a13f'; for (let x = 1; x < 16; x += 4) c.fillRect(x, 4, 2, 1); R(c, '#8e5a2a', 0, 1, 16, 1); R(c, '#8e5a2a', 0, 7, 16, 1); },
+    mihrab(c, r) { TILE.gwall(c, r); R(c, '#1c2f3a', 4, 3, 8, 13); c.fillStyle = '#1c2f3a'; c.beginPath(); c.arc(8, 4, 4, Math.PI, 0); c.fill(); R(c, '#2d7f8f', 5, 5, 6, 11); c.fillStyle = '#2d7f8f'; c.beginPath(); c.arc(8, 5, 3, Math.PI, 0); c.fill(); c.fillStyle = '#f1e7cc'; c.beginPath(); c.moveTo(8, 6); c.lineTo(10, 9); c.lineTo(8, 12); c.lineTo(6, 9); c.fill(); R(c, '#c9a13f', 7, 8, 2, 2); },
     dark(c) { R(c, '#07060c', 0, 0, 16, 16); }
   };
-  const SOLID = new Set(['water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull']);
+  const SOLID = new Set(['gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull']);
   G.isSolidTile = n => SOLID.has(n);
   G.tile = function (name, variant, hue) {
     const key = name + '|' + (variant || 0) + '|' + (hue || 0);
@@ -773,6 +786,10 @@ body.portrait .mlist { max-height: 12em; }
     glyph: { w: 14, h: 14, fw: 0, fh: 0, hue: true, draw(c, r, o) { const h = (o && o.hue) || 200; c.fillStyle = `hsla(${h},100%,75%,.9)`; for (let i = 0; i < 7; i++) c.fillRect(2 + Math.floor(r() * 9), 2 + Math.floor(r() * 9), 1 + Math.floor(r() * 4), 1 + Math.floor(r() * 2)); } },
     carpetroll: { w: 16, h: 8, fw: 14, fh: 4, draw(c) { R(c, '#8e2f2a', 1, 2, 14, 5); R(c, '#d9b45a', 1, 2, 1, 5); R(c, '#d9b45a', 14, 2, 1, 5); R(c, '#a53c33', 3, 3, 10, 1); } },
     mat: { w: 20, h: 10, fw: 0, fh: 0, flat: true, draw(c) { R(c, '#b8a26a', 0, 1, 20, 8); c.fillStyle = '#9a8552'; for (let x = 1; x < 20; x += 3) c.fillRect(x, 1, 1, 8); R(c, '#d6c28a', 0, 1, 20, 1); } },
+    minbar: { w: 16, h: 22, fw: 14, fh: 6, draw(c) { R(c, '#6b4a2e', 2, 14, 12, 8); R(c, '#8b6a45', 2, 14, 12, 2); R(c, '#6b4a2e', 5, 8, 9, 6); R(c, '#8b6a45', 5, 8, 9, 2); R(c, '#6b4a2e', 9, 2, 5, 6); R(c, '#8b6a45', 9, 2, 5, 2); c.fillStyle = '#c9a13f'; c.fillRect(3, 17, 1, 1); c.fillRect(6, 11, 1, 1); c.fillRect(10, 5, 1, 1); R(c, '#4a3220', 13, 0, 1, 22); } },
+    rug: { w: 24, h: 14, fw: 0, fh: 0, flat: true, draw(c, r, o) { const col = (o && o.color) || '#8e2f2a', a2 = (o && o.trim) || '#d9b45a'; R(c, col, 0, 1, 24, 12); R(c, a2, 1, 2, 22, 1); R(c, a2, 1, 11, 22, 1); R(c, a2, 1, 2, 1, 10); R(c, a2, 22, 2, 1, 10); c.fillStyle = '#f1e7cc'; for (let k = 0; k < 3; k++) { const x = 6 + k * 6; c.beginPath(); c.moveTo(x, 4); c.lineTo(x + 3, 7); c.lineTo(x, 10); c.lineTo(x - 3, 7); c.fill(); } c.fillStyle = '#27608f'; for (let k = 0; k < 3; k++) c.fillRect(5 + k * 6, 6, 2, 2); } },
+    lantern: { w: 10, h: 26, fw: 4, fh: 3, draw(c) { R(c, '#4a3826', 4, 8, 2, 18); R(c, '#6b5236', 2, 24, 6, 2); R(c, '#2e2218', 2, 2, 6, 7); R(c, '#ffd27a', 3, 3, 4, 5); c.fillStyle = '#2e2218'; c.fillRect(3, 5, 4, 1); c.fillRect(5, 3, 1, 5); R(c, '#c9a13f', 4, 0, 2, 2); } },
+    basin: { w: 24, h: 18, fw: 20, fh: 8, draw(c) { c.fillStyle = '#c9c1b2'; c.beginPath(); c.moveTo(12, 1); c.lineTo(23, 9); c.lineTo(12, 17); c.lineTo(1, 9); c.fill(); c.fillStyle = '#e6e0d4'; c.fillRect(4, 4, 16, 10); c.fillStyle = '#3a95b6'; c.beginPath(); c.moveTo(12, 4); c.lineTo(19, 9); c.lineTo(12, 14); c.lineTo(5, 9); c.fill(); c.fillStyle = '#8fd3e4'; c.fillRect(10, 8, 4, 1); R(c, '#c9a13f', 11, 8, 2, 2); } },
     spring: { w: 20, h: 12, fw: 0, fh: 0, flat: true, draw(c) { c.fillStyle = '#3a95b6'; c.beginPath(); c.ellipse(10, 6, 9, 5, 0, 0, 6.3); c.fill(); c.fillStyle = '#8fd3e4'; c.fillRect(6, 4, 4, 1); c.fillRect(11, 7, 3, 1); } }
   };
   G.OBJ = OBJ;
@@ -786,47 +803,43 @@ body.portrait .mlist { max-height: 12em; }
 
   /* ================= PERSONNAGES (sans visage) ================= */
   const ccache = {};
+  // Personnages en blocs : des volumes, jamais de traits. Tête = cube d'étoffe ; les Compagnons portent
+  // un panneau de lumière à la place du visage.
   G.charSheet = function (look) {
     const key = JSON.stringify(look); if (ccache[key]) return ccache[key];
     const cv = mk(48, 96), c = cv.getContext('2d');
-    const robe = look.robe || '#8a7355', head = look.head || '#e6dcc4', cloak = look.cloak, kind = look.kind || 'homme';
-    const rd = shade(robe, 0.72), rl = shade(robe, 1.18), hd = shade(head, 0.8);
-    const skin = (kind === 'compagnon' || look.aura) ? '#fff4cf' : '#c79a70';
-    const foot = '#3a2a1c';
+    const kind = look.kind || 'homme', robe = look.robe || '#8a7355', cloak = look.cloak || shade(robe, 0.68);
+    const lit = kind === 'compagnon' || !!look.aura, short = kind === 'soldat' || kind === 'romain' || kind === 'marin' || kind === 'cyber';
+    let head = look.head || '#e6dcc4'; if (kind === 'berbere') head = look.veil || '#1c3a5a'; if (kind === 'moine') head = shade(robe, 0.9);
+    const panel = lit ? '#fff6d4' : shade(head, 0.82), legs = short ? '#4a3d32' : shade(robe, 0.8), arm = shade(robe, 0.9);
     for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) {
-      const ox = f * 16, oy = dir * 24, bob = f ? 0 : 0;
-      const Rr = (col, x, y, w, h) => R(c, col, ox + x, oy + y + bob, w, h);
-      const side = dir === 1 || dir === 2;
-      // pieds
-      if (!side) { if (f !== 2) Rr(foot, 5, 22, 2, 2); if (f !== 1) Rr(foot, 9, 22, 2, 2); if (f === 1) Rr(foot, 5, 23, 2, 1); if (f === 2) Rr(foot, 9, 23, 2, 1); }
-      else { if (f === 0) { Rr(foot, 6, 22, 2, 2); Rr(foot, 9, 22, 2, 2); } else if (f === 1) { Rr(foot, 4, 22, 3, 2); Rr(foot, 9, 22, 2, 1); } else { Rr(foot, 7, 22, 2, 2); Rr(foot, 10, 22, 2, 1); } }
-      // robe
-      const short = kind === 'marin' || kind === 'romain' || kind === 'soldat';
-      const hem = short ? 19 : 22;
-      if (!side) { Rr(robe, 4, 10, 8, hem - 10); Rr(robe, 3, 15, 10, hem - 15); Rr(rd, 11, 11, 1, hem - 11); Rr(rd, 12, 15, 1, hem - 15); Rr(rl, 4, 10, 1, 6); Rr(rd, 3, hem - 1, 10, 1); if (short) { Rr(shade(skin, .85), 5, 19, 2, 3); Rr(shade(skin, .85), 9, 19, 2, 3); } }
-      else { Rr(robe, 5, 10, 6, hem - 10); Rr(robe, 4, 16, 8, hem - 16); Rr(rd, 10, 11, 1, hem - 11); Rr(rd, 4, hem - 1, 8, 1); if (short) { Rr(shade(skin, .85), 6, 19, 2, 3); Rr(shade(skin, .85), 9, 19, 2, 3); } }
-      // manteau / cape
-      if (cloak) { const cd = shade(cloak, 0.8);
-        if (dir === 0) { Rr(cloak, 3, 10, 2, 9); Rr(cloak, 11, 10, 2, 9); Rr(cd, 4, 14, 8, 1); }
-        else if (dir === 3) { Rr(cloak, 3, 10, 10, 10); Rr(cd, 3, 19, 10, 1); Rr(cd, 8, 10, 1, 10); }
-        else { Rr(cloak, dir === 1 ? 8 : 4, 10, 4, 10); Rr(cd, dir === 1 ? 11 : 4, 10, 1, 10); } }
-      else if (dir === 0) Rr(rd, 4, 14, 8, 1);
-      // tête : coiffe + visage uni (aucun trait)
-      const band = shade(cloak || robe, 0.6), hs = shade(head, 0.66);
-      if (dir === 0) { Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 3); Rr(head, 4, 5, 1, 6); Rr(head, 11, 5, 1, 6); Rr(hs, 4, 6, 1, 5); Rr(hs, 11, 6, 1, 5); Rr(skin, 6, 5, 4, 5); Rr(hd, 5, 2, 6, 1); Rr(band, 4, 4, 8, 1); }
-      else if (dir === 3) { Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 8); Rr(hs, 4, 10, 8, 1); Rr(hs, 4, 6, 1, 4); Rr(hs, 11, 6, 1, 4); Rr(hd, 5, 2, 6, 1); Rr(band, 4, 4, 8, 1); }
-      else { const L = dir === 1; Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 3); Rr(head, L ? 7 : 4, 5, 5, 6); Rr(hs, L ? 7 : 4, 10, 5, 1); Rr(hs, L ? 11 : 4, 6, 1, 4); Rr(skin, L ? 4 : 9, 5, 3, 5); Rr(hd, 5, 2, 6, 1); Rr(band, 4, 4, 8, 1); }
-      // variantes
-      if (kind === 'soldat') { Rr('#6b4a2e', 13, 1, 1, 21); Rr('#c9ced6', 13, 0, 1, 2); if (dir === 0) { Rr('#7a5b3a', 2, 12, 4, 5); Rr('#d9b45a', 3, 14, 2, 1); } Rr('#8a8f98', 5, 1, 6, 2); }
-      if (kind === 'romain') { Rr('#b9bec8', 5, 1, 6, 3); Rr('#b33327', 6, 0, 4, 1); Rr('#b33327', 7, -1 < 0 ? 0 : 0, 2, 1); if (dir !== 3) Rr('#b9bec8', side ? 6 : 5, 11, side ? 4 : 6, 4); Rr('#6b4a2e', 13, 2, 1, 20); Rr('#c9ced6', 13, 0, 1, 3); }
-      if (kind === 'perse') { Rr(head, 6, 0, 4, 3); Rr('#d9b45a', 6, 2, 4, 1); Rr('#d9b45a', side ? 4 : 3, hem - 2, side ? 8 : 10, 1); }
-      if (kind === 'moine') { Rr(robe, 4, 1, 8, 4); Rr(rd, 4, 1, 8, 1); if (dir === 0) Rr('#d9b45a', 7, 13, 2, 3); }
-      if (kind === 'ancien') { Rr('#6b4a2e', 1, 6, 1, 17); Rr('#e9e2d0', side ? 5 : 4, 10, side ? 6 : 8, 2); }
-      if (kind === 'cyber') { Rr('#39e6ff', side ? 7 : 7, 11, 1, 8); if (dir === 0) Rr('#39e6ff', 6, 7, 4, 1); Rr('#ff4fd8', side ? 4 : 3, hem - 1, side ? 8 : 10, 1); }
-      if (kind === 'marin') { Rr('#e9e2d0', side ? 5 : 4, 13, side ? 6 : 8, 1); }
-      if (kind === 'savant') { Rr('#e9e2d0', side ? 5 : 4, 10, side ? 6 : 8, 2); if (dir === 0) { Rr('#e6dcc4', 9, 14, 3, 4); Rr('#8a6238', 9, 14, 3, 1); } }
-      if (kind === 'marchand') { Rr('#d9b45a', side ? 5 : 4, 14, side ? 6 : 8, 1); if (dir === 0) Rr('#a8663c', 2, 15, 3, 3); }
-      if (kind === 'berbere') { const veil = look.veil || '#1c3a5a'; if (dir === 0) { Rr(veil, 4, 2, 8, 4); Rr(veil, 5, 8, 6, 3); Rr(veil, 4, 5, 1, 5); Rr(veil, 11, 5, 1, 5); Rr(skin, 6, 6, 4, 2); } else if (dir === 3) { Rr(veil, 4, 2, 8, 9); } else { const L = dir === 1; Rr(veil, 4, 2, 8, 4); Rr(veil, L ? 7 : 4, 5, 5, 6); Rr(veil, L ? 4 : 9, 8, 3, 3); Rr(skin, L ? 4 : 9, 6, 3, 2); } }
+      const ox = f * 16, oy = dir * 24, side = dir === 1 || dir === 2, flip = dir === 2;
+      const B = (col, x, y, w, h) => R(c, col, ox + (flip ? 16 - x - w : x), oy + y, w, h);
+      const cube = (col, x, y, w, h) => { B(col, x, y, w, h); B(shade(col, 1.22), x, y, w, 1); B(shade(col, 0.72), flip ? x : x + w - 1, y + 1, 1, h - 1); B(shade(col, 0.58), x, y + h - 1, w, 1); };
+      if (!side) {
+        cube(legs, 4, f === 1 ? 16 : 17, 4, 6); cube(legs, 8, f === 2 ? 16 : 17, 4, 6);
+        cube(dir === 3 ? cloak : robe, 4, 9, 8, 8);
+        if (dir === 0) { B(cloak, 4, 9, 1, 8); B(cloak, 11, 9, 1, 8); B(shade(cloak, 0.8), 4, 14, 8, 1); }
+        cube(arm, 2, f === 1 ? 10 : f === 2 ? 8 : 9, 2, 7); cube(arm, 12, f === 2 ? 10 : f === 1 ? 8 : 9, 2, 7);
+        cube(head, 4, 1, 8, 8); if (dir === 0) B(panel, 5, 4, 6, 4);
+        if (lit) B(shade(head, 0.7), 4, 3, 8, 1);
+      } else {
+        if (f === 0) cube(legs, 6, 17, 4, 6); else if (f === 1) { cube(legs, 9, 17, 3, 6); cube(legs, 4, 16, 3, 6); } else { cube(legs, 8, 16, 3, 6); cube(legs, 5, 17, 3, 6); }
+        cube(robe, 5, 9, 6, 8); B(cloak, 9, 9, 2, 8);
+        cube(arm, f === 1 ? 5 : f === 2 ? 9 : 7, 9, 2, 7);
+        cube(head, 4, 1, 8, 8); B(panel, 4, 4, 3, 4);
+        if (lit) B(shade(head, 0.7), 4, 3, 8, 1);
+      }
+      // attributs, eux aussi en blocs
+      if (kind === 'soldat') { B('#8a8f98', 4, 1, 8, 2); B('#6b4a2e', 14, 2, 1, 20); B('#c9ced6', 14, 0, 1, 2); }
+      if (kind === 'romain') { B('#b9bec8', 4, 1, 8, 2); B('#b33327', 6, 0, 4, 1); if (dir !== 3) B('#b9bec8', side ? 5 : 4, 10, side ? 6 : 8, 4); B('#6b4a2e', 14, 2, 1, 20); B('#c9ced6', 14, 0, 1, 2); }
+      if (kind === 'perse') { B(head, 5, 0, 6, 1); B('#d9b45a', 4, 2, 8, 1); B('#d9b45a', side ? 5 : 4, 16, side ? 6 : 8, 1); }
+      if (kind === 'ancien') { B('#6b4a2e', 1, 5, 1, 18); B('#e9e2d0', side ? 5 : 4, 9, side ? 6 : 8, 2); }
+      if (kind === 'savant') { B('#e9e2d0', side ? 5 : 4, 9, side ? 6 : 8, 2); if (dir === 0) { B('#f1e7cc', 9, 13, 3, 3); B('#8a6238', 9, 13, 3, 1); } }
+      if (kind === 'marchand') { B('#d9b45a', side ? 5 : 4, 13, side ? 6 : 8, 1); if (dir === 0) B('#a8663c', 1, 15, 3, 3); }
+      if (kind === 'berbere') { B(shade(head, 1.3), 4, 3, 8, 1); if (dir === 0) B('#c79a70', 5, 4, 6, 1); }
+      if (kind === 'cyber') { B('#39e6ff', side ? 7 : 7, 10, 1, 6); B('#ff4fd8', side ? 5 : 4, 16, side ? 6 : 8, 1); }
+      if (kind === 'marin') { B('#e9e2d0', side ? 5 : 4, 11, side ? 6 : 8, 1); B('#e9e2d0', side ? 5 : 4, 14, side ? 6 : 8, 1); }
     }
     if (kind === 'enfant') { const cv2 = mk(48, 96), c2 = cv2.getContext('2d'); c2.imageSmoothingEnabled = false; for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) c2.drawImage(cv, f * 16, dir * 24, 16, 24, f * 16 + 2, dir * 24 + 7, 12, 17); return (ccache[key] = cv2); }
     return (ccache[key] = cv);
@@ -1059,7 +1072,8 @@ body.portrait .mlist { max-height: 12em; }
     set(x, y, t, solid) { x = this.X(x); if (x < 0 || y < 0 || x >= this.w || y >= this.h) return; const i = y * this.w + x; this.g[i] = t; this.solid[i] = solid === undefined ? (G.isSolidTile(t) ? 1 : 0) : (solid ? 1 : 0); }
     get(x, y) { x = this.X(x); return this.g[y * this.w + x]; }
     fill(x, y, w, h, t, solid) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.set(x + i, y + j, t, solid); }
-    ring(x, y, w, h, t) { for (let i = 0; i < w; i++) { this.set(x + i, y, t, true); this.set(x + i, y + h - 1, t, true); } for (let j = 0; j < h; j++) { this.set(x, y + j, t, true); this.set(x + w - 1, y + j, t, true); } }
+    ring(x, y, w, h, t, solid) { const so = solid === undefined ? true : solid; for (let i = 0; i < w; i++) { this.set(x + i, y, t, so); this.set(x + i, y + h - 1, t, so); } for (let j = 0; j < h; j++) { this.set(x, y + j, t, so); this.set(x + w - 1, y + j, t, so); } }
+    rosette(x, y, R, n, pal) { (this.decals || (this.decals = [])).push({ x: this.X(x) * T + 8, y: y * T + 8, R, n, pal }); }
     block(x, y, w, h) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) { const xx = this.X(x + i); if (xx >= 0 && y + j >= 0 && xx < this.w && y + j < this.h) this.solid[(y + j) * this.w + xx] = 1; } }
     free(x, y) { x = this.X(x); return x >= 0 && y >= 0 && x < this.w && y < this.h && !this.solid[y * this.w + x]; }
     obj(type, x, y, opt) {
@@ -1095,6 +1109,7 @@ body.portrait .mlist { max-height: 12em; }
         c.drawImage(G.tile(n, v, this.hue), x * T, y * T);
         if (n === 'water' || n === 'sea') anim.push({ x, y, n });
       }
+      (this.decals || []).forEach(d => drawRosette(c, d));
       // ombres portées au pied des bâtiments
       (this.shadows || []).forEach(sh => { const g = c.createLinearGradient(0, sh[1] * T, 0, sh[1] * T + 9); g.addColorStop(0, 'rgba(30,18,44,.42)'); g.addColorStop(1, 'rgba(30,18,44,0)'); c.fillStyle = g; c.fillRect(sh[0] * T + 3, sh[1] * T, sh[2] * T, 9); });
       // mini-carte : 1 pixel par case
@@ -1107,6 +1122,17 @@ body.portrait .mlist { max-height: 12em; }
       this.objs.filter(o => !o.flat && G.OBJ[o.type].fw).forEach(o => { c.beginPath(); c.ellipse(o.x + 3, o.y + 1, Math.max(5, G.OBJ[o.type].fw * 0.7), 3, 0, 0, 6.3); c.fill(); });
       return { id: this.id, w: this.w, h: this.h, canvas: cv, mini, solid: this.solid, objs: this.objs.filter(o => !o.flat), lights: this.lights, spots: this.spots, anim, env: env || {}, opts: this.opts, hue: this.hue };
     }
+  }
+
+  // rosace : la même étoile à n branches, tournée et réduite, comme dans un entrelacs
+  function drawRosette(c, d) {
+    const x = d.x, y = d.y, R = d.R, n = d.n, pal = d.pal || ['rgba(190,150,56,.8)', 'rgba(45,127,143,.34)', 'rgba(241,231,204,.5)', 'rgba(142,90,42,.55)'];
+    const star = (r1, r2, rot, fill, stroke) => { c.beginPath(); for (let i = 0; i < n * 2; i++) { const a = rot + i * Math.PI / n, rr = i % 2 ? r2 : r1; c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.86); } c.closePath(); if (fill) { c.fillStyle = fill; c.fill(); } if (stroke) { c.strokeStyle = stroke; c.lineWidth = 1; c.stroke(); } };
+    [1, 0.94].forEach(k => { c.strokeStyle = pal[3]; c.lineWidth = 1; c.beginPath(); c.ellipse(x, y, R * k, R * k * 0.86, 0, 0, 6.3); c.stroke(); });
+    star(R * 0.9, R * 0.6, 0, pal[1], pal[0]); star(R * 0.9, R * 0.6, Math.PI / n, null, pal[0]);
+    star(R * 0.56, R * 0.3, Math.PI / n, pal[2], pal[3]); star(R * 0.56, R * 0.3, 0, null, pal[3]);
+    star(R * 0.26, R * 0.13, 0, pal[0], null);
+    c.fillStyle = pal[0]; for (let i = 0; i < n; i++) { const a = i * 2 * Math.PI / n; c.fillRect(Math.round(x + Math.cos(a) * R * 0.9) - 1, Math.round(y + Math.sin(a) * R * 0.9 * 0.86) - 1, 2, 2); }
   }
 
   const TIME = {
@@ -1125,18 +1151,21 @@ body.portrait .mlist { max-height: 12em; }
     // place pavée
     b.fill(23, 21, 15, 8, 'stone');
     // mosquée : enceinte de pisé, cour ouverte, colonnes de troncs de palmier
-    b.fill(21, 5, 19, 14, 'path'); b.ring(21, 5, 19, 14, 'wall');
+    b.fill(21, 5, 19, 14, 'path'); b.ring(21, 5, 19, 14, 'gwall');
+    b.fill(22, 6, 17, 6, id === 'koufa' ? 'zellij' : 'zsand', false); b.ring(22, 12, 17, 6, id === 'koufa' ? 'zellij' : 'zsand', false);
+    b.rosette(30, 15, 34, id === 'koufa' ? 12 : 8); if (id === 'koufa') { b.set(30, 5, 'mihrab', true); b.obj('basin', 36, 15); }
+    b.obj('minbar', 37, 7);
     b.set(30, 18, 'path', false); b.set(29, 18, 'path', false); b.set(31, 18, 'path', false);
     for (let x = 24; x <= 36; x += 3) { b.obj('trunkcol', x, 8); b.obj('trunkcol', x, 11); }
-    for (let x = 24; x <= 36; x += 4) b.obj('mat', x, 14);
-    b.obj('lamp', 23, 16); b.obj('lamp', 37, 16); b.light(23, 15, 60, '#ffc878', 0.12); b.light(37, 15, 60, '#ffc878', 0.12); b.light(30, 9, 80, '#ffd9a0', 0.05);
-    b.spot('mosquee_cour', 30, 13); b.spot('mosquee_porte', 30, 20);
-    b.spot('priere', 26, 16); b.light(26, 15, 46, '#fff0c0', 0.05); b.obj('shelf', 35, 16); b.obj('mat', 34, 17); b.spot('ecole', 33, 17);
+    for (let x = 25; x <= 34; x += 3) b.obj('mat', x, 10);
+    b.obj('lantern', 23, 16); b.obj('lantern', 37, 16); b.obj('lantern', 23, 7); b.light(23, 6, 50, '#ffc878', 0.12); b.light(23, 15, 60, '#ffc878', 0.12); b.light(37, 15, 60, '#ffc878', 0.12); b.light(30, 9, 80, '#ffd9a0', 0.05);
+    b.spot('mosquee_cour', 30, 12); b.spot('mosquee_porte', 30, 20);
+    b.spot('priere', 30, 15); b.light(30, 15, 70, '#fff0c0', 0.05); b.obj('shelf', 35, 16); b.obj('mat', 34, 17); b.spot('ecole', 33, 17);
     b.spot('place', 30, 25);
     b.obj('well', 25, 23); b.spot('puits', 25, 25);
     // halle (Saqîfa / tribunal) : auvent de palmes sur piliers, à l'ouest
     b.house(6, 17, 9, 6, { roof: 'thatch', edge: 'thatch', doorAt: 4 }); b.fill(6, 23, 9, 3, 'stone');
-    b.obj('trunkcol', 6, 25); b.obj('trunkcol', 14, 25); b.obj('mat', 9, 24); b.obj('mat', 12, 24); b.obj('lamp', 16, 23); b.light(16, 22, 56, '#ffc878', 0.12);
+    b.rosette(10, 24, 20, 8); b.obj('trunkcol', 6, 25); b.obj('trunkcol', 14, 25); b.obj('rug', 8, 23, { color: '#6b3f2a', trim: '#d9b45a' }); b.obj('rug', 12, 23, { color: '#6b3f2a', trim: '#d9b45a' }); b.obj('lantern', 16, 23); b.light(16, 22, 56, '#ffc878', 0.12);
     b.spot('halle', 10, 26);
     // maison du Compagnon (nord-ouest)
     b.house(12, 7, 6, 5); b.spot('maison', 15, 13); b.obj('jar', 12, 12); b.obj('sack', 18, 12);
@@ -1146,7 +1175,7 @@ body.portrait .mlist { max-height: 12em; }
     b.fill(40, 20, 15, 8, 'path');
     ['#a53c33', '#2f6f8f', '#c9a13f', '#3d8a6a'].forEach((col, i) => b.obj('stall', 42 + i * 4, 21, { color: col }));
     b.obj('stall', 44, 27, { color: '#6b3f7a' }); b.obj('stall', 50, 27, { color: '#a53c33' });
-    b.obj('jar', 41, 23); b.obj('crate', 55, 22); b.obj('sack', 54, 26); b.obj('lamp', 48, 24); b.light(48, 23, 60, '#ffc878', 0.12);
+    b.obj('rug', 45, 24, { color: '#8e2f2a' }); b.obj('rug', 50, 25, { color: '#27608f', trim: '#f1e7cc' }); b.obj('jar', 41, 23); b.obj('crate', 55, 22); b.obj('sack', 54, 26); b.obj('lamp', 48, 24); b.light(48, 23, 60, '#ffc878', 0.12);
     b.spot('souk', 47, 25);
     // palmeraie (sud-est) avec rigole
     b.patch('grass', 49, 38, 6); b.fill(44, 41, 12, 1, 'water'); b.set(49, 41, 'wood', false); b.set(50, 41, 'wood', false);
@@ -1250,7 +1279,7 @@ body.portrait .mlist { max-height: 12em; }
     b.spot('nef', 20, 17); b.spot('entree', 20, 27);
     b.obj('treasure', 33, 6); b.obj('treasure', 35, 9); b.obj('treasure', 31, 9); b.obj('chest', 36, 6); b.obj('jar', 30, 6); b.light(33, 7, 60, '#ffe08a', 0.1); b.spot('tresor', 33, 11);
     for (let y = 8; y < 26; y += 3) b.obj('column', 6, y); b.spot('colonnade', 9, 17);
-    b.fill(29, 19, 9, 8, 'grass'); b.obj('fountain', 33, 22); b.obj('cypress', 30, 20); b.obj('cypress', 37, 25); b.spot('jardin', 33, 25); b.obj('mat', 31, 24); b.spot('priere', 31, 25);
+    b.fill(29, 19, 9, 8, 'grass'); b.obj('fountain', 33, 22); b.obj('cypress', 30, 20); b.obj('cypress', 37, 25); b.spot('jardin', 33, 25); b.obj('mat', 36, 20); b.spot('priere', 36, 21);
     b.obj('carpetroll', 4, 5); b.obj('jar', 3, 26); b.obj('brazier', 10, 26); b.light(10, 25, 60, '#ffb45a', 0.2);
     return b.finish(Object.assign(envFor('dusk'), { clouds: false, ambient: '#8a78a8', grade: ['#ffb060', 0.18], particles: 'dust', rate: 4, sound: 'silence', bg: 'palais', rays: { a: 0.06, color: '#ffe0b0' }, bloom: 0.24, music: 'palais' }));
   }
@@ -1289,17 +1318,17 @@ body.portrait .mlist { max-height: 12em; }
     b.fill(28, 36, 3, 1, 'stone', false); b.spot('porte', 29, 38); b.obj('lamp', 26, 38); b.obj('lamp', 32, 38); b.light(26, 37, 54, '#ffc878', 0.12); b.light(32, 37, 54, '#ffc878', 0.12);
     b.set(50, 20, 'path', false); b.spot('poterne', 52, 20);
     // cour pavée et puits
-    b.fill(22, 18, 15, 9, 'stone'); b.obj('well', 29, 21); b.spot('puits', 29, 23); b.spot('cour', 29, 25);
+    b.fill(22, 18, 15, 9, 'stone'); b.ring(22, 18, 15, 9, 'zellij', false); b.rosette(29, 22, 46, 12); b.obj('well', 29, 21); b.spot('puits', 29, 23); b.spot('cour', 29, 25);
     // salle du Caïd (nord)
     b.house(23, 8, 13, 7, { roof: 'roof', doorAt: 6 }); b.obj('banner', 22, 16, { color: '#1c3a5a', trim: '#e6dcc4' }); b.obj('banner', 36, 16, { color: '#1c3a5a', trim: '#e6dcc4' }); b.obj('brazier', 26, 16); b.obj('brazier', 32, 16); b.light(26, 15, 60, '#ffb45a', 0.2); b.light(32, 15, 60, '#ffb45a', 0.2); b.spot('salle', 29, 16);
     // mosquée (nord-ouest) : cour ouverte, nattes
-    b.fill(10, 8, 10, 9, 'path'); b.ring(10, 8, 10, 9, 'wall'); b.set(15, 16, 'path', false); b.set(14, 16, 'path', false);
-    b.obj('trunkcol', 12, 11); b.obj('trunkcol', 17, 11); b.obj('mat', 13, 13); b.obj('mat', 16, 13); b.obj('lamp', 11, 15); b.light(11, 14, 50, '#ffc878', 0.1); b.light(15, 12, 60, '#fff0c0', 0.05);
-    b.spot('mosquee', 15, 18); b.spot('priere', 15, 14);
+    b.fill(10, 8, 10, 9, 'zellij', false); b.ring(10, 8, 10, 9, 'gwall'); b.set(15, 8, 'mihrab', true); b.set(15, 16, 'zellij', false); b.set(14, 16, 'zellij', false); b.rosette(15, 13, 22, 8); b.obj('basin', 12, 15);
+    b.obj('column', 12, 10); b.obj('column', 18, 10); b.obj('lantern', 17, 15); b.light(11, 14, 50, '#ffc878', 0.1); b.light(15, 12, 60, '#fff0c0', 0.05);
+    b.spot('mosquee', 15, 18); b.spot('priere', 15, 13);
     // école (nord-est) : auvent, rayonnage, nattes
-    b.house(39, 8, 8, 5, { roof: 'thatch', edge: 'thatch' }); b.obj('shelf', 41, 14); b.obj('mat', 44, 15); b.obj('mat', 41, 16); b.obj('lamp', 46, 15); b.light(46, 14, 50, '#ffc878', 0.1); b.spot('ecole', 43, 16);
+    b.house(39, 8, 8, 5, { roof: 'thatch', edge: 'thatch' }); b.obj('shelf', 41, 14); b.obj('rug', 44, 16, { color: '#3d8a6a', trim: '#f1e7cc' }); b.obj('lamp', 46, 15); b.light(46, 14, 50, '#ffc878', 0.1); b.spot('ecole', 43, 16);
     // souk (est)
-    ['#1c3a5a', '#a53c33', '#c9a13f'].forEach((c, i) => b.obj('stall', 41 + i * 4, 22, { color: c })); b.obj('jar', 40, 24); b.obj('crate', 48, 25); b.obj('camel', 46, 28); b.spot('souk', 44, 25);
+    ['#1c3a5a', '#a53c33', '#c9a13f'].forEach((c, i) => b.obj('stall', 41 + i * 4, 22, { color: c })); b.obj('rug', 43, 24, { color: '#1c3a5a', trim: '#f1e7cc' }); b.obj('rug', 47, 26, { color: '#8e2f2a' }); b.obj('jar', 40, 24); b.obj('crate', 48, 25); b.obj('camel', 46, 28); b.spot('souk', 44, 25);
     // greniers (sud-ouest)
     b.house(10, 26, 6, 5); b.house(17, 28, 5, 5, { window: false }); b.obj('sack', 12, 32); b.obj('jar', 15, 32); b.obj('sack', 18, 34); b.obj('crate', 21, 34); b.spot('greniers', 15, 33);
     // jardin (sud-est) : rigole, palmiers
@@ -1466,7 +1495,7 @@ body.portrait .mlist { max-height: 12em; }
     const ok = conf >= P.goal;
     if (ok) {
       sv.parley.won++; I.audio.sfx('roll'); G.flash('#ffe08a');
-      const xp = P.xp || Math.round(34 + 20 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
+      const xp = P.xp || Math.round(22 + 12 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
       await card('victory', `<p class="small">Pourparler · ${I.esc(P.title)}</p><h1>La parole a suffi</h1><ul><li>Confiance : <b>${conf} / ${P.goal}</b></li><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}</ul><div class="hint">▼</div>`);
       await S.run(P.win);
     } else {
@@ -1520,6 +1549,7 @@ body.portrait .mlist { max-height: 12em; }
       case 'ask': { S.hideDialog(); const i = await menuPick(a, b); if (b[i].r) await S.run(b[i].r); break; }
       case 'parley': await runParley(a); break;
       case 'pray': await W.pray(a); break;
+      case 'save': await I.ui.saveMenu(); break;
       case 'pillar': W.pillar(a, b); break;
       case 'mus': I.audio.music(a); break;
       case 'battle': S.hideDialog(); await I.battle.start(a); break;
@@ -1758,7 +1788,7 @@ body.portrait .mlist { max-height: 12em; }
         if (!saga.frame && sp.cTot) {
           const perfect = (sp.cOk || 0) === sp.cTot;
           if (perfect) { sv.items.siwak = (sv.items.siwak || 0) + 2; sv.items.musc = (sv.items.musc || 0) + 1; I.audio.sfx('roll'); }
-          await S.card('victory', `<p class="small">Fidélité à la Chaîne · ${I.esc(saga.name)}</p><h1>${perfect ? 'Isnâd sahîh' : 'Chaîne transmise'}</h1><ul><li>Actes retrouvés du premier coup : <b>${sp.cOk || 0} / ${sp.cTot}</b></li>${perfect ? '<li>Chaîne sans faille : chaque acte fut celui que les transmetteurs ont rapporté.</li><li>Reçu : <b>Siwâk ×2</b>, <b>Musc</b></li>' : '<li>Là où la chaîne a vacillé, relis le codex : chaque acte y a sa source.</li>'}</ul><div class="hint">▼</div>`);
+          await S.card('victory', `<p class="small">Fidélité à la Chaîne · ${I.esc(saga.name)}</p><h1>${perfect ? 'Isnâd sahîh' : 'Chaîne transmise'}</h1><ul><li>Actes retrouvés du premier coup : <b>${sp.cOk || 0} / ${sp.cTot}</b></li>${perfect ? '<li>Chaîne sans faille : chaque acte fut celui que les transmetteurs ont rapporté.</li><li>Reçu : <b>Siwâk ×2</b>, <b>Musc</b></li>' : '<li>Là où la chaîne a vacillé, relis le Recueil : chaque acte y a sa source.</li>'}</ul><div class="hint">▼</div>`);
         }
         sp.done = true; sp.ch = saga.frame ? W.ci + 1 : 0; I.save.store();
         await I.ui.afterSaga(saga, ch);
@@ -1775,6 +1805,9 @@ body.portrait .mlist { max-height: 12em; }
     W.npcs.forEach(n => { if (n.hidden || n.map !== W.map.id || !n.placed) return; const d = Math.hypot(n.x - px, n.y - py); if (d < bd) { bd = d; best = n; } });
     const o0 = W.cur();
     if (o0 && o0.talk) { const n = W.npcs.find(n => n.id === o0.talk); if (n && !n.hidden && n.map === W.map.id && n.placed && (Math.hypot(n.x - px, n.y - py) < 27 || Math.hypot(n.x - p.x, n.y - p.y) < 24)) best = n; }
+    // sur la natte, la prière et la sauvegarde passent avant un voisin que l'on ne regarde pas en face
+    const onMat = W.nearPrayer() && !(o0 && o0.talk && best && best.id === o0.talk);
+    if (onMat && best && bd > 13) best = null;
     if (best) {
       const dx = p.x - best.x, dy = p.y - best.y; best.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0);
       const o = W.cur();
@@ -1785,7 +1818,7 @@ body.portrait .mlist { max-height: 12em; }
     const c = W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
-      await S.run([['ask', 'Une natte tournée vers La Mecque. Faire halte pour la prière ?', [{ t: 'Prier', r: [['pray']] }, { t: 'Plus tard', r: [] }]]]);
+      await S.run([['ask', 'Une natte tournée vers La Mecque, au cœur de l’étoile.', [{ t: 'Prier : le groupe se repose, la Sakîna descend', r: [['pray']] }, { t: 'Sauvegarder la partie', r: [['save']] }, { t: 'Plus tard', r: [] }]]]);
     }
   };
   W.fight = async function (f) {
@@ -1824,7 +1857,9 @@ body.portrait .mlist { max-height: 12em; }
         p.moving = !!(m1 || m2); if (p.moving) { pushTrail(); if (Math.floor(W.t * 5) !== Math.floor((W.t - dt) * 5)) I.audio.sfx('step'); }
       } else p.moving = false;
       const o = W.cur();
-      if (o && o.goto) { const s = W.spotPx(o.goto); if (s && Math.hypot(s[0] - p.x, s[1] - p.y) < 36) W.complete(); }
+      if (o && o.goto) { const s = W.spotPx(o.goto), pr = W.map.spots.priere, near = pr && s && Math.hypot(pr[0] * T + 8 - s[0], pr[1] * T + 13 - s[1]) < 70; if (s && Math.hypot(s[0] - p.x, s[1] - p.y) < (near ? 20 : 36)) W.complete(); }
+      // rappel : on ne sauvegarde que dans les mosquées
+      W.unsaved = (W.unsaved || 0) + dt; if (W.unsaved > 480 && !W._warned) { W._warned = true; S.toast('Tu n’as pas sauvegardé depuis un moment. La natte d’une mosquée, au cœur de l’étoile, garde ta partie.', 6000); }
       for (const f of W.foes) {
         if (f.done || f.map !== W.map.id || !f.placed) continue;
         const d = Math.hypot(f.x - p.x, f.y - p.y);
@@ -1944,7 +1979,10 @@ body.portrait .mlist { max-height: 12em; }
       if (!best && W.nearPrayer()) best = { x: p.x, y: p.y + 6 };
       if (best && !(tg && tg.kind === 'talk' && Math.abs(tg.x - best.x) < 2)) { const bx = Math.round(best.x - cx), by = Math.round(best.y - cy - 34 + Math.sin(t * 5) * 1.5); c.fillStyle = '#1a1420'; c.fillRect(bx - 7, by - 1, 14, 9); c.fillStyle = '#fff6dc'; c.fillRect(bx - 6, by, 12, 7); c.fillRect(bx - 1, by + 7, 2, 2); c.fillStyle = '#1a1420'; c.fillRect(bx - 4, by + 3, 2, 2); c.fillRect(bx - 1, by + 3, 2, 2); c.fillRect(bx + 2, by + 3, 2, 2); }
     }
-    if (m.spots.priere) { const px2 = m.spots.priere[0] * T + 8 - cx, py2 = m.spots.priere[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) { lights.push({ x: px2, y: py2, r: 30 + Math.sin(t * 2) * 3, color: '#fff3c8', a: 0.55 }); if (Math.random() < 0.06) G.spawn({ x: px2 + (Math.random() - 0.5) * 16, y: py2 + 4, vy: -10, life: 1.6, size: 0.6, color: '#fff3c8', type: 'mote' }); } }
+    if (m.spots.priere) { const px2 = m.spots.priere[0] * T + 8 - cx, py2 = m.spots.priere[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) {
+      // étoile à huit branches en lumière : deux carrés qui tournent en sens contraires
+      const sq = (rot, r, col) => { c.strokeStyle = col; c.lineWidth = 1; c.beginPath(); for (let i = 0; i < 4; i++) { const a = rot + i * Math.PI / 2, X = px2 + Math.cos(a) * r, Y = py2 + 4 + Math.sin(a) * r * 0.62; if (i) c.lineTo(X, Y); else c.moveTo(X, Y); } c.closePath(); c.stroke(); };
+      sq(t * 0.45, 11, 'rgba(255,236,170,.9)'); sq(-t * 0.45 + Math.PI / 4, 11, 'rgba(255,236,170,.9)'); sq(t * 0.3 + 0.4, 6, 'rgba(130,225,235,.75)'); lights.push({ x: px2, y: py2, r: 30 + Math.sin(t * 2) * 3, color: '#fff3c8', a: 0.55 }); if (Math.random() < 0.06) G.spawn({ x: px2 + (Math.random() - 0.5) * 16, y: py2 + 4, vy: -10, life: 1.6, size: 0.6, color: '#fff3c8', type: 'mote' }); } }
     // lumières de la carte
     const la = env.lightA === undefined ? 1 : env.lightA;
     if (la > 0) for (const L of m.lights) { const x = L.x - cx, y = L.y - cy; if (x < -L.r || y < -L.r || x > G.PW + L.r || y > G.PH + L.r) continue; lights.push({ x, y, r: L.r, color: L.color, a: la * (1 - L.flicker * (0.5 + 0.5 * Math.sin(t * 9 + L.x))) }); }
@@ -1966,14 +2004,14 @@ body.portrait .mlist { max-height: 12em; }
   'use strict';
   const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, $ = I.$;
   const B = I.battle = { active: false };
-  const TIER = { minion: { hp: 0.66, atk: 0.8, def: 0.8, spd: 0.95, xp: 1 }, elite: { hp: 2.4, atk: 1.0, def: 1.0, spd: 1.0, xp: 3.2 }, boss: { hp: 6.4, atk: 1.15, def: 1.05, spd: 1.04, xp: 7 } };
+  const TIER = { minion: { hp: 0.78, atk: 0.8, def: 0.8, spd: 0.95, xp: 1 }, elite: { hp: 2.4, atk: 1.0, def: 1.0, spd: 1.0, xp: 3.2 }, boss: { hp: 6.4, atk: 1.15, def: 1.05, spd: 1.04, xp: 7 } };
   const base = L => ({ hp: 70 + 26 * L, sp: 14 + 4 * L, atk: 9 + 3 * L, def: 7 + 2.2 * L, spd: 10 + 0.6 * L });
 
   I.calc = {
     hero(def, lvl) { const r = D.ROLES[def.role], b = base(lvl); return { hp: Math.round(b.hp * r.hp), sp: Math.round(b.sp * r.sp), atk: b.atk * r.atk, mag: b.atk * r.mag, def: b.def * r.def, spd: b.spd * r.spd }; },
     enemy(def, nHeroes, nFoes) {
-      const t0 = TIER[def.tier], early = def.tier === 'boss' && def.lvl <= 4, t = early ? Object.assign({}, t0, { hp: t0.hp * 0.75, atk: t0.atk * 0.9 }) : t0, b = base(def.lvl), ps = nHeroes >= 3 ? 1 : nHeroes === 2 ? 0.72 : 0.42, crowd = nFoes >= 3 ? 0.85 : 1;
-      return { hp: Math.round(b.hp * t.hp * ps * crowd), atk: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.9 : 1), mag: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.9 : 1), def: b.def * t.def, spd: b.spd * t.spd };
+      const t0 = TIER[def.tier], early = def.tier === 'boss' && def.lvl <= 4, t = early ? Object.assign({}, t0, { hp: t0.hp * 0.75, atk: t0.atk * 0.9 }) : t0, b = base(def.lvl), ps = (nHeroes >= 3 ? 1 : nHeroes === 2 ? 0.64 : 0.42) * (def.tier === 'elite' && def.lvl <= 3 ? 0.85 : 1), crowd = nFoes >= 3 ? 0.85 : 1;
+      return { hp: Math.round(b.hp * t.hp * ps * crowd), atk: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.84 : 1), mag: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.84 : 1), def: b.def * t.def, spd: b.spd * t.spd };
     },
     xpNeed: l => 40 + 40 * l,
     xpOf: def => Math.round((10 + 7 * def.lvl) * TIER[def.tier].xp)
@@ -2541,20 +2579,44 @@ body.portrait .mlist { max-height: 12em; }
   U.showTitle = function () {
     I.setScene(U.titleScene); G.clearParts(); G.amb = { kind: 'dust', rate: 5, n: 0 }; I.audio.amb('vent'); I.audio.music('titre'); I.audio.beat('veille');
     $('#hud').hidden = true; document.body.dataset.theme = 'orient';
-    const box = $('#title .vmenu'); box.innerHTML = ''; const sv = I.save.data, has = sv.started; let fl, armed = false;
+    const box = $('#title .vmenu'); box.innerHTML = ''; const sv = I.save.data, has = I.save.slots().some(Boolean); let fl;
     const mk = (label, fn, dis) => { const b = I.el('button', '', label); b.type = 'button'; b.disabled = !!dis; b.onclick = ev => { ev.stopPropagation(); I.audio.unlock(); fn(b); }; box.appendChild(b); return b; };
     const close = () => { fl.destroy(); screen('#title', false); I.audio.stopBeat(); };
     const btns = [];
-    if (has) btns.push(mk('Continuer', () => { close(); U.resume(); }));
+    if (has) btns.push(mk('Continuer', async () => { close(); const ok = await U.loadMenu(); if (ok) U.resume(); else U.showTitle(); }));
     btns.push(mk('Nouvelle partie', b => {
-      if (has && !armed) { armed = true; b.textContent = 'Effacer et recommencer ?'; return; }
-      close(); I.save.reset(); I.save.data.started = true; I.save.store(); W.roster = {}; W.saga = null; W.startChapter('idris', 0);
+      close(); I.save.reset(); I.save.data.started = true; W.roster = {}; W.saga = null; W.startChapter('idris', 0);
     }));
     btns.push(mk('Son : ' + (I.audio.on ? 'activé' : 'coupé'), b => { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = 'Son : ' + (I.audio.on ? 'activé' : 'coupé'); }));
     btns.push(mk('Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'), b => { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'); }));
     btns.push(mk('Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'); }));
     btns.push(mk('Plein écran', () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } }));
     screen('#title', true); fl = focusList(btns);
+  };
+  const slotLabel = (d, n) => d ? `Emplacement ${n} · ${I.esc((d.meta && d.meta.label) || 'Partie')} · ${new Date((d.meta && d.meta.when) || 0).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })} ${new Date((d.meta && d.meta.when) || 0).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}` : `Emplacement ${n} · vide`;
+  U.saveMenu = async function () {
+    const slots = I.save.slots(), opts = slots.map((d, i) => ({ t: slotLabel(d, i + 1) })).concat([{ t: 'Annuler' }]);
+    S.depth++;
+    try {
+      const i = I.debug.auto ? 2 : await S.menuPick('Sauvegarder sur quel emplacement ?', opts);
+      if (i > 2) return false;
+      const inWorld = I.scene === W && W.map; if (inWorld) W.checkpoint();
+      const lead = W.saga && W.party.length ? W.hero(W.party[0]) : null;
+      const label = inWorld && W.saga ? `${W.saga.name} · ${W.ch.title}${lead ? ' · niv. ' + lead.lvl : ''}` : `La Chaîne · ${I.save.data.lights.filter(l => l !== 'sabr').length} Lumière(s)`;
+      const ok = I.save.write(i + 1, { label }); if (ok) { W.unsaved = 0; W._warned = false; }
+      I.audio.sfx(ok ? 'roll' : 'dark'); G.flash('#fff3c8');
+      if (inWorld) for (let k = 0; k < 40; k++) G.spawn({ x: W.player.x - W.cam.x, y: W.player.y - W.cam.y - 6, vx: (Math.random() - 0.5) * 160, vy: (Math.random() - 0.8) * 120, life: 1.2, size: 0.9, color: '#ffe9a8', type: 'spark' });
+      S.toast(ok ? `<b>Partie sauvegardée</b> · emplacement ${i + 1}` : 'La sauvegarde a échoué : le stockage du navigateur est indisponible.', 3600);
+      return ok;
+    } finally { S.depth--; S.hideDialog(); }
+  };
+  U.loadMenu = async function () {
+    const slots = I.save.slots(), idx = slots.map((d, i) => d ? i : -1).filter(i => i >= 0);
+    if (!idx.length) return false;
+    I.setScene(U.blank);
+    S.depth++;
+    try { const k = await S.menuPick('Reprendre quelle partie ?', idx.map(i => ({ t: slotLabel(slots[i], i + 1) })).concat([{ t: 'Retour' }])); if (k >= idx.length) return false; return I.save.read(idx[k] + 1); }
+    finally { S.depth--; S.hideDialog(); }
   };
   U.resume = function () {
     const sv = I.save.data;
@@ -2593,7 +2655,8 @@ body.portrait .mlist { max-height: 12em; }
     foot.appendChild(I.el('span', 'pill', `Fidélité à la Chaîne : <b>${sv.isnad.ok}</b> / ${sv.isnad.total}`));
     if (sv.parley && sv.parley.total) foot.appendChild(I.el('span', 'pill', `Pourparlers réussis : <b>${sv.parley.won}</b> / ${sv.parley.total}`));
     if (I.sagas.caid && Object.keys(sv.veillees || {}).length) foot.appendChild(I.el('span', 'pill', 'Citadelle du Caïd : ' + Object.keys(D.PILLARS).map(k => `${D.PILLARS[k].glyph} <b>${sv.citadel[k]}</b>`).join(' · ')));
-    const cb = I.el('button', '', 'Codex'); cb.type = 'button'; cb.onclick = ev => { ev.stopPropagation(); close(); U.pause('codex', () => U.showChain()); }; foot.appendChild(cb); btns.push(cb);
+    const sb = I.el('button', '', 'Sauvegarder (natte des Archives)'); sb.type = 'button'; sb.onclick = async ev => { ev.stopPropagation(); close(); await U.saveMenu(); U.showChain(); }; foot.appendChild(sb); btns.push(sb);
+    const cb = I.el('button', '', 'Recueil'); cb.type = 'button'; cb.onclick = ev => { ev.stopPropagation(); close(); U.pause('codex', () => U.showChain()); }; foot.appendChild(cb); btns.push(cb);
     const tb = I.el('button', '', 'Écran-titre'); tb.type = 'button'; tb.onclick = ev => { ev.stopPropagation(); close(); U.showTitle(); }; foot.appendChild(tb); btns.push(tb);
     screen('#chain', true);
     const next = list.findIndex(s => !(sv.sagas[s.id] && sv.sagas[s.id].done));
@@ -2650,7 +2713,7 @@ body.portrait .mlist { max-height: 12em; }
   };
   U.unlockCodex = function (id) {
     const cid = W.saga.id + '/' + id, sv = I.save.data; if (sv.codex.includes(cid)) return; const e = U.codexEntry(cid); if (!e) return;
-    sv.codex.push(cid); S.toast(`Codex : <b>${I.esc(e.title)}</b>`);
+    sv.codex.push(cid); S.toast(`Recueil : <b>${I.esc(e.title)}</b>`);
     const sp = sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} }); sp.kn = (sp.kn || 0) + 1; if (sp.kn % 6 === 0) W.pillar('savoir', 1);
   };
 
@@ -2666,23 +2729,23 @@ body.portrait .mlist { max-height: 12em; }
     const help = () => `<h3>Commandes</h3><p><kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : se déplacer, naviguer · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : menu, retour. Sur écran tactile : croix et boutons à l’écran, et tout est cliquable.</p>
       <h3>Combat</h3><p>On n’affronte jamais des personnes, seulement des <em>égrégores</em> : les idoles que les cœurs fabriquent ensemble. Chaque égrégore est protégé par des <b>voiles</b> (⛊). Frappe-le avec la <b>vertu</b> qui est sa faille pour retirer un voile ; à zéro, il est <b>dévoilé</b> : il perd son tour et subit bien plus.</p>
       <p><b>Niyya</b> (l’intention) : un point par tour ; dépense-en jusqu’à trois (◂ ▸) pour multiplier les coups ou renforcer une vertu. <b>Sakîna</b> : la jauge dorée ; pleine, elle ouvre l’acte ultime du Compagnon.</p>
-      <h3>La parole avant le sabre</h3><p>Un <b>pourparler</b> se gagne manche après manche : chaque argument fait monter ou baisser la confiance. Les meilleurs demandent un <b>savoir</b> (✧) appris d’un savant, d’un feuillet, d’un témoin. Avoir <b>prié</b> dans le chapitre donne la sérénité : +1 de confiance. Si la parole échoue, le récit continue, mais il en coûte.</p>\n      <h3>La Chaîne</h3><p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>`;
+      <h3>La parole avant le sabre</h3><p>Un <b>pourparler</b> se gagne manche après manche : chaque argument fait monter ou baisser la confiance. Les meilleurs demandent un <b>savoir</b> (✧) appris d’un savant, d’un feuillet, d’un témoin. Avoir <b>prié</b> dans le chapitre donne la sérénité : +1 de confiance. Si la parole échoue, le récit continue, mais il en coûte.</p>\n      <h3>Sauvegarder</h3><p>On ne sauvegarde que <b>dans les mosquées</b>, sur la natte au cœur de l’étoile, et à la natte des Archives depuis l’écran de la Chaîne. Trois emplacements. Fermer la page sans sauvegarder fait perdre ce qui a été joué depuis.</p>\n      <h3>La Chaîne</h3><p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>`;
     const journal = () => { const o = W.cur && W.cur(); return `<h3>${W.ch ? I.esc(W.ch.title) : 'Journal'}</h3><p class="src">${W.ch ? I.esc(W.ch.sub) : ''}</p><p>${o && o.text ? '◆ ' + I.esc(o.text) : 'Aucun objectif en cours.'}</p><p class="src">Fidélité à la Chaîne : ${sv.isnad.ok} / ${sv.isnad.total} · Lumières : ${sv.lights.map(l => D.ELEMENTS[l].name).join(', ') || 'aucune'}</p>`; };
     const root = () => {
       const inWorld = I.scene === W;
-      const items = [{ label: 'Reprendre', fn: close, show: journal }, { label: 'Groupe', fn() {}, show: () => '<h3>Groupe</h3>' + party() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Codex', fn: codex, show: () => `<h3>Codex</h3><p>${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} débloquée${sv.codex.length > 1 ? 's' : ''} : biographies, événements, paroles, et les idoles de la noosphère.</p>` }, { label: 'Citadelle', fn() {}, show: () => { const P = W.pillars(); const eff = { priere: 'Sakîna au début des combats ; sérénité dans les pourparlers', savoir: 'failles révélées d’emblée ; arguments ouverts par le savoir', justice: 'dégâts reçus réduits', lien: 'dégâts infligés accrus ; renforts d’alliés' }; return `<h3>${W.saga && W.saga.veillees ? 'La Citadelle du Caïd' : 'Ce que ce règne a bâti'}</h3>` + Object.keys(D.PILLARS).map(k => `<p><b>${D.PILLARS[k].glyph} ${D.PILLARS[k].name}</b> ${'◆'.repeat(P[k] || 0)}${'◇'.repeat(5 - (P[k] || 0))}<br><small>${eff[k]}</small></p>`).join('') + '<p class="src">Les piliers montent par la prière tenue, le savoir appris, la justice rendue et les pactes noués ; ils descendent quand la parole échoue.</p>'; } },
+      const items = [{ label: 'Reprendre', fn: close, show: journal }, { label: 'Groupe', fn() {}, show: () => '<h3>Groupe</h3>' + party() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` }, { label: 'Citadelle', fn() {}, show: () => { const P = W.pillars(); const eff = { priere: 'Sakîna au début des combats ; sérénité dans les pourparlers', savoir: 'failles révélées d’emblée ; arguments ouverts par le savoir', justice: 'dégâts reçus réduits', lien: 'dégâts infligés accrus ; renforts d’alliés' }; return `<h3>${W.saga && W.saga.veillees ? 'La Citadelle du Caïd' : 'Ce que ce règne a bâti'}</h3>` + Object.keys(D.PILLARS).map(k => `<p><b>${D.PILLARS[k].glyph} ${D.PILLARS[k].name}</b> ${'◆'.repeat(P[k] || 0)}${'◇'.repeat(5 - (P[k] || 0))}<br><small>${eff[k]}</small></p>`).join('') + '<p class="src">Les piliers montent par la prière tenue, le savoir appris, la justice rendue et les pactes noués ; ils descendent quand la parole échoue.</p>'; } },
         { label: 'Commandes', fn() {}, show: help },
         { label: 'Son : ' + (I.audio.on ? 'activé' : 'coupé'), fn(b) { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = 'Son : ' + (I.audio.on ? 'activé' : 'coupé'); }, show: () => '<h3>Son</h3><p>Coupe ou rétablit tout le son : ambiances, bruitages et musique.</p>' },
         { label: 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'), fn(b) { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'); }, show: () => '<h3>Musique</h3><p>Bande-son originale synthétisée, une piste par ambiance. Coupée, il reste les ambiances, les percussions de duff et les bruitages.</p>' },
         { label: 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'), fn(b) { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'); }, show: () => '<h3>Rendu</h3><p>Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.</p>' }];
-      if (inWorld) items.push({ label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>La progression du chapitre est conservée : tu reprendras au dernier objectif atteint.</p>' });
+      if (inWorld) items.push({ label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre au dernier objectif atteint, tant que la page reste ouverte. Rien n’est écrit tant que tu n’as pas sauvegardé dans une mosquée ou à la natte des Archives.</p>' });
       $('#menu h2').textContent = 'Halte';
       build(items, { onCancel: close });
     };
     const codex = () => {
-      const es = sv.codex.map(U.codexEntry).filter(Boolean), items = [{ label: '◂ Retour', fn: mode === 'codex' ? close : root, show: () => '<h3>Codex</h3><p>Choisis une entrée.</p>' }];
+      const es = sv.codex.map(U.codexEntry).filter(Boolean), items = [{ label: '◂ Retour', fn: mode === 'codex' ? close : root, show: () => '<h3>Le Recueil</h3><p>Choisis une entrée.</p>' }];
       D.CODEX_CATS.forEach(cat => { const L = es.filter(e => e.cat === cat); if (!L.length) return; items.push({ cat }); L.forEach(e => items.push({ label: I.esc(e.title), fn() {}, show: () => `<h3>${I.esc(e.title)}</h3><p class="src">${cat} · ${I.esc(e.saga.name)}</p><p>${I.fmt(e.text)}</p>${e.src ? `<p class="src">Source : ${I.esc(e.src)}</p>` : ''}` })); });
-      $('#menu h2').textContent = 'Codex';
+      $('#menu h2').textContent = 'Le Recueil';
       build(items, { onCancel: mode === 'codex' ? close : root });
     };
     screen('#menu', true); if (mode === 'codex') codex(); else root();
@@ -2862,7 +2925,8 @@ ISNAD.registerSaga({
         ] },
         { text: 'Descendre aux Archives basses (au bout de la rue)', goto: 'ascenseur', then: [
           ['sfx', 'door'], ['map', 'archives', 'entree'],
-          ['nar', 'Quarante étages sous la rue, là où le Flux ne descend pas : les Archives basses.']
+          ['nar', 'Quarante étages sous la rue, là où le Flux ne descend pas : les Archives basses.'],
+          ['nar', 'Dans un angle, une natte tournée vers La Mecque. Ici comme dans chaque mosquée de la Chaîne, on peut prier, et c’est là seulement que l’on *sauvegarde* la partie.']
         ] },
         { text: 'Parler à Maître Yûnus', talk: 'yunus_n', then: [
           ['say', 'yunus_n', 'Te voilà, Idris. Assieds-toi. Ce soir, je te remets ce qu’on m’a remis.'],

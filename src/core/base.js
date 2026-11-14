@@ -71,15 +71,23 @@
       items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
       opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, parley: { won: 0, total: 0 } };
   }
+  // La progression ne s'écrit que dans une mosquée (trois emplacements). Les options, elles, se gardent à part.
+  const OKEY = 'isnad.opts.v1', SLOT = n => 'isnad.slot.' + n;
   I.save = {
     data: fresh(),
+    slots() { return [1, 2, 3].map(n => { try { const d = JSON.parse(localStorage.getItem(SLOT(n)) || 'null'); return d && d.v === 1 ? d : null; } catch (e) { return null; } }); },
     load() {
-      try { const raw = localStorage.getItem(SKEY); if (raw) { const d = JSON.parse(raw); if (d && d.v === 1) { const f = fresh(); this.data = Object.assign(f, d); this.data.opts = Object.assign(fresh().opts, d.opts || {}); return true; } } } catch (e) { /* stockage indisponible */ }
-      return false;
+      try {
+        const o = JSON.parse(localStorage.getItem(OKEY) || 'null'); if (o) Object.assign(this.data.opts, o);
+        const old = localStorage.getItem(SKEY); // reprise d'une partie de la version précédente (sauvegarde automatique)
+        if (old) { const d = JSON.parse(old); if (d && d.v === 1 && d.started && !this.slots().some(Boolean)) { d.meta = { label: 'Partie de la version précédente', when: Date.now() }; localStorage.setItem(SLOT(1), JSON.stringify(d)); if (d.opts && !o) Object.assign(this.data.opts, d.opts); } localStorage.removeItem(SKEY); }
+      } catch (e) { /* stockage indisponible */ }
+      return this.slots().some(Boolean);
     },
-    store() { try { localStorage.setItem(SKEY, JSON.stringify(this.data)); } catch (e) { /* ignore */ } },
-    reset() { const o = this.data.opts; this.data = fresh(); this.data.opts = Object.assign(this.data.opts, o); this.store(); },
-    exists() { try { return !!localStorage.getItem(SKEY) && this.data.started; } catch (e) { return false; } }
+    store() { try { localStorage.setItem(OKEY, JSON.stringify(this.data.opts)); } catch (e) { /* ignore */ } },
+    write(n, meta) { this.data.meta = Object.assign({ when: Date.now() }, meta || {}); this.data.started = true; try { localStorage.setItem(SLOT(n), JSON.stringify(this.data)); return true; } catch (e) { return false; } },
+    read(n) { const d = this.slots()[n - 1]; if (!d) return false; const o = this.data.opts; this.data = Object.assign(fresh(), d); this.data.opts = o; return true; },
+    reset() { const o = this.data.opts; this.data = fresh(); this.data.opts = Object.assign(this.data.opts, o); }
   };
 
   /* ---------- son : ambiances (bruit filtré) + percussions (duff) + bruitages. Pas d'instrument mélodique. ---------- */

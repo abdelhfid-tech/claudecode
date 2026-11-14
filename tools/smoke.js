@@ -81,6 +81,12 @@ const url = 'file://' + path.join(__dirname, '../index.html');
         log.push(`${ok ? 'OK ' : 'BLOQUÉ '} ${sid}${ci !== undefined ? '#' + ci : ''} en ${((performance.now() - t0) / 1000).toFixed(1)} s${ok ? '' : ' — chapitre ' + (W.ch && W.ch.id) + ' objectif ' + W.objIndex + ' carte ' + (W.map && W.map.id)}`);
         if (!ok) break;
       }
+      // sauvegarde : aller-retour sur un emplacement ; haltes de prière : accessibles à pied depuis chaque lieu
+      const before = JSON.stringify(I.save.data.lights), okW = I.save.write(3, { label: 'essai' }); I.save.data.lights = []; const okR = I.save.read(3);
+      log.push(`SAUVEGARDE écriture ${okW} lecture ${okR} identique ${JSON.stringify(I.save.data.lights) === before}`); try { localStorage.removeItem('isnad.slot.3'); } catch (e) {}
+      const bad = []; I.debug.auto = false; I.script.depth = 1;
+      for (const id of ['medine', 'koufa', 'desert', 'camp', 'romaine', 'palais', 'navire', 'citadelle', 'archives']) { W.loadMap(id, {}, null); const m = W.map, q = W.resolve('priere', id, W.player); for (const k of Object.keys(m.spots)) { if (k === 'priere') continue; const a = W.resolve(k, id, W.player); if (!W.reach(a[0], a[1], q[0], q[1])) bad.push(id + ':' + k); } }
+      log.push(bad.length ? 'NATTE INACCESSIBLE depuis ' + bad.join(', ') : 'NATTES toutes accessibles à pied');
       return { log, stats, save: { lights: I.save.data.lights, isnad: I.save.data.isnad, codex: I.save.data.codex.length, epilogue: I.save.data.epilogue, veillees: Object.keys(I.save.data.veillees || {}), citadel: I.save.data.citadel, parley: I.save.data.parley, piliers: Object.fromEntries(Object.entries(I.save.data.sagas).filter(([k, v]) => v.pil).map(([k, v]) => [k, Object.values(v.pil).join('/')])) } };
     }, mode);
     console.log(res.log.join('\n'));

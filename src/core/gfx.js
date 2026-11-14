@@ -38,8 +38,8 @@
     wall(c, r) { speck(c, r, P.adobe, 22); R(c, '#e2bd8a', 0, 0, 16, 1); R(c, '#a07a4c', 0, 15, 16, 1); c.fillStyle = '#b08a59'; c.fillRect(0, 5, 16, 1); c.fillRect(0, 10, 16, 1); },
     roof(c, r) { speck(c, r, P.roof, 20); c.fillStyle = '#86693f'; for (let y = 2; y < 16; y += 4) for (let x = (y % 8 ? 0 : 2); x < 16; x += 4) c.fillRect(x, y, 3, 1); },
     roofedge(c, r) { TILE.roof(c, r); R(c, '#d7b684', 0, 13, 16, 2); R(c, '#7a5f3a', 0, 15, 16, 1); },
-    door(c, r) { TILE.wall(c, r); R(c, '#4a3220', 4, 3, 8, 13); R(c, '#6b4a2e', 5, 4, 6, 12); R(c, '#3a2616', 7, 4, 1, 12); R(c, '#d9b45a', 9, 10, 1, 1); },
-    window(c, r) { TILE.wall(c, r); R(c, '#3a2a1c', 6, 5, 4, 5); R(c, '#e8b860', 7, 6, 2, 3); },
+    door(c, r) { TILE.wall(c, r); R(c, '#4a3220', 4, 4, 8, 12); c.fillStyle = '#4a3220'; c.beginPath(); c.arc(8, 5, 4, Math.PI, 0); c.fill(); R(c, '#6b4a2e', 5, 5, 6, 11); c.fillStyle = '#6b4a2e'; c.beginPath(); c.arc(8, 5, 3, Math.PI, 0); c.fill(); R(c, '#3a2616', 8, 3, 1, 13); c.fillStyle = '#d9b45a'; [[6, 7], [10, 7], [6, 11], [10, 11], [6, 14], [10, 14]].forEach(q => c.fillRect(q[0], q[1], 1, 1)); },
+    window(c, r) { TILE.wall(c, r); R(c, '#3a2a1c', 5, 3, 6, 8); R(c, '#e8b860', 6, 4, 4, 6); c.fillStyle = '#3a2a1c'; for (let k = 0; k < 4; k++) { c.fillRect(6 + k, 4 + k, 1, 1); c.fillRect(9 - k, 4 + k, 1, 1); c.fillRect(6 + k, 9 - k, 1, 1); c.fillRect(9 - k, 9 - k, 1, 1); } R(c, '#d9b37f', 5, 2, 6, 1); },
     thatch(c, r) { speck(c, r, ['#8d7a3e', '#7c6a34', '#a08c4a', '#6b5a2a'], 24); c.fillStyle = '#5d4e24'; for (let x = 1; x < 16; x += 3) c.fillRect(x, 0, 1, 16); },
     marble(c, r) { speck(c, r, P.marble, 8); R(c, '#c4bcad', 0, 15, 16, 1); R(c, '#c4bcad', 15, 0, 1, 16); R(c, '#f7f3ea', 0, 0, 15, 1); },
     mosaic(c, r) { R(c, '#e0d9ca', 0, 0, 16, 16); const cs = ['#2f6f8f', '#b5553a', '#d9b45a', '#3d8a6a', '#e9e2d0']; for (let y = 0; y < 16; y += 2) for (let x = 0; x < 16; x += 2) { const d = Math.abs(x - 7) + Math.abs(y - 7); R(c, cs[(d >> 1) % cs.length], x, y, 2, 2); } c.fillStyle = 'rgba(60,50,40,.25)'; for (let i = 0; i < 16; i += 2) { c.fillRect(i, 0, 1, 16); c.fillRect(0, i, 16, 1); } },
@@ -61,9 +61,14 @@
     nfloor(c, r, v, hue) { R(c, '#0c0f2c', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,65%,.55)`; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = `hsla(${hue},90%,70%,.14)`; c.fillRect(1, 1, 15, 15); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.8)`; if (r() < 0.35) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); },
     nbridge(c, r, v, hue) { R(c, '#080a20', 0, 0, 16, 16); c.fillStyle = `hsla(${(hue + 150) % 360},100%,70%,.75)`; c.fillRect(0, 3, 16, 1); c.fillRect(0, 12, 16, 1); c.fillStyle = `hsla(${(hue + 150) % 360},100%,70%,.18)`; c.fillRect(0, 4, 16, 8); },
     void(c, r) { R(c, '#04051a', 0, 0, 16, 16); if (r() < 0.3) R(c, '#3b3f8a', Math.floor(r() * 16), Math.floor(r() * 16), 1, 1); if (r() < 0.08) R(c, '#cfd6ff', Math.floor(r() * 16), Math.floor(r() * 16), 1, 1); },
+    // zellige « étoile et croix » : l'étoile à huit branches naît de deux carrés superposés
+    zellij(c, r, v) { const pal = v % 2 ? ['#d8c08a', '#2d7f8f', '#f1e7cc', '#c9a13f'] : ['#d8c08a', '#27608f', '#f1e7cc', '#b5553a']; R(c, pal[0], 0, 0, 16, 16); c.fillStyle = pal[1]; c.fillRect(3, 3, 10, 10); c.beginPath(); c.moveTo(8, 1); c.lineTo(15, 8); c.lineTo(8, 15); c.lineTo(1, 8); c.fill(); c.fillStyle = pal[2]; c.beginPath(); c.moveTo(8, 4); c.lineTo(12, 8); c.lineTo(8, 12); c.lineTo(4, 8); c.fill(); R(c, pal[3], 7, 7, 2, 2); R(c, pal[3], 0, 0, 1, 1); R(c, pal[3], 15, 0, 1, 1); R(c, pal[3], 0, 15, 1, 1); R(c, pal[3], 15, 15, 1, 1); },
+    zsand(c, r) { R(c, '#d4b47c', 0, 0, 16, 16); c.fillStyle = '#c29b62'; c.fillRect(3, 3, 10, 10); c.beginPath(); c.moveTo(8, 1); c.lineTo(15, 8); c.lineTo(8, 15); c.lineTo(1, 8); c.fill(); c.fillStyle = '#e6cf9c'; c.beginPath(); c.moveTo(8, 4); c.lineTo(12, 8); c.lineTo(8, 12); c.lineTo(4, 8); c.fill(); R(c, '#a8824f', 7, 7, 2, 2); },
+    gwall(c, r) { TILE.wall(c, r); R(c, '#f1e0b8', 0, 2, 16, 5); c.fillStyle = '#2d7f8f'; for (let x = 0; x < 16; x += 4) { c.beginPath(); c.moveTo(x, 4.5); c.lineTo(x + 2, 2); c.lineTo(x + 4, 4.5); c.lineTo(x + 2, 7); c.fill(); } c.fillStyle = '#c9a13f'; for (let x = 1; x < 16; x += 4) c.fillRect(x, 4, 2, 1); R(c, '#8e5a2a', 0, 1, 16, 1); R(c, '#8e5a2a', 0, 7, 16, 1); },
+    mihrab(c, r) { TILE.gwall(c, r); R(c, '#1c2f3a', 4, 3, 8, 13); c.fillStyle = '#1c2f3a'; c.beginPath(); c.arc(8, 4, 4, Math.PI, 0); c.fill(); R(c, '#2d7f8f', 5, 5, 6, 11); c.fillStyle = '#2d7f8f'; c.beginPath(); c.arc(8, 5, 3, Math.PI, 0); c.fill(); c.fillStyle = '#f1e7cc'; c.beginPath(); c.moveTo(8, 6); c.lineTo(10, 9); c.lineTo(8, 12); c.lineTo(6, 9); c.fill(); R(c, '#c9a13f', 7, 8, 2, 2); },
     dark(c) { R(c, '#07060c', 0, 0, 16, 16); }
   };
-  const SOLID = new Set(['water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull']);
+  const SOLID = new Set(['gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull']);
   G.isSolidTile = n => SOLID.has(n);
   G.tile = function (name, variant, hue) {
     const key = name + '|' + (variant || 0) + '|' + (hue || 0);
@@ -119,6 +124,10 @@
     glyph: { w: 14, h: 14, fw: 0, fh: 0, hue: true, draw(c, r, o) { const h = (o && o.hue) || 200; c.fillStyle = `hsla(${h},100%,75%,.9)`; for (let i = 0; i < 7; i++) c.fillRect(2 + Math.floor(r() * 9), 2 + Math.floor(r() * 9), 1 + Math.floor(r() * 4), 1 + Math.floor(r() * 2)); } },
     carpetroll: { w: 16, h: 8, fw: 14, fh: 4, draw(c) { R(c, '#8e2f2a', 1, 2, 14, 5); R(c, '#d9b45a', 1, 2, 1, 5); R(c, '#d9b45a', 14, 2, 1, 5); R(c, '#a53c33', 3, 3, 10, 1); } },
     mat: { w: 20, h: 10, fw: 0, fh: 0, flat: true, draw(c) { R(c, '#b8a26a', 0, 1, 20, 8); c.fillStyle = '#9a8552'; for (let x = 1; x < 20; x += 3) c.fillRect(x, 1, 1, 8); R(c, '#d6c28a', 0, 1, 20, 1); } },
+    minbar: { w: 16, h: 22, fw: 14, fh: 6, draw(c) { R(c, '#6b4a2e', 2, 14, 12, 8); R(c, '#8b6a45', 2, 14, 12, 2); R(c, '#6b4a2e', 5, 8, 9, 6); R(c, '#8b6a45', 5, 8, 9, 2); R(c, '#6b4a2e', 9, 2, 5, 6); R(c, '#8b6a45', 9, 2, 5, 2); c.fillStyle = '#c9a13f'; c.fillRect(3, 17, 1, 1); c.fillRect(6, 11, 1, 1); c.fillRect(10, 5, 1, 1); R(c, '#4a3220', 13, 0, 1, 22); } },
+    rug: { w: 24, h: 14, fw: 0, fh: 0, flat: true, draw(c, r, o) { const col = (o && o.color) || '#8e2f2a', a2 = (o && o.trim) || '#d9b45a'; R(c, col, 0, 1, 24, 12); R(c, a2, 1, 2, 22, 1); R(c, a2, 1, 11, 22, 1); R(c, a2, 1, 2, 1, 10); R(c, a2, 22, 2, 1, 10); c.fillStyle = '#f1e7cc'; for (let k = 0; k < 3; k++) { const x = 6 + k * 6; c.beginPath(); c.moveTo(x, 4); c.lineTo(x + 3, 7); c.lineTo(x, 10); c.lineTo(x - 3, 7); c.fill(); } c.fillStyle = '#27608f'; for (let k = 0; k < 3; k++) c.fillRect(5 + k * 6, 6, 2, 2); } },
+    lantern: { w: 10, h: 26, fw: 4, fh: 3, draw(c) { R(c, '#4a3826', 4, 8, 2, 18); R(c, '#6b5236', 2, 24, 6, 2); R(c, '#2e2218', 2, 2, 6, 7); R(c, '#ffd27a', 3, 3, 4, 5); c.fillStyle = '#2e2218'; c.fillRect(3, 5, 4, 1); c.fillRect(5, 3, 1, 5); R(c, '#c9a13f', 4, 0, 2, 2); } },
+    basin: { w: 24, h: 18, fw: 20, fh: 8, draw(c) { c.fillStyle = '#c9c1b2'; c.beginPath(); c.moveTo(12, 1); c.lineTo(23, 9); c.lineTo(12, 17); c.lineTo(1, 9); c.fill(); c.fillStyle = '#e6e0d4'; c.fillRect(4, 4, 16, 10); c.fillStyle = '#3a95b6'; c.beginPath(); c.moveTo(12, 4); c.lineTo(19, 9); c.lineTo(12, 14); c.lineTo(5, 9); c.fill(); c.fillStyle = '#8fd3e4'; c.fillRect(10, 8, 4, 1); R(c, '#c9a13f', 11, 8, 2, 2); } },
     spring: { w: 20, h: 12, fw: 0, fh: 0, flat: true, draw(c) { c.fillStyle = '#3a95b6'; c.beginPath(); c.ellipse(10, 6, 9, 5, 0, 0, 6.3); c.fill(); c.fillStyle = '#8fd3e4'; c.fillRect(6, 4, 4, 1); c.fillRect(11, 7, 3, 1); } }
   };
   G.OBJ = OBJ;
@@ -132,47 +141,43 @@
 
   /* ================= PERSONNAGES (sans visage) ================= */
   const ccache = {};
+  // Personnages en blocs : des volumes, jamais de traits. Tête = cube d'étoffe ; les Compagnons portent
+  // un panneau de lumière à la place du visage.
   G.charSheet = function (look) {
     const key = JSON.stringify(look); if (ccache[key]) return ccache[key];
     const cv = mk(48, 96), c = cv.getContext('2d');
-    const robe = look.robe || '#8a7355', head = look.head || '#e6dcc4', cloak = look.cloak, kind = look.kind || 'homme';
-    const rd = shade(robe, 0.72), rl = shade(robe, 1.18), hd = shade(head, 0.8);
-    const skin = (kind === 'compagnon' || look.aura) ? '#fff4cf' : '#c79a70';
-    const foot = '#3a2a1c';
+    const kind = look.kind || 'homme', robe = look.robe || '#8a7355', cloak = look.cloak || shade(robe, 0.68);
+    const lit = kind === 'compagnon' || !!look.aura, short = kind === 'soldat' || kind === 'romain' || kind === 'marin' || kind === 'cyber';
+    let head = look.head || '#e6dcc4'; if (kind === 'berbere') head = look.veil || '#1c3a5a'; if (kind === 'moine') head = shade(robe, 0.9);
+    const panel = lit ? '#fff6d4' : shade(head, 0.82), legs = short ? '#4a3d32' : shade(robe, 0.8), arm = shade(robe, 0.9);
     for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) {
-      const ox = f * 16, oy = dir * 24, bob = f ? 0 : 0;
-      const Rr = (col, x, y, w, h) => R(c, col, ox + x, oy + y + bob, w, h);
-      const side = dir === 1 || dir === 2;
-      // pieds
-      if (!side) { if (f !== 2) Rr(foot, 5, 22, 2, 2); if (f !== 1) Rr(foot, 9, 22, 2, 2); if (f === 1) Rr(foot, 5, 23, 2, 1); if (f === 2) Rr(foot, 9, 23, 2, 1); }
-      else { if (f === 0) { Rr(foot, 6, 22, 2, 2); Rr(foot, 9, 22, 2, 2); } else if (f === 1) { Rr(foot, 4, 22, 3, 2); Rr(foot, 9, 22, 2, 1); } else { Rr(foot, 7, 22, 2, 2); Rr(foot, 10, 22, 2, 1); } }
-      // robe
-      const short = kind === 'marin' || kind === 'romain' || kind === 'soldat';
-      const hem = short ? 19 : 22;
-      if (!side) { Rr(robe, 4, 10, 8, hem - 10); Rr(robe, 3, 15, 10, hem - 15); Rr(rd, 11, 11, 1, hem - 11); Rr(rd, 12, 15, 1, hem - 15); Rr(rl, 4, 10, 1, 6); Rr(rd, 3, hem - 1, 10, 1); if (short) { Rr(shade(skin, .85), 5, 19, 2, 3); Rr(shade(skin, .85), 9, 19, 2, 3); } }
-      else { Rr(robe, 5, 10, 6, hem - 10); Rr(robe, 4, 16, 8, hem - 16); Rr(rd, 10, 11, 1, hem - 11); Rr(rd, 4, hem - 1, 8, 1); if (short) { Rr(shade(skin, .85), 6, 19, 2, 3); Rr(shade(skin, .85), 9, 19, 2, 3); } }
-      // manteau / cape
-      if (cloak) { const cd = shade(cloak, 0.8);
-        if (dir === 0) { Rr(cloak, 3, 10, 2, 9); Rr(cloak, 11, 10, 2, 9); Rr(cd, 4, 14, 8, 1); }
-        else if (dir === 3) { Rr(cloak, 3, 10, 10, 10); Rr(cd, 3, 19, 10, 1); Rr(cd, 8, 10, 1, 10); }
-        else { Rr(cloak, dir === 1 ? 8 : 4, 10, 4, 10); Rr(cd, dir === 1 ? 11 : 4, 10, 1, 10); } }
-      else if (dir === 0) Rr(rd, 4, 14, 8, 1);
-      // tête : coiffe + visage uni (aucun trait)
-      const band = shade(cloak || robe, 0.6), hs = shade(head, 0.66);
-      if (dir === 0) { Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 3); Rr(head, 4, 5, 1, 6); Rr(head, 11, 5, 1, 6); Rr(hs, 4, 6, 1, 5); Rr(hs, 11, 6, 1, 5); Rr(skin, 6, 5, 4, 5); Rr(hd, 5, 2, 6, 1); Rr(band, 4, 4, 8, 1); }
-      else if (dir === 3) { Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 8); Rr(hs, 4, 10, 8, 1); Rr(hs, 4, 6, 1, 4); Rr(hs, 11, 6, 1, 4); Rr(hd, 5, 2, 6, 1); Rr(band, 4, 4, 8, 1); }
-      else { const L = dir === 1; Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 3); Rr(head, L ? 7 : 4, 5, 5, 6); Rr(hs, L ? 7 : 4, 10, 5, 1); Rr(hs, L ? 11 : 4, 6, 1, 4); Rr(skin, L ? 4 : 9, 5, 3, 5); Rr(hd, 5, 2, 6, 1); Rr(band, 4, 4, 8, 1); }
-      // variantes
-      if (kind === 'soldat') { Rr('#6b4a2e', 13, 1, 1, 21); Rr('#c9ced6', 13, 0, 1, 2); if (dir === 0) { Rr('#7a5b3a', 2, 12, 4, 5); Rr('#d9b45a', 3, 14, 2, 1); } Rr('#8a8f98', 5, 1, 6, 2); }
-      if (kind === 'romain') { Rr('#b9bec8', 5, 1, 6, 3); Rr('#b33327', 6, 0, 4, 1); Rr('#b33327', 7, -1 < 0 ? 0 : 0, 2, 1); if (dir !== 3) Rr('#b9bec8', side ? 6 : 5, 11, side ? 4 : 6, 4); Rr('#6b4a2e', 13, 2, 1, 20); Rr('#c9ced6', 13, 0, 1, 3); }
-      if (kind === 'perse') { Rr(head, 6, 0, 4, 3); Rr('#d9b45a', 6, 2, 4, 1); Rr('#d9b45a', side ? 4 : 3, hem - 2, side ? 8 : 10, 1); }
-      if (kind === 'moine') { Rr(robe, 4, 1, 8, 4); Rr(rd, 4, 1, 8, 1); if (dir === 0) Rr('#d9b45a', 7, 13, 2, 3); }
-      if (kind === 'ancien') { Rr('#6b4a2e', 1, 6, 1, 17); Rr('#e9e2d0', side ? 5 : 4, 10, side ? 6 : 8, 2); }
-      if (kind === 'cyber') { Rr('#39e6ff', side ? 7 : 7, 11, 1, 8); if (dir === 0) Rr('#39e6ff', 6, 7, 4, 1); Rr('#ff4fd8', side ? 4 : 3, hem - 1, side ? 8 : 10, 1); }
-      if (kind === 'marin') { Rr('#e9e2d0', side ? 5 : 4, 13, side ? 6 : 8, 1); }
-      if (kind === 'savant') { Rr('#e9e2d0', side ? 5 : 4, 10, side ? 6 : 8, 2); if (dir === 0) { Rr('#e6dcc4', 9, 14, 3, 4); Rr('#8a6238', 9, 14, 3, 1); } }
-      if (kind === 'marchand') { Rr('#d9b45a', side ? 5 : 4, 14, side ? 6 : 8, 1); if (dir === 0) Rr('#a8663c', 2, 15, 3, 3); }
-      if (kind === 'berbere') { const veil = look.veil || '#1c3a5a'; if (dir === 0) { Rr(veil, 4, 2, 8, 4); Rr(veil, 5, 8, 6, 3); Rr(veil, 4, 5, 1, 5); Rr(veil, 11, 5, 1, 5); Rr(skin, 6, 6, 4, 2); } else if (dir === 3) { Rr(veil, 4, 2, 8, 9); } else { const L = dir === 1; Rr(veil, 4, 2, 8, 4); Rr(veil, L ? 7 : 4, 5, 5, 6); Rr(veil, L ? 4 : 9, 8, 3, 3); Rr(skin, L ? 4 : 9, 6, 3, 2); } }
+      const ox = f * 16, oy = dir * 24, side = dir === 1 || dir === 2, flip = dir === 2;
+      const B = (col, x, y, w, h) => R(c, col, ox + (flip ? 16 - x - w : x), oy + y, w, h);
+      const cube = (col, x, y, w, h) => { B(col, x, y, w, h); B(shade(col, 1.22), x, y, w, 1); B(shade(col, 0.72), flip ? x : x + w - 1, y + 1, 1, h - 1); B(shade(col, 0.58), x, y + h - 1, w, 1); };
+      if (!side) {
+        cube(legs, 4, f === 1 ? 16 : 17, 4, 6); cube(legs, 8, f === 2 ? 16 : 17, 4, 6);
+        cube(dir === 3 ? cloak : robe, 4, 9, 8, 8);
+        if (dir === 0) { B(cloak, 4, 9, 1, 8); B(cloak, 11, 9, 1, 8); B(shade(cloak, 0.8), 4, 14, 8, 1); }
+        cube(arm, 2, f === 1 ? 10 : f === 2 ? 8 : 9, 2, 7); cube(arm, 12, f === 2 ? 10 : f === 1 ? 8 : 9, 2, 7);
+        cube(head, 4, 1, 8, 8); if (dir === 0) B(panel, 5, 4, 6, 4);
+        if (lit) B(shade(head, 0.7), 4, 3, 8, 1);
+      } else {
+        if (f === 0) cube(legs, 6, 17, 4, 6); else if (f === 1) { cube(legs, 9, 17, 3, 6); cube(legs, 4, 16, 3, 6); } else { cube(legs, 8, 16, 3, 6); cube(legs, 5, 17, 3, 6); }
+        cube(robe, 5, 9, 6, 8); B(cloak, 9, 9, 2, 8);
+        cube(arm, f === 1 ? 5 : f === 2 ? 9 : 7, 9, 2, 7);
+        cube(head, 4, 1, 8, 8); B(panel, 4, 4, 3, 4);
+        if (lit) B(shade(head, 0.7), 4, 3, 8, 1);
+      }
+      // attributs, eux aussi en blocs
+      if (kind === 'soldat') { B('#8a8f98', 4, 1, 8, 2); B('#6b4a2e', 14, 2, 1, 20); B('#c9ced6', 14, 0, 1, 2); }
+      if (kind === 'romain') { B('#b9bec8', 4, 1, 8, 2); B('#b33327', 6, 0, 4, 1); if (dir !== 3) B('#b9bec8', side ? 5 : 4, 10, side ? 6 : 8, 4); B('#6b4a2e', 14, 2, 1, 20); B('#c9ced6', 14, 0, 1, 2); }
+      if (kind === 'perse') { B(head, 5, 0, 6, 1); B('#d9b45a', 4, 2, 8, 1); B('#d9b45a', side ? 5 : 4, 16, side ? 6 : 8, 1); }
+      if (kind === 'ancien') { B('#6b4a2e', 1, 5, 1, 18); B('#e9e2d0', side ? 5 : 4, 9, side ? 6 : 8, 2); }
+      if (kind === 'savant') { B('#e9e2d0', side ? 5 : 4, 9, side ? 6 : 8, 2); if (dir === 0) { B('#f1e7cc', 9, 13, 3, 3); B('#8a6238', 9, 13, 3, 1); } }
+      if (kind === 'marchand') { B('#d9b45a', side ? 5 : 4, 13, side ? 6 : 8, 1); if (dir === 0) B('#a8663c', 1, 15, 3, 3); }
+      if (kind === 'berbere') { B(shade(head, 1.3), 4, 3, 8, 1); if (dir === 0) B('#c79a70', 5, 4, 6, 1); }
+      if (kind === 'cyber') { B('#39e6ff', side ? 7 : 7, 10, 1, 6); B('#ff4fd8', side ? 5 : 4, 16, side ? 6 : 8, 1); }
+      if (kind === 'marin') { B('#e9e2d0', side ? 5 : 4, 11, side ? 6 : 8, 1); B('#e9e2d0', side ? 5 : 4, 14, side ? 6 : 8, 1); }
     }
     if (kind === 'enfant') { const cv2 = mk(48, 96), c2 = cv2.getContext('2d'); c2.imageSmoothingEnabled = false; for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) c2.drawImage(cv, f * 16, dir * 24, 16, 24, f * 16 + 2, dir * 24 + 7, 12, 17); return (ccache[key] = cv2); }
     return (ccache[key] = cv);

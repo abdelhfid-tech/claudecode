@@ -105,7 +105,7 @@
     const ok = conf >= P.goal;
     if (ok) {
       sv.parley.won++; I.audio.sfx('roll'); G.flash('#ffe08a');
-      const xp = P.xp || Math.round(34 + 20 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
+      const xp = P.xp || Math.round(22 + 12 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
       await card('victory', `<p class="small">Pourparler · ${I.esc(P.title)}</p><h1>La parole a suffi</h1><ul><li>Confiance : <b>${conf} / ${P.goal}</b></li><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}</ul><div class="hint">▼</div>`);
       await S.run(P.win);
     } else {
@@ -159,6 +159,7 @@
       case 'ask': { S.hideDialog(); const i = await menuPick(a, b); if (b[i].r) await S.run(b[i].r); break; }
       case 'parley': await runParley(a); break;
       case 'pray': await W.pray(a); break;
+      case 'save': await I.ui.saveMenu(); break;
       case 'pillar': W.pillar(a, b); break;
       case 'mus': I.audio.music(a); break;
       case 'battle': S.hideDialog(); await I.battle.start(a); break;

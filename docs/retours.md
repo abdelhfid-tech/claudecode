@@ -73,7 +73,9 @@ pourparlers ; (6) point de reprise plus fin.
 
 À revérifier sur la version livrée : certaines ont pu être corrigées depuis.
 
-- Reprendre au milieu d'un objectif rejoue cet objectif depuis son début, combat compris.
+- La sauvegarde se fait désormais à la main, dans les mosquées (choix du décideur). Reprendre une
+  sauvegarde rejoue l'objectif en cours depuis son début ; ce qui n'a pas été sauvegardé est perdu à la
+  fermeture de la page, sans avertissement possible dans un Artifact.
 - En combat à trois ennemis, la plaque de nom du troisième peut recouvrir le corps d'un autre.
 - Corrigé depuis : l'écran de la Chaîne tient en 720 px (cartes compactes) ; les coiffes ont un
   bandeau et un ombrage pour ne plus se lire comme une tache claire ; le champ de bataille a été

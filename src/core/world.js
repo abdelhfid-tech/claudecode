@@ -201,7 +201,7 @@
         if (!saga.frame && sp.cTot) {
           const perfect = (sp.cOk || 0) === sp.cTot;
           if (perfect) { sv.items.siwak = (sv.items.siwak || 0) + 2; sv.items.musc = (sv.items.musc || 0) + 1; I.audio.sfx('roll'); }
-          await S.card('victory', `<p class="small">Fidélité à la Chaîne · ${I.esc(saga.name)}</p><h1>${perfect ? 'Isnâd sahîh' : 'Chaîne transmise'}</h1><ul><li>Actes retrouvés du premier coup : <b>${sp.cOk || 0} / ${sp.cTot}</b></li>${perfect ? '<li>Chaîne sans faille : chaque acte fut celui que les transmetteurs ont rapporté.</li><li>Reçu : <b>Siwâk ×2</b>, <b>Musc</b></li>' : '<li>Là où la chaîne a vacillé, relis le codex : chaque acte y a sa source.</li>'}</ul><div class="hint">▼</div>`);
+          await S.card('victory', `<p class="small">Fidélité à la Chaîne · ${I.esc(saga.name)}</p><h1>${perfect ? 'Isnâd sahîh' : 'Chaîne transmise'}</h1><ul><li>Actes retrouvés du premier coup : <b>${sp.cOk || 0} / ${sp.cTot}</b></li>${perfect ? '<li>Chaîne sans faille : chaque acte fut celui que les transmetteurs ont rapporté.</li><li>Reçu : <b>Siwâk ×2</b>, <b>Musc</b></li>' : '<li>Là où la chaîne a vacillé, relis le Recueil : chaque acte y a sa source.</li>'}</ul><div class="hint">▼</div>`);
         }
         sp.done = true; sp.ch = saga.frame ? W.ci + 1 : 0; I.save.store();
         await I.ui.afterSaga(saga, ch);
@@ -218,6 +218,9 @@
     W.npcs.forEach(n => { if (n.hidden || n.map !== W.map.id || !n.placed) return; const d = Math.hypot(n.x - px, n.y - py); if (d < bd) { bd = d; best = n; } });
     const o0 = W.cur();
     if (o0 && o0.talk) { const n = W.npcs.find(n => n.id === o0.talk); if (n && !n.hidden && n.map === W.map.id && n.placed && (Math.hypot(n.x - px, n.y - py) < 27 || Math.hypot(n.x - p.x, n.y - p.y) < 24)) best = n; }
+    // sur la natte, la prière et la sauvegarde passent avant un voisin que l'on ne regarde pas en face
+    const onMat = W.nearPrayer() && !(o0 && o0.talk && best && best.id === o0.talk);
+    if (onMat && best && bd > 13) best = null;
     if (best) {
       const dx = p.x - best.x, dy = p.y - best.y; best.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0);
       const o = W.cur();
@@ -228,7 +231,7 @@
     const c = W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
-      await S.run([['ask', 'Une natte tournée vers La Mecque. Faire halte pour la prière ?', [{ t: 'Prier', r: [['pray']] }, { t: 'Plus tard', r: [] }]]]);
+      await S.run([['ask', 'Une natte tournée vers La Mecque, au cœur de l’étoile.', [{ t: 'Prier : le groupe se repose, la Sakîna descend', r: [['pray']] }, { t: 'Sauvegarder la partie', r: [['save']] }, { t: 'Plus tard', r: [] }]]]);
     }
   };
   W.fight = async function (f) {
@@ -267,7 +270,9 @@
         p.moving = !!(m1 || m2); if (p.moving) { pushTrail(); if (Math.floor(W.t * 5) !== Math.floor((W.t - dt) * 5)) I.audio.sfx('step'); }
       } else p.moving = false;
       const o = W.cur();
-      if (o && o.goto) { const s = W.spotPx(o.goto); if (s && Math.hypot(s[0] - p.x, s[1] - p.y) < 36) W.complete(); }
+      if (o && o.goto) { const s = W.spotPx(o.goto), pr = W.map.spots.priere, near = pr && s && Math.hypot(pr[0] * T + 8 - s[0], pr[1] * T + 13 - s[1]) < 70; if (s && Math.hypot(s[0] - p.x, s[1] - p.y) < (near ? 20 : 36)) W.complete(); }
+      // rappel : on ne sauvegarde que dans les mosquées
+      W.unsaved = (W.unsaved || 0) + dt; if (W.unsaved > 480 && !W._warned) { W._warned = true; S.toast('Tu n’as pas sauvegardé depuis un moment. La natte d’une mosquée, au cœur de l’étoile, garde ta partie.', 6000); }
       for (const f of W.foes) {
         if (f.done || f.map !== W.map.id || !f.placed) continue;
         const d = Math.hypot(f.x - p.x, f.y - p.y);
@@ -387,7 +392,10 @@
       if (!best && W.nearPrayer()) best = { x: p.x, y: p.y + 6 };
       if (best && !(tg && tg.kind === 'talk' && Math.abs(tg.x - best.x) < 2)) { const bx = Math.round(best.x - cx), by = Math.round(best.y - cy - 34 + Math.sin(t * 5) * 1.5); c.fillStyle = '#1a1420'; c.fillRect(bx - 7, by - 1, 14, 9); c.fillStyle = '#fff6dc'; c.fillRect(bx - 6, by, 12, 7); c.fillRect(bx - 1, by + 7, 2, 2); c.fillStyle = '#1a1420'; c.fillRect(bx - 4, by + 3, 2, 2); c.fillRect(bx - 1, by + 3, 2, 2); c.fillRect(bx + 2, by + 3, 2, 2); }
     }
-    if (m.spots.priere) { const px2 = m.spots.priere[0] * T + 8 - cx, py2 = m.spots.priere[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) { lights.push({ x: px2, y: py2, r: 30 + Math.sin(t * 2) * 3, color: '#fff3c8', a: 0.55 }); if (Math.random() < 0.06) G.spawn({ x: px2 + (Math.random() - 0.5) * 16, y: py2 + 4, vy: -10, life: 1.6, size: 0.6, color: '#fff3c8', type: 'mote' }); } }
+    if (m.spots.priere) { const px2 = m.spots.priere[0] * T + 8 - cx, py2 = m.spots.priere[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) {
+      // étoile à huit branches en lumière : deux carrés qui tournent en sens contraires
+      const sq = (rot, r, col) => { c.strokeStyle = col; c.lineWidth = 1; c.beginPath(); for (let i = 0; i < 4; i++) { const a = rot + i * Math.PI / 2, X = px2 + Math.cos(a) * r, Y = py2 + 4 + Math.sin(a) * r * 0.62; if (i) c.lineTo(X, Y); else c.moveTo(X, Y); } c.closePath(); c.stroke(); };
+      sq(t * 0.45, 11, 'rgba(255,236,170,.9)'); sq(-t * 0.45 + Math.PI / 4, 11, 'rgba(255,236,170,.9)'); sq(t * 0.3 + 0.4, 6, 'rgba(130,225,235,.75)'); lights.push({ x: px2, y: py2, r: 30 + Math.sin(t * 2) * 3, color: '#fff3c8', a: 0.55 }); if (Math.random() < 0.06) G.spawn({ x: px2 + (Math.random() - 0.5) * 16, y: py2 + 4, vy: -10, life: 1.6, size: 0.6, color: '#fff3c8', type: 'mote' }); } }
     // lumières de la carte
     const la = env.lightA === undefined ? 1 : env.lightA;
     if (la > 0) for (const L of m.lights) { const x = L.x - cx, y = L.y - cy; if (x < -L.r || y < -L.r || x > G.PW + L.r || y > G.PH + L.r) continue; lights.push({ x, y, r: L.r, color: L.color, a: la * (1 - L.flicker * (0.5 + 0.5 * Math.sin(t * 9 + L.x))) }); }

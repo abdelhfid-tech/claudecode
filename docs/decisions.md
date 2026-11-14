@@ -4,9 +4,22 @@ Le décideur a demandé de « prendre les décisions qui s'imposent ». Selon l'
 l'agent exécute et l'humain décide : chaque décision ci-dessous est donc une **proposition appliquée**,
 à valider, amender ou rejeter. Cocher la case une fois tranché.
 
+## Réponses du décideur (14 novembre, après la version 2)
+
+| Question | Réponse | Effet |
+|---|---|---|
+| Jusqu'où pousser la saga d'Abû Bakr avant les autres ? | Trois chapitres, finition maximale | La trame reste ; l'effort va au rendu, au rythme, aux mosquées. Les autres sagas restent jouables en l'état. |
+| Comment sauvegarder ? | **Dans les mosquées seulement** | Plus de sauvegarde automatique. Trois emplacements, écrits sur la natte d'une mosquée ou à la natte des Archives (écran de la Chaîne). Fermer la page sans sauvegarder fait perdre ce qui a été joué depuis. |
+| Images générées par un service payant ? | Non, tout par le code | L'autorisation n° 1 est refusée pour les images. |
+| Le cadre en trois époques ? | Gardé | D1 et D24 sont validées. |
+
+Demandes du même message, appliquées : personnages en blocs (des volumes, aucun trait) pour ne pas
+figurer ; décors sublimés ; géométrie dans les mosquées (rosaces, zellige étoile-et-croix, frises,
+mihrab, minbar, lanternes) ; « codex » renommé « Recueil » dans l'interface.
+
 ## Récit et sujet
 
-- [ ] **D1. Titre et histoire-cadre.** *ISNAD — Chroniques des Compagnons* ; Idris, *râwî* de la
+- [x] **D1. Titre et histoire-cadre.** *ISNAD — Chroniques des Compagnons* ; Idris, *râwî* de la
   Cité-Miroir en 1508 H (2084), remonte la Chaîne pour dévoiler l'AGRÉGOR, « l'agrégateur d'égrégores ».
   *Pourquoi* : le cadre justifie l'ambiance cyberpunk, donne un sens actuel aux idoles, et fait du
   joueur un transmetteur plutôt qu'un Compagnon. *Écarté* : incarner directement les Compagnons sans
@@ -83,7 +96,7 @@ l'agent exécute et l'humain décide : chaque décision ci-dessous est donc une 
 - [ ] **D23. *Citadelle* comme inspiration, pas comme source.** Le ton, la voix d'un seigneur du désert,
   quelques motifs (la sentinelle, le puits, le géomètre, le silence). Aucune phrase reprise, aucun épisode
   repris tel quel. Hommage dit au codex et aux crédits.
-- [ ] **D24. Les veillées du Caïd.** Un maillon de fiction entre les Compagnons et Idris ; une veillée
+- [x] **D24. Les veillées du Caïd.** Un maillon de fiction entre les Compagnons et Idris ; une veillée
   après chaque saga ; décisions libres dont les conséquences durent sur les quatre piliers.
 - [ ] **D25. La prière comme halte.** Elle repose le groupe, donne la Sakîna et la sérénité dans la
   parole. Écrite sobrement, placée aux moments attestés ou aux haltes ; aucun appel à la prière synthétisé.

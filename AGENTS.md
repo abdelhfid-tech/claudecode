@@ -56,7 +56,9 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
 ## Exigences de respect (non négociables)
 
 1. Le Prophète ﷺ n'est jamais représenté ni mis en scène en dialogue. On l'évoque seulement.
-2. Personne n'a de visage. Ne jamais décrire de traits physiques, ne jamais dessiner d'yeux ni de bouche.
+2. Personne n'a de visage. Les personnages sont des volumes en blocs (tête cubique, corps, bras, jambes),
+   sans aucun trait ; les Compagnons portent un panneau de lumière. Ne jamais décrire de traits physiques,
+   ne jamais dessiner d'yeux ni de bouche.
 3. Seulement des événements attestés. Une parole attestée passe par `['quote', texte, source]`. En cas
    de doute, écrire « On rapporte » dans la source et signaler la discussion dans le codex.
 4. Sobriété : le récit reste centré sur les Compagnons et leurs alliés ; pas d'intrigue sentimentale ;

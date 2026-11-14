@@ -16,7 +16,8 @@
     set(x, y, t, solid) { x = this.X(x); if (x < 0 || y < 0 || x >= this.w || y >= this.h) return; const i = y * this.w + x; this.g[i] = t; this.solid[i] = solid === undefined ? (G.isSolidTile(t) ? 1 : 0) : (solid ? 1 : 0); }
     get(x, y) { x = this.X(x); return this.g[y * this.w + x]; }
     fill(x, y, w, h, t, solid) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) this.set(x + i, y + j, t, solid); }
-    ring(x, y, w, h, t) { for (let i = 0; i < w; i++) { this.set(x + i, y, t, true); this.set(x + i, y + h - 1, t, true); } for (let j = 0; j < h; j++) { this.set(x, y + j, t, true); this.set(x + w - 1, y + j, t, true); } }
+    ring(x, y, w, h, t, solid) { const so = solid === undefined ? true : solid; for (let i = 0; i < w; i++) { this.set(x + i, y, t, so); this.set(x + i, y + h - 1, t, so); } for (let j = 0; j < h; j++) { this.set(x, y + j, t, so); this.set(x + w - 1, y + j, t, so); } }
+    rosette(x, y, R, n, pal) { (this.decals || (this.decals = [])).push({ x: this.X(x) * T + 8, y: y * T + 8, R, n, pal }); }
     block(x, y, w, h) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) { const xx = this.X(x + i); if (xx >= 0 && y + j >= 0 && xx < this.w && y + j < this.h) this.solid[(y + j) * this.w + xx] = 1; } }
     free(x, y) { x = this.X(x); return x >= 0 && y >= 0 && x < this.w && y < this.h && !this.solid[y * this.w + x]; }
     obj(type, x, y, opt) {
@@ -52,6 +53,7 @@
         c.drawImage(G.tile(n, v, this.hue), x * T, y * T);
         if (n === 'water' || n === 'sea') anim.push({ x, y, n });
       }
+      (this.decals || []).forEach(d => drawRosette(c, d));
       // ombres portées au pied des bâtiments
       (this.shadows || []).forEach(sh => { const g = c.createLinearGradient(0, sh[1] * T, 0, sh[1] * T + 9); g.addColorStop(0, 'rgba(30,18,44,.42)'); g.addColorStop(1, 'rgba(30,18,44,0)'); c.fillStyle = g; c.fillRect(sh[0] * T + 3, sh[1] * T, sh[2] * T, 9); });
       // mini-carte : 1 pixel par case
@@ -64,6 +66,17 @@
       this.objs.filter(o => !o.flat && G.OBJ[o.type].fw).forEach(o => { c.beginPath(); c.ellipse(o.x + 3, o.y + 1, Math.max(5, G.OBJ[o.type].fw * 0.7), 3, 0, 0, 6.3); c.fill(); });
       return { id: this.id, w: this.w, h: this.h, canvas: cv, mini, solid: this.solid, objs: this.objs.filter(o => !o.flat), lights: this.lights, spots: this.spots, anim, env: env || {}, opts: this.opts, hue: this.hue };
     }
+  }
+
+  // rosace : la même étoile à n branches, tournée et réduite, comme dans un entrelacs
+  function drawRosette(c, d) {
+    const x = d.x, y = d.y, R = d.R, n = d.n, pal = d.pal || ['rgba(190,150,56,.8)', 'rgba(45,127,143,.34)', 'rgba(241,231,204,.5)', 'rgba(142,90,42,.55)'];
+    const star = (r1, r2, rot, fill, stroke) => { c.beginPath(); for (let i = 0; i < n * 2; i++) { const a = rot + i * Math.PI / n, rr = i % 2 ? r2 : r1; c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.86); } c.closePath(); if (fill) { c.fillStyle = fill; c.fill(); } if (stroke) { c.strokeStyle = stroke; c.lineWidth = 1; c.stroke(); } };
+    [1, 0.94].forEach(k => { c.strokeStyle = pal[3]; c.lineWidth = 1; c.beginPath(); c.ellipse(x, y, R * k, R * k * 0.86, 0, 0, 6.3); c.stroke(); });
+    star(R * 0.9, R * 0.6, 0, pal[1], pal[0]); star(R * 0.9, R * 0.6, Math.PI / n, null, pal[0]);
+    star(R * 0.56, R * 0.3, Math.PI / n, pal[2], pal[3]); star(R * 0.56, R * 0.3, 0, null, pal[3]);
+    star(R * 0.26, R * 0.13, 0, pal[0], null);
+    c.fillStyle = pal[0]; for (let i = 0; i < n; i++) { const a = i * 2 * Math.PI / n; c.fillRect(Math.round(x + Math.cos(a) * R * 0.9) - 1, Math.round(y + Math.sin(a) * R * 0.9 * 0.86) - 1, 2, 2); }
   }
 
   const TIME = {
@@ -82,18 +95,21 @@
     // place pavée
     b.fill(23, 21, 15, 8, 'stone');
     // mosquée : enceinte de pisé, cour ouverte, colonnes de troncs de palmier
-    b.fill(21, 5, 19, 14, 'path'); b.ring(21, 5, 19, 14, 'wall');
+    b.fill(21, 5, 19, 14, 'path'); b.ring(21, 5, 19, 14, 'gwall');
+    b.fill(22, 6, 17, 6, id === 'koufa' ? 'zellij' : 'zsand', false); b.ring(22, 12, 17, 6, id === 'koufa' ? 'zellij' : 'zsand', false);
+    b.rosette(30, 15, 34, id === 'koufa' ? 12 : 8); if (id === 'koufa') { b.set(30, 5, 'mihrab', true); b.obj('basin', 36, 15); }
+    b.obj('minbar', 37, 7);
     b.set(30, 18, 'path', false); b.set(29, 18, 'path', false); b.set(31, 18, 'path', false);
     for (let x = 24; x <= 36; x += 3) { b.obj('trunkcol', x, 8); b.obj('trunkcol', x, 11); }
-    for (let x = 24; x <= 36; x += 4) b.obj('mat', x, 14);
-    b.obj('lamp', 23, 16); b.obj('lamp', 37, 16); b.light(23, 15, 60, '#ffc878', 0.12); b.light(37, 15, 60, '#ffc878', 0.12); b.light(30, 9, 80, '#ffd9a0', 0.05);
-    b.spot('mosquee_cour', 30, 13); b.spot('mosquee_porte', 30, 20);
-    b.spot('priere', 26, 16); b.light(26, 15, 46, '#fff0c0', 0.05); b.obj('shelf', 35, 16); b.obj('mat', 34, 17); b.spot('ecole', 33, 17);
+    for (let x = 25; x <= 34; x += 3) b.obj('mat', x, 10);
+    b.obj('lantern', 23, 16); b.obj('lantern', 37, 16); b.obj('lantern', 23, 7); b.light(23, 6, 50, '#ffc878', 0.12); b.light(23, 15, 60, '#ffc878', 0.12); b.light(37, 15, 60, '#ffc878', 0.12); b.light(30, 9, 80, '#ffd9a0', 0.05);
+    b.spot('mosquee_cour', 30, 12); b.spot('mosquee_porte', 30, 20);
+    b.spot('priere', 30, 15); b.light(30, 15, 70, '#fff0c0', 0.05); b.obj('shelf', 35, 16); b.obj('mat', 34, 17); b.spot('ecole', 33, 17);
     b.spot('place', 30, 25);
     b.obj('well', 25, 23); b.spot('puits', 25, 25);
     // halle (Saqîfa / tribunal) : auvent de palmes sur piliers, à l'ouest
     b.house(6, 17, 9, 6, { roof: 'thatch', edge: 'thatch', doorAt: 4 }); b.fill(6, 23, 9, 3, 'stone');
-    b.obj('trunkcol', 6, 25); b.obj('trunkcol', 14, 25); b.obj('mat', 9, 24); b.obj('mat', 12, 24); b.obj('lamp', 16, 23); b.light(16, 22, 56, '#ffc878', 0.12);
+    b.rosette(10, 24, 20, 8); b.obj('trunkcol', 6, 25); b.obj('trunkcol', 14, 25); b.obj('rug', 8, 23, { color: '#6b3f2a', trim: '#d9b45a' }); b.obj('rug', 12, 23, { color: '#6b3f2a', trim: '#d9b45a' }); b.obj('lantern', 16, 23); b.light(16, 22, 56, '#ffc878', 0.12);
     b.spot('halle', 10, 26);
     // maison du Compagnon (nord-ouest)
     b.house(12, 7, 6, 5); b.spot('maison', 15, 13); b.obj('jar', 12, 12); b.obj('sack', 18, 12);
@@ -103,7 +119,7 @@
     b.fill(40, 20, 15, 8, 'path');
     ['#a53c33', '#2f6f8f', '#c9a13f', '#3d8a6a'].forEach((col, i) => b.obj('stall', 42 + i * 4, 21, { color: col }));
     b.obj('stall', 44, 27, { color: '#6b3f7a' }); b.obj('stall', 50, 27, { color: '#a53c33' });
-    b.obj('jar', 41, 23); b.obj('crate', 55, 22); b.obj('sack', 54, 26); b.obj('lamp', 48, 24); b.light(48, 23, 60, '#ffc878', 0.12);
+    b.obj('rug', 45, 24, { color: '#8e2f2a' }); b.obj('rug', 50, 25, { color: '#27608f', trim: '#f1e7cc' }); b.obj('jar', 41, 23); b.obj('crate', 55, 22); b.obj('sack', 54, 26); b.obj('lamp', 48, 24); b.light(48, 23, 60, '#ffc878', 0.12);
     b.spot('souk', 47, 25);
     // palmeraie (sud-est) avec rigole
     b.patch('grass', 49, 38, 6); b.fill(44, 41, 12, 1, 'water'); b.set(49, 41, 'wood', false); b.set(50, 41, 'wood', false);
@@ -207,7 +223,7 @@
     b.spot('nef', 20, 17); b.spot('entree', 20, 27);
     b.obj('treasure', 33, 6); b.obj('treasure', 35, 9); b.obj('treasure', 31, 9); b.obj('chest', 36, 6); b.obj('jar', 30, 6); b.light(33, 7, 60, '#ffe08a', 0.1); b.spot('tresor', 33, 11);
     for (let y = 8; y < 26; y += 3) b.obj('column', 6, y); b.spot('colonnade', 9, 17);
-    b.fill(29, 19, 9, 8, 'grass'); b.obj('fountain', 33, 22); b.obj('cypress', 30, 20); b.obj('cypress', 37, 25); b.spot('jardin', 33, 25); b.obj('mat', 31, 24); b.spot('priere', 31, 25);
+    b.fill(29, 19, 9, 8, 'grass'); b.obj('fountain', 33, 22); b.obj('cypress', 30, 20); b.obj('cypress', 37, 25); b.spot('jardin', 33, 25); b.obj('mat', 36, 20); b.spot('priere', 36, 21);
     b.obj('carpetroll', 4, 5); b.obj('jar', 3, 26); b.obj('brazier', 10, 26); b.light(10, 25, 60, '#ffb45a', 0.2);
     return b.finish(Object.assign(envFor('dusk'), { clouds: false, ambient: '#8a78a8', grade: ['#ffb060', 0.18], particles: 'dust', rate: 4, sound: 'silence', bg: 'palais', rays: { a: 0.06, color: '#ffe0b0' }, bloom: 0.24, music: 'palais' }));
   }
@@ -246,17 +262,17 @@
     b.fill(28, 36, 3, 1, 'stone', false); b.spot('porte', 29, 38); b.obj('lamp', 26, 38); b.obj('lamp', 32, 38); b.light(26, 37, 54, '#ffc878', 0.12); b.light(32, 37, 54, '#ffc878', 0.12);
     b.set(50, 20, 'path', false); b.spot('poterne', 52, 20);
     // cour pavée et puits
-    b.fill(22, 18, 15, 9, 'stone'); b.obj('well', 29, 21); b.spot('puits', 29, 23); b.spot('cour', 29, 25);
+    b.fill(22, 18, 15, 9, 'stone'); b.ring(22, 18, 15, 9, 'zellij', false); b.rosette(29, 22, 46, 12); b.obj('well', 29, 21); b.spot('puits', 29, 23); b.spot('cour', 29, 25);
     // salle du Caïd (nord)
     b.house(23, 8, 13, 7, { roof: 'roof', doorAt: 6 }); b.obj('banner', 22, 16, { color: '#1c3a5a', trim: '#e6dcc4' }); b.obj('banner', 36, 16, { color: '#1c3a5a', trim: '#e6dcc4' }); b.obj('brazier', 26, 16); b.obj('brazier', 32, 16); b.light(26, 15, 60, '#ffb45a', 0.2); b.light(32, 15, 60, '#ffb45a', 0.2); b.spot('salle', 29, 16);
     // mosquée (nord-ouest) : cour ouverte, nattes
-    b.fill(10, 8, 10, 9, 'path'); b.ring(10, 8, 10, 9, 'wall'); b.set(15, 16, 'path', false); b.set(14, 16, 'path', false);
-    b.obj('trunkcol', 12, 11); b.obj('trunkcol', 17, 11); b.obj('mat', 13, 13); b.obj('mat', 16, 13); b.obj('lamp', 11, 15); b.light(11, 14, 50, '#ffc878', 0.1); b.light(15, 12, 60, '#fff0c0', 0.05);
-    b.spot('mosquee', 15, 18); b.spot('priere', 15, 14);
+    b.fill(10, 8, 10, 9, 'zellij', false); b.ring(10, 8, 10, 9, 'gwall'); b.set(15, 8, 'mihrab', true); b.set(15, 16, 'zellij', false); b.set(14, 16, 'zellij', false); b.rosette(15, 13, 22, 8); b.obj('basin', 12, 15);
+    b.obj('column', 12, 10); b.obj('column', 18, 10); b.obj('lantern', 17, 15); b.light(11, 14, 50, '#ffc878', 0.1); b.light(15, 12, 60, '#fff0c0', 0.05);
+    b.spot('mosquee', 15, 18); b.spot('priere', 15, 13);
     // école (nord-est) : auvent, rayonnage, nattes
-    b.house(39, 8, 8, 5, { roof: 'thatch', edge: 'thatch' }); b.obj('shelf', 41, 14); b.obj('mat', 44, 15); b.obj('mat', 41, 16); b.obj('lamp', 46, 15); b.light(46, 14, 50, '#ffc878', 0.1); b.spot('ecole', 43, 16);
+    b.house(39, 8, 8, 5, { roof: 'thatch', edge: 'thatch' }); b.obj('shelf', 41, 14); b.obj('rug', 44, 16, { color: '#3d8a6a', trim: '#f1e7cc' }); b.obj('lamp', 46, 15); b.light(46, 14, 50, '#ffc878', 0.1); b.spot('ecole', 43, 16);
     // souk (est)
-    ['#1c3a5a', '#a53c33', '#c9a13f'].forEach((c, i) => b.obj('stall', 41 + i * 4, 22, { color: c })); b.obj('jar', 40, 24); b.obj('crate', 48, 25); b.obj('camel', 46, 28); b.spot('souk', 44, 25);
+    ['#1c3a5a', '#a53c33', '#c9a13f'].forEach((c, i) => b.obj('stall', 41 + i * 4, 22, { color: c })); b.obj('rug', 43, 24, { color: '#1c3a5a', trim: '#f1e7cc' }); b.obj('rug', 47, 26, { color: '#8e2f2a' }); b.obj('jar', 40, 24); b.obj('crate', 48, 25); b.obj('camel', 46, 28); b.spot('souk', 44, 25);
     // greniers (sud-ouest)
     b.house(10, 26, 6, 5); b.house(17, 28, 5, 5, { window: false }); b.obj('sack', 12, 32); b.obj('jar', 15, 32); b.obj('sack', 18, 34); b.obj('crate', 21, 34); b.spot('greniers', 15, 33);
     // jardin (sud-est) : rigole, palmiers

@@ -19,6 +19,16 @@ Direction artistique, sonore et rédactionnelle. Les valeurs font foi dans `src/
 6. **Pixel art net, lumière douce.** Les pixels restent francs ; la douceur vient de l'éclairage, du
    halo et des particules, jamais d'un flou sur le dessin lui-même.
 
+## Personnages en blocs, décors sublimés (demande du décideur)
+
+Les personnages sont faits de blocs : une tête cubique d'étoffe, un corps, deux bras, deux jambes, avec
+une face claire, un dessus plus clair et un côté plus sombre. Aucun trait. Les Compagnons portent un
+panneau de lumière à la place du visage. Les attributs (lance, casque, bâton, rouleau) sont eux aussi
+des blocs. À l'inverse, les décors sont travaillés : zellige « étoile et croix », rosaces à huit et
+douze branches tracées au sol, frises sur les murs des mosquées, mihrab, minbar, lanternes, tapis à
+losanges, portes cintrées cloutées, fenêtres à claustra. Sur la natte de chaque mosquée, deux carrés de
+lumière tournent en sens contraires et dessinent l'étoile à huit branches : c'est le point de sauvegarde.
+
 ## Trois habillages
 
 L'habillage suit la carte : `noos`, `cite`, `archives` → cyber ; `romaine`, `palais` → romain ; le

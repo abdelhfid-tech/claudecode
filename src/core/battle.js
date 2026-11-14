@@ -3,14 +3,14 @@
   'use strict';
   const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, $ = I.$;
   const B = I.battle = { active: false };
-  const TIER = { minion: { hp: 0.66, atk: 0.8, def: 0.8, spd: 0.95, xp: 1 }, elite: { hp: 2.4, atk: 1.0, def: 1.0, spd: 1.0, xp: 3.2 }, boss: { hp: 6.4, atk: 1.15, def: 1.05, spd: 1.04, xp: 7 } };
+  const TIER = { minion: { hp: 0.78, atk: 0.8, def: 0.8, spd: 0.95, xp: 1 }, elite: { hp: 2.4, atk: 1.0, def: 1.0, spd: 1.0, xp: 3.2 }, boss: { hp: 6.4, atk: 1.15, def: 1.05, spd: 1.04, xp: 7 } };
   const base = L => ({ hp: 70 + 26 * L, sp: 14 + 4 * L, atk: 9 + 3 * L, def: 7 + 2.2 * L, spd: 10 + 0.6 * L });
 
   I.calc = {
     hero(def, lvl) { const r = D.ROLES[def.role], b = base(lvl); return { hp: Math.round(b.hp * r.hp), sp: Math.round(b.sp * r.sp), atk: b.atk * r.atk, mag: b.atk * r.mag, def: b.def * r.def, spd: b.spd * r.spd }; },
     enemy(def, nHeroes, nFoes) {
-      const t0 = TIER[def.tier], early = def.tier === 'boss' && def.lvl <= 4, t = early ? Object.assign({}, t0, { hp: t0.hp * 0.75, atk: t0.atk * 0.9 }) : t0, b = base(def.lvl), ps = nHeroes >= 3 ? 1 : nHeroes === 2 ? 0.72 : 0.42, crowd = nFoes >= 3 ? 0.85 : 1;
-      return { hp: Math.round(b.hp * t.hp * ps * crowd), atk: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.9 : 1), mag: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.9 : 1), def: b.def * t.def, spd: b.spd * t.spd };
+      const t0 = TIER[def.tier], early = def.tier === 'boss' && def.lvl <= 4, t = early ? Object.assign({}, t0, { hp: t0.hp * 0.75, atk: t0.atk * 0.9 }) : t0, b = base(def.lvl), ps = (nHeroes >= 3 ? 1 : nHeroes === 2 ? 0.64 : 0.42) * (def.tier === 'elite' && def.lvl <= 3 ? 0.85 : 1), crowd = nFoes >= 3 ? 0.85 : 1;
+      return { hp: Math.round(b.hp * t.hp * ps * crowd), atk: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.84 : 1), mag: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.84 : 1), def: b.def * t.def, spd: b.spd * t.spd };
     },
     xpNeed: l => 40 + 40 * l,
     xpOf: def => Math.round((10 + 7 * def.lvl) * TIER[def.tier].xp)

@@ -52,6 +52,13 @@ dans la Cité-Miroir, qui rend la sixième Lumière, la Patience (*sabr*).
   explique, puis repropose. Le Compagnon ne fait jamais à l'écran autre chose que ce qui est rapporté.
 - **Codex.** Biographies, événements, paroles et idoles, avec leurs sources.
 
+## Sauvegarder
+
+On ne sauvegarde que **dans les mosquées** : sur la natte, au cœur de l'étoile, on peut prier (le groupe se
+repose) et sauvegarder sur l'un des trois emplacements. L'écran de la Chaîne offre aussi la natte des
+Archives. Il n'y a pas de sauvegarde automatique : fermer la page sans sauvegarder fait perdre ce qui a
+été joué depuis. « Continuer », à l'écran-titre, propose les emplacements remplis.
+
 ## Version 2 : la parole avant le sabre
 
 - **Pourparlers.** Les crises se dénouent d'abord par la parole : délégations, pactes, arbitrages. Un
