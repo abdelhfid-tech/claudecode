@@ -191,7 +191,7 @@ function checkSaga(s, E, W) {
     });
 
     // Vérification des scripts, en suivant la carte courante.
-    const state = { map: c.map };
+    const state = { map: c.map }; const sites = new Set();
     const checkOps = (ops, where) => {
       if (!Array.isArray(ops)) { E.push(`${where}: script doit être un tableau`); return; }
       ops.forEach((o, i) => {
@@ -249,6 +249,8 @@ function checkSaga(s, E, W) {
           case 'if': checkOps(o[2], wo + '.then'); if (o[3]) checkOps(o[3], wo + '.else'); break;
           case 'pray': if (o[1] !== undefined && !D.PRAYERS[o[1]]) E.push(`${wo}: pray « ${o[1]} » invalide (${Object.keys(D.PRAYERS).join('|')})`); break;
           case 'pillar': if (!D.PILLARS[o[1]]) E.push(`${wo}: pilier « ${o[1]} » invalide (${Object.keys(D.PILLARS).join('|')})`); if (typeof o[2] !== 'number' || Math.abs(o[2]) > 2 || !o[2]) E.push(`${wo}: pillar delta ±1 ou ±2`); break;
+          case 'mat': if (!D.MATS[o[1]]) E.push(`${wo}: matériau « ${o[1]} » inconnu (${Object.keys(D.MATS).join('|')})`); break;
+          case 'site': { const st = o[1] || {}; ['id', 'name'].forEach(k => { if (typeof st[k] !== 'string') E.push(`${wo}: site.${k} manquant`); }); checkAt(st.at, state.map, wo); if (!st.need || Object.keys(st.need).some(k => !D.PIECES[k])) E.push(`${wo}: site.need doit lister des pièces connues`); Object.keys(st.give || {}).forEach(k => { if (!D.MATS[k]) E.push(`${wo}: site.give : matériau « ${k} » inconnu`); }); sites.add(st.id); break; }
           case 'mus': if (!D.TRACKS.includes(o[1])) E.push(`${wo}: piste « ${o[1]} » inconnue (${D.TRACKS.join('|')})`); break;
           case 'parley': {
             const P = o[1] || {};
@@ -285,8 +287,9 @@ function checkSaga(s, E, W) {
     if (!Array.isArray(c.objectives) || !c.objectives.length) E.push(`${w}: objectives[] manquant`);
     (c.objectives || []).forEach((o, i) => {
       const wo = `${w}.obj${i}`;
-      const kinds = ['goto', 'talk', 'foe', 'auto'].filter(k => o[k] !== undefined);
-      if (kinds.length !== 1) E.push(`${wo}: exactement un parmi goto|talk|foe|auto`);
+      const kinds = ['goto', 'talk', 'foe', 'auto', 'build'].filter(k => o[k] !== undefined);
+      if (kinds.length !== 1) E.push(`${wo}: exactement un parmi goto|talk|foe|auto|build`);
+      if (o.build !== undefined) { const bd = o.build; if (bd.site !== undefined) { if (!sites.has(bd.site)) E.push(`${wo}: site « ${bd.site} » non ouvert par un ['site', …] auparavant`); } else if (!D.PIECES[bd.piece] || typeof bd.n !== 'number') E.push(`${wo}: build attend { piece, n } ou { site }`); }
       if (!o.auto && typeof o.text !== 'string') E.push(`${wo}: « text » manquant`);
       if (o.goto !== undefined) checkAt(o.goto, state.map, wo);
       if (o.talk !== undefined) {

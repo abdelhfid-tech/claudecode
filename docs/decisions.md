@@ -102,6 +102,21 @@ mihrab, minbar, lanternes) ; « codex » renommé « Recueil » dans l'interface
   parole. Écrite sobrement, placée aux moments attestés ou aux haltes ; aucun appel à la prière synthétisé.
 - [ ] **D26. Rendu.** Rétro-HD par défaut, bascule en 2D simple à la main ou d'elle-même si l'appareil peine.
 
+## Version 3 : bâtir (demande du décideur)
+
+- [ ] **D27. Bâtir case par case, devant soi, à ciel ouvert.** Récolter, poser, retirer ; quinze pièces.
+  *Écarté pour l'instant* : un monde entièrement en blocs que l'on creuse et empile en hauteur.
+- [ ] **D28. On ne peut pas se murer.** Une pièce pleine est refusée si elle coupe l'accès à un lieu.
+- [ ] **D29. Les mosquées se fondent sur des chantiers ouverts par le récit**, à chaque terre gagnée ;
+  ailleurs, les mêmes pièces se posent librement mais ne font pas un point de sauvegarde.
+- [ ] **D30. Ce que le joueur bâtit est son acte, pas celui d'un Compagnon**, quand les sources se
+  taisent : le texte le dit (le fossé recreusé à Médine pendant la Ridda, la mosquée de Dhû l-Qassa).
+  Ce qui est attesté est cité : les chèvres du quartier (Ibn Sa'd), le Fossé de l'an 5.
+- [ ] **D31. Troupeaux et champs rapportent à chaque chapitre**, et les troupeaux versent leur dû
+  (Justice +1) : c'est précisément ce que la Ridda refusait.
+- [ ] **D32. Première saga d'abord.** Trois moments bâtis : l'enclos, le fossé (qui pèse dans le combat
+  de Dhû l-Qassa), la mosquée. Les autres sagas ont le mode Bâtir libre, sans chantier scénarisé.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

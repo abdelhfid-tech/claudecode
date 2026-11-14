@@ -52,7 +52,7 @@
     const c = $('#card'); c.className = cls; c.innerHTML = html; c.hidden = false;
     void c.offsetWidth; c.classList.add('on');
     if (I.debug.auto) await I.sleep(60);
-    else if (auto) await Promise.race([I.sleep(auto), I.sleep(500).then(() => I.input.wait(['ok', 'cancel']))]);
+    else if (auto) await I.input.waitTimed(['ok', 'cancel'], auto, 500);
     else { await I.sleep(350); await I.input.wait(['ok', 'cancel']); }
     c.classList.remove('on'); await I.sleep(260); c.hidden = true;
   }
@@ -162,6 +162,8 @@
       case 'save': await I.ui.saveMenu(); break;
       case 'pillar': W.pillar(a, b); break;
       case 'mus': I.audio.music(a); break;
+      case 'mat': I.build.give(a, b === undefined ? 1 : b); break;
+      case 'site': I.build.openSite(a); break;
       case 'battle': S.hideDialog(); await I.battle.start(a); break;
       case 'map': S.hideDialog(); await S.fade('out'); W.loadMap(a, c || {}, b); await S.fade('in'); break;
       case 'tp': { const e = W.ent(a); if (e) { const p = W.resolve(b, e === W.player ? W.map.id : e.map, e); if (p) { e.x = p[0]; e.y = p[1]; e.placed = true; e.placedMap = W.map.id; if (e === W.player) W.resetTrail(); } else { e.at = b; e.placed = false; } } break; }

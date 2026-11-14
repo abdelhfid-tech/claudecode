@@ -313,6 +313,7 @@
     return b.finish({ time: 'archives', ambient: '#6a66a0', grade: ['#ffb45a', 0.14], particles: 'dust', rate: 5, sound: 'noos', bg: 'cite', rays: { a: 0.05, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine' });
   }
 
+  M.drawRosette = drawRosette;
   M.build = function (id, opts) {
     opts = opts || {};
     switch (id) {

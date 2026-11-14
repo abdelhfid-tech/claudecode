@@ -429,7 +429,7 @@
     const b = $('#battle .banner'); b.className = 'banner ' + (cls || ''); b.innerHTML = html; b.hidden = false; clearTimeout(bannerT);
     const hide = () => { b.hidden = true; };
     if (!wait) { bannerT = setTimeout(hide, ms / Math.min(I.speed, 3)); return Promise.resolve(); }
-    return Promise.race([I.sleep(ms), I.sleep(450).then(() => I.input.wait(['ok', 'cancel']))]).then(hide);
+    return I.input.waitTimed(['ok', 'cancel'], ms, 450).then(hide);
   }
 
   function refresh() {

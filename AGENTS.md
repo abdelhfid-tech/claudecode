@@ -20,6 +20,7 @@ toute considération de jeu.
 | `src/data/frame.js` | histoire-cadre | même format, `frame: true` |
 | `src/page.html`, `src/style.css` | gabarit et interface | |
 | `index.html`, `dist/isnad.html` | **générés** | ne jamais les éditer à la main |
+| `src/core/build.js` | bâtir : matériaux, pièces, chantiers, troupeaux | pièces et matériaux déclarés dans `defs.js` |
 | `src/data/caid.js` | les veillées du Caïd | même format, `frame: true`, `veillees: true`, un chapitre par saga (`after`) |
 | `src/data/music.js` | bande-son | `ISNAD.registerMusic(nom, piste)`, validée par `tools/validate-music.js` |
 | `docs/schema-saga.md`, `docs/schema-v2.md` | contrat de données et bible narrative | à relire avant d'écrire du contenu |

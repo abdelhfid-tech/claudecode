@@ -227,3 +227,18 @@ body.portrait .mlist { max-height: 12em; }
 #card.pray h1 { letter-spacing: .3em; } #card.pray p { font-style: italic; max-width: 28em; }
 #card.pray { background: radial-gradient(ellipse at center, rgba(20, 16, 40, .95), rgba(4, 3, 10, 1)); }
 #card.parley h1 { font-size: 1.6em; }
+
+/* ---------- bâtir ---------- */
+#buildbtn { position: absolute; right: calc(2% + 2.9em); top: 3%; width: 2.4em; height: 2.4em; border-radius: 6px; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; }
+body.in-build #buildbtn { background: var(--acc); color: #0b0a14; }
+#buildbar { position: absolute; left: 2%; right: 2%; bottom: 2.5%; z-index: 9; background: var(--panel); border: 1px solid var(--line); border-radius: 3px; padding: .4em .6em; display: flex; flex-direction: column; gap: .3em; font-size: .8em; }
+#buildbar .mats { display: flex; flex-wrap: wrap; gap: .3em 1em; font-family: var(--f-mono); color: var(--dim); font-size: .9em; }
+#buildbar .mats i { font-style: normal; color: var(--acc); margin-right: .3em; } #buildbar .mats b { color: #fff; }
+#buildbar .pieces { display: flex; gap: .3em; overflow-x: auto; padding-bottom: .2em; scrollbar-width: thin; }
+.pc { flex: none; display: flex; flex-direction: column; align-items: center; gap: .15em; width: 5.4em; padding: .3em .2em; background: rgba(255, 255, 255, .05); border: 1px solid transparent; border-radius: 3px; font-size: .86em; line-height: 1.1; text-align: center; }
+.pc .ic { width: 2.2em; height: 2.2em; background-size: contain; background-repeat: no-repeat; background-position: center; image-rendering: pixelated; display: grid; place-items: center; color: var(--red); font-size: 1em; }
+.pc.sel { border-color: var(--gold); background: rgba(233, 200, 119, .18); color: #fff; } .pc.poor { opacity: .45; }
+#buildbar .info { color: var(--sand); min-height: 1.3em; } #buildbar .info em { color: var(--dim); }
+#buildbar .keys { color: var(--dim); font-size: .86em; } body.touch #buildbar .keys { display: none; }
+body.portrait #buildbar { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; font-size: 12px; }
+body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.in-build #pad { bottom: max(6px, env(safe-area-inset-bottom, 0px)); }

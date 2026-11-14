@@ -34,7 +34,7 @@
   const KEY = {
     ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right',
     Enter: 'ok', Space: 'ok', KeyZ: 'ok', KeyE: 'ok', NumpadEnter: 'ok',
-    Escape: 'cancel', KeyX: 'cancel', Backspace: 'cancel', KeyM: 'menu', Tab: 'menu'
+    Escape: 'cancel', KeyX: 'cancel', Backspace: 'cancel', KeyM: 'menu', Tab: 'menu', KeyB: 'build', KeyC: 'prev', KeyV: 'next'
   };
   function emit(a) {
     I.audio.unlock();
@@ -46,6 +46,14 @@
     pop(fn) { const i = stack.lastIndexOf(fn); if (i >= 0) stack.splice(i, 1); },
     emit,
     clearHeld() { held.up = held.down = held.left = held.right = false; },
+    // attend une action OU un délai ; l'écouteur est toujours retiré (sinon il avalerait les touches suivantes)
+    waitTimed(actions, ms, delay) {
+      return new Promise(res => {
+        let h = null, done = false; const fin = v => { if (done) return; done = true; if (h) I.input.pop(h); res(v); };
+        setTimeout(() => { if (!done) h = I.input.push(a => { if (actions.includes(a)) fin(a); return true; }); }, (delay || 0) / I.speed);
+        setTimeout(() => fin(null), ms / I.speed);
+      });
+    },
     // attend l'une des actions ; renvoie l'action
     wait(actions) {
       return new Promise(res => {

@@ -61,12 +61,16 @@
       if (W.map) W.checkpoint();
     } finally { S.depth--; S.hideDialog(); }
   };
-  W.nearPrayer = function () { const m = W.map, sp = m && m.spots.priere; if (!sp) return false; return Math.hypot(sp[0] * T + 8 - W.player.x, sp[1] * T + 13 - W.player.y) < 26; };
+  W.prayerPts = function () { const m = W.map, out = []; if (!m) return out; if (m.spots.priere) out.push(m.spots.priere); if (I.build && W.saga) I.build.prayerPoints().forEach(q => out.push(q)); return out; };
+  W.nearPrayer = function () { return W.prayerPts().some(sp => Math.hypot(sp[0] * T + 8 - W.player.x, sp[1] * T + 13 - W.player.y) < 26); };
 
   /* ----- cartes ----- */
   W.loadMap = function (id, opts, spot) {
     opts = opts || {}; const key = id + JSON.stringify(opts);
-    W.map = mapCache[key] || (mapCache[key] = I.maps.build(id, opts)); W.mapOpts = opts;
+    W.mapKey = key; const bl = I.build && W.saga ? I.build.peek(id) : null;
+    if (bl && bl.length) { W.map = I.maps.build(id, opts); bl.forEach(e => I.build.apply(e, W.map)); } // ce qui a été bâti reste
+    else W.map = mapCache[key] || (mapCache[key] = I.maps.build(id, opts));
+    W.mapOpts = opts; if (I.build && I.build.on && !I.build.outdoor(id)) I.build.set(false);
     const ks = Object.keys(mapCache); if (ks.length > 4) ks.filter(k2 => k2 !== key).slice(0, ks.length - 4).forEach(k2 => { delete mapCache[k2]; });
     const env = W.map.env; G.clearParts(); G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 };
     I.audio.amb(env.sound || 'vent'); I.audio.music(env.music || 'silence');
@@ -77,6 +81,7 @@
     W.resetTrail(); W.tint = null; W.updateCam(true);
     document.body.dataset.theme = (id === 'noos' || id === 'cite' || id === 'archives') ? 'cyber' : (id === 'romaine' || id === 'palais') ? 'roman' : 'orient';
   };
+  W.uncache = function () { delete mapCache[W.mapKey]; };
   W.solidAt = function (px, py) { const m = W.map, tx = Math.floor(px / T), ty = Math.floor(py / T); if (tx < 0 || ty < 0 || tx >= m.w || ty >= m.h) return true; return !!m.solid[ty * m.w + tx]; };
   function occupied(x, y, self) {
     const near = e => e !== self && !e.hidden && e.map === W.map.id && e.placed !== false && Math.abs(e.x - x) < 12 && Math.abs(e.y - y) < 10;
@@ -145,6 +150,7 @@
     try {
       await S.fade('in', 500);
       if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); }
+      if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) I.build.yields(); }
       if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Croix : marcher · <b>OK</b> : parler, valider · <b>MENU</b> : halte' : '<b>Flèches</b> ou <b>ZQSD</b> : marcher · <b>Entrée</b> : parler · <b>Échap</b> : menu', 9000);
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
@@ -155,7 +161,7 @@
     const tm = W.map && ({ dawn: 'Fajr', day: 'Dhuhr', dusk: 'Maghrib', night: '’Ishâ' })[W.map.env.time];
     $('#hud .sub').textContent = (W.ch ? W.ch.sub : '') + (tm ? '  ·  ◠ ' + tm : '');
     const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('');
-    $('#hud .obj').textContent = o && o.text ? o.text : '';
+    $('#hud .obj').textContent = (o && o.text ? o.text : '') + (o && o.build ? I.build.objectiveText(o.build) : '');
     $('#hud .obj').hidden = !(o && o.text);
   };
   W.checkpoint = function () {
@@ -170,6 +176,7 @@
       if (!o) return W.endChapter();
       W.hud();
       if (o.foe) { const f = W.foes.find(f => f.id === o.foe); if (f && f.done) { await W.complete(true); continue; } }
+      if (o.build && I.build.objectiveDone(o.build)) { await W.complete(true); continue; }
       if (!o.auto) return;
       await W.complete(true);
     }
@@ -232,7 +239,7 @@
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
       await S.run([['ask', 'Une natte tournée vers La Mecque, au cœur de l’étoile.', [{ t: 'Prier : le groupe se repose, la Sakîna descend', r: [['pray']] }, { t: 'Sauvegarder la partie', r: [['save']] }, { t: 'Plus tard', r: [] }]]]);
-    }
+    } else if (I.build) await I.build.gather();
   };
   W.fight = async function (f) {
     S.depth++;
@@ -246,6 +253,8 @@
   /* ----- mise à jour ----- */
   W.onInput = function (a) {
     if (I.scene !== W || S.busy || W.lock) return false;
+    if (a === 'build') { I.build.set(!I.build.on); return true; }
+    if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel') { I.build.set(false); return true; } if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
     if (a === 'ok') { W.interact(); return true; }
     if (a === 'menu' || a === 'cancel') { I.ui.pause(); return true; }
     return false;
@@ -277,7 +286,7 @@
         if (f.done || f.map !== W.map.id || !f.placed) continue;
         const d = Math.hypot(f.x - p.x, f.y - p.y);
         if (d < 15) { W.fight(f); break; }
-        if (d < 72 && !f.boss) { const vx = (p.x - f.x) / d * 22 * dt, vy = (p.y - f.y) / d * 22 * dt; if (!W.solidAt(f.x + vx, f.y)) f.x += vx; if (!W.solidAt(f.x, f.y + vy)) f.y += vy; }
+        if (d < 72 && !f.boss) { const vx = (p.x - f.x) / d * 22 * dt, vy = (p.y - f.y) / d * 22 * dt, m2 = W.map, stop = (x, y) => W.solidAt(x, y) || (m2.trench && m2.trench.has(Math.floor(y / T) * m2.w + Math.floor(x / T))); if (!stop(f.x + vx, f.y)) f.x += vx; if (!stop(f.x, f.y + vy)) f.y += vy; }
       }
     } else if (!p.scripted) p.moving = false;
     W.updateCam();
@@ -301,6 +310,8 @@
   W.walkStep = function () {
     const o = W.cur(), p = W.player, h = I.input.held, log = I.debug.log || (I.debug.log = []), st = W._walk || (W._walk = {});
     h.up = h.down = h.left = h.right = false; if (!o || o.auto) return;
+    if (o.build && I.debug.noBuild) return;
+    if (o.build) { if (!W._bb) { W._bb = true; I.build.autoBuild(o.build); I.build.after().then(() => { W._bb = false; }, e => { log.push('ERR bâtir ' + e.message); W._bb = false; }); } return; }
     const key = W.saga.id + W.ch.id + W.objIndex + W.map.id;
     let tx, ty, kind = o.goto ? 'goto' : o.talk ? 'talk' : 'foe';
     if (o.goto) { const sp = W.spotPx(o.goto); if (!sp) return; tx = sp[0]; ty = sp[1]; }
@@ -320,6 +331,8 @@
   };
   W.autoStep = function () {
     const o = W.cur(); if (!o) return; const p = W.player, log = I.debug.log || (I.debug.log = []);
+    if (o.build && I.debug.noBuild) return;
+    if (o.build) { W._autoBusy = true; I.build.autoBuild(o.build); I.build.after().then(() => { W._autoBusy = false; }, e => { log.push('ERR bâtir ' + e.message); W._autoBusy = false; }); return; }
     if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
     const go = (x, y, what) => { if (!W.reach(p.x, p.y, x, y)) log.push(`INACCESSIBLE ${W.saga.id}/${W.ch.id} obj${W.objIndex} ${what} sur ${W.map.id}`); p.x = x; p.y = y; W.resetTrail(); };
     W._autoBusy = true; const done = () => { W._autoBusy = false; };
@@ -332,6 +345,7 @@
   W.target = function () {
     const o = W.cur(); if (!o) return null;
     if (o.goto) { const s = W.spotPx(o.goto); return s && { x: s[0], y: s[1], kind: 'goto' }; }
+    if (o.build) { const st = o.build.site && I.build.sites()[o.build.site]; return st && st.map === W.map.id ? { x: (st.x + st.w / 2) * T, y: (st.y + st.h / 2) * T, kind: 'goto' } : null; }
     if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); return n && !n.hidden && n.map === W.map.id && n.placed ? { x: n.x, y: n.y - 26, kind: 'talk' } : null; }
     if (o.foe) { const f = W.foes.find(f => f.id === o.foe); return f && !f.done && f.map === W.map.id && f.placed ? { x: f.x, y: f.y - 30, kind: 'foe' } : null; }
     return null;
@@ -354,6 +368,7 @@
     // eau animée
     const fr = Math.floor(t * 2.2) % 4;
     for (const a of m.anim) { const x = a.x * T - cx, y = a.y * T - cy; if (x < -16 || y < -16 || x > G.PW || y > G.PH) continue; c.drawImage(G.tile(a.n, (a.x + a.y + fr) % 4, 0), x, y); }
+    if (I.build) I.build.render(c, cx, cy, t);
     // marqueur d'objectif au sol
     const tg = W.target();
     if (tg && tg.kind === 'goto') { const rr = 9 + Math.sin(t * 4) * 2; c.strokeStyle = 'rgba(255,224,138,.9)'; c.lineWidth = 1; c.beginPath(); c.ellipse(tg.x - cx, tg.y - cy, rr, rr * 0.45, 0, 0, 6.3); c.stroke(); c.fillStyle = 'rgba(255,224,138,.25)'; c.fill(); if (Math.random() < 0.3) G.spawn({ x: tg.x - cx + (Math.random() - 0.5) * 14, y: tg.y - cy, vy: -18, life: 1.2, size: 0.7, color: '#ffe08a', type: 'mote' }); }
@@ -368,7 +383,7 @@
     list.sort((a, b) => a.y - b.y);
     const lights = [];
     for (const e of list) {
-      if (e.o) { const o = e.o; c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2) - cx, o.y - o.h + 1 - cy); if (o.anim) drawFlame(c, o.x - cx, o.y - cy - (o.type === 'brazier' ? 10 : 3), t + o.seed, o.type === 'fire'); }
+      if (e.o) { const o = e.o; c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2) - cx, o.y - o.h + 1 - cy); if (o.anim) drawFlame(c, o.x - cx, o.y - cy - (o.type === 'brazier' ? 10 : 3), t + o.seed, o.type === 'fire'); if (G.OBJ[o.type].herd) I.build.herd(c, o, o.x - cx, o.y - cy, t); }
       else if (e.n) { const n = e.n; drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t, n.aura); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
       else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = 0.86 + Math.sin(t * 5 + f.ph) * 0.12; c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
@@ -392,7 +407,7 @@
       if (!best && W.nearPrayer()) best = { x: p.x, y: p.y + 6 };
       if (best && !(tg && tg.kind === 'talk' && Math.abs(tg.x - best.x) < 2)) { const bx = Math.round(best.x - cx), by = Math.round(best.y - cy - 34 + Math.sin(t * 5) * 1.5); c.fillStyle = '#1a1420'; c.fillRect(bx - 7, by - 1, 14, 9); c.fillStyle = '#fff6dc'; c.fillRect(bx - 6, by, 12, 7); c.fillRect(bx - 1, by + 7, 2, 2); c.fillStyle = '#1a1420'; c.fillRect(bx - 4, by + 3, 2, 2); c.fillRect(bx - 1, by + 3, 2, 2); c.fillRect(bx + 2, by + 3, 2, 2); }
     }
-    if (m.spots.priere) { const px2 = m.spots.priere[0] * T + 8 - cx, py2 = m.spots.priere[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) {
+    for (const pp of W.prayerPts()) { const px2 = pp[0] * T + 8 - cx, py2 = pp[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) {
       // étoile à huit branches en lumière : deux carrés qui tournent en sens contraires
       const sq = (rot, r, col) => { c.strokeStyle = col; c.lineWidth = 1; c.beginPath(); for (let i = 0; i < 4; i++) { const a = rot + i * Math.PI / 2, X = px2 + Math.cos(a) * r, Y = py2 + 4 + Math.sin(a) * r * 0.62; if (i) c.lineTo(X, Y); else c.moveTo(X, Y); } c.closePath(); c.stroke(); };
       sq(t * 0.45, 11, 'rgba(255,236,170,.9)'); sq(-t * 0.45 + Math.PI / 4, 11, 'rgba(255,236,170,.9)'); sq(t * 0.3 + 0.4, 6, 'rgba(130,225,235,.75)'); lights.push({ x: px2, y: py2, r: 30 + Math.sin(t * 2) * 3, color: '#fff3c8', a: 0.55 }); if (Math.random() < 0.06) G.spawn({ x: px2 + (Math.random() - 0.5) * 16, y: py2 + 4, vy: -10, life: 1.6, size: 0.6, color: '#fff3c8', type: 'mote' }); } }

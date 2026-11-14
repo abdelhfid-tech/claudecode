@@ -137,3 +137,25 @@ ISNAD.registerMusic('medine', {
 Jeton = `hauteur/durée` ; hauteur `A–G` + `#` ou `b` facultatif + octave 1–7 ; silence `-` ; durée en temps
 (0.25, 0.5, 1, 1.5, 2…). Timbres : `pulse, square, triangle, saw, sine, pluck` (oud), `flute` (ney),
 `strings, bell, drums`. `victoire` est jouée une fois, les autres en boucle.
+
+## 7. Bâtir (version 3)
+
+Matériaux (`D.MATS`) : `eau, pise, palme, pierre, grain, laine`. Pièces (`D.PIECES`) : `tranchee, puits,
+palmier, champ, enclos, bergerie, chamelier, mur, sol, pilier, mihrab, natte, tapis, lanterne, rosace`.
+Le joueur récolte (palmier → palme, rocher → pierre, puits ou rive → eau, eau pétrie → pisé, étal →
+grain) et pose devant lui, case par case, sur les cartes à ciel ouvert (`medine, koufa, desert, camp,
+citadelle`). Ce qui est bâti reste d'un chapitre à l'autre, par saga, et rapporte au début de chaque
+chapitre. Une pièce pleine est refusée si elle coupe l'accès à un lieu : on ne peut pas se murer.
+
+| élément | effet |
+|---|---|
+| `['mat', matériau, n]` | donne (ou retire) des matériaux |
+| `['site', { id, name, at, w, h, need: { mur: 10, sol: 8, … }, give: { pise: 24, … } }]` | ouvre un chantier de mosquée sur la carte courante (`at` = coin haut-gauche), livre les matériaux |
+| objectif `{ text, build: { piece: 'tranchee', n: 6 } }` | accompli quand la carte courante compte n pièces de ce type |
+| objectif `{ text, build: { site: 'id' } }` | accompli quand le chantier est achevé |
+
+Une mosquée achevée devient un lieu de prière et de sauvegarde (sur sa natte) ; Prière +1, Lien +1.
+Un puits et trois palmiers font une oasis (Lien +1). Six segments de tranchée gardent un lieu ; les
+égrégores visibles ne les franchissent pas. Les troupeaux versent leur dû à chaque chapitre (Justice +1).
+**Règle de respect** : quand les sources ne disent pas qu'on a bâti à tel endroit, le texte le dit
+(« Les sources ne disent pas qui posa la première brique… ») et l'acte est celui du joueur, pas d'un Compagnon.

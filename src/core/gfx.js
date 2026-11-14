@@ -66,9 +66,13 @@
     zsand(c, r) { R(c, '#d4b47c', 0, 0, 16, 16); c.fillStyle = '#c29b62'; c.fillRect(3, 3, 10, 10); c.beginPath(); c.moveTo(8, 1); c.lineTo(15, 8); c.lineTo(8, 15); c.lineTo(1, 8); c.fill(); c.fillStyle = '#e6cf9c'; c.beginPath(); c.moveTo(8, 4); c.lineTo(12, 8); c.lineTo(8, 12); c.lineTo(4, 8); c.fill(); R(c, '#a8824f', 7, 7, 2, 2); },
     gwall(c, r) { TILE.wall(c, r); R(c, '#f1e0b8', 0, 2, 16, 5); c.fillStyle = '#2d7f8f'; for (let x = 0; x < 16; x += 4) { c.beginPath(); c.moveTo(x, 4.5); c.lineTo(x + 2, 2); c.lineTo(x + 4, 4.5); c.lineTo(x + 2, 7); c.fill(); } c.fillStyle = '#c9a13f'; for (let x = 1; x < 16; x += 4) c.fillRect(x, 4, 2, 1); R(c, '#8e5a2a', 0, 1, 16, 1); R(c, '#8e5a2a', 0, 7, 16, 1); },
     mihrab(c, r) { TILE.gwall(c, r); R(c, '#1c2f3a', 4, 3, 8, 13); c.fillStyle = '#1c2f3a'; c.beginPath(); c.arc(8, 4, 4, Math.PI, 0); c.fill(); R(c, '#2d7f8f', 5, 5, 6, 11); c.fillStyle = '#2d7f8f'; c.beginPath(); c.arc(8, 5, 3, Math.PI, 0); c.fill(); c.fillStyle = '#f1e7cc'; c.beginPath(); c.moveTo(8, 6); c.lineTo(10, 9); c.lineTo(8, 12); c.lineTo(6, 9); c.fill(); R(c, '#c9a13f', 7, 8, 2, 2); },
+    // pièces à bâtir : fossé, sillons, bloc de pisé vu du dessus (face supérieure claire, face avant sombre)
+    trench(c, r) { speck(c, r, P.sand, 10); R(c, '#3a2a1c', 1, 3, 14, 10); R(c, '#24180f', 2, 5, 12, 7); R(c, '#6b4a2e', 1, 3, 14, 1); R(c, '#b08a59', 0, 1, 16, 2); R(c, '#c9a567', 0, 13, 16, 2); c.fillStyle = '#8a6238'; c.fillRect(4, 2, 1, 2); c.fillRect(11, 2, 1, 2); },
+    field(c, r) { R(c, '#8a6a3a', 0, 0, 16, 16); c.fillStyle = '#6e5028'; for (let y = 1; y < 16; y += 4) c.fillRect(0, y, 16, 2); c.fillStyle = '#9ac25a'; for (let y = 0; y < 16; y += 4) for (let x = 1 + (y % 8 ? 2 : 0); x < 16; x += 4) { c.fillRect(x, y, 1, 2); c.fillRect(x + 1, y + 1, 1, 1); } },
+    bwall(c, r) { R(c, '#d9b37f', 0, 0, 16, 9); R(c, '#e8c896', 0, 0, 16, 2); R(c, '#b98f5c', 0, 9, 16, 7); R(c, '#a07a4c', 0, 15, 16, 1); c.fillStyle = '#a98252'; c.fillRect(0, 12, 16, 1); c.fillRect(5, 9, 1, 3); c.fillRect(11, 12, 1, 3); c.fillStyle = '#c9a56e'; for (let i = 0; i < 6; i++) c.fillRect(Math.floor(r() * 15), 2 + Math.floor(r() * 6), 1, 1); },
     dark(c) { R(c, '#07060c', 0, 0, 16, 16); }
   };
-  const SOLID = new Set(['gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull']);
+  const SOLID = new Set(['bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull']);
   G.isSolidTile = n => SOLID.has(n);
   G.tile = function (name, variant, hue) {
     const key = name + '|' + (variant || 0) + '|' + (hue || 0);
@@ -128,6 +132,9 @@
     rug: { w: 24, h: 14, fw: 0, fh: 0, flat: true, draw(c, r, o) { const col = (o && o.color) || '#8e2f2a', a2 = (o && o.trim) || '#d9b45a'; R(c, col, 0, 1, 24, 12); R(c, a2, 1, 2, 22, 1); R(c, a2, 1, 11, 22, 1); R(c, a2, 1, 2, 1, 10); R(c, a2, 22, 2, 1, 10); c.fillStyle = '#f1e7cc'; for (let k = 0; k < 3; k++) { const x = 6 + k * 6; c.beginPath(); c.moveTo(x, 4); c.lineTo(x + 3, 7); c.lineTo(x, 10); c.lineTo(x - 3, 7); c.fill(); } c.fillStyle = '#27608f'; for (let k = 0; k < 3; k++) c.fillRect(5 + k * 6, 6, 2, 2); } },
     lantern: { w: 10, h: 26, fw: 4, fh: 3, draw(c) { R(c, '#4a3826', 4, 8, 2, 18); R(c, '#6b5236', 2, 24, 6, 2); R(c, '#2e2218', 2, 2, 6, 7); R(c, '#ffd27a', 3, 3, 4, 5); c.fillStyle = '#2e2218'; c.fillRect(3, 5, 4, 1); c.fillRect(5, 3, 1, 5); R(c, '#c9a13f', 4, 0, 2, 2); } },
     basin: { w: 24, h: 18, fw: 20, fh: 8, draw(c) { c.fillStyle = '#c9c1b2'; c.beginPath(); c.moveTo(12, 1); c.lineTo(23, 9); c.lineTo(12, 17); c.lineTo(1, 9); c.fill(); c.fillStyle = '#e6e0d4'; c.fillRect(4, 4, 16, 10); c.fillStyle = '#3a95b6'; c.beginPath(); c.moveTo(12, 4); c.lineTo(19, 9); c.lineTo(12, 14); c.lineTo(5, 9); c.fill(); c.fillStyle = '#8fd3e4'; c.fillRect(10, 8, 4, 1); R(c, '#c9a13f', 11, 8, 2, 2); } },
+    pen_goat: { w: 34, h: 26, fw: 30, fh: 8, herd: ['#e9e2d0', '#8a7355', 2], draw(c) { OBJ.pen_goat.fence(c); }, fence(c) { R(c, 'rgba(120,90,50,.35)', 2, 8, 30, 16); c.fillStyle = '#8a6238'; for (let x = 1; x < 34; x += 4) { c.fillRect(x, 4, 2, 6); c.fillRect(x, 20, 2, 6); } c.fillRect(1, 4, 2, 22); c.fillRect(31, 4, 2, 22); c.fillStyle = '#6e4c2a'; c.fillRect(1, 6, 32, 1); c.fillRect(1, 22, 32, 1); } },
+    pen_sheep: { w: 34, h: 26, fw: 30, fh: 8, herd: ['#f1ece2', '#3a2a1c', 3], draw(c) { OBJ.pen_goat.fence(c); } },
+    pen_camel: { w: 34, h: 26, fw: 30, fh: 8, herd: ['#b08a55', '#8e6d40', 2, 1], draw(c) { OBJ.pen_goat.fence(c); } },
     spring: { w: 20, h: 12, fw: 0, fh: 0, flat: true, draw(c) { c.fillStyle = '#3a95b6'; c.beginPath(); c.ellipse(10, 6, 9, 5, 0, 0, 6.3); c.fill(); c.fillStyle = '#8fd3e4'; c.fillRect(6, 4, 4, 1); c.fillRect(11, 7, 3, 1); } }
   };
   G.OBJ = OBJ;

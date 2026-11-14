@@ -30,6 +30,15 @@ mène les combats avec une IA et saute d'objectif en objectif après avoir véri
 | `node tools/smoke.js wrong` | Toutes les mauvaises réponses, tous les pourparlers perdus (0 sur 20) : chaque branche d'échec s'exécute et la partie se termine quand même. |
 | Lecture des 18 pistes dans un navigateur de test | Aucune erreur ; niveau mesuré sur chacune ; un limiteur a été ajouté après une crête trop haute. |
 
+## Version 3 : bâtir
+
+Rejoué par `smoke.js auto` et `smoke.js walk` : les trois objectifs de construction de la première saga
+(enclos, six segments de tranchée, mosquée de Dhû l-Qassa) sont bâtis par le test et validés ; chaque
+type de pièce a été posé une fois ; l'oasis, le chantier, la mosquée fondée et son point de prière ont
+été constatés. Le mode Bâtir a été piloté au clavier (ouvrir, changer de pièce, poser). Ce test a révélé
+un défaut ancien, corrigé : après un bandeau ou un carton qui s'effaçait tout seul, la touche suivante
+était avalée. Non testé : bâtir au doigt sur un vrai téléphone ; l'équilibre des matériaux.
+
 ## Revue critique : le joueur exigeant
 
 Un amateur rigoureux de JRPG 16 bits dirait ceci, sans complaisance.

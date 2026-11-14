@@ -146,6 +146,26 @@ reçus par niveau. Lien : +3 % de dégâts infligés par niveau.
 **Veillées du Caïd.** Cinq chapitres de fiction (`src/data/caid.js`), un après chaque saga, dans la carte
 `citadelle`. Les piliers de la Citadelle persistent d'une veillée à l'autre.
 
+## Bâtir (version 3)
+
+Boucle : récolter → poser → rapporter. Matériaux : eau, pisé, palme, pierre, grain, laine. Récolte : un
+palmier donne 1 palme, un rocher 1 ou 2 pierres, un point d'eau 2 eaux, 2 eaux pétries donnent 3 pisés,
+un étal 2 grains (une fois par visite de la carte). Pose : la case devant soi, sur une carte à ciel
+ouvert ; une pièce pleine est refusée si elle isole un lieu ou un personnage.
+
+| Pièce | Coût | Effet |
+|---|---|---|
+| Tranchée | la peine de creuser | arrête les égrégores visibles ; six segments gardent un lieu |
+| Puits | 4 pierres | eau à chaque chapitre (+3) ; requis à six pas pour palmiers et champs |
+| Palmier | 1 eau | dattes à chaque chapitre ; un puits et trois palmiers font une oasis (Lien +1) |
+| Champ d'orge | 1 eau, 1 grain | grain et pain à chaque chapitre |
+| Enclos de chèvres, de moutons, de chameaux | 3 à 4 palmes | lait, laine, pierre à chaque chapitre ; le dû des troupeaux donne Justice +1 |
+| Mur, sol, pilier, niche, natte, tapis, lanterne, rosace | pisé, palme, pierre, laine | pièces de mosquée |
+
+Chantier de mosquée : ouvert par le récit sur une terre gagnée, avec une liste de pièces à poser dans un
+enclos tracé au sol. Achevée, la mosquée donne Prière +1 et Lien +1, et sa natte devient un point de
+prière et de sauvegarde.
+
 ## Feuille de route proposée
 
 1. Relecture historique par un spécialiste, puis corrections de texte.

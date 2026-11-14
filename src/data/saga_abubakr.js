@@ -290,6 +290,9 @@ ISNAD.registerSaga({
       text: "Un compte oublié sur un étal du souk : trente chamelles « de zakât » rachetées aux Banû Rimth pour le prix de dix, « en attendant que le calife plie ». Pièce de fiction. Elle rappelle une règle simple de la Chaîne : avant de croire celui qui conseille, regarde ce qu'il gagne à son conseil." },
     { id: 'thamir', cat: 'Noosphère', title: "Thâmir le courtier (personnage de fiction)",
       text: "Thâmir ibn Ghânim, courtier du souk de Médine, n'a pas existé. La Chaîne l'invente pour donner un visage à l'hypocrisie (nifâq) : dire aux uns ce qu'ils veulent entendre, aux autres le contraire, et servir entre les deux son propre compte. Les sources parlent des hypocrites de Médine sans toujours les nommer ; aucun Compagnon, aucune tribu, aucune communauté n'est visé ici. L'hypocrite n'est pas l'étranger : il est du dedans." },
+    { id: 'chevres', cat: 'Parole', title: "Les chèvres du quartier", text: "On rapporte qu'Abû Bakr trayait les chèvres des gens de son quartier. Devenu calife, il continua, et alla encore quelque temps au marché porter ses étoffes, jusqu'à ce qu'on lui fixe de quoi vivre sur le Trésor. Dans le jeu, bâtir un enclos donne du lait à chaque chapitre.", src: "Ibn Sa'd, at-Tabaqât al-Kubrâ" },
+    { id: 'fosse', cat: 'Événement', title: "Le Fossé", text: "En l'an 5 de l'Hégire, une coalition marcha sur Médine. Sur le conseil de Salmân al-Fârisî, les musulmans creusèrent un fossé au nord de la ville : un stratagème venu de Perse, inconnu des Arabes, qui arrêta la cavalerie. Pendant la Ridda, les sources disent qu'Abû Bakr posta des gardes aux passes de Médine ; qu'on y ait creusé de nouveau est une liberté du jeu.", src: "Ibn Hishâm, as-Sîra ; at-Tabarî, Târîkh" },
+    { id: 'batir', cat: 'Lieu', title: "Bâtir d'abord un lieu de prière", text: "À Qubâ' puis à Médine, la première chose bâtie fut une mosquée : des briques de terre crue, des troncs de palmier pour piliers, des palmes pour toit. Les villes fondées ensuite, Basra, Koufa, Fustât, commencèrent de même. Le jeu te laisse poser ces blocs toi-même sur chaque terre gagnée ; les sources ne disent pas qu'on bâtit à Dhû l-Qassa.", src: "Ibn Hishâm, as-Sîra ; al-Balâdhurî, Futûh al-Buldân" },
     { id: 'najran', cat: 'Événement', title: "Le pacte de Najrân confirmé",
       text: "Les chrétiens de Najrân, au sud de l'Arabie, avaient reçu du Messager d'Allah ﷺ un pacte écrit garantissant leurs personnes, leurs biens et leur culte. À sa mort, ils vinrent demander ce que valait encore l'écrit. On rapporte qu'Abû Bakr leur en fit rédiger la confirmation, dans les mêmes termes. Un pacte ne meurt pas avec celui qui l'a donné : il oblige ceux qui lui succèdent.",
       src: "at-Tabarî, Târîkh ; Abû Yûsuf, Kitâb al-Kharâj" }
@@ -550,7 +553,14 @@ ISNAD.registerSaga({
           ['say', 'abubakr', "Et de quoi nourrirai-je les miens ?"],
           ['say', 'abuubayda', "Viens. Nous te fixerons sur le Trésor la part d'un homme parmi les Émigrés : ni la plus haute, ni la plus basse."],
           ['nar', "Ainsi fut fixée la subsistance du premier calife : de quoi vivre, un vêtement pour l'été, un vêtement pour l'hiver. Ibn Sa'd l'a consigné."],
-          ['hide', 'umar'], ['hide', 'abuubayda'], ['join', 'umar'], ['join', 'abuubayda']
+          ['hide', 'umar'], ['hide', 'abuubayda'], ['join', 'umar'], ['join', 'abuubayda'],
+          ['nar', "Râwî : ce que les sources montrent de leurs mains, tu peux le refaire des tiennes. Ouvre le mode *Bâtir* (touche B, ou le bouton ▦), choisis une pièce, pose-la devant toi."],
+          ['mat', 'palme', 4]
+        ] },
+        { text: "Bâtir un enclos pour les chèvres du quartier", build: { piece: 'enclos', n: 1 }, then: [
+          ['nar', "On rapporte qu'il trayait les chèvres des gens de son quartier. Quand il devint calife, une voix s'inquiéta : « Maintenant, il ne nous les traira plus. »"],
+          ['quote', "Si, par ma vie, je vous les trairai. J'espère que ce qui m'arrive ne me changera pas.", "On rapporte d'Abû Bakr — Ibn Sa'd, at-Tabaqât"],
+          ['codex', 'chevres'], ['give', 'lait', 1], ['pillar', 'lien', 1]
         ] },
         { text: "Tenir conseil sur la place", goto: 'place', then: [
           ['nar', "L'armée que le Messager d'Allah ﷺ avait préparée pour les marches de Syrie campe encore à al-Jurf, sous les ordres d'Usâma ibn Zayd, qui n'a pas vingt ans."],
@@ -658,7 +668,13 @@ ISNAD.registerSaga({
               ['nar', "Thâmir s'incline très bas. Il s'inclinait déjà, tout à l'heure, devant le cheikh des Banû Rimth."] ] }
           ]],
           ['nar', "Abû Bakr poste des gardes aux passes de Médine et rassemble les gens dans la mosquée."],
-          ['say', 'abubakr', "Le pays s'est retourné autour de vous, et leurs envoyés ont vu votre petit nombre. Vous ne savez s'ils viendront de nuit ou de jour. Tenez-vous prêts."]
+          ['say', 'abubakr', "Le pays s'est retourné autour de vous, et leurs envoyés ont vu votre petit nombre. Vous ne savez s'ils viendront de nuit ou de jour. Tenez-vous prêts."],
+          ['say', 'umar', "Nous sommes peu. Qu'au moins la ville ne soit pas prise à revers pendant que tu sors."],
+          ['nar', "Sept ans plus tôt, un Persan nommé Salmân avait appris à Médine à se garder par un fossé. Les mains s'en souviennent. Creuse : ouvre le mode *Bâtir* et pose six segments de tranchée, où tu voudras."]
+        ] },
+        { text: "Creuser six segments de tranchée pour garder Médine", build: { piece: 'tranchee', n: 6 }, then: [
+          ['flag', 'fosse_medine'], ['codex', 'fosse'], ['pillar', 'savoir', 1],
+          ['nar', "La terre est retournée, les gardes sont aux passes. Celui qui sort peut maintenant sortir sans regarder derrière lui."]
         ] },
         { auto: true, then: [
           ['nar', "Trois nuits plus tard, ils vinrent."],
@@ -673,9 +689,9 @@ ISNAD.registerSaga({
           ['say', 'umar', "Ils se rassemblent derrière les rochers. Ce ne sont plus des murmures : c'est une volonté."],
           ['if', 'rimth_allies', [
             ['battle', { group: ['reniement', 'reniement', 'reniement'], bg: 'desert', intro: "« Rentrons chez nos pères. » La nuée fond sur vous ; derrière elle, des cavaliers amis ferment la piste.",
-              allies: [{ flag: 'rimth_allies', name: 'Les cavaliers des Banû Rimth' }] }]
+              allies: [{ flag: 'rimth_allies', name: 'Les cavaliers des Banû Rimth' }, { flag: 'fosse_medine', name: 'Médine gardée par son fossé' }] }]
           ], [
-            ['battle', { group: ['reniement', 'reniement', 'reniement', 'mot_clan'], bg: 'desert', intro: "« Rentrons chez nos pères. » La nuée fond sur vous. Nul ne garde la piste de l'est : un mot d'ordre s'y est joint." }]
+            ['battle', { group: ['reniement', 'reniement', 'reniement', 'mot_clan'], bg: 'desert', intro: "« Rentrons chez nos pères. » La nuée fond sur vous. Nul ne garde la piste de l'est : un mot d'ordre s'y est joint.", allies: [{ flag: 'fosse_medine', name: 'Médine gardée par son fossé' }] }]
           ]],
           ['nar', "À l'aube, la piste est libre. Mais le refus lui-même n'est pas brisé : il a une source, et elle n'est pas faite de sable."],
           ['nar', "Ils prient l'aube sur le sable encore froid, les montures entravées derrière eux."],
@@ -762,6 +778,14 @@ ISNAD.registerSaga({
               ['say', 'abubakr', "Tu dis vrai. Que chacun aille où je l'ai envoyé. Je garderai Médine ; vous, gardez votre parole."],
               ['nar', "Il fait demi-tour. Reconnaître le vrai quand il vient d'un autre : cela aussi s'appelle véracité."] ] }
           ]]
+        ] },
+        { auto: true, then: [
+          ['nar', "Dhû l-Qassa : la première terre reprise. Les sources ne disent pas qui y posa la première brique. Mais partout où ils firent halte, ils commencèrent par un lieu de prière. Pose-la, râwî."],
+          ['codex', 'batir'],
+          ['site', { id: 'dhulqassa', name: 'La mosquée de Dhû l-Qassa', at: ['feu', 5, 1], w: 9, h: 7, need: { mur: 10, sol: 8, pilier: 2, mihrab: 1, natte: 1 }, give: { pise: 24, palme: 6, pierre: 4 } }]
+        ] },
+        { text: "Fonder la mosquée de Dhû l-Qassa, dans l'enclos tracé au sol", build: { site: 'dhulqassa' }, then: [
+          ['nar', "Dix blocs de terre, deux troncs, une niche, une natte. Ce n'est presque rien, et c'est assez : ceux qui partent sauront où revenir."]
         ] },
         { text: "Regarder partir les colonnes depuis le tertre", goto: 'tertre', then: [
           ['nar', "Onze colonnes s'enfoncent dans onze directions. Parmi ceux qui prendront la route du Yamâma : Zayd, le frère de 'Umar ; Sâlim, l'affranchi qui porte le Coran dans sa poitrine ; al-Barâ' ibn Mâlik. Des récitateurs par centaines."],

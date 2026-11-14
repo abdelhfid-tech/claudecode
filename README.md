@@ -52,6 +52,22 @@ dans la Cité-Miroir, qui rend la sixième Lumière, la Patience (*sabr*).
   explique, puis repropose. Le Compagnon ne fait jamais à l'écran autre chose que ce qui est rapporté.
 - **Codex.** Biographies, événements, paroles et idoles, avec leurs sources.
 
+## Bâtir
+
+Touche **B** (ou le bouton ▦), à ciel ouvert. On récolte en s'adressant aux choses : un palmier donne de
+la palme, un rocher de la pierre, un puits ou une rive de l'eau, l'eau pétrie du pisé, un étal du grain.
+Puis on pose devant soi, case par case :
+
+- **tranchée** : les égrégores qui rôdent ne la franchissent pas ; six segments gardent un lieu ;
+- **puits**, **palmiers** (un puits et trois palmiers font une oasis), **champs d'orge** ;
+- **enclos** de chèvres (lait), de moutons (laine), de chameaux (la caravane rapporte de la pierre) ;
+- les pièces d'une **mosquée** : mur de pisé, sol à étoiles, pilier de palmier, niche de qibla, natte,
+  tapis, lanterne, rosace.
+
+Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s'ouvre : la
+mosquée achevée devient un lieu de prière et de sauvegarde. Dans la première saga : l'enclos des chèvres
+du quartier, le fossé de Médine avant la nuit de Dhû l-Qassa, la mosquée de Dhû l-Qassa.
+
 ## Sauvegarder
 
 On ne sauvegarde que **dans les mosquées** : sur la natte, au cœur de l'étoile, on peut prier (le groupe se
