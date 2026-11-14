@@ -58,6 +58,8 @@ dans la Cité-Miroir, qui rend la sixième Lumière, la Patience (*sabr*).
 node tools/validate.js          # valide les sagas contre le schéma (src/core/defs.js)
 node tools/build.js             # assemble index.html et dist/isnad.html
 node tools/smoke.js auto        # joue la partie entière automatiquement dans Chromium
+node tools/smoke.js walk        # même partie, mais le héros marche réellement (vraies collisions)
+node tools/smoke.js wrong       # choisit d'abord toutes les mauvaises réponses
 node tools/smoke.js shots       # captures d'écran bureau et mobile dans .smoke/
 ```
 

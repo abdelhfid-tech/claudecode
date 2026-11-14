@@ -223,7 +223,12 @@
       } else p.moving = false;
       const o = W.cur();
       if (o && o.goto) { const s = W.spotPx(o.goto); if (s && Math.hypot(s[0] - p.x, s[1] - p.y) < 36) W.complete(); }
-      for (const f of W.foes) if (!f.done && f.map === W.map.id && f.placed && Math.hypot(f.x - p.x, f.y - p.y) < 15) { W.fight(f); break; }
+      for (const f of W.foes) {
+        if (f.done || f.map !== W.map.id || !f.placed) continue;
+        const d = Math.hypot(f.x - p.x, f.y - p.y);
+        if (d < 15) { W.fight(f); break; }
+        if (d < 72 && !f.boss) { const vx = (p.x - f.x) / d * 22 * dt, vy = (p.y - f.y) / d * 22 * dt; if (!W.solidAt(f.x + vx, f.y)) f.x += vx; if (!W.solidAt(f.x, f.y + vy)) f.y += vy; }
+      }
     } else if (!p.scripted) p.moving = false;
     W.updateCam();
   };
@@ -338,6 +343,14 @@
     // lumières de la carte
     const la = env.lightA === undefined ? 1 : env.lightA;
     if (la > 0) for (const L of m.lights) { const x = L.x - cx, y = L.y - cy; if (x < -L.r || y < -L.r || x > G.PW + L.r || y > G.PH + L.r) continue; lights.push({ x, y, r: L.r, color: L.color, a: la * (1 - L.flicker * (0.5 + 0.5 * Math.sin(t * 9 + L.x))) }); }
-    return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint };
+    // mini-carte (hors dialogue)
+    if (!S.busy && m.mini) {
+      const mw = m.w, mh = m.h, mx = G.PW - mw - 30, my = 6; c.globalAlpha = 0.82; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, mw + 4, mh + 4); c.drawImage(m.mini, mx, my); c.globalAlpha = 1;
+      c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = 1; c.strokeRect(mx - 1.5, my - 1.5, mw + 3, mh + 3);
+      if (tg && Math.floor(t * 3) % 2) { c.fillStyle = '#ffe08a'; c.fillRect(mx + Math.floor(tg.x / T) - 1, my + Math.floor((tg.kind === 'goto' ? tg.y : tg.y + 28) / T) - 1, 3, 3); }
+      W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) { c.fillStyle = '#ff6a8a'; c.fillRect(mx + Math.floor(f.x / T), my + Math.floor(f.y / T), 1, 1); } });
+      c.fillStyle = '#fff'; c.fillRect(mx + Math.floor(W.player.x / T) - 1, my + Math.floor(W.player.y / T) - 1, 2, 2);
+    }
+    return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint, clouds: env.clouds ? { x: cx, y: cy } : null };
   };
 })();

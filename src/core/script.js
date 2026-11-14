@@ -70,7 +70,7 @@
       options.forEach((o, i) => { const b = I.el('button', 'opt', I.fmt(o.t)); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
       sel(0);
       const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); I.audio.sfx('move'); } else if (a === 'ok') done(idx); return true; });
-      if (I.debug.auto) setTimeout(() => done(I.debug.pickWrong ? 0 : Math.max(0, options.findIndex(o => o.ok))), 40);
+      if (I.debug.auto) setTimeout(() => { const bad = options.findIndex(o => o.ok === undefined || o.ok === false), good = options.findIndex(o => o.ok); done(I.debug.pickWrong && bad >= 0 && good >= 0 ? bad : Math.max(0, good)); }, 40);
     });
   }
   S.menuPick = menuPick;

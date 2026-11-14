@@ -29,11 +29,13 @@ node tools/validate.js [fichiers]   # sans argument : tous les src/data/saga_*.j
 node tools/validate.js src/data/frame.js
 node tools/build.js
 node tools/smoke.js auto            # prologue, cinq sagas, épilogue joués automatiquement
+node tools/smoke.js walk            # idem en marchant réellement (clavier simulé, vraies collisions)
+node tools/smoke.js wrong           # idem en prenant d'abord chaque mauvaise réponse
 node tools/smoke.js shots           # captures bureau et mobile dans .smoke/
 ```
 
 **Règle.** Toute modification de contenu (`src/data/`) repasse le validateur, puis le build, puis
-`smoke.js auto`. Toute modification du moteur repasse le build et `smoke.js auto`. Un changement n'est
+`smoke.js auto`. Toute modification du moteur repasse le build, `smoke.js auto` et `smoke.js walk`. Un changement n'est
 terminé que si le validateur affiche ✓, que le test se termine sans « BLOQUÉ », sans « INACCESSIBLE »,
 sans « ABSENT » et sans erreur console.
 

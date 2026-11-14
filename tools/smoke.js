@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 /* Test de fumée : lance le jeu dans Chromium, capture des écrans, puis joue automatiquement
    le prologue, les cinq sagas et l'épilogue (mode ISNAD.debug.auto).
-   Usage : node tools/smoke.js [shots|auto|all] [dossier de sortie] */
+   Usage : node tools/smoke.js [shots|auto|walk|wrong|all] [dossier de sortie]
+   auto : saute d'objectif en objectif · walk : marche réellement (clavier simulé, vraies collisions)
+   wrong : choisit d'abord toutes les mauvaises réponses avant la bonne */
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
@@ -60,11 +62,11 @@ const url = 'file://' + path.join(__dirname, '../index.html');
     await m.close();
   }
 
-  if (mode === 'auto' || mode === 'walk' || mode === 'all') {
+  if (mode === 'auto' || mode === 'walk' || mode === 'wrong' || mode === 'all') {
     const page = await mkPage({ width: 960, height: 540 });
     const res = await page.evaluate(async (walk) => {
       const I = window.ISNAD, W = I.world, log = I.debug.log = [], stats = [];
-      I.debug.auto = true; I.debug.walk = walk; I.speed = 40; I.audio.setOn(false);
+      I.debug.auto = true; I.debug.walk = walk === 'walk'; I.debug.pickWrong = walk === 'wrong'; I.speed = 40; I.audio.setOn(false);
       I.save.reset(); I.save.data.started = true;
       const hide = () => document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
       // instrumentation des combats
@@ -80,7 +82,7 @@ const url = 'file://' + path.join(__dirname, '../index.html');
         if (!ok) break;
       }
       return { log, stats, save: { lights: I.save.data.lights, isnad: I.save.data.isnad, codex: I.save.data.codex.length, epilogue: I.save.data.epilogue } };
-    }, mode === 'walk');
+    }, mode);
     console.log(res.log.join('\n'));
     console.log('--- combats ---');
     res.stats.forEach(s => console.log(`${s.saga}/${s.ch} ${s.boss ? 'BOSS ' : ''}${s.group}  défaites:${s.defeats} tours:${s.turns} KO:${s.kos} PVmin:${s.min}%  niv:${s.lv}`));

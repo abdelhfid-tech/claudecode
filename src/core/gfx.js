@@ -158,9 +158,10 @@
         else { Rr(cloak, dir === 1 ? 8 : 4, 10, 4, 10); Rr(cd, dir === 1 ? 11 : 4, 10, 1, 10); } }
       else if (dir === 0) Rr(rd, 4, 14, 8, 1);
       // tête : coiffe + visage uni (aucun trait)
-      if (dir === 0) { Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 3); Rr(head, 4, 5, 1, 6); Rr(head, 11, 5, 1, 6); Rr(hd, 4, 10, 1, 1); Rr(hd, 11, 10, 1, 1); Rr(skin, 6, 5, 4, 5); Rr(hd, 5, 2, 6, 1); }
-      else if (dir === 3) { Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 8); Rr(hd, 4, 10, 8, 1); Rr(hd, 5, 2, 6, 1); }
-      else { const L = dir === 1; Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 3); Rr(head, L ? 7 : 4, 5, 5, 6); Rr(hd, L ? 7 : 4, 10, 5, 1); Rr(skin, L ? 4 : 9, 5, 3, 5); Rr(hd, 5, 2, 6, 1); }
+      const band = shade(cloak || robe, 0.6), hs = shade(head, 0.66);
+      if (dir === 0) { Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 3); Rr(head, 4, 5, 1, 6); Rr(head, 11, 5, 1, 6); Rr(hs, 4, 6, 1, 5); Rr(hs, 11, 6, 1, 5); Rr(skin, 6, 5, 4, 5); Rr(hd, 5, 2, 6, 1); Rr(band, 4, 4, 8, 1); }
+      else if (dir === 3) { Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 8); Rr(hs, 4, 10, 8, 1); Rr(hs, 4, 6, 1, 4); Rr(hs, 11, 6, 1, 4); Rr(hd, 5, 2, 6, 1); Rr(band, 4, 4, 8, 1); }
+      else { const L = dir === 1; Rr(head, 5, 2, 6, 3); Rr(head, 4, 3, 8, 3); Rr(head, L ? 7 : 4, 5, 5, 6); Rr(hs, L ? 7 : 4, 10, 5, 1); Rr(hs, L ? 11 : 4, 6, 1, 4); Rr(skin, L ? 4 : 9, 5, 3, 5); Rr(hd, 5, 2, 6, 1); Rr(band, 4, 4, 8, 1); }
       // variantes
       if (kind === 'soldat') { Rr('#6b4a2e', 13, 1, 1, 21); Rr('#c9ced6', 13, 0, 1, 2); if (dir === 0) { Rr('#7a5b3a', 2, 12, 4, 5); Rr('#d9b45a', 3, 14, 2, 1); } Rr('#8a8f98', 5, 1, 6, 2); }
       if (kind === 'romain') { Rr('#b9bec8', 5, 1, 6, 3); Rr('#b33327', 6, 0, 4, 1); Rr('#b33327', 7, -1 < 0 ? 0 : 0, 2, 1); if (dir !== 3) Rr('#b9bec8', side ? 6 : 5, 11, side ? 4 : 6, 4); Rr('#6b4a2e', 13, 2, 1, 20); Rr('#c9ced6', 13, 0, 1, 3); }
@@ -257,7 +258,7 @@
   };
   G.resize = function () {
     const st = G.cv.parentElement, w = st.clientWidth, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    G.k = Math.max(2, Math.min(4, Math.ceil(w * dpr / G.PW)));
+    G.k = Math.max(2, Math.min(G.low ? 2 : 4, Math.ceil(w * dpr / G.PW)));
     G.cv.width = G.PW * G.k; G.cv.height = G.PH * G.k;
     st.style.setProperty('--u', (st.clientHeight / G.PH) + 'px');
   };
@@ -288,6 +289,9 @@
   /* opts : { ambient:'#rrggbb' (multiplié), lights:[{x,y,r,color,a}], grade:[couleur, alpha], vignette, scan, tilt } */
   G.present = function (dt, o) {
     o = o || {};
+    // qualité adaptative : si l'appareil peine, on allège (résolution, flou, nuages, balayage)
+    if (!G.low && I.speed === 1) { G._slow = dt > 0.034 ? (G._slow || 0) + 1 : Math.max(0, (G._slow || 0) - 2); if (G._slow > 150) { G.low = true; G.resize(); } }
+    if (G.low) { o.tilt = false; o.clouds = null; o.scan = false; o.rays = null; }
     const c = G.out, k = G.k, W = G.cv.width, H = G.cv.height;
     let sx = 0, sy = 0;
     if (G.shakeT > 0) { G.shakeT -= dt; sx = (Math.random() - 0.5) * 6 * k * Math.min(1, G.shakeT * 4); sy = (Math.random() - 0.5) * 6 * k * Math.min(1, G.shakeT * 4); }
@@ -319,6 +323,17 @@
       });
       l.globalAlpha = 1;
       c.globalCompositeOperation = 'multiply'; c.drawImage(G.lcv, sx, sy, W, H);
+    }
+    // ombres de nuages qui dérivent (extérieurs)
+    if (o.clouds) {
+      c.globalCompositeOperation = 'multiply';
+      const t = performance.now() / 1000, cw = 520 * k, chh = 340 * k;
+      for (let i = 0; i < 4; i++) {
+        const x = ((i * 173 + t * 7 - o.clouds.x * 0.9) % 520 + 520) % 520 * k - 70 * k + sx, y = ((i * 97 + t * 2.2 - o.clouds.y * 0.9) % 340 + 340) % 340 * k - 60 * k + sy, rr = (60 + i * 16) * k;
+        const g = c.createRadialGradient(x, y, rr * 0.2, x, y, rr); g.addColorStop(0, 'rgba(96,84,128,.5)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+        c.globalAlpha = 0.55; c.fillStyle = '#fff'; c.save(); c.translate(x, y); c.scale(1.7, 1); c.translate(-x, -y); c.fillStyle = g; c.fillRect(x - rr, y - rr, rr * 2, rr * 2); c.restore();
+      }
+      c.globalAlpha = 1;
     }
     // halo (bloom doux)
     c.globalCompositeOperation = 'screen'; c.globalAlpha = o.bloom === undefined ? 0.2 : o.bloom; c.drawImage(G.bcv, sx, sy, W, H);

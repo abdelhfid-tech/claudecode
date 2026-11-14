@@ -37,6 +37,7 @@
       if (door !== 'none') this.set(dx, y + h - 1, door, true);
       if (st.window !== false && w >= 4) { this.set(x + 1, y + h - 2, st.windowTile || 'window', true); if (w >= 6) this.set(x + w - 2, y + h - 2, st.windowTile || 'window', true); }
       if (st.lit !== false) this.light(dx, y + h - 1, 44, '#ffb45a', 0.15);
+      (this.shadows || (this.shadows = [])).push([this.X(x, w), y + h, w]);
       return [dx, y + h];
     }
     scatter(type, n, x, y, w, h, opt) { let tries = n * 12; while (n > 0 && tries-- > 0) { const tx = x + Math.floor(this.r() * w), ty = y + Math.floor(this.r() * h); if (this.free(tx, ty) && this.free(tx, ty + 1) && !this.reserved(tx, ty)) { this.obj(type, tx, ty, typeof opt === 'function' ? opt() : opt); n--; } } }
@@ -51,12 +52,17 @@
         c.drawImage(G.tile(n, v, this.hue), x * T, y * T);
         if (n === 'water' || n === 'sea') anim.push({ x, y, n });
       }
+      // ombres portées au pied des bâtiments
+      (this.shadows || []).forEach(sh => { const g = c.createLinearGradient(0, sh[1] * T, 0, sh[1] * T + 9); g.addColorStop(0, 'rgba(30,18,44,.42)'); g.addColorStop(1, 'rgba(30,18,44,0)'); c.fillStyle = g; c.fillRect(sh[0] * T + 3, sh[1] * T, sh[2] * T, 9); });
+      // mini-carte : 1 pixel par case
+      const mini = G.mk(this.w, this.h), mc = mini.getContext('2d');
+      for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) { const n = this.g[y * this.w + x], so = this.solid[y * this.w + x]; mc.fillStyle = (n === 'water' || n === 'sea') ? 'rgba(70,150,200,.75)' : n === 'void' ? 'rgba(8,8,30,.5)' : so ? 'rgba(20,14,30,.8)' : (n === 'path' || n === 'stone' || n === 'nbridge' || n === 'wood' || n === 'marble' || n === 'mosaic' || n === 'carpet') ? 'rgba(240,225,190,.75)' : 'rgba(200,180,140,.5)'; mc.fillRect(x, y, 1, 1); }
       // objets plats (nattes, sources) cuits dans le sol
       this.objs.filter(o => o.flat).forEach(o => c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2), o.y - o.h + 1));
       // ombres portées douces sous les objets
       c.fillStyle = 'rgba(30,20,40,.22)';
       this.objs.filter(o => !o.flat && G.OBJ[o.type].fw).forEach(o => { c.beginPath(); c.ellipse(o.x + 3, o.y + 1, Math.max(5, G.OBJ[o.type].fw * 0.7), 3, 0, 0, 6.3); c.fill(); });
-      return { id: this.id, w: this.w, h: this.h, canvas: cv, solid: this.solid, objs: this.objs.filter(o => !o.flat), lights: this.lights, spots: this.spots, anim, env: env || {}, opts: this.opts, hue: this.hue };
+      return { id: this.id, w: this.w, h: this.h, canvas: cv, mini, solid: this.solid, objs: this.objs.filter(o => !o.flat), lights: this.lights, spots: this.spots, anim, env: env || {}, opts: this.opts, hue: this.hue };
     }
   }
 
@@ -66,7 +72,7 @@
     night: { ambient: '#4456a6', grade: ['#2a3a9a', 0.2], lightA: 1, bloom: 0.22 },
     dawn: { ambient: '#cfa9bd', grade: ['#ff9aa0', 0.18], rays: { a: 0.05, color: '#ffd9c8' }, lightA: 0.5, bloom: 0.18 }
   };
-  function envFor(time, extra) { return Object.assign({ time: time || 'day' }, TIME[time || 'day'], extra || {}); }
+  function envFor(time, extra) { return Object.assign({ time: time || 'day', clouds: time !== 'night' }, TIME[time || 'day'], extra || {}); }
 
   /* ---------- Ville arabe : Médine / Koufa ---------- */
   function ville(id, o) {
@@ -202,7 +208,7 @@
     for (let y = 8; y < 26; y += 3) b.obj('column', 6, y); b.spot('colonnade', 9, 17);
     b.fill(29, 19, 9, 8, 'grass'); b.obj('fountain', 33, 22); b.obj('cypress', 30, 20); b.obj('cypress', 37, 25); b.spot('jardin', 33, 25);
     b.obj('carpetroll', 4, 5); b.obj('jar', 3, 26); b.obj('brazier', 10, 26); b.light(10, 25, 60, '#ffb45a', 0.2);
-    return b.finish(Object.assign(envFor('dusk'), { ambient: '#8a78a8', grade: ['#ffb060', 0.18], particles: 'dust', rate: 4, sound: 'silence', bg: 'palais', rays: { a: 0.06, color: '#ffe0b0' }, bloom: 0.24 }));
+    return b.finish(Object.assign(envFor('dusk'), { clouds: false, ambient: '#8a78a8', grade: ['#ffb060', 0.18], particles: 'dust', rate: 4, sound: 'silence', bg: 'palais', rays: { a: 0.06, color: '#ffe0b0' }, bloom: 0.24 }));
   }
 
   /* ---------- Navires enchaînés ---------- */
