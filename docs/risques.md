@@ -32,6 +32,17 @@ joue le prologue, les cinq sagas et l'épilogue de bout en bout sans erreur.
 | Contenu écrit en parallèle puis interrompu par une limite d'usage | réalisée | moyen | Les fichiers étaient valides sur le disque ; ils ont été assemblés et rejoués par les trois tests. Trois contenus sans relecture finale de leur auteur : à relire en priorité. |
 | Durée et volume allongés (pourparlers, veillées) | moyenne | faible | Chaque veillée est autoportante et courte ; un pourparler rapporte autant qu'un combat. |
 
+## Risques ajoutés par la version 5 (le cœur)
+
+| Risque | Prob. | Impact | Parade mise en œuvre |
+|---|---|---|---|
+| Faire des œuvres de piété des « sortilèges » de jeu | moyenne | fort | Exigence 15 : textes sobres, aucun pouvoir promis ; l'effet est une « provision » que les épreuves consomment, et il reste faible. Deux versets seulement, en traduction du sens, à vérifier. Relecture humaine indispensable. |
+| Importer une liste étrangère (« péchés capitaux ») dans un sujet musulman | moyenne | moyen | Sept maux décrits par la tradition morale musulmane, nommés en arabe ; le Recueil dit que le nombre de sept est un choix du jeu. À faire relire. |
+| Qu'une lame passe pour une relique, ou qu'un égrégore passe pour un symbole religieux | faible | fort | Exigence 16 ; lames sans inscription ; l'emblème du « colosse », qui pouvait se lire comme une croix, a été redessiné en lame effilée ; l'Orgueil est une couronne. |
+| Prêter une faute à un Compagnon (prière laissée, colère, envie) | faible | fort | Énigmes et idées noires réservées à la fiction, et le validateur le vérifie pour les énigmes et le pèlerinage. Les idées noires des sagas ne touchent que des interlocuteurs inventés (liste dans `decisions.md`, D64). |
+| Le renard « compagnon » rappelle le conte dont on s'inspire ailleurs | moyenne | moyen | Exigence 14 : aucun épisode repris ; il n'est pas apprivoisé, il rejoint celui qui a résolu une énigme. À faire relire avec D55. |
+| Le doigt jamais essayé sur un vrai téléphone | forte | moyen | Parcours `tap` complet (vraies collisions), captures en émulation ; la croix tactile reste disponible en réglage. |
+
 ## Verdict
 
 Aucun risque classé « tue le projet » n'est sans parade, mais la parade du risque 1 est incomplète

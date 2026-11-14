@@ -186,6 +186,26 @@ td .ic { width: 32px; height: 32px; object-fit: contain; display: inline-block; 
   .attitudes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
+/* le cœur : œuvres, lames, maux, figures du ciel */
+.lames-g, .betes-g { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 0 34px; margin-top: 1.2em; }
+.lame-f { display: grid; grid-template-columns: 40px minmax(0, 1fr) 84px; gap: 16px; align-items: center; padding: 16px 0; border-top: 1px solid rgba(233, 200, 119, .16); }
+.lame-f .epee { width: 36px; height: 88px; filter: drop-shadow(0 0 8px var(--c)); }
+.lame-f h4, .bete-f h4 { margin: 0; font-family: var(--f-titre); color: var(--c); font-size: 1rem; letter-spacing: .04em; }
+.lame-f h4 span, .bete-f h4 span { font-family: var(--f-texte); font-style: italic; font-weight: 400; color: var(--cendre); font-size: .86rem; letter-spacing: 0; }
+.lame-f .forge { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--cendre); margin: .2em 0 .35em; max-width: none; }
+.lame-f p, .bete-f p { margin: 0; font-size: .92rem; line-height: 1.45; max-width: none; }
+.lame-f figure { margin: 0; text-align: center; }
+.lame-f figure img { width: 72px; height: 72px; object-fit: contain; margin: 0 auto; filter: drop-shadow(0 0 10px hsla(var(--h), 80%, 60%, .4)); }
+.lame-f figcaption { font-family: var(--f-titre); font-size: .72rem; color: #fff6dc; padding-top: .3em; }
+.bete-f { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: 18px; align-items: center; padding: 16px 0; border-top: 1px solid rgba(233, 200, 119, .16); }
+.bete-f img { width: 112px; height: auto; filter: drop-shadow(0 0 10px var(--c)); }
+.bete-f .don { margin: .25em 0; }
+.bete-f .src { font-family: var(--f-mono); font-size: .7rem; color: var(--cendre); margin-top: .5em; }
+.noires { display: flex; flex-wrap: wrap; gap: 12px 22px; margin-top: 1em; }
+.noires figure { width: 92px; text-align: center; margin: 0; }
+.noires img { width: 64px; height: 64px; object-fit: contain; margin: 0 auto; filter: drop-shadow(0 0 8px hsla(var(--h), 80%, 60%, .4)); }
+.noires figcaption { font-family: var(--f-titre); font-size: .74rem; padding-top: .35em; color: #fff6dc; }
+.gl { font-style: normal; }
 .peuple { margin-top: 2.2em; padding-top: 1.2em; border-top: 1px solid rgba(233, 200, 119, .16); }
 .peuple h3 { margin-top: 0; }
 .peuple .src { font-family: var(--f-mono); font-size: .72rem; color: var(--cendre); margin: -.3em 0 .4em; max-width: none; }
@@ -334,6 +354,24 @@ body.export { background: #000; }
 body.export > *:not(.table), body.export .table h2, body.export .chapo, body.export .cartel { display: none; }
 body.export .table { padding: 0; border: 0; } body.export .table .gout { padding: 0; } body.export .table .col { max-width: none; }
 body.export .pw { width: 1920px; min-width: 0; margin: 0 0 40px; } body.export .pw.haut { width: 1080px; max-width: none; }
+/* planche 11 : sept œuvres, sept lames, sept maux ; les figures du ciel */
+.sept { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); gap: .8em; margin: 1.2em 0 .9em; min-height: 0; }
+.sept article { display: flex; flex-direction: column; align-items: center; text-align: center; background: radial-gradient(ellipse at 50% 30%, #221a3c 0%, var(--encre) 74%); border: 1px solid rgba(233, 200, 119, .14); padding: .9em .5em .8em; min-height: 0; }
+.sept .epee { height: 36%; width: auto; flex: none; filter: drop-shadow(0 0 .8em var(--c)); }
+.sept .oe { font-family: var(--f-mono); font-size: .62em; letter-spacing: .14em; text-transform: uppercase; color: var(--cendre); margin-top: .8em; }
+.sept b { font-family: var(--f-titre); font-size: .84em; letter-spacing: .05em; color: var(--c); line-height: 1.15; }
+.sept i { font-style: italic; font-size: .7em; color: var(--cendre); }
+.sept .tr { color: var(--or); margin: .45em 0 .2em; font-size: .62em; letter-spacing: .2em; font-family: var(--f-mono); text-transform: uppercase; }
+.sept .mal { flex: 1; min-height: 0; width: 58%; object-fit: contain; filter: drop-shadow(0 0 .8em hsla(var(--h), 80%, 60%, .35)); }
+.sept em { font-style: normal; font-family: var(--f-titre); font-size: .76em; color: #fff6dc; margin-top: .4em; }
+.ciel { display: flex; align-items: center; gap: 2.4em; margin-bottom: 1.6em; }
+.ciel > .cap { flex: none; max-width: 11em; }
+.ciel > div { display: flex; flex: 1; justify-content: space-between; gap: 1.2em; }
+.ciel figure { display: flex; align-items: center; gap: .8em; margin: 0; }
+.ciel img { height: 3.4em; width: auto; filter: drop-shadow(0 0 .6em var(--c)); }
+.ciel figcaption { font-family: var(--f-texte); font-size: 1em; letter-spacing: 0; text-transform: none; padding: 0; line-height: 1.2; text-align: left; }
+.ciel figcaption b { display: block; font-family: var(--f-titre); font-size: .74em; letter-spacing: .04em; color: var(--c); }
+.ciel figcaption span { font-size: .7em; color: var(--cendre); font-style: italic; }
 body.export .pl { border: 0; }
 </style>
 
@@ -371,6 +409,9 @@ body.export .pl { border: 0; }
     <li><a href="#parole">La parole avant le sabre</a></li>
     <li><a href="#combat">Le combat</a></li>
     <li><a href="#piliers">Prière, savoir, piliers</a></li>
+    <li><a href="#coeur">Les œuvres et la provision du cœur</a></li>
+    <li><a href="#lames">Sept lames, sept maux du cœur</a></li>
+    <li><a href="#lumiere">Énigmes du cœur, compagnons de lumière</a></li>
     <li><a href="#batir">Bâtir</a></li>
     <li><a href="#caravanes">Routes et caravanes</a></li>
     <li><a href="#veillees">Les veillées du Caïd</a></li>
@@ -392,8 +433,8 @@ body.export .pl { border: 0; }
     <p>On n’y combat jamais des personnes. Les adversaires sont des <span class="terme">égrégores</span> : les idoles que les cœurs fabriquent ensemble, comme le Déni, le Clan, la Rumeur ou le Trône vide. Avant d’en venir là, on parle, on prie, on apprend, on bâtit.</p>
     <dl class="fiche">
       <div><dt>Genre</dt><dd>Jeu de rôle au tour par tour, un joueur</dd></div>
-      <div><dt>Contenu</dt><dd>Un prologue, cinq sagas de trois chapitres, cinq veillées, cinq rencontres, un épilogue</dd></div>
-      <div><dt>Support</dt><dd>Navigateur, sur ordinateur ou téléphone. Clavier ou tactile</dd></div>
+      <div><dt>Contenu</dt><dd>Un prologue, cinq sagas de trois chapitres, cinq veillées, cinq rencontres, un épilogue ; sept lames à forger, sept maux du cœur à trancher</dd></div>
+      <div><dt>Support</dt><dd>Navigateur, sur ordinateur ou téléphone. Clavier, souris ou doigt</dd></div>
       <div><dt>Langue</dt><dd>Français</dd></div>
       <div><dt>Image</dt><dd>Pixel art éclairé (rétro-HD), ou 2D simple sur les appareils modestes</dd></div>
       <div><dt>Son</dt><dd>18 pistes originales synthétisées, ambiances et percussions. Aucune voix</dd></div>
@@ -422,26 +463,30 @@ body.export .pl { border: 0; }
     <div class="duo">
       <div>
         <div class="tab"><table>
-          <thead><tr><th>Action</th><th>Clavier</th><th>Écran tactile</th></tr></thead>
+          <thead><tr><th>Action</th><th>Clavier</th><th>Souris ou doigt</th></tr></thead>
           <tbody>
-            <tr><td class="n">Se déplacer, naviguer</td><td><kbd>Flèches</kbd> ou <kbd>ZQSD</kbd> / <kbd>WASD</kbd></td><td>Croix à l’écran</td></tr>
-            <tr><td class="n">Parler, examiner, valider</td><td><kbd>Entrée</kbd> ou <kbd>Espace</kbd></td><td>Bouton OK, ou toucher le choix</td></tr>
-            <tr><td class="n">Menu de halte, retour</td><td><kbd>Échap</kbd> ou <kbd>X</kbd>, <kbd>M</kbd> pour le menu</td><td>Bouton MENU, ou ☰</td></tr>
-            <tr><td class="n">Bâtir, à ciel ouvert</td><td><kbd>B</kbd>, puis <kbd>C</kbd> et <kbd>V</kbd> pour changer de pièce</td><td>Bouton ▦, puis toucher la pièce</td></tr>
+            <tr><td class="n">Se déplacer</td><td><kbd>Flèches</kbd> ou <kbd>ZQSD</kbd> / <kbd>WASD</kbd></td><td>Toucher l’endroit où aller. Doigt maintenu : le héros suit</td></tr>
+            <tr><td class="n">Parler, se servir d’une chose</td><td><kbd>Entrée</kbd> ou <kbd>Espace</kbd></td><td>Toucher le personnage, le coffre, la natte, le palmier</td></tr>
+            <tr><td class="n">Que faire ?</td><td><kbd>H</kbd></td><td>Bouton <b>?</b></td></tr>
+            <tr><td class="n">Menu de halte, retour</td><td><kbd>Échap</kbd> ou <kbd>X</kbd>, <kbd>M</kbd> pour le menu</td><td>Bouton ☰, ou MENU</td></tr>
+            <tr><td class="n">Bâtir, à ciel ouvert</td><td><kbd>B</kbd>, puis <kbd>C</kbd> et <kbd>V</kbd> pour changer de pièce</td><td>Bouton ▦, puis toucher la pièce et la case</td></tr>
             <tr><td class="n">Doser la Niyya en combat</td><td><kbd>◂</kbd> <kbd>▸</kbd></td><td>Boutons − et +</td></tr>
           </tbody>
         </table></div>
+        <h3>Le bouton ?</h3>
+        <p>Quand on ne sait plus quoi faire, le bouton <b>?</b> redit l’objectif, explique comment l’atteindre, donne sa direction en pas et en étoile, et annonce le poids de l’épreuve qui vient. Il peut <b>montrer le chemin</b>, par des points d’or au sol, ou <b>y conduire</b> le héros.</p>
         <h3>Le menu de halte</h3>
-        <p>On y trouve le journal du chapitre, le <b>Groupe</b>, la <b>Besace</b>, le <b>Recueil</b>, les piliers de la <b>Citadelle</b>, le rappel des commandes et les réglages : son, musique, rendu rétro-HD ou 2D simple. Le jeu passe de lui-même en 2D simple s’il peine.</p>
+        <p>On y trouve le journal du chapitre, puis, rangés par familles : <b>le groupe</b> (compagnons, besace, piliers), <b>le cœur</b> (œuvres et lames, compagnons de lumière), <b>le savoir</b> (Recueil, aide du jeu par thèmes) et les <b>réglages</b> : taille du texte, croix tactile, son, musique, rendu rétro-HD ou 2D simple. Le jeu passe de lui-même en 2D simple s’il peine.</p>
+        <figure class="ecran"><img src="img/que-faire.jpg" alt="Le panneau « Que faire ? » : l’objectif, ce qu’il faut faire, la direction, et les choix « Montrer le chemin » et « M’y conduire »." loading="lazy"><figcaption style="padding:.7em .8em .8em">« Que faire ? » : l’objectif expliqué, sa direction, et deux façons d’y aller.</figcaption></figure>
       </div>
-      <figure class="ecran" style="max-width:300px;justify-self:center"><img src="img/m-jeu.jpg" alt="Le jeu sur téléphone, en portrait : l’image en haut, la croix et les boutons en bas." style="aspect-ratio:1/2" loading="lazy"><figcaption style="padding:.7em .8em .8em">Sur téléphone, en portrait : l’image en haut, la croix et les boutons sous le pouce.</figcaption></figure>
+      <figure class="ecran" style="max-width:300px;justify-self:center"><img src="img/m-jeu.jpg" alt="Le jeu sur téléphone, tenu en hauteur : la scène agrandie en haut, l’objectif et les piliers dessous." style="aspect-ratio:1/2" loading="lazy"><figcaption style="padding:.7em .8em .8em">Sur téléphone, tenu en hauteur : la scène est agrandie, l’objectif se lit dessous, et l’on touche l’endroit où aller.</figcaption></figure>
     </div>
   </section>
 
   <section class="feuillet" id="sauvegarder">
     <h2>Sauvegarder</h2>
     <div class="duo inv">
-      <figure class="ecran"><img src="img/natte.jpg" alt="Dans la cour de la mosquée, le menu de la natte : prier, sauvegarder la partie, plus tard." loading="lazy"><figcaption style="padding:.7em .8em .8em">La natte, au cœur de l’étoile. On y prie et on y sauvegarde.</figcaption></figure>
+      <figure class="ecran"><img src="img/natte.jpg" alt="Dans la cour de la mosquée, le menu de la natte : prier, les œuvres du jour, sauvegarder la partie, plus tard." loading="lazy"><figcaption style="padding:.7em .8em .8em">La natte, au cœur de l’étoile. On y prie, on y accomplit les œuvres du jour, on y sauvegarde.</figcaption></figure>
       <div>
         <p>On ne sauvegarde que <b>dans les mosquées</b>, sur la natte tournée vers La Mecque. Deux carrés de lumière y tournent en sens contraires et dessinent une étoile à huit branches : c’est le repère.</p>
         <ul>
@@ -775,6 +820,16 @@ body.export .pl { border: 0; }
       </div>
       <figure class="ecran"><img src="img/pourparler.jpg" alt="Un pourparler à la Saqîfa : jauge de confiance et trois arguments." loading="lazy"><figcaption style="padding:.7em .8em .8em">Pourparler « Les bords de l’auvent », manche 1 sur 4.</figcaption></figure>
     </div>
+    <h3>Les idées noires</h3>
+    <div class="duo inv">
+      <figure class="ecran"><img src="img/idee-noire.jpg" alt="Carton « Une idée noire : la Honte », au milieu d’un pourparler." loading="lazy"><figcaption style="padding:.7em .8em .8em">Au milieu d’un pourparler : ce n’est plus l’homme qui répond, c’est sa honte.</figcaption></figure>
+      <div>
+        <p>Pour convaincre quelqu’un, il faut parfois dissiper d’abord ce qui parle à sa place. Dans certains pourparlers, à la deuxième manche, une <b>idée noire</b> couvre ta voix : la honte, la peur, le soupçon, la rancune ou le désespoir.</p>
+        <p>Dans la noosphère, elle a un corps, et l’on peut le dissiper. On ne la combat pas contre l’homme, mais pour lui. Après quoi il écoute, et la confiance monte d’un point.</p>
+        <div class="noires"><figure style="--h:300"><img class="px" src="img/e-coeur-noir_honte.png" alt=""><figcaption>La Honte</figcaption></figure><figure style="--h:262"><img class="px" src="img/e-coeur-noir_peur.png" alt=""><figcaption>La Peur</figcaption></figure><figure style="--h:96"><img class="px" src="img/e-coeur-noir_soupcon.png" alt=""><figcaption>Le Soupçon</figcaption></figure><figure style="--h:2"><img class="px" src="img/e-coeur-noir_rancune.png" alt=""><figcaption>La Rancune</figcaption></figure><figure style="--h:238"><img class="px" src="img/e-coeur-noir_desespoir.png" alt=""><figcaption>Le Désespoir</figcaption></figure></div>
+        <p class="note">Une idée noire ne s’attache qu’à un personnage de fiction : jamais à un personnage historique.</p>
+      </div>
+    </div>
   </section>
 
   <section class="feuillet" id="combat">
@@ -835,6 +890,64 @@ body.export .pl { border: 0; }
         <tr><td class="n"><span class="gl">∞</span>Lien</td><td>On noue des pactes, on gagne des alliés</td><td>3 % de dégâts infligés en plus. Renforts sur les routes</td></tr>
       </tbody>
     </table></div>
+  </section>
+
+  <section class="feuillet" id="coeur">
+    <h2>Les œuvres et la provision du cœur</h2>
+    <div class="duo">
+      <div>
+        <p>Plus une épreuve est lourde, plus il faut s’y préparer. Sur la natte d’une mosquée, après la prière, on accomplit les <b>œuvres du jour</b> : le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite. Trois par chapitre au plus, la prière en sus.</p>
+        <p>Chacune ajoute un point à la <b>provision du cœur</b> (♥, cinq au plus). Une idole en consomme deux, un mal du cœur trois. Qui s’y présente sans provision combat <b>le cœur lourd</b> : chaque point qui manque retire 8 % aux coups portés et ajoute 8 % aux coups reçus. Rien ne bloque pour autant : le poids s’allège à chaque reprise.</p>
+        <p>Chaque œuvre a son prix. Un jour de <b>jeûne</b>, les vivres de la besace attendent le soir. L’<b>aumône</b> coûte douze dirhams. Le <b>pèlerinage</b> n’est proposé que dans les veillées, quand la caravane passe, et s’accomplit à la fin de la veillée.</p>
+        <p class="note"><b>Ce ne sont pas des sortilèges.</b> Le jeu ne promet aucun pouvoir : il traduit à sa façon ce que ces œuvres font au cœur. Les textes les décrivent sobrement, sans formule ni parole inventée.</p>
+      </div>
+      <div class="pile">
+        <figure class="ecran"><img src="img/oeuvres.jpg" alt="Le menu des œuvres du jour, sur la natte : dhikr, étude du Coran, jeûne, aumône, visite, avec l’avancement de chaque lame." loading="lazy"><figcaption style="padding:.7em .8em .8em">Les œuvres du jour. À droite de chacune, la lame qu’elle forge.</figcaption></figure>
+        <figure class="ecran"><img src="img/oeuvre-dhikr.jpg" alt="Carton d’une œuvre : le dhikr." loading="lazy"></figure>
+      </div>
+    </div>
+    <div class="tab"><table>
+      <thead><tr><th>Œuvre</th><th>Ce qu’elle est dans le jeu</th><th>La lame qu’elle forge</th></tr></thead>
+      <tbody><tr><td class="n"><span class="gl">◠︎</span>La prière</td><td>Sur la natte d’une mosquée. Le groupe se repose, la Sakîna descend. La première prière d’un chapitre nourrit la provision.</td><td style="color:#ffe08a">La Sincérité <small>· 3 fois</small></td></tr><tr><td class="n"><span class="gl">∴︎</span>Le dhikr</td><td>Le rappel, à voix basse, après la prière. Apaise : la Sakîna monte.</td><td style="color:#ff9a7a">La Longanimité <small>· 3 fois</small></td></tr><tr><td class="n"><span class="gl">✧︎</span>L’étude du Coran</td><td>Reprendre ce que l’on sait, apprendre ce qui suit, devant quelqu’un qui écoute.</td><td style="color:#c49bff">L’Ardeur <small>· 3 fois</small></td></tr><tr><td class="n"><span class="gl">☾︎</span>Le jeûne</td><td>De l’aube au couchant. Jusqu’à la fin du chapitre, les vivres de la besace restent fermés pendant les combats. Le jeûne s’accomplit au coucher du soleil.</td><td style="color:#7fd69a">Le Contentement <small>· 3 fois</small></td></tr><tr><td class="n"><span class="gl">◎︎</span>L’aumône</td><td>Douze dirhams, donnés sans témoin à ceux qui ne demandent rien.</td><td style="color:#5fe0d0">La Largesse <small>· 3 fois</small></td></tr><tr><td class="n"><span class="gl">∞︎</span>La visite</td><td>Frapper à une porte où l’on n’était pas attendu. Les liens se tiennent en les visitant.</td><td style="color:#6fb6ff">La Bienveillance <small>· 3 fois</small></td></tr><tr><td class="n"><span class="gl">⟁︎</span>Le pèlerinage</td><td>Une fois, quand la caravane passe. Il s’accomplit à la fin de la veillée.</td><td style="color:#e6dcc4">L’Humilité <small>· une fois</small></td></tr></tbody>
+    </table></div>
+  </section>
+
+  <section class="feuillet" id="lames">
+    <h2>Sept lames, sept maux du cœur</h2>
+    <div class="duo inv">
+      <div class="pile">
+        <figure class="ecran"><img src="img/lame.jpg" alt="Carton « Une lame est forgée : la Largesse »." loading="lazy"><figcaption style="padding:.7em .8em .8em">La troisième aumône forge la Largesse.</figcaption></figure>
+        <figure class="ecran"><img src="img/mal.jpg" alt="Combat contre l’Avarice : la lame lui a ôté ses voiles." loading="lazy"><figcaption style="padding:.7em .8em .8em">Devant sa lame, le mal n’a plus qu’un voile et toutes ses failles sont connues.</figcaption></figure>
+      </div>
+      <div>
+        <p>Derrière les idoles se tiennent <b>sept maux du cœur</b> : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. Ce sont les derniers adversaires du jeu. Cinq se dressent à la fin des rencontres de la Cité-Miroir ; tous ceux qui restent attendent devant le cœur de l’Agrégor.</p>
+        <p>Dans la noosphère, une vertu longuement pratiquée prend le fil d’une <b>lame</b>. Trois fois la même œuvre forgent la lame du mal contraire ; un seul pèlerinage forge l’Humilité.</p>
+        <ul>
+          <li><b>Avec sa lame</b>, le mal perd ses voiles et il est <b>tranché</b> : il ne revient pas.</li>
+          <li><b>Sans elle</b>, il est seulement <b>repoussé</b>, au prix d’un vrai combat, et revient au dernier chapitre.</li>
+        </ul>
+        <p>La Chaîne rappelle, sous chaque maillon, le mal qui attend au bout et où en est sa lame. La page « Œuvres et lames » de la halte tient le compte.</p>
+        <p class="note">Ces lames sont une image : ni reliques, ni épées d’un personnage historique. La liste de sept est un choix du jeu ; les traités de morale décrivent davantage de maux, et les rangent autrement.</p>
+      </div>
+    </div>
+    <div class="lames-g"><article class="lame-f" style="--c:#7fd69a;--h:28"><img class="px epee" src="img/lame-avidite.png" alt="" width="18" height="44"><div><h4>Le Contentement <span>al-Qanâ’a</span></h4><p class="forge">Jeûne × 3</p><p>Al-hirs : vouloir encore, alors qu’on a. Elle ne manque de rien et ne se rassasie de rien.</p></div><figure><img class="px" src="img/e-coeur-avidite.png" alt=""><figcaption>L’Avidité</figcaption></figure></article><article class="lame-f" style="--c:#e6dcc4;--h:276"><img class="px epee" src="img/lame-orgueil.png" alt="" width="18" height="44"><div><h4>L’Humilité <span>at-Tawâdu’</span></h4><p class="forge">Pèlerinage × 1</p><p>Al-kibr : se voir au-dessus, et tenir le vrai pour une offense. Il grandit de chaque regard levé vers lui.</p></div><figure><img class="px" src="img/e-coeur-orgueil.png" alt=""><figcaption>L’Orgueil</figcaption></figure></article><article class="lame-f" style="--c:#ffe08a;--h:318"><img class="px epee" src="img/lame-ostentation.png" alt="" width="18" height="44"><div><h4>La Sincérité <span>al-Ikhlâs</span></h4><p class="forge">Prière × 3</p><p>Ar-riyâ’ : faire le bien pour être vu le faisant. Elle ne déteste pas la vertu : elle la porte comme un vêtement.</p></div><figure><img class="px" src="img/e-coeur-ostentation.png" alt=""><figcaption>L’Ostentation</figcaption></figure></article><article class="lame-f" style="--c:#5fe0d0;--h:46"><img class="px epee" src="img/lame-avarice.png" alt="" width="18" height="44"><div><h4>La Largesse <span>al-Karam</span></h4><p class="forge">Aumône × 3</p><p>Al-bukhl : retenir ce qui devait circuler. Elle compte ce qu’elle garde, jamais ce qu’elle doit.</p></div><figure><img class="px" src="img/e-coeur-avarice.png" alt=""><figcaption>L’Avarice</figcaption></figure></article><article class="lame-f" style="--c:#c49bff;--h:212"><img class="px epee" src="img/lame-insouciance.png" alt="" width="18" height="44"><div><h4>L’Ardeur <span>al-Himma</span></h4><p class="forge">Étude × 3</p><p>Al-ghafla : vivre à côté de sa vie. Ce n’est pas un refus, c’est un sommeil.</p></div><figure><img class="px" src="img/e-coeur-insouciance.png" alt=""><figcaption>L’Insouciance</figcaption></figure></article><article class="lame-f" style="--c:#6fb6ff;--h:128"><img class="px epee" src="img/lame-envie.png" alt="" width="18" height="44"><div><h4>La Bienveillance <span>an-Nasîha</span></h4><p class="forge">Visite × 3</p><p>Al-hasad : ne pas supporter le bien d’un autre. Elle ne veut pas ce qu’il a ; elle veut qu’il ne l’ait plus.</p></div><figure><img class="px" src="img/e-coeur-envie.png" alt=""><figcaption>L’Envie</figcaption></figure></article><article class="lame-f" style="--c:#ff9a7a;--h:4"><img class="px epee" src="img/lame-colere.png" alt="" width="18" height="44"><div><h4>La Longanimité <span>al-Hilm</span></h4><p class="forge">Dhikr × 3</p><p>Al-ghadab : un feu qui se croit juste. Elle a toujours une bonne raison, et c’est toujours la même.</p></div><figure><img class="px" src="img/e-coeur-colere.png" alt=""><figcaption>La Colère</figcaption></figure></article></div>
+  </section>
+
+  <section class="feuillet" id="lumiere">
+    <h2>Énigmes du cœur, compagnons de lumière</h2>
+    <div class="duo">
+      <div>
+        <h3 style="margin-top:0">Les énigmes du cœur</h3>
+        <p>Dans les veillées de la Citadelle, il arrive qu’un compagnon languisse sans fièvre ni blessure. Il tient moins bien au combat, et aucun remède n’y fait. Les anciens demandaient : « Qu’a-t-il cessé de faire ? »</p>
+        <p>À toi de trouver. Les gens de la Citadelle donnent des indices ; l’œuvre juste, accomplie sur la natte, le remet debout. Trois énigmes attendent, dans trois veillées.</p>
+        <p class="note">Ce n’est pas une punition : c’est un poids, et il se pose en reprenant ce qu’on avait laissé. Une énigme ne touche jamais qu’un personnage de fiction.</p>
+      </div>
+      <figure class="ecran"><img src="img/enigme.jpg" alt="Dans la Citadelle, l’énigme en cours est rappelée sous l’objectif : « Zîrî languit, sans fièvre ni blessure »." loading="lazy"><figcaption style="padding:.7em .8em .8em">L’énigme en cours se lit sous l’objectif.</figcaption></figure>
+    </div>
+    <h3>Les compagnons de lumière</h3>
+    <p>Les Arabes donnaient aux étoiles des noms de bêtes. Dans la noosphère, ces noms ont pris corps : cinq figures du ciel rejoignent celui qui les a méritées. Une seule accompagne le groupe au combat ; on la choisit dans la halte.</p>
+    <div class="betes-g"><article class="bete-f" style="--c:#f2c27a"><img class="px" src="img/bete-renard.png" alt=""><div><h4>Le Renard des sables <span>ath-Tha’lab</span></h4><p class="don"><b>Flair.</b> Au début du combat, il flaire une faille de chaque égrégore.</p><p>Les chameliers disent qu’il naît d’une étoile tombée dans les dunes. Il ne suit personne ; il marche devant, et se retourne pour voir si l’on vient.</p><p class="src">Il rejoint celui qui a résolu une énigme.</p></div></article><article class="bete-f" style="--c:#bfd6ff"><img class="px" src="img/bete-aigle.png" alt=""><div><h4>L’Aigle <span>an-Nasr</span></h4><p class="don"><b>Regard.</b> Le groupe agit plus tôt et gagne un point de Niyya.</p><p>An-Nasr at-Tâ’ir, « l’Aigle qui vole » : l’étoile qui se lève plein est. Dans la noosphère, le nom a pris des ailes.</p><p class="src">Il rejoint celui qui a forgé une première lame.</p></div></article><article class="bete-f" style="--c:#ff9a5c"><img class="px" src="img/bete-phenix.png" alt=""><div><h4>Le Phénix <span>al-’Anqâ’</span></h4><p class="don"><b>Renaissance.</b> Une fois par combat, il relève le premier compagnon éprouvé.</p><p>Al-’Anqâ’, l’oiseau des vieux contes arabes : personne ne l’a vu, tout le monde en parle. Il n’apparaît qu’où quelque chose a fini de brûler.</p><p class="src">Il rejoint celui qui a tranché un premier mal.</p></div></article><article class="bete-f" style="--c:#ffd76a"><img class="px" src="img/bete-lion.png" alt=""><div><h4>Le Lion <span>al-Asad</span></h4><p class="don"><b>Présence.</b> Pendant trois tours, les égrégores frappent moins fort.</p><p>Al-Asad : les anciens Arabes voyaient au ciel un lion immense, étendu sur plusieurs de nos constellations. Il ne rugit pas. Il est là, et cela suffit.</p><p class="src">Il rejoint celui qui a remporté trois grandes épreuves le cœur prêt.</p></div></article><article class="bete-f" style="--c:#9fe8d0"><img class="px" src="img/bete-gazelle.png" alt=""><div><h4>La Gazelle <span>az-Zaby</span></h4><p class="don"><b>Apaisement.</b> Le groupe se régénère pendant trois tours et reçoit un peu de Sakîna.</p><p>Trois couples d’étoiles, au nord, portent le nom de « bonds de la gazelle ». Elle ne s’approche que de ceux qui parlent avant de frapper.</p><p class="src">Elle rejoint celui qui a gagné cinq pourparlers.</p></div></article></div>
+    <p class="note">Ce sont des figures de fiction, dessinées en silhouettes de lumière. Aucune n’accompagne un Compagnon dans le récit historique.</p>
   </section>
 
   <section class="feuillet" id="batir">
@@ -915,7 +1028,8 @@ body.export .pl { border: 0; }
       <div>
         <p>Après chaque saga et sa veillée, Idris remonte dans la rue. Un enfant l’y attend chaque soir, sous le grand écran, avec une question. Il le mène vers quelqu’un que la ville a enfermé dans une idole.</p>
         <p>On le dénoue par la parole. Les meilleurs arguments sont ceux qu’Idris vient d’apprendre : un savoir du Compagnon, un savoir de la Citadelle. Sans eux, on peut encore convaincre, mais de justesse.</p>
-        <p>Si la parole échoue, on affronte l’idole, jamais la personne. Chaque ami gagné revient prêter main-forte au dernier maillon.</p>
+        <p>Au milieu de l’échange, son idole parle à sa place : c’est son idée noire, et il faut la dissiper pour qu’il entende. Chaque ami gagné revient prêter main-forte au dernier maillon.</p>
+        <p>Puis ce qui se tenait derrière l’idole se dresse : un <b>mal du cœur</b>. On le tranche si l’on a forgé sa lame ; sinon on le repousse, et il reviendra.</p>
         <p>Puis on retourne auprès de l’enfant, et on lui dit de qui on tient ce qu’on a appris. C’est le métier d’Idris.</p>
       </div>
       <div class="pile">
@@ -924,8 +1038,8 @@ body.export .pl { border: 0; }
       </div>
     </div>
     <div class="tab"><table>
-      <thead><tr><th>Rencontre</th><th>Après</th><th>Ce qui le retient</th><th>Savoirs qui ouvrent un argument</th></tr></thead>
-      <tbody><tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-defileur.png" alt="">Celui qui défile</td><td style="color:#ffe08a">Abû Bakr · Véracité</td><td>Il a honte du temps qu’il y passe, et il y retourne pour ne plus y penser. Le mépris l’y renfoncerait. Il faut lui dire ce qui est.</td><td>Le Déni <small>(Abû Bakr)</small><br>L'aube de vérité <small>(la Citadelle)</small><br>Le discours d'investiture <small>(Abû Bakr)</small></td></tr><tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-regent.png" alt="">Le Régent</td><td style="color:#6fb6ff">'Umar · Justice</td><td>Il confond le siège et la charge. Il ne fait de mal à personne : il n’a personne. Il lui manque quelqu’un dont répondre.</td><td>Le Trône vide <small>('Umar)</small><br>« Tu as été juste, alors tu as dormi » <small>('Umar)</small><br>La sentinelle <small>(la Citadelle)</small></td></tr><tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-admire.png" alt="">L’Admiré</td><td style="color:#ff7a5c">Khâlid · Courage</td><td>Il n’entend que les applaudissements, et il ne sait plus qui il serait sans eux.</td><td>L'Idole du Héros <small>(Khâlid)</small><br>« C'est Allah qui agit » <small>(Khâlid)</small><br>La foggara <small>(la Citadelle)</small></td></tr><tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-compteur.png" alt="">Le Compteur</td><td style="color:#5fe0d0">'Uthmân · Miséricorde</td><td>Il amasse des regards comme d’autres de l’or. Il n’en a jamais posé un seul sur quelqu’un.</td><td>Le puits de Rûma <small>('Uthmân)</small><br>L'Or <small>('Uthmân)</small><br>La Citadelle <small>(la Citadelle)</small></td></tr><tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-carto.png" alt="">Le Cartographe</td><td style="color:#c49bff">'Alî · Savoir</td><td>Il sait tout de la Cité sans y avoir marché. Il tient pour vrai ce que beaucoup ont vu, et n’a jamais demandé à personne de qui il le tenait.</td><td>La phrase et son verset <small>('Alî)</small><br>Le débat de Harûrâ' <small>('Alî)</small><br>Parole vraie, visée fausse <small>(la Citadelle)</small></td></tr><tr><td class="n">L’opérateur de garde</td><td style="color:#7fd69a">Idris · Patience</td><td>Il a peur de perdre son score, et il n’a jamais vu personne dire non à l’Agrégor.</td><td>L’isnâd <small>(les Archives)</small></td></tr></tbody>
+      <thead><tr><th>Rencontre</th><th>Après</th><th>Ce qui le retient</th><th>Savoirs qui ouvrent un argument</th><th>Le mal derrière, et sa lame</th></tr></thead>
+      <tbody><tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-defileur.png" alt="">Celui qui défile</td><td style="color:#ffe08a">Abû Bakr · Véracité</td><td>Il a honte du temps qu’il y passe, et il y retourne pour ne plus y penser. Le mépris l’y renfoncerait. Il faut lui dire ce qui est.</td><td>Le Déni <small>(Abû Bakr)</small><br>L'aube de vérité <small>(la Citadelle)</small><br>Le discours d'investiture <small>(Abû Bakr)</small></td><td>L’Avidité<br><small style="color:#7fd69a">Le Contentement · jeûne × 3</small></td></tr><tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-regent.png" alt="">Le Régent</td><td style="color:#6fb6ff">'Umar · Justice</td><td>Il confond le siège et la charge. Il ne fait de mal à personne : il n’a personne. Il lui manque quelqu’un dont répondre.</td><td>Le Trône vide <small>('Umar)</small><br>« Tu as été juste, alors tu as dormi » <small>('Umar)</small><br>La sentinelle <small>(la Citadelle)</small></td><td>L’Orgueil<br><small style="color:#e6dcc4">L’Humilité · pèlerinage × 1</small></td></tr><tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-admire.png" alt="">L’Admiré</td><td style="color:#ff7a5c">Khâlid · Courage</td><td>Il n’entend que les applaudissements, et il ne sait plus qui il serait sans eux.</td><td>L'Idole du Héros <small>(Khâlid)</small><br>« C'est Allah qui agit » <small>(Khâlid)</small><br>La foggara <small>(la Citadelle)</small></td><td>L’Ostentation<br><small style="color:#ffe08a">La Sincérité · prière × 3</small></td></tr><tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-compteur.png" alt="">Le Compteur</td><td style="color:#5fe0d0">'Uthmân · Miséricorde</td><td>Il amasse des regards comme d’autres de l’or. Il n’en a jamais posé un seul sur quelqu’un.</td><td>Le puits de Rûma <small>('Uthmân)</small><br>L'Or <small>('Uthmân)</small><br>La Citadelle <small>(la Citadelle)</small></td><td>L’Avarice<br><small style="color:#5fe0d0">La Largesse · aumône × 3</small></td></tr><tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-carto.png" alt="">Le Cartographe</td><td style="color:#c49bff">'Alî · Savoir</td><td>Il sait tout de la Cité sans y avoir marché. Il tient pour vrai ce que beaucoup ont vu, et n’a jamais demandé à personne de qui il le tenait.</td><td>La phrase et son verset <small>('Alî)</small><br>Le débat de Harûrâ' <small>('Alî)</small><br>Parole vraie, visée fausse <small>(la Citadelle)</small></td><td>L’Insouciance<br><small style="color:#c49bff">L’Ardeur · étude × 3</small></td></tr><tr><td class="n">L’opérateur de garde</td><td style="color:#7fd69a">Idris · Patience</td><td>Il a peur de perdre son score, et il n’a jamais vu personne dire non à l’Agrégor.</td><td>L’isnâd <small>(les Archives)</small></td><td>Tous ceux qui n’ont pas été tranchés</td></tr></tbody>
     </table></div>
     <p>Ces rencontres sont une fiction.</p>
   </section>
@@ -945,6 +1059,8 @@ body.export .pl { border: 0; }
       <li><b>Les versets</b> ne sont donnés qu’en traduction du sens, avec leur référence.</li>
       <li><b>Aucune voix.</b> Ni récitation, ni appel à la prière synthétisé. Le nom divin ne figure sur rien que l’on frappe.</li>
       <li><b>La prière n’est pas un pouvoir.</b> Elle s’écrit sobrement, aux moments attestés et aux haltes du récit.</li>
+      <li><b>Les œuvres ne sont pas des sortilèges.</b> Dhikr, étude, jeûne, aumône, visite, pèlerinage : décrits sobrement. Le jeu n’en tire qu’une provision du cœur.</li>
+      <li><b>Lames, maux et figures du ciel sont des images.</b> Ni relique, ni épée d’un personnage historique. Une idée noire, une énigme ne touchent que des personnages de fiction.</li>
     </ul>
   </section>
 
@@ -1111,6 +1227,18 @@ body.export .pl { border: 0; }
       <h3>Des tribus, des cités, deux empires</h3>
       <p class="dit" style="max-width:none">Aucun groupe n’est un ennemi par nature. On leur parle avant tout.<span class="leg"><i>◆</i> PERSONNAGE DE FICTION</span></p>
       <div class="peuples"><article><b>Les Ansâr de Médine</b><div><figure><img class="px" src="img/n-abubakr-hubab.png" alt="" width="32" height="48"><figcaption>Al-Hubâb ibn al-Mundhir</figcaption></figure><figure><img class="px" src="img/n-abubakr-bashir.png" alt="" width="32" height="48"><figcaption>Bashîr ibn Sa'd</figcaption></figure><figure><img class="px" src="img/n-abubakr-ancien.png" alt="" width="32" height="48"><figcaption>Vieil Ansârî</figcaption></figure><figure><img class="px" src="img/n-ali-abuayyub.png" alt="" width="32" height="48"><figcaption>Abû Ayyûb al-Ansârî</figcaption></figure></div></article><article><b>Les tribus d’Arabie</b><div><figure><img class="px" src="img/n-abubakr-delegue.png" alt="" width="32" height="48"><figcaption>Délégué des tribus</figcaption></figure><figure><img class="px" src="img/n-abubakr-dirgham.png" alt="" width="32" height="48"><figcaption><i>◆</i> Dirghâm, cheikh des Banû Rimth</figcaption></figure><figure><img class="px" src="img/n-umar-bedouin.png" alt="" width="32" height="48"><figcaption>Bédouin réfugié</figcaption></figure><figure><img class="px" src="img/n-umar-fazari.png" alt="" width="32" height="48"><figcaption>Homme des Fazâra</figcaption></figure><figure><img class="px" src="img/n-umar-suraqa.png" alt="" width="32" height="48"><figcaption>Surâqa ibn Mâlik</figcaption></figure><figure><img class="px" src="img/n-khalid-bedouin.png" alt="" width="32" height="48"><figcaption>Ancien des Kalb</figcaption></figure><figure><img class="px" src="img/n-khalid-chamelier.png" alt="" width="32" height="48"><figcaption>Chamelier</figcaption></figure></div></article><article><b>Les Arabes chrétiens : Ghassân, al-Hîra, Najrân</b><div><figure><img class="px" src="img/n-umar-jabala.png" alt="" width="32" height="48"><figcaption>Jabala ibn al-Ayham</figcaption></figure><figure><img class="px" src="img/n-khalid-wahb.png" alt="" width="32" height="48"><figcaption><i>◆</i> Wahb ibn Zurayr</figcaption></figure><figure><img class="px" src="img/n-khalid-amr_hira.png" alt="" width="32" height="48"><figcaption>'Amr ibn 'Abd al-Masîh</figcaption></figure><figure><img class="px" src="img/n-abubakr-najran.png" alt="" width="32" height="48"><figcaption>Envoyé de Najrân</figcaption></figure><figure><img class="px" src="img/n-khalid-econome.png" alt="" width="32" height="48"><figcaption><i>◆</i> Économe du monastère</figcaption></figure><figure><img class="px" src="img/n-khalid-ermite.png" alt="" width="32" height="48"><figcaption>Ermite du ravin</figcaption></figure></div></article><article><b>Rome et le Shâm</b><div><figure><img class="px" src="img/n-umar-sophrone.png" alt="" width="32" height="48"><figcaption>Sophrone</figcaption></figure><figure><img class="px" src="img/n-umar-garde.png" alt="" width="32" height="48"><figcaption>Garde de la porte</figcaption></figure><figure><img class="px" src="img/n-umar-moine.png" alt="" width="32" height="48"><figcaption>Moine</figcaption></figure><figure><img class="px" src="img/n-khalid-marchand.png" alt="" width="32" height="48"><figcaption>Marchand de Homs</figcaption></figure><figure><img class="px" src="img/n-khalid-ancien_bourg.png" alt="" width="32" height="48"><figcaption><i>◆</i> Ancien du Fort des Oliviers</figcaption></figure><figure><img class="px" src="img/n-uthman-pretre.png" alt="" width="32" height="48"><figcaption>Un prêtre du port</figcaption></figure></div></article><article><b>La Perse</b><div><figure><img class="px" src="img/n-umar-hurmuzan.png" alt="" width="32" height="48"><figcaption>Al-Hurmuzân</figcaption></figure><figure><img class="px" src="img/n-caid-farrokh.png" alt="" width="32" height="48"><figcaption><i>◆</i> Farrokh, géomètre</figcaption></figure></div></article><article><b>Koufa et l’Irak</b><div><figure><img class="px" src="img/n-ali-kumayl.png" alt="" width="32" height="48"><figcaption>Kumayl ibn Ziyâd</figcaption></figure><figure><img class="px" src="img/n-ali-shurayh.png" alt="" width="32" height="48"><figcaption>Le juge Shurayh</figcaption></figure><figure><img class="px" src="img/n-ali-qanbar.png" alt="" width="32" height="48"><figcaption>Qanbar</figcaption></figure><figure><img class="px" src="img/n-ali-ashtar.png" alt="" width="32" height="48"><figcaption>Mâlik al-Ashtar</figcaption></figure><figure><img class="px" src="img/n-ali-ibnkawwa.png" alt="" width="32" height="48"><figcaption>Ibn al-Kawwâ'</figcaption></figure></div></article><article><b>L’Égypte et la mer</b><div><figure><img class="px" src="img/n-uthman-ibnsad.png" alt="" width="32" height="48"><figcaption>'Abdallâh ibn Sa'd</figcaption></figure><figure><img class="px" src="img/n-uthman-charpentier.png" alt="" width="32" height="48"><figcaption>Un charpentier d'Alexandrie</figcaption></figure><figure><img class="px" src="img/n-uthman-vigie.png" alt="" width="32" height="48"><figcaption>Une vigie</figcaption></figure><figure><img class="px" src="img/n-uthman-ancien_ile.png" alt="" width="32" height="48"><figcaption>Un ancien du port</figcaption></figure></div></article><article><b>Les gens de la Citadelle</b><div><figure><img class="px" src="img/n-caid-idir.png" alt="" width="32" height="48"><figcaption><i>◆</i> Amghar Idir</figcaption></figure><figure><img class="px" src="img/n-caid-meksa.png" alt="" width="32" height="48"><figcaption><i>◆</i> Amghar Meksa</figcaption></figure><figure><img class="px" src="img/n-caid-amezyan.png" alt="" width="32" height="48"><figcaption><i>◆</i> Amezyan, le puisatier</figcaption></figure><figure><img class="px" src="img/n-caid-warsen.png" alt="" width="32" height="48"><figcaption><i>◆</i> L'ancien Warsen</figcaption></figure><figure><img class="px" src="img/n-caid-izem.png" alt="" width="32" height="48"><figcaption><i>◆</i> Izem, le général</figcaption></figure><figure><img class="px" src="img/n-caid-yishaq.png" alt="" width="32" height="48"><figcaption><i>◆</i> Maître Yishaq, caravanier</figcaption></figure><figure><img class="px" src="img/n-caid-cyprien.png" alt="" width="32" height="48"><figcaption><i>◆</i> Frère Cyprien, moine-médecin</figcaption></figure></div></article><article><b>Les gens de la Cité-Miroir</b><div><figure><img class="px" src="img/n-idris-gamin.png" alt="" width="32" height="48"><figcaption><i>◆</i> Enfant</figcaption></figure><figure><img class="px" src="img/n-idris-defileur.png" alt="" width="32" height="48"><figcaption><i>◆</i> Celui qui défile</figcaption></figure><figure><img class="px" src="img/n-idris-regent.png" alt="" width="32" height="48"><figcaption><i>◆</i> Le Régent</figcaption></figure><figure><img class="px" src="img/n-idris-admire.png" alt="" width="32" height="48"><figcaption><i>◆</i> L’Admiré</figcaption></figure><figure><img class="px" src="img/n-idris-compteur.png" alt="" width="32" height="48"><figcaption><i>◆</i> Le Compteur</figcaption></figure><figure><img class="px" src="img/n-idris-carto.png" alt="" width="32" height="48"><figcaption><i>◆</i> Le Cartographe</figcaption></figure></div></article><article><b>Ceux qui parlent des deux côtés</b><div><figure><img class="px" src="img/n-abubakr-thamir.png" alt="" width="32" height="48"><figcaption><i>◆</i> Thâmir le courtier</figcaption></figure><figure><img class="px" src="img/n-umar-hazim.png" alt="" width="32" height="48"><figcaption><i>◆</i> Hâzim, commis de la Maison de la farine</figcaption></figure><figure><img class="px" src="img/n-khalid-ghalib.png" alt="" width="32" height="48"><figcaption><i>◆</i> Ghâlib, l'intendant</figcaption></figure><figure><img class="px" src="img/n-uthman-akhbar.png" alt="" width="32" height="48"><figcaption><i>◆</i> Abû l-Akhbâr</figcaption></figure><figure><img class="px" src="img/n-ali-madan.png" alt="" width="32" height="48"><figcaption><i>◆</i> Ma'dân, notable des greniers</figcaption></figure><figure><img class="px" src="img/n-caid-chambellan.png" alt="" width="32" height="48"><figcaption><i>◆</i> Maymûn, le chambellan</figcaption></figure></div></article></div>
+      <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
+    </div>
+  </article></div></div>
+
+  <div class="cartel"><b>Planche 11 · Le cœur</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="defile"><div class="pw"><article class="pl" data-nom="11-le-coeur">
+    <div class="in">
+      <p class="sur">Les œuvres, les lames, les maux</p>
+      <h3>Sept œuvres, sept lames, sept maux du cœur</h3>
+      <p class="dit" style="max-width:none">Une vertu pratiquée prend le fil d’une lame. Sans elle, le mal n’est que repoussé : il revient.</p>
+      <div class="sept"><article style="--c:#7fd69a;--h:28"><img class="px epee" src="img/lame-avidite.png" alt=""><span class="oe">Jeûne × 3</span><b>Le Contentement</b><i>al-Qanâ’a</i><span class="tr">tranche</span><img class="px mal" src="img/e-coeur-avidite.png" alt=""><em>L’Avidité</em></article><article style="--c:#e6dcc4;--h:276"><img class="px epee" src="img/lame-orgueil.png" alt=""><span class="oe">Pèlerinage × 1</span><b>L’Humilité</b><i>at-Tawâdu’</i><span class="tr">tranche</span><img class="px mal" src="img/e-coeur-orgueil.png" alt=""><em>L’Orgueil</em></article><article style="--c:#ffe08a;--h:318"><img class="px epee" src="img/lame-ostentation.png" alt=""><span class="oe">Prière × 3</span><b>La Sincérité</b><i>al-Ikhlâs</i><span class="tr">tranche</span><img class="px mal" src="img/e-coeur-ostentation.png" alt=""><em>L’Ostentation</em></article><article style="--c:#5fe0d0;--h:46"><img class="px epee" src="img/lame-avarice.png" alt=""><span class="oe">Aumône × 3</span><b>La Largesse</b><i>al-Karam</i><span class="tr">tranche</span><img class="px mal" src="img/e-coeur-avarice.png" alt=""><em>L’Avarice</em></article><article style="--c:#c49bff;--h:212"><img class="px epee" src="img/lame-insouciance.png" alt=""><span class="oe">Étude × 3</span><b>L’Ardeur</b><i>al-Himma</i><span class="tr">tranche</span><img class="px mal" src="img/e-coeur-insouciance.png" alt=""><em>L’Insouciance</em></article><article style="--c:#6fb6ff;--h:128"><img class="px epee" src="img/lame-envie.png" alt=""><span class="oe">Visite × 3</span><b>La Bienveillance</b><i>an-Nasîha</i><span class="tr">tranche</span><img class="px mal" src="img/e-coeur-envie.png" alt=""><em>L’Envie</em></article><article style="--c:#ff9a7a;--h:4"><img class="px epee" src="img/lame-colere.png" alt=""><span class="oe">Dhikr × 3</span><b>La Longanimité</b><i>al-Hilm</i><span class="tr">tranche</span><img class="px mal" src="img/e-coeur-colere.png" alt=""><em>La Colère</em></article></div>
+      <div class="ciel"><span class="cap">CINQ COMPAGNONS DE LUMIÈRE, FIGURES DU CIEL</span><div><figure style="--c:#f2c27a"><img class="px" src="img/bete-renard.png" alt=""><figcaption><b>Le Renard des sables</b><span>Flair</span></figcaption></figure><figure style="--c:#bfd6ff"><img class="px" src="img/bete-aigle.png" alt=""><figcaption><b>L’Aigle</b><span>Regard</span></figcaption></figure><figure style="--c:#ff9a5c"><img class="px" src="img/bete-phenix.png" alt=""><figcaption><b>Le Phénix</b><span>Renaissance</span></figcaption></figure><figure style="--c:#ffd76a"><img class="px" src="img/bete-lion.png" alt=""><figcaption><b>Le Lion</b><span>Présence</span></figcaption></figure><figure style="--c:#9fe8d0"><img class="px" src="img/bete-gazelle.png" alt=""><figcaption><b>La Gazelle</b><span>Apaisement</span></figcaption></figure></div></div>
       <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
     </div>
   </article></div></div>

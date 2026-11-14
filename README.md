@@ -149,7 +149,7 @@ node tools/promo.js all         # livret du joueur et planches : captures, sprit
 ```
 
 Le livret du joueur et les planches de présentation sont dans `promo/` : `livret.html` s'ouvre tel
-quel, `planches/` contient les neuf planches en images (huit en 1920 × 1080, une affiche verticale en
+quel, `planches/` contient les onze planches en images (dix en 1920 × 1080, une affiche verticale en
 1080 × 1350). Le texte se modifie dans `promo/livret.src.html`, puis `node tools/promo.js planches`
 réassemble la page et réexporte les images. Noms, dates, accroches, pièces et étoiles viennent des
 données du jeu.

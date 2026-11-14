@@ -64,6 +64,21 @@ la guerre n'est plus la seule issue ; il y a une bande-son ; le rendu s'adapte �
 (3) écoute et réglage de la musique ; (4) densifier l'exploration ; (5) mise en scène des combats et des
 pourparlers ; (6) point de reprise plus fin.
 
+## Version 5 : téléphone, aide, le cœur
+
+Rejoué de bout en bout, sans blocage ni erreur console, par cinq parcours automatiques : `auto`,
+`walk`, `tap` (le héros marche comme au doigt, par le chemin que tracerait un toucher), `wrong`
+(mauvaises réponses d'abord, pourparlers perdus) et `auto` sans aucune œuvre (`SANS_OEUVRES=1`).
+
+- Le joueur de test accomplit les œuvres du jour après chaque prière, dénoue les trois énigmes, forge
+  six lames sur sept (il n'a pas la bourse pour trois aumônes), tranche six maux, repousse le septième.
+- Sans aucune œuvre : toutes les épreuves restent gagnables, sans défaite pour le joueur de test ; six
+  maux sont repoussés et reviennent au dernier chapitre.
+- Mal du cœur avec sa lame : deux à six tours. Sans lame : six à trente tours selon le groupe.
+- Idée noire au milieu d'un pourparler : trois à huit tours, aucune défaite.
+- Vérifié sur des captures en 390 × 844 : la scène agrandie, le texte, l'objectif sous l'image, le
+  menu des œuvres, le combat. **Aucun essai sur un vrai téléphone ni avec un vrai doigt.**
+
 ## Ce qui n'a pas été testé
 
 - **Aucun test humain.** Ni le plaisir de jeu, ni la clarté des règles, ni le rythme, ni la longueur
@@ -90,6 +105,12 @@ pourparlers ; (6) point de reprise plus fin.
   bandeau et un ombrage pour ne plus se lire comme une tache claire ; le champ de bataille a été
   remonté au-dessus du panneau de commandes.
 - Sur téléphone en paysage, le panneau de combat occupe encore le tiers bas de l'écran.
+- Les œuvres pèsent peu pour le joueur de test (aucune défaite sans elles). C'est voulu pour que rien
+  ne bloque ; si le décideur veut que « plus dur » se sente davantage, le réglage tient en une ligne
+  (8 % par point manquant, `src/core/battle.js`).
+- Une partie commencée avant la version 5 ne retrouve pas les idées noires ni les maux des rencontres
+  déjà jouées : les maux correspondants se dressent tous au dernier chapitre.
+- Le menu des œuvres défile sur un petit téléphone (six lignes) ; rien n'indique qu'il défile.
 
 ## Retours à collecter
 
@@ -110,5 +131,8 @@ pourparlers ; (6) point de reprise plus fin.
 10. Les choix de fidélité apprennent-ils quelque chose, ou devine-t-on au hasard ?
 11. Lisibilité et confort sur téléphone, en portrait et en paysage.
 12. Le son : présence, fatigue, envie de le couper.
+13. Le doigt : touche-t-on juste, le héros va-t-il où l'on veut, la croix manque-t-elle ?
+14. « Que faire ? » suffit-il quand on est perdu, ou faut-il des indices écrits objectif par objectif ?
+15. Les œuvres : sent-on qu'elles préparent, ou les accomplit-on machinalement ?
 
 Les retours se consignent dans ce fichier, datés, puis redescendent en tâches courtes.

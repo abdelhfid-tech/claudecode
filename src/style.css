@@ -215,7 +215,7 @@ body.portrait #dialog .text { font-size: 1.04em; line-height: 1.4; }
 body.portrait #dialog .seal { width: 3.8em; height: 3.8em; margin-top: -1.9em; left: .7em; }
 body.portrait #dialog.nar { padding-left: 1.2em; }
 body.portrait #choice { top: calc(100% + 10px); transform: translateX(-50%); width: calc(100% - 12px); max-height: calc(100vh - 100% - 30px); max-height: calc(100dvh - 100% - 30px); }
-body.portrait #choice .opt { padding: .7em .9em; }
+body.portrait #choice .opt { padding: .58em .9em; }
 body.portrait #battle .panel { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; grid-template-columns: 1fr; }
 body.portrait #battle .order { font-size: calc(10.5px * var(--tz, 1)); } body.portrait .plate { font-size: calc(10.5px * var(--tz, 1)); min-width: 6.4em; } body.portrait #battle .banner { font-size: calc(13.5px * var(--tz, 1)); }
 body.portrait .fl { font-size: calc(15px * var(--tz, 1)); }

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Livret du joueur et planches de promotion.
    Tout ce qui est montré vient du jeu : écrans capturés en jouant, sprites tirés du moteur, textes tirés des données.
-   Usage : node tools/promo.js [captures|sprites|livret|planches|all]
+   Usage : node tools/promo.js [captures|recit|decors|coeur|mobile|sprites|livret|planches|all]
      captures : joue le prologue et la saga I, s'arrête aux moments utiles, écrit promo/img/*.jpg
      sprites  : personnages, sceaux, égrégores, carreaux, pièces à bâtir, écrit promo/img/*.png
      livret   : assemble promo/livret.src.html et les données en promo/livret.html (autonome)
@@ -284,6 +284,65 @@ async function decors(browser, errors) {
   return T;
 }
 
+/* ---------- 2 ter. le cœur : natte, œuvres, lame, mal du cœur, idée noire, aide, énigme ---------- */
+async function coeur(browser, errors) {
+  console.log('Captures — le cœur');
+  const ouvrir = async () => { const T = await openGame(browser, errors); await T.ev(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 30; });
+    await T.p.keyboard.press('Enter'); for (let i = 0; i < 600; i++) { if (await T.ev(chainShown)) break; await T.p.waitForTimeout(100); } return T; };
+  const aller = async (T, saga, ci) => { // même départ que les décors : jeu automatique jusqu'au premier repos
+    await T.ev(([s, c]) => { const I = window.ISNAD, W = I.world; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen');
+      window.__stop = () => true; window.__stopped = false; I.debug.auto = true; I.debug.noOeuvres = true; I.speed = 30; W.roster = {}; W.saga = null; I.script.flags = {}; W.startChapter(s, c); }, [saga, ci]);
+    for (let i = 0; i < 500; i++) { if (await T.ev(() => window.__stopped)) break; await T.p.waitForTimeout(50); }
+    await T.p.waitForTimeout(300); await T.ev(() => { const W = window.ISNAD.world; W.foes = []; document.querySelector('#toasts').innerHTML = ''; });
+  };
+  const surNatte = T => T.ev(() => { const W = window.ISNAD.world, sp = W.map.spots.priere; W.player.x = sp[0] * 16 + 8; W.player.y = sp[1] * 16 + 13; W.player.dir = 3; W.resetTrail(); W.updateCam(true); });
+  const choix = async (T, i) => { const o = await T.p.$$('#choice .opt'); await o[i < 0 ? o.length + i : i].click(); await T.p.waitForTimeout(550); };
+  const carton = (T, cls) => T.ev(c => { const e = document.querySelector('#card'); return !e.hidden && e.classList.contains('on') && e.classList.contains(c); }, cls);
+  const attends = async (T, fn, arg, n) => { for (let i = 0; i < (n || 80); i++) { if (await fn(T, arg)) return true; await T.p.waitForTimeout(150); } return false; };
+  const pret = T => T.ev(() => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); return !!c && c.querySelectorAll('.mi').length > 0 && !c.querySelector('.mhint') && (!b || b.hidden); });
+  const sansToasts = T => T.ev(() => { document.querySelector('#toasts').innerHTML = ''; });
+
+  // a. Médine : la natte, les œuvres du jour, une lame forgée, un compagnon de lumière
+  let T = await ouvrir(); await aller(T, 'abubakr', 0);
+  await T.ev(() => { window.ISNAD.trade.dirhams(60); window.ISNAD.world.hud(); }); await surNatte(T);
+  await T.ev(() => { window.ISNAD.oeuvres.natte(); }); await T.p.waitForTimeout(700); await T.shot('natte');
+  await choix(T, 1); await T.shot('oeuvres');
+  await choix(T, 0); await attends(T, carton, 'oeuvre'); await T.p.waitForTimeout(500); await T.shot('oeuvre-dhikr');
+  await T.p.keyboard.press('Enter'); await T.p.waitForTimeout(900);
+  await T.ev(() => { window.ISNAD.oeuvres.state().oeuvres.aumone = 2; });
+  await choix(T, 3); await attends(T, carton, 'oeuvre'); await T.p.waitForTimeout(400); await T.p.keyboard.press('Enter');
+  await attends(T, carton, 'lame'); await T.p.waitForTimeout(600); await sansToasts(T); await T.shot('lame');
+  await T.p.keyboard.press('Enter'); await attends(T, carton, 'animal'); await T.p.waitForTimeout(600); await sansToasts(T); await T.shot('compagnon-lumiere');
+  await T.p.keyboard.press('Enter'); await T.p.waitForTimeout(900);
+  await choix(T, -1); await choix(T, -1); await sansToasts(T);
+  // b. « Que faire ? », puis la halte
+  await T.ev(() => { const W = window.ISNAD.world; W.player.y += 40; W.resetTrail(); W.updateCam(true); window.ISNAD.ui.guide(); }); await T.p.waitForTimeout(600); await T.shot('que-faire');
+  await choix(T, -1);
+  await T.ev(() => { const d = window.ISNAD.oeuvres.state(); d.oeuvres.dhikr = 2; d.oeuvres.jeune = 1; d.oeuvres.priere = 2; d.zad = 3; window.ISNAD.ui.pause(); }); await T.p.waitForTimeout(500);
+  const cote = async label => { for (const b of await T.p.$$('#menu .side button')) { if ((await b.textContent()).includes(label)) { await b.hover(); await T.p.waitForTimeout(350); return; } } };
+  await cote('Œuvres et lames'); await T.shot('halte-lames');
+  await cote('Compagnons de lumière'); await T.shot('halte-lumiere');
+  await T.ev(() => { document.querySelector('#menu').hidden = true; document.body.classList.remove('in-screen'); window.ISNAD.ui.menuOpen = false; });
+  // c. un mal du cœur, la lame en main
+  await T.ev(() => { const I = window.ISNAD; I.oeuvres.state().zad = 3; I.battle.start({ group: ['avarice'], boss: true, bg: 'cite' }); });
+  await attends(T, pret, null, 160); await T.p.waitForTimeout(400); await T.shot('mal');
+  await T.p.close();
+
+  // d. une idée noire, au milieu d'un pourparler (saga I, chapitre 2)
+  T = await ouvrir(); await aller(T, 'abubakr', 1);
+  await T.ev(() => { const I = window.ISNAD, find = a => { if (!a || typeof a !== 'object') return null; if (Array.isArray(a) && a[0] === 'parley' && a[1] && a[1].with === 'dirgham') return a[1]; for (const v of Array.isArray(a) ? a : Object.values(a)) { const r = find(v); if (r) return r; } return null; };
+    const P = find(I.sagas.abubakr.chapters[1].objectives); I.debug.auto = false; I.speed = 1; I.script.run([['parley', P]]); });
+  for (let i = 0; i < 40; i++) { if (await carton(T, 'noir')) break; await T.p.keyboard.press('Enter'); await T.p.waitForTimeout(420); }
+  await T.p.waitForTimeout(600); await sansToasts(T); await T.shot('idee-noire');
+  await T.p.keyboard.press('Enter'); await attends(T, pret, null, 160); await T.p.waitForTimeout(400); await T.shot('idee-noire-combat');
+  await T.p.close();
+
+  // e. une énigme du cœur, dans la Citadelle
+  T = await ouvrir(); await aller(T, 'caid', 1); await surNatte(T);
+  await T.ev(() => { const W = window.ISNAD.world; W.player.y += 30; W.player.dir = 0; W.resetTrail(); W.updateCam(true); W.hud(); }); await T.p.waitForTimeout(900); await T.shot('enigme');
+  await T.p.close();
+}
+
 /* ---------- 2 bis. téléphone, en portrait : croix et boutons tactiles ---------- */
 async function mobile(browser, errors) {
   console.log('Captures — téléphone');
@@ -300,7 +359,13 @@ async function mobile(browser, errors) {
   for (let i = 0; i < 600; i++) { if (await p.evaluate(() => !document.querySelector('#chain').hidden)) break; await p.waitForTimeout(100); }
   await p.waitForTimeout(500); await p.keyboard.press('Enter');
   for (let i = 0; i < 1200; i++) { if (await p.evaluate(() => window.__stopped)) break; await p.waitForTimeout(50); }
+  await p.evaluate(() => { document.querySelector('#toasts').innerHTML = ''; });
   await p.waitForTimeout(1200); await snap('m-jeu');
+  await p.tap('#helpbtn'); await p.waitForTimeout(600); await snap('m-aide');
+  { const o = await p.$$('#choice .opt'); await o[o.length - 1].tap(); await p.waitForTimeout(400); }
+  await p.evaluate(() => { const I = window.ISNAD; I.battle.start({ group: Object.keys(I.world.saga.enemies).slice(0, 2), bg: 'ville' }); });
+  for (let i = 0; i < 120; i++) { if (await p.evaluate(() => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); return !!c && c.querySelectorAll('.mi').length > 0 && (!b || b.hidden); })) break; await p.waitForTimeout(150); }
+  await p.waitForTimeout(400); await snap('m-combat');
   await p.close();
 }
 
@@ -331,6 +396,11 @@ async function sprites(browser, errors, T) {
     Object.entries(KIND).forEach(([k, l]) => { out['k-' + k] = front(Object.assign({ kind: k }, l)); out['gk-' + k] = G.charGrand(Object.assign({ kind: k }, l), 0, 0).toDataURL(); });
     // égrégores : chacun à sa taille de combat
     sagas.forEach(s => Object.entries(s.enemies || {}).forEach(([id, e]) => { const sc = e.tier === 'boss' ? 3 : e.tier === 'elite' ? 2 : 1; out['e-' + s.id + '-' + id] = G.enemy(e.art, e.hue, sc, e.seed).toDataURL(); }));
+    // le cœur : lames, figures du ciel, maux du cœur et idées noires
+    { const O = I.oeuvres, CO = I.sagas.coeur;
+      Object.keys(D.VICES).forEach(v => { out['lame-' + v] = O.lame(v).toDataURL(); });
+      D.ANIMAUX.forEach(a => { out['bete-' + a] = O.bete(a).toDataURL(); });
+      Object.entries(CO.enemies).forEach(([id, e]) => { out['e-coeur-' + id] = G.enemy(e.art, e.hue, 2, e.seed).toDataURL(); }); }
     // carreaux et objets
     ['zellij', 'zsand', 'gwall', 'mihrab', 'trench', 'field', 'bwall'].forEach(t => { try { const [c, x] = mk(48, 48); for (let i = 0; i < 9; i++) x.drawImage(G.tile(t, i % 4, 0), (i % 3) * 16, Math.floor(i / 3) * 16); out['t-' + t] = c.toDataURL(); } catch (e) { /* carreau absent */ } });
     ['palm', 'well', 'pen_goat', 'pen_sheep', 'pen_camel', 'lantern', 'mat', 'rug', 'minbar', 'stall', 'tent', 'camel', 'bales', 'trunkcol', 'basin', 'isnad'].forEach(o => { try { out['o-' + o] = G.obj(o).toDataURL(); } catch (e) { /* objet absent */ } });
@@ -349,7 +419,7 @@ function livret() {
   const D = require(path.join(ROOT, 'src/core/defs.js'));
   const sagas = {}; const keep = global.ISNAD, keepW = global.window;
   global.window = global; global.ISNAD = { registerSaga: s => { sagas[s.id] = s; }, registerMusic: () => {} };
-  fs.readdirSync(path.join(ROOT, 'src/data')).filter(f => /^(saga_.*|frame|caid)\.js$/.test(f)).forEach(f => require(path.join(ROOT, 'src/data', f)));
+  fs.readdirSync(path.join(ROOT, 'src/data')).filter(f => /^(saga_.*|frame|caid|coeur)\.js$/.test(f)).forEach(f => require(path.join(ROOT, 'src/data', f)));
   global.ISNAD = keep; global.window = keepW;
   const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const five = Object.values(sagas).filter(s => !s.frame).sort((a, b) => a.order - b.order);
@@ -421,14 +491,25 @@ function livret() {
     return court ? `<article><b>${esc(g.titre)}</b><div>${figs}</div></article>` : `<article class="peuple"><h3>${esc(g.titre)}</h3><p>${esc(txt)}</p>${src}<div class="gens-l">${figs}</div></article>`; };
   R.PEUPLES = GROUPES.map(g => groupe(g, false)).join('');
   R.PEUPLESPLANCHE = GROUPES.map(g => groupe(g, true)).join('');
+  // le cœur : œuvres, lames et maux, idées noires, figures du ciel
+  const CO = sagas.coeur, viceDe = k => Object.keys(D.VICES).find(v => D.VICES[v].oeuvre === k), bas = n => n.replace(/^L(’|a |e )/, (m, x) => 'l' + x);
+  R.OEUVRES = D.OEUVRES.map(k => { const o = CO.oeuvres[k], v = viceDe(k); return `<tr><td class="n"><span class="gl">${txt(o.glyph)}</span>${esc(o.name)}</td><td>${esc(o.desc)}</td><td style="color:${CO.lames[v].couleur}">${esc(CO.lames[v].name)} <small>· ${D.VICES[v].need} fois</small></td></tr>`; }).join('').replace(/· 1 fois/, '· une fois');
+  R.LAMES = Object.keys(D.VICES).map(v => { const L = CO.lames[v], E = CO.enemies[v], V = D.VICES[v], o = CO.oeuvres[V.oeuvre];
+    return `<article class="lame-f" style="--c:${L.couleur};--h:${E.hue}"><img class="px epee" src="img/lame-${v}.png" alt="" width="18" height="44"><div><h4>${esc(L.name)} <span>${esc(L.ar)}</span></h4><p class="forge">${esc(o.court)} × ${V.need}</p><p>${esc(debut(E.desc, 2))}</p></div><figure><img class="px" src="img/e-coeur-${v}.png" alt=""><figcaption>${esc(E.name)}</figcaption></figure></article>`; }).join('');
+  R.NOIRES = Object.entries(CO.enemies).filter(([id]) => id.indexOf('noir_') === 0).map(([id, e]) => `<figure style="--h:${e.hue}"><img class="px" src="img/e-coeur-${id}.png" alt=""><figcaption>${esc(e.name)}</figcaption></figure>`).join('');
+  R.BETES = D.ANIMAUX.map(a => { const A = CO.animaux[a]; return `<article class="bete-f" style="--c:${A.couleur}"><img class="px" src="img/bete-${a}.png" alt=""><div><h4>${esc(A.name)} <span>${esc(A.ar)}</span></h4><p class="don"><b>${esc(A.don)}.</b> ${esc(A.effet)}</p><p>${esc(A.texte)}</p><p class="src">${esc(A.vient)}</p></div></article>`; }).join('');
+  R.SEPT = Object.keys(D.VICES).map(v => { const L = CO.lames[v], E = CO.enemies[v], V = D.VICES[v], o = CO.oeuvres[V.oeuvre];
+    return `<article style="--c:${L.couleur};--h:${E.hue}"><img class="px epee" src="img/lame-${v}.png" alt=""><span class="oe">${esc(o.court)} × ${V.need}</span><b>${esc(L.name)}</b><i>${esc(L.ar)}</i><span class="tr">tranche</span><img class="px mal" src="img/e-coeur-${v}.png" alt=""><em>${esc(E.name)}</em></article>`; }).join('');
+  R.CIEL = D.ANIMAUX.map(a => { const A = CO.animaux[a]; return `<figure style="--c:${A.couleur}"><img class="px" src="img/bete-${a}.png" alt=""><figcaption><b>${esc(A.name)}</b><span>${esc(A.don)}</span></figcaption></figure>`; }).join('');
+  const malDe = c => { const v = c.vice; if (!v) return ''; const V = D.VICES[v]; return `${esc(CO.enemies[v].name)}<br><small style="color:${CO.lames[v].couleur}">${esc(CO.lames[v].name)} · ${esc(CO.oeuvres[V.oeuvre].court.toLowerCase())} × ${V.need}</small>`; };
   // les rencontres de la Cité-Miroir : qui, après quel maillon, et quels savoirs ouvrent les meilleurs arguments
   const findOp = (a, name) => { if (!a || typeof a !== 'object') return null; if (Array.isArray(a)) { if (a[0] === name && a[1] && typeof a[1] === 'object') return a[1]; for (const v of a) { const r = findOp(v, name); if (r) return r; } return null; } for (const v of Object.values(a)) { const r = findOp(v, name); if (r) return r; } return null; };
   const savoir = ref => { const [sid, id] = ref.split('/'), c = sagas[sid].codex.find(x => x.id === id); if (!c) throw new Error('savoir introuvable : ' + ref); return `${esc(c.title)} <small>(${sid === 'caid' ? 'la Citadelle' : esc(sagas[sid].heroes[sid].name)})</small>`; };
   R.RENCONTRES = sagas.idris.chapters.filter(c => c.after).map(c => { const s2 = sagas[c.after], P = findOp(c.objectives, 'parley'), needs = [];
     P.rounds.forEach(r => r.opts.forEach(o => { if (o.need && needs.indexOf(o.need) < 0) needs.push(o.need); }));
     const who = c.npcs.find(n => n.id === P.with);
-    return `<tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-${who.id}.png" alt="">${esc(c.title)}</td><td style="color:${col(s2)}">${esc(s2.heroes[s2.id].name)} · ${esc(s2.lightName)}</td><td>${esc(P.intro)}</td><td>${needs.map(savoir).join('<br>')}</td></tr>`; }).join('')
-    + `<tr><td class="n">L’opérateur de garde</td><td style="color:${D.ELEMENTS.sabr.color}">Idris · Patience</td><td>${esc(findOp(sagas.idris.chapters.find(c => c.id === 'e1').objectives, 'parley').intro)}</td><td>L’isnâd <small>(les Archives)</small></td></tr>`;
+    return `<tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-${who.id}.png" alt="">${esc(c.title)}</td><td style="color:${col(s2)}">${esc(s2.heroes[s2.id].name)} · ${esc(s2.lightName)}</td><td>${esc(P.intro)}</td><td>${needs.map(savoir).join('<br>')}</td><td>${malDe(c)}</td></tr>`; }).join('')
+    + `<tr><td class="n">L’opérateur de garde</td><td style="color:${D.ELEMENTS.sabr.color}">Idris · Patience</td><td>${esc(findOp(sagas.idris.chapters.find(c => c.id === 'e1').objectives, 'parley').intro)}</td><td>L’isnâd <small>(les Archives)</small></td><td>Tous ceux qui n’ont pas été tranchés</td></tr>`;
   R.PALETTE = Object.values(D.PIECES).map(p => `<figure><img class="px" src="img/${icon(p)}.png" alt=""><figcaption>${esc(p.name)}</figcaption></figure>`).join('');
   R.VEILLEES = sagas.caid.chapters.map(c => `<tr><td class="n">${esc(c.title)}</td><td>${esc(c.sub)}</td></tr>`).join('');
   let src = fs.readFileSync(path.join(PROMO, 'livret.src.html'), 'utf8');
@@ -462,6 +543,7 @@ async function planches(browser, errors) {
   if (mode === 'livret') { livret(); return; }
   const browser = await chromium.launch(); const errors = [];
   if (mode === 'recit' || mode === 'captures' || mode === 'all') await captures(browser, errors);
+  if (mode === 'coeur' || mode === 'captures' || mode === 'all') await coeur(browser, errors);
   if (mode === 'mobile' || mode === 'captures' || mode === 'all') await mobile(browser, errors);
   if (mode === 'decors' || mode === 'captures' || mode === 'all') { const T = await decors(browser, errors); await sprites(browser, errors, T); }
   else if (mode === 'sprites') await sprites(browser, errors);
