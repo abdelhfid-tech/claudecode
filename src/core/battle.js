@@ -116,8 +116,9 @@
       if (!C.lack) C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 10); });
     }
     for (const e of alive('foe')) {
-      const v = e.def.vice; if (!v || !I.oeuvres.hasBlade(v)) continue;
+      const v = e.def.vice; if (!v) continue;
       const L = I.sagas.coeur.lames[v];
+      if (!I.oeuvres.hasBlade(v)) { if (first) await banner(`<small>Sans sa lame · ${I.esc(L.name)}</small>On ne peut que ${v === 'orgueil' ? 'le' : 'la'} repousser`, 1700, false, 'speech foe'); continue; }
       await banner(`<small>Lame · ${I.esc(L.ar)}</small>${I.esc(L.name)} tranche ses voiles`, 1700, false, 'speech intro'); I.audio.sfx('slash'); G.flash(L.couleur);
       e.cut = true; e.veilsMax = 1; e.veils = 1; e.hp = Math.round(e.max.hp * 0.6); e.def.weak.forEach(w => { e.known[w] = true; }); e.flash = 1; fx('slash', e, L.couleur); refresh(); await I.sleep(500);
     }
@@ -432,7 +433,8 @@
     if (C.opts.boss || Math.random() < 0.4) { const k = C.opts.boss ? I.pick(['musc', 'lait', 'eau']) : I.pick(['dattes', 'dattes', 'pain', 'eau', 'miel', 'siwak']); sv.items[k] = (sv.items[k] || 0) + 1; drop = `<li>Trouvé : <b>${D.ITEMS[k].name}</b></li>`; }
     W.persistHeroes();
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
-    await S.card('victory', `<p class="small">${C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>Dévoilement</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
+    const maux = C.all.filter(e => e.side === 'foe' && e.def.vice);
+    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? 'La lame a tranché' : 'Sans sa lame, le mal recule') : C.opts.noir ? 'On ne l’a pas combattue contre lui, mais pour lui' : C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>${maux.length ? (maux.every(e => e.cut) ? 'Tranché' : maux.some(e => e.cut) ? 'Tranché et repoussé' : 'Repoussé') : C.opts.noir ? 'L’idée noire se dissipe' : 'Dévoilement'}</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
   async function defeat() {
     I.audio.sfx('dark');

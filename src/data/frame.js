@@ -355,7 +355,7 @@ ISNAD.registerSaga({
             lose: [['pillar', 'lien', -1], ['nar', 'Il a déjà repris. Tu n’as pas trouvé les mots, ce soir. Il a pourtant levé la tête, une fois.']]
           }],
           ['nar', 'Derrière lui, quelque chose ne s’est pas tu. Sous chaque « encore un », il y a une faim plus vieille que les écrans.'],
-          ['battle', { group: ['avidite'], bg: 'cite', boss: true, intro: 'L’Avidité : vouloir encore, alors qu’on a. Sans la lame du Contentement, on ne peut que la repousser.' }],
+          ['battle', { group: ['avidite'], bg: 'cite', boss: true, intro: 'L’Avidité : vouloir encore, alors qu’on a.' }],
           ['if', 'tranche_avidite', [['nar', 'La lame du Contentement n’a rien frappé : elle a montré ce qui suffisait. L’Avidité ne reviendra pas dans cette ruelle.']], [['nar', 'L’Avidité recule, sans se défaire. Elle reviendra. Le jeûne, trois fois tenu, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
@@ -417,7 +417,7 @@ ISNAD.registerSaga({
             lose: [['pillar', 'lien', -1], ['nar', '« Refusé », dit-il, et il tamponne. Tu n’as pas trouvé les mots, ce soir. Il a pourtant regardé son siège, une fois, comme on regarde un inconnu.']]
           }],
           ['nar', 'Le siège est vide, et quelque chose s’y tient encore : ce qui veut être au-dessus, même de personne.'],
-          ['battle', { group: ['orgueil'], bg: 'cite', boss: true, intro: 'L’Orgueil : se voir au-dessus. Sans la lame de l’Humilité, on ne peut que le repousser.' }],
+          ['battle', { group: ['orgueil'], bg: 'cite', boss: true, intro: 'L’Orgueil : se voir au-dessus.' }],
           ['if', 'tranche_orgueil', [['nar', 'La lame de l’Humilité est passée sans bruit, comme passe un homme parmi d’autres. L’Orgueil ne reviendra pas s’asseoir ici.']], [['nar', 'L’Orgueil recule d’un pas, la tête haute. Il reviendra. Le pèlerinage, où tous portent la même étoffe, forge la lame qui le tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
@@ -478,7 +478,7 @@ ISNAD.registerSaga({
             lose: [['pillar', 'lien', -1], ['nar', 'Il s’est déjà retourné vers les fenêtres. Tu n’as pas trouvé les mots, ce soir. Il a pourtant porté la main à sa poitrine, comme on cherche s’il y a encore quelqu’un.']]
           }],
           ['nar', 'L’estrade est vide. Mais ce qui brillait pour être vu brille encore, seul, au milieu de la rue.'],
-          ['battle', { group: ['ostentation'], bg: 'cite', boss: true, intro: 'L’Ostentation : faire le bien pour être vu le faisant. Sans la lame de la Sincérité, on ne peut que la repousser.' }],
+          ['battle', { group: ['ostentation'], bg: 'cite', boss: true, intro: 'L’Ostentation : faire le bien pour être vu le faisant.' }],
           ['if', 'tranche_ostentation', [['nar', 'La lame de la Sincérité n’a pas d’éclat : c’est pour cela qu’elle coupe. L’Ostentation s’est éteinte, faute de regards.']], [['nar', 'L’Ostentation se retire derrière un écran. Elle reviendra. La prière tenue quand nul ne regarde, trois fois, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
@@ -539,7 +539,7 @@ ISNAD.registerSaga({
             lose: [['pillar', 'lien', -1], ['nar', 'Il a repris son compte. Tu n’as pas trouvé les mots, ce soir. Il a pourtant regardé ses mains, comme s’il se demandait à quoi elles avaient servi.']]
           }],
           ['nar', 'Les colonnes de chiffres s’effacent. Dessous, il reste une main fermée.'],
-          ['battle', { group: ['avarice'], bg: 'cite', boss: true, intro: 'L’Avarice : retenir ce qui devait circuler. Sans la lame de la Largesse, on ne peut que la repousser.' }],
+          ['battle', { group: ['avarice'], bg: 'cite', boss: true, intro: 'L’Avarice : retenir ce qui devait circuler.' }],
           ['if', 'tranche_avarice', [['nar', 'La lame de la Largesse a ouvert la main fermée, et il n’y avait rien dedans qui valût d’être gardé. L’Avarice ne comptera plus ici.']], [['nar', 'L’Avarice referme les doigts et recule. Elle reviendra. L’aumône, trois fois donnée sans témoin, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
@@ -600,7 +600,7 @@ ISNAD.registerSaga({
             lose: [['pillar', 'lien', -1], ['nar', 'Il a déjà reporté ta visite : « un relevé, non confirmé ». Tu n’as pas trouvé les mots, ce soir. Il a pourtant levé les yeux vers la fenêtre, pour la première fois depuis longtemps.']]
           }],
           ['nar', 'La carte est roulée. Mais ce qui l’empêchait d’aller voir est toujours là, tiède et patient comme un demi-sommeil.'],
-          ['battle', { group: ['insouciance'], bg: 'cite', boss: true, intro: 'L’Insouciance : vivre à côté de sa vie. Sans la lame de l’Ardeur, on ne peut que la repousser.' }],
+          ['battle', { group: ['insouciance'], bg: 'cite', boss: true, intro: 'L’Insouciance : vivre à côté de sa vie.' }],
           ['if', 'tranche_insouciance', [['nar', 'La lame de l’Ardeur a tranché le demi-sommeil d’un seul fil. L’Insouciance ne s’étendra plus sur cette table.']], [['nar', 'L’Insouciance se retourne, comme un dormeur qu’on dérange. Elle reviendra. L’étude, trois fois reprise, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
