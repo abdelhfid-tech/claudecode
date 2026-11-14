@@ -1,0 +1,826 @@
+<title>Livret ISNAD</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Amiri&family=Cinzel:wght@500;700&family=Reem+Kufi:wght@500;700&family=Share+Tech+Mono&display=swap">
+<style>
+/* Mise en page : un livret en feuillets sur fond de nuit, relié par un fil d'or (la Chaîne),
+   puis des planches 16:9 posées sur une table sombre. Un seul habillage, celui du jeu. */
+:root {
+  color-scheme: dark;
+  --nuit: #07060d;          /* fond, noir teinté de violet */
+  --encre: #0e0c1c;         /* panneaux */
+  --voile: #18142c;         /* panneaux relevés */
+  --or: #e9c877;            /* accent : titres, filets */
+  --sable: #f3e7cc;         /* texte courant */
+  --cendre: #a79c86;        /* texte secondaire */
+  --zellige: #2d8f9f;       /* turquoise des frises */
+  --neon: #39e6ff; --rose: #ff4fd8;   /* monde de 2084 et noosphère */
+  --filet: rgba(233, 200, 119, .32);
+  --f-titre: "Cinzel", "Trajan Pro", "Times New Roman", "Amiri", serif;
+  --f-texte: "Alegreya", "Iowan Old Style", Georgia, "Amiri", serif;
+  --f-ar: "Reem Kufi", "Noto Kufi Arabic", "Geeza Pro", "Segoe UI", sans-serif;
+  --f-mono: "Share Tech Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--nuit); color: var(--sable); font-family: var(--f-texte); font-size: 18px; line-height: 1.58; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: var(--or); text-underline-offset: .18em; }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--neon); outline-offset: 3px; }
+.px { image-rendering: pixelated; }
+.ar { font-family: var(--f-ar); }
+kbd { font-family: var(--f-mono); font-size: .84em; padding: .08em .45em; border: 1px solid rgba(243, 231, 204, .35); border-radius: 3px; white-space: nowrap; }
+.gout { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.col { max-width: 1080px; margin: 0 auto; }
+
+/* ---------- couverture ---------- */
+.couv { position: relative; background: var(--nuit); overflow: hidden; border-bottom: 1px solid var(--filet); }
+/* l'image tient la droite et se fond dans la nuit ; le titre reste sur fond sombre */
+.couv > img { position: absolute; top: 0; right: 0; bottom: 0; width: 70%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+.couv::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--nuit) 0%, var(--nuit) 30%, rgba(7, 6, 13, .6) 50%, rgba(7, 6, 13, .05) 78%), linear-gradient(0deg, rgba(7, 6, 13, .92), transparent 32%); }
+@media (max-width: 760px) {
+  .couv > img { width: 100%; }
+  .couv::after { background: linear-gradient(0deg, rgba(7, 6, 13, .97) 0%, rgba(7, 6, 13, .84) 55%, rgba(7, 6, 13, .66) 100%); }
+}
+.couv .gout { position: relative; z-index: 1; padding-block: clamp(48px, 9vw, 120px) clamp(36px, 6vw, 72px); }
+.couv .ar { font-size: clamp(1.6rem, 4vw, 2.6rem); color: var(--or); line-height: 1; text-align: left; text-shadow: 0 0 30px rgba(233, 200, 119, .5); }
+.couv h1 { font-family: var(--f-titre); font-weight: 700; font-size: clamp(3.2rem, 11vw, 7.4rem); letter-spacing: .26em; margin: .05em 0 0; line-height: 1; color: #fff6dc; text-shadow: 0 0 2px #fff, 0 0 46px rgba(233, 200, 119, .45); }
+.couv .sous { font-family: var(--f-titre); letter-spacing: .4em; text-transform: uppercase; font-size: clamp(.7rem, 1.6vw, .95rem); margin: .9em 0 0; }
+.couv .objet { margin: 2.2em 0 0; max-width: 34ch; font-size: clamp(1.15rem, 2.2vw, 1.5rem); font-style: italic; line-height: 1.4; text-wrap: balance; }
+.couv .quoi { font-family: var(--f-mono); color: var(--cendre); font-size: .86rem; letter-spacing: .06em; margin: 1.1em 0 0; max-width: 46ch; }
+.acces { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 2em; }
+.acces a { font-family: var(--f-titre); letter-spacing: .14em; font-size: .86rem; text-transform: uppercase; text-decoration: none; padding: .7em 1.3em; border: 1px solid var(--filet); background: rgba(10, 8, 20, .7); color: var(--sable); }
+.acces a.jouer { background: var(--or); color: #1a1408; border-color: var(--or); font-weight: 700; }
+.acces a:hover { border-color: var(--or); }
+
+/* ---------- sommaire ---------- */
+.sommaire { padding-block: 34px 10px; }
+.sommaire ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 4px 28px; font-size: .98rem; }
+.sommaire li { border-bottom: 1px solid rgba(233, 200, 119, .14); }
+.sommaire a { display: flex; justify-content: space-between; gap: 1em; padding: .45em 0; text-decoration: none; color: var(--sable); }
+.sommaire a span { font-family: var(--f-mono); color: var(--cendre); font-size: .78rem; align-self: center; }
+.sommaire a:hover { color: var(--or); }
+
+/* ---------- feuillets du livret : un fil d'or court à gauche, une étoile à chaque titre ---------- */
+.livret { padding-block: 28px 80px; }
+.fil { position: relative; padding-left: clamp(26px, 5vw, 64px); }
+.fil::before { content: ""; position: absolute; left: clamp(8px, 1.6vw, 20px); top: 0; bottom: 0; width: 1px; background: linear-gradient(var(--filet), var(--filet)); }
+.partie { font-family: var(--f-mono); letter-spacing: .28em; text-transform: uppercase; font-size: .78rem; color: var(--zellige); margin: 84px 0 0; }
+.feuillet { padding-top: 52px; }
+.feuillet > h2 { position: relative; font-family: var(--f-titre); font-weight: 700; letter-spacing: .1em; font-size: clamp(1.45rem, 3.3vw, 2.1rem); line-height: 1.2; color: var(--or); margin: 0 0 .7em; text-wrap: balance; }
+/* l'étoile à huit branches : deux carrés croisés, comme sur la natte du jeu */
+.feuillet > h2::before, .feuillet > h2::after { content: ""; position: absolute; top: .52em; left: calc(-1 * clamp(26px, 5vw, 64px) + clamp(8px, 1.6vw, 20px) - 6px); width: 13px; height: 13px; border: 1px solid var(--or); background: var(--nuit); }
+.feuillet > h2::after { transform: rotate(45deg); background: transparent; }
+.feuillet h3 { font-family: var(--f-titre); font-weight: 500; letter-spacing: .08em; font-size: 1.08rem; color: #fff6dc; margin: 1.9em 0 .4em; }
+.feuillet p, .feuillet li { max-width: 66ch; }
+.feuillet p { margin: 0 0 .9em; }
+.feuillet ul, .feuillet ol { margin: 0 0 1em; padding-left: 1.25em; }
+.feuillet li { margin-bottom: .35em; }
+.feuillet b, .feuillet strong { color: #fff6dc; font-weight: 700; }
+.terme { font-style: italic; color: #fff6dc; }
+.duo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: clamp(22px, 4vw, 52px); align-items: start; }
+.duo > * { min-width: 0; }
+.duo.inv { grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); }
+@media (max-width: 860px) { .duo, .duo.inv { grid-template-columns: minmax(0, 1fr); } }
+figure { margin: 0; }
+.ecran { border: 1px solid var(--filet); background: #000; box-shadow: 0 18px 50px rgba(0, 0, 0, .55); }
+.ecran img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+figcaption { font-family: var(--f-mono); font-size: .76rem; letter-spacing: .04em; color: var(--cendre); padding: .7em 0 0; max-width: 60ch; line-height: 1.45; }
+.pile { display: grid; gap: 22px; }
+.tri { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 1.4em; }
+@media (max-width: 760px) { .tri { grid-template-columns: minmax(0, 1fr); } }
+
+.fiche { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; margin: 1.6em 0 0; border-top: 1px solid var(--filet); border-left: 1px solid var(--filet); }
+.fiche div { padding: .8em 1em; border-right: 1px solid var(--filet); border-bottom: 1px solid var(--filet); }
+.fiche dt { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cendre); }
+.fiche dd { margin: .15em 0 0; color: #fff6dc; }
+
+.tab { overflow-x: auto; margin: 1.1em 0 1.4em; }
+table { border-collapse: collapse; width: 100%; font-size: .96rem; font-variant-numeric: tabular-nums; }
+th { font-family: var(--f-mono); font-weight: 400; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cendre); text-align: left; padding: .55em .9em .55em 0; border-bottom: 1px solid var(--filet); white-space: nowrap; }
+td { padding: .6em .9em .6em 0; border-bottom: 1px solid rgba(233, 200, 119, .12); vertical-align: top; }
+td.n { color: #fff6dc; white-space: nowrap; }
+td .ic { width: 32px; height: 32px; object-fit: contain; display: inline-block; vertical-align: middle; margin-right: .5em; }
+.gl { display: inline-block; width: 1.5em; text-align: center; }
+
+.note { border-left: 2px solid var(--zellige); padding: .2em 0 .2em 1em; color: var(--sable); margin: 1.2em 0; max-width: 66ch; }
+.note b { color: var(--or); }
+
+/* les cinq sagas */
+.sagas { display: grid; gap: 18px; margin-top: 1.4em; }
+.saga { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 4px 24px; padding: 22px 24px; background: var(--encre); border: 1px solid rgba(233, 200, 119, .16); border-left: 3px solid var(--c); }
+.saga .sceau { width: 96px; height: 96px; grid-row: span 2; }
+.saga h3 { margin: 0; font-size: 1.22rem; color: #fff6dc; }
+.saga .ord { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--cendre); }
+.saga .lum { color: var(--c); font-style: italic; }
+.saga .dit { font-size: 1.08rem; font-style: italic; margin: .5em 0 .7em; max-width: 60ch; }
+.saga ol { list-style: none; padding: 0; margin: 0 0 .6em; display: grid; gap: .15em; font-size: .95rem; }
+.saga ol b { font-weight: 500; }
+.saga ol span { color: var(--cendre); font-family: var(--f-mono); font-size: .76rem; margin-left: .6em; }
+.saga .groupe { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .9rem; color: var(--cendre); align-items: flex-end; }
+.saga .groupe span { display: inline-flex; align-items: flex-end; gap: 6px; }
+.saga .groupe img { width: 32px; height: 48px; }
+@media (max-width: 560px) { .saga { grid-template-columns: minmax(0, 1fr); } .saga .sceau { grid-row: auto; width: 72px; height: 72px; } }
+
+.lumieres { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin: 1.2em 0; }
+@media (max-width: 860px) { .lumieres { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .lumieres { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.lumieres div { padding: .8em .8em; background: var(--encre); border-top: 2px solid var(--c); min-width: 0; }
+.lumieres b { display: block; color: var(--c); font-family: var(--f-titre); font-size: .9rem; letter-spacing: .04em; font-weight: 500; }
+.lumieres small { color: var(--cendre); font-style: italic; }
+.lumieres i { display: block; font-style: normal; color: var(--c); font-size: 1.15rem; line-height: 1.3; }
+
+.engage { list-style: none; padding: 0; margin: 1.2em 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0 34px; }
+.engage li { max-width: none; padding: .75em 0; border-top: 1px solid rgba(233, 200, 119, .16); margin: 0; }
+.engage b { display: block; }
+
+/* ---------- planches ---------- */
+.table { background: #030308; border-top: 1px solid var(--filet); padding-block: 70px 90px; }
+.table > .gout > .col { max-width: 1280px; }
+.table h2 { font-family: var(--f-titre); font-weight: 700; letter-spacing: .12em; font-size: clamp(1.5rem, 3.4vw, 2.2rem); color: var(--or); margin: 0 0 .4em; }
+.table .chapo { max-width: 66ch; color: var(--sable); margin: 0 0 1em; }
+.cartel { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 20px; font-family: var(--f-mono); font-size: .78rem; letter-spacing: .1em; color: var(--cendre); margin: 54px 0 10px; }
+.cartel b { color: var(--sable); font-weight: 400; text-transform: uppercase; }
+.defile { overflow-x: auto; }
+.pw { container-type: inline-size; min-width: 660px; }
+.pw.haut { max-width: 620px; min-width: 300px; }
+/* une planche : tout y est en em, et 1em vaut 1,25 % de sa largeur ; elle s'exporte nette à toute taille */
+.pl { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--nuit); color: var(--sable); font-size: 1.25cqw; line-height: 1.4; border: 1px solid rgba(233, 200, 119, .22); }
+.pl.haut { aspect-ratio: 4 / 5; font-size: 2.3cqw; }
+.pl img.fond { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pl .in { position: absolute; inset: 0; padding: 3.4em 4.2em 3em; display: flex; flex-direction: column; }
+.pl h3 { font-family: var(--f-titre); font-weight: 700; letter-spacing: .1em; font-size: 2.5em; line-height: 1.12; margin: 0; color: var(--or); text-wrap: balance; }
+.pl .sur { font-family: var(--f-mono); font-size: .78em; letter-spacing: .28em; text-transform: uppercase; color: var(--zellige); margin: 0 0 .7em; }
+.pl .dit { font-style: italic; font-size: 1.12em; max-width: 46em; margin: .5em 0 0; color: var(--sable); }
+.pl .sig { position: absolute; left: 4.2em; right: 4.2em; bottom: 1.5em; display: flex; justify-content: space-between; align-items: baseline; font-family: var(--f-titre); letter-spacing: .3em; font-size: .68em; text-transform: uppercase; color: var(--cendre); }
+.pl .sig .ar { letter-spacing: 0; font-size: 1.5em; color: var(--or); }
+.pl .cap { font-family: var(--f-mono); font-size: .72em; letter-spacing: .05em; color: var(--cendre); line-height: 1.45; }
+.pl .vue { border: 1px solid var(--filet); background: #000; overflow: hidden; }
+.pl .vue img { width: 100%; height: 100%; object-fit: cover; }
+
+/* 1 · affiche */
+.p-affiche img.fond { transform: scale(1.05); }
+.p-affiche:not(.haut) img.fond { left: auto; right: 0; width: 72%; transform-origin: 100% 50%; }
+.p-affiche .ombre { position: absolute; inset: 0; background: linear-gradient(90deg, var(--nuit) 0%, var(--nuit) 28%, rgba(7, 6, 13, .62) 47%, rgba(7, 6, 13, 0) 74%), linear-gradient(0deg, rgba(7, 6, 13, .95), transparent 34%); }
+.p-affiche .in { justify-content: center; padding-bottom: 9em; }
+.p-affiche .ar.nom { font-size: 2.6em; color: var(--or); line-height: 1; text-shadow: 0 0 1.2em rgba(233, 200, 119, .5); }
+.p-affiche .logo { font-family: var(--f-titre); font-weight: 700; font-size: 7.6em; letter-spacing: .26em; line-height: 1; color: #fff6dc; text-shadow: 0 0 .03em #fff, 0 0 .6em rgba(233, 200, 119, .45); margin: .04em 0 0; }
+.p-affiche .sous { font-family: var(--f-titre); letter-spacing: .44em; text-transform: uppercase; font-size: 1.02em; margin: 1em 0 0; }
+.p-affiche .dit { font-size: 1.7em; max-width: 19em; margin-top: 1.5em; line-height: 1.32; }
+.p-affiche .quoi { font-family: var(--f-mono); font-size: .86em; letter-spacing: .1em; color: var(--cendre); margin: 1.4em 0 0; }
+.sceaux { position: absolute; left: 4.2em; bottom: 2.6em; display: flex; gap: 1.5em; }
+.sceaux figure { width: 5em; text-align: center; }
+.sceaux img { width: 5em; height: 5em; }
+.sceaux figcaption { font-family: var(--f-titre); font-size: .58em; letter-spacing: .12em; text-transform: uppercase; color: var(--sable); padding: .5em 0 0; white-space: nowrap; }
+.pl.haut.p-affiche .ombre { background: linear-gradient(0deg, rgba(7, 6, 13, .98) 0%, rgba(7, 6, 13, .92) 40%, rgba(7, 6, 13, .15) 72%, rgba(7, 6, 13, .35) 100%); }
+.pl.haut.p-affiche .in { justify-content: flex-end; padding: 2.6em 2.6em 9.2em; }
+.pl.haut.p-affiche .logo { font-size: 5.6em; }
+.pl.haut.p-affiche .ar.nom { font-size: 2em; }
+.pl.haut.p-affiche .sous { font-size: .74em; letter-spacing: .36em; }
+.pl.haut.p-affiche .dit { font-size: 1.2em; margin-top: 1.1em; max-width: 22em; }
+.pl.haut.p-affiche .quoi { font-size: .6em; }
+.pl.haut .sceaux { left: 2.6em; bottom: 2.2em; gap: 1em; }
+.pl.haut .sceaux figure, .pl.haut .sceaux img { width: 3.9em; } .pl.haut .sceaux img { height: 3.9em; }
+.pl.haut .sceaux figcaption { font-size: .44em; }
+
+/* 2 · trois époques */
+.epoques { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2em; margin: 1.8em 0 1.6em; min-height: 0; }
+.epoque { position: relative; overflow: hidden; border: 1px solid var(--filet); }
+.epoque img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.epoque::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(7, 6, 13, .96) 0%, rgba(7, 6, 13, .82) 30%, transparent 62%); }
+.epoque div { position: absolute; left: 1.5em; right: 1.5em; bottom: 1.3em; z-index: 1; }
+.epoque .quand { font-family: var(--f-mono); font-size: .76em; letter-spacing: .2em; color: var(--c, var(--or)); }
+.epoque b { display: block; font-family: var(--f-titre); font-size: 1.36em; letter-spacing: .08em; color: #fff6dc; margin: .15em 0 .3em; }
+.epoque p { margin: 0; font-size: .92em; line-height: 1.4; }
+
+/* 3 · cinq sagas */
+.cinq { flex: 1; display: grid; grid-template-columns: repeat(5, 1fr); gap: 1em; margin: 1.8em 0 1.6em; min-height: 0; }
+.cinq article { position: relative; background: var(--encre); border-top: .22em solid var(--c); padding: 1.4em 1.2em 1.2em; display: flex; flex-direction: column; }
+.cinq .sceau { width: 5.4em; height: 5.4em; margin: 0 0 .8em -.3em; }
+.cinq .ord { font-family: var(--f-mono); font-size: .64em; letter-spacing: .18em; color: var(--cendre); text-transform: uppercase; }
+.cinq b { font-family: var(--f-titre); font-size: 1.16em; letter-spacing: .05em; color: #fff6dc; line-height: 1.2; margin: .2em 0 .1em; }
+.cinq .lum { color: var(--c); font-style: italic; font-size: .92em; }
+.cinq p { margin: .9em 0 0; font-size: .9em; line-height: 1.38; font-style: italic; }
+.cinq ol { list-style: none; margin: auto 0 0; padding: .9em 0 0; border-top: 1px solid rgba(233, 200, 119, .18); display: grid; gap: .28em; font-size: .78em; line-height: 1.3; }
+.cinq ol span { font-family: var(--f-mono); color: var(--cendre); margin-right: .6em; }
+.cinq .groupe { display: flex; align-items: flex-end; gap: .7em; margin-top: 1.1em; }
+.cinq .groupe img { width: 2.3em; height: 3.45em; }
+
+/* 4 · personne n'a de visage */
+.visage { flex: 1; display: grid; grid-template-columns: 22em 1fr; gap: 3em; min-height: 0; margin-top: .4em; }
+.visage .texte { display: flex; flex-direction: column; justify-content: center; }
+.visage .texte p { margin: 1em 0 0; font-size: 1.02em; }
+.rang { display: flex; align-items: flex-end; justify-content: space-between; gap: .4em; }
+.rang figure { text-align: center; flex: 1; }
+.rang img { width: 6.4em; height: 9.6em; margin: 0 auto; filter: drop-shadow(0 .5em .6em rgba(0, 0, 0, .6)); }
+.rang.petit img { width: 3.5em; height: 5.25em; }
+.rang figcaption { font-family: var(--f-titre); font-size: .66em; letter-spacing: .1em; text-transform: uppercase; color: var(--sable); padding: .7em 0 0; }
+.rang.petit figcaption { font-family: var(--f-mono); font-size: .58em; letter-spacing: .04em; color: var(--cendre); text-transform: none; }
+.visage .scene { display: flex; flex-direction: column; justify-content: center; gap: 2.2em; padding: 2em 2.4em; background: radial-gradient(ellipse at 50% 40%, #241d3f 0%, var(--encre) 70%); border: 1px solid rgba(233, 200, 119, .18); }
+
+/* 5 · les idoles */
+.idoles { flex: 1; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(2, 1fr); gap: .9em; margin: 1.6em 0 1.6em; min-height: 0; }
+.idoles figure { background: radial-gradient(ellipse at 50% 38%, #221a3c 0%, var(--encre) 72%); border: 1px solid rgba(233, 200, 119, .14); padding: 1em .8em .9em; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center; min-height: 0; }
+.idoles img { flex: 1; min-height: 0; width: 76%; object-fit: contain; filter: drop-shadow(0 0 1em hsla(var(--h), 80%, 60%, .35)); }
+.idoles b { font-family: var(--f-titre); font-size: .78em; letter-spacing: .06em; color: #fff6dc; margin-top: .7em; line-height: 1.2; }
+.idoles span { font-size: .74em; font-style: italic; color: var(--cendre); line-height: 1.25; margin-top: .15em; }
+
+/* 6 · la parole avant le sabre */
+.parole { display: grid; grid-template-columns: 1fr 1fr; align-content: start; gap: 1.5em 1.6em; margin: auto 0; padding-bottom: 1.2em; }
+.parole .vue { aspect-ratio: 16 / 9; }
+.trois { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6em; }
+.trois div { border-top: 1px solid var(--filet); padding-top: .7em; }
+.trois b { font-family: var(--f-titre); font-size: .92em; letter-spacing: .08em; color: var(--or); }
+.trois p { margin: .2em 0 0; font-size: .86em; line-height: 1.38; }
+
+/* 7 · bâtir, s'orienter, commercer */
+.monde { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4em; margin: 1.5em 0 0; }
+.monde .vue { aspect-ratio: 16 / 9; }
+.monde b { display: block; font-family: var(--f-titre); font-size: .92em; letter-spacing: .08em; color: var(--or); margin-top: .8em; }
+.monde p { margin: .2em 0 0; font-size: .86em; line-height: 1.38; }
+.palette { margin: auto 0 2.6em; border-top: 1px solid var(--filet); padding-top: .9em; }
+.palette > div { display: grid; grid-template-columns: repeat(15, 1fr); gap: .5em; margin-top: .9em; }
+.palette figure { text-align: center; }
+.palette img { width: 3.1em; height: 3.1em; object-fit: contain; margin: 0 auto; }
+.palette figcaption { font-family: var(--f-texte); font-size: .56em; letter-spacing: 0; color: var(--sable); padding: .6em 0 0; line-height: 1.2; }
+
+/* 8 · direction artistique */
+.da { flex: 1; display: grid; grid-template-columns: 1fr 1fr 1.15fr; gap: 2.2em; margin: 1.6em 0 1.6em; min-height: 0; }
+.da h4 { font-family: var(--f-mono); font-weight: 400; font-size: .7em; letter-spacing: .22em; text-transform: uppercase; color: var(--cendre); margin: 0 0 .8em; }
+.nuancier { display: grid; grid-template-columns: repeat(5, 1fr); gap: .4em; }
+.nuancier i { display: block; aspect-ratio: 1; background: var(--c); border: 1px solid rgba(255, 255, 255, .12); }
+.nuancier.sept { grid-template-columns: repeat(7, 1fr); margin-top: 1.3em; }
+.nuancier span { display: block; font-family: var(--f-mono); font-size: .52em; color: var(--cendre); margin-top: .5em; line-height: 1.3; }
+.specimen > div { border-top: 1px solid rgba(233, 200, 119, .18); padding: .55em 0 .6em; }
+.specimen small { display: block; font-family: var(--f-mono); font-size: .56em; letter-spacing: .1em; color: var(--cendre); }
+.zel { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6em; }
+.zel img { width: 100%; aspect-ratio: 1; border: 1px solid rgba(233, 200, 119, .2); }
+.da .vue { margin-top: 1em; aspect-ratio: 16 / 7.4; }
+.da .rose { width: 100%; aspect-ratio: 1; object-fit: contain; }
+
+/* ---------- pied ---------- */
+.pied { padding-block: 44px 70px; border-top: 1px solid var(--filet); font-size: .92rem; color: var(--cendre); }
+.pied p { max-width: 72ch; margin: 0 0 .7em; }
+
+/* ---------- export des planches (tools/promo.js) ---------- */
+body.export { background: #000; }
+body.export > *:not(.table), body.export .table h2, body.export .chapo, body.export .cartel { display: none; }
+body.export .table { padding: 0; border: 0; } body.export .table .gout { padding: 0; } body.export .table .col { max-width: none; }
+body.export .pw { width: 1920px; min-width: 0; margin: 0 0 40px; } body.export .pw.haut { width: 1080px; max-width: none; }
+body.export .pl { border: 0; }
+</style>
+
+
+<header class="couv">
+  <img src="img/d-medine-soir.jpg" alt="">
+  <div class="gout"><div class="col">
+    <div class="ar" lang="ar" dir="rtl">إسناد</div>
+    <h1>ISNAD</h1>
+    <p class="sous">Chroniques des Compagnons</p>
+    <p class="objet">Livret du joueur et planches de présentation</p>
+    <p class="quoi">Un jeu de rôle au tour par tour, en pixel art éclairé. Cinq sagas, de la mort du Prophète <span class="pbuh">ﷺ</span> à la fin du califat bien guidé. Dans le navigateur, sans installation.</p>
+    <nav class="acces" aria-label="Accès">
+      <a class="jouer" href="https://claude.ai/artifact/EwTi1raZJHMCycSjTHL8iB">Jouer</a>
+      <a href="#livret">Le livret</a>
+      <a href="#planches">Les planches</a>
+    </nav>
+  </div></div>
+</header>
+
+<nav class="sommaire gout" aria-label="Sommaire"><div class="col">
+  <ol>
+    <li><a href="#en-bref">Le jeu en bref <span>01</span></a></li>
+    <li><a href="#commencer">Commencer une partie <span>02</span></a></li>
+    <li><a href="#commandes">Les commandes <span>03</span></a></li>
+    <li><a href="#sauvegarder">Sauvegarder <span>04</span></a></li>
+    <li><a href="#epoques">Trois époques, une chaîne <span>05</span></a></li>
+    <li><a href="#sagas">Les cinq sagas <span>06</span></a></li>
+    <li><a href="#explorer">Explorer, s’orienter aux étoiles <span>07</span></a></li>
+    <li><a href="#chaine">La fidélité à la Chaîne <span>08</span></a></li>
+    <li><a href="#parole">La parole avant le sabre <span>09</span></a></li>
+    <li><a href="#combat">Le combat <span>10</span></a></li>
+    <li><a href="#piliers">Prière, savoir, piliers <span>11</span></a></li>
+    <li><a href="#batir">Bâtir <span>12</span></a></li>
+    <li><a href="#caravanes">Routes et caravanes <span>13</span></a></li>
+    <li><a href="#veillees">Les veillées du Caïd <span>14</span></a></li>
+    <li><a href="#respect">Ce que le jeu s’interdit <span>15</span></a></li>
+    <li><a href="#sources">Sources et avertissement <span>16</span></a></li>
+    <li><a href="#planches">Planches de présentation <span>17</span></a></li>
+  </ol>
+</div></nav>
+
+<main id="livret" class="livret gout"><div class="col fil">
+
+  <p class="partie">Pour commencer</p>
+
+  <section class="feuillet" id="en-bref">
+    <h2>Le jeu en bref</h2>
+    <p>ISNAD est un jeu de rôle au tour par tour qui tient dans un seul fichier et se joue dans un navigateur. Il commence à Médine, en l’an 11 de l’Hégire, le jour de la mort du Prophète <span class="pbuh">ﷺ</span>. On y suit cinq Compagnons, l’un après l’autre, jusqu’à la fin du califat bien guidé. Chacun a sa saga en trois chapitres, sa vertu et ses épreuves.</p>
+    <p>L’<span class="terme">isnâd</span> est la chaîne des transmetteurs : la suite des personnes par qui une parole nous est parvenue. Le jeu en fait sa structure. On ne refait pas l’Histoire, on la reçoit, maillon après maillon, et on apprend à dire de qui on la tient.</p>
+    <p>On n’y combat jamais des personnes. Les adversaires sont des <span class="terme">égrégores</span> : les idoles que les cœurs fabriquent ensemble, comme le Déni, le Clan, la Rumeur ou le Trône vide. Avant d’en venir là, on parle, on prie, on apprend, on bâtit.</p>
+    <dl class="fiche">
+      <div><dt>Genre</dt><dd>Jeu de rôle au tour par tour, un joueur</dd></div>
+      <div><dt>Contenu</dt><dd>Un prologue, cinq sagas de trois chapitres, cinq veillées, un épilogue</dd></div>
+      <div><dt>Support</dt><dd>Navigateur, sur ordinateur ou téléphone. Clavier ou tactile</dd></div>
+      <div><dt>Langue</dt><dd>Français</dd></div>
+      <div><dt>Image</dt><dd>Pixel art éclairé (rétro-HD), ou 2D simple sur les appareils modestes</dd></div>
+      <div><dt>Son</dt><dd>18 pistes originales synthétisées, ambiances et percussions. Aucune voix</dd></div>
+    </dl>
+  </section>
+
+  <section class="feuillet" id="commencer">
+    <h2>Commencer une partie</h2>
+    <div class="duo">
+      <div>
+        <ol>
+          <li>Ouvre le jeu et choisis <b>Nouvelle partie</b>.</li>
+          <li>Le prologue dure environ cinq minutes. En 2084, dans la Cité-Miroir, Idris descend aux Archives basses et y trouve la Chaîne.</li>
+          <li>L’écran de <b>la Chaîne</b> s’ouvre : cinq maillons, cinq témoins. Le premier est Abû Bakr. L’ordre est libre, mais la Chaîne se lit du premier au dernier.</li>
+          <li>À la fin de chaque saga, une veillée se joue à la Citadelle du Caïd, puis on revient à la Chaîne.</li>
+          <li>Quand les cinq Lumières sont réunies, le dernier maillon s’ouvre. C’est celui d’Idris.</li>
+        </ol>
+        <p>Depuis l’écran de la Chaîne, on peut aussi sauvegarder à la natte des Archives, ouvrir le Recueil et revenir à l’écran-titre.</p>
+      </div>
+      <figure class="ecran"><img src="img/chaine.jpg" alt="L’écran de la Chaîne : cinq maillons, un par Compagnon, et un dernier maillon scellé." loading="lazy"></figure>
+    </div>
+  </section>
+
+  <section class="feuillet" id="commandes">
+    <h2>Les commandes</h2>
+    <div class="duo">
+      <div>
+        <div class="tab"><table>
+          <thead><tr><th>Action</th><th>Clavier</th><th>Écran tactile</th></tr></thead>
+          <tbody>
+            <tr><td class="n">Se déplacer, naviguer</td><td><kbd>Flèches</kbd> ou <kbd>ZQSD</kbd> / <kbd>WASD</kbd></td><td>Croix à l’écran</td></tr>
+            <tr><td class="n">Parler, examiner, valider</td><td><kbd>Entrée</kbd> ou <kbd>Espace</kbd></td><td>Bouton OK, ou toucher le choix</td></tr>
+            <tr><td class="n">Menu de halte, retour</td><td><kbd>Échap</kbd> ou <kbd>X</kbd>, <kbd>M</kbd> pour le menu</td><td>Bouton MENU, ou ☰</td></tr>
+            <tr><td class="n">Bâtir, à ciel ouvert</td><td><kbd>B</kbd>, puis <kbd>C</kbd> et <kbd>V</kbd> pour changer de pièce</td><td>Bouton ▦, puis toucher la pièce</td></tr>
+            <tr><td class="n">Doser la Niyya en combat</td><td><kbd>◂</kbd> <kbd>▸</kbd></td><td>Boutons − et +</td></tr>
+          </tbody>
+        </table></div>
+        <h3>Le menu de halte</h3>
+        <p>On y trouve le journal du chapitre, le <b>Groupe</b>, la <b>Besace</b>, le <b>Recueil</b>, les piliers de la <b>Citadelle</b>, le rappel des commandes et les réglages : son, musique, rendu rétro-HD ou 2D simple. Le jeu passe de lui-même en 2D simple s’il peine.</p>
+      </div>
+      <figure class="ecran" style="max-width:300px;justify-self:center"><img src="img/m-jeu.jpg" alt="Le jeu sur téléphone, en portrait : l’image en haut, la croix et les boutons en bas." style="aspect-ratio:1/2" loading="lazy"><figcaption style="padding:.7em .8em .8em">Sur téléphone, en portrait : l’image en haut, la croix et les boutons sous le pouce.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="feuillet" id="sauvegarder">
+    <h2>Sauvegarder</h2>
+    <div class="duo inv">
+      <figure class="ecran"><img src="img/natte.jpg" alt="Dans la cour de la mosquée, le menu de la natte : prier, sauvegarder la partie, plus tard." loading="lazy"><figcaption style="padding:.7em .8em .8em">La natte, au cœur de l’étoile. On y prie et on y sauvegarde.</figcaption></figure>
+      <div>
+        <p>On ne sauvegarde que <b>dans les mosquées</b>, sur la natte tournée vers La Mecque. Deux carrés de lumière y tournent en sens contraires et dessinent une étoile à huit branches : c’est le repère.</p>
+        <ul>
+          <li>Trois emplacements de sauvegarde.</li>
+          <li>Une natte se trouve aussi aux Archives, accessible depuis l’écran de la Chaîne.</li>
+          <li>Une mosquée que tu as bâtie devient à son tour un lieu de prière et de sauvegarde.</li>
+          <li>La partie est gardée dans ce navigateur, sur cet appareil.</li>
+        </ul>
+        <p class="note"><b>À retenir.</b> Il n’y a pas de sauvegarde automatique. Fermer la page sans être passé par une natte fait perdre ce qui a été joué depuis.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="partie">Le monde</p>
+
+  <section class="feuillet" id="epoques">
+    <h2>Trois époques, une chaîne</h2>
+    <p>Le récit remonte la Chaîne, du présent vers la source.</p>
+    <div class="tri">
+      <figure><div class="ecran"><img src="img/d-cite.jpg" alt="Une rue de la Cité-Miroir sous la pluie, enseignes au néon." loading="lazy"></div><figcaption><b style="color:var(--neon);font-weight:400">2084 · LA CITÉ-MIROIR.</b> Idris est un râwî, un transmetteur, dans une ville où une machine, l’AGRÉGOR, donne corps à ce que des millions de regards désirent ensemble.</figcaption></figure>
+      <figure><div class="ecran"><img src="img/d-citadelle-mosquee.jpg" alt="La mosquée de la Citadelle, la nuit, dallage bleu à étoiles." loading="lazy"></div><figcaption><b style="color:var(--or);font-weight:400">LA CITADELLE.</b> Le Caïd, seigneur berbère, est un maillon de la Chaîne. Ses veillées sont une fiction, en hommage à <i>Citadelle</i> de Saint-Exupéry.</figcaption></figure>
+      <figure><div class="ecran"><img src="img/d-medine-jour.jpg" alt="La cour de la mosquée de Médine, de jour : zellige, troncs de palmier, rosace." loading="lazy"></div><figcaption><b style="color:#ffe08a;font-weight:400">632 – 661 · LES COMPAGNONS.</b> Médine, le désert, le Shâm, la mer, Koufa. Les événements sont ceux que les sources rapportent.</figcaption></figure>
+    </div>
+    <p style="margin-top:1.4em">Entre ces époques s’ouvre la <span class="terme">noosphère</span> : le lieu, tout en lignes de lumière, où les valeurs partagées et les idoles prennent forme. C’est là que se livrent les combats.</p>
+  </section>
+
+  <section class="feuillet" id="sagas">
+    <h2>Les cinq sagas</h2>
+    <p>Chaque saga se suffit à elle-même. Chacune porte une Lumière, la vertu de son Compagnon, qui rejoint ensuite la Chaîne.</p>
+    <div class="sagas">
+      <article class="saga" style="--c:#ffe08a">
+        <img class="sceau" src="img/sceau-abubakr.png" alt="" width="192" height="192">
+        <div><span class="ord">Maillon I · 11–13 H · 632–634</span><h3>Abû Bakr as-Siddîq</h3><span class="lum">As-Siddîq · Lumière : Véracité (Sidq)</span></div>
+        <div><p class="dit">Le jour où tout pouvait se défaire, un homme doux a dit le vrai.</p>
+          <ol><li><b>Le Jour le plus sombre</b><span>An 11 H · 632 · Médine</span></li><li><b>L'Armée d'Usâma</b><span>An 11 H · 632 · Médine</span></li><li><b>Yamâma — le Menteur</b><span>An 11–12 H · 632–633 · Dhû l-Qassa</span></li></ol>
+          <div class="groupe"><span><img class="px" src="img/h-abubakr-abubakr.png" alt="" width="16" height="24">Abû Bakr</span><span><img class="px" src="img/h-abubakr-umar.png" alt="" width="16" height="24">'Umar</span><span><img class="px" src="img/h-abubakr-abuubayda.png" alt="" width="16" height="24">Abû 'Ubayda</span></div>
+        </div>
+      </article>
+      <article class="saga" style="--c:#6fb6ff">
+        <img class="sceau" src="img/sceau-umar.png" alt="" width="192" height="192">
+        <div><span class="ord">Maillon II · 13–23 H · 634–644</span><h3>'Umar ibn al-Khattâb</h3><span class="lum">Al-Fârûq · Lumière : Justice ('Adl)</span></div>
+        <div><p class="dit">Deux empires tombèrent sous son califat. Lui dormait sur une natte.</p>
+          <ol><li><b>Les Rondes de nuit</b><span>An 18 H · 639 · Médine</span></li><li><b>Les Clés de Jérusalem</b><span>An 16 H · 637 · De Médine à Îliyâ'</span></li><li><b>Le Trône et la Natte</b><span>An 17–23 H · 638–644 · Médine</span></li></ol>
+          <div class="groupe"><span><img class="px" src="img/h-umar-umar.png" alt="" width="16" height="24">'Umar</span><span><img class="px" src="img/h-umar-aslam.png" alt="" width="16" height="24">Aslam</span><span><img class="px" src="img/h-umar-abuubayda.png" alt="" width="16" height="24">Abû 'Ubayda</span><span><img class="px" src="img/h-umar-abdarrahman.png" alt="" width="16" height="24">'Abd ar-Rahmân</span></div>
+        </div>
+      </article>
+      <article class="saga" style="--c:#ff7a5c">
+        <img class="sceau" src="img/sceau-khalid.png" alt="" width="192" height="192">
+        <div><span class="ord">Maillon III · 13–21 H · 634–642</span><h3>Khâlid ibn al-Walîd</h3><span class="lum">Le Sabre dégainé · Lumière : Courage (Shajâ'a)</span></div>
+        <div><p class="dit">Il n'a jamais perdu une bataille. Il lui reste à vaincre sa propre statue.</p>
+          <ol><li><b>La Traversée</b><span>An 13 H · 634 · Désert de la Samâwa</span></li><li><b>Yarmoûk</b><span>An 13 ou 15 H · 634–636 · Vallée du Yarmoûk</span></li><li><b>L'Épée au fourreau</b><span>An 17 H · 638 · Qinnasrîn, puis Homs</span></li></ol>
+          <div class="groupe"><span><img class="px" src="img/h-khalid-khalid.png" alt="" width="16" height="24">Khâlid</span><span><img class="px" src="img/h-khalid-qaqa.png" alt="" width="16" height="24">Al-Qa'qâ'</span><span><img class="px" src="img/h-khalid-dirar.png" alt="" width="16" height="24">Dirâr</span></div>
+        </div>
+      </article>
+      <article class="saga" style="--c:#5fe0d0">
+        <img class="sceau" src="img/sceau-uthman.png" alt="" width="192" height="192">
+        <div><span class="ord">Maillon IV · 23–35 H · 644–656</span><h3>'Uthmân ibn 'Affân</h3><span class="lum">Le Généreux · Lumière : Miséricorde (Rahma)</span></div>
+        <div><p class="dit">Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui.</p>
+          <ol><li><b>Les Feuillets</b><span>Vers l'an 30 H · 650 · Médine</span></li><li><b>La Bataille des Mâts</b><span>An 28–34 H · 649–655 · Médine, puis la mer</span></li><li><b>La Maison assiégée</b><span>An 35 H · 656 · Médine</span></li></ol>
+          <div class="groupe"><span><img class="px" src="img/h-uthman-uthman.png" alt="" width="16" height="24">'Uthmân</span><span><img class="px" src="img/h-uthman-zayd.png" alt="" width="16" height="24">Zayd ibn Thâbit</span><span><img class="px" src="img/h-uthman-hudhayfa.png" alt="" width="16" height="24">Hudhayfa</span></div>
+        </div>
+      </article>
+      <article class="saga" style="--c:#c49bff">
+        <img class="sceau" src="img/sceau-ali.png" alt="" width="192" height="192">
+        <div><span class="ord">Maillon V · 35–40 H · 656–661</span><h3>'Alî ibn Abî Tâlib</h3><span class="lum">La Porte du Savoir · Lumière : Savoir ('Ilm)</span></div>
+        <div><p class="dit">Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour.</p>
+          <ol><li><b>Le Bouclier et le Juge</b><span>An 36 H · 657 · Koufa</span></li><li><b>La Parole détournée</b><span>An 37 H · 658 · Koufa et Harûrâ'</span></li><li><b>Nahrawân, puis l’aube</b><span>An 38–40 H · 658–661 · Nahrawân, Koufa</span></li></ol>
+          <div class="groupe"><span><img class="px" src="img/h-ali-ali.png" alt="" width="16" height="24">'Alî</span><span><img class="px" src="img/h-ali-ibnabbas.png" alt="" width="16" height="24">Ibn 'Abbâs</span><span><img class="px" src="img/h-ali-ammar.png" alt="" width="16" height="24">'Ammâr</span><span><img class="px" src="img/h-ali-qays.png" alt="" width="16" height="24">Qays</span></div>
+        </div>
+      </article></div>
+  </section>
+
+  <p class="partie">Les systèmes</p>
+
+  <section class="feuillet" id="explorer">
+    <h2>Explorer, s’orienter aux étoiles</h2>
+    <div class="duo">
+      <div>
+        <p>L’objectif du moment s’affiche en haut à gauche, précédé d’un losange. On parle aux gens qui portent une bulle, on ouvre les coffres, on récolte en s’adressant aux choses.</p>
+        <p>On s’oriente au ciel, comme les pilotes du désert. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>
+        <div class="tab"><table>
+          <thead><tr><th>Cap</th><th>Étoile</th><th></th><th>C’est-à-dire</th></tr></thead>
+          <tbody><tr><td class="n">Nord</td><td>al-Jady</td><td class="ar" lang="ar" dir="rtl">الجدي</td><td>la Polaire, le Chevreau : elle ne bouge pas</td></tr><tr><td class="n">Nord-est</td><td>lever d’al-'Ayyûq</td><td class="ar" lang="ar" dir="rtl">العيّوق</td><td>Capella, la gardienne des Pléiades</td></tr><tr><td class="n">Est</td><td>lever d’an-Nasr at-Tâ'ir</td><td class="ar" lang="ar" dir="rtl">النسر الطائر</td><td>Altaïr, l’Aigle qui vole</td></tr><tr><td class="n">Sud-est</td><td>lever d’al-'Aqrab</td><td class="ar" lang="ar" dir="rtl">العقرب</td><td>le Scorpion, son cœur rouge</td></tr><tr><td class="n">Sud</td><td>Suhayl</td><td class="ar" lang="ar" dir="rtl">سهيل</td><td>Canopus, l’étoile du sud</td></tr><tr><td class="n">Sud-ouest</td><td>coucher d’al-'Aqrab</td><td class="ar" lang="ar" dir="rtl">العقرب</td><td>le Scorpion, son cœur rouge</td></tr><tr><td class="n">Ouest</td><td>coucher d’an-Nasr at-Tâ'ir</td><td class="ar" lang="ar" dir="rtl">النسر الطائر</td><td>Altaïr, l’Aigle qui vole</td></tr><tr><td class="n">Nord-ouest</td><td>coucher d’al-'Ayyûq</td><td class="ar" lang="ar" dir="rtl">العيّوق</td><td>Capella, la gardienne des Pléiades</td></tr></tbody>
+        </table></div>
+      </div>
+      <div class="pile">
+        <figure class="ecran"><img src="img/explorer.jpg" alt="Médine : l’objectif en haut à gauche, le cadran des étoiles pointant al-Jady au nord, la mini-carte à droite." loading="lazy"></figure>
+        <figure class="ecran"><img src="img/noosphere.jpg" alt="La noosphère : des dalles de lumière bleue reliées par des passerelles." loading="lazy"><figcaption style="padding:.7em .8em .8em">La noosphère, où attendent les égrégores.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="feuillet" id="chaine">
+    <h2>La fidélité à la Chaîne</h2>
+    <div class="duo inv">
+      <div class="pile">
+        <figure class="ecran"><img src="img/choix.jpg" alt="Un choix à la Saqîfa : trois propositions, une seule est celle des sources." loading="lazy"></figure>
+        <figure class="ecran"><img src="img/citation.jpg" alt="Un carton de citation, avec la parole rapportée et sa source." loading="lazy"></figure>
+      </div>
+      <div>
+        <p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté.</p>
+        <p>Te tromper ne change pas l’Histoire. La Chaîne vacille, le jeu explique pourquoi cette réponse n’est pas celle des sources, puis te ramène à ce qui fut. Le compte de tes réponses justes s’affiche sur l’écran de la Chaîne.</p>
+        <p>Les paroles attestées apparaissent en carton, avec leur source. Tout le reste du dialogue est une dramatisation.</p>
+        <p class="note"><b>Ce qui varie est fictif ou local.</b> L’issue d’un pourparler, un chantier, une caravane peuvent tourner de plusieurs façons. Un fait historique, jamais.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="feuillet" id="parole">
+    <h2>La parole avant le sabre</h2>
+    <div class="duo">
+      <div>
+        <p>Avant d’en venir au combat, on tente un <b>pourparler</b>. Il se joue en plusieurs manches. À chacune, ton interlocuteur parle et tu choisis un argument.</p>
+        <ul>
+          <li>Chaque argument fait monter ou baisser la <b>confiance</b>. Il faut atteindre le seuil fixé avant la dernière manche.</li>
+          <li>Les meilleurs arguments demandent un <b>savoir</b> : une entrée du Recueil apprise d’un savant, d’un feuillet ou d’un témoin. Sans elle, l’argument reste fermé.</li>
+          <li>Avoir <b>prié</b> dans le chapitre donne la sérénité : un point de confiance d’avance.</li>
+          <li>Une parole qui porte rapporte de la sagesse, comme une victoire.</li>
+        </ul>
+        <p>Si la parole échoue, le récit continue. Ce qui n’a pas été noué ainsi devra l’être autrement et coûtera davantage.</p>
+      </div>
+      <figure class="ecran"><img src="img/pourparler.jpg" alt="Un pourparler à la Saqîfa : jauge de confiance et trois arguments." loading="lazy"><figcaption style="padding:.7em .8em .8em">Pourparler « Les bords de l’auvent », manche 1 sur 4.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="feuillet" id="combat">
+    <h2>Le combat</h2>
+    <div class="duo inv">
+      <figure class="ecran"><img src="img/combat-boss.jpg" alt="Combat contre al-Kadhdhâb, le Menteur : ordre des tours en haut, les trois compagnons à droite, le menu de commandes en bas." loading="lazy"><figcaption style="padding:.7em .8em .8em">En haut, l’ordre des tours. En bas, Constance, Souffle, Niyya et Sakîna de chacun.</figcaption></figure>
+      <div>
+        <p>Le combat se joue au tour par tour, et l’ordre des prochains tours est toujours visible. Chaque Compagnon a sa <b>Constance</b> (ce qu’il peut endurer) et son <b>Souffle</b> (ce que coûtent ses vertus). Un compagnon à bout est <span class="terme">éprouvé</span>.</p>
+        <h3>Voiles et failles</h3>
+        <p>Chaque égrégore est protégé par des <b>voiles</b>. Frappe-le avec la vertu qui est sa <b>faille</b> pour en retirer un. À zéro, il est <span class="terme">dévoilé</span> : il perd son tour et subit bien plus. Ses failles se découvrent en essayant, ou d’emblée si le Savoir du règne est élevé.</p>
+      </div>
+    </div>
+    <h3>Le Fer et les six Lumières</h3>
+    <p>Le <b>Fer</b> (Hadîd) est l’élan physique : il frappe, mais certaines idoles y sont insensibles. Les six <b>Lumières</b> sont les vertus des Compagnons. Chaque égrégore craint certaines d’entre elles.</p>
+    <div class="lumieres"><div style="--c:#ffe08a"><i>◈︎</i><b>Véracité</b><small>Sidq</small></div><div style="--c:#6fb6ff"><i>⚖︎</i><b>Justice</b><small>'Adl</small></div><div style="--c:#7fd69a"><i>❖︎</i><b>Patience</b><small>Sabr</small></div><div style="--c:#5fe0d0"><i>✦︎</i><b>Miséricorde</b><small>Rahma</small></div><div style="--c:#ff7a5c"><i>▲︎</i><b>Courage</b><small>Shajâ'a</small></div><div style="--c:#c49bff"><i>✧︎</i><b>Savoir</b><small>'Ilm</small></div></div>
+    <div class="duo">
+      <div>
+        <h3>Les commandes</h3>
+        <div class="tab"><table><tbody>
+          <tr><td class="n">Frapper</td><td>Un coup de Fer. Gratuit.</td></tr>
+          <tr><td class="n">Éclairer</td><td>Un coup porté avec la Lumière du Compagnon. Gratuit.</td></tr>
+          <tr><td class="n">Vertus</td><td>Les actes propres à chacun : frapper fort, soigner, protéger, révéler une faille. Ils coûtent du Souffle.</td></tr>
+          <tr><td class="n">Objets</td><td>Ce que contient la Besace.</td></tr>
+          <tr><td class="n">Garde</td><td>Encaisser, et gagner de la Niyya et de la Sakîna.</td></tr>
+        </tbody></table></div>
+      </div>
+      <div>
+        <h3>Niyya et Sakîna</h3>
+        <p>La <b>Niyya</b>, l’intention, monte d’un point par tour, jusqu’à cinq. Dépenses-en jusqu’à trois d’un coup pour multiplier les coups de Fer ou renforcer une vertu.</p>
+        <p>La <b>Sakîna</b> est la jauge dorée. Elle monte quand on endure, quand on touche une faille, quand on dévoile. Pleine, elle ouvre l’acte ultime du Compagnon.</p>
+        <p>Si tout le groupe est éprouvé, la chaîne ne rompt pas : le combat reprend, le groupe reposé.</p>
+      </div>
+    </div>
+    <h3>La Besace</h3>
+    <div class="tab"><table><tbody><tr><td class="n">Dattes de Médine</td><td>Rend 40 % de Constance à un compagnon.</td></tr><tr><td class="n">Outre d'eau</td><td>Rend 80 % de Constance à un compagnon.</td></tr><tr><td class="n">Pain d'orge</td><td>Rend 25 % de Constance à tout le groupe.</td></tr><tr><td class="n">Miel</td><td>Dissipe les altérations et rend 30 % de Constance.</td></tr><tr><td class="n">Musc</td><td>Rend 50 % de Souffle à un compagnon.</td></tr><tr><td class="n">Lait chaud</td><td>Relève un compagnon éprouvé (50 % de Constance).</td></tr><tr><td class="n">Siwâk</td><td>Accorde 2 points de Niyya.</td></tr></tbody></table></div>
+  </section>
+
+  <section class="feuillet" id="piliers">
+    <h2>Prière, savoir, piliers</h2>
+    <div class="duo">
+      <div>
+        <p>La <b>prière</b> n’est pas un sortilège. Elle se place aux moments que les sources attestent et aux haltes naturelles du récit, à l’un de ses cinq moments : Fajr, Dhuhr, ’Asr, Maghrib, ’Ishâ. Sur une natte, le groupe se repose et la Sakîna descend.</p>
+        <p>Le <b>savoir</b> se recueille en chemin, auprès des savants, dans les feuillets, de la bouche des témoins. Tout va au <b>Recueil</b> : biographies, événements, lieux, paroles avec leur source, idoles de la noosphère. Ce qu’on y a appris ouvre des arguments dans les pourparlers.</p>
+        <h3>Ce que le règne a bâti</h3>
+        <p>Quatre piliers, de zéro à cinq, mesurent chaque saga. Ils montent par la prière tenue, le savoir appris, la justice rendue et les pactes noués. Ils descendent quand la parole échoue.</p>
+      </div>
+      <div class="pile">
+        <figure class="ecran"><img src="img/priere.jpg" alt="Carton de prière : Dhuhr, le midi." loading="lazy"></figure>
+        <figure class="ecran"><img src="img/recueil.jpg" alt="Le Recueil : la liste des entrées par catégorie, et la biographie de ’Umar avec ses sources." loading="lazy"></figure>
+      </div>
+    </div>
+    <div class="tab"><table>
+      <thead><tr><th>Pilier</th><th>Il monte quand</th><th>Effet, par niveau</th></tr></thead>
+      <tbody>
+        <tr><td class="n"><span class="gl">◠</span>Prière</td><td>On prie aux haltes du récit</td><td>+6 de Sakîna au début de chaque combat</td></tr>
+        <tr><td class="n"><span class="gl">✧</span>Savoir</td><td>On apprend : un niveau toutes les six entrées du Recueil</td><td>Une faille révélée d’emblée chez chaque égrégore, tous les deux niveaux</td></tr>
+        <tr><td class="n"><span class="gl">⚖</span>Justice</td><td>On rend à chacun son dû</td><td>3 % de dégâts reçus en moins. Routes plus sûres</td></tr>
+        <tr><td class="n"><span class="gl">∞</span>Lien</td><td>On noue des pactes, on gagne des alliés</td><td>3 % de dégâts infligés en plus. Renforts sur les routes</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="feuillet" id="batir">
+    <h2>Bâtir</h2>
+    <div class="duo">
+      <div>
+        <p>À ciel ouvert, la touche <kbd>B</kbd> ou le bouton ▦ ouvre le mode bâtir. On pose devant soi, case par case. Ce qui est bâti reste et rapporte à chaque chapitre.</p>
+        <h3>Récolter</h3>
+        <p>On récolte en s’adressant aux choses. Un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Le <b>grain</b> vient des champs, la <b>laine</b> des moutons. Le comptoir des caravanes vend le reste.</p>
+        <h3>Quelques règles</h3>
+        <ul>
+          <li>Palmiers, champs et troupeaux veulent de l’eau à moins de six pas.</li>
+          <li>Un puits et trois palmiers font une oasis.</li>
+          <li>Six segments de tranchée gardent un lieu : les égrégores qui rôdent ne la franchissent pas.</li>
+          <li>On ne peut pas s’emmurer ni barrer un passage.</li>
+        </ul>
+      </div>
+      <figure class="ecran"><img src="img/batir.jpg" alt="Le mode bâtir au souk de Médine : la barre des pièces en bas, un puits, des palmiers, un enclos déjà posés." loading="lazy"><figcaption style="padding:.7em .8em .8em">La barre du bâtisseur : matériaux en haut, pièces au milieu, coût en bas.</figcaption></figure>
+    </div>
+    <div class="tab"><table>
+      <thead><tr><th>Pièce</th><th>Coût</th><th>À quoi elle sert</th></tr></thead>
+      <tbody><tr><th colspan="3" style="padding-top:1.3em;color:var(--zellige)">Défendre</th></tr><tr><td class="n"><img class="ic px" src="img/t-trench.png" alt="">Tranchée</td><td style="white-space:nowrap">La peine de creuser</td><td>Les égrégores qui rôdent ne la franchissent pas. Six segments gardent un lieu.</td></tr><tr><th colspan="3" style="padding-top:1.3em;color:var(--zellige)">Eau et vivres</th></tr><tr><td class="n"><img class="ic px" src="img/o-well.png" alt="">Puits</td><td style="white-space:nowrap">Pierre × 4</td><td>Donne de l’eau. Palmiers, champs et troupeaux en ont besoin à moins de six pas.</td></tr><tr><td class="n"><img class="ic px" src="img/o-palm.png" alt="">Palmier</td><td style="white-space:nowrap">Eau × 1</td><td>Un puits et trois palmiers font une oasis. Donne des dattes à chaque chapitre.</td></tr><tr><td class="n"><img class="ic px" src="img/t-field.png" alt="">Champ d’orge</td><td style="white-space:nowrap">Eau × 1, Grain × 1</td><td>Donne du grain et du pain à chaque chapitre.</td></tr><tr><th colspan="3" style="padding-top:1.3em;color:var(--zellige)">Troupeaux</th></tr><tr><td class="n"><img class="ic px" src="img/o-pen_goat.png" alt="">Enclos de chèvres</td><td style="white-space:nowrap">Palme × 3</td><td>Du lait à chaque chapitre.</td></tr><tr><td class="n"><img class="ic px" src="img/o-pen_sheep.png" alt="">Enclos de moutons</td><td style="white-space:nowrap">Palme × 3</td><td>De la laine pour les tapis.</td></tr><tr><td class="n"><img class="ic px" src="img/o-pen_camel.png" alt="">Enclos de chameaux</td><td style="white-space:nowrap">Palme × 4, Grain × 1</td><td>La caravane rapporte de la pierre à chaque chapitre.</td></tr><tr><th colspan="3" style="padding-top:1.3em;color:var(--zellige)">Mosquée</th></tr><tr><td class="n"><img class="ic px" src="img/t-bwall.png" alt="">Mur de pisé</td><td style="white-space:nowrap">Pisé × 1</td><td>Un bloc de terre crue. L’enceinte se monte bloc par bloc.</td></tr><tr><td class="n"><img class="ic px" src="img/t-zsand.png" alt="">Sol à étoiles</td><td style="white-space:nowrap">Pisé × 1</td><td>Dallage géométrique.</td></tr><tr><td class="n"><img class="ic px" src="img/o-trunkcol.png" alt="">Pilier de palmier</td><td style="white-space:nowrap">Palme × 1</td><td>Un tronc dressé, comme à Médine.</td></tr><tr><td class="n"><img class="ic px" src="img/t-mihrab.png" alt="">Niche de qibla</td><td style="white-space:nowrap">Pisé × 2, Pierre × 1</td><td>Indique la direction de La Mecque.</td></tr><tr><td class="n"><img class="ic px" src="img/o-mat.png" alt="">Natte de prière</td><td style="white-space:nowrap">Palme × 1</td><td>Dans une mosquée achevée, on y prie et on y sauvegarde.</td></tr><tr><td class="n"><img class="ic px" src="img/o-rug.png" alt="">Tapis</td><td style="white-space:nowrap">Laine × 1</td><td>Laine tissée, à losanges.</td></tr><tr><td class="n"><img class="ic px" src="img/o-lantern.png" alt="">Lanterne</td><td style="white-space:nowrap">Pierre × 1</td><td>Éclaire la nuit.</td></tr><tr><td class="n"><img class="ic px" src="img/rosace.png" alt="">Rosace</td><td style="white-space:nowrap">Pierre × 2</td><td>Étoile à huit branches tracée au sol.</td></tr></tbody>
+    </table></div>
+    <div class="duo inv">
+      <figure class="ecran"><img src="img/mosquee-batie.jpg" alt="La mosquée de Dhû l-Qassa, bâtie par le joueur dans le camp : mur de pisé, sol à étoiles, piliers de palmier, niche de qibla, natte." loading="lazy"></figure>
+      <div>
+        <h3>Fonder une mosquée</h3>
+        <p>Sur une terre gagnée, un chantier s’ouvre, tracé au sol. Les matériaux sont livrés. Il faut monter l’enceinte en pisé, daller le sol, dresser les piliers de palmier, placer la niche de qibla et poser la natte.</p>
+        <p>La mosquée achevée devient un lieu de prière et de sauvegarde. Dans la saga d’Abû Bakr, c’est celle de Dhû l-Qassa.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="feuillet" id="caravanes">
+    <h2>Routes et caravanes</h2>
+    <div class="duo">
+      <div>
+        <p>Aux ballots du souk ou du camp se tient le <b>comptoir des caravanes</b>. On y vend ce que rapportent les troupeaux et les champs, on y achète des matériaux et des vivres, et l’on peut confier une cargaison à une caravane. On commence avec vingt dirhams.</p>
+        <div class="tab"><table>
+          <thead><tr><th>Route</th><th>Mise</th><th>Retour espéré</th><th>Péril</th></tr></thead>
+          <tbody>
+            <tr><td class="n">Le Yémen, par la route d’hiver</td><td>12</td><td>19</td><td>18 %</td></tr>
+            <tr><td class="n">Le Shâm, par la route d’été, jusqu’à Bosra</td><td>20</td><td>35</td><td>30 %</td></tr>
+            <tr><td class="n">Le Bahreïn et les confins de l’Irak</td><td>30</td><td>58</td><td>45 %</td></tr>
+          </tbody>
+        </table></div>
+        <p>La caravane revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue (3 % de péril en moins par niveau), que des pactes sont noués (2 % par niveau de Lien) et que des méharistes la gardent (6 % par enclos de chameaux).</p>
+        <h3>Quand une route est pillée</h3>
+        <ol>
+          <li>On lève des renforts : alliés liés par un pacte, méharistes.</li>
+          <li>On parle d’abord au chef des pillards.</li>
+          <li>On ne se bat qu’en dernier recours, et contre les égrégores de la razzia.</li>
+          <li>On rend à chacun ce qui lui revient, et les pillards sont remis au juge.</li>
+        </ol>
+      </div>
+      <div class="pile">
+        <figure class="ecran"><img src="img/routes.jpg" alt="Le comptoir : trois routes, leur mise, leur retour espéré et leur péril." loading="lazy"></figure>
+        <figure class="ecran"><img src="img/pillage.jpg" alt="Pourparler avec le chef des pillards : rendre ce qui fut pris." loading="lazy"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="feuillet" id="veillees">
+    <h2>Les veillées du Caïd</h2>
+    <div class="duo inv">
+      <figure class="ecran"><img src="img/d-citadelle.jpg" alt="La cour de la Citadelle au couchant, dallée d’une grande rosace." loading="lazy"></figure>
+      <div>
+        <p>Après chaque saga, on passe une veillée à la Citadelle. Le Caïd y affronte, à l’échelle de ses murs, la question que le Compagnon vient de trancher. Il est accompagné de Maître Bahrâm, le géomètre, et de Zîrî, capitaine des sentinelles.</p>
+        <div class="tab"><table><tbody><tr><td class="n">La Nuit du père</td><td>Veillée de la Véracité · après Abû Bakr</td></tr><tr><td class="n">La Sentinelle</td><td>Veillée de la Justice · après 'Umar</td></tr><tr><td class="n">Le Général et la Tour</td><td>Veillée du Courage · après Khâlid</td></tr><tr><td class="n">La Rumeur du puits</td><td>Veillée de la Miséricorde · après 'Uthmân</td></tr><tr><td class="n">Les Purs</td><td>Veillée du Savoir · après 'Alî</td></tr></tbody></table></div>
+        <p>Ces veillées sont une fiction. Elles rendent hommage à <i>Citadelle</i> d’Antoine de Saint-Exupéry, sans en reprendre le texte ni les épisodes.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="partie">Repères</p>
+
+  <section class="feuillet" id="respect">
+    <h2>Ce que le jeu s’interdit</h2>
+    <p>Le sujet est religieux et historique. L’exactitude et le respect passent avant le jeu.</p>
+    <ul class="engage">
+      <li><b>Le Prophète <span class="pbuh">ﷺ</span> n’apparaît jamais.</b> Ni image, ni silhouette, ni réplique. On l’évoque seulement.</li>
+      <li><b>Personne n’a de visage.</b> Les personnages sont des volumes en blocs. Les Compagnons portent un panneau de lumière.</li>
+      <li><b>Seulement des événements attestés.</b> Une parole citée porte sa source. En cas de doute, on écrit « On rapporte ».</li>
+      <li><b>Aucun ennemi n’est une personne.</b> Ni un peuple, ni une religion. On n’affronte que des égrégores abstraits.</li>
+      <li><b>Aucun groupe n’est ennemi par nature.</b> Perses, juifs, chrétiens, tribus : des acteurs aux intérêts légitimes, avec des gens d’honneur chez chacun.</li>
+      <li><b>Aucune polémique confessionnelle.</b> Les dissensions entre Compagnons sont évoquées avec retenue, sans désigner de coupable.</li>
+      <li><b>Les versets</b> ne sont donnés qu’en traduction du sens, avec leur référence.</li>
+      <li><b>Aucune voix.</b> Ni récitation, ni appel à la prière synthétisé. Le nom divin ne figure sur rien que l’on frappe.</li>
+      <li><b>La prière n’est pas un pouvoir.</b> Elle s’écrit sobrement, aux moments attestés et aux haltes du récit.</li>
+    </ul>
+  </section>
+
+  <section class="feuillet" id="sources">
+    <h2>Sources et avertissement</h2>
+    <p>Cette œuvre est une fiction interactive inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles présentées en carton, avec leur source, sont des citations rapportées.</p>
+    <p><b>Sources principales.</b> Ibn Hishâm, <i>as-Sîra an-Nabawiyya</i> · at-Tabarî, <i>Târîkh ar-Rusul wa-l-Mulûk</i> · Ibn Sa’d, <i>at-Tabaqât al-Kubrâ</i> · Ibn Kathîr, <i>al-Bidâya wa-n-Nihâya</i> · al-Bukhârî et Muslim, <i>as-Sahîh</i> · Ibn ’Asâkir, <i>Târîkh Dimashq</i>.</p>
+    <p><b>Noosphère et égrégore.</b> « Noosphère » vient de Vernadsky et de Teilhard de Chardin ; « égrégore » désigne une forme-pensée collective. Le jeu s’en sert comme d’une image pour parler des valeurs partagées et des idoles que les hommes se fabriquent.</p>
+    <p>Qu’Allah agrée les Compagnons. Toute erreur est celle des auteurs ; vérifiez auprès des savants et des sources.</p>
+    <p class="note"><b>État du projet.</b> Version de travail. La relecture historique et religieuse par un spécialiste reste à faire.</p>
+  </section>
+
+</div></main>
+
+<section class="table" id="planches"><div class="gout"><div class="col">
+  <h2>Planches de présentation</h2>
+  <p class="chapo">Neuf planches pour présenter le jeu. Tout ce qu’elles montrent vient du jeu lui-même : écrans capturés en jouant, personnages et idoles dessinés par le moteur. Chacune existe aussi en image, prête à publier.</p>
+
+  <div class="cartel"><b>Planche 1 · Affiche</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="defile"><div class="pw"><article class="pl p-affiche" data-nom="01-affiche">
+    <img class="fond" src="img/d-medine-soir.jpg" alt="">
+    <div class="ombre"></div>
+    <div class="in">
+      <div class="ar nom" lang="ar" dir="rtl" style="text-align:left">إسناد</div>
+      <div class="logo">ISNAD</div>
+      <div class="sous">Chroniques des Compagnons</div>
+      <p class="dit">Savoir de qui l’on tient ce que l’on sait.</p>
+      <p class="quoi">JEU DE RÔLE AU TOUR PAR TOUR · CINQ SAGAS · DANS LE NAVIGATEUR</p>
+    </div>
+    <div class="sceaux"><figure><img src="img/sceau-abubakr.png" alt=""><figcaption>Abû Bakr</figcaption></figure><figure><img src="img/sceau-umar.png" alt=""><figcaption>'Umar</figcaption></figure><figure><img src="img/sceau-khalid.png" alt=""><figcaption>Khâlid</figcaption></figure><figure><img src="img/sceau-uthman.png" alt=""><figcaption>'Uthmân</figcaption></figure><figure><img src="img/sceau-ali.png" alt=""><figcaption>'Alî</figcaption></figure></div>
+  </article></div></div>
+
+  <div class="cartel"><b>Planche 2 · Trois époques, une chaîne</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="defile"><div class="pw"><article class="pl" data-nom="02-epoques">
+    <div class="in">
+      <p class="sur">Le récit</p>
+      <h3>Trois époques, une seule chaîne</h3>
+      <div class="epoques">
+        <div class="epoque" style="--c:var(--neon)"><img src="img/d-cite.jpg" alt=""><div><span class="quand">2084</span><b>La Cité-Miroir</b><p>Idris, transmetteur dans une ville où une machine fabrique les idoles à la chaîne.</p></div></div>
+        <div class="epoque"><img src="img/d-citadelle-mosquee.jpg" alt=""><div><span class="quand">UN MAILLON</span><b>La Citadelle</b><p>Les veillées du Caïd, seigneur berbère. Une fiction, en hommage à Saint-Exupéry.</p></div></div>
+        <div class="epoque" style="--c:#ffe08a"><img src="img/d-medine-jour.jpg" alt=""><div><span class="quand">632 – 661</span><b>Les Compagnons</b><p>Médine, le désert, le Shâm, la mer, Koufa. Ce que les sources rapportent.</p></div></div>
+      </div>
+      <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
+    </div>
+  </article></div></div>
+
+  <div class="cartel"><b>Planche 3 · Cinq sagas, cinq Lumières</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="defile"><div class="pw"><article class="pl" data-nom="03-sagas">
+    <div class="in">
+      <p class="sur">Les Compagnons</p>
+      <h3>Cinq sagas, cinq Lumières</h3>
+      <div class="cinq"><article style="--c:#ffe08a"><img class="sceau" src="img/sceau-abubakr.png" alt=""><span class="ord">Maillon I · 632–634</span><b>Abû Bakr as-Siddîq</b><span class="lum">As-Siddîq · Véracité</span><p>Le jour où tout pouvait se défaire, un homme doux a dit le vrai.</p><ol><li><span>I</span>Le Jour le plus sombre</li><li><span>II</span>L'Armée d'Usâma</li><li><span>III</span>Yamâma — le Menteur</li></ol><div class="groupe"><img class="px" src="img/h-abubakr-abubakr.png" alt=""><img class="px" src="img/h-abubakr-umar.png" alt=""><img class="px" src="img/h-abubakr-abuubayda.png" alt=""></div></article><article style="--c:#6fb6ff"><img class="sceau" src="img/sceau-umar.png" alt=""><span class="ord">Maillon II · 634–644</span><b>'Umar ibn al-Khattâb</b><span class="lum">Al-Fârûq · Justice</span><p>Deux empires tombèrent sous son califat. Lui dormait sur une natte.</p><ol><li><span>I</span>Les Rondes de nuit</li><li><span>II</span>Les Clés de Jérusalem</li><li><span>III</span>Le Trône et la Natte</li></ol><div class="groupe"><img class="px" src="img/h-umar-umar.png" alt=""><img class="px" src="img/h-umar-aslam.png" alt=""><img class="px" src="img/h-umar-abuubayda.png" alt=""><img class="px" src="img/h-umar-abdarrahman.png" alt=""></div></article><article style="--c:#ff7a5c"><img class="sceau" src="img/sceau-khalid.png" alt=""><span class="ord">Maillon III · 634–642</span><b>Khâlid ibn al-Walîd</b><span class="lum">Le Sabre dégainé · Courage</span><p>Il n'a jamais perdu une bataille. Il lui reste à vaincre sa propre statue.</p><ol><li><span>I</span>La Traversée</li><li><span>II</span>Yarmoûk</li><li><span>III</span>L'Épée au fourreau</li></ol><div class="groupe"><img class="px" src="img/h-khalid-khalid.png" alt=""><img class="px" src="img/h-khalid-qaqa.png" alt=""><img class="px" src="img/h-khalid-dirar.png" alt=""></div></article><article style="--c:#5fe0d0"><img class="sceau" src="img/sceau-uthman.png" alt=""><span class="ord">Maillon IV · 644–656</span><b>'Uthmân ibn 'Affân</b><span class="lum">Le Généreux · Miséricorde</span><p>Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui.</p><ol><li><span>I</span>Les Feuillets</li><li><span>II</span>La Bataille des Mâts</li><li><span>III</span>La Maison assiégée</li></ol><div class="groupe"><img class="px" src="img/h-uthman-uthman.png" alt=""><img class="px" src="img/h-uthman-zayd.png" alt=""><img class="px" src="img/h-uthman-hudhayfa.png" alt=""></div></article><article style="--c:#c49bff"><img class="sceau" src="img/sceau-ali.png" alt=""><span class="ord">Maillon V · 656–661</span><b>'Alî ibn Abî Tâlib</b><span class="lum">La Porte du Savoir · Savoir</span><p>Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour.</p><ol><li><span>I</span>Le Bouclier et le Juge</li><li><span>II</span>La Parole détournée</li><li><span>III</span>Nahrawân, puis l’aube</li></ol><div class="groupe"><img class="px" src="img/h-ali-ali.png" alt=""><img class="px" src="img/h-ali-ibnabbas.png" alt=""><img class="px" src="img/h-ali-ammar.png" alt=""><img class="px" src="img/h-ali-qays.png" alt=""></div></article></div>
+      <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
+    </div>
+  </article></div></div>
+
+  <div class="cartel"><b>Planche 4 · Personne n’a de visage</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="defile"><div class="pw"><article class="pl" data-nom="04-personnages">
+    <div class="in">
+      <div class="visage">
+        <div class="texte">
+          <p class="sur">Les personnages</p>
+          <h3>Personne n’a de visage</h3>
+          <p>Des volumes en blocs : une tête cubique d’étoffe, un corps, deux bras, deux jambes. Aucun trait.</p>
+          <p>On reconnaît un Compagnon à sa lumière, non à ses traits : il porte un panneau clair à la place du visage.</p>
+          <p>Le Prophète <span class="pbuh">ﷺ</span> n’apparaît jamais.</p>
+        </div>
+        <div class="scene">
+          <div class="rang"><figure><img class="px" src="img/h-abubakr-abubakr.png" alt=""><figcaption>Abû Bakr</figcaption></figure><figure><img class="px" src="img/h-umar-umar.png" alt=""><figcaption>'Umar</figcaption></figure><figure><img class="px" src="img/h-khalid-khalid.png" alt=""><figcaption>Khâlid</figcaption></figure><figure><img class="px" src="img/h-uthman-uthman.png" alt=""><figcaption>'Uthmân</figcaption></figure><figure><img class="px" src="img/h-ali-ali.png" alt=""><figcaption>'Alî</figcaption></figure></div>
+          <div class="rang petit"><figure><img class="px" src="img/k-ancien.png" alt=""><figcaption>ancien</figcaption></figure><figure><img class="px" src="img/k-savant.png" alt=""><figcaption>savant</figcaption></figure><figure><img class="px" src="img/k-marchand.png" alt=""><figcaption>marchand</figcaption></figure><figure><img class="px" src="img/k-soldat.png" alt=""><figcaption>soldat</figcaption></figure><figure><img class="px" src="img/k-berbere.png" alt=""><figcaption>Berbère</figcaption></figure><figure><img class="px" src="img/k-perse.png" alt=""><figcaption>Perse</figcaption></figure><figure><img class="px" src="img/k-romain.png" alt=""><figcaption>Romain</figcaption></figure><figure><img class="px" src="img/k-moine.png" alt=""><figcaption>moine</figcaption></figure><figure><img class="px" src="img/k-marin.png" alt=""><figcaption>marin</figcaption></figure><figure><img class="px" src="img/k-enfant.png" alt=""><figcaption>enfant</figcaption></figure><figure><img class="px" src="img/k-cyber.png" alt=""><figcaption>2084</figcaption></figure></div>
+        </div>
+      </div>
+      <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
+    </div>
+  </article></div></div>
+
+  <div class="cartel"><b>Planche 5 · Les idoles sont des choses</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="defile"><div class="pw"><article class="pl" data-nom="05-idoles">
+    <div class="in">
+      <p class="sur">Les adversaires</p>
+      <h3>On n’affronte jamais des personnes</h3>
+      <p class="dit">Seulement des égrégores : les idoles que les cœurs fabriquent ensemble.</p>
+      <div class="idoles"><figure style="--h:220"><img class="px" src="img/e-abubakr-deni.png" alt=""><b>Le Déni</b><span>le deuil qui refuse</span></figure><figure style="--h:15"><img class="px" src="img/e-abubakr-clan.png" alt=""><b>Al-'Asabiyya, le Clan</b><span>l’esprit de corps tribal</span></figure><figure style="--h:305"><img class="px" src="img/e-abubakr-kadhdhab.png" alt=""><b>Al-Kadhdhâb, le Menteur</b><span>la contrefaçon</span></figure><figure style="--h:35"><img class="px" src="img/e-umar-aigle.png" alt=""><b>L'Aigle d'Airain</b><span>l’orgueil d’empire</span></figure><figure style="--h:48"><img class="px" src="img/e-umar-trone.png" alt=""><b>Le Trône vide</b><span>la tyrannie</span></figure><figure style="--h:270"><img class="px" src="img/e-khalid-peur_nombre.png" alt=""><b>La Peur du Nombre</b><span>l’issue réduite à un décompte</span></figure><figure style="--h:46"><img class="px" src="img/e-khalid-idole_heros.png" alt=""><b>L'Idole du Héros</b><span>la gloire du vainqueur</span></figure><figure style="--h:215"><img class="px" src="img/e-uthman-abime.png" alt=""><b>L'Abîme</b><span>la peur de la mer</span></figure><figure style="--h:320"><img class="px" src="img/e-uthman-rumeur.png" alt=""><b>La Rumeur</b><span>ce qu’on répète sans l’avoir vu</span></figure><figure style="--h:280"><img class="px" src="img/e-ali-slogan.png" alt=""><b>Le Slogan</b><span>la formule vidée de son sens</span></figure><figure style="--h:215"><img class="px" src="img/e-ali-juge.png" alt=""><b>Le Juge sans miséricorde</b><span>se faire juge des cœurs</span></figure><figure style="--h:285"><img class="px" src="img/e-idris-agregor.png" alt=""><b>L'AGRÉGOR</b><span>la fabrique des idoles</span></figure></div>
+      <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
+    </div>
+  </article></div></div>
+
+  <div class="cartel"><b>Planche 6 · La parole avant le sabre</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="defile"><div class="pw"><article class="pl" data-nom="06-parole-et-combat">
+    <div class="in">
+      <p class="sur">Le système de jeu</p>
+      <h3>La parole avant le sabre</h3>
+      <div class="parole">
+        <div class="vue"><img src="img/pourparler.jpg" alt=""></div>
+        <div class="vue"><img src="img/combat-boss.jpg" alt=""></div>
+        <div class="trois">
+          <div><b>Pourparler</b><p>Manche après manche, gagner la confiance. Les meilleurs arguments demandent un savoir. Avoir prié donne la sérénité.</p></div>
+          <div><b>Voiles et failles</b><p>Chaque idole a ses voiles. La vertu qui est sa faille les retire. Dévoilée, elle perd son tour.</p></div>
+          <div><b>Niyya et Sakîna</b><p>L’intention se dose, jusqu’à trois points par acte. La quiétude, pleine, ouvre l’acte ultime du Compagnon.</p></div>
+        </div>
+      </div>
+      <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
+    </div>
+  </article></div></div>
+
+  <div class="cartel"><b>Planche 7 · Bâtir, s’orienter, commercer</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="defile"><div class="pw"><article class="pl" data-nom="07-batir-et-routes">
+    <div class="in">
+      <p class="sur">Le monde</p>
+      <h3>Bâtir, s’orienter, commercer</h3>
+      <div class="monde">
+        <figure><div class="vue"><img src="img/batir.jpg" alt=""></div><b>Bâtir</b><p>Puits, palmiers, champs, enclos, tranchées. Et, bloc après bloc, des mosquées où l’on prie et où l’on sauvegarde.</p></figure>
+        <figure><div class="vue"><img src="img/explorer.jpg" alt=""></div><b>Les étoiles</b><p>On s’oriente au ciel. Huit caps, nommés en arabe par l’étoile qui s’y lève ou s’y couche.</p></figure>
+        <figure><div class="vue"><img src="img/routes.jpg" alt=""></div><b>Les caravanes</b><p>Yémen, Shâm, Bahreïn. Une route pillée se règle par la parole, puis par la justice.</p></figure>
+      </div>
+      <div class="palette"><span class="cap">QUINZE PIÈCES À POSER, CASE PAR CASE</span><div><figure><img class="px" src="img/t-trench.png" alt=""><figcaption>Tranchée</figcaption></figure><figure><img class="px" src="img/o-well.png" alt=""><figcaption>Puits</figcaption></figure><figure><img class="px" src="img/o-palm.png" alt=""><figcaption>Palmier</figcaption></figure><figure><img class="px" src="img/t-field.png" alt=""><figcaption>Champ d’orge</figcaption></figure><figure><img class="px" src="img/o-pen_goat.png" alt=""><figcaption>Enclos de chèvres</figcaption></figure><figure><img class="px" src="img/o-pen_sheep.png" alt=""><figcaption>Enclos de moutons</figcaption></figure><figure><img class="px" src="img/o-pen_camel.png" alt=""><figcaption>Enclos de chameaux</figcaption></figure><figure><img class="px" src="img/t-bwall.png" alt=""><figcaption>Mur de pisé</figcaption></figure><figure><img class="px" src="img/t-zsand.png" alt=""><figcaption>Sol à étoiles</figcaption></figure><figure><img class="px" src="img/o-trunkcol.png" alt=""><figcaption>Pilier de palmier</figcaption></figure><figure><img class="px" src="img/t-mihrab.png" alt=""><figcaption>Niche de qibla</figcaption></figure><figure><img class="px" src="img/o-mat.png" alt=""><figcaption>Natte de prière</figcaption></figure><figure><img class="px" src="img/o-rug.png" alt=""><figcaption>Tapis</figcaption></figure><figure><img class="px" src="img/o-lantern.png" alt=""><figcaption>Lanterne</figcaption></figure><figure><img class="px" src="img/rosace.png" alt=""><figcaption>Rosace</figcaption></figure></div></div>
+      <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
+    </div>
+  </article></div></div>
+
+  <div class="cartel"><b>Planche 8 · Géométrie et lumière</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="defile"><div class="pw"><article class="pl" data-nom="08-direction-artistique">
+    <div class="in">
+      <p class="sur">Direction artistique</p>
+      <h3>Géométrie et lumière</h3>
+      <div class="da">
+        <div>
+          <h4>Couleurs</h4>
+          <div class="nuancier">
+            <div style="--c:#07060d"><i></i><span>Nuit<br>#07060D</span></div>
+            <div style="--c:#e9c877"><i></i><span>Or<br>#E9C877</span></div>
+            <div style="--c:#f3e7cc"><i></i><span>Sable<br>#F3E7CC</span></div>
+            <div style="--c:#39e6ff"><i></i><span>Néon<br>#39E6FF</span></div>
+            <div style="--c:#ff4fd8"><i></i><span>Rose<br>#FF4FD8</span></div>
+          </div>
+          <div class="nuancier sept"><div style="--c:#c9ced6"><i></i><span>Fer</span></div><div style="--c:#ffe08a"><i></i><span>Véracité</span></div><div style="--c:#6fb6ff"><i></i><span>Justice</span></div><div style="--c:#7fd69a"><i></i><span>Patience</span></div><div style="--c:#5fe0d0"><i></i><span>Miséricorde</span></div><div style="--c:#ff7a5c"><i></i><span>Courage</span></div><div style="--c:#c49bff"><i></i><span>Savoir</span></div></div>
+          <p class="cap" style="margin:1.6em 0 0">Tout est dessiné par le code : aucune image importée, aucune voix. 18 pistes originales synthétisées, une par ambiance.</p>
+          <img class="rose" src="img/rosace.png" alt="" style="width:50%;margin:1.4em 0 0">
+        </div>
+        <div>
+          <h4>Caractères</h4>
+          <div class="specimen">
+            <div><span style="font-family:var(--f-titre);font-weight:700;font-size:1.7em;letter-spacing:.12em;color:#fff6dc">Cinzel</span><small>TITRES, CAPITALES GRAVÉES</small></div>
+            <div><span style="font-size:1.5em">Alegreya, <i>le récit</i></span><small>TEXTE COURANT</small></div>
+            <div><span class="ar" lang="ar" style="font-size:1.7em;color:var(--or)">أبو بكر · عمر · علي</span><small>REEM KUFI · SCEAUX ET ÉTOILES</small></div>
+            <div><span style="font-family:var(--f-mono);font-size:1.15em;color:var(--neon)">An 1508 H · 2084</span><small>SHARE TECH MONO · DATES, MONDE DE 2084</small></div>
+          </div>
+          <div class="vue"><img src="img/d-palais.jpg" alt=""></div>
+        </div>
+        <div>
+          <h4>Zellige, frises, rosace</h4>
+          <div class="zel">
+            <img class="px" src="img/t-zellij.png" alt=""><img class="px" src="img/t-zsand.png" alt=""><img class="px" src="img/t-mihrab.png" alt="">
+          </div>
+          <div class="vue"><img src="img/d-medine-jour.jpg" alt=""></div>
+          <p class="cap" style="margin:.9em 0 0">Les personnages sont des blocs, les décors sont travaillés. Dans chaque mosquée, deux carrés de lumière dessinent l’étoile à huit branches.</p>
+        </div>
+      </div>
+      <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
+    </div>
+  </article></div></div>
+
+  <div class="cartel"><b>Planche 9 · Affiche verticale</b><span>4:5 · 1080 × 1350</span></div>
+  <div class="pw haut"><article class="pl haut p-affiche" data-nom="09-affiche-verticale">
+    <img class="fond" src="img/d-medine-soir.jpg" alt="" style="object-position:50% 50%">
+    <div class="ombre"></div>
+    <div class="in">
+      <div class="ar nom" lang="ar" dir="rtl" style="text-align:left">إسناد</div>
+      <div class="logo">ISNAD</div>
+      <div class="sous">Chroniques des Compagnons</div>
+      <p class="dit">Savoir de qui l’on tient ce que l’on sait.</p>
+      <p class="quoi">JEU DE RÔLE AU TOUR PAR TOUR · CINQ SAGAS · DANS LE NAVIGATEUR</p>
+    </div>
+    <div class="sceaux"><figure><img src="img/sceau-abubakr.png" alt=""><figcaption>Abû Bakr</figcaption></figure><figure><img src="img/sceau-umar.png" alt=""><figcaption>'Umar</figcaption></figure><figure><img src="img/sceau-khalid.png" alt=""><figcaption>Khâlid</figcaption></figure><figure><img src="img/sceau-uthman.png" alt=""><figcaption>'Uthmân</figcaption></figure><figure><img src="img/sceau-ali.png" alt=""><figcaption>'Alî</figcaption></figure></div>
+  </article></div>
+
+</div></div></section>
+
+<footer class="pied gout"><div class="col">
+  <p>ISNAD · Chroniques des Compagnons. Livret du joueur et planches de présentation.</p>
+  <p>Les écrans sont des captures du jeu. Les veillées de la Citadelle sont une fiction, en hommage à <i>Citadelle</i> d’Antoine de Saint-Exupéry (1948). La musique est originale.</p>
+</div></footer>

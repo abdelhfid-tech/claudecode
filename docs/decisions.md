@@ -135,6 +135,24 @@ Points à vérifier ajoutés : la promesse de la route sûre de San'â' au Hadra
 Khabbâb) ; la traduction du sens de 16:16 ; les noms d'étoiles et la rose en huit caps, simplifiée
 d'après celle que décriront les pilotes arabes.
 
+## Livret et planches de présentation (demande du décideur)
+
+- [ ] **D37. Tout ce que montrent le livret et les planches vient du jeu.** Écrans capturés en jouant,
+  sprites tirés du moteur, noms, dates et accroches tirés des données (`tools/promo.js`). Aucun avis,
+  aucune récompense, aucun chiffre inventé ; aucune durée de jeu annoncée, faute de mesure.
+- [ ] **D38. Phrase d'affiche : « Savoir de qui l'on tient ce que l'on sait. »** C'est l'accroche du
+  maillon d'Idris. À remplacer si le décideur préfère celle d'une saga.
+- [ ] **D39. Le livret garde la mention « Version de travail. La relecture historique et religieuse par
+  un spécialiste reste à faire. »** À retirer par le décideur une fois la relecture faite, pas avant.
+- [ ] **D40. La légende des idoles sur la planche 5 résume leur description du Recueil** en quelques
+  mots (« la contrefaçon », « l'orgueil d'empire »…). Formules de l'agent, à valider.
+- [ ] **D41. Police de secours Amiri pour ﷺ.** Sur un appareil dont les polices n'ont pas ce signe, il
+  s'affichait en carré vide. Amiri (Google Fonts) est ajoutée en dernier recours aux deux familles du
+  jeu ; rien d'autre ne change à l'écran.
+
+Le bouton « Jouer » du livret pointe vers l'Artifact privé du jeu : il ne fonctionne que pour le
+décideur tant que le jeu n'est pas partagé (autorisation n° 2 ci-dessous, toujours de côté).
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

@@ -1,0 +1,379 @@
+#!/usr/bin/env node
+/* Livret du joueur et planches de promotion.
+   Tout ce qui est montré vient du jeu : écrans capturés en jouant, sprites tirés du moteur, textes tirés des données.
+   Usage : node tools/promo.js [captures|sprites|livret|planches|all]
+     captures : joue le prologue et la saga I, s'arrête aux moments utiles, écrit promo/img/*.jpg
+     sprites  : personnages, sceaux, égrégores, carreaux, pièces à bâtir, écrit promo/img/*.png
+     livret   : assemble promo/livret.src.html et les données en promo/livret.html (autonome)
+                et promo/livret.artifact.html (fragment à publier)
+     planches : exporte chaque planche du livret en promo/planches/*.jpg (1920 px de large) */
+const { chromium } = require('playwright');
+const path = require('path');
+const fs = require('fs');
+const ROOT = path.join(__dirname, '..');
+const PROMO = path.join(ROOT, 'promo'), IMG = path.join(PROMO, 'img'), OUT = path.join(PROMO, 'planches');
+const GAME = 'file://' + path.join(ROOT, 'index.html');
+const mode = process.argv[2] || 'all';
+const only = process.argv[3] ? process.argv[3].split(',') : null;
+[PROMO, IMG, OUT].forEach(d => fs.mkdirSync(d, { recursive: true }));
+
+/* ---------- outillage commun ---------- */
+async function openGame(browser, errors) {
+  const ctx = await browser.newContext({ viewport: { width: 1536, height: 864 }, deviceScaleFactor: 1 });
+  const p = await ctx.newPage();
+  p.on('pageerror', e => errors.push('pageerror: ' + e.message + '\n' + (e.stack || '').split('\n').slice(0, 3).join('\n')));
+  p.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
+  await p.goto(GAME); await p.waitForTimeout(1900);
+  await p.addStyleTag({ content: 'body.promo-clean #hud,body.promo-clean #toasts,body.promo-clean #compass,body.promo-clean #menubtn,body.promo-clean #buildbtn,body.promo-clean #pad{visibility:hidden!important}' });
+  // arrêts : le jeu automatique s'interrompt quand la condition devient vraie, au repos, entre deux objectifs
+  await p.evaluate(() => {
+    const I = window.ISNAD, W = I.world, o = W.autoStep;
+    I.audio.setOn(false);
+    W.autoStep = function () {
+      if (window.__stop) { let k = false; try { k = window.__stop(W, I); } catch (e) { k = false; }
+        if (k) { I.debug.auto = false; I.speed = 1; window.__stop = null; window.__stopped = true; return; } }
+      return o.apply(this, arguments);
+    };
+  });
+  const ev = (fn, arg) => p.evaluate(fn, arg);
+  const T = {
+    p, ev,
+    key: async (k, n, w) => { for (let i = 0; i < (n || 1); i++) { await p.keyboard.press(k); await p.waitForTimeout(w || 260); } },
+    shot: async (name) => { if (only && !only.includes(name)) return; await p.screenshot({ path: path.join(IMG, name + '.jpg'), type: 'jpeg', quality: 90 }); console.log('  ✓', name); },
+    clean: on => ev(on => { document.body.classList.toggle('promo-clean', on); const m = window.ISNAD.world.map; if (m) { if (on) { if (m.mini) m._mini = m.mini; m.mini = null; } else if (m._mini) m.mini = m._mini; } }, on),
+    // place le joueur sur un lieu nommé (décalage en pixels), compagnons en file derrière lui
+    place: (spot, dx, dy, dir, tx, ty) => ev(([spot, dx, dy, dir, tx, ty]) => {
+      const W = window.ISNAD.world, P = W.player; if (!W.map.spots[spot]) return false; const s = W.resolve(spot, W.map.id, P); if (!s || isNaN(s[0])) return false;
+      P.x = s[0] + (dx || 0); P.y = s[1] + (dy || 0); if (dir !== undefined && dir !== null) P.dir = dir;
+      W.trail = []; for (let i = 0; i < 64; i++) W.trail.push([P.x + (tx || 0) * i * 1.25, P.y + (ty || 0) * i * 1.25, P.dir]);
+      W.updateCam(true); return [Math.round(P.x / 16), Math.round(P.y / 16)];
+    }, [spot, dx, dy, dir, tx, ty]),
+    runTo: async (cond, timeout) => {
+      await ev(src => { const I = window.ISNAD; window.__stop = new Function('W', 'I', 'return (' + src + ')'); window.__stopped = false; I.debug.auto = true; I.speed = 30; }, cond);
+      const t0 = Date.now();
+      while (Date.now() - t0 < (timeout || 150000)) { if (await ev(() => window.__stopped)) { await p.waitForTimeout(450); return true; } await p.waitForTimeout(50); }
+      await ev(() => { window.ISNAD.debug.auto = false; window.ISNAD.speed = 1; window.__stop = null; });
+      console.log('  ! arrêt non atteint :', cond); return false;
+    },
+    // avance le dialogue touche par touche jusqu'à ce que la condition soit vraie
+    until: async (fn, max, arg) => { for (let i = 0; i < (max || 60); i++) { if (await ev(fn, arg)) return true; await p.keyboard.press('Enter'); await p.waitForTimeout(330); } return false; },
+    state: () => ev(() => { const I = window.ISNAD, W = I.world; return { saga: W.saga && W.saga.id, ch: W.ch && W.ch.id, obj: W.objIndex, map: W.map && W.map.id, busy: I.script.busy, battle: !!I.battle.active, party: W.party }; })
+  };
+  return T;
+}
+const idle = () => { const I = window.ISNAD; return !I.script.busy && I.scene === I.world && !I.battle.active; };
+const chainShown = () => !document.querySelector('#chain').hidden;
+
+/* ---------- 1. captures en jouant ---------- */
+async function captures(browser, errors) {
+  console.log('Captures — récit');
+  const T = await openGame(browser, errors), { p, ev, key, shot, clean, place, runTo, until } = T;
+  await shot('titre');
+  // prologue : Cité-Miroir, Archives, la Chaîne
+  await ev(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 30; window.__stop = new Function('W', 'I', 'return W.ch && W.ch.id === "p1" && W.objIndex === 0'); window.__stopped = false; });
+  await p.keyboard.press('Enter');
+  for (let i = 0; i < 400; i++) { if (await ev(() => window.__stopped)) break; await p.waitForTimeout(50); }
+  await p.waitForTimeout(700);
+  await place('rue', 0, 0, 2); await p.waitForTimeout(900); await shot('cite');
+  await runTo('W.ch.id === "p1" && W.objIndex === 3');
+  await p.waitForTimeout(500); await shot('archives');
+  await ev(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 30; });
+  for (let i = 0; i < 600; i++) { if (await ev(chainShown)) break; await p.waitForTimeout(100); }
+  await ev(() => { window.ISNAD.debug.auto = false; window.ISNAD.speed = 1; }); await p.waitForTimeout(900);
+  await shot('chaine');
+  // saga I
+  await p.keyboard.press('Enter'); await p.waitForTimeout(2300); await shot('saga-carton');
+  await runTo('W.saga.id === "abubakr" && W.ch.id === "ab1" && W.objIndex === 0');
+  await p.waitForTimeout(600); await shot('explorer');
+  // la natte : prier, sauvegarder
+  await place('priere', 0, 14, 3); await p.waitForTimeout(900);
+  await key('Enter', 1, 700); await shot('natte');
+  await key('ArrowDown', 1, 200); await key('Enter', 1, 700); await shot('emplacements');
+  await key('Escape', 1, 500); await until(idle, 6);
+  await place('priere', 0, 14, 3); await p.waitForTimeout(400);
+  await key('Enter', 1, 600); await key('Enter', 1, 1300); await shot('priere');
+  await until(idle, 12);
+  // noosphère, puis la Saqîfa : pourparler, choix, citation, combat à trois
+  await runTo('W.ch.id === "ab1" && W.objIndex === 3');
+  await p.waitForTimeout(700); await shot('noosphere');
+  await runTo('W.ch.id === "ab1" && W.objIndex === 5');
+  await ev(() => { const W = window.ISNAD.world, s = W.resolve(W.cur().goto, W.map.id, W.player); W.player.x = s[0]; W.player.y = s[1]; W.resetTrail(); });
+  const seen = {};
+  for (let i = 0; i < 140; i++) {
+    await p.waitForTimeout(420);
+    const st = await ev(() => { const I = window.ISNAD, c = document.querySelector('#card'), ch = document.querySelector('#choice'), d = document.querySelector('#dialog');
+      return { battle: !!I.battle.active, idle: !I.script.busy && I.scene === I.world && !I.battle.active, card: c.hidden ? '' : c.className, parley: !ch.hidden && !!ch.querySelector('.phead'), choice: !ch.hidden && !ch.querySelector('.phead'), dialog: !d.hidden, obj: I.world.objIndex }; });
+    if (st.idle && st.obj !== 5) break;
+    if (st.battle && !seen.battle) {
+      seen.battle = 1;
+      const cmdReady = () => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); return c.children.length > 1 && !c.querySelector('.mhint') && b.hidden; };
+      for (let j = 0; j < 40; j++) { if (await ev(cmdReady)) break; await p.waitForTimeout(600); if (j > 5 && j % 2) await p.keyboard.press('Enter'); }
+      await p.waitForTimeout(500); await shot('combat-menu');
+      await ev(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 6; });
+      for (let j = 0; j < 200; j++) { if (!(await ev(() => !!window.ISNAD.battle.active))) break; await p.waitForTimeout(150); }
+      await ev(() => { window.ISNAD.debug.auto = false; window.ISNAD.speed = 1; }); await p.waitForTimeout(500); continue;
+    }
+    if (st.parley && !seen.parley) { seen.parley = 1; await shot('pourparler'); }
+    else if (st.card.indexOf('parley') >= 0 && !seen.pcard) { seen.pcard = 1; await p.waitForTimeout(400); await shot('pourparler-carton'); }
+    else if (st.card.indexOf('quote') >= 0 && !seen.quote) { seen.quote = 1; await p.waitForTimeout(500); await shot('citation'); }
+    else if (st.card.indexOf('victory') >= 0 && !seen.victory) { seen.victory = 1; await p.waitForTimeout(400); await shot('victoire'); }
+    else if (st.choice && !seen.choice) { seen.choice = 1; await shot('choix'); }
+    else if (st.dialog && !seen.dialog && seen.parley) { seen.dialog = 1; await p.waitForTimeout(2600); await shot('dialogue'); }
+    await p.keyboard.press('Enter');
+  }
+  console.log('  Saqîfa :', Object.keys(seen).join(', '));
+  // chapitre 2 : bâtir, comptoir des caravanes, cadran des étoiles
+  await runTo('W.ch.id === "ab2" && W.objIndex === 1 && !!W.cur().build');
+  await p.waitForTimeout(600);
+  await ev(() => { const B = window.ISNAD.build, W = window.ISNAD.world; ['pierre', 'eau', 'grain', 'palme', 'pise', 'laine'].forEach(k => B.give(k, 14, true)); });
+  await place('souk', -40, 60, 0); await p.waitForTimeout(500);
+  const pos = await ev(() => { const W = window.ISNAD.world; return [Math.floor(W.player.x / 16), Math.floor(W.player.y / 16)]; });
+  console.log('  poses :', JSON.stringify(await ev(([px, py]) => { const B = window.ISNAD.build, r = [];
+    r.push(B.placeAt(px + 3, py + 2, 'puits')); [[4, 3], [5, 2], [2, 3]].forEach(d => r.push(B.placeAt(px + d[0], py + d[1], 'palmier')));
+    [[3, 4], [4, 4], [5, 4]].forEach(d => r.push(B.placeAt(px + d[0], py + d[1], 'champ'))); r.push(B.placeAt(px - 3, py + 2, 'bergerie')); r.push(B.placeAt(px - 4, py + 4, 'chamelier'));
+    [[-1, 4], [0, 4], [1, 4]].forEach(d => r.push(B.placeAt(px + d[0], py + d[1], 'tranchee'))); r.push(B.placeAt(px + 1, py + 2, 'rosace')); r.push(B.placeAt(px - 1, py + 2, 'lanterne')); B.refresh(); return r.map(x => x || 'ok'); }, pos)));
+  await key('b', 1, 500); for (let i = 0; i < 5; i++) await key('v', 1, 90);
+  await p.waitForTimeout(400); await shot('batir');
+  await key('b', 1, 400);
+  await place('comptoir', 0, 5, 2); await p.waitForTimeout(800); await shot('etoiles');
+  await key('Enter', 1, 700); await shot('comptoir');
+  await key('ArrowDown', 2, 150); await key('Enter', 1, 600); await shot('routes');
+  await key('Enter', 1, 700);                                   // confier la cargaison à la première route
+  await key('ArrowDown', 3, 150); await key('Enter', 1, 600);   // « Partir »
+  await until(idle, 10);
+  // halte : le groupe, le Recueil, les quatre piliers
+  await key('Escape', 1, 600); await key('ArrowDown', 1, 350); await shot('halte-groupe');
+  await key('ArrowDown', 2, 200); await key('Enter', 1, 500); await key('ArrowDown', 3, 200); await p.waitForTimeout(300); await shot('recueil');
+  await key('Escape', 1, 500); await key('ArrowDown', 4, 200); await p.waitForTimeout(300); await shot('halte-piliers');
+  await key('Escape', 1, 500); await until(idle, 4);
+  // la route pillée : renforts, pourparler
+  ev(() => { window.ISNAD.trade.raid({ loss: 12, name: 'le Yémen' }); return 1; });
+  const rs = {};
+  for (let i = 0; i < 30; i++) {
+    await p.waitForTimeout(480);
+    const k = await ev(() => { const c = document.querySelector('#choice'); return c.hidden ? '' : (c.querySelector('.phead') ? 'parley' : 'menu'); });
+    if (k === 'menu' && !rs.menu) { rs.menu = 1; await shot('renforts'); }
+    if (k === 'parley') { await shot('pillage'); break; }
+    await p.keyboard.press('Enter');
+  }
+  await p.close();
+
+  if (process.env.SANS_CHANTIER) return;
+  // chapitre 3 : le chantier de la mosquée, sur une page neuve (le récit y arrive seul)
+  console.log('Captures — chantier');
+  const U = await openGame(browser, errors);
+  await U.ev(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 30; });
+  await U.p.keyboard.press('Enter');
+  for (let i = 0; i < 600; i++) { if (await U.ev(chainShown)) break; await U.p.waitForTimeout(100); }
+  await U.p.keyboard.press('Enter');
+  if (await U.runTo('W.saga && W.saga.id === "abubakr" && W.ch.id === "ab3" && W.objIndex === 2 && !!W.cur().build', 240000)) {
+    await U.p.waitForTimeout(600);
+    await U.ev(() => { const W = window.ISNAD.world, st = window.ISNAD.build.sites().dhulqassa; W.player.x = (st.x + 4) * 16 + 8; W.player.y = (st.y + st.h) * 16 + 10; W.player.dir = 3; W.resetTrail(); W.updateCam(true); });
+    await U.key('b', 1, 600); await U.shot('chantier');
+    await U.ev(() => { const I = window.ISNAD, W = I.world; I.build.autoBuild(W.cur().build); I.build.refresh(); I.build.after(); });
+    await U.p.waitForTimeout(1900); await U.shot('mosquee-fondee');
+    await U.until(() => !window.ISNAD.script.busy, 14);
+    await U.ev(() => { const W = window.ISNAD.world, st = window.ISNAD.build.sites().dhulqassa; W.player.x = st.nx * 16 + 8; W.player.y = st.ny * 16 + 24; W.player.dir = 3; W.trail = []; for (let i = 0; i < 64; i++) W.trail.push([W.player.x - i * 1.25, W.player.y + i * 0.5, 3]); W.updateCam(true); });
+    await U.p.waitForTimeout(800); await U.shot('mosquee-batie');
+  }
+  await U.p.close();
+}
+
+/* ---------- 2. décors : un saut par chapitre, HUD masqué ---------- */
+const DECORS = [
+  // nom, saga, chapitre, [carte, heure], lieu, dx, dy, dir, file des compagnons (tx, ty)
+  ['d-medine-jour', 'abubakr', 2, ['medine', 'day'], 'mosquee_cour', 0, 30, 3, 1, 0.4],
+  ['d-medine-soir', 'abubakr', 2, ['medine', 'dusk'], 'priere', 0, 26, 3, -1, 0.5],
+  ['d-medine-nuit', 'umar', 0, ['medine', 'night'], 'mosquee_porte', 0, 26, 3, 1, 0.3],
+  ['d-souk', 'abubakr', 1, ['medine', null], 'souk', 0, 20, 0, -1, 0],
+  ['d-desert', 'khalid', 0, ['desert', 'day'], 'dunes', 0, 0, 2, -1, 0.2],
+  ['d-oasis', 'khalid', 0, ['desert', 'night'], 'oasis', 0, 30, 3, -1, 0.3],
+  ['d-camp', 'khalid', 1, ['camp', 'dusk'], 'etendard', 0, 28, 3, 1, 0.3],
+  ['d-romaine', 'khalid', 2, ['romaine', null], 'forum', 0, 20, 3, -1, 0.3],
+  ['d-palais', 'umar', 2, ['palais', 'day'], 'nef', 0, 10, 3, 0, 1],
+  ['d-navire', 'uthman', 1, ['navire', 'day'], 'pont', 0, 0, 2, -1, 0],
+  ['d-koufa', 'ali', 0, ['koufa', null], 'place', 0, 10, 0, 1, 0.2],
+  ['d-noos', 'ali', 2, ['noos', null], 'noeud2', 0, 0, 2, -1, 0.2],
+  ['d-citadelle', 'caid', 0, ['citadelle', 'dusk'], 'cour', 0, 30, 3, 1, 0.3],
+  ['d-citadelle-mosquee', 'caid', 1, ['citadelle', 'night'], 'priere', 0, 22, 3, -1, 0.4],
+  ['d-cite', 'idris', 0, ['cite', null], 'ecran', -30, 26, 2, -1, 0],
+  ['d-archives', 'idris', 0, ['archives', null], 'chaine', 0, 40, 3, 0, 1]
+];
+async function decors(browser, errors) {
+  console.log('Captures — décors');
+  const T = await openGame(browser, errors), { p, ev, shot, clean, place, runTo } = T;
+  await ev(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 30; });
+  await p.keyboard.press('Enter');
+  for (let i = 0; i < 600; i++) { if (await ev(chainShown)) break; await p.waitForTimeout(100); }
+  for (const [name, saga, ci, alt, spot, dx, dy, dir, tx, ty] of DECORS) {
+    if (only && !only.includes(name)) continue;
+    // le jeu automatique est enclenché avant le départ du chapitre : sinon un carton d'introduction attend une touche
+    await ev(([s, c]) => { const I = window.ISNAD, W = I.world; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen');
+      window.__stop = () => true; window.__stopped = false; I.debug.auto = true; I.speed = 30; W.roster = {}; W.saga = null; I.script.flags = {}; W.startChapter(s, c); }, [saga, ci]);
+    let ok = false; for (let i = 0; i < 400; i++) { if (await ev(() => window.__stopped)) { ok = true; break; } await p.waitForTimeout(50); }
+    if (!ok) { console.log('  ! décor sauté :', name, JSON.stringify(await T.state())); continue; }
+    await p.waitForTimeout(300);
+    await ev(() => { const W = window.ISNAD.world; W.objIndex = 99; W.foes = []; }); // prise de vue : ni objectif ni égrégore à déclencher en posant le personnage
+    if (alt) await ev(([m, t, spot]) => { const W = window.ISNAD.world; W.loadMap(m, t ? { time: t } : {}, spot); }, [alt[0], alt[1], spot]);
+    const at = await place(spot, dx, dy, dir, tx, ty);
+    await clean(true); await p.waitForTimeout(1500);
+    await shot(name); if (!at) console.log('  ! lieu introuvable :', name, spot);
+    await clean(false);
+  }
+  // l'idole de la saga I, groupe de trois : menu, vertus, cible, coup porté
+  if (!only || only.some(n => n.startsWith('combat-'))) {
+    await ev(() => { const I = window.ISNAD, W = I.world; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
+      window.__stop = () => true; window.__stopped = false; I.debug.auto = true; I.speed = 30; W.roster = {}; W.saga = null; I.script.flags = {}; W.startChapter('abubakr', 2); });
+    for (let i = 0; i < 400; i++) { if (await ev(() => window.__stopped)) break; await p.waitForTimeout(50); }
+    await ev(() => { const I = window.ISNAD, W = I.world; W.objIndex = 99; W.foes = [];
+      const find = a => { if (!Array.isArray(a)) { if (a && typeof a === 'object') for (const v of Object.values(a)) { const r = find(v); if (r) return r; } return null; }
+        if (a[0] === 'battle' && a[1] && a[1].boss) return a[1]; for (const v of a) { const r = find(v); if (r) return r; } return null; };
+      const b = find(W.saga.chapters[2].objectives); W.party.forEach(id => { W.hero(id).sakina = 100; });
+      I.battle.start(Object.assign({}, b, { intro: null })); });
+    const cmdReady = () => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); return c.children.length > 1 && !c.querySelector('.mhint') && b.hidden; };
+    for (let j = 0; j < 40; j++) { if (await ev(cmdReady)) break; await p.waitForTimeout(600); if (j > 5 && j % 2) await p.keyboard.press('Enter'); }
+    await p.waitForTimeout(600); await shot('combat-boss');
+    await T.key('ArrowDown', 2, 220); await T.key('Enter', 1, 550); await shot('combat-vertus');
+    await T.key('Enter', 1, 550);
+    if (await ev(() => !!document.querySelector('#battle .cmd .mhint'))) { await shot('combat-cible'); await p.keyboard.press('Enter'); }
+    await p.waitForTimeout(380); await shot('combat-coup');
+  }
+  return T;
+}
+
+/* ---------- 2 bis. téléphone, en portrait : croix et boutons tactiles ---------- */
+async function mobile(browser, errors) {
+  console.log('Captures — téléphone');
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 780 }, deviceScaleFactor: 2, hasTouch: true, isMobile: true });
+  const p = await ctx.newPage();
+  p.on('pageerror', e => errors.push('pageerror: ' + e.message));
+  await p.goto(GAME); await p.waitForTimeout(1900);
+  const snap = async name => { await p.screenshot({ path: path.join(IMG, name + '.jpg'), type: 'jpeg', quality: 88 }); console.log('  ✓', name); };
+  await snap('m-titre');
+  await p.evaluate(() => { const I = window.ISNAD, W = I.world, o = W.autoStep; I.audio.setOn(false);
+    W.autoStep = function () { if (window.__stop && window.__stop(W, I)) { I.debug.auto = false; I.speed = 1; window.__stop = null; window.__stopped = true; return; } return o.apply(this, arguments); };
+    window.__stop = W => W.saga && W.saga.id === 'abubakr' && W.ch.id === 'ab1' && W.objIndex === 1; window.__stopped = false; I.debug.auto = true; I.speed = 30; });
+  await p.keyboard.press('Enter');
+  for (let i = 0; i < 600; i++) { if (await p.evaluate(() => !document.querySelector('#chain').hidden)) break; await p.waitForTimeout(100); }
+  await p.waitForTimeout(500); await p.keyboard.press('Enter');
+  for (let i = 0; i < 1200; i++) { if (await p.evaluate(() => window.__stopped)) break; await p.waitForTimeout(50); }
+  await p.waitForTimeout(1200); await snap('m-jeu');
+  await p.close();
+}
+
+/* ---------- 3. sprites tirés du moteur ---------- */
+async function sprites(browser, errors, T) {
+  console.log('Sprites');
+  T = T || await openGame(browser, errors);
+  const data = await T.ev(() => {
+    const I = window.ISNAD, G = I.gfx, D = window.ISNAD_DEFS, out = {};
+    const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); x.imageSmoothingEnabled = false; return [c, x]; };
+    const front = (look) => { const [c, x] = mk(16, 24); x.drawImage(G.charSheet(look), 0, 0, 16, 24, 0, 0, 16, 24); return c.toDataURL(); };
+    const sagas = I.sagaList.slice().sort((a, b) => a.order - b.order);
+    // héros (face), sceaux
+    sagas.forEach(s => {
+      Object.entries(s.heroes || {}).forEach(([id, h]) => { out['h-' + s.id + '-' + id] = front(Object.assign({ kind: 'compagnon' }, h.look)); });
+      out['sceau-' + s.id] = G.seal(s.arabic, D.ELEMENTS[s.light].color).toDataURL();
+    });
+    // gens de rencontre : un par type
+    const KIND = { homme: { robe: '#8a7355' }, ancien: { robe: '#6b5a48', head: '#e9e2d0' }, soldat: { robe: '#7a4a32' }, romain: { robe: '#8a2f2a' }, perse: { robe: '#2f5d6d', head: '#e9d9a8' }, moine: { robe: '#4a3d32' }, enfant: { robe: '#a8663c' }, marin: { robe: '#2f4a7a' }, cyber: { robe: '#2a3048', head: '#1c2030' }, savant: { robe: '#e9e2d0', head: '#f4f0e6' }, marchand: { robe: '#7b5a3a' }, berbere: { robe: '#2f4a7a', head: '#1f2f55' } };
+    Object.entries(KIND).forEach(([k, l]) => { out['k-' + k] = front(Object.assign({ kind: k }, l)); });
+    // égrégores : chacun à sa taille de combat
+    sagas.forEach(s => Object.entries(s.enemies || {}).forEach(([id, e]) => { const sc = e.tier === 'boss' ? 3 : e.tier === 'elite' ? 2 : 1; out['e-' + s.id + '-' + id] = G.enemy(e.art, e.hue, sc, e.seed).toDataURL(); }));
+    // carreaux et objets
+    ['zellij', 'zsand', 'gwall', 'mihrab', 'trench', 'field', 'bwall'].forEach(t => { try { const [c, x] = mk(48, 48); for (let i = 0; i < 9; i++) x.drawImage(G.tile(t, i % 4, 0), (i % 3) * 16, Math.floor(i / 3) * 16); out['t-' + t] = c.toDataURL(); } catch (e) { /* carreau absent */ } });
+    ['palm', 'well', 'pen_goat', 'pen_sheep', 'pen_camel', 'lantern', 'mat', 'rug', 'minbar', 'stall', 'tent', 'camel', 'bales', 'trunkcol', 'basin', 'isnad'].forEach(o => { try { out['o-' + o] = G.obj(o).toDataURL(); } catch (e) { /* objet absent */ } });
+    // rosace
+    { const [c, x] = mk(200, 200); x.imageSmoothingEnabled = true; I.maps.drawRosette(x, { x: 100, y: 100, R: 96, n: 8 }); out['rosace'] = c.toDataURL(); }
+    return out;
+  });
+  let n = 0;
+  for (const [k, url] of Object.entries(data)) { fs.writeFileSync(path.join(IMG, k + '.png'), Buffer.from(url.split(',')[1], 'base64')); n++; }
+  console.log('  ✓', n, 'sprites');
+  await T.p.close();
+}
+
+/* ---------- 4. le livret : gabarit + données du jeu ---------- */
+function livret() {
+  const D = require(path.join(ROOT, 'src/core/defs.js'));
+  const sagas = {}; const keep = global.ISNAD, keepW = global.window;
+  global.window = global; global.ISNAD = { registerSaga: s => { sagas[s.id] = s; }, registerMusic: () => {} };
+  fs.readdirSync(path.join(ROOT, 'src/data')).filter(f => /^(saga_.*|frame|caid)\.js$/.test(f)).forEach(f => require(path.join(ROOT, 'src/data', f)));
+  global.ISNAD = keep; global.window = keepW;
+  const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const five = Object.values(sagas).filter(s => !s.frame).sort((a, b) => a.order - b.order);
+  const ROM = ['I', 'II', 'III', 'IV', 'V'];
+  const col = s => D.ELEMENTS[s.light].color;
+  const txt = g => g + '︎'; // présentation « texte », jamais émoji
+  const R = {};
+  R.PISTES = String(D.TRACKS.filter(t => t !== 'silence').length);
+  R.SAGAS = five.map((s, i) => `
+      <article class="saga" style="--c:${col(s)}">
+        <img class="sceau" src="img/sceau-${s.id}.png" alt="" width="192" height="192">
+        <div><span class="ord">Maillon ${ROM[i]} · ${esc(s.years)}</span><h3>${esc(s.name)}</h3><span class="lum">${esc(s.epithet)} · Lumière : ${esc(s.lightName)} (${esc(D.ELEMENTS[s.light].ar)})</span></div>
+        <div><p class="dit">${esc(s.tagline)}</p>
+          <ol>${s.chapters.map(c => `<li><b>${esc(c.title)}</b><span>${esc(c.sub)}</span></li>`).join('')}</ol>
+          <div class="groupe">${Object.entries(s.heroes).map(([id, h]) => `<span><img class="px" src="img/h-${s.id}-${id}.png" alt="" width="16" height="24">${esc(h.name)}</span>`).join('')}</div>
+        </div>
+      </article>`).join('');
+  R.CINQ = five.map((s, i) => `<article style="--c:${col(s)}"><img class="sceau" src="img/sceau-${s.id}.png" alt=""><span class="ord">Maillon ${ROM[i]} · ${esc(s.years.split(' · ')[1] || s.years)}</span><b>${esc(s.name)}</b><span class="lum">${esc(s.epithet)} · ${esc(s.lightName)}</span><p>${esc(s.tagline)}</p>`
+    + `<ol>${s.chapters.map((c, j) => `<li><span>${ROM[j]}</span>${esc(c.title)}</li>`).join('')}</ol><div class="groupe">${Object.keys(s.heroes).map(id => `<img class="px" src="img/h-${s.id}-${id}.png" alt="">`).join('')}</div></article>`).join('');
+  R.SCEAUX = five.map(s => `<figure><img src="img/sceau-${s.id}.png" alt=""><figcaption>${esc(s.heroes[s.id].name)}</figcaption></figure>`).join('');
+  R.HEROS = five.map(s => `<figure><img class="px" src="img/h-${s.id}-${s.id}.png" alt=""><figcaption>${esc(s.heroes[s.id].name)}</figcaption></figure>`).join('');
+  const GENS = [['ancien', 'ancien'], ['savant', 'savant'], ['marchand', 'marchand'], ['soldat', 'soldat'], ['berbere', 'Berbère'], ['perse', 'Perse'], ['romain', 'Romain'], ['moine', 'moine'], ['marin', 'marin'], ['enfant', 'enfant'], ['cyber', '2084']];
+  R.GENS = GENS.map(([k, l]) => `<figure><img class="px" src="img/k-${k}.png" alt=""><figcaption>${l}</figcaption></figure>`).join('');
+  // les idoles : le nom vient des données, la légende résume la description du Recueil
+  const IDOLES = [['abubakr', 'deni', 'le deuil qui refuse'], ['abubakr', 'clan', 'l’esprit de corps tribal'], ['abubakr', 'kadhdhab', 'la contrefaçon'], ['umar', 'aigle', 'l’orgueil d’empire'], ['umar', 'trone', 'la tyrannie'], ['khalid', 'peur_nombre', 'l’issue réduite à un décompte'],
+    ['khalid', 'idole_heros', 'la gloire du vainqueur'], ['uthman', 'abime', 'la peur de la mer'], ['uthman', 'rumeur', 'ce qu’on répète sans l’avoir vu'], ['ali', 'slogan', 'la formule vidée de son sens'], ['ali', 'juge', 'se faire juge des cœurs'], ['idris', 'agregor', 'la fabrique des idoles']];
+  R.IDOLES = IDOLES.map(([s, id, l]) => { const e = sagas[s].enemies[id]; return `<figure style="--h:${e.hue}"><img class="px" src="img/e-${s}-${id}.png" alt=""><b>${esc(e.name.replace(' — ', ', '))}</b><span>${l}</span></figure>`; }).join('');
+  const CAP = { nord: 'Nord', 'nord-est': 'Nord-est', est: 'Est', 'sud-est': 'Sud-est', sud: 'Sud', 'sud-ouest': 'Sud-ouest', ouest: 'Ouest', 'nord-ouest': 'Nord-ouest' };
+  const el = n => /^[aâeéèiîoôuû'’]/i.test(n) ? 'd’' : 'de ';
+  R.ETOILES = Object.keys(CAP).map(d => D.STARS.find(x => x.dir === d)).map(st => `<tr><td class="n">${CAP[st.dir]}</td><td>${st.way ? st.way + ' ' + el(st.name) : ''}${esc(st.name)}</td><td class="ar" lang="ar" dir="rtl">${st.ar}</td><td>${esc(st.fr)}</td></tr>`).join('');
+  R.LUMIERES = Object.entries(D.ELEMENTS).filter(([k]) => k !== 'fer').map(([k, e]) => `<div style="--c:${e.color}"><i>${txt(e.glyph)}</i><b>${esc(e.name)}</b><small>${esc(e.ar)}</small></div>`).join('');
+  R.NUANCIER = Object.values(D.ELEMENTS).map(e => `<div style="--c:${e.color}"><i></i><span>${esc(e.name)}</span></div>`).join('');
+  R.OBJETS = Object.values(D.ITEMS).map(o => `<tr><td class="n">${esc(o.name)}</td><td>${esc(o.desc)}</td></tr>`).join('');
+  const cost = c => Object.keys(c).length ? Object.entries(c).map(([k, n]) => `${D.MATS[k].name} × ${n}`).join(', ') : 'La peine de creuser';
+  const icon = p => p.tile ? `t-${p.tile}` : p.obj ? `o-${p.obj}` : 'rosace';
+  let grp = ''; R.PIECES = Object.values(D.PIECES).map(p => (p.group !== grp ? (grp = p.group, `<tr><th colspan="3" style="padding-top:1.3em;color:var(--zellige)">${esc(p.group)}</th></tr>`) : '') + `<tr><td class="n"><img class="ic px" src="img/${icon(p)}.png" alt="">${esc(p.name)}</td><td style="white-space:nowrap">${cost(p.cost)}</td><td>${esc(p.desc)}</td></tr>`).join('');
+  R.PALETTE = Object.values(D.PIECES).map(p => `<figure><img class="px" src="img/${icon(p)}.png" alt=""><figcaption>${esc(p.name)}</figcaption></figure>`).join('');
+  R.VEILLEES = sagas.caid.chapters.map(c => `<tr><td class="n">${esc(c.title)}</td><td>${esc(c.sub)}</td></tr>`).join('');
+  let src = fs.readFileSync(path.join(PROMO, 'livret.src.html'), 'utf8');
+  src = src.replace(/\{\{([A-Z]+)\}\}/g, (m, k) => { if (!(k in R)) throw new Error('bloc inconnu : ' + k); return R[k]; });
+  // images réellement utilisées (pour la publication) ; une image absente arrête l'assemblage
+  const used = [...new Set([...src.matchAll(/(?:src|href)="(img\/[^"]+)"/g)].map(m => m[1]))].sort();
+  const missing = used.filter(u => !fs.existsSync(path.join(PROMO, u))); if (missing.length) throw new Error('images absentes : ' + missing.join(', '));
+  const [head, body] = src.split('<!-- corps -->');
+  fs.writeFileSync(path.join(PROMO, 'livret.artifact.html'), head + body);
+  fs.writeFileSync(path.join(PROMO, 'livret.html'), '<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' + head + '</head>\n<body>\n' + body + '</body>\n</html>\n');
+  fs.writeFileSync(path.join(PROMO, 'fichiers.json'), JSON.stringify(used, null, 1) + '\n');
+  const poids = used.reduce((n, u) => n + fs.statSync(path.join(PROMO, u)).size, 0);
+  console.log(`Livret : ${used.length} images (${(poids / 1048576).toFixed(1)} Mo), page ${(Buffer.byteLength(head + body) / 1024).toFixed(0)} Ko`);
+}
+
+/* ---------- 5. export des planches en images ---------- */
+async function planches(browser, errors) {
+  const ctx = await browser.newContext({ viewport: { width: 1960, height: 1200 }, deviceScaleFactor: 1 });
+  const p = await ctx.newPage();
+  p.on('pageerror', e => errors.push('pageerror: ' + e.message));
+  await p.goto('file://' + path.join(PROMO, 'livret.html'));
+  await p.evaluate(async () => { document.body.classList.add('export'); document.querySelectorAll('img').forEach(i => { i.loading = 'eager'; });
+    await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode().catch(() => {}))); });
+  await p.waitForTimeout(700);
+  for (const h of await p.$$('.pl')) { const nom = await h.getAttribute('data-nom'); if (only && !only.includes(nom)) continue;
+    await h.screenshot({ path: path.join(OUT, nom + '.jpg'), type: 'jpeg', quality: 93 }); const b = await h.boundingBox(); console.log('  ✓', nom, Math.round(b.width) + ' × ' + Math.round(b.height)); }
+  await p.close();
+}
+
+(async () => {
+  if (mode === 'livret') { livret(); return; }
+  const browser = await chromium.launch(); const errors = [];
+  if (mode === 'recit' || mode === 'captures' || mode === 'all') await captures(browser, errors);
+  if (mode === 'mobile' || mode === 'captures' || mode === 'all') await mobile(browser, errors);
+  if (mode === 'decors' || mode === 'captures' || mode === 'all') { const T = await decors(browser, errors); await sprites(browser, errors, T); }
+  else if (mode === 'sprites') await sprites(browser, errors);
+  if (mode === 'all') livret();
+  if (mode === 'planches' || mode === 'all') { if (mode === 'planches') livret(); await planches(browser, errors); }
+  if (errors.length) { console.log('--- ERREURS (' + errors.length + ') ---'); [...new Set(errors)].slice(0, 20).forEach(e => console.log(e)); }
+  await browser.close();
+  process.exit(errors.length ? 1 : 0);
+})();

@@ -24,6 +24,8 @@ toute considération de jeu.
 | `src/data/caid.js` | les veillées du Caïd | même format, `frame: true`, `veillees: true`, un chapitre par saga (`after`) |
 | `src/data/music.js` | bande-son | `ISNAD.registerMusic(nom, piste)`, validée par `tools/validate-music.js` |
 | `docs/schema-saga.md`, `docs/schema-v2.md` | contrat de données et bible narrative | à relire avant d'écrire du contenu |
+| `promo/livret.src.html` | livret du joueur et planches de présentation | gabarit ; `tools/promo.js` y injecte les données du jeu |
+| `promo/livret.html`, `promo/livret.artifact.html`, `promo/planches/`, `promo/img/` | **générés** | ne rien y inventer : écrans capturés en jouant, sprites du moteur |
 
 ## Commandes
 
@@ -36,6 +38,8 @@ node tools/smoke.js auto            # prologue, cinq sagas, épilogue joués aut
 node tools/smoke.js walk            # idem en marchant réellement (clavier simulé, vraies collisions)
 node tools/smoke.js wrong           # idem en prenant d'abord chaque mauvaise réponse
 node tools/smoke.js shots           # captures bureau et mobile dans .smoke/
+node tools/promo.js all             # livret et planches : captures, sprites, assemblage, export
+node tools/promo.js planches        # après une retouche du texte : réassemble et réexporte seulement
 ```
 
 **Règle.** Toute modification de contenu (`src/data/`) repasse le validateur, puis le build, puis

@@ -4,8 +4,8 @@
   --ink: #07060d; --panel: rgba(14, 12, 28, .9); --panel2: rgba(24, 20, 44, .92);
   --gold: #e9c877; --sand: #f3e7cc; --dim: #a79c86; --neon: #39e6ff; --rose: #ff4fd8; --red: #ff7a5c; --green: #7fd69a;
   --acc: var(--gold); --line: rgba(233, 200, 119, .5);
-  --f-display: "Cinzel", "Trajan Pro", "Times New Roman", serif;
-  --f-body: "Alegreya", "Iowan Old Style", Georgia, serif;
+  --f-display: "Cinzel", "Trajan Pro", "Times New Roman", "Amiri", serif;
+  --f-body: "Alegreya", "Iowan Old Style", Georgia, "Amiri", serif; /* Amiri : secours pour ﷺ là où la police du système ne l’a pas */
   --f-ar: "Reem Kufi", "Noto Kufi Arabic", "Geeza Pro", "Segoe UI", sans-serif;
   --f-mono: "Share Tech Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --u: 4px;

@@ -115,7 +115,14 @@ node tools/smoke.js walk        # même partie, mais le héros marche réellemen
 node tools/smoke.js wrong       # choisit d'abord toutes les mauvaises réponses et perd chaque pourparler
 node tools/validate-music.js    # vérifie les dix-huit pistes
 node tools/smoke.js shots       # captures d'écran bureau et mobile dans .smoke/
+node tools/promo.js all         # livret du joueur et planches : captures, sprites, assemblage, export
 ```
+
+Le livret du joueur et les planches de présentation sont dans `promo/` : `livret.html` s'ouvre tel
+quel, `planches/` contient les neuf planches en images (huit en 1920 × 1080, une affiche verticale en
+1080 × 1350). Le texte se modifie dans `promo/livret.src.html`, puis `node tools/promo.js planches`
+réassemble la page et réexporte les images. Noms, dates, accroches, pièces et étoiles viennent des
+données du jeu.
 
 `smoke.js` demande Playwright et Chromium (`npm i playwright` hors de l'environnement d'origine).
 
@@ -133,7 +140,8 @@ src/core/battle.js    combat
 src/core/ui.js        titre, Chaîne, menus, codex, boucle principale
 src/data/frame.js     histoire-cadre (prologue, épilogue)
 src/data/saga_*.js    une saga par fichier
-tools/                build, validate, smoke
+tools/                build, validate, smoke, promo
+promo/                livret du joueur (gabarit, page assemblée, images) et planches exportées
 docs/                 artefacts du framework « De l'idée à la production »
 ```
 
