@@ -2989,6 +2989,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   O.natte = async function () {
     S.depth++;
     try {
+      // la première fois : dire en une phrase ce que la natte permet
+      if (!st().vuNatte && !I.debug.auto) { st().vuNatte = true; O.learn('oeuvres'); S.toast('Sur la natte : <b>prier</b>, accomplir les <b>œuvres du jour</b>, <b>sauvegarder</b>. Chaque œuvre nourrit la provision du cœur (♥), que les grandes épreuves consomment.', 11000); }
       while (true) {
         const d = st(), left = MAX_JOUR - O.dayCount();
         const i = I.debug.auto ? 3 : await S.menuPick('Une natte tournée vers La Mecque, au cœur de l’étoile.', [
