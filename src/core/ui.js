@@ -224,7 +224,11 @@
     let last = performance.now();
     (function frame(now) {
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
-      if (sc) { try { if (sc.update) sc.update(dt); G.present(dt, sc.render(dt) || {}); } catch (e) { if (!U._err) { U._err = e; console.error(e); } } }
+      if (sc) { try {
+        if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) W.walkStep(); W.update(1 / 60); } I.input.clearHeld(); }
+        else if (sc.update) sc.update(dt);
+        G.present(dt, sc.render(dt) || {});
+      } catch (e) { if (!U._err) { U._err = e; console.error(e); } } }
       $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden);
       requestAnimationFrame(frame);
     })(last);

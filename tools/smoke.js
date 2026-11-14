@@ -60,11 +60,11 @@ const url = 'file://' + path.join(__dirname, '../index.html');
     await m.close();
   }
 
-  if (mode === 'auto' || mode === 'all') {
+  if (mode === 'auto' || mode === 'walk' || mode === 'all') {
     const page = await mkPage({ width: 960, height: 540 });
-    const res = await page.evaluate(async () => {
+    const res = await page.evaluate(async (walk) => {
       const I = window.ISNAD, W = I.world, log = I.debug.log = [], stats = [];
-      I.debug.auto = true; I.speed = 40; I.audio.setOn(false);
+      I.debug.auto = true; I.debug.walk = walk; I.speed = 40; I.audio.setOn(false);
       I.save.reset(); I.save.data.started = true;
       const hide = () => document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
       // instrumentation des combats
@@ -80,7 +80,7 @@ const url = 'file://' + path.join(__dirname, '../index.html');
         if (!ok) break;
       }
       return { log, stats, save: { lights: I.save.data.lights, isnad: I.save.data.isnad, codex: I.save.data.codex.length, epilogue: I.save.data.epilogue } };
-    });
+    }, mode === 'walk');
     console.log(res.log.join('\n'));
     console.log('--- combats ---');
     res.stats.forEach(s => console.log(`${s.saga}/${s.ch} ${s.boss ? 'BOSS ' : ''}${s.group}  défaites:${s.defeats} tours:${s.turns} KO:${s.kos} PVmin:${s.min}%  niv:${s.lv}`));

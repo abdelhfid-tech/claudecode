@@ -1437,6 +1437,7 @@ body.portrait .mlist { max-height: 12em; }
   W.cur = function () { return W.ch && W.ch.objectives[W.objIndex]; };
   W.startChapter = async function (sagaId, ci, cp) {
     const saga = I.sagas[sagaId], ch = saga.chapters[ci];
+    W.lock = true;
     if (W.saga !== saga) W.roster = {};
     W.saga = saga; W.ci = ci; W.ch = ch; W.minLvl = saga.frame ? (ch.minLvl || 1) : (MINLVL[ci] || 6);
     const sp = I.save.data.sagas[sagaId] || (I.save.data.sagas[sagaId] = { ch: 0, done: false, flags: {} });
@@ -1451,12 +1452,13 @@ body.portrait .mlist { max-height: 12em; }
       (cp.chests || []).forEach(i => { if (W.chests[i]) W.chests[i].open = true; });
       W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s) { n.hidden = !!s.h; } });
     }
-    await S.fade('out', 300);
+    S.depth++;
+    try { await S.fade('out', 300); } finally { S.depth--; }
     I.setScene(W);
     W.loadMap(cp ? cp.map : ch.map, cp ? cp.opts : (ch.opts || {}), cp ? cp.pos : ch.start);
     if (cp) W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s && s.x !== undefined && n.map === W.map.id) { n.x = s.x; n.y = s.y; n.placed = true; n.placedMap = W.map.id; } });
     W.player.dir = 0; W.hud(); $('#hud').hidden = false;
-    S.depth++; // verrouille le déplacement pendant l'ouverture
+    S.depth++; W.lock = false; // verrouille le déplacement pendant l'ouverture
     try {
       await S.fade('in', 500);
       if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); }
@@ -1524,6 +1526,8 @@ body.portrait .mlist { max-height: 12em; }
     const px = p.x + fx * 12, py = p.y + fy * 12;
     let best = null, bd = 22;
     W.npcs.forEach(n => { if (n.hidden || n.map !== W.map.id || !n.placed) return; const d = Math.hypot(n.x - px, n.y - py); if (d < bd) { bd = d; best = n; } });
+    const o0 = W.cur();
+    if (o0 && o0.talk) { const n = W.npcs.find(n => n.id === o0.talk); if (n && !n.hidden && n.map === W.map.id && n.placed && (Math.hypot(n.x - px, n.y - py) < 27 || Math.hypot(n.x - p.x, n.y - p.y) < 24)) best = n; }
     if (best) {
       const dx = p.x - best.x, dy = p.y - best.y; best.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0);
       const o = W.cur();
@@ -1553,17 +1557,17 @@ body.portrait .mlist { max-height: 12em; }
   W.update = function (dt) {
     W.t += dt; const p = W.player, h = I.input.held;
     const can = !S.busy && !W.lock && !I.ui.menuOpen;
-    if (can && I.debug.auto && !W._autoBusy) { W.autoStep(); W.updateCam(); return; }
+    if (can && I.debug.auto && !W._autoBusy && !I.debug.walk) { W.autoStep(); W.updateCam(); return; }
     if (can && (W.solidAt(p.x - 4, p.y - 5) || W.solidAt(p.x + 4, p.y) || W.solidAt(p.x - 4, p.y) || W.solidAt(p.x + 4, p.y - 5))) { const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; W.resetTrail(); } }
     if (can) {
       let dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0);
       if (dx || dy) {
-        const sp = 82 * dt * (dx && dy ? 0.7071 : 1);
+        const crowd = W.npcs.some(n => !n.hidden && n.map === W.map.id && n.placed && Math.abs(n.x - p.x) < 8 && Math.abs(n.y - p.y) < 6);
+        const sp = 82 * dt * (dx && dy ? 0.7071 : 1) * (crowd ? 0.55 : 1);
         p.dir = dx < 0 ? 1 : dx > 0 ? 2 : dy < 0 ? 3 : 0;
         const tryMove = (mx, my) => {
           const nx = p.x + mx, ny = p.y + my;
           if (W.solidAt(nx - 4, ny - 5) || W.solidAt(nx + 4, ny - 5) || W.solidAt(nx - 4, ny) || W.solidAt(nx + 4, ny)) return false;
-          if (W.npcs.some(n => !n.hidden && n.map === W.map.id && n.placed && Math.abs(n.x - nx) < 8 && Math.abs(n.y - ny) < 6 && Math.hypot(n.x - nx, n.y - ny) < Math.hypot(n.x - p.x, n.y - p.y))) return false;
           p.x = nx; p.y = ny; return true;
         };
         const m1 = dx && tryMove(dx * sp, 0), m2 = dy && tryMove(0, dy * sp);
@@ -1582,6 +1586,34 @@ body.portrait .mlist { max-height: 12em; }
     while (q.length) { const [x, y] = q.shift(); if (Math.abs(x - ex) <= 1 && Math.abs(y - ey) <= 1) return true;
       for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= m.w || ny >= m.h) continue; const i = ny * m.w + nx; if (seen[i] || m.solid[i]) continue; seen[i] = 1; q.push([nx, ny]); } }
     return false;
+  };
+  // tests « à pied » : pilote le héros au clavier simulé le long d'un chemin, avec la vraie physique
+  W.pathTo = function (x0, y0, x1, y1) {
+    const m = W.map, sx = Math.floor(x0 / 16), sy = Math.floor((y0 - 2) / 16), ex = Math.floor(x1 / 16), ey = Math.floor((y1 - 2) / 16);
+    const prev = new Int32Array(m.w * m.h).fill(-1), q = [sy * m.w + sx]; prev[sy * m.w + sx] = sy * m.w + sx; let end = -1;
+    while (q.length) { const i = q.shift(), x = i % m.w, y = (i - x) / m.w; if (Math.abs(x - ex) + Math.abs(y - ey) <= 1) { end = i; break; }
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= m.w || ny >= m.h) continue; const j = ny * m.w + nx; if (prev[j] >= 0 || m.solid[j]) continue; prev[j] = i; q.push(j); } }
+    if (end < 0) return null; const path = []; for (let i = end; prev[i] !== i; i = prev[i]) path.unshift([(i % m.w) * 16 + 8, Math.floor(i / m.w) * 16 + 11]); return path;
+  };
+  W.walkStep = function () {
+    const o = W.cur(), p = W.player, h = I.input.held, log = I.debug.log || (I.debug.log = []), st = W._walk || (W._walk = {});
+    h.up = h.down = h.left = h.right = false; if (!o || o.auto) return;
+    const key = W.saga.id + W.ch.id + W.objIndex + W.map.id;
+    let tx, ty, kind = o.goto ? 'goto' : o.talk ? 'talk' : 'foe';
+    if (o.goto) { const sp = W.spotPx(o.goto); if (!sp) return; tx = sp[0]; ty = sp[1]; }
+    else if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); if (!n || n.hidden || n.map !== W.map.id || !n.placed) { if (st.key !== key) { st.key = key; log.push(`PNJ ABSENT ${key} ${o.talk}`); } W.complete(); return; } tx = n.x; ty = n.y; }
+    else { const f = W.foes.find(f => f.id === o.foe); if (!f || f.map !== W.map.id || !f.placed) { if (st.key !== key) { st.key = key; log.push(`FOE ABSENT ${key} ${o.foe}`); } if (f) f.done = true; W.complete(); return; } tx = f.x; ty = f.y; }
+    if (st.key !== key) { st.key = key; st.path = W.pathTo(p.x, p.y, tx, ty); st.t = 0; st.best = 1e9; st.stall = 0; if (!st.path) { log.push(`SANS CHEMIN ${key} ${kind}`); } }
+    st.t++;
+    const d = Math.hypot(tx - p.x, ty - p.y);
+    if (kind === 'talk' && d < 26) { const dx = tx - p.x, dy = ty - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); const before = W.objIndex; W.interact(); if (W.objIndex === before && !S.busy) { if (!st.miss) { st.miss = 1; } } return; }
+    const prog = st.path ? st.path.length * 16 + (st.path.length ? Math.hypot(st.path[0][0] - p.x, st.path[0][1] - p.y) : d) : d;
+    if (prog < st.best - 0.5) { st.best = prog; st.stall = 0; } else st.stall++;
+    if (!st.path || st.stall > 300 || st.t > 30000) { log.push(`COINCÉ ${key} ${kind} à ${Math.round(d)} px (${st.path ? 'chemin trouvé' : 'aucun chemin'})`); p.x = tx; p.y = ty + (kind === 'goto' ? 0 : 14); W.resetTrail(); st.key = null; if (kind === 'talk') W.complete(); return; }
+    while (st.path.length > 1 && Math.hypot(st.path[0][0] - p.x, st.path[0][1] - p.y) < 3) st.path.shift();
+    const wp = st.path.length ? st.path[0] : [tx, ty], wx = st.path.length > 1 || kind !== 'goto' ? wp[0] : tx, wy = st.path.length > 1 || kind !== 'goto' ? wp[1] : ty;
+    if (st.path.length <= 1 && Math.hypot(wp[0] - p.x, wp[1] - p.y) < 3) { st.path = [[tx, ty]]; }
+    const ddx = wx - p.x, ddy = wy - p.y; if (ddx > 1.2) h.right = true; else if (ddx < -1.2) h.left = true; if (ddy > 1.2) h.down = true; else if (ddy < -1.2) h.up = true;
   };
   W.autoStep = function () {
     const o = W.cur(); if (!o) return; const p = W.player, log = I.debug.log || (I.debug.log = []);
@@ -2376,7 +2408,11 @@ body.portrait .mlist { max-height: 12em; }
     let last = performance.now();
     (function frame(now) {
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
-      if (sc) { try { if (sc.update) sc.update(dt); G.present(dt, sc.render(dt) || {}); } catch (e) { if (!U._err) { U._err = e; console.error(e); } } }
+      if (sc) { try {
+        if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) W.walkStep(); W.update(1 / 60); } I.input.clearHeld(); }
+        else if (sc.update) sc.update(dt);
+        G.present(dt, sc.render(dt) || {});
+      } catch (e) { if (!U._err) { U._err = e; console.error(e); } } }
       $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden);
       requestAnimationFrame(frame);
     })(last);
