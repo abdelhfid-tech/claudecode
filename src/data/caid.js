@@ -574,7 +574,7 @@ ISNAD.registerSaga({
         ] },
         { id: 'farrokh', name: 'Farrokh, géomètre', at: ['ecole', 1, 1], look: { kind: 'perse', robe: '#2d6e8e', head: '#e7d9a8' },
           talk: [['say', 'farrokh', "Nous ne sortirons pas, seigneur. Pas par peur. Pour qu'on ne dise pas que nous avons fui."]] },
-        { id: 'porteur', name: "Porteur d'eau", at: ['cour', 1, 1], look: { kind: 'homme', robe: '#6b5a48', head: '#c9bda8' }, talk: [
+        { id: 'porteur', name: "Porteur d'eau", at: ['cour', 1, 1], look: { kind: 'homme', robe: '#6b5a48', head: '#c9bda8', coiffe: 'calotte', manteau: 'aucun', court: true, item: 'outre' }, talk: [
           ['say', 'porteur', "D'où ça vient ? D'un homme qui paie à boire et qui plaint beaucoup le peuple. De belles manches. Il dit qu'il tient ça du palais."],
           ['say', 'porteur', "Moi je porte l'eau, seigneur, je ne la juge pas. Mais un homme qui plaint tant les pauvres sans avoir jamais porté une outre, je m'en méfie."],
           ['say', 'porteur', "Tu as mauvaise mine, seigneur. Chez nous on dit : celui qui compte ses sacs la nuit ferait mieux d'en ouvrir un le jour."],

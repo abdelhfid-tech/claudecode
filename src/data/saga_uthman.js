@@ -39,7 +39,7 @@ ISNAD.registerSaga({
     uthman: {
       name: "'Uthmân", title: 'Le Généreux', arabic: 'عثمان',
       role: 'soigneur', el: 'rahma',
-      look: { robe: '#efe9dc', head: '#f6f1e4', cloak: '#2f6d6a', aura: '#8ff0e0' },
+      look: { robe: '#efe9dc', head: '#f6f1e4', cloak: '#2f6d6a', aura: '#8ff0e0', coiffe: 'imama_large', manteau: 'ample', motif: 'bandes' },
       skills: [
         { lvl: 1, id: 'largesse', name: 'Largesse', desc: 'Donne sans compter : rend de la Constance à tout le groupe.', cost: 5,
           target: 'allies', heal: 0.6, anim: 'heal' },
@@ -61,7 +61,7 @@ ISNAD.registerSaga({
     zayd: {
       name: 'Zayd ibn Thâbit', title: 'Le Scribe', arabic: 'زيد',
       role: 'sage', el: 'ilm',
-      look: { robe: '#c9b99a', head: '#e9e1cf', cloak: '#5b4a8a', aura: '#d2b6ff', item: 'feuillets' },
+      look: { robe: '#d8ccb0', head: '#5b4a8a', cloak: '#5b4a8a', aura: '#d2b6ff', coiffe: 'calotte', manteau: 'aucun', echarpe: true, item: 'feuillets' },
       skills: [
         { lvl: 1, id: 'calame', name: 'Le Calame', desc: 'Trace net ce que la querelle brouille. Dégâts de Savoir.', cost: 3,
           target: 'foe', el: 'ilm', pow: 1.3, anim: 'glyph' },
@@ -82,7 +82,7 @@ ISNAD.registerSaga({
     hudhayfa: {
       name: 'Hudhayfa', title: 'Le Gardien du secret', arabic: 'حذيفة',
       role: 'stratege', el: 'sidq',
-      look: { robe: '#8a7355', head: '#ded3bd', cloak: '#6e5a2a', aura: '#ffe9a0' },
+      look: { robe: '#8a7355', head: '#ded3bd', cloak: '#6e5a2a', aura: '#ffe9a0', coiffe: 'imama_queue', manteau: 'long', echarpe: true },
       skills: [
         { lvl: 1, id: 'estoc', name: 'Estoc des frontières', desc: 'Un coup droit appris aux marches. Dégâts de Fer.', cost: 3,
           target: 'foe', el: 'fer', pow: 1.4, anim: 'slash' },

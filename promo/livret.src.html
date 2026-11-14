@@ -461,6 +461,7 @@ body.export .pl { border: 0; }
             <tr><td class="n">Se déplacer</td><td><kbd>Flèches</kbd> ou <kbd>ZQSD</kbd> / <kbd>WASD</kbd></td><td>Toucher l’endroit où aller. Doigt maintenu : le héros suit</td></tr>
             <tr><td class="n">Parler, se servir d’une chose</td><td><kbd>Entrée</kbd> ou <kbd>Espace</kbd></td><td>Toucher le personnage, le coffre, la natte, le palmier</td></tr>
             <tr><td class="n">Que faire ?</td><td><kbd>H</kbd></td><td>Bouton <b>?</b></td></tr>
+            <tr><td class="n">Carte du lieu</td><td><kbd>C</kbd></td><td>Toucher la mini-carte, ou « Carte » dans la halte</td></tr>
             <tr><td class="n">Menu de halte, retour</td><td><kbd>Échap</kbd> ou <kbd>X</kbd>, <kbd>M</kbd> pour le menu</td><td>Bouton ☰, ou MENU</td></tr>
             <tr><td class="n">Bâtir, à ciel ouvert</td><td><kbd>B</kbd>, puis <kbd>C</kbd> et <kbd>V</kbd> pour changer de pièce</td><td>Bouton ▦, puis toucher la pièce et la case</td></tr>
             <tr><td class="n">Doser la Niyya en combat</td><td><kbd>◂</kbd> <kbd>▸</kbd></td><td>Boutons − et +</td></tr>
@@ -515,7 +516,8 @@ body.export .pl { border: 0; }
   <section class="feuillet" id="personnages">
     <h2>Les personnages</h2>
     <p>Chaque saga se joue en groupe. Voici ceux que l’on y mène, avec leur rôle, leur Lumière, leurs vertus et l’acte que leur ouvre la Sakîna.</p>
-    <p>Personne n’a de visage. On reconnaît chacun à sa coiffe, à son vêtement, à ce qu’il porte, et un Compagnon à son voile de lumière. Ce qu’ils éprouvent se lit dans leur attitude : la tête qui s’incline, le bras qui se lève, le genou qui plie.</p>
+    <p>Personne n’a de visage. On reconnaît chacun à sa silhouette : un turban haut, large ou dont un pan retombe sur l’épaule, une calotte, un casque ; un manteau long, ample, jeté sur une seule épaule, ou pas de manteau du tout ; une robe rayée, une écharpe, un bouclier. Un Compagnon se reconnaît en outre à son voile de lumière. Ce qu’ils éprouvent se lit dans leur attitude : la tête qui s’incline, le bras qui se lève, le genou qui plie.</p>
+    <p>En jeu, dès qu’on s’arrête, le nom de ceux qui entourent le héros s’affiche au-dessus d’eux, et la boîte de dialogue montre la silhouette de celui qui parle. Ces tenues sont une convention de dessin : elles ne prétendent pas restituer un costume attesté.</p>
     <figure class="ecran" style="max-width:720px;margin-top:1.4em"><div style="overflow:hidden;aspect-ratio:16/9"><img src="img/emotion.jpg" alt="Dans la cour de la mosquée de Médine, ’Umar est à genoux, la tête basse ; Abû Bakr et Abû ’Ubayda se tiennent devant lui." loading="lazy" style="transform:scale(2.2);transform-origin:50% 46%"></div><figcaption style="padding:.7em .8em .8em">« Mes jambes ne me portèrent plus, et je tombai à terre. » ’Umar ibn al-Khattâb, d’après al-Bukhârî. Dans le jeu, c’est son corps qui le dit.</figcaption></figure>
     {{PERSONNAGES}}
     <div class="troupe"><h3>Gens de rencontre</h3>
@@ -538,6 +540,8 @@ body.export .pl { border: 0; }
     <div class="duo">
       <div>
         <p>L’objectif du moment s’affiche en haut à gauche, précédé d’un losange. On parle aux gens qui portent une bulle, on ouvre les coffres, on récolte en s’adressant aux choses.</p>
+        <p>La <b>mini-carte</b>, en haut de l’écran, montre le lieu et ta position. Touche-la, ou ouvre <b>Carte</b> dans la halte (touche <kbd>C</kbd>) : le lieu entier tel qu’on le voit, ta position, l’objectif, la natte, le comptoir et les lieux nommés.</p>
+        <figure class="ecran"><img src="img/carte.jpg" alt="La carte de Médine dans la halte : la mosquée, le souk, les portes, la position du héros et l’objectif." loading="lazy"><figcaption style="padding:.7em .8em .8em">La carte de la halte : où l’on est, où l’on va.</figcaption></figure>
         <p>On s’oriente au ciel, comme les pilotes du désert. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>
         <div class="tab"><table>
           <thead><tr><th>Cap</th><th>Étoile</th><th></th><th>C’est-à-dire</th></tr></thead>

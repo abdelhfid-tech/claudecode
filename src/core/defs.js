@@ -62,6 +62,26 @@
     archives: { label: 'Archives basses',   spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] }
   };
 
+  // noms des lieux, pour la carte de la halte (null : lieu technique, non affiché)
+  D.LIEUX = {
+    mosquee_cour: 'Mosquée', mosquee_porte: null, place: 'Place', souk: 'Souk', halle: 'Halle', maison: 'Maisons', puits: 'Puits', palmeraie: 'Palmeraie',
+    porte_nord: 'Porte du nord', porte_sud: 'Porte du sud', enclos: 'Enclos', colline: 'Colline', priere: null, ecole: 'École', comptoir: null,
+    depart: 'Départ', dunes: 'Dunes', rochers: 'Rochers', oasis: 'Oasis', source: 'Source', caravane: 'Caravane', crete: 'Crête', ruines: 'Ruines', arrivee: 'Arrivée',
+    entree: 'Entrée', tente_chef: 'Tente du chef', feu: 'Feu', etendard: 'Étendard', lignes: 'Lignes', tertre: 'Tertre', tentes: 'Tentes',
+    porte: 'Porte', cardo: 'Grande rue', forum: 'Forum', basilique: 'Basilique', esplanade: 'Esplanade', palais: 'Palais', fontaine: 'Fontaine', remparts: 'Remparts',
+    jardin: 'Jardin', marche: 'Marché', quartier: 'Quartier', nef: 'Nef', trone: 'Trône', tresor: 'Trésor', colonnade: 'Colonnade',
+    poupe: 'Poupe', pont: 'Pont', mat: 'Mât', proue: 'Proue', passerelle: 'Passerelle', pont2: 'Entrepont',
+    seuil: 'Seuil', noeud1: 'Nœud', noeud2: 'Nœud', noeud3: 'Nœud', faille: 'Faille', miroir: 'Miroir', coeur: 'Cœur',
+    cour: 'Cour', tour: 'Tour', salle: 'Grande salle', mosquee: 'Mosquée', greniers: 'Greniers', poterne: 'Poterne',
+    rue: 'Rue', ecran: 'Grand écran', ruelle: 'Ruelle', ascenseur: 'Ascenseur', parvis: 'Parvis', rayonnages: 'Rayonnages', bureau: 'Bureau', chaine: 'La Chaîne'
+  };
+
+  // tenue d'un personnage (look) : coiffes, manteaux, motifs, attributs portés — dessin dans sprites.js
+  D.COIFFES = ['imama', 'imama_haute', 'imama_large', 'imama_queue', 'calotte', 'casque', 'casque_turban', 'capuche', 'tiare', 'litham', 'keffieh'];
+  D.MANTEAUX = ['long', 'aucun', 'epaule', 'ample'];
+  D.MOTIFS = ['rayures', 'bandes'];
+  D.PORTES = ['durra', 'sabre', 'lance', 'baton', 'feuillets', 'bourse', 'bouclier', 'outre', 'etendard'];
+
   D.ITEMS = {
     // vivre: true — ce que l'on ne prend pas un jour de jeûne
     dattes: { name: 'Dattes de Médine', desc: 'Rend 40 % de Constance à un compagnon.',              hp: 0.4,  target: 'ally', vivre: true },

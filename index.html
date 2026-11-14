@@ -49,7 +49,7 @@ body[data-theme="cyber"] #hud .sub { font-family: var(--f-mono); }
 #hud .obj::before { content: "◆ "; color: var(--acc); font-size: .8em; }
 #menubtn, #helpbtn { position: absolute; right: 2%; top: 3%; width: 2.4em; height: 2.4em; border-radius: 50%; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; padding: 0; }
 #helpbtn { right: calc(2% + 2.9em); font-family: var(--f-display); font-weight: 700; }
-#toasts { position: absolute; right: 2%; top: 14%; display: flex; flex-direction: column; gap: .4em; align-items: flex-end; pointer-events: none; z-index: 30; }
+#toasts { position: absolute; right: 2%; top: var(--mini, 14%); display: flex; flex-direction: column; gap: .4em; align-items: flex-end; pointer-events: none; z-index: 30; }
 .toast { padding: .32em .8em; background: var(--panel); border-right: 2px solid var(--acc); font-size: .82em; animation: tin .3s ease; transition: opacity .4s, transform .4s; max-width: 22em; }
 .toast b { color: var(--acc); }
 .toast.out { opacity: 0; transform: translateX(1em); }
@@ -257,6 +257,26 @@ body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 #card.pray { background: radial-gradient(ellipse at center, rgba(20, 16, 40, .95), rgba(4, 3, 10, 1)); }
 #card.parley h1 { font-size: 1.6em; }
 
+/* ---------- qui est qui, et où : noms au-dessus des personnages, silhouette de celui qui parle, carte ---------- */
+#noms { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3; }
+.nom { position: absolute; transform: translate(-50%, -100%); padding: .02em .5em .08em; font-size: .6em; line-height: 1.25; white-space: nowrap; color: #fff6dc; background: rgba(8, 7, 18, .74); border-bottom: 1px solid var(--c, var(--gold)); border-radius: 2px; text-shadow: 0 1px 2px #000; animation: nomin .25s ease; }
+@keyframes nomin { from { opacity: 0; } }
+body.portrait .nom { font-size: .66em; }
+#dialog .fig { position: absolute; left: 1.75em; top: 50%; height: 4.5em; width: 3em; margin-top: -2.5em; image-rendering: pixelated; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .6)); }
+#dialog.avecfig .seal { opacity: .38; }
+body.portrait #dialog .fig { left: 1.2em; height: 3.9em; width: 2.6em; margin-top: -2.1em; }
+#menu .cols.large { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
+#menu .cols.large .side { flex-direction: row; overflow: visible; }
+.carte { position: relative; width: 100%; margin: .4em 0 .6em; border: 1px solid var(--line); background: #0a0810; }
+.carte canvas { display: block; width: 100%; height: 100%; }
+.carte .lieu, .carte .ici { position: absolute; transform: translate(-50%, -50%); font-size: .62em; letter-spacing: .04em; white-space: nowrap; padding: .02em .4em; background: rgba(8, 7, 18, .62); color: #f3e7cc; border-radius: 2px; pointer-events: none; }
+.carte .ici { transform: translate(-50%, -190%); background: #fff6dc; color: #1a1420; font-weight: 700; font-size: .66em; }
+.legende { font-size: .82em; color: var(--sand); margin: .3em 0; }
+.legende i { display: inline-block; width: .8em; height: .8em; border-radius: 50%; margin: 0 .3em 0 .9em; vertical-align: -.05em; }
+.legende i:first-child { margin-left: 0; }
+.legende .k1 { background: #ff7a5c; box-shadow: 0 0 0 2px #fff; } .legende .k2 { background: #ffe08a; transform: rotate(45deg); border-radius: 1px; } .legende .k3 { background: #7fe6e0; border-radius: 2px; transform: rotate(22deg); } .legende .k4 { background: transparent; border: 2px solid #e9c877; }
+#ui { --mini: 14%; }
+
 /* ---------- le cœur : œuvres, lames, compagnons de lumière ---------- */
 #hud .enig { margin-top: .3em; display: inline-block; padding: .16em .6em; font-size: .76em; font-style: italic; color: #f7ecd2; background: rgba(10, 8, 20, .6); border-left: 2px solid #c49bff; }
 #hud .pil .zad i { color: #ff9a8a; }
@@ -318,7 +338,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
         <div class="panel"><div class="heroes"></div><div class="cmd"></div></div>
       </div>
       <div id="floaters"></div>
-      <div id="dialog" hidden><div class="seal"></div><div class="name"></div><div class="text"></div><div class="next">▼</div></div>
+      <div id="noms"></div>
+      <div id="dialog" hidden><div class="seal"></div><img class="fig" alt="" hidden><div class="name"></div><div class="text"></div><div class="next">▼</div></div>
       <div id="choice" hidden></div>
       <div id="buildbar" hidden><div class="mats"></div><div class="pieces"></div><div class="info"></div><div class="keys"><kbd>Entrée</kbd> poser devant soi · <kbd>C</kbd> <kbd>V</kbd> changer de pièce · <kbd>B</kbd> ou <kbd>Échap</kbd> quitter</div></div>
     </div>
@@ -412,6 +433,26 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     archives: { label: 'Archives basses',   spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] }
   };
 
+  // noms des lieux, pour la carte de la halte (null : lieu technique, non affiché)
+  D.LIEUX = {
+    mosquee_cour: 'Mosquée', mosquee_porte: null, place: 'Place', souk: 'Souk', halle: 'Halle', maison: 'Maisons', puits: 'Puits', palmeraie: 'Palmeraie',
+    porte_nord: 'Porte du nord', porte_sud: 'Porte du sud', enclos: 'Enclos', colline: 'Colline', priere: null, ecole: 'École', comptoir: null,
+    depart: 'Départ', dunes: 'Dunes', rochers: 'Rochers', oasis: 'Oasis', source: 'Source', caravane: 'Caravane', crete: 'Crête', ruines: 'Ruines', arrivee: 'Arrivée',
+    entree: 'Entrée', tente_chef: 'Tente du chef', feu: 'Feu', etendard: 'Étendard', lignes: 'Lignes', tertre: 'Tertre', tentes: 'Tentes',
+    porte: 'Porte', cardo: 'Grande rue', forum: 'Forum', basilique: 'Basilique', esplanade: 'Esplanade', palais: 'Palais', fontaine: 'Fontaine', remparts: 'Remparts',
+    jardin: 'Jardin', marche: 'Marché', quartier: 'Quartier', nef: 'Nef', trone: 'Trône', tresor: 'Trésor', colonnade: 'Colonnade',
+    poupe: 'Poupe', pont: 'Pont', mat: 'Mât', proue: 'Proue', passerelle: 'Passerelle', pont2: 'Entrepont',
+    seuil: 'Seuil', noeud1: 'Nœud', noeud2: 'Nœud', noeud3: 'Nœud', faille: 'Faille', miroir: 'Miroir', coeur: 'Cœur',
+    cour: 'Cour', tour: 'Tour', salle: 'Grande salle', mosquee: 'Mosquée', greniers: 'Greniers', poterne: 'Poterne',
+    rue: 'Rue', ecran: 'Grand écran', ruelle: 'Ruelle', ascenseur: 'Ascenseur', parvis: 'Parvis', rayonnages: 'Rayonnages', bureau: 'Bureau', chaine: 'La Chaîne'
+  };
+
+  // tenue d'un personnage (look) : coiffes, manteaux, motifs, attributs portés — dessin dans sprites.js
+  D.COIFFES = ['imama', 'imama_haute', 'imama_large', 'imama_queue', 'calotte', 'casque', 'casque_turban', 'capuche', 'tiare', 'litham', 'keffieh'];
+  D.MANTEAUX = ['long', 'aucun', 'epaule', 'ample'];
+  D.MOTIFS = ['rayures', 'bandes'];
+  D.PORTES = ['durra', 'sabre', 'lance', 'baton', 'feuillets', 'bourse', 'bouclier', 'outre', 'etendard'];
+
   D.ITEMS = {
     // vivre: true — ce que l'on ne prend pas un jour de jeûne
     dattes: { name: 'Dattes de Médine', desc: 'Rend 40 % de Constance à un compagnon.',              hp: 0.4,  target: 'ally', vivre: true },
@@ -488,8 +529,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   // v2 — piliers de la Citadelle, moments de prière, pistes musicales
   D.PILLARS = { priere: { name: 'Prière', glyph: '◠' }, savoir: { name: 'Savoir', glyph: '✧' }, justice: { name: 'Justice', glyph: '⚖' }, lien: { name: 'Lien', glyph: '∞' } };
   D.PRAYERS = { fajr: 'Fajr · l’aube', dhuhr: 'Dhuhr · le midi', asr: '’Asr · l’après-midi', maghrib: 'Maghrib · le couchant', isha: '’Ishâ · la nuit' };
-  D.TRACKS = ['titre', 'chaine', 'medine', 'nuit', 'desert', 'camp', 'rome', 'palais', 'mer', 'noos', 'cite', 'citadelle', 'combat', 'boss', 'victoire', 'deuil', 'espoir', 'conseil', 'silence'];
-  D.WAVES = ['pulse', 'square', 'triangle', 'saw', 'sine', 'pluck', 'flute', 'strings', 'bell', 'drums'];
+  D.TRACKS = ['titre', 'chaine', 'medine', 'nuit', 'desert', 'camp', 'rome', 'palais', 'mer', 'noos', 'cite', 'citadelle', 'combat', 'boss', 'vice', 'victoire', 'deuil', 'espoir', 'conseil', 'lame', 'rencontre', 'silence'];
+  D.WAVES = ['pulse', 'square', 'triangle', 'saw', 'sine', 'pluck', 'harp', 'flute', 'strings', 'pad', 'brass', 'bass', 'contra', 'bell', 'timp', 'drums'];
 
   // poses des personnages : l'émotion se lit dans le corps, jamais sur un visage (dessin : sprites.js)
   D.POSES = ['prie', 'resolu', 'accable', 'salut', 'surpris', 'garde'];
@@ -602,28 +643,24 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     reset() { const o = this.data.opts; this.data = fresh(); this.data.opts = Object.assign(this.data.opts, o); }
   };
 
-  /* ---------- son : ambiances (bruit filtré) + percussions (duff) + bruitages. Pas d'instrument mélodique. ---------- */
+  /* ---------- son : ambiances (bruit filtré) + percussions (duff) + bruitages ; la bande-son est plus bas. Aucune voix. ---------- */
   const A = I.audio = { ctx: null, on: true, master: null, ambNode: null, ambName: null, rhythm: null };
   A.unlock = function () {
     if (A.ctx) { if (A.ctx.state === 'suspended') A.ctx.resume(); return; }
     try {
       const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
       A.ctx = new AC();
-      A.master = A.ctx.createGain(); A.master.gain.value = A.on ? 0.8 : 0;
-      const lim = A.ctx.createDynamicsCompressor(); lim.threshold.value = -12; lim.knee.value = 8; lim.ratio.value = 8; lim.attack.value = 0.003; lim.release.value = 0.2; A.master.connect(lim); lim.connect(A.ctx.destination);
-      const len = A.ctx.sampleRate * 2; A.noise = A.ctx.createBuffer(1, len, A.ctx.sampleRate);
-      const d = A.noise.getChannelData(0); let b = 0;
-      for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; b = (b + 0.04 * w) / 1.04; d[i] = w * 0.5 + b * 4; }
+      const oc = outChain(A.ctx); A.master = oc.master; A.limiter = oc.lim; A.master.gain.value = A.on ? 0.8 : 0;
+      noiseBuf(A.ctx);
       if (A.pendingAmb) { const n = A.pendingAmb; A.pendingAmb = null; A.amb(n); }
       if (A.pendingRhythm) { const n = A.pendingRhythm; A.pendingRhythm = null; A.beat(n); }
-      A.mbus = A.ctx.createGain(); A.mbus.gain.value = A.musicOn ? 0.26 : 0; A.mbus.connect(A.master);
-      const dl = A.ctx.createDelay(1), fb = A.ctx.createGain(), wet = A.ctx.createGain(); dl.delayTime.value = 0.29; fb.gain.value = 0.26; wet.gain.value = 0.22; A.mbus.connect(dl); dl.connect(fb); fb.connect(dl); dl.connect(wet); wet.connect(A.master);
+      A.mbus = musicBus(A.ctx, A.master); A.mbus.gain.value = A.musicOn ? MG : 0;
       if (A.wantTrack) { const n = A.wantTrack; A.curTrack = null; A.music(n); }
     } catch (e) { A.ctx = null; }
   };
   A.setOn = function (v) { A.on = v; if (A.master) A.master.gain.setTargetAtTime(v ? 0.8 : 0, A.ctx.currentTime, 0.05); };
   function noiseSrc(loop) { const s = A.ctx.createBufferSource(); s.buffer = A.noise; s.loop = !!loop; return s; }
-  function env(g, t, a, d, peak) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); }
+  function env(g, t, a, d, peak) { g.gain.value = 0; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); }
   // percussions
   A.dum = function (t, vol, pitch, out) {
     if (!A.ctx) return; t = t || A.ctx.currentTime; const o = A.ctx.createOscillator(), g = A.ctx.createGain();
@@ -720,72 +757,196 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     };
     A.rhythm = { name, timer: setInterval(tick, 80) };
   };
-  /* ---------- musique : séquenceur multi-voix (timbres synthétisés, façon 16 bits) ---------- */
+  /* ---------- musique : séquenceur multi-voix (timbres synthétisés, façon 16 bits) ----------
+     Piste : { bpm, beats, intro?, voices: [{ wave, vol, pan?, notes }] }. `intro` : temps joués une seule fois, la boucle
+     reprend ensuite à ce temps-là. Timbres : D.WAVES. Aucun timbre vocal (exigence 9) : flûte, luth, harpe, cordes,
+     cuivres, cloches, timbales, synthés et percussions. Détail : docs/musique.md. */
   I.music = {}; I.registerMusic = function (name, def) { I.music[name] = def; };
   A.musicOn = true; A.curTrack = null; A.wantTrack = null;
+  const MG = 0.26;                                   // gain du bus musique : la bande-son reste sous les bruitages
   const SEMI = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
   function freqOf(n) { const m = n.match(/^([A-G])(#|b)?(\d)$/); if (!m) return 0; const midi = 12 * (+m[3] + 1) + SEMI[m[1]] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0); return 440 * Math.pow(2, (midi - 69) / 12); }
   function parseTrack(def) {
-    if (def._ev) return def._ev; const ev = [];
+    if (def._ev) return def._ev; const ev = [], intro = def.intro || 0;
     def.voices.forEach((v, vi) => { let t = 0; String(v.notes || '').trim().split(/\s+/).forEach(tk => { const m = tk.match(/^(.+)\/(\d*\.?\d+)$/); if (!m) return; const len = parseFloat(m[2]); if (m[1] !== '-') ev.push({ t, len, v: vi, n: m[1].split('+') }); t += len; }); });
-    ev.sort((a, b) => a.t - b.t); return (def._ev = ev);
+    ev.sort((a, b) => a.t - b.t); let i0 = 0; while (i0 < ev.length && ev[i0].t < intro - 1e-6) i0++;
+    def._i0 = i0; return (def._ev = ev);
   }
-  function tone(wave, f, t, dur, vol) {
-    const c = A.ctx, g = c.createGain(), o = c.createOscillator(); let last = o, extra = null;
-    const rel = wave === 'strings' ? 0.22 : wave === 'flute' ? 0.12 : 0.06, end = t + dur;
-    o.frequency.setValueAtTime(f, t);
+  // sortie : gain général puis limiteur — la même chaîne sert au jeu et au rendu hors ligne
+  function outChain(c) {
+    const m = c.createGain(), lim = c.createDynamicsCompressor(); lim.threshold.value = -12; lim.knee.value = 8; lim.ratio.value = 8; lim.attack.value = 0.003; lim.release.value = 0.2;
+    m.connect(lim); lim.connect(c.destination); return { master: m, lim };
+  }
+  function noiseBuf(c) {
+    if (A.noise) return A.noise; const len = c.sampleRate * 2, buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0); let b = 0;
+    for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; b = (b + 0.04 * w) / 1.04; d[i] = w * 0.5 + b * 4; }
+    return (A.noise = buf);
+  }
+  // bus musique : écho filtré (à la manière des consoles 16 bits) et salle synthétique, calculée, sans fichier
+  function musicBus(c, dest) {
+    const bus = c.createGain(), dl = c.createDelay(1), fb = c.createGain(), lp = c.createBiquadFilter(), wet = c.createGain();
+    dl.delayTime.value = 0.27; fb.gain.value = 0.28; lp.type = 'lowpass'; lp.frequency.value = 2400; wet.gain.value = 0.14;
+    bus.connect(dest); bus.connect(dl); dl.connect(lp); lp.connect(fb); fb.connect(dl); lp.connect(wet); wet.connect(dest);
+    try { const cv = c.createConvolver(), rv = c.createGain(); cv.buffer = room(c); rv.gain.value = 0.22; bus.connect(cv); cv.connect(rv); rv.connect(dest); } catch (e) { /* pas de convolution : l'écho suffit */ }
+    return bus;
+  }
+  function room(c) {
+    const sr = c.sampleRate, n = Math.floor(sr * 1.6), pre = Math.floor(sr * 0.012), buf = c.createBuffer(2, n, sr);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = buf.getChannelData(ch); let y = 0, s = 9301 + ch * 4241;
+      for (let i = pre; i < n; i++) { const x = (i - pre) / sr; s = (s * 1664525 + 1013904223) >>> 0; y += (0.5 - 0.42 * Math.min(1, x / 0.9)) * (s / 2147483648 - 1 - y); d[i] = y * Math.exp(-x / 0.26); }
+    }
+    return buf;
+  }
+  // Tables d'ondes : des spectres fixes (amplitude de chaque harmonique), comme les échantillons d'une console 16 bits.
+  // L'éclat de l'attaque est une seconde couche, vite éteinte : aucun filtre à balayer, donc presque rien à calculer.
+  const SPEC = {
+    oud: [1, 0.72, 0.5, 0.38, 0.3, 0.2, 0.16, 0.1, 0.08, 0.05, 0.03, 0.02],
+    harp: [1, 0.42, 0.22, 0.12, 0.07, 0.04, 0.02],
+    brass: [1, 0.95, 0.8, 0.6, 0.5, 0.34, 0.24, 0.16, 0.11, 0.07, 0.05, 0.03],
+    bass: [1, 0.62, 0.45, 0.3, 0.2, 0.12, 0.08, 0.05],
+    contra: [1, 0.55, 0.3, 0.18, 0.1, 0.06, 0.03]
+  };
+  function table(c, name) {
+    const key = '_w_' + name; if (c[key]) return c[key]; let re, im;
+    if (name === 'pulse') {                         // rectangle à 25 % : le timbre nasal des synthés de console
+      const N = 28; re = new Float32Array(N); im = new Float32Array(N);
+      for (let n = 1; n < N; n++) { re[n] = 2 / (Math.PI * n) * Math.sin(Math.PI * n / 2); im[n] = 2 / (Math.PI * n) * (1 - Math.cos(Math.PI * n / 2)); }
+    } else { const h = SPEC[name]; re = new Float32Array(h.length + 1); im = new Float32Array(h.length + 1); h.forEach((a, i) => { im[i + 1] = a; }); }
+    return (c[key] = c.createPeriodicWave(re, im));
+  }
+  // niveau propre à chaque timbre : à `vol` égal, les timbres sonnent à peu près aussi fort (réglé par la mesure, docs/musique.md)
+  const LEVEL = { pulse: 0.87, square: 0.59, triangle: 0.8, sine: 0.66, saw: 0.67, bass: 0.89, contra: 0.9, pluck: 0.9, harp: 1.03, bell: 1.06, flute: 0.92, strings: 0.49, pad: 0.55, brass: 0.71, timp: 1.3 };
+  function hit(c, out, t, vol, hz, dur, type, q) {
+    const n = c.createBufferSource(), g = c.createGain(), f = c.createBiquadFilter(); n.buffer = noiseBuf(c);
+    f.type = type || 'bandpass'; f.frequency.value = hz; f.Q.value = q || 1.2;
+    env(g, t, 0.003, dur, vol); n.connect(f); f.connect(g); g.connect(out); n.start(t, Math.random() * 1.5); n.stop(t + dur + 0.08);
+  }
+  function thud(c, out, t, vol, f0, f1, dur) {
+    const o = c.createOscillator(), g = c.createGain(); o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur * 0.6);
+    env(g, t, 0.004, dur, vol); o.connect(g); g.connect(out); o.start(t); o.stop(t + dur + 0.08);
+  }
+  function tone(c, out, wave, f, t, dur, vol) {
+    const g = c.createGain(), G = g.gain, o = c.createOscillator(), end = t + dur, hold = Math.max(t + 0.02, end - 0.01);
+    let src = o, o2 = null, stop2 = 0, rel = 0.06, ring = 0, vib = 0, lvl;
+    const osc2 = (shape, ratio, cents) => { o2 = c.createOscillator(); if (SPEC[shape]) o2.setPeriodicWave(table(c, shape)); else o2.type = shape; o2.frequency.value = f * (ratio || 1); if (cents) o2.detune.value = cents; return o2; };
+    const via = (node, k) => { const lg = c.createGain(); lg.gain.value = k; node.connect(lg); lg.connect(g); return lg.gain; };           // une couche à son propre niveau
+    const snap = (shape, k, len) => { const p = via(osc2(shape), k); p.setValueAtTime(k, t); p.exponentialRampToValueAtTime(0.001, t + len); stop2 = t + len + 0.02; };   // l'éclat de l'attaque
+    const lp = hz => { const l = c.createBiquadFilter(); l.type = 'lowpass'; l.frequency.value = hz; l.Q.value = 0.7; return l; };
+    // attaque, puis chute éventuelle vers un palier ; `lvl` retient le niveau tenu, d'où part le relâchement
+    const ads = (a, d, s) => { a = Math.min(a, dur * 0.45); G.linearRampToValueAtTime(vol, t + a); lvl = vol; if (d && t + a + d < hold) { lvl = vol * s; G.linearRampToValueAtTime(lvl, t + a + d); } };
+    // corde pincée, cloche, peau : la note sonne puis s'éteint d'elle-même
+    const decay = (first, at, total) => { ring = total; G.linearRampToValueAtTime(vol, t + 0.004); if (first) G.exponentialRampToValueAtTime(vol * first, t + at); G.exponentialRampToValueAtTime(0.0002, t + total); };
+    o.frequency.value = f; G.value = 0; G.setValueAtTime(0.0001, t); vol *= LEVEL[wave] || 1;   // gain nul avant l'attaque : sans cela, un échantillon peut passer à plein niveau
     switch (wave) {
-      case 'pulse': case 'square': o.type = 'square'; vol *= 0.5; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.01); g.gain.linearRampToValueAtTime(vol * 0.7, t + 0.09); break;
-      case 'triangle': o.type = 'triangle'; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.01); break;
-      case 'sine': o.type = 'sine'; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.02); break;
-      case 'saw': { o.type = 'sawtooth'; vol *= 0.5; const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1900; o.connect(lp); last = lp; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.012); break; }
-      case 'pluck': { o.type = 'sawtooth'; vol *= 0.7; const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(3200, t); lp.frequency.exponentialRampToValueAtTime(500, t + 0.3); o.connect(lp); last = lp; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.004); g.gain.exponentialRampToValueAtTime(Math.max(0.0002, vol * 0.08), t + Math.min(dur + 0.3, 1.1)); break; }
-      case 'bell': { o.type = 'sine'; vol *= 0.7; extra = c.createOscillator(); extra.type = 'sine'; extra.frequency.value = f * 2.76; const eg = c.createGain(); eg.gain.value = 0.28; extra.connect(eg); eg.connect(g); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0002, t + Math.max(0.5, Math.min(dur + 0.9, 2.2))); break; }
-      case 'flute': { o.type = 'triangle'; const lf = c.createOscillator(), lg = c.createGain(); lf.frequency.value = 5.2; lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(f * 0.006, t + Math.min(0.35, dur)); lf.connect(lg); lg.connect(o.frequency); lf.start(t); lf.stop(end + rel + 0.05); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.05); g.gain.linearRampToValueAtTime(vol * 0.85, t + 0.2); break; }
-      case 'strings': { o.type = 'sawtooth'; vol *= 0.42; extra = c.createOscillator(); extra.type = 'sawtooth'; extra.frequency.value = f * 1.006; const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1500; o.connect(lp); extra.connect(lp); last = lp; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + Math.min(0.12, dur * 0.5)); break; }
-      default: o.type = 'triangle'; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.01);
+      case 'pulse': o.setPeriodicWave(table(c, 'pulse')); ads(0.008, 0.08, 0.72); vib = 0.005; break;
+      case 'square': o.type = 'square'; ads(0.008, 0.08, 0.72); vib = 0.004; break;
+      case 'sine': o.type = 'sine'; ads(0.02); break;
+      case 'saw': o.type = 'sawtooth'; src = lp(Math.min(3400, 1500 + f)); o.connect(src); ads(0.012); vib = 0.005; break;
+      case 'bass': o.setPeriodicWave(table(c, 'bass')); snap('sawtooth', 0.5, 0.07); ads(0.005, 0.12, 0.7); rel = 0.05; break;
+      case 'contra': o.setPeriodicWave(table(c, 'contra')); snap('oud', 0.35, 0.05); ads(0.006, 0.3, 0.6); rel = 0.1; break;
+      case 'pluck': o.setPeriodicWave(table(c, 'oud')); snap('sawtooth', 0.45, 0.06); decay(0.09, Math.min(dur + 0.3, 1.1), Math.min(dur + 0.45, 1.25)); break;
+      case 'harp': o.setPeriodicWave(table(c, 'harp')); snap('oud', 0.5, 0.1); decay(0.3, 0.3, Math.max(0.6, Math.min(dur + 0.7, 1.6))); break;
+      case 'bell': o.type = 'sine'; via(osc2('sine', 2.76), 0.28); decay(0, 0, Math.max(0.5, Math.min(dur + 0.9, 2.2))); break;
+      case 'flute': o.type = 'triangle'; ads(0.05, 0.15, 0.85); rel = 0.12; vib = 0.006; break;
+      case 'strings': o.type = 'sawtooth'; o.detune.value = -6; src = lp(Math.min(2400, 1200 + f * 1.2)); o.connect(src); osc2('sawtooth', 1, 7).connect(src); ads(0.11); rel = 0.26; break;
+      case 'pad': o.type = 'sawtooth'; o.detune.value = -9; src = lp(900); o.connect(src); osc2('sawtooth', 1, 9).connect(src); ads(0.3); rel = 0.45; break;
+      case 'brass': {                               // le cuivre s'ouvre : la couche ronde cède la place à la couche brillante
+        o.setPeriodicWave(table(c, 'brass')); src = c.createGain(); o.connect(src); src.gain.setValueAtTime(0.25, t); src.gain.linearRampToValueAtTime(1, t + 0.07);
+        const m = via(osc2('triangle'), 0.9); m.setValueAtTime(0.9, t); m.linearRampToValueAtTime(0.3, t + 0.1); ads(0.03, 0.18, 0.86); rel = 0.09; vib = 0.004; break;
+      }
+      case 'timp': o.type = 'sine'; o.frequency.setValueAtTime(f * 1.5, t); o.frequency.exponentialRampToValueAtTime(f, t + 0.05); via(osc2('triangle', 2), 0.3); decay(0, 0, Math.max(0.45, Math.min(dur + 0.5, 1.3))); hit(c, out, t, vol * 0.3, 600, 0.05, 'lowpass'); break;
+      default: o.type = 'triangle'; ads(0.01);
     }
-    if (wave !== 'pluck' && wave !== 'bell') { g.gain.setValueAtTime(g.gain.value || vol, Math.max(t + 0.02, end - 0.01)); g.gain.linearRampToValueAtTime(0.0001, end + rel); }
-    last.connect(g); g.connect(A.mbus);
-    const stop = wave === 'bell' ? t + Math.max(0.6, Math.min(dur + 1, 2.4)) : wave === 'pluck' ? t + Math.min(dur + 0.4, 1.2) : end + rel + 0.03;
-    o.start(t); o.stop(stop); if (extra) { extra.start(t); extra.stop(stop); }
+    if (!ring) { G.setValueAtTime(lvl, hold); G.linearRampToValueAtTime(0.0001, end + rel); }
+    src.connect(g); g.connect(out);
+    const stop = (ring ? t + ring : end + rel) + 0.03;
+    o.start(t); o.stop(stop); if (o2) { o2.start(t); o2.stop(stop2 || stop); }
+    if (vib && dur > 0.42) {                        // vibrato retardé sur les notes tenues
+      const lf = c.createOscillator(), lg = c.createGain(); lf.frequency.value = 5.4; lg.gain.value = 0; lg.gain.setValueAtTime(0, t + 0.16); lg.gain.linearRampToValueAtTime(f * vib, t + 0.42);
+      lf.connect(lg); lg.connect(o.frequency); if (o2 && !stop2) lg.connect(o2.frequency); lf.start(t); lf.stop(stop);
+    }
+    if (wave === 'flute') {                         // souffle du roseau : un peu d'air à l'attaque, un filet ensuite
+      const n = c.createBufferSource(), bp = c.createBiquadFilter(), ng = c.createGain(); n.buffer = noiseBuf(c); n.loop = true; bp.type = 'bandpass'; bp.frequency.value = Math.min(7000, f * 3); bp.Q.value = 0.8;
+      ng.gain.value = 0; ng.gain.setValueAtTime(0.0001, t); ng.gain.linearRampToValueAtTime(vol * 0.3, t + 0.02); ng.gain.linearRampToValueAtTime(vol * 0.07, Math.min(t + 0.13, hold)); ng.gain.setValueAtTime(vol * 0.07, hold); ng.gain.linearRampToValueAtTime(0.0001, end + rel);
+      n.connect(bp); bp.connect(ng); ng.connect(out); n.start(t, Math.random() * 1.5); n.stop(stop);
+    }
   }
-  function drum(n, t, vol) {
+  function drum(c, out, n, t, vol) {
     switch (n) {
-      case 'D': A.dum(t, vol * 1.5, 120, A.mbus); break;
-      case 'T': A.tek(t, vol * 1.5, 2400, A.mbus); break;
-      case 't': A.tek(t, vol * 0.7, 3400, A.mbus); break;
-      case 'k': A.dum(t, vol * 1.7, 66, A.mbus); break;
-      case 's': A.noiseHit(t, vol * 1.3, 1900, 0.13, 'bandpass', 900, A.mbus); break;
-      case 'h': A.noiseHit(t, vol * 0.5, 8000, 0.04, 'highpass', 0, A.mbus); break;
-      case 'c': A.noiseHit(t, vol * 0.8, 6000, 0.5, 'highpass', 3000, A.mbus); break;
+      case 'D': thud(c, out, t, vol * 1.35, 120, 50, 0.28); hit(c, out, t, vol * 0.45, 500, 0.05, 'lowpass'); break;          // dum : le centre de la peau
+      case 'T': hit(c, out, t, vol * 0.75, 2400, 0.07, 'bandpass', 2.5); break;                                               // tek : le bord
+      case 't': hit(c, out, t, vol * 0.35, 3400, 0.06, 'bandpass', 2.5); break;
+      case 'r': hit(c, out, t, vol * 0.3, 7200, 0.08, 'highpass'); hit(c, out, t + 0.035, vol * 0.14, 9000, 0.05, 'highpass'); break;   // riq : cymbalettes
+      case 'k': thud(c, out, t, vol * 1.6, 150, 46, 0.2); hit(c, out, t, vol * 0.3, 1800, 0.012, 'lowpass'); break;            // grosse caisse
+      case 'b': thud(c, out, t, vol * 1.5, 92, 36, 0.6); hit(c, out, t, vol * 0.5, 320, 0.1, 'lowpass'); break;                // grand tambour
+      case 'm': thud(c, out, t, vol * 1.25, 200, 100, 0.22); hit(c, out, t, vol * 0.2, 900, 0.04); break;                      // tom
+      case 's': hit(c, out, t, vol * 1.1, 1600, 0.14, 'bandpass', 0.9); thud(c, out, t, vol * 0.5, 240, 170, 0.08); break;      // caisse claire : timbre et fût
+      case 'h': hit(c, out, t, vol * 0.45, 8000, 0.04, 'highpass'); break;                                                     // charleston
+      case 'c': hit(c, out, t, vol * 0.7, 4800, 0.9, 'highpass'); break;                                                       // cymbale
+      case 'a': [[1245, 1], [2960, 0.6], [4410, 0.3]].forEach(p => { const o = c.createOscillator(), g = c.createGain(); o.frequency.value = p[0]; env(g, t, 0.001, 0.14 + 0.2 * p[1], vol * 0.5 * p[1]); o.connect(g); g.connect(out); o.start(t); o.stop(t + 0.5); });
+        hit(c, out, t, vol * 0.6, 3000, 0.03, 'bandpass', 0.8); break;                                                         // enclume
     }
+  }
+  function voiceOuts(c, def, dest) { return def.voices.map(v => { if (!v.pan || !c.createStereoPanner) return dest; const p = c.createStereoPanner(); p.pan.value = v.pan; p.connect(dest); return p; }); }
+  function play(c, outs, def, e, t, spb) {
+    const v = def.voices[e.v], out = outs[e.v];
+    if (v.wave === 'drums') { e.n.forEach(n => drum(c, out, n, t, v.vol)); return; }
+    const dur = Math.max(0.04, e.len * spb * 0.94), vol = v.vol / Math.sqrt(e.n.length);
+    e.n.forEach(n => { const f = freqOf(n); if (f) tone(c, out, v.wave, f, t, dur, vol); });
+  }
+  function endTrack(tc) {                           // fond la piste en cours, puis libère son bus
+    const st = A.curTrack; if (!st) return; clearInterval(st.timer); A.curTrack = null;
+    const now = A.ctx.currentTime; st.bus.gain.cancelScheduledValues(now); st.bus.gain.setTargetAtTime(0, now, tc || 0.09);
+    setTimeout(() => { try { st.bus.disconnect(); } catch (e) { /* déjà libéré */ } }, 2500);
   }
   A.music = function (name) {
     A.wantTrack = name;
     if (!A.ctx || !A.mbus) return;
     if (A.curTrack && A.curTrack.name === name) return;
-    if (A.curTrack) { clearInterval(A.curTrack.timer); A.curTrack = null; }
+    endTrack();
     const def = I.music[name]; if (!def || !A.musicOn || name === 'silence') { A.hasMusic = false; return; }
     A.hasMusic = true; A.stopBeat();
-    const ev = parseTrack(def), spb = 60 / def.bpm, once = name === 'victoire';
-    const st = { name, i: 0, loop0: A.ctx.currentTime + 0.12, timer: 0 };
-    A.mbus.gain.cancelScheduledValues(A.ctx.currentTime); A.mbus.gain.setValueAtTime(0.0001, A.ctx.currentTime); A.mbus.gain.linearRampToValueAtTime(0.26, A.ctx.currentTime + 0.5);
+    const c = A.ctx, ev = parseTrack(def), spb = 60 / def.bpm, intro = def.intro || 0, t0 = c.currentTime + 0.12, bus = c.createGain();
+    A.mbus.gain.cancelScheduledValues(c.currentTime); A.mbus.gain.setTargetAtTime(MG, c.currentTime, 0.03); bus.connect(A.mbus);
+    const st = { name, i: 0, base: t0, pass: 0, timer: 0, bus, outs: voiceOuts(c, def, bus), leave: false };
     const tick = () => {
-      if (!A.ctx || A.curTrack !== st) return; const now = A.ctx.currentTime;
-      if (now > st.loop0 + def.beats * spb + 1) { st.loop0 = now + 0.1; st.i = 0; } // onglet en veille : on repart proprement
+      if (!A.ctx || A.curTrack !== st) return; const now = c.currentTime;
+      if (st.leave && now >= t0 + intro * spb - 0.03) { const n = A._after; A._after = null; A.music(n && n !== name ? n : 'silence'); return; }
+      if (now > st.base + def.beats * spb + 1) { if (intro) st.pass = 1; st.base = now + 0.1 - (st.pass ? intro * spb : 0); st.i = st.pass ? def._i0 : 0; } // onglet en veille : on repart proprement
       let guard = 0;
-      while (guard++ < 400) {
-        if (st.i >= ev.length) { if (once) { if (now > st.loop0 + def.beats * spb) { clearInterval(st.timer); A.curTrack = null; if (A.afterJingle) { const n = A.afterJingle; A.afterJingle = null; A.music(n); } } return; } st.loop0 += def.beats * spb; st.i = 0; if (!ev.length) return; }
-        const e = ev[st.i], t = st.loop0 + e.t * spb; if (t > now + 0.3) break; st.i++;
-        if (t < now - 0.05) continue;
-        const v = def.voices[e.v], dur = Math.max(0.04, e.len * spb * 0.94);
-        if (v.wave === 'drums') e.n.forEach(n => drum(n, t, v.vol)); else e.n.forEach(n => { const f = freqOf(n); if (f) tone(v.wave, f, t, dur, v.vol / Math.sqrt(e.n.length)); });
+      while (guard++ < 600) {
+        if (st.i >= ev.length) { if (def._i0 >= ev.length) return; st.base += (def.beats - intro) * spb; st.i = def._i0; st.pass++; }
+        const e = ev[st.i], t = st.base + e.t * spb; if (t > now + 0.3) break;
+        if (st.leave && !st.pass && e.t >= intro - 1e-6) break;               // on s'en va après l'intro : rien de la boucle n'est lancé
+        st.i++; if (t < now - 0.05) continue;
+        play(c, st.outs, def, e, t, spb);
       }
     };
     st.timer = setInterval(tick, 70); A.curTrack = st; tick();
   };
-  A.setMusic = function (on) { A.musicOn = on; if (!A.ctx) return; if (!on) { if (A.curTrack) { clearInterval(A.curTrack.timer); A.curTrack = null; } A.mbus.gain.setTargetAtTime(0, A.ctx.currentTime, 0.1); A.hasMusic = false; } else { const n = A.wantTrack; A.curTrack = null; if (n) A.music(n); } };
+  // battle.js pose `afterJingle` deux fois : avant la fanfare (la piste à reprendre), puis quand la carte de victoire se ferme.
+  // Posé pendant que « victoire » joue, il veut dire « on s'en va » : la piste suivante entre dès que la fanfare est finie.
+  Object.defineProperty(A, 'afterJingle', {
+    configurable: true, enumerable: true, get() { return A._after || null; },
+    set(v) { A._after = v || null; const st = A.curTrack; if (st && st.name === 'victoire') { st.leave = true; A.wantTrack = v || 'silence'; } }
+  });
+  A.setMusic = function (on) { A.musicOn = on; if (!A.ctx) return; if (!on) { endTrack(0.03); A.mbus.gain.setTargetAtTime(0, A.ctx.currentTime, 0.1); A.hasMusic = false; } else { const n = A.wantTrack; endTrack(0.03); if (n) A.music(n); } };
+  // Rendu hors ligne d'une piste, avec les mêmes timbres, le même bus et le même limiteur : sert à mesurer les niveaux et la
+  // charge de calcul. Comme en jeu, les notes sont posées au fil de l'eau (ici par tranches d'une demi-seconde).
+  A.render = function (name, seconds) {
+    const def = I.music[name], OC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!def || !OC) return Promise.reject(new Error('rendu indisponible'));
+    const sr = 44100, spb = 60 / def.bpm, intro = def.intro || 0, loop = (def.beats - intro) * spb, len = seconds || def.beats * spb + loop + 2.5, step = 0.5, list = [];
+    const c = new OC(2, Math.ceil(len * sr), sr), oc = outChain(c), bus = musicBus(c, oc.master), ev = parseTrack(def), outs = voiceOuts(c, def, bus);
+    oc.master.gain.value = 0.8; bus.gain.value = MG;
+    for (let base = 0.1, pass = 0; loop > 0 && base + (pass ? intro * spb : 0) < len; base += loop, pass++) ev.forEach(e => { const t = base + e.t * spb; if ((!pass || e.t >= intro - 1e-6) && t < len - 0.05) list.push({ t, e }); });
+    list.sort((a, b) => a.t - b.t); let i = 0;
+    const fill = until => { for (; i < list.length && list[i].t < until; i++) play(c, outs, def, list[i].e, list[i].t, spb); };
+    fill(2 * step);
+    for (let k = 1; k * step < len - 0.01; k++) c.suspend(k * step).then(() => { fill((k + 2) * step); c.resume(); });
+    return c.startRendering();
+  };
+
 
   A.stopBeat = function () { A.pendingRhythm = null; if (A.rhythm) { clearInterval(A.rhythm.timer); A.rhythm = null; } };
 })();
@@ -1221,6 +1382,44 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
         '..TTtTTTtTTttu..', '..TtTTtTTtTttu..', '..TTtTTtTTtttu..', '..TtTTtTTtttuu..', '..tTttTttTttuu..']
   };
 
+  // d'autres façons de se couvrir la tête : la silhouette dit qui est qui, avant même la couleur
+  const BAS_D = ['...uvVVVVVVvu...', '...uVVVVVVVVu...', '...uVVVVVVVVu...', '....vVVVVVVv....', '.....uvvvvu.....'];
+  const BAS_L = ['...VVVVvuttuu...', '...VVVVVuttuu...', '...VVVVVutuuu...', '...vVVVvuuuu....', '....vvvuuu......'];
+  const BAS_U = ['...TTtTTtttuu...', '...TtTTttuuuu...', '...ttTtutuuuu...', '....tuutuuuu....', '.....uutuuu.....'];
+  // turban haut, enroulé serré
+  { const haut = ['......tTTt......', '.....TTTTut.....', '....TTTuTTtu....', '....TuuTTTtu....', '...TTTTuuTTtu...'];
+    HEADS.imama_haute = { d: haut.concat(['...aAAAAAAAAa...'], BAS_D), l: haut.concat(['...AAAAAAAAaa...'], BAS_L), u: haut.concat(['...aAAAAAAAAa...'], BAS_U) }; }
+  // turban large et bas
+  { const large = ['................', '................', '...tTTTTTTTTt...', '..TTTuuTTTuTTu..', '..TuuTTTTuuTtu..'];
+    HEADS.imama_large = { d: large.concat(['...aAAAAAAAAa...'], BAS_D), l: large.concat(['...AAAAAAAAaa...'], BAS_L), u: large.concat(['...aAAAAAAAAa...'], BAS_U) }; }
+  // turban dont un pan retombe sur l'épaule (le corps prolonge le pan : voir grid)
+  HEADS.imama_queue = {
+    d: ['................', '.....tTTTTt.....', '....TTTTutTu....', '...TTTuuTTTtu...', '...TuuTTTTutu...', '...aAAAAAAAAaT..',
+        '...uvVVVVVVvuTt.', '...uVVVVVVVVutT.', '...uVVVVVVVVuTt.', '....vVVVVVVv.tT.', '.....uvvvvu..Tt.'],
+    l: ['................', '.....tTTTTt.....', '....TTTTutTu....', '...TTTuuTTTtu...', '...TuuTTTTutu...', '...AAAAAAAAaaT..',
+        '...VVVVvuttuuTt.', '...VVVVVuttuutT.', '...VVVVVutuuuTt.', '...vVVVvuuuu.tT.', '....vvvuuu...Tt.'],
+    u: ['................', '.....tTTTTt.....', '....TTTTutTu....', '...TTTuuTTTtu...', '...TuuTTTTutu...', '...aAAAAAAAAa...',
+        '...TTtTTTTttuu..', '...TttTTTtuuuu..', '...tttuTTuuuuu..', '....tuuTTuuu....', '.....uuTTuu.....']
+  };
+  // calotte : une coiffe basse, l'étoffe serrée autour de la tête
+  HEADS.calotte = {
+    d: ['................', '................', '.....tTTTTt.....', '....TTTTTTtu....', '....aAAAAAAa....', '...tuVVVVVVut...',
+        '...uvVVVVVVvu...', '...uVVVVVVVVu...', '...uVVVVVVVVu...', '....vVVVVVVv....', '.....uvvvvu.....'],
+    l: ['................', '................', '.....tTTTTt.....', '....TTTTTTtu....', '....AAAAAAaa....', '...VVVVvtttuu...',
+        '...VVVVVtttuu...', '...VVVVVttuuu...', '...VVVVVtuuu....', '...vVVVvuuu.....', '....vvvuu.......'],
+    u: ['................', '................', '.....tTTTTt.....', '....TTTTTTtu....', '....aAAAAAAa....', '...tTTtTTtttu...',
+        '...TtTTtTttuu...', '...tTttTtuuuu...', '...ttTtutuuu....', '....tuutuuu.....', '.....uutuu......']
+  };
+  // casque pointu ceint d'un turban, camail de mailles sur la nuque
+  HEADS.casque_turban = {
+    d: ['.......II.......', '......IIIi......', '.....IIIIii.....', '....IIIIIIii....', '...tTTTuTTTtu...', '...TuuTTTuuTt...',
+        '...ivVVVVVVvi...', '...iVVVVVVVVi...', '...iiVVVVVVii...', '...iIivVVviIi...', '....iiIiiIii....'],
+    l: ['......II........', '.....IIIi.......', '....IIIIIii.....', '...IIIIIIiii....', '...TTTuTTTttu...', '...TuuTTuuTtu...',
+        '...VVVVviiIii...', '...VVVVViIiii...', '...VVVViiiIii...', '...vVViIiiii....', '....iiiiIii.....'],
+    u: ['.......II.......', '......IIIi......', '.....IIIIii.....', '....IIIIIIii....', '...tTTTuTTTtu...', '...TuuTTTuuTt...',
+        '...iIiiIiiIii...', '...iiIiiIiiii...', '...iIiiIiiIii...', '...iiiIiiIiii...', '....iiIiiiii....']
+  };
+
   /* ---------- gabarits : corps ----------
      R r buste · S s jupe · L l bas de jupe (jambes si la tenue est courte) · M entre-jambes · Z ourlet
      C c k manteau · E e pans du manteau (absents si la tenue est courte) · B b m bas du dos · A a ceinture · N main · F f pied */
@@ -1289,13 +1488,22 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
 
   /* ---------- types de personnages : coiffe, tenue, attribut ---------- */
   const KINDS = {
-    compagnon: { coiffe: 'imama', lit: true }, homme: { coiffe: 'imama' }, ancien: { coiffe: 'imama', chale: true, item: 'baton' },
-    savant: { coiffe: 'imama', chale: true, item: 'feuillets' }, marchand: { coiffe: 'imama', item: 'bourse', trim: '#d9b45a' },
+    compagnon: { coiffe: 'imama', lit: true }, homme: { coiffe: 'imama', varie: true }, ancien: { coiffe: 'imama_queue', chale: true, item: 'baton' },
+    savant: { coiffe: 'imama_large', chale: true, item: 'feuillets' }, marchand: { coiffe: 'imama_haute', item: 'bourse', trim: '#d9b45a', motif: 'rayures' },
     soldat: { coiffe: 'casque', court: true, item: 'lance' }, romain: { coiffe: 'casque', court: true, item: 'lance', cimier: true, cuirasse: true },
-    perse: { coiffe: 'tiare', trim: '#d9b45a' }, moine: { coiffe: 'capuche', sombre: true, trim: '#c9b99a' }, enfant: { coiffe: 'imama', petit: true },
-    marin: { coiffe: 'imama', court: true, raies: true }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' },
+    perse: { coiffe: 'tiare', trim: '#d9b45a' }, moine: { coiffe: 'capuche', sombre: true, trim: '#c9b99a' }, enfant: { coiffe: 'calotte', petit: true, manteau: 'aucun' },
+    marin: { coiffe: 'calotte', court: true, raies: true, manteau: 'aucun' }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' },
     bedouin: { coiffe: 'keffieh', drape: true, trim: '#3a2a20' } // gens des tribus : la couleur du cordon et du galon (look.trim) dit le clan
   };
+
+  // les gens sans nom ne se ressemblent pas tous : coiffe et manteau choisis d'après leurs couleurs, toujours les mêmes pour un même personnage
+  const VARIE = [['imama', 'long'], ['calotte', 'aucun'], ['imama_queue', 'long'], ['imama_large', 'epaule'], ['imama_haute', 'aucun'], ['calotte', 'epaule']];
+  function kindOf(look) {
+    const K = Object.assign({}, KINDS[look.kind] || KINDS.homme);
+    if (K.varie && !look.coiffe && !look.manteau) { const v = VARIE[I.hash((look.robe || '') + (look.head || '') + (look.cloak || '')) % VARIE.length]; K.coiffe = v[0]; K.manteau = v[1]; }
+    ['coiffe', 'item', 'manteau', 'motif', 'echarpe', 'court', 'cuirasse', 'chale'].forEach(k => { if (look[k] !== undefined) K[k] = look[k]; });
+    return K;
+  }
 
   /* ---------- couleurs ---------- */
   const rgb = h => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
@@ -1328,7 +1536,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
 
   /* ---------- composition d'une image : grille de 16 × 24 matières ---------- */
   function grid(look, dir, frame, pose) {
-    const K = Object.assign({}, KINDS[look.kind] || KINDS.homme, look.coiffe ? { coiffe: look.coiffe } : null, look.item !== undefined ? { item: look.item } : null);
+    const K = kindOf(look);
     const key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l';
     const P = pose && POSES[pose] && POSES[pose][key] ? POSES[pose] : null;
     let bodyRows = P ? P[key] : BODIES[key][frame || 0]; const hy = P ? (P.hy || 0) : 0, kneel = !!(P && P.kneel);
@@ -1338,8 +1546,25 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     const put = (x, y, m) => { if (x >= 0 && x < W && y >= 0 && y < H && m !== '.') g[y][x] = m; };
     const b0 = kneel ? H - 8 : 11 + petit; // un corps à genoux tient en 8 lignes, posées au sol
     bodyRows.forEach((row, j) => { for (let x = 0; x < W; x++) put(x, b0 + j, row[x]); });
-    // attributs tenus ou portés
-    const it = K.item, hip = b0 + 5;
+    // la tenue : pas de manteau, manteau sur une seule épaule, manteau ample ; rayures, bandes, écharpe
+    const y1 = kneel ? H : H - 2, nu = (x, y) => { const m = g[y][x]; g[y][x] = m === 'C' ? 'R' : (m === 'c' || m === 'k') ? 'r' : (m === 'E' || m === 'e') ? '.' : m === 'B' ? 'S' : (m === 'b' || m === 'm') ? 's' : m; };
+    if (K.manteau === 'aucun' || (K.manteau === 'epaule' && dir === 2)) { for (let y = b0; y < y1; y++) for (let x = 0; x < W; x++) nu(x, y); }
+    else if (K.manteau === 'epaule') { for (let y = b0; y < y1; y++) for (let x = 0; x < W; x++) if (key === 'd' ? x >= 8 : key === 'u' ? x < 8 : false) nu(x, y); }
+    else if (K.manteau === 'ample' && !kneel) for (let y = b0 + 1; y < y1; y++) {
+      let a = 0; while (a < W && g[y][a] === '.') a++; let b = W - 1; while (b >= 0 && g[y][b] === '.') b--;
+      if (a > 0 && a < W && 'CckEe'.indexOf(g[y][a]) >= 0) g[y][a - 1] = g[y][a] === 'k' ? 'c' : g[y][a];
+      if (b < W - 1 && b >= 0 && 'CckEe'.indexOf(g[y][b]) >= 0) g[y][b + 1] = g[y][b] === 'C' ? 'c' : g[y][b];
+    }
+    if (K.motif === 'rayures') { for (let y = b0; y < y1; y++) for (let x = 0; x < W; x++) if ('RSLl'.indexOf(g[y][x]) >= 0 && x % 3 === 0) g[y][x] = 'a'; }
+    else if (K.motif === 'bandes') { for (let y = b0; y < y1; y++) for (let x = 0; x < W; x++) if ('CcEe'.indexOf(g[y][x]) >= 0 && (y - b0) % 3 === 2) g[y][x] = 'A'; }
+    if (K.echarpe && !kneel) { const pts = key === 'd' ? [[5, 0], [6, 0], [6, 1], [7, 1], [7, 2], [8, 2], [8, 3], [9, 3]] : key === 'l' ? [[4, 1], [5, 1], [5, 2], [6, 2], [6, 3]] : [];
+      pts.forEach(([x, dy]) => { if ('RrSs'.indexOf(g[b0 + dy][x]) >= 0) g[b0 + dy][x] = 'A'; }); }
+    // attributs tenus ou portés (un ou plusieurs)
+    const hip = b0 + 5;
+    for (const it of [].concat(K.item || [])) {
+    if (it === 'bouclier') { const x0 = key === 'd' ? 0 : key === 'u' ? 12 : 9; [[1, -2], [2, -2], [0, -1], [1, -1], [2, -1], [3, -1], [0, 0], [3, 0], [0, 1], [1, 1], [2, 1], [3, 1], [1, 2], [2, 2]].forEach(([dx, dy]) => put(x0 + dx, hip + dy, (dx + dy) % 2 ? 'i' : 'I')); put(x0 + 1, hip, 'A'); put(x0 + 2, hip, 'a'); }
+    if (it === 'outre' && key !== 'u') { const x = key === 'd' ? 10 : 6; put(x, hip - 1, 'w'); put(x, hip, 'W'); put(x + 1, hip, 'W'); put(x, hip + 1, 'W'); put(x + 1, hip + 1, 'w'); }
+    if (it === 'etendard') { const x = key === 'd' ? 1 : key === 'u' ? 14 : 2, sx = key === 'u' ? -1 : 1; for (let y = 1; y < H - 1; y++) put(x, y, y % 5 === 2 ? 'w' : 'W'); put(x, 0, 'I'); for (let j = 0; j < 4; j++) for (let k2 = 1; k2 <= 4 - (j === 3 ? 2 : 0); k2++) put(x + sx * k2, 1 + j, (j + k2) % 3 ? 'A' : 'a'); }
     if (it === 'baton' || it === 'lance') { const x = key === 'd' ? 1 : key === 'u' ? 14 : 2, top = it === 'lance' ? 1 : (kneel ? 9 : 5); for (let y = top; y < H - 1; y++) put(x, y, y % 5 === 2 ? 'w' : 'W'); if (it === 'lance') { put(x, 0, 'I'); put(x, 1, 'I'); put(x, 2, 'i'); } }
     if (it === 'durra') { const x = key === 'd' ? 1 : key === 'u' ? 14 : 3; for (let y = hip - 3; y < hip + 4; y++) put(x, y, y === hip - 3 ? 'w' : 'W'); }
     if (it === 'sabre') {
@@ -1349,6 +1574,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     }
     if (it === 'feuillets' && key !== 'u') { const x = key === 'd' ? 1 : 3; put(x, hip - 1, 'P'); put(x + 1, hip - 1, 'P'); put(x, hip, 'P'); put(x + 1, hip, 'P'); put(x, hip + 1, 'w'); put(x + 1, hip + 1, 'w'); }
     if (it === 'bourse' && key !== 'u') { const x = key === 'd' ? 10 : 6; put(x, hip, 'A'); put(x + 1, hip, 'a'); put(x, hip + 1, 'a'); put(x + 1, hip + 1, 'a'); }
+    }
     if (K.chale && !kneel) for (let x = 2; x < 14; x++) { if ('Cck'.indexOf(g[b0][x]) >= 0) g[b0][x] = 'T'; if ('Cck'.indexOf(g[b0 + 1][x]) >= 0) g[b0 + 1][x] = x % 3 ? 'T' : 't'; }
     if (K.drape && !kneel) for (let y = b0; y < b0 + 2; y++) for (let x = 0; x < W; x++) if ((x <= 4 || x >= 11) && 'Cck'.indexOf(g[y][x]) >= 0) g[y][x] = y === b0 ? 't' : 'u'; // l'étoffe de tête retombe sur les épaules
     if (K.raies) for (let y = b0 + 1; y < b0 + 5; y += 2) for (let x = 0; x < W; x++) if ('RrCc'.indexOf(g[y][x]) >= 0) g[y][x] = 'T';
@@ -1356,6 +1582,9 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     // tête (11 lignes), inclinée ou abaissée selon la pose
     const head = HEADS[K.coiffe] || HEADS.imama, hrows = head[key] || head.d, h0 = (kneel ? b0 - 11 : petit) + hy, hx = hy && key === 'l' ? -1 : 0;
     for (let j = 0; j < 11; j++) for (let x = 0; x < W; x++) put(x + hx, h0 + j, hrows[j][x]);
+    if (K.coiffe === 'imama_queue' && !kneel) { // le pan du turban retombe sur l'épaule (de dos : entre les épaules)
+      if (key === 'd') { put(13 + hx, h0 + 11, 't'); put(13 + hx, h0 + 12, 'u'); } else if (key === 'l') { put(13 + hx, h0 + 11, 't'); put(12 + hx, h0 + 12, 'u'); }
+      else { put(7, h0 + 11, 'T'); put(8, h0 + 11, 't'); put(7, h0 + 12, 't'); put(8, h0 + 12, 'u'); put(7, h0 + 13, 'u'); } }
     if (K.cimier) { if (key === 'l') for (let x = 4; x < 11; x++) put(x, h0, 'X'); else for (let x = 6; x < 10; x++) { put(x, h0, 'X'); if (key === 'u') put(x, h0 + 1, 'X'); } }
     if (extra) extra.forEach(([x, y, m]) => put(x, y, m));
     if (dir === 2) for (let y = 0; y < H; y++) g[y].reverse();
@@ -1776,12 +2005,13 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
 
   function speaker(who) {
     const W = I.world, saga = W.saga;
-    if (saga && saga.heroes && saga.heroes[who]) { const h = saga.heroes[who]; return { name: h.name, seal: G.sealURL(h.arabic, D.ELEMENTS[h.el].color), color: D.ELEMENTS[h.el].color }; }
+    const figOf = look => G.charURL(look, 0);
+    if (saga && saga.heroes && saga.heroes[who]) { const h = saga.heroes[who]; return { name: h.name, seal: G.sealURL(h.arabic, D.ELEMENTS[h.el].color), color: D.ELEMENTS[h.el].color, fig: figOf(Object.assign({ kind: 'compagnon' }, h.look)) }; }
     const n = W.npcs && W.npcs.find(n => n.id === who);
     if (n) {
-      if (n.hero && saga.heroes[n.hero]) { const h = saga.heroes[n.hero]; return { name: n.name || h.name, seal: G.sealURL(h.arabic, D.ELEMENTS[h.el].color), color: D.ELEMENTS[h.el].color }; }
+      if (n.hero && saga.heroes[n.hero]) { const h = saga.heroes[n.hero]; return { name: n.name || h.name, seal: G.sealURL(h.arabic, D.ELEMENTS[h.el].color), color: D.ELEMENTS[h.el].color, fig: figOf(Object.assign({ kind: 'compagnon' }, h.look)) }; }
       const col = KIND_COL[(n.look && n.look.kind) || 'homme'] || '#c8b48a';
-      return { name: n.name, seal: G.sealURL('', col), color: col };
+      return { name: n.name, seal: G.sealURL('', col), color: col, fig: n.sheet && n.sheet.look ? figOf(n.sheet.look) : null };
     }
     return { name: who, seal: G.sealURL('', '#c8b48a'), color: '#c8b48a' };
   }
@@ -1793,6 +2023,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     document.body.classList.add('in-dialog');
     $('#dialog .seal').style.backgroundImage = sp ? `url(${sp.seal})` : 'none';
     $('#dialog .seal').hidden = !sp;
+    const fg = $('#dialog .fig'); fg.hidden = !(sp && sp.fig); if (sp && sp.fig) fg.src = sp.fig; box.classList.toggle('avecfig', !!(sp && sp.fig)); // la silhouette de celui qui parle
     const nm = $('#dialog .name'); nm.textContent = sp ? sp.name : ((I.world.saga && I.world.saga.narrator) || 'La Chaîne'); nm.style.color = sp ? sp.color : '#ffe08a';
     const tx = $('#dialog .text'); const html = I.fmt(text);
     // effet machine à écrire sur le texte brut, puis rendu complet
@@ -2064,6 +2295,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     if (spot) { const p = Array.isArray(spot) && typeof spot[0] === 'number' ? spot : W.resolve(spot, id, W.player); W.player.x = p[0]; W.player.y = p[1]; }
     W.resetTrail(); W.tint = null; W.pose = []; W.dest = null; W.focus = null; W._way = null; W.updateCam(true);
     document.body.dataset.theme = (id === 'noos' || id === 'cite' || id === 'archives') ? 'cyber' : (id === 'romaine' || id === 'palais') ? 'roman' : 'orient';
+    $('#ui').style.setProperty('--mini', (W.map.mini ? ((27 + W.map.h + 6) / G.PH * 100).toFixed(1) : '14') + '%'); // les annonces s'empilent sous la mini-carte
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
   W.solidAt = function (px, py) { const m = W.map, tx = Math.floor(px / T), ty = Math.floor(py / T); if (tx < 0 || ty < 0 || tx >= m.w || ty >= m.h) return true; return !!m.solid[ty * m.w + tx]; };
@@ -2254,6 +2486,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel') { I.build.set(false); return true; } if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
     if (a === 'ok') { W.stop(); W.interact(); return true; }
     if (a === 'help') { W.stop(); I.ui.guide(); return true; }
+    if (a === 'prev') { W.stop(); I.ui.pause('carte'); return true; }
     if (a === 'menu' || a === 'cancel') { W.stop(); I.ui.pause(); return true; }
     return false;
   };
@@ -2354,6 +2587,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   W.tap = function (wx, wy) {
     if (I.scene !== W || S.busy || W.lock || I.ui.menuOpen || I.debug.auto || I.debug.walk) return false;
     const p = W.player, m = W.map, here = e => !e.hidden && e.map === m.id && e.placed;
+    { const r = W.miniRect, sx = wx - Math.round(W.cam.x), sy = wy - Math.round(W.cam.y); if (r && sx >= r[0] && sx <= r[0] + r[2] && sy >= r[1] && sy <= r[1] + r[3]) { W.stop(); I.ui.pause('carte'); return true; } }
     const face = (x, y) => { const dx = x - p.x, dy = y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
     if (I.build && I.build.on) {
       const tx = Math.floor(wx / T), ty = Math.floor(wy / T), put = () => { face(tx * T + 8, ty * T + 11); I.build.aim = [tx, ty]; I.build.place(); };
@@ -2425,6 +2659,12 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     else if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); if (!n || n.hidden || n.map !== W.map.id || !n.placed) { log.push(`PNJ ABSENT ${W.saga.id}/${W.ch.id} obj${W.objIndex} talk ${o.talk} (carte ${W.map.id}, pnj ${n ? n.map + (n.hidden ? ' caché' : '') : '?'})`); } else go(n.x, n.y + 14, 'talk ' + o.talk); W.complete().then(done, e => { log.push('ERR ' + e.message); done(); }); }
     else if (o.foe) { const f = W.foes.find(f => f.id === o.foe); if (!f || f.map !== W.map.id || !f.placed) { log.push(`FOE ABSENT ${W.saga.id}/${W.ch.id} obj${W.objIndex} foe ${o.foe} (carte ${W.map.id})`); if (f) f.done = true; W.complete().then(done, done); } else { go(f.x, f.y + 14, 'foe ' + o.foe); W.fight(f).then(done, e => { log.push('ERR ' + e.message); done(); }); } }
     else done();
+  };
+  W.carte = function () {
+    const m = W.map, cv = G.mk(m.w * T, m.h * T), c = cv.getContext('2d');
+    c.drawImage(m.canvas, 0, 0);
+    m.objs.slice().sort((a, b) => a.y - b.y).forEach(o => { try { c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2), o.y - o.h + 1); } catch (e) { /* objet sans dessin */ } });
+    return cv;
   };
   W.spotPx = function (at) { const m = W.map, name = Array.isArray(at) ? at[0] : at, s = m.spots[name]; if (!s) return null; return [(s[0] + (Array.isArray(at) ? at[1] : 0)) * T + 8, (s[1] + (Array.isArray(at) ? at[2] : 0)) * T + 13]; };
   W.target = function () {
@@ -2513,12 +2753,12 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     if (la > 0) for (const L of m.lights) { const x = L.x - cx, y = L.y - cy; if (x < -L.r || y < -L.r || x > G.PW + L.r || y > G.PH + L.r) continue; lights.push({ x, y, r: L.r, color: L.color, a: la * (1 - L.flicker * (0.5 + 0.5 * Math.sin(t * 9 + L.x))) }); }
     // mini-carte (hors dialogue)
     if (!S.busy && m.mini) {
-      const mw = m.w, mh = m.h, crop = G.view.w < G.PW, mx = crop ? G.view.x + 5 : G.PW - mw - 30, my = crop ? 5 : 6; c.globalAlpha = 0.82; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, mw + 4, mh + 4); c.drawImage(m.mini, mx, my); c.globalAlpha = 1;
+      const mw = m.w, mh = m.h, crop = G.view.w < G.PW, mx = crop ? G.view.x + 5 : G.PW - mw - 8, my = crop ? 5 : 27; c.globalAlpha = 0.82; W.miniRect = [mx - 2, my - 2, mw + 4, mh + 4]; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, mw + 4, mh + 4); c.drawImage(m.mini, mx, my); c.globalAlpha = 1;
       c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = 1; c.strokeRect(mx - 1.5, my - 1.5, mw + 3, mh + 3);
       if (tg && Math.floor(t * 3) % 2) { c.fillStyle = '#ffe08a'; c.fillRect(mx + Math.floor(tg.x / T) - 1, my + Math.floor((tg.kind === 'goto' ? tg.y : tg.y + 28) / T) - 1, 3, 3); }
       W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) { c.fillStyle = '#ff6a8a'; c.fillRect(mx + Math.floor(f.x / T), my + Math.floor(f.y / T), 1, 1); } });
-      c.fillStyle = '#fff'; c.fillRect(mx + Math.floor(W.player.x / T) - 1, my + Math.floor(W.player.y / T) - 1, 2, 2);
-    }
+      c.fillStyle = Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a'; c.fillRect(mx + Math.floor(W.player.x / T) - 1, my + Math.floor(W.player.y / T) - 1, 3, 3);
+    } else W.miniRect = null;
     return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint, clouds: env.clouds ? { x: cx, y: cy } : null };
   };
 })();
@@ -3968,7 +4208,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     const sv = I.save.data, side = $('#menu .side'), pane = $('#menu .pane'); let fl = null;
     const close = () => { if (fl) fl.destroy(); screen('#menu', false); U.menuOpen = false; if (onClose) onClose(); };
     const mkb = (label, fn, cls) => { const b = I.el('button', cls || '', label); b.type = 'button'; b.onclick = ev => { ev.stopPropagation(); fn(b); }; return b; };
-    const build = (items, o) => { if (fl) fl.destroy(); side.innerHTML = ''; const btns = []; items.forEach(it => { if (it.cat) { side.appendChild(I.el('div', 'cat', it.cat)); return; } const b = mkb(it.label, it.fn); b._show = it.show; side.appendChild(b); btns.push(b); }); fl = focusList(btns, Object.assign({ onSel: b => { if (b._show) pane.innerHTML = b._show(); } }, o)); };
+    const build = (items, o) => { if (fl) fl.destroy(); side.innerHTML = ''; const btns = []; items.forEach(it => { if (it.cat) { side.appendChild(I.el('div', 'cat', it.cat)); return; } const b = mkb(it.label, it.fn); b._show = it.show; b._after = it.after; side.appendChild(b); btns.push(b); }); fl = focusList(btns, Object.assign({ onSel: b => { if (b._show) pane.innerHTML = b._show(); if (b._after) b._after(pane); } }, o)); $('#menu .cols').classList.toggle('large', !!(o && o.large)); };
     const party = () => (W.saga && W.party.length) ? W.party.map(id => { const h = W.hero(id), st = I.calc.hero(h.def, h.lvl), e = D.ELEMENTS[h.def.el]; return `<div class="stat"><span class="seal" style="background-image:url(${G.sealURL(h.def.arabic, e.color)})"></span><img class="fig" alt="" src="${G.charURL(Object.assign({ kind: 'compagnon' }, h.def.look))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> ${h.def.title ? '<em>' + I.esc(h.def.title) + '</em>' : ''} <small>· niveau ${h.lvl} · ${e.name}</small><br><small>Constance ${Math.ceil(h.hp)}/${st.hp} · Souffle ${h.sp}/${st.sp} · Force ${Math.round(st.atk)} · Esprit ${Math.round(st.mag)} · Garde ${Math.round(st.def)} · Élan ${Math.round(st.spd)}</small><div class="sk">${h.def.skills.filter(k => k.lvl <= h.lvl).map(k => I.esc(k.name)).join(' · ')}</div></div></div>`; }).join('') : '<p>Aucun groupe pour l’instant.</p>';
     const bag = () => '<h3>Besace</h3>' + (Object.keys(D.ITEMS).filter(k => (sv.items[k] || 0) > 0).map(k => `<p><b>${D.ITEMS[k].name}</b> ×${sv.items[k]}<br><small>${D.ITEMS[k].desc}</small></p>`).join('') || '<p>La besace est vide.</p>') + '<p class="src">Les objets s’utilisent en combat. Le groupe reprend des forces après chaque victoire.</p>';
     const journal = () => { const o = W.cur && W.cur(); return `<h3>${W.ch ? I.esc(W.ch.title) : 'Journal'}</h3><p class="src">${W.ch ? I.esc(W.ch.sub) : ''}</p><p>${o && o.text ? '◆ ' + I.esc(o.text) : 'Aucun objectif en cours.'}</p><p class="src">Le bouton <b>?</b> explique l’objectif et peut montrer le chemin.</p><p class="src">Fidélité à la Chaîne : ${sv.isnad.ok} / ${sv.isnad.total} · Lumières : ${sv.lights.map(l => D.ELEMENTS[l].name).join(', ') || 'aucune'}</p>`; };
@@ -3978,6 +4218,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
       const inWorld = I.scene === W, o = sv.opts;
       const items = [{ label: 'Reprendre', fn: close, show: journal }];
       if (inWorld) items.push({ label: 'Que faire ?', fn() { close(); U.guide(); }, show: () => '<h3>Que faire ?</h3><p>L’objectif expliqué, sa direction, et le chemin montré au sol si tu le demandes. Le même bouton <b>?</b> est toujours en haut de l’écran.</p>' });
+      if (inWorld && W.map) items.push({ label: 'Carte', fn: carte, show: () => '<h3>Carte</h3><p>Le lieu entier, avec ta position, l’objectif, la natte et les lieux nommés. On l’ouvre aussi en touchant la mini-carte, ou par la touche <kbd>C</kbd>.</p>' });
       items.push({ cat: 'Le groupe' }, { label: 'Compagnons', fn() {}, show: () => '<h3>Le groupe</h3>' + party() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Piliers', fn() {}, show: pillars });
       items.push({ cat: 'Le cœur' }, { label: 'Œuvres et lames', fn() {}, show: () => I.oeuvres.paneOeuvres() }, { label: 'Compagnons de lumière', fn: betes, show: () => I.oeuvres.paneAnimaux() });
       items.push({ cat: 'Le savoir' }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` },
@@ -3991,6 +4232,31 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
       if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre au dernier objectif atteint, tant que la page reste ouverte. Rien n’est écrit tant que tu n’as pas sauvegardé dans une mosquée ou à la natte des Archives.</p>' });
       $('#menu h2').textContent = 'Halte';
       build(items, { onCancel: close });
+    };
+    // la carte du lieu : le sol et les bâtiments tels qu'on les voit, la position du héros, l'objectif, la natte, les lieux nommés
+    const carteHTML = () => {
+      const m = W.map, tg = W.target(), sagaCh = W.saga.chapters, pct = (v, n) => (v / n * 100).toFixed(2) + '%';
+      const lieux = Object.keys(m.spots).filter(k => D.LIEUX[k]).map(k => '<span class="lieu" style="left:' + pct(m.spots[k][0] + 0.5, m.w) + ';top:' + pct(m.spots[k][1] + 0.5, m.h) + '">' + I.esc(D.LIEUX[k]) + '</span>').join('');
+      return '<h3>' + I.esc(D.MAPS[m.id].label) + '</h3><p class="src">' + I.esc(W.ch.sub) + '</p>' +
+        '<div class="carte" style="aspect-ratio:' + m.w + '/' + m.h + ';max-width:min(100%, calc(58vh * ' + (m.w / m.h).toFixed(3) + '))"><canvas></canvas>' + lieux + '<span class="ici" style="left:' + pct(W.player.x, m.w * 16) + ';top:' + pct(W.player.y - 8, m.h * 16) + '">' + I.esc(W.saga.heroes[W.party[0]].name) + '</span></div>' +
+        '<p class="legende"><i class="k1"></i> toi <i class="k2"></i> objectif' + (tg ? '' : ' (ailleurs, ou sans lieu)') + (W.prayerPts().length ? ' <i class="k3"></i> natte : prière, œuvres, sauvegarde' : '') + (m.spots.comptoir ? ' <i class="k4"></i> comptoir des caravanes' : '') + '</p>' +
+        '<p class="src">' + sagaCh.map((c, i) => (i === W.ci ? '<b>▸ ' + I.esc(c.title) + '</b>' : I.esc(c.title))).slice(0, W.saga.frame && !W.saga.veillees ? 0 : 9).join(' · ') + '</p>';
+    };
+    const carteDraw = pane => {
+      const cv = pane.querySelector('.carte canvas'); if (!cv) return; const m = W.map, src = W.carte(), c = cv.getContext('2d'), tg = W.target(), T = 16;
+      cv.width = src.width; cv.height = src.height; c.drawImage(src, 0, 0);
+      c.fillStyle = 'rgba(8,6,16,.18)'; c.fillRect(0, 0, cv.width, cv.height);
+      const k = Math.max(1, src.width / 480), star = (x, y, r, col, n) => { c.fillStyle = col; c.beginPath(); for (let q = 0; q < n * 2; q++) { const rr = q % 2 ? r * 0.42 : r, a = q * Math.PI / n - Math.PI / 2; c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } c.closePath(); c.fill(); };
+      const halo = (x, y, r) => { c.fillStyle = 'rgba(10,8,20,.75)'; c.beginPath(); c.arc(x, y, r, 0, 6.3); c.fill(); };
+      W.prayerPts().forEach(sp => { const x = sp[0] * T + 8, y = sp[1] * T + 10; halo(x, y, 9 * k); star(x, y, 7.5 * k, '#7fe6e0', 8); });
+      if (m.spots.comptoir) { const x = m.spots.comptoir[0] * T + 8, y = m.spots.comptoir[1] * T + 8; halo(x, y, 8 * k); c.strokeStyle = '#e9c877'; c.lineWidth = 2 * k; c.beginPath(); c.arc(x, y, 5 * k, 0, 6.3); c.stroke(); c.fillStyle = '#e9c877'; c.beginPath(); c.arc(x, y, 1.6 * k, 0, 6.3); c.fill(); }
+      if (tg) { halo(tg.gx, tg.gy - 6, 11 * k); star(tg.gx, tg.gy - 6, 9.5 * k, '#ffe08a', 4); }
+      const p = W.player; halo(p.x, p.y - 8, 9 * k); c.fillStyle = '#ffffff'; c.beginPath(); c.arc(p.x, p.y - 8, 6 * k, 0, 6.3); c.fill(); c.fillStyle = '#ff7a5c'; c.beginPath(); c.arc(p.x, p.y - 8, 3.2 * k, 0, 6.3); c.fill();
+    };
+    const carte = () => {
+      const back = mode === 'carte' ? close : root;
+      $('#menu h2').textContent = 'Carte';
+      build([{ label: '◂ Retour', fn: back, show: carteHTML, after: carteDraw }], { onCancel: back, large: true });
     };
     const betes = () => {
       const d = I.oeuvres.state(), A = I.sagas.coeur.animaux, items = [{ label: '◂ Retour', fn: root, show: () => I.oeuvres.paneAnimaux() }];
@@ -4011,12 +4277,12 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
       $('#menu h2').textContent = 'Le Recueil';
       build(items, { onCancel: mode === 'codex' ? close : root });
     };
-    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'aide') aide(); else root();
+    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'aide') aide(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
   };
 
   /* ---------- l'aide du jeu, thème par thème ---------- */
   U.AIDE = [
-    ['Se déplacer, agir', '<p><b>Au doigt ou à la souris.</b> Touche un endroit : le héros s’y rend. Garde le doigt posé : il te suit. Touche un personnage pour lui parler ; touche un coffre, une natte, un palmier, un rocher ou un puits pour t’en servir.</p><p><b>Au clavier.</b> <kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : marcher, naviguer · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : halte, retour · <kbd>H</kbd> : que faire ? · <kbd>B</kbd> : bâtir.</p><p>Le bouton <b>?</b> dit toujours ce qu’il y a à faire, dans quelle direction, et peut montrer le chemin ou t’y conduire.</p>'],
+    ['Se déplacer, agir', '<p><b>Au doigt ou à la souris.</b> Touche un endroit : le héros s’y rend. Garde le doigt posé : il te suit. Touche un personnage pour lui parler ; touche un coffre, une natte, un palmier, un rocher ou un puits pour t’en servir.</p><p><b>Au clavier.</b> <kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : marcher, naviguer · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : halte, retour · <kbd>H</kbd> : que faire ? · <kbd>B</kbd> : bâtir.</p><p>Le bouton <b>?</b> dit toujours ce qu’il y a à faire, dans quelle direction, et peut montrer le chemin ou t’y conduire.</p><p><b>La carte.</b> La mini-carte, en haut de l’écran, montre le lieu et ta position. Touche-la, ou ouvre <b>Carte</b> dans la halte (touche <kbd>C</kbd>) : le lieu entier, l’objectif, la natte, les lieux nommés.</p><p><b>Qui est qui.</b> Chaque personnage a sa coiffe, son manteau et son attribut. À l’arrêt, le nom de ceux qui t’entourent s’affiche au-dessus d’eux.</p>'],
     ['Combat', '<p>On n’affronte jamais des personnes, seulement des <em>égrégores</em> : les idoles que les cœurs fabriquent ensemble. Chaque égrégore est protégé par des <b>voiles</b> (⛊). Frappe-le avec la <b>vertu</b> qui est sa faille pour retirer un voile ; à zéro, il est <b>dévoilé</b> : il perd son tour et subit bien plus.</p><p><b>Niyya</b> (l’intention) : un point par tour ; dépense-en jusqu’à trois (◂ ▸) pour multiplier les coups ou renforcer une vertu. <b>Sakîna</b> : la jauge dorée ; pleine, elle ouvre l’acte ultime du Compagnon.</p>'],
     ['La parole avant le sabre', '<p>Un <b>pourparler</b> se gagne manche après manche : chaque argument fait monter ou baisser la confiance. Les meilleurs demandent un <b>savoir</b> (✧) appris d’un savant, d’un feuillet, d’un témoin. Avoir <b>prié</b> dans le chapitre donne la sérénité : +1 de confiance. Si la parole échoue, le récit continue, mais il en coûte.</p>'],
     ['Prier et sauvegarder', '<p>La natte d’une mosquée, au cœur de l’étoile à huit branches : on y <b>prie</b> (le groupe se repose, la Sakîna descend) et l’on y <b>sauvegarde</b>. On ne sauvegarde que là, et à la natte des Archives depuis l’écran de la Chaîne. Trois emplacements. Fermer la page sans sauvegarder fait perdre ce qui a été joué depuis.</p>'],
@@ -4070,6 +4336,23 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     if (k === 'way') W.wayT = W.t + 16;
     else if (k === 'go') { W.wayT = W.t + 16; W.lead(); }
     else if (k === 'aide') U.pause('aide');
+  };
+
+  /* ---------- noms au-dessus des personnages ---------- */
+  let still = 0;
+  U.noms = function (now) {
+    const box = $('#noms'), ok = I.scene === W && W.map && W.saga && !S.busy && !W.lock && !U.menuOpen && !(I.build && I.build.on) && !$('#hud').hidden;
+    if (!ok) { if (box.childElementCount) box.innerHTML = ''; return; }
+    const p = W.player, sc = U.scale || 1, cx = Math.round(W.cam.x) + (U.zoom ? G.view.x : 0), cy = Math.round(W.cam.y), tg = W.target(), list = [], m = W.map;
+    if (p.moving) still = now;
+    W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y); if (d < 60 || (tg && tg.ent === n && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y, d, c: n.aura || '#f3e7cc' }); });
+    list.sort((a, b) => a.d - b.d); list.length = Math.min(list.length, 5);
+    if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.trail[Math.min(W.trail.length - 1, i * 13)] : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: D.ELEMENTS[h.el].color }); });
+    const seen = {}, w = $('#stage').clientWidth;
+    list.forEach(e => { const x = (e.x - cx) * sc, y = (e.y - cy - 25) * sc; if (x < 8 || x > w - 8 || y < 4) return; seen[e.k] = 1;
+      let el = box.querySelector('[data-k="' + e.k + '"]'); if (!el) { el = I.el('span', 'nom', I.esc(e.t)); el.dataset.k = e.k; el.style.setProperty('--c', e.c); box.appendChild(el); }
+      el.style.left = x.toFixed(1) + 'px'; el.style.top = y.toFixed(1) + 'px'; });
+    [...box.children].forEach(el => { if (!seen[el.dataset.k]) el.remove(); });
   };
 
   /* ---------- réglages d'affichage ---------- */
@@ -4157,6 +4440,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
         else { U.pointerTick(now); if (sc.update) sc.update(dt); }
         G.present(dt, sc.render(dt) || {});
       } catch (e) { if (!U._err) { U._err = e; console.error(e); } } }
+      if ((U._nf = (U._nf || 0) + 1) % 3 === 0) U.noms(now);
       const tx = U.zoom ? -G.view.x * U.scale : 0; if (tx !== U._tx) { U._tx = tx; cvEl.style.transform = tx ? 'translateX(' + tx + 'px)' : ''; }
       $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden); $('#helpbtn').hidden = $('#menubtn').hidden;
       $('#buildbtn').hidden = $('#menubtn').hidden || !W.saga || (W.saga.frame && !W.saga.veillees) || !I.build.outdoor(W.map.id);
@@ -4220,7 +4504,7 @@ ISNAD.registerSaga({
     },
     salim: {
       name: 'Sâlim', title: 'le Repenti', arabic: 'سالم', role: 'guerrier', el: 'shajaa',
-      look: { kind: 'cyber', robe: '#4a2f3a', head: '#2a1c24', cloak: '#2b2530' },
+      look: { kind: 'cyber', robe: '#5a2f3a', head: '#6b2f3a', cloak: '#2b2530', coiffe: 'calotte', manteau: 'aucun' },
       skills: [
         { lvl: 1, id: 'couper', name: 'Couper le signal', desc: 'Frappe nette.', cost: 3, target: 'foe', el: 'fer', pow: 1.5, anim: 'slash' },
         { lvl: 1, id: 'debrancher', name: 'Débrancher', desc: 'Oser dire non : frappe de Courage, retire les renforts.', cost: 5, target: 'foe', el: 'shajaa', pow: 1.4, fx: [{ st: 'dispel' }], anim: 'burst' },
@@ -4487,6 +4771,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Celui qui défile', 'Cité-Miroir · le soir du maillon d’Abû Bakr'],
+        ['mus', 'rencontre'],
         ['nar', 'Idris remonte des Archives avec une Lumière qui n’est pas la sienne : la Véracité d’Abû Bakr. Là-haut, la rue n’a pas changé.'],
         ['nar', 'L’enfant est là, sous le grand écran, comme hier.']
       ],
@@ -4549,6 +4834,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Le Régent', 'Cité-Miroir · le soir du maillon de ’Umar'],
+        ['mus', 'rencontre'],
         ['nar', 'La Justice de ’Umar pèse dans la main d’Idris comme une balance vide : elle attend qu’on y pose quelque chose.'],
         ['nar', 'Sous le grand écran, l’enfant a déjà une question.']
       ],
@@ -4610,6 +4896,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'L’Admiré', 'Cité-Miroir · le soir du maillon de Khâlid'],
+        ['mus', 'rencontre'],
         ['nar', 'Le Courage de Khâlid n’est pas celui qu’Idris attendait. C’est le courage de descendre d’un socle.'],
         ['nar', 'Ce soir, il y a du bruit sous le grand écran. L’enfant regarde, la tête penchée.']
       ],
@@ -4671,6 +4958,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Le Compteur', 'Cité-Miroir · le soir du maillon de ’Uthmân'],
+        ['mus', 'rencontre'],
         ['nar', 'La Miséricorde de ’Uthmân a la forme d’un puits : on n’y garde rien pour soi, et il ne tarit pas.'],
         ['nar', 'L’enfant attend sous le grand écran. Il a l’air de quelqu’un qui a fait un calcul et n’y croit pas.']
       ],
@@ -4732,6 +5020,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Le Cartographe', 'Cité-Miroir · le soir du maillon de ’Alî'],
+        ['mus', 'rencontre'],
         ['nar', 'Le Savoir de ’Alî ne ressemble pas à une réponse. Il ressemble à une question bien posée : de qui le tiens-tu ?'],
         ['nar', 'L’enfant tient un bout de papier, sous le grand écran. Il le retourne dans tous les sens.']
       ],
@@ -4788,10 +5077,13 @@ ISNAD.registerSaga({
 });
 
 /* ==== src/data/music.js ==== */
-/* ISNAD — bande-son originale (toutes les mélodies sont composées pour le jeu).
-   Une piste = ISNAD.registerMusic(nom, { bpm, beats, voices: [{ wave, vol, notes }] }).
-   Jeton = hauteur/durée en temps ; accord = notes jointes par + ; silence = -.
-   Le motif de la Chaîne (ré – la – sol – fa# – ré) revient dans titre, chaine, desert, citadelle, boss, espoir, victoire. */
+/* ISNAD — bande-son originale : toutes les mélodies sont composées pour le jeu, aucune n'est reprise d'une œuvre existante.
+   Une piste = ISNAD.registerMusic(nom, { bpm, beats, intro?, voices: [{ wave, vol, pan?, notes }] }).
+   Jeton = hauteur/durée en temps ; accord = notes jointes par + ; silence = - ; `intro` = temps joués une seule fois.
+   Percussions : D dum, T tek, t tek léger, r riq, k grosse caisse, b grand tambour, m tom, s caisse claire, h charleston,
+   c cymbale, a enclume.
+   Le thème de la Chaîne — trois maillons qui montent, (ré) la–sol, si–la, ré — revient dans titre, chaine, citadelle,
+   espoir, victoire ; vice le renverse avant de le retrouver. Tonalités, tempos et idées : docs/musique.md. */
 (function () {
   'use strict';
   const R = (ISNAD.registerMusic || function () {}).bind(ISNAD);
@@ -4802,209 +5094,466 @@ ISNAD.registerSaga({
     return bars.join(' ');
   };
   const N = (s, n) => Array(n).fill(s);                       // n fois la même mesure
-  const E = (...n) => n.map(x => x + '/.5').join(' ');        // suite de croches
-  const pick = (map, prog) => prog.split(' ').map(k => map[k]);
 
-  const MOTIF = 'D4/1 A4/1 G4/.5 F#4/.5 D4/1';
-  const MOTIF5 = 'D5/1 A5/1 G5/.5 F#5/.5 D5/1';
+  /* ---------- un peu d'harmonie : l'accompagnement se déduit des accords, les mélodies s'écrivent à la main ---------- */
+  const STEP = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }, NOTE = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
+  const pcOf = s => (STEP[s[0]] + (s[1] === '#' ? 1 : s[1] === 'b' ? 11 : 0)) % 12;
+  const midi = n => 12 * (+n.slice(-1) + 1) + STEP[n[0]] + (n[1] === '#' ? 1 : n[1] === 'b' ? -1 : 0);
+  const name = k => NOTE[k % 12] + (Math.floor(k / 12) - 1);
+  const QUAL = {
+    '': [0, 4, 7], m: [0, 3, 7], 5: [0, 7], sus: [0, 5, 7], dim: [0, 3, 6], aug: [0, 4, 8], 6: [0, 4, 7, 9], m6: [0, 3, 7, 9],
+    7: [0, 4, 7, 10], m7: [0, 3, 7, 10], M7: [0, 4, 7, 11], '7sus': [0, 5, 7, 10], o7: [0, 3, 6, 9], m7b5: [0, 3, 6, 10], add9: [0, 2, 4, 7]
+  };
+  const chord = sym => {
+    const m = /^([A-G][#b]?)([^/]*)(?:\/([A-G][#b]?))?$/.exec(sym), q = m && QUAL[m[2]];
+    if (!q) { console.warn('musique : accord inconnu « ' + sym + ' »'); return { pcs: [0], bass: 0 }; }
+    const r = pcOf(m[1]); return { pcs: q.map(i => (r + i) % 12), bass: m[3] ? pcOf(m[3]) : r };
+  };
+  // échelle d'un accord à partir de `lo` : la basse, puis les notes de l'accord depuis la quinte au-dessus (rien de serré
+  // dans le grave). Avec '^lo' : les notes de l'accord serrées dans l'octave qui part de `lo`, puis leurs octaves.
+  const ladder = (sym, lo) => {
+    const c = chord(sym);
+    if (lo[0] === '^') { const l = midi(lo.slice(1)), near = c.pcs.map(p => l + ((p - l % 12) + 12) % 12).sort((a, b) => a - b); return near.concat(near.map(k => k + 12), near.map(k => k + 24)); }
+    let b = midi(lo); while (b % 12 !== c.bass) b++;
+    const L = [b]; for (let k = b + 7; L.length < 12; k++) if (c.pcs.includes(k % 12)) L.push(k);
+    return L;
+  };
+  // fig('Dm', 'D2', '0/.5 1/.5 2+3/1 -/2') : un motif écrit en degrés de l'échelle ; o = la basse à l'octave
+  const fig = (sym, lo, pat) => {
+    const L = ladder(sym, lo);
+    return pat.split(' ').map(tk => { const i = tk.lastIndexOf('/'), h = tk.slice(0, i); return h === '-' ? tk : h.split('+').map(x => name(x === 'o' ? L[0] + 12 : L[+x])).join('+') + tk.slice(i); }).join(' ');
+  };
+  // nappe : l'accord serré dans l'octave qui part de `lo` — d'un accord au suivant, les voix bougent le moins possible
+  const pad = (sym, lo, d) => { const c = chord(sym), l = midi(lo); return c.pcs.map(p => l + ((p - l % 12) + 12) % 12).sort((a, b) => a - b).map(name).join('+') + '/' + d; };
+  // 'Dm Gm | A:3 A7:1' → mesures de [accord, temps] ; sans précision, les accords d'une mesure se partagent ses temps
+  const prog = (str, len) => str.split('|').map(bar => { const cs = bar.trim().split(/\s+/); return cs.map(c => { const [s, b] = c.split(':'); return [s, b ? +b : len / cs.length]; }); });
+  const acc = (str, len, lo, pats) => prog(str, len).map(bar => bar.map(([s, b]) => { if (!pats[b]) console.warn('musique : pas de motif pour ' + b + ' temps (' + s + ')'); return fig(s, lo, pats[b] || '-/' + b); }).join(' '));
+  const pads = (str, len, lo) => prog(str, len).map(bar => bar.map(([s, b]) => pad(s, lo, b)).join(' '));
+  const tr = (s, n) => s.replace(/[A-G][#b]?\d/g, x => name(midi(x) + n));              // transpose une ligne de n demi-tons
+  const trp = (p, n) => p.replace(/[A-G][#b]?/g, r => NOTE[(pcOf(r) + n + 120) % 12]);   // transpose une grille d'accords
+  const trs = (bars, n) => bars.map(b => tr(b, n));
+  const sc = s => s.split(' ').map(pcOf);                                              // gamme → classes de hauteur
+  // luth seul : chaque note sur deux cordes à l'unisson (les chœurs doublés de l'instrument) — elle sort 3 dB plus fort
+  const two = line => line.replace(/([A-G][#b]?\d)\//g, '$1+$1/');
+  // Hétérophonie : le luth double un chant en l'ornant. Il refrappe les notes longues et y glisse un mordant vers le degré
+  // supérieur de la gamme (durée q) ; avec `re`, il redouble aussi les noires en croches. `shift` transpose (demi-tons).
+  const het = (bars, scale, shift, q, re) => bars.map(bar => bar.trim().split(/\s+/).map(tk => {
+    const i = tk.lastIndexOf('/'), h = tk.slice(0, i), d = parseFloat(tk.slice(i + 1)); if (h === '-' || h.includes('+')) return tk;
+    const m = midi(h) + (shift || 0), n = name(m); let u = m + 1; while (!scale.includes(u % 12)) u++;
+    const turn = name(u) + '/' + q + ' ' + n + '/' + q;
+    if (d < 1 - 1e-9) return n + '/' + d;
+    if (d < 1.5 - 1e-9) return re ? n + '/' + d / 2 + ' ' + n + '/' + d / 2 : n + '/' + d;
+    if (d < 2 - 1e-9) return n + '/' + (d - 2 * q) + ' ' + turn;                       // le mordant mène à la note suivante
+    let out = n + '/1 ' + turn + ' ' + n + '/' + (1 - 2 * q), rest = d - 2;             // frappe, mordant, puis une frappe par temps
+    while (rest > 1e-9) { const x = Math.min(1, rest); out += ' ' + n + '/' + x; rest -= x; }
+    return out;
+  }).join(' '));
 
-  /* ---------- titre : grave puis ample — ré, seconde augmentée (ré mib fa# sol la sib do) ---------- */
+  /* ---------- le thème de la Chaîne ----------
+     Trois maillons : chacun monte (quinte, tierce, quarte) et s'accroche un degré sous l'arrivée du précédent.
+     Huit mesures à quatre temps ; la levée (un demi-temps sur la tonique) appartient à la mesure d'avant. */
+  const CH = {       // forme majeure, en ré
+    a1: 'A4/1.5 G4/.5 B4/1.5 A4/.5', a2: 'D5/2.5 -/1 E4/.5', a3: 'B4/1.5 A4/.5 C#5/1.5 B4/.5', a4: 'E5/3 -/1',
+    b1: 'F#5/1.5 E5/.5 D5/1.5 B4/.5', b2: 'G4/1.5 A4/.5 B4/2', b3: 'A4/1.5 G4/.5 F#4/1.5 E4/.5'
+  };
+  const CHm = {      // forme mineure : le maillon du milieu s'abaisse, la demi-cadence prend la seconde augmentée
+    a1: 'A4/1.5 G4/.5 Bb4/1.5 A4/.5', a2: 'D5/2.5 -/1 D4/.5', a3: 'Bb4/1.5 A4/.5 C#5/1.5 Bb4/.5', a4: 'A4/3 -/1',
+    b1: 'F5/1.5 E5/.5 D5/1.5 Bb4/.5', b2: 'G4/1.5 A4/.5 Bb4/2', b3: 'A4/1.5 G4/.5 E4/1.5 C#4/.5'
+  };
+  const CHP = 'D G | D Bm | Em A | A F#/A# | Bm D/A | G Em | Gm A7 | D';            // la sous-dominante mineure avant la cadence
+  const CHPm = 'Dm Gm | Dm Bb | Gm A | A | Bb Dm/A | Gm Eb | Em7b5 A7 | D';        // cadence picarde
+  // contre-chant de la forme majeure : il répond quand le thème tient sa note, puis le double à la tierce
+  const DESC = ['-/4', '-/1 A5/.5 F#5/.5 G5/.5 F#5/.5 D5/1', '-/4', '-/1 C#5/.5 E5/.5 F#5/1 E5/.5 C#5/.5',
+    'A5/1.5 G5/.5 F#5/1.5 D5/.5', 'B4/1.5 C#5/.5 D5/2', 'C5/1.5 Bb4/.5 A4/1.5 G4/.5', 'F#4/3 -/.5 D4/.5'];
+  // arpèges de harpe : une vague qui monte et se replie, en doubles croches puis en croches
+  const H16 = { 4: '0/.25 1/.25 2/.25 3/.25 4/.25 3/.25 2/.25 3/.25 4/.25 5/.25 4/.25 3/.25 2/.25 3/.25 1/.25 2/.25', 2: '0/.25 1/.25 2/.25 3/.25 4/.25 3/.25 2/.25 1/.25', 1: '0/.25 1/.25 2/.25 3/.25' };
+  const H8 = { 4: '0/.5 1/.5 2/.5 3/.5 4/.5 3/.5 2/.5 1/.5', 2: '0/.5 1/.5 2/.5 3/.5', 1: '0/.5 2/.5' };
+
+  /* ---------- titre : grave puis ample — ré mineur harmonique, puis ré majeur ---------- */
   (function () {
-    const ch = { D: 'D3+F#3+A3/4', Eb: 'Eb3+G3+Bb3/4', Gm: 'G3+Bb3+D4/4', Cm: 'C3+Eb3+G3/4', CD: 'C3+Eb3+G3/2 D3+F#3+A3/2' };
-    const ar = { D: E('D3', 'A3', 'D4', 'F#4', 'A4', 'F#4', 'D4', 'A3'), Eb: E('Eb3', 'Bb3', 'Eb4', 'G4', 'Bb4', 'G4', 'Eb4', 'Bb3'), Gm: E('G3', 'D4', 'G4', 'Bb4', 'D5', 'Bb4', 'G4', 'D4'), Cm: E('C3', 'G3', 'C4', 'Eb4', 'G4', 'Eb4', 'C4', 'G3') };
-    const bs = { D: 'D2/1.5 D2/.5 A2/1 D2/1', Eb: 'Eb2/1.5 Eb2/.5 Bb2/1 Eb2/1', Gm: 'G2/1.5 G2/.5 D2/1 G2/1', Cm: 'C2/1.5 C2/.5 G2/1 C2/1' };
-    R('titre', { bpm: 76, beats: 64, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(4,
-        MOTIF, 'Eb4/1 F#4/1 G4/2', MOTIF, 'C4/1 Eb4/1 D4/2',
-        'A4/1 Bb4/1 A4/.5 G4/.5 F#4/1', 'G4/1 A4/1 Bb4/2', 'C5/1 Bb4/1 A4/.5 G4/.5 F#4/1', 'G4/1 F#4/1 D4/2',
-        MOTIF5, 'Eb5/.5 F#5/.5 G5/1 A5/2', 'Bb5/1 A5/1 G5/.5 F#5/.5 G5/1', 'A5/2 D5/2',
-        'C5/1 D5/1 Eb5/.5 F#5/.5 G5/1', 'A5/1.5 G5/.5 F#5/1 Eb5/1', 'D5/1 A4/1 G4/.5 F#4/.5 Eb4/1', 'D4/4') },
-      { wave: 'strings', vol: 0.25, notes: B(4, ...pick(ch, 'D Eb D CD D Gm Cm D D Eb Gm D Cm Gm D D')) },
-      { wave: 'pluck', vol: 0.24, notes: B(4, ...N('-/4', 8), ...pick(ar, 'D Eb Gm D Cm Gm D'), 'D3/.5 A3/.5 D4/.5 F#4/.5 A4/2') },
-      { wave: 'triangle', vol: 0.4, notes: B(4, 'D2/4', 'Eb2/4', 'D2/4', 'C2/2 D2/2', 'D2/4', 'G2/4', 'C2/4', 'D2/4', ...pick(bs, 'D Eb Gm D Cm Gm D'), 'D2/4') },
-      { wave: 'drums', vol: 0.32, notes: B(4, ...N('D/2 t/1 t/1', 8), ...N('D/1 T/.5 t/.5 D/.5 t/.5 T/1', 7), 'D/1 T/1 D/2') }
+    const pI = 'D5 | Bb/D | Gm/D | A7sus:2 A7:1 A7sus:1';   // la levée (ré) tombe sur la quarte suspendue, pas contre la sensible
+    R('titre', { bpm: 72, beats: 80, intro: 16, voices: [
+      { wave: 'flute', vol: 0.48, notes: B(4, ...N('-/4', 3), '-/3.5 D4/.5', CHm.a1, CHm.a2, CHm.a3, CHm.a4, CHm.b1, CHm.b2, CHm.b3, 'D4/4', ...DESC) },
+      { wave: 'brass', vol: 0.6, pan: 0.15, notes: B(4, ...N('-/4', 11), '-/3.5 D4/.5', CH.a1, CH.a2, CH.a3, CH.a4, CH.b1, CH.b2, CH.b3, 'D4/4') },
+      { wave: 'strings', vol: 0.24, pan: -0.2, notes: B(4, ...pads(pI, 4, 'F3'), ...pads(CHPm, 4, 'F3'), ...pads(CHP, 4, 'F3')) },
+      // une touche arabo-andalouse : dans la première partie, le luth double la flûte en l'ornant
+      { wave: 'pluck', vol: 0.36, pan: -0.25, notes: B(4, ...N('-/4', 3), '-/3.5 D4/.5', ...het([CHm.a1, CHm.a2, CHm.a3, CHm.a4, CHm.b1, CHm.b2, CHm.b3, 'D4/4'], sc('D E F G A Bb C'), 0, 0.125), ...N('-/4', 7), '-/3.5 D4/.5') },
+      { wave: 'harp', vol: 0.4, pan: 0.25, notes: B(4, ...acc(pI, 4, 'D2', H16), ...acc(CHPm, 4, 'D2', H8), ...acc(CHP, 4, 'D2', H16)) },
+      { wave: 'triangle', vol: 0.32, notes: B(4, ...acc(pI, 4, 'D2', { 4: '0/4', 2: '0/2', 1: '0/1' }), ...acc(CHPm, 4, 'D2', { 4: '0/3 0/1', 2: '0/2' }), ...acc(CHP, 4, 'D2', { 4: '0/1.5 0/.5 1/1 0/1', 2: '0/1.5 0/.5' })) },
+      { wave: 'timp', vol: 0.3, notes: B(4, 'D2/4', '-/4', '-/4', '-/2 A2/.5 A2/.5 A2/.25 A2/.25 A2/.25 A2/.25',
+        'D2/2 -/2', '-/4', '-/4', 'A2/2 -/2', '-/4', '-/4', '-/2 A2/1 A2/1', 'D2/2 -/1 A2/.5 A2/.5',
+        'D2/1 -/1 D2/1 -/1', '-/4', '-/4', 'A2/2 -/2', '-/4', '-/4', '-/2 A2/.5 A2/.5 A2/.5 A2/.5', 'D2/2 -/2') }
     ] });
   })();
 
-  /* ---------- chaine : suspendu, cloches et cordes ---------- */
-  R('chaine', { bpm: 66, beats: 32, voices: [
-    { wave: 'bell', vol: 0.5, notes: B(4, MOTIF5, '-/1 A4/1 D5/2', 'Eb5/1 G5/1 F#5/.5 Eb5/.5 D5/1', '-/2 A4/2', MOTIF5, '-/1 Bb4/1 A4/2', 'G4/1 A4/1 Bb4/.5 A4/.5 F#4/1', 'D4/4') },
-    { wave: 'strings', vol: 0.25, notes: B(4, 'D3+A3/4', 'D3+A3/4', 'Eb3+Bb3/4', 'D3+A3/4', 'D3+F#3+A3/4', 'G3+Bb3+D4/4', 'C3+Eb3+G3/4', 'D3+A3/4') },
-    { wave: 'sine', vol: 0.2, notes: B(4, 'A4/4', 'A4/4', 'Bb4/4', 'A4/4', 'A4/4', 'A4/4', 'G4/4', 'A4/4') },
-    { wave: 'triangle', vol: 0.38, notes: B(4, 'D2/4', 'D2/4', 'Eb2/4', 'D2/4', 'D2/4', 'G2/4', 'C2/4', 'D2/4') }
-  ] });
-
-  /* ---------- medine : paisible, flûte et oud — sol mineur ---------- */
+  /* ---------- chaine : suspendu — ré, à 6/8 (un temps = une croche), accords empruntés sur pédale de tonique ---------- */
   (function () {
-    const ar = { Gm: E('G3', 'D4', 'G4', 'D4', 'Bb3', 'D4', 'G4', 'D4'), Bb: E('Bb2', 'F3', 'Bb3', 'F3', 'D3', 'F3', 'Bb3', 'F3'), Eb: E('Eb3', 'Bb3', 'Eb4', 'Bb3', 'G3', 'Bb3', 'Eb4', 'Bb3'), F: E('F3', 'C4', 'F4', 'C4', 'A3', 'C4', 'F4', 'C4'), D: E('D3', 'A3', 'D4', 'A3', 'F#3', 'A3', 'D4', 'A3') };
-    R('medine', { bpm: 92, beats: 32, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(4, 'D5/1 Eb5/.5 D5/.5 C5/1 Bb4/1', 'A4/.5 Bb4/.5 C5/1 D5/2', 'G5/1 F5/.5 Eb5/.5 D5/1 C5/1', 'Bb4/1 A4/1 G4/2', 'Bb4/1 C5/.5 D5/.5 Eb5/1 D5/1', 'C5/.5 Bb4/.5 A4/1 Bb4/2', 'D5/1 C5/.5 Bb4/.5 A4/1 F#4/1', 'G4/3 -/1') },
-      { wave: 'pluck', vol: 0.28, notes: B(4, ...pick(ar, 'Gm Bb Eb Gm Eb F D Gm')) },
-      { wave: 'triangle', vol: 0.4, notes: B(4, 'G2/2 G2/2', 'Bb2/2 Bb2/2', 'Eb2/2 Eb2/2', 'G2/2 D2/2', 'Eb2/2 Eb2/2', 'F2/2 F2/2', 'D2/2 D2/2', 'G2/4') },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('D/1 -/.5 t/.5 T/1 t/1', 8)) }
+    const p = 'D:3 G/D:3 | D | Bb/D | C/D | D:3 Gm/D:3 | D | Em7:3 A7sus:3 | A7 | G:3 D/F#:3 | Em:3 Bm:3 | Bb | Gm6:3 A7:3 | D | A/D | G/D:3 Gm/D:3 | D';
+    const st = pads(p, 6, 'F#3'); for (let i = 0; i < 4; i++) st[i] = '-/6';
+    R('chaine', { bpm: 132, beats: 96, voices: [
+      { wave: 'bell', vol: 0.42, notes: B(6, 'A5/2 G5/1 B5/2 A5/1', 'D6/5 -/1', 'Bb5/3 A5/2 F5/1', 'G5/3 E5/2 D5/1', 'A5/2 G5/1 Bb5/2 A5/1', 'D6/5 -/1', 'B5/2 A5/1 G5/2 E5/1', 'F#5/3 E5/3',
+        'F#5/2 E5/1 D5/2 B4/1', 'G4/2 A4/1 B4/3', 'D5/2 F5/1 A5/3', 'G5/2 E5/1 C#5/3', 'D5/3 F#5/3', 'E5/6', 'B4/3 Bb4/3', 'A4/5 D5/1') },
+      { wave: 'harp', vol: 0.5, pan: -0.2, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/1 3/1 2/1 3/1 4/1 3/1', 3: '0/1 2/1 3/1' })) },
+      { wave: 'strings', vol: 0.22, pan: 0.2, notes: B(6, ...st) },
+      { wave: 'triangle', vol: 0.26, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/6', 3: '0/3' })) }
     ] });
   })();
 
-  /* ---------- nuit : dépouillé — ré, seconde mineure ---------- */
-  R('nuit', { bpm: 60, beats: 32, voices: [
-    { wave: 'flute', vol: 0.48, notes: B(4, '-/2 A4/1 Bb4/1', 'A4/3 -/1', '-/1 D5/1 C5/1 Bb4/1', 'A4/4', '-/2 G4/1 A4/1', 'Bb4/2 A4/1 G4/1', 'F4/1 Eb4/1 D4/2', 'D4/2 -/2') },
-    { wave: 'sine', vol: 0.22, notes: B(4, 'D4+A4/4', 'D4+A4/4', 'G3+D4/4', 'A3+D4/4', 'D4+A4/4', 'D4+A4/4', 'Eb4+G4/4', 'D4+A4/4') },
-    { wave: 'bell', vol: 0.2, notes: B(4, '-/4', '-/2 D5/2', '-/4', '-/2 A4/2', '-/4', '-/2 D5/2', '-/4', '-/2 A4/2') },
-    { wave: 'triangle', vol: 0.36, notes: B(4, 'D2/4', 'D2/4', 'G2/4', 'A2/4', 'D2/4', 'D2/4', 'Eb2/4', 'D2/4') }
-  ] });
-
-  /* ---------- desert : marche lente ---------- */
+  /* ---------- medine : marche souple — sol dorien, puis si bémol majeur. Couleur arabo-andalouse : un prélude de luth sans
+     percussion (joué une fois) ; à la reprise, le luth quitte l'accompagnement pour doubler le chant en l'ornant, et le târ et
+     la darbouka passent à un cycle en 3 + 3 + 2. ---------- */
   (function () {
-    const ar = { D: E('D3', 'A3', 'D4', 'A3', 'D3', 'A3', 'D4', 'A3'), Eb: E('Eb3', 'Bb3', 'Eb4', 'Bb3', 'Eb3', 'Bb3', 'Eb4', 'Bb3'), Gm: E('G3', 'D4', 'G4', 'D4', 'G3', 'D4', 'G4', 'D4') };
-    const bs = { D: 'D2/1 -/1 D2/1 A2/1', Eb: 'Eb2/1 -/1 Eb2/1 Bb2/1', Gm: 'G2/1 -/1 G2/1 D2/1' };
-    const prog = 'D Eb D D D Gm D D Gm D Eb';
-    R('desert', { bpm: 72, beats: 48, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(4, 'D4/2 Eb4/1 F#4/1', 'G4/2 F#4/1 Eb4/1', MOTIF, 'D4/3 -/1', 'A4/2 Bb4/1 C5/1', 'Bb4/1 A4/1 G4/2', 'F#4/1 G4/1 A4/1 Bb4/1', 'A4/3 -/1', 'D5/2 C5/1 Bb4/1', 'A4/1 G4/1 F#4/2', 'G4/1 F#4/1 Eb4/1 F#4/1', 'D4/4') },
-      { wave: 'pluck', vol: 0.26, notes: B(4, ...pick(ar, prog), ar.D) },
-      { wave: 'triangle', vol: 0.42, notes: B(4, ...pick(bs, prog), 'D2/4') },
-      { wave: 'drums', vol: 0.34, notes: B(4, ...N('D/1 t/.5 t/.5 D/1 T/1', 12)) }
+    const pA = 'Gm | C | Gm | Dm | Gm | C | Bb F/A | Gm D', pB = 'Bb | F/A | Gm | Dm | Eb | Bb/D | Cm | D';
+    const oud = { 4: '0/.5 3/.5 2/.5 3/.5 1/.5 3/.5 2/.5 3/.5', 2: '0/.5 3/.5 2/.5 3/.5' };
+    // basse marchante : elle pose la fondamentale, puis s'approche de la suivante par degrés ou par demi-ton
+    const wA = ['G2/1.5 D3/.5 G2/1 A2/.5 B2/.5', 'C3/1.5 G2/.5 C3/1 Bb2/.5 A2/.5', 'G2/1.5 D3/.5 Bb2/1 C3/.5 C#3/.5', 'D3/1.5 A2/.5 D3/1 A2/.5 F#2/.5',
+      'G2/1.5 D3/.5 G2/1 A2/.5 B2/.5', 'C3/1.5 G2/.5 C3/1 D3/.5 C3/.5', 'Bb2/1.5 Bb2/.5 A2/1.5 A2/.5', 'G2/1.5 D3/.5 D3/1 A2/.5 F#2/.5'];
+    const wB = ['Bb2/1.5 F3/.5 D3/1 C3/.5 Bb2/.5', 'A2/1.5 C3/.5 A2/1 F2/.5 A2/.5', 'G2/1.5 D3/.5 G2/1 F2/.5 E2/.5', 'D2/1.5 A2/.5 D3/1 C3/.5 D3/.5',
+      'Eb3/1.5 Bb2/.5 G2/1 Bb2/.5 Eb3/.5', 'D3/1.5 Bb2/.5 D3/1 Eb3/.5 D3/.5', 'C3/1.5 G2/.5 Eb3/1 C3/.5 C#3/.5', 'D3/1.5 A2/.5 D3/1 A2/.5 F#2/.5'];
+    const A = ['D5/1 Bb4/.5 C5/.5 D5/1 G5/1', 'E5/1.5 D5/.5 C5/1 E5/1', 'D5/1 Bb4/.5 C5/.5 D5/.5 F5/.5 E5/.5 D5/.5', 'C5/1.5 A4/.5 D5/2',
+      'G5/1 F5/.5 E5/.5 D5/1 Bb4/1', 'C5/.5 D5/.5 E5/1 G5/1 E5/1', 'F5/1 D5/1 C5/1 A4/1'];
+    const A2 = A.concat('Bb4/.5 A4/.5 G4/1 -/1 D5/.5 Eb5/.5');                                  // la reprise, que le luth double
+    const beat = 'D/.5 T/.5 r/.5 T/.5 D/.5 r/.5 T/.5 r/.5', turn = 'D/.5 T/.5 r/.5 T/.5 D/.5 D/.5 T/.25 T/.25 T/.5';
+    const cyc = 'D/.5 r/.5 r/.5 T/.5 r/.5 r/.5 T/.5 r/.5', fin = 'D/.5 r/.5 r/.5 T/.5 r/.5 D/.5 T/.25 T/.25 T/.5';   // 3 + 3 + 2
+    R('medine', { bpm: 96, beats: 104, intro: 8, voices: [
+      { wave: 'flute', vol: 0.5, notes: B(4, '-/4', '-/4', ...A, 'Bb4/.5 A4/.5 G4/1 -/1 A4/.5 C5/.5', ...A2,
+        'F5/2 D5/1 Bb4/1', 'C5/1.5 D5/.5 C5/1 A4/1', 'Bb4/1 C5/.5 D5/.5 G5/2', 'F5/1.5 E5/.5 D5/2', 'G5/2 Eb5/1 Bb4/1', 'D5/1.5 Eb5/.5 F5/1 D5/1', 'Eb5/1 D5/.5 C5/.5 G4/1 C5/1', 'D5/1 C5/.5 Bb4/.5 A4/2') },
+      // prélude : le luth seul descend par degrés vers la finale ; puis il accompagne, puis il double le chant en l'ornant
+      { wave: 'pluck', vol: 0.42, pan: -0.25, notes: B(4, two('G4/1.5 A4/.25 G4/.25 F4/.5 E4/.5 D4/1'), two('Bb3/.5 C4/.5 D4/.75 C4/.25 Bb3/.5 A3/.5 G3/1'),
+        ...acc(pA, 4, 'G2', oud), ...het(A2, sc('G A Bb C D E F'), -12, 0.25, true), ...acc(pB, 4, 'G2', oud)) },
+      { wave: 'strings', vol: 0.28, pan: 0.2, notes: 'G3+D4/8 ' + B(4, ...N('-/4', 8), 'G3/2 Bb3/2', 'C4/2 E4/2', 'D4/2 Bb3/2', 'A3/2 F3/2', 'G3/2 Bb3/2', 'E4/2 C4/2', 'D4/2 C4/2', 'G3/2 A3/1 F#3/1', ...pads(pB, 4, 'F3')) },
+      { wave: 'contra', vol: 0.32, notes: B(4, '-/4', '-/4', ...wA, ...wA, ...wB) },
+      { wave: 'drums', vol: 0.32, notes: B(4, '-/4', '-/4', ...N(beat, 7), turn, ...N(cyc, 7), fin, ...N(cyc, 7), fin) }
     ] });
   })();
 
-  /* ---------- camp : veillée d'armes — la, seconde mineure ---------- */
-  R('camp', { bpm: 80, beats: 32, voices: [
-    { wave: 'flute', vol: 0.48, notes: B(4, 'E4/1.5 F4/.5 E4/1 D4/1', 'C4/1 D4/1 E4/2', 'A4/1.5 G4/.5 F4/1 E4/1', 'F4/1 E4/1 D4/2', 'E4/1.5 F4/.5 G4/1 A4/1', 'Bb4/1 A4/1 G4/2', 'F4/1 E4/1 D4/1 C4/1', 'A4/3 -/1') },
-    { wave: 'strings', vol: 0.24, notes: B(4, 'A3+C4+E4/4', 'A3+C4+E4/4', 'F3+A3+C4/4', 'D3+F3+A3/4', 'A3+C4+E4/4', 'Bb3+D4+F4/4', 'D3+F3+A3/4', 'A3+C4+E4/4') },
-    { wave: 'triangle', vol: 0.4, notes: B(4, 'A2/2 E2/2', 'A2/2 E2/2', 'F2/2 C2/2', 'D2/2 A2/2', 'A2/2 E2/2', 'Bb2/2 F2/2', 'D2/2 D2/2', 'A2/4') },
-    { wave: 'drums', vol: 0.32, notes: B(4, ...N('D/1.5 D/.5 T/1 t/1', 8)) }
-  ] });
-
-  /* ---------- rome : solennel — ré dorien ---------- */
-  R('rome', { bpm: 70, beats: 48, voices: [
-    { wave: 'saw', vol: 0.45, notes: B(4, 'D4/2 A4/2', 'G4/1 F4/1 E4/2', 'F4/1 G4/1 A4/1 B4/1', 'C5/2 A4/2', 'D5/2 C5/1 B4/1', 'A4/1 G4/1 A4/2', 'F4/1 E4/1 D4/1 E4/1', 'E4/3 -/1', 'D4/1 F4/1 A4/1 D5/1', 'C5/1.5 B4/.5 A4/2', 'G4/1 F4/1 E4/2', 'D4/4') },
-    { wave: 'strings', vol: 0.26, notes: B(4, 'D3+F3+A3/4', 'C3+E3+G3/4', 'F3+A3+C4/4', 'A3+C4+E4/4', 'G3+B3+D4/4', 'A3+C4+E4/4', 'D3+F3+A3/4', 'A3+C4+E4/4', 'D3+F3+A3/4', 'F3+A3+C4/4', 'C3+E3+G3/4', 'D3+F3+A3/4') },
-    { wave: 'triangle', vol: 0.42, notes: B(4, 'D2/2 D2/2', 'C2/2 C2/2', 'F2/2 F2/2', 'A2/2 A2/2', 'G2/2 G2/2', 'A2/2 A2/2', 'D2/2 D2/2', 'A2/2 E2/2', 'D2/2 D2/2', 'F2/2 F2/2', 'C2/2 C2/2', 'D2/4') },
-    { wave: 'drums', vol: 0.33, notes: B(4, ...N('k/2 k/1 k/1', 11), 'k/2 c/2') }
-  ] });
-
-  /* ---------- palais : faste persan — ré, deux secondes augmentées (ré mib fa# sol la sib do#) ---------- */
+  /* ---------- nuit : dépouillé — sol mineur, le chant de la ville ralenti ; sixte napolitaine avant la reprise ---------- */
   (function () {
-    const bs = { D: 'D2/1 D2/.5 D2/.5 A2/1 D2/1', Eb: 'Eb2/1 Eb2/.5 Eb2/.5 Bb2/1 Eb2/1', Gm: 'G2/1 G2/.5 G2/.5 D2/1 G2/1', A: 'A2/1 A2/.5 A2/.5 G2/1 A2/1' };
-    R('palais', { bpm: 100, beats: 32, voices: [
-      { wave: 'pluck', vol: 0.5, notes: B(4, 'D5/.5 Eb5/.5 F#5/1 G5/.5 F#5/.5 Eb5/1', 'D5/1 C#5/.5 D5/.5 Eb5/2', 'F#5/.5 G5/.5 A5/1 Bb5/.5 A5/.5 G5/1', 'F#5/1 Eb5/1 D5/2', 'A4/.5 Bb4/.5 C#5/1 D5/.5 Eb5/.5 F#5/1', 'G5/1 F#5/.5 Eb5/.5 D5/2', 'Eb5/.5 D5/.5 C#5/1 Bb4/.5 A4/.5 C#5/1', 'D5/3 -/1') },
-      { wave: 'strings', vol: 0.24, notes: B(4, 'D3+F#3+A3/4', 'Eb3+G3+Bb3/4', 'D3+F#3+A3/4', 'D3+F#3+A3/4', 'D3+F#3+A3/4', 'G3+Bb3+D4/4', 'A3+C#4+G4/4', 'D3+F#3+A3/4') },
-      { wave: 'triangle', vol: 0.4, notes: B(4, ...pick(bs, 'D Eb D D D Gm A'), 'D2/2 D2/2') },
-      { wave: 'drums', vol: 0.34, notes: B(4, ...N('D/1 t/.5 T/.5 D/.5 D/.5 T/1', 8)) }
+    const p = 'Gm | Eb | Cm7 | D | Gm | Eb | Am7b5 D7 | Gm | Bb | F/A | Ab | D';
+    R('nuit', { bpm: 60, beats: 48, voices: [
+      { wave: 'flute', vol: 0.44, notes: B(4, '-/1 D5/1 Bb4/.5 C5/.5 D5/1', 'G5/3 F5/.5 Eb5/.5', 'D5/2 C5/1 Bb4/1', 'A4/3 -/1', '-/1 D5/1 Bb4/.5 C5/.5 D5/1', 'Bb5/2 G5/1 Eb5/1',
+        'C5/1 Eb5/1 D5/1 C5/.5 A4/.5', 'G4/3 -/1', '-/1 F5/1 D5/1 Bb4/1', 'C5/2 A4/2', 'Eb5/2 C5/2', 'D5/1 C5/.5 Bb4/.5 A4/2') },
+      { wave: 'pluck', vol: 0.42, pan: -0.2, notes: B(4, ...acc(p, 4, 'G2', { 4: '0/1 1/1 2/1 3/1', 2: '0/1 2/1' })) },
+      { wave: 'bell', vol: 0.3, pan: 0.3, notes: B(4, '-/4', '-/2 Bb5/2', '-/4', '-/2 D6/2', '-/4', '-/4', '-/4', '-/1 G5/1 D6/2', '-/4', '-/2 C6/2', '-/4', '-/2 F#5/2') },
+      { wave: 'pad', vol: 0.2, notes: B(4, ...pads(p, 4, 'G3')) },
+      { wave: 'triangle', vol: 0.26, notes: B(4, ...acc(p, 4, 'G2', { 4: '0/4', 2: '0/2' })) }
     ] });
   })();
 
-  /* ---------- mer : balancement à 6/8 (un temps = une croche) — la dorien ---------- */
+  /* ---------- desert : pédale de ré et mélodie ornée — hijaz sur ré (ré mi♭ fa# sol la si♭ do). Le luth et les percussions
+     groupent leurs croches par trois contre la mesure à quatre temps (3 + 3 + 2) ; dans la seconde partie les cordes tiennent
+     le chant avec la flûte, puis le luth le double en l'ornant. ---------- */
   (function () {
-    const ar = { Am: 'A3/1 C4/1 E4/1 A3/1 C4/1 E4/1', Em: 'E3/1 G3/1 B3/1 E3/1 G3/1 B3/1', C: 'C4/1 E4/1 G4/1 C4/1 E4/1 G4/1', G: 'G3/1 B3/1 D4/1 G3/1 B3/1 D4/1' };
-    R('mer', { bpm: 138, beats: 48, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(6, 'A4/2 B4/1 C5/2 B4/1', 'A4/2 G4/1 E4/3', 'A4/2 B4/1 C5/2 D5/1', 'E5/2 D5/1 C5/3', 'D5/2 C5/1 B4/2 A4/1', 'G4/2 A4/1 B4/3', 'C5/2 B4/1 A4/2 G4/1', 'A4/6') },
-      { wave: 'pluck', vol: 0.26, notes: B(6, ...pick(ar, 'Am Em Am C G Em Am Am')) },
-      { wave: 'triangle', vol: 0.4, notes: B(6, 'A2/3 A2/3', 'E2/3 E2/3', 'A2/3 A2/3', 'C2/3 C2/3', 'G2/3 G2/3', 'E2/3 E2/3', 'A2/3 E2/3', 'A2/6') },
-      { wave: 'drums', vol: 0.3, notes: B(6, ...N('D/1 t/1 t/1 T/1 t/1 t/1', 8)) }
+    const strum = '0/.5 1/.5 1/.5 0/.5 1/.5 1/.5 0/.5 1/.5', d = fig('D5', 'D3', strum), g = fig('Gm/D', 'D3', strum);
+    const bd = 'D2/1.5 D2/1.5 A2/1', bg = 'D2/1.5 D2/1.5 G2/1';
+    const step = 'D/.5 r/.5 t/.5 D/.5 r/.5 t/.5 T/.5 r/.5', turn = 'D/.5 r/.5 t/.5 D/.5 r/.5 T/.5 T/.25 t/.25 r/.5';
+    const Bm = ['G4/1 Bb4/1 D5/1.5 C5/.5', 'Bb4/1 A4/.5 G4/.5 A4/2', 'C5/1 Eb5/1 D5/1.5 C5/.5', 'Bb4/.5 A4/.5 G4/.5 F#4/.5 A4/2',
+      'D5/2 Eb5/.25 D5/.25 C5/.5 Bb4/1', 'C5/1 Bb4/.5 A4/.5 G4/2', 'F#4/.5 G4/.5 A4/.5 Bb4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5', 'D4/3 -/1'];
+    R('desert', { bpm: 76, beats: 64, voices: [
+      { wave: 'flute', vol: 0.5, notes: B(4, 'A4/2 Bb4/.25 A4/.25 G4/.5 F#4/1', 'G4/.5 F#4/.5 Eb4/1 D4/2', 'D4/.5 Eb4/.5 F#4/.5 G4/.5 A4/1 Bb4/.25 A4/.25 G4/.5', 'A4/3 -/1',
+        'D5/2 C5/.25 D5/.25 C5/.5 Bb4/1', 'A4/.5 Bb4/.5 C5/1 Bb4/.5 A4/.5 G4/1', 'F#4/.5 G4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5 D4/.5 Eb4/.5', 'D4/3 -/1', ...Bm) },
+      // le luth tient la pédale et répond quand la flûte se tait ; à la fin il rejoint le chant, à l'unisson, en l'ornant
+      { wave: 'pluck', vol: 0.44, pan: -0.25, notes: B(4, d, d, d, 'D3/1 A3/.5 D4/.5 F#4/.5 G4/.5 A4/1', d, d, d, 'D4/.5 Eb4/.5 F#4/.5 G4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5',
+        g, g, g, d, ...het(Bm.slice(4, 7), sc('D Eb F# G A Bb C'), 0, 0.25, true), 'D4/.5 Eb4/.5 F#4/.5 G4/.5 A4/1 D4/1') },
+      { wave: 'strings', vol: 0.26, pan: 0.2, notes: B(8, ...N('D3+A3/8', 4), 'D3+G3/8', 'D3+G3/4 D3+A3/4', 'D3+G3/8', 'D3+A3/8') },
+      // les cordes tiennent le chant, sans ses ornements
+      { wave: 'strings', vol: 0.34, pan: 0.1, notes: B(4, ...N('-/4', 8), Bm[0], Bm[1], Bm[2], Bm[3], 'D5/2.5 C5/.5 Bb4/1', Bm[5], Bm[6], Bm[7]) },
+      { wave: 'contra', vol: 0.28, notes: B(4, ...N(bd, 8), bg, bg, bg, bd, bg, bg, bd, bd) },
+      { wave: 'drums', vol: 0.32, notes: B(4, ...N(step, 3), turn, ...N(step, 3), turn, ...N(step, 3), turn, ...N(step, 3), turn) }
     ] });
   })();
 
-  /* ---------- noos : étrange — gamme par tons (do ré mi fa# lab sib) ---------- */
+  /* ---------- camp : veillée d'armes — la mineur ; la flûte veille, le cor répond. Couleur arabo-andalouse : un cycle
+     clairsemé en 3 + 3 + 2, le luth qui double la flûte en l'ornant puis se joint à ses réponses, une cadence qui redescend
+     par degrés vers la finale. ---------- */
   (function () {
-    const a = E('C4', 'E4', 'Ab4', 'C5', 'Ab4', 'E4', 'C4', 'E4'), b = E('D4', 'F#4', 'Bb4', 'D5', 'Bb4', 'F#4', 'D4', 'F#4');
-    const bc = 'C2/1.5 C2/.5 -/1 C2/1', bd = 'D2/1.5 D2/.5 -/1 D2/1';
-    R('noos', { bpm: 110, beats: 32, voices: [
-      { wave: 'bell', vol: 0.48, notes: B(4, 'E5/2 Ab5/2', 'F#5/1 E5/1 C5/2', 'D5/2 F#5/2', 'Bb5/1 Ab5/1 F#5/2', 'E5/1 C5/1 D5/1 E5/1', 'Ab5/3 -/1', 'F#5/1 D5/1 Bb4/2', 'C5/4') },
-      { wave: 'pulse', vol: 0.26, notes: B(4, a, a, b, b, a, a, b, a) },
-      { wave: 'triangle', vol: 0.4, notes: B(4, bc, bc, bd, bd, bc, bc, bd, bc) },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('k/1 h/.5 h/.5 s/1 h/.5 h/.5', 8)) }
+    const pA = 'Am | Am/G | FM7 | E7sus E7 | Am | C/G | Dm | E', pB = 'F | G | Em | Am | Dm | Am/E | Bm7b5 E7 | Am';
+    const ost = { 4: '0/.5 1/.5 2/.5 1/.5 0/.5 1/.5 3/.5 1/.5', 2: '0/.5 1/.5 2/.5 1/.5' }, low = { 4: '0/1.5 0/.5 0/2', 2: '0/2' };
+    const pulse = 'D/1.5 D/1.5 T/.5 t/.5', roll = 'D/1.5 D/1.5 T/.25 t/.25 t/.25 t/.25';                    // 3 + 3 + 2
+    const fA = ['E5/1.5 D5/.5 C5/1 A4/1', 'B4/1 C5/.5 D5/.5 E5/2', 'A5/1.5 G5/.5 F5/1 E5/1', 'D5/2 B4/1 G#4/1', 'A4/1 C5/.5 E5/.5 A5/2', 'G5/1.5 F5/.5 E5/1 C5/1', 'D5/1 F5/1 E5/1 D5/1', 'E5/1.5 D5/.5 B4/2'];
+    const oA = acc(pA, 4, 'E2', ost), oB = acc(pB, 4, 'E2', ost), half = sym => fig(sym, 'E2', ost[2]);
+    R('camp', { bpm: 84, beats: 64, voices: [
+      { wave: 'flute', vol: 0.46, notes: B(4, ...fA, '-/4', '-/2 D5/.5 E5/.5 G5/1', '-/4', '-/2 E5/.5 D5/.5 C5/1', '-/4', '-/2 A5/.5 G5/.5 E5/1', 'F5/2 E5/2', 'E5/3 -/1') },
+      { wave: 'brass', vol: 0.5, pan: 0.2, notes: B(4, ...N('-/4', 8), 'A4/1 C5/1 F5/1.5 E5/.5', 'D5/2 B4/1 G4/1', 'G4/1 B4/1 E5/1.5 D5/.5', 'C5/2 A4/2', 'F4/1 A4/1 D5/1.5 C5/.5', 'C5/1 B4/.5 A4/.5 E4/2', 'D5/1 B4/1 G#4/1 E4/1', 'A4/3 -/1') },
+      // le luth : quatre mesures d'ostinato, puis il double la flûte en l'ornant ; dans la seconde partie il se joint
+      // aux réponses de la flûte et conclut en descendant par degrés, mi ré do si la
+      { wave: 'pluck', vol: 0.46, pan: -0.25, notes: B(4, ...oA.slice(0, 4), ...het(fA.slice(4), sc('A B C D E F G'), 0, 0.25, true),
+        oB[0], half('G') + ' D4/.5 E4/.5 G4/1', oB[2], half('Am') + ' E4/.5 D4/.5 C4/1', oB[4], half('Am/E') + ' A4/.5 G4/.5 E4/1', oB[6], 'A2/.5 E3/.5 E4/.5 D4/.5 C4/.5 B3/.5 A3/1') },
+      { wave: 'strings', vol: 0.18, notes: B(4, ...pads(pA.replace('FM7', 'F'), 4, 'G3'), ...pads(pB, 4, 'G3')) },
+      { wave: 'contra', vol: 0.28, notes: B(4, ...acc(pA, 4, 'E2', low), ...acc(pB, 4, 'E2', low)) },
+      { wave: 'drums', vol: 0.28, notes: B(4, ...N(pulse, 7), roll, ...N(pulse, 7), roll) }
     ] });
   })();
 
-  /* ---------- cite : cyberpunk, basse pulsée — mi mineur ---------- */
+  /* ---------- rome : solennel — ré dorien, cuivres en quintes et quartes sur bourdon ; cadence picarde ---------- */
   (function () {
-    const p = (n, t) => E(n, n, n, n, n, n, t, n);
-    R('cite', { bpm: 118, beats: 32, voices: [
-      { wave: 'pulse', vol: 0.48, notes: B(4, 'E5/1.5 D5/.5 B4/1 G4/1', 'A4/1 B4/1 E4/2', 'E5/1.5 D5/.5 C5/1 G4/1', 'A4/1 F#4/1 A4/2', 'B4/.5 E5/.5 G5/1 F#5/1 E5/1', 'C5/1 E5/1 A4/2', 'G4/1 C5/1 E5/1 G5/1', 'F#5/2 B4/2') },
-      { wave: 'strings', vol: 0.22, notes: B(4, 'E3+G3+B3/4', 'E3+G3+B3/4', 'C3+E3+G3/4', 'D3+F#3+A3/4', 'E3+G3+B3/4', 'A3+C4+E4/4', 'C3+E3+G3/4', 'B3+D4+F#4/4') },
-      { wave: 'saw', vol: 0.42, notes: B(4, p('E2', 'G2'), p('E2', 'G2'), p('C2', 'E2'), p('D2', 'F#2'), p('E2', 'G2'), p('A2', 'C3'), p('C2', 'E2'), p('B2', 'B2')) },
-      { wave: 'drums', vol: 0.36, notes: B(4, ...N('k/1 h/.5 h/.5 s/1 h/.5 k/.5', 8)) }
+    const pA = 'Dm | C | Dm | Am | F | C | G | Dm', pB = 'Bb | F/A | Gm | A | Dm | G/B | Em7b5 A7 | D';
+    R('rome', { bpm: 66, beats: 64, voices: [
+      { wave: 'brass', vol: 0.6, notes: B(4, 'D4+A3/2 A4+D4/2', 'G4+C4/1.5 E4/.5 G4+C4/2', 'A4+D4/1 D5+A4/1 C5/1 A4+D4/1', 'B4/1.5 A4/.5 E4+A3/2', 'F4+C4/2 A4+F4/2', 'G4+C4/2 C5+G4/2', 'B4+G4/1.5 A4/.5 G4+D4/1 B4+G4/1', 'A4+D4/4',
+        'D4/4', 'C4/4', 'D4/2 Bb3/2', 'C#4/2 E4/2', 'D4/4', 'D4/2 G4/2', 'E4/3 C#4/1', 'D4+A4/4') },
+      { wave: 'flute', vol: 0.5, pan: 0.2, notes: B(4, ...N('-/4', 4), 'C5/2 F5/2', 'E5/2 G5/2', 'D5/1.5 E5/.5 D5/1 B4/1', 'D5/4',
+        'D5/2 F5/1.5 E5/.5', 'C5/2 A4/2', 'Bb4/1 D5/1 G5/1.5 F5/.5', 'E5/2 C#5/2', 'D5/2 A4/1 F4/1', 'G4/1 B4/1 D5/2', 'G4/1 Bb4/1 A4/1.5 G4/.5', 'F#4/4') },
+      { wave: 'strings', vol: 0.22, pan: -0.2, notes: B(4, ...pads(pA, 4, 'F3'), ...pads(pB, 4, 'F3')) },
+      { wave: 'harp', vol: 0.4, pan: -0.3, notes: B(4, ...acc(pA, 4, 'D2', H8), ...acc(pB, 4, 'D2', H8)) },
+      { wave: 'triangle', vol: 0.3, notes: B(4, ...acc(pA, 4, 'D2', { 4: '0/2 0/2', 2: '0/2' }), ...acc(pB, 4, 'D2', { 4: '0/2 0/2', 2: '0/2' })) },
+      { wave: 'drums', vol: 0.3, notes: B(4, ...N('b/2 -/1 b/1', 7), 'b/2 -/2', ...N('b/2 -/2', 7), 'b+c/4') }
     ] });
   })();
 
-  /* ---------- citadelle : méditatif, ample — ré pentatonique mineur (ré fa sol la do) ---------- */
+  /* ---------- palais : faste — la mineur harmonique à 6/8, danse de cour ; sixte napolitaine à la cadence ---------- */
   (function () {
-    const ar = { D: 'D3/1 A3/1 D4/1 A3/1', C: 'C3/1 G3/1 C4/1 G3/1', F: 'F3/1 C4/1 F4/1 C4/1', G: 'G3/1 D4/1 G4/1 D4/1' };
-    const dr = { D: 'D3+A3/4', C: 'C3+G3/4', F: 'F3+C4/4', G: 'G3+D4/4' };
-    const prog = 'D D C D F G D D D C G D';
-    R('citadelle', { bpm: 63, beats: 48, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(4, 'D4/2 F4/1 G4/1', 'A4/3 G4/1', 'F4/1 G4/1 A4/1 C5/1', 'A4/4', 'D5/2 C5/1 A4/1', 'G4/1 A4/1 F4/2', 'G4/1 F4/1 D4/1 C4/1', 'D4/3 -/1', 'D4/1 A4/1 G4/.5 F4/.5 D4/1', 'C5/2 A4/2', 'G4/1 F4/1 G4/1 A4/1', 'D4/4') },
-      { wave: 'strings', vol: 0.24, notes: B(4, ...pick(dr, prog)) },
-      { wave: 'pluck', vol: 0.26, notes: B(4, ...pick(ar, prog)) },
-      { wave: 'triangle', vol: 0.4, notes: B(4, 'D2/4', 'D2/4', 'C2/4', 'D2/4', 'F2/4', 'G2/4', 'D2/4', 'D2/4', 'D2/4', 'C2/4', 'G2/4', 'D2/4') },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('D/2 t/1 t/1', 12)) }
+    const pA = 'Am | Dm/A | Am | E/G# | Am | Dm | Bb:3 E:3 | Am', pB = 'C | G/B | Am | E | F | C/E | Dm6:3 E:3 | Am';
+    const wave = { 6: '0/1 2/1 3/1 4/1 3/1 2/1', 3: '0/1 2/1 3/1' }, low = { 6: '0/3 0/2 0/1', 3: '0/3' };
+    const Bm = ['G5/2 E5/1 C5/2 E5/1', 'D5/2 B4/1 G4/2 B4/1', 'C5/1 D5/1 E5/1 A5/3', 'G#5/2 E5/1 B4/3', 'A5/2 F5/1 C5/2 F5/1', 'G5/2 E5/1 C5/3', 'F5/1 D5/1 B4/1 D5/1 B4/1 G#4/1', 'A4/6'];
+    const dance = 'D/1 r/1 T/1 D/1 T/1 r/1', turn = 'D/1 r/1 T/1 D/1 T/.5 T/.5 T/1';
+    R('palais', { bpm: 186, beats: 96, voices: [
+      { wave: 'pluck', vol: 0.5, notes: B(6, 'A4/1 B4/1 C5/1 E5/2 C5/1', 'D5/1 E5/1 F5/1 D5/2 A4/1', 'C5/1 B4/1 A4/1 E5/3', 'D5/1 C5/1 B4/1 G#4/3', 'A4/1 B4/1 C5/1 E5/2 A5/1', 'A5/1 G5/1 F5/1 D5/2 F5/1', 'D5/2 Bb4/1 D5/1 B4/1 G#4/1', 'A4/3 E4/2 A4/1', ...Bm) },
+      { wave: 'flute', vol: 0.36, pan: 0.2, notes: B(6, ...N('-/6', 8), ...Bm) },
+      { wave: 'harp', vol: 0.32, pan: -0.3, notes: B(6, ...acc(pA, 6, 'E2', wave), ...acc(pB, 6, 'E2', wave)) },
+      { wave: 'strings', vol: 0.2, pan: 0.25, notes: B(6, ...pads(pA, 6, 'G3'), ...pads(pB, 6, 'G3')) },
+      { wave: 'contra', vol: 0.28, notes: B(6, ...acc(pA, 6, 'E2', low), ...acc(pB, 6, 'E2', low)) },
+      { wave: 'drums', vol: 0.32, notes: B(6, ...N(dance, 3), turn, ...N(dance, 3), turn, ...N(dance, 3), turn, ...N(dance, 3), turn) }
     ] });
   })();
 
-  /* ---------- conseil : tension retenue — la mineur harmonique ---------- */
+  /* ---------- mer : barcarolle à 6/8 — sol majeur, le septième degré abaissé avant la reprise ---------- */
   (function () {
-    const ar = { Am: E('A3', 'E4', 'A3', 'E4', 'A3', 'E4', 'C4', 'E4'), F: E('F3', 'C4', 'F3', 'C4', 'F3', 'C4', 'A3', 'C4'), Dm: E('D3', 'A3', 'D3', 'A3', 'D3', 'A3', 'F3', 'A3'), E: E('E3', 'B3', 'E3', 'B3', 'E3', 'B3', 'G#3', 'B3') };
-    R('conseil', { bpm: 88, beats: 32, voices: [
-      { wave: 'flute', vol: 0.46, notes: B(4, '-/2 E5/1 D5/1', 'C5/1 B4/1 A4/2', '-/2 F5/1 E5/1', 'D5/1 C5/1 B4/2', '-/1 A4/1 C5/1 E5/1', 'F5/2 D5/2', 'C5/1 A4/1 F4/1 A4/1', 'G#4/2 B4/2') },
-      { wave: 'pluck', vol: 0.3, notes: B(4, ...pick(ar, 'Am Am F E Am Dm F E')) },
-      { wave: 'triangle', vol: 0.4, notes: B(4, 'A2/3 A2/1', 'A2/3 A2/1', 'F2/3 F2/1', 'E2/3 E2/1', 'A2/3 A2/1', 'D2/3 D2/1', 'F2/3 F2/1', 'E2/4') },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('D/1 -/1 t/.5 t/.5 -/1', 8)) }
+    const pA = 'G | D/F# | Em | C | G/B | Am7 | C/D:3 D:3 | G', pB = 'Em | Bm | C | G | Am | Em/G | F | D';
+    const wave = { 6: '0/1 1/1 2/1 3/1 2/1 1/1', 3: '0/1 1/1 2/1' }, low = { 6: '0/3 0/3', 3: '0/3' };
+    const swell = 'D/2 r/1 t/2 r/1';
+    R('mer', { bpm: 144, beats: 96, voices: [
+      { wave: 'flute', vol: 0.48, notes: B(6, 'D5/3 B4/2 D5/1', 'A5/3 F#5/2 D5/1', 'G5/2 F#5/1 E5/2 B4/1', 'E5/4 D5/1 C5/1', 'D5/3 B4/2 D5/1', 'C5/2 E5/1 G5/3', 'E5/2 C5/1 D5/3', 'G5/5 -/1',
+        'B4/2 E5/1 G5/2 F#5/1', 'F#5/3 D5/2 B4/1', 'C5/2 E5/1 G5/2 E5/1', 'D5/5 -/1', 'A4/2 C5/1 E5/2 D5/1', 'B4/3 G4/2 B4/1', 'A4/2 C5/1 F5/3', 'F#5/2 E5/1 D5/2 A4/1') },
+      { wave: 'brass', vol: 0.44, pan: 0.25, notes: B(6, ...N('-/6', 7), '-/3 D4/1 G4/2', ...N('-/6', 7), '-/3 A3/1 D4/2') },
+      { wave: 'harp', vol: 0.44, pan: -0.25, notes: B(6, ...acc(pA, 6, 'E2', wave), ...acc(pB, 6, 'E2', wave)) },
+      { wave: 'strings', vol: 0.22, pan: 0.15, notes: B(6, ...pads(pA, 6, 'G3'), ...pads(pB, 6, 'G3')) },
+      { wave: 'contra', vol: 0.28, notes: B(6, ...acc(pA, 6, 'E2', low), ...acc(pB, 6, 'E2', low)) },
+      { wave: 'drums', vol: 0.24, notes: B(6, 'D+c/2 r/1 t/2 r/1', ...N(swell, 7), 'D+c/2 r/1 t/2 r/1', ...N(swell, 7)) }
     ] });
   })();
 
-  /* ---------- combat : vif — mi mineur ---------- */
-  R('combat', { bpm: 150, beats: 32, voices: [
-    { wave: 'pulse', vol: 0.5, notes: B(4, 'E5/.5 E5/.5 G5/.5 E5/.5 B4/1 D5/1', 'C5/.5 B4/.5 A4/1 B4/2', 'E5/.5 E5/.5 G5/.5 A5/.5 B5/1 A5/1', 'G5/.5 F#5/.5 E5/1 D5/2', 'C5/.5 D5/.5 E5/1 G5/1 E5/1', 'D5/.5 E5/.5 F#5/1 A5/1 F#5/1', 'G5/.5 F#5/.5 E5/.5 D5/.5 C5/1 B4/1', 'E5/2 -/.5 B4/.5 D5/.5 B4/.5') },
-    { wave: 'square', vol: 0.22, notes: B(4, 'E3+G3+B3/4', 'A3+C4+E4/2 B3+D4+F#4/2', 'E3+G3+B3/4', 'E3+G3+B3/2 D3+F#3+A3/2', 'C3+E3+G3/4', 'D3+F#3+A3/4', 'E3+G3+B3/2 C3+E3+G3/2', 'E3+G3+B3/2 B3+D4+F#4/2') },
-    { wave: 'saw', vol: 0.42, notes: B(4,
-      E('E2', 'E2', 'B2', 'E2', 'E2', 'E2', 'B2', 'E2'), E('A2', 'A2', 'E2', 'A2', 'B2', 'B2', 'F#2', 'B2'),
-      E('E2', 'E2', 'B2', 'E2', 'E2', 'E2', 'B2', 'E2'), E('E2', 'E2', 'B2', 'E2', 'D2', 'D2', 'A2', 'D2'),
-      E('C2', 'C2', 'G2', 'C2', 'C2', 'C2', 'G2', 'C2'), E('D2', 'D2', 'A2', 'D2', 'D2', 'D2', 'A2', 'D2'),
-      E('E2', 'E2', 'B2', 'E2', 'C2', 'C2', 'G2', 'C2'), E('E2', 'E2', 'B2', 'E2', 'B2', 'B2', 'B2', 'B2')) },
-    { wave: 'drums', vol: 0.38, notes: B(4, ...N('k/.5 h/.5 s/.5 h/.5 k/.5 k/.5 s/.5 h/.5', 7), 'k/.5 h/.5 s/.5 h/.5 s/.5 s/.5 s/.25 s/.25 c/.5') }
-  ] });
-
-  /* ---------- boss : plus sombre, plus rapide — le motif de la Chaîne, pressé ---------- */
+  /* ---------- noos : étrange — do mineur, la♭ mineur, mi mineur : trois accords mineurs à la tierce majeure ---------- */
   (function () {
-    const g = n => N(n + '/.5 ' + n + '/.25 ' + n + '/.25', 4).join(' ');
-    const g2 = (a, b) => N(a + '/.5 ' + a + '/.25 ' + a + '/.25', 2).concat(N(b + '/.5 ' + b + '/.25 ' + b + '/.25', 2)).join(' ');
-    const D = 'D3+F#3+A3/4', Cm = 'C3+Eb3+G3/4', Gm = 'G3+Bb3+D4/4', Eb = 'Eb3+G3+Bb3/4';
-    R('boss', { bpm: 168, beats: 48, voices: [
-      { wave: 'saw', vol: 0.5, notes: B(4, 'D5/.5 D5/.5 Eb5/.5 D5/.5 C5/1 D5/1', 'F#5/1 Eb5/.5 D5/.5 C5/1 Bb4/1', 'A4/.5 A4/.5 Bb4/.5 A4/.5 G4/1 A4/1', 'C5/1 Bb4/.5 A4/.5 F#4/2', 'G4/.5 A4/.5 Bb4/1 C5/.5 D5/.5 Eb5/1', 'D5/2 C5/1 Bb4/1', 'A4/.5 Bb4/.5 C5/1 D5/.5 Eb5/.5 F#5/1', 'G5/2 F#5/2', MOTIF5, 'Eb5/1 Bb5/1 A5/.5 G5/.5 Eb5/1', 'F#5/.5 G5/.5 A5/1 G5/.5 F#5/.5 Eb5/1', 'D5/3 -/1') },
-      { wave: 'strings', vol: 0.24, notes: B(4, D, Cm, D, D, Gm, Gm, D, 'G3+Bb3+D4/2 D3+F#3+A3/2', D, Eb, D, D) },
-      { wave: 'triangle', vol: 0.44, notes: B(4, g('D2'), g('C2'), g('D2'), g('D2'), g('G2'), g('G2'), g('D2'), g2('G2', 'D2'), g('D2'), g('Eb2'), g('D2'), g('D2')) },
-      { wave: 'drums', vol: 0.4, notes: B(4, ...N('k/.5 k/.5 s/.5 k/.5 k/.5 k/.5 s/.5 h/.5', 11), 'k/.5 k/.5 s/.5 s/.5 s/.5 s/.5 c/1') }
+    const p = 'Cm | Cm | Abm | Abm | Em | Em | G | Gaug | Cm | Abm | Em | Gaug | Cm | Abm | Em | G Gaug';
+    R('noos', { bpm: 104, beats: 64, voices: [
+      { wave: 'bell', vol: 0.42, notes: B(4, 'G5/2 Eb5/2', 'D5/1 Eb5/1 G5/2', 'Ab5/2 Eb5/2', 'B4/1 Eb5/1 Ab5/2', 'G5/2 E5/2', 'F#5/1 G5/1 B5/2', 'D5/2 B4/2', 'B4/1 D#5/1 G5/2',
+        'C5/1 Eb5/1 G5/1 C6/1', 'B5/2 Ab5/1 Eb5/1', 'E5/1 G5/1 B5/2', 'G5/2 D#5/2', 'Eb5/2 D5/1 C5/1', 'Eb5/2 B4/2', 'E5/2 G5/1 F#5/1', 'D5/2 D#5/2') },
+      { wave: 'pulse', vol: 0.3, pan: -0.3, notes: B(4, ...acc(p, 4, '^C4', { 4: '0/.5 1/.5 2/.5 1/.5 3/.5 1/.5 2/.5 1/.5', 2: '0/.5 1/.5 2/.5 1/.5' })) },
+      { wave: 'pad', vol: 0.24, pan: 0.2, notes: B(4, ...pads(p, 4, 'G3')) },
+      { wave: 'bass', vol: 0.4, notes: B(4, ...acc(p, 4, 'C2', { 4: '0/1 -/.5 0/.5 0/1 -/1', 2: '0/1 -/.5 0/.5' })) },
+      { wave: 'drums', vol: 0.3, notes: B(4, ...N('k/1 t/.5 h/.5 -/.5 h/.5 t/.5 h/.5', 16)) }
     ] });
   })();
 
-  /* ---------- deuil : lent, presque nu — ré mineur ---------- */
-  R('deuil', { bpm: 54, beats: 32, voices: [
-    { wave: 'flute', vol: 0.5, notes: B(4, 'A4/3 G4/1', 'F4/2 E4/2', 'D4/3 -/1', 'F4/1 G4/1 A4/2', 'Bb4/3 A4/1', 'G4/2 F4/2', 'E4/2 D4/1 E4/1', 'D4/4') },
-    { wave: 'pluck', vol: 0.24, notes: B(4, 'D3/2 A3/2', 'D3/2 A3/2', 'Bb2/2 F3/2', 'D3/2 A3/2', 'G3/2 D4/2', 'Bb2/2 F3/2', 'A2/2 E3/2', 'D3/4') },
-    { wave: 'sine', vol: 0.36, notes: B(4, 'D2/4', 'D2/4', 'Bb2/4', 'D2/4', 'G2/4', 'Bb2/4', 'A2/4', 'D2/4') }
-  ] });
-
-  /* ---------- espoir : le motif de la Chaîne en ré majeur ---------- */
+  /* ---------- cite : la Cité-Miroir — mi mineur, arpèges de synthé, pouls froid ---------- */
   (function () {
-    const ar = { D: E('D3', 'A3', 'D4', 'F#4', 'A4', 'F#4', 'D4', 'A3'), A: E('A2', 'E3', 'A3', 'C#4', 'E4', 'C#4', 'A3', 'E3'), G: E('G2', 'D3', 'G3', 'B3', 'D4', 'B3', 'G3', 'D3') };
-    const ch = { D: 'D3+F#3+A3/4', A: 'A3+C#4+E4/4', G: 'G3+B3+D4/4' };
-    const prog = 'D A D D G D A D';
-    R('espoir', { bpm: 96, beats: 32, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(4, MOTIF, 'E4/1 F#4/1 A4/2', 'D4/1 A4/1 G4/.5 F#4/.5 E4/1', 'F#4/1 G4/1 A4/2', 'B4/1 A4/1 G4/.5 F#4/.5 G4/1', 'A4/1 D5/1 C#5/.5 B4/.5 A4/1', 'G4/1 F#4/1 E4/1 A4/1', 'D5/3 -/1') },
-      { wave: 'strings', vol: 0.25, notes: B(4, ...pick(ch, prog)) },
-      { wave: 'pluck', vol: 0.26, notes: B(4, ...pick(ar, prog)) },
-      { wave: 'triangle', vol: 0.4, notes: B(4, 'D2/2 D2/2', 'A2/2 A2/2', 'D2/2 D2/2', 'D2/2 D2/2', 'G2/2 G2/2', 'D2/2 D2/2', 'A2/2 A2/2', 'D2/4') },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('D/1 t/.5 t/.5 T/1 t/1', 8)) }
+    const pA = 'Em | Em | CM7 | CM7 | Am7 | Am7 | Bm7 | B7', pB = 'G | D/F# | Em | C#m7b5 | C | G/B | Am7 | B7sus B7';
+    const arp = { 4: '0/.25 2/.25 1/.25 2/.25 3/.25 2/.25 1/.25 2/.25 0/.25 2/.25 1/.25 2/.25 3/.25 2/.25 1/.25 2/.25', 2: '0/.25 2/.25 1/.25 2/.25 3/.25 2/.25 1/.25 2/.25' };
+    const beat = { 4: '0/.5 0/.5 0/.5 0/.5 0/.5 0/.5 o/.5 0/.5', 2: '0/.5 0/.5 o/.5 0/.5' };
+    const kit = 'k/1 h/.5 h/.5 s/1 h/.5 k/.5', fill = 'k/1 h/.5 h/.5 s/1 s/.25 s/.25 k/.5';
+    R('cite', { bpm: 112, beats: 64, voices: [
+      { wave: 'pulse', vol: 0.46, notes: B(4, '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'A4/1 B4/2 -/1', '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'E4/1 G4/2 -/1', '-/.5 C5/.5 E5/1 G5/.5 E5/1 C5/.5', 'D5/1 E5/2 -/1', '-/.5 D5/.5 F#5/1 A5/.5 F#5/1 D5/.5', 'F#5/1 D#5/1 B4/2',
+        'D5/2 B4/1 D5/1', 'F#5/2 A5/1 D5/1', 'G5/1.5 F#5/.5 E5/1 B4/1', 'G5/2 E5/2', 'E5/1 G5/1 B5/1.5 A5/.5', 'G5/2 D5/2', 'C5/1 E5/1 A5/1.5 G5/.5', 'F#5/2 D#5/1 B4/1') },
+      { wave: 'square', vol: 0.22, pan: -0.35, notes: B(4, ...acc(pA, 4, '^E4', arp), ...acc(pB, 4, '^E4', arp)) },
+      { wave: 'pad', vol: 0.22, pan: 0.25, notes: B(4, ...pads(pA.replace(/CM7/g, 'C'), 4, 'G3'), ...pads(pB, 4, 'G3')) },
+      { wave: 'bass', vol: 0.4, notes: B(4, ...acc(pA, 4, 'C2', beat), ...acc(pB, 4, 'C2', beat)) },
+      { wave: 'drums', vol: 0.34, notes: B(4, ...N(kit, 7), fill, ...N(kit, 7), fill) }
     ] });
   })();
 
-  /* ---------- victoire : courte fanfare, jouée une fois ---------- */
-  R('victoire', { bpm: 132, beats: 8, voices: [
-    { wave: 'pulse', vol: 0.5, notes: B(4, 'D5/.5 D5/.5 A5/1 G5/.5 F#5/.5 D5/1', 'E5/.5 F#5/.5 G5/.5 B5/.5 A5/2') },
-    { wave: 'strings', vol: 0.26, notes: B(4, 'D3+F#3+A3/2 G3+B3+D4/2', 'A3+C#4+E4/2 D3+F#3+A3/2') },
-    { wave: 'triangle', vol: 0.42, notes: B(4, 'D2/2 G2/2', 'A2/2 D2/2') },
-    { wave: 'drums', vol: 0.36, notes: B(4, 'D/.5 t/.5 T/1 D/.5 t/.5 T/1', 'D/.5 D/.5 T/.5 T/.5 c/2') }
-  ] });
+  /* ---------- citadelle : noble et grave — le thème de la Chaîne en sol dorien ; cadence picarde.
+     Une citadelle berbère au bord du désert : évocation arabo-andalouse. Prélude de luth sans percussion (joué une fois) ;
+     le cor appelle, le luth et les cordes répondent ; puis tout l'ensemble porte le chant : les cordes le tiennent, le luth
+     l'orne, le târ et la darbouka tournent en 3 + 3 + 2. ---------- */
+  (function () {
+    const pA = 'Gm C | Gm C | Am Dm | Dm D | Eb Gm/D | Cm Eb | Am7b5 D7 | G', pB = 'Bb | F/A | Gm | D/F# | Eb | Cm | Dsus D | G';
+    // le thème, écrit en ré puis descendu d'une quinte : la, sol, si♮, la → ré, do, mi♮, ré — la sixte dorienne éclaire le maillon du milieu
+    const th = trs(['A4/1.5 G4/.5 B4/1.5 A4/.5', 'D5/2.5 -/1 E4/.5', 'B4/1.5 A4/.5 C5/1.5 B4/.5', 'E5/3 -/1', 'F5/1.5 E5/.5 D5/1.5 Bb4/.5', 'G4/1.5 A4/.5 Bb4/2', 'A4/1.5 G4/.5 E4/1.5 C#4/.5', 'D4/4'], -7);
+    const chant = ['D5/2 F5/1 Bb5/1', 'A5/3 F5/1', 'Bb5/2 G5/1 D5/1', 'A5/3 D5/1', 'G5/1.5 F5/.5 Eb5/1 G5/1', 'C6/2 G5/1 Eb5/1', 'G5/2 F#5/1.5 D5/.5'];   // la seconde partie, à la flûte
+    const min = sc('G A Bb C D Eb F');
+    const slow = { 4: '0/1 1/1 2/1 3/1', 2: '0/1 2/1' }, low = { 4: '0/2 0/2', 2: '0/2' };
+    const cyc = 'D/.5 r/.5 r/.5 T/.5 r/.5 r/.5 D/.5 r/.5', cyc2 = 'D/.5 r/.5 t/.5 T/.5 r/.5 t/.5 D/.5 T/.5', clos = 'D+b/.5 r/.5 r/.5 T/.5 r/.5 r/.5 D/.5 T/.5';   // 3 + 3 + 2
+    R('citadelle', { bpm: 63, beats: 76, intro: 12, voices: [
+      // le cor : l'appel (les quatre premières mesures du thème), puis il rejoint l'ensemble à la cadence
+      { wave: 'brass', vol: 0.62, notes: B(4, '-/4', '-/4', '-/3.5 G3/.5', th[0], th[1], th[2], th[3], '-/4', '-/4', th[6], th[7],
+        'D4/2 F4/2', 'C4/2 F4/2', 'D4/2 Bb3/2', 'A3/2 D4/2', 'Eb4/2 G4/2', 'Eb4/2 C4/2', 'D4/3 C4/1', 'B3/3.5 G3/.5') },
+      { wave: 'flute', vol: 0.5, pan: 0.2, notes: B(4, ...N('-/4', 11), ...chant, 'G5/4') },
+      // le luth : prélude seul, sans mesure apparente, qui redescend par degrés vers la finale ; puis les réponses au cor
+      // (le premier maillon, en valeurs brèves) ; puis le chant, doublé et orné
+      { wave: 'pluck', vol: 0.46, pan: -0.25, notes: B(4, two('D4/1.5 E4/.25 D4/.25 C4/.5 D4/.5 F4/1'), two('G4/1 F4/.25 G4/.25 F4/.5 E4/.5 D4/.5 C4/1'), two('Bb3/.5 A3/.5 Bb3/.25 A3/.25 G3/2 -/.5'),
+        '-/4', '-/1 D4/.5 C4/.5 E4/.5 D4/.5 G4/.5 -/.5', '-/4', '-/1 E4/.5 D4/.5 F#4/.5 E4/.5 A4/.5 -/.5', ...het(th.slice(4), min, 0, 0.125),
+        ...het(chant, min, -12, 0.125), 'G4/1 A4/.5 B4/.5 C5/.25 B4/.25 A4/.5 G4/1') },
+      // les cordes tiennent le chant : la charpente des réponses, puis la fin du thème, puis la seconde partie sous la flûte
+      { wave: 'strings', vol: 0.44, pan: 0.15, notes: B(4, ...N('-/4', 4), '-/1 D4/1 E4/1 G4/.5 -/.5', '-/4', '-/1 E4/1 F#4/1 A4/.5 -/.5', ...th.slice(4), ...trs(chant, -12), 'G4/2 B4/.5 A4/.5 G4/1') },
+      { wave: 'strings', vol: 0.2, pan: -0.2, notes: 'G3+D4/6 G3+D4/6 ' + B(4, ...pads(pA, 4, 'D3'), ...pads(pB.replace('Dsus D', 'Dsus D7'), 4, 'D3')) },
+      { wave: 'harp', vol: 0.42, pan: 0.3, notes: B(4, 'G2/.25 D3/.25 G3/.25 D4/3.25', '-/4', '-/2 G3/.25 D4/.25 G4/1.5', ...acc(pA, 4, 'F2', slow), ...acc(pB, 4, 'F2', H8)) },
+      { wave: 'triangle', vol: 0.3, notes: 'G2/6 G2/6 ' + B(4, ...acc(pA, 4, 'F2', low), ...acc(pB, 4, 'F2', low)) },
+      { wave: 'drums', vol: 0.26, notes: B(4, '-/4', '-/4', '-/4', ...N(cyc, 7), clos, ...N(cyc2, 7), clos) }
+    ] });
+  })();
+
+  /* ---------- conseil : pourparlers — mi mineur à cinq temps, pédale de mi ; la tension monte et ne se résout pas.
+     Couleur arabo-andalouse : la mesure balance entre trois et deux, le târ le marque ; le luth répond aux fins de phrase en
+     redescendant par degrés vers la finale ; dans le dernier tiers les cordes tiennent le chant avec la flûte. ---------- */
+  (function () {
+    const p = 'Em | Em | F/E | Em | Am/E | Em | F#m7b5:3 B7:2 | Em | C/E | Am/E | F#m7b5 | B7';
+    const ost = { 5: '0/.5 1/.5 2/.5 1/.5 2/.5 3/.5 0/.5 1/.5 3/.5 1/.5', 3: '0/.5 1/.5 2/.5 1/.5 2/.5 3/.5', 2: '0/.5 1/.5 3/.5 1/.5' };
+    const oud = acc(p, 5, 'E3', ost), rep = fig('Em', 'E3', ost[3]) + ' A4/.5 G4/.5 F#4/.5 E4/.5';   // la réponse : la, sol, fa#, mi
+    oud[3] = rep; oud[7] = rep;
+    R('conseil', { bpm: 96, beats: 60, voices: [
+      { wave: 'flute', vol: 0.44, notes: B(5, '-/3 B4/1 C5/1', 'B4/3 G4/2', 'A4/1 C5/1 F5/1 E5/2', 'E5/3 B4/2', '-/3 C5/1 D5/1', 'E5/2 G5/1 F#5/2', 'A4/1 C5/1 E5/1 D#5/1 B4/1', 'E5/3 -/2',
+        'G5/2 E5/1 C5/2', 'E5/2 C5/1 A4/2', 'C5/2 A4/1 F#4/2', 'B4/1 D#5/1 F#5/1 B5/2') },
+      { wave: 'pluck', vol: 0.38, pan: -0.25, notes: B(5, ...oud) },
+      { wave: 'strings', vol: 0.2, pan: 0.2, notes: B(5, ...pads(p, 5, 'G3')) },
+      { wave: 'strings', vol: 0.34, pan: 0.1, notes: B(5, ...N('-/5', 8), 'G5/2 E5/1 C5/2', 'E5/2 C5/1 A4/2', 'C5/2 A4/1 F#4/2', 'B4/1 D#5/1 F#5/1 B5/2') },
+      { wave: 'triangle', vol: 0.28, notes: B(5, ...acc(p, 5, 'E2', { 5: '0/3 0/2', 3: '0/3', 2: '0/2' })) },
+      { wave: 'drums', vol: 0.3, notes: B(5, ...N('D/1 r/1 r/1 T/1 r/1', 12)) }
+    ] });
+  })();
+
+  /* ---------- combat : sol mineur — levée en fusée sur la gamme hijaz, basse en doubles croches, appels de cuivres ---------- */
+  (function () {
+    const pA = 'Gm | Gm | Eb | F | Gm | Gm | Cm | D', pB = 'Bb | F/A | Gm | D/F# | Eb | Bb/D | Cm7 | D';
+    const rocket = 'D4/.25 Eb4/.25 F#4/.25 G4/.25 A4/.25 Bb4/.25 C5/.25 D5/.25 Eb5/.25 F#5/.25 G5/.25 A5/.25 Bb5/.25 C6/.25 D6/.5';
+    // basse en doubles croches : la fondamentale martelée, l'octave qui claque, la quinte en fin de mesure
+    const s16 = { 4: '0/.25 0/.25 o/.25 0/.25 0/.25 0/.25 o/.25 0/.25 0/.25 o/.25 0/.25 0/.25 o/.25 0/.25 1/.25 o/.25' }, stab = { 4: N('-/.5 0+1+2/.25 -/.25', 4).join(' ') };
+    const kit = 'k/.5 h/.5 s/.5 h/.5 k/.25 k/.25 h/.5 s/.5 h/.5', crash = 'k+c/.5 h/.5 s/.5 h/.5 k/.25 k/.25 h/.5 s/.5 h/.5';
+    const turn = 'k/.5 h/.5 s/.5 h/.5 k/.25 k/.25 h/.5 s/.25 s/.25 s/.5', fill = 'k/.5 h/.5 s/.5 h/.5 m/.25 m/.25 m/.25 m/.25 s/.25 s/.25 s/.25 s/.25';
+    const bassA = acc(pA, 4, 'C2', s16); bassA[7] = 'D2/.25 D2/.25 D3/.25 D2/.25 D2/.25 D2/.25 D3/.25 D2/.25 D2/.25 D2/.25 D3/.25 D2/.25 D2/.25 E2/.25 F#2/.25 A2/.25';
+    R('combat', { bpm: 152, beats: 72, intro: 8, voices: [
+      { wave: 'pulse', vol: 0.42, notes: B(4, '-/4', rocket,
+        'G5/.5 -/.25 G5/.25 F5/.5 G5/.5 Bb5/1 A5/.5 G5/.5', 'D5/1.5 F5/.5 G5/1 -/1', 'G5/.5 -/.25 G5/.25 F5/.5 G5/.5 Bb5/1 C6/.5 Bb5/.5', 'A5/1.5 G5/.5 F5/1 -/1',
+        'Bb5/.5 -/.25 Bb5/.25 A5/.5 Bb5/.5 D6/1 C6/.5 Bb5/.5', 'A5/.5 G5/.5 F5/.5 D5/.5 G5/2', 'Eb5/.5 G5/.5 C6/1 Bb5/.5 G5/.5 Eb5/1', 'D5/.5 F#5/.5 A5/.5 C6/.5 D6/2',
+        ...acc(pB, 4, '^D5', { 4: '-/.5 0/.5 1/.5 2/.5 -/.5 2/.5 1/.5 0/.5' }).slice(0, 7), rocket) },
+      { wave: 'brass', vol: 0.48, pan: 0.15, notes: B(4, 'G4+Bb4+D5/.5 -/1 G4+Bb4+D5/.5 -/1 G4+Bb4+D5/.5 -/.5', 'F#4+A4+D5/4',
+        'G4+Bb4+D5/.5 -/3.5', '-/3 D5/.5 G5/.5', 'Eb4+G4+Bb4/.5 -/3.5', '-/3 C5/.5 F5/.5', 'G4+Bb4+D5/.5 -/3.5', '-/2 D5/.5 Bb4/.5 G4/1', 'Eb4+G4+C5/.5 -/3.5', 'D4+F#4+A4/2 D4+F#4+C5/2',
+        'D4/1.5 F4/.5 Bb4/2', 'A4/1.5 G4/.5 F4/1 C5/1', 'Bb4/.5 A4/.5 G4/1 D5/2', 'C5/1 A4/1 F#4/2', 'G4/1.5 Bb4/.5 Eb5/2', 'D5/1.5 C5/.5 Bb4/1 F4/1', 'Eb4/.5 G4/.5 Bb4/1 C5/1 Eb5/1', 'D5/2 -/2') },
+      { wave: 'strings', vol: 0.22, pan: -0.2, notes: B(4, 'G3+Bb3+D4/4', 'F#3+A3+D4/4', ...pads(pA, 4, 'G3'), ...pads(pB, 4, 'G3')) },
+      { wave: 'bass', vol: 0.36, notes: B(4, 'G2/.25 G2/.25 G3/.25 G2/.25 G2/.25 G2/.25 G3/.25 G2/.25 G2/.25 G3/.25 G2/.25 G2/.25 G3/.25 G2/.25 Bb2/.25 C3/.25', N('D2/.25 D2/.25 D3/.25 D2/.25', 4).join(' '), ...bassA, ...acc(pB, 4, 'C2', s16)) },
+      { wave: 'saw', vol: 0.24, pan: 0.3, notes: B(4, '-/4', '-/4', ...acc(pA, 4, '^G3', stab), ...acc(pB, 4, '^G3', stab)) },
+      { wave: 'drums', vol: 0.36, notes: B(4, 'k+c/.5 h/.5 h/.5 k/.5 h/.5 h/.5 k/.5 s/.5', N('s/.25', 8).concat(N('m/.25', 4), N('s/.25', 4)).join(' '),
+        crash, kit, kit, turn, kit, kit, kit, fill, crash, kit, kit, turn, kit, kit, kit, fill) }
+    ] });
+  })();
+
+  /* ---------- boss : ré mineur — plus lent, plus lourd ; un ostinato qui frotte (seconde mineure, triton) sous des accords changeants ---------- */
+  (function () {
+    const pA = 'Dm Ddim | Dm | Eb | Dm | Gm | C#o7 | Dm | A7', pB = 'Bb | Bb | Gm | Gm | Eb | Edim | Asus | A7';
+    const riff = 'D2/.5 D2/.5 D3/.5 D2/.5 Eb2/.5 D2/.5 Ab2/.5 A2/.5';
+    const kit = 'b+k/1 h/.5 k/.5 s/1 k/.5 h/.5', crash = 'b+k+c/1 h/.5 k/.5 s/1 k/.5 h/.5', fill = 'b+k/1 h/.5 k/.5 s/.5 s/.5 m/.25 m/.25 s/.25 s/.25';
+    R('boss', { bpm: 126, beats: 72, intro: 8, voices: [
+      { wave: 'brass', vol: 0.6, notes: B(4, '-/4', '-/4',
+        'D4/1 F4/1 Ab4/1.5 G4/.5', 'F4/1 E4/1 D4/2', 'Eb4/1 G4/1 Bb4/1.5 A4/.5', 'G4/1 F4/1 D4/2', 'D4/1 G4/1 Bb4/1.5 A4/.5', 'Bb4/1 C#5/1 E5/2', 'F5/1.5 E5/.5 D5/1 A4/1', 'Bb4/1.5 A4/.5 E4/1 C#4/1',
+        'Bb3+F4/4', 'Bb3+F4/4', 'G3+D4/4', 'G3+D4/4', 'Eb4+Bb4/4', 'E4+Bb4/4', 'D4+A4/4', 'C#4+A4/4') },
+      { wave: 'saw', vol: 0.54, pan: 0.15, notes: B(4, ...N('-/4', 10), 'F5/2 D5/1 F5/1', 'Bb5/2 A5/1 F5/1', 'G5/2 D5/1 G5/1', 'Bb5/1.5 A5/.5 G5/2', 'G5/2 Eb5/1 G5/1', 'Bb5/2 G5/1 E5/1', 'A5/3 G5/1', 'E5/1 C#5/1 A4/2') },
+      { wave: 'strings', vol: 0.24, pan: -0.2, notes: B(4, '-/4', 'F3+A3+D4/4', ...pads(pA, 4, 'F3'), ...pads(pB, 4, 'F3')) },
+      { wave: 'bass', vol: 0.42, notes: B(4, ...N(riff, 10), ...acc(pB, 4, 'D2', { 4: '0/.5 0/.5 o/.5 0/.5 1/.5 0/.5 o/.5 1/.5' })) },
+      { wave: 'timp', vol: 0.26, notes: B(4, 'D2/1 -/1 D2/1 A2/1', 'D2/1 -/1 A2/.5 A2/.5 A2/.25 A2/.25 A2/.25 A2/.25', ...N('D2/2 -/1.5 A2/.5', 8),
+        'Bb2/2 -/2', 'Bb2/2 -/2', 'G2/2 -/2', 'G2/2 -/2', 'Eb2/2 -/2', 'E2/2 -/2', 'A2/2 -/1 A2/.5 A2/.5', 'A2/1 A2/1 A2/.5 A2/.5 A2/.25 A2/.25 A2/.25 A2/.25') },
+      { wave: 'drums', vol: 0.34, notes: B(4, 'b+k/1 -/1 k/1 s/1', 'b+k/1 k/.5 k/.5 s/.5 s/.5 m/.25 m/.25 m/.25 m/.25', crash, ...N(kit, 6), fill, crash, ...N(kit, 6), fill) }
+    ] });
+  })();
+
+  /* ---------- vice : l'adversaire final — do mineur. La Chaîne renversée (les maillons tombent), les accords de la Noosphère,
+     puis le thème droit, qui tient jusqu'à une cadence picarde avant que tout recommence. ---------- */
+  (function () {
+    const pI = 'Cm | Ab/C | F#o7/C | G7', pA = 'Fm Cm | Ab | Cm G | G | Ab Fm | G7 | Cm G7 | Cm', pB = 'Cm | Abm | Em | Gaug | Cm | Abm | Em | G', pC = trp(CHPm, -2);
+    const up = trs([CHm.a1, 'D5/2.5 -/1 D4/.5', CHm.a3, CHm.a4, CHm.b1, CHm.b2, CHm.b3], -2);       // le thème droit, en do mineur
+    const drive = '0/.25 0/.25 o/.25 0/.25', s16 = { 4: N(drive, 4).join(' '), 2: N(drive, 2).join(' ') };
+    const kit = 'k/.5 h/.5 s/.5 k/.25 k/.25 h/.5 k/.5 s/.5 h/.5', crash = 'k+c/.5 h/.5 s/.5 k/.25 k/.25 h/.5 k/.5 s/.5 h/.5', fill = 'k/.5 h/.5 s/.5 k/.25 k/.25 ' + N('m/.25', 4).concat(N('s/.25', 4)).join(' ');
+    const half = 'b+k/1 h/.5 h/.5 s/1 h/.5 k/.5';
+    R('vice', { bpm: 132, beats: 112, intro: 16, voices: [
+      { wave: 'brass', vol: 0.6, notes: B(4, '-/4', '-/4', '-/4', 'G3+D4/3.5 C5/.5',
+        'F4/1.5 G4/.5 Eb4/1.5 F4/.5', 'C4/2.5 -/1 Bb4/.5', 'Eb4/1.5 F4/.5 D4/1.5 Eb4/.5', 'B3/2.5 -/1 G4/.5', 'Ab4/1.5 G4/.5 F4/1.5 Eb4/.5', 'D4/1.5 Eb4/.5 F4/2', 'Eb4/1.5 D4/.5 C4/1.5 B3/.5', 'C4/4',
+        'C4+G4/4', 'Ab3+Eb4/4', 'G3+E4/4', 'G3+D#4/4', 'C4+G4/4', 'Ab3+Eb4/4', 'G3+E4/4', 'G3+D4/3.5 C4/.5',
+        ...up, 'C4/3.5 C5/.5') },
+      { wave: 'saw', vol: 0.54, pan: 0.15, notes: B(4, ...N('-/4', 4),
+        '-/4', '-/1 Ab5/.5 G5/.5 Eb5/.5 C5/.5 Eb5/1', '-/4', '-/1 D5/.5 G5/.5 B5/.5 G5/.5 D5/1', '-/4', '-/2 B5/.5 G5/.5 F5/.5 D5/.5', '-/4', '-/1 G5/.5 Eb5/.5 C5/1 -/1',
+        'G5/2 Eb5/1 G5/1', 'Eb5/1 Ab5/1 B5/2', 'B5/1.5 G5/.5 E5/2', 'D#5/1 G5/1 B5/2', 'C6/2 G5/1 Eb5/1', 'Eb5/1 B5/1 Ab5/2', 'G5/1.5 E5/.5 B4/1 E5/1', 'D5/1 G5/1 B5/1 D6/.5 C5/.5',
+        ...trs(up, 12), 'C5/4') },
+      { wave: 'strings', vol: 0.24, pan: -0.2, notes: B(4, ...pads(pI, 4, 'G3'), ...pads(pA.replace('Cm G7 |', 'Cm:2 G7sus:1.5 G7:.5 |'), 4, 'G3'), ...pads(pB, 4, 'G3'), ...pads(pC, 4, 'G3')) },
+      { wave: 'bell', vol: 0.3, pan: 0.3, notes: B(4, 'C5/2 -/2', 'C5/2 -/2', 'C5/2 -/2', 'G4/1 B4/1 D5/1 F5/1', ...N('-/4', 8),
+        'C5/2 G4/2', 'Eb5/2 Ab4/2', 'E5/2 B4/2', 'D#5/2 G4/2', 'C5/2 G4/2', 'Eb5/2 Ab4/2', 'E5/2 B4/2', 'D5/2 G4/2', 'C5/4', ...N('-/4', 3), 'C5/4', '-/4', '-/4', 'E5/1 G5/1 C6/2') },
+      { wave: 'bass', vol: 0.4, notes: B(4, 'C2/4', 'C2/4', N('C2/.5', 8).join(' '), N('G2/.25', 16).join(' '), ...acc(pA, 4, 'C2', s16), ...acc(pB, 4, 'C2', { 4: '0/1 0/.5 0/.5 o/1 0/1' }), ...acc(pC, 4, 'C2', s16)) },
+      { wave: 'timp', vol: 0.26, notes: B(4, 'C3/1 -/3', 'C3/1 -/3', 'C3/1 -/1 C3/1 -/1', 'G2/.5 G2/.5 G2/.5 G2/.5 ' + N('G2/.25', 8).join(' '),
+        '-/2 C3/1 -/1', '-/4', 'C3/1 -/1 G2/1 -/1', 'G2/1 -/1 G2/.5 G2/.5 G2/1', '-/4', 'G2/1 -/3', 'C3/1 -/1 G2/1 G2/1', 'C3/1 -/2 G2/.5 G2/.5',
+        'C3/2 -/2', '-/4', '-/4', 'G2/2 -/2', 'C3/2 -/2', '-/4', '-/4', 'G2/1 G2/1 G2/.5 G2/.5 ' + N('G2/.25', 4).join(' '),
+        'C3/1 -/3', 'C3/1 -/3', '-/2 G2/1 -/1', 'G2/1 -/1 G2/1 G2/1', '-/4', '-/4', '-/2 G2/.5 G2/.5 G2/.5 G2/.5', 'C3/2 -/1 G2/.5 G2/.5') },
+      { wave: 'drums', vol: 0.32, notes: B(4, 'b/4', 'b/4', 'b/2 b/2', 'b/1 ' + N('s/.25', 8).concat(N('m/.25', 4)).join(' '),
+        crash, kit, kit, fill, kit, kit, kit, fill, 'b+k+c/1 h/.5 h/.5 s/1 h/.5 k/.5', ...N(half, 6), 'b+k/1 h/.5 h/.5 s/.5 s/.5 m/.25 m/.25 s/.25 s/.25',
+        crash, kit, kit, fill, kit, kit, kit, 'k+c/1 -/1 ' + N('s/.25', 4).concat(N('m/.25', 4)).join(' ')) }
+    ] });
+  })();
+
+  /* ---------- victoire : fanfare sur le thème de la Chaîne (ré majeur, IV–V–I), puis boucle douce : le thème, deux fois plus lent ---------- */
+  (function () {
+    const pL = 'D | G | D/F# | A7sus | Bm | G | Em7 A7 | D';
+    R('victoire', { bpm: 132, beats: 41, intro: 9, voices: [
+      { wave: 'brass', vol: 0.6, notes: '-/.5 D4/.5 A4+F#4/1.5 G4+E4/.5 B4+G4/1.5 A4+F#4/.5 D5+B4/1.5 E5+C#5/.5 F#5+D5+A4/2 -/16 -/16' },
+      { wave: 'strings', vol: 0.22, pan: -0.2, notes: '-/1 F#3+A3+D4/2 G3+B3+D4/2 G3+B3+D4/1.5 A3+C#4+E4/.5 F#3+A3+D4/2 ' + B(4, ...pads(pL, 4, 'F#3')) },
+      { wave: 'flute', vol: 0.46, notes: '-/9 ' + B(4, 'A4/3 G4/1', 'B4/3 A4/1', 'D5/4', 'E5/2 D5/1 B4/1', 'F#5/3 E5/1', 'D5/3 B4/1', 'G4/1.5 A4/.5 F#4/1.5 E4/.5', 'D4/4') },
+      { wave: 'harp', vol: 0.36, pan: 0.25, notes: '-/7 D4/.25 F#4/.25 A4/.25 D5/.25 F#5/.25 A5/.25 D6/.5 ' + B(4, ...acc(pL, 4, 'D2', H8)) },
+      { wave: 'contra', vol: 0.28, notes: '-/1 D2/2 G2/2 G2/1.5 A2/.5 D2/2 ' + B(4, ...acc(pL, 4, 'D2', { 4: '0/2.5 0/.5 1/1', 2: '0/2' })) },
+      { wave: 'drums', vol: 0.3, notes: 's/.25 s/.25 s/.25 s/.25 k+c/1 s/.5 s/.5 k/1 s/.5 s/.5 k/1 s/.25 s/.25 k/.5 k+c/2 ' + B(4, ...N('D/1 r/.5 t/.5 T/1 r/1', 8)) }
+    ] });
+  })();
+
+  /* ---------- deuil : lent, à trois temps, peu de voix — ré mineur ; la fin reste ouverte, sans tierce ---------- */
+  (function () {
+    const p = 'Dm | Dm/C | Bb | A | Dm | Gm | A7sus:2 A:1 | Dm | F | C/E | Dm | A/C# | Bb | Gm6 | A7 | D5';
+    const st = pads(p, 3, 'F3'); for (let i = 0; i < 8; i++) st[i] = '-/3';
+    R('deuil', { bpm: 56, beats: 48, voices: [
+      { wave: 'flute', vol: 0.44, notes: B(3, 'A4/2 D5/1', 'F5/2 E5/1', 'D5/3', 'C#5/2 A4/1', 'A4/2 D5/1', 'G5/2 F5/1', 'E5/2 C#5/1', 'D5/3',
+        'A4/1 C5/1 F5/1', 'G5/2 E5/1', 'F5/2 D5/1', 'E5/3', 'D5/2 F5/1', 'E5/2 D5/1', 'E5/1 C#5/1 A4/1', 'D4/3') },
+      { wave: 'harp', vol: 0.48, pan: -0.15, notes: B(3, ...acc(p, 3, 'C2', { 3: '0/.5 1/.5 2/.5 3/.5 2/.5 1/.5', 2: '0/.5 1/.5 2/.5 3/.5', 1: '0/.5 3/.5' })) },
+      { wave: 'triangle', vol: 0.24, notes: B(3, ...acc(p, 3, 'C2', { 3: '0/3', 2: '0/2', 1: '0/1' })) },
+      { wave: 'strings', vol: 0.2, pan: 0.15, notes: B(3, ...st) }
+    ] });
+  })();
+
+  /* ---------- espoir : le thème de la Chaîne s'ouvre — ré majeur, puis fa majeur (une tierce plus haut), et retour ---------- */
+  (function () {
+    const pA = CHP.replace(/\| D$/, '| D C7sus'), pF = trp(CHP, 3), pT = 'Bb Gm | A7sus:2 A7:1 A7sus:1';
+    const lift = { 4: '0/1.5 0/.5 1/1 0/1', 2: '0/1.5 0/.5' }, calm = { 4: '0/3 0/1', 2: '0/2', 1: '0/1' };
+    const st = pads(pA, 4, 'F#3'); for (let i = 0; i < 4; i++) st[i] = '-/4';
+    const soft = 'D/1 r/.5 t/.5 T/1 r/1', full = 'D/1 r/.5 t/.5 T/.5 D/.5 r/.5 t/.5';
+    R('espoir', { bpm: 96, beats: 72, voices: [
+      { wave: 'flute', vol: 0.48, notes: B(4, CH.a1, CH.a2, CH.a3, CH.a4, CH.b1, CH.b2, CH.b3, 'D4/2 -/2', ...trs(DESC.slice(0, 7), 3), 'A4/4', 'D5/1.5 C5/.5 Bb4/2', 'A4/3.5 D4/.5') },
+      { wave: 'brass', vol: 0.58, pan: 0.15, notes: B(4, ...N('-/4', 7), '-/3.5 F4/.5', ...trs([CH.a1, CH.a2, CH.a3, CH.a4, CH.b1, CH.b2, CH.b3], 3), 'F4/4', '-/4', '-/4') },
+      { wave: 'strings', vol: 0.22, pan: -0.2, notes: B(4, ...st, ...pads(pF, 4, 'F#3'), ...pads(pT, 4, 'F#3')) },
+      { wave: 'harp', vol: 0.38, pan: 0.25, notes: B(4, ...acc(pA, 4, 'D2', H8), ...acc(pF, 4, 'D2', H16), ...acc(pT, 4, 'D2', H8)) },
+      { wave: 'contra', vol: 0.28, notes: B(4, ...acc(pA, 4, 'D2', calm), ...acc(pF, 4, 'D2', lift), ...acc(pT, 4, 'D2', calm)) },
+      { wave: 'drums', vol: 0.3, notes: B(4, ...N('-/4', 4), ...N(soft, 4), ...N(full, 8), 'D/2 T/2', 'D/1 t/1 T/.5 T/.5 t/.25 t/.25 t/.25 t/.25') }
+    ] });
+  })();
+
+  /* ---------- lame : une lame se forge — ré, quartes et quintes à nu, l'enclume ; la tierce majeure n'arrive qu'au dernier accord ---------- */
+  (function () {
+    const p = 'D5 | C | Bb | Asus A | Dm | G | Em7b5 A7 | D';
+    const strike = 'b+a/1 -/.5 a/.5 a/1 -/1';
+    R('lame', { bpm: 80, beats: 32, voices: [
+      { wave: 'brass', vol: 0.6, notes: B(4, 'D4+A3/2 G4+D4/1 A4+D4/1', 'C5+G4/3 G4+E4/1', 'F4+D4/2 Bb4+F4/1 D5+Bb4/1', 'D5+A4/2 C#5+A4/2', 'D5+A4/2 A4+F4/1 F4+D4/1', 'G4+D4/2 B4+G4/1 D5+B4/1', 'Bb4+G4/2 A4+E4/1 G4+E4/1', 'F#4+D4/4') },
+      { wave: 'strings', vol: 0.22, pan: -0.2, notes: B(4, ...pads(p, 4, 'F3')) },
+      { wave: 'timp', vol: 0.3, notes: B(4, 'D2/2 -/2', '-/4', '-/4', 'A2/2 A2/2', 'D2/2 -/2', '-/4', '-/2 A2/1 A2/1', 'D2/2 -/2') },
+      { wave: 'bell', vol: 0.3, pan: 0.35, notes: B(4, '-/4', '-/3 G6/1', '-/4', '-/3 E6/1', '-/4', '-/3 D6/1', '-/4', '-/1 A5/1 D6/2') },
+      { wave: 'triangle', vol: 0.28, notes: B(4, ...acc(p, 4, 'D2', { 4: '0/4', 2: '0/2' })) },
+      { wave: 'drums', vol: 0.3, notes: B(4, ...N(strike, 7), 'b+a/1 -/.5 a/.5 a/1 a/.5 a/.5') }
+    ] });
+  })();
+
+  /* ---------- rencontre : un soir de 2084, un enfant pose une question — la majeur ; la boîte à musique interroge et reste
+     suspendue sur la dominante, le roseau répond, la sous-dominante mineure passe comme une ombre ---------- */
+  (function () {
+    const p = 'AM7 | F#m7 | DM7 | Dm6 | A/C# | Bm7 | E7sus | E7sus | F#m7 | C#m7 | DM7 | A/C# | Bm7 | Dm6 | Aadd9 | Esus';
+    R('rencontre', { bpm: 84, beats: 64, voices: [
+      { wave: 'bell', vol: 0.5, notes: B(4, '-/1 E5/1 A5/1 G#5/1', 'E5/2 C#5/2', '-/1 D5/1 F#5/1 A5/1', 'B5/2 A5/1 F5/1', 'E5/2 C#5/1 E5/1', 'D5/1 F#5/1 A5/2', 'E5/1 F#5/1 A5/1 B5/1', 'B5/3 -/1', ...N('-/4', 8)) },
+      { wave: 'flute', vol: 0.5, pan: 0.15, notes: B(4, ...N('-/4', 8), 'A4/2 C#5/1 E5/1', 'E5/2 B4/1 G#4/1', 'F#4/1 A4/1 C#5/2', 'E5/2 C#5/1 A4/1', 'D5/2 B4/1 D5/1', 'F5/2 D5/1 B4/1', 'C#5/2 B4/1 A4/1', 'A4/2 B4/2') },
+      { wave: 'square', vol: 0.24, pan: -0.3, notes: B(4, ...acc(p.replace(/DM7/g, 'Dadd9'), 4, '^A3', { 4: '0/.5 1/.5 2/.5 3/.5 2/.5 1/.5 2/.5 1/.5' })) },
+      { wave: 'pad', vol: 0.22, pan: 0.2, notes: B(4, ...pads(p.replace('AM7', 'A').replace(/DM7/g, 'D'), 4, 'E3')) },
+      { wave: 'triangle', vol: 0.24, notes: B(4, ...acc(p, 4, 'D2', { 4: '0/2.5 0/.5 0/1' })) },
+      { wave: 'drums', vol: 0.3, notes: B(4, ...N('-/1 h/1 -/1 h/1', 16)) }
+    ] });
+  })();
 })();
 
 /* ==== src/data/caid.js ==== */
@@ -5584,7 +6133,7 @@ ISNAD.registerSaga({
         ] },
         { id: 'farrokh', name: 'Farrokh, géomètre', at: ['ecole', 1, 1], look: { kind: 'perse', robe: '#2d6e8e', head: '#e7d9a8' },
           talk: [['say', 'farrokh', "Nous ne sortirons pas, seigneur. Pas par peur. Pour qu'on ne dise pas que nous avons fui."]] },
-        { id: 'porteur', name: "Porteur d'eau", at: ['cour', 1, 1], look: { kind: 'homme', robe: '#6b5a48', head: '#c9bda8' }, talk: [
+        { id: 'porteur', name: "Porteur d'eau", at: ['cour', 1, 1], look: { kind: 'homme', robe: '#6b5a48', head: '#c9bda8', coiffe: 'calotte', manteau: 'aucun', court: true, item: 'outre' }, talk: [
           ['say', 'porteur', "D'où ça vient ? D'un homme qui paie à boire et qui plaint beaucoup le peuple. De belles manches. Il dit qu'il tient ça du palais."],
           ['say', 'porteur', "Moi je porte l'eau, seigneur, je ne la juge pas. Mais un homme qui plaint tant les pauvres sans avoir jamais porté une outre, je m'en méfie."],
           ['say', 'porteur', "Tu as mauvaise mine, seigneur. Chez nous on dit : celui qui compte ses sacs la nuit ferait mieux d'en ouvrir un le jour."],
@@ -6041,7 +6590,7 @@ ISNAD.registerSaga({
     abubakr: {
       name: "Abû Bakr", title: 'As-Siddîq', arabic: 'أبو بكر',
       role: 'sage', el: 'sidq',
-      look: { robe: '#e9e2d0', head: '#f4f0e6', cloak: '#8a6d3b', aura: '#ffe9a8' },
+      look: { robe: '#efe9dc', head: '#f6f1e4', cloak: '#b08d4a', aura: '#ffe9a8', coiffe: 'imama', manteau: 'epaule' },
       skills: [
         { lvl: 1, id: 'parole', name: 'Parole véridique', desc: "Dit le vrai sans détour. Dégâts de Véracité.", cost: 3,
           target: 'foe', el: 'sidq', pow: 1.4, anim: 'light' },
@@ -6062,7 +6611,7 @@ ISNAD.registerSaga({
     umar: {
       name: "'Umar", title: 'Al-Fârûq', arabic: 'عمر',
       role: 'gardien', el: 'adl',
-      look: { robe: '#7b5a3a', head: '#efe7d6', cloak: '#3d2c1e', aura: '#9fd0ff', item: 'durra' },
+      look: { robe: '#6b4a32', head: '#2f3a55', cloak: '#3d2c1e', aura: '#9fd0ff', coiffe: 'imama_large', manteau: 'ample', item: 'durra' },
       skills: [
         { lvl: 1, id: 'durra', name: 'La Durra', desc: "Coup de férule. Peut étourdir.", cost: 3,
           target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
@@ -6083,7 +6632,7 @@ ISNAD.registerSaga({
     abuubayda: {
       name: "Abû 'Ubayda", title: 'Amîn al-Umma', arabic: 'أبو عبيدة',
       role: 'soigneur', el: 'rahma',
-      look: { robe: '#6f7f6a', head: '#eae4d2', cloak: '#4b5a4a', aura: '#8ff0e0' },
+      look: { robe: '#6f7f6a', head: '#eae4d2', cloak: '#4b5a4a', aura: '#8ff0e0', coiffe: 'calotte', manteau: 'aucun', echarpe: true },
       skills: [
         { lvl: 1, id: 'baume', name: 'Baume', desc: "Panse un compagnon : rend de la Constance.", cost: 3,
           target: 'ally', heal: 1.0, anim: 'heal' },
@@ -6942,7 +7491,7 @@ ISNAD.registerSaga({
     ali: {
       name: "'Alî", title: 'La Porte du Savoir', arabic: 'علي',
       role: 'guerrier', el: 'ilm',
-      look: { robe: '#2f5d50', head: '#f1ead8', cloak: '#1f3a34', aura: '#c49bff', item: 'sabre' },
+      look: { robe: '#2f5d50', head: '#2c2a33', cloak: '#1f3a34', aura: '#c49bff', coiffe: 'imama', manteau: 'epaule', item: 'sabre' },
       skills: [
         { lvl: 1, id: 'dhulfiqar', name: 'Dhû l-Fiqâr', desc: 'Le sabre à deux pointes : deux frappes de fer.', cost: 3,
           target: 'foe', el: 'fer', pow: 0.8, hits: 2, anim: 'slash' },
@@ -6963,7 +7512,7 @@ ISNAD.registerSaga({
     ibnabbas: {
       name: "Ibn 'Abbâs", title: 'Le Docte de la communauté', arabic: 'ابن عباس',
       role: 'sage', el: 'ilm',
-      look: { robe: '#e9e2cf', head: '#f6f1e4', cloak: '#6c5a8e', aura: '#ffe08a', item: 'feuillets' },
+      look: { robe: '#e9e2cf', head: '#f6f1e4', cloak: '#6c5a8e', aura: '#ffe08a', coiffe: 'imama_haute', chale: true, item: 'feuillets' },
       skills: [
         { lvl: 1, id: 'question', name: 'Question droite', desc: 'Il écoute le grief jusqu’au bout : révèle les failles.', cost: 2,
           target: 'foe', el: 'sidq', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'light' },
@@ -6984,7 +7533,7 @@ ISNAD.registerSaga({
     ammar: {
       name: "'Ammâr", title: 'Le Vétéran', arabic: 'عمّار',
       role: 'soigneur', el: 'sabr',
-      look: { robe: '#8a7355', head: '#e6dcc8', cloak: '#5b4630', aura: '#7fd69a' },
+      look: { robe: '#8a7355', head: '#c9b98a', cloak: '#5b4630', aura: '#7fd69a', coiffe: 'imama_queue', manteau: 'long' },
       skills: [
         { lvl: 1, id: 'soutien', name: 'Main du vétéran', desc: 'Relève le courage d’un compagnon : rend la Constance.', cost: 3,
           target: 'ally', heal: 1.0, anim: 'heal' },
@@ -7003,7 +7552,7 @@ ISNAD.registerSaga({
     qays: {
       name: 'Qays', title: "Fils de Sa'd", arabic: 'قيس',
       role: 'stratege', el: 'rahma',
-      look: { robe: '#9c3f2e', head: '#efe6d2', cloak: '#4a2a22', aura: '#5fe0d0' },
+      look: { robe: '#9c3f2e', head: '#efe6d2', cloak: '#4a2a22', aura: '#5fe0d0', coiffe: 'imama_large', manteau: 'ample', echarpe: true },
       skills: [
         { lvl: 1, id: 'largesse', name: 'Largesse', desc: 'Il donne sans compter : soigne tout le groupe.', cost: 5,
           target: 'allies', heal: 0.6, anim: 'heal' },
@@ -7929,7 +8478,7 @@ ISNAD.registerSaga({
     khalid: {
       name: 'Khâlid', title: 'Le Sabre dégainé', arabic: 'خالد',
       role: 'guerrier', el: 'shajaa',
-      look: { robe: '#7a2f2a', head: '#efe6d2', cloak: '#3a2a22', aura: '#ff9a70', item: 'sabre' },
+      look: { robe: '#7a2f2a', head: '#e9dcc0', cloak: '#8e2f2a', aura: '#ff9a70', coiffe: 'casque_turban', cuirasse: true, manteau: 'epaule', item: 'sabre' },
       skills: [
         { lvl: 1, id: 'charge', name: 'Charge', desc: 'Charge de cavalerie sur un égrégore.', cost: 3,
           target: 'foe', el: 'fer', pow: 1.4, anim: 'slash' },
@@ -7950,7 +8499,7 @@ ISNAD.registerSaga({
     qaqa: {
       name: "Al-Qa'qâ'", title: "Ibn 'Amr at-Tamîmî", arabic: 'القعقاع',
       role: 'stratege', el: 'sabr',
-      look: { robe: '#3f5a4a', head: '#e6dcc4', cloak: '#2b3a30', aura: '#8fe0a8', item: 'sabre' },
+      look: { robe: '#3f5a4a', head: '#e6dcc4', cloak: '#2b3a30', aura: '#8fe0a8', coiffe: 'casque', court: true, legs: '#3a3a30', manteau: 'aucun', item: ['sabre', 'bouclier'] },
       skills: [
         { lvl: 1, id: 'estoc', name: 'Estoc', desc: 'Frappe rapide et précise.', cost: 2,
           target: 'foe', el: 'fer', pow: 1.2, anim: 'slash' },
@@ -7971,7 +8520,7 @@ ISNAD.registerSaga({
     dirar: {
       name: 'Dirâr', title: 'Ibn al-Azwar', arabic: 'ضرار',
       role: 'guerrier', el: 'shajaa',
-      look: { robe: '#b08a4a', head: '#f0e8d8', cloak: '#5a3a22', aura: '#ffb080', item: 'lance' },
+      look: { robe: '#c9a25a', head: '#f0e8d8', cloak: '#5a3a22', aura: '#ffb080', trim: '#b5462f', coiffe: 'imama_queue', manteau: 'aucun', court: true, legs: '#6b4a32', echarpe: true, item: 'lance' },
       skills: [
         { lvl: 1, id: 'ruee', name: 'Ruée', desc: "Se jette sur l'égrégore.", cost: 2,
           target: 'foe', el: 'fer', pow: 1.25, anim: 'slash' },
@@ -8812,7 +9361,7 @@ ISNAD.registerSaga({
     umar: {
       name: "'Umar", title: 'Al-Fârûq', arabic: 'عمر',
       role: 'gardien', el: 'adl',
-      look: { robe: '#7b5a3a', head: '#efe7d6', cloak: '#3d2c1e', aura: '#9fd0ff', item: 'durra' },
+      look: { robe: '#6b4a32', head: '#2f3a55', cloak: '#3d2c1e', aura: '#9fd0ff', coiffe: 'imama_large', manteau: 'ample', item: 'durra' },
       skills: [
         { lvl: 1, id: 'durra', name: 'La Durra', desc: "Coup de férule. Peut étourdir.", cost: 3,
           target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
@@ -8833,7 +9382,7 @@ ISNAD.registerSaga({
     aslam: {
       name: 'Aslam', title: "L'affranchi de 'Umar", arabic: 'أسلم',
       role: 'soigneur', el: 'rahma',
-      look: { robe: '#8a7a5c', head: '#d9cfb8', cloak: '#5b4a33', aura: '#7fe3d6' },
+      look: { robe: '#a08a5c', head: '#8a5a3a', cloak: '#5b4a33', aura: '#7fe3d6', coiffe: 'calotte', manteau: 'aucun', court: true, legs: '#5a4a3a' },
       skills: [
         { lvl: 1, id: 'lanterne', name: 'La Lanterne', desc: "Éclaire ce qui rôde : Miséricorde sur un égrégore.", cost: 2,
           target: 'foe', el: 'rahma', pow: 1.2, anim: 'light' },
@@ -8854,7 +9403,7 @@ ISNAD.registerSaga({
     abuubayda: {
       name: "Abû 'Ubayda", title: "L'homme de confiance de la communauté", arabic: 'أبو عبيدة',
       role: 'stratege', el: 'sabr',
-      look: { robe: '#b9ad92', head: '#f1ece0', cloak: '#6c7a5a', aura: '#9be0ae' },
+      look: { robe: '#6f7f6a', head: '#eae4d2', cloak: '#4b5a4a', aura: '#9be0ae', coiffe: 'calotte', manteau: 'aucun', echarpe: true },
       skills: [
         { lvl: 1, id: 'depot', name: 'Garde du dépôt', desc: "Ce qu'on lui confie, il le rend : Patience sur un égrégore.", cost: 3,
           target: 'foe', el: 'sabr', pow: 1.3, anim: 'light' },
@@ -8875,7 +9424,7 @@ ISNAD.registerSaga({
     abdarrahman: {
       name: "'Abd ar-Rahmân", title: "Ibn 'Awf", arabic: 'عبد الرحمن',
       role: 'sage', el: 'sidq',
-      look: { robe: '#d8d2c2', head: '#f4efe2', cloak: '#7a5c2e', aura: '#ffe7a0' },
+      look: { robe: '#e2d9c2', head: '#f4efe2', cloak: '#8a5c2e', aura: '#ffe7a0', coiffe: 'imama_haute', motif: 'rayures', item: 'bourse' },
       skills: [
         { lvl: 1, id: 'loyal', name: 'Commerce loyal', desc: "Ni fraude ni serment vain : Véracité sur un égrégore.", cost: 3,
           target: 'foe', el: 'sidq', pow: 1.3, anim: 'light' },
@@ -9795,7 +10344,7 @@ ISNAD.registerSaga({
     uthman: {
       name: "'Uthmân", title: 'Le Généreux', arabic: 'عثمان',
       role: 'soigneur', el: 'rahma',
-      look: { robe: '#efe9dc', head: '#f6f1e4', cloak: '#2f6d6a', aura: '#8ff0e0' },
+      look: { robe: '#efe9dc', head: '#f6f1e4', cloak: '#2f6d6a', aura: '#8ff0e0', coiffe: 'imama_large', manteau: 'ample', motif: 'bandes' },
       skills: [
         { lvl: 1, id: 'largesse', name: 'Largesse', desc: 'Donne sans compter : rend de la Constance à tout le groupe.', cost: 5,
           target: 'allies', heal: 0.6, anim: 'heal' },
@@ -9817,7 +10366,7 @@ ISNAD.registerSaga({
     zayd: {
       name: 'Zayd ibn Thâbit', title: 'Le Scribe', arabic: 'زيد',
       role: 'sage', el: 'ilm',
-      look: { robe: '#c9b99a', head: '#e9e1cf', cloak: '#5b4a8a', aura: '#d2b6ff', item: 'feuillets' },
+      look: { robe: '#d8ccb0', head: '#5b4a8a', cloak: '#5b4a8a', aura: '#d2b6ff', coiffe: 'calotte', manteau: 'aucun', echarpe: true, item: 'feuillets' },
       skills: [
         { lvl: 1, id: 'calame', name: 'Le Calame', desc: 'Trace net ce que la querelle brouille. Dégâts de Savoir.', cost: 3,
           target: 'foe', el: 'ilm', pow: 1.3, anim: 'glyph' },
@@ -9838,7 +10387,7 @@ ISNAD.registerSaga({
     hudhayfa: {
       name: 'Hudhayfa', title: 'Le Gardien du secret', arabic: 'حذيفة',
       role: 'stratege', el: 'sidq',
-      look: { robe: '#8a7355', head: '#ded3bd', cloak: '#6e5a2a', aura: '#ffe9a0' },
+      look: { robe: '#8a7355', head: '#ded3bd', cloak: '#6e5a2a', aura: '#ffe9a0', coiffe: 'imama_queue', manteau: 'long', echarpe: true },
       skills: [
         { lvl: 1, id: 'estoc', name: 'Estoc des frontières', desc: 'Un coup droit appris aux marches. Dégâts de Fer.', cost: 3,
           target: 'foe', el: 'fer', pow: 1.4, anim: 'slash' },

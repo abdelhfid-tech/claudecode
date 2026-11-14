@@ -85,6 +85,7 @@
     if (spot) { const p = Array.isArray(spot) && typeof spot[0] === 'number' ? spot : W.resolve(spot, id, W.player); W.player.x = p[0]; W.player.y = p[1]; }
     W.resetTrail(); W.tint = null; W.pose = []; W.dest = null; W.focus = null; W._way = null; W.updateCam(true);
     document.body.dataset.theme = (id === 'noos' || id === 'cite' || id === 'archives') ? 'cyber' : (id === 'romaine' || id === 'palais') ? 'roman' : 'orient';
+    $('#ui').style.setProperty('--mini', (W.map.mini ? ((27 + W.map.h + 6) / G.PH * 100).toFixed(1) : '14') + '%'); // les annonces s'empilent sous la mini-carte
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
   W.solidAt = function (px, py) { const m = W.map, tx = Math.floor(px / T), ty = Math.floor(py / T); if (tx < 0 || ty < 0 || tx >= m.w || ty >= m.h) return true; return !!m.solid[ty * m.w + tx]; };
@@ -275,6 +276,7 @@
     if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel') { I.build.set(false); return true; } if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
     if (a === 'ok') { W.stop(); W.interact(); return true; }
     if (a === 'help') { W.stop(); I.ui.guide(); return true; }
+    if (a === 'prev') { W.stop(); I.ui.pause('carte'); return true; }
     if (a === 'menu' || a === 'cancel') { W.stop(); I.ui.pause(); return true; }
     return false;
   };
@@ -375,6 +377,7 @@
   W.tap = function (wx, wy) {
     if (I.scene !== W || S.busy || W.lock || I.ui.menuOpen || I.debug.auto || I.debug.walk) return false;
     const p = W.player, m = W.map, here = e => !e.hidden && e.map === m.id && e.placed;
+    { const r = W.miniRect, sx = wx - Math.round(W.cam.x), sy = wy - Math.round(W.cam.y); if (r && sx >= r[0] && sx <= r[0] + r[2] && sy >= r[1] && sy <= r[1] + r[3]) { W.stop(); I.ui.pause('carte'); return true; } }
     const face = (x, y) => { const dx = x - p.x, dy = y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
     if (I.build && I.build.on) {
       const tx = Math.floor(wx / T), ty = Math.floor(wy / T), put = () => { face(tx * T + 8, ty * T + 11); I.build.aim = [tx, ty]; I.build.place(); };
@@ -446,6 +449,12 @@
     else if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); if (!n || n.hidden || n.map !== W.map.id || !n.placed) { log.push(`PNJ ABSENT ${W.saga.id}/${W.ch.id} obj${W.objIndex} talk ${o.talk} (carte ${W.map.id}, pnj ${n ? n.map + (n.hidden ? ' caché' : '') : '?'})`); } else go(n.x, n.y + 14, 'talk ' + o.talk); W.complete().then(done, e => { log.push('ERR ' + e.message); done(); }); }
     else if (o.foe) { const f = W.foes.find(f => f.id === o.foe); if (!f || f.map !== W.map.id || !f.placed) { log.push(`FOE ABSENT ${W.saga.id}/${W.ch.id} obj${W.objIndex} foe ${o.foe} (carte ${W.map.id})`); if (f) f.done = true; W.complete().then(done, done); } else { go(f.x, f.y + 14, 'foe ' + o.foe); W.fight(f).then(done, e => { log.push('ERR ' + e.message); done(); }); } }
     else done();
+  };
+  W.carte = function () {
+    const m = W.map, cv = G.mk(m.w * T, m.h * T), c = cv.getContext('2d');
+    c.drawImage(m.canvas, 0, 0);
+    m.objs.slice().sort((a, b) => a.y - b.y).forEach(o => { try { c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2), o.y - o.h + 1); } catch (e) { /* objet sans dessin */ } });
+    return cv;
   };
   W.spotPx = function (at) { const m = W.map, name = Array.isArray(at) ? at[0] : at, s = m.spots[name]; if (!s) return null; return [(s[0] + (Array.isArray(at) ? at[1] : 0)) * T + 8, (s[1] + (Array.isArray(at) ? at[2] : 0)) * T + 13]; };
   W.target = function () {
@@ -534,12 +543,12 @@
     if (la > 0) for (const L of m.lights) { const x = L.x - cx, y = L.y - cy; if (x < -L.r || y < -L.r || x > G.PW + L.r || y > G.PH + L.r) continue; lights.push({ x, y, r: L.r, color: L.color, a: la * (1 - L.flicker * (0.5 + 0.5 * Math.sin(t * 9 + L.x))) }); }
     // mini-carte (hors dialogue)
     if (!S.busy && m.mini) {
-      const mw = m.w, mh = m.h, crop = G.view.w < G.PW, mx = crop ? G.view.x + 5 : G.PW - mw - 30, my = crop ? 5 : 6; c.globalAlpha = 0.82; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, mw + 4, mh + 4); c.drawImage(m.mini, mx, my); c.globalAlpha = 1;
+      const mw = m.w, mh = m.h, crop = G.view.w < G.PW, mx = crop ? G.view.x + 5 : G.PW - mw - 8, my = crop ? 5 : 27; c.globalAlpha = 0.82; W.miniRect = [mx - 2, my - 2, mw + 4, mh + 4]; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, mw + 4, mh + 4); c.drawImage(m.mini, mx, my); c.globalAlpha = 1;
       c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = 1; c.strokeRect(mx - 1.5, my - 1.5, mw + 3, mh + 3);
       if (tg && Math.floor(t * 3) % 2) { c.fillStyle = '#ffe08a'; c.fillRect(mx + Math.floor(tg.x / T) - 1, my + Math.floor((tg.kind === 'goto' ? tg.y : tg.y + 28) / T) - 1, 3, 3); }
       W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) { c.fillStyle = '#ff6a8a'; c.fillRect(mx + Math.floor(f.x / T), my + Math.floor(f.y / T), 1, 1); } });
-      c.fillStyle = '#fff'; c.fillRect(mx + Math.floor(W.player.x / T) - 1, my + Math.floor(W.player.y / T) - 1, 2, 2);
-    }
+      c.fillStyle = Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a'; c.fillRect(mx + Math.floor(W.player.x / T) - 1, my + Math.floor(W.player.y / T) - 1, 3, 3);
+    } else W.miniRect = null;
     return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint, clouds: env.clouds ? { x: cx, y: cy } : null };
   };
 })();

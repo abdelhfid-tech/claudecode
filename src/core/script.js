@@ -9,12 +9,13 @@
 
   function speaker(who) {
     const W = I.world, saga = W.saga;
-    if (saga && saga.heroes && saga.heroes[who]) { const h = saga.heroes[who]; return { name: h.name, seal: G.sealURL(h.arabic, D.ELEMENTS[h.el].color), color: D.ELEMENTS[h.el].color }; }
+    const figOf = look => G.charURL(look, 0);
+    if (saga && saga.heroes && saga.heroes[who]) { const h = saga.heroes[who]; return { name: h.name, seal: G.sealURL(h.arabic, D.ELEMENTS[h.el].color), color: D.ELEMENTS[h.el].color, fig: figOf(Object.assign({ kind: 'compagnon' }, h.look)) }; }
     const n = W.npcs && W.npcs.find(n => n.id === who);
     if (n) {
-      if (n.hero && saga.heroes[n.hero]) { const h = saga.heroes[n.hero]; return { name: n.name || h.name, seal: G.sealURL(h.arabic, D.ELEMENTS[h.el].color), color: D.ELEMENTS[h.el].color }; }
+      if (n.hero && saga.heroes[n.hero]) { const h = saga.heroes[n.hero]; return { name: n.name || h.name, seal: G.sealURL(h.arabic, D.ELEMENTS[h.el].color), color: D.ELEMENTS[h.el].color, fig: figOf(Object.assign({ kind: 'compagnon' }, h.look)) }; }
       const col = KIND_COL[(n.look && n.look.kind) || 'homme'] || '#c8b48a';
-      return { name: n.name, seal: G.sealURL('', col), color: col };
+      return { name: n.name, seal: G.sealURL('', col), color: col, fig: n.sheet && n.sheet.look ? figOf(n.sheet.look) : null };
     }
     return { name: who, seal: G.sealURL('', '#c8b48a'), color: '#c8b48a' };
   }
@@ -26,6 +27,7 @@
     document.body.classList.add('in-dialog');
     $('#dialog .seal').style.backgroundImage = sp ? `url(${sp.seal})` : 'none';
     $('#dialog .seal').hidden = !sp;
+    const fg = $('#dialog .fig'); fg.hidden = !(sp && sp.fig); if (sp && sp.fig) fg.src = sp.fig; box.classList.toggle('avecfig', !!(sp && sp.fig)); // la silhouette de celui qui parle
     const nm = $('#dialog .name'); nm.textContent = sp ? sp.name : ((I.world.saga && I.world.saga.narrator) || 'La Chaîne'); nm.style.color = sp ? sp.color : '#ffe08a';
     const tx = $('#dialog .text'); const html = I.fmt(text);
     // effet machine à écrire sur le texte brut, puis rendu complet

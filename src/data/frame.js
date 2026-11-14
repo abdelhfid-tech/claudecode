@@ -48,7 +48,7 @@ ISNAD.registerSaga({
     },
     salim: {
       name: 'Sâlim', title: 'le Repenti', arabic: 'سالم', role: 'guerrier', el: 'shajaa',
-      look: { kind: 'cyber', robe: '#4a2f3a', head: '#2a1c24', cloak: '#2b2530' },
+      look: { kind: 'cyber', robe: '#5a2f3a', head: '#6b2f3a', cloak: '#2b2530', coiffe: 'calotte', manteau: 'aucun' },
       skills: [
         { lvl: 1, id: 'couper', name: 'Couper le signal', desc: 'Frappe nette.', cost: 3, target: 'foe', el: 'fer', pow: 1.5, anim: 'slash' },
         { lvl: 1, id: 'debrancher', name: 'Débrancher', desc: 'Oser dire non : frappe de Courage, retire les renforts.', cost: 5, target: 'foe', el: 'shajaa', pow: 1.4, fx: [{ st: 'dispel' }], anim: 'burst' },
@@ -315,6 +315,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Celui qui défile', 'Cité-Miroir · le soir du maillon d’Abû Bakr'],
+        ['mus', 'rencontre'],
         ['nar', 'Idris remonte des Archives avec une Lumière qui n’est pas la sienne : la Véracité d’Abû Bakr. Là-haut, la rue n’a pas changé.'],
         ['nar', 'L’enfant est là, sous le grand écran, comme hier.']
       ],
@@ -377,6 +378,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Le Régent', 'Cité-Miroir · le soir du maillon de ’Umar'],
+        ['mus', 'rencontre'],
         ['nar', 'La Justice de ’Umar pèse dans la main d’Idris comme une balance vide : elle attend qu’on y pose quelque chose.'],
         ['nar', 'Sous le grand écran, l’enfant a déjà une question.']
       ],
@@ -438,6 +440,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'L’Admiré', 'Cité-Miroir · le soir du maillon de Khâlid'],
+        ['mus', 'rencontre'],
         ['nar', 'Le Courage de Khâlid n’est pas celui qu’Idris attendait. C’est le courage de descendre d’un socle.'],
         ['nar', 'Ce soir, il y a du bruit sous le grand écran. L’enfant regarde, la tête penchée.']
       ],
@@ -499,6 +502,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Le Compteur', 'Cité-Miroir · le soir du maillon de ’Uthmân'],
+        ['mus', 'rencontre'],
         ['nar', 'La Miséricorde de ’Uthmân a la forme d’un puits : on n’y garde rien pour soi, et il ne tarit pas.'],
         ['nar', 'L’enfant attend sous le grand écran. Il a l’air de quelqu’un qui a fait un calcul et n’y croit pas.']
       ],
@@ -560,6 +564,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Le Cartographe', 'Cité-Miroir · le soir du maillon de ’Alî'],
+        ['mus', 'rencontre'],
         ['nar', 'Le Savoir de ’Alî ne ressemble pas à une réponse. Il ressemble à une question bien posée : de qui le tiens-tu ?'],
         ['nar', 'L’enfant tient un bout de papier, sous le grand écran. Il le retourne dans tous les sens.']
       ],

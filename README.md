@@ -19,6 +19,7 @@ une valeur, pour dévoiler l'Agrégor.
 | Se déplacer | Flèches, ou ZQSD / WASD | Toucher l'endroit où aller ; doigt maintenu, le héros suit |
 | Parler, se servir d'une chose | Entrée, Espace, Z ou E | Toucher le personnage, le coffre, la natte, le palmier |
 | Que faire ? | H | Bouton ? : l'objectif expliqué, le chemin montré, « M'y conduire » |
+| Carte du lieu | C | Toucher la mini-carte, ou « Carte » dans la halte |
 | Halte, retour | Échap, X ou Retour arrière ; M ou Tab | Bouton ☰, bouton MENU |
 
 Sur un téléphone tenu en hauteur, la scène est agrandie et l'objectif passe sous l'image. La taille du
@@ -130,7 +131,7 @@ Archives. Il n'y a pas de sauvegarde automatique : fermer la page sans sauvegard
   Tout y est de fiction.
 - **Intrigue politique.** Factions, délégations, communautés aux intérêts divergents traitées avec
   dignité, hypocrites de fiction issus du camp du héros.
-- **Bande-son originale** synthétisée, dix-huit pistes, coupable séparément ; **rendu** rétro-HD ou 2D
+- **Bande-son originale** synthétisée, vingt et une pistes, coupable séparément ; **rendu** rétro-HD ou 2D
   simple, au choix ou automatiquement si l'appareil peine.
 
 ## Développer
@@ -143,7 +144,7 @@ node tools/smoke.js auto        # joue la partie entière automatiquement dans C
 node tools/smoke.js walk        # même partie, mais le héros marche réellement (vraies collisions)
 node tools/smoke.js tap         # même partie, en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
 node tools/smoke.js wrong       # choisit d'abord toutes les mauvaises réponses et perd chaque pourparler
-node tools/validate-music.js    # vérifie les dix-huit pistes
+node tools/validate-music.js    # vérifie les vingt et une pistes
 node tools/smoke.js shots       # captures d'écran bureau et mobile dans .smoke/
 node tools/promo.js all         # livret du joueur et planches : captures, sprites, assemblage, export
 ```

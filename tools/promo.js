@@ -304,6 +304,8 @@ async function coeur(browser, errors) {
 
   // a. Médine : la natte, les œuvres du jour, une lame forgée, un compagnon de lumière
   let T = await ouvrir(); await aller(T, 'abubakr', 0);
+  await T.ev(() => { window.ISNAD.ui.pause('carte'); }); await T.p.waitForTimeout(700); await T.shot('carte');
+  await T.p.keyboard.press('Escape'); await T.p.waitForTimeout(350); // la halte se referme comme le ferait le joueur
   await T.ev(() => { window.ISNAD.trade.dirhams(60); window.ISNAD.world.hud(); }); await surNatte(T);
   await T.ev(() => { window.ISNAD.oeuvres.natte(); }); await T.p.waitForTimeout(700); await T.shot('natte');
   await choix(T, 1); await T.shot('oeuvres');
@@ -322,7 +324,7 @@ async function coeur(browser, errors) {
   const cote = async label => { for (const b of await T.p.$$('#menu .side button')) { if ((await b.textContent()).includes(label)) { await b.hover(); await T.p.waitForTimeout(350); return; } } };
   await cote('Œuvres et lames'); await T.shot('halte-lames');
   await cote('Compagnons de lumière'); await T.shot('halte-lumiere');
-  await T.ev(() => { document.querySelector('#menu').hidden = true; document.body.classList.remove('in-screen'); window.ISNAD.ui.menuOpen = false; });
+  await T.p.keyboard.press('Escape'); await T.p.waitForTimeout(350); // la halte se referme comme le ferait le joueur
   // c. un mal du cœur, la lame en main
   await T.ev(() => { const I = window.ISNAD; I.oeuvres.state().zad = 3; I.battle.start({ group: ['avarice'], boss: true, bg: 'cite' }); });
   await attends(T, pret, null, 160); await T.p.waitForTimeout(400); await T.shot('mal');

@@ -94,6 +94,16 @@ function checkSaga(s, E, W) {
   Object.keys(propres).forEach(k => { if (!commun && ennemisCommuns()[k]) E.push(`ennemi ${k}: ce nom est déjà celui d'un égrégore commun (src/data/coeur.js)`); });
   const codexIds = new Set((s.codex || []).map(c => c.id));
 
+  // tenue d'un personnage : coiffe, manteau, motif, attributs portés
+  const checkLook = (l, where) => {
+    if (!l || typeof l !== 'object') return;
+    if (l.coiffe !== undefined && !D.COIFFES.includes(l.coiffe)) E.push(`${where}: look.coiffe « ${l.coiffe} » invalide (${D.COIFFES.join('|')})`);
+    if (l.manteau !== undefined && !D.MANTEAUX.includes(l.manteau)) E.push(`${where}: look.manteau « ${l.manteau} » invalide (${D.MANTEAUX.join('|')})`);
+    if (l.motif !== undefined && !D.MOTIFS.includes(l.motif)) E.push(`${where}: look.motif « ${l.motif} » invalide (${D.MOTIFS.join('|')})`);
+    if (l.item !== undefined && l.item !== null) [].concat(l.item).forEach(it => { if (!D.PORTES.includes(it)) E.push(`${where}: look.item « ${it} » invalide (${D.PORTES.join('|')})`); });
+    ['echarpe', 'court', 'cuirasse', 'chale'].forEach(k => { if (l[k] !== undefined && typeof l[k] !== 'boolean') E.push(`${where}: look.${k} vaut true ou false`); });
+    ['robe', 'head', 'cloak', 'aura', 'trim', 'legs'].forEach(k => { if (l[k] !== undefined && !/^#[0-9a-fA-F]{6}$/.test(l[k])) E.push(`${where}: look.${k} doit être une couleur #rrggbb`); });
+  };
   const checkSkill = (k, where, isHero) => {
     if (!k || typeof k !== 'object') { E.push(`${where}: compétence invalide`); return; }
     if (typeof k.name !== 'string') E.push(`${where}: compétence sans « name »`);
@@ -120,7 +130,7 @@ function checkSaga(s, E, W) {
     req(h, 'name', 'string', w); req(h, 'arabic', 'string', w);
     if (!D.ROLES[h.role]) E.push(`${w}: role « ${h.role} » invalide (${Object.keys(D.ROLES).join('|')})`);
     if (!D.ELEMENTS[h.el]) E.push(`${w}: el « ${h.el} » invalide`);
-    if (req(h, 'look', 'object', w)) ['robe', 'head'].forEach(k => req(h.look, k, 'string', w + '.look'));
+    if (req(h, 'look', 'object', w)) { ['robe', 'head'].forEach(k => req(h.look, k, 'string', w + '.look')); checkLook(h.look, w); }
     if (req(h, 'skills', 'array', w)) {
       if (h.skills.length < 3) E.push(`${w}: au moins 3 compétences`);
       const ids = new Set();
@@ -203,7 +213,7 @@ function checkSaga(s, E, W) {
       checkAt(n.at, n.map || c.map, wn);
       if (!n.hero) {
         if (!n.look || typeof n.look !== 'object') E.push(`${wn}: « look » manquant (ou hero:'id')`);
-        else if (n.look.kind && !D.NPC_KINDS.includes(n.look.kind)) E.push(`${wn}: look.kind « ${n.look.kind} » invalide`);
+        else { if (n.look.kind && !D.NPC_KINDS.includes(n.look.kind)) E.push(`${wn}: look.kind « ${n.look.kind} » invalide`); checkLook(n.look, wn); }
       } else if (!heroes[n.hero]) E.push(`${wn}: hero « ${n.hero} » inconnu`);
     });
     (c.foes || []).forEach(f => {

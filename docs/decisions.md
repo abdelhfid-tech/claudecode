@@ -290,6 +290,31 @@ Les mécaniques sont décidées par le décideur. Restent à valider : mes inter
   l'agent pour encadrer ces mécaniques : au décideur de les confirmer, de les reformuler ou de les retirer.
 - Une partie déjà commencée garde tout : les nouveaux champs se créent à la première utilisation.
 
+## Qui est qui, où l'on est, et la couleur de la musique (remarques du décideur)
+
+Remarques reçues : « ils ont tous la même coupe et quasiment les mêmes habits, comment les
+différencier ? » ; « la map globale doit être quelque part dans l'écran avec la position du
+personnage, le plus simple c'est dans le menu ? » ; « la musique peut contenir des inspirations
+arabo-andalouses ».
+
+- [x] **D70. Des silhouettes qu'on distingue.** Cinq coiffes nouvelles (turban haut, large, à pan,
+  calotte, casque enturbanné), quatre manteaux (long, absent, sur une épaule, ample), rayures, bandes,
+  écharpe, tenue courte, mailles, bouclier. Chaque héros a la sienne ; les gens sans nom varient
+  d'eux-mêmes selon leurs couleurs. *Convention de dessin, non reconstitution* : aucune de ces tenues
+  n'est donnée pour attestée, et aucun trait physique n'est décrit (exigence 2 inchangée).
+- [x] **D71. Un attribut porté seulement s'il est attesté ou propre au rôle.** La durra de 'Umar, le
+  sabre de Khâlid et de 'Alî, les feuillets de Zayd et d'Ibn 'Abbâs, la bourse de 'Abd ar-Rahmân, la
+  lance de Dirâr, le bouclier d'al-Qa'qâ'. Trois attributs que j'avais ajoutés sans appui ont été retirés.
+- [x] **D72. Les noms s'affichent.** À l'arrêt, le nom de ceux qui entourent le héros apparaît
+  au-dessus d'eux ; la boîte de dialogue montre la silhouette de celui qui parle.
+- [x] **D73. La carte.** *Lecture de l'agent* : « map globale » = le lieu entier. La halte a une page
+  « Carte » (touche C, ou toucher la mini-carte) : le lieu tel qu'on le voit, la position du héros,
+  l'objectif, la natte, le comptoir, les lieux nommés. La mini-carte, que les boutons cachaient en
+  partie sur grand écran, est descendue sous eux. Il n'y a pas de carte du monde reliant les lieux
+  entre eux : à faire si c'est cela que le décideur attendait.
+- [ ] **D74. Couleur arabo-andalouse** dans la bande-son : passe en cours, bornée à quelques pistes
+  (la Citadelle d'abord) ; voir `docs/musique.md`. À juger à l'oreille.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

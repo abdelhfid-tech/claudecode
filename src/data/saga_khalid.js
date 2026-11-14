@@ -47,7 +47,7 @@ ISNAD.registerSaga({
     khalid: {
       name: 'Khâlid', title: 'Le Sabre dégainé', arabic: 'خالد',
       role: 'guerrier', el: 'shajaa',
-      look: { robe: '#7a2f2a', head: '#efe6d2', cloak: '#3a2a22', aura: '#ff9a70', item: 'sabre' },
+      look: { robe: '#7a2f2a', head: '#e9dcc0', cloak: '#8e2f2a', aura: '#ff9a70', coiffe: 'casque_turban', cuirasse: true, manteau: 'epaule', item: 'sabre' },
       skills: [
         { lvl: 1, id: 'charge', name: 'Charge', desc: 'Charge de cavalerie sur un égrégore.', cost: 3,
           target: 'foe', el: 'fer', pow: 1.4, anim: 'slash' },
@@ -68,7 +68,7 @@ ISNAD.registerSaga({
     qaqa: {
       name: "Al-Qa'qâ'", title: "Ibn 'Amr at-Tamîmî", arabic: 'القعقاع',
       role: 'stratege', el: 'sabr',
-      look: { robe: '#3f5a4a', head: '#e6dcc4', cloak: '#2b3a30', aura: '#8fe0a8', item: 'sabre' },
+      look: { robe: '#3f5a4a', head: '#e6dcc4', cloak: '#2b3a30', aura: '#8fe0a8', coiffe: 'casque', court: true, legs: '#3a3a30', manteau: 'aucun', item: ['sabre', 'bouclier'] },
       skills: [
         { lvl: 1, id: 'estoc', name: 'Estoc', desc: 'Frappe rapide et précise.', cost: 2,
           target: 'foe', el: 'fer', pow: 1.2, anim: 'slash' },
@@ -89,7 +89,7 @@ ISNAD.registerSaga({
     dirar: {
       name: 'Dirâr', title: 'Ibn al-Azwar', arabic: 'ضرار',
       role: 'guerrier', el: 'shajaa',
-      look: { robe: '#b08a4a', head: '#f0e8d8', cloak: '#5a3a22', aura: '#ffb080', item: 'lance' },
+      look: { robe: '#c9a25a', head: '#f0e8d8', cloak: '#5a3a22', aura: '#ffb080', trim: '#b5462f', coiffe: 'imama_queue', manteau: 'aucun', court: true, legs: '#6b4a32', echarpe: true, item: 'lance' },
       skills: [
         { lvl: 1, id: 'ruee', name: 'Ruée', desc: "Se jette sur l'égrégore.", cost: 2,
           target: 'foe', el: 'fer', pow: 1.25, anim: 'slash' },

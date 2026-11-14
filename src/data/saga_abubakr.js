@@ -41,7 +41,7 @@ ISNAD.registerSaga({
     abubakr: {
       name: "Abû Bakr", title: 'As-Siddîq', arabic: 'أبو بكر',
       role: 'sage', el: 'sidq',
-      look: { robe: '#e9e2d0', head: '#f4f0e6', cloak: '#8a6d3b', aura: '#ffe9a8' },
+      look: { robe: '#efe9dc', head: '#f6f1e4', cloak: '#b08d4a', aura: '#ffe9a8', coiffe: 'imama', manteau: 'epaule' },
       skills: [
         { lvl: 1, id: 'parole', name: 'Parole véridique', desc: "Dit le vrai sans détour. Dégâts de Véracité.", cost: 3,
           target: 'foe', el: 'sidq', pow: 1.4, anim: 'light' },
@@ -62,7 +62,7 @@ ISNAD.registerSaga({
     umar: {
       name: "'Umar", title: 'Al-Fârûq', arabic: 'عمر',
       role: 'gardien', el: 'adl',
-      look: { robe: '#7b5a3a', head: '#efe7d6', cloak: '#3d2c1e', aura: '#9fd0ff', item: 'durra' },
+      look: { robe: '#6b4a32', head: '#2f3a55', cloak: '#3d2c1e', aura: '#9fd0ff', coiffe: 'imama_large', manteau: 'ample', item: 'durra' },
       skills: [
         { lvl: 1, id: 'durra', name: 'La Durra', desc: "Coup de férule. Peut étourdir.", cost: 3,
           target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
@@ -83,7 +83,7 @@ ISNAD.registerSaga({
     abuubayda: {
       name: "Abû 'Ubayda", title: 'Amîn al-Umma', arabic: 'أبو عبيدة',
       role: 'soigneur', el: 'rahma',
-      look: { robe: '#6f7f6a', head: '#eae4d2', cloak: '#4b5a4a', aura: '#8ff0e0' },
+      look: { robe: '#6f7f6a', head: '#eae4d2', cloak: '#4b5a4a', aura: '#8ff0e0', coiffe: 'calotte', manteau: 'aucun', echarpe: true },
       skills: [
         { lvl: 1, id: 'baume', name: 'Baume', desc: "Panse un compagnon : rend de la Constance.", cost: 3,
           target: 'ally', heal: 1.0, anim: 'heal' },

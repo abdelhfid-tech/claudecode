@@ -43,7 +43,7 @@ ISNAD.registerSaga({
     umar: {
       name: "'Umar", title: 'Al-Fârûq', arabic: 'عمر',
       role: 'gardien', el: 'adl',
-      look: { robe: '#7b5a3a', head: '#efe7d6', cloak: '#3d2c1e', aura: '#9fd0ff', item: 'durra' },
+      look: { robe: '#6b4a32', head: '#2f3a55', cloak: '#3d2c1e', aura: '#9fd0ff', coiffe: 'imama_large', manteau: 'ample', item: 'durra' },
       skills: [
         { lvl: 1, id: 'durra', name: 'La Durra', desc: "Coup de férule. Peut étourdir.", cost: 3,
           target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
@@ -64,7 +64,7 @@ ISNAD.registerSaga({
     aslam: {
       name: 'Aslam', title: "L'affranchi de 'Umar", arabic: 'أسلم',
       role: 'soigneur', el: 'rahma',
-      look: { robe: '#8a7a5c', head: '#d9cfb8', cloak: '#5b4a33', aura: '#7fe3d6' },
+      look: { robe: '#a08a5c', head: '#8a5a3a', cloak: '#5b4a33', aura: '#7fe3d6', coiffe: 'calotte', manteau: 'aucun', court: true, legs: '#5a4a3a' },
       skills: [
         { lvl: 1, id: 'lanterne', name: 'La Lanterne', desc: "Éclaire ce qui rôde : Miséricorde sur un égrégore.", cost: 2,
           target: 'foe', el: 'rahma', pow: 1.2, anim: 'light' },
@@ -85,7 +85,7 @@ ISNAD.registerSaga({
     abuubayda: {
       name: "Abû 'Ubayda", title: "L'homme de confiance de la communauté", arabic: 'أبو عبيدة',
       role: 'stratege', el: 'sabr',
-      look: { robe: '#b9ad92', head: '#f1ece0', cloak: '#6c7a5a', aura: '#9be0ae' },
+      look: { robe: '#6f7f6a', head: '#eae4d2', cloak: '#4b5a4a', aura: '#9be0ae', coiffe: 'calotte', manteau: 'aucun', echarpe: true },
       skills: [
         { lvl: 1, id: 'depot', name: 'Garde du dépôt', desc: "Ce qu'on lui confie, il le rend : Patience sur un égrégore.", cost: 3,
           target: 'foe', el: 'sabr', pow: 1.3, anim: 'light' },
@@ -106,7 +106,7 @@ ISNAD.registerSaga({
     abdarrahman: {
       name: "'Abd ar-Rahmân", title: "Ibn 'Awf", arabic: 'عبد الرحمن',
       role: 'sage', el: 'sidq',
-      look: { robe: '#d8d2c2', head: '#f4efe2', cloak: '#7a5c2e', aura: '#ffe7a0' },
+      look: { robe: '#e2d9c2', head: '#f4efe2', cloak: '#8a5c2e', aura: '#ffe7a0', coiffe: 'imama_haute', motif: 'rayures', item: 'bourse' },
       skills: [
         { lvl: 1, id: 'loyal', name: 'Commerce loyal', desc: "Ni fraude ni serment vain : Véracité sur un égrégore.", cost: 3,
           target: 'foe', el: 'sidq', pow: 1.3, anim: 'light' },

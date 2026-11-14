@@ -48,6 +48,24 @@ précédente (section suivante) sont remplacés par des silhouettes dessinées p
 - **Le grand sprite** (32 × 48) sert au combat, au menu du groupe et au livret. C'est le même dessin,
   agrandi par Scale2x puis enrichi : dégradé du voile, plis des étoffes, galon au bas du manteau.
 
+### Qui est qui (demande du décideur : « ils ont tous la même coupe et quasiment les mêmes habits »)
+
+Chaque personnage se reconnaît à sa silhouette avant sa couleur. Trois leviers, tous dans le costume :
+
+- **La coiffe** : turban rond, turban haut, turban large, turban dont un pan retombe sur l'épaule,
+  calotte, casque, casque ceint d'un turban, capuche, tiare, litham, étoffe des gens du désert.
+- **Le manteau** : long, absent, jeté sur une seule épaule, ample ; uni, ou à bandes. La robe peut
+  être rayée, barrée d'une écharpe, courte sur des jambes bottées, ou couverte de mailles.
+- **L'attribut** : seulement s'il est attesté ou propre au rôle (la durra, le sabre, les feuillets,
+  la bourse, la lance, le bouclier).
+
+Les gens sans nom varient d'eux-mêmes : leur coiffe et leur manteau se déduisent de leurs couleurs,
+toujours les mêmes pour un même personnage. En jeu, à l'arrêt, le nom de ceux qui entourent le héros
+s'affiche au-dessus d'eux, et la boîte de dialogue montre la silhouette de celui qui parle.
+
+Ces tenues sont une **convention de dessin**. Elles ne prétendent pas restituer un costume attesté,
+et ne décrivent aucun trait physique : ni taille, ni corpulence, ni visage (exigence 2).
+
 ## Version précédente : personnages en blocs, décors sublimés (demande du décideur)
 
 Les personnages sont faits de blocs : une tête cubique d'étoffe, un corps, deux bras, deux jambes, avec
@@ -131,7 +149,7 @@ Trois familles, toutes synthétisées par le code :
   cyber, veille. Ils accompagnent l'écran-titre et les combats.
 - **Bruitages** : validation, pas, coup, voile brisé, lumière, soin, porte, vague, parasite.
 
-**Bande-son originale synthétisée** (version 2, à la demande du décideur) : dix-huit pistes, timbres proches de l'oud, du ney, des cordes et des percussions de duff, dans l'esprit des consoles 16 bits ; un motif de cinq notes, celui de la Chaîne, revient d'une piste à l'autre. Aucune voix, aucune récitation, aucun appel à la prière synthétisé. Le son peut être coupé depuis
+**Bande-son originale synthétisée** (version 2, à la demande du décideur) : vingt et une pistes, dans le métier des partitions de JRPG 16 bits, avec une couleur arabo-andalouse là où le récit l'appelle ; un thème de six notes, celui de la Chaîne, revient d'une piste à l'autre (détail : `docs/musique.md`). Aucune voix, aucune récitation, aucun appel à la prière synthétisé. Le son peut être coupé depuis
 l'écran-titre et le menu.
 
 ## Icône et captures

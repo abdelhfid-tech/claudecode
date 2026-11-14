@@ -43,7 +43,7 @@ ISNAD.registerSaga({
     ali: {
       name: "'Alî", title: 'La Porte du Savoir', arabic: 'علي',
       role: 'guerrier', el: 'ilm',
-      look: { robe: '#2f5d50', head: '#f1ead8', cloak: '#1f3a34', aura: '#c49bff', item: 'sabre' },
+      look: { robe: '#2f5d50', head: '#2c2a33', cloak: '#1f3a34', aura: '#c49bff', coiffe: 'imama', manteau: 'epaule', item: 'sabre' },
       skills: [
         { lvl: 1, id: 'dhulfiqar', name: 'Dhû l-Fiqâr', desc: 'Le sabre à deux pointes : deux frappes de fer.', cost: 3,
           target: 'foe', el: 'fer', pow: 0.8, hits: 2, anim: 'slash' },
@@ -64,7 +64,7 @@ ISNAD.registerSaga({
     ibnabbas: {
       name: "Ibn 'Abbâs", title: 'Le Docte de la communauté', arabic: 'ابن عباس',
       role: 'sage', el: 'ilm',
-      look: { robe: '#e9e2cf', head: '#f6f1e4', cloak: '#6c5a8e', aura: '#ffe08a', item: 'feuillets' },
+      look: { robe: '#e9e2cf', head: '#f6f1e4', cloak: '#6c5a8e', aura: '#ffe08a', coiffe: 'imama_haute', chale: true, item: 'feuillets' },
       skills: [
         { lvl: 1, id: 'question', name: 'Question droite', desc: 'Il écoute le grief jusqu’au bout : révèle les failles.', cost: 2,
           target: 'foe', el: 'sidq', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'light' },
@@ -85,7 +85,7 @@ ISNAD.registerSaga({
     ammar: {
       name: "'Ammâr", title: 'Le Vétéran', arabic: 'عمّار',
       role: 'soigneur', el: 'sabr',
-      look: { robe: '#8a7355', head: '#e6dcc8', cloak: '#5b4630', aura: '#7fd69a' },
+      look: { robe: '#8a7355', head: '#c9b98a', cloak: '#5b4630', aura: '#7fd69a', coiffe: 'imama_queue', manteau: 'long' },
       skills: [
         { lvl: 1, id: 'soutien', name: 'Main du vétéran', desc: 'Relève le courage d’un compagnon : rend la Constance.', cost: 3,
           target: 'ally', heal: 1.0, anim: 'heal' },
@@ -104,7 +104,7 @@ ISNAD.registerSaga({
     qays: {
       name: 'Qays', title: "Fils de Sa'd", arabic: 'قيس',
       role: 'stratege', el: 'rahma',
-      look: { robe: '#9c3f2e', head: '#efe6d2', cloak: '#4a2a22', aura: '#5fe0d0' },
+      look: { robe: '#9c3f2e', head: '#efe6d2', cloak: '#4a2a22', aura: '#5fe0d0', coiffe: 'imama_large', manteau: 'ample', echarpe: true },
       skills: [
         { lvl: 1, id: 'largesse', name: 'Largesse', desc: 'Il donne sans compter : soigne tout le groupe.', cost: 5,
           target: 'allies', heal: 0.6, anim: 'heal' },

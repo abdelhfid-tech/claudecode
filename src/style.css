@@ -39,7 +39,7 @@ body[data-theme="cyber"] #hud .sub { font-family: var(--f-mono); }
 #hud .obj::before { content: "◆ "; color: var(--acc); font-size: .8em; }
 #menubtn, #helpbtn { position: absolute; right: 2%; top: 3%; width: 2.4em; height: 2.4em; border-radius: 50%; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; padding: 0; }
 #helpbtn { right: calc(2% + 2.9em); font-family: var(--f-display); font-weight: 700; }
-#toasts { position: absolute; right: 2%; top: 14%; display: flex; flex-direction: column; gap: .4em; align-items: flex-end; pointer-events: none; z-index: 30; }
+#toasts { position: absolute; right: 2%; top: var(--mini, 14%); display: flex; flex-direction: column; gap: .4em; align-items: flex-end; pointer-events: none; z-index: 30; }
 .toast { padding: .32em .8em; background: var(--panel); border-right: 2px solid var(--acc); font-size: .82em; animation: tin .3s ease; transition: opacity .4s, transform .4s; max-width: 22em; }
 .toast b { color: var(--acc); }
 .toast.out { opacity: 0; transform: translateX(1em); }
@@ -246,6 +246,26 @@ body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 #card.pray h1 { letter-spacing: .3em; } #card.pray p { font-style: italic; max-width: 28em; }
 #card.pray { background: radial-gradient(ellipse at center, rgba(20, 16, 40, .95), rgba(4, 3, 10, 1)); }
 #card.parley h1 { font-size: 1.6em; }
+
+/* ---------- qui est qui, et où : noms au-dessus des personnages, silhouette de celui qui parle, carte ---------- */
+#noms { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3; }
+.nom { position: absolute; transform: translate(-50%, -100%); padding: .02em .5em .08em; font-size: .6em; line-height: 1.25; white-space: nowrap; color: #fff6dc; background: rgba(8, 7, 18, .74); border-bottom: 1px solid var(--c, var(--gold)); border-radius: 2px; text-shadow: 0 1px 2px #000; animation: nomin .25s ease; }
+@keyframes nomin { from { opacity: 0; } }
+body.portrait .nom { font-size: .66em; }
+#dialog .fig { position: absolute; left: 1.75em; top: 50%; height: 4.5em; width: 3em; margin-top: -2.5em; image-rendering: pixelated; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .6)); }
+#dialog.avecfig .seal { opacity: .38; }
+body.portrait #dialog .fig { left: 1.2em; height: 3.9em; width: 2.6em; margin-top: -2.1em; }
+#menu .cols.large { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
+#menu .cols.large .side { flex-direction: row; overflow: visible; }
+.carte { position: relative; width: 100%; margin: .4em 0 .6em; border: 1px solid var(--line); background: #0a0810; }
+.carte canvas { display: block; width: 100%; height: 100%; }
+.carte .lieu, .carte .ici { position: absolute; transform: translate(-50%, -50%); font-size: .62em; letter-spacing: .04em; white-space: nowrap; padding: .02em .4em; background: rgba(8, 7, 18, .62); color: #f3e7cc; border-radius: 2px; pointer-events: none; }
+.carte .ici { transform: translate(-50%, -190%); background: #fff6dc; color: #1a1420; font-weight: 700; font-size: .66em; }
+.legende { font-size: .82em; color: var(--sand); margin: .3em 0; }
+.legende i { display: inline-block; width: .8em; height: .8em; border-radius: 50%; margin: 0 .3em 0 .9em; vertical-align: -.05em; }
+.legende i:first-child { margin-left: 0; }
+.legende .k1 { background: #ff7a5c; box-shadow: 0 0 0 2px #fff; } .legende .k2 { background: #ffe08a; transform: rotate(45deg); border-radius: 1px; } .legende .k3 { background: #7fe6e0; border-radius: 2px; transform: rotate(22deg); } .legende .k4 { background: transparent; border: 2px solid #e9c877; }
+#ui { --mini: 14%; }
 
 /* ---------- le cœur : œuvres, lames, compagnons de lumière ---------- */
 #hud .enig { margin-top: .3em; display: inline-block; padding: .16em .6em; font-size: .76em; font-style: italic; color: #f7ecd2; background: rgba(10, 8, 20, .6); border-left: 2px solid #c49bff; }
