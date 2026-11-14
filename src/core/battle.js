@@ -100,7 +100,7 @@
     I.setScene(B.scene); B.active = true; G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue, n: 0 };
     document.body.classList.add('in-battle'); $('#hud').hidden = true; $('#toasts').innerHTML = ''; $('#battle').hidden = false; refresh();
     const prevMus = I.audio.wantTrack; C.prevMus = prevMus;
-    I.audio.amb('noos'); I.audio.music(opts.boss ? 'boss' : 'combat'); I.audio.beat(opts.boss ? 'malfuf' : (opts.bg === 'romaine' || opts.bg === 'palais') ? 'marche' : (opts.bg === 'cite' || opts.bg === 'noos') ? 'cyber' : 'ayyub');
+    I.audio.amb('noos'); I.audio.music(opts.group.some(id => (foeDef(id) || {}).vice) && D.TRACKS.includes('vice') ? 'vice' : opts.boss ? 'boss' : 'combat'); I.audio.beat(opts.boss ? 'malfuf' : (opts.bg === 'romaine' || opts.bg === 'palais') ? 'marche' : (opts.bg === 'cite' || opts.bg === 'noos') ? 'cyber' : 'ayyub');
     await S.fade('in', 260);
     // piliers de la Citadelle : ce qui a été bâti pèse dans le combat
     const P = W.pillars(); C.pJust = 1 - 0.03 * (P.justice || 0); C.pLien = 1 + 0.03 * (P.lien || 0);
