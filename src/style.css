@@ -181,8 +181,9 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 #menu .pane h3 { font-family: var(--f-display); letter-spacing: .06em; color: var(--gold); margin: 0 0 .4em; }
 #menu .pane p { margin: .5em 0; max-width: 38em; line-height: 1.5; }
 #menu .pane .src { font-size: .78em; color: var(--dim); font-style: italic; }
-.stat { display: grid; grid-template-columns: 3.2em 1fr; gap: .8em; align-items: center; padding: .6em 0; border-bottom: 1px solid rgba(255, 255, 255, .08); }
+.stat { display: grid; grid-template-columns: 3.2em 2.6em 1fr; gap: .8em; align-items: center; padding: .6em 0; border-bottom: 1px solid rgba(255, 255, 255, .08); }
 .stat .seal { width: 3.2em; height: 3.2em; background-size: cover; border-radius: 50%; }
+.stat .fig { width: 2.6em; height: 3.9em; image-rendering: pixelated; }
 .stat small { color: var(--dim); } .stat .sk { font-size: .82em; color: var(--sand); }
 kbd { font-family: var(--f-mono); font-size: .86em; padding: .05em .4em; border: 1px solid rgba(255, 255, 255, .3); border-radius: 3px; }
 

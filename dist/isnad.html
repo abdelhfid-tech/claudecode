@@ -185,8 +185,9 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 #menu .pane h3 { font-family: var(--f-display); letter-spacing: .06em; color: var(--gold); margin: 0 0 .4em; }
 #menu .pane p { margin: .5em 0; max-width: 38em; line-height: 1.5; }
 #menu .pane .src { font-size: .78em; color: var(--dim); font-style: italic; }
-.stat { display: grid; grid-template-columns: 3.2em 1fr; gap: .8em; align-items: center; padding: .6em 0; border-bottom: 1px solid rgba(255, 255, 255, .08); }
+.stat { display: grid; grid-template-columns: 3.2em 2.6em 1fr; gap: .8em; align-items: center; padding: .6em 0; border-bottom: 1px solid rgba(255, 255, 255, .08); }
 .stat .seal { width: 3.2em; height: 3.2em; background-size: cover; border-radius: 50%; }
+.stat .fig { width: 2.6em; height: 3.9em; image-rendering: pixelated; }
 .stat small { color: var(--dim); } .stat .sk { font-size: .82em; color: var(--sand); }
 kbd { font-family: var(--f-mono); font-size: .86em; padding: .05em .4em; border: 1px solid rgba(255, 255, 255, .3); border-radius: 3px; }
 
@@ -382,7 +383,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     fade: [1, 2], wait: [1, 1], shake: [0, 1], flash: [0, 1], sfx: [1, 1], amb: [1, 1],
     give: [1, 2], join: [1, 1], leave: [1, 1], codex: [1, 1], heal: [0, 0],
     flag: [1, 2], if: [2, 3], tint: [1, 1], light: [1, 1],
-    pray: [0, 1], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1], lore: [1, 1], raid: [0, 1]
+    pray: [0, 1], emote: [2, 2], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1], lore: [1, 1], raid: [0, 1]
   };
 
   // v4 — s'orienter aux étoiles. Huit caps, nommés comme le feront les pilotes arabes : par l'étoile qui
@@ -427,6 +428,9 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
   D.PRAYERS = { fajr: 'Fajr · l’aube', dhuhr: 'Dhuhr · le midi', asr: '’Asr · l’après-midi', maghrib: 'Maghrib · le couchant', isha: '’Ishâ · la nuit' };
   D.TRACKS = ['titre', 'chaine', 'medine', 'nuit', 'desert', 'camp', 'rome', 'palais', 'mer', 'noos', 'cite', 'citadelle', 'combat', 'boss', 'victoire', 'deuil', 'espoir', 'conseil', 'silence'];
   D.WAVES = ['pulse', 'square', 'triangle', 'saw', 'sine', 'pluck', 'flute', 'strings', 'bell', 'drums'];
+
+  // poses des personnages : l'émotion se lit dans le corps, jamais sur un visage (dessin : sprites.js)
+  D.POSES = ['prie', 'resolu', 'accable', 'salut', 'surpris', 'garde'];
 
   D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole'];
 
@@ -873,49 +877,8 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     return (ocache[key] = cv);
   };
 
-  /* ================= PERSONNAGES (sans visage) ================= */
-  const ccache = {};
-  // Personnages en blocs : des volumes, jamais de traits. Tête = cube d'étoffe ; les Compagnons portent
-  // un panneau de lumière à la place du visage.
-  G.charSheet = function (look) {
-    const key = JSON.stringify(look); if (ccache[key]) return ccache[key];
-    const cv = mk(48, 96), c = cv.getContext('2d');
-    const kind = look.kind || 'homme', robe = look.robe || '#8a7355', cloak = look.cloak || shade(robe, 0.68);
-    const lit = kind === 'compagnon' || !!look.aura, short = kind === 'soldat' || kind === 'romain' || kind === 'marin' || kind === 'cyber';
-    let head = look.head || '#e6dcc4'; if (kind === 'berbere') head = look.veil || '#1c3a5a'; if (kind === 'moine') head = shade(robe, 0.9);
-    const panel = lit ? '#fff6d4' : shade(head, 0.82), legs = short ? '#4a3d32' : shade(robe, 0.8), arm = shade(robe, 0.9);
-    for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) {
-      const ox = f * 16, oy = dir * 24, side = dir === 1 || dir === 2, flip = dir === 2;
-      const B = (col, x, y, w, h) => R(c, col, ox + (flip ? 16 - x - w : x), oy + y, w, h);
-      const cube = (col, x, y, w, h) => { B(col, x, y, w, h); B(shade(col, 1.22), x, y, w, 1); B(shade(col, 0.72), flip ? x : x + w - 1, y + 1, 1, h - 1); B(shade(col, 0.58), x, y + h - 1, w, 1); };
-      if (!side) {
-        cube(legs, 4, f === 1 ? 16 : 17, 4, 6); cube(legs, 8, f === 2 ? 16 : 17, 4, 6);
-        cube(dir === 3 ? cloak : robe, 4, 9, 8, 8);
-        if (dir === 0) { B(cloak, 4, 9, 1, 8); B(cloak, 11, 9, 1, 8); B(shade(cloak, 0.8), 4, 14, 8, 1); }
-        cube(arm, 2, f === 1 ? 10 : f === 2 ? 8 : 9, 2, 7); cube(arm, 12, f === 2 ? 10 : f === 1 ? 8 : 9, 2, 7);
-        cube(head, 4, 1, 8, 8); if (dir === 0) B(panel, 5, 4, 6, 4);
-        if (lit) B(shade(head, 0.7), 4, 3, 8, 1);
-      } else {
-        if (f === 0) cube(legs, 6, 17, 4, 6); else if (f === 1) { cube(legs, 9, 17, 3, 6); cube(legs, 4, 16, 3, 6); } else { cube(legs, 8, 16, 3, 6); cube(legs, 5, 17, 3, 6); }
-        cube(robe, 5, 9, 6, 8); B(cloak, 9, 9, 2, 8);
-        cube(arm, f === 1 ? 5 : f === 2 ? 9 : 7, 9, 2, 7);
-        cube(head, 4, 1, 8, 8); B(panel, 4, 4, 3, 4);
-        if (lit) B(shade(head, 0.7), 4, 3, 8, 1);
-      }
-      // attributs, eux aussi en blocs
-      if (kind === 'soldat') { B('#8a8f98', 4, 1, 8, 2); B('#6b4a2e', 14, 2, 1, 20); B('#c9ced6', 14, 0, 1, 2); }
-      if (kind === 'romain') { B('#b9bec8', 4, 1, 8, 2); B('#b33327', 6, 0, 4, 1); if (dir !== 3) B('#b9bec8', side ? 5 : 4, 10, side ? 6 : 8, 4); B('#6b4a2e', 14, 2, 1, 20); B('#c9ced6', 14, 0, 1, 2); }
-      if (kind === 'perse') { B(head, 5, 0, 6, 1); B('#d9b45a', 4, 2, 8, 1); B('#d9b45a', side ? 5 : 4, 16, side ? 6 : 8, 1); }
-      if (kind === 'ancien') { B('#6b4a2e', 1, 5, 1, 18); B('#e9e2d0', side ? 5 : 4, 9, side ? 6 : 8, 2); }
-      if (kind === 'savant') { B('#e9e2d0', side ? 5 : 4, 9, side ? 6 : 8, 2); if (dir === 0) { B('#f1e7cc', 9, 13, 3, 3); B('#8a6238', 9, 13, 3, 1); } }
-      if (kind === 'marchand') { B('#d9b45a', side ? 5 : 4, 13, side ? 6 : 8, 1); if (dir === 0) B('#a8663c', 1, 15, 3, 3); }
-      if (kind === 'berbere') { B(shade(head, 1.3), 4, 3, 8, 1); if (dir === 0) B('#c79a70', 5, 4, 6, 1); }
-      if (kind === 'cyber') { B('#39e6ff', side ? 7 : 7, 10, 1, 6); B('#ff4fd8', side ? 5 : 4, 16, side ? 6 : 8, 1); }
-      if (kind === 'marin') { B('#e9e2d0', side ? 5 : 4, 11, side ? 6 : 8, 1); B('#e9e2d0', side ? 5 : 4, 14, side ? 6 : 8, 1); }
-    }
-    if (kind === 'enfant') { const cv2 = mk(48, 96), c2 = cv2.getContext('2d'); c2.imageSmoothingEnabled = false; for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) c2.drawImage(cv, f * 16, dir * 24, 16, 24, f * 16 + 2, dir * 24 + 7, 12, 17); return (ccache[key] = cv2); }
-    return (ccache[key] = cv);
-  };
+  /* ================= PERSONNAGES ================= */
+  // Dessinés dans sprites.js (G.charSheet, G.charPose, G.charGrand) : silhouettes au pixel, sans visage.
   G.DIRS = { down: 0, left: 1, right: 2, up: 3 };
 
   /* ================= ÉGRÉGORES ================= */
@@ -1123,6 +1086,268 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     c.fillStyle = vg; c.fillRect(0, 0, W, H);
     if (G.flashA > 0) { c.globalAlpha = G.flashA; c.fillStyle = G.flashC; c.fillRect(0, 0, W, H); c.globalAlpha = 1; G.flashA -= dt * 2.4; }
   };
+})();
+
+/* ==== src/core/sprites.js ==== */
+/* ISNAD — personnages : silhouettes dessinées au pixel, à la manière des jeux 16 bits. Personne n'a de visage :
+   ni yeux, ni bouche, ni trait. Les Compagnons portent un voile de lumière ; le caractère passe par la
+   coiffe, le costume, l'attribut et la pose.
+   Un personnage = une tête (11 lignes, selon la coiffe) + un corps (13 lignes, selon le pas ou la pose),
+   en gabarits de 16 × 24 dont chaque lettre nomme une matière. Le « grand » sprite (32 × 48, combat et
+   livret) est le même dessin agrandi par Scale2x, puis enrichi : dégradé du voile, plis, galon. */
+(function () {
+  'use strict';
+  const I = window.ISNAD, G = I.gfx, D = window.ISNAD_DEFS;
+  const W = 16, H = 24;
+
+  /* ---------- gabarits : têtes ----------
+     T t u coiffe (clair, moyen, sombre) · A a bandeau · V v voile ou face unie · I i fer · X cimier */
+  const HEADS = {
+    imama: {
+      d: ['................', '.....tTTTTt.....', '....TTTTutTu....', '...TTTuuTTTtu...', '...TuuTTTTutu...', '...aAAAAAAAAa...',
+          '...uvVVVVVVvu...', '...uVVVVVVVVu...', '...uVVVVVVVVu...', '....vVVVVVVv....', '.....uvvvvu.....'],
+      l: ['................', '.....tTTTTt.....', '....TTTTutTu....', '...TTTuuTTTtu...', '...TuuTTTTutu...', '...AAAAAAAAaa...',
+          '...VVVVvuttuu...', '...VVVVVuttuu...', '...VVVVVutuuu...', '...vVVVvuuuu....', '....vvvuuu......'],
+      u: ['................', '.....tTTTTt.....', '....TTTTutTu....', '...TTTuuTTTtu...', '...TuuTTTTutu...', '...aAAAAAAAAa...',
+          '...TTtTTtttuu...', '...TtTTttuuuu...', '...ttTtutuuuu...', '....tuutuuuu....', '.....uutuuu.....']
+    },
+    casque: {
+      d: ['.......II.......', '......IIIi......', '....IIIIIIii....', '...IIIIIIIiii...', '...IIiIIIiiii...', '...iiiiiiiiii...',
+          '...ivVVVVVVvi...', '...iVVVVVVVVi...', '...iiVVVVVVii...', '...iIivVVviIi...', '....iiIiiIii....'],
+      l: ['......II........', '.....IIIi.......', '...IIIIIIii.....', '...IIIIIIiiii...', '...IIiIIiiiii...', '...iiiiiiiiii...',
+          '...VVVVviiIii...', '...VVVVViIiii...', '...VVVViiiIii...', '...vVViIiiii....', '....iiiiIii.....'],
+      u: ['.......II.......', '......IIIi......', '....IIIIIIii....', '...IIIIIIIiii...', '...IIiIIIiiii...', '...iiiiiiiiii...',
+          '...iIiiIiiIii...', '...iiIiiIiiii...', '...iIiiIiiIii...', '...iiiIiiIiii...', '....iiIiiiii....']
+    },
+    capuche: {
+      d: ['................', '......tTTt......', '....TTTTTttu....', '...TTTTttttuu...', '..TTTtuuuuttuu..', '..TTuvVVVVvutu..',
+          '..TtuVVVVVVutu..', '..ttuVVVVVVutu..', '..ttuVVVVVVutu..', '..tuuvVVVVvuuu..', '...tuuvvvvuuu...'],
+      l: ['................', '......tTTTt.....', '....TTTTTtttu...', '...TTTTtttttuu..', '..TTTtttttttuu..', '..TuVVVvttttuu..',
+          '..uVVVVVtttuuu..', '..uVVVVVttuuuu..', '..uVVVVVttuuu...', '..tuVVVutuuu....', '...tuuuutuu.....'],
+      u: ['................', '......tTTt......', '....TTTTTttu....', '...TTTTTttttu...', '..TTTtTTttttuu..', '..TTtTTtttttuu..',
+          '..TttTttttuuuu..', '..Tttttuttuuuu..', '..tttutttuuuu...', '..ttuuttuuuu....', '...tuuuuuuu.....']
+    },
+    tiare: {
+      d: ['.....tTTTTt.....', '....TTTTTTtt....', '....TTTTTttu....', '....AAAAAAaa....', '...uTTTTTtttu...', '...uuuuuuuuuu...',
+          '...uvVVVVVVvu...', '...uVVVVVVVVu...', '...uVVVVVVVVu...', '....vVVVVVVv....', '.....uvvvvu.....'],
+      l: ['.....tTTTTt.....', '....TTTTTTtt....', '....TTTTTttu....', '....AAAAAAaa....', '...TTTTTttttu...', '...uuuuuuuuuu...',
+          '...VVVVvuttuu...', '...VVVVVuttuu...', '...VVVVVutuu....', '...vVVVvuuu.....', '....vvvuu.......'],
+      u: ['.....tTTTTt.....', '....TTTTTTtt....', '....TTTTTttu....', '....AAAAAAaa....', '...TTTTTttttu...', '...TTtTTtttuu...',
+          '...TtTTttttuu...', '...ttTtttuuuu...', '...tttuttuuu....', '....tuuuuuu.....', '.....uuuuu......']
+    },
+    litham: {
+      d: ['................', '.....tTTTTt.....', '....TTTTutTu....', '...TTTuuTTTtu...', '...TuuTTTTutu...', '...uuuuuuuuuu...',
+          '...uVVVVVVVVu...', '...tTTTuTTttu...', '...TTuTTTtttu...', '....tTTtttuu....', '.....ttuuuu.....'],
+      l: ['................', '.....tTTTTt.....', '....TTTTutTu....', '...TTTuuTTTtu...', '...TuuTTTTutu...', '...uuuuuuuuuu...',
+          '...VVVVVutttu...', '...TTTuTuttuu...', '...TTuTtutuu....', '...tTtttuuu.....', '....ttuuu.......'],
+      u: null // de dos : comme le turban
+    }
+  };
+  HEADS.litham.u = HEADS.imama.u;
+
+  /* ---------- gabarits : corps ----------
+     R r buste · S s jupe · L l bas de jupe (jambes si la tenue est courte) · M entre-jambes · Z ourlet
+     C c k manteau · E e pans du manteau (absents si la tenue est courte) · B b m bas du dos · A a ceinture · N main · F f pied */
+  const TOP_D = ['....CCrAArCC....', '...CCcrRRrcCC...', '...CckRRRRkcC...', '...CckRRRrkcC...', '...CkaAAAAakC...'];
+  const LOW_D = ['....kSSSsSSk....', '...ckSSsSSSkc...', '...ekLLMMLLke...', '..eekLlMMLlkee..', '..eekZZMMZZkee..'];
+  const TOP_L = ['.....rAArCCc....', '....RRrCCCcc....', '....RRkCCckc....', '....RRkCCckc....', '....AakCcckc....'];
+  const LOW_L = ['....SSsSSkcc....', '....SSsSskcc....', '...LLLlLlkee....', '...LLlLllkeeE...', '...ZZZZZZZkee...'];
+  const TOP_U = ['....CCCtuCCc....', '...CCCCtuCccc...', '...CCcCtuCckC...', '...CCcCCcCckC...', '...CCcCCcCccC...'];
+  const LOW_U = ['....CcCCcCck....', '...CCcCccCckc...', '...EeBBmmBbke...', '..EeeBbmmBbkee..', '..eekZZMMZZkee..'];
+  const FEET = ['....FFf..FFf....', '....FFf..FFf....'], FEET_A = ['....FFf..Ff.....', '....FFf.........'], FEET_B = ['.....fF..FFf....', '.........FFf....'];
+  const SIDE = ['......FFFf......', '......FFFf......'], SIDE_A = ['...FFf....Ff....', '...FFf..........'], SIDE_B = ['....Ff...FFf....', '.........FFf....'];
+  const body = (top, mid, low, feet) => top.concat([mid], low, feet);
+  const BODIES = {
+    d: [
+      body(TOP_D, '...NkSSSSSSkN...', LOW_D, FEET),
+      body(TOP_D.slice(0, 4).concat(['...CkaAAAAakN...']), '...CkSSSSSSk....', ['...NkSSSsSSk....'].concat(LOW_D.slice(1)), FEET_A),
+      body(TOP_D.slice(0, 4).concat(['...NkaAAAAakC...']), '....kSSSSSSkC...', ['....kSSSsSSkN...'].concat(LOW_D.slice(1)), FEET_B)
+    ],
+    l: [
+      body(TOP_L, '....SSkNNkcc....', LOW_L, SIDE),
+      body(TOP_L.slice(0, 2).concat(['....RkCCckkc....', '....RkCCckkc....', '....AkCcckkc....']), '....SNNkkkcc....', LOW_L, SIDE_A),
+      body(TOP_L.slice(0, 2).concat(['....RRrkCCkc....', '....RRrkCCkc....', '....AaakCckc....']), '....SSskNNcc....', LOW_L, SIDE_B)
+    ],
+    u: [
+      body(TOP_U, '...NCcCCcCckN...', LOW_U, FEET),
+      body(TOP_U.slice(0, 4).concat(['...CCcCCcCccN...']), '...CCcCCcCck....', ['...NcCCcCCck....'].concat(LOW_U.slice(1)), FEET_A),
+      body(TOP_U.slice(0, 4).concat(['...NCcCCcCccC...']), '....CcCCcCckC...', ['....CcCCcCckN...'].concat(LOW_U.slice(1)), FEET_B)
+    ]
+  };
+
+  /* ---------- poses : le corps parle ----------
+     hy : la tête s'incline · kneel : corps de 8 lignes posé au sol · extra : pixels ajoutés par-dessus [x, y, matière] */
+  const POSES = {
+    // recueillement : debout, la tête inclinée, les mains posées l'une sur l'autre
+    prie: { hy: 1,
+      d: body(TOP_D.slice(0, 2).concat(['...CckRNNRkcC...', '...CckRNNrkcC...', '...CkaAAAAakC...']), '....kSSSSSSk....', LOW_D, FEET),
+      l: body(TOP_L.slice(0, 2).concat(['....RRkCCckc....', '...NNCCCcckc....', '....AakkkkCc....']), '....SSsSSkcc....', LOW_L, SIDE),
+      u: body(TOP_U, '....CcCCcCck....', LOW_U, FEET) },
+    // résolution : un bras levé, la tête droite
+    resolu: {
+      d: body(['....CCrAArCC....', '.CCCCcrRRrcCC...', '....ckRRRRkcC...', '....ckRRRrkcC...', '....kaAAAAakC...'], '....kSSSSSSkN...', LOW_D, FEET),
+      extraD: [[1, 11, 'C'], [2, 11, 'c'], [1, 10, 'C'], [2, 10, 'c'], [1, 9, 'C'], [2, 9, 'c'], [1, 8, 'C'], [2, 8, 'c'], [1, 7, 'C'], [2, 7, 'c'], [1, 6, 'N'], [2, 6, 'N'], [1, 5, 'N'], [2, 5, 'N']],
+      l: body(['.....rAArCCc....', '...CRRrCCCcc....', '....RRrkckkc....', '....RRrkckkc....', '....Aaakckkc....'], '....SSsSSkcc....', LOW_L, SIDE),
+      extraL: [[2, 11, 'C'], [3, 11, 'c'], [1, 10, 'C'], [2, 10, 'c'], [1, 9, 'C'], [2, 9, 'c'], [0, 8, 'C'], [1, 8, 'c'], [0, 7, 'N'], [1, 7, 'N'], [0, 6, 'N']],
+      u: body(['....CCCtuCCc....', '...CCCCtuCcccCC.', '...CCcCtuCck....', '...CCcCCcCck....', '...CCcCCcCcc....'], '...NCcCCcCck....', LOW_U, FEET),
+      extraU: [[13, 11, 'C'], [14, 11, 'c'], [13, 10, 'C'], [14, 10, 'c'], [13, 9, 'C'], [14, 9, 'c'], [13, 8, 'C'], [14, 8, 'c'], [13, 7, 'C'], [14, 7, 'c'], [13, 6, 'N'], [14, 6, 'N'], [13, 5, 'N'], [14, 5, 'N']] },
+    // accablement : à genoux, la tête basse
+    accable: { hy: 1, kneel: true,
+      d: ['....CCrAArCC....', '...CCcrRRrcCC...', '...CckRRRRkcC...', '...CckRRRrkcC...', '...CkaAAAAakC...', '..EkNSSSSSSNkE..', '..ekLLLLLLLLke..', '.eekZZZZZZZZkee.'],
+      l: ['.....rAArCCc....', '....RRrCCCcc....', '....RRkCCckc....', '...NNCCCckkc....', '....AakkkkCc....', '...SSSsSSkccE...', '..LLLLlLlkkeeE..', '..ZZZZZZZZkeee..'],
+      u: ['....CCCtuCCc....', '...CCCCtuCccc...', '...CCcCtuCckC...', '...CCcCCcCckC...', '...CCcCCcCccC...', '..ECcCCcCcckcE..', '..EeBBbmmBbkee..', '.eekZZZMMZZZkee.'] },
+    // salut : la main sur le cœur
+    salut: {
+      d: body(TOP_D.slice(0, 2).concat(['...CckNNRRkcC...', '...CkCCcRrkcC...', '...CkaAAAAakC...']), '....kSSSSSSkN...', LOW_D, FEET),
+      l: body(TOP_L.slice(0, 2).concat(['....RNNCCckc....', '....RRkCCckc....', '....AakkkkCc....']), '....SSsSSkcc....', LOW_L, SIDE) },
+    // surprise : les bras s'écartent (le moteur ajoute un petit sursaut)
+    surpris: {
+      d: body(['....CCrAArCC....', '.NCCCcrRRrcCCCN.', '....ckRRRRkc....', '....ckRRRrkc....', '....kaAAAAak....'], '....kSSSSSSk....', LOW_D, FEET),
+      l: body(['.....rAArCCc....', '.NCCCRrCCCcc....', '....RRrkckkc....', '....RRrkckkcCN..', '....Aaakckkc....'], '....SSsSSkcc....', LOW_L, SIDE) },
+    // garde : le manteau ramené devant soi
+    garde: {
+      d: body(TOP_D.slice(0, 2).concat(['...CckCCCCkcC...', '...CcCCccCCcC...', '...CkaAAAAakC...']), '....kSSSSSSk....', LOW_D, FEET),
+      l: body(['.....rAArCCc....', '...CCCrCCCcc....', '..CCCcCCCckc....', '..CCccCCcckc....', '..CCccNCcckc....'], '..CcccSSSkcc....', LOW_L, SIDE) }
+  };
+  D.POSES.forEach(p => { if (!POSES[p]) throw new Error('pose sans dessin : ' + p); });
+
+  /* ---------- types de personnages : coiffe, tenue, attribut ---------- */
+  const KINDS = {
+    compagnon: { coiffe: 'imama', lit: true }, homme: { coiffe: 'imama' }, ancien: { coiffe: 'imama', chale: true, item: 'baton' },
+    savant: { coiffe: 'imama', chale: true, item: 'feuillets' }, marchand: { coiffe: 'imama', item: 'bourse', trim: '#d9b45a' },
+    soldat: { coiffe: 'casque', court: true, item: 'lance' }, romain: { coiffe: 'casque', court: true, item: 'lance', cimier: true, cuirasse: true },
+    perse: { coiffe: 'tiare', trim: '#d9b45a' }, moine: { coiffe: 'capuche', sombre: true, trim: '#c9b99a' }, enfant: { coiffe: 'imama', petit: true },
+    marin: { coiffe: 'imama', court: true, raies: true }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' }
+  };
+
+  /* ---------- couleurs ---------- */
+  const rgb = h => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+  const hex = a => '#' + a.map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
+  const mix = (a, b, t) => { const x = rgb(a), y = rgb(b); return hex([0, 1, 2].map(i => x[i] + (y[i] - x[i]) * t)); };
+  const lum = h => { const c = rgb(h); return (c[0] * 0.3 + c[1] * 0.59 + c[2] * 0.11) / 255; };
+  function vivid(h) { // la teinte d'une lueur pâle, ramenée à une couleur franche pour un bandeau ou une ceinture
+    const [r, g, b] = rgb(h).map(v => v / 255), mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn; if (d < 0.02) return h;
+    let hu = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; hu *= 60; if (hu < 0) hu += 360;
+    const s = 0.72, l = 0.56, c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((hu / 60) % 2 - 1)), m = l - c / 2;
+    const t = hu < 60 ? [c, x, 0] : hu < 120 ? [x, c, 0] : hu < 180 ? [0, c, x] : hu < 240 ? [0, x, c] : hu < 300 ? [x, 0, c] : [c, 0, x];
+    return hex(t.map(v => (v + m) * 255));
+  }
+  // trois tons par matière ; l'ombre tire vers le violet, la lumière vers le chaud, comme sur une console 16 bits
+  const ramp = c => [lum(c) > 0.8 ? mix(c, '#ffffff', 0.45) : mix(c, '#fff0cc', 0.32), mix(c, '#2a1c3a', lum(c) > 0.8 ? 0.16 : 0.22), mix(c, '#20143a', lum(c) > 0.8 ? 0.42 : 0.54)];
+  const INK = '#150f1d';
+  function palette(look, K) {
+    const robe = look.robe || '#8a7355', head = look.head || (K.coiffe === 'litham' ? (look.veil || '#1f2f55') : K.coiffe === 'capuche' ? robe : '#e6dcc4');
+    const cloak = look.cloak || G.shade(robe, 0.68), trim = look.trim || (look.aura ? vivid(look.aura) : K.trim || mix(cloak, '#d9b45a', 0.5));
+    const [T, t, u] = ramp(K.neon ? mix(head, '#6272a4', 0.3) : head), [R, r] = ramp(robe), q = ramp(robe)[2], [C, c, k] = ramp(cloak), A = mix(trim, '#ffffff', 0.12), a = mix(trim, '#20143a', 0.42);
+    const legs = look.legs || '#4a3d32', [L, l, z] = K.court ? ramp(legs) : [R, r, q];
+    const p = { T, t, u, R, r, S: R, s: r, C, c, k, A, a, N: mix(head, '#ffffff', 0.3), F: '#7a5433', f: '#46301e',
+      L, l, Z: z, M: K.court ? null : r, E: K.court ? null : c, e: K.court ? null : k, B: K.court ? L : C, b: K.court ? l : c, m: K.court ? null : c,
+      I: '#c3c8d2', i: '#7f8794', X: '#b33327', W: '#8a6238', w: '#5a3d22', P: '#f3e9cf', Y: '#39e6ff', y: '#ff4fd8' };
+    if (K.lit) { p.V = '#fffbe8'; p.v = look.aura ? mix(look.aura, '#ffffff', 0.25) : '#ffe9a8'; p.N = '#fff3d6'; }
+    else { p.V = mix(mix(head, '#5a4a4a', 0.6), '#2a1c3a', K.sombre ? 0.6 : 0.1); p.v = mix(p.V, '#20143a', 0.35); }
+    if (K.cuirasse) { p.R = p.I; p.r = p.i; }
+    return p;
+  }
+
+  /* ---------- composition d'une image : grille de 16 × 24 matières ---------- */
+  function grid(look, dir, frame, pose) {
+    const K = Object.assign({}, KINDS[look.kind] || KINDS.homme, look.coiffe ? { coiffe: look.coiffe } : null, look.item !== undefined ? { item: look.item } : null);
+    const key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l';
+    const P = pose && POSES[pose] && POSES[pose][key] ? POSES[pose] : null;
+    let bodyRows = P ? P[key] : BODIES[key][frame || 0]; const hy = P ? (P.hy || 0) : 0, kneel = !!(P && P.kneel);
+    const petit = K.petit && !kneel ? 3 : 0; if (petit) bodyRows = bodyRows.filter((r, j) => j !== 3 && j !== 7 && j !== 8); // enfant : trois lignes de moins
+    const extra = P ? (key === 'd' ? P.extraD : key === 'l' ? P.extraL : P.extraU) : null;
+    const g = []; for (let y = 0; y < H; y++) g.push(new Array(W).fill('.'));
+    const put = (x, y, m) => { if (x >= 0 && x < W && y >= 0 && y < H && m !== '.') g[y][x] = m; };
+    const b0 = kneel ? H - 8 : 11 + petit; // un corps à genoux tient en 8 lignes, posées au sol
+    bodyRows.forEach((row, j) => { for (let x = 0; x < W; x++) put(x, b0 + j, row[x]); });
+    // attributs tenus ou portés
+    const it = K.item, hip = b0 + 5;
+    if (it === 'baton' || it === 'lance') { const x = key === 'd' ? 1 : key === 'u' ? 14 : 2, top = it === 'lance' ? 1 : (kneel ? 9 : 5); for (let y = top; y < H - 1; y++) put(x, y, y % 5 === 2 ? 'w' : 'W'); if (it === 'lance') { put(x, 0, 'I'); put(x, 1, 'I'); put(x, 2, 'i'); } }
+    if (it === 'durra') { const x = key === 'd' ? 1 : key === 'u' ? 14 : 3; for (let y = hip - 3; y < hip + 4; y++) put(x, y, y === hip - 3 ? 'w' : 'W'); }
+    if (it === 'sabre') {
+      if (key === 'd') { [[11, 0], [12, 1], [12, 2], [13, 3], [13, 4]].forEach(([x, y]) => { put(x, hip + y, 'f'); put(x + 1, hip + y, 'F'); }); put(10, hip - 1, 'A'); put(11, hip - 1, 'a'); }
+      else if (key === 'u') { [[4, 0], [3, 1], [3, 2], [2, 3], [2, 4]].forEach(([x, y]) => { put(x, hip + y, 'F'); put(x - 1, hip + y, 'f'); }); put(5, hip - 1, 'A'); }
+      else { [[10, 0], [11, 1], [12, 2], [13, 3], [14, 4]].forEach(([x, y]) => { put(x, hip + y, 'f'); put(x, hip + y - 1, 'F'); }); put(9, hip - 1, 'A'); put(9, hip - 2, 'a'); }
+    }
+    if (it === 'feuillets' && key !== 'u') { const x = key === 'd' ? 1 : 3; put(x, hip - 1, 'P'); put(x + 1, hip - 1, 'P'); put(x, hip, 'P'); put(x + 1, hip, 'P'); put(x, hip + 1, 'w'); put(x + 1, hip + 1, 'w'); }
+    if (it === 'bourse' && key !== 'u') { const x = key === 'd' ? 10 : 6; put(x, hip, 'A'); put(x + 1, hip, 'a'); put(x, hip + 1, 'a'); put(x + 1, hip + 1, 'a'); }
+    if (K.chale && !kneel) for (let x = 2; x < 14; x++) { if ('Cck'.indexOf(g[b0][x]) >= 0) g[b0][x] = 'T'; if ('Cck'.indexOf(g[b0 + 1][x]) >= 0) g[b0 + 1][x] = x % 3 ? 'T' : 't'; }
+    if (K.raies) for (let y = b0 + 1; y < b0 + 5; y += 2) for (let x = 0; x < W; x++) if ('RrCc'.indexOf(g[y][x]) >= 0) g[y][x] = 'T';
+    if (K.neon) { for (let y = b0 + 1; y < b0 + 4; y++) { const x = key === 'd' ? 7 : key === 'l' ? 5 : -1; if (x >= 0 && g[y][x] !== '.') g[y][x] = 'Y'; } for (let x = 0; x < W; x++) if ('Aa'.indexOf(g[b0 + 4][x]) >= 0) g[b0 + 4][x] = 'y'; }
+    // tête (11 lignes), inclinée ou abaissée selon la pose
+    const head = HEADS[K.coiffe] || HEADS.imama, hrows = head[key] || head.d, h0 = (kneel ? b0 - 11 : petit) + hy, hx = hy && key === 'l' ? -1 : 0;
+    for (let j = 0; j < 11; j++) for (let x = 0; x < W; x++) put(x + hx, h0 + j, hrows[j][x]);
+    if (K.cimier) { if (key === 'l') for (let x = 4; x < 11; x++) put(x, h0, 'X'); else for (let x = 6; x < 10; x++) { put(x, h0, 'X'); if (key === 'u') put(x, h0 + 1, 'X'); } }
+    if (extra) extra.forEach(([x, y, m]) => put(x, y, m));
+    if (dir === 2) for (let y = 0; y < H; y++) g[y].reverse();
+    return { g, K };
+  }
+
+  /* ---------- rendu ---------- */
+  const mk = G.mk;
+  function outline(c, w, h) { // liseré : la teinte voisine, très assombrie ; jamais sous les pieds
+    const id = c.getImageData(0, 0, w, h), d = id.data, k = rgb(INK), add = [];
+    const solid = (x, y) => x >= 0 && y >= 0 && x < w && y < h && d[(y * w + x) * 4 + 3] > 200;
+    for (let y = 0; y < h - 1; y++) for (let x = 0; x < w; x++) { if (solid(x, y)) continue;
+      const n = solid(x, y + 1) ? [x, y + 1] : solid(x + 1, y) ? [x + 1, y] : solid(x - 1, y) ? [x - 1, y] : solid(x, y - 1) ? [x, y - 1] : null; if (n) add.push(x, y, (n[1] * w + n[0]) * 4); }
+    for (let i = 0; i < add.length; i += 3) { const o = (add[i + 1] * w + add[i]) * 4, s = add[i + 2]; for (let j = 0; j < 3; j++) d[o + j] = Math.round(d[s + j] * 0.22 + k[j] * 0.78); d[o + 3] = 255; }
+    c.putImageData(id, 0, 0);
+  }
+  function paint(g, pal, w, h) { const cv = mk(w, h), c = cv.getContext('2d'); for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const col = pal[g[y][x]]; if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } } return cv; }
+  const scache = {}, ck = (look, a, b, c) => JSON.stringify(look) + '|' + a + '|' + (b || 0) + '|' + (c || '');
+  function small(look, dir, frame, pose) {
+    const k = 's' + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
+    const { g, K } = grid(look, dir, frame, pose), cv = paint(g, palette(look, K), W, H);
+    outline(cv.getContext('2d'), W, H);
+    return (scache[k] = cv);
+  }
+  // Scale2x (EPX) sur la grille des matières : les diagonales s'arrondissent sans rien inventer
+  function scale2x(g) {
+    const o = []; for (let y = 0; y < H * 2; y++) o.push(new Array(W * 2));
+    const at = (x, y) => (x < 0 || y < 0 || x >= W || y >= H) ? '.' : g[y][x];
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const p = g[y][x], a = at(x, y - 1), b = at(x + 1, y), c = at(x - 1, y), d = at(x, y + 1);
+      o[y * 2][x * 2] = (c === a && c !== d && a !== b) ? a : p; o[y * 2][x * 2 + 1] = (a === b && a !== c && b !== d) ? b : p;
+      o[y * 2 + 1][x * 2] = (d === c && d !== b && c !== a) ? c : p; o[y * 2 + 1][x * 2 + 1] = (b === d && b !== a && d !== c) ? d : p;
+    }
+    return o;
+  }
+  function grand(look, dir, frame, pose) {
+    const k = 'g' + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
+    const { g, K } = grid(look, dir, frame, pose), pal = palette(look, K), G2 = scale2x(g), w = W * 2, h = H * 2;
+    let cv = paint(G2, pal, w, h); const c = cv.getContext('2d'), px = (x, y, col) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } };
+    const is = (x, y, set) => x >= 0 && y >= 0 && x < w && y < h && set.indexOf(G2[y][x]) >= 0;
+    // le voile : une lumière qui se dégrade du centre vers le bord (Compagnons), une étoffe unie sinon
+    let x0 = 99, x1 = -1, y0 = 99, y1 = -1; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (is(x, y, 'Vv')) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    if (x1 >= 0) { const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 - 0.5, rx = (x1 - x0) / 2 + 0.5, ry = (y1 - y0) / 2 + 0.5;
+      for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (is(x, y, 'Vv')) { const dd = Math.hypot((x - cx) / rx, (y - cy) / ry);
+        px(x, y, K.lit ? (dd < 0.5 ? '#ffffff' : dd < 0.82 ? pal.V : pal.v) : (y - y0 < 2 || dd > 0.86 ? pal.v : pal.V)); } }
+    // plis des étoffes, reflets, galon au bas du manteau
+    for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) { const m = G2[y][x];
+      if ((m === 'S' || m === 'L') && !K.court && x % 4 === 1 && is(x - 1, y, 'SL') && is(x + 1, y, 'SL')) px(x, y, pal.s);
+      if ((m === 'C' || m === 'B') && y % 2 === 0 && x % 6 === 3 && is(x, y - 1, 'CB') && is(x, y + 1, 'CB')) px(x, y, pal.c);
+      if (m === 'T' && is(x, y - 1, '.') ) px(x, y, mix(pal.T, '#ffffff', 0.45));
+      if ((m === 'C' || m === 'R') && is(x, y - 1, '.') && !is(x - 1, y, '.')) px(x, y, mix(pal[m], '#ffffff', 0.3));
+      if ('Eek'.indexOf(m) >= 0 && y > h * 0.72 && is(x, y + 1, '.Ff')) px(x, y, pal.a);
+      if (m === 'Z' && !K.court && is(x, y + 1, '.Ff')) px(x, y, pal.a); }
+    outline(cv.getContext('2d'), w, h);
+    return (scache[k] = cv);
+  }
+
+  /* ---------- interface ---------- */
+  // planche de marche : 4 directions × 3 pas, comme avant ; les poses se demandent à part
+  G.charSheet = function (look) {
+    const k = 'S' + JSON.stringify(look); if (scache[k]) return scache[k];
+    const cv = mk(48, 96), c = cv.getContext('2d');
+    for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) c.drawImage(small(look, dir, f), f * 16, dir * 24);
+    cv.look = look; return (scache[k] = cv);
+  };
+  G.charPose = (look, dir, pose) => small(look, dir, 0, pose);
+  G.charGrand = (look, dir, frame, pose) => grand(look, dir, frame || 0, pose);
+  const ucache = {}; // image du grand sprite, pour les menus
+  G.charURL = (look, dir, pose) => { const k = ck(look, dir || 0, 0, pose); return ucache[k] || (ucache[k] = grand(look, dir || 0, 0, pose).toDataURL()); };
+  G.KINDS = KINDS;
 })();
 
 /* ==== src/core/maps.js ==== */
@@ -1623,6 +1848,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
       case 'ask': { S.hideDialog(); const i = await menuPick(a, b); if (b[i].r) await S.run(b[i].r); break; }
       case 'parley': await runParley(a); break;
       case 'pray': await W.pray(a); break;
+      case 'emote': W.emote(a, b); break;
       case 'save': await I.ui.saveMenu(); break;
       case 'pillar': W.pillar(a, b); break;
       case 'mus': I.audio.music(a); break;
@@ -1714,17 +1940,22 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     maghrib: ['Le soleil toucha la terre. Ils prièrent, et le vacarme du jour retomba.'],
     isha: ['La nuit était entière. Ils prièrent, et le silence cessa d’être vide.', 'Dernière prière. Ce qui restait à décider attendrait le matin, et s’en trouverait mieux.']
   };
+  W.pose = [];
+  W.emote = function (who, pose) {
+    const p = pose && D.POSES.includes(pose) ? pose : null;
+    if (who === 'groupe') W.pose = W.party.map(() => p); else if (who === 'hero') W.pose[0] = p; else { const n = W.npcs.find(x => x.id === who); if (n) n.pose = p; }
+  };
   W.pray = async function (moment) {
     const env = W.map ? W.map.env : {}, m = moment || ({ dawn: 'fajr', day: 'dhuhr', dusk: 'maghrib', night: 'isha' })[env.time] || 'isha';
     S.depth++;
     try {
-      S.hideDialog(); await S.fade('out', 600); I.audio.sfx('light');
+      S.hideDialog(); W.emote('groupe', 'prie'); await I.sleep(I.debug.auto ? 10 : 700); await S.fade('out', 600); I.audio.sfx('light');
       const fz = $('#fade'); fz.style.transition = 'none'; fz.style.opacity = 0; // le carton prend le relais du fondu
       await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>La prière</h1><p>${I.pick(PRAY_LINES[m])}</p><p class="small">Le groupe est reposé · Sakîna</p><div class="hint">▼</div>`, 6500);
       W.healAll(); W.gainSakina(35); S.flags._prayed = true;
       if (!S.flags._prayPillar) { S.flags._prayPillar = true; W.pillar('priere', 1); }
       if (W.map) W.checkpoint();
-    } finally { S.depth--; S.hideDialog(); }
+    } finally { S.depth--; S.hideDialog(); W.emote('groupe', null); }
   };
   W.prayerPts = function () { const m = W.map, out = []; if (!m) return out; if (m.spots.priere) out.push(m.spots.priere); if (I.build && W.saga) I.build.prayerPoints().forEach(q => out.push(q)); return out; };
   W.nearPrayer = function () { return W.prayerPts().some(sp => Math.hypot(sp[0] * T + 8 - W.player.x, sp[1] * T + 13 - W.player.y) < 26); };
@@ -1743,7 +1974,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     W.foes.forEach(f => { if (f.map === id && !f.placed) { const p = W.resolve(f.at, id, f); if (p) { f.x = p[0]; f.y = p[1]; f.placed = true; } } });
     W.chests.forEach(c => { if (c.map === id && !c.placed) { const p = W.resolve(c.at, id, c); if (p) { c.x = p[0]; c.y = p[1]; c.placed = true; } } });
     if (spot) { const p = Array.isArray(spot) && typeof spot[0] === 'number' ? spot : W.resolve(spot, id, W.player); W.player.x = p[0]; W.player.y = p[1]; }
-    W.resetTrail(); W.tint = null; W.updateCam(true);
+    W.resetTrail(); W.tint = null; W.pose = []; W.updateCam(true);
     document.body.dataset.theme = (id === 'noos' || id === 'cite' || id === 'archives') ? 'cyber' : (id === 'romaine' || id === 'palais') ? 'roman' : 'orient';
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
@@ -2019,9 +2250,10 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
   };
 
   /* ----- rendu ----- */
-  function drawChar(c, sheet, x, y, dir, moving, t, aura) {
+  function drawChar(c, sheet, x, y, dir, moving, t, aura, pose) {
     const f = moving ? [1, 0, 2, 0][Math.floor(t * 8) % 4] : 0;
     c.fillStyle = 'rgba(20,12,30,.32)'; c.beginPath(); c.ellipse(Math.round(x), Math.round(y) + 1, 6, 2.5, 0, 0, 6.3); c.fill();
+    if (pose && !moving && sheet.look) { c.drawImage(G.charPose(sheet.look, dir, pose), Math.round(x) - 8, Math.round(y) - 22 - (pose === 'surpris' ? 2 : 0)); return; }
     c.drawImage(sheet, f * 16, dir * 24, 16, 24, Math.round(x) - 8, Math.round(y) - 22 - (moving && f ? 1 : 0), 16, 24);
   }
   W.drawChar = drawChar;
@@ -2051,11 +2283,11 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     const lights = [];
     for (const e of list) {
       if (e.o) { const o = e.o; c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2) - cx, o.y - o.h + 1 - cy); if (o.anim) drawFlame(c, o.x - cx, o.y - cy - (o.type === 'brazier' ? 10 : 3), t + o.seed, o.type === 'fire'); if (G.OBJ[o.type].herd) I.build.herd(c, o, o.x - cx, o.y - cy, t); }
-      else if (e.n) { const n = e.n; drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t, n.aura); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
+      else if (e.n) { const n = e.n; drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
       else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = 0.86 + Math.sin(t * 5 + f.ph) * 0.12; c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
-      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (W.saga.heroes[W.party[e.fol]].look.aura || '#ffe9a8'), a: 0.4 }); }
-      else if (e.p) { const p = W.player; drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lk.aura || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol]); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (W.saga.heroes[W.party[e.fol]].look.aura || '#ffe9a8'), a: 0.4 }); }
+      else if (e.p) { const p = W.player; drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0]); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lk.aura || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {
@@ -2742,6 +2974,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     const sk = cmd.skill, boost = cmd.boost || 0, hero = e.side === 'hero';
     if (hero) { if (sk.cost) e.sp = Math.max(0, e.sp - sk.cost); e.niyya -= boost; if (cmd.limit) e.sakina = 0; }
     if (!sk.basic || !hero) banner(sk.name, 800, false, cmd.limit ? 'limit' : hero ? '' : 'foe');
+    if (hero && !sk.basic) { e.pose = 'resolu'; setTimeout(() => { e.pose = null; }, 900 / I.speed); }
     if (cmd.limit) { G.flash(e.color); I.audio.sfx('roll'); await I.sleep(350); }
     const col = sk.el ? D.ELEMENTS[sk.el].color : (hero ? e.color : `hsl(${e.def.hue},90%,65%)`), dir = hero ? -1 : 1;
     // élan vers l'avant
@@ -2849,6 +3082,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     let drop = '';
     if (C.opts.boss || Math.random() < 0.4) { const k = C.opts.boss ? I.pick(['musc', 'lait', 'eau']) : I.pick(['dattes', 'dattes', 'pain', 'eau', 'miel', 'siwak']); sv.items[k] = (sv.items[k] || 0) + 1; drop = `<li>Trouvé : <b>${D.ITEMS[k].name}</b></li>`; }
     W.persistHeroes();
+    C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
     await S.card('victory', `<p class="small">${C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>Dévoilement</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
   async function defeat() {
@@ -2941,11 +3175,13 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
         } else {
           const x = Math.round(e.x + e.ox + jx), y = Math.round(e.y), act = C.active === e;
           c.fillStyle = 'rgba(0,0,0,.4)'; c.beginPath(); c.ellipse(x, y + 1, 12, 4, 0, 0, 6.3); c.fill();
-          if (!e.alive) { c.globalAlpha = 0.55; c.drawImage(e.sheet, 0, 24, 16, 24, x - 16, y - 28, 32, 30); c.globalAlpha = 1; }
+          const look = e.sheet.look;
+          if (!e.alive) { c.globalAlpha = 0.62; c.drawImage(G.charGrand(look, 1, 0, 'accable'), x - 16, y - 46); c.globalAlpha = 1; }
           else {
             const f = act ? [1, 0, 2, 0][Math.floor(t * 6) % 4] : 0, bob = act ? 0 : Math.round(Math.sin(t * 2 + e.x) * 0.6);
-            c.drawImage(e.sheet, f * 16, 24, 16, 24, x - 16, y - 46 + bob, 32, 48);
-            if (e.flash > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, e.flash) * 0.8; c.drawImage(e.sheet, f * 16, 24, 16, 24, x - 16, y - 46 + bob, 32, 48); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
+            const pose = e.pose || (e.st.garde ? 'garde' : (!act && e.hp / e.max.hp < 0.2) ? 'accable' : null), img = G.charGrand(look, 1, pose ? 0 : f, pose);
+            c.drawImage(img, x - 16, y - 46 + bob);
+            if (e.flash > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, e.flash) * 0.8; c.drawImage(img, x - 16, y - 46 + bob); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
             if (e.st.garde) { c.strokeStyle = e.color; c.lineWidth = 1; c.beginPath(); c.ellipse(x - 14, y - 24, 4, 20, 0, 0, 6.3); c.stroke(); }
             lights.push({ x, y: y - 26, r: act ? 46 : 32, color: e.color, a: act ? 0.9 : 0.5 });
             if (e.sakina >= 100 && Math.random() < 0.3) G.spawn({ x: x + (Math.random() - 0.5) * 18, y: y - 4, vy: -30, life: 0.9, size: 0.8, color: e.color, type: 'mote' });
@@ -3179,7 +3415,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     const close = () => { if (fl) fl.destroy(); screen('#menu', false); U.menuOpen = false; if (onClose) onClose(); };
     const mkb = (label, fn, cls) => { const b = I.el('button', cls || '', label); b.type = 'button'; b.onclick = ev => { ev.stopPropagation(); fn(b); }; return b; };
     const build = (items, o) => { if (fl) fl.destroy(); side.innerHTML = ''; const btns = []; items.forEach(it => { if (it.cat) { side.appendChild(I.el('div', 'cat', it.cat)); return; } const b = mkb(it.label, it.fn); b._show = it.show; side.appendChild(b); btns.push(b); }); fl = focusList(btns, Object.assign({ onSel: b => { if (b._show) pane.innerHTML = b._show(); } }, o)); };
-    const party = () => (W.saga && W.party.length) ? W.party.map(id => { const h = W.hero(id), st = I.calc.hero(h.def, h.lvl), e = D.ELEMENTS[h.def.el]; return `<div class="stat"><span class="seal" style="background-image:url(${G.sealURL(h.def.arabic, e.color)})"></span><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> ${h.def.title ? '<em>' + I.esc(h.def.title) + '</em>' : ''} <small>· niveau ${h.lvl} · ${e.name}</small><br><small>Constance ${Math.ceil(h.hp)}/${st.hp} · Souffle ${h.sp}/${st.sp} · Force ${Math.round(st.atk)} · Esprit ${Math.round(st.mag)} · Garde ${Math.round(st.def)} · Élan ${Math.round(st.spd)}</small><div class="sk">${h.def.skills.filter(k => k.lvl <= h.lvl).map(k => I.esc(k.name)).join(' · ')}</div></div></div>`; }).join('') : '<p>Aucun groupe pour l’instant.</p>';
+    const party = () => (W.saga && W.party.length) ? W.party.map(id => { const h = W.hero(id), st = I.calc.hero(h.def, h.lvl), e = D.ELEMENTS[h.def.el]; return `<div class="stat"><span class="seal" style="background-image:url(${G.sealURL(h.def.arabic, e.color)})"></span><img class="fig" alt="" src="${G.charURL(Object.assign({ kind: 'compagnon' }, h.def.look))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> ${h.def.title ? '<em>' + I.esc(h.def.title) + '</em>' : ''} <small>· niveau ${h.lvl} · ${e.name}</small><br><small>Constance ${Math.ceil(h.hp)}/${st.hp} · Souffle ${h.sp}/${st.sp} · Force ${Math.round(st.atk)} · Esprit ${Math.round(st.mag)} · Garde ${Math.round(st.def)} · Élan ${Math.round(st.spd)}</small><div class="sk">${h.def.skills.filter(k => k.lvl <= h.lvl).map(k => I.esc(k.name)).join(' · ')}</div></div></div>`; }).join('') : '<p>Aucun groupe pour l’instant.</p>';
     const bag = () => '<h3>Besace</h3>' + (Object.keys(D.ITEMS).filter(k => (sv.items[k] || 0) > 0).map(k => `<p><b>${D.ITEMS[k].name}</b> ×${sv.items[k]}<br><small>${D.ITEMS[k].desc}</small></p>`).join('') || '<p>La besace est vide.</p>') + '<p class="src">Les objets s’utilisent en combat. Le groupe reprend des forces après chaque victoire.</p>';
     const help = () => `<h3>Commandes</h3><p><kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : se déplacer, naviguer · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : menu, retour. Sur écran tactile : croix et boutons à l’écran, et tout est cliquable.</p>
       <h3>Combat</h3><p>On n’affronte jamais des personnes, seulement des <em>égrégores</em> : les idoles que les cœurs fabriquent ensemble. Chaque égrégore est protégé par des <b>voiles</b> (⛊). Frappe-le avec la <b>vertu</b> qui est sa faille pour retirer un voile ; à zéro, il est <b>dévoilé</b> : il perd son tour et subit bien plus.</p>
@@ -4597,7 +4833,7 @@ ISNAD.registerSaga({
     umar: {
       name: "'Umar", title: 'Al-Fârûq', arabic: 'عمر',
       role: 'gardien', el: 'adl',
-      look: { robe: '#7b5a3a', head: '#efe7d6', cloak: '#3d2c1e', aura: '#9fd0ff' },
+      look: { robe: '#7b5a3a', head: '#efe7d6', cloak: '#3d2c1e', aura: '#9fd0ff', item: 'durra' },
       skills: [
         { lvl: 1, id: 'durra', name: 'La Durra', desc: "Coup de férule. Peut étourdir.", cost: 3,
           target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
@@ -4886,6 +5122,7 @@ ISNAD.registerSaga({
       ],
       objectives: [
         { text: "Rejoindre Abû 'Ubayda près de la porte", talk: 'abuubayda', then: [
+          ['emote', 'abuubayda', 'salut'],
           ['say', 'abuubayda', "Abû Bakr ! Te voilà, Allah soit loué. La ville chancelle. Les uns pleurent, les autres se taisent, et 'Umar… 'Umar jure que ce n'est pas vrai."],
           ['say', 'abubakr', "Mène-moi à la mosquée, Abû 'Ubayda. Ne disons rien à personne avant d'avoir vu."],
           ['hide', 'abuubayda'], ['join', 'abuubayda'], ['codex', 'abuubayda_bio']
@@ -4927,11 +5164,13 @@ ISNAD.registerSaga({
           ['quote', "Muhammad n'est qu'un messager ; des messagers avant lui sont passés. S'il mourait donc, ou s'il était tué, retourneriez-vous sur vos talons ? Quiconque retourne sur ses talons ne nuira en rien à Allah ; et Allah récompensera bientôt les reconnaissants.", "Coran 3:144 — traduction du sens"],
           ['nar', "Ibn 'Abbâs dira : « Ce fut comme si les gens n'avaient jamais su que ce verset avait été révélé, avant qu'Abû Bakr ne le récite. » Ce jour-là, toute la ville le répétait."],
           ['quote', "Par Allah, dès que j'entendis Abû Bakr le réciter, mes jambes ne me portèrent plus, et je tombai à terre. Je sus alors que le Prophète ﷺ était mort.", "'Umar ibn al-Khattâb — al-Bukhârî, as-Sahîh"],
+          ['emote', 'umar', 'accable'],
           ['codex', 'jour_sombre'], ['codex', 'deni']
         ] },
         { text: "Relever 'Umar", talk: 'umar', then: [
           ['say', 'umar', "C'est donc vrai. Toi seul as eu la force de le dire. Je voulais tant qu'il revienne…"],
           ['say', 'abubakr', "Nous l'aimons tous plus que nos propres vies, 'Umar. C'est pour cela qu'il faut garder ce qu'il nous a transmis, et ne pas nous arrêter à sa personne."],
+          ['emote', 'umar', null],
           ['say', 'umar', "Me voici. Dis-moi où me tenir."],
           ['hide', 'umar'], ['join', 'umar'], ['codex', 'umar_bio'],
           ['show', 'messager'], ['walk', 'messager', ['mosquee_cour', 0, 2]],
@@ -5473,7 +5712,7 @@ ISNAD.registerSaga({
     ali: {
       name: "'Alî", title: 'La Porte du Savoir', arabic: 'علي',
       role: 'guerrier', el: 'ilm',
-      look: { robe: '#2f5d50', head: '#f1ead8', cloak: '#1f3a34', aura: '#c49bff' },
+      look: { robe: '#2f5d50', head: '#f1ead8', cloak: '#1f3a34', aura: '#c49bff', item: 'sabre' },
       skills: [
         { lvl: 1, id: 'dhulfiqar', name: 'Dhû l-Fiqâr', desc: 'Le sabre à deux pointes : deux frappes de fer.', cost: 3,
           target: 'foe', el: 'fer', pow: 0.8, hits: 2, anim: 'slash' },
@@ -5494,7 +5733,7 @@ ISNAD.registerSaga({
     ibnabbas: {
       name: "Ibn 'Abbâs", title: 'Le Docte de la communauté', arabic: 'ابن عباس',
       role: 'sage', el: 'ilm',
-      look: { robe: '#e9e2cf', head: '#f6f1e4', cloak: '#6c5a8e', aura: '#ffe08a' },
+      look: { robe: '#e9e2cf', head: '#f6f1e4', cloak: '#6c5a8e', aura: '#ffe08a', item: 'feuillets' },
       skills: [
         { lvl: 1, id: 'question', name: 'Question droite', desc: 'Il écoute le grief jusqu’au bout : révèle les failles.', cost: 2,
           target: 'foe', el: 'sidq', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'light' },
@@ -6459,7 +6698,7 @@ ISNAD.registerSaga({
     khalid: {
       name: 'Khâlid', title: 'Le Sabre dégainé', arabic: 'خالد',
       role: 'guerrier', el: 'shajaa',
-      look: { robe: '#7a2f2a', head: '#efe6d2', cloak: '#3a2a22', aura: '#ff9a70' },
+      look: { robe: '#7a2f2a', head: '#efe6d2', cloak: '#3a2a22', aura: '#ff9a70', item: 'sabre' },
       skills: [
         { lvl: 1, id: 'charge', name: 'Charge', desc: 'Charge de cavalerie sur un égrégore.', cost: 3,
           target: 'foe', el: 'fer', pow: 1.4, anim: 'slash' },
@@ -6480,7 +6719,7 @@ ISNAD.registerSaga({
     qaqa: {
       name: "Al-Qa'qâ'", title: "Ibn 'Amr at-Tamîmî", arabic: 'القعقاع',
       role: 'stratege', el: 'sabr',
-      look: { robe: '#3f5a4a', head: '#e6dcc4', cloak: '#2b3a30', aura: '#8fe0a8' },
+      look: { robe: '#3f5a4a', head: '#e6dcc4', cloak: '#2b3a30', aura: '#8fe0a8', item: 'sabre' },
       skills: [
         { lvl: 1, id: 'estoc', name: 'Estoc', desc: 'Frappe rapide et précise.', cost: 2,
           target: 'foe', el: 'fer', pow: 1.2, anim: 'slash' },
@@ -6501,7 +6740,7 @@ ISNAD.registerSaga({
     dirar: {
       name: 'Dirâr', title: 'Ibn al-Azwar', arabic: 'ضرار',
       role: 'guerrier', el: 'shajaa',
-      look: { robe: '#b08a4a', head: '#f0e8d8', cloak: '#5a3a22', aura: '#ffb080' },
+      look: { robe: '#b08a4a', head: '#f0e8d8', cloak: '#5a3a22', aura: '#ffb080', item: 'lance' },
       skills: [
         { lvl: 1, id: 'ruee', name: 'Ruée', desc: "Se jette sur l'égrégore.", cost: 2,
           target: 'foe', el: 'fer', pow: 1.25, anim: 'slash' },
@@ -7341,7 +7580,7 @@ ISNAD.registerSaga({
     umar: {
       name: "'Umar", title: 'Al-Fârûq', arabic: 'عمر',
       role: 'gardien', el: 'adl',
-      look: { robe: '#7b5a3a', head: '#efe7d6', cloak: '#3d2c1e', aura: '#9fd0ff' },
+      look: { robe: '#7b5a3a', head: '#efe7d6', cloak: '#3d2c1e', aura: '#9fd0ff', item: 'durra' },
       skills: [
         { lvl: 1, id: 'durra', name: 'La Durra', desc: "Coup de férule. Peut étourdir.", cost: 3,
           target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
@@ -8345,7 +8584,7 @@ ISNAD.registerSaga({
     zayd: {
       name: 'Zayd ibn Thâbit', title: 'Le Scribe', arabic: 'زيد',
       role: 'sage', el: 'ilm',
-      look: { robe: '#c9b99a', head: '#e9e1cf', cloak: '#5b4a8a', aura: '#d2b6ff' },
+      look: { robe: '#c9b99a', head: '#e9e1cf', cloak: '#5b4a8a', aura: '#d2b6ff', item: 'feuillets' },
       skills: [
         { lvl: 1, id: 'calame', name: 'Le Calame', desc: 'Trace net ce que la querelle brouille. Dégâts de Savoir.', cost: 3,
           target: 'foe', el: 'ilm', pow: 1.3, anim: 'glyph' },

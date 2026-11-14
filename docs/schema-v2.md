@@ -46,6 +46,7 @@ Validation : `node tools/validate.js <fichier>` (sagas, veillées) · `node tool
 
 | op | effet |
 |---|---|
+| `['emote', qui, pose]` | Fait prendre une attitude à un personnage. `qui` : `'hero'` (le meneur), `'groupe'`, ou l'identifiant d'un PNJ de la carte. `pose` : `prie, resolu, accable, salut, surpris, garde`, ou `null` pour la quitter. L'attitude tient tant que le personnage ne marche pas ; elle tombe au changement de carte pour le groupe. À réserver à ce que le texte dit déjà : on ne prête pas un geste à un Compagnon sans source. |
 | `['pray', moment?]` | Halte de prière scriptée. `moment` : `fajr, dhuhr, asr, maghrib, isha` (facultatif). Fondu, carton sobre, groupe restauré, Sakîna, pilier Prière +1 (une fois par chapitre). 3 à 5 par saga. |
 | `['pillar', nom, ±n]` | Renforce ou ébranle un pilier : `priere, savoir, justice, lien` ; n = 1 ou 2. |
 | `['mus', piste]` | Change la musique jusqu'au prochain changement de carte. Pistes : `titre, chaine, medine, nuit, desert, camp, rome, palais, mer, noos, cite, citadelle, combat, boss, victoire, deuil, espoir, conseil, silence`. |

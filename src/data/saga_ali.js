@@ -43,7 +43,7 @@ ISNAD.registerSaga({
     ali: {
       name: "'Alî", title: 'La Porte du Savoir', arabic: 'علي',
       role: 'guerrier', el: 'ilm',
-      look: { robe: '#2f5d50', head: '#f1ead8', cloak: '#1f3a34', aura: '#c49bff' },
+      look: { robe: '#2f5d50', head: '#f1ead8', cloak: '#1f3a34', aura: '#c49bff', item: 'sabre' },
       skills: [
         { lvl: 1, id: 'dhulfiqar', name: 'Dhû l-Fiqâr', desc: 'Le sabre à deux pointes : deux frappes de fer.', cost: 3,
           target: 'foe', el: 'fer', pow: 0.8, hits: 2, anim: 'slash' },
@@ -64,7 +64,7 @@ ISNAD.registerSaga({
     ibnabbas: {
       name: "Ibn 'Abbâs", title: 'Le Docte de la communauté', arabic: 'ابن عباس',
       role: 'sage', el: 'ilm',
-      look: { robe: '#e9e2cf', head: '#f6f1e4', cloak: '#6c5a8e', aura: '#ffe08a' },
+      look: { robe: '#e9e2cf', head: '#f6f1e4', cloak: '#6c5a8e', aura: '#ffe08a', item: 'feuillets' },
       skills: [
         { lvl: 1, id: 'question', name: 'Question droite', desc: 'Il écoute le grief jusqu’au bout : révèle les failles.', cost: 2,
           target: 'foe', el: 'sidq', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'light' },

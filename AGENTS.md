@@ -16,6 +16,7 @@ toute considération de jeu.
 |---|---|---|
 | `src/core/defs.js` | énumérations : éléments, rôles, cartes et lieux, opérations, objets | source de vérité du schéma, lue par le navigateur et par le validateur |
 | `src/core/*.js` | moteur | modules en IIFE attachés à `window.ISNAD`, ordre de chargement fixé dans `tools/build.js` |
+| `src/core/sprites.js` | personnages : gabarits de 16 × 24, coiffes, attributs, poses, grand sprite de 32 × 48 | chaque lettre d'un gabarit nomme une matière ; les poses sont déclarées dans `defs.js` |
 | `src/data/saga_<id>.js` | une saga | un seul appel à `ISNAD.registerSaga({...})`, JavaScript pur, sans DOM |
 | `src/data/frame.js` | histoire-cadre | même format, `frame: true` |
 | `src/page.html`, `src/style.css` | gabarit et interface | |
@@ -61,9 +62,10 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
 ## Exigences de respect (non négociables)
 
 1. Le Prophète ﷺ n'est jamais représenté ni mis en scène en dialogue. On l'évoque seulement.
-2. Personne n'a de visage. Les personnages sont des volumes en blocs (tête cubique, corps, bras, jambes),
-   sans aucun trait ; les Compagnons portent un panneau de lumière. Ne jamais décrire de traits physiques,
-   ne jamais dessiner d'yeux ni de bouche.
+2. Personne n'a de visage. Les personnages sont des silhouettes dessinées au pixel (coiffe, vêtement,
+   manteau, attribut), sans aucun trait ; les Compagnons portent un voile de lumière. Ne jamais décrire
+   de traits physiques, ne jamais dessiner d'yeux ni de bouche. Le caractère et l'émotion passent par
+   le costume, l'attribut et l'attitude du corps (`D.POSES`).
 3. Seulement des événements attestés. Une parole attestée passe par `['quote', texte, source]`. En cas
    de doute, écrire « On rapporte » dans la source et signaler la discussion dans le codex.
 4. Sobriété : le récit reste centré sur les Compagnons et leurs alliés ; pas d'intrigue sentimentale ;

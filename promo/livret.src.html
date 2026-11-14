@@ -55,10 +55,10 @@ kbd { font-family: var(--f-mono); font-size: .84em; padding: .08em .45em; border
 
 /* ---------- sommaire ---------- */
 .sommaire { padding-block: 34px 10px; }
-.sommaire ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 4px 28px; font-size: .98rem; }
+.sommaire ol { counter-reset: s; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 4px 28px; font-size: .98rem; }
 .sommaire li { border-bottom: 1px solid rgba(233, 200, 119, .14); }
 .sommaire a { display: flex; justify-content: space-between; gap: 1em; padding: .45em 0; text-decoration: none; color: var(--sable); }
-.sommaire a span { font-family: var(--f-mono); color: var(--cendre); font-size: .78rem; align-self: center; }
+.sommaire a::after { counter-increment: s; content: counter(s, decimal-leading-zero); font-family: var(--f-mono); color: var(--cendre); font-size: .78rem; align-self: center; }
 .sommaire a:hover { color: var(--or); }
 
 /* ---------- feuillets du livret : un fil d'or court à gauche, une étoile à chaque titre ---------- */
@@ -134,6 +134,53 @@ td .ic { width: 32px; height: 32px; object-fit: contain; display: inline-block; 
 .engage li { max-width: none; padding: .75em 0; border-top: 1px solid rgba(233, 200, 119, .16); margin: 0; }
 .engage b { display: block; }
 
+/* fiches de personnages */
+.troupe { margin-top: 2.6em; }
+.troupe > h3 { font-family: var(--f-mono); font-weight: 400; font-size: .78rem; letter-spacing: .24em; text-transform: uppercase; color: var(--cendre); border-bottom: 1px solid var(--filet); padding-bottom: .6em; margin: 0 0 1.2em; }
+.fiche-p { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 20px; align-items: start; }
+.fiche-p .scene { display: flex; justify-content: center; align-items: flex-end; gap: 6px; padding: 16px 10px 12px; background: radial-gradient(ellipse at 50% 62%, color-mix(in srgb, var(--c) 26%, transparent) 0%, transparent 68%), var(--encre); border: 1px solid rgba(233, 200, 119, .16); border-bottom: 2px solid var(--c); }
+.fiche-p .scene img { width: 96px; height: 144px; }
+.fiche-p .scene img.profil { display: none; }
+.fiche-p header { display: flex; align-items: center; gap: 14px; }
+.fiche-p .sceau { width: 56px; height: 56px; }
+.fiche-p h4 { font-family: var(--f-titre); font-weight: 700; letter-spacing: .06em; font-size: 1.12rem; color: #fff6dc; margin: 0; }
+.fiche-p h4 .ar { font-weight: 500; color: var(--c); margin-left: .5em; letter-spacing: 0; }
+.fiche-p .titre { margin: 0; color: var(--c); font-style: italic; }
+.fiche-p dl { display: flex; flex-wrap: wrap; gap: 4px 22px; margin: .6em 0 .5em; }
+.fiche-p dl div { display: flex; gap: .5em; align-items: baseline; }
+.fiche-p dt { font-family: var(--f-mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cendre); }
+.fiche-p dd { margin: 0; color: #fff6dc; }
+.fiche-p .bio { margin: 0 0 .3em; max-width: 68ch; }
+.fiche-p .src { font-family: var(--f-mono); font-size: .72rem; color: var(--cendre); margin: 0 0 .6em; max-width: none; }
+.fiche-p .vertus-l { font-size: .9rem; color: var(--cendre); margin: 0; }
+.fiche-p.meneur { grid-template-columns: 300px minmax(0, 1fr); gap: 30px; padding: 22px; background: var(--encre); border: 1px solid rgba(233, 200, 119, .16); }
+.fiche-p.meneur .scene { padding: 26px 12px 18px; background: radial-gradient(ellipse at 50% 60%, color-mix(in srgb, var(--c) 30%, transparent) 0%, transparent 70%), var(--nuit); gap: 14px; }
+.fiche-p.meneur .scene img { width: 128px; height: 192px; }
+.fiche-p.meneur .scene img.profil { display: block; }
+.fiche-p.meneur h4 { font-size: 1.5rem; }
+.fiche-p .ultime { border-left: 2px solid var(--c); padding-left: .9em; margin: .9em 0; max-width: 66ch; }
+.fiche-p .vertus { list-style: none; padding: 0; margin: .8em 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px 22px; }
+.fiche-p .vertus li { max-width: none; margin: 0; line-height: 1.35; }
+.fiche-p .vertus li b { font-weight: 500; }
+.fiche-p .vertus li span { font-family: var(--f-mono); font-size: .7rem; color: var(--cendre); margin-left: .6em; }
+.fiche-p .vertus li small { color: var(--cendre); font-size: .86rem; }
+.attitudes { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin-top: 1.3em; max-width: 520px; }
+.attitudes figure { text-align: center; background: var(--nuit); border: 1px solid rgba(233, 200, 119, .12); padding: 8px 2px 6px; }
+.attitudes img { width: 48px; height: 72px; margin: 0 auto; }
+.attitudes figcaption { font-size: .6rem; letter-spacing: 0; padding: .5em 0 0; }
+.suite { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 22px 28px; margin-top: 22px; }
+.gens-l { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 1em; }
+.gens-l figure { text-align: center; }
+.gens-l img { width: 64px; height: 96px; margin: 0 auto; }
+.gens-l figcaption { padding: .3em 0 0; }
+@media (max-width: 760px) {
+  .fiche-p.meneur { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+  .fiche-p { grid-template-columns: 110px minmax(0, 1fr); gap: 14px; }
+  .fiche-p .scene img { width: 64px; height: 96px; }
+  .fiche-p.meneur .scene img { width: 96px; height: 144px; }
+  .attitudes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
 /* ---------- planches ---------- */
 .table { background: #030308; border-top: 1px solid var(--filet); padding-block: 70px 90px; }
 .table > .gout > .col { max-width: 1280px; }
@@ -207,16 +254,13 @@ td .ic { width: 32px; height: 32px; object-fit: contain; display: inline-block; 
 .cinq .groupe img { width: 2.3em; height: 3.45em; }
 
 /* 4 · personne n'a de visage */
-.visage { flex: 1; display: grid; grid-template-columns: 22em 1fr; gap: 3em; min-height: 0; margin-top: .4em; }
+.visage { flex: 1; display: grid; grid-template-columns: 20em 1fr; gap: 2.6em; min-height: 0; margin-top: .4em; }
 .visage .texte { display: flex; flex-direction: column; justify-content: center; }
 .visage .texte p { margin: 1em 0 0; font-size: 1.02em; }
-.rang { display: flex; align-items: flex-end; justify-content: space-between; gap: .4em; }
-.rang figure { text-align: center; flex: 1; }
-.rang img { width: 6.4em; height: 9.6em; margin: 0 auto; filter: drop-shadow(0 .5em .6em rgba(0, 0, 0, .6)); }
-.rang.petit img { width: 3.5em; height: 5.25em; }
-.rang figcaption { font-family: var(--f-titre); font-size: .66em; letter-spacing: .1em; text-transform: uppercase; color: var(--sable); padding: .7em 0 0; }
-.rang.petit figcaption { font-family: var(--f-mono); font-size: .58em; letter-spacing: .04em; color: var(--cendre); text-transform: none; }
-.visage .scene { display: flex; flex-direction: column; justify-content: center; gap: 2.2em; padding: 2em 2.4em; background: radial-gradient(ellipse at 50% 40%, #241d3f 0%, var(--encre) 70%); border: 1px solid rgba(233, 200, 119, .18); }
+.visage .scene { display: grid; grid-template-columns: 5.6em repeat(7, 1fr); align-items: end; justify-items: center; gap: .5em .3em; align-content: center; padding: 1.6em 1.8em; background: radial-gradient(ellipse at 50% 45%, #241d3f 0%, var(--encre) 72%); border: 1px solid rgba(233, 200, 119, .18); }
+.visage .scene span { font-family: var(--f-mono); font-size: .56em; letter-spacing: .08em; text-transform: uppercase; color: var(--cendre); padding-bottom: .5em; align-self: center; }
+.visage .scene b { font-family: var(--f-titre); font-size: .66em; letter-spacing: .08em; justify-self: start; align-self: center; text-transform: uppercase; }
+.visage .scene img { width: 4.2em; height: 6.3em; }
 
 /* 5 · les idoles */
 .idoles { flex: 1; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(2, 1fr); gap: .9em; margin: 1.6em 0 1.6em; min-height: 0; }
@@ -289,23 +333,24 @@ body.export .pl { border: 0; }
 
 <nav class="sommaire gout" aria-label="Sommaire"><div class="col">
   <ol>
-    <li><a href="#en-bref">Le jeu en bref <span>01</span></a></li>
-    <li><a href="#commencer">Commencer une partie <span>02</span></a></li>
-    <li><a href="#commandes">Les commandes <span>03</span></a></li>
-    <li><a href="#sauvegarder">Sauvegarder <span>04</span></a></li>
-    <li><a href="#epoques">Trois époques, une chaîne <span>05</span></a></li>
-    <li><a href="#sagas">Les cinq sagas <span>06</span></a></li>
-    <li><a href="#explorer">Explorer, s’orienter aux étoiles <span>07</span></a></li>
-    <li><a href="#chaine">La fidélité à la Chaîne <span>08</span></a></li>
-    <li><a href="#parole">La parole avant le sabre <span>09</span></a></li>
-    <li><a href="#combat">Le combat <span>10</span></a></li>
-    <li><a href="#piliers">Prière, savoir, piliers <span>11</span></a></li>
-    <li><a href="#batir">Bâtir <span>12</span></a></li>
-    <li><a href="#caravanes">Routes et caravanes <span>13</span></a></li>
-    <li><a href="#veillees">Les veillées du Caïd <span>14</span></a></li>
-    <li><a href="#respect">Ce que le jeu s’interdit <span>15</span></a></li>
-    <li><a href="#sources">Sources et avertissement <span>16</span></a></li>
-    <li><a href="#planches">Planches de présentation <span>17</span></a></li>
+    <li><a href="#en-bref">Le jeu en bref</a></li>
+    <li><a href="#commencer">Commencer une partie</a></li>
+    <li><a href="#commandes">Les commandes</a></li>
+    <li><a href="#sauvegarder">Sauvegarder</a></li>
+    <li><a href="#epoques">Trois époques, une chaîne</a></li>
+    <li><a href="#sagas">Les cinq sagas</a></li>
+    <li><a href="#personnages">Les personnages</a></li>
+    <li><a href="#explorer">Explorer, s’orienter aux étoiles</a></li>
+    <li><a href="#chaine">La fidélité à la Chaîne</a></li>
+    <li><a href="#parole">La parole avant le sabre</a></li>
+    <li><a href="#combat">Le combat</a></li>
+    <li><a href="#piliers">Prière, savoir, piliers</a></li>
+    <li><a href="#batir">Bâtir</a></li>
+    <li><a href="#caravanes">Routes et caravanes</a></li>
+    <li><a href="#veillees">Les veillées du Caïd</a></li>
+    <li><a href="#respect">Ce que le jeu s’interdit</a></li>
+    <li><a href="#sources">Sources et avertissement</a></li>
+    <li><a href="#planches">Planches de présentation</a></li>
   </ol>
 </div></nav>
 
@@ -400,6 +445,18 @@ body.export .pl { border: 0; }
     <h2>Les cinq sagas</h2>
     <p>Chaque saga se suffit à elle-même. Chacune porte une Lumière, la vertu de son Compagnon, qui rejoint ensuite la Chaîne.</p>
     <div class="sagas">{{SAGAS}}</div>
+  </section>
+
+  <section class="feuillet" id="personnages">
+    <h2>Les personnages</h2>
+    <p>Chaque saga se joue en groupe. Voici ceux que l’on y mène, avec leur rôle, leur Lumière, leurs vertus et l’acte que leur ouvre la Sakîna.</p>
+    <p>Personne n’a de visage. On reconnaît chacun à sa coiffe, à son vêtement, à ce qu’il porte, et un Compagnon à son voile de lumière. Ce qu’ils éprouvent se lit dans leur attitude : la tête qui s’incline, le bras qui se lève, le genou qui plie.</p>
+    <figure class="ecran" style="max-width:720px;margin-top:1.4em"><div style="overflow:hidden;aspect-ratio:16/9"><img src="img/emotion.jpg" alt="Dans la cour de la mosquée de Médine, ’Umar est à genoux, la tête basse ; Abû Bakr et Abû ’Ubayda se tiennent devant lui." loading="lazy" style="transform:scale(2.2);transform-origin:50% 46%"></div><figcaption style="padding:.7em .8em .8em">« Mes jambes ne me portèrent plus, et je tombai à terre. » ’Umar ibn al-Khattâb, d’après al-Bukhârî. Dans le jeu, c’est son corps qui le dit.</figcaption></figure>
+    {{PERSONNAGES}}
+    <div class="troupe"><h3>Gens de rencontre</h3>
+      <p>Anciens, savants, marchands, soldats, envoyés : ceux à qui l’on parle en chemin. Aucun groupe n’est un ennemi par nature.</p>
+      <div class="gens-l">{{GENS}}</div>
+    </div>
   </section>
 
   <p class="partie">Les systèmes</p>
@@ -594,7 +651,7 @@ body.export .pl { border: 0; }
     <p>Le sujet est religieux et historique. L’exactitude et le respect passent avant le jeu.</p>
     <ul class="engage">
       <li><b>Le Prophète <span class="pbuh">ﷺ</span> n’apparaît jamais.</b> Ni image, ni silhouette, ni réplique. On l’évoque seulement.</li>
-      <li><b>Personne n’a de visage.</b> Les personnages sont des volumes en blocs. Les Compagnons portent un panneau de lumière.</li>
+      <li><b>Personne n’a de visage.</b> Ni yeux, ni bouche, ni trait. Les Compagnons portent un voile de lumière ; l’émotion se lit dans le corps.</li>
       <li><b>Seulement des événements attestés.</b> Une parole citée porte sa source. En cas de doute, on écrit « On rapporte ».</li>
       <li><b>Aucun ennemi n’est une personne.</b> Ni un peuple, ni une religion. On n’affronte que des égrégores abstraits.</li>
       <li><b>Aucun groupe n’est ennemi par nature.</b> Perses, juifs, chrétiens, tribus : des acteurs aux intérêts légitimes, avec des gens d’honneur chez chacun.</li>
@@ -658,21 +715,18 @@ body.export .pl { border: 0; }
     </div>
   </article></div></div>
 
-  <div class="cartel"><b>Planche 4 · Personne n’a de visage</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="cartel"><b>Planche 4 · Personne n’a de visage, le corps parle</b><span>16:9 · 1920 × 1080</span></div>
   <div class="defile"><div class="pw"><article class="pl" data-nom="04-personnages">
     <div class="in">
       <div class="visage">
         <div class="texte">
           <p class="sur">Les personnages</p>
           <h3>Personne n’a de visage</h3>
-          <p>Des volumes en blocs : une tête cubique d’étoffe, un corps, deux bras, deux jambes. Aucun trait.</p>
-          <p>On reconnaît un Compagnon à sa lumière, non à ses traits : il porte un panneau clair à la place du visage.</p>
+          <p>Ni yeux, ni bouche, ni trait. On reconnaît un Compagnon à son voile de lumière, à la couleur de son bandeau, à ce qu’il porte.</p>
+          <p>L’émotion passe par le corps : la tête qui s’incline, le bras qui se lève, le genou qui plie.</p>
           <p>Le Prophète <span class="pbuh">ﷺ</span> n’apparaît jamais.</p>
         </div>
-        <div class="scene">
-          <div class="rang">{{HEROS}}</div>
-          <div class="rang petit">{{GENS}}</div>
-        </div>
+        <div class="scene">{{ATTITUDES}}</div>
       </div>
       <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
     </div>
@@ -757,7 +811,7 @@ body.export .pl { border: 0; }
             <img class="px" src="img/t-zellij.png" alt=""><img class="px" src="img/t-zsand.png" alt=""><img class="px" src="img/t-mihrab.png" alt="">
           </div>
           <div class="vue"><img src="img/d-medine-jour.jpg" alt=""></div>
-          <p class="cap" style="margin:.9em 0 0">Les personnages sont des blocs, les décors sont travaillés. Dans chaque mosquée, deux carrés de lumière dessinent l’étoile à huit branches.</p>
+          <p class="cap" style="margin:.9em 0 0">Zellige « étoile et croix », frises, rosaces. Dans chaque mosquée, deux carrés de lumière dessinent l’étoile à huit branches.</p>
         </div>
       </div>
       <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>

@@ -96,6 +96,12 @@ async function captures(browser, errors) {
   // noosphère, puis la Saqîfa : pourparler, choix, citation, combat à trois
   await runTo('W.ch.id === "ab1" && W.objIndex === 3');
   await p.waitForTimeout(700); await shot('noosphere');
+  // l'émotion sans visage : 'Umar à genoux dans la cour de la mosquée, Abû Bakr devant lui
+  if (await runTo('W.ch.id === "ab1" && W.objIndex === 4')) {
+    await ev(() => { const W = window.ISNAD.world, n = W.npcs.find(x => x.id === 'umar'), P = W.player; n.dir = 0; P.x = n.x - 2; P.y = n.y + 30; P.dir = 3;
+      W.trail = []; for (let i = 0; i < 64; i++) W.trail.push([P.x + i * 1.25, P.y + i * 0.5, 3]); W.updateCam(true); });
+    await clean(true); await p.waitForTimeout(1200); await shot('emotion'); await clean(false);
+  }
   await runTo('W.ch.id === "ab1" && W.objIndex === 5');
   await ev(() => { const W = window.ISNAD.world, s = W.resolve(W.cur().goto, W.map.id, W.player); W.player.x = s[0]; W.player.y = s[1]; W.resetTrail(); });
   const seen = {};
@@ -275,9 +281,13 @@ async function sprites(browser, errors, T) {
       Object.entries(s.heroes || {}).forEach(([id, h]) => { out['h-' + s.id + '-' + id] = front(Object.assign({ kind: 'compagnon' }, h.look)); });
       out['sceau-' + s.id] = G.seal(s.arabic, D.ELEMENTS[s.light].color).toDataURL();
     });
+    // grands sprites (32 × 48) : face et profil de chaque héros ; les six attitudes de chaque meneur
+    sagas.forEach(s => Object.entries(s.heroes || {}).forEach(([id, h]) => { const look = Object.assign({ kind: 'compagnon' }, h.look);
+      out['g-' + s.id + '-' + id] = G.charGrand(look, 0, 0).toDataURL(); out['gl-' + s.id + '-' + id] = G.charGrand(look, 1, 0).toDataURL();
+      if (id === s.id) D.POSES.forEach(p => { out['g-' + s.id + '-' + id + '-' + p] = G.charGrand(look, 0, 0, p).toDataURL(); }); }));
     // gens de rencontre : un par type
     const KIND = { homme: { robe: '#8a7355' }, ancien: { robe: '#6b5a48', head: '#e9e2d0' }, soldat: { robe: '#7a4a32' }, romain: { robe: '#8a2f2a' }, perse: { robe: '#2f5d6d', head: '#e9d9a8' }, moine: { robe: '#4a3d32' }, enfant: { robe: '#a8663c' }, marin: { robe: '#2f4a7a' }, cyber: { robe: '#2a3048', head: '#1c2030' }, savant: { robe: '#e9e2d0', head: '#f4f0e6' }, marchand: { robe: '#7b5a3a' }, berbere: { robe: '#2f4a7a', head: '#1f2f55' } };
-    Object.entries(KIND).forEach(([k, l]) => { out['k-' + k] = front(Object.assign({ kind: k }, l)); });
+    Object.entries(KIND).forEach(([k, l]) => { out['k-' + k] = front(Object.assign({ kind: k }, l)); out['gk-' + k] = G.charGrand(Object.assign({ kind: k }, l), 0, 0).toDataURL(); });
     // égrégores : chacun à sa taille de combat
     sagas.forEach(s => Object.entries(s.enemies || {}).forEach(([id, e]) => { const sc = e.tier === 'boss' ? 3 : e.tier === 'elite' ? 2 : 1; out['e-' + s.id + '-' + id] = G.enemy(e.art, e.hue, sc, e.seed).toDataURL(); }));
     // carreaux et objets
@@ -313,15 +323,42 @@ function livret() {
         <div><span class="ord">Maillon ${ROM[i]} · ${esc(s.years)}</span><h3>${esc(s.name)}</h3><span class="lum">${esc(s.epithet)} · Lumière : ${esc(s.lightName)} (${esc(D.ELEMENTS[s.light].ar)})</span></div>
         <div><p class="dit">${esc(s.tagline)}</p>
           <ol>${s.chapters.map(c => `<li><b>${esc(c.title)}</b><span>${esc(c.sub)}</span></li>`).join('')}</ol>
-          <div class="groupe">${Object.entries(s.heroes).map(([id, h]) => `<span><img class="px" src="img/h-${s.id}-${id}.png" alt="" width="16" height="24">${esc(h.name)}</span>`).join('')}</div>
+          <div class="groupe">${Object.entries(s.heroes).map(([id, h]) => `<span><img class="px" src="img/g-${s.id}-${id}.png" alt="" width="32" height="48">${esc(h.name)}</span>`).join('')}</div>
         </div>
       </article>`).join('');
   R.CINQ = five.map((s, i) => `<article style="--c:${col(s)}"><img class="sceau" src="img/sceau-${s.id}.png" alt=""><span class="ord">Maillon ${ROM[i]} · ${esc(s.years.split(' · ')[1] || s.years)}</span><b>${esc(s.name)}</b><span class="lum">${esc(s.epithet)} · ${esc(s.lightName)}</span><p>${esc(s.tagline)}</p>`
-    + `<ol>${s.chapters.map((c, j) => `<li><span>${ROM[j]}</span>${esc(c.title)}</li>`).join('')}</ol><div class="groupe">${Object.keys(s.heroes).map(id => `<img class="px" src="img/h-${s.id}-${id}.png" alt="">`).join('')}</div></article>`).join('');
+    + `<ol>${s.chapters.map((c, j) => `<li><span>${ROM[j]}</span>${esc(c.title)}</li>`).join('')}</ol><div class="groupe">${Object.keys(s.heroes).map(id => `<img class="px" src="img/g-${s.id}-${id}.png" alt="">`).join('')}</div></article>`).join('');
   R.SCEAUX = five.map(s => `<figure><img src="img/sceau-${s.id}.png" alt=""><figcaption>${esc(s.heroes[s.id].name)}</figcaption></figure>`).join('');
-  R.HEROS = five.map(s => `<figure><img class="px" src="img/h-${s.id}-${s.id}.png" alt=""><figcaption>${esc(s.heroes[s.id].name)}</figcaption></figure>`).join('');
+  // planche 4 : les cinq meneurs, debout puis dans chacune des six attitudes
+  const POSE = { prie: 'Recueillement', resolu: 'Résolution', accable: 'Accablement', salut: 'Salut', surpris: 'Surprise', garde: 'Garde' };
+  R.ATTITUDES = '<span></span><span>Debout</span>' + D.POSES.map(p => `<span>${POSE[p]}</span>`).join('')
+    + five.map(s => `<b style="color:${col(s)}">${esc(s.heroes[s.id].name)}</b><img class="px" src="img/g-${s.id}-${s.id}.png" alt="">` + D.POSES.map(p => `<img class="px" src="img/g-${s.id}-${s.id}-${p}.png" alt="">`).join('')).join('');
+  // livret : une fiche par personnage, comme dans les manuels des jeux de rôle 16 bits
+  const ROLE = { sage: 'Sage', gardien: 'Gardien', guerrier: 'Guerrier', soigneur: 'Soigneur', stratege: 'Stratège' };
+  const FICTION = { // personnages de fiction sans entrée de biographie : résumé de ce que le jeu en dit
+    'idris/idris': 'Archiviste de la Cité-Miroir, en 2084. Il descend aux Archives basses, y trouve la Chaîne et la remonte, maillon après maillon.',
+    'idris/yunus': 'Il veille sur les Archives basses et sur la Chaîne. C’est auprès de lui qu’Idris apprend à citer ses sources.',
+    'idris/salim': 'Dix ans passés à nourrir l’Agrégor. Il sait où est son cœur, et ne veut plus le servir.',
+    'caid/geometre': 'L’un des savants perses à qui le vieux Caïd donna asile. Il mesure les champs, trace les rigoles et tient l’école.',
+    'caid/capitaine': 'Il commande les sentinelles du rempart.' };
+  const bioOf = (s, id) => (s.codex || []).find(c => c.cat === 'Biographie' && (c.id === id + '_bio' || c.id === 'bio_' + id));
+  const debut = (t, n) => t.split(/(?<=[.!?»])\s+(?=[A-ZÀ-Ý'’«])/).slice(0, n).join(' ');
+  const fiche = (s, id, lead) => { const h = s.heroes[id], e = D.ELEMENTS[h.el], b = bioOf(s, id), txt = b ? debut(b.text, lead ? 3 : 2) : FICTION[s.id + '/' + id] || '';
+    const vertus = h.skills.map(k => `<li><b>${esc(k.name)}</b><span>niv. ${k.lvl}</span>${lead ? '<br><small>' + esc(k.desc) + '</small>' : ''}</li>`).join('');
+    return `<article class="fiche-p${lead ? ' meneur' : ''}" style="--c:${e.color}">
+        <div class="scene"><img class="px" src="img/g-${s.id}-${id}.png" alt="" width="32" height="48">${lead ? `<img class="px profil" src="img/gl-${s.id}-${id}.png" alt="" width="32" height="48">` : ''}</div>
+        <div class="texte">
+          <header>${lead ? `<img class="sceau" src="img/sceau-${s.id}.png" alt="">` : ''}<div><h4>${esc(h.name)}${h.arabic ? ` <span class="ar" lang="ar" dir="rtl">${h.arabic}</span>` : ''}</h4><p class="titre">${esc(h.title)}</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>${ROLE[h.role]}</dd></div><div><dt>Lumière</dt><dd style="color:${e.color}">${esc(e.name)} <i>(${esc(e.ar)})</i></dd></div><div><dt>Acte de Sakîna</dt><dd>${esc(h.limit.name)}</dd></div></dl>
+          <p class="bio">${esc(txt)}</p>${b && b.src ? `<p class="src">${b.src === 'Fiction' ? 'Personnage de fiction' : 'D’après ' + esc(b.src)}</p>` : (b ? '' : '<p class="src">Personnage de fiction</p>')}
+          ${lead ? `<p class="ultime"><b>${esc(h.limit.name)}.</b> ${esc(h.limit.desc || '')}</p><ul class="vertus">${vertus}</ul>
+          <div class="attitudes">${D.POSES.map(p => `<figure><img class="px" src="img/g-${s.id}-${id}-${p}.png" alt="" width="32" height="48"><figcaption>${POSE[p]}</figcaption></figure>`).join('')}</div>` : `<p class="vertus-l">${h.skills.map(k => esc(k.name)).join(' · ')}</p>`}
+        </div>
+      </article>`; };
+  const troupe = (s, titre) => `<div class="troupe"><h3>${titre}</h3>${fiche(s, s.id, true)}<div class="suite">${Object.keys(s.heroes).filter(id => id !== s.id).map(id => fiche(s, id, false)).join('')}</div></div>`;
+  R.PERSONNAGES = five.map((s, i) => troupe(s, 'Maillon ' + ROM[i] + ' · ' + esc(s.lightName))).join('') + troupe(sagas.caid, 'La Citadelle') + troupe(sagas.idris, '2084 · La Cité-Miroir');
   const GENS = [['ancien', 'ancien'], ['savant', 'savant'], ['marchand', 'marchand'], ['soldat', 'soldat'], ['berbere', 'Berbère'], ['perse', 'Perse'], ['romain', 'Romain'], ['moine', 'moine'], ['marin', 'marin'], ['enfant', 'enfant'], ['cyber', '2084']];
-  R.GENS = GENS.map(([k, l]) => `<figure><img class="px" src="img/k-${k}.png" alt=""><figcaption>${l}</figcaption></figure>`).join('');
+  R.GENS = GENS.map(([k, l]) => `<figure><img class="px" src="img/gk-${k}.png" alt="" width="32" height="48"><figcaption>${l}</figcaption></figure>`).join('');
   // les idoles : le nom vient des données, la légende résume la description du Recueil
   const IDOLES = [['abubakr', 'deni', 'le deuil qui refuse'], ['abubakr', 'clan', 'l’esprit de corps tribal'], ['abubakr', 'kadhdhab', 'la contrefaçon'], ['umar', 'aigle', 'l’orgueil d’empire'], ['umar', 'trone', 'la tyrannie'], ['khalid', 'peur_nombre', 'l’issue réduite à un décompte'],
     ['khalid', 'idole_heros', 'la gloire du vainqueur'], ['uthman', 'abime', 'la peur de la mer'], ['uthman', 'rumeur', 'ce qu’on répète sans l’avoir vu'], ['ali', 'slogan', 'la formule vidée de son sens'], ['ali', 'juge', 'se faire juge des cœurs'], ['idris', 'agregor', 'la fabrique des idoles']];

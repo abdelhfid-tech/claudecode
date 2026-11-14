@@ -22,8 +22,9 @@ D5 = 1). Seule ressource distante : quatre polices Google Fonts, chacune avec un
 flowchart TD
   defs[defs.js<br>énumérations, schéma] --> base[base.js<br>entrées, sauvegarde, son]
   defs --> validate[tools/validate.js]
-  base --> gfx[gfx.js<br>tuiles, objets, personnages,<br>égrégores, sceaux, composition]
-  gfx --> maps[maps.js<br>générateurs de cartes]
+  base --> gfx[gfx.js<br>tuiles, objets,<br>égrégores, sceaux, composition]
+  gfx --> sprites[sprites.js<br>personnages au pixel,<br>poses, grand sprite]
+  sprites --> maps[maps.js<br>générateurs de cartes]
   maps --> world[world.js<br>exploration, objectifs,<br>points de reprise]
   script[script.js<br>interprète de scripts] --> world
   world --> battle[battle.js<br>combat]

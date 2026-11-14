@@ -76,6 +76,8 @@ umar: {
   role: 'gardien',                 // guerrier | gardien | sage | soigneur | stratege
   el: 'adl',                       // élément de son attaque de base « lumineuse » et de son affinité
   look: { robe: '#7b5a3a', head: '#efe7d6', cloak: '#3d2c1e', aura: '#9fd0ff' },   // couleurs hex
+  // facultatif dans look — item : 'durra' | 'sabre' | 'lance' | 'baton' | 'feuillets' | 'bourse' (attribut porté,
+  // seulement s'il est attesté) · coiffe : 'imama' | 'casque' | 'capuche' | 'tiare' | 'litham' · trim : couleur du galon
   skills: [                        // 5 à 6 compétences, apprises aux niveaux 1,1,2,4,6,8 environ
     { lvl: 1, id: 'durra', name: 'La Durra', desc: 'Coup de férule. Peut étourdir.', cost: 3,
       target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },

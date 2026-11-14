@@ -62,7 +62,7 @@ ISNAD.registerSaga({
     umar: {
       name: "'Umar", title: 'Al-Fârûq', arabic: 'عمر',
       role: 'gardien', el: 'adl',
-      look: { robe: '#7b5a3a', head: '#efe7d6', cloak: '#3d2c1e', aura: '#9fd0ff' },
+      look: { robe: '#7b5a3a', head: '#efe7d6', cloak: '#3d2c1e', aura: '#9fd0ff', item: 'durra' },
       skills: [
         { lvl: 1, id: 'durra', name: 'La Durra', desc: "Coup de férule. Peut étourdir.", cost: 3,
           target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
@@ -351,6 +351,7 @@ ISNAD.registerSaga({
       ],
       objectives: [
         { text: "Rejoindre Abû 'Ubayda près de la porte", talk: 'abuubayda', then: [
+          ['emote', 'abuubayda', 'salut'],
           ['say', 'abuubayda', "Abû Bakr ! Te voilà, Allah soit loué. La ville chancelle. Les uns pleurent, les autres se taisent, et 'Umar… 'Umar jure que ce n'est pas vrai."],
           ['say', 'abubakr', "Mène-moi à la mosquée, Abû 'Ubayda. Ne disons rien à personne avant d'avoir vu."],
           ['hide', 'abuubayda'], ['join', 'abuubayda'], ['codex', 'abuubayda_bio']
@@ -392,11 +393,13 @@ ISNAD.registerSaga({
           ['quote', "Muhammad n'est qu'un messager ; des messagers avant lui sont passés. S'il mourait donc, ou s'il était tué, retourneriez-vous sur vos talons ? Quiconque retourne sur ses talons ne nuira en rien à Allah ; et Allah récompensera bientôt les reconnaissants.", "Coran 3:144 — traduction du sens"],
           ['nar', "Ibn 'Abbâs dira : « Ce fut comme si les gens n'avaient jamais su que ce verset avait été révélé, avant qu'Abû Bakr ne le récite. » Ce jour-là, toute la ville le répétait."],
           ['quote', "Par Allah, dès que j'entendis Abû Bakr le réciter, mes jambes ne me portèrent plus, et je tombai à terre. Je sus alors que le Prophète ﷺ était mort.", "'Umar ibn al-Khattâb — al-Bukhârî, as-Sahîh"],
+          ['emote', 'umar', 'accable'],
           ['codex', 'jour_sombre'], ['codex', 'deni']
         ] },
         { text: "Relever 'Umar", talk: 'umar', then: [
           ['say', 'umar', "C'est donc vrai. Toi seul as eu la force de le dire. Je voulais tant qu'il revienne…"],
           ['say', 'abubakr', "Nous l'aimons tous plus que nos propres vies, 'Umar. C'est pour cela qu'il faut garder ce qu'il nous a transmis, et ne pas nous arrêter à sa personne."],
+          ['emote', 'umar', null],
           ['say', 'umar', "Me voici. Dis-moi où me tenir."],
           ['hide', 'umar'], ['join', 'umar'], ['codex', 'umar_bio'],
           ['show', 'messager'], ['walk', 'messager', ['mosquee_cour', 0, 2]],

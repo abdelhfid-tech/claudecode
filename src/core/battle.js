@@ -289,6 +289,7 @@
     const sk = cmd.skill, boost = cmd.boost || 0, hero = e.side === 'hero';
     if (hero) { if (sk.cost) e.sp = Math.max(0, e.sp - sk.cost); e.niyya -= boost; if (cmd.limit) e.sakina = 0; }
     if (!sk.basic || !hero) banner(sk.name, 800, false, cmd.limit ? 'limit' : hero ? '' : 'foe');
+    if (hero && !sk.basic) { e.pose = 'resolu'; setTimeout(() => { e.pose = null; }, 900 / I.speed); }
     if (cmd.limit) { G.flash(e.color); I.audio.sfx('roll'); await I.sleep(350); }
     const col = sk.el ? D.ELEMENTS[sk.el].color : (hero ? e.color : `hsl(${e.def.hue},90%,65%)`), dir = hero ? -1 : 1;
     // élan vers l'avant
@@ -396,6 +397,7 @@
     let drop = '';
     if (C.opts.boss || Math.random() < 0.4) { const k = C.opts.boss ? I.pick(['musc', 'lait', 'eau']) : I.pick(['dattes', 'dattes', 'pain', 'eau', 'miel', 'siwak']); sv.items[k] = (sv.items[k] || 0) + 1; drop = `<li>Trouvé : <b>${D.ITEMS[k].name}</b></li>`; }
     W.persistHeroes();
+    C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
     await S.card('victory', `<p class="small">${C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>Dévoilement</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
   async function defeat() {
@@ -488,11 +490,13 @@
         } else {
           const x = Math.round(e.x + e.ox + jx), y = Math.round(e.y), act = C.active === e;
           c.fillStyle = 'rgba(0,0,0,.4)'; c.beginPath(); c.ellipse(x, y + 1, 12, 4, 0, 0, 6.3); c.fill();
-          if (!e.alive) { c.globalAlpha = 0.55; c.drawImage(e.sheet, 0, 24, 16, 24, x - 16, y - 28, 32, 30); c.globalAlpha = 1; }
+          const look = e.sheet.look;
+          if (!e.alive) { c.globalAlpha = 0.62; c.drawImage(G.charGrand(look, 1, 0, 'accable'), x - 16, y - 46); c.globalAlpha = 1; }
           else {
             const f = act ? [1, 0, 2, 0][Math.floor(t * 6) % 4] : 0, bob = act ? 0 : Math.round(Math.sin(t * 2 + e.x) * 0.6);
-            c.drawImage(e.sheet, f * 16, 24, 16, 24, x - 16, y - 46 + bob, 32, 48);
-            if (e.flash > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, e.flash) * 0.8; c.drawImage(e.sheet, f * 16, 24, 16, 24, x - 16, y - 46 + bob, 32, 48); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
+            const pose = e.pose || (e.st.garde ? 'garde' : (!act && e.hp / e.max.hp < 0.2) ? 'accable' : null), img = G.charGrand(look, 1, pose ? 0 : f, pose);
+            c.drawImage(img, x - 16, y - 46 + bob);
+            if (e.flash > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, e.flash) * 0.8; c.drawImage(img, x - 16, y - 46 + bob); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
             if (e.st.garde) { c.strokeStyle = e.color; c.lineWidth = 1; c.beginPath(); c.ellipse(x - 14, y - 24, 4, 20, 0, 0, 6.3); c.stroke(); }
             lights.push({ x, y: y - 26, r: act ? 46 : 32, color: e.color, a: act ? 0.9 : 0.5 });
             if (e.sakina >= 100 && Math.random() < 0.3) G.spawn({ x: x + (Math.random() - 0.5) * 18, y: y - 4, vy: -30, life: 0.9, size: 0.8, color: e.color, type: 'mote' });

@@ -61,7 +61,7 @@ ISNAD.registerSaga({
     zayd: {
       name: 'Zayd ibn Thâbit', title: 'Le Scribe', arabic: 'زيد',
       role: 'sage', el: 'ilm',
-      look: { robe: '#c9b99a', head: '#e9e1cf', cloak: '#5b4a8a', aura: '#d2b6ff' },
+      look: { robe: '#c9b99a', head: '#e9e1cf', cloak: '#5b4a8a', aura: '#d2b6ff', item: 'feuillets' },
       skills: [
         { lvl: 1, id: 'calame', name: 'Le Calame', desc: 'Trace net ce que la querelle brouille. Dégâts de Savoir.', cost: 3,
           target: 'foe', el: 'ilm', pow: 1.3, anim: 'glyph' },

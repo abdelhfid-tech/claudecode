@@ -132,7 +132,8 @@ dist/isnad.html       même jeu, en fragment pour publication en Artifact
 src/page.html         gabarit HTML          src/style.css   interface
 src/core/defs.js      énumérations et schéma (source de vérité)
 src/core/base.js      entrées, sauvegarde, son
-src/core/gfx.js       tuiles, objets, personnages, égrégores, sceaux, composition
+src/core/gfx.js       tuiles, objets, égrégores, sceaux, composition
+src/core/sprites.js   personnages au pixel : gabarits, coiffes, attributs, poses, grand sprite
 src/core/maps.js      générateurs de cartes
 src/core/script.js    interprète de scripts (dialogues, choix, mise en scène)
 src/core/world.js     exploration, objectifs, points de reprise

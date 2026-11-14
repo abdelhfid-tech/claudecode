@@ -150,6 +150,26 @@ d'après celle que décriront les pilotes arabes.
   s'affichait en carré vide. Amiri (Google Fonts) est ajoutée en dernier recours aux deux familles du
   jeu ; rien d'autre ne change à l'écran.
 
+## Personnages « du niveau de Final Fantasy VI » (demande du décideur)
+
+Demande reçue : des personnages du niveau de FF6, avec des visages, des caractères, des émotions, et
+présentés dans le livret comme dans les manuels de FF6.
+
+- [x] **D42. Personnages redessinés au pixel**, à la manière des jeux 16 bits (`src/core/sprites.js`) :
+  coiffes, costumes, attributs, marche en trois pas, grand sprite pour le combat et les menus. Appliqué.
+- [ ] **D43. Les visages ne sont pas faits.** L'exigence n° 2 (personne n'a de visage, ni yeux ni
+  bouche) est maintenue, pour les Compagnons en premier lieu. Le caractère et l'émotion passent par la
+  coiffe, le bandeau à la couleur de la Lumière, l'attribut, et six attitudes du corps.
+- [ ] **D44. Attributs portés**, repris de vertus déjà présentes dans les données : la durra de 'Umar,
+  le sabre de 'Alî, de Khâlid et d'al-Qa'qâ', la lance de Dirâr, les feuillets de Zayd et d'Ibn 'Abbâs.
+- [ ] **D45. Trois attitudes mises en scène dans la saga I**, chacune disant ce que le texte dit déjà :
+  Abû 'Ubayda salue, la main sur le cœur ; 'Umar est à genoux dans la cour après la récitation (« mes
+  jambes ne me portèrent plus », al-Bukhârî, déjà cité en carton) ; il se relève quand Abû Bakr lui parle.
+- [ ] **D46. Fiches de personnages du livret.** Rôle, Lumière, vertus et acte de Sakîna viennent des
+  données ; le portrait est le début de la biographie du Recueil, avec sa source. Les cinq personnages
+  de fiction sans biographie (Idris, Yûnus, Sâlim, Bahrâm, Zîrî) ont une ligne écrite par l'agent d'après
+  ce que le jeu en dit : à valider.
+
 Le bouton « Jouer » du livret pointe vers l'Artifact privé du jeu : il ne fonctionne que pour le
 décideur tant que le jeu n'est pas partagé (autorisation n° 2 ci-dessous, toujours de côté).
 

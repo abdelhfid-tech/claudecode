@@ -19,7 +19,31 @@ Direction artistique, sonore et rédactionnelle. Les valeurs font foi dans `src/
 6. **Pixel art net, lumière douce.** Les pixels restent francs ; la douceur vient de l'éclairage, du
    halo et des particules, jamais d'un flou sur le dessin lui-même.
 
-## Personnages en blocs, décors sublimés (demande du décideur)
+## Personnages au pixel, à la manière des jeux 16 bits (demande du décideur, 14 novembre)
+
+Le décideur a demandé des personnages « du niveau de Final Fantasy VI ». Les blocs de la version
+précédente (section suivante) sont remplacés par des silhouettes dessinées pixel par pixel dans
+`src/core/sprites.js`. La règle ne change pas : **personne n'a de visage**, ni yeux, ni bouche, ni trait.
+
+- **Gabarits.** Un personnage tient dans 16 × 24 pixels, comme un sprite de console 16 bits : une tête
+  (11 lignes, selon la coiffe) et un corps (13 lignes, selon le pas ou la pose). Chaque lettre du gabarit
+  nomme une matière (coiffe, voile, buste, jupe, manteau, galon, main, pied), trois tons par matière,
+  l'ombre tirant vers le violet. Un liseré sombre, teinté par la matière voisine, cerne la silhouette.
+- **Le voile de lumière.** À la place du visage, les Compagnons portent une lumière unie, bordée de la
+  teinte de leur Lumière. Les autres personnages ont une face d'étoffe, unie elle aussi.
+- **Ce qui distingue.** La coiffe (turban, casque, capuche, tiare, litham), le bandeau et la ceinture à
+  la couleur de la Lumière, le manteau, l'attribut porté. Un attribut ne s'ajoute à un Compagnon que s'il
+  est déjà attesté dans ses vertus : la durra de 'Umar, le sabre de 'Alî et de Khâlid, les feuillets de
+  Zayd et d'Ibn 'Abbâs, la lance de Dirâr.
+- **Les attitudes** (`D.POSES`). Recueillement (tête inclinée, mains l'une sur l'autre), résolution (un
+  bras levé), accablement (à genoux, tête basse), salut (la main sur le cœur), surprise (les bras
+  s'écartent), garde (le manteau ramené devant soi). Le moteur s'en sert seul en combat (garde, vertu
+  dite le bras levé, épuisement sous 20 % de Constance, salut à la victoire) et pendant la prière ; un
+  script les pose avec `['emote', qui, pose]`.
+- **Le grand sprite** (32 × 48) sert au combat, au menu du groupe et au livret. C'est le même dessin,
+  agrandi par Scale2x puis enrichi : dégradé du voile, plis des étoffes, galon au bas du manteau.
+
+## Version précédente : personnages en blocs, décors sublimés (demande du décideur)
 
 Les personnages sont faits de blocs : une tête cubique d'étoffe, un corps, deux bras, deux jambes, avec
 une face claire, un dessus plus clair et un côté plus sombre. Aucun trait. Les Compagnons portent un

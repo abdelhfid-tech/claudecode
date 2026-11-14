@@ -247,6 +247,7 @@ function checkSaga(s, E, W) {
           case 'join': case 'leave': if (!heroes[o[1]]) E.push(`${wo}: héros « ${o[1]} » inconnu`); break;
           case 'codex': if (!codexIds.has(o[1])) E.push(`${wo}: entrée de codex « ${o[1]} » inconnue`); break;
           case 'if': checkOps(o[2], wo + '.then'); if (o[3]) checkOps(o[3], wo + '.else'); break;
+          case 'emote': if (o[2] !== null && !D.POSES.includes(o[2])) E.push(`${wo}: pose « ${o[2]} » inconnue (${D.POSES.join('|')}, ou null pour la quitter)`); break;
           case 'pray': if (o[1] !== undefined && !D.PRAYERS[o[1]]) E.push(`${wo}: pray « ${o[1]} » invalide (${Object.keys(D.PRAYERS).join('|')})`); break;
           case 'pillar': if (!D.PILLARS[o[1]]) E.push(`${wo}: pilier « ${o[1]} » invalide (${Object.keys(D.PILLARS).join('|')})`); if (typeof o[2] !== 'number' || Math.abs(o[2]) > 2 || !o[2]) E.push(`${wo}: pillar delta ±1 ou ±2`); break;
           case 'mat': if (!D.MATS[o[1]]) E.push(`${wo}: matériau « ${o[1]} » inconnu (${Object.keys(D.MATS).join('|')})`); break;

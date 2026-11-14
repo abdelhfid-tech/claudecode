@@ -55,10 +55,10 @@ kbd { font-family: var(--f-mono); font-size: .84em; padding: .08em .45em; border
 
 /* ---------- sommaire ---------- */
 .sommaire { padding-block: 34px 10px; }
-.sommaire ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 4px 28px; font-size: .98rem; }
+.sommaire ol { counter-reset: s; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 4px 28px; font-size: .98rem; }
 .sommaire li { border-bottom: 1px solid rgba(233, 200, 119, .14); }
 .sommaire a { display: flex; justify-content: space-between; gap: 1em; padding: .45em 0; text-decoration: none; color: var(--sable); }
-.sommaire a span { font-family: var(--f-mono); color: var(--cendre); font-size: .78rem; align-self: center; }
+.sommaire a::after { counter-increment: s; content: counter(s, decimal-leading-zero); font-family: var(--f-mono); color: var(--cendre); font-size: .78rem; align-self: center; }
 .sommaire a:hover { color: var(--or); }
 
 /* ---------- feuillets du livret : un fil d'or court à gauche, une étoile à chaque titre ---------- */
@@ -134,6 +134,53 @@ td .ic { width: 32px; height: 32px; object-fit: contain; display: inline-block; 
 .engage li { max-width: none; padding: .75em 0; border-top: 1px solid rgba(233, 200, 119, .16); margin: 0; }
 .engage b { display: block; }
 
+/* fiches de personnages */
+.troupe { margin-top: 2.6em; }
+.troupe > h3 { font-family: var(--f-mono); font-weight: 400; font-size: .78rem; letter-spacing: .24em; text-transform: uppercase; color: var(--cendre); border-bottom: 1px solid var(--filet); padding-bottom: .6em; margin: 0 0 1.2em; }
+.fiche-p { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 20px; align-items: start; }
+.fiche-p .scene { display: flex; justify-content: center; align-items: flex-end; gap: 6px; padding: 16px 10px 12px; background: radial-gradient(ellipse at 50% 62%, color-mix(in srgb, var(--c) 26%, transparent) 0%, transparent 68%), var(--encre); border: 1px solid rgba(233, 200, 119, .16); border-bottom: 2px solid var(--c); }
+.fiche-p .scene img { width: 96px; height: 144px; }
+.fiche-p .scene img.profil { display: none; }
+.fiche-p header { display: flex; align-items: center; gap: 14px; }
+.fiche-p .sceau { width: 56px; height: 56px; }
+.fiche-p h4 { font-family: var(--f-titre); font-weight: 700; letter-spacing: .06em; font-size: 1.12rem; color: #fff6dc; margin: 0; }
+.fiche-p h4 .ar { font-weight: 500; color: var(--c); margin-left: .5em; letter-spacing: 0; }
+.fiche-p .titre { margin: 0; color: var(--c); font-style: italic; }
+.fiche-p dl { display: flex; flex-wrap: wrap; gap: 4px 22px; margin: .6em 0 .5em; }
+.fiche-p dl div { display: flex; gap: .5em; align-items: baseline; }
+.fiche-p dt { font-family: var(--f-mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cendre); }
+.fiche-p dd { margin: 0; color: #fff6dc; }
+.fiche-p .bio { margin: 0 0 .3em; max-width: 68ch; }
+.fiche-p .src { font-family: var(--f-mono); font-size: .72rem; color: var(--cendre); margin: 0 0 .6em; max-width: none; }
+.fiche-p .vertus-l { font-size: .9rem; color: var(--cendre); margin: 0; }
+.fiche-p.meneur { grid-template-columns: 300px minmax(0, 1fr); gap: 30px; padding: 22px; background: var(--encre); border: 1px solid rgba(233, 200, 119, .16); }
+.fiche-p.meneur .scene { padding: 26px 12px 18px; background: radial-gradient(ellipse at 50% 60%, color-mix(in srgb, var(--c) 30%, transparent) 0%, transparent 70%), var(--nuit); gap: 14px; }
+.fiche-p.meneur .scene img { width: 128px; height: 192px; }
+.fiche-p.meneur .scene img.profil { display: block; }
+.fiche-p.meneur h4 { font-size: 1.5rem; }
+.fiche-p .ultime { border-left: 2px solid var(--c); padding-left: .9em; margin: .9em 0; max-width: 66ch; }
+.fiche-p .vertus { list-style: none; padding: 0; margin: .8em 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px 22px; }
+.fiche-p .vertus li { max-width: none; margin: 0; line-height: 1.35; }
+.fiche-p .vertus li b { font-weight: 500; }
+.fiche-p .vertus li span { font-family: var(--f-mono); font-size: .7rem; color: var(--cendre); margin-left: .6em; }
+.fiche-p .vertus li small { color: var(--cendre); font-size: .86rem; }
+.attitudes { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin-top: 1.3em; max-width: 520px; }
+.attitudes figure { text-align: center; background: var(--nuit); border: 1px solid rgba(233, 200, 119, .12); padding: 8px 2px 6px; }
+.attitudes img { width: 48px; height: 72px; margin: 0 auto; }
+.attitudes figcaption { font-size: .6rem; letter-spacing: 0; padding: .5em 0 0; }
+.suite { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 22px 28px; margin-top: 22px; }
+.gens-l { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 1em; }
+.gens-l figure { text-align: center; }
+.gens-l img { width: 64px; height: 96px; margin: 0 auto; }
+.gens-l figcaption { padding: .3em 0 0; }
+@media (max-width: 760px) {
+  .fiche-p.meneur { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+  .fiche-p { grid-template-columns: 110px minmax(0, 1fr); gap: 14px; }
+  .fiche-p .scene img { width: 64px; height: 96px; }
+  .fiche-p.meneur .scene img { width: 96px; height: 144px; }
+  .attitudes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
 /* ---------- planches ---------- */
 .table { background: #030308; border-top: 1px solid var(--filet); padding-block: 70px 90px; }
 .table > .gout > .col { max-width: 1280px; }
@@ -207,16 +254,13 @@ td .ic { width: 32px; height: 32px; object-fit: contain; display: inline-block; 
 .cinq .groupe img { width: 2.3em; height: 3.45em; }
 
 /* 4 · personne n'a de visage */
-.visage { flex: 1; display: grid; grid-template-columns: 22em 1fr; gap: 3em; min-height: 0; margin-top: .4em; }
+.visage { flex: 1; display: grid; grid-template-columns: 20em 1fr; gap: 2.6em; min-height: 0; margin-top: .4em; }
 .visage .texte { display: flex; flex-direction: column; justify-content: center; }
 .visage .texte p { margin: 1em 0 0; font-size: 1.02em; }
-.rang { display: flex; align-items: flex-end; justify-content: space-between; gap: .4em; }
-.rang figure { text-align: center; flex: 1; }
-.rang img { width: 6.4em; height: 9.6em; margin: 0 auto; filter: drop-shadow(0 .5em .6em rgba(0, 0, 0, .6)); }
-.rang.petit img { width: 3.5em; height: 5.25em; }
-.rang figcaption { font-family: var(--f-titre); font-size: .66em; letter-spacing: .1em; text-transform: uppercase; color: var(--sable); padding: .7em 0 0; }
-.rang.petit figcaption { font-family: var(--f-mono); font-size: .58em; letter-spacing: .04em; color: var(--cendre); text-transform: none; }
-.visage .scene { display: flex; flex-direction: column; justify-content: center; gap: 2.2em; padding: 2em 2.4em; background: radial-gradient(ellipse at 50% 40%, #241d3f 0%, var(--encre) 70%); border: 1px solid rgba(233, 200, 119, .18); }
+.visage .scene { display: grid; grid-template-columns: 5.6em repeat(7, 1fr); align-items: end; justify-items: center; gap: .5em .3em; align-content: center; padding: 1.6em 1.8em; background: radial-gradient(ellipse at 50% 45%, #241d3f 0%, var(--encre) 72%); border: 1px solid rgba(233, 200, 119, .18); }
+.visage .scene span { font-family: var(--f-mono); font-size: .56em; letter-spacing: .08em; text-transform: uppercase; color: var(--cendre); padding-bottom: .5em; align-self: center; }
+.visage .scene b { font-family: var(--f-titre); font-size: .66em; letter-spacing: .08em; justify-self: start; align-self: center; text-transform: uppercase; }
+.visage .scene img { width: 4.2em; height: 6.3em; }
 
 /* 5 · les idoles */
 .idoles { flex: 1; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(2, 1fr); gap: .9em; margin: 1.6em 0 1.6em; min-height: 0; }
@@ -289,23 +333,24 @@ body.export .pl { border: 0; }
 
 <nav class="sommaire gout" aria-label="Sommaire"><div class="col">
   <ol>
-    <li><a href="#en-bref">Le jeu en bref <span>01</span></a></li>
-    <li><a href="#commencer">Commencer une partie <span>02</span></a></li>
-    <li><a href="#commandes">Les commandes <span>03</span></a></li>
-    <li><a href="#sauvegarder">Sauvegarder <span>04</span></a></li>
-    <li><a href="#epoques">Trois époques, une chaîne <span>05</span></a></li>
-    <li><a href="#sagas">Les cinq sagas <span>06</span></a></li>
-    <li><a href="#explorer">Explorer, s’orienter aux étoiles <span>07</span></a></li>
-    <li><a href="#chaine">La fidélité à la Chaîne <span>08</span></a></li>
-    <li><a href="#parole">La parole avant le sabre <span>09</span></a></li>
-    <li><a href="#combat">Le combat <span>10</span></a></li>
-    <li><a href="#piliers">Prière, savoir, piliers <span>11</span></a></li>
-    <li><a href="#batir">Bâtir <span>12</span></a></li>
-    <li><a href="#caravanes">Routes et caravanes <span>13</span></a></li>
-    <li><a href="#veillees">Les veillées du Caïd <span>14</span></a></li>
-    <li><a href="#respect">Ce que le jeu s’interdit <span>15</span></a></li>
-    <li><a href="#sources">Sources et avertissement <span>16</span></a></li>
-    <li><a href="#planches">Planches de présentation <span>17</span></a></li>
+    <li><a href="#en-bref">Le jeu en bref</a></li>
+    <li><a href="#commencer">Commencer une partie</a></li>
+    <li><a href="#commandes">Les commandes</a></li>
+    <li><a href="#sauvegarder">Sauvegarder</a></li>
+    <li><a href="#epoques">Trois époques, une chaîne</a></li>
+    <li><a href="#sagas">Les cinq sagas</a></li>
+    <li><a href="#personnages">Les personnages</a></li>
+    <li><a href="#explorer">Explorer, s’orienter aux étoiles</a></li>
+    <li><a href="#chaine">La fidélité à la Chaîne</a></li>
+    <li><a href="#parole">La parole avant le sabre</a></li>
+    <li><a href="#combat">Le combat</a></li>
+    <li><a href="#piliers">Prière, savoir, piliers</a></li>
+    <li><a href="#batir">Bâtir</a></li>
+    <li><a href="#caravanes">Routes et caravanes</a></li>
+    <li><a href="#veillees">Les veillées du Caïd</a></li>
+    <li><a href="#respect">Ce que le jeu s’interdit</a></li>
+    <li><a href="#sources">Sources et avertissement</a></li>
+    <li><a href="#planches">Planches de présentation</a></li>
   </ol>
 </div></nav>
 
@@ -405,7 +450,7 @@ body.export .pl { border: 0; }
         <div><span class="ord">Maillon I · 11–13 H · 632–634</span><h3>Abû Bakr as-Siddîq</h3><span class="lum">As-Siddîq · Lumière : Véracité (Sidq)</span></div>
         <div><p class="dit">Le jour où tout pouvait se défaire, un homme doux a dit le vrai.</p>
           <ol><li><b>Le Jour le plus sombre</b><span>An 11 H · 632 · Médine</span></li><li><b>L'Armée d'Usâma</b><span>An 11 H · 632 · Médine</span></li><li><b>Yamâma — le Menteur</b><span>An 11–12 H · 632–633 · Dhû l-Qassa</span></li></ol>
-          <div class="groupe"><span><img class="px" src="img/h-abubakr-abubakr.png" alt="" width="16" height="24">Abû Bakr</span><span><img class="px" src="img/h-abubakr-umar.png" alt="" width="16" height="24">'Umar</span><span><img class="px" src="img/h-abubakr-abuubayda.png" alt="" width="16" height="24">Abû 'Ubayda</span></div>
+          <div class="groupe"><span><img class="px" src="img/g-abubakr-abubakr.png" alt="" width="32" height="48">Abû Bakr</span><span><img class="px" src="img/g-abubakr-umar.png" alt="" width="32" height="48">'Umar</span><span><img class="px" src="img/g-abubakr-abuubayda.png" alt="" width="32" height="48">Abû 'Ubayda</span></div>
         </div>
       </article>
       <article class="saga" style="--c:#6fb6ff">
@@ -413,7 +458,7 @@ body.export .pl { border: 0; }
         <div><span class="ord">Maillon II · 13–23 H · 634–644</span><h3>'Umar ibn al-Khattâb</h3><span class="lum">Al-Fârûq · Lumière : Justice ('Adl)</span></div>
         <div><p class="dit">Deux empires tombèrent sous son califat. Lui dormait sur une natte.</p>
           <ol><li><b>Les Rondes de nuit</b><span>An 18 H · 639 · Médine</span></li><li><b>Les Clés de Jérusalem</b><span>An 16 H · 637 · De Médine à Îliyâ'</span></li><li><b>Le Trône et la Natte</b><span>An 17–23 H · 638–644 · Médine</span></li></ol>
-          <div class="groupe"><span><img class="px" src="img/h-umar-umar.png" alt="" width="16" height="24">'Umar</span><span><img class="px" src="img/h-umar-aslam.png" alt="" width="16" height="24">Aslam</span><span><img class="px" src="img/h-umar-abuubayda.png" alt="" width="16" height="24">Abû 'Ubayda</span><span><img class="px" src="img/h-umar-abdarrahman.png" alt="" width="16" height="24">'Abd ar-Rahmân</span></div>
+          <div class="groupe"><span><img class="px" src="img/g-umar-umar.png" alt="" width="32" height="48">'Umar</span><span><img class="px" src="img/g-umar-aslam.png" alt="" width="32" height="48">Aslam</span><span><img class="px" src="img/g-umar-abuubayda.png" alt="" width="32" height="48">Abû 'Ubayda</span><span><img class="px" src="img/g-umar-abdarrahman.png" alt="" width="32" height="48">'Abd ar-Rahmân</span></div>
         </div>
       </article>
       <article class="saga" style="--c:#ff7a5c">
@@ -421,7 +466,7 @@ body.export .pl { border: 0; }
         <div><span class="ord">Maillon III · 13–21 H · 634–642</span><h3>Khâlid ibn al-Walîd</h3><span class="lum">Le Sabre dégainé · Lumière : Courage (Shajâ'a)</span></div>
         <div><p class="dit">Il n'a jamais perdu une bataille. Il lui reste à vaincre sa propre statue.</p>
           <ol><li><b>La Traversée</b><span>An 13 H · 634 · Désert de la Samâwa</span></li><li><b>Yarmoûk</b><span>An 13 ou 15 H · 634–636 · Vallée du Yarmoûk</span></li><li><b>L'Épée au fourreau</b><span>An 17 H · 638 · Qinnasrîn, puis Homs</span></li></ol>
-          <div class="groupe"><span><img class="px" src="img/h-khalid-khalid.png" alt="" width="16" height="24">Khâlid</span><span><img class="px" src="img/h-khalid-qaqa.png" alt="" width="16" height="24">Al-Qa'qâ'</span><span><img class="px" src="img/h-khalid-dirar.png" alt="" width="16" height="24">Dirâr</span></div>
+          <div class="groupe"><span><img class="px" src="img/g-khalid-khalid.png" alt="" width="32" height="48">Khâlid</span><span><img class="px" src="img/g-khalid-qaqa.png" alt="" width="32" height="48">Al-Qa'qâ'</span><span><img class="px" src="img/g-khalid-dirar.png" alt="" width="32" height="48">Dirâr</span></div>
         </div>
       </article>
       <article class="saga" style="--c:#5fe0d0">
@@ -429,7 +474,7 @@ body.export .pl { border: 0; }
         <div><span class="ord">Maillon IV · 23–35 H · 644–656</span><h3>'Uthmân ibn 'Affân</h3><span class="lum">Le Généreux · Lumière : Miséricorde (Rahma)</span></div>
         <div><p class="dit">Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui.</p>
           <ol><li><b>Les Feuillets</b><span>Vers l'an 30 H · 650 · Médine</span></li><li><b>La Bataille des Mâts</b><span>An 28–34 H · 649–655 · Médine, puis la mer</span></li><li><b>La Maison assiégée</b><span>An 35 H · 656 · Médine</span></li></ol>
-          <div class="groupe"><span><img class="px" src="img/h-uthman-uthman.png" alt="" width="16" height="24">'Uthmân</span><span><img class="px" src="img/h-uthman-zayd.png" alt="" width="16" height="24">Zayd ibn Thâbit</span><span><img class="px" src="img/h-uthman-hudhayfa.png" alt="" width="16" height="24">Hudhayfa</span></div>
+          <div class="groupe"><span><img class="px" src="img/g-uthman-uthman.png" alt="" width="32" height="48">'Uthmân</span><span><img class="px" src="img/g-uthman-zayd.png" alt="" width="32" height="48">Zayd ibn Thâbit</span><span><img class="px" src="img/g-uthman-hudhayfa.png" alt="" width="32" height="48">Hudhayfa</span></div>
         </div>
       </article>
       <article class="saga" style="--c:#c49bff">
@@ -437,9 +482,212 @@ body.export .pl { border: 0; }
         <div><span class="ord">Maillon V · 35–40 H · 656–661</span><h3>'Alî ibn Abî Tâlib</h3><span class="lum">La Porte du Savoir · Lumière : Savoir ('Ilm)</span></div>
         <div><p class="dit">Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour.</p>
           <ol><li><b>Le Bouclier et le Juge</b><span>An 36 H · 657 · Koufa</span></li><li><b>La Parole détournée</b><span>An 37 H · 658 · Koufa et Harûrâ'</span></li><li><b>Nahrawân, puis l’aube</b><span>An 38–40 H · 658–661 · Nahrawân, Koufa</span></li></ol>
-          <div class="groupe"><span><img class="px" src="img/h-ali-ali.png" alt="" width="16" height="24">'Alî</span><span><img class="px" src="img/h-ali-ibnabbas.png" alt="" width="16" height="24">Ibn 'Abbâs</span><span><img class="px" src="img/h-ali-ammar.png" alt="" width="16" height="24">'Ammâr</span><span><img class="px" src="img/h-ali-qays.png" alt="" width="16" height="24">Qays</span></div>
+          <div class="groupe"><span><img class="px" src="img/g-ali-ali.png" alt="" width="32" height="48">'Alî</span><span><img class="px" src="img/g-ali-ibnabbas.png" alt="" width="32" height="48">Ibn 'Abbâs</span><span><img class="px" src="img/g-ali-ammar.png" alt="" width="32" height="48">'Ammâr</span><span><img class="px" src="img/g-ali-qays.png" alt="" width="32" height="48">Qays</span></div>
         </div>
       </article></div>
+  </section>
+
+  <section class="feuillet" id="personnages">
+    <h2>Les personnages</h2>
+    <p>Chaque saga se joue en groupe. Voici ceux que l’on y mène, avec leur rôle, leur Lumière, leurs vertus et l’acte que leur ouvre la Sakîna.</p>
+    <p>Personne n’a de visage. On reconnaît chacun à sa coiffe, à son vêtement, à ce qu’il porte, et un Compagnon à son voile de lumière. Ce qu’ils éprouvent se lit dans leur attitude : la tête qui s’incline, le bras qui se lève, le genou qui plie.</p>
+    <figure class="ecran" style="max-width:720px;margin-top:1.4em"><div style="overflow:hidden;aspect-ratio:16/9"><img src="img/emotion.jpg" alt="Dans la cour de la mosquée de Médine, ’Umar est à genoux, la tête basse ; Abû Bakr et Abû ’Ubayda se tiennent devant lui." loading="lazy" style="transform:scale(2.2);transform-origin:50% 46%"></div><figcaption style="padding:.7em .8em .8em">« Mes jambes ne me portèrent plus, et je tombai à terre. » ’Umar ibn al-Khattâb, d’après al-Bukhârî. Dans le jeu, c’est son corps qui le dit.</figcaption></figure>
+    <div class="troupe"><h3>Maillon I · Véracité</h3><article class="fiche-p meneur" style="--c:#ffe08a">
+        <div class="scene"><img class="px" src="img/g-abubakr-abubakr.png" alt="" width="32" height="48"><img class="px profil" src="img/gl-abubakr-abubakr.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><img class="sceau" src="img/sceau-abubakr.png" alt=""><div><h4>Abû Bakr <span class="ar" lang="ar" dir="rtl">أبو بكر</span></h4><p class="titre">As-Siddîq</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Sage</dd></div><div><dt>Lumière</dt><dd style="color:#ffe08a">Véracité <i>(Sidq)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>As-Siddîq</dd></div></dl>
+          <p class="bio">'Abdallâh ibn Abî Quhâfa, des Banû Taym de Quraysh, né à La Mecque vers 573. Marchand d'étoffes et généalogiste réputé des Arabes, il fut parmi les tout premiers à croire et dépensa sa fortune pour affranchir des croyants persécutés, dont Bilâl. Compagnon de l'Hégire et de la Grotte, il dirigea la prière durant la dernière maladie du Messager d'Allah ﷺ.</p><p class="src">D’après Ibn Sa'd, at-Tabaqât ; Ibn Hishâm, as-Sîra ; al-Bukhârî</p>
+          <p class="ultime"><b>As-Siddîq.</b> La véracité à nu : frappe tous les égrégores, déchire leurs voiles et révèle leurs failles.</p><ul class="vertus"><li><b>Parole véridique</b><span>niv. 1</span><br><small>Dit le vrai sans détour. Dégâts de Véracité.</small></li><li><b>Apaisement</b><span>niv. 1</span><br><small>Une parole douce relève un cœur : rend de la Constance à un compagnon.</small></li><li><b>Science des lignées</b><span>niv. 2</span><br><small>Nul ne connaissait mieux les généalogies des Arabes : révèle les failles d'un égrégore.</small></li><li><b>Fermeté</b><span>niv. 3</span><br><small>« Je ne dénouerai pas un étendard qu'il a noué. » Renforce la garde du groupe.</small></li><li><b>Affranchir</b><span>niv. 5</span><br><small>Il rachetait les opprimés : retire les altérations d'un compagnon et lui rend un peu de Constance.</small></li><li><b>Certitude</b><span>niv. 7</span><br><small>« S'il l'a dit, il a dit vrai. » Lourds dégâts de Véracité, déchire un voile.</small></li></ul>
+          <div class="attitudes"><figure><img class="px" src="img/g-abubakr-abubakr-prie.png" alt="" width="32" height="48"><figcaption>Recueillement</figcaption></figure><figure><img class="px" src="img/g-abubakr-abubakr-resolu.png" alt="" width="32" height="48"><figcaption>Résolution</figcaption></figure><figure><img class="px" src="img/g-abubakr-abubakr-accable.png" alt="" width="32" height="48"><figcaption>Accablement</figcaption></figure><figure><img class="px" src="img/g-abubakr-abubakr-salut.png" alt="" width="32" height="48"><figcaption>Salut</figcaption></figure><figure><img class="px" src="img/g-abubakr-abubakr-surpris.png" alt="" width="32" height="48"><figcaption>Surprise</figcaption></figure><figure><img class="px" src="img/g-abubakr-abubakr-garde.png" alt="" width="32" height="48"><figcaption>Garde</figcaption></figure></div>
+        </div>
+      </article><div class="suite"><article class="fiche-p" style="--c:#6fb6ff">
+        <div class="scene"><img class="px" src="img/g-abubakr-umar.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>'Umar <span class="ar" lang="ar" dir="rtl">عمر</span></h4><p class="titre">Al-Fârûq</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Gardien</dd></div><div><dt>Lumière</dt><dd style="color:#6fb6ff">Justice <i>('Adl)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Al-Fârûq</dd></div></dl>
+          <p class="bio">'Umar ibn al-Khattâb, des Banû 'Adî de Quraysh. Sa conversion donna de l'assurance aux croyants de La Mecque.</p><p class="src">D’après Ibn Sa'd, at-Tabaqât ; al-Bukhârî</p>
+          <p class="vertus-l">La Durra · Firâsa · Rempart · Équité · Hardiesse · Rendre le droit</p>
+        </div>
+      </article><article class="fiche-p" style="--c:#5fe0d0">
+        <div class="scene"><img class="px" src="img/g-abubakr-abuubayda.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Abû 'Ubayda <span class="ar" lang="ar" dir="rtl">أبو عبيدة</span></h4><p class="titre">Amîn al-Umma</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Soigneur</dd></div><div><dt>Lumière</dt><dd style="color:#5fe0d0">Miséricorde <i>(Rahma)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Amîn al-Umma</dd></div></dl>
+          <p class="bio">'Âmir ibn 'Abdallâh ibn al-Jarrâh, de Quraysh, l'un des dix à qui le Paradis fut annoncé. Le Messager d'Allah ﷺ dit de lui : « Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda ibn al-Jarrâh. »</p><p class="src">D’après al-Bukhârî ; Muslim ; Ibn Sa'd, at-Tabaqât</p>
+          <p class="vertus-l">Baume · Dépôt gardé · Partage du pain · Douceur · Relever · Pas du marcheur</p>
+        </div>
+      </article></div></div><div class="troupe"><h3>Maillon II · Justice</h3><article class="fiche-p meneur" style="--c:#6fb6ff">
+        <div class="scene"><img class="px" src="img/g-umar-umar.png" alt="" width="32" height="48"><img class="px profil" src="img/gl-umar-umar.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><img class="sceau" src="img/sceau-umar.png" alt=""><div><h4>'Umar <span class="ar" lang="ar" dir="rtl">عمر</span></h4><p class="titre">Al-Fârûq</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Gardien</dd></div><div><dt>Lumière</dt><dd style="color:#6fb6ff">Justice <i>('Adl)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Al-Fârûq</dd></div></dl>
+          <p class="bio">'Umar ibn al-Khattâb (qu'Allah l'agrée), des Banû 'Adî de Quraysh, embrasse l'islam à La Mecque et devient l'un des plus proches Compagnons du Prophète ﷺ. On rapporte qu'il reçut le surnom d'al-Fârûq : celui qui distingue le vrai du faux. Deuxième calife (13–23 H), premier à porter le titre de Commandeur des croyants, il institue le calendrier de l'Hégire, le dîwân et les rondes de nuit.</p><p class="src">D’après Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh ; adh-Dhahabî, Siyar</p>
+          <p class="ultime"><b>Al-Fârûq.</b> Sépare le vrai du faux : Justice sur tous, bonus dissipés, deux voiles déchirés.</p><ul class="vertus"><li><b>La Durra</b><span>niv. 1</span><br><small>Coup de férule. Peut étourdir.</small></li><li><b>Firâsa</b><span>niv. 1</span><br><small>Discerne les failles d'un égrégore et le frappe d'un trait de Justice.</small></li><li><b>Ronde de nuit</b><span>niv. 2</span><br><small>Veille sur le groupe : régénération pendant 3 tours.</small></li><li><b>Équité</b><span>niv. 4</span><br><small>La même mesure pour tous : Justice sur tous les égrégores.</small></li><li><b>Porter le fardeau</b><span>niv. 6</span><br><small>Prend la charge sur son dos : attire les coups, en garde, défense accrue.</small></li><li><b>Sentence</b><span>niv. 8</span><br><small>Jugement sans appel : forte Justice, déchire un voile.</small></li></ul>
+          <div class="attitudes"><figure><img class="px" src="img/g-umar-umar-prie.png" alt="" width="32" height="48"><figcaption>Recueillement</figcaption></figure><figure><img class="px" src="img/g-umar-umar-resolu.png" alt="" width="32" height="48"><figcaption>Résolution</figcaption></figure><figure><img class="px" src="img/g-umar-umar-accable.png" alt="" width="32" height="48"><figcaption>Accablement</figcaption></figure><figure><img class="px" src="img/g-umar-umar-salut.png" alt="" width="32" height="48"><figcaption>Salut</figcaption></figure><figure><img class="px" src="img/g-umar-umar-surpris.png" alt="" width="32" height="48"><figcaption>Surprise</figcaption></figure><figure><img class="px" src="img/g-umar-umar-garde.png" alt="" width="32" height="48"><figcaption>Garde</figcaption></figure></div>
+        </div>
+      </article><div class="suite"><article class="fiche-p" style="--c:#5fe0d0">
+        <div class="scene"><img class="px" src="img/g-umar-aslam.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Aslam <span class="ar" lang="ar" dir="rtl">أسلم</span></h4><p class="titre">L'affranchi de 'Umar</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Soigneur</dd></div><div><dt>Lumière</dt><dd style="color:#5fe0d0">Miséricorde <i>(Rahma)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Le Repas des humbles</dd></div></dl>
+          <p class="bio">Aslam (qu'Allah lui fasse miséricorde) entra au service de 'Umar en l'an 11 H et resta son affranchi (mawlâ). Il l'accompagna dans ses rondes nocturnes et transmit de lui de nombreux récits, dont celui de la famille affamée de la harra.</p><p class="src">D’après Ibn Sa'd, Tabaqât ; adh-Dhahabî, Siyar</p>
+          <p class="vertus-l">La Lanterne · Panser · Ranimer le foyer · Veille fidèle · Relever · La Part de chacun</p>
+        </div>
+      </article><article class="fiche-p" style="--c:#7fd69a">
+        <div class="scene"><img class="px" src="img/g-umar-abuubayda.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Abû 'Ubayda <span class="ar" lang="ar" dir="rtl">أبو عبيدة</span></h4><p class="titre">L'homme de confiance de la communauté</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Stratège</dd></div><div><dt>Lumière</dt><dd style="color:#7fd69a">Patience <i>(Sabr)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Amîn al-Umma</dd></div></dl>
+          <p class="bio">Abû 'Ubayda 'Âmir ibn al-Jarrâh (qu'Allah l'agrée) compte parmi les dix à qui le Paradis fut annoncé. Le Prophète ﷺ a dit : « Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda. »</p><p class="src">D’après al-Bukhârî, Sahîh (3744) ; Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh</p>
+          <p class="vertus-l">Garde du dépôt · Parole droite · Rangs serrés · Marche de Shâm · Dépouillement · Demeurer parmi les siens</p>
+        </div>
+      </article><article class="fiche-p" style="--c:#ffe08a">
+        <div class="scene"><img class="px" src="img/g-umar-abdarrahman.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>'Abd ar-Rahmân <span class="ar" lang="ar" dir="rtl">عبد الرحمن</span></h4><p class="titre">Ibn 'Awf</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Sage</dd></div><div><dt>Lumière</dt><dd style="color:#ffe08a">Véracité <i>(Sidq)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>L'or dans la main</dd></div></dl>
+          <p class="bio">'Abd ar-Rahmân ibn 'Awf (qu'Allah l'agrée), l'un des dix à qui le Paradis fut annoncé, compte parmi les tout premiers musulmans. Arrivé à Médine sans rien, il déclina l'aide offerte et demanda seulement : « Indique-moi le marché. »</p><p class="src">D’après al-Bukhârî, Sahîh (2048, 3700) ; Ibn Sa'd, Tabaqât</p>
+          <p class="vertus-l">Commerce loyal · Peser juste · Caravane offerte · Aumône discrète · Désistement · Serment tenu</p>
+        </div>
+      </article></div></div><div class="troupe"><h3>Maillon III · Courage</h3><article class="fiche-p meneur" style="--c:#ff7a5c">
+        <div class="scene"><img class="px" src="img/g-khalid-khalid.png" alt="" width="32" height="48"><img class="px profil" src="img/gl-khalid-khalid.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><img class="sceau" src="img/sceau-khalid.png" alt=""><div><h4>Khâlid <span class="ar" lang="ar" dir="rtl">خالد</span></h4><p class="titre">Le Sabre dégainé</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Guerrier</dd></div><div><dt>Lumière</dt><dd style="color:#ff7a5c">Courage <i>(Shajâ'a)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Le Sabre dégainé</dd></div></dl>
+          <p class="bio">Khâlid ibn al-Walîd ibn al-Mughîra, des Banû Makhzûm de Quraysh (qu'Allah l'agrée). Cavalier redouté de La Mecque, il embrasse l'islam en l'an 8 H. À Mu'ta, il ramène l'armée en bon ordre ; le Messager d'Allah ﷺ le nomme alors « un sabre d'entre les sabres d'Allah ».</p><p class="src">D’après al-Bukhârî ; Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh</p>
+          <p class="ultime"><b>Le Sabre dégainé.</b> Charge irrésistible sur toutes les lignes ; déchire un voile.</p><ul class="vertus"><li><b>Charge</b><span>niv. 1</span><br><small>Charge de cavalerie sur un égrégore.</small></li><li><b>Élan</b><span>niv. 1</span><br><small>Le courage fait reculer l'ombre.</small></li><li><b>Charge tournante</b><span>niv. 2</span><br><small>Contourne la ligne et frappe deux fois.</small></li><li><b>La Manœuvre</b><span>niv. 4</span><br><small>Science de la bataille : frappe toutes les lignes et peut les ralentir.</small></li><li><b>Rengainer</b><span>niv. 6</span><br><small>Remet l'épée au fourreau. La patience fend ce que le fer n'entame pas, et ôte un voile.</small></li><li><b>Neuf sabres</b><span>niv. 8</span><br><small>Frappe quatre fois, jusqu'à ce que la lame se brise.</small></li></ul>
+          <div class="attitudes"><figure><img class="px" src="img/g-khalid-khalid-prie.png" alt="" width="32" height="48"><figcaption>Recueillement</figcaption></figure><figure><img class="px" src="img/g-khalid-khalid-resolu.png" alt="" width="32" height="48"><figcaption>Résolution</figcaption></figure><figure><img class="px" src="img/g-khalid-khalid-accable.png" alt="" width="32" height="48"><figcaption>Accablement</figcaption></figure><figure><img class="px" src="img/g-khalid-khalid-salut.png" alt="" width="32" height="48"><figcaption>Salut</figcaption></figure><figure><img class="px" src="img/g-khalid-khalid-surpris.png" alt="" width="32" height="48"><figcaption>Surprise</figcaption></figure><figure><img class="px" src="img/g-khalid-khalid-garde.png" alt="" width="32" height="48"><figcaption>Garde</figcaption></figure></div>
+        </div>
+      </article><div class="suite"><article class="fiche-p" style="--c:#7fd69a">
+        <div class="scene"><img class="px" src="img/g-khalid-qaqa.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Al-Qa'qâ' <span class="ar" lang="ar" dir="rtl">القعقاع</span></h4><p class="titre">Ibn 'Amr at-Tamîmî</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Stratège</dd></div><div><dt>Lumière</dt><dd style="color:#7fd69a">Patience <i>(Sabr)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Vagues de renfort</dd></div></dl>
+          <p class="bio">Al-Qa'qâ' ibn 'Amr at-Tamîmî (qu'Allah l'agrée), cavalier des Banû Tamîm. Abû Bakr l'envoie en renfort à Khâlid en Irak ; on rapporte qu'il dit de lui : « La voix d'al-Qa'qâ' dans l'armée vaut mieux que mille hommes. »</p><p class="src">D’après at-Tabarî, Târîkh (d'après Sayf ibn 'Umar) ; Ibn Hajar, al-Isâba</p>
+          <p class="vertus-l">Estoc · Œil de l'éclaireur · Tenir la ligne · Dire vrai · Relever un frère · La Voix dans les rangs</p>
+        </div>
+      </article><article class="fiche-p" style="--c:#ff7a5c">
+        <div class="scene"><img class="px" src="img/g-khalid-dirar.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Dirâr <span class="ar" lang="ar" dir="rtl">ضرار</span></h4><p class="titre">Ibn al-Azwar</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Guerrier</dd></div><div><dt>Lumière</dt><dd style="color:#ff7a5c">Courage <i>(Shajâ'a)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>L'Avant-garde</dd></div></dl>
+          <p class="bio">Dirâr ibn al-Azwar al-Asadî (qu'Allah l'agrée), Compagnon, cavalier et poète des Banû Asad. Les récits de la conquête de la Syrie en font l'un des plus hardis cavaliers de Khâlid.</p><p class="src">D’après Ibn 'Abd al-Barr, al-Istî'âb ; Ibn Hajar, al-Isâba ; Futûh ash-Shâm (attribué à al-Wâqidî)</p>
+          <p class="vertus-l">Ruée · Partager l'outre · Défi · Panser · Serment tenu · Percée</p>
+        </div>
+      </article></div></div><div class="troupe"><h3>Maillon IV · Miséricorde</h3><article class="fiche-p meneur" style="--c:#5fe0d0">
+        <div class="scene"><img class="px" src="img/g-uthman-uthman.png" alt="" width="32" height="48"><img class="px profil" src="img/gl-uthman-uthman.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><img class="sceau" src="img/sceau-uthman.png" alt=""><div><h4>'Uthmân <span class="ar" lang="ar" dir="rtl">عثمان</span></h4><p class="titre">Le Généreux</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Soigneur</dd></div><div><dt>Lumière</dt><dd style="color:#5fe0d0">Miséricorde <i>(Rahma)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Sans effusion de sang</dd></div></dl>
+          <p class="bio">'Uthmân ibn 'Affân (qu'Allah l'agrée), du clan des Banû Umayya, compte parmi les premiers à embrasser l'islam, à l'appel d'Abû Bakr. Marchand prospère, il émigra en Abyssinie puis à Médine, et sa fortune servit la communauté sans compter. Désigné par le conseil des six après 'Umar, il fut le troisième calife (23–35 H).</p><p class="src">D’après Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya wa-n-Nihâya</p>
+          <p class="ultime"><b>Sans effusion de sang.</b> Refuse le sang : relève le groupe, dissipe ses maux et le garde.</p><ul class="vertus"><li><b>Largesse</b><span>niv. 1</span><br><small>Donne sans compter : rend de la Constance à tout le groupe.</small></li><li><b>Retenue</b><span>niv. 1</span><br><small>Répond à la violence par la douceur : blesse l'idole et affaiblit ses coups.</small></li><li><b>Les Feuillets réunis</b><span>niv. 2</span><br><small>Oppose à la discorde un tracé unique. Dégâts de Véracité.</small></li><li><b>Le Puits de Rûma</b><span>niv. 4</span><br><small>L'eau offerte à tous : rend du Souffle au groupe.</small></li><li><b>Affranchir</b><span>niv. 6</span><br><small>Délivre un compagnon de ses altérations et lui rend de la Constance.</small></li><li><b>Patience de l'assiégé</b><span>niv. 8</span><br><small>Tient sans rendre les coups : Patience sur tous les égrégores, et sa garde s'affermit.</small></li></ul>
+          <div class="attitudes"><figure><img class="px" src="img/g-uthman-uthman-prie.png" alt="" width="32" height="48"><figcaption>Recueillement</figcaption></figure><figure><img class="px" src="img/g-uthman-uthman-resolu.png" alt="" width="32" height="48"><figcaption>Résolution</figcaption></figure><figure><img class="px" src="img/g-uthman-uthman-accable.png" alt="" width="32" height="48"><figcaption>Accablement</figcaption></figure><figure><img class="px" src="img/g-uthman-uthman-salut.png" alt="" width="32" height="48"><figcaption>Salut</figcaption></figure><figure><img class="px" src="img/g-uthman-uthman-surpris.png" alt="" width="32" height="48"><figcaption>Surprise</figcaption></figure><figure><img class="px" src="img/g-uthman-uthman-garde.png" alt="" width="32" height="48"><figcaption>Garde</figcaption></figure></div>
+        </div>
+      </article><div class="suite"><article class="fiche-p" style="--c:#c49bff">
+        <div class="scene"><img class="px" src="img/g-uthman-zayd.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Zayd ibn Thâbit <span class="ar" lang="ar" dir="rtl">زيد</span></h4><p class="titre">Le Scribe</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Sage</dd></div><div><dt>Lumière</dt><dd style="color:#c49bff">Savoir <i>('Ilm)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>La Copie fidèle</dd></div></dl>
+          <p class="bio">Zayd ibn Thâbit (qu'Allah l'agrée), Ansârî de Médine, avait une dizaine d'années à l'Hégire. Scribe de la Révélation, il apprit sur l'ordre du Messager d'Allah ﷺ l'écriture d'autres peuples pour sa correspondance.</p><p class="src">D’après al-Bukhârî, Sahîh ; Ibn Sa'd, Tabaqât</p>
+          <p class="vertus-l">Le Calame · Collation · Deux témoins · Un seul tracé · Dictée · L'Exemplaire de référence</p>
+        </div>
+      </article><article class="fiche-p" style="--c:#ffe08a">
+        <div class="scene"><img class="px" src="img/g-uthman-hudhayfa.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Hudhayfa <span class="ar" lang="ar" dir="rtl">حذيفة</span></h4><p class="titre">Le Gardien du secret</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Stratège</dd></div><div><dt>Lumière</dt><dd style="color:#ffe08a">Véracité <i>(Sidq)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>L'Avertisseur</dd></div></dl>
+          <p class="bio">Hudhayfa ibn al-Yamân (qu'Allah l'agrée) était appelé le gardien du secret : le Messager d'Allah ﷺ lui avait confié les noms des hypocrites, qu'il ne divulgua jamais. Il disait : « Les gens interrogeaient le Messager d'Allah ﷺ sur le bien ; moi, je l'interrogeais sur le mal, de peur qu'il ne m'atteigne. »</p><p class="src">D’après al-Bukhârî ; Muslim ; Ibn Sa'd, Tabaqât</p>
+          <p class="vertus-l">Estoc des frontières · Cri d'alarme · Démasquer · Tenir la ligne · Veille aux frontières · Parole sans détour</p>
+        </div>
+      </article></div></div><div class="troupe"><h3>Maillon V · Savoir</h3><article class="fiche-p meneur" style="--c:#c49bff">
+        <div class="scene"><img class="px" src="img/g-ali-ali.png" alt="" width="32" height="48"><img class="px profil" src="img/gl-ali-ali.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><img class="sceau" src="img/sceau-ali.png" alt=""><div><h4>'Alî <span class="ar" lang="ar" dir="rtl">علي</span></h4><p class="titre">La Porte du Savoir</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Guerrier</dd></div><div><dt>Lumière</dt><dd style="color:#c49bff">Savoir <i>('Ilm)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Haydar</dd></div></dl>
+          <p class="bio">'Alî (qu'Allah l'agrée), cousin du Messager d'Allah ﷺ, grandit dans sa maison et fut parmi les tout premiers à embrasser l'islam, encore enfant. La nuit de l'Hégire, il dormit dans le lit du Messager ﷺ pour couvrir son départ. Porte-étendard à Khaybar, il est l'un des dix à qui le Paradis fut annoncé.</p><p class="src">D’après Ibn Hishâm, Sîra ; Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh ; at-Tirmidhî</p>
+          <p class="ultime"><b>Haydar.</b> Le Lion de Khaybar : nul voile ne tient devant lui.</p><ul class="vertus"><li><b>Dhû l-Fiqâr</b><span>niv. 1</span><br><small>Le sabre à deux pointes : deux frappes de fer.</small></li><li><b>Sentence juste</b><span>niv. 1</span><br><small>Un jugement rendu sans égard au rang. Justice.</small></li><li><b>Parole de savoir</b><span>niv. 2</span><br><small>Rend à chaque chose sa place. Savoir.</small></li><li><b>La Porte de Khaybar</b><span>niv. 4</span><br><small>Il se fait rempart : garde du groupe renforcée, les coups viennent à lui.</small></li><li><b>« Interrogez-moi »</b><span>niv. 6</span><br><small>Il répond à toutes les questions à la fois. Savoir sur tous les égrégores.</small></li><li><b>Arrêt sans appel</b><span>niv. 8</span><br><small>Justice forte ; retire les faveurs que l’égrégore s’est données.</small></li></ul>
+          <div class="attitudes"><figure><img class="px" src="img/g-ali-ali-prie.png" alt="" width="32" height="48"><figcaption>Recueillement</figcaption></figure><figure><img class="px" src="img/g-ali-ali-resolu.png" alt="" width="32" height="48"><figcaption>Résolution</figcaption></figure><figure><img class="px" src="img/g-ali-ali-accable.png" alt="" width="32" height="48"><figcaption>Accablement</figcaption></figure><figure><img class="px" src="img/g-ali-ali-salut.png" alt="" width="32" height="48"><figcaption>Salut</figcaption></figure><figure><img class="px" src="img/g-ali-ali-surpris.png" alt="" width="32" height="48"><figcaption>Surprise</figcaption></figure><figure><img class="px" src="img/g-ali-ali-garde.png" alt="" width="32" height="48"><figcaption>Garde</figcaption></figure></div>
+        </div>
+      </article><div class="suite"><article class="fiche-p" style="--c:#c49bff">
+        <div class="scene"><img class="px" src="img/g-ali-ibnabbas.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Ibn 'Abbâs <span class="ar" lang="ar" dir="rtl">ابن عباس</span></h4><p class="titre">Le Docte de la communauté</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Sage</dd></div><div><dt>Lumière</dt><dd style="color:#c49bff">Savoir <i>('Ilm)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Le Docte</dd></div></dl>
+          <p class="bio">Cousin du Messager d'Allah ﷺ, il avait environ treize ans à sa mort (qu'Allah l'agrée, ainsi que son père). Le Messager ﷺ avait invoqué pour lui l'intelligence de la religion.</p><p class="src">D’après al-Bukhârî ; Ibn Sa'd, Tabaqât</p>
+          <p class="vertus-l">Question droite · L'Interprète · Parole apaisante · La Preuve · Trois réponses · Le Retour des égarés</p>
+        </div>
+      </article><article class="fiche-p" style="--c:#7fd69a">
+        <div class="scene"><img class="px" src="img/g-ali-ammar.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>'Ammâr <span class="ar" lang="ar" dir="rtl">عمّار</span></h4><p class="titre">Le Vétéran</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Soigneur</dd></div><div><dt>Lumière</dt><dd style="color:#7fd69a">Patience <i>(Sabr)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Patience des premiers jours</dd></div></dl>
+          <p class="bio">'Ammâr (qu'Allah l'agrée) fut des tout premiers musulmans de La Mecque. Sa famille, pauvre et sans protecteur, endura la torture pour sa foi, et ses parents comptent parmi les premiers martyrs de l'islam.</p><p class="src">D’après Ibn Hishâm, Sîra ; Ibn Sa'd, Tabaqât ; Ahmad, al-Musnad</p>
+          <p class="vertus-l">Main du vétéran · Patience ardente · Baume des anciens · Délier · Tenir</p>
+        </div>
+      </article><article class="fiche-p" style="--c:#5fe0d0">
+        <div class="scene"><img class="px" src="img/g-ali-qays.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Qays <span class="ar" lang="ar" dir="rtl">قيس</span></h4><p class="titre">Fils de Sa'd</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Stratège</dd></div><div><dt>Lumière</dt><dd style="color:#5fe0d0">Miséricorde <i>(Rahma)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Générosité sans compte</dd></div></dl>
+          <p class="bio">Qays ibn Sa'd ibn 'Ubâda (qu'Allah les agrée), des Ansâr de Médine, était le fils du chef des Khazraj. Il se tenait auprès du Messager d'Allah ﷺ, rapporte Anas, « comme le chef de la garde auprès de l'émir ».</p><p class="src">D’après al-Bukhârî ; Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh</p>
+          <p class="vertus-l">Largesse · Coup du garde · Main ouverte · Manœuvre · Bannière de sûreté · Relever</p>
+        </div>
+      </article></div></div><div class="troupe"><h3>La Citadelle</h3><article class="fiche-p meneur" style="--c:#7fd69a">
+        <div class="scene"><img class="px" src="img/g-caid-caid.png" alt="" width="32" height="48"><img class="px profil" src="img/gl-caid-caid.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><img class="sceau" src="img/sceau-caid.png" alt=""><div><h4>Le Caïd <span class="ar" lang="ar" dir="rtl">القائد</span></h4><p class="titre">Seigneur de la Citadelle</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Gardien</dd></div><div><dt>Lumière</dt><dd style="color:#7fd69a">Patience <i>(Sabr)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Ce qui tient les hommes</dd></div></dl>
+          <p class="bio">Seigneur berbère d'une citadelle au bord du désert, héritier d'un père assassiné. Il n'a pas de nom dans la Chaîne : seulement sa charge, et ce qu'il a transmis. Il apprit à gouverner dans les vies des Compagnons, que lui lisait un vieux maître, et consigna pour son fils ce qu'il en avait fait.</p><p class="src">Personnage de fiction</p>
+          <p class="ultime"><b>Ce qui tient les hommes.</b> Relève, soigne et fortifie tout le groupe.</p><ul class="vertus"><li><b>Veiller</b><span>niv. 1</span><br><small>Tenir sans haine : frappe de Patience.</small></li><li><b>Peser l'homme</b><span>niv. 1</span><br><small>Regarder avant de juger : révèle les failles d'un égrégore.</small></li><li><b>Faire rempart</b><span>niv. 1</span><br><small>Se place devant les siens : attire les coups, Garde renforcée.</small></li><li><b>« Disait mon père »</b><span>niv. 2</span><br><small>Une parole reçue raffermit le groupe : Force et Esprit accrus.</small></li><li><b>Dire le vrai</b><span>niv. 3</span><br><small>Nommer la chose telle qu'elle est : frappe de Véracité.</small></li><li><b>La même loi</b><span>niv. 3</span><br><small>Une seule balance pour tous : Justice sur tous les égrégores.</small></li></ul>
+          <div class="attitudes"><figure><img class="px" src="img/g-caid-caid-prie.png" alt="" width="32" height="48"><figcaption>Recueillement</figcaption></figure><figure><img class="px" src="img/g-caid-caid-resolu.png" alt="" width="32" height="48"><figcaption>Résolution</figcaption></figure><figure><img class="px" src="img/g-caid-caid-accable.png" alt="" width="32" height="48"><figcaption>Accablement</figcaption></figure><figure><img class="px" src="img/g-caid-caid-salut.png" alt="" width="32" height="48"><figcaption>Salut</figcaption></figure><figure><img class="px" src="img/g-caid-caid-surpris.png" alt="" width="32" height="48"><figcaption>Surprise</figcaption></figure><figure><img class="px" src="img/g-caid-caid-garde.png" alt="" width="32" height="48"><figcaption>Garde</figcaption></figure></div>
+        </div>
+      </article><div class="suite"><article class="fiche-p" style="--c:#c49bff">
+        <div class="scene"><img class="px" src="img/g-caid-geometre.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Maître Bahrâm <span class="ar" lang="ar" dir="rtl">بهرام</span></h4><p class="titre">le Géomètre</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Soigneur</dd></div><div><dt>Lumière</dt><dd style="color:#c49bff">Savoir <i>('Ilm)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Ce qui demeure</dd></div></dl>
+          <p class="bio">L’un des savants perses à qui le vieux Caïd donna asile. Il mesure les champs, trace les rigoles et tient l’école.</p><p class="src">Personnage de fiction</p>
+          <p class="vertus-l">Mesurer · Démontrer · Baume · Partager l'eau · Leçon du soir · La pente douce</p>
+        </div>
+      </article><article class="fiche-p" style="--c:#ff7a5c">
+        <div class="scene"><img class="px" src="img/g-caid-capitaine.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Zîrî <span class="ar" lang="ar" dir="rtl">زيري</span></h4><p class="titre">Capitaine des sentinelles</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Guerrier</dd></div><div><dt>Lumière</dt><dd style="color:#ff7a5c">Courage <i>(Shajâ'a)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>L'aube sur le rempart</dd></div></dl>
+          <p class="bio">Il commande les sentinelles du rempart.</p><p class="src">Personnage de fiction</p>
+          <p class="vertus-l">Coup de lance · Braver · Tenir le poste · La ronde · Poser la lance · Cri de la relève</p>
+        </div>
+      </article></div></div><div class="troupe"><h3>2084 · La Cité-Miroir</h3><article class="fiche-p meneur" style="--c:#7fd69a">
+        <div class="scene"><img class="px" src="img/g-idris-idris.png" alt="" width="32" height="48"><img class="px profil" src="img/gl-idris-idris.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><img class="sceau" src="img/sceau-idris.png" alt=""><div><h4>Idris <span class="ar" lang="ar" dir="rtl">إدريس</span></h4><p class="titre">le Râwî</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Stratège</dd></div><div><dt>Lumière</dt><dd style="color:#7fd69a">Patience <i>(Sabr)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>La Chaîne entière</dd></div></dl>
+          <p class="bio">Archiviste de la Cité-Miroir, en 2084. Il descend aux Archives basses, y trouve la Chaîne et la remonte, maillon après maillon.</p><p class="src">Personnage de fiction</p>
+          <p class="ultime"><b>La Chaîne entière.</b> De témoin en témoin : toutes les Lumières à la fois.</p><ul class="vertus"><li><b>Tenir bon</b><span>niv. 1</span><br><small>Résister sans haine : frappe de Patience.</small></li><li><b>Citer la source</b><span>niv. 1</span><br><small>« De qui le tiens-tu ? » Révèle les failles d’un égrégore.</small></li><li><b>Reprendre souffle</b><span>niv. 1</span><br><small>Rend de la Constance à un compagnon.</small></li><li><b>Parole du Véridique</b><span>niv. 9</span><br><small>La Lumière d’Abû Bakr : dire vrai quand tout vacille.</small></li><li><b>Mesure du Fârûq</b><span>niv. 9</span><br><small>La Lumière de ’Umar : la même balance pour tous.</small></li><li><b>Le Sabre rengainé</b><span>niv. 9</span><br><small>La Lumière de Khâlid : le courage de s’effacer.</small></li><li><b>Largesse du Généreux</b><span>niv. 9</span><br><small>La Lumière de ’Uthmân : soigne tout le groupe.</small></li><li><b>Porte du Savoir</b><span>niv. 9</span><br><small>La Lumière de ’Alî : comprendre avant de juger.</small></li></ul>
+          <div class="attitudes"><figure><img class="px" src="img/g-idris-idris-prie.png" alt="" width="32" height="48"><figcaption>Recueillement</figcaption></figure><figure><img class="px" src="img/g-idris-idris-resolu.png" alt="" width="32" height="48"><figcaption>Résolution</figcaption></figure><figure><img class="px" src="img/g-idris-idris-accable.png" alt="" width="32" height="48"><figcaption>Accablement</figcaption></figure><figure><img class="px" src="img/g-idris-idris-salut.png" alt="" width="32" height="48"><figcaption>Salut</figcaption></figure><figure><img class="px" src="img/g-idris-idris-surpris.png" alt="" width="32" height="48"><figcaption>Surprise</figcaption></figure><figure><img class="px" src="img/g-idris-idris-garde.png" alt="" width="32" height="48"><figcaption>Garde</figcaption></figure></div>
+        </div>
+      </article><div class="suite"><article class="fiche-p" style="--c:#c49bff">
+        <div class="scene"><img class="px" src="img/g-idris-yunus.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Maître Yûnus <span class="ar" lang="ar" dir="rtl">يونس</span></h4><p class="titre">le Gardien</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Soigneur</dd></div><div><dt>Lumière</dt><dd style="color:#c49bff">Savoir <i>('Ilm)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Ce qui fut gardé</dd></div></dl>
+          <p class="bio">Il veille sur les Archives basses et sur la Chaîne. C’est auprès de lui qu’Idris apprend à citer ses sources.</p><p class="src">Personnage de fiction</p>
+          <p class="vertus-l">Leçon · Panser · Veille · Rappel · Mémoire vive</p>
+        </div>
+      </article><article class="fiche-p" style="--c:#ff7a5c">
+        <div class="scene"><img class="px" src="img/g-idris-salim.png" alt="" width="32" height="48"></div>
+        <div class="texte">
+          <header><div><h4>Sâlim <span class="ar" lang="ar" dir="rtl">سالم</span></h4><p class="titre">le Repenti</p></div></header>
+          <dl><div><dt>Rôle</dt><dd>Guerrier</dd></div><div><dt>Lumière</dt><dd style="color:#ff7a5c">Courage <i>(Shajâ'a)</i></dd></div><div><dt>Acte de Sakîna</dt><dd>Coupure générale</dd></div></dl>
+          <p class="bio">Dix ans passés à nourrir l’Agrégor. Il sait où est son cœur, et ne veut plus le servir.</p><p class="src">Personnage de fiction</p>
+          <p class="vertus-l">Couper le signal · Débrancher · Brouillage · Faire front · L’Aveu</p>
+        </div>
+      </article></div></div>
+    <div class="troupe"><h3>Gens de rencontre</h3>
+      <p>Anciens, savants, marchands, soldats, envoyés : ceux à qui l’on parle en chemin. Aucun groupe n’est un ennemi par nature.</p>
+      <div class="gens-l"><figure><img class="px" src="img/gk-ancien.png" alt="" width="32" height="48"><figcaption>ancien</figcaption></figure><figure><img class="px" src="img/gk-savant.png" alt="" width="32" height="48"><figcaption>savant</figcaption></figure><figure><img class="px" src="img/gk-marchand.png" alt="" width="32" height="48"><figcaption>marchand</figcaption></figure><figure><img class="px" src="img/gk-soldat.png" alt="" width="32" height="48"><figcaption>soldat</figcaption></figure><figure><img class="px" src="img/gk-berbere.png" alt="" width="32" height="48"><figcaption>Berbère</figcaption></figure><figure><img class="px" src="img/gk-perse.png" alt="" width="32" height="48"><figcaption>Perse</figcaption></figure><figure><img class="px" src="img/gk-romain.png" alt="" width="32" height="48"><figcaption>Romain</figcaption></figure><figure><img class="px" src="img/gk-moine.png" alt="" width="32" height="48"><figcaption>moine</figcaption></figure><figure><img class="px" src="img/gk-marin.png" alt="" width="32" height="48"><figcaption>marin</figcaption></figure><figure><img class="px" src="img/gk-enfant.png" alt="" width="32" height="48"><figcaption>enfant</figcaption></figure><figure><img class="px" src="img/gk-cyber.png" alt="" width="32" height="48"><figcaption>2084</figcaption></figure></div>
+    </div>
   </section>
 
   <p class="partie">Les systèmes</p>
@@ -634,7 +882,7 @@ body.export .pl { border: 0; }
     <p>Le sujet est religieux et historique. L’exactitude et le respect passent avant le jeu.</p>
     <ul class="engage">
       <li><b>Le Prophète <span class="pbuh">ﷺ</span> n’apparaît jamais.</b> Ni image, ni silhouette, ni réplique. On l’évoque seulement.</li>
-      <li><b>Personne n’a de visage.</b> Les personnages sont des volumes en blocs. Les Compagnons portent un panneau de lumière.</li>
+      <li><b>Personne n’a de visage.</b> Ni yeux, ni bouche, ni trait. Les Compagnons portent un voile de lumière ; l’émotion se lit dans le corps.</li>
       <li><b>Seulement des événements attestés.</b> Une parole citée porte sa source. En cas de doute, on écrit « On rapporte ».</li>
       <li><b>Aucun ennemi n’est une personne.</b> Ni un peuple, ni une religion. On n’affronte que des égrégores abstraits.</li>
       <li><b>Aucun groupe n’est ennemi par nature.</b> Perses, juifs, chrétiens, tribus : des acteurs aux intérêts légitimes, avec des gens d’honneur chez chacun.</li>
@@ -693,26 +941,23 @@ body.export .pl { border: 0; }
     <div class="in">
       <p class="sur">Les Compagnons</p>
       <h3>Cinq sagas, cinq Lumières</h3>
-      <div class="cinq"><article style="--c:#ffe08a"><img class="sceau" src="img/sceau-abubakr.png" alt=""><span class="ord">Maillon I · 632–634</span><b>Abû Bakr as-Siddîq</b><span class="lum">As-Siddîq · Véracité</span><p>Le jour où tout pouvait se défaire, un homme doux a dit le vrai.</p><ol><li><span>I</span>Le Jour le plus sombre</li><li><span>II</span>L'Armée d'Usâma</li><li><span>III</span>Yamâma — le Menteur</li></ol><div class="groupe"><img class="px" src="img/h-abubakr-abubakr.png" alt=""><img class="px" src="img/h-abubakr-umar.png" alt=""><img class="px" src="img/h-abubakr-abuubayda.png" alt=""></div></article><article style="--c:#6fb6ff"><img class="sceau" src="img/sceau-umar.png" alt=""><span class="ord">Maillon II · 634–644</span><b>'Umar ibn al-Khattâb</b><span class="lum">Al-Fârûq · Justice</span><p>Deux empires tombèrent sous son califat. Lui dormait sur une natte.</p><ol><li><span>I</span>Les Rondes de nuit</li><li><span>II</span>Les Clés de Jérusalem</li><li><span>III</span>Le Trône et la Natte</li></ol><div class="groupe"><img class="px" src="img/h-umar-umar.png" alt=""><img class="px" src="img/h-umar-aslam.png" alt=""><img class="px" src="img/h-umar-abuubayda.png" alt=""><img class="px" src="img/h-umar-abdarrahman.png" alt=""></div></article><article style="--c:#ff7a5c"><img class="sceau" src="img/sceau-khalid.png" alt=""><span class="ord">Maillon III · 634–642</span><b>Khâlid ibn al-Walîd</b><span class="lum">Le Sabre dégainé · Courage</span><p>Il n'a jamais perdu une bataille. Il lui reste à vaincre sa propre statue.</p><ol><li><span>I</span>La Traversée</li><li><span>II</span>Yarmoûk</li><li><span>III</span>L'Épée au fourreau</li></ol><div class="groupe"><img class="px" src="img/h-khalid-khalid.png" alt=""><img class="px" src="img/h-khalid-qaqa.png" alt=""><img class="px" src="img/h-khalid-dirar.png" alt=""></div></article><article style="--c:#5fe0d0"><img class="sceau" src="img/sceau-uthman.png" alt=""><span class="ord">Maillon IV · 644–656</span><b>'Uthmân ibn 'Affân</b><span class="lum">Le Généreux · Miséricorde</span><p>Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui.</p><ol><li><span>I</span>Les Feuillets</li><li><span>II</span>La Bataille des Mâts</li><li><span>III</span>La Maison assiégée</li></ol><div class="groupe"><img class="px" src="img/h-uthman-uthman.png" alt=""><img class="px" src="img/h-uthman-zayd.png" alt=""><img class="px" src="img/h-uthman-hudhayfa.png" alt=""></div></article><article style="--c:#c49bff"><img class="sceau" src="img/sceau-ali.png" alt=""><span class="ord">Maillon V · 656–661</span><b>'Alî ibn Abî Tâlib</b><span class="lum">La Porte du Savoir · Savoir</span><p>Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour.</p><ol><li><span>I</span>Le Bouclier et le Juge</li><li><span>II</span>La Parole détournée</li><li><span>III</span>Nahrawân, puis l’aube</li></ol><div class="groupe"><img class="px" src="img/h-ali-ali.png" alt=""><img class="px" src="img/h-ali-ibnabbas.png" alt=""><img class="px" src="img/h-ali-ammar.png" alt=""><img class="px" src="img/h-ali-qays.png" alt=""></div></article></div>
+      <div class="cinq"><article style="--c:#ffe08a"><img class="sceau" src="img/sceau-abubakr.png" alt=""><span class="ord">Maillon I · 632–634</span><b>Abû Bakr as-Siddîq</b><span class="lum">As-Siddîq · Véracité</span><p>Le jour où tout pouvait se défaire, un homme doux a dit le vrai.</p><ol><li><span>I</span>Le Jour le plus sombre</li><li><span>II</span>L'Armée d'Usâma</li><li><span>III</span>Yamâma — le Menteur</li></ol><div class="groupe"><img class="px" src="img/g-abubakr-abubakr.png" alt=""><img class="px" src="img/g-abubakr-umar.png" alt=""><img class="px" src="img/g-abubakr-abuubayda.png" alt=""></div></article><article style="--c:#6fb6ff"><img class="sceau" src="img/sceau-umar.png" alt=""><span class="ord">Maillon II · 634–644</span><b>'Umar ibn al-Khattâb</b><span class="lum">Al-Fârûq · Justice</span><p>Deux empires tombèrent sous son califat. Lui dormait sur une natte.</p><ol><li><span>I</span>Les Rondes de nuit</li><li><span>II</span>Les Clés de Jérusalem</li><li><span>III</span>Le Trône et la Natte</li></ol><div class="groupe"><img class="px" src="img/g-umar-umar.png" alt=""><img class="px" src="img/g-umar-aslam.png" alt=""><img class="px" src="img/g-umar-abuubayda.png" alt=""><img class="px" src="img/g-umar-abdarrahman.png" alt=""></div></article><article style="--c:#ff7a5c"><img class="sceau" src="img/sceau-khalid.png" alt=""><span class="ord">Maillon III · 634–642</span><b>Khâlid ibn al-Walîd</b><span class="lum">Le Sabre dégainé · Courage</span><p>Il n'a jamais perdu une bataille. Il lui reste à vaincre sa propre statue.</p><ol><li><span>I</span>La Traversée</li><li><span>II</span>Yarmoûk</li><li><span>III</span>L'Épée au fourreau</li></ol><div class="groupe"><img class="px" src="img/g-khalid-khalid.png" alt=""><img class="px" src="img/g-khalid-qaqa.png" alt=""><img class="px" src="img/g-khalid-dirar.png" alt=""></div></article><article style="--c:#5fe0d0"><img class="sceau" src="img/sceau-uthman.png" alt=""><span class="ord">Maillon IV · 644–656</span><b>'Uthmân ibn 'Affân</b><span class="lum">Le Généreux · Miséricorde</span><p>Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui.</p><ol><li><span>I</span>Les Feuillets</li><li><span>II</span>La Bataille des Mâts</li><li><span>III</span>La Maison assiégée</li></ol><div class="groupe"><img class="px" src="img/g-uthman-uthman.png" alt=""><img class="px" src="img/g-uthman-zayd.png" alt=""><img class="px" src="img/g-uthman-hudhayfa.png" alt=""></div></article><article style="--c:#c49bff"><img class="sceau" src="img/sceau-ali.png" alt=""><span class="ord">Maillon V · 656–661</span><b>'Alî ibn Abî Tâlib</b><span class="lum">La Porte du Savoir · Savoir</span><p>Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour.</p><ol><li><span>I</span>Le Bouclier et le Juge</li><li><span>II</span>La Parole détournée</li><li><span>III</span>Nahrawân, puis l’aube</li></ol><div class="groupe"><img class="px" src="img/g-ali-ali.png" alt=""><img class="px" src="img/g-ali-ibnabbas.png" alt=""><img class="px" src="img/g-ali-ammar.png" alt=""><img class="px" src="img/g-ali-qays.png" alt=""></div></article></div>
       <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
     </div>
   </article></div></div>
 
-  <div class="cartel"><b>Planche 4 · Personne n’a de visage</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="cartel"><b>Planche 4 · Personne n’a de visage, le corps parle</b><span>16:9 · 1920 × 1080</span></div>
   <div class="defile"><div class="pw"><article class="pl" data-nom="04-personnages">
     <div class="in">
       <div class="visage">
         <div class="texte">
           <p class="sur">Les personnages</p>
           <h3>Personne n’a de visage</h3>
-          <p>Des volumes en blocs : une tête cubique d’étoffe, un corps, deux bras, deux jambes. Aucun trait.</p>
-          <p>On reconnaît un Compagnon à sa lumière, non à ses traits : il porte un panneau clair à la place du visage.</p>
+          <p>Ni yeux, ni bouche, ni trait. On reconnaît un Compagnon à son voile de lumière, à la couleur de son bandeau, à ce qu’il porte.</p>
+          <p>L’émotion passe par le corps : la tête qui s’incline, le bras qui se lève, le genou qui plie.</p>
           <p>Le Prophète <span class="pbuh">ﷺ</span> n’apparaît jamais.</p>
         </div>
-        <div class="scene">
-          <div class="rang"><figure><img class="px" src="img/h-abubakr-abubakr.png" alt=""><figcaption>Abû Bakr</figcaption></figure><figure><img class="px" src="img/h-umar-umar.png" alt=""><figcaption>'Umar</figcaption></figure><figure><img class="px" src="img/h-khalid-khalid.png" alt=""><figcaption>Khâlid</figcaption></figure><figure><img class="px" src="img/h-uthman-uthman.png" alt=""><figcaption>'Uthmân</figcaption></figure><figure><img class="px" src="img/h-ali-ali.png" alt=""><figcaption>'Alî</figcaption></figure></div>
-          <div class="rang petit"><figure><img class="px" src="img/k-ancien.png" alt=""><figcaption>ancien</figcaption></figure><figure><img class="px" src="img/k-savant.png" alt=""><figcaption>savant</figcaption></figure><figure><img class="px" src="img/k-marchand.png" alt=""><figcaption>marchand</figcaption></figure><figure><img class="px" src="img/k-soldat.png" alt=""><figcaption>soldat</figcaption></figure><figure><img class="px" src="img/k-berbere.png" alt=""><figcaption>Berbère</figcaption></figure><figure><img class="px" src="img/k-perse.png" alt=""><figcaption>Perse</figcaption></figure><figure><img class="px" src="img/k-romain.png" alt=""><figcaption>Romain</figcaption></figure><figure><img class="px" src="img/k-moine.png" alt=""><figcaption>moine</figcaption></figure><figure><img class="px" src="img/k-marin.png" alt=""><figcaption>marin</figcaption></figure><figure><img class="px" src="img/k-enfant.png" alt=""><figcaption>enfant</figcaption></figure><figure><img class="px" src="img/k-cyber.png" alt=""><figcaption>2084</figcaption></figure></div>
-        </div>
+        <div class="scene"><span></span><span>Debout</span><span>Recueillement</span><span>Résolution</span><span>Accablement</span><span>Salut</span><span>Surprise</span><span>Garde</span><b style="color:#ffe08a">Abû Bakr</b><img class="px" src="img/g-abubakr-abubakr.png" alt=""><img class="px" src="img/g-abubakr-abubakr-prie.png" alt=""><img class="px" src="img/g-abubakr-abubakr-resolu.png" alt=""><img class="px" src="img/g-abubakr-abubakr-accable.png" alt=""><img class="px" src="img/g-abubakr-abubakr-salut.png" alt=""><img class="px" src="img/g-abubakr-abubakr-surpris.png" alt=""><img class="px" src="img/g-abubakr-abubakr-garde.png" alt=""><b style="color:#6fb6ff">'Umar</b><img class="px" src="img/g-umar-umar.png" alt=""><img class="px" src="img/g-umar-umar-prie.png" alt=""><img class="px" src="img/g-umar-umar-resolu.png" alt=""><img class="px" src="img/g-umar-umar-accable.png" alt=""><img class="px" src="img/g-umar-umar-salut.png" alt=""><img class="px" src="img/g-umar-umar-surpris.png" alt=""><img class="px" src="img/g-umar-umar-garde.png" alt=""><b style="color:#ff7a5c">Khâlid</b><img class="px" src="img/g-khalid-khalid.png" alt=""><img class="px" src="img/g-khalid-khalid-prie.png" alt=""><img class="px" src="img/g-khalid-khalid-resolu.png" alt=""><img class="px" src="img/g-khalid-khalid-accable.png" alt=""><img class="px" src="img/g-khalid-khalid-salut.png" alt=""><img class="px" src="img/g-khalid-khalid-surpris.png" alt=""><img class="px" src="img/g-khalid-khalid-garde.png" alt=""><b style="color:#5fe0d0">'Uthmân</b><img class="px" src="img/g-uthman-uthman.png" alt=""><img class="px" src="img/g-uthman-uthman-prie.png" alt=""><img class="px" src="img/g-uthman-uthman-resolu.png" alt=""><img class="px" src="img/g-uthman-uthman-accable.png" alt=""><img class="px" src="img/g-uthman-uthman-salut.png" alt=""><img class="px" src="img/g-uthman-uthman-surpris.png" alt=""><img class="px" src="img/g-uthman-uthman-garde.png" alt=""><b style="color:#c49bff">'Alî</b><img class="px" src="img/g-ali-ali.png" alt=""><img class="px" src="img/g-ali-ali-prie.png" alt=""><img class="px" src="img/g-ali-ali-resolu.png" alt=""><img class="px" src="img/g-ali-ali-accable.png" alt=""><img class="px" src="img/g-ali-ali-salut.png" alt=""><img class="px" src="img/g-ali-ali-surpris.png" alt=""><img class="px" src="img/g-ali-ali-garde.png" alt=""></div>
       </div>
       <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
     </div>
@@ -797,7 +1042,7 @@ body.export .pl { border: 0; }
             <img class="px" src="img/t-zellij.png" alt=""><img class="px" src="img/t-zsand.png" alt=""><img class="px" src="img/t-mihrab.png" alt="">
           </div>
           <div class="vue"><img src="img/d-medine-jour.jpg" alt=""></div>
-          <p class="cap" style="margin:.9em 0 0">Les personnages sont des blocs, les décors sont travaillés. Dans chaque mosquée, deux carrés de lumière dessinent l’étoile à huit branches.</p>
+          <p class="cap" style="margin:.9em 0 0">Zellige « étoile et croix », frises, rosaces. Dans chaque mosquée, deux carrés de lumière dessinent l’étoile à huit branches.</p>
         </div>
       </div>
       <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>

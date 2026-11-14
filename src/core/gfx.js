@@ -147,49 +147,8 @@
     return (ocache[key] = cv);
   };
 
-  /* ================= PERSONNAGES (sans visage) ================= */
-  const ccache = {};
-  // Personnages en blocs : des volumes, jamais de traits. Tête = cube d'étoffe ; les Compagnons portent
-  // un panneau de lumière à la place du visage.
-  G.charSheet = function (look) {
-    const key = JSON.stringify(look); if (ccache[key]) return ccache[key];
-    const cv = mk(48, 96), c = cv.getContext('2d');
-    const kind = look.kind || 'homme', robe = look.robe || '#8a7355', cloak = look.cloak || shade(robe, 0.68);
-    const lit = kind === 'compagnon' || !!look.aura, short = kind === 'soldat' || kind === 'romain' || kind === 'marin' || kind === 'cyber';
-    let head = look.head || '#e6dcc4'; if (kind === 'berbere') head = look.veil || '#1c3a5a'; if (kind === 'moine') head = shade(robe, 0.9);
-    const panel = lit ? '#fff6d4' : shade(head, 0.82), legs = short ? '#4a3d32' : shade(robe, 0.8), arm = shade(robe, 0.9);
-    for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) {
-      const ox = f * 16, oy = dir * 24, side = dir === 1 || dir === 2, flip = dir === 2;
-      const B = (col, x, y, w, h) => R(c, col, ox + (flip ? 16 - x - w : x), oy + y, w, h);
-      const cube = (col, x, y, w, h) => { B(col, x, y, w, h); B(shade(col, 1.22), x, y, w, 1); B(shade(col, 0.72), flip ? x : x + w - 1, y + 1, 1, h - 1); B(shade(col, 0.58), x, y + h - 1, w, 1); };
-      if (!side) {
-        cube(legs, 4, f === 1 ? 16 : 17, 4, 6); cube(legs, 8, f === 2 ? 16 : 17, 4, 6);
-        cube(dir === 3 ? cloak : robe, 4, 9, 8, 8);
-        if (dir === 0) { B(cloak, 4, 9, 1, 8); B(cloak, 11, 9, 1, 8); B(shade(cloak, 0.8), 4, 14, 8, 1); }
-        cube(arm, 2, f === 1 ? 10 : f === 2 ? 8 : 9, 2, 7); cube(arm, 12, f === 2 ? 10 : f === 1 ? 8 : 9, 2, 7);
-        cube(head, 4, 1, 8, 8); if (dir === 0) B(panel, 5, 4, 6, 4);
-        if (lit) B(shade(head, 0.7), 4, 3, 8, 1);
-      } else {
-        if (f === 0) cube(legs, 6, 17, 4, 6); else if (f === 1) { cube(legs, 9, 17, 3, 6); cube(legs, 4, 16, 3, 6); } else { cube(legs, 8, 16, 3, 6); cube(legs, 5, 17, 3, 6); }
-        cube(robe, 5, 9, 6, 8); B(cloak, 9, 9, 2, 8);
-        cube(arm, f === 1 ? 5 : f === 2 ? 9 : 7, 9, 2, 7);
-        cube(head, 4, 1, 8, 8); B(panel, 4, 4, 3, 4);
-        if (lit) B(shade(head, 0.7), 4, 3, 8, 1);
-      }
-      // attributs, eux aussi en blocs
-      if (kind === 'soldat') { B('#8a8f98', 4, 1, 8, 2); B('#6b4a2e', 14, 2, 1, 20); B('#c9ced6', 14, 0, 1, 2); }
-      if (kind === 'romain') { B('#b9bec8', 4, 1, 8, 2); B('#b33327', 6, 0, 4, 1); if (dir !== 3) B('#b9bec8', side ? 5 : 4, 10, side ? 6 : 8, 4); B('#6b4a2e', 14, 2, 1, 20); B('#c9ced6', 14, 0, 1, 2); }
-      if (kind === 'perse') { B(head, 5, 0, 6, 1); B('#d9b45a', 4, 2, 8, 1); B('#d9b45a', side ? 5 : 4, 16, side ? 6 : 8, 1); }
-      if (kind === 'ancien') { B('#6b4a2e', 1, 5, 1, 18); B('#e9e2d0', side ? 5 : 4, 9, side ? 6 : 8, 2); }
-      if (kind === 'savant') { B('#e9e2d0', side ? 5 : 4, 9, side ? 6 : 8, 2); if (dir === 0) { B('#f1e7cc', 9, 13, 3, 3); B('#8a6238', 9, 13, 3, 1); } }
-      if (kind === 'marchand') { B('#d9b45a', side ? 5 : 4, 13, side ? 6 : 8, 1); if (dir === 0) B('#a8663c', 1, 15, 3, 3); }
-      if (kind === 'berbere') { B(shade(head, 1.3), 4, 3, 8, 1); if (dir === 0) B('#c79a70', 5, 4, 6, 1); }
-      if (kind === 'cyber') { B('#39e6ff', side ? 7 : 7, 10, 1, 6); B('#ff4fd8', side ? 5 : 4, 16, side ? 6 : 8, 1); }
-      if (kind === 'marin') { B('#e9e2d0', side ? 5 : 4, 11, side ? 6 : 8, 1); B('#e9e2d0', side ? 5 : 4, 14, side ? 6 : 8, 1); }
-    }
-    if (kind === 'enfant') { const cv2 = mk(48, 96), c2 = cv2.getContext('2d'); c2.imageSmoothingEnabled = false; for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) c2.drawImage(cv, f * 16, dir * 24, 16, 24, f * 16 + 2, dir * 24 + 7, 12, 17); return (ccache[key] = cv2); }
-    return (ccache[key] = cv);
-  };
+  /* ================= PERSONNAGES ================= */
+  // Dessinés dans sprites.js (G.charSheet, G.charPose, G.charGrand) : silhouettes au pixel, sans visage.
   G.DIRS = { down: 0, left: 1, right: 2, up: 3 };
 
   /* ================= ÉGRÉGORES ================= */
