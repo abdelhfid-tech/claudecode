@@ -1,7 +1,10 @@
-/* ISNAD — bande-son originale (toutes les mélodies sont composées pour le jeu).
-   Une piste = ISNAD.registerMusic(nom, { bpm, beats, voices: [{ wave, vol, notes }] }).
-   Jeton = hauteur/durée en temps ; accord = notes jointes par + ; silence = -.
-   Le motif de la Chaîne (ré – la – sol – fa# – ré) revient dans titre, chaine, desert, citadelle, boss, espoir, victoire. */
+/* ISNAD — bande-son originale : toutes les mélodies sont composées pour le jeu, aucune n'est reprise d'une œuvre existante.
+   Une piste = ISNAD.registerMusic(nom, { bpm, beats, intro?, voices: [{ wave, vol, pan?, notes }] }).
+   Jeton = hauteur/durée en temps ; accord = notes jointes par + ; silence = - ; `intro` = temps joués une seule fois.
+   Percussions : D dum, T tek, t tek léger, r riq, k grosse caisse, b grand tambour, m tom, s caisse claire, h charleston,
+   c cymbale, a enclume.
+   Le thème de la Chaîne — trois maillons qui montent, (ré) la–sol, si–la, ré — revient dans titre, chaine, citadelle,
+   espoir, victoire ; vice le renverse avant de le retrouver. Tonalités, tempos et idées : docs/musique.md. */
 (function () {
   'use strict';
   const R = (ISNAD.registerMusic || function () {}).bind(ISNAD);
@@ -12,207 +15,410 @@
     return bars.join(' ');
   };
   const N = (s, n) => Array(n).fill(s);                       // n fois la même mesure
-  const E = (...n) => n.map(x => x + '/.5').join(' ');        // suite de croches
-  const pick = (map, prog) => prog.split(' ').map(k => map[k]);
 
-  const MOTIF = 'D4/1 A4/1 G4/.5 F#4/.5 D4/1';
-  const MOTIF5 = 'D5/1 A5/1 G5/.5 F#5/.5 D5/1';
+  /* ---------- un peu d'harmonie : l'accompagnement se déduit des accords, les mélodies s'écrivent à la main ---------- */
+  const STEP = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }, NOTE = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
+  const pcOf = s => (STEP[s[0]] + (s[1] === '#' ? 1 : s[1] === 'b' ? 11 : 0)) % 12;
+  const midi = n => 12 * (+n.slice(-1) + 1) + STEP[n[0]] + (n[1] === '#' ? 1 : n[1] === 'b' ? -1 : 0);
+  const name = k => NOTE[k % 12] + (Math.floor(k / 12) - 1);
+  const QUAL = {
+    '': [0, 4, 7], m: [0, 3, 7], 5: [0, 7], sus: [0, 5, 7], dim: [0, 3, 6], aug: [0, 4, 8], 6: [0, 4, 7, 9], m6: [0, 3, 7, 9],
+    7: [0, 4, 7, 10], m7: [0, 3, 7, 10], M7: [0, 4, 7, 11], '7sus': [0, 5, 7, 10], o7: [0, 3, 6, 9], m7b5: [0, 3, 6, 10], add9: [0, 2, 4, 7]
+  };
+  const chord = sym => {
+    const m = /^([A-G][#b]?)([^/]*)(?:\/([A-G][#b]?))?$/.exec(sym), q = m && QUAL[m[2]];
+    if (!q) { console.warn('musique : accord inconnu « ' + sym + ' »'); return { pcs: [0], bass: 0 }; }
+    const r = pcOf(m[1]); return { pcs: q.map(i => (r + i) % 12), bass: m[3] ? pcOf(m[3]) : r };
+  };
+  // échelle d'un accord à partir de `lo` : la basse, puis les notes de l'accord depuis la quinte au-dessus (rien de serré
+  // dans le grave). Avec '^lo' : les notes de l'accord serrées dans l'octave qui part de `lo`, puis leurs octaves.
+  const ladder = (sym, lo) => {
+    const c = chord(sym);
+    if (lo[0] === '^') { const l = midi(lo.slice(1)), near = c.pcs.map(p => l + ((p - l % 12) + 12) % 12).sort((a, b) => a - b); return near.concat(near.map(k => k + 12), near.map(k => k + 24)); }
+    let b = midi(lo); while (b % 12 !== c.bass) b++;
+    const L = [b]; for (let k = b + 7; L.length < 12; k++) if (c.pcs.includes(k % 12)) L.push(k);
+    return L;
+  };
+  // fig('Dm', 'D2', '0/.5 1/.5 2+3/1 -/2') : un motif écrit en degrés de l'échelle ; o = la basse à l'octave
+  const fig = (sym, lo, pat) => {
+    const L = ladder(sym, lo);
+    return pat.split(' ').map(tk => { const i = tk.lastIndexOf('/'), h = tk.slice(0, i); return h === '-' ? tk : h.split('+').map(x => name(x === 'o' ? L[0] + 12 : L[+x])).join('+') + tk.slice(i); }).join(' ');
+  };
+  // nappe : l'accord serré dans l'octave qui part de `lo` — d'un accord au suivant, les voix bougent le moins possible
+  const pad = (sym, lo, d) => { const c = chord(sym), l = midi(lo); return c.pcs.map(p => l + ((p - l % 12) + 12) % 12).sort((a, b) => a - b).map(name).join('+') + '/' + d; };
+  // 'Dm Gm | A:3 A7:1' → mesures de [accord, temps] ; sans précision, les accords d'une mesure se partagent ses temps
+  const prog = (str, len) => str.split('|').map(bar => { const cs = bar.trim().split(/\s+/); return cs.map(c => { const [s, b] = c.split(':'); return [s, b ? +b : len / cs.length]; }); });
+  const acc = (str, len, lo, pats) => prog(str, len).map(bar => bar.map(([s, b]) => { if (!pats[b]) console.warn('musique : pas de motif pour ' + b + ' temps (' + s + ')'); return fig(s, lo, pats[b] || '-/' + b); }).join(' '));
+  const pads = (str, len, lo) => prog(str, len).map(bar => bar.map(([s, b]) => pad(s, lo, b)).join(' '));
+  const tr = (s, n) => s.replace(/[A-G][#b]?\d/g, x => name(midi(x) + n));              // transpose une ligne de n demi-tons
+  const trp = (p, n) => p.replace(/[A-G][#b]?/g, r => NOTE[(pcOf(r) + n + 120) % 12]);   // transpose une grille d'accords
+  const trs = (bars, n) => bars.map(b => tr(b, n));
 
-  /* ---------- titre : grave puis ample — ré, seconde augmentée (ré mib fa# sol la sib do) ---------- */
+  /* ---------- le thème de la Chaîne ----------
+     Trois maillons : chacun monte (quinte, tierce, quarte) et s'accroche un degré sous l'arrivée du précédent.
+     Huit mesures à quatre temps ; la levée (un demi-temps sur la tonique) appartient à la mesure d'avant. */
+  const CH = {       // forme majeure, en ré
+    a1: 'A4/1.5 G4/.5 B4/1.5 A4/.5', a2: 'D5/2.5 -/1 E4/.5', a3: 'B4/1.5 A4/.5 C#5/1.5 B4/.5', a4: 'E5/3 -/1',
+    b1: 'F#5/1.5 E5/.5 D5/1.5 B4/.5', b2: 'G4/1.5 A4/.5 B4/2', b3: 'A4/1.5 G4/.5 F#4/1.5 E4/.5'
+  };
+  const CHm = {      // forme mineure : le maillon du milieu s'abaisse, la demi-cadence prend la seconde augmentée
+    a1: 'A4/1.5 G4/.5 Bb4/1.5 A4/.5', a2: 'D5/2.5 -/1 D4/.5', a3: 'Bb4/1.5 A4/.5 C#5/1.5 Bb4/.5', a4: 'A4/3 -/1',
+    b1: 'F5/1.5 E5/.5 D5/1.5 Bb4/.5', b2: 'G4/1.5 A4/.5 Bb4/2', b3: 'A4/1.5 G4/.5 E4/1.5 C#4/.5'
+  };
+  const CHP = 'D G | D Bm | Em A | A F#/A# | Bm D/A | G Em | Gm A7 | D';            // la sous-dominante mineure avant la cadence
+  const CHPm = 'Dm Gm | Dm Bb | Gm A | A | Bb Dm/A | Gm Eb | Em7b5 A7 | D';        // cadence picarde
+  // contre-chant de la forme majeure : il répond quand le thème tient sa note, puis le double à la tierce
+  const DESC = ['-/4', '-/1 A5/.5 F#5/.5 G5/.5 F#5/.5 D5/1', '-/4', '-/1 C#5/.5 E5/.5 F#5/1 E5/.5 C#5/.5',
+    'A5/1.5 G5/.5 F#5/1.5 D5/.5', 'B4/1.5 C#5/.5 D5/2', 'C5/1.5 Bb4/.5 A4/1.5 G4/.5', 'F#4/3 -/.5 D4/.5'];
+  // arpèges de harpe : une vague qui monte et se replie, en doubles croches puis en croches
+  const H16 = { 4: '0/.25 1/.25 2/.25 3/.25 4/.25 3/.25 2/.25 3/.25 4/.25 5/.25 4/.25 3/.25 2/.25 3/.25 1/.25 2/.25', 2: '0/.25 1/.25 2/.25 3/.25 4/.25 3/.25 2/.25 1/.25', 1: '0/.25 1/.25 2/.25 3/.25' };
+  const H8 = { 4: '0/.5 1/.5 2/.5 3/.5 4/.5 3/.5 2/.5 1/.5', 2: '0/.5 1/.5 2/.5 3/.5', 1: '0/.5 2/.5' };
+
+  /* ---------- titre : grave puis ample — ré mineur harmonique, puis ré majeur ---------- */
   (function () {
-    const ch = { D: 'D3+F#3+A3/4', Eb: 'Eb3+G3+Bb3/4', Gm: 'G3+Bb3+D4/4', Cm: 'C3+Eb3+G3/4', CD: 'C3+Eb3+G3/2 D3+F#3+A3/2' };
-    const ar = { D: E('D3', 'A3', 'D4', 'F#4', 'A4', 'F#4', 'D4', 'A3'), Eb: E('Eb3', 'Bb3', 'Eb4', 'G4', 'Bb4', 'G4', 'Eb4', 'Bb3'), Gm: E('G3', 'D4', 'G4', 'Bb4', 'D5', 'Bb4', 'G4', 'D4'), Cm: E('C3', 'G3', 'C4', 'Eb4', 'G4', 'Eb4', 'C4', 'G3') };
-    const bs = { D: 'D2/1.5 D2/.5 A2/1 D2/1', Eb: 'Eb2/1.5 Eb2/.5 Bb2/1 Eb2/1', Gm: 'G2/1.5 G2/.5 D2/1 G2/1', Cm: 'C2/1.5 C2/.5 G2/1 C2/1' };
-    R('titre', { bpm: 76, beats: 64, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(4,
-        MOTIF, 'Eb4/1 F#4/1 G4/2', MOTIF, 'C4/1 Eb4/1 D4/2',
-        'A4/1 Bb4/1 A4/.5 G4/.5 F#4/1', 'G4/1 A4/1 Bb4/2', 'C5/1 Bb4/1 A4/.5 G4/.5 F#4/1', 'G4/1 F#4/1 D4/2',
-        MOTIF5, 'Eb5/.5 F#5/.5 G5/1 A5/2', 'Bb5/1 A5/1 G5/.5 F#5/.5 G5/1', 'A5/2 D5/2',
-        'C5/1 D5/1 Eb5/.5 F#5/.5 G5/1', 'A5/1.5 G5/.5 F#5/1 Eb5/1', 'D5/1 A4/1 G4/.5 F#4/.5 Eb4/1', 'D4/4') },
-      { wave: 'strings', vol: 0.25, notes: B(4, ...pick(ch, 'D Eb D CD D Gm Cm D D Eb Gm D Cm Gm D D')) },
-      { wave: 'pluck', vol: 0.24, notes: B(4, ...N('-/4', 8), ...pick(ar, 'D Eb Gm D Cm Gm D'), 'D3/.5 A3/.5 D4/.5 F#4/.5 A4/2') },
-      { wave: 'triangle', vol: 0.4, notes: B(4, 'D2/4', 'Eb2/4', 'D2/4', 'C2/2 D2/2', 'D2/4', 'G2/4', 'C2/4', 'D2/4', ...pick(bs, 'D Eb Gm D Cm Gm D'), 'D2/4') },
-      { wave: 'drums', vol: 0.32, notes: B(4, ...N('D/2 t/1 t/1', 8), ...N('D/1 T/.5 t/.5 D/.5 t/.5 T/1', 7), 'D/1 T/1 D/2') }
+    const pI = 'D5 | Bb/D | Gm/D | A7sus:2 A7:1 A7sus:1';   // la levée (ré) tombe sur la quarte suspendue, pas contre la sensible
+    R('titre', { bpm: 72, beats: 80, intro: 16, voices: [
+      { wave: 'flute', vol: 0.48, notes: B(4, ...N('-/4', 3), '-/3.5 D4/.5', CHm.a1, CHm.a2, CHm.a3, CHm.a4, CHm.b1, CHm.b2, CHm.b3, 'D4/4', ...DESC) },
+      { wave: 'brass', vol: 0.6, pan: 0.15, notes: B(4, ...N('-/4', 11), '-/3.5 D4/.5', CH.a1, CH.a2, CH.a3, CH.a4, CH.b1, CH.b2, CH.b3, 'D4/4') },
+      { wave: 'strings', vol: 0.24, pan: -0.2, notes: B(4, ...pads(pI, 4, 'F3'), ...pads(CHPm, 4, 'F3'), ...pads(CHP, 4, 'F3')) },
+      { wave: 'harp', vol: 0.4, pan: 0.25, notes: B(4, ...acc(pI, 4, 'D2', H16), ...acc(CHPm, 4, 'D2', H8), ...acc(CHP, 4, 'D2', H16)) },
+      { wave: 'triangle', vol: 0.32, notes: B(4, ...acc(pI, 4, 'D2', { 4: '0/4', 2: '0/2', 1: '0/1' }), ...acc(CHPm, 4, 'D2', { 4: '0/3 0/1', 2: '0/2' }), ...acc(CHP, 4, 'D2', { 4: '0/1.5 0/.5 1/1 0/1', 2: '0/1.5 0/.5' })) },
+      { wave: 'timp', vol: 0.3, notes: B(4, 'D2/4', '-/4', '-/4', '-/2 A2/.5 A2/.5 A2/.25 A2/.25 A2/.25 A2/.25',
+        'D2/2 -/2', '-/4', '-/4', 'A2/2 -/2', '-/4', '-/4', '-/2 A2/1 A2/1', 'D2/2 -/1 A2/.5 A2/.5',
+        'D2/1 -/1 D2/1 -/1', '-/4', '-/4', 'A2/2 -/2', '-/4', '-/4', '-/2 A2/.5 A2/.5 A2/.5 A2/.5', 'D2/2 -/2') }
     ] });
   })();
 
-  /* ---------- chaine : suspendu, cloches et cordes ---------- */
-  R('chaine', { bpm: 66, beats: 32, voices: [
-    { wave: 'bell', vol: 0.5, notes: B(4, MOTIF5, '-/1 A4/1 D5/2', 'Eb5/1 G5/1 F#5/.5 Eb5/.5 D5/1', '-/2 A4/2', MOTIF5, '-/1 Bb4/1 A4/2', 'G4/1 A4/1 Bb4/.5 A4/.5 F#4/1', 'D4/4') },
-    { wave: 'strings', vol: 0.25, notes: B(4, 'D3+A3/4', 'D3+A3/4', 'Eb3+Bb3/4', 'D3+A3/4', 'D3+F#3+A3/4', 'G3+Bb3+D4/4', 'C3+Eb3+G3/4', 'D3+A3/4') },
-    { wave: 'sine', vol: 0.2, notes: B(4, 'A4/4', 'A4/4', 'Bb4/4', 'A4/4', 'A4/4', 'A4/4', 'G4/4', 'A4/4') },
-    { wave: 'triangle', vol: 0.38, notes: B(4, 'D2/4', 'D2/4', 'Eb2/4', 'D2/4', 'D2/4', 'G2/4', 'C2/4', 'D2/4') }
-  ] });
-
-  /* ---------- medine : paisible, flûte et oud — sol mineur ---------- */
+  /* ---------- chaine : suspendu — ré, à 6/8 (un temps = une croche), accords empruntés sur pédale de tonique ---------- */
   (function () {
-    const ar = { Gm: E('G3', 'D4', 'G4', 'D4', 'Bb3', 'D4', 'G4', 'D4'), Bb: E('Bb2', 'F3', 'Bb3', 'F3', 'D3', 'F3', 'Bb3', 'F3'), Eb: E('Eb3', 'Bb3', 'Eb4', 'Bb3', 'G3', 'Bb3', 'Eb4', 'Bb3'), F: E('F3', 'C4', 'F4', 'C4', 'A3', 'C4', 'F4', 'C4'), D: E('D3', 'A3', 'D4', 'A3', 'F#3', 'A3', 'D4', 'A3') };
-    R('medine', { bpm: 92, beats: 32, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(4, 'D5/1 Eb5/.5 D5/.5 C5/1 Bb4/1', 'A4/.5 Bb4/.5 C5/1 D5/2', 'G5/1 F5/.5 Eb5/.5 D5/1 C5/1', 'Bb4/1 A4/1 G4/2', 'Bb4/1 C5/.5 D5/.5 Eb5/1 D5/1', 'C5/.5 Bb4/.5 A4/1 Bb4/2', 'D5/1 C5/.5 Bb4/.5 A4/1 F#4/1', 'G4/3 -/1') },
-      { wave: 'pluck', vol: 0.28, notes: B(4, ...pick(ar, 'Gm Bb Eb Gm Eb F D Gm')) },
-      { wave: 'triangle', vol: 0.4, notes: B(4, 'G2/2 G2/2', 'Bb2/2 Bb2/2', 'Eb2/2 Eb2/2', 'G2/2 D2/2', 'Eb2/2 Eb2/2', 'F2/2 F2/2', 'D2/2 D2/2', 'G2/4') },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('D/1 -/.5 t/.5 T/1 t/1', 8)) }
+    const p = 'D:3 G/D:3 | D | Bb/D | C/D | D:3 Gm/D:3 | D | Em7:3 A7sus:3 | A7 | G:3 D/F#:3 | Em:3 Bm:3 | Bb | Gm6:3 A7:3 | D | A/D | G/D:3 Gm/D:3 | D';
+    const st = pads(p, 6, 'F#3'); for (let i = 0; i < 4; i++) st[i] = '-/6';
+    R('chaine', { bpm: 132, beats: 96, voices: [
+      { wave: 'bell', vol: 0.42, notes: B(6, 'A5/2 G5/1 B5/2 A5/1', 'D6/5 -/1', 'Bb5/3 A5/2 F5/1', 'G5/3 E5/2 D5/1', 'A5/2 G5/1 Bb5/2 A5/1', 'D6/5 -/1', 'B5/2 A5/1 G5/2 E5/1', 'F#5/3 E5/3',
+        'F#5/2 E5/1 D5/2 B4/1', 'G4/2 A4/1 B4/3', 'D5/2 F5/1 A5/3', 'G5/2 E5/1 C#5/3', 'D5/3 F#5/3', 'E5/6', 'B4/3 Bb4/3', 'A4/5 D5/1') },
+      { wave: 'harp', vol: 0.5, pan: -0.2, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/1 3/1 2/1 3/1 4/1 3/1', 3: '0/1 2/1 3/1' })) },
+      { wave: 'strings', vol: 0.22, pan: 0.2, notes: B(6, ...st) },
+      { wave: 'triangle', vol: 0.26, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/6', 3: '0/3' })) }
     ] });
   })();
 
-  /* ---------- nuit : dépouillé — ré, seconde mineure ---------- */
-  R('nuit', { bpm: 60, beats: 32, voices: [
-    { wave: 'flute', vol: 0.48, notes: B(4, '-/2 A4/1 Bb4/1', 'A4/3 -/1', '-/1 D5/1 C5/1 Bb4/1', 'A4/4', '-/2 G4/1 A4/1', 'Bb4/2 A4/1 G4/1', 'F4/1 Eb4/1 D4/2', 'D4/2 -/2') },
-    { wave: 'sine', vol: 0.22, notes: B(4, 'D4+A4/4', 'D4+A4/4', 'G3+D4/4', 'A3+D4/4', 'D4+A4/4', 'D4+A4/4', 'Eb4+G4/4', 'D4+A4/4') },
-    { wave: 'bell', vol: 0.2, notes: B(4, '-/4', '-/2 D5/2', '-/4', '-/2 A4/2', '-/4', '-/2 D5/2', '-/4', '-/2 A4/2') },
-    { wave: 'triangle', vol: 0.36, notes: B(4, 'D2/4', 'D2/4', 'G2/4', 'A2/4', 'D2/4', 'D2/4', 'Eb2/4', 'D2/4') }
-  ] });
-
-  /* ---------- desert : marche lente ---------- */
+  /* ---------- medine : marche souple — sol dorien, puis si bémol majeur ---------- */
   (function () {
-    const ar = { D: E('D3', 'A3', 'D4', 'A3', 'D3', 'A3', 'D4', 'A3'), Eb: E('Eb3', 'Bb3', 'Eb4', 'Bb3', 'Eb3', 'Bb3', 'Eb4', 'Bb3'), Gm: E('G3', 'D4', 'G4', 'D4', 'G3', 'D4', 'G4', 'D4') };
-    const bs = { D: 'D2/1 -/1 D2/1 A2/1', Eb: 'Eb2/1 -/1 Eb2/1 Bb2/1', Gm: 'G2/1 -/1 G2/1 D2/1' };
-    const prog = 'D Eb D D D Gm D D Gm D Eb';
-    R('desert', { bpm: 72, beats: 48, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(4, 'D4/2 Eb4/1 F#4/1', 'G4/2 F#4/1 Eb4/1', MOTIF, 'D4/3 -/1', 'A4/2 Bb4/1 C5/1', 'Bb4/1 A4/1 G4/2', 'F#4/1 G4/1 A4/1 Bb4/1', 'A4/3 -/1', 'D5/2 C5/1 Bb4/1', 'A4/1 G4/1 F#4/2', 'G4/1 F#4/1 Eb4/1 F#4/1', 'D4/4') },
-      { wave: 'pluck', vol: 0.26, notes: B(4, ...pick(ar, prog), ar.D) },
-      { wave: 'triangle', vol: 0.42, notes: B(4, ...pick(bs, prog), 'D2/4') },
-      { wave: 'drums', vol: 0.34, notes: B(4, ...N('D/1 t/.5 t/.5 D/1 T/1', 12)) }
+    const pA = 'Gm | C | Gm | Dm | Gm | C | Bb F/A | Gm D', pB = 'Bb | F/A | Gm | Dm | Eb | Bb/D | Cm | D';
+    const oud = { 4: '0/.5 3/.5 2/.5 3/.5 1/.5 3/.5 2/.5 3/.5', 2: '0/.5 3/.5 2/.5 3/.5' };
+    // basse marchante : elle pose la fondamentale, puis s'approche de la suivante par degrés ou par demi-ton
+    const wA = ['G2/1.5 D3/.5 G2/1 A2/.5 B2/.5', 'C3/1.5 G2/.5 C3/1 Bb2/.5 A2/.5', 'G2/1.5 D3/.5 Bb2/1 C3/.5 C#3/.5', 'D3/1.5 A2/.5 D3/1 A2/.5 F#2/.5',
+      'G2/1.5 D3/.5 G2/1 A2/.5 B2/.5', 'C3/1.5 G2/.5 C3/1 D3/.5 C3/.5', 'Bb2/1.5 Bb2/.5 A2/1.5 A2/.5', 'G2/1.5 D3/.5 D3/1 A2/.5 F#2/.5'];
+    const wB = ['Bb2/1.5 F3/.5 D3/1 C3/.5 Bb2/.5', 'A2/1.5 C3/.5 A2/1 F2/.5 A2/.5', 'G2/1.5 D3/.5 G2/1 F2/.5 E2/.5', 'D2/1.5 A2/.5 D3/1 C3/.5 D3/.5',
+      'Eb3/1.5 Bb2/.5 G2/1 Bb2/.5 Eb3/.5', 'D3/1.5 Bb2/.5 D3/1 Eb3/.5 D3/.5', 'C3/1.5 G2/.5 Eb3/1 C3/.5 C#3/.5', 'D3/1.5 A2/.5 D3/1 A2/.5 F#2/.5'];
+    const A = ['D5/1 Bb4/.5 C5/.5 D5/1 G5/1', 'E5/1.5 D5/.5 C5/1 E5/1', 'D5/1 Bb4/.5 C5/.5 D5/.5 F5/.5 E5/.5 D5/.5', 'C5/1.5 A4/.5 D5/2',
+      'G5/1 F5/.5 E5/.5 D5/1 Bb4/1', 'C5/.5 D5/.5 E5/1 G5/1 E5/1', 'F5/1 D5/1 C5/1 A4/1'];
+    const beat = 'D/.5 T/.5 r/.5 T/.5 D/.5 r/.5 T/.5 r/.5', turn = 'D/.5 T/.5 r/.5 T/.5 D/.5 D/.5 T/.25 T/.25 T/.5';
+    R('medine', { bpm: 96, beats: 96, voices: [
+      { wave: 'flute', vol: 0.5, notes: B(4, ...A, 'Bb4/.5 A4/.5 G4/1 -/1 A4/.5 C5/.5', ...A, 'Bb4/.5 A4/.5 G4/1 -/1 D5/.5 Eb5/.5',
+        'F5/2 D5/1 Bb4/1', 'C5/1.5 D5/.5 C5/1 A4/1', 'Bb4/1 C5/.5 D5/.5 G5/2', 'F5/1.5 E5/.5 D5/2', 'G5/2 Eb5/1 Bb4/1', 'D5/1.5 Eb5/.5 F5/1 D5/1', 'Eb5/1 D5/.5 C5/.5 G4/1 C5/1', 'D5/1 C5/.5 Bb4/.5 A4/2') },
+      { wave: 'pluck', vol: 0.42, pan: -0.25, notes: B(4, ...acc(pA, 4, 'G2', oud), ...acc(pA, 4, 'G2', oud), ...acc(pB, 4, 'G2', oud)) },
+      { wave: 'strings', vol: 0.28, pan: 0.2, notes: B(4, ...N('-/4', 8), 'G3/2 Bb3/2', 'C4/2 E4/2', 'D4/2 Bb3/2', 'A3/2 F3/2', 'G3/2 Bb3/2', 'E4/2 C4/2', 'D4/2 C4/2', 'Bb3/2 A3/1 F#3/1', ...pads(pB, 4, 'F3')) },
+      { wave: 'contra', vol: 0.32, notes: B(4, ...wA, ...wA, ...wB) },
+      { wave: 'drums', vol: 0.32, notes: B(4, ...N(beat, 7), turn, ...N(beat, 7), turn, ...N(beat, 7), turn) }
     ] });
   })();
 
-  /* ---------- camp : veillée d'armes — la, seconde mineure ---------- */
-  R('camp', { bpm: 80, beats: 32, voices: [
-    { wave: 'flute', vol: 0.48, notes: B(4, 'E4/1.5 F4/.5 E4/1 D4/1', 'C4/1 D4/1 E4/2', 'A4/1.5 G4/.5 F4/1 E4/1', 'F4/1 E4/1 D4/2', 'E4/1.5 F4/.5 G4/1 A4/1', 'Bb4/1 A4/1 G4/2', 'F4/1 E4/1 D4/1 C4/1', 'A4/3 -/1') },
-    { wave: 'strings', vol: 0.24, notes: B(4, 'A3+C4+E4/4', 'A3+C4+E4/4', 'F3+A3+C4/4', 'D3+F3+A3/4', 'A3+C4+E4/4', 'Bb3+D4+F4/4', 'D3+F3+A3/4', 'A3+C4+E4/4') },
-    { wave: 'triangle', vol: 0.4, notes: B(4, 'A2/2 E2/2', 'A2/2 E2/2', 'F2/2 C2/2', 'D2/2 A2/2', 'A2/2 E2/2', 'Bb2/2 F2/2', 'D2/2 D2/2', 'A2/4') },
-    { wave: 'drums', vol: 0.32, notes: B(4, ...N('D/1.5 D/.5 T/1 t/1', 8)) }
-  ] });
-
-  /* ---------- rome : solennel — ré dorien ---------- */
-  R('rome', { bpm: 70, beats: 48, voices: [
-    { wave: 'saw', vol: 0.45, notes: B(4, 'D4/2 A4/2', 'G4/1 F4/1 E4/2', 'F4/1 G4/1 A4/1 B4/1', 'C5/2 A4/2', 'D5/2 C5/1 B4/1', 'A4/1 G4/1 A4/2', 'F4/1 E4/1 D4/1 E4/1', 'E4/3 -/1', 'D4/1 F4/1 A4/1 D5/1', 'C5/1.5 B4/.5 A4/2', 'G4/1 F4/1 E4/2', 'D4/4') },
-    { wave: 'strings', vol: 0.26, notes: B(4, 'D3+F3+A3/4', 'C3+E3+G3/4', 'F3+A3+C4/4', 'A3+C4+E4/4', 'G3+B3+D4/4', 'A3+C4+E4/4', 'D3+F3+A3/4', 'A3+C4+E4/4', 'D3+F3+A3/4', 'F3+A3+C4/4', 'C3+E3+G3/4', 'D3+F3+A3/4') },
-    { wave: 'triangle', vol: 0.42, notes: B(4, 'D2/2 D2/2', 'C2/2 C2/2', 'F2/2 F2/2', 'A2/2 A2/2', 'G2/2 G2/2', 'A2/2 A2/2', 'D2/2 D2/2', 'A2/2 E2/2', 'D2/2 D2/2', 'F2/2 F2/2', 'C2/2 C2/2', 'D2/4') },
-    { wave: 'drums', vol: 0.33, notes: B(4, ...N('k/2 k/1 k/1', 11), 'k/2 c/2') }
-  ] });
-
-  /* ---------- palais : faste persan — ré, deux secondes augmentées (ré mib fa# sol la sib do#) ---------- */
+  /* ---------- nuit : dépouillé — sol mineur, le chant de la ville ralenti ; sixte napolitaine avant la reprise ---------- */
   (function () {
-    const bs = { D: 'D2/1 D2/.5 D2/.5 A2/1 D2/1', Eb: 'Eb2/1 Eb2/.5 Eb2/.5 Bb2/1 Eb2/1', Gm: 'G2/1 G2/.5 G2/.5 D2/1 G2/1', A: 'A2/1 A2/.5 A2/.5 G2/1 A2/1' };
-    R('palais', { bpm: 100, beats: 32, voices: [
-      { wave: 'pluck', vol: 0.5, notes: B(4, 'D5/.5 Eb5/.5 F#5/1 G5/.5 F#5/.5 Eb5/1', 'D5/1 C#5/.5 D5/.5 Eb5/2', 'F#5/.5 G5/.5 A5/1 Bb5/.5 A5/.5 G5/1', 'F#5/1 Eb5/1 D5/2', 'A4/.5 Bb4/.5 C#5/1 D5/.5 Eb5/.5 F#5/1', 'G5/1 F#5/.5 Eb5/.5 D5/2', 'Eb5/.5 D5/.5 C#5/1 Bb4/.5 A4/.5 C#5/1', 'D5/3 -/1') },
-      { wave: 'strings', vol: 0.24, notes: B(4, 'D3+F#3+A3/4', 'Eb3+G3+Bb3/4', 'D3+F#3+A3/4', 'D3+F#3+A3/4', 'D3+F#3+A3/4', 'G3+Bb3+D4/4', 'A3+C#4+G4/4', 'D3+F#3+A3/4') },
-      { wave: 'triangle', vol: 0.4, notes: B(4, ...pick(bs, 'D Eb D D D Gm A'), 'D2/2 D2/2') },
-      { wave: 'drums', vol: 0.34, notes: B(4, ...N('D/1 t/.5 T/.5 D/.5 D/.5 T/1', 8)) }
+    const p = 'Gm | Eb | Cm7 | D | Gm | Eb | Am7b5 D7 | Gm | Bb | F/A | Ab | D';
+    R('nuit', { bpm: 60, beats: 48, voices: [
+      { wave: 'flute', vol: 0.44, notes: B(4, '-/1 D5/1 Bb4/.5 C5/.5 D5/1', 'G5/3 F5/.5 Eb5/.5', 'D5/2 C5/1 Bb4/1', 'A4/3 -/1', '-/1 D5/1 Bb4/.5 C5/.5 D5/1', 'Bb5/2 G5/1 Eb5/1',
+        'C5/1 Eb5/1 D5/1 C5/.5 A4/.5', 'G4/3 -/1', '-/1 F5/1 D5/1 Bb4/1', 'C5/2 A4/2', 'Eb5/2 C5/2', 'D5/1 C5/.5 Bb4/.5 A4/2') },
+      { wave: 'pluck', vol: 0.42, pan: -0.2, notes: B(4, ...acc(p, 4, 'G2', { 4: '0/1 1/1 2/1 3/1', 2: '0/1 2/1' })) },
+      { wave: 'bell', vol: 0.3, pan: 0.3, notes: B(4, '-/4', '-/2 Bb5/2', '-/4', '-/2 D6/2', '-/4', '-/4', '-/4', '-/1 G5/1 D6/2', '-/4', '-/2 C6/2', '-/4', '-/2 F#5/2') },
+      { wave: 'pad', vol: 0.2, notes: B(4, ...pads(p, 4, 'G3')) },
+      { wave: 'triangle', vol: 0.26, notes: B(4, ...acc(p, 4, 'G2', { 4: '0/4', 2: '0/2' })) }
     ] });
   })();
 
-  /* ---------- mer : balancement à 6/8 (un temps = une croche) — la dorien ---------- */
+  /* ---------- desert : pédale de ré et mélodie ornée — hijaz sur ré (ré mi♭ fa# sol la si♭ do) ---------- */
   (function () {
-    const ar = { Am: 'A3/1 C4/1 E4/1 A3/1 C4/1 E4/1', Em: 'E3/1 G3/1 B3/1 E3/1 G3/1 B3/1', C: 'C4/1 E4/1 G4/1 C4/1 E4/1 G4/1', G: 'G3/1 B3/1 D4/1 G3/1 B3/1 D4/1' };
-    R('mer', { bpm: 138, beats: 48, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(6, 'A4/2 B4/1 C5/2 B4/1', 'A4/2 G4/1 E4/3', 'A4/2 B4/1 C5/2 D5/1', 'E5/2 D5/1 C5/3', 'D5/2 C5/1 B4/2 A4/1', 'G4/2 A4/1 B4/3', 'C5/2 B4/1 A4/2 G4/1', 'A4/6') },
-      { wave: 'pluck', vol: 0.26, notes: B(6, ...pick(ar, 'Am Em Am C G Em Am Am')) },
-      { wave: 'triangle', vol: 0.4, notes: B(6, 'A2/3 A2/3', 'E2/3 E2/3', 'A2/3 A2/3', 'C2/3 C2/3', 'G2/3 G2/3', 'E2/3 E2/3', 'A2/3 E2/3', 'A2/6') },
-      { wave: 'drums', vol: 0.3, notes: B(6, ...N('D/1 t/1 t/1 T/1 t/1 t/1', 8)) }
+    const walk = '0/1 1/1 0/.5 1/.5 2/1', d = fig('D5', 'D3', walk), g = fig('Gm/D', 'D3', walk), dl = fig('D5', 'D3', '0/1 1/1 0/.5 1/.5 1/1');
+    const bd = 'D2/2 -/.5 D2/.5 A2/1', bg = 'D2/2 -/.5 D2/.5 G2/1';
+    const step = 'D/1 r/.5 t/.5 D/.5 D/.5 T/.5 r/.5', turn = 'D/1 r/.5 t/.5 D/.5 T/.5 T/.25 t/.25 r/.5';
+    R('desert', { bpm: 76, beats: 64, voices: [
+      { wave: 'flute', vol: 0.5, notes: B(4, 'A4/2 Bb4/.25 A4/.25 G4/.5 F#4/1', 'G4/.5 F#4/.5 Eb4/1 D4/2', 'D4/.5 Eb4/.5 F#4/.5 G4/.5 A4/1 Bb4/.25 A4/.25 G4/.5', 'A4/3 -/1',
+        'D5/2 C5/.25 D5/.25 C5/.5 Bb4/1', 'A4/.5 Bb4/.5 C5/1 Bb4/.5 A4/.5 G4/1', 'F#4/.5 G4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5 D4/.5 Eb4/.5', 'D4/3 -/1',
+        'G4/1 Bb4/1 D5/1.5 C5/.5', 'Bb4/1 A4/.5 G4/.5 A4/2', 'C5/1 Eb5/1 D5/1.5 C5/.5', 'Bb4/.5 A4/.5 G4/.5 F#4/.5 A4/2',
+        'D5/2 Eb5/.25 D5/.25 C5/.5 Bb4/1', 'C5/1 Bb4/.5 A4/.5 G4/2', 'F#4/.5 G4/.5 A4/.5 Bb4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5', 'D4/3 -/1') },
+      // le luth tient la pédale et répond quand la flûte se tait
+      { wave: 'pluck', vol: 0.44, pan: -0.25, notes: B(4, d, d, d, 'D3/1 A3/.5 D4/.5 F#4/.5 G4/.5 A4/1', d, d, dl, 'D4/.5 Eb4/.5 F#4/.5 G4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5',
+        g, g, g, d, g, g, dl, 'D4/.5 Eb4/.5 F#4/.5 G4/.5 A4/1 D4/1') },
+      { wave: 'strings', vol: 0.26, pan: 0.2, notes: B(8, ...N('D3+A3/8', 4), 'D3+G3/8', 'D3+G3/4 D3+A3/4', 'D3+G3/8', 'D3+A3/8') },
+      { wave: 'contra', vol: 0.28, notes: B(4, ...N(bd, 8), bg, bg, bg, bd, bg, bg, bd, bd) },
+      { wave: 'drums', vol: 0.32, notes: B(4, ...N(step, 3), turn, ...N(step, 3), turn, ...N(step, 3), turn, ...N(step, 3), turn) }
     ] });
   })();
 
-  /* ---------- noos : étrange — gamme par tons (do ré mi fa# lab sib) ---------- */
+  /* ---------- camp : veillée d'armes — la mineur ; la flûte veille, le cor répond ---------- */
   (function () {
-    const a = E('C4', 'E4', 'Ab4', 'C5', 'Ab4', 'E4', 'C4', 'E4'), b = E('D4', 'F#4', 'Bb4', 'D5', 'Bb4', 'F#4', 'D4', 'F#4');
-    const bc = 'C2/1.5 C2/.5 -/1 C2/1', bd = 'D2/1.5 D2/.5 -/1 D2/1';
-    R('noos', { bpm: 110, beats: 32, voices: [
-      { wave: 'bell', vol: 0.48, notes: B(4, 'E5/2 Ab5/2', 'F#5/1 E5/1 C5/2', 'D5/2 F#5/2', 'Bb5/1 Ab5/1 F#5/2', 'E5/1 C5/1 D5/1 E5/1', 'Ab5/3 -/1', 'F#5/1 D5/1 Bb4/2', 'C5/4') },
-      { wave: 'pulse', vol: 0.26, notes: B(4, a, a, b, b, a, a, b, a) },
-      { wave: 'triangle', vol: 0.4, notes: B(4, bc, bc, bd, bd, bc, bc, bd, bc) },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('k/1 h/.5 h/.5 s/1 h/.5 h/.5', 8)) }
+    const pA = 'Am | Am/G | FM7 | E7sus E7 | Am | C/G | Dm | E', pB = 'F | G | Em | Am | Dm | Am/E | Bm7b5 E7 | Am';
+    const ost = { 4: '0/.5 1/.5 2/.5 1/.5 0/.5 1/.5 3/.5 1/.5', 2: '0/.5 1/.5 2/.5 1/.5' }, low = { 4: '0/1.5 0/.5 0/2', 2: '0/2' };
+    const pulse = 'D/1.5 D/.5 T/1 t/.5 t/.5', roll = 'D/1.5 D/.5 T/.5 T/.5 t/.25 t/.25 t/.25 t/.25';
+    R('camp', { bpm: 84, beats: 64, voices: [
+      { wave: 'flute', vol: 0.46, notes: B(4, 'E5/1.5 D5/.5 C5/1 A4/1', 'B4/1 C5/.5 D5/.5 E5/2', 'A5/1.5 G5/.5 F5/1 E5/1', 'D5/2 B4/1 G#4/1', 'A4/1 C5/.5 E5/.5 A5/2', 'G5/1.5 F5/.5 E5/1 C5/1', 'D5/1 F5/1 E5/1 D5/1', 'E5/1.5 D5/.5 B4/2',
+        '-/4', '-/2 D5/.5 E5/.5 G5/1', '-/4', '-/2 E5/.5 D5/.5 C5/1', '-/4', '-/2 A5/.5 G5/.5 E5/1', 'F5/2 E5/2', 'E5/3 -/1') },
+      { wave: 'brass', vol: 0.5, pan: 0.2, notes: B(4, ...N('-/4', 8), 'A4/1 C5/1 F5/1.5 E5/.5', 'D5/2 B4/1 G4/1', 'G4/1 B4/1 E5/1.5 D5/.5', 'C5/2 A4/2', 'F4/1 A4/1 D5/1.5 C5/.5', 'C5/1 B4/.5 A4/.5 E4/2', 'D5/1 B4/1 G#4/1 E4/1', 'A4/3 -/1') },
+      { wave: 'pluck', vol: 0.46, pan: -0.25, notes: B(4, ...acc(pA, 4, 'E2', ost), ...acc(pB, 4, 'E2', ost)) },
+      { wave: 'strings', vol: 0.18, notes: B(4, ...pads(pA.replace('FM7', 'F'), 4, 'G3'), ...pads(pB, 4, 'G3')) },
+      { wave: 'contra', vol: 0.28, notes: B(4, ...acc(pA, 4, 'E2', low), ...acc(pB, 4, 'E2', low)) },
+      { wave: 'drums', vol: 0.28, notes: B(4, ...N(pulse, 7), roll, ...N(pulse, 7), roll) }
     ] });
   })();
 
-  /* ---------- cite : cyberpunk, basse pulsée — mi mineur ---------- */
+  /* ---------- rome : solennel — ré dorien, cuivres en quintes et quartes sur bourdon ; cadence picarde ---------- */
   (function () {
-    const p = (n, t) => E(n, n, n, n, n, n, t, n);
-    R('cite', { bpm: 118, beats: 32, voices: [
-      { wave: 'pulse', vol: 0.48, notes: B(4, 'E5/1.5 D5/.5 B4/1 G4/1', 'A4/1 B4/1 E4/2', 'E5/1.5 D5/.5 C5/1 G4/1', 'A4/1 F#4/1 A4/2', 'B4/.5 E5/.5 G5/1 F#5/1 E5/1', 'C5/1 E5/1 A4/2', 'G4/1 C5/1 E5/1 G5/1', 'F#5/2 B4/2') },
-      { wave: 'strings', vol: 0.22, notes: B(4, 'E3+G3+B3/4', 'E3+G3+B3/4', 'C3+E3+G3/4', 'D3+F#3+A3/4', 'E3+G3+B3/4', 'A3+C4+E4/4', 'C3+E3+G3/4', 'B3+D4+F#4/4') },
-      { wave: 'saw', vol: 0.42, notes: B(4, p('E2', 'G2'), p('E2', 'G2'), p('C2', 'E2'), p('D2', 'F#2'), p('E2', 'G2'), p('A2', 'C3'), p('C2', 'E2'), p('B2', 'B2')) },
-      { wave: 'drums', vol: 0.36, notes: B(4, ...N('k/1 h/.5 h/.5 s/1 h/.5 k/.5', 8)) }
+    const pA = 'Dm | C | Dm | Am | F | C | G | Dm', pB = 'Bb | F/A | Gm | A | Dm | G/B | Em7b5 A7 | D';
+    R('rome', { bpm: 66, beats: 64, voices: [
+      { wave: 'brass', vol: 0.6, notes: B(4, 'D4+A3/2 A4+D4/2', 'G4+C4/1.5 E4/.5 G4+C4/2', 'A4+D4/1 D5+A4/1 C5/1 A4+D4/1', 'B4/1.5 A4/.5 E4+A3/2', 'F4+C4/2 A4+F4/2', 'G4+C4/2 C5+G4/2', 'B4+G4/1.5 A4/.5 G4+D4/1 B4+G4/1', 'A4+D4/4',
+        'D4/4', 'C4/4', 'D4/2 Bb3/2', 'C#4/2 E4/2', 'D4/4', 'D4/2 G4/2', 'E4/3 C#4/1', 'D4+A4/4') },
+      { wave: 'flute', vol: 0.5, pan: 0.2, notes: B(4, ...N('-/4', 4), 'C5/2 F5/2', 'E5/2 G5/2', 'D5/1.5 E5/.5 D5/1 B4/1', 'D5/4',
+        'D5/2 F5/1.5 E5/.5', 'C5/2 A4/2', 'Bb4/1 D5/1 G5/1.5 F5/.5', 'E5/2 C#5/2', 'D5/2 A4/1 F4/1', 'G4/1 B4/1 D5/2', 'G4/1 Bb4/1 A4/1.5 G4/.5', 'F#4/4') },
+      { wave: 'strings', vol: 0.22, pan: -0.2, notes: B(4, ...pads(pA, 4, 'F3'), ...pads(pB, 4, 'F3')) },
+      { wave: 'harp', vol: 0.4, pan: -0.3, notes: B(4, ...acc(pA, 4, 'D2', H8), ...acc(pB, 4, 'D2', H8)) },
+      { wave: 'triangle', vol: 0.3, notes: B(4, ...acc(pA, 4, 'D2', { 4: '0/2 0/2', 2: '0/2' }), ...acc(pB, 4, 'D2', { 4: '0/2 0/2', 2: '0/2' })) },
+      { wave: 'drums', vol: 0.3, notes: B(4, ...N('b/2 -/1 b/1', 7), 'b/2 -/2', ...N('b/2 -/2', 7), 'b+c/4') }
     ] });
   })();
 
-  /* ---------- citadelle : méditatif, ample — ré pentatonique mineur (ré fa sol la do) ---------- */
+  /* ---------- palais : faste — la mineur harmonique à 6/8, danse de cour ; sixte napolitaine à la cadence ---------- */
   (function () {
-    const ar = { D: 'D3/1 A3/1 D4/1 A3/1', C: 'C3/1 G3/1 C4/1 G3/1', F: 'F3/1 C4/1 F4/1 C4/1', G: 'G3/1 D4/1 G4/1 D4/1' };
-    const dr = { D: 'D3+A3/4', C: 'C3+G3/4', F: 'F3+C4/4', G: 'G3+D4/4' };
-    const prog = 'D D C D F G D D D C G D';
-    R('citadelle', { bpm: 63, beats: 48, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(4, 'D4/2 F4/1 G4/1', 'A4/3 G4/1', 'F4/1 G4/1 A4/1 C5/1', 'A4/4', 'D5/2 C5/1 A4/1', 'G4/1 A4/1 F4/2', 'G4/1 F4/1 D4/1 C4/1', 'D4/3 -/1', 'D4/1 A4/1 G4/.5 F4/.5 D4/1', 'C5/2 A4/2', 'G4/1 F4/1 G4/1 A4/1', 'D4/4') },
-      { wave: 'strings', vol: 0.24, notes: B(4, ...pick(dr, prog)) },
-      { wave: 'pluck', vol: 0.26, notes: B(4, ...pick(ar, prog)) },
-      { wave: 'triangle', vol: 0.4, notes: B(4, 'D2/4', 'D2/4', 'C2/4', 'D2/4', 'F2/4', 'G2/4', 'D2/4', 'D2/4', 'D2/4', 'C2/4', 'G2/4', 'D2/4') },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('D/2 t/1 t/1', 12)) }
+    const pA = 'Am | Dm/A | Am | E/G# | Am | Dm | Bb:3 E:3 | Am', pB = 'C | G/B | Am | E | F | C/E | Dm6:3 E:3 | Am';
+    const wave = { 6: '0/1 2/1 3/1 4/1 3/1 2/1', 3: '0/1 2/1 3/1' }, low = { 6: '0/3 0/2 0/1', 3: '0/3' };
+    const Bm = ['G5/2 E5/1 C5/2 E5/1', 'D5/2 B4/1 G4/2 B4/1', 'C5/1 D5/1 E5/1 A5/3', 'G#5/2 E5/1 B4/3', 'A5/2 F5/1 C5/2 F5/1', 'G5/2 E5/1 C5/3', 'F5/1 D5/1 B4/1 D5/1 B4/1 G#4/1', 'A4/6'];
+    const dance = 'D/1 r/1 T/1 D/1 T/1 r/1', turn = 'D/1 r/1 T/1 D/1 T/.5 T/.5 T/1';
+    R('palais', { bpm: 186, beats: 96, voices: [
+      { wave: 'pluck', vol: 0.5, notes: B(6, 'A4/1 B4/1 C5/1 E5/2 C5/1', 'D5/1 E5/1 F5/1 D5/2 A4/1', 'C5/1 B4/1 A4/1 E5/3', 'D5/1 C5/1 B4/1 G#4/3', 'A4/1 B4/1 C5/1 E5/2 A5/1', 'A5/1 G5/1 F5/1 D5/2 F5/1', 'D5/2 Bb4/1 D5/1 B4/1 G#4/1', 'A4/3 E4/2 A4/1', ...Bm) },
+      { wave: 'flute', vol: 0.36, pan: 0.2, notes: B(6, ...N('-/6', 8), ...Bm) },
+      { wave: 'harp', vol: 0.32, pan: -0.3, notes: B(6, ...acc(pA, 6, 'E2', wave), ...acc(pB, 6, 'E2', wave)) },
+      { wave: 'strings', vol: 0.2, pan: 0.25, notes: B(6, ...pads(pA, 6, 'G3'), ...pads(pB, 6, 'G3')) },
+      { wave: 'contra', vol: 0.28, notes: B(6, ...acc(pA, 6, 'E2', low), ...acc(pB, 6, 'E2', low)) },
+      { wave: 'drums', vol: 0.32, notes: B(6, ...N(dance, 3), turn, ...N(dance, 3), turn, ...N(dance, 3), turn, ...N(dance, 3), turn) }
     ] });
   })();
 
-  /* ---------- conseil : tension retenue — la mineur harmonique ---------- */
+  /* ---------- mer : barcarolle à 6/8 — sol majeur, le septième degré abaissé avant la reprise ---------- */
   (function () {
-    const ar = { Am: E('A3', 'E4', 'A3', 'E4', 'A3', 'E4', 'C4', 'E4'), F: E('F3', 'C4', 'F3', 'C4', 'F3', 'C4', 'A3', 'C4'), Dm: E('D3', 'A3', 'D3', 'A3', 'D3', 'A3', 'F3', 'A3'), E: E('E3', 'B3', 'E3', 'B3', 'E3', 'B3', 'G#3', 'B3') };
-    R('conseil', { bpm: 88, beats: 32, voices: [
-      { wave: 'flute', vol: 0.46, notes: B(4, '-/2 E5/1 D5/1', 'C5/1 B4/1 A4/2', '-/2 F5/1 E5/1', 'D5/1 C5/1 B4/2', '-/1 A4/1 C5/1 E5/1', 'F5/2 D5/2', 'C5/1 A4/1 F4/1 A4/1', 'G#4/2 B4/2') },
-      { wave: 'pluck', vol: 0.3, notes: B(4, ...pick(ar, 'Am Am F E Am Dm F E')) },
-      { wave: 'triangle', vol: 0.4, notes: B(4, 'A2/3 A2/1', 'A2/3 A2/1', 'F2/3 F2/1', 'E2/3 E2/1', 'A2/3 A2/1', 'D2/3 D2/1', 'F2/3 F2/1', 'E2/4') },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('D/1 -/1 t/.5 t/.5 -/1', 8)) }
+    const pA = 'G | D/F# | Em | C | G/B | Am7 | C/D:3 D:3 | G', pB = 'Em | Bm | C | G | Am | Em/G | F | D';
+    const wave = { 6: '0/1 1/1 2/1 3/1 2/1 1/1', 3: '0/1 1/1 2/1' }, low = { 6: '0/3 0/3', 3: '0/3' };
+    const swell = 'D/2 r/1 t/2 r/1';
+    R('mer', { bpm: 144, beats: 96, voices: [
+      { wave: 'flute', vol: 0.48, notes: B(6, 'D5/3 B4/2 D5/1', 'A5/3 F#5/2 D5/1', 'G5/2 F#5/1 E5/2 B4/1', 'E5/4 D5/1 C5/1', 'D5/3 B4/2 D5/1', 'C5/2 E5/1 G5/3', 'E5/2 C5/1 D5/3', 'G5/5 -/1',
+        'B4/2 E5/1 G5/2 F#5/1', 'F#5/3 D5/2 B4/1', 'C5/2 E5/1 G5/2 E5/1', 'D5/5 -/1', 'A4/2 C5/1 E5/2 D5/1', 'B4/3 G4/2 B4/1', 'A4/2 C5/1 F5/3', 'F#5/2 E5/1 D5/2 A4/1') },
+      { wave: 'brass', vol: 0.44, pan: 0.25, notes: B(6, ...N('-/6', 7), '-/3 D4/1 G4/2', ...N('-/6', 7), '-/3 A3/1 D4/2') },
+      { wave: 'harp', vol: 0.44, pan: -0.25, notes: B(6, ...acc(pA, 6, 'E2', wave), ...acc(pB, 6, 'E2', wave)) },
+      { wave: 'strings', vol: 0.22, pan: 0.15, notes: B(6, ...pads(pA, 6, 'G3'), ...pads(pB, 6, 'G3')) },
+      { wave: 'contra', vol: 0.28, notes: B(6, ...acc(pA, 6, 'E2', low), ...acc(pB, 6, 'E2', low)) },
+      { wave: 'drums', vol: 0.24, notes: B(6, 'D+c/2 r/1 t/2 r/1', ...N(swell, 7), 'D+c/2 r/1 t/2 r/1', ...N(swell, 7)) }
     ] });
   })();
 
-  /* ---------- combat : vif — mi mineur ---------- */
-  R('combat', { bpm: 150, beats: 32, voices: [
-    { wave: 'pulse', vol: 0.5, notes: B(4, 'E5/.5 E5/.5 G5/.5 E5/.5 B4/1 D5/1', 'C5/.5 B4/.5 A4/1 B4/2', 'E5/.5 E5/.5 G5/.5 A5/.5 B5/1 A5/1', 'G5/.5 F#5/.5 E5/1 D5/2', 'C5/.5 D5/.5 E5/1 G5/1 E5/1', 'D5/.5 E5/.5 F#5/1 A5/1 F#5/1', 'G5/.5 F#5/.5 E5/.5 D5/.5 C5/1 B4/1', 'E5/2 -/.5 B4/.5 D5/.5 B4/.5') },
-    { wave: 'square', vol: 0.22, notes: B(4, 'E3+G3+B3/4', 'A3+C4+E4/2 B3+D4+F#4/2', 'E3+G3+B3/4', 'E3+G3+B3/2 D3+F#3+A3/2', 'C3+E3+G3/4', 'D3+F#3+A3/4', 'E3+G3+B3/2 C3+E3+G3/2', 'E3+G3+B3/2 B3+D4+F#4/2') },
-    { wave: 'saw', vol: 0.42, notes: B(4,
-      E('E2', 'E2', 'B2', 'E2', 'E2', 'E2', 'B2', 'E2'), E('A2', 'A2', 'E2', 'A2', 'B2', 'B2', 'F#2', 'B2'),
-      E('E2', 'E2', 'B2', 'E2', 'E2', 'E2', 'B2', 'E2'), E('E2', 'E2', 'B2', 'E2', 'D2', 'D2', 'A2', 'D2'),
-      E('C2', 'C2', 'G2', 'C2', 'C2', 'C2', 'G2', 'C2'), E('D2', 'D2', 'A2', 'D2', 'D2', 'D2', 'A2', 'D2'),
-      E('E2', 'E2', 'B2', 'E2', 'C2', 'C2', 'G2', 'C2'), E('E2', 'E2', 'B2', 'E2', 'B2', 'B2', 'B2', 'B2')) },
-    { wave: 'drums', vol: 0.38, notes: B(4, ...N('k/.5 h/.5 s/.5 h/.5 k/.5 k/.5 s/.5 h/.5', 7), 'k/.5 h/.5 s/.5 h/.5 s/.5 s/.5 s/.25 s/.25 c/.5') }
-  ] });
-
-  /* ---------- boss : plus sombre, plus rapide — le motif de la Chaîne, pressé ---------- */
+  /* ---------- noos : étrange — do mineur, la♭ mineur, mi mineur : trois accords mineurs à la tierce majeure ---------- */
   (function () {
-    const g = n => N(n + '/.5 ' + n + '/.25 ' + n + '/.25', 4).join(' ');
-    const g2 = (a, b) => N(a + '/.5 ' + a + '/.25 ' + a + '/.25', 2).concat(N(b + '/.5 ' + b + '/.25 ' + b + '/.25', 2)).join(' ');
-    const D = 'D3+F#3+A3/4', Cm = 'C3+Eb3+G3/4', Gm = 'G3+Bb3+D4/4', Eb = 'Eb3+G3+Bb3/4';
-    R('boss', { bpm: 168, beats: 48, voices: [
-      { wave: 'saw', vol: 0.5, notes: B(4, 'D5/.5 D5/.5 Eb5/.5 D5/.5 C5/1 D5/1', 'F#5/1 Eb5/.5 D5/.5 C5/1 Bb4/1', 'A4/.5 A4/.5 Bb4/.5 A4/.5 G4/1 A4/1', 'C5/1 Bb4/.5 A4/.5 F#4/2', 'G4/.5 A4/.5 Bb4/1 C5/.5 D5/.5 Eb5/1', 'D5/2 C5/1 Bb4/1', 'A4/.5 Bb4/.5 C5/1 D5/.5 Eb5/.5 F#5/1', 'G5/2 F#5/2', MOTIF5, 'Eb5/1 Bb5/1 A5/.5 G5/.5 Eb5/1', 'F#5/.5 G5/.5 A5/1 G5/.5 F#5/.5 Eb5/1', 'D5/3 -/1') },
-      { wave: 'strings', vol: 0.24, notes: B(4, D, Cm, D, D, Gm, Gm, D, 'G3+Bb3+D4/2 D3+F#3+A3/2', D, Eb, D, D) },
-      { wave: 'triangle', vol: 0.44, notes: B(4, g('D2'), g('C2'), g('D2'), g('D2'), g('G2'), g('G2'), g('D2'), g2('G2', 'D2'), g('D2'), g('Eb2'), g('D2'), g('D2')) },
-      { wave: 'drums', vol: 0.4, notes: B(4, ...N('k/.5 k/.5 s/.5 k/.5 k/.5 k/.5 s/.5 h/.5', 11), 'k/.5 k/.5 s/.5 s/.5 s/.5 s/.5 c/1') }
+    const p = 'Cm | Cm | Abm | Abm | Em | Em | G | Gaug | Cm | Abm | Em | Gaug | Cm | Abm | Em | G Gaug';
+    R('noos', { bpm: 104, beats: 64, voices: [
+      { wave: 'bell', vol: 0.42, notes: B(4, 'G5/2 Eb5/2', 'D5/1 Eb5/1 G5/2', 'Ab5/2 Eb5/2', 'B4/1 Eb5/1 Ab5/2', 'G5/2 E5/2', 'F#5/1 G5/1 B5/2', 'D5/2 B4/2', 'B4/1 D#5/1 G5/2',
+        'C5/1 Eb5/1 G5/1 C6/1', 'B5/2 Ab5/1 Eb5/1', 'E5/1 G5/1 B5/2', 'G5/2 D#5/2', 'Eb5/2 D5/1 C5/1', 'Eb5/2 B4/2', 'E5/2 G5/1 F#5/1', 'D5/2 D#5/2') },
+      { wave: 'pulse', vol: 0.3, pan: -0.3, notes: B(4, ...acc(p, 4, '^C4', { 4: '0/.5 1/.5 2/.5 1/.5 3/.5 1/.5 2/.5 1/.5', 2: '0/.5 1/.5 2/.5 1/.5' })) },
+      { wave: 'pad', vol: 0.24, pan: 0.2, notes: B(4, ...pads(p, 4, 'G3')) },
+      { wave: 'bass', vol: 0.4, notes: B(4, ...acc(p, 4, 'C2', { 4: '0/1 -/.5 0/.5 0/1 -/1', 2: '0/1 -/.5 0/.5' })) },
+      { wave: 'drums', vol: 0.3, notes: B(4, ...N('k/1 t/.5 h/.5 -/.5 h/.5 t/.5 h/.5', 16)) }
     ] });
   })();
 
-  /* ---------- deuil : lent, presque nu — ré mineur ---------- */
-  R('deuil', { bpm: 54, beats: 32, voices: [
-    { wave: 'flute', vol: 0.5, notes: B(4, 'A4/3 G4/1', 'F4/2 E4/2', 'D4/3 -/1', 'F4/1 G4/1 A4/2', 'Bb4/3 A4/1', 'G4/2 F4/2', 'E4/2 D4/1 E4/1', 'D4/4') },
-    { wave: 'pluck', vol: 0.24, notes: B(4, 'D3/2 A3/2', 'D3/2 A3/2', 'Bb2/2 F3/2', 'D3/2 A3/2', 'G3/2 D4/2', 'Bb2/2 F3/2', 'A2/2 E3/2', 'D3/4') },
-    { wave: 'sine', vol: 0.36, notes: B(4, 'D2/4', 'D2/4', 'Bb2/4', 'D2/4', 'G2/4', 'Bb2/4', 'A2/4', 'D2/4') }
-  ] });
-
-  /* ---------- espoir : le motif de la Chaîne en ré majeur ---------- */
+  /* ---------- cite : la Cité-Miroir — mi mineur, arpèges de synthé, pouls froid ---------- */
   (function () {
-    const ar = { D: E('D3', 'A3', 'D4', 'F#4', 'A4', 'F#4', 'D4', 'A3'), A: E('A2', 'E3', 'A3', 'C#4', 'E4', 'C#4', 'A3', 'E3'), G: E('G2', 'D3', 'G3', 'B3', 'D4', 'B3', 'G3', 'D3') };
-    const ch = { D: 'D3+F#3+A3/4', A: 'A3+C#4+E4/4', G: 'G3+B3+D4/4' };
-    const prog = 'D A D D G D A D';
-    R('espoir', { bpm: 96, beats: 32, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(4, MOTIF, 'E4/1 F#4/1 A4/2', 'D4/1 A4/1 G4/.5 F#4/.5 E4/1', 'F#4/1 G4/1 A4/2', 'B4/1 A4/1 G4/.5 F#4/.5 G4/1', 'A4/1 D5/1 C#5/.5 B4/.5 A4/1', 'G4/1 F#4/1 E4/1 A4/1', 'D5/3 -/1') },
-      { wave: 'strings', vol: 0.25, notes: B(4, ...pick(ch, prog)) },
-      { wave: 'pluck', vol: 0.26, notes: B(4, ...pick(ar, prog)) },
-      { wave: 'triangle', vol: 0.4, notes: B(4, 'D2/2 D2/2', 'A2/2 A2/2', 'D2/2 D2/2', 'D2/2 D2/2', 'G2/2 G2/2', 'D2/2 D2/2', 'A2/2 A2/2', 'D2/4') },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('D/1 t/.5 t/.5 T/1 t/1', 8)) }
+    const pA = 'Em | Em | CM7 | CM7 | Am7 | Am7 | Bm7 | B7', pB = 'G | D/F# | Em | C#m7b5 | C | G/B | Am7 | B7sus B7';
+    const arp = { 4: '0/.25 2/.25 1/.25 2/.25 3/.25 2/.25 1/.25 2/.25 0/.25 2/.25 1/.25 2/.25 3/.25 2/.25 1/.25 2/.25', 2: '0/.25 2/.25 1/.25 2/.25 3/.25 2/.25 1/.25 2/.25' };
+    const beat = { 4: '0/.5 0/.5 0/.5 0/.5 0/.5 0/.5 o/.5 0/.5', 2: '0/.5 0/.5 o/.5 0/.5' };
+    const kit = 'k/1 h/.5 h/.5 s/1 h/.5 k/.5', fill = 'k/1 h/.5 h/.5 s/1 s/.25 s/.25 k/.5';
+    R('cite', { bpm: 112, beats: 64, voices: [
+      { wave: 'pulse', vol: 0.46, notes: B(4, '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'A4/1 B4/2 -/1', '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'E4/1 G4/2 -/1', '-/.5 C5/.5 E5/1 G5/.5 E5/1 C5/.5', 'D5/1 E5/2 -/1', '-/.5 D5/.5 F#5/1 A5/.5 F#5/1 D5/.5', 'F#5/1 D#5/1 B4/2',
+        'D5/2 B4/1 D5/1', 'F#5/2 A5/1 D5/1', 'G5/1.5 F#5/.5 E5/1 B4/1', 'G5/2 E5/2', 'E5/1 G5/1 B5/1.5 A5/.5', 'G5/2 D5/2', 'C5/1 E5/1 A5/1.5 G5/.5', 'F#5/2 D#5/1 B4/1') },
+      { wave: 'square', vol: 0.22, pan: -0.35, notes: B(4, ...acc(pA, 4, '^E4', arp), ...acc(pB, 4, '^E4', arp)) },
+      { wave: 'pad', vol: 0.22, pan: 0.25, notes: B(4, ...pads(pA.replace(/CM7/g, 'C'), 4, 'G3'), ...pads(pB, 4, 'G3')) },
+      { wave: 'bass', vol: 0.4, notes: B(4, ...acc(pA, 4, 'C2', beat), ...acc(pB, 4, 'C2', beat)) },
+      { wave: 'drums', vol: 0.34, notes: B(4, ...N(kit, 7), fill, ...N(kit, 7), fill) }
     ] });
   })();
 
-  /* ---------- victoire : courte fanfare, jouée une fois ---------- */
-  R('victoire', { bpm: 132, beats: 8, voices: [
-    { wave: 'pulse', vol: 0.5, notes: B(4, 'D5/.5 D5/.5 A5/1 G5/.5 F#5/.5 D5/1', 'E5/.5 F#5/.5 G5/.5 B5/.5 A5/2') },
-    { wave: 'strings', vol: 0.26, notes: B(4, 'D3+F#3+A3/2 G3+B3+D4/2', 'A3+C#4+E4/2 D3+F#3+A3/2') },
-    { wave: 'triangle', vol: 0.42, notes: B(4, 'D2/2 G2/2', 'A2/2 D2/2') },
-    { wave: 'drums', vol: 0.36, notes: B(4, 'D/.5 t/.5 T/1 D/.5 t/.5 T/1', 'D/.5 D/.5 T/.5 T/.5 c/2') }
-  ] });
+  /* ---------- citadelle : noble et grave — le thème de la Chaîne en sol dorien, au cor ; cadence picarde ---------- */
+  (function () {
+    const pA = 'Gm C | Gm F | Am Dm | Dm D | Eb Gm/D | Cm Eb | Am7b5 D7 | G', pB = 'Bb | F/A | Gm | D/F# | Eb | Cm | Dsus D | G';
+    // écrit en ré puis descendu d'une quinte : la, sol, si♮, la → ré, do, mi♮, ré — la sixte dorienne éclaire le maillon du milieu
+    const theme = trs(['A4/1.5 G4/.5 B4/1.5 A4/.5', 'D5/2.5 -/1 E4/.5', 'B4/1.5 A4/.5 C5/1.5 B4/.5', 'E5/3 -/1', 'F5/1.5 E5/.5 D5/1.5 Bb4/.5', 'G4/1.5 A4/.5 Bb4/2', 'A4/1.5 G4/.5 E4/1.5 C#4/.5', 'D4/4'], -7);
+    const slow = { 4: '0/1 1/1 2/1 3/1', 2: '0/1 2/1' }, low = { 4: '0/2 0/2', 2: '0/2' };
+    R('citadelle', { bpm: 63, beats: 64, voices: [
+      { wave: 'brass', vol: 0.62, notes: B(4, ...theme, 'D4/2 F4/2', 'C4/2 F4/2', 'D4/2 Bb3/2', 'A3/2 D4/2', 'Eb4/2 G4/2', 'Eb4/2 C4/2', 'D4/3 C4/1', 'B3/3.5 G3/.5') },
+      { wave: 'flute', vol: 0.5, pan: 0.2, notes: B(4, ...N('-/4', 8), 'D5/2 F5/1 Bb5/1', 'A5/3 F5/1', 'Bb5/2 G5/1 D5/1', 'A5/3 D5/1', 'G5/1.5 F5/.5 Eb5/1 G5/1', 'C6/2 G5/1 Eb5/1', 'G5/2 F#5/1.5 D5/.5', 'G5/4') },
+      { wave: 'strings', vol: 0.24, pan: -0.2, notes: B(4, ...pads(pA, 4, 'D3'), ...pads(pB.replace('Dsus D', 'Dsus D7'), 4, 'D3')) },
+      { wave: 'harp', vol: 0.42, pan: 0.3, notes: B(4, ...acc(pA, 4, 'F2', slow), ...acc(pB, 4, 'F2', H8)) },
+      { wave: 'triangle', vol: 0.3, notes: B(4, ...acc(pA, 4, 'F2', low), ...acc(pB, 4, 'F2', low)) },
+      { wave: 'timp', vol: 0.28, notes: B(4, 'G2/2 -/2', '-/4', '-/4', 'D3/2 -/1 D3/.5 D3/.5', '-/4', '-/4', '-/2 D3/1 D3/1', 'G2/2 -/2',
+        '-/4', '-/4', 'G2/2 -/2', 'D3/2 -/2', '-/4', '-/4', 'D3/1 -/1 D3/.5 D3/.5 D3/.25 D3/.25 D3/.25 D3/.25', 'G2/2 -/2') }
+    ] });
+  })();
+
+  /* ---------- conseil : pourparlers — mi mineur à cinq temps, pédale de mi ; la tension monte et ne se résout pas ---------- */
+  (function () {
+    const p = 'Em | Em | F/E | Em | Am/E | Em | F#m7b5:3 B7:2 | Em | C/E | Am/E | F#m7b5 | B7';
+    R('conseil', { bpm: 96, beats: 60, voices: [
+      { wave: 'flute', vol: 0.44, notes: B(5, '-/3 B4/1 C5/1', 'B4/3 G4/2', 'A4/1 C5/1 F5/1 E5/2', 'E5/3 B4/2', '-/3 C5/1 D5/1', 'E5/2 G5/1 F#5/2', 'A4/1 C5/1 E5/1 D#5/1 B4/1', 'E5/3 -/2',
+        'G5/2 E5/1 C5/2', 'E5/2 C5/1 A4/2', 'C5/2 A4/1 F#4/2', 'B4/1 D#5/1 F#5/1 B5/2') },
+      { wave: 'pluck', vol: 0.38, pan: -0.25, notes: B(5, ...acc(p, 5, 'E3', { 5: '0/.5 1/.5 2/.5 1/.5 2/.5 3/.5 0/.5 1/.5 3/.5 1/.5', 3: '0/.5 1/.5 2/.5 1/.5 2/.5 3/.5', 2: '0/.5 1/.5 3/.5 1/.5' })) },
+      { wave: 'strings', vol: 0.2, pan: 0.2, notes: B(5, ...pads(p, 5, 'G3')) },
+      { wave: 'triangle', vol: 0.28, notes: B(5, ...acc(p, 5, 'E2', { 5: '0/3 0/2', 3: '0/3', 2: '0/2' })) },
+      { wave: 'drums', vol: 0.3, notes: B(5, ...N('D/2 t/1 T/1 t/.5 t/.5', 12)) }
+    ] });
+  })();
+
+  /* ---------- combat : sol mineur — levée en fusée sur la gamme hijaz, basse en doubles croches, appels de cuivres ---------- */
+  (function () {
+    const pA = 'Gm | Gm | Eb | F | Gm | Gm | Cm | D', pB = 'Bb | F/A | Gm | D/F# | Eb | Bb/D | Cm7 | D';
+    const rocket = 'D4/.25 Eb4/.25 F#4/.25 G4/.25 A4/.25 Bb4/.25 C5/.25 D5/.25 Eb5/.25 F#5/.25 G5/.25 A5/.25 Bb5/.25 C6/.25 D6/.5';
+    // basse en doubles croches : la fondamentale martelée, l'octave qui claque, la quinte en fin de mesure
+    const s16 = { 4: '0/.25 0/.25 o/.25 0/.25 0/.25 0/.25 o/.25 0/.25 0/.25 o/.25 0/.25 0/.25 o/.25 0/.25 1/.25 o/.25' }, stab = { 4: N('-/.5 0+1+2/.25 -/.25', 4).join(' ') };
+    const kit = 'k/.5 h/.5 s/.5 h/.5 k/.25 k/.25 h/.5 s/.5 h/.5', crash = 'k+c/.5 h/.5 s/.5 h/.5 k/.25 k/.25 h/.5 s/.5 h/.5';
+    const turn = 'k/.5 h/.5 s/.5 h/.5 k/.25 k/.25 h/.5 s/.25 s/.25 s/.5', fill = 'k/.5 h/.5 s/.5 h/.5 m/.25 m/.25 m/.25 m/.25 s/.25 s/.25 s/.25 s/.25';
+    const bassA = acc(pA, 4, 'C2', s16); bassA[7] = 'D2/.25 D2/.25 D3/.25 D2/.25 D2/.25 D2/.25 D3/.25 D2/.25 D2/.25 D2/.25 D3/.25 D2/.25 D2/.25 E2/.25 F#2/.25 A2/.25';
+    R('combat', { bpm: 152, beats: 72, intro: 8, voices: [
+      { wave: 'pulse', vol: 0.42, notes: B(4, '-/4', rocket,
+        'G5/.5 -/.25 G5/.25 F5/.5 G5/.5 Bb5/1 A5/.5 G5/.5', 'D5/1.5 F5/.5 G5/1 -/1', 'G5/.5 -/.25 G5/.25 F5/.5 G5/.5 Bb5/1 C6/.5 Bb5/.5', 'A5/1.5 G5/.5 F5/1 -/1',
+        'Bb5/.5 -/.25 Bb5/.25 A5/.5 Bb5/.5 D6/1 C6/.5 Bb5/.5', 'A5/.5 G5/.5 F5/.5 D5/.5 G5/2', 'Eb5/.5 G5/.5 C6/1 Bb5/.5 G5/.5 Eb5/1', 'D5/.5 F#5/.5 A5/.5 C6/.5 D6/2',
+        ...acc(pB, 4, '^D5', { 4: '-/.5 0/.5 1/.5 2/.5 -/.5 2/.5 1/.5 0/.5' }).slice(0, 7), rocket) },
+      { wave: 'brass', vol: 0.48, pan: 0.15, notes: B(4, 'G4+Bb4+D5/.5 -/1 G4+Bb4+D5/.5 -/1 G4+Bb4+D5/.5 -/.5', 'F#4+A4+D5/4',
+        'G4+Bb4+D5/.5 -/3.5', '-/3 D5/.5 G5/.5', 'Eb4+G4+Bb4/.5 -/3.5', '-/3 C5/.5 F5/.5', 'G4+Bb4+D5/.5 -/3.5', '-/2 D5/.5 Bb4/.5 G4/1', 'Eb4+G4+C5/.5 -/3.5', 'D4+F#4+A4/2 D4+F#4+C5/2',
+        'D4/1.5 F4/.5 Bb4/2', 'A4/1.5 G4/.5 F4/1 C5/1', 'Bb4/.5 A4/.5 G4/1 D5/2', 'C5/1 A4/1 F#4/2', 'G4/1.5 Bb4/.5 Eb5/2', 'D5/1.5 C5/.5 Bb4/1 F4/1', 'Eb4/.5 G4/.5 Bb4/1 C5/1 Eb5/1', 'D5/2 -/2') },
+      { wave: 'strings', vol: 0.22, pan: -0.2, notes: B(4, 'G3+Bb3+D4/4', 'F#3+A3+D4/4', ...pads(pA, 4, 'G3'), ...pads(pB, 4, 'G3')) },
+      { wave: 'bass', vol: 0.36, notes: B(4, 'G2/.25 G2/.25 G3/.25 G2/.25 G2/.25 G2/.25 G3/.25 G2/.25 G2/.25 G3/.25 G2/.25 G2/.25 G3/.25 G2/.25 Bb2/.25 C3/.25', N('D2/.25 D2/.25 D3/.25 D2/.25', 4).join(' '), ...bassA, ...acc(pB, 4, 'C2', s16)) },
+      { wave: 'saw', vol: 0.24, pan: 0.3, notes: B(4, '-/4', '-/4', ...acc(pA, 4, '^G3', stab), ...acc(pB, 4, '^G3', stab)) },
+      { wave: 'drums', vol: 0.36, notes: B(4, 'k+c/.5 h/.5 h/.5 k/.5 h/.5 h/.5 k/.5 s/.5', N('s/.25', 8).concat(N('m/.25', 4), N('s/.25', 4)).join(' '),
+        crash, kit, kit, turn, kit, kit, kit, fill, crash, kit, kit, turn, kit, kit, kit, fill) }
+    ] });
+  })();
+
+  /* ---------- boss : ré mineur — plus lent, plus lourd ; un ostinato qui frotte (seconde mineure, triton) sous des accords changeants ---------- */
+  (function () {
+    const pA = 'Dm Ddim | Dm | Eb | Dm | Gm | C#o7 | Dm | A7', pB = 'Bb | Bb | Gm | Gm | Eb | Edim | Asus | A7';
+    const riff = 'D2/.5 D2/.5 D3/.5 D2/.5 Eb2/.5 D2/.5 Ab2/.5 A2/.5';
+    const kit = 'b+k/1 h/.5 k/.5 s/1 k/.5 h/.5', crash = 'b+k+c/1 h/.5 k/.5 s/1 k/.5 h/.5', fill = 'b+k/1 h/.5 k/.5 s/.5 s/.5 m/.25 m/.25 s/.25 s/.25';
+    R('boss', { bpm: 126, beats: 72, intro: 8, voices: [
+      { wave: 'brass', vol: 0.6, notes: B(4, '-/4', '-/4',
+        'D4/1 F4/1 Ab4/1.5 G4/.5', 'F4/1 E4/1 D4/2', 'Eb4/1 G4/1 Bb4/1.5 A4/.5', 'G4/1 F4/1 D4/2', 'D4/1 G4/1 Bb4/1.5 A4/.5', 'Bb4/1 C#5/1 E5/2', 'F5/1.5 E5/.5 D5/1 A4/1', 'Bb4/1.5 A4/.5 E4/1 C#4/1',
+        'Bb3+F4/4', 'Bb3+F4/4', 'G3+D4/4', 'G3+D4/4', 'Eb4+Bb4/4', 'E4+Bb4/4', 'D4+A4/4', 'C#4+A4/4') },
+      { wave: 'saw', vol: 0.54, pan: 0.15, notes: B(4, ...N('-/4', 10), 'F5/2 D5/1 F5/1', 'Bb5/2 A5/1 F5/1', 'G5/2 D5/1 G5/1', 'Bb5/1.5 A5/.5 G5/2', 'G5/2 Eb5/1 G5/1', 'Bb5/2 G5/1 E5/1', 'A5/3 G5/1', 'E5/1 C#5/1 A4/2') },
+      { wave: 'strings', vol: 0.24, pan: -0.2, notes: B(4, '-/4', 'F3+A3+D4/4', ...pads(pA, 4, 'F3'), ...pads(pB, 4, 'F3')) },
+      { wave: 'bass', vol: 0.42, notes: B(4, ...N(riff, 10), ...acc(pB, 4, 'D2', { 4: '0/.5 0/.5 o/.5 0/.5 1/.5 0/.5 o/.5 1/.5' })) },
+      { wave: 'timp', vol: 0.26, notes: B(4, 'D2/1 -/1 D2/1 A2/1', 'D2/1 -/1 A2/.5 A2/.5 A2/.25 A2/.25 A2/.25 A2/.25', ...N('D2/2 -/1.5 A2/.5', 8),
+        'Bb2/2 -/2', 'Bb2/2 -/2', 'G2/2 -/2', 'G2/2 -/2', 'Eb2/2 -/2', 'E2/2 -/2', 'A2/2 -/1 A2/.5 A2/.5', 'A2/1 A2/1 A2/.5 A2/.5 A2/.25 A2/.25 A2/.25 A2/.25') },
+      { wave: 'drums', vol: 0.34, notes: B(4, 'b+k/1 -/1 k/1 s/1', 'b+k/1 k/.5 k/.5 s/.5 s/.5 m/.25 m/.25 m/.25 m/.25', crash, ...N(kit, 6), fill, crash, ...N(kit, 6), fill) }
+    ] });
+  })();
+
+  /* ---------- vice : l'adversaire final — do mineur. La Chaîne renversée (les maillons tombent), les accords de la Noosphère,
+     puis le thème droit, qui tient jusqu'à une cadence picarde avant que tout recommence. ---------- */
+  (function () {
+    const pI = 'Cm | Ab/C | F#o7/C | G7', pA = 'Fm Cm | Ab | Cm G | G | Ab Fm | G7 | Cm G7 | Cm', pB = 'Cm | Abm | Em | Gaug | Cm | Abm | Em | G', pC = trp(CHPm, -2);
+    const up = trs([CHm.a1, 'D5/2.5 -/1 D4/.5', CHm.a3, CHm.a4, CHm.b1, CHm.b2, CHm.b3], -2);       // le thème droit, en do mineur
+    const drive = '0/.25 0/.25 o/.25 0/.25', s16 = { 4: N(drive, 4).join(' '), 2: N(drive, 2).join(' ') };
+    const kit = 'k/.5 h/.5 s/.5 k/.25 k/.25 h/.5 k/.5 s/.5 h/.5', crash = 'k+c/.5 h/.5 s/.5 k/.25 k/.25 h/.5 k/.5 s/.5 h/.5', fill = 'k/.5 h/.5 s/.5 k/.25 k/.25 ' + N('m/.25', 4).concat(N('s/.25', 4)).join(' ');
+    const half = 'b+k/1 h/.5 h/.5 s/1 h/.5 k/.5';
+    R('vice', { bpm: 132, beats: 112, intro: 16, voices: [
+      { wave: 'brass', vol: 0.6, notes: B(4, '-/4', '-/4', '-/4', 'G3+D4/3.5 C5/.5',
+        'F4/1.5 G4/.5 Eb4/1.5 F4/.5', 'C4/2.5 -/1 Bb4/.5', 'Eb4/1.5 F4/.5 D4/1.5 Eb4/.5', 'B3/2.5 -/1 G4/.5', 'Ab4/1.5 G4/.5 F4/1.5 Eb4/.5', 'D4/1.5 Eb4/.5 F4/2', 'Eb4/1.5 D4/.5 C4/1.5 B3/.5', 'C4/4',
+        'C4+G4/4', 'Ab3+Eb4/4', 'G3+E4/4', 'G3+D#4/4', 'C4+G4/4', 'Ab3+Eb4/4', 'G3+E4/4', 'G3+D4/3.5 C4/.5',
+        ...up, 'C4/3.5 C5/.5') },
+      { wave: 'saw', vol: 0.54, pan: 0.15, notes: B(4, ...N('-/4', 4),
+        '-/4', '-/1 Ab5/.5 G5/.5 Eb5/.5 C5/.5 Eb5/1', '-/4', '-/1 D5/.5 G5/.5 B5/.5 G5/.5 D5/1', '-/4', '-/2 B5/.5 G5/.5 F5/.5 D5/.5', '-/4', '-/1 G5/.5 Eb5/.5 C5/1 -/1',
+        'G5/2 Eb5/1 G5/1', 'Eb5/1 Ab5/1 B5/2', 'B5/1.5 G5/.5 E5/2', 'D#5/1 G5/1 B5/2', 'C6/2 G5/1 Eb5/1', 'Eb5/1 B5/1 Ab5/2', 'G5/1.5 E5/.5 B4/1 E5/1', 'D5/1 G5/1 B5/1 D6/.5 C5/.5',
+        ...trs(up, 12), 'C5/4') },
+      { wave: 'strings', vol: 0.24, pan: -0.2, notes: B(4, ...pads(pI, 4, 'G3'), ...pads(pA.replace('Cm G7 |', 'Cm:2 G7sus:1.5 G7:.5 |'), 4, 'G3'), ...pads(pB, 4, 'G3'), ...pads(pC, 4, 'G3')) },
+      { wave: 'bell', vol: 0.3, pan: 0.3, notes: B(4, 'C5/2 -/2', 'C5/2 -/2', 'C5/2 -/2', 'G4/1 B4/1 D5/1 F5/1', ...N('-/4', 8),
+        'C5/2 G4/2', 'Eb5/2 Ab4/2', 'E5/2 B4/2', 'D#5/2 G4/2', 'C5/2 G4/2', 'Eb5/2 Ab4/2', 'E5/2 B4/2', 'D5/2 G4/2', 'C5/4', ...N('-/4', 3), 'C5/4', '-/4', '-/4', 'E5/1 G5/1 C6/2') },
+      { wave: 'bass', vol: 0.4, notes: B(4, 'C2/4', 'C2/4', N('C2/.5', 8).join(' '), N('G2/.25', 16).join(' '), ...acc(pA, 4, 'C2', s16), ...acc(pB, 4, 'C2', { 4: '0/1 0/.5 0/.5 o/1 0/1' }), ...acc(pC, 4, 'C2', s16)) },
+      { wave: 'timp', vol: 0.26, notes: B(4, 'C3/1 -/3', 'C3/1 -/3', 'C3/1 -/1 C3/1 -/1', 'G2/.5 G2/.5 G2/.5 G2/.5 ' + N('G2/.25', 8).join(' '),
+        '-/2 C3/1 -/1', '-/4', 'C3/1 -/1 G2/1 -/1', 'G2/1 -/1 G2/.5 G2/.5 G2/1', '-/4', 'G2/1 -/3', 'C3/1 -/1 G2/1 G2/1', 'C3/1 -/2 G2/.5 G2/.5',
+        'C3/2 -/2', '-/4', '-/4', 'G2/2 -/2', 'C3/2 -/2', '-/4', '-/4', 'G2/1 G2/1 G2/.5 G2/.5 ' + N('G2/.25', 4).join(' '),
+        'C3/1 -/3', 'C3/1 -/3', '-/2 G2/1 -/1', 'G2/1 -/1 G2/1 G2/1', '-/4', '-/4', '-/2 G2/.5 G2/.5 G2/.5 G2/.5', 'C3/2 -/1 G2/.5 G2/.5') },
+      { wave: 'drums', vol: 0.32, notes: B(4, 'b/4', 'b/4', 'b/2 b/2', 'b/1 ' + N('s/.25', 8).concat(N('m/.25', 4)).join(' '),
+        crash, kit, kit, fill, kit, kit, kit, fill, 'b+k+c/1 h/.5 h/.5 s/1 h/.5 k/.5', ...N(half, 6), 'b+k/1 h/.5 h/.5 s/.5 s/.5 m/.25 m/.25 s/.25 s/.25',
+        crash, kit, kit, fill, kit, kit, kit, 'k+c/1 -/1 ' + N('s/.25', 4).concat(N('m/.25', 4)).join(' ')) }
+    ] });
+  })();
+
+  /* ---------- victoire : fanfare sur le thème de la Chaîne (ré majeur, IV–V–I), puis boucle douce : le thème, deux fois plus lent ---------- */
+  (function () {
+    const pL = 'D | G | D/F# | A7sus | Bm | G | Em7 A7 | D';
+    R('victoire', { bpm: 132, beats: 41, intro: 9, voices: [
+      { wave: 'brass', vol: 0.6, notes: '-/.5 D4/.5 A4+F#4/1.5 G4+E4/.5 B4+G4/1.5 A4+F#4/.5 D5+B4/1.5 E5+C#5/.5 F#5+D5+A4/2 -/16 -/16' },
+      { wave: 'strings', vol: 0.22, pan: -0.2, notes: '-/1 F#3+A3+D4/2 G3+B3+D4/2 G3+B3+D4/1.5 A3+C#4+E4/.5 F#3+A3+D4/2 ' + B(4, ...pads(pL, 4, 'F#3')) },
+      { wave: 'flute', vol: 0.46, notes: '-/9 ' + B(4, 'A4/3 G4/1', 'B4/3 A4/1', 'D5/4', 'E5/2 D5/1 B4/1', 'F#5/3 E5/1', 'D5/3 B4/1', 'G4/1.5 A4/.5 F#4/1.5 E4/.5', 'D4/4') },
+      { wave: 'harp', vol: 0.36, pan: 0.25, notes: '-/7 D4/.25 F#4/.25 A4/.25 D5/.25 F#5/.25 A5/.25 D6/.5 ' + B(4, ...acc(pL, 4, 'D2', H8)) },
+      { wave: 'contra', vol: 0.28, notes: '-/1 D2/2 G2/2 G2/1.5 A2/.5 D2/2 ' + B(4, ...acc(pL, 4, 'D2', { 4: '0/2.5 0/.5 1/1', 2: '0/2' })) },
+      { wave: 'drums', vol: 0.3, notes: 's/.25 s/.25 s/.25 s/.25 k+c/1 s/.5 s/.5 k/1 s/.5 s/.5 k/1 s/.25 s/.25 k/.5 k+c/2 ' + B(4, ...N('D/1 r/.5 t/.5 T/1 r/1', 8)) }
+    ] });
+  })();
+
+  /* ---------- deuil : lent, à trois temps, peu de voix — ré mineur ; la fin reste ouverte, sans tierce ---------- */
+  (function () {
+    const p = 'Dm | Dm/C | Bb | A | Dm | Gm | A7sus:2 A:1 | Dm | F | C/E | Dm | A/C# | Bb | Gm6 | A7 | D5';
+    const st = pads(p, 3, 'F3'); for (let i = 0; i < 8; i++) st[i] = '-/3';
+    R('deuil', { bpm: 56, beats: 48, voices: [
+      { wave: 'flute', vol: 0.44, notes: B(3, 'A4/2 D5/1', 'F5/2 E5/1', 'D5/3', 'C#5/2 A4/1', 'A4/2 D5/1', 'G5/2 F5/1', 'E5/2 C#5/1', 'D5/3',
+        'A4/1 C5/1 F5/1', 'G5/2 E5/1', 'F5/2 D5/1', 'E5/3', 'D5/2 F5/1', 'E5/2 D5/1', 'E5/1 C#5/1 A4/1', 'D4/3') },
+      { wave: 'harp', vol: 0.48, pan: -0.15, notes: B(3, ...acc(p, 3, 'C2', { 3: '0/.5 1/.5 2/.5 3/.5 2/.5 1/.5', 2: '0/.5 1/.5 2/.5 3/.5', 1: '0/.5 3/.5' })) },
+      { wave: 'triangle', vol: 0.24, notes: B(3, ...acc(p, 3, 'C2', { 3: '0/3', 2: '0/2', 1: '0/1' })) },
+      { wave: 'strings', vol: 0.2, pan: 0.15, notes: B(3, ...st) }
+    ] });
+  })();
+
+  /* ---------- espoir : le thème de la Chaîne s'ouvre — ré majeur, puis fa majeur (une tierce plus haut), et retour ---------- */
+  (function () {
+    const pA = CHP.replace(/\| D$/, '| D C7sus'), pF = trp(CHP, 3), pT = 'Bb Gm | A7sus:2 A7:1 A7sus:1';
+    const lift = { 4: '0/1.5 0/.5 1/1 0/1', 2: '0/1.5 0/.5' }, calm = { 4: '0/3 0/1', 2: '0/2', 1: '0/1' };
+    const st = pads(pA, 4, 'F#3'); for (let i = 0; i < 4; i++) st[i] = '-/4';
+    const soft = 'D/1 r/.5 t/.5 T/1 r/1', full = 'D/1 r/.5 t/.5 T/.5 D/.5 r/.5 t/.5';
+    R('espoir', { bpm: 96, beats: 72, voices: [
+      { wave: 'flute', vol: 0.48, notes: B(4, CH.a1, CH.a2, CH.a3, CH.a4, CH.b1, CH.b2, CH.b3, 'D4/2 -/2', ...trs(DESC.slice(0, 7), 3), 'A4/4', 'D5/1.5 C5/.5 Bb4/2', 'A4/3.5 D4/.5') },
+      { wave: 'brass', vol: 0.58, pan: 0.15, notes: B(4, ...N('-/4', 7), '-/3.5 F4/.5', ...trs([CH.a1, CH.a2, CH.a3, CH.a4, CH.b1, CH.b2, CH.b3], 3), 'F4/4', '-/4', '-/4') },
+      { wave: 'strings', vol: 0.22, pan: -0.2, notes: B(4, ...st, ...pads(pF, 4, 'F#3'), ...pads(pT, 4, 'F#3')) },
+      { wave: 'harp', vol: 0.38, pan: 0.25, notes: B(4, ...acc(pA, 4, 'D2', H8), ...acc(pF, 4, 'D2', H16), ...acc(pT, 4, 'D2', H8)) },
+      { wave: 'contra', vol: 0.28, notes: B(4, ...acc(pA, 4, 'D2', calm), ...acc(pF, 4, 'D2', lift), ...acc(pT, 4, 'D2', calm)) },
+      { wave: 'drums', vol: 0.3, notes: B(4, ...N('-/4', 4), ...N(soft, 4), ...N(full, 8), 'D/2 T/2', 'D/1 t/1 T/.5 T/.5 t/.25 t/.25 t/.25 t/.25') }
+    ] });
+  })();
+
+  /* ---------- lame : une lame se forge — ré, quartes et quintes à nu, l'enclume ; la tierce majeure n'arrive qu'au dernier accord ---------- */
+  (function () {
+    const p = 'D5 | C | Bb | Asus A | Dm | G | Em7b5 A7 | D';
+    const strike = 'b+a/1 -/.5 a/.5 a/1 -/1';
+    R('lame', { bpm: 80, beats: 32, voices: [
+      { wave: 'brass', vol: 0.6, notes: B(4, 'D4+A3/2 G4+D4/1 A4+D4/1', 'C5+G4/3 G4+E4/1', 'F4+D4/2 Bb4+F4/1 D5+Bb4/1', 'D5+A4/2 C#5+A4/2', 'D5+A4/2 A4+F4/1 F4+D4/1', 'G4+D4/2 B4+G4/1 D5+B4/1', 'Bb4+G4/2 A4+E4/1 G4+E4/1', 'F#4+D4/4') },
+      { wave: 'strings', vol: 0.22, pan: -0.2, notes: B(4, ...pads(p, 4, 'F3')) },
+      { wave: 'timp', vol: 0.3, notes: B(4, 'D2/2 -/2', '-/4', '-/4', 'A2/2 A2/2', 'D2/2 -/2', '-/4', '-/2 A2/1 A2/1', 'D2/2 -/2') },
+      { wave: 'bell', vol: 0.3, pan: 0.35, notes: B(4, '-/4', '-/3 G6/1', '-/4', '-/3 E6/1', '-/4', '-/3 D6/1', '-/4', '-/1 A5/1 D6/2') },
+      { wave: 'triangle', vol: 0.28, notes: B(4, ...acc(p, 4, 'D2', { 4: '0/4', 2: '0/2' })) },
+      { wave: 'drums', vol: 0.3, notes: B(4, ...N(strike, 7), 'b+a/1 -/.5 a/.5 a/1 a/.5 a/.5') }
+    ] });
+  })();
+
+  /* ---------- rencontre : un soir de 2084, un enfant pose une question — la majeur ; la boîte à musique interroge et reste
+     suspendue sur la dominante, le roseau répond, la sous-dominante mineure passe comme une ombre ---------- */
+  (function () {
+    const p = 'AM7 | F#m7 | DM7 | Dm6 | A/C# | Bm7 | E7sus | E7sus | F#m7 | C#m7 | DM7 | A/C# | Bm7 | Dm6 | Aadd9 | Esus';
+    R('rencontre', { bpm: 84, beats: 64, voices: [
+      { wave: 'bell', vol: 0.5, notes: B(4, '-/1 E5/1 A5/1 G#5/1', 'E5/2 C#5/2', '-/1 D5/1 F#5/1 A5/1', 'B5/2 A5/1 F5/1', 'E5/2 C#5/1 E5/1', 'D5/1 F#5/1 A5/2', 'E5/1 F#5/1 A5/1 B5/1', 'B5/3 -/1', ...N('-/4', 8)) },
+      { wave: 'flute', vol: 0.5, pan: 0.15, notes: B(4, ...N('-/4', 8), 'A4/2 C#5/1 E5/1', 'E5/2 B4/1 G#4/1', 'F#4/1 A4/1 C#5/2', 'E5/2 C#5/1 A4/1', 'D5/2 B4/1 D5/1', 'F5/2 D5/1 B4/1', 'C#5/2 B4/1 A4/1', 'A4/2 B4/2') },
+      { wave: 'square', vol: 0.24, pan: -0.3, notes: B(4, ...acc(p.replace(/DM7/g, 'Dadd9'), 4, '^A3', { 4: '0/.5 1/.5 2/.5 3/.5 2/.5 1/.5 2/.5 1/.5' })) },
+      { wave: 'pad', vol: 0.22, pan: 0.2, notes: B(4, ...pads(p.replace('AM7', 'A').replace(/DM7/g, 'D'), 4, 'E3')) },
+      { wave: 'triangle', vol: 0.24, notes: B(4, ...acc(p, 4, 'D2', { 4: '0/2.5 0/.5 0/1' })) },
+      { wave: 'drums', vol: 0.3, notes: B(4, ...N('-/1 h/1 -/1 h/1', 16)) }
+    ] });
+  })();
 })();
