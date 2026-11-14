@@ -559,6 +559,7 @@ ISNAD.registerSaga({
                     r: "Il se lève à demi. « Alors prenez-les. On n'a pas besoin de ma parole pour cela. »" }
                 ] },
               { say: "« Si nous traitons avec vous, Constantinople nous le fera payer. Si nous refusons, ce sera vous. »",
+                noir: { name: "La Peur", group: ['noir_peur'], intro: "Ils craignent deux flottes : celle qui est entrée dans la baie, et celle qui reviendra les punir d'avoir traité. Entre les deux, c'est la peur qui parle pour eux.", after: "Bien. Nous avons peur, voilà qui est dit. Parlons maintenant de ce que tu offres." },
                 opts: [
                   { t: "« Versez-nous ce que vous leur versez, pas davantage. Et continuez de leur verser : nous ne vous l'interdirons pas. »", el: 'adl', v: 3, need: 'deux_feux',
                     r: "Il te regarde longtemps. « Tu sais donc ce que c'est, vivre entre deux feux. »" },

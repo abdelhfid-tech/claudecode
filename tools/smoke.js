@@ -4,7 +4,8 @@
    Usage : node tools/smoke.js [shots|auto|walk|tap|wrong|all] [dossier de sortie]
    auto : saute d'objectif en objectif · walk : marche réellement (clavier simulé, vraies collisions)
    tap : marche comme au doigt (chemin tracé jusqu'à l'objectif, vraies collisions)
-   wrong : choisit d'abord toutes les mauvaises réponses avant la bonne */
+   wrong : choisit d'abord toutes les mauvaises réponses avant la bonne
+   SANS_OEUVRES=1 : le joueur automatique n'accomplit aucune œuvre (épreuves abordées le cœur lourd) */
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
@@ -65,8 +66,9 @@ const url = 'file://' + path.join(__dirname, '../index.html');
 
   if (mode === 'auto' || mode === 'walk' || mode === 'tap' || mode === 'wrong' || mode === 'all') {
     const page = await mkPage({ width: 960, height: 540 });
-    const res = await page.evaluate(async (walk) => {
+    const res = await page.evaluate(async ([walk, sans]) => {
       const I = window.ISNAD, W = I.world, log = I.debug.log = [], stats = [];
+      I.debug.noOeuvres = !!sans;
       I.debug.auto = true; I.debug.walk = walk === 'walk' ? true : walk === 'tap' ? 'tap' : false; I.debug.pickWrong = walk === 'wrong'; I.speed = 40; I.audio.setOn(false);
       I.save.reset(); I.save.data.started = true;
       const hide = () => document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
@@ -88,8 +90,8 @@ const url = 'file://' + path.join(__dirname, '../index.html');
       const bad = []; I.debug.auto = false; I.script.depth = 1;
       for (const id of ['medine', 'koufa', 'desert', 'camp', 'romaine', 'palais', 'navire', 'citadelle', 'archives']) { W.loadMap(id, {}, null); const m = W.map, q = W.resolve('priere', id, W.player); for (const k of Object.keys(m.spots)) { if (k === 'priere') continue; const a = W.resolve(k, id, W.player); if (!W.reach(a[0], a[1], q[0], q[1])) bad.push(id + ':' + k); } }
       log.push(bad.length ? 'NATTE INACCESSIBLE depuis ' + bad.join(', ') : 'NATTES toutes accessibles à pied');
-      return { log, stats, save: { lights: I.save.data.lights, isnad: I.save.data.isnad, codex: I.save.data.codex.length, epilogue: I.save.data.epilogue, veillees: Object.keys(I.save.data.veillees || {}), rencontres: Object.keys(I.save.data.rencontres || {}), citadel: I.save.data.citadel, parley: I.save.data.parley, piliers: Object.fromEntries(Object.entries(I.save.data.sagas).filter(([k, v]) => v.pil).map(([k, v]) => [k, Object.values(v.pil).join('/')])) } };
-    }, mode);
+      return { log, stats, save: { lights: I.save.data.lights, isnad: I.save.data.isnad, codex: I.save.data.codex.length, epilogue: I.save.data.epilogue, veillees: Object.keys(I.save.data.veillees || {}), rencontres: Object.keys(I.save.data.rencontres || {}), coeur: { zad: I.save.data.zad, oeuvres: I.save.data.oeuvres, lames: Object.keys(I.save.data.lames || {}), vices: I.save.data.vices, animaux: Object.keys(I.save.data.animaux || {}), enigmes: Object.keys(I.save.data.enigmes || {}), pret: I.save.data.pret || 0 }, citadel: I.save.data.citadel, parley: I.save.data.parley, piliers: Object.fromEntries(Object.entries(I.save.data.sagas).filter(([k, v]) => v.pil).map(([k, v]) => [k, Object.values(v.pil).join('/')])) } };
+    }, [mode, process.env.SANS_OEUVRES || '']);
     console.log(res.log.join('\n'));
     console.log('--- combats ---');
     res.stats.forEach(s => console.log(`${s.saga}/${s.ch} ${s.boss ? 'BOSS ' : ''}${s.group}  défaites:${s.defeats} tours:${s.turns} KO:${s.kos} PVmin:${s.min}%  niv:${s.lv}`));

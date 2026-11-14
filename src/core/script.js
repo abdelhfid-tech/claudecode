@@ -97,6 +97,13 @@
     for (let r = 0; r < n; r++) {
       const R = P.rounds[r];
       await showLine('say', sp, R.say); S.hideDialog();
+      if (R.noir) {
+        const N = R.noir, gain = N.v || 1; I.oeuvres.learn('idees_noires');
+        await card('title parley noir', `<p class="small">Une idée noire</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">On ne la combat pas contre lui, mais pour lui</p><div class="rule"></div><div class="hint">▼</div>`);
+        await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || 'Elle parle plus fort que toi. Dissipe-la.' });
+        conf += gain; I.audio.music('conseil'); S.toast(`<b>Confiance +${gain}</b> — son regard s’éclaircit`, 2400);
+        if (N.after) { await showLine('say', sp, N.after); S.hideDialog(); }
+      }
       const i = await menuPick('Que réponds-tu ?', R.opts, head(r)); const o = R.opts[i];
       conf = Math.max(0, conf + o.v);
       S.toast(o.v > 0 ? `<b>Confiance +${o.v}</b>` : o.v < 0 ? `<b>Confiance ${o.v}</b> — il se ferme` : 'Il ne bouge pas.', 1800); I.audio.sfx(o.v > 0 ? 'light' : o.v < 0 ? 'dark' : 'blip');
@@ -107,6 +114,7 @@
     if (ok) {
       sv.parley.won++; I.audio.sfx('roll'); G.flash('#ffe08a');
       const xp = P.xp || Math.round(22 + 12 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
+      await I.oeuvres.rally();
       await card('victory', `<p class="small">Pourparler · ${I.esc(P.title)}</p><h1>La parole a suffi</h1><ul><li>Confiance : <b>${conf} / ${P.goal}</b></li><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}</ul><div class="hint">▼</div>`);
       await S.run(P.win);
     } else {
@@ -167,6 +175,7 @@
       case 'mat': I.build.give(a, b === undefined ? 1 : b); break;
       case 'lore': I.trade.lore(a); break;
       case 'raid': S.hideDialog(); await I.trade.raid(a || {}); break;
+      case 'vices': S.hideDialog(); await I.oeuvres.finale(a || {}); break;
       case 'site': I.build.openSite(a); break;
       case 'battle': S.hideDialog(); await I.battle.start(a); break;
       case 'map': S.hideDialog(); await S.fade('out'); W.loadMap(a, c || {}, b); await S.fade('in'); break;

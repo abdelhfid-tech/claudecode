@@ -3,6 +3,9 @@
    veillée, Idris remonte dans la rue et rencontre un habitant enfermé dans une idole. Il le dénoue par la parole ;
    les meilleurs arguments demandent un savoir appris chez le Compagnon ou à la Citadelle (need: 'saga/id').
    Tout y est de fiction. Les types sont anciens ; les images et les phrases sont originales. */
+/* Depuis la version du cœur : chaque rencontre porte, à sa deuxième manche, l'idée noire de celui à qui l'on
+   parle (« noir »), et s'achève devant le mal du cœur qui se tenait derrière lui. Le dernier chapitre fait se
+   dresser ceux qui n'ont pas été tranchés (['vices', …]). Textes des maux et des lames : src/data/coeur.js. */
 ISNAD.registerSaga({
   id: 'idris', order: 0, frame: true,
   name: 'Idris', epithet: 'Le Râwî', arabic: 'إدريس', years: '1508 H · 2084',
@@ -283,6 +286,12 @@ ISNAD.registerSaga({
           ['say', "L'AGRÉGOR", 'Je ne suis pas un dieu, Idris. Je n’ai jamais prétendu l’être. Je suis seulement ce que vous regardez tous en même temps.'],
           ['say', "L'AGRÉGOR", 'J’ai été le Clan. J’ai été l’Aigle et le Trône. J’ai été le Héros, l’Or, la Rumeur, le Juge. On m’a brisé chaque fois. On m’a refait chaque fois.'],
           ['say', 'idris', 'Je sais. Je les ai vus te briser. Aucun d’eux n’a cru en avoir fini avec toi. Ils ont tenu, chacun son heure, et passé le dépôt au suivant.'],
+          ['say', "L'AGRÉGOR", 'Et sous chacun de ces noms, il y avait toujours les mêmes. Tu les connais. Ils ne sont pas à moi : ils sont à vous.'],
+          ['vices', { bg: 'cite',
+            avant: [['nar', 'Autour du cœur, ce qui n’a pas été tranché se redresse.']],
+            aucun: [['nar', 'Autour du cœur, rien ne se dresse. Les sept ont été tranchés en chemin, un à un, par ce que des mains ont fait.']],
+            tous: [['say', 'yunus', 'Sept lames, et aucune n’est de fer. Garde-les en t’en servant : elles ne tiennent leur fil que de l’œuvre.']],
+            reste: [['say', 'yunus', 'Ceux que tu n’as fait que repousser reviendront. Ce n’est pas une défaite : c’est le travail de demain.']] }],
           ['heal'],
           ['battle', { group: ['agregor'], bg: 'cite', boss: true, intro: 'Les six Lumières sont ses failles. Dévoile-le, encore et encore.', allies: [{ flag: 'operateur', name: 'L’opérateur coupe une à une les alimentations' },
             { flag: 'ami_defile', name: 'Celui qui défilait éteint son écran', hp: 0.03, veil: 0 }, { flag: 'ami_regent', name: 'Le Régent a laissé son siège : il veille dans la rue', hp: 0.03, veil: 0 },
@@ -298,7 +307,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_abubakr', after: 'abubakr', title: 'Celui qui défile', sub: 'Cité-Miroir · le soir du maillon d’Abû Bakr', minLvl: 8, last: true,
+      id: 'r_abubakr', after: 'abubakr', vice: 'avidite', title: 'Celui qui défile', sub: 'Cité-Miroir · le soir du maillon d’Abû Bakr', minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
@@ -329,7 +338,9 @@ ISNAD.registerSaga({
                 { t: 'Tu perds ta vie. Lève-toi.', el: 'shajaa', v: -1, r: 'Tu crois que je ne le sais pas ? C’est justement ce que je viens oublier ici.' },
                 { t: 'Chez Abû Bakr, j’ai vu ce que devient un chagrin qu’on refuse de nommer : il prend un corps, et il commande.', el: 'sidq', v: 2, need: 'abubakr/deni', r: 'Un chagrin… Oui. Ça a commencé comme ça. Je ne voulais pas que ce soit vrai.' }
               ] },
-              { say: 'Si j’arrête, il faudra que je regarde ce que j’ai laissé pendant ce temps-là.', opts: [
+              { say: 'Si j’arrête, il faudra que je regarde ce que j’ai laissé pendant ce temps-là.',
+                noir: { name: 'Le Défilement', group: ['defilement'], bg: 'cite', intro: 'Il a dit « si j’arrête », et quelque chose, derrière lui, a resserré sa prise. Tant qu’elle parlera plus fort que toi, il n’entendra rien.', say: 'On ne le frappe pas avec colère : on cesse de le suivre.', after: 'C’est… plus calme, d’un coup. Répète ce que tu disais.' },
+                opts: [
                 { t: 'Oui. Et ce sera moins lourd que de continuer à ne pas le regarder.', el: 'sidq', v: 2, r: 'Tu ne me promets pas que ce sera léger. C’est déjà ça.' },
                 { t: 'Ce n’est rien. Tout le monde fait comme toi.', el: 'rahma', v: 0, r: 'C’est ce que dit le Flux. Mot pour mot.' },
                 { t: 'Un seigneur du désert a annoncé lui-même, à l’aube, la nouvelle qu’il aurait pu taire sept jours. Il y a perdu de l’avance, et gagné d’être cru.', el: 'sidq', v: 2, need: 'caid/aube_vraie', r: 'Dire la chose avant qu’on la devine… À qui la dirais-je, moi ?' }
@@ -341,8 +352,11 @@ ISNAD.registerSaga({
               ] }
             ],
             win: [['flag', 'ami_defile'], ['pillar', 'lien', 1], ['emote', 'defileur', 'salut'], ['nar', 'Il éteint. Sa main tremble un peu. Puis il se lève, et regarde la ruelle comme on regarde une pièce où l’on rentre.']],
-            lose: [['nar', 'Il a déjà repris. Quelque chose, derrière lui, se nourrit de chaque « encore un ».'], ['battle', { group: ['defilement'], bg: 'cite', intro: 'On ne le frappe pas avec colère : on cesse de le suivre.' }], ['nar', 'Le défilement s’est tu un instant. L’homme a levé la tête, sans rien dire.']]
-          }]
+            lose: [['pillar', 'lien', -1], ['nar', 'Il a déjà repris. Tu n’as pas trouvé les mots, ce soir. Il a pourtant levé la tête, une fois.']]
+          }],
+          ['nar', 'Derrière lui, quelque chose ne s’est pas tu. Sous chaque « encore un », il y a une faim plus vieille que les écrans.'],
+          ['battle', { group: ['avidite'], bg: 'cite', boss: true, intro: 'L’Avidité : vouloir encore, alors qu’on a. Sans la lame du Contentement, on ne peut que la repousser.' }],
+          ['if', 'tranche_avidite', [['nar', 'La lame du Contentement n’a rien frappé : elle a montré ce qui suffisait. L’Avidité ne reviendra pas dans cette ruelle.']], [['nar', 'L’Avidité recule, sans se défaire. Elle reviendra. Le jeûne, trois fois tenu, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Alors ? Il oubliait quoi ?'],
@@ -355,7 +369,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_umar', after: 'umar', title: 'Le Régent', sub: 'Cité-Miroir · le soir du maillon de ’Umar', minLvl: 8, last: true,
+      id: 'r_umar', after: 'umar', vice: 'orgueil', title: 'Le Régent', sub: 'Cité-Miroir · le soir du maillon de ’Umar', minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
@@ -386,7 +400,9 @@ ISNAD.registerSaga({
                 { t: 'J’accepte, si tu me donnes un bureau.', el: 'adl', v: -1, r: 'Accordé. Tu vois ? Tout le monde finit par vouloir un siège.' },
                 { t: 'J’ai vu un siège qui survit à tous ceux qui s’y asseyent. Il ne donne rien : il prend la place de celui qui croit le tenir.', el: 'adl', v: 2, need: 'umar/ego_trone', r: 'Qui t’a parlé de mon fauteuil ? … Il est froid, c’est vrai. Même l’été.' }
               ] },
-              { say: 'Sans moi, ce serait le désordre. C’est moi qui valide ce que l’écran décide.', opts: [
+              { say: 'Sans moi, ce serait le désordre. C’est moi qui valide ce que l’écran décide.',
+                noir: { name: 'Le Petit Trône', group: ['petit_trone'], bg: 'cite', intro: 'Il s’est redressé sur son siège, et le siège a grandi sous lui. Ce n’est plus lui qui parle : c’est la place qu’il occupe.', say: 'La place vide exige qu’on l’occupe. Ne t’y assieds pas.', after: 'Je… je me suis entendu parler. Continue.' },
+                opts: [
                 { t: 'Alors c’est l’écran qui commande, et toi qui signes.', el: 'sidq', v: 2, r: 'Je… je contresigne. Ce n’est pas rien, contresigner.' },
                 { t: 'Tu fais un travail utile.', el: 'rahma', v: 0, r: 'N’est-ce pas ? Accordé.' },
                 { t: 'On a trouvé ’Umar endormi dans la mosquée, sans garde ni chambellan, lui sous qui deux empires étaient tombés. Il n’avait pas de siège. Il avait des gens dont il répondait.', el: 'adl', v: 2, need: 'umar/hurmuzan', r: 'Sans garde… et il dormait ? Moi, je ne dors pas. Je surveille mon tampon.' }
@@ -398,8 +414,11 @@ ISNAD.registerSaga({
               ] }
             ],
             win: [['flag', 'ami_regent'], ['pillar', 'justice', 1], ['nar', 'Il pose son tampon sur le rebord. Il ne sait pas encore où aller, mais il regarde la rue, et non plus l’écran.']],
-            lose: [['nar', '« Refusé », dit-il, et il tamponne. Derrière lui, un petit trône vide attend que quelqu’un s’y trompe.'], ['battle', { group: ['petit_trone'], bg: 'cite', intro: 'La place vide exige qu’on l’occupe. Ne t’y assieds pas.' }], ['nar', 'Le siège vacille. Le Régent le regarde comme s’il le voyait pour la première fois.']]
-          }]
+            lose: [['pillar', 'lien', -1], ['nar', '« Refusé », dit-il, et il tamponne. Tu n’as pas trouvé les mots, ce soir. Il a pourtant regardé son siège, une fois, comme on regarde un inconnu.']]
+          }],
+          ['nar', 'Le siège est vide, et quelque chose s’y tient encore : ce qui veut être au-dessus, même de personne.'],
+          ['battle', { group: ['orgueil'], bg: 'cite', boss: true, intro: 'L’Orgueil : se voir au-dessus. Sans la lame de l’Humilité, on ne peut que le repousser.' }],
+          ['if', 'tranche_orgueil', [['nar', 'La lame de l’Humilité est passée sans bruit, comme passe un homme parmi d’autres. L’Orgueil ne reviendra pas s’asseoir ici.']], [['nar', 'L’Orgueil recule d’un pas, la tête haute. Il reviendra. Le pèlerinage, où tous portent la même étoffe, forge la lame qui le tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Il accordait à qui, alors ?'],
@@ -411,7 +430,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_khalid', after: 'khalid', title: 'L’Admiré', sub: 'Cité-Miroir · le soir du maillon de Khâlid', minLvl: 8, last: true,
+      id: 'r_khalid', after: 'khalid', vice: 'ostentation', title: 'L’Admiré', sub: 'Cité-Miroir · le soir du maillon de Khâlid', minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
@@ -442,7 +461,9 @@ ISNAD.registerSaga({
                 { t: 'Tu es le plus regardé de la Cité.', el: 'rahma', v: -1, r: 'Encore ! Redis-le. … C’est étrange, ça ne dure jamais plus d’une seconde.' },
                 { t: 'J’ai vu une idole d’or qui avait la silhouette d’un homme de bien. Chaque louange lui ajoutait une couche. Elle ne s’est brisée que le jour où l’homme lui-même a refusé le socle.', el: 'shajaa', v: 2, need: 'khalid/idole_heros', r: 'Refuser le socle… Mais c’est lui qui me tient debout.' }
               ] },
-              { say: 'Si je descends, ils regarderont quelqu’un d’autre dans l’heure.', opts: [
+              { say: 'Si je descends, ils regarderont quelqu’un d’autre dans l’heure.',
+                noir: { name: 'L’Applaudissement', group: ['applaudissement'], bg: 'cite', intro: 'Il a cherché des yeux un public, et le bruit des mains a couvert ta voix. Il faut d’abord faire le silence.', say: 'Il vit d’être regardé. Regarde ailleurs, et tiens bon.', after: 'Personne ne regarde. C’est étrange. Parle.' },
+                opts: [
                 { t: 'Oui. Et tu sauras enfin qui reste.', el: 'sidq', v: 2, r: 'Qui reste… Je n’ose pas faire le compte.' },
                 { t: 'Non. Ils te resteront fidèles.', el: 'rahma', v: -1, r: 'Tu mens gentiment. Eux aussi.' },
                 { t: 'Khâlid n’avait jamais perdu une bataille. On lui a retiré le commandement, non pour une faute, mais parce que les gens s’en remettaient à lui. Il a obéi.', el: 'shajaa', v: 3, need: 'khalid/parole_umar', r: 'Sans faute… et il n’a pas crié à l’injustice ? Il faut plus de courage pour cela que pour monter.' }
@@ -454,8 +475,11 @@ ISNAD.registerSaga({
               ] }
             ],
             win: [['flag', 'ami_admire'], ['pillar', 'lien', 1], ['nar', 'Il fait un pas hors de la lumière de l’écran. Les fenêtres continuent d’applaudir la place vide. Il ne se retourne pas.']],
-            lose: [['nar', 'Il s’est déjà retourné vers les fenêtres. Leur applaudissement a pris un corps.'], ['battle', { group: ['applaudissement'], bg: 'cite', intro: 'Il vit d’être regardé. Regarde ailleurs, et tiens bon.' }], ['nar', 'Un silence d’une seconde. L’Admiré a porté la main à sa poitrine, comme on cherche s’il y a encore quelqu’un.']]
-          }]
+            lose: [['pillar', 'lien', -1], ['nar', 'Il s’est déjà retourné vers les fenêtres. Tu n’as pas trouvé les mots, ce soir. Il a pourtant porté la main à sa poitrine, comme on cherche s’il y a encore quelqu’un.']]
+          }],
+          ['nar', 'L’estrade est vide. Mais ce qui brillait pour être vu brille encore, seul, au milieu de la rue.'],
+          ['battle', { group: ['ostentation'], bg: 'cite', boss: true, intro: 'L’Ostentation : faire le bien pour être vu le faisant. Sans la lame de la Sincérité, on ne peut que la repousser.' }],
+          ['if', 'tranche_ostentation', [['nar', 'La lame de la Sincérité n’a pas d’éclat : c’est pour cela qu’elle coupe. L’Ostentation s’est éteinte, faute de regards.']], [['nar', 'L’Ostentation se retire derrière un écran. Elle reviendra. La prière tenue quand nul ne regarde, trois fois, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Il a compté, finalement ?'],
@@ -467,7 +491,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_uthman', after: 'uthman', title: 'Le Compteur', sub: 'Cité-Miroir · le soir du maillon de ’Uthmân', minLvl: 8, last: true,
+      id: 'r_uthman', after: 'uthman', vice: 'avarice', title: 'Le Compteur', sub: 'Cité-Miroir · le soir du maillon de ’Uthmân', minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
@@ -498,7 +522,9 @@ ISNAD.registerSaga({
                 { t: 'C’est du vol. Rends-les.', el: 'shajaa', v: -1, r: 'J’ai les reçus. Tu veux les voir ? Je les ai comptés aussi.' },
                 { t: 'À Médine, l’eau douce d’un puits se vendait. ’Uthmân l’a acheté de son bien, comme toi, puis il l’a donné à tous : son seau n’y avait pas plus de droit qu’un autre.', el: 'rahma', v: 2, need: 'uthman/ruma', r: 'Payé, puis donné ? Alors il ne lui restait rien… si ce n’est tous ceux qui venaient y boire.' }
               ] },
-              { say: 'Si je les donne, je n’en aurai plus. C’est mathématique.', opts: [
+              { say: 'Si je les donne, je n’en aurai plus. C’est mathématique.',
+                noir: { name: 'Le Compte', group: ['compte'], bg: 'cite', intro: 'Il a recompté, et le chiffre a pris toute la place. Tant qu’il comptera, il n’y aura personne en face de lui.', say: 'Il pèse et ne nourrit personne. La largesse le renverse.', after: 'J’ai perdu le fil. Tant mieux, peut-être. Tu disais ?' },
+                opts: [
                 { t: 'Un regard que tu donnes à quelqu’un, tu ne le perds pas : tu sais où il est.', el: 'rahma', v: 2, r: 'Savoir où il est… Je ne sais où est aucun des miens. Ils sont dans le coffre.' },
                 { t: 'Tu en rachèteras.', el: 'adl', v: 0, r: 'C’est ce que je fais. C’est ce que je fais depuis vingt ans.' },
                 { t: 'Là où chacun compte ce que l’autre a reçu, l’Or dresse sa tour. Je l’ai vue. Elle pèse, et elle ne nourrit personne.', el: 'ilm', v: 2, need: 'uthman/or_n', r: 'Une tour… Mon coffre a la forme d’une tour, maintenant que tu le dis.' }
@@ -510,8 +536,11 @@ ISNAD.registerSaga({
               ] }
             ],
             win: [['flag', 'ami_compteur'], ['pillar', 'lien', 1], ['nar', 'Il ouvre le coffre. Il en sort un regard, un seul, et le pose sur le premier passant. Le passant relève la tête, étonné qu’on le voie.']],
-            lose: [['nar', 'Il a repris son compte. Derrière lui, la pile est assez haute pour faire de l’ombre.'], ['battle', { group: ['compte'], bg: 'cite', intro: 'Il pèse et ne nourrit personne. La largesse le renverse.' }], ['nar', 'La pile a glissé. Le Compteur a regardé ses mains, comme s’il se demandait à quoi elles avaient servi.']]
-          }]
+            lose: [['pillar', 'lien', -1], ['nar', 'Il a repris son compte. Tu n’as pas trouvé les mots, ce soir. Il a pourtant regardé ses mains, comme s’il se demandait à quoi elles avaient servi.']]
+          }],
+          ['nar', 'Les colonnes de chiffres s’effacent. Dessous, il reste une main fermée.'],
+          ['battle', { group: ['avarice'], bg: 'cite', boss: true, intro: 'L’Avarice : retenir ce qui devait circuler. Sans la lame de la Largesse, on ne peut que la repousser.' }],
+          ['if', 'tranche_avarice', [['nar', 'La lame de la Largesse a ouvert la main fermée, et il n’y avait rien dedans qui valût d’être gardé. L’Avarice ne comptera plus ici.']], [['nar', 'L’Avarice referme les doigts et recule. Elle reviendra. L’aumône, trois fois donnée sans témoin, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Il en a donné un ?'],
@@ -523,7 +552,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_ali', after: 'ali', title: 'Le Cartographe', sub: 'Cité-Miroir · le soir du maillon de ’Alî', minLvl: 8, last: true,
+      id: 'r_ali', after: 'ali', vice: 'insouciance', title: 'Le Cartographe', sub: 'Cité-Miroir · le soir du maillon de ’Alî', minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
@@ -554,7 +583,9 @@ ISNAD.registerSaga({
                 { t: 'Onze millions de gens peuvent se tromper ensemble.', el: 'ilm', v: 1, r: 'En théorie. En théorie seulement.' },
                 { t: 'J’ai vu une phrase vraie devenir un mot d’ordre, parce que des milliers la répétaient sans sa suite. Le nombre ne l’avait pas rendue plus juste : il l’avait coupée.', el: 'ilm', v: 2, need: 'ali/phrase_verset', r: 'Coupée… Mes relevés aussi sont des morceaux. Je n’ai jamais demandé ce qu’il y avait autour.' }
               ] },
-              { say: 'Que voudrais-tu ? Que j’aille voir moi-même chaque rue ? Un savant ne se déplace pas.', opts: [
+              { say: 'Que voudrais-tu ? Que j’aille voir moi-même chaque rue ? Un savant ne se déplace pas.',
+                noir: { name: 'La Carte sans chemin', group: ['carte_vide'], bg: 'cite', intro: 'Il a posé la main sur sa carte, et la carte a répondu à sa place. Elle sait tout, et n’est allée nulle part.', say: 'Elle sait tout et n’a rien vu. Demande-lui de qui elle le tient.', after: 'Il y a des blancs sur ma carte. Je ne les voyais plus. Dis-moi.' },
+                opts: [
                 { t: 'Une seule. Celle de l’enfant. Va voir la porte.', el: 'sabr', v: 2, r: 'Une seule rue… C’est peu, pour une méthode. Mais c’est faisable.' },
                 { t: 'Alors ta carte ne vaut rien.', el: 'shajaa', v: -1, r: 'Elle vaut onze millions de relevés. Bonsoir.' },
                 { t: 'Quand des milliers d’hommes se sont retirés à Harûrâ’, Ibn ’Abbâs n’a pas écrit sur eux : il est allé les trouver à midi. Il a écouté leurs griefs, puis il a répondu. Deux mille sont revenus ce jour-là.', el: 'ilm', v: 3, need: 'ali/harura', r: 'Il y est allé. En personne. Et il a écouté d’abord… Je n’ai jamais écouté un relevé.' }
@@ -566,8 +597,11 @@ ISNAD.registerSaga({
               ] }
             ],
             win: [['flag', 'ami_carto'], ['pillar', 'savoir', 1], ['nar', 'Il roule sa carte, la glisse sous son bras, et sort. Il marche mal : il n’a pas l’habitude. Au coin de la rue, il s’arrête devant une porte, et il rit.']],
-            lose: [['nar', 'Il a déjà reporté ta visite : « un relevé, non confirmé ». Sa carte se replie sur elle-même comme une lentille.'], ['battle', { group: ['carte_vide'], bg: 'cite', intro: 'Elle sait tout et n’a rien vu. Demande-lui de qui elle le tient.' }], ['nar', 'La lentille s’est fêlée. Le Cartographe a levé les yeux vers la fenêtre, pour la première fois depuis longtemps.']]
-          }]
+            lose: [['pillar', 'lien', -1], ['nar', 'Il a déjà reporté ta visite : « un relevé, non confirmé ». Tu n’as pas trouvé les mots, ce soir. Il a pourtant levé les yeux vers la fenêtre, pour la première fois depuis longtemps.']]
+          }],
+          ['nar', 'La carte est roulée. Mais ce qui l’empêchait d’aller voir est toujours là, tiède et patient comme un demi-sommeil.'],
+          ['battle', { group: ['insouciance'], bg: 'cite', boss: true, intro: 'L’Insouciance : vivre à côté de sa vie. Sans la lame de l’Ardeur, on ne peut que la repousser.' }],
+          ['if', 'tranche_insouciance', [['nar', 'La lame de l’Ardeur a tranché le demi-sommeil d’un seul fil. L’Insouciance ne s’étendra plus sur cette table.']], [['nar', 'L’Insouciance se retourne, comme un dormeur qu’on dérange. Elle reviendra. L’étude, trois fois reprise, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Il est venu voir ma porte ?'],

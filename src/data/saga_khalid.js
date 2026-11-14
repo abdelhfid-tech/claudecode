@@ -744,6 +744,7 @@ ISNAD.registerSaga({
                   { t: 'Parce que tes murs ne tiendront pas trois jours, et tu le sais.', el: 'shajaa', v: -1, r: "Ils ont tenu trois mois contre les Perses. Tu connais mal mes murs." }
                 ] },
               { say: "Le tribut. Rome nous taxait déjà, et ne nous défendait plus. Que ferez-vous de notre argent ?",
+                noir: { name: "Le Soupçon", group: ['noir_soupcon'], intro: "L'ancien écoute, et derrière chaque mot il entend ceux d'avant : d'autres aussi avaient promis. Le bourg a déjà brûlé une fois.", after: "Tu n'es pas ceux d'avant. Je veux bien l'entendre. Continue." },
                 opts: [
                   { t: "Il paie votre défense. Demande aux gens de Homs : le jour où nous n'avons plus pu les défendre, nous le leur avons rendu.", el: 'sidq', v: 3, need: 'homs_impot', r: "On me l'avait raconté. Je croyais à une fable de marchands." },
                   { t: "Il paie votre défense, et rien d'autre. Ni tes champs ni ta maison ne changent de maître.", el: 'adl', v: 2, r: "Rome disait « défense » aussi. Mais Rome ne venait plus." },

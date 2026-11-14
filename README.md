@@ -14,11 +14,15 @@ une valeur, pour dévoiler l'Agrégor.
 - En ligne : la version publiée en Artifact (lien donné dans la session de travail).
 - En local : ouvrir `index.html` dans un navigateur récent. Aucun serveur, aucune installation.
 
-| Action | Clavier | Tactile |
+| Action | Clavier | Souris ou doigt |
 |---|---|---|
-| Se déplacer, naviguer | Flèches, ou ZQSD / WASD | Croix à l'écran |
-| Parler, valider | Entrée, Espace, Z ou E | Bouton OK, ou toucher l'élément |
-| Menu, retour | Échap, X ou Retour arrière ; M ou Tab pour le menu | Bouton MENU, bouton ☰ |
+| Se déplacer | Flèches, ou ZQSD / WASD | Toucher l'endroit où aller ; doigt maintenu, le héros suit |
+| Parler, se servir d'une chose | Entrée, Espace, Z ou E | Toucher le personnage, le coffre, la natte, le palmier |
+| Que faire ? | H | Bouton ? : l'objectif expliqué, le chemin montré, « M'y conduire » |
+| Halte, retour | Échap, X ou Retour arrière ; M ou Tab | Bouton ☰, bouton MENU |
+
+Sur un téléphone tenu en hauteur, la scène est agrandie et l'objectif passe sous l'image. La taille du
+texte se règle (halte, « Texte »), et une croix tactile peut être affichée pour qui la préfère.
 
 La progression est enregistrée dans le navigateur (`localStorage`) à chaque objectif atteint.
 « Continuer » reprend au dernier objectif.
@@ -51,6 +55,27 @@ dans la Cité-Miroir, qui rend la sixième Lumière, la Patience (*sabr*).
   que les sources rapportent. Un mauvais choix ne réécrit pas l'Histoire : la chaîne vacille, le jeu
   explique, puis repropose. Le Compagnon ne fait jamais à l'écran autre chose que ce qui est rapporté.
 - **Codex.** Biographies, événements, paroles et idoles, avec leurs sources.
+
+## Le cœur : œuvres, lames, maux, idées noires
+
+- **Les œuvres et la provision.** Sur la natte d'une mosquée, on prie et l'on accomplit les œuvres du
+  jour : dhikr, étude du Coran, jeûne, aumône, visite ; dans les veillées, le pèlerinage. Chacune
+  ajoute à la *provision du cœur* (♥). Plus une épreuve est lourde, plus elle en demande : une idole 2,
+  un mal du cœur 3. Qui s'y présente sans provision combat le cœur lourd. Ces œuvres ne sont pas des
+  sortilèges : le jeu traduit à sa façon ce qu'elles font au cœur.
+- **Sept maux du cœur, sept lames.** L'avidité, l'orgueil, l'ostentation, l'avarice, l'insouciance,
+  l'envie, la colère se tiennent derrière les idoles. Une œuvre pratiquée forge la lame qui tranche le
+  mal contraire : le Contentement, l'Humilité, la Sincérité, la Largesse, l'Ardeur, la Bienveillance,
+  la Longanimité. Sans sa lame, un mal est seulement repoussé, et il revient au dernier chapitre.
+- **Idées noires.** Dans certains pourparlers, la honte, la peur, le soupçon, la rancune ou le
+  désespoir de l'autre parlent plus fort que toi : on les dissipe dans la noosphère, pour lui et non
+  contre lui, et il écoute.
+- **Énigmes du cœur.** Dans les veillées, un compagnon languit sans fièvre ni blessure. Il faut
+  trouver ce qu'il a cessé de faire.
+- **Compagnons de lumière.** Cinq figures du ciel (le Renard des sables, l'Aigle, le Phénix, le Lion,
+  la Gazelle) rejoignent celui qui les a méritées. Une seule accompagne le groupe au combat.
+
+Tout cela est une fiction de jeu, dite comme telle : ni relique, ni pouvoir, ni récit historique.
 
 ## Routes : étoiles, caravanes, justice
 
@@ -112,9 +137,11 @@ Archives. Il n'y a pas de sauvegarde automatique : fermer la page sans sauvegard
 
 ```sh
 node tools/validate.js          # valide les sagas contre le schéma (src/core/defs.js)
+node tools/validate.js src/data/frame.js src/data/caid.js src/data/coeur.js   # histoire-cadre, veillées, contenu commun
 node tools/build.js             # assemble index.html et dist/isnad.html
 node tools/smoke.js auto        # joue la partie entière automatiquement dans Chromium
 node tools/smoke.js walk        # même partie, mais le héros marche réellement (vraies collisions)
+node tools/smoke.js tap         # même partie, en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
 node tools/smoke.js wrong       # choisit d'abord toutes les mauvaises réponses et perd chaque pourparler
 node tools/validate-music.js    # vérifie les dix-huit pistes
 node tools/smoke.js shots       # captures d'écran bureau et mobile dans .smoke/

@@ -4,7 +4,8 @@
   const D = window.ISNAD_DEFS;
   const I = window.ISNAD = {
     D, sagas: {}, sagaList: [],
-    registerSaga(s) { this.sagas[s.id] = s; this.sagaList.push(s); this.sagaList.sort((a, b) => a.order - b.order); },
+    // commun: true — contenu partagé par toutes les sagas (src/data/coeur.js) : ni maillon ni chapitre
+    registerSaga(s) { this.sagas[s.id] = s; if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => a.order - b.order); },
     speed: 1, debug: {}
   };
 

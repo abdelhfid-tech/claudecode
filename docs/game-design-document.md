@@ -116,8 +116,12 @@ place des portraits ; égrégores abstraits ; son fait d'ambiances, de percussio
 
 ## Plateformes et contrôles
 
-Navigateur de bureau ou mobile. Clavier, souris ou tactile ; pas de manette physique. En portrait
-étroit, dialogues et commandes passent sous la scène.
+Navigateur de bureau ou mobile. Clavier, souris ou tactile ; pas de manette physique. On se déplace
+aussi en touchant ou en cliquant l'endroit où aller (chemin calculé sur la grille), et l'on agit en
+touchant la personne ou la chose. Sur un téléphone tenu en hauteur, la scène ne montre qu'une partie
+de la largeur, agrandie, en exploration comme en combat ; l'objectif, les dialogues et les commandes
+passent sous l'image. La taille du texte se règle. Le bouton ? (touche H) explique l'objectif, donne
+sa direction et peut montrer le chemin ou y conduire.
 
 ## Périmètre de la V1
 
@@ -181,6 +185,28 @@ par niveau de Justice, 2 par niveau de Lien, 6 par enclos de chameaux (plancher 
 pourparler demande 6, 5 ou 4 de confiance selon 0, 1 ou 2 renforts ; en cas d'échec, combat contre la
 Razzia avec les renforts en ouverture. Partage : servir d'abord les petits porteurs (Justice +1, on
 retrouve la moitié de sa mise), au prorata (Justice +1, 70 %), ou soi d'abord (Justice −1, tout).
+
+## Le cœur (version 5)
+
+Demande du décideur : que les épreuves difficiles demandent des œuvres, que l'on combatte les idées
+noires de ceux que l'on veut convaincre, qu'une quête de lames légendaires mène à sept boss finaux,
+que des animaux légendaires accompagnent le groupe, et que certaines énigmes se dénouent par une œuvre.
+
+| Système | Règle | Garde-fou |
+|---|---|---|
+| Œuvres du jour | Sur la natte : dhikr, étude, jeûne, aumône, visite ; trois par chapitre, la prière en sus | Textes sobres ; aucun pouvoir promis (exigence 15) |
+| Provision du cœur (♥) | +1 par œuvre, cinq au plus ; une idole en consomme 2, un mal du cœur 3 | Chaque point manquant : 8 % ; s'allège à chaque reprise, donc rien ne bloque |
+| Jeûne | Ferme les vivres de la besace jusqu'à la fin du chapitre ; compte pour la lame s'il a été tenu dans l'épreuve | |
+| Pèlerinage | Intention sur la natte, accompli à la fin de la veillée ; remplit la provision | Seulement dans la fiction des veillées |
+| Lames | Trois fois l'œuvre (une fois le pèlerinage) forge la lame du mal contraire | Image, non relique ; aucune inscription |
+| Maux du cœur | Élite au niveau du groupe ; avec la lame : un seul voile, failles connues, 60 % de Constance | Égrégores abstraits ; liste de sept dite « choix du jeu » |
+| Idées noires | Combat à la deuxième manche de douze pourparlers ; +1 de confiance | Interlocuteurs de fiction seulement |
+| Énigmes du cœur | Un héros des veillées à 75 % de Constance tant que l'œuvre juste n'est pas accomplie | Jamais un Compagnon |
+| Compagnons de lumière | Cinq figures du ciel ; une active ; un don au début du combat | Fiction ; absentes du récit historique |
+
+Dons : le Renard révèle une faille de chaque égrégore ; l'Aigle fait agir le groupe plus tôt et donne
+un point de Niyya ; le Phénix relève une fois le premier compagnon éprouvé ; le Lion affaiblit les
+coups adverses pendant trois tours ; la Gazelle régénère le groupe pendant trois tours.
 
 ## Feuille de route proposée
 

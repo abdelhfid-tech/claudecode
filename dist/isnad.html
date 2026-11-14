@@ -177,6 +177,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 .link .tl { font-size: .84em; color: var(--sand); margin: .15em 0; }
 .link .stt { font-size: .68em; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 .link .stt.done { color: var(--c); }
+.link .qt { font-size: .7em; color: var(--dim); letter-spacing: .04em; margin-top: .15em; }
 .link.locked { opacity: .45; }
 .chainfoot { margin-top: 1em; display: flex; gap: .6em; flex-wrap: wrap; justify-content: center; align-items: center; font-size: .84em; color: var(--dim); }
 .chainfoot button, .pill { padding: .3em 1em; border: 1px solid var(--line); background: rgba(10, 8, 20, .7); border-radius: 2em; font-size: .9em; }
@@ -250,6 +251,24 @@ body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 #card.pray { background: radial-gradient(ellipse at center, rgba(20, 16, 40, .95), rgba(4, 3, 10, 1)); }
 #card.parley h1 { font-size: 1.6em; }
 
+/* ---------- le cœur : œuvres, lames, compagnons de lumière ---------- */
+#hud .enig { margin-top: .3em; display: inline-block; padding: .16em .6em; font-size: .76em; font-style: italic; color: #f7ecd2; background: rgba(10, 8, 20, .6); border-left: 2px solid #c49bff; }
+#hud .pil .zad i { color: #ff9a8a; }
+body.portrait #hud .enig { display: block; background: var(--panel); }
+#card.oeuvre .orn { font-size: 3em; color: var(--gold); line-height: .9; text-shadow: 0 0 40px rgba(233, 200, 119, .5); }
+#card.oeuvre h1 { letter-spacing: .24em; } #card.oeuvre p { font-style: italic; max-width: 28em; } #card.oeuvre p.small { font-style: normal; }
+#card.oeuvre { background: radial-gradient(ellipse at center, rgba(20, 16, 40, .95), rgba(4, 3, 10, 1)); }
+#card.lame img.lame { height: 9.5em; image-rendering: pixelated; filter: drop-shadow(0 0 18px rgba(255, 240, 200, .55)); margin-bottom: .4em; animation: bob 2.4s ease-in-out infinite; }
+#card.lame .ar, #card.animal .ar { font-style: italic; color: var(--dim); }
+#card.animal img.bete { height: 6em; image-rendering: pixelated; filter: drop-shadow(0 0 16px rgba(255, 240, 200, .6)); margin-bottom: .5em; animation: bob 2s ease-in-out infinite; }
+#card.noir h1 { color: #c9b8ff; } #card.noir { background: radial-gradient(ellipse at center, rgba(22, 12, 40, .92), rgba(4, 3, 10, .98)); }
+.lames { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15em), 1fr)); gap: .5em .9em; margin: .6em 0; }
+.lm { display: grid; grid-template-columns: 1.5em 1fr; gap: .7em; align-items: center; opacity: .62; }
+.lm.ok { opacity: 1; } .lm img { height: 3.6em; image-rendering: pixelated; justify-self: center; filter: grayscale(.85) brightness(.7); } .lm.ok img { filter: drop-shadow(0 0 6px rgba(255, 240, 200, .5)); }
+.lm small { color: var(--dim); }
+.stat.bete { grid-template-columns: 5.4em 1fr; } .stat.bete .fig { width: 5.4em; height: auto; } .stat.bete.off { opacity: .55; } .stat.bete.off .fig { display: grid; place-items: center; height: 2.6em; font-family: var(--f-display); font-size: 1.3em; color: var(--dim); border: 1px dashed rgba(255, 255, 255, .2); width: 3.4em; }
+.stat.bete.cur { border-bottom-color: var(--gold); }
+
 /* ---------- bâtir ---------- */
 #buildbtn { position: absolute; right: calc(2% + 5.8em); top: 3%; width: 2.4em; height: 2.4em; border-radius: 6px; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; padding: 0; }
 body.in-build #buildbtn { background: var(--acc); color: #0b0a14; }
@@ -280,7 +299,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   <div id="stage">
     <div id="view"><canvas id="cv" aria-label="Scène de jeu"></canvas></div>
     <div id="ui">
-      <div id="hud" hidden><div class="chap"></div><div class="sub"></div><div class="obj"></div><div class="pil"></div></div>
+      <div id="hud" hidden><div class="chap"></div><div class="sub"></div><div class="obj"></div><div class="enig" hidden></div><div class="pil"></div></div>
       <button id="menubtn" type="button" aria-label="Menu" hidden>☰</button>
       <button id="buildbtn" type="button" aria-label="Bâtir" hidden>▦</button>
       <button id="helpbtn" type="button" aria-label="Que faire ?" hidden>?</button>
@@ -386,12 +405,13 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   };
 
   D.ITEMS = {
-    dattes: { name: 'Dattes de Médine', desc: 'Rend 40 % de Constance à un compagnon.',              hp: 0.4,  target: 'ally' },
-    eau:    { name: "Outre d'eau",      desc: 'Rend 80 % de Constance à un compagnon.',              hp: 0.8,  target: 'ally' },
-    pain:   { name: "Pain d'orge",      desc: 'Rend 25 % de Constance à tout le groupe.',            hp: 0.25, target: 'allies' },
-    miel:   { name: 'Miel',             desc: 'Dissipe les altérations et rend 30 % de Constance.',  hp: 0.3,  cleanse: true, target: 'ally' },
+    // vivre: true — ce que l'on ne prend pas un jour de jeûne
+    dattes: { name: 'Dattes de Médine', desc: 'Rend 40 % de Constance à un compagnon.',              hp: 0.4,  target: 'ally', vivre: true },
+    eau:    { name: "Outre d'eau",      desc: 'Rend 80 % de Constance à un compagnon.',              hp: 0.8,  target: 'ally', vivre: true },
+    pain:   { name: "Pain d'orge",      desc: 'Rend 25 % de Constance à tout le groupe.',            hp: 0.25, target: 'allies', vivre: true },
+    miel:   { name: 'Miel',             desc: 'Dissipe les altérations et rend 30 % de Constance.',  hp: 0.3,  cleanse: true, target: 'ally', vivre: true },
     musc:   { name: 'Musc',             desc: 'Rend 50 % de Souffle à un compagnon.',                sp: 0.5,  target: 'ally' },
-    lait:   { name: 'Lait chaud',       desc: 'Relève un compagnon éprouvé (50 % de Constance).',    revive: 0.5, target: 'ally' },
+    lait:   { name: 'Lait chaud',       desc: 'Relève un compagnon éprouvé (50 % de Constance).',    revive: 0.5, target: 'ally', vivre: true },
     siwak:  { name: 'Siwâk',            desc: 'Accorde 2 points de Niyya.',                          niyya: 2, target: 'ally' }
   };
 
@@ -402,8 +422,23 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     fade: [1, 2], wait: [1, 1], shake: [0, 1], flash: [0, 1], sfx: [1, 1], amb: [1, 1],
     give: [1, 2], join: [1, 1], leave: [1, 1], codex: [1, 1], heal: [0, 0],
     flag: [1, 2], if: [2, 3], tint: [1, 1], light: [1, 1],
-    pray: [0, 1], emote: [2, 2], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1], lore: [1, 1], raid: [0, 1]
+    pray: [0, 1], emote: [2, 2], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1], lore: [1, 1], raid: [0, 1],
+    vices: [0, 1]
   };
+
+  // v5 — le cœur. Les œuvres ; les sept maux du cœur, chacun avec l'œuvre qui forge sa lame et le
+  // nombre de fois qu'il faut l'avoir accomplie ; les compagnons de lumière. Textes : src/data/coeur.js.
+  D.OEUVRES = ['priere', 'dhikr', 'etude', 'jeune', 'aumone', 'visite', 'hajj'];
+  D.VICES = {
+    avidite:     { oeuvre: 'jeune',  need: 3 },
+    orgueil:     { oeuvre: 'hajj',   need: 1 },
+    ostentation: { oeuvre: 'priere', need: 3 },
+    avarice:     { oeuvre: 'aumone', need: 3 },
+    insouciance: { oeuvre: 'etude',  need: 3 },
+    envie:       { oeuvre: 'visite', need: 3 },
+    colere:      { oeuvre: 'dhikr',  need: 3 }
+  };
+  D.ANIMAUX = ['renard', 'aigle', 'phenix', 'lion', 'gazelle'];
 
   // v4 — s'orienter aux étoiles. Huit caps, nommés comme le feront les pilotes arabes : par l'étoile qui
   // s'y lève (à l'est) ou s'y couche (à l'ouest). Ordre : E, SE, S, SO, O, NO, N, NE (secteurs de 45°).
@@ -451,7 +486,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   // poses des personnages : l'émotion se lit dans le corps, jamais sur un visage (dessin : sprites.js)
   D.POSES = ['prie', 'resolu', 'accable', 'salut', 'surpris', 'garde'];
 
-  D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole'];
+  D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole', 'Cœur'];
 
   root.ISNAD_DEFS = D;
   if (typeof module !== 'undefined' && module.exports) module.exports = D;
@@ -464,7 +499,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   const D = window.ISNAD_DEFS;
   const I = window.ISNAD = {
     D, sagas: {}, sagaList: [],
-    registerSaga(s) { this.sagas[s.id] = s; this.sagaList.push(s); this.sagaList.sort((a, b) => a.order - b.order); },
+    // commun: true — contenu partagé par toutes les sagas (src/data/coeur.js) : ni maillon ni chapitre
+    registerSaga(s) { this.sagas[s.id] = s; if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => a.order - b.order); },
     speed: 1, debug: {}
   };
 
@@ -1820,6 +1856,13 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     for (let r = 0; r < n; r++) {
       const R = P.rounds[r];
       await showLine('say', sp, R.say); S.hideDialog();
+      if (R.noir) {
+        const N = R.noir, gain = N.v || 1; I.oeuvres.learn('idees_noires');
+        await card('title parley noir', `<p class="small">Une idée noire</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">On ne la combat pas contre lui, mais pour lui</p><div class="rule"></div><div class="hint">▼</div>`);
+        await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || 'Elle parle plus fort que toi. Dissipe-la.' });
+        conf += gain; I.audio.music('conseil'); S.toast(`<b>Confiance +${gain}</b> — son regard s’éclaircit`, 2400);
+        if (N.after) { await showLine('say', sp, N.after); S.hideDialog(); }
+      }
       const i = await menuPick('Que réponds-tu ?', R.opts, head(r)); const o = R.opts[i];
       conf = Math.max(0, conf + o.v);
       S.toast(o.v > 0 ? `<b>Confiance +${o.v}</b>` : o.v < 0 ? `<b>Confiance ${o.v}</b> — il se ferme` : 'Il ne bouge pas.', 1800); I.audio.sfx(o.v > 0 ? 'light' : o.v < 0 ? 'dark' : 'blip');
@@ -1830,6 +1873,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     if (ok) {
       sv.parley.won++; I.audio.sfx('roll'); G.flash('#ffe08a');
       const xp = P.xp || Math.round(22 + 12 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
+      await I.oeuvres.rally();
       await card('victory', `<p class="small">Pourparler · ${I.esc(P.title)}</p><h1>La parole a suffi</h1><ul><li>Confiance : <b>${conf} / ${P.goal}</b></li><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}</ul><div class="hint">▼</div>`);
       await S.run(P.win);
     } else {
@@ -1890,6 +1934,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
       case 'mat': I.build.give(a, b === undefined ? 1 : b); break;
       case 'lore': I.trade.lore(a); break;
       case 'raid': S.hideDialog(); await I.trade.raid(a || {}); break;
+      case 'vices': S.hideDialog(); await I.oeuvres.finale(a || {}); break;
       case 'site': I.build.openSite(a); break;
       case 'battle': S.hideDialog(); await I.battle.start(a); break;
       case 'map': S.hideDialog(); await S.fade('out'); W.loadMap(a, c || {}, b); await S.fade('in'); break;
@@ -1988,7 +2033,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
       const fz = $('#fade'); fz.style.transition = 'none'; fz.style.opacity = 0; // le carton prend le relais du fondu
       await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>La prière</h1><p>${I.pick(PRAY_LINES[m])}</p><p class="small">Le groupe est reposé · Sakîna</p><div class="hint">▼</div>`, 6500);
       W.healAll(); W.gainSakina(35); S.flags._prayed = true;
-      if (!S.flags._prayPillar) { S.flags._prayPillar = true; W.pillar('priere', 1); }
+      if (!S.flags._prayPillar) { S.flags._prayPillar = true; W.pillar('priere', 1); await I.oeuvres.gain('priere'); } // la première prière du chapitre nourrit la provision
       if (W.map) W.checkpoint();
     } finally { S.depth--; S.hideDialog(); W.emote('groupe', null); }
   };
@@ -2068,7 +2113,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     W.saga = saga; W.ci = ci; W.ch = ch; W.minLvl = saga.frame ? (ch.minLvl || 1) : (MINLVL[ci] || 6);
     const sp = I.save.data.sagas[sagaId] || (I.save.data.sagas[sagaId] = { ch: 0, done: false, flags: {} });
     S.flags = cp ? (cp.flags || {}) : Object.assign({}, sp.flags || {});
-    if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; }
+    if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); }
+    I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
     W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.charSheet(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
     W.foes = (ch.foes || []).map(f => Object.assign({}, f, { map: f.map || ch.map, done: false, placed: false, ph: Math.random() * 6 }));
@@ -2088,7 +2134,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     S.depth++; W.lock = false; // verrouille le déplacement pendant l'ouverture
     try {
       await S.fade('in', 500);
-      if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); }
+      if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); await I.oeuvres.openChapter(); }
       if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) { I.build.yields(); await I.trade.resolve(); } }
       if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Touche un endroit pour t’y rendre, un personnage pour lui parler · <b>?</b> : que faire' : '<b>Flèches</b>, <b>ZQSD</b> ou clic : marcher · <b>Entrée</b> : parler · <b>H</b> ou <b>?</b> : que faire · <b>Échap</b> : halte', 10000);
       await W.advance();
@@ -2099,7 +2145,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     $('#hud .chap').textContent = W.ch ? W.ch.title : '';
     const tm = W.map && ({ dawn: 'Fajr', day: 'Dhuhr', dusk: 'Maghrib', night: '’Ishâ' })[W.map.env.time];
     $('#hud .sub').textContent = (W.ch ? W.ch.sub : '') + (tm ? '  ·  ◠ ' + tm : '');
-    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="Dirhams"><i>◎</i>${I.trade.dirhams()}</span>` : '');
+    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="Dirhams"><i>◎</i>${I.trade.dirhams()}</span>` : '') + `<span title="Provision du cœur" class="zad"><i>♥</i>${I.oeuvres.zad()}${I.oeuvres.fasting() ? ' <i>☾</i>jeûne' : ''}</span>`;
+    const en = I.oeuvres.enigme(); $('#hud .enig').hidden = !en; if (en) $('#hud .enig').textContent = 'Énigme : ' + en.signe;
     $('#hud .obj').textContent = (o && o.text ? o.text : '') + (o && o.build ? I.build.objectiveText(o.build) : '');
     $('#hud .obj').hidden = !(o && o.text);
   };
@@ -2135,6 +2182,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     S.depth++;
     try {
       if (ch.outro) await S.run(ch.outro);
+      await I.oeuvres.endChapter();
       const sp = sv.sagas[saga.id]; sp.flags = S.flags; W.persistHeroes(); sv.cp = null;
       $('#hud').hidden = true;
       if (W.ci + 1 < saga.chapters.length && !(saga.frame && ch.last)) {
@@ -2178,7 +2226,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     const c = who && W.chests.includes(who) && !who.open && Math.hypot(who.x - p.x, who.y - p.y) < 30 ? who : W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
-      await S.run([['ask', 'Une natte tournée vers La Mecque, au cœur de l’étoile.', [{ t: 'Prier : le groupe se repose, la Sakîna descend', r: [['pray']] }, { t: 'Sauvegarder la partie', r: [['save']] }, { t: 'Plus tard', r: [] }]]]);
+      await I.oeuvres.natte();
     } else if (I.trade && I.trade.near()) await I.trade.open();
     else if (I.build) await I.build.gather();
   };
@@ -2362,7 +2410,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     if (I.trade && W.map.spots.comptoir && !S.flags._trade_test && !W.saga.frame && !W._autoBusy) { S.flags._trade_test = true; W._autoBusy = true; I.trade._autoStep = 0; I.trade._sold = I.trade._bought = 0; I.trade.open().then(() => { W._autoBusy = false; }, e => { log.push('ERR commerce ' + e.message); W._autoBusy = false; }); return; }
     if (o.build && I.debug.noBuild) return;
     if (o.build) { W._autoBusy = true; I.build.autoBuild(o.build); I.build.after().then(() => { W._autoBusy = false; }, e => { log.push('ERR bâtir ' + e.message); W._autoBusy = false; }); return; }
-    if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
+    if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => I.oeuvres.auto()).then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
     const go = (x, y, what) => { if (!W.reach(p.x, p.y, x, y)) log.push(`INACCESSIBLE ${W.saga.id}/${W.ch.id} obj${W.objIndex} ${what} sur ${W.map.id}`); p.x = x; p.y = y; W.resetTrail(); };
     W._autoBusy = true; const done = () => { W._autoBusy = false; };
     if (o.goto) { const s = W.resolve(o.goto, W.map.id, p); go(s[0], s[1], 'goto ' + o.goto); W.complete().then(done, e => { log.push('ERR ' + e.message); done(); }); }
@@ -2417,6 +2465,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     W.chests.forEach(ch => { if (ch.map === m.id && ch.placed) list.push({ y: ch.y, ch }); });
     for (let i = W.party.length - 1; i >= 1; i--) { const tr = W.trail[Math.min(W.trail.length - 1, i * 13)]; if (tr) list.push({ y: tr[1] - 0.1, fol: i, tr }); }
     list.push({ y: W.player.y, p: true });
+    const bete = W.saga.frame && I.oeuvres.animal(), btr = bete && W.trail[Math.min(W.trail.length - 1, W.party.length * 13 + 8)];
+    if (btr) list.push({ y: btr[1] - 0.2, bete, tr: btr }); // figure du ciel : seulement dans la fiction (Cité-Miroir, Citadelle)
     list.sort((a, b) => a.y - b.y);
     const lights = [];
     for (const e of list) {
@@ -2424,8 +2474,9 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
       else if (e.n) { const n = e.n; drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
       else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = 0.86 + Math.sin(t * 5 + f.ph) * 0.12; c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
-      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol]); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (W.saga.heroes[W.party[e.fol]].look.aura || '#ffe9a8'), a: 0.4 }); }
-      else if (e.p) { const p = W.player; drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0]); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lk.aura || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+      else if (e.bete) { const tr = e.tr, im = I.oeuvres.bete(e.bete, true), bx = Math.round(tr[0] - cx), by = Math.round(tr[1] - cy - im.height - 1 + Math.sin(t * 3) * 1.2); c.globalAlpha = 0.92; if (tr[2] === 2) { c.save(); c.translate(bx, 0); c.scale(-1, 1); c.drawImage(im, -Math.round(im.width / 2), by); c.restore(); } else c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 24, color: (I.sagas.coeur.animaux[e.bete] || {}).couleur || '#ffe9a8', a: 0.7 }); }
+      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null)); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (W.saga.heroes[W.party[e.fol]].look.aura || '#ffe9a8'), a: 0.4 }); }
+      else if (e.p) { const p = W.player; drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null)); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lk.aura || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {
@@ -2821,6 +2872,310 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   };
 })();
 
+/* ==== src/core/oeuvres.js ==== */
+/* ISNAD — le cœur : œuvres et provision, lames, maux du cœur, énigmes, compagnons de lumière.
+   Les textes sont du contenu (src/data/coeur.js) ; ici, seulement les règles et le dessin. */
+(function () {
+  'use strict';
+  const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, W = I.world;
+  const O = I.oeuvres = {};
+  const C0 = () => I.sagas.coeur || { oeuvres: {}, lames: {}, animaux: {}, enemies: {} };
+  const JOUR = ['dhikr', 'etude', 'jeune', 'aumone', 'visite']; // les œuvres du jour ; la prière et le pèlerinage ont leur propre règle
+  const MAX_JOUR = 3, MAX_ZAD = 5;
+  O.JOUR = JOUR; O.MAX_JOUR = MAX_JOUR; O.MAX_ZAD = MAX_ZAD;
+
+  /* ----- état sauvegardé ----- */
+  function st() {
+    const d = I.save.data;
+    d.oeuvres = d.oeuvres || {}; d.lames = d.lames || {}; d.vices = d.vices || {}; d.animaux = d.animaux || {}; d.enigmes = d.enigmes || {};
+    if (typeof d.zad !== 'number') d.zad = 0;
+    return d;
+  }
+  O.state = st;
+  O.zad = () => st().zad;
+  O.count = k => st().oeuvres[k] || 0;
+  O.hasBlade = v => !!st().lames[v];
+  O.viceOf = k => Object.keys(D.VICES).find(v => D.VICES[v].oeuvre === k);
+  O.fasting = () => !!S.flags._o_jeune;
+  const bas = n => n.replace(/^L(’|a |e )/, (m, x) => 'l' + x); // « L’Avarice » → « l’Avarice » en cours de phrase
+  const e_ = v => v === 'orgueil' ? '' : 'e'; // accord : l'orgueil est le seul masculin des sept
+  // le Recueil du cœur s'ouvre à mesure : une entrée la première fois que l'on rencontre la chose
+  O.learn = function (id) {
+    const cid = 'coeur/' + id, sv = I.save.data; if (sv.codex.includes(cid)) return;
+    const e = (C0().codex || []).find(c => c.id === id); if (!e) return;
+    sv.codex.push(cid); S.toast('Recueil : <b>' + I.esc(e.title) + '</b>');
+  };
+  const hasPurse = () => !!(I.trade && W.saga && (!W.saga.frame || W.saga.veillees));
+  // les lames et les maux tranchés sont visibles des scripts : ['if', 'lame_avarice', …], ['if', 'tranche_avarice', …]
+  O.syncFlags = function () {
+    const d = st();
+    Object.keys(D.VICES).forEach(v => { if (d.lames[v]) S.flags['lame_' + v] = true; else delete S.flags['lame_' + v]; if (d.vices[v] === 'tranche') S.flags['tranche_' + v] = true; else delete S.flags['tranche_' + v]; });
+    if (Object.keys(D.VICES).every(v => d.vices[v] === 'tranche')) S.flags.sept_tranches = true; else delete S.flags.sept_tranches;
+  };
+
+  /* ----- le chapitre : une journée ----- */
+  O.newChapter = function () { Object.keys(S.flags).forEach(k => { if (k.indexOf('_o_') === 0) delete S.flags[k]; }); };
+  O.enigme = function () { const e = W.ch && W.ch.enigme; return e && !st().enigmes[e.id] ? e : null; };
+  O.afflicted = id => { const e = O.enigme(); return !!(e && e.who === id); };
+  O.openChapter = async function () {
+    const e = O.enigme();
+    if (e && !S.flags._o_enig) { S.flags._o_enig = true; await S.run(e.intro || []); S.toast('Énigme du cœur : <b>' + I.esc(e.title) + '</b>', 4600); }
+    W.hud();
+  };
+  // fin de chapitre : le jeûne s'accomplit au couchant, la caravane du pèlerinage part
+  O.endChapter = async function () {
+    const T = C0().oeuvres;
+    if (S.flags._o_jeune) {
+      S.toast(I.esc(T.jeune.fin), 4200);
+      if (S.flags._o_jeune_c) await O.gain('jeune', { noZad: true }); // il ne compte pour la lame que s'il a été tenu dans l'épreuve
+    }
+    if (S.flags._o_hajj) {
+      I.audio.sfx('light');
+      for (const l of T.hajj.lignes) await S.card('oeuvre', '<div class="orn">' + T.hajj.glyph + '</div><p class="small">Œuvre</p><h1>' + I.esc(T.hajj.name) + '</h1><p>' + I.fmt(l) + '</p><div class="hint">▼</div>', 9000);
+      await O.gain('hajj');
+    }
+    O.newChapter();
+  };
+
+  /* ----- accomplir une œuvre ----- */
+  O.dayCount = () => JOUR.filter(k => S.flags['_o_' + k]).length;
+  // '' si l'œuvre est possible ici et maintenant ; sinon la raison
+  O.can = function (k) {
+    const T = C0().oeuvres[k]; if (!T || !W.saga) return 'indisponible';
+    if (S.flags['_o_' + k]) return k === 'hajj' ? 'intention formulée' : 'déjà accompli aujourd’hui';
+    if (k === 'hajj') return !(W.ch && W.ch.hajj) ? 'aucune caravane ne part' : O.count('hajj') >= 1 ? 'déjà accompli' : '';
+    if (O.dayCount() >= MAX_JOUR) return 'la journée est pleine';
+    if (k === 'aumone') { if (!hasPurse()) return 'pas de bourse ici'; if (I.trade.dirhams() < T.prix) return 'il faut ' + T.prix + ' dirhams'; }
+    return '';
+  };
+  O.gain = async function (k, o) {
+    const d = st(); d.oeuvres[k] = (d.oeuvres[k] || 0) + 1;
+    O.learn('oeuvres'); O.learn('zad'); if (k === 'dhikr') O.learn('dhikr');
+    if (!(o && o.noZad)) d.zad = Math.min(MAX_ZAD, d.zad + (k === 'hajj' ? MAX_ZAD : 1));
+    // la première fois dans un règne, l'œuvre élève aussi ce qu'elle bâtit
+    const pil = { etude: 'savoir', visite: 'lien', aumone: 'justice' }[k];
+    if (pil && !S.flags['op_' + k]) { S.flags['op_' + k] = true; W.pillar(pil, 1); }
+    await O.solve(k); await O.forge(k); await O.rally();
+    W.hud();
+  };
+  O.perform = async function (k) {
+    const why = O.can(k); if (why) { S.toast(I.esc(why.charAt(0).toUpperCase() + why.slice(1)) + '.', 1800); I.audio.sfx('dark'); return false; }
+    const T = C0().oeuvres[k];
+    S.flags['_o_' + k] = true;
+    S.depth++;
+    try {
+      I.audio.sfx('light');
+      if (k === 'hajj') { S.toast('L’intention est formulée. La caravane du pèlerinage partira à la fin de la veillée.', 5200); }
+      else {
+        if (k === 'aumone') I.trade.dirhams(-T.prix);
+        await S.card('oeuvre', '<div class="orn">' + T.glyph + '</div><p class="small">Œuvre</p><h1>' + I.esc(T.name) + '</h1><p>' + I.fmt(I.pick(T.lignes)) + '</p><p class="small">' + (k === 'jeune' ? 'Provision du cœur +1 · les vivres attendront le soir' : 'Provision du cœur +1') + '</p><div class="hint">▼</div>', 8000);
+        if (k === 'jeune') { const d = st(); d.zad = Math.min(MAX_ZAD, d.zad + 1); await O.solve(k); }
+        else await O.gain(k);
+        if (k === 'dhikr') W.gainSakina(25);
+      }
+      W.hud(); W.checkpoint();
+    } finally { S.depth--; S.hideDialog(); }
+    return true;
+  };
+  // la natte : prier, accomplir les œuvres du jour, sauvegarder
+  O.natte = async function () {
+    S.depth++;
+    try {
+      while (true) {
+        const d = st(), left = MAX_JOUR - O.dayCount();
+        const i = I.debug.auto ? 3 : await S.menuPick('Une natte tournée vers La Mecque, au cœur de l’étoile.', [
+          { t: 'Prier : le groupe se repose, la Sakîna descend' },
+          { t: 'Les œuvres du jour (' + (left > 0 ? 'encore ' + left : 'journée pleine') + ') · provision ♥ ' + d.zad + ' / ' + MAX_ZAD },
+          { t: 'Sauvegarder la partie' }, { t: 'Plus tard' }]);
+        if (i === 0) { await W.pray(); return; }
+        if (i === 2) { await I.ui.saveMenu(); return; }
+        if (i === 3) return;
+        await O.menu();
+      }
+    } finally { S.depth--; S.hideDialog(); }
+  };
+  O.menu = async function () {
+    const T = C0().oeuvres;
+    while (true) {
+      const ks = JOUR.concat(W.ch && W.ch.hajj ? ['hajj'] : []);
+      const opts = ks.map(k => { const why = O.can(k), v = O.viceOf(k), n = O.count(k), need = v ? D.VICES[v].need : 0;
+        return { k, t: T[k].menu + (k === 'aumone' ? ' (' + T[k].prix + ' dirhams)' : ''), note: why ? why : (v && !O.hasBlade(v) ? C0().lames[v].name + ' ' + Math.min(n, need) + ' / ' + need : v ? 'lame forgée' : '') }; });
+      const i = await S.menuPick('Les œuvres du jour · ' + (MAX_JOUR - O.dayCount()) + ' encore possibles', opts.map(o => ({ t: o.t + (o.note ? ' · *' + o.note + '*' : '') })).concat([{ t: 'Retour' }]));
+      if (i >= opts.length) return;
+      await O.perform(opts[i].k);
+    }
+  };
+  // tests : accomplit ce qui est possible, comme le ferait un joueur appliqué (l'ordre tourne d'un chapitre à l'autre)
+  O.auto = async function () {
+    const off = ((W.ci || 0) * 2 + (W.saga.order || 0)) % JOUR.length, en = O.enigme();
+    let ks = JOUR.slice(off).concat(JOUR.slice(0, off), ['hajj']);
+    if (en && JOUR.includes(en.cure)) ks = [en.cure].concat(ks.filter(k => k !== en.cure)); // l'énigme d'abord
+    for (const k of ks) {
+      if (I.debug.noOeuvres) break;
+      if (k === 'aumone' && en && en.cure === 'aumone' && I.trade && I.trade.dirhams() < C0().oeuvres.aumone.prix) I.trade.dirhams(C0().oeuvres.aumone.prix); // le test ne doit pas dépendre de la bourse
+      if (!O.can(k)) await O.perform(k);
+    }
+  };
+  // le mal du cœur qui attend au bout d'un maillon (la rencontre de la Cité-Miroir qui le suit), et où en est sa lame
+  O.viceApres = function (sagaId) { const fr = I.sagas.idris, c = fr && fr.chapters.find(x => x.after === sagaId); return c && c.vice ? c.vice : null; };
+  O.quete = function (v) {
+    if (!v) return '';
+    const d = st(), V = D.VICES[v], E = C0().enemies[v], L = C0().lames[v], T = C0().oeuvres[V.oeuvre], n = Math.min(O.count(V.oeuvre), V.need);
+    if (d.vices[v] === 'tranche') return I.esc(E.name) + ' : tranché' + e_(v);
+    return I.esc(E.name) + ' · ' + (d.lames[v] ? 'lame forgée : ' + I.esc(bas(L.name)) : I.esc(L.name) + ' : ' + I.esc(T.court.toLowerCase()) + ' ' + n + ' / ' + V.need);
+  };
+
+  /* ----- énigmes ----- */
+  O.solve = async function (k) {
+    const e = O.enigme(); if (!e) return;
+    const h = W.saga.heroes[e.who], nom = h ? h.name : 'Il';
+    if (e.cure !== k) { S.toast(I.esc(nom) + ' ne va pas mieux : ce n’était pas ce qui lui manquait.', 3600); return; }
+    st().enigmes[e.id] = true; I.audio.sfx('roll'); G.flash('#fff3c8'); O.learn('enigmes');
+    await S.run(e.solved || []);
+    const xp = Math.round(30 + 14 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
+    await S.card('victory', '<p class="small">Énigme du cœur</p><h1>' + I.esc(e.title) + '</h1><ul><li>' + I.fmt(e.mot) + '</li><li>Sagesse acquise : <b>+' + xp + '</b></li>' + lines.join('') + '</ul><div class="hint">▼</div>');
+    W.pillar('lien', 1); W.healAll();
+  };
+
+  /* ----- lames ----- */
+  O.forge = async function (k) {
+    const v = O.viceOf(k), d = st(); if (!v || d.lames[v] || (d.oeuvres[k] || 0) < D.VICES[v].need) return;
+    d.lames[v] = true; O.syncFlags(); O.learn('lames');
+    const L = C0().lames[v], E = C0().enemies[v];
+    I.audio.sfx('roll'); G.flash(L.couleur); if (D.TRACKS.includes('lame')) I.audio.music('lame');
+    await S.card('lame', '<img class="lame" alt="" src="' + O.lameURL(v) + '"><p class="small">Une lame est forgée</p><h1 style="color:' + L.couleur + '">' + I.esc(L.name) + '</h1><p class="ar">' + I.esc(L.ar) + '</p><p>' + I.fmt(L.texte) + '</p><p class="small">Elle tranche ' + I.esc(bas(E.name)) + '</p><div class="hint">▼</div>');
+    const env = W.map && W.map.env; if (env && I.scene === W && D.TRACKS.includes('lame')) I.audio.music(env.music || 'silence');
+  };
+
+  /* ----- compagnons de lumière ----- */
+  O.animal = function () { const d = st(); return d.animal && d.animaux[d.animal] ? d.animal : null; };
+  O.rally = async function () {
+    const d = st(), got = [];
+    const cond = { renard: Object.keys(d.enigmes).length >= 1, aigle: Object.keys(d.lames).length >= 1, phenix: Object.keys(d.vices).some(v => d.vices[v] === 'tranche'), lion: (d.pret || 0) >= 3, gazelle: !!(d.parley && d.parley.won >= 5) };
+    D.ANIMAUX.forEach(id => { if (cond[id] && !d.animaux[id]) { d.animaux[id] = true; if (!d.animal) d.animal = id; got.push(id); } });
+    if (got.length) O.learn('figures_ciel');
+    for (const id of got) {
+      const A = C0().animaux[id]; I.audio.sfx('light');
+      await S.card('animal', '<img class="bete" alt="" src="' + O.animalURL(id) + '"><p class="small">Un compagnon de lumière</p><h1 style="color:' + A.couleur + '">' + I.esc(A.name) + '</h1><p class="ar">' + I.esc(A.ar) + '</p><p>' + I.fmt(A.texte) + '</p><p class="small">' + I.esc(A.don) + ' · ' + I.esc(A.effet) + '</p><div class="hint">▼</div>');
+    }
+  };
+
+  /* ----- le combat : poids de l'épreuve, provision, maux tranchés ou repoussés ----- */
+  const defOf = id => (W.saga && W.saga.enemies[id]) || (I.common && I.common.enemies[id]) || {};
+  // 0 : escarmouche · 2 : idole · 3 : mal du cœur
+  O.weight = function (opts) {
+    if (opts.noir) return 0; if (typeof opts.w === 'number') return opts.w;
+    const defs = opts.group.map(defOf);
+    return defs.some(d => d.vice) ? 3 : (opts.boss || defs.some(d => d.tier === 'boss')) ? 2 : 0;
+  };
+  // à l'entrée : l'épreuve consomme la provision ; ce qui manque pèse sur le cœur (allégé à chaque reprise)
+  O.enter = function (opts, first) {
+    if (!first) { const c = opts._coeur || { w: 0, had: 0, lack: 0 }; c.lack = Math.max(0, c.lack - 1); return c; }
+    const d = st(), w = O.weight(opts), had = d.zad, lack = Math.max(0, w - had);
+    d.zad = Math.max(0, had - w);
+    if (S.flags._o_jeune) S.flags._o_jeune_c = (S.flags._o_jeune_c || 0) + 1;
+    return (opts._coeur = { w, had, lack });
+  };
+  O.leave = async function (opts, foes, result) {
+    if (result !== 'win') return;
+    const d = st(), c = opts._coeur || {};
+    if (c.w >= 2 && !c.lack) d.pret = (d.pret || 0) + 1;
+    foes.forEach(e => { const v = e.def.vice; if (v) { d.vices[v] = O.hasBlade(v) ? 'tranche' : (d.vices[v] || 'repousse'); O.learn('maux'); } });
+    O.syncFlags();
+    await O.rally();
+  };
+  // dernier chapitre : les maux qui n'ont pas été tranchés se dressent une dernière fois, deux par deux
+  O.finale = async function (o) {
+    o = o || {}; const d = st(), left = Object.keys(D.VICES).filter(v => d.vices[v] !== 'tranche');
+    if (!left.length) { await S.run(o.aucun || []); }
+    else {
+      await S.run(o.avant || []);
+      for (let i = 0; i < left.length; i += 2) {
+        const g = left.slice(i, i + 2), noms = g.map(v => C0().enemies[v].name).join(' et ');
+        await I.battle.start({ group: g, bg: o.bg || 'cite', boss: true, w: 1, intro: noms + (g.length > 1 ? ' se dressent.' : ' se dresse.') + (g.some(v => O.hasBlade(v)) ? ' Une lame attend son heure.' : '') });
+        W.healAll();
+      }
+    }
+    O.syncFlags();
+    const n = Object.keys(D.VICES).filter(v => d.vices[v] === 'tranche').length, L = C0().lames, E = C0().enemies;
+    await S.card('victory', '<p class="small">Les sept maux du cœur</p><h1>' + (n === 7 ? 'Les sept sont tranchés' : n + ' tranché' + (n > 1 ? 's' : '') + ' sur sept') + '</h1><ul>' +
+      Object.keys(D.VICES).map(v => '<li>' + I.esc(E[v].name) + ' : ' + (d.vices[v] === 'tranche' ? '<b>tranché' + e_(v) + '</b> par ' + I.esc(bas(L[v].name)) : 'repoussé' + e_(v) + ' ; ' + (v === 'orgueil' ? 'il' : 'elle') + ' reviendra') + '</li>').join('') +
+      '</ul><p class="small">' + (n === 7 ? 'Aucun ne reviendra de ton vivant. Les suivants auront les leurs à trancher.' : 'Une lame se forge par l’œuvre : ce qui n’est que repoussé revient.') + '</p><div class="hint">▼</div>');
+    await S.run(n === 7 ? (o.tous || []) : (o.reste || []));
+  };
+
+  /* ----- dessin : lames et figures du ciel, sans inscription ni trait ----- */
+  const cache = {};
+  // une lame droite, à double tranchant ; la couleur est celle de la vertu
+  O.lame = function (v) {
+    if (cache['l' + v]) return cache['l' + v];
+    const col = (C0().lames[v] || {}).couleur || '#e6dcc4', cv = G.mk(18, 44), c = cv.getContext('2d'), R = (x, y, w, h, k) => { c.fillStyle = k; c.fillRect(x, y, w, h); };
+    const hi = G.shade(col, 1.55), mid = G.shade(col, 1.15), lo = G.shade(col, 0.62), dk = '#1a1420', gold = '#e9c877', gold2 = '#a8843a';
+    // liseré
+    R(7, 1, 4, 1, dk); R(6, 2, 6, 27, dk); R(3, 28, 12, 4, dk); R(6, 31, 6, 9, dk); R(5, 39, 8, 4, dk);
+    // lame : pointe, plat clair, tranchant sombre, gouttière
+    R(8, 2, 2, 1, hi); R(7, 3, 4, 25, mid); R(7, 3, 1, 25, hi); R(10, 3, 1, 25, lo); R(8, 6, 1, 20, lo); R(9, 6, 1, 20, hi);
+    // garde, fusée, pommeau
+    R(4, 29, 10, 2, gold); R(4, 30, 10, 1, gold2); R(4, 29, 1, 2, hi); R(13, 29, 1, 2, gold2);
+    R(7, 31, 4, 8, '#4a3526'); R(7, 32, 4, 1, '#2f2118'); R(7, 34, 4, 1, '#2f2118'); R(7, 36, 4, 1, '#2f2118');
+    R(6, 39, 6, 3, gold); R(6, 41, 6, 1, gold2); R(8, 40, 2, 1, col);
+    return (cache['l' + v] = cv);
+  };
+  O.lameURL = v => cache['lu' + v] || (cache['lu' + v] = O.lame(v).toDataURL());
+  // figures du ciel : une silhouette de lumière semée d'étoiles, de profil, sans aucun trait
+  // deux tailles : la grande pour le combat et la halte, la petite pour suivre le groupe dans la fiction
+  const BETES = {
+    renard: ['......#.....#...............', '.....##....##...............', '.....###..###...............', '.....########...............', '....#########...............', '...##########..........oo...', '..###########.........oooo..', '...###########.......#oooo..', '.....##########.....###oo...', '......#################.....', '......################......', '......###############.......', '......###.#####..####.......', '......##...###....###.......', '......##...##.....##........', '.....###..###....###........'],
+    aigle: ['.............##.............', '............####............', '#...........####...........#', '##.#.......######.......#.##', '####.#....########....#.####', '.######..##########..######.', '..########################..', '...######################...', '.....##################.....', '.......##############.......', '.........##########.........', '..........########..........', '.........##########.........', '........###.####.###........', '........#...####...#........'],
+    phenix: ['...o.................o......', '...oo...............oo......', '..#oo......o.......ooo......', '..###.....###.....#oo.......', '..####...#####...###o.......', '...####..#####..####........', '...#####..###..#####........', '....################........', '.....##############.........', '......############..........', '.......##########...........', '........########............', '.......###.####.#o..........', '......##...###...oo.........', '.....#o....##.o...oo........', '....oo....##...oo..oo.......', '...oo.....#.....oo..o.......', '..........o......o..........'],
+    lion: ['....#####...................', '..#########.............oo..', '.###########...........o#o..', '.############..........#....', '#############.........#.....', '##############.......##.....', '.#########################..', '.########################...', '..#######################...', '...######################...', '....####################....', '....#####......#########....', '....####........###.####....', '....###.........###..###....', '....###.........###..###....', '...####........####.####....'],
+    gazelle: ['...#....#...................', '...#...#....................', '...#..#.....................', '...#.##.....................', '...####.....................', '..#####.....................', '.######.....................', '..#####..............#......', '...####.............##......', '....####....############....', '....####################....', '.....###################....', '.....##################.....', '.....####..........####.....', '.....#.#...........#..#.....', '.....#.#...........#..#.....', '....#..#..........#...#.....', '....#..#..........#...#.....']
+  };
+  const PETITES = {
+    renard: ['..#...#...............', '.##..##...............', '.######...............', '########.........###..', '.#########.....######.', '..###############oo##.', '...##############oo#..', '...#############......', '...####.....####......', '...##........##.......', '...##........##.......', '..##........##........'],
+    aigle: ['##................##', '.###............###.', '..#####......#####..', '...##############...', '.....##########.....', '......########......', '.....###.##.###.....', '.........##.........', '........####........', '........#..#........'],
+    phenix: ['...o........o...', '..###......###..', '...####..####...', '....########....', '.....######.....', '......####......', '......####......', '.....#o##o#.....', '....o..oo..o....', '...o...oo...o...'],
+    lion: ['..###.............o.', '.#####...........#o.', '#######.........#...', '#######.#########...', '.###############....', '..##############....', '..###.###..#####....', '..##...##...##.##...', '..##...##...##.##...', '.###..###..###.###..'],
+    gazelle: ['.#..#...............', '.#.#................', '.###................', '####..........#.....', '.###.....########...', '..##############....', '..#############.....', '..##.#......#.##....', '..#..#......#..#....', '.#...#.....#...#....']
+  };
+  O.bete = function (id, petit) {
+    const ck = (petit ? 'p' : 'b') + id; if (cache[ck]) return cache[ck];
+    const g = (petit ? PETITES : BETES)[id] || BETES.renard, w = g[0].length + 2, h = g.length + 2, cv = G.mk(w, h), c = cv.getContext('2d'), col = (C0().animaux[id] || {}).couleur || '#ffe9a8';
+    const at = (x, y) => (g[y] && g[y][x] && g[y][x] !== '.') ? g[y][x] : null, r = I.rng(I.hash('bete' + id));
+    for (let y = 0; y < g.length; y++) for (let x = 0; x < g[0].length; x++) {
+      const k = at(x, y);
+      if (!k) { if (at(x - 1, y) || at(x + 1, y) || at(x, y - 1) || at(x, y + 1)) { c.fillStyle = 'rgba(20,14,40,.55)'; c.fillRect(x + 1, y + 1, 1, 1); } continue; }
+      const top = !at(x, y - 1), bot = !at(x, y + 1);
+      c.fillStyle = k === 'o' ? G.shade(col, 1.6) : top ? G.shade(col, 1.35) : bot ? G.shade(col, 0.7) : col; c.fillRect(x + 1, y + 1, 1, 1);
+      if (!top && !bot && r() < 0.09) { c.fillStyle = '#ffffff'; c.fillRect(x + 1, y + 1, 1, 1); } // étoiles
+    }
+    return (cache[ck] = cv);
+  };
+  O.animalURL = function (id) {
+    if (cache['bu' + id]) return cache['bu' + id];
+    const s = O.bete(id), k = 3, cv = G.mk(s.width * k, s.height * k), c = cv.getContext('2d'); c.imageSmoothingEnabled = false; c.drawImage(s, 0, 0, cv.width, cv.height);
+    return (cache['bu' + id] = cv.toDataURL());
+  };
+
+  /* ----- pages de la halte ----- */
+  O.paneOeuvres = function () {
+    const d = st(), T = C0().oeuvres, L = C0().lames, E = C0().enemies;
+    let h = '<h3>Œuvres et lames</h3><p>Provision du cœur : <b>♥ ' + d.zad + ' / ' + MAX_ZAD + '</b>. Chaque œuvre y ajoute ; une idole en demande 2, un mal du cœur 3. Qui s’y présente sans provision combat le cœur lourd.</p>' +
+      '<p class="src">Les œuvres s’accomplissent sur la natte d’une mosquée : trois par chapitre au plus, la prière en sus.' + (O.fasting() ? ' <b>Jeûne en cours</b> : les vivres attendent le soir.' : '') + '</p>';
+    h += '<div class="lames">' + Object.keys(D.VICES).map(v => { const V = D.VICES[v], n = O.count(V.oeuvre), ok = !!d.lames[v], stt = d.vices[v];
+      return '<div class="lm' + (ok ? ' ok' : '') + '"><img alt="" src="' + O.lameURL(v) + '"><div><b style="color:' + (ok ? L[v].couleur : 'inherit') + '">' + I.esc(L[v].name) + '</b> <small>' + I.esc(L[v].ar) + '</small><br><small>' + I.esc(T[V.oeuvre].court) + ' ' + Math.min(n, V.need) + ' / ' + V.need + ' · contre ' + I.esc(bas(E[v].name)) + (stt === 'tranche' ? ' — <b>tranché' + e_(v) + '</b>' : stt === 'repousse' ? ' — repoussé' + e_(v) : '') + '</small></div></div>'; }).join('') + '</div>';
+    return h + '<p class="src">Les lames sont une image : une vertu pratiquée, qui tranche le mal contraire. Ce ne sont pas des reliques.</p>';
+  };
+  O.paneAnimaux = function () {
+    const d = st(), A = C0().animaux, cur = O.animal();
+    return '<h3>Compagnons de lumière</h3><p>Des figures du ciel, qui prennent corps dans la noosphère. Un seul t’accompagne au combat : choisis-le dans la liste.</p>' +
+      D.ANIMAUX.map(id => d.animaux[id]
+        ? '<div class="stat bete' + (cur === id ? ' cur' : '') + '"><img class="fig" alt="" src="' + O.animalURL(id) + '"><div><b style="color:' + A[id].couleur + '">' + I.esc(A[id].name) + '</b> <small>' + I.esc(A[id].ar) + (cur === id ? ' · à tes côtés' : '') + '</small><br><small><b>' + I.esc(A[id].don) + '</b> · ' + I.esc(A[id].effet) + '</small><div class="sk">' + I.fmt(A[id].texte) + '</div></div></div>'
+        : '<div class="stat bete off"><span class="fig">?</span><div><b>Une figure du ciel</b><br><small>' + I.esc(A[id].vient) + '</small></div></div>').join('') +
+      '<p class="src">Fiction : aucun de ces compagnons n’appartient au récit historique.</p>';
+  };
+})();
+
 /* ==== src/core/battle.js ==== */
 /* ISNAD — combat : ordre des tours visible (CTB), voiles et faiblesses, Niyya (élan), Sakîna (ultime). */
 (function () {
@@ -2929,9 +3284,32 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     // piliers de la Citadelle : ce qui a été bâti pèse dans le combat
     const P = W.pillars(); C.pJust = 1 - 0.03 * (P.justice || 0); C.pLien = 1 + 0.03 * (P.lien || 0);
     C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 6 * (P.priere || 0)); else { e.def.weak.slice(0, Math.floor((P.savoir || 0) / 2)).forEach(w => { e.known[w] = true; }); } });
+    // le cœur : l'épreuve consomme la provision ; ce qui manque pèse. Celui qui languit tient moins.
+    const HC = I.oeuvres.enter(opts, first); C.lack = HC.lack || 0;
+    C.all.forEach(e => { if (e.side === 'hero' && I.oeuvres.afflicted(e.id)) { e.max.hp = Math.round(e.max.hp * 0.75); e.hp = Math.min(e.hp, e.max.hp); } });
     refresh();
     if (first && opts.intro) await banner(I.esc(opts.intro), readTime(opts.intro), true, 'speech intro');
     else if (first) await banner(opts.boss ? `${d0.name} se dresse.` : 'Une emprise se referme…', 1100);
+    if (HC.w) {
+      await banner(`<small>Épreuve de poids ${HC.w} · provision du cœur ${HC.had}</small>${C.lack ? 'Le cœur est lourd' : 'Le cœur est prêt'}`, 1500, false, C.lack ? 'speech foe' : 'speech intro');
+      if (!C.lack) C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 10); });
+    }
+    for (const e of alive('foe')) {
+      const v = e.def.vice; if (!v || !I.oeuvres.hasBlade(v)) continue;
+      const L = I.sagas.coeur.lames[v];
+      await banner(`<small>Lame · ${I.esc(L.ar)}</small>${I.esc(L.name)} tranche ses voiles`, 1700, false, 'speech intro'); I.audio.sfx('slash'); G.flash(L.couleur);
+      e.cut = true; e.veilsMax = 1; e.veils = 1; e.hp = Math.round(e.max.hp * 0.6); e.def.weak.forEach(w => { e.known[w] = true; }); e.flash = 1; fx('slash', e, L.couleur); refresh(); await I.sleep(500);
+    }
+    C.bete = I.oeuvres.animal();
+    if (C.bete && first) {
+      const A = I.sagas.coeur.animaux[C.bete], hs = alive('hero'), fs = alive('foe');
+      await banner(`<small>Compagnon de lumière · ${I.esc(A.don)}</small>${I.esc(A.name)}`, 1300, false, 'speech intro'); I.audio.sfx('light');
+      if (C.bete === 'renard') fs.forEach(e => { const w = e.def.weak.find(x => !e.known[x]); if (w) { e.known[w] = true; floater(e, 'Faille flairée', 'info'); } });
+      else if (C.bete === 'aigle') hs.forEach(e => { e.ct *= 0.5; e.niyya = Math.min(5, e.niyya + 1); floater(e, '+Niyya', 'buff'); });
+      else if (C.bete === 'lion') fs.forEach(e => { e.buffs.atk = { v: -1, t: 3 }; floater(e, 'Force ▼', 'debuff'); });
+      else if (C.bete === 'gazelle') hs.forEach(e => { e.st.regen = 3; e.sakina = Math.min(100, e.sakina + 10); floater(e, 'Régén.', 'buff'); });
+      refresh(); await I.sleep(500);
+    }
     for (const al of (opts.allies || [])) {
       if (!S.flags[al.flag]) continue;
       await banner(`<small>Renfort</small>${I.esc(al.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(500);
@@ -2959,7 +3337,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     I.setScene(prev); G.clearParts();
     if (prev === W) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; }
     I.audio.amb(prevAmb || 'vent'); if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.music(C.prevMus || 'silence'); else I.audio.afterJingle = C.prevMus || null; }
-    if (result === 'win') await S.fade('in', 260);
+    const foes0 = C.all.filter(e => e.side === 'foe');
+    if (result === 'win') { await S.fade('in', 260); await I.oeuvres.leave(opts, foes0, result); }
     C = null;
     return result;
   }
@@ -3009,8 +3388,9 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     const skills = h.def.skills.filter(k => k.lvl <= h.lvl && k.cost <= h.sp && !h.st.doute), foes = alive('foe'), allies = alive('hero');
     const low = allies.slice().sort((a, b) => a.hp / a.max.hp - b.hp / b.max.hp)[0];
     const down = C.all.find(x => x.side === 'hero' && !x.alive);
-    if (down) { const rv = skills.find(k => k.revive); if (rv) return { type: 'skill', skill: rv, targets: targetsFor(h, rv, down), boost: 0 }; if ((I.save.data.items.lait || 0) > 0) return { type: 'item', item: 'lait', targets: [down] }; }
-    if (low.hp / low.max.hp < 0.45) { const hl = skills.find(k => k.heal); if (hl) return { type: 'skill', skill: hl, targets: targetsFor(h, hl, low), boost: Math.min(h.niyya, 1) }; if (low.hp / low.max.hp < 0.3) { const it = ['eau', 'dattes', 'pain', 'miel'].find(k => (I.save.data.items[k] || 0) > 0); if (it) return { type: 'item', item: it, targets: D.ITEMS[it].target === 'allies' ? allies : [low] }; } }
+    const fast = I.oeuvres.fasting();
+    if (down) { const rv = skills.find(k => k.revive); if (rv) return { type: 'skill', skill: rv, targets: targetsFor(h, rv, down), boost: 0 }; if (!fast && (I.save.data.items.lait || 0) > 0) return { type: 'item', item: 'lait', targets: [down] }; }
+    if (low.hp / low.max.hp < 0.45) { const hl = skills.find(k => k.heal); if (hl) return { type: 'skill', skill: hl, targets: targetsFor(h, hl, low), boost: Math.min(h.niyya, 1) }; if (low.hp / low.max.hp < 0.3 && !fast) { const it = ['eau', 'dattes', 'pain', 'miel'].find(k => (I.save.data.items[k] || 0) > 0); if (it) return { type: 'item', item: it, targets: D.ITEMS[it].target === 'allies' ? allies : [low] }; } }
     const t = foes.slice().sort((a, b) => (b.broken ? 1 : 0) - (a.broken ? 1 : 0) || a.hp - b.hp)[0];
     if (h.sakina >= 100 && h.def.limit.pow && !(t.def.immune || []).includes(h.def.limit.el)) return { type: 'skill', skill: h.def.limit, limit: true, targets: targetsFor(h, h.def.limit, t), boost: 0 };
     const atks = skills.filter(k => k.pow).concat([FER, lightOf(h)]).filter(k => !(t.tried[k.el] && (t.def.immune || []).includes(k.el)));
@@ -3090,7 +3470,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
       if (i === 3) {
         const inv = I.save.data.items, ids = Object.keys(D.ITEMS).filter(k => (inv[k] || 0) > 0);
         if (!ids.length) { banner('La besace est vide.', 900); continue; }
-        const j = await listMenu(box, '<b>Objets</b>', ids.map(k => ({ label: D.ITEMS[k].name, sub: '×' + inv[k], desc: D.ITEMS[k].desc })), { back: true, desc: true });
+        const fast = I.oeuvres.fasting();
+        const j = await listMenu(box, '<b>Objets</b>' + (fast ? ' <span class="niyya">jour de jeûne</span>' : ''), ids.map(k => ({ label: D.ITEMS[k].name, sub: fast && D.ITEMS[k].vivre ? 'jeûne' : '×' + inv[k], disabled: fast && D.ITEMS[k].vivre, desc: fast && D.ITEMS[k].vivre ? 'Jour de jeûne : les vivres attendent le coucher du soleil.' : D.ITEMS[k].desc })), { back: true, desc: true });
         if (j < 0) continue; const it = D.ITEMS[ids[j]];
         let tg; if (it.target === 'allies') tg = alive('hero'); else { const pool = C.all.filter(e => e.side === 'hero' && (it.revive ? !e.alive : e.alive)); if (!pool.length) { banner('Personne n’en a besoin.', 900); continue; } const t = await pickTarget(pool, it.name); if (!t) continue; tg = [t]; }
         return { type: 'item', item: ids[j], targets: tg };
@@ -3158,7 +3539,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     if (immune) { t.known[el] = 'x'; floater(t, 'Sans effet', 'info'); fx('guard', t, '#889'); return; }
     let d = stat * sk.pow * mult * 2.2 * (50 / (50 + eff(t, 'df'))) * (0.92 + Math.random() * 0.16);
     if (weak) d *= 1.3; if (t.broken) d *= 1.5; if (t.st.garde) d *= 0.5;
-    d *= a.side === 'hero' ? (C.pLien || 1) : (C.pJust || 1);
+    d *= a.side === 'hero' ? (C.pLien || 1) * (1 - 0.08 * (C.lack || 0)) : (C.pJust || 1) * (1 + 0.08 * (C.lack || 0));
     d = Math.max(1, Math.round(d));
     t.hp = Math.max(0, t.hp - d); t.flash = 1; t.shake = 0.25;
     floater(t, d, 'dmg' + (weak ? ' weak' : '') + (t.side === 'hero' ? ' hero' : ''));
@@ -3192,8 +3573,12 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   }
   async function kill(t) {
     if (!t.alive) return; t.alive = false; t.hp = 0; t.st = {}; t.buffs = {};
+    if (t.side === 'foe' && t.def.vice) floater(t, t.cut ? 'TRANCHÉ' : 'Repoussé', 'break');
     if (t.side === 'foe') { I.audio.sfx('break'); for (let i = 0; i < 40; i++) G.spawn({ x: t.x + (Math.random() - 0.5) * t.size * 0.7, y: t.y - Math.random() * t.size, vx: (Math.random() - 0.5) * 40, vy: -20 - Math.random() * 60, life: 1.2 + Math.random(), size: 1 + Math.random(), color: `hsl(${t.def.hue},100%,75%)`, type: 'glyph' }); await tween(t, 'fade', 0, 500); }
-    else { floater(t, 'Éprouvé', 'debuff'); I.audio.sfx('dark'); await I.sleep(300); }
+    else {
+      floater(t, 'Éprouvé', 'debuff'); I.audio.sfx('dark'); await I.sleep(300);
+      if (C.bete === 'phenix' && !C.phenix) { C.phenix = true; await banner('<small>Le Phénix</small>Ce qui a brûlé se relève', 1200, false, 'speech intro'); t.alive = true; t.hp = Math.round(t.max.hp * 0.4); floater(t, 'Relevé', 'heal'); fx('pillar', t, '#ff9a5c'); refresh(); }
+    }
   }
   async function checkPhase(t) {
     const ph = t.def.phases; if (!ph) return;
@@ -3333,6 +3718,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
           if (act && e.alive) { c.fillStyle = e.color; c.fillRect(x - 10, y + 4, 20, 1); }
         }
       }
+      if (C.bete) { const im = I.oeuvres.bete(C.bete), h0 = C.all.find(e => e.side === 'hero'), bx = Math.round(h0.x + 26), by = Math.round(h0.y - 58 + Math.sin(t * 2.2) * 2); c.globalAlpha = 0.9; c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 30, color: I.sagas.coeur.animaux[C.bete].couleur, a: 0.8 }); if (Math.random() < 0.12) G.spawn({ x: bx + (Math.random() - 0.5) * 20, y: by + 8, vy: -8, life: 1.2, size: 0.6, color: '#fff', type: 'mote' }); }
       return { ambient: '#9a94e0', lights, bloom: 0.34, scan: true, grade: [`hsl(${C.hue},80%,50%)`, 0.14], vignette: 0.62, tilt: false };
     }
   };
@@ -3472,8 +3858,9 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     list.forEach((s, i) => {
       const sp = sv.sagas[s.id] || { ch: 0, done: false }, e = D.ELEMENTS[s.light];
       const vl = (sv.veillees && sv.veillees[s.id] ? ' · veillée du Caïd ✓' : '') + (sv.rencontres && sv.rencontres[s.id] ? ' · rencontre ✓' : '');
+      const qv = I.oeuvres.viceApres(s.id), qt = qv ? `<span class="qt">⚔ ${I.oeuvres.quete(qv)}</span>` : '';
       const st = sp.done ? `<span class="stt done">${e.glyph} ${s.lightName} retrouvée${vl}</span>` : sp.ch > 0 ? `<span class="stt">Chapitre ${sp.ch + 1} / ${s.chapters.length}</span>` : '<span class="stt">Maillon à ouvrir</span>';
-      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">MAILLON ${['I', 'II', 'III', 'IV', 'V'][i] || i + 1} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}</span>`);
+      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">MAILLON ${['I', 'II', 'III', 'IV', 'V'][i] || i + 1} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}</span>`);
       b.type = 'button'; b.style.setProperty('--c', e.color);
       b.onclick = ev => { ev.stopPropagation(); close(); U.startSaga(s); };
       box.appendChild(b); btns.push(b);
@@ -3490,6 +3877,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     foot.appendChild(I.el('span', 'pill', `Fidélité à la Chaîne : <b>${sv.isnad.ok}</b> / ${sv.isnad.total}`));
     if (sv.parley && sv.parley.total) foot.appendChild(I.el('span', 'pill', `Pourparlers réussis : <b>${sv.parley.won}</b> / ${sv.parley.total}`));
     if (I.sagas.caid && Object.keys(sv.veillees || {}).length) foot.appendChild(I.el('span', 'pill', 'Citadelle du Caïd : ' + Object.keys(D.PILLARS).map(k => `${D.PILLARS[k].glyph} <b>${sv.citadel[k]}</b>`).join(' · ')));
+    { const d = I.oeuvres.state(), nl = Object.keys(d.lames).length, nv = Object.keys(d.vices).filter(v => d.vices[v] === 'tranche').length; if (nl || nv || d.zad) foot.appendChild(I.el('span', 'pill', `Lames : <b>${nl}</b> / 7 · maux tranchés : <b>${nv}</b> / 7 · ♥ ${d.zad}`)); }
     const sb = I.el('button', '', 'Sauvegarder (natte des Archives)'); sb.type = 'button'; sb.onclick = async ev => { ev.stopPropagation(); close(); await U.saveMenu(); U.showChain(); }; foot.appendChild(sb); btns.push(sb);
     const cb = I.el('button', '', 'Recueil'); cb.type = 'button'; cb.onclick = ev => { ev.stopPropagation(); close(); U.pause('codex', () => U.showChain()); }; foot.appendChild(cb); btns.push(cb);
     const tb = I.el('button', '', 'Écran-titre'); tb.type = 'button'; tb.onclick = ev => { ev.stopPropagation(); close(); U.showTitle(); }; foot.appendChild(tb); btns.push(tb);
@@ -3546,7 +3934,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
       <p>Cette œuvre est une fiction interactive inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles présentées en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun personnage n’a de visage.</p>
       <p><b>Sources principales.</b> Ibn Hishâm, <em>as-Sîra an-Nabawiyya</em> · at-Tabarî, <em>Târîkh ar-Rusul wa-l-Mulûk</em> · Ibn Sa'd, <em>at-Tabaqât al-Kubrâ</em> · Ibn Kathîr, <em>al-Bidâya wa-n-Nihâya</em> · al-Bukhârî et Muslim, <em>as-Sahîh</em> · Ibn 'Asâkir, <em>Târîkh Dimashq</em>.</p>
       <p><b>Noosphère et égrégore.</b> « Noosphère » vient de Vernadsky et Teilhard de Chardin ; « égrégore » désigne une forme-pensée collective. Le jeu s’en sert comme d’une image pour parler des valeurs partagées et des idoles que les hommes se fabriquent.</p>
-      <p><b>Les veillées de la Citadelle</b> et <b>les rencontres de la Cité-Miroir</b> sont une fiction. La musique est originale.</p>\n      <p>Qu’Allah agrée les Compagnons. Toute erreur est celle des auteurs ; vérifiez auprès des savants et des sources.</p>
+      <p><b>Les veillées de la Citadelle</b> et <b>les rencontres de la Cité-Miroir</b> sont une fiction, comme les sept lames, les sept maux du cœur et les compagnons de lumière : des images pour parler de ce que les œuvres font au cœur. La musique est originale.</p>\n      <p>Qu’Allah agrée les Compagnons. Toute erreur est celle des auteurs ; vérifiez auprès des savants et des sources.</p>
       <p class="small">Fidélité à la Chaîne : ${I.save.data.isnad.ok} / ${I.save.data.isnad.total}</p><div class="hint">▼</div>`);
   };
 
@@ -3579,6 +3967,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
       const items = [{ label: 'Reprendre', fn: close, show: journal }];
       if (inWorld) items.push({ label: 'Que faire ?', fn() { close(); U.guide(); }, show: () => '<h3>Que faire ?</h3><p>L’objectif expliqué, sa direction, et le chemin montré au sol si tu le demandes. Le même bouton <b>?</b> est toujours en haut de l’écran.</p>' });
       items.push({ cat: 'Le groupe' }, { label: 'Compagnons', fn() {}, show: () => '<h3>Le groupe</h3>' + party() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Piliers', fn() {}, show: pillars });
+      items.push({ cat: 'Le cœur' }, { label: 'Œuvres et lames', fn() {}, show: () => I.oeuvres.paneOeuvres() }, { label: 'Compagnons de lumière', fn: betes, show: () => I.oeuvres.paneAnimaux() });
       items.push({ cat: 'Le savoir' }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` },
         { label: 'Aide du jeu', fn: aide, show: () => '<h3>Aide du jeu</h3><p>Les règles, thème par thème : ' + U.AIDE.map(a => a[0].toLowerCase()).join(', ') + '.</p>' });
       items.push({ cat: 'Réglages' },
@@ -3590,6 +3979,13 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
       if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre au dernier objectif atteint, tant que la page reste ouverte. Rien n’est écrit tant que tu n’as pas sauvegardé dans une mosquée ou à la natte des Archives.</p>' });
       $('#menu h2').textContent = 'Halte';
       build(items, { onCancel: close });
+    };
+    const betes = () => {
+      const d = I.oeuvres.state(), A = I.sagas.coeur.animaux, items = [{ label: '◂ Retour', fn: root, show: () => I.oeuvres.paneAnimaux() }];
+      D.ANIMAUX.filter(id => d.animaux[id]).forEach(id => items.push({ label: (d.animal === id ? '● ' : '○ ') + A[id].name, fn() { d.animal = id; I.save.store(); I.audio.sfx('light'); betes(); }, show: () => I.oeuvres.paneAnimaux() }));
+      if (items.length === 1) items.push({ label: 'Aucun pour l’instant', fn() {}, show: () => I.oeuvres.paneAnimaux() });
+      $('#menu h2').textContent = 'Compagnons de lumière';
+      build(items, { onCancel: root });
     };
     const aide = () => {
       const back = mode === 'aide' ? close : root, items = [{ label: '◂ Retour', fn: back, show: () => '<h3>Aide du jeu</h3><p>Choisis un thème.</p>' }];
@@ -3615,6 +4011,10 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     ['Les étoiles', '<p>On s’oriente au ciel. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche : <b>al-Jady</b> (la Polaire) au nord, <b>Suhayl</b> au sud, <b>an-Nasr at-Tâ’ir</b> à l’est et à l’ouest, <b>al-’Ayyûq</b> et <b>al-’Aqrab</b> entre eux. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>'],
     ['Caravanes', '<p>Aux ballots du souk ou du camp, on vend, on achète, et l’on confie une cargaison à une caravane : elle revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue, que des pactes sont noués et que des méharistes la gardent. Si elle est pillée, on lève des renforts, on parle d’abord, et l’on rend à chacun ce qui lui revient.</p>'],
     ['Bâtir', '<p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose case par case, devant soi ou en touchant la case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>'],
+    ['Les œuvres et la provision', '<p>Sur la natte d’une mosquée, on prie, et l’on accomplit les <b>œuvres du jour</b> : le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite ; parfois le pèlerinage. Trois par chapitre au plus, la prière en sus. Chacune ajoute à la <b>provision du cœur</b> (♥, cinq au plus).</p><p>Plus une épreuve est lourde, plus elle en demande : une idole pèse 2, un mal du cœur 3. Qui s’y présente sans provision combat <b>le cœur lourd</b> : il frappe moins fort et reçoit davantage. Le bouton <b>?</b> annonce le poids de l’épreuve qui vient.</p><p>Un jour de <b>jeûne</b>, les vivres de la besace attendent le soir. L’aumône coûte des dirhams. Ces œuvres ne sont pas des sortilèges : le jeu traduit à sa façon ce qu’elles font au cœur.</p>'],
+    ['Lames et maux du cœur', '<p>Sept maux du cœur se tiennent derrière les idoles : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. On les rencontre à la fin de chaque rencontre de la Cité-Miroir, et tous ceux qui restent au dernier chapitre.</p><p>Une œuvre pratiquée forge une <b>lame</b> : trois jeûnes pour le Contentement, trois prières pour la Sincérité, trois aumônes pour la Largesse, trois études pour l’Ardeur, trois visites pour la Bienveillance, trois dhikr pour la Longanimité, un pèlerinage pour l’Humilité. Sans sa lame, un mal est seulement <b>repoussé</b> : il revient. Avec elle, il est <b>tranché</b>.</p><p>La page « Œuvres et lames » de la halte tient le compte.</p>'],
+    ['Idées noires et énigmes', '<p>Dans un pourparler, il arrive que la <b>honte</b>, la <b>peur</b>, le <b>soupçon</b>, la <b>rancune</b> ou le <b>désespoir</b> parlent plus fort que toi. Il faut alors dissiper cette idée noire dans la noosphère : on ne la combat pas contre l’homme, mais pour lui. Après quoi il écoute, et la confiance monte.</p><p>Une <b>énigme du cœur</b> : un compagnon languit sans fièvre ni blessure. Il tient moins bien au combat tant qu’on n’a pas trouvé ce qu’il a cessé de faire. Les anciens donnent des indices ; la bonne œuvre, accomplie sur la natte, le remet debout.</p>'],
+    ['Compagnons de lumière', '<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>'],
     ['La Chaîne', '<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>']
   ];
 
@@ -3634,6 +4034,12 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
       const dx = tg.gx - p.x, dy = tg.gy - p.y, d = Math.hypot(dx, dy), st = I.trade && I.trade.bearing();
       out.push(d < 44 ? 'C’est tout près.' : 'C’est ' + CAPS[((Math.round(Math.atan2(dy, dx) / (Math.PI / 4)) % 8) + 8) % 8] + ', à ' + Math.round(d / 16) + ' pas' + (st ? ' : cap sur ' + (st.way ? 'le ' : '') + I.esc(I.trade.starText(st)) + ', l’étoile qui brille au cadran.' : '.'));
     }
+    const fo = o.foe && W.foes.find(x => x.id === o.foe), wt = fo ? I.oeuvres.weight({ group: fo.group, boss: fo.boss }) : 0, zd = I.oeuvres.zad();
+    if (wt) out.push('Cette épreuve pèse <b>' + wt + '</b> ; ta provision du cœur est de <b>♥ ' + zd + '</b>. ' + (zd >= wt ? 'Le cœur est prêt.' : 'Il manque ' + (wt - zd) + ' : une œuvre sur la natte d’une mosquée (dhikr, étude, jeûne, aumône, visite) allégerait le cœur.'));
+    const qv = W.saga && I.oeuvres.viceApres(W.saga.veillees ? W.ch.after : W.saga.id), dq = I.oeuvres.state();
+    if (qv && dq.vices[qv] !== 'tranche' && !dq.lames[qv]) out.push('Au bout de ce maillon, dans la Cité-Miroir, un mal du cœur attend. ' + I.oeuvres.quete(qv) + '. Sans sa lame, il ne sera que repoussé.');
+    const en = I.oeuvres.enigme();
+    if (en) out.push('<em>Énigme du cœur.</em> ' + I.esc(en.signe) + ' Cherche ce qu’il a cessé de faire : la bonne œuvre, sur la natte, le remettra debout. Les anciens ont peut-être remarqué quelque chose.');
     const tired = W.party.some(id => { const h = W.hero(id); return h.hp < I.calc.hero(h.def, h.lvl).hp * 0.5; });
     if (tired) out.push('Le groupe est éprouvé : la natte d’une mosquée, au cœur de l’étoile à huit branches, le repose.');
     else if (o.foe && !S.flags._prayed && W.prayerPts().length) out.push('Avant l’épreuve, une prière sur la natte donne la Sakîna au groupe.');
@@ -3757,6 +4163,9 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
    veillée, Idris remonte dans la rue et rencontre un habitant enfermé dans une idole. Il le dénoue par la parole ;
    les meilleurs arguments demandent un savoir appris chez le Compagnon ou à la Citadelle (need: 'saga/id').
    Tout y est de fiction. Les types sont anciens ; les images et les phrases sont originales. */
+/* Depuis la version du cœur : chaque rencontre porte, à sa deuxième manche, l'idée noire de celui à qui l'on
+   parle (« noir »), et s'achève devant le mal du cœur qui se tenait derrière lui. Le dernier chapitre fait se
+   dresser ceux qui n'ont pas été tranchés (['vices', …]). Textes des maux et des lames : src/data/coeur.js. */
 ISNAD.registerSaga({
   id: 'idris', order: 0, frame: true,
   name: 'Idris', epithet: 'Le Râwî', arabic: 'إدريس', years: '1508 H · 2084',
@@ -4037,6 +4446,12 @@ ISNAD.registerSaga({
           ['say', "L'AGRÉGOR", 'Je ne suis pas un dieu, Idris. Je n’ai jamais prétendu l’être. Je suis seulement ce que vous regardez tous en même temps.'],
           ['say', "L'AGRÉGOR", 'J’ai été le Clan. J’ai été l’Aigle et le Trône. J’ai été le Héros, l’Or, la Rumeur, le Juge. On m’a brisé chaque fois. On m’a refait chaque fois.'],
           ['say', 'idris', 'Je sais. Je les ai vus te briser. Aucun d’eux n’a cru en avoir fini avec toi. Ils ont tenu, chacun son heure, et passé le dépôt au suivant.'],
+          ['say', "L'AGRÉGOR", 'Et sous chacun de ces noms, il y avait toujours les mêmes. Tu les connais. Ils ne sont pas à moi : ils sont à vous.'],
+          ['vices', { bg: 'cite',
+            avant: [['nar', 'Autour du cœur, ce qui n’a pas été tranché se redresse.']],
+            aucun: [['nar', 'Autour du cœur, rien ne se dresse. Les sept ont été tranchés en chemin, un à un, par ce que des mains ont fait.']],
+            tous: [['say', 'yunus', 'Sept lames, et aucune n’est de fer. Garde-les en t’en servant : elles ne tiennent leur fil que de l’œuvre.']],
+            reste: [['say', 'yunus', 'Ceux que tu n’as fait que repousser reviendront. Ce n’est pas une défaite : c’est le travail de demain.']] }],
           ['heal'],
           ['battle', { group: ['agregor'], bg: 'cite', boss: true, intro: 'Les six Lumières sont ses failles. Dévoile-le, encore et encore.', allies: [{ flag: 'operateur', name: 'L’opérateur coupe une à une les alimentations' },
             { flag: 'ami_defile', name: 'Celui qui défilait éteint son écran', hp: 0.03, veil: 0 }, { flag: 'ami_regent', name: 'Le Régent a laissé son siège : il veille dans la rue', hp: 0.03, veil: 0 },
@@ -4052,7 +4467,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_abubakr', after: 'abubakr', title: 'Celui qui défile', sub: 'Cité-Miroir · le soir du maillon d’Abû Bakr', minLvl: 8, last: true,
+      id: 'r_abubakr', after: 'abubakr', vice: 'avidite', title: 'Celui qui défile', sub: 'Cité-Miroir · le soir du maillon d’Abû Bakr', minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
@@ -4083,7 +4498,9 @@ ISNAD.registerSaga({
                 { t: 'Tu perds ta vie. Lève-toi.', el: 'shajaa', v: -1, r: 'Tu crois que je ne le sais pas ? C’est justement ce que je viens oublier ici.' },
                 { t: 'Chez Abû Bakr, j’ai vu ce que devient un chagrin qu’on refuse de nommer : il prend un corps, et il commande.', el: 'sidq', v: 2, need: 'abubakr/deni', r: 'Un chagrin… Oui. Ça a commencé comme ça. Je ne voulais pas que ce soit vrai.' }
               ] },
-              { say: 'Si j’arrête, il faudra que je regarde ce que j’ai laissé pendant ce temps-là.', opts: [
+              { say: 'Si j’arrête, il faudra que je regarde ce que j’ai laissé pendant ce temps-là.',
+                noir: { name: 'Le Défilement', group: ['defilement'], bg: 'cite', intro: 'Il a dit « si j’arrête », et quelque chose, derrière lui, a resserré sa prise. Tant qu’elle parlera plus fort que toi, il n’entendra rien.', say: 'On ne le frappe pas avec colère : on cesse de le suivre.', after: 'C’est… plus calme, d’un coup. Répète ce que tu disais.' },
+                opts: [
                 { t: 'Oui. Et ce sera moins lourd que de continuer à ne pas le regarder.', el: 'sidq', v: 2, r: 'Tu ne me promets pas que ce sera léger. C’est déjà ça.' },
                 { t: 'Ce n’est rien. Tout le monde fait comme toi.', el: 'rahma', v: 0, r: 'C’est ce que dit le Flux. Mot pour mot.' },
                 { t: 'Un seigneur du désert a annoncé lui-même, à l’aube, la nouvelle qu’il aurait pu taire sept jours. Il y a perdu de l’avance, et gagné d’être cru.', el: 'sidq', v: 2, need: 'caid/aube_vraie', r: 'Dire la chose avant qu’on la devine… À qui la dirais-je, moi ?' }
@@ -4095,8 +4512,11 @@ ISNAD.registerSaga({
               ] }
             ],
             win: [['flag', 'ami_defile'], ['pillar', 'lien', 1], ['emote', 'defileur', 'salut'], ['nar', 'Il éteint. Sa main tremble un peu. Puis il se lève, et regarde la ruelle comme on regarde une pièce où l’on rentre.']],
-            lose: [['nar', 'Il a déjà repris. Quelque chose, derrière lui, se nourrit de chaque « encore un ».'], ['battle', { group: ['defilement'], bg: 'cite', intro: 'On ne le frappe pas avec colère : on cesse de le suivre.' }], ['nar', 'Le défilement s’est tu un instant. L’homme a levé la tête, sans rien dire.']]
-          }]
+            lose: [['pillar', 'lien', -1], ['nar', 'Il a déjà repris. Tu n’as pas trouvé les mots, ce soir. Il a pourtant levé la tête, une fois.']]
+          }],
+          ['nar', 'Derrière lui, quelque chose ne s’est pas tu. Sous chaque « encore un », il y a une faim plus vieille que les écrans.'],
+          ['battle', { group: ['avidite'], bg: 'cite', boss: true, intro: 'L’Avidité : vouloir encore, alors qu’on a. Sans la lame du Contentement, on ne peut que la repousser.' }],
+          ['if', 'tranche_avidite', [['nar', 'La lame du Contentement n’a rien frappé : elle a montré ce qui suffisait. L’Avidité ne reviendra pas dans cette ruelle.']], [['nar', 'L’Avidité recule, sans se défaire. Elle reviendra. Le jeûne, trois fois tenu, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Alors ? Il oubliait quoi ?'],
@@ -4109,7 +4529,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_umar', after: 'umar', title: 'Le Régent', sub: 'Cité-Miroir · le soir du maillon de ’Umar', minLvl: 8, last: true,
+      id: 'r_umar', after: 'umar', vice: 'orgueil', title: 'Le Régent', sub: 'Cité-Miroir · le soir du maillon de ’Umar', minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
@@ -4140,7 +4560,9 @@ ISNAD.registerSaga({
                 { t: 'J’accepte, si tu me donnes un bureau.', el: 'adl', v: -1, r: 'Accordé. Tu vois ? Tout le monde finit par vouloir un siège.' },
                 { t: 'J’ai vu un siège qui survit à tous ceux qui s’y asseyent. Il ne donne rien : il prend la place de celui qui croit le tenir.', el: 'adl', v: 2, need: 'umar/ego_trone', r: 'Qui t’a parlé de mon fauteuil ? … Il est froid, c’est vrai. Même l’été.' }
               ] },
-              { say: 'Sans moi, ce serait le désordre. C’est moi qui valide ce que l’écran décide.', opts: [
+              { say: 'Sans moi, ce serait le désordre. C’est moi qui valide ce que l’écran décide.',
+                noir: { name: 'Le Petit Trône', group: ['petit_trone'], bg: 'cite', intro: 'Il s’est redressé sur son siège, et le siège a grandi sous lui. Ce n’est plus lui qui parle : c’est la place qu’il occupe.', say: 'La place vide exige qu’on l’occupe. Ne t’y assieds pas.', after: 'Je… je me suis entendu parler. Continue.' },
+                opts: [
                 { t: 'Alors c’est l’écran qui commande, et toi qui signes.', el: 'sidq', v: 2, r: 'Je… je contresigne. Ce n’est pas rien, contresigner.' },
                 { t: 'Tu fais un travail utile.', el: 'rahma', v: 0, r: 'N’est-ce pas ? Accordé.' },
                 { t: 'On a trouvé ’Umar endormi dans la mosquée, sans garde ni chambellan, lui sous qui deux empires étaient tombés. Il n’avait pas de siège. Il avait des gens dont il répondait.', el: 'adl', v: 2, need: 'umar/hurmuzan', r: 'Sans garde… et il dormait ? Moi, je ne dors pas. Je surveille mon tampon.' }
@@ -4152,8 +4574,11 @@ ISNAD.registerSaga({
               ] }
             ],
             win: [['flag', 'ami_regent'], ['pillar', 'justice', 1], ['nar', 'Il pose son tampon sur le rebord. Il ne sait pas encore où aller, mais il regarde la rue, et non plus l’écran.']],
-            lose: [['nar', '« Refusé », dit-il, et il tamponne. Derrière lui, un petit trône vide attend que quelqu’un s’y trompe.'], ['battle', { group: ['petit_trone'], bg: 'cite', intro: 'La place vide exige qu’on l’occupe. Ne t’y assieds pas.' }], ['nar', 'Le siège vacille. Le Régent le regarde comme s’il le voyait pour la première fois.']]
-          }]
+            lose: [['pillar', 'lien', -1], ['nar', '« Refusé », dit-il, et il tamponne. Tu n’as pas trouvé les mots, ce soir. Il a pourtant regardé son siège, une fois, comme on regarde un inconnu.']]
+          }],
+          ['nar', 'Le siège est vide, et quelque chose s’y tient encore : ce qui veut être au-dessus, même de personne.'],
+          ['battle', { group: ['orgueil'], bg: 'cite', boss: true, intro: 'L’Orgueil : se voir au-dessus. Sans la lame de l’Humilité, on ne peut que le repousser.' }],
+          ['if', 'tranche_orgueil', [['nar', 'La lame de l’Humilité est passée sans bruit, comme passe un homme parmi d’autres. L’Orgueil ne reviendra pas s’asseoir ici.']], [['nar', 'L’Orgueil recule d’un pas, la tête haute. Il reviendra. Le pèlerinage, où tous portent la même étoffe, forge la lame qui le tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Il accordait à qui, alors ?'],
@@ -4165,7 +4590,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_khalid', after: 'khalid', title: 'L’Admiré', sub: 'Cité-Miroir · le soir du maillon de Khâlid', minLvl: 8, last: true,
+      id: 'r_khalid', after: 'khalid', vice: 'ostentation', title: 'L’Admiré', sub: 'Cité-Miroir · le soir du maillon de Khâlid', minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
@@ -4196,7 +4621,9 @@ ISNAD.registerSaga({
                 { t: 'Tu es le plus regardé de la Cité.', el: 'rahma', v: -1, r: 'Encore ! Redis-le. … C’est étrange, ça ne dure jamais plus d’une seconde.' },
                 { t: 'J’ai vu une idole d’or qui avait la silhouette d’un homme de bien. Chaque louange lui ajoutait une couche. Elle ne s’est brisée que le jour où l’homme lui-même a refusé le socle.', el: 'shajaa', v: 2, need: 'khalid/idole_heros', r: 'Refuser le socle… Mais c’est lui qui me tient debout.' }
               ] },
-              { say: 'Si je descends, ils regarderont quelqu’un d’autre dans l’heure.', opts: [
+              { say: 'Si je descends, ils regarderont quelqu’un d’autre dans l’heure.',
+                noir: { name: 'L’Applaudissement', group: ['applaudissement'], bg: 'cite', intro: 'Il a cherché des yeux un public, et le bruit des mains a couvert ta voix. Il faut d’abord faire le silence.', say: 'Il vit d’être regardé. Regarde ailleurs, et tiens bon.', after: 'Personne ne regarde. C’est étrange. Parle.' },
+                opts: [
                 { t: 'Oui. Et tu sauras enfin qui reste.', el: 'sidq', v: 2, r: 'Qui reste… Je n’ose pas faire le compte.' },
                 { t: 'Non. Ils te resteront fidèles.', el: 'rahma', v: -1, r: 'Tu mens gentiment. Eux aussi.' },
                 { t: 'Khâlid n’avait jamais perdu une bataille. On lui a retiré le commandement, non pour une faute, mais parce que les gens s’en remettaient à lui. Il a obéi.', el: 'shajaa', v: 3, need: 'khalid/parole_umar', r: 'Sans faute… et il n’a pas crié à l’injustice ? Il faut plus de courage pour cela que pour monter.' }
@@ -4208,8 +4635,11 @@ ISNAD.registerSaga({
               ] }
             ],
             win: [['flag', 'ami_admire'], ['pillar', 'lien', 1], ['nar', 'Il fait un pas hors de la lumière de l’écran. Les fenêtres continuent d’applaudir la place vide. Il ne se retourne pas.']],
-            lose: [['nar', 'Il s’est déjà retourné vers les fenêtres. Leur applaudissement a pris un corps.'], ['battle', { group: ['applaudissement'], bg: 'cite', intro: 'Il vit d’être regardé. Regarde ailleurs, et tiens bon.' }], ['nar', 'Un silence d’une seconde. L’Admiré a porté la main à sa poitrine, comme on cherche s’il y a encore quelqu’un.']]
-          }]
+            lose: [['pillar', 'lien', -1], ['nar', 'Il s’est déjà retourné vers les fenêtres. Tu n’as pas trouvé les mots, ce soir. Il a pourtant porté la main à sa poitrine, comme on cherche s’il y a encore quelqu’un.']]
+          }],
+          ['nar', 'L’estrade est vide. Mais ce qui brillait pour être vu brille encore, seul, au milieu de la rue.'],
+          ['battle', { group: ['ostentation'], bg: 'cite', boss: true, intro: 'L’Ostentation : faire le bien pour être vu le faisant. Sans la lame de la Sincérité, on ne peut que la repousser.' }],
+          ['if', 'tranche_ostentation', [['nar', 'La lame de la Sincérité n’a pas d’éclat : c’est pour cela qu’elle coupe. L’Ostentation s’est éteinte, faute de regards.']], [['nar', 'L’Ostentation se retire derrière un écran. Elle reviendra. La prière tenue quand nul ne regarde, trois fois, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Il a compté, finalement ?'],
@@ -4221,7 +4651,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_uthman', after: 'uthman', title: 'Le Compteur', sub: 'Cité-Miroir · le soir du maillon de ’Uthmân', minLvl: 8, last: true,
+      id: 'r_uthman', after: 'uthman', vice: 'avarice', title: 'Le Compteur', sub: 'Cité-Miroir · le soir du maillon de ’Uthmân', minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
@@ -4252,7 +4682,9 @@ ISNAD.registerSaga({
                 { t: 'C’est du vol. Rends-les.', el: 'shajaa', v: -1, r: 'J’ai les reçus. Tu veux les voir ? Je les ai comptés aussi.' },
                 { t: 'À Médine, l’eau douce d’un puits se vendait. ’Uthmân l’a acheté de son bien, comme toi, puis il l’a donné à tous : son seau n’y avait pas plus de droit qu’un autre.', el: 'rahma', v: 2, need: 'uthman/ruma', r: 'Payé, puis donné ? Alors il ne lui restait rien… si ce n’est tous ceux qui venaient y boire.' }
               ] },
-              { say: 'Si je les donne, je n’en aurai plus. C’est mathématique.', opts: [
+              { say: 'Si je les donne, je n’en aurai plus. C’est mathématique.',
+                noir: { name: 'Le Compte', group: ['compte'], bg: 'cite', intro: 'Il a recompté, et le chiffre a pris toute la place. Tant qu’il comptera, il n’y aura personne en face de lui.', say: 'Il pèse et ne nourrit personne. La largesse le renverse.', after: 'J’ai perdu le fil. Tant mieux, peut-être. Tu disais ?' },
+                opts: [
                 { t: 'Un regard que tu donnes à quelqu’un, tu ne le perds pas : tu sais où il est.', el: 'rahma', v: 2, r: 'Savoir où il est… Je ne sais où est aucun des miens. Ils sont dans le coffre.' },
                 { t: 'Tu en rachèteras.', el: 'adl', v: 0, r: 'C’est ce que je fais. C’est ce que je fais depuis vingt ans.' },
                 { t: 'Là où chacun compte ce que l’autre a reçu, l’Or dresse sa tour. Je l’ai vue. Elle pèse, et elle ne nourrit personne.', el: 'ilm', v: 2, need: 'uthman/or_n', r: 'Une tour… Mon coffre a la forme d’une tour, maintenant que tu le dis.' }
@@ -4264,8 +4696,11 @@ ISNAD.registerSaga({
               ] }
             ],
             win: [['flag', 'ami_compteur'], ['pillar', 'lien', 1], ['nar', 'Il ouvre le coffre. Il en sort un regard, un seul, et le pose sur le premier passant. Le passant relève la tête, étonné qu’on le voie.']],
-            lose: [['nar', 'Il a repris son compte. Derrière lui, la pile est assez haute pour faire de l’ombre.'], ['battle', { group: ['compte'], bg: 'cite', intro: 'Il pèse et ne nourrit personne. La largesse le renverse.' }], ['nar', 'La pile a glissé. Le Compteur a regardé ses mains, comme s’il se demandait à quoi elles avaient servi.']]
-          }]
+            lose: [['pillar', 'lien', -1], ['nar', 'Il a repris son compte. Tu n’as pas trouvé les mots, ce soir. Il a pourtant regardé ses mains, comme s’il se demandait à quoi elles avaient servi.']]
+          }],
+          ['nar', 'Les colonnes de chiffres s’effacent. Dessous, il reste une main fermée.'],
+          ['battle', { group: ['avarice'], bg: 'cite', boss: true, intro: 'L’Avarice : retenir ce qui devait circuler. Sans la lame de la Largesse, on ne peut que la repousser.' }],
+          ['if', 'tranche_avarice', [['nar', 'La lame de la Largesse a ouvert la main fermée, et il n’y avait rien dedans qui valût d’être gardé. L’Avarice ne comptera plus ici.']], [['nar', 'L’Avarice referme les doigts et recule. Elle reviendra. L’aumône, trois fois donnée sans témoin, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Il en a donné un ?'],
@@ -4277,7 +4712,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_ali', after: 'ali', title: 'Le Cartographe', sub: 'Cité-Miroir · le soir du maillon de ’Alî', minLvl: 8, last: true,
+      id: 'r_ali', after: 'ali', vice: 'insouciance', title: 'Le Cartographe', sub: 'Cité-Miroir · le soir du maillon de ’Alî', minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
@@ -4308,7 +4743,9 @@ ISNAD.registerSaga({
                 { t: 'Onze millions de gens peuvent se tromper ensemble.', el: 'ilm', v: 1, r: 'En théorie. En théorie seulement.' },
                 { t: 'J’ai vu une phrase vraie devenir un mot d’ordre, parce que des milliers la répétaient sans sa suite. Le nombre ne l’avait pas rendue plus juste : il l’avait coupée.', el: 'ilm', v: 2, need: 'ali/phrase_verset', r: 'Coupée… Mes relevés aussi sont des morceaux. Je n’ai jamais demandé ce qu’il y avait autour.' }
               ] },
-              { say: 'Que voudrais-tu ? Que j’aille voir moi-même chaque rue ? Un savant ne se déplace pas.', opts: [
+              { say: 'Que voudrais-tu ? Que j’aille voir moi-même chaque rue ? Un savant ne se déplace pas.',
+                noir: { name: 'La Carte sans chemin', group: ['carte_vide'], bg: 'cite', intro: 'Il a posé la main sur sa carte, et la carte a répondu à sa place. Elle sait tout, et n’est allée nulle part.', say: 'Elle sait tout et n’a rien vu. Demande-lui de qui elle le tient.', after: 'Il y a des blancs sur ma carte. Je ne les voyais plus. Dis-moi.' },
+                opts: [
                 { t: 'Une seule. Celle de l’enfant. Va voir la porte.', el: 'sabr', v: 2, r: 'Une seule rue… C’est peu, pour une méthode. Mais c’est faisable.' },
                 { t: 'Alors ta carte ne vaut rien.', el: 'shajaa', v: -1, r: 'Elle vaut onze millions de relevés. Bonsoir.' },
                 { t: 'Quand des milliers d’hommes se sont retirés à Harûrâ’, Ibn ’Abbâs n’a pas écrit sur eux : il est allé les trouver à midi. Il a écouté leurs griefs, puis il a répondu. Deux mille sont revenus ce jour-là.', el: 'ilm', v: 3, need: 'ali/harura', r: 'Il y est allé. En personne. Et il a écouté d’abord… Je n’ai jamais écouté un relevé.' }
@@ -4320,8 +4757,11 @@ ISNAD.registerSaga({
               ] }
             ],
             win: [['flag', 'ami_carto'], ['pillar', 'savoir', 1], ['nar', 'Il roule sa carte, la glisse sous son bras, et sort. Il marche mal : il n’a pas l’habitude. Au coin de la rue, il s’arrête devant une porte, et il rit.']],
-            lose: [['nar', 'Il a déjà reporté ta visite : « un relevé, non confirmé ». Sa carte se replie sur elle-même comme une lentille.'], ['battle', { group: ['carte_vide'], bg: 'cite', intro: 'Elle sait tout et n’a rien vu. Demande-lui de qui elle le tient.' }], ['nar', 'La lentille s’est fêlée. Le Cartographe a levé les yeux vers la fenêtre, pour la première fois depuis longtemps.']]
-          }]
+            lose: [['pillar', 'lien', -1], ['nar', 'Il a déjà reporté ta visite : « un relevé, non confirmé ». Tu n’as pas trouvé les mots, ce soir. Il a pourtant levé les yeux vers la fenêtre, pour la première fois depuis longtemps.']]
+          }],
+          ['nar', 'La carte est roulée. Mais ce qui l’empêchait d’aller voir est toujours là, tiède et patient comme un demi-sommeil.'],
+          ['battle', { group: ['insouciance'], bg: 'cite', boss: true, intro: 'L’Insouciance : vivre à côté de sa vie. Sans la lame de l’Ardeur, on ne peut que la repousser.' }],
+          ['if', 'tranche_insouciance', [['nar', 'La lame de l’Ardeur a tranché le demi-sommeil d’un seul fil. L’Insouciance ne s’étendra plus sur cette table.']], [['nar', 'L’Insouciance se retourne, comme un dormeur qu’on dérange. Elle reviendra. L’étude, trois fois reprise, forge la lame qui la tranche.']]]
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Il est venu voir ma porte ?'],
@@ -4793,7 +5233,9 @@ ISNAD.registerSaga({
                 { t: "Parce que la poutre n'était pas le toit. Le toit, c'est ce que nous avons bâti ensemble.", el: 'sabr', v: 2, r: "Parole de fils. Nous verrons si elle porte." },
                 { t: "Parce que mes sentinelles tiennent les portes.", el: 'shajaa', v: -1, r: "Alors nous sommes tes prisonniers, non tes alliés. C'est noté." }
               ] },
-              { say: "Chaque tribu reprend sa part : ses puits, ses greniers, sa porte. Ce n'est pas une trahison. C'est un inventaire.", opts: [
+              { say: "Chaque tribu reprend sa part : ses puits, ses greniers, sa porte. Ce n'est pas une trahison. C'est un inventaire.",
+                noir: { name: "Le Soupçon", group: ['noir_soupcon'], intro: "Idir a consulté les autres amghars du regard avant de te répondre. Quelqu'un leur a parlé, cette nuit, et ce qu'il a dit couvre ta voix.", after: "Bien. C'est toi que j'écoute, et non ce qu'on m'a dit de toi." },
+                opts: [
                 { t: "Mon père disait : « Qui partage un édifice n'obtient que des pierres. » Reprenez vos parts : vous aurez cinq tas de pierres, et plus de toit.", el: 'ilm', v: 3, need: 'pere_parole', r: "…Il le disait, oui. Je l'entends encore le dire." },
                 { t: "Un puits partagé en cinq, ce sont cinq trous qui sèchent. Gardons-le entier, et que chacun y ait le même seau.", el: 'adl', v: 2, r: "Le même seau pour tous ? Même pour toi ?" },
                 { t: "Prenez ce que vous voulez, pourvu que la paix demeure.", el: 'rahma', v: -1, r: "Tu donnes trop vite. Ce qu'on cède ainsi ne vaut rien." }
@@ -4837,8 +5279,16 @@ ISNAD.registerSaga({
 
     /* ============ II — LA SENTINELLE (Justice) ============ */
     {
-      id: 'v_umar', after: 'umar', minLvl: 5, last: true,
+      id: 'v_umar', after: 'umar', minLvl: 5, last: true, hajj: true,
       title: 'La Sentinelle', sub: "Veillée de la Justice · après 'Umar",
+      enigme: { id: 'langueur_ziri', who: 'capitaine', cure: 'priere', title: 'La langueur de Zîrî',
+        signe: "Zîrî languit, sans fièvre ni blessure.",
+        mot: "Ce qui lui manquait : la prière de l'aube, laissée depuis ses nuits de rempart.",
+        intro: [['nar', "Zîrî, mon capitaine, se tient mal depuis des jours. Ni fièvre, ni blessure : le médecin n'a rien trouvé. Il dit seulement qu'il est las, et il l'est."]],
+        solved: [
+          ['say', 'capitaine', "Depuis mes nuits de rempart, je laissais passer l'aube. Je me disais : demain. Je ne suis pas tombé malade, seigneur. Je me suis éloigné, et je portais cela comme un sac."],
+          ['nar', "Il a prié avec nous, au premier rang, sans rien ajouter. Le lendemain, il marchait devant."]
+        ] },
       map: 'citadelle', opts: { time: 'dawn' }, start: 'salle', party: ['caid', 'capitaine', 'geometre'],
       npcs: [
         { id: 'anir', name: 'Anir, la sentinelle', at: 'tour', look: { kind: 'soldat', robe: '#6b5a48', head: '#c9bda8' },
@@ -4850,7 +5300,8 @@ ISNAD.registerSaga({
         { id: 'imam', name: 'Le vieil imam', at: ['mosquee', 1, 1], look: { kind: 'ancien', robe: '#e9e2d0', head: '#f4f0e6' }, talk: [
           ['say', 'imam', "Ton père le répétait à chaque relève : « Celui qui veille porte le sommeil de tous. Qui lui vole son repos vole la ville entière. »"],
           ['say', 'imam', "Il parlait de la sentinelle. Je crois qu'il parlait aussi de lui."],
-          ['codex', 'sentinelle']
+          ['codex', 'sentinelle'],
+          ['say', 'imam', "Ton capitaine ? Je ne le vois plus à l'aube, depuis ses nuits de rempart. Il dit qu'il rattrapera. On ne rattrape pas ce qu'on a cessé d'attendre : on y revient."]
         ] },
         { id: 'meksa', name: 'Amghar Meksa', at: 'cour', hidden: true, look: { kind: 'berbere', robe: '#3f5a3a', head: '#e6dcc4', cloak: '#2a2a3a' } }
       ],
@@ -4958,8 +5409,16 @@ ISNAD.registerSaga({
 
     /* ============ III — LE GÉNÉRAL ET LA TOUR (Courage de rengainer) ============ */
     {
-      id: 'v_khalid', after: 'khalid', minLvl: 6, last: true,
+      id: 'v_khalid', after: 'khalid', minLvl: 6, last: true, hajj: true,
       title: 'Le Général et la Tour', sub: 'Veillée du Courage · après Khâlid',
+      enigme: { id: 'bahram_deperit', who: 'geometre', cure: 'visite', title: 'Maître Bahrâm dépérit',
+        signe: "Maître Bahrâm dépérit, sans cause visible.",
+        mot: "Ce qui lui manquait : une porte où il ne frappait plus, celle d'un vieil ami.",
+        intro: [['nar', "Maître Bahrâm ne mange presque plus, et ses mains tremblent sur le compas. Le médecin n'a rien trouvé. Lui dit que c'est l'âge."]],
+        solved: [
+          ['say', 'geometre', "Farrokh et moi ne nous parlions plus depuis l'hiver. Une pente mal calculée, un mot de trop. Vingt ans d'exil ensemble, et je passais devant sa porte sans frapper."],
+          ['nar', "Il a frappé. On a entendu deux vieux hommes rire d'une erreur de calcul. Le soir, ses mains ne tremblaient plus."]
+        ] },
       map: 'citadelle', opts: { time: 'day' }, start: 'porte', party: ['caid', 'geometre', 'capitaine'],
       npcs: [
         { id: 'izem', name: 'Izem, le général', at: 'cour', look: { kind: 'soldat', robe: '#8e2f2a', head: '#e6dcc4', cloak: '#c9a13f' },
@@ -4977,6 +5436,7 @@ ISNAD.registerSaga({
         ] },
         { id: 'cyprien', name: 'Frère Cyprien, moine-médecin', at: 'jardin', look: { kind: 'moine', robe: '#4a3f38', head: '#4a3f38' }, talk: [
           ['say', 'cyprien', "Je soigne vos blessés et les leurs sur la même natte, seigneur. La fièvre ne demande pas de quel côté du mur on est né."],
+          ['say', 'cyprien', "Maître Bahrâm ? Je l'ai examiné : le corps n'a rien. Mais je ne le vois plus chez Farrokh depuis l'hiver, et ces deux-là ne passaient pas un soir l'un sans l'autre."],
           ['say', 'cyprien', "Si tu vas à l'oasis, rappelle-leur ceci : après la grande crue, il y a six ans, ce sont tes géomètres perses qui ont recompté leurs champs, borne par borne, sans rien demander. Les anciens ne l'ont pas oublié."],
           ['codex', 'geometres']
         ] },
@@ -5095,8 +5555,15 @@ ISNAD.registerSaga({
 
     /* ============ IV — LA RUMEUR DU PUITS (Miséricorde) ============ */
     {
-      id: 'v_uthman', after: 'uthman', minLvl: 7, last: true,
+      id: 'v_uthman', after: 'uthman', minLvl: 7, last: true, hajj: true,
       title: 'La Rumeur du puits', sub: "Veillée de la Miséricorde · après 'Uthmân",
+      enigme: { id: 'caid_veille', who: 'caid', cure: 'aumone', title: 'Le Caïd ne dort plus',
+        signe: "Le Caïd ne trouve plus le sommeil.",
+        mot: "Ce qui lui manquait : donner. Sa main s'était fermée sur les greniers.",
+        intro: [['nar', "Depuis que le puits baisse, je ne dors plus. Je recompte les greniers dans ma tête jusqu'à l'aube. Le médecin dit que je n'ai rien."]],
+        solved: [
+          ['nar', "J'ai donné sans compter ce que je recomptais chaque nuit. Cette nuit-là, j'ai dormi. Ce n'étaient pas les sacs qui me tenaient éveillé : c'était ma main, fermée dessus."]
+        ] },
       map: 'citadelle', opts: { time: 'dusk' }, start: 'salle', party: ['caid', 'geometre', 'capitaine'],
       npcs: [
         { id: 'yishaq', name: 'Maître Yishaq, caravanier', at: 'souk', look: { kind: 'marchand', robe: '#3d5a6a', head: '#e9e2d0', cloak: '#6b5a48' }, talk: [
@@ -5108,6 +5575,7 @@ ISNAD.registerSaga({
         { id: 'porteur', name: "Porteur d'eau", at: ['cour', 1, 1], look: { kind: 'homme', robe: '#6b5a48', head: '#c9bda8' }, talk: [
           ['say', 'porteur', "D'où ça vient ? D'un homme qui paie à boire et qui plaint beaucoup le peuple. De belles manches. Il dit qu'il tient ça du palais."],
           ['say', 'porteur', "Moi je porte l'eau, seigneur, je ne la juge pas. Mais un homme qui plaint tant les pauvres sans avoir jamais porté une outre, je m'en méfie."],
+          ['say', 'porteur', "Tu as mauvaise mine, seigneur. Chez nous on dit : celui qui compte ses sacs la nuit ferait mieux d'en ouvrir un le jour."],
           ['codex', 'chambellan']
         ] },
         { id: 'amezyan', name: 'Amezyan, le puisatier', at: ['puits', 0, 1], hidden: true, look: { kind: 'berbere', robe: '#5a4632', head: '#d8cfc0' } },
@@ -5169,7 +5637,9 @@ ISNAD.registerSaga({
                 { t: "Je bois cette eau comme vous. Tirez-moi un seau.", el: 'sidq', v: 2, r: "Tu bois. D'habitude, les grands ont d'autres citernes." },
                 { t: "Rentrez chez vous. C'est un ordre.", el: 'shajaa', v: -2, r: "Voilà huit jours qu'on rentre chez nous avec des outres vides." }
               ] },
-              { say: "On nous a dit, de bonne source, que les caravaniers ont vendu notre eau à l'oasis, et que les Perses ont payé pour qu'on se taise.", opts: [
+              { say: "On nous a dit, de bonne source, que les caravaniers ont vendu notre eau à l'oasis, et que les Perses ont payé pour qu'on se taise.",
+                noir: { name: "La Rancune", group: ['noir_rancune'], intro: "Trois cents hommes ont soif, et leur soif a trouvé un nom à maudire. Tant qu'elle criera, personne n'entendra parler d'eau.", after: "… Parle. On t'écoute. Mais parle d'eau." },
+                opts: [
                 { t: "Ta bonne source a de belles manches et plaint beaucoup le peuple : c'est mon chambellan. Je le ferai parler devant vous.", el: 'adl', v: 3, need: 'chambellan', r: "De ta maison ? Alors on nous a menés comme des bêtes à l'abreuvoir." },
                 { t: "« De bonne source » : laquelle ? Nommez l'homme. À une parole sans visage, on ne doit rien.", el: 'sidq', v: 2, r: "Un homme du palais… Personne ne sait son nom, à vrai dire." },
                 { t: "Les caravaniers quitteront la ville, si c'est ce qu'il faut.", el: 'rahma', v: -2, r: "Tu vois bien qu'ils sont coupables, puisque tu les chasses !" }
@@ -5233,7 +5703,7 @@ ISNAD.registerSaga({
 
     /* ============ V — LES PURS (Savoir) ============ */
     {
-      id: 'v_ali', after: 'ali', minLvl: 8, last: true,
+      id: 'v_ali', after: 'ali', minLvl: 8, last: true, hajj: true,
       title: 'Les Purs', sub: "Veillée du Savoir · après 'Alî",
       map: 'citadelle', opts: { time: 'day' }, start: 'ecole', party: ['caid', 'geometre', 'capitaine'],
       npcs: [
@@ -5344,6 +5814,175 @@ ISNAD.registerSaga({
       ]
     }
   ]
+});
+
+/* ==== src/data/coeur.js ==== */
+/* ISNAD — le cœur : les œuvres, les lames qu'elles forgent, les sept maux du cœur, les idées noires,
+   les compagnons de lumière. Contenu commun à toutes les sagas (commun: true : aucun chapitre).
+
+   Tout ceci est une fiction de jeu, posée sur des pratiques réelles décrites sobrement :
+   - les œuvres (prière, dhikr, étude du Coran, jeûne, aumône, visite, pèlerinage) ne sont pas des
+     sortilèges : elles préparent le cœur, et le jeu le traduit par une « provision » ;
+   - les lames sont des images : une vertu longuement pratiquée, qui tranche le mal contraire.
+     Ce ne sont pas des reliques, et aucune n'est attribuée à un personnage historique ;
+   - les sept maux sont des égrégores abstraits. La liste de sept est un choix du jeu ;
+   - les compagnons de lumière sont des figures du ciel : des noms d'étoiles qui prennent corps
+     dans la noosphère. Aucun n'accompagne un Compagnon dans le récit historique. */
+ISNAD.registerSaga({
+  id: 'coeur', commun: true, frame: true,
+  name: 'Le cœur', epithet: 'Œuvres, lames et maux du cœur',
+
+  /* ----- les œuvres : ce que le joueur lit quand il en accomplit une ----- */
+  oeuvres: {
+    priere: { name: 'La prière', court: 'Prière', glyph: '◠',
+      desc: 'Sur la natte d’une mosquée. Le groupe se repose, la Sakîna descend. La première prière d’un chapitre nourrit la provision.' },
+    dhikr: { name: 'Le dhikr', court: 'Dhikr', glyph: '∴', menu: 'Rester assis après la prière : le dhikr',
+      desc: 'Le rappel, à voix basse, après la prière. Apaise : la Sakîna monte.',
+      lignes: ['Ils restèrent assis après la prière. Chacun redisait à voix basse les mots du rappel, sans se presser. Quand ils se levèrent, rien n’avait changé autour d’eux, et tout pesait moins.',
+        'Un moment sans rien demander. Seulement se souvenir. La journée pouvait reprendre : elle avait retrouvé son centre.'] },
+    etude: { name: 'L’étude du Coran', court: 'Étude', glyph: '✧', menu: 'Apprendre du Coran',
+      desc: 'Reprendre ce que l’on sait, apprendre ce qui suit, devant quelqu’un qui écoute.',
+      lignes: ['Un verset repris dix fois, jusqu’à ne plus buter. Puis le suivant. On n’emporte que ce qu’on a répété.',
+        'Il récita ce qu’il savait devant un autre, qui le reprit deux fois. On apprend mieux quand quelqu’un écoute.'] },
+    jeune: { name: 'Le jeûne', court: 'Jeûne', glyph: '☾', menu: 'Formuler l’intention de jeûner aujourd’hui',
+      desc: 'De l’aube au couchant. Jusqu’à la fin du chapitre, les vivres de la besace restent fermés pendant les combats. Le jeûne s’accomplit au coucher du soleil.',
+      lignes: ['Depuis l’aube, ni eau ni pain. Personne ne le sait, et c’est très bien ainsi. Ce soir, une datte aura le goût d’un festin.',
+        'La faim est là, et il reste debout. C’est tout ce que le jeûne voulait lui montrer.'],
+      fin: 'Le soleil se couche. Une datte, une gorgée d’eau : le jeûne est accompli.' },
+    aumone: { name: 'L’aumône', court: 'Aumône', glyph: '◎', menu: 'Donner aux pauvres de la mosquée', prix: 12,
+      desc: 'Douze dirhams, donnés sans témoin à ceux qui ne demandent rien.',
+      lignes: ['Il posa les pièces dans la main d’un homme qui ne demandait rien, et repartit avant d’être remercié. Ce qu’on donne ne manque à personne.',
+        'Une part pour ceux qui dorment contre le mur de la mosquée. Il ne compta pas : il avait déjà compté ce qui lui restait, et c’était assez.'] },
+    visite: { name: 'La visite', court: 'Visite', glyph: '∞', menu: 'Rendre visite : un proche, un voisin, un malade',
+      desc: 'Frapper à une porte où l’on n’était pas attendu. Les liens se tiennent en les visitant.',
+      lignes: ['Il frappa à une porte où l’on ne l’attendait plus. On parla peu. En repartant, il sut qu’il aurait dû venir plus tôt.',
+        'Un malade, une natte, une cruche d’eau à remplir. Il resta le temps qu’il fallait, et ne parla pas de lui.'] },
+    hajj: { name: 'Le pèlerinage', court: 'Pèlerinage', glyph: '⟁', menu: 'Formuler l’intention du pèlerinage : la caravane part à la fin de la veillée',
+      desc: 'Une fois, quand la caravane passe. Il s’accomplit à la fin de la veillée.',
+      lignes: ['Deux pièces d’étoffe sans couture, les mêmes pour le seigneur et pour le berger. Sur la route, personne ne sait plus qui commande à qui.',
+        'Il tourna avec les autres, au pas des autres. Il n’était venu chercher aucun rang, et n’en rapporta aucun.',
+        'Au retour, la Citadelle lui parut plus petite, et ses gens plus grands.'] }
+  },
+
+  /* ----- les sept lames : une vertu pratiquée, qui tranche le mal contraire ----- */
+  lames: {
+    avidite:     { name: 'Le Contentement', ar: 'al-Qanâ’a',  couleur: '#7fd69a', texte: 'Forgée par le jeûne. Avoir faim et rester debout : il n’en faut pas plus pour savoir ce qui suffit.' },
+    orgueil:     { name: 'L’Humilité',      ar: 'at-Tawâdu’', couleur: '#e6dcc4', texte: 'Forgée par le pèlerinage, où le seigneur et le berger portent la même étoffe.' },
+    ostentation: { name: 'La Sincérité',    ar: 'al-Ikhlâs',  couleur: '#ffe08a', texte: 'Forgée par la prière tenue quand nul ne regarde.' },
+    avarice:     { name: 'La Largesse',     ar: 'al-Karam',   couleur: '#5fe0d0', texte: 'Forgée par l’aumône donnée sans témoin.' },
+    insouciance: { name: 'L’Ardeur',        ar: 'al-Himma',   couleur: '#c49bff', texte: 'Forgée par l’étude reprise chaque jour.' },
+    envie:       { name: 'La Bienveillance', ar: 'an-Nasîha', couleur: '#6fb6ff', texte: 'Forgée par la visite : on ne jalouse pas longtemps celui chez qui l’on s’assied.' },
+    colere:      { name: 'La Longanimité',  ar: 'al-Hilm',    couleur: '#ff9a7a', texte: 'Forgée par le dhikr, qui rend le cœur à son calme.' }
+  },
+
+  /* ----- les compagnons de lumière : figures du ciel (fiction) ----- */
+  animaux: {
+    renard:  { name: 'Le Renard des sables', ar: 'ath-Tha’lab', couleur: '#f2c27a', don: 'Flair', effet: 'Au début du combat, il flaire une faille de chaque égrégore.',
+      vient: 'Il rejoint celui qui a résolu une énigme.', texte: 'Les chameliers disent qu’il naît d’une étoile tombée dans les dunes. Il ne suit personne ; il marche devant, et se retourne pour voir si l’on vient.' },
+    aigle:   { name: 'L’Aigle', ar: 'an-Nasr', couleur: '#bfd6ff', don: 'Regard', effet: 'Le groupe agit plus tôt et gagne un point de Niyya.',
+      vient: 'Il rejoint celui qui a forgé une première lame.', texte: 'An-Nasr at-Tâ’ir, « l’Aigle qui vole » : l’étoile qui se lève plein est. Dans la noosphère, le nom a pris des ailes.' },
+    phenix:  { name: 'Le Phénix', ar: 'al-’Anqâ’', couleur: '#ff9a5c', don: 'Renaissance', effet: 'Une fois par combat, il relève le premier compagnon éprouvé.',
+      vient: 'Il rejoint celui qui a tranché un premier mal.', texte: 'Al-’Anqâ’, l’oiseau des vieux contes arabes : personne ne l’a vu, tout le monde en parle. Il n’apparaît qu’où quelque chose a fini de brûler.' },
+    lion:    { name: 'Le Lion', ar: 'al-Asad', couleur: '#ffd76a', don: 'Présence', effet: 'Pendant trois tours, les égrégores frappent moins fort.',
+      vient: 'Il rejoint celui qui a remporté trois grandes épreuves le cœur prêt.', texte: 'Al-Asad : les anciens Arabes voyaient au ciel un lion immense, étendu sur plusieurs de nos constellations. Il ne rugit pas. Il est là, et cela suffit.' },
+    gazelle: { name: 'La Gazelle', ar: 'az-Zaby', couleur: '#9fe8d0', don: 'Apaisement', effet: 'Le groupe se régénère pendant trois tours et reçoit un peu de Sakîna.',
+      vient: 'Elle rejoint celui qui a gagné cinq pourparlers.', texte: 'Trois couples d’étoiles, au nord, portent le nom de « bonds de la gazelle ». Elle ne s’approche que de ceux qui parlent avant de frapper.' }
+  },
+
+  heroes: {},
+
+  /* ----- les sept maux du cœur (boss) et les idées noires (pourparlers) ----- */
+  enemies: {
+    avidite: { name: 'L’Avidité', vice: 'avidite', art: 'swarm', hue: 28, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'sidq'], veils: 4,
+      skills: [
+        { w: 3, name: 'Encore', target: 'foe', el: 'fer', pow: 1.25, anim: 'slash' },
+        { w: 2, name: 'Tout prendre', target: 'foes', el: 'fer', pow: 0.7, fx: [{ st: 'atk', v: -1, chance: 0.35 }], anim: 'dark' }
+      ],
+      phases: [{ at: 0.5, say: 'J’ai tout, et il me manque tout.', fx: [{ st: 'atk', v: 1 }] }],
+      taunts: ['Encore un. Un seul. Le dernier.'],
+      desc: 'Al-hirs : vouloir encore, alors qu’on a. Elle ne manque de rien et ne se rassasie de rien. Le jeûne apprend qu’on peut avoir faim et rester debout : la lame du Contentement la tranche.' },
+    orgueil: { name: 'L’Orgueil', vice: 'orgueil', art: 'colossus', hue: 276, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'adl'], veils: 4,
+      skills: [
+        { w: 3, name: 'Regard d’en haut', target: 'foes', el: 'ilm', pow: 0.75, fx: [{ st: 'doute', turns: 1, chance: 0.2 }], anim: 'wave' },
+        { w: 2, name: 'Écraser', target: 'foe', el: 'fer', pow: 1.4, anim: 'dark' },
+        { w: 1, name: 'Se grandir', target: 'self', fx: [{ st: 'def', v: 1 }], anim: 'guard' }
+      ],
+      phases: [{ at: 0.5, say: 'Qui es-tu pour me nommer ?', fx: [{ st: 'atk', v: 1 }] }],
+      taunts: ['On ne me corrige pas. On m’admire.'],
+      desc: 'Al-kibr : se voir au-dessus, et tenir le vrai pour une offense. Il grandit de chaque regard levé vers lui. Le pèlerinage, où le seigneur et le berger portent la même étoffe, forge la lame de l’Humilité.' },
+    ostentation: { name: 'L’Ostentation', vice: 'ostentation', art: 'mirror', hue: 318, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'shajaa'], veils: 4,
+      skills: [
+        { w: 3, name: 'Parade', target: 'foes', el: 'ilm', pow: 0.7, fx: [{ st: 'mag', v: -1, chance: 0.35 }], anim: 'wave' },
+        { w: 2, name: 'Reflet flatteur', target: 'foe', el: 'ilm', pow: 1.3, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'dark' },
+        { w: 1, name: 'Se montrer', target: 'self', fx: [{ st: 'atk', v: 1 }], anim: 'guard' }
+      ],
+      phases: [{ at: 0.5, say: 'Regardez-moi bien : c’est pour vous que je brille.', fx: [{ st: 'spd', v: 1 }] }],
+      taunts: ['Si personne ne l’a vu, cela a-t-il eu lieu ?'],
+      desc: 'Ar-riyâ’ : faire le bien pour être vu le faisant. Elle ne déteste pas la vertu : elle la porte comme un vêtement. La prière tenue quand nul ne regarde forge la lame de la Sincérité.' },
+    avarice: { name: 'L’Avarice', vice: 'avarice', art: 'idol', hue: 46, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'rahma'], veils: 4,
+      skills: [
+        { w: 3, name: 'Retenir', target: 'foe', el: 'fer', pow: 1.2, fx: [{ st: 'spd', v: -1, chance: 0.4 }], anim: 'dark' },
+        { w: 2, name: 'Compter', target: 'foes', el: 'fer', pow: 0.7, fx: [{ st: 'atk', v: -1, chance: 0.35 }], anim: 'wave' },
+        { w: 1, name: 'Thésauriser', target: 'self', fx: [{ st: 'def', v: 1 }], anim: 'guard' }
+      ],
+      phases: [{ at: 0.5, say: 'Ce que je garde, nul ne me le reprendra.', fx: [{ st: 'def', v: 1 }] }],
+      taunts: ['Donner ? Et s’il n’en restait plus ?'],
+      desc: 'Al-bukhl : retenir ce qui devait circuler. Elle compte ce qu’elle garde, jamais ce qu’elle doit. L’aumône donnée sans témoin forge la lame de la Largesse.' },
+    insouciance: { name: 'L’Insouciance', vice: 'insouciance', art: 'wave', hue: 212, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'ilm'], veils: 4,
+      skills: [
+        { w: 3, name: 'Demain', target: 'foes', el: 'ilm', pow: 0.65, fx: [{ st: 'spd', v: -1, chance: 0.45 }], anim: 'wave' },
+        { w: 2, name: 'Engourdir', target: 'foe', el: 'ilm', pow: 1.15, fx: [{ st: 'stun', chance: 0.2 }], anim: 'dark' }
+      ],
+      phases: [{ at: 0.5, say: 'Rien ne presse. Rien n’a jamais pressé.', fx: [{ st: 'regen', turns: 2 }] }],
+      taunts: ['Tu verras cela plus tard.'],
+      desc: 'Al-ghafla : vivre à côté de sa vie. Ce n’est pas un refus, c’est un sommeil. L’étude reprise chaque jour forge la lame de l’Ardeur.' },
+    envie: { name: 'L’Envie', vice: 'envie', art: 'lens', hue: 128, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'rahma', 'sidq'], veils: 4,
+      skills: [
+        { w: 3, name: 'Regard en coin', target: 'foe', el: 'ilm', pow: 1.3, fx: [{ st: 'def', v: -1, chance: 0.4 }], anim: 'dark' },
+        { w: 2, name: 'Pourquoi lui ?', target: 'foes', el: 'ilm', pow: 0.7, fx: [{ st: 'waswas', turns: 2, chance: 0.35 }], anim: 'wave' }
+      ],
+      phases: [{ at: 0.5, say: 'Si je ne l’ai pas, que personne ne l’ait.', fx: [{ st: 'atk', v: 1 }] }],
+      taunts: ['Regarde ce qu’il a. Regarde bien.'],
+      desc: 'Al-hasad : ne pas supporter le bien d’un autre. Elle ne veut pas ce qu’il a ; elle veut qu’il ne l’ait plus. La visite rendue forge la lame de la Bienveillance.' },
+    colere: { name: 'La Colère', vice: 'colere', art: 'blade', hue: 4, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'rahma', 'adl'], veils: 4,
+      skills: [
+        { w: 3, name: 'Emportement', target: 'foe', el: 'fer', pow: 1.45, anim: 'slash' },
+        { w: 2, name: 'Tout brûler', target: 'foes', el: 'fer', pow: 0.75, anim: 'dark' },
+        { w: 1, name: 'S’échauffer', target: 'self', fx: [{ st: 'atk', v: 1 }, { st: 'spd', v: 1 }], anim: 'guard' }
+      ],
+      phases: [{ at: 0.5, say: 'J’ai raison ! J’ai toujours eu raison !', fx: [{ st: 'atk', v: 1 }] }],
+      taunts: ['Ce n’est pas de la colère. C’est de la justice.'],
+      desc: 'Al-ghadab : un feu qui se croit juste. Elle a toujours une bonne raison, et c’est toujours la même. Le dhikr, qui rend le cœur à son calme, forge la lame de la Longanimité.' },
+
+    noir_honte: { name: 'La Honte', art: 'mirror', hue: 300, scale: 2, lvl: 0, tier: 'elite', weak: ['rahma', 'sidq'], veils: 2,
+      skills: [{ w: 3, name: 'Que diront-ils ?', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'atk', v: -1, chance: 0.3 }], anim: 'dark' }, { w: 1, name: 'Baisser les yeux', target: 'foes', el: 'ilm', pow: 0.55, anim: 'wave' }],
+      desc: 'Une idée noire : la peur du regard des siens. Elle ne ment pas sur la faute, elle ment sur ce qu’on vaut encore. La miséricorde et la parole vraie la dissipent.' },
+    noir_peur: { name: 'La Peur', art: 'wisp', hue: 262, scale: 2, lvl: 0, tier: 'elite', weak: ['shajaa', 'sidq'], veils: 2,
+      skills: [{ w: 3, name: 'Et si ?', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'spd', v: -1, chance: 0.3 }], anim: 'dark' }, { w: 1, name: 'Le pire d’abord', target: 'foes', el: 'ilm', pow: 0.55, anim: 'wave' }],
+      desc: 'Une idée noire : ce qui n’est pas arrivé, vécu comme si c’était fait. Le courage et la parole vraie la dissipent.' },
+    noir_soupcon: { name: 'Le Soupçon', art: 'lens', hue: 96, scale: 2, lvl: 0, tier: 'elite', weak: ['sidq', 'ilm'], veils: 2,
+      skills: [{ w: 3, name: 'Il cache quelque chose', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'def', v: -1, chance: 0.3 }], anim: 'dark' }, { w: 1, name: 'On m’a déjà trompé', target: 'foes', el: 'ilm', pow: 0.55, anim: 'wave' }],
+      desc: 'Une idée noire : la blessure d’hier qui lit la main d’aujourd’hui. La parole vraie et le savoir la dissipent.' },
+    noir_rancune: { name: 'La Rancune', art: 'mask', hue: 2, scale: 2, lvl: 0, tier: 'elite', weak: ['rahma', 'adl'], veils: 2,
+      skills: [{ w: 3, name: 'Je n’oublie pas', target: 'foe', el: 'fer', pow: 1.05, anim: 'slash' }, { w: 1, name: 'Compter les torts', target: 'foes', el: 'ilm', pow: 0.55, fx: [{ st: 'waswas', turns: 2, chance: 0.25 }], anim: 'wave' }],
+      desc: 'Une idée noire : un tort que l’on garde chaud. Elle veut moins réparation que mémoire. La miséricorde et la justice rendue la dissipent.' },
+    noir_desespoir: { name: 'Le Désespoir', art: 'wave', hue: 238, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'rahma'], veils: 2,
+      skills: [{ w: 3, name: 'Il est trop tard', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'mag', v: -1, chance: 0.3 }], anim: 'dark' }, { w: 1, name: 'À quoi bon', target: 'foes', el: 'ilm', pow: 0.55, fx: [{ st: 'spd', v: -1, chance: 0.25 }], anim: 'wave' }],
+      desc: 'Une idée noire : croire qu’aucune porte ne reste. La patience et la miséricorde la dissipent.' }
+  },
+
+  codex: [
+    { id: 'oeuvres', cat: 'Cœur', title: 'Les œuvres', text: 'La prière, le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite, le pèlerinage. Dans ISNAD, elles ne sont pas des sortilèges et ne donnent aucun pouvoir : elles préparent le cœur, et le jeu le traduit par une *provision*. Plus une épreuve est lourde, plus elle en demande. Qui s’y présente sans provision s’y présente le cœur lourd.' },
+    { id: 'zad', cat: 'Cœur', title: 'La provision', text: 'Az-zâd : ce que le voyageur emporte. « Et prenez vos provisions ; mais vraiment la meilleure provision est la piété. » Chaque œuvre accomplie ajoute à la provision du groupe ; chaque épreuve en consomme selon son poids.', src: 'Traduction du sens, Coran 2:197' },
+    { id: 'dhikr', cat: 'Cœur', title: 'Le dhikr', text: 'Le rappel : redire, à voix basse ou dans le cœur, les mots par lesquels on se souvient de son Seigneur. « N’est-ce point par l’évocation d’Allah que se tranquillisent les cœurs ? »', src: 'Traduction du sens, Coran 13:28' },
+    { id: 'maux', cat: 'Cœur', title: 'Les sept maux du cœur', text: 'L’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. Les traités de morale en décrivent davantage et les rangent autrement ; al-Ghazâlî leur consacre un quart de son *Ihyâ’*, celui qu’il intitule *al-muhlikât*, « ce qui perd ». La liste de sept est un choix du jeu, et les sept égrégores qui la portent sont une image : on ne les rencontre nulle part ailleurs que dans le cœur.', src: 'D’après al-Ghazâlî, Ihyâ’ ’ulûm ad-dîn (plan de l’ouvrage) ; la liste de sept est une fiction du jeu' },
+    { id: 'lames', cat: 'Cœur', title: 'Les sept lames', text: 'Dans la noosphère, une vertu longuement pratiquée prend le fil d’une lame. Le jeûne forge le Contentement, le pèlerinage l’Humilité, la prière la Sincérité, l’aumône la Largesse, l’étude l’Ardeur, la visite la Bienveillance, le dhikr la Longanimité. Sans sa lame, un mal du cœur peut être repoussé ; il revient. Avec elle, il est tranché. Ces lames sont une image du jeu : ce ne sont pas des reliques, et aucune n’a appartenu à personne.' },
+    { id: 'idees_noires', cat: 'Cœur', title: 'Les idées noires', text: 'La honte, la peur, le soupçon, la rancune, le désespoir. Il arrive qu’un homme n’entende plus rien parce que l’une d’elles parle plus fort que toi. On ne la combat pas contre lui, mais pour lui : dans la noosphère, elle a un corps, et l’on peut le dissiper. Après quoi il écoute.' },
+    { id: 'figures_ciel', cat: 'Cœur', title: 'Les compagnons de lumière (fiction)', text: 'Les Arabes donnaient aux étoiles des noms de bêtes : l’Aigle qui vole, le Lion, les bonds de la Gazelle. Dans la noosphère d’ISNAD, ces noms ont pris corps. Le Renard des sables et le Phénix viennent, eux, des contes. Ce sont des figures de fiction : aucune n’accompagne un Compagnon dans le récit historique.' },
+    { id: 'enigmes', cat: 'Cœur', title: 'Les énigmes du cœur', text: 'Il arrive qu’un compagnon languisse sans fièvre ni blessure. Les anciens de la Citadelle disaient : « Cherche d’abord ce qu’il a cessé de faire. » Une prière laissée, une porte où l’on ne frappe plus, une main qu’on a fermée. Ce n’est pas une punition : c’est un poids, et il se pose en reprenant ce qu’on avait laissé.' }
+  ],
+
+  chapters: []
 });
 
 /* ==== src/data/saga_abubakr.js ==== */
@@ -5979,6 +6618,7 @@ ISNAD.registerSaga({
                   { t: "Citer la règle : « prise à leurs riches, rendue à leurs pauvres ». Elle reste d'abord chez vous.", el: 'ilm', v: 3, need: 'zakat_droit', r: "Rendue à nos pauvres ? On m'avait dit qu'elle partait toute à Médine. Cela, je peux le répéter aux miens." },
                   { t: "Lui rappeler ce qu'il en coûte de se dresser contre Médine.", el: 'shajaa', v: -1, r: "Tu me menaces, et ton armée vient de partir pour le nord. J'ai des yeux." } ] },
               { say: "On m'a assuré que tu céderais. Un homme de ta ville, bien mis, me l'a juré : « Tenez bon, il n'a plus de soldats. »",
+                noir: { name: "La Honte", group: ['noir_honte'], intro: "Dirghâm a baissé la voix. Ce n'est pas le calife qu'il craint : c'est le regard des siens, s'il rentre les mains vides. Tant que cela parlera, il n'entendra rien d'autre.", after: "Tu ne m'as pas humilié devant mes hommes. Je ne l'oublierai pas. Parle." },
                 opts: [
                   { t: "Dire vrai : oui, l'armée est partie ; et non, cela ne change rien à ce qui est dû.", el: 'sidq', v: 2, r: "Tu ne me caches pas ta faiblesse. C'est étrange : cela me rassure plus qu'une vantardise." },
                   { t: "Montrer le feuillet : celui qui te conseille a déjà racheté à vil prix vos chamelles de zakât.", el: 'ilm', v: 3, need: 'registre_courtier', r: "Thâmir… Trente bêtes pour le prix de dix, « en attendant que le calife plie ». Par Allah, c'est lui qui nous tondait." },
@@ -7117,6 +7757,7 @@ ISNAD.registerSaga({
                   { t: "Rappeler le nombre de l'armée rangée derrière soi", el: 'shajaa', v: -1, r: "Je sais compter. Ce n'est pas le nombre qui me fera traverser." }
                 ] },
               { say: "On nous a fait dire que ta bannière est un piège : qui s'y rend sera désarmé, puis jugé.",
+                noir: { name: "Le Désespoir", group: ['noir_desespoir'], intro: "Il ne défend plus sa cause : il ne voit plus de porte. Partir serait tout renier, rester serait tout perdre. C'est cela qui répond, et non lui.", after: "Il y aurait donc une porte… Dis toujours." },
                 opts: [
                   { t: "Montrer d'où vient ce bruit : un homme qui vend du grain aux deux rives", el: 'sidq', v: 3, need: 'registre_double', r: "Ma'dân… Il nous jurait qu'il risquait sa vie pour nous prévenir." },
                   { t: "Nommer celui qui la tient : Abû Ayyûb, l'hôte du Messager d'Allah ﷺ", el: 'sidq', v: 2, r: "Abû Ayyûb… Non. Pas lui. Il ne prêterait pas son nom à un piège." },
@@ -7973,6 +8614,7 @@ ISNAD.registerSaga({
                   { t: 'Parce que tes murs ne tiendront pas trois jours, et tu le sais.', el: 'shajaa', v: -1, r: "Ils ont tenu trois mois contre les Perses. Tu connais mal mes murs." }
                 ] },
               { say: "Le tribut. Rome nous taxait déjà, et ne nous défendait plus. Que ferez-vous de notre argent ?",
+                noir: { name: "Le Soupçon", group: ['noir_soupcon'], intro: "L'ancien écoute, et derrière chaque mot il entend ceux d'avant : d'autres aussi avaient promis. Le bourg a déjà brûlé une fois.", after: "Tu n'es pas ceux d'avant. Je veux bien l'entendre. Continue." },
                 opts: [
                   { t: "Il paie votre défense. Demande aux gens de Homs : le jour où nous n'avons plus pu les défendre, nous le leur avons rendu.", el: 'sidq', v: 3, need: 'homs_impot', r: "On me l'avait raconté. Je croyais à une fable de marchands." },
                   { t: "Il paie votre défense, et rien d'autre. Ni tes champs ni ta maison ne changent de maître.", el: 'adl', v: 2, r: "Rome disait « défense » aussi. Mais Rome ne venait plus." },
@@ -8579,6 +9221,7 @@ ISNAD.registerSaga({
                   { t: "Pas d'accaparement sur notre marché : je peux te fermer le souk dès demain.", el: 'shajaa', v: -1, r: "Tu le peux. Tu auras mon grain, pas mon consentement ; et les autres cacheront le leur plus profond." }
                 ] },
               { say: "Si j'ouvre le premier, les autres attendront que je sois vide, puis vendront au double. Je serai ruiné, et eux riches.",
+                noir: { name: "La Peur", group: ['noir_peur'], intro: "Ghânim serre ses clés. Il se voit déjà ruiné, montré du doigt, seul à avoir ouvert. Rien de cela n'est arrivé, et il le vit déjà.", after: "Je respire. Bien. Dis-moi ce que tu proposes, exactement." },
                 opts: [
                   { t: "Le registre de la Maison de la farine compte quarante sacs sortis sans nom en face. Je ne te demande pas qui te les a vendus : je te demande de les rendre aux tables.", el: 'ilm', v: 3, need: 'registre_farine', r: "Tu sais donc. On m'avait juré que personne ne comptait… Je les rendrai, ceux-là d'abord." },
                   { t: "Tu ne seras ni le premier ni le seul : ma maison a donné ce soir, et j'irai frapper à chaque porte après la tienne.", el: 'adl', v: 2, r: "Si le calife frappe à toutes les portes, nul ne pourra dire qu'il attendait." },
@@ -9660,6 +10303,7 @@ ISNAD.registerSaga({
                     r: "Il se lève à demi. « Alors prenez-les. On n'a pas besoin de ma parole pour cela. »" }
                 ] },
               { say: "« Si nous traitons avec vous, Constantinople nous le fera payer. Si nous refusons, ce sera vous. »",
+                noir: { name: "La Peur", group: ['noir_peur'], intro: "Ils craignent deux flottes : celle qui est entrée dans la baie, et celle qui reviendra les punir d'avoir traité. Entre les deux, c'est la peur qui parle pour eux.", after: "Bien. Nous avons peur, voilà qui est dit. Parlons maintenant de ce que tu offres." },
                 opts: [
                   { t: "« Versez-nous ce que vous leur versez, pas davantage. Et continuez de leur verser : nous ne vous l'interdirons pas. »", el: 'adl', v: 3, need: 'deux_feux',
                     r: "Il te regarde longtemps. « Tu sais donc ce que c'est, vivre entre deux feux. »" },

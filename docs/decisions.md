@@ -218,6 +218,78 @@ lu comme 2084, l'année de l'histoire-cadre.)
 Le bouton « Jouer » du livret pointe vers l'Artifact privé du jeu : il ne fonctionne que pour le
 décideur tant que le jeu n'est pas partagé (autorisation n° 2 ci-dessous, toujours de côté).
 
+## Téléphone, aide, et le cœur : œuvres, lames, maux, idées noires, compagnons de lumière (demande du décideur)
+
+Demande reçue, en substance : pour convaincre les gens il faut parfois combattre leurs idées noires ;
+une musique dans le style de Nobuo Uematsu ; une meilleure expérience sur mobile, avec l'écran tactile
+pour les déplacements et des caractères plus grands ; une aide qui explique ce qu'on doit faire ; plus
+les épreuves sont dures, plus il faut jeûner, faire du dhikr, apprendre du Coran, faire le pèlerinage,
+donner à un pauvre, visiter un proche ; parfois des énigmes (un membre du groupe toujours malade sans
+qu'on sache pourquoi : il n'avait pas fait sa prière) ; remettre de l'ordre dans tout ; la quête des
+épées légendaires, chacune détruisant un péché capital ; les péchés capitaux en boss finaux ; des
+animaux légendaires pour compagnons (renard, aigle, phénix…).
+
+Les mécaniques sont décidées par le décideur. Restent à valider : mes interprétations (signalées
+« lecture de l'agent ») et tout texte qui touche à la religion.
+
+- [x] **D56. Téléphone.** Écran en hauteur : la scène ne montre qu'une partie de la largeur, agrandie
+  (exploration et combat), l'objectif et les piliers passent sous l'image. On touche un endroit pour
+  s'y rendre, un personnage pour lui parler, un objet pour s'en servir ; doigt maintenu, le héros suit.
+  Même chose à la souris. Texte agrandi, et réglable (normal, grand, très grand). La croix tactile
+  devient un réglage. *Non vérifié sur un vrai téléphone : seulement dans Chromium en émulation.*
+- [x] **D57. « Que faire ? »** Bouton ? et touche H : l'objectif redit, expliqué selon sa nature, sa
+  direction en pas et en étoile, le poids de l'épreuve qui vient, l'énigme en cours ; « Montrer le
+  chemin » (points d'or au sol) et « M'y conduire ».
+- [x] **D58. De l'ordre.** Halte rangée par catégories (le groupe, le cœur, le savoir, réglages,
+  partir) ; aide du jeu par thèmes ; contenu commun dans un seul fichier (`src/data/coeur.js`), règles
+  dans un seul module (`src/core/oeuvres.js`).
+- [ ] **D59. Les œuvres et la provision du cœur.** Sur la natte : la prière, et les œuvres du jour
+  (dhikr, étude du Coran, jeûne, aumône, visite), trois par chapitre au plus. Chacune ajoute 1 à la
+  provision (*az-zâd*, cinq au plus). Une idole en consomme 2, un mal du cœur 3 ; chaque point qui
+  manque retire 8 % aux coups portés et ajoute 8 % aux coups reçus, et s'allège à chaque reprise.
+  Le jeûne ferme les vivres de la besace jusqu'à la fin du chapitre ; l'aumône coûte 12 dirhams.
+  *Lecture de l'agent* : « plus les épreuves sont dures, plus il faut… » devient une provision que les
+  épreuves consomment. Les textes disent ce que l'œuvre fait au cœur, jamais un pouvoir (exigence 15).
+- [ ] **D60. Deux versets en traduction du sens**, dans le Recueil : 2:197 (la provision) et 13:28 (le
+  dhikr). **À vérifier mot à mot.**
+- [ ] **D61. « Les sept maux du cœur » plutôt que « péchés capitaux ».** *Lecture de l'agent* : la
+  liste chrétienne est remplacée par sept maux que décrit la tradition morale musulmane : l'avidité
+  (*al-hirs*), l'orgueil (*al-kibr*), l'ostentation (*ar-riyâ'*), l'avarice (*al-bukhl*), l'insouciance
+  (*al-ghafla*), l'envie (*al-hasad*), la colère (*al-ghadab*). Le Recueil renvoie au quart des
+  *muhlikât* de l'*Ihyâ'* d'al-Ghazâlî et dit que le nombre de sept est un choix du jeu. Ce sont des
+  égrégores abstraits (exigence 6). **Liste, noms et renvoi à faire relire.**
+- [ ] **D62. Sept lames, une par mal.** Le Contentement (jeûne ×3), l'Humilité (pèlerinage), la
+  Sincérité (prière ×3), la Largesse (aumône ×3), l'Ardeur (étude ×3), la Bienveillance (visite ×3),
+  la Longanimité (dhikr ×3). Ce sont des images : une vertu pratiquée. Ni relique, ni épée d'un
+  personnage historique, ni inscription (exigences 8 et 16).
+- [ ] **D63. Où l'on affronte les maux.** Un à la fin de chaque rencontre de la Cité-Miroir (avidité,
+  orgueil, ostentation, avarice, insouciance), et tous ceux qui restent, deux par deux, devant le cœur
+  de l'Agrégor. Avec sa lame, le mal perd ses voiles et il est **tranché** ; sans elle, il est
+  **repoussé** et revient au dernier chapitre. Rien ne bloque : la fin se joue sans aucune lame.
+- [ ] **D64. Idées noires.** Dans douze pourparlers, à la deuxième manche, il faut dissiper la honte,
+  la peur, le soupçon, la rancune ou le désespoir de l'interlocuteur (dans les rencontres : son
+  idole) ; la confiance monte ensuite. Seulement chez des interlocuteurs **de fiction** : jamais un
+  personnage historique (pas de Sophrone, pas de délégation d'Égypte).
+- [ ] **D65. Trois énigmes du cœur**, dans les veillées seulement (le validateur les refuse dans une
+  saga de Compagnon) : Zîrî languit (la prière, l'exemple donné par le décideur), maître Bahrâm
+  dépérit (la visite), le Caïd ne dort plus (l'aumône). Le compagnon tient moins bien au combat tant
+  que l'œuvre n'est pas reprise. Le Recueil dit : « Ce n'est pas une punition : c'est un poids. »
+- [ ] **D66. Le pèlerinage n'existe que dans la fiction des veillées** : l'intention se formule sur la
+  natte, il s'accomplit à la fin de la veillée. Aucun pèlerinage n'est prêté à un Compagnon par le jeu.
+- [ ] **D67. Cinq compagnons de lumière.** Des figures du ciel : l'Aigle (*an-Nasr at-Tâ'ir*, Altaïr),
+  le Lion (*al-Asad*), la Gazelle (les « bonds de la gazelle », au nord), le Renard des sables et le
+  Phénix (*al-'Anqâ'*), ces deux-là venus des contes. Ils rejoignent celui qui a résolu une énigme,
+  forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers.
+  Un seul accompagne le groupe au combat. Dessinés en silhouette de lumière, sans aucun trait. On ne
+  les voit marcher que dans la fiction (Cité-Miroir, Citadelle). *Exigence 14* : le renard n'est pas
+  « apprivoisé », aucune scène du conte n'est reprise. **Noms d'étoiles à faire relire.**
+- [ ] **D68. Bande-son réécrite** à la manière des JRPG 16 bits (voir `docs/musique.md` quand elle
+  sera fusionnée) : écrite sans pouvoir l'écouter, donc à juger à l'oreille par le décideur.
+- [ ] **D69. Deux exigences ajoutées à `AGENTS.md`** (15 : les œuvres ne sont pas des sortilèges ;
+  16 : lames, maux, idées noires et compagnons de lumière sont des images de fiction). Proposées par
+  l'agent pour encadrer ces mécaniques : au décideur de les confirmer, de les reformuler ou de les retirer.
+- Une partie déjà commencée garde tout : les nouveaux champs se créent à la première utilisation.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
@@ -260,3 +332,5 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
 2. Le jeu doit-il rester privé, être partagé à un cercle, ou être rendu public après relecture ?
 3. Les sceaux portent les noms des Compagnons en arabe : est-ce conforme à l'intention ?
 4. Quelle suite : approfondir ces cinq sagas, ou en ajouter d'autres ?
+5. Les sept maux retenus et leurs noms (D61), les deux versets (D60), les noms d'étoiles (D67) : qui les relit ?
+6. Les œuvres comptent-elles au bon prix (trois par chapitre, 8 % par point manquant), ou faut-il durcir ?

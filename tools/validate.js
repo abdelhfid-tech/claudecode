@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /* Valide un ou plusieurs fichiers de saga contre le schéma (src/core/defs.js).
-   Usage : node tools/validate.js src/data/saga_xxx.js [...]   (sans argument : tous les src/data/saga_*.js) */
+   Usage : node tools/validate.js src/data/saga_xxx.js [...]   (sans argument : tous les src/data/saga_*.js)
+   Le contenu commun (src/data/coeur.js, « commun: true ») se valide de la même façon. */
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
@@ -13,21 +14,23 @@ if (!files.length) {
 }
 
 // savoirs d'une autre saga (« saga/id ») : vérifiés dans les autres fichiers de données
-const autres = {}; let autresLus = false;
-function savoirConnu(ref) {
-  if (!autresLus) { autresLus = true; const dir = path.join(__dirname, '../src/data');
-    for (const f of fs.readdirSync(dir).filter(f => /\.js$/.test(f))) { const got = [], c = { ISNAD: { registerSaga: s => got.push(s), registerMusic() {} }, console }; c.window = c; c.globalThis = c;
-      try { vm.runInNewContext(fs.readFileSync(path.join(dir, f), 'utf8'), c); } catch (e) { /* signalé ailleurs */ }
-      got.forEach(s => { autres[s.id] = new Set((s.codex || []).map(x => x.id)); }); } }
-  const [sid, id] = ref.split('/'); return !!(autres[sid] && autres[sid].has(id));
+const autres = {}, communs = {}; let autresLus = false;
+function lireAutres() {
+  if (autresLus) return; autresLus = true; const dir = path.join(__dirname, '../src/data');
+  for (const f of fs.readdirSync(dir).filter(f => /\.js$/.test(f))) { const got = [], c = { ISNAD: { registerSaga: s => got.push(s), registerMusic() {} }, console }; c.window = c; c.globalThis = c;
+    try { vm.runInNewContext(fs.readFileSync(path.join(dir, f), 'utf8'), c); } catch (e) { /* signalé ailleurs */ }
+    got.forEach(s => { autres[s.id] = new Set((s.codex || []).map(x => x.id)); if (s.commun) Object.assign(communs, s.enemies || {}); }); }
 }
+function savoirConnu(ref) { lireAutres(); const [sid, id] = ref.split('/'); return !!(autres[sid] && autres[sid].has(id)); }
+// égrégores communs à toutes les sagas : maux du cœur, idées noires
+function ennemisCommuns() { lireAutres(); return communs; }
 
 let totalErr = 0;
 for (const file of files) {
   const errs = [];
   const warn = [];
   const sagas = [];
-  const ctx = { ISNAD: { registerSaga: s => sagas.push(s) }, console };
+  const ctx = { ISNAD: { registerSaga: s => sagas.push(s), registerMusic() {} }, console };
   ctx.window = ctx; ctx.globalThis = ctx;
   try {
     vm.runInNewContext(fs.readFileSync(file, 'utf8'), ctx, { filename: file });
@@ -62,6 +65,7 @@ function stats(sagas) {
     if (o[0] === 'if') { walk(o[2]); walk(o[3]); }
   });
   for (const s of sagas) {
+    if (s.commun) return `contenu commun : ${Object.keys(s.enemies || {}).length} égrégores, ${(s.codex || []).length} entrées du Recueil, ${Object.keys(s.oeuvres || {}).length} œuvres, ${Object.keys(s.lames || {}).length} lames, ${Object.keys(s.animaux || {}).length} compagnons de lumière`;
     walk(s.intro); walk(s.outro);
     for (const c of s.chapters) {
       ch++; walk(c.intro); walk(c.outro);
@@ -79,14 +83,15 @@ function checkSaga(s, E, W) {
     if (t === 'array' ? !Array.isArray(o[k]) : typeof o[k] !== t) { E.push(`${where}: « ${k} » doit être ${t}`); return false; }
     return true;
   };
-  const W0 = `saga ${s.id || '?'}`;
-  ['id', 'name', 'epithet', 'arabic', 'years', 'light', 'lightName', 'tagline'].forEach(k => req(s, k, 'string', W0));
-  req(s, 'order', 'number', W0);
+  const W0 = `saga ${s.id || '?'}`, commun = !!s.commun;
+  (commun ? ['id', 'name'] : ['id', 'name', 'epithet', 'arabic', 'years', 'light', 'lightName', 'tagline']).forEach(k => req(s, k, 'string', W0));
+  if (!commun) req(s, 'order', 'number', W0);
   if (s.light && !D.ELEMENTS[s.light]) E.push(`${W0}: light « ${s.light} » inconnue`);
   req(s, 'heroes', 'object', W0); req(s, 'enemies', 'object', W0);
   req(s, 'codex', 'array', W0); req(s, 'chapters', 'array', W0);
-  req(s, 'intro', 'array', W0); req(s, 'outro', 'array', W0);
-  const heroes = s.heroes || {}, enemies = s.enemies || {};
+  if (!commun) { req(s, 'intro', 'array', W0); req(s, 'outro', 'array', W0); }
+  const heroes = s.heroes || {}, propres = s.enemies || {}, enemies = Object.assign({}, commun ? {} : ennemisCommuns(), propres);
+  Object.keys(propres).forEach(k => { if (!commun && ennemisCommuns()[k]) E.push(`ennemi ${k}: ce nom est déjà celui d'un égrégore commun (src/data/coeur.js)`); });
   const codexIds = new Set((s.codex || []).map(c => c.id));
 
   const checkSkill = (k, where, isHero) => {
@@ -130,12 +135,13 @@ function checkSaga(s, E, W) {
     if (req(h, 'limit', 'object', w)) checkSkill(h.limit, w + '.limit', true);
   }
 
-  for (const [id, e] of Object.entries(enemies)) {
+  for (const [id, e] of Object.entries(propres)) {
     const w = `ennemi ${id}`;
+    if (e.vice !== undefined && (!commun || !D.VICES[e.vice] || e.vice !== id)) E.push(`${w}: « vice » réservé au contenu commun, et doit valoir l'identifiant d'un mal de D.VICES`);
     req(e, 'name', 'string', w);
     if (!D.ART.includes(e.art)) E.push(`${w}: art « ${e.art} » invalide (${D.ART.join('|')})`);
     if (!D.TIERS.includes(e.tier)) E.push(`${w}: tier « ${e.tier} » invalide`);
-    if (typeof e.lvl !== 'number' || e.lvl < 1 || e.lvl > 12) E.push(`${w}: lvl 1–12`);
+    if (typeof e.lvl !== 'number' || e.lvl < (commun ? 0 : 1) || e.lvl > 12) E.push(`${w}: lvl ${commun ? '0 (calé sur le groupe) à 12' : '1–12'}`);
     if (typeof e.hue !== 'number') E.push(`${w}: hue (0–360) manquant`);
     if (!Array.isArray(e.weak) || e.weak.length < 1) E.push(`${w}: weak[] manquant (au moins 1)`);
     (e.weak || []).concat(e.immune || []).forEach(x => { if (!D.ELEMENTS[x]) E.push(`${w}: élément « ${x} » invalide`); });
@@ -154,6 +160,18 @@ function checkSaga(s, E, W) {
     if (!D.CODEX_CATS.includes(c.cat)) E.push(`${w}: cat « ${c.cat} » invalide (${D.CODEX_CATS.join('|')})`);
   });
 
+  if (commun) {
+    // le cœur : chaque œuvre, chaque lame, chaque compagnon de lumière a son texte ; chaque mal a son égrégore
+    const T = s.oeuvres || {}, L = s.lames || {}, A = s.animaux || {};
+    D.OEUVRES.forEach(k => { const o = T[k]; if (!o) { E.push(`œuvre ${k}: texte manquant`); return; } ['name', 'court', 'glyph', 'desc'].forEach(x => req(o, x, 'string', `œuvre ${k}`)); if (k !== 'priere') { req(o, 'menu', 'string', `œuvre ${k}`); if (!Array.isArray(o.lignes) || !o.lignes.length || o.lignes.some(l => typeof l !== 'string')) E.push(`œuvre ${k}: « lignes » manquantes`); } });
+    if (T.aumone && typeof T.aumone.prix !== 'number') E.push('œuvre aumone: « prix » manquant'); if (T.jeune && typeof T.jeune.fin !== 'string') E.push('œuvre jeune: « fin » manquant');
+    Object.keys(T).forEach(k => { if (!D.OEUVRES.includes(k)) E.push(`œuvre ${k}: inconnue de D.OEUVRES`); });
+    Object.keys(D.VICES).forEach(v => { const l = L[v]; if (!l) E.push(`lame ${v}: texte manquant`); else ['name', 'ar', 'couleur', 'texte'].forEach(x => req(l, x, 'string', `lame ${v}`)); if (!propres[v] || propres[v].vice !== v) E.push(`mal ${v}: égrégore manquant (enemies.${v} avec vice: '${v}')`); if (!D.OEUVRES.includes(D.VICES[v].oeuvre)) E.push(`mal ${v}: œuvre inconnue`); });
+    D.ANIMAUX.forEach(a => { const x = A[a]; if (!x) E.push(`compagnon de lumière ${a}: texte manquant`); else ['name', 'ar', 'couleur', 'don', 'effet', 'vient', 'texte'].forEach(k => req(x, k, 'string', `compagnon de lumière ${a}`)); });
+    if ((s.chapters || []).length) E.push(`${W0}: un contenu commun n'a pas de chapitres`);
+    return;
+  }
+
   const chIds = new Set();
   (s.chapters || []).forEach((c, ci) => {
     const w = `chapitre ${c.id || ci}`;
@@ -168,6 +186,9 @@ function checkSaga(s, E, W) {
     }
     const npcIds = new Set(), foeIds = new Set();
     const npcMap = {};
+    if (c.hajj !== undefined && c.hajj !== true) E.push(`${w}: « hajj » vaut true ou s'omet`);
+    if (c.vice !== undefined && (!D.VICES[c.vice] || !c.after || !s.frame)) E.push(`${w}: « vice » annonce le mal du cœur d'une rencontre (chapitre « after » de l'histoire-cadre) et doit figurer dans D.VICES`);
+    if (c.hajj && !s.veillees) E.push(`${w}: le pèlerinage n'est proposé que dans la fiction des veillées`);
     const checkAt = (at, mapId, where) => {
       const spot = Array.isArray(at) ? at[0] : at;
       if (!D.MAPS[mapId]) { E.push(`${where}: carte « ${mapId} » inconnue`); return; }
@@ -228,6 +249,13 @@ function checkSaga(s, E, W) {
             });
             break;
           }
+          case 'vices': {
+            const v = o[1] || {};
+            if (!s.frame) E.push(`${wo}: les maux du cœur ne se dressent que dans l'histoire-cadre`);
+            if (v.bg && !D.BATTLE_BG.includes(v.bg)) E.push(`${wo}: bg « ${v.bg} » invalide`);
+            ['avant', 'aucun', 'tous', 'reste'].forEach(k => { if (v[k] !== undefined) checkOps(v[k], `${wo}.${k}`); });
+            break;
+          }
           case 'battle': {
             const b = o[1] || {};
             if (!Array.isArray(b.group) || !b.group.length || b.group.length > 4) E.push(`${wo}: battle.group de 1 à 4`);
@@ -272,6 +300,16 @@ function checkSaga(s, E, W) {
             let max = 0, maxFree = 0, min = 0;
             P.rounds.forEach((r, ri) => {
               if (typeof r.say !== 'string') E.push(`${wo}: manche ${ri} sans « say »`);
+              let noirV = 0;
+              if (r.noir !== undefined) {
+                const N = r.noir || {}; noirV = N.v === undefined ? 1 : N.v;
+                ['name', 'intro'].forEach(k => { if (typeof N[k] !== 'string') E.push(`${wo}: manche ${ri} : noir.${k} manquant`); });
+                ['say', 'after'].forEach(k => { if (N[k] !== undefined && typeof N[k] !== 'string') E.push(`${wo}: manche ${ri} : noir.${k} doit être une chaîne`); });
+                if (!Array.isArray(N.group) || !N.group.length || N.group.length > 3) E.push(`${wo}: manche ${ri} : noir.group de 1 à 3`);
+                (N.group || []).forEach(g => { if (!enemies[g]) E.push(`${wo}: manche ${ri} : idée noire « ${g} » inconnue`); else if (enemies[g].vice || enemies[g].tier === 'boss') E.push(`${wo}: manche ${ri} : une idée noire n'est ni une idole ni un mal du cœur`); });
+                if (typeof noirV !== 'number' || noirV < 1 || noirV > 2) E.push(`${wo}: manche ${ri} : noir.v vaut 1 ou 2`);
+                if (N.bg && !D.BATTLE_BG.includes(N.bg)) E.push(`${wo}: manche ${ri} : noir.bg invalide`);
+              }
               if (!Array.isArray(r.opts) || r.opts.length < 2 || r.opts.length > 4) { E.push(`${wo}: manche ${ri} : 2 à 4 options`); return; }
               let m = -9, mf = -9, mn = 9;
               r.opts.forEach((x, xi) => {
@@ -282,7 +320,7 @@ function checkSaga(s, E, W) {
                 m = Math.max(m, x.v); if (x.need === undefined) mf = Math.max(mf, x.v); mn = Math.min(mn, x.v);
               });
               if (mf === -9) E.push(`${wo}: manche ${ri} : au moins une option sans « need »`);
-              max += m; maxFree += Math.max(mf, -2); min += mn;
+              max += m + noirV; maxFree += Math.max(mf, -2) + noirV; min += mn + noirV;
             });
             if (P.goal > max) E.push(`${wo}: parley.goal ${P.goal} inatteignable (max ${max})`);
             if (P.goal > maxFree + 1) W.push(`${wo}: parley gagnable seulement avec un savoir (max sans savoir ${maxFree}, +1 si prière)`);
@@ -296,6 +334,15 @@ function checkSaga(s, E, W) {
       });
     };
     if (c.intro) checkOps(c.intro, `${w}.intro`);
+    if (c.enigme !== undefined) {
+      const en = c.enigme, we = `${w}.enigme`;
+      ['id', 'who', 'title', 'signe', 'mot'].forEach(k => req(en, k, 'string', we));
+      if (!heroes[en.who] || !(c.party || []).includes(en.who)) E.push(`${we}: « who » doit être un héros du groupe de ce chapitre`);
+      if (!s.frame) E.push(`${we}: une énigme ne touche qu'un personnage de fiction (histoire-cadre ou veillées), jamais un Compagnon`);
+      if (!D.OEUVRES.includes(en.cure) || en.cure === 'hajj') E.push(`${we}: cure « ${en.cure} » doit être une œuvre (${D.OEUVRES.filter(k => k !== 'hajj').join('|')})`);
+      if (!D.MAPS[c.map].spots.includes('priere')) E.push(`${we}: la carte ${c.map} n'a pas de natte où accomplir l'œuvre`);
+      { const save = state.map; if (en.intro) checkOps(en.intro, `${we}.intro`); if (en.solved) checkOps(en.solved, `${we}.solved`); state.map = save; }
+    }
     if (!Array.isArray(c.objectives) || !c.objectives.length) E.push(`${w}: objectives[] manquant`);
     (c.objectives || []).forEach((o, i) => {
       const wo = `${w}.obj${i}`;
@@ -303,6 +350,7 @@ function checkSaga(s, E, W) {
       if (kinds.length !== 1) E.push(`${wo}: exactement un parmi goto|talk|foe|auto|build`);
       if (o.build !== undefined) { const bd = o.build; if (bd.site !== undefined) { if (!sites.has(bd.site)) E.push(`${wo}: site « ${bd.site} » non ouvert par un ['site', …] auparavant`); } else if (!D.PIECES[bd.piece] || typeof bd.n !== 'number') E.push(`${wo}: build attend { piece, n } ou { site }`); }
       if (!o.auto && typeof o.text !== 'string') E.push(`${wo}: « text » manquant`);
+      if (o.hint !== undefined && typeof o.hint !== 'string') E.push(`${wo}: « hint » doit être une chaîne`);
       if (o.goto !== undefined) checkAt(o.goto, state.map, wo);
       if (o.talk !== undefined) {
         if (!npcIds.has(o.talk)) E.push(`${wo}: pnj « ${o.talk} » inconnu`);

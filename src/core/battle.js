@@ -105,9 +105,32 @@
     // piliers de la Citadelle : ce qui a été bâti pèse dans le combat
     const P = W.pillars(); C.pJust = 1 - 0.03 * (P.justice || 0); C.pLien = 1 + 0.03 * (P.lien || 0);
     C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 6 * (P.priere || 0)); else { e.def.weak.slice(0, Math.floor((P.savoir || 0) / 2)).forEach(w => { e.known[w] = true; }); } });
+    // le cœur : l'épreuve consomme la provision ; ce qui manque pèse. Celui qui languit tient moins.
+    const HC = I.oeuvres.enter(opts, first); C.lack = HC.lack || 0;
+    C.all.forEach(e => { if (e.side === 'hero' && I.oeuvres.afflicted(e.id)) { e.max.hp = Math.round(e.max.hp * 0.75); e.hp = Math.min(e.hp, e.max.hp); } });
     refresh();
     if (first && opts.intro) await banner(I.esc(opts.intro), readTime(opts.intro), true, 'speech intro');
     else if (first) await banner(opts.boss ? `${d0.name} se dresse.` : 'Une emprise se referme…', 1100);
+    if (HC.w) {
+      await banner(`<small>Épreuve de poids ${HC.w} · provision du cœur ${HC.had}</small>${C.lack ? 'Le cœur est lourd' : 'Le cœur est prêt'}`, 1500, false, C.lack ? 'speech foe' : 'speech intro');
+      if (!C.lack) C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 10); });
+    }
+    for (const e of alive('foe')) {
+      const v = e.def.vice; if (!v || !I.oeuvres.hasBlade(v)) continue;
+      const L = I.sagas.coeur.lames[v];
+      await banner(`<small>Lame · ${I.esc(L.ar)}</small>${I.esc(L.name)} tranche ses voiles`, 1700, false, 'speech intro'); I.audio.sfx('slash'); G.flash(L.couleur);
+      e.cut = true; e.veilsMax = 1; e.veils = 1; e.hp = Math.round(e.max.hp * 0.6); e.def.weak.forEach(w => { e.known[w] = true; }); e.flash = 1; fx('slash', e, L.couleur); refresh(); await I.sleep(500);
+    }
+    C.bete = I.oeuvres.animal();
+    if (C.bete && first) {
+      const A = I.sagas.coeur.animaux[C.bete], hs = alive('hero'), fs = alive('foe');
+      await banner(`<small>Compagnon de lumière · ${I.esc(A.don)}</small>${I.esc(A.name)}`, 1300, false, 'speech intro'); I.audio.sfx('light');
+      if (C.bete === 'renard') fs.forEach(e => { const w = e.def.weak.find(x => !e.known[x]); if (w) { e.known[w] = true; floater(e, 'Faille flairée', 'info'); } });
+      else if (C.bete === 'aigle') hs.forEach(e => { e.ct *= 0.5; e.niyya = Math.min(5, e.niyya + 1); floater(e, '+Niyya', 'buff'); });
+      else if (C.bete === 'lion') fs.forEach(e => { e.buffs.atk = { v: -1, t: 3 }; floater(e, 'Force ▼', 'debuff'); });
+      else if (C.bete === 'gazelle') hs.forEach(e => { e.st.regen = 3; e.sakina = Math.min(100, e.sakina + 10); floater(e, 'Régén.', 'buff'); });
+      refresh(); await I.sleep(500);
+    }
     for (const al of (opts.allies || [])) {
       if (!S.flags[al.flag]) continue;
       await banner(`<small>Renfort</small>${I.esc(al.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(500);
@@ -135,7 +158,8 @@
     I.setScene(prev); G.clearParts();
     if (prev === W) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; }
     I.audio.amb(prevAmb || 'vent'); if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.music(C.prevMus || 'silence'); else I.audio.afterJingle = C.prevMus || null; }
-    if (result === 'win') await S.fade('in', 260);
+    const foes0 = C.all.filter(e => e.side === 'foe');
+    if (result === 'win') { await S.fade('in', 260); await I.oeuvres.leave(opts, foes0, result); }
     C = null;
     return result;
   }
@@ -185,8 +209,9 @@
     const skills = h.def.skills.filter(k => k.lvl <= h.lvl && k.cost <= h.sp && !h.st.doute), foes = alive('foe'), allies = alive('hero');
     const low = allies.slice().sort((a, b) => a.hp / a.max.hp - b.hp / b.max.hp)[0];
     const down = C.all.find(x => x.side === 'hero' && !x.alive);
-    if (down) { const rv = skills.find(k => k.revive); if (rv) return { type: 'skill', skill: rv, targets: targetsFor(h, rv, down), boost: 0 }; if ((I.save.data.items.lait || 0) > 0) return { type: 'item', item: 'lait', targets: [down] }; }
-    if (low.hp / low.max.hp < 0.45) { const hl = skills.find(k => k.heal); if (hl) return { type: 'skill', skill: hl, targets: targetsFor(h, hl, low), boost: Math.min(h.niyya, 1) }; if (low.hp / low.max.hp < 0.3) { const it = ['eau', 'dattes', 'pain', 'miel'].find(k => (I.save.data.items[k] || 0) > 0); if (it) return { type: 'item', item: it, targets: D.ITEMS[it].target === 'allies' ? allies : [low] }; } }
+    const fast = I.oeuvres.fasting();
+    if (down) { const rv = skills.find(k => k.revive); if (rv) return { type: 'skill', skill: rv, targets: targetsFor(h, rv, down), boost: 0 }; if (!fast && (I.save.data.items.lait || 0) > 0) return { type: 'item', item: 'lait', targets: [down] }; }
+    if (low.hp / low.max.hp < 0.45) { const hl = skills.find(k => k.heal); if (hl) return { type: 'skill', skill: hl, targets: targetsFor(h, hl, low), boost: Math.min(h.niyya, 1) }; if (low.hp / low.max.hp < 0.3 && !fast) { const it = ['eau', 'dattes', 'pain', 'miel'].find(k => (I.save.data.items[k] || 0) > 0); if (it) return { type: 'item', item: it, targets: D.ITEMS[it].target === 'allies' ? allies : [low] }; } }
     const t = foes.slice().sort((a, b) => (b.broken ? 1 : 0) - (a.broken ? 1 : 0) || a.hp - b.hp)[0];
     if (h.sakina >= 100 && h.def.limit.pow && !(t.def.immune || []).includes(h.def.limit.el)) return { type: 'skill', skill: h.def.limit, limit: true, targets: targetsFor(h, h.def.limit, t), boost: 0 };
     const atks = skills.filter(k => k.pow).concat([FER, lightOf(h)]).filter(k => !(t.tried[k.el] && (t.def.immune || []).includes(k.el)));
@@ -266,7 +291,8 @@
       if (i === 3) {
         const inv = I.save.data.items, ids = Object.keys(D.ITEMS).filter(k => (inv[k] || 0) > 0);
         if (!ids.length) { banner('La besace est vide.', 900); continue; }
-        const j = await listMenu(box, '<b>Objets</b>', ids.map(k => ({ label: D.ITEMS[k].name, sub: '×' + inv[k], desc: D.ITEMS[k].desc })), { back: true, desc: true });
+        const fast = I.oeuvres.fasting();
+        const j = await listMenu(box, '<b>Objets</b>' + (fast ? ' <span class="niyya">jour de jeûne</span>' : ''), ids.map(k => ({ label: D.ITEMS[k].name, sub: fast && D.ITEMS[k].vivre ? 'jeûne' : '×' + inv[k], disabled: fast && D.ITEMS[k].vivre, desc: fast && D.ITEMS[k].vivre ? 'Jour de jeûne : les vivres attendent le coucher du soleil.' : D.ITEMS[k].desc })), { back: true, desc: true });
         if (j < 0) continue; const it = D.ITEMS[ids[j]];
         let tg; if (it.target === 'allies') tg = alive('hero'); else { const pool = C.all.filter(e => e.side === 'hero' && (it.revive ? !e.alive : e.alive)); if (!pool.length) { banner('Personne n’en a besoin.', 900); continue; } const t = await pickTarget(pool, it.name); if (!t) continue; tg = [t]; }
         return { type: 'item', item: ids[j], targets: tg };
@@ -334,7 +360,7 @@
     if (immune) { t.known[el] = 'x'; floater(t, 'Sans effet', 'info'); fx('guard', t, '#889'); return; }
     let d = stat * sk.pow * mult * 2.2 * (50 / (50 + eff(t, 'df'))) * (0.92 + Math.random() * 0.16);
     if (weak) d *= 1.3; if (t.broken) d *= 1.5; if (t.st.garde) d *= 0.5;
-    d *= a.side === 'hero' ? (C.pLien || 1) : (C.pJust || 1);
+    d *= a.side === 'hero' ? (C.pLien || 1) * (1 - 0.08 * (C.lack || 0)) : (C.pJust || 1) * (1 + 0.08 * (C.lack || 0));
     d = Math.max(1, Math.round(d));
     t.hp = Math.max(0, t.hp - d); t.flash = 1; t.shake = 0.25;
     floater(t, d, 'dmg' + (weak ? ' weak' : '') + (t.side === 'hero' ? ' hero' : ''));
@@ -368,8 +394,12 @@
   }
   async function kill(t) {
     if (!t.alive) return; t.alive = false; t.hp = 0; t.st = {}; t.buffs = {};
+    if (t.side === 'foe' && t.def.vice) floater(t, t.cut ? 'TRANCHÉ' : 'Repoussé', 'break');
     if (t.side === 'foe') { I.audio.sfx('break'); for (let i = 0; i < 40; i++) G.spawn({ x: t.x + (Math.random() - 0.5) * t.size * 0.7, y: t.y - Math.random() * t.size, vx: (Math.random() - 0.5) * 40, vy: -20 - Math.random() * 60, life: 1.2 + Math.random(), size: 1 + Math.random(), color: `hsl(${t.def.hue},100%,75%)`, type: 'glyph' }); await tween(t, 'fade', 0, 500); }
-    else { floater(t, 'Éprouvé', 'debuff'); I.audio.sfx('dark'); await I.sleep(300); }
+    else {
+      floater(t, 'Éprouvé', 'debuff'); I.audio.sfx('dark'); await I.sleep(300);
+      if (C.bete === 'phenix' && !C.phenix) { C.phenix = true; await banner('<small>Le Phénix</small>Ce qui a brûlé se relève', 1200, false, 'speech intro'); t.alive = true; t.hp = Math.round(t.max.hp * 0.4); floater(t, 'Relevé', 'heal'); fx('pillar', t, '#ff9a5c'); refresh(); }
+    }
   }
   async function checkPhase(t) {
     const ph = t.def.phases; if (!ph) return;
@@ -509,6 +539,7 @@
           if (act && e.alive) { c.fillStyle = e.color; c.fillRect(x - 10, y + 4, 20, 1); }
         }
       }
+      if (C.bete) { const im = I.oeuvres.bete(C.bete), h0 = C.all.find(e => e.side === 'hero'), bx = Math.round(h0.x + 26), by = Math.round(h0.y - 58 + Math.sin(t * 2.2) * 2); c.globalAlpha = 0.9; c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 30, color: I.sagas.coeur.animaux[C.bete].couleur, a: 0.8 }); if (Math.random() < 0.12) G.spawn({ x: bx + (Math.random() - 0.5) * 20, y: by + 8, vy: -8, life: 1.2, size: 0.6, color: '#fff', type: 'mote' }); }
       return { ambient: '#9a94e0', lights, bloom: 0.34, scan: true, grade: [`hsl(${C.hue},80%,50%)`, 0.14], vignette: 0.62, tilt: false };
     }
   };

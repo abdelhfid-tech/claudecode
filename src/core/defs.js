@@ -63,12 +63,13 @@
   };
 
   D.ITEMS = {
-    dattes: { name: 'Dattes de Médine', desc: 'Rend 40 % de Constance à un compagnon.',              hp: 0.4,  target: 'ally' },
-    eau:    { name: "Outre d'eau",      desc: 'Rend 80 % de Constance à un compagnon.',              hp: 0.8,  target: 'ally' },
-    pain:   { name: "Pain d'orge",      desc: 'Rend 25 % de Constance à tout le groupe.',            hp: 0.25, target: 'allies' },
-    miel:   { name: 'Miel',             desc: 'Dissipe les altérations et rend 30 % de Constance.',  hp: 0.3,  cleanse: true, target: 'ally' },
+    // vivre: true — ce que l'on ne prend pas un jour de jeûne
+    dattes: { name: 'Dattes de Médine', desc: 'Rend 40 % de Constance à un compagnon.',              hp: 0.4,  target: 'ally', vivre: true },
+    eau:    { name: "Outre d'eau",      desc: 'Rend 80 % de Constance à un compagnon.',              hp: 0.8,  target: 'ally', vivre: true },
+    pain:   { name: "Pain d'orge",      desc: 'Rend 25 % de Constance à tout le groupe.',            hp: 0.25, target: 'allies', vivre: true },
+    miel:   { name: 'Miel',             desc: 'Dissipe les altérations et rend 30 % de Constance.',  hp: 0.3,  cleanse: true, target: 'ally', vivre: true },
     musc:   { name: 'Musc',             desc: 'Rend 50 % de Souffle à un compagnon.',                sp: 0.5,  target: 'ally' },
-    lait:   { name: 'Lait chaud',       desc: 'Relève un compagnon éprouvé (50 % de Constance).',    revive: 0.5, target: 'ally' },
+    lait:   { name: 'Lait chaud',       desc: 'Relève un compagnon éprouvé (50 % de Constance).',    revive: 0.5, target: 'ally', vivre: true },
     siwak:  { name: 'Siwâk',            desc: 'Accorde 2 points de Niyya.',                          niyya: 2, target: 'ally' }
   };
 
@@ -79,8 +80,23 @@
     fade: [1, 2], wait: [1, 1], shake: [0, 1], flash: [0, 1], sfx: [1, 1], amb: [1, 1],
     give: [1, 2], join: [1, 1], leave: [1, 1], codex: [1, 1], heal: [0, 0],
     flag: [1, 2], if: [2, 3], tint: [1, 1], light: [1, 1],
-    pray: [0, 1], emote: [2, 2], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1], lore: [1, 1], raid: [0, 1]
+    pray: [0, 1], emote: [2, 2], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1], lore: [1, 1], raid: [0, 1],
+    vices: [0, 1]
   };
+
+  // v5 — le cœur. Les œuvres ; les sept maux du cœur, chacun avec l'œuvre qui forge sa lame et le
+  // nombre de fois qu'il faut l'avoir accomplie ; les compagnons de lumière. Textes : src/data/coeur.js.
+  D.OEUVRES = ['priere', 'dhikr', 'etude', 'jeune', 'aumone', 'visite', 'hajj'];
+  D.VICES = {
+    avidite:     { oeuvre: 'jeune',  need: 3 },
+    orgueil:     { oeuvre: 'hajj',   need: 1 },
+    ostentation: { oeuvre: 'priere', need: 3 },
+    avarice:     { oeuvre: 'aumone', need: 3 },
+    insouciance: { oeuvre: 'etude',  need: 3 },
+    envie:       { oeuvre: 'visite', need: 3 },
+    colere:      { oeuvre: 'dhikr',  need: 3 }
+  };
+  D.ANIMAUX = ['renard', 'aigle', 'phenix', 'lion', 'gazelle'];
 
   // v4 — s'orienter aux étoiles. Huit caps, nommés comme le feront les pilotes arabes : par l'étoile qui
   // s'y lève (à l'est) ou s'y couche (à l'ouest). Ordre : E, SE, S, SO, O, NO, N, NE (secteurs de 45°).
@@ -128,7 +144,7 @@
   // poses des personnages : l'émotion se lit dans le corps, jamais sur un visage (dessin : sprites.js)
   D.POSES = ['prie', 'resolu', 'accable', 'salut', 'surpris', 'garde'];
 
-  D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole'];
+  D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole', 'Cœur'];
 
   root.ISNAD_DEFS = D;
   if (typeof module !== 'undefined' && module.exports) module.exports = D;

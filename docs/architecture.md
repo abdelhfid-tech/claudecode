@@ -27,7 +27,9 @@ flowchart TD
   sprites --> maps[maps.js<br>générateurs de cartes]
   maps --> world[world.js<br>exploration, objectifs,<br>points de reprise]
   script[script.js<br>interprète de scripts] --> world
-  world --> battle[battle.js<br>combat]
+  world --> oeuvres[oeuvres.js<br>le cœur : provision,<br>lames, énigmes]
+  oeuvres --> battle[battle.js<br>combat]
+  world --> battle
   script --> battle
   battle --> ui[ui.js<br>titre, Chaîne, menus,<br>boucle principale]
   world --> ui
@@ -38,8 +40,18 @@ flowchart TD
 ```
 
 Chaque module est une fonction immédiate qui s'attache à `window.ISNAD`. L'ordre de chargement est
-fixé dans `tools/build.js` : `defs`, `base`, `gfx`, `maps`, `script`, `world`, `battle`, `ui`, puis
-`frame.js`, puis les sagas par ordre alphabétique, puis le démarrage (`ISNAD.ui.boot()`).
+fixé dans `tools/build.js` : `defs`, `base`, `gfx`, `sprites`, `maps`, `script`, `world`, `build`,
+`trade`, `oeuvres`, `battle`, `ui`, puis `frame.js`, `music.js`, `caid.js`, `coeur.js`, puis les sagas
+par ordre alphabétique, puis le démarrage (`ISNAD.ui.boot()`).
+
+**Fenêtre visible.** Le canevas garde toujours 384 × 216 pixels logiques. Sur un écran en hauteur,
+la scène n'en montre qu'une fenêtre (`G.view`), que la feuille de style agrandit et que le monde fait
+suivre au héros ; les combats rapprochent les deux camps du centre. Rien d'autre ne change dans le
+rendu, et les plaques posées sur l'image se placent par rapport à cette fenêtre.
+
+**Chemin au doigt.** `W.route` parcourt la grille en largeur jusqu'à la case praticable la plus proche
+du point touché ; `W.goTo` fait suivre ce chemin en coupant les angles quand la ligne droite est libre.
+`W.tap` décide de ce que le toucher veut dire : aller là, parler, ouvrir, s'adresser à une chose.
 
 ## Rendu rétro-HD
 

@@ -235,7 +235,9 @@ ISNAD.registerSaga({
                 { t: "Parce que la poutre n'était pas le toit. Le toit, c'est ce que nous avons bâti ensemble.", el: 'sabr', v: 2, r: "Parole de fils. Nous verrons si elle porte." },
                 { t: "Parce que mes sentinelles tiennent les portes.", el: 'shajaa', v: -1, r: "Alors nous sommes tes prisonniers, non tes alliés. C'est noté." }
               ] },
-              { say: "Chaque tribu reprend sa part : ses puits, ses greniers, sa porte. Ce n'est pas une trahison. C'est un inventaire.", opts: [
+              { say: "Chaque tribu reprend sa part : ses puits, ses greniers, sa porte. Ce n'est pas une trahison. C'est un inventaire.",
+                noir: { name: "Le Soupçon", group: ['noir_soupcon'], intro: "Idir a consulté les autres amghars du regard avant de te répondre. Quelqu'un leur a parlé, cette nuit, et ce qu'il a dit couvre ta voix.", after: "Bien. C'est toi que j'écoute, et non ce qu'on m'a dit de toi." },
+                opts: [
                 { t: "Mon père disait : « Qui partage un édifice n'obtient que des pierres. » Reprenez vos parts : vous aurez cinq tas de pierres, et plus de toit.", el: 'ilm', v: 3, need: 'pere_parole', r: "…Il le disait, oui. Je l'entends encore le dire." },
                 { t: "Un puits partagé en cinq, ce sont cinq trous qui sèchent. Gardons-le entier, et que chacun y ait le même seau.", el: 'adl', v: 2, r: "Le même seau pour tous ? Même pour toi ?" },
                 { t: "Prenez ce que vous voulez, pourvu que la paix demeure.", el: 'rahma', v: -1, r: "Tu donnes trop vite. Ce qu'on cède ainsi ne vaut rien." }
@@ -279,8 +281,16 @@ ISNAD.registerSaga({
 
     /* ============ II — LA SENTINELLE (Justice) ============ */
     {
-      id: 'v_umar', after: 'umar', minLvl: 5, last: true,
+      id: 'v_umar', after: 'umar', minLvl: 5, last: true, hajj: true,
       title: 'La Sentinelle', sub: "Veillée de la Justice · après 'Umar",
+      enigme: { id: 'langueur_ziri', who: 'capitaine', cure: 'priere', title: 'La langueur de Zîrî',
+        signe: "Zîrî languit, sans fièvre ni blessure.",
+        mot: "Ce qui lui manquait : la prière de l'aube, laissée depuis ses nuits de rempart.",
+        intro: [['nar', "Zîrî, mon capitaine, se tient mal depuis des jours. Ni fièvre, ni blessure : le médecin n'a rien trouvé. Il dit seulement qu'il est las, et il l'est."]],
+        solved: [
+          ['say', 'capitaine', "Depuis mes nuits de rempart, je laissais passer l'aube. Je me disais : demain. Je ne suis pas tombé malade, seigneur. Je me suis éloigné, et je portais cela comme un sac."],
+          ['nar', "Il a prié avec nous, au premier rang, sans rien ajouter. Le lendemain, il marchait devant."]
+        ] },
       map: 'citadelle', opts: { time: 'dawn' }, start: 'salle', party: ['caid', 'capitaine', 'geometre'],
       npcs: [
         { id: 'anir', name: 'Anir, la sentinelle', at: 'tour', look: { kind: 'soldat', robe: '#6b5a48', head: '#c9bda8' },
@@ -292,7 +302,8 @@ ISNAD.registerSaga({
         { id: 'imam', name: 'Le vieil imam', at: ['mosquee', 1, 1], look: { kind: 'ancien', robe: '#e9e2d0', head: '#f4f0e6' }, talk: [
           ['say', 'imam', "Ton père le répétait à chaque relève : « Celui qui veille porte le sommeil de tous. Qui lui vole son repos vole la ville entière. »"],
           ['say', 'imam', "Il parlait de la sentinelle. Je crois qu'il parlait aussi de lui."],
-          ['codex', 'sentinelle']
+          ['codex', 'sentinelle'],
+          ['say', 'imam', "Ton capitaine ? Je ne le vois plus à l'aube, depuis ses nuits de rempart. Il dit qu'il rattrapera. On ne rattrape pas ce qu'on a cessé d'attendre : on y revient."]
         ] },
         { id: 'meksa', name: 'Amghar Meksa', at: 'cour', hidden: true, look: { kind: 'berbere', robe: '#3f5a3a', head: '#e6dcc4', cloak: '#2a2a3a' } }
       ],
@@ -400,8 +411,16 @@ ISNAD.registerSaga({
 
     /* ============ III — LE GÉNÉRAL ET LA TOUR (Courage de rengainer) ============ */
     {
-      id: 'v_khalid', after: 'khalid', minLvl: 6, last: true,
+      id: 'v_khalid', after: 'khalid', minLvl: 6, last: true, hajj: true,
       title: 'Le Général et la Tour', sub: 'Veillée du Courage · après Khâlid',
+      enigme: { id: 'bahram_deperit', who: 'geometre', cure: 'visite', title: 'Maître Bahrâm dépérit',
+        signe: "Maître Bahrâm dépérit, sans cause visible.",
+        mot: "Ce qui lui manquait : une porte où il ne frappait plus, celle d'un vieil ami.",
+        intro: [['nar', "Maître Bahrâm ne mange presque plus, et ses mains tremblent sur le compas. Le médecin n'a rien trouvé. Lui dit que c'est l'âge."]],
+        solved: [
+          ['say', 'geometre', "Farrokh et moi ne nous parlions plus depuis l'hiver. Une pente mal calculée, un mot de trop. Vingt ans d'exil ensemble, et je passais devant sa porte sans frapper."],
+          ['nar', "Il a frappé. On a entendu deux vieux hommes rire d'une erreur de calcul. Le soir, ses mains ne tremblaient plus."]
+        ] },
       map: 'citadelle', opts: { time: 'day' }, start: 'porte', party: ['caid', 'geometre', 'capitaine'],
       npcs: [
         { id: 'izem', name: 'Izem, le général', at: 'cour', look: { kind: 'soldat', robe: '#8e2f2a', head: '#e6dcc4', cloak: '#c9a13f' },
@@ -419,6 +438,7 @@ ISNAD.registerSaga({
         ] },
         { id: 'cyprien', name: 'Frère Cyprien, moine-médecin', at: 'jardin', look: { kind: 'moine', robe: '#4a3f38', head: '#4a3f38' }, talk: [
           ['say', 'cyprien', "Je soigne vos blessés et les leurs sur la même natte, seigneur. La fièvre ne demande pas de quel côté du mur on est né."],
+          ['say', 'cyprien', "Maître Bahrâm ? Je l'ai examiné : le corps n'a rien. Mais je ne le vois plus chez Farrokh depuis l'hiver, et ces deux-là ne passaient pas un soir l'un sans l'autre."],
           ['say', 'cyprien', "Si tu vas à l'oasis, rappelle-leur ceci : après la grande crue, il y a six ans, ce sont tes géomètres perses qui ont recompté leurs champs, borne par borne, sans rien demander. Les anciens ne l'ont pas oublié."],
           ['codex', 'geometres']
         ] },
@@ -537,8 +557,15 @@ ISNAD.registerSaga({
 
     /* ============ IV — LA RUMEUR DU PUITS (Miséricorde) ============ */
     {
-      id: 'v_uthman', after: 'uthman', minLvl: 7, last: true,
+      id: 'v_uthman', after: 'uthman', minLvl: 7, last: true, hajj: true,
       title: 'La Rumeur du puits', sub: "Veillée de la Miséricorde · après 'Uthmân",
+      enigme: { id: 'caid_veille', who: 'caid', cure: 'aumone', title: 'Le Caïd ne dort plus',
+        signe: "Le Caïd ne trouve plus le sommeil.",
+        mot: "Ce qui lui manquait : donner. Sa main s'était fermée sur les greniers.",
+        intro: [['nar', "Depuis que le puits baisse, je ne dors plus. Je recompte les greniers dans ma tête jusqu'à l'aube. Le médecin dit que je n'ai rien."]],
+        solved: [
+          ['nar', "J'ai donné sans compter ce que je recomptais chaque nuit. Cette nuit-là, j'ai dormi. Ce n'étaient pas les sacs qui me tenaient éveillé : c'était ma main, fermée dessus."]
+        ] },
       map: 'citadelle', opts: { time: 'dusk' }, start: 'salle', party: ['caid', 'geometre', 'capitaine'],
       npcs: [
         { id: 'yishaq', name: 'Maître Yishaq, caravanier', at: 'souk', look: { kind: 'marchand', robe: '#3d5a6a', head: '#e9e2d0', cloak: '#6b5a48' }, talk: [
@@ -550,6 +577,7 @@ ISNAD.registerSaga({
         { id: 'porteur', name: "Porteur d'eau", at: ['cour', 1, 1], look: { kind: 'homme', robe: '#6b5a48', head: '#c9bda8' }, talk: [
           ['say', 'porteur', "D'où ça vient ? D'un homme qui paie à boire et qui plaint beaucoup le peuple. De belles manches. Il dit qu'il tient ça du palais."],
           ['say', 'porteur', "Moi je porte l'eau, seigneur, je ne la juge pas. Mais un homme qui plaint tant les pauvres sans avoir jamais porté une outre, je m'en méfie."],
+          ['say', 'porteur', "Tu as mauvaise mine, seigneur. Chez nous on dit : celui qui compte ses sacs la nuit ferait mieux d'en ouvrir un le jour."],
           ['codex', 'chambellan']
         ] },
         { id: 'amezyan', name: 'Amezyan, le puisatier', at: ['puits', 0, 1], hidden: true, look: { kind: 'berbere', robe: '#5a4632', head: '#d8cfc0' } },
@@ -611,7 +639,9 @@ ISNAD.registerSaga({
                 { t: "Je bois cette eau comme vous. Tirez-moi un seau.", el: 'sidq', v: 2, r: "Tu bois. D'habitude, les grands ont d'autres citernes." },
                 { t: "Rentrez chez vous. C'est un ordre.", el: 'shajaa', v: -2, r: "Voilà huit jours qu'on rentre chez nous avec des outres vides." }
               ] },
-              { say: "On nous a dit, de bonne source, que les caravaniers ont vendu notre eau à l'oasis, et que les Perses ont payé pour qu'on se taise.", opts: [
+              { say: "On nous a dit, de bonne source, que les caravaniers ont vendu notre eau à l'oasis, et que les Perses ont payé pour qu'on se taise.",
+                noir: { name: "La Rancune", group: ['noir_rancune'], intro: "Trois cents hommes ont soif, et leur soif a trouvé un nom à maudire. Tant qu'elle criera, personne n'entendra parler d'eau.", after: "… Parle. On t'écoute. Mais parle d'eau." },
+                opts: [
                 { t: "Ta bonne source a de belles manches et plaint beaucoup le peuple : c'est mon chambellan. Je le ferai parler devant vous.", el: 'adl', v: 3, need: 'chambellan', r: "De ta maison ? Alors on nous a menés comme des bêtes à l'abreuvoir." },
                 { t: "« De bonne source » : laquelle ? Nommez l'homme. À une parole sans visage, on ne doit rien.", el: 'sidq', v: 2, r: "Un homme du palais… Personne ne sait son nom, à vrai dire." },
                 { t: "Les caravaniers quitteront la ville, si c'est ce qu'il faut.", el: 'rahma', v: -2, r: "Tu vois bien qu'ils sont coupables, puisque tu les chasses !" }
@@ -675,7 +705,7 @@ ISNAD.registerSaga({
 
     /* ============ V — LES PURS (Savoir) ============ */
     {
-      id: 'v_ali', after: 'ali', minLvl: 8, last: true,
+      id: 'v_ali', after: 'ali', minLvl: 8, last: true, hajj: true,
       title: 'Les Purs', sub: "Veillée du Savoir · après 'Alî",
       map: 'citadelle', opts: { time: 'day' }, start: 'ecole', party: ['caid', 'geometre', 'capitaine'],
       npcs: [

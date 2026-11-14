@@ -870,6 +870,7 @@ ISNAD.registerSaga({
                   { t: "Rappeler le nombre de l'armée rangée derrière soi", el: 'shajaa', v: -1, r: "Je sais compter. Ce n'est pas le nombre qui me fera traverser." }
                 ] },
               { say: "On nous a fait dire que ta bannière est un piège : qui s'y rend sera désarmé, puis jugé.",
+                noir: { name: "Le Désespoir", group: ['noir_desespoir'], intro: "Il ne défend plus sa cause : il ne voit plus de porte. Partir serait tout renier, rester serait tout perdre. C'est cela qui répond, et non lui.", after: "Il y aurait donc une porte… Dis toujours." },
                 opts: [
                   { t: "Montrer d'où vient ce bruit : un homme qui vend du grain aux deux rives", el: 'sidq', v: 3, need: 'registre_double', r: "Ma'dân… Il nous jurait qu'il risquait sa vie pour nous prévenir." },
                   { t: "Nommer celui qui la tient : Abû Ayyûb, l'hôte du Messager d'Allah ﷺ", el: 'sidq', v: 2, r: "Abû Ayyûb… Non. Pas lui. Il ne prêterait pas son nom à un piège." },

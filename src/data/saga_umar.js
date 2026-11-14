@@ -464,6 +464,7 @@ ISNAD.registerSaga({
                   { t: "Pas d'accaparement sur notre marché : je peux te fermer le souk dès demain.", el: 'shajaa', v: -1, r: "Tu le peux. Tu auras mon grain, pas mon consentement ; et les autres cacheront le leur plus profond." }
                 ] },
               { say: "Si j'ouvre le premier, les autres attendront que je sois vide, puis vendront au double. Je serai ruiné, et eux riches.",
+                noir: { name: "La Peur", group: ['noir_peur'], intro: "Ghânim serre ses clés. Il se voit déjà ruiné, montré du doigt, seul à avoir ouvert. Rien de cela n'est arrivé, et il le vit déjà.", after: "Je respire. Bien. Dis-moi ce que tu proposes, exactement." },
                 opts: [
                   { t: "Le registre de la Maison de la farine compte quarante sacs sortis sans nom en face. Je ne te demande pas qui te les a vendus : je te demande de les rendre aux tables.", el: 'ilm', v: 3, need: 'registre_farine', r: "Tu sais donc. On m'avait juré que personne ne comptait… Je les rendrai, ceux-là d'abord." },
                   { t: "Tu ne seras ni le premier ni le seul : ma maison a donné ce soir, et j'irai frapper à chaque porte après la tienne.", el: 'adl', v: 2, r: "Si le calife frappe à toutes les portes, nul ne pourra dire qu'il attendait." },

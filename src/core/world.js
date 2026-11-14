@@ -62,7 +62,7 @@
       const fz = $('#fade'); fz.style.transition = 'none'; fz.style.opacity = 0; // le carton prend le relais du fondu
       await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>La prière</h1><p>${I.pick(PRAY_LINES[m])}</p><p class="small">Le groupe est reposé · Sakîna</p><div class="hint">▼</div>`, 6500);
       W.healAll(); W.gainSakina(35); S.flags._prayed = true;
-      if (!S.flags._prayPillar) { S.flags._prayPillar = true; W.pillar('priere', 1); }
+      if (!S.flags._prayPillar) { S.flags._prayPillar = true; W.pillar('priere', 1); await I.oeuvres.gain('priere'); } // la première prière du chapitre nourrit la provision
       if (W.map) W.checkpoint();
     } finally { S.depth--; S.hideDialog(); W.emote('groupe', null); }
   };
@@ -142,7 +142,8 @@
     W.saga = saga; W.ci = ci; W.ch = ch; W.minLvl = saga.frame ? (ch.minLvl || 1) : (MINLVL[ci] || 6);
     const sp = I.save.data.sagas[sagaId] || (I.save.data.sagas[sagaId] = { ch: 0, done: false, flags: {} });
     S.flags = cp ? (cp.flags || {}) : Object.assign({}, sp.flags || {});
-    if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; }
+    if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); }
+    I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
     W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.charSheet(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
     W.foes = (ch.foes || []).map(f => Object.assign({}, f, { map: f.map || ch.map, done: false, placed: false, ph: Math.random() * 6 }));
@@ -162,7 +163,7 @@
     S.depth++; W.lock = false; // verrouille le déplacement pendant l'ouverture
     try {
       await S.fade('in', 500);
-      if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); }
+      if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); await I.oeuvres.openChapter(); }
       if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) { I.build.yields(); await I.trade.resolve(); } }
       if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Touche un endroit pour t’y rendre, un personnage pour lui parler · <b>?</b> : que faire' : '<b>Flèches</b>, <b>ZQSD</b> ou clic : marcher · <b>Entrée</b> : parler · <b>H</b> ou <b>?</b> : que faire · <b>Échap</b> : halte', 10000);
       await W.advance();
@@ -173,7 +174,8 @@
     $('#hud .chap').textContent = W.ch ? W.ch.title : '';
     const tm = W.map && ({ dawn: 'Fajr', day: 'Dhuhr', dusk: 'Maghrib', night: '’Ishâ' })[W.map.env.time];
     $('#hud .sub').textContent = (W.ch ? W.ch.sub : '') + (tm ? '  ·  ◠ ' + tm : '');
-    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="Dirhams"><i>◎</i>${I.trade.dirhams()}</span>` : '');
+    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="Dirhams"><i>◎</i>${I.trade.dirhams()}</span>` : '') + `<span title="Provision du cœur" class="zad"><i>♥</i>${I.oeuvres.zad()}${I.oeuvres.fasting() ? ' <i>☾</i>jeûne' : ''}</span>`;
+    const en = I.oeuvres.enigme(); $('#hud .enig').hidden = !en; if (en) $('#hud .enig').textContent = 'Énigme : ' + en.signe;
     $('#hud .obj').textContent = (o && o.text ? o.text : '') + (o && o.build ? I.build.objectiveText(o.build) : '');
     $('#hud .obj').hidden = !(o && o.text);
   };
@@ -209,6 +211,7 @@
     S.depth++;
     try {
       if (ch.outro) await S.run(ch.outro);
+      await I.oeuvres.endChapter();
       const sp = sv.sagas[saga.id]; sp.flags = S.flags; W.persistHeroes(); sv.cp = null;
       $('#hud').hidden = true;
       if (W.ci + 1 < saga.chapters.length && !(saga.frame && ch.last)) {
@@ -252,7 +255,7 @@
     const c = who && W.chests.includes(who) && !who.open && Math.hypot(who.x - p.x, who.y - p.y) < 30 ? who : W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
-      await S.run([['ask', 'Une natte tournée vers La Mecque, au cœur de l’étoile.', [{ t: 'Prier : le groupe se repose, la Sakîna descend', r: [['pray']] }, { t: 'Sauvegarder la partie', r: [['save']] }, { t: 'Plus tard', r: [] }]]]);
+      await I.oeuvres.natte();
     } else if (I.trade && I.trade.near()) await I.trade.open();
     else if (I.build) await I.build.gather();
   };
@@ -436,7 +439,7 @@
     if (I.trade && W.map.spots.comptoir && !S.flags._trade_test && !W.saga.frame && !W._autoBusy) { S.flags._trade_test = true; W._autoBusy = true; I.trade._autoStep = 0; I.trade._sold = I.trade._bought = 0; I.trade.open().then(() => { W._autoBusy = false; }, e => { log.push('ERR commerce ' + e.message); W._autoBusy = false; }); return; }
     if (o.build && I.debug.noBuild) return;
     if (o.build) { W._autoBusy = true; I.build.autoBuild(o.build); I.build.after().then(() => { W._autoBusy = false; }, e => { log.push('ERR bâtir ' + e.message); W._autoBusy = false; }); return; }
-    if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
+    if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => I.oeuvres.auto()).then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
     const go = (x, y, what) => { if (!W.reach(p.x, p.y, x, y)) log.push(`INACCESSIBLE ${W.saga.id}/${W.ch.id} obj${W.objIndex} ${what} sur ${W.map.id}`); p.x = x; p.y = y; W.resetTrail(); };
     W._autoBusy = true; const done = () => { W._autoBusy = false; };
     if (o.goto) { const s = W.resolve(o.goto, W.map.id, p); go(s[0], s[1], 'goto ' + o.goto); W.complete().then(done, e => { log.push('ERR ' + e.message); done(); }); }
@@ -491,6 +494,8 @@
     W.chests.forEach(ch => { if (ch.map === m.id && ch.placed) list.push({ y: ch.y, ch }); });
     for (let i = W.party.length - 1; i >= 1; i--) { const tr = W.trail[Math.min(W.trail.length - 1, i * 13)]; if (tr) list.push({ y: tr[1] - 0.1, fol: i, tr }); }
     list.push({ y: W.player.y, p: true });
+    const bete = W.saga.frame && I.oeuvres.animal(), btr = bete && W.trail[Math.min(W.trail.length - 1, W.party.length * 13 + 8)];
+    if (btr) list.push({ y: btr[1] - 0.2, bete, tr: btr }); // figure du ciel : seulement dans la fiction (Cité-Miroir, Citadelle)
     list.sort((a, b) => a.y - b.y);
     const lights = [];
     for (const e of list) {
@@ -498,8 +503,9 @@
       else if (e.n) { const n = e.n; drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
       else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = 0.86 + Math.sin(t * 5 + f.ph) * 0.12; c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
-      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol]); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (W.saga.heroes[W.party[e.fol]].look.aura || '#ffe9a8'), a: 0.4 }); }
-      else if (e.p) { const p = W.player; drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0]); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lk.aura || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+      else if (e.bete) { const tr = e.tr, im = I.oeuvres.bete(e.bete, true), bx = Math.round(tr[0] - cx), by = Math.round(tr[1] - cy - im.height - 1 + Math.sin(t * 3) * 1.2); c.globalAlpha = 0.92; if (tr[2] === 2) { c.save(); c.translate(bx, 0); c.scale(-1, 1); c.drawImage(im, -Math.round(im.width / 2), by); c.restore(); } else c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 24, color: (I.sagas.coeur.animaux[e.bete] || {}).couleur || '#ffe9a8', a: 0.7 }); }
+      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null)); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (W.saga.heroes[W.party[e.fol]].look.aura || '#ffe9a8'), a: 0.4 }); }
+      else if (e.p) { const p = W.player; drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null)); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lk.aura || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {

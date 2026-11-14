@@ -173,6 +173,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 .link .tl { font-size: .84em; color: var(--sand); margin: .15em 0; }
 .link .stt { font-size: .68em; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 .link .stt.done { color: var(--c); }
+.link .qt { font-size: .7em; color: var(--dim); letter-spacing: .04em; margin-top: .15em; }
 .link.locked { opacity: .45; }
 .chainfoot { margin-top: 1em; display: flex; gap: .6em; flex-wrap: wrap; justify-content: center; align-items: center; font-size: .84em; color: var(--dim); }
 .chainfoot button, .pill { padding: .3em 1em; border: 1px solid var(--line); background: rgba(10, 8, 20, .7); border-radius: 2em; font-size: .9em; }
@@ -245,6 +246,24 @@ body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 #card.pray h1 { letter-spacing: .3em; } #card.pray p { font-style: italic; max-width: 28em; }
 #card.pray { background: radial-gradient(ellipse at center, rgba(20, 16, 40, .95), rgba(4, 3, 10, 1)); }
 #card.parley h1 { font-size: 1.6em; }
+
+/* ---------- le cœur : œuvres, lames, compagnons de lumière ---------- */
+#hud .enig { margin-top: .3em; display: inline-block; padding: .16em .6em; font-size: .76em; font-style: italic; color: #f7ecd2; background: rgba(10, 8, 20, .6); border-left: 2px solid #c49bff; }
+#hud .pil .zad i { color: #ff9a8a; }
+body.portrait #hud .enig { display: block; background: var(--panel); }
+#card.oeuvre .orn { font-size: 3em; color: var(--gold); line-height: .9; text-shadow: 0 0 40px rgba(233, 200, 119, .5); }
+#card.oeuvre h1 { letter-spacing: .24em; } #card.oeuvre p { font-style: italic; max-width: 28em; } #card.oeuvre p.small { font-style: normal; }
+#card.oeuvre { background: radial-gradient(ellipse at center, rgba(20, 16, 40, .95), rgba(4, 3, 10, 1)); }
+#card.lame img.lame { height: 9.5em; image-rendering: pixelated; filter: drop-shadow(0 0 18px rgba(255, 240, 200, .55)); margin-bottom: .4em; animation: bob 2.4s ease-in-out infinite; }
+#card.lame .ar, #card.animal .ar { font-style: italic; color: var(--dim); }
+#card.animal img.bete { height: 6em; image-rendering: pixelated; filter: drop-shadow(0 0 16px rgba(255, 240, 200, .6)); margin-bottom: .5em; animation: bob 2s ease-in-out infinite; }
+#card.noir h1 { color: #c9b8ff; } #card.noir { background: radial-gradient(ellipse at center, rgba(22, 12, 40, .92), rgba(4, 3, 10, .98)); }
+.lames { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15em), 1fr)); gap: .5em .9em; margin: .6em 0; }
+.lm { display: grid; grid-template-columns: 1.5em 1fr; gap: .7em; align-items: center; opacity: .62; }
+.lm.ok { opacity: 1; } .lm img { height: 3.6em; image-rendering: pixelated; justify-self: center; filter: grayscale(.85) brightness(.7); } .lm.ok img { filter: drop-shadow(0 0 6px rgba(255, 240, 200, .5)); }
+.lm small { color: var(--dim); }
+.stat.bete { grid-template-columns: 5.4em 1fr; } .stat.bete .fig { width: 5.4em; height: auto; } .stat.bete.off { opacity: .55; } .stat.bete.off .fig { display: grid; place-items: center; height: 2.6em; font-family: var(--f-display); font-size: 1.3em; color: var(--dim); border: 1px dashed rgba(255, 255, 255, .2); width: 3.4em; }
+.stat.bete.cur { border-bottom-color: var(--gold); }
 
 /* ---------- bâtir ---------- */
 #buildbtn { position: absolute; right: calc(2% + 5.8em); top: 3%; width: 2.4em; height: 2.4em; border-radius: 6px; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; padding: 0; }

@@ -143,6 +143,27 @@ nouveau (`talk` → `codex`). Dans le pourparler :
 À l'épilogue, `allies: [{ flag, name, hp, veil }]` fait revenir les amis gagnés ; `hp` (facultatif) règle la part
 de Constance ôtée à l'adversaire, 0.08 par défaut ; `veil: 0` laisse ses voiles intacts.
 
+## 5 ter. Le cœur (version 5)
+
+Contenu commun : `src/data/coeur.js`, un appel à `registerSaga` avec `commun: true` et `chapters: []`.
+Il porte `oeuvres` (textes des sept œuvres de `D.OEUVRES`), `lames` et `enemies` (une entrée par mal
+de `D.VICES`, l'égrégore portant `vice: '<id>'`), les idées noires (égrégores ordinaires),
+`animaux` (`D.ANIMAUX`) et un `codex` de catégorie « Cœur ». Ses égrégores ont `lvl: 0` : leur
+niveau se cale sur celui du groupe. Ils sont utilisables dans tous les fichiers de données.
+
+| Champ | Où | Forme | Règle |
+|---|---|---|---|
+| `noir` | une manche de pourparler | `{ name, group: [égrégore], intro, say?, after?, v?, bg? }` | Combat avant le choix de la manche ; `v` (1 par défaut, 2 au plus) s'ajoute à la confiance. Interlocuteur de fiction seulement. |
+| `enigme` | un chapitre de l'histoire-cadre ou des veillées | `{ id, who, cure, title, signe, mot, intro?, solved? }` | `who` est un héros du groupe ; `cure` une œuvre (sauf le pèlerinage) ; la carte doit avoir une natte. |
+| `hajj: true` | un chapitre des veillées | booléen | Propose l'intention du pèlerinage sur la natte ; il s'accomplit à la fin du chapitre. |
+| `vice` | un chapitre « after » de l'histoire-cadre | identifiant de `D.VICES` | Annonce le mal du cœur de la rencontre (affiché sur la Chaîne et dans « Que faire ? »). |
+| `hint` | un objectif | chaîne | Phrase ajoutée à l'aide « Que faire ? » pour cet objectif. |
+| `['vices', { bg?, avant?, aucun?, tous?, reste? }]` | opération, histoire-cadre | scripts | Fait se dresser, deux par deux, les maux non tranchés ; puis joue `tous` ou `reste`. |
+
+Drapeaux posés par le moteur, lisibles par `['if', …]` : `lame_<mal>` (lame forgée),
+`tranche_<mal>` (mal tranché), `sept_tranches`. Les drapeaux `_o_*` sont ceux de la journée et
+s'effacent à chaque chapitre.
+
 ## 6. Musique (`src/data/music.js`)
 
 ```js

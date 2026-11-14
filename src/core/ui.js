@@ -130,8 +130,9 @@
     list.forEach((s, i) => {
       const sp = sv.sagas[s.id] || { ch: 0, done: false }, e = D.ELEMENTS[s.light];
       const vl = (sv.veillees && sv.veillees[s.id] ? ' · veillée du Caïd ✓' : '') + (sv.rencontres && sv.rencontres[s.id] ? ' · rencontre ✓' : '');
+      const qv = I.oeuvres.viceApres(s.id), qt = qv ? `<span class="qt">⚔ ${I.oeuvres.quete(qv)}</span>` : '';
       const st = sp.done ? `<span class="stt done">${e.glyph} ${s.lightName} retrouvée${vl}</span>` : sp.ch > 0 ? `<span class="stt">Chapitre ${sp.ch + 1} / ${s.chapters.length}</span>` : '<span class="stt">Maillon à ouvrir</span>';
-      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">MAILLON ${['I', 'II', 'III', 'IV', 'V'][i] || i + 1} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}</span>`);
+      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">MAILLON ${['I', 'II', 'III', 'IV', 'V'][i] || i + 1} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}</span>`);
       b.type = 'button'; b.style.setProperty('--c', e.color);
       b.onclick = ev => { ev.stopPropagation(); close(); U.startSaga(s); };
       box.appendChild(b); btns.push(b);
@@ -148,6 +149,7 @@
     foot.appendChild(I.el('span', 'pill', `Fidélité à la Chaîne : <b>${sv.isnad.ok}</b> / ${sv.isnad.total}`));
     if (sv.parley && sv.parley.total) foot.appendChild(I.el('span', 'pill', `Pourparlers réussis : <b>${sv.parley.won}</b> / ${sv.parley.total}`));
     if (I.sagas.caid && Object.keys(sv.veillees || {}).length) foot.appendChild(I.el('span', 'pill', 'Citadelle du Caïd : ' + Object.keys(D.PILLARS).map(k => `${D.PILLARS[k].glyph} <b>${sv.citadel[k]}</b>`).join(' · ')));
+    { const d = I.oeuvres.state(), nl = Object.keys(d.lames).length, nv = Object.keys(d.vices).filter(v => d.vices[v] === 'tranche').length; if (nl || nv || d.zad) foot.appendChild(I.el('span', 'pill', `Lames : <b>${nl}</b> / 7 · maux tranchés : <b>${nv}</b> / 7 · ♥ ${d.zad}`)); }
     const sb = I.el('button', '', 'Sauvegarder (natte des Archives)'); sb.type = 'button'; sb.onclick = async ev => { ev.stopPropagation(); close(); await U.saveMenu(); U.showChain(); }; foot.appendChild(sb); btns.push(sb);
     const cb = I.el('button', '', 'Recueil'); cb.type = 'button'; cb.onclick = ev => { ev.stopPropagation(); close(); U.pause('codex', () => U.showChain()); }; foot.appendChild(cb); btns.push(cb);
     const tb = I.el('button', '', 'Écran-titre'); tb.type = 'button'; tb.onclick = ev => { ev.stopPropagation(); close(); U.showTitle(); }; foot.appendChild(tb); btns.push(tb);
@@ -204,7 +206,7 @@
       <p>Cette œuvre est une fiction interactive inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles présentées en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun personnage n’a de visage.</p>
       <p><b>Sources principales.</b> Ibn Hishâm, <em>as-Sîra an-Nabawiyya</em> · at-Tabarî, <em>Târîkh ar-Rusul wa-l-Mulûk</em> · Ibn Sa'd, <em>at-Tabaqât al-Kubrâ</em> · Ibn Kathîr, <em>al-Bidâya wa-n-Nihâya</em> · al-Bukhârî et Muslim, <em>as-Sahîh</em> · Ibn 'Asâkir, <em>Târîkh Dimashq</em>.</p>
       <p><b>Noosphère et égrégore.</b> « Noosphère » vient de Vernadsky et Teilhard de Chardin ; « égrégore » désigne une forme-pensée collective. Le jeu s’en sert comme d’une image pour parler des valeurs partagées et des idoles que les hommes se fabriquent.</p>
-      <p><b>Les veillées de la Citadelle</b> et <b>les rencontres de la Cité-Miroir</b> sont une fiction. La musique est originale.</p>\n      <p>Qu’Allah agrée les Compagnons. Toute erreur est celle des auteurs ; vérifiez auprès des savants et des sources.</p>
+      <p><b>Les veillées de la Citadelle</b> et <b>les rencontres de la Cité-Miroir</b> sont une fiction, comme les sept lames, les sept maux du cœur et les compagnons de lumière : des images pour parler de ce que les œuvres font au cœur. La musique est originale.</p>\n      <p>Qu’Allah agrée les Compagnons. Toute erreur est celle des auteurs ; vérifiez auprès des savants et des sources.</p>
       <p class="small">Fidélité à la Chaîne : ${I.save.data.isnad.ok} / ${I.save.data.isnad.total}</p><div class="hint">▼</div>`);
   };
 
@@ -237,6 +239,7 @@
       const items = [{ label: 'Reprendre', fn: close, show: journal }];
       if (inWorld) items.push({ label: 'Que faire ?', fn() { close(); U.guide(); }, show: () => '<h3>Que faire ?</h3><p>L’objectif expliqué, sa direction, et le chemin montré au sol si tu le demandes. Le même bouton <b>?</b> est toujours en haut de l’écran.</p>' });
       items.push({ cat: 'Le groupe' }, { label: 'Compagnons', fn() {}, show: () => '<h3>Le groupe</h3>' + party() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Piliers', fn() {}, show: pillars });
+      items.push({ cat: 'Le cœur' }, { label: 'Œuvres et lames', fn() {}, show: () => I.oeuvres.paneOeuvres() }, { label: 'Compagnons de lumière', fn: betes, show: () => I.oeuvres.paneAnimaux() });
       items.push({ cat: 'Le savoir' }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` },
         { label: 'Aide du jeu', fn: aide, show: () => '<h3>Aide du jeu</h3><p>Les règles, thème par thème : ' + U.AIDE.map(a => a[0].toLowerCase()).join(', ') + '.</p>' });
       items.push({ cat: 'Réglages' },
@@ -248,6 +251,13 @@
       if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre au dernier objectif atteint, tant que la page reste ouverte. Rien n’est écrit tant que tu n’as pas sauvegardé dans une mosquée ou à la natte des Archives.</p>' });
       $('#menu h2').textContent = 'Halte';
       build(items, { onCancel: close });
+    };
+    const betes = () => {
+      const d = I.oeuvres.state(), A = I.sagas.coeur.animaux, items = [{ label: '◂ Retour', fn: root, show: () => I.oeuvres.paneAnimaux() }];
+      D.ANIMAUX.filter(id => d.animaux[id]).forEach(id => items.push({ label: (d.animal === id ? '● ' : '○ ') + A[id].name, fn() { d.animal = id; I.save.store(); I.audio.sfx('light'); betes(); }, show: () => I.oeuvres.paneAnimaux() }));
+      if (items.length === 1) items.push({ label: 'Aucun pour l’instant', fn() {}, show: () => I.oeuvres.paneAnimaux() });
+      $('#menu h2').textContent = 'Compagnons de lumière';
+      build(items, { onCancel: root });
     };
     const aide = () => {
       const back = mode === 'aide' ? close : root, items = [{ label: '◂ Retour', fn: back, show: () => '<h3>Aide du jeu</h3><p>Choisis un thème.</p>' }];
@@ -273,6 +283,10 @@
     ['Les étoiles', '<p>On s’oriente au ciel. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche : <b>al-Jady</b> (la Polaire) au nord, <b>Suhayl</b> au sud, <b>an-Nasr at-Tâ’ir</b> à l’est et à l’ouest, <b>al-’Ayyûq</b> et <b>al-’Aqrab</b> entre eux. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>'],
     ['Caravanes', '<p>Aux ballots du souk ou du camp, on vend, on achète, et l’on confie une cargaison à une caravane : elle revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue, que des pactes sont noués et que des méharistes la gardent. Si elle est pillée, on lève des renforts, on parle d’abord, et l’on rend à chacun ce qui lui revient.</p>'],
     ['Bâtir', '<p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose case par case, devant soi ou en touchant la case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>'],
+    ['Les œuvres et la provision', '<p>Sur la natte d’une mosquée, on prie, et l’on accomplit les <b>œuvres du jour</b> : le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite ; parfois le pèlerinage. Trois par chapitre au plus, la prière en sus. Chacune ajoute à la <b>provision du cœur</b> (♥, cinq au plus).</p><p>Plus une épreuve est lourde, plus elle en demande : une idole pèse 2, un mal du cœur 3. Qui s’y présente sans provision combat <b>le cœur lourd</b> : il frappe moins fort et reçoit davantage. Le bouton <b>?</b> annonce le poids de l’épreuve qui vient.</p><p>Un jour de <b>jeûne</b>, les vivres de la besace attendent le soir. L’aumône coûte des dirhams. Ces œuvres ne sont pas des sortilèges : le jeu traduit à sa façon ce qu’elles font au cœur.</p>'],
+    ['Lames et maux du cœur', '<p>Sept maux du cœur se tiennent derrière les idoles : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. On les rencontre à la fin de chaque rencontre de la Cité-Miroir, et tous ceux qui restent au dernier chapitre.</p><p>Une œuvre pratiquée forge une <b>lame</b> : trois jeûnes pour le Contentement, trois prières pour la Sincérité, trois aumônes pour la Largesse, trois études pour l’Ardeur, trois visites pour la Bienveillance, trois dhikr pour la Longanimité, un pèlerinage pour l’Humilité. Sans sa lame, un mal est seulement <b>repoussé</b> : il revient. Avec elle, il est <b>tranché</b>.</p><p>La page « Œuvres et lames » de la halte tient le compte.</p>'],
+    ['Idées noires et énigmes', '<p>Dans un pourparler, il arrive que la <b>honte</b>, la <b>peur</b>, le <b>soupçon</b>, la <b>rancune</b> ou le <b>désespoir</b> parlent plus fort que toi. Il faut alors dissiper cette idée noire dans la noosphère : on ne la combat pas contre l’homme, mais pour lui. Après quoi il écoute, et la confiance monte.</p><p>Une <b>énigme du cœur</b> : un compagnon languit sans fièvre ni blessure. Il tient moins bien au combat tant qu’on n’a pas trouvé ce qu’il a cessé de faire. Les anciens donnent des indices ; la bonne œuvre, accomplie sur la natte, le remet debout.</p>'],
+    ['Compagnons de lumière', '<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>'],
     ['La Chaîne', '<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>']
   ];
 
@@ -292,6 +306,12 @@
       const dx = tg.gx - p.x, dy = tg.gy - p.y, d = Math.hypot(dx, dy), st = I.trade && I.trade.bearing();
       out.push(d < 44 ? 'C’est tout près.' : 'C’est ' + CAPS[((Math.round(Math.atan2(dy, dx) / (Math.PI / 4)) % 8) + 8) % 8] + ', à ' + Math.round(d / 16) + ' pas' + (st ? ' : cap sur ' + (st.way ? 'le ' : '') + I.esc(I.trade.starText(st)) + ', l’étoile qui brille au cadran.' : '.'));
     }
+    const fo = o.foe && W.foes.find(x => x.id === o.foe), wt = fo ? I.oeuvres.weight({ group: fo.group, boss: fo.boss }) : 0, zd = I.oeuvres.zad();
+    if (wt) out.push('Cette épreuve pèse <b>' + wt + '</b> ; ta provision du cœur est de <b>♥ ' + zd + '</b>. ' + (zd >= wt ? 'Le cœur est prêt.' : 'Il manque ' + (wt - zd) + ' : une œuvre sur la natte d’une mosquée (dhikr, étude, jeûne, aumône, visite) allégerait le cœur.'));
+    const qv = W.saga && I.oeuvres.viceApres(W.saga.veillees ? W.ch.after : W.saga.id), dq = I.oeuvres.state();
+    if (qv && dq.vices[qv] !== 'tranche' && !dq.lames[qv]) out.push('Au bout de ce maillon, dans la Cité-Miroir, un mal du cœur attend. ' + I.oeuvres.quete(qv) + '. Sans sa lame, il ne sera que repoussé.');
+    const en = I.oeuvres.enigme();
+    if (en) out.push('<em>Énigme du cœur.</em> ' + I.esc(en.signe) + ' Cherche ce qu’il a cessé de faire : la bonne œuvre, sur la natte, le remettra debout. Les anciens ont peut-être remarqué quelque chose.');
     const tired = W.party.some(id => { const h = W.hero(id); return h.hp < I.calc.hero(h.def, h.lvl).hp * 0.5; });
     if (tired) out.push('Le groupe est éprouvé : la natte d’une mosquée, au cœur de l’étoile à huit branches, le repose.');
     else if (o.foe && !S.flags._prayed && W.prayerPts().length) out.push('Avant l’épreuve, une prière sur la natte donne la Sakîna au groupe.');

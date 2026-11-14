@@ -630,6 +630,7 @@ ISNAD.registerSaga({
                   { t: "Citer la règle : « prise à leurs riches, rendue à leurs pauvres ». Elle reste d'abord chez vous.", el: 'ilm', v: 3, need: 'zakat_droit', r: "Rendue à nos pauvres ? On m'avait dit qu'elle partait toute à Médine. Cela, je peux le répéter aux miens." },
                   { t: "Lui rappeler ce qu'il en coûte de se dresser contre Médine.", el: 'shajaa', v: -1, r: "Tu me menaces, et ton armée vient de partir pour le nord. J'ai des yeux." } ] },
               { say: "On m'a assuré que tu céderais. Un homme de ta ville, bien mis, me l'a juré : « Tenez bon, il n'a plus de soldats. »",
+                noir: { name: "La Honte", group: ['noir_honte'], intro: "Dirghâm a baissé la voix. Ce n'est pas le calife qu'il craint : c'est le regard des siens, s'il rentre les mains vides. Tant que cela parlera, il n'entendra rien d'autre.", after: "Tu ne m'as pas humilié devant mes hommes. Je ne l'oublierai pas. Parle." },
                 opts: [
                   { t: "Dire vrai : oui, l'armée est partie ; et non, cela ne change rien à ce qui est dû.", el: 'sidq', v: 2, r: "Tu ne me caches pas ta faiblesse. C'est étrange : cela me rassure plus qu'une vantardise." },
                   { t: "Montrer le feuillet : celui qui te conseille a déjà racheté à vil prix vos chamelles de zakât.", el: 'ilm', v: 3, need: 'registre_courtier', r: "Thâmir… Trente bêtes pour le prix de dix, « en attendant que le calife plie ». Par Allah, c'est lui qui nous tondait." },
