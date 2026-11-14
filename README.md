@@ -52,6 +52,24 @@ dans la Cité-Miroir, qui rend la sixième Lumière, la Patience (*sabr*).
   explique, puis repropose. Le Compagnon ne fait jamais à l'écran autre chose que ce qui est rapporté.
 - **Codex.** Biographies, événements, paroles et idoles, avec leurs sources.
 
+## Version 2 : la parole avant le sabre
+
+- **Pourparlers.** Les crises se dénouent d'abord par la parole : délégations, pactes, arbitrages. Un
+  pourparler se gagne manche après manche ; il peut échouer, et le récit continue autrement (combat de
+  dernier recours, pilier ébranlé, allié perdu). Vingt pourparlers dans le jeu.
+- **Savoir et prière.** Les meilleurs arguments demandent un savoir appris d'un savant, d'un feuillet ou
+  d'un témoin. Chaque carte a une halte de prière : le groupe s'y repose, reçoit la Sakîna et aborde les
+  pourparlers avec sérénité.
+- **Les quatre piliers de la Citadelle** : Prière, Savoir, Justice, Lien. Ils montent et descendent selon
+  ce que le joueur réussit ou manque, et pèsent en combat.
+- **Les veillées du Caïd.** Après chaque saga, un seigneur berbère de fiction affronte dans sa citadelle
+  une crise qui répond à la leçon reçue. Ici les décisions sont libres et leurs conséquences durent.
+  Hommage à *Citadelle* d'Antoine de Saint-Exupéry, dont aucune phrase n'est reprise.
+- **Intrigue politique.** Factions, délégations, communautés aux intérêts divergents traitées avec
+  dignité, hypocrites de fiction issus du camp du héros.
+- **Bande-son originale** synthétisée, dix-huit pistes, coupable séparément ; **rendu** rétro-HD ou 2D
+  simple, au choix ou automatiquement si l'appareil peine.
+
 ## Développer
 
 ```sh
@@ -59,7 +77,8 @@ node tools/validate.js          # valide les sagas contre le schéma (src/core/d
 node tools/build.js             # assemble index.html et dist/isnad.html
 node tools/smoke.js auto        # joue la partie entière automatiquement dans Chromium
 node tools/smoke.js walk        # même partie, mais le héros marche réellement (vraies collisions)
-node tools/smoke.js wrong       # choisit d'abord toutes les mauvaises réponses
+node tools/smoke.js wrong       # choisit d'abord toutes les mauvaises réponses et perd chaque pourparler
+node tools/validate-music.js    # vérifie les dix-huit pistes
 node tools/smoke.js shots       # captures d'écran bureau et mobile dans .smoke/
 ```
 

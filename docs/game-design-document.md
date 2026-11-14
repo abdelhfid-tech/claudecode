@@ -122,8 +122,29 @@ Navigateur de bureau ou mobile. Clavier, souris ou tactile ; pas de manette phys
 ## Périmètre de la V1
 
 Livré : prologue, cinq sagas de trois chapitres, épilogue, codex, sauvegarde locale, test automatique.
-Hors périmètre : équipement, boutique, quêtes annexes, mini-jeux, musique mélodique, voix, autres
+Hors périmètre : équipement, boutique, quêtes annexes, mini-jeux, voix, autres
 langues, manette, sauvegarde en ligne.
+
+## Systèmes de la version 2
+
+**Pourparler.** De 3 à 5 manches ; à chaque manche l'interlocuteur parle, le joueur choisit un argument
+(valeur de −2 à +3, étiqueté d'une vertu). La confiance est la somme des valeurs ; il faut atteindre
+l'objectif. Avoir prié dans le chapitre donne +1 au départ. Un argument marqué d'un savoir n'est
+disponible que si l'entrée de codex correspondante est connue. Réussite : Sagesse égale à 34 + 20 × niveau,
+puis la branche `win`. Échec : la branche `lose`, souvent un combat de dernier recours.
+
+**Halte de prière.** Sur chaque carte, un lieu `priere`. Le groupe est entièrement restauré, la Sakîna
+monte de 35, le pilier Prière gagne 1 (une fois par chapitre), un point de reprise est posé.
+
+**Piliers (0 à 5).** Prière : +6 de Sakîna par niveau au début d'un combat. Savoir : une faille révélée
+d'emblée par tranche de deux niveaux ; +1 toutes les six entrées de codex. Justice : −3 % de dégâts
+reçus par niveau. Lien : +3 % de dégâts infligés par niveau.
+
+**Alliés.** Chaque allié dont le drapeau est levé ouvre le combat : un voile retiré à chaque égrégore et
+8 % de sa Constance.
+
+**Veillées du Caïd.** Cinq chapitres de fiction (`src/data/caid.js`), un après chaque saga, dans la carte
+`citadelle`. Les piliers de la Citadelle persistent d'une veillée à l'autre.
 
 ## Feuille de route proposée
 

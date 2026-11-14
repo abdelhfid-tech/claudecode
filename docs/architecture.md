@@ -109,8 +109,20 @@ Un objectif interrompu en cours de script est rejoué depuis son début.
   automatique : dialogues et choix avancent seuls, les combats sont menés par une IA de test, et
   l'accessibilité à pied de chaque objectif est vérifiée par un parcours en largeur sur la grille.
 
+## Ajouts de la version 2
+
+- **Séquenceur musical** (`src/core/base.js`) : chaque piste est une liste de voix (timbre, volume, notes
+  en texte) ; le séquenceur planifie les notes en avance sur l'horloge audio. Timbres synthétisés :
+  `pulse, square, triangle, saw, sine, pluck, flute, strings, bell, drums`. Bus de musique séparé, écho
+  léger, limiteur en sortie. Les pistes sont dans `src/data/music.js`.
+- **Pourparler, prière, piliers** : opérations `parley`, `pray`, `pillar`, `mus` de l'interprète
+  (`src/core/script.js`) ; état des piliers dans la sauvegarde (par saga, et global pour la Citadelle).
+- **Carte `citadelle`** et lieux `priere`, `ecole`, `quartier` ajoutés aux générateurs (`src/core/maps.js`).
+- **Bascule de rendu** : `G.low` coupe le flou, les nuages, le balayage et abaisse la résolution, à la
+  main (options) ou quand les images s'allongent.
+
 ## Limites connues
 
-- Pas de manette physique, pas de son mélodique, pas de reprise au milieu d'un script.
+- Pas de manette physique, pas de reprise au milieu d'un script.
 - La composition redessine tout l'écran à chaque image ; non mesuré sur appareil modeste.
 - Le canevas n'est pas décrit aux technologies d'assistance.

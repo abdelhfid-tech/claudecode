@@ -19,6 +19,42 @@ prévus par le profil sont faits ») **n'est pas atteint** : aucun humain n'a en
 Le test automatique fait avancer seuls les dialogues et les choix (il prend toujours la bonne option),
 mène les combats avec une IA et saute d'objectif en objectif après avoir vérifié le chemin.
 
+## Version 2 : ce qui a été rejoué
+
+| Test | Résultat |
+|---|---|
+| `node tools/validate.js` sur les cinq sagas, l'histoire-cadre et les veillées | ✓ partout : 20 pourparlers, 28 choix, 26 prières scriptées. |
+| `node tools/validate-music.js` | ✓ 18 pistes, chaque voix dure exactement sa boucle. |
+| `node tools/smoke.js auto` | Prologue, cinq sagas, cinq veillées, épilogue : aucune erreur console. |
+| `node tools/smoke.js walk` | Même partie en marchant réellement : aucun blocage ; 20 pourparlers gagnés sur 20. |
+| `node tools/smoke.js wrong` | Toutes les mauvaises réponses, tous les pourparlers perdus (0 sur 20) : chaque branche d'échec s'exécute et la partie se termine quand même. |
+| Lecture des 18 pistes dans un navigateur de test | Aucune erreur ; niveau mesuré sur chacune ; un limiteur a été ajouté après une crête trop haute. |
+
+## Revue critique : le joueur exigeant
+
+Un amateur rigoureux de JRPG 16 bits dirait ceci, sans complaisance.
+
+**Ce qui tient.** Le système de voiles et de failles oblige à réfléchir ; la Niyya donne un vrai choix à
+chaque tour ; les pourparlers ont un enjeu et un échec qui coûte ; le savoir sert à quelque chose ; le
+récit est tenu et sourcé ; on peut finir le jeu sans jamais être bloqué.
+
+**Ce qui pèche encore.**
+1. L'exploration est peu dense : peu de secrets, pas de quêtes annexes, des cartes sans intérieurs.
+2. Pas d'équipement ni de choix de construction du groupe : la progression est linéaire.
+3. Reprendre après un rechargement rejoue l'objectif en cours depuis son début.
+4. L'équilibrage n'a été éprouvé que par une IA de test, y compris celui des piliers.
+5. Les combats manquent de mise en scène : pas d'animation propre à chaque acte, pas d'intention ennemie annoncée.
+6. La musique est synthétique et n'a jamais été mixée à l'oreille.
+7. Les personnages sont petits et peu expressifs ; les pourparlers se jouent dans une liste, sans mise en scène propre.
+8. Sur téléphone en portrait, la scène est petite.
+
+**Ce que la version 2 corrige.** Les choix ont désormais des conséquences (pourparlers, piliers, veillées) ;
+la guerre n'est plus la seule issue ; il y a une bande-son ; le rendu s'adapte à l'appareil.
+
+**À faire ensuite, par priorité.** (1) relecture historique et religieuse ; (2) test par des joueurs ;
+(3) écoute et réglage de la musique ; (4) densifier l'exploration ; (5) mise en scène des combats et des
+pourparlers ; (6) point de reprise plus fin.
+
 ## Ce qui n'a pas été testé
 
 - **Aucun test humain.** Ni le plaisir de jeu, ni la clarté des règles, ni le rythme, ni la longueur

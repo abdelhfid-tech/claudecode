@@ -20,13 +20,16 @@ toute considération de jeu.
 | `src/data/frame.js` | histoire-cadre | même format, `frame: true` |
 | `src/page.html`, `src/style.css` | gabarit et interface | |
 | `index.html`, `dist/isnad.html` | **générés** | ne jamais les éditer à la main |
-| `docs/schema-saga.md` | contrat de données et bible narrative | à relire avant d'écrire du contenu |
+| `src/data/caid.js` | les veillées du Caïd | même format, `frame: true`, `veillees: true`, un chapitre par saga (`after`) |
+| `src/data/music.js` | bande-son | `ISNAD.registerMusic(nom, piste)`, validée par `tools/validate-music.js` |
+| `docs/schema-saga.md`, `docs/schema-v2.md` | contrat de données et bible narrative | à relire avant d'écrire du contenu |
 
 ## Commandes
 
 ```sh
 node tools/validate.js [fichiers]   # sans argument : tous les src/data/saga_*.js
-node tools/validate.js src/data/frame.js
+node tools/validate.js src/data/frame.js src/data/caid.js
+node tools/validate-music.js         # chaque voix d'une piste dure exactement `beats` temps
 node tools/build.js
 node tools/smoke.js auto            # prologue, cinq sagas, épilogue joués automatiquement
 node tools/smoke.js walk            # idem en marchant réellement (clavier simulé, vraies collisions)
@@ -63,7 +66,16 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
 6. Tous les ennemis sont des égrégores abstraits. Jamais un peuple, une religion ou une personne.
 7. Versets : seulement en « traduction du sens », avec leur référence, et seulement si l'on est certain.
 8. Jamais le nom divin dans un nom de compétence, sur un sprite ou sur un élément que l'on frappe.
-9. Son : ambiances, percussions et bruitages. Aucun instrument mélodique.
+9. Son : ambiances, percussions, bruitages et une bande-son originale synthétisée (`src/data/music.js`),
+   coupable séparément. Aucune voix, aucune récitation, aucun appel à la prière synthétisé.
+10. Aucun groupe n'est un ennemi par nature. Perses, juifs, chrétiens, tribus : des acteurs politiques aux
+    intérêts légitimes, avec des gens d'honneur chez chacun. Jamais de trait attribué à un peuple ou à
+    une religion.
+11. Les hypocrites sont des individus fictifs, issus du camp du héros, au nom inventé. Jamais un
+    Compagnon, jamais un personnage historique.
+12. Ce qui varie est fictif ou local : l'issue d'un pourparler ne change jamais un fait historique.
+13. La prière n'est pas un sortilège : elle s'écrit sobrement et se place aux moments attestés ou aux
+    haltes naturelles. *Citadelle* inspire le ton ; aucune de ses phrases n'est reprise.
 
 ## Qui fait quoi
 

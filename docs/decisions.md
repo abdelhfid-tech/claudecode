@@ -40,8 +40,8 @@ l'agent exécute et l'humain décide : chaque décision ci-dessous est donc une 
 
 ## Forme
 
-- [ ] **D9. Son sans instrument mélodique.** Ambiances, percussions de duff, bruitages. *Écarté* :
-  une bande-son mélodique, même en option.
+- [x] **D9. Son sans instrument mélodique.** *Levée par le décideur* : il a demandé une bande-son
+  (voir D17). Les ambiances, percussions de duff et bruitages restent, et suffisent si la musique est coupée.
 - [ ] **D10. Art et son entièrement générés par le code.** Aucun service payant, aucun asset externe.
   *Pourquoi* : contrainte de l'Artifact, coût nul, pas de droits à gérer. *Écarté* : images ou voix
   générées par un service tiers, qui auraient dépensé des crédits sans accord.
@@ -62,6 +62,46 @@ l'agent exécute et l'humain décide : chaque décision ci-dessous est donc une 
 - [ ] **D16. Réflexion et exécution dans la même session.** Écart à l'invariant 1, imposé par le délai ;
   la spécification a tout de même été écrite en fichiers avant l'exécution.
 
+## Version 2 (demande du décideur reçue après la première livraison)
+
+- [ ] **D17. Bande-son mélodique.** Dix-huit pistes originales synthétisées par le code, activées par
+  défaut, coupables séparément du reste du son. Aucune mélodie existante n'est reprise. *Écarté* :
+  musique générée par un service payant (autorisation non demandée).
+- [ ] **D18. La parole avant le sabre.** Vingt pourparlers ; l'échec mène à un combat de dernier recours
+  (toujours contre un égrégore) ou ébranle un pilier. Un pourparler réussi rapporte autant qu'un combat.
+- [ ] **D19. Ce qui varie est fictif ou local.** L'issue d'un pourparler porte sur un clan de fiction, un
+  quartier, un convoi, ou sur la manière dont l'événement connu est atteint. Les actes des Compagnons
+  restent ceux des sources.
+- [ ] **D20. Les groupes aux intérêts divergents sont des acteurs politiques, jamais des ennemis par
+  nature.** Perses, juifs, chrétiens, tribus : chacun a des craintes légitimes et des gens d'honneur.
+  À Jérusalem, le patriarche et l'ancien de Tibériade « disent vrai tous les deux, chacun depuis sa peine ».
+- [ ] **D21. Les hypocrites sont des individus fictifs issus du camp du héros** (un courtier, un commis,
+  un intendant, un colporteur, un notable, un chambellan), au nom inventé. Jamais un personnage historique.
+- [ ] **D22. Alliances de parenté.** Le contrat de données ne les admet que comme un pacte entre clans
+  évoqué en une phrase, hors champ. **Le contenu actuel n'en comporte aucune** : les alliances du jeu
+  passent par des pactes, des arbitrages et des travaux communs. À trancher par le décideur.
+- [ ] **D23. *Citadelle* comme inspiration, pas comme source.** Le ton, la voix d'un seigneur du désert,
+  quelques motifs (la sentinelle, le puits, le géomètre, le silence). Aucune phrase reprise, aucun épisode
+  repris tel quel. Hommage dit au codex et aux crédits.
+- [ ] **D24. Les veillées du Caïd.** Un maillon de fiction entre les Compagnons et Idris ; une veillée
+  après chaque saga ; décisions libres dont les conséquences durent sur les quatre piliers.
+- [ ] **D25. La prière comme halte.** Elle repose le groupe, donne la Sakîna et la sérénité dans la
+  parole. Écrite sobrement, placée aux moments attestés ou aux haltes ; aucun appel à la prière synthétisé.
+- [ ] **D26. Rendu.** Rétro-HD par défaut, bascule en 2D simple à la main ou d'elle-même si l'appareil peine.
+
+## Autorisations et accès mis de côté jusqu'au retour du décideur
+
+Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
+
+1. **Services payants de génération** (voix, musique, images) : non utilisés. Tout est produit par le code.
+2. **Partage ou passage en public de l'Artifact** : il reste privé.
+3. **Demande de fusion et hébergement public** (GitHub Pages) : seule la branche de travail est poussée.
+4. **Citation directe de *Citadelle*** : œuvre encore protégée en France ; aucune citation.
+5. **Relecture par un spécialiste** du contenu historique et religieux : à organiser par le décideur.
+6. **Relance des agents interrompus.** Une limite d'usage a coupé quatre agents en cours de route (sagas
+   de 'Umar et de 'Alî, veillées, documentation). Leurs fichiers étaient valides et ont été intégrés et
+   testés, mais leurs auteurs n'ont pas rendu leur relecture finale : ces trois contenus sont à relire en priorité.
+
 ## Points de divergence historique assumés
 
 Chacun est signalé au joueur dans le codex. À relire en priorité par le validateur.
@@ -77,6 +117,12 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
 | H7 | **Siège de 'Uthmân.** Origine disputée des lettres, détails divergents chez les historiens anciens. | Aucun coupable nommé ; paroles introduites par « On rapporte ». |
 | H8 | **Chronologie non linéaire de la saga de 'Umar** (chapitre 1 en 18 H, chapitre 2 en 16 H). | Annoncé par la narration. |
 | H9 | **Groupes à quatre héros.** Abû 'Ubayda, mort en 18 H, cède la place à 'Abd ar-Rahmân ibn 'Awf ; 'Ammâr, tombé à Siffîn, à Qays ibn Sa'd. | Écart au gabarit de trois héros, pour respecter la chronologie. |
+| H11 | **Jabala ibn al-Ayham**, roi ghassânide, et l'égalité devant le droit. Récit célèbre à la chaîne discutée. | « On rapporte » ; l'alliance du roi est perdue, comme dans les récits ; le pourparler porte sur un chef de fiction. |
+| H12 | **Le retour de familles juives à Jérusalem.** at-Tabarî transmet une clause contraire ; des traditions plus tardives (Geniza du Caire) rapportent le retour. | Les deux versions sont dites au codex ; la scène est introduite par « On rapporte ». |
+| H13 | **'Amr ibn 'Abd al-Masîh à al-Hîra.** L'entretien avec Khâlid est rapporté par at-Tabarî, ses détails sont incertains. | Raconté ; le pourparler porte sur un économe de fiction. |
+| H14 | **La lettre à Mâlik al-Ashtar**, attribuée à 'Alî dans le *Nahj al-Balâgha*. | « On rapporte » ; attribution signalée au codex. |
+| H15 | **Le pacte de Chypre, les griefs des gens d'Égypte et la lettre** dont l'origine reste disputée. | Aucun coupable nommé : « une main qu'on ne nomma jamais ». |
+| H16 | **La confirmation du pacte de Najrân** par Abû Bakr. | Scène de parole sobre. |
 | H10 | **Verset 3:144 et paroles d'Abû Bakr**, cités en traduction du sens. | À vérifier mot à mot. |
 
 ## Questions ouvertes pour le décideur

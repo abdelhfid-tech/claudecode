@@ -2643,7 +2643,7 @@ body.portrait .mlist { max-height: 12em; }
   U.unlockCodex = function (id) {
     const cid = W.saga.id + '/' + id, sv = I.save.data; if (sv.codex.includes(cid)) return; const e = U.codexEntry(cid); if (!e) return;
     sv.codex.push(cid); S.toast(`Codex : <b>${I.esc(e.title)}</b>`);
-    const sp = sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} }); sp.kn = (sp.kn || 0) + 1; if (sp.kn % 3 === 0) W.pillar('savoir', 1);
+    const sp = sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} }); sp.kn = (sp.kn || 0) + 1; if (sp.kn % 6 === 0) W.pillar('savoir', 1);
   };
 
   /* ---------- menu de pause ---------- */

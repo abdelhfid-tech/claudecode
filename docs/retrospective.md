@@ -74,6 +74,17 @@ lecteurs d'écran restent à faire. Le risque dominant est resté hors des modul
 - Réserver la dernière demi-heure à un humain qui joue, plutôt qu'à des finitions.
 - Faire relire chaque saga par un second agent chargé uniquement de vérifier sources et citations.
 
+## Ce que la version 2 a enseigné
+
+- **Un changement de cap en cours de route s'absorbe si le contenu est une donnée.** Pourparlers, prière,
+  piliers et musique ont été ajoutés au contrat, au validateur et au moteur, puis les cinq sagas ont été
+  enrichies en parallèle sans réécriture.
+- **Les tests automatiques sont ce qui a permis de reprendre.** Une limite d'usage a coupé quatre agents ;
+  au redémarrage, le validateur et les trois modes du test ont suffi à savoir que tout tenait.
+- **Ce qui a coûté.** L'interruption a fait dépasser le délai de trois heures ; trois contenus n'ont pas
+  eu la relecture finale de leur auteur ; la documentation de la version 2 a été écrite en fin de course.
+- **Piège.** Lancer sept agents à la fois épuise le quota d'un coup : en lancer moins, ou échelonner.
+
 ## Suite proposée
 
 1. Validation de `decisions.md` par le décideur.

@@ -21,6 +21,16 @@ La question était : peut-on obtenir un rendu « rétro-HD » crédible et cinq 
 asset, dans un seul fichier ? Réponse démontrée par le produit lui-même : oui. Le test automatique
 joue le prologue, les cinq sagas et l'épilogue de bout en bout sans erreur.
 
+## Risques ajoutés par la version 2
+
+| Risque | Prob. | Impact | Parade mise en œuvre |
+|---|---|---|---|
+| Représenter des groupes religieux ou ethniques comme des adversaires | moyenne | fort | Règle écrite dans le contrat (`docs/schema-v2.md` §2) : aucun groupe ennemi par nature, intérêts légitimes, gens d'honneur chez chacun ; tous les ennemis de combat restent des égrégores ; les hypocrites sont des individus fictifs du camp du héros. Relecture humaine encore à faire. |
+| Droits sur *Citadelle* (œuvre protégée en France) | faible | moyen | Inspiration de ton seulement ; aucune phrase ni épisode repris ; hommage explicite. |
+| Musique jamais écoutée par un humain | forte | moyen | Chaque piste est validée mesure par mesure et jouée dans un navigateur de test (aucune erreur, niveaux mesurés, limiteur en sortie) ; interrupteur séparé. Le jugement de l'oreille reste à faire. |
+| Contenu écrit en parallèle puis interrompu par une limite d'usage | réalisée | moyen | Les fichiers étaient valides sur le disque ; ils ont été assemblés et rejoués par les trois tests. Trois contenus sans relecture finale de leur auteur : à relire en priorité. |
+| Durée et volume allongés (pourparlers, veillées) | moyenne | faible | Chaque veillée est autoportante et courte ; un pourparler rapporte autant qu'un combat. |
+
 ## Verdict
 
 Aucun risque classé « tue le projet » n'est sans parade, mais la parade du risque 1 est incomplète

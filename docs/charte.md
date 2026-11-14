@@ -92,7 +92,7 @@ Trois familles, toutes synthétisées par le code :
   cyber, veille. Ils accompagnent l'écran-titre et les combats.
 - **Bruitages** : validation, pas, coup, voile brisé, lumière, soin, porte, vague, parasite.
 
-**Aucun instrument mélodique**, aucune voix, aucune récitation. Le son peut être coupé depuis
+**Bande-son originale synthétisée** (version 2, à la demande du décideur) : dix-huit pistes, timbres proches de l'oud, du ney, des cordes et des percussions de duff, dans l'esprit des consoles 16 bits ; un motif de cinq notes, celui de la Chaîne, revient d'une piste à l'autre. Aucune voix, aucune récitation, aucun appel à la prière synthétisé. Le son peut être coupé depuis
 l'écran-titre et le menu.
 
 ## Icône et captures
