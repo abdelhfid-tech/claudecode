@@ -17,6 +17,27 @@ const mode = process.argv[2] || 'all';
 const only = process.argv[3] ? process.argv[3].split(',') : null;
 [PROMO, IMG, OUT].forEach(d => fs.mkdirSync(d, { recursive: true }));
 
+/* ---------- tribus, peuples et alliés : qui l'on rencontre ----------
+   Le nom et l'apparence viennent des données. La présentation reprend le début d'une entrée du Recueil
+   (recueil : [saga, id]) ou, à défaut, une ligne neutre (texte). f : personnage de fiction. */
+const GROUPES = [
+  { titre: 'Les Ansâr de Médine', texte: 'Les « Auxiliaires » : les gens de Médine, Aws et Khazraj, qui ont ouvert leurs maisons et leurs palmeraies aux Émigrés venus de La Mecque.',
+    gens: [['abubakr', 'hubab'], ['abubakr', 'bashir'], ['abubakr', 'ancien'], ['ali', 'abuayyub']] },
+  { titre: 'Les tribus d’Arabie', recueil: ['abubakr', 'ridda'], n: 1,
+    gens: [['abubakr', 'delegue'], ['abubakr', 'dirgham', 'f'], ['umar', 'bedouin'], ['umar', 'fazari'], ['umar', 'suraqa'], ['khalid', 'bedouin'], ['khalid', 'chamelier']] },
+  { titre: 'Les Arabes chrétiens : Ghassân, al-Hîra, Najrân', recueil: ['khalid', 'arabes_chretiens'], n: 1,
+    gens: [['umar', 'jabala'], ['khalid', 'wahb', 'f'], ['khalid', 'amr_hira'], ['abubakr', 'najran'], ['khalid', 'econome', 'f'], ['khalid', 'ermite']] },
+  { titre: 'Rome et le Shâm', texte: 'L’empire romain d’Orient tient le Shâm : des garnisons, des marchands, des moines, et à Îliyâ’ (Jérusalem) le patriarche Sophrone, qui ne veut remettre la ville qu’au calife en personne.',
+    gens: [['umar', 'sophrone'], ['umar', 'garde'], ['umar', 'moine'], ['khalid', 'marchand'], ['khalid', 'ancien_bourg', 'f'], ['uthman', 'pretre']] },
+  { titre: 'La Perse', recueil: ['umar', 'hurmuzan'], n: 1, gens: [['umar', 'hurmuzan'], ['caid', 'farrokh', 'f']] },
+  { titre: 'Koufa et l’Irak', recueil: ['ali', 'koufa'], n: 2, gens: [['ali', 'kumayl'], ['ali', 'shurayh'], ['ali', 'qanbar'], ['ali', 'ashtar'], ['ali', 'ibnkawwa']] },
+  { titre: 'L’Égypte et la mer', recueil: ['uthman', 'flotte'], n: 2, gens: [['uthman', 'ibnsad'], ['uthman', 'charpentier'], ['uthman', 'vigie'], ['uthman', 'ancien_ile']] },
+  { titre: 'Les gens de la Citadelle', texte: 'Autour du Caïd : les amghars des tribus berbères, un général, un caravanier, un moine-médecin, et des géomètres perses à qui son père donna asile. Tous sont de fiction.',
+    gens: [['caid', 'idir', 'f'], ['caid', 'meksa', 'f'], ['caid', 'amezyan', 'f'], ['caid', 'warsen', 'f'], ['caid', 'izem', 'f'], ['caid', 'yishaq', 'f'], ['caid', 'cyprien', 'f']] },
+  { titre: 'Ceux qui parlent des deux côtés', texte: 'Dans chaque saga, un personnage inventé dit à chacun ce qu’il veut entendre et sert son propre compte. Il vient toujours du camp du héros. Ce n’est jamais un Compagnon ni un personnage historique.',
+    gens: [['abubakr', 'thamir', 'f'], ['umar', 'hazim', 'f'], ['khalid', 'ghalib', 'f'], ['uthman', 'akhbar', 'f'], ['ali', 'madan', 'f'], ['caid', 'chambellan', 'f']] }
+];
+
 /* ---------- outillage commun ---------- */
 async function openGame(browser, errors) {
   const ctx = await browser.newContext({ viewport: { width: 1536, height: 864 }, deviceScaleFactor: 1 });
@@ -271,8 +292,12 @@ async function mobile(browser, errors) {
 async function sprites(browser, errors, T) {
   console.log('Sprites');
   T = T || await openGame(browser, errors);
-  const data = await T.ev(() => {
+  const data = await T.ev((PNJ) => {
     const I = window.ISNAD, G = I.gfx, D = window.ISNAD_DEFS, out = {};
+    // tribus, peuples et alliés : le grand sprite de chaque personnage cité
+    PNJ.forEach(([sid, id]) => { const s = I.sagas[sid]; let n = null; s.chapters.forEach(c => (c.npcs || []).forEach(x => { if (!n && x.id === id) n = x; })); if (!n) return;
+      const look = n.hero ? Object.assign({ kind: 'compagnon' }, s.heroes[n.hero].look) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look);
+      out['n-' + sid + '-' + id] = G.charGrand(look, 0, 0).toDataURL(); });
     const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); x.imageSmoothingEnabled = false; return [c, x]; };
     const front = (look) => { const [c, x] = mk(16, 24); x.drawImage(G.charSheet(look), 0, 0, 16, 24, 0, 0, 16, 24); return c.toDataURL(); };
     const sagas = I.sagaList.slice().sort((a, b) => a.order - b.order);
@@ -286,7 +311,7 @@ async function sprites(browser, errors, T) {
       out['g-' + s.id + '-' + id] = G.charGrand(look, 0, 0).toDataURL(); out['gl-' + s.id + '-' + id] = G.charGrand(look, 1, 0).toDataURL();
       if (id === s.id) D.POSES.forEach(p => { out['g-' + s.id + '-' + id + '-' + p] = G.charGrand(look, 0, 0, p).toDataURL(); }); }));
     // gens de rencontre : un par type
-    const KIND = { homme: { robe: '#8a7355' }, ancien: { robe: '#6b5a48', head: '#e9e2d0' }, soldat: { robe: '#7a4a32' }, romain: { robe: '#8a2f2a' }, perse: { robe: '#2f5d6d', head: '#e9d9a8' }, moine: { robe: '#4a3d32' }, enfant: { robe: '#a8663c' }, marin: { robe: '#2f4a7a' }, cyber: { robe: '#2a3048', head: '#1c2030' }, savant: { robe: '#e9e2d0', head: '#f4f0e6' }, marchand: { robe: '#7b5a3a' }, berbere: { robe: '#2f4a7a', head: '#1f2f55' } };
+    const KIND = { homme: { robe: '#8a7355' }, ancien: { robe: '#6b5a48', head: '#e9e2d0' }, soldat: { robe: '#7a4a32' }, romain: { robe: '#8a2f2a' }, perse: { robe: '#2f5d6d', head: '#e9d9a8' }, moine: { robe: '#4a3d32' }, enfant: { robe: '#a8663c' }, marin: { robe: '#2f4a7a' }, cyber: { robe: '#2a3048', head: '#1c2030' }, savant: { robe: '#e9e2d0', head: '#f4f0e6' }, marchand: { robe: '#7b5a3a' }, berbere: { robe: '#2f4a7a', head: '#1f2f55' }, bedouin: { robe: '#7a6a52', head: '#e9dcc0', cloak: '#4a3626', trim: '#b5462f' } };
     Object.entries(KIND).forEach(([k, l]) => { out['k-' + k] = front(Object.assign({ kind: k }, l)); out['gk-' + k] = G.charGrand(Object.assign({ kind: k }, l), 0, 0).toDataURL(); });
     // égrégores : chacun à sa taille de combat
     sagas.forEach(s => Object.entries(s.enemies || {}).forEach(([id, e]) => { const sc = e.tier === 'boss' ? 3 : e.tier === 'elite' ? 2 : 1; out['e-' + s.id + '-' + id] = G.enemy(e.art, e.hue, sc, e.seed).toDataURL(); }));
@@ -296,7 +321,7 @@ async function sprites(browser, errors, T) {
     // rosace
     { const [c, x] = mk(200, 200); x.imageSmoothingEnabled = true; I.maps.drawRosette(x, { x: 100, y: 100, R: 96, n: 8 }); out['rosace'] = c.toDataURL(); }
     return out;
-  });
+  }, GROUPES.reduce((a, g) => a.concat(g.gens), []));
   let n = 0;
   for (const [k, url] of Object.entries(data)) { fs.writeFileSync(path.join(IMG, k + '.png'), Buffer.from(url.split(',')[1], 'base64')); n++; }
   console.log('  ✓', n, 'sprites');
@@ -357,7 +382,7 @@ function livret() {
       </article>`; };
   const troupe = (s, titre) => `<div class="troupe"><h3>${titre}</h3>${fiche(s, s.id, true)}<div class="suite">${Object.keys(s.heroes).filter(id => id !== s.id).map(id => fiche(s, id, false)).join('')}</div></div>`;
   R.PERSONNAGES = five.map((s, i) => troupe(s, 'Maillon ' + ROM[i] + ' · ' + esc(s.lightName))).join('') + troupe(sagas.caid, 'La Citadelle') + troupe(sagas.idris, '2084 · La Cité-Miroir');
-  const GENS = [['ancien', 'ancien'], ['savant', 'savant'], ['marchand', 'marchand'], ['soldat', 'soldat'], ['berbere', 'Berbère'], ['perse', 'Perse'], ['romain', 'Romain'], ['moine', 'moine'], ['marin', 'marin'], ['enfant', 'enfant'], ['cyber', '2084']];
+  const GENS = [['ancien', 'ancien'], ['savant', 'savant'], ['marchand', 'marchand'], ['bedouin', 'homme des tribus'], ['soldat', 'soldat'], ['berbere', 'Berbère'], ['perse', 'Perse'], ['romain', 'Romain'], ['moine', 'moine'], ['marin', 'marin'], ['enfant', 'enfant'], ['cyber', '2084']];
   R.GENS = GENS.map(([k, l]) => `<figure><img class="px" src="img/gk-${k}.png" alt="" width="32" height="48"><figcaption>${l}</figcaption></figure>`).join('');
   // les idoles : le nom vient des données, la légende résume la description du Recueil
   const IDOLES = [['abubakr', 'deni', 'le deuil qui refuse'], ['abubakr', 'clan', 'l’esprit de corps tribal'], ['abubakr', 'kadhdhab', 'la contrefaçon'], ['umar', 'aigle', 'l’orgueil d’empire'], ['umar', 'trone', 'la tyrannie'], ['khalid', 'peur_nombre', 'l’issue réduite à un décompte'],
@@ -372,6 +397,14 @@ function livret() {
   const cost = c => Object.keys(c).length ? Object.entries(c).map(([k, n]) => `${D.MATS[k].name} × ${n}`).join(', ') : 'La peine de creuser';
   const icon = p => p.tile ? `t-${p.tile}` : p.obj ? `o-${p.obj}` : 'rosace';
   let grp = ''; R.PIECES = Object.values(D.PIECES).map(p => (p.group !== grp ? (grp = p.group, `<tr><th colspan="3" style="padding-top:1.3em;color:var(--zellige)">${esc(p.group)}</th></tr>`) : '') + `<tr><td class="n"><img class="ic px" src="img/${icon(p)}.png" alt="">${esc(p.name)}</td><td style="white-space:nowrap">${cost(p.cost)}</td><td>${esc(p.desc)}</td></tr>`).join('');
+  // tribus, peuples et alliés
+  const pnj = (sid, id) => { let n = null; sagas[sid].chapters.forEach(c => (c.npcs || []).forEach(x => { if (!n && x.id === id) n = x; })); if (!n) throw new Error('personnage introuvable : ' + sid + '/' + id); return n; };
+  const groupe = (g, court) => { const c = g.recueil ? sagas[g.recueil[0]].codex.find(x => x.id === g.recueil[1]) : null; if (g.recueil && !c) throw new Error('entrée du Recueil introuvable : ' + g.recueil.join('/'));
+    const txt = c ? debut(c.text, g.n || 1) : g.texte, src = c ? `<p class="src">Recueil : ${esc(c.title)}${c.src ? ' · d’après ' + esc(c.src) : ''}</p>` : '';
+    const figs = g.gens.map(([sid, id, f]) => `<figure><img class="px" src="img/n-${sid}-${id}.png" alt="" width="32" height="48"><figcaption>${court && f ? '<i>◆</i> ' : ''}${esc(pnj(sid, id).name)}${!court && f ? '<i>fiction</i>' : ''}</figcaption></figure>`).join('');
+    return court ? `<article><b>${esc(g.titre)}</b><div>${figs}</div></article>` : `<article class="peuple"><h3>${esc(g.titre)}</h3><p>${esc(txt)}</p>${src}<div class="gens-l">${figs}</div></article>`; };
+  R.PEUPLES = GROUPES.map(g => groupe(g, false)).join('');
+  R.PEUPLESPLANCHE = GROUPES.map(g => groupe(g, true)).join('');
   R.PALETTE = Object.values(D.PIECES).map(p => `<figure><img class="px" src="img/${icon(p)}.png" alt=""><figcaption>${esc(p.name)}</figcaption></figure>`).join('');
   R.VEILLEES = sagas.caid.chapters.map(c => `<tr><td class="n">${esc(c.title)}</td><td>${esc(c.sub)}</td></tr>`).join('');
   let src = fs.readFileSync(path.join(PROMO, 'livret.src.html'), 'utf8');

@@ -53,6 +53,15 @@
     }
   };
   HEADS.litham.u = HEADS.imama.u;
+  // étoffe de tête des gens du désert : un voile retenu par un cordon, qui retombe sur les épaules (stylisation)
+  HEADS.keffieh = {
+    d: ['................', '.....tTTTTt.....', '....TTTTTTtu....', '...aAAAAAAAAa...', '...TTTtTTTTtu...', '..tTuuuuuuuutu..',
+        '..TTuVVVVVVutu..', '..TtuVVVVVVutu..', '..TtuVVVVVVutu..', '..TTtuVVVVutuu..', '..tTttuvvuttuu..'],
+    l: ['................', '.....tTTTTt.....', '....TTTTTTtu....', '...AAAAAAAAaa...', '...TTTtTTTTtu...', '..tuuuuuTTttu...',
+        '..VVVVVuTTtttu..', '..VVVVVuTtttuu..', '..VVVVVuTTttuu..', '...vVVvuTtttuu..', '....vvutTttuuu..'],
+    u: ['................', '.....tTTTTt.....', '....TTTTTTtu....', '...aAAAAAAAAa...', '...TTTtTTTTtu...', '..tTTTtTTTtttu..',
+        '..TTtTTTtTTttu..', '..TtTTtTTtTttu..', '..TTtTTtTTtttu..', '..TtTTtTTtttuu..', '..tTttTttTttuu..']
+  };
 
   /* ---------- gabarits : corps ----------
      R r buste · S s jupe · L l bas de jupe (jambes si la tenue est courte) · M entre-jambes · Z ourlet
@@ -126,7 +135,8 @@
     savant: { coiffe: 'imama', chale: true, item: 'feuillets' }, marchand: { coiffe: 'imama', item: 'bourse', trim: '#d9b45a' },
     soldat: { coiffe: 'casque', court: true, item: 'lance' }, romain: { coiffe: 'casque', court: true, item: 'lance', cimier: true, cuirasse: true },
     perse: { coiffe: 'tiare', trim: '#d9b45a' }, moine: { coiffe: 'capuche', sombre: true, trim: '#c9b99a' }, enfant: { coiffe: 'imama', petit: true },
-    marin: { coiffe: 'imama', court: true, raies: true }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' }
+    marin: { coiffe: 'imama', court: true, raies: true }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' },
+    bedouin: { coiffe: 'keffieh', drape: true, trim: '#3a2a20' } // gens des tribus : la couleur du cordon et du galon (look.trim) dit le clan
   };
 
   /* ---------- couleurs ---------- */
@@ -182,6 +192,7 @@
     if (it === 'feuillets' && key !== 'u') { const x = key === 'd' ? 1 : 3; put(x, hip - 1, 'P'); put(x + 1, hip - 1, 'P'); put(x, hip, 'P'); put(x + 1, hip, 'P'); put(x, hip + 1, 'w'); put(x + 1, hip + 1, 'w'); }
     if (it === 'bourse' && key !== 'u') { const x = key === 'd' ? 10 : 6; put(x, hip, 'A'); put(x + 1, hip, 'a'); put(x, hip + 1, 'a'); put(x + 1, hip + 1, 'a'); }
     if (K.chale && !kneel) for (let x = 2; x < 14; x++) { if ('Cck'.indexOf(g[b0][x]) >= 0) g[b0][x] = 'T'; if ('Cck'.indexOf(g[b0 + 1][x]) >= 0) g[b0 + 1][x] = x % 3 ? 'T' : 't'; }
+    if (K.drape && !kneel) for (let y = b0; y < b0 + 2; y++) for (let x = 0; x < W; x++) if ((x <= 4 || x >= 11) && 'Cck'.indexOf(g[y][x]) >= 0) g[y][x] = y === b0 ? 't' : 'u'; // l'étoffe de tête retombe sur les épaules
     if (K.raies) for (let y = b0 + 1; y < b0 + 5; y += 2) for (let x = 0; x < W; x++) if ('RrCc'.indexOf(g[y][x]) >= 0) g[y][x] = 'T';
     if (K.neon) { for (let y = b0 + 1; y < b0 + 4; y++) { const x = key === 'd' ? 7 : key === 'l' ? 5 : -1; if (x >= 0 && g[y][x] !== '.') g[y][x] = 'Y'; } for (let x = 0; x < W; x++) if ('Aa'.indexOf(g[b0 + 4][x]) >= 0) g[b0 + 4][x] = 'y'; }
     // tête (11 lignes), inclinée ou abaissée selon la pose

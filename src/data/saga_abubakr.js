@@ -519,7 +519,7 @@ ISNAD.registerSaga({
           talk: [['say', 'usama', "L'armée est prête. Nous n'attendons qu'un mot du successeur du Messager d'Allah."]] },
         { id: 'soldat', name: "Soldat d'Usâma", at: ['porte_nord', 2, 0], look: { kind: 'soldat', robe: '#5c5140', head: '#ddd3c0' },
           talk: [['say', 'soldat', "Notre émir n'a pas vingt ans. Mais c'est le Messager d'Allah ﷺ qui a noué son étendard. Qui oserait le dénouer ?"]] },
-        { id: 'delegue', name: 'Délégué des tribus', at: ['mosquee_porte', 1, 2], hidden: true, look: { kind: 'homme', robe: '#6e5540', head: '#cfc2a8' } },
+        { id: 'delegue', name: 'Délégué des tribus', at: ['mosquee_porte', 1, 2], hidden: true, look: { kind: 'bedouin', robe: '#6e5540', head: '#cfc2a8' } },
         { id: 'recitateur', name: 'Un récitateur', at: ['ecole', 0, 1], look: { kind: 'savant', robe: '#e6dfcc', head: '#f2ecdc' },
           talk: [
             ['say', 'recitateur', "Quand le Messager d'Allah ﷺ envoya Mu'âdh au Yémen, il lui fit dire aux gens que la zakât est prise à leurs riches et rendue à leurs pauvres. Retiens le mot : *leurs* pauvres. Ce n'est pas un tribut qu'on emporte."],
@@ -528,7 +528,7 @@ ISNAD.registerSaga({
           talk: [['say', 'priant', "Le pays se retourne, et lui ne change rien à ses heures : la prière, puis les gens. Je crois que c'est pour cela qu'on le suit."]] },
         { id: 'thamir', name: 'Thâmir le courtier', at: ['souk', -2, 2], look: { kind: 'marchand', robe: '#7a4f3a', head: '#d9c9a8', cloak: '#4a2f22' },
           talk: [['say', 'thamir', "Successeur du Messager d'Allah ! Tout Médine loue ta fermeté. Si quelque délégation te cause du souci, envoie-la-moi : je sais parler aux gens des tribus."]] },
-        { id: 'dirgham', name: 'Dirghâm, cheikh des Banû Rimth', at: ['puits', -1, 1], hidden: true, look: { kind: 'homme', robe: '#5f4a36', head: '#c9b998', cloak: '#3a2c20' },
+        { id: 'dirgham', name: 'Dirghâm, cheikh des Banû Rimth', at: ['puits', -1, 1], hidden: true, look: { kind: 'bedouin', robe: '#5f4a36', head: '#c9b998', cloak: '#3a2c20', trim: '#b5462f', item: 'baton' },
           talk: [['say', 'dirgham', "Mes gens m'attendent, et je ne sais pas encore ce que je leur dirai."]] }
       ],
       foes: [

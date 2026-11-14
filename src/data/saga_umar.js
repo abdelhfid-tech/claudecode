@@ -330,7 +330,7 @@ ISNAD.registerSaga({
           talk: [['say', 'aslam', "La lanterne est prête, Commandeur des croyants."]] },
         { id: 'veilleur', name: 'Veilleur', at: 'porte_nord', look: { kind: 'soldat', robe: '#5a4632', head: '#d8cfc0' },
           talk: [['say', 'veilleur', "Rien à signaler, sinon le vent. On dit que le calife n'applique pas la peine du vol cette année : on ne châtie pas celui que la faim a poussé."]] },
-        { id: 'bedouin', name: 'Bédouin réfugié', at: ['place', 2, 1], look: { kind: 'homme', robe: '#6e5b45', head: '#cbbfa9' },
+        { id: 'bedouin', name: 'Bédouin réfugié', at: ['place', 2, 1], look: { kind: 'bedouin', robe: '#6e5b45', head: '#cbbfa9' },
           talk: [['say', 'bedouin', "Tout le désert est venu se serrer contre Médine. Le calife a fait compter les arrivants ; chaque soir on dresse des tables, et il s'y assoit le dernier."]] },
         { id: 'ancien', name: 'Ancien de Médine', at: ['mosquee_porte', 1, 0], look: { kind: 'ancien', robe: '#8c8272', head: '#eee6d6' },
           talk: [['ask', "L'ancien se chauffe les mains au-dessus d'une braise.", [
@@ -535,7 +535,7 @@ ISNAD.registerSaga({
       map: 'desert', opts: { time: 'day' }, start: 'depart',
       party: ['umar', 'aslam'],
       npcs: [
-        { id: 'chamelier', name: 'Chamelier', at: ['oasis', 1, -1], look: { kind: 'homme', robe: '#7a6648', head: '#d9ccb2' },
+        { id: 'chamelier', name: 'Chamelier', at: ['oasis', 1, -1], look: { kind: 'bedouin', robe: '#7a6648', head: '#d9ccb2' },
           talk: [['say', 'chamelier', "On dit que le calife des Arabes monte vers Shâm. Je guette son cortège depuis l'aube : je n'ai vu passer que deux hommes et une monture."]] },
         { id: 'abu_pnj', name: "Abû 'Ubayda", hero: 'abuubayda', at: 'arrivee',
           talk: [['say', 'abuubayda', "Le patriarche t'attend, Commandeur des croyants."]] },
@@ -760,7 +760,7 @@ ISNAD.registerSaga({
           ] },
         { id: 'jabala', name: 'Jabala ibn al-Ayham', at: ['mosquee_porte', -1, 0], look: { kind: 'homme', robe: '#5a2f6a', head: '#d4af37', cloak: '#7a1f2a' },
           talk: [['say', 'jabala', "J'ai régné sur les Arabes de Shâm. Je suis venu à vous de moi-même, et nul ne m'y a contraint."]] },
-        { id: 'fazari', name: 'Homme des Fazâra', at: ['mosquee_porte', 1, 0], look: { kind: 'homme', robe: '#7a6a52', head: '#cfc3ab' },
+        { id: 'fazari', name: 'Homme des Fazâra', at: ['mosquee_porte', 1, 0], look: { kind: 'bedouin', robe: '#7a6a52', head: '#cfc3ab', trim: '#5f8a4a' },
           talk: [['say', 'fazari', "Je ne demande que mon droit."]] },
         { id: 'thawr', name: 'Thawr ibn Mâlik', at: ['mosquee_porte', -2, 1], look: { kind: 'soldat', robe: '#3f4f6a', head: '#cfc6b2', cloak: '#2a2f44' },
           talk: [['say', 'thawr', "Mes cavaliers gardent la marche de Shâm, comme ceux de mon père. Je suis mon roi. Mais j'écoute."]] },

@@ -54,7 +54,9 @@ Validation : `node tools/validate.js <fichier>` (sagas, veillées) · `node tool
 
 Chaque carte a désormais un lieu `priere` (halte libre : le joueur peut y prier quand il veut) ; les
 villes ont aussi `ecole` (cercle d'étude), la cité romaine `quartier`.
-Types de PNJ ajoutés : `savant`, `marchand`, `berbere`.
+Types de PNJ ajoutés : `savant`, `marchand`, `berbere`, puis `bedouin` (gens des tribus : étoffe de tête
+qui retombe sur les épaules ; `look.trim` donne la couleur du cordon et de la ceinture, une par clan ;
+`look.item: 'baton'` distingue un cheikh).
 Coffre de savoir : `chests: [{ at, codex: 'id' }]` (un feuillet : débloque l'entrée de codex).
 `ask` accepte `need: 'idCodex'` sur une option (verrouillée tant que l'entrée n'est pas connue).
 `battle` accepte `allies: [{ flag: 'nom_du_drapeau', name: 'Les cavaliers de …' }]` : chaque allié dont le

@@ -308,9 +308,9 @@ ISNAD.registerSaga({
           talk: [['say', 'dirar', "Donne-moi l'avant-garde. Si le désert veut quelqu'un, qu'il commence par moi."]] },
         { id: 'messager', name: 'Courrier de Médine', at: ['caravane', -1, -2], look: { kind: 'homme', robe: '#5d6b58', head: '#d9cfb8' },
           talk: [['say', 'messager', "Le Calife a écrit : la moitié des hommes reste avec al-Muthannâ ibn Hâritha pour tenir l'Irak. L'autre moitié est attendue en Syrie comme on attend la pluie."]] },
-        { id: 'chamelier', name: 'Chamelier', at: ['caravane', -3, 1], look: { kind: 'homme', robe: '#7d6a50', head: '#cfc3a8' },
+        { id: 'chamelier', name: 'Chamelier', at: ['caravane', -3, 1], look: { kind: 'bedouin', robe: '#7d6a50', head: '#cfc3a8' },
           talk: [['say', 'chamelier', "On les prive d'eau, puis on les abreuve deux fois, jusqu'à satiété. Ensuite on leur lie le museau. Leur ventre sera notre outre."]] },
-        { id: 'bedouin', name: 'Ancien des Kalb', at: ['caravane', 3, 2], look: { kind: 'ancien', robe: '#4f4a44', head: '#e2d8c4' },
+        { id: 'bedouin', name: 'Ancien des Kalb', at: ['caravane', 3, 2], look: { kind: 'bedouin', robe: '#4f4a44', head: '#e2d8c4', trim: '#4a6f9a', item: 'baton' },
           talk: [
             ['say', 'bedouin', "Qurâqir est la dernière eau de mon peuple. Au-delà, le vent efface les traces avant le matin."],
             ['ask', "Interroger l'ancien", [
@@ -521,7 +521,7 @@ ISNAD.registerSaga({
           talk: [['say', 'armurier', "On dit que Khâlid veut ranger l'armée par escadrons, dans une ordonnance que les Arabes n'ont jamais employée. J'aiguise ; il ordonne ; Allah décide."]] },
         { id: 'jeune', name: 'Jeune soldat', at: ['feu', 1, 0], look: { kind: 'soldat', robe: '#64503a', head: '#d5c9b0' },
           talk: [['say', 'jeune', "Mon père disait : celui qui compte ses adversaires a déjà perdu la moitié de son bras. Je m'efforce de regarder le feu."]] },
-        { id: 'wahb', name: 'Wahb ibn Zurayr', at: ['etendard', -2, -1], hidden: true, look: { kind: 'berbere', robe: '#3f4f6a', head: '#d8d2c2', cloak: '#26303f' },
+        { id: 'wahb', name: 'Wahb ibn Zurayr', at: ['etendard', -2, -1], hidden: true, look: { kind: 'bedouin', robe: '#3f4f6a', head: '#d8d2c2', cloak: '#26303f', trim: '#8a5fb0' },
           talk: [['say', 'wahb', "Je garderai le gué ou je ne le garderai pas. Mais je n'oublierai pas qu'on m'a parlé avant de me frapper."]] },
         { id: 'ermite', name: 'Ermite du ravin', at: ['tertre', -2, 1], look: { kind: 'moine', robe: '#4a4038', head: '#4a4038' },
           talk: [

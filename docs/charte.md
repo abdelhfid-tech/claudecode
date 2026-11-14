@@ -35,6 +35,11 @@ précédente (section suivante) sont remplacés par des silhouettes dessinées p
   la couleur de la Lumière, le manteau, l'attribut porté. Un attribut ne s'ajoute à un Compagnon que s'il
   est déjà attesté dans ses vertus : la durra de 'Umar, le sabre de 'Alî et de Khâlid, les feuillets de
   Zayd et d'Ibn 'Abbâs, la lance de Dirâr.
+- **Les gens des tribus** (`bedouin`). Une étoffe de tête retenue par un cordon, qui retombe sur les
+  épaules : c'est une stylisation, non une reconstitution. La couleur du cordon et de la ceinture dit le
+  clan (rouge pour les Banû Rimth, vert pour les Fazâra, bleu pour les Kalb, violet pour les Banû
+  Zurayr). Aucun costume n'est attribué à une religion : Romains et Perses portent une tenue de rang
+  ou d'armée, les moines leur habit.
 - **Les attitudes** (`D.POSES`). Recueillement (tête inclinée, mains l'une sur l'autre), résolution (un
   bras levé), accablement (à genoux, tête basse), salut (la main sur le cœur), surprise (les bras
   s'écartent), garde (le manteau ramené devant soi). Le moteur s'en sert seul en combat (garde, vertu

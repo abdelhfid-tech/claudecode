@@ -36,7 +36,7 @@
   D.FX = ['atk', 'mag', 'def', 'spd', 'stun', 'doute', 'waswas', 'regen', 'garde', 'reveal',
           'cleanse', 'dispel', 'veil', 'niyya', 'sakina', 'taunt'];
 
-  D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber', 'savant', 'marchand', 'berbere'];
+  D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber', 'savant', 'marchand', 'berbere', 'bedouin'];
 
   D.BATTLE_BG = ['noos', 'desert', 'ville', 'camp', 'romaine', 'palais', 'mer', 'cite'];
 

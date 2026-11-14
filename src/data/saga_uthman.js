@@ -301,7 +301,7 @@ ISNAD.registerSaga({
           talk: [['say', 'said', "Un exemplaire pour chaque grande garnison, et un qui restera à Médine. Tel est l'ordre."]] },
         { id: 'ancien', name: 'Un ancien de Médine', at: ['mosquee_porte', 2, 1], look: { kind: 'ancien', robe: '#8c8272', head: '#f0ece2' },
           talk: [['say', 'ancien', "Il a fait rebâtir la mosquée en pierre taillée, avec un toit de teck. Certains murmurent que c'est trop beau. On murmure beaucoup, ces temps-ci."]] },
-        { id: 'marchand', name: 'Un caravanier', at: ['place', 2, 0], look: { kind: 'homme', robe: '#9a7b4f', head: '#d6c9ae' },
+        { id: 'marchand', name: 'Un caravanier', at: ['place', 2, 0], look: { kind: 'bedouin', robe: '#9a7b4f', head: '#d6c9ae' },
           talk: [['say', 'marchand', "J'arrive de Fustât. Là-bas, à Koufa, au Shâm : partout on récite. Mais plus personne ne récite tout à fait comme son voisin."]] },
         { id: 'maitre', name: 'Un maître du cercle', at: 'ecole', look: { kind: 'savant', robe: '#e8e2d2', head: '#f4efe2' },
           talk: [

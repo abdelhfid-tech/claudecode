@@ -170,6 +170,21 @@ présentés dans le livret comme dans les manuels de FF6.
   de fiction sans biographie (Idris, Yûnus, Sâlim, Bahrâm, Zîrî) ont une ligne écrite par l'agent d'après
   ce que le jeu en dit : à valider.
 
+## Tribus, peuples et alliés (question du décideur : « il manque pas des femmes ? des tribus ? »)
+
+- [ ] **D47. Les tribus se voient.** Elles étaient dans le récit, mais leurs gens ressemblaient à tout
+  le monde. Nouveau type `bedouin` (étoffe de tête, cordon à la couleur du clan), donné à neuf
+  personnages existants : le délégué des tribus, Dirghâm des Banû Rimth, le Bédouin réfugié, l'homme
+  des Fazâra, l'ancien des Kalb, Wahb ibn Zurayr, deux chameliers, un caravanier. Seule l'apparence
+  change ; aucun texte n'est touché.
+- [ ] **D48. Section et planche « Tribus, peuples et alliés ».** Neuf groupes : Ansâr, tribus d'Arabie,
+  Arabes chrétiens, Rome et le Shâm, la Perse, Koufa et l'Irak, l'Égypte et la mer, les gens de la
+  Citadelle, les personnages de fiction qui parlent des deux côtés. Noms et apparences viennent des
+  données ; cinq présentations reprennent le début d'une entrée du Recueil, quatre sont des lignes de
+  l'agent (Ansâr, Rome et le Shâm, Citadelle, fiction) : à valider.
+- [ ] **D49. Pas de personnages féminins ajoutés.** L'exigence n° 4 est maintenue : le récit reste
+  centré sur les Compagnons et leurs alliés, foules et familles désignées collectivement.
+
 Le bouton « Jouer » du livret pointe vers l'Artifact privé du jeu : il ne fonctionne que pour le
 décideur tant que le jeu n'est pas partagé (autorisation n° 2 ci-dessous, toujours de côté).
 

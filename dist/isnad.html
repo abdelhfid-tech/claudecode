@@ -340,7 +340,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
   D.FX = ['atk', 'mag', 'def', 'spd', 'stun', 'doute', 'waswas', 'regen', 'garde', 'reveal',
           'cleanse', 'dispel', 'veil', 'niyya', 'sakina', 'taunt'];
 
-  D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber', 'savant', 'marchand', 'berbere'];
+  D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber', 'savant', 'marchand', 'berbere', 'bedouin'];
 
   D.BATTLE_BG = ['noos', 'desert', 'ville', 'camp', 'romaine', 'palais', 'mer', 'cite'];
 
@@ -1144,6 +1144,15 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     }
   };
   HEADS.litham.u = HEADS.imama.u;
+  // étoffe de tête des gens du désert : un voile retenu par un cordon, qui retombe sur les épaules (stylisation)
+  HEADS.keffieh = {
+    d: ['................', '.....tTTTTt.....', '....TTTTTTtu....', '...aAAAAAAAAa...', '...TTTtTTTTtu...', '..tTuuuuuuuutu..',
+        '..TTuVVVVVVutu..', '..TtuVVVVVVutu..', '..TtuVVVVVVutu..', '..TTtuVVVVutuu..', '..tTttuvvuttuu..'],
+    l: ['................', '.....tTTTTt.....', '....TTTTTTtu....', '...AAAAAAAAaa...', '...TTTtTTTTtu...', '..tuuuuuTTttu...',
+        '..VVVVVuTTtttu..', '..VVVVVuTtttuu..', '..VVVVVuTTttuu..', '...vVVvuTtttuu..', '....vvutTttuuu..'],
+    u: ['................', '.....tTTTTt.....', '....TTTTTTtu....', '...aAAAAAAAAa...', '...TTTtTTTTtu...', '..tTTTtTTTtttu..',
+        '..TTtTTTtTTttu..', '..TtTTtTTtTttu..', '..TTtTTtTTtttu..', '..TtTTtTTtttuu..', '..tTttTttTttuu..']
+  };
 
   /* ---------- gabarits : corps ----------
      R r buste · S s jupe · L l bas de jupe (jambes si la tenue est courte) · M entre-jambes · Z ourlet
@@ -1217,7 +1226,8 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     savant: { coiffe: 'imama', chale: true, item: 'feuillets' }, marchand: { coiffe: 'imama', item: 'bourse', trim: '#d9b45a' },
     soldat: { coiffe: 'casque', court: true, item: 'lance' }, romain: { coiffe: 'casque', court: true, item: 'lance', cimier: true, cuirasse: true },
     perse: { coiffe: 'tiare', trim: '#d9b45a' }, moine: { coiffe: 'capuche', sombre: true, trim: '#c9b99a' }, enfant: { coiffe: 'imama', petit: true },
-    marin: { coiffe: 'imama', court: true, raies: true }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' }
+    marin: { coiffe: 'imama', court: true, raies: true }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' },
+    bedouin: { coiffe: 'keffieh', drape: true, trim: '#3a2a20' } // gens des tribus : la couleur du cordon et du galon (look.trim) dit le clan
   };
 
   /* ---------- couleurs ---------- */
@@ -1273,6 +1283,7 @@ body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) 
     if (it === 'feuillets' && key !== 'u') { const x = key === 'd' ? 1 : 3; put(x, hip - 1, 'P'); put(x + 1, hip - 1, 'P'); put(x, hip, 'P'); put(x + 1, hip, 'P'); put(x, hip + 1, 'w'); put(x + 1, hip + 1, 'w'); }
     if (it === 'bourse' && key !== 'u') { const x = key === 'd' ? 10 : 6; put(x, hip, 'A'); put(x + 1, hip, 'a'); put(x, hip + 1, 'a'); put(x + 1, hip + 1, 'a'); }
     if (K.chale && !kneel) for (let x = 2; x < 14; x++) { if ('Cck'.indexOf(g[b0][x]) >= 0) g[b0][x] = 'T'; if ('Cck'.indexOf(g[b0 + 1][x]) >= 0) g[b0 + 1][x] = x % 3 ? 'T' : 't'; }
+    if (K.drape && !kneel) for (let y = b0; y < b0 + 2; y++) for (let x = 0; x < W; x++) if ((x <= 4 || x >= 11) && 'Cck'.indexOf(g[y][x]) >= 0) g[y][x] = y === b0 ? 't' : 'u'; // l'étoffe de tête retombe sur les épaules
     if (K.raies) for (let y = b0 + 1; y < b0 + 5; y += 2) for (let x = 0; x < W; x++) if ('RrCc'.indexOf(g[y][x]) >= 0) g[y][x] = 'T';
     if (K.neon) { for (let y = b0 + 1; y < b0 + 4; y++) { const x = key === 'd' ? 7 : key === 'l' ? 5 : -1; if (x >= 0 && g[y][x] !== '.') g[y][x] = 'Y'; } for (let x = 0; x < W; x++) if ('Aa'.indexOf(g[b0 + 4][x]) >= 0) g[b0 + 4][x] = 'y'; }
     // tête (11 lignes), inclinée ou abaissée selon la pose
@@ -5290,7 +5301,7 @@ ISNAD.registerSaga({
           talk: [['say', 'usama', "L'armée est prête. Nous n'attendons qu'un mot du successeur du Messager d'Allah."]] },
         { id: 'soldat', name: "Soldat d'Usâma", at: ['porte_nord', 2, 0], look: { kind: 'soldat', robe: '#5c5140', head: '#ddd3c0' },
           talk: [['say', 'soldat', "Notre émir n'a pas vingt ans. Mais c'est le Messager d'Allah ﷺ qui a noué son étendard. Qui oserait le dénouer ?"]] },
-        { id: 'delegue', name: 'Délégué des tribus', at: ['mosquee_porte', 1, 2], hidden: true, look: { kind: 'homme', robe: '#6e5540', head: '#cfc2a8' } },
+        { id: 'delegue', name: 'Délégué des tribus', at: ['mosquee_porte', 1, 2], hidden: true, look: { kind: 'bedouin', robe: '#6e5540', head: '#cfc2a8' } },
         { id: 'recitateur', name: 'Un récitateur', at: ['ecole', 0, 1], look: { kind: 'savant', robe: '#e6dfcc', head: '#f2ecdc' },
           talk: [
             ['say', 'recitateur', "Quand le Messager d'Allah ﷺ envoya Mu'âdh au Yémen, il lui fit dire aux gens que la zakât est prise à leurs riches et rendue à leurs pauvres. Retiens le mot : *leurs* pauvres. Ce n'est pas un tribut qu'on emporte."],
@@ -5299,7 +5310,7 @@ ISNAD.registerSaga({
           talk: [['say', 'priant', "Le pays se retourne, et lui ne change rien à ses heures : la prière, puis les gens. Je crois que c'est pour cela qu'on le suit."]] },
         { id: 'thamir', name: 'Thâmir le courtier', at: ['souk', -2, 2], look: { kind: 'marchand', robe: '#7a4f3a', head: '#d9c9a8', cloak: '#4a2f22' },
           talk: [['say', 'thamir', "Successeur du Messager d'Allah ! Tout Médine loue ta fermeté. Si quelque délégation te cause du souci, envoie-la-moi : je sais parler aux gens des tribus."]] },
-        { id: 'dirgham', name: 'Dirghâm, cheikh des Banû Rimth', at: ['puits', -1, 1], hidden: true, look: { kind: 'homme', robe: '#5f4a36', head: '#c9b998', cloak: '#3a2c20' },
+        { id: 'dirgham', name: 'Dirghâm, cheikh des Banû Rimth', at: ['puits', -1, 1], hidden: true, look: { kind: 'bedouin', robe: '#5f4a36', head: '#c9b998', cloak: '#3a2c20', trim: '#b5462f', item: 'baton' },
           talk: [['say', 'dirgham', "Mes gens m'attendent, et je ne sais pas encore ce que je leur dirai."]] }
       ],
       foes: [
@@ -6959,9 +6970,9 @@ ISNAD.registerSaga({
           talk: [['say', 'dirar', "Donne-moi l'avant-garde. Si le désert veut quelqu'un, qu'il commence par moi."]] },
         { id: 'messager', name: 'Courrier de Médine', at: ['caravane', -1, -2], look: { kind: 'homme', robe: '#5d6b58', head: '#d9cfb8' },
           talk: [['say', 'messager', "Le Calife a écrit : la moitié des hommes reste avec al-Muthannâ ibn Hâritha pour tenir l'Irak. L'autre moitié est attendue en Syrie comme on attend la pluie."]] },
-        { id: 'chamelier', name: 'Chamelier', at: ['caravane', -3, 1], look: { kind: 'homme', robe: '#7d6a50', head: '#cfc3a8' },
+        { id: 'chamelier', name: 'Chamelier', at: ['caravane', -3, 1], look: { kind: 'bedouin', robe: '#7d6a50', head: '#cfc3a8' },
           talk: [['say', 'chamelier', "On les prive d'eau, puis on les abreuve deux fois, jusqu'à satiété. Ensuite on leur lie le museau. Leur ventre sera notre outre."]] },
-        { id: 'bedouin', name: 'Ancien des Kalb', at: ['caravane', 3, 2], look: { kind: 'ancien', robe: '#4f4a44', head: '#e2d8c4' },
+        { id: 'bedouin', name: 'Ancien des Kalb', at: ['caravane', 3, 2], look: { kind: 'bedouin', robe: '#4f4a44', head: '#e2d8c4', trim: '#4a6f9a', item: 'baton' },
           talk: [
             ['say', 'bedouin', "Qurâqir est la dernière eau de mon peuple. Au-delà, le vent efface les traces avant le matin."],
             ['ask', "Interroger l'ancien", [
@@ -7172,7 +7183,7 @@ ISNAD.registerSaga({
           talk: [['say', 'armurier', "On dit que Khâlid veut ranger l'armée par escadrons, dans une ordonnance que les Arabes n'ont jamais employée. J'aiguise ; il ordonne ; Allah décide."]] },
         { id: 'jeune', name: 'Jeune soldat', at: ['feu', 1, 0], look: { kind: 'soldat', robe: '#64503a', head: '#d5c9b0' },
           talk: [['say', 'jeune', "Mon père disait : celui qui compte ses adversaires a déjà perdu la moitié de son bras. Je m'efforce de regarder le feu."]] },
-        { id: 'wahb', name: 'Wahb ibn Zurayr', at: ['etendard', -2, -1], hidden: true, look: { kind: 'berbere', robe: '#3f4f6a', head: '#d8d2c2', cloak: '#26303f' },
+        { id: 'wahb', name: 'Wahb ibn Zurayr', at: ['etendard', -2, -1], hidden: true, look: { kind: 'bedouin', robe: '#3f4f6a', head: '#d8d2c2', cloak: '#26303f', trim: '#8a5fb0' },
           talk: [['say', 'wahb', "Je garderai le gué ou je ne le garderai pas. Mais je n'oublierai pas qu'on m'a parlé avant de me frapper."]] },
         { id: 'ermite', name: 'Ermite du ravin', at: ['tertre', -2, 1], look: { kind: 'moine', robe: '#4a4038', head: '#4a4038' },
           talk: [
@@ -7867,7 +7878,7 @@ ISNAD.registerSaga({
           talk: [['say', 'aslam', "La lanterne est prête, Commandeur des croyants."]] },
         { id: 'veilleur', name: 'Veilleur', at: 'porte_nord', look: { kind: 'soldat', robe: '#5a4632', head: '#d8cfc0' },
           talk: [['say', 'veilleur', "Rien à signaler, sinon le vent. On dit que le calife n'applique pas la peine du vol cette année : on ne châtie pas celui que la faim a poussé."]] },
-        { id: 'bedouin', name: 'Bédouin réfugié', at: ['place', 2, 1], look: { kind: 'homme', robe: '#6e5b45', head: '#cbbfa9' },
+        { id: 'bedouin', name: 'Bédouin réfugié', at: ['place', 2, 1], look: { kind: 'bedouin', robe: '#6e5b45', head: '#cbbfa9' },
           talk: [['say', 'bedouin', "Tout le désert est venu se serrer contre Médine. Le calife a fait compter les arrivants ; chaque soir on dresse des tables, et il s'y assoit le dernier."]] },
         { id: 'ancien', name: 'Ancien de Médine', at: ['mosquee_porte', 1, 0], look: { kind: 'ancien', robe: '#8c8272', head: '#eee6d6' },
           talk: [['ask', "L'ancien se chauffe les mains au-dessus d'une braise.", [
@@ -8072,7 +8083,7 @@ ISNAD.registerSaga({
       map: 'desert', opts: { time: 'day' }, start: 'depart',
       party: ['umar', 'aslam'],
       npcs: [
-        { id: 'chamelier', name: 'Chamelier', at: ['oasis', 1, -1], look: { kind: 'homme', robe: '#7a6648', head: '#d9ccb2' },
+        { id: 'chamelier', name: 'Chamelier', at: ['oasis', 1, -1], look: { kind: 'bedouin', robe: '#7a6648', head: '#d9ccb2' },
           talk: [['say', 'chamelier', "On dit que le calife des Arabes monte vers Shâm. Je guette son cortège depuis l'aube : je n'ai vu passer que deux hommes et une monture."]] },
         { id: 'abu_pnj', name: "Abû 'Ubayda", hero: 'abuubayda', at: 'arrivee',
           talk: [['say', 'abuubayda', "Le patriarche t'attend, Commandeur des croyants."]] },
@@ -8297,7 +8308,7 @@ ISNAD.registerSaga({
           ] },
         { id: 'jabala', name: 'Jabala ibn al-Ayham', at: ['mosquee_porte', -1, 0], look: { kind: 'homme', robe: '#5a2f6a', head: '#d4af37', cloak: '#7a1f2a' },
           talk: [['say', 'jabala', "J'ai régné sur les Arabes de Shâm. Je suis venu à vous de moi-même, et nul ne m'y a contraint."]] },
-        { id: 'fazari', name: 'Homme des Fazâra', at: ['mosquee_porte', 1, 0], look: { kind: 'homme', robe: '#7a6a52', head: '#cfc3ab' },
+        { id: 'fazari', name: 'Homme des Fazâra', at: ['mosquee_porte', 1, 0], look: { kind: 'bedouin', robe: '#7a6a52', head: '#cfc3ab', trim: '#5f8a4a' },
           talk: [['say', 'fazari', "Je ne demande que mon droit."]] },
         { id: 'thawr', name: 'Thawr ibn Mâlik', at: ['mosquee_porte', -2, 1], look: { kind: 'soldat', robe: '#3f4f6a', head: '#cfc6b2', cloak: '#2a2f44' },
           talk: [['say', 'thawr', "Mes cavaliers gardent la marche de Shâm, comme ceux de mon père. Je suis mon roi. Mais j'écoute."]] },
@@ -8824,7 +8835,7 @@ ISNAD.registerSaga({
           talk: [['say', 'said', "Un exemplaire pour chaque grande garnison, et un qui restera à Médine. Tel est l'ordre."]] },
         { id: 'ancien', name: 'Un ancien de Médine', at: ['mosquee_porte', 2, 1], look: { kind: 'ancien', robe: '#8c8272', head: '#f0ece2' },
           talk: [['say', 'ancien', "Il a fait rebâtir la mosquée en pierre taillée, avec un toit de teck. Certains murmurent que c'est trop beau. On murmure beaucoup, ces temps-ci."]] },
-        { id: 'marchand', name: 'Un caravanier', at: ['place', 2, 0], look: { kind: 'homme', robe: '#9a7b4f', head: '#d6c9ae' },
+        { id: 'marchand', name: 'Un caravanier', at: ['place', 2, 0], look: { kind: 'bedouin', robe: '#9a7b4f', head: '#d6c9ae' },
           talk: [['say', 'marchand', "J'arrive de Fustât. Là-bas, à Koufa, au Shâm : partout on récite. Mais plus personne ne récite tout à fait comme son voisin."]] },
         { id: 'maitre', name: 'Un maître du cercle', at: 'ecole', look: { kind: 'savant', robe: '#e8e2d2', head: '#f4efe2' },
           talk: [
