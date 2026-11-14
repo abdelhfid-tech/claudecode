@@ -102,10 +102,10 @@
       case 'choice': {
         S.hideDialog();
         let opts = b.slice(), first = true; const sv = I.save.data;
-        sv.isnad.total++;
+        sv.isnad.total++; const spc = sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} }); spc.cTot = (spc.cTot || 0) + 1;
         while (true) {
           const i = await menuPick(a, opts); const o = opts[i];
-          if (o.ok) { if (first) { sv.isnad.ok++; S.toast('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.'); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); } if (o.r) await S.run(o.r); break; }
+          if (o.ok) { if (first) { sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; S.toast('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.'); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); } if (o.r) await S.run(o.r); break; }
           first = false; I.audio.sfx('glitch'); G.shake(260); G.flash('#7a5cff');
           S.toast('<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.');
           if (o.r) await S.run(o.r);

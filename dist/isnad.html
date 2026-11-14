@@ -1318,10 +1318,10 @@ body.portrait .mlist { max-height: 12em; }
       case 'choice': {
         S.hideDialog();
         let opts = b.slice(), first = true; const sv = I.save.data;
-        sv.isnad.total++;
+        sv.isnad.total++; const spc = sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} }); spc.cTot = (spc.cTot || 0) + 1;
         while (true) {
           const i = await menuPick(a, opts); const o = opts[i];
-          if (o.ok) { if (first) { sv.isnad.ok++; S.toast('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.'); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); } if (o.r) await S.run(o.r); break; }
+          if (o.ok) { if (first) { sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; S.toast('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.'); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); } if (o.r) await S.run(o.r); break; }
           first = false; I.audio.sfx('glitch'); G.shake(260); G.flash('#7a5cff');
           S.toast('<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.');
           if (o.r) await S.run(o.r);
@@ -1527,6 +1527,11 @@ body.portrait .mlist { max-height: 12em; }
       } else {
         await S.fade('out', 600); I.setScene(I.ui.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 6, hue: 40, n: 0 }; await S.fade('in', 400);
         if (saga.outro && (!saga.frame || W.ci === saga.chapters.length - 1)) await S.run(saga.outro);
+        if (!saga.frame && sp.cTot) {
+          const perfect = (sp.cOk || 0) === sp.cTot;
+          if (perfect) { sv.items.siwak = (sv.items.siwak || 0) + 2; sv.items.musc = (sv.items.musc || 0) + 1; I.audio.sfx('roll'); }
+          await S.card('victory', `<p class="small">Fidélité à la Chaîne · ${I.esc(saga.name)}</p><h1>${perfect ? 'Isnâd sahîh' : 'Chaîne transmise'}</h1><ul><li>Actes retrouvés du premier coup : <b>${sp.cOk || 0} / ${sp.cTot}</b></li>${perfect ? '<li>Chaîne sans faille : chaque acte fut celui que les transmetteurs ont rapporté.</li><li>Reçu : <b>Siwâk ×2</b>, <b>Musc</b></li>' : '<li>Là où la chaîne a vacillé, relis le codex : chaque acte y a sa source.</li>'}</ul><div class="hint">▼</div>`);
+        }
         sp.done = true; sp.ch = saga.frame ? W.ci + 1 : 0; I.save.store();
         await I.ui.afterSaga(saga, ch);
       }
@@ -2339,6 +2344,7 @@ body.portrait .mlist { max-height: 12em; }
     W.roster = {}; W.saga = s; S.flags = {};
     let ci = sp.done ? 0 : sp.ch;
     if (sp.done) { sp.ch = 0; sp.flags = {}; }
+    if (ci === 0 && !(sv.cp && sv.cp.saga === s.id && sv.cp.obj > 0)) { sp.cOk = 0; sp.cTot = 0; }
     const resume0 = sv.cp && sv.cp.saga === s.id && sv.cp.ci === 0 && sv.cp.obj > 0 && !sp.done;
     if (ci === 0 && !resume0) {
       I.setScene(U.blank); document.body.dataset.theme = 'orient';

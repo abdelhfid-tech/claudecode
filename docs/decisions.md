@@ -26,9 +26,10 @@ l'agent exécute et l'humain décide : chaque décision ci-dessous est donc une 
   scène ; Siffîn est évoqué en cartons, sans coupable ; les insurgés du siège de 'Uthmân ne sont pas
   nommés. La saga de 'Alî se concentre sur le tribunal, le débat d'Ibn 'Abbâs et Nahrawân.
   *Écarté* : jouer ces épisodes.
-- [ ] **D6. Sobriété générale.** Aucun personnage féminin mis en scène, aucune romance, aucun sujet
-  intime ; on dit « une famille », « les gens ». Conséquence assumée : certains récits célèbres sont
-  résumés ou laissés de côté.
+- [ ] **D6. Sobriété générale.** Le récit reste centré sur les cinq Compagnons et leurs alliés d'armes
+  et de conseil ; pas d'intrigue sentimentale ; foules et familles sont désignées collectivement
+  (« une famille », « les gens »). Conséquence assumée : certains récits célèbres sont résumés ou
+  laissés de côté.
 - [ ] **D7. Choix des cinq sagas et de leur thèse.** Abû Bakr et la Véracité, 'Umar et la Justice,
   Khâlid et le Courage de rengainer, 'Uthmân et la Miséricorde, 'Alî et le Savoir. Khâlid est placé
   troisième, entre les califes, pour l'ambiance romaine. *Écarté pour la V1* : Bilâl, Salmân,

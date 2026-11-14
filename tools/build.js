@@ -16,6 +16,7 @@ if (js.includes('</script')) throw new Error('</script> trouvé dans le JS');
 const page = read('src/page.html').replace('/*CSS*/', () => read('src/style.css')).replace('/*JS*/', () => js);
 fs.mkdirSync(path.join(root, 'dist'), { recursive: true });
 fs.writeFileSync(path.join(root, 'dist/isnad.html'), page);
-const full = `<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n</head>\n<body>\n${page}\n</body>\n</html>\n`;
+const cut = page.indexOf('<div id="app">');
+const full = `<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="description" content="ISNAD — JRPG rétro-HD en cinq sagas : les Compagnons après la mort du Prophète ﷺ.">\n${page.slice(0, cut)}</head>\n<body>\n${page.slice(cut)}\n</body>\n</html>\n`;
 fs.writeFileSync(path.join(root, 'index.html'), full);
 console.log(`index.html ${(full.length / 1024).toFixed(0)} Ko · dist/isnad.html ${(page.length / 1024).toFixed(0)} Ko · ${core.length + data.length} modules`);

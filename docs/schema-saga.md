@@ -39,8 +39,8 @@ jamais à l'écran autre chose que ce qui est rapporté de lui. Les fausses opti
   Les paroles attestées passent par `['quote', texte, source]`. Les dialogues ordinaires (`say`) sont une
   dramatisation sobre : phrases courtes, dignes, sans familiarité moderne. En cas de doute sur une parole,
   écrire « On rapporte que… » dans la source.
-- Aucun personnage féminin mis en scène, aucune romance, aucun sujet intime. Dire « une famille », « les
-  gens », « un voyageur ».
+- Sobriété : le récit reste centré sur les Compagnons et leurs alliés ; pas d'intrigue sentimentale ;
+  foules et familles sont désignées collectivement (« une famille », « les gens », « un voyageur »).
 - Aucune polémique confessionnelle. Les dissensions entre Compagnons sont évoquées avec retenue, sans
   désigner de coupable ; tous sont nommés avec respect.
 - Versets : seulement en « traduction du sens », avec référence (sourate:verset), et seulement ceux dont on

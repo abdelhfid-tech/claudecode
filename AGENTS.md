@@ -56,7 +56,8 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
 2. Personne n'a de visage. Ne jamais décrire de traits physiques, ne jamais dessiner d'yeux ni de bouche.
 3. Seulement des événements attestés. Une parole attestée passe par `['quote', texte, source]`. En cas
    de doute, écrire « On rapporte » dans la source et signaler la discussion dans le codex.
-4. Aucun personnage féminin mis en scène, aucune romance, aucun sujet intime.
+4. Sobriété : le récit reste centré sur les Compagnons et leurs alliés ; pas d'intrigue sentimentale ;
+   foules et familles sont désignées collectivement (« une famille », « les gens »).
 5. Aucune polémique confessionnelle. Les dissensions entre Compagnons sont évoquées avec retenue et
    sans désigner de coupable.
 6. Tous les ennemis sont des égrégores abstraits. Jamais un peuple, une religion ou une personne.
