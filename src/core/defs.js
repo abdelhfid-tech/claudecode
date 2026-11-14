@@ -1,0 +1,87 @@
+/* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
+(function (root) {
+  const D = {};
+
+  // Vertus-éléments. « fer » = l'élan physique ; les six autres sont les Lumières.
+  D.ELEMENTS = {
+    fer:    { name: 'Fer',         ar: 'Hadîd',   color: '#c9ced6', glyph: '⚔' },
+    sidq:   { name: 'Véracité',    ar: 'Sidq',    color: '#ffe08a', glyph: '◈' },
+    adl:    { name: 'Justice',     ar: "'Adl",    color: '#6fb6ff', glyph: '⚖' },
+    sabr:   { name: 'Patience',    ar: 'Sabr',    color: '#7fd69a', glyph: '❖' },
+    rahma:  { name: 'Miséricorde', ar: 'Rahma',   color: '#5fe0d0', glyph: '✦' },
+    shajaa: { name: 'Courage',     ar: "Shajâ'a", color: '#ff7a5c', glyph: '▲' },
+    ilm:    { name: 'Savoir',      ar: "'Ilm",    color: '#c49bff', glyph: '✧' }
+  };
+
+  // Archétypes de héros : multiplicateurs de croissance.
+  D.ROLES = {
+    guerrier: { hp: 1.15, sp: 0.8,  atk: 1.3,  mag: 0.75, def: 1.05, spd: 1.0  },
+    gardien:  { hp: 1.35, sp: 0.85, atk: 1.0,  mag: 0.85, def: 1.3,  spd: 0.85 },
+    sage:     { hp: 0.95, sp: 1.25, atk: 0.8,  mag: 1.3,  def: 0.9,  spd: 1.0  },
+    soigneur: { hp: 0.9,  sp: 1.35, atk: 0.7,  mag: 1.2,  def: 0.85, spd: 1.05 },
+    stratege: { hp: 1.0,  sp: 1.0,  atk: 1.1,  mag: 1.0,  def: 0.95, spd: 1.3  }
+  };
+
+  D.TIERS = ['minion', 'elite', 'boss'];
+
+  // Formes procédurales des égrégores (aucun être animé figuratif : formes abstraites).
+  D.ART = ['wisp', 'mask', 'eagle', 'crown', 'throne', 'tower', 'lens', 'mirror', 'swarm',
+           'idol', 'scale', 'blade', 'wave', 'banner', 'colossus'];
+
+  D.ANIMS = ['slash', 'light', 'burst', 'wave', 'pillar', 'glyph', 'heal', 'guard', 'dark'];
+
+  D.TARGETS = ['foe', 'foes', 'ally', 'allies', 'self'];
+
+  // Effets (fx.st)
+  D.FX = ['atk', 'mag', 'def', 'spd', 'stun', 'doute', 'waswas', 'regen', 'garde', 'reveal',
+          'cleanse', 'dispel', 'veil', 'niyya', 'sakina', 'taunt'];
+
+  D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber'];
+
+  D.BATTLE_BG = ['noos', 'desert', 'ville', 'camp', 'romaine', 'palais', 'mer', 'cite'];
+
+  D.TIMES = ['day', 'dusk', 'night', 'dawn'];
+
+  D.SFX = ['duff', 'tek', 'roll', 'hit', 'break', 'light', 'wind', 'door', 'crowd', 'wave', 'glitch', 'blip'];
+  D.AMB = ['vent', 'nuit', 'foule', 'feu', 'mer', 'noos', 'cite', 'silence', 'bataille'];
+
+  // Cartes disponibles et leurs lieux nommés (spots).
+  const VILLE = ['mosquee_cour', 'mosquee_porte', 'place', 'souk', 'halle', 'maison', 'puits',
+                 'palmeraie', 'porte_nord', 'porte_sud', 'enclos', 'colline'];
+  D.MAPS = {
+    medine:   { label: 'Médine',            spots: VILLE },
+    koufa:    { label: 'Koufa',             spots: VILLE },
+    desert:   { label: 'Désert',            spots: ['depart', 'dunes', 'rochers', 'oasis', 'source', 'caravane', 'crete', 'ruines', 'arrivee'] },
+    camp:     { label: 'Camp',              spots: ['entree', 'tente_chef', 'feu', 'etendard', 'lignes', 'enclos', 'tertre', 'tentes'] },
+    romaine:  { label: 'Cité romaine',      spots: ['porte', 'cardo', 'forum', 'basilique', 'esplanade', 'palais', 'fontaine', 'remparts', 'jardin', 'marche'] },
+    palais:   { label: 'Palais',            spots: ['entree', 'nef', 'trone', 'tresor', 'colonnade', 'jardin'] },
+    navire:   { label: 'Navire',            spots: ['poupe', 'pont', 'mat', 'proue', 'passerelle', 'pont2'] },
+    noos:     { label: 'Noosphère',         spots: ['seuil', 'noeud1', 'noeud2', 'noeud3', 'faille', 'miroir', 'coeur'] },
+    cite:     { label: 'Cité-Miroir',       spots: ['rue', 'ecran', 'ruelle', 'ascenseur', 'parvis'] },
+    archives: { label: 'Archives basses',   spots: ['entree', 'rayonnages', 'bureau', 'chaine'] }
+  };
+
+  D.ITEMS = {
+    dattes: { name: 'Dattes de Médine', desc: 'Rend 40 % de Constance à un compagnon.',              hp: 0.4,  target: 'ally' },
+    eau:    { name: "Outre d'eau",      desc: 'Rend 80 % de Constance à un compagnon.',              hp: 0.8,  target: 'ally' },
+    pain:   { name: "Pain d'orge",      desc: 'Rend 25 % de Constance à tout le groupe.',            hp: 0.25, target: 'allies' },
+    miel:   { name: 'Miel',             desc: 'Dissipe les altérations et rend 30 % de Constance.',  hp: 0.3,  cleanse: true, target: 'ally' },
+    musc:   { name: 'Musc',             desc: 'Rend 50 % de Souffle à un compagnon.',                sp: 0.5,  target: 'ally' },
+    lait:   { name: 'Lait chaud',       desc: 'Relève un compagnon éprouvé (50 % de Constance).',    revive: 0.5, target: 'ally' },
+    siwak:  { name: 'Siwâk',            desc: 'Accorde 2 points de Niyya.',                          niyya: 2, target: 'ally' }
+  };
+
+  // Opérations de script autorisées : nom -> [min args, max args]
+  D.OPS = {
+    say: [2, 2], nar: [1, 1], quote: [2, 2], title: [1, 2], choice: [2, 2], ask: [2, 2],
+    battle: [1, 1], map: [2, 3], tp: [2, 2], walk: [2, 2], face: [2, 2], show: [1, 1], hide: [1, 1],
+    fade: [1, 2], wait: [1, 1], shake: [0, 1], flash: [0, 1], sfx: [1, 1], amb: [1, 1],
+    give: [1, 2], join: [1, 1], leave: [1, 1], codex: [1, 1], heal: [0, 0],
+    flag: [1, 2], if: [2, 3], tint: [1, 1], light: [1, 1]
+  };
+
+  D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole'];
+
+  root.ISNAD_DEFS = D;
+  if (typeof module !== 'undefined' && module.exports) module.exports = D;
+})(typeof window !== 'undefined' ? window : globalThis);

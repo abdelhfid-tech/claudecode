@@ -1,0 +1,699 @@
+/* ISNAD — Saga V : 'Alî ibn Abî Tâlib, la Porte du Savoir.
+   Sources principales : Ibn Sa'd (Tabaqât), at-Tabarî (Târîkh), Ibn Kathîr (al-Bidâya), Muslim, al-Bukhârî,
+   an-Nasâ'î (as-Sunan al-Kubrâ), Ibn Abî Shayba (al-Musannaf). Dialogues ordinaires dramatisés. */
+ISNAD.registerSaga({
+  id: 'ali', order: 5,
+  name: "'Alî ibn Abî Tâlib", epithet: 'La Porte du Savoir', arabic: 'علي',
+  years: '35–40 H · 656–661',
+  light: 'ilm', lightName: 'Savoir',
+  ambiance: 'orientale · noosphère',
+  tagline: "Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour.",
+
+  intro: [
+    ['amb', 'silence'],
+    ['title', "'Alî ibn Abî Tâlib", 'Cinquième maillon · La Porte du Savoir'],
+    ['nar', "Médine, fin de l'an 35. 'Uthmân vient de tomber, et la communauté cherche un homme vers qui se tourner. On se presse à la porte de 'Alî. Il refuse d'abord. On insiste. Il n'accepte qu'à la mosquée, devant tous : son serment ne sera pas secret."],
+    ['nar', "Il a grandi dans la maison du Messager d'Allah ﷺ et fut parmi les tout premiers à croire, enfant encore. La nuit de l'Hégire, il dormit dans le lit du Messager ﷺ pour couvrir son départ. À Khaybar, il porta l'étendard."],
+    ['quote', "Le meilleur juge d'entre nous est 'Alî.", "'Umar ibn al-Khattâb — al-Bukhârî"],
+    ['nar', "Son califat sera le plus éprouvé des quatre. L'idole qui l'attend n'est ni une couronne ni un trésor. Elle porte l'habit de la piété : c'est le Juge sans miséricorde — celui qui excommunie, et croit ce faisant servir Allah."],
+    ['say', 'Idris', "Une idole qui cite le Livre… Dans la Cité-Miroir, je crois que je la connais. Elle condamne à la vitesse d'un écran."],
+    ['codex', 'ali_bio']
+  ],
+
+  outro: [
+    ['amb', 'silence'],
+    ['nar', "'Alî ibn Abî Tâlib meurt à Koufa, en Ramadan de l'an 40, deux jours après le coup. Son meurtrier ne reçoit qu'une frappe. Aucun autre sang ne coule en son nom."],
+    ['quote', "Un homme vous a quittés hier, que les premiers n'ont pas devancé par le savoir et que les derniers n'atteindront pas. Il n'a laissé ni or ni argent, sinon sept cents dirhams.", "Al-Hasan ibn 'Alî, au lendemain de sa mort — Ahmad, al-Musnad ; Ibn Sa'd, Tabaqât"],
+    ['nar', "Avec lui s'achève le temps des califes bien guidés : trente années depuis la mort du Messager ﷺ, à quelques mois près. Al-Hasan les complétera, puis réconciliera deux grands groupes de musulmans. On appellera cette année-là l'Année de l'unité."],
+    ['nar', "L'idole du Juge sans miséricorde n'est pas morte à Nahrawân. Elle a seulement appris à changer de formule. Mais ce que 'Alî lui a opposé demeure : celui qui sait ne se hâte pas de condamner."],
+    ['say', 'Idris', "Le savoir, ce n'est pas d'avoir raison contre quelqu'un. C'est de savoir encore, devant celui qui te frappe, ce qu'il t'est interdit de lui faire."],
+    ['nar', "Le cinquième maillon se referme. La Chaîne, elle, continue : des Compagnons à leurs élèves, des élèves aux leurs — jusqu'à toi."],
+    ['sfx', 'light'],
+    ['flash', '#c49bff'],
+    ['light', 'ilm']
+  ],
+
+  /* ─────────────────────────── HÉROS ─────────────────────────── */
+  heroes: {
+    ali: {
+      name: "'Alî", title: 'La Porte du Savoir', arabic: 'علي',
+      role: 'guerrier', el: 'ilm',
+      look: { robe: '#2f5d50', head: '#f1ead8', cloak: '#1f3a34', aura: '#c49bff' },
+      skills: [
+        { lvl: 1, id: 'dhulfiqar', name: 'Dhû l-Fiqâr', desc: 'Le sabre à deux pointes : deux frappes de fer.', cost: 3,
+          target: 'foe', el: 'fer', pow: 0.8, hits: 2, anim: 'slash' },
+        { lvl: 1, id: 'sentence', name: 'Sentence juste', desc: 'Un jugement rendu sans égard au rang. Justice.', cost: 3,
+          target: 'foe', el: 'adl', pow: 1.3, anim: 'light' },
+        { lvl: 2, id: 'parole_savoir', name: 'Parole de savoir', desc: 'Rend à chaque chose sa place. Savoir.', cost: 4,
+          target: 'foe', el: 'ilm', pow: 1.4, anim: 'glyph' },
+        { lvl: 4, id: 'khaybar', name: 'La Porte de Khaybar', desc: 'Il se fait rempart : garde du groupe renforcée, les coups viennent à lui.', cost: 5,
+          target: 'allies', fx: [{ st: 'def', v: 1, turns: 3 }, { st: 'taunt', turns: 2, self: true }], anim: 'guard' },
+        { lvl: 6, id: 'interrogez', name: '« Interrogez-moi »', desc: 'Il répond à toutes les questions à la fois. Savoir sur tous les égrégores.', cost: 7,
+          target: 'foes', el: 'ilm', pow: 0.9, anim: 'glyph' },
+        { lvl: 8, id: 'arret', name: 'Arrêt sans appel', desc: 'Justice forte ; retire les faveurs que l’égrégore s’est données.', cost: 8,
+          target: 'foe', el: 'adl', pow: 1.9, fx: [{ st: 'dispel' }], anim: 'pillar' }
+      ],
+      limit: { id: 'haydar', name: 'Haydar', desc: 'Le Lion de Khaybar : nul voile ne tient devant lui.', target: 'foes',
+               el: 'shajaa', pow: 1.6, fx: [{ st: 'veil', v: -2 }], anim: 'pillar' }
+    },
+    ibnabbas: {
+      name: "Ibn 'Abbâs", title: 'Le Docte de la communauté', arabic: 'ابن عباس',
+      role: 'sage', el: 'ilm',
+      look: { robe: '#e9e2cf', head: '#f6f1e4', cloak: '#6c5a8e', aura: '#ffe08a' },
+      skills: [
+        { lvl: 1, id: 'question', name: 'Question droite', desc: 'Il écoute le grief jusqu’au bout : révèle les failles.', cost: 2,
+          target: 'foe', el: 'sidq', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'light' },
+        { lvl: 1, id: 'interprete', name: "L'Interprète", desc: 'Replace la parole dans son contexte. Savoir.', cost: 3,
+          target: 'foe', el: 'ilm', pow: 1.3, anim: 'glyph' },
+        { lvl: 2, id: 'apaisement', name: 'Parole apaisante', desc: 'Rend la Constance à un compagnon.', cost: 4,
+          target: 'ally', heal: 1.0, anim: 'heal' },
+        { lvl: 4, id: 'preuve', name: 'La Preuve', desc: 'Un argument que nul ne peut écarter. Véracité ; ôte un voile.', cost: 5,
+          target: 'foe', el: 'sidq', pow: 1.4, fx: [{ st: 'veil', v: -1 }], anim: 'light' },
+        { lvl: 6, id: 'trois_reponses', name: 'Trois réponses', desc: 'À trois griefs, trois réponses. Trois frappes de Savoir.', cost: 7,
+          target: 'foe', el: 'ilm', pow: 0.6, hits: 3, anim: 'glyph' },
+        { lvl: 8, id: 'retour', name: 'Le Retour des égarés', desc: 'Soigne le groupe et dissipe ses altérations.', cost: 9,
+          target: 'allies', heal: 0.6, fx: [{ st: 'cleanse' }], anim: 'heal' }
+      ],
+      limit: { id: 'habr', name: 'Le Docte', desc: 'Le Livre répond au Livre : Savoir sur tous, failles révélées, les idoles doutent.', target: 'foes',
+               el: 'ilm', pow: 1.5, fx: [{ st: 'reveal' }, { st: 'doute', turns: 2 }], anim: 'glyph' }
+    },
+    ammar: {
+      name: "'Ammâr", title: 'Le Vétéran', arabic: 'عمّار',
+      role: 'soigneur', el: 'sabr',
+      look: { robe: '#8a7355', head: '#e6dcc8', cloak: '#5b4630', aura: '#7fd69a' },
+      skills: [
+        { lvl: 1, id: 'soutien', name: 'Main du vétéran', desc: 'Relève le courage d’un compagnon : rend la Constance.', cost: 3,
+          target: 'ally', heal: 1.0, anim: 'heal' },
+        { lvl: 1, id: 'patience', name: 'Patience ardente', desc: 'Ce qui a tenu sous l’épreuve ne cède plus. Patience.', cost: 3,
+          target: 'foe', el: 'sabr', pow: 1.3, anim: 'light' },
+        { lvl: 2, id: 'baume', name: 'Baume des anciens', desc: 'Régénération pour tout le groupe.', cost: 5,
+          target: 'allies', fx: [{ st: 'regen', turns: 3 }], anim: 'heal' },
+        { lvl: 3, id: 'delier', name: 'Délier', desc: 'Dissipe les altérations d’un compagnon et le soigne un peu.', cost: 4,
+          target: 'ally', heal: 0.5, fx: [{ st: 'cleanse' }], anim: 'heal' },
+        { lvl: 5, id: 'tenir', name: 'Tenir', desc: 'Patience sur tous les égrégores ; affaiblit leur assaut.', cost: 7,
+          target: 'foes', el: 'sabr', pow: 0.85, fx: [{ st: 'atk', v: -1, chance: 0.5 }], anim: 'wave' }
+      ],
+      limit: { id: 'premiers_jours', name: 'Patience des premiers jours', desc: 'Soigne tout le groupe, dissipe ses altérations, affermit sa garde.', target: 'allies',
+               heal: 1.0, fx: [{ st: 'cleanse' }, { st: 'def', v: 1, turns: 3 }], anim: 'heal' }
+    },
+    qays: {
+      name: 'Qays', title: "Fils de Sa'd", arabic: 'قيس',
+      role: 'stratege', el: 'rahma',
+      look: { robe: '#9c3f2e', head: '#efe6d2', cloak: '#4a2a22', aura: '#5fe0d0' },
+      skills: [
+        { lvl: 1, id: 'largesse', name: 'Largesse', desc: 'Il donne sans compter : soigne tout le groupe.', cost: 5,
+          target: 'allies', heal: 0.6, anim: 'heal' },
+        { lvl: 1, id: 'garde', name: 'Coup du garde', desc: 'Frappe de fer, nette et prompte.', cost: 3,
+          target: 'foe', el: 'fer', pow: 1.3, anim: 'slash' },
+        { lvl: 2, id: 'main_ouverte', name: 'Main ouverte', desc: 'Désarme par le bienfait. Miséricorde.', cost: 3,
+          target: 'foe', el: 'rahma', pow: 1.3, anim: 'light' },
+        { lvl: 4, id: 'manoeuvre', name: 'Manœuvre', desc: 'Le groupe gagne en Élan ; lui-même gagne un point de Niyya.', cost: 5,
+          target: 'allies', fx: [{ st: 'spd', v: 1, turns: 3 }, { st: 'niyya', v: 1, self: true }], anim: 'guard' },
+        { lvl: 6, id: 'banniere', name: 'Bannière de sûreté', desc: 'Qui la rejoint est sauf. Miséricorde sur tous ; ôte un voile.', cost: 7,
+          target: 'foes', el: 'rahma', pow: 0.9, fx: [{ st: 'veil', v: -1 }], anim: 'wave' },
+        { lvl: 8, id: 'relever', name: 'Relever', desc: 'Relève un compagnon éprouvé.', cost: 8,
+          target: 'ally', revive: true, heal: 0.5, anim: 'heal' }
+      ],
+      limit: { id: 'karam', name: 'Générosité sans compte', desc: 'Soigne le groupe, le régénère et lui accorde 2 points de Niyya.', target: 'allies',
+               heal: 1.0, fx: [{ st: 'regen', turns: 3 }, { st: 'niyya', v: 2 }], anim: 'heal' }
+    }
+  },
+
+  /* ─────────────────────────── ÉGRÉGORES ─────────────────────────── */
+  enemies: {
+    murmure: {
+      name: 'Murmure de rang', art: 'wisp', hue: 48, scale: 1, lvl: 1, tier: 'minion',
+      weak: ['fer', 'sidq'], veils: 1,
+      skills: [{ w: 2, name: '« Sais-tu qui il est ? »', target: 'foe', el: 'fer', pow: 0.9, fx: [{ st: 'def', v: -1, chance: 0.3 }], anim: 'dark' }],
+      taunts: ['C’est le calife… qu’il la prenne…'],
+      desc: 'Un chuchotement de foule : « on ne fait pas attendre un homme pareil ». Seul, il n’est rien ; à mille, il fait plier une règle. Un coup franc ou une parole vraie le dissipent.'
+    },
+    soupcon: {
+      name: 'Soupçon', art: 'mask', hue: 300, scale: 1, lvl: 2, tier: 'minion',
+      weak: ['ilm', 'sabr'], veils: 2,
+      skills: [{ w: 2, name: 'Insinuation', target: 'foe', el: 'fer', pow: 0.8, fx: [{ st: 'waswas', turns: 2, chance: 0.5 }], anim: 'dark' }],
+      desc: 'Un masque vide qui prête à chacun une arrière-pensée. Il ne résiste ni à celui qui vérifie, ni à celui qui attend la preuve avant de parler.'
+    },
+    privilege: {
+      name: 'Le Privilège', art: 'crown', hue: 45, scale: 2, lvl: 3, tier: 'elite',
+      weak: ['adl', 'sabr'], veils: 3,
+      skills: [
+        { w: 3, name: 'Préséance', target: 'self', fx: [{ st: 'def', v: 1 }], anim: 'guard' },
+        { w: 3, name: 'Le rang vaut preuve', target: 'foe', el: 'fer', pow: 1.3, anim: 'dark' },
+        { w: 2, name: 'Regards de la foule', target: 'foes', el: 'fer', pow: 0.7, fx: [{ st: 'atk', v: -1, chance: 0.4 }], anim: 'wave' }
+      ],
+      phases: [{ at: 0.5, say: 'Tu es le calife. Un mot de toi, et le juge se taira. Qui t’en blâmerait ?', fx: [{ st: 'atk', v: 1 }],
+                 addSkills: [{ w: 3, name: 'Passe-droit', target: 'foe', el: 'fer', pow: 1.5, fx: [{ st: 'doute', turns: 2, chance: 0.5 }], anim: 'burst' }] }],
+      taunts: ['Tout le monde trouve cela normal.', 'La règle est pour les autres.'],
+      desc: 'Égrégore du rang. Il naît chaque fois qu’une foule attend que le puissant gagne parce qu’il est puissant. Il n’a pas besoin de corrompre le juge : il lui suffit que chacun trouve normal que la règle plie. La justice et la patience le brisent.'
+    },
+    echo: {
+      name: 'Écho', art: 'wisp', hue: 285, scale: 1, lvl: 3, tier: 'minion',
+      weak: ['ilm', 'shajaa'], veils: 1,
+      skills: [
+        { w: 2, name: 'Redite', target: 'foe', el: 'fer', pow: 0.9, anim: 'dark' },
+        { w: 1, name: 'Amplifier', target: 'ally', fx: [{ st: 'atk', v: 1 }], anim: 'glyph' }
+      ],
+      desc: 'Une voix qui répète ce que dit la voix d’à côté. Elle n’a jamais lu la phrase qu’elle crie. Il suffit de lui demander ce qu’elle veut dire.'
+    },
+    clameur: {
+      name: 'Clameur', art: 'swarm', hue: 270, scale: 1, lvl: 4, tier: 'minion',
+      weak: ['sidq', 'fer'], veils: 2,
+      skills: [
+        { w: 3, name: 'Mille bouches', target: 'foes', el: 'fer', pow: 0.65, anim: 'wave' },
+        { w: 1, name: 'Couvrir la voix', target: 'foe', fx: [{ st: 'doute', turns: 2, chance: 0.6 }], anim: 'dark' }
+      ],
+      desc: 'Une nuée de mots criés pour ne pas entendre la réponse. Elle couvre les voix : celui qu’elle atteint doute et se tait.'
+    },
+    slogan: {
+      name: 'Le Slogan', art: 'banner', hue: 280, scale: 3, lvl: 5, tier: 'boss',
+      weak: ['ilm', 'sidq'], immune: ['fer'], veils: 5,
+      skills: [
+        { w: 3, name: 'Mot d’ordre', target: 'foe', el: 'fer', pow: 1.3, anim: 'dark' },
+        { w: 2, name: 'Répétition', target: 'foes', el: 'fer', pow: 0.75, fx: [{ st: 'doute', turns: 2, chance: 0.3 }], anim: 'wave' },
+        { w: 2, name: 'Unisson', target: 'self', fx: [{ st: 'atk', v: 1 }], anim: 'glyph' }
+      ],
+      phases: [{ at: 0.5, say: 'Je suis une parole vraie. On ne discute pas une parole vraie : on la crie.', fx: [{ st: 'spd', v: 1 }],
+                 addSkills: [{ w: 3, name: 'Parole vidée', target: 'foes', el: 'fer', pow: 0.9, fx: [{ st: 'mag', v: -1, chance: 0.5 }], anim: 'burst' }] }],
+      taunts: ['Répète. Ne réfléchis pas. Répète.', 'Qui me nuance me trahit.'],
+      desc: 'Égrégore de la formule. Une parole vraie, répétée par des milliers de bouches qui ne la comprennent plus, se détache de son sens et devient une arme. Le Slogan ne ment pas : il tronque. Le fer passe au travers ; le savoir et la véracité le font taire.'
+    },
+    lame: {
+      name: 'Lame pieuse', art: 'blade', hue: 200, scale: 1, lvl: 5, tier: 'minion',
+      weak: ['rahma', 'shajaa'], veils: 2,
+      skills: [
+        { w: 3, name: 'Zèle tranchant', target: 'foe', el: 'fer', pow: 0.65, hits: 2, anim: 'slash' },
+        { w: 1, name: 'Ferveur', target: 'self', fx: [{ st: 'spd', v: 1 }], anim: 'glyph' }
+      ],
+      taunts: ['Je frappe pour le bien.'],
+      desc: 'Un faisceau de lames sûr de servir le bien. Il ne doute jamais, et c’est ce qui le rend dangereux. La miséricorde l’émousse ; le courage de lui tenir tête le disperse.'
+    },
+    scrupule: {
+      name: 'Le Scrupule inversé', art: 'lens', hue: 160, scale: 2, lvl: 7, tier: 'elite',
+      weak: ['rahma', 'ilm'], veils: 4,
+      skills: [
+        { w: 2, name: 'Peser la datte', target: 'self', fx: [{ st: 'def', v: 1 }, { st: 'regen', turns: 2 }], anim: 'guard' },
+        { w: 3, name: 'Négliger le sang', target: 'foe', el: 'fer', pow: 1.5, anim: 'slash' },
+        { w: 2, name: 'Loupe', target: 'foes', el: 'fer', pow: 0.8, fx: [{ st: 'def', v: -1, chance: 0.4 }], anim: 'glyph' }
+      ],
+      phases: [{ at: 0.4, say: 'Une datte prise sans la payer : voilà la faute. Le reste n’est que poussière.', fx: [{ st: 'atk', v: 1 }] }],
+      desc: 'Une grappe de lentilles qui grossit l’infime et ne voit plus l’immense. Il pèse une datte tombée et enjambe le sang d’un innocent. Le savoir lui rend les proportions ; la miséricorde, le sens.'
+    },
+    juge: {
+      name: 'Le Juge sans miséricorde', art: 'scale', hue: 215, scale: 3, lvl: 9, tier: 'boss',
+      weak: ['ilm', 'rahma'], immune: ['adl'], veils: 6,
+      skills: [
+        { w: 3, name: 'Sentence', target: 'foe', el: 'adl', pow: 1.5, anim: 'pillar' },
+        { w: 2, name: 'Tous coupables', target: 'foes', el: 'adl', pow: 0.85, anim: 'wave' },
+        { w: 2, name: 'Anathème', target: 'foe', el: 'fer', pow: 1.0, fx: [{ st: 'doute', turns: 2, chance: 0.6 }, { st: 'def', v: -1, chance: 0.5 }], anim: 'dark' },
+        { w: 1, name: 'Certitude', target: 'self', fx: [{ st: 'atk', v: 1 }, { st: 'def', v: 1 }], anim: 'guard' }
+      ],
+      phases: [
+        { at: 0.6, say: 'Je suis le jugement. Qui me contredit s’est condamné lui-même.', fx: [{ st: 'atk', v: 1 }],
+          addSkills: [{ w: 3, name: 'Plateau unique', target: 'foes', el: 'adl', pow: 1.0, fx: [{ st: 'waswas', turns: 2, chance: 0.5 }], anim: 'burst' }] },
+        { at: 0.3, say: 'Tous coupables. Toi aussi. Toi surtout, qui prétends savoir.', fx: [{ st: 'spd', v: 1 }],
+          addSkills: [{ w: 3, name: 'La phrase devenue lame', target: 'foe', el: 'fer', pow: 1.9, anim: 'slash' }] }
+      ],
+      taunts: ['Je n’ai pas besoin de t’entendre.', 'La miséricorde est une faiblesse de juge.'],
+      desc: 'L’idole de ceux qui se font juges des cœurs. Elle porte l’habit de la justice, mais sa balance n’a qu’un plateau : elle ne sait que condamner. La justice seule ne l’entame pas, car elle s’en croit le nom. Elle cède au savoir, qui distingue, et à la miséricorde, qui retient la main.'
+    }
+  },
+
+  /* ─────────────────────────── CODEX ─────────────────────────── */
+  codex: [
+    { id: 'ali_bio', cat: 'Biographie', title: "'Alî ibn Abî Tâlib",
+      text: "'Alî (qu'Allah l'agrée), cousin du Messager d'Allah ﷺ, grandit dans sa maison et fut parmi les tout premiers à embrasser l'islam, encore enfant. La nuit de l'Hégire, il dormit dans le lit du Messager ﷺ pour couvrir son départ. Porte-étendard à Khaybar, il est l'un des dix à qui le Paradis fut annoncé. Élu calife à Médine à la fin de l'an 35, il porta le siège du califat à Koufa et mourut en martyr en Ramadan de l'an 40. Le surnom « la Porte du Savoir » vient d'une tradition célèbre dont l'authenticité est discutée ; son rang de savant et de juge, lui, fait l'unanimité.",
+      src: "Ibn Hishâm, Sîra ; Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh ; at-Tirmidhî" },
+    { id: 'ibnabbas_bio', cat: 'Biographie', title: "'Abdallâh ibn 'Abbâs",
+      text: "Cousin du Messager d'Allah ﷺ, il avait environ treize ans à sa mort (qu'Allah l'agrée, ainsi que son père). Le Messager ﷺ avait invoqué pour lui l'intelligence de la religion. 'Umar le faisait siéger, tout jeune, parmi les anciens de Badr. On le surnomme le Docte de la communauté et l'Interprète du Coran. Gouverneur de Bassora pour 'Alî, il mourut à Tâ'if en l'an 68.",
+      src: "al-Bukhârî ; Ibn Sa'd, Tabaqât" },
+    { id: 'ammar_bio', cat: 'Biographie', title: "'Ammâr ibn Yâsir",
+      text: "'Ammâr (qu'Allah l'agrée) fut des tout premiers musulmans de La Mecque. Sa famille, pauvre et sans protecteur, endura la torture pour sa foi, et ses parents comptent parmi les premiers martyrs de l'islam. Il combattit à Badr et aux grandes journées, puis gouverna Koufa sous 'Umar. Il tomba à Siffîn en l'an 37, à plus de quatre-vingt-dix ans. On rapporte que sa dernière gorgée en ce monde fut un peu de lait.",
+      src: "Ibn Hishâm, Sîra ; Ibn Sa'd, Tabaqât ; Ahmad, al-Musnad" },
+    { id: 'qays_bio', cat: 'Biographie', title: "Qays ibn Sa'd",
+      text: "Qays ibn Sa'd ibn 'Ubâda (qu'Allah les agrée), des Ansâr de Médine, était le fils du chef des Khazraj. Il se tenait auprès du Messager d'Allah ﷺ, rapporte Anas, « comme le chef de la garde auprès de l'émir ». Célèbre pour sa générosité et sa finesse, il gouverna l'Égypte pour 'Alî, puis commanda à Siffîn et à Nahrawân, où il exhorta les sécessionnistes avant la bataille. Il mourut à Médine vers l'an 60.",
+      src: "al-Bukhârî ; Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh" },
+    { id: 'koufa', cat: 'Lieu', title: 'Koufa',
+      text: "Ville-camp fondée en l'an 17 par Sa'd ibn Abî Waqqâs, sur l'ordre de 'Umar, près de l'Euphrate. 'Alî en fit le siège du califat en l'an 36. On rapporte qu'il refusa d'habiter le palais du gouverneur. Koufa deviendra l'un des grands foyers du savoir : droit, grammaire, lectures du Coran — et une écriture qui porte son nom, le coufique.",
+      src: "al-Balâdhurî, Futûh al-Buldân ; at-Tabarî, Târîkh" },
+    { id: 'cuirasse', cat: 'Événement', title: 'La cuirasse devant le juge',
+      text: "On rapporte que 'Alî, calife, reconnut sa cuirasse entre les mains d'un homme des Gens du Livre, à Koufa. Il ne la reprit pas : il le cita devant le juge Shurayh, en fonction depuis 'Umar. Faute de preuve recevable — le juge écarta le témoignage du fils en faveur de son père —, Shurayh trancha contre le calife, qui s'inclina. L'homme, bouleversé, reconnut les faits et embrassa l'islam ; 'Alî lui laissa la cuirasse. Le récit, très célèbre, est rapporté par Abû Nu'aym, al-Bayhaqî et Ibn Kathîr ; les spécialistes discutent la solidité de sa chaîne.",
+      src: "Abû Nu'aym, Hilyat al-Awliyâ' ; al-Bayhaqî, as-Sunan al-Kubrâ ; Ibn Kathîr, al-Bidâya wa n-Nihâya" },
+    { id: 'privilege', cat: 'Noosphère', title: 'Le Privilège',
+      text: "Égrégore du rang. Il naît chaque fois qu'une foule attend que le puissant gagne parce qu'il est puissant. Il n'a pas besoin de corrompre le juge : il lui suffit que chacun trouve normal que la règle plie. Il se brise quand le premier des hommes se tient devant le juge comme le dernier, et repart débouté sans colère." },
+    { id: 'siffin', cat: 'Événement', title: 'Siffîn',
+      text: "En l'an 37, sur la rive de l'Euphrate, l'armée d'Irak et l'armée de Syrie se font face durant des semaines. De grands Compagnons se trouvent dans chaque rang ; d'autres s'abstiennent. Les combats cessent quand on convient de s'en remettre à deux arbitres. Les savants recommandent la retenue sur ces événements : tous étaient des croyants qui cherchaient le vrai, et l'on demande pour tous l'agrément d'Allah.",
+      src: "at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya wa n-Nihâya" },
+    { id: 'harura', cat: 'Événement', title: "Le débat de Harûrâ'",
+      text: "Au retour de Siffîn, plusieurs milliers d'hommes refusent l'arbitrage et se retirent à Harûrâ', près de Koufa : on les appellera Harûriyya, puis Khawârij, « ceux qui sont sortis ». Ibn 'Abbâs vient débattre avec eux à l'heure de midi. Il écoute leurs griefs, puis y répond par le Coran (5:95 ; 4:35) et par l'exemple du Messager ﷺ à Hudaybiyya. Deux mille d'entre eux reviennent ce jour-là ; davantage, selon d'autres récits.",
+      src: "an-Nasâ'î, as-Sunan al-Kubrâ ; al-Hâkim, al-Mustadrak ; 'Abd ar-Razzâq, al-Musannaf" },
+    { id: 'slogan', cat: 'Noosphère', title: 'Le Slogan',
+      text: "Égrégore de la formule. Une parole vraie, répétée par des milliers de bouches qui ne la comprennent plus, se détache de son sens et devient une arme. Le Slogan ne ment pas : il tronque. Aucune lame ne l'entame ; seuls le savoir, qui rend à la phrase son contexte, et la véracité, qui rappelle ce qu'elle visait, le font taire. L'Agrégor de la Cité-Miroir en fabrique mille par jour." },
+    { id: 'parole_verite', cat: 'Parole', title: '« Parole de vérité… »',
+      text: "Quand les sécessionnistes criaient « Le jugement n'appartient qu'à Allah », 'Alî répondit : « Parole de vérité par laquelle on vise le faux. » Il leur reconnut pourtant trois droits : l'accès aux mosquées, leur part du trésor tant que leurs mains restaient avec celles des musulmans, et de n'être jamais combattus les premiers. Il refusa de punir une opinion tant qu'elle ne versait pas le sang.",
+      src: "Muslim ; Ibn Abî Shayba, al-Musannaf ; at-Tabarî, Târîkh" },
+    { id: 'nahrawan', cat: 'Événement', title: 'Nahrawân',
+      text: "En l'an 38, les irréductibles se regroupent près du canal de Nahrawân, à l'est du Tigre. Ils tuent 'Abdallâh, fils du Compagnon Khabbâb, puis l'émissaire de 'Alî. Sommés de livrer les meurtriers, ils répondent : « Nous les avons tous tués. » 'Alî fait dresser une bannière de sûreté, confiée à Abû Ayyûb al-Ansârî ; des centaines se retirent. Il interdit de frapper le premier. La bataille est brève. Interrogé ensuite, il refuse de les dire polythéistes ou hypocrites.",
+      src: "at-Tabarî, Târîkh ; Ibn Abî Shayba, al-Musannaf ; Ibn Kathîr, al-Bidâya wa n-Nihâya" },
+    { id: 'juge', cat: 'Noosphère', title: 'Le Juge sans miséricorde',
+      text: "L'idole de ceux qui se font juges des cœurs. Elle porte l'habit de la justice, mais sa balance n'a qu'un plateau : elle ne sait que condamner. Scrupuleuse pour une datte, elle est sans égard pour le sang. La justice seule ne l'entame pas, car elle s'en croit le nom ; elle cède au savoir, qui distingue, et à la miséricorde, qui retient la main. 'Alî la brisa deux fois : à Nahrawân, en refusant de rendre l'anathème, puis sur son lit, en protégeant son propre meurtrier de la vengeance." },
+    { id: 'consignes', cat: 'Parole', title: 'Les dernières consignes',
+      text: "Frappé à l'aube, en Ramadan de l'an 40, 'Alî donna ses consignes au sujet de son agresseur, Ibn Muljam : qu'on le nourrisse et qu'on le traite bien ; s'il survivait, il déciderait lui-même ; s'il mourait, une seule frappe pour sa frappe, sans mutilation. Il interdit qu'on verse le sang d'autres musulmans en son nom. Il mourut deux jours plus tard, selon les récits les plus répandus.",
+      src: "Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh" }
+  ],
+
+  /* ─────────────────────────── CHAPITRES ─────────────────────────── */
+  chapters: [
+    /* ═════ Chapitre 1 ═════ */
+    {
+      id: 'a1', title: 'Le Bouclier et le Juge', sub: 'An 36 H · 657 · Koufa',
+      map: 'koufa', opts: { time: 'day' }, start: 'mosquee_cour',
+      party: ['ali', 'ibnabbas'],
+      npcs: [
+        { id: 'ammar', name: "'Ammâr ibn Yâsir", hero: 'ammar', at: 'place',
+          talk: [['say', 'ammar', "J'ai vu naître cette religion à La Mecque. Je veux la voir juste à Koufa."]] },
+        { id: 'kumayl', name: 'Kumayl ibn Ziyâd', at: ['mosquee_cour', 2, 1], look: { kind: 'homme', robe: '#6d7a5a', head: '#e8e0cc' },
+          talk: [
+            ['say', 'kumayl', "Il m'a pris par la main, un soir, et m'a mené hors de la ville pour m'enseigner. Je n'ai rien oublié."],
+            ['quote', "Le savoir vaut mieux que la richesse : le savoir te garde, alors que toi, tu gardes la richesse.", "'Alî ibn Abî Tâlib à Kumayl — on rapporte, Abû Nu'aym, Hilyat al-Awliyâ'"]
+          ] },
+        { id: 'etudiant', name: 'Un étudiant', at: ['mosquee_porte', 1, 0], look: { kind: 'homme', robe: '#b9a98a', head: '#efe7d6' },
+          talk: [['say', 'etudiant', "Koufa n'était qu'un camp de roseaux quand Sa'd ibn Abî Waqqâs l'a fondée. Aujourd'hui on y vient de loin pour apprendre."]] },
+        { id: 'changeur', name: 'Un peseur du souk', at: ['souk', -2, 1], look: { kind: 'ancien', robe: '#7a6248', head: '#d9cdb6' },
+          talk: [['say', 'changeur', "On rapporte qu'il parcourt les étals, sa férule à la main : « Marchands, craignez Allah, et donnez la juste mesure. » Depuis, je vérifie mes poids deux fois."]] },
+        { id: 'homme', name: "L'homme à la cuirasse", at: ['souk', 1, 0], look: { kind: 'homme', robe: '#5c6b7a', head: '#cfc6b4' },
+          talk: [['say', 'homme', "Des cuirasses, des selles, du cuir de Hîra. Regarde sans crainte."]] },
+        { id: 'shurayh', name: 'Le juge Shurayh', at: 'halle', look: { kind: 'ancien', robe: '#e8e0cc', head: '#f2ece0' },
+          talk: [['say', 'shurayh', "Ici, je ne connais que des plaideurs. Le rang reste à la porte."]] },
+        { id: 'qanbar', name: 'Qanbar', at: ['halle', -1, 1], look: { kind: 'homme', robe: '#8c7a5e', head: '#e2d8c2' },
+          talk: [['say', 'qanbar', "Je suis son affranchi. Je témoignerai de ce que j'ai vu, pas davantage."]] },
+        { id: 'hasan', name: 'Al-Hasan', at: ['halle', 1, 1], look: { kind: 'compagnon', robe: '#e6dfcc', head: '#f4efe2', aura: '#ffe9a8' },
+          talk: [['say', 'hasan', "Mon père m'a appris qu'un juge se respecte même quand il nous déboute."]] }
+      ],
+      foes: [
+        { id: 'f1', at: ['souk', 3, 2], group: ['murmure', 'murmure'], bg: 'ville' },
+        { id: 'f1b', at: 'palmeraie', group: ['murmure', 'soupcon'], bg: 'ville' },
+        { id: 'f2', map: 'noos', at: 'noeud1', group: ['soupcon', 'murmure', 'murmure'], bg: 'noos' }
+      ],
+      chests: [
+        { at: ['puits', 1, 0], item: 'dattes', n: 2 },
+        { at: ['palmeraie', 1, 1], item: 'musc', n: 1 },
+        { map: 'noos', at: 'faille', item: 'miel', n: 1 }
+      ],
+      intro: [
+        ['title', 'Le Bouclier et le Juge', 'An 36 de l’Hégire · Koufa'],
+        ['amb', 'foule'],
+        ['nar', "Koufa, près de l'Euphrate. 'Alî y a porté le siège du califat. On rapporte qu'il refusa le palais du gouverneur et logea simplement, à deux pas de la mosquée où il enseigne."],
+        ['quote', "Interrogez-moi sur le Livre d'Allah : il n'est pas un verset dont je ne sache s'il est descendu de nuit ou de jour, en plaine ou en montagne.", "'Alî ibn Abî Tâlib — Ibn Sa'd, Tabaqât"],
+        ['nar', "Ce matin-là, une pièce manque à son équipement : une vieille cuirasse, égarée en route. Il n'y pense plus. Il sort inspecter le souk, comme chaque jour."],
+        ['codex', 'koufa'],
+        ['codex', 'ibnabbas_bio']
+      ],
+      objectives: [
+        { text: "Retrouver 'Ammâr ibn Yâsir sur la place", talk: 'ammar', then: [
+          ['say', 'ammar', "Commandeur des croyants. Mes os sont vieux, mais ils savent encore marcher derrière le vrai."],
+          ['say', 'ali', "Marche à côté, Abû l-Yaqzân. Pas derrière."],
+          ['join', 'ammar'], ['hide', 'ammar'],
+          ['codex', 'ammar_bio']
+        ] },
+        { text: 'Inspecter le souk de Koufa', goto: 'souk', then: [
+          ['nar', "Entre deux étals, un reflet de mailles. Une cuirasse usée, que 'Alî reconnaît au premier regard."],
+          ['say', 'ali', "Cette cuirasse est la mienne. Je ne l'ai ni vendue ni donnée."],
+          ['say', 'homme', "Elle est à moi, Commandeur des croyants. Elle est dans ma main."],
+          ['nar', "Le souk se tait. Puis les murmures montent, de tous côtés : c'est le calife — qu'il la prenne, et qu'on n'en parle plus."],
+          ['choice', "L'homme refuse de rendre la cuirasse. Que fait le calife ?", [
+            { t: "La reprendre d'autorité : chacun sait qu'il ne ment pas", r: [
+              ['nar', "La chaîne vacille. Ce n'est pas ce qui fut rapporté. Être véridique ne dispense pas de la preuve : ce qu'il aurait pris ainsi, tout puissant après lui l'aurait pris de même."]
+            ] },
+            { t: 'Le citer devant le juge, comme tout plaideur', ok: true, r: [
+              ['say', 'ali', "Alors allons devant Shurayh. Il dira lequel de nous deux a raison."],
+              ['say', 'homme', "Devant ton propre juge ?"],
+              ['say', 'ali', "Devant le juge. Il n'est à personne."]
+            ] },
+            { t: "Faire saisir l'homme par la garde du souk", r: [
+              ['nar', "Non. L'homme tenait l'objet, et rien encore ne prouvait le vol. 'Alî ne fit arrêter personne : il se fit plaideur."]
+            ] }
+          ]],
+          ['tp', 'homme', ['halle', -1, 2]],
+          ['say', 'ibnabbas', "Écoute ces murmures. Ils ne veulent pas de mal : ils trouvent seulement naturel que le rang l'emporte. C'est ainsi que naît un égrégore."]
+        ] },
+        { text: 'Dissiper les murmures du souk', foe: 'f1', then: [
+          ['nar', "Les murmures se dispersent. Mais dans l'envers de la ville, ils convergent vers la halle du juge, où quelque chose les attend et les rassemble."],
+          ['give', 'dattes', 2]
+        ] },
+        { text: 'Se présenter devant le juge Shurayh, à la halle', talk: 'shurayh', then: [
+          ['say', 'shurayh', "Commandeur des croyants. Que réclames-tu ?"],
+          ['say', 'ali', "Cette cuirasse. Elle est à moi : je ne l'ai ni vendue ni donnée."],
+          ['say', 'shurayh', "Et toi, que réponds-tu ?"],
+          ['say', 'homme', "La cuirasse est à moi. Mais je ne tiens pas le Commandeur des croyants pour un menteur."],
+          ['say', 'shurayh', "Elle est entre ses mains. Commandeur des croyants, as-tu une preuve ?"],
+          ['say', 'ali', "Qanbar, mon affranchi, et al-Hasan, mon fils, en témoignent."],
+          ['say', 'shurayh', "Le témoignage de l'affranchi, je le reçois. Celui du fils en faveur de son père, je ne puis le recevoir."],
+          ['nar', "Un silence tombe sur la halle. Tous les regards vont du juge au calife. Nul n'imagine que le calife puisse perdre. Et de cette attente, dans l'envers du lieu, quelque chose se couronne."],
+          ['sfx', 'glitch'],
+          ['map', 'noos', 'seuil', { hue: 48 }],
+          ['amb', 'noos'],
+          ['nar', "La noosphère de Koufa. Ici, l'attente de la foule a pris corps : une couronne vide, qui grandit de chaque regard levé vers le rang."],
+          ['codex', 'privilege']
+        ] },
+        { text: "Traverser l'envers de la halle", foe: 'f2', then: [
+          ['say', 'ammar', "J'ai connu La Mecque quand les puissants y avaient toujours raison. Je ne veux pas revoir cela sous un autre nom."]
+        ] },
+        { text: 'Atteindre le cœur de l’égrégore', goto: 'coeur', then: [
+          ['say', 'ibnabbas', "Le voilà. Il ne cédera pas à la force : il s'en nourrit. Montre-lui la justice, et la patience de celui qui attend son tour."],
+          ['heal'],
+          ['battle', { group: ['privilege'], bg: 'noos', boss: true, intro: 'Tu es le premier des hommes. Pourquoi plaiderais-tu comme le dernier ?' }],
+          ['sfx', 'break'],
+          ['nar', "La couronne se fend. Dans la halle, rien n'a bougé : un juge attend la réponse d'un plaideur."],
+          ['map', 'koufa', 'halle', { time: 'day' }],
+          ['amb', 'foule'],
+          ['choice', 'Le juge a écarté le témoignage. Que fait le calife ?', [
+            { t: "Rappeler au juge de qui il tient sa charge", r: [
+              ['nar', "La chaîne vacille. Ce n'est pas ce qui fut rapporté. Un juge qui tremble devant celui qui le nomme n'est plus un juge — et 'Alî le savait mieux que quiconque."]
+            ] },
+            { t: 'Trancher lui-même : il est le meilleur juge de la communauté', r: [
+              ['nar', "Non. Nul n'est juge en sa propre cause, fût-il le plus savant des hommes. Il avait choisi de plaider : il accepta d'être débouté."]
+            ] },
+            { t: '« Shurayh a dit vrai : je n’ai pas d’autre preuve. »', ok: true, r: [
+              ['say', 'ali', "Shurayh a dit vrai. Je n'ai pas d'autre preuve."],
+              ['say', 'shurayh', "Alors la cuirasse reste à celui qui la tient."]
+            ] }
+          ]],
+          ['nar', "L'homme prend la cuirasse et fait quelques pas vers la porte. Puis il s'arrête, et revient."],
+          ['say', 'homme', "J'atteste que ce sont là des jugements de prophètes. Le Commandeur des croyants me mène devant son propre juge — et son juge tranche contre lui !"],
+          ['say', 'homme', "La cuirasse est la tienne. Elle était tombée de ta monture, et je l'ai ramassée."],
+          ['nar', "On rapporte qu'il prononça alors l'attestation de foi, et que 'Alî lui répondit : « Puisque tu as embrassé l'islam, elle est à toi » — et lui fit don, de surcroît, d'un cheval."],
+          ['codex', 'cuirasse']
+        ] }
+      ],
+      outro: [
+        ['nar', "Ce jour-là, Koufa apprit qu'un calife pouvait perdre un procès et en sortir grandi. Dans la noosphère de la ville, une couronne était tombée : celle qui voulait que le rang tienne lieu de preuve."],
+        ['say', 'ibnabbas', "Tu as perdu une cuirasse, cousin."],
+        ['say', 'ali', "Et le juge a gardé la sienne. Le marché est bon."]
+      ]
+    },
+
+    /* ═════ Chapitre 2 ═════ */
+    {
+      id: 'a2', title: 'La Parole détournée', sub: "An 37 H · 658 · Koufa et Harûrâ'",
+      map: 'koufa', opts: { time: 'day' }, start: 'maison',
+      party: ['ali', 'ibnabbas'],
+      npcs: [
+        { id: 'qays', name: "Qays ibn Sa'd", hero: 'qays', at: ['maison', 1, 1],
+          talk: [['say', 'qays', "On me dit rusé. Si la ruse ne menait pas au Feu, je le serais plus que quiconque."]] },
+        { id: 'veteran', name: 'Un vétéran de Siffîn', at: 'place', look: { kind: 'soldat', robe: '#6b5a48', head: '#d6ccb8' },
+          talk: [
+            ['say', 'veteran', "J'étais près de 'Ammâr, le dernier jour. On lui porta un peu de lait. Il sourit : ce serait, dit-il, sa dernière provision de ce monde."],
+            ['if', 'lait_donne',
+              [['say', 'veteran', "Qu'Allah lui fasse miséricorde. Et à nous tous."]],
+              [['say', 'veteran', "Tiens. Garde ceci en mémoire de lui."], ['give', 'lait', 1], ['flag', 'lait_donne', true]]]
+          ] },
+        { id: 'fidele', name: 'Un fidèle', at: ['mosquee_porte', 1, 0], look: { kind: 'homme', robe: '#9a8a6c', head: '#ebe3d0' },
+          talk: [['say', 'fidele', "Ils étaient au premier rang de la prière, l'an dernier. Aujourd'hui ils campent à Harûrâ' et nous disent sortis de la foi."]] },
+        { id: 'crieur', name: 'Un sécessionniste', at: ['mosquee_cour', 2, 2], hidden: true, look: { kind: 'homme', robe: '#4f4a45', head: '#c8c0b0' },
+          talk: [['say', 'crieur', "Je n'ai rien à te dire. Le jugement n'appartient qu'à Allah."]] },
+        { id: 'sentinelle', name: "Sentinelle de Harûrâ'", map: 'camp', at: ['entree', 1, 0], look: { kind: 'soldat', robe: '#4f4a45', head: '#c8c0b0' },
+          talk: [['say', 'sentinelle', "Tu es le cousin de 'Alî. Entre, mais n'attends pas qu'on t'approuve."]] },
+        { id: 'ibnkawwa', name: "Ibn al-Kawwâ'", map: 'camp', at: ['feu', -2, 0], look: { kind: 'homme', robe: '#3f4650', head: '#d0c8b8' },
+          talk: [['say', 'ibnkawwa', "Je connais cet homme. Les Quraysh sont gens de dispute : ne discutez pas avec lui."]] },
+        { id: 'recitant', name: 'Un jeune récitant', map: 'camp', at: 'tentes', look: { kind: 'homme', robe: '#5a544c', head: '#d8d0c0' },
+          talk: [['say', 'recitant', "Nous veillons toutes les nuits. Nous jeûnons. Comment des gens qui adorent autant pourraient-ils se tromper ?"]] },
+        { id: 'orateur', name: 'Le porte-parole', map: 'camp', at: ['feu', 1, 0], look: { kind: 'ancien', robe: '#45403a', head: '#cfc7b6' },
+          talk: [['say', 'orateur', "Nous avons dit ce que nous avions à dire."]] },
+        { id: 'repenti', name: 'Un homme de Koufa', map: 'camp', at: ['feu', 0, 2], hidden: true, look: { kind: 'homme', robe: '#7a6c58', head: '#e0d6c2' },
+          talk: [['say', 'repenti', "Je rentre. D'autres me suivent."]] }
+      ],
+      foes: [
+        { id: 'fk', at: 'palmeraie', group: ['echo', 'echo'], bg: 'ville' },
+        { id: 'f2', map: 'noos', at: 'noeud1', group: ['echo', 'clameur', 'echo'], bg: 'noos' },
+        { id: 'f3', map: 'noos', at: 'miroir', group: ['clameur', 'clameur'], bg: 'noos' }
+      ],
+      chests: [
+        { at: ['puits', 0, 1], item: 'eau', n: 1 },
+        { map: 'camp', at: ['enclos', 1, 0], item: 'dattes', n: 2 },
+        { map: 'noos', at: 'faille', item: 'musc', n: 1 }
+      ],
+      intro: [
+        ['title', 'La Parole détournée', 'An 37 de l’Hégire · Harûrâ’'],
+        ['amb', 'silence'],
+        ['nar', "Siffîn, sur l'Euphrate. Deux armées de croyants se font face durant des semaines. Dans chaque rang on prie, et l'on pleure les morts de l'autre. La Chaîne ne s'y attarde pas : elle baisse les yeux."],
+        ['nar', "'Ammâr ibn Yâsir y tombe, à plus de quatre-vingt-dix ans. Puis des feuillets du Livre sont levés au bout des lances, et l'on convient de s'en remettre à deux arbitres. Les armes se taisent. Autre chose commence."],
+        ['codex', 'siffin'],
+        ['nar', "Sur la route du retour, des milliers d'hommes quittent les rangs. Ils refusent l'arbitrage, crient une phrase tirée du Livre, et dressent leurs tentes à Harûrâ', aux portes de Koufa."],
+        ['amb', 'foule']
+      ],
+      objectives: [
+        { text: "Entendre Qays ibn Sa'd devant la maison", talk: 'qays', then: [
+          ['say', 'qays', "Commandeur des croyants, ils sont des milliers à Harûrâ'. Ils se sont donné un chef pour la guerre et un imam pour la prière."],
+          ['say', 'ali', "Ont-ils versé le sang ?"],
+          ['say', 'qays', "Non. Ils crient, et ils prient."],
+          ['say', 'ali', "Alors on ne leur répond pas par le sabre. On leur parle."],
+          ['join', 'qays'], ['hide', 'qays'],
+          ['codex', 'qays_bio']
+        ] },
+        { text: "Gagner la porte nord, vers Harûrâ'", goto: 'porte_nord', then: [
+          ['say', 'ibnabbas', "Commandeur des croyants, retarde un peu la prière de midi. Je vais aller parler à ces gens."],
+          ['say', 'ali', "Je crains pour toi."],
+          ['say', 'ibnabbas', "Ne crains rien. On me sait de bon caractère, et je ne fais de mal à personne."],
+          ['nar', "Il revêt son plus beau manteau du Yémen et part seul, à l'heure où le soleil est au plus haut. La Chaîne te fait marcher dans ses pas."],
+          ['leave', 'ali'], ['leave', 'qays'],
+          ['map', 'camp', 'entree', { time: 'day' }],
+          ['amb', 'vent'],
+          ['nar', "Harûrâ'. « Je n'avais jamais vu, dira Ibn 'Abbâs, de gens plus appliqués à l'adoration » : marqués par les prosternations, épuisés par les veilles. Leur piété n'est pas feinte. C'est ce qui rend l'idole si forte."],
+          ['say', 'Une voix', "Bienvenue, Ibn 'Abbâs. Mais que fait sur toi ce manteau de prix ?"],
+          ['say', 'ibnabbas', "Que me reprochez-vous ? J'ai vu sur le Messager d'Allah ﷺ les plus beaux manteaux."]
+        ] },
+        { text: 'Débattre avec le porte-parole, près du feu', talk: 'orateur', then: [
+          ['say', 'ibnkawwa', "Ne discutez pas avec lui ! Les Quraysh sont gens de dispute."],
+          ['say', 'Une voix', "Si. Qu'il parle : nous l'écouterons."],
+          ['say', 'ibnabbas', "Je viens de la part des Compagnons du Prophète ﷺ. C'est parmi eux que le Coran est descendu, et nul d'entre eux n'est avec vous. Dites-moi ce que vous reprochez à son cousin."],
+          ['nar', "Ils avancent trois griefs. Il les écoute jusqu'au bout sans interrompre. La Chaîne te fait entendre ici le premier et le dernier."],
+          ['say', 'orateur', "Il a fait juges des hommes dans l'affaire d'Allah. Or le jugement n'appartient qu'à Allah."],
+          ['choice', "Que répond Ibn 'Abbâs au premier grief ?", [
+            { t: 'Par le Livre : il confie lui-même un jugement à « deux hommes justes »', ok: true, r: [
+              ['say', 'ibnabbas', "Allah a remis au jugement des hommes le prix d'un gibier tué en état de sacralisation : « deux hommes justes parmi vous en jugeront » (5:95). Et Il envoie deux arbitres pour réconcilier un foyer (4:35)."],
+              ['say', 'ibnabbas', "Je vous adjure par Allah : le jugement des hommes pour épargner le sang et réconcilier les croyants vaut-il moins que pour un lièvre ?"],
+              ['say', 'Des voix', "Non… Cela vaut mieux."],
+              ['say', 'ibnabbas', "Suis-je sorti de ce grief ?"],
+              ['say', 'Des voix', "Par Allah, oui."]
+            ] },
+            { t: 'Par la menace : le calife a une armée à une heure de marche', r: [
+              ['nar', "La chaîne vacille. Ce n'est pas ce qui fut rapporté : il vint seul et sans arme, à l'heure de midi, et n'opposa que des preuves."]
+            ] },
+            { t: 'Par le mépris : on ne discute pas avec des égarés', r: [
+              ['nar', "Non. 'Alî lui-même le laissa aller débattre, et il écouta d'abord leurs griefs jusqu'au bout avant d'y répondre un à un."]
+            ] }
+          ]],
+          ['say', 'orateur', "Il a effacé de l'acte son titre de Commandeur des croyants. S'il n'est pas le commandeur des croyants, de qui l'est-il donc ?"],
+          ['choice', "Que répond Ibn 'Abbâs au dernier grief ?", [
+            { t: "Qu'un titre n'est qu'un mot, et qu'il importe peu", r: [
+              ['nar', "Ce n'est pas l'argument rapporté. Ibn 'Abbâs ne balaya pas leur scrupule : il lui opposa un précédent, et le plus haut qui soit."]
+            ] },
+            { t: 'Par le précédent de Hudaybiyya', ok: true, r: [
+              ['say', 'ibnabbas', "À Hudaybiyya, les polythéistes refusèrent qu'on écrive « Messager d'Allah » sur le traité. Le Prophète ﷺ fit effacer le mot et écrire le nom de son père. Et c'est 'Alî qui tenait le calame."],
+              ['say', 'ibnabbas', "Par Allah, le Messager d'Allah ﷺ vaut mieux que 'Alî. S'effacer d'une page l'a-t-il effacé de la prophétie ?"],
+              ['say', 'Des voix', "Non, par Allah."]
+            ] }
+          ]],
+          ['nar', "Une partie de l'assemblée se tait. L'autre reprend la phrase, plus fort, pour ne plus entendre. Et dans l'envers du camp, des milliers de voix qui répètent sans comprendre se dressent d'un seul bloc."],
+          ['join', 'ali'], ['join', 'qays'],
+          ['nar', "Nul ne plaide seul dans la noosphère : le savoir de 'Alî et la droiture de Qays y marchent avec Ibn 'Abbâs."],
+          ['sfx', 'glitch'],
+          ['map', 'noos', 'seuil', { hue: 285 }],
+          ['amb', 'noos']
+        ] },
+        { text: 'Faire taire les échos', foe: 'f2', then: [
+          ['say', 'qays', "Aucun d'eux n'a lu la phrase qu'il crie. Ils se la passent de bouche en bouche comme un mot d'ordre."],
+          ['give', 'musc', 1]
+        ] },
+        { text: 'Atteindre le cœur de la formule', goto: 'coeur', then: [
+          ['say', 'ibnabbas', "Il n'a pas de corps : c'est une phrase. Le fer passera au travers. Rendons-lui son sens — le savoir et le vrai le feront taire."],
+          ['codex', 'slogan'],
+          ['heal'],
+          ['battle', { group: ['slogan'], bg: 'noos', boss: true, intro: 'Je suis une parole vraie. Qui oserait me contredire ?' }],
+          ['sfx', 'break'],
+          ['nar', "L'étendard de mots se défait, lettre à lettre. La phrase retombe où elle était : dans le Livre, entière, avec ce qui la précède et ce qui la suit."],
+          ['map', 'camp', 'feu', { time: 'dusk' }],
+          ['amb', 'vent'],
+          ['show', 'repenti'],
+          ['say', 'repenti', "Je croyais défendre le Livre. Je ne défendais qu'une phrase que j'avais cessé d'écouter. Je rentre à Koufa."],
+          ['nar', "Deux mille hommes se lèvent ce jour-là et reprennent la route de la ville — davantage, selon d'autres récits. Les autres restent près de leurs feux, et se taisent."],
+          ['codex', 'harura'],
+          ['map', 'koufa', 'mosquee_porte', { time: 'dusk' }],
+          ['leave', 'ibnabbas'], ['join', 'ibnabbas'],
+          ['amb', 'foule'],
+          ['show', 'crieur'],
+          ['nar', "Les semaines passent. Ceux qui ne sont pas revenus entrent pourtant dans Koufa, et jusque dans la mosquée. Quand 'Alî prêche, des voix s'élèvent des recoins."]
+        ] },
+        { text: 'Entrer dans la cour de la mosquée', goto: 'mosquee_cour', then: [
+          ['say', 'crieur', "Le jugement n'appartient qu'à Allah !"],
+          ['say', 'Une autre voix', "Le jugement n'appartient qu'à Allah !"],
+          ['quote', 'Parole de vérité par laquelle on vise le faux.', "'Alî ibn Abî Tâlib — Muslim"],
+          ['choice', 'Ils l’interrompent en pleine mosquée. Que décide le calife ?', [
+            { t: 'Les faire arrêter avant qu’ils ne nuisent', r: [
+              ['nar', "La chaîne vacille. Il refusa de punir une intention : tant qu'ils ne levaient pas l'épée, ils gardaient leur place dans les rangs."]
+            ] },
+            { t: 'Leur reconnaître trois droits, tant qu’ils ne versent pas le sang', ok: true, r: [
+              ['quote', "Vous avez sur nous trois droits : nous ne vous interdirons pas les mosquées d'Allah pour y évoquer Son nom ; nous ne vous priverons pas de votre part tant que vos mains seront avec les nôtres ; et nous ne vous combattrons pas les premiers.", "'Alî ibn Abî Tâlib — Ibn Abî Shayba, al-Musannaf ; at-Tabarî, Târîkh"]
+            ] },
+            { t: 'Leur interdire la mosquée', r: [
+              ['nar', "Non. Ce fut le premier des droits qu'il leur garantit : nul ne leur fermerait les mosquées d'Allah."]
+            ] }
+          ]],
+          ['say', 'qays', "Ils t'ont déclaré sorti de la foi, et tu leur gardes leur part du trésor."],
+          ['say', 'ali', "Ils ont dit une parole. Je ne verse pas le sang pour une parole."],
+          ['codex', 'parole_verite']
+        ] }
+      ],
+      outro: [
+        ['nar', "Ceux qui restent irréductibles quittent Koufa de nuit, un à un, par petits groupes. Ils se donnent rendez-vous près d'un canal, à l'est du Tigre. Son nom : Nahrawân."],
+        ['say', 'ibnabbas', "Le Slogan est tombé. Mais ce qui le criait cherche déjà une autre forme."]
+      ]
+    },
+
+    /* ═════ Chapitre 3 ═════ */
+    {
+      id: 'a3', title: 'Nahrawân, puis l’aube', sub: 'An 38–40 H · 658–661 · Nahrawân, Koufa',
+      map: 'camp', opts: { time: 'day' }, start: 'entree',
+      party: ['ali', 'ibnabbas', 'qays'],
+      npcs: [
+        { id: 'eclaireur', name: 'Un éclaireur', at: ['entree', 2, 0], look: { kind: 'soldat', robe: '#6b5a48', head: '#d6ccb8' },
+          talk: [['say', 'eclaireur', "Ils sont rangés derrière le canal. Ils n'ont pas reculé d'un pas."]] },
+        { id: 'soldat', name: 'Un soldat de Koufa', at: 'feu', look: { kind: 'soldat', robe: '#7a5a44', head: '#dcd2be' },
+          talk: [['say', 'soldat', "Nous marchions vers la Syrie. Mais comment laisser derrière nous, près de nos familles, des gens qui tuent sur un soupçon ?"]] },
+        { id: 'vieux', name: 'Un vieux récitant', at: 'tentes', look: { kind: 'ancien', robe: '#8a7c66', head: '#ece4d2' },
+          talk: [
+            ['say', 'vieux', "J'ai prié épaule contre épaule avec certains d'entre eux. Ce soir je ne sais plus pour qui invoquer. Alors j'invoque pour tous."],
+            ['if', 'pain_donne',
+              [['say', 'vieux', "Que la paix revienne, voilà tout."]],
+              [['say', 'vieux', "Prends ce pain. On ne tient pas debout le ventre vide."], ['give', 'pain', 2], ['flag', 'pain_donne', true]]]
+          ] },
+        { id: 'abuayyub', name: 'Abû Ayyûb al-Ansârî', at: 'etendard', look: { kind: 'compagnon', robe: '#e2dccb', head: '#f3eee1', aura: '#5fe0d0' },
+          talk: [['say', 'abuayyub', "Le Messager d'Allah ﷺ a logé sous mon toit, à Médine. Je n'aurais jamais cru porter un étendard contre des gens qui prient."]] },
+        { id: 'farwa', name: 'Farwa ibn Nawfal', at: ['etendard', 2, 1], hidden: true, look: { kind: 'soldat', robe: '#4f4a45', head: '#c8c0b0' },
+          talk: [['say', 'farwa', "Je me retire. Je ne lèverai l'épée que le jour où j'y verrai clair."]] },
+        { id: 'ibnnabbah', name: "Ibn an-Nabbâh, le muezzin", map: 'koufa', at: ['maison', 1, 1], look: { kind: 'homme', robe: '#a89878', head: '#f0e8d6' },
+          talk: [['say', 'ibnnabbah', "Commandeur des croyants, c'est l'heure. L'aube est proche."]] },
+        { id: 'veilleur', name: 'Un veilleur', map: 'koufa', at: 'place', look: { kind: 'homme', robe: '#6d6456', head: '#ddd4c0' },
+          talk: [['say', 'veilleur', "Les nuits de Ramadan sont douces à Koufa. On l'a vu, hier, regarder longtemps le ciel."]] },
+        { id: 'hasan', name: 'Al-Hasan', map: 'koufa', at: ['mosquee_porte', 1, 1], hidden: true, look: { kind: 'compagnon', robe: '#e6dfcc', head: '#f4efe2', aura: '#ffe9a8' },
+          talk: [['say', 'hasan', "Nous ferons ce qu'il a dit. Rien de plus."]] }
+      ],
+      foes: [
+        { id: 'f1', at: 'lignes', group: ['lame', 'lame'], bg: 'camp' },
+        { id: 'f2', map: 'noos', at: 'noeud2', group: ['scrupule', 'lame'], bg: 'noos' },
+        { id: 'f3', map: 'noos', at: 'miroir', group: ['lame', 'lame', 'lame'], bg: 'noos' }
+      ],
+      chests: [
+        { at: ['enclos', 1, 0], item: 'eau', n: 2 },
+        { at: ['tertre', 0, 1], item: 'siwak', n: 1 },
+        { map: 'noos', at: 'faille', item: 'lait', n: 1 }
+      ],
+      intro: [
+        ['title', 'Nahrawân, puis l’aube', 'An 38 de l’Hégire'],
+        ['amb', 'vent'],
+        ['nar', "Ils sont quatre mille au bord du canal de Nahrawân. Ils se sont choisi un chef, et ont jugé le monde entier : quiconque ne pense pas comme eux a quitté la foi, et son sang ne compte plus."],
+        ['nar', "Sur leur route passe un voyageur : 'Abdallâh, fils du Compagnon Khabbâb, avec les siens. Ils l'interrogent. Ses réponses sont celles d'un croyant. Ils le tuent, et les siens avec lui."],
+        ['nar', "Le même jour, rapporte-t-on, l'un d'eux ramasse une datte tombée d'un palmier ; ses compagnons le reprennent : « Tu l'as prise sans en payer le prix ! » Scrupule pour une datte. Aucun pour le sang."]
+      ],
+      objectives: [
+        { text: "Entendre le rapport de l'éclaireur", talk: 'eclaireur', then: [
+          ['say', 'eclaireur', "Commandeur des croyants. Ils ont tué le fils de Khabbâb sur la route, et les siens. Ton émissaire, al-Hârith ibn Murra, est allé leur demander compte : ils l'ont tué aussi."],
+          ['say', 'ali', "Qu'on leur porte ceci : livrez-nous les meurtriers de nos frères, et je vous laisse. Peut-être Allah retournera-t-Il vos cœurs."],
+          ['nar', "La réponse revient avant le soir, d'une seule voix."],
+          ['quote', 'Nous les avons tous tués. Et nous tenons tous leur sang et le vôtre pour licite.', "Réponse des gens de Nahrawân — at-Tabarî, Târîkh"],
+          ['say', 'qays', "Ils ne disent pas « l'un de nous ». Ils disent « tous ». Ils ne forment plus qu'un seul juge."],
+          ['give', 'eau', 1]
+        ] },
+        { text: 'Dissiper les Lames pieuses aux abords des lignes', foe: 'f1', then: [
+          ['say', 'ibnabbas', "Elles sont certaines de servir le bien. C'est une certitude sans savoir : rien ne coupe plus aveuglément."]
+        ] },
+        { text: "Rejoindre Abû Ayyûb à l'étendard", talk: 'abuayyub', then: [
+          ['say', 'abuayyub', "L'étendard est prêt, Commandeur des croyants. Dis-moi ce qu'il doit annoncer."],
+          ['choice', 'Les deux rangs se font face. Que commande le calife ?', [
+            { t: "Charger avant l'aube, tant qu'ils dorment", r: [
+              ['nar', "La chaîne vacille. Ce n'est pas ce qui fut rapporté : il défendit à ses hommes de frapper les premiers, et attendit que l'autre rang engage le combat."]
+            ] },
+            { t: 'Lever le camp : on ne combat pas des gens qui prient', r: [
+              ['nar', "Non plus. Le sang d'innocents avait coulé sur la route, et tous s'en réclamaient. Se retirer, c'était leur abandonner chaque voyageur d'Irak."]
+            ] },
+            { t: 'Dresser une bannière de sûreté, et ne pas frapper le premier', ok: true, r: [
+              ['say', 'ali', "Annonce : qui rejoint cette bannière est en sûreté. Qui rentre à Koufa ou gagne al-Madâ'in est en sûreté. Nous ne réclamons que ceux qui ont tué nos frères."],
+              ['say', 'ali', "Et vous autres : ne les combattez pas tant qu'ils ne vous ont pas combattus."]
+            ] }
+          ]],
+          ['show', 'farwa'],
+          ['say', 'farwa', "Par Allah, je ne sais plus pour quelle raison nous combattrions 'Alî. Je me retire, jusqu'à y voir clair."],
+          ['nar', "Farwa ibn Nawfal s'éloigne avec cinq cents cavaliers. D'autres suivent, par groupes. De quatre mille, il en reste moins de trois mille autour de leur chef."],
+          ['say', 'qays', "Serviteurs d'Allah ! Livrez-nous ceux que nous réclamons, et revenez à ce que vous avez quitté !"],
+          ['nar', "Ils ne répondent que par leur cri, et chargent : « En route vers le Paradis ! » Dans l'envers de la plaine, une balance immense se dresse. Elle n'a qu'un plateau."],
+          ['sfx', 'glitch'],
+          ['map', 'noos', 'seuil', { hue: 215 }],
+          ['amb', 'noos']
+        ] },
+        { text: 'Briser le Scrupule inversé', foe: 'f2', then: [
+          ['say', 'ali', "Il pèse la datte et ne voit pas le sang. Voilà ce que devient la règle quand on en retire le savoir."]
+        ] },
+        { text: 'Atteindre le cœur de la balance', goto: 'coeur', then: [
+          ['say', 'ibnabbas', "La justice seule ne l'entamera pas : il s'en croit le nom. Frappe-le de savoir et de miséricorde — ce sont les deux choses qu'il n'a jamais pesées."],
+          ['heal'],
+          ['battle', { group: ['juge'], bg: 'noos', boss: true, intro: 'Je n’ai pas besoin de t’entendre. Je sais déjà ce que tu es.' }],
+          ['sfx', 'break'],
+          ['nar', "La balance se brise. Dans la plaine, tout est déjà fini : la bataille n'a pas duré une matinée. Du côté de 'Alî, on compte moins de dix morts."],
+          ['map', 'camp', 'tertre', { time: 'dusk' }],
+          ['amb', 'vent'],
+          ['nar', "Il marche parmi les tombés, sans joie. Un homme l'arrête : « Commandeur des croyants, étaient-ils des polythéistes ? »"],
+          ['choice', "Ils l'avaient déclaré mécréant. Que répond 'Alî ?", [
+            { t: '« Oui. Qui excommunie mérite de l’être. »', r: [
+              ['nar', "La chaîne vacille. C'est précisément l'idole qu'il vient de briser : il refusa de leur rendre l'anathème qu'ils lui avaient jeté."]
+            ] },
+            { t: '« Du polythéisme, ils ont fui. »', ok: true, r: [
+              ['quote', "Du polythéisme, ils ont fui. […] Les hypocrites n'évoquent Allah que très peu. […] Ce sont des gens qui se sont dressés contre nous.", "'Alî ibn Abî Tâlib, interrogé sur les gens de Nahrawân — Ibn Abî Shayba, al-Musannaf"]
+            ] },
+            { t: '« Ce sont des hypocrites. »', r: [
+              ['nar', "Ce n'est pas ce qui fut rapporté. On le lui demanda aussi, et il répondit que les hypocrites n'évoquent Allah que très peu — or ceux-là L'évoquaient jour et nuit."]
+            ] }
+          ]],
+          ['nar', "Il refuse de leur rendre le mot. L'idole du Juge, pour la première fois, ne trouve rien à quoi se nourrir."],
+          ['codex', 'nahrawan'],
+          ['codex', 'juge'],
+          ['nar', "Deux années passent. La Syrie, l'Égypte, les routes : rien n'est apaisé. À Koufa, 'Alî dit parfois sa lassitude, et il continue. Ramadan de l'an 40."],
+          ['leave', 'ibnabbas'], ['leave', 'qays'],
+          ['map', 'koufa', 'maison', { time: 'dawn' }],
+          ['amb', 'nuit'],
+          ['say', 'ibnnabbah', "Commandeur des croyants, c'est l'heure de la prière."]
+        ] },
+        { text: "Marcher vers la mosquée pour la prière de l'aube", goto: 'mosquee_porte', then: [
+          ['nar', "Avant l'aube, comme chaque jour, il sort en réveillant les gens sur son passage."],
+          ['say', 'ali', "La prière ! La prière, serviteurs d'Allah !"],
+          ['wait', 700],
+          ['nar', "Une ombre se détache du seuil. Un cri : « Le jugement est à Allah, 'Alî — non à toi ! » La phrase de Harûrâ' est devenue une lame."],
+          ['sfx', 'hit'], ['flash', '#ffffff'], ['shake', 700],
+          ['wait', 900],
+          ['amb', 'silence'],
+          ['show', 'hasan'],
+          ['nar', "On le porte chez lui. On saisit l'homme : 'Abd ar-Rahmân ibn Muljam, venu venger ceux de Nahrawân. On l'amène, lié."],
+          ['say', 'hasan', "Père. L'homme est là. Qu'ordonnes-tu ?"],
+          ['choice', "Son meurtrier est devant lui. Qu'ordonne 'Alî ?", [
+            { t: '« Qu’on le châtie longuement, pour l’exemple. »', r: [
+              ['nar', "La chaîne vacille. Ce n'est pas ce qui fut rapporté : il interdit toute mutilation et toute cruauté envers l'homme qui venait de le frapper."]
+            ] },
+            { t: '« Que le sang des siens réponde du mien. »', r: [
+              ['nar', "Non. Il défendit expressément qu'on verse le sang d'autres musulmans en son nom : seul le meurtrier répondrait de son acte."]
+            ] },
+            { t: '« Nourrissez-le, et traitez-le bien. »', ok: true, r: [
+              ['quote', "Nourrissez-le bien et donnez-lui une couche douce. Si je vis, je serai seul juge de mon sang. Si je meurs, une frappe pour sa frappe — et ne mutilez pas l'homme.", "'Alî ibn Abî Tâlib — on rapporte, Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh"],
+              ['quote', "N'allez pas verser le sang des musulmans en criant : « On a tué le Commandeur des croyants ! » Que seul mon meurtrier réponde de moi.", "'Alî ibn Abî Tâlib — on rapporte, at-Tabarî, Târîkh"]
+            ] }
+          ]],
+          ['codex', 'consignes'],
+          ['nar', "Sur son lit, celui qu'on avait condamné au nom d'Allah protège son propre meurtrier de la vengeance. Le Juge sans miséricorde n'a jamais connu pire défaite."]
+        ] }
+      ],
+      outro: [
+        ['say', 'hasan', "Il nous a appris le droit jusqu'à son dernier souffle. Sa dernière leçon portait sur l'homme qui l'a frappé."],
+        ['nar', "Le jour se lève sur Koufa. Dans la mosquée, on prie sans lui. Dans la noosphère, une lumière violette demeure au-dessus de la ville : elle ne s'éteindra plus."]
+      ]
+    }
+  ]
+});
