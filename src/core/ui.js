@@ -128,11 +128,13 @@
     W.roster = {}; W.saga = s; S.flags = {};
     let ci = sp.done ? 0 : sp.ch;
     if (sp.done) { sp.ch = 0; sp.flags = {}; }
-    if (ci === 0) {
+    const resume0 = sv.cp && sv.cp.saga === s.id && sv.cp.ci === 0 && sv.cp.obj > 0 && !sp.done;
+    if (ci === 0 && !resume0) {
       I.setScene(U.blank); document.body.dataset.theme = 'orient';
       S.depth++; try { await S.run([['title', s.name, s.epithet + ' · ' + s.years]].concat(s.intro || [])); } finally { S.depth--; S.hideDialog(); }
     }
-    await W.startChapter(s.id, ci);
+    const cp = sv.cp && sv.cp.saga === s.id && sv.cp.ci === ci && ci > 0 ? sv.cp : (sv.cp && sv.cp.saga === s.id && sv.cp.ci === 0 && ci === 0 && sv.cp.obj > 0 ? sv.cp : null);
+    await W.startChapter(s.id, ci, cp || undefined);
   };
   U.afterSaga = async function (saga, ch) {
     const sv = I.save.data;

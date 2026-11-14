@@ -74,6 +74,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 #card.title p { letter-spacing: .22em; text-transform: uppercase; font-size: .72em; color: var(--sand); }
 #card.quote .orn { color: var(--gold); font-size: 1.3em; }
 #card.quote blockquote { margin: .5em 0; max-width: 30em; font-style: italic; font-size: 1.18em; line-height: 1.45; color: #fff6dc; text-wrap: balance; }
+#card.quote blockquote::before { content: "« "; color: var(--gold); } #card.quote blockquote::after { content: " »"; color: var(--gold); }
 #card.quote cite { font-style: normal; font-size: .68em; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
 #card.lightcard .glyph { font-size: 3.4em; line-height: 1; text-shadow: 0 0 40px currentColor; }
 #card.lightcard .ar { font-style: italic; color: var(--dim); }
@@ -207,3 +208,5 @@ body.portrait #battle .order { font-size: 9px; } body.portrait .plate { font-siz
 body.portrait #hud { font-size: 11px; max-width: 80%; } body.portrait .fl { font-size: 13px; }
 body.portrait .mlist { max-height: 12em; }
 @media (prefers-reduced-motion: reduce) { .toast, .fl, #card, .link { animation-duration: .01s; transition: none; } }
+
+@media (orientation: landscape) and (max-height: 480px) { #ui { font-size: max(11px, calc(var(--u) * 6.4)); } .hrow { padding: .12em .5em; } #battle .cmd { padding: .25em .4em; } .mi { padding: .16em .5em; } #dialog { min-height: 30%; } }

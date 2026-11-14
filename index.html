@@ -85,6 +85,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 #card.title p { letter-spacing: .22em; text-transform: uppercase; font-size: .72em; color: var(--sand); }
 #card.quote .orn { color: var(--gold); font-size: 1.3em; }
 #card.quote blockquote { margin: .5em 0; max-width: 30em; font-style: italic; font-size: 1.18em; line-height: 1.45; color: #fff6dc; text-wrap: balance; }
+#card.quote blockquote::before { content: "« "; color: var(--gold); } #card.quote blockquote::after { content: " »"; color: var(--gold); }
 #card.quote cite { font-style: normal; font-size: .68em; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
 #card.lightcard .glyph { font-size: 3.4em; line-height: 1; text-shadow: 0 0 40px currentColor; }
 #card.lightcard .ar { font-style: italic; color: var(--dim); }
@@ -218,6 +219,8 @@ body.portrait #battle .order { font-size: 9px; } body.portrait .plate { font-siz
 body.portrait #hud { font-size: 11px; max-width: 80%; } body.portrait .fl { font-size: 13px; }
 body.portrait .mlist { max-height: 12em; }
 @media (prefers-reduced-motion: reduce) { .toast, .fl, #card, .link { animation-duration: .01s; transition: none; } }
+
+@media (orientation: landscape) and (max-height: 480px) { #ui { font-size: max(11px, calc(var(--u) * 6.4)); } .hrow { padding: .12em .5em; } #battle .cmd { padding: .25em .4em; } .mi { padding: .16em .5em; } #dialog { min-height: 30%; } }
 
 </style>
 <div id="app">
@@ -810,7 +813,7 @@ body.portrait .mlist { max-height: 12em; }
   };
   G.resize = function () {
     const st = G.cv.parentElement, w = st.clientWidth, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    G.k = Math.max(2, Math.min(5, Math.ceil(w * dpr / G.PW)));
+    G.k = Math.max(2, Math.min(4, Math.ceil(w * dpr / G.PW)));
     G.cv.width = G.PW * G.k; G.cv.height = G.PH * G.k;
     st.style.setProperty('--u', (st.clientHeight / G.PH) + 'px');
   };
@@ -1296,7 +1299,7 @@ body.portrait .mlist { max-height: 12em; }
     switch (op[0]) {
       case 'say': await showLine('say', speaker(a), b); break;
       case 'nar': await showLine('nar', null, a); break;
-      case 'quote': S.hideDialog(); I.audio.sfx('light'); await card('quote', `<div class="orn">❖</div><blockquote>${I.fmt(a)}</blockquote><cite>${I.fmt(b)}</cite><div class="hint">▼</div>`); break;
+      case 'quote': S.hideDialog(); I.audio.sfx('light'); await card('quote', `<div class="orn">❖</div><blockquote>${I.fmt(a.replace(/^«\s*/, '').replace(/\s*»$/, ''))}</blockquote><cite>${I.fmt(b)}</cite><div class="hint">▼</div>`); break;
       case 'title': S.hideDialog(); I.audio.sfx('roll'); await card('title', `<h1>${I.fmt(a)}</h1>${b ? `<p>${I.fmt(b)}</p>` : ''}<div class="rule"></div>`, 3000); break;
       case 'choice': {
         S.hideDialog();
@@ -1398,9 +1401,9 @@ body.portrait .mlist { max-height: 12em; }
     return W.npcs.some(near) || W.foes.some(f => !f.done && near(f)) || W.chests.some(near) || (self !== W.player && Math.abs(W.player.x - x) < 12 && Math.abs(W.player.y - y) < 10);
   }
   // 'lieu' | ['lieu',dx,dy] -> position libre la plus proche (px)
-  W.resolve = function (at, mapId, self) {
+  W.resolve = function (at, mapId, self, tile) {
     const m = W.map; if (!m || m.id !== mapId) return null;
-    const name = Array.isArray(at) ? at[0] : at, s = m.spots[name] || [Math.floor(m.w / 2), Math.floor(m.h / 2)];
+    const name = Array.isArray(at) ? at[0] : at, s = tile || m.spots[name] || [Math.floor(m.w / 2), Math.floor(m.h / 2)];
     const tx0 = s[0] + (Array.isArray(at) ? at[1] : 0), ty0 = s[1] + (Array.isArray(at) ? at[2] : 0);
     for (let rad = 0; rad < 9; rad++) for (let dy = -rad; dy <= rad; dy++) for (let dx = -rad; dx <= rad; dx++) {
       if (Math.max(Math.abs(dx), Math.abs(dy)) !== rad) continue;
@@ -1457,6 +1460,7 @@ body.portrait .mlist { max-height: 12em; }
     try {
       await S.fade('in', 500);
       if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); }
+      if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Croix : marcher · <b>OK</b> : parler, valider · <b>MENU</b> : halte' : '<b>Flèches</b> ou <b>ZQSD</b> : marcher · <b>Entrée</b> : parler · <b>Échap</b> : menu', 9000);
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
   };
@@ -1550,6 +1554,7 @@ body.portrait .mlist { max-height: 12em; }
     W.t += dt; const p = W.player, h = I.input.held;
     const can = !S.busy && !W.lock && !I.ui.menuOpen;
     if (can && I.debug.auto && !W._autoBusy) { W.autoStep(); W.updateCam(); return; }
+    if (can && (W.solidAt(p.x - 4, p.y - 5) || W.solidAt(p.x + 4, p.y) || W.solidAt(p.x - 4, p.y) || W.solidAt(p.x + 4, p.y - 5))) { const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; W.resetTrail(); } }
     if (can) {
       let dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0);
       if (dx || dy) {
@@ -1558,7 +1563,7 @@ body.portrait .mlist { max-height: 12em; }
         const tryMove = (mx, my) => {
           const nx = p.x + mx, ny = p.y + my;
           if (W.solidAt(nx - 4, ny - 5) || W.solidAt(nx + 4, ny - 5) || W.solidAt(nx - 4, ny) || W.solidAt(nx + 4, ny)) return false;
-          if (W.npcs.some(n => !n.hidden && n.map === W.map.id && n.placed && Math.abs(n.x - nx) < 9 && Math.abs(n.y - ny) < 7)) return false;
+          if (W.npcs.some(n => !n.hidden && n.map === W.map.id && n.placed && Math.abs(n.x - nx) < 8 && Math.abs(n.y - ny) < 6 && Math.hypot(n.x - nx, n.y - ny) < Math.hypot(n.x - p.x, n.y - p.y))) return false;
           p.x = nx; p.y = ny; return true;
         };
         const m1 = dx && tryMove(dx * sp, 0), m2 = dy && tryMove(0, dy * sp);
@@ -1643,6 +1648,13 @@ body.portrait .mlist { max-height: 12em; }
         c.save(); c.translate(ex, ey); c.rotate(ang); c.scale(pu, pu); c.fillStyle = '#1a1420'; c.beginPath(); c.moveTo(7, 0); c.lineTo(-5, -6); c.lineTo(-5, 6); c.fill(); c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(5, 0); c.lineTo(-4, -4); c.lineTo(-4, 4); c.fill(); c.restore();
       }
     }
+    // bulle « parler » au-dessus du personnage à portée
+    if (!S.busy && !W.lock) {
+      const p = W.player, px = p.x + [0, -1, 1, 0][p.dir] * 12, py = p.y + [1, 0, 0, -1][p.dir] * 12; let best = null, bd = 22;
+      W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - px, n.y - py); if (d < bd) { bd = d; best = n; } });
+      if (!best) { const ch = W.chests.find(ch => !ch.open && ch.map === m.id && ch.placed && Math.hypot(ch.x - px, ch.y - py) < 18); if (ch) best = { x: ch.x, y: ch.y + 12 }; }
+      if (best && !(tg && tg.kind === 'talk' && Math.abs(tg.x - best.x) < 2)) { const bx = Math.round(best.x - cx), by = Math.round(best.y - cy - 34 + Math.sin(t * 5) * 1.5); c.fillStyle = '#1a1420'; c.fillRect(bx - 7, by - 1, 14, 9); c.fillStyle = '#fff6dc'; c.fillRect(bx - 6, by, 12, 7); c.fillRect(bx - 1, by + 7, 2, 2); c.fillStyle = '#1a1420'; c.fillRect(bx - 4, by + 3, 2, 2); c.fillRect(bx - 1, by + 3, 2, 2); c.fillRect(bx + 2, by + 3, 2, 2); }
+    }
     // lumières de la carte
     const la = env.lightA === undefined ? 1 : env.lightA;
     if (la > 0) for (const L of m.lights) { const x = L.x - cx, y = L.y - cy; if (x < -L.r || y < -L.r || x > G.PW + L.r || y > G.PH + L.r) continue; lights.push({ x, y, r: L.r, color: L.color, a: la * (1 - L.flicker * (0.5 + 0.5 * Math.sin(t * 9 + L.x))) }); }
@@ -1656,13 +1668,13 @@ body.portrait .mlist { max-height: 12em; }
   'use strict';
   const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, $ = I.$;
   const B = I.battle = { active: false };
-  const TIER = { minion: { hp: 0.66, atk: 0.8, def: 0.8, spd: 0.95, xp: 1 }, elite: { hp: 2.1, atk: 0.98, def: 1.0, spd: 1.0, xp: 3.2 }, boss: { hp: 5.0, atk: 1.1, def: 1.05, spd: 1.04, xp: 7 } };
+  const TIER = { minion: { hp: 0.66, atk: 0.8, def: 0.8, spd: 0.95, xp: 1 }, elite: { hp: 2.4, atk: 1.0, def: 1.0, spd: 1.0, xp: 3.2 }, boss: { hp: 6.4, atk: 1.15, def: 1.05, spd: 1.04, xp: 7 } };
   const base = L => ({ hp: 70 + 26 * L, sp: 14 + 4 * L, atk: 9 + 3 * L, def: 7 + 2.2 * L, spd: 10 + 0.6 * L });
 
   I.calc = {
     hero(def, lvl) { const r = D.ROLES[def.role], b = base(lvl); return { hp: Math.round(b.hp * r.hp), sp: Math.round(b.sp * r.sp), atk: b.atk * r.atk, mag: b.atk * r.mag, def: b.def * r.def, spd: b.spd * r.spd }; },
     enemy(def, nHeroes, nFoes) {
-      const t = TIER[def.tier], b = base(def.lvl), ps = nHeroes >= 3 ? 1 : nHeroes === 2 ? 0.72 : 0.42, crowd = nFoes >= 3 ? 0.85 : 1;
+      const t0 = TIER[def.tier], early = def.tier === 'boss' && def.lvl <= 4, t = early ? Object.assign({}, t0, { hp: t0.hp * 0.75, atk: t0.atk * 0.9 }) : t0, b = base(def.lvl), ps = nHeroes >= 3 ? 1 : nHeroes === 2 ? 0.72 : 0.42, crowd = nFoes >= 3 ? 0.85 : 1;
       return { hp: Math.round(b.hp * t.hp * ps * crowd), atk: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.9 : 1), mag: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.9 : 1), def: b.def * t.def, spd: b.spd * t.spd };
     },
     xpNeed: l => 40 + 40 * l,
@@ -1679,11 +1691,11 @@ body.portrait .mlist { max-height: 12em; }
   /* ================= décor ================= */
   const SKY = { desert: ['#150c30', '#5c2756', '#e08a4a'], ville: ['#0c0e2c', '#35285c', '#c8785a'], camp: ['#080a20', '#281e4c', '#9a4a48'], romaine: ['#0e1232', '#383876', '#d8a070'], palais: ['#120a26', '#48205c', '#c89040'], mer: ['#051028', '#123c66', '#5fb4cc'], cite: ['#04030d', '#180e3c', '#7a2cff'], noos: ['#02021a', '#0a0d36', '#30209a'] };
   function paintBg(kind, hue) {
-    const cv = G.mk(G.PW, G.PH), c = cv.getContext('2d'), sky = SKY[kind] || SKY.noos, H0 = 124, r = I.rng(I.hash(kind + hue));
+    const cv = G.mk(G.PW, G.PH), c = cv.getContext('2d'), sky = SKY[kind] || SKY.noos, H0 = 100, r = I.rng(I.hash(kind + hue));
     const g = c.createLinearGradient(0, 0, 0, H0); g.addColorStop(0, sky[0]); g.addColorStop(0.6, sky[1]); g.addColorStop(1, sky[2]); c.fillStyle = g; c.fillRect(0, 0, G.PW, H0);
-    for (let i = 0; i < 70; i++) { c.fillStyle = `rgba(255,255,255,${0.2 + r() * 0.7})`; c.fillRect(Math.floor(r() * G.PW), Math.floor(r() * 80), 1, 1); }
+    for (let i = 0; i < 70; i++) { c.fillStyle = `rgba(255,255,255,${0.2 + r() * 0.7})`; c.fillRect(Math.floor(r() * G.PW), Math.floor(r() * 62), 1, 1); }
     // astre
-    const ax = kind === 'cite' ? 300 : 250, ay = kind === 'noos' ? 56 : 84; const ag = c.createRadialGradient(ax, ay, 2, ax, ay, 60); ag.addColorStop(0, 'rgba(255,240,200,.95)'); ag.addColorStop(0.18, `hsla(${hue},90%,75%,.5)`); ag.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = ag; c.fillRect(ax - 60, ay - 60, 120, 120);
+    const ax = kind === 'cite' ? 300 : 250, ay = kind === 'noos' ? 44 : 64; const ag = c.createRadialGradient(ax, ay, 2, ax, ay, 60); ag.addColorStop(0, 'rgba(255,240,200,.95)'); ag.addColorStop(0.18, `hsla(${hue},90%,75%,.5)`); ag.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = ag; c.fillRect(ax - 60, ay - 60, 120, 120);
     c.strokeStyle = `hsla(${hue},100%,75%,.35)`; c.lineWidth = 1; for (let i = 1; i < 4; i++) { c.beginPath(); c.ellipse(ax, ay, 18 * i, 6 * i, -0.3, 0, 6.3); c.stroke(); }
     const sil = '#0b0818', sil2 = '#16102c';
     c.fillStyle = sil2;
@@ -1703,7 +1715,7 @@ body.portrait .mlist { max-height: 12em; }
     return cv;
   }
   function drawGrid(c, hue, t) {
-    const H0 = 124, H = G.PH - H0;
+    const H0 = 100, H = G.PH - H0;
     c.fillStyle = `hsla(${hue},100%,66%,.34)`;
     for (let i = 0; i < 9; i++) { const f = ((i + (t * 0.35) % 1) / 9); const y = H0 + H * f * f; c.fillRect(0, Math.round(y), G.PW, 1); }
     c.strokeStyle = `hsla(${hue},100%,66%,.22)`; c.lineWidth = 1; c.beginPath();
@@ -1711,8 +1723,8 @@ body.portrait .mlist { max-height: 12em; }
   }
 
   /* ================= mise en place ================= */
-  const FOE_POS = { 1: [[112, 158]], 2: [[84, 132], [150, 172]], 3: [[70, 124], [146, 142], [92, 182]], 4: [[62, 120], [140, 122], [80, 176], [158, 180]] };
-  const HERO_POS = [[300, 128], [316, 158], [296, 190]];
+  const FOE_POS = { 1: [[112, 146]], 2: [[80, 126], [154, 150]], 3: [[62, 122], [140, 128], [100, 156]], 4: [[54, 120], [128, 116], [86, 154], [164, 152]] };
+  const HERO_POS = [[270, 120], [306, 132], [342, 144]];
   function mkHero(id, i) {
     const h = I.world.hero(id), st = I.calc.hero(h.def, h.lvl);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
@@ -1720,7 +1732,7 @@ body.portrait .mlist { max-height: 12em; }
   }
   function mkFoe(id, i, n, nH) {
     const def = I.world.saga.enemies[id], st = I.calc.enemy(def, nH, n), sc = def.scale || (def.tier === 'boss' ? 3 : def.tier === 'elite' ? 2 : 1);
-    const pos = n === 1 && sc >= 3 ? [118, 182] : FOE_POS[n][i];
+    const pos = n === 1 && sc >= 3 ? [118, 156] : FOE_POS[n][i];
     return { side: 'foe', id, name: def.name, def, lvl: def.lvl, max: { hp: st.hp, sp: 0 }, hp: st.hp, sp: 0, atk: st.atk, mag: st.mag, df: st.def, spd: st.spd, buffs: {}, st: {}, veils: def.veils, veilsMax: def.veils, broken: false,
       known: {}, tried: {}, phase: 0, skills: (def.skills || []).slice(), x: pos[0], y: pos[1], ox: 0, flash: 0, ct: 0, alive: true, spr: G.enemy(def.art, def.hue, sc, 0), size: sc >= 3 ? 112 : sc === 2 ? 80 : 52, ph: Math.random() * 6, fade: 1 };
   }
@@ -1879,7 +1891,7 @@ body.portrait .mlist { max-height: 12em; }
     while (true) {
       const pips = () => { let s = ''; for (let i = 0; i < 5; i++) s += `<i class="pip${i < h.niyya - boost ? ' on' : i < h.niyya ? ' use' : ''}"></i>`; return s; };
       const title = () => `<b style="color:${h.color}">${h.name}</b><span class="niyya"><button type="button" class="nb" data-d="-1">−</button>Niyya ${pips()}<button type="button" class="nb" data-d="1">+</button>${boost ? `<em>élan ×${boost}</em>` : ''}</span>`;
-      const setBoost = d => { boost = I.clamp(boost + d, 0, Math.min(3, h.niyya)); const t = box.querySelector('.mtitle'); if (t) { t.innerHTML = title(); wire(); } I.audio.sfx('move'); };
+      const setBoost = d => { const was = boost; boost = I.clamp(boost + d, 0, Math.min(3, h.niyya)); if (boost > was) { G.spawn({ x: h.x, y: h.y - 24, type: 'ring', r0: 6, r1: 24 + boost * 4, life: 0.4, size: 2, color: h.color }); for (let q = 0; q < 8; q++) G.spawn({ x: h.x + (Math.random() - 0.5) * 20, y: h.y, vy: -50 - Math.random() * 40, life: 0.6, size: 0.9, color: h.color, type: 'spark' }); } const t = box.querySelector('.mtitle'); if (t) { t.innerHTML = title(); wire(); } I.audio.sfx('move'); };
       const wire = () => box.querySelectorAll('.nb').forEach(b => b.onclick = ev => { ev.stopPropagation(); setBoost(+b.dataset.d); });
       const lum = lightOf(h);
       const items = [
@@ -2076,7 +2088,7 @@ body.portrait .mlist { max-height: 12em; }
       const weak = e.def.weak.map(w => e.known[w] ? `<i style="color:${D.ELEMENTS[w].color}" title="${D.ELEMENTS[w].name}">${D.ELEMENTS[w].glyph}</i>` : '<i class="unk">?</i>').join('') + (e.def.immune || []).filter(w => e.known[w] === 'x').map(w => `<i class="imm" title="Insensible : ${D.ELEMENTS[w].name}">${D.ELEMENTS[w].glyph}</i>`).join('');
       const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${STN[k === 'df' ? 'def' : k]}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="dn">${STN[k] || k}</b>`).join('');
       const d = I.el('button', 'plate' + (C.cursor === e ? ' cur' : '') + (e.broken ? ' brk' : ''), `<span class="nm">${I.esc(e.name)}</span><span class="bar"><i style="width:${Math.max(0, e.hp / e.max.hp * 100)}%"></i></span><span class="row"><span class="veil">${e.broken ? 'DÉVOILÉ' : '⛊ ' + e.veils}</span><span class="wk">${weak}</span></span>${sts ? `<span class="sts">${sts}</span>` : ''}`);
-      d.type = 'button'; d.style.left = (e.x / G.PW * 100) + '%'; d.style.top = (Math.max(14, e.y - e.size - 4) / G.PH * 100) + '%';
+      d.type = 'button'; d.style.left = (e.x / G.PW * 100) + '%'; d.style.top = (Math.max(44, e.y - e.size - 4) / G.PH * 100) + '%';
       d.onclick = ev => { ev.stopPropagation(); if (C.pickCb) C.pickCb(e); };
       pl.appendChild(d);
     });
@@ -2268,11 +2280,13 @@ body.portrait .mlist { max-height: 12em; }
     W.roster = {}; W.saga = s; S.flags = {};
     let ci = sp.done ? 0 : sp.ch;
     if (sp.done) { sp.ch = 0; sp.flags = {}; }
-    if (ci === 0) {
+    const resume0 = sv.cp && sv.cp.saga === s.id && sv.cp.ci === 0 && sv.cp.obj > 0 && !sp.done;
+    if (ci === 0 && !resume0) {
       I.setScene(U.blank); document.body.dataset.theme = 'orient';
       S.depth++; try { await S.run([['title', s.name, s.epithet + ' · ' + s.years]].concat(s.intro || [])); } finally { S.depth--; S.hideDialog(); }
     }
-    await W.startChapter(s.id, ci);
+    const cp = sv.cp && sv.cp.saga === s.id && sv.cp.ci === ci && ci > 0 ? sv.cp : (sv.cp && sv.cp.saga === s.id && sv.cp.ci === 0 && ci === 0 && sv.cp.obj > 0 ? sv.cp : null);
+    await W.startChapter(s.id, ci, cp || undefined);
   };
   U.afterSaga = async function (saga, ch) {
     const sv = I.save.data;
@@ -2448,7 +2462,7 @@ ISNAD.registerSaga({
       skills: [{ w: 3, name: 'Défilement sans fin', target: 'foes', el: 'ilm', pow: 0.8, fx: [{ st: 'waswas', turns: 2, chance: 0.5 }], anim: 'wave' }, { w: 1, name: 'Lecture automatique', target: 'self', fx: [{ st: 'spd', v: 1 }], anim: 'guard' }],
       phases: [{ at: 0.5, say: 'Encore un. Encore un. Encore un.', fx: [{ st: 'spd', v: 1 }] }],
       desc: 'Héritier de la Rumeur : mille voix à la fois, dont aucune ne répond de ce qu’elle dit. On ne le frappe pas ; on cesse de le suivre.' },
-    agregor: { name: "L'AGRÉGOR", art: 'idol', hue: 285, scale: 3, lvl: 10, tier: 'boss', weak: ['sidq', 'adl', 'shajaa', 'rahma', 'ilm', 'sabr'], veils: 7,
+    agregor: { name: "L'AGRÉGOR", art: 'idol', hue: 285, scale: 3, lvl: 11, tier: 'boss', weak: ['sidq', 'adl', 'shajaa', 'rahma', 'ilm', 'sabr'], veils: 7,
       skills: [
         { w: 3, name: 'Mille regards', target: 'foes', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'wave' },
         { w: 3, name: 'Culte', target: 'foe', el: 'ilm', pow: 1.5, anim: 'dark' },

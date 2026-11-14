@@ -49,9 +49,9 @@
     return W.npcs.some(near) || W.foes.some(f => !f.done && near(f)) || W.chests.some(near) || (self !== W.player && Math.abs(W.player.x - x) < 12 && Math.abs(W.player.y - y) < 10);
   }
   // 'lieu' | ['lieu',dx,dy] -> position libre la plus proche (px)
-  W.resolve = function (at, mapId, self) {
+  W.resolve = function (at, mapId, self, tile) {
     const m = W.map; if (!m || m.id !== mapId) return null;
-    const name = Array.isArray(at) ? at[0] : at, s = m.spots[name] || [Math.floor(m.w / 2), Math.floor(m.h / 2)];
+    const name = Array.isArray(at) ? at[0] : at, s = tile || m.spots[name] || [Math.floor(m.w / 2), Math.floor(m.h / 2)];
     const tx0 = s[0] + (Array.isArray(at) ? at[1] : 0), ty0 = s[1] + (Array.isArray(at) ? at[2] : 0);
     for (let rad = 0; rad < 9; rad++) for (let dy = -rad; dy <= rad; dy++) for (let dx = -rad; dx <= rad; dx++) {
       if (Math.max(Math.abs(dx), Math.abs(dy)) !== rad) continue;
@@ -108,6 +108,7 @@
     try {
       await S.fade('in', 500);
       if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); }
+      if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Croix : marcher · <b>OK</b> : parler, valider · <b>MENU</b> : halte' : '<b>Flèches</b> ou <b>ZQSD</b> : marcher · <b>Entrée</b> : parler · <b>Échap</b> : menu', 9000);
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
   };
@@ -201,6 +202,7 @@
     W.t += dt; const p = W.player, h = I.input.held;
     const can = !S.busy && !W.lock && !I.ui.menuOpen;
     if (can && I.debug.auto && !W._autoBusy) { W.autoStep(); W.updateCam(); return; }
+    if (can && (W.solidAt(p.x - 4, p.y - 5) || W.solidAt(p.x + 4, p.y) || W.solidAt(p.x - 4, p.y) || W.solidAt(p.x + 4, p.y - 5))) { const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; W.resetTrail(); } }
     if (can) {
       let dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0);
       if (dx || dy) {
@@ -209,7 +211,7 @@
         const tryMove = (mx, my) => {
           const nx = p.x + mx, ny = p.y + my;
           if (W.solidAt(nx - 4, ny - 5) || W.solidAt(nx + 4, ny - 5) || W.solidAt(nx - 4, ny) || W.solidAt(nx + 4, ny)) return false;
-          if (W.npcs.some(n => !n.hidden && n.map === W.map.id && n.placed && Math.abs(n.x - nx) < 9 && Math.abs(n.y - ny) < 7)) return false;
+          if (W.npcs.some(n => !n.hidden && n.map === W.map.id && n.placed && Math.abs(n.x - nx) < 8 && Math.abs(n.y - ny) < 6 && Math.hypot(n.x - nx, n.y - ny) < Math.hypot(n.x - p.x, n.y - p.y))) return false;
           p.x = nx; p.y = ny; return true;
         };
         const m1 = dx && tryMove(dx * sp, 0), m2 = dy && tryMove(0, dy * sp);
@@ -293,6 +295,13 @@
         const ang = Math.atan2(sy - G.PH / 2, sx - G.PW / 2), ex = I.clamp(sx, 12, G.PW - 12), ey = I.clamp(sy, 22, G.PH - 12), pu = 1 + Math.sin(t * 6) * 0.2;
         c.save(); c.translate(ex, ey); c.rotate(ang); c.scale(pu, pu); c.fillStyle = '#1a1420'; c.beginPath(); c.moveTo(7, 0); c.lineTo(-5, -6); c.lineTo(-5, 6); c.fill(); c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(5, 0); c.lineTo(-4, -4); c.lineTo(-4, 4); c.fill(); c.restore();
       }
+    }
+    // bulle « parler » au-dessus du personnage à portée
+    if (!S.busy && !W.lock) {
+      const p = W.player, px = p.x + [0, -1, 1, 0][p.dir] * 12, py = p.y + [1, 0, 0, -1][p.dir] * 12; let best = null, bd = 22;
+      W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - px, n.y - py); if (d < bd) { bd = d; best = n; } });
+      if (!best) { const ch = W.chests.find(ch => !ch.open && ch.map === m.id && ch.placed && Math.hypot(ch.x - px, ch.y - py) < 18); if (ch) best = { x: ch.x, y: ch.y + 12 }; }
+      if (best && !(tg && tg.kind === 'talk' && Math.abs(tg.x - best.x) < 2)) { const bx = Math.round(best.x - cx), by = Math.round(best.y - cy - 34 + Math.sin(t * 5) * 1.5); c.fillStyle = '#1a1420'; c.fillRect(bx - 7, by - 1, 14, 9); c.fillStyle = '#fff6dc'; c.fillRect(bx - 6, by, 12, 7); c.fillRect(bx - 1, by + 7, 2, 2); c.fillStyle = '#1a1420'; c.fillRect(bx - 4, by + 3, 2, 2); c.fillRect(bx - 1, by + 3, 2, 2); c.fillRect(bx + 2, by + 3, 2, 2); }
     }
     // lumières de la carte
     const la = env.lightA === undefined ? 1 : env.lightA;

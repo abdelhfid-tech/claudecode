@@ -3,13 +3,13 @@
   'use strict';
   const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, $ = I.$;
   const B = I.battle = { active: false };
-  const TIER = { minion: { hp: 0.66, atk: 0.8, def: 0.8, spd: 0.95, xp: 1 }, elite: { hp: 2.1, atk: 0.98, def: 1.0, spd: 1.0, xp: 3.2 }, boss: { hp: 5.0, atk: 1.1, def: 1.05, spd: 1.04, xp: 7 } };
+  const TIER = { minion: { hp: 0.66, atk: 0.8, def: 0.8, spd: 0.95, xp: 1 }, elite: { hp: 2.4, atk: 1.0, def: 1.0, spd: 1.0, xp: 3.2 }, boss: { hp: 6.4, atk: 1.15, def: 1.05, spd: 1.04, xp: 7 } };
   const base = L => ({ hp: 70 + 26 * L, sp: 14 + 4 * L, atk: 9 + 3 * L, def: 7 + 2.2 * L, spd: 10 + 0.6 * L });
 
   I.calc = {
     hero(def, lvl) { const r = D.ROLES[def.role], b = base(lvl); return { hp: Math.round(b.hp * r.hp), sp: Math.round(b.sp * r.sp), atk: b.atk * r.atk, mag: b.atk * r.mag, def: b.def * r.def, spd: b.spd * r.spd }; },
     enemy(def, nHeroes, nFoes) {
-      const t = TIER[def.tier], b = base(def.lvl), ps = nHeroes >= 3 ? 1 : nHeroes === 2 ? 0.72 : 0.42, crowd = nFoes >= 3 ? 0.85 : 1;
+      const t0 = TIER[def.tier], early = def.tier === 'boss' && def.lvl <= 4, t = early ? Object.assign({}, t0, { hp: t0.hp * 0.75, atk: t0.atk * 0.9 }) : t0, b = base(def.lvl), ps = nHeroes >= 3 ? 1 : nHeroes === 2 ? 0.72 : 0.42, crowd = nFoes >= 3 ? 0.85 : 1;
       return { hp: Math.round(b.hp * t.hp * ps * crowd), atk: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.9 : 1), mag: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.9 : 1), def: b.def * t.def, spd: b.spd * t.spd };
     },
     xpNeed: l => 40 + 40 * l,
@@ -26,11 +26,11 @@
   /* ================= décor ================= */
   const SKY = { desert: ['#150c30', '#5c2756', '#e08a4a'], ville: ['#0c0e2c', '#35285c', '#c8785a'], camp: ['#080a20', '#281e4c', '#9a4a48'], romaine: ['#0e1232', '#383876', '#d8a070'], palais: ['#120a26', '#48205c', '#c89040'], mer: ['#051028', '#123c66', '#5fb4cc'], cite: ['#04030d', '#180e3c', '#7a2cff'], noos: ['#02021a', '#0a0d36', '#30209a'] };
   function paintBg(kind, hue) {
-    const cv = G.mk(G.PW, G.PH), c = cv.getContext('2d'), sky = SKY[kind] || SKY.noos, H0 = 124, r = I.rng(I.hash(kind + hue));
+    const cv = G.mk(G.PW, G.PH), c = cv.getContext('2d'), sky = SKY[kind] || SKY.noos, H0 = 100, r = I.rng(I.hash(kind + hue));
     const g = c.createLinearGradient(0, 0, 0, H0); g.addColorStop(0, sky[0]); g.addColorStop(0.6, sky[1]); g.addColorStop(1, sky[2]); c.fillStyle = g; c.fillRect(0, 0, G.PW, H0);
-    for (let i = 0; i < 70; i++) { c.fillStyle = `rgba(255,255,255,${0.2 + r() * 0.7})`; c.fillRect(Math.floor(r() * G.PW), Math.floor(r() * 80), 1, 1); }
+    for (let i = 0; i < 70; i++) { c.fillStyle = `rgba(255,255,255,${0.2 + r() * 0.7})`; c.fillRect(Math.floor(r() * G.PW), Math.floor(r() * 62), 1, 1); }
     // astre
-    const ax = kind === 'cite' ? 300 : 250, ay = kind === 'noos' ? 56 : 84; const ag = c.createRadialGradient(ax, ay, 2, ax, ay, 60); ag.addColorStop(0, 'rgba(255,240,200,.95)'); ag.addColorStop(0.18, `hsla(${hue},90%,75%,.5)`); ag.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = ag; c.fillRect(ax - 60, ay - 60, 120, 120);
+    const ax = kind === 'cite' ? 300 : 250, ay = kind === 'noos' ? 44 : 64; const ag = c.createRadialGradient(ax, ay, 2, ax, ay, 60); ag.addColorStop(0, 'rgba(255,240,200,.95)'); ag.addColorStop(0.18, `hsla(${hue},90%,75%,.5)`); ag.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = ag; c.fillRect(ax - 60, ay - 60, 120, 120);
     c.strokeStyle = `hsla(${hue},100%,75%,.35)`; c.lineWidth = 1; for (let i = 1; i < 4; i++) { c.beginPath(); c.ellipse(ax, ay, 18 * i, 6 * i, -0.3, 0, 6.3); c.stroke(); }
     const sil = '#0b0818', sil2 = '#16102c';
     c.fillStyle = sil2;
@@ -50,7 +50,7 @@
     return cv;
   }
   function drawGrid(c, hue, t) {
-    const H0 = 124, H = G.PH - H0;
+    const H0 = 100, H = G.PH - H0;
     c.fillStyle = `hsla(${hue},100%,66%,.34)`;
     for (let i = 0; i < 9; i++) { const f = ((i + (t * 0.35) % 1) / 9); const y = H0 + H * f * f; c.fillRect(0, Math.round(y), G.PW, 1); }
     c.strokeStyle = `hsla(${hue},100%,66%,.22)`; c.lineWidth = 1; c.beginPath();
@@ -58,8 +58,8 @@
   }
 
   /* ================= mise en place ================= */
-  const FOE_POS = { 1: [[112, 158]], 2: [[84, 132], [150, 172]], 3: [[70, 124], [146, 142], [92, 182]], 4: [[62, 120], [140, 122], [80, 176], [158, 180]] };
-  const HERO_POS = [[300, 128], [316, 158], [296, 190]];
+  const FOE_POS = { 1: [[112, 146]], 2: [[80, 126], [154, 150]], 3: [[62, 122], [140, 128], [100, 156]], 4: [[54, 120], [128, 116], [86, 154], [164, 152]] };
+  const HERO_POS = [[270, 120], [306, 132], [342, 144]];
   function mkHero(id, i) {
     const h = I.world.hero(id), st = I.calc.hero(h.def, h.lvl);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
@@ -67,7 +67,7 @@
   }
   function mkFoe(id, i, n, nH) {
     const def = I.world.saga.enemies[id], st = I.calc.enemy(def, nH, n), sc = def.scale || (def.tier === 'boss' ? 3 : def.tier === 'elite' ? 2 : 1);
-    const pos = n === 1 && sc >= 3 ? [118, 182] : FOE_POS[n][i];
+    const pos = n === 1 && sc >= 3 ? [118, 156] : FOE_POS[n][i];
     return { side: 'foe', id, name: def.name, def, lvl: def.lvl, max: { hp: st.hp, sp: 0 }, hp: st.hp, sp: 0, atk: st.atk, mag: st.mag, df: st.def, spd: st.spd, buffs: {}, st: {}, veils: def.veils, veilsMax: def.veils, broken: false,
       known: {}, tried: {}, phase: 0, skills: (def.skills || []).slice(), x: pos[0], y: pos[1], ox: 0, flash: 0, ct: 0, alive: true, spr: G.enemy(def.art, def.hue, sc, 0), size: sc >= 3 ? 112 : sc === 2 ? 80 : 52, ph: Math.random() * 6, fade: 1 };
   }
@@ -226,7 +226,7 @@
     while (true) {
       const pips = () => { let s = ''; for (let i = 0; i < 5; i++) s += `<i class="pip${i < h.niyya - boost ? ' on' : i < h.niyya ? ' use' : ''}"></i>`; return s; };
       const title = () => `<b style="color:${h.color}">${h.name}</b><span class="niyya"><button type="button" class="nb" data-d="-1">−</button>Niyya ${pips()}<button type="button" class="nb" data-d="1">+</button>${boost ? `<em>élan ×${boost}</em>` : ''}</span>`;
-      const setBoost = d => { boost = I.clamp(boost + d, 0, Math.min(3, h.niyya)); const t = box.querySelector('.mtitle'); if (t) { t.innerHTML = title(); wire(); } I.audio.sfx('move'); };
+      const setBoost = d => { const was = boost; boost = I.clamp(boost + d, 0, Math.min(3, h.niyya)); if (boost > was) { G.spawn({ x: h.x, y: h.y - 24, type: 'ring', r0: 6, r1: 24 + boost * 4, life: 0.4, size: 2, color: h.color }); for (let q = 0; q < 8; q++) G.spawn({ x: h.x + (Math.random() - 0.5) * 20, y: h.y, vy: -50 - Math.random() * 40, life: 0.6, size: 0.9, color: h.color, type: 'spark' }); } const t = box.querySelector('.mtitle'); if (t) { t.innerHTML = title(); wire(); } I.audio.sfx('move'); };
       const wire = () => box.querySelectorAll('.nb').forEach(b => b.onclick = ev => { ev.stopPropagation(); setBoost(+b.dataset.d); });
       const lum = lightOf(h);
       const items = [
@@ -423,7 +423,7 @@
       const weak = e.def.weak.map(w => e.known[w] ? `<i style="color:${D.ELEMENTS[w].color}" title="${D.ELEMENTS[w].name}">${D.ELEMENTS[w].glyph}</i>` : '<i class="unk">?</i>').join('') + (e.def.immune || []).filter(w => e.known[w] === 'x').map(w => `<i class="imm" title="Insensible : ${D.ELEMENTS[w].name}">${D.ELEMENTS[w].glyph}</i>`).join('');
       const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${STN[k === 'df' ? 'def' : k]}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="dn">${STN[k] || k}</b>`).join('');
       const d = I.el('button', 'plate' + (C.cursor === e ? ' cur' : '') + (e.broken ? ' brk' : ''), `<span class="nm">${I.esc(e.name)}</span><span class="bar"><i style="width:${Math.max(0, e.hp / e.max.hp * 100)}%"></i></span><span class="row"><span class="veil">${e.broken ? 'DÉVOILÉ' : '⛊ ' + e.veils}</span><span class="wk">${weak}</span></span>${sts ? `<span class="sts">${sts}</span>` : ''}`);
-      d.type = 'button'; d.style.left = (e.x / G.PW * 100) + '%'; d.style.top = (Math.max(14, e.y - e.size - 4) / G.PH * 100) + '%';
+      d.type = 'button'; d.style.left = (e.x / G.PW * 100) + '%'; d.style.top = (Math.max(44, e.y - e.size - 4) / G.PH * 100) + '%';
       d.onclick = ev => { ev.stopPropagation(); if (C.pickCb) C.pickCb(e); };
       pl.appendChild(d);
     });

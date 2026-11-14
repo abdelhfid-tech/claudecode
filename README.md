@@ -1,1 +1,100 @@
-# claudecode
+# ISNAD — Chroniques des Compagnons
+
+JRPG rétro-HD jouable dans le navigateur, en un seul fichier HTML. Le récit commence à la mort du
+Prophète ﷺ (an 11 de l'Hégire, 632) et suit cinq Compagnons, chacun dans une saga de trois chapitres,
+jusqu'à la fin du califat bien guidé (an 40, 661).
+
+Le cadre est une fiction : en 1508 H (2084), dans la Cité-Miroir, l'**AGRÉGOR** fabrique des idoles en
+agrégeant l'attention de millions de regards. Idris, jeune *râwî* (transmetteur) des Archives basses,
+remonte la **Chaîne** (*isnâd*) de témoin en témoin. Chaque saga lui rend une **Lumière**, c'est-à-dire
+une valeur, pour dévoiler l'Agrégor.
+
+## Jouer
+
+- En ligne : la version publiée en Artifact (lien donné dans la session de travail).
+- En local : ouvrir `index.html` dans un navigateur récent. Aucun serveur, aucune installation.
+
+| Action | Clavier | Tactile |
+|---|---|---|
+| Se déplacer, naviguer | Flèches, ou ZQSD / WASD | Croix à l'écran |
+| Parler, valider | Entrée, Espace, Z ou E | Bouton OK, ou toucher l'élément |
+| Menu, retour | Échap, X ou Retour arrière ; M ou Tab pour le menu | Bouton MENU, bouton ☰ |
+
+La progression est enregistrée dans le navigateur (`localStorage`) à chaque objectif atteint.
+« Continuer » reprend au dernier objectif.
+
+## Les cinq sagas
+
+| | Compagnon | Période | Lumière | Idoles affrontées |
+|---|---|---|---|---|
+| I | Abû Bakr as-Siddîq | 11–13 H | Véracité (*sidq*) | le Déni, le Clan, le Menteur |
+| II | 'Umar ibn al-Khattâb | 13–23 H | Justice (*'adl*) | l'Accapareur, l'Aigle d'Airain, le Trône vide |
+| III | Khâlid ibn al-Walîd | 13–21 H | Courage (*shajâ'a*) | la Soif, la Peur du Nombre, l'Idole du Héros |
+| IV | 'Uthmân ibn 'Affân | 23–35 H | Miséricorde (*rahma*) | Babel, l'Abîme, la Rumeur |
+| V | 'Alî ibn Abî Tâlib | 35–40 H | Savoir (*'ilm*) | le Privilège, le Slogan, le Juge sans miséricorde |
+
+L'ordre est libre. Quand les cinq Lumières sont réunies, le dernier maillon s'ouvre : le retour d'Idris
+dans la Cité-Miroir, qui rend la sixième Lumière, la Patience (*sabr*).
+
+## Mécaniques
+
+- **On ne combat jamais des personnes ni des peuples.** Tous les adversaires sont des *égrégores* :
+  des formes abstraites nées de ce que beaucoup de cœurs regardent ensemble. Les batailles
+  historiques sont racontées ; le combat jouable a lieu dans la *noosphère* du lieu.
+- **Voiles et failles.** Chaque égrégore est protégé par des voiles (⛊). Le frapper avec la vertu qui
+  est sa faille retire un voile ; à zéro il est *dévoilé* : il perd son tour et subit davantage.
+- **Niyya** (l'intention). Un point par tour, cinq au plus. On en dépense jusqu'à trois pour multiplier
+  les coups d'une attaque de base ou renforcer une vertu.
+- **Sakîna.** Une jauge qui monte quand on encaisse, quand on touche une faille et quand on choisit
+  juste. Pleine, elle ouvre l'acte ultime du Compagnon.
+- **Fidélité à la Chaîne.** Aux moments décisifs, deux à quatre actes sont proposés ; un seul est celui
+  que les sources rapportent. Un mauvais choix ne réécrit pas l'Histoire : la chaîne vacille, le jeu
+  explique, puis repropose. Le Compagnon ne fait jamais à l'écran autre chose que ce qui est rapporté.
+- **Codex.** Biographies, événements, paroles et idoles, avec leurs sources.
+
+## Développer
+
+```sh
+node tools/validate.js          # valide les sagas contre le schéma (src/core/defs.js)
+node tools/build.js             # assemble index.html et dist/isnad.html
+node tools/smoke.js auto        # joue la partie entière automatiquement dans Chromium
+node tools/smoke.js shots       # captures d'écran bureau et mobile dans .smoke/
+```
+
+`smoke.js` demande Playwright et Chromium (`npm i playwright` hors de l'environnement d'origine).
+
+```
+index.html            jeu assemblé, page autonome
+dist/isnad.html       même jeu, en fragment pour publication en Artifact
+src/page.html         gabarit HTML          src/style.css   interface
+src/core/defs.js      énumérations et schéma (source de vérité)
+src/core/base.js      entrées, sauvegarde, son
+src/core/gfx.js       tuiles, objets, personnages, égrégores, sceaux, composition
+src/core/maps.js      générateurs de cartes
+src/core/script.js    interprète de scripts (dialogues, choix, mise en scène)
+src/core/world.js     exploration, objectifs, points de reprise
+src/core/battle.js    combat
+src/core/ui.js        titre, Chaîne, menus, codex, boucle principale
+src/data/frame.js     histoire-cadre (prologue, épilogue)
+src/data/saga_*.js    une saga par fichier
+tools/                build, validate, smoke
+docs/                 artefacts du framework « De l'idée à la production »
+```
+
+Les consignes pour un agent codeur sont dans `AGENTS.md`, le contrat de données dans
+`docs/schema-saga.md`, les décisions à valider dans `docs/decisions.md`.
+
+## Sources
+
+Ibn Hishâm, *as-Sîra an-Nabawiyya* · at-Tabarî, *Târîkh ar-Rusul wa-l-Mulûk* · Ibn Sa'd,
+*at-Tabaqât al-Kubrâ* · Ibn Kathîr, *al-Bidâya wa-n-Nihâya* · al-Balâdhurî, *Futûh al-Buldân* ·
+al-Bukhârî et Muslim, *as-Sahîh* · Ibn 'Asâkir, *Târîkh Dimashq*. Chaque entrée du codex cite les
+siennes et signale les récits dont la chaîne est discutée.
+
+## Avertissement
+
+ISNAD est une fiction interactive inspirée de sources historiques. Les dialogues sont une
+dramatisation ; seules les paroles présentées en carton, avec leur source, sont des citations
+rapportées. Le Prophète ﷺ n'est jamais représenté et aucun personnage n'a de visage. Le contenu
+historique n'a pas été relu par un spécialiste : toute erreur est celle des auteurs, et le texte doit
+être vérifié auprès des sources et des savants avant toute diffusion.

@@ -257,7 +257,7 @@
   };
   G.resize = function () {
     const st = G.cv.parentElement, w = st.clientWidth, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    G.k = Math.max(2, Math.min(5, Math.ceil(w * dpr / G.PW)));
+    G.k = Math.max(2, Math.min(4, Math.ceil(w * dpr / G.PW)));
     G.cv.width = G.PW * G.k; G.cv.height = G.PH * G.k;
     st.style.setProperty('--u', (st.clientHeight / G.PH) + 'px');
   };

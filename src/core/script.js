@@ -97,7 +97,7 @@
     switch (op[0]) {
       case 'say': await showLine('say', speaker(a), b); break;
       case 'nar': await showLine('nar', null, a); break;
-      case 'quote': S.hideDialog(); I.audio.sfx('light'); await card('quote', `<div class="orn">❖</div><blockquote>${I.fmt(a)}</blockquote><cite>${I.fmt(b)}</cite><div class="hint">▼</div>`); break;
+      case 'quote': S.hideDialog(); I.audio.sfx('light'); await card('quote', `<div class="orn">❖</div><blockquote>${I.fmt(a.replace(/^«\s*/, '').replace(/\s*»$/, ''))}</blockquote><cite>${I.fmt(b)}</cite><div class="hint">▼</div>`); break;
       case 'title': S.hideDialog(); I.audio.sfx('roll'); await card('title', `<h1>${I.fmt(a)}</h1>${b ? `<p>${I.fmt(b)}</p>` : ''}<div class="rule"></div>`, 3000); break;
       case 'choice': {
         S.hideDialog();

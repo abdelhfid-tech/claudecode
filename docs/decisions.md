@@ -1,0 +1,86 @@
+# Décisions prises en l'absence du décideur — À VALIDER
+
+Le décideur a demandé de « prendre les décisions qui s'imposent ». Selon l'invariant 4 du framework,
+l'agent exécute et l'humain décide : chaque décision ci-dessous est donc une **proposition appliquée**,
+à valider, amender ou rejeter. Cocher la case une fois tranché.
+
+## Récit et sujet
+
+- [ ] **D1. Titre et histoire-cadre.** *ISNAD — Chroniques des Compagnons* ; Idris, *râwî* de la
+  Cité-Miroir en 1508 H (2084), remonte la Chaîne pour dévoiler l'AGRÉGOR, « l'agrégateur d'égrégores ».
+  *Pourquoi* : le cadre justifie l'ambiance cyberpunk, donne un sens actuel aux idoles, et fait du
+  joueur un transmetteur plutôt qu'un Compagnon. *Écarté* : incarner directement les Compagnons sans
+  médiation.
+- [ ] **D2. Le Prophète ﷺ n'est jamais représenté ; personne n'a de visage.** Sceaux calligraphiés à la
+  place des portraits, Compagnons au visage de lumière. *Pourquoi* : respect du sujet, et cohérence
+  visuelle. *Écarté* : portraits dessinés, même stylisés.
+- [ ] **D3. On ne combat que des égrégores.** Les batailles (Yamâma, Yarmoûk, les Mâts, Nahrawân) sont
+  racontées ; le combat jouable oppose le groupe à l'idole qui se nourrit de l'événement. *Pourquoi* :
+  ne faire d'aucun peuple ni d'aucune religion un ennemi de jeu, et porter le thème demandé (valeurs
+  contre idoles). *Écarté* : batailles tactiques entre armées.
+- [ ] **D4. Les choix sont une fidélité à la Chaîne, pas une uchronie.** Une seule option est l'acte
+  rapporté ; les autres font vaciller la chaîne, sont expliquées, puis le choix est reproposé.
+  *Pourquoi* : ne jamais prêter à un Compagnon un acte qu'il n'a pas commis. *Écarté* : embranchements
+  narratifs.
+- [ ] **D5. Retenue sur les dissensions entre Compagnons.** La bataille du Chameau n'est pas mise en
+  scène ; Siffîn est évoqué en cartons, sans coupable ; les insurgés du siège de 'Uthmân ne sont pas
+  nommés. La saga de 'Alî se concentre sur le tribunal, le débat d'Ibn 'Abbâs et Nahrawân.
+  *Écarté* : jouer ces épisodes.
+- [ ] **D6. Sobriété générale.** Aucun personnage féminin mis en scène, aucune romance, aucun sujet
+  intime ; on dit « une famille », « les gens ». Conséquence assumée : certains récits célèbres sont
+  résumés ou laissés de côté.
+- [ ] **D7. Choix des cinq sagas et de leur thèse.** Abû Bakr et la Véracité, 'Umar et la Justice,
+  Khâlid et le Courage de rengainer, 'Uthmân et la Miséricorde, 'Alî et le Savoir. Khâlid est placé
+  troisième, entre les califes, pour l'ambiance romaine. *Écarté pour la V1* : Bilâl, Salmân,
+  Abû Dharr, Abû 'Ubayda comme héros de saga.
+- [ ] **D8. La sixième Lumière, la Patience, appartient à Idris** et à quiconque transmet. L'épilogue
+  se clôt sur une parole du sermon de l'Adieu citée en carton (« Que celui qui est présent transmette
+  à l'absent », al-Bukhârî et Muslim). À vérifier et à valider expressément.
+
+## Forme
+
+- [ ] **D9. Son sans instrument mélodique.** Ambiances, percussions de duff, bruitages. *Écarté* :
+  une bande-son mélodique, même en option.
+- [ ] **D10. Art et son entièrement générés par le code.** Aucun service payant, aucun asset externe.
+  *Pourquoi* : contrainte de l'Artifact, coût nul, pas de droits à gérer. *Écarté* : images ou voix
+  générées par un service tiers, qui auraient dépensé des crédits sans accord.
+- [ ] **D11. Ordre des sagas libre.** Chaque saga a son groupe et repart du niveau 1. La Chaîne
+  recommande de commencer par Abû Bakr. *Écarté* : déblocage linéaire.
+- [ ] **D12. Difficulté indulgente.** Niveau plancher par chapitre, soin après chaque victoire, reprise
+  immédiate après une défaite. *Écarté* : fin de partie et points de sauvegarde espacés.
+- [ ] **D13. Vocabulaire.** Constance, Souffle, éprouvé, voiles, dévoilé, Niyya, Sakîna ; les héros ne
+  « meurent » pas en combat et les compétences ne portent jamais le nom divin.
+
+## Méthode et publication
+
+- [ ] **D14. Publication en Artifact privé et sur la branche Git de travail.** Pas de demande de
+  fusion, pas de partage public. *Pourquoi* : le contenu n'a pas été relu par un spécialiste.
+- [ ] **D15. Cinq sagas écrites en parallèle par cinq agents**, sur un contrat de données validé par
+  script, pendant que le moteur était construit. *Écarté* : écriture séquentielle, impossible en
+  trois heures.
+- [ ] **D16. Réflexion et exécution dans la même session.** Écart à l'invariant 1, imposé par le délai ;
+  la spécification a tout de même été écrite en fichiers avant l'exécution.
+
+## Points de divergence historique assumés
+
+Chacun est signalé au joueur dans le codex. À relire en priorité par le validateur.
+
+| # | Point | Ce que fait le jeu |
+|---|---|---|
+| H1 | **La cuirasse de 'Alî devant le juge Shurayh.** Récit célèbre (Abû Nu'aym, al-Bayhaqî, Ibn Kathîr) dont la chaîne est discutée. | Joué au chapitre 1 de la saga V, introduit par « On rapporte » ; le codex dit la discussion. |
+| H2 | **La lettre écartant Khâlid du commandement.** Selon at-Tabarî elle arrive au Yarmoûk ; selon d'autres, devant Damas, et c'est Abû 'Ubayda qui tarde à la montrer. | Le jeu suit at-Tabarî ; le chapitre est daté « An 13 ou 15 H » ; le codex donne les deux versions. |
+| H3 | **'Umar déclinant de prier dans l'église de la Résurrection.** Rapporté par Eutychius, source chrétienne tardive. | Proposé comme choix, avec « On rapporte » ; la source est nommée. |
+| H4 | **« Tu as été juste, alors tu as dormi. »** Formule d'une tradition tardive, attribuée tantôt à un envoyé de César ou de Kisrâ, tantôt à al-Hurmuzân. | Citée avec cette réserve. |
+| H5 | **Dates.** Reddition de Jérusalem entre 15 et 17 H ; bataille des Mâts en 34 ou 31 H ; retour d'Usâma après quarante ou soixante-dix jours. | Fourchettes indiquées. |
+| H6 | **Alliés de Khâlid.** Les exploits de Dirâr viennent en grande partie du *Futûh ash-Shâm* attribué à al-Wâqidî ; ceux d'al-Qa'qâ' des récits de Sayf ibn 'Umar. | Signalé dans leurs biographies. |
+| H7 | **Siège de 'Uthmân.** Origine disputée des lettres, détails divergents chez les historiens anciens. | Aucun coupable nommé ; paroles introduites par « On rapporte ». |
+| H8 | **Chronologie non linéaire de la saga de 'Umar** (chapitre 1 en 18 H, chapitre 2 en 16 H). | Annoncé par la narration. |
+| H9 | **Groupes à quatre héros.** Abû 'Ubayda, mort en 18 H, cède la place à 'Abd ar-Rahmân ibn 'Awf ; 'Ammâr, tombé à Siffîn, à Qays ibn Sa'd. | Écart au gabarit de trois héros, pour respecter la chronologie. |
+| H10 | **Verset 3:144 et paroles d'Abû Bakr**, cités en traduction du sens. | À vérifier mot à mot. |
+
+## Questions ouvertes pour le décideur
+
+1. Qui relit le contenu historique et religieux, et selon quelle référence ?
+2. Le jeu doit-il rester privé, être partagé à un cercle, ou être rendu public après relecture ?
+3. Les sceaux portent les noms des Compagnons en arabe : est-ce conforme à l'intention ?
+4. Quelle suite : approfondir ces cinq sagas, ou en ajouter d'autres ?

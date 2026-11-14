@@ -1,0 +1,32 @@
+# Risques et faisabilité — étape 0.5
+
+Probabilité et impact notés faible, moyen ou fort. Les parades listées sont celles qui ont été
+réellement mises en œuvre ; ce qui reste ouvert est dit comme tel.
+
+| # | Risque | Prob. | Impact | Parade mise en œuvre | Reste ouvert |
+|---|---|---|---|---|---|
+| 1 | **Sensibilité religieuse et exactitude historique.** Une parole mal attribuée, une représentation déplacée, un parti pris sur une dissension. | Forte | Tue le projet | Bible narrative écrite avant tout contenu (`schema-saga.md` §1). Prophète ﷺ jamais représenté, personne n'a de visage. Paroles attestées isolées en cartons avec leur source. Récits discutés signalés dans le codex. Choix conçus comme fidélité aux sources. Dissensions racontées sans coupable. Avertissement à l'écran-titre, dans le codex et au générique. | **Aucune relecture par un spécialiste.** Les textes viennent d'un modèle : des erreurs de date, de source ou de formulation sont probables. À lever avant tout partage public. |
+| 2 | **Délai de trois heures** pour un moteur et cinq sagas. | Forte | Fort | Contrat de données et validateur écrits en premier ; cinq agents écrivent une saga chacun pendant que le moteur est construit. Statistiques calculées par le moteur pour éviter un équilibrage par saga. | Finitions limitées. Voir `retours.md`. |
+| 3 | **Cohérence de cinq sagas écrites en parallèle.** Schémas divergents, ton inégal, références à des fonctions inexistantes. | Moyenne | Fort | Un seul schéma (`defs.js`), un validateur qui refuse toute opération, carte, lieu ou effet inconnu, une bible de ton commune, un gabarit par saga. Test automatique qui joue chaque saga jusqu'au bout. | Le ton n'a été relu qu'en partie. Deux sagas ont quatre héros au lieu de trois, pour une raison historique. |
+| 4 | **Contraintes de l'hébergement en Artifact.** Images, médias et requêtes bloqués ; un seul fichier ; téléchargements inertes. | Certaine | Fort si ignorée | Tout l'art et tout le son sont générés par le code. Un fichier d'environ 500 Ko. Seule ressource externe : Google Fonts, avec polices de repli. `[hidden]` forcé dans la feuille de style. | Si les polices ne chargent pas, le rendu change un peu (sceaux arabes compris). |
+| 5 | **Équilibrage non testé par des humains.** Trop facile, trop long ou bloquant. | Forte | Moyen | Niveau plancher par chapitre (1, 4, 6) pour qu'aucun broyage ne soit nécessaire. Soin partiel après chaque victoire. Une défaite relance le combat avec le groupe restauré. Réglage contre une IA de test sur la partie entière. | L'IA de test connaît les règles ; un nouveau joueur, non. La difficulté réelle est inconnue. |
+| 6 | **Plaisir de jeu non vérifié.** Risque propre au type « jeu » du framework. | Forte | Moyen | Variété par chapitre (exploration, dialogue, noosphère, boss), boss dont les failles racontent quelque chose, choix de fidélité, codex. | Personne n'y a joué. |
+| 7 | **Lisibilité sur mobile.** Scène 16:9 trop petite en portrait. | Moyenne | Moyen | En portrait étroit, dialogue, choix et commandes de combat passent sous la scène ; manette tactile ; taille de base d'au moins 13 px ; tous les menus sont touchables. Captures faites en 390 × 780. | Non testé sur un vrai téléphone. Safari et iOS non testés. |
+| 8 | **Sauvegarde locale fragile.** Navigation privée, données effacées, changement d'appareil. | Moyenne | Faible | Lectures et écritures protégées ; le jeu fonctionne sans stockage. Point de reprise à chaque objectif. Sagas indépendantes, donc peu à refaire. | Pas d'export ni de synchronisation. |
+| 9 | **Performance sur appareil modeste.** Composition plein écran à chaque image. | Faible | Moyen | Couche pixel en 384 × 216, flou en basse résolution réutilisé, densité d'écran plafonnée à 2, particules plafonnées. | Non mesuré sur un appareil d'entrée de gamme. |
+
+## Faisabilité de la partie la plus incertaine
+
+La question était : peut-on obtenir un rendu « rétro-HD » crédible et cinq sagas jouables sans aucun
+asset, dans un seul fichier ? Réponse démontrée par le produit lui-même : oui. Le test automatique
+joue le prologue, les cinq sagas et l'épilogue de bout en bout sans erreur.
+
+## Verdict
+
+Aucun risque classé « tue le projet » n'est sans parade, mais la parade du risque 1 est incomplète
+tant qu'un validateur humain n'a pas relu les textes. Le produit est donc livrable au décideur et à un
+cercle de relecture. Il n'est pas prêt pour une diffusion publique.
+
+## Budget
+
+Coût des services : zéro. Pas de compte, pas d'hébergement payant, pas de générateur d'assets.
