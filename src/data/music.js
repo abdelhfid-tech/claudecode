@@ -53,6 +53,22 @@
   const tr = (s, n) => s.replace(/[A-G][#b]?\d/g, x => name(midi(x) + n));              // transpose une ligne de n demi-tons
   const trp = (p, n) => p.replace(/[A-G][#b]?/g, r => NOTE[(pcOf(r) + n + 120) % 12]);   // transpose une grille d'accords
   const trs = (bars, n) => bars.map(b => tr(b, n));
+  const sc = s => s.split(' ').map(pcOf);                                              // gamme → classes de hauteur
+  // luth seul : chaque note sur deux cordes à l'unisson (les chœurs doublés de l'instrument) — elle sort 3 dB plus fort
+  const two = line => line.replace(/([A-G][#b]?\d)\//g, '$1+$1/');
+  // Hétérophonie : le luth double un chant en l'ornant. Il refrappe les notes longues et y glisse un mordant vers le degré
+  // supérieur de la gamme (durée q) ; avec `re`, il redouble aussi les noires en croches. `shift` transpose (demi-tons).
+  const het = (bars, scale, shift, q, re) => bars.map(bar => bar.trim().split(/\s+/).map(tk => {
+    const i = tk.lastIndexOf('/'), h = tk.slice(0, i), d = parseFloat(tk.slice(i + 1)); if (h === '-' || h.includes('+')) return tk;
+    const m = midi(h) + (shift || 0), n = name(m); let u = m + 1; while (!scale.includes(u % 12)) u++;
+    const turn = name(u) + '/' + q + ' ' + n + '/' + q;
+    if (d < 1 - 1e-9) return n + '/' + d;
+    if (d < 1.5 - 1e-9) return re ? n + '/' + d / 2 + ' ' + n + '/' + d / 2 : n + '/' + d;
+    if (d < 2 - 1e-9) return n + '/' + (d - 2 * q) + ' ' + turn;                       // le mordant mène à la note suivante
+    let out = n + '/1 ' + turn + ' ' + n + '/' + (1 - 2 * q), rest = d - 2;             // frappe, mordant, puis une frappe par temps
+    while (rest > 1e-9) { const x = Math.min(1, rest); out += ' ' + n + '/' + x; rest -= x; }
+    return out;
+  }).join(' '));
 
   /* ---------- le thème de la Chaîne ----------
      Trois maillons : chacun monte (quinte, tierce, quarte) et s'accroche un degré sous l'arrivée du précédent.
@@ -81,6 +97,8 @@
       { wave: 'flute', vol: 0.48, notes: B(4, ...N('-/4', 3), '-/3.5 D4/.5', CHm.a1, CHm.a2, CHm.a3, CHm.a4, CHm.b1, CHm.b2, CHm.b3, 'D4/4', ...DESC) },
       { wave: 'brass', vol: 0.6, pan: 0.15, notes: B(4, ...N('-/4', 11), '-/3.5 D4/.5', CH.a1, CH.a2, CH.a3, CH.a4, CH.b1, CH.b2, CH.b3, 'D4/4') },
       { wave: 'strings', vol: 0.24, pan: -0.2, notes: B(4, ...pads(pI, 4, 'F3'), ...pads(CHPm, 4, 'F3'), ...pads(CHP, 4, 'F3')) },
+      // une touche arabo-andalouse : dans la première partie, le luth double la flûte en l'ornant
+      { wave: 'pluck', vol: 0.36, pan: -0.25, notes: B(4, ...N('-/4', 3), '-/3.5 D4/.5', ...het([CHm.a1, CHm.a2, CHm.a3, CHm.a4, CHm.b1, CHm.b2, CHm.b3, 'D4/4'], sc('D E F G A Bb C'), 0, 0.125), ...N('-/4', 7), '-/3.5 D4/.5') },
       { wave: 'harp', vol: 0.4, pan: 0.25, notes: B(4, ...acc(pI, 4, 'D2', H16), ...acc(CHPm, 4, 'D2', H8), ...acc(CHP, 4, 'D2', H16)) },
       { wave: 'triangle', vol: 0.32, notes: B(4, ...acc(pI, 4, 'D2', { 4: '0/4', 2: '0/2', 1: '0/1' }), ...acc(CHPm, 4, 'D2', { 4: '0/3 0/1', 2: '0/2' }), ...acc(CHP, 4, 'D2', { 4: '0/1.5 0/.5 1/1 0/1', 2: '0/1.5 0/.5' })) },
       { wave: 'timp', vol: 0.3, notes: B(4, 'D2/4', '-/4', '-/4', '-/2 A2/.5 A2/.5 A2/.25 A2/.25 A2/.25 A2/.25',
@@ -102,7 +120,9 @@
     ] });
   })();
 
-  /* ---------- medine : marche souple — sol dorien, puis si bémol majeur ---------- */
+  /* ---------- medine : marche souple — sol dorien, puis si bémol majeur. Couleur arabo-andalouse : un prélude de luth sans
+     percussion (joué une fois) ; à la reprise, le luth quitte l'accompagnement pour doubler le chant en l'ornant, et le târ et
+     la darbouka passent à un cycle en 3 + 3 + 2. ---------- */
   (function () {
     const pA = 'Gm | C | Gm | Dm | Gm | C | Bb F/A | Gm D', pB = 'Bb | F/A | Gm | Dm | Eb | Bb/D | Cm | D';
     const oud = { 4: '0/.5 3/.5 2/.5 3/.5 1/.5 3/.5 2/.5 3/.5', 2: '0/.5 3/.5 2/.5 3/.5' };
@@ -113,14 +133,18 @@
       'Eb3/1.5 Bb2/.5 G2/1 Bb2/.5 Eb3/.5', 'D3/1.5 Bb2/.5 D3/1 Eb3/.5 D3/.5', 'C3/1.5 G2/.5 Eb3/1 C3/.5 C#3/.5', 'D3/1.5 A2/.5 D3/1 A2/.5 F#2/.5'];
     const A = ['D5/1 Bb4/.5 C5/.5 D5/1 G5/1', 'E5/1.5 D5/.5 C5/1 E5/1', 'D5/1 Bb4/.5 C5/.5 D5/.5 F5/.5 E5/.5 D5/.5', 'C5/1.5 A4/.5 D5/2',
       'G5/1 F5/.5 E5/.5 D5/1 Bb4/1', 'C5/.5 D5/.5 E5/1 G5/1 E5/1', 'F5/1 D5/1 C5/1 A4/1'];
+    const A2 = A.concat('Bb4/.5 A4/.5 G4/1 -/1 D5/.5 Eb5/.5');                                  // la reprise, que le luth double
     const beat = 'D/.5 T/.5 r/.5 T/.5 D/.5 r/.5 T/.5 r/.5', turn = 'D/.5 T/.5 r/.5 T/.5 D/.5 D/.5 T/.25 T/.25 T/.5';
-    R('medine', { bpm: 96, beats: 96, voices: [
-      { wave: 'flute', vol: 0.5, notes: B(4, ...A, 'Bb4/.5 A4/.5 G4/1 -/1 A4/.5 C5/.5', ...A, 'Bb4/.5 A4/.5 G4/1 -/1 D5/.5 Eb5/.5',
+    const cyc = 'D/.5 r/.5 r/.5 T/.5 r/.5 r/.5 T/.5 r/.5', fin = 'D/.5 r/.5 r/.5 T/.5 r/.5 D/.5 T/.25 T/.25 T/.5';   // 3 + 3 + 2
+    R('medine', { bpm: 96, beats: 104, intro: 8, voices: [
+      { wave: 'flute', vol: 0.5, notes: B(4, '-/4', '-/4', ...A, 'Bb4/.5 A4/.5 G4/1 -/1 A4/.5 C5/.5', ...A2,
         'F5/2 D5/1 Bb4/1', 'C5/1.5 D5/.5 C5/1 A4/1', 'Bb4/1 C5/.5 D5/.5 G5/2', 'F5/1.5 E5/.5 D5/2', 'G5/2 Eb5/1 Bb4/1', 'D5/1.5 Eb5/.5 F5/1 D5/1', 'Eb5/1 D5/.5 C5/.5 G4/1 C5/1', 'D5/1 C5/.5 Bb4/.5 A4/2') },
-      { wave: 'pluck', vol: 0.42, pan: -0.25, notes: B(4, ...acc(pA, 4, 'G2', oud), ...acc(pA, 4, 'G2', oud), ...acc(pB, 4, 'G2', oud)) },
-      { wave: 'strings', vol: 0.28, pan: 0.2, notes: B(4, ...N('-/4', 8), 'G3/2 Bb3/2', 'C4/2 E4/2', 'D4/2 Bb3/2', 'A3/2 F3/2', 'G3/2 Bb3/2', 'E4/2 C4/2', 'D4/2 C4/2', 'Bb3/2 A3/1 F#3/1', ...pads(pB, 4, 'F3')) },
-      { wave: 'contra', vol: 0.32, notes: B(4, ...wA, ...wA, ...wB) },
-      { wave: 'drums', vol: 0.32, notes: B(4, ...N(beat, 7), turn, ...N(beat, 7), turn, ...N(beat, 7), turn) }
+      // prélude : le luth seul descend par degrés vers la finale ; puis il accompagne, puis il double le chant en l'ornant
+      { wave: 'pluck', vol: 0.42, pan: -0.25, notes: B(4, two('G4/1.5 A4/.25 G4/.25 F4/.5 E4/.5 D4/1'), two('Bb3/.5 C4/.5 D4/.75 C4/.25 Bb3/.5 A3/.5 G3/1'),
+        ...acc(pA, 4, 'G2', oud), ...het(A2, sc('G A Bb C D E F'), -12, 0.25, true), ...acc(pB, 4, 'G2', oud)) },
+      { wave: 'strings', vol: 0.28, pan: 0.2, notes: 'G3+D4/8 ' + B(4, ...N('-/4', 8), 'G3/2 Bb3/2', 'C4/2 E4/2', 'D4/2 Bb3/2', 'A3/2 F3/2', 'G3/2 Bb3/2', 'E4/2 C4/2', 'D4/2 C4/2', 'G3/2 A3/1 F#3/1', ...pads(pB, 4, 'F3')) },
+      { wave: 'contra', vol: 0.32, notes: B(4, '-/4', '-/4', ...wA, ...wA, ...wB) },
+      { wave: 'drums', vol: 0.32, notes: B(4, '-/4', '-/4', ...N(beat, 7), turn, ...N(cyc, 7), fin, ...N(cyc, 7), fin) }
     ] });
   })();
 
@@ -137,35 +161,45 @@
     ] });
   })();
 
-  /* ---------- desert : pédale de ré et mélodie ornée — hijaz sur ré (ré mi♭ fa# sol la si♭ do) ---------- */
+  /* ---------- desert : pédale de ré et mélodie ornée — hijaz sur ré (ré mi♭ fa# sol la si♭ do). Le luth et les percussions
+     groupent leurs croches par trois contre la mesure à quatre temps (3 + 3 + 2) ; dans la seconde partie les cordes tiennent
+     le chant avec la flûte, puis le luth le double en l'ornant. ---------- */
   (function () {
-    const walk = '0/1 1/1 0/.5 1/.5 2/1', d = fig('D5', 'D3', walk), g = fig('Gm/D', 'D3', walk), dl = fig('D5', 'D3', '0/1 1/1 0/.5 1/.5 1/1');
-    const bd = 'D2/2 -/.5 D2/.5 A2/1', bg = 'D2/2 -/.5 D2/.5 G2/1';
-    const step = 'D/1 r/.5 t/.5 D/.5 D/.5 T/.5 r/.5', turn = 'D/1 r/.5 t/.5 D/.5 T/.5 T/.25 t/.25 r/.5';
+    const strum = '0/.5 1/.5 1/.5 0/.5 1/.5 1/.5 0/.5 1/.5', d = fig('D5', 'D3', strum), g = fig('Gm/D', 'D3', strum);
+    const bd = 'D2/1.5 D2/1.5 A2/1', bg = 'D2/1.5 D2/1.5 G2/1';
+    const step = 'D/.5 r/.5 t/.5 D/.5 r/.5 t/.5 T/.5 r/.5', turn = 'D/.5 r/.5 t/.5 D/.5 r/.5 T/.5 T/.25 t/.25 r/.5';
+    const Bm = ['G4/1 Bb4/1 D5/1.5 C5/.5', 'Bb4/1 A4/.5 G4/.5 A4/2', 'C5/1 Eb5/1 D5/1.5 C5/.5', 'Bb4/.5 A4/.5 G4/.5 F#4/.5 A4/2',
+      'D5/2 Eb5/.25 D5/.25 C5/.5 Bb4/1', 'C5/1 Bb4/.5 A4/.5 G4/2', 'F#4/.5 G4/.5 A4/.5 Bb4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5', 'D4/3 -/1'];
     R('desert', { bpm: 76, beats: 64, voices: [
       { wave: 'flute', vol: 0.5, notes: B(4, 'A4/2 Bb4/.25 A4/.25 G4/.5 F#4/1', 'G4/.5 F#4/.5 Eb4/1 D4/2', 'D4/.5 Eb4/.5 F#4/.5 G4/.5 A4/1 Bb4/.25 A4/.25 G4/.5', 'A4/3 -/1',
-        'D5/2 C5/.25 D5/.25 C5/.5 Bb4/1', 'A4/.5 Bb4/.5 C5/1 Bb4/.5 A4/.5 G4/1', 'F#4/.5 G4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5 D4/.5 Eb4/.5', 'D4/3 -/1',
-        'G4/1 Bb4/1 D5/1.5 C5/.5', 'Bb4/1 A4/.5 G4/.5 A4/2', 'C5/1 Eb5/1 D5/1.5 C5/.5', 'Bb4/.5 A4/.5 G4/.5 F#4/.5 A4/2',
-        'D5/2 Eb5/.25 D5/.25 C5/.5 Bb4/1', 'C5/1 Bb4/.5 A4/.5 G4/2', 'F#4/.5 G4/.5 A4/.5 Bb4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5', 'D4/3 -/1') },
-      // le luth tient la pédale et répond quand la flûte se tait
-      { wave: 'pluck', vol: 0.44, pan: -0.25, notes: B(4, d, d, d, 'D3/1 A3/.5 D4/.5 F#4/.5 G4/.5 A4/1', d, d, dl, 'D4/.5 Eb4/.5 F#4/.5 G4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5',
-        g, g, g, d, g, g, dl, 'D4/.5 Eb4/.5 F#4/.5 G4/.5 A4/1 D4/1') },
+        'D5/2 C5/.25 D5/.25 C5/.5 Bb4/1', 'A4/.5 Bb4/.5 C5/1 Bb4/.5 A4/.5 G4/1', 'F#4/.5 G4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5 D4/.5 Eb4/.5', 'D4/3 -/1', ...Bm) },
+      // le luth tient la pédale et répond quand la flûte se tait ; à la fin il rejoint le chant, à l'unisson, en l'ornant
+      { wave: 'pluck', vol: 0.44, pan: -0.25, notes: B(4, d, d, d, 'D3/1 A3/.5 D4/.5 F#4/.5 G4/.5 A4/1', d, d, d, 'D4/.5 Eb4/.5 F#4/.5 G4/.5 A4/.5 G4/.5 F#4/.5 Eb4/.5',
+        g, g, g, d, ...het(Bm.slice(4, 7), sc('D Eb F# G A Bb C'), 0, 0.25, true), 'D4/.5 Eb4/.5 F#4/.5 G4/.5 A4/1 D4/1') },
       { wave: 'strings', vol: 0.26, pan: 0.2, notes: B(8, ...N('D3+A3/8', 4), 'D3+G3/8', 'D3+G3/4 D3+A3/4', 'D3+G3/8', 'D3+A3/8') },
+      // les cordes tiennent le chant, sans ses ornements
+      { wave: 'strings', vol: 0.34, pan: 0.1, notes: B(4, ...N('-/4', 8), Bm[0], Bm[1], Bm[2], Bm[3], 'D5/2.5 C5/.5 Bb4/1', Bm[5], Bm[6], Bm[7]) },
       { wave: 'contra', vol: 0.28, notes: B(4, ...N(bd, 8), bg, bg, bg, bd, bg, bg, bd, bd) },
       { wave: 'drums', vol: 0.32, notes: B(4, ...N(step, 3), turn, ...N(step, 3), turn, ...N(step, 3), turn, ...N(step, 3), turn) }
     ] });
   })();
 
-  /* ---------- camp : veillée d'armes — la mineur ; la flûte veille, le cor répond ---------- */
+  /* ---------- camp : veillée d'armes — la mineur ; la flûte veille, le cor répond. Couleur arabo-andalouse : un cycle
+     clairsemé en 3 + 3 + 2, le luth qui double la flûte en l'ornant puis se joint à ses réponses, une cadence qui redescend
+     par degrés vers la finale. ---------- */
   (function () {
     const pA = 'Am | Am/G | FM7 | E7sus E7 | Am | C/G | Dm | E', pB = 'F | G | Em | Am | Dm | Am/E | Bm7b5 E7 | Am';
     const ost = { 4: '0/.5 1/.5 2/.5 1/.5 0/.5 1/.5 3/.5 1/.5', 2: '0/.5 1/.5 2/.5 1/.5' }, low = { 4: '0/1.5 0/.5 0/2', 2: '0/2' };
-    const pulse = 'D/1.5 D/.5 T/1 t/.5 t/.5', roll = 'D/1.5 D/.5 T/.5 T/.5 t/.25 t/.25 t/.25 t/.25';
+    const pulse = 'D/1.5 D/1.5 T/.5 t/.5', roll = 'D/1.5 D/1.5 T/.25 t/.25 t/.25 t/.25';                    // 3 + 3 + 2
+    const fA = ['E5/1.5 D5/.5 C5/1 A4/1', 'B4/1 C5/.5 D5/.5 E5/2', 'A5/1.5 G5/.5 F5/1 E5/1', 'D5/2 B4/1 G#4/1', 'A4/1 C5/.5 E5/.5 A5/2', 'G5/1.5 F5/.5 E5/1 C5/1', 'D5/1 F5/1 E5/1 D5/1', 'E5/1.5 D5/.5 B4/2'];
+    const oA = acc(pA, 4, 'E2', ost), oB = acc(pB, 4, 'E2', ost), half = sym => fig(sym, 'E2', ost[2]);
     R('camp', { bpm: 84, beats: 64, voices: [
-      { wave: 'flute', vol: 0.46, notes: B(4, 'E5/1.5 D5/.5 C5/1 A4/1', 'B4/1 C5/.5 D5/.5 E5/2', 'A5/1.5 G5/.5 F5/1 E5/1', 'D5/2 B4/1 G#4/1', 'A4/1 C5/.5 E5/.5 A5/2', 'G5/1.5 F5/.5 E5/1 C5/1', 'D5/1 F5/1 E5/1 D5/1', 'E5/1.5 D5/.5 B4/2',
-        '-/4', '-/2 D5/.5 E5/.5 G5/1', '-/4', '-/2 E5/.5 D5/.5 C5/1', '-/4', '-/2 A5/.5 G5/.5 E5/1', 'F5/2 E5/2', 'E5/3 -/1') },
+      { wave: 'flute', vol: 0.46, notes: B(4, ...fA, '-/4', '-/2 D5/.5 E5/.5 G5/1', '-/4', '-/2 E5/.5 D5/.5 C5/1', '-/4', '-/2 A5/.5 G5/.5 E5/1', 'F5/2 E5/2', 'E5/3 -/1') },
       { wave: 'brass', vol: 0.5, pan: 0.2, notes: B(4, ...N('-/4', 8), 'A4/1 C5/1 F5/1.5 E5/.5', 'D5/2 B4/1 G4/1', 'G4/1 B4/1 E5/1.5 D5/.5', 'C5/2 A4/2', 'F4/1 A4/1 D5/1.5 C5/.5', 'C5/1 B4/.5 A4/.5 E4/2', 'D5/1 B4/1 G#4/1 E4/1', 'A4/3 -/1') },
-      { wave: 'pluck', vol: 0.46, pan: -0.25, notes: B(4, ...acc(pA, 4, 'E2', ost), ...acc(pB, 4, 'E2', ost)) },
+      // le luth : quatre mesures d'ostinato, puis il double la flûte en l'ornant ; dans la seconde partie il se joint
+      // aux réponses de la flûte et conclut en descendant par degrés, mi ré do si la
+      { wave: 'pluck', vol: 0.46, pan: -0.25, notes: B(4, ...oA.slice(0, 4), ...het(fA.slice(4), sc('A B C D E F G'), 0, 0.25, true),
+        oB[0], half('G') + ' D4/.5 E4/.5 G4/1', oB[2], half('Am') + ' E4/.5 D4/.5 C4/1', oB[4], half('Am/E') + ' A4/.5 G4/.5 E4/1', oB[6], 'A2/.5 E3/.5 E4/.5 D4/.5 C4/.5 B3/.5 A3/1') },
       { wave: 'strings', vol: 0.18, notes: B(4, ...pads(pA.replace('FM7', 'F'), 4, 'G3'), ...pads(pB, 4, 'G3')) },
       { wave: 'contra', vol: 0.28, notes: B(4, ...acc(pA, 4, 'E2', low), ...acc(pB, 4, 'E2', low)) },
       { wave: 'drums', vol: 0.28, notes: B(4, ...N(pulse, 7), roll, ...N(pulse, 7), roll) }
@@ -248,33 +282,53 @@
     ] });
   })();
 
-  /* ---------- citadelle : noble et grave — le thème de la Chaîne en sol dorien, au cor ; cadence picarde ---------- */
+  /* ---------- citadelle : noble et grave — le thème de la Chaîne en sol dorien ; cadence picarde.
+     Une citadelle berbère au bord du désert : évocation arabo-andalouse. Prélude de luth sans percussion (joué une fois) ;
+     le cor appelle, le luth et les cordes répondent ; puis tout l'ensemble porte le chant : les cordes le tiennent, le luth
+     l'orne, le târ et la darbouka tournent en 3 + 3 + 2. ---------- */
   (function () {
-    const pA = 'Gm C | Gm F | Am Dm | Dm D | Eb Gm/D | Cm Eb | Am7b5 D7 | G', pB = 'Bb | F/A | Gm | D/F# | Eb | Cm | Dsus D | G';
-    // écrit en ré puis descendu d'une quinte : la, sol, si♮, la → ré, do, mi♮, ré — la sixte dorienne éclaire le maillon du milieu
-    const theme = trs(['A4/1.5 G4/.5 B4/1.5 A4/.5', 'D5/2.5 -/1 E4/.5', 'B4/1.5 A4/.5 C5/1.5 B4/.5', 'E5/3 -/1', 'F5/1.5 E5/.5 D5/1.5 Bb4/.5', 'G4/1.5 A4/.5 Bb4/2', 'A4/1.5 G4/.5 E4/1.5 C#4/.5', 'D4/4'], -7);
+    const pA = 'Gm C | Gm C | Am Dm | Dm D | Eb Gm/D | Cm Eb | Am7b5 D7 | G', pB = 'Bb | F/A | Gm | D/F# | Eb | Cm | Dsus D | G';
+    // le thème, écrit en ré puis descendu d'une quinte : la, sol, si♮, la → ré, do, mi♮, ré — la sixte dorienne éclaire le maillon du milieu
+    const th = trs(['A4/1.5 G4/.5 B4/1.5 A4/.5', 'D5/2.5 -/1 E4/.5', 'B4/1.5 A4/.5 C5/1.5 B4/.5', 'E5/3 -/1', 'F5/1.5 E5/.5 D5/1.5 Bb4/.5', 'G4/1.5 A4/.5 Bb4/2', 'A4/1.5 G4/.5 E4/1.5 C#4/.5', 'D4/4'], -7);
+    const chant = ['D5/2 F5/1 Bb5/1', 'A5/3 F5/1', 'Bb5/2 G5/1 D5/1', 'A5/3 D5/1', 'G5/1.5 F5/.5 Eb5/1 G5/1', 'C6/2 G5/1 Eb5/1', 'G5/2 F#5/1.5 D5/.5'];   // la seconde partie, à la flûte
+    const min = sc('G A Bb C D Eb F');
     const slow = { 4: '0/1 1/1 2/1 3/1', 2: '0/1 2/1' }, low = { 4: '0/2 0/2', 2: '0/2' };
-    R('citadelle', { bpm: 63, beats: 64, voices: [
-      { wave: 'brass', vol: 0.62, notes: B(4, ...theme, 'D4/2 F4/2', 'C4/2 F4/2', 'D4/2 Bb3/2', 'A3/2 D4/2', 'Eb4/2 G4/2', 'Eb4/2 C4/2', 'D4/3 C4/1', 'B3/3.5 G3/.5') },
-      { wave: 'flute', vol: 0.5, pan: 0.2, notes: B(4, ...N('-/4', 8), 'D5/2 F5/1 Bb5/1', 'A5/3 F5/1', 'Bb5/2 G5/1 D5/1', 'A5/3 D5/1', 'G5/1.5 F5/.5 Eb5/1 G5/1', 'C6/2 G5/1 Eb5/1', 'G5/2 F#5/1.5 D5/.5', 'G5/4') },
-      { wave: 'strings', vol: 0.24, pan: -0.2, notes: B(4, ...pads(pA, 4, 'D3'), ...pads(pB.replace('Dsus D', 'Dsus D7'), 4, 'D3')) },
-      { wave: 'harp', vol: 0.42, pan: 0.3, notes: B(4, ...acc(pA, 4, 'F2', slow), ...acc(pB, 4, 'F2', H8)) },
-      { wave: 'triangle', vol: 0.3, notes: B(4, ...acc(pA, 4, 'F2', low), ...acc(pB, 4, 'F2', low)) },
-      { wave: 'timp', vol: 0.28, notes: B(4, 'G2/2 -/2', '-/4', '-/4', 'D3/2 -/1 D3/.5 D3/.5', '-/4', '-/4', '-/2 D3/1 D3/1', 'G2/2 -/2',
-        '-/4', '-/4', 'G2/2 -/2', 'D3/2 -/2', '-/4', '-/4', 'D3/1 -/1 D3/.5 D3/.5 D3/.25 D3/.25 D3/.25 D3/.25', 'G2/2 -/2') }
+    const cyc = 'D/.5 r/.5 r/.5 T/.5 r/.5 r/.5 D/.5 r/.5', cyc2 = 'D/.5 r/.5 t/.5 T/.5 r/.5 t/.5 D/.5 T/.5', clos = 'D+b/.5 r/.5 r/.5 T/.5 r/.5 r/.5 D/.5 T/.5';   // 3 + 3 + 2
+    R('citadelle', { bpm: 63, beats: 76, intro: 12, voices: [
+      // le cor : l'appel (les quatre premières mesures du thème), puis il rejoint l'ensemble à la cadence
+      { wave: 'brass', vol: 0.62, notes: B(4, '-/4', '-/4', '-/3.5 G3/.5', th[0], th[1], th[2], th[3], '-/4', '-/4', th[6], th[7],
+        'D4/2 F4/2', 'C4/2 F4/2', 'D4/2 Bb3/2', 'A3/2 D4/2', 'Eb4/2 G4/2', 'Eb4/2 C4/2', 'D4/3 C4/1', 'B3/3.5 G3/.5') },
+      { wave: 'flute', vol: 0.5, pan: 0.2, notes: B(4, ...N('-/4', 11), ...chant, 'G5/4') },
+      // le luth : prélude seul, sans mesure apparente, qui redescend par degrés vers la finale ; puis les réponses au cor
+      // (le premier maillon, en valeurs brèves) ; puis le chant, doublé et orné
+      { wave: 'pluck', vol: 0.46, pan: -0.25, notes: B(4, two('D4/1.5 E4/.25 D4/.25 C4/.5 D4/.5 F4/1'), two('G4/1 F4/.25 G4/.25 F4/.5 E4/.5 D4/.5 C4/1'), two('Bb3/.5 A3/.5 Bb3/.25 A3/.25 G3/2 -/.5'),
+        '-/4', '-/1 D4/.5 C4/.5 E4/.5 D4/.5 G4/.5 -/.5', '-/4', '-/1 E4/.5 D4/.5 F#4/.5 E4/.5 A4/.5 -/.5', ...het(th.slice(4), min, 0, 0.125),
+        ...het(chant, min, -12, 0.125), 'G4/1 A4/.5 B4/.5 C5/.25 B4/.25 A4/.5 G4/1') },
+      // les cordes tiennent le chant : la charpente des réponses, puis la fin du thème, puis la seconde partie sous la flûte
+      { wave: 'strings', vol: 0.44, pan: 0.15, notes: B(4, ...N('-/4', 4), '-/1 D4/1 E4/1 G4/.5 -/.5', '-/4', '-/1 E4/1 F#4/1 A4/.5 -/.5', ...th.slice(4), ...trs(chant, -12), 'G4/2 B4/.5 A4/.5 G4/1') },
+      { wave: 'strings', vol: 0.2, pan: -0.2, notes: 'G3+D4/6 G3+D4/6 ' + B(4, ...pads(pA, 4, 'D3'), ...pads(pB.replace('Dsus D', 'Dsus D7'), 4, 'D3')) },
+      { wave: 'harp', vol: 0.42, pan: 0.3, notes: B(4, 'G2/.25 D3/.25 G3/.25 D4/3.25', '-/4', '-/2 G3/.25 D4/.25 G4/1.5', ...acc(pA, 4, 'F2', slow), ...acc(pB, 4, 'F2', H8)) },
+      { wave: 'triangle', vol: 0.3, notes: 'G2/6 G2/6 ' + B(4, ...acc(pA, 4, 'F2', low), ...acc(pB, 4, 'F2', low)) },
+      { wave: 'drums', vol: 0.26, notes: B(4, '-/4', '-/4', '-/4', ...N(cyc, 7), clos, ...N(cyc2, 7), clos) }
     ] });
   })();
 
-  /* ---------- conseil : pourparlers — mi mineur à cinq temps, pédale de mi ; la tension monte et ne se résout pas ---------- */
+  /* ---------- conseil : pourparlers — mi mineur à cinq temps, pédale de mi ; la tension monte et ne se résout pas.
+     Couleur arabo-andalouse : la mesure balance entre trois et deux, le târ le marque ; le luth répond aux fins de phrase en
+     redescendant par degrés vers la finale ; dans le dernier tiers les cordes tiennent le chant avec la flûte. ---------- */
   (function () {
     const p = 'Em | Em | F/E | Em | Am/E | Em | F#m7b5:3 B7:2 | Em | C/E | Am/E | F#m7b5 | B7';
+    const ost = { 5: '0/.5 1/.5 2/.5 1/.5 2/.5 3/.5 0/.5 1/.5 3/.5 1/.5', 3: '0/.5 1/.5 2/.5 1/.5 2/.5 3/.5', 2: '0/.5 1/.5 3/.5 1/.5' };
+    const oud = acc(p, 5, 'E3', ost), rep = fig('Em', 'E3', ost[3]) + ' A4/.5 G4/.5 F#4/.5 E4/.5';   // la réponse : la, sol, fa#, mi
+    oud[3] = rep; oud[7] = rep;
     R('conseil', { bpm: 96, beats: 60, voices: [
       { wave: 'flute', vol: 0.44, notes: B(5, '-/3 B4/1 C5/1', 'B4/3 G4/2', 'A4/1 C5/1 F5/1 E5/2', 'E5/3 B4/2', '-/3 C5/1 D5/1', 'E5/2 G5/1 F#5/2', 'A4/1 C5/1 E5/1 D#5/1 B4/1', 'E5/3 -/2',
         'G5/2 E5/1 C5/2', 'E5/2 C5/1 A4/2', 'C5/2 A4/1 F#4/2', 'B4/1 D#5/1 F#5/1 B5/2') },
-      { wave: 'pluck', vol: 0.38, pan: -0.25, notes: B(5, ...acc(p, 5, 'E3', { 5: '0/.5 1/.5 2/.5 1/.5 2/.5 3/.5 0/.5 1/.5 3/.5 1/.5', 3: '0/.5 1/.5 2/.5 1/.5 2/.5 3/.5', 2: '0/.5 1/.5 3/.5 1/.5' })) },
+      { wave: 'pluck', vol: 0.38, pan: -0.25, notes: B(5, ...oud) },
       { wave: 'strings', vol: 0.2, pan: 0.2, notes: B(5, ...pads(p, 5, 'G3')) },
+      { wave: 'strings', vol: 0.34, pan: 0.1, notes: B(5, ...N('-/5', 8), 'G5/2 E5/1 C5/2', 'E5/2 C5/1 A4/2', 'C5/2 A4/1 F#4/2', 'B4/1 D#5/1 F#5/1 B5/2') },
       { wave: 'triangle', vol: 0.28, notes: B(5, ...acc(p, 5, 'E2', { 5: '0/3 0/2', 3: '0/3', 2: '0/2' })) },
-      { wave: 'drums', vol: 0.3, notes: B(5, ...N('D/2 t/1 T/1 t/.5 t/.5', 12)) }
+      { wave: 'drums', vol: 0.3, notes: B(5, ...N('D/1 r/1 r/1 T/1 r/1', 12)) }
     ] });
   })();
 
