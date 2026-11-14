@@ -97,6 +97,8 @@ ISNAD.registerSaga({
     { id: 'isnad', cat: 'Parole', title: 'L’isnâd', text: 'La chaîne de transmission : « Untel m’a rapporté, d’après untel, qui l’a vu. » Des générations de savants ont vérifié chaque maillon, la mémoire et la probité de chaque transmetteur. On rapporte de ’Abdallâh ibn al-Mubârak : « L’isnâd fait partie de la religion ; sans lui, chacun dirait ce qu’il veut. »', src: 'Muslim, introduction du Sahîh' },
     { id: 'lumieres', cat: 'Noosphère', title: 'Les six Lumières', text: 'Véracité (*sidq*), Justice (*’adl*), Courage (*shajâ’a*), Miséricorde (*rahma*), Savoir (*’ilm*), Patience (*sabr*). Chaque saga en rend une à Idris ; la sixième est celle de quiconque transmet. En combat, chacune est une vertu qui dévoile certains égrégores.' },
     { id: 'jour', cat: 'Événement', title: 'Le jour le plus sombre', text: 'Le Messager d’Allah ﷺ meurt à Médine un lundi de Rabî’ al-Awwal de l’an 11 de l’Hégire (juin 632). La communauté, bouleversée, doit décider en quelques heures de ce qu’elle devient. C’est ici que commence la Chaîne.', src: 'Ibn Hishâm, as-Sîra ; al-Bukhârî' },
+    { id: 'piliers', cat: 'Noosphère', title: 'Les quatre piliers', text: 'Ce qui tient une cité debout ne se voit pas : la Prière, qui repose les cœurs et les range côte à côte ; le Savoir, qui ouvre ce que la force ne peut ouvrir ; la Justice, la même pour le puissant et pour le pauvre ; le Lien, la parole donnée et les pactes tenus. On rapporte que le Messager d’Allah ﷺ disait de la prière : « Ô Bilâl, repose-nous par elle. »', src: 'Abû Dâwûd, as-Sunan' },
+    { id: 'parole', cat: 'Noosphère', title: 'La parole avant le sabre', text: 'Délégations, pactes, arbitrages, alliances : la plupart des crises de ce temps se sont dénouées, ou auraient pu l’être, par la parole. Dans ISNAD, un pourparler se gagne par la justesse des arguments, par le savoir appris en chemin et par la sérénité de qui a prié. Le combat ne vient qu’en dernier recours, et toujours contre une idole, jamais contre des personnes.' },
     { id: 'avertissement', cat: 'Parole', title: 'Avertissement', text: 'ISNAD est une fiction inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun personnage n’a de visage. Toute erreur est celle des auteurs : vérifiez auprès des sources et des savants.' }
   ],
 
@@ -155,8 +157,10 @@ ISNAD.registerSaga({
           ['sfx', 'light'],
           ['nar', 'Cinq anneaux d’or tournent lentement dans la pénombre. Aucun écran. Seulement des noms, et après chaque nom : « d’après ».'],
           ['say', 'Maître Yûnus', 'Tu ne seras pas eux, Idris. Nul ne le peut. Tu marcheras dans la trace de leurs actes, tels que les transmetteurs les ont rapportés. Si tu t’en écartes, la chaîne vacillera et te ramènera.'],
+          ['say', 'Maître Yûnus', 'Entre eux et toi, d’autres maillons. L’un d’eux fut un seigneur berbère, au bord du désert : le Caïd. Il lisait ces vies pour apprendre à tenir sa citadelle. Tu l’entendras, toi aussi.'],
+          ['say', 'Maître Yûnus', 'Deux choses reviennent dans toutes ces vies, et tu les retrouveras partout : la prière, qui repose et rassemble, et le savoir, qui ouvre ce que la force ne peut ouvrir. Le sabre ne vient qu’après, quand la parole a tout essayé.'],
           ['say', 'Maître Yûnus', 'Elle commence au jour le plus sombre. Le jour où tout aurait pu se défaire.'],
-          ['codex', 'lumieres'],
+          ['codex', 'lumieres'], ['codex', 'piliers'], ['codex', 'parole'],
           ['fade', 'out', 900], ['amb', 'vent'], ['flash', '#fff3d0'],
           ['title', 'Médine', '12 Rabî’ al-Awwal, an 11 de l’Hégire · juin 632'],
           ['nar', 'Ce lundi-là, la plus grande lumière que la terre ait portée quitta ce monde. Le Messager d’Allah ﷺ venait de rejoindre son Seigneur.'],
@@ -193,7 +197,32 @@ ISNAD.registerSaga({
           ['say', 'salim_n', 'Tu es l’archiviste ? Je m’appelle Sâlim. J’ai passé dix ans à nourrir l’Agrégor. Je sais où est son cœur, et je ne veux plus le servir.'],
           ['say', 'idris', 'Pourquoi maintenant ?'],
           ['say', 'salim_n', 'Mon fils m’a demandé ce que je fabriquais. Je n’ai pas su répondre sans mentir.'],
-          ['hide', 'salim_n'], ['join', 'salim']
+          ['hide', 'salim_n'], ['join', 'salim'],
+          ['say', 'salim', 'Il y a un opérateur de garde au pied du grand écran. Un ancien collègue. S’il nous ouvre la trappe de service, nous entrons sans que le Flux nous voie. Sinon, il faudra le traverser.'],
+          ['parley', {
+            with: 'L’opérateur de nuit', title: 'L’opérateur de garde',
+            intro: 'Il a peur de perdre son score, et il n’a jamais vu personne dire non à l’Agrégor.',
+            goal: 5,
+            rounds: [
+              { say: 'Sâlim ? Tu n’as rien à faire ici. Si je vous laisse passer, mon score tombe à zéro avant l’aube.', opts: [
+                { t: 'Ton score est un chiffre que d’autres t’attribuent. Qu’étais-tu avant qu’on te note ?', el: 'sidq', v: 2, r: 'Avant… J’étais quelqu’un que ses voisins connaissaient par son nom.' },
+                { t: 'Ouvre, ou nous passerons quand même.', el: 'shajaa', v: -1, r: 'Alors passez. Mais ne me demandez pas d’en répondre.' },
+                { t: 'Nous te paierons le double de ce que tu perds.', el: 'adl', v: 0, r: 'Avec quoi ? Tout ce qui s’achète ici, c’est lui qui le note.' }
+              ] },
+              { say: 'Vous allez faire quoi, là-dedans ? L’éteindre ? D’autres l’ont juré. Il est toujours là.', opts: [
+                { t: 'Nous n’allons pas l’éteindre. Nous allons rendre aux gens ce qu’il agrège : de qui ils tiennent ce qu’ils savent.', el: 'ilm', v: 3, need: 'isnad', r: 'Une chaîne… avec des noms. Mon grand-père parlait comme ça.' },
+                { t: 'Nous allons le briser une fois pour toutes.', el: 'shajaa', v: 0, r: 'Vous mentez, ou vous vous trompez. On ne brise pas ce que tout le monde regarde.' },
+                { t: 'Nous allons essayer. Je ne te promets rien de plus.', el: 'sidq', v: 2, r: 'Au moins vous ne me vendez rien.' }
+              ] },
+              { say: 'Et si je vous ouvre, et que tout recommence demain sous un autre nom ?', opts: [
+                { t: 'Alors tu auras tenu ton heure, comme ceux d’avant, et tu passeras le dépôt.', el: 'sabr', v: 2, r: 'Tenir son heure. C’est peu. C’est peut-être assez.' },
+                { t: 'Cela ne recommencera pas.', el: 'sidq', v: -1, r: 'Vous voyez. Vous promettez comme lui.' },
+                { t: 'Viens avec nous. Tu verras par toi-même.', el: 'rahma', v: 1, r: 'Je ne suis pas courageux. Mais je peux tourner une clé.' }
+              ] }
+            ],
+            win: [['flag', 'operateur'], ['pillar', 'lien', 1], ['nar', 'La trappe de service s’ouvre sans un bruit. Quelque part dans la machine, un homme a cessé d’avoir peur.']],
+            lose: [['pillar', 'lien', -1], ['nar', 'La trappe reste fermée. Il faudra passer par le Flux, à découvert.'], ['battle', { group: ['tendance', 'tendance'], bg: 'cite', intro: 'Le Flux vous a vus.' }]]
+          }]
         ] },
         { text: 'Se tenir devant le grand écran', goto: 'ecran', then: [
           ['sfx', 'glitch'], ['shake', 400],
@@ -219,7 +248,7 @@ ISNAD.registerSaga({
           ['say', "L'AGRÉGOR", 'J’ai été le Clan. J’ai été l’Aigle et le Trône. J’ai été le Héros, l’Or, la Rumeur, le Juge. On m’a brisé chaque fois. On m’a refait chaque fois.'],
           ['say', 'idris', 'Je sais. Je les ai vus te briser. Aucun d’eux n’a cru en avoir fini avec toi. Ils ont tenu, chacun son heure, et passé le dépôt au suivant.'],
           ['heal'],
-          ['battle', { group: ['agregor'], bg: 'cite', boss: true, intro: 'Les six Lumières sont ses failles. Dévoile-le, encore et encore.' }],
+          ['battle', { group: ['agregor'], bg: 'cite', boss: true, intro: 'Les six Lumières sont ses failles. Dévoile-le, encore et encore.', allies: [{ flag: 'operateur', name: 'L’opérateur coupe une à une les alimentations' }] }],
           ['nar', 'L’Agrégor ne s’effondre pas. Il se tait. Pour la première fois depuis des années, les écrans de la Cité-Miroir n’ont rien à montrer.'],
           ['map', 'cite', 'ecran'], ['show', 'gamin2'], ['amb', 'vent'],
           ['nar', 'Dans la rue, des milliers de têtes se relèvent. Derrière le verre éteint, le ciel est noir. Avec des points dedans.'],

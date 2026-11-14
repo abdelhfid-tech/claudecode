@@ -211,3 +211,19 @@ body.portrait .mlist { max-height: 12em; }
 @media (prefers-reduced-motion: reduce) { .toast, .fl, #card, .link { animation-duration: .01s; transition: none; } }
 
 @media (orientation: landscape) and (max-height: 480px) { #ui { font-size: max(11px, calc(var(--u) * 6.4)); } .hrow { padding: .12em .5em; } #battle .cmd { padding: .25em .4em; } .mi { padding: .16em .5em; } #dialog { min-height: 30%; } }
+
+/* ---------- v2 : piliers, pourparlers, prière ---------- */
+#hud .pil { margin-top: .35em; display: flex; gap: .7em; font-size: .72em; font-family: var(--f-mono); color: var(--sand); }
+#hud .pil i { font-style: normal; color: var(--acc); margin-right: .22em; }
+.toast .pl { font-family: var(--f-mono); color: var(--sand); margin-left: .4em; }
+#choice .phead { display: grid; grid-template-columns: 3em 1fr auto; gap: .7em; align-items: center; padding: .45em .8em; background: var(--panel2); border: 1px solid var(--line); }
+.phead .seal { width: 3em; height: 3em; background-size: cover; border-radius: 50%; }
+.phead .pt b { display: block; font-family: var(--f-display); letter-spacing: .05em; font-size: .92em; }
+.phead .pt small, .phead .trust { color: var(--dim); font-size: .78em; }
+.phead .trust { text-align: right; } .phead .pips { display: inline-flex; flex-wrap: wrap; max-width: 9em; justify-content: flex-end; vertical-align: middle; }
+#choice .opt .el { font-style: normal; display: inline-block; width: 1.2em; }
+#choice .opt.locked { opacity: .6; font-style: italic; } .lock, .kn { color: #c49bff; } .kn { font-size: .72em; margin-left: .5em; letter-spacing: .06em; }
+#card.pray .orn { font-size: 3.4em; color: var(--gold); line-height: .8; text-shadow: 0 0 40px rgba(233, 200, 119, .5); }
+#card.pray h1 { letter-spacing: .3em; } #card.pray p { font-style: italic; max-width: 28em; }
+#card.pray { background: radial-gradient(ellipse at center, rgba(20, 16, 40, .95), rgba(4, 3, 10, 1)); }
+#card.parley h1 { font-size: 1.6em; }

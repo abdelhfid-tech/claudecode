@@ -41,10 +41,12 @@ for (const file of files) {
 process.exit(totalErr ? 1 : 0);
 
 function stats(sagas) {
-  let ch = 0, ops = 0, bat = 0, cho = 0;
+  let ch = 0, ops = 0, bat = 0, cho = 0, par = 0, pry = 0;
   const walk = list => (list || []).forEach(o => {
     ops++;
     if (o[0] === 'battle') bat++;
+    if (o[0] === 'parley') { par++; walk(o[1].win); walk(o[1].lose); }
+    if (o[0] === 'pray') pry++;
     if (o[0] === 'choice') { cho++; o[2].forEach(c => walk(c.r)); }
     if (o[0] === 'ask') o[2].forEach(c => walk(c.r));
     if (o[0] === 'if') { walk(o[2]); walk(o[3]); }
@@ -58,7 +60,7 @@ function stats(sagas) {
       bat += (c.foes || []).length;
     }
   }
-  return `${ch} chapitres, ${ops} opérations, ${bat} combats, ${cho} choix`;
+  return `${ch} chapitres, ${ops} opérations, ${bat} combats, ${cho} choix, ${par} pourparlers, ${pry} prières`;
 }
 
 function checkSaga(s, E, W) {
@@ -184,7 +186,8 @@ function checkSaga(s, E, W) {
     });
     (c.chests || []).forEach((x, i) => {
       checkAt(x.at, x.map || c.map, `${w}/coffre ${i}`);
-      if (!D.ITEMS[x.item]) E.push(`${w}/coffre ${i}: objet « ${x.item} » inconnu`);
+      if (x.codex !== undefined) { if (!codexIds.has(x.codex)) E.push(`${w}/coffre ${i}: codex « ${x.codex} » inconnu`); }
+      else if (!D.ITEMS[x.item]) E.push(`${w}/coffre ${i}: objet « ${x.item} » inconnu`);
     });
 
     // Vérification des scripts, en suivant la carte courante.
@@ -210,6 +213,7 @@ function checkSaga(s, E, W) {
             o[2].forEach((c, j) => {
               if (typeof c.t !== 'string') E.push(`${wo}: option ${j} sans texte « t »`);
               if (o[0] === 'choice' && !c.ok && (!Array.isArray(c.r) || !c.r.length)) E.push(`${wo}: option fausse ${j} doit avoir une réponse r:[...] qui explique`);
+              if (c.need !== undefined && (o[0] !== 'ask' || !codexIds.has(c.need))) E.push(`${wo}: option ${j} : need « ${c.need} » invalide (réservé à ask, id de codex)`);
               if (c.r) checkOps(c.r, `${wo}.opt${j}`);
             });
             break;
@@ -219,6 +223,7 @@ function checkSaga(s, E, W) {
             if (!Array.isArray(b.group) || !b.group.length || b.group.length > 4) E.push(`${wo}: battle.group de 1 à 4`);
             (b.group || []).forEach(g => { if (!enemies[g]) E.push(`${wo}: ennemi « ${g} » inconnu`); });
             if (b.bg && !D.BATTLE_BG.includes(b.bg)) E.push(`${wo}: bg « ${b.bg} » invalide`);
+            (b.allies || []).forEach(al => { if (!al || typeof al.flag !== 'string' || typeof al.name !== 'string') E.push(`${wo}: battle.allies attend [{flag, name}]`); });
             break;
           }
           case 'map':
@@ -242,6 +247,36 @@ function checkSaga(s, E, W) {
           case 'join': case 'leave': if (!heroes[o[1]]) E.push(`${wo}: héros « ${o[1]} » inconnu`); break;
           case 'codex': if (!codexIds.has(o[1])) E.push(`${wo}: entrée de codex « ${o[1]} » inconnue`); break;
           case 'if': checkOps(o[2], wo + '.then'); if (o[3]) checkOps(o[3], wo + '.else'); break;
+          case 'pray': if (o[1] !== undefined && !D.PRAYERS[o[1]]) E.push(`${wo}: pray « ${o[1]} » invalide (${Object.keys(D.PRAYERS).join('|')})`); break;
+          case 'pillar': if (!D.PILLARS[o[1]]) E.push(`${wo}: pilier « ${o[1]} » invalide (${Object.keys(D.PILLARS).join('|')})`); if (typeof o[2] !== 'number' || Math.abs(o[2]) > 2 || !o[2]) E.push(`${wo}: pillar delta ±1 ou ±2`); break;
+          case 'mus': if (!D.TRACKS.includes(o[1])) E.push(`${wo}: piste « ${o[1]} » inconnue (${D.TRACKS.join('|')})`); break;
+          case 'parley': {
+            const P = o[1] || {};
+            ['with', 'title', 'intro'].forEach(k => { if (typeof P[k] !== 'string') E.push(`${wo}: parley.${k} manquant`); });
+            if (typeof P.goal !== 'number') E.push(`${wo}: parley.goal manquant`);
+            if (!Array.isArray(P.rounds) || P.rounds.length < 3 || P.rounds.length > 5) { E.push(`${wo}: parley.rounds de 3 à 5 manches`); break; }
+            let max = 0, maxFree = 0, min = 0;
+            P.rounds.forEach((r, ri) => {
+              if (typeof r.say !== 'string') E.push(`${wo}: manche ${ri} sans « say »`);
+              if (!Array.isArray(r.opts) || r.opts.length < 2 || r.opts.length > 4) { E.push(`${wo}: manche ${ri} : 2 à 4 options`); return; }
+              let m = -9, mf = -9, mn = 9;
+              r.opts.forEach((x, xi) => {
+                if (typeof x.t !== 'string' || typeof x.r !== 'string') E.push(`${wo}: manche ${ri} option ${xi} : « t » et « r » (réplique) requis`);
+                if (typeof x.v !== 'number' || x.v < -2 || x.v > 3) E.push(`${wo}: manche ${ri} option ${xi} : v entre -2 et 3`);
+                if (!D.ELEMENTS[x.el] || x.el === 'fer') E.push(`${wo}: manche ${ri} option ${xi} : el doit être une Lumière`);
+                if (x.need !== undefined && !codexIds.has(x.need)) E.push(`${wo}: manche ${ri} option ${xi} : need « ${x.need} » absent du codex`);
+                m = Math.max(m, x.v); if (x.need === undefined) mf = Math.max(mf, x.v); mn = Math.min(mn, x.v);
+              });
+              if (mf === -9) E.push(`${wo}: manche ${ri} : au moins une option sans « need »`);
+              max += m; maxFree += Math.max(mf, -2); min += mn;
+            });
+            if (P.goal > max) E.push(`${wo}: parley.goal ${P.goal} inatteignable (max ${max})`);
+            if (P.goal > maxFree + 1) W.push(`${wo}: parley gagnable seulement avec un savoir (max sans savoir ${maxFree}, +1 si prière)`);
+            if (P.goal <= min) E.push(`${wo}: parley.goal ${P.goal} toujours atteint (min ${min})`);
+            if (!Array.isArray(P.win) || !Array.isArray(P.lose)) E.push(`${wo}: parley.win et parley.lose (tableaux d'ops) requis`);
+            else { const sm = state.map; checkOps(P.win, wo + '.win'); const m1 = state.map; state.map = sm; checkOps(P.lose, wo + '.lose'); if (state.map !== m1) E.push(`${wo}: win et lose doivent finir sur la même carte`); }
+            break;
+          }
           case 'light': if (!D.ELEMENTS[o[1]]) E.push(`${wo}: lumière « ${o[1]} » inconnue`); break;
         }
       });
@@ -270,8 +305,8 @@ function checkSaga(s, E, W) {
   });
   // intro/outro de saga : pas de carte (cartons narratifs uniquement)
   const flat = ops => (ops || []).forEach((o, i) => {
-    if (!Array.isArray(o) || !['nar', 'quote', 'title', 'say', 'wait', 'sfx', 'amb', 'codex', 'light', 'flash', 'fade', 'tint'].includes(o[0]))
-      E.push(`${W0}.intro/outro[${i}]: seules nar|quote|title|say|wait|sfx|amb|codex|light|flash|fade|tint sont permises ici`);
+    if (!Array.isArray(o) || !['nar', 'quote', 'title', 'say', 'wait', 'sfx', 'amb', 'codex', 'light', 'flash', 'fade', 'tint', 'mus', 'pillar'].includes(o[0]))
+      E.push(`${W0}.intro/outro[${i}]: seules nar|quote|title|say|wait|sfx|amb|codex|light|flash|fade|tint|mus|pillar sont permises ici`);
     if (o[0] === 'codex' && !codexIds.has(o[1])) E.push(`${W0}.intro/outro[${i}]: codex « ${o[1]} » inconnu`);
   });
   flat(s.intro); flat(s.outro);

@@ -1,6 +1,8 @@
 /* ISNAD — Saga V : 'Alî ibn Abî Tâlib, la Porte du Savoir.
    Sources principales : Ibn Sa'd (Tabaqât), at-Tabarî (Târîkh), Ibn Kathîr (al-Bidâya), Muslim, al-Bukhârî,
-   an-Nasâ'î (as-Sunan al-Kubrâ), Ibn Abî Shayba (al-Musannaf). Dialogues ordinaires dramatisés. */
+   an-Nasâ'î (as-Sunan al-Kubrâ), Ibn Abî Shayba (al-Musannaf). Dialogues ordinaires dramatisés.
+   v2 : la parole avant le fer. Trois pourparlers, haltes de prière, savoirs à apprendre.
+   Figures de fiction (voir codex « fiction_ali ») : Ma'dân, Mâzin, le maître du cercle, le doyen des récitants. */
 ISNAD.registerSaga({
   id: 'ali', order: 5,
   name: "'Alî ibn Abî Tâlib", epithet: 'La Porte du Savoir', arabic: 'علي',
@@ -17,16 +19,19 @@ ISNAD.registerSaga({
     ['quote', "Le meilleur juge d'entre nous est 'Alî.", "'Umar ibn al-Khattâb — al-Bukhârî"],
     ['nar', "Son califat sera le plus éprouvé des quatre. L'idole qui l'attend n'est ni une couronne ni un trésor. Elle porte l'habit de la piété : c'est le Juge sans miséricorde — celui qui excommunie, et croit ce faisant servir Allah."],
     ['say', 'Idris', "Une idole qui cite le Livre… Dans la Cité-Miroir, je crois que je la connais. Elle condamne à la vitesse d'un écran."],
+    ['nar', "Ici la parole passe avant le fer : on plaide, on apprend, on prie. Ce que tu auras appris auprès des maîtres et dans les feuillets t'ouvrira des arguments ; ce que tu auras négligé te les fermera."],
     ['codex', 'ali_bio']
   ],
 
   outro: [
     ['amb', 'silence'],
+    ['mus', 'deuil'],
     ['nar', "'Alî ibn Abî Tâlib meurt à Koufa, en Ramadan de l'an 40, deux jours après le coup. Son meurtrier ne reçoit qu'une frappe. Aucun autre sang ne coule en son nom."],
     ['quote', "Un homme vous a quittés hier, que les premiers n'ont pas devancé par le savoir et que les derniers n'atteindront pas. Il n'a laissé ni or ni argent, sinon sept cents dirhams.", "Al-Hasan ibn 'Alî, au lendemain de sa mort — Ahmad, al-Musnad ; Ibn Sa'd, Tabaqât"],
     ['nar', "Avec lui s'achève le temps des califes bien guidés : trente années depuis la mort du Messager ﷺ, à quelques mois près. Al-Hasan les complétera, puis réconciliera deux grands groupes de musulmans. On appellera cette année-là l'Année de l'unité."],
     ['nar', "L'idole du Juge sans miséricorde n'est pas morte à Nahrawân. Elle a seulement appris à changer de formule. Mais ce que 'Alî lui a opposé demeure : celui qui sait ne se hâte pas de condamner."],
     ['say', 'Idris', "Le savoir, ce n'est pas d'avoir raison contre quelqu'un. C'est de savoir encore, devant celui qui te frappe, ce qu'il t'est interdit de lui faire."],
+    ['mus', 'espoir'],
     ['nar', "Le cinquième maillon se referme. La Chaîne, elle, continue : des Compagnons à leurs élèves, des élèves aux leurs — jusqu'à toi."],
     ['sfx', 'light'],
     ['flash', '#c49bff'],
@@ -259,7 +264,29 @@ ISNAD.registerSaga({
       text: "L'idole de ceux qui se font juges des cœurs. Elle porte l'habit de la justice, mais sa balance n'a qu'un plateau : elle ne sait que condamner. Scrupuleuse pour une datte, elle est sans égard pour le sang. La justice seule ne l'entame pas, car elle s'en croit le nom ; elle cède au savoir, qui distingue, et à la miséricorde, qui retient la main. 'Alî la brisa deux fois : à Nahrawân, en refusant de rendre l'anathème, puis sur son lit, en protégeant son propre meurtrier de la vengeance." },
     { id: 'consignes', cat: 'Parole', title: 'Les dernières consignes',
       text: "Frappé à l'aube, en Ramadan de l'an 40, 'Alî donna ses consignes au sujet de son agresseur, Ibn Muljam : qu'on le nourrisse et qu'on le traite bien ; s'il survivait, il déciderait lui-même ; s'il mourait, une seule frappe pour sa frappe, sans mutilation. Il interdit qu'on verse le sang d'autres musulmans en son nom. Il mourut deux jours plus tard, selon les récits les plus répandus.",
-      src: "Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh" }
+      src: "Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh" },
+    { id: 'fiction_ali', cat: 'Biographie', title: 'Figures de fiction de cette saga',
+      text: "Pour donner un visage aux enjeux, cette saga ajoute aux personnages historiques quatre figures inventées : Ma'dân, notable des greniers de Koufa ; Mâzin, chef des cavaliers de la Butte ; le maître du cercle d'étude ; le doyen des récitants de Nahrawân. Leurs paroles et leurs choix sont de fiction. Ce qui dépend d'eux change selon tes pourparlers ; ce que les sources rapportent des Compagnons ne change pas." },
+    { id: 'lettre_juges', cat: 'Parole', title: "La lettre de 'Umar sur le jugement",
+      text: "'Umar ibn al-Khattâb écrivit à Abû Mûsâ al-Ash'arî une lettre restée la charte des juges. On y lit : « Traite les gens à égalité dans ton regard, ton audience et ton jugement, afin que le noble n'espère pas ta partialité et que le faible ne désespère pas de ta justice. » Et encore : « La preuve incombe à celui qui réclame, et le serment à celui qui nie. » C'est la règle même que Shurayh appliqua au calife.",
+      src: "ad-Dâraqutnî, as-Sunan ; al-Bayhaqî, as-Sunan al-Kubrâ — traduction du sens" },
+    { id: 'shurayh_bio', cat: 'Biographie', title: 'Le juge Shurayh',
+      text: "Shurayh ibn al-Hârith al-Kindî, d'origine yéménite, appartient à la génération qui suit les Compagnons. On rapporte que 'Umar, en désaccord avec un homme sur un cheval acheté à l'essai, le prit pour arbitre ; Shurayh lui donna tort : « Garde ce que tu as acheté, ou rends-le comme tu l'as pris. » 'Umar le nomma juge de Koufa. Il le resta une soixantaine d'années, sous plusieurs califes, et mourut très âgé vers l'an 78.",
+      src: "Ibn Sa'd, Tabaqât ; Wakî', Akhbâr al-Qudât" },
+    { id: 'phrase_verset', cat: 'Parole', title: 'La phrase et son verset',
+      text: "« Le jugement n'appartient qu'à Allah » : la phrase est du Coran (6:57 ; 12:40 ; 12:67). Dans la sourate Yûsuf elle se poursuit : « Il vous a commandé de n'adorer que Lui » (12:40, traduction du sens). Elle parle de l'adoration due à Allah seul. Le même Livre confie pourtant des jugements à des hommes : « deux hommes justes parmi vous » (5:95), et deux arbitres pour réconcilier un foyer (4:35). Lire une phrase sans sa suite ni ses sœurs, c'est la changer en mot d'ordre.",
+      src: "Coran — traductions du sens ; at-Tabarî, Tafsîr" },
+    { id: 'mushaf_muet', cat: 'Parole', title: '« Ô mushaf, parle aux gens ! »',
+      text: "On rapporte que 'Alî, apprenant les reproches des sécessionnistes, réunit les récitants, fit apporter un grand mushaf, le posa devant lui et le frappa de la main : « Ô mushaf, parle aux gens ! » On s'étonna : ce n'est que de l'encre sur des feuilles ; ce sont les hommes qui parlent d'après ce qu'ils en ont appris. La leçon était là : le Livre ne tranche pas seul, il faut des gens qui le connaissent pour dire ce qu'il juge. Puis il envoya Ibn 'Abbâs.",
+      src: "Ahmad, al-Musnad ; at-Tabarî, Târîkh" },
+    { id: 'registre_double', cat: 'Événement', title: 'Le registre aux deux colonnes (fiction)',
+      text: "Un feuillet de comptes trouvé à Harûrâ' : d'un côté le grain livré aux greniers de Koufa, de l'autre le grain vendu au camp des sécessionnistes, de la même main. Il appartient à Ma'dân, notable imaginé pour ce récit. Les chroniques ne nomment personne de tel ; mais toute discorde a ses marchands, qui assurent chaque camp de leur fidélité et vivent de ce que nul ne se parle." },
+    { id: 'ashtar', cat: 'Parole', title: 'La lettre à Mâlik al-Ashtar',
+      text: "Mâlik ibn al-Hârith an-Nakha'î, dit al-Ashtar, fut l'un des principaux lieutenants de 'Alî. Nommé gouverneur d'Égypte en l'an 38, il mourut en route, à al-Qulzum. On rapporte que 'Alî lui avait remis une longue lettre sur l'art de gouverner : miséricorde pour les administrés, « ton frère en religion ou ton semblable dans la création », choix des juges, méfiance envers les flatteurs. Elle figure dans le Nahj al-Balâgha, recueil composé vers l'an 400 par ash-Sharîf ar-Radî ; les spécialistes discutent l'attribution de ses textes.",
+      src: "Nahj al-Balâgha, lettre 53 ; at-Tabarî, Târîkh (nomination et mort d'al-Ashtar)" },
+    { id: 'ibn_khabbab', cat: 'Événement', title: 'Le fils de Khabbâb',
+      text: "'Abdallâh, fils du Compagnon Khabbâb ibn al-Aratt, voyageait avec les siens quand il croisa les gens de Nahrawân. On rapporte qu'ils lui demandèrent une parole tenue de son père. Il leur transmit celle-ci, du Messager d'Allah ﷺ : viendra une discorde où celui qui reste assis vaudra mieux que celui qui se tient debout, et celui qui se tient debout mieux que celui qui marche. Ils le tuèrent. Ce meurtre décida 'Alî à marcher sur Nahrawân.",
+      src: "Ahmad, al-Musnad ; at-Tabarî, Târîkh ; Ibn Abî Shayba, al-Musannaf" }
   ],
 
   /* ─────────────────────────── CHAPITRES ─────────────────────────── */
@@ -288,7 +315,26 @@ ISNAD.registerSaga({
         { id: 'qanbar', name: 'Qanbar', at: ['halle', -1, 1], look: { kind: 'homme', robe: '#8c7a5e', head: '#e2d8c2' },
           talk: [['say', 'qanbar', "Je suis son affranchi. Je témoignerai de ce que j'ai vu, pas davantage."]] },
         { id: 'hasan', name: 'Al-Hasan', at: ['halle', 1, 1], look: { kind: 'compagnon', robe: '#e6dfcc', head: '#f4efe2', aura: '#ffe9a8' },
-          talk: [['say', 'hasan', "Mon père m'a appris qu'un juge se respecte même quand il nous déboute."]] }
+          talk: [['say', 'hasan', "Mon père m'a appris qu'un juge se respecte même quand il nous déboute."]] },
+        { id: 'maitre', name: 'Le maître du cercle', at: 'ecole', look: { kind: 'savant', robe: '#e6e0cf', head: '#f4efe2' },
+          talk: [
+            ['say', 'maitre', "Assieds-toi, si tu as un moment. Ici on n'enseigne pas à avoir raison : on enseigne d'où l'on tient ce que l'on dit."],
+            ['ask', 'Que demander au maître du cercle ?', [
+              { t: "Comment 'Umar voulait-il que l'on juge ?", r: [
+                ['say', 'maitre', "Il l'a écrit à Abû Mûsâ : égalité dans le regard, dans l'audience et dans le jugement. Et ceci, que tout plaideur devrait savoir : la preuve incombe à celui qui réclame."],
+                ['codex', 'lettre_juges'],
+                ['if', 'su_lettre', [], [['pillar', 'savoir', 1], ['flag', 'su_lettre', true]]]
+              ] },
+              { t: 'Qui est le juge Shurayh ?', r: [
+                ['say', 'maitre', "Un homme qui donna tort à 'Umar pour un cheval, dit-on, et que 'Umar fit juge pour cela. Un élève a consigné l'affaire : cherche son feuillet, à deux pas d'ici."]
+              ] },
+              { t: 'Rien pour aujourd’hui.', r: [
+                ['say', 'maitre', "Alors reviens. Le savoir ne court pas après ceux qui le fuient ; mais il attend longtemps."]
+              ] }
+            ]]
+          ] },
+        { id: 'madan', name: "Ma'dân, notable des greniers", at: ['place', 2, 1], hidden: true, look: { kind: 'marchand', robe: '#7a4f6a', head: '#e8dcc6' },
+          talk: [['say', 'madan', "Ton serviteur avant tous les autres, Commandeur des croyants."]] }
       ],
       foes: [
         { id: 'f1', at: ['souk', 3, 2], group: ['murmure', 'murmure'], bg: 'ville' },
@@ -298,7 +344,8 @@ ISNAD.registerSaga({
       chests: [
         { at: ['puits', 1, 0], item: 'dattes', n: 2 },
         { at: ['palmeraie', 1, 1], item: 'musc', n: 1 },
-        { map: 'noos', at: 'faille', item: 'miel', n: 1 }
+        { map: 'noos', at: 'faille', item: 'miel', n: 1 },
+        { at: ['ecole', 1, 1], codex: 'shurayh_bio' }
       ],
       intro: [
         ['title', 'Le Bouclier et le Juge', 'An 36 de l’Hégire · Koufa'],
@@ -307,7 +354,8 @@ ISNAD.registerSaga({
         ['quote', "Interrogez-moi sur le Livre d'Allah : il n'est pas un verset dont je ne sache s'il est descendu de nuit ou de jour, en plaine ou en montagne.", "'Alî ibn Abî Tâlib — Ibn Sa'd, Tabaqât"],
         ['nar', "Ce matin-là, une pièce manque à son équipement : une vieille cuirasse, égarée en route. Il n'y pense plus. Il sort inspecter le souk, comme chaque jour."],
         ['codex', 'koufa'],
-        ['codex', 'ibnabbas_bio']
+        ['codex', 'ibnabbas_bio'],
+        ['say', 'ibnabbas', "Le cercle d'étude se tient à deux pas. Ce qu'on y apprend sert toujours un jour, devant un juge ou devant des notables."]
       ],
       objectives: [
         { text: "Retrouver 'Ammâr ibn Yâsir sur la place", talk: 'ammar', then: [
@@ -383,7 +431,61 @@ ISNAD.registerSaga({
           ['say', 'homme', "J'atteste que ce sont là des jugements de prophètes. Le Commandeur des croyants me mène devant son propre juge — et son juge tranche contre lui !"],
           ['say', 'homme', "La cuirasse est la tienne. Elle était tombée de ta monture, et je l'ai ramassée."],
           ['nar', "On rapporte qu'il prononça alors l'attestation de foi, et que 'Alî lui répondit : « Puisque tu as embrassé l'islam, elle est à toi » — et lui fit don, de surcroît, d'un cheval."],
-          ['codex', 'cuirasse']
+          ['codex', 'cuirasse'],
+          ['nar', "L'appel de midi monte sur Koufa. Dans le rang, le plaideur débouté et celui qui vient de gagner se tiennent épaule contre épaule."],
+          ['pray', 'dhuhr'],
+          ['show', 'madan'],
+          ['nar', "À la sortie, des hommes en beaux manteaux attendent sur la place : les notables de Koufa. Un calife qui perd un procès les inquiète plus qu'un calife qui en gagne."]
+        ] },
+        { text: 'Recevoir les notables de Koufa, sur la place', talk: 'madan', then: [
+          ['mus', 'conseil'],
+          ['codex', 'fiction_ali'],
+          ['say', 'madan', "Commandeur des croyants ! Ma'dân, des greniers de Koufa, ton serviteur avant tous les autres. Nous venons en amis : ce qui s'est passé dans la halle ne doit pas se reproduire."],
+          ['nar', "J'ai connu des villes où le puissant gagnait toujours. Elles tenaient debout comme un mur sans mortier, par la seule habitude des pierres. Ce qui lie les hommes n'est pas la force du premier d'entre eux : c'est la certitude du dernier qu'on l'écoutera."],
+          ['parley', {
+            with: 'madan', title: 'Les notables de Koufa',
+            intro: "Ils craignent qu'un calife débouté soit un calife affaibli. Ma'dân parle pour eux, et un peu pour lui-même.",
+            goal: 7,
+            rounds: [
+              { say: "Tout Koufa t'a vu perdre devant un homme du souk. Un chef qu'on déboute aujourd'hui, on le défie demain. Fais savoir que la parole du calife vaut preuve.",
+                opts: [
+                  { t: "Demander ce que vaudrait cette règle sous un calife injuste", el: 'adl', v: 2, r: "Nous ne pensions qu'à toi. Pas à ceux qui viendront après toi." },
+                  { t: "Citer la lettre de 'Umar à ses juges : la preuve incombe à celui qui réclame", el: 'ilm', v: 3, need: 'lettre_juges', r: "La lettre de 'Umar… Nos pères l'ont entendue lire dans cette halle même." },
+                  { t: "Répondre que nul n'osera défier le calife", el: 'shajaa', v: -1, r: "Voilà ! C'est ce calife-là que nous réclamons : celui qu'on n'ose pas contredire." }
+                ] },
+              { say: "Shurayh est un bon juge, nul ne le nie. Mais un juge avisé sait devant qui il siège.",
+                opts: [
+                  { t: "Rappeler que Shurayh a déjà donné tort à 'Umar, qui le fit juge pour cela", el: 'ilm', v: 3, need: 'shurayh_bio', r: "Je l'ignorais. Ou je l'avais oublié à dessein." },
+                  { t: "Dire qu'il siège devant deux plaideurs, et rien d'autre", el: 'sidq', v: 2, r: "Deux plaideurs. Dit ainsi, la halle paraît plus grande que le palais." },
+                  { t: "Convenir que Shurayh aurait pu y mettre des formes", el: 'rahma', v: 0, r: "Des formes, oui. Nous n'en demandons pas davantage… pour commencer." }
+                ] },
+              { say: "Soit. Mais nous, qui tenons les greniers et les marchés, serons-nous cités demain comme n'importe qui, par n'importe qui ?",
+                opts: [
+                  { t: "Montrer que la même halle les protège : n'importe qui y sera cité à leur demande", el: 'adl', v: 2, r: "Elle nous protège aussi… Je n'avais pas regardé la chose de ce côté." },
+                  { t: "Dire que celui qui n'a rien pris n'a rien à craindre d'une audience", el: 'sabr', v: 1, r: "Facile à dire pour qui vient de perdre une cuirasse et de gagner une ville." },
+                  { t: "Ménager leur rang : laisser entendre qu'on y aura égard", el: 'rahma', v: -2, r: "À la bonne heure. Je savais que nous finirions par nous entendre." }
+                ] },
+              { say: "On dit déjà dans les quartiers : le calife est faible. Que répondrons-nous, nous qui parlons pour toi ?",
+                opts: [
+                  { t: "Qu'ils ont vu un homme perdre un bien et garder la règle : le dire comme ils l'ont vu", el: 'sidq', v: 2, r: "Dit ainsi, cela se laisse répéter sans rougir." },
+                  { t: "Qu'une ville est forte de ce que le plus petit ose y réclamer", el: 'ilm', v: 1, r: "Belle phrase. Les quartiers préfèrent le pain aux phrases ; mais nous la porterons." },
+                  { t: "Que les bavards se tairont d'eux-mêmes", el: 'sabr', v: -1, r: "Ils ne se taisent jamais d'eux-mêmes. C'est même notre métier de le savoir." }
+                ] }
+            ],
+            win: [
+              ['say', 'madan', "Nous dirons donc que Koufa a un juge, et que son calife s'en honore. Cela se défend."],
+              ['nar', "Les notables se retirent, rassurés. Ma'dân s'incline plus bas que les autres, et sourit un peu trop longtemps."],
+              ['pillar', 'justice', 1],
+              ['flag', 'notables_acquis', true]
+            ],
+            lose: [
+              ['say', 'madan', "Nous avons entendu. Nous dirons aux quartiers ce que nous pourrons."],
+              ['nar', "Ils repartent sans être convaincus. Derrière eux, sur la place, les murmures se reforment : la parole n'a pas suffi, et l'idole du rang relève un fragment de sa couronne."],
+              ['battle', { group: ['soupcon', 'murmure', 'murmure'], bg: 'ville', intro: '« Faible… il est faible… » Le murmure revient, plus épais.' }],
+              ['nar', "Le murmure se tait. Mais Koufa, il faudra la convaincre encore."]
+            ]
+          }],
+          ['mus', 'medine']
         ] }
       ],
       outro: [
@@ -421,7 +523,26 @@ ISNAD.registerSaga({
         { id: 'orateur', name: 'Le porte-parole', map: 'camp', at: ['feu', 1, 0], look: { kind: 'ancien', robe: '#45403a', head: '#cfc7b6' },
           talk: [['say', 'orateur', "Nous avons dit ce que nous avions à dire."]] },
         { id: 'repenti', name: 'Un homme de Koufa', map: 'camp', at: ['feu', 0, 2], hidden: true, look: { kind: 'homme', robe: '#7a6c58', head: '#e0d6c2' },
-          talk: [['say', 'repenti', "Je rentre. D'autres me suivent."]] }
+          talk: [['say', 'repenti', "Je rentre. D'autres me suivent."]] },
+        { id: 'madan', name: "Ma'dân, notable des greniers", at: ['souk', 0, 1], look: { kind: 'marchand', robe: '#7a4f6a', head: '#e8dcc6' },
+          talk: [['say', 'madan', "Ces gens de Harûrâ' sont la honte de Koufa. Un mot du calife, et mes greniers leur seront fermés. Je le dis à qui veut l'entendre."]] },
+        { id: 'maitre', name: 'Le maître du cercle', at: 'ecole', look: { kind: 'savant', robe: '#e6e0cf', head: '#f4efe2' },
+          talk: [
+            ['say', 'maitre', "On crie une phrase aux portes de la ville. Sais-tu où elle se trouve dans le Livre, et ce qui la suit ?"],
+            ['say', 'maitre', "Sourate Yûsuf : « Le jugement n'appartient qu'à Allah. Il vous a commandé de n'adorer que Lui. » Elle parle de l'adoration. Une phrase coupée de sa suite, on lui fait dire ce qu'on veut."],
+            ['codex', 'phrase_verset'],
+            ['if', 'su_verset', [], [['pillar', 'savoir', 1], ['flag', 'su_verset', true]]]
+          ] },
+        { id: 'temoin', name: 'Un récitant de Koufa', at: ['mosquee_cour', -2, 1], look: { kind: 'homme', robe: '#a39478', head: '#efe7d4' },
+          talk: [
+            ['say', 'temoin', "J'y étais. Il a fait entrer les récitants, posé devant lui un grand mushaf, et l'a frappé du plat de la main : « Ô mushaf, parle aux gens ! »"],
+            ['say', 'temoin', "Nous avons dit : ce n'est que de l'encre sur des feuilles ; c'est nous qui parlons d'après lui. Alors nous avons compris ce qu'il voulait nous faire dire."],
+            ['codex', 'mushaf_muet']
+          ] },
+        { id: 'mazin', name: 'Mâzin, chef des cavaliers de la Butte', map: 'camp', at: ['feu', 2, 1], look: { kind: 'soldat', robe: '#55504a', head: '#d4ccbc' },
+          talk: [['say', 'mazin', "J'écoute. Je n'ai pas encore décidé si j'écoute pour répondre ou pour comprendre."]] },
+        { id: 'ashtar', name: 'Mâlik al-Ashtar', at: 'ecole', hidden: true, look: { kind: 'soldat', robe: '#5d4a3a', head: '#e4dac6' },
+          talk: [['say', 'ashtar', "Je pars pour l'Égypte dès que la lettre sera scellée."]] }
       ],
       foes: [
         { id: 'fk', at: 'palmeraie', group: ['echo', 'echo'], bg: 'ville' },
@@ -431,6 +552,7 @@ ISNAD.registerSaga({
       chests: [
         { at: ['puits', 0, 1], item: 'eau', n: 1 },
         { map: 'camp', at: ['enclos', 1, 0], item: 'dattes', n: 2 },
+        { map: 'camp', at: ['enclos', -1, 1], codex: 'registre_double' },
         { map: 'noos', at: 'faille', item: 'musc', n: 1 }
       ],
       intro: [
@@ -440,7 +562,9 @@ ISNAD.registerSaga({
         ['nar', "'Ammâr ibn Yâsir y tombe, à plus de quatre-vingt-dix ans. Puis des feuillets du Livre sont levés au bout des lances, et l'on convient de s'en remettre à deux arbitres. Les armes se taisent. Autre chose commence."],
         ['codex', 'siffin'],
         ['nar', "Sur la route du retour, des milliers d'hommes quittent les rangs. Ils refusent l'arbitrage, crient une phrase tirée du Livre, et dressent leurs tentes à Harûrâ', aux portes de Koufa."],
-        ['amb', 'foule']
+        ['amb', 'foule'],
+        ['nar', "Avant de parler aux hommes, on se tait devant Celui qui les a faits. Qui se relève de sa prière ne plaide plus pour avoir raison : il plaide pour ramener."],
+        ['pray', 'fajr']
       ],
       objectives: [
         { text: "Entendre Qays ibn Sa'd devant la maison", talk: 'qays', then: [
@@ -449,7 +573,8 @@ ISNAD.registerSaga({
           ['say', 'qays', "Non. Ils crient, et ils prient."],
           ['say', 'ali', "Alors on ne leur répond pas par le sabre. On leur parle."],
           ['join', 'qays'], ['hide', 'qays'],
-          ['codex', 'qays_bio']
+          ['codex', 'qays_bio'],
+          ['say', 'ibnabbas', "Avant Harûrâ', je passerai par le cercle d'étude et par la mosquée. On ne plaide bien que ce dont on sait d'où on le tient."]
         ] },
         { text: "Gagner la porte nord, vers Harûrâ'", goto: 'porte_nord', then: [
           ['say', 'ibnabbas', "Commandeur des croyants, retarde un peu la prière de midi. Je vais aller parler à ces gens."],
@@ -461,7 +586,8 @@ ISNAD.registerSaga({
           ['amb', 'vent'],
           ['nar', "Harûrâ'. « Je n'avais jamais vu, dira Ibn 'Abbâs, de gens plus appliqués à l'adoration » : marqués par les prosternations, épuisés par les veilles. Leur piété n'est pas feinte. C'est ce qui rend l'idole si forte."],
           ['say', 'Une voix', "Bienvenue, Ibn 'Abbâs. Mais que fait sur toi ce manteau de prix ?"],
-          ['say', 'ibnabbas', "Que me reprochez-vous ? J'ai vu sur le Messager d'Allah ﷺ les plus beaux manteaux."]
+          ['say', 'ibnabbas', "Que me reprochez-vous ? J'ai vu sur le Messager d'Allah ﷺ les plus beaux manteaux."],
+          ['nar', "Près de l'enclos, on décharge des sacs de grain. Du grain de Koufa. Quelqu'un, là-bas, nourrit le camp qu'il maudit en public."]
         ] },
         { text: 'Débattre avec le porte-parole, près du feu', talk: 'orateur', then: [
           ['say', 'ibnkawwa', "Ne discutez pas avec lui ! Les Quraysh sont gens de dispute."],
@@ -495,6 +621,48 @@ ISNAD.registerSaga({
               ['say', 'Des voix', "Non, par Allah."]
             ] }
           ]],
+          ['nar', "Au second rang, un homme n'a pas crié. Mâzin mène trois cents cavaliers, ceux de la Butte. Il ne demande pas qu'on le réfute : il demande qu'on lui réponde."],
+          ['mus', 'conseil'],
+          ['parley', {
+            with: 'mazin', title: 'Mâzin et les cavaliers de la Butte',
+            intro: "Il a quitté ses champs pour une phrase du Livre. Il craint de s'être trompé, et plus encore de l'avouer devant ses hommes.",
+            goal: 8,
+            rounds: [
+              { say: "Tes réponses sont belles, fils de 'Abbâs. Mais la phrase que nous crions est dans le Livre. Diras-tu que le Livre se trompe ?",
+                opts: [
+                  { t: "Réciter le verset jusqu'au bout : « Il vous a commandé de n'adorer que Lui » (12:40)", el: 'ilm', v: 3, need: 'phrase_verset', r: "Je la récitais sans aller au bout du verset. Trois cents hommes derrière moi, et aucun ne m'a repris." },
+                  { t: "Reconnaître que la phrase est vraie, et que c'est son emploi qui s'égare", el: 'sidq', v: 2, r: "Tu ne nies pas la phrase. C'est déjà plus que ce qu'on m'avait dit de toi." },
+                  { t: "Dire qu'ils la crient sans l'avoir méditée", el: 'shajaa', v: -1, r: "Voilà le Qurayshite. Nous savons ce que nous récitons, fils de 'Abbâs." }
+                ] },
+              { say: "On nous a appris que le Livre suffit, et que les hommes le trahissent. Pourquoi faudrait-il des hommes entre le Livre et nous ?",
+                opts: [
+                  { t: "Raconter le mushaf que 'Alî pria de parler, et qui resta muet", el: 'ilm', v: 3, need: 'mushaf_muet', r: "De l'encre entre deux planchettes… Et nous qui pensions l'entendre crier." },
+                  { t: "Rappeler que le Livre lui-même réclame « deux hommes justes »", el: 'adl', v: 2, r: "Des hommes justes. Encore faut-il qu'ils le soient." },
+                  { t: "Lui demander qui lui a appris à lire", el: 'rahma', v: 1, r: "Mon père. Sur une omoplate de chameau. Un homme, oui." }
+                ] },
+              { say: "Mes hommes ont laissé leurs moissons pour cette phrase. Si je les ramène, on dira que Mâzin a eu peur.",
+                opts: [
+                  { t: "Dire qu'il faut plus de cœur pour revenir d'une erreur que pour s'y tenir", el: 'sabr', v: 2, r: "Plus de cœur… Mon père le disait du chamelier qui rebrousse chemin avant le puits à sec." },
+                  { t: "Assurer que nul à Koufa ne leur fera honte : leur place et leur part les attendent", el: 'rahma', v: 2, r: "Notre part ? Après ce que nous avons crié ?" },
+                  { t: "Le presser de se décider sur-le-champ", el: 'shajaa', v: -2, r: "On ne presse pas trois cents hommes comme on pousse un âne. Tu viens de perdre ce que tu avais gagné." }
+                ] },
+              { say: "Un homme de Koufa nous a fait dire que 'Alî marcherait sur nous avant la fin du mois. Pourquoi te croirais-je, toi plutôt que lui ?",
+                opts: [
+                  { t: "Montrer le feuillet de comptes : celui qui les a prévenus leur vend aussi leur grain", el: 'sidq', v: 3, need: 'registre_double', r: "Cette écriture, je la connais. Il nous jurait que c'était par amour du Livre." },
+                  { t: "Faire remarquer qu'il est venu seul, sans arme, à midi", el: 'sidq', v: 2, r: "C'est vrai. Un homme qui prépare une attaque n'envoie pas son cousin." },
+                  { t: "Répéter la parole du calife : jamais le premier coup", el: 'adl', v: 1, r: "Une parole. Nous verrons ce qu'elle pèse." }
+                ] }
+            ],
+            win: [
+              ['say', 'mazin', "Je ramène mes hommes à Koufa. Et si cette phrase se dresse encore contre vous, fils de 'Abbâs, ceux de la Butte seront là pour lui rendre sa suite."],
+              ['flag', 'allie_mazin', true],
+              ['pillar', 'lien', 1]
+            ],
+            lose: [
+              ['say', 'mazin', "Tu parles bien. Mais on ne ramène pas trois cents hommes sur de belles paroles. Nous restons près de nos feux."],
+              ['pillar', 'lien', -1]
+            ]
+          }],
           ['nar', "Une partie de l'assemblée se tait. L'autre reprend la phrase, plus fort, pour ne plus entendre. Et dans l'envers du camp, des milliers de voix qui répètent sans comprendre se dressent d'un seul bloc."],
           ['join', 'ali'], ['join', 'qays'],
           ['nar', "Nul ne plaide seul dans la noosphère : le savoir de 'Alî et la droiture de Qays y marchent avec Ibn 'Abbâs."],
@@ -510,7 +678,8 @@ ISNAD.registerSaga({
           ['say', 'ibnabbas', "Il n'a pas de corps : c'est une phrase. Le fer passera au travers. Rendons-lui son sens — le savoir et le vrai le feront taire."],
           ['codex', 'slogan'],
           ['heal'],
-          ['battle', { group: ['slogan'], bg: 'noos', boss: true, intro: 'Je suis une parole vraie. Qui oserait me contredire ?' }],
+          ['battle', { group: ['slogan'], bg: 'noos', boss: true, intro: 'Je suis une parole vraie. Qui oserait me contredire ?',
+                       allies: [{ flag: 'allie_mazin', name: 'Les cavaliers de la Butte' }] }],
           ['sfx', 'break'],
           ['nar', "L'étendard de mots se défait, lettre à lettre. La phrase retombe où elle était : dans le Livre, entière, avec ce qui la précède et ce qui la suit."],
           ['map', 'camp', 'feu', { time: 'dusk' }],
@@ -518,10 +687,15 @@ ISNAD.registerSaga({
           ['show', 'repenti'],
           ['say', 'repenti', "Je croyais défendre le Livre. Je ne défendais qu'une phrase que j'avais cessé d'écouter. Je rentre à Koufa."],
           ['nar', "Deux mille hommes se lèvent ce jour-là et reprennent la route de la ville — davantage, selon d'autres récits. Les autres restent près de leurs feux, et se taisent."],
+          ['if', 'allie_mazin',
+            [['nar', "Parmi eux, trois cents cavaliers marchent en ordre derrière Mâzin. Ceux-là, la Chaîne ne les compte pas : elle les a imaginés. Mais elle sait qu'il y en eut de semblables."]],
+            [['nar', "Ceux de la Butte ne se lèvent pas. Mâzin regarde longtemps la route de Koufa, rajuste la sangle de son cheval, et ne dit rien."]]],
           ['codex', 'harura'],
           ['map', 'koufa', 'mosquee_porte', { time: 'dusk' }],
           ['leave', 'ibnabbas'], ['join', 'ibnabbas'],
           ['amb', 'foule'],
+          ['nar', "Ce soir-là, à la mosquée de Koufa, les rangs sont plus longs de deux mille hommes."],
+          ['pray', 'maghrib'],
           ['show', 'crieur'],
           ['nar', "Les semaines passent. Ceux qui ne sont pas revenus entrent pourtant dans Koufa, et jusque dans la mosquée. Quand 'Alî prêche, des voix s'élèvent des recoins."]
         ] },
@@ -542,7 +716,31 @@ ISNAD.registerSaga({
           ]],
           ['say', 'qays', "Ils t'ont déclaré sorti de la foi, et tu leur gardes leur part du trésor."],
           ['say', 'ali', "Ils ont dit une parole. Je ne verse pas le sang pour une parole."],
-          ['codex', 'parole_verite']
+          ['codex', 'parole_verite'],
+          ['say', 'madan', "Trois droits à ceux qui t'insultent ! Laisse-moi au moins leur fermer mes greniers, Commandeur des croyants : je ne songe qu'à ta gloire."],
+          ['say', 'ali', "On ne retire pas le pain pour une parole."],
+          ['show', 'ashtar'],
+          ['nar', "An 38. L'Égypte vacille. 'Alî y envoie le plus ferme de ses lieutenants, Mâlik al-Ashtar, qui attend ses consignes au cercle d'étude."]
+        ] },
+        { text: "Remettre ses consignes à Mâlik al-Ashtar, au cercle d'étude", talk: 'ashtar', then: [
+          ['mus', 'conseil'],
+          ['say', 'ashtar', "Commandeur des croyants, je pars gouverner un pays dont la plupart des habitants ne prient pas comme nous. Que leur dois-je ?"],
+          ['nar', "On rapporte qu'il lui remit une longue lettre. La Chaîne ne la tient pas pour certaine dans chacun de ses mots ; elle la transmet comme on la lui a transmise."],
+          ['ask', 'Quelle consigne lire la première ?', [
+            { t: 'Sur ceux qu’il gouvernera', r: [
+              ['quote', "Emplis ton cœur de miséricorde pour tes administrés. […] Ils sont de deux sortes : ou bien ton frère en religion, ou bien ton semblable dans la création.", "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)"]
+            ] },
+            { t: 'Sur le choix des juges', r: [
+              ['quote', "Choisis, pour juger entre les gens, le meilleur de tes administrés : celui que les affaires n'accablent pas, que les plaideurs n'irritent pas, et qui ne persiste pas dans l'erreur.", "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)"]
+            ] },
+            { t: 'Sur les flatteurs', r: [
+              ['quote', "Attache-toi aux gens scrupuleux et véridiques ; puis accoutume-les à ne pas te couvrir d'éloges, ni à te réjouir d'un bien que tu n'as pas fait.", "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)"]
+            ] }
+          ]],
+          ['say', 'ibnabbas', "Frère en religion, ou semblable dans la création. Il n'a laissé personne dehors."],
+          ['codex', 'ashtar'],
+          ['pillar', 'justice', 1], ['pillar', 'lien', 1],
+          ['nar', "Al-Ashtar part pour l'Égypte. Il n'y arrivera pas : il meurt en route, à al-Qulzum. La lettre, elle, a fait le voyage jusqu'à nous."]
         ] }
       ],
       outro: [
@@ -564,6 +762,8 @@ ISNAD.registerSaga({
         { id: 'vieux', name: 'Un vieux récitant', at: 'tentes', look: { kind: 'ancien', robe: '#8a7c66', head: '#ece4d2' },
           talk: [
             ['say', 'vieux', "J'ai prié épaule contre épaule avec certains d'entre eux. Ce soir je ne sais plus pour qui invoquer. Alors j'invoque pour tous."],
+            ['say', 'vieux', "Sais-tu ce que le fils de Khabbâb leur a transmis avant de mourir ? La parole de son père : dans la discorde, celui qui reste assis vaut mieux que celui qui se lève."],
+            ['codex', 'ibn_khabbab'],
             ['if', 'pain_donne',
               [['say', 'vieux', "Que la paix revienne, voilà tout."]],
               [['say', 'vieux', "Prends ce pain. On ne tient pas debout le ventre vide."], ['give', 'pain', 2], ['flag', 'pain_donne', true]]]
@@ -577,7 +777,11 @@ ISNAD.registerSaga({
         { id: 'veilleur', name: 'Un veilleur', map: 'koufa', at: 'place', look: { kind: 'homme', robe: '#6d6456', head: '#ddd4c0' },
           talk: [['say', 'veilleur', "Les nuits de Ramadan sont douces à Koufa. On l'a vu, hier, regarder longtemps le ciel."]] },
         { id: 'hasan', name: 'Al-Hasan', map: 'koufa', at: ['mosquee_porte', 1, 1], hidden: true, look: { kind: 'compagnon', robe: '#e6dfcc', head: '#f4efe2', aura: '#ffe9a8' },
-          talk: [['say', 'hasan', "Nous ferons ce qu'il a dit. Rien de plus."]] }
+          talk: [['say', 'hasan', "Nous ferons ce qu'il a dit. Rien de plus."]] },
+        { id: 'madan', name: "Ma'dân, notable des greniers", at: ['tente_chef', 2, 1], look: { kind: 'marchand', robe: '#7a4f6a', head: '#e8dcc6' },
+          talk: [['say', 'madan', "Mes convois suivent l'armée, Commandeur des croyants. Rien ne manquera, tant que la campagne dure."]] },
+        { id: 'doyen', name: 'Le doyen des récitants', at: ['etendard', 3, 2], hidden: true, look: { kind: 'ancien', robe: '#4f4a45', head: '#d2cabb' },
+          talk: [['say', 'doyen', "Je ne sais pas partir. Je ne sais plus rester."]] }
       ],
       foes: [
         { id: 'f1', at: 'lignes', group: ['lame', 'lame'], bg: 'camp' },
@@ -605,8 +809,34 @@ ISNAD.registerSaga({
           ['say', 'qays', "Ils ne disent pas « l'un de nous ». Ils disent « tous ». Ils ne forment plus qu'un seul juge."],
           ['give', 'eau', 1]
         ] },
+        { text: "Entendre Ma'dân, qui presse d'attaquer (près de la tente du chef)", talk: 'madan', then: [
+          ['mus', 'conseil'],
+          ['say', 'madan', "Commandeur des croyants, frappe cette nuit ! Ils dorment. Chaque jour d'attente coûte à l'armée : je le sais, c'est moi qui la nourris."],
+          ['nar', "Ma'dân parle fort, et son regard revient souvent vers les convois. À Harûrâ' déjà, quelqu'un nourrissait le camp d'en face."],
+          ['ask', "Ma'dân pousse à frapper sans attendre. Que lui oppose-t-on ?", [
+            { t: 'Lui mettre sous les yeux le registre aux deux colonnes', need: 'registre_double', r: [
+              ['say', 'ibnabbas', "Une colonne pour Koufa, une colonne pour Harûrâ'. La même main, Ma'dân. Et à chaque camp tu as fait dire que l'autre allait frapper."],
+              ['say', 'madan', "Je… je tenais les deux portes ouvertes, voilà tout. Il faut bien que quelqu'un se parle, dans une discorde."],
+              ['nar', "On ne le frappe pas, on ne le chasse pas. On lui retire la garde des greniers, et l'on fait lire ses comptes devant l'armée. Pour un homme qui vivait de n'être pas vu, c'est assez."],
+              ['flag', 'madan_demasque', true],
+              ['pillar', 'justice', 1]
+            ] },
+            { t: "L'écarter sans l'accuser : on ne condamne pas sur un bruit", r: [
+              ['say', 'ali', "Nous ne frapperons pas les premiers. Retourne à tes convois."],
+              ['nar', "Ma'dân s'incline et sort. Nul ne sait encore à combien de feux il se chauffe."]
+            ] },
+            { t: 'Le chasser du camp sur ce soupçon', r: [
+              ['say', 'ibnabbas', "Sur un soupçon ? Regarde de l'autre côté du canal : voilà où mène de condamner sans preuve."],
+              ['nar', "On le rappelle. Mais le mot a été dit, et le camp l'a entendu : ce soir-là, plus d'un regarde son voisin de travers."],
+              ['pillar', 'justice', -1]
+            ] }
+          ]]
+        ] },
         { text: 'Dissiper les Lames pieuses aux abords des lignes', foe: 'f1', then: [
-          ['say', 'ibnabbas', "Elles sont certaines de servir le bien. C'est une certitude sans savoir : rien ne coupe plus aveuglément."]
+          ['say', 'ibnabbas', "Elles sont certaines de servir le bien. C'est une certitude sans savoir : rien ne coupe plus aveuglément."],
+          ['nar', "La nuit tombe sur les deux rives. La sentinelle qui veille ne garde pas seulement un camp : elle garde la possibilité que demain quelqu'un traverse encore le canal. Tant qu'un seul peut revenir, la parole n'a pas fini son ouvrage."],
+          ['pray', 'isha'],
+          ['nar', "Au matin, les deux rangs sont face à face."]
         ] },
         { text: "Rejoindre Abû Ayyûb à l'étendard", talk: 'abuayyub', then: [
           ['say', 'abuayyub', "L'étendard est prêt, Commandeur des croyants. Dis-moi ce qu'il doit annoncer."],
@@ -625,6 +855,50 @@ ISNAD.registerSaga({
           ['show', 'farwa'],
           ['say', 'farwa', "Par Allah, je ne sais plus pour quelle raison nous combattrions 'Alî. Je me retire, jusqu'à y voir clair."],
           ['nar', "Farwa ibn Nawfal s'éloigne avec cinq cents cavaliers. D'autres suivent, par groupes. De quatre mille, il en reste moins de trois mille autour de leur chef."],
+          ['show', 'doyen'],
+          ['nar', "Au bord du canal, un groupe hésite encore : des récitants, serrés autour d'un vieil homme. Qays s'avance vers eux, les mains ouvertes. C'est la dernière ambassade."],
+          ['mus', 'conseil'],
+          ['parley', {
+            with: 'doyen', title: 'La dernière ambassade',
+            intro: "Il n'a tué personne. Il a veillé, jeûné, crié avec les autres. Il ne sait plus comment partir sans tout renier.",
+            goal: 8,
+            rounds: [
+              { say: "Nous avons veillé et jeûné pour cette cause. Si nous passons sous votre bannière, que restera-t-il de nos nuits ?",
+                opts: [
+                  { t: "Dire que rien n'en est perdu : c'est le sang qu'on leur demande de quitter, non la veille", el: 'rahma', v: 2, r: "Tu ne dis pas que nos prières étaient fausses. Les nôtres le disent des vôtres." },
+                  { t: "Répondre que nul ici ne tient le compte de ce qu'Allah agrée", el: 'sabr', v: 1, r: "C'est vrai. Je l'avais oublié, à force de compter." },
+                  { t: "Rappeler le nombre de l'armée rangée derrière soi", el: 'shajaa', v: -1, r: "Je sais compter. Ce n'est pas le nombre qui me fera traverser." }
+                ] },
+              { say: "On nous a fait dire que ta bannière est un piège : qui s'y rend sera désarmé, puis jugé.",
+                opts: [
+                  { t: "Montrer d'où vient ce bruit : un homme qui vend du grain aux deux rives", el: 'sidq', v: 3, need: 'registre_double', r: "Ma'dân… Il nous jurait qu'il risquait sa vie pour nous prévenir." },
+                  { t: "Nommer celui qui la tient : Abû Ayyûb, l'hôte du Messager d'Allah ﷺ", el: 'sidq', v: 2, r: "Abû Ayyûb… Non. Pas lui. Il ne prêterait pas son nom à un piège." },
+                  { t: "Dire que le calife n'a jamais manqué à une sûreté donnée", el: 'adl', v: 1, r: "Tu le dis. Je n'ai que ta parole pour cela." }
+                ] },
+              { say: "Et si nous rentrons, que fera-t-il de gens qui l'ont déclaré sorti de la foi ?",
+                opts: [
+                  { t: "Rappeler les trois droits qu'il leur garantit à Koufa, quand on l'insultait en pleine mosquée", el: 'adl', v: 3, need: 'parole_verite', r: "J'y étais. J'ai crié avec les autres. Il ne nous a pas fait sortir." },
+                  { t: "Redire ses mots : il ne réclame que les meurtriers ; qui rentre est en sûreté", el: 'rahma', v: 2, r: "Seulement ceux qui ont tué ? Rien pour ce que nous avons dit ?" },
+                  { t: "Promettre plus que le calife n'a dit : des charges, des honneurs", el: 'shajaa', v: -2, r: "Tu promets trop, fils de Sa'd. Le calife n'a parlé que de sûreté ; c'était plus digne." }
+                ] },
+              { say: "Les nôtres répondent : « nous l'avons tous tué ». Je n'y étais pas. Mais si je pars, je les renie.",
+                opts: [
+                  { t: "Redire ce que le fils de Khabbâb leur transmit : dans la discorde, celui qui reste assis vaut mieux", el: 'ilm', v: 3, need: 'ibn_khabbab', r: "Il leur a dit cela ? Et ils l'ont tué quand même… Alors c'est lui que je renierais en restant." },
+                  { t: "Dire que crier « tous » ne fait pas de lui un meurtrier, mais que rester demain en fera un", el: 'sidq', v: 2, r: "Demain… Oui. C'est demain que je deviens ce qu'ils disent." },
+                  { t: "Dire qu'on ne renie pas des frères en refusant leur faute", el: 'rahma', v: 1, r: "C'est ce que je me répète la nuit. Venant d'un autre, cela pèse davantage." }
+                ] }
+            ],
+            win: [
+              ['nar', "Le doyen plie son tapis. Une centaine de récitants passent le canal derrière lui et vont s'asseoir sous la bannière d'Abû Ayyûb. Ceux-là sont de fiction ; la bannière, et ceux qu'elle sauva, ne le sont pas."],
+              ['flag', 'retour_nahrawan', true],
+              ['pillar', 'lien', 1]
+            ],
+            lose: [
+              ['say', 'doyen', "Je ne sais pas partir. Qu'Allah me pardonne, et toi aussi, fils de Sa'd."],
+              ['nar', "Le vieil homme retourne vers les siens. La parole n'a pas suffi ; elle aura du moins été dite jusqu'au bout."],
+              ['pillar', 'lien', -1]
+            ]
+          }],
           ['say', 'qays', "Serviteurs d'Allah ! Livrez-nous ceux que nous réclamons, et revenez à ce que vous avez quitté !"],
           ['nar', "Ils ne répondent que par leur cri, et chargent : « En route vers le Paradis ! » Dans l'envers de la plaine, une balance immense se dresse. Elle n'a qu'un plateau."],
           ['sfx', 'glitch'],
@@ -637,7 +911,8 @@ ISNAD.registerSaga({
         { text: 'Atteindre le cœur de la balance', goto: 'coeur', then: [
           ['say', 'ibnabbas', "La justice seule ne l'entamera pas : il s'en croit le nom. Frappe-le de savoir et de miséricorde — ce sont les deux choses qu'il n'a jamais pesées."],
           ['heal'],
-          ['battle', { group: ['juge'], bg: 'noos', boss: true, intro: 'Je n’ai pas besoin de t’entendre. Je sais déjà ce que tu es.' }],
+          ['battle', { group: ['juge'], bg: 'noos', boss: true, intro: 'Je n’ai pas besoin de t’entendre. Je sais déjà ce que tu es.',
+                       allies: [{ flag: 'allie_mazin', name: 'Les cavaliers de la Butte' }, { flag: 'retour_nahrawan', name: 'Les récitants revenus sous la bannière' }] }],
           ['sfx', 'break'],
           ['nar', "La balance se brise. Dans la plaine, tout est déjà fini : la bataille n'a pas duré une matinée. Du côté de 'Alî, on compte moins de dix morts."],
           ['map', 'camp', 'tertre', { time: 'dusk' }],
@@ -671,6 +946,9 @@ ISNAD.registerSaga({
           ['sfx', 'hit'], ['flash', '#ffffff'], ['shake', 700],
           ['wait', 900],
           ['amb', 'silence'],
+          ['mus', 'deuil'],
+          ['nar', "Il ne laisse pas la prière se perdre : on rapporte qu'il fit avancer Ja'da ibn Hubayra pour la diriger à sa place."],
+          ['pray', 'fajr'],
           ['show', 'hasan'],
           ['nar', "On le porte chez lui. On saisit l'homme : 'Abd ar-Rahmân ibn Muljam, venu venger ceux de Nahrawân. On l'amène, lié."],
           ['say', 'hasan', "Père. L'homme est là. Qu'ordonnes-tu ?"],
@@ -692,6 +970,9 @@ ISNAD.registerSaga({
       ],
       outro: [
         ['say', 'hasan', "Il nous a appris le droit jusqu'à son dernier souffle. Sa dernière leçon portait sur l'homme qui l'a frappé."],
+        ['if', 'madan_demasque',
+          [['nar', "Les comptes de Ma'dân furent lus à Koufa après ceux de l'armée. On ne le revit plus aux greniers. Toute discorde a ses marchands ; celle-ci en eut un de moins."]],
+          [['nar', "Ma'dân vendit du grain aux deux rives jusqu'au dernier jour, et jura à chacun sa fidélité. Nul ne le sut. C'est ainsi que durent les discordes : par ceux qui en vivent."]]],
         ['nar', "Le jour se lève sur Koufa. Dans la mosquée, on prie sans lui. Dans la noosphère, une lumière violette demeure au-dessus de la ville : elle ne s'éteindra plus."]
       ]
     }

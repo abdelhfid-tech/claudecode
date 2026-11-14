@@ -81,7 +81,7 @@ const url = 'file://' + path.join(__dirname, '../index.html');
         log.push(`${ok ? 'OK ' : 'BLOQUÉ '} ${sid}${ci !== undefined ? '#' + ci : ''} en ${((performance.now() - t0) / 1000).toFixed(1)} s${ok ? '' : ' — chapitre ' + (W.ch && W.ch.id) + ' objectif ' + W.objIndex + ' carte ' + (W.map && W.map.id)}`);
         if (!ok) break;
       }
-      return { log, stats, save: { lights: I.save.data.lights, isnad: I.save.data.isnad, codex: I.save.data.codex.length, epilogue: I.save.data.epilogue } };
+      return { log, stats, save: { lights: I.save.data.lights, isnad: I.save.data.isnad, codex: I.save.data.codex.length, epilogue: I.save.data.epilogue, veillees: Object.keys(I.save.data.veillees || {}), citadel: I.save.data.citadel, parley: I.save.data.parley, piliers: Object.fromEntries(Object.entries(I.save.data.sagas).filter(([k, v]) => v.pil).map(([k, v]) => [k, Object.values(v.pil).join('/')])) } };
     }, mode);
     console.log(res.log.join('\n'));
     console.log('--- combats ---');

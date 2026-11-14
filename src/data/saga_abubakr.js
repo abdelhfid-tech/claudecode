@@ -1,5 +1,7 @@
 /* ISNAD — Saga I : Abû Bakr as-Siddîq (11–13 H · 632–634). Lumière : Véracité (sidq).
-   Sources : al-Bukhârî, Muslim, Ibn Hishâm, at-Tabarî, Ibn Sa'd, Ibn Kathîr. Dialogues « say » dramatisés. */
+   Sources : al-Bukhârî, Muslim, Ibn Hishâm, at-Tabarî, Ibn Sa'd, Ibn Kathîr. Dialogues « say » dramatisés.
+   v2 : la parole avant le fer — pourparlers (bords de la Saqîfa, Banû Rimth), haltes de prière, savoir, piliers.
+   Fiction signalée comme telle : Thâmir le courtier (hypocrite), les Banû Rimth et leur cheikh Dirghâm. */
 ISNAD.registerSaga({
   id: 'abubakr', order: 1,
   name: "Abû Bakr as-Siddîq", epithet: 'As-Siddîq', arabic: 'أبو بكر',
@@ -9,23 +11,25 @@ ISNAD.registerSaga({
   tagline: "Le jour où tout pouvait se défaire, un homme doux a dit le vrai.",
 
   intro: [
-    ['amb', 'silence'],
+    ['amb', 'silence'], ['mus', 'chaine'],
     ['title', "Abû Bakr as-Siddîq", "Saga I · Le Véridique"],
     ['nar', "Râwî, voici le premier maillon. 'Abdallâh ibn Abî Quhâfa, marchand d'étoffes de La Mecque, que tous appelaient Abû Bakr. Un homme doux, prompt aux larmes ; parmi les tout premiers à croire."],
     ['nar', "Il donna sa fortune pour racheter des croyants opprimés. Sur la route de l'Hégire, il fut le compagnon de la Grotte, quand ils n'étaient que deux."],
     ['nar', "Un matin, La Mecque se moqua : le Messager d'Allah ﷺ disait avoir été mené de nuit jusqu'à Jérusalem. On courut chez Abû Bakr, certain de le voir vaciller."],
     ['quote', "S'il l'a dit, il a dit vrai.", "Abû Bakr — rapporté par Ibn Hishâm, as-Sîra"],
     ['nar', "De ce jour on l'appela as-Siddîq : celui qui tient pour vrai ce qui est vrai, quoi qu'il en coûte. C'est cette Lumière que tu viens chercher."],
+    ['nar', "Mais retiens d'abord ceci, râwî : avant chaque combat, il parla. Aux Ansâr, aux tribus, aux envoyés. Le sabre ne vint qu'après la parole, jamais à sa place. Et la parole, il la prenait au sortir de la prière."],
     ['nar', "Trois idoles l'attendent dans la noosphère : le Déni, qui refuse la mort ; le Clan, qui déchire ; le Menteur, qui contrefait. La Chaîne s'ouvre au jour le plus sombre."]
   ],
 
   outro: [
-    ['amb', 'silence'],
+    ['amb', 'silence'], ['mus', 'deuil'],
     ['nar', "Deux ans, trois mois et quelques jours. En ce peu de temps : l'Arabie rassemblée, le Coran recueilli, les armées en marche vers l'Irak et la Syrie. Puis la fièvre le prend, à l'été de l'an 13."],
     ['nar', "Il consulte les Compagnons, puis dicte à 'Uthmân son dernier acte : il désigne 'Umar. À ceux qui redoutent la rudesse de 'Umar, il répond qu'elle s'adoucira sous la charge."],
     ['nar', "Il fait rendre au Trésor ce qu'il en a reçu pour vivre. 'Umar pleure : « Qu'Allah fasse miséricorde à Abû Bakr ; il a épuisé ceux qui viendront après lui. »"],
     ['quote', "Lavez ces deux vêtements que je porte, et ensevelissez-moi dedans. Le vivant a plus besoin du neuf que le mort.", "Abû Bakr, sur son lit de mort — al-Bukhârî, as-Sahîh"],
     ['nar', "Il s'éteint le 22 Jumâdâ al-Âkhira de l'an 13, à soixante-trois ans. On l'enterre de nuit, auprès du Messager d'Allah ﷺ, qu'il avait suivi en tout."],
+    ['mus', 'espoir'],
     ['nar', "Râwî, voici la première Lumière. La Véracité : ne pas adorer le messager à la place de Celui qui l'envoie ; ne rien retrancher du vrai par peur ; ne rien y contrefaire pour plaire."],
     ['sfx', 'light'],
     ['flash', '#ffe08a'],
@@ -266,7 +270,29 @@ ISNAD.registerSaga({
       text: "Égrégore de la contrefaçon, né autour de Musaylima. Il n'attaque pas le vrai de front : il l'imite, l'allège, et promet à chacun ce qu'il désire — un prophète de sa tribu, une religion sans exigence, « la moitié de la terre ». C'est un miroir tourné vers la foule. Seule la véracité le fend ; le savoir distingue l'original de la copie, et la patience refuse ses promesses rapides. Il change de nom à chaque époque." },
     { id: 'jam_quran', cat: 'Événement', title: "Le rassemblement du Coran",
       text: "Après le Yamâma, 'Umar craint que le Coran ne se perde avec ses récitateurs et presse Abû Bakr de le rassembler. D'abord hésitant devant un acte que le Messager ﷺ n'avait pas accompli, Abû Bakr s'y résout et en charge Zayd ibn Thâbit, ancien scribe de la Révélation. Zayd recueille les versets sur les tiges de palmier, les pierres plates et dans la mémoire des hommes, en exigeant des témoins. Les feuillets restent chez Abû Bakr, puis chez 'Umar.",
-      src: "al-Bukhârî, as-Sahîh (récit de Zayd ibn Thâbit)" }
+      src: "al-Bukhârî, as-Sahîh (récit de Zayd ibn Thâbit)" },
+    { id: 'lignees', cat: 'Parole', title: "La science des lignées",
+      text: "Abû Bakr passait pour le plus savant de Quraysh en généalogies : on rapporte que le Messager d'Allah ﷺ renvoya vers lui le poète Hassân ibn Thâbit pour s'en instruire. Il savait ainsi qu'al-Aws et al-Khazraj, les deux tribus des Ansâr, descendaient de deux frères, et s'étaient pourtant fait la guerre des générations durant, jusqu'à la journée de Bu'âth, peu avant l'Hégire. Ce n'est pas le sang qui les avait unis.",
+      src: "Muslim (récit de Hassân) ; Ibn Hishâm, as-Sîra" },
+    { id: 'imamat', cat: 'Événement', title: "« Ordonnez à Abû Bakr de diriger la prière »",
+      text: "Durant sa dernière maladie, le Messager d'Allah ﷺ ordonna qu'Abû Bakr dirige la prière à sa place, et le répéta quand on lui proposa un autre. À la Saqîfa, rapporte-t-on, 'Umar le rappela aux Ansâr : qui d'entre vous accepterait de passer devant celui que le Messager ﷺ a fait passer devant ? Ils répondirent : « Nous cherchons refuge auprès d'Allah de passer devant Abû Bakr. »",
+      src: "al-Bukhârî ; Muslim ; an-Nasâ'î et Ahmad (parole de 'Umar)" },
+    { id: 'priere_repos', cat: 'Parole', title: "« Donne-nous par elle le repos »",
+      text: "On rapporte que le Messager d'Allah ﷺ disait à Bilâl : « Ô Bilâl, appelle à la prière : donne-nous par elle le repos. » Dans la Chaîne, la prière n'est pas une formule qui répare. C'est la halte où celui qui porte une charge la dépose un instant devant plus grand que lui, et la reprend plus légère. Qui s'y arrête avant de parler aux hommes parle ensuite plus juste.",
+      src: "Abû Dâwûd, as-Sunan ; Ahmad, al-Musnad" },
+    { id: 'zakat_droit', cat: 'Parole', title: "« Prise à leurs riches, rendue à leurs pauvres »",
+      text: "En envoyant Mu'âdh ibn Jabal au Yémen, le Messager d'Allah ﷺ lui fit enseigner que la zakât est « prise à leurs riches et rendue à leurs pauvres ». Ce n'est donc ni un tribut versé à un homme, ni une faveur qu'un chef pourrait remettre : c'est le droit du pauvre sur le bien du riche, et il revient d'abord aux pauvres du lieu même où il est prélevé.",
+      src: "al-Bukhârî ; Muslim (envoi de Mu'âdh au Yémen)" },
+    { id: 'banu_rimth', cat: 'Événement', title: "Les Banû Rimth (clan de fiction)",
+      text: "Des délégations vinrent bien demander à Abû Bakr la remise de la zakât : cela est rapporté. Parmi elles, la Chaîne imagine un clan de pasteurs, les Banû Rimth, et son cheikh Dirghâm ; leur histoire est inventée. Elle montre ce que les chroniques laissent dans l'ombre : toutes les tribus ne se retournèrent pas, et plusieurs furent gardées par la parole. Ainsi 'Adî ibn Hâtim apporta-t-il à Médine la zakât des Tayy, quand tant d'autres la retenaient.",
+      src: "at-Tabarî, Târîkh ; Muslim (pour 'Adî ibn Hâtim)" },
+    { id: 'registre_courtier', cat: 'Noosphère', title: "Le feuillet du courtier (fiction)",
+      text: "Un compte oublié sur un étal du souk : trente chamelles « de zakât » rachetées aux Banû Rimth pour le prix de dix, « en attendant que le calife plie ». Pièce de fiction. Elle rappelle une règle simple de la Chaîne : avant de croire celui qui conseille, regarde ce qu'il gagne à son conseil." },
+    { id: 'thamir', cat: 'Noosphère', title: "Thâmir le courtier (personnage de fiction)",
+      text: "Thâmir ibn Ghânim, courtier du souk de Médine, n'a pas existé. La Chaîne l'invente pour donner un visage à l'hypocrisie (nifâq) : dire aux uns ce qu'ils veulent entendre, aux autres le contraire, et servir entre les deux son propre compte. Les sources parlent des hypocrites de Médine sans toujours les nommer ; aucun Compagnon, aucune tribu, aucune communauté n'est visé ici. L'hypocrite n'est pas l'étranger : il est du dedans." },
+    { id: 'najran', cat: 'Événement', title: "Le pacte de Najrân confirmé",
+      text: "Les chrétiens de Najrân, au sud de l'Arabie, avaient reçu du Messager d'Allah ﷺ un pacte écrit garantissant leurs personnes, leurs biens et leur culte. À sa mort, ils vinrent demander ce que valait encore l'écrit. On rapporte qu'Abû Bakr leur en fit rédiger la confirmation, dans les mêmes termes. Un pacte ne meurt pas avec celui qui l'a donné : il oblige ceux qui lui succèdent.",
+      src: "at-Tabarî, Târîkh ; Abû Yûsuf, Kitâb al-Kharâj" }
   ],
 
   /* ───────────────────────────── CHAPITRES ───────────────────────────── */
@@ -291,7 +317,17 @@ ISNAD.registerSaga({
         { id: 'hubab', name: "Al-Hubâb ibn al-Mundhir", at: ['halle', -1, 1], look: { kind: 'compagnon', robe: '#5b6b4f', head: '#ece4d0', aura: '#bfe6a8' },
           talk: [['say', 'hubab', "Nous avons ouvert nos maisons et nos palmeraies. Qui veillera sur les Ansâr, à présent ?"]] },
         { id: 'bashir', name: "Bashîr ibn Sa'd", at: ['halle', 1, 1], look: { kind: 'compagnon', robe: '#6a5f4a', head: '#efe7d4', aura: '#ffe9a8' },
-          talk: [['say', 'bashir', "Nous n'avons pas secouru cette religion pour en tirer une part de ce monde. Ne l'oublions pas aujourd'hui."]] }
+          talk: [['say', 'bashir', "Nous n'avons pas secouru cette religion pour en tirer une part de ce monde. Ne l'oublions pas aujourd'hui."]] },
+        { id: 'fidele', name: 'Un fidèle', at: ['priere', -1, 1], look: { kind: 'homme', robe: '#7a6f5a', head: '#e9e1cf' },
+          talk: [
+            ['say', 'fidele', "L'heure de la prière ne s'arrête pas pour le deuil. Qui doit parler aux hommes, aujourd'hui, ferait bien de s'adresser d'abord à son Seigneur."],
+            ['codex', 'priere_repos'] ] },
+        { id: 'maitre', name: "Maître d'école", at: ['ecole', 0, 1], look: { kind: 'savant', robe: '#e6dfcc', head: '#f2ecdc' },
+          talk: [
+            ['say', 'maitre', "Abû Bakr… Les enfants récitent les lignées que tu m'as apprises. Al-Aws et al-Khazraj : deux frères, et tant de sang entre leurs fils, jusqu'à Bu'âth. Ce n'est pas la lignée qui a fait d'eux des frères."],
+            ['codex', 'lignees'] ] },
+        { id: 'thamir', name: 'Thâmir le courtier', at: ['halle', 3, 3], look: { kind: 'marchand', robe: '#7a4f3a', head: '#d9c9a8', cloak: '#4a2f22' },
+          talk: [['say', 'thamir', "Abû Bakr ! Quel jour, quel jour… Hâte-toi sous l'auvent : les Ansâr n'attendent que toi, et ils te sont tout acquis. Je le leur disais à l'instant."]] }
       ],
       foes: [
         { id: 'f_deni', map: 'noos', at: 'coeur', group: ['deni', 'murmure'], bg: 'noos' },
@@ -300,11 +336,12 @@ ISNAD.registerSaga({
       ],
       chests: [
         { at: ['souk', 1, 1], item: 'dattes', n: 2 },
+        { at: ['priere', 1, 1], codex: 'imamat' },
         { map: 'noos', at: 'faille', item: 'musc', n: 1 }
       ],
       intro: [
         ['title', "Le Jour le plus sombre", "Lundi 12 Rabî' al-Awwal, an 11 de l'Hégire"],
-        ['amb', 'foule'],
+        ['amb', 'foule'], ['mus', 'deuil'],
         ['nar', "Médine, juin 632. Ce matin encore, on croyait la fièvre du Messager d'Allah ﷺ en recul, et les cœurs s'étaient rassurés. Abû Bakr était rentré chez lui, à as-Sunh, aux abords de la ville."],
         ['nar', "Puis un cavalier est venu, sans pouvoir achever sa phrase. Abû Bakr a sellé sa monture. Il entre dans Médine par le sud."],
         ['codex', 'abubakr_bio']
@@ -363,9 +400,11 @@ ISNAD.registerSaga({
           ['say', 'messager', "Abû Bakr ! 'Umar ! Les Ansâr sont réunis sous l'auvent des Banû Sâ'ida, autour de Sa'd ibn 'Ubâda. Ils parlent de choisir un chef parmi eux."],
           ['say', 'umar', "Allons trouver nos frères les Ansâr."],
           ['say', 'abuubayda', "Je viens avec vous."],
+          ['nar', "Râwî, avant de parler à des hommes, apprends d'où ils viennent : près de la mosquée, un maître d'école enseigne les lignées. Et l'heure de la prière approche ; qui s'y arrête parle ensuite plus juste."],
           ['hide', 'messager']
         ] },
         { text: "Gagner la Saqîfa des Banû Sâ'ida", goto: 'halle', then: [
+          ['hide', 'thamir'],
           ['nar', "En chemin, deux hommes de bien parmi les Ansâr leur conseillent de régler l'affaire entre Émigrés. Ils poursuivent pourtant : c'est en face que l'on parle à des frères."],
           ['nar', "Sous l'auvent, les Ansâr sont assemblés. Eux qui ont tout donné — leurs maisons, leurs palmeraies, leur sang — craignent ce que demain fera d'eux."],
           ['say', 'Un orateur des Ansâr', "Nous sommes les Auxiliaires d'Allah et le bataillon de l'islam. Et vous, Émigrés, vous êtes venus à nous comme une poignée d'hommes."],
@@ -374,9 +413,47 @@ ISNAD.registerSaga({
           ['say', 'abubakr', "Doucement, 'Umar."],
           ['nar', "'Umar dira plus tard : « Il ne laissa pas un mot de ce que j'avais préparé sans le dire, et mieux que moi. » Abû Bakr loue les Ansâr, et ne retranche rien de leur mérite."],
           ['say', 'abubakr', "Tout le bien que vous dites de vous, vous en êtes dignes. Mais les Arabes ne reconnaîtront cette charge qu'à ce clan de Quraysh. Ne déchirons pas ce qui a été uni."],
-          ['nar', "Les voix montent. Dans l'envers de l'auvent, deux mots enflent et se font face : « nous », « vous ». Ils se nouent en un faisceau d'étendards. La plus vieille idole des Arabes se réveille."],
+          ['nar', "Râwî : les sources rapportent ce qui fut dit au centre de l'auvent. Elles se taisent sur ses bords, où des jeunes gens échauffés se pressent. Là, les mots sont à toi ; s'ils sont mauvais, ils seront de toi, non de lui."],
+          ['mus', 'conseil'],
+          ['parley', {
+            with: "Un jeune homme des Ansâr",
+            title: "Les bords de l'auvent",
+            intro: "Ils ont tout donné et craignent d'être oubliés demain. Ils veulent une garantie, pas une leçon.",
+            goal: 7,
+            rounds: [
+              { say: "Nous avons ouvert nos maisons et versé notre sang. Et demain ? Quraysh commandera, et l'on nous dira merci.",
+                opts: [
+                  { t: "Reconnaître tout ce que les Ansâr ont donné, sans rien en retrancher.", el: 'sidq', v: 2, r: "Du moins, tu ne nous marchandes pas notre part. Continue." },
+                  { t: "Rappeler que sans les Émigrés, il n'y aurait rien eu à secourir.", el: 'shajaa', v: -1, r: "Voilà. Déjà, on nous fait la leçon sous notre propre toit." },
+                  { t: "Promettre aux Ansâr la moitié des charges et des revenus.", el: 'rahma', v: 0, r: "Tu promets beaucoup, et bien vite. Qui tiendra ta promesse quand tu ne seras plus là ?" } ] },
+              { say: "Un émir parmi nous, un émir parmi vous : voilà qui serait juste.",
+                opts: [
+                  { t: "Deux émirs, ce sont deux étendards ; et deux étendards, demain, deux communautés.", el: 'adl', v: 2, r: "… Je n'avais pas regardé si loin. Deux sabres dans un même fourreau, cela ne s'est jamais vu." },
+                  { t: "Remonter les lignées : Aws et Khazraj, fils de deux frères, se sont fait la guerre jusqu'à Bu'âth. Ce n'est pas le sang qui vous a unis.", el: 'ilm', v: 3, need: 'lignees', r: "Bu'âth… Mon oncle y est resté. Tu dis vrai : ce n'est pas le sang qui nous a rendus frères." },
+                  { t: "Trancher : la décision revient aux premiers Émigrés, et à eux seuls.", el: 'shajaa', v: -2, r: "Alors pourquoi être venus jusqu'ici ? Pour nous l'annoncer ?" } ] },
+              { say: "On nous a soufflé que vous veniez prendre, et non demander. Un homme du souk le jurait tout à l'heure.",
+                opts: [
+                  { t: "Demander le nom de celui qui souffle, et pourquoi il ne parle pas à voix haute.", el: 'sidq', v: 2, r: "C'est vrai qu'il parlait bas, et qu'il a disparu quand vous êtes entrés… Thâmir, le courtier." },
+                  { t: "Laisser passer : un jour pareil, les gens disent n'importe quoi.", el: 'sabr', v: 0, r: "Peut-être. Mais sa parole a déjà fait le tour de l'auvent." },
+                  { t: "Jurer que jamais un Émigré n'a convoité cette charge.", el: 'sidq', v: -1, r: "Jamais ? Ne jure pas pour tous les hommes : tu n'en connais pas le fond." } ] },
+              { say: "Admettons. Que nous restera-t-il, à nous ?",
+                opts: [
+                  { t: "« Nous serons les émirs, et vous les vizirs » : rien ne se décidera sans vous.", el: 'adl', v: 2, r: "Les vizirs… Qu'on ne tranche rien sans nous consulter, et nous tiendrons parole." },
+                  { t: "Laisser 'Umar rappeler qui le Messager d'Allah ﷺ a fait passer devant pour la prière.", el: 'sidq', v: 3, need: 'imamat', r: "Nous cherchons refuge auprès d'Allah de passer devant celui-là." },
+                  { t: "Rappeler pourquoi ils ont secouru cette religion : non pour une part de ce monde.", el: 'rahma', v: 1, r: "Bashîr le disait à l'instant. C'est dur à entendre, et c'est vrai." },
+                  { t: "Leur laisser entendre qu'ils n'ont guère le choix.", el: 'shajaa', v: -2, r: "On a toujours le choix. C'est même pour cela que nous sommes réunis." } ] }
+            ],
+            win: [
+              ['flag', 'saqifa_unie'], ['pillar', 'lien', 1],
+              ['nar', "Les bords de l'auvent se taisent et se tournent vers le centre. Ceux qui grondaient tout à l'heure font maintenant signe aux autres d'écouter."] ],
+            lose: [
+              ['pillar', 'lien', -1],
+              ['nar', "Le jeune homme se détourne. Autour de lui le murmure reprend, gagne de proche en proche, et couvre un instant la voix d'Abû Bakr. La parole n'a pas suffi."] ]
+          }],
+          ['nar', "Mais une idole ne se rend pas à un argument. Dans l'envers de l'auvent, deux mots enflent et se font face : « nous », « vous ». Ils se nouent en un faisceau d'étendards. La plus vieille idole des Arabes se réveille."],
           ['heal'],
-          ['battle', { group: ['clan', 'mot_clan', 'mot_clan'], bg: 'ville', boss: true, intro: "Al-'Asabiyya : « Avant d'être croyants, vous étiez des tribus. Vous le redeviendrez. »" }],
+          ['battle', { group: ['clan', 'mot_clan', 'mot_clan'], bg: 'ville', boss: true, intro: "Al-'Asabiyya : « Avant d'être croyants, vous étiez des tribus. Vous le redeviendrez. »",
+            allies: [{ flag: 'saqifa_unie', name: 'Les Ansâr et les Muhâjirûn réunis' }] }],
           ['nar', "Le faisceau se dénoue. Sous l'auvent, le tumulte retombe d'un coup, comme un vent qui tourne. Il reste des hommes, des frères, et une question."],
           ['choice', "Abû Bakr tient la main de 'Umar et celle d'Abû 'Ubayda. Que propose-t-il à l'assemblée ?", [
             { t: "Tendre sa propre main : nul n'est plus digne que lui de cette charge.", r: [
@@ -399,13 +476,18 @@ ISNAD.registerSaga({
           ['nar', "Le lendemain. La mosquée est pleine : tous viennent prêter allégeance. Abû Bakr n'a pas dormi. Il n'a jamais voulu de cette charge, et il sait ce qu'elle pèse."]
         ] },
         { text: "Prendre la parole devant les croyants", goto: 'mosquee_cour', then: [
+          ['nar', "L'aube. Comme chaque jour depuis que le Messager d'Allah ﷺ l'avait ordonné durant sa maladie, c'est lui qui s'avance pour diriger la prière. Les rangs se serrent derrière lui, épaule contre épaule."],
+          ['pray', 'fajr'],
+          ['codex', 'imamat'],
           ['quote', "Ô gens ! J'ai été placé à votre tête, et je ne suis pas le meilleur d'entre vous. Si j'agis bien, aidez-moi ; si j'agis mal, redressez-moi. La véracité est un dépôt, et le mensonge une trahison.", "Abû Bakr, discours d'investiture — Ibn Hishâm, as-Sîra"],
           ['quote', "Le faible parmi vous est fort auprès de moi, jusqu'à ce que je lui rende son droit. Le fort parmi vous est faible auprès de moi, jusqu'à ce que je lui reprenne le droit d'autrui.", "Abû Bakr, discours d'investiture — Ibn Hishâm, as-Sîra"],
           ['quote', "Obéissez-moi tant que j'obéis à Allah et à Son Messager. Si je leur désobéis, vous ne me devez plus obéissance.", "Abû Bakr, discours d'investiture — Ibn Hishâm, as-Sîra"],
-          ['codex', 'investiture']
+          ['codex', 'investiture'],
+          ['pillar', 'justice', 1], ['mus', 'espoir']
         ] }
       ],
       outro: [
+        ['nar', "Un peuple n'est pas un tas de pierres, râwî : c'est un temple, et ce qui le tient debout n'est aucune de ses pierres. Ce jour-là, on en retira la clef de voûte, et il tint. C'est qu'on l'avait bâti autour d'autre chose qu'un homme."],
         ['nar', "Râwî, retiens ceci : le premier acte du premier successeur fut de dire qu'il pouvait se tromper. Les idoles, elles, ne demandent jamais qu'on les redresse."],
         ['nar', "Mais hors de Médine, les tribus apprennent la nouvelle. Et le désert se met à murmurer."]
       ]
@@ -422,14 +504,26 @@ ISNAD.registerSaga({
         { id: 'abuubayda', name: "Abû 'Ubayda", hero: 'abuubayda', at: ['souk', 1, 0],
           talk: [['say', 'abuubayda', "Paix sur toi, successeur du Messager d'Allah."]] },
         { id: 'marchand', name: 'Vieux marchand', at: ['souk', 2, 2], look: { kind: 'ancien', robe: '#7d6a4f', head: '#eee6d2' },
-          talk: [['say', 'marchand', "Hier on lui prêtait allégeance ; ce soir il voulait encore vendre ses étoffes lui-même. Dis-moi quel roi fait cela."]] },
+          talk: [
+            ['say', 'marchand', "Hier on lui prêtait allégeance ; ce soir il voulait encore vendre ses étoffes lui-même. Dis-moi quel roi fait cela."],
+            ['say', 'marchand', "Et prends garde aux balances trop bien huilées. Il y a par ici un courtier dont les comptes traînent sur l'étal ; un feuillet s'égare vite."] ] },
         { id: 'garde', name: 'Garde des passes', at: ['porte_sud', 1, -1], look: { kind: 'soldat', robe: '#5a4632', head: '#d8cfc0' },
           talk: [['say', 'garde', "'Alî, az-Zubayr, Talha et Ibn Mas'ûd tiennent les passes de la ville. Médine ne dort plus que d'un œil."]] },
         { id: 'usama', name: "Usâma ibn Zayd", at: ['porte_nord', 0, -1], look: { kind: 'compagnon', robe: '#4f5f73', head: '#ece6d6', aura: '#cfe4ff' },
           talk: [['say', 'usama', "L'armée est prête. Nous n'attendons qu'un mot du successeur du Messager d'Allah."]] },
         { id: 'soldat', name: "Soldat d'Usâma", at: ['porte_nord', 2, 0], look: { kind: 'soldat', robe: '#5c5140', head: '#ddd3c0' },
           talk: [['say', 'soldat', "Notre émir n'a pas vingt ans. Mais c'est le Messager d'Allah ﷺ qui a noué son étendard. Qui oserait le dénouer ?"]] },
-        { id: 'delegue', name: 'Délégué des tribus', at: ['mosquee_porte', 1, 2], hidden: true, look: { kind: 'homme', robe: '#6e5540', head: '#cfc2a8' } }
+        { id: 'delegue', name: 'Délégué des tribus', at: ['mosquee_porte', 1, 2], hidden: true, look: { kind: 'homme', robe: '#6e5540', head: '#cfc2a8' } },
+        { id: 'recitateur', name: 'Un récitateur', at: ['ecole', 0, 1], look: { kind: 'savant', robe: '#e6dfcc', head: '#f2ecdc' },
+          talk: [
+            ['say', 'recitateur', "Quand le Messager d'Allah ﷺ envoya Mu'âdh au Yémen, il lui fit dire aux gens que la zakât est prise à leurs riches et rendue à leurs pauvres. Retiens le mot : *leurs* pauvres. Ce n'est pas un tribut qu'on emporte."],
+            ['codex', 'zakat_droit'] ] },
+        { id: 'priant', name: 'Un fidèle', at: ['priere', -1, 1], look: { kind: 'ancien', robe: '#7a6f5a', head: '#efe9dc' },
+          talk: [['say', 'priant', "Le pays se retourne, et lui ne change rien à ses heures : la prière, puis les gens. Je crois que c'est pour cela qu'on le suit."]] },
+        { id: 'thamir', name: 'Thâmir le courtier', at: ['souk', -2, 2], look: { kind: 'marchand', robe: '#7a4f3a', head: '#d9c9a8', cloak: '#4a2f22' },
+          talk: [['say', 'thamir', "Successeur du Messager d'Allah ! Tout Médine loue ta fermeté. Si quelque délégation te cause du souci, envoie-la-moi : je sais parler aux gens des tribus."]] },
+        { id: 'dirgham', name: 'Dirghâm, cheikh des Banû Rimth', at: ['puits', -1, 1], hidden: true, look: { kind: 'homme', robe: '#5f4a36', head: '#c9b998', cloak: '#3a2c20' },
+          talk: [['say', 'dirgham', "Mes gens m'attendent, et je ne sais pas encore ce que je leur dirai."]] }
       ],
       foes: [
         { id: 'f_d1', map: 'desert', at: 'dunes', group: ['reniement', 'reniement', 'mot_clan'], bg: 'desert' },
@@ -438,6 +532,7 @@ ISNAD.registerSaga({
       ],
       chests: [
         { at: ['puits', 1, 0], item: 'eau', n: 1 },
+        { at: ['souk', 3, -1], codex: 'registre_courtier' },
         { map: 'desert', at: ['oasis', 1, 1], item: 'pain', n: 2 },
         { map: 'noos', at: 'faille', item: 'siwak', n: 1 }
       ],
@@ -500,7 +595,69 @@ ISNAD.registerSaga({
               ['quote', "Par Allah, je vis qu'Allah avait ouvert la poitrine d'Abû Bakr à cette décision, et je sus que c'était la vérité.", "'Umar ibn al-Khattâb — al-Bukhârî et Muslim"] ] }
           ]],
           ['hide', 'delegue'],
-          ['nar', "Les délégués repartent. Ils ont compté, en passant, le peu d'hommes restés dans la ville. Abû Bakr poste des gardes aux passes de Médine et rassemble les gens dans la mosquée."],
+          ['nar', "Les délégués repartent. Ils ont compté, en passant, le peu d'hommes restés dans la ville."],
+          ['nar', "Un seul s'attarde près du puits, la bride de son chameau à la main. Les chroniques ne nomment pas tous les clans venus ce soir-là ; celui-ci, la Chaîne l'appelle les Banû Rimth."],
+          ['show', 'dirgham'], ['codex', 'banu_rimth'],
+          ['nar', "Le soleil touche les palmiers ; l'heure du Maghrib est proche. Qui veut parler juste aux hommes s'adresse d'abord à son Seigneur."]
+        ] },
+        { text: "Parler au cheikh des Banû Rimth, près du puits", talk: 'dirgham', then: [
+          ['nar', "Râwî : le principe, le calife l'a dit, et il n'en retranchera rien. Mais pour ce cheikh-là, les sources n'ont gardé aucun mot. Ils sont à toi ; s'ils sont mauvais, ils seront de toi, non de lui."],
+          ['mus', 'conseil'],
+          ['parley', {
+            with: 'dirgham',
+            title: "Le cheikh des Banû Rimth",
+            intro: "L'année fut maigre. Il ne renie rien : il craint de rentrer les mains vides devant les siens, et quelqu'un lui a juré que le calife plierait.",
+            goal: 7,
+            rounds: [
+              { say: "Mes chamelles ont maigri, et mes gens comptent chaque tête. Si je reviens en disant : « Il a tout pris », ils ne me suivront plus. Dispense-nous cette année.",
+                opts: [
+                  { t: "La zakât n'est pas à moi pour que j'en fasse remise : elle est le droit de vos propres pauvres.", el: 'adl', v: 2, r: "Nos pauvres… Il est vrai que les miens ne mangent pas tous à leur faim." },
+                  { t: "Citer la règle : « prise à leurs riches, rendue à leurs pauvres ». Elle reste d'abord chez vous.", el: 'ilm', v: 3, need: 'zakat_droit', r: "Rendue à nos pauvres ? On m'avait dit qu'elle partait toute à Médine. Cela, je peux le répéter aux miens." },
+                  { t: "Lui rappeler ce qu'il en coûte de se dresser contre Médine.", el: 'shajaa', v: -1, r: "Tu me menaces, et ton armée vient de partir pour le nord. J'ai des yeux." } ] },
+              { say: "On m'a assuré que tu céderais. Un homme de ta ville, bien mis, me l'a juré : « Tenez bon, il n'a plus de soldats. »",
+                opts: [
+                  { t: "Dire vrai : oui, l'armée est partie ; et non, cela ne change rien à ce qui est dû.", el: 'sidq', v: 2, r: "Tu ne me caches pas ta faiblesse. C'est étrange : cela me rassure plus qu'une vantardise." },
+                  { t: "Montrer le feuillet : celui qui te conseille a déjà racheté à vil prix vos chamelles de zakât.", el: 'ilm', v: 3, need: 'registre_courtier', r: "Thâmir… Trente bêtes pour le prix de dix, « en attendant que le calife plie ». Par Allah, c'est lui qui nous tondait." },
+                  { t: "Prétendre qu'une seconde armée campe derrière la colline.", el: 'shajaa', v: -2, r: "Mes éclaireurs reviennent de la colline. Il n'y a là que des chèvres." } ] },
+              { say: "Soit. Mais donne-moi quelque chose à rapporter. Un homme ne revient pas vers sa tribu avec une défaite.",
+                opts: [
+                  { t: "Proposer un pacte : la zakât est versée, et les Banû Rimth gardent la piste de Dhû l-Qassa.", el: 'adl', v: 2, r: "Garder la piste… Voilà une charge, et non une aumône. Mes cavaliers savent faire cela." },
+                  { t: "Accorder un délai pour les bêtes malades : un délai, non une remise.", el: 'rahma', v: 1, r: "Un délai, non une remise… C'est peu. Mais c'est honnête." },
+                  { t: "Promettre que l'an prochain, on fermera les yeux.", el: 'rahma', v: -1, r: "Alors pourquoi pas cette année ? Tu vois : toi-même, tu n'y crois pas." } ] },
+              { say: "Et si les autres clans apprennent que les Banû Rimth ont payé, quand eux refusaient ?",
+                opts: [
+                  { t: "Alors ils sauront aussi qui a tenu sa parole quand tout chancelait.", el: 'sidq', v: 2, r: "Qu'on dise cela de nous. Je préfère ce nom à celui qu'ils se font." },
+                  { t: "Se taire, et lui laisser le temps de peser.", el: 'sabr', v: 1, r: "… Tu ne me presses pas. Les autres pressaient." },
+                  { t: "Le flatter : un cheikh tel que lui n'a que faire de l'avis des autres.", el: 'shajaa', v: -1, r: "Garde ton miel. On m'en a déjà servi ce soir." } ] }
+            ],
+            win: [
+              ['flag', 'rimth_allies'], ['pillar', 'lien', 1],
+              ['say', 'dirgham', "Écris-le : les Banû Rimth versent leur dû, et leurs cavaliers tiennent la piste de Dhû l-Qassa. Que mes fils l'apprennent de ma bouche plutôt que de celle d'un courtier."],
+              ['nar', "Il repart avant la nuit. Ce soir-là, sur la piste de l'est, des feux s'allument qui ne sont pas ennemis."] ],
+            lose: [
+              ['pillar', 'lien', -1],
+              ['say', 'dirgham', "Je ne peux pas rapporter cela aux miens. Je ne lèverai pas la main contre Médine ; mais ne compte pas sur mes cavaliers."],
+              ['nar', "Il s'éloigne sans se retourner. La parole n'a pas suffi : cette nuit, la piste de l'est restera sans gardiens."] ]
+          }],
+          ['hide', 'dirgham'],
+          ['nar', "Reste une question : qui donc avait juré au cheikh que le calife plierait ? Un homme de la ville, bien mis. Au souk, on sait qui parle aux gens des tribus."]
+        ] },
+        { text: "Trouver Thâmir le courtier, au souk", talk: 'thamir', then: [
+          ['codex', 'thamir'],
+          ['say', 'thamir', "Le cheikh des Banû Rimth ? Un homme rude, mais je l'ai préparé de mon mieux à t'entendre. J'espère que mes pauvres paroles t'auront servi."],
+          ['ask', "Thâmir sourit, les mains ouvertes. Que faire ?", [
+            { t: "Poser devant lui le feuillet de ses comptes.", need: 'registre_courtier', r: [
+              ['say', 'thamir', "Ce… ce n'est qu'une avance ! J'ai rendu service à ces pauvres gens. Trente bêtes, payées comptant…"],
+              ['nar', "Le feuillet dit le reste : trente bêtes payées le prix de dix, et la promesse, répétée de tente en tente, que le calife plierait."],
+              ['nar', "Abû Bakr ne hausse pas la voix. Thâmir rendra les bêtes au prix qu'il en a donné, et ne tiendra plus la balance du souk. Le fort est faible, ici, jusqu'à ce qu'il ait rendu le droit d'autrui."],
+              ['flag', 'thamir_demasque'], ['pillar', 'justice', 1], ['hide', 'thamir'] ] },
+            { t: "L'interroger, sans preuve en main.", r: [
+              ['say', 'thamir', "Moi ? J'ai seulement tenu compagnie à ces gens, par égard pour toi. On m'aura mal compris : le désert déforme tout."],
+              ['nar', "Sa parole glisse comme l'huile sur l'eau. Sans preuve, on ne condamne pas : cela aussi est justice. Mais il sait, désormais, qu'on le regarde."] ] },
+            { t: "Le laisser : la nuit presse, et Médine d'abord.", r: [
+              ['nar', "Thâmir s'incline très bas. Il s'inclinait déjà, tout à l'heure, devant le cheikh des Banû Rimth."] ] }
+          ]],
+          ['nar', "Abû Bakr poste des gardes aux passes de Médine et rassemble les gens dans la mosquée."],
           ['say', 'abubakr', "Le pays s'est retourné autour de vous, et leurs envoyés ont vu votre petit nombre. Vous ne savez s'ils viendront de nuit ou de jour. Tenez-vous prêts."]
         ] },
         { auto: true, then: [
@@ -514,8 +671,15 @@ ISNAD.registerSaga({
         ] },
         { text: "Poursuivre jusqu'aux rochers de Dhû l-Qassa", goto: 'rochers', then: [
           ['say', 'umar', "Ils se rassemblent derrière les rochers. Ce ne sont plus des murmures : c'est une volonté."],
-          ['battle', { group: ['reniement', 'reniement', 'reniement'], bg: 'desert', intro: "« Rentrons chez nos pères. » La nuée fond sur vous." }],
-          ['nar', "À l'aube, la piste est libre. Mais le refus lui-même n'est pas brisé : il a une source, et elle n'est pas faite de sable."]
+          ['if', 'rimth_allies', [
+            ['battle', { group: ['reniement', 'reniement', 'reniement'], bg: 'desert', intro: "« Rentrons chez nos pères. » La nuée fond sur vous ; derrière elle, des cavaliers amis ferment la piste.",
+              allies: [{ flag: 'rimth_allies', name: 'Les cavaliers des Banû Rimth' }] }]
+          ], [
+            ['battle', { group: ['reniement', 'reniement', 'reniement', 'mot_clan'], bg: 'desert', intro: "« Rentrons chez nos pères. » La nuée fond sur vous. Nul ne garde la piste de l'est : un mot d'ordre s'y est joint." }]
+          ]],
+          ['nar', "À l'aube, la piste est libre. Mais le refus lui-même n'est pas brisé : il a une source, et elle n'est pas faite de sable."],
+          ['nar', "Ils prient l'aube sur le sable encore froid, les montures entravées derrière eux."],
+          ['pray', 'fajr']
         ] },
         { text: "Trouver la source du refus, dans les ruines", goto: 'ruines', then: [
           ['nar', "Entre les pierres d'un vieux fortin, l'air tremble. Ici l'on a compté, pesé, soustrait : « La prière, soit. Mais ma part reste à moi. »"],
@@ -525,13 +689,16 @@ ISNAD.registerSaga({
           ['nar', "La noosphère du refus. Au loin, une tour de pièces. Pas une ne tombe."]
         ] },
         { text: "Noosphère : atteindre l'Avare du dû", goto: 'coeur', then: [
-          ['battle', { group: ['avare', 'mot_clan', 'mot_clan'], bg: 'noos', boss: true, intro: "L'Avare du dû : « Je prie. Je jeûne. Que veut-on de plus ? Ce qui est à moi est à moi. »" }],
+          ['battle', { group: ['avare', 'mot_clan', 'mot_clan'], bg: 'noos', boss: true, intro: "L'Avare du dû : « Je prie. Je jeûne. Que veut-on de plus ? Ce qui est à moi est à moi. »",
+            allies: [{ flag: 'rimth_allies', name: 'Le dû versé par les Banû Rimth' }] }],
           ['sfx', 'break'], ['flash', '#ffe08a'],
           ['nar', "La tour s'effondre en pluie claire. Ce que l'Avare retenait retourne à ceux à qui c'était dû."],
           ['map', 'medine', 'porte_nord', { time: 'dawn' }],
           ['amb', 'vent'], ['sfx', 'duff'],
           ['nar', "Quarante jours ont passé ; d'autres disent soixante-dix. À la porte nord, une poussière : l'armée d'Usâma revient, sauve et chargée."],
-          ['nar', "Les tribus qui l'avaient vue passer s'étaient dit : « Si ces gens étaient faibles, ils n'auraient pas envoyé pareille armée. » Une parole tenue avait gardé Médine mieux qu'un rempart."]
+          ['nar', "Les tribus qui l'avaient vue passer s'étaient dit : « Si ces gens étaient faibles, ils n'auraient pas envoyé pareille armée. » Une parole tenue avait gardé Médine mieux qu'un rempart."],
+          ['mus', 'espoir'],
+          ['nar', "Car une ville ne tient pas par ses murs, râwî, mais par ce qui, en chacun, monte la garde. Une parole tenue est une sentinelle qui ne dort pas."]
         ] }
       ],
       outro: [
@@ -557,7 +724,13 @@ ISNAD.registerSaga({
         { id: 'veilleur', name: 'Veilleur', map: 'medine', at: 'place', look: { kind: 'soldat', robe: '#5a4632', head: '#d8cfc0' },
           talk: [['say', 'veilleur', "Pas un cavalier depuis dix jours. Le calife passe ses nuits à la mosquée."]] },
         { id: 'courrier', name: 'Courrier du Yamâma', map: 'medine', at: ['mosquee_porte', 0, 1], hidden: true, look: { kind: 'soldat', robe: '#6a5a44', head: '#d2c7b0' } },
-        { id: 'zaydthabit', name: "Zayd ibn Thâbit", map: 'medine', at: ['mosquee_cour', 1, 0], hidden: true, look: { kind: 'compagnon', robe: '#5f6f84', head: '#f0eadb', aura: '#d9c2ff' } }
+        { id: 'zaydthabit', name: "Zayd ibn Thâbit", map: 'medine', at: ['mosquee_cour', 1, 0], hidden: true, look: { kind: 'compagnon', robe: '#5f6f84', head: '#f0eadb', aura: '#d9c2ff' } },
+        { id: 'najran', name: 'Envoyé de Najrân', map: 'medine', at: ['place', -2, 1], look: { kind: 'moine', robe: '#4a3f4f', head: '#3a3040' },
+          talk: [['say', 'najran', "J'attends depuis le matin. On m'a dit que ton calife reçoit le faible avant le fort ; je verrai bien."]] },
+        { id: 'thamir', name: 'Thâmir le courtier', map: 'medine', at: ['souk', -1, 1], hidden: true, look: { kind: 'marchand', robe: '#7a4f3a', head: '#d9c9a8', cloak: '#4a2f22' },
+          talk: [['say', 'thamir', "On dit que les lignes ont plié, là-bas… Je ne fais que répéter, bien sûr. Je prie pour eux, comme tout le monde."]] },
+        { id: 'veilleur_priere', name: 'Un fidèle', map: 'medine', at: ['priere', -1, 1], look: { kind: 'ancien', robe: '#7a6f5a', head: '#efe9dc' },
+          talk: [['say', 'veilleur_priere', "Il ne peut pas tenir un sabre à leur côté. Alors il tient ce qu'il peut tenir : la nuit, debout."]] }
       ],
       foes: [
         { id: 'f_k1', map: 'noos', at: 'noeud1', group: ['fausse_rime', 'fausse_rime', 'echo'], bg: 'noos' },
@@ -597,9 +770,28 @@ ISNAD.registerSaga({
         { auto: true, then: [
           ['map', 'medine', 'porte_nord', { time: 'night' }],
           ['amb', 'nuit'],
-          ['nar', "Médine, des semaines plus tard. Tulayha est défait ; les colonnes ont convergé vers le Yamâma. Depuis, plus de nouvelles. Le calife ne dort guère."]
+          ['nar', "Médine, des semaines plus tard. Tulayha est défait ; les colonnes ont convergé vers le Yamâma. Depuis, plus de nouvelles. Le calife ne dort guère."],
+          ['if', 'thamir_demasque', [
+            ['nar', "Au souk, nul ne colporte de fausses nouvelles ce soir : la balance a changé de mains, et les langues avec elle."]
+          ], [
+            ['show', 'thamir'],
+            ['nar', "Au souk, une voix basse court d'étal en étal : « Les lignes ont plié… et si le calife s'était trompé ? » Nul ne sait d'où elle part. Elle fait son chemin."],
+            ['pillar', 'lien', -1]
+          ]]
+        ] },
+        { text: "Recevoir l'envoyé de Najrân, sur la place", talk: 'najran', then: [
+          ['mus', 'conseil'],
+          ['nar', "Entre deux courriers, la charge continue. Un homme en habit sombre attend depuis le matin, un rouleau contre la poitrine. Il vient de Najrân, au sud, où vivent des chrétiens sous pacte."],
+          ['say', 'najran', "Votre Prophète nous avait écrit une garantie : nos personnes, nos biens, nos églises. Il n'est plus, et les tribus se déchirent. Je viens savoir ce que vaut encore son écrit."],
+          ['say', 'abubakr', "Ce qu'il a donné, je n'ai pas qualité pour le reprendre. Déroule ton écrit : nous le récrirons mot pour mot, et j'y mettrai mon nom sous le sien."],
+          ['nar', "On rapporte qu'il leur fit rédiger la confirmation du pacte, dans les termes mêmes du Messager d'Allah ﷺ : protection pour leurs personnes, leurs biens et leur culte."],
+          ['say', 'najran', "Je croyais venir marchander. Je repars avec plus que je n'apportais : la preuve qu'une parole, chez vous, survit à celui qui l'a donnée."],
+          ['pillar', 'lien', 1], ['pillar', 'justice', 1], ['codex', 'najran'],
+          ['hide', 'najran']
         ] },
         { text: "Veiller dans la cour de la mosquée", goto: 'mosquee_cour', then: [
+          ['nar', "Celui qui veille pour les autres n'a que deux provisions : sa prière et son silence. Le reste, il l'a déjà donné."],
+          ['pray', 'isha'],
           ['nar', "Râwî, la Chaîne te montre ce que Médine ignore encore. À 'Aqrabâ', les Banû Hanîfa sont des dizaines de milliers. Les lignes des croyants ont plié jusqu'à la tente de Khâlid."],
           ['nar', "Khâlid crie : « Distinguez-vous, que l'on voie d'où vient la brèche ! » Abû Hudhayfa appelle : « Gens du Coran, parez le Coran de vos actes ! » Sâlim plante l'étendard et ne recule plus."],
           ['nar', "Là-bas, le fer. Mais le Menteur ne tient pas par le fer : il tient par ce que des milliers de cœurs veulent entendre. Ce front-là n'a pas de distance. Il passe par ici."],
@@ -625,10 +817,13 @@ ISNAD.registerSaga({
           ['nar', "Le miroir se fend. Il n'y avait rien derrière. À la même heure, dans le jardin, le Menteur tombe, et les Banû Hanîfa déposent les armes."],
           ['map', 'medine', 'mosquee_cour', { time: 'dawn' }],
           ['amb', 'silence'],
+          ['nar', "L'aube. Les rangs de la prière sont clairsemés : tant d'hommes sont au loin, et l'on ne sait pas encore lesquels reviendront."],
+          ['pray', 'fajr'],
           ['show', 'courrier']
         ] },
         { text: "Recevoir le courrier du Yamâma, à la porte de la mosquée", talk: 'courrier', then: [
           ['say', 'courrier', "Successeur du Messager d'Allah : la victoire. Le Menteur est mort, et le Yamâma est revenu à l'islam."],
+          ['mus', 'deuil'],
           ['say', 'courrier', "Mais nous avons enterré douze cents des nôtres. Zayd ibn al-Khattâb. Sâlim. Abû Hudhayfa. Thâbit ibn Qays. Et des récitateurs par dizaines, de ceux qui portaient le Coran tout entier."],
           ['quote', "Il m'a devancé vers les deux biens : il a embrassé l'islam avant moi, et il est tombé martyr avant moi.", "'Umar, à la mort de son frère Zayd — Ibn Sa'd, at-Tabaqât"],
           ['hide', 'courrier'],
@@ -652,7 +847,8 @@ ISNAD.registerSaga({
           ['quote', "Par Allah, s'ils m'avaient chargé de déplacer une montagne, cela ne m'eût pas été plus lourd que ce qu'il m'ordonna : rassembler le Coran.", "Zayd ibn Thâbit — al-Bukhârî, as-Sahîh"],
           ['nar', "Zayd le recueille sur les tiges de palmier, les pierres plates, et dans la poitrine des hommes. Pour chaque verset, rapporte-t-on, il exige des témoins. Les feuillets resteront chez Abû Bakr jusqu'à sa mort."],
           ['sfx', 'light'],
-          ['codex', 'jam_quran']
+          ['codex', 'jam_quran'],
+          ['pillar', 'savoir', 2], ['mus', 'espoir']
         ] }
       ],
       outro: [

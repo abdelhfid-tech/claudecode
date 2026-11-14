@@ -26,7 +26,7 @@
     document.body.classList.add('in-dialog');
     $('#dialog .seal').style.backgroundImage = sp ? `url(${sp.seal})` : 'none';
     $('#dialog .seal').hidden = !sp;
-    const nm = $('#dialog .name'); nm.textContent = sp ? sp.name : 'La Chaîne'; nm.style.color = sp ? sp.color : '#ffe08a';
+    const nm = $('#dialog .name'); nm.textContent = sp ? sp.name : ((I.world.saga && I.world.saga.narrator) || 'La Chaîne'); nm.style.color = sp ? sp.color : '#ffe08a';
     const tx = $('#dialog .text'); const html = I.fmt(text);
     // effet machine à écrire sur le texte brut, puis rendu complet
     const plain = text.replace(/\*/g, ''); let i = 0, done = false;
@@ -59,24 +59,66 @@
   S.card = card;
 
   /* ----- choix ----- */
-  function menuPick(prompt, options) {
+  function known(id) { return I.save.data.codex.includes(I.world.saga.id + '/' + id); }
+  S.known = known;
+  function lockLabel(o) { const e = I.ui.codexEntry(I.world.saga.id + '/' + o.need); return `<span class="lock">✧ Savoir requis${e ? ' : ' + I.esc(e.title) : ''}</span>`; }
+  function menuPick(prompt, options, head) {
     return new Promise(res => {
       const box = $('#choice'); box.hidden = false; box.innerHTML = '';
       document.body.classList.add('in-dialog');
+      if (head) box.appendChild(I.el('div', 'phead', head));
       box.appendChild(I.el('div', 'prompt', I.fmt(prompt)));
       let idx = 0; const btns = [];
+      const locked = o => o.need !== undefined && !known(o.need);
       const sel = i => { idx = (i + btns.length) % btns.length; btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); };
-      const done = i => { I.input.pop(h); box.hidden = true; I.audio.sfx('ok'); res(i); };
-      options.forEach((o, i) => { const b = I.el('button', 'opt', I.fmt(o.t)); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
-      sel(0);
+      const done = i => { if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; I.audio.sfx('ok'); res(i); };
+      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + I.fmt(o.t) + (o.need !== undefined ? ' <span class="kn">✧ savoir</span>' : '')); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
+      sel(Math.max(0, options.findIndex(o => !locked(o))));
       const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); I.audio.sfx('move'); } else if (a === 'ok') done(idx); return true; });
-      if (I.debug.auto) setTimeout(() => { const bad = options.findIndex(o => o.ok === undefined || o.ok === false), good = options.findIndex(o => o.ok); done(I.debug.pickWrong && bad >= 0 && good >= 0 ? bad : Math.max(0, good)); }, 40);
+      if (I.debug.auto) setTimeout(() => {
+        const open = options.map((o, i) => i).filter(i => !locked(options[i]));
+        if (options.some(o => typeof o.v === 'number')) { const pick = open.slice().sort((x, y) => I.debug.pickWrong ? options[x].v - options[y].v : options[y].v - options[x].v)[0]; return done(pick); }
+        const bad = open.find(i => !options[i].ok), good = open.find(i => options[i].ok);
+        done(I.debug.pickWrong && bad !== undefined && good !== undefined ? bad : (good !== undefined ? good : open[0]));
+      }, 40);
     });
   }
   S.menuPick = menuPick;
 
+  /* ----- pourparler : la parole avant le sabre ----- */
+  async function runParley(P) {
+    const W = I.world, sv = I.save.data, sp = speaker(P.with), n = P.rounds.length;
+    S.hideDialog(); I.audio.music('conseil');
+    let conf = S.flags._prayed ? 1 : 0;
+    const pips = () => { let h = ''; for (let i = 0; i < P.goal; i++) h += `<i class="pip${i < conf ? ' on' : ''}"></i>`; return h; };
+    const head = r => `<span class="seal" style="background-image:url(${sp.seal})"></span><span class="pt"><b>${I.esc(P.title)}</b><small>${I.esc(sp.name)} · manche ${r + 1} / ${n}</small></span><span class="trust">Confiance <span class="pips">${pips()}</span></span>`;
+    await card('title parley', `<p class="small">Pourparler</p><h1>${I.fmt(P.title)}</h1><p>${I.fmt(P.intro)}</p>${S.flags._prayed ? '<p class="small">Sérénité de la prière : +1 de confiance</p>' : ''}<div class="rule"></div><div class="hint">▼</div>`);
+    for (let r = 0; r < n; r++) {
+      const R = P.rounds[r];
+      await showLine('say', sp, R.say); S.hideDialog();
+      const i = await menuPick('Que réponds-tu ?', R.opts, head(r)); const o = R.opts[i];
+      conf = Math.max(0, conf + o.v);
+      S.toast(o.v > 0 ? `<b>Confiance +${o.v}</b>` : o.v < 0 ? `<b>Confiance ${o.v}</b> — il se ferme` : 'Il ne bouge pas.', 1800); I.audio.sfx(o.v > 0 ? 'light' : o.v < 0 ? 'dark' : 'blip');
+      await showLine('say', sp, o.r);
+    }
+    S.hideDialog(); sv.parley.total++;
+    const ok = conf >= P.goal;
+    if (ok) {
+      sv.parley.won++; I.audio.sfx('roll'); G.flash('#ffe08a');
+      const xp = P.xp || Math.round(34 + 20 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
+      await card('victory', `<p class="small">Pourparler · ${I.esc(P.title)}</p><h1>La parole a suffi</h1><ul><li>Confiance : <b>${conf} / ${P.goal}</b></li><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}</ul><div class="hint">▼</div>`);
+      await S.run(P.win);
+    } else {
+      I.audio.sfx('dark'); G.shake(260);
+      await card('defeat', `<p class="small">Pourparler · ${I.esc(P.title)}</p><h1>La parole n’a pas suffi</h1><p>Confiance : ${conf} / ${P.goal}. Ce qui n’a pas été noué par la parole devra l’être autrement, et coûtera davantage.</p><div class="hint">▼</div>`);
+      await S.run(P.lose);
+    }
+    const env = W.map && W.map.env; if (env && I.scene === W) I.audio.music(env.music || 'silence');
+  }
+
   S.toast = function (html, ms) {
-    const t = I.el('div', 'toast', html); $('#toasts').appendChild(t);
+    const box = $('#toasts'); while (box.children.length >= 4) box.firstChild.remove();
+    const t = I.el('div', 'toast', html); box.appendChild(t);
     setTimeout(() => t.classList.add('out'), (ms || 2600)); setTimeout(() => t.remove(), (ms || 2600) + 500);
   };
   S.fade = async function (dir, ms) {
@@ -115,6 +157,10 @@
         break;
       }
       case 'ask': { S.hideDialog(); const i = await menuPick(a, b); if (b[i].r) await S.run(b[i].r); break; }
+      case 'parley': await runParley(a); break;
+      case 'pray': await W.pray(a); break;
+      case 'pillar': W.pillar(a, b); break;
+      case 'mus': I.audio.music(a); break;
       case 'battle': S.hideDialog(); await I.battle.start(a); break;
       case 'map': S.hideDialog(); await S.fade('out'); W.loadMap(a, c || {}, b); await S.fade('in'); break;
       case 'tp': { const e = W.ent(a); if (e) { const p = W.resolve(b, e === W.player ? W.map.id : e.map, e); if (p) { e.x = p[0]; e.y = p[1]; e.placed = true; e.placedMap = W.map.id; if (e === W.player) W.resetTrail(); } else { e.at = b; e.placed = false; } } break; }

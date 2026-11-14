@@ -93,10 +93,21 @@
     if (first) { I.audio.sfx('glitch'); G.flash('#fff'); await S.fade('out', 220); }
     I.setScene(B.scene); B.active = true; G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue, n: 0 };
     document.body.classList.add('in-battle'); $('#hud').hidden = true; $('#toasts').innerHTML = ''; $('#battle').hidden = false; refresh();
-    I.audio.amb('noos'); I.audio.beat(opts.boss ? 'malfuf' : (opts.bg === 'romaine' || opts.bg === 'palais') ? 'marche' : (opts.bg === 'cite' || opts.bg === 'noos') ? 'cyber' : 'ayyub');
+    const prevMus = I.audio.wantTrack; C.prevMus = prevMus;
+    I.audio.amb('noos'); I.audio.music(opts.boss ? 'boss' : 'combat'); I.audio.beat(opts.boss ? 'malfuf' : (opts.bg === 'romaine' || opts.bg === 'palais') ? 'marche' : (opts.bg === 'cite' || opts.bg === 'noos') ? 'cyber' : 'ayyub');
     await S.fade('in', 260);
+    // piliers de la Citadelle : ce qui a été bâti pèse dans le combat
+    const P = W.pillars(); C.pJust = 1 - 0.03 * (P.justice || 0); C.pLien = 1 + 0.03 * (P.lien || 0);
+    C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 6 * (P.priere || 0)); else { e.def.weak.slice(0, Math.floor((P.savoir || 0) / 2)).forEach(w => { e.known[w] = true; }); } });
+    refresh();
     if (first && opts.intro) await banner(I.esc(opts.intro), readTime(opts.intro), true, 'speech intro');
     else if (first) await banner(opts.boss ? `${d0.name} se dresse.` : 'Une emprise se referme…', 1100);
+    for (const al of (opts.allies || [])) {
+      if (!S.flags[al.flag]) continue;
+      await banner(`<small>Renfort</small>${I.esc(al.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(500);
+      alive('foe').forEach(e => { if (!e.broken) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; floater(e, 'DÉVOILÉ', 'break'); } else floater(e, 'Voile ôté', 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * 0.08)); e.flash = 1; fx('light', e, '#ffe08a'); });
+      refresh(); await I.sleep(700);
+    }
     let result = null;
     while (!result) {
       // prochain acteur
@@ -109,6 +120,7 @@
     }
     B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result };
     I.audio.stopBeat(); $('#battle .cmd').innerHTML = ''; C.cursor = null;
+    if (result === 'win') { I.audio.afterJingle = C.prevMus || null; I.audio.music('victoire'); } else I.audio.music('deuil');
     if (result === 'win') await victory(); else await defeat();
     // retour
     C.all.filter(e => e.side === 'hero').forEach(e => { const h = e.ref, st = I.calc.hero(h.def, h.lvl); h.hp = Math.min(st.hp, Math.max(1, e.hp) + Math.round(st.hp * 0.35)); h.sp = Math.min(st.sp, e.sp + Math.round(st.sp * 0.35)); h.sakina = e.sakina; });
@@ -116,7 +128,7 @@
     $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = '';
     I.setScene(prev); G.clearParts();
     if (prev === W) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; }
-    I.audio.amb(prevAmb || 'vent');
+    I.audio.amb(prevAmb || 'vent'); if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.music(C.prevMus || 'silence'); else I.audio.afterJingle = C.prevMus || null; }
     if (result === 'win') await S.fade('in', 260);
     C = null;
     return result;
@@ -315,6 +327,7 @@
     if (immune) { t.known[el] = 'x'; floater(t, 'Sans effet', 'info'); fx('guard', t, '#889'); return; }
     let d = stat * sk.pow * mult * 2.2 * (50 / (50 + eff(t, 'df'))) * (0.92 + Math.random() * 0.16);
     if (weak) d *= 1.3; if (t.broken) d *= 1.5; if (t.st.garde) d *= 0.5;
+    d *= a.side === 'hero' ? (C.pLien || 1) : (C.pJust || 1);
     d = Math.max(1, Math.round(d));
     t.hp = Math.max(0, t.hp - d); t.flash = 1; t.shake = 0.25;
     floater(t, d, 'dmg' + (weak ? ' weak' : '') + (t.side === 'hero' ? ' hero' : ''));
@@ -362,6 +375,13 @@
   }
 
   /* ================= fins ================= */
+  B.grantXP = function (xp) {
+    const W = I.world, lines = [];
+    W.party.forEach(id => { const h = W.hero(id); h.xp += xp; let up = false;
+      while (h.xp >= I.calc.xpNeed(h.lvl) && h.lvl < 12) { h.xp -= I.calc.xpNeed(h.lvl); h.lvl++; up = true; h.def.skills.filter(k => k.lvl === h.lvl).forEach(k => lines.push(`<li><b>${h.def.name}</b> apprend <em>${k.name}</em></li>`)); }
+      if (up) { lines.unshift(`<li><b>${h.def.name}</b> atteint le niveau <b>${h.lvl}</b></li>`); const st = I.calc.hero(h.def, h.lvl); h.hp = st.hp; h.sp = st.sp; } });
+    W.persistHeroes(); return lines;
+  };
   async function victory() {
     const W = I.world, sv = I.save.data; I.audio.sfx('roll');
     let xp = 0; C.all.filter(e => e.side === 'foe').forEach(e => { xp += I.calc.xpOf(e.def); const cid = 'foe:' + W.saga.id + ':' + e.id; if (!sv.codex.includes(cid)) sv.codex.push(cid); });

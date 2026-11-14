@@ -30,13 +30,46 @@
   function lookOf(def) { return Object.assign({ kind: 'compagnon' }, def.look); }
   W.refreshSheets = function () { W.sheets = W.party.map(id => G.charSheet(lookOf(W.saga.heroes[id]))); };
 
+  /* ----- piliers de la Citadelle, prière ----- */
+  W.pillars = function () {
+    const sv = I.save.data; if (!W.saga) return { priere: 0, savoir: 0, justice: 0, lien: 0 };
+    if (W.saga.veillees) return sv.citadel;
+    const sp = sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} });
+    return sp.pil || (sp.pil = { priere: 0, savoir: 0, justice: 0, lien: 0 });
+  };
+  W.pillar = function (name, d) {
+    const P = W.pillars(), def = D.PILLARS[name]; if (!def) return; const was = P[name] || 0;
+    P[name] = I.clamp(was + d, 0, 5); W.hud();
+    if (P[name] !== was) { S.toast(`Pilier · <b>${def.name}</b> ${d > 0 ? '▲' : '▼'} <span class="pl">${def.glyph} ${P[name]}</span>`, 2800); I.audio.sfx(d > 0 ? 'light' : 'dark'); }
+  };
+  const PRAY_LINES = {
+    fajr: ['Avant le jour, ils se rangèrent, épaule contre épaule. Puis la lumière vint, comme une réponse.', 'L’aube n’était encore qu’un fil. Ils prièrent, et le jour eut un commencement.'],
+    dhuhr: ['Au plus haut du soleil, ils posèrent ce qu’ils portaient. Rien ne pressait plus que cela.', 'Midi. La ville se tut le temps d’une prière, et chacun retrouva sa place.'],
+    asr: ['L’ombre s’allongeait. Ils prièrent, et la journée retrouva sa mesure.'],
+    maghrib: ['Le soleil toucha la terre. Ils prièrent, et le vacarme du jour retomba.'],
+    isha: ['La nuit était entière. Ils prièrent, et le silence cessa d’être vide.', 'Dernière prière. Ce qui restait à décider attendrait le matin, et s’en trouverait mieux.']
+  };
+  W.pray = async function (moment) {
+    const env = W.map ? W.map.env : {}, m = moment || ({ dawn: 'fajr', day: 'dhuhr', dusk: 'maghrib', night: 'isha' })[env.time] || 'isha';
+    S.depth++;
+    try {
+      S.hideDialog(); await S.fade('out', 600); I.audio.sfx('light');
+      const fz = $('#fade'); fz.style.transition = 'none'; fz.style.opacity = 0; // le carton prend le relais du fondu
+      await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>La prière</h1><p>${I.pick(PRAY_LINES[m])}</p><p class="small">Le groupe est reposé · Sakîna</p><div class="hint">▼</div>`, 6500);
+      W.healAll(); W.gainSakina(35); S.flags._prayed = true;
+      if (!S.flags._prayPillar) { S.flags._prayPillar = true; W.pillar('priere', 1); }
+      if (W.map) W.checkpoint();
+    } finally { S.depth--; S.hideDialog(); }
+  };
+  W.nearPrayer = function () { const m = W.map, sp = m && m.spots.priere; if (!sp) return false; return Math.hypot(sp[0] * T + 8 - W.player.x, sp[1] * T + 13 - W.player.y) < 26; };
+
   /* ----- cartes ----- */
   W.loadMap = function (id, opts, spot) {
     opts = opts || {}; const key = id + JSON.stringify(opts);
     W.map = mapCache[key] || (mapCache[key] = I.maps.build(id, opts)); W.mapOpts = opts;
     const ks = Object.keys(mapCache); if (ks.length > 4) ks.filter(k2 => k2 !== key).slice(0, ks.length - 4).forEach(k2 => { delete mapCache[k2]; });
     const env = W.map.env; G.clearParts(); G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 };
-    I.audio.amb(env.sound || 'vent');
+    I.audio.amb(env.sound || 'vent'); I.audio.music(env.music || 'silence');
     W.npcs.forEach(n => { if (n.map === id) W.place(n); });
     W.foes.forEach(f => { if (f.map === id && !f.placed) { const p = W.resolve(f.at, id, f); if (p) { f.x = p[0]; f.y = p[1]; f.placed = true; } } });
     W.chests.forEach(c => { if (c.map === id && !c.placed) { const p = W.resolve(c.at, id, c); if (p) { c.x = p[0]; c.y = p[1]; c.placed = true; } } });
@@ -90,7 +123,8 @@
     if (W.saga !== saga) W.roster = {};
     W.saga = saga; W.ci = ci; W.ch = ch; W.minLvl = saga.frame ? (ch.minLvl || 1) : (MINLVL[ci] || 6);
     const sp = I.save.data.sagas[sagaId] || (I.save.data.sagas[sagaId] = { ch: 0, done: false, flags: {} });
-    S.flags = cp ? (cp.flags || {}) : (sp.flags || {});
+    S.flags = cp ? (cp.flags || {}) : Object.assign({}, sp.flags || {});
+    if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; }
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
     W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.charSheet(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
     W.foes = (ch.foes || []).map(f => Object.assign({}, f, { map: f.map || ch.map, done: false, placed: false, ph: Math.random() * 6 }));
@@ -118,7 +152,9 @@
   W.hud = function () {
     const o = W.cur();
     $('#hud .chap').textContent = W.ch ? W.ch.title : '';
-    $('#hud .sub').textContent = W.ch ? W.ch.sub : '';
+    const tm = W.map && ({ dawn: 'Fajr', day: 'Dhuhr', dusk: 'Maghrib', night: '’Ishâ' })[W.map.env.time];
+    $('#hud .sub').textContent = (W.ch ? W.ch.sub : '') + (tm ? '  ·  ◠ ' + tm : '');
+    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('');
     $('#hud .obj').textContent = o && o.text ? o.text : '';
     $('#hud .obj').hidden = !(o && o.text);
   };
@@ -190,7 +226,10 @@
       return;
     }
     const c = W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
-    if (c) { c.open = true; I.audio.sfx('door'); await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); }
+    if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
+    if (W.nearPrayer()) {
+      await S.run([['ask', 'Une natte tournée vers La Mecque. Faire halte pour la prière ?', [{ t: 'Prier', r: [['pray']] }, { t: 'Plus tard', r: [] }]]]);
+    }
   };
   W.fight = async function (f) {
     S.depth++;
@@ -276,6 +315,7 @@
   };
   W.autoStep = function () {
     const o = W.cur(); if (!o) return; const p = W.player, log = I.debug.log || (I.debug.log = []);
+    if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
     const go = (x, y, what) => { if (!W.reach(p.x, p.y, x, y)) log.push(`INACCESSIBLE ${W.saga.id}/${W.ch.id} obj${W.objIndex} ${what} sur ${W.map.id}`); p.x = x; p.y = y; W.resetTrail(); };
     W._autoBusy = true; const done = () => { W._autoBusy = false; };
     if (o.goto) { const s = W.resolve(o.goto, W.map.id, p); go(s[0], s[1], 'goto ' + o.goto); W.complete().then(done, e => { log.push('ERR ' + e.message); done(); }); }
@@ -344,8 +384,10 @@
       const p = W.player, px = p.x + [0, -1, 1, 0][p.dir] * 12, py = p.y + [1, 0, 0, -1][p.dir] * 12; let best = null, bd = 22;
       W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - px, n.y - py); if (d < bd) { bd = d; best = n; } });
       if (!best) { const ch = W.chests.find(ch => !ch.open && ch.map === m.id && ch.placed && Math.hypot(ch.x - px, ch.y - py) < 18); if (ch) best = { x: ch.x, y: ch.y + 12 }; }
+      if (!best && W.nearPrayer()) best = { x: p.x, y: p.y + 6 };
       if (best && !(tg && tg.kind === 'talk' && Math.abs(tg.x - best.x) < 2)) { const bx = Math.round(best.x - cx), by = Math.round(best.y - cy - 34 + Math.sin(t * 5) * 1.5); c.fillStyle = '#1a1420'; c.fillRect(bx - 7, by - 1, 14, 9); c.fillStyle = '#fff6dc'; c.fillRect(bx - 6, by, 12, 7); c.fillRect(bx - 1, by + 7, 2, 2); c.fillStyle = '#1a1420'; c.fillRect(bx - 4, by + 3, 2, 2); c.fillRect(bx - 1, by + 3, 2, 2); c.fillRect(bx + 2, by + 3, 2, 2); }
     }
+    if (m.spots.priere) { const px2 = m.spots.priere[0] * T + 8 - cx, py2 = m.spots.priere[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) { lights.push({ x: px2, y: py2, r: 30 + Math.sin(t * 2) * 3, color: '#fff3c8', a: 0.55 }); if (Math.random() < 0.06) G.spawn({ x: px2 + (Math.random() - 0.5) * 16, y: py2 + 4, vy: -10, life: 1.6, size: 0.6, color: '#fff3c8', type: 'mote' }); } }
     // lumières de la carte
     const la = env.lightA === undefined ? 1 : env.lightA;
     if (la > 0) for (const L of m.lights) { const x = L.x - cx, y = L.y - cy; if (x < -L.r || y < -L.r || x > G.PW + L.r || y > G.PH + L.r) continue; lights.push({ x, y, r: L.r, color: L.color, a: la * (1 - L.flicker * (0.5 + 0.5 * Math.sin(t * 9 + L.x))) }); }

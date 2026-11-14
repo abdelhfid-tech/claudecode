@@ -1,0 +1,139 @@
+# ISNAD v2 — addendum au contrat de données
+
+Complète `docs/schema-saga.md` (toujours valable). Énumérations : `src/core/defs.js`.
+Validation : `node tools/validate.js <fichier>` (sagas, veillées) · `node tools/validate-music.js` (musique).
+
+## 1. Ce que la v2 change (décisions du décideur)
+
+1. **La guerre en dernier recours.** Les crises se dénouent d'abord par la parole : délégations, pactes,
+   alliances, arbitrages. Le combat (toujours contre un égrégore, jamais contre des personnes) n'arrive
+   que lorsque la parole a échoué, ou face à une idole qui ne négocie pas.
+2. **Tentatives, succès, échecs.** Un pourparler (`parley`) peut réussir ou échouer ; les deux issues
+   font avancer le récit, avec des conséquences (allié gagné ou perdu, combat évité ou plus dur, pilier
+   renforcé ou ébranlé).
+3. **Le savoir et la prière sont les deux piliers récurrents.** Le savoir ouvre des arguments
+   (`need`) ; la prière repose le groupe, donne la Sakîna et un avantage de sérénité dans la parole.
+4. **Ambiance « Citadelle ».** Une voix de seigneur du désert qui médite sur ce qui lie les hommes :
+   la sentinelle, le puits, le cèdre, le temple bâti pierre à pierre, les provisions qui endorment, le
+   sens qui noue les choses, le silence, la prière. S'en inspirer pour le ton ; **ne jamais recopier le
+   texte de Saint-Exupéry** (œuvre protégée) : écrire des phrases originales.
+5. **Intrigue politique.** Factions, conseils, délégations, retournements. Des groupes aux intérêts
+   divergents (tribus, notables perses, communautés juives et chrétiennes sous pacte, marchands,
+   moines, soldats) et des **hypocrites fictifs**.
+6. **Musique.** Une piste par ambiance (`mus` pour les moments marquants).
+
+## 2. Règles de respect propres à la v2 (non négociables)
+
+- **Aucun groupe n'est un ennemi par nature.** Perses, juifs, chrétiens, tribus : ce sont des acteurs
+  politiques aux intérêts légitimes, avec chez chacun des gens d'honneur. Jamais de trait attribué à un
+  peuple ou à une religion (ni ruse, ni avidité, ni traîtrise « de nature »). Un désaccord vient d'un
+  intérêt, d'une peur, d'un tort subi, d'une personne.
+- **Les hypocrites sont des individus fictifs, issus du camp du héros** (un chambellan, un notable, un
+  officier) : ils disent ce qu'on veut entendre et servent autre chose. Jamais un Compagnon réel, jamais
+  un personnage historique nommé. Leur nom est inventé et sobre.
+- **Les personnages historiques non musulmans** (Sophrone, Hurmuzân, Jabala…) gardent leur dignité.
+- **Ce qui varie est fictif ou local.** L'issue d'un `parley` ne change jamais un fait historique : elle
+  porte sur un enjeu local ou fictif (une tribu de fiction, un quartier, un convoi, un témoin), ou sur
+  la *manière* dont l'événement connu est atteint. Les actes des Compagnons restent ceux des sources
+  (mécanique `choice`).
+- **Alliances de parenté** : possibles comme pacte entre clans, en une phrase sobre, hors champ, sans
+  personnage mis en scène ni détail.
+- **La prière n'est pas un sortilège.** Elle s'écrit sobrement (« Ils prièrent. ») et se place aux
+  moments que les sources attachent à une prière (l'aube de la mort de 'Umar, de 'Alî ; Abû Bakr
+  dirigeant la prière ; l'appel de Bilâl à Jérusalem) ou aux haltes naturelles.
+
+## 3. Nouvelles opérations
+
+| op | effet |
+|---|---|
+| `['pray', moment?]` | Halte de prière scriptée. `moment` : `fajr, dhuhr, asr, maghrib, isha` (facultatif). Fondu, carton sobre, groupe restauré, Sakîna, pilier Prière +1 (une fois par chapitre). 3 à 5 par saga. |
+| `['pillar', nom, ±n]` | Renforce ou ébranle un pilier : `priere, savoir, justice, lien` ; n = 1 ou 2. |
+| `['mus', piste]` | Change la musique jusqu'au prochain changement de carte. Pistes : `titre, chaine, medine, nuit, desert, camp, rome, palais, mer, noos, cite, citadelle, combat, boss, victoire, deuil, espoir, conseil, silence`. |
+| `['parley', {...}]` | Pourparler (ci-dessous). |
+
+Chaque carte a désormais un lieu `priere` (halte libre : le joueur peut y prier quand il veut) ; les
+villes ont aussi `ecole` (cercle d'étude), la cité romaine `quartier`.
+Types de PNJ ajoutés : `savant`, `marchand`, `berbere`.
+Coffre de savoir : `chests: [{ at, codex: 'id' }]` (un feuillet : débloque l'entrée de codex).
+`ask` accepte `need: 'idCodex'` sur une option (verrouillée tant que l'entrée n'est pas connue).
+`battle` accepte `allies: [{ flag: 'nom_du_drapeau', name: 'Les cavaliers de …' }]` : chaque allié dont le
+drapeau est levé frappe en ouverture (un voile retiré à chaque égrégore).
+
+### Le pourparler
+
+```js
+['parley', {
+  with: 'chef_tayy',                       // id de PNJ ou nom libre de l'interlocuteur
+  title: 'La délégation des Banû …',
+  intro: 'Ce que veut l’autre, ce qu’il craint. Une phrase.',
+  goal: 6,                                  // confiance à atteindre (somme des v choisis)
+  rounds: [                                 // 3 à 5 manches
+    { say: 'Ce que dit l’interlocuteur.',
+      opts: [                               // 2 à 4 arguments
+        { t: 'Argument juste.',             el: 'adl',   v: 2,  r: 'Sa réponse.' },
+        { t: 'Argument de savoir.',         el: 'ilm',   v: 3,  r: 'Sa réponse.', need: 'id_codex' },
+        { t: 'Menace ou flatterie.',        el: 'shajaa', v: -1, r: 'Sa réponse.' }
+      ] }
+  ],
+  win:  [ /* ops : pacte conclu — ['flag','allie_x'], ['pillar','lien',1], … */ ],
+  lose: [ /* ops : la parole n'a pas suffi — souvent un ['battle', …] en dernier recours, ou ['pillar','lien',-1] */ ]
+}]
+```
+
+- `v` de −2 à 3 ; `el` = la vertu de l'argument (`sidq, adl, sabr, rahma, shajaa, ilm`).
+- `need` : l'argument n'est disponible que si l'entrée de codex est connue (apprise d'un savant, d'un
+  feuillet, d'un témoin). C'est en général le meilleur argument : **le savoir doit payer**.
+- Si le groupe a prié dans le chapitre : +1 de confiance au départ (sérénité).
+- `goal` : atteignable sans savoir seulement par un sans-faute, confortable avec. Le validateur vérifie
+  que `goal` est atteignable et non automatique. `win` et `lose` doivent finir sur la même carte.
+- Les mauvaises options sont des tentations humaines (menacer, flatter, promettre trop, mentir par
+  omission), jamais des caricatures.
+- Un pourparler réussi rapporte autant de Sagesse qu'un combat : la parole n'est pas un raccourci pauvre.
+
+## 4. Les piliers de la Citadelle
+
+Quatre piliers, de 0 à 5 : **Prière**, **Savoir**, **Justice**, **Lien** (ce qui tient les hommes
+ensemble : pactes, alliances, parole donnée). Chaque saga a les siens ; les veillées du Caïd bâtissent
+la Citadelle elle-même, qui persiste. Effets en combat : Prière → Sakîna de départ ; Savoir → failles
+révélées d'emblée ; Justice → dégâts reçus réduits ; Lien → dégâts infligés accrus.
+Chaque `codex` débloqué nourrit aussi le Savoir. Viser, par saga : 5 à 8 `pillar` positifs possibles,
+2 à 3 négatifs sur les branches d'échec.
+
+## 5. Les veillées du Caïd (`src/data/caid.js`)
+
+Un maillon de la Chaîne entre les Compagnons et Idris : **le Caïd**, seigneur berbère de fiction, héritier
+d'un père assassiné, qui apprend à gouverner dans les vies des Compagnons. Après chaque saga, une
+**veillée** : il affronte dans sa citadelle une crise qui répond à la leçon reçue. Ici tout est fictif :
+les décisions sont libres (`ask`, `parley`), elles ont des conséquences durables sur les piliers.
+
+```js
+ISNAD.registerSaga({
+  id: 'caid', order: 6, frame: true, veillees: true, narrator: 'Le Caïd',
+  name: 'Le Caïd', epithet: 'Seigneur de la Citadelle', arabic: 'القائد', years: 'un maillon de la Chaîne',
+  light: 'sabr', lightName: 'Patience', tagline: '…', intro: [], outro: [],
+  heroes: { caid: {…}, /* 2 alliés fictifs */ }, enemies: {…}, codex: [...],
+  chapters: [ { id: 'v_abubakr', after: 'abubakr', minLvl: 3, last: true, title: '…', sub: '…', map: 'citadelle', … }, … ]
+});
+```
+Un chapitre par saga (`after` = id de la saga : `abubakr, umar, khalid, uthman, ali`), autoportant, jouable
+dans n'importe quel ordre. `minLvl` : 3, 5, 6, 7, 8 dans cet ordre. Carte `citadelle` (lieux : `porte, cour,
+puits, remparts, tour, salle, mosquee, priere, ecole, souk, jardin, greniers, palmeraie, poterne`) et
+`noos`, `desert`. Durée : 6 à 9 minutes ; 1 pourparler au moins, 1 décision libre lourde, 1 combat au plus
+(évitable si la parole réussit), 1 `pray`, 2 à 3 `codex`.
+
+## 6. Musique (`src/data/music.js`)
+
+```js
+ISNAD.registerMusic('medine', {
+  bpm: 92, beats: 32,                        // boucle de 32 temps ; chaque voix dure exactement `beats`
+  voices: [
+    { wave: 'flute',    vol: 0.5,  notes: 'D5/1 Eb5/.5 F#5/.5 G5/2 -/1 A5/1 …' },   // mélodie
+    { wave: 'pluck',    vol: 0.3,  notes: 'D3+A3/2 G3+D4/2 …' },                    // accords : notes jointes par +
+    { wave: 'triangle', vol: 0.4,  notes: 'D2/2 D2/2 G2/2 A2/2 …' },                // basse
+    { wave: 'drums',    vol: 0.35, notes: 'D/1 t/.5 t/.5 T/1 -/1 …' }               // D dum, T tek, t tek léger, k grosse caisse, s caisse claire, h charleston, c cymbale
+  ]
+});
+```
+Jeton = `hauteur/durée` ; hauteur `A–G` + `#` ou `b` facultatif + octave 1–7 ; silence `-` ; durée en temps
+(0.25, 0.5, 1, 1.5, 2…). Timbres : `pulse, square, triangle, saw, sine, pluck` (oud), `flute` (ney),
+`strings, bell, drums`. `victoire` est jouée une fois, les autres en boucle.

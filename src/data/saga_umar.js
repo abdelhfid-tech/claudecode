@@ -1,5 +1,7 @@
 /* ISNAD — Saga II : 'Umar ibn al-Khattâb, Al-Fârûq. Lumière : la Justice ('Adl).
-   Sources principales : Ibn Sa'd (Tabaqât), at-Tabarî (Târîkh), Ibn Kathîr (al-Bidâya), al-Bukhârî, al-Hâkim. */
+   Sources principales : Ibn Sa'd (Tabaqât), at-Tabarî (Târîkh), Ibn Kathîr (al-Bidâya), al-Bukhârî, al-Hâkim, Mâlik (al-Muwatta').
+   v2 : trois pourparlers (Abû Ghânim, Sophrone, Thawr), quatre prières, piliers, savoirs. Personnages de fiction : Hâzim ibn Nawfal,
+   Abû Ghânim, l'ancien de Tibériade, Thawr ibn Mâlik (signalés comme tels dans le codex). */
 ISNAD.registerSaga({
   id: 'umar', order: 2,
   name: "'Umar ibn al-Khattâb", epithet: 'Al-Fârûq', arabic: 'عمر',
@@ -13,6 +15,7 @@ ISNAD.registerSaga({
     ['title', "'Umar ibn al-Khattâb", 'Saga II · Al-Fârûq'],
     ['nar', "An 13 de l'Hégire. Abû Bakr s'éteint, et son dernier dépôt tient en un nom : 'Umar. Médine retient son souffle. On connaît sa rigueur ; on ignore encore jusqu'où elle ira contre lui-même."],
     ['nar', "En dix ans, Shâm, l'Irak, la Perse et l'Égypte s'ouvrent. Jamais tant d'or, de trônes et d'aigles n'ont regardé un seul homme. Et cet homme porte un manteau rapiécé."],
+    ['nar', "Un empire qui s'ouvre n'est d'abord qu'un grenier trop plein. Il faut qu'un homme refuse d'y dormir pour que les autres y trouvent du pain, et non un maître."],
     ['nar', "Dans la noosphère, l'Empire ne meurt pas avec ses armées. Il cherche un nouveau front où poser sa couronne, un nouveau cœur où s'asseoir."],
     ['quote', "« Si une brebis périssait, égarée, au bord de l'Euphrate, je craindrais qu'Allah ne m'en demande compte au Jour de la Résurrection. »", "Abû Nu'aym, Hilyat al-Awliyâ' ; Ibn Sa'd, Tabaqât (variantes)"],
     ['nar', "Idris, suis la Chaîne. Voici la Justice : non pas une balance qu'on tient, mais un fardeau qu'on porte."]
@@ -20,10 +23,8 @@ ISNAD.registerSaga({
 
   outro: [
     ['amb', 'silence'],
-    ['title', "L'aube de Dhû l-Hijja", 'An 23 H · 644 · Médine'],
-    ['nar', "Il aligne les rangs pour la prière de l'aube, comme chaque jour. Un esclave perse, Abû Lu'lu'a, s'est glissé derrière lui. La prière commence. La lame frappe."],
-    ['flash', '#ffffff'],
-    ['nar', "Blessé, 'Umar saisit la main de 'Abd ar-Rahmân ibn 'Awf et l'avance à sa place : que la prière des gens s'achève. Puis on le porte chez lui. Sa première question : qui m'a frappé ?"],
+    ['mus', 'deuil'],
+    ['nar', "La prière achevée, on le porte chez lui. Sa première question : qui m'a frappé ?"],
     ['quote', "« Louange à Allah, qui n'a pas placé ma mort entre les mains d'un homme se réclamant de l'islam. »", "al-Bukhârî, Sahîh (3700)"],
     ['nar', "Il fait compter ses dettes et demande qu'on les acquitte. Il refuse de désigner son fils et confie le choix du successeur à un conseil de six Compagnons."],
     ['quote', "« Je recommande à mon successeur les protégés d'Allah et de Son Messager : qu'il respecte leur pacte, qu'il les défende, et qu'on ne leur impose rien au-delà de leurs forces. »", "al-Bukhârî, Sahîh (3700) — traduction du sens"],
@@ -31,6 +32,7 @@ ISNAD.registerSaga({
     ['quote', "« Je voudrais en sortir quitte : rien pour moi, rien contre moi. »", "al-Bukhârî, Sahîh (3700)"],
     ['codex', 'shura'],
     ['nar', "Dix ans et demi. Les trônes sont tombés ; la natte est restée. Il repose près du Messager d'Allah ﷺ et d'Abû Bakr, comme il avait vécu : à leur suite."],
+    ['mus', 'espoir'],
     ['nar', "Idris, retiens ceci : l'idole du pouvoir n'est pas brisée par celui qui la renverse, mais par celui qui refuse de s'y asseoir. La Justice commence par soi."],
     ['sfx', 'light'],
     ['light', 'adl']
@@ -275,6 +277,36 @@ ISNAD.registerSaga({
     { id: 'shura', cat: 'Événement', title: "L'aube et le conseil des six",
       text: "Fin 23 H, 'Umar est frappé pendant la prière de l'aube par Abû Lu'lu'a, un esclave perse. Il loue Allah que son meurtrier ne se réclame pas de l'islam, fait compter ses dettes et recommande à son successeur les protégés (dhimma). Il confie le choix du calife à six Compagnons : 'Uthmân, 'Alî, Talha, az-Zubayr, Sa'd ibn Abî Waqqâs et 'Abd ar-Rahmân ibn 'Awf. Il est enterré auprès du Prophète ﷺ et d'Abû Bakr.",
       src: "al-Bukhârî, Sahîh (3700)" },
+    { id: 'istisqa', cat: 'Événement', title: 'La prière pour la pluie',
+      text: "Au plus dur de l'Année des cendres, 'Umar sort avec les gens demander la pluie. Anas ibn Mâlik rapporte qu'il faisait alors avancer al-'Abbâs ibn 'Abd al-Muttalib, l'oncle du Prophète ﷺ, et disait : « Ô Allah, nous Te sollicitions par notre Prophète et Tu nous donnais la pluie ; nous Te sollicitons par l'oncle de notre Prophète : donne-nous la pluie. » Et la pluie leur était donnée. Le calife ne se met pas en avant : il cherche, parmi les siens, celui dont la demande sera la plus humble.",
+      src: "al-Bukhârî, Sahîh (1010) — traduction du sens ; Ibn Sa'd, Tabaqât" },
+    { id: 'accaparement', cat: 'Parole', title: "« Pas d'accaparement sur notre marché »",
+      text: "On rapporte que 'Umar disait : « Pas d'accaparement sur notre marché. » Il interdisait à ceux qui avaient de l'or en trop d'acheter les vivres arrivés à Médine pour les retenir jusqu'à la hausse ; mais celui qui apportait lui-même sa marchandise, à dos de bête, l'été comme l'hiver, restait libre de vendre ou de garder. La règle ne vise pas le marchand : elle vise le calcul fait sur la faim d'autrui.",
+      src: "Mâlik, al-Muwatta' (livre des ventes) — traduction du sens" },
+    { id: 'registre_farine', cat: 'Événement', title: 'Le feuillet de la Maison de la farine',
+      text: "'Umar fit tenir à Médine une Maison de la farine (Dâr ad-Daqîq) : farine, dattes, raisins secs, de quoi secourir le voyageur et le nécessiteux. Le feuillet trouvé ici est une invention du jeu : il compte quarante sacs sortis l'année de la faim sans nom en face. Un registre ne nourrit personne ; mais il empêche que la faim des uns devienne, sans bruit, le commerce des autres.",
+      src: "Dâr ad-Daqîq : Ibn Sa'd, Tabaqât. Le feuillet et ses chiffres sont fictifs." },
+    { id: 'hazim_fiction', cat: 'Biographie', title: 'Hâzim ibn Nawfal (personnage de fiction)',
+      text: "Hâzim n'a pas existé : le jeu l'invente pour donner un visage à l'hypocrite, celui qui dit au pouvoir ce qu'il veut entendre et se sert derrière la louange. Ce qu'il rencontre, en revanche, est rapporté : 'Umar faisait inventorier les biens de ses gouverneurs à leur prise de charge, leur demandait raison de tout surplus, et se méfiait de qui le louait en face.",
+      src: "Pratique de 'Umar : Ibn Sa'd, Tabaqât ; al-Balâdhurî, Futûh al-Buldân. Le personnage est fictif." },
+    { id: 'bannissement', cat: 'Événement', title: "L'interdit d'Aelia",
+      text: "Après la révolte de 132–135, l'empereur Hadrien rebâtit Jérusalem sous le nom d'Aelia et en interdit le séjour aux juifs. L'interdit, appliqué avec plus ou moins de rigueur selon les règnes, est renouvelé par Héraclius vers 630, au lendemain de la guerre perse. Quand 'Umar arrive, il dure depuis cinq siècles. C'est une loi de César : elle a un auteur et une date.",
+      src: "Eusèbe de Césarée, Histoire ecclésiastique ; chroniqueurs byzantins ; historiographie moderne" },
+    { id: 'familles_tiberiade', cat: 'Événement', title: 'Les soixante-dix familles',
+      text: "Le texte du pacte transmis par at-Tabarî contient une clause demandée par les gens de la ville : qu'aucun juif n'y habite avec eux, comme sous Byzance. D'autres traditions, plus tardives — un récit judéo-arabe retrouvé dans la Geniza du Caire, des chroniqueurs — rapportent que 'Umar autorisa ensuite soixante-dix familles venues de Tibériade à s'établir au sud de l'esplanade. Les historiens discutent encore ces récits. Le jeu en fait un pourparler : l'ancien de Tibériade est un personnage de fiction, et seule la manière varie, non l'issue rapportée.",
+      src: "at-Tabarî, Târîkh (texte du pacte) ; fragment de la Geniza du Caire ; traditions tardives, attributions discutées" },
+    { id: 'ghassan', cat: 'Lieu', title: 'Les Ghassânides, gardiens de la marche',
+      text: "Arabes chrétiens établis aux confins de Shâm, les Banû Ghassân gardaient la frontière du désert pour Rome, contre une solde. Le chroniqueur Théophane rapporte que, vers 630, un trésorier d'Héraclius refusa leur solde à des Arabes fédérés de la frontière en les insultant ; plusieurs tribus s'en souvinrent. Jabala ibn al-Ayham fut leur dernier roi : il combattit au Yarmoûk dans le camp romain.",
+      src: "Théophane, Chronographie ; al-Balâdhurî, Futûh al-Buldân" },
+    { id: 'jabala', cat: 'Événement', title: "L'affaire de Jabala ibn al-Ayham",
+      text: "On rapporte que Jabala, roi ghassânide, embrassa l'islam et vint en grand équipage. Pendant le pèlerinage, un homme des Fazâra marcha sur le pan de son manteau ; Jabala le frappa au visage. 'Umar lui donna le choix : obtenir le pardon de l'homme, ou subir la pareille. « Je suis un roi et lui un homme du commun. — L'islam vous a réunis, toi et lui. » Jabala demanda la nuit et gagna Constantinople avec les siens. Le récit est célèbre, mais sa chaîne est discutée et ses versions divergent (d'autres le placent à Damas, devant Abû 'Ubayda). Le jeu le met en scène à Médine ; Thawr ibn Mâlik est un personnage de fiction.",
+      src: "Ibn Kathîr, al-Bidâya ; al-Isfahânî, Kitâb al-Aghânî ; al-Balâdhurî (autre version)" },
+    { id: 'diwan', cat: 'Événement', title: 'Le dîwân',
+      text: "Quand l'argent des provinces afflua, 'Umar consulta les Compagnons et fit dresser un registre des pensions, le dîwân, par tribus et par rang d'ancienneté dans l'islam. On voulut l'inscrire en tête ; il répondit : « Placez 'Umar là où Allah l'a placé », et fit commencer par les proches du Prophète ﷺ. Ce que chacun reçoit est écrit, donc vérifiable : le registre met le Trésor sous le regard de tous.",
+      src: "Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh ; al-Balâdhurî, Futûh al-Buldân" },
+    { id: 'hijri', cat: 'Événement', title: "Le calendrier de l'Hégire",
+      text: "On rapporte qu'Abû Mûsâ al-Ash'arî écrivit de Bassora : « Il nous vient de toi des lettres sans date. » 'Umar réunit les Compagnons, vers l'an 17. Les uns proposèrent de compter depuis la naissance du Prophète ﷺ, d'autres depuis sa mort ; on retint l'Hégire, sur l'avis de 'Alî dit-on, et le mois de Muharram pour ouvrir l'année. Ni une naissance ni un deuil : le jour où une communauté quitta sa ville pour sa foi.",
+      src: "at-Tabarî, Târîkh ; al-Hâkim, al-Mustadrak ; Ibn Hajar, Fath al-Bârî" },
     { id: 'ego_accapareur', cat: 'Noosphère', title: "L'Accapareur",
       text: "Égrégore de la pénurie organisée. Il naît lorsque beaucoup ferment ensemble leurs greniers en regardant monter les prix : chaque porte close l'élève d'un étage. Il se nourrit de la peur de manquer, et la fabrique à son tour. La force seule l'entame peu ; il cède devant la Miséricorde, qui donne, et la Justice, qui répartit.",
       src: 'Lecture noosphérique du jeu' },
@@ -304,8 +336,15 @@ ISNAD.registerSaga({
           talk: [['ask', "L'ancien se chauffe les mains au-dessus d'une braise.", [
             { t: "Depuis quand dure la sécheresse ?", r: [['say', 'ancien', "Neuf lunes bientôt. La terre a pris la couleur de la cendre : on appelle déjà cette année l'Année des cendres."]] },
             { t: "Que fait le calife ?", r: [['say', 'ancien', "Il mange ce que mangent les pauvres : de l'huile et du pain d'orge. Il a écrit à l'Égypte, à Shâm et à l'Irak. Les caravanes viendront."]] },
+            { t: "Et les marchands de grain ?", r: [
+              ['say', 'ancien', "Les uns ont vidé leurs greniers dès le premier mois. D'autres attendent la hausse. 'Umar l'a dit au souk : pas d'accaparement sur notre marché. Mais il préfère une porte qu'on ouvre à une porte qu'on enfonce."],
+              ['codex', 'accaparement'] ] },
             { t: "Le laisser à sa braise", r: [['say', 'ancien', "Qu'Allah allège cette nuit."]] }
           ]]] },
+        { id: 'hazim', name: 'Hâzim, commis de la Maison de la farine', at: ['souk', 0, -1], look: { kind: 'homme', robe: '#5e6a58', head: '#e8dfc8', cloak: '#3a4236' },
+          talk: [['say', 'hazim', "Dors tranquille, Commandeur des croyants. Tant que je tiens les clés, pas un grain ne s'égare. Qui te sert mieux que moi ?"]] },
+        { id: 'ghanim', name: 'Abû Ghânim, marchand de grain', at: ['place', -2, -1], look: { kind: 'marchand', robe: '#6a4f3a', head: '#d9c9a8', cloak: '#4a3626' },
+          talk: [['say', 'ghanim', "Le grain ? Reviens au matin. À cette heure je ne vends ni n'achète : je veille sur ce qui est à moi."]] },
         { id: 'voyageur', name: 'Voyageur', at: 'enclos', hidden: true, look: { kind: 'homme', robe: '#6b5a48', head: '#c9bda8' },
           talk: [['say', 'voyageur', "La nuit et le froid nous ont arrêtés ici."]] },
         { id: 'enfant1', name: 'Enfant', at: ['enclos', 1, 1], hidden: true, look: { kind: 'enfant', robe: '#8a7560', head: '#d6cab4' },
@@ -320,6 +359,7 @@ ISNAD.registerSaga({
       ],
       chests: [
         { at: ['souk', 2, 1], item: 'dattes', n: 2 },
+        { at: ['souk', -1, 1], codex: 'registre_farine' },
         { map: 'noos', at: ['faille', 0, 0], item: 'musc', n: 1 }
       ],
       intro: [
@@ -374,13 +414,17 @@ ISNAD.registerSaga({
           ['sfx', 'wind']
         ] },
         { text: 'Courir aux réserves de farine du souk', goto: 'souk', then: [
-          ['nar', "Dâr ad-Daqîq, la Maison de la farine. 'Umar en tire un sac de farine et une jarre de graisse."],
+          ['nar', "Dâr ad-Daqîq, la Maison de la farine. Le commis de garde se lève d'un bond."],
+          ['say', 'hazim', "Commandeur des croyants, à cette heure ! Tout est compté, pesé, gardé. Nul ne veille sur la farine des pauvres comme ton serviteur : repose-toi sur moi."],
+          ['say', 'umar', "Je me reposerai quand ils auront mangé. Un sac de farine, et de la graisse."],
+          ['nar', "Le commis s'empresse. La réserve sonne plus creux que ne le disent ses comptes ; près de la porte traîne un feuillet que nul n'a rangé."],
           ['say', 'umar', "Charge-le sur mon dos."],
           ['say', 'aslam', "Je le porterai à ta place, Commandeur des croyants."],
           ['choice', "Aslam tend les bras vers le sac. Que répond 'Umar ?", [
             { t: "Porter lui-même le sac, sur son propre dos", ok: true, r: [
               ['quote', "« Porteras-tu mon fardeau à ma place, au Jour de la Résurrection ? »", "Récit d'Aslam — at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya"],
-              ['nar', "Aslam charge le sac sur le dos du calife. Ils repartent en hâte dans la nuit."]
+              ['nar', "Aslam charge le sac sur le dos du calife. Ils repartent en hâte dans la nuit."],
+              ['pillar', 'justice', 1]
             ] },
             { t: "Laisser Aslam porter : c'est son office", r: [
               ['nar', "Ce n'est pas ce qui fut rapporté. Aslam insista ; 'Umar refusa chaque fois. Le fardeau d'un peuple ne se délègue pas."]
@@ -399,7 +443,61 @@ ISNAD.registerSaga({
           ['say', 'umar', "Dis du bien. Quand tu iras trouver le Commandeur des croyants, tu me trouveras là-bas, si Allah le veut."],
           ['say', 'umar', "Aslam, la faim les tenait éveillés et les faisait pleurer. Je n'ai pas voulu partir avant d'avoir vu ce que j'ai vu."],
           ['codex', 'ramada'],
-          ['nar', "Mais la farine d'une nuit ne brise pas la disette. Dans l'envers de Médine, quelque chose a tout vu — et s'en irrite."],
+          ['nar', "Mais la farine d'une nuit ne brise pas la disette. Sur la place, derrière une porte close, une lampe brûle encore : le grenier d'Abû Ghânim, le plus gros marchand de grain de la ville."],
+          ['say', 'aslam', "Tu pourrais le contraindre, Commandeur des croyants. La loi du marché te le permet."],
+          ['say', 'umar', "Je le pourrais. J'aurais son grain, et tous les autres cacheraient le leur. Allons d'abord lui parler."]
+        ] },
+        { text: "Frapper à la porte du grenier, sur la place", talk: 'ghanim', then: [
+          ['say', 'ghanim', "Qui frappe à cette heure ?… Commandeur des croyants. Je n'ai rien fait que la loi défende."],
+          ['nar', "Un grenier plein au milieu d'une ville qui a faim n'est plus une provision : c'est un mur. Et nul n'habite longtemps derrière un mur que les siens regardent."],
+          ['mus', 'conseil'],
+          ['parley', {
+            with: 'ghanim',
+            title: "Le grenier d'Abû Ghânim",
+            intro: "Il craint d'être ruiné s'il ouvre le premier, et de passer pour un homme qui a cédé à la peur. Il s'agit d'obtenir son grain sans le lui prendre.",
+            goal: 7,
+            rounds: [
+              { say: "Ce grain est à moi. Je l'ai acheté avant la disette, au prix du jour. Où est ma faute ?",
+                opts: [
+                  { t: "Nul ne t'ôte ton bien. Mais le prix d'aujourd'hui, c'est la faim des autres qui l'a fait.", el: 'adl', v: 2, r: "Je n'ai pas fait la sécheresse… Mais non, je n'ai pas fait ce prix-là non plus." },
+                  { t: "Je reviens de la harra. Des enfants s'y endorment devant une marmite d'eau.", el: 'rahma', v: 1, r: "Si près des murs ? Je ne savais pas qu'on en était là." },
+                  { t: "Pas d'accaparement sur notre marché : je peux te fermer le souk dès demain.", el: 'shajaa', v: -1, r: "Tu le peux. Tu auras mon grain, pas mon consentement ; et les autres cacheront le leur plus profond." }
+                ] },
+              { say: "Si j'ouvre le premier, les autres attendront que je sois vide, puis vendront au double. Je serai ruiné, et eux riches.",
+                opts: [
+                  { t: "Le registre de la Maison de la farine compte quarante sacs sortis sans nom en face. Je ne te demande pas qui te les a vendus : je te demande de les rendre aux tables.", el: 'ilm', v: 3, need: 'registre_farine', r: "Tu sais donc. On m'avait juré que personne ne comptait… Je les rendrai, ceux-là d'abord." },
+                  { t: "Tu ne seras ni le premier ni le seul : ma maison a donné ce soir, et j'irai frapper à chaque porte après la tienne.", el: 'adl', v: 2, r: "Si le calife frappe à toutes les portes, nul ne pourra dire qu'il attendait." },
+                  { t: "Les caravanes d'Égypte sont en route. Ton grain ne vaudra bientôt plus rien.", el: 'sidq', v: 0, r: "Bientôt ? Dans un mois ? D'ici là, il vaut ce qu'il vaut." }
+                ] },
+              { say: "Et qui me rendra ce que j'aurai donné ? Mes fils aussi vivent de ce commerce.",
+                opts: [
+                  { t: "Le Trésor te paiera au prix d'avant la disette, devant témoins. Tu ne perdras que le gain que la faim t'aurait fait.", el: 'adl', v: 2, r: "Le prix d'avant… C'est un prix dur. Mais c'est un prix honnête." },
+                  { t: "Assieds-toi demain à la table commune. Tu verras à qui tu donnes ; aucun compte ne te le dira mieux.", el: 'rahma', v: 2, r: "On dit que tu t'y assois le dernier. J'irai." },
+                  { t: "Ta récompense est auprès d'Allah ; ne me parle pas de dirhams cette nuit.", el: 'sabr', v: -1, r: "Elle l'est. Mais mes créanciers, eux, sont à Médine." }
+                ] },
+              { say: "Si j'ouvre… qu'on ne dise pas que j'ai cédé à la peur du calife. Je dois pouvoir regarder mes voisins.",
+                opts: [
+                  { t: "On dira ce qui est : qu'Abû Ghânim a ouvert le premier, de son plein gré, une nuit où nul ne l'y forçait.", el: 'sidq', v: 2, r: "De mon plein gré. Oui. Cela, je peux le porter." },
+                  { t: "Prends la nuit. Je reviendrai à l'aube, seul.", el: 'sabr', v: 1, r: "À l'aube, les enfants auront encore faim… Mais tu reviendras, je le sais." },
+                  { t: "Peu importe ce qu'on dira. Seul le grain compte.", el: 'ilm', v: -1, r: "Pour toi, peut-être. Moi, c'est ici que je vis." }
+                ] }
+            ],
+            win: [
+              ['say', 'ghanim', "Qu'on ouvre. Et qu'on porte les premiers sacs aux tables avant le jour : je veux que mes voisins me voient les charger."],
+              ['nar', "Avant l'aube, trois autres greniers s'ouvrent dans la rue. Personne ne les y a contraints : il a suffi que le premier ne soit pas resté seul."],
+              ['flag', 'greniers_ouverts'],
+              ['pillar', 'lien', 1],
+              ['give', 'pain', 1]
+            ],
+            lose: [
+              ['say', 'ghanim', "Tu parles bien, Commandeur des croyants. Mais je n'ouvrirai pas le premier. Fais ce que la loi te permet."],
+              ['nar', "'Umar fera ouvrir, au matin, par la règle du marché. Le grain sortira ; la confiance, non. Dans la rue, d'autres portes se sont refermées en entendant frapper."],
+              ['pillar', 'lien', -1]
+            ]
+          }],
+          ['codex', 'accaparement'],
+          ['mus', 'nuit'],
+          ['nar', "Dans l'envers de Médine, quelque chose a tout entendu — et s'en irrite."],
           ['sfx', 'glitch'],
           ['map', 'noos', 'seuil', { hue: 45 }],
           ['amb', 'noos'],
@@ -409,19 +507,25 @@ ISNAD.registerSaga({
         { text: "Atteindre le cœur de la noosphère et briser l'Accapareur", goto: 'coeur', then: [
           ['say', "L'Accapareur", "Un sac de farine ? Pour une nuit ? Demain ils auront faim de nouveau, et mes portes seront toujours closes."],
           ['say', 'umar', "Demain, je reviendrai. Et le jour d'après. Jusqu'à ce que tes portes s'ouvrent."],
-          ['battle', { group: ['accapareur'], bg: 'ville', boss: true, intro: "La peur de manquer a pris corps." }],
+          ['battle', { group: ['accapareur'], bg: 'ville', boss: true, intro: "La peur de manquer a pris corps.",
+                       allies: [{ flag: 'greniers_ouverts', name: "Les greniers ouverts d'Abû Ghânim" }] }],
           ['nar', "L'Accapareur s'effondre en une pluie de grains. Dans toute la noosphère de Médine, des portes de greniers s'entrouvrent."]
         ] }
       ],
       outro: [
-        ['fade', 'out'],
+        ['map', 'medine', 'place', { time: 'dawn' }],
         ['amb', 'vent'],
         ['nar', "'Umar écrit aux gouverneurs : « Au secours ! Au secours ! » D'Égypte, 'Amr répond : « Je t'envoie une caravane dont la tête sera chez toi quand la queue sera encore chez moi. »"],
-        ['nar', "De Shâm, Abû 'Ubayda arrive le premier, avec quatre mille montures chargées de vivres. Puis 'Umar sort prier pour la pluie avec les gens. Et la pluie vient."],
+        ['nar', "De Shâm, Abû 'Ubayda arrive le premier, avec quatre mille montures chargées de vivres. Mais le ciel reste fermé. Alors 'Umar sort avec les gens, sans apparat, et fait avancer al-'Abbâs, l'oncle du Prophète ﷺ."],
+        ['quote', "« Ô Allah, nous Te sollicitions par notre Prophète et Tu nous donnais la pluie ; nous Te sollicitons par l'oncle de notre Prophète : donne-nous la pluie. »", "Invocation de 'Umar — al-Bukhârî, Sahîh (1010), traduction du sens"],
+        ['pray'],
+        ['codex', 'istisqa'],
+        ['mus', 'espoir'],
+        ['sfx', 'wind'],
+        ['nar', "Et la pluie vient. Les gens rentrent en relevant leurs manteaux ; la terre couleur de cendre boit jusqu'au soir."],
         ['nar', "On rapporte qu'il disait : si la disette avait duré, j'aurais logé chaque famille pauvre chez une famille aisée — car nul ne périt en partageant la moitié de son repas."],
         ['codex', 'bio_umar'],
-        ['heal'],
-        ['fade', 'in']
+        ['heal']
       ]
     },
 
@@ -448,6 +552,12 @@ ISNAD.registerSaga({
           ]]] },
         { id: 'sophrone', name: 'Sophrone', map: 'romaine', at: 'basilique', look: { kind: 'moine', robe: '#e8e2d2', head: '#b89a4a' },
           talk: [['say', 'sophrone', "La ville est entre tes mains, et tes serments avec elle."]] },
+        { id: 'ancien_tib', name: 'Ancien de Tibériade', map: 'romaine', at: 'quartier', look: { kind: 'ancien', robe: '#4a5a6e', head: '#e6e0d0' },
+          talk: [
+            ['say', 'ancien_tib', "Je viens de Tibériade. Depuis l'empereur Hadrien, aucun des nôtres n'a le droit d'habiter cette ville ; Héraclius a renouvelé l'interdit voici sept ans. Cinq siècles que nous la regardons depuis ses collines."],
+            ['codex', 'bannissement'],
+            ['say', 'ancien_tib', "Je ne demande la maison de personne, ni la peine de personne. Je demande que cet édit ne dure pas plus longtemps que l'empire qui l'a écrit."]
+          ] },
         { id: 'bilal', name: 'Bilâl', map: 'romaine', at: ['esplanade', 2, 0], hidden: true, look: { kind: 'compagnon', robe: '#e6dfd0', head: '#f2ede2' },
           talk: [['nar', "Bilâl se tient face à la ville, silencieux."]] }
       ],
@@ -460,6 +570,7 @@ ISNAD.registerSaga({
       chests: [
         { at: ['oasis', -1, 1], item: 'eau', n: 1 },
         { map: 'romaine', at: ['jardin', 0, 1], item: 'miel', n: 1 },
+        { map: 'romaine', at: ['quartier', 1, 1], codex: 'bannissement' },
         { map: 'romaine', at: ['remparts', 1, 0], item: 'siwak', n: 1 }
       ],
       intro: [
@@ -500,7 +611,9 @@ ISNAD.registerSaga({
           ['hide', 'abu_pnj'], ['join', 'abuubayda'], ['codex', 'bio_abuubayda'],
           ['map', 'romaine', 'porte', { time: 'day' }],
           ['amb', 'foule'],
-          ['nar', "Îliyâ'. Les remparts, les colonnes, les coupoles. Une foule muette regarde entrer le maître du nouvel empire : un homme à pied, qui mène sa monture par la bride."]
+          ['mus', 'rome'],
+          ['nar', "Îliyâ'. Les remparts, les colonnes, les coupoles. Une foule muette regarde entrer le maître du nouvel empire : un homme à pied, qui mène sa monture par la bride."],
+          ['say', 'abuubayda', "Le patriarche attend devant la basilique. Mais écoute d'abord la ville, si tu veux savoir ce qu'on te demandera : au quartier bas, un ancien venu de Tibériade patiente depuis l'aube."]
         ] },
         { text: 'Rencontrer le patriarche Sophrone devant la basilique', talk: 'sophrone', then: [
           ['say', 'sophrone', "Je suis Sophrone, patriarche de cette ville. Je n'ai voulu remettre ses clés qu'à toi."],
@@ -523,8 +636,63 @@ ISNAD.registerSaga({
               ['nar', "Ce n'est pas ce qui fut rapporté. 'Umar ne retarda pas la prière : il déplaça seulement ses pas."]
             ] }
           ]],
+          ['pray', 'dhuhr'],
           ['say', 'sophrone', "Tu protèges mon église contre les tiens. Quel empire fait cela ?"],
-          ['say', 'umar', "Ce n'est pas un empire. Conduis-moi à l'esplanade."],
+          ['say', 'umar', "Ce n'est pas un empire."],
+          ['nar', "On ne tient pas une ville par ses remparts. On la tient par ce que chacun peut encore y appeler sien : son seuil, sa prière, la tombe de ses morts."],
+          ['tp', 'ancien_tib', ['basilique', -2, 1]],
+          ['say', 'sophrone', "Alors entends encore ceci. Mon peuple demande ce que Rome lui garantissait : que les juifs n'habitent pas Îliyâ' avec nous. Je ne le demande pas par haine. Ma ville sort d'un sac et d'un siège ; j'ai peur de ce qu'un retour y réveillerait."],
+          ['say', 'ancien_tib', "Commandeur des croyants, voilà cinq siècles que nous pleurons cette ville de loin. Nous ne voulons ni la maison d'autrui ni une revanche : seulement habiter près de nos pierres, et y prier."],
+          ['say', 'abuubayda', "Chacun des deux dit vrai, depuis sa peine. Tu peux trancher seul. Tu peux aussi tenter qu'ils s'entendent."],
+          ['mus', 'conseil'],
+          ['parley', {
+            with: 'sophrone',
+            title: 'La clause et les familles de Tibériade',
+            intro: "Sophrone craint pour la paix d'une ville encore meurtrie ; l'ancien demande la fin d'un bannissement de cinq siècles. Il s'agit que le patriarche y consente de lui-même.",
+            goal: 7,
+            rounds: [
+              { say: "Les plaies de ma ville sont ouvertes. Si tu y fais rentrer ceux que Rome en tenait éloignés, je ne réponds plus de la paix de ses rues.",
+                opts: [
+                  { t: "Je ne te demande pas d'oublier ce que ta ville a souffert. Je te demande si la peine des uns doit rester la loi des autres.", el: 'rahma', v: 2, r: "Tu poses la question comme un pasteur. Je l'entends." },
+                  { t: "Le pacte que tu viens de recevoir garantit tes églises. Il ne te fait pas gardien des portes.", el: 'adl', v: 1, r: "C'est vrai. Mais un gardien inquiet garde mal ce qu'on lui laisse." },
+                  { t: "La ville s'est rendue. Ce n'est plus à son patriarche d'en choisir les habitants.", el: 'shajaa', v: -1, r: "Alors pourquoi m'avoir fait signer ? Un pacte que l'on dicte n'est qu'un ordre." }
+                ] },
+              { say: "Ce bannissement n'est pas de moi. Il a l'âge des siècles ; mes pères l'ont trouvé en naissant.",
+                opts: [
+                  { t: "Il a un auteur et une date : Hadrien, au sortir d'une guerre ; puis Héraclius, il y a sept ans. Ce qu'un César a décrété n'est pas l'Évangile.", el: 'ilm', v: 3, need: 'bannissement', r: "Tu connais nos édits mieux que nos gouverneurs. Oui : c'était la loi de César, non celle de l'autel." },
+                  { t: "Ce que les pères ont trouvé en naissant, les fils peuvent le laisser derrière eux. Tu es vieux, patriarche : laisse autre chose.", el: 'sidq', v: 2, r: "Tu frappes juste, et sans cruauté." },
+                  { t: "Les siècles ne font pas le droit.", el: 'sabr', v: 0, r: "Ils font l'habitude. Et c'est d'habitude que vivent les villes." }
+                ] },
+              { say: "Combien ? L'ancien parle de deux cents familles. Ma ville n'a pas deux cents maisons vides.",
+                opts: [
+                  { t: "Alors pas deux cents. Un nombre que la ville peut porter : soixante-dix, et pas une maison prise à qui l'habite.", el: 'adl', v: 2, r: "Soixante-dix… Au sud de l'esplanade, près des eaux de Siloé, il y a des ruines que nul ne réclame." },
+                  { t: "Demande-le-lui toi-même. Il est là, et tu ne lui as encore jamais parlé.", el: 'rahma', v: 1, r: "Je n'ai jamais parlé à l'un des leurs autrement que par édit. Soit." },
+                  { t: "Deux cents, puisqu'ils le demandent.", el: 'shajaa', v: -1, r: "Tu donnes ce qui n'est pas vide. Ce sont mes fidèles qui paieront ta largesse." }
+                ] },
+              { say: "Et si, l'an prochain, une rixe éclate près de l'esplanade ? À qui demandera-t-on des comptes ?",
+                opts: [
+                  { t: "À moi. Les uns et les autres sont sous mon pacte : qui lèse l'un d'eux trouvera le même juge.", el: 'adl', v: 2, r: "Le même juge pour tous. Rome ne nous l'a jamais promis." },
+                  { t: "Qu'une veille commune garde les abords : des tiens, des leurs, des miens. On surveille mieux ce qu'on garde ensemble.", el: 'sidq', v: 2, r: "Une veille commune… Voilà une chose que je n'aurais pas osé demander." },
+                  { t: "Les rixes sont l'affaire du gouverneur, non la tienne.", el: 'ilm', v: 0, r: "Elles seront l'affaire de mes fidèles bien avant d'être la sienne." }
+                ] }
+            ],
+            win: [
+              ['nar', "Sophrone se tourne vers l'ancien de Tibériade. Pour la première fois, les deux vieillards se parlent sans édit entre eux."],
+              ['say', 'sophrone', "Soixante-dix familles, au sud de l'esplanade. Et une veille commune aux abords. Qu'on l'écrive à part du pacte, de ma main et de la tienne."],
+              ['say', 'ancien_tib', "Nous n'en espérions pas tant de sa bouche. Qu'il en soit remercié, et toi avec lui."],
+              ['flag', 'veille_commune'],
+              ['pillar', 'lien', 1]
+            ],
+            lose: [
+              ['say', 'sophrone', "Je ne peux pas y mettre ma main. Ce que tu décideras, tu le décideras sans moi."],
+              ['nar', "On rapporte que 'Umar fixa lui-même le nombre : soixante-dix familles, au sud de l'esplanade. La chose se fit ; mais sans le consentement du patriarche, et la ville le sut."],
+              ['pillar', 'lien', -1]
+            ]
+          }],
+          ['codex', 'bannissement'],
+          ['codex', 'familles_tiberiade'],
+          ['mus', 'rome'],
+          ['say', 'umar', "Conduis-moi à l'esplanade."],
           ['say', 'sophrone', "Le palais du gouverneur barre le chemin. Depuis ce matin, quelque chose y rôde : la pompe des Césars, qui cherche un nouveau maître."]
         ] },
         { text: 'Dissiper le Faste devant le palais du gouverneur', foe: 'f_faste', then: [
@@ -536,13 +704,17 @@ ISNAD.registerSaga({
           ['say', "L'Aigle d'Airain", "Enfin, un vainqueur. Rome m'a porté, et d'autres avant elle. Entre en César, fils d'al-Khattâb : la ville n'attend que cela pour t'aimer."],
           ['say', 'umar', "Elle attend la justice. Toi, tu n'es que l'habitude qu'ont les hommes de se courber."],
           ['codex', 'ego_aigle'],
-          ['battle', { group: ['aigle'], bg: 'romaine', boss: true, intro: "L'orgueil des empires cherche un front où se poser." }],
+          ['battle', { group: ['aigle'], bg: 'romaine', boss: true, intro: "L'orgueil des empires cherche un front où se poser.",
+                       allies: [{ flag: 'veille_commune', name: "La veille commune d'Îliyâ'" }] }],
           ['nar', "L'Aigle se brise. Ses plumes d'airain retombent : ce n'étaient que de vieilles pièces de monnaie."],
           ['nar', "Alors 'Umar étend son manteau, y ramasse les décombres de l'esplanade et les emporte lui-même. Les musulmans l'imitent, jusqu'à ce que le sol soit net."],
           ['show', 'bilal'],
+          ['mus', 'silence'],
           ['nar', "On rapporte que, lors de ce voyage, on pria 'Umar de demander l'appel à Bilâl — qui ne l'avait plus lancé depuis la mort du Messager d'Allah ﷺ."],
           ['nar', "Bilâl se lève. À sa voix, ceux qui avaient connu le temps du Prophète ﷺ pleurent comme ils n'avaient jamais pleuré. Et 'Umar plus que tous."],
-          ['codex', 'bilal']
+          ['codex', 'bilal'],
+          ['pray', 'asr'],
+          ['mus', 'espoir']
         ] }
       ],
       outro: [
@@ -569,8 +741,29 @@ ISNAD.registerSaga({
         { id: 'scribe', name: 'Scribe du dîwân', at: ['halle', 1, 0], look: { kind: 'homme', robe: '#5a6470', head: '#e4dccb' },
           talk: [['ask', "Le scribe lève son calame.", [
             { t: "Qu'est-ce que le dîwân ?", r: [['say', 'scribe', "Le registre des pensions. On voulait y inscrire 'Umar en tête ; il a dit : « Placez 'Umar là où Allah l'a placé », et il a fait commencer par les proches du Prophète ﷺ."]] },
-            { t: "De quand date-t-on les lettres ?", r: [['say', 'scribe', "De l'Hégire, depuis que 'Umar a consulté les Compagnons. Ni d'une naissance, ni d'une mort : du jour où l'on a quitté sa ville pour sa foi."]] }
+            { t: "De quand date-t-on les lettres ?", r: [['say', 'scribe', "De l'Hégire, depuis que 'Umar a consulté les Compagnons. Ni d'une naissance, ni d'une mort : du jour où l'on a quitté sa ville pour sa foi."], ['codex', 'hijri']] }
           ]]] },
+        { id: 'hazim', name: 'Hâzim, commis du Trésor', at: ['halle', -1, 0], look: { kind: 'homme', robe: '#5e6a58', head: '#e8dfc8', cloak: '#3a4236' },
+          talk: [['say', 'hazim', "Depuis la Maison de la farine, on m'a confié les comptes du Trésor. C'est que le Commandeur des croyants sait reconnaître ceux qui l'aiment."]] },
+        { id: 'savant', name: 'Maître du cercle', at: 'ecole', look: { kind: 'savant', robe: '#e2dccb', head: '#f3eee0' },
+          talk: [['if', 'su_hijri',
+            [['say', 'savant', "Compte tes années depuis l'Hégire, et tu sauras toujours d'où tu es parti."]],
+            [
+              ['say', 'savant', "Assieds-toi dans le cercle. Nous comptions hier : de quand dater une lettre ? Abû Mûsâ s'en plaignait depuis Bassora, dit-on : il lui venait du calife des écrits sans date."],
+              ['say', 'savant', "On proposa la naissance du Prophète ﷺ, puis sa mort. On retint l'Hégire. Un peuple qui date ses jours d'un départ n'oublie pas qu'il est en chemin."],
+              ['flag', 'su_hijri'], ['codex', 'hijri'], ['pillar', 'savoir', 1]
+            ]]] },
+        { id: 'veteran', name: 'Vétéran de Shâm', at: ['mosquee_porte', 3, 0], look: { kind: 'soldat', robe: '#6a5a40', head: '#e2d8c2' },
+          talk: [
+            ['say', 'veteran', "Les Banû Ghassân ? Je les ai eus en face au Yarmoûk. Ils gardaient la marche du désert pour César, contre une solde. On raconte qu'un jour son trésorier l'a refusée aux Arabes de la frontière, avec une injure. Ces choses-là ne s'oublient pas."],
+            ['codex', 'ghassan']
+          ] },
+        { id: 'jabala', name: 'Jabala ibn al-Ayham', at: ['mosquee_porte', -1, 0], look: { kind: 'homme', robe: '#5a2f6a', head: '#d4af37', cloak: '#7a1f2a' },
+          talk: [['say', 'jabala', "J'ai régné sur les Arabes de Shâm. Je suis venu à vous de moi-même, et nul ne m'y a contraint."]] },
+        { id: 'fazari', name: 'Homme des Fazâra', at: ['mosquee_porte', 1, 0], look: { kind: 'homme', robe: '#7a6a52', head: '#cfc3ab' },
+          talk: [['say', 'fazari', "Je ne demande que mon droit."]] },
+        { id: 'thawr', name: 'Thawr ibn Mâlik', at: ['mosquee_porte', -2, 1], look: { kind: 'soldat', robe: '#3f4f6a', head: '#cfc6b2', cloak: '#2a2f44' },
+          talk: [['say', 'thawr', "Mes cavaliers gardent la marche de Shâm, comme ceux de mon père. Je suis mon roi. Mais j'écoute."]] },
         { id: 'plaignant', name: "Voyageur d'Égypte", at: ['puits', 1, 0], look: { kind: 'homme', robe: '#4a6a5a', head: '#d8cdb8' },
           talk: [['say', 'plaignant', "Le fils du gouverneur d'Égypte m'avait frappé. Je suis venu me plaindre ici : 'Umar m'a tendu le fouet, devant le père. Il lui a dit : depuis quand asservissez-vous des gens nés libres ?"]] }
       ],
@@ -620,6 +813,80 @@ ISNAD.registerSaga({
               ['nar', "Ce n'est pas ce qui fut rapporté. La justice de 'Umar le liait lui-même le premier : sa parole pesa plus que sa colère."]
             ] }
           ]],
+          ['say', 'aslam', "Commandeur des croyants, un homme des Fazâra attend devant la mosquée, le visage en sang. Il se plaint d'un roi."],
+          ['say', 'abdarrahman', "Jabala, le prince des Ghassân. Un vétéran de Shâm, près de la porte, connaît ces gens mieux que nous : écoute-le si tu veux savoir ce qui les tient."]
+        ] },
+        { text: 'Entendre la plainte portée devant la mosquée', talk: 'fazari', then: [
+          ['nar', "On rapporte que la chose advint pendant le pèlerinage : dans la presse, un homme des Fazâra marcha sur le pan du manteau de Jabala, et le roi le frappa au visage."],
+          ['say', 'fazari', "Commandeur des croyants, cet homme m'a brisé le nez. J'avais foulé son vêtement sans le vouloir."],
+          ['say', 'umar', "Jabala. Est-ce vrai ?"],
+          ['say', 'jabala', "C'est vrai. Il a marché sur mon manteau devant tous. N'était le respect dû à ce lieu, il lui en aurait coûté davantage."],
+          ['say', 'umar', "Tu as avoué. Obtiens son pardon ; sinon, il te rendra le coup."],
+          ['say', 'jabala', "Comment ? Je suis un roi, et lui un homme du commun."],
+          ['choice', "Un roi allié, dont dépend toute une frontière, refuse d'être l'égal d'un bédouin. Que tranche 'Umar ?", [
+            { t: "Le même droit pour les deux : le pardon du bédouin, ou la pareille", ok: true, r: [
+              ['quote', "« L'islam vous a réunis, toi et lui. Tu ne l'emportes sur lui en rien, sinon par la piété. »", "On rapporte — récit de Jabala : Ibn Kathîr, al-Bidâya ; al-Isfahânî, al-Aghânî (chaîne discutée), traduction du sens"],
+              ['pillar', 'justice', 1]
+            ] },
+            { t: "Presser le bédouin de pardonner, au nom de l'alliance", r: [
+              ['nar', "Ce n'est pas ce qui fut rapporté. Le pardon appartenait au bédouin seul ; 'Umar ne le lui arracha pas pour ménager un trône."]
+            ] },
+            { t: "Remettre l'affaire au jour où les frontières seront sûres", r: [
+              ['nar', "Ce n'est pas ce qui fut rapporté. Le droit d'un homme n'attendit pas la commodité d'une alliance."]
+            ] }
+          ]],
+          ['say', 'jabala', "Je croyais être plus honoré dans l'islam que je ne l'étais avant lui."],
+          ['say', 'umar', "Laisse cela. Contente cet homme."],
+          ['say', 'jabala', "Donne-moi jusqu'à demain."],
+          ['nar', "'Umar accorde la nuit. Le prince croyait perdre un rang ; il ne perdait que le droit de frapper. Mais c'est de ce droit-là qu'il avait fait sa demeure."],
+          ['nar', "Dans l'ombre du roi, un chef de clan n'a pas quitté 'Umar des yeux : Thawr ibn Mâlik, dont les cavaliers gardent la marche de Shâm. S'il part avec son roi, une frontière part avec lui."],
+          ['mus', 'conseil'],
+          ['parley', {
+            with: 'thawr',
+            title: 'Le serment de Thawr',
+            intro: "Thawr doit tout à son roi. Mais ses hommes ont leurs pâturages de ce côté-ci de la frontière, et il vient de voir un bédouin obtenir justice d'un prince.",
+            goal: 7,
+            rounds: [
+              { say: "Mon roi est abaissé devant un gardien de chameaux. Demain, ce sera mon tour. Pourquoi resterais-je ?",
+                opts: [
+                  { t: "Demain, si un prince frappe l'un de tes cavaliers, c'est ce même droit qui le relèvera. Tu viens de voir ce qu'il vaut.", el: 'adl', v: 2, r: "Mes cavaliers… Chez César, leur nez ne valait pas un procès." },
+                  { t: "Ton roi n'est pas abaissé. Il est égal ; c'est autre chose, et c'est plus dur.", el: 'sidq', v: 1, r: "Plus dur, je te l'accorde." },
+                  { t: "Pars si tu le veux. Shâm se gardera sans toi.", el: 'shajaa', v: -1, r: "Alors tu n'as rien à me dire, et moi rien à entendre." }
+                ] },
+              { say: "J'ai prêté serment à Jabala, et mon père au sien. Un homme qui rompt son serment, que vaut ensuite sa parole pour toi ?",
+                opts: [
+                  { t: "Je sais ce qui liait les tiens à César : une solde, que son trésorier vous a refusée avec une injure. Ce que je te propose ne s'achète pas : cela t'oblige, et cela m'oblige.", el: 'ilm', v: 3, need: 'ghassan', r: "Tu sais cela ? Il nous a traités de chiens. Aucun de mes hommes ne l'a oublié." },
+                  { t: "Je ne te demande pas de rompre un serment. Ton roi partira de lui-même. Je te demande ce que tu dois à ceux qui restent.", el: 'sidq', v: 2, r: "À ceux qui restent… Mes hommes ont des troupeaux de ce côté, et des morts dans cette terre." },
+                  { t: "Les serments passent avec ceux qui les ont reçus.", el: 'sabr', v: 0, r: "Pas chez nous." }
+                ] },
+              { say: "Et ma foi ? Mes pères étaient chrétiens ; plus d'un de mes cavaliers l'est resté. Ton droit égal vaut-il pour eux ?",
+                opts: [
+                  { t: "Le pacte les couvre : leurs personnes, leurs biens, leurs églises. Qui lèse l'un d'eux me trouvera devant lui.", el: 'adl', v: 2, r: "J'ai entendu ce qu'on dit d'Îliyâ'. Si tu tiens ici ce que tu as écrit là-bas…" },
+                  { t: "Je ne compte pas tes cavaliers par leur prière. Je les compte par leur parole ; et la tienne n'a pas tremblé.", el: 'rahma', v: 2, r: "Voilà longtemps qu'on ne m'avait pas compté ainsi." },
+                  { t: "Ils feront ce que font les vaincus : ils s'accommoderont.", el: 'ilm', v: -1, r: "Nous ne sommes pas des vaincus. Nous sommes des hommes qui choisissent." }
+                ] },
+              { say: "Si je reste, que dirai-je à mes hommes quand ils demanderont ce que j'y ai gagné ?",
+                opts: [
+                  { t: "Rien que tu puisses compter. Dis-leur ce que tu as vu ce soir : un roi et un bédouin devant le même juge.", el: 'sidq', v: 2, r: "Ils l'ont vu aussi. C'est peut-être assez." },
+                  { t: "La part de tout combattant, ni plus ni moins, inscrite au registre à ton nom.", el: 'adl', v: 1, r: "Ni plus ni moins… Tu ne sais pas acheter les gens, fils d'al-Khattâb." },
+                  { t: "Que ceux qui partent n'y gagneront rien non plus.", el: 'shajaa', v: -1, r: "Ils auront gardé leur roi. C'est quelque chose." }
+                ] }
+            ],
+            win: [
+              ['say', 'thawr', "Je reste. Non contre mon roi : jamais je ne lèverai la main sur lui. Mais mes cavaliers garderont la marche, et ton juge les trouvera devant lui s'ils fautent."],
+              ['flag', 'allie_thawr'],
+              ['pillar', 'lien', 1]
+            ],
+            lose: [
+              ['say', 'thawr', "Tu es juste, 'Umar. Mais on ne quitte pas son roi la nuit où il tombe. Adieu."],
+              ['nar', "Les cavaliers de Thawr sellent avant l'aube. Une marche de Shâm restera sans garde ; il faudra y envoyer des hommes que l'on n'a pas."],
+              ['pillar', 'lien', -1]
+            ]
+          }],
+          ['mus', 'medine'],
+          ['nar', "On rapporte qu'à la faveur de la nuit Jabala quitta la ville avec les siens et gagna Constantinople. Il ne revint pas. La tradition lui prête, plus tard, des vers de regret."],
+          ['nar', "L'alliance d'un roi est perdue. 'Umar le savait en parlant. Il a parlé."],
+          ['codex', 'ghassan'], ['codex', 'jabala'],
           ['say', 'abdarrahman', "Commandeur des croyants, le convoi d'al-Madâ'in vient d'atteindre la place. Les trésors de Kisrâ."],
           ['codex', 'bio_abdarrahman']
         ] },
@@ -654,6 +921,27 @@ ISNAD.registerSaga({
         ] },
         { text: "Gagner la halle où l'on tient le dîwân", goto: 'halle', then: [
           ['nar', "Le dîwân : le registre où 'Umar a fait inscrire, nom par nom, la part de chacun — les proches du Prophète ﷺ en tête, et les siens à leur rang."],
+          ['codex', 'diwan'], ['pillar', 'savoir', 1],
+          ['say', 'hazim', "Commandeur des croyants ! Tout est inscrit, tout est pesé. Si chacun servait comme toi, on se passerait de registres. Permets que j'écrive ton nom en tête : ce ne serait que justice."],
+          ['say', 'umar', "Écris 'Umar là où Allah l'a placé."],
+          ['nar', "L'homme s'incline très bas. 'Abd ar-Rahmân, lui, regarde ses mains : elles tiennent le registre comme on tient une porte fermée."],
+          ['ask', "Le commis du Trésor loue beaucoup. Que faire vérifier ?", [
+            { t: "Poser le feuillet de l'Année des cendres en face du dîwân", need: 'registre_farine', r: [
+              ['nar', "Les mêmes ratures, la même main. Quarante sacs sortis sans nom l'année de la faim ; et ici, des parts inscrites deux fois, sous des noms que nul ne connaît."],
+              ['say', 'hazim', "Commandeur des croyants… c'était peu de chose… d'autres en faisaient autant…"],
+              ['say', 'umar', "D'où tiens-tu cela ?"],
+              ['nar', "Il rend ce qu'il a pris, devant témoins, et quitte sa charge. 'Umar n'ajoute rien : le registre a parlé pour lui."],
+              ['flag', 'hazim_demasque'], ['pillar', 'justice', 1]
+            ] },
+            { t: "Faire recompter le convoi d'al-Madâ'in", r: [
+              ['nar', "Pas un anneau ne manque : le commis n'a pas touché à ce que tous regardaient. Faute de preuve, 'Umar ne condamne pas. Il fait seulement tenir les comptes en double."]
+            ] },
+            { t: "Lui demander raison de ses éloges", r: [
+              ['say', 'hazim', "Je dis seulement ce que chacun pense, Commandeur des croyants."],
+              ['nar', "Une louange n'est pas une faute. Faute de preuve, 'Umar ne condamne pas. Il fait seulement tenir les comptes en double."]
+            ] }
+          ]],
+          ['codex', 'hazim_fiction'],
           ['say', 'abdarrahman', "L'or de Kisrâ est partagé. Mais regarde l'envers des choses : son trône, lui, ne se partage pas. Il attend."],
           ['sfx', 'glitch'],
           ['map', 'palais', 'entree', { time: 'night' }],
@@ -671,7 +959,8 @@ ISNAD.registerSaga({
           ['say', 'umar', "J'ai une natte dans une mosquée. Elle me suffit."],
           ['say', 'Le Trône vide', "Tous disent cela. Puis vient l'or, et la peur de le perdre, et les gardes pour le garder. Tu as pleuré tout à l'heure : tu me connais déjà."],
           ['say', 'umar', "Je te connais. C'est pourquoi tu resteras vide."],
-          ['battle', { group: ['trone'], bg: 'palais', boss: true, intro: "La tyrannie n'est pas un roi : c'est une place qui attend." }],
+          ['battle', { group: ['trone'], bg: 'palais', boss: true, intro: "La tyrannie n'est pas un roi : c'est une place qui attend.",
+                       allies: [{ flag: 'allie_thawr', name: 'Les cavaliers de Thawr' }] }],
           ['flash', '#ffffff'],
           ['sfx', 'break'],
           ['nar', "Le Trône se fend. Il n'y avait rien dessous : ni socle, ni fondation. Seulement le regard de tous ceux qui s'étaient inclinés."]
@@ -680,8 +969,14 @@ ISNAD.registerSaga({
       outro: [
         ['map', 'medine', 'mosquee_cour', { time: 'dawn' }],
         ['amb', 'silence'],
+        ['mus', 'silence'],
         ['nar', "Médine, avant l'aube. La natte est à sa place. 'Umar aussi."],
         ['quote', "« Ô Allah, accorde-moi le martyre dans Ton sentier, et fais que ma mort ait lieu dans la ville de Ton Messager. »", "Invocation de 'Umar — al-Bukhârî, Sahîh (1890)"],
+        ['title', "L'aube de Dhû l-Hijja", 'An 23 H · 644 · Médine'],
+        ['nar', "Il aligne les rangs pour la prière de l'aube, comme chaque jour. Un esclave perse, Abû Lu'lu'a, s'est glissé derrière lui. La prière commence. La lame frappe."],
+        ['flash', '#ffffff'],
+        ['nar', "Blessé, 'Umar saisit la main de 'Abd ar-Rahmân ibn 'Awf et l'avance à sa place : la prière des gens ne doit pas se rompre."],
+        ['pray', 'fajr'],
         ['heal']
       ]
     }

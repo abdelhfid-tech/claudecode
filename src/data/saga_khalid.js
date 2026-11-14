@@ -1,5 +1,10 @@
 /* ISNAD — Saga III : Khâlid ibn al-Walîd, « Le Sabre dégainé ».
-   Thèse : le plus grand courage n'est pas de dégainer, mais de rengainer.
+   Thèse : le plus grand courage n'est pas de dégainer, mais de rengainer. Le plus grand capitaine de son
+   temps a aussi conclu des paix : le sabre n'est que le dernier recours.
+   v2 : trois pourparlers (le monastère d'al-Hîra, les Banû Zurayr au Yarmoûk, le Fort des Oliviers), prières,
+   savoirs qui ouvrent des arguments, piliers, et un hypocrite de fiction : Ghâlib, l'intendant.
+   Fiction signalée dans le codex : l'économe et son monastère, Wahb ibn Zurayr et son clan, le Fort des
+   Oliviers, Ghâlib, les feuillets.
    Sources principales : at-Tabarî (Târîkh), al-Balâdhurî (Futûh al-Buldân), al-Bukhârî, Ibn Sa'd, Ibn Kathîr. */
 ISNAD.registerSaga({
   id: 'khalid', order: 3,
@@ -11,24 +16,26 @@ ISNAD.registerSaga({
 
   intro: [
     ['title', 'Khâlid ibn al-Walîd', 'Le Sabre dégainé'],
-    ['amb', 'vent'],
+    ['amb', 'vent'], ['mus', 'desert'],
     ['nar', "An 13 de l'Hégire. L'Arabie est de nouveau une. Au nord, deux empires se regardent depuis des siècles par-dessus le désert : Rome et la Perse. Entre eux marche un homme que nul n'a encore vu vaincu."],
     ['nar', "Khâlid, fils d'al-Walîd, des Banû Makhzûm. À Uhud, il chargeait contre les musulmans. Depuis l'an 8, il charge avec eux. Le Messager d'Allah ﷺ l'a nommé « un sabre d'entre les sabres d'Allah »."],
     ['quote', "Neuf sabres se sont brisés dans ma main le jour de Mu'ta ; il ne m'est resté en main qu'une large lame yéménite.", 'Khâlid ibn al-Walîd — al-Bukhârî'],
     ['codex', 'khalid_bio'],
     ['codex', 'parole_sabres'],
+    ['nar', "On retient d'un capitaine ses charges, parce qu'elles font du bruit. Ses traités n'en font pas : une porte qui s'ouvre ne s'entend pas de loin. Al-Hîra, Damas, vingt cités lui ont ouvert sur une parole écrite."],
     ['nar', "Mais la noosphère n'oublie rien. Chaque victoire y dépose une paillette d'or. Et les hommes, qui aiment regarder ce qui brille, commencent à y dresser quelque chose qui porte son nom."],
     ['nar', "Idris sent le maillon se refermer sur son poignet. La Chaîne murmure : « Regarde bien. Voici un homme qui devra vaincre sa propre statue. »"]
   ],
 
   outro: [
-    ['amb', 'silence'],
+    ['amb', 'silence'], ['mus', 'deuil'],
     ['title', 'Homs', "An 21 de l'Hégire"],
     ['nar', "Khâlid ne commandera plus. Il vit à Homs quatre années encore, simple croyant parmi ceux qu'il a menés. Il ne récrimine pas. Quand la mort vient, elle le trouve dans son lit, et c'est la seule chose qu'il lui reproche."],
     ['quote', "J'ai pris part à tant de combats ; il n'est pas sur mon corps un empan sans une blessure de sabre, de lance ou de flèche… et voici que je meurs sur ma couche. Que les yeux des lâches ne connaissent pas le sommeil !", "Khâlid ibn al-Walîd, sur son lit de mort — Ibn 'Asâkir ; Ibn Kathîr, al-Bidâya"],
     ['nar', "Il ne laisse ni or ni domaine : son cheval, ses armes et un serviteur, qu'il lègue pour la cause d'Allah. On rapporte que 'Umar dit : « Qu'Allah fasse miséricorde à Abû Sulaymân ; il était autre que ce que nous pensions. »"],
     ['codex', 'mort_khalid'],
-    ['amb', 'cite'],
+    ['nar', "Les villes qu'il avait prises par un écrit étaient encore debout, et leurs portes ouvertes. Celles-là ne chantent pas son nom. Elles vivent : c'est une louange qui ne fabrique pas d'idole."],
+    ['amb', 'cite'], ['mus', 'espoir'],
     ['nar', "Idris rouvre les yeux dans les Archives basses. Sur tous les écrans de la Cité-Miroir, l'Agrégor dresse ses colosses du jour. Il sait maintenant comment on les fend : non en frappant plus fort, mais en refusant le socle."],
     ['nar', "Le courage n'est pas seulement de dégainer. C'est de rengainer quand la vérité l'exige. Une Lumière s'allume sur la Chaîne."],
     ['sfx', 'light'],
@@ -259,7 +266,30 @@ ISNAD.registerSaga({
     { id: 'idole_nombre', cat: 'Noosphère', title: 'La Peur du Nombre',
       text: "Idole faite de décomptes. Elle se nourrit de chaque regard qui dénombre l'adversaire et de chaque bouche qui répète le total. Elle fait croire que l'issue est une soustraction. Une parole vraie la fend : « Les armées ne sont nombreuses que par la victoire. » Dans la Cité-Miroir, l'Agrégor lui donne d'autres noms : audience, score, majorité." },
     { id: 'idole_heros', cat: 'Noosphère', title: "L'Idole du Héros",
-      text: "Le plus subtil des égrégores : il prend la silhouette d'un homme de bien. Chaque « avec lui, on ne perd jamais » lui ajoute une couche d'or. Il ne demande pas qu'on renie Allah ; seulement qu'on oublie de Le nommer. Le fer ne l'entame pas, car il est fait de victoires. Il se brise quand le héros lui-même refuse le socle. Le Laurier, louange des poètes, est sa couronne." }
+      text: "Le plus subtil des égrégores : il prend la silhouette d'un homme de bien. Chaque « avec lui, on ne perd jamais » lui ajoute une couche d'or. Il ne demande pas qu'on renie Allah ; seulement qu'on oublie de Le nommer. Le fer ne l'entame pas, car il est fait de victoires. Il se brise quand le héros lui-même refuse le socle. Le Laurier, louange des poètes, est sa couronne." },
+    /* ── v2 : pactes, savoirs, fiction signalée ── */
+    { id: 'hira', cat: 'Lieu', title: 'Al-Hîra',
+      text: "Sur la rive occidentale de l'Euphrate, al-Hîra fut pendant trois siècles la capitale des rois lakhmides, Arabes alliés de la Perse. Ville de palais et de monastères, peuplée d'Arabes chrétiens que l'on nommait les 'Ibâd. La tradition rapporte que c'est d'al-Hîra et d'al-Anbâr que l'écriture arabe gagna le Hijâz. Après la conquête, Koufa sera fondée à quelques lieues de là.",
+      src: 'al-Balâdhurî, Futûh al-Buldân ; at-Tabarî, Târîkh' },
+    { id: 'pacte_hira', cat: 'Événement', title: "Le pacte d'al-Hîra",
+      text: "En 12 H (633), ses forts cernés, al-Hîra envoie ses notables traiter avec Khâlid. La ville se rend par pacte : elle garde ses églises et ses palais, et verse un tribut annuel dont le montant varie selon les transmetteurs. On rapporte l'entretien de Khâlid avec le doyen 'Amr ibn 'Abd al-Masîh : « Que font là ces forteresses ? — Nous les avons bâties pour l'insensé, afin de le retenir jusqu'à ce que vienne le sage. » Le monastère des Roseaux et son économe sont de fiction.",
+      src: "at-Tabarî, Târîkh (d'après Sayf ibn 'Umar) ; al-Balâdhurî, Futûh al-Buldân" },
+    { id: 'routes_desert', cat: 'Lieu', title: "Les signes de l'eau",
+      text: "Ce que savent les gens du désert et qu'aucune carte ne dit. On marche de nuit et l'on se tait le jour. On abreuve les chameaux deux fois pour en faire des outres vivantes. L'eau cachée se trahit par un épineux ; mais les caravaniers coupent ces arbres pour leurs feux : c'est la souche qu'il faut chercher, et creuser à sa racine. À Suwâ, c'est ainsi que l'eau fut retrouvée.",
+      src: 'at-Tabarî, Târîkh (récit de la traversée) ; le feuillet lui-même est de fiction' },
+    { id: 'arabes_chretiens', cat: 'Événement', title: 'Les Arabes chrétiens de Syrie',
+      text: "Ghassân, Tanûkh, Lakhm, Judhâm, Bahrâ' : des tribus arabes, chrétiennes pour la plupart, gardaient depuis des générations la frontière de Rome. Au Yarmoûk, beaucoup combattent dans les rangs romains, sous le Ghassanide Jabala ibn al-Ayham. On rapporte, d'après le chroniqueur Théophane, que la solde de certains de ces alliés n'était plus versée. Après la bataille, bien des clans traitèrent : les uns embrassèrent l'islam, d'autres gardèrent leur foi sous pacte. Wahb ibn Zurayr et son clan sont de fiction.",
+      src: 'al-Balâdhurî, Futûh al-Buldân ; at-Tabarî, Târîkh ; Théophane, Chronographie' },
+    { id: 'pacte_damas', cat: 'Événement', title: 'La lettre de sûreté de Damas',
+      text: "En 14 H (635), Damas se rend par traité. Al-Balâdhurî transmet le texte attribué à Khâlid : sécurité pour les personnes, les biens et les églises ; l'enceinte ne sera pas démolie ; nul n'occupera les maisons. Les transmetteurs divergent sur le détail (une porte forcée, l'autre ouverte par accord), mais la ville entière fut traitée selon le pacte. Homs, Baalbek et d'autres cités se rendirent ensuite à des conditions voisines. Le Fort des Oliviers et son ancien sont de fiction.",
+      src: 'al-Balâdhurî, Futûh al-Buldân' },
+    { id: 'homs_impot', cat: 'Événement', title: "L'impôt rendu",
+      text: "Avant le Yarmoûk, les armées musulmanes doivent se replier de Homs. On rapporte qu'elles rendirent alors aux habitants le tribut perçu : « Nous ne pouvons plus vous défendre. » Les gens de Homs auraient répondu que ce gouvernement et cette justice leur étaient plus chers que l'état où ils se trouvaient, et ils fermèrent leurs portes à l'armée d'Héraclius.",
+      src: 'al-Balâdhurî, Futûh al-Buldân ; Abû Yûsuf, Kitâb al-Kharâj' },
+    { id: 'comptes_intendant', cat: 'Noosphère', title: "Le registre de l'intendant",
+      text: "Feuillet de fiction. Colonne de gauche : ce que versent les solliciteurs pour approcher l'émir. Colonne de droite : ce que touchent les poètes par vers, et les crieurs par acclamation. Ainsi se fabrique une idole : non par ferveur, mais par commerce. Celui qui tient le registre ne croit pas au héros ; il en vit." },
+    { id: 'ghalib', cat: 'Biographie', title: "Ghâlib, l'intendant",
+      text: "Personnage de fiction. Intendant du butin dans l'armée de Khâlid, il préfère l'assaut au traité, parce que l'assaut se chante et se partage. Il paie les poètes, fait crier le nom de l'émir dans les rangs et vend l'accès à sa tente. Il n'a jamais dit de mal de Khâlid : c'est sa manière de s'en servir. La tradition nomme hypocrite celui dont la langue sert une chose et le cœur une autre." }
   ],
 
   /* ──────────────────────────── CHAPITRES ──────────────────────────── */
@@ -285,9 +315,26 @@ ISNAD.registerSaga({
             ['say', 'bedouin', "Qurâqir est la dernière eau de mon peuple. Au-delà, le vent efface les traces avant le matin."],
             ['ask', "Interroger l'ancien", [
               { t: "Qui est Râfi' ?", r: [['say', 'bedouin', "Un homme des Tayy. Il a fait cette route une fois, enfant, avec son père. Une fois suffit à qui sait regarder."]] },
-              { t: "Qu'y a-t-il à Suwâ ?", r: [['say', 'bedouin', "Une eau des Bahrâ'. Et derrière elle, la Syrie, par une porte que les Romains ne gardent pas."]] }
+              { t: "Qu'y a-t-il à Suwâ ?", r: [['say', 'bedouin', "Une eau des Bahrâ'. Et derrière elle, la Syrie, par une porte que les Romains ne gardent pas."]] },
+              { t: 'Comment reconnaît-on une eau cachée ?', r: [
+                ['say', 'bedouin', "À l'épineux qui boit dessus. Mais retiens ceci, que les guides oublient : les caravaniers coupent ces arbres pour leurs feux. Ne cherche pas l'arbre. Cherche la souche."],
+                ['codex', 'routes_desert']] }
             ]]
-          ] }
+          ] },
+        /* ── an 12 H : le camp devant al-Hîra (ouverture du chapitre) ── */
+        { id: 'amr_hira', name: "'Amr ibn 'Abd al-Masîh", map: 'camp', at: 'tente_chef', look: { kind: 'ancien', robe: '#e6dfcf', head: '#f2ecdf', cloak: '#6a5a7a' },
+          talk: [['say', 'amr_hira', "J'ai vu passer bien des maîtres sur ce fleuve. Ceux qui sont restés sont ceux qui savaient écrire ce qu'ils promettaient."]] },
+        { id: 'econome', name: 'Économe du monastère', map: 'camp', at: ['tente_chef', 3, 1], look: { kind: 'moine', robe: '#4a4038', head: '#4a4038' },
+          talk: [['say', 'econome', "J'attendrai que les grands aient fini, émir. Les petits murs passent après les grands."]] },
+        { id: 'lettre_hira', name: "Lettré d'al-Hîra", map: 'camp', at: ['feu', 1, 1], look: { kind: 'savant', robe: '#d8d0bc', head: '#efe9da' },
+          talk: [
+            ['say', 'lettre_hira', "Tu regardes nos palais, émir. Regarde plutôt nos écoles. On rapporte que c'est d'ici, et d'al-Anbâr, que l'écriture des Arabes est partie vers ton Hijâz."],
+            ['say', 'lettre_hira', "Les rois lakhmides sont tombés ; leurs scribes sont restés. Une ville qui sait écrire sait aussi tenir un pacte : elle en garde la copie."],
+            ['codex', 'hira']] },
+        { id: 'ghalib', name: "Ghâlib, l'intendant", map: 'camp', at: ['tentes', 1, 1], look: { kind: 'marchand', robe: '#6a4a2c', head: '#d9c9a8', cloak: '#3a2a1c' },
+          talk: [['say', 'ghalib', "J'ai fait compter les échelles, émir. Trois jours, et al-Hîra est à nous, avec ce qu'il y a dedans. Un traité ne remplit ni les sacoches ni les chansons."]] },
+        { id: 'priant1', name: 'Homme de la troupe', map: 'camp', at: ['priere', 1, 0], look: { kind: 'soldat', robe: '#5c4c3a', head: '#d9cfb8' },
+          talk: [['say', 'priant1', "Midi approche, émir, et les rangs se forment ici. Mon père disait : parle après avoir prié, tu parleras plus bas, et l'on t'écoutera mieux."]] }
       ],
       foes: [
         { id: 'f1', at: 'rochers', group: ['mirage', 'murmure'], bg: 'desert' },
@@ -296,18 +343,81 @@ ISNAD.registerSaga({
       ],
       chests: [
         { at: ['ruines', 1, 1], item: 'dattes', n: 2 },
-        { at: ['dunes', 2, -1], item: 'siwak', n: 1 }
+        { at: ['dunes', 2, -1], item: 'siwak', n: 1 },
+        { at: ['ruines', -1, 1], codex: 'routes_desert' },
+        { map: 'camp', at: ['tentes', 3, 2], codex: 'hira' }
       ],
       intro: [
         ['title', 'La Traversée', "An 13 de l'Hégire · Désert de la Samâwa"],
         ['amb', 'vent'],
-        ['nar', "Al-Hîra est tombée, l'Euphrate est tenu. C'est alors qu'arrive une lettre de Médine : en Syrie, les armées musulmanes font face à la plus grande levée que Rome ait rassemblée."],
-        ['quote', "Par Allah, je ferai oublier aux Romains les suggestions du diable par Khâlid ibn al-Walîd.", 'On rapporte d\'Abû Bakr as-Siddîq — at-Tabarî, Târîkh'],
-        ['nar', "L'ordre est bref : laisser la moitié de l'armée en Irak, prendre l'autre, et rejoindre la Syrie au plus vite. Au puits de Qurâqir, Khâlid cherche un guide."],
-        ['give', 'eau', 2],
-        ['give', 'dattes', 3]
+        ['nar', "Mais avant le désert, il y eut une ville. La Chaîne remonte d'une année : an 12, sous les murs d'al-Hîra, la cité blanche des anciens rois arabes d'Irak."],
+        ['map', 'camp', 'entree', { time: 'day' }],
+        ['mus', 'conseil'], ['amb', 'foule'],
+        ['title', 'Al-Hîra', "An 12 de l'Hégire · un an plus tôt"],
+        ['nar', "Les forts d'al-Hîra sont cernés. Les échelles sont prêtes, et les hommes aussi. Khâlid fait dire aux notables qu'il les recevra sous sa tente."],
+        ['nar', "Une ville forcée n'est qu'un tas de pierres qu'il te faut garder. Une ville qui t'ouvre sa porte est une sentinelle de plus sur ton rempart."]
       ],
       objectives: [
+        { text: "Recevoir les notables d'al-Hîra sous la tente", talk: 'amr_hira', then: [
+          ['nar', "On rapporte que le doyen des notables, 'Amr ibn 'Abd al-Masîh, s'avança le premier, si vieux qu'on le disait né sous d'autres rois."],
+          ['say', 'khalid', 'Êtes-vous des Arabes, ou des gens de cette terre ?'],
+          ['say', 'amr_hira', "Des Arabes qui ont pris les usages de la terre, et des gens de la terre qui se sont faits Arabes."],
+          ['say', 'khalid', 'Venez-vous pour la paix, ou pour la guerre ?'],
+          ['say', 'amr_hira', 'Pour la paix.'],
+          ['say', 'khalid', 'Alors que font là ces forteresses ?'],
+          ['quote', "Nous les avons bâties pour l'insensé, afin de le retenir jusqu'à ce que vienne le sage qui l'en empêche.", "On rapporte — 'Amr ibn 'Abd al-Masîh à Khâlid, at-Tabarî, Târîkh"],
+          ['nar', "Le pacte fut écrit : al-Hîra garde ses églises et ses palais, et verse un tribut dont les chroniques ne donnent pas toutes le même chiffre. Aucune échelle ne fut dressée."],
+          ['codex', 'pacte_hira'],
+          ['say', 'ghalib', "Un écrit, émir ? Les hommes attendaient autre chose. On ne chante pas un parchemin."],
+          ['say', 'khalid', "Alors qu'ils chantent moins, Ghâlib, et qu'ils rentrent tous."],
+          ['nar', "Reste un petit mur, hors des grands : le monastère des Roseaux, sur la ligne même du camp. Son économe attend près de la tente, les mains dans ses manches."]
+        ] },
+        { text: "Entendre l'économe du monastère hors les murs", talk: 'econome', then: [
+          ['parley', {
+            with: 'econome', title: 'Le monastère des Roseaux',
+            intro: "Les moines craignent qu'on loge la troupe chez eux ; l'intendance y voit un grenier tout fait. Ils ont un puits, des livres, et des chameliers qui connaissent l'ouest.",
+            goal: 4,
+            rounds: [
+              { say: "Émir, nos murs n'ont jamais gardé que des livres et un puits. Tes intendants ont déjà mesuré nos greniers.",
+                opts: [
+                  { t: "Nul ne logera chez vous sans votre gré, et ce qu'on prendra sera payé. Le pacte vaut hors les murs comme dedans.", el: 'adl', v: 2, r: "Payé… Aucune armée ne nous a jamais dit ce mot." },
+                  { t: "Vous n'avez rien à craindre de moi.", el: 'rahma', v: 1, r: "De toi, peut-être. Mais tu n'es pas tous tes hommes." },
+                  { t: "Une armée a besoin de grain. Mieux vaut me le donner que me le voir prendre.", el: 'shajaa', v: -1, r: "Alors ce n'est pas un pacte que tu proposes. C'est une rançon." }
+                ] },
+              { say: "On dit que vous méprisez ce qui s'écrit dans une autre langue que la vôtre. Que deviendront nos livres ?",
+                opts: [
+                  { t: "C'est d'al-Hîra, dit-on, que l'écriture des Arabes est venue au Hijâz. On ne brûle pas l'école où l'on a appris ses lettres.", el: 'ilm', v: 3, need: 'hira', r: "Tu sais cela ? Peu des tiens le savent. Peu des miens, d'ailleurs." },
+                  { t: "Un livre est un dépôt. Garde les tiens : je mets un homme sûr à ta porte, et il me répondra de chaque feuillet.", el: 'ilm', v: 2, r: "Un garde qui veille sur des livres au lieu de s'en chauffer… Je demande à voir." },
+                  { t: "Je ne lis pas le syriaque. Tes livres ne m'intéressent pas.", el: 'sidq', v: 0, r: "C'est franc. Ce n'est pas rassurant." }
+                ] },
+              { say: "Tu pars vers l'ouest, m'a-t-on dit. Toi parti, que devrons-nous à celui qui viendra ?",
+                opts: [
+                  { t: "Ce que dit l'écrit, rien de plus. Si mon successeur vous demande davantage, montrez-lui mon sceau.", el: 'sidq', v: 2, r: "Un homme qui borne lui-même ce qu'on lui doit… Soit." },
+                  { t: 'Nous verrons cela à mon retour.', el: 'sabr', v: 1, r: "Ceux qui partent vers l'ouest ne reviennent pas toujours." },
+                  { t: 'Priez pour ma victoire : cela suffira.', el: 'rahma', v: -1, r: "Nous prions pour la paix, émir. Ce n'est pas toujours la même chose." }
+                ] }
+            ],
+            win: [
+              ['say', 'econome', "Alors notre porte restera ouverte. Prends ceci : l'itinéraire de nos frères qui vont à pied jusqu'en Syrie. Et trois de nos chameliers ; ils savent où l'eau se cache."],
+              ['codex', 'routes_desert'], ['give', 'eau', 2],
+              ['flag', 'hira_amie'], ['pillar', 'lien', 1],
+              ['nar', "Un mur de roseaux et de briques crues, gagné sans une échelle. Les chameliers d'al-Hîra marcheront avec l'armée."]
+            ],
+            lose: [
+              ['say', 'econome', "Je te crois honnête, émir. Mais je ne peux pas confier mes frères à une parole que tes propres hommes n'ont pas entendue."],
+              ['nar', "Khâlid interdit tout de même le monastère à la troupe. La porte, elle, resta close : ni guides, ni itinéraire. On ne force pas la confiance ; on la manque, et l'on s'en souvient."],
+              ['pillar', 'lien', -1]
+            ]
+          }],
+          ['map', 'desert', 'caravane', { time: 'dusk' }],
+          ['mus', 'desert'], ['amb', 'vent'],
+          ['title', 'Qurâqir', "An 13 de l'Hégire · un an plus tard"],
+          ['nar', "Al-Hîra est en paix, l'Euphrate est tenu. C'est alors qu'arrive une lettre de Médine : en Syrie, les armées musulmanes font face à la plus grande levée que Rome ait rassemblée."],
+          ['quote', "Par Allah, je ferai oublier aux Romains les suggestions du diable par Khâlid ibn al-Walîd.", 'On rapporte d\'Abû Bakr as-Siddîq — at-Tabarî, Târîkh'],
+          ['nar', "L'ordre est bref : laisser la moitié de l'armée en Irak, prendre l'autre, et rejoindre la Syrie au plus vite. Au puits de Qurâqir, Khâlid cherche un guide."],
+          ['give', 'eau', 2],
+          ['give', 'dattes', 3]
+        ] },
         { text: "Consulter Râfi' ibn 'Umayra, le guide", talk: 'rafi', then: [
           ['say', 'khalid', "On dit que tu connais un chemin vers la Syrie qui passe derrière les garnisons romaines."],
           ['say', 'rafi', "Je le connais. Mais tu ne le feras pas avec des chevaux et des bagages. Par Allah, le cavalier seul y craint pour sa vie. Cinq nuits pleines, sans une goutte d'eau."],
@@ -353,7 +463,21 @@ ISNAD.registerSaga({
           ['say', 'rafi', "Regardez pour moi. Cherchez deux buttes jumelles. À leur pied, un épineux, de la taille d'un homme assis."],
           ['say', 'dirar', "Nous voyons les buttes. Il n'y a pas d'arbre."],
           ['quote', "Nous sommes à Allah et c'est à Lui que nous retournons ! Vous êtes perdus, par Allah, et moi avec vous. Regardez encore !", "Râfi' ibn 'Umayra — at-Tabarî, Târîkh"],
-          ['say', 'qaqa', "Là. Une souche. On l'a coupé : il n'en reste que la racine."],
+          ['ask', 'Les hommes fouillent le pied des buttes. Où porter le regard ?', [
+            { t: "Reprendre le pied des buttes, pas à pas, jusqu'à trouver l'arbre.", r: [
+              ['nar', "Une heure sous le soleil droit, à chercher un arbre qui n'est plus. Dans les rangs, on recommence à voir de l'eau où il n'y en a pas."],
+              ['battle', { group: ['mirage', 'murmure'], bg: 'desert', intro: "La soif gagne les rangs pendant qu'on cherche." }],
+              ['say', 'qaqa', "Là. Une souche. On l'a coupé : il n'en reste que la racine."]] },
+            { t: 'Envoyer Dirâr au sommet de la butte, pour voir de plus haut.', r: [
+              ['say', 'dirar', "D'en haut, rien que du sable. Attends… une tache sombre, au pied de la seconde butte."],
+              ['nar', "La montée lui a coûté le peu de salive qui lui restait, et aux rangs une heure de plus. Les murmures de soif montent avec la chaleur."],
+              ['battle', { group: ['murmure', 'murmure'], bg: 'desert', intro: 'Les murmures de soif montent avec la chaleur.' }],
+              ['say', 'qaqa', "C'est une souche. On a coupé l'arbre : il n'en reste que la racine."]] },
+            { t: "Chercher une souche, non un arbre : les caravaniers coupent les épineux pour leurs feux.", need: 'routes_desert', r: [
+              ['say', 'qaqa', "Là. Une souche. On l'a coupé : il n'en reste que la racine."],
+              ['nar', "Une ligne apprise avant le départ vient d'épargner une heure de soleil à toute une armée. Le savoir ne pèse rien dans les sacoches ; c'est la seule provision qui ne s'épuise pas."],
+              ['pillar', 'savoir', 1]] }
+          ]],
           ['say', 'rafi', 'Creusez à sa racine.']
         ] },
         { text: "Atteindre la souche de l'épineux", goto: 'source', then: [
@@ -362,11 +486,14 @@ ISNAD.registerSaga({
           ['nar', "Mais entre les hommes et la souche, quelque chose se lève. Cinq jours de gorges sèches lui ont donné un corps."],
           ['say', 'La Soif', "Nul homme n'a franchi ces cinq nuits avant toi. Couche-toi. Le sable est doux à qui renonce."],
           ['say', 'khalid', "Je n'ai pas promis d'arriver. J'ai promis de marcher."],
-          ['battle', { group: ['soif', 'mirage'], bg: 'desert', boss: true, intro: 'La Soif barre le chemin de la source.' }],
+          ['battle', { group: ['soif', 'mirage'], bg: 'desert', boss: true, intro: 'La Soif barre le chemin de la source.',
+            allies: [{ flag: 'hira_amie', name: "Les chameliers d'al-Hîra" }] }],
           ['tint', null], ['sfx', 'light'],
           ['nar', "On creuse. Le sable devient sombre, puis humide. Puis l'eau monte, froide, entre les doigts."],
           ['say', 'rafi', "Par Allah, je ne suis venu à cette eau qu'une seule fois, enfant, avec mon père."],
-          ['heal'],
+          ['nar', "Nul ne but avant que les bêtes et les blessés aient bu. Puis le soleil toucha le sable ; ils firent leurs ablutions à l'eau retrouvée, et se rangèrent."],
+          ['pray', 'maghrib'],
+          ['nar', "Le puits ne vaut pas par l'eau qu'il garde, mais par la marche qu'il ordonne. Ôte-le, et la caravane n'est plus qu'une soif qui tourne en rond."],
           ['quote', "Qu'ils sont bénis, les yeux de Râfi' : comme il a su trouver sa route ! De Qurâqir à Suwâ il a coupé le désert — cinq nuits où le lâche, s'il s'y engage, pleure.", "Vers d'un homme de l'armée — at-Tabarî, Târîkh"]
         ] }
       ],
@@ -393,7 +520,18 @@ ISNAD.registerSaga({
         { id: 'armurier', name: 'Armurier', at: ['tentes', 0, 1], look: { kind: 'homme', robe: '#70553c', head: '#cbbfa6' },
           talk: [['say', 'armurier', "On dit que Khâlid veut ranger l'armée par escadrons, dans une ordonnance que les Arabes n'ont jamais employée. J'aiguise ; il ordonne ; Allah décide."]] },
         { id: 'jeune', name: 'Jeune soldat', at: ['feu', 1, 0], look: { kind: 'soldat', robe: '#64503a', head: '#d5c9b0' },
-          talk: [['say', 'jeune', "Mon père disait : celui qui compte ses adversaires a déjà perdu la moitié de son bras. Je m'efforce de regarder le feu."]] }
+          talk: [['say', 'jeune', "Mon père disait : celui qui compte ses adversaires a déjà perdu la moitié de son bras. Je m'efforce de regarder le feu."]] },
+        { id: 'wahb', name: 'Wahb ibn Zurayr', at: ['etendard', -2, -1], hidden: true, look: { kind: 'berbere', robe: '#3f4f6a', head: '#d8d2c2', cloak: '#26303f' },
+          talk: [['say', 'wahb', "Je garderai le gué ou je ne le garderai pas. Mais je n'oublierai pas qu'on m'a parlé avant de me frapper."]] },
+        { id: 'ermite', name: 'Ermite du ravin', at: ['tertre', -2, 1], look: { kind: 'moine', robe: '#4a4038', head: '#4a4038' },
+          talk: [
+            ['say', 'ermite', "Ma grotte est entre vos deux camps ; vos blessés me l'ont prise, et m'ont donné du pain. Tu veux savoir qui campe en face ? Des Arabes comme toi, pour beaucoup : Ghassân, Tanûkh, Lakhm."],
+            ['say', 'ermite', "Ils gardent la frontière de César depuis leurs grands-pères. Mais César ne paie plus leur solde, dit-on ; et un serment qu'un seul des deux tient encore pèse lourd à porter."],
+            ['codex', 'arabes_chretiens']] },
+        { id: 'ghalib', name: "Ghâlib, l'intendant", at: ['feu', -1, -1], look: { kind: 'marchand', robe: '#6a4a2c', head: '#d9c9a8', cloak: '#3a2a1c' },
+          talk: [['say', 'ghalib', "J'ai fait passer le mot de feu en feu, émir : « Avec Khâlid, on ne perd jamais. » Cela vaut mille lances, et cela ne coûte que quelques poètes."]] },
+        { id: 'qari', name: 'Récitant', at: ['priere', 1, 0], look: { kind: 'savant', robe: '#d8d0bc', head: '#efe9da' },
+          talk: [['say', 'qari', "Ce soir on récite la sourate al-Anfâl devant chaque escadron, comme c'est l'usage depuis Badr. Viens prier la nuit avec nous, émir, avant de parler à qui que ce soit."]] }
       ],
       foes: [
         { id: 'f1', at: ['feu', -2, 1], group: ['decompte', 'decompte'], bg: 'camp' },
@@ -426,6 +564,56 @@ ISNAD.registerSaga({
           ['say', 'abu_ubayda', "Tu as dit vrai. Prends cette journée, Abû Sulaymân, et range-nous comme tu l'entends."],
           ['say', 'khalid', "Trente-six escadrons, et davantage. Le centre à Abû 'Ubayda, les ailes à 'Amr et à Yazîd. Qu'ils voient des armées là où il n'y a que des hommes résolus."],
           ['codex', 'yarmouk'], ['codex', 'abu_ubayda_bio'],
+          ['pillar', 'lien', 1],
+          ['say', 'abu_ubayda', "Une chose encore. Un chef des Arabes d'en face a demandé la sauvegarde pour te parler. Il attend sous l'étendard. Ce sont des hommes de notre langue : ne prenons pas par le fer ce que la parole peut obtenir."],
+          ['show', 'wahb']
+        ] },
+        { text: "Entendre le chef des Banû Zurayr, sous l'étendard", talk: 'wahb', then: [
+          ['mus', 'conseil'],
+          ['nar', "Un homme en manteau sombre, une croix de bois au cou, la main loin de la garde. Les Banû Zurayr tiennent le gué du ravin, sur le flanc des Romains. Demain, ce gué décidera de bien des vies."],
+          ['parley', {
+            with: 'wahb', title: 'Le gué des Banû Zurayr',
+            intro: "Wahb a juré à César comme son père et son grand-père. Il craint pour ses églises, ses troupeaux, et pour l'honneur de ses jeunes gens. Il ne veut pas trahir ; il veut savoir à qui il parle.",
+            goal: 6,
+            rounds: [
+              { say: "Je suis venu parce que nous parlons la même langue. Mais mes pères ont juré à César. Pourquoi romprais-je un serment ?",
+                opts: [
+                  { t: "César ne paie plus la solde des siens. On me l'a dit : tes cavaliers gardent ses routes à crédit.", el: 'ilm', v: 3, need: 'arabes_chretiens', r: "Deux ans qu'elle n'est pas venue. Tu es bien renseigné, pour un homme du désert." },
+                  { t: "Un serment oblige tant que celui qui l'a reçu tient le sien. César tient-il le sien envers toi ?", el: 'adl', v: 2, r: "C'est une question que je me pose la nuit. Je n'aime pas qu'un autre me la pose." },
+                  { t: "Parce que demain César aura perdu, et qu'il vaut mieux se trouver du côté du vainqueur.", el: 'shajaa', v: -1, r: "Voilà ce que dirait un marchand. Je croyais parler à un homme d'armes." }
+                ] },
+              { say: "Si je m'écarte, que deviennent mes églises, mes morts, mes troupeaux ? Vos poètes chantent que vous prenez tout.",
+                opts: [
+                  { t: "À al-Hîra, des Arabes chrétiens ont traité avec moi. Leurs églises sont debout, leurs palais aussi. Envoie un homme le leur demander.", el: 'sidq', v: 3, need: 'pacte_hira', r: "J'ai des cousins à al-Hîra. Je saurai avant l'hiver si tu mens." },
+                  { t: "Qui traite avec nous garde sa foi, ses biens et ses lieux de prière. C'est écrit et scellé, non chanté.", el: 'adl', v: 2, r: "Un écrit vaut mieux qu'une chanson. Continue." },
+                  { t: "Je te promets davantage : des terres et des troupeaux pris à César.", el: 'rahma', v: -1, r: "Tu promets ce que tu n'as pas. Les Romains promettaient aussi." }
+                ] },
+              { say: "Mes jeunes gens veulent se battre. Si je leur dis de rester sous la tente, ils me diront lâche.",
+                opts: [
+                  { t: "Dis-leur qu'il faut plus de cœur pour retenir un cheval que pour le lancer. Qu'ils gardent le gué : nul ne blâme un homme de garder son eau.", el: 'sabr', v: 2, r: "Garder le gué… Cela, ils l'entendront." },
+                  { t: "S'il leur faut une bataille, qu'ils viennent la livrer à nos côtés.", el: 'shajaa', v: 1, r: "Contre leurs cousins de Ghassân ? Tu demandes trop, et trop vite." },
+                  { t: "Leur avis importe peu : c'est toi le chef.", el: 'sidq', v: -2, r: "On voit que tu n'as jamais commandé à des hommes libres de s'en aller." }
+                ] },
+              { say: "Et toi, Khâlid ? On dit que tu ne perds jamais. Est-ce à toi que je dois me fier ?",
+                opts: [
+                  { t: "Ne te fie pas à moi. Je suis un homme, et demain un autre peut commander. Fie-toi au pacte : il ne porte pas mon nom.", el: 'sidq', v: 2, r: "C'est la première parole que j'entends, dans cette guerre, qui ne soit pas de l'orgueil." },
+                  { t: "Abû 'Ubayda scellera avec moi. Deux sceaux, et le Calife derrière eux.", el: 'adl', v: 1, r: "Deux sceaux valent mieux qu'un. Mais je ne connais que toi." },
+                  { t: "Oui. Tant que je commande, nul ne touchera aux tiens.", el: 'shajaa', v: 0, r: "Et le jour où tu ne commanderas plus ?" }
+                ] }
+            ],
+            win: [
+              ['say', 'wahb', "Alors écoute. Demain, les Banû Zurayr garderont leur gué, et rien d'autre. Et mes éclaireurs montreront aux tiens les sentes du ravin. Je ne trahis pas César : je cesse de mourir pour lui."],
+              ['flag', 'zurayr_ecart'], ['pillar', 'lien', 1],
+              ['nar', "Aucun sabre n'a quitté son fourreau, et le flanc romain vient de perdre un gué. Ce que Khâlid a gagné cette nuit-là, aucun poète ne le chantera : il n'y a rien à voir."]
+            ],
+            lose: [
+              ['say', 'wahb', "Tu parles bien, mais tu parles comme un vainqueur, et je ne remets pas mes morts à un vainqueur. Demain, je serai où mon serment me place."],
+              ['pillar', 'lien', -1],
+              ['nar', "Il repart sous sa sauvegarde, et nul ne le retient. La parole a été tentée ; elle n'a pas suffi. Demain, il y aura des lances de plus dans la forêt."]
+            ]
+          }],
+          ['hide', 'wahb'],
+          ['mus', 'camp'],
           ['show', 'courrier'],
           ['say', 'qaqa', "Émir, un cavalier à l'entrée du camp. Il vient de Médine et ne veut parler qu'à toi."]
         ] },
@@ -446,6 +634,8 @@ ISNAD.registerSaga({
           ['nar', "Cette nuit-là, Khâlid commande une armée qui n'est déjà plus la sienne. Nul ne le sait que lui, le courrier — et Celui à qui rien n'échappe."]
         ] },
         { text: "Gagner les lignes avant l'aube", goto: 'lignes', then: [
+          ['nar', "Avant le jour, chaque émir range les siens pour la prière. Khâlid prie dans le rang, l'épaule contre celle d'un homme dont il ne sait pas le nom."],
+          ['pray', 'fajr'],
           ['amb', 'bataille'], ['sfx', 'roll'],
           ['nar', "L'aube. En face, les rangs romains s'ébranlent, enseignes levées, dans un grondement qui fait trembler l'eau des gourdes."],
           ['nar', "Et dans la noosphère, la peur de tous ceux qui ont compté les feux se lève d'un bloc. Tant qu'elle tiendra debout, aucun escadron ne tiendra."],
@@ -460,15 +650,22 @@ ISNAD.registerSaga({
         { text: 'Atteindre le cœur, où se tient la Peur du Nombre', goto: 'coeur', then: [
           ['say', 'La Peur du Nombre', 'Regarde l\'horizon, Khâlid. Compte avec moi : un, deux, trois… Tu n\'auras pas fini avant la nuit.'],
           ['say', 'khalid', "Les armées ne sont nombreuses que par la victoire. Tu n'es qu'un chiffre qui a pris peur de lui-même."],
-          ['battle', { group: ['decompte', 'peur_nombre', 'decompte'], bg: 'noos', boss: true, intro: 'La Peur du Nombre déploie ses mille lances.' }],
+          ['if', 'zurayr_ecart',
+            [['battle', { group: ['decompte', 'peur_nombre', 'decompte'], bg: 'noos', boss: true, intro: 'La Peur du Nombre déploie ses mille lances. Mais un gué, sur son flanc, ne compte plus pour elle.',
+              allies: [{ flag: 'zurayr_ecart', name: 'Les éclaireurs des Banû Zurayr' }] }]],
+            [['battle', { group: ['decompte', 'peur_nombre', 'decompte', 'ombre_lance'], bg: 'noos', boss: true, intro: 'La Peur du Nombre déploie ses mille lances, et celles du gué avec elles.' }]]],
           ['sfx', 'break'], ['flash', '#ffffff'],
           ['map', 'camp', 'tente_chef', { time: 'dusk' }],
-          ['amb', 'vent'],
+          ['amb', 'vent'], ['mus', 'deuil'],
           ['nar', "La bataille fut longue et rude ; les chroniques en gardent le fracas. Au plus fort de la mêlée, 'Ikrima ibn Abî Jahl et quatre cents hommes firent serment de ne pas reculer. La cavalerie de Khâlid sépara les cavaliers romains de leur infanterie, et la plaine bascula."],
+          ['if', 'zurayr_ecart',
+            [['nar', "Les Banû Zurayr gardèrent leur gué tout le jour, et rien d'autre. Au soir, leurs tentes étaient pleines, et pas une lance de Khâlid n'avait eu à les chercher."]],
+            [['nar', "Les Banû Zurayr chargèrent avec Ghassân, comme leur serment le voulait. Beaucoup ne revirent pas leurs tentes. Khâlid fit rendre leurs morts à Wahb, sans rançon."]]],
           ['nar', "On rapporte qu'au soir, on porta de l'eau à un blessé. Il désigna son voisin : « Lui d'abord. » Le voisin désigna un troisième. Quand l'outre revint au premier, tous trois étaient morts sans avoir bu."],
           ['say', 'dirar', "Nous avons traversé cinq nuits pour de l'eau. Eux l'ont tenue dans leurs mains, et ils l'ont donnée."],
           ['nar', "Alors seulement, Khâlid tire la lettre de son carquois et la tend à Abû 'Ubayda."],
           ['say', 'khalid', "Le Commandeur des croyants t'a confié la Syrie. Je suis sous tes ordres."],
+          ['pillar', 'justice', 1],
           ['say', 'abu_ubayda', "Ce n'est pas le pouvoir de ce monde que je cherche, ni pour ce monde que j'œuvre. Nous sommes frères. Reste près de moi : cette armée a besoin de ton conseil."]
         ] }
       ],
@@ -490,7 +687,19 @@ ISNAD.registerSaga({
         { id: 'soldat', name: 'Soldat de Khâlid', at: ['marche', 2, 1], look: { kind: 'soldat', robe: '#5f4a36', head: '#d6cab2' },
           talk: [['say', 'soldat', 'Avec Khâlid, on ne perd jamais. Tout le monde le sait. Même les Romains le savent.']] },
         { id: 'marchand', name: 'Marchand de Homs', at: ['fontaine', 1, 0], look: { kind: 'romain', robe: '#8a8fa3', head: '#cfc6b4' },
-          talk: [['say', 'marchand', "Quand vos armées ont dû quitter Homs, avant le Yarmoûk, elles nous ont rendu l'impôt : « Nous ne pouvons plus vous protéger. » Aucun empire ne nous avait jamais rendu une pièce."]] },
+          talk: [['say', 'marchand', "Quand vos armées ont dû quitter Homs, avant le Yarmoûk, elles nous ont rendu l'impôt : « Nous ne pouvons plus vous protéger. » Aucun empire ne nous avait jamais rendu une pièce."],
+            ['codex', 'homs_impot']] },
+        { id: 'ancien_bourg', name: 'Ancien du Fort des Oliviers', at: ['palais', 2, 2], look: { kind: 'romain', robe: '#7d7466', head: '#d6cdbb' },
+          talk: [['if', 'oliviers_pacte',
+            [['say', 'ancien_bourg', "Nos portes sont ouvertes, émir. Je monterai chaque soir vérifier qu'elles le sont encore, et chaque soir je m'en étonnerai."]],
+            [['say', 'ancien_bourg', "Nous attendrons, émir. Les murs savent attendre ; c'est même tout ce qu'ils savent."]]]] },
+        { id: 'scribe', name: 'Scribe du dîwân', at: ['palais', -2, 1], look: { kind: 'savant', robe: '#d8d0bc', head: '#efe9da' },
+          talk: [
+            ['say', 'scribe', "J'ai recopié de ma main la lettre de sûreté que tu donnas à Damas, émir. Les délégués des bourgs me la demandent avant même de te saluer."],
+            ['quote', "Voici ce que Khâlid ibn al-Walîd accorde aux habitants de Damas s'il y entre : la sécurité pour leurs personnes, leurs biens et leurs églises. L'enceinte de leur ville ne sera pas démolie, et nul n'occupera leurs maisons. Tant qu'ils s'acquittent du tribut, il ne leur sera fait que du bien.", 'al-Balâdhurî, Futûh al-Buldân — traduction du sens, abrégée'],
+            ['codex', 'pacte_damas']] },
+        { id: 'ghalib', name: "Ghâlib, l'intendant", at: ['forum', -2, 1], look: { kind: 'marchand', robe: '#6a4a2c', head: '#d9c9a8', cloak: '#3a2a1c' },
+          talk: [['say', 'ghalib', "Les solliciteurs font la queue jusqu'à la fontaine, émir. Ne t'occupe de rien : je trie, j'ordonne, je fais patienter. C'est mon office."]] },
         { id: 'moine', name: 'Moine', at: ['basilique', 0, 1], look: { kind: 'moine', robe: '#3e3a36', head: '#3e3a36' },
           talk: [['say', 'moine', "On nous a garanti nos vies, nos biens et nos églises. J'ai vu passer bien des maîtres ; je juge chacun à ce qu'il laisse debout."]] },
         { id: 'estafette', name: "Courrier d'Abû 'Ubayda", at: ['marche', -1, 0], hidden: true, look: { kind: 'soldat', robe: '#56624f', head: '#d9cfb8' } },
@@ -508,21 +717,90 @@ ISNAD.registerSaga({
       chests: [
         { at: ['palais', 1, 1], item: 'eau', n: 2 },
         { at: ['jardin', 1, 0], item: 'miel', n: 1 },
+        { at: ['fontaine', 2, 0], codex: 'comptes_intendant' },
         { map: 'noos', at: 'miroir', item: 'musc', n: 2 }
       ],
       intro: [
         ['title', "L'Épée au fourreau", "An 17 de l'Hégire · Qinnasrîn"],
         ['amb', 'foule'],
         ['nar', "Quatre ans ont passé. La Syrie est ouverte, d'Antioche à Jérusalem. Khâlid gouverne Qinnasrîn sous l'autorité d'Abû 'Ubayda. Il revient d'une expédition heureuse, chargé de butin."],
-        ['nar', "Les gens affluent vers lui de toutes parts : solliciteurs, poètes, curieux. On vient voir l'homme qui ne perd jamais. On repart en racontant qu'on l'a vu."]
+        ['nar', "Les gens affluent vers lui de toutes parts : solliciteurs, poètes, curieux. On vient voir l'homme qui ne perd jamais. On repart en racontant qu'on l'a vu."],
+        ['nar', "Ce matin, pourtant, un homme l'attend qui ne vient pas l'admirer : l'ancien d'un bourg fortifié du district, le Fort des Oliviers, dont les portes sont closes depuis l'hiver."]
       ],
       objectives: [
+        { text: 'Recevoir le délégué du Fort des Oliviers, devant le palais', talk: 'ancien_bourg', then: [
+          ['mus', 'conseil'],
+          ['say', 'ghalib', "Émir, ne perds pas ta matinée. Trois jours d'échelles, et ce bourg est à nous. Les hommes n'ont pas eu d'assaut depuis des mois ; les poètes non plus."],
+          ['say', 'khalid', "Les hommes n'ont pas eu de morts depuis des mois, Ghâlib. Je ne les ai pas entendus s'en plaindre."],
+          ['parley', {
+            with: 'ancien_bourg', title: 'Le Fort des Oliviers',
+            intro: "Le bourg a déjà été brûlé une fois, par les Perses. Son ancien craint le tribut, l'appétit des officiers, et la parole d'un capitaine qu'un mot de Médine peut défaire.",
+            goal: 6,
+            rounds: [
+              { say: "Mes pères ont fermé ces portes devant les Perses, il y a vingt-cinq ans. Pourquoi les ouvrirais-je devant toi ?",
+                opts: [
+                  { t: "Parce que je l'ai déjà écrit pour Damas : vos vies, vos biens, vos églises ; vos murs debout ; nul soldat logé chez vous. Damas est debout.", el: 'ilm', v: 3, need: 'pacte_damas', r: "J'ai des parents à Damas. Ils m'ont écrit la même chose. Je voulais l'entendre de ta bouche." },
+                  { t: "Parce que je ne te demande pas tes portes : je te propose un écrit. Vos vies, vos biens, vos églises, contre le tribut, et rien au-delà.", el: 'adl', v: 2, r: "Un écrit… Les Perses, eux, n'écrivaient rien." },
+                  { t: 'Parce que tes murs ne tiendront pas trois jours, et tu le sais.', el: 'shajaa', v: -1, r: "Ils ont tenu trois mois contre les Perses. Tu connais mal mes murs." }
+                ] },
+              { say: "Le tribut. Rome nous taxait déjà, et ne nous défendait plus. Que ferez-vous de notre argent ?",
+                opts: [
+                  { t: "Il paie votre défense. Demande aux gens de Homs : le jour où nous n'avons plus pu les défendre, nous le leur avons rendu.", el: 'sidq', v: 3, need: 'homs_impot', r: "On me l'avait raconté. Je croyais à une fable de marchands." },
+                  { t: "Il paie votre défense, et rien d'autre. Ni tes champs ni ta maison ne changent de maître.", el: 'adl', v: 2, r: "Rome disait « défense » aussi. Mais Rome ne venait plus." },
+                  { t: 'Moins que César ne vous en prenait.', el: 'rahma', v: 0, r: "C'est ce que dit chaque nouveau maître, la première année." }
+                ] },
+              { say: "Tes officiers, derrière toi, comptent mes greniers des yeux. Lequel commande ici : toi, ou leur appétit ?",
+                opts: [
+                  { t: "Moi. Et le premier qui passe ta porte sans mon sceau en répondra devant l'armée entière.", el: 'shajaa', v: 2, r: "Tu parles haut. J'ai vu tes hommes t'obéir : je te crois." },
+                  { t: "Laisse-moi trois jours pour les éloigner d'ici.", el: 'sabr', v: 1, r: "Trois jours, c'est long pour une porte qui hésite." },
+                  { t: 'Ils ont gagné leur part. Un soldat se paie.', el: 'sidq', v: -2, r: "Alors c'est bien une rançon. Nous resterons fermés." }
+                ] },
+              { say: "Une dernière chose. On dit que le Calife de Médine défait d'un mot ce que font ses capitaines. Et si demain tu n'es plus là ?",
+                opts: [
+                  { t: "Alors l'écrit y sera encore. Je ne signe pas en mon nom : je signe pour ceux qui viendront après moi.", el: 'sidq', v: 2, r: "Voilà pourquoi j'ouvrirai. Un homme qui se sait remplaçable ne ment pas pour sa gloire." },
+                  { t: "Abû 'Ubayda scellera après moi : c'est lui, l'émir de la Syrie.", el: 'adl', v: 1, r: "Deux sceaux valent mieux qu'un." },
+                  { t: 'Je serai là. On ne remplace pas Khâlid.', el: 'shajaa', v: 0, r: "C'est ce que disent tes poètes. Les murs de Damas, eux, ne disent rien : ils sont debout." }
+                ] }
+            ],
+            win: [
+              ['say', 'ancien_bourg', "Fais écrire, émir. Ce soir, les portes du Fort des Oliviers seront ouvertes, et je dormirai pour la première fois depuis l'hiver."],
+              ['flag', 'oliviers_pacte'], ['pillar', 'lien', 1], ['pillar', 'justice', 1],
+              ['nar', "Un bourg entier entre dans la paix sans qu'une seule maison ait à compter ses morts. Ghâlib, lui, compte autre chose, et fait la moue."]
+            ],
+            lose: [
+              ['say', 'ancien_bourg', "Tu es peut-être juste, émir. Mais j'entends tes officiers plus fort que toi. Nous resterons fermés."],
+              ['say', 'ghalib', "Tu vois, émir ? Les échelles sont prêtes."],
+              ['say', 'khalid', "Range-les. Pas d'assaut : on tiendra les routes, et l'on attendra."],
+              ['nar', "Mais dans les rangs, l'envie d'assaut que Ghâlib a nourrie a déjà pris corps. Avant de bloquer un bourg, il faut faire taire ceux qui chantent sa prise."],
+              ['battle', { group: ['echo', 'echo'], bg: 'romaine', intro: "« À l'assaut ! Khâlid ! Khâlid ! » Les échos réclament leur chanson." }],
+              ['pillar', 'lien', -1],
+              ['nar', "Le Fort des Oliviers ouvrit au onzième jour de blocus, sans assaut, aux conditions de Damas. Mais onze jours de faim laissent dans un bourg une mémoire que nul écrit n'efface."]
+            ]
+          }],
+          ['mus', 'rome'],
+          ['nar', "L'ancien reparti, la foule du matin reflue vers le forum. On y attend Khâlid comme on attend un spectacle."]
+        ] },
         { text: "Traverser Qinnasrîn jusqu'au forum", goto: 'forum', then: [
           ['sfx', 'crowd'],
           ['say', 'poete', "Voici celui devant qui les forteresses ouvrent leurs portes ! Celui dont le nom marche devant lui comme une avant-garde !"],
           ['nar', "La foule reprend. Khâlid écoute. Il est généreux de nature : à un solliciteur de marque, il fait compter dix mille dirhams, pris sur sa part."],
           ['say', 'qaqa', 'Émir… Dix mille. Cela se saura à Médine avant la fin du mois.'],
           ['say', 'Des soldats', 'Avec Khâlid, on ne perd jamais !'],
+          ['say', 'ghalib', "Tu entends, émir ? Voilà ce que valent quatre ans de victoires. Laisse-moi faire : demain, ce cri-là s'entendra jusqu'à Médine."],
+          ['ask', "Que répond Khâlid à son intendant ?", [
+            { t: "Lui ordonner de faire taire les poètes.", r: [
+              ['say', 'ghalib', "Faire taire la reconnaissance d'un peuple ? J'obéirai, émir. Mais elle parlera plus fort demain : c'est le propre de ce qu'on interdit."],
+              ['nar', "Il s'incline très bas. Un homme qui s'incline si bas a toujours quelque chose à cacher sous son manteau."]] },
+            { t: "Le remercier : il sert bien l'armée.", r: [
+              ['say', 'ghalib', "Je ne sers que toi, émir. Toi seul."],
+              ['nar', "C'est précisément ce qui aurait dû l'inquiéter. Mais on n'examine pas volontiers la main qui vous dresse une statue."]] },
+            { t: "Lire à voix haute son registre : tant par vers, tant par acclamation, tant pour approcher l'émir.", need: 'comptes_intendant', r: [
+              ['say', 'khalid', "« Au poète, pour vingt vers : deux cents dirhams. Aux crieurs du forum : cinquante. Reçu de trois solliciteurs, pour une audience : mille. » C'est ton écriture, Ghâlib."],
+              ['say', 'ghalib', "Émir… C'est pour ta gloire que je…"],
+              ['say', 'khalid', "Non. C'est pour ta bourse, et tu la remplissais de mon nom. Tu rendras tes comptes à Abû 'Ubayda. Devant tous."],
+              ['nar', "Dans les rangs, quelques acclamations s'éteignent, comme des lampes qu'on ne paie plus. Pas toutes : certaines étaient sincères, et celles-là sont les plus lourdes à porter."],
+              ['flag', 'ghalib_demasque'], ['pillar', 'justice', 1], ['hide', 'ghalib']] }
+          ]],
           ['nar', "Chaque acclamation, dans la noosphère, est un coup de ciseau sur un bloc d'or. Au marché, les échos de louange ont pris corps : ils répètent son nom tout seuls."]
         ] },
         { text: 'Faire taire les échos de louange au marché', foe: 'f1', then: [
@@ -530,10 +808,10 @@ ISNAD.registerSaga({
           ['show', 'estafette'],
           ['say', 'estafette', "Émir, Abû 'Ubayda te demande à Homs. Un envoyé du Commandeur des croyants est arrivé de Médine."],
           ['fade', 'out'],
-          ['hide', 'poete'], ['hide', 'soldat'], ['hide', 'estafette'],
+          ['hide', 'poete'], ['hide', 'soldat'], ['hide', 'estafette'], ['hide', 'ancien_bourg'], ['hide', 'scribe'], ['hide', 'ghalib'],
           ['show', 'abu_ubayda'], ['show', 'bilal'],
           ['map', 'romaine', 'porte', { time: 'dusk' }],
-          ['hide', 'poete'], ['hide', 'soldat'], ['hide', 'estafette'],
+          ['hide', 'poete'], ['hide', 'soldat'], ['hide', 'estafette'], ['hide', 'ancien_bourg'], ['hide', 'scribe'], ['hide', 'ghalib'],
           ['show', 'abu_ubayda'], ['show', 'bilal'],
           ['title', 'Homs', "L'armée est assemblée sur l'esplanade"],
           ['fade', 'in'],
@@ -557,6 +835,10 @@ ISNAD.registerSaga({
           ['say', 'bilal', 'Nous écoutons ceux qui nous commandent et nous leur obéissons ; et nous honorons ceux qui le méritent.'],
           ['say', 'khalid', "J'écoute et j'obéis."],
           ['codex', 'destitution'],
+          ['mus', 'deuil'],
+          ['nar', "L'appel du couchant monte sur Homs. Khâlid, les poignets encore marqués par son propre turban, prend place dans le rang, derrière Abû 'Ubayda. Ni devant, ni à l'écart : dans le rang."],
+          ['pray', 'maghrib'],
+          ['nar', "Le sabre n'est beau qu'au fourreau de celui qui saurait le tirer. Qui ne sait que dégainer n'est pas un homme d'armes : c'est une arme, et d'autres mains la tiennent."],
           ['nar', "Khâlid a obéi. Mais dans les rangs, la colère enfle : « Ils ont osé. Lui ! » Et cette colère-là ne monte pas vers Allah. Elle monte vers un socle."],
           ['sfx', 'glitch'], ['shake', 500],
           ['map', 'noos', 'seuil', { hue: 48 }],
@@ -573,20 +855,26 @@ ISNAD.registerSaga({
           ['say', "L'Idole du Héros", 'Et ton nom. Frappe-moi, si tu veux : chaque coup de sabre me grandit.'],
           ['say', 'qaqa', 'Émir, le fer ne lui fera rien. Il est fait de tes victoires.'],
           ['say', 'khalid', "Alors je le combattrai avec ce qu'il ne possède pas."],
-          ['battle', { group: ['idole_heros'], bg: 'noos', boss: true, intro: "Le fer ne l'entame pas. Seules la patience et la vérité fendent l'or." }],
+          ['battle', { group: ['idole_heros'], bg: 'noos', boss: true, intro: "Le fer ne l'entame pas. Seules la patience et la vérité fendent l'or.",
+            allies: [{ flag: 'ghalib_demasque', name: 'Les rangs détrompés' }] }],
           ['flash', '#fff2c0'], ['sfx', 'break'],
           ['say', "L'Idole du Héros", 'Sans moi… qui se souviendra… de toi ?'],
           ['say', 'khalid', "Celui qui n'oublie rien me suffit."],
           ['nar', "Le colosse se fend du sommet au socle. Dedans, il n'y a rien : pas même un homme. Seulement le creux où d'autres avaient versé leur confiance."],
           ['map', 'romaine', 'porte', { time: 'dawn' }],
-          ['hide', 'poete'], ['hide', 'soldat'], ['hide', 'estafette'],
-          ['amb', 'vent'],
+          ['hide', 'poete'], ['hide', 'soldat'], ['hide', 'estafette'], ['hide', 'ancien_bourg'], ['hide', 'scribe'], ['hide', 'ghalib'],
+          ['amb', 'vent'], ['mus', 'espoir'],
+          ['nar', "Avant de monter en selle, il prie l'aube avec ceux qui restent. Personne ne l'acclame ; quelqu'un lui tient son étrier."],
+          ['pray', 'fajr'],
           ['nar', "Khâlid prend la route de Médine. 'Umar l'y reçoit, examine ses comptes, et le trouve intègre. Puis le Calife écrit aux provinces."],
           ['quote', "Je n'ai pas destitué Khâlid par mécontentement ni pour trahison ; mais les gens ont été éblouis par lui, et j'ai craint qu'ils ne s'en remettent à lui. J'ai voulu qu'ils sachent que c'est Allah qui agit.", "'Umar ibn al-Khattâb, lettre aux provinces — at-Tabarî, Târîkh"]
         ] }
       ],
       outro: [
-        ['codex', 'parole_umar'], ['codex', 'idole_heros'],
+        ['codex', 'parole_umar'], ['codex', 'idole_heros'], ['codex', 'ghalib'],
+        ['if', 'ghalib_demasque',
+          [['nar', "Ghâlib rendit ses comptes devant l'armée, et fut renvoyé sans autre peine que la honte. Il n'avait volé personne : il avait vendu un nom. Aucune loi ne le punissait ; il fallut le savoir pour le voir."]],
+          [['nar', "Ghâlib, lui, ne fut jamais inquiété. Il trouva un autre capitaine à louer : il y en a toujours un. Les idoles ont des intendants que la chute des idoles ne ruine pas."]]],
         ['nar', "Les armées continuèrent de vaincre sans lui. C'était la preuve que 'Umar cherchait — et peut-être celle dont Khâlid lui-même avait besoin."],
         ['say', 'dirar', "Émir… que ferons-nous, à présent ?"],
         ['say', 'khalid', "Ce que nous faisions avant qu'on nous regarde."]

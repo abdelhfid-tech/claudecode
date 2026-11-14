@@ -8,7 +8,7 @@ ISNAD.registerSaga({
   tagline: "Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui.",
 
   intro: [
-    ['amb', 'vent'],
+    ['amb', 'vent'], ['mus', 'chaine'],
     ['title', "'Uthmân ibn 'Affân", 'Le Généreux · 23–35 H'],
     ['nar', "An 23 de l'Hégire. 'Umar est tombé à la prière de l'aube. Six hommes se concertent trois jours ; au matin, les mains se tendent vers 'Uthmân ibn 'Affân."],
     ['nar', "Il a près de soixante-dix ans. Marchand prospère, il a tant donné qu'on a cessé de compter : un puits racheté pour que tous y boivent, l'armée des jours difficiles équipée de ses deniers."],
@@ -19,7 +19,7 @@ ISNAD.registerSaga({
   ],
 
   outro: [
-    ['amb', 'silence'],
+    ['amb', 'silence'], ['mus', 'deuil'],
     ['flash', '#ffffff'],
     ['nar', "Le vendredi 18 Dhû l-Hijja de l'an 35, on força sa porte. Il jeûnait. Le Livre était ouvert devant lui."],
     ['nar', "La Chaîne se tait ici. Elle ne montre pas. Elle dit seulement : il avait plus de quatre-vingts ans, il avait gouverné douze années, et nul n'était mort pour le défendre — parce qu'il l'avait interdit."],
@@ -29,7 +29,7 @@ ISNAD.registerSaga({
     ['codex', 'nommez'],
     ['nar', "Idris, entends-tu ? C'est de cette blessure qu'est née la Chaîne que tu remontes. À la Rumeur qui dit « on dit », les transmetteurs ont répondu : qui te l'a dit ? Et de qui le tenait-il ?"],
     ['nar', "Le Flux de la Cité-Miroir n'est pas autre chose. Tu ne le feras pas taire en criant plus fort que lui. Tu le briseras comme eux : en vérifiant — et en refusant de haïr sur parole."],
-    ['sfx', 'light'],
+    ['mus', 'espoir'], ['sfx', 'light'],
     ['title', 'Lumière retrouvée', 'Rahma — la Miséricorde'],
     ['light', 'rahma']
   ],
@@ -249,6 +249,26 @@ ISNAD.registerSaga({
     { id: 'nommez', cat: 'Parole', title: '« Nommez-nous vos hommes »',
       text: "« Si un pervers vous apporte une nouvelle, voyez bien clair… » (Coran 49:6, traduction du sens) : le verset fonde une discipline, ne rien transmettre sans avoir vérifié. Après la discorde, rapporte Ibn Sîrîn, on cessa de recevoir une parole sans demander sa chaîne : « Nommez-nous vos hommes. » La science de l'isnâd est la réponse des transmetteurs à la Rumeur : pour chaque parole, qui l'a dite, et qui l'a entendue de lui.",
       src: 'Coran 49:6 ; Muslim, introduction au Sahîh' },
+    { id: 'tabayyun', cat: 'Parole', title: "« Qui te l'a dit ? »",
+      text: "La règle tient en deux questions : de qui tiens-tu cela ? et lui, de qui le tenait-il ? Le Coran commande de voir clair avant d'agir sur une nouvelle (49:6, traduction du sens). Une parole dont on ne peut nommer le porteur n'est pas reçue. Plus tard, Ibn Sîrîn dira : « Cette science est religion : regardez de qui vous prenez votre religion. » La Rumeur vit de ce que personne ne pose la question.",
+      src: 'Coran 49:6 ; Muslim, introduction au Sahîh' },
+    { id: 'sept_modes', cat: 'Parole', title: 'Les sept modes de récitation',
+      text: "On rapporte que 'Umar entendit un jour Hishâm ibn Hakîm réciter une sourate autrement qu'il ne l'avait apprise. Il le mena devant le Messager d'Allah ﷺ, qui les fit réciter l'un après l'autre et approuva chacun : le Coran, leur fut-il dit, a été révélé selon sept modes. Les savants ont longuement discuté le sens précis de ces « modes » ; tous en retiennent la leçon : deux récitations reçues ne s'annulent pas. Ce sont les lecteurs qui se disputent, non les lectures.",
+      src: 'al-Bukhârî, Sahîh ; Muslim, Sahîh' },
+    { id: 'mosquee_29', cat: 'Lieu', title: 'La mosquée agrandie',
+      text: "En 29 H, 'Uthmân fit agrandir et rebâtir la mosquée du Prophète ﷺ à Médine : murs de pierre taillée et de chaux, piliers de pierre, toit de teck. Ibn 'Umar rapporte qu'elle était d'abord de briques crues, de palmes et de troncs de palmier ; qu'Abû Bakr n'y changea rien ; que 'Umar l'agrandit dans les mêmes matériaux ; puis que 'Uthmân la transforma. À ceux qui trouvaient l'ouvrage trop beau, il rappela la promesse d'une demeure auprès d'Allah pour qui Lui bâtit une mosquée.",
+      src: 'al-Bukhârî, Sahîh ; Muslim, Sahîh' },
+    { id: 'deux_feux', cat: 'Lieu', title: 'Entre deux flottes',
+      text: "Au milieu du VIIe siècle, Chypre relève de Constantinople et lui verse l'impôt. Quand la flotte du Shâm paraît en 28 H, ses habitants ne peuvent ni combattre ni changer de maître sans être punis par l'autre. Le pacte que rapportent les chroniqueurs tient compte de cette double contrainte : ils paieraient aux uns autant qu'aux autres, sans prendre parti. Le port et ses anciens, dans ce récit, sont de fiction ; la situation, elle, est rapportée.",
+      src: 'al-Balâdhurî, Futûh al-Buldân' },
+    { id: 'chypre', cat: 'Événement', title: 'Le pacte de Chypre',
+      text: "En 28 H (649), la flotte levée par Mu'âwiya, rejointe par des navires d'Égypte, aborde Chypre. Les récits arabes parlent d'un accord plutôt que d'une conquête : un tribut annuel d'environ sept mille dinars, autant que l'île en versait à Constantinople, ce dont on ne l'empêcherait pas ; la neutralité entre les deux puissances ; et le devoir d'avertir des mouvements de la flotte adverse. Ce fut le premier pacte maritime de la communauté.",
+      src: 'al-Balâdhurî, Futûh al-Buldân ; at-Tabarî, Târîkh (an 28 H)' },
+    { id: 'griefs', cat: 'Événement', title: 'Grief par grief',
+      text: "On rapporte que 'Uthmân reçut les mécontents venus d'Égypte et répondit à chacun de leurs reproches. Sur les pâturages réservés : ils l'étaient pour les chameaux de l'aumône, comme au temps de 'Umar, et s'étaient étendus avec les troupeaux. Sur les exemplaires retirés : le Livre est un, et l'on avait craint la discorde. Ce qui était fondé, il promit de le redresser. Les récits disent qu'ils repartirent satisfaits ; les historiens divergent sur les détails.",
+      src: 'at-Tabarî, Târîkh (an 35 H) ; Ibn Kathîr, al-Bidâya wa-n-Nihâya' },
+    { id: 'akhbar_n', cat: 'Noosphère', title: 'Abû l-Akhbâr (personnage de fiction)',
+      text: "Scribe de garnison et porteur de lettres, inventé pour ce récit : « le père des nouvelles » est un sobriquet. Il ne ment presque jamais. Il arrondit, ajoute un mot, tait une réserve, et dit toujours : « je ne fais que répéter ». Il n'est pas la Rumeur : il en est la petite bouche. Une seule question le désarme : qui te l'a dit ?" },
     { id: 'babel_n', cat: 'Noosphère', title: 'Babel',
       text: "Égrégore de la discorde des lectures. Il naît quand une chose vraie, reçue par plusieurs voies, devient un motif de se préférer à l'autre. Il se nourrit d'une seule phrase : « Ma lecture vaut mieux que la tienne. » Il est défait par le Savoir, qui compare et vérifie, et par la Véracité, qui renonce à avoir raison seule." },
     { id: 'abime_n', cat: 'Noosphère', title: "L'Abîme",
@@ -282,7 +302,15 @@ ISNAD.registerSaga({
         { id: 'ancien', name: 'Un ancien de Médine', at: ['mosquee_porte', 2, 1], look: { kind: 'ancien', robe: '#8c8272', head: '#f0ece2' },
           talk: [['say', 'ancien', "Il a fait rebâtir la mosquée en pierre taillée, avec un toit de teck. Certains murmurent que c'est trop beau. On murmure beaucoup, ces temps-ci."]] },
         { id: 'marchand', name: 'Un caravanier', at: ['place', 2, 0], look: { kind: 'homme', robe: '#9a7b4f', head: '#d6c9ae' },
-          talk: [['say', 'marchand', "J'arrive de Fustât. Là-bas, à Koufa, au Shâm : partout on récite. Mais plus personne ne récite tout à fait comme son voisin."]] }
+          talk: [['say', 'marchand', "J'arrive de Fustât. Là-bas, à Koufa, au Shâm : partout on récite. Mais plus personne ne récite tout à fait comme son voisin."]] },
+        { id: 'maitre', name: 'Un maître du cercle', at: 'ecole', look: { kind: 'savant', robe: '#e8e2d2', head: '#f4efe2' },
+          talk: [
+            ['say', 'maitre', "Nous lisions le récit de 'Umar et de Hishâm ibn Hakîm. Chacun récitait à sa façon ; chacun fut approuvé. Sept modes, et pas un qui annule l'autre."],
+            ['codex', 'sept_modes'],
+            ['say', 'maitre', "Retiens-le pour le souk : deux lectures reçues ne se disputent pas. Ce sont les lecteurs qui se disputent."]
+          ] },
+        { id: 'akhbar', name: 'Abû l-Akhbâr', at: ['souk', 0, 2], look: { kind: 'marchand', robe: '#6d5f73', head: '#cfc6b4' },
+          talk: [['say', 'akhbar', "On m'appelle Abû l-Akhbâr. Je porte les lettres des garnisons, et parfois, dit-on, ce qu'il y a entre les lignes. Je ne fais que répéter."]] }
       ],
       foes: [
         { id: 'f_palm', at: ['palmeraie', 0, 2], group: ['murmure'], bg: 'ville' },
@@ -290,6 +318,7 @@ ISNAD.registerSaga({
       ],
       chests: [
         { at: ['palmeraie', 1, 0], item: 'dattes', n: 2 },
+        { at: ['halle', 2, 1], codex: 'tabayyun' },
         { map: 'noos', at: 'faille', item: 'musc', n: 1 }
       ],
       intro: [
@@ -313,12 +342,69 @@ ISNAD.registerSaga({
           ['say', 'rec_sham', "J'ai appris ce verset à Homs, de la bouche d'un Compagnon. C'est ainsi qu'on le récite."],
           ['say', 'rec_irak', "Et moi à Koufa, d'un autre Compagnon. Ma lecture vaut mieux que la tienne."],
           ['say', 'hudhayfa', "Tu les entends. Chacun a reçu du vrai. C'est l'orgueil d'avoir raison qui en fait une arme."],
-          ['nar', "Autour des deux hommes, l'air se trouble. Dans la noosphère du souk, des lettres se détachent des voix et tournoient — des variantes devenues querelles."],
-          ['battle', { group: ['variante', 'murmure'], bg: 'ville', intro: 'La querelle prend corps.' }],
-          ['nar', "Les glyphes retombent. Les deux récitateurs se taisent, étonnés de leur propre colère."],
+          ['say', 'akhbar', "Je ne fais que passer, Commandeur des croyants. Je porte les lettres des garnisons. On m'en dit, des choses, entre deux relais…"],
+          ['nar', "Derrière chacun des deux hommes, un détachement en permission : la colonne du Gué, rentrée du Shâm, et celle des Deux-Puits, rentrée d'Irak. Garnisons de fiction ; querelle bien réelle."],
+          ['mus', 'conseil'],
+          ['parley', {
+            with: 'Les deux récitateurs', title: 'La querelle du souk',
+            intro: "Chacun a reçu du vrai. Chacun craint qu'on lui dise qu'il a mal reçu.",
+            goal: 6,
+            rounds: [
+              { say: "Celui du Shâm : « Il a dit devant mes hommes que ma lecture était fautive. Je l'ai reçue d'un Compagnon ! »",
+                opts: [
+                  { t: "Demander à chacun de qui il tient sa récitation.", el: 'ilm', v: 2,
+                    r: "« D'un Compagnon, à Homs. » — « D'un Compagnon, à Koufa. » Ils se regardent, un peu moins sûrs de se haïr." },
+                  { t: "Rappeler le jour où 'Umar et Hishâm se disputèrent ainsi, et furent approuvés tous deux.", el: 'ilm', v: 3, need: 'sept_modes',
+                    r: "Un silence. « Tous les deux ? » — « Tous les deux. » La colère cherche où se poser, et ne trouve pas." },
+                  { t: "Leur ordonner de se taire : le calife est là.", el: 'shajaa', v: -1,
+                    r: "Ils se taisent. Leurs regards, non." }
+                ] },
+              { say: "Celui d'Irak : « Alors laquelle est la bonne ? Il faut bien que l'une vaille mieux que l'autre. »",
+                opts: [
+                  { t: "« Aucune ne vaut mieux. C'est de vouloir l'emporter qui est la faute. »", el: 'sidq', v: 2,
+                    r: "Il ouvre la bouche pour répondre, et s'aperçoit qu'il n'a rien à répondre." },
+                  { t: "« Récitez-moi le verset, l'un après l'autre. J'écouterai avant de dire un mot. »", el: 'sabr', v: 1,
+                    r: "Ils récitent. Les deux voix diffèrent d'un souffle, et disent la même chose." },
+                  { t: "« Celle de Médine, évidemment. »", el: 'adl', v: -1,
+                    r: "Les deux hommes se rembrunissent ensemble : les voilà d'accord, contre toi." }
+                ] },
+              { say: "Abû l-Akhbâr, à mi-voix : « On dit que ceux du Shâm traitent ceux d'Irak d'ignorants. Je ne fais que répéter… »",
+                opts: [
+                  { t: "« Qui te l'a dit, Abû l-Akhbâr ? Et lui, de qui le tenait-il ? »", el: 'sidq', v: 3, need: 'tabayyun',
+                    r: "Il cherche un nom, puis un autre. La chaîne casse au premier maillon ; les deux colonnes l'ont vue casser." },
+                  { t: "Se tourner vers les deux hommes : « L'avez-vous entendu vous-mêmes ? »", el: 'sabr', v: 1,
+                    r: "« Non. » — « Moi non plus. » La phrase retombe, à moitié." },
+                  { t: "« S'ils l'ont dit, ils en répondront. »", el: 'adl', v: -2,
+                    r: "Celui d'Irak serre les poings. La phrase vient de trouver une bouche de plus : la tienne." }
+                ] },
+              { say: "Les deux, presque ensemble : « Et demain, aux frontières, quand nous réciterons côte à côte ? »",
+                opts: [
+                  { t: "« Demain, vous lirez dans un même tracé. Ceux qui ont écrit sous la dictée y veilleront avec moi. »", el: 'ilm', v: 2,
+                    r: "« Un même tracé… » Ils répètent le mot comme on essaie un manteau. Il leur va." },
+                  { t: "« Demain, priez épaule contre épaule, comme vous combattez. Le reste suivra. »", el: 'rahma', v: 1,
+                    r: "Ils hochent la tête. Ce n'est pas une réponse ; c'est un commencement." },
+                  { t: "« Demain, que chaque colonne prie à part : il n'y aura plus de querelle. »", el: 'sabr', v: -1,
+                    r: "Ils acquiescent, soulagés. C'est exactement ce que voulait la querelle." }
+                ] }
+            ],
+            win: [
+              ['nar', "Les deux récitateurs se taisent, étonnés de leur propre colère. Derrière eux, les hommes du Gué et ceux des Deux-Puits se mêlent pour la première fois depuis la porte de la ville."],
+              ['flag', 'ut_garnisons'], ['pillar', 'lien', 1]
+            ],
+            lose: [
+              ['nar', "Autour des deux hommes, l'air se trouble. Dans la noosphère du souk, des lettres se détachent des voix et tournoient — des variantes devenues querelles."],
+              ['battle', { group: ['variante', 'murmure'], bg: 'ville', intro: 'La parole a manqué son heure : la querelle prend corps.' }],
+              ['nar', "Les glyphes retombent. Les deux récitateurs se taisent enfin ; chaque colonne repart de son côté de la rue."]
+            ]
+          }],
+          ['codex', 'akhbar_n'],
           ['say', 'uthman', "Ce n'est pas eux qu'il faut reprendre. C'est le chemin par lequel la discorde entre. Allons trouver Zayd."]
         ] },
         { text: 'Consulter Zayd ibn Thâbit dans la cour de la mosquée', talk: 'zayd', then: [
+          ['nar', "La mosquée vient d'être rebâtie : pierre taillée, piliers de pierre, toit de teck. Certains la trouvent trop belle. L'appel de midi s'élève ; on se range."],
+          ['pray', 'dhuhr'],
+          ['codex', 'mosquee_29'], ['pillar', 'priere', 1],
+          ['mus', 'conseil'],
           ['say', 'zayd', "Commandeur des croyants. On m'a dit ce qui se passe aux frontières."],
           ['say', 'uthman', "Tu as réuni les feuillets au temps d'Abû Bakr. Dis-moi ce que cela t'a coûté."],
           ['quote', "« Par Allah, s'ils m'avaient chargé de déplacer une montagne, cela ne m'aurait pas été plus lourd que ce qu'ils m'ordonnèrent : réunir le Coran. »", 'Zayd ibn Thâbit — al-Bukhârî, Sahîh'],
@@ -351,14 +437,18 @@ ISNAD.registerSaga({
           ['say', 'zayd', "Ce sont des lettres justes, arrachées à leur ligne. Remises à leur place, elles se taisent."]
         ] },
         { text: 'Atteindre le cœur, où se dresse Babel', goto: 'coeur', then: [
-          ['battle', { group: ['babel'], bg: 'noos', boss: true, intro: "Mille lectures — et pas une qui écoute l'autre." }],
+          ['battle', { group: ['babel'], bg: 'noos', boss: true, intro: "Mille lectures — et pas une qui écoute l'autre.",
+            allies: [{ flag: 'ut_garnisons', name: 'Les deux colonnes réconciliées' }] }],
           ['nar', "La tour de voix se défait. Il n'en reste qu'une récitation, portée par plusieurs souffles — diverse dans ses tons, une dans son tracé."],
           ['map', 'medine', 'halle', { time: 'dusk' }], ['amb', 'vent'],
           ['say', 'zayd', "C'est achevé. Nous avons comparé chaque ligne aux feuillets. Rien n'y manque, rien n'y est ajouté."]
         ] }
       ],
       outro: [
+        ['mus', 'espoir'],
         ['nar', "On rapporte que des exemplaires partirent pour Koufa, Bassora et le Shâm ; un autre demeura à Médine. Les copies divergentes furent retirées. De l'Ifrîqiya au Khorâsân, on lirait désormais dans le même tracé."],
+        ['pillar', 'savoir', 2],
+        ['nar', "On ne bâtit pas une demeure en préférant sa pierre à celle du voisin. Le tracé unique n'ôte rien aux voix : il leur donne le mur où s'adosser."],
         ['quote', "« En vérité, c'est Nous qui avons fait descendre le Rappel, et c'est Nous qui en sommes gardien. »", 'Coran 15:9 — traduction du sens'],
         ['codex', 'babel_n'],
         ['nar', "Idris : une idole peut naître d'une chose vraie. Il suffit que chacun préfère avoir raison plutôt qu'être uni."]
@@ -378,9 +468,33 @@ ISNAD.registerSaga({
             ['say', 'ancien2', "'Umar avait demandé à 'Amr ibn al-'Âs de lui décrire la mer. Je me souviens de la réponse : elle a fait le tour de Médine."],
             ['quote', "« J'ai vu une créature immense que montent de petites créatures… Ils y sont comme des vers sur un bout de bois : s'il penche, ils se noient ; s'ils en réchappent, ils en restent éblouis. »", "On rapporte — 'Amr ibn al-'Âs à 'Umar, at-Tabarî, Târîkh"]
           ] },
-        { id: 'ibnsad', name: "'Abdallâh ibn Sa'd", map: 'navire', at: 'mat', look: { kind: 'marin', robe: '#4d6470', head: '#e6dfd0', cloak: '#26404d' },
+        { id: 'maitre', name: 'Un maître du cercle', at: 'ecole', look: { kind: 'savant', robe: '#e8e2d2', head: '#f4efe2' },
+          talk: [
+            ['say', 'maitre', "La leçon du jour tient en une question : « Qui te l'a dit ? » Puis une seconde : « Et lui, de qui le tenait-il ? » Une nouvelle dont on ne peut nommer le porteur, on ne la reçoit pas."],
+            ['codex', 'tabayyun'],
+            ['say', 'maitre', "Le Livre le commande : si l'on vous apporte une nouvelle, voyez clair avant d'agir."]
+          ] },
+        { id: 'akhbar', name: 'Abû l-Akhbâr', at: ['place', -1, 1], look: { kind: 'marchand', robe: '#6d5f73', head: '#cfc6b4' },
+          talk: [
+            ['say', 'akhbar', "On dit, Commandeur des croyants — je ne fais que répéter — que la flotte se remplira de force, quoi qu'on promette."],
+            ['ask', 'Que lui répondre ?', [
+              { t: "« Qui le dit ? Nomme-le-moi. »", need: 'tabayyun', r: [
+                ['say', 'akhbar', "Des gens. Des gens sûrs… Pardonne-moi, on m'attend au relais."] ] },
+              { t: 'Ne rien répondre.', r: [
+                ['nar', "Il sourit et s'éloigne. Une phrase qu'on ne relève pas est une phrase qui voyage."] ] }
+            ]]
+          ] },
+        { id: 'ancien_ile', name: 'Un ancien du port', map: 'navire', at: 'mat', look: { kind: 'ancien', robe: '#5f6f7a', head: '#d8d2c4' },
+          talk: [['say', 'ancien_ile', "Je parle pour un port de pêcheurs. C'est peu, mais c'est tout ce que j'ai à défendre."]] },
+        { id: 'pretre', name: 'Un prêtre du port', map: 'navire', at: ['pont', 1, -1], look: { kind: 'moine', robe: '#3d3a44', head: '#3d3a44' },
+          talk: [
+            ['say', 'pretre', "Je ne suis venu ni vous maudire ni vous bénir. Je suis venu parce que ce port est le mien."],
+            ['say', 'pretre', "Sache ce que nous sommes : un village entre deux feux. Nous versons déjà l'impôt à Constantinople. Cessons, et sa flotte nous punira ; refusons-vous, et ce sera la vôtre."],
+            ['codex', 'deux_feux']
+          ] },
+        { id: 'ibnsad', name: "'Abdallâh ibn Sa'd", map: 'navire', at: 'mat', hidden: true, look: { kind: 'marin', robe: '#4d6470', head: '#e6dfd0', cloak: '#26404d' },
           talk: [['say', 'ibnsad', "Tenez les chaînes prêtes. Quand le vent tombera, nous ferons de ces coques une seule terre."]] },
-        { id: 'vigie', name: 'Une vigie', map: 'navire', at: 'proue', look: { kind: 'marin', robe: '#5a6a5f', head: '#d9d2bf' },
+        { id: 'vigie', name: 'Une vigie', map: 'navire', at: 'proue', hidden: true, look: { kind: 'marin', robe: '#5a6a5f', head: '#d9d2bf' },
           talk: [['say', 'vigie', "Leurs voiles couvrent l'horizon du nord. Leurs pilotes lisent les étoiles et les courants depuis des siècles. Ne les crois pas faibles parce qu'ils sont en face."]] },
         { id: 'charpentier', name: "Un charpentier d'Alexandrie", map: 'navire', at: ['pont', -1, 1], look: { kind: 'marin', robe: '#7d6a4d', head: '#cfc4ab' },
           talk: [['say', 'charpentier', "Chez nous, on construit des coques depuis toujours. Ces gens du désert apprennent vite : ils écoutent quand on leur parle du vent."]] },
@@ -420,12 +534,77 @@ ISNAD.registerSaga({
             ] }
           ]],
           ['quote', "« Ne choisis personne et ne tire personne au sort. Laisse-leur le choix : celui qui choisit de partir de son plein gré, transporte-le et aide-le. »", "On rapporte — 'Uthmân à Mu'âwiya, at-Tabarî, Târîkh (an 28 H)"],
-          ['codex', 'flotte'],
-          ['nar', "Cette année-là, la flotte atteint Chypre. Six ans passent. Dans les chantiers d'Égypte et du Shâm, des cavaliers apprennent à tenir debout sur un pont."],
+          ['codex', 'flotte'], ['pillar', 'justice', 1],
+          ['nar', "Cette année-là, la flotte quitte les ports du Shâm. Sa première escale n'est pas une bataille : c'est une île, si proche qu'on y entend, disait l'émissaire, aboyer les chiens."],
+          ['map', 'navire', 'poupe', { time: 'dusk' }], ['amb', 'mer'], ['sfx', 'wave'], ['mus', 'mer'],
+          ['nar', "An 28, devant Chypre. 'Uthmân n'a pas embarqué : il est à Médine, et ses compagnons aussi. Mais sa consigne voyage avec ceux qu'il envoie, et c'est elle que tu portes sur ce pont, tel que les marins l'ont raconté."],
+          ['nar', "Une barque se détache du rivage. Des anciens du port montent à bord, sans armes : ils viennent voir si l'on peut parler à cette flotte avant qu'elle ne parle la première."]
+        ] },
+        { text: 'Recevoir les anciens du port, montés à bord (au pied du mât)', talk: 'ancien_ile', then: [
+          ['say', 'ancien_ile', "Je parle pour le port, pas pour l'île, et encore moins pour l'empereur. Dis-moi à qui je parle : à une flotte, ou à des hommes ?"],
+          ['say', 'Un officier de la flotte', "À des hommes à qui le calife a ordonné de préférer un pacte à une prise."],
+          ['mus', 'conseil'],
+          ['parley', {
+            with: 'ancien_ile', title: 'Les anciens du port',
+            intro: "Ils craignent deux flottes : celle qui vient d'entrer dans la baie, et celle qui reviendra les punir d'avoir traité.",
+            goal: 6,
+            rounds: [
+              { say: "« Vos voiles sont entrées dans notre baie sans rien demander. Que veut-on à des pêcheurs ? »",
+                opts: [
+                  { t: "« La vérité d'abord : nous ne voulons pas votre île. Nous voulons que cette mer cesse d'être une arme contre nos côtes. »", el: 'sidq', v: 2,
+                    r: "« Au moins tu ne prétends pas être venu pour notre bien. Continue. »" },
+                  { t: "« Rien que vous n'ayez consenti. C'est la consigne de celui qui nous envoie. »", el: 'rahma', v: 1,
+                    r: "« Consenti… devant deux cents coques. Mais je retiens le mot. »" },
+                  { t: "« Vos barques, vos greniers et vos pilotes. Tout de suite. »", el: 'shajaa', v: -2,
+                    r: "Il se lève à demi. « Alors prenez-les. On n'a pas besoin de ma parole pour cela. »" }
+                ] },
+              { say: "« Si nous traitons avec vous, Constantinople nous le fera payer. Si nous refusons, ce sera vous. »",
+                opts: [
+                  { t: "« Versez-nous ce que vous leur versez, pas davantage. Et continuez de leur verser : nous ne vous l'interdirons pas. »", el: 'adl', v: 3, need: 'deux_feux',
+                    r: "Il te regarde longtemps. « Tu sais donc ce que c'est, vivre entre deux feux. »" },
+                  { t: "« Je ne peux pas vous promettre leur clémence. Seulement la nôtre — et par écrit. »", el: 'sidq', v: 2,
+                    r: "« Un écrit. Soit. Les écrits durent plus que les flottes. »" },
+                  { t: "« Nous vous protégerons d'eux, quoi qu'il arrive. »", el: 'shajaa', v: -1,
+                    r: "« Avec quoi ? Vous repartirez à la belle saison. Eux restent à trois jours de voile. »" }
+                ] },
+              { say: "« Et nos fils ? On dit que les flottes prennent leurs rameurs où elles les trouvent. »",
+                opts: [
+                  { t: "« Chez nous, nul n'a embarqué de force : ni désigné, ni tiré au sort. Nous ne ferons pas aux vôtres ce que nous refusons aux nôtres. »", el: 'adl', v: 2,
+                    r: "« Si c'est vrai, c'est la première flotte de cette sorte que je vois. »" },
+                  { t: "« Demande-le aux volontaires eux-mêmes : ils sont sur ce pont. »", el: 'sidq', v: 1,
+                    r: "Il hèle un rameur. L'homme répond sans regarder ses chefs. L'ancien hoche la tête." },
+                  { t: "« Quelques rameurs seulement, et bien payés. »", el: 'rahma', v: -1,
+                    r: "« Voilà. On commence toujours par “quelques”. »" }
+                ] },
+              { say: "« Que voulez-vous de nous, à la fin, que nous puissions donner sans nous perdre ? »",
+                opts: [
+                  { t: "« Votre neutralité : n'aider personne contre nous, et nous avertir quand leur flotte appareille. »", el: 'adl', v: 2,
+                    r: "« Avertir n'est pas combattre. Cela, un pêcheur peut le jurer. »" },
+                  { t: "« Vos pilotes, s'ils y consentent, pour nous apprendre ces eaux. »", el: 'ilm', v: 1,
+                    r: "« Apprendre la mer à des gens du sable… Ils en riront. Puis ils le feront : je les connais. »" },
+                  { t: "« Que vous combattiez à nos côtés. »", el: 'shajaa', v: -2,
+                    r: "« Contre ceux dont nous partageons les autels ? Tu demandes ce qu'un homme ne donne pas. »" }
+                ] }
+            ],
+            win: [
+              ['nar', "L'accord tient en peu de mots : un tribut égal à celui qu'ils versent déjà, la neutralité, et un avertissement quand l'autre flotte appareille. On l'écrit ; les anciens y posent le doigt."],
+              ['nar', "En redescendant dans sa barque, l'ancien se retourne : trois pilotes du port resteront quelques saisons, pour apprendre ces eaux à qui veut les apprendre."],
+              ['flag', 'ut_pilotes'], ['pillar', 'lien', 1]
+            ],
+            lose: [
+              ['nar', "Le pacte se fera — les récits le rapportent — mais ce port-ci n'y mettra que sa peur. Les anciens signent sans lever les yeux, et redescendent sans un mot."],
+              ['pillar', 'lien', -1],
+              ['nar', "Cette nuit-là, la crainte de l'île passe d'un bord à l'autre : à quoi bon une mer où l'on n'a que des vaincus pour voisins ?"],
+              ['battle', { group: ['ecume', 'murmure'], bg: 'mer', intro: "La peur de l'île a pris le large avec vous." }]
+            ]
+          }],
+          ['hide', 'ancien_ile'], ['hide', 'pretre'], ['codex', 'chypre'],
+          ['nar', "Un pacte est un puits creusé entre deux campements : chacun y descend son seau, et nul n'a besoin d'aimer l'autre pour y boire."],
+          ['nar', "Six ans passent. Dans les chantiers d'Égypte et du Shâm, des cavaliers apprennent à tenir debout sur un pont."],
           ['nar', "An 34. L'empereur Constant arme cinq cents voiles pour reprendre la mer. 'Abdallâh ibn Sa'd, gouverneur d'Égypte, sort à sa rencontre au large de la Lycie."],
           ['map', 'navire', 'poupe', { time: 'dawn' }], ['amb', 'mer'], ['sfx', 'wave'],
-          ['nar', "'Uthmân n'a pas embarqué : il est à Médine, et ses compagnons aussi. Mais un ordre voyage avec ceux qu'il envoie. Ce pont, tu le parcours tel que les marins l'ont raconté — et ce que tu portes à bord, c'est le souci du calife pour chacun d'eux."],
-          ['nar', "Dans la noosphère de la flotte, sa décision a un poids : nul n'est ici contre son gré. Rejoins l'amiral au pied du mât."]
+          ['show', 'ibnsad'], ['show', 'vigie'],
+          ['nar', "Dans la noosphère de la flotte, la décision du calife a un poids : nul n'est ici contre son gré. Rejoins l'amiral au pied du mât."]
         ] },
         { text: "Rejoindre l'amiral au pied du mât", talk: 'ibnsad', then: [
           ['say', 'ibnsad', "Deux cents coques, et la moitié de mes hommes n'avaient jamais vu la mer avant de s'engager. En face : l'empereur en personne, et des marins dont les pères naviguaient déjà."],
@@ -441,6 +620,8 @@ ISNAD.registerSaga({
             ] }
           ]],
           ['say', 'ibnsad', "Ils ont passé la nuit au son de leurs cloches ; nous, en prière. Au matin, nous lierons les navires bord à bord. Si mes hommes sont des gens de terre, je leur donnerai un sol."],
+          ['nar', "Avant que le jour ne se lève sur les deux flottes, les rangs se forment sur les ponts, serrés comme le seront bientôt les coques."],
+          ['pray', 'fajr'],
           ['nar', "Dans la noosphère, la peur n'attend pas le matin. Elle monte par les dalots, blanche et froide, et se rassemble près de la passerelle."]
         ] },
         { text: "Gagner la passerelle, où l'effroi se rassemble", goto: 'passerelle', then: [
@@ -461,7 +642,8 @@ ISNAD.registerSaga({
           ['say', 'hudhayfa', "Elles ne frappent pas pour blesser. Elles frappent pour qu'on lâche. Ne lâchons pas."]
         ] },
         { text: "Descendre au cœur, face à l'Abîme", goto: 'coeur', then: [
-          ['battle', { group: ['abime'], bg: 'mer', boss: true, intro: 'Sous les coques, quelque chose ouvre les bras.' }],
+          ['battle', { group: ['abime'], bg: 'mer', boss: true, intro: 'Sous les coques, quelque chose ouvre les bras.',
+            allies: [{ flag: 'ut_pilotes', name: 'Les pilotes du port' }] }],
           ['nar', "L'Abîme se referme. Là-haut, au même instant, la ligne de l'empereur se rompt. Constant échappe de peu ; sa flotte se disperse vers le nord."],
           ['map', 'navire', 'proue', { time: 'day' }], ['amb', 'mer'],
           ['say', 'ibnsad', "C'est fini. Qu'on dise au Commandeur des croyants que pas un de ces hommes n'a été traîné ici. C'est pour cela qu'ils ont tenu."]
@@ -495,7 +677,15 @@ ISNAD.registerSaga({
         { id: 'affranchi', name: 'Un affranchi', at: ['maison', -2, 0], hidden: true, look: { kind: 'homme', robe: '#8a7c66', head: '#d2c7b0' },
           talk: [['say', 'affranchi', "Ce matin, il nous a rendus libres. Vingt d'entre nous. Puis il a demandé qu'on lui apporte le Livre."]] },
         { id: 'ancien3', name: 'Un ancien de Médine', at: ['puits', 1, 0], look: { kind: 'ancien', robe: '#8c8272', head: '#f0ece2' },
-          talk: [['say', 'ancien3', "Ce puits me rappelle Rûma. On vendait son eau, autrefois. Il l'a acheté et nous l'a donné. Je n'ai jamais payé une gorgée."]] }
+          talk: [['say', 'ancien3', "Ce puits me rappelle Rûma. On vendait son eau, autrefois. Il l'a acheté et nous l'a donné. Je n'ai jamais payé une gorgée."]] },
+        { id: 'maitre', name: 'Un maître du cercle', at: 'ecole', look: { kind: 'savant', robe: '#e8e2d2', head: '#f4efe2' },
+          talk: [
+            ['say', 'maitre', "On vient au cercle me demander si les lettres disent vrai. Je réponds par deux questions : qui te l'a dit ? et lui, de qui le tenait-il ?"],
+            ['codex', 'tabayyun'],
+            ['say', 'maitre', "Personne, ces jours-ci, n'a su me répondre jusqu'au second nom."]
+          ] },
+        { id: 'akhbar', name: 'Abû l-Akhbâr', at: ['place', -1, 1], hidden: true, look: { kind: 'marchand', robe: '#6d5f73', head: '#cfc6b4' },
+          talk: [['say', 'akhbar', "Je ne fais que lire ce qui est écrit, Commandeur des croyants."]] }
       ],
       foes: [
         { id: 'f_or', map: 'noos', at: 'noeud2', group: ['or'], bg: 'noos' },
@@ -504,6 +694,7 @@ ISNAD.registerSaga({
       chests: [
         { at: 'colline', item: 'miel', n: 1 },
         { at: ['palmeraie', 1, 0], item: 'eau', n: 1 },
+        { at: ['porte_sud', -2, -1], codex: 'griefs' },
         { map: 'noos', at: 'miroir', item: 'lait', n: 1 }
       ],
       intro: [
@@ -511,6 +702,8 @@ ISNAD.registerSaga({
         ['amb', 'foule'],
         ['nar', "Douze ans de califat. Les trésors ont afflué, et avec eux les comparaisons. Dans les garnisons d'Égypte et d'Irak, des griefs circulent — certains fondés, d'autres grossis de bouche en bouche."],
         ['nar', "Des lettres passent de main en main. Nul ne sait dire qui les a écrites. Des hommes venus de Fustât, de Koufa et de Bassora campent maintenant aux portes de Médine."],
+        ['nar', "Ce soir encore, il dirige la prière du couchant dans la mosquée qu'il a rebâtie. Bientôt, on l'en empêchera."],
+        ['pray', 'maghrib'],
         ['nar', "'Uthmân a plus de quatre-vingts ans. Il sort de la mosquée avec Zayd. Du souk monte une rumeur — au sens propre."]
       ],
       objectives: [
@@ -526,9 +719,93 @@ ISNAD.registerSaga({
         { text: "Écouter un homme venu d'Égypte, à la porte sud", talk: 'insurge', then: [
           ['say', 'insurge', "On nous a lu des lettres, dans les mosquées de Fustât. Elles disaient tes gouverneurs injustes. Nous avons marché jusqu'ici pour te le dire en face."],
           ['say', 'uthman', "Alors asseyez-vous, et dites-moi chaque grief. Ce qui est fondé, je le redresserai ; ce qui ne l'est pas, vous l'entendrez de ma bouche."],
-          ['nar', "On rapporte qu'il les écouta, leur répondit point par point, et qu'ils repartirent apaisés. Puis, sur la route, une lettre les rattrapa — dont nul n'a jamais su dire avec certitude qui l'avait écrite. Ils firent demi-tour."],
-          ['say', 'insurge', "Je ne sais plus qui a écrit cela. Mais tout le monde le répète. Comment tant de bouches pourraient-elles se tromper ?"],
-          ['codex', 'siege']
+          ['mus', 'conseil'],
+          ['parley', {
+            with: 'insurge', title: "Les griefs des gens d'Égypte",
+            intro: "Ils ont marché des semaines. Ils veulent être entendus plus encore qu'avoir raison.",
+            goal: 7,
+            rounds: [
+              { say: "« On nous a lu des lettres, à Fustât. Elles disaient tout ce que tu as fait de travers. Nous voici. »",
+                opts: [
+                  { t: "« Asseyez-vous. Dites chaque grief ; je répondrai à chacun, devant tous. »", el: 'adl', v: 2,
+                    r: "Il s'assoit. Derrière lui, d'autres s'assoient. C'est déjà un peu moins une foule." },
+                  { t: "« Ces lettres : qui les a écrites ? Qui les a portées ? Commençons par là, ensemble. »", el: 'sidq', v: 3, need: 'tabayyun',
+                    r: "Il ouvre la bouche, la referme. « On nous les a lues. Je n'ai pas demandé de qui. »" },
+                  { t: "« Des lettres sans auteur ne méritent pas de réponse. »", el: 'shajaa', v: -1,
+                    r: "« Et nos semaines de marche ? Elles non plus ? »" }
+                ] },
+              { say: "« Tu as fait retirer et brûler des exemplaires du Livre. »",
+                opts: [
+                  { t: "« Les copies ont été faites d'après les feuillets d'Abû Bakr, devant les Compagnons assemblés. Rien ne s'est fait à l'écart. »", el: 'ilm', v: 3, need: 'mushaf',
+                    r: "« En présence de tous… Cela, on ne nous l'avait pas lu. »" },
+                  { t: "« J'ai craint que vous ne vous déchiriez sur le Livre. Tu as vu ces disputes aux frontières : dis-moi si j'ai eu tort de les craindre. »", el: 'sidq', v: 2,
+                    r: "Il baisse les yeux. Il les a vues." },
+                  { t: "« Cela ne regarde que le calife. »", el: 'shajaa', v: -2,
+                    r: "Un murmure court dans les rangs. Il n'attendait que cette phrase." }
+                ] },
+              { say: "« Tu as réservé des pâturages, et confié des charges aux tiens. »",
+                opts: [
+                  { t: "« Le pâturage est réservé aux chameaux de l'aumône, comme au temps de 'Umar ; les troupeaux ont grandi, je l'ai étendu. Envoyez qui vous voudrez le vérifier. »", el: 'adl', v: 3, need: 'griefs',
+                    r: "« Vérifier… Tu nous laisserais vérifier ? » Le mot passe de rang en rang." },
+                  { t: "« Ce qui est fondé dans vos griefs, je le redresserai. Et j'en demande pardon à Allah devant vous. »", el: 'rahma', v: 2,
+                    r: "Quelqu'un, au fond, se détourne pour s'essuyer les yeux. On n'était pas venu entendre cela." },
+                  { t: "« Tout cela est mensonge. »", el: 'shajaa', v: -1,
+                    r: "« Tout ? Alors tu ne nous as pas écoutés. »" }
+                ] },
+              { say: "« Et si nous repartons, qui nous dit que rien ne sera oublié à la première étape ? »",
+                opts: [
+                  { t: "« Un écrit que vous emporterez, et des témoins que vous choisirez vous-mêmes. »", el: 'adl', v: 2,
+                    r: "« Des témoins de notre choix. Soit. »" },
+                  { t: "« Restez mes hôtes aussi longtemps qu'il faudra pour le voir de vos yeux. »", el: 'rahma', v: 1,
+                    r: "« Tes hôtes… Nous avons des champs qui attendent. Mais nous nous en souviendrons. »" },
+                  { t: "« Ma parole suffit. »", el: 'sidq', v: 0,
+                    r: "« Elle nous suffisait, autrefois. Avant les lettres. »" }
+                ] }
+            ],
+            win: [
+              ['nar', "Grief après grief, la colère se défait comme un nœud qu'on prend la peine de suivre des doigts. Au soir, l'homme d'Égypte se lève : « Nous étions venus crier. Tu nous as fait parler. »"],
+              ['flag', 'ut_egyptien'], ['pillar', 'justice', 1]
+            ],
+            lose: [
+              ['nar', "Les réponses sont venues, mais pas dans l'ordre où il fallait les entendre. L'homme d'Égypte se lève sans colère et sans paix : « Nous partirons. Je ne dis pas que nous avons été entendus. »"],
+              ['pillar', 'lien', -1],
+              ['nar', "Dans la noosphère de la porte sud, ce qui n'a pas été écouté jusqu'au bout se met à parler tout seul."],
+              ['battle', { group: ['ouidire', 'ouidire'], bg: 'ville', intro: "Un grief mal entendu cherche d'autres oreilles." }]
+            ]
+          }],
+          ['nar', "Les récits le rapportent : ils levèrent le camp et reprirent la route de l'Égypte. Médine respira, le temps de quelques étapes."],
+          ['nar', "Il faut une saison pour nouer un lien, et une phrase pour le défaire. Celui qui garde les hommes veille d'abord sur ce qu'ils se disent."],
+          ['mus', 'deuil'],
+          ['nar', "Puis, sur la route, une lettre les rattrapa, scellée — écrite par une main qu'on ne nomma jamais. Ils firent demi-tour. Ce que la parole avait noué en un jour, un feuillet le défit en une heure."],
+          ['if', 'ut_egyptien', [
+            ['say', 'insurge', "J'ai demandé qui l'avait écrite. On m'a répondu : tout le monde le sait. Je suis revenu avec les autres — mais je n'irai pas plus loin que cette porte."]
+          ], [
+            ['say', 'insurge', "Je ne sais pas qui a écrit cela. Mais tout le monde le répète. Comment tant de bouches pourraient-elles se tromper ?"]
+          ]],
+          ['codex', 'siege'],
+          ['show', 'akhbar'],
+          ['nar', "Sur la place, quelqu'un lit la lettre à voix haute. On dirait qu'elle s'allonge à chaque lecture."]
+        ] },
+        { text: 'Trouver celui qui lit la lettre à la foule, sur la place', talk: 'akhbar', then: [
+          ['say', 'akhbar', "« …et il est écrit — je ne fais que lire — qu'on châtiera ceux qui sont venus se plaindre, et leurs fils après eux… »"],
+          ['say', 'zayd', "J'ai tenu des feuillets toute ma vie. Celui-ci est bien court pour tout ce qu'il y lit."],
+          ['ask', "Abû l-Akhbâr lève les yeux de la lettre. Que faire ?", [
+            { t: "« Qui te l'a remise, Abû l-Akhbâr ? Et celui-là, de qui la tenait-il ? »", need: 'tabayyun', r: [
+              ['say', 'akhbar', "D'un homme sûr. Qui la tenait… d'un autre. Je ne fais que répéter, Commandeur des croyants. Je n'ai jamais fait que répéter."],
+              ['nar', "Il n'a pas de nom à donner. Ceux qui l'écoutaient l'entendent se taire : il arrondissait, ajoutait un mot, taisait une réserve. Devant la question, il ne lui reste qu'un papier sans garant."],
+              ['say', 'uthman', "Laissez-le aller. Qu'il sache seulement qu'on lui a demandé son garant, et qu'on le lui redemandera."],
+              ['flag', 'ut_demasque'], ['pillar', 'savoir', 1]
+            ] },
+            { t: 'Le prier de cesser sa lecture, sans rien lui demander.', r: [
+              ['nar', "Il s'incline, roule la lettre et se fond dans la foule. On l'a fait taire sans lui demander son garant : il le racontera à sa façon, et ceux qui crient à l'arbitraire auront une phrase de plus."],
+              ['pillar', 'justice', -1]
+            ] },
+            { t: 'Passer sans un mot.', r: [
+              ['nar', "Il reprend sa lecture. Quand tu te retournes, il n'est plus là ; la foule, elle, sait déjà la lettre par cœur."]
+            ] }
+          ]],
+          ['hide', 'akhbar'],
+          ['nar', "Confondu ou non, Abû l-Akhbâr n'était qu'une bouche. La Rumeur en a mille autres, et elle marche déjà vers la maison."]
         ] },
         { text: 'Rentrer à la maison, que le cercle enserre', goto: 'maison', then: [
           ['amb', 'nuit'],
@@ -551,8 +828,10 @@ ISNAD.registerSaga({
           ]],
           ['quote', "« Te plairait-il de tuer tous les gens, et moi avec eux ? Par Allah, si tu tues un seul homme, c'est comme si tu avais tué tous les gens. »", "'Uthmân à Abû Hurayra — Ibn Sa'd, Tabaqât"],
           ['quote', "« J'adjure quiconque estime me devoir écoute et obéissance de retenir sa main et son arme. […] Je ne serai pas le premier à succéder au Messager d'Allah ﷺ dans sa communauté en faisant couler le sang. »", "On rapporte — Ibn Sa'd, Tabaqât ; Ahmad, Musnad"],
-          ['codex', 'parole_sang'],
+          ['codex', 'parole_sang'], ['pillar', 'lien', 1],
           ['show', 'affranchi'],
+          ['nar', "Le dernier matin se lève sur la maison. Avant le jour, il prie."],
+          ['pray', 'fajr'],
           ['nar', "Ce matin-là, il affranchit vingt esclaves. Il jeûne. Il fait apporter le Livre et l'ouvre devant lui."],
           ['say', 'zayd', "Tu ne veux pas te défendre contre eux. Mais il y a autre chose à cette porte, qui n'est pas un homme."],
           ['say', 'uthman', "Celle-là, je veux bien la regarder en face."],
@@ -569,7 +848,8 @@ ISNAD.registerSaga({
         { text: 'Faire face à la Rumeur', goto: 'coeur', then: [
           ['say', 'La Rumeur', "On dit que tu es venu te justifier. On dit que tu es venu te taire. On dit…"],
           ['say', 'uthman', "Je ne suis venu ni me justifier ni te faire taire. Je suis venu te refuser ce que tu demandes : du sang."],
-          ['battle', { group: ['rumeur'], bg: 'noos', boss: true, intro: 'Mille bouches. Pas un témoin.' }],
+          ['battle', { group: ['rumeur'], bg: 'noos', boss: true, intro: 'Mille bouches. Pas un témoin.',
+            allies: [{ flag: 'ut_egyptien', name: "Ceux qui ont demandé : « qui l'a écrite ? »" }, { flag: 'ut_demasque', name: 'Les témoins de la place' }] }],
           ['nar', "L'emprise se brise. Un instant, les voix se taisent — et dans ce silence, chacun pourrait entendre qu'il ne sait pas ce qu'il répète."],
           ['nar', "Mais briser une emprise n'est pas dissoudre une foule. Dehors, les hommes sont réels, et leur colère aussi. 'Uthmân le sait. Il ne demandait pas à être sauvé : seulement que nul ne tue en son nom."],
           ['codex', 'rumeur_n'],

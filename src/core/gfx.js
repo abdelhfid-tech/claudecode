@@ -170,6 +170,9 @@
       if (kind === 'ancien') { Rr('#6b4a2e', 1, 6, 1, 17); Rr('#e9e2d0', side ? 5 : 4, 10, side ? 6 : 8, 2); }
       if (kind === 'cyber') { Rr('#39e6ff', side ? 7 : 7, 11, 1, 8); if (dir === 0) Rr('#39e6ff', 6, 7, 4, 1); Rr('#ff4fd8', side ? 4 : 3, hem - 1, side ? 8 : 10, 1); }
       if (kind === 'marin') { Rr('#e9e2d0', side ? 5 : 4, 13, side ? 6 : 8, 1); }
+      if (kind === 'savant') { Rr('#e9e2d0', side ? 5 : 4, 10, side ? 6 : 8, 2); if (dir === 0) { Rr('#e6dcc4', 9, 14, 3, 4); Rr('#8a6238', 9, 14, 3, 1); } }
+      if (kind === 'marchand') { Rr('#d9b45a', side ? 5 : 4, 14, side ? 6 : 8, 1); if (dir === 0) Rr('#a8663c', 2, 15, 3, 3); }
+      if (kind === 'berbere') { const veil = look.veil || '#1c3a5a'; if (dir === 0) { Rr(veil, 4, 2, 8, 4); Rr(veil, 5, 8, 6, 3); Rr(veil, 4, 5, 1, 5); Rr(veil, 11, 5, 1, 5); Rr(skin, 6, 6, 4, 2); } else if (dir === 3) { Rr(veil, 4, 2, 8, 9); } else { const L = dir === 1; Rr(veil, 4, 2, 8, 4); Rr(veil, L ? 7 : 4, 5, 5, 6); Rr(veil, L ? 4 : 9, 8, 3, 3); Rr(skin, L ? 4 : 9, 6, 3, 2); } }
     }
     if (kind === 'enfant') { const cv2 = mk(48, 96), c2 = cv2.getContext('2d'); c2.imageSmoothingEnabled = false; for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) c2.drawImage(cv, f * 16, dir * 24, 16, 24, f * 16 + 2, dir * 24 + 7, 12, 17); return (ccache[key] = cv2); }
     return (ccache[key] = cv);
