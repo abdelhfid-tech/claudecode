@@ -106,6 +106,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 #battle .banner { position: absolute; left: 50%; top: 11%; transform: translateX(-50%); padding: .3em 1.6em; background: linear-gradient(90deg, transparent, rgba(8, 7, 18, .92) 18%, rgba(8, 7, 18, .92) 82%, transparent); font-family: var(--f-display); letter-spacing: .1em; color: var(--gold); white-space: nowrap; max-width: 96%; text-align: center; z-index: 3; }
 #battle .banner.foe { color: #d9c8ff; } #battle .banner.limit { color: #fff; font-size: 1.25em; text-shadow: 0 0 18px var(--gold); }
 #battle .banner.speech { white-space: normal; width: 80%; font-family: var(--f-body); font-style: italic; letter-spacing: 0; font-size: 1.05em; padding: .6em 2em; top: 20%; }
+#battle .banner.intro { font-style: normal; color: var(--sand); top: 24%; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(8, 7, 18, .9); }
 #battle .banner small { display: block; font-family: var(--f-display); font-style: normal; font-size: .62em; letter-spacing: .3em; text-transform: uppercase; color: var(--dim); }
 #battle .panel { position: absolute; left: 1.5%; right: 1.5%; bottom: 2%; display: grid; grid-template-columns: 1.25fr 1fr; gap: .6em; align-items: end; pointer-events: none; }
 #battle .panel > * { pointer-events: auto; }

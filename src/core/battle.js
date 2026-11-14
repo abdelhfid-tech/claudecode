@@ -92,10 +92,10 @@
     C.all.forEach(e => { e.ct = 1000 / eff(e, 'spd') * (0.6 + Math.random() * 0.4) * (e.side === 'foe' ? 1.15 : 1); });
     if (first) { I.audio.sfx('glitch'); G.flash('#fff'); await S.fade('out', 220); }
     I.setScene(B.scene); B.active = true; G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue, n: 0 };
-    document.body.classList.add('in-battle'); $('#hud').hidden = true; $('#battle').hidden = false; refresh();
+    document.body.classList.add('in-battle'); $('#hud').hidden = true; $('#toasts').innerHTML = ''; $('#battle').hidden = false; refresh();
     I.audio.amb('noos'); I.audio.beat(opts.boss ? 'malfuf' : (opts.bg === 'romaine' || opts.bg === 'palais') ? 'marche' : (opts.bg === 'cite' || opts.bg === 'noos') ? 'cyber' : 'ayyub');
     await S.fade('in', 260);
-    if (first && opts.intro) await banner(opts.intro, 2200, true);
+    if (first && opts.intro) await banner(I.esc(opts.intro), readTime(opts.intro), true, 'speech intro');
     else if (first) await banner(opts.boss ? `${d0.name} se dresse.` : 'Une emprise se referme…', 1100);
     let result = null;
     while (!result) {
@@ -355,7 +355,7 @@
     const ph = t.def.phases; if (!ph) return;
     while (t.phase < ph.length && t.alive && t.hp / t.max.hp <= ph[t.phase].at) {
       const p = ph[t.phase++]; G.shake(500); G.flash(`hsl(${t.def.hue},90%,60%)`); I.audio.sfx('dark');
-      if (p.say) await banner(`<small>${I.esc(t.name)}</small>« ${I.esc(p.say)} »`, 2600, true, 'foe speech');
+      if (p.say) await banner(`<small>${I.esc(t.name)}</small>« ${I.esc(p.say)} »`, readTime(p.say), true, 'foe speech');
       (p.fx || []).forEach(f => applyFx(t, t, f, 0)); (p.addSkills || []).forEach(k => t.skills.push(k));
       t.broken = false; t.veils = t.veilsMax; refresh();
     }
@@ -403,12 +403,13 @@
     f.style.left = ((p.x + (Math.random() - 0.5) * 14) / G.PW * 100) + '%'; f.style.top = ((p.y - 6 - (e._fl = ((e._fl || 0) + 1) % 3) * 9) / G.PH * 100) + '%';
     $('#floaters').appendChild(f); setTimeout(() => f.remove(), 1100);
   }
+  const readTime = txt => I.clamp(1800 + String(txt).length * 48, 2400, 7500);
   let bannerT = null;
   function banner(html, ms, wait, cls) {
     const b = $('#battle .banner'); b.className = 'banner ' + (cls || ''); b.innerHTML = html; b.hidden = false; clearTimeout(bannerT);
     const hide = () => { b.hidden = true; };
     if (!wait) { bannerT = setTimeout(hide, ms / Math.min(I.speed, 3)); return Promise.resolve(); }
-    return Promise.race([I.sleep(ms), I.sleep(300).then(() => I.input.wait(['ok', 'cancel']))]).then(hide);
+    return Promise.race([I.sleep(ms), I.sleep(450).then(() => I.input.wait(['ok', 'cancel']))]).then(hide);
   }
 
   function refresh() {

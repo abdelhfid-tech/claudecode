@@ -34,6 +34,7 @@
   W.loadMap = function (id, opts, spot) {
     opts = opts || {}; const key = id + JSON.stringify(opts);
     W.map = mapCache[key] || (mapCache[key] = I.maps.build(id, opts)); W.mapOpts = opts;
+    const ks = Object.keys(mapCache); if (ks.length > 4) ks.filter(k2 => k2 !== key).slice(0, ks.length - 4).forEach(k2 => { delete mapCache[k2]; });
     const env = W.map.env; G.clearParts(); G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 };
     I.audio.amb(env.sound || 'vent');
     W.npcs.forEach(n => { if (n.map === id) W.place(n); });
