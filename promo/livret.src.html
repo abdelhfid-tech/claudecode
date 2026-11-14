@@ -367,6 +367,7 @@ body.export .pl { border: 0; }
     <li><a href="#batir">Bâtir</a></li>
     <li><a href="#caravanes">Routes et caravanes</a></li>
     <li><a href="#veillees">Les veillées du Caïd</a></li>
+    <li><a href="#rencontres">Les rencontres de la Cité-Miroir</a></li>
     <li><a href="#respect">Ce que le jeu s’interdit</a></li>
     <li><a href="#sources">Sources et avertissement</a></li>
     <li><a href="#planches">Planches de présentation</a></li>
@@ -384,7 +385,7 @@ body.export .pl { border: 0; }
     <p>On n’y combat jamais des personnes. Les adversaires sont des <span class="terme">égrégores</span> : les idoles que les cœurs fabriquent ensemble, comme le Déni, le Clan, la Rumeur ou le Trône vide. Avant d’en venir là, on parle, on prie, on apprend, on bâtit.</p>
     <dl class="fiche">
       <div><dt>Genre</dt><dd>Jeu de rôle au tour par tour, un joueur</dd></div>
-      <div><dt>Contenu</dt><dd>Un prologue, cinq sagas de trois chapitres, cinq veillées, un épilogue</dd></div>
+      <div><dt>Contenu</dt><dd>Un prologue, cinq sagas de trois chapitres, cinq veillées, cinq rencontres, un épilogue</dd></div>
       <div><dt>Support</dt><dd>Navigateur, sur ordinateur ou téléphone. Clavier ou tactile</dd></div>
       <div><dt>Langue</dt><dd>Français</dd></div>
       <div><dt>Image</dt><dd>Pixel art éclairé (rétro-HD), ou 2D simple sur les appareils modestes</dd></div>
@@ -400,7 +401,7 @@ body.export .pl { border: 0; }
           <li>Ouvre le jeu et choisis <b>Nouvelle partie</b>.</li>
           <li>Le prologue dure environ cinq minutes. En 2084, dans la Cité-Miroir, Idris descend aux Archives basses et y trouve la Chaîne.</li>
           <li>L’écran de <b>la Chaîne</b> s’ouvre : cinq maillons, cinq témoins. Le premier est Abû Bakr. L’ordre est libre, mais la Chaîne se lit du premier au dernier.</li>
-          <li>À la fin de chaque saga, une veillée se joue à la Citadelle du Caïd, puis on revient à la Chaîne.</li>
+          <li>À la fin de chaque saga, une veillée se joue à la Citadelle du Caïd, puis une rencontre dans la Cité-Miroir. On revient ensuite à la Chaîne.</li>
           <li>Quand les cinq Lumières sont réunies, le dernier maillon s’ouvre. C’est celui d’Idris.</li>
         </ol>
         <p>Depuis l’écran de la Chaîne, on peut aussi sauvegarder à la natte des Archives, ouvrir le Recueil et revenir à l’écran-titre.</p>
@@ -453,8 +454,8 @@ body.export .pl { border: 0; }
     <h2>Trois époques, une chaîne</h2>
     <p>Le récit remonte la Chaîne, du présent vers la source.</p>
     <div class="tri">
-      <figure><div class="ecran"><img src="img/d-cite.jpg" alt="Une rue de la Cité-Miroir sous la pluie, enseignes au néon." loading="lazy"></div><figcaption><b style="color:var(--neon);font-weight:400">2084 · LA CITÉ-MIROIR.</b> Idris est un râwî, un transmetteur, dans une ville où une machine, l’AGRÉGOR, donne corps à ce que des millions de regards désirent ensemble.</figcaption></figure>
-      <figure><div class="ecran"><img src="img/d-citadelle-mosquee.jpg" alt="La mosquée de la Citadelle, la nuit, dallage bleu à étoiles." loading="lazy"></div><figcaption><b style="color:var(--or);font-weight:400">LA CITADELLE.</b> Le Caïd, seigneur berbère, est un maillon de la Chaîne. Ses veillées sont une fiction, en hommage à <i>Citadelle</i> de Saint-Exupéry.</figcaption></figure>
+      <figure><div class="ecran"><img src="img/d-cite.jpg" alt="Une rue de la Cité-Miroir sous la pluie, enseignes au néon." loading="lazy"></div><figcaption><b style="color:var(--neon);font-weight:400">2084 · LA CITÉ-MIROIR.</b> Idris est un râwî, un transmetteur, dans une ville où une machine, l’AGRÉGOR, donne corps à ce que des millions de regards désirent ensemble. Entre deux maillons, il y rencontre ceux qu’elle a enfermés dans une idole.</figcaption></figure>
+      <figure><div class="ecran"><img src="img/d-citadelle-mosquee.jpg" alt="La mosquée de la Citadelle, la nuit, dallage bleu à étoiles." loading="lazy"></div><figcaption><b style="color:var(--or);font-weight:400">LA CITADELLE.</b> Le Caïd, seigneur berbère, est un maillon de la Chaîne. Ses veillées sont une fiction.</figcaption></figure>
       <figure><div class="ecran"><img src="img/d-medine-jour.jpg" alt="La cour de la mosquée de Médine, de jour : zellige, troncs de palmier, rosace." loading="lazy"></div><figcaption><b style="color:#ffe08a;font-weight:400">632 – 661 · LES COMPAGNONS.</b> Médine, le désert, le Shâm, la mer, Koufa. Les événements sont ceux que les sources rapportent.</figcaption></figure>
     </div>
     <p style="margin-top:1.4em">Entre ces époques s’ouvre la <span class="terme">noosphère</span> : le lieu, tout en lignes de lumière, où les valeurs partagées et les idoles prennent forme. C’est là que se livrent les combats.</p>
@@ -665,9 +666,30 @@ body.export .pl { border: 0; }
       <div>
         <p>Après chaque saga, on passe une veillée à la Citadelle. Le Caïd y affronte, à l’échelle de ses murs, la question que le Compagnon vient de trancher. Il est accompagné de Maître Bahrâm, le géomètre, et de Zîrî, capitaine des sentinelles.</p>
         <div class="tab"><table><tbody>{{VEILLEES}}</tbody></table></div>
-        <p>Ces veillées sont une fiction. Elles rendent hommage à <i>Citadelle</i> d’Antoine de Saint-Exupéry, sans en reprendre le texte ni les épisodes.</p>
+        <p>Ces veillées sont une fiction : le Caïd, sa citadelle et ses gens n’ont jamais existé.</p>
       </div>
     </div>
+  </section>
+
+  <section class="feuillet" id="rencontres">
+    <h2>Les rencontres de la Cité-Miroir</h2>
+    <div class="duo">
+      <div>
+        <p>Après chaque saga et sa veillée, Idris remonte dans la rue. Un enfant l’y attend chaque soir, sous le grand écran, avec une question. Il le mène vers quelqu’un que la ville a enfermé dans une idole.</p>
+        <p>On le dénoue par la parole. Les meilleurs arguments sont ceux qu’Idris vient d’apprendre : un savoir du Compagnon, un savoir de la Citadelle. Sans eux, on peut encore convaincre, mais de justesse.</p>
+        <p>Si la parole échoue, on affronte l’idole, jamais la personne. Chaque ami gagné revient prêter main-forte au dernier maillon.</p>
+        <p>Puis on retourne auprès de l’enfant, et on lui dit de qui on tient ce qu’on a appris. C’est le métier d’Idris.</p>
+      </div>
+      <div class="pile">
+        <figure class="ecran"><div style="overflow:hidden;aspect-ratio:16/9"><img src="img/rencontre-enfant.jpg" alt="Sous le grand écran de la Cité-Miroir, un enfant attend Idris." loading="lazy" style="transform:scale(1.9);transform-origin:52% 40%"></div><figcaption style="padding:.7em .8em .8em">L’enfant du parvis, chaque soir sous le grand écran.</figcaption></figure>
+        <figure class="ecran"><img src="img/rencontre.jpg" alt="Pourparler avec celui qui défile : trois arguments, dont un ouvert par un savoir appris chez Abû Bakr." loading="lazy"><figcaption style="padding:.7em .8em .8em">La mention « ✧ savoir » signale un argument ouvert par un savoir du Recueil.</figcaption></figure>
+      </div>
+    </div>
+    <div class="tab"><table>
+      <thead><tr><th>Rencontre</th><th>Après</th><th>Ce qui le retient</th><th>Savoirs qui ouvrent un argument</th></tr></thead>
+      <tbody>{{RENCONTRES}}</tbody>
+    </table></div>
+    <p>Ces rencontres sont une fiction.</p>
   </section>
 
   <p class="partie">Repères</p>
@@ -723,8 +745,8 @@ body.export .pl { border: 0; }
       <p class="sur">Le récit</p>
       <h3>Trois époques, une seule chaîne</h3>
       <div class="epoques">
-        <div class="epoque" style="--c:var(--neon)"><img src="img/d-cite.jpg" alt=""><div><span class="quand">2084</span><b>La Cité-Miroir</b><p>Idris, transmetteur dans une ville où une machine fabrique les idoles à la chaîne.</p></div></div>
-        <div class="epoque"><img src="img/d-citadelle-mosquee.jpg" alt=""><div><span class="quand">UN MAILLON</span><b>La Citadelle</b><p>Les veillées du Caïd, seigneur berbère. Une fiction, en hommage à Saint-Exupéry.</p></div></div>
+        <div class="epoque" style="--c:var(--neon)"><img src="img/d-cite.jpg" alt=""><div><span class="quand">2084</span><b>La Cité-Miroir</b><p>Idris, transmetteur. Entre deux maillons, il rencontre ceux que la ville a enfermés dans une idole.</p></div></div>
+        <div class="epoque"><img src="img/d-citadelle-mosquee.jpg" alt=""><div><span class="quand">UN MAILLON</span><b>La Citadelle</b><p>Les veillées du Caïd, seigneur berbère : les mêmes questions, à l’échelle d’une cité.</p></div></div>
         <div class="epoque" style="--c:#ffe08a"><img src="img/d-medine-jour.jpg" alt=""><div><span class="quand">632 – 661</span><b>Les Compagnons</b><p>Médine, le désert, le Shâm, la mer, Koufa. Ce que les sources rapportent.</p></div></div>
       </div>
       <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
@@ -873,5 +895,5 @@ body.export .pl { border: 0; }
 
 <footer class="pied gout"><div class="col">
   <p>ISNAD · Chroniques des Compagnons. Livret du joueur et planches de présentation.</p>
-  <p>Les écrans sont des captures du jeu. Les veillées de la Citadelle sont une fiction, en hommage à <i>Citadelle</i> d’Antoine de Saint-Exupéry (1948). La musique est originale.</p>
+  <p>Les écrans sont des captures du jeu. Les veillées de la Citadelle et les rencontres de la Cité-Miroir sont une fiction. La musique est originale.</p>
 </div></footer>

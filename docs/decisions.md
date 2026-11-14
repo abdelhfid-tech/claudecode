@@ -185,6 +185,36 @@ présentés dans le livret comme dans les manuels de FF6.
 - [ ] **D49. Pas de personnages féminins ajoutés.** L'exigence n° 4 est maintenue : le récit reste
   centré sur les Compagnons et leurs alliés, foules et familles désignées collectivement.
 
+## La quête de 2084 et l'auteur qu'on ne nomme pas (demande du décideur)
+
+Demande reçue : ne pas parler de Saint-Exupéry, même si l'on s'en inspire ; en 2084, le personnage a
+les mêmes quêtes que le petit prince (sans le citer), rencontre les mêmes types de personnes, et
+surmonte les épreuves grâce aux sagesses de la Citadelle et des Compagnons. (Le message dit « 2048 » ;
+lu comme 2084, l'année de l'histoire-cadre.)
+
+- [x] **D50. Ni l'auteur ni ses œuvres ne sont nommés** dans le jeu (crédits, Recueil), le livret, les
+  planches et le README. L'entrée « Hommage » du Recueil devient « Les veillées (fiction) ». Les noms
+  ne restent que dans `AGENTS.md` (exigence 14) et `docs/`, pour que la règle « rien n'est repris »
+  reste applicable par un agent.
+- [ ] **D51. Cinq rencontres dans la Cité-Miroir**, une après chaque saga et sa veillée, plus l'épilogue :
+  celui qui défile (après Abû Bakr), le Régent ('Umar), l'Admiré (Khâlid), le Compteur ('Uthmân), le
+  Cartographe ('Alî), l'opérateur de garde (dernier maillon). Chacune se dénoue par un pourparler ; si
+  la parole échoue, on affronte l'idole, jamais la personne.
+- [ ] **D52. Les sagesses servent d'arguments.** Dans chaque rencontre, les meilleurs arguments demandent
+  un savoir du Recueil : deux du Compagnon, un de la Citadelle (`need: 'saga/id'`). Chaque argument
+  redit ce que l'entrée du Recueil dit déjà ; rien n'est prêté de plus aux Compagnons.
+- [ ] **D53. L'enfant du parvis.** Le fil qui relie les rencontres : il est là chaque soir avec une
+  question, mène Idris vers la personne, et reçoit en retour ce qu'Idris a appris, « avec le nom de
+  celui de qui il le tient ». Pas de fleur, pas de renard, pas de planète : la chose dont Idris répond
+  est le dépôt qu'on lui a confié, et l'enfant à qui il le transmet.
+- [ ] **D54. Les amis gagnés reviennent à l'épilogue** en renfort : chacun ôte 3 % de Constance à
+  l'Agrégor, sans toucher à ses voiles, pour que le dernier combat reste un combat.
+- [ ] **D55. Distance prise avec le conte.** Mêmes types, autres images : un tampon au lieu d'un
+  trône, des fenêtres qui applaudissent, des regards mis au coffre, une carte avec un mur à la place
+  d'une porte. Aucune phrase, aucun nom, aucun épisode repris. Le conte est encore protégé en France
+  et aux États-Unis : à faire relire avant toute publication.
+- Une partie déjà avancée ne rejoue pas les rencontres des sagas terminées avant cette version.
+
 Le bouton « Jouer » du livret pointe vers l'Artifact privé du jeu : il ne fonctionne que pour le
 décideur tant que le jeu n'est pas partagé (autorisation n° 2 ci-dessous, toujours de côté).
 

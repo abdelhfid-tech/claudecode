@@ -107,7 +107,7 @@
     for (const al of (opts.allies || [])) {
       if (!S.flags[al.flag]) continue;
       await banner(`<small>Renfort</small>${I.esc(al.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(500);
-      alive('foe').forEach(e => { if (!e.broken) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; floater(e, 'DÉVOILÉ', 'break'); } else floater(e, 'Voile ôté', 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * 0.08)); e.flash = 1; fx('light', e, '#ffe08a'); });
+      alive('foe').forEach(e => { if (!e.broken && al.veil !== 0) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; floater(e, 'DÉVOILÉ', 'break'); } else floater(e, 'Voile ôté', 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * (al.hp === undefined ? 0.08 : al.hp))); e.flash = 1; fx('light', e, '#ffe08a'); });
       refresh(); await I.sleep(700);
     }
     let result = null;

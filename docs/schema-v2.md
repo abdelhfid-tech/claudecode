@@ -124,6 +124,25 @@ puits, remparts, tour, salle, mosquee, priere, ecole, souk, jardin, greniers, pa
 `noos`, `desert`. Durée : 6 à 9 minutes ; 1 pourparler au moins, 1 décision libre lourde, 1 combat au plus
 (évitable si la parole réussit), 1 `pray`, 2 à 3 `codex`.
 
+## 5 bis. Les rencontres de la Cité-Miroir (`src/data/frame.js`)
+
+Cinq chapitres de l'histoire-cadre, marqués `after: '<saga>'`, `last: true`, `minLvl: 8`. Le moteur en
+lance un à la fin de la veillée de cette saga (ou à la fin de la saga si la veillée est déjà faite), puis
+revient à la Chaîne et note `rencontres[saga]` dans la sauvegarde. Le dernier maillon porte `fin: true` :
+c'est lui qui joue l'envoi final de la saga-cadre.
+
+Gabarit d'une rencontre : l'enfant du parvis (`talk`), la personne (`talk` → `parley`), l'enfant de
+nouveau (`talk` → `codex`). Dans le pourparler :
+
+- une option peut demander un savoir d'une autre saga : `need: 'abubakr/deni'`, `need: 'caid/sentinelle'` ;
+  le validateur vérifie que l'entrée existe ; chaque manche garde une option sans `need` ;
+- l'argument redit ce que l'entrée du Recueil dit déjà, rien de plus ;
+- `win` pose un drapeau `ami_*` et monte un pilier ; `lose` mène à un combat contre l'idole de la
+  personne (égrégore de palier `elite`, niveau 7, faible à la Patience et à la Lumière de la saga).
+
+À l'épilogue, `allies: [{ flag, name, hp, veil }]` fait revenir les amis gagnés ; `hp` (facultatif) règle la part
+de Constance ôtée à l'adversaire, 0.08 par défaut ; `veil: 0` laisse ses voiles intacts.
+
 ## 6. Musique (`src/data/music.js`)
 
 ```js

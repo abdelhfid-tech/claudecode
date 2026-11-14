@@ -1,4 +1,8 @@
-/* ISNAD — histoire-cadre : Idris, râwî de la Cité-Miroir (prologue et dernier maillon). */
+/* ISNAD — histoire-cadre : Idris, râwî de la Cité-Miroir.
+   Prologue (p1), dernier maillon (e1), et cinq rencontres (r_*, marquées « after ») : après chaque saga et sa
+   veillée, Idris remonte dans la rue et rencontre un habitant enfermé dans une idole. Il le dénoue par la parole ;
+   les meilleurs arguments demandent un savoir appris chez le Compagnon ou à la Citadelle (need: 'saga/id').
+   Tout y est de fiction. Les types sont anciens ; les images et les phrases sont originales. */
 ISNAD.registerSaga({
   id: 'idris', order: 0, frame: true,
   name: 'Idris', epithet: 'Le Râwî', arabic: 'إدريس', years: '1508 H · 2084',
@@ -74,6 +78,26 @@ ISNAD.registerSaga({
       skills: [{ w: 3, name: 'Défilement sans fin', target: 'foes', el: 'ilm', pow: 0.8, fx: [{ st: 'waswas', turns: 2, chance: 0.5 }], anim: 'wave' }, { w: 1, name: 'Lecture automatique', target: 'self', fx: [{ st: 'spd', v: 1 }], anim: 'guard' }],
       phases: [{ at: 0.5, say: 'Encore un. Encore un. Encore un.', fx: [{ st: 'spd', v: 1 }] }],
       desc: 'Héritier de la Rumeur : mille voix à la fois, dont aucune ne répond de ce qu’elle dit. On ne le frappe pas ; on cesse de le suivre.' },
+    defilement: { name: 'Le Défilement', art: 'wave', hue: 200, scale: 2, lvl: 7, tier: 'elite', weak: ['sidq', 'sabr'], veils: 3,
+      skills: [{ w: 3, name: 'Encore un', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'waswas', turns: 1, chance: 0.3 }], anim: 'wave' }],
+      taunts: ['Encore un. Juste un.'],
+      desc: 'Ce qu’on regarde pour ne pas regarder autre chose. Il ne retient personne : il fait oublier qu’on peut partir. La véracité, dite sans mépris, et la patience le dissipent.' },
+    petit_trone: { name: 'Le Petit Trône', art: 'throne', hue: 48, scale: 2, lvl: 7, tier: 'elite', weak: ['adl', 'sabr'], veils: 3,
+      skills: [{ w: 3, name: 'Accordé', target: 'foe', el: 'adl', pow: 1.0, fx: [{ st: 'atk', v: -1, chance: 0.3 }], anim: 'dark' }],
+      taunts: ['Accordé. Refusé. Accordé.'],
+      desc: 'Un siège sans charge : le goût de décider, quand il n’y a plus personne dont répondre. La justice, qui ne s’exempte pas elle-même, le renverse.' },
+    applaudissement: { name: 'L’Applaudissement', art: 'mask', hue: 320, scale: 2, lvl: 7, tier: 'elite', weak: ['shajaa', 'sabr'], veils: 3,
+      skills: [{ w: 3, name: 'Ovation', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'doute', turns: 1, chance: 0.3 }], anim: 'burst' }],
+      taunts: ['Regarde-moi. Regarde-moi encore.'],
+      desc: 'Le bruit que fait une foule qui n’est pas là. Il ne tient debout que celui qui l’écoute. Il cède devant le courage de descendre du socle.' },
+    compte: { name: 'Le Compte', art: 'tower', hue: 45, scale: 2, lvl: 7, tier: 'elite', weak: ['rahma', 'sabr'], veils: 3,
+      skills: [{ w: 3, name: 'Addition', target: 'foe', el: 'fer', pow: 1.0, anim: 'slash' }, { w: 1, name: 'Mise en réserve', target: 'self', fx: [{ st: 'def', v: 1 }], anim: 'guard' }],
+      taunts: ['Un de plus. Un de plus.'],
+      desc: 'Ce qu’on amasse pour l’avoir, et qui ne sert à personne. Il pèse et ne nourrit pas. La largesse le renverse.' },
+    carte_vide: { name: 'La Carte sans chemin', art: 'lens', hue: 160, scale: 2, lvl: 7, tier: 'elite', weak: ['ilm', 'sabr'], veils: 3,
+      skills: [{ w: 3, name: 'Relevé', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'spd', v: -1, chance: 0.3 }], anim: 'glyph' }],
+      taunts: ['Combien l’ont vu ?'],
+      desc: 'Un savoir fait d’additions, que personne n’est allé vérifier. Il sait tout et n’a rien vu. Il cède quand on lui demande de qui il le tient.' },
     agregor: { name: "L'AGRÉGOR", art: 'idol', hue: 285, scale: 3, lvl: 11, tier: 'boss', weak: ['sidq', 'adl', 'shajaa', 'rahma', 'ilm', 'sabr'], veils: 7,
       skills: [
         { w: 3, name: 'Mille regards', target: 'foes', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'wave' },
@@ -103,6 +127,12 @@ ISNAD.registerSaga({
     { id: 'caravanes', cat: 'Événement', title: 'Les caravanes', text: 'La Mecque vivait de deux voyages, que le Coran nomme : celui de l’hiver, vers le Yémen, et celui de l’été, vers le Shâm (sourate 106). Abû Bakr était marchand d’étoffes, ’Uthmân et ’Abd ar-Rahmân ibn ’Awf de grands négociants. À Médine, un marché fut établi sans taxe. Dans le jeu, on confie une cargaison à une caravane : elle revient au chapitre suivant, plus sûrement si la justice est rendue, si des pactes sont noués et si des méharistes gardent la route.', src: 'Coran 106 ; Ibn Sa’d, at-Tabaqât' },
     { id: 'routes_sures', cat: 'Parole', title: 'La route sûre', text: 'On rapporte du Messager d’Allah ﷺ, aux jours où les croyants étaient persécutés, cette promesse : un temps viendrait où le voyageur irait de San’â’ au Hadramawt sans craindre autre chose qu’Allah, et le loup pour ses brebis. La sûreté des routes est restée la mesure d’un gouvernement juste. Dans les veillées, le père du Caïd dit la même chose à sa manière : une cité se juge à ses routes.', src: 'al-Bukhârî, as-Sahîh (récit de Khabbâb ibn al-Aratt)' },
     { id: 'razzia', cat: 'Noosphère', title: 'La razzia', text: 'Avant l’islam, le coup de main contre une caravane ou un campement (*ghazw*) était une coutume, presque un honneur. Le jeu en fait un égrégore : « prendre parce qu’on le peut ». On ne le combat qu’en dernier recours ; on lève d’abord des renforts, parce qu’on écoute mieux celui qui n’est pas venu seul, puis on parle. Ce qui est repris est rendu à ceux qui l’avaient perdu, et les pillards sont remis au juge : ce n’est pas à celui qui poursuit de dire la peine.' },
+    { id: 'r_defile', cat: 'Noosphère', title: 'Celui qui défile', text: 'Un homme de la Cité-Miroir, dans une ruelle. Il regarde défiler pour oublier, et ce qu’il veut oublier, c’est le temps qu’il y passe. Le mépris l’y renfonce. On l’en tire en disant ce qui est, comme on l’annonce à quelqu’un qu’on respecte, et en restant à côté de lui. Personnage de fiction.' },
+    { id: 'r_regent', cat: 'Noosphère', title: 'Le Régent', text: 'Il tient un tampon au pied d’une tour vide et accorde ce que l’écran a déjà décidé. Il n’a personne à commander, donc personne dont répondre. Il confond le siège et la charge : on peut avoir l’un sans l’autre, et c’est la charge qui fait dormir en paix. Personnage de fiction.' },
+    { id: 'r_admire', cat: 'Noosphère', title: 'L’Admiré', text: 'Sous le grand écran, un homme que des millions de fenêtres applaudissent. Derrière les fenêtres, il n’y a personne. Il ne sait plus qui il serait sans ce bruit. Descendre du socle demande plus de courage que d’y monter : nul n’applaudit celui qui descend. Personnage de fiction.' },
+    { id: 'r_compteur', cat: 'Noosphère', title: 'Le Compteur', text: 'Il achète des regards quand personne n’en veut et les garde dans un coffre, sans jamais en poser un sur quelqu’un. Ce qu’on donne, on sait où il est ; ce qu’on amasse, on le perd de vue. Personnage de fiction.' },
+    { id: 'r_cartographe', cat: 'Noosphère', title: 'Le Cartographe', text: 'Il dessine la Cité sans y marcher, d’après des millions de relevés. Il demande « combien l’ont vu ? » et jamais « qui ? ». Sa carte porte un mur là où un enfant sait qu’il y a une porte. Un savoir se corrige en allant voir, et se garde avec le nom de celui qui a vu. Personnage de fiction.' },
+    { id: 'enfant', cat: 'Noosphère', title: 'L’enfant du parvis', text: 'Il est là chaque soir, sous le grand écran, avec une question. Il ne lâche jamais la deuxième. Idris a commencé par lui répondre ; il a fini par l’attendre. On répond de ceux à qui l’on a commencé de répondre : c’est aussi cela, transmettre. Personnage de fiction.' },
     { id: 'avertissement', cat: 'Parole', title: 'Avertissement', text: 'ISNAD est une fiction inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun personnage n’a de visage. Toute erreur est celle des auteurs : vérifiez auprès des sources et des savants.' }
   ],
 
@@ -177,7 +207,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'e1', title: 'Le Cœur de l’Agrégor', sub: 'An 1508 de l’Hégire · Cité-Miroir', minLvl: 9, last: true,
+      id: 'e1', title: 'Le Cœur de l’Agrégor', sub: 'An 1508 de l’Hégire · Cité-Miroir', minLvl: 9, last: true, fin: true,
       map: 'cite', start: 'parvis', party: ['idris', 'yunus'],
       npcs: [
         { id: 'salim_n', name: 'Sâlim', hero: 'salim', at: 'rue', talk: [['say', 'salim_n', 'Je sais où est son cœur.']] },
@@ -204,6 +234,7 @@ ISNAD.registerSaga({
           ['say', 'salim_n', 'Mon fils m’a demandé ce que je fabriquais. Je n’ai pas su répondre sans mentir.'],
           ['hide', 'salim_n'], ['join', 'salim'],
           ['say', 'salim', 'Il y a un opérateur de garde au pied du grand écran. Un ancien collègue. S’il nous ouvre la trappe de service, nous entrons sans que le Flux nous voie. Sinon, il faudra le traverser.'],
+          ['say', 'salim', 'Il relance une alerte par heure, depuis des années. On lui a dit de le faire. Personne ne lui a dit pourquoi, et il n’a jamais manqué une heure.'],
           ['parley', {
             with: 'L’opérateur de nuit', title: 'L’opérateur de garde',
             intro: 'Il a peur de perdre son score, et il n’a jamais vu personne dire non à l’Agrégor.',
@@ -253,13 +284,297 @@ ISNAD.registerSaga({
           ['say', "L'AGRÉGOR", 'J’ai été le Clan. J’ai été l’Aigle et le Trône. J’ai été le Héros, l’Or, la Rumeur, le Juge. On m’a brisé chaque fois. On m’a refait chaque fois.'],
           ['say', 'idris', 'Je sais. Je les ai vus te briser. Aucun d’eux n’a cru en avoir fini avec toi. Ils ont tenu, chacun son heure, et passé le dépôt au suivant.'],
           ['heal'],
-          ['battle', { group: ['agregor'], bg: 'cite', boss: true, intro: 'Les six Lumières sont ses failles. Dévoile-le, encore et encore.', allies: [{ flag: 'operateur', name: 'L’opérateur coupe une à une les alimentations' }] }],
+          ['battle', { group: ['agregor'], bg: 'cite', boss: true, intro: 'Les six Lumières sont ses failles. Dévoile-le, encore et encore.', allies: [{ flag: 'operateur', name: 'L’opérateur coupe une à une les alimentations' },
+            { flag: 'ami_defile', name: 'Celui qui défilait éteint son écran', hp: 0.03, veil: 0 }, { flag: 'ami_regent', name: 'Le Régent a laissé son siège : il veille dans la rue', hp: 0.03, veil: 0 },
+            { flag: 'ami_admire', name: 'L’Admiré est descendu, sans public', hp: 0.03, veil: 0 }, { flag: 'ami_compteur', name: 'Le Compteur donne ses regards à ceux qu’on ne voit pas', hp: 0.03, veil: 0 },
+            { flag: 'ami_carto', name: 'Le Cartographe écrit des noms en marge de sa carte', hp: 0.03, veil: 0 }] }],
           ['nar', 'L’Agrégor ne s’effondre pas. Il se tait. Pour la première fois depuis des années, les écrans de la Cité-Miroir n’ont rien à montrer.'],
           ['map', 'cite', 'ecran'], ['show', 'gamin2'], ['amb', 'vent'],
           ['nar', 'Dans la rue, des milliers de têtes se relèvent. Derrière le verre éteint, le ciel est noir. Avec des points dedans.'],
           ['say', 'gamin2', 'Monsieur… c’est quoi, ces lumières, là-haut ?'],
           ['say', 'idris', 'Assieds-toi. Je vais te raconter. Mais d’abord, retiens de qui je le tiens.'],
           ['nar', 'Idris n’a pas détruit l’Agrégor. Demain, d’autres le rallumeront sous un autre nom. Il a fait ce qu’on lui avait appris : il a transmis.']
+        ] }
+      ]
+    },
+    {
+      id: 'r_abubakr', after: 'abubakr', title: 'Celui qui défile', sub: 'Cité-Miroir · le soir du maillon d’Abû Bakr', minLvl: 8, last: true,
+      map: 'cite', start: 'parvis', party: ['idris'],
+      npcs: [
+        { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
+        { id: 'defileur', name: 'Celui qui défile', at: ['ruelle', 0, -1], look: { kind: 'cyber', robe: '#33303f', head: '#201c28', cloak: '#2a2632' }, talk: [['say', 'defileur', '… encore un…']] }
+      ],
+      intro: [
+        ['title', 'Celui qui défile', 'Cité-Miroir · le soir du maillon d’Abû Bakr'],
+        ['nar', 'Idris remonte des Archives avec une Lumière qui n’est pas la sienne : la Véracité d’Abû Bakr. Là-haut, la rue n’a pas changé.'],
+        ['nar', 'L’enfant est là, sous le grand écran, comme hier.']
+      ],
+      objectives: [
+        { text: 'Rejoindre l’enfant, sous le grand écran', talk: 'gamin', then: [
+          ['say', 'gamin', 'Monsieur, il y a un homme dans la ruelle. Il regarde défiler depuis ce matin. Je lui ai demandé pourquoi. Il a dit : « Pour oublier. »'],
+          ['say', 'idris', 'Oublier quoi ?'],
+          ['say', 'gamin', 'Je le lui ai demandé aussi. Il a regardé ailleurs. Toi, d’habitude, tu réponds.']
+        ] },
+        { text: 'Trouver l’homme de la ruelle', talk: 'defileur', then: [
+          ['say', 'defileur', '… encore un… Ne reste pas là, tu me fais de l’ombre.'],
+          ['say', 'idris', 'Qu’est-ce que tu regardes ?'],
+          ['say', 'defileur', 'Je ne sais plus. C’est le principe.'],
+          ['parley', {
+            with: 'defileur', title: 'Ce qu’on oublie en défilant',
+            intro: 'Il a honte du temps qu’il y passe, et il y retourne pour ne plus y penser. Le mépris l’y renfoncerait. Il faut lui dire ce qui est.',
+            goal: 5,
+            rounds: [
+              { say: 'Je défile pour oublier. Voilà. Tu es content ?', opts: [
+                { t: 'Oublier quoi ?', el: 'sidq', v: 1, r: 'Que j’y ai passé la journée. Et celle d’hier.' },
+                { t: 'Tu perds ta vie. Lève-toi.', el: 'shajaa', v: -1, r: 'Tu crois que je ne le sais pas ? C’est justement ce que je viens oublier ici.' },
+                { t: 'Chez Abû Bakr, j’ai vu ce que devient un chagrin qu’on refuse de nommer : il prend un corps, et il commande.', el: 'sidq', v: 2, need: 'abubakr/deni', r: 'Un chagrin… Oui. Ça a commencé comme ça. Je ne voulais pas que ce soit vrai.' }
+              ] },
+              { say: 'Si j’arrête, il faudra que je regarde ce que j’ai laissé pendant ce temps-là.', opts: [
+                { t: 'Oui. Et ce sera moins lourd que de continuer à ne pas le regarder.', el: 'sidq', v: 2, r: 'Tu ne me promets pas que ce sera léger. C’est déjà ça.' },
+                { t: 'Ce n’est rien. Tout le monde fait comme toi.', el: 'rahma', v: 0, r: 'C’est ce que dit le Flux. Mot pour mot.' },
+                { t: 'Un seigneur du désert a annoncé lui-même, à l’aube, la nouvelle qu’il aurait pu taire sept jours. Il y a perdu de l’avance, et gagné d’être cru.', el: 'sidq', v: 2, need: 'caid/aube_vraie', r: 'Dire la chose avant qu’on la devine… À qui la dirais-je, moi ?' }
+              ] },
+              { say: 'Et si je la dis, cette chose, qu’est-ce que j’y gagne ?', opts: [
+                { t: 'De ne plus avoir à l’oublier chaque matin.', el: 'sabr', v: 2, r: 'Chaque matin… Oui. C’est bien ce que ça coûte.' },
+                { t: 'Rien. Mais tu vaudras mieux.', el: 'adl', v: 0, r: 'Tu parles comme un tableau des scores.' },
+                { t: 'Le jour où on lui remit la charge, Abû Bakr a commencé par dire qu’il n’était pas le meilleur, et il a demandé qu’on le redresse s’il se trompait. Dis-le à quelqu’un, et demande-lui de te redresser.', el: 'sidq', v: 3, need: 'abubakr/investiture', r: 'Demander à être redressé… Il y a quelqu’un, au troisième, qui frappait à ma porte, avant.' }
+              ] }
+            ],
+            win: [['flag', 'ami_defile'], ['pillar', 'lien', 1], ['emote', 'defileur', 'salut'], ['nar', 'Il éteint. Sa main tremble un peu. Puis il se lève, et regarde la ruelle comme on regarde une pièce où l’on rentre.']],
+            lose: [['nar', 'Il a déjà repris. Quelque chose, derrière lui, se nourrit de chaque « encore un ».'], ['battle', { group: ['defilement'], bg: 'cite', intro: 'On ne le frappe pas avec colère : on cesse de le suivre.' }], ['nar', 'Le défilement s’est tu un instant. L’homme a levé la tête, sans rien dire.']]
+          }]
+        ] },
+        { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
+          ['say', 'gamin', 'Alors ? Il oubliait quoi ?'],
+          ['say', 'idris', 'Qu’il oubliait. C’est une chose qu’on ne peut dire à quelqu’un qu’en restant à côté de lui.'],
+          ['say', 'gamin', 'Moi, quand j’ai honte, je voudrais qu’on me le dise doucement.'],
+          ['say', 'idris', 'C’est ce que j’ai appris aujourd’hui d’un homme qui s’appelait Abû Bakr. Retiens son nom : c’est de lui que je le tiens.'],
+          ['codex', 'r_defile'], ['codex', 'enfant'],
+          ['say', 'gamin', 'Je serai là demain.']
+        ] }
+      ]
+    },
+    {
+      id: 'r_umar', after: 'umar', title: 'Le Régent', sub: 'Cité-Miroir · le soir du maillon de ’Umar', minLvl: 8, last: true,
+      map: 'cite', start: 'parvis', party: ['idris'],
+      npcs: [
+        { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
+        { id: 'regent', name: 'Le Régent', at: ['ascenseur', -2, 0], look: { kind: 'cyber', coiffe: 'tiare', robe: '#4a3a52', head: '#5a4a2a', cloak: '#2f2638', trim: '#d9b45a' }, talk: [['say', 'regent', 'Accordé.']] }
+      ],
+      intro: [
+        ['title', 'Le Régent', 'Cité-Miroir · le soir du maillon de ’Umar'],
+        ['nar', 'La Justice de ’Umar pèse dans la main d’Idris comme une balance vide : elle attend qu’on y pose quelque chose.'],
+        ['nar', 'Sous le grand écran, l’enfant a déjà une question.']
+      ],
+      objectives: [
+        { text: 'Rejoindre l’enfant, sous le grand écran', talk: 'gamin', then: [
+          ['say', 'gamin', 'Monsieur, au bout de la rue il y a un homme avec un tampon. Chaque fois que l’écran change, il tamponne et il dit : « Accordé. »'],
+          ['say', 'idris', 'Il accorde quoi ?'],
+          ['say', 'gamin', 'Ce que l’écran a déjà fait. Si personne ne lui demande rien, à qui est-ce qu’il accorde ?']
+        ] },
+        { text: 'Aller voir l’homme au tampon, au bout de la rue', talk: 'regent', then: [
+          ['say', 'regent', 'Halte. Tu entres dans le Neuvième. Rien ne s’y fait sans mon accord. Je t’accorde d’y entrer.'],
+          ['say', 'idris', 'Qui habite le Neuvième ?'],
+          ['say', 'regent', 'Personne, pour le moment. Mais tout y est en règle.'],
+          ['parley', {
+            with: 'regent', title: 'Régner sur personne',
+            intro: 'Il confond le siège et la charge. Il ne fait de mal à personne : il n’a personne. Il lui manque quelqu’un dont répondre.',
+            goal: 5,
+            rounds: [
+              { say: 'Sois mon ministre. Tu parles bien. Je te nomme sur-le-champ : accordé.', opts: [
+                { t: 'Ministre de quoi ? Il n’y a personne à servir, ici.', el: 'sidq', v: 1, r: 'Il y a l’ordre. L’ordre, c’est quelqu’un.' },
+                { t: 'J’accepte, si tu me donnes un bureau.', el: 'adl', v: -1, r: 'Accordé. Tu vois ? Tout le monde finit par vouloir un siège.' },
+                { t: 'J’ai vu un siège qui survit à tous ceux qui s’y asseyent. Il ne donne rien : il prend la place de celui qui croit le tenir.', el: 'adl', v: 2, need: 'umar/ego_trone', r: 'Qui t’a parlé de mon fauteuil ? … Il est froid, c’est vrai. Même l’été.' }
+              ] },
+              { say: 'Sans moi, ce serait le désordre. C’est moi qui valide ce que l’écran décide.', opts: [
+                { t: 'Alors c’est l’écran qui commande, et toi qui signes.', el: 'sidq', v: 2, r: 'Je… je contresigne. Ce n’est pas rien, contresigner.' },
+                { t: 'Tu fais un travail utile.', el: 'rahma', v: 0, r: 'N’est-ce pas ? Accordé.' },
+                { t: 'On a trouvé ’Umar endormi dans la mosquée, sans garde ni chambellan, lui sous qui deux empires étaient tombés. Il n’avait pas de siège. Il avait des gens dont il répondait.', el: 'adl', v: 2, need: 'umar/hurmuzan', r: 'Sans garde… et il dormait ? Moi, je ne dors pas. Je surveille mon tampon.' }
+              ] },
+              { say: 'Répondre de quelqu’un… De qui ? Il n’y a plus personne dans le Neuvième.', opts: [
+                { t: 'Il y a un homme, dans la ruelle, à qui personne ne parle. Commence par lui.', el: 'rahma', v: 2, r: 'Un administré. Un vrai. Il faudrait que j’aille le voir… à pied ?' },
+                { t: 'Alors ferme le Neuvième et rentre chez toi.', el: 'shajaa', v: 0, r: 'Et qui accordera la fermeture ?' },
+                { t: 'À la Citadelle, on dit : celui qui veille porte le sommeil de tous. Veille sur quelqu’un, et tu auras une charge. Le siège, tu peux le laisser.', el: 'adl', v: 3, need: 'caid/sentinelle', r: 'Porter le sommeil de quelqu’un… C’est plus lourd qu’un tampon. Je crois que c’est ce que je cherchais.' }
+              ] }
+            ],
+            win: [['flag', 'ami_regent'], ['pillar', 'justice', 1], ['nar', 'Il pose son tampon sur le rebord. Il ne sait pas encore où aller, mais il regarde la rue, et non plus l’écran.']],
+            lose: [['nar', '« Refusé », dit-il, et il tamponne. Derrière lui, un petit trône vide attend que quelqu’un s’y trompe.'], ['battle', { group: ['petit_trone'], bg: 'cite', intro: 'La place vide exige qu’on l’occupe. Ne t’y assieds pas.' }], ['nar', 'Le siège vacille. Le Régent le regarde comme s’il le voyait pour la première fois.']]
+          }]
+        ] },
+        { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
+          ['say', 'gamin', 'Il accordait à qui, alors ?'],
+          ['say', 'idris', 'À personne. Il avait un siège, et pas de charge. ’Umar avait une charge, et pas de siège : c’est de lui que je tiens la différence.'],
+          ['say', 'gamin', 'Et toi, tu as une charge ?'],
+          ['say', 'idris', 'On m’a confié quelque chose. Je commence à croire que tu en fais partie.'],
+          ['codex', 'r_regent'], ['codex', 'enfant']
+        ] }
+      ]
+    },
+    {
+      id: 'r_khalid', after: 'khalid', title: 'L’Admiré', sub: 'Cité-Miroir · le soir du maillon de Khâlid', minLvl: 8, last: true,
+      map: 'cite', start: 'parvis', party: ['idris'],
+      npcs: [
+        { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
+        { id: 'admire', name: 'L’Admiré', at: ['ecran', -3, 1], look: { kind: 'cyber', robe: '#5a2f52', head: '#3a2038', cloak: '#3a2440', trim: '#ff4fd8' }, talk: [['say', 'admire', 'Tu m’as reconnu, bien sûr.']] }
+      ],
+      intro: [
+        ['title', 'L’Admiré', 'Cité-Miroir · le soir du maillon de Khâlid'],
+        ['nar', 'Le Courage de Khâlid n’est pas celui qu’Idris attendait. C’est le courage de descendre d’un socle.'],
+        ['nar', 'Ce soir, il y a du bruit sous le grand écran. L’enfant regarde, la tête penchée.']
+      ],
+      objectives: [
+        { text: 'Rejoindre l’enfant, sous le grand écran', talk: 'gamin', then: [
+          ['say', 'gamin', 'Monsieur, tu vois l’homme, là ? Tout le monde l’applaudit. Mais j’ai regardé : ce sont des fenêtres qui applaudissent. Il n’y a personne derrière.'],
+          ['say', 'idris', 'Il le sait ?'],
+          ['say', 'gamin', 'Je crois qu’il préfère ne pas compter.']
+        ] },
+        { text: 'Parler à l’homme qu’on applaudit', talk: 'admire', then: [
+          ['say', 'admire', 'Ah ! Un regard de plus. Approche. Tu m’as reconnu, bien sûr.'],
+          ['say', 'idris', 'Non.'],
+          ['say', 'admire', 'C’est impossible. Onze millions de fenêtres me suivent. Tu dois en être sans le savoir.'],
+          ['parley', {
+            with: 'admire', title: 'Descendre du socle',
+            intro: 'Il n’entend que les applaudissements, et il ne sait plus qui il serait sans eux.',
+            goal: 5,
+            rounds: [
+              { say: 'Dis-moi que je suis le plus regardé de la Cité. Dis-le. Ça ne coûte rien.', opts: [
+                { t: 'Tu es le plus regardé. Est-ce que quelqu’un te connaît ?', el: 'sidq', v: 2, r: 'Me connaître… C’est une drôle de question à poser à quelqu’un de célèbre.' },
+                { t: 'Tu es le plus regardé de la Cité.', el: 'rahma', v: -1, r: 'Encore ! Redis-le. … C’est étrange, ça ne dure jamais plus d’une seconde.' },
+                { t: 'J’ai vu une idole d’or qui avait la silhouette d’un homme de bien. Chaque louange lui ajoutait une couche. Elle ne s’est brisée que le jour où l’homme lui-même a refusé le socle.', el: 'shajaa', v: 2, need: 'khalid/idole_heros', r: 'Refuser le socle… Mais c’est lui qui me tient debout.' }
+              ] },
+              { say: 'Si je descends, ils regarderont quelqu’un d’autre dans l’heure.', opts: [
+                { t: 'Oui. Et tu sauras enfin qui reste.', el: 'sidq', v: 2, r: 'Qui reste… Je n’ose pas faire le compte.' },
+                { t: 'Non. Ils te resteront fidèles.', el: 'rahma', v: -1, r: 'Tu mens gentiment. Eux aussi.' },
+                { t: 'Khâlid n’avait jamais perdu une bataille. On lui a retiré le commandement, non pour une faute, mais parce que les gens s’en remettaient à lui. Il a obéi.', el: 'shajaa', v: 3, need: 'khalid/parole_umar', r: 'Sans faute… et il n’a pas crié à l’injustice ? Il faut plus de courage pour cela que pour monter.' }
+              ] },
+              { say: 'Et que ferais-je, en bas ? Je ne sais rien faire d’autre qu’être regardé.', opts: [
+                { t: 'Regarde quelqu’un, à ton tour. Il y a un enfant, là, qui pose des questions.', el: 'rahma', v: 2, r: 'Regarder quelqu’un… sans qu’il applaudisse ? Je peux essayer.' },
+                { t: 'Tu trouveras bien.', el: 'sabr', v: 0, r: 'C’est ce qu’on dit à ceux qu’on n’aidera pas.' },
+                { t: 'À la Citadelle, j’ai appris ce qu’est une foggara : une galerie sous la terre, que personne ne voit, et qui mène l’eau par son seul poids à tous les jardins.', el: 'ilm', v: 2, need: 'caid/foggara', r: 'Une chose que personne ne voit, et dont tout le monde boit. … Personne ne l’applaudit, celle-là ?' }
+              ] }
+            ],
+            win: [['flag', 'ami_admire'], ['pillar', 'lien', 1], ['nar', 'Il fait un pas hors de la lumière de l’écran. Les fenêtres continuent d’applaudir la place vide. Il ne se retourne pas.']],
+            lose: [['nar', 'Il s’est déjà retourné vers les fenêtres. Leur applaudissement a pris un corps.'], ['battle', { group: ['applaudissement'], bg: 'cite', intro: 'Il vit d’être regardé. Regarde ailleurs, et tiens bon.' }], ['nar', 'Un silence d’une seconde. L’Admiré a porté la main à sa poitrine, comme on cherche s’il y a encore quelqu’un.']]
+          }]
+        ] },
+        { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
+          ['say', 'gamin', 'Il a compté, finalement ?'],
+          ['say', 'idris', 'Pas encore. Mais il est descendu d’une marche. Un homme nommé Khâlid en a descendu de plus hautes : c’est de lui que je le tiens.'],
+          ['say', 'gamin', 'C’est dur, de descendre ?'],
+          ['say', 'idris', 'Plus que de monter. Personne ne t’applaudit.'],
+          ['codex', 'r_admire'], ['codex', 'enfant']
+        ] }
+      ]
+    },
+    {
+      id: 'r_uthman', after: 'uthman', title: 'Le Compteur', sub: 'Cité-Miroir · le soir du maillon de ’Uthmân', minLvl: 8, last: true,
+      map: 'cite', start: 'parvis', party: ['idris'],
+      npcs: [
+        { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
+        { id: 'compteur', name: 'Le Compteur', at: ['rue', 2, -1], look: { kind: 'cyber', robe: '#4a4430', head: '#2a2618', cloak: '#3a3424', trim: '#d9b45a', item: 'bourse' }, talk: [['say', 'compteur', 'Ne me dérange pas. Je compte.']] }
+      ],
+      intro: [
+        ['title', 'Le Compteur', 'Cité-Miroir · le soir du maillon de ’Uthmân'],
+        ['nar', 'La Miséricorde de ’Uthmân a la forme d’un puits : on n’y garde rien pour soi, et il ne tarit pas.'],
+        ['nar', 'L’enfant attend sous le grand écran. Il a l’air de quelqu’un qui a fait un calcul et n’y croit pas.']
+      ],
+      objectives: [
+        { text: 'Rejoindre l’enfant, sous le grand écran', talk: 'gamin', then: [
+          ['say', 'gamin', 'Monsieur, il y a un homme qui compte, dans la rue. Il a mis de côté plus de regards que toute la ville. Je lui ai demandé à quoi ils servaient.'],
+          ['say', 'idris', 'Et il a dit ?'],
+          ['say', 'gamin', 'Il a dit : « À en avoir. »']
+        ] },
+        { text: 'Trouver l’homme qui compte, dans la rue', talk: 'compteur', then: [
+          ['say', 'compteur', 'Ne me dérange pas. J’en suis à… Voilà. Tu m’as fait perdre le fil.'],
+          ['say', 'idris', 'Qu’est-ce que tu comptes ?'],
+          ['say', 'compteur', 'Des regards. Je les achète quand personne n’en veut, et je les garde. Un regard qu’on garde ne se pose sur rien : il reste neuf.'],
+          ['parley', {
+            with: 'compteur', title: 'Ce qu’on garde et ce qu’on donne',
+            intro: 'Il amasse des regards comme d’autres de l’or. Il n’en a jamais posé un seul sur quelqu’un.',
+            goal: 5,
+            rounds: [
+              { say: 'Ils sont à moi. Je les ai payés. Qu’y a-t-il à redire ?', opts: [
+                { t: 'Rien. Ils sont à toi. À qui servent-ils ?', el: 'adl', v: 1, r: 'Servir… Ils n’ont pas à servir. Ils ont à être là.' },
+                { t: 'C’est du vol. Rends-les.', el: 'shajaa', v: -1, r: 'J’ai les reçus. Tu veux les voir ? Je les ai comptés aussi.' },
+                { t: 'À Médine, l’eau douce d’un puits se vendait. ’Uthmân l’a acheté de son bien, comme toi, puis il l’a donné à tous : son seau n’y avait pas plus de droit qu’un autre.', el: 'rahma', v: 2, need: 'uthman/ruma', r: 'Payé, puis donné ? Alors il ne lui restait rien… si ce n’est tous ceux qui venaient y boire.' }
+              ] },
+              { say: 'Si je les donne, je n’en aurai plus. C’est mathématique.', opts: [
+                { t: 'Un regard que tu donnes à quelqu’un, tu ne le perds pas : tu sais où il est.', el: 'rahma', v: 2, r: 'Savoir où il est… Je ne sais où est aucun des miens. Ils sont dans le coffre.' },
+                { t: 'Tu en rachèteras.', el: 'adl', v: 0, r: 'C’est ce que je fais. C’est ce que je fais depuis vingt ans.' },
+                { t: 'Là où chacun compte ce que l’autre a reçu, l’Or dresse sa tour. Je l’ai vue. Elle pèse, et elle ne nourrit personne.', el: 'ilm', v: 2, need: 'uthman/or_n', r: 'Une tour… Mon coffre a la forme d’une tour, maintenant que tu le dis.' }
+              ] },
+              { say: 'Admettons. À qui donnerais-je le premier ?', opts: [
+                { t: 'Au premier qui passe et que personne ne regarde.', el: 'rahma', v: 2, r: 'Il y en a beaucoup. Ceux-là, je ne les avais jamais comptés.' },
+                { t: 'À moi.', el: 'sidq', v: -1, r: 'Ha. Tu vois bien : tout le monde amasse.' },
+                { t: 'Le Caïd disait de sa citadelle qu’elle ne tenait pas par ses pierres, mais par ce que les hommes s’y devaient les uns aux autres. Ôte cela, disait-il, il reste un enclos.', el: 'ilm', v: 3, need: 'caid/citadelle_lieu', r: 'Un enclos… J’ai bâti un enclos, et je me suis mis dedans.' }
+              ] }
+            ],
+            win: [['flag', 'ami_compteur'], ['pillar', 'lien', 1], ['nar', 'Il ouvre le coffre. Il en sort un regard, un seul, et le pose sur le premier passant. Le passant relève la tête, étonné qu’on le voie.']],
+            lose: [['nar', 'Il a repris son compte. Derrière lui, la pile est assez haute pour faire de l’ombre.'], ['battle', { group: ['compte'], bg: 'cite', intro: 'Il pèse et ne nourrit personne. La largesse le renverse.' }], ['nar', 'La pile a glissé. Le Compteur a regardé ses mains, comme s’il se demandait à quoi elles avaient servi.']]
+          }]
+        ] },
+        { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
+          ['say', 'gamin', 'Il en a donné un ?'],
+          ['say', 'idris', 'Un seul. C’est le plus difficile. Un homme nommé ’Uthmân a donné un puits entier : c’est de lui que je le tiens.'],
+          ['say', 'gamin', 'Toi, tu me regardes, quand je parle.'],
+          ['say', 'idris', 'C’est toi qui me l’as appris, à force de revenir.'],
+          ['codex', 'r_compteur'], ['codex', 'enfant']
+        ] }
+      ]
+    },
+    {
+      id: 'r_ali', after: 'ali', title: 'Le Cartographe', sub: 'Cité-Miroir · le soir du maillon de ’Alî', minLvl: 8, last: true,
+      map: 'cite', start: 'parvis', party: ['idris'],
+      npcs: [
+        { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
+        { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'cyber', robe: '#2f4a52', head: '#1c2c30', cloak: '#24383e', trim: '#39e6ff', item: 'feuillets' }, talk: [['say', 'carto', 'Combien l’ont vu ?']] }
+      ],
+      intro: [
+        ['title', 'Le Cartographe', 'Cité-Miroir · le soir du maillon de ’Alî'],
+        ['nar', 'Le Savoir de ’Alî ne ressemble pas à une réponse. Il ressemble à une question bien posée : de qui le tiens-tu ?'],
+        ['nar', 'L’enfant tient un bout de papier, sous le grand écran. Il le retourne dans tous les sens.']
+      ],
+      objectives: [
+        { text: 'Rejoindre l’enfant, sous le grand écran', talk: 'gamin', then: [
+          ['say', 'gamin', 'Monsieur, il y a un homme qui dessine la carte de la Cité. Je lui ai demandé s’il connaissait ma rue. Il a dit qu’il ne sortait jamais : il attend qu’on lui apporte des relevés.'],
+          ['say', 'idris', 'Et ta rue, elle est sur sa carte ?'],
+          ['say', 'gamin', 'Oui. Mais il a mis un mur là où il y a une porte.']
+        ] },
+        { text: 'Trouver l’homme à la carte, au bout de la rue', talk: 'carto', then: [
+          ['say', 'carto', 'Un marcheur ! Parfait. Dis-moi ce que tu as vu, je le reporterai. Combien l’ont vu avec toi ?'],
+          ['say', 'idris', 'Tu ne demandes pas qui ?'],
+          ['say', 'carto', 'Qui ? Non. Combien. Ce qu’un seul a vu n’existe pas. Ce qu’un million a vu est certain.'],
+          ['parley', {
+            with: 'carto', title: 'Combien, ou qui ?',
+            intro: 'Il sait tout de la Cité sans y avoir marché. Il tient pour vrai ce que beaucoup ont vu, et n’a jamais demandé à personne de qui il le tenait.',
+            goal: 5,
+            rounds: [
+              { say: 'Ma carte est exacte. Elle additionne onze millions de relevés.', opts: [
+                { t: 'Elle porte un mur là où il y a une porte. Un enfant me l’a dit. Il habite la rue.', el: 'sidq', v: 2, r: 'Un seul témoin ? … Mais il habite la rue. C’est contrariant.' },
+                { t: 'Onze millions de gens peuvent se tromper ensemble.', el: 'ilm', v: 1, r: 'En théorie. En théorie seulement.' },
+                { t: 'J’ai vu une phrase vraie devenir un mot d’ordre, parce que des milliers la répétaient sans sa suite. Le nombre ne l’avait pas rendue plus juste : il l’avait coupée.', el: 'ilm', v: 2, need: 'ali/phrase_verset', r: 'Coupée… Mes relevés aussi sont des morceaux. Je n’ai jamais demandé ce qu’il y avait autour.' }
+              ] },
+              { say: 'Que voudrais-tu ? Que j’aille voir moi-même chaque rue ? Un savant ne se déplace pas.', opts: [
+                { t: 'Une seule. Celle de l’enfant. Va voir la porte.', el: 'sabr', v: 2, r: 'Une seule rue… C’est peu, pour une méthode. Mais c’est faisable.' },
+                { t: 'Alors ta carte ne vaut rien.', el: 'shajaa', v: -1, r: 'Elle vaut onze millions de relevés. Bonsoir.' },
+                { t: 'Quand des milliers d’hommes se sont retirés à Harûrâ’, Ibn ’Abbâs n’a pas écrit sur eux : il est allé les trouver à midi. Il a écouté leurs griefs, puis il a répondu. Deux mille sont revenus ce jour-là.', el: 'ilm', v: 3, need: 'ali/harura', r: 'Il y est allé. En personne. Et il a écouté d’abord… Je n’ai jamais écouté un relevé.' }
+              ] },
+              { say: 'Et si j’y vais, et que je me trompe quand même ?', opts: [
+                { t: 'Alors tu diras de qui tu le tiens, et l’on pourra te corriger. C’est cela, une chaîne.', el: 'ilm', v: 2, r: 'Dire de qui… Mettre des noms sur une carte. On ne m’a jamais appris cela.' },
+                { t: 'Tu ne te tromperas pas.', el: 'sidq', v: -1, r: 'Voilà une affirmation sans source.' },
+                { t: 'À la Citadelle, j’ai lu sur un feuillet qu’une parole vraie peut servir de lame, et qu’on lui répond par le savoir, non par une autre lame. Une carte fausse, c’est pareil : on la corrige en allant voir, pas en criant plus fort.', el: 'ilm', v: 2, need: 'caid/slogan_purs', r: 'Aller voir… Tu es le premier marcheur qui ne me demande pas d’additionner.' }
+              ] }
+            ],
+            win: [['flag', 'ami_carto'], ['pillar', 'savoir', 1], ['nar', 'Il roule sa carte, la glisse sous son bras, et sort. Il marche mal : il n’a pas l’habitude. Au coin de la rue, il s’arrête devant une porte, et il rit.']],
+            lose: [['nar', 'Il a déjà reporté ta visite : « un relevé, non confirmé ». Sa carte se replie sur elle-même comme une lentille.'], ['battle', { group: ['carte_vide'], bg: 'cite', intro: 'Elle sait tout et n’a rien vu. Demande-lui de qui elle le tient.' }], ['nar', 'La lentille s’est fêlée. Le Cartographe a levé les yeux vers la fenêtre, pour la première fois depuis longtemps.']]
+          }]
+        ] },
+        { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
+          ['say', 'gamin', 'Il est venu voir ma porte ?'],
+          ['say', 'idris', 'Il y est. Il a écrit en marge de sa carte : « d’après l’enfant de la rue ».'],
+          ['say', 'gamin', 'Moi, sur une carte !'],
+          ['say', 'idris', 'C’est ainsi qu’une chose vraie se garde : avec le nom de celui qui l’a vue. Chez ’Alî, j’ai appris à poser la question avant de juger.'],
+          ['codex', 'r_cartographe'], ['codex', 'enfant']
         ] }
       ]
     }

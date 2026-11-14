@@ -18,7 +18,7 @@ toute considération de jeu.
 | `src/core/*.js` | moteur | modules en IIFE attachés à `window.ISNAD`, ordre de chargement fixé dans `tools/build.js` |
 | `src/core/sprites.js` | personnages : gabarits de 16 × 24, coiffes, attributs, poses, grand sprite de 32 × 48 | chaque lettre d'un gabarit nomme une matière ; les poses sont déclarées dans `defs.js` |
 | `src/data/saga_<id>.js` | une saga | un seul appel à `ISNAD.registerSaga({...})`, JavaScript pur, sans DOM |
-| `src/data/frame.js` | histoire-cadre | même format, `frame: true` |
+| `src/data/frame.js` | histoire-cadre : prologue, dernier maillon (`fin: true`) et cinq rencontres de la Cité-Miroir | même format, `frame: true` ; une rencontre porte `after: '<saga>'` et se joue après la veillée de cette saga |
 | `src/page.html`, `src/style.css` | gabarit et interface | |
 | `index.html`, `dist/isnad.html` | **générés** | ne jamais les éditer à la main |
 | `src/core/build.js` | bâtir : matériaux, pièces, chantiers, troupeaux | pièces et matériaux déclarés dans `defs.js` |
@@ -84,14 +84,21 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     Compagnon, jamais un personnage historique.
 12. Ce qui varie est fictif ou local : l'issue d'un pourparler ne change jamais un fait historique.
 13. La prière n'est pas un sortilège : elle s'écrit sobrement et se place aux moments attestés ou aux
-    haltes naturelles. *Citadelle* inspire le ton ; aucune de ses phrases n'est reprise.
+    haltes naturelles.
+14. Inspiration sans emprunt. *Citadelle* inspire le ton des veillées ; un conte du même auteur
+    inspire les types rencontrés en 2084 (celui qui règne sur personne, celui qu'on applaudit, celui
+    qui oublie, celui qui compte, celui qui obéit à un ordre sans raison, celui qui sait sans être
+    allé voir). On n'en reprend ni phrase, ni image, ni nom, ni épisode : tout est réécrit pour la
+    Cité-Miroir. Ni l'auteur ni ses œuvres ne sont nommés dans le jeu, le livret, les planches ou le
+    README (décision du décideur) ; ils ne le sont qu'ici et dans `docs/`, pour que la règle reste
+    applicable.
 
 ## Qui fait quoi
 
 | L'agent fait | L'agent propose, l'humain décide | L'agent ne touche pas |
 |---|---|---|
 | Écrire, assembler, valider, tester, versionner le code | Tout texte destiné au joueur qui touche à l'histoire ou à la religion | Une citation, une source ou une attribution sans la vérifier |
-| Corriger un bogue reproduit par le test | Un nouveau Compagnon, une nouvelle saga, un nouvel épisode historique | Les neuf exigences ci-dessus |
+| Corriger un bogue reproduit par le test | Un nouveau Compagnon, une nouvelle saga, un nouvel épisode historique | Les exigences ci-dessus |
 | Régler l'équilibrage par simulation | Une nouvelle mécanique, un changement de direction artistique ou sonore | La publication hors du dépôt et de l'Artifact privé (partage public, store) |
 | Tenir la documentation à jour | L'ajout d'une dépendance, d'un service ou d'un asset externe | `docs/decisions.md` : les décisions y sont validées ou rejetées par le décideur |
 | Prendre des captures d'écran | La levée d'une réserve de `docs/retours.md` | Les sauvegardes des joueurs (changer `isnad.save.v1` sans migration) |

@@ -77,7 +77,7 @@
   function fresh() {
     return { v: 1, started: false, prologue: false, epilogue: false, lights: [], sagas: {}, heroes: {},
       items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
-      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, parley: { won: 0, total: 0 } };
+      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 } };
   }
   // La progression ne s'écrit que dans une mosquée (trois emplacements). Les options, elles, se gardent à part.
   const OKEY = 'isnad.opts.v1', SLOT = n => 'isnad.slot.' + n;

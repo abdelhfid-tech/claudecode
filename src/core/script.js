@@ -59,9 +59,10 @@
   S.card = card;
 
   /* ----- choix ----- */
-  function known(id) { return I.save.data.codex.includes(I.world.saga.id + '/' + id); }
+  const cid = id => id.indexOf('/') > 0 ? id : I.world.saga.id + '/' + id; // « saga/id » : un savoir appris ailleurs
+  function known(id) { return I.save.data.codex.includes(cid(id)); }
   S.known = known;
-  function lockLabel(o) { const e = I.ui.codexEntry(I.world.saga.id + '/' + o.need); return `<span class="lock">✧ Savoir requis${e ? ' : ' + I.esc(e.title) : ''}</span>`; }
+  function lockLabel(o) { const e = I.ui.codexEntry(cid(o.need)); return `<span class="lock">✧ Savoir requis${e ? ' : ' + I.esc(e.title) + (o.need.indexOf('/') > 0 ? ' (' + I.esc(e.saga.name) + ')' : '') : ''}</span>`; }
   function menuPick(prompt, options, head) {
     return new Promise(res => {
       const box = $('#choice'); box.hidden = false; box.innerHTML = '';

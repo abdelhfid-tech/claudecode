@@ -209,7 +209,7 @@
         S.depth--; try { await W.startChapter(saga.id, W.ci + 1); } finally { S.depth++; }
       } else {
         await S.fade('out', 600); I.setScene(I.ui.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 6, hue: 40, n: 0 }; await S.fade('in', 400);
-        if (saga.outro && (!saga.frame || W.ci === saga.chapters.length - 1)) await S.run(saga.outro);
+        if (saga.outro && (!saga.frame || (saga.veillees ? W.ci === saga.chapters.length - 1 : !!ch.fin))) await S.run(saga.outro);
         if (!saga.frame && sp.cTot) {
           const perfect = (sp.cOk || 0) === sp.cTot;
           if (perfect) { sv.items.siwak = (sv.items.siwak || 0) + 2; sv.items.musc = (sv.items.musc || 0) + 1; I.audio.sfx('roll'); }

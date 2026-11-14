@@ -34,6 +34,8 @@ const GROUPES = [
   { titre: 'L’Égypte et la mer', recueil: ['uthman', 'flotte'], n: 2, gens: [['uthman', 'ibnsad'], ['uthman', 'charpentier'], ['uthman', 'vigie'], ['uthman', 'ancien_ile']] },
   { titre: 'Les gens de la Citadelle', texte: 'Autour du Caïd : les amghars des tribus berbères, un général, un caravanier, un moine-médecin, et des géomètres perses à qui son père donna asile. Tous sont de fiction.',
     gens: [['caid', 'idir', 'f'], ['caid', 'meksa', 'f'], ['caid', 'amezyan', 'f'], ['caid', 'warsen', 'f'], ['caid', 'izem', 'f'], ['caid', 'yishaq', 'f'], ['caid', 'cyprien', 'f']] },
+  { titre: 'Les gens de la Cité-Miroir', texte: 'En 2084, sous le grand écran : un enfant qui pose des questions, et ceux que la ville a enfermés chacun dans son idole. Tous sont de fiction.',
+    gens: [['idris', 'gamin', 'f'], ['idris', 'defileur', 'f'], ['idris', 'regent', 'f'], ['idris', 'admire', 'f'], ['idris', 'compteur', 'f'], ['idris', 'carto', 'f']] },
   { titre: 'Ceux qui parlent des deux côtés', texte: 'Dans chaque saga, un personnage inventé dit à chacun ce qu’il veut entendre et sert son propre compte. Il vient toujours du camp du héros. Ce n’est jamais un Compagnon ni un personnage historique.',
     gens: [['abubakr', 'thamir', 'f'], ['umar', 'hazim', 'f'], ['khalid', 'ghalib', 'f'], ['uthman', 'akhbar', 'f'], ['ali', 'madan', 'f'], ['caid', 'chambellan', 'f']] }
 ];
@@ -87,6 +89,7 @@ const chainShown = () => !document.querySelector('#chain').hidden;
 
 /* ---------- 1. captures en jouant ---------- */
 async function captures(browser, errors) {
+  if (process.env.SEUL_CHANTIER) return chantier(browser, errors);
   console.log('Captures — récit');
   const T = await openGame(browser, errors), { p, ev, key, shot, clean, place, runTo, until } = T;
   await shot('titre');
@@ -185,7 +188,11 @@ async function captures(browser, errors) {
   }
   await p.close();
 
-  if (process.env.SANS_CHANTIER) return;
+  if (!process.env.SANS_CHANTIER) await chantier(browser, errors);
+}
+
+/* ---------- 1 bis. le chantier de la mosquée, la fin de la saga I, puis une rencontre ---------- */
+async function chantier(browser, errors) {
   // chapitre 3 : le chantier de la mosquée, sur une page neuve (le récit y arrive seul)
   console.log('Captures — chantier');
   const U = await openGame(browser, errors);
@@ -203,7 +210,16 @@ async function captures(browser, errors) {
     await U.ev(() => { const W = window.ISNAD.world, st = window.ISNAD.build.sites().dhulqassa; W.player.x = st.nx * 16 + 8; W.player.y = st.ny * 16 + 24; W.player.dir = 3; W.trail = []; for (let i = 0; i < 64; i++) W.trail.push([W.player.x - i * 1.25, W.player.y + i * 0.5, 3]); W.updateCam(true); });
     await U.p.waitForTimeout(800); await U.shot('mosquee-batie');
   }
+  // la suite du récit se joue seule : fin de la saga I, veillée du Caïd, puis la première rencontre de la Cité-Miroir
+  if (await U.runTo('W.saga && W.saga.id === "idris" && W.ch.id === "r_abubakr" && W.objIndex === 1', 420000)) {
+    await U.place('ecran', 48, 52, 3, 0, 0); await U.clean(true); await U.p.waitForTimeout(1200); await U.shot('rencontre-enfant'); await U.clean(false);
+    await U.ev(() => { const W = window.ISNAD.world, n = W.npcs.find(x => x.id === 'defileur'), P = W.player; P.x = n.x; P.y = n.y + 16; P.dir = 3; W.resetTrail(); W.updateCam(true); });
+    await U.p.waitForTimeout(600); await U.p.keyboard.press('Enter');
+    for (let i = 0; i < 30; i++) { await U.p.waitForTimeout(450); if (await U.ev(() => { const c = document.querySelector('#choice'); return !c.hidden && !!c.querySelector('.phead'); })) break; await U.p.keyboard.press('Enter'); }
+    await U.p.waitForTimeout(600); await U.shot('rencontre');
+  }
   await U.p.close();
+
 }
 
 /* ---------- 2. décors : un saut par chapitre, HUD masqué ---------- */
@@ -405,6 +421,14 @@ function livret() {
     return court ? `<article><b>${esc(g.titre)}</b><div>${figs}</div></article>` : `<article class="peuple"><h3>${esc(g.titre)}</h3><p>${esc(txt)}</p>${src}<div class="gens-l">${figs}</div></article>`; };
   R.PEUPLES = GROUPES.map(g => groupe(g, false)).join('');
   R.PEUPLESPLANCHE = GROUPES.map(g => groupe(g, true)).join('');
+  // les rencontres de la Cité-Miroir : qui, après quel maillon, et quels savoirs ouvrent les meilleurs arguments
+  const findOp = (a, name) => { if (!a || typeof a !== 'object') return null; if (Array.isArray(a)) { if (a[0] === name && a[1] && typeof a[1] === 'object') return a[1]; for (const v of a) { const r = findOp(v, name); if (r) return r; } return null; } for (const v of Object.values(a)) { const r = findOp(v, name); if (r) return r; } return null; };
+  const savoir = ref => { const [sid, id] = ref.split('/'), c = sagas[sid].codex.find(x => x.id === id); if (!c) throw new Error('savoir introuvable : ' + ref); return `${esc(c.title)} <small>(${sid === 'caid' ? 'la Citadelle' : esc(sagas[sid].heroes[sid].name)})</small>`; };
+  R.RENCONTRES = sagas.idris.chapters.filter(c => c.after).map(c => { const s2 = sagas[c.after], P = findOp(c.objectives, 'parley'), needs = [];
+    P.rounds.forEach(r => r.opts.forEach(o => { if (o.need && needs.indexOf(o.need) < 0) needs.push(o.need); }));
+    const who = c.npcs.find(n => n.id === P.with);
+    return `<tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-${who.id}.png" alt="">${esc(c.title)}</td><td style="color:${col(s2)}">${esc(s2.heroes[s2.id].name)} · ${esc(s2.lightName)}</td><td>${esc(P.intro)}</td><td>${needs.map(savoir).join('<br>')}</td></tr>`; }).join('')
+    + `<tr><td class="n">L’opérateur de garde</td><td style="color:${D.ELEMENTS.sabr.color}">Idris · Patience</td><td>${esc(findOp(sagas.idris.chapters.find(c => c.id === 'e1').objectives, 'parley').intro)}</td><td>L’isnâd <small>(les Archives)</small></td></tr>`;
   R.PALETTE = Object.values(D.PIECES).map(p => `<figure><img class="px" src="img/${icon(p)}.png" alt=""><figcaption>${esc(p.name)}</figcaption></figure>`).join('');
   R.VEILLEES = sagas.caid.chapters.map(c => `<tr><td class="n">${esc(c.title)}</td><td>${esc(c.sub)}</td></tr>`).join('');
   let src = fs.readFileSync(path.join(PROMO, 'livret.src.html'), 'utf8');

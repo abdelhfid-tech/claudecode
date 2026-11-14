@@ -1,7 +1,7 @@
 /* ISNAD — Les veillées du Caïd : un maillon de fiction entre les Compagnons et Idris.
    Après chaque saga, le Caïd affronte dans sa citadelle une crise qui répond à la leçon reçue.
    Tout est fictif ici : les décisions sont libres et pèsent sur les piliers de la Citadelle.
-   Hommage à « Citadelle » d'Antoine de Saint-Exupéry (1948) pour la voix et quelques motifs ; aucun texte repris. */
+   Tout y est de fiction ; les phrases sont originales. */
 ISNAD.registerSaga({
   id: 'caid', order: 6, frame: true, veillees: true, narrator: 'Le Caïd',
   name: 'Le Caïd', epithet: 'Seigneur de la Citadelle', arabic: 'القائد',
@@ -139,7 +139,7 @@ ISNAD.registerSaga({
     { id: 'eau_saumatre', cat: 'Événement', title: "L'eau du puits", text: "Quand une nappe baisse, l'eau douce s'épuise la première, et l'eau plus salée du fond remonte dans le seau. Le goût change sans que personne y ait touché. Bahrâm le montra en faisant sécher l'eau du fond sur une pierre chaude : elle y laissa du sel.", src: 'Fiction' },
     { id: 'hudaybiyya', cat: 'Événement', title: 'Le pacte nommé victoire', text: "En l'an 6 de l'Hégire, à al-Hudaybiyya, un pacte fut conclu avec Quraysh à des conditions que beaucoup de Compagnons trouvèrent amères. Sur le chemin du retour fut révélée la sourate « La Victoire éclatante » (48), que de nombreux Compagnons et exégètes ont rapportée à ce pacte. On rapporte d'az-Zuhrî que la paix ainsi ouverte fit entrer dans l'islam autant de monde, ou davantage, que toutes les années précédentes.", src: 'Ibn Hishâm, as-Sîra ; al-Bukhârî' },
     { id: 'slogan_purs', cat: 'Parole', title: 'Parole vraie, visée fausse', text: "Feuillet recopié de la main du vieux Caïd. Quand des hommes firent sécession en criant « Le jugement n'appartient qu'à Allah », on rapporte que 'Alî ibn Abî Tâlib répondit : « Parole de vérité par laquelle on vise le faux. » Une phrase vraie peut servir de lame ; on lui répond par le savoir, non par une autre lame.", src: 'Muslim, as-Sahîh' },
-    { id: 'hommage', cat: 'Parole', title: 'Hommage', text: "Les veillées du Caïd sont une fiction. Leur voix et quelques-uns de leurs motifs (la sentinelle, le puits, le cèdre, le géomètre) rendent hommage à *Citadelle* d'Antoine de Saint-Exupéry, paru en 1948, sans en reprendre le texte ni les épisodes. Le Caïd, sa citadelle et ses gens n'ont jamais existé ; les leçons qu'il reçoit sont celles des sagas." }
+    { id: 'fiction_veillees', cat: 'Parole', title: 'Les veillées (fiction)', text: "Les veillées du Caïd sont une fiction. Le Caïd, sa citadelle et ses gens n'ont jamais existé ; les leçons qu'il reçoit sont celles des sagas, posées à l'échelle d'une cité." }
   ],
 
   chapters: [
@@ -272,7 +272,7 @@ ISNAD.registerSaga({
           ], [
             ['nar', "Je n'ai pas fait ce jour-là ce qu'avait fait Abû Bakr au jour le plus sombre. Lui a dit la mort avant qu'on la devine. Moi, j'ai appris à mes dépens qu'une vérité différée ne revient jamais seule : elle ramène avec elle le soupçon."]
           ]],
-          ['codex', 'citadelle_lieu'], ['codex', 'piliers'], ['codex', 'hommage']
+          ['codex', 'citadelle_lieu'], ['codex', 'piliers'], ['codex', 'fiction_veillees']
         ] }
       ]
     },
@@ -393,7 +393,7 @@ ISNAD.registerSaga({
           ], [
             ['nar', "Je n'ai pas fait ce jour-là ce qu'avait fait 'Umar. Lui pesait le fort et le faible sur la même balance. Moi j'ai laissé la mienne pencher, et depuis je fais garder ma porte : celui qui a été injuste ne dort plus que d'un œil."]
           ]],
-          ['codex', 'piliers'], ['codex', 'hommage']
+          ['codex', 'piliers'], ['codex', 'fiction_veillees']
         ] }
       ]
     },
@@ -530,7 +530,7 @@ ISNAD.registerSaga({
           ], [
             ['nar', "Je n'ai pas su faire ce jour-là ce qu'avait fait 'Umar, ni offrir à Izem d'être ce que fut Khâlid. Lui aurait posé l'épée si je le lui avais demandé droit dans les yeux. C'est moi qui n'ai pas eu le courage de le demander."]
           ]],
-          ['codex', 'citadelle_lieu'], ['codex', 'piliers'], ['codex', 'hommage']
+          ['codex', 'citadelle_lieu'], ['codex', 'piliers'], ['codex', 'fiction_veillees']
         ] }
       ]
     },
@@ -668,7 +668,7 @@ ISNAD.registerSaga({
           ], [
             ['nar', "J'ai fait ce jour-là ce qu'avait fait 'Uthmân dans sa maison assiégée : j'ai refusé que le sang coule pour ma tranquillité, fût-ce celui des égarés. Et j'ai appris de la rumeur ce qu'il en avait appris : elle ne cherche pas la vérité, elle cherche un visage."]
           ]],
-          ['codex', 'chambellan'], ['codex', 'piliers'], ['codex', 'hommage']
+          ['codex', 'chambellan'], ['codex', 'piliers'], ['codex', 'fiction_veillees']
         ] }
       ]
     },
@@ -781,7 +781,7 @@ ISNAD.registerSaga({
             ['nar', "J'ai fait ce jour-là ce qu'avait fait 'Alî devant ceux qui détournaient une parole vraie : j'ai envoyé le savoir avant le sabre, j'ai laissé aux égarés leur mosquée et leur part, et je n'ai pas levé la main le premier."]
           ]],
           ['nar', "Puis j'ai pris le calame, et j'ai écrit pour mon fils ce qu'on m'avait transmis, de témoin en témoin. Les murs que j'ai tenus tomberont. Ce que j'ai reçu, s'il le remet à son tour, ne tombera pas. C'est ainsi que la Chaîne est venue jusqu'à toi, râwî."],
-          ['codex', 'citadelle_lieu'], ['codex', 'piliers'], ['codex', 'hommage']
+          ['codex', 'citadelle_lieu'], ['codex', 'piliers'], ['codex', 'fiction_veillees']
         ] }
       ]
     }

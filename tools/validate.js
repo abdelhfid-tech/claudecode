@@ -12,6 +12,16 @@ if (!files.length) {
   files = fs.readdirSync(dir).filter(f => /^saga_.*\.js$/.test(f)).map(f => path.join(dir, f));
 }
 
+// savoirs d'une autre saga (« saga/id ») : vérifiés dans les autres fichiers de données
+const autres = {}; let autresLus = false;
+function savoirConnu(ref) {
+  if (!autresLus) { autresLus = true; const dir = path.join(__dirname, '../src/data');
+    for (const f of fs.readdirSync(dir).filter(f => /\.js$/.test(f))) { const got = [], c = { ISNAD: { registerSaga: s => got.push(s), registerMusic() {} }, console }; c.window = c; c.globalThis = c;
+      try { vm.runInNewContext(fs.readFileSync(path.join(dir, f), 'utf8'), c); } catch (e) { /* signalé ailleurs */ }
+      got.forEach(s => { autres[s.id] = new Set((s.codex || []).map(x => x.id)); }); } }
+  const [sid, id] = ref.split('/'); return !!(autres[sid] && autres[sid].has(id));
+}
+
 let totalErr = 0;
 for (const file of files) {
   const errs = [];
@@ -268,7 +278,7 @@ function checkSaga(s, E, W) {
                 if (typeof x.t !== 'string' || typeof x.r !== 'string') E.push(`${wo}: manche ${ri} option ${xi} : « t » et « r » (réplique) requis`);
                 if (typeof x.v !== 'number' || x.v < -2 || x.v > 3) E.push(`${wo}: manche ${ri} option ${xi} : v entre -2 et 3`);
                 if (!D.ELEMENTS[x.el] || x.el === 'fer') E.push(`${wo}: manche ${ri} option ${xi} : el doit être une Lumière`);
-                if (x.need !== undefined && !codexIds.has(x.need)) E.push(`${wo}: manche ${ri} option ${xi} : need « ${x.need} » absent du codex`);
+                if (x.need !== undefined && !(String(x.need).indexOf('/') > 0 ? savoirConnu(x.need) : codexIds.has(x.need))) E.push(`${wo}: manche ${ri} option ${xi} : need « ${x.need} » absent du codex`);
                 m = Math.max(m, x.v); if (x.need === undefined) mf = Math.max(mf, x.v); mn = Math.min(mn, x.v);
               });
               if (mf === -9) E.push(`${wo}: manche ${ri} : au moins une option sans « need »`);

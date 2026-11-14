@@ -97,9 +97,12 @@ Archives. Il n'y a pas de sauvegarde automatique : fermer la page sans sauvegard
   pourparlers avec sérénité.
 - **Les quatre piliers de la Citadelle** : Prière, Savoir, Justice, Lien. Ils montent et descendent selon
   ce que le joueur réussit ou manque, et pèsent en combat.
+- **Les rencontres de la Cité-Miroir.** Après chaque saga et sa veillée, Idris remonte en 2084 et
+  rencontre quelqu'un que la ville a enfermé dans une idole. On le dénoue par la parole, avec les
+  savoirs appris chez le Compagnon et à la Citadelle ; les amis gagnés reviennent à l'épilogue.
 - **Les veillées du Caïd.** Après chaque saga, un seigneur berbère de fiction affronte dans sa citadelle
   une crise qui répond à la leçon reçue. Ici les décisions sont libres et leurs conséquences durent.
-  Hommage à *Citadelle* d'Antoine de Saint-Exupéry, dont aucune phrase n'est reprise.
+  Tout y est de fiction.
 - **Intrigue politique.** Factions, délégations, communautés aux intérêts divergents traitées avec
   dignité, hypocrites de fiction issus du camp du héros.
 - **Bande-son originale** synthétisée, dix-huit pistes, coupable séparément ; **rendu** rétro-HD ou 2D
