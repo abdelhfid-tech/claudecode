@@ -52,6 +52,18 @@ dans la Cité-Miroir, qui rend la sixième Lumière, la Patience (*sabr*).
   explique, puis repropose. Le Compagnon ne fait jamais à l'écran autre chose que ce qui est rapporté.
 - **Codex.** Biographies, événements, paroles et idoles, avec leurs sources.
 
+## Routes : étoiles, caravanes, justice
+
+- **S'orienter aux étoiles.** Un cadran montre huit caps nommés en arabe par l'étoile qui s'y lève ou s'y
+  couche : al-Jady (la Polaire) au nord, Suhayl au sud, an-Nasr at-Tâ'ir, al-'Ayyûq, al-'Aqrab. L'étoile
+  qui brille est celle de l'objectif ; au bord de l'écran, elle précède le joueur.
+- **Commercer.** Aux ballots du souk, du camp ou de la caravane : vendre, acheter, confier une cargaison
+  pour le Yémen (route d'hiver), le Shâm (route d'été) ou le Bahreïn. La caravane revient au chapitre
+  suivant. Elle risque moins si la justice est rendue, si des pactes sont noués, si des méharistes gardent la route.
+- **Une route pillée.** Des hommes rentrent à pied. On lève des renforts, on parle d'abord au chef des
+  pillards, on ne combat qu'en dernier recours (l'égrégore de la Razzia), puis on partage ce qui est
+  repris et l'on remet les pillards au juge.
+
 ## Bâtir
 
 Touche **B** (ou le bouton ▦), à ciel ouvert. On récolte en s'adressant aux choses : un palmier donne de

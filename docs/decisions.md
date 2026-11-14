@@ -117,6 +117,24 @@ mihrab, minbar, lanternes) ; « codex » renommé « Recueil » dans l'interface
 - [ ] **D32. Première saga d'abord.** Trois moments bâtis : l'enclos, le fossé (qui pèse dans le combat
   de Dhû l-Qassa), la mosquée. Les autres sagas ont le mode Bâtir libre, sans chantier scénarisé.
 
+## Version 4 : routes (demande du décideur)
+
+- [ ] **D33. L'orientation se fait aux étoiles, partout.** Huit caps aux noms arabes ; la flèche d'objectif
+  devient une étoile. La mini-carte est conservée comme aide : à retirer si le décideur veut une
+  navigation purement céleste.
+- [ ] **D34. Commerce par caravanes**, avec les deux voyages de Quraysh (hiver vers le Yémen, été vers le
+  Shâm) ; dans les veillées, des routes de fiction.
+- [ ] **D35. Une route pillée appelle des renforts, la parole d'abord, puis la justice.** L'adversaire de
+  combat reste un égrégore (la Razzia). Le joueur partage ce qui est repris ; il ne prononce aucune
+  peine : les pillards sont remis au juge.
+- [ ] **D36. Cohérence.** Côté Histoire : marchands de La Mecque, routes coupées pendant la Ridda, lecture
+  du ciel. Côté *Citadelle* : la caravane, le puits, la cité « qui se juge à ses routes » (phrase
+  originale mise dans la bouche du père du Caïd, pas une citation).
+
+Points à vérifier ajoutés : la promesse de la route sûre de San'â' au Hadramawt (al-Bukhârî, récit de
+Khabbâb) ; la traduction du sens de 16:16 ; les noms d'étoiles et la rose en huit caps, simplifiée
+d'après celle que décriront les pilotes arabes.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

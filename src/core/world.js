@@ -150,7 +150,7 @@
     try {
       await S.fade('in', 500);
       if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); }
-      if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) I.build.yields(); }
+      if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) { I.build.yields(); await I.trade.resolve(); } }
       if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Croix : marcher · <b>OK</b> : parler, valider · <b>MENU</b> : halte' : '<b>Flèches</b> ou <b>ZQSD</b> : marcher · <b>Entrée</b> : parler · <b>Échap</b> : menu', 9000);
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
@@ -160,7 +160,7 @@
     $('#hud .chap').textContent = W.ch ? W.ch.title : '';
     const tm = W.map && ({ dawn: 'Fajr', day: 'Dhuhr', dusk: 'Maghrib', night: '’Ishâ' })[W.map.env.time];
     $('#hud .sub').textContent = (W.ch ? W.ch.sub : '') + (tm ? '  ·  ◠ ' + tm : '');
-    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('');
+    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="Dirhams"><i>◎</i>${I.trade.dirhams()}</span>` : '');
     $('#hud .obj').textContent = (o && o.text ? o.text : '') + (o && o.build ? I.build.objectiveText(o.build) : '');
     $('#hud .obj').hidden = !(o && o.text);
   };
@@ -239,7 +239,8 @@
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
       await S.run([['ask', 'Une natte tournée vers La Mecque, au cœur de l’étoile.', [{ t: 'Prier : le groupe se repose, la Sakîna descend', r: [['pray']] }, { t: 'Sauvegarder la partie', r: [['save']] }, { t: 'Plus tard', r: [] }]]]);
-    } else if (I.build) await I.build.gather();
+    } else if (I.trade && I.trade.near()) await I.trade.open();
+    else if (I.build) await I.build.gather();
   };
   W.fight = async function (f) {
     S.depth++;
@@ -331,6 +332,7 @@
   };
   W.autoStep = function () {
     const o = W.cur(); if (!o) return; const p = W.player, log = I.debug.log || (I.debug.log = []);
+    if (I.trade && W.map.spots.comptoir && !S.flags._trade_test && !W.saga.frame && !W._autoBusy) { S.flags._trade_test = true; W._autoBusy = true; I.trade._autoStep = 0; I.trade._sold = I.trade._bought = 0; I.trade.open().then(() => { W._autoBusy = false; }, e => { log.push('ERR commerce ' + e.message); W._autoBusy = false; }); return; }
     if (o.build && I.debug.noBuild) return;
     if (o.build) { W._autoBusy = true; I.build.autoBuild(o.build); I.build.after().then(() => { W._autoBusy = false; }, e => { log.push('ERR bâtir ' + e.message); W._autoBusy = false; }); return; }
     if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
@@ -396,7 +398,7 @@
       if (tg.kind !== 'goto' && sx > 0 && sx < G.PW && sy > 0 && sy < G.PH) { const by = sy + Math.sin(t * 5) * 2; c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(sx, by + 4); c.lineTo(sx - 4, by - 2); c.lineTo(sx, by - 6); c.lineTo(sx + 4, by - 2); c.fill(); c.fillStyle = '#fff6dc'; c.fillRect(sx - 1, by - 3, 2, 3); }
       if (sx < 6 || sx > G.PW - 6 || sy < 6 || sy > G.PH - 6) {
         const ang = Math.atan2(sy - G.PH / 2, sx - G.PW / 2), ex = I.clamp(sx, 12, G.PW - 12), ey = I.clamp(sy, 22, G.PH - 12), pu = 1 + Math.sin(t * 6) * 0.2;
-        c.save(); c.translate(ex, ey); c.rotate(ang); c.scale(pu, pu); c.fillStyle = '#1a1420'; c.beginPath(); c.moveTo(7, 0); c.lineTo(-5, -6); c.lineTo(-5, 6); c.fill(); c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(5, 0); c.lineTo(-4, -4); c.lineTo(-4, 4); c.fill(); c.restore();
+        c.save(); c.translate(ex, ey); c.rotate(ang); c.scale(pu, pu); c.rotate(-ang + t * 0.6); const star = (r, col) => { c.fillStyle = col; c.beginPath(); for (let q = 0; q < 8; q++) { const rr = q % 2 ? r * 0.3 : r, aa = q * Math.PI / 4; c.lineTo(Math.cos(aa) * rr, Math.sin(aa) * rr); } c.closePath(); c.fill(); }; star(8, '#1a1420'); star(6.5, '#ffe9a8'); star(2.5, '#fff'); c.restore(); lights.push({ x: ex, y: ey, r: 16, color: '#ffe9a8', a: 0.7 });
       }
     }
     // bulle « parler » au-dessus du personnage à portée
@@ -404,7 +406,7 @@
       const p = W.player, px = p.x + [0, -1, 1, 0][p.dir] * 12, py = p.y + [1, 0, 0, -1][p.dir] * 12; let best = null, bd = 22;
       W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - px, n.y - py); if (d < bd) { bd = d; best = n; } });
       if (!best) { const ch = W.chests.find(ch => !ch.open && ch.map === m.id && ch.placed && Math.hypot(ch.x - px, ch.y - py) < 18); if (ch) best = { x: ch.x, y: ch.y + 12 }; }
-      if (!best && W.nearPrayer()) best = { x: p.x, y: p.y + 6 };
+      if (!best && (W.nearPrayer() || (I.trade && I.trade.near()))) best = { x: p.x, y: p.y + 6 };
       if (best && !(tg && tg.kind === 'talk' && Math.abs(tg.x - best.x) < 2)) { const bx = Math.round(best.x - cx), by = Math.round(best.y - cy - 34 + Math.sin(t * 5) * 1.5); c.fillStyle = '#1a1420'; c.fillRect(bx - 7, by - 1, 14, 9); c.fillStyle = '#fff6dc'; c.fillRect(bx - 6, by, 12, 7); c.fillRect(bx - 1, by + 7, 2, 2); c.fillStyle = '#1a1420'; c.fillRect(bx - 4, by + 3, 2, 2); c.fillRect(bx - 1, by + 3, 2, 2); c.fillRect(bx + 2, by + 3, 2, 2); }
     }
     for (const pp of W.prayerPts()) { const px2 = pp[0] * T + 8 - cx, py2 = pp[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) {

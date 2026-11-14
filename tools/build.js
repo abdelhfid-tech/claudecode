@@ -7,7 +7,7 @@ const path = require('path');
 const root = path.join(__dirname, '..');
 const read = f => fs.readFileSync(path.join(root, f), 'utf8');
 
-const core = ['defs', 'base', 'gfx', 'maps', 'script', 'world', 'build', 'battle', 'ui'].map(n => `src/core/${n}.js`);
+const core = ['defs', 'base', 'gfx', 'maps', 'script', 'world', 'build', 'trade', 'battle', 'ui'].map(n => `src/core/${n}.js`);
 const data = ['src/data/frame.js', 'src/data/music.js', 'src/data/caid.js'].filter(f => fs.existsSync(path.join(root, f))).concat(fs.readdirSync(path.join(root, 'src/data')).filter(f => /^saga_.*\.js$/.test(f)).sort().map(f => 'src/data/' + f));
 const js = core.concat(data).map(f => `/* ==== ${f} ==== */\n` + read(f)).join('\n') +
   '\n(window.claude && window.claude.hot && window.claude.hot.ready) ? window.claude.hot.ready(function () { ISNAD.ui.boot(); }) : ISNAD.ui.boot();\n';

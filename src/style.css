@@ -242,3 +242,12 @@ body.in-build #buildbtn { background: var(--acc); color: #0b0a14; }
 #buildbar .keys { color: var(--dim); font-size: .86em; } body.touch #buildbar .keys { display: none; }
 body.portrait #buildbar { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; font-size: 12px; }
 body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.in-build #pad { bottom: max(6px, env(safe-area-inset-bottom, 0px)); }
+
+/* ---------- cadran des étoiles ---------- */
+#compass { position: absolute; left: 2%; top: 27%; display: flex; align-items: center; gap: .5em; pointer-events: none; z-index: 4; }
+#compass canvas { width: 5.6em; height: 5.6em; }
+#compass .lab { display: flex; flex-direction: column; line-height: 1.15; text-shadow: 0 1px 3px #000, 0 0 10px rgba(0, 0, 0, .9); }
+#compass .lab span { font-family: var(--f-ar); color: var(--gold); font-size: 1.05em; }
+#compass .lab b { font-family: var(--f-display); font-size: .74em; letter-spacing: .05em; color: #fff6dc; font-weight: 500; }
+#compass .lab small { font-size: .66em; color: var(--sand); letter-spacing: .12em; text-transform: uppercase; }
+body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) #compass { top: 24%; }

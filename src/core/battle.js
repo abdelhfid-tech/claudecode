@@ -65,8 +65,10 @@
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
       buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(Object.assign({ kind: 'compagnon' }, h.def.look)), color: D.ELEMENTS[h.def.el].color };
   }
+  // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
+  function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, W.hero(W.party[0]).lvl) }) : d; }
   function mkFoe(id, i, n, nH) {
-    const def = I.world.saga.enemies[id], st = I.calc.enemy(def, nH, n), sc = def.scale || (def.tier === 'boss' ? 3 : def.tier === 'elite' ? 2 : 1);
+    const def = foeDef(id), st = I.calc.enemy(def, nH, n), sc = def.scale || (def.tier === 'boss' ? 3 : def.tier === 'elite' ? 2 : 1);
     const pos = n === 1 && sc >= 3 ? [118, 156] : FOE_POS[n][i];
     return { side: 'foe', id, name: def.name, def, lvl: def.lvl, max: { hp: st.hp, sp: 0 }, hp: st.hp, sp: 0, atk: st.atk, mag: st.mag, df: st.def, spd: st.spd, buffs: {}, st: {}, veils: def.veils, veilsMax: def.veils, broken: false,
       known: {}, tried: {}, phase: 0, skills: (def.skills || []).slice(), x: pos[0], y: pos[1], ox: 0, flash: 0, ct: 0, alive: true, spr: G.enemy(def.art, def.hue, sc, 0), size: sc >= 3 ? 112 : sc === 2 ? 80 : 52, ph: Math.random() * 6, fade: 1 };
@@ -85,7 +87,7 @@
 
   async function run(opts, first) {
     const W = I.world, prev = I.scene, prevAmb = I.audio.ambName;
-    const d0 = W.saga.enemies[opts.group[0]], hue = d0.hue;
+    const d0 = foeDef(opts.group[0]), hue = d0.hue;
     C = { opts, hue, bg: paintBg(opts.bg || 'noos', hue), all: [], t: 0, cursor: null, log: [], turn: 0 };
     W.party.forEach((id, i) => C.all.push(mkHero(id, i)));
     const nH = C.all.length; opts.group.forEach((id, i) => C.all.push(mkFoe(id, i, opts.group.length, nH)));
@@ -384,7 +386,7 @@
   };
   async function victory() {
     const W = I.world, sv = I.save.data; I.audio.sfx('roll');
-    let xp = 0; C.all.filter(e => e.side === 'foe').forEach(e => { xp += I.calc.xpOf(e.def); const cid = 'foe:' + W.saga.id + ':' + e.id; if (!sv.codex.includes(cid)) sv.codex.push(cid); });
+    let xp = 0; C.all.filter(e => e.side === 'foe').forEach(e => { xp += I.calc.xpOf(e.def); const cid = 'foe:' + (W.saga.enemies[e.id] ? W.saga.id : '_') + ':' + e.id; if (!sv.codex.includes(cid)) sv.codex.push(cid); });
     const lines = [];
     C.all.filter(e => e.side === 'hero').forEach(e => {
       const h = e.ref; h.xp += xp; let up = false;

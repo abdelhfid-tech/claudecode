@@ -555,7 +555,9 @@ ISNAD.registerSaga({
           ['nar', "Ainsi fut fixée la subsistance du premier calife : de quoi vivre, un vêtement pour l'été, un vêtement pour l'hiver. Ibn Sa'd l'a consigné."],
           ['hide', 'umar'], ['hide', 'abuubayda'], ['join', 'umar'], ['join', 'abuubayda'],
           ['nar', "Râwî : ce que les sources montrent de leurs mains, tu peux le refaire des tiennes. Ouvre le mode *Bâtir* (touche B, ou le bouton ▦), choisis une pièce, pose-la devant toi."],
-          ['mat', 'palme', 4]
+          ['mat', 'palme', 4],
+          ['nar', "Au bout du souk, les ballots d'une caravane. On y vend, on y achète, et l'on y confie une cargaison pour le Yémen ou pour le Shâm : c'est de ce commerce qu'il vivait."],
+          ['lore', 'caravanes']
         ] },
         { text: "Bâtir un enclos pour les chèvres du quartier", build: { piece: 'enclos', n: 1 }, then: [
           ['nar', "On rapporte qu'il trayait les chèvres des gens de son quartier. Quand il devint calife, une voix s'inquiéta : « Maintenant, il ne nous les traira plus. »"],
@@ -680,7 +682,9 @@ ISNAD.registerSaga({
           ['nar', "Trois nuits plus tard, ils vinrent."],
           ['map', 'desert', 'depart', { time: 'night' }],
           ['amb', 'nuit'],
-          ['nar', "Les abords de Médine, sur la piste de Dhû l-Qassa. Le calife est sorti lui-même, de nuit, à la tête de ceux qui restaient. Dans l'envers du désert, le reniement a pris corps."]
+          ['nar', "Les abords de Médine, sur la piste de Dhû l-Qassa. Le calife est sorti lui-même, de nuit, à la tête de ceux qui restaient. Dans l'envers du désert, le reniement a pris corps."],
+          ['nar', "Pas de lune. On marche aux étoiles, comme toujours ici : al-Jady, le Chevreau qui ne bouge pas, à main gauche ; Suhayl dans le dos. Lève les yeux vers le cadran : l'étoile qui brille est ta route."],
+          ['lore', 'etoiles']
         ] },
         { text: "Repousser les nuées du reniement, dans les dunes", foe: 'f_d1', then: [
           ['nar', "Les nuées refluent vers l'est. On raconte que les assaillants faisaient rouler des outres gonflées vers les chameaux pour les affoler. Cette nuit, la ruse ne suffit pas."]
@@ -802,6 +806,11 @@ ISNAD.registerSaga({
             ['nar', "Au souk, une voix basse court d'étal en étal : « Les lignes ont plié… et si le calife s'était trompé ? » Nul ne sait d'où elle part. Elle fait son chemin."],
             ['pillar', 'lien', -1]
           ]]
+        ] },
+        { auto: true, then: [
+          ['nar', "Cette nuit-là, des hommes frappent à la porte nord. Une caravane de Médine, partie pour le Shâm, a été arrêtée sur la piste."],
+          ['raid'],
+          ['nar', "Avant l'aube, la piste du nord est rouverte. Tant que le Menteur tient le Yamâma, d'autres bandes se lèveront ; mais on saura, de Médine, qu'il vient quelqu'un."]
         ] },
         { text: "Recevoir l'envoyé de Najrân, sur la place", talk: 'najran', then: [
           ['mus', 'conseil'],

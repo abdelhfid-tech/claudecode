@@ -251,6 +251,7 @@ function checkSaga(s, E, W) {
           case 'pillar': if (!D.PILLARS[o[1]]) E.push(`${wo}: pilier « ${o[1]} » invalide (${Object.keys(D.PILLARS).join('|')})`); if (typeof o[2] !== 'number' || Math.abs(o[2]) > 2 || !o[2]) E.push(`${wo}: pillar delta ±1 ou ±2`); break;
           case 'mat': if (!D.MATS[o[1]]) E.push(`${wo}: matériau « ${o[1]} » inconnu (${Object.keys(D.MATS).join('|')})`); break;
           case 'site': { const st = o[1] || {}; ['id', 'name'].forEach(k => { if (typeof st[k] !== 'string') E.push(`${wo}: site.${k} manquant`); }); checkAt(st.at, state.map, wo); if (!st.need || Object.keys(st.need).some(k => !D.PIECES[k])) E.push(`${wo}: site.need doit lister des pièces connues`); Object.keys(st.give || {}).forEach(k => { if (!D.MATS[k]) E.push(`${wo}: site.give : matériau « ${k} » inconnu`); }); sites.add(st.id); break; }
+          case 'lore': if (!D.LORE.includes(o[1])) E.push(`${wo}: savoir commun « ${o[1]} » inconnu (${D.LORE.join('|')})`); break;
           case 'mus': if (!D.TRACKS.includes(o[1])) E.push(`${wo}: piste « ${o[1]} » inconnue (${D.TRACKS.join('|')})`); break;
           case 'parley': {
             const P = o[1] || {};

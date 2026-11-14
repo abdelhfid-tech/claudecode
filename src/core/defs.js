@@ -47,17 +47,17 @@
 
   // Cartes disponibles et leurs lieux nommés (spots).
   const VILLE = ['mosquee_cour', 'mosquee_porte', 'place', 'souk', 'halle', 'maison', 'puits',
-                 'palmeraie', 'porte_nord', 'porte_sud', 'enclos', 'colline', 'priere', 'ecole'];
+                 'palmeraie', 'porte_nord', 'porte_sud', 'enclos', 'colline', 'priere', 'ecole', 'comptoir'];
   D.MAPS = {
     medine:   { label: 'Médine',            spots: VILLE },
     koufa:    { label: 'Koufa',             spots: VILLE },
-    desert:   { label: 'Désert',            spots: ['depart', 'dunes', 'rochers', 'oasis', 'source', 'caravane', 'crete', 'ruines', 'arrivee', 'priere'] },
-    camp:     { label: 'Camp',              spots: ['entree', 'tente_chef', 'feu', 'etendard', 'lignes', 'enclos', 'tertre', 'tentes', 'priere'] },
-    romaine:  { label: 'Cité romaine',      spots: ['porte', 'cardo', 'forum', 'basilique', 'esplanade', 'palais', 'fontaine', 'remparts', 'jardin', 'marche', 'priere', 'quartier'] },
+    desert:   { label: 'Désert',            spots: ['depart', 'dunes', 'rochers', 'oasis', 'source', 'caravane', 'crete', 'ruines', 'arrivee', 'priere', 'comptoir'] },
+    camp:     { label: 'Camp',              spots: ['entree', 'tente_chef', 'feu', 'etendard', 'lignes', 'enclos', 'tertre', 'tentes', 'priere', 'comptoir'] },
+    romaine:  { label: 'Cité romaine',      spots: ['porte', 'cardo', 'forum', 'basilique', 'esplanade', 'palais', 'fontaine', 'remparts', 'jardin', 'marche', 'priere', 'quartier', 'comptoir'] },
     palais:   { label: 'Palais',            spots: ['entree', 'nef', 'trone', 'tresor', 'colonnade', 'jardin', 'priere'] },
     navire:   { label: 'Navire',            spots: ['poupe', 'pont', 'mat', 'proue', 'passerelle', 'pont2', 'priere'] },
     noos:     { label: 'Noosphère',         spots: ['seuil', 'noeud1', 'noeud2', 'noeud3', 'faille', 'miroir', 'coeur'] },
-    citadelle:{ label: 'La Citadelle',      spots: ['porte', 'cour', 'puits', 'remparts', 'tour', 'salle', 'mosquee', 'priere', 'ecole', 'souk', 'jardin', 'greniers', 'palmeraie', 'poterne'] },
+    citadelle:{ label: 'La Citadelle',      spots: ['porte', 'cour', 'puits', 'remparts', 'tour', 'salle', 'mosquee', 'priere', 'ecole', 'souk', 'jardin', 'greniers', 'palmeraie', 'poterne', 'comptoir'] },
     cite:     { label: 'Cité-Miroir',       spots: ['rue', 'ecran', 'ruelle', 'ascenseur', 'parvis'] },
     archives: { label: 'Archives basses',   spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] }
   };
@@ -79,8 +79,22 @@
     fade: [1, 2], wait: [1, 1], shake: [0, 1], flash: [0, 1], sfx: [1, 1], amb: [1, 1],
     give: [1, 2], join: [1, 1], leave: [1, 1], codex: [1, 1], heal: [0, 0],
     flag: [1, 2], if: [2, 3], tint: [1, 1], light: [1, 1],
-    pray: [0, 1], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1]
+    pray: [0, 1], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1], lore: [1, 1], raid: [0, 1]
   };
+
+  // v4 — s'orienter aux étoiles. Huit caps, nommés comme le feront les pilotes arabes : par l'étoile qui
+  // s'y lève (à l'est) ou s'y couche (à l'ouest). Ordre : E, SE, S, SO, O, NO, N, NE (secteurs de 45°).
+  D.STARS = [
+    { dir: 'est',        name: "an-Nasr at-Tâ'ir", ar: 'النسر الطائر', way: 'lever',   fr: 'Altaïr, l’Aigle qui vole' },
+    { dir: 'sud-est',    name: "al-'Aqrab",        ar: 'العقرب',       way: 'lever',   fr: 'le Scorpion, son cœur rouge' },
+    { dir: 'sud',        name: 'Suhayl',           ar: 'سهيل',         way: '',        fr: 'Canopus, l’étoile du sud' },
+    { dir: 'sud-ouest',  name: "al-'Aqrab",        ar: 'العقرب',       way: 'coucher', fr: 'le Scorpion, son cœur rouge' },
+    { dir: 'ouest',      name: "an-Nasr at-Tâ'ir", ar: 'النسر الطائر', way: 'coucher', fr: 'Altaïr, l’Aigle qui vole' },
+    { dir: 'nord-ouest', name: "al-'Ayyûq",        ar: 'العيّوق',      way: 'coucher', fr: 'Capella, la gardienne des Pléiades' },
+    { dir: 'nord',       name: 'al-Jady',          ar: 'الجدي',        way: '',        fr: 'la Polaire, le Chevreau : elle ne bouge pas' },
+    { dir: 'nord-est',   name: "al-'Ayyûq",        ar: 'العيّوق',      way: 'lever',   fr: 'Capella, la gardienne des Pléiades' }
+  ];
+  D.LORE = ['etoiles', 'caravanes', 'routes_sures', 'razzia'];
 
   // v3 — bâtir : matériaux et pièces. Une pièce se pose case par case, devant soi.
   D.MATS = {

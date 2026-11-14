@@ -163,6 +163,8 @@
       case 'pillar': W.pillar(a, b); break;
       case 'mus': I.audio.music(a); break;
       case 'mat': I.build.give(a, b === undefined ? 1 : b); break;
+      case 'lore': I.trade.lore(a); break;
+      case 'raid': S.hideDialog(); await I.trade.raid(a || {}); break;
       case 'site': I.build.openSite(a); break;
       case 'battle': S.hideDialog(); await I.battle.start(a); break;
       case 'map': S.hideDialog(); await S.fade('out'); W.loadMap(a, c || {}, b); await S.fade('in'); break;

@@ -120,6 +120,7 @@
     ['#a53c33', '#2f6f8f', '#c9a13f', '#3d8a6a'].forEach((col, i) => b.obj('stall', 42 + i * 4, 21, { color: col }));
     b.obj('stall', 44, 27, { color: '#6b3f7a' }); b.obj('stall', 50, 27, { color: '#a53c33' });
     b.obj('rug', 45, 24, { color: '#8e2f2a' }); b.obj('rug', 50, 25, { color: '#27608f', trim: '#f1e7cc' }); b.obj('jar', 41, 23); b.obj('crate', 55, 22); b.obj('sack', 54, 26); b.obj('lamp', 48, 24); b.light(48, 23, 60, '#ffc878', 0.12);
+    b.obj('bales', 53, 23); b.obj('camel', 53, 26); b.spot('comptoir', 52, 24); b.light(53, 23, 44, '#ffc878', 0.1);
     b.spot('souk', 47, 25);
     // palmeraie (sud-est) avec rigole
     b.patch('grass', 49, 38, 6); b.fill(44, 41, 12, 1, 'water'); b.set(49, 41, 'wood', false); b.set(50, 41, 'wood', false);
@@ -152,7 +153,7 @@
     b.obj('brokencol', 40, 18); b.obj('brokencol', 43, 21); b.obj('column', 38, 21); b.fill(39, 19, 4, 2, 'stone'); b.spot('ruines', 41, 21);
     b.patch('grass', 58, 31, 4); b.patch('water', 58, 31, 1); b.scatter('palm', 9, 53, 26, 11, 10); b.spot('oasis', 58, 34);
     b.obj('thorn', 67, 8); b.obj('spring', 66, 10); b.obj('rock', 69, 9); b.obj('thorn', 63, 6); b.spot('source', 66, 11);
-    b.obj('tent', 8, 30, { color: '#d8c8a8' }); b.obj('tent', 13, 33, { color: '#cdb892', trim: '#2f6f4f' }); b.obj('fire', 10, 34); b.light(10, 33, 70, '#ff9a4a', 0.25); b.obj('camel', 15, 29); b.obj('camel', 6, 35); b.spot('caravane', 11, 32); b.obj('mat', 16, 32); b.spot('priere', 16, 33);
+    b.obj('tent', 8, 30, { color: '#d8c8a8' }); b.obj('tent', 13, 33, { color: '#cdb892', trim: '#2f6f4f' }); b.obj('fire', 10, 34); b.light(10, 33, 70, '#ff9a4a', 0.25); b.obj('camel', 15, 29); b.obj('camel', 6, 35); b.spot('caravane', 11, 32); b.obj('bales', 13, 36); b.spot('comptoir', 14, 36); b.obj('mat', 16, 32); b.spot('priere', 16, 33);
     b.spot('arrivee', 76, 20);
     b.scatter('rock', 22, 0, 0, 80, 40); b.scatter('thorn', 10, 0, 0, 80, 40); b.scatter('bigrock', 6, 0, 0, 80, 40);
     const t = o.time || 'day';
@@ -173,7 +174,7 @@
     for (let i = 0; i < 4; i++) b.obj('tent', 8 + i * 7, 31 + (i % 2) * 3, { color: cols[(i + 1) % 3], trim: '#2f6f8f' });
     for (let i = 0; i < 3; i++) b.obj('tent', 36 + i * 5, 30 + (i % 2) * 3, { color: cols[i % 3] });
     b.obj('fire', 14, 26); b.light(14, 25, 60, '#ff9a4a', 0.25); b.obj('fire', 40, 26); b.light(40, 25, 60, '#ff9a4a', 0.25);
-    b.obj('camel', 7, 26); b.obj('camel', 11, 28); b.obj('sack', 5, 28); b.obj('crate', 4, 25); b.spot('enclos', 9, 24);
+    b.obj('camel', 7, 26); b.obj('camel', 11, 28); b.obj('sack', 5, 28); b.obj('crate', 4, 25); b.spot('enclos', 9, 24); b.obj('bales', 13, 25); b.spot('comptoir', 13, 26);
     for (let y = 10; y < 30; y += 3) b.obj('banner', 48, y, { color: y % 2 ? '#1e1e1e' : '#2f6f4f' });
     b.spot('lignes', 45, 20);
     b.obj('bigrock', 40, 5); b.obj('rock', 44, 4); b.obj('rock', 37, 3); b.spot('tertre', 41, 8);
@@ -206,7 +207,7 @@
     // jardin
     b.patch('grass', 11, 37, 4); b.scatter('cypress', 6, 6, 34, 11, 6); b.spot('jardin', 12, 38);
     // marché
-    ['#b33327', '#2f6f8f', '#c9a13f'].forEach((c, i) => b.obj('stall', 46 + i * 5, 34, { color: c })); b.obj('jar', 45, 36); b.obj('crate', 58, 36); b.spot('marche', 51, 37);
+    ['#b33327', '#2f6f8f', '#c9a13f'].forEach((c, i) => b.obj('stall', 46 + i * 5, 34, { color: c })); b.obj('jar', 45, 36); b.obj('crate', 58, 36); b.spot('marche', 51, 37); b.obj('bales', 55, 38); b.obj('camel', 57, 39); b.spot('comptoir', 54, 39);
     b.spot('remparts', 54, 40);
     b.scatter('jar', 6, 2, 16, 60, 24); b.scatter('cypress', 6, 0, 0, 64, 40);
     const t = o.time || 'day';
@@ -272,7 +273,7 @@
     // école (nord-est) : auvent, rayonnage, nattes
     b.house(39, 8, 8, 5, { roof: 'thatch', edge: 'thatch' }); b.obj('shelf', 41, 14); b.obj('rug', 44, 16, { color: '#3d8a6a', trim: '#f1e7cc' }); b.obj('lamp', 46, 15); b.light(46, 14, 50, '#ffc878', 0.1); b.spot('ecole', 43, 16);
     // souk (est)
-    ['#1c3a5a', '#a53c33', '#c9a13f'].forEach((c, i) => b.obj('stall', 41 + i * 4, 22, { color: c })); b.obj('rug', 43, 24, { color: '#1c3a5a', trim: '#f1e7cc' }); b.obj('rug', 47, 26, { color: '#8e2f2a' }); b.obj('jar', 40, 24); b.obj('crate', 48, 25); b.obj('camel', 46, 28); b.spot('souk', 44, 25);
+    ['#1c3a5a', '#a53c33', '#c9a13f'].forEach((c, i) => b.obj('stall', 41 + i * 4, 22, { color: c })); b.obj('rug', 43, 24, { color: '#1c3a5a', trim: '#f1e7cc' }); b.obj('rug', 47, 26, { color: '#8e2f2a' }); b.obj('jar', 40, 24); b.obj('crate', 48, 25); b.obj('camel', 46, 28); b.obj('bales', 44, 28); b.spot('comptoir', 43, 29); b.spot('souk', 44, 25);
     // greniers (sud-ouest)
     b.house(10, 26, 6, 5); b.house(17, 28, 5, 5, { window: false }); b.obj('sack', 12, 32); b.obj('jar', 15, 32); b.obj('sack', 18, 34); b.obj('crate', 21, 34); b.spot('greniers', 15, 33);
     // jardin (sud-est) : rigole, palmiers

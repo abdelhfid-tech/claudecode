@@ -159,3 +159,17 @@ Un puits et trois palmiers font une oasis (Lien +1). Six segments de tranchée g
 égrégores visibles ne les franchissent pas. Les troupeaux versent leur dû à chaque chapitre (Justice +1).
 **Règle de respect** : quand les sources ne disent pas qu'on a bâti à tel endroit, le texte le dit
 (« Les sources ne disent pas qui posa la première brique… ») et l'acte est celui du joueur, pas d'un Compagnon.
+
+## 8. Routes : étoiles, caravanes, pillage (version 4)
+
+- **Étoiles.** `D.STARS` : huit caps nommés par l'étoile qui s'y lève ou s'y couche (al-Jady au nord,
+  Suhayl au sud, an-Nasr at-Tâ'ir à l'est et à l'ouest, al-'Ayyûq et al-'Aqrab entre eux). Le cadran et
+  l'étoile de bord d'écran guident vers l'objectif courant : rien à écrire dans les données. Dans les
+  textes, donner les directions par les étoiles (« al-Jady à main gauche »).
+- **Comptoir.** Les cartes `medine, koufa, desert, camp, romaine, citadelle` ont un lieu `comptoir` : on y
+  vend, on y achète, on y confie une cargaison (retour au chapitre suivant).
+- `['lore', id]` débloque un savoir commun à toutes les sagas : `etoiles, caravanes, routes_sures, razzia`.
+- `['raid']` joue l'épisode d'une route pillée : des hommes rentrent à pied, on lève des renforts (selon
+  le pilier Lien et les enclos de chameaux), pourparler avec le chef des pillards, combat de dernier
+  recours contre l'égrégore « La Razzia », partage de ce qui est repris, remise au juge.
+**Règle de respect** : celui qui poursuit ne prononce pas la peine ; les pillards sont remis au juge.

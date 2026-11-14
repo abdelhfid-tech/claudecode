@@ -166,6 +166,22 @@ Chantier de mosquée : ouvert par le récit sur une terre gagnée, avec une list
 enclos tracé au sol. Achevée, la mosquée donne Prière +1 et Lien +1, et sa natte devient un point de
 prière et de sauvegarde.
 
+## Routes (version 4)
+
+**Étoiles.** Huit caps de 45°, nommés par l'étoile qui s'y lève (côté est) ou s'y couche (côté ouest),
+comme sur la rose des pilotes arabes ; le cadran et l'étoile de bord d'écran indiquent l'objectif.
+
+**Commerce.** Monnaie : le dirham (20 au départ). Vente : dattes 3, lait 4, pain 3, miel 6, laine 4, grain
+2, palme 1, pierre 2, pisé 1. Achat : grain 3, laine 6, pierre 4, palme 3, pisé 2, dattes 5, outre 7, miel
+10, musc 14, siwâk 8. Caravanes : Yémen (mise 12, retour 19, péril 18 %), Shâm (20, 35, 30 %), Bahreïn
+(30, 58, 45 %) ; dans les veillées, trois routes de fiction aux mêmes chiffres. Le péril baisse de 3 points
+par niveau de Justice, 2 par niveau de Lien, 6 par enclos de chameaux (plancher 6 %).
+
+**Route pillée.** Renforts : +1 si Lien ≥ 2, +1 si Lien ≥ 4, +1 s'il y a un enclos de chameaux. Le
+pourparler demande 6, 5 ou 4 de confiance selon 0, 1 ou 2 renforts ; en cas d'échec, combat contre la
+Razzia avec les renforts en ouverture. Partage : servir d'abord les petits porteurs (Justice +1, on
+retrouve la moitié de sa mise), au prorata (Justice +1, 70 %), ou soi d'abord (Justice −1, tout).
+
 ## Feuille de route proposée
 
 1. Relecture historique par un spécialiste, puis corrections de texte.

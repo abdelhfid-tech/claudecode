@@ -135,6 +135,7 @@
     pen_goat: { w: 34, h: 26, fw: 30, fh: 8, herd: ['#e9e2d0', '#8a7355', 2], draw(c) { OBJ.pen_goat.fence(c); }, fence(c) { R(c, 'rgba(120,90,50,.35)', 2, 8, 30, 16); c.fillStyle = '#8a6238'; for (let x = 1; x < 34; x += 4) { c.fillRect(x, 4, 2, 6); c.fillRect(x, 20, 2, 6); } c.fillRect(1, 4, 2, 22); c.fillRect(31, 4, 2, 22); c.fillStyle = '#6e4c2a'; c.fillRect(1, 6, 32, 1); c.fillRect(1, 22, 32, 1); } },
     pen_sheep: { w: 34, h: 26, fw: 30, fh: 8, herd: ['#f1ece2', '#3a2a1c', 3], draw(c) { OBJ.pen_goat.fence(c); } },
     pen_camel: { w: 34, h: 26, fw: 30, fh: 8, herd: ['#b08a55', '#8e6d40', 2, 1], draw(c) { OBJ.pen_goat.fence(c); } },
+    bales: { w: 22, h: 18, fw: 16, fh: 6, draw(c) { R(c, '#a8845a', 1, 8, 9, 9); R(c, '#8b6a45', 1, 8, 9, 2); R(c, '#c8b48a', 11, 6, 10, 11); R(c, '#a8946c', 11, 6, 10, 2); R(c, '#8e2f2a', 4, 1, 10, 8); R(c, '#a53c33', 4, 1, 10, 2); c.fillStyle = '#5d4630'; c.fillRect(5, 8, 1, 9); c.fillRect(15, 6, 1, 11); c.fillRect(8, 1, 1, 8); R(c, '#d9b45a', 6, 4, 2, 2); R(c, '#d9b45a', 11, 4, 2, 2); } },
     spring: { w: 20, h: 12, fw: 0, fh: 0, flat: true, draw(c) { c.fillStyle = '#3a95b6'; c.beginPath(); c.ellipse(10, 6, 9, 5, 0, 0, 6.3); c.fill(); c.fillStyle = '#8fd3e4'; c.fillRect(6, 4, 4, 1); c.fillRect(11, 7, 3, 1); } }
   };
   G.OBJ = OBJ;

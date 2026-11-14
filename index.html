@@ -253,6 +253,15 @@ body.in-build #buildbtn { background: var(--acc); color: #0b0a14; }
 body.portrait #buildbar { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; font-size: 12px; }
 body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.in-build #pad { bottom: max(6px, env(safe-area-inset-bottom, 0px)); }
 
+/* ---------- cadran des étoiles ---------- */
+#compass { position: absolute; left: 2%; top: 27%; display: flex; align-items: center; gap: .5em; pointer-events: none; z-index: 4; }
+#compass canvas { width: 5.6em; height: 5.6em; }
+#compass .lab { display: flex; flex-direction: column; line-height: 1.15; text-shadow: 0 1px 3px #000, 0 0 10px rgba(0, 0, 0, .9); }
+#compass .lab span { font-family: var(--f-ar); color: var(--gold); font-size: 1.05em; }
+#compass .lab b { font-family: var(--f-display); font-size: .74em; letter-spacing: .05em; color: #fff6dc; font-weight: 500; }
+#compass .lab small { font-size: .66em; color: var(--sand); letter-spacing: .12em; text-transform: uppercase; }
+body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) #compass { top: 24%; }
+
 </style>
 </head>
 <body>
@@ -263,6 +272,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
       <div id="hud" hidden><div class="chap"></div><div class="sub"></div><div class="obj"></div><div class="pil"></div></div>
       <button id="menubtn" type="button" aria-label="Menu" hidden>☰</button>
       <button id="buildbtn" type="button" aria-label="Bâtir" hidden>▦</button>
+      <div id="compass" hidden><canvas aria-label="Cadran des étoiles"></canvas><div class="lab"></div></div>
       <div id="toasts"></div>
       <div id="battle" hidden>
         <div class="order"></div><div class="plates"></div><div class="banner" hidden></div>
@@ -348,17 +358,17 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
 
   // Cartes disponibles et leurs lieux nommés (spots).
   const VILLE = ['mosquee_cour', 'mosquee_porte', 'place', 'souk', 'halle', 'maison', 'puits',
-                 'palmeraie', 'porte_nord', 'porte_sud', 'enclos', 'colline', 'priere', 'ecole'];
+                 'palmeraie', 'porte_nord', 'porte_sud', 'enclos', 'colline', 'priere', 'ecole', 'comptoir'];
   D.MAPS = {
     medine:   { label: 'Médine',            spots: VILLE },
     koufa:    { label: 'Koufa',             spots: VILLE },
-    desert:   { label: 'Désert',            spots: ['depart', 'dunes', 'rochers', 'oasis', 'source', 'caravane', 'crete', 'ruines', 'arrivee', 'priere'] },
-    camp:     { label: 'Camp',              spots: ['entree', 'tente_chef', 'feu', 'etendard', 'lignes', 'enclos', 'tertre', 'tentes', 'priere'] },
-    romaine:  { label: 'Cité romaine',      spots: ['porte', 'cardo', 'forum', 'basilique', 'esplanade', 'palais', 'fontaine', 'remparts', 'jardin', 'marche', 'priere', 'quartier'] },
+    desert:   { label: 'Désert',            spots: ['depart', 'dunes', 'rochers', 'oasis', 'source', 'caravane', 'crete', 'ruines', 'arrivee', 'priere', 'comptoir'] },
+    camp:     { label: 'Camp',              spots: ['entree', 'tente_chef', 'feu', 'etendard', 'lignes', 'enclos', 'tertre', 'tentes', 'priere', 'comptoir'] },
+    romaine:  { label: 'Cité romaine',      spots: ['porte', 'cardo', 'forum', 'basilique', 'esplanade', 'palais', 'fontaine', 'remparts', 'jardin', 'marche', 'priere', 'quartier', 'comptoir'] },
     palais:   { label: 'Palais',            spots: ['entree', 'nef', 'trone', 'tresor', 'colonnade', 'jardin', 'priere'] },
     navire:   { label: 'Navire',            spots: ['poupe', 'pont', 'mat', 'proue', 'passerelle', 'pont2', 'priere'] },
     noos:     { label: 'Noosphère',         spots: ['seuil', 'noeud1', 'noeud2', 'noeud3', 'faille', 'miroir', 'coeur'] },
-    citadelle:{ label: 'La Citadelle',      spots: ['porte', 'cour', 'puits', 'remparts', 'tour', 'salle', 'mosquee', 'priere', 'ecole', 'souk', 'jardin', 'greniers', 'palmeraie', 'poterne'] },
+    citadelle:{ label: 'La Citadelle',      spots: ['porte', 'cour', 'puits', 'remparts', 'tour', 'salle', 'mosquee', 'priere', 'ecole', 'souk', 'jardin', 'greniers', 'palmeraie', 'poterne', 'comptoir'] },
     cite:     { label: 'Cité-Miroir',       spots: ['rue', 'ecran', 'ruelle', 'ascenseur', 'parvis'] },
     archives: { label: 'Archives basses',   spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] }
   };
@@ -380,8 +390,22 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     fade: [1, 2], wait: [1, 1], shake: [0, 1], flash: [0, 1], sfx: [1, 1], amb: [1, 1],
     give: [1, 2], join: [1, 1], leave: [1, 1], codex: [1, 1], heal: [0, 0],
     flag: [1, 2], if: [2, 3], tint: [1, 1], light: [1, 1],
-    pray: [0, 1], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1]
+    pray: [0, 1], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1], lore: [1, 1], raid: [0, 1]
   };
+
+  // v4 — s'orienter aux étoiles. Huit caps, nommés comme le feront les pilotes arabes : par l'étoile qui
+  // s'y lève (à l'est) ou s'y couche (à l'ouest). Ordre : E, SE, S, SO, O, NO, N, NE (secteurs de 45°).
+  D.STARS = [
+    { dir: 'est',        name: "an-Nasr at-Tâ'ir", ar: 'النسر الطائر', way: 'lever',   fr: 'Altaïr, l’Aigle qui vole' },
+    { dir: 'sud-est',    name: "al-'Aqrab",        ar: 'العقرب',       way: 'lever',   fr: 'le Scorpion, son cœur rouge' },
+    { dir: 'sud',        name: 'Suhayl',           ar: 'سهيل',         way: '',        fr: 'Canopus, l’étoile du sud' },
+    { dir: 'sud-ouest',  name: "al-'Aqrab",        ar: 'العقرب',       way: 'coucher', fr: 'le Scorpion, son cœur rouge' },
+    { dir: 'ouest',      name: "an-Nasr at-Tâ'ir", ar: 'النسر الطائر', way: 'coucher', fr: 'Altaïr, l’Aigle qui vole' },
+    { dir: 'nord-ouest', name: "al-'Ayyûq",        ar: 'العيّوق',      way: 'coucher', fr: 'Capella, la gardienne des Pléiades' },
+    { dir: 'nord',       name: 'al-Jady',          ar: 'الجدي',        way: '',        fr: 'la Polaire, le Chevreau : elle ne bouge pas' },
+    { dir: 'nord-est',   name: "al-'Ayyûq",        ar: 'العيّوق',      way: 'lever',   fr: 'Capella, la gardienne des Pléiades' }
+  ];
+  D.LORE = ['etoiles', 'caravanes', 'routes_sures', 'razzia'];
 
   // v3 — bâtir : matériaux et pièces. Une pièce se pose case par case, devant soi.
   D.MATS = {
@@ -845,6 +869,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     pen_goat: { w: 34, h: 26, fw: 30, fh: 8, herd: ['#e9e2d0', '#8a7355', 2], draw(c) { OBJ.pen_goat.fence(c); }, fence(c) { R(c, 'rgba(120,90,50,.35)', 2, 8, 30, 16); c.fillStyle = '#8a6238'; for (let x = 1; x < 34; x += 4) { c.fillRect(x, 4, 2, 6); c.fillRect(x, 20, 2, 6); } c.fillRect(1, 4, 2, 22); c.fillRect(31, 4, 2, 22); c.fillStyle = '#6e4c2a'; c.fillRect(1, 6, 32, 1); c.fillRect(1, 22, 32, 1); } },
     pen_sheep: { w: 34, h: 26, fw: 30, fh: 8, herd: ['#f1ece2', '#3a2a1c', 3], draw(c) { OBJ.pen_goat.fence(c); } },
     pen_camel: { w: 34, h: 26, fw: 30, fh: 8, herd: ['#b08a55', '#8e6d40', 2, 1], draw(c) { OBJ.pen_goat.fence(c); } },
+    bales: { w: 22, h: 18, fw: 16, fh: 6, draw(c) { R(c, '#a8845a', 1, 8, 9, 9); R(c, '#8b6a45', 1, 8, 9, 2); R(c, '#c8b48a', 11, 6, 10, 11); R(c, '#a8946c', 11, 6, 10, 2); R(c, '#8e2f2a', 4, 1, 10, 8); R(c, '#a53c33', 4, 1, 10, 2); c.fillStyle = '#5d4630'; c.fillRect(5, 8, 1, 9); c.fillRect(15, 6, 1, 11); c.fillRect(8, 1, 1, 8); R(c, '#d9b45a', 6, 4, 2, 2); R(c, '#d9b45a', 11, 4, 2, 2); } },
     spring: { w: 20, h: 12, fw: 0, fh: 0, flat: true, draw(c) { c.fillStyle = '#3a95b6'; c.beginPath(); c.ellipse(10, 6, 9, 5, 0, 0, 6.3); c.fill(); c.fillStyle = '#8fd3e4'; c.fillRect(6, 4, 4, 1); c.fillRect(11, 7, 3, 1); } }
   };
   G.OBJ = OBJ;
@@ -1231,6 +1256,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     ['#a53c33', '#2f6f8f', '#c9a13f', '#3d8a6a'].forEach((col, i) => b.obj('stall', 42 + i * 4, 21, { color: col }));
     b.obj('stall', 44, 27, { color: '#6b3f7a' }); b.obj('stall', 50, 27, { color: '#a53c33' });
     b.obj('rug', 45, 24, { color: '#8e2f2a' }); b.obj('rug', 50, 25, { color: '#27608f', trim: '#f1e7cc' }); b.obj('jar', 41, 23); b.obj('crate', 55, 22); b.obj('sack', 54, 26); b.obj('lamp', 48, 24); b.light(48, 23, 60, '#ffc878', 0.12);
+    b.obj('bales', 53, 23); b.obj('camel', 53, 26); b.spot('comptoir', 52, 24); b.light(53, 23, 44, '#ffc878', 0.1);
     b.spot('souk', 47, 25);
     // palmeraie (sud-est) avec rigole
     b.patch('grass', 49, 38, 6); b.fill(44, 41, 12, 1, 'water'); b.set(49, 41, 'wood', false); b.set(50, 41, 'wood', false);
@@ -1263,7 +1289,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     b.obj('brokencol', 40, 18); b.obj('brokencol', 43, 21); b.obj('column', 38, 21); b.fill(39, 19, 4, 2, 'stone'); b.spot('ruines', 41, 21);
     b.patch('grass', 58, 31, 4); b.patch('water', 58, 31, 1); b.scatter('palm', 9, 53, 26, 11, 10); b.spot('oasis', 58, 34);
     b.obj('thorn', 67, 8); b.obj('spring', 66, 10); b.obj('rock', 69, 9); b.obj('thorn', 63, 6); b.spot('source', 66, 11);
-    b.obj('tent', 8, 30, { color: '#d8c8a8' }); b.obj('tent', 13, 33, { color: '#cdb892', trim: '#2f6f4f' }); b.obj('fire', 10, 34); b.light(10, 33, 70, '#ff9a4a', 0.25); b.obj('camel', 15, 29); b.obj('camel', 6, 35); b.spot('caravane', 11, 32); b.obj('mat', 16, 32); b.spot('priere', 16, 33);
+    b.obj('tent', 8, 30, { color: '#d8c8a8' }); b.obj('tent', 13, 33, { color: '#cdb892', trim: '#2f6f4f' }); b.obj('fire', 10, 34); b.light(10, 33, 70, '#ff9a4a', 0.25); b.obj('camel', 15, 29); b.obj('camel', 6, 35); b.spot('caravane', 11, 32); b.obj('bales', 13, 36); b.spot('comptoir', 14, 36); b.obj('mat', 16, 32); b.spot('priere', 16, 33);
     b.spot('arrivee', 76, 20);
     b.scatter('rock', 22, 0, 0, 80, 40); b.scatter('thorn', 10, 0, 0, 80, 40); b.scatter('bigrock', 6, 0, 0, 80, 40);
     const t = o.time || 'day';
@@ -1284,7 +1310,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     for (let i = 0; i < 4; i++) b.obj('tent', 8 + i * 7, 31 + (i % 2) * 3, { color: cols[(i + 1) % 3], trim: '#2f6f8f' });
     for (let i = 0; i < 3; i++) b.obj('tent', 36 + i * 5, 30 + (i % 2) * 3, { color: cols[i % 3] });
     b.obj('fire', 14, 26); b.light(14, 25, 60, '#ff9a4a', 0.25); b.obj('fire', 40, 26); b.light(40, 25, 60, '#ff9a4a', 0.25);
-    b.obj('camel', 7, 26); b.obj('camel', 11, 28); b.obj('sack', 5, 28); b.obj('crate', 4, 25); b.spot('enclos', 9, 24);
+    b.obj('camel', 7, 26); b.obj('camel', 11, 28); b.obj('sack', 5, 28); b.obj('crate', 4, 25); b.spot('enclos', 9, 24); b.obj('bales', 13, 25); b.spot('comptoir', 13, 26);
     for (let y = 10; y < 30; y += 3) b.obj('banner', 48, y, { color: y % 2 ? '#1e1e1e' : '#2f6f4f' });
     b.spot('lignes', 45, 20);
     b.obj('bigrock', 40, 5); b.obj('rock', 44, 4); b.obj('rock', 37, 3); b.spot('tertre', 41, 8);
@@ -1317,7 +1343,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     // jardin
     b.patch('grass', 11, 37, 4); b.scatter('cypress', 6, 6, 34, 11, 6); b.spot('jardin', 12, 38);
     // marché
-    ['#b33327', '#2f6f8f', '#c9a13f'].forEach((c, i) => b.obj('stall', 46 + i * 5, 34, { color: c })); b.obj('jar', 45, 36); b.obj('crate', 58, 36); b.spot('marche', 51, 37);
+    ['#b33327', '#2f6f8f', '#c9a13f'].forEach((c, i) => b.obj('stall', 46 + i * 5, 34, { color: c })); b.obj('jar', 45, 36); b.obj('crate', 58, 36); b.spot('marche', 51, 37); b.obj('bales', 55, 38); b.obj('camel', 57, 39); b.spot('comptoir', 54, 39);
     b.spot('remparts', 54, 40);
     b.scatter('jar', 6, 2, 16, 60, 24); b.scatter('cypress', 6, 0, 0, 64, 40);
     const t = o.time || 'day';
@@ -1383,7 +1409,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     // école (nord-est) : auvent, rayonnage, nattes
     b.house(39, 8, 8, 5, { roof: 'thatch', edge: 'thatch' }); b.obj('shelf', 41, 14); b.obj('rug', 44, 16, { color: '#3d8a6a', trim: '#f1e7cc' }); b.obj('lamp', 46, 15); b.light(46, 14, 50, '#ffc878', 0.1); b.spot('ecole', 43, 16);
     // souk (est)
-    ['#1c3a5a', '#a53c33', '#c9a13f'].forEach((c, i) => b.obj('stall', 41 + i * 4, 22, { color: c })); b.obj('rug', 43, 24, { color: '#1c3a5a', trim: '#f1e7cc' }); b.obj('rug', 47, 26, { color: '#8e2f2a' }); b.obj('jar', 40, 24); b.obj('crate', 48, 25); b.obj('camel', 46, 28); b.spot('souk', 44, 25);
+    ['#1c3a5a', '#a53c33', '#c9a13f'].forEach((c, i) => b.obj('stall', 41 + i * 4, 22, { color: c })); b.obj('rug', 43, 24, { color: '#1c3a5a', trim: '#f1e7cc' }); b.obj('rug', 47, 26, { color: '#8e2f2a' }); b.obj('jar', 40, 24); b.obj('crate', 48, 25); b.obj('camel', 46, 28); b.obj('bales', 44, 28); b.spot('comptoir', 43, 29); b.spot('souk', 44, 25);
     // greniers (sud-ouest)
     b.house(10, 26, 6, 5); b.house(17, 28, 5, 5, { window: false }); b.obj('sack', 12, 32); b.obj('jar', 15, 32); b.obj('sack', 18, 34); b.obj('crate', 21, 34); b.spot('greniers', 15, 33);
     // jardin (sud-est) : rigole, palmiers
@@ -1609,6 +1635,8 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
       case 'pillar': W.pillar(a, b); break;
       case 'mus': I.audio.music(a); break;
       case 'mat': I.build.give(a, b === undefined ? 1 : b); break;
+      case 'lore': I.trade.lore(a); break;
+      case 'raid': S.hideDialog(); await I.trade.raid(a || {}); break;
       case 'site': I.build.openSite(a); break;
       case 'battle': S.hideDialog(); await I.battle.start(a); break;
       case 'map': S.hideDialog(); await S.fade('out'); W.loadMap(a, c || {}, b); await S.fade('in'); break;
@@ -1795,7 +1823,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     try {
       await S.fade('in', 500);
       if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); }
-      if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) I.build.yields(); }
+      if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) { I.build.yields(); await I.trade.resolve(); } }
       if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Croix : marcher · <b>OK</b> : parler, valider · <b>MENU</b> : halte' : '<b>Flèches</b> ou <b>ZQSD</b> : marcher · <b>Entrée</b> : parler · <b>Échap</b> : menu', 9000);
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
@@ -1805,7 +1833,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     $('#hud .chap').textContent = W.ch ? W.ch.title : '';
     const tm = W.map && ({ dawn: 'Fajr', day: 'Dhuhr', dusk: 'Maghrib', night: '’Ishâ' })[W.map.env.time];
     $('#hud .sub').textContent = (W.ch ? W.ch.sub : '') + (tm ? '  ·  ◠ ' + tm : '');
-    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('');
+    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="Dirhams"><i>◎</i>${I.trade.dirhams()}</span>` : '');
     $('#hud .obj').textContent = (o && o.text ? o.text : '') + (o && o.build ? I.build.objectiveText(o.build) : '');
     $('#hud .obj').hidden = !(o && o.text);
   };
@@ -1884,7 +1912,8 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
       await S.run([['ask', 'Une natte tournée vers La Mecque, au cœur de l’étoile.', [{ t: 'Prier : le groupe se repose, la Sakîna descend', r: [['pray']] }, { t: 'Sauvegarder la partie', r: [['save']] }, { t: 'Plus tard', r: [] }]]]);
-    } else if (I.build) await I.build.gather();
+    } else if (I.trade && I.trade.near()) await I.trade.open();
+    else if (I.build) await I.build.gather();
   };
   W.fight = async function (f) {
     S.depth++;
@@ -1976,6 +2005,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
   };
   W.autoStep = function () {
     const o = W.cur(); if (!o) return; const p = W.player, log = I.debug.log || (I.debug.log = []);
+    if (I.trade && W.map.spots.comptoir && !S.flags._trade_test && !W.saga.frame && !W._autoBusy) { S.flags._trade_test = true; W._autoBusy = true; I.trade._autoStep = 0; I.trade._sold = I.trade._bought = 0; I.trade.open().then(() => { W._autoBusy = false; }, e => { log.push('ERR commerce ' + e.message); W._autoBusy = false; }); return; }
     if (o.build && I.debug.noBuild) return;
     if (o.build) { W._autoBusy = true; I.build.autoBuild(o.build); I.build.after().then(() => { W._autoBusy = false; }, e => { log.push('ERR bâtir ' + e.message); W._autoBusy = false; }); return; }
     if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
@@ -2041,7 +2071,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
       if (tg.kind !== 'goto' && sx > 0 && sx < G.PW && sy > 0 && sy < G.PH) { const by = sy + Math.sin(t * 5) * 2; c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(sx, by + 4); c.lineTo(sx - 4, by - 2); c.lineTo(sx, by - 6); c.lineTo(sx + 4, by - 2); c.fill(); c.fillStyle = '#fff6dc'; c.fillRect(sx - 1, by - 3, 2, 3); }
       if (sx < 6 || sx > G.PW - 6 || sy < 6 || sy > G.PH - 6) {
         const ang = Math.atan2(sy - G.PH / 2, sx - G.PW / 2), ex = I.clamp(sx, 12, G.PW - 12), ey = I.clamp(sy, 22, G.PH - 12), pu = 1 + Math.sin(t * 6) * 0.2;
-        c.save(); c.translate(ex, ey); c.rotate(ang); c.scale(pu, pu); c.fillStyle = '#1a1420'; c.beginPath(); c.moveTo(7, 0); c.lineTo(-5, -6); c.lineTo(-5, 6); c.fill(); c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(5, 0); c.lineTo(-4, -4); c.lineTo(-4, 4); c.fill(); c.restore();
+        c.save(); c.translate(ex, ey); c.rotate(ang); c.scale(pu, pu); c.rotate(-ang + t * 0.6); const star = (r, col) => { c.fillStyle = col; c.beginPath(); for (let q = 0; q < 8; q++) { const rr = q % 2 ? r * 0.3 : r, aa = q * Math.PI / 4; c.lineTo(Math.cos(aa) * rr, Math.sin(aa) * rr); } c.closePath(); c.fill(); }; star(8, '#1a1420'); star(6.5, '#ffe9a8'); star(2.5, '#fff'); c.restore(); lights.push({ x: ex, y: ey, r: 16, color: '#ffe9a8', a: 0.7 });
       }
     }
     // bulle « parler » au-dessus du personnage à portée
@@ -2049,7 +2079,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
       const p = W.player, px = p.x + [0, -1, 1, 0][p.dir] * 12, py = p.y + [1, 0, 0, -1][p.dir] * 12; let best = null, bd = 22;
       W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - px, n.y - py); if (d < bd) { bd = d; best = n; } });
       if (!best) { const ch = W.chests.find(ch => !ch.open && ch.map === m.id && ch.placed && Math.hypot(ch.x - px, ch.y - py) < 18); if (ch) best = { x: ch.x, y: ch.y + 12 }; }
-      if (!best && W.nearPrayer()) best = { x: p.x, y: p.y + 6 };
+      if (!best && (W.nearPrayer() || (I.trade && I.trade.near()))) best = { x: p.x, y: p.y + 6 };
       if (best && !(tg && tg.kind === 'talk' && Math.abs(tg.x - best.x) < 2)) { const bx = Math.round(best.x - cx), by = Math.round(best.y - cy - 34 + Math.sin(t * 5) * 1.5); c.fillStyle = '#1a1420'; c.fillRect(bx - 7, by - 1, 14, 9); c.fillStyle = '#fff6dc'; c.fillRect(bx - 6, by, 12, 7); c.fillRect(bx - 1, by + 7, 2, 2); c.fillStyle = '#1a1420'; c.fillRect(bx - 4, by + 3, 2, 2); c.fillRect(bx - 1, by + 3, 2, 2); c.fillRect(bx + 2, by + 3, 2, 2); }
     }
     for (const pp of W.prayerPts()) { const px2 = pp[0] * T + 8 - cx, py2 = pp[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) {
@@ -2266,6 +2296,168 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
   };
 })();
 
+/* ==== src/core/trade.js ==== */
+/* ISNAD — routes : s'orienter aux étoiles, commercer par caravanes, rendre justice quand une route est pillée. */
+(function () {
+  'use strict';
+  const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, W = I.world, $ = I.$, T = 16;
+  const Tr = I.trade = {};
+
+  /* Égrégores des routes, communs à toutes les sagas (niveau calé sur celui du groupe). */
+  I.common = { enemies: {
+    razzia: { name: 'La Razzia', art: 'blade', hue: 16, scale: 2, lvl: 0, tier: 'elite', weak: ['adl', 'sabr'], veils: 3,
+      skills: [{ w: 3, name: 'Coup de main', target: 'foe', el: 'fer', pow: 1.3, anim: 'slash' }, { w: 2, name: 'Prendre parce qu’on le peut', target: 'foes', el: 'fer', pow: 0.75, fx: [{ st: 'def', v: -1, chance: 0.4 }], anim: 'dark' }],
+      phases: [{ at: 0.5, say: 'La route est à qui la tient. Qui viendra me la reprendre ?', fx: [{ st: 'atk', v: 1 }] }],
+      desc: 'La vieille coutume du pillage, érigée en honneur : prendre parce qu’on le peut. Elle se nourrit des routes où nul ne vient. La justice et la patience la désarment.' },
+    butin: { name: 'Le Butin', art: 'tower', hue: 44, scale: 1, lvl: 0, tier: 'minion', weak: ['rahma', 'adl'], veils: 2,
+      skills: [{ w: 2, name: 'Partage inégal', target: 'foe', el: 'fer', pow: 0.9, fx: [{ st: 'atk', v: -1, chance: 0.3 }], anim: 'dark' }],
+      desc: 'Ce qui fut pris, et qui divise déjà ceux qui l’ont pris. Rendre le dissout.' },
+    peur_route: { name: 'La Peur des routes', art: 'wisp', hue: 262, scale: 1, lvl: 0, tier: 'minion', weak: ['shajaa', 'sidq'], veils: 1,
+      skills: [{ w: 2, name: 'On ne passe plus', target: 'foes', el: 'ilm', pow: 0.5, fx: [{ st: 'spd', v: -1, chance: 0.4 }], anim: 'wave' }],
+      desc: 'Quand une route n’est plus sûre, on cesse de la prendre, et c’est la cité qui se referme. Elle craint ceux qui y retournent.' }
+  } };
+
+  /* ================= étoiles ================= */
+  Tr.bearing = function () {
+    const tg = W.target && W.target(); if (!tg) return null;
+    const a = Math.atan2(tg.y - W.player.y, tg.x - W.player.x) * 180 / Math.PI;
+    return D.STARS[((Math.round(a / 45) % 8) + 8) % 8];
+  };
+  Tr.starText = function (st) { return st ? `${st.way ? st.way + ' d’' : ''}${st.name}` : ''; };
+  let cctx = null, lastKey = '';
+  Tr.drawCompass = function (t) {
+    const el = $('#compass'); if (!el) return;
+    const show = I.scene === W && !S.busy && !$('#hud').hidden && W.map && !I.build.on; el.hidden = !show; if (!show) return;
+    const cv = el.querySelector('canvas'); if (!cctx) { cv.width = cv.height = 128; cctx = cv.getContext('2d'); }
+    const c = cctx, st = Tr.bearing(), night = W.map.env.time !== 'day', lit = night ? 1 : 0.55;
+    c.clearRect(0, 0, 128, 128); c.save(); c.translate(64, 64);
+    const g = c.createRadialGradient(0, 0, 6, 0, 0, 62); g.addColorStop(0, 'rgba(22,18,48,.92)'); g.addColorStop(1, 'rgba(6,5,16,.92)'); c.fillStyle = g; c.beginPath(); c.arc(0, 0, 60, 0, 6.3); c.fill();
+    c.strokeStyle = 'rgba(233,200,119,.55)'; c.lineWidth = 1.5; c.beginPath(); c.arc(0, 0, 59, 0, 6.3); c.stroke(); c.lineWidth = 0.6; c.beginPath(); c.arc(0, 0, 40, 0, 6.3); c.stroke();
+    for (let k = 0; k < 2; k++) { c.save(); c.rotate(k * Math.PI / 4); c.strokeStyle = 'rgba(233,200,119,.16)'; c.strokeRect(-28, -28, 56, 56); c.restore(); }
+    D.STARS.forEach((s, i) => {
+      const a = i * Math.PI / 4, x = Math.cos(a) * 48, y = Math.sin(a) * 48, on = st === s && i === D.STARS.indexOf(st), tw = 0.75 + 0.25 * Math.sin(t * 3 + i * 1.7), r = (i === 6 ? 6 : 4) * (on ? 1.6 : 1);
+      c.fillStyle = on ? '#ffe9a8' : `rgba(220,226,255,${lit * tw})`; if (on) { c.shadowColor = '#ffe08a'; c.shadowBlur = 14; }
+      c.beginPath(); for (let q = 0; q < 8; q++) { const rr = q % 2 ? r * 0.32 : r, aa = q * Math.PI / 4; c.lineTo(x + Math.cos(aa) * rr, y + Math.sin(aa) * rr); } c.closePath(); c.fill(); c.shadowBlur = 0;
+    });
+    if (st) { const i = D.STARS.indexOf(st), a = i * Math.PI / 4; c.strokeStyle = 'rgba(255,233,168,.9)'; c.lineWidth = 2; c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.cos(a) * 38, Math.sin(a) * 38); c.stroke(); }
+    c.fillStyle = '#fff6dc'; c.beginPath(); c.arc(0, 0, 3, 0, 6.3); c.fill(); c.restore();
+    const key = st ? D.STARS.indexOf(st) + st.name : '-';
+    if (key !== lastKey) { lastKey = key; el.querySelector('.lab').innerHTML = st ? `<span lang="ar" dir="rtl">${st.ar}</span><b>${st.way ? st.way + ' d’' : ''}${st.name}</b><small>${st.dir}</small>` : '<small>al-Jady au nord, Suhayl au sud</small>';
+      if (st && !I.save.data._lore_etoiles) { I.save.data._lore_etoiles = 1; Tr.lore('etoiles'); } }
+  };
+  Tr.lore = function (id) { const cid = 'idris/' + id, sv = I.save.data; if (sv.codex.includes(cid) || !I.ui.codexEntry(cid)) return; sv.codex.push(cid); S.toast(`Recueil : <b>${I.esc(I.ui.codexEntry(cid).title)}</b>`); };
+
+  /* ================= commerce ================= */
+  Tr.dirhams = function (d) { const sv = I.save.data; if (sv.dirhams === undefined) sv.dirhams = 20; if (d) sv.dirhams = Math.max(0, sv.dirhams + d); return sv.dirhams; };
+  const SELL = [['item', 'dattes', 3], ['item', 'lait', 4], ['item', 'pain', 3], ['item', 'miel', 6], ['mat', 'laine', 4], ['mat', 'grain', 2], ['mat', 'palme', 1], ['mat', 'pierre', 2], ['mat', 'pise', 1]];
+  const BUY = [['mat', 'grain', 3], ['mat', 'laine', 6], ['mat', 'pierre', 4], ['mat', 'palme', 3], ['mat', 'pise', 2], ['item', 'dattes', 5], ['item', 'eau', 7], ['item', 'miel', 10], ['item', 'musc', 14], ['item', 'siwak', 8]];
+  const nameOf = (k, id) => k === 'item' ? D.ITEMS[id].name : D.MATS[id].name;
+  const stock = (k, id) => k === 'item' ? (I.save.data.items[id] || 0) : (I.build.mats()[id] || 0);
+  const add = (k, id, n) => { if (k === 'item') I.save.data.items[id] = Math.max(0, (I.save.data.items[id] || 0) + n); else I.build.give(id, n, true); };
+  Tr.routes = function () {
+    return W.saga && W.saga.veillees ? [
+      { id: 'puits', name: 'La piste des sept puits, vers le nord', cost: 12, gain: 19, risk: 0.18 },
+      { id: 'sel', name: 'La route du sel, vers le fleuve du sud', cost: 20, gain: 35, risk: 0.3 },
+      { id: 'cote', name: 'La grande traversée, jusqu’à la côte', cost: 30, gain: 58, risk: 0.45 }] : [
+      { id: 'yemen', name: 'Le Yémen, par la route d’hiver', cost: 12, gain: 19, risk: 0.18 },
+      { id: 'sham', name: 'Le Shâm, par la route d’été, jusqu’à Bosra', cost: 20, gain: 35, risk: 0.3 },
+      { id: 'bahrayn', name: 'Le Bahreïn et les confins de l’Irak', cost: 30, gain: 58, risk: 0.45 }];
+  };
+  const sp = () => { const sv = I.save.data; return sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} }); };
+  Tr.guard = function () { // ce qui garde une route : la justice rendue, les pactes noués, les méharistes
+    const P = W.pillars(), b = I.save.data.built || {}; let camels = 0; Object.keys(b).forEach(k => { if (k.indexOf(W.saga.id + ':') === 0) camels += b[k].filter(e => e.t === 'chamelier').length; });
+    return { camels, risk: (P.justice || 0) * 0.03 + (P.lien || 0) * 0.02 + camels * 0.06, renforts: ((P.lien || 0) >= 2 ? 1 : 0) + ((P.lien || 0) >= 4 ? 1 : 0) + (camels ? 1 : 0) };
+  };
+  Tr.near = function () { const m = W.map, s = m && m.spots.comptoir; return !!(s && W.saga && (!W.saga.frame || W.saga.veillees) && Math.hypot(s[0] * T + 8 - W.player.x, s[1] * T + 13 - W.player.y) < 30); };
+  Tr.open = async function () {
+    S.depth++;
+    try {
+      Tr.lore('caravanes'); I.audio.sfx('ok');
+      const pick = (q, o) => I.debug.auto ? Promise.resolve(o._auto || 0) : S.menuPick(q, o);
+      for (;;) {
+        const car = sp().caravan, top = [{ t: 'Vendre' }, { t: 'Acheter' }, { t: car ? `Caravane en route : ${car.name}` : 'Confier une cargaison à une caravane' }, { t: 'Partir' }];
+        const i = I.debug.auto ? (Tr._autoStep = (Tr._autoStep || 0) + 1, [0, 1, 2, 3][Math.min(3, Tr._autoStep - 1)]) : await S.menuPick(`Le comptoir des caravanes · ${Tr.dirhams()} dirhams`, top);
+        if (i === 3) break;
+        if (i === 0) for (;;) {
+          const L = SELL.filter(e => stock(e[0], e[1]) > 0), o = L.map(e => ({ t: `${nameOf(e[0], e[1])} · tu en as ${stock(e[0], e[1])} · ${e[2]} dirhams pièce` })).concat([{ t: 'Retour' }]);
+          const j = I.debug.auto ? (L.length && !Tr._sold ? (Tr._sold = 1, 0) : L.length) : await S.menuPick(`Vendre · ${Tr.dirhams()} dirhams`, o);
+          if (j >= L.length) break; add(L[j][0], L[j][1], -1); Tr.dirhams(L[j][2]); I.audio.sfx('blip');
+        }
+        if (i === 1) for (;;) {
+          const o = BUY.map(e => ({ t: `${nameOf(e[0], e[1])} · ${e[2]} dirhams` + (Tr.dirhams() < e[2] ? ' (trop cher)' : '') })).concat([{ t: 'Retour' }]);
+          const j = I.debug.auto ? (!Tr._bought && Tr.dirhams() >= 3 ? (Tr._bought = 1, 0) : BUY.length) : await S.menuPick(`Acheter · ${Tr.dirhams()} dirhams`, o);
+          if (j >= BUY.length) break; if (Tr.dirhams() < BUY[j][2]) { S.toast('Il te manque des dirhams.', 1500); I.audio.sfx('dark'); continue; }
+          Tr.dirhams(-BUY[j][2]); add(BUY[j][0], BUY[j][1], 1); I.audio.sfx('blip');
+        }
+        if (i === 2) {
+          if (car) { S.toast(`La caravane pour ${I.esc(car.name)} reviendra au prochain chapitre.`, 3000); if (I.debug.auto) continue; else continue; }
+          const R = Tr.routes(), gd = Tr.guard(), o = R.map(r => ({ t: `${r.name} · mise ${r.cost} dirhams, retour espéré ${r.gain} · péril ${Math.round(Math.max(0.06, r.risk - gd.risk) * 100)} %` + (Tr.dirhams() < r.cost ? ' (mise trop haute)' : '') })).concat([{ t: 'Retour' }]);
+          const j = I.debug.auto ? (Tr.dirhams() >= R[0].cost ? 0 : R.length) : await S.menuPick('Quelle route ? Une route gardée par la justice, les pactes et les méharistes est moins périlleuse.', o);
+          if (j >= R.length) continue; const r = R[j]; if (Tr.dirhams() < r.cost) { S.toast('Ta mise ne suffit pas.', 1500); continue; }
+          Tr.dirhams(-r.cost); sp().caravan = { id: r.id, name: r.name, cost: r.cost, gain: r.gain, risk: Math.max(0.06, r.risk - gd.risk) }; I.audio.sfx('roll');
+          S.toast(`La caravane part pour <b>${I.esc(r.name)}</b>. Elle reviendra au prochain chapitre, s’il plaît à Allah.`, 4200);
+        }
+      }
+    } finally { S.depth--; S.hideDialog(); }
+  };
+  // au début d'un chapitre : la caravane revient, ou des hommes rentrent à pied
+  Tr.resolve = async function () {
+    const s = sp(), car = s.caravan; if (!car) return; s.caravan = null;
+    const raided = I.debug.auto ? !s._raided : Math.random() < car.risk;
+    if (!raided) { Tr.dirhams(car.gain); I.audio.sfx('roll'); S.toast(`La caravane est revenue de <b>${I.esc(car.name)}</b> : +${car.gain} dirhams.`, 5200); if (!s._traded) { s._traded = 1; W.pillar('lien', 1); } return; }
+    s._raided = 1; await Tr.raid({ loss: car.cost, name: car.name });
+  };
+
+  /* ================= une route pillée : lever des renforts, parler d'abord, rendre justice ================= */
+  Tr.raid = async function (o) {
+    o = o || {}; const v = W.saga.veillees, gd = Tr.guard(), R = gd.renforts, mine = o.loss > 0;
+    S.flags._r1 = R >= 1; S.flags._r2 = R >= 2;
+    const who1 = gd.camels ? 'Les méharistes de tes enclos' : 'Ceux que tes pactes ont liés', who2 = 'Les hommes du voisinage, levés à ton appel';
+    const ops = [
+      ['mus', 'conseil'], ['sfx', 'crowd'],
+      ['nar', v ? 'Des chameliers rentrent à pied, sans leurs bêtes. La caravane a été prise à deux jours de marche, entre deux puits.' : 'Des hommes rentrent à pied, sans leurs bêtes. La caravane a été pillée sur la piste : en ces mois de trouble, des bandes tiennent les routes.'],
+      ['say', 'Un caravanier', 'Ils ne nous ont pas tués. Ils ont dit que la route était à eux désormais, et que nul ne viendrait la leur reprendre.'],
+      ['nar', v ? 'Mon père disait : « Une cité se juge à ses routes. Là où le marchand voyage sans crainte, le prince peut dormir. »' : 'On rapporte cette promesse : un jour, le voyageur irait de San’â’ au Hadramawt sans craindre autre chose qu’Allah, et le loup pour ses brebis. Une route sûre est le visage de la justice.'],
+      ['lore', 'routes_sures'],
+      ['nar', R >= 2 ? `Tu n’iras pas seul. ${who1} se mettent en selle ; ${who2.toLowerCase()} suivent. On lit le ciel : cap sur ${Tr.starText(D.STARS[7])}.` : R === 1 ? `Peu répondent, mais ils répondent : ${who1.toLowerCase()}. On lit le ciel : cap sur ${Tr.starText(D.STARS[7])}.` : 'Tu appelles des renforts. Nul ne vient : tu n’as noué ni pacte ni caravane de garde. Tu iras avec les tiens, sous al-Jady.'],
+      ['parley', {
+        with: 'Le chef des pillards', title: 'Rendre ce qui fut pris',
+        intro: 'Il a faim, il a des hommes à nourrir, et la coutume de ses pères lui dit que prendre est un honneur. Il écoute d’autant mieux que tu n’es pas venu seul.',
+        goal: R >= 2 ? 4 : R === 1 ? 5 : 6,
+        rounds: [
+          { say: 'Tu viens me reprendre ce que j’ai pris ? Mes pères vivaient ainsi. La route nourrit qui la tient.', opts: [
+            { t: 'Tes pères avaient faim. Toi aussi. Mais ceux que tu as dépouillés avaient faim avant toi.', el: 'rahma', v: 2, r: 'Tu parles de leur faim. Personne ne parle jamais de la mienne.' },
+            { t: 'La route ne t’appartient pas plus que le vent. Elle est à qui la prend sans faire peur.', el: 'adl', v: 2, r: 'Sans faire peur… On ne m’a jamais laissé d’autre métier.' },
+            { t: 'Rends tout, ou tu ne verras pas le matin.', el: 'shajaa', v: -1, r: 'Voilà enfin une langue que je connais. Je la parle mieux que toi.' }] },
+          { say: 'Si je rends, mes hommes diront que j’ai eu peur. Un chef qui a eu peur n’est plus un chef.', opts: [
+            { t: 'Rendre devant tous n’est pas la peur. C’est la seule chose ici que personne n’a encore osée.', el: 'shajaa', v: 2, r: 'Oser rendre… Tu retournes les mots comme on retourne un tapis.' },
+            { t: 'Je dirai moi-même, devant tes hommes, que tu as rendu sans y être forcé.', el: 'sidq', v: 2, r: 'Tu le dirais ? Devant eux ?' },
+            { t: 'Tes hommes penseront ce qu’ils voudront.', el: 'sabr', v: 0, r: 'Alors tu ne sais pas ce que c’est que de tenir des hommes.' }] },
+          { say: 'Et après ? Rendre ne remplit aucun ventre. Demain il faudra bien manger.', opts: [
+            { t: 'Demain, garde cette route au lieu de la piller. Une caravane paie ceux qui la conduisent à bon port.', el: 'adl', v: 3, r: 'Garder… Être payé pour que les autres passent. Mes pères en auraient ri. Mes fils, peut-être pas.' },
+            { t: 'Ce n’est plus mon affaire.', el: 'sabr', v: -1, r: 'Alors nous nous reverrons sur cette piste, toi et moi.' },
+            { t: 'Il y a des puits à creuser et des champs à ouvrir. Je sais où.', el: 'ilm', v: 2, r: 'De l’eau. Tu promets de l’eau à un homme du désert. C’est beaucoup promettre.' }] }
+        ],
+        win: [['nar', 'Il fait décharger les bêtes une à une, devant ses hommes, sans baisser la tête. Personne ne rit.'], ['flag', '_raid_paix'], ['pillar', 'lien', 1]],
+        lose: [['nar', 'Il crache dans le sable. Derrière lui, dans l’envers de la piste, la vieille coutume se dresse : il ne commande plus, c’est elle.'],
+          ['battle', { group: ['razzia', 'butin', 'peur_route'], bg: 'desert', boss: false, intro: 'La Razzia : prendre parce qu’on le peut. Elle ne négocie pas.', allies: [{ flag: '_r1', name: who1 }, { flag: '_r2', name: who2 }] }],
+          ['nar', 'L’idole tombée, il ne reste que des hommes fatigués, et des ballots qu’ils n’osent plus regarder. Ils posent les armes.']]
+      }],
+      ['nar', 'Ce qui fut pris est rassemblé. Tout n’y est pas : une part a déjà été mangée, une autre perdue dans la fuite.'],
+      ['ask', 'Ce qui reste ne couvre pas toutes les pertes. Qui est servi d’abord ?', [
+        { t: 'Les petits porteurs, qui n’avaient que cela.', r: [['pillar', 'justice', 1], ['flag', '_raid_part', 'peu'], ['nar', 'Ils repartent avec leur charge entière. Tu reprends ce qui reste.']] },
+        { t: 'Chacun à proportion de ce qu’il a perdu.', r: [['pillar', 'justice', 1], ['flag', '_raid_part', 'part'], ['nar', 'On pèse, on compte, on partage. Nul n’a tout, nul n’est oublié.']] },
+        { t: mine ? 'Ma propre mise d’abord : c’est moi qui ai mené la poursuite.' : 'Ceux qui ont mené la poursuite d’abord.', r: [['pillar', 'justice', -1], ['flag', '_raid_part', 'tout'], ['nar', 'Tu es servi le premier. Les autres attendent, et se taisent. C’est un silence dont on se souvient.']] }]],
+      ['nar', 'Les pillards sont remis au juge : ce n’est pas à celui qui poursuit de dire la peine. La route, elle, est rouverte.'],
+      ['lore', 'razzia']
+    ];
+    await S.run(ops);
+    if (mine) { const part = S.flags._raid_part, back = Math.round(o.loss * (part === 'tout' ? 1 : part === 'part' ? 0.7 : 0.5)); Tr.dirhams(back); S.toast(`Tu retrouves <b>${back} dirhams</b> de ta mise de ${o.loss}.`, 4200); }
+    delete S.flags._r1; delete S.flags._r2; delete S.flags._raid_part;
+    const env = W.map && W.map.env; if (env && I.scene === W) I.audio.music(env.music || 'silence');
+  };
+})();
+
 /* ==== src/core/battle.js ==== */
 /* ISNAD — combat : ordre des tours visible (CTB), voiles et faiblesses, Niyya (élan), Sakîna (ultime). */
 (function () {
@@ -2334,8 +2526,10 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
       buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(Object.assign({ kind: 'compagnon' }, h.def.look)), color: D.ELEMENTS[h.def.el].color };
   }
+  // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
+  function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, W.hero(W.party[0]).lvl) }) : d; }
   function mkFoe(id, i, n, nH) {
-    const def = I.world.saga.enemies[id], st = I.calc.enemy(def, nH, n), sc = def.scale || (def.tier === 'boss' ? 3 : def.tier === 'elite' ? 2 : 1);
+    const def = foeDef(id), st = I.calc.enemy(def, nH, n), sc = def.scale || (def.tier === 'boss' ? 3 : def.tier === 'elite' ? 2 : 1);
     const pos = n === 1 && sc >= 3 ? [118, 156] : FOE_POS[n][i];
     return { side: 'foe', id, name: def.name, def, lvl: def.lvl, max: { hp: st.hp, sp: 0 }, hp: st.hp, sp: 0, atk: st.atk, mag: st.mag, df: st.def, spd: st.spd, buffs: {}, st: {}, veils: def.veils, veilsMax: def.veils, broken: false,
       known: {}, tried: {}, phase: 0, skills: (def.skills || []).slice(), x: pos[0], y: pos[1], ox: 0, flash: 0, ct: 0, alive: true, spr: G.enemy(def.art, def.hue, sc, 0), size: sc >= 3 ? 112 : sc === 2 ? 80 : 52, ph: Math.random() * 6, fade: 1 };
@@ -2354,7 +2548,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
 
   async function run(opts, first) {
     const W = I.world, prev = I.scene, prevAmb = I.audio.ambName;
-    const d0 = W.saga.enemies[opts.group[0]], hue = d0.hue;
+    const d0 = foeDef(opts.group[0]), hue = d0.hue;
     C = { opts, hue, bg: paintBg(opts.bg || 'noos', hue), all: [], t: 0, cursor: null, log: [], turn: 0 };
     W.party.forEach((id, i) => C.all.push(mkHero(id, i)));
     const nH = C.all.length; opts.group.forEach((id, i) => C.all.push(mkFoe(id, i, opts.group.length, nH)));
@@ -2653,7 +2847,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
   };
   async function victory() {
     const W = I.world, sv = I.save.data; I.audio.sfx('roll');
-    let xp = 0; C.all.filter(e => e.side === 'foe').forEach(e => { xp += I.calc.xpOf(e.def); const cid = 'foe:' + W.saga.id + ':' + e.id; if (!sv.codex.includes(cid)) sv.codex.push(cid); });
+    let xp = 0; C.all.filter(e => e.side === 'foe').forEach(e => { xp += I.calc.xpOf(e.def); const cid = 'foe:' + (W.saga.enemies[e.id] ? W.saga.id : '_') + ':' + e.id; if (!sv.codex.includes(cid)) sv.codex.push(cid); });
     const lines = [];
     C.all.filter(e => e.side === 'hero').forEach(e => {
       const h = e.ref; h.xp += xp; let up = false;
@@ -2976,6 +3170,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
 
   /* ---------- codex ---------- */
   U.codexEntry = function (cid) {
+    if (cid.startsWith('foe:_:')) { const e = I.common.enemies[cid.split(':')[2]]; return e ? { id: cid, cat: 'Noosphère', title: e.name, text: e.desc + ` — Failles : ${e.weak.map(w => D.ELEMENTS[w].name).join(', ')}.`, saga: { name: 'Les routes' } } : null; }
     if (cid.startsWith('foe:')) { const [, sid, eid] = cid.split(':'), s = I.sagas[sid], e = s && s.enemies[eid]; return e ? { id: cid, cat: 'Noosphère', title: e.name, text: e.desc + ` — Failles : ${e.weak.map(w => D.ELEMENTS[w].name).join(', ')}.`, saga: s } : null; }
     const [sid, eid] = cid.split('/'), s = I.sagas[sid], e = s && s.codex.find(c => c.id === eid); return e ? Object.assign({ saga: s }, e, { id: cid }) : null;
   };
@@ -2997,7 +3192,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
     const help = () => `<h3>Commandes</h3><p><kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : se déplacer, naviguer · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : menu, retour. Sur écran tactile : croix et boutons à l’écran, et tout est cliquable.</p>
       <h3>Combat</h3><p>On n’affronte jamais des personnes, seulement des <em>égrégores</em> : les idoles que les cœurs fabriquent ensemble. Chaque égrégore est protégé par des <b>voiles</b> (⛊). Frappe-le avec la <b>vertu</b> qui est sa faille pour retirer un voile ; à zéro, il est <b>dévoilé</b> : il perd son tour et subit bien plus.</p>
       <p><b>Niyya</b> (l’intention) : un point par tour ; dépense-en jusqu’à trois (◂ ▸) pour multiplier les coups ou renforcer une vertu. <b>Sakîna</b> : la jauge dorée ; pleine, elle ouvre l’acte ultime du Compagnon.</p>
-      <h3>La parole avant le sabre</h3><p>Un <b>pourparler</b> se gagne manche après manche : chaque argument fait monter ou baisser la confiance. Les meilleurs demandent un <b>savoir</b> (✧) appris d’un savant, d’un feuillet, d’un témoin. Avoir <b>prié</b> dans le chapitre donne la sérénité : +1 de confiance. Si la parole échoue, le récit continue, mais il en coûte.</p>\n      <h3>Bâtir</h3><p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose devant soi, case par case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>\n      <h3>Sauvegarder</h3><p>On ne sauvegarde que <b>dans les mosquées</b>, sur la natte au cœur de l’étoile, et à la natte des Archives depuis l’écran de la Chaîne. Trois emplacements. Fermer la page sans sauvegarder fait perdre ce qui a été joué depuis.</p>\n      <h3>La Chaîne</h3><p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>`;
+      <h3>La parole avant le sabre</h3><p>Un <b>pourparler</b> se gagne manche après manche : chaque argument fait monter ou baisser la confiance. Les meilleurs demandent un <b>savoir</b> (✧) appris d’un savant, d’un feuillet, d’un témoin. Avoir <b>prié</b> dans le chapitre donne la sérénité : +1 de confiance. Si la parole échoue, le récit continue, mais il en coûte.</p>\n      <h3>Les étoiles</h3><p>On s’oriente au ciel. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche : <b>al-Jady</b> (la Polaire) au nord, <b>Suhayl</b> au sud, <b>an-Nasr at-Tâ’ir</b> à l’est et à l’ouest, <b>al-’Ayyûq</b> et <b>al-’Aqrab</b> entre eux. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>\n      <h3>Caravanes</h3><p>Aux ballots du souk ou du camp, on vend, on achète, et l’on confie une cargaison à une caravane : elle revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue, que des pactes sont noués et que des méharistes la gardent. Si elle est pillée, on lève des renforts, on parle d’abord, et l’on rend à chacun ce qui lui revient.</p>\n      <h3>Bâtir</h3><p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose devant soi, case par case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>\n      <h3>Sauvegarder</h3><p>On ne sauvegarde que <b>dans les mosquées</b>, sur la natte au cœur de l’étoile, et à la natte des Archives depuis l’écran de la Chaîne. Trois emplacements. Fermer la page sans sauvegarder fait perdre ce qui a été joué depuis.</p>\n      <h3>La Chaîne</h3><p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>`;
     const journal = () => { const o = W.cur && W.cur(); return `<h3>${W.ch ? I.esc(W.ch.title) : 'Journal'}</h3><p class="src">${W.ch ? I.esc(W.ch.sub) : ''}</p><p>${o && o.text ? '◆ ' + I.esc(o.text) : 'Aucun objectif en cours.'}</p><p class="src">Fidélité à la Chaîne : ${sv.isnad.ok} / ${sv.isnad.total} · Lumières : ${sv.lights.map(l => D.ELEMENTS[l].name).join(', ') || 'aucune'}</p>`; };
     const root = () => {
       const inWorld = I.scene === W;
@@ -3057,6 +3252,7 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
       $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden);
       $('#buildbtn').hidden = $('#menubtn').hidden || !W.saga || (W.saga.frame && !W.saga.veillees) || !I.build.outdoor(W.map.id);
       if (I.build.on) $('#buildbar').hidden = S.busy || I.scene !== W;
+      I.trade.drawCompass(now / 1000);
       requestAnimationFrame(frame);
     })(last);
     const go = () => U.showTitle();
@@ -3166,6 +3362,10 @@ ISNAD.registerSaga({
     { id: 'jour', cat: 'Événement', title: 'Le jour le plus sombre', text: 'Le Messager d’Allah ﷺ meurt à Médine un lundi de Rabî’ al-Awwal de l’an 11 de l’Hégire (juin 632). La communauté, bouleversée, doit décider en quelques heures de ce qu’elle devient. C’est ici que commence la Chaîne.', src: 'Ibn Hishâm, as-Sîra ; al-Bukhârî' },
     { id: 'piliers', cat: 'Noosphère', title: 'Les quatre piliers', text: 'Ce qui tient une cité debout ne se voit pas : la Prière, qui repose les cœurs et les range côte à côte ; le Savoir, qui ouvre ce que la force ne peut ouvrir ; la Justice, la même pour le puissant et pour le pauvre ; le Lien, la parole donnée et les pactes tenus. On rapporte que le Messager d’Allah ﷺ disait de la prière : « Ô Bilâl, repose-nous par elle. »', src: 'Abû Dâwûd, as-Sunan' },
     { id: 'parole', cat: 'Noosphère', title: 'La parole avant le sabre', text: 'Délégations, pactes, arbitrages, alliances : la plupart des crises de ce temps se sont dénouées, ou auraient pu l’être, par la parole. Dans ISNAD, un pourparler se gagne par la justesse des arguments, par le savoir appris en chemin et par la sérénité de qui a prié. Le combat ne vient qu’en dernier recours, et toujours contre une idole, jamais contre des personnes.' },
+    { id: 'etoiles', cat: 'Lieu', title: 'S’orienter aux étoiles', text: 'Les Arabes du désert lisaient leur route au ciel, et le Coran le rappelle : « Et des points de repère ; et au moyen des étoiles ils se guident » (16:16, traduction du sens). *Al-Jady* (الجدي), la Polaire, ne bouge pas : elle donne le nord. *Suhayl* (سهيل), Canopus, marque le sud. Entre eux, on nomme un cap par l’étoile qui s’y lève ou s’y couche : *an-Nasr at-Tâ’ir* (Altaïr), *al-’Ayyûq* (Capella), *al-’Aqrab* (le Scorpion). On connaît aussi *ath-Thurayyâ* (les Pléiades), *ad-Dabarân*, *ash-Shi’râ* (Sirius), *Banât Na’sh* (la Grande Ourse) et *al-Farqadân*. Le cadran du jeu simplifie en huit caps une rose que les pilotes arabes de l’océan Indien décriront plus tard en trente-deux.', src: 'Coran 16:16 et 6:97 ; Ibn Qutayba, Kitâb al-Anwâ’ ; Ibn Mâjid, Kitâb al-Fawâ’id' },
+    { id: 'caravanes', cat: 'Événement', title: 'Les caravanes', text: 'La Mecque vivait de deux voyages, que le Coran nomme : celui de l’hiver, vers le Yémen, et celui de l’été, vers le Shâm (sourate 106). Abû Bakr était marchand d’étoffes, ’Uthmân et ’Abd ar-Rahmân ibn ’Awf de grands négociants. À Médine, un marché fut établi sans taxe. Dans le jeu, on confie une cargaison à une caravane : elle revient au chapitre suivant, plus sûrement si la justice est rendue, si des pactes sont noués et si des méharistes gardent la route.', src: 'Coran 106 ; Ibn Sa’d, at-Tabaqât' },
+    { id: 'routes_sures', cat: 'Parole', title: 'La route sûre', text: 'On rapporte du Messager d’Allah ﷺ, aux jours où les croyants étaient persécutés, cette promesse : un temps viendrait où le voyageur irait de San’â’ au Hadramawt sans craindre autre chose qu’Allah, et le loup pour ses brebis. La sûreté des routes est restée la mesure d’un gouvernement juste. Dans les veillées, le père du Caïd dit la même chose à sa manière : une cité se juge à ses routes.', src: 'al-Bukhârî, as-Sahîh (récit de Khabbâb ibn al-Aratt)' },
+    { id: 'razzia', cat: 'Noosphère', title: 'La razzia', text: 'Avant l’islam, le coup de main contre une caravane ou un campement (*ghazw*) était une coutume, presque un honneur. Le jeu en fait un égrégore : « prendre parce qu’on le peut ». On ne le combat qu’en dernier recours ; on lève d’abord des renforts, parce qu’on écoute mieux celui qui n’est pas venu seul, puis on parle. Ce qui est repris est rendu à ceux qui l’avaient perdu, et les pillards sont remis au juge : ce n’est pas à celui qui poursuit de dire la peine.' },
     { id: 'avertissement', cat: 'Parole', title: 'Avertissement', text: 'ISNAD est une fiction inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun personnage n’a de visage. Toute erreur est celle des auteurs : vérifiez auprès des sources et des savants.' }
   ],
 
@@ -4898,7 +5098,9 @@ ISNAD.registerSaga({
           ['nar', "Ainsi fut fixée la subsistance du premier calife : de quoi vivre, un vêtement pour l'été, un vêtement pour l'hiver. Ibn Sa'd l'a consigné."],
           ['hide', 'umar'], ['hide', 'abuubayda'], ['join', 'umar'], ['join', 'abuubayda'],
           ['nar', "Râwî : ce que les sources montrent de leurs mains, tu peux le refaire des tiennes. Ouvre le mode *Bâtir* (touche B, ou le bouton ▦), choisis une pièce, pose-la devant toi."],
-          ['mat', 'palme', 4]
+          ['mat', 'palme', 4],
+          ['nar', "Au bout du souk, les ballots d'une caravane. On y vend, on y achète, et l'on y confie une cargaison pour le Yémen ou pour le Shâm : c'est de ce commerce qu'il vivait."],
+          ['lore', 'caravanes']
         ] },
         { text: "Bâtir un enclos pour les chèvres du quartier", build: { piece: 'enclos', n: 1 }, then: [
           ['nar', "On rapporte qu'il trayait les chèvres des gens de son quartier. Quand il devint calife, une voix s'inquiéta : « Maintenant, il ne nous les traira plus. »"],
@@ -5023,7 +5225,9 @@ ISNAD.registerSaga({
           ['nar', "Trois nuits plus tard, ils vinrent."],
           ['map', 'desert', 'depart', { time: 'night' }],
           ['amb', 'nuit'],
-          ['nar', "Les abords de Médine, sur la piste de Dhû l-Qassa. Le calife est sorti lui-même, de nuit, à la tête de ceux qui restaient. Dans l'envers du désert, le reniement a pris corps."]
+          ['nar', "Les abords de Médine, sur la piste de Dhû l-Qassa. Le calife est sorti lui-même, de nuit, à la tête de ceux qui restaient. Dans l'envers du désert, le reniement a pris corps."],
+          ['nar', "Pas de lune. On marche aux étoiles, comme toujours ici : al-Jady, le Chevreau qui ne bouge pas, à main gauche ; Suhayl dans le dos. Lève les yeux vers le cadran : l'étoile qui brille est ta route."],
+          ['lore', 'etoiles']
         ] },
         { text: "Repousser les nuées du reniement, dans les dunes", foe: 'f_d1', then: [
           ['nar', "Les nuées refluent vers l'est. On raconte que les assaillants faisaient rouler des outres gonflées vers les chameaux pour les affoler. Cette nuit, la ruse ne suffit pas."]
@@ -5145,6 +5349,11 @@ ISNAD.registerSaga({
             ['nar', "Au souk, une voix basse court d'étal en étal : « Les lignes ont plié… et si le calife s'était trompé ? » Nul ne sait d'où elle part. Elle fait son chemin."],
             ['pillar', 'lien', -1]
           ]]
+        ] },
+        { auto: true, then: [
+          ['nar', "Cette nuit-là, des hommes frappent à la porte nord. Une caravane de Médine, partie pour le Shâm, a été arrêtée sur la piste."],
+          ['raid'],
+          ['nar', "Avant l'aube, la piste du nord est rouverte. Tant que le Menteur tient le Yamâma, d'autres bandes se lèveront ; mais on saura, de Médine, qu'il vient quelqu'un."]
         ] },
         { text: "Recevoir l'envoyé de Najrân, sur la place", talk: 'najran', then: [
           ['mus', 'conseil'],
