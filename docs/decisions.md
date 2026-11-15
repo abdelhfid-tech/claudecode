@@ -398,7 +398,10 @@ Final Fantasy !! »
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
 
 1. **Services payants de génération** (voix, musique, images) : non utilisés. Tout est produit par le code.
-2. **Partage ou passage en public de l'Artifact** : il reste privé.
+2. **Partage ou passage en public de l'Artifact** : le jeu reste privé. *Constat du 15 novembre* : la
+   plateforme indique que l'Artifact du **livret** est partagé « par lien ». Ce réglage ne se fait que
+   du côté de son propriétaire ; l'agent ne l'a pas fait et ne peut pas le changer. Chaque mise à jour
+   du livret est donc visible de quiconque a le lien : à confirmer ou à retirer par le décideur.
 3. **Demande de fusion et hébergement public** (GitHub Pages) : seule la branche de travail est poussée.
 4. **Citation directe de *Citadelle*** : œuvre encore protégée en France ; aucune citation.
 5. **Relecture par un spécialiste** du contenu historique et religieux : à organiser par le décideur.

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Livret du joueur et planches de promotion.
    Tout ce qui est montré vient du jeu : écrans capturés en jouant, sprites tirés du moteur, textes tirés des données.
-   Usage : node tools/promo.js [captures|recit|decors|coeur|mobile|sprites|livret|planches|all]
+   Usage : node tools/promo.js [captures|recit|decors|coeur|equipement|mobile|sprites|livret|planches|all]
      captures : joue le prologue et la saga I, s'arrête aux moments utiles, écrit promo/img/*.jpg
      sprites  : personnages, sceaux, égrégores, carreaux, pièces à bâtir, écrit promo/img/*.png
      livret   : assemble promo/livret.src.html et les données en promo/livret.html (autonome)
@@ -38,6 +38,19 @@ const GROUPES = [
     gens: [['idris', 'gamin', 'f'], ['idris', 'defileur', 'f'], ['idris', 'regent', 'f'], ['idris', 'admire', 'f'], ['idris', 'compteur', 'f'], ['idris', 'carto', 'f']] },
   { titre: 'Ceux qui parlent des deux côtés', texte: 'Dans chaque saga, un personnage inventé dit à chacun ce qu’il veut entendre et sert son propre compte. Il vient toujours du camp du héros. Ce n’est jamais un Compagnon ni un personnage historique.',
     gens: [['abubakr', 'thamir', 'f'], ['umar', 'hazim', 'f'], ['khalid', 'ghalib', 'f'], ['uthman', 'akhbar', 'f'], ['ali', 'madan', 'f'], ['caid', 'chambellan', 'f']] }
+];
+
+/* ---------- l'équipement : tenues d'exemple, sur une silhouette sans nom ----------
+   [nom de fichier, rôle, titre, ce qui est porté]. Les noms des pièces viennent des données. */
+const SILH = { kind: 'homme', robe: '#7a4a32', head: '#e6dcc4', cloak: '#4a3626', coiffe: 'imama', manteau: 'long' }, LETTRE = { kind: 'homme', robe: '#e9e2d0', head: '#f4f0e6', cloak: '#7a6a52', coiffe: 'imama_large', manteau: 'epaule' };
+const TENUES = [
+  ['depart', 'guerrier', 'Au départ', { md: 'epee_fer', tete: 'turban', corps: 'tunique' }, SILH],
+  ['lancier', 'guerrier', 'Lancier', { md: 'lance_khatt', mg: 'rondache', tete: 'casque_fer', corps: 'cotte' }, SILH],
+  ['archer', 'guerrier', 'Archer', { md: 'arc_nab', tete: 'casque_cuir', corps: 'gilet_cuir' }, SILH],
+  ['ligne', 'gardien', 'Homme de ligne', { md: 'masse_fer', mg: 'grand_bouclier', tete: 'casque_bandes', corps: 'lamelles' }, SILH],
+  ['eclaireur', 'stratege', 'Éclaireur', { md: 'dague', mg: 'bouclier_cuir', tete: 'coiffe_mailles', corps: 'matelassee' }, SILH],
+  ['scribe', 'sage', 'Scribe', { md: 'ecritoire', mg: 'tablette', tete: 'turban_voyage', corps: 'tunique_lin' }, LETTRE],
+  ['marcheur', 'soigneur', 'Marcheur', { md: 'baton_acacia', mg: 'gourde', tete: 'calotte', corps: 'manteau_laine' }, LETTRE]
 ];
 
 /* ---------- outillage commun ---------- */
@@ -345,6 +358,35 @@ async function coeur(browser, errors) {
   await T.p.close();
 }
 
+/* ---------- 2 ter. l'équipement : la halte, le choix d'une pièce, la proposition, les artisans, le combat ---------- */
+async function equipement(browser, errors) {
+  console.log('Captures — l’équipement');
+  const T = await openGame(browser, errors); await T.ev(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 30; });
+  await T.p.keyboard.press('Enter'); for (let i = 0; i < 600; i++) { if (await T.ev(chainShown)) break; await T.p.waitForTimeout(100); }
+  // saga III, chapitre 2 : trois compagnons d'armes, et une réserve comme on en a après un maillon
+  await T.ev(() => { const I = window.ISNAD, W = I.world; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen');
+    window.__stop = () => true; window.__stopped = false; I.debug.auto = true; I.debug.noOeuvres = true; I.speed = 30; W.roster = {}; W.saga = null; I.script.flags = {}; W.startChapter('khalid', 1); });
+  for (let i = 0; i < 500; i++) { if (await T.ev(() => window.__stopped)) break; await T.p.waitForTimeout(50); }
+  await T.p.waitForTimeout(300);
+  await T.ev(() => { const I = window.ISNAD, W = I.world, Gr = I.gear; W.foes = []; I.save.data.gear = {}; W.party.forEach(id => { delete I.save.data.equip[Gr.key(W.hero(id))]; delete I.save.data.gearInit[Gr.key(W.hero(id))]; Gr.of(W.hero(id)); });
+    ['epee_yemen', 'lance_khatt', 'arc_nab', 'dague', 'rondache', 'casque_bandes', 'coiffe_mailles', 'cotte_saluqi', 'gilet_cuir', 'turban_voyage', 'masse_fer', 'grand_bouclier'].forEach(id => Gr.add(id, 1)); I.trade.dirhams(60); W.hud(); document.querySelector('#toasts').innerHTML = ''; });
+  const sansToasts = () => T.ev(() => { document.querySelector('#toasts').innerHTML = ''; });
+  await T.ev(() => window.ISNAD.ui.pause('equip')); await T.p.waitForTimeout(600); await T.shot('equipement');
+  await T.ev(() => { [...document.querySelectorAll('#menu .side button')][2].click(); }); await T.p.waitForTimeout(400); await T.key('ArrowDown', 2, 200); await T.shot('equipement-piece');
+  await T.key('Escape', 1, 300); await T.key('Escape', 1, 400);
+  // une pièce arrive : « Qui la porte ? »
+  T.ev(() => { window.ISNAD.script.run([['give', 'epee_inde']]); }); await T.p.waitForTimeout(1000); await sansToasts(); await T.shot('equipement-recu');
+  await T.key('Enter', 1, 800); await sansToasts();
+  // les artisans du camp
+  T.ev(() => { window.ISNAD.trade.artisans(); }); await T.p.waitForTimeout(700); await T.key('Enter', 1, 500); await sansToasts(); await T.shot('artisans');
+  for (let i = 0; i < 4; i++) { const k = await T.ev(() => { const c = document.querySelector('#choice'); if (c.hidden) return -1; const o = [...c.querySelectorAll('.opt')]; o[o.length - 1].click(); return o.length; }); if (k < 0) break; await T.p.waitForTimeout(450); }
+  // au mieux, puis un combat : chacun porte ce qu'on lui a donné
+  await T.ev(() => { const I = window.ISNAD; I.gear.bestAll(); document.querySelector('#toasts').innerHTML = ''; I.battle.start({ group: Object.keys(I.world.saga.enemies).slice(0, 2), bg: 'camp' }); });
+  for (let i = 0; i < 160; i++) { if (await T.ev(() => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); return !!c && c.querySelectorAll('.mi').length > 0 && !c.querySelector('.mhint') && (!b || b.hidden); })) break; await T.p.waitForTimeout(150); }
+  await T.p.waitForTimeout(400); await T.shot('combat-equipe');
+  await T.p.close();
+}
+
 /* ---------- 2 bis. téléphone, en portrait : croix et boutons tactiles ---------- */
 async function mobile(browser, errors) {
   console.log('Captures — téléphone');
@@ -375,7 +417,7 @@ async function mobile(browser, errors) {
 async function sprites(browser, errors, T) {
   console.log('Sprites');
   T = T || await openGame(browser, errors);
-  const data = await T.ev((PNJ) => {
+  const data = await T.ev(([PNJ, TENUES]) => {
     const I = window.ISNAD, G = I.gfx, D = window.ISNAD_DEFS, out = {};
     // tribus, peuples et alliés : le grand sprite de chaque personnage cité
     PNJ.forEach(([sid, id]) => { const s = I.sagas[sid]; let n = null; s.chapters.forEach(c => (c.npcs || []).forEach(x => { if (!n && x.id === id) n = x; })); if (!n) return;
@@ -403,13 +445,20 @@ async function sprites(browser, errors, T) {
       Object.keys(D.VICES).forEach(v => { out['lame-' + v] = O.lame(v).toDataURL(); });
       D.ANIMAUX.forEach(a => { out['bete-' + a] = O.bete(a).toDataURL(); });
       Object.entries(CO.enemies).forEach(([id, e]) => { out['e-coeur-' + id] = G.enemy(e.art, e.hue, 2, e.seed).toDataURL(); }); }
+    // l'équipement : une icône par pièce ; des tenues d'exemple, de face et de profil ; gens d'armes variés
+    { const Gr = I.gear, d = Gr.state();
+      Object.keys(D.GEAR).forEach(id => { out['eq-' + id] = Gr.icon(id).toDataURL(); });
+      TENUES.forEach(([nom, role, titre, eq, look]) => { const h = { id: nom, key: 'promo:' + nom, def: { role, look, name: nom }, lvl: 5 }; d.equip[h.key] = eq; d.gearInit[h.key] = 1; const L = Gr.look(h);
+        out['eqh-' + nom] = G.charGrand(L, 0, 0).toDataURL(); out['eql-' + nom] = G.charGrand(L, 1, 0).toDataURL(); delete d.equip[h.key]; delete d.gearInit[h.key]; });
+      ['#6a5a40', '#5a4632', '#4f4a45', '#6b5a48', '#64503a', '#3f4f6a', '#6f6250'].forEach((robe, i) => { out['tr-soldat-' + i] = G.charGrand({ kind: 'soldat', robe, head: '#e2d8c2', sel: i }, 0, 0).toDataURL(); });
+      for (let i = 0; i < 4; i++) out['tr-romain-' + i] = G.charGrand({ kind: 'romain', robe: '#8a2f2a', head: '#c8c0b0', sel: i }, 0, 0).toDataURL(); }
     // carreaux et objets
     ['zellij', 'zsand', 'gwall', 'mihrab', 'trench', 'field', 'bwall'].forEach(t => { try { const [c, x] = mk(48, 48); for (let i = 0; i < 9; i++) x.drawImage(G.tile(t, i % 4, 0), (i % 3) * 16, Math.floor(i / 3) * 16); out['t-' + t] = c.toDataURL(); } catch (e) { /* carreau absent */ } });
     ['palm', 'well', 'pen_goat', 'pen_sheep', 'pen_camel', 'lantern', 'mat', 'rug', 'minbar', 'stall', 'tent', 'camel', 'bales', 'trunkcol', 'basin', 'isnad'].forEach(o => { try { out['o-' + o] = G.obj(o).toDataURL(); } catch (e) { /* objet absent */ } });
     // rosace
     { const [c, x] = mk(200, 200); x.imageSmoothingEnabled = true; I.maps.drawRosette(x, { x: 100, y: 100, R: 96, n: 8 }); out['rosace'] = c.toDataURL(); }
     return out;
-  }, GROUPES.reduce((a, g) => a.concat(g.gens), []));
+  }, [GROUPES.reduce((a, g) => a.concat(g.gens), []), TENUES]);
   let n = 0;
   for (const [k, url] of Object.entries(data)) { fs.writeFileSync(path.join(IMG, k + '.png'), Buffer.from(url.split(',')[1], 'base64')); n++; }
   console.log('  ✓', n, 'sprites');
@@ -512,6 +561,18 @@ function livret() {
     const who = c.npcs.find(n => n.id === P.with);
     return `<tr><td class="n"><img class="ic px" style="width:32px;height:48px" src="img/n-idris-${who.id}.png" alt="">${esc(c.title)}</td><td style="color:${col(s2)}">${esc(s2.heroes[s2.id].name)} · ${esc(s2.lightName)}</td><td>${esc(P.intro)}</td><td>${needs.map(savoir).join('<br>')}</td><td>${malDe(c)}</td></tr>`; }).join('')
     + `<tr><td class="n">L’opérateur de garde</td><td style="color:${D.ELEMENTS.sabr.color}">Idris · Patience</td><td>${esc(findOp(sagas.idris.chapters.find(c => c.id === 'e1').objectives, 'parley').intro)}</td><td>L’isnâd <small>(les Archives)</small></td><td>Tous ceux qui n’ont pas été tranchés</td></tr>`;
+  // l'équipement : catalogue par emplacement, étals par lieu, tenues d'exemple (mêmes mots que dans le jeu : gear.js)
+  { const NOM = { atk: 'Force', mag: 'Esprit', def: 'Garde', spd: 'Élan', hp: 'Constance', sp: 'Souffle' }, pc = v => (v > 0 ? '+' : '−') + Math.abs(v) + ' %', typ = g => D.GEAR_TYPES[g.t], pct = v => Math.round(v * 100) + ' %';
+    const effets = g => { const o = Object.keys(NOM).filter(k => g[k]).map(k => NOM[k] + ' ' + pc(g[k])); if (g.perce) o.push('perce la garde (' + pct(g.perce) + ')'); if (g.vif) o.push('frappe parfois deux fois (' + pct(g.vif) + ')'); if (g.prime) o.push('agit plus tôt au début du combat'); if (g.choc) o.push('peut étourdir (' + pct(g.choc) + ')'); if (g.parade) o.push('pare un coup de fer (' + pct(g.parade) + ')'); if (g.ferme) o.push('tient bon face à l’étourdissement (' + pct(g.ferme) + ')'); return o.join(' · '); };
+    const ids = Object.keys(D.GEAR), de = s => ids.filter(id => typ(D.GEAR[id]).slot === s);
+    R.NPIECES = String(ids.length);
+    R.EQUIPEMENT = Object.keys(D.SLOTS).map(s => `<h3>${esc(D.SLOTS[s])}</h3><div class="pieces-g">` + de(s).map(id => { const g = D.GEAR[id]; return `<article class="piece"><img class="px" src="img/eq-${id}.png" alt="" width="18" height="18"><div><h4>${esc(g.name)} <span>${esc(typ(g).name.toLowerCase())}</span></h4><p class="fx">${esc(effets(g))}</p><p>${esc(g.desc)}</p></div></article>`; }).join('') + '</div>').join('');
+    R.ARTISANS = Object.entries(D.GEAR_SHOPS).map(([m, L]) => `<tr><td class="n">${esc(D.MAPS[m].label)}</td><td>${L.map(id => `<span class="etal"><img class="px" src="img/eq-${id}.png" alt="" width="18" height="18">${esc(D.GEAR[id].name)}</span>`).join(' ')}</td></tr>`).join('');
+    R.TENUES = TENUES.map(([nom, role, titre, eq]) => `<figure><span><img class="px" src="img/eqh-${nom}.png" alt="" width="32" height="48"><img class="px" src="img/eql-${nom}.png" alt="" width="32" height="48"></span><figcaption><b>${esc(titre)}</b>${Object.values(eq).map(id => esc(D.GEAR[id].name)).join(', ')}</figcaption></figure>`).join('');
+    const COLS = { md: 5, mg: 2, tete: 3, corps: 3 }; // colonnes de la planche : 24, 8, 10 et 11 pièces tiennent en cinq rangs au plus
+    R.ARSENAL = Object.keys(D.SLOTS).map(s => `<div class="ars"><span class="cap">${esc(D.SLOTS[s])} · ${de(s).length}</span><div style="--n:${COLS[s] || 3}">` + de(s).map(id => `<figure><img class="px" src="img/eq-${id}.png" alt=""><figcaption>${esc(D.GEAR[id].name)}</figcaption></figure>`).join('') + '</div></div>').join('');
+    R.TROUPE = [0, 1, 2, 3, 4, 5, 6].map(i => `<img class="px" src="img/tr-soldat-${i}.png" alt="">`).join('') + [0, 1, 2, 3].map(i => `<img class="px" src="img/tr-romain-${i}.png" alt="">`).join('');
+    R.TENUESPLANCHE = TENUES.slice(1).map(([nom, role, titre]) => `<figure><img class="px" src="img/eqh-${nom}.png" alt=""><figcaption>${esc(titre)}</figcaption></figure>`).join(''); }
   R.PALETTE = Object.values(D.PIECES).map(p => `<figure><img class="px" src="img/${icon(p)}.png" alt=""><figcaption>${esc(p.name)}</figcaption></figure>`).join('');
   R.VEILLEES = sagas.caid.chapters.map(c => `<tr><td class="n">${esc(c.title)}</td><td>${esc(c.sub)}</td></tr>`).join('');
   let src = fs.readFileSync(path.join(PROMO, 'livret.src.html'), 'utf8');
@@ -546,6 +607,7 @@ async function planches(browser, errors) {
   const browser = await chromium.launch(); const errors = [];
   if (mode === 'recit' || mode === 'captures' || mode === 'all') await captures(browser, errors);
   if (mode === 'coeur' || mode === 'captures' || mode === 'all') await coeur(browser, errors);
+  if (mode === 'equipement' || mode === 'captures' || mode === 'all') await equipement(browser, errors);
   if (mode === 'mobile' || mode === 'captures' || mode === 'all') await mobile(browser, errors);
   if (mode === 'decors' || mode === 'captures' || mode === 'all') { const T = await decors(browser, errors); await sprites(browser, errors, T); }
   else if (mode === 'sprites') await sprites(browser, errors);

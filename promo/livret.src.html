@@ -182,6 +182,27 @@ td .ic { width: 32px; height: 32px; object-fit: contain; display: inline-block; 
 }
 
 /* le cœur : œuvres, lames, maux, figures du ciel */
+.pieces-g { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 0 30px; margin: .6em 0 1.6em; }
+.piece { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; padding: 12px 0; border-top: 1px solid rgba(233, 200, 119, .14); }
+.piece img { width: 36px; height: 36px; margin-top: 2px; }
+.piece h4 { margin: 0; font-family: var(--f-titre); color: #fff6dc; font-size: .95rem; letter-spacing: .03em; }
+.piece h4 span { font-family: var(--f-mono); font-weight: 400; color: var(--cendre); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; margin-left: .4em; }
+.piece p { margin: 0; font-size: .88rem; line-height: 1.4; max-width: none; color: var(--sable); }
+.piece .fx { color: var(--or); font-size: .82rem; margin: .1em 0 .2em; }
+.etals td:last-child { line-height: 2; } .etal { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; white-space: nowrap; } .etal img { width: 18px; height: 18px; }
+.tenues { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px 18px; margin-top: 1em; }
+.tenues figure { margin: 0; } .tenues span { display: flex; gap: 6px; } .tenues img { width: 64px; height: 96px; }
+.tenues figcaption { font-family: var(--f-texte); font-size: .78rem; letter-spacing: 0; text-transform: none; color: var(--cendre); line-height: 1.3; padding: .3em 0 0; }
+.tenues figcaption b { display: block; font-family: var(--f-titre); font-size: .84rem; color: #fff6dc; letter-spacing: .04em; }
+.arsenal { flex: 1; display: grid; grid-template-columns: 5fr 2fr 3fr 3fr; gap: 1.1em; margin: 1.1em 0 .8em; min-height: 0; }
+.ars { background: var(--encre); border: 1px solid rgba(233, 200, 119, .14); border-top: .16em solid var(--zellige); padding: .7em .7em .5em; min-height: 0; display: flex; flex-direction: column; }
+.ars > div { flex: 1; display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: .5em .2em; margin-top: .7em; align-content: start; }
+.ars figure { margin: 0; text-align: center; } .ars img { width: 2.5em; height: 2.5em; margin: 0 auto; }
+.ars figcaption { font-family: var(--f-texte); font-size: .5em; letter-spacing: 0; text-transform: none; color: var(--sable); line-height: 1.15; padding: .35em 0 0; }
+.portes { display: flex; align-items: center; gap: 1.4em; margin-bottom: 1.7em; }
+.portes > .cap { flex: none; max-width: 9.5em; } .portes > div { display: flex; gap: 1em; align-items: flex-end; } .portes > div.tr { gap: .2em; }
+.portes figure { margin: 0; text-align: center; } .portes img { height: 5em; width: auto; } .portes .tr img { height: 3.7em; }
+.portes figcaption { font-family: var(--f-texte); font-size: .56em; letter-spacing: 0; text-transform: none; color: var(--sable); padding: .2em 0 0; }
 .lames-g, .betes-g { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 0 34px; margin-top: 1.2em; }
 .lame-f { display: grid; grid-template-columns: 40px minmax(0, 1fr) 84px; gap: 16px; align-items: center; padding: 16px 0; border-top: 1px solid rgba(233, 200, 119, .16); }
 .lame-f .epee { width: 36px; height: 88px; filter: drop-shadow(0 0 8px var(--c)); }
@@ -401,6 +422,7 @@ body.export .pl { border: 0; }
     <li><a href="#chaine">La fidélité à la Chaîne</a></li>
     <li><a href="#parole">La parole avant le sabre</a></li>
     <li><a href="#combat">Le combat</a></li>
+    <li><a href="#equipement">L’équipement</a></li>
     <li><a href="#piliers">Prière, savoir, piliers</a></li>
     <li><a href="#coeur">Les œuvres et la provision du cœur</a></li>
     <li><a href="#lames">Sept lames, sept maux du cœur</a></li>
@@ -633,6 +655,52 @@ body.export .pl { border: 0; }
     <div class="tab"><table><tbody>{{OBJETS}}</tbody></table></div>
   </section>
 
+  <section class="feuillet" id="equipement">
+    <h2>L’équipement</h2>
+    <div class="duo">
+      <figure class="ecran"><img src="img/equipement.jpg" alt="La page Équipement de la halte : pour chaque compagnon, ses quatre emplacements, la pièce portée et ce qu’elle apporte." loading="lazy"><figcaption style="padding:.7em .8em .8em">Dans la halte : quatre emplacements par compagnon, et la réserve commune.</figcaption></figure>
+      <div>
+        <p>Chaque compagnon a quatre emplacements : <b>main droite</b>, <b>main gauche</b>, <b>tête</b> et <b>corps</b>. {{NPIECES}} pièces se partagent entre eux, et chaque rôle a les siennes : un sage ne porte pas de cotte de mailles, un guerrier n’a que faire d’un calame.</p>
+        <p>Les pièces viennent des <b>coffres</b> et des <b>comptoirs</b>. Elles vont dans une <b>réserve</b> commune à toute la Chaîne : à la fin d’un maillon, ce que le groupe portait y retourne, et le groupe suivant s’en sert.</p>
+        <p>Quand une pièce arrive, le jeu demande aussitôt qui la porte. Dans la halte, <b>Au mieux</b> habille tout le groupe d’un geste.</p>
+      </div>
+    </div>
+    <div class="duo inv" style="margin-top:2.6em">
+      <figure class="ecran"><img src="img/equipement-piece.jpg" alt="Le choix d’une pièce pour la main droite : la liste de la réserve, et pour la pièce regardée, ce qu’elle change chiffre par chiffre." loading="lazy"><figcaption style="padding:.7em .8em .8em">Avant de choisir, on voit ce que la pièce change, chiffre par chiffre.</figcaption></figure>
+      <div>
+        <h3>Chaque famille a son caractère</h3>
+        <div class="tab"><table><tbody>
+          <tr><td class="n">Épée</td><td>La Force la plus sûre.</td></tr>
+          <tr><td class="n">Lance</td><td>Perce une part de la Garde adverse.</td></tr>
+          <tr><td class="n">Arc</td><td>Tire le premier : qui le porte agit plus tôt au début du combat.</td></tr>
+          <tr><td class="n">Dague</td><td>Vive : elle frappe parfois deux fois.</td></tr>
+          <tr><td class="n">Masse</td><td>Lourde : elle peut étourdir.</td></tr>
+          <tr><td class="n">Bâton, calame</td><td>Le bâton soutient le Souffle ; le calame nourrit l’Esprit.</td></tr>
+          <tr><td class="n">Bouclier</td><td>Pare parfois un coup de fer, qui ne fait alors que la moitié de son mal.</td></tr>
+          <tr><td class="n">Casque</td><td>Aide à tenir bon face à l’étourdissement.</td></tr>
+          <tr><td class="n">Armure</td><td>Le fer protège, et il ralentit.</td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+    <h3>On voit ce que l’on porte</h3>
+    <div class="duo">
+      <figure class="ecran"><img src="img/combat-equipe.jpg" alt="Un combat : les trois compagnons portent l’arme, le bouclier, le casque et l’armure qu’on leur a donnés." loading="lazy"><figcaption style="padding:.7em .8em .8em">En combat, chacun porte ce qu’on lui a donné.</figcaption></figure>
+      <div>
+        <p>En combat et dans la halte, la silhouette montre l’arme, le bouclier, le casque et l’armure. Les étoffes ne changent pas le dessin : chacun garde la coiffe et le manteau qui le font reconnaître. Dans le récit, personne ne change de silhouette.</p>
+        <div class="tenues">{{TENUES}}</div>
+      </div>
+    </div>
+    <div class="duo" style="margin-top:2.6em">
+      <figure class="ecran"><img src="img/equipement-recu.jpg" alt="Une épée vient d’être trouvée : le jeu propose les trois compagnons qui peuvent la porter, avec ce qu’elle changerait pour chacun." loading="lazy"><figcaption style="padding:.7em .8em .8em">Une pièce arrive : le jeu demande aussitôt qui la porte.</figcaption></figure>
+      <figure class="ecran"><img src="img/artisans.jpg" alt="Les artisans du camp : six armes avec leur prix, ce qu’elles apportent, et à qui elles iraient mieux." loading="lazy"><figcaption style="padding:.7em .8em .8em">Au comptoir : le prix, l’effet, et à qui la pièce irait mieux.</figcaption></figure>
+    </div>
+    <h3>Les artisans, lieu par lieu</h3>
+    <p>Chaque comptoir vend ce que l’on fabrique sur place ou ce qui passe par là : de 8 à 85 dirhams, et la revente rend la moitié. La bourse est la même que pour l’aumône : il faut choisir.</p>
+    <div class="tab"><table class="etals"><tbody>{{ARTISANS}}</tbody></table></div>
+    {{EQUIPEMENT}}
+    <p class="note">Ce sont des objets ordinaires de l’époque : une <b>convention de jeu</b>, sans relique ni inscription. Leurs noms viennent du vocabulaire des poètes anciens ; le jeu ne dit pas qui portait quoi, et le fer ne remplace jamais la provision du cœur.</p>
+  </section>
+
   <section class="feuillet" id="piliers">
     <h2>Prière, savoir, piliers</h2>
     <div class="duo">
@@ -827,6 +895,7 @@ body.export .pl { border: 0; }
       <li><b>La prière n’est pas un pouvoir.</b> Elle s’écrit sobrement, aux moments attestés et aux haltes du récit.</li>
       <li><b>Les œuvres ne sont pas des sortilèges.</b> Dhikr, étude, jeûne, aumône, visite, pèlerinage : décrits sobrement. Le jeu n’en tire qu’une provision du cœur.</li>
       <li><b>Lames, maux et figures du ciel sont des images.</b> Ni relique, ni épée d’un personnage historique. Une idée noire, une énigme ne touchent que des personnages de fiction.</li>
+      <li><b>L’équipement est fait d’objets ordinaires.</b> Ni relique, ni inscription, ni or ni soie, ni vertu prêtée à un objet. Le jeu ne dit pas qui portait quoi ; dans le récit, personne ne change de silhouette.</li>
     </ul>
   </section>
 
@@ -1005,6 +1074,18 @@ body.export .pl { border: 0; }
       <p class="dit" style="max-width:none">Une vertu pratiquée prend le fil d’une lame. Sans elle, le mal n’est que repoussé : il revient.</p>
       <div class="sept">{{SEPT}}</div>
       <div class="ciel"><span class="cap">CINQ COMPAGNONS DE LUMIÈRE, FIGURES DU CIEL</span><div>{{CIEL}}</div></div>
+      <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
+    </div>
+  </article></div></div>
+
+  <div class="cartel"><b>Planche 12 · L’équipement</b><span>16:9 · 1920 × 1080</span></div>
+  <div class="defile"><div class="pw"><article class="pl" data-nom="12-equipement">
+    <div class="in">
+      <p class="sur">Armes, boucliers, coiffes, tenues</p>
+      <h3>{{NPIECES}} pièces, quatre emplacements</h3>
+      <p class="dit" style="max-width:none">Des objets ordinaires de l’époque, sans relique ni inscription. Le fer aide à tenir ; il ne remplace pas le cœur.</p>
+      <div class="arsenal">{{ARSENAL}}</div>
+      <div class="portes"><span class="cap">EN COMBAT, ON VOIT CE QUE L’ON PORTE</span><div>{{TENUESPLANCHE}}</div><span class="cap">LES GENS D’ARMES NE SE RESSEMBLENT PLUS</span><div class="tr">{{TROUPE}}</div></div>
       <div class="sig"><span>ISNAD · Chroniques des Compagnons</span><span class="ar" lang="ar">إسناد</span></div>
     </div>
   </article></div></div>
