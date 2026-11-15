@@ -8,6 +8,7 @@
  "img/bete-renard.png",
  "img/carte.jpg",
  "img/chaine.jpg",
+ "img/champ.jpg",
  "img/choix.jpg",
  "img/citation.jpg",
  "img/combat-boss.jpg",
@@ -18,6 +19,7 @@
  "img/d-medine-jour.jpg",
  "img/d-medine-soir.jpg",
  "img/d-palais.jpg",
+ "img/descente.jpg",
  "img/e-abubakr-clan.png",
  "img/e-abubakr-deni.png",
  "img/e-abubakr-kadhdhab.png",
@@ -277,8 +279,10 @@
  "img/o-well.png",
  "img/oeuvre-dhikr.jpg",
  "img/oeuvres.jpg",
+ "img/organigramme.jpg",
  "img/pillage.jpg",
  "img/pourparler.jpg",
+ "img/preparation.jpg",
  "img/priere.jpg",
  "img/que-faire.jpg",
  "img/recueil.jpg",
@@ -309,5 +313,6 @@
  "img/tr-soldat-3.png",
  "img/tr-soldat-4.png",
  "img/tr-soldat-5.png",
- "img/tr-soldat-6.png"
+ "img/tr-soldat-6.png",
+ "img/valeurs.jpg"
 ]

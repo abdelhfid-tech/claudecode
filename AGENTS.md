@@ -32,7 +32,7 @@ toute considération de jeu.
 | `src/data/music.js` | bande-son | `ISNAD.registerMusic(nom, piste)`, validée par `tools/validate-music.js` |
 | `docs/schema-saga.md`, `docs/schema-v2.md` | contrat de données et bible narrative | à relire avant d'écrire du contenu |
 | `promo/livret.src.html` | livret du joueur et planches de présentation | gabarit ; `tools/promo.js` y injecte les données du jeu |
-| `promo/livret.html`, `promo/livret.artifact.html`, `promo/livret.pdf`, `promo/planches/`, `promo/img/` | **générés** | ne rien y inventer : écrans capturés en jouant, sprites du moteur |
+| `promo/livret.html`, `promo/livret.artifact.html`, `promo/livret.pdf`, `promo/planches/`, `promo/img/` | **générés** | ne rien y inventer : écrans capturés en jouant, sprites du moteur ; le PDF n’est pas versionné (`node tools/promo.js pdf` le refait) |
 
 ## Commandes
 

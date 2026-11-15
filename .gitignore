@@ -1,3 +1,5 @@
 .smoke/
 node_modules/
 .claude/worktrees/
+# le livret en PDF se refait par : node tools/promo.js pdf (une vingtaine de Mo, non versionné)
+promo/livret.pdf
