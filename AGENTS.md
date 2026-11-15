@@ -25,13 +25,14 @@ toute considération de jeu.
 | `src/core/oeuvres.js` | le cœur : œuvres et provision, lames, maux du cœur, énigmes, compagnons de lumière | règles et dessin seulement ; œuvres, maux et compagnons déclarés dans `defs.js` |
 | `src/core/gear.js` | l'équipement : quatre emplacements, réserve commune, icônes, pages de la halte | règles et dessin seulement ; pièces, types et étals déclarés dans `defs.js` (`D.GEAR`, `D.GEAR_TYPES`, `D.GEAR_SHOPS`) |
 | `src/core/mal.js` | l'organigramme du mal : enracinement d'une idole, réponse parlée à une idée noire, page de la halte | règles et dessin seulement ; racines, manières et parcours des récits déclarés dans `defs.js` (`D.RACINES`, `D.VOIES`, `D.parcours`) ; textes dans `coeur.js` (`mal`, `parole`) |
+| `src/core/valeurs.js` | le côté du bien : sept Valeurs et sept attributs divins (les badges), les trois portes de la noosphère (prière, dhikr, sommeil) et le combat intérieur du râwî | règles et dessin seulement ; textes dans `coeur.js` (`bien`, `valeurs`, `attributs`, `portes`) ; rien de plus dans la sauvegarde |
 | `src/core/rangs.js` | la bataille déclarée : le champ (cinq colonnes, trois couloirs), nos rangs, les nuées de l'idole, les ordres, les manœuvres du stratège | règles et dessin seulement ; types de rangs, ordres et manœuvres déclarés dans `defs.js` (`D.RANGS`, `D.ORDRES`, `D.MANOEUVRES`) ; la mission est dans le chapitre (`bataille`) |
 | `src/data/coeur.js` | contenu commun à toutes les sagas : textes des œuvres, lames, maux, idées noires, compagnons de lumière, organigramme du mal | `commun: true`, aucun chapitre ; ses égrégores sont utilisables partout |
 | `src/data/caid.js` | les veillées du Caïd | même format, `frame: true`, `veillees: true`, un chapitre par saga (`after`) |
 | `src/data/music.js` | bande-son | `ISNAD.registerMusic(nom, piste)`, validée par `tools/validate-music.js` |
 | `docs/schema-saga.md`, `docs/schema-v2.md` | contrat de données et bible narrative | à relire avant d'écrire du contenu |
 | `promo/livret.src.html` | livret du joueur et planches de présentation | gabarit ; `tools/promo.js` y injecte les données du jeu |
-| `promo/livret.html`, `promo/livret.artifact.html`, `promo/planches/`, `promo/img/` | **générés** | ne rien y inventer : écrans capturés en jouant, sprites du moteur |
+| `promo/livret.html`, `promo/livret.artifact.html`, `promo/livret.pdf`, `promo/planches/`, `promo/img/` | **générés** | ne rien y inventer : écrans capturés en jouant, sprites du moteur |
 
 ## Commandes
 
@@ -53,6 +54,7 @@ node tools/bataille.js mesures      # chaque combat d'idole qui a des rangs, jou
 node tools/smoke.js shots           # captures bureau et mobile dans .smoke/
 node tools/promo.js all             # livret et planches : captures, sprites, assemblage, export
 node tools/promo.js planches        # après une retouche du texte : réassemble et réexporte seulement
+node tools/promo.js pdf             # le livret mis en pages : promo/livret.pdf
 ```
 
 **Règle.** Toute modification de contenu (`src/data/`) repasse le validateur, puis le build, puis
@@ -92,6 +94,10 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
   un fichier de saga ne fixe ni effectif ni dégâts. `stratege: true` se pose sur un héros (il ordonne sans perdre son
   tour et connaît les manœuvres de `D.MANOEUVRES`). Un allié d'un combat (`allies`) peut porter `rang` : dans une
   bataille déclarée, il prend place sur le champ au lieu de frapper en ouverture.
+- Le côté du bien est dans `coeur.js` : `valeurs` et `attributs` ont une entrée par mal du cœur (les clés de `D.VICES`).
+  Un attribut porte `nom`, `sens`, `verset` (entre guillemets, mot à mot), `ref` (« Coran s:v ») et `mot` ; le validateur
+  le vérifie. `portes` décrit les trois portes de la noosphère, `secours` le texte du secours. Un verset n'entre que lu sur
+  une traduction publiée, jamais de mémoire.
 
 ## Exigences de respect (non négociables)
 
@@ -158,6 +164,28 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     que la mission permet : là où l'histoire ne connaît pas de bataille, ou là où le sang fut refusé, ni charge ni tir,
     ou pas de rangs du tout. Les manœuvres du stratège sont des manœuvres d'école : le jeu ne dit pas que l'une d'elles
     fut faite tel jour, en tel lieu. L'issue d'une bataille déclarée ne change aucun fait de l'histoire.
+
+20. *(Demandée par le décideur ; formulation proposée par l'agent, à confirmer.)* Le secours. Dans une bataille déclarée
+    presque perdue, le groupe est relevé, une fois par tentative, si la prière a été tenue dans le chapitre. Aucun ange
+    n'est dessiné, nommé, compté ni mis en dialogue : de la lumière et un verset, rien d'autre. Le jeu cite ce que le Coran
+    rapporte de Badr, en traduction du sens, et ne dit pas que des anges sont venus tel jour de l'histoire des Compagnons.
+    On ne commande pas le secours : aucune action du combat ne le déclenche. Aucun texte ne dit qu'un Compagnon a manqué
+    sa prière : la page de préparation parle au râwî. C'est une exception aux exigences 13 et 15, voulue par le décideur ;
+    l'agent ne les a pas réécrites.
+
+21. *(Demandée par le décideur ; formulation proposée par l'agent, à confirmer.)* Valeurs et attributs. Du côté du bien,
+    on ne dit ni djinn, ni égrégore, ni idole. Il n'y a pas d'organigramme du bien en miroir de celui du mal : rien ne se
+    tient en face du Créateur. Une Valeur est une image du jeu, marquée d'un badge sans inscription. Un attribut divin
+    vient du Coran, avec son verset en traduction du sens et sa référence, vérifiés mot à mot ; il n'est jamais dessiné,
+    personnifié, « équipé » ni changé en pouvoir ; son Nom est du texte, jamais un sprite (l'exigence 8 reste entière) ;
+    on dit qu'on le reconnaît, jamais qu'on le possède.
+
+22. *(Demandée par le décideur ; formulation proposée par l'agent, à confirmer.)* Descendre dans la noosphère. Au sortir
+    de la prière, dans le dhikr, en songe, on peut y descendre pour faire face à ses maux du cœur. C'est le combat du râwî,
+    personnage de fiction, seul : jamais celui d'un Compagnon, à qui le jeu ne prête aucun mal du cœur. « Démons
+    intérieurs » est une façon de parler, que le jeu explique aussitôt : aucun combattant ne porte le nom d'un démon. La
+    prière elle-même reste sobre : la porte s'ouvre quand elle est dite. Une descente par porte et par chapitre ; si le
+    mal l'emporte, on remonte, et rien n'est perdu.
 
 ## Qui fait quoi
 

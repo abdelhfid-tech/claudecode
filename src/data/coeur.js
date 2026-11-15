@@ -208,6 +208,66 @@ ISNAD.registerSaga({
 
   /* ----- l'organigramme du mal : une lecture, pas une démonologie (exigence 18, proposée). Deux étages : ce qui est
      enseigné (`etage: 'enseigne'`), puis les images du jeu (`etage: 'image'`). Textes proposés par l'agent, à valider. ----- */
+  // Le côté du bien (décision du décideur) : on n'y dit ni djinn, ni égrégore, ni idole, mais Valeurs et attributs, et on
+  // les collectionne comme des badges. Sept Valeurs : celles des sept lames, gardées quand le mal d'en face est tranché.
+  // Sept attributs divins : un Nom tiré du Coran, avec son verset et sa référence, reconnu quand l'œuvre a forgé la lame.
+  // Aucun attribut n'est dessiné, personnifié ni « équipé » : on le reconnaît, on ne le possède pas (exigence 21, proposée).
+  bien: {
+    titre: 'Valeurs et attributs',
+    chapeau: 'Du côté du bien, rien ne se nomme djinn, égrégore ou idole. On dit des *Valeurs* : ce que le cœur garde quand un mal est tranché. Et des *attributs* : ceux d’Allah, que nul ne possède, que l’on reconnaît.',
+    note: 'Il n’y a pas d’organigramme du bien : Iblîs n’est qu’une créature, et rien ne se tient en face du Créateur. Les badges sont une image du jeu : ils marquent un rappel reçu, non une qualité acquise pour toujours.',
+    gagner: 'Elle se garde quand ce mal est tranché par sa lame.', reconnaitre: 'Il se reconnaît quand l’œuvre a forgé la lame.'
+  },
+  valeurs: {
+    avidite:     { texte: 'Savoir ce qui suffit, et s’y tenir sans regret.', face: 'vouloir encore, alors qu’on a' },
+    orgueil:     { texte: 'Se tenir à sa place, sans se croire au-dessus de personne.', face: 'se voir au-dessus' },
+    ostentation: { texte: 'Faire le bien sans chercher qui regarde.', face: 'faire le bien pour être vu le faisant' },
+    avarice:     { texte: 'Laisser circuler ce que l’on a reçu.', face: 'retenir ce qui devait circuler' },
+    insouciance: { texte: 'Ne pas remettre à demain ce qui compte.', face: 'vivre à côté de sa vie' },
+    envie:       { texte: 'Se réjouir du bien d’autrui comme du sien.', face: 'ne pas supporter le bien d’autrui' },
+    colere:      { texte: 'Garder son calme quand on pourrait frapper.', face: 'frapper avant d’avoir entendu' }
+  },
+  attributs: {
+    avidite:     { nom: 'ar-Razzâq', sens: 'le Grand Pourvoyeur', verset: '« En vérité, c’est Allah qui est le Grand Pourvoyeur, Le Détenteur de la force, l’Inébranlable. »', ref: 'Coran 51:58',
+                   mot: 'Le contentement s’appuie sur ceci : la subsistance vient de Lui.' },
+    orgueil:     { nom: 'al-Kabîr, al-Muta’âl', sens: 'Le Grand, Le Sublime', verset: '« Le Connaisseur de ce qui est caché et de ce qui est apparent, Le Grand, Le Sublime. »', ref: 'Coran 13:9',
+                   mot: 'L’humilité s’appuie sur ceci : la grandeur est à Lui.' },
+    ostentation: { nom: 'al-Khabîr', sens: 'le Parfaitement Connaisseur', verset: '« Ne connaît-Il pas ce qu’Il a créé alors que c’est Lui le Compatissant, le Parfaitement Connaisseur. »', ref: 'Coran 67:14',
+                   mot: 'La sincérité s’appuie sur ceci : Il connaît ce que les regards ne voient pas.' },
+    avarice:     { nom: 'al-Wahhâb', sens: 'le Grand Donateur', verset: '« C’est Toi, certes, le Grand Donateur ! »', ref: 'Coran 3:8 (fin du verset)',
+                   mot: 'La largesse s’appuie sur ceci : ce que l’on donne a d’abord été reçu.' },
+    insouciance: { nom: 'al-Hayy, al-Qayyûm', sens: 'le Vivant, Celui qui subsiste par Lui-même', verset: '« Allah! Point de divinité à part Lui, le Vivant, Celui qui subsiste par Lui-même (Al Qayyum). Ni somnolence ni sommeil ne Le saisissent. »', ref: 'Coran 2:255 (début du verset)',
+                   mot: 'L’ardeur s’appuie sur ceci : Lui ne s’assoupit pas.' },
+    envie:       { nom: 'al-Latîf', sens: 'doux envers Ses serviteurs', verset: '« Allah est doux envers Ses serviteurs. Il attribue [Ses biens] à qui Il veut. Et c’est Lui le Fort, le Puissant. »', ref: 'Coran 42:19',
+                   mot: 'La bienveillance s’appuie sur ceci : ce que l’autre a reçu, c’est Lui qui l’a donné.' },
+    colere:      { nom: 'al-Halîm', sens: 'indulgent', verset: '« Une parole agréable et un pardon valent mieux qu’une aumône suivie d’un tort. Allah n’a besoin de rien, et Il est indulgent. »', ref: 'Coran 2:263',
+                   mot: 'La longanimité s’appuie sur ceci : Il est indulgent, Lui qui n’a besoin de rien.' }
+  },
+  // Les portes de la noosphère (décision du décideur) : la prière, le dhikr, le sommeil. On y descend pour faire face à ses
+  // maux du cœur. C'est le combat du râwî, personnage de fiction, seul : jamais celui d'un Compagnon (exigences 15 et 16).
+  portes: {
+    priere:  { titre: 'Au sortir de la prière', invite: 'La prière est dite. Le cœur est calme, et la noosphère est toute proche.' },
+    dhikr:   { titre: 'Dans le dhikr', invite: 'Le souvenir a fait silence autour de toi. La noosphère est toute proche.' },
+    sommeil: { titre: 'En songe', invite: 'Le sommeil vient. Entre veille et songe, la noosphère est toute proche.', menu: 'S’endormir : un songe peut ouvrir la noosphère' },
+    question: 'Veux-tu y descendre, râwî, et faire face à ce qui te pèse ? Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. Ce n’est pas le cœur des Compagnons que tu vas voir : c’est le tien.',
+    plusTard: 'Pas maintenant', rien: 'Rien ne te pèse plus de ce côté-là : les sept maux du cœur sont tranchés.', deja: 'Cette porte s’est déjà ouverte dans ce chapitre.',
+    avecLame: 'lame forgée', sansLame: 'sans lame : ce mal ne sera que repoussé',
+    seuil: 'La noosphère s’ouvre. Tu y descends seul.',
+    remonte: { titre: 'La noosphère se referme', h1: 'Ce mal pèse encore', texte: 'On ne tranche pas un mal du cœur d’un seul coup. L’œuvre forge la lame : reviens quand elle sera prête.' }
+  },
+
+  // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue.
+  // Aucun ange n'est dessiné, nommé, compté ni mis en dialogue. Les deux versets sont cités mot à mot (traduction de
+  // M. Hamidullah, lue sur api.quran.com, traduction 31) ; ils parlent de Badr, et le jeu ne dit rien d'un autre jour.
+  secours: {
+    titre: 'Le secours', bandeau: 'Le groupe est relevé',
+    verset: '« Et (rappelez-vous) le moment où vous imploriez le secours de votre Seigneur et qu’Il vous exauça aussitôt : “Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres.” »',
+    ref: 'Coran 8:9, traduction du sens · c’était à Badr',
+    mot: 'Tu avais tenu ta prière, et le secours est venu. On ne le commande pas. Le jeu ne montre pas les anges, ne les nomme pas, ne les compte pas.',
+    pret: 'Si la bataille tourne au pire, le secours peut venir. On ne le commande pas.',
+    absent: 'Le secours ne vient qu’à qui a tenu sa prière : une natte, avant l’épreuve, y suffit.'
+  },
+
   mal: {
     titre: 'Organigramme du mal',
     chapeau: 'Qui souffle, qui consent, et ce que cela devient. À chaque étage sa réponse, et pas une de plus.',
@@ -248,6 +308,10 @@ ISNAD.registerSaga({
     { id: 'souffleurs', cat: 'Noosphère', title: 'Ceux qui soufflent', text: 'Le Coran enseigne à chercher protection « contre le mal du mauvais conseiller, furtif, qui souffle le mal dans les poitrines des hommes, qu’il (le conseiller) soit un djinn, ou un être humain ». Dans ISNAD, on ne les voit pas, on ne les nomme pas, on ne les compte pas, on ne les combat pas. Tous les djinns ne soufflent pas, et le jeu ne s’en prend à aucun. Ce que l’on rencontre, c’est ce qu’un cœur fait de ce qu’il a entendu.', src: 'Traduction du sens, Coran 114:4-6' },
     { id: 'iblis', cat: 'Noosphère', title: 'Iblîs, l’ennemi déclaré', text: 'Le jeu le nomme et ne le montre pas. Il ne parle dans aucune scène, et l’on ne le combat nulle part : ce n’est pas une épée qui en protège. Le Coran rapporte ce qu’il dira, quand tout sera accompli, à ceux qui l’auront suivi : « Je n’avais aucune autorité sur vous si ce n’est que je vous ai appelés, et que vous m’avez répondu. Ne me faites donc pas de reproches ; mais faites-en à vous-mêmes. » Il appelle. C’est le cœur qui répond.', src: 'Traduction du sens, Coran 14:22' },
     { id: 'bataille', cat: 'Noosphère', title: 'La bataille déclarée', text: 'Contre une idole, on ne se bat plus seul, et l’on ne se bat pas sans le dire. La bataille est déclarée : chacun sait ce qui se dresse, et qui tient les rangs. En face, il n’y a jamais d’hommes : des nuées, que l’idole envoie. Nos rangs ne tombent pas : éprouvés, ils se replient et se reforment. C’est une image du jeu. Il ne dit pas combien d’hommes il y avait tel jour, ni qui fit telle manœuvre : la réserve mobile, l’enveloppement et le repli feint sont des manœuvres d’école.' },
+    { id: 'valeurs', cat: 'Cœur', title: 'Les sept Valeurs', text: 'Du côté du bien, on ne dit ni djinn, ni égrégore, ni idole : on dit des Valeurs. Il y en a sept, une en face de chaque mal du cœur : le Contentement, l’Humilité, la Sincérité, la Largesse, l’Ardeur, la Bienveillance, la Longanimité. L’œuvre forge la lame ; la lame tranche le mal ; ce qui reste alors, c’est la Valeur. Le jeu la marque d’un badge. C’est une image : une valeur ne se possède pas comme un objet, elle se garde en la pratiquant.' },
+    { id: 'attributs', cat: 'Cœur', title: 'Les attributs divins', text: 'Chaque Valeur s’appuie sur un attribut d’Allah, que le jeu nomme d’après le Coran, avec son verset et sa référence : ar-Razzâq, al-Kabîr, al-Khabîr, al-Wahhâb, al-Hayy al-Qayyûm, al-Latîf, al-Halîm. On ne possède pas un attribut divin : on le reconnaît. Le jeu ne le dessine pas, ne lui prête aucune figure et n’en fait ni une arme ni un pouvoir ; le badge marque seulement que le rappel a été reçu. Il n’y a pas d’organigramme du bien : rien ne se tient en face du Créateur.', src: 'Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.' },
+    { id: 'noos_interieure', cat: 'Noosphère', title: 'Descendre en soi', text: 'Au sortir de la prière, dans le dhikr, en songe : à ces moments-là, la noosphère est toute proche, et l’on peut y descendre pour faire face à ce qui pèse. Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. C’est le combat du râwî, seul. Ce n’est jamais celui d’un Compagnon : le jeu ne prête à aucun d’eux un mal du cœur. Avec la lame que l’œuvre a forgée, le mal est tranché ; sans elle, il n’est que repoussé. Image du jeu, dite comme telle.' },
+    { id: 'secours', cat: 'Cœur', title: 'Le secours', text: 'À Badr, les croyants étaient en petit nombre. Le Coran rapporte qu’ils implorèrent le secours, et ce qui leur fut répondu : « Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres. » Puis : « Allah ne fit cela que pour (vous) apporter une bonne nouvelle et pour qu’avec cela vos cœurs se tranquillisent. Et il n’y a de victoire que de la part d’Allah. » Dans ISNAD, quand une bataille déclarée est presque perdue, le secours relève le groupe, une fois, si la prière a été tenue dans le chapitre. C’est une image du jeu. Il ne montre pas les anges, ne les nomme pas, ne les compte pas, et il ne dit pas qu’ils sont venus tel jour de l’histoire des Compagnons. On ne commande pas le secours : on tient sa prière, et l’on combat.', src: 'Traduction du sens, Coran 8:9-10. Règle de jeu.' },
     { id: 'enracinement', cat: 'Noosphère', title: 'L’enracinement', text: 'Une idée noire dans un seul cœur se dissipe par la parole. Reprise par beaucoup, elle prend corps : c’est un égrégore. Quand on ne la voit plus tant elle est partout, elle commande : c’est une idole. Le jeu mesure cela d’un à cinq, pour chaque idole. La parole qui porte la déracine ; la parole manquée la laisse s’enfoncer. Déracinée, l’idole pèse moins et garde un voile de moins ; enracinée, elle pèse davantage. C’est une image du jeu : la jauge se dit d’une idole, jamais d’une époque ni de ses gens.' },
     { id: 'figures_ciel', cat: 'Cœur', title: 'Les compagnons de lumière (fiction)', text: 'Les Arabes donnaient aux étoiles des noms de bêtes : l’Aigle qui vole, le Lion, les bonds de la Gazelle. Dans la noosphère d’ISNAD, ces noms ont pris corps. Le Renard des sables et le Phénix viennent, eux, des contes. Ce sont des figures de fiction : aucune n’accompagne un Compagnon dans le récit historique.' },
     { id: 'equipement', cat: 'Objets', title: 'Ce que l’on porte', text: 'Épées, lances, arcs, boucliers, casques, cottes, turbans et manteaux : le jeu range sous quatre emplacements ce qu’un groupe pouvait porter en ce temps-là. C’est une *convention de jeu*. Aucune de ces pièces n’est une relique, aucune n’a appartenu à un personnage de l’histoire, aucune ne porte d’inscription, et le jeu ne dit pas qui portait quoi. Leurs noms viennent de la poésie arabe ancienne, où une bonne lame est dite *muhannad* (d’acier de l’Inde), *yamânî* (du Yémen) ou *mashrafî* ; une bonne lance, *khattî* (d’al-Khatt, port du Bahreïn) ou *samharî* ; un bon arc est de bois de *nab\'* ; une bonne cotte est *salûqî*. Le fer aide à tenir ; il ne remplace pas la provision du cœur.', src: 'Convention de jeu. Vocabulaire des poètes anciens, à faire vérifier.' },

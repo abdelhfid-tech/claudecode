@@ -72,6 +72,11 @@ semer le doute) et l'appelle à quatre endroits : la mise en place, le pas (apr�
 « Ordonner » du menu, le dessin. Le champ se dessine là où le panneau du combat ne le couvre pas (toute la scène en
 hauteur, le haut de la scène en largeur). Outil : `tools/bataille.js`.
 
+**Version 8.** `valeurs.js` (le côté du bien) se charge après `mal.js`. Il ne garde rien : une Valeur se lit dans
+`vices`, un attribut dans `lames`. Il ouvre aussi les portes de la noosphère, et prête au combat un groupe d'un seul :
+le râwî (`heros`, `sansReprise`, `interieur`). La page de préparation est une page de la halte (`U.prepare`), appelée
+par `battle.js` avant chaque tentative contre une idole. `tools/promo.js pdf` imprime le livret en PDF.
+
 ## Rendu rétro-HD
 
 Le monde est dessiné sur une **couche pixel de 384 × 216**, puis composé sur le canevas d'affichage,

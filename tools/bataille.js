@@ -5,7 +5,7 @@
    node tools/bataille.js mesures [saga] [N]    chaque combat d'idole qui a des rangs, N fois avec et N fois sans (4 par défaut)
                                                 (ajouter « faux » : après les mauvaises réponses, l'idole au plus enraciné)
 
-   Au doigt : le carton se lit, le champ se voit, « Ordonner » se touche, chaque rang et chaque ordre se voient et se
+   Au doigt : la préparation se lit et ses boutons se touchent, le champ se voit, « Ordonner » se touche, chaque rang et chaque ordre se voient et se
    touchent, le stratège reçoit ses manœuvres, un flanc découvert s'annonce sans couvrir le champ, la bataille se termine.
    ECHELLE=2 devant la commande : des captures deux fois plus fines, pour les montrer.
    Écrit « INVISIBLE » (une entrée de menu hors de l'écran, le champ sous un menu ou sous un bandeau) et « BLOQUÉ »
@@ -61,11 +61,18 @@ const prep = faux => { const I = window.ISNAD; I.debug.log = []; I.debug.auto = 
     const saga = A[0] === 'doigt' && A[1] ? A[1] : 'khalid', ci = A[0] === 'doigt' && A[2] ? +A[2] - 1 : 1, taille = A.find(x => /^\d+x\d+$/.test(x));
     for (const [w, h] of (taille ? [taille.split('x').map(Number)] : [[390, 844], [844, 390]])) {
       const p = await ouvrir(w, h, true), T = `${saga}${ci + 1}-${w}x${h}`, dit = m => console.log(`${w}x${h}  ${m}`), shot = n => p.screenshot({ path: path.join(out, `bataille-${T}-${n}.png`) });
-      await p.evaluate(({ saga, ci }) => { const I = window.ISNAD, W = I.world, R = I.rangs, od = R.declare; R.declare = async function (C, o) { if (W.ch.bataille && I.mal.estIdole(o)) { I.debug.auto = false; I.speed = 1; window.__bataille = true; } return od.apply(this, arguments); };
+      await p.evaluate(({ saga, ci }) => { const I = window.ISNAD, W = I.world, U = I.ui, op = U.prepare; U.prepare = function (o) { if (W.ch.bataille && I.mal.estIdole(o) && !window.__bataille) { I.debug.auto = false; I.speed = 1; window.__bataille = true; } return op.apply(this, arguments); };
         const ob = I.battle.start; I.battle.start = async function (o) { const r = await ob.apply(this, arguments); if (window.__bataille) window.__bataille = 'finie'; return r; }; W.roster = {}; W.saga = null; W.startChapter(saga, ci); }, { saga, ci });
       try { await p.waitForFunction(() => window.__bataille === true, null, { timeout: 200000 }); } catch (e) { dit('BLOQUÉ : la bataille déclarée n’a pas été atteinte'); rate++; await p.context().close(); continue; }
-      await p.waitForFunction(() => { const c = document.querySelector('#card'); return !c.hidden && c.classList.contains('on'); }, null, { timeout: 20000 }); await p.waitForTimeout(600);
-      await shot('1-carton'); dit('carton : ' + await p.evaluate(() => document.querySelector('#card').innerText.replace(/\n+/g, ' ⏎ ').slice(0, 300)));
+      // la préparation : la page se lit, ses boutons se touchent, on peut s'équiper, puis on déclare
+      await p.waitForFunction(() => !document.querySelector('#menu').hidden && /préparation/.test(document.querySelector('#menu h2').textContent), null, { timeout: 20000 }); await p.waitForTimeout(700);
+      await shot('1-preparation'); dit('préparation : ' + await p.evaluate(() => document.querySelector('#menu .pane').innerText.replace(/\n+/g, ' ⏎ ').slice(0, 900)));
+      { const B = await p.$$('#menu .side button'), noms = [];
+        for (const b of B) { noms.push((await b.textContent()).trim()); const r = await b.boundingBox(); if (!r || !(await b.isVisible()) || r.y < -1 || r.y + r.height > h + 1) { dit('INVISIBLE : « ' + noms[noms.length - 1] + ' » (préparation)'); rate++; } }
+        dit('   boutons : ' + noms.join(' | '));
+        const mieux = B[noms.findIndex(n => n.includes('Équiper au mieux'))]; if (mieux) { await mieux.tap(); await p.waitForTimeout(900); }
+        let dec = null; for (const b of await p.$$('#menu .side button')) if ((await b.textContent()).includes('Déclarer')) dec = b;
+        if (!dec) { dit('ABSENT : « Déclarer la bataille »'); rate++; } else { await dec.tap(); await p.waitForTimeout(900); } }
       const etat = () => p.evaluate(() => { const I = window.ISNAD, b = document.querySelector('#battle'), cmd = b.querySelector('.cmd'), mi = [...cmd.querySelectorAll('.mi')], bn = b.querySelector('.banner'), st = document.querySelector('#stage').getBoundingClientRect(), ch = I.battle.champ();
         const pc = r => ({ t: (r.top - st.top) / st.height, b: (r.bottom - st.top) / st.height, l: (r.left - st.left) / st.width, r: (r.right - st.left) / st.width });
         let cadre = null; if (ch) { const k = I.rangs.cadre(ch); cadre = { t: k.y / k.ph, b: (k.y + k.h) / k.ph, l: (k.x - k.vx) / k.vw, r: (k.x + k.w - k.vx) / k.vw }; }

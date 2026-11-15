@@ -215,6 +215,10 @@ et connaît les manœuvres de `D.MANOEUVRES`. Dans un `battle`, un allié `{ fla
 drapeau est levé prend place sur le champ comme un rang de plus (`rang` pris dans `D.RANGS`, `gens` par défaut) ;
 sans bataille déclarée, ou sans rangs, il frappe en ouverture comme avant. Vérification : `node tools/bataille.js`.
 
+Avant tout combat d'idole, le moteur ouvre de lui-même la page de préparation ; un fichier de saga n'a rien à écrire
+pour cela. Le secours, les Valeurs, les attributs et les portes de la noosphère sont du contenu commun (`coeur.js`) :
+une saga n'en déclare aucun.
+
 **Objectifs** (séquentiels) : un seul déclencheur parmi `goto:'lieu'` (atteindre un lieu de la carte
 courante), `talk:'pnj'` (le PNJ doit être sur la carte courante), `foe:'id'` (vaincre un ennemi visible de
 la carte courante), `auto:true` (immédiat). `text` est affiché dans le journal de quête ; une flèche guide

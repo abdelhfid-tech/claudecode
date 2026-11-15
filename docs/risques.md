@@ -65,6 +65,12 @@ joue le prologue, les cinq sagas et l'épilogue de bout en bout sans erreur.
 | Qu'un texte ou un ennemi nomme un jour un djinn | faible | forte | Garde de nom dans le validateur |
 | Qu'une bataille déclarée passe pour la reconstitution d'une bataille de l'histoire | moyenne | forte | Exigence 19 (proposée) ; en face, des nuées, jamais des hommes ; aucun effectif, aucun nom d'unité ; les manœuvres sont dites « d'école » et ne sont rattachées à aucun jour |
 | Qu'on voie des hommes tomber | faible | forte | Un rang éprouvé se replie et se reforme ; aucun corps à l'écran |
+| Que le secours fasse de la prière un sortilège | moyenne | forte | Exigence 20 (proposée) : on ne le commande pas, rien ne le déclenche en combat, une fois par tentative ; exception aux exigences 13 et 15 dite comme telle, à trancher par le décideur |
+| Que le jeu semble dire que des anges sont venus à telle bataille des Compagnons | moyenne | forte | Aucun ange dessiné, nommé ni compté ; le texte cite Badr et dit qu'il n'affirme rien d'un autre jour |
+| Que collectionner des attributs divins « comme des badges » paraisse léger | moyenne | forte | Exigence 21 (proposée) : du texte seul, un verset et sa référence vérifiés, « reconnaître » et non « posséder », aucun pouvoir ; à relire par un relecteur |
+| Qu'un rapprochement entre une Valeur et un attribut soit théologiquement faux | moyenne | forte | Sept lignes consignées comme propositions de l'agent (D121) ; rien n'est publié dans le livret partagé avant relecture |
+| Que le côté du bien se lise comme un dualisme | faible | forte | Pas d'organigramme du bien ; « rien ne se tient en face du Créateur » |
+| Qu'un mal du cœur soit prêté à un Compagnon | moyenne | forte | Exigence 22 (proposée) : le combat intérieur est celui du râwî seul, et le jeu le dit avant la descente |
 | Que le champ alourdisse ou bloque le combat | moyenne | moyenne | `tools/bataille.js` : parcours au doigt à trois tailles, mesures avec et sans rangs, « ÉCART » au-delà de 20 % |
 
 ## Verdict

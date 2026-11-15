@@ -319,6 +319,27 @@ body.portrait #hud .enig { display: block; background: var(--panel); }
 /* le champ de bataille : les bandeaux se rangent hors du champ (au-dessus, écran en hauteur ; entre le champ et le panneau sinon) */
 #battle.champ .banner, #battle.champ .banner.speech, #battle.champ .banner.intro { top: 56.5%; }
 body.portrait #battle.champ .banner, body.portrait #battle.champ .banner.speech, body.portrait #battle.champ .banner.intro { top: 4%; }
+/* Valeurs et attributs : un badge par Valeur (dessiné), un médaillon de texte par attribut (jamais un dessin) */
+.badge { width: 2.6em; height: 2.6em; image-rendering: pixelated; flex: none; vertical-align: -.8em; } .badge.grand { width: 6.5em; height: 6.5em; display: block; margin: 0 auto .6em; filter: drop-shadow(0 0 1.2em rgba(233, 200, 119, .35)); }
+.bien { display: grid; gap: .5em; margin: .7em 0; }
+.bien-l { display: grid; grid-template-columns: auto 1fr; gap: .2em .7em; align-items: center; padding: .45em .6em; background: rgba(255, 255, 255, .035); border-left: 2px solid rgba(255, 255, 255, .12); opacity: .72; }
+.bien-l.on { opacity: 1; border-left-color: var(--gold); } .bien-l small { color: var(--dim); }
+.att { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: .3em .6em; align-items: center; margin: .15em 0 0; } .att small, .att span { color: var(--dim); }
+.med { font-style: normal; display: inline-grid; place-items: center; min-width: 2.1em; min-height: 2.1em; padding: 0 .75em; border: 1px dashed rgba(255, 255, 255, .25); border-radius: 2em; color: var(--dim); font-family: var(--f-display); letter-spacing: .05em; flex: none; max-width: 100%; box-sizing: border-box; text-align: center; }
+.att.on .med { border: 1px solid var(--gold); color: #fff6dc; box-shadow: 0 0 1em rgba(233, 200, 119, .18) inset; }
+#card.valeur h1 { letter-spacing: .14em; } #card.attribut .orn { color: #fff6dc; } #card.attribut h1 { letter-spacing: .1em; text-transform: none; }
+#card.attribut p.sens { font-family: var(--f-display); letter-spacing: .12em; color: var(--gold); font-style: normal; } #card.attribut p.mot { font-style: normal; color: var(--dim); font-size: .92em; max-width: 30em; }
+#card.noos { background: radial-gradient(ellipse at center, rgba(30, 20, 70, .95), rgba(4, 3, 10, 1)); }
+/* le secours : le verset, sa référence, puis le mot du jeu, plus sobre */
+#card.secours .orn { color: #fff6dc; } #card.secours h1 { letter-spacing: .16em; }
+#card.secours p.mot { font-style: normal; color: var(--dim); font-size: .92em; max-width: 30em; }
+/* la préparation d'une bataille : une liste de points, ◆ quand c'est là, ◇ quand il manque quelque chose */
+.prepa { list-style: none; margin: .6em 0; padding: 0; display: grid; gap: .55em; }
+.prepa li { position: relative; padding: .1em 0 .1em 1.5em; line-height: 1.38; }
+.prepa li::before { content: '◆'; position: absolute; left: .1em; top: .1em; color: var(--gold); }
+.prepa li.manque::before { content: '◇'; color: #ff9a8a; }
+.prepa li > b { display: block; font-family: var(--f-display); letter-spacing: .06em; font-weight: 400; color: var(--sand); }
+.prepa em { color: #ffb4a6; font-style: normal; } .prepa small { color: var(--dim); } .prepa .rien { color: var(--dim); }
 /* écran en hauteur : pendant qu'on ordonne, le menu remonte sous le champ (les plaques du groupe reviennent après) */
 body.portrait #battle.ordre .heroes { display: none; }
 /* écran en largeur : le menu des ordres prend toute la largeur du panneau, sur deux colonnes, et ne monte jamais jusqu'au champ

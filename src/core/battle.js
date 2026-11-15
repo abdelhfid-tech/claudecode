@@ -67,13 +67,14 @@
   const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
   B.relayout = function () { if (!C) return; C.all.forEach(e => { e.x = bx(e.x0); }); refresh(); };
   B.champ = () => (C && C.champ) || null; // le champ de la bataille en cours, pour les outils de test
-  function mkHero(id, i) {
-    const h = I.world.hero(id), st = I.calc.of(h);
+  let chef = null; // celui sur qui se règle le niveau des égrégores communs : le premier du groupe qui combat
+  function mkHero(x, i) {
+    const h = typeof x === 'string' ? I.world.hero(x) : x, id = h.id, st = I.calc.of(h);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
       buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) };
   }
   // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
-  function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, W.hero(W.party[0]).lvl) }) : d; }
+  function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, (chef || W.hero(W.party[0])).lvl) }) : d; }
   function mkFoe(id, i, n, nH) {
     const def = foeDef(id), st = I.calc.enemy(def, nH, n), sc = def.scale || (def.tier === 'boss' ? 3 : def.tier === 'elite' ? 2 : 1);
     const pos = n === 1 && sc >= 3 ? [118, 156] : FOE_POS[n][i];
@@ -97,12 +98,16 @@
     const W = I.world, prev = I.scene === B.scene ? W : I.scene, mark = I.input.mark(); let first = true;
     while (true) {
       let res;
+      // toute idole : la bataille se déclare, et l'on vérifie d'abord ce que l'on a (à chaque tentative : on peut se rééquiper)
+      if (I.mal.estIdole(opts)) { try { await I.ui.prepare(opts); } catch (e) { I.report(e, 'préparation'); } }
       try { res = await run(opts, first); }
       catch (e) { I.report(e, 'combat'); B.abort(prev, mark); res = 'win'; } // un incident ne doit pas arrêter le récit : on rend la main, le combat compte pour gagné
       first = false;
       if (res === 'win') break;
+      if (opts.sansReprise) return 'lose'; // un combat que l'on a choisi : on peut en revenir sans l'avoir gagné
       W.healAll(); W.party.forEach(id => { W.hero(id).sakina = 50; });
     }
+    return 'win';
   };
   // sortie de secours : referme le combat où qu'il en soit et rend l'écran
   B.abort = function (prev, mark) {
@@ -118,7 +123,8 @@
     const W = I.world, prev = I.scene;
     const d0 = foeDef(opts.group[0]), hue = d0.hue;
     C = { opts, hue, bg: paintBg(opts.bg || 'noos', hue), all: [], t: 0, cursor: null, log: [], turn: 0 };
-    W.party.forEach((id, i) => C.all.push(mkHero(id, i)));
+    chef = opts.heros ? opts.heros[0] : null; // `heros` : un groupe prêté pour ce combat-là (le râwî seul, dans la noosphère intérieure)
+    (opts.heros || W.party).forEach((x, i) => C.all.push(mkHero(x, i)));
     const nH = C.all.length; opts.group.forEach((id, i) => C.all.push(mkFoe(id, i, opts.group.length, nH)));
     C.all.forEach(e => { e.ct = 1000 / eff(e, 'spd') * (0.6 + Math.random() * 0.4) * (e.side === 'foe' ? 1.15 : 1) * (e.gear && e.gear.prime ? 0.55 : 1); });
     if (first) { I.audio.sfx('glitch'); G.flash('#fff'); await S.fade('out', 220); }
@@ -184,9 +190,9 @@
       if (C.champ && I.rangs.du(C, act) && alive('foe').length && alive('hero').length) await I.rangs.pas(C);
       act.ct = 1000 / eff(act, 'spd');
       C.active = null;
-      if (!alive('foe').length) result = 'win'; else if (!alive('hero').length) result = 'lose';
+      if (!alive('foe').length) result = 'win'; else if (!alive('hero').length && !(await leSecours(opts))) result = 'lose';
     }
-    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result, champ: C.champ ? Object.assign({ rangs: C.champ.rangs.length, pas: C.champ.pas, flancs: C.champ.flancs.filter(Boolean).length }, C.champ.stats) : null };
+    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result, secours: !!C.secouru, champ: C.champ ? Object.assign({ rangs: C.champ.rangs.length, pas: C.champ.pas, flancs: C.champ.flancs.filter(Boolean).length }, C.champ.stats) : null };
     I.audio.stopBeat(); $('#battle .cmd').innerHTML = ''; C.cursor = null;
     if (result === 'win') { I.audio.afterJingle = I.audio.place || null; I.audio.music('victoire'); } else I.audio.music('deuil');
     if (result === 'win') await victory(); else await defeat();
@@ -494,8 +500,30 @@
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
     await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? 'La lame a tranché' : 'Sans sa lame, le mal recule') : C.opts.noir ? 'On ne l’a pas combattu contre lui, mais pour lui' : C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>${maux.length ? (maux.every(e => e.cut) ? 'Tranché' : maux.some(e => e.cut) ? 'Tranché et repoussé' : 'Repoussé') : C.opts.noir ? 'L’égrégore lâche prise' : 'Dévoilement'}</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
+  // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue dans le
+  // chapitre, le groupe est relevé, une fois par tentative. On ne montre que de la lumière : ni figure, ni nom, ni nombre.
+  // On ne le commande pas : aucune action du combat ne le déclenche, et il ne vient pas dans un combat ordinaire.
+  async function leSecours(opts) {
+    if (C.secouru || !I.mal.estIdole(opts) || !S.flags._prayed) return false;
+    C.secouru = true; const T = (I.sagas.coeur && I.sagas.coeur.secours) || { titre: 'Le secours', bandeau: 'Le groupe est relevé' }, vite = I.debug.auto;
+    $('#battle .cmd').innerHTML = ''; I.audio.sfx('light'); G.flash('#fff6dc'); if (!vite) await I.sleep(650);
+    C.all.forEach(e => {
+      if (e.side !== 'hero') { if (e.alive) e.ct += 320; return; } // l'idole marque le pas
+      e.alive = true; e.hp = Math.max(e.hp, Math.round(e.max.hp * 0.5)); e.sp = Math.max(e.sp, Math.round(e.max.sp * 0.5)); cleanse(e);
+      e.sakina = Math.min(100, e.sakina + 25); e.ct = Math.min(e.ct, 60); e.flash = 1; fx('pillar', e, '#fff6dc'); floater(e, 'Relevé', 'heal');
+    });
+    I.audio.sfx('roll'); refresh(); I.oeuvres.learn('secours');
+    const d = I.oeuvres.state();
+    if (!d.vuSecours && !vite && T.verset) { d.vuSecours = true; await I.sleep(500);
+      await S.card('pray secours', `<div class="orn">✧</div><p class="small">${I.esc(T.titre)}</p><h1>On ne le commande pas</h1><p>${I.esc(T.verset)}</p><p class="small">${I.esc(T.ref)}</p><p class="mot">${I.esc(T.mot)}</p><div class="hint">▼</div>`); }
+    else await banner(`<small>${I.esc(T.titre)}</small>${I.esc(T.bandeau)}`, 1700, false, 'speech intro');
+    if (!vite) await I.sleep(500);
+    return true;
+  }
   async function defeat() {
     I.audio.sfx('dark');
+    if (C.opts.interieur) { const T = ((I.sagas.coeur || {}).portes || {}).remonte || {}; // la noosphère intérieure : on remonte, rien n'est perdu
+      await S.card('defeat', `<p class="small">${I.esc(T.titre || '')}</p><h1>${I.esc(T.h1 || '')}</h1><p>${I.esc(T.texte || '')}</p><div class="hint">▼</div>`); return; }
     await S.card('defeat', `<p class="small">Le groupe est éprouvé</p><h1>La chaîne ne rompt pas</h1><p>Ce qui fut transmis ne se perd pas. Reprends, le cœur affermi : la Sakîna descend sur ceux qui persévèrent.</p><div class="hint">Reprendre ▼</div>`);
   }
 

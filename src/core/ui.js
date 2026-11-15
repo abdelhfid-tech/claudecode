@@ -275,6 +275,7 @@
       items.push({ cat: 'Le cœur' }, { label: 'Œuvres et lames', fn() {}, show: () => I.oeuvres.paneOeuvres() }, { label: 'Compagnons de lumière', fn: betes, show: () => I.oeuvres.paneAnimaux() });
       items.push({ cat: 'Le savoir' }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` },
         { label: 'Organigramme du mal', fn: mal, show: () => I.mal.paneVue() },
+        { label: 'Valeurs et attributs', fn: valeurs, show: () => I.valeurs.paneVue() },
         { label: 'Aide du jeu', fn: aide, show: () => '<h3>Aide du jeu</h3><p>Les règles, thème par thème : ' + U.AIDE.map(a => a[0].toLowerCase()).join(', ') + '.</p>' });
       items.push({ cat: 'Réglages' },
         toggle('Texte', () => ['normal', 'grand', 'très grand'][o.tz || 0], () => { o.tz = ((o.tz || 0) + 1) % 3; U.applyOpts(); }, 'Taille des caractères dans les dialogues, les menus et les combats.'),
@@ -314,7 +315,7 @@
     };
     // l'équipement : quatre emplacements par compagnon, une réserve commune ; on choisit une pièce en voyant ce qu'elle change
     const equip = start => {
-      const Gr = I.gear, items = [{ label: '◂ Retour', fn: mode === 'equip' ? close : root, show: () => Gr.paneGroupe() }];
+      const Gr = I.gear, sortir = mode === 'equip' ? close : mode === 'prepa' ? () => prepa(2) : root, items = [{ label: '◂ Retour', fn: sortir, show: () => Gr.paneGroupe() }];
       if (W.saga && W.party.length) {
         items.push({ label: '✦ Équiper au mieux', fn() { const n = Gr.bestAll(); I.audio.sfx(n ? 'light' : 'blip'); S.toast(n ? `${n} pièce${n > 1 ? 's' : ''} changée${n > 1 ? 's' : ''}.` : 'Chacun porte déjà ce que la réserve a de mieux pour lui.', 2400); equip(1); }, show: () => Gr.paneGroupe() });
         W.party.forEach((id, pi) => { const h = W.hero(id); items.push({ cat: I.esc(h.def.name) });
@@ -322,7 +323,7 @@
       }
       items.push({ cat: 'Réserve' }, { label: 'Voir la réserve', fn() {}, show: () => Gr.paneReserve() });
       $('#menu h2').textContent = 'Équipement';
-      build(items, { onCancel: mode === 'equip' ? close : root, start: start || 0 });
+      build(items, { onCancel: sortir, start: start || 0 });
     };
     const pieces = (h, s, back) => {
       const Gr = I.gear, cur = Gr.of(h)[s], retour = () => equip(back), items = [{ label: '◂ Retour', fn: retour, show: () => '<h3>' + D.SLOTS[s] + '</h3>' + Gr.fiche(h) }];
@@ -353,14 +354,39 @@
       $('#menu h2').textContent = 'Le Recueil';
       build(items, { onCancel: mode === 'codex' ? close : root });
     };
+    // la préparation d'une bataille déclarée : ce que l'on a, ce qui manque. On peut encore s'équiper ; rien ne bloque,
+    // et l'on ne recule pas : la seule sortie est de déclarer la bataille.
+    const prepa = start => {
+      const o = U.prepa, vue = () => I.rangs.panePrepa(o), items = [
+        { label: '⚔ Déclarer la bataille', fn: close, show: vue },
+        { label: '✦ Équiper au mieux', fn() { const n = I.gear.bestAll(); I.audio.sfx(n ? 'light' : 'blip'); S.toast(n ? `${n} pièce${n > 1 ? 's' : ''} changée${n > 1 ? 's' : ''}.` : 'Chacun porte déjà ce que la réserve a de mieux pour lui.', 2400); prepa(1); }, show: vue },
+        { label: 'Choisir l’équipement', fn() { equip(); }, show: () => I.gear.paneGroupe() },
+        { label: 'Le groupe', fn() {}, show: party }, { label: 'La besace', fn() {}, show: bag }];
+      $('#menu h2').textContent = 'Bataille déclarée · préparation';
+      build(items, { start: start || 0 });
+    };
+    // le côté du bien : sept Valeurs et sept attributs, collectionnés comme des badges
+    const valeurs = () => {
+      const Vl = I.valeurs, back = mode === 'valeurs' ? close : root, items = [{ label: '◂ Retour', fn: back, show: () => Vl.paneVue() }, { label: 'Vue d’ensemble', fn() {}, show: () => Vl.paneVue() }, { cat: 'Les sept Valeurs' }];
+      Vl.IDS.forEach(v => items.push({ label: (Vl.acquise(v) ? '◆ ' : '◇ ') + I.esc(Vl.nom(v)), fn() {}, show: () => Vl.paneUne(v) }));
+      I.oeuvres.learn('valeurs'); $('#menu h2').textContent = 'Valeurs et attributs';
+      build(items, { onCancel: back, start: 1 });
+    };
     // l'organigramme du mal : la vue d'ensemble, puis les idoles rencontrées, maillon par maillon
     const mal = () => {
       const Ml = I.mal, back = mode === 'mal' ? close : root, items = [{ label: '◂ Retour', fn: back, show: () => Ml.paneVue() }, { label: 'Vue d’ensemble', fn() {}, show: () => Ml.paneVue() }, { cat: 'Les idoles rencontrées' }];
       Ml.epoques().forEach(s => items.push({ label: I.esc(Ml.nomEpoque(s)), fn() {}, show: () => Ml.paneEpoque(s) }));
+      if (mode !== 'mal') items.push({ cat: 'Du côté du bien' }, { label: 'Valeurs et attributs', fn: valeurs, show: () => I.valeurs.paneVue() });
       Ml.apprendre(); $('#menu h2').textContent = 'Organigramme du mal';
       build(items, { onCancel: back, start: 1 });
     };
-    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'mal') mal(); else if (mode === 'aide') aide(); else if (mode === 'equip') equip(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
+    screen('#menu', true); if (mode === 'prepa') prepa(); else if (mode === 'codex') codex(); else if (mode === 'valeurs') valeurs(); else if (mode === 'mal') mal(); else if (mode === 'aide') aide(); else if (mode === 'equip') equip(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
+  };
+
+  // Avant chaque combat d'idole : la page de préparation. Le joueur de test ne s'y arrête pas.
+  U.prepare = function (opts) {
+    if (I.debug.auto || U.menuOpen) return Promise.resolve();
+    return new Promise(res => { U.prepa = opts; U.pause('prepa', () => { U.prepa = null; res(); }); });
   };
 
   /* ---------- l'aide du jeu, thème par thème ---------- */
@@ -376,7 +402,10 @@
     ['Les œuvres et la provision', '<p>Sur la natte d’une mosquée, on prie, et l’on accomplit les <b>œuvres du jour</b> : le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite ; parfois le pèlerinage. Trois par chapitre au plus, la prière en sus. Chacune ajoute à la <b>provision du cœur</b> (♥, cinq au plus).</p><p>Plus une épreuve est lourde, plus elle en demande : une idole pèse de 1 à 3 selon son enracinement, un mal du cœur 3. Qui s’y présente sans provision combat <b>le cœur lourd</b> : il frappe moins fort et reçoit davantage. Le bouton <b>?</b> annonce le poids de l’épreuve qui vient.</p><p>Un jour de <b>jeûne</b>, les vivres de la besace attendent le soir. L’aumône coûte des dirhams. Ces œuvres ne sont pas des sortilèges : le jeu traduit à sa façon ce qu’elles font au cœur.</p>'],
     ['Lames et maux du cœur', '<p>Sept maux du cœur se tiennent derrière les idoles : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. On les rencontre à la fin de chaque rencontre de la Cité-Miroir, et tous ceux qui restent au dernier chapitre.</p><p>Une œuvre pratiquée forge une <b>lame</b> : trois jeûnes pour le Contentement, trois prières pour la Sincérité, trois aumônes pour la Largesse, trois études pour l’Ardeur, trois visites pour la Bienveillance, trois dhikr pour la Longanimité, un pèlerinage pour l’Humilité. Sans sa lame, un mal est seulement <b>repoussé</b> : il revient. Avec elle, il est <b>tranché</b>.</p><p>La page « Œuvres et lames » de la halte tient le compte.</p>'],
     ['À chaque mal sa réponse', '<p>L’<b>organigramme du mal</b> (halte, « Le savoir ») range ce que l’on rencontre et dit comment y répondre. À l’<b>idée noire</b>, qui pèse sur une personne : la parole, la pédagogie, la bienveillance. À l’<b>égrégore</b>, que beaucoup de cœurs nourrissent : le combat. À l’<b>idole</b>, enracinée : une bataille déclarée. On ne combat ni Iblîs ni ceux qui soufflent, et l’on ne s’en prend à aucun djinn : on répond à ce qui a été soufflé.</p><p>Chaque idole a une jauge d’<b>enracinement</b>, de ▮ à ▮▮▮▮▮. Un pourparler gagné, une idée noire dissipée du premier coup la font baisser ; une parole manquée, un acte que les transmetteurs n’ont pas rapporté la font monter. Déracinée, l’idole pèse moins sur la provision du cœur et garde un voile de moins ; enracinée, elle pèse davantage. La jauge se dit d’une idole, jamais d’une époque ni de ses gens.</p>'],
-    ['La bataille déclarée', '<p>Contre une <b>idole</b>, un carton <b>déclare la bataille</b> : l’idole, son enracinement, les <b>rangs</b> présents. Le combat du groupe se joue comme d’habitude. À côté, un <b>champ</b> de cinq colonnes sur trois couloirs : nos rangs y font face aux <b>nuées</b> de l’idole. Ce ne sont jamais des hommes. Là où il n’y a pas d’armée à mener, la bataille se déclare sans rangs, et le carton dit pourquoi.</p><p>Après chaque tour de l’idole, et au plus tard tous les trois tours, les rangs exécutent leur ordre, puis les nuées avancent. Au tour d’un compagnon, <b>Ordonner</b> change l’ordre d’un rang, à la place de son action : tenir, avancer, charger (cavaliers), tirer (archers), glisser vers un autre couloir, se replier. Sur le champ, chaque rang porte son <b>numéro</b>, celui du menu ; trois points disent sa tenue, un chevron son ordre. Une nuée bordée par un autre rang est prise <b>de flanc</b> ; prise des deux côtés, <b>en tenaille</b>, elle se dissipe. Un rang qui atteint le pied de l’idole <b>découvre son flanc</b> : un voile tombe, une faille se révèle. Une nuée qui perce jusqu’au camp sème le doute.</p><p>Un rang éprouvé se replie et se reforme : personne ne tombe. Le nombre de rangs suit la mission et le niveau du groupe ; un allié gagné par la parole vient en <b>renfort</b> et prend place sur le champ. <b>Khâlid</b>, dont c’est le métier, ordonne sans perdre son tour, et connaît trois manœuvres d’école : la réserve mobile, l’enveloppement, le repli feint.</p>'],
+    ['Valeurs et attributs', '<p>Du côté du bien, on ne dit ni djinn, ni égrégore, ni idole : on dit des <b>Valeurs</b> et des <b>attributs</b>. Il y a sept Valeurs, une en face de chaque mal du cœur. L’<b>œuvre</b>, accomplie trois fois, forge la lame ; la lame <b>tranche</b> le mal ; la Valeur d’en face est alors gardée, et le jeu la marque d’un <b>badge</b>.</p><p>Quand une lame est forgée, l’œuvre rappelle aussi un <b>attribut divin</b>, nommé d’après le Coran, avec son verset. On ne possède pas un attribut : on le reconnaît. La page « Valeurs et attributs » de la halte les rassemble.</p>'],
+    ['Descendre dans la noosphère', '<p>Trois moments ouvrent la noosphère à qui veut y descendre : <b>au sortir de la prière</b> sur la natte, <b>dans le dhikr</b>, et <b>en songe</b> (« S’endormir », sur la natte). Une descente par porte et par chapitre.</p><p>On y fait face à l’un de ses <b>maux du cœur</b> : ce que l’on appelle ses démons intérieurs. C’est le combat du <b>râwî</b>, seul ; ce n’est jamais celui d’un Compagnon. Avec la lame que l’œuvre a forgée, le mal est tranché et la Valeur gardée ; sans elle, il n’est que repoussé. Si le mal l’emporte, on remonte : rien n’est perdu.</p>'],
+    ['Le secours', '<p>Dans une <b>bataille déclarée</b> presque perdue, quand le dernier compagnon va tomber, le <b>secours</b> peut venir : le groupe est relevé, une fois. Il ne vient que si la <b>prière</b> a été tenue dans le chapitre, et l’on ne le commande pas.</p><p>Le jeu ne montre pas les anges, ne les nomme pas, ne les compte pas. Il cite ce que le Coran rapporte de Badr, et ne dit rien d’un autre jour.</p>'],
+    ['La bataille déclarée', '<p>Contre une <b>idole</b>, la bataille se <b>déclare</b>, et commence par une page de <b>préparation</b> : les hommes, le groupe, les armes et les boucliers, les vertus, la besace, le cœur. Elle signale ce qui manque sans rien bloquer, et l’on peut encore s’y équiper. Le combat du groupe se joue comme d’habitude. À côté, un <b>champ</b> de cinq colonnes sur trois couloirs : nos rangs y font face aux <b>nuées</b> de l’idole. Ce ne sont jamais des hommes. Là où il n’y a pas d’armée à mener, la bataille se déclare sans rangs, et le carton dit pourquoi.</p><p>Après chaque tour de l’idole, et au plus tard tous les trois tours, les rangs exécutent leur ordre, puis les nuées avancent. Au tour d’un compagnon, <b>Ordonner</b> change l’ordre d’un rang, à la place de son action : tenir, avancer, charger (cavaliers), tirer (archers), glisser vers un autre couloir, se replier. Sur le champ, chaque rang porte son <b>numéro</b>, celui du menu ; trois points disent sa tenue, un chevron son ordre. Une nuée bordée par un autre rang est prise <b>de flanc</b> ; prise des deux côtés, <b>en tenaille</b>, elle se dissipe. Un rang qui atteint le pied de l’idole <b>découvre son flanc</b> : un voile tombe, une faille se révèle. Une nuée qui perce jusqu’au camp sème le doute.</p><p>Un rang éprouvé se replie et se reforme : personne ne tombe. Le nombre de rangs suit la mission et le niveau du groupe ; un allié gagné par la parole vient en <b>renfort</b> et prend place sur le champ. <b>Khâlid</b>, dont c’est le métier, ordonne sans perdre son tour, et connaît trois manœuvres d’école : la réserve mobile, l’enveloppement, le repli feint.</p>'],
     ['Idées noires et énigmes', '<p>Dans un pourparler, il arrive que la <b>honte</b>, la <b>peur</b>, le <b>soupçon</b>, la <b>rancune</b> ou le <b>désespoir</b> parlent plus fort que toi. On ne la combat pas : on lui <b>répond</b>. Elle a deux voiles ; à chacun, tu choisis ta manière : <b>dire vrai</b> (la parole), <b>expliquer</b> (la pédagogie) ou <b>rassurer</b> (la bienveillance). La bonne manière fait tomber le voile ; une autre t’apprend pourquoi elle ne portait pas. Après quoi il écoute, et la confiance monte.</p><p>Une <b>énigme du cœur</b> : un compagnon languit sans fièvre ni blessure. Il tient moins bien au combat tant qu’on n’a pas trouvé ce qu’il a cessé de faire. Les anciens donnent des indices ; la bonne œuvre, accomplie sur la natte, le remet debout.</p>'],
     ['Compagnons de lumière', '<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>'],
     ['Si le jeu s’arrête', '<p>Si l’écran reste noir ou si plus rien ne répond pendant un quart de minute, un bouton <b>Reprendre</b> apparaît en bas de l’écran : il ramène au dernier objectif atteint, sans rien perdre de ce qui a été sauvegardé.</p><p>La partie se garde toute seule : en dernier recours, <b>recharge la page</b> puis choisis « Continuer ».</p><p>Dans la halte, <b>Diagnostic</b> donne la version du jeu, l’appareil, l’état du son et les incidents relevés : c’est ce qu’il faut transmettre pour qu’une panne soit comprise. Couper le son ou la musique (Réglages) suffit parfois à la contourner.</p>'],

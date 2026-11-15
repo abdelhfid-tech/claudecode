@@ -115,6 +115,21 @@ function checkSaga(s, E, W) {
   req(s, 'heroes', 'object', W0); req(s, 'enemies', 'object', W0);
   req(s, 'codex', 'array', W0); req(s, 'chapters', 'array', W0);
   if (!commun) { req(s, 'intro', 'array', W0); req(s, 'outro', 'array', W0); }
+  // le côté du bien : sept Valeurs et sept attributs, un par mal du cœur ; un attribut a son Nom, son verset et sa référence
+  if (commun) {
+    const vices = Object.keys(D.VICES), txt = (o, k, w) => { if (!o || typeof o[k] !== 'string' || !o[k].trim()) E.push(`${w}: « ${k} » manque`); };
+    if (s.valeurs || s.attributs) vices.forEach(v => {
+      const X = (s.valeurs || {})[v], A = (s.attributs || {})[v];
+      if (!X) E.push(`valeurs.${v}: manque (une Valeur par mal du cœur)`); else { txt(X, 'texte', `valeurs.${v}`); txt(X, 'face', `valeurs.${v}`); }
+      if (!A) E.push(`attributs.${v}: manque (un attribut par mal du cœur)`);
+      else { ['nom', 'sens', 'verset', 'ref', 'mot'].forEach(k => txt(A, k, `attributs.${v}`));
+        if (typeof A.ref === 'string' && !/^Coran \d+:\d+/.test(A.ref)) E.push(`attributs.${v}: la référence commence par « Coran s:v » (exigence 7)`);
+        if (typeof A.verset === 'string' && !/^«.*»$/.test(A.verset.trim())) E.push(`attributs.${v}: le verset se cite entre guillemets, mot à mot`); }
+    });
+    Object.keys(s.valeurs || {}).concat(Object.keys(s.attributs || {})).forEach(k => { if (!D.VICES[k]) E.push(`valeurs/attributs: « ${k} » n'est pas un mal du cœur (${vices.join('|')})`); });
+    if (s.portes) ['priere', 'dhikr', 'sommeil'].forEach(k => { const P = s.portes[k]; if (!P) E.push(`portes.${k}: manque`); else { txt(P, 'titre', `portes.${k}`); txt(P, 'invite', `portes.${k}`); } });
+    if (s.secours) ['titre', 'bandeau', 'verset', 'ref', 'mot'].forEach(k => txt(s.secours, k, 'secours'));
+  }
   const heroes = s.heroes || {}, propres = s.enemies || {}, enemies = Object.assign({}, commun ? {} : ennemisCommuns(), propres);
   Object.keys(propres).forEach(k => { if (!commun && ennemisCommuns()[k]) E.push(`ennemi ${k}: ce nom est déjà celui d'un égrégore commun (src/data/coeur.js)`); });
   const codexIds = new Set((s.codex || []).map(c => c.id));

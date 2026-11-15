@@ -211,6 +211,23 @@ mission dans le chapitre (`bataille`, décrit dans `schema-saga.md`). Toute idol
   pas pourquoi.
 - **Rien n'est sauvegardé** : le champ naît et meurt avec le combat.
 
+## 5 sexies. Préparation, secours, Valeurs et attributs, portes de la noosphère (version 8)
+
+- **La préparation** (`rangs.js`, `R.panePrepa` ; page ouverte par `ui.js`, `U.prepare`) : avant chaque combat d'idole et à
+  chaque reprise. Six points : les hommes, le groupe, l'équipement, les vertus, la besace, le cœur. Elle signale, ne
+  bloque rien, et l'on peut s'y équiper. Le joueur de test ne s'y arrête pas.
+- **Le secours** (`battle.js`, `leSecours` ; textes : `coeur.js`, `secours`) : dans un combat d'idole, quand tout le groupe
+  est éprouvé et que la prière a été tenue dans le chapitre (`S.flags._prayed`), il est relevé une fois par tentative.
+  Exigence 20 (proposée).
+- **Valeurs et attributs** (`valeurs.js` ; textes : `coeur.js`, `bien`, `valeurs`, `attributs`) : une Valeur par mal du cœur,
+  gardée quand il est tranché ; un attribut divin par Valeur, reconnu quand la lame est forgée. Rien de plus dans la
+  sauvegarde : tout se lit dans `lames` et `vices`. Page « Valeurs et attributs » de la halte. Exigence 21 (proposée).
+- **Les portes de la noosphère** (`valeurs.js`, `V.porte`, `V.descendre` ; textes : `coeur.js`, `portes`) : au sortir de la
+  prière, dans le dhikr, en songe (« S'endormir », sur la natte). Une descente par porte et par chapitre (drapeaux
+  `_o_porte_*`, effacés à chaque chapitre). Le combat est celui du râwî seul : `battle` accepte pour cela `heros` (un
+  groupe prêté), `sansReprise` (on peut revenir sans avoir gagné) et `interieur` (le carton de remontée). Exigence 22
+  (proposée).
+
 ## 6. Musique (`src/data/music.js`)
 
 ```js

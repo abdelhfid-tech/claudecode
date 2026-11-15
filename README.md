@@ -92,6 +92,17 @@ refuse. En bas, les images du jeu : les idées noires, les égrégores, les idol
 
 Les textes de cette page sont des propositions, à relire (`docs/decisions.md`, D97 à D102).
 
+### Le côté du bien : Valeurs et attributs
+
+Du côté du bien, on ne dit ni djinn, ni égrégore, ni idole. Sept **Valeurs**, une en face de chaque mal du cœur, se
+gardent quand ce mal est tranché ; le jeu les marque d'un badge. Sept **attributs divins**, nommés d'après le Coran avec
+leur verset, se reconnaissent quand l'œuvre a forgé la lame. Il n'y a pas d'organigramme du bien.
+
+On descend dans la noosphère **au sortir de la prière, dans le dhikr ou en songe**, pour faire face à ses maux du cœur.
+C'est le combat du râwî, seul : jamais celui d'un Compagnon.
+
+Propositions à valider : `docs/decisions.md`, D118 à D125.
+
 ### La bataille déclarée
 
 Contre une idole, on ne se bat plus seul. Un carton déclare la bataille, et à côté du combat s'ouvre un champ de
@@ -104,6 +115,10 @@ cinq colonnes sur trois couloirs : nos rangs y font face aux nuées de l'idole, 
 - **Khâlid.** Il ordonne sans perdre son tour et connaît trois manœuvres d'école : la réserve mobile,
   l'enveloppement, le repli feint.
 - **Personne ne tombe.** Un rang éprouvé se replie et se reforme. Le jeu ne donne aucun effectif.
+- **La préparation.** Avant chaque idole, une page dit ce que l'on a et ce qui manque : hommes, armes, boucliers,
+  vertus, besace, provision du cœur. On peut encore s'y équiper.
+- **Le secours.** Dans une bataille presque perdue, le groupe est relevé une fois, si la prière a été tenue. Aucun
+  ange n'est montré, nommé ni compté.
 
 Toute idole est annoncée par ce carton. Des rangs existent là où le récit met déjà une troupe aux côtés du héros :
 La Traversée et Yarmoûk (saga de Khâlid), L'Armée d'Usâma (les gardes des passes), La Bataille des Mâts (les ponts).

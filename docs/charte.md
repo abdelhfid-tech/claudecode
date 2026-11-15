@@ -96,6 +96,16 @@ Une page de texte, pas une galerie. Deux étages, séparés par un trait d'or en
 - **La jauge** : cinq barres dorées, `▮▮▮▯▯`. Elle accompagne le nom d'une idole, jamais celui d'un
   maillon ; les maillons sont désignés par leur numéro et leurs années.
 
+### Valeurs, attributs, secours
+
+- **Une Valeur** : un médaillon à huit pans, de la couleur de sa lame, sans inscription ni figure. Un à sept points
+  disent laquelle c'est. Éteint tant que le mal n'est pas tranché.
+- **Un attribut divin** : jamais un dessin. Un médaillon de texte, cerclé d'or quand il est reconnu, en pointillé avant ;
+  le Nom en translittération, son rendu, le verset et sa référence.
+- **Le secours** : un éclat clair sur tout l'écran, puis une colonne de lumière sur chaque compagnon. Aucune
+  silhouette, aucune aile, aucun visage, aucun nombre. Le carton porte un ornement à quatre branches et le verset.
+- **La descente** : le décor de la noosphère, et le râwî seul face au mal. Aucun Compagnon à l’écran.
+
 ### Le champ de bataille
 
 Une vue à part, le temps d'un ordre ou d'un pas : le décor du combat, assombri, et un damier de quinze cases.

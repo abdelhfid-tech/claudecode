@@ -111,13 +111,17 @@
       while (true) {
         const d = st(), left = MAX_JOUR - O.dayCount();
         const titre = { html: 'Une natte tournée vers La Mecque, au cœur de l’étoile.' + (premiere ? '<small>On y prie, et le groupe s’y repose. On y accomplit aussi les œuvres du jour : chacune nourrit la provision du cœur (♥), que les grandes épreuves consomment.</small>' : '') };
-        const i = I.debug.auto ? 3 : await S.menuPick(titre, [
+        const songe = ((C0().portes || {}).sommeil || {}).menu || 'S’endormir';
+        const i = I.debug.auto ? 4 : await S.menuPick(titre, [
           { t: 'Prier et se reposer : Constance et Souffle à 100 %, la Sakîna descend' },
           { t: 'Les œuvres du jour (' + (left > 0 ? 'encore ' + left : 'journée pleine') + ') · provision ♥ ' + d.zad + ' / ' + MAX_ZAD },
+          { t: songe },
           { t: 'Garder une copie de la partie (elle se sauvegarde déjà toute seule)' }, { t: 'Plus tard' }]);
-        if (i === 0) { await W.pray(); return; }
-        if (i === 2) { await I.ui.saveMenu(); return; }
-        if (i === 3) return;
+        // la prière, le dhikr, le sommeil : à ces moments-là, la noosphère est proche, et l'on peut y descendre (valeurs.js)
+        if (i === 0) { await W.pray(); await I.valeurs.porte('priere'); return; }
+        if (i === 2) { await I.valeurs.porte('sommeil'); return; }
+        if (i === 3) { await I.ui.saveMenu(); return; }
+        if (i === 4 || i < 0) return;
         await O.menu();
       }
     } finally { S.depth--; S.hideDialog(); }
@@ -130,7 +134,7 @@
         return { k, t: T[k].menu + (k === 'aumone' ? ' (' + T[k].prix + ' dirhams)' : ''), note: why ? why : (v && !O.hasBlade(v) ? C0().lames[v].name + ' ' + Math.min(n, need) + ' / ' + need : v ? 'lame forgée' : '') }; });
       const i = await S.menuPick('Les œuvres du jour · ' + (MAX_JOUR - O.dayCount()) + ' encore possibles', opts.map(o => ({ t: o.t + (o.note ? ' · *' + o.note + '*' : '') })).concat([{ t: 'Retour' }]));
       if (i >= opts.length) return;
-      await O.perform(opts[i].k);
+      if ((await O.perform(opts[i].k)) && opts[i].k === 'dhikr') { await I.valeurs.porte('dhikr'); return; }
     }
   };
   // tests : accomplit ce qui est possible, comme le ferait un joueur appliqué (l'ordre tourne d'un chapitre à l'autre)
@@ -141,7 +145,7 @@
     for (const k of ks) {
       if (I.debug.noOeuvres) break;
       if (k === 'aumone' && en && en.cure === 'aumone' && I.trade && I.trade.dirhams() < C0().oeuvres.aumone.prix) I.trade.dirhams(C0().oeuvres.aumone.prix); // le test ne doit pas dépendre de la bourse
-      if (!O.can(k)) await O.perform(k);
+      if (!O.can(k)) { await O.perform(k); if (k === 'dhikr') await I.valeurs.porte('dhikr'); }
     }
   };
   // le mal du cœur qui attend au bout d'un maillon (la rencontre de la Cité-Miroir qui le suit), et où en est sa lame
@@ -173,6 +177,7 @@
     I.audio.sfx('roll'); G.flash(L.couleur); if (D.TRACKS.includes('lame')) I.audio.music('lame');
     await S.card('lame', '<img class="lame" alt="" src="' + O.lameURL(v) + '"><p class="small">Une lame est forgée</p><h1 style="color:' + L.couleur + '">' + I.esc(L.name) + '</h1><p class="ar">' + I.esc(L.ar) + '</p><p>' + I.fmt(L.texte) + '</p><p class="small">Elle tranche ' + I.esc(bas(E.name)) + '</p><div class="hint">▼</div>');
     if (D.TRACKS.includes('lame')) I.audio.back();
+    await I.valeurs.reconnait(v); // l'œuvre qui a forgé la lame rappelle un attribut divin
   };
 
   /* ----- compagnons de lumière ----- */
@@ -208,8 +213,10 @@
     if (result !== 'win') return;
     const d = st(), c = opts._coeur || {};
     if ((c.w >= 2 || I.mal.estIdole(opts)) && !c.lack) d.pret = (d.pret || 0) + 1; // une idole déracinée ne pèse que 1 : elle compte tout de même
-    foes.forEach(e => { const v = e.def.vice; if (v) { d.vices[v] = O.hasBlade(v) ? 'tranche' : (d.vices[v] || 'repousse'); O.learn('maux'); } });
+    const gardees = [];
+    foes.forEach(e => { const v = e.def.vice; if (v) { const avant = d.vices[v]; d.vices[v] = O.hasBlade(v) ? 'tranche' : (d.vices[v] || 'repousse'); if (d.vices[v] === 'tranche' && avant !== 'tranche') gardees.push(v); O.learn('maux'); } });
     O.syncFlags();
+    for (const v of gardees) await I.valeurs.gagne(v); // le mal tranché, la Valeur d'en face reste
     await O.rally();
   };
   // dernier chapitre : les maux qui n'ont pas été tranchés se dressent une dernière fois, deux par deux

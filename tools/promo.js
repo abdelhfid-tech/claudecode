@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 /* Livret du joueur et planches de promotion.
    Tout ce qui est montré vient du jeu : écrans capturés en jouant, sprites tirés du moteur, textes tirés des données.
-   Usage : node tools/promo.js [captures|recit|decors|coeur|equipement|mobile|sprites|livret|planches|all]
+   Usage : node tools/promo.js [captures|recit|decors|coeur|noos|equipement|mobile|sprites|livret|planches|pdf|all]
      captures : joue le prologue et la saga I, s'arrête aux moments utiles, écrit promo/img/*.jpg
      sprites  : personnages, sceaux, égrégores, carreaux, pièces à bâtir, écrit promo/img/*.png
      livret   : assemble promo/livret.src.html et les données en promo/livret.html (autonome)
                 et promo/livret.artifact.html (fragment à publier)
-     planches : exporte chaque planche du livret en promo/planches/*.jpg (1920 px de large) */
+     planches : exporte chaque planche du livret en promo/planches/*.jpg (1920 px de large)
+     pdf : imprime promo/livret.html en promo/livret.pdf, mis en pages */
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
@@ -324,9 +325,13 @@ async function coeur(browser, errors) {
   await choix(T, 1); await T.shot('oeuvres');
   await choix(T, 0); await attends(T, carton, 'oeuvre'); await T.p.waitForTimeout(500); await T.shot('oeuvre-dhikr');
   await T.p.keyboard.press('Enter'); await T.p.waitForTimeout(900);
+  await attends(T, T => T.ev(() => { const c = document.querySelector('#choice'); return !c.hidden && /noosphère/.test(c.textContent); }), null, 40);
+  await T.p.waitForTimeout(400); await sansToasts(T); await T.shot('porte'); // dans le dhikr, la noosphère est proche
+  await choix(T, -1); await choix(T, 1); // pas maintenant ; retour aux œuvres du jour
   await T.ev(() => { window.ISNAD.oeuvres.state().oeuvres.aumone = 2; });
   await choix(T, 3); await attends(T, carton, 'oeuvre'); await T.p.waitForTimeout(400); await T.p.keyboard.press('Enter');
   await attends(T, carton, 'lame'); await T.p.waitForTimeout(600); await sansToasts(T); await T.shot('lame');
+  await T.p.keyboard.press('Enter'); await attends(T, carton, 'attribut'); await T.p.waitForTimeout(600); await sansToasts(T); await T.shot('attribut');
   await T.p.keyboard.press('Enter'); await attends(T, carton, 'animal'); await T.p.waitForTimeout(600); await sansToasts(T); await T.shot('compagnon-lumiere');
   await T.p.keyboard.press('Enter'); await T.p.waitForTimeout(900);
   await choix(T, -1); await choix(T, -1); await sansToasts(T);
@@ -358,6 +363,49 @@ async function coeur(browser, errors) {
   // e. une énigme du cœur, dans la Citadelle
   T = await ouvrir(); await aller(T, 'caid', 1); await surNatte(T);
   await T.ev(() => { const W = window.ISNAD.world; W.player.y += 30; W.player.dir = 0; W.resetTrail(); W.updateCam(true); W.hud(); }); await T.p.waitForTimeout(900); await T.shot('enigme');
+  await T.p.close();
+}
+
+/* ---------- 2 bis b. l'organigramme, la bataille déclarée, Valeurs et attributs, la descente ---------- */
+async function noos(browser, errors) {
+  console.log('Captures — organigramme, bataille déclarée, Valeurs et attributs');
+  const chainShown = () => !document.querySelector('#chain').hidden;
+  const ouvrir = async () => { const T = await openGame(browser, errors); await T.ev(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 30; });
+    await T.p.keyboard.press('Enter'); for (let i = 0; i < 600; i++) { if (await T.ev(chainShown)) break; await T.p.waitForTimeout(100); } return T; };
+  const aller = async (T, saga, ci) => {
+    await T.ev(([s, c]) => { const I = window.ISNAD, W = I.world; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset();
+      window.__stop = () => true; window.__stopped = false; I.debug.auto = true; I.debug.noOeuvres = true; I.speed = 30; W.roster = {}; W.saga = null; I.script.flags = {}; W.startChapter(s, c); }, [saga, ci]);
+    for (let i = 0; i < 500; i++) { if (await T.ev(() => window.__stopped)) break; await T.p.waitForTimeout(50); }
+    await T.p.waitForTimeout(300); await T.ev(() => { const W = window.ISNAD.world; W.foes = []; document.querySelector('#toasts').innerHTML = ''; });
+  };
+  const attends = async (T, fn, n) => { for (let i = 0; i < (n || 80); i++) { if (await T.ev(fn)) return true; await T.p.waitForTimeout(150); } return false; };
+  const pret = () => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); return !!c && c.querySelectorAll('.mi').length > 0 && !c.querySelector('.mhint') && (!b || b.hidden); };
+  const cote = async (T, label, clic) => { for (const b of await T.p.$$('#menu .side button')) { if ((await b.textContent()).includes(label)) { if (clic) await b.click(); else await b.hover(); await T.p.waitForTimeout(450); return true; } } return false; };
+
+  // a. Médine : la page des Valeurs et attributs, puis la descente en songe
+  let T = await ouvrir(); await aller(T, 'abubakr', 0);
+  await T.ev(() => { const I = window.ISNAD, d = I.oeuvres.state(); d.oeuvres.jeune = 3; d.lames.avidite = true; d.oeuvres.hajj = 1; d.lames.orgueil = true; d.vices.orgueil = 'tranche'; d.oeuvres.aumone = 3; d.lames.avarice = true; d.vices.avarice = 'tranche'; d.oeuvres.dhikr = 2; d.zad = 3; I.oeuvres.syncFlags(); I.ui.pause('valeurs'); });
+  await T.p.waitForTimeout(700); await T.shot('valeurs');
+  await T.p.keyboard.press('Escape'); await T.p.waitForTimeout(400);
+  await T.ev(() => { const W = window.ISNAD.world, sp = W.map.spots.priere; W.player.x = sp[0] * 16 + 8; W.player.y = sp[1] * 16 + 13; W.player.dir = 3; W.resetTrail(); W.updateCam(true); window.ISNAD.oeuvres.natte(); });
+  await T.p.waitForTimeout(700); { const o = await T.p.$$('#choice .opt'); await o[2].click(); await T.p.waitForTimeout(700); } // s'endormir
+  { const o = await T.p.$$('#choice .opt'); await o[0].click(); await T.p.waitForTimeout(900); } // l'Avidité, lame forgée
+  await T.p.keyboard.press('Enter'); await attends(T, pret, 160); await T.p.waitForTimeout(500); await T.ev(() => { document.querySelector('#toasts').innerHTML = ''; }); await T.shot('descente');
+  await T.p.close();
+
+  // b. Yarmoûk : l'organigramme, la préparation, le champ
+  T = await ouvrir(); await aller(T, 'khalid', 1);
+  await T.ev(() => { window.ISNAD.ui.pause('mal'); }); await T.p.waitForTimeout(700); await T.shot('organigramme');
+  await T.p.keyboard.press('Escape'); await T.p.waitForTimeout(400);
+  await T.ev(() => { const I = window.ISNAD, W = I.world; W.objIndex = 99; W.foes = []; I.script.flags.zurayr_ecart = true; I.script.flags._prayed = true;
+    const find = a => { if (!Array.isArray(a)) { if (a && typeof a === 'object') for (const v of Object.values(a)) { const r = find(v); if (r) return r; } return null; }
+      if (a[0] === 'battle' && a[1] && a[1].boss) return a[1]; for (const v of a) { const r = find(v); if (r) return r; } return null; };
+    const b = find(W.saga.chapters[1].objectives); I.oeuvres.state().zad = 3; I.debug.auto = false; I.speed = 1; I.battle.start(Object.assign({}, b, { intro: null })); });
+  await attends(T, () => !document.querySelector('#menu').hidden && /préparation/.test(document.querySelector('#menu h2').textContent), 60); await T.p.waitForTimeout(600); await T.shot('preparation');
+  await cote(T, 'Déclarer', true);
+  await attends(T, pret, 200); await T.p.waitForTimeout(400);
+  for (const b of await T.p.$$('#battle .cmd .mi')) { if ((await b.textContent()).includes('Ordonner')) { await b.click(); break; } }
+  await T.p.waitForTimeout(900); await T.ev(() => { document.querySelector('#toasts').innerHTML = ''; }); await T.shot('champ');
   await T.p.close();
 }
 
@@ -605,17 +653,71 @@ async function planches(browser, errors) {
   await p.close();
 }
 
+/* ---------- 6. le livret en PDF ---------- */
+// promo/livret.html imprimé par le navigateur, mis en pages : la couverture, le sommaire, un feuillet par page au moins,
+// les planches à la fin. Rien n'y est ajouté : mêmes textes, mêmes images, mêmes polices.
+const IMPRESSION = `
+  html, body { background: #07060d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .couv { min-height: 1697px; box-sizing: border-box; break-after: page; }
+  .couv nav.acces { display: none !important; }
+  nav.sommaire { padding-top: 70px; }
+  nav.sommaire a { text-decoration: none; }
+  .partie { break-before: page; break-after: avoid; padding-top: 56px; }
+  section.feuillet { padding-top: 34px; opacity: 1 !important; transform: none !important; }
+  section.feuillet > h2 { break-after: avoid; }
+  section.table { break-before: page; padding-top: 56px; }
+  h2, h3, h4, .cartel { break-after: avoid; }
+  figure, .ecran, .fiche, .fiche-p, .peuple, .groupe, .piece, .etal, .duo, .scene, .vue, .troupe, .note, dl, tr, li, blockquote, .defile, .pl, .lum, .bio { break-inside: avoid; }
+  p { orphans: 3; widows: 3; }
+  .defile { overflow: visible !important; }
+  footer.pied { break-before: avoid; margin-top: 60px; }
+`;
+async function pdf(browser, errors) {
+  console.log('— livret en PDF');
+  const p = await (await browser.newContext({ viewport: { width: 1200, height: 1697 }, deviceScaleFactor: 1 })).newPage();
+  p.on('pageerror', e => errors.push('pdf : ' + e.message));
+  await p.goto('file://' + path.join(PROMO, 'livret.html')); await p.emulateMedia({ media: 'screen' });
+  await p.addStyleTag({ content: IMPRESSION });
+  const manque = await p.evaluate(async () => {
+    document.querySelectorAll('img').forEach(i => { i.loading = 'eager'; });
+    const pied = document.querySelector('footer.pied'), som = document.querySelector('nav.sommaire'); if (pied && som) som.after(pied); // l'avertissement sous le sommaire, plutôt que seul sur une dernière page
+    await Promise.all([...document.images].map(i => i.complete ? null : new Promise(r => { i.addEventListener('load', r); i.addEventListener('error', r); })));
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    return [...document.images].filter(i => !i.naturalWidth).map(i => i.getAttribute('src'));
+  });
+  manque.forEach(m => errors.push('pdf : image absente ' + m));
+  // les captures pèsent lourd : chacune est réduite à deux fois sa largeur d'affichage, dans la page seulement
+  const liste = await p.evaluate(() => [...document.images].filter(i => /\.jpe?g$/i.test(i.getAttribute('src') || '')).map((i, k) => { i.dataset.k = k; return { k, src: i.getAttribute('src'), w: Math.ceil(i.getBoundingClientRect().width) }; }));
+  for (const it of liste) {
+    const fichier = path.join(PROMO, it.src); if (!fs.existsSync(fichier)) continue;
+    await p.evaluate(async ({ k, b64, w }) => {
+      const im = document.querySelector('img[data-k="' + k + '"]'), src = new Image(); src.src = 'data:image/jpeg;base64,' + b64; await src.decode();
+      const W = Math.min(src.naturalWidth, Math.max(480, w * 2)), H = Math.round(src.naturalHeight * W / src.naturalWidth), c = document.createElement('canvas');
+      c.width = W; c.height = H; const x = c.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(src, 0, 0, W, H);
+      im.removeAttribute('srcset'); im.src = c.toDataURL('image/jpeg', 0.84); await im.decode();
+    }, { k: it.k, b64: fs.readFileSync(fichier).toString('base64'), w: it.w });
+  }
+  await p.waitForTimeout(600);
+  const out = path.join(PROMO, 'livret.pdf');
+  await p.pdf({ path: out, width: '1200px', height: '1697px', printBackground: true, margin: { top: '0', right: '0', bottom: '0', left: '0' } });
+  console.log('  ✓ promo/livret.pdf', Math.round(fs.statSync(out).size / 1024) + ' Ko');
+  await p.context().close();
+}
+
 (async () => {
   if (mode === 'livret') { livret(); return; }
   const browser = await chromium.launch(); const errors = [];
   if (mode === 'recit' || mode === 'captures' || mode === 'all') await captures(browser, errors);
   if (mode === 'coeur' || mode === 'captures' || mode === 'all') await coeur(browser, errors);
+  if (mode === 'noos' || mode === 'captures' || mode === 'all') await noos(browser, errors);
   if (mode === 'equipement' || mode === 'captures' || mode === 'all') await equipement(browser, errors);
   if (mode === 'mobile' || mode === 'captures' || mode === 'all') await mobile(browser, errors);
   if (mode === 'decors' || mode === 'captures' || mode === 'all') { const T = await decors(browser, errors); await sprites(browser, errors, T); }
   else if (mode === 'sprites') await sprites(browser, errors);
   if (mode === 'all') livret();
   if (mode === 'planches' || mode === 'all') { if (mode === 'planches') livret(); await planches(browser, errors); }
+  if (mode === 'pdf' || mode === 'all') await pdf(browser, errors);
   if (errors.length) { console.log('--- ERREURS (' + errors.length + ') ---'); [...new Set(errors)].slice(0, 20).forEach(e => console.log(e)); }
   await browser.close();
   process.exit(errors.length ? 1 : 0);

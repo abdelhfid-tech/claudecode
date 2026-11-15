@@ -66,15 +66,53 @@
   const nueeEn = (ch, c, l) => ch.nuees.find(n => n.c === c && n.l === l) || null;
   const actifs = ch => ch.rangs.filter(r => !r.repos);
 
-  // le carton qui annonce la bataille : l'idole, son enracinement, les rangs présents
+  /* ================= la préparation : ce que l'on a, ce qui manque ================= */
+  // ce que la mission aligne pour ce combat, sans ouvrir le champ : les rangs, le renfort, les alliés venus ou non
+  R.apercu = function (opts) {
+    const B = (W.ch && W.ch.bataille) || {}, tous = B.rangs || [], n = tous.length ? R.combien(B) : 0, gagnes = (opts.allies || []).filter(a => S.flags[a.flag]);
+    const renfort = n ? gagnes.filter(a => a.rang).slice(0, 1) : [];
+    return { B, rangs: tous.slice(0, n).map(r => ({ name: r.name || D.RANGS[r.t].name, T: D.RANGS[r.t] })), plus: tous.length - n, renfort, venus: gagnes.filter(a => !renfort.includes(a)), absents: (opts.allies || []).filter(a => !S.flags[a.flag]) };
+  };
+  const idoleDe = opts => { const L = I.mal.lignee(W.saga, W.ch).idoles, id = opts.group.find(g => L.includes(g)) || opts.group[0]; return W.saga.enemies[id] || (I.common && I.common.enemies[id]) || { name: '', weak: [] }; };
+  // La page de préparation (ouverte par ui.js avant chaque combat d'idole). Elle signale, elle ne bloque rien.
+  R.panePrepa = function (opts) {
+    const A = R.apercu(opts), E = idoleDe(opts), Gr = I.gear, hs = W.party.map(id => W.hero(id)), lvl = hs.length ? hs[0].lvl : 1, L = [];
+    const li = (ok, titre, html) => L.push(`<li class="${ok ? 'ok' : 'manque'}"><b>${titre}</b>${html}</li>`), noms = a => a.map(x => I.esc(x.name)).join(', ');
+    // les hommes
+    { let h = '', ok = true;
+      if (A.rangs.length) { h += `${A.rangs.length} rang${A.rangs.length > 1 ? 's' : ''} : ${noms(A.rangs)}.`; if (A.renfort.length) h += ` En renfort sur le champ : ${noms(A.renfort)}.`; if (A.plus > 0 && lvl < 8) h += ` <small>Un rang de plus au niveau ${lvl < 4 ? 4 : 8}.</small>`; }
+      else h += I.fmt(A.B.mot || 'Il n’y a pas de rangs à mener ici : ce combat se livre sans armée.');
+      if (A.venus.length) h += ` Avec vous dès l’ouverture : ${noms(A.venus)}.`;
+      if (A.absents.length) { ok = false; h += ` <em>N’est pas venu : ${noms(A.absents)}.</em> <small>Une parole mieux menée l’aurait gagné.</small>`; }
+      li(ok, 'Les hommes', h); }
+    // le groupe
+    { let ok = true; const h = hs.map(x => { const st = I.calc.of(x), bas = x.hp < st.hp * 0.6 || x.sp < st.sp * 0.4; if (bas) ok = false; return `${I.esc(x.def.name)} · niveau ${x.lvl} · Constance ${Math.ceil(x.hp)}/${st.hp} · Souffle ${x.sp}/${st.sp}${x.hp <= 0 ? ' <em>(éprouvé)</em>' : bas ? ' <em>(entamé)</em>' : ''}`; }).join('<br>');
+      li(ok, 'Le groupe', h + (ok ? '' : '<br><small>Le groupe n’est pas reposé : une natte, ou la besace, l’aurait remis.</small>')); }
+    // armes, boucliers, casques, cuirasses
+    { let vides = 0, dispo = 0; const h = hs.map(x => { const eq = Gr.of(x); return I.esc(x.def.name) + ' : ' + Gr.SLOTS.map(s => { const id = eq[s]; if (id) return Gr.img(id) + ' ' + I.esc(D.GEAR[id].name); vides++; if (Gr.reserve(s).some(g => Gr.can(x.def, g))) dispo++; return `<span class="rien">${D.SLOTS[s].toLowerCase()} : rien</span>`; }).join(' · '); }).join('<br>');
+      li(!dispo, 'Armes, boucliers, casques, cuirasses', h + (dispo ? `<br><em>${dispo} emplacement${dispo > 1 ? 's' : ''} vide${dispo > 1 ? 's' : ''} alors que la réserve a de quoi.</em> <small>« Équiper au mieux » s’en charge.</small>` : vides ? '<br><small>La réserve n’a rien de plus pour eux : les coffres et les comptoirs la remplissent.</small>' : '')); }
+    // les vertus
+    { const P = W.pillars(), connues = (E.weak || []).slice(0, Math.floor((P.savoir || 0) / 2)), port = {}; hs.forEach(x => { port[x.def.el] = 1; x.def.skills.filter(k => k.lvl <= x.lvl && k.el).forEach(k => { port[k.el] = 1; }); });
+      const mine = Object.keys(port).filter(e => D.ELEMENTS[e] && e !== 'fer').map(e => `<span style="color:${D.ELEMENTS[e].color}">${D.ELEMENTS[e].glyph} ${D.ELEMENTS[e].name}</span>`).join(' · ') || 'aucune';
+      const touche = connues.filter(e => port[e]);
+      li(!connues.length || touche.length > 0, 'Les vertus', `Lumières du groupe : ${mine}.<br>` + (connues.length ? `Failles connues de l’idole : ${connues.map(e => D.ELEMENTS[e].name).join(', ')}. ` + (touche.length ? 'Le groupe en porte.' : '<em>Le groupe n’en porte aucune.</em>') : '<small>Ses failles restent à découvrir en combattant ; un Savoir plus haut dans ce règne en révèle d’emblée.</small>')); }
+    // la besace
+    { const it = I.save.data.items || {}, ks = Object.keys(D.ITEMS).filter(k => (it[k] || 0) > 0);
+      li(ks.length > 0, 'La besace', ks.length ? ks.map(k => `${I.esc(D.ITEMS[k].name)} ×${it[k]}`).join(' · ') : '<em>Vide.</em> <small>Les coffres et les comptoirs la remplissent.</small>'); }
+    // le cœur
+    { const w = I.oeuvres.weight(opts), z = I.oeuvres.zad(), prie = !!S.flags._prayed;
+      li(z >= w && prie, 'Le cœur', `Provision ♥ ${z} · l’épreuve en demande ${w}. ` + (z >= w ? 'Le cœur est prêt.' : `<em>Il en manquera ${w - z} : le cœur sera lourd.</em> <small>Les œuvres du jour, sur la natte, nourrissent la provision.</small>`) +
+        '<br>' + (prie ? 'Tu es passé par la prière dans ce chapitre.' : '<em>Tu n’es pas encore passé par la natte dans ce chapitre.</em>') + R.motSecours(prie)); }
+    const manque = L.filter(x => x.indexOf('class="manque"') > 0).length;
+    return `<h3>${I.esc(E.name)}</h3><p class="src">Bataille déclarée · enracinement ${I.mal.traits(I.mal.niveau())}</p><ul class="prepa">${L.join('')}</ul>` +
+      `<p class="src">${manque ? `${manque} point${manque > 1 ? 's' : ''} à regarder, marqué${manque > 1 ? 's' : ''} d’un ◇.` : 'Tout est là.'} Rien n’empêche de déclarer la bataille : cette page dit ce que l’on a, et ce qui manque.</p>`;
+  };
+  R.motSecours = prie => { const T = (I.sagas.coeur && I.sagas.coeur.secours) || {}, t = prie ? T.pret : T.absent; return t ? ` <small>${I.esc(t)}</small>` : ''; };
+
+  // la bataille est déclarée : l'idole, son enracinement, les rangs présents. La page de préparation le dit ; ici, le Recueil s'ouvre.
   R.declare = async function (C, opts) {
     if (!I.mal.estIdole(opts)) return; // toute idole se combat par une bataille déclarée ; la mission dit s'il y a des rangs
-    const B = (W.ch && W.ch.bataille) || {};
     I.oeuvres.learn('bataille');
-    const ch = C.champ, lead = C.all.find(e => e.side === 'foe' && I.mal.lignee(W.saga, W.ch).idoles.includes(e.id)) || C.all.find(e => e.side === 'foe');
-    const rangs = ch ? ch.rangs.map(r => `<li><b>${I.esc(r.name)}</b> · ${NOMS[r.l]}</li>`).join('') : '';
-    await S.card('title parley bataille', `<p class="small">Bataille déclarée</p><h1>${I.esc(lead.name)}</h1><p>Enracinement ${I.mal.traits(I.mal.niveau())}</p>` +
-      (rangs ? `<ul class="rangs">${rangs}</ul><p class="small">En face, des nuées : jamais des hommes. Au tour d’un compagnon, « Ordonner » dirige un rang.</p>` : `<p>${I.fmt(B.mot || 'Il n’y a pas de rangs à mener ici : ce combat se livre sans armée.')}</p>`) + '<div class="rule"></div><div class="hint">▼</div>');
   };
 
   /* ================= le pas : nos rangs, puis les nuées ================= */

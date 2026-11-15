@@ -329,6 +329,27 @@ body.portrait #hud .enig { display: block; background: var(--panel); }
 /* le champ de bataille : les bandeaux se rangent hors du champ (au-dessus, écran en hauteur ; entre le champ et le panneau sinon) */
 #battle.champ .banner, #battle.champ .banner.speech, #battle.champ .banner.intro { top: 56.5%; }
 body.portrait #battle.champ .banner, body.portrait #battle.champ .banner.speech, body.portrait #battle.champ .banner.intro { top: 4%; }
+/* Valeurs et attributs : un badge par Valeur (dessiné), un médaillon de texte par attribut (jamais un dessin) */
+.badge { width: 2.6em; height: 2.6em; image-rendering: pixelated; flex: none; vertical-align: -.8em; } .badge.grand { width: 6.5em; height: 6.5em; display: block; margin: 0 auto .6em; filter: drop-shadow(0 0 1.2em rgba(233, 200, 119, .35)); }
+.bien { display: grid; gap: .5em; margin: .7em 0; }
+.bien-l { display: grid; grid-template-columns: auto 1fr; gap: .2em .7em; align-items: center; padding: .45em .6em; background: rgba(255, 255, 255, .035); border-left: 2px solid rgba(255, 255, 255, .12); opacity: .72; }
+.bien-l.on { opacity: 1; border-left-color: var(--gold); } .bien-l small { color: var(--dim); }
+.att { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: .3em .6em; align-items: center; margin: .15em 0 0; } .att small, .att span { color: var(--dim); }
+.med { font-style: normal; display: inline-grid; place-items: center; min-width: 2.1em; min-height: 2.1em; padding: 0 .75em; border: 1px dashed rgba(255, 255, 255, .25); border-radius: 2em; color: var(--dim); font-family: var(--f-display); letter-spacing: .05em; flex: none; max-width: 100%; box-sizing: border-box; text-align: center; }
+.att.on .med { border: 1px solid var(--gold); color: #fff6dc; box-shadow: 0 0 1em rgba(233, 200, 119, .18) inset; }
+#card.valeur h1 { letter-spacing: .14em; } #card.attribut .orn { color: #fff6dc; } #card.attribut h1 { letter-spacing: .1em; text-transform: none; }
+#card.attribut p.sens { font-family: var(--f-display); letter-spacing: .12em; color: var(--gold); font-style: normal; } #card.attribut p.mot { font-style: normal; color: var(--dim); font-size: .92em; max-width: 30em; }
+#card.noos { background: radial-gradient(ellipse at center, rgba(30, 20, 70, .95), rgba(4, 3, 10, 1)); }
+/* le secours : le verset, sa référence, puis le mot du jeu, plus sobre */
+#card.secours .orn { color: #fff6dc; } #card.secours h1 { letter-spacing: .16em; }
+#card.secours p.mot { font-style: normal; color: var(--dim); font-size: .92em; max-width: 30em; }
+/* la préparation d'une bataille : une liste de points, ◆ quand c'est là, ◇ quand il manque quelque chose */
+.prepa { list-style: none; margin: .6em 0; padding: 0; display: grid; gap: .55em; }
+.prepa li { position: relative; padding: .1em 0 .1em 1.5em; line-height: 1.38; }
+.prepa li::before { content: '◆'; position: absolute; left: .1em; top: .1em; color: var(--gold); }
+.prepa li.manque::before { content: '◇'; color: #ff9a8a; }
+.prepa li > b { display: block; font-family: var(--f-display); letter-spacing: .06em; font-weight: 400; color: var(--sand); }
+.prepa em { color: #ffb4a6; font-style: normal; } .prepa small { color: var(--dim); } .prepa .rien { color: var(--dim); }
 /* écran en hauteur : pendant qu'on ordonne, le menu remonte sous le champ (les plaques du groupe reviennent après) */
 body.portrait #battle.ordre .heroes { display: none; }
 /* écran en largeur : le menu des ordres prend toute la largeur du panneau, sur deux colonnes, et ne monte jamais jusqu'au champ
@@ -456,7 +477,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
+window.ISNAD_VERSION = "2026-11-15 14:50 UTC · 372e54d+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -2986,7 +3007,7 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
     if (I.trade && W.map.spots.comptoir && !S.flags._trade_test && !W.saga.frame && !W._autoBusy) { S.flags._trade_test = true; W._autoBusy = true; I.trade._autoStep = 0; I.trade._sold = I.trade._bought = I.trade._forge = 0; I.trade.open().then(() => { W._autoBusy = false; }, e => { log.push('ERR commerce ' + e.message); W._autoBusy = false; }); return; }
     if (o.build && I.debug.noBuild) return;
     if (o.build) { W._autoBusy = true; I.build.autoBuild(o.build); I.build.after().then(() => { W._autoBusy = false; }, e => { log.push('ERR bâtir ' + e.message); W._autoBusy = false; }); return; }
-    if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => I.oeuvres.auto()).then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
+    if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => I.valeurs.porte('priere')).then(() => I.oeuvres.auto()).then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
     const go = (x, y, what) => { if (!W.reach(p.x, p.y, x, y)) log.push(`INACCESSIBLE ${W.saga.id}/${W.ch.id} obj${W.objIndex} ${what} sur ${W.map.id}`); p.x = x; p.y = y; W.resetTrail(); };
     const ck = !W._autoBusy && W.chests.find(c => !c.open && !c._vu && c.map === W.map.id && c.placed);
     if (ck) { ck._vu = true; const quoi = ck.gear || ck.item || ck.codex;
@@ -3598,13 +3619,17 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
       while (true) {
         const d = st(), left = MAX_JOUR - O.dayCount();
         const titre = { html: 'Une natte tournée vers La Mecque, au cœur de l’étoile.' + (premiere ? '<small>On y prie, et le groupe s’y repose. On y accomplit aussi les œuvres du jour : chacune nourrit la provision du cœur (♥), que les grandes épreuves consomment.</small>' : '') };
-        const i = I.debug.auto ? 3 : await S.menuPick(titre, [
+        const songe = ((C0().portes || {}).sommeil || {}).menu || 'S’endormir';
+        const i = I.debug.auto ? 4 : await S.menuPick(titre, [
           { t: 'Prier et se reposer : Constance et Souffle à 100 %, la Sakîna descend' },
           { t: 'Les œuvres du jour (' + (left > 0 ? 'encore ' + left : 'journée pleine') + ') · provision ♥ ' + d.zad + ' / ' + MAX_ZAD },
+          { t: songe },
           { t: 'Garder une copie de la partie (elle se sauvegarde déjà toute seule)' }, { t: 'Plus tard' }]);
-        if (i === 0) { await W.pray(); return; }
-        if (i === 2) { await I.ui.saveMenu(); return; }
-        if (i === 3) return;
+        // la prière, le dhikr, le sommeil : à ces moments-là, la noosphère est proche, et l'on peut y descendre (valeurs.js)
+        if (i === 0) { await W.pray(); await I.valeurs.porte('priere'); return; }
+        if (i === 2) { await I.valeurs.porte('sommeil'); return; }
+        if (i === 3) { await I.ui.saveMenu(); return; }
+        if (i === 4 || i < 0) return;
         await O.menu();
       }
     } finally { S.depth--; S.hideDialog(); }
@@ -3617,7 +3642,7 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
         return { k, t: T[k].menu + (k === 'aumone' ? ' (' + T[k].prix + ' dirhams)' : ''), note: why ? why : (v && !O.hasBlade(v) ? C0().lames[v].name + ' ' + Math.min(n, need) + ' / ' + need : v ? 'lame forgée' : '') }; });
       const i = await S.menuPick('Les œuvres du jour · ' + (MAX_JOUR - O.dayCount()) + ' encore possibles', opts.map(o => ({ t: o.t + (o.note ? ' · *' + o.note + '*' : '') })).concat([{ t: 'Retour' }]));
       if (i >= opts.length) return;
-      await O.perform(opts[i].k);
+      if ((await O.perform(opts[i].k)) && opts[i].k === 'dhikr') { await I.valeurs.porte('dhikr'); return; }
     }
   };
   // tests : accomplit ce qui est possible, comme le ferait un joueur appliqué (l'ordre tourne d'un chapitre à l'autre)
@@ -3628,7 +3653,7 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
     for (const k of ks) {
       if (I.debug.noOeuvres) break;
       if (k === 'aumone' && en && en.cure === 'aumone' && I.trade && I.trade.dirhams() < C0().oeuvres.aumone.prix) I.trade.dirhams(C0().oeuvres.aumone.prix); // le test ne doit pas dépendre de la bourse
-      if (!O.can(k)) await O.perform(k);
+      if (!O.can(k)) { await O.perform(k); if (k === 'dhikr') await I.valeurs.porte('dhikr'); }
     }
   };
   // le mal du cœur qui attend au bout d'un maillon (la rencontre de la Cité-Miroir qui le suit), et où en est sa lame
@@ -3660,6 +3685,7 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
     I.audio.sfx('roll'); G.flash(L.couleur); if (D.TRACKS.includes('lame')) I.audio.music('lame');
     await S.card('lame', '<img class="lame" alt="" src="' + O.lameURL(v) + '"><p class="small">Une lame est forgée</p><h1 style="color:' + L.couleur + '">' + I.esc(L.name) + '</h1><p class="ar">' + I.esc(L.ar) + '</p><p>' + I.fmt(L.texte) + '</p><p class="small">Elle tranche ' + I.esc(bas(E.name)) + '</p><div class="hint">▼</div>');
     if (D.TRACKS.includes('lame')) I.audio.back();
+    await I.valeurs.reconnait(v); // l'œuvre qui a forgé la lame rappelle un attribut divin
   };
 
   /* ----- compagnons de lumière ----- */
@@ -3695,8 +3721,10 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
     if (result !== 'win') return;
     const d = st(), c = opts._coeur || {};
     if ((c.w >= 2 || I.mal.estIdole(opts)) && !c.lack) d.pret = (d.pret || 0) + 1; // une idole déracinée ne pèse que 1 : elle compte tout de même
-    foes.forEach(e => { const v = e.def.vice; if (v) { d.vices[v] = O.hasBlade(v) ? 'tranche' : (d.vices[v] || 'repousse'); O.learn('maux'); } });
+    const gardees = [];
+    foes.forEach(e => { const v = e.def.vice; if (v) { const avant = d.vices[v]; d.vices[v] = O.hasBlade(v) ? 'tranche' : (d.vices[v] || 'repousse'); if (d.vices[v] === 'tranche' && avant !== 'tranche') gardees.push(v); O.learn('maux'); } });
     O.syncFlags();
+    for (const v of gardees) await I.valeurs.gagne(v); // le mal tranché, la Valeur d'en face reste
     await O.rally();
   };
   // dernier chapitre : les maux qui n'ont pas été tranchés se dressent une dernière fois, deux par deux
@@ -4238,6 +4266,141 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
   };
 })();
 
+/* ==== src/core/valeurs.js ==== */
+/* ISNAD — le côté du bien : Valeurs et attributs ; les portes de la noosphère.
+   Demande du décideur : « Du côté du bien on appelle ça des Valeurs ou des attributs, pas des djinns, égrégores ou idoles » ;
+   « on collectionne les valeurs et les attributs comme des badges » ; « 7 valeurs + je parle des attributs divins » ; et, à la
+   prière, au dhikr ou au sommeil, « la possibilité d'accéder à la noosphère pour combattre nos démons intérieurs ».
+
+   Rien de nouveau n'est gardé dans la sauvegarde : une Valeur est acquise quand le mal d'en face est tranché, un attribut est
+   reconnu quand l'œuvre a forgé la lame. Règles et dessin seulement ; textes dans coeur.js (`bien`, `valeurs`, `attributs`,
+   `portes`).
+
+   Garde-fous (exigences 8, 15, 16 ; 21 et 22 proposées) :
+   - un attribut divin n'est jamais dessiné, personnifié, « équipé » ni changé en pouvoir : son Nom est du texte, jamais un
+     sprite ; il vient du Coran, avec son verset et sa référence ;
+   - pas d'organigramme du bien en miroir de celui du mal : rien ne se tient en face du Créateur ;
+   - le combat intérieur est celui du râwî (Idris, personnage de fiction), seul. Jamais celui d'un Compagnon : le jeu ne
+     prête à aucun d'eux un mal du cœur. « Démons intérieurs » est une façon de parler : ce sont les maux du cœur. */
+(function () {
+  'use strict';
+  const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, W = I.world;
+  const V = I.valeurs = {};
+  const IDS = Object.keys(D.VICES);
+  const C0 = () => I.sagas.coeur || {};
+  const T = k => C0()[k] || {};
+  const st = () => I.oeuvres.state();
+  V.IDS = IDS;
+  V.acquise = v => st().vices[v] === 'tranche';
+  V.reconnu = v => !!st().lames[v];
+  V.compte = () => ({ valeurs: IDS.filter(V.acquise).length, attributs: IDS.filter(V.reconnu).length, sur: IDS.length });
+
+  /* ================= les badges ================= */
+  // Un badge de Valeur : un médaillon à huit pans, sans inscription ni figure. Le nombre de points dit lequel c'est.
+  const cache = {};
+  function pans(c, x0, y0, n, coupe, col) { c.fillStyle = col; for (let y = 0; y < n; y++) { const r = Math.max(0, coupe - y, y - (n - 1 - coupe)); c.fillRect(x0 + r, y0 + y, n - 2 * r, 1); } }
+  V.badge = function (v, plein) {
+    const k = 'b' + v + (plein ? 1 : 0); if (cache[k]) return cache[k];
+    const n = IDS.indexOf(v) + 1, col = (T('lames')[v] || {}).couleur || '#e9c877', cv = G.mk(26, 26), c = cv.getContext('2d');
+    pans(c, 0, 0, 26, 8, plein ? col : '#3a3650'); pans(c, 2, 2, 22, 7, '#100d1c'); pans(c, 4, 4, 18, 6, plein ? col : '#232038');
+    c.fillStyle = plein ? '#100d1c' : '#3a3650';
+    if (n === 1) c.fillRect(12, 12, 2, 2);
+    else for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / n; c.fillRect(Math.round(13 + Math.cos(a) * 5) - 1, Math.round(13 + Math.sin(a) * 5) - 1, 2, 2); }
+    if (plein) { c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(8, 4, 10, 1); }
+    return (cache[k] = cv);
+  };
+  V.badgeURL = (v, plein) => cache['u' + v + (plein ? 1 : 0)] || (cache['u' + v + (plein ? 1 : 0)] = V.badge(v, plein).toDataURL());
+  const img = (v, plein, cls) => `<img class="badge${cls ? ' ' + cls : ''}" alt="" src="${V.badgeURL(v, plein)}">`;
+
+  /* ================= gagner, reconnaître ================= */
+  // La Valeur d'en face, quand le mal est tranché (oeuvres.js l'appelle au moment où cela arrive)
+  V.gagne = async function (v) {
+    const L = T('lames')[v], X = T('valeurs')[v] || {}; if (!L) return;
+    I.oeuvres.learn('valeurs'); if (I.debug.auto) return;
+    I.audio.sfx('light'); G.flash(L.couleur);
+    await S.card('lame valeur', `${img(v, true, 'grand')}<p class="small">Une Valeur</p><h1 style="color:${L.couleur}">${I.esc(L.name)}</h1><p class="ar">${I.esc(L.ar)}</p><p>${I.fmt(X.texte || '')}</p><p class="small">Valeurs gardées : ${V.compte().valeurs} / ${IDS.length}</p><div class="hint">▼</div>`);
+  };
+  // L'attribut divin que l'œuvre rappelle, quand la lame est forgée. Du texte, rien d'autre : ni figure, ni sprite.
+  V.reconnait = async function (v) {
+    const A = T('attributs')[v]; if (!A) return;
+    I.oeuvres.learn('attributs'); if (I.debug.auto) return;
+    I.audio.sfx('light');
+    await S.card('pray attribut', `<div class="orn">◌</div><p class="small">Un attribut divin à reconnaître</p><h1>${I.esc(A.nom)}</h1><p class="sens">${I.esc(A.sens)}</p><p>${I.esc(A.verset)}</p><p class="small">${I.esc(A.ref)}, traduction du sens</p><p class="mot">${I.esc(A.mot)}</p><div class="hint">▼</div>`);
+  };
+
+  /* ================= la page de la halte ================= */
+  const oeuvreDe = v => { const k = D.VICES[v].oeuvre, O = T('oeuvres')[k] || {}; return { k, nom: (O.court || O.name || k), n: Math.min(I.oeuvres.count(k), D.VICES[v].need), need: D.VICES[v].need }; };
+  function carte(v) {
+    const L = T('lames')[v] || {}, X = T('valeurs')[v] || {}, A = T('attributs')[v] || {}, E = (C0().enemies || {})[v] || {}, B = T('bien'), a = V.acquise(v), r = V.reconnu(v), o = oeuvreDe(v);
+    return `<div class="bien-l${a ? ' on' : ''}">${img(v, a)}<div class="val"><b style="color:${a ? L.couleur : 'inherit'}">${I.esc(L.name || '')}</b> <small>${I.esc(L.ar || '')}</small><br>` +
+      `<small>${a ? I.fmt(X.texte || '') : 'En face : ' + I.esc(E.name || '') + '. ' + I.esc(B.gagner || '')}</small></div>` +
+      `<div class="att${r ? ' on' : ''}"><i class="med">${r ? I.esc(A.nom || '') : '◌'}</i><small>${r ? '« ' + I.esc(A.sens || '') + ' » · ' + I.esc(A.ref || '') : I.esc(B.reconnaitre || '') + ' ' + I.esc(o.nom) + ' : ' + o.n + ' / ' + o.need}</small></div></div>`;
+  }
+  V.paneVue = function () {
+    const B = T('bien'), n = V.compte();
+    return `<h3>${I.esc(B.titre || 'Valeurs et attributs')}</h3><p>${I.fmt(B.chapeau || '')}</p><p class="src">Valeurs gardées : <b>${n.valeurs}</b> / ${n.sur} · attributs reconnus : <b>${n.attributs}</b> / ${n.sur}</p>` +
+      `<div class="bien">${IDS.map(carte).join('')}</div><p class="src">${I.fmt(B.note || '')}</p>`;
+  };
+  V.paneUne = function (v) {
+    const L = T('lames')[v] || {}, X = T('valeurs')[v] || {}, A = T('attributs')[v] || {}, E = (C0().enemies || {})[v] || {}, B = T('bien'), a = V.acquise(v), r = V.reconnu(v), o = oeuvreDe(v);
+    let h = `<h3 style="color:${L.couleur}">${img(v, a)} ${I.esc(L.name || '')} <small>${I.esc(L.ar || '')}</small></h3>`;
+    h += `<p>${I.fmt(X.texte || '')}</p><p class="src">${a ? 'Valeur gardée.' : 'En face : ' + I.esc(E.name || '') + ' (' + I.esc(X.face || '') + '). ' + I.esc(B.gagner || '')}</p>`;
+    h += `<p class="src">La lame : ${r ? 'forgée' : I.esc(o.nom) + ' ' + o.n + ' / ' + o.need}. ${a ? '' : 'On fait face à ce mal en descendant dans la noosphère : au sortir de la prière, dans le dhikr, en songe.'}</p>`;
+    h += '<h3>L’attribut</h3>' + (r ? `<p class="att on"><i class="med">${I.esc(A.nom || '')}</i> <span>« ${I.esc(A.sens || '')} »</span></p><p>${I.esc(A.verset || '')}</p><p class="src">${I.esc(A.ref || '')}, traduction du sens</p><p>${I.esc(A.mot || '')}</p>`
+      : `<p class="att"><i class="med">◌</i> <span>${I.esc(B.reconnaitre || '')}</span></p>`);
+    return h;
+  };
+  V.nom = v => (T('lames')[v] || {}).name || v;
+
+  /* ================= les portes de la noosphère ================= */
+  V.PORTES = ['priere', 'dhikr', 'sommeil'];
+  V.restent = () => IDS.filter(v => !V.acquise(v));
+  V.ouverte = k => !!S.flags['_o_porte_' + k]; // une descente par porte et par chapitre
+  // Le râwî : Idris, personnage de fiction. Dans son propre récit, c'est lui tel qu'il est ; ailleurs, la Chaîne lui prête
+  // la mesure du groupe qu'il accompagne.
+  V.rawi = function () {
+    const sg = I.sagas.idris, def = sg && sg.heroes && sg.heroes.idris; if (!def) return null;
+    if (W.saga && W.saga.id === 'idris' && W.party.includes('idris')) return W.hero('idris');
+    const key = 'idris:idris', sv = I.save.data.heroes[key] || { lvl: 1, xp: 0 }, chef = W.party.length ? W.hero(W.party[0]) : null;
+    const h = { id: 'idris', key, def, lvl: Math.max(sv.lvl || 1, chef ? chef.lvl : 1), xp: sv.xp || 0, sakina: 0, niyya: 0, prete: true };
+    const s0 = I.calc.of(h); h.hp = s0.hp; h.sp = s0.sp; return h;
+  };
+  // Descendre : un seul mal, face au râwî seul. Pas de reprise forcée : si le mal l'emporte, on remonte.
+  V.descendre = async function (k, v) {
+    const P = T('portes'), E = (C0().enemies || {})[v], X = T('valeurs')[v] || {}, h = V.rawi(); if (!E || !h) return null;
+    S.flags['_o_porte_' + k] = true; I.oeuvres.learn('noos_interieure');
+    S.depth++;
+    let res = null;
+    try {
+      S.hideDialog();
+      if (!I.debug.auto) await S.card('title noos', `<p class="small">${I.esc((P[k] || {}).titre || '')}</p><h1>La noosphère</h1><p>${I.esc(P.seuil || '')}</p><div class="rule"></div><div class="hint">▼</div>`, 6000);
+      res = await I.battle.start({ group: [v], bg: 'noos', w: 1, interieur: true, sansReprise: true, heros: [h], intro: E.name + ' : ' + (X.face || '') + '.' });
+      if (h.prete) I.save.data.heroes[h.key] = { lvl: h.lvl, xp: h.xp }; // ce que le râwî a appris lui reste
+      if (W.map && W.saga && !W.lock) W.checkpoint();
+    } finally { S.depth--; S.hideDialog(); }
+    return res;
+  };
+  // Au sortir de la prière, dans le dhikr, en songe : la porte s'ouvre, et l'on choisit de descendre ou non.
+  V.porte = async function (k) {
+    const P = T('portes'), Pk = P[k]; if (!Pk || !W.saga) return null;
+    const L = V.restent(), O = I.oeuvres;
+    if (I.debug.auto) { // le joueur de test ne descend que pour trancher : une lame forgée, un mal encore debout
+      if (I.debug.noOeuvres || V.ouverte(k)) return null; const v = L.find(x => O.hasBlade(x)); return v ? V.descendre(k, v) : null;
+    }
+    if (V.ouverte(k)) { if (k === 'sommeil') S.toast(I.esc(P.deja || ''), 2600); return null; }
+    if (!L.length) { if (k === 'sommeil') S.toast(I.esc(P.rien || ''), 3200); return null; }
+    S.depth++;
+    let v = null;
+    try {
+      const E = C0().enemies || {}, Lm = T('lames');
+      const titre = { html: I.esc(Pk.invite) + '<small>' + I.esc(P.question || '') + '</small>' };
+      const i = await S.menuPick(titre, L.map(x => ({ t: E[x].name + ' · *' + (O.hasBlade(x) ? (P.avecLame || 'lame forgée') + ' : ' + Lm[x].name : (P.sansLame || 'sans lame')) + '*' })).concat([{ t: P.plusTard || 'Pas maintenant' }]));
+      if (i >= 0 && i < L.length) v = L[i];
+    } finally { S.depth--; S.hideDialog(); }
+    return v ? V.descendre(k, v) : null;
+  };
+})();
+
 /* ==== src/core/rangs.js ==== */
 /* ISNAD — la bataille déclarée : des rangs, un terrain, des ordres.
    Dans un chapitre qui déclare une `bataille`, le combat de l'idole se double d'un champ de cinq colonnes sur trois
@@ -4307,15 +4470,53 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
   const nueeEn = (ch, c, l) => ch.nuees.find(n => n.c === c && n.l === l) || null;
   const actifs = ch => ch.rangs.filter(r => !r.repos);
 
-  // le carton qui annonce la bataille : l'idole, son enracinement, les rangs présents
+  /* ================= la préparation : ce que l'on a, ce qui manque ================= */
+  // ce que la mission aligne pour ce combat, sans ouvrir le champ : les rangs, le renfort, les alliés venus ou non
+  R.apercu = function (opts) {
+    const B = (W.ch && W.ch.bataille) || {}, tous = B.rangs || [], n = tous.length ? R.combien(B) : 0, gagnes = (opts.allies || []).filter(a => S.flags[a.flag]);
+    const renfort = n ? gagnes.filter(a => a.rang).slice(0, 1) : [];
+    return { B, rangs: tous.slice(0, n).map(r => ({ name: r.name || D.RANGS[r.t].name, T: D.RANGS[r.t] })), plus: tous.length - n, renfort, venus: gagnes.filter(a => !renfort.includes(a)), absents: (opts.allies || []).filter(a => !S.flags[a.flag]) };
+  };
+  const idoleDe = opts => { const L = I.mal.lignee(W.saga, W.ch).idoles, id = opts.group.find(g => L.includes(g)) || opts.group[0]; return W.saga.enemies[id] || (I.common && I.common.enemies[id]) || { name: '', weak: [] }; };
+  // La page de préparation (ouverte par ui.js avant chaque combat d'idole). Elle signale, elle ne bloque rien.
+  R.panePrepa = function (opts) {
+    const A = R.apercu(opts), E = idoleDe(opts), Gr = I.gear, hs = W.party.map(id => W.hero(id)), lvl = hs.length ? hs[0].lvl : 1, L = [];
+    const li = (ok, titre, html) => L.push(`<li class="${ok ? 'ok' : 'manque'}"><b>${titre}</b>${html}</li>`), noms = a => a.map(x => I.esc(x.name)).join(', ');
+    // les hommes
+    { let h = '', ok = true;
+      if (A.rangs.length) { h += `${A.rangs.length} rang${A.rangs.length > 1 ? 's' : ''} : ${noms(A.rangs)}.`; if (A.renfort.length) h += ` En renfort sur le champ : ${noms(A.renfort)}.`; if (A.plus > 0 && lvl < 8) h += ` <small>Un rang de plus au niveau ${lvl < 4 ? 4 : 8}.</small>`; }
+      else h += I.fmt(A.B.mot || 'Il n’y a pas de rangs à mener ici : ce combat se livre sans armée.');
+      if (A.venus.length) h += ` Avec vous dès l’ouverture : ${noms(A.venus)}.`;
+      if (A.absents.length) { ok = false; h += ` <em>N’est pas venu : ${noms(A.absents)}.</em> <small>Une parole mieux menée l’aurait gagné.</small>`; }
+      li(ok, 'Les hommes', h); }
+    // le groupe
+    { let ok = true; const h = hs.map(x => { const st = I.calc.of(x), bas = x.hp < st.hp * 0.6 || x.sp < st.sp * 0.4; if (bas) ok = false; return `${I.esc(x.def.name)} · niveau ${x.lvl} · Constance ${Math.ceil(x.hp)}/${st.hp} · Souffle ${x.sp}/${st.sp}${x.hp <= 0 ? ' <em>(éprouvé)</em>' : bas ? ' <em>(entamé)</em>' : ''}`; }).join('<br>');
+      li(ok, 'Le groupe', h + (ok ? '' : '<br><small>Le groupe n’est pas reposé : une natte, ou la besace, l’aurait remis.</small>')); }
+    // armes, boucliers, casques, cuirasses
+    { let vides = 0, dispo = 0; const h = hs.map(x => { const eq = Gr.of(x); return I.esc(x.def.name) + ' : ' + Gr.SLOTS.map(s => { const id = eq[s]; if (id) return Gr.img(id) + ' ' + I.esc(D.GEAR[id].name); vides++; if (Gr.reserve(s).some(g => Gr.can(x.def, g))) dispo++; return `<span class="rien">${D.SLOTS[s].toLowerCase()} : rien</span>`; }).join(' · '); }).join('<br>');
+      li(!dispo, 'Armes, boucliers, casques, cuirasses', h + (dispo ? `<br><em>${dispo} emplacement${dispo > 1 ? 's' : ''} vide${dispo > 1 ? 's' : ''} alors que la réserve a de quoi.</em> <small>« Équiper au mieux » s’en charge.</small>` : vides ? '<br><small>La réserve n’a rien de plus pour eux : les coffres et les comptoirs la remplissent.</small>' : '')); }
+    // les vertus
+    { const P = W.pillars(), connues = (E.weak || []).slice(0, Math.floor((P.savoir || 0) / 2)), port = {}; hs.forEach(x => { port[x.def.el] = 1; x.def.skills.filter(k => k.lvl <= x.lvl && k.el).forEach(k => { port[k.el] = 1; }); });
+      const mine = Object.keys(port).filter(e => D.ELEMENTS[e] && e !== 'fer').map(e => `<span style="color:${D.ELEMENTS[e].color}">${D.ELEMENTS[e].glyph} ${D.ELEMENTS[e].name}</span>`).join(' · ') || 'aucune';
+      const touche = connues.filter(e => port[e]);
+      li(!connues.length || touche.length > 0, 'Les vertus', `Lumières du groupe : ${mine}.<br>` + (connues.length ? `Failles connues de l’idole : ${connues.map(e => D.ELEMENTS[e].name).join(', ')}. ` + (touche.length ? 'Le groupe en porte.' : '<em>Le groupe n’en porte aucune.</em>') : '<small>Ses failles restent à découvrir en combattant ; un Savoir plus haut dans ce règne en révèle d’emblée.</small>')); }
+    // la besace
+    { const it = I.save.data.items || {}, ks = Object.keys(D.ITEMS).filter(k => (it[k] || 0) > 0);
+      li(ks.length > 0, 'La besace', ks.length ? ks.map(k => `${I.esc(D.ITEMS[k].name)} ×${it[k]}`).join(' · ') : '<em>Vide.</em> <small>Les coffres et les comptoirs la remplissent.</small>'); }
+    // le cœur
+    { const w = I.oeuvres.weight(opts), z = I.oeuvres.zad(), prie = !!S.flags._prayed;
+      li(z >= w && prie, 'Le cœur', `Provision ♥ ${z} · l’épreuve en demande ${w}. ` + (z >= w ? 'Le cœur est prêt.' : `<em>Il en manquera ${w - z} : le cœur sera lourd.</em> <small>Les œuvres du jour, sur la natte, nourrissent la provision.</small>`) +
+        '<br>' + (prie ? 'Tu es passé par la prière dans ce chapitre.' : '<em>Tu n’es pas encore passé par la natte dans ce chapitre.</em>') + R.motSecours(prie)); }
+    const manque = L.filter(x => x.indexOf('class="manque"') > 0).length;
+    return `<h3>${I.esc(E.name)}</h3><p class="src">Bataille déclarée · enracinement ${I.mal.traits(I.mal.niveau())}</p><ul class="prepa">${L.join('')}</ul>` +
+      `<p class="src">${manque ? `${manque} point${manque > 1 ? 's' : ''} à regarder, marqué${manque > 1 ? 's' : ''} d’un ◇.` : 'Tout est là.'} Rien n’empêche de déclarer la bataille : cette page dit ce que l’on a, et ce qui manque.</p>`;
+  };
+  R.motSecours = prie => { const T = (I.sagas.coeur && I.sagas.coeur.secours) || {}, t = prie ? T.pret : T.absent; return t ? ` <small>${I.esc(t)}</small>` : ''; };
+
+  // la bataille est déclarée : l'idole, son enracinement, les rangs présents. La page de préparation le dit ; ici, le Recueil s'ouvre.
   R.declare = async function (C, opts) {
     if (!I.mal.estIdole(opts)) return; // toute idole se combat par une bataille déclarée ; la mission dit s'il y a des rangs
-    const B = (W.ch && W.ch.bataille) || {};
     I.oeuvres.learn('bataille');
-    const ch = C.champ, lead = C.all.find(e => e.side === 'foe' && I.mal.lignee(W.saga, W.ch).idoles.includes(e.id)) || C.all.find(e => e.side === 'foe');
-    const rangs = ch ? ch.rangs.map(r => `<li><b>${I.esc(r.name)}</b> · ${NOMS[r.l]}</li>`).join('') : '';
-    await S.card('title parley bataille', `<p class="small">Bataille déclarée</p><h1>${I.esc(lead.name)}</h1><p>Enracinement ${I.mal.traits(I.mal.niveau())}</p>` +
-      (rangs ? `<ul class="rangs">${rangs}</ul><p class="small">En face, des nuées : jamais des hommes. Au tour d’un compagnon, « Ordonner » dirige un rang.</p>` : `<p>${I.fmt(B.mot || 'Il n’y a pas de rangs à mener ici : ce combat se livre sans armée.')}</p>`) + '<div class="rule"></div><div class="hint">▼</div>');
   };
 
   /* ================= le pas : nos rangs, puis les nuées ================= */
@@ -4599,13 +4800,14 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
   const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
   B.relayout = function () { if (!C) return; C.all.forEach(e => { e.x = bx(e.x0); }); refresh(); };
   B.champ = () => (C && C.champ) || null; // le champ de la bataille en cours, pour les outils de test
-  function mkHero(id, i) {
-    const h = I.world.hero(id), st = I.calc.of(h);
+  let chef = null; // celui sur qui se règle le niveau des égrégores communs : le premier du groupe qui combat
+  function mkHero(x, i) {
+    const h = typeof x === 'string' ? I.world.hero(x) : x, id = h.id, st = I.calc.of(h);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
       buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) };
   }
   // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
-  function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, W.hero(W.party[0]).lvl) }) : d; }
+  function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, (chef || W.hero(W.party[0])).lvl) }) : d; }
   function mkFoe(id, i, n, nH) {
     const def = foeDef(id), st = I.calc.enemy(def, nH, n), sc = def.scale || (def.tier === 'boss' ? 3 : def.tier === 'elite' ? 2 : 1);
     const pos = n === 1 && sc >= 3 ? [118, 156] : FOE_POS[n][i];
@@ -4629,12 +4831,16 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
     const W = I.world, prev = I.scene === B.scene ? W : I.scene, mark = I.input.mark(); let first = true;
     while (true) {
       let res;
+      // toute idole : la bataille se déclare, et l'on vérifie d'abord ce que l'on a (à chaque tentative : on peut se rééquiper)
+      if (I.mal.estIdole(opts)) { try { await I.ui.prepare(opts); } catch (e) { I.report(e, 'préparation'); } }
       try { res = await run(opts, first); }
       catch (e) { I.report(e, 'combat'); B.abort(prev, mark); res = 'win'; } // un incident ne doit pas arrêter le récit : on rend la main, le combat compte pour gagné
       first = false;
       if (res === 'win') break;
+      if (opts.sansReprise) return 'lose'; // un combat que l'on a choisi : on peut en revenir sans l'avoir gagné
       W.healAll(); W.party.forEach(id => { W.hero(id).sakina = 50; });
     }
+    return 'win';
   };
   // sortie de secours : referme le combat où qu'il en soit et rend l'écran
   B.abort = function (prev, mark) {
@@ -4650,7 +4856,8 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
     const W = I.world, prev = I.scene;
     const d0 = foeDef(opts.group[0]), hue = d0.hue;
     C = { opts, hue, bg: paintBg(opts.bg || 'noos', hue), all: [], t: 0, cursor: null, log: [], turn: 0 };
-    W.party.forEach((id, i) => C.all.push(mkHero(id, i)));
+    chef = opts.heros ? opts.heros[0] : null; // `heros` : un groupe prêté pour ce combat-là (le râwî seul, dans la noosphère intérieure)
+    (opts.heros || W.party).forEach((x, i) => C.all.push(mkHero(x, i)));
     const nH = C.all.length; opts.group.forEach((id, i) => C.all.push(mkFoe(id, i, opts.group.length, nH)));
     C.all.forEach(e => { e.ct = 1000 / eff(e, 'spd') * (0.6 + Math.random() * 0.4) * (e.side === 'foe' ? 1.15 : 1) * (e.gear && e.gear.prime ? 0.55 : 1); });
     if (first) { I.audio.sfx('glitch'); G.flash('#fff'); await S.fade('out', 220); }
@@ -4716,9 +4923,9 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
       if (C.champ && I.rangs.du(C, act) && alive('foe').length && alive('hero').length) await I.rangs.pas(C);
       act.ct = 1000 / eff(act, 'spd');
       C.active = null;
-      if (!alive('foe').length) result = 'win'; else if (!alive('hero').length) result = 'lose';
+      if (!alive('foe').length) result = 'win'; else if (!alive('hero').length && !(await leSecours(opts))) result = 'lose';
     }
-    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result, champ: C.champ ? Object.assign({ rangs: C.champ.rangs.length, pas: C.champ.pas, flancs: C.champ.flancs.filter(Boolean).length }, C.champ.stats) : null };
+    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result, secours: !!C.secouru, champ: C.champ ? Object.assign({ rangs: C.champ.rangs.length, pas: C.champ.pas, flancs: C.champ.flancs.filter(Boolean).length }, C.champ.stats) : null };
     I.audio.stopBeat(); $('#battle .cmd').innerHTML = ''; C.cursor = null;
     if (result === 'win') { I.audio.afterJingle = I.audio.place || null; I.audio.music('victoire'); } else I.audio.music('deuil');
     if (result === 'win') await victory(); else await defeat();
@@ -5026,8 +5233,30 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
     await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? 'La lame a tranché' : 'Sans sa lame, le mal recule') : C.opts.noir ? 'On ne l’a pas combattu contre lui, mais pour lui' : C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>${maux.length ? (maux.every(e => e.cut) ? 'Tranché' : maux.some(e => e.cut) ? 'Tranché et repoussé' : 'Repoussé') : C.opts.noir ? 'L’égrégore lâche prise' : 'Dévoilement'}</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
+  // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue dans le
+  // chapitre, le groupe est relevé, une fois par tentative. On ne montre que de la lumière : ni figure, ni nom, ni nombre.
+  // On ne le commande pas : aucune action du combat ne le déclenche, et il ne vient pas dans un combat ordinaire.
+  async function leSecours(opts) {
+    if (C.secouru || !I.mal.estIdole(opts) || !S.flags._prayed) return false;
+    C.secouru = true; const T = (I.sagas.coeur && I.sagas.coeur.secours) || { titre: 'Le secours', bandeau: 'Le groupe est relevé' }, vite = I.debug.auto;
+    $('#battle .cmd').innerHTML = ''; I.audio.sfx('light'); G.flash('#fff6dc'); if (!vite) await I.sleep(650);
+    C.all.forEach(e => {
+      if (e.side !== 'hero') { if (e.alive) e.ct += 320; return; } // l'idole marque le pas
+      e.alive = true; e.hp = Math.max(e.hp, Math.round(e.max.hp * 0.5)); e.sp = Math.max(e.sp, Math.round(e.max.sp * 0.5)); cleanse(e);
+      e.sakina = Math.min(100, e.sakina + 25); e.ct = Math.min(e.ct, 60); e.flash = 1; fx('pillar', e, '#fff6dc'); floater(e, 'Relevé', 'heal');
+    });
+    I.audio.sfx('roll'); refresh(); I.oeuvres.learn('secours');
+    const d = I.oeuvres.state();
+    if (!d.vuSecours && !vite && T.verset) { d.vuSecours = true; await I.sleep(500);
+      await S.card('pray secours', `<div class="orn">✧</div><p class="small">${I.esc(T.titre)}</p><h1>On ne le commande pas</h1><p>${I.esc(T.verset)}</p><p class="small">${I.esc(T.ref)}</p><p class="mot">${I.esc(T.mot)}</p><div class="hint">▼</div>`); }
+    else await banner(`<small>${I.esc(T.titre)}</small>${I.esc(T.bandeau)}`, 1700, false, 'speech intro');
+    if (!vite) await I.sleep(500);
+    return true;
+  }
   async function defeat() {
     I.audio.sfx('dark');
+    if (C.opts.interieur) { const T = ((I.sagas.coeur || {}).portes || {}).remonte || {}; // la noosphère intérieure : on remonte, rien n'est perdu
+      await S.card('defeat', `<p class="small">${I.esc(T.titre || '')}</p><h1>${I.esc(T.h1 || '')}</h1><p>${I.esc(T.texte || '')}</p><div class="hint">▼</div>`); return; }
     await S.card('defeat', `<p class="small">Le groupe est éprouvé</p><h1>La chaîne ne rompt pas</h1><p>Ce qui fut transmis ne se perd pas. Reprends, le cœur affermi : la Sakîna descend sur ceux qui persévèrent.</p><div class="hint">Reprendre ▼</div>`);
   }
 
@@ -5423,6 +5652,7 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
       items.push({ cat: 'Le cœur' }, { label: 'Œuvres et lames', fn() {}, show: () => I.oeuvres.paneOeuvres() }, { label: 'Compagnons de lumière', fn: betes, show: () => I.oeuvres.paneAnimaux() });
       items.push({ cat: 'Le savoir' }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` },
         { label: 'Organigramme du mal', fn: mal, show: () => I.mal.paneVue() },
+        { label: 'Valeurs et attributs', fn: valeurs, show: () => I.valeurs.paneVue() },
         { label: 'Aide du jeu', fn: aide, show: () => '<h3>Aide du jeu</h3><p>Les règles, thème par thème : ' + U.AIDE.map(a => a[0].toLowerCase()).join(', ') + '.</p>' });
       items.push({ cat: 'Réglages' },
         toggle('Texte', () => ['normal', 'grand', 'très grand'][o.tz || 0], () => { o.tz = ((o.tz || 0) + 1) % 3; U.applyOpts(); }, 'Taille des caractères dans les dialogues, les menus et les combats.'),
@@ -5462,7 +5692,7 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
     };
     // l'équipement : quatre emplacements par compagnon, une réserve commune ; on choisit une pièce en voyant ce qu'elle change
     const equip = start => {
-      const Gr = I.gear, items = [{ label: '◂ Retour', fn: mode === 'equip' ? close : root, show: () => Gr.paneGroupe() }];
+      const Gr = I.gear, sortir = mode === 'equip' ? close : mode === 'prepa' ? () => prepa(2) : root, items = [{ label: '◂ Retour', fn: sortir, show: () => Gr.paneGroupe() }];
       if (W.saga && W.party.length) {
         items.push({ label: '✦ Équiper au mieux', fn() { const n = Gr.bestAll(); I.audio.sfx(n ? 'light' : 'blip'); S.toast(n ? `${n} pièce${n > 1 ? 's' : ''} changée${n > 1 ? 's' : ''}.` : 'Chacun porte déjà ce que la réserve a de mieux pour lui.', 2400); equip(1); }, show: () => Gr.paneGroupe() });
         W.party.forEach((id, pi) => { const h = W.hero(id); items.push({ cat: I.esc(h.def.name) });
@@ -5470,7 +5700,7 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
       }
       items.push({ cat: 'Réserve' }, { label: 'Voir la réserve', fn() {}, show: () => Gr.paneReserve() });
       $('#menu h2').textContent = 'Équipement';
-      build(items, { onCancel: mode === 'equip' ? close : root, start: start || 0 });
+      build(items, { onCancel: sortir, start: start || 0 });
     };
     const pieces = (h, s, back) => {
       const Gr = I.gear, cur = Gr.of(h)[s], retour = () => equip(back), items = [{ label: '◂ Retour', fn: retour, show: () => '<h3>' + D.SLOTS[s] + '</h3>' + Gr.fiche(h) }];
@@ -5501,14 +5731,39 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
       $('#menu h2').textContent = 'Le Recueil';
       build(items, { onCancel: mode === 'codex' ? close : root });
     };
+    // la préparation d'une bataille déclarée : ce que l'on a, ce qui manque. On peut encore s'équiper ; rien ne bloque,
+    // et l'on ne recule pas : la seule sortie est de déclarer la bataille.
+    const prepa = start => {
+      const o = U.prepa, vue = () => I.rangs.panePrepa(o), items = [
+        { label: '⚔ Déclarer la bataille', fn: close, show: vue },
+        { label: '✦ Équiper au mieux', fn() { const n = I.gear.bestAll(); I.audio.sfx(n ? 'light' : 'blip'); S.toast(n ? `${n} pièce${n > 1 ? 's' : ''} changée${n > 1 ? 's' : ''}.` : 'Chacun porte déjà ce que la réserve a de mieux pour lui.', 2400); prepa(1); }, show: vue },
+        { label: 'Choisir l’équipement', fn() { equip(); }, show: () => I.gear.paneGroupe() },
+        { label: 'Le groupe', fn() {}, show: party }, { label: 'La besace', fn() {}, show: bag }];
+      $('#menu h2').textContent = 'Bataille déclarée · préparation';
+      build(items, { start: start || 0 });
+    };
+    // le côté du bien : sept Valeurs et sept attributs, collectionnés comme des badges
+    const valeurs = () => {
+      const Vl = I.valeurs, back = mode === 'valeurs' ? close : root, items = [{ label: '◂ Retour', fn: back, show: () => Vl.paneVue() }, { label: 'Vue d’ensemble', fn() {}, show: () => Vl.paneVue() }, { cat: 'Les sept Valeurs' }];
+      Vl.IDS.forEach(v => items.push({ label: (Vl.acquise(v) ? '◆ ' : '◇ ') + I.esc(Vl.nom(v)), fn() {}, show: () => Vl.paneUne(v) }));
+      I.oeuvres.learn('valeurs'); $('#menu h2').textContent = 'Valeurs et attributs';
+      build(items, { onCancel: back, start: 1 });
+    };
     // l'organigramme du mal : la vue d'ensemble, puis les idoles rencontrées, maillon par maillon
     const mal = () => {
       const Ml = I.mal, back = mode === 'mal' ? close : root, items = [{ label: '◂ Retour', fn: back, show: () => Ml.paneVue() }, { label: 'Vue d’ensemble', fn() {}, show: () => Ml.paneVue() }, { cat: 'Les idoles rencontrées' }];
       Ml.epoques().forEach(s => items.push({ label: I.esc(Ml.nomEpoque(s)), fn() {}, show: () => Ml.paneEpoque(s) }));
+      if (mode !== 'mal') items.push({ cat: 'Du côté du bien' }, { label: 'Valeurs et attributs', fn: valeurs, show: () => I.valeurs.paneVue() });
       Ml.apprendre(); $('#menu h2').textContent = 'Organigramme du mal';
       build(items, { onCancel: back, start: 1 });
     };
-    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'mal') mal(); else if (mode === 'aide') aide(); else if (mode === 'equip') equip(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
+    screen('#menu', true); if (mode === 'prepa') prepa(); else if (mode === 'codex') codex(); else if (mode === 'valeurs') valeurs(); else if (mode === 'mal') mal(); else if (mode === 'aide') aide(); else if (mode === 'equip') equip(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
+  };
+
+  // Avant chaque combat d'idole : la page de préparation. Le joueur de test ne s'y arrête pas.
+  U.prepare = function (opts) {
+    if (I.debug.auto || U.menuOpen) return Promise.resolve();
+    return new Promise(res => { U.prepa = opts; U.pause('prepa', () => { U.prepa = null; res(); }); });
   };
 
   /* ---------- l'aide du jeu, thème par thème ---------- */
@@ -5524,7 +5779,10 @@ window.ISNAD_VERSION = "2026-11-15 13:32 UTC · 4eb0ced+";
     ['Les œuvres et la provision', '<p>Sur la natte d’une mosquée, on prie, et l’on accomplit les <b>œuvres du jour</b> : le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite ; parfois le pèlerinage. Trois par chapitre au plus, la prière en sus. Chacune ajoute à la <b>provision du cœur</b> (♥, cinq au plus).</p><p>Plus une épreuve est lourde, plus elle en demande : une idole pèse de 1 à 3 selon son enracinement, un mal du cœur 3. Qui s’y présente sans provision combat <b>le cœur lourd</b> : il frappe moins fort et reçoit davantage. Le bouton <b>?</b> annonce le poids de l’épreuve qui vient.</p><p>Un jour de <b>jeûne</b>, les vivres de la besace attendent le soir. L’aumône coûte des dirhams. Ces œuvres ne sont pas des sortilèges : le jeu traduit à sa façon ce qu’elles font au cœur.</p>'],
     ['Lames et maux du cœur', '<p>Sept maux du cœur se tiennent derrière les idoles : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. On les rencontre à la fin de chaque rencontre de la Cité-Miroir, et tous ceux qui restent au dernier chapitre.</p><p>Une œuvre pratiquée forge une <b>lame</b> : trois jeûnes pour le Contentement, trois prières pour la Sincérité, trois aumônes pour la Largesse, trois études pour l’Ardeur, trois visites pour la Bienveillance, trois dhikr pour la Longanimité, un pèlerinage pour l’Humilité. Sans sa lame, un mal est seulement <b>repoussé</b> : il revient. Avec elle, il est <b>tranché</b>.</p><p>La page « Œuvres et lames » de la halte tient le compte.</p>'],
     ['À chaque mal sa réponse', '<p>L’<b>organigramme du mal</b> (halte, « Le savoir ») range ce que l’on rencontre et dit comment y répondre. À l’<b>idée noire</b>, qui pèse sur une personne : la parole, la pédagogie, la bienveillance. À l’<b>égrégore</b>, que beaucoup de cœurs nourrissent : le combat. À l’<b>idole</b>, enracinée : une bataille déclarée. On ne combat ni Iblîs ni ceux qui soufflent, et l’on ne s’en prend à aucun djinn : on répond à ce qui a été soufflé.</p><p>Chaque idole a une jauge d’<b>enracinement</b>, de ▮ à ▮▮▮▮▮. Un pourparler gagné, une idée noire dissipée du premier coup la font baisser ; une parole manquée, un acte que les transmetteurs n’ont pas rapporté la font monter. Déracinée, l’idole pèse moins sur la provision du cœur et garde un voile de moins ; enracinée, elle pèse davantage. La jauge se dit d’une idole, jamais d’une époque ni de ses gens.</p>'],
-    ['La bataille déclarée', '<p>Contre une <b>idole</b>, un carton <b>déclare la bataille</b> : l’idole, son enracinement, les <b>rangs</b> présents. Le combat du groupe se joue comme d’habitude. À côté, un <b>champ</b> de cinq colonnes sur trois couloirs : nos rangs y font face aux <b>nuées</b> de l’idole. Ce ne sont jamais des hommes. Là où il n’y a pas d’armée à mener, la bataille se déclare sans rangs, et le carton dit pourquoi.</p><p>Après chaque tour de l’idole, et au plus tard tous les trois tours, les rangs exécutent leur ordre, puis les nuées avancent. Au tour d’un compagnon, <b>Ordonner</b> change l’ordre d’un rang, à la place de son action : tenir, avancer, charger (cavaliers), tirer (archers), glisser vers un autre couloir, se replier. Sur le champ, chaque rang porte son <b>numéro</b>, celui du menu ; trois points disent sa tenue, un chevron son ordre. Une nuée bordée par un autre rang est prise <b>de flanc</b> ; prise des deux côtés, <b>en tenaille</b>, elle se dissipe. Un rang qui atteint le pied de l’idole <b>découvre son flanc</b> : un voile tombe, une faille se révèle. Une nuée qui perce jusqu’au camp sème le doute.</p><p>Un rang éprouvé se replie et se reforme : personne ne tombe. Le nombre de rangs suit la mission et le niveau du groupe ; un allié gagné par la parole vient en <b>renfort</b> et prend place sur le champ. <b>Khâlid</b>, dont c’est le métier, ordonne sans perdre son tour, et connaît trois manœuvres d’école : la réserve mobile, l’enveloppement, le repli feint.</p>'],
+    ['Valeurs et attributs', '<p>Du côté du bien, on ne dit ni djinn, ni égrégore, ni idole : on dit des <b>Valeurs</b> et des <b>attributs</b>. Il y a sept Valeurs, une en face de chaque mal du cœur. L’<b>œuvre</b>, accomplie trois fois, forge la lame ; la lame <b>tranche</b> le mal ; la Valeur d’en face est alors gardée, et le jeu la marque d’un <b>badge</b>.</p><p>Quand une lame est forgée, l’œuvre rappelle aussi un <b>attribut divin</b>, nommé d’après le Coran, avec son verset. On ne possède pas un attribut : on le reconnaît. La page « Valeurs et attributs » de la halte les rassemble.</p>'],
+    ['Descendre dans la noosphère', '<p>Trois moments ouvrent la noosphère à qui veut y descendre : <b>au sortir de la prière</b> sur la natte, <b>dans le dhikr</b>, et <b>en songe</b> (« S’endormir », sur la natte). Une descente par porte et par chapitre.</p><p>On y fait face à l’un de ses <b>maux du cœur</b> : ce que l’on appelle ses démons intérieurs. C’est le combat du <b>râwî</b>, seul ; ce n’est jamais celui d’un Compagnon. Avec la lame que l’œuvre a forgée, le mal est tranché et la Valeur gardée ; sans elle, il n’est que repoussé. Si le mal l’emporte, on remonte : rien n’est perdu.</p>'],
+    ['Le secours', '<p>Dans une <b>bataille déclarée</b> presque perdue, quand le dernier compagnon va tomber, le <b>secours</b> peut venir : le groupe est relevé, une fois. Il ne vient que si la <b>prière</b> a été tenue dans le chapitre, et l’on ne le commande pas.</p><p>Le jeu ne montre pas les anges, ne les nomme pas, ne les compte pas. Il cite ce que le Coran rapporte de Badr, et ne dit rien d’un autre jour.</p>'],
+    ['La bataille déclarée', '<p>Contre une <b>idole</b>, la bataille se <b>déclare</b>, et commence par une page de <b>préparation</b> : les hommes, le groupe, les armes et les boucliers, les vertus, la besace, le cœur. Elle signale ce qui manque sans rien bloquer, et l’on peut encore s’y équiper. Le combat du groupe se joue comme d’habitude. À côté, un <b>champ</b> de cinq colonnes sur trois couloirs : nos rangs y font face aux <b>nuées</b> de l’idole. Ce ne sont jamais des hommes. Là où il n’y a pas d’armée à mener, la bataille se déclare sans rangs, et le carton dit pourquoi.</p><p>Après chaque tour de l’idole, et au plus tard tous les trois tours, les rangs exécutent leur ordre, puis les nuées avancent. Au tour d’un compagnon, <b>Ordonner</b> change l’ordre d’un rang, à la place de son action : tenir, avancer, charger (cavaliers), tirer (archers), glisser vers un autre couloir, se replier. Sur le champ, chaque rang porte son <b>numéro</b>, celui du menu ; trois points disent sa tenue, un chevron son ordre. Une nuée bordée par un autre rang est prise <b>de flanc</b> ; prise des deux côtés, <b>en tenaille</b>, elle se dissipe. Un rang qui atteint le pied de l’idole <b>découvre son flanc</b> : un voile tombe, une faille se révèle. Une nuée qui perce jusqu’au camp sème le doute.</p><p>Un rang éprouvé se replie et se reforme : personne ne tombe. Le nombre de rangs suit la mission et le niveau du groupe ; un allié gagné par la parole vient en <b>renfort</b> et prend place sur le champ. <b>Khâlid</b>, dont c’est le métier, ordonne sans perdre son tour, et connaît trois manœuvres d’école : la réserve mobile, l’enveloppement, le repli feint.</p>'],
     ['Idées noires et énigmes', '<p>Dans un pourparler, il arrive que la <b>honte</b>, la <b>peur</b>, le <b>soupçon</b>, la <b>rancune</b> ou le <b>désespoir</b> parlent plus fort que toi. On ne la combat pas : on lui <b>répond</b>. Elle a deux voiles ; à chacun, tu choisis ta manière : <b>dire vrai</b> (la parole), <b>expliquer</b> (la pédagogie) ou <b>rassurer</b> (la bienveillance). La bonne manière fait tomber le voile ; une autre t’apprend pourquoi elle ne portait pas. Après quoi il écoute, et la confiance monte.</p><p>Une <b>énigme du cœur</b> : un compagnon languit sans fièvre ni blessure. Il tient moins bien au combat tant qu’on n’a pas trouvé ce qu’il a cessé de faire. Les anciens donnent des indices ; la bonne œuvre, accomplie sur la natte, le remet debout.</p>'],
     ['Compagnons de lumière', '<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>'],
     ['Si le jeu s’arrête', '<p>Si l’écran reste noir ou si plus rien ne répond pendant un quart de minute, un bouton <b>Reprendre</b> apparaît en bas de l’écran : il ramène au dernier objectif atteint, sans rien perdre de ce qui a été sauvegardé.</p><p>La partie se garde toute seule : en dernier recours, <b>recharge la page</b> puis choisis « Continuer ».</p><p>Dans la halte, <b>Diagnostic</b> donne la version du jeu, l’appareil, l’état du son et les incidents relevés : c’est ce qu’il faut transmettre pour qu’une panne soit comprise. Couper le son ou la musique (Réglages) suffit parfois à la contourner.</p>'],
@@ -7880,6 +8138,66 @@ ISNAD.registerSaga({
 
   /* ----- l'organigramme du mal : une lecture, pas une démonologie (exigence 18, proposée). Deux étages : ce qui est
      enseigné (`etage: 'enseigne'`), puis les images du jeu (`etage: 'image'`). Textes proposés par l'agent, à valider. ----- */
+  // Le côté du bien (décision du décideur) : on n'y dit ni djinn, ni égrégore, ni idole, mais Valeurs et attributs, et on
+  // les collectionne comme des badges. Sept Valeurs : celles des sept lames, gardées quand le mal d'en face est tranché.
+  // Sept attributs divins : un Nom tiré du Coran, avec son verset et sa référence, reconnu quand l'œuvre a forgé la lame.
+  // Aucun attribut n'est dessiné, personnifié ni « équipé » : on le reconnaît, on ne le possède pas (exigence 21, proposée).
+  bien: {
+    titre: 'Valeurs et attributs',
+    chapeau: 'Du côté du bien, rien ne se nomme djinn, égrégore ou idole. On dit des *Valeurs* : ce que le cœur garde quand un mal est tranché. Et des *attributs* : ceux d’Allah, que nul ne possède, que l’on reconnaît.',
+    note: 'Il n’y a pas d’organigramme du bien : Iblîs n’est qu’une créature, et rien ne se tient en face du Créateur. Les badges sont une image du jeu : ils marquent un rappel reçu, non une qualité acquise pour toujours.',
+    gagner: 'Elle se garde quand ce mal est tranché par sa lame.', reconnaitre: 'Il se reconnaît quand l’œuvre a forgé la lame.'
+  },
+  valeurs: {
+    avidite:     { texte: 'Savoir ce qui suffit, et s’y tenir sans regret.', face: 'vouloir encore, alors qu’on a' },
+    orgueil:     { texte: 'Se tenir à sa place, sans se croire au-dessus de personne.', face: 'se voir au-dessus' },
+    ostentation: { texte: 'Faire le bien sans chercher qui regarde.', face: 'faire le bien pour être vu le faisant' },
+    avarice:     { texte: 'Laisser circuler ce que l’on a reçu.', face: 'retenir ce qui devait circuler' },
+    insouciance: { texte: 'Ne pas remettre à demain ce qui compte.', face: 'vivre à côté de sa vie' },
+    envie:       { texte: 'Se réjouir du bien d’autrui comme du sien.', face: 'ne pas supporter le bien d’autrui' },
+    colere:      { texte: 'Garder son calme quand on pourrait frapper.', face: 'frapper avant d’avoir entendu' }
+  },
+  attributs: {
+    avidite:     { nom: 'ar-Razzâq', sens: 'le Grand Pourvoyeur', verset: '« En vérité, c’est Allah qui est le Grand Pourvoyeur, Le Détenteur de la force, l’Inébranlable. »', ref: 'Coran 51:58',
+                   mot: 'Le contentement s’appuie sur ceci : la subsistance vient de Lui.' },
+    orgueil:     { nom: 'al-Kabîr, al-Muta’âl', sens: 'Le Grand, Le Sublime', verset: '« Le Connaisseur de ce qui est caché et de ce qui est apparent, Le Grand, Le Sublime. »', ref: 'Coran 13:9',
+                   mot: 'L’humilité s’appuie sur ceci : la grandeur est à Lui.' },
+    ostentation: { nom: 'al-Khabîr', sens: 'le Parfaitement Connaisseur', verset: '« Ne connaît-Il pas ce qu’Il a créé alors que c’est Lui le Compatissant, le Parfaitement Connaisseur. »', ref: 'Coran 67:14',
+                   mot: 'La sincérité s’appuie sur ceci : Il connaît ce que les regards ne voient pas.' },
+    avarice:     { nom: 'al-Wahhâb', sens: 'le Grand Donateur', verset: '« C’est Toi, certes, le Grand Donateur ! »', ref: 'Coran 3:8 (fin du verset)',
+                   mot: 'La largesse s’appuie sur ceci : ce que l’on donne a d’abord été reçu.' },
+    insouciance: { nom: 'al-Hayy, al-Qayyûm', sens: 'le Vivant, Celui qui subsiste par Lui-même', verset: '« Allah! Point de divinité à part Lui, le Vivant, Celui qui subsiste par Lui-même (Al Qayyum). Ni somnolence ni sommeil ne Le saisissent. »', ref: 'Coran 2:255 (début du verset)',
+                   mot: 'L’ardeur s’appuie sur ceci : Lui ne s’assoupit pas.' },
+    envie:       { nom: 'al-Latîf', sens: 'doux envers Ses serviteurs', verset: '« Allah est doux envers Ses serviteurs. Il attribue [Ses biens] à qui Il veut. Et c’est Lui le Fort, le Puissant. »', ref: 'Coran 42:19',
+                   mot: 'La bienveillance s’appuie sur ceci : ce que l’autre a reçu, c’est Lui qui l’a donné.' },
+    colere:      { nom: 'al-Halîm', sens: 'indulgent', verset: '« Une parole agréable et un pardon valent mieux qu’une aumône suivie d’un tort. Allah n’a besoin de rien, et Il est indulgent. »', ref: 'Coran 2:263',
+                   mot: 'La longanimité s’appuie sur ceci : Il est indulgent, Lui qui n’a besoin de rien.' }
+  },
+  // Les portes de la noosphère (décision du décideur) : la prière, le dhikr, le sommeil. On y descend pour faire face à ses
+  // maux du cœur. C'est le combat du râwî, personnage de fiction, seul : jamais celui d'un Compagnon (exigences 15 et 16).
+  portes: {
+    priere:  { titre: 'Au sortir de la prière', invite: 'La prière est dite. Le cœur est calme, et la noosphère est toute proche.' },
+    dhikr:   { titre: 'Dans le dhikr', invite: 'Le souvenir a fait silence autour de toi. La noosphère est toute proche.' },
+    sommeil: { titre: 'En songe', invite: 'Le sommeil vient. Entre veille et songe, la noosphère est toute proche.', menu: 'S’endormir : un songe peut ouvrir la noosphère' },
+    question: 'Veux-tu y descendre, râwî, et faire face à ce qui te pèse ? Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. Ce n’est pas le cœur des Compagnons que tu vas voir : c’est le tien.',
+    plusTard: 'Pas maintenant', rien: 'Rien ne te pèse plus de ce côté-là : les sept maux du cœur sont tranchés.', deja: 'Cette porte s’est déjà ouverte dans ce chapitre.',
+    avecLame: 'lame forgée', sansLame: 'sans lame : ce mal ne sera que repoussé',
+    seuil: 'La noosphère s’ouvre. Tu y descends seul.',
+    remonte: { titre: 'La noosphère se referme', h1: 'Ce mal pèse encore', texte: 'On ne tranche pas un mal du cœur d’un seul coup. L’œuvre forge la lame : reviens quand elle sera prête.' }
+  },
+
+  // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue.
+  // Aucun ange n'est dessiné, nommé, compté ni mis en dialogue. Les deux versets sont cités mot à mot (traduction de
+  // M. Hamidullah, lue sur api.quran.com, traduction 31) ; ils parlent de Badr, et le jeu ne dit rien d'un autre jour.
+  secours: {
+    titre: 'Le secours', bandeau: 'Le groupe est relevé',
+    verset: '« Et (rappelez-vous) le moment où vous imploriez le secours de votre Seigneur et qu’Il vous exauça aussitôt : “Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres.” »',
+    ref: 'Coran 8:9, traduction du sens · c’était à Badr',
+    mot: 'Tu avais tenu ta prière, et le secours est venu. On ne le commande pas. Le jeu ne montre pas les anges, ne les nomme pas, ne les compte pas.',
+    pret: 'Si la bataille tourne au pire, le secours peut venir. On ne le commande pas.',
+    absent: 'Le secours ne vient qu’à qui a tenu sa prière : une natte, avant l’épreuve, y suffit.'
+  },
+
   mal: {
     titre: 'Organigramme du mal',
     chapeau: 'Qui souffle, qui consent, et ce que cela devient. À chaque étage sa réponse, et pas une de plus.',
@@ -7920,6 +8238,10 @@ ISNAD.registerSaga({
     { id: 'souffleurs', cat: 'Noosphère', title: 'Ceux qui soufflent', text: 'Le Coran enseigne à chercher protection « contre le mal du mauvais conseiller, furtif, qui souffle le mal dans les poitrines des hommes, qu’il (le conseiller) soit un djinn, ou un être humain ». Dans ISNAD, on ne les voit pas, on ne les nomme pas, on ne les compte pas, on ne les combat pas. Tous les djinns ne soufflent pas, et le jeu ne s’en prend à aucun. Ce que l’on rencontre, c’est ce qu’un cœur fait de ce qu’il a entendu.', src: 'Traduction du sens, Coran 114:4-6' },
     { id: 'iblis', cat: 'Noosphère', title: 'Iblîs, l’ennemi déclaré', text: 'Le jeu le nomme et ne le montre pas. Il ne parle dans aucune scène, et l’on ne le combat nulle part : ce n’est pas une épée qui en protège. Le Coran rapporte ce qu’il dira, quand tout sera accompli, à ceux qui l’auront suivi : « Je n’avais aucune autorité sur vous si ce n’est que je vous ai appelés, et que vous m’avez répondu. Ne me faites donc pas de reproches ; mais faites-en à vous-mêmes. » Il appelle. C’est le cœur qui répond.', src: 'Traduction du sens, Coran 14:22' },
     { id: 'bataille', cat: 'Noosphère', title: 'La bataille déclarée', text: 'Contre une idole, on ne se bat plus seul, et l’on ne se bat pas sans le dire. La bataille est déclarée : chacun sait ce qui se dresse, et qui tient les rangs. En face, il n’y a jamais d’hommes : des nuées, que l’idole envoie. Nos rangs ne tombent pas : éprouvés, ils se replient et se reforment. C’est une image du jeu. Il ne dit pas combien d’hommes il y avait tel jour, ni qui fit telle manœuvre : la réserve mobile, l’enveloppement et le repli feint sont des manœuvres d’école.' },
+    { id: 'valeurs', cat: 'Cœur', title: 'Les sept Valeurs', text: 'Du côté du bien, on ne dit ni djinn, ni égrégore, ni idole : on dit des Valeurs. Il y en a sept, une en face de chaque mal du cœur : le Contentement, l’Humilité, la Sincérité, la Largesse, l’Ardeur, la Bienveillance, la Longanimité. L’œuvre forge la lame ; la lame tranche le mal ; ce qui reste alors, c’est la Valeur. Le jeu la marque d’un badge. C’est une image : une valeur ne se possède pas comme un objet, elle se garde en la pratiquant.' },
+    { id: 'attributs', cat: 'Cœur', title: 'Les attributs divins', text: 'Chaque Valeur s’appuie sur un attribut d’Allah, que le jeu nomme d’après le Coran, avec son verset et sa référence : ar-Razzâq, al-Kabîr, al-Khabîr, al-Wahhâb, al-Hayy al-Qayyûm, al-Latîf, al-Halîm. On ne possède pas un attribut divin : on le reconnaît. Le jeu ne le dessine pas, ne lui prête aucune figure et n’en fait ni une arme ni un pouvoir ; le badge marque seulement que le rappel a été reçu. Il n’y a pas d’organigramme du bien : rien ne se tient en face du Créateur.', src: 'Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.' },
+    { id: 'noos_interieure', cat: 'Noosphère', title: 'Descendre en soi', text: 'Au sortir de la prière, dans le dhikr, en songe : à ces moments-là, la noosphère est toute proche, et l’on peut y descendre pour faire face à ce qui pèse. Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. C’est le combat du râwî, seul. Ce n’est jamais celui d’un Compagnon : le jeu ne prête à aucun d’eux un mal du cœur. Avec la lame que l’œuvre a forgée, le mal est tranché ; sans elle, il n’est que repoussé. Image du jeu, dite comme telle.' },
+    { id: 'secours', cat: 'Cœur', title: 'Le secours', text: 'À Badr, les croyants étaient en petit nombre. Le Coran rapporte qu’ils implorèrent le secours, et ce qui leur fut répondu : « Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres. » Puis : « Allah ne fit cela que pour (vous) apporter une bonne nouvelle et pour qu’avec cela vos cœurs se tranquillisent. Et il n’y a de victoire que de la part d’Allah. » Dans ISNAD, quand une bataille déclarée est presque perdue, le secours relève le groupe, une fois, si la prière a été tenue dans le chapitre. C’est une image du jeu. Il ne montre pas les anges, ne les nomme pas, ne les compte pas, et il ne dit pas qu’ils sont venus tel jour de l’histoire des Compagnons. On ne commande pas le secours : on tient sa prière, et l’on combat.', src: 'Traduction du sens, Coran 8:9-10. Règle de jeu.' },
     { id: 'enracinement', cat: 'Noosphère', title: 'L’enracinement', text: 'Une idée noire dans un seul cœur se dissipe par la parole. Reprise par beaucoup, elle prend corps : c’est un égrégore. Quand on ne la voit plus tant elle est partout, elle commande : c’est une idole. Le jeu mesure cela d’un à cinq, pour chaque idole. La parole qui porte la déracine ; la parole manquée la laisse s’enfoncer. Déracinée, l’idole pèse moins et garde un voile de moins ; enracinée, elle pèse davantage. C’est une image du jeu : la jauge se dit d’une idole, jamais d’une époque ni de ses gens.' },
     { id: 'figures_ciel', cat: 'Cœur', title: 'Les compagnons de lumière (fiction)', text: 'Les Arabes donnaient aux étoiles des noms de bêtes : l’Aigle qui vole, le Lion, les bonds de la Gazelle. Dans la noosphère d’ISNAD, ces noms ont pris corps. Le Renard des sables et le Phénix viennent, eux, des contes. Ce sont des figures de fiction : aucune n’accompagne un Compagnon dans le récit historique.' },
     { id: 'equipement', cat: 'Objets', title: 'Ce que l’on porte', text: 'Épées, lances, arcs, boucliers, casques, cottes, turbans et manteaux : le jeu range sous quatre emplacements ce qu’un groupe pouvait porter en ce temps-là. C’est une *convention de jeu*. Aucune de ces pièces n’est une relique, aucune n’a appartenu à un personnage de l’histoire, aucune ne porte d’inscription, et le jeu ne dit pas qui portait quoi. Leurs noms viennent de la poésie arabe ancienne, où une bonne lame est dite *muhannad* (d’acier de l’Inde), *yamânî* (du Yémen) ou *mashrafî* ; une bonne lance, *khattî* (d’al-Khatt, port du Bahreïn) ou *samharî* ; un bon arc est de bois de *nab\'* ; une bonne cotte est *salûqî*. Le fer aide à tenir ; il ne remplace pas la provision du cœur.', src: 'Convention de jeu. Vocabulaire des poètes anciens, à faire vérifier.' },

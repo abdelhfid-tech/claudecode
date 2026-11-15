@@ -275,6 +275,22 @@ aucune manœuvre à un jour de l'histoire (exigence 19, proposée). Toute idole 
 des rangs existent dans quatre chapitres (La Traversée, Yarmoûk, L'Armée d'Usâma, La Bataille des Mâts).
 Partout ailleurs la bataille se déclare sans rangs : le tableau est dans `docs/decisions.md` (D111).
 
+## Préparation, secours, Valeurs et attributs, portes de la noosphère (version 8)
+
+Demandes du décideur, citées dans `docs/decisions.md` (D112 à D117).
+
+| Élément | Règle |
+|---|---|
+| La préparation | avant chaque idole, et à chaque reprise : hommes, groupe, équipement, vertus, besace, cœur ; elle signale sans bloquer, et l'on peut s'y équiper |
+| Le secours | bataille d'idole presque perdue et prière tenue dans le chapitre : le groupe est relevé, une fois ; on ne le commande pas ; aucun ange n'est montré, nommé ni compté |
+| Les sept Valeurs | celles des sept lames ; une Valeur est gardée quand son mal est tranché ; un badge sans inscription |
+| Les sept attributs divins | un par Valeur, tiré du Coran avec son verset ; reconnu quand l'œuvre a forgé la lame ; du texte, jamais un dessin |
+| Les portes de la noosphère | au sortir de la prière, dans le dhikr, en songe ; une descente par porte et par chapitre |
+| Le combat intérieur | un mal du cœur, face au râwî seul ; jamais un Compagnon ; avec la lame il est tranché, sans elle repoussé ; si l'on perd, on remonte |
+
+La boucle : l'œuvre, trois fois, forge la lame et fait reconnaître un attribut ; la prière, le dhikr ou le sommeil ouvrent
+la noosphère ; on y tranche le mal ; la Valeur d'en face est gardée. Il n'y a pas d'organigramme du bien.
+
 ## Feuille de route proposée
 
 1. Relecture historique par un spécialiste, puis corrections de texte.
