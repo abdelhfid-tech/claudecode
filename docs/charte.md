@@ -212,6 +212,17 @@ encombrants (D90). C'est la musique qui porte le lieu.
 **Bande-son originale synthétisée** (version 2, à la demande du décideur) : vingt et une pistes, dans le métier des partitions de JRPG 16 bits, avec une couleur arabo-andalouse là où le récit l'appelle ; un thème de six notes, celui de la Chaîne, revient d'une piste à l'autre (détail : `docs/musique.md`). Aucune voix, aucune récitation, aucun appel à la prière synthétisé. Le son peut être coupé depuis
 l'écran-titre et le menu.
 
+## Le livret en PDF
+
+A5 paysage (210 × 148 mm) : les proportions des écrans du jeu, une page qui tient entière sur un écran. Le texte coule
+sur deux colonnes séparées par un filet doré ; il fait 10,7 points sur le papier. La couverture occupe une page, dans
+la forme large du livret : le titre à gauche, Médine au soir à droite. Le sommaire tient sur une page, avec les quatre
+parties en intertitres et le numéro de page de chaque feuillet. Une figure a la largeur d'une colonne ; une capture
+prise sur téléphone se pose à gauche de sa légende. Seuls les tableaux qui ne tiennent pas dans une colonne prennent
+toute la largeur. Chaque planche a sa page. Aucune page à moitié vide, sauf la dernière du livret : l'outil déplace
+une figure d'un ou deux paragraphes, ou la réduit de 30 % au plus, plutôt que de laisser un blanc. Détail et relevé :
+`docs/decisions.md`, D126 à D131.
+
 ## Icône et captures
 
 Pas d'icône dédiée. Les captures d'écran de référence sont produites par `node tools/smoke.js shots`.

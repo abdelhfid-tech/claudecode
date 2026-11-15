@@ -775,6 +775,69 @@ Ce que l'agent a construit pour y répondre :
   page de préparation n'offre que l'équipement comme remède : pour prier ou remplir la besace, il faut y avoir pensé
   avant. Un râwî de niveau 1 qui descend sans lame peut perdre : il remonte, sans dommage.
 
+## Le livret en PDF : A5 paysage, pages équilibrées (demande du décideur, 15 novembre)
+
+Le décideur, le PDF de D116 en main : « Je veux le pdf final avec optimisation de l'espace car la il y a des pages
+surchargées et des pages vides. » À la question du format, il répond « Livret A5 », puis : « Ça peut être A5 paysage ».
+
+- [x] **D126. Le format.** *Choix du décideur.* A5 paysage (210 × 148 mm), toutes les pages. Le livret est mis en
+  pages sur 1000 px de large puis imprimé à l'échelle : le texte de 18 px fait 10,7 points sur le papier, contre 5,9
+  dans le PDF précédent ramené à la même largeur.
+- [ ] **D127. Deux colonnes.** Le corps du livret coule sur deux colonnes ; dans une colonne, chaque élément garde la
+  mise en page que le livret a déjà pour les téléphones. Seuls deux tableaux prennent toute la largeur (« Valeurs et
+  attributs », « Les rencontres de la Cité-Miroir ») : ils ne tiennent pas dans une colonne. Aucun saut de page forcé
+  dans le corps ; seulement après la couverture, après le sommaire et avant les planches. Une planche par page.
+- [ ] **D128. Le sommaire, les signets.** Le sommaire tient sur une page et donne le vrai numéro de page de chaque
+  feuillet, relu dans le fichier imprimé ; ses entrées sont cliquables et les titres deviennent des signets du lecteur
+  de PDF.
+- [ ] **D129. L'ajusteur.** L'outil relit le PDF qu'il vient de produire. Quand une colonne garde plus de 22 % de blanc
+  parce que la figure suivante est partie en tête de la colonne d'après, il corrige une chose et recommence : le texte
+  qui suit la figure remonte, ou la figure remonte avant le texte qui la précède (sans jamais franchir un titre) ;
+  sinon la figure est réduite juste assez, de 30 % au plus. Une fiche (saga, compagnon) peut passer d'une colonne à
+  l'autre, jamais juste après son en-tête.
+- [ ] **D130. Ce que le PDF change par rapport au livret en ligne.** Aucun texte n'est réécrit. Changent : la place
+  d'une figure, d'un ou deux paragraphes au plus, et sa taille ; l'ordre des planches, rangées par numéro (l'affiche
+  verticale, planche 9, revient entre la 8 et la 10) ; l'avertissement du pied de page, placé à la fin du livret sous
+  « Sources et avertissement » ; les halos des fiches de personnages, repeints en petites images (imprimés tels quels,
+  ils pesaient 4 Mo).
+- [ ] **D131. « Dix planches ».** Le chapeau des planches annonçait dix planches ; il y en a douze (onze en 16:9, une
+  affiche verticale). Corrigé dans `promo/livret.src.html` et dans le `README`. Le livret en ligne n'est pas republié
+  pour ce seul mot : au décideur de le dire.
+- **Relevé du 15 novembre.** 74 pages : la couverture, le sommaire, 60 pages de livret, 12 de planches ; 7,9 Mo
+  (19 Mo auparavant). Colonnes remplies à 89 % en moyenne ; deux colonnes juste sous 70 % (67 % page 6, 68 % page 12) ;
+  la dernière page du livret, avant les planches, est à moitié pleine. Quatorze ajustements. Sommaire : 27 numéros sur
+  27 relus justes. Toutes les pages ont été relues sur planche-contact.
+- **Trois constats d'outil, pour qui reprendra ce code.** Un bloc plus large que la page fait rétrécir tout le
+  document à l'impression (les planches avaient 660 px de largeur minimale) ; un repère posé dans la page, même
+  invisible, déplace la mise en pages (les repères sont donc des ancres du PDF, lues par `pdfinfo -dests`) ; un bloc
+  pleine largeur suivi d'un bloc insécable trop haut renvoie toute la suite à la page suivante (d'où le peu de blocs
+  pleine largeur).
+- **Limites connues.** Un premier plan annonçait « environ 65 pages » : il y en a 74, parce que chaque planche a
+  maintenant sa page. Une fiche de saga ou de meneur peut être coupée entre deux colonnes. Sans `pdfinfo` ni `pdftoppm`
+  (poppler), l'outil imprime sans ajuster ni paginer le sommaire, et le dit.
+
+### Pistes du décideur pour la version suivante (réflexion ouverte : rien n'est décidé, rien n'est exécuté)
+
+« Est-ce que ça peut devenir un jeu en réseau dans une version à venir ? Avec possibilité de créer son propre
+personnage, créer, acheter ou vendre des objets en ligne, ajouter des missions ? N'exécute rien je réfléchis à la
+version suivante. Je peux demander à image 2 ou nanobanana d'améliorer les personnages ? »
+
+Réponse de l'agent, pour mémoire :
+
+- **En réseau : faisable, mais c'est un autre objet.** Le jeu est un seul fichier sans serveur, et l'Artifact bloque
+  toute requête réseau ; il faudrait un site hébergé et un serveur. La base s'y prête : une mission est un chapitre de
+  données que le validateur contrôle, les effets d'un objet sont calculés par le moteur. Quatre étapes possibles, de la
+  plus légère à la plus lourde : son personnage et ses missions, échangées par fichier (aucun serveur) ; comptes,
+  sauvegarde en ligne et catalogue de missions relues ; échoppe entre joueurs en monnaie du jeu ; jeu à plusieurs, en
+  coopération contre les égrégores. L'agent commencerait par la première.
+- **À peser.** Le coût et l'entretien d'un serveur, les données personnelles ; le contenu écrit par les joueurs, que
+  les exigences de respect ne couvrent plus toutes seules (missions limitées à la fiction, relecture avant
+  publication, un personnage créé n'est jamais un Compagnon) ; pas d'argent réel dans l'échoppe ; la coopération plutôt
+  que l'affrontement entre joueurs.
+- **Outils d'images.** Oui comme modèles (costumes, silhouettes, palettes) que l'agent redessine dans les gabarits du
+  moteur ; non comme images posées telles quelles, car les personnages sont dessinés par le code. Sans visage : ces
+  outils en dessinent par défaut. C'est le décideur qui génère et qui vérifie les droits d'usage.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
@@ -845,5 +908,9 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     comme une exception dite ? Doit-il venir aussi hors des batailles d'idole ?
 15. *Répondu le 15 novembre (D123).* Les portes de la noosphère (D123) : le combat intérieur est celui du râwî, jamais d'un Compagnon. Est-ce bien
     l'intention ? « Au sortir de la prière » convient-il, ou faut-il « pendant » ?
+16. Le livret en PDF (D126 à D131) : le format et le nombre de pages conviennent-ils ? Faut-il aussi une version A4
+    pour l'impression ? Le livret en ligne doit-il reprendre la correction « Douze planches » ?
+17. La version suivante : par quelle étape commencer, et le décideur veut-il une note d'architecture chiffrée avant
+    de choisir ?
 10. *Répondu le 15 novembre : « Ça a l'air ok ».* La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

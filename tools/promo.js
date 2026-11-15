@@ -7,10 +7,13 @@
      livret   : assemble promo/livret.src.html et les données en promo/livret.html (autonome)
                 et promo/livret.artifact.html (fragment à publier)
      planches : exporte chaque planche du livret en promo/planches/*.jpg (1920 px de large)
-     pdf : imprime promo/livret.html en promo/livret.pdf, mis en pages */
+     pdf      : réassemble le livret puis l'imprime en promo/livret.pdf : A5 paysage, deux colonnes, pages équilibrées
+                (demande pdfinfo et pdftoppm, de poppler ; « pdf detail » affiche le remplissage page par page) */
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
+const { execFileSync } = require('child_process');
 const ROOT = path.join(__dirname, '..');
 const PROMO = path.join(ROOT, 'promo'), IMG = path.join(PROMO, 'img'), OUT = path.join(PROMO, 'planches');
 const GAME = 'file://' + path.join(ROOT, 'index.html');
@@ -657,39 +660,278 @@ async function planches(browser, errors) {
 }
 
 /* ---------- 6. le livret en PDF ---------- */
-// promo/livret.html imprimé par le navigateur, mis en pages : la couverture, le sommaire, un feuillet par page au moins,
-// les planches à la fin. Rien n'y est ajouté : mêmes textes, mêmes images, mêmes polices.
+// promo/livret.html imprimé par le navigateur en A5 paysage, sur deux colonnes. Rien n'y est ajouté : mêmes textes, mêmes
+// images, mêmes polices. La page est mise en pages sur 1000 px de large puis imprimée à l'échelle : 18 px de texte font
+// 10,7 points sur le papier. Une planche par page. Un ajusteur relit le PDF produit et comble les blancs (voir ajuster).
+const A5 = { l: 210 / 25.4 * 96, h: 148 / 25.4 * 96 };                     // la feuille couchée, en px CSS
+const PG = { l: 1000, haut: 30, bas: 38, bord: 34, gout: 44 };              // largeur de mise en page, marges, bord, gouttière
+PG.e = A5.l / PG.l;                                                         // l'échelle d'impression
+PG.h = Math.floor(A5.h / PG.e) - 1;                                         // hauteur d'une page, en px de mise en page
+PG.utile = PG.h - PG.haut - PG.bas;
+PG.large = PG.l - 2 * PG.bord;                                              // la largeur utile, et celle d'une colonne
+PG.col = (PG.large - PG.gout) / 2;
+const px = v => (v * PG.e).toFixed(2) + 'px';                               // une longueur de mise en page, dite au papier
+
+const NUMERO = `content: counter(page); font-family: "Share Tech Mono", monospace; font-size: ${px(11)}; letter-spacing: .22em; color: #8f8873; vertical-align: top; padding-top: ${px(11)};`;
 const IMPRESSION = `
+  @page { size: 210mm 148mm; margin: ${px(PG.haut)} 0 ${px(PG.bas)} 0; background: #07060d; @bottom-center { ${NUMERO} } }
+  @page :first { margin: 0; @bottom-center { content: none; } }
   html, body { background: #07060d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .couv { min-height: 1697px; box-sizing: border-box; break-after: page; }
+  .gout { padding-left: ${PG.bord}px !important; padding-right: ${PG.bord}px !important; }
+  .col { max-width: none !important; }
+
+  /* la couverture : une page entière, dans la forme large du livret */
+  .couv { height: ${PG.h}px; box-sizing: border-box; break-after: page; border-bottom: 0; display: flex; flex-direction: column; justify-content: center; }
   .couv nav.acces { display: none !important; }
-  nav.sommaire { padding-top: 70px; }
-  nav.sommaire a { text-decoration: none; }
-  .partie { break-before: page; break-after: avoid; padding-top: 56px; }
-  section.feuillet { padding-top: 34px; opacity: 1 !important; transform: none !important; }
-  section.feuillet > h2 { break-after: avoid; }
-  section.table { break-before: page; padding-top: 56px; }
-  h2, h3, h4, .cartel { break-after: avoid; }
-  figure, .ecran, .fiche, .fiche-p, .peuple, .groupe, .piece, .etal, .duo, .scene, .vue, .troupe, .note, dl, tr, li, blockquote, .defile, .pl, .lum, .bio { break-inside: avoid; }
-  p { orphans: 3; widows: 3; }
+  .reperes { position: absolute; left: 0; top: 0; width: 0; height: 0; overflow: hidden; }
+  /* les impressions d'essai : mêmes boîtes, sans le poids des images */
+  html.essai img.lourde, html.essai .pl * { visibility: hidden !important; }
+  html.essai figure:has(img.lourde), html.essai .pl { background: #777 !important; }
+
+  /* le sommaire : une page, deux colonnes, les parties, le numéro de page de chaque feuillet */
+  nav.sommaire { padding-block: 6px 0 !important; break-after: page; }
+  nav.sommaire h2 { font-family: var(--f-titre); font-weight: 700; letter-spacing: .12em; font-size: 1.7rem; color: var(--or); margin: 0 0 .7em; }
+  nav.sommaire ol { display: block !important; columns: 2; column-gap: ${PG.gout}px; font-size: .96rem; line-height: 1.3; }
+  nav.sommaire li { break-inside: avoid; }
+  nav.sommaire li.part { border: 0; font-family: var(--f-mono); letter-spacing: .28em; text-transform: uppercase; font-size: .74rem; color: var(--zellige); padding: 1.5em 0 .5em; break-after: avoid; }
+  nav.sommaire li.part:first-child { padding-top: 0; }
+  nav.sommaire li a { padding-block: .42em !important; text-decoration: none; }
+  nav.sommaire li a::after { content: attr(data-page) !important; font-size: .82rem; color: var(--sable); }
+  nav.sommaire li.a-part { margin-top: 1.5em; border-top: 1px solid rgba(233, 200, 119, .14); }
+
+  /* le livret : deux colonnes, le texte coule de l'une à l'autre et de page en page */
+  .livret { padding-block: 0 !important; }
+  main .col.fil { columns: 2; column-gap: ${PG.gout}px; column-rule: 1px solid rgba(233, 200, 119, .2); padding-left: 0 !important; }
+  html.mesure main .col.fil { columns: auto !important; width: ${PG.col}px; }
+  .fil::before { display: none !important; }
+  .partie { margin: 30px 0 0; break-after: avoid; }
+  .fil > .partie:first-child { margin-top: 0; }
+  section.feuillet { opacity: 1 !important; transform: none !important; padding-top: 26px; }
+  .partie + section.feuillet { padding-top: 8px; }
+  .feuillet > h2 { font-size: 1.42rem; padding-left: 26px; margin-bottom: .55em; }
+  .feuillet > h2::before, .feuillet > h2::after { left: 2px !important; top: .4em !important; }
+  .feuillet h3 { margin-top: 1.4em; }
+  h2, h3, h4, .troupe > h3 { break-after: avoid; break-inside: avoid; }
+  figure, tr, li, .note, blockquote, dl.fiche, .piece, .lame-f, .bete-f, .lumieres > div { break-inside: avoid; }
+  /* une fiche peut passer d'une colonne à l'autre, jamais juste après son en-tête */
+  .saga .ord, .saga h3, .saga .dit, .fiche-p header, .fiche-p dl { break-after: avoid; }
+  .saga .dit, .saga .groupe { break-inside: avoid; }
+  .etals tr { break-inside: auto; }
+  p { orphans: 2; widows: 2; }
+  .feuillet p, .feuillet li, .note, figcaption { max-width: none !important; }
+  .duo, .pile, .tri, .sagas, .suite, .pieces-g, .lames-g, .betes-g, .engage { display: block; }
+  .duo > * + * { margin-top: 20px; }
+  .pile > * + *, .tri > * + *, .suite > * + * { margin-top: 18px; }
+  .sagas > * + * { margin-top: 14px; }
+  .deplacee { margin: 14px 0 16px !important; }
+  .ecran { box-shadow: none; }
+  figure.portrait { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 0 8px; max-width: none !important; background: none; border: 0; }
+  figure.portrait img { height: ${Math.round(PG.utile * 0.46)}px; width: auto !important; border: 1px solid var(--filet); }
+  .tab { overflow: visible !important; margin: .8em 0 1.1em; }
+  .tab.large { column-span: all; }
+  th { white-space: normal; }
+  thead { break-after: avoid; }
+  .tri { margin: 1em 0 1.2em; }
+  .lumieres { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .troupe { margin-top: 2em; }
+  .fiche-p { grid-template-columns: 96px minmax(0, 1fr); gap: 14px; }
+  .fiche-p .scene { padding: 12px 6px 8px; }
+  .fiche-p .scene img { width: 64px; height: 96px; }
+  .fiche-p.meneur { display: block; padding: 16px 16px 14px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .fiche-p.meneur .scene { float: left; width: 172px; margin: 0 16px 6px 0; padding: 14px 6px 10px; gap: 8px; }
+  .fiche-p.meneur .scene img { width: 72px; height: 108px; }
+  .fiche-p.meneur h4 { font-size: 1.3rem; }
+  .fiche-p.meneur .vertus { clear: both; }
+  .fiche-p.meneur .attitudes { grid-template-columns: repeat(6, minmax(0, 1fr)); max-width: none; gap: 6px; }
+  .fiche-p.meneur .attitudes figcaption { font-size: .54rem; letter-spacing: 0; }
+  .colophon { margin-top: 30px; padding-top: 12px; border-top: 1px solid var(--filet); font-size: .92rem; color: var(--cendre); break-inside: avoid; }
+  .colophon p { margin: 0 0 .5em; }
+
+  /* les planches : une par page */
+  section.table { break-before: page; background: transparent; border: 0; padding-block: 0 !important; }
+  section.table h2 { font-size: 1.7rem; margin: 0 0 .2em; }
+  section.table .chapo { max-width: none; font-size: .95rem; line-height: 1.45; margin: 0 0 10px; }
+  .planche { break-before: page; break-inside: avoid; padding-top: 26px; }
+  .planche.premiere { break-before: avoid; padding-top: 0; }
+  .planche.premiere .cartel, .planche.premiere .defile { max-width: 826px; margin-inline: auto; }
+  .planche.debout { padding-top: 0; }
+  .planche.debout .cartel, .planche.debout .pw { max-width: 462px !important; margin-inline: auto; }
+  .planche .cartel { margin: 0 0 8px; }
   .defile { overflow: visible !important; }
-  footer.pied { break-before: avoid; margin-top: 60px; }
+  .pw { min-width: 0 !important; }
+  .pw.haut { max-width: none; }
 `;
-async function pdf(browser, errors) {
-  console.log('— livret en PDF');
-  const p = await (await browser.newContext({ viewport: { width: 1200, height: 1697 }, deviceScaleFactor: 1 })).newPage();
+
+// Ce qui se prépare dans la page avant d'imprimer : rien n'est réécrit, on range.
+const PREPARER = async (G) => {
+  const $ = (s, e) => (e || document).querySelector(s), $$ = (s, e) => [...(e || document).querySelectorAll(s)];
+  $$('img').forEach(i => { i.loading = 'eager'; });
+  await Promise.all([...document.images].map(i => i.complete ? null : new Promise(r => { i.addEventListener('load', r); i.addEventListener('error', r); })));
+  if (document.fonts && document.fonts.ready) await document.fonts.ready;
+  // l'avertissement du pied de page : à la fin du livret, sous les sources, plutôt que seul sur une dernière page
+  const pied = $('footer.pied'), corps = $('main .col');
+  if (pied && corps) { const d = document.createElement('div'); d.className = 'colophon'; d.innerHTML = ($('.col', pied) || pied).innerHTML; corps.appendChild(d); pied.remove(); }
+  // le sommaire : son titre, les parties du livret, et la place du numéro de page
+  const ol = $('nav.sommaire ol');
+  if (ol) {
+    const t = document.createElement('h2'); t.textContent = 'Sommaire'; ol.before(t);
+    let partie = null; const de = {};
+    $$('main .col > *').forEach(e => { if (e.matches('.partie')) partie = e.textContent.trim(); else if (e.id && partie) { de[e.id] = partie; partie = null; } });
+    $$('li', ol).forEach(li => { const a = $('a', li), id = a && (a.getAttribute('href') || '').slice(1); a.dataset.page = '';
+      if (de[id]) { const p = document.createElement('li'); p.className = 'part'; p.textContent = de[id]; li.before(p); }
+      if (id === 'planches') li.className = 'a-part'; });
+  }
+  // les signets du PDF se font sur les titres : le grand titre de couverture (son halo le répéterait) et l'arabe des noms n'y entrent pas
+  $$('.couv h1').forEach(e => e.setAttribute('role', 'presentation')); $$('h3 .ar, h4 .ar').forEach(e => e.setAttribute('aria-hidden', 'true'));
+  // les planches : chacune avec son cartel, dans l'ordre de leurs numéros
+  const table = $('#planches .col');
+  if (table) {
+    const blocs = $$('.cartel', table).map(c => { const d = document.createElement('div'); d.className = 'planche'; const df = c.nextElementSibling; c.before(d); d.append(c, df);
+      d.dataset.n = (c.textContent.match(/Planche\s+(\d+)/) || [0, 99])[1]; if ($('.pw.haut', d)) d.classList.add('debout'); return d; });
+    blocs.sort((a, b) => a.dataset.n - b.dataset.n).forEach(d => table.appendChild(d));
+    if (blocs[0]) $('.planche', table).classList.add('premiere');
+  }
+  $$('img').forEach(i => { if (/\.jpe?g$/i.test(i.getAttribute('src') || '')) i.classList.add('lourde'); });
+  // une capture prise en hauteur (téléphone) : l'image à gauche, sa légende à côté
+  $$('main figure').forEach(f => { const i = $('img.lourde', f); if (i && $$('img', f).length === 1 && i.naturalHeight > i.naturalWidth * 1.15) f.classList.add('portrait'); });
+  // les halos des fiches : imprimés tels quels, Chromium en ferait des images de la taille de la page ; on les peint une fois, petits
+  const racine = getComputedStyle(document.documentElement), teinte = v => { const n = parseInt(v.trim().slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; }, halos = {};
+  $$('.fiche-p .scene').forEach(s => { const f = s.closest('.fiche-p'), c = getComputedStyle(f).getPropertyValue('--c').trim(), m = f.classList.contains('meneur'), cle = c + (m ? 'm' : '');
+    if (!/^#[0-9a-f]{6}$/i.test(c)) return;
+    if (!halos[cle]) { const cv = document.createElement('canvas'), L = 240, H = 180, x = cv.getContext('2d'), cy = m ? .60 : .62, rgb = teinte(c).join(','); cv.width = L; cv.height = H;
+      x.fillStyle = racine.getPropertyValue(m ? '--nuit' : '--encre').trim() || '#0d0b1a'; x.fillRect(0, 0, L, H);
+      x.translate(L / 2, H * cy); x.scale(L / 2 * Math.SQRT2, H * Math.max(cy, 1 - cy) * Math.SQRT2);
+      const g = x.createRadialGradient(0, 0, 0, 0, 0, 1); g.addColorStop(0, `rgba(${rgb},${m ? .30 : .26})`); g.addColorStop(m ? .70 : .68, `rgba(${rgb},0)`); x.fillStyle = g; x.fillRect(-2, -2, 4, 4);
+      halos[cle] = cv.toDataURL('image/jpeg', 0.92); }
+    s.style.background = `url(${halos[cle]}) center / 100% 100% no-repeat`; });
+  // un tableau prend toute la largeur de la page s'il ne tient pas dans une colonne, ou s'il y occuperait plus de surface
+  document.documentElement.classList.add('mesure');
+  $$('main .tab').forEach(t => { const tb = $('table', t); if (!tb) return; const e = t.getBoundingClientRect(), deborde = tb.getBoundingClientRect().width > e.width + 2;
+    t.style.width = G.large + 'px'; const l = t.getBoundingClientRect(); t.style.width = '';
+    if (deborde || e.height * e.width > l.height * l.width * 1.08) t.classList.add('large'); });
+  document.documentElement.classList.remove('mesure');
+  return [...document.images].filter(i => !i.naturalWidth).map(i => i.getAttribute('src'));
+};
+
+// Les repères. Chromium écrit dans le PDF la place de tout élément visé par un lien de la page. On donne donc un id aux
+// blocs à suivre et, sur la couverture, un lien vide et sans surface vers chacun : rien ne s'affiche, la mise en pages
+// n'en est pas changée, et « pdfinfo -dests » dit ensuite sur quelle page, à quelle hauteur et dans quelle colonne est chaque bloc.
+const REPERER = () => {
+  const $$ = s => [...document.querySelectorAll(s)], liens = document.createElement('div'); liens.className = 'reperes'; let k = 0;
+  const poser = (e, genre, id) => { if (e.dataset.genre) return; e.dataset.genre = genre; if (id) e.id = id; else if (!e.id) e.id = 'rep-' + (++k);
+    const a = document.createElement('a'); a.href = '#' + e.id; a.tabIndex = -1; liens.appendChild(a); };
+  $$('section.feuillet > h2').forEach(e => poser(e, 'titre', 't-' + e.parentNode.id));
+  $$('section.table').forEach(e => poser(e, 'planches'));
+  $$('main .tab.large').forEach(e => poser(e, 'large'));
+  $$('main figure').forEach(e => { const r = e.getBoundingClientRect(), im = e.querySelectorAll('img'); if (r.height >= 120 && im.length === 1 && im[0].getBoundingClientRect().width >= 180) poser(e, 'figure'); });
+  $$('main .note, main .lumieres, main dl.fiche, main .colophon').forEach(e => { if (e.getBoundingClientRect().height >= 90) poser(e, 'bloc'); });
+  document.querySelector('.couv').appendChild(liens);
+  return liens.children.length;
+};
+
+// Dans la page : les mesures et les gestes de l'ajusteur. Un « atome » est un bloc du fil du texte (paragraphe, liste,
+// figure, tableau, fiche…) ; les conteneurs de mise en page (feuillet, duo, pile) n'en sont pas.
+const OUTILS = () => {
+  const racine = document.documentElement, corps = document.querySelector('main .col');
+  const CONTENEUR = e => e.matches('section.feuillet, .duo, .pile, .tri, .troupe') || (e.tagName === 'DIV' && !e.className && !e.dataset.genre);
+  const TEXTE = e => e.matches('p:not(.partie), ul, ol');
+  const atomes = () => { const A = []; const va = e => { for (const c of e.children) { if (CONTENEUR(c)) va(c); else A.push(c); } }; va(corps); return A; };
+  const h = e => e.getBoundingClientRect().height;
+  const surUneColonne = f => { racine.classList.add('mesure'); try { return f(); } finally { racine.classList.remove('mesure'); } };   // hauteurs vraies, sans coupure
+  window.__pdf = {
+    blocs() { const larges = {}; document.querySelectorAll('[data-genre="large"]').forEach(e => { larges[e.id] = h(e); });
+      return surUneColonne(() => [...document.querySelectorAll('[data-genre]')].map(e => { const i = e.dataset.genre === 'figure' ? e.querySelector('img') : null;
+        if (i && !e.dataset.hi0) e.dataset.hi0 = h(i);
+        return { id: e.id, genre: e.dataset.genre, h: larges[e.id] || h(e), hi: i ? h(i) : 0, hi0: i ? +e.dataset.hi0 : 0, mobile: e.matches('figure, dl.fiche') }; })); },
+    autour(id) { return surUneColonne(() => { const A = atomes(), i = A.indexOf(document.getElementById(id)), apres = [], avant = [];
+      for (let j = i + 1; i >= 0 && j < A.length && TEXTE(A[j]); j++) apres.push(h(A[j]) + 16);
+      for (let j = i - 1; j >= 0 && TEXTE(A[j]); j--) avant.push(h(A[j]) + 16);
+      return { apres, avant }; }); },
+    deplacer(id, n) { const A = atomes(), e = document.getElementById(id), i = A.indexOf(e), cible = A[i + n]; if (i < 0 || !cible) return false;
+      e.classList.add('deplacee'); if (n > 0) cible.after(e); else cible.before(e); return true; },
+    reduire(id, d) { return surUneColonne(() => { const e = document.getElementById(id), i = e.querySelector('img'), hi = h(i), l = e.getBoundingClientRect().width;
+      e.style.maxWidth = Math.floor(l * Math.max(0.4, (hi - d) / hi)) + 'px'; e.style.marginInline = 'auto'; return true; }); },
+  };
+};
+
+// Ce que dit le PDF : jusqu'où chaque colonne de chaque page est remplie (pdftoppm), et où est chaque repère (pdfinfo -dests).
+// Tout est rendu en px de mise en page, la hauteur comptée depuis le haut de la zone imprimée. Chromium écrit ces places sans
+// leur appliquer l'échelle d'impression ni la marge haute : on ne le suppose pas, on l'étalonne sur deux places connues,
+// le haut du livret (« livret », en tête de sa première page) et le bord gauche de la colonne de droite.
+function relever(fichier, tmp) {
+  const pt = 0.75 * PG.e, pages = [], rep = {}, D = [];
+  const H = +(execFileSync('pdfinfo', [fichier]).toString().match(/Page size:\s+[\d.]+ x ([\d.]+)/) || [0, 420])[1];
+  execFileSync('pdfinfo', ['-dests', fichier], { maxBuffer: 1 << 26 }).toString().split('\n').forEach(l => { const m = l.match(/^\s*(\d+)\s+\[\s*XYZ\s+(-?[\d.]+)\s+(-?[\d.]+)[^\]]*\]\s+"(.+)"\s*$/); if (m) D.push({ page: +m[1], g: +m[2], t: +m[3], nom: m[4] }); });
+  const t0 = (D.find(d => d.nom === 'livret') || { t: H }).t, droite = {}; D.forEach(d => { if (d.g > H * 0.6) droite[d.g] = (droite[d.g] || 0) + 1; });
+  const gd = +(Object.entries(droite).sort((a, b) => b[1] - a[1])[0] || [0])[0], k = gd ? gd / (PG.bord + PG.col + PG.gout) : 0.75;
+  D.forEach(d => { rep[d.nom] = { page: d.page, x: d.g / k, y: (t0 - d.t) / k, col: d.g / k < PG.l / 2 ? 0 : 1 }; });
+  const etalon = { k, sur: Object.values(rep).every(r => r.y > -12 && r.y < PG.utile + 12) };
+  fs.rmSync(tmp, { recursive: true, force: true }); fs.mkdirSync(tmp, { recursive: true });
+  execFileSync('pdftoppm', ['-r', '24', '-gray', fichier, path.join(tmp, 'p')]);
+  fs.readdirSync(tmp).filter(f => f.endsWith('.pgm')).sort().forEach((f, k) => { const b = fs.readFileSync(path.join(tmp, f)); let i = 0;
+    const mot = () => { while (b[i] === 10 || b[i] === 32 || b[i] === 13) i++; let s = ''; while (b[i] !== 10 && b[i] !== 32 && b[i] !== 13) s += String.fromCharCode(b[i++]); return s; };
+    mot(); const w = +mot(), h = +mot(); mot(); i++; const hp = H / pt, y0 = Math.round(PG.haut / hp * h), y1 = Math.round((PG.haut + PG.utile) / hp * h), P = { n: k + 1, plein: [0, 0] };
+    [[PG.bord, PG.bord + PG.col], [PG.l - PG.bord - PG.col, PG.l - PG.bord]].forEach(([a, z], c) => { const xa = Math.round(a / PG.l * w), xz = Math.round(z / PG.l * w); let bas = y0;
+      for (let y = y0; y < y1; y++) { let n = 0; for (let x = xa; x < xz; x++) if (b[i + y * w + x] > 40) n++; if (n > (xz - xa) * 0.02) bas = y + 1; }
+      P.plein[c] = Math.max(0, bas / h * hp - PG.haut); });
+    pages.push(P); });
+  fs.rmSync(tmp, { recursive: true, force: true });
+  return { pages, rep, etalon };
+}
+
+// L'ajusteur. On imprime, on relit le PDF, et tant qu'une colonne garde un grand blanc parce que le bloc suivant est parti
+// en tête de la colonne d'après, on corrige une chose et l'on recommence :
+//   le texte remonte (la figure passe après le texte qui la suit, ou avant celui qui la précède, sans franchir un titre) ;
+//   sinon la figure est réduite juste assez pour tenir (30 % au plus).
+async function ajuster(p, mesurer, R) {
+  const SEUIL = Math.round(PG.utile * 0.22), JEU = 36, MAXI = 0.30, tentes = new Map(), journal = [];
+  const tente = (id, quoi) => { const t = tentes.get(id) || []; if (t.includes(quoi)) return true; t.push(quoi); tentes.set(id, t); return false; };
+  const fin = () => (R.rep.planches || { page: R.pages.length + 1 }).page;      // la page où commencent les planches
+  await p.evaluate(OUTILS);
+  const passes = async () => { for (let tour = 1; tour <= 40 && journal.length < 60; tour++) {
+    const B = await p.evaluate(() => window.__pdf.blocs()), ici = b => R.rep[b.id];
+    // le haut de la rangée de colonnes de chaque page : sous le dernier bloc pleine largeur qui y commence
+    const haut = n => Math.max(0, ...B.filter(b => b.genre === 'large' && ici(b) && ici(b).page === n).map(b => ici(b).y + b.h + 14));
+    const tete = (n, c) => { const h0 = haut(n); return B.filter(b => b.genre !== 'titre' && b.genre !== 'planches' && ici(b) && ici(b).page === n && (b.genre === 'large' || ici(b).col === c) && ici(b).y >= h0 - 8)
+      .map(b => ({ ...b, y: ici(b).y - h0 })).sort((a, b) => a.y - b.y)[0]; };
+    let geste = null;
+    for (const P of R.pages) { if (P.n < 3 || P.n >= fin() - 1 || geste) continue;
+      for (const c of [0, 1]) { const blanc = PG.utile - P.plein[c]; if (blanc < SEUIL || geste) continue;
+        // le bloc parti : en tête de la colonne de droite, ou de la page suivante si la colonne de droite n'a rien reçu
+        const droiteVide = c === 0 && P.plein[1] <= haut(P.n) + 6, b = c === 0 && !droiteVide ? tete(P.n, 1) : tete(P.n + 1, 0);
+        if (!b || b.y > 150 || b.genre === 'large') continue;
+        // ce qu'il manque pour qu'il tienne ; s'il devait tenir d'après les mesures, on sait pourtant qu'il n'a pas tenu : un peu
+        const manque = Math.max(24, b.y + b.h + JEU - blanc), ou = `page ${P.n}, colonne ${c ? 'droite' : 'gauche'} (${Math.round(blanc)} px de blanc)`;
+        if (b.genre === 'figure' && manque <= b.hi0 * 0.12 && b.hi - manque >= b.hi0 * (1 - MAXI) && !tente(b.id, 'r')) { geste = ['reduire', b.id, manque, `${ou} : figure réduite de ${Math.round(manque)} px`]; break; }
+        if (b.mobile) { const v = await p.evaluate(id => window.__pdf.autour(id), b.id); let sa = 0, na = 0, sv = 0, nv = 0;
+          while (na < v.apres.length && sa < blanc - JEU) sa += v.apres[na++];          // le texte qui suit remonte dans le blanc
+          while (nv < v.avant.length && sv < manque) sv += v.avant[nv++];               // ou la figure remonte avant le texte qui la précède
+          if (na && sa >= blanc * 0.6 && !tente(b.id, 'ap')) { geste = ['deplacer', b.id, na, `${ou} : le texte qui suit remonte (${na} bloc${na > 1 ? 's' : ''})`]; break; }
+          if (nv && sv >= manque && sv <= P.plein[c] - 20 && !tente(b.id, 'av')) { geste = ['deplacer', b.id, -nv, `${ou} : la figure remonte avant ${nv} bloc${nv > 1 ? 's' : ''} de texte`]; break; }
+          if (na && sa >= blanc * 0.3 && !tente(b.id, 'ap')) { geste = ['deplacer', b.id, na, `${ou} : le texte qui suit remonte en partie (${na} bloc${na > 1 ? 's' : ''})`]; break; } }
+        if (b.genre === 'figure' && b.hi - manque >= b.hi0 * (1 - MAXI) && !tente(b.id, 'r2')) { geste = ['reduire', b.id, manque, `${ou} : figure réduite de ${Math.round(manque)} px`]; break; }
+      } }
+    if (!geste) break;
+    await p.evaluate(([f, id, v]) => window.__pdf[f](id, v), geste.slice(0, 3)); journal.push(geste[3]); R = await mesurer();
+  } };
+  await passes();
+  // la fin du livret : s'il ne reste qu'un fond de page avant les planches, les figures des dernières pages cèdent la place
+  { const B = await p.evaluate(() => window.__pdf.blocs()), der = R.pages.find(P => P.n === fin() - 1), reste = der ? der.plein[0] + der.plein[1] : 0;
+    if (der && reste < PG.utile * 0.5) { let gagne = 0; const pris = [], vise = reste * 1.15 + 40;
+      for (const b of B.filter(b => b.genre === 'figure' && R.rep[b.id] && R.rep[b.id].page >= fin() - 9 && R.rep[b.id].page < fin() - 1 && b.hi >= b.hi0 * 0.9).reverse()) { if (gagne >= vise) break; const d = Math.round(b.hi0 * 0.2); pris.push([b.id, d]); gagne += d; }
+      if (gagne >= vise) { for (const g of pris) await p.evaluate(([id, d]) => window.__pdf.reduire(id, d), g);
+        journal.push(`fin du livret : ${Math.round(reste)} px sur la dernière page ; ${pris.length} figures réduites pour les reprendre`); R = await mesurer(); await passes(); } } }
+  return { R, journal };
+}
+
+async function pdf(browser, errors, opts = {}) {
+  console.log('— livret en PDF (A5 paysage)');
+  const p = await (await browser.newContext({ viewport: { width: PG.l, height: PG.h }, deviceScaleFactor: 1 })).newPage();
   p.on('pageerror', e => errors.push('pdf : ' + e.message));
   await p.goto('file://' + path.join(PROMO, 'livret.html')); await p.emulateMedia({ media: 'screen' });
   await p.addStyleTag({ content: IMPRESSION });
-  const manque = await p.evaluate(async () => {
-    document.querySelectorAll('img').forEach(i => { i.loading = 'eager'; });
-    const pied = document.querySelector('footer.pied'), som = document.querySelector('nav.sommaire'); if (pied && som) som.after(pied); // l'avertissement sous le sommaire, plutôt que seul sur une dernière page
-    await Promise.all([...document.images].map(i => i.complete ? null : new Promise(r => { i.addEventListener('load', r); i.addEventListener('error', r); })));
-    if (document.fonts && document.fonts.ready) await document.fonts.ready;
-    return [...document.images].filter(i => !i.naturalWidth).map(i => i.getAttribute('src'));
-  });
-  manque.forEach(m => errors.push('pdf : image absente ' + m));
+  (await p.evaluate(PREPARER, PG)).forEach(m => errors.push('pdf : image absente ' + m));
   // les captures pèsent lourd : chacune est réduite à deux fois sa largeur d'affichage, dans la page seulement
   const liste = await p.evaluate(() => [...document.images].filter(i => /\.jpe?g$/i.test(i.getAttribute('src') || '')).map((i, k) => { i.dataset.k = k; return { k, src: i.getAttribute('src'), w: Math.ceil(i.getBoundingClientRect().width) }; }));
   for (const it of liste) {
@@ -701,10 +943,36 @@ async function pdf(browser, errors) {
       im.removeAttribute('srcset'); im.src = c.toDataURL('image/jpeg', 0.84); await im.decode();
     }, { k: it.k, b64: fs.readFileSync(fichier).toString('base64'), w: it.w });
   }
-  await p.waitForTimeout(600);
-  const out = path.join(PROMO, 'livret.pdf');
-  await p.pdf({ path: out, width: '1200px', height: '1697px', printBackground: true, margin: { top: '0', right: '0', bottom: '0', left: '0' } });
-  console.log('  ✓ promo/livret.pdf', Math.round(fs.statSync(out).size / 1024) + ' Ko');
+  await p.waitForTimeout(400);
+  const out = path.join(PROMO, 'livret.pdf'), tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'livret-pdf-')), essai = path.join(tmp, 'essai.pdf');
+  const imprimer = async (f, fin) => { await p.evaluate(e => document.documentElement.classList.toggle('essai', e), !fin);
+    await p.pdf({ path: f, width: '210mm', height: '148mm', scale: PG.e, preferCSSPageSize: true, printBackground: true, ...(fin ? { outline: true, tagged: true } : {}) }); };
+  let outils = true; try { execFileSync('pdfinfo', ['-v'], { stdio: 'ignore' }); execFileSync('pdftoppm', ['-v'], { stdio: 'ignore' }); } catch (e) { outils = false; }
+  if (!outils) { console.log('  pdfinfo et pdftoppm (poppler) sont absents : le livret est imprimé sans ajustement ni sommaire paginé'); await imprimer(out, true); fs.rmSync(tmp, { recursive: true, force: true }); await p.context().close(); return; }
+  await p.evaluate(REPERER);
+  let R = null, journal = [];
+  const mesurer = async () => { await imprimer(essai); R = relever(essai, path.join(tmp, 'pgm')); return R; };
+  await mesurer();
+  const absents = (await p.evaluate(() => [...document.querySelectorAll('[data-genre="titre"]')].map(e => e.id))).filter(id => !R.rep[id]);
+  if (absents.length) errors.push('pdf : titres sans repère dans le PDF : ' + absents.join(', '));
+  if (!R.etalon.sur) errors.push('pdf : des repères tombent hors de la page (échelle ' + R.etalon.k.toFixed(3) + ') : le livret est imprimé sans ajustement');
+  else { const a = await ajuster(p, mesurer, R); R = a.R; journal = a.journal; }
+  // le sommaire reçoit ses numéros de page, puis le fichier final est imprimé et relu : il doit être celui qu'on a mesuré
+  const numeroter = () => p.evaluate(rep => document.querySelectorAll('nav.sommaire a').forEach(a => { const id = (a.getAttribute('href') || '').slice(1), r = rep['t-' + id] || rep[id]; a.dataset.page = r ? r.page : ''; }), R.rep);
+  await numeroter(); await imprimer(out, true);
+  let F = relever(out, path.join(tmp, 'pgm'));
+  const memes = (a, b) => a.pages.length === b.pages.length && Object.keys(a.rep).every(id => b.rep[id] && b.rep[id].page === a.rep[id].page);
+  if (!memes(R, F)) { R = F; await numeroter(); await imprimer(out, true); F = relever(out, path.join(tmp, 'pgm')); if (!memes(R, F)) errors.push('pdf : la mise en pages change entre deux impressions, le sommaire n’est pas sûr'); }
+  fs.rmSync(tmp, { recursive: true, force: true });
+  const som = await p.evaluate(() => [...document.querySelectorAll('nav.sommaire a')].map(a => [(a.getAttribute('href') || '').slice(1), +a.dataset.page])), justes = som.filter(([id, n]) => (F.rep['t-' + id] || F.rep[id] || {}).page === n).length;
+  if (justes !== som.length) errors.push(`pdf : sommaire inexact (${justes} entrées justes sur ${som.length})`);
+  const debut = (F.rep.planches || { page: F.pages.length + 1 }).page, corps = F.pages.filter(P => P.n > 2 && P.n < debut), taux = v => Math.round(v / PG.utile * 100);
+  const creux = []; corps.forEach(P => P.plein.forEach((v, c) => { if (taux(v) < 70 && P.n !== debut - 1) creux.push(P.n + (c ? 'd' : 'g') + ' (' + taux(v) + ' %)'); }));
+  console.log(`  ✓ promo/livret.pdf · ${F.pages.length} pages (${corps.length} de livret, ${F.pages.length - debut + 1} de planches) · ${Math.round(fs.statSync(out).size / 1024)} Ko`);
+  console.log(`  remplissage moyen des colonnes du livret : ${Math.round(corps.reduce((s, P) => s + taux(P.plein[0]) + taux(P.plein[1]), 0) / corps.length / 2)} % · colonnes sous 70 % : ${creux.join(', ') || 'aucune'}`);
+  console.log(`  sommaire : ${justes} numéros de page sur ${som.length} relus justes dans le fichier imprimé`);
+  console.log(`  ajustements : ${journal.length}`); journal.forEach(j => console.log('    · ' + j));
+  if (opts.detail) console.log('  par page (gauche/droite) : ' + F.pages.map(P => P.n + ':' + taux(P.plein[0]) + '/' + taux(P.plein[1])).join(' '));
   await p.context().close();
 }
 
@@ -720,7 +988,8 @@ async function pdf(browser, errors) {
   else if (mode === 'sprites') await sprites(browser, errors);
   if (mode === 'all') livret();
   if (mode === 'planches' || mode === 'all') { if (mode === 'planches') livret(); await planches(browser, errors); }
-  if (mode === 'pdf' || mode === 'all') await pdf(browser, errors);
+  if (mode === 'pdf') livret();
+  if (mode === 'pdf' || mode === 'all') await pdf(browser, errors, { detail: !!only && only.includes('detail') });
   if (errors.length) { console.log('--- ERREURS (' + errors.length + ') ---'); [...new Set(errors)].slice(0, 20).forEach(e => console.log(e)); }
   await browser.close();
   process.exit(errors.length ? 1 : 0);

@@ -77,6 +77,14 @@ hauteur, le haut de la scène en largeur). Outil : `tools/bataille.js`.
 le râwî (`heros`, `sansReprise`, `interieur`). La page de préparation est une page de la halte (`U.prepare`), appelée
 par `battle.js` avant chaque tentative contre une idole. `tools/promo.js pdf` imprime le livret en PDF.
 
+**Le livret en PDF.** `tools/promo.js pdf` réassemble `promo/livret.html`, l'ouvre à 1000 px de large, lui ajoute une
+feuille d'impression (`IMPRESSION` : A5 paysage, deux colonnes) et range la page (`PREPARER`) sans rien réécrire. Il
+l'imprime ensuite à l'échelle et relit le fichier produit : `pdfinfo -dests` donne la page, la colonne et la hauteur de
+chaque bloc suivi (ce sont des ancres du PDF : aucun repère n'est ajouté dans la page), `pdftoppm` donne le remplissage
+de chaque colonne. Tant qu'une colonne reste creuse, `ajuster` déplace ou réduit une figure et l'on recommence, sur des
+impressions d'essai sans images. Le sommaire reçoit alors ses numéros de page, et le fichier final est relu : il doit
+être celui qu'on a mesuré.
+
 ## Rendu rétro-HD
 
 Le monde est dessiné sur une **couche pixel de 384 × 216**, puis composé sur le canevas d'affichage,

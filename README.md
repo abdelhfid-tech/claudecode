@@ -219,13 +219,15 @@ node tools/doigt.js loin        # idem, puis tout le premier chapitre de la saga
 node tools/validate-music.js    # vérifie les vingt et une pistes
 node tools/smoke.js shots       # captures d'écran bureau et mobile dans .smoke/
 node tools/promo.js all         # livret du joueur et planches : captures, sprites, assemblage, export
+node tools/promo.js pdf         # le livret en PDF : A5 paysage, deux colonnes (promo/livret.pdf)
 ```
 
 Le livret du joueur et les planches de présentation sont dans `promo/` : `livret.html` s'ouvre tel
-quel, `planches/` contient les onze planches en images (dix en 1920 × 1080, une affiche verticale en
+quel, `planches/` contient les douze planches en images (onze en 1920 × 1080, une affiche verticale en
 1080 × 1350). Le texte se modifie dans `promo/livret.src.html`, puis `node tools/promo.js planches`
 réassemble la page et réexporte les images. Noms, dates, accroches, pièces et étoiles viennent des
-données du jeu.
+données du jeu. `node tools/promo.js pdf` en tire `promo/livret.pdf` : 74 pages A5 paysage, sommaire paginé,
+signets ; ce fichier n'est pas versionné, et l'outil demande `pdfinfo` et `pdftoppm` (poppler).
 
 `smoke.js` demande Playwright et Chromium (`npm i playwright` hors de l'environnement d'origine).
 
