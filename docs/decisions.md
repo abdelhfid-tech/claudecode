@@ -756,7 +756,8 @@ Ce que l'agent a construit pour y répondre :
   du cœur ». J'ai écrit « au sortir de la prière » plutôt que « pendant », pour que la prière reste sobre.
 - [x] **D124. Exigences 20, 21 et 22 dans `AGENTS.md`.** Leurs choix essentiels sont validés par les réponses ci-dessus ;
   leur formulation reste celle de l'agent, que le décideur peut retoucher. Les exigences 13 et 15 ne sont pas ajustées.
-- [ ] **D125. Le livret.** Le PDF est le livret mis en pages. L'Artifact du livret, partagé par lien, n'est pas republié
+- [x] **D125. Le livret.** *Le 15 novembre, à la question « Puis-je le mettre à jour ? », le décideur a répondu : « Oui,
+  mets-le à jour. » L'Artifact du livret est republié avec ses trois nouvelles sections (version 12).* Le PDF est le livret mis en pages. L'Artifact du livret, partagé par lien, n'est pas republié
   tant que le décideur n'a pas relu les textes nouveaux.
 - **Vérifications.** Batterie complète sans anomalie (cinq parcours automatiques, rechargement, trois parcours au
   doigt, son). La bataille au doigt passe par la page de préparation ; mesures avec et sans rangs sans écart. Le
