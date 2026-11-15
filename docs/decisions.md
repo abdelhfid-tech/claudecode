@@ -974,6 +974,13 @@ après un premier plan qui modifiait le moteur actuel :
   d'encre, veste de la ruelle, écharpe du copiste, manteau du veilleur, calotte du lettré — leurs noms et leurs
   couleurs sont une proposition, à voir sur la planche. `v2/tools/personnage.js` joue tout cela par les vrais boutons,
   en quatre tailles d'écran.
+- [ ] **D147. La 2.0 publiée à part (lot 1.6).** La 2.0 porte son titre, « ISNAD 2.0 », et se publie dans son propre
+  Artifact privé ; celui de la 1.31 reste à sa version 31. Chaque Artifact ayant son propre stockage, une partie ne passe
+  de l'un à l'autre que par l'export et l'import. Dans un Artifact, une page ne peut pas remettre de fichier au joueur :
+  l'export n'y propose donc que la copie du texte, au lieu d'un bouton qui ne ferait rien. On ne publie que l'assemblage
+  que toute la batterie a joué. Deux garde-fous ajoutés avant de publier : aucun texte d'un paquet ne porte de balise
+  (« < », « > ») — aucun des 13 628 textes du jeu de base n'en contient —, et une copie gardée abîmée sur l'appareil se
+  relit sans faire trébucher le jeu.
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 

@@ -70,8 +70,8 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const TAILLES = [['bureau', { width: 960, height: 540 }], ['telephone', { width: 390, height: 844 }], ['paysage', { width: 844, height: 390 }], ['petit', { width: 360, height: 560 }]];
   let pageBureau = null;
   for (const [nom, vp] of TAILLES) {
-    const p = await ouvrir(vp); await ecouter(p);
-    await bouton(p, '#title .vmenu', 'Nouvelle partie').click(); await p.waitForTimeout(700);
+    const p = await ouvrir(vp); await ecouter(p); const tactile = vp.width < 900, toucher = loc => (tactile ? loc.tap() : loc.click());   // sur un écran tactile, on touche
+    await toucher(bouton(p, '#title .vmenu', 'Nouvelle partie')); await p.waitForTimeout(700);
     const e1 = await p.evaluate(() => { const s = document.querySelector('#perso'), vis = e => { const r = e.getBoundingClientRect(); return r.width > 3 && r.height > 3 && r.top >= 0 && r.bottom <= innerHeight + 1 && r.left >= 0 && r.right <= innerWidth + 1; };
       return { ouvert: !s.hidden, nom: (s.querySelector('input') || {}).value, tenues: s.querySelectorAll('.tenue').length, choisie: [...s.querySelectorAll('.tenue')].findIndex(b => b.classList.contains('choisie')), ok: (s.querySelector('.ok') || {}).textContent, okVisible: !!s.querySelector('.ok') && vis(s.querySelector('.ok')), champVisible: !!s.querySelector('input') && vis(s.querySelector('input')),
         figures: [...s.querySelectorAll('.vue img')].map(i => i.naturalWidth + '×' + i.naturalHeight), defile: s.scrollHeight > s.clientHeight + 1, large: s.scrollWidth > s.clientWidth + 1, retour: [...s.querySelectorAll('button')].some(b => /Retour/.test(b.textContent)) }; });
@@ -86,14 +86,14 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     if (!e2.bloque || !/Dieu/.test(e2.note)) ko(`ÉCART ${nom} : un nom refusé ne bloque pas « Commencer » (${JSON.stringify(e2)})`);
     await p.locator('#perso input').fill('Khalil'); await p.waitForTimeout(150);
     // chaque tenue se choisit et se voit
-    const vues = []; for (let i = 0; i < 6; i++) { await p.waitForTimeout(650); await p.locator('#perso .tenue').nth(i).click(); await p.waitForTimeout(200);
+    const vues = []; for (let i = 0; i < 6; i++) { await p.waitForTimeout(650); await toucher(p.locator('#perso .tenue').nth(i)); await p.waitForTimeout(350);
       vues.push(await p.evaluate(() => ({ face: document.querySelector('#perso .vue img').src.length + ':' + document.querySelector('#perso .vue img').src.slice(-40), sous: document.querySelector('#perso .sous').textContent, n: [...document.querySelectorAll('#perso .tenue')].findIndex(b => b.classList.contains('choisie')) })));
       if (nom === 'bureau' || nom === 'telephone') await p.screenshot({ path: path.join(out, nom + '-3-tenue-' + (i + 1) + '.png') }); }
     if (new Set(vues.map(v => v.face)).size !== 6 || vues.some((v, i) => v.n !== i)) ko(`ÉCART ${nom} : toucher une tenue ne la montre pas (${vues.map(v => v.n + ' ' + v.sous).join(' | ')})`);
-    await p.waitForTimeout(650); await p.locator('#perso .tenue').nth(4).click(); await p.waitForTimeout(650);
+    await p.waitForTimeout(650); await toucher(p.locator('#perso .tenue').nth(4)); await p.waitForTimeout(650);
     const e3 = await p.evaluate(() => ({ bloque: document.querySelector('#perso .ok').disabled, qui: document.querySelector('#perso .qui').textContent }));
     if (e3.bloque || e3.qui !== 'Khalil') ko(`ÉCART ${nom} : « Khalil » ne débloque pas « Commencer » (${JSON.stringify(e3)})`);
-    await p.locator('#perso .ok').click(); await p.waitForTimeout(900);
+    await toucher(p.locator('#perso .ok')); await p.waitForTimeout(900);
     const e4 = await p.evaluate(() => { const I = window.ISNAD; return { ferme: document.querySelector('#perso').hidden, profil: I.save.data.profil, monde: !!(I.world.saga && I.world.saga.id === 'idris'), heros: I.sagas.idris.heroes.idris.name, sceau: I.sagas.idris.heroes.idris.arabic }; });
     if (!e4.ferme || !e4.monde || e4.profil.nom !== 'Khalil' || e4.profil.tenue !== 'veilleur' || e4.heros !== 'Khalil' || e4.sceau !== '') { ko(`BLOQUÉ ${nom} : « Commencer » ne lance pas le prologue avec le personnage choisi : ${JSON.stringify(e4)}`); await p.close(); continue; }
     // le prologue en entier, joué par le joueur automatique ; tout ce qui s'affiche est relevé
@@ -107,7 +107,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     if (!joue.fin || joue.log.length) ko(`BLOQUÉ ${nom} : le prologue ne se joue pas jusqu'à la Chaîne avec un personnage choisi (${joue.log.join(' ; ')})`);
     else if (joue.reste.length) joue.reste.forEach(r => ko(`ÉCART ${nom} : « Idris » s'affiche encore — …${r}…`));
     else if (!joue.ou.dialogue || !joue.ou.combat || !joue.ou.chaine || joue.faute) ko(`ÉCART ${nom} : le nom choisi ne paraît pas partout (${JSON.stringify(joue.ou)}, élisions fautives : ${joue.faute})`);
-    else ok(`${nom} ${vp.width}×${vp.height} : « Ton personnage » s'ouvre sur Idris, refuse « Allah », montre les six tenues ; Khalil en manteau du veilleur joue tout le prologue — ${joue.n} textes relevés, « Khalil » ${joue.fois} fois (dialogue, combat, Chaîne), « de Khalil » ou « que Khalil » ${joue.elide} fois, plus un seul « Idris »${e1.defile ? ' · l’écran défile' : ''}`);
+    else ok(`${nom} ${vp.width}×${vp.height}${tactile ? ', au doigt' : ''} : « Ton personnage » s'ouvre sur Idris, refuse « Allah », montre les six tenues ; Khalil en manteau du veilleur joue tout le prologue — ${joue.n} textes relevés, « Khalil » ${joue.fois} fois (dialogue, combat, Chaîne), « de Khalil » ou « que Khalil » ${joue.elide} fois, plus un seul « Idris »${e1.defile ? ' · l’écran défile' : ''}`);
     sansErreur(nom); if (nom === 'bureau') pageBureau = p; else await p.close();
   }
 
@@ -130,6 +130,8 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     const c4 = await p.evaluate(async () => { const I = window.ISNAD, W = I.world; I.audio.setOn(false); I.speed = 40; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); W.roster = {}; W.saga = null;
       await W.startChapter('idris', 0, { saga: 'idris', ci: 0, obj: 1, map: 'archives', opts: {}, pos: 'bureau', party: ['idris'], npcs: {}, foes: [], chests: [], flags: {} }); I.speed = 1;
       const avant = JSON.stringify(W.sheets[0].look); I.ui.pause(); const b = [...document.querySelectorAll('#menu .side button')].find(x => /Ton personnage/.test(x.textContent)); return { avant, entree: !!b }; });
+    { await bouton(p, '#menu .side', 'Compagnons').click(); await p.waitForTimeout(500); const groupe = await p.evaluate(() => (document.querySelector('#menu .pane').innerText || '').replace(/\s+/g, ' ')); await p.screenshot({ path: path.join(out, 'bureau-5b-halte-groupe.png') });
+      if (!/Khalil/.test(groupe) || /(^|[^A-Za-zÀ-ÿ])Idris(?![A-Za-zÀ-ÿ])/.test(groupe)) ko(`ÉCART à la halte, la page du groupe ne dit pas le nom choisi : « ${groupe.slice(0, 120)} »`); else ok(`à la halte, la page du groupe dit le nom choisi — « ${groupe.slice(0, 60)}… »`); }
     if (!c4.entree) ko('ABSENT la halte ne propose pas « Ton personnage »');
     else { await bouton(p, '#menu .side', 'Ton personnage').click(); await p.waitForTimeout(700); await bouton(p, '#menu .side', 'Ton personnage').click().catch(() => {}); await p.waitForTimeout(700);
       const ouvert = await p.evaluate(() => !document.querySelector('#perso').hidden);

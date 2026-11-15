@@ -14,10 +14,15 @@
    R.verifierLieux(lieux)         → [erreurs] : les noms des lieux qu'un paquet déclare
    R.verifierEnsemble(sagas)      → [erreurs] : renvois entre sagas, ordre sur la Chaîne
    R.stats(sagas)                 → la ligne de résumé
+   Aucun texte ne porte de balise (« < », « > ») : verifierSaga et verifierPaquet le refusent.
 
    verifierPaquet(D, paquet, { sagas, pris })   → { erreurs, avis, resume } : un paquet entier, face au contenu déjà posé */
 (function (racine) {
   'use strict';
+  // 2.0 — aucun texte ne porte de balise. « < » et « > » n'ont rien à faire dans un récit, un nom ou une description (l'emphase
+  // s'écrit *ainsi*) ; et un contenu venu d'ailleurs ne doit pas pouvoir glisser du code dans la page.
+  function balises(racine, ou, E) { let n = 0; (function va(v, w) { if (typeof v === 'string') { if (/[<>]/.test(v) && n++ < 5) E.push(`${w}: un texte ne contient ni « < » ni « > » (l'emphase s'écrit *ainsi*)`); }
+    else if (v && typeof v === 'object') Object.keys(v).forEach(k => va(v[k], w + (Array.isArray(v) ? '[' + k + ']' : '.' + k))); })(racine, ou); }
   function creer(D, contexte) {
     const C = contexte || {}, savoirConnu = C.savoirConnu || (() => false), ennemisCommuns = C.ennemisCommuns || (() => ({}));
     // (la garde des noms : définie ici parce que les lieux et les objets d'un paquet y passent aussi)
@@ -508,7 +513,7 @@
       return E;
     }
 
-    return { verifierEquipement, verifierEnsemble, verifierSaga(s) { const erreurs = [], avis = []; checkSaga(s, erreurs, avis); return { erreurs, avis }; }, verifierPistes, verifierObjets, verifierLieux, stats };
+    return { verifierEquipement, verifierEnsemble, verifierSaga(s) { const erreurs = [], avis = []; checkSaga(s, erreurs, avis); balises(s, 'saga ' + (s && s.id), erreurs); return { erreurs, avis }; }, verifierPistes, verifierObjets, verifierLieux, stats };
   }
 
   /* 2.0 — un paquet entier. D'abord sa forme et ses identifiants (D.paquet.refus). Puis, sur une copie des tables étendue
@@ -524,6 +529,7 @@
     const siennes = p.sagas || [], toutes = deja.concat(siennes), savoirs = {}, communs = {};
     toutes.forEach(s => { savoirs[s.id] = (s.codex || []).map(x => x.id); if (s.commun) Object.assign(communs, s.enemies || {}); });
     const R = creer(T, { savoirConnu: ref => { const k = String(ref).split('/'); return !!(savoirs[k[0]] && savoirs[k[0]].includes(k[1])); }, ennemisCommuns: () => communs });
+    balises({ titre: p.titre, note: p.note, livres: p.livres, lieux: p.lieux, objets: p.objets, equipement: p.equipement, etals: p.etals, pistes: p.pistes }, 'paquet', erreurs);
     R.verifierEquipement().forEach(e => erreurs.push('équipement — ' + e));
     R.verifierObjets(p.objets, p.equipement).forEach(e => erreurs.push('objets — ' + e));
     R.verifierLieux(p.lieux).forEach(e => erreurs.push(e));

@@ -96,7 +96,8 @@ lot 1.5) et `paquets` (les paquets posés quand elle a été écrite, avec leur 
 | `adopter(partie)` | la partie devient la partie en cours ; ce qui renvoie à un contenu absent est mis de côté (`avis`) |
 
 **Exporter, importer.** « Exporter la partie » (pied de la Chaîne, halte) montre le texte, l'enregistre en fichier
-`isnad-partie.json` ou le copie — là où le téléchargement est bloqué, le texte reste à copier. « Importer une partie »
+`isnad-partie.json` ou le copie. Dans un Artifact, une page ne peut pas remettre de fichier : le bouton du fichier n'y
+est pas proposé, il reste la copie du texte. « Importer une partie »
 (coin de l'écran-titre) lit un texte collé ou un fichier choisi, montre ce qu'il contient, et ne remplace la partie en
 cours qu'après confirmation ; les copies gardées à la mosquée ne sont pas touchées.
 
@@ -107,7 +108,8 @@ réserve en nombres, point de reprise complet). Sinon elle est refusée, et rien
 **Un contenu absent ne casse rien et ne perd rien.** Une partie peut citer un paquet que ce jeu n'a pas. À l'adoption :
 un point de reprise situé dans une saga ou un lieu absents est levé (on reprend à la Chaîne) ; une pièce d'équipement
 inconnue quitte le héros pour la réserve, où elle attend sans gêner ; objets, savoirs et maillons achevés restent
-dans la partie, invisibles. Le joueur est prévenu une fois. Quand le paquet revient, tout est là.
+dans la partie, invisibles. Le joueur est prévenu une fois. Quand le paquet revient, tout est là. Une copie gardée
+sur l'appareil qui serait abîmée se relit de la même façon : ce qui n'a pas la forme attendue est écarté.
 
 `node v2/tools/partie.js` le prouve par les vrais boutons : jouer, exporter (texte et fichier), effacer, réimporter à
 l'identique, reprendre au milieu d'un chapitre ; dix textes qui ne sont pas des parties, refusés sans rien changer ;
@@ -188,10 +190,18 @@ Règles ajoutées par la 2.0 :
 - `after` désigne une saga qui existe ; `order` est unique dans son livre ; le livre d'une saga est déclaré ; un paquet
   range ses sagas hors du livre I ;
 - un objet de la besace n'a que des effets connus, dans leurs bornes, et des mots sobres ;
+- aucun texte ne porte de balise (« < », « > ») — vrai des 13 628 textes du jeu de base, exigé de tout paquet ;
 - le contenu commun, l'histoire-cadre et les veillées appartiennent au jeu de base : un paquet apporte des maillons.
 
 Le contenu du jeu de base est de la donnée pure : chaque saga et chaque piste ressortent identiques d'un aller-retour
 JSON (620 Ko en tout). C'est ce qui permettra de le ranger dans une base.
+
+## Publier
+
+`node v2/tools/build.js` écrit `v2/dist/isnad.html` : le jeu en un fragment, pour un Artifact privé. La 2.0 a **son**
+Artifact, sous le titre « ISNAD 2.0 » ; celui de la 1.31 reste à sa version 31 et n'est plus republié. Chaque Artifact
+a son propre stockage : une partie ne passe de l'un à l'autre que par l'export et l'import. On ne publie que
+l'assemblage que toute la batterie a joué.
 
 ## Commandes
 

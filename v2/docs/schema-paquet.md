@@ -41,6 +41,9 @@ base de données servira (chantier 2). Le contrat d'une saga, lui, ne change pas
 
 Toute autre clé est refusée : une faute de frappe (`equipment`) ne passe pas en silence.
 
+**Aucun texte ne porte de balise.** Ni « < » ni « > » dans un récit, un nom ou une description : l'emphase s'écrit
+`*ainsi*`. Un paquet ne peut donc rien glisser dans la page.
+
 **Le râwî s'écrit « Idris ».** Un texte qui parle du personnage du joueur le nomme Idris, comme ceux du livre I. Le jeu
 le redit au nom que le joueur a choisi, élision comprise (« d’Idris » devient « de Khalil ») : un paquet n'a rien à
 prévoir, et n'écrit jamais lui-même le nom d'un joueur.

@@ -543,7 +543,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.0 · 2026-11-15 22:53 UTC · 32e18f2+";
+window.ISNAD_VERSION = "2.0 · 2026-11-15 23:28 UTC · 0a40f26+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -1006,10 +1006,15 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 22:53 UTC · 32e18f2+";
    R.verifierLieux(lieux)         → [erreurs] : les noms des lieux qu'un paquet déclare
    R.verifierEnsemble(sagas)      → [erreurs] : renvois entre sagas, ordre sur la Chaîne
    R.stats(sagas)                 → la ligne de résumé
+   Aucun texte ne porte de balise (« < », « > ») : verifierSaga et verifierPaquet le refusent.
 
    verifierPaquet(D, paquet, { sagas, pris })   → { erreurs, avis, resume } : un paquet entier, face au contenu déjà posé */
 (function (racine) {
   'use strict';
+  // 2.0 — aucun texte ne porte de balise. « < » et « > » n'ont rien à faire dans un récit, un nom ou une description (l'emphase
+  // s'écrit *ainsi*) ; et un contenu venu d'ailleurs ne doit pas pouvoir glisser du code dans la page.
+  function balises(racine, ou, E) { let n = 0; (function va(v, w) { if (typeof v === 'string') { if (/[<>]/.test(v) && n++ < 5) E.push(`${w}: un texte ne contient ni « < » ni « > » (l'emphase s'écrit *ainsi*)`); }
+    else if (v && typeof v === 'object') Object.keys(v).forEach(k => va(v[k], w + (Array.isArray(v) ? '[' + k + ']' : '.' + k))); })(racine, ou); }
   function creer(D, contexte) {
     const C = contexte || {}, savoirConnu = C.savoirConnu || (() => false), ennemisCommuns = C.ennemisCommuns || (() => ({}));
     // (la garde des noms : définie ici parce que les lieux et les objets d'un paquet y passent aussi)
@@ -1500,7 +1505,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 22:53 UTC · 32e18f2+";
       return E;
     }
 
-    return { verifierEquipement, verifierEnsemble, verifierSaga(s) { const erreurs = [], avis = []; checkSaga(s, erreurs, avis); return { erreurs, avis }; }, verifierPistes, verifierObjets, verifierLieux, stats };
+    return { verifierEquipement, verifierEnsemble, verifierSaga(s) { const erreurs = [], avis = []; checkSaga(s, erreurs, avis); balises(s, 'saga ' + (s && s.id), erreurs); return { erreurs, avis }; }, verifierPistes, verifierObjets, verifierLieux, stats };
   }
 
   /* 2.0 — un paquet entier. D'abord sa forme et ses identifiants (D.paquet.refus). Puis, sur une copie des tables étendue
@@ -1516,6 +1521,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 22:53 UTC · 32e18f2+";
     const siennes = p.sagas || [], toutes = deja.concat(siennes), savoirs = {}, communs = {};
     toutes.forEach(s => { savoirs[s.id] = (s.codex || []).map(x => x.id); if (s.commun) Object.assign(communs, s.enemies || {}); });
     const R = creer(T, { savoirConnu: ref => { const k = String(ref).split('/'); return !!(savoirs[k[0]] && savoirs[k[0]].includes(k[1])); }, ennemisCommuns: () => communs });
+    balises({ titre: p.titre, note: p.note, livres: p.livres, lieux: p.lieux, objets: p.objets, equipement: p.equipement, etals: p.etals, pistes: p.pistes }, 'paquet', erreurs);
     R.verifierEquipement().forEach(e => erreurs.push('équipement — ' + e));
     R.verifierObjets(p.objets, p.equipement).forEach(e => erreurs.push('objets — ' + e));
     R.verifierLieux(p.lieux).forEach(e => erreurs.push(e));
@@ -1709,7 +1715,10 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 22:53 UTC · 32e18f2+";
     // le point de reprise : dans une saga, un chapitre et un lieu que ce jeu connaît — sinon on reprend à la Chaîne
     const c = d.cp; if (c && !(I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci] && D.MAPS[c.map])) { d.cp = null; A.reprise = true; }
     // l'équipement porté : une pièce inconnue retourne à la réserve, où elle attend sans gêner
-    Object.keys(d.equip || {}).forEach(k => { const e = d.equip[k]; Object.keys(e).forEach(s => { const id = e[s]; if (D.GEAR[id]) return; delete e[s]; d.gear[id] = (d.gear[id] || 0) + 1; A.pieces++; }); });
+    // (une copie gardée sur l'appareil n'est pas contrôlée comme une partie importée : ce qui n'a pas la forme attendue est écarté ici)
+    if (!estObjet(d.equip)) d.equip = {}; if (!estObjet(d.gear)) d.gear = {};
+    Object.keys(d.equip).forEach(k => { const e = d.equip[k]; if (!estObjet(e)) { delete d.equip[k]; return; }
+      Object.keys(e).forEach(s => { const id = e[s]; if (D.GEAR[id]) return; delete e[s]; if (typeof id === 'string' && id) d.gear[id] = (naturel(d.gear[id]) ? d.gear[id] : 0) + 1; A.pieces++; }); });
     return A;
   }
   // les paquets posés au moment où la partie s'écrit
@@ -6514,7 +6523,9 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 22:53 UTC · 32e18f2+";
     const zone = (lu, dit) => { const ta = I.el('textarea'); ta.spellcheck = false; ta.readOnly = !!lu; ta.setAttribute('aria-label', dit); ta.autocapitalize = 'off'; ta.autocomplete = 'off'; return ta; };
     const exporter = () => {
       const sv = I.save.data, texte = I.save.exporter(), ta = zone(true, 'Ta partie, en texte'), note = I.el('p', 'note', ''); ta.value = texte;
-      tete.innerHTML = 'Ta partie tient dans ce texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.';
+      // Dans un Artifact, la page ne peut pas remettre un fichier au joueur : le bouton n'y serait qu'un leurre. On n'y propose que la copie.
+      const sansFichier = !!(window.claude && window.claude.hot);
+      tete.innerHTML = 'Ta partie tient dans ce texte. ' + (sansFichier ? 'Copie-le et garde-le' : 'Garde-le') + ' en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.';
       const dire = (ok, m) => { note.className = 'note ' + (ok ? 'ok' : 'ko'); note.textContent = m; };
       const bF = bouton('Enregistrer le fichier', () => { try { const a = document.createElement('a'), u = URL.createObjectURL(new Blob([texte], { type: 'application/json' })); a.href = u; a.download = 'isnad-partie.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 5000);
         dire(true, 'Fichier « isnad-partie.json » remis au navigateur. S’il n’apparaît pas, copie le texte.'); } catch (e) { dire(false, 'Ce navigateur ne laisse pas enregistrer un fichier ici. Copie le texte.'); } });
@@ -6522,7 +6533,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 22:53 UTC · 32e18f2+";
         if (ok) dire(true, 'Texte copié. Colle-le dans une note ou un message pour le garder.'); else { ta.focus(); ta.select(); dire(false, 'La copie n’a pas pu se faire : le texte est sélectionné, copie-le à la main.'); } });
       const bR = bouton('◂ Retour', revenir);
       const faits = I.save.maillons().length;
-      poser([I.el('p', 'resume', `<b>${I.esc((sv.meta && sv.meta.label) || 'Partie en cours')}</b><br>${pl(sv.lights.filter(l => l !== 'sabr').length, 'Lumière', 'Lumières')} · ${pl(faits, 'maillon achevé', 'maillons achevés')} · ${pl(sv.codex.length, 'savoir', 'savoirs')}<br><small>${(texte.length / 1024).toFixed(0)} Ko de texte · format ${I.save.FORMAT}</small>`), rangee([bF, bC, bR]), note, ta], [bF, bC, bR]);
+      poser([I.el('p', 'resume', `<b>${I.esc((sv.meta && sv.meta.label) || 'Partie en cours')}</b><br>${pl(sv.lights.filter(l => l !== 'sabr').length, 'Lumière', 'Lumières')} · ${pl(faits, 'maillon achevé', 'maillons achevés')} · ${pl(sv.codex.length, 'savoir', 'savoirs')}<br><small>${(texte.length / 1024).toFixed(0)} Ko de texte · format ${I.save.FORMAT}</small>`), rangee(sansFichier ? [bC, bR] : [bF, bC, bR]), note, ta], sansFichier ? [bC, bR] : [bF, bC, bR]);
     };
     const confirmer = r => {
       const R = r.resume, ici = !!(I.save.autoGet() || I.save.slots().some(Boolean));

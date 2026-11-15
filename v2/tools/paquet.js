@@ -64,6 +64,8 @@ if (estEssai) {
     ['une saga dans un livre que personne ne déclare', p => { S0(p).livre = 3; }, 'pas déclaré'],
     ['un livre du jeu de base renommé', p => { p.livres[1] = { titre: 'Autre titre' }; }, 'existe déjà'],
     ['un lieu du jeu de base redéclaré', p => { p.lieux.medine = { gabarit: 'ville', nom: 'Autre' }; }, 'existe déjà'],
+    ['une balise dans un récit', p => { S0(p).intro[0][1] = 'Un récit <img src=x onerror=alert(1)>'; }, 'ni « < »'],
+    ['une balise dans le nom d’un lieu', p => { p.lieux.halte_essai.nom = '<b>La Halte</b>'; }, 'ni « < »'],
     ['un moteur trop récent', p => { p.moteur = 99; }, 'moteur'],
     ['une clé inconnue', p => { p.equipment = {}; }, 'inconnue']
   ];

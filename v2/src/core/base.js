@@ -166,7 +166,10 @@
     // le point de reprise : dans une saga, un chapitre et un lieu que ce jeu connaît — sinon on reprend à la Chaîne
     const c = d.cp; if (c && !(I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci] && D.MAPS[c.map])) { d.cp = null; A.reprise = true; }
     // l'équipement porté : une pièce inconnue retourne à la réserve, où elle attend sans gêner
-    Object.keys(d.equip || {}).forEach(k => { const e = d.equip[k]; Object.keys(e).forEach(s => { const id = e[s]; if (D.GEAR[id]) return; delete e[s]; d.gear[id] = (d.gear[id] || 0) + 1; A.pieces++; }); });
+    // (une copie gardée sur l'appareil n'est pas contrôlée comme une partie importée : ce qui n'a pas la forme attendue est écarté ici)
+    if (!estObjet(d.equip)) d.equip = {}; if (!estObjet(d.gear)) d.gear = {};
+    Object.keys(d.equip).forEach(k => { const e = d.equip[k]; if (!estObjet(e)) { delete d.equip[k]; return; }
+      Object.keys(e).forEach(s => { const id = e[s]; if (D.GEAR[id]) return; delete e[s]; if (typeof id === 'string' && id) d.gear[id] = (naturel(d.gear[id]) ? d.gear[id] : 0) + 1; A.pieces++; }); });
     return A;
   }
   // les paquets posés au moment où la partie s'écrit

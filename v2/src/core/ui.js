@@ -188,7 +188,9 @@
     const zone = (lu, dit) => { const ta = I.el('textarea'); ta.spellcheck = false; ta.readOnly = !!lu; ta.setAttribute('aria-label', dit); ta.autocapitalize = 'off'; ta.autocomplete = 'off'; return ta; };
     const exporter = () => {
       const sv = I.save.data, texte = I.save.exporter(), ta = zone(true, 'Ta partie, en texte'), note = I.el('p', 'note', ''); ta.value = texte;
-      tete.innerHTML = 'Ta partie tient dans ce texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.';
+      // Dans un Artifact, la page ne peut pas remettre un fichier au joueur : le bouton n'y serait qu'un leurre. On n'y propose que la copie.
+      const sansFichier = !!(window.claude && window.claude.hot);
+      tete.innerHTML = 'Ta partie tient dans ce texte. ' + (sansFichier ? 'Copie-le et garde-le' : 'Garde-le') + ' en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.';
       const dire = (ok, m) => { note.className = 'note ' + (ok ? 'ok' : 'ko'); note.textContent = m; };
       const bF = bouton('Enregistrer le fichier', () => { try { const a = document.createElement('a'), u = URL.createObjectURL(new Blob([texte], { type: 'application/json' })); a.href = u; a.download = 'isnad-partie.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 5000);
         dire(true, 'Fichier « isnad-partie.json » remis au navigateur. S’il n’apparaît pas, copie le texte.'); } catch (e) { dire(false, 'Ce navigateur ne laisse pas enregistrer un fichier ici. Copie le texte.'); } });
@@ -196,7 +198,7 @@
         if (ok) dire(true, 'Texte copié. Colle-le dans une note ou un message pour le garder.'); else { ta.focus(); ta.select(); dire(false, 'La copie n’a pas pu se faire : le texte est sélectionné, copie-le à la main.'); } });
       const bR = bouton('◂ Retour', revenir);
       const faits = I.save.maillons().length;
-      poser([I.el('p', 'resume', `<b>${I.esc((sv.meta && sv.meta.label) || 'Partie en cours')}</b><br>${pl(sv.lights.filter(l => l !== 'sabr').length, 'Lumière', 'Lumières')} · ${pl(faits, 'maillon achevé', 'maillons achevés')} · ${pl(sv.codex.length, 'savoir', 'savoirs')}<br><small>${(texte.length / 1024).toFixed(0)} Ko de texte · format ${I.save.FORMAT}</small>`), rangee([bF, bC, bR]), note, ta], [bF, bC, bR]);
+      poser([I.el('p', 'resume', `<b>${I.esc((sv.meta && sv.meta.label) || 'Partie en cours')}</b><br>${pl(sv.lights.filter(l => l !== 'sabr').length, 'Lumière', 'Lumières')} · ${pl(faits, 'maillon achevé', 'maillons achevés')} · ${pl(sv.codex.length, 'savoir', 'savoirs')}<br><small>${(texte.length / 1024).toFixed(0)} Ko de texte · format ${I.save.FORMAT}</small>`), rangee(sansFichier ? [bC, bR] : [bF, bC, bR]), note, ta], sansFichier ? [bC, bR] : [bF, bC, bR]);
     };
     const confirmer = r => {
       const R = r.resume, ici = !!(I.save.autoGet() || I.save.slots().some(Boolean));

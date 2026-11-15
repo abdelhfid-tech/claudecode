@@ -136,6 +136,17 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
       if (s.v !== 2 || !s.prologue || !s.chaine || s.profil !== 'object') ko(`ÉCART partie de la 1.31 mal reprise : ${JSON.stringify(s)}`); else ok(`une partie de la 1.31 (« ${v1.version} », format 1) est acceptée, remise au format ${s.v}, et se reprend à la Chaîne — ${s.savoirs} savoirs`); }
     sansErreur('en reprenant une partie de la 1.31'); await p.close(); }
 
+  /* ---------- 3 bis. dans un Artifact, la page ne peut pas remettre un fichier : l'export n'y propose que la copie ---------- */
+  { const ctx = await browser.newContext({ viewport: { width: 960, height: 540 } }); await ctx.addInitScript(() => { window.claude = { hot: {} }; }); const p = await ctx.newPage();
+    p.on('pageerror', e => errors.push('pageerror: ' + e.message)); p.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); }); await p.goto(url); await p.waitForTimeout(1700);
+    const a = await p.evaluate(async () => { const I = window.ISNAD; I.audio.setOn(false); I.save.reset(); I.save.data.started = true; I.save.data.prologue = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); await I.ui.showChain();
+      [...document.querySelectorAll('#chain .chainfoot button')].find(b => /Exporter la partie/.test(b.textContent)).click(); await new Promise(r => setTimeout(r, 400));
+      const s = document.querySelector('#partie'); return { ouvert: !s.hidden, boutons: [...s.querySelectorAll('button')].map(b => b.textContent), texte: (s.querySelector('textarea') || {}).value || '', dit: s.querySelector('header p').textContent }; });
+    await p.screenshot({ path: path.join(out, '07-exporter-dans-un-artifact.png') });
+    if (!a.ouvert || a.boutons.some(b => /fichier/i.test(b)) || !a.boutons.some(b => /Copier le texte/.test(b)) || a.texte.indexOf('"isnad":"partie"') < 0) ko(`ÉCART dans un Artifact, l'export propose encore un fichier ou perd la copie : ${JSON.stringify({ boutons: a.boutons, n: a.texte.length })}`);
+    else ok(`dans un Artifact, où une page ne peut pas remettre de fichier : l'export ne propose que « ${a.boutons.filter(b => /Copier/.test(b))[0]} » et le texte — « ${a.dit.slice(0, 70)}… »`);
+    sansErreur('dans un Artifact'); await ctx.close(); }
+
   /* ---------- 4. les emplacements : écrits au format 2 ; un emplacement d'un premier assemblage de la 2.0 (format 1) se relit ---------- */
   page = await ouvrir();
   const emp = await page.evaluate(vieux => { const I = window.ISNAD; I.save.reset(); I.save.data.started = true; I.save.data.prologue = true; I.save.data.lights = ['sidq'];
@@ -146,6 +157,10 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   if (!emp.w || emp.ecrit.v !== 2 || emp.ecrit.paquets !== 'object') ko(`ÉCART un emplacement n'est pas écrit au format 2 : ${JSON.stringify(emp.ecrit)}`);
   else if (JSON.stringify(emp.liste) !== '[2,2,null]' || !emp.lu || emp.apres.v !== 2) ko(`ÉCART un emplacement au format 1 ne se relit pas : ${JSON.stringify(emp)}`);
   else ok('les emplacements s’écrivent au format 2, avec le profil et les paquets posés ; un emplacement au format 1 se relit, remis à jour');
+  const abimee = await page.evaluate(() => { const I = window.ISNAD; localStorage.setItem('isnad2.slot.3', JSON.stringify({ v: 2, started: true, prologue: true, equip: { 'abubakr:abubakr': null, 'umar:umar': { md: 'piece_inconnue', tete: 7 } }, gear: null, cp: { saga: 'nulle_part', ci: 0, obj: 0, map: 'x', party: [] } }));
+    let lu = false, jet = ''; try { lu = I.save.read(3); } catch (e) { jet = e.message; } const d = I.save.data, r = { lu, jet, equip: JSON.stringify(d.equip), reserve: JSON.stringify(d.gear), cp: d.cp, avis: I.save.avis }; localStorage.removeItem('isnad2.slot.3'); I.save.reset(); return r; });
+  if (!abimee.lu || abimee.jet || abimee.cp !== null || abimee.equip !== '{"umar:umar":{}}' || abimee.reserve !== '{"piece_inconnue":1}') ko(`ÉCART une copie gardée abîmée ne se relit pas proprement : ${JSON.stringify(abimee)}`);
+  else ok('une copie gardée abîmée sur l’appareil se relit sans trébucher : ce qui n’a pas de forme est écarté, la pièce inconnue va à la réserve, on reprend à la Chaîne');
   sansErreur('sur les emplacements'); await page.close();
 
   await browser.close(); if (fichier) { try { fs.unlinkSync(fichier); } catch (x) { /* déjà parti */ } }
