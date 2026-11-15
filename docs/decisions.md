@@ -838,6 +838,41 @@ Réponse de l'agent, pour mémoire :
   moteur ; non comme images posées telles quelles, car les personnages sont dessinés par le code. Sans visage : ces
   outils en dessinent par défaut. C'est le décideur qui génère et qui vérifie les droits d'usage.
 
+**Suite, le même jour.** Le décideur souhaite que l'on choisisse le nom et le style du personnage principal. Il
+demande un texte à donner à un outil d'images, livret joint (`docs/prompt-images.md`). Et : « Ok donc pas de jeu en
+réseau mais personnalisation et vente d'objets ou de quêtes pour se financer ? monnaie réelle ou virtuelle (acheté en
+ligne ?) est-ce que ce jeu peut se mettre sur une plateforme ? Roblox ? iOS ? Android ? Autre ? Pour être vendu ?
+Quels aménagements prévoir ? Aussi comment le mettre en ligne ? Landing page ? Site ? Connexion gmail ? Il faudrait
+que je puisse rajouter des saga par exemple celles de Abu hurayra, de Salman le perse, des ommeyades, des abassides,
+etc donc l'architecture doit pouvoir le permettre de manière natives, mais aussi des objets des armes des armures
+etc »
+
+Réponse de l'agent, pour mémoire (rien n'est exécuté) :
+
+- **Le personnage du joueur.** Ce serait Idris, le râwî, seul personnage de fiction que l'on mène de bout en bout : on
+  choisirait son nom et sa tenue (coiffe, vêtement, manteau, attribut, couleur), toujours sans visage. Les Compagnons
+  gardent leur nom et leur silhouette. À prévoir : le nom « Idris » est écrit une quarantaine de fois dans les textes ;
+  la sauvegarde change, donc une migration ; et un nom choisi s'affiche sur un personnage que l'on frappe en combat, ce
+  qui touche l'exigence 8 pour les noms qui portent le Nom divin.
+- **Se financer.** Vendre du contenu, pas de la puissance : un jeu de base gratuit, puis des sagas ou des quêtes en
+  achat unique ; des tenues en option. Ni monnaie achetée, ni tirage au hasard, ni objet qui rend plus fort contre de
+  l'argent.
+- **Plateformes.** Le site web et itch.io d'abord (le jeu est déjà une page web), puis Android, puis iOS, Steam si la
+  demande existe. Roblox : non, il faudrait refaire le jeu entier dans son outil.
+- **Aménagements.** Sauvegarde exportable puis rattachée à un compte ; polices embarquées ; icône, mode hors ligne ;
+  pages légales et classification d'âge ; et, avant toute sortie publique, la relecture du contenu par un spécialiste,
+  toujours en attente.
+- **Mise en ligne.** Une page d'accueil tirée du livret, le jeu et le livret sur le même site. Une connexion (Google,
+  et Apple sur iOS) seulement le jour où il y a une sauvegarde ou un achat à rattacher ; on joue toujours sans compte.
+- **Ajouter des sagas et des objets.** Une saga est déjà un fichier de données que l'assemblage ramasse et que
+  l'écran de la Chaîne range par ordre. Restent liés aux cinq sagas : les rencontres de la Cité-Miroir et les veillées
+  (une par saga), le parcours de test, les textes du livret. Les objets, eux, sont déclarés dans `defs.js` : pour
+  qu'une saga apporte ses armes, ses armures, ses cartes et sa musique, il faut un format de « paquet » contrôlé par
+  le validateur. C'est un chantier d'architecture à part entière.
+- **Ligne éditoriale à fixer par le décideur.** Une grande part de la vie d'Abû Hurayra et de Salmân se passe du
+  vivant du Prophète ﷺ, que le jeu ne met jamais en scène. Les époques omeyyade et abbasside sont des temps de
+  dissensions : l'exigence 5 y pèse plus lourd encore.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
@@ -912,5 +947,10 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     pour l'impression ? Le livret en ligne doit-il reprendre la correction « Douze planches » ?
 17. La version suivante : par quelle étape commencer, et le décideur veut-il une note d'architecture chiffrée avant
     de choisir ?
+18. Le personnage du joueur : est-ce bien Idris dont on choisit le nom et la tenue ? Que faire d'un nom qui porte le
+    Nom divin (exigence 8) ?
+19. Le financement : des sagas vendues en achat unique, sans monnaie achetée ni objet payant qui rend plus fort,
+    est-ce la bonne voie ?
+20. Les sagas à venir : lesquelles d'abord, qui les relit, et quelle ligne pour les époques de dissensions ?
 10. *Répondu le 15 novembre : « Ça a l'air ok ».* La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?
