@@ -291,7 +291,8 @@
     // la carte du lieu : le sol et les bâtiments tels qu'on les voit, la position du héros, l'objectif, la natte, les lieux nommés
     const carteHTML = () => {
       const m = W.map, tg = W.target(), sagaCh = W.saga.chapters, pct = (v, n) => (v / n * 100).toFixed(2) + '%';
-      const lieux = Object.keys(m.spots).filter(k => D.LIEUX[k]).map(k => '<span class="lieu" style="left:' + pct(m.spots[k][0] + 0.5, m.w) + ';top:' + pct(m.spots[k][1] + 0.5, m.h) + '">' + I.esc(D.LIEUX[k]) + '</span>').join('');
+      const noms = Object.assign({}, D.LIEUX, D.MAPS[m.id].noms || {}); // un lieu peut nommer ses lieux à sa façon
+      const lieux = Object.keys(m.spots).filter(k => noms[k]).map(k => '<span class="lieu" style="left:' + pct(m.spots[k][0] + 0.5, m.w) + ';top:' + pct(m.spots[k][1] + 0.5, m.h) + '">' + I.esc(noms[k]) + '</span>').join('');
       return '<h3>' + I.esc(D.MAPS[m.id].label) + '</h3><p class="src">' + I.esc(W.ch.sub) + '</p>' +
         '<div class="carte" style="aspect-ratio:' + m.w + '/' + m.h + ';max-width:min(100%, calc(58vh * ' + (m.w / m.h).toFixed(3) + '))"><canvas></canvas>' + lieux + '<span class="ici" style="left:' + pct(W.player.x, m.w * 16) + ';top:' + pct(W.player.y - 8, m.h * 16) + '">' + I.esc(W.saga.heroes[W.party[0]].name) + '</span></div>' +
         '<p class="legende"><i class="k1"></i> toi <i class="k2"></i> objectif' + (tg ? '' : ' (ailleurs, ou sans lieu)') + (W.prayerPts().length ? ' <i class="k3"></i> natte : prière, repos, œuvres' : '') + (m.spots.comptoir ? ' <i class="k4"></i> comptoir : boutique d’équipement, caravanes' : '') + '</p>' +
@@ -485,7 +486,8 @@
   };
   U.diagnostic = function () {
     const A = I.audio, st = $('#stage'), d = I.oeuvres.state(), e = I.errors;
-    const L = [['Version', window.ISNAD_VERSION || 'de travail'], ['Navigateur', navigator.userAgent], ['Fenêtre', window.innerWidth + ' × ' + window.innerHeight + ' · densité ' + (window.devicePixelRatio || 1)],
+    const pq = Object.keys(I.paquets || {}).map(k => I.paquets[k].titre + ' (' + k + ', version ' + I.paquets[k].version + ')'), rf = (I.refuses || []).map(r => r.id + ' — ' + r.refus[0]);
+    const L = [['Version', window.ISNAD_VERSION || 'de travail'], ['Contenu', 'jeu de base' + (pq.length ? ' · paquets : ' + pq.join(', ') : ' · aucun paquet ajouté') + (rf.length ? ' · refusés : ' + rf.join(' ; ') : '')], ['Navigateur', navigator.userAgent], ['Fenêtre', window.innerWidth + ' × ' + window.innerHeight + ' · densité ' + (window.devicePixelRatio || 1)],
       ['Scène', st.clientWidth + ' × ' + st.clientHeight + (document.body.classList.contains('portrait') ? ' · en hauteur' : ' · en largeur') + (U.zoom ? ' · agrandie' : '') + ' · échelle ' + G.k + (G.low ? ' · 2D simple' : '')],
       ['Entrée', (document.body.classList.contains('touch') ? 'tactile' : 'clavier ou souris')],
       ['Sauvegarde automatique', I.save.autoKo ? 'refusée par le navigateur (stockage indisponible)' : I.save.autoAt ? 'il y a ' + Math.round((Date.now() - I.save.autoAt) / 1000) + ' s' : 'pas encore écrite'],

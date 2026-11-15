@@ -3,8 +3,8 @@
   'use strict';
   const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, W = I.world, $ = I.$, T = 16;
   const Bd = I.build = { on: false, sel: 'tranchee' };
-  const OUTDOOR = { medine: 1, koufa: 1, desert: 1, camp: 1, citadelle: 1 };
-  Bd.outdoor = id => !!OUTDOOR[id];
+  // on bâtit à ciel ouvert : c'est le gabarit du lieu qui le dit (D.GABARITS)
+  Bd.outdoor = id => !!(D.gabarit(id) || {}).dehors;
   const WATER = { well: 1, fountain: 1, basin: 1, spring: 1 };
 
   /* ----- réserves ----- */
@@ -117,7 +117,7 @@
     } finally { S.depth--; S.hideDialog(); }
   };
   Bd.gather = async function () {
-    if (!W.saga || (W.saga.frame && !W.saga.veillees) || !OUTDOOR[W.map.id]) return false;
+    if (!W.saga || (W.saga.frame && !W.saga.veillees) || !Bd.outdoor(W.map.id)) return false;
     const p = W.player, px = p.x + [0, -1, 1, 0][p.dir] * 12, py = p.y + [1, 0, 0, -1][p.dir] * 12, m = W.map;
     const o = m.objs.find(o => Math.abs(o.x - px) < 13 && Math.abs(o.y - 4 - py) < 13 && (o.type === 'palm' || o.type === 'rock' || o.type === 'bigrock' || o.type === 'stall' || WATER[o.type]));
     const [tx, ty] = Bd.target(), wt = m.anim.some(a => a.x === tx && a.y === ty);
@@ -144,7 +144,7 @@
   const ORDER = ['_retirer'].concat(Object.keys(D.PIECES));
   Bd.set = function (on) {
     if (on && (I.scene !== W || S.busy || !W.saga)) return;
-    if (on && !OUTDOOR[W.map.id]) { S.toast('On ne bâtit pas ici. Cherche un sol à ciel ouvert.', 2200); return; }
+    if (on && !Bd.outdoor(W.map.id)) { S.toast('On ne bâtit pas ici. Cherche un sol à ciel ouvert.', 2200); return; }
     Bd.on = !!on; document.body.classList.toggle('in-build', Bd.on); $('#buildbar').hidden = !Bd.on; if (Bd.on) { I.audio.sfx('ok'); Bd.refresh(); }
   };
   Bd.cycle = function (d) { const i = ORDER.indexOf(Bd.sel); Bd.sel = ORDER[(i + d + ORDER.length) % ORDER.length]; I.audio.sfx('move'); Bd.refresh(); };

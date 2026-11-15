@@ -1,20 +1,27 @@
 /* ISNAD 2.0 — les règles du contenu, en un module.
    Ce sont les règles de la 1.31 (tools/validate.js et tools/validate-music.js), mot pour mot, sorties de leurs scripts :
-   plus d'accès au disque, plus d'arrêt du programme. Elles se chargent sous Node (require) comme dans un navigateur
-   (window.ISNAD_REGLES) : la commande de contrôle, l'outil d'export et la page d'administration s'en servent telles quelles.
+   plus d'accès au disque, plus d'arrêt du programme. Ce que la 2.0 ajoute est marqué « 2.0 ». Le module se charge sous
+   Node (require) comme dans un navigateur (window.ISNAD_REGLES) : la commande de contrôle, le jeu quand il reçoit un
+   paquet et la page d'administration s'en servent tels quels.
 
-   const R = creer(D, contexte)   D : les énumérations (src/core/defs.js)
+   const R = creer(D, contexte)   D : les énumérations (src/core/defs.js), ou une copie étendue par un paquet
                                   contexte.savoirConnu(« saga/id ») : ce savoir existe-t-il dans une autre saga ?
                                   contexte.ennemisCommuns() : les égrégores communs à toutes les sagas
    R.verifierEquipement()         → [erreurs]
    R.verifierSaga(saga)           → { erreurs, avis }
-   R.verifierPistes(pistes)       → [erreurs]
+   R.verifierPistes(pistes, opt)  → [erreurs] ; opt.partiel : ces pistes s'ajoutent, on n'attend pas toutes celles du jeu
+   R.verifierObjets(objets, pieces) → [erreurs] : les objets de la besace qu'un paquet apporte
+   R.verifierLieux(lieux)         → [erreurs] : les noms des lieux qu'un paquet déclare
    R.verifierEnsemble(sagas)      → [erreurs] : renvois entre sagas, ordre sur la Chaîne
-   R.stats(sagas)                 → la ligne de résumé */
+   R.stats(sagas)                 → la ligne de résumé
+
+   verifierPaquet(D, paquet, { sagas, pris })   → { erreurs, avis, resume } : un paquet entier, face au contenu déjà posé */
 (function (racine) {
   'use strict';
   function creer(D, contexte) {
     const C = contexte || {}, savoirConnu = C.savoirConnu || (() => false), ennemisCommuns = C.ennemisCommuns || (() => ({}));
+    // (la garde des noms : définie ici parce que les lieux et les objets d'un paquet y passent aussi)
+    const NOM_INTERDIT = /(^|[^a-zà-ÿ])(ibl[iî]s|satan|sh?a[iy]t[aâ]ne?s?|chayt[aâ]ne?s?|diables?|d[ée]mons?|d?jinns?)(?![a-zà-ÿ])/i;
 
     // l'équipement (D.GEAR) : chaque pièce a un type, un rang, un nom, une description sobre ; aucun mot qui en ferait une relique
     function verifierEquipement() { const E = [], STATS = ['atk', 'mag', 'def', 'spd', 'hp', 'sp'], TRAITS = ['perce', 'vif', 'choc', 'parade', 'ferme'], INTERDIT = /allah|dieu|proph|bén[ie]|sacr|saint|relique|talisman|amulette|miracl|\bor\b|doré|soie/i;
@@ -71,7 +78,6 @@
       const W0 = `saga ${s.id || '?'}`, commun = !!s.commun;
       // exigences 6 et 18 : aucun combattant, aucune compétence, aucun personnage ne porte le nom d'Iblîs, d'un démon ou d'un djinn.
       // La garde ne regarde que les noms, jamais un texte ni une citation (mots entiers : « Démontrer » passe).
-      const NOM_INTERDIT = /(^|[^a-zà-ÿ])(ibl[iî]s|satan|sh?a[iy]t[aâ]ne?s?|chayt[aâ]ne?s?|diables?|d[ée]mons?|d?jinns?)(?![a-zà-ÿ])/i;
       const garde = (nom, where) => { if (typeof nom === 'string' && NOM_INTERDIT.test(nom)) E.push(`${where}: « ${nom} » — aucun combattant, aucune compétence, aucun personnage ne porte le nom d'Iblîs, d'un démon ou d'un djinn (exigences 6 et 18)`); };
       (commun ? ['id', 'name'] : ['id', 'name', 'epithet', 'arabic', 'years', 'light', 'lightName', 'tagline']).forEach(k => req(s, k, 'string', W0));
       if (!commun) req(s, 'order', 'number', W0);
@@ -168,6 +174,8 @@
           (p.addSkills || []).forEach(k => checkSkill(k, w + '.phase', false));
         });
         if (typeof e.desc !== 'string') E.push(`${w}: « desc » manquant`);
+        // 2.0 : le moteur calcule les forces d'après le niveau et le palier ; un égrégore n'en fixe aucune (la 1.31 l'ignorait sans le dire)
+        ['hp', 'sp', 'atk', 'mag', 'def', 'df', 'spd', 'xp', 'max'].forEach(k => { if (e[k] !== undefined) E.push(`${w}: « ${k} » — un égrégore ne fixe ni Constance ni dégâts : le moteur les calcule d'après son niveau et son palier`); });
         // l'organigramme du mal : la racine d'une idole est l'une des douze ; « idee » marque les cinq idées noires du contenu commun
         if (e.racine !== undefined && ![].concat(e.racine).every(r => D.RACINES.includes(r))) E.push(`${w}: racine « ${e.racine} » inconnue (${D.RACINES.join('|')})`);
         if (e.idee !== undefined && !(commun && D.NOIRS.includes(id) && e.idee === true)) E.push(`${w}: « idee » est réservé aux cinq idées noires du contenu commun (D.NOIRS)`);
@@ -432,7 +440,7 @@
     }
 
     // la musique : chaque voix d'une piste dure exactement `beats` temps ; chaque piste de D.TRACKS existe
-    function verifierPistes(tracks) {
+    function verifierPistes(tracks, opt) {
       const E = [];
       const PITCH = /^[A-G](#|b)?[1-7]$/, DR = /^[DTtrkbmshca]$/;   // percussions : dum, tek, tek léger, riq, grosse caisse, grand tambour, tom, caisse claire, charleston, cymbale, enclume
       for (const [name, t] of Object.entries(tracks)) {
@@ -456,8 +464,36 @@
           if (Math.abs(sum - t.beats) > 0.001) E.push(`${name} voix ${i} (${v.wave}): dure ${sum} temps, attendu ${t.beats}`);
         });
       }
-      const miss = D.TRACKS.filter(n => n !== 'silence' && !tracks[n]);
+      const miss = opt && opt.partiel ? [] : D.TRACKS.filter(n => n !== 'silence' && !tracks[n]);   // 2.0 : « partiel » pour les pistes d'un paquet
       if (miss.length) E.push('pistes absentes : ' + miss.join(', '));
+      return E;
+    }
+
+    // 2.0 — les objets de la besace qu'un paquet apporte : des effets que le moteur connaît, dans leurs bornes, et des mots
+    // sobres. Un objet soigne, relève ou rend du Souffle ; il ne porte ni nom divin, ni vertu, ni rien de sacré changé en
+    // pouvoir (exigences 8, 15 et 17). Les pièces d'équipement du paquet passent la même garde des mots.
+    function verifierObjets(objets, pieces) {
+      const E = [], PARTS = ['hp', 'sp', 'revive'], CLES = ['name', 'desc', 'hp', 'sp', 'revive', 'cleanse', 'niyya', 'target', 'vivre', 'paquet'];
+      const SACRE = /allah|dieu|proph|bén[ie]|sacr|saint|relique|talisman|amulette|miracl|\bor\b|doré|soie|zamzam|coran|mushaf|verset|sourate|baraka|ruqya|\banges?\b/i;
+      const mots = (id, o) => { const txt = (o.name || '') + ' ' + (o.desc || ''); if (SACRE.test(txt)) E.push(`${id}: un objet ne reçoit ni nom divin, ni vertu, ni rien de sacré changé en pouvoir (exigences 8, 15 et 17)`); if (NOM_INTERDIT.test(txt)) E.push(`${id}: ni Iblîs, ni démon, ni djinn dans le nom ou la description d'un objet (exigence 18)`); };
+      Object.keys(objets || {}).forEach(id => { const o = objets[id];
+        Object.keys(o).forEach(k => { if (!CLES.includes(k)) E.push(`${id}: clé « ${k} » inconnue (name, desc, hp, sp, revive, cleanse, niyya, target, vivre)`); });
+        mots(id, o);
+        PARTS.forEach(k => { if (o[k] !== undefined && !(typeof o[k] === 'number' && o[k] > 0 && o[k] <= 1)) E.push(`${id}: ${k} attend une part, de 0 (exclu) à 1`); });
+        if (o.niyya !== undefined && !(Number.isInteger(o.niyya) && o.niyya >= 1 && o.niyya <= 3)) E.push(`${id}: niyya de 1 à 3`);
+        if (o.cleanse !== undefined && o.cleanse !== true) E.push(`${id}: cleanse vaut true, ou ne s'écrit pas`);
+        if (o.vivre !== undefined && typeof o.vivre !== 'boolean') E.push(`${id}: vivre vaut true ou false`);
+        if (!['ally', 'allies'].includes(o.target)) E.push(`${id}: target « ${o.target} » invalide (ally : un compagnon ; allies : tout le groupe)`);
+        if (o.revive !== undefined && o.target !== 'ally') E.push(`${id}: un objet qui relève s'adresse à un seul compagnon (target: 'ally')`);
+        if (!PARTS.some(k => o[k]) && !o.cleanse && !o.niyya) E.push(`${id}: objet sans effet`);
+        if (D.GEAR[id]) E.push(`${id}: même identifiant qu'une pièce d'équipement`); });
+      Object.keys(pieces || {}).forEach(id => mots(id, pieces[id]));
+      return E;
+    }
+    // 2.0 — les lieux qu'un paquet déclare : leur forme est contrôlée par D.paquet.refus ; ici, seulement la garde des noms
+    function verifierLieux(lieux) {
+      const E = [], garde = (nom, w) => { if (typeof nom === 'string' && NOM_INTERDIT.test(nom)) E.push(`${w}: « ${nom} » — ni Iblîs, ni démon, ni djinn dans le nom d'un lieu (exigence 18)`); };
+      Object.keys(lieux || {}).forEach(id => { const l = lieux[id]; garde(l.nom, `lieu ${id}`); Object.keys(l.noms || {}).forEach(k => garde(l.noms[k], `lieu ${id}, noms.${k}`)); });
       return E;
     }
 
@@ -471,8 +507,40 @@
       return E;
     }
 
-    return { verifierEquipement, verifierEnsemble, verifierSaga(s) { const erreurs = [], avis = []; checkSaga(s, erreurs, avis); return { erreurs, avis }; }, verifierPistes, stats };
+    return { verifierEquipement, verifierEnsemble, verifierSaga(s) { const erreurs = [], avis = []; checkSaga(s, erreurs, avis); return { erreurs, avis }; }, verifierPistes, verifierObjets, verifierLieux, stats };
   }
-  const api = { creer };
+
+  /* 2.0 — un paquet entier. D'abord sa forme et ses identifiants (D.paquet.refus). Puis, sur une copie des tables étendue
+     de ce qu'il déclare, les règles de chacune de ses parties et celles de l'ensemble, face au contenu déjà posé.
+       ctx.sagas : les sagas déjà posées (jeu de base, autres paquets) ; ctx.pris : { paquets, sagas }, par identifiant.
+     Les tables du jeu ne sont jamais touchées : un paquet refusé ne laisse aucune trace. → { erreurs, avis, resume } */
+  function verifierPaquet(D, p, ctx) {
+    const C = ctx || {}, deja = C.sagas || [], pris = C.pris || { paquets: {}, sagas: {} }, avis = [];
+    if (!C.pris) deja.forEach(s => { pris.sagas[s.id] = s; });
+    const erreurs = D.paquet.refus(p, D, pris).slice();
+    if (erreurs.length) return { erreurs, avis, resume: '' };
+    const T = D.paquet.tables(); D.paquet.poser(p, T);
+    const siennes = p.sagas || [], toutes = deja.concat(siennes), savoirs = {}, communs = {};
+    toutes.forEach(s => { savoirs[s.id] = (s.codex || []).map(x => x.id); if (s.commun) Object.assign(communs, s.enemies || {}); });
+    const R = creer(T, { savoirConnu: ref => { const k = String(ref).split('/'); return !!(savoirs[k[0]] && savoirs[k[0]].includes(k[1])); }, ennemisCommuns: () => communs });
+    R.verifierEquipement().forEach(e => erreurs.push('équipement — ' + e));
+    R.verifierObjets(p.objets, p.equipement).forEach(e => erreurs.push('objets — ' + e));
+    R.verifierLieux(p.lieux).forEach(e => erreurs.push(e));
+    R.verifierPistes(p.pistes || {}, { partiel: true }).forEach(e => erreurs.push('pistes — ' + e));
+    siennes.forEach(s => {
+      // le contenu commun, l'histoire-cadre et les veillées appartiennent au jeu de base : un paquet apporte des maillons
+      if (s.commun || s.frame || s.veillees) { erreurs.push(`saga ${s.id}: le contenu commun, l'histoire-cadre et les veillées appartiennent au jeu de base ; un paquet apporte des maillons de la Chaîne`); return; }
+      const r = R.verifierSaga(s); r.erreurs.forEach(e => erreurs.push(e)); r.avis.forEach(a => avis.push(a)); });
+    R.verifierEnsemble(toutes).forEach(e => erreurs.push(e));
+    // ce qui est déclaré sans jamais servir : rien de faux, mais le joueur ne le verra pas
+    const ailleurs = JSON.stringify([siennes, p.etals || {}, Object.keys(p.lieux || {}).map(k => p.lieux[k].piste || '')]);
+    const sert = id => ailleurs.includes('"' + id + '"');
+    [['lieux', 'le lieu'], ['objets', 'l’objet'], ['equipement', 'la pièce'], ['pistes', 'la piste']].forEach(([cle, mot]) => Object.keys(p[cle] || {}).forEach(id => { if (!sert(id)) avis.push(`${mot} « ${id} » est déclaré${cle === 'lieux' || cle === 'objets' ? '' : 'e'} mais ne sert nulle part dans ce paquet`); }));
+    const nb = (n, un, des) => n ? [n + ' ' + (n > 1 ? des : un)] : [];
+    const resume = [].concat(nb(siennes.length, 'saga', 'sagas'), nb(Object.keys(p.lieux || {}).length, 'lieu', 'lieux'), nb(Object.keys(p.objets || {}).length, 'objet', 'objets'),
+      nb(Object.keys(p.equipement || {}).length, 'pièce d’équipement', 'pièces d’équipement'), nb(Object.keys(p.etals || {}).length, 'étal', 'étals'), nb(Object.keys(p.pistes || {}).length, 'piste', 'pistes')).join(', ') || 'vide';
+    return { erreurs, avis, resume };
+  }
+  const api = { creer, verifierPaquet };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else racine.ISNAD_REGLES = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

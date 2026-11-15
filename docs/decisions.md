@@ -909,6 +909,31 @@ après un premier plan qui modifiait le moteur actuel :
   fautives d'une saga et une de la musique sont refusées avec les mêmes messages par la 1.31 et par la 2.0. Constat au
   passage : le validateur de la 1.31 laisse passer un égrégore qui fixerait ses points de vie (`hp`), que le moteur
   ignore de toute façon ; la 2.0 le refusera dans un paquet.
+- [ ] **D138. Un paquet ajoute, il ne remplace rien (lot 1.2).** Tout contenu ajouté à la 2.0 arrive par un paquet : un
+  document de données (JSON) qui porte des sagas, des lieux, des objets, des pièces d'équipement, des étals et des
+  pistes. Un identifiant déjà pris ne se redéclare pas ; une clé inconnue est refusée ; un paquet refusé ne laisse aucune
+  trace et le jeu continue. Le paquet dit le moteur qu'il demande (`moteur`, aujourd'hui 1) : trop récent, il est refusé
+  avec un message. Contrat : `v2/docs/schema-paquet.md`.
+- [ ] **D139. Le jeu contrôle lui-même ce qu'il reçoit.** Les règles du contenu sont embarquées dans le jeu (65 Ko de
+  plus) : `ISNAD.registerPack` refuse un paquet qui ne les passe pas, exigences de respect comprises, d'où qu'il vienne.
+  La commande, le jeu et la future page d'administration lisent le même texte de règles.
+- [ ] **D140. Les lieux par gabarit.** Le moteur bâtit un lieu d'après son gabarit (dix gabarits, `D.GABARITS`) et non
+  plus d'après son nom ; Koufa est une ville dans sa variante « fleuve ». Preuve : les 65 cartes que le contenu demande
+  sortent identiques de la 1.31 gelée et de la 2.0, point par point (`v2/tools/cartes.js`). Un lieu de paquet a sa propre
+  graine ; si l'un de ses lieux nommés se trouvait coupé des autres, le moteur rebat les cartes. Un paquet ne crée ni
+  gabarit ni lieu nommé : cela reste du code.
+- [ ] **D141. Règles ajoutées par la 2.0.** *(Proposées par l'agent ; la troisième touche au respect : à confirmer par le
+  décideur.)* Un égrégore ne fixe ni Constance ni dégâts. `after` désigne une saga qui existe ; `order` est unique dans
+  son livre. Un objet de la besace n'a que des effets connus, dans leurs bornes ; ni lui ni une pièce d'équipement ne
+  reçoit, en plus des mots déjà refusés par la 1.31 (nom divin, « béni », « sacré », relique, talisman, or, soie), les
+  mots « Zamzam », « Coran », « mushaf », « verset », « sourate », « baraka », « ruqya », « ange » : rien de sacré n'est
+  changé en pouvoir (exigences 15 et 17). Le contenu commun, l'histoire-cadre et les veillées appartiennent au jeu de
+  base : un paquet apporte des maillons de la Chaîne.
+- [ ] **D142. Le paquet d'essai.** `v2/tools/essais/paquet_essai.js` : pure fiction, jamais livré — un copiste inventé
+  dans une halte inventée, sans Compagnon, sans événement, sans parole rapportée, sans verset. Il porte une saga d'un
+  chapitre dans un livre II, deux lieux, un objet, une épée, deux étals, une piste. `v2/tools/paquet.js` le contrôle,
+  vérifie que vingt et une copies fautives sont refusées chacune pour la bonne raison, assemble un jeu à part, y joue la
+  saga de trois façons, et vérifie qu'un paquet fautif est refusé par le jeu sans l'arrêter.
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
@@ -991,5 +1016,7 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
 20. Les sagas à venir : lesquelles d'abord, qui les relit, et quelle ligne pour les époques de dissensions ?
 21. La 2.0 (D132 à D135) : faut-il poser une étiquette `v1.31` dans le dépôt et la pousser ? Quel titre pour le
     livre I, le jour où un livre II existera ?
+22. Les paquets (D138 à D142) : la liste des mots refusés dans le nom d'un objet convient-elle (D141) ? Un paquet
+    doit-il pouvoir un jour apporter, pour ses sagas, une veillée du Caïd ou une rencontre de la Cité-Miroir ?
 10. *Répondu le 15 novembre : « Ça a l'air ok ».* La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

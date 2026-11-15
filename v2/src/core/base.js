@@ -21,6 +21,33 @@
   window.addEventListener('error', ev => { I.report(ev.error || ev.message || 'erreur', 'erreur'); });
   window.addEventListener('unhandledrejection', ev => { I.report(ev.reason || 'promesse rejetée', 'suite interrompue'); });
 
+  /* ---------- paquets (2.0) : du contenu ajouté au jeu de base ----------
+     Un paquet est un document de données (D.paquet, dans defs.js) : sagas, lieux, objets, équipement, étals, pistes.
+     Avant d'être posé, il passe les règles du contenu (regles.js) : les mêmes que la commande de contrôle et que la page
+     d'administration. Refusé, il est signalé (page Diagnostic) et le jeu continue sans lui : un paquet ne peut ni arrêter
+     le jeu, ni remplacer ce qui existe déjà. */
+  I.paquets = {};   // les paquets posés, par identifiant
+  I.refuses = [];   // ceux qui ne l'ont pas été, et pourquoi
+  I.registerPack = function (p) {
+    const id = p && typeof p.id === 'string' && p.id ? p.id : '?';
+    let refus;
+    try {
+      const pris = { paquets: I.paquets, sagas: I.sagas }, RG = window.ISNAD_REGLES;
+      refus = RG ? RG.verifierPaquet(D, p, { pris, sagas: Object.keys(I.sagas).map(k => I.sagas[k]) }).erreurs : D.paquet.refus(p, D, pris);
+    } catch (e) { refus = ['paquet illisible (' + (e && e.message ? e.message : e) + ')']; }
+    if (refus.length) {
+      I.refuses.push({ id, version: p && p.version, n: refus.length, refus: refus.slice(0, 12) });
+      I.report(new Error(refus[0] + (refus.length > 1 ? ' — et ' + (refus.length - 1) + ' autre' + (refus.length > 2 ? 's' : '') : '')), 'paquet « ' + id + ' » refusé');
+      return false;
+    }
+    D.paquet.poser(p, D);
+    Object.keys(p.pistes || {}).forEach(n => I.registerMusic(n, p.pistes[n]));
+    (p.sagas || []).forEach(s => { s.paquet = p.id; I.registerSaga(s); });
+    I.paquets[p.id] = { id: p.id, version: p.version, titre: p.titre || p.id, sagas: (p.sagas || []).map(s => s.id), lieux: Object.keys(p.lieux || {}),
+      objets: Object.keys(p.objets || {}), equipement: Object.keys(p.equipement || {}), pistes: Object.keys(p.pistes || {}) };
+    return true;
+  };
+
   /* ---------- utilitaires ---------- */
   I.rng = function (seed) {
     let s = (seed >>> 0) || 1;

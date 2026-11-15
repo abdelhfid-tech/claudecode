@@ -44,21 +44,40 @@
 
   D.SFX = ['duff', 'tek', 'roll', 'hit', 'break', 'light', 'door', 'glitch', 'blip'];
 
-  // Cartes disponibles et leurs lieux nommés (spots).
+  // Cartes. Dix gabarits, que maps.js sait bâtir, et les lieux bâtis dessus. Un gabarit fixe les lieux nommés (spots), le
+  // thème de l'interface, sa piste, et dit si l'on y bâtit (dehors). Un lieu porte un nom et, s'il le faut, une variante,
+  // sa propre piste et ses propres noms de lieux. Un paquet déclare ses lieux de la même façon (D.paquet, plus bas).
   const VILLE = ['mosquee_cour', 'mosquee_porte', 'place', 'souk', 'halle', 'maison', 'puits',
                  'palmeraie', 'porte_nord', 'porte_sud', 'enclos', 'colline', 'priere', 'ecole', 'comptoir'];
+  D.GABARITS = {
+    // variante « fleuve » : la ville est retournée, un fleuve la borde, la cour de la mosquée est carrelée
+    ville:     { nom: 'Ville d’Arabie',  theme: 'orient', dehors: true,  piste: 'medine',    variantes: ['fleuve'], spots: VILLE },
+    desert:    { nom: 'Désert',          theme: 'orient', dehors: true,  piste: 'desert',    spots: ['depart', 'dunes', 'rochers', 'oasis', 'source', 'caravane', 'crete', 'ruines', 'arrivee', 'priere', 'comptoir'] },
+    camp:      { nom: 'Camp',            theme: 'orient', dehors: true,  piste: 'camp',      spots: ['entree', 'tente_chef', 'feu', 'etendard', 'lignes', 'enclos', 'tertre', 'tentes', 'priere', 'comptoir'] },
+    romaine:   { nom: 'Cité romaine',    theme: 'roman',  dehors: false, piste: 'rome',      spots: ['porte', 'cardo', 'forum', 'basilique', 'esplanade', 'palais', 'fontaine', 'remparts', 'jardin', 'marche', 'priere', 'quartier', 'comptoir'] },
+    palais:    { nom: 'Palais',          theme: 'roman',  dehors: false, piste: 'palais',    spots: ['entree', 'nef', 'trone', 'tresor', 'colonnade', 'jardin', 'priere'] },
+    navire:    { nom: 'Navire',          theme: 'orient', dehors: false, piste: 'mer',       spots: ['poupe', 'pont', 'mat', 'proue', 'passerelle', 'pont2', 'priere'] },
+    noos:      { nom: 'Noosphère',       theme: 'cyber',  dehors: false, piste: 'noos',      spots: ['seuil', 'noeud1', 'noeud2', 'noeud3', 'faille', 'miroir', 'coeur'] },
+    citadelle: { nom: 'Citadelle',       theme: 'orient', dehors: true,  piste: 'citadelle', spots: ['porte', 'cour', 'puits', 'remparts', 'tour', 'salle', 'mosquee', 'priere', 'ecole', 'souk', 'jardin', 'greniers', 'palmeraie', 'poterne', 'comptoir'] },
+    cite:      { nom: 'Cité-Miroir',     theme: 'cyber',  dehors: false, piste: 'cite',      spots: ['rue', 'ecran', 'ruelle', 'ascenseur', 'parvis'] },
+    archives:  { nom: 'Archives basses', theme: 'cyber',  dehors: false, piste: 'chaine',    spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] }
+  };
+  // un lieu : son nom, son gabarit, les lieux nommés de ce gabarit, et ce qui lui est propre (variante, piste, noms)
+  D.lieu = function (label, gabarit, propre) { const L = { label, gabarit, spots: D.GABARITS[gabarit].spots }; Object.keys(propre || {}).forEach(k => { if (propre[k] !== undefined) L[k] = propre[k]; }); return L; };
+  // (lit les tables de l'objet sur lequel on l'appelle : D dans le jeu, une copie pendant le contrôle d'un paquet)
+  D.gabarit = function (id) { const L = this.MAPS[id]; return (L && this.GABARITS[L.gabarit]) || null; };
   D.MAPS = {
-    medine:   { label: 'Médine',            spots: VILLE },
-    koufa:    { label: 'Koufa',             spots: VILLE },
-    desert:   { label: 'Désert',            spots: ['depart', 'dunes', 'rochers', 'oasis', 'source', 'caravane', 'crete', 'ruines', 'arrivee', 'priere', 'comptoir'] },
-    camp:     { label: 'Camp',              spots: ['entree', 'tente_chef', 'feu', 'etendard', 'lignes', 'enclos', 'tertre', 'tentes', 'priere', 'comptoir'] },
-    romaine:  { label: 'Cité romaine',      spots: ['porte', 'cardo', 'forum', 'basilique', 'esplanade', 'palais', 'fontaine', 'remparts', 'jardin', 'marche', 'priere', 'quartier', 'comptoir'] },
-    palais:   { label: 'Palais',            spots: ['entree', 'nef', 'trone', 'tresor', 'colonnade', 'jardin', 'priere'] },
-    navire:   { label: 'Navire',            spots: ['poupe', 'pont', 'mat', 'proue', 'passerelle', 'pont2', 'priere'] },
-    noos:     { label: 'Noosphère',         spots: ['seuil', 'noeud1', 'noeud2', 'noeud3', 'faille', 'miroir', 'coeur'] },
-    citadelle:{ label: 'La Citadelle',      spots: ['porte', 'cour', 'puits', 'remparts', 'tour', 'salle', 'mosquee', 'priere', 'ecole', 'souk', 'jardin', 'greniers', 'palmeraie', 'poterne', 'comptoir'] },
-    cite:     { label: 'Cité-Miroir',       spots: ['rue', 'ecran', 'ruelle', 'ascenseur', 'parvis'] },
-    archives: { label: 'Archives basses',   spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] }
+    medine:    D.lieu('Médine', 'ville'),
+    koufa:     D.lieu('Koufa', 'ville', { variante: 'fleuve' }),
+    desert:    D.lieu('Désert', 'desert'),
+    camp:      D.lieu('Camp', 'camp'),
+    romaine:   D.lieu('Cité romaine', 'romaine'),
+    palais:    D.lieu('Palais', 'palais'),
+    navire:    D.lieu('Navire', 'navire'),
+    noos:      D.lieu('Noosphère', 'noos'),
+    citadelle: D.lieu('La Citadelle', 'citadelle'),
+    cite:      D.lieu('Cité-Miroir', 'cite'),
+    archives:  D.lieu('Archives basses', 'archives')
   };
 
   // noms des lieux, pour la carte de la halte (null : lieu technique, non affiché)
@@ -321,6 +340,90 @@
   D.POSES = ['prie', 'resolu', 'accable', 'salut', 'surpris', 'garde'];
 
   D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole', 'Cœur', 'Objets'];
+
+  /* ---------- Les paquets (2.0) ----------
+     Un paquet est un document de données pures (JSON) qui ajoute du contenu au jeu de base :
+       { id, version, moteur, titre, note, livres, sagas, lieux, objets, equipement, etals, pistes }
+     Il ajoute, il ne remplace rien : un identifiant déjà pris ne se redéclare pas. Le contrat est dans v2/docs/schema-paquet.md.
+     Les fonctions ci-dessous servent au jeu (ISNAD.registerPack) comme au contrôle (regles.js) : même lecture des deux côtés. */
+  D.MOTEUR = 1;                                   // ce que ce moteur sait lire d'un paquet ; il monte quand un paquet peut dire davantage
+  D.LIVRES = { 1: { titre: 'Les cinq Lumières' } };   // les livres de la Chaîne ; le titre ne s'affiche que s'il y en a plusieurs
+  const estObjet = v => !!v && typeof v === 'object' && !Array.isArray(v);
+  const texte = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.length <= (max || 400);
+  D.paquet = {
+    CLES: ['id', 'version', 'moteur', 'titre', 'note', 'livres', 'sagas', 'lieux', 'objets', 'equipement', 'etals', 'pistes'],
+    ID: /^[a-z][a-z0-9_]{1,39}$/,
+    // les tables qu'un paquet étend, copiées : un contrôle ne doit jamais atteindre celles du jeu
+    tables() {
+      const C = Object.create(D); ['MAPS', 'ITEMS', 'GEAR', 'LIVRES'].forEach(k => { C[k] = Object.assign({}, D[k]); });
+      C.GEAR_SHOPS = {}; Object.keys(D.GEAR_SHOPS).forEach(k => { C.GEAR_SHOPS[k] = D.GEAR_SHOPS[k].slice(); });
+      C.TRACKS = D.TRACKS.slice(); return C;
+    },
+    // Ce qui interdit de poser le paquet : sa forme, le moteur qu'il demande, un identifiant déjà pris. → [refus]
+    // T : les tables (D, ou une copie) ; pris : { paquets, sagas } — ce qui est déjà posé, par identifiant.
+    refus(p, T, pris) {
+      const R = [], ID = D.paquet.ID, P = pris || {};
+      if (!estObjet(p)) return ['un paquet est un objet : { id, version, moteur, … }'];
+      if (typeof p.id !== 'string' || !ID.test(p.id)) return ['id : des minuscules, des chiffres ou « _ », une lettre d’abord, 2 à 40 signes'];
+      if (p.id === 'base') R.push('id « base » : réservé au jeu de base');
+      if ((P.paquets || {})[p.id]) R.push(`le paquet « ${p.id} » est déjà posé`);
+      if (!(Number.isInteger(p.version) && p.version >= 1)) R.push('version : un entier, 1 ou plus');
+      if (!(Number.isInteger(p.moteur) && p.moteur >= 1)) R.push('moteur : un entier, 1 ou plus');
+      else if (p.moteur > T.MOTEUR) return [`ce paquet demande le moteur ${p.moteur} ; ce jeu a le moteur ${T.MOTEUR} : il lui faut une version plus récente du jeu`];
+      Object.keys(p).forEach(k => { if (!D.paquet.CLES.includes(k)) R.push(`clé « ${k} » inconnue (${D.paquet.CLES.join(', ')})`); });
+      if (p.titre !== undefined && !texte(p.titre, 80)) R.push('titre : un texte de 80 signes au plus');
+      if (p.note !== undefined && typeof p.note !== 'string') R.push('note : un texte');
+      const table = (cle, fn) => { const v = p[cle]; if (v === undefined) return; if (!estObjet(v)) { R.push(`${cle} : attend un objet { identifiant: … }`); return; }
+        Object.keys(v).forEach(id => { if (!estObjet(v[id]) && cle !== 'etals') { R.push(`${cle}.${id} : attend un objet`); return; } fn(id, v[id], cle + '.' + id); }); };
+      const idOk = (id, w) => { if (!ID.test(id)) { R.push(`${w} : identifiant invalide (minuscules, chiffres, « _ »)`); return false; } return true; };
+      const pistes = estObjet(p.pistes) ? p.pistes : {}, lieux = estObjet(p.lieux) ? p.lieux : {}, pieces = estObjet(p.equipement) ? p.equipement : {}, objets = estObjet(p.objets) ? p.objets : {};
+      // les livres : un numéro, un titre ; un livre déjà déclaré garde son titre
+      table('livres', (n, l, w) => { if (!/^[1-9][0-9]?$/.test(n)) { R.push(`${w} : un livre porte un numéro, de 1 à 99`); return; }
+        if (!texte(l.titre, 60)) R.push(`${w} : titre manquant (60 signes au plus)`);
+        else if (T.LIVRES[n] && T.LIVRES[n].titre !== l.titre) R.push(`${w} : ce livre existe déjà sous le titre « ${T.LIVRES[n].titre} »`); });
+      // les sagas : une liste ; chaque identifiant est neuf
+      if (p.sagas !== undefined) { if (!Array.isArray(p.sagas)) R.push('sagas : attend une liste');
+        else { const vus = {}; p.sagas.forEach((s, i) => { const w = `sagas[${i}]`; if (!estObjet(s) || typeof s.id !== 'string') { R.push(`${w} : une saga est un objet qui porte un id`); return; }
+          if (!idOk(s.id, w)) return; if ((P.sagas || {})[s.id]) R.push(`${w} : la saga « ${s.id} » existe déjà`); if (vus[s.id]) R.push(`${w} : saga « ${s.id} » déclarée deux fois`); vus[s.id] = 1;
+          if (!Array.isArray(s.chapters) && !s.commun) R.push(`${w} : chapters manquant`); }); } }
+      // les pistes : un nom neuf, de quoi jouer
+      table('pistes', (n, d, w) => { if (!idOk(n, w)) return; if (T.TRACKS.includes(n)) R.push(`${w} : la piste « ${n} » existe déjà`);
+        if (typeof d.bpm !== 'number' || typeof d.beats !== 'number' || !Array.isArray(d.voices) || d.voices.some(v => !estObjet(v) || typeof v.notes !== 'string')) R.push(`${w} : attend { bpm, beats, voices: [{ wave, vol, notes }] }`); });
+      // les lieux : un gabarit connu, un nom
+      table('lieux', (id, l, w) => { if (!idOk(id, w)) return; if (T.MAPS[id]) R.push(`${w} : le lieu « ${id} » existe déjà`);
+        const g = T.GABARITS[l.gabarit]; if (!g) { R.push(`${w} : gabarit « ${l.gabarit} » inconnu (${Object.keys(T.GABARITS).join(', ')})`); return; }
+        Object.keys(l).forEach(k => { if (!['gabarit', 'nom', 'variante', 'piste', 'noms'].includes(k)) R.push(`${w} : clé « ${k} » inconnue (gabarit, nom, variante, piste, noms)`); });
+        if (!texte(l.nom, 40)) R.push(`${w} : nom manquant (40 signes au plus)`);
+        if (l.variante !== undefined && !(g.variantes || []).includes(l.variante)) R.push(`${w} : variante « ${l.variante} » inconnue pour ce gabarit (${(g.variantes || []).join(', ') || 'aucune'})`);
+        if (l.piste !== undefined && !(T.TRACKS.includes(l.piste) || pistes[l.piste])) R.push(`${w} : piste « ${l.piste} » inconnue`);
+        if (l.noms !== undefined) { if (!estObjet(l.noms)) R.push(`${w} : noms attend { lieu: 'nom' }`);
+          else Object.keys(l.noms).forEach(k => { if (!g.spots.includes(k)) R.push(`${w} : noms.${k} — ce gabarit n'a pas ce lieu (${g.spots.join(', ')})`); else if (!(l.noms[k] === null || texte(l.noms[k], 30))) R.push(`${w} : noms.${k} attend un nom (30 signes au plus), ou null pour ne pas l'afficher`); }); } });
+      // les objets de la besace et les pièces d'équipement : un identifiant neuf, dans les deux tables à la fois
+      const neuf = (id, w) => { if (T.ITEMS[id] || T.GEAR[id]) { R.push(`${w} : « ${id} » existe déjà`); return false; } return true; };
+      table('objets', (id, o, w) => { if (!idOk(id, w) || !neuf(id, w)) return; if (!texte(o.name, 40) || !texte(o.desc, 160)) R.push(`${w} : name (40 signes) et desc (160 signes) attendus`); });
+      table('equipement', (id, g, w) => { if (!idOk(id, w) || !neuf(id, w)) return; if (objets[id]) R.push(`${w} : « ${id} » est aussi déclaré dans objets`);
+        if (!T.GEAR_TYPES[g.t]) R.push(`${w} : famille « ${g.t} » inconnue (${Object.keys(T.GEAR_TYPES).join(', ')}) — une nouvelle famille se dessine dans le moteur`);
+        if (!(Number.isInteger(g.r) && g.r >= 0 && g.r < T.GEAR_PRIX.length)) R.push(`${w} : rang r de 0 à ${T.GEAR_PRIX.length - 1}`);
+        if (!texte(g.name, 40) || !texte(g.desc, 160)) R.push(`${w} : name (40 signes) et desc (160 signes) attendus`);
+        if (!Array.isArray(g.c) || g.c.length !== 2 || g.c.some(c => !/^#[0-9a-f]{6}$/i.test(c))) R.push(`${w} : c attend deux couleurs #rrggbb`); });
+      // les étals : un lieu qui a un comptoir, des pièces qui existent
+      table('etals', (m, liste, w) => { const L = T.MAPS[m] || (lieux[m] && T.GABARITS[lieux[m].gabarit] ? { spots: T.GABARITS[lieux[m].gabarit].spots } : null);
+        if (!L) { R.push(`${w} : lieu « ${m} » inconnu`); return; } if (!L.spots.includes('comptoir')) R.push(`${w} : ce lieu n'a pas de comptoir`);
+        if (!Array.isArray(liste) || !liste.length) { R.push(`${w} : attend une liste de pièces`); return; }
+        liste.forEach(id => { if (!(T.GEAR[id] || pieces[id])) R.push(`${w} : pièce « ${id} » inconnue`); else if ((T.GEAR_SHOPS[m] || []).includes(id) || liste.indexOf(id) !== liste.lastIndexOf(id)) R.push(`${w} : « ${id} » est déjà à cet étal`); }); });
+      return R;
+    },
+    // Pose dans les tables T ce que le paquet déclare. À n'appeler que si refus() n'a rien trouvé. Les sagas et le son de
+    // chaque piste se posent dans le jeu (ISNAD.registerPack) : ici, seulement les énumérations.
+    poser(p, T) {
+      Object.keys(p.livres || {}).forEach(n => { if (!T.LIVRES[n]) T.LIVRES[n] = { titre: p.livres[n].titre, paquet: p.id }; });
+      Object.keys(p.pistes || {}).forEach(n => { T.TRACKS.push(n); });
+      Object.keys(p.lieux || {}).forEach(id => { const l = p.lieux[id]; T.MAPS[id] = D.lieu(l.nom, l.gabarit, { variante: l.variante, piste: l.piste, noms: l.noms, paquet: p.id }); });
+      Object.keys(p.objets || {}).forEach(id => { T.ITEMS[id] = Object.assign({}, p.objets[id], { paquet: p.id }); });
+      Object.keys(p.equipement || {}).forEach(id => { T.GEAR[id] = Object.assign({}, p.equipement[id], { paquet: p.id }); });
+      Object.keys(p.etals || {}).forEach(m => { T.GEAR_SHOPS[m] = (T.GEAR_SHOPS[m] || []).concat(p.etals[m]); });
+    }
+  };
 
   root.ISNAD_DEFS = D;
   if (typeof module !== 'undefined' && module.exports) module.exports = D;

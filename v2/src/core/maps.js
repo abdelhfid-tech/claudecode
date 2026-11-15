@@ -1,14 +1,14 @@
 /* ISNAD — cartes : boîte à outils + générateurs (ville arabe, désert, camp, cité romaine, palais, navire, noosphère, cité-miroir, archives). */
 (function () {
   'use strict';
-  const I = window.ISNAD, G = I.gfx, T = 16;
+  const I = window.ISNAD, G = I.gfx, D = I.D, T = 16;
   const M = I.maps = {};
 
   class MB {
-    constructor(id, w, h, base, opts) {
+    constructor(id, w, h, base, opts, graine) {
       this.id = id; this.w = w; this.h = h; this.opts = opts || {}; this.hue = (opts && opts.hue) || 0;
       this.g = new Array(w * h).fill(base); this.solid = new Uint8Array(w * h);
-      this.objs = []; this.lights = []; this.spots = {}; this.r = I.rng(I.hash(id + JSON.stringify(opts || {})));
+      this.objs = []; this.lights = []; this.spots = {}; this.r = I.rng(I.hash((graine || id) + JSON.stringify(opts || {})));
       if (G.isSolidTile(base)) this.solid.fill(1);
       this.mirror = false;
     }
@@ -87,17 +87,17 @@
   };
   function envFor(time, extra) { return Object.assign({ time: time || 'day', clouds: time !== 'night' }, TIME[time || 'day'], extra || {}); }
 
-  /* ---------- Ville arabe : Médine / Koufa ---------- */
-  function ville(id, o) {
-    const b = new MB(id, 60, 46, 'sand', o); b.mirror = id === 'koufa';
+  /* ---------- Ville arabe : Médine, et sa variante « fleuve » (Koufa) ---------- */
+  function ville(id, o, L, graine) {
+    const fleuve = !!L && L.variante === 'fleuve', b = new MB(id, 60, 46, 'sand', o, graine); b.mirror = fleuve;
     // chemins
     b.road(29, 0, 29, 45, 'path', 3); b.road(2, 24, 57, 24, 'path', 3); b.road(12, 24, 12, 38, 'path', 2); b.road(46, 24, 46, 38, 'path', 2); b.road(16, 12, 29, 12, 'path', 2);
     // place pavée
     b.fill(23, 21, 15, 8, 'stone');
     // mosquée : enceinte de pisé, cour ouverte, colonnes de troncs de palmier
     b.fill(21, 5, 19, 14, 'path'); b.ring(21, 5, 19, 14, 'gwall');
-    b.fill(22, 6, 17, 6, id === 'koufa' ? 'zellij' : 'zsand', false); b.ring(22, 12, 17, 6, id === 'koufa' ? 'zellij' : 'zsand', false);
-    b.rosette(30, 15, 34, id === 'koufa' ? 12 : 8); if (id === 'koufa') { b.set(30, 5, 'mihrab', true); b.obj('basin', 36, 15); }
+    b.fill(22, 6, 17, 6, fleuve ? 'zellij' : 'zsand', false); b.ring(22, 12, 17, 6, fleuve ? 'zellij' : 'zsand', false);
+    b.rosette(30, 15, 34, fleuve ? 12 : 8); if (fleuve) { b.set(30, 5, 'mihrab', true); b.obj('basin', 36, 15); }
     b.obj('minbar', 37, 7);
     b.set(30, 18, 'path', false); b.set(29, 18, 'path', false); b.set(31, 18, 'path', false);
     for (let x = 24; x <= 36; x += 3) { b.obj('trunkcol', x, 8); b.obj('trunkcol', x, 11); }
@@ -134,15 +134,15 @@
     // portes
     b.obj('banner', 27, 2, { color: '#1e1e1e' }); b.obj('banner', 33, 2, { color: '#1e1e1e' }); b.spot('porte_nord', 30, 2);
     b.obj('lamp', 27, 43); b.obj('lamp', 33, 43); b.light(27, 42, 50, '#ffc878', 0.12); b.light(33, 42, 50, '#ffc878', 0.12); b.spot('porte_sud', 30, 43);
-    if (id === 'koufa') { b.fill(0, 0, 2, 46, 'water'); b.scatter('cypress', 5, 3, 2, 3, 40); }
+    if (fleuve) { b.fill(0, 0, 2, 46, 'water'); b.scatter('cypress', 5, 3, 2, 3, 40); }
     b.scatter('palm', 14, 0, 0, 60, 46); b.scatter('rock', 8, 0, 0, 60, 46); b.scatter('bush', 8, 0, 0, 60, 46);
     const t = o.time || 'day';
     return b.finish(envFor(t, { particles: t === 'night' ? 'fireflies' : 'dust', rate: t === 'night' ? 3 : 8, bg: 'ville', music: t === 'night' ? 'nuit' : 'medine' }));
   }
 
   /* ---------- Désert ---------- */
-  function desert(o) {
-    const b = new MB('desert', 80, 40, 'sand', o);
+  function desert(id, o, L, graine) {
+    const b = new MB(id, 80, 40, 'sand', o, graine);
     for (let i = 0; i < 260; i++) b.patch('dune', Math.floor(b.r() * 80), Math.floor(b.r() * 40), 1 + Math.floor(b.r() * 2));
     // piste sinueuse
     let y = 20; for (let x = 0; x < 80; x++) { y += Math.round(Math.sin(x / 7) * 0.8); y = I.clamp(y, 16, 24); b.fillSoft(x, y, 1, 2, 'path'); }
@@ -161,8 +161,8 @@
   }
 
   /* ---------- Camp militaire ---------- */
-  function camp(o) {
-    const b = new MB('camp', 52, 38, 'sand', o);
+  function camp(id, o, L, graine) {
+    const b = new MB(id, 52, 38, 'sand', o, graine);
     b.road(0, 19, 51, 19, 'path', 3); b.road(25, 8, 25, 30, 'path', 3);
     b.spot('entree', 4, 20);
     b.obj('bigtent', 26, 9, { color: '#e6dcc4', trim: '#2f6f4f' }); b.spot('tente_chef', 26, 12); b.obj('banner', 22, 10, { color: '#1e1e1e' }); b.obj('banner', 30, 10, { color: '#f1ece2', trim: '#1e1e1e' });
@@ -184,8 +184,8 @@
   }
 
   /* ---------- Cité romaine (Damas, Jérusalem, Homs) ---------- */
-  function romaine(o) {
-    const b = new MB('romaine', 64, 46, 'path', o);
+  function romaine(id, o, L, graine) {
+    const b = new MB(id, 64, 46, 'path', o, graine);
     const RS = { roof: 'rroof', edge: 'rroofedge', wall: 'rwall', door: 'rdoor', windowTile: 'rwall' };
     // remparts sud + porte
     b.fill(0, 42, 64, 3, 'rwall', true); b.fill(0, 41, 64, 1, 'rroofedge', true); b.fill(30, 41, 4, 4, 'stone', false); b.set(29, 43, 'arch', true); b.set(34, 43, 'arch', true);
@@ -215,8 +215,8 @@
   }
 
   /* ---------- Palais perse (salle du trône) ---------- */
-  function palais(o) {
-    const b = new MB('palais', 40, 30, 'glaze', o);
+  function palais(id, o, L, graine) {
+    const b = new MB(id, 40, 30, 'glaze', o, graine);
     b.ring(0, 0, 40, 30, 'pwall'); b.fill(1, 1, 38, 2, 'pwall', true);
     b.fill(17, 4, 6, 24, 'carpet'); b.set(19, 29, 'glaze', false); b.set(20, 29, 'glaze', false);
     b.obj('throne', 20, 5); b.spot('trone', 20, 8); b.obj('brazier', 16, 6); b.obj('brazier', 24, 6); b.light(16, 5, 70, '#ffb45a', 0.2); b.light(24, 5, 70, '#ffb45a', 0.2);
@@ -230,8 +230,8 @@
   }
 
   /* ---------- Navires enchaînés ---------- */
-  function navire(o) {
-    const b = new MB('navire', 52, 24, 'sea', o);
+  function navire(id, o, L, graine) {
+    const b = new MB(id, 52, 24, 'sea', o, graine);
     const ship = (x0, x1) => { for (let x = x0; x <= x1; x++) { const e = Math.min(x - x0, x1 - x), inset = e === 0 ? 3 : e === 1 ? 2 : e === 2 ? 1 : 0; b.fill(x, 7 + inset, 1, 9 - inset * 2, 'wood', false); b.set(x, 16 - inset, 'hull', true); } };
     ship(4, 25); ship(29, 49);
     b.fill(26, 10, 3, 3, 'wood', false); b.obj('chain', 27, 9); b.obj('chain', 27, 13);
@@ -242,8 +242,8 @@
   }
 
   /* ---------- Noosphère ---------- */
-  function noos(o) {
-    const b = new MB('noos', 60, 40, 'void', o); const hue = b.hue = (o.hue === undefined ? 210 : o.hue);
+  function noos(id, o, L, graine) {
+    const b = new MB(id, 60, 40, 'void', o, graine); const hue = b.hue = (o.hue === undefined ? 210 : o.hue);
     const room = (name, cx, cy, hw, hh) => { b.fill(cx - hw, cy - hh, hw * 2 + 1, hh * 2 + 1, 'nfloor', false); b.spot(name, cx, cy); b.light(cx, cy, 70 + hw * 10, `hsl(${hue},90%,60%)`, 0.1); };
     const bridge = (x1, y1, x2, y2) => { const sx = Math.min(x1, x2), ex = Math.max(x1, x2), sy = Math.min(y1, y2), ey = Math.max(y1, y2); for (let x = sx; x <= ex; x++) for (let k = 0; k < 2; k++) if (b.g[(y1 + k) * b.w + x] === 'void') b.set(x, y1 + k, 'nbridge', false); for (let y = sy; y <= ey + 1; y++) for (let k = 0; k < 2; k++) if (b.g[y * b.w + x2 + k] === 'void') b.set(x2 + k, y, 'nbridge', false); };
     bridge(6, 20, 18, 20); bridge(18, 20, 30, 11); bridge(18, 20, 30, 28); bridge(18, 8, 18, 20); bridge(18, 20, 18, 32); bridge(30, 11, 47, 19); bridge(30, 28, 47, 21);
@@ -254,8 +254,8 @@
   }
 
   /* ---------- La Citadelle du Caïd (ksar au bord du désert) ---------- */
-  function citadelle(o) {
-    const b = new MB('citadelle', 58, 46, 'sand', o);
+  function citadelle(id, o, L, graine) {
+    const b = new MB(id, 58, 46, 'sand', o, graine);
     for (let i = 0; i < 120; i++) b.patch('dune', Math.floor(b.r() * 58), Math.floor(b.r() * 46), 1);
     // enceinte de pisé, tours d'angle, porte au sud, poterne à l'est
     b.fill(8, 6, 43, 31, 'path', false); b.ring(8, 6, 43, 31, 'wall'); b.fill(8, 5, 43, 1, 'roofedge', true);
@@ -289,8 +289,8 @@
   }
 
   /* ---------- Cité-Miroir (cyberpunk) ---------- */
-  function cite(o) {
-    const b = new MB('cite', 60, 22, 'asphalt', o);
+  function cite(id, o, L, graine) {
+    const b = new MB(id, 60, 22, 'asphalt', o, graine);
     b.fill(0, 0, 60, 7, 'croof', true); b.fill(0, 7, 60, 2, 'cwall', true); b.fill(0, 17, 60, 5, 'croof', true); b.fill(0, 12, 60, 1, 'neonline', false);
     const cols = ['#ff4fd8', '#39e6ff', '#ffe08a', '#7dffb0', '#ff7a5c'];
     for (let x = 4; x < 58; x += 7) { const c = cols[(x >> 1) % cols.length]; b.obj('neon', x, 9, { color: c }); b.light(x, 8, 70, c, 0.3); }
@@ -302,8 +302,8 @@
   }
 
   /* ---------- Archives basses ---------- */
-  function archives(o) {
-    const b = new MB('archives', 34, 24, 'metal', o);
+  function archives(id, o, L, graine) {
+    const b = new MB(id, 34, 24, 'metal', o, graine);
     b.ring(0, 0, 34, 24, 'cwall'); b.fill(1, 1, 32, 2, 'cwall', true); b.set(16, 23, 'metal', false); b.set(17, 23, 'metal', false);
     for (let x = 4; x < 16; x += 4) { b.obj('shelf', x, 5); b.obj('shelf', x, 10); }
     for (let x = 5; x < 15; x += 3) b.obj('rack', x, 17);
@@ -315,20 +315,32 @@
   }
 
   M.drawRosette = drawRosette;
+  const GEN = { ville, desert, camp, romaine, palais, navire, noos, citadelle, cite, archives };
+  // Tous les lieux nommés d'une carte se rejoignent-ils à pied ? Même parcours que les tests (cases libres voisines).
+  function libre(m, s) {
+    for (let rad = 0; rad < 9; rad++) for (let dy = -rad; dy <= rad; dy++) for (let dx = -rad; dx <= rad; dx++) {
+      if (Math.max(Math.abs(dx), Math.abs(dy)) !== rad) continue;
+      const x = s[0] + dx, y = s[1] + dy; if (x < 1 || y < 1 || x >= m.w - 1 || y >= m.h - 1) continue;
+      if (!m.solid[y * m.w + x]) return [x, y];
+    }
+    return null;
+  }
+  M.relie = function (m) {
+    const pts = Object.keys(m.spots).map(k => libre(m, m.spots[k])); if (pts.some(p => !p)) return false; if (pts.length < 2) return true;
+    const vu = new Uint8Array(m.w * m.h), q = [pts[0]]; vu[pts[0][1] * m.w + pts[0][0]] = 1;
+    for (let i = 0; i < q.length; i++) { const x = q[i][0], y = q[i][1];
+      for (const d of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + d[0], ny = y + d[1]; if (nx < 0 || ny < 0 || nx >= m.w || ny >= m.h) continue; const k = ny * m.w + nx; if (vu[k] || m.solid[k]) continue; vu[k] = 1; q.push([nx, ny]); } }
+    return pts.every(p => vu[p[1] * m.w + p[0]]);
+  };
+  // Un lieu est bâti sur son gabarit (D.MAPS, D.GABARITS). Les lieux du jeu de base sortent comme ils sont toujours sortis.
+  // Un lieu déclaré par un paquet a sa propre graine : si un lieu nommé s'y trouve coupé des autres, on rebat les cartes.
   M.build = function (id, opts) {
     opts = opts || {};
-    switch (id) {
-      case 'medine': case 'koufa': return ville(id, opts);
-      case 'desert': return desert(opts);
-      case 'camp': return camp(opts);
-      case 'romaine': return romaine(opts);
-      case 'palais': return palais(opts);
-      case 'navire': return navire(opts);
-      case 'noos': return noos(opts);
-      case 'cite': return cite(opts);
-      case 'citadelle': return citadelle(opts);
-      case 'archives': return archives(opts);
-    }
-    return noos(opts);
+    const L = D.MAPS[id], gen = L && GEN[L.gabarit];
+    if (!gen) return noos('noos', opts);
+    let m = gen(id, opts, L);
+    if (L.paquet) for (let k = 1; k <= 12 && !M.relie(m); k++) m = gen(id, opts, L, id + '~' + k);
+    if (L.piste && m.env.music === D.GABARITS[L.gabarit].piste) m.env.music = L.piste;
+    return m;
   };
 })();

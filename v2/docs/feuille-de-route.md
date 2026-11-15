@@ -7,8 +7,8 @@
 | Lot | État | Ce qui a été vérifié |
 |---|---|---|
 | 0 — geler la 1.31, ouvrir `v2/` | **fait** le 15 novembre (commit `e42c1a9`) | toute la batterie sur la copie, sans anomalie ni erreur console ; compte rendu du parcours automatique identique à celui de la 1.31, au hasard des combats près ; `gel.js` : 37 fichiers conformes |
-| 1.1 — le validateur en module | **fait** le 15 novembre | même sortie qu'avant sur tout le contenu ; huit copies fautives d'une saga et une de la musique refusées avec les mêmes messages par la 1.31 et par la 2.0 |
-| 1.2 — les paquets, les lieux par gabarit | à faire | |
+| 1.1 — le validateur en module | **fait** le 15 novembre (commit `91f1e3b`) | même sortie qu'avant sur tout le contenu ; huit copies fautives d'une saga et une de la musique refusées avec les mêmes messages par la 1.31 et par la 2.0 |
+| 1.2 — les paquets, les lieux par gabarit | **fait** le 15 novembre | les 65 cartes que le contenu demande, identiques à celles de la 1.31 (`cartes.js`) ; le paquet d'essai contrôlé, assemblé à part et joué de trois façons, 21 copies fautives refusées pour la bonne raison, 5 paquets fautifs refusés par le jeu sans l'arrêter (`paquet.js`) ; toute la batterie du jeu de base, sans anomalie |
 | 1.3 — les livres | à faire | |
 | 1.4 — la partie du joueur | à faire | |
 | 1.5 — le personnage du joueur | à faire | |
@@ -118,6 +118,17 @@ Six lots. Chacun est livré, testé par toute la batterie de la 2.0, contrôlé 
 - Ce qui reste dans le moteur : une nouvelle famille d'arme ou un nouveau dessin porté, un nouveau gabarit de
   carte, une nouvelle forme d'égrégore, une nouvelle opération de script.
 - Le contenu copié de la 1.31 devient le paquet de base de la 2.0, sans changer un mot.
+
+*Réalisé (15 novembre).* Le contrat est écrit dans `v2/docs/schema-paquet.md`. Quatre choses diffèrent de ce qui était
+prévu, toutes dans le sens de la prudence :
+
+- les règles du contenu sont embarquées dans le jeu : `registerPack` refuse lui-même un paquet qui ne les passe pas ;
+- un lieu s'écrit `{ gabarit, nom, variante, piste, noms }` — `noms` renomme les lieux du gabarit sur la carte de la
+  halte, il n'en crée pas ;
+- le jeu de base reste écrit dans `v2/src/data/`, comme en 1.31 : il n'est pas lui-même un paquet (`base` est un
+  identifiant réservé). Il est de la donnée pure, vérifié par un aller-retour JSON : la base pourra le recevoir ;
+- le paquet d'essai et l'outil `paquet.js`, prévus au lot 1.6, sont arrivés dès ce lot pour l'éprouver ; le lot 1.6
+  les complétera (livre II sur la Chaîne, export et import de la partie, partie chargée sans le paquet).
 
 ### 1.3 Les livres
 
