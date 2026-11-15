@@ -208,6 +208,27 @@ Dons : le Renard révèle une faille de chaque égrégore ; l'Aigle fait agir le
 un point de Niyya ; le Phénix relève une fois le premier compagnon éprouvé ; le Lion affaiblit les
 coups adverses pendant trois tours ; la Gazelle régénère le groupe pendant trois tours.
 
+## L'équipement (version 6)
+
+Remarque du décideur : pas assez de variété dans les armes, les armures, les boucliers et les casques ;
+s'inspirer de Final Fantasy.
+
+| Système | Règle | Garde-fou |
+|---|---|---|
+| Emplacements | Main droite, main gauche, tête, corps ; cinquante-trois pièces en seize familles | Objets ordinaires : ni relique, ni inscription, ni or ni soie (exigence 17) |
+| Rôles | Chaque rôle a ses familles : le guerrier et le gardien portent le fer, le sage et le soigneur le bâton, le calame et l'étoffe, le stratège un peu de tout sauf le lourd | Le jeu ne dit pas qui portait quoi : c'est le joueur qui habille |
+| Effets | Pourcentages de Force, Esprit, Garde, Élan, Constance, Souffle ; le fer protège et ralentit | Jamais d'élément-vertu, jamais de protection contre le doute ou le waswâs |
+| Traits | Lance : perce la garde. Dague : frappe parfois deux fois. Arc : tire le premier. Masse : étourdit. Bouclier : pare un coup de fer. Casque : tient bon face à l'étourdissement | Effets physiques seulement |
+| Réserve | Commune à toute la Chaîne ; ce qu'un groupe portait y retourne à la fin de sa saga | Une pièce portée par un héros absent peut être rappelée |
+| Trouver | Un coffre par chapitre ; six comptoirs aux étals différents ; 8 à 85 dirhams | La même bourse sert à l'aumône |
+| Voir | Une icône par pièce ; en combat et dans la halte, la silhouette porte arme, bouclier, casque, armure | Hors combat, la silhouette du récit ne change pas |
+| Aides | « Qui la porte ? » à la réception ; « Au mieux » ; rappel dans « Que faire ? » | |
+
+Pourquoi des pourcentages : chaque saga repart du niveau 1 avec un nouveau groupe, et la réserve suit
+le joueur. Un bonus en points aurait écrasé le début de chaque saga ; un pourcentage reste juste à tout
+niveau. Les bonus sont volontairement modestes (une pièce de haut rang : 15 à 20 %) : la provision du
+cœur doit toujours peser davantage que le fer.
+
 ## Feuille de route proposée
 
 1. Relecture historique par un spécialiste, puis corrections de texte.

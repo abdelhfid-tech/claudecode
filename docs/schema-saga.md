@@ -80,10 +80,13 @@ umar: {
   //   coiffe  : D.COIFFES  — 'imama' | 'imama_haute' | 'imama_large' | 'imama_queue' | 'calotte' | 'casque' | 'casque_turban' | …
   //   manteau : D.MANTEAUX — 'long' (défaut) | 'aucun' | 'epaule' | 'ample'
   //   motif   : D.MOTIFS   — 'rayures' (robe) | 'bandes' (manteau) ; echarpe, court, cuirasse, chale : true
+  //   armure  : D.ARMURES  — 'cuir' | 'matelasse' | 'mailles' | 'lamelles' : ce qui couvre le buste
   //   item    : D.PORTES   — un attribut ou une liste ; seulement s'il est attesté ou propre au rôle
   //             (la durra de 'Umar, le sabre d'un chef de guerre, les feuillets d'un scribe)
   //   trim : couleur du galon et du bandeau · legs : couleur des jambes d'une tenue courte
   // Coiffe, manteau et couleurs sont une convention de dessin : ils ne prétendent pas restituer un costume attesté.
+  // L'équipement n'est pas décrit ici : le héros commence avec la tenue de son rôle et de son dessin (une épée s'il
+  // porte un sabre, un casque s'il en est coiffé), puis le joueur l'habille. Voir « Équipement » plus bas.
   skills: [                        // 5 à 6 compétences, apprises aux niveaux 1,1,2,4,6,8 environ
     { lvl: 1, id: 'durra', name: 'La Durra', desc: 'Coup de férule. Peut étourdir.', cost: 3,
       target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
@@ -172,7 +175,9 @@ Noosphère), 2–3 paroles.
     { id: 'pere', name: 'Voyageur', at: 'enclos', hidden: true, look: { kind: 'homme', robe: '#6b5a48', head: '#c9bda8' } }
   ],
   foes: [ { id: 'f1', at: 'palmeraie', group: ['murmure', 'murmure'], bg: 'ville' } ],   // ennemis visibles sur la carte
-  chests: [ { at: ['souk', 2, 1], item: 'dattes', n: 2 } ],
+  chests: [ { at: ['souk', 2, 1], item: 'dattes', n: 2 },            // un objet de la besace,
+            { at: ['priere', 1, 1], codex: 'imamat' },               // un feuillet du Recueil,
+            { at: ['halle', 1, 1], gear: 'calame_encrier' } ],       // ou une pièce d'équipement (D.GEAR)
   intro: [ ['title', 'Les Rondes de nuit', 'An 18 de l’Hégire'], ['nar', '…'] ],
   objectives: [
     { text: 'Rejoindre Aslam devant la maison', talk: 'aslam', then: [ ['say', 'aslam', '…'], ['join', 'aslam'] ] },
@@ -222,12 +227,33 @@ Un PNJ ou un `foe` peut vivre sur une autre carte que celle du chapitre via `map
 | `['fade', 'out'|'in', ms?]`, `['wait', ms]`, `['shake', ms?]`, `['flash', couleur?]`, `['tint', couleur|null]` | mise en scène |
 | `['sfx', nom]` | `duff, tek, roll, hit, break, light, wind, door, crowd, wave, glitch, blip` |
 | `['amb', nom]` | ambiance : `vent, nuit, foule, feu, mer, noos, cite, silence, bataille` |
-| `['give', objet, n?]` | `dattes, eau, pain, miel, musc, lait, siwak` |
+| `['give', objet, n?]` | `dattes, eau, pain, miel, musc, lait, siwak`, ou une pièce d'équipement de `D.GEAR` |
 | `['join', héros]` / `['leave', héros]` | modifie le groupe |
 | `['codex', id]` | débloque une entrée |
 | `['heal']` | restaure le groupe |
 | `['flag', nom, valeur?]`, `['if', nom, [ops], [sinon]?]` | drapeaux locaux à la saga |
 | `['light', élément]` | accorde la Lumière de la saga (dernière op de `outro` de saga) |
+
+## 6 bis. Équipement
+
+Tout est déclaré dans `src/core/defs.js` ; un fichier de saga ne fait que **placer** des pièces (coffre
+`gear`, opération `give`). Il ne fixe ni effet, ni prix, ni rôle.
+
+| Table | Contenu |
+|---|---|
+| `D.SLOTS` | les quatre emplacements : `md` main droite, `mg` main gauche, `tete`, `corps` |
+| `D.GEAR_TYPES` | seize familles (épée, lance, arc, dague, masse, bâton, calame ; bouclier, grand bouclier, outil ; turban, calotte, casque ; étoffe, cuir, armure) : emplacement, rôles autorisés, geste de frappe, ce que la main montre |
+| `D.GEAR` | les pièces : famille `t`, rang `r` (0 à 4, qui fixe le prix), nom, description, effets en pourcentage (`atk mag def spd hp sp`), traits (`perce vif prime choc parade ferme`), dessin (`port`, `tete`, `corps`, `ico`, couleurs `c`) |
+| `D.GEAR_PRIX` | prix par rang, en dirhams ; la revente rend la moitié |
+| `D.GEAR_SHOPS` | ce que vend le comptoir de chaque carte qui en a un |
+
+Règles que le validateur vérifie : un type, un rang, un nom et une description par pièce ; des effets
+bornés (±25 % par statistique, 0,6 au plus par trait) ; au moins une pièce par rôle et par emplacement ;
+aucun mot qui ferait d'un objet une relique ou lui prêterait une vertu (nom divin, « béni », « sacré »,
+« talisman », or, soie). Une pièce n'a jamais d'élément-vertu. Voir l'exigence 17 d'`AGENTS.md`.
+
+Où placer une pièce : une par chapitre suffit, dans un coffre à l'écart du chemin. Éviter ce qui ferait
+écho à un épisode (pas de cotte de mailles dans le chapitre de la cuirasse de 'Alî).
 
 ## 7. Gabarit d'une saga (durée cible : 20–25 min)
 

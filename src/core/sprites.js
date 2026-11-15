@@ -101,6 +101,16 @@
         '...iIiiIiiIii...', '...iiIiiIiiii...', '...iIiiIiiIii...', '...iiiIiiIiii...', '....iiIiiiii....']
   };
 
+  // casque de cuir : la calotte de fer sans sa pointe, en cuir durci (W w)
+  { const cuir = r => r.replace(/I/g, 'W').replace(/i/g, 'w'), galon = r => r.replace(/[Ii]/g, 'a'), cal = (rows, bas) => ['................', '................'].concat(rows.slice(2, 5).map(cuir), [galon(rows[5])], bas);
+    HEADS.casque_cuir = { d: cal(HEADS.casque.d, BAS_D), l: cal(HEADS.casque.l, BAS_L), u: cal(HEADS.casque.u, BAS_U) }; }
+  // casque à bandes : plaques rivées sous des bandes (A a), sans pointe
+  { const bande = (rows, xs) => rows.map((r, j) => { if (j === 0) return '................'; const a = r.split(''); if (j === 5) return a.map((m, x) => m === 'i' || m === 'I' ? (x % 2 ? 'W' : 'w') : m).join(''); if (j >= 2 && j <= 4) xs.forEach(x => { if (a[x] === 'I' || a[x] === 'i') a[x] = 'w'; }); return a.join(''); });
+    HEADS.casque_bandes = { d: bande(HEADS.casque.d, [5, 10]), l: bande(HEADS.casque.l, [4, 8]), u: bande(HEADS.casque.u, [5, 10]) }; }
+  // coiffe de mailles : un capuchon d'anneaux (I i en damier), taillé sur la capuche
+  { const mail = rows => rows.map((r, y) => r.split('').map((m, x) => 'Ttu'.indexOf(m) >= 0 ? ((x + y) % 2 ? 'I' : 'i') : m).join(''));
+    HEADS.coiffe_mailles = { d: mail(HEADS.capuche.d), l: mail(HEADS.capuche.l), u: mail(HEADS.capuche.u) }; }
+
   /* ---------- gabarits : corps ----------
      R r buste · S s jupe · L l bas de jupe (jambes si la tenue est courte) · M entre-jambes · Z ourlet
      C c k manteau · E e pans du manteau (absents si la tenue est courte) · B b m bas du dos · A a ceinture · N main · F f pied */
@@ -171,7 +181,7 @@
   const KINDS = {
     compagnon: { coiffe: 'imama', lit: true }, homme: { coiffe: 'imama', varie: true }, ancien: { coiffe: 'imama_queue', chale: true, item: 'baton' },
     savant: { coiffe: 'imama_large', chale: true, item: 'feuillets' }, marchand: { coiffe: 'imama_haute', item: 'bourse', trim: '#d9b45a', motif: 'rayures' },
-    soldat: { coiffe: 'casque', court: true, item: 'lance' }, romain: { coiffe: 'casque', court: true, item: 'lance', cimier: true, cuirasse: true },
+    soldat: { coiffe: 'casque', court: true, item: 'lance', troupe: 'soldat' }, romain: { coiffe: 'casque', court: true, item: 'lance', cimier: true, cuirasse: true, troupe: 'romain' },
     perse: { coiffe: 'tiare', trim: '#d9b45a' }, moine: { coiffe: 'capuche', sombre: true, trim: '#c9b99a' }, enfant: { coiffe: 'calotte', petit: true, manteau: 'aucun' },
     marin: { coiffe: 'calotte', court: true, raies: true, manteau: 'aucun' }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' },
     bedouin: { coiffe: 'keffieh', drape: true, trim: '#3a2a20' } // gens des tribus : la couleur du cordon et du galon (look.trim) dit le clan
@@ -179,10 +189,16 @@
 
   // les gens sans nom ne se ressemblent pas tous : coiffe et manteau choisis d'après leurs couleurs, toujours les mêmes pour un même personnage
   const VARIE = [['imama', 'long'], ['calotte', 'aucun'], ['imama_queue', 'long'], ['imama_large', 'epaule'], ['imama_haute', 'aucun'], ['calotte', 'epaule']];
+  // les gens d'armes non plus : casque, arme, bouclier et armure varient d'un homme à l'autre (look.sel : qui il est)
+  const TROUPES = {
+    soldat: [['casque', 'lance', null], ['casque_turban', ['sabre', 'bouclier_cuir'], 'cuir'], ['casque_cuir', 'arc', null], ['coiffe_mailles', ['lance', 'bouclier_bois'], 'mailles'], ['casque', ['sabre', 'bouclier'], 'mailles'], ['casque_bandes', 'masse', 'cuir'], ['casque_cuir', ['lance', 'bouclier_cuir'], 'matelasse']],
+    romain: [['casque', ['lance', 'pavois'], 'lamelles'], ['casque_bandes', ['lance', 'pavois'], 'mailles'], ['casque', ['sabre', 'bouclier'], 'lamelles'], ['casque_bandes', 'arc', 'cuir']]
+  };
   function kindOf(look) {
     const K = Object.assign({}, KINDS[look.kind] || KINDS.homme);
+    if (K.troupe && look.sel !== undefined && !look.coiffe && !look.item) { const v = TROUPES[K.troupe][look.sel % TROUPES[K.troupe].length]; K.coiffe = v[0]; K.item = v[1]; if (v[2]) { K.armure = v[2]; K.cuirasse = false; } }
     if (K.varie && !look.coiffe && !look.manteau) { const v = VARIE[I.hash((look.robe || '') + (look.head || '') + (look.cloak || '')) % VARIE.length]; K.coiffe = v[0]; K.manteau = v[1]; }
-    ['coiffe', 'item', 'manteau', 'motif', 'echarpe', 'court', 'cuirasse', 'chale'].forEach(k => { if (look[k] !== undefined) K[k] = look[k]; });
+    ['coiffe', 'item', 'manteau', 'motif', 'echarpe', 'court', 'cuirasse', 'chale', 'armure'].forEach(k => { if (look[k] !== undefined) K[k] = look[k]; });
     return K;
   }
 
@@ -238,12 +254,25 @@
     }
     if (K.motif === 'rayures') { for (let y = b0; y < y1; y++) for (let x = 0; x < W; x++) if ('RSLl'.indexOf(g[y][x]) >= 0 && x % 3 === 0) g[y][x] = 'a'; }
     else if (K.motif === 'bandes') { for (let y = b0; y < y1; y++) for (let x = 0; x < W; x++) if ('CcEe'.indexOf(g[y][x]) >= 0 && (y - b0) % 3 === 2) g[y][x] = 'A'; }
+    if (K.armure) { const bas = K.armure === 'mailles' ? 8 : K.armure === 'lamelles' ? 7 : 5; // mailles en damier, lamelles en rangs, cuir uni, toile piquée
+      for (let y = b0; y < Math.min(y1, b0 + bas); y++) for (let x = 0; x < W; x++) { const m = g[y][x]; if ('RrSs'.indexOf(m) < 0) continue;
+        g[y][x] = K.armure === 'mailles' ? ((x + y) % 2 ? 'I' : 'i') : K.armure === 'lamelles' ? ((y - b0) % 2 ? 'i' : (x % 2 ? 'I' : 'i')) : K.armure === 'cuir' ? ((m === 'R' || m === 'S') ? 'W' : 'w') : ((x + y) % 3 === 0 ? 'r' : m); } }
     if (K.echarpe && !kneel) { const pts = key === 'd' ? [[5, 0], [6, 0], [6, 1], [7, 1], [7, 2], [8, 2], [8, 3], [9, 3]] : key === 'l' ? [[4, 1], [5, 1], [5, 2], [6, 2], [6, 3]] : [];
       pts.forEach(([x, dy]) => { if ('RrSs'.indexOf(g[b0 + dy][x]) >= 0) g[b0 + dy][x] = 'A'; }); }
     // attributs tenus ou portés (un ou plusieurs)
     const hip = b0 + 5;
     for (const it of [].concat(K.item || [])) {
-    if (it === 'bouclier') { const x0 = key === 'd' ? 0 : key === 'u' ? 12 : 9; [[1, -2], [2, -2], [0, -1], [1, -1], [2, -1], [3, -1], [0, 0], [3, 0], [0, 1], [1, 1], [2, 1], [3, 1], [1, 2], [2, 2]].forEach(([dx, dy]) => put(x0 + dx, hip + dy, (dx + dy) % 2 ? 'i' : 'I')); put(x0 + 1, hip, 'A'); put(x0 + 2, hip, 'a'); }
+    // le bouclier se porte du côté libre : à droite de l'image quand la main droite tient une hampe
+    const hampe = [].concat(K.item || []).some(q => ['lance', 'baton', 'masse', 'arc', 'durra', 'etendard', 'calame'].indexOf(q) >= 0), ecuX = key === 'd' ? (hampe ? 12 : 0) : key === 'u' ? (hampe ? 0 : 12) : 9;
+    if (it === 'bouclier' || it === 'bouclier_cuir' || it === 'bouclier_bois') { const x0 = ecuX, fer = it === 'bouclier', m1 = fer ? 'I' : 'W', m2 = fer ? 'i' : 'w';
+      [[1, -2], [2, -2], [0, -1], [1, -1], [2, -1], [3, -1], [0, 0], [3, 0], [0, 1], [1, 1], [2, 1], [3, 1], [1, 2], [2, 2]].forEach(([dx, dy]) => put(x0 + dx, hip + dy, it === 'bouclier_bois' && (dy === -2 || dy === 2 || dx === 0 || dx === 3) ? 'i' : (dx + dy) % 2 ? m2 : m1));
+      put(x0 + 1, hip, it === 'bouclier_bois' ? 'I' : 'A'); put(x0 + 2, hip, it === 'bouclier_bois' ? 'i' : 'a'); }
+    if (it === 'pavois') { const x0 = ecuX; for (let dy = -4; dy <= 3; dy++) for (let dx = 0; dx < 4; dx++) { if ((dy === -4 || dy === 3) && (dx === 0 || dx === 3)) continue; put(x0 + dx, hip + dy, (dx === 0 || dx === 3 || dy === -4 || dy === 3) ? 'i' : 'X'); } put(x0 + 1, hip - 1, 'I'); put(x0 + 2, hip - 1, 'I'); put(x0 + 1, hip, 'I'); put(x0 + 2, hip, 'i'); }
+    if (it === 'arc' && key !== 'u') { const x = key === 'd' ? 0 : 0; [[2, -6], [1, -5], [1, -4], [0, -3], [0, -2], [0, -1], [0, 0], [0, 1], [1, 2], [1, 3], [2, 4]].forEach(([dx, dy]) => put(x + dx, hip + dy, dy === -1 || dy === 0 ? 'w' : 'W')); for (let dy = -5; dy <= 3; dy++) if (g[hip + dy] && g[hip + dy][x + 2] === '.') put(x + 2, hip + dy, 'P'); }
+    if (it === 'masse') { const x = key === 'd' ? 1 : key === 'u' ? 14 : 2; for (let y = hip - 4; y < hip + 3; y++) put(x, y, y % 4 === 1 ? 'w' : 'W'); [[-1, -7], [0, -7], [1, -7], [-1, -6], [0, -6], [1, -6], [-1, -5], [0, -5], [1, -5]].forEach(([dx, dy]) => put(x + dx, hip + dy, (dx + dy) % 2 ? 'i' : 'I')); }
+    if (it === 'dague' && key !== 'u') { if (key === 'd') { put(10, hip - 1, 'w'); put(11, hip, 'I'); put(12, hip + 1, 'I'); put(12, hip + 2, 'i'); } else { put(3, hip - 1, 'w'); put(2, hip, 'I'); put(1, hip + 1, 'I'); put(0, hip + 2, 'i'); } }
+    if (it === 'calame' && key !== 'u') { const x = key === 'd' ? 2 : 3; put(x, hip - 2, 'W'); put(x, hip - 1, 'W'); put(x - 1, hip, 'W'); put(x - 1, hip + 1, 'f'); }
+    if (it === 'tablette' && key !== 'u') { const x = key === 'd' ? 12 : 9; put(x, hip - 2, 'w'); put(x + 1, hip - 2, 'w'); for (let dy = -1; dy <= 1; dy++) { put(x, hip + dy, 'P'); put(x + 1, hip + dy, 'P'); } put(x, hip + 2, 'W'); put(x + 1, hip + 2, 'W'); }
     if (it === 'outre' && key !== 'u') { const x = key === 'd' ? 10 : 6; put(x, hip - 1, 'w'); put(x, hip, 'W'); put(x + 1, hip, 'W'); put(x, hip + 1, 'W'); put(x + 1, hip + 1, 'w'); }
     if (it === 'etendard') { const x = key === 'd' ? 1 : key === 'u' ? 14 : 2, sx = key === 'u' ? -1 : 1; for (let y = 1; y < H - 1; y++) put(x, y, y % 5 === 2 ? 'w' : 'W'); put(x, 0, 'I'); for (let j = 0; j < 4; j++) for (let k2 = 1; k2 <= 4 - (j === 3 ? 2 : 0); k2++) put(x + sx * k2, 1 + j, (j + k2) % 3 ? 'A' : 'a'); }
     if (it === 'baton' || it === 'lance') { const x = key === 'd' ? 1 : key === 'u' ? 14 : 2, top = it === 'lance' ? 1 : (kneel ? 9 : 5); for (let y = top; y < H - 1; y++) put(x, y, y % 5 === 2 ? 'w' : 'W'); if (it === 'lance') { put(x, 0, 'I'); put(x, 1, 'I'); put(x, 2, 'i'); } }

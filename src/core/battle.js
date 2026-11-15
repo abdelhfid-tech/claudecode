@@ -8,6 +8,8 @@
 
   I.calc = {
     hero(def, lvl) { const r = D.ROLES[def.role], b = base(lvl); return { hp: Math.round(b.hp * r.hp), sp: Math.round(b.sp * r.sp), atk: b.atk * r.atk, mag: b.atk * r.mag, def: b.def * r.def, spd: b.spd * r.spd }; },
+    // le même, avec ce que le héros porte : l'équipement ajoute des pourcentages (gear.js)
+    of(h, eq) { const st = I.calc.hero(h.def, h.lvl), m = I.gear ? I.gear.mods(h, eq) : null; if (!m) return st; const f = k => 1 + m[k] / 100; return { hp: Math.round(st.hp * f('hp')), sp: Math.round(st.sp * f('sp')), atk: st.atk * f('atk'), mag: st.mag * f('mag'), def: st.def * f('def'), spd: st.spd * f('spd') }; },
     enemy(def, nHeroes, nFoes) {
       const t0 = TIER[def.tier], early = def.tier === 'boss' && def.lvl <= 4, t = early ? Object.assign({}, t0, { hp: t0.hp * 0.75, atk: t0.atk * 0.9 }) : t0, b = base(def.lvl), ps = (nHeroes >= 3 ? 1 : nHeroes === 2 ? 0.64 : 0.42) * (def.tier === 'elite' && def.lvl <= 3 ? 0.85 : 1), crowd = nFoes >= 3 ? 0.85 : 1;
       return { hp: Math.round(b.hp * t.hp * ps * crowd), atk: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.84 : 1), mag: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.84 : 1), def: b.def * t.def, spd: b.spd * t.spd };
@@ -65,9 +67,9 @@
   const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
   B.relayout = function () { if (!C) return; C.all.forEach(e => { e.x = bx(e.x0); }); refresh(); };
   function mkHero(id, i) {
-    const h = I.world.hero(id), st = I.calc.hero(h.def, h.lvl);
+    const h = I.world.hero(id), st = I.calc.of(h);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
-      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(Object.assign({ kind: 'compagnon' }, h.def.look)), color: D.ELEMENTS[h.def.el].color };
+      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) };
   }
   // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
   function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, W.hero(W.party[0]).lvl) }) : d; }
@@ -98,7 +100,7 @@
     C = null; if (mark !== undefined) I.input.trim(mark);
     I.setScene(prev || I.world); G.clearParts();
     const W = I.world; if ((prev || W) === W && W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; I.audio.music(env.music || 'silence'); }
-    const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0;
+    const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0; document.body.classList.remove('noir');
   };
 
   async function run(opts, first) {
@@ -107,7 +109,7 @@
     C = { opts, hue, bg: paintBg(opts.bg || 'noos', hue), all: [], t: 0, cursor: null, log: [], turn: 0 };
     W.party.forEach((id, i) => C.all.push(mkHero(id, i)));
     const nH = C.all.length; opts.group.forEach((id, i) => C.all.push(mkFoe(id, i, opts.group.length, nH)));
-    C.all.forEach(e => { e.ct = 1000 / eff(e, 'spd') * (0.6 + Math.random() * 0.4) * (e.side === 'foe' ? 1.15 : 1); });
+    C.all.forEach(e => { e.ct = 1000 / eff(e, 'spd') * (0.6 + Math.random() * 0.4) * (e.side === 'foe' ? 1.15 : 1) * (e.gear && e.gear.prime ? 0.55 : 1); });
     if (first) { I.audio.sfx('glitch'); G.flash('#fff'); await S.fade('out', 220); }
     I.setScene(B.scene); B.active = true; G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue, n: 0 };
     document.body.classList.add('in-battle'); $('#hud').hidden = true; $('#toasts').innerHTML = ''; $('#battle').hidden = false; refresh();
@@ -165,7 +167,7 @@
     if (result === 'win') { I.audio.afterJingle = C.prevMus || null; I.audio.music('victoire'); } else I.audio.music('deuil');
     if (result === 'win') await victory(); else await defeat();
     // retour
-    C.all.filter(e => e.side === 'hero').forEach(e => { const h = e.ref, st = I.calc.hero(h.def, h.lvl); h.hp = Math.min(st.hp, Math.max(1, e.hp) + Math.round(st.hp * 0.35)); h.sp = Math.min(st.sp, e.sp + Math.round(st.sp * 0.35)); h.sakina = e.sakina; });
+    C.all.filter(e => e.side === 'hero').forEach(e => { const h = e.ref, st = I.calc.of(h); h.hp = Math.min(st.hp, Math.max(1, e.hp) + Math.round(st.hp * 0.35)); h.sp = Math.min(st.sp, e.sp + Math.round(st.sp * 0.35)); h.sakina = e.sakina; });
     await S.fade('out', 260);
     $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = '';
     I.setScene(prev); G.clearParts();
@@ -243,10 +245,10 @@
       const desc = I.el('div', 'mdesc'); if (o.desc) box.appendChild(desc);
       let idx = o.start || 0; const btns = [];
       const sel = i => { idx = (i + items.length) % items.length; btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); if (o.desc) desc.innerHTML = items[idx].desc || ''; if (o.onSel) o.onSel(idx); btns[idx].scrollIntoView && btns[idx].scrollIntoView({ block: 'nearest' }); };
-      const done = v => { I.input.pop(h); res(v); };
+      const done = v => { I.input.pop(h); res(v); }, ne = performance.now();
       items.forEach((it, i) => {
         const b = I.el('button', 'mi' + (it.disabled ? ' off' : '') + (it.cls ? ' ' + it.cls : ''), `<span>${it.label}</span>${it.sub ? `<small>${it.sub}</small>` : ''}`); b.type = 'button';
-        b.onclick = ev => { ev.stopPropagation(); sel(i); if (!it.disabled) { I.audio.sfx('ok'); done(i); } else I.audio.sfx('dark'); };
+        b.onclick = ev => { ev.stopPropagation(); if (performance.now() - ne < 250) return; sel(i); if (!it.disabled) { I.audio.sfx('ok'); done(i); } else I.audio.sfx('dark'); }; // pas de toucher fantôme
         b.onmouseenter = () => sel(i); btns.push(b); list.appendChild(b);
       });
       if (o.back) { const bk = I.el('button', 'mback', '◂ Retour'); bk.type = 'button'; bk.onclick = ev => { ev.stopPropagation(); done(-1); }; box.appendChild(bk); }
@@ -286,7 +288,7 @@
       const wire = () => box.querySelectorAll('.nb').forEach(b => b.onclick = ev => { ev.stopPropagation(); setBoost(+b.dataset.d); });
       const lum = lightOf(h);
       const items = [
-        { label: `${elc('fer')} Frapper`, sub: boost ? `${1 + boost} coups` : 'Force' },
+        { label: `${elc('fer')} Frapper`, sub: boost ? `${1 + boost} coups` : (h.gear.arme ? D.GEAR_TYPES[h.gear.arme.t].name : 'Force') },
         { label: `${elc(lum.el)} Éclairer`, sub: D.ELEMENTS[lum.el].name },
         { label: '✦ Vertus', sub: `Souffle ${h.sp}`, disabled: !!h.st.doute },
         { label: '◍ Objets' },
@@ -337,7 +339,9 @@
     const col = sk.el ? D.ELEMENTS[sk.el].color : (hero ? e.color : `hsl(${e.def.hue},90%,65%)`), dir = hero ? -1 : 1;
     // élan vers l'avant
     await tween(e, 'ox', dir * 14, 110);
-    const hits = (sk.hits || 1) + (sk.basic && hero ? boost : 0), mult = sk.basic ? 1 : 1 + 0.5 * boost;
+    // l'arme en main : une dague frappe parfois deux fois, une masse étourdit parfois
+    const fer = hero && sk.basic && sk.el === 'fer', vif = fer && e.gear.vif && Math.random() < e.gear.vif; if (vif) floater(e, 'Coup double', 'info');
+    const hits = (sk.hits || 1) + (sk.basic && hero ? boost : 0) + (vif ? 1 : 0), mult = sk.basic ? 1 : 1 + 0.5 * boost;
     let targets = cmd.targets.filter(t => t.alive || sk.revive);
     if (sk.pow) {
       for (let hI = 0; hI < hits; hI++) {
@@ -346,6 +350,7 @@
         I.audio.sfx(sk.el === 'fer' ? (hero ? 'slash' : 'hit') : hero ? 'light' : 'dark');
         await I.sleep(hits > 1 ? 190 : 300);
       }
+      if (fer && e.gear.choc) for (const t of cmd.targets) if (t.alive && t.hp > 0) applyFx(e, t, { st: 'stun', chance: e.gear.choc }, 0);
       for (const t of cmd.targets) if (t.alive && t.hp <= 0) await kill(t);
       for (const t of cmd.targets) if (t.side === 'foe' && t.alive) await checkPhase(t);
     } else { fx(sk.anim || (sk.heal ? 'heal' : 'glyph'), sk.target === 'self' ? e : targets[0] || e, col); I.audio.sfx(sk.heal ? 'heal' : hero ? 'light' : 'dark'); }
@@ -371,13 +376,16 @@
     const immune = t.side === 'foe' && (t.def.immune || []).includes(el), weak = t.side === 'foe' && t.def.weak.includes(el);
     if (t.side === 'foe') t.tried[el] = true;
     if (immune) { t.known[el] = 'x'; floater(t, 'Sans effet', 'info'); fx('guard', t, '#889'); return; }
-    let d = stat * sk.pow * mult * 2.2 * (50 / (50 + eff(t, 'df'))) * (0.92 + Math.random() * 0.16);
+    // l'équipement : une lance perce une part de la garde ; un bouclier pare parfois un coup de fer
+    const gA = a.gear || {}, gT = t.gear || {}, perce = el === 'fer' && gA.perce ? 1 - gA.perce : 1;
+    let d = stat * sk.pow * mult * 2.2 * (50 / (50 + eff(t, 'df') * perce)) * (0.92 + Math.random() * 0.16);
+    const pare = el === 'fer' && gT.parade && !t.st.stun && Math.random() < gT.parade; if (pare) d *= 0.5;
     if (weak) d *= 1.3; if (t.broken) d *= 1.5; if (t.st.garde) d *= 0.5;
     d *= a.side === 'hero' ? (C.pLien || 1) * (1 - 0.08 * (C.lack || 0)) : (C.pJust || 1) * (1 + 0.08 * (C.lack || 0));
     d = Math.max(1, Math.round(d));
     t.hp = Math.max(0, t.hp - d); t.flash = 1; t.shake = 0.25;
-    floater(t, d, 'dmg' + (weak ? ' weak' : '') + (t.side === 'hero' ? ' hero' : ''));
-    fx(sk.anim || (el === 'fer' ? 'slash' : 'light'), t, col);
+    floater(t, d, 'dmg' + (weak ? ' weak' : '') + (t.side === 'hero' ? ' hero' : '')); if (pare) { floater(t, 'Paré', 'info'); fx('guard', t, '#c3c8d2'); }
+    fx((sk.basic && el === 'fer' && gA.anim) || sk.anim || (el === 'fer' ? 'slash' : 'light'), t, col, a);
     if (t.side === 'hero') { t.sakina = Math.min(100, t.sakina + d / t.max.hp * 70); G.shake(160); C.minHp = Math.min(C.minHp === undefined ? 1 : C.minHp, t.hp / t.max.hp); if (t.hp <= 0) C.kos = (C.kos || 0) + 1; }
     if (weak) {
       t.known[el] = true; if (a.side === 'hero') a.sakina = Math.min(100, a.sakina + 7);
@@ -391,7 +399,7 @@
     const turns = (f.turns || 3) + (a.side === 'hero' ? boost : 0);
     switch (f.st) {
       case 'atk': case 'mag': case 'def': case 'spd': { const k = f.st === 'def' ? 'df' : f.st; t.buffs[k] = { v: f.v, t: turns }; floater(t, `${STN[f.st]} ${f.v > 0 ? '▲' : '▼'}`, f.v > 0 ? 'buff' : 'debuff'); break; }
-      case 'stun': if (t.side === 'foe' && t.def.tier === 'boss' && t.stunned) break; t.st.stun = 1; t.stunned = true; floater(t, 'Étourdi', 'debuff'); break;
+      case 'stun': if (t.side === 'foe' && t.def.tier === 'boss' && t.stunned) break; if (t.gear && t.gear.ferme && Math.random() < t.gear.ferme) { floater(t, 'Tient bon', 'buff'); break; } t.st.stun = 1; t.stunned = true; floater(t, 'Étourdi', 'debuff'); break;
       case 'doute': t.st.doute = f.turns || 2; floater(t, 'Doute', 'debuff'); break;
       case 'waswas': t.st.waswas = turns; floater(t, 'Waswâs', 'debuff'); break;
       case 'regen': t.st.regen = turns; floater(t, 'Régén.', 'buff'); break;
@@ -429,7 +437,7 @@
     const W = I.world, lines = [];
     W.party.forEach(id => { const h = W.hero(id); h.xp += xp; let up = false;
       while (h.xp >= I.calc.xpNeed(h.lvl) && h.lvl < 12) { h.xp -= I.calc.xpNeed(h.lvl); h.lvl++; up = true; h.def.skills.filter(k => k.lvl === h.lvl).forEach(k => lines.push(`<li><b>${h.def.name}</b> apprend <em>${k.name}</em></li>`)); }
-      if (up) { lines.unshift(`<li><b>${h.def.name}</b> atteint le niveau <b>${h.lvl}</b></li>`); const st = I.calc.hero(h.def, h.lvl); h.hp = st.hp; h.sp = st.sp; } });
+      if (up) { lines.unshift(`<li><b>${h.def.name}</b> atteint le niveau <b>${h.lvl}</b></li>`); const st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp; } });
     W.persistHeroes(); return lines;
   };
   async function victory() {
@@ -439,7 +447,7 @@
     C.all.filter(e => e.side === 'hero').forEach(e => {
       const h = e.ref; h.xp += xp; let up = false;
       while (h.xp >= I.calc.xpNeed(h.lvl) && h.lvl < 12) { h.xp -= I.calc.xpNeed(h.lvl); h.lvl++; up = true; h.def.skills.filter(k => k.lvl === h.lvl).forEach(k => lines.push(`<li><b>${h.def.name}</b> apprend <em>${k.name}</em></li>`)); }
-      if (up) { lines.unshift(`<li><b>${h.def.name}</b> atteint le niveau <b>${h.lvl}</b></li>`); const st = I.calc.hero(h.def, h.lvl); e.max = { hp: st.hp, sp: st.sp }; e.hp = st.hp; e.sp = st.sp; }
+      if (up) { lines.unshift(`<li><b>${h.def.name}</b> atteint le niveau <b>${h.lvl}</b></li>`); const st = I.calc.of(h); e.max = { hp: st.hp, sp: st.sp }; e.hp = st.hp; e.sp = st.sp; }
     });
     let drop = '';
     if (C.opts.boss || Math.random() < 0.4) { const k = C.opts.boss ? I.pick(['musc', 'lait', 'eau']) : I.pick(['dattes', 'dattes', 'pain', 'eau', 'miel', 'siwak']); sv.items[k] = (sv.items[k] || 0) + 1; drop = `<li>Trouvé : <b>${D.ITEMS[k].name}</b></li>`; }
@@ -456,9 +464,13 @@
   /* ================= présentation ================= */
   function tween(e, k, to, ms) { const from = e[k], t0 = performance.now(); ms = ms / I.speed; return new Promise(res => { (function st() { const f = Math.min(1, (performance.now() - t0) / ms); e[k] = from + (to - from) * f; if (f < 1) requestAnimationFrame(st); else res(); })(); }); }
   function pos(e) { return { x: e.x + e.ox, y: e.y - (e.side === 'foe' ? e.size * 0.55 : 26) }; }
-  function fx(kind, e, col) {
+  function fx(kind, e, col, from) {
     const p = pos(e), x = p.x, y = p.y;
     switch (kind) {
+      // coups portés avec l'arme en main : estoc de lance, flèche, choc de masse ou de bâton
+      case 'thrust': { const s = from && from.x < x ? 1 : -1; for (let i = 0; i < 14; i++) G.spawn({ x: x - s * (40 - i * 3), y: y + (Math.random() - 0.5) * 3, vx: s * (200 + Math.random() * 140), vy: (Math.random() - 0.5) * 16, life: 0.24, size: 1.2, color: i % 3 ? '#fff' : col, type: 'spark' }); G.spawn({ x, y, type: 'ring', r0: 3, r1: 18, life: 0.3, size: 2, color: '#fff' }); break; }
+      case 'arrow': { const fp = from ? pos(from) : { x: x + 120, y: y }, T = 0.16; for (let i = 0; i < 8; i++) G.spawn({ x: fp.x + (x - fp.x) * i * 0.035, y: fp.y + (y - fp.y) * i * 0.035, vx: (x - fp.x) / T, vy: (y - fp.y) / T, life: T, size: 1.1, color: i ? '#e6dcc4' : '#fff', type: 'spark' }); setTimeout(() => { G.spawn({ x, y, type: 'ring', r0: 2, r1: 14, life: 0.3, size: 2, color: '#fff' }); for (let i = 0; i < 7; i++) G.spawn({ x, y, vx: (Math.random() - 0.5) * 150, vy: (Math.random() - 0.5) * 150, life: 0.3, size: 0.9, color: col, type: 'spark' }); }, T * 1000 / I.speed); break; }
+      case 'smash': G.spawn({ x, y: y + 16, type: 'ring', r0: 6, r1: 36, life: 0.36, size: 3, color: '#fff' }); for (let i = 0; i < 16; i++) G.spawn({ x: x + (Math.random() - 0.5) * 22, y: y + 12, vx: (Math.random() - 0.5) * 220, vy: -60 - Math.random() * 170, grav: 520, life: 0.5, size: 1.2, color: i % 2 ? col : '#e6dcc4', type: 'spark' }); G.shake(150); break;
       case 'slash': G.spawn({ x, y, type: 'arc', r0: 18, a0: -2.4, sweep: 2.6, life: 0.28, size: 2, color: col }); G.spawn({ x, y, type: 'arc', r0: 14, a0: 0.7, sweep: 2.4, life: 0.32, size: 1.5, color: '#fff' }); for (let i = 0; i < 10; i++) G.spawn({ x, y, vx: (Math.random() - 0.5) * 260, vy: (Math.random() - 0.5) * 200, life: 0.35, size: 0.9, color: col, type: 'spark' }); break;
       case 'light': G.spawn({ x, y: y + 22, type: 'pillar', w: 12, life: 0.5, color: col, a: 0.8 }); G.spawn({ x, y, type: 'ring', r0: 4, r1: 30, life: 0.45, size: 2, color: col }); G.spawn({ x, y, type: 'glow', size: 5, life: 0.4, color: col }); break;
       case 'burst': for (let i = 0; i < 26; i++) { const a = Math.random() * 6.28, v = 80 + Math.random() * 200; G.spawn({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.5, size: 1.1, color: i % 3 ? col : '#fff', type: 'spark' }); } G.spawn({ x, y, type: 'ring', r0: 6, r1: 44, life: 0.4, size: 3, color: col }); break;

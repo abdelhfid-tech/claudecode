@@ -338,6 +338,7 @@ ISNAD.registerSaga({
         { id: 'f_palm', at: 'palmeraie', group: ['murmure', 'murmure'], bg: 'ville' }
       ],
       chests: [
+        { at: ['halle', 1, 1], gear: 'calame_encrier' },
         { at: ['souk', 1, 1], item: 'dattes', n: 2 },
         { at: ['priere', 1, 1], codex: 'imamat' },
         { map: 'noos', at: 'faille', item: 'musc', n: 1 }
@@ -537,6 +538,7 @@ ISNAD.registerSaga({
         { id: 'f_n2', map: 'noos', at: 'noeud1', group: ['mot_clan', 'mot_clan', 'reniement'], bg: 'noos' }
       ],
       chests: [
+        { at: ['palmeraie', 1, 1], gear: 'turban_voyage' },
         { at: ['puits', 1, 0], item: 'eau', n: 1 },
         { at: ['souk', 3, -1], codex: 'registre_courtier' },
         { map: 'desert', at: ['oasis', 1, 1], item: 'pain', n: 2 },
@@ -762,6 +764,7 @@ ISNAD.registerSaga({
         { id: 'f_camp', at: 'enclos', group: ['reniement', 'reniement'], bg: 'camp' }
       ],
       chests: [
+        { at: ['feu', 1, 1], gear: 'baton_acacia' },
         { at: ['tentes', 1, 1], item: 'lait', n: 1 },
         { map: 'medine', at: ['puits', 1, 0], item: 'musc', n: 1 },
         { map: 'noos', at: 'faille', item: 'miel', n: 1 }

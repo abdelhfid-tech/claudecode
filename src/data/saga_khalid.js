@@ -342,6 +342,7 @@ ISNAD.registerSaga({
         { id: 'f3', at: 'ruines', group: ['murmure', 'murmure', 'murmure'], bg: 'desert' }
       ],
       chests: [
+        { at: ['rochers', 1, 1], gear: 'arc_nab' },
         { at: ['ruines', 1, 1], item: 'dattes', n: 2 },
         { at: ['dunes', 2, -1], item: 'siwak', n: 1 },
         { at: ['ruines', -1, 1], codex: 'routes_desert' },
@@ -540,6 +541,7 @@ ISNAD.registerSaga({
         { id: 'f4', map: 'noos', at: 'faille', group: ['decompte', 'decompte', 'decompte'], bg: 'noos' }
       ],
       chests: [
+        { at: ['lignes', 1, 1], gear: 'lance_khatt' },
         { at: ['tentes', 2, 0], item: 'pain', n: 2 },
         { at: ['etendard', -1, 1], item: 'musc', n: 1 },
         { map: 'noos', at: 'miroir', item: 'lait', n: 1 }
@@ -715,6 +717,7 @@ ISNAD.registerSaga({
         { id: 'f3', map: 'noos', at: 'faille', group: ['echo', 'echo', 'echo'], bg: 'noos' }
       ],
       chests: [
+        { at: ['marche', 1, 1], gear: 'epee_inde' },
         { at: ['palais', 1, 1], item: 'eau', n: 2 },
         { at: ['jardin', 1, 0], item: 'miel', n: 1 },
         { at: ['fontaine', 2, 0], codex: 'comptes_intendant' },

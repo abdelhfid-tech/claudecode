@@ -66,6 +66,23 @@ s'affiche au-dessus d'eux, et la boîte de dialogue montre la silhouette de celu
 Ces tenues sont une **convention de dessin**. Elles ne prétendent pas restituer un costume attesté,
 et ne décrivent aucun trait physique : ni taille, ni corpulence, ni visage (exigence 2).
 
+### L'équipement (demande du décideur : « variété dans les armes, armures, boucliers, casques »)
+
+- **Une icône par pièce**, 16 × 16, dessinée par le code comme le reste : trois tons de la matière
+  (fer, acier, bois, cuir, laine, lin), un accent, un liseré sombre. La forme dit la famille, la
+  couleur dit la pièce.
+- **Sur la silhouette**, en combat et dans la halte seulement : l'arme en main (épée au côté, lance,
+  arc, masse, dague, bâton, calame), le bouclier (cuir, bois, ferré, grand bouclier), le casque (cuir,
+  fer, enturbanné, à bandes, coiffe de mailles), l'armure sur le buste (cuir, toile piquée, mailles,
+  lamelles). Les étoffes ne changent pas le dessin : chacun garde la coiffe et le manteau qui le
+  font reconnaître.
+- **Dans le récit**, la silhouette reste celle du fichier de saga : on n'arme pas un Compagnon dans une
+  scène où rien ne l'atteste.
+- **Aucun symbole.** Ni inscription, ni emblème, ni rien qui dessine une croix ou un autre signe
+  religieux : bandes d'un casque sur les côtés, jamais au milieu ; bosse d'un bouclier ronde, sans tige.
+- **Les gens d'armes sans nom** varient comme les autres : casque, arme, bouclier et armure se
+  déduisent de qui ils sont, toujours les mêmes pour un même personnage.
+
 ## Version précédente : personnages en blocs, décors sublimés (demande du décideur)
 
 Les personnages sont faits de blocs : une tête cubique d'étoffe, un corps, deux bras, deux jambes, avec

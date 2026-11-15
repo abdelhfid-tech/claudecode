@@ -150,7 +150,7 @@ ISNAD.registerSaga({
         { id: 'gamin', name: 'Enfant', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Monsieur, c’est vrai qu’avant le ciel était noir, la nuit, avec des points dedans ?']] },
         { id: 'yunus_n', name: 'Maître Yûnus', hero: 'yunus', map: 'archives', at: 'bureau', talk: [['say', 'yunus_n', 'La Chaîne t’attend au fond de la salle, Idris.']] }
       ],
-      chests: [{ map: 'archives', at: ['rayonnages', 2, 1], item: 'dattes', n: 2 }],
+      chests: [{ map: 'archives', at: ['bureau', 1, 1], gear: 'lampe' }, { map: 'archives', at: ['rayonnages', 2, 1], item: 'dattes', n: 2 }],
       intro: [
         ['title', 'ISNAD', 'An 1508 de l’Hégire · 2084 · Cité-Miroir'],
         ['nar', 'Dans la Cité-Miroir, on ne lève plus les yeux. Le ciel est un écran, et l’écran regarde en retour.'],
@@ -223,7 +223,7 @@ ISNAD.registerSaga({
         { id: 'f2', map: 'noos', at: 'noeud2', group: ['score', 'marque'], bg: 'cite' },
         { id: 'f3', map: 'noos', at: 'noeud3', group: ['flux'], bg: 'cite', boss: true }
       ],
-      chests: [{ map: 'noos', at: 'faille', item: 'musc', n: 2 }, { map: 'noos', at: 'miroir', item: 'lait', n: 2 }, { map: 'noos', at: ['noeud3', 2, 0], item: 'eau', n: 2 }],
+      chests: [{ map: 'noos', at: ['noeud1', 1, 1], gear: 'epee_maitre' }, { map: 'noos', at: 'faille', item: 'musc', n: 2 }, { map: 'noos', at: 'miroir', item: 'lait', n: 2 }, { map: 'noos', at: ['noeud3', 2, 0], item: 'eau', n: 2 }],
       intro: [
         ['title', 'Le Cœur de l’Agrégor', 'An 1508 de l’Hégire · Cité-Miroir'],
         ['nar', 'Idris rouvre les yeux. Cinq Lumières brûlent en lui, et aucune n’est la sienne : on les lui a confiées.'],

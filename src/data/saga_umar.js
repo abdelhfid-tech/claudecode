@@ -358,6 +358,7 @@ ISNAD.registerSaga({
         { id: 'f3', map: 'noos', at: 'noeud2', group: ['cendre', 'cendre'], bg: 'noos' }
       ],
       chests: [
+        { at: ['halle', 1, 1], gear: 'manteau_laine' },
         { at: ['souk', 2, 1], item: 'dattes', n: 2 },
         { at: ['souk', -1, 1], codex: 'registre_farine' },
         { map: 'noos', at: ['faille', 0, 0], item: 'musc', n: 1 }
@@ -569,6 +570,7 @@ ISNAD.registerSaga({
         { id: 'f_cardo', map: 'romaine', at: 'cardo', group: ['faste', 'mirage'], bg: 'romaine' }
       ],
       chests: [
+        { map: 'romaine', at: ['fontaine', 1, 1], gear: 'rondache' },
         { at: ['oasis', -1, 1], item: 'eau', n: 1 },
         { map: 'romaine', at: ['jardin', 0, 1], item: 'miel', n: 1 },
         { map: 'romaine', at: ['quartier', 1, 1], codex: 'bannissement' },
@@ -774,6 +776,7 @@ ISNAD.registerSaga({
         { id: 'f_jardin', map: 'palais', at: 'jardin', group: ['reflet', 'reflet', 'reflet'], bg: 'palais' }
       ],
       chests: [
+        { map: 'palais', at: ['jardin', 1, 0], gear: 'ecritoire' },
         { at: ['palmeraie', 0, 1], item: 'pain', n: 1 },
         { map: 'palais', at: ['tresor', 0, 0], item: 'lait', n: 1 },
         { map: 'palais', at: ['colonnade', 1, 0], item: 'musc', n: 1 }

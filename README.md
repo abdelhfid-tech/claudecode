@@ -78,6 +78,22 @@ dans la Cité-Miroir, qui rend la sixième Lumière, la Patience (*sabr*).
 
 Tout cela est une fiction de jeu, dite comme telle : ni relique, ni pouvoir, ni récit historique.
 
+## L'équipement
+
+- **Quatre emplacements** par compagnon : main droite (épée, lance, arc, dague, masse, bâton ou calame),
+  main gauche (bouclier, ou un outil pour qui n'en porte pas), tête (turban, calotte ou casque), corps
+  (étoffe, cuir ou armure). Cinquante-trois pièces, chacune avec son icône.
+- **Chaque rôle a ses pièces**, et chaque famille son caractère : une lance perce la garde, une dague
+  frappe parfois deux fois, un arc tire le premier, une masse étourdit, un bouclier pare, un casque évite
+  d'être étourdi ; le fer protège mais ralentit.
+- **Coffres et comptoirs.** Un coffre par chapitre ; six comptoirs dont les étals diffèrent selon le lieu.
+  La réserve est commune à toute la Chaîne.
+- **On voit ce que l'on porte** en combat et dans la halte, où chaque pièce montre ce qu'elle change
+  avant d'être choisie ; « Au mieux » habille tout le groupe d'un geste.
+
+Ce sont des objets ordinaires de l'époque : une convention de jeu, sans relique ni inscription. Le jeu
+ne dit pas qui portait quoi, et le fer ne remplace jamais la provision du cœur.
+
 ## Routes : étoiles, caravanes, justice
 
 - **S'orienter aux étoiles.** Un cadran montre huit caps nommés en arabe par l'étoile qui s'y lève ou s'y
@@ -144,6 +160,7 @@ node tools/smoke.js auto        # joue la partie entière automatiquement dans C
 node tools/smoke.js walk        # même partie, mais le héros marche réellement (vraies collisions)
 node tools/smoke.js tap         # même partie, en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
 node tools/smoke.js wrong       # choisit d'abord toutes les mauvaises réponses et perd chaque pourparler
+node tools/doigt.js             # joue le prologue au doigt, sans raccourci, et vérifie que tout ce que le jeu attend se voit
 node tools/validate-music.js    # vérifie les vingt et une pistes
 node tools/smoke.js shots       # captures d'écran bureau et mobile dans .smoke/
 node tools/promo.js all         # livret du joueur et planches : captures, sprites, assemblage, export

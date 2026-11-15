@@ -167,7 +167,7 @@ ISNAD.registerSaga({
           ['say', 'imam', "Prie d'abord. Tu décideras ensuite. On ne tranche pas bien avec un cœur qui court."]
         ] }
       ],
-      chests: [{ at: ['greniers', 1, 0], item: 'dattes', n: 2 }, { at: ['jardin', 1, 1], item: 'eau', n: 1 }],
+      chests: [{ at: ['salle', 1, 1], gear: 'burnous' }, { at: ['greniers', 1, 0], item: 'dattes', n: 2 }, { at: ['jardin', 1, 1], item: 'eau', n: 1 }],
       intro: [
         ['flag', 'v1_vrai', false], ['flag', 'v1_tu', false], ['flag', 'v1_pacte', false],
         ['title', 'La Nuit du père', 'Veillée de la Véracité'],
@@ -307,7 +307,7 @@ ISNAD.registerSaga({
         ] },
         { id: 'meksa', name: 'Amghar Meksa', at: 'cour', hidden: true, look: { kind: 'berbere', robe: '#3f5a3a', head: '#e6dcc4', cloak: '#2a2a3a' } }
       ],
-      chests: [{ at: ['tour', 1, 1], item: 'miel', n: 1 }, { at: ['greniers', 0, 1], item: 'pain', n: 2 }],
+      chests: [{ at: ['remparts', 1, 1], gear: 'bouclier_lamt' }, { at: ['tour', 1, 1], item: 'miel', n: 1 }, { at: ['greniers', 0, 1], item: 'pain', n: 2 }],
       intro: [
         ['flag', 'v2_egale', false], ['flag', 'v2_meksa', false],
         ['title', 'La Sentinelle', 'Veillée de la Justice'],
@@ -445,7 +445,7 @@ ISNAD.registerSaga({
         { id: 'warsen', name: "L'ancien Warsen", map: 'desert', at: 'oasis', look: { kind: 'ancien', robe: '#7a6a4a', head: '#e6dcc4' },
           talk: [['say', 'warsen', "Parle, Caïd. Nous avons soif, mais nous avons encore des oreilles."]] }
       ],
-      chests: [{ at: ['palmeraie', 1, 0], item: 'dattes', n: 2 }, { map: 'desert', at: ['oasis', -2, 1], item: 'eau', n: 2 }],
+      chests: [{ at: ['souk', 1, 1], gear: 'cheche' }, { at: ['palmeraie', 1, 0], item: 'dattes', n: 2 }, { map: 'desert', at: ['oasis', -2, 1], item: 'eau', n: 2 }],
       intro: [
         ['flag', 'v3_pacte', false], ['flag', 'v3_rengaine', false], ['flag', 'v3_farrokh', false],
         ['title', 'Le Général et la Tour', 'Veillée du Courage'],
@@ -584,7 +584,7 @@ ISNAD.registerSaga({
         { id: 'chambellan', name: 'Maymûn, le chambellan', at: ['salle', 2, 0], look: { kind: 'marchand', robe: '#5a2f4a', head: '#e6dcc4', cloak: '#c9a13f' },
           talk: [['say', 'chambellan', "Le peuple souffre, seigneur. Il faut le comprendre. Il faut toujours comprendre le peuple."]] }
       ],
-      chests: [{ at: ['souk', 2, 1], item: 'musc', n: 1 }, { at: ['palmeraie', 0, 1], item: 'eau', n: 2 }],
+      chests: [{ at: ['cour', 1, 1], gear: 'houlette' }, { at: ['souk', 2, 1], item: 'musc', n: 1 }, { at: ['palmeraie', 0, 1], item: 'eau', n: 2 }],
       intro: [
         ['flag', 'v4_calme', false], ['flag', 'v4_cede', false],
         ['title', 'La Rumeur du puits', 'Veillée de la Miséricorde'],
@@ -720,7 +720,7 @@ ISNAD.registerSaga({
         { id: 'pur1', name: 'Un Pur', at: ['cour', 2, 1], look: { kind: 'homme', robe: '#cfc8b8', head: '#cfc8b8' },
           talk: [['say', 'pur1', "La citadelle n'appartient qu'à Dieu ! …C'est tout ce que j'ai à te dire. C'est tout ce qu'il y a à dire."]] }
       ],
-      chests: [{ at: ['ecole', 2, -1], codex: 'slogan_purs' }, { at: ['jardin', 0, 1], item: 'musc', n: 1 }],
+      chests: [{ at: ['tour', 1, 0], gear: 'cotte_serree' }, { at: ['ecole', 2, -1], codex: 'slogan_purs' }, { at: ['jardin', 0, 1], item: 'musc', n: 1 }],
       intro: [
         ['flag', 'v5_force', false], ['flag', 'v5_gagne', false],
         ['title', 'Les Purs', 'Veillée du Savoir'],

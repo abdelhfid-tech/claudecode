@@ -11,20 +11,20 @@
     if (W.roster[id]) return W.roster[id];
     const def = W.saga.heroes[id]; if (!def) return null;
     const key = W.saga.id + ':' + id, sv = I.save.data.heroes[key] || { lvl: 1, xp: 0 };
-    const h = { id, def, lvl: sv.lvl, xp: sv.xp, sakina: 0, niyya: 0 };
-    const st = I.calc.hero(def, h.lvl); h.hp = st.hp; h.sp = st.sp;
+    const h = { id, key, def, lvl: sv.lvl, xp: sv.xp, sakina: 0, niyya: 0 };
+    const st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp;
     return (W.roster[id] = h);
   };
   W.persistHeroes = function () { for (const id in W.roster) { const h = W.roster[id]; I.save.data.heroes[W.saga.id + ':' + id] = { lvl: h.lvl, xp: h.xp }; } };
-  W.ensureLevel = function (h) { if (h.lvl < W.minLvl) { h.lvl = W.minLvl; h.xp = 0; const st = I.calc.hero(h.def, h.lvl); h.hp = st.hp; h.sp = st.sp; } };
-  W.healAll = function () { W.party.forEach(id => { const h = W.hero(id), st = I.calc.hero(h.def, h.lvl); h.hp = st.hp; h.sp = st.sp; }); };
+  W.ensureLevel = function (h) { if (h.lvl < W.minLvl) { h.lvl = W.minLvl; h.xp = 0; const st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp; } };
+  W.healAll = function () { W.party.forEach(id => { const h = W.hero(id), st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp; }); };
   W.gainSakina = function (v) { W.party.forEach(id => { const h = W.hero(id); h.sakina = Math.min(100, h.sakina + v); }); };
   W.join = function (id) {
     if (W.party.includes(id) || !W.saga.heroes[id]) return;
     if (W.party.length >= 3) return;
     W.party.push(id); const h = W.hero(id); W.ensureLevel(h);
-    const lead = W.hero(W.party[0]); if (lead && h.lvl < lead.lvl - 1) { h.lvl = lead.lvl - 1; const st = I.calc.hero(h.def, h.lvl); h.hp = st.hp; h.sp = st.sp; }
-    W.refreshSheets(); S.toast(`<b>${h.def.name}</b> rejoint le groupe.`); I.audio.sfx('ok');
+    const lead = W.hero(W.party[0]); if (lead && h.lvl < lead.lvl - 1) { h.lvl = lead.lvl - 1; const st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp; }
+    W.refreshSheets(); S.toast(`<b>${h.def.name}</b> rejoint le groupe.`); I.audio.sfx('ok'); if (I.debug.auto) I.gear.best(h);
   };
   W.leave = function (id) { const i = W.party.indexOf(id); if (i < 0 || W.party.length <= 1) return; W.party.splice(i, 1); W.refreshSheets(); };
   function lookOf(def) { return Object.assign({ kind: 'compagnon' }, def.look); }
@@ -146,7 +146,7 @@
     if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); }
     I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
-    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.charSheet(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
+    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.charSheet(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
     W.foes = (ch.foes || []).map(f => Object.assign({}, f, { map: f.map || ch.map, done: false, placed: false, ph: Math.random() * 6 }));
     W.chests = (ch.chests || []).map(c => Object.assign({}, c, { map: c.map || ch.map, open: false, placed: false }));
     W.objIndex = cp ? cp.obj : 0;
@@ -167,6 +167,8 @@
       if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); await I.oeuvres.openChapter(); }
       if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) { I.build.yields(); await I.trade.resolve(); } }
       if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Touche un endroit pour t’y rendre, un personnage pour lui parler · <b>?</b> : que faire' : '<b>Flèches</b>, <b>ZQSD</b> ou clic : marcher · <b>Entrée</b> : parler · <b>H</b> ou <b>?</b> : que faire · <b>Échap</b> : halte', 10000);
+      // l'équipement : le joueur de test s'habille au mieux ; le joueur est prévenu quand la réserve tient mieux que ce qu'il porte
+      if (I.debug.auto) I.gear.bestAll(); else if (!cp && I.gear.better()) S.toast('La réserve tient de quoi mieux équiper ce groupe : <b>Halte</b>, puis <b>Équipement</b>.', 7000);
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
   };
@@ -227,7 +229,9 @@
           if (perfect) { sv.items.siwak = (sv.items.siwak || 0) + 2; sv.items.musc = (sv.items.musc || 0) + 1; I.audio.sfx('roll'); }
           await S.card('victory', `<p class="small">Fidélité à la Chaîne · ${I.esc(saga.name)}</p><h1>${perfect ? 'Isnâd sahîh' : 'Chaîne transmise'}</h1><ul><li>Actes retrouvés du premier coup : <b>${sp.cOk || 0} / ${sp.cTot}</b></li>${perfect ? '<li>Chaîne sans faille : chaque acte fut celui que les transmetteurs ont rapporté.</li><li>Reçu : <b>Siwâk ×2</b>, <b>Musc</b></li>' : '<li>Là où la chaîne a vacillé, relis le Recueil : chaque acte y a sa source.</li>'}</ul><div class="hint">▼</div>`);
         }
-        sp.done = true; sp.ch = saga.frame ? W.ci + 1 : 0; I.save.store();
+        sp.done = true; sp.ch = saga.frame ? W.ci + 1 : 0;
+        if (!saga.frame) I.gear.deposer(saga.id); // ce que ce groupe portait rejoint la réserve : le suivant s'en servira
+        I.save.store();
         await I.ui.afterSaga(saga, ch);
       }
     } finally { S.depth--; S.hideDialog(); }
@@ -254,7 +258,7 @@
       return;
     }
     const c = who && W.chests.includes(who) && !who.open && Math.hypot(who.x - p.x, who.y - p.y) < 30 ? who : W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
-    if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
+    if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.gear || c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
       await I.oeuvres.natte();
     } else if (I.trade && I.trade.near()) await I.trade.open();
@@ -439,11 +443,15 @@
   };
   W.autoStep = function () {
     const o = W.cur(); if (!o) return; const p = W.player, log = I.debug.log || (I.debug.log = []);
-    if (I.trade && W.map.spots.comptoir && !S.flags._trade_test && !W.saga.frame && !W._autoBusy) { S.flags._trade_test = true; W._autoBusy = true; I.trade._autoStep = 0; I.trade._sold = I.trade._bought = 0; I.trade.open().then(() => { W._autoBusy = false; }, e => { log.push('ERR commerce ' + e.message); W._autoBusy = false; }); return; }
+    if (I.trade && W.map.spots.comptoir && !S.flags._trade_test && !W.saga.frame && !W._autoBusy) { S.flags._trade_test = true; W._autoBusy = true; I.trade._autoStep = 0; I.trade._sold = I.trade._bought = I.trade._forge = 0; I.trade.open().then(() => { W._autoBusy = false; }, e => { log.push('ERR commerce ' + e.message); W._autoBusy = false; }); return; }
     if (o.build && I.debug.noBuild) return;
     if (o.build) { W._autoBusy = true; I.build.autoBuild(o.build); I.build.after().then(() => { W._autoBusy = false; }, e => { log.push('ERR bâtir ' + e.message); W._autoBusy = false; }); return; }
     if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => I.oeuvres.auto()).then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
     const go = (x, y, what) => { if (!W.reach(p.x, p.y, x, y)) log.push(`INACCESSIBLE ${W.saga.id}/${W.ch.id} obj${W.objIndex} ${what} sur ${W.map.id}`); p.x = x; p.y = y; W.resetTrail(); };
+    const ck = !W._autoBusy && W.chests.find(c => !c.open && !c._vu && c.map === W.map.id && c.placed);
+    if (ck) { ck._vu = true; const quoi = ck.gear || ck.item || ck.codex;
+      if (![[0, 14], [0, -14], [-14, 0], [14, 0]].some(([dx, dy]) => W.reach(p.x, p.y, ck.x + dx, ck.y + dy))) log.push(`INACCESSIBLE ${W.saga.id}/${W.ch.id} coffre ${quoi} sur ${W.map.id}`);
+      W._autoBusy = true; ck.open = true; S.run([ck.codex ? ['codex', ck.codex] : ['give', ck.gear || ck.item, ck.n || 1]]).then(() => { W.checkpoint(); W._autoBusy = false; }, e => { log.push('ERR coffre ' + e.message); W._autoBusy = false; }); return; }
     W._autoBusy = true; const done = () => { W._autoBusy = false; };
     if (o.goto) { const s = W.resolve(o.goto, W.map.id, p); go(s[0], s[1], 'goto ' + o.goto); W.complete().then(done, e => { log.push('ERR ' + e.message); done(); }); }
     else if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); if (!n || n.hidden || n.map !== W.map.id || !n.placed) { log.push(`PNJ ABSENT ${W.saga.id}/${W.ch.id} obj${W.objIndex} talk ${o.talk} (carte ${W.map.id}, pnj ${n ? n.map + (n.hidden ? ' caché' : '') : '?'})`); } else go(n.x, n.y + 14, 'talk ' + o.talk); W.complete().then(done, e => { log.push('ERR ' + e.message); done(); }); }

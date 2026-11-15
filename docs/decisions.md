@@ -317,22 +317,81 @@ arabo-andalouses ».
 
 ## « Le jeu s'arrête après le premier combat » (signalement du décideur)
 
-Signalement reçu sans autre précision (appareil, navigateur, ce que montre l'écran).
+Signalement reçu sans autre précision (appareil, navigateur, ce que montre l'écran). C'est le premier
+retour d'un joueur réel.
 
-- [x] **D75. Non reproduit, donc durci.** Le début du jeu a été rejoué « à la main » par un pilote qui
-  n'utilise aucun raccourci de test (son activé, clavier puis doigt, bureau et téléphone émulé) : le
-  premier combat se termine et le récit reprend, dans Chromium. Ni Safari ni Firefox ne sont
-  disponibles ici. *Lecture de l'agent* : une erreur propre à l'appareil (le plus probable : le son,
-  entre le fondu de sortie du combat et la reprise de la musique) laissait l'écran noir ou le combat
-  figé, sans rien dire. Le moteur ne se tait plus et ne reste plus bloqué :
-  - une panne du son coupe la musique, pas la partie ;
-  - une opération de récit qui échoue est passée et consignée ; un combat qui échoue est quitté proprement ;
-  - si le jeu attend plus de quinze secondes sans rien afficher, un bouton **Reprendre** ramène au
-    dernier objectif atteint ;
-  - la halte a une page **Diagnostic** (version, appareil, état du son, incidents relevés) et
-    l'écran-titre affiche la version.
-  Vérifié par trois pannes simulées (oscillateur refusé, gain refusé, suite qui ne rend jamais la
-  main). **Reste à savoir ce qui s'est passé chez le décideur** : voir la question 7.
+- [x] **D75. La cause : un écran noir à la fin du prologue.** Peu après le premier combat, le prologue
+  fond au noir, puis affiche un carton (« Médine ») et quatre narrations. Tout cela restait **sous** le
+  noir du fondu : l'écran était noir, le jeu attendait un toucher, et rien ne le disait. Le défaut
+  datait de la toute première version. Les parcours automatiques ne le voyaient pas : ils avancent
+  dès que le jeu attend, sans regarder l'écran ; et le premier pilote « à la main » faisait de même.
+  - **Corrigé** : un carton passe toujours au-dessus du fondu ; le dialogue et les choix aussi dès que
+    l'écran est noir. Le récit sur fond noir se lit, avec son « ▼ ». Vérifié à l'image, sur téléphone
+    et sur bureau. Un second endroit avait le même défaut, sans blocage (le carton « Homs », saga III).
+  - **Contrôle permanent** : le moteur signale au joueur de test tout texte affiché sous un fondu
+    (« TEXTE CACHÉ ») ; c'est désormais un motif d'échec, comme « BLOQUÉ ». Remis à l'ancien
+    comportement, le contrôle retrouve bien les cinq textes du prologue.
+  - *Lecture de l'agent* : c'est très probablement ce que le décideur a rencontré, mais il ne l'a pas
+    confirmé (question 7). Avant de trouver, le moteur avait été durci, et ces protections restent :
+    une panne du son coupe la musique, pas la partie ; une opération de récit qui échoue est passée et
+    consignée ; un combat qui échoue est quitté proprement ; après quinze secondes sans rien d'affiché,
+    un bouton **Reprendre** ramène au dernier objectif ; la halte a une page **Diagnostic** et
+    l'écran-titre affiche la version ; sur un écran en hauteur, toucher la zone vide sous l'image fait
+    avancer le texte.
+
+- [x] **D85. Le toucher fantôme.** Le test au doigt écrit pour D75 a trouvé un second défaut, propre aux
+  écrans tactiles : le toucher qui fait avancer la dernière réplique pouvait répondre aussitôt au menu de
+  choix apparu sous le doigt, sans que le joueur l'ait vu (sur un écran en hauteur, le dialogue et les
+  choix occupent la même place). Or un choix de fidélité compte. Un menu de choix n'accepte désormais
+  rien pendant un tiers de seconde, les commandes de combat un quart de seconde au doigt. Le test compte
+  les menus ouverts et les menus touchés : l'écart est un échec.
+- [x] **D86. `tools/doigt.js`.** Le prologue joué au doigt, sans raccourci, sur trois tailles d'écran,
+  avec un regard sur l'écran avant chaque toucher. À passer après toute modification du moteur ou de
+  la mise en page. Il ne couvre que le prologue : l'étendre aux sagas est à faire.
+
+## Équipement : armes, armures, boucliers, casques (remarque du décideur)
+
+Remarque reçue : « je ne vois de variété dans les armes, armures, boucliers, casques : inspire-toi de
+Final Fantasy !! »
+
+- [x] **D76. Quatre emplacements, cinquante-trois pièces.** *Lecture de l'agent* : la remarque porte à
+  la fois sur ce que l'on voit et sur ce que l'on peut choisir. Main droite (épées, lances, arcs, dagues,
+  masses, bâtons, calames), main gauche (boucliers, ou un outil pour qui n'en porte pas), tête (turbans,
+  calottes, casques), corps (étoffes, cuirs, armures). Chaque rôle a ses pièces : un sage ne porte pas de
+  cotte de mailles. La réserve est commune à toute la Chaîne ; à la fin d'une saga, ce que son groupe
+  portait y retourne, et le groupe suivant s'en sert.
+- [x] **D77. Des effets en pourcentage, et strictement matériels.** Force, Esprit, Garde, Élan,
+  Constance, Souffle, et six traits : percer la garde (lance), frapper deux fois (dague), tirer le
+  premier (arc), étourdir (masse), parer (bouclier), tenir bon (casque). Le fer protège et ralentit.
+  Aucune pièce ne porte d'élément-vertu, aucune ne protège du doute ni du waswâs : un objet ne reçoit pas
+  de vertu (exigences 15 et 16). Les bonus restent modestes, pour que la provision du cœur pèse toujours
+  davantage que le fer. Ils sont en pourcentage parce que chaque saga repart du niveau 1 : une pièce
+  trouvée tôt ne doit pas écraser le début de la saga suivante.
+- [x] **D78. Ni relique, ni reconstitution.** Des objets ordinaires : aucune arme d'un personnage de
+  l'histoire, aucune inscription, ni or ni soie, aucun talisman ; le validateur refuse ces mots dans le
+  catalogue. Le jeu ne dit jamais qui portait quoi : c'est le joueur qui habille, comme il choisit déjà
+  quelle vertu employer. Hors combat et hors menu, chaque personnage garde sa silhouette (D70, D71).
+- [ ] **D79. Les noms des pièces.** Ils viennent du vocabulaire de la poésie arabe ancienne (*muhannad*,
+  *yamânî*, *mashrafî* pour les lames ; *khattî*, *samharî* pour les lances ; le bois de *nab'* pour les
+  arcs ; *salûqî* pour les cottes) et de savoir-faire que les sources attribuent à des lieux : lin
+  d'Égypte, étoffes rayées du Yémen, bouclier de lamt au Maghreb, casque à bandes et cuirasse à lamelles
+  de Rûm et de Perse. **Texte qui touche à l'histoire : proposé par l'agent, à valider et à faire relire**
+  (question 8). Le Recueil le dit au joueur : « convention de jeu », « à faire vérifier ».
+- [x] **D80. On les voit.** Une icône au pixel par pièce. En combat et dans la halte, la silhouette porte
+  ce qu'on lui a donné : arme en main, bouclier, casque, armure. Les étoffes (turbans, tuniques,
+  manteaux) ne changent pas le dessin : chacun garde la coiffe et le manteau qui le font reconnaître.
+  Les gens d'armes sans nom ne se ressemblent plus tous (sept tenues de soldat, quatre de Rûm). Deux
+  dessins qui pouvaient évoquer une croix (casque à bandes, grand bouclier) ont été refaits.
+- [x] **D81. Où les trouver.** Un coffre par chapitre (vingt-deux pièces) ; six comptoirs aux étals
+  différents (Médine, le désert, le camp, la ville de Rûm, Koufa, la Citadelle) ; de 8 à 85 dirhams,
+  revente à moitié prix. La même bourse sert à l'aumône : il faut choisir.
+- [x] **D82. Ne pas alourdir.** Quand une pièce arrive, le jeu propose aussitôt « Qui la porte ? » si
+  elle améliore quelqu'un. « Au mieux » habille tout le groupe d'un geste. « Que faire ? » signale une
+  meilleure pièce restée dans la réserve.
+- [x] **D83. La halte sur téléphone.** En portrait, la liste des pages passe sur deux colonnes
+  au-dessus de la page, qui prend toute la largeur : elle était écrasée dans une colonne étroite.
+- [ ] **D84. Exigence 17 ajoutée à `AGENTS.md`** (l'équipement est fait d'objets ordinaires) : rédigée par
+  l'agent pour que la règle reste applicable, à valider par le décideur.
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
@@ -378,5 +437,8 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
 4. Quelle suite : approfondir ces cinq sagas, ou en ajouter d'autres ?
 5. Les sept maux retenus et leurs noms (D61), les deux versets (D60), les noms d'étoiles (D67) : qui les relit ?
 6. Les œuvres comptent-elles au bon prix (trois par chapitre, 8 % par point manquant), ou faut-il durcir ?
-7. L'arrêt après le premier combat (D75) : sur quel appareil et dans quelle application ? L'écran
-   était-il noir, figé sur le combat, ou le héros ne bougeait-il plus ? Que dit la page Diagnostic de la halte ?
+7. L'arrêt après le premier combat (D75) : était-ce bien un écran noir, une fois arrivé devant la
+   Chaîne au fond des Archives ? Si le jeu s'arrête encore ailleurs : sur quel appareil, que montre
+   l'écran, et que dit la page Diagnostic de la halte ?
+8. L'équipement (D76 à D84) : qui relit les noms et les provenances des pièces ? L'équipement doit-il
+   se voir en combat sur les Compagnons eux-mêmes, ou seulement sur les personnages de fiction ?

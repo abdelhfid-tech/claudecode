@@ -317,6 +317,7 @@ ISNAD.registerSaga({
         { id: 'f_noeud', map: 'noos', at: 'noeud2', group: ['variante', 'variante', 'murmure'], bg: 'noos' }
       ],
       chests: [
+        { at: ['ecole', 1, 1], gear: 'tablette' },
         { at: ['palmeraie', 1, 0], item: 'dattes', n: 2 },
         { at: ['halle', 2, 1], codex: 'tabayyun' },
         { map: 'noos', at: 'faille', item: 'musc', n: 1 }
@@ -506,6 +507,7 @@ ISNAD.registerSaga({
         { id: 'f_faille2', map: 'noos', at: 'faille', group: ['ecume', 'variante'], bg: 'mer' }
       ],
       chests: [
+        { map: 'navire', at: ['mat', 1, 1], gear: 'dague' },
         { at: ['souk', 1, 0], item: 'pain', n: 1 },
         { map: 'navire', at: ['pont', 2, 0], item: 'eau', n: 1 },
         { map: 'noos', at: 'miroir', item: 'siwak', n: 1 }
@@ -693,6 +695,7 @@ ISNAD.registerSaga({
         { id: 'f_faille3', map: 'noos', at: 'faille', group: ['echo', 'ouidire', 'ouidire'], bg: 'noos' }
       ],
       chests: [
+        { at: ['maison', 1, 1], gear: 'manteau_raye' },
         { at: 'colline', item: 'miel', n: 1 },
         { at: ['palmeraie', 1, 0], item: 'eau', n: 1 },
         { at: ['porte_sud', -2, -1], codex: 'griefs' },

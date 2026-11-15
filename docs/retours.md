@@ -81,10 +81,34 @@ Rejoué de bout en bout, sans blocage ni erreur console, par cinq parcours autom
 
 ## Premier retour de jeu réel : « le jeu s'arrête après le premier combat »
 
-Signalé par le décideur. **Non reproduit** dans Chromium, ni au clavier ni au doigt émulé, son activé.
-Le moteur a été durci pour qu'une panne ne fige plus la partie (voir `decisions.md`, D75) ; trois
-pannes simulées sont traversées. Ce qui manque pour conclure : l'appareil, le navigateur ou
-l'application, ce que montrait l'écran, et la page Diagnostic de la halte.
+Signalé par le décideur. **Cause trouvée** : à la fin du prologue, un carton et quatre narrations
+s'affichaient sous le noir d'un fondu. L'écran restait noir, le jeu attendait un toucher. Corrigé, et
+un contrôle permanent signale désormais tout texte caché (voir `decisions.md`, D75).
+
+**Ce que ce retour apprend.** Un parcours automatique qui avance « dès que le jeu attend » prouve que
+le récit se déroule, pas qu'il se voit. Cinq parcours complets passaient sur un jeu qu'un joueur ne
+pouvait pas dépasser sans deviner. Un outil a été ajouté, `tools/doigt.js` : il joue le prologue au
+doigt, sans raccourci, et regarde l'écran avant chaque toucher. Dès son premier passage il a trouvé un
+second défaut (un toucher qui répondait à un menu de choix à la place du joueur, D85). Il ne couvre
+que le prologue. Rien ne remplace un essai humain.
+
+## Version 6 : équipement, et ce que le joueur voit
+
+Rejoué de bout en bout par les cinq parcours (`auto`, `walk`, `tap`, `wrong`, `auto` sans œuvres) :
+aucun blocage, aucun texte caché, aucune erreur console, aucune défaite du joueur de test. Puis par
+`tools/doigt.js` sur trois tailles d'écran (390 × 844, 360 × 560, 844 × 390) : le prologue se termine au
+doigt, tout ce que le jeu attend se voit, le menu de choix est vu avant d'être touché.
+
+- Le joueur de test ouvre désormais les coffres de chaque lieu : tous sont accessibles à pied, y
+  compris les vingt-deux coffres d'équipement. Il s'équipe « au mieux » à chaque pièce reçue et achète
+  aux artisans quand sa bourse le permet ; il finit avec vingt-trois pièces portées et trente-huit en réserve.
+- Équilibre : soixante-quatre combats, 421 tours avant l'équipement, 427 après ; Constance minimale
+  moyenne de 91 % dans les deux cas. L'équipement ne déplace pas la difficulté pour l'IA de test.
+- Vérifié sur captures, bureau et téléphone : la page Équipement, le choix d'une pièce et sa
+  comparaison, « Qui la porte ? », les artisans, le combat avec les silhouettes équipées, les cinquante-
+  trois icônes, la halte en portrait (liste sur deux colonnes, page en dessous).
+- **Non vérifié par un humain** : l'intérêt de l'équipement, la justesse des prix, la lisibilité des
+  icônes sur un vrai téléphone, et tout ce qui suit le prologue quand on joue au doigt.
 
 ## Ce qui n'a pas été testé
 

@@ -342,6 +342,7 @@ ISNAD.registerSaga({
         { id: 'f2', map: 'noos', at: 'noeud1', group: ['soupcon', 'murmure', 'murmure'], bg: 'noos' }
       ],
       chests: [
+        { at: ['halle', 1, 1], gear: 'calame_fin' },
         { at: ['puits', 1, 0], item: 'dattes', n: 2 },
         { at: ['palmeraie', 1, 1], item: 'musc', n: 1 },
         { map: 'noos', at: 'faille', item: 'miel', n: 1 },
@@ -550,6 +551,7 @@ ISNAD.registerSaga({
         { id: 'f3', map: 'noos', at: 'miroir', group: ['clameur', 'clameur'], bg: 'noos' }
       ],
       chests: [
+        { map: 'camp', at: ['lignes', 1, 1], gear: 'lance_samhari' },
         { at: ['puits', 0, 1], item: 'eau', n: 1 },
         { map: 'camp', at: ['enclos', 1, 0], item: 'dattes', n: 2 },
         { map: 'camp', at: ['enclos', -1, 1], codex: 'registre_double' },
@@ -789,6 +791,7 @@ ISNAD.registerSaga({
         { id: 'f3', map: 'noos', at: 'miroir', group: ['lame', 'lame', 'lame'], bg: 'noos' }
       ],
       chests: [
+        { at: ['feu', 1, 1], gear: 'arc_double' },
         { at: ['enclos', 1, 0], item: 'eau', n: 2 },
         { at: ['tertre', 0, 1], item: 'siwak', n: 1 },
         { map: 'noos', at: 'faille', item: 'lait', n: 1 }

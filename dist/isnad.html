@@ -33,6 +33,8 @@ body.portrait #app { justify-content: flex-start; padding-top: 6px; }
 #stage { touch-action: none; }
 #ui { position: absolute; inset: 0; font-size: calc(max(13px, var(--u) * 7.2) * var(--tz, 1)); line-height: 1.32; }
 #fade { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 40; }
+/* un récit sur fond noir se lit : les cartons passent toujours au-dessus du fondu, le dialogue et les choix quand l'écran est noir */
+body.noir #dialog { z-index: 41; } body.noir #choice { z-index: 42; }
 
 /* ---------- HUD ---------- */
 #hud { position: absolute; left: 2.2%; top: 3%; max-width: 62%; pointer-events: none; text-shadow: 0 1px 3px #000, 0 0 12px rgba(0, 0, 0, .8); }
@@ -65,7 +67,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 @keyframes bob { 50% { transform: translateY(.25em); } }
 
 /* ---------- choix ---------- */
-#choice { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: min(86%, 34em); display: flex; flex-direction: column; gap: .45em; z-index: 25; max-height: 96%; overflow-y: auto; scrollbar-width: thin; }
+#choice { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: min(86%, 34em); display: flex; flex-direction: column; gap: .45em; z-index: 25; max-height: 90%; overflow-y: auto; scrollbar-width: thin; }
 #choice .prompt.guide { text-align: left; font-family: var(--f-body); letter-spacing: 0; color: var(--sand); display: flex; flex-direction: column; gap: .35em; padding: .7em 1em; border: 1px solid var(--line); background: var(--panel2); }
 #choice .prompt.guide .gt { font-family: var(--f-display); letter-spacing: .14em; color: var(--acc); font-size: .9em; }
 #choice .prompt.guide .gl b { color: #fff6dc; } #choice .prompt.guide kbd { font-size: .8em; }
@@ -74,7 +76,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 #choice .opt.sel { border-left-color: var(--acc); border-color: var(--line); background: var(--panel2); transform: translateX(.5em); color: #fff; }
 
 /* ---------- cartons ---------- */
-#card { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6vh max(24px, 8vw); background: radial-gradient(ellipse at center, rgba(8, 7, 18, .82), rgba(4, 3, 10, .96)); opacity: 0; transition: opacity .28s; z-index: 35; cursor: pointer; font-size: calc(clamp(16.5px, 2.3vmin + 7.5px, 26px) * var(--tz, 1)); }
+#card { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6vh max(24px, 8vw); background: radial-gradient(ellipse at center, rgba(8, 7, 18, .82), rgba(4, 3, 10, .96)); opacity: 0; transition: opacity .28s; z-index: 45; cursor: pointer; font-size: calc(clamp(16.5px, 2.3vmin + 7.5px, 26px) * var(--tz, 1)); }
 #card.on { opacity: 1; }
 #card h1 { font-family: var(--f-display); font-weight: 700; letter-spacing: .14em; font-size: 2em; margin: .1em 0; color: var(--gold); text-wrap: balance; text-shadow: 0 0 30px rgba(233, 200, 119, .35); }
 #card p { margin: .3em 0; max-width: 34em; }
@@ -220,6 +222,7 @@ body.portrait #dialog .seal { width: 3.8em; height: 3.8em; margin-top: -1.9em; l
 body.portrait #dialog.nar { padding-left: 1.2em; }
 body.portrait #choice { top: calc(100% + 10px); transform: translateX(-50%); width: calc(100% - 12px); max-height: calc(100vh - 100% - 30px); max-height: calc(100dvh - 100% - 30px); }
 body.portrait #choice .opt { padding: .58em .9em; }
+body.portrait #choice .opt.sel { transform: none; } /* pas de décalage : la liste occupe déjà toute la largeur */
 body.portrait #battle .panel { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; grid-template-columns: 1fr; }
 body.portrait #battle .order { font-size: calc(10.5px * var(--tz, 1)); } body.portrait .plate { font-size: calc(10.5px * var(--tz, 1)); min-width: 6.4em; } body.portrait #battle .banner { font-size: calc(13.5px * var(--tz, 1)); }
 body.portrait .fl { font-size: calc(15px * var(--tz, 1)); }
@@ -321,6 +324,34 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
 body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) #compass { top: 24%; }
 body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
 
+/* ---------- équipement ---------- */
+.gi { width: 1.5em; height: 1.5em; image-rendering: pixelated; vertical-align: -.36em; flex: none; }
+.gi.big { width: 2.4em; height: 2.4em; vertical-align: -.7em; }
+i.gi.vide { display: inline-block; border: 1px dashed rgba(255, 255, 255, .22); border-radius: 3px; box-sizing: border-box; }
+.rien { color: var(--dim); font-style: italic; }
+.stat.gear { grid-template-columns: 3.4em 1fr; align-items: start; } .stat.gear .fig { width: 3.4em; height: 5.1em; }
+.gslot { display: grid; grid-template-columns: 6.2em 1.6em 1fr; gap: .5em; align-items: center; padding: .28em 0; border-top: 1px solid rgba(255, 255, 255, .06); line-height: 1.25; }
+.gslot > small:first-child { color: var(--dim); font-size: .72em; letter-spacing: .08em; text-transform: uppercase; }
+.pane > .gslot { grid-template-columns: 1.6em 1fr; }
+.gslot small { color: var(--dim); }
+.gcmp { display: flex; flex-direction: column; gap: .2em; margin: .3em 0 .6em; font-variant-numeric: tabular-nums; }
+.gcmp span { padding: .22em .6em; background: rgba(255, 255, 255, .04); border-left: 2px solid var(--line); }
+.gcmp .up { border-left-color: #7fd69a; } .gcmp .up b { color: #9be8b2; } .gcmp .down { border-left-color: #ff7a5c; } .gcmp .down b { color: #ff9c84; }
+.stat .port { font-size: .8em; color: var(--dim); margin-top: .25em; } .stat .port .gi { width: 1.2em; height: 1.2em; vertical-align: -.26em; }
+#menu .side button .gi { margin-right: .15em; } #menu .side button small { color: var(--dim); }
+#choice .prompt.gear { display: grid; grid-template-columns: auto 1fr; gap: .2em .7em; align-items: center; text-align: left; font-family: var(--f-body); letter-spacing: 0; color: var(--sand); }
+#choice .prompt.gear .gi { width: 2.2em; height: 2.2em; } #choice .prompt.gear em { grid-column: 1 / -1; font-family: var(--f-display); font-style: normal; letter-spacing: .08em; color: var(--acc); }
+#choice .opt .gi { margin-right: .25em; } #choice .opt small { color: var(--dim); }
+#toasts .gi { width: 1.4em; height: 1.4em; }
+/* la halte en portrait : liste sur deux colonnes, page dessous */
+body.portrait #menu .cols { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, auto) minmax(0, 1fr); gap: .6em; }
+body.portrait #menu .side { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: max-content; gap: .28em; max-height: 40vh; align-content: start; overflow-y: auto; }
+body.portrait #menu .side .cat { grid-column: 1 / -1; margin-top: .3em; }
+body.portrait #menu .side button { padding: .5em .6em; font-size: .86em; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body.portrait #menu .pane { padding: .8em .9em; }
+body.portrait #menu header { margin-bottom: .5em; }
+body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot > small:first-child { grid-column: 1 / -1; margin-bottom: -.3em; }
+
 </style>
 <div id="app">
   <div id="stage">
@@ -368,7 +399,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
+window.ISNAD_VERSION = "2026-11-15 07:50 UTC · b89349e+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -449,10 +480,11 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
   };
 
   // tenue d'un personnage (look) : coiffes, manteaux, motifs, attributs portés — dessin dans sprites.js
-  D.COIFFES = ['imama', 'imama_haute', 'imama_large', 'imama_queue', 'calotte', 'casque', 'casque_turban', 'capuche', 'tiare', 'litham', 'keffieh'];
+  D.COIFFES = ['imama', 'imama_haute', 'imama_large', 'imama_queue', 'calotte', 'casque', 'casque_turban', 'casque_cuir', 'casque_bandes', 'coiffe_mailles', 'capuche', 'tiare', 'litham', 'keffieh'];
   D.MANTEAUX = ['long', 'aucun', 'epaule', 'ample'];
   D.MOTIFS = ['rayures', 'bandes'];
-  D.PORTES = ['durra', 'sabre', 'lance', 'baton', 'feuillets', 'bourse', 'bouclier', 'outre', 'etendard'];
+  D.PORTES = ['durra', 'sabre', 'lance', 'baton', 'feuillets', 'bourse', 'bouclier', 'outre', 'etendard', 'arc', 'dague', 'masse', 'calame', 'tablette', 'bouclier_cuir', 'bouclier_bois', 'pavois'];
+  D.ARMURES = ['cuir', 'matelasse', 'mailles', 'lamelles']; // look.armure : ce qui couvre le buste
 
   D.ITEMS = {
     // vivre: true — ce que l'on ne prend pas un jour de jeûne
@@ -463,6 +495,117 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     musc:   { name: 'Musc',             desc: 'Rend 50 % de Souffle à un compagnon.',                sp: 0.5,  target: 'ally' },
     lait:   { name: 'Lait chaud',       desc: 'Relève un compagnon éprouvé (50 % de Constance).',    revive: 0.5, target: 'ally', vivre: true },
     siwak:  { name: 'Siwâk',            desc: 'Accorde 2 points de Niyya.',                          niyya: 2, target: 'ally' }
+  };
+
+  // v6 — l'équipement. Quatre emplacements, comme dans les jeux de rôle d'autrefois : main droite, main
+  // gauche, tête, corps. Des objets ordinaires de l'époque : ni relique, ni arme d'un personnage de
+  // l'histoire, ni inscription, ni or ni soie, ni vertu prêtée à un objet (exigences 8, 15 et 16).
+  // Les effets sont des pourcentages des statistiques du niveau : le moteur calcule, rien n'est fixé à la main.
+  //   atk Force · mag Esprit · def Garde · spd Élan · hp Constance · sp Souffle (en %)
+  //   perce  part de la Garde adverse ignorée par les coups de fer   vif    chance de frapper deux fois
+  //   prime  agit plus tôt au début du combat                         choc   chance d'étourdir en frappant
+  //   parade chance de parer un coup de fer (moitié des dégâts)       ferme  chance de ne pas être étourdi
+  //   r      rang (0 à 4) : fixe le prix · tete, corps, port : ce que le dessin montre en combat (sprites.js)
+  //   c      [couleur principale, couleur d'accent] de l'icône · ico : gabarit d'icône, s'il diffère du type
+  const TOUS = ['guerrier', 'gardien', 'sage', 'soigneur', 'stratege'], ARMES = ['guerrier', 'gardien', 'stratege'], LOURD = ['guerrier', 'gardien'], LETTRES = ['sage', 'soigneur', 'stratege'];
+  D.SLOTS = { md: 'Main droite', mg: 'Main gauche', tete: 'Tête', corps: 'Corps' };
+  D.GEAR_TYPES = {
+    epee:    { slot: 'md', name: 'Épée', roles: ARMES, anim: 'slash', port: 'sabre' },
+    lance:   { slot: 'md', name: 'Lance', roles: LOURD, anim: 'thrust', port: 'lance' },
+    arc:     { slot: 'md', name: 'Arc', roles: ['guerrier', 'stratege'], anim: 'arrow', port: 'arc' },
+    dague:   { slot: 'md', name: 'Dague', roles: ['guerrier', 'stratege'], anim: 'slash', port: 'dague' },
+    masse:   { slot: 'md', name: 'Masse', roles: LOURD, anim: 'smash', port: 'masse' },
+    baton:   { slot: 'md', name: 'Bâton', roles: ['gardien', 'sage', 'soigneur', 'stratege'], anim: 'smash', port: 'baton' },
+    calame:  { slot: 'md', name: 'Calame', roles: LETTRES, port: 'calame' },
+    ecu:     { slot: 'mg', name: 'Bouclier', roles: ARMES, port: 'bouclier' },
+    pavois:  { slot: 'mg', name: 'Grand bouclier', roles: LOURD, port: 'pavois' },
+    outil:   { slot: 'mg', name: 'Outil', roles: LETTRES },
+    turban:  { slot: 'tete', name: 'Turban', roles: TOUS },
+    calotte: { slot: 'tete', name: 'Calotte', roles: TOUS },
+    casque:  { slot: 'tete', name: 'Casque', roles: ARMES },
+    etoffe:  { slot: 'corps', name: 'Étoffe', roles: TOUS },
+    cuir:    { slot: 'corps', name: 'Cuir', roles: ARMES },
+    mailles: { slot: 'corps', name: 'Armure', roles: LOURD }
+  };
+  const FER = '#c3c8d2', ACIER = '#a9bfd6', BOIS = '#8a6238', CUIR = '#9a6a3c', LAINE = '#e6dcc4';
+  D.GEAR = {
+    // --- main droite : épées
+    epee_fer:       { t: 'epee', r: 0, name: 'Épée de fer', atk: 3, c: [FER, BOIS], desc: 'Lame droite à deux tranchants, sans ornement.' },
+    epee_yemen:     { t: 'epee', r: 1, name: 'Épée du Yémen', atk: 7, c: ['#d0cfc4', '#7a2f2a'], desc: 'Le Yémen forge depuis longtemps ; ses lames sont recherchées.' },
+    epee_inde:      { t: 'epee', r: 2, name: 'Épée d’acier de l’Inde', atk: 11, c: [ACIER, '#2f5f8a'], desc: 'Un acier venu par mer. Les poètes anciens nomment cette lame muhannad.' },
+    epee_mashrafi:  { t: 'epee', r: 3, name: 'Épée de Mashârif', atk: 15, spd: 2, c: ['#dfe6ee', '#3f7a5a'], desc: 'Les poètes anciens la nomment mashrafî, du nom des bourgs où on la forgeait.' },
+    epee_maitre:    { t: 'epee', r: 4, name: 'Épée de maître forgeron', atk: 19, spd: 2, c: ['#f0f4fa', '#5a3f8a'], desc: 'Un fil égal d’un bout à l’autre : l’ouvrage d’une vie d’atelier.' },
+    // lances : elles percent la garde
+    javelot:        { t: 'lance', r: 1, name: 'Javelot', atk: 5, spd: 2, perce: 0.15, c: [FER, '#a07848'], ico: 'javelot', desc: 'Court et léger. On le tient ou on le lance.' },
+    lance_khatt:    { t: 'lance', r: 2, name: 'Lance d’al-Khatt', atk: 9, perce: 0.2, c: [FER, '#b89a5a'], desc: 'Hampe de roseau dur débarquée à al-Khatt, sur la côte du Bahreïn : on la dit khattî.' },
+    lance_samhari:  { t: 'lance', r: 3, name: 'Lance samharie', atk: 13, perce: 0.25, c: [ACIER, '#6a4a2a'], desc: 'Droite et ferme : les poètes anciens la nomment samharî.' },
+    // arcs : la première flèche part avant tout le monde
+    arc_chasse:     { t: 'arc', r: 1, name: 'Arc de chasse', atk: 4, spd: 4, prime: true, c: [BOIS, LAINE], desc: 'Un arc simple, d’une seule pièce de bois.' },
+    arc_nab:        { t: 'arc', r: 2, name: "Arc de nab'", atk: 8, spd: 6, prime: true, c: ['#a8743c', LAINE], desc: "Taillé dans le nab', le bois que préféraient les archers d’Arabie." },
+    arc_double:     { t: 'arc', r: 3, name: 'Arc à double courbure', atk: 12, spd: 7, prime: true, c: ['#6a4a2a', '#c9b99a'], ico: 'arc2', desc: 'Bois, corne et tendon collés, à la manière des archers de Perse.' },
+    // dagues : vives, elles frappent parfois deux fois
+    couteau:        { t: 'dague', r: 0, name: 'Couteau de ceinture', atk: 2, spd: 3, c: [FER, BOIS], desc: 'Celui de tous les jours, qui coupe le pain et la corde.' },
+    dague:          { t: 'dague', r: 2, name: 'Dague', atk: 6, spd: 6, vif: 0.2, c: [FER, '#7a2f2a'], desc: 'Lame courte, vite sortie.' },
+    dague_fine:     { t: 'dague', r: 3, name: 'Dague effilée', atk: 9, spd: 8, vif: 0.3, c: [ACIER, '#2f5f8a'], desc: 'Si mince qu’elle trouve le défaut d’une garde.' },
+    // masses : lourdes, elles étourdissent
+    massue:         { t: 'masse', r: 1, name: 'Massue de tamaris', atk: 8, spd: -4, choc: 0.12, c: [BOIS, BOIS], ico: 'massue', desc: 'Un bois dense, coupé au bord des oueds.' },
+    masse_fer:      { t: 'masse', r: 3, name: 'Masse de fer', atk: 16, spd: -5, choc: 0.2, c: [FER, BOIS], desc: 'Une tête de fer sur un manche court : l’arme des cavaliers lourds.' },
+    // bâtons : on s'y appuie
+    baton_marche:   { t: 'baton', r: 0, name: 'Bâton de marche', def: 2, sp: 4, c: [BOIS, BOIS], desc: 'On s’y appuie ; le souffle dure plus longtemps.' },
+    baton_acacia:   { t: 'baton', r: 1, name: 'Bâton d’acacia', def: 4, sp: 8, c: ['#a8743c', '#5a3d22'], desc: 'Bois dur des vallées sèches, poli par la main.' },
+    baton_ferre:    { t: 'baton', r: 2, name: 'Bâton ferré', atk: 5, def: 6, sp: 8, c: [BOIS, FER], ico: 'baton_ferre', desc: 'Deux viroles de fer : il soutient, et il pare.' },
+    houlette:       { t: 'baton', r: 2, name: 'Houlette de berger', hp: 6, sp: 10, c: ['#a07848', BOIS], ico: 'houlette', roles: ['sage', 'soigneur'], desc: 'Le bâton recourbé de ceux qui gardent les bêtes.' },
+    // calames : qui note retient
+    calame:         { t: 'calame', r: 0, name: 'Calame de roseau', mag: 3, c: ['#c9a25a', '#2a2233'], desc: 'Un roseau taillé en biseau. Qui note retient.' },
+    calame_encrier: { t: 'calame', r: 1, name: 'Calame et encrier', mag: 7, sp: 3, c: ['#c9a25a', '#3a5f7a'], ico: 'encrier', desc: 'L’encre de noir de fumée à la ceinture : on écrit où l’on se trouve.' },
+    ecritoire:      { t: 'calame', r: 2, name: 'Écritoire de scribe', mag: 11, sp: 6, c: ['#8a6238', '#c9a25a'], ico: 'ecritoire', desc: 'Calames, canif et encre dans un même étui.' },
+    calame_fin:     { t: 'calame', r: 3, name: 'Calame taillé fin', mag: 15, sp: 6, c: ['#e0c27a', '#5a3f8a'], desc: 'Le bec le plus fin : celui des copistes exercés.' },
+    // --- main gauche : boucliers
+    bouclier_cuir:  { t: 'ecu', r: 1, name: 'Bouclier de cuir', def: 5, parade: 0.08, port: 'bouclier_cuir', c: [CUIR, '#5e3c22'], desc: 'Peaux cousues, sans bois : léger, il suit le bras.' },
+    rondache:       { t: 'ecu', r: 2, name: 'Rondache de bois', def: 8, parade: 0.1, port: 'bouclier_bois', c: ['#a07848', FER], desc: 'Planches jointes sous une peau tendue.' },
+    bouclier_lamt:  { t: 'ecu', r: 3, name: 'Bouclier de lamt', def: 9, spd: 1, parade: 0.16, port: 'bouclier_cuir', c: ['#e0cfa8', '#9a6a3c'], desc: 'Cuir d’antilope du Sahara, renommé dans tout le Maghreb.' },
+    bouclier_ferre: { t: 'ecu', r: 3, name: 'Bouclier ferré', def: 12, spd: -3, parade: 0.12, port: 'bouclier', c: [FER, '#7a2f2a'], desc: 'Bordure et bosse de fer : il arrête, mais il pèse.' },
+    grand_bouclier: { t: 'pavois', r: 3, name: 'Grand bouclier', def: 15, spd: -6, parade: 0.18, c: ['#7a2f2a', FER], desc: 'Haut comme le torse, à la manière des lignes de Rûm.' },
+    // outils de la main gauche, pour qui ne porte pas de bouclier
+    gourde:         { t: 'outil', r: 1, name: 'Gourde de cuir', sp: 8, port: 'outre', c: [CUIR, '#5e3c22'], ico: 'gourde', desc: 'De l’eau à portée de main : on parle et on marche plus longtemps.' },
+    tablette:       { t: 'outil', r: 2, name: 'Tablette de bois', mag: 5, sp: 4, port: 'tablette', c: ['#c9a25a', '#2a2233'], ico: 'tablette', desc: 'On y écrit, on la lave, on recommence.' },
+    lampe:          { t: 'outil', r: 3, name: 'Lampe de veille', mag: 8, sp: 2, c: ['#b8763c', '#ffd27a'], ico: 'lampe', desc: 'Pour étudier quand les autres dorment.' },
+    // --- tête : turbans et calottes
+    turban:         { t: 'turban', r: 0, name: 'Turban de coton', hp: 2, c: [LAINE, '#b0a48a'], desc: 'Une étoffe enroulée : l’ombre et la tenue.' },
+    turban_voyage:  { t: 'turban', r: 1, name: 'Turban de voyage', hp: 5, spd: 2, c: ['#d6c7a0', '#7a2f2a'], desc: 'Serré, un pan rabattu contre le vent.' },
+    cheche:         { t: 'turban', r: 2, name: 'Chèche des sables', hp: 5, sp: 6, c: ['#2f4f7a', '#1f2f55'], ico: 'cheche', desc: 'Le long voile des gens du désert : il garde le souffle du sable.' },
+    calotte:        { t: 'calotte', r: 1, name: 'Calotte de feutre', sp: 5, mag: 2, c: ['#b8a888', '#7a6a50'], desc: 'Légère, elle laisse la tête au frais.' },
+    calotte_double: { t: 'calotte', r: 2, name: 'Calotte doublée', sp: 8, mag: 4, c: ['#8a9a7a', '#4a5a3a'], desc: 'Deux épaisseurs piquées : on l’oublie.' },
+    // casques
+    casque_cuir:    { t: 'casque', r: 1, name: 'Casque de cuir', def: 4, ferme: 0.25, tete: 'casque_cuir', c: [CUIR, '#5e3c22'], desc: 'Cuir durci : peu de poids, un peu de garde.' },
+    coiffe_mailles: { t: 'casque', r: 2, name: 'Coiffe de mailles', def: 6, spd: -1, ferme: 0.35, tete: 'coiffe_mailles', c: [FER, '#7f8794'], ico: 'coiffe_mailles', desc: 'Un capuchon d’anneaux qui couvre la nuque.' },
+    casque_fer:     { t: 'casque', r: 2, name: 'Casque de fer', def: 8, spd: -2, ferme: 0.5, tete: 'casque', c: [FER, '#7f8794'], desc: 'Une calotte de fer d’une seule pièce.' },
+    casque_turban:  { t: 'casque', r: 3, name: 'Casque enturbanné', def: 8, hp: 5, spd: -2, ferme: 0.5, tete: 'casque_turban', c: [FER, LAINE], ico: 'casque_turban', desc: 'Un turban autour du fer : il amortit, et il tient chaud.' },
+    casque_bandes:  { t: 'casque', r: 3, name: 'Casque à bandes', def: 11, spd: -3, ferme: 0.6, tete: 'casque_bandes', c: [FER, '#b8763c'], ico: 'casque_bandes', desc: 'Quatre plaques rivées sous des bandes de fer, à la manière de Rûm et de Perse.' },
+    // --- corps : étoffes
+    tunique:        { t: 'etoffe', r: 0, name: 'Tunique de laine', hp: 2, c: ['#b8a888', '#7a6a50'], desc: 'Le vêtement de tous les jours.' },
+    tunique_lin:    { t: 'etoffe', r: 1, name: 'Tunique de lin', sp: 5, spd: 2, c: ['#f0ead8', '#c9c0a8'], desc: 'Lin d’Égypte, léger sous le soleil.' },
+    manteau_laine:  { t: 'etoffe', r: 1, name: 'Manteau de laine', hp: 6, def: 2, c: ['#6a5a4a', '#3a3028'], ico: 'manteau', desc: 'Épais : il tient chaud la nuit et amortit le jour.' },
+    manteau_raye:   { t: 'etoffe', r: 2, name: 'Manteau rayé du Yémen', hp: 8, sp: 6, c: ['#e6dcc4', '#7a2f2a'], ico: 'manteau_raye', desc: 'Étoffe rayée des tisserands du Yémen, portée dans toute l’Arabie.' },
+    burnous:        { t: 'etoffe', r: 2, name: 'Burnous', hp: 8, def: 3, spd: 1, c: ['#e9e2d0', '#a89878'], ico: 'burnous', desc: 'Le manteau à capuchon des gens du Maghreb, d’une seule pièce.' },
+    // cuirs
+    gilet_cuir:     { t: 'cuir', r: 1, name: 'Gilet de cuir', def: 6, corps: 'cuir', c: [CUIR, '#5e3c22'], desc: 'Cuir épais, lacé sur les côtés.' },
+    matelassee:     { t: 'cuir', r: 2, name: 'Tunique matelassée', def: 8, hp: 5, corps: 'matelasse', c: ['#c9b99a', '#7a6a50'], ico: 'matelassee', desc: 'De la bourre piquée entre deux toiles : elle boit les coups.' },
+    // armures
+    cotte:          { t: 'mailles', r: 2, name: 'Cotte de mailles', def: 12, spd: -3, corps: 'mailles', c: [FER, '#7f8794'], desc: 'Des milliers d’anneaux rivés. Elle protège, et elle pèse.' },
+    cotte_saluqi:   { t: 'mailles', r: 3, name: 'Cotte salûqie', def: 16, spd: -3, corps: 'mailles', c: [ACIER, '#5f7f9a'], desc: 'Du nom de Salûq, au Yémen, que citent les poètes anciens.' },
+    lamelles:       { t: 'mailles', r: 3, name: 'Cuirasse à lamelles', def: 18, hp: 4, spd: -5, corps: 'lamelles', c: [FER, '#7a2f2a'], ico: 'lamelles', desc: 'De petites plaques lacées, à la manière des cavaliers lourds de Perse et de Rûm.' },
+    cotte_serree:   { t: 'mailles', r: 4, name: 'Cotte à mailles serrées', def: 20, spd: -3, corps: 'mailles', c: ['#dfe6ee', '#5a3f8a'], desc: 'Anneaux plus petits, rangs plus denses : peu de lames passent.' }
+  };
+  D.GEAR_PRIX = [8, 16, 30, 50, 85]; // en dirhams, selon le rang ; la revente rend la moitié
+  // chaque comptoir a ses artisans : ce que l'on trouve dépend du lieu
+  D.GEAR_SHOPS = {
+    medine:    ['epee_fer', 'epee_yemen', 'javelot', 'couteau', 'baton_marche', 'baton_acacia', 'calame', 'calame_encrier', 'bouclier_cuir', 'gourde', 'turban', 'turban_voyage', 'calotte', 'tunique', 'tunique_lin', 'manteau_laine', 'gilet_cuir'],
+    desert:    ['arc_chasse', "arc_nab", 'lance_khatt', 'massue', 'houlette', 'baton_acacia', 'bouclier_cuir', 'gourde', 'cheche', 'turban_voyage', 'manteau_raye', 'manteau_laine'],
+    camp:      ['epee_yemen', 'epee_inde', 'lance_khatt', 'lance_samhari', 'arc_nab', 'dague', 'rondache', 'bouclier_ferre', 'casque_cuir', 'coiffe_mailles', 'casque_fer', 'gilet_cuir', 'matelassee', 'cotte'],
+    romaine:   ['epee_inde', 'masse_fer', 'dague', 'ecritoire', 'grand_bouclier', 'bouclier_ferre', 'tablette', 'lampe', 'casque_bandes', 'casque_fer', 'tunique_lin', 'lamelles', 'matelassee'],
+    koufa:     ['epee_inde', 'epee_mashrafi', 'arc_double', 'dague_fine', 'baton_ferre', 'ecritoire', 'calame_fin', 'rondache', 'tablette', 'lampe', 'calotte_double', 'casque_turban', 'manteau_raye', 'cotte', 'cotte_saluqi'],
+    citadelle: ['epee_yemen', 'lance_samhari', 'massue', 'baton_ferre', 'houlette', 'calame_encrier', 'rondache', 'bouclier_lamt', 'lampe', 'cheche', 'casque_fer', 'burnous', 'matelassee', 'cotte']
   };
 
   // Opérations de script autorisées : nom -> [min args, max args]
@@ -536,7 +679,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
   // poses des personnages : l'émotion se lit dans le corps, jamais sur un visage (dessin : sprites.js)
   D.POSES = ['prie', 'resolu', 'accable', 'salut', 'surpris', 'garde'];
 
-  D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole', 'Cœur'];
+  D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole', 'Cœur', 'Objets'];
 
   root.ISNAD_DEFS = D;
   if (typeof module !== 'undefined' && module.exports) module.exports = D;
@@ -636,7 +779,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
   const SKEY = 'isnad.save.v1';
   function fresh() {
     return { v: 1, started: false, prologue: false, epilogue: false, lights: [], sagas: {}, heroes: {},
-      items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
+      items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, gear: {}, equip: {}, gearInit: {}, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
       opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 } };
   }
   // La progression ne s'écrit que dans une mosquée (trois emplacements). Les options, elles, se gardent à part.
@@ -1448,6 +1591,16 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
         '...iIiiIiiIii...', '...iiIiiIiiii...', '...iIiiIiiIii...', '...iiiIiiIiii...', '....iiIiiiii....']
   };
 
+  // casque de cuir : la calotte de fer sans sa pointe, en cuir durci (W w)
+  { const cuir = r => r.replace(/I/g, 'W').replace(/i/g, 'w'), galon = r => r.replace(/[Ii]/g, 'a'), cal = (rows, bas) => ['................', '................'].concat(rows.slice(2, 5).map(cuir), [galon(rows[5])], bas);
+    HEADS.casque_cuir = { d: cal(HEADS.casque.d, BAS_D), l: cal(HEADS.casque.l, BAS_L), u: cal(HEADS.casque.u, BAS_U) }; }
+  // casque à bandes : plaques rivées sous des bandes (A a), sans pointe
+  { const bande = (rows, xs) => rows.map((r, j) => { if (j === 0) return '................'; const a = r.split(''); if (j === 5) return a.map((m, x) => m === 'i' || m === 'I' ? (x % 2 ? 'W' : 'w') : m).join(''); if (j >= 2 && j <= 4) xs.forEach(x => { if (a[x] === 'I' || a[x] === 'i') a[x] = 'w'; }); return a.join(''); });
+    HEADS.casque_bandes = { d: bande(HEADS.casque.d, [5, 10]), l: bande(HEADS.casque.l, [4, 8]), u: bande(HEADS.casque.u, [5, 10]) }; }
+  // coiffe de mailles : un capuchon d'anneaux (I i en damier), taillé sur la capuche
+  { const mail = rows => rows.map((r, y) => r.split('').map((m, x) => 'Ttu'.indexOf(m) >= 0 ? ((x + y) % 2 ? 'I' : 'i') : m).join(''));
+    HEADS.coiffe_mailles = { d: mail(HEADS.capuche.d), l: mail(HEADS.capuche.l), u: mail(HEADS.capuche.u) }; }
+
   /* ---------- gabarits : corps ----------
      R r buste · S s jupe · L l bas de jupe (jambes si la tenue est courte) · M entre-jambes · Z ourlet
      C c k manteau · E e pans du manteau (absents si la tenue est courte) · B b m bas du dos · A a ceinture · N main · F f pied */
@@ -1518,7 +1671,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
   const KINDS = {
     compagnon: { coiffe: 'imama', lit: true }, homme: { coiffe: 'imama', varie: true }, ancien: { coiffe: 'imama_queue', chale: true, item: 'baton' },
     savant: { coiffe: 'imama_large', chale: true, item: 'feuillets' }, marchand: { coiffe: 'imama_haute', item: 'bourse', trim: '#d9b45a', motif: 'rayures' },
-    soldat: { coiffe: 'casque', court: true, item: 'lance' }, romain: { coiffe: 'casque', court: true, item: 'lance', cimier: true, cuirasse: true },
+    soldat: { coiffe: 'casque', court: true, item: 'lance', troupe: 'soldat' }, romain: { coiffe: 'casque', court: true, item: 'lance', cimier: true, cuirasse: true, troupe: 'romain' },
     perse: { coiffe: 'tiare', trim: '#d9b45a' }, moine: { coiffe: 'capuche', sombre: true, trim: '#c9b99a' }, enfant: { coiffe: 'calotte', petit: true, manteau: 'aucun' },
     marin: { coiffe: 'calotte', court: true, raies: true, manteau: 'aucun' }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' },
     bedouin: { coiffe: 'keffieh', drape: true, trim: '#3a2a20' } // gens des tribus : la couleur du cordon et du galon (look.trim) dit le clan
@@ -1526,10 +1679,16 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
 
   // les gens sans nom ne se ressemblent pas tous : coiffe et manteau choisis d'après leurs couleurs, toujours les mêmes pour un même personnage
   const VARIE = [['imama', 'long'], ['calotte', 'aucun'], ['imama_queue', 'long'], ['imama_large', 'epaule'], ['imama_haute', 'aucun'], ['calotte', 'epaule']];
+  // les gens d'armes non plus : casque, arme, bouclier et armure varient d'un homme à l'autre (look.sel : qui il est)
+  const TROUPES = {
+    soldat: [['casque', 'lance', null], ['casque_turban', ['sabre', 'bouclier_cuir'], 'cuir'], ['casque_cuir', 'arc', null], ['coiffe_mailles', ['lance', 'bouclier_bois'], 'mailles'], ['casque', ['sabre', 'bouclier'], 'mailles'], ['casque_bandes', 'masse', 'cuir'], ['casque_cuir', ['lance', 'bouclier_cuir'], 'matelasse']],
+    romain: [['casque', ['lance', 'pavois'], 'lamelles'], ['casque_bandes', ['lance', 'pavois'], 'mailles'], ['casque', ['sabre', 'bouclier'], 'lamelles'], ['casque_bandes', 'arc', 'cuir']]
+  };
   function kindOf(look) {
     const K = Object.assign({}, KINDS[look.kind] || KINDS.homme);
+    if (K.troupe && look.sel !== undefined && !look.coiffe && !look.item) { const v = TROUPES[K.troupe][look.sel % TROUPES[K.troupe].length]; K.coiffe = v[0]; K.item = v[1]; if (v[2]) { K.armure = v[2]; K.cuirasse = false; } }
     if (K.varie && !look.coiffe && !look.manteau) { const v = VARIE[I.hash((look.robe || '') + (look.head || '') + (look.cloak || '')) % VARIE.length]; K.coiffe = v[0]; K.manteau = v[1]; }
-    ['coiffe', 'item', 'manteau', 'motif', 'echarpe', 'court', 'cuirasse', 'chale'].forEach(k => { if (look[k] !== undefined) K[k] = look[k]; });
+    ['coiffe', 'item', 'manteau', 'motif', 'echarpe', 'court', 'cuirasse', 'chale', 'armure'].forEach(k => { if (look[k] !== undefined) K[k] = look[k]; });
     return K;
   }
 
@@ -1585,12 +1744,25 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     }
     if (K.motif === 'rayures') { for (let y = b0; y < y1; y++) for (let x = 0; x < W; x++) if ('RSLl'.indexOf(g[y][x]) >= 0 && x % 3 === 0) g[y][x] = 'a'; }
     else if (K.motif === 'bandes') { for (let y = b0; y < y1; y++) for (let x = 0; x < W; x++) if ('CcEe'.indexOf(g[y][x]) >= 0 && (y - b0) % 3 === 2) g[y][x] = 'A'; }
+    if (K.armure) { const bas = K.armure === 'mailles' ? 8 : K.armure === 'lamelles' ? 7 : 5; // mailles en damier, lamelles en rangs, cuir uni, toile piquée
+      for (let y = b0; y < Math.min(y1, b0 + bas); y++) for (let x = 0; x < W; x++) { const m = g[y][x]; if ('RrSs'.indexOf(m) < 0) continue;
+        g[y][x] = K.armure === 'mailles' ? ((x + y) % 2 ? 'I' : 'i') : K.armure === 'lamelles' ? ((y - b0) % 2 ? 'i' : (x % 2 ? 'I' : 'i')) : K.armure === 'cuir' ? ((m === 'R' || m === 'S') ? 'W' : 'w') : ((x + y) % 3 === 0 ? 'r' : m); } }
     if (K.echarpe && !kneel) { const pts = key === 'd' ? [[5, 0], [6, 0], [6, 1], [7, 1], [7, 2], [8, 2], [8, 3], [9, 3]] : key === 'l' ? [[4, 1], [5, 1], [5, 2], [6, 2], [6, 3]] : [];
       pts.forEach(([x, dy]) => { if ('RrSs'.indexOf(g[b0 + dy][x]) >= 0) g[b0 + dy][x] = 'A'; }); }
     // attributs tenus ou portés (un ou plusieurs)
     const hip = b0 + 5;
     for (const it of [].concat(K.item || [])) {
-    if (it === 'bouclier') { const x0 = key === 'd' ? 0 : key === 'u' ? 12 : 9; [[1, -2], [2, -2], [0, -1], [1, -1], [2, -1], [3, -1], [0, 0], [3, 0], [0, 1], [1, 1], [2, 1], [3, 1], [1, 2], [2, 2]].forEach(([dx, dy]) => put(x0 + dx, hip + dy, (dx + dy) % 2 ? 'i' : 'I')); put(x0 + 1, hip, 'A'); put(x0 + 2, hip, 'a'); }
+    // le bouclier se porte du côté libre : à droite de l'image quand la main droite tient une hampe
+    const hampe = [].concat(K.item || []).some(q => ['lance', 'baton', 'masse', 'arc', 'durra', 'etendard', 'calame'].indexOf(q) >= 0), ecuX = key === 'd' ? (hampe ? 12 : 0) : key === 'u' ? (hampe ? 0 : 12) : 9;
+    if (it === 'bouclier' || it === 'bouclier_cuir' || it === 'bouclier_bois') { const x0 = ecuX, fer = it === 'bouclier', m1 = fer ? 'I' : 'W', m2 = fer ? 'i' : 'w';
+      [[1, -2], [2, -2], [0, -1], [1, -1], [2, -1], [3, -1], [0, 0], [3, 0], [0, 1], [1, 1], [2, 1], [3, 1], [1, 2], [2, 2]].forEach(([dx, dy]) => put(x0 + dx, hip + dy, it === 'bouclier_bois' && (dy === -2 || dy === 2 || dx === 0 || dx === 3) ? 'i' : (dx + dy) % 2 ? m2 : m1));
+      put(x0 + 1, hip, it === 'bouclier_bois' ? 'I' : 'A'); put(x0 + 2, hip, it === 'bouclier_bois' ? 'i' : 'a'); }
+    if (it === 'pavois') { const x0 = ecuX; for (let dy = -4; dy <= 3; dy++) for (let dx = 0; dx < 4; dx++) { if ((dy === -4 || dy === 3) && (dx === 0 || dx === 3)) continue; put(x0 + dx, hip + dy, (dx === 0 || dx === 3 || dy === -4 || dy === 3) ? 'i' : 'X'); } put(x0 + 1, hip - 1, 'I'); put(x0 + 2, hip - 1, 'I'); put(x0 + 1, hip, 'I'); put(x0 + 2, hip, 'i'); }
+    if (it === 'arc' && key !== 'u') { const x = key === 'd' ? 0 : 0; [[2, -6], [1, -5], [1, -4], [0, -3], [0, -2], [0, -1], [0, 0], [0, 1], [1, 2], [1, 3], [2, 4]].forEach(([dx, dy]) => put(x + dx, hip + dy, dy === -1 || dy === 0 ? 'w' : 'W')); for (let dy = -5; dy <= 3; dy++) if (g[hip + dy] && g[hip + dy][x + 2] === '.') put(x + 2, hip + dy, 'P'); }
+    if (it === 'masse') { const x = key === 'd' ? 1 : key === 'u' ? 14 : 2; for (let y = hip - 4; y < hip + 3; y++) put(x, y, y % 4 === 1 ? 'w' : 'W'); [[-1, -7], [0, -7], [1, -7], [-1, -6], [0, -6], [1, -6], [-1, -5], [0, -5], [1, -5]].forEach(([dx, dy]) => put(x + dx, hip + dy, (dx + dy) % 2 ? 'i' : 'I')); }
+    if (it === 'dague' && key !== 'u') { if (key === 'd') { put(10, hip - 1, 'w'); put(11, hip, 'I'); put(12, hip + 1, 'I'); put(12, hip + 2, 'i'); } else { put(3, hip - 1, 'w'); put(2, hip, 'I'); put(1, hip + 1, 'I'); put(0, hip + 2, 'i'); } }
+    if (it === 'calame' && key !== 'u') { const x = key === 'd' ? 2 : 3; put(x, hip - 2, 'W'); put(x, hip - 1, 'W'); put(x - 1, hip, 'W'); put(x - 1, hip + 1, 'f'); }
+    if (it === 'tablette' && key !== 'u') { const x = key === 'd' ? 12 : 9; put(x, hip - 2, 'w'); put(x + 1, hip - 2, 'w'); for (let dy = -1; dy <= 1; dy++) { put(x, hip + dy, 'P'); put(x + 1, hip + dy, 'P'); } put(x, hip + 2, 'W'); put(x + 1, hip + 2, 'W'); }
     if (it === 'outre' && key !== 'u') { const x = key === 'd' ? 10 : 6; put(x, hip - 1, 'w'); put(x, hip, 'W'); put(x + 1, hip, 'W'); put(x, hip + 1, 'W'); put(x + 1, hip + 1, 'w'); }
     if (it === 'etendard') { const x = key === 'd' ? 1 : key === 'u' ? 14 : 2, sx = key === 'u' ? -1 : 1; for (let y = 1; y < H - 1; y++) put(x, y, y % 5 === 2 ? 'w' : 'W'); put(x, 0, 'I'); for (let j = 0; j < 4; j++) for (let k2 = 1; k2 <= 4 - (j === 3 ? 2 : 0); k2++) put(x + sx * k2, 1 + j, (j + k2) % 3 ? 'A' : 'a'); }
     if (it === 'baton' || it === 'lance') { const x = key === 'd' ? 1 : key === 'u' ? 14 : 2, top = it === 'lance' ? 1 : (kneel ? 9 : 5); for (let y = top; y < H - 1; y++) put(x, y, y % 5 === 2 ? 'w' : 'W'); if (it === 'lance') { put(x, 0, 'I'); put(x, 1, 'I'); put(x, 2, 'i'); } }
@@ -2044,6 +2216,17 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     return { name: who, seal: G.sealURL('', '#c8b48a'), color: '#c8b48a' };
   }
 
+  /* ----- rien de ce que le joueur doit lire ne reste sous le noir d'un fondu -----
+     Un script peut fondre au noir puis raconter (« fade out », un carton, des narrations) : le texte passe alors
+     au-dessus du noir (classe « noir »). Le joueur de test signale tout texte qui resterait caché. */
+  const noirci = () => +($('#fade').style.opacity || 0) > 0.5;
+  function lisible(el) {
+    if (!noirci()) return;
+    if (S.TEXTE_SUR_NOIR) document.body.classList.add('noir');
+    if (I.debug.log) { const z = e => +getComputedStyle(e).zIndex || 0; if (z(el) <= z($('#fade'))) I.debug.log.push('TEXTE CACHÉ sous le fondu : #' + el.id + ' « ' + (el.textContent || '').trim().slice(0, 50) + ' »'); }
+  }
+  S.TEXTE_SUR_NOIR = true; // à « false », on retrouve l'ancien comportement : le joueur de test doit alors signaler « TEXTE CACHÉ »
+
   /* ----- boîte de dialogue ----- */
   let typing = null;
   async function showLine(kind, sp, text) {
@@ -2066,7 +2249,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       let tick = 0;
       typing = setInterval(() => { i += 2; tx.textContent = plain.slice(0, i); if (++tick % 3 === 0) I.audio.sfx('step'); if (i >= plain.length) finish(); }, 22);
     });
-    $('#dialog .next').style.visibility = 'visible';
+    $('#dialog .next').style.visibility = 'visible'; lisible(box);
     await I.sleep(60);
     if (I.debug.auto) await I.sleep(30); else await I.input.wait(['ok', 'cancel']);
     I.audio.sfx('blip');
@@ -2076,7 +2259,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
   /* ----- cartons ----- */
   async function card(cls, html, auto) {
     const c = $('#card'); c.className = cls; c.innerHTML = html; c.hidden = false;
-    void c.offsetWidth; c.classList.add('on');
+    void c.offsetWidth; c.classList.add('on'); lisible(c);
     if (I.debug.auto) await I.sleep(60);
     else if (auto) await I.input.waitTimed(['ok', 'cancel'], auto, 500);
     else { await I.sleep(350); await I.input.wait(['ok', 'cancel']); }
@@ -2098,10 +2281,12 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       let idx = 0; const btns = [];
       const locked = o => o.need !== undefined && !known(o.need);
       const sel = i => { idx = (i + btns.length) % btns.length; btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); };
-      const done = i => { if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; I.audio.sfx('ok'); res(i); };
-      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + I.fmt(o.t) + (o.need !== undefined ? ' <span class="kn">✧ savoir</span>' : '')); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
-      sel(Math.max(0, options.findIndex(o => !locked(o))));
-      const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); I.audio.sfx('move'); } else if (a === 'ok') done(idx); return true; });
+      const ne = performance.now(); // un menu n'accepte rien pendant un tiers de seconde : le toucher qui vient de faire avancer le texte ne répond pas à la place du joueur
+      const done = i => { if (!I.debug.auto && performance.now() - ne < 350) return; if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; I.audio.sfx('ok'); res(i); };
+      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ savoir</span>' : '')); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
+      sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box);
+      const vue = () => { if (btns[idx].scrollIntoView) btns[idx].scrollIntoView({ block: 'nearest' }); }; // une longue liste suit la sélection
+      const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); vue(); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); vue(); I.audio.sfx('move'); } else if (a === 'ok') done(idx); return true; });
       if (I.debug.auto) setTimeout(() => {
         const open = options.map((o, i) => i).filter(i => !locked(options[i]));
         if (options.some(o => typeof o.v === 'number')) { const pick = open.slice().sort((x, y) => I.debug.pickWrong ? options[x].v - options[y].v : options[y].v - options[x].v)[0]; return done(pick); }
@@ -2158,6 +2343,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
   };
   S.fade = async function (dir, ms) {
     const f = $('#fade'); ms = (ms || 450) / I.speed; f.style.transition = `opacity ${ms}ms ease`; f.style.opacity = dir === 'out' ? 1 : 0;
+    if (dir !== 'out') document.body.classList.remove('noir'); // le jour revient : le texte reprend sa place sous les écrans
     await new Promise(r => setTimeout(r, ms + 30));
   };
 
@@ -2216,7 +2402,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       case 'flash': G.flash(a || '#fff'); break;
       case 'sfx': I.audio.sfx(a); break;
       case 'amb': I.audio.amb(a); break;
-      case 'give': { const n = b || 1, it = D.ITEMS[a]; const inv = I.save.data.items; inv[a] = (inv[a] || 0) + n; S.toast(`Reçu : <b>${it.name}</b>${n > 1 ? ' ×' + n : ''}`); I.audio.sfx('ok'); break; }
+      case 'give': { if (D.GEAR[a]) { await I.gear.receive(a, b || 1); break; } const n = b || 1, it = D.ITEMS[a]; const inv = I.save.data.items; inv[a] = (inv[a] || 0) + n; S.toast(`Reçu : <b>${it.name}</b>${n > 1 ? ' ×' + n : ''}`); I.audio.sfx('ok'); break; }
       case 'join': W.join(a); break;
       case 'leave': W.leave(a); break;
       case 'codex': I.ui.unlockCodex(a); break;
@@ -2249,20 +2435,20 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     if (W.roster[id]) return W.roster[id];
     const def = W.saga.heroes[id]; if (!def) return null;
     const key = W.saga.id + ':' + id, sv = I.save.data.heroes[key] || { lvl: 1, xp: 0 };
-    const h = { id, def, lvl: sv.lvl, xp: sv.xp, sakina: 0, niyya: 0 };
-    const st = I.calc.hero(def, h.lvl); h.hp = st.hp; h.sp = st.sp;
+    const h = { id, key, def, lvl: sv.lvl, xp: sv.xp, sakina: 0, niyya: 0 };
+    const st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp;
     return (W.roster[id] = h);
   };
   W.persistHeroes = function () { for (const id in W.roster) { const h = W.roster[id]; I.save.data.heroes[W.saga.id + ':' + id] = { lvl: h.lvl, xp: h.xp }; } };
-  W.ensureLevel = function (h) { if (h.lvl < W.minLvl) { h.lvl = W.minLvl; h.xp = 0; const st = I.calc.hero(h.def, h.lvl); h.hp = st.hp; h.sp = st.sp; } };
-  W.healAll = function () { W.party.forEach(id => { const h = W.hero(id), st = I.calc.hero(h.def, h.lvl); h.hp = st.hp; h.sp = st.sp; }); };
+  W.ensureLevel = function (h) { if (h.lvl < W.minLvl) { h.lvl = W.minLvl; h.xp = 0; const st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp; } };
+  W.healAll = function () { W.party.forEach(id => { const h = W.hero(id), st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp; }); };
   W.gainSakina = function (v) { W.party.forEach(id => { const h = W.hero(id); h.sakina = Math.min(100, h.sakina + v); }); };
   W.join = function (id) {
     if (W.party.includes(id) || !W.saga.heroes[id]) return;
     if (W.party.length >= 3) return;
     W.party.push(id); const h = W.hero(id); W.ensureLevel(h);
-    const lead = W.hero(W.party[0]); if (lead && h.lvl < lead.lvl - 1) { h.lvl = lead.lvl - 1; const st = I.calc.hero(h.def, h.lvl); h.hp = st.hp; h.sp = st.sp; }
-    W.refreshSheets(); S.toast(`<b>${h.def.name}</b> rejoint le groupe.`); I.audio.sfx('ok');
+    const lead = W.hero(W.party[0]); if (lead && h.lvl < lead.lvl - 1) { h.lvl = lead.lvl - 1; const st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp; }
+    W.refreshSheets(); S.toast(`<b>${h.def.name}</b> rejoint le groupe.`); I.audio.sfx('ok'); if (I.debug.auto) I.gear.best(h);
   };
   W.leave = function (id) { const i = W.party.indexOf(id); if (i < 0 || W.party.length <= 1) return; W.party.splice(i, 1); W.refreshSheets(); };
   function lookOf(def) { return Object.assign({ kind: 'compagnon' }, def.look); }
@@ -2384,7 +2570,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); }
     I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
-    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.charSheet(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
+    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.charSheet(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
     W.foes = (ch.foes || []).map(f => Object.assign({}, f, { map: f.map || ch.map, done: false, placed: false, ph: Math.random() * 6 }));
     W.chests = (ch.chests || []).map(c => Object.assign({}, c, { map: c.map || ch.map, open: false, placed: false }));
     W.objIndex = cp ? cp.obj : 0;
@@ -2405,6 +2591,8 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); await I.oeuvres.openChapter(); }
       if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) { I.build.yields(); await I.trade.resolve(); } }
       if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Touche un endroit pour t’y rendre, un personnage pour lui parler · <b>?</b> : que faire' : '<b>Flèches</b>, <b>ZQSD</b> ou clic : marcher · <b>Entrée</b> : parler · <b>H</b> ou <b>?</b> : que faire · <b>Échap</b> : halte', 10000);
+      // l'équipement : le joueur de test s'habille au mieux ; le joueur est prévenu quand la réserve tient mieux que ce qu'il porte
+      if (I.debug.auto) I.gear.bestAll(); else if (!cp && I.gear.better()) S.toast('La réserve tient de quoi mieux équiper ce groupe : <b>Halte</b>, puis <b>Équipement</b>.', 7000);
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
   };
@@ -2465,7 +2653,9 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
           if (perfect) { sv.items.siwak = (sv.items.siwak || 0) + 2; sv.items.musc = (sv.items.musc || 0) + 1; I.audio.sfx('roll'); }
           await S.card('victory', `<p class="small">Fidélité à la Chaîne · ${I.esc(saga.name)}</p><h1>${perfect ? 'Isnâd sahîh' : 'Chaîne transmise'}</h1><ul><li>Actes retrouvés du premier coup : <b>${sp.cOk || 0} / ${sp.cTot}</b></li>${perfect ? '<li>Chaîne sans faille : chaque acte fut celui que les transmetteurs ont rapporté.</li><li>Reçu : <b>Siwâk ×2</b>, <b>Musc</b></li>' : '<li>Là où la chaîne a vacillé, relis le Recueil : chaque acte y a sa source.</li>'}</ul><div class="hint">▼</div>`);
         }
-        sp.done = true; sp.ch = saga.frame ? W.ci + 1 : 0; I.save.store();
+        sp.done = true; sp.ch = saga.frame ? W.ci + 1 : 0;
+        if (!saga.frame) I.gear.deposer(saga.id); // ce que ce groupe portait rejoint la réserve : le suivant s'en servira
+        I.save.store();
         await I.ui.afterSaga(saga, ch);
       }
     } finally { S.depth--; S.hideDialog(); }
@@ -2492,7 +2682,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       return;
     }
     const c = who && W.chests.includes(who) && !who.open && Math.hypot(who.x - p.x, who.y - p.y) < 30 ? who : W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
-    if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.item, c.n || 1]]); W.checkpoint(); return; }
+    if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.gear || c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
       await I.oeuvres.natte();
     } else if (I.trade && I.trade.near()) await I.trade.open();
@@ -2677,11 +2867,15 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
   };
   W.autoStep = function () {
     const o = W.cur(); if (!o) return; const p = W.player, log = I.debug.log || (I.debug.log = []);
-    if (I.trade && W.map.spots.comptoir && !S.flags._trade_test && !W.saga.frame && !W._autoBusy) { S.flags._trade_test = true; W._autoBusy = true; I.trade._autoStep = 0; I.trade._sold = I.trade._bought = 0; I.trade.open().then(() => { W._autoBusy = false; }, e => { log.push('ERR commerce ' + e.message); W._autoBusy = false; }); return; }
+    if (I.trade && W.map.spots.comptoir && !S.flags._trade_test && !W.saga.frame && !W._autoBusy) { S.flags._trade_test = true; W._autoBusy = true; I.trade._autoStep = 0; I.trade._sold = I.trade._bought = I.trade._forge = 0; I.trade.open().then(() => { W._autoBusy = false; }, e => { log.push('ERR commerce ' + e.message); W._autoBusy = false; }); return; }
     if (o.build && I.debug.noBuild) return;
     if (o.build) { W._autoBusy = true; I.build.autoBuild(o.build); I.build.after().then(() => { W._autoBusy = false; }, e => { log.push('ERR bâtir ' + e.message); W._autoBusy = false; }); return; }
     if (W.map.spots.priere && !S.flags._prayed && !W._autoBusy) { W._autoBusy = true; W.pray().then(() => I.oeuvres.auto()).then(() => { W._autoBusy = false; }, e => { log.push('ERR prière ' + e.message); W._autoBusy = false; }); return; }
     const go = (x, y, what) => { if (!W.reach(p.x, p.y, x, y)) log.push(`INACCESSIBLE ${W.saga.id}/${W.ch.id} obj${W.objIndex} ${what} sur ${W.map.id}`); p.x = x; p.y = y; W.resetTrail(); };
+    const ck = !W._autoBusy && W.chests.find(c => !c.open && !c._vu && c.map === W.map.id && c.placed);
+    if (ck) { ck._vu = true; const quoi = ck.gear || ck.item || ck.codex;
+      if (![[0, 14], [0, -14], [-14, 0], [14, 0]].some(([dx, dy]) => W.reach(p.x, p.y, ck.x + dx, ck.y + dy))) log.push(`INACCESSIBLE ${W.saga.id}/${W.ch.id} coffre ${quoi} sur ${W.map.id}`);
+      W._autoBusy = true; ck.open = true; S.run([ck.codex ? ['codex', ck.codex] : ['give', ck.gear || ck.item, ck.n || 1]]).then(() => { W.checkpoint(); W._autoBusy = false; }, e => { log.push('ERR coffre ' + e.message); W._autoBusy = false; }); return; }
     W._autoBusy = true; const done = () => { W._autoBusy = false; };
     if (o.goto) { const s = W.resolve(o.goto, W.map.id, p); go(s[0], s[1], 'goto ' + o.goto); W.complete().then(done, e => { log.push('ERR ' + e.message); done(); }); }
     else if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); if (!n || n.hidden || n.map !== W.map.id || !n.placed) { log.push(`PNJ ABSENT ${W.saga.id}/${W.ch.id} obj${W.objIndex} talk ${o.talk} (carte ${W.map.id}, pnj ${n ? n.map + (n.hidden ? ' caché' : '') : '?'})`); } else go(n.x, n.y + 14, 'talk ' + o.talk); W.complete().then(done, e => { log.push('ERR ' + e.message); done(); }); }
@@ -3065,9 +3259,10 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       Tr.lore('caravanes'); I.audio.sfx('ok');
       const pick = (q, o) => I.debug.auto ? Promise.resolve(o._auto || 0) : S.menuPick(q, o);
       for (;;) {
-        const car = sp().caravan, top = [{ t: 'Vendre' }, { t: 'Acheter' }, { t: car ? `Caravane en route : ${car.name}` : 'Confier une cargaison à une caravane' }, { t: 'Partir' }];
-        const i = I.debug.auto ? (Tr._autoStep = (Tr._autoStep || 0) + 1, [0, 1, 2, 3][Math.min(3, Tr._autoStep - 1)]) : await S.menuPick(`Le comptoir des caravanes · ${Tr.dirhams()} dirhams`, top);
-        if (i === 3) break;
+        const car = sp().caravan, art = (D.GEAR_SHOPS[W.map.id] || []).length, top = [{ t: 'Vendre' }, { t: 'Acheter' }, { t: car ? `Caravane en route : ${car.name}` : 'Confier une cargaison à une caravane' }, { t: art ? 'Les artisans : armes, boucliers, coiffes, tenues' : 'Revendre une pièce de la réserve' }, { t: 'Partir' }];
+        const i = I.debug.auto ? (Tr._autoStep = (Tr._autoStep || 0) + 1, [0, 1, 2, 3, 4][Math.min(4, Tr._autoStep - 1)]) : await S.menuPick(`Le comptoir des caravanes · ${Tr.dirhams()} dirhams`, top);
+        if (i === 4) break;
+        if (i === 3) { await Tr.artisans(); continue; }
         if (i === 0) for (;;) {
           const L = SELL.filter(e => stock(e[0], e[1]) > 0), o = L.map(e => ({ t: `${nameOf(e[0], e[1])} · tu en as ${stock(e[0], e[1])} · ${e[2]} dirhams pièce` })).concat([{ t: 'Retour' }]);
           const j = I.debug.auto ? (L.length && !Tr._sold ? (Tr._sold = 1, 0) : L.length) : await S.menuPick(`Vendre · ${Tr.dirhams()} dirhams`, o);
@@ -3089,6 +3284,30 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
         }
       }
     } finally { S.depth--; S.hideDialog(); }
+  };
+  // les artisans du lieu : chaque comptoir vend ce que l'on fabrique ou ce qui passe par là (D.GEAR_SHOPS)
+  Tr.artisans = async function () {
+    const Gr = I.gear, shop = D.GEAR_SHOPS[W.map.id] || [], heroes = W.party.map(id => W.hero(id));
+    const mieux = (h, id) => Gr.can(h.def, id) && Gr.score(h.def, id) > (Gr.of(h)[Gr.slotOf(id)] ? Gr.score(h.def, Gr.of(h)[Gr.slotOf(id)]) : 0) + 0.01;
+    if (I.debug.auto) { // le joueur de test achète la pièce utile la moins chère, s'il lui reste de quoi faire l'aumône
+      const pick = shop.filter(id => Tr.dirhams() >= Gr.prix(id) + 12 && !Gr.stock(id) && heroes.some(h => mieux(h, id))).sort((a, b) => Gr.prix(a) - Gr.prix(b))[0];
+      if (pick && !Tr._forge) { Tr._forge = 1; Tr.dirhams(-Gr.prix(pick)); await Gr.receive(pick); } return; }
+    const vendre = async () => { for (;;) { const L = Gr.reserve(), o = L.map(id => ({ html: `${Gr.img(id)} ${I.esc(D.GEAR[id].name)}${Gr.stock(id) > 1 ? ' ×' + Gr.stock(id) : ''} · ${Gr.revente(id)} dirhams` })).concat([{ t: 'Retour' }]);
+      const j = await S.menuPick(L.length ? `Revendre · ${Tr.dirhams()} dirhams` : 'La réserve est vide.', o); if (j >= L.length) return; Gr.add(L[j], -1); Tr.dirhams(Gr.revente(L[j])); I.audio.sfx('blip'); } };
+    if (!shop.length) return vendre();
+    for (;;) {
+      const cats = Gr.SLOTS.filter(s => shop.some(id => Gr.slotOf(id) === s));
+      const o = cats.map(s => ({ t: `${D.SLOTS[s]} · ${shop.filter(id => Gr.slotOf(id) === s).length} pièces` })).concat([{ t: 'Revendre une pièce de la réserve' }, { t: 'Retour' }]);
+      const i = await S.menuPick(`Les artisans de ${D.MAPS[W.map.id].label} · ${Tr.dirhams()} dirhams`, o);
+      if (i > cats.length) return; if (i === cats.length) { await vendre(); continue; }
+      for (;;) {
+        const L = shop.filter(id => Gr.slotOf(id) === cats[i]), bo = L.map(id => { const g = D.GEAR[id], who = heroes.filter(h => Gr.can(h.def, id));
+          return { html: `${Gr.img(id)} <b>${I.esc(g.name)}</b> · ${Gr.prix(id)} dirhams${Tr.dirhams() < Gr.prix(id) ? ' (trop cher)' : ''}<br><small>${Gr.effets(g)}${who.length ? (who.some(h => mieux(h, id)) ? ' · mieux pour ' + who.filter(h => mieux(h, id)).map(h => I.esc(h.def.name)).join(', ') : '') : ' · personne ici ne peut la porter'}</small>` }; }).concat([{ t: 'Retour' }]);
+        const j = await S.menuPick(`${D.SLOTS[cats[i]]} · ${Tr.dirhams()} dirhams`, bo); if (j >= L.length) break;
+        if (Tr.dirhams() < Gr.prix(L[j])) { S.toast('Il te manque des dirhams.', 1500); I.audio.sfx('dark'); continue; }
+        Tr.dirhams(-Gr.prix(L[j])); await Gr.receive(L[j]);
+      }
+    }
   };
   // au début d'un chapitre : la caravane revient, ou des hommes rentrent à pied
   Tr.resolve = async function () {
@@ -3454,6 +3673,283 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
   };
 })();
 
+/* ==== src/core/gear.js ==== */
+/* ISNAD — l'équipement : quatre emplacements (main droite, main gauche, tête, corps), une réserve commune,
+   des pièces que l'on voit. Règles, icônes et pages de la halte ; les pièces sont déclarées dans defs.js.
+   Ce sont des objets ordinaires de l'époque : une convention de jeu, ni relique ni reconstitution. Le jeu
+   ne dit pas qui portait quoi, et aucun objet ne reçoit de vertu : le fer aide à tenir, il ne remplace pas le cœur. */
+(function () {
+  'use strict';
+  const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script;
+  const Gr = I.gear = {};
+  const SLOTS = Object.keys(D.SLOTS), STATS = ['atk', 'mag', 'def', 'spd', 'hp', 'sp'];
+  const NOM = { atk: 'Force', mag: 'Esprit', def: 'Garde', spd: 'Élan', hp: 'Constance', sp: 'Souffle' };
+  const TRAITS = ['perce', 'vif', 'choc', 'parade', 'ferme'];
+  Gr.SLOTS = SLOTS; Gr.NOM = NOM;
+
+  /* ================= état : la réserve, ce que chacun porte ================= */
+  Gr.state = function () { const d = I.save.data; if (!d.gear) d.gear = {}; if (!d.equip) d.equip = {}; if (!d.gearInit) d.gearInit = {}; return d; };
+  Gr.typeOf = id => D.GEAR_TYPES[D.GEAR[id].t];
+  Gr.slotOf = id => Gr.typeOf(id).slot;
+  Gr.can = (def, id) => { const g = D.GEAR[id]; return !!g && (g.roles || D.GEAR_TYPES[g.t].roles).includes(def.role); };
+  Gr.prix = id => D.GEAR_PRIX[D.GEAR[id].r];
+  Gr.revente = id => Math.floor(Gr.prix(id) / 2);
+  Gr.key = h => h.key || (I.world.saga.id + ':' + h.id);
+  Gr.stock = id => Gr.state().gear[id] || 0;
+  Gr.add = function (id, n) { const d = Gr.state(); d.gear[id] = Math.max(0, (d.gear[id] || 0) + n); if (!d.gear[id]) delete d.gear[id]; };
+  Gr.reserve = slot => Object.keys(Gr.state().gear).filter(id => D.GEAR[id] && (!slot || Gr.slotOf(id) === slot)).sort((a, b) => D.GEAR[b].r - D.GEAR[a].r || D.GEAR[a].name.localeCompare(D.GEAR[b].name));
+
+  // ce avec quoi un héros commence : selon son rôle, et selon ce que son dessin montre déjà
+  function depart(def) {
+    const L = def.look || {}, it = [].concat(L.item || []), e = {};
+    const first = list => list.find(id => id && Gr.can(def, id));
+    e.md = first([it.includes('sabre') && 'epee_fer', it.includes('lance') && 'javelot', it.includes('feuillets') && 'calame', it.includes('baton') && 'baton_marche',
+      { guerrier: 'epee_fer', gardien: 'baton_marche', stratege: 'couteau', sage: 'calame', soigneur: 'baton_marche' }[def.role]]);
+    if (it.includes('bouclier')) e.mg = first(['bouclier_cuir']);
+    if (L.kind !== 'cyber') {
+      e.tete = first([L.coiffe === 'casque_turban' && 'casque_turban', L.coiffe === 'casque' && 'casque_fer', 'turban']);
+      e.corps = first([L.cuirasse && 'cotte', 'tunique']);
+    }
+    SLOTS.forEach(s => { if (!e[s]) delete e[s]; });
+    return e;
+  }
+  // { md, mg, tete, corps } ; la première fois, la tenue de départ ; un groupe retrouvé se sert dans la réserve
+  Gr.of = function (h) {
+    const d = Gr.state(), k = Gr.key(h);
+    if (!d.equip[k]) { if (!d.gearInit[k]) { d.gearInit[k] = 1; d.equip[k] = depart(h.def); } else { d.equip[k] = {}; Gr.best(h); } }
+    return d.equip[k];
+  };
+  Gr.mods = function (h, eq) { const e = eq || Gr.of(h), m = { atk: 0, mag: 0, def: 0, spd: 0, hp: 0, sp: 0 }; SLOTS.forEach(s => { const g = D.GEAR[e[s]]; if (g) STATS.forEach(k => { m[k] += g[k] || 0; }); }); return m; };
+  // ce que l'équipement change au combat, au-delà des chiffres
+  Gr.traits = function (h) {
+    const e = Gr.of(h), t = { perce: 0, vif: 0, choc: 0, parade: 0, ferme: 0, prime: false, anim: null, arme: null };
+    SLOTS.forEach(s => { const g = D.GEAR[e[s]]; if (!g) return; TRAITS.forEach(k => { t[k] = Math.min(0.75, t[k] + (g[k] || 0)); }); if (g.prime) t.prime = true; });
+    const a = D.GEAR[e.md]; if (a) { t.arme = a; t.anim = D.GEAR_TYPES[a.t].anim || null; }
+    return t;
+  };
+  Gr.sync = function (h) { const st = I.calc.of(h); h.hp = Math.min(h.hp, st.hp); h.sp = Math.min(h.sp, st.sp); };
+  // équiper (ou retirer : id nul). L'ancienne pièce retourne à la réserve.
+  Gr.put = function (h, slot, id) {
+    const e = Gr.of(h), old = e[slot]; if (id && (Gr.slotOf(id) !== slot || !Gr.can(h.def, id) || !Gr.stock(id))) return false;
+    if (old) Gr.add(old, 1); if (id) { Gr.add(id, -1); e[slot] = id; } else delete e[slot];
+    Gr.sync(h); return true;
+  };
+  // pièces portées par ceux qui ne sont pas du groupe (autre saga, compagnon resté en arrière) : on peut les rappeler
+  Gr.ailleurs = function (h, slot) {
+    const d = Gr.state(), W = I.world, ici = W.party.map(id => Gr.key(W.hero(id))), out = [];
+    Object.keys(d.equip).forEach(k => { if (ici.includes(k)) return; const id = d.equip[k][slot]; if (!id || !Gr.can(h.def, id)) return; const [sid, hid] = k.split(':'), def = I.sagas[sid] && I.sagas[sid].heroes[hid]; out.push({ id, key: k, name: def ? def.name : '?' }); });
+    return out;
+  };
+  Gr.rappeler = function (key, slot) { const e = Gr.state().equip[key]; if (e && e[slot]) { Gr.add(e[slot], 1); delete e[slot]; } };
+  // à la fin d'une saga, ce que son groupe portait rejoint la réserve : le groupe suivant s'en servira
+  // (les pièces de départ, de rang 0, ne s'y entassent pas : deux de chaque suffisent)
+  Gr.deposer = function (sagaId) { const d = Gr.state(); let n = 0; Object.keys(d.equip).forEach(k => { if (k.indexOf(sagaId + ':') !== 0) return; SLOTS.forEach(s => { const id = d.equip[k][s]; if (id && D.GEAR[id] && !(D.GEAR[id].r === 0 && Gr.stock(id) >= 2)) { Gr.add(id, 1); n++; } }); delete d.equip[k]; }); return n; };
+
+  /* ================= choisir : ce qu'une pièce vaut pour un rôle ================= */
+  const POIDS = {
+    guerrier: { atk: 3, def: 1.5, hp: 1.2, spd: 1.2, mag: 0.6, sp: 0.4 }, gardien: { def: 3, hp: 2, atk: 1.6, spd: 0.8, mag: 0.8, sp: 0.5 },
+    sage: { mag: 3, sp: 1.6, hp: 1, def: 1, spd: 1, atk: 0.2 }, soigneur: { mag: 2.6, sp: 2, hp: 1.2, def: 1, spd: 1, atk: 0.2 },
+    stratege: { spd: 2.6, atk: 2, mag: 1.6, def: 1, hp: 1, sp: 0.8 }
+  };
+  Gr.score = function (def, id) {
+    const g = D.GEAR[id]; if (!g) return 0; const w = POIDS[def.role]; let s = 0.5; // une pièce vaut toujours mieux que rien
+    STATS.forEach(k => { s += (g[k] || 0) * w[k]; });
+    return s + ((g.perce || 0) + (g.vif || 0)) * 10 * w.atk + (g.choc || 0) * 30 + (g.parade || 0) * 60 + (g.ferme || 0) * 6 + (g.prime ? 4 : 0);
+  };
+  // « Au mieux » : pour chaque emplacement, la meilleure pièce de la réserve. Rend le nombre de pièces changées.
+  Gr.best = function (h) {
+    const e = Gr.of(h); let n = 0;
+    SLOTS.forEach(s => { let top = e[s] || null, sc = top ? Gr.score(h.def, top) : 0;
+      Gr.reserve(s).forEach(id => { if (Gr.can(h.def, id) && Gr.score(h.def, id) > sc + 0.01) { top = id; sc = Gr.score(h.def, id); } });
+      if (top !== (e[s] || null) && Gr.put(h, s, top)) n++; });
+    return n;
+  };
+  Gr.bestAll = function () { const W = I.world; let n = 0; if (!W.saga) return 0; W.party.forEach(id => { n += Gr.best(W.hero(id)); }); return n; };
+  // la réserve tient-elle mieux que ce que porte quelqu'un du groupe ?
+  Gr.better = function () {
+    const W = I.world; if (!W.saga) return null;
+    for (const id of W.party) { const h = W.hero(id), e = Gr.of(h); for (const g of Gr.reserve()) { const s = Gr.slotOf(g); if (Gr.can(h.def, g) && Gr.score(h.def, g) > (e[s] ? Gr.score(h.def, e[s]) : 0) + 0.01) return { h, id: g }; } }
+    return null;
+  };
+
+  /* ================= dire : effets, comparaisons ================= */
+  const pc = v => (v > 0 ? '+' : '−') + Math.abs(v) + ' %';
+  Gr.effets = function (g) {
+    const out = STATS.filter(k => g[k]).map(k => `${NOM[k]} ${pc(g[k])}`);
+    if (g.perce) out.push(`perce la garde (${Math.round(g.perce * 100)} %)`);
+    if (g.vif) out.push(`frappe parfois deux fois (${Math.round(g.vif * 100)} %)`);
+    if (g.prime) out.push('agit plus tôt au début du combat');
+    if (g.choc) out.push(`peut étourdir (${Math.round(g.choc * 100)} %)`);
+    if (g.parade) out.push(`pare un coup de fer (${Math.round(g.parade * 100)} %)`);
+    if (g.ferme) out.push(`tient bon face à l’étourdissement (${Math.round(g.ferme * 100)} %)`);
+    return out.join(' · ') || 'sans effet';
+  };
+  const avec = (h, slot, id) => { const e = Object.assign({}, Gr.of(h)); if (id) e[slot] = id; else delete e[slot]; return e; };
+  const pts = (st, k) => Math.round(st[k]);
+  // « Force 43 → 48 ▲ » pour chaque statistique qui bouge
+  Gr.compare = function (h, slot, id) {
+    const a = I.calc.of(h), b = I.calc.of(h, avec(h, slot, id));
+    const L = STATS.filter(k => pts(a, k) !== pts(b, k)).map(k => `<span class="${pts(b, k) > pts(a, k) ? 'up' : 'down'}">${NOM[k]} ${pts(a, k)} → <b>${pts(b, k)}</b> ${pts(b, k) > pts(a, k) ? '▲' : '▼'}</span>`);
+    return L.length ? L.join('') : '<span>Aucun chiffre ne change.</span>';
+  };
+  // le même constat en une ligne, pour un choix rapide
+  Gr.delta = function (h, slot, id) {
+    const a = I.calc.of(h), b = I.calc.of(h, avec(h, slot, id));
+    return STATS.filter(k => pts(a, k) !== pts(b, k)).map(k => `${NOM[k]} ${pts(b, k) > pts(a, k) ? '+' : '−'}${Math.abs(pts(b, k) - pts(a, k))}`).join(' · ') || 'rien ne change';
+  };
+
+  /* ================= montrer : le personnage équipé, tel qu'on le voit au combat ================= */
+  const TENUS = ['sabre', 'lance', 'baton', 'bouclier', 'arc', 'dague', 'masse', 'calame', 'tablette', 'bouclier_cuir', 'bouclier_bois', 'pavois', 'outre'];
+  const CASQUES = ['casque', 'casque_turban', 'casque_cuir', 'casque_bandes', 'coiffe_mailles'];
+  Gr.look = function (h, eq) {
+    const e = eq || Gr.of(h), L = Object.assign({ kind: 'compagnon' }, h.def.look), items = [].concat(L.item || []).filter(x => !TENUS.includes(x));
+    const port = id => { const g = D.GEAR[id]; return g ? (g.port || D.GEAR_TYPES[g.t].port) : null; };
+    [port(e.md), port(e.mg)].forEach(p => { if (p) items.push(p); });
+    if (items.length) L.item = items; else delete L.item;
+    if (L.kind === 'cyber') return L; // en 2084, la silhouette garde sa capuche : seul ce que l'on tient change
+    const te = D.GEAR[e.tete], co = D.GEAR[e.corps];
+    if (te && te.tete) L.coiffe = te.tete; else if (CASQUES.includes(L.coiffe)) L.coiffe = 'imama';
+    delete L.cuirasse; if (co && co.corps) L.armure = co.corps; else delete L.armure;
+    return L;
+  };
+
+  /* ================= icônes : 16 × 16, une matière par lettre =================
+     C c k couleur principale (clair, moyen, sombre) · A a accent · I i fer · W w bois · P page · N encre */
+  const ICO = {
+    epee: ['..............Cc', '.............Cck', '............Cck.', '...........Cck..', '..........Cck...', '.........Cck....', '........Cck.....', '.......Cck......',
+      '..A...Cck.......', '..aA.Cck........', '...aACk.........', '....WAa.........', '...Ww.aA........', '..Ww...a........', '.Ww.............', 'Aa..............'],
+    lance: ['..............CC', '.............CCc', '............CCck', '...........Ccck.', '..........Aak...', '.........Aa.....', '........Aa......', '.......Aa.......',
+      '......Aa........', '.....Aa.........', '....Aa..........', '...Aa...........', '..Aa............', '.Aa.............', 'Aa..............', 'a...............'],
+    javelot: ['................', '................', '.............CC.', '............CCc.', '...........CCck.', '..........Acck..', '.........Aa.....', '........Aa......',
+      '.......WW.......', '......Ww........', '.....Aa.........', '....Aa..........', '...Aa...........', '..Aa............', '................', '................'],
+    arc: ['..........Cc....', '........CCcA....', '.......Cc..A....', '......Cc...A....', '.....Cc....A....', '.....Cc....A....', '....Cc.....A....', '....Ck.....A....',
+      '....Ck.....A....', '....Cc.....A....', '.....Cc....A....', '.....Cc....A....', '......Cc...A....', '.......Cc..A....', '........CCcA....', '..........Cc....'],
+    arc2: ['...........Cc...', '..........Cc....', '........CCcA....', '......CCc..A....', '.....Cc....A....', '.....Cc....A....', '......Cc...A....', '......Ck...A....',
+      '......Ck...A....', '......Cc...A....', '.....Cc....A....', '.....Cc....A....', '......CCc..A....', '........CCcA....', '..........Cc....', '...........Cc...'],
+    dague: ['................', '................', '.............C..', '............Cc..', '...........Cck..', '..........Cck...', '.........Cck....', '........Cck.....',
+      '....A..Cck......', '....aA.ck.......', '.....aAa........', '.....WwaA.......', '....Ww..a.......', '...Ww...........', '..Aa............', '................'],
+    masse: ['..........CC....', '........CCCCc...', '.......CCCCCck..', '......CCCCCCcck.', '......CCCCCcckk.', '.......CCCcckk..', '........cckkk...', '.......Aakk.....',
+      '......Aa........', '.....Aa.........', '....Aa..........', '...Aa...........', '..Aa............', '.Aa.............', 'Aa..............', '................'],
+    baton: ['.............CC.', '............CCc.', '...........CCc..', '..........CCc...', '.........CCc....', '........CCc.....', '.......CCc......', '......CCc.......',
+      '.....CCc........', '....CCc.........', '...CCc..........', '..CCc...........', '.CCc............', 'CCc.............', 'Cc..............', '................'],
+    baton_ferre: ['.............AA.', '............AAa.', '...........CCc..', '..........CCc...', '.........AAa....', '........CCc.....', '.......CCc......', '......CCc.......',
+      '.....CCc........', '....CCc.........', '...AAa..........', '..CCc...........', '.CCc............', 'AAa.............', 'Aa..............', '................'],
+    houlette: ['........CCC.....', '.......Cc.CC....', '.......C...Cc...', '...........Cc...', '..........CCc...', '.........CCc....', '........CCc.....', '.......CCc......',
+      '......CCc.......', '.....CCc........', '....CCc.........', '...CCc..........', '..CCc...........', '.CCc............', 'CCc.............', 'Cc..............'],
+    calame: ['................', '.............C..', '............CCc.', '...........CCc..', '..........CCc...', '.........CCc....', '........CCc.....', '.......CCc......',
+      '......CCc.......', '.....CCc........', '....CCc.........', '...Ccc..........', '..aA............', '.aA.............', '.A..............', '................'],
+    encrier: ['............C...', '...........CCc..', '..........CCc...', '.........CCc....', '........CCc.....', '.......CCc......', '......CCc.......', '.....Ccc........',
+      '....aA....AAAA..', '...aA....AaaaaA.', '...A.....AAAAAa.', '........AAAAAAAa', '........AAAAAAaa', '........AAAAAaaa', '.........AAAaaa.', '..........aaaa..'],
+    ecritoire: ['................', '................', '..........P.....', '.........PPc....', '........AAc.....', '.......AA.......', '.CCCCCCAACCCCCC.', 'CCCCCCCCCCCCCCCc',
+      'CAAACCCCCCCAAACc', 'CCCCCCCCCCCCCCcc', 'CccccccccccccccK', '.kkkkkkkkkkkkkk.', '................', '................', '................', '................'],
+    bouclier: ['.....CCCCCC.....', '...CCCCCCCCcc...', '..CCCCCCCCCCcc..', '.CCCCCCCCCCCCcc.', '.CCCCCCCCCCCCcc.', 'CCCCCCAAACCCCcck', 'CCCCCAAAAaCCCcck', 'CCCCCAAAaaCCCcck',
+      'CCCCCAAaaaCCccck', 'CCCCCCaaaCCCccck', 'CCCCCCCCCCCcccck', '.CCCCCCCCCCcccc.', '.cCCCCCCCCccccc.', '..ccCCCCccccck..', '...cccccccckk...', '.....kkkkkk.....'],
+    pavois: ['....CCCCCCCC....', '...CCCCCCCCCc...', '...CAAAAAAAAc...', '...CCCCCCCCCck..', '...CCCCCCCCCck..', '...CCCCAACCCck..', '...CCCAAAACCck..', '...CCCAAaaCCck..',
+      '...CCCAaaaCCck..', '...CCCCaaCCCck..', '...CCCCCCCCCck..', '...CCCCCCCCCck..', '...CAAAAAAAAck..', '...cCCCCCCCcck..', '....ccccccckk...', '.....kkkkkk.....'],
+    gourde: ['.......aa.......', '......aAAa......', '......AWWA......', '.......CC.......', '......CCCc......', '.....CCCCCc.....', '....CCCCCCCc....', '...CCCCCCCCcc...',
+      '...CCCCCCCCcc...', '..CCCCCCCCCCcc..', '..CCCCCCCCCccc..', '..CCCCCCCCcccc..', '...CCCCCCccck...', '...cCCCcccckk...', '....ccccckk.....', '......kkk.......'],
+    tablette: ['.......WW.......', '......WwwW......', '......W..W......', '..CCCCCCCCCCCC..', '..CPPPPPPPPPPc..', '..CPPPPPPPPPPc..', '..CPPPPPPPPPPc..', '..CPPPPPPPPPPc..',
+      '..CPPPPPPPPPPc..', '..CPPPPPPPPPPc..', '..CPPPPPPPPPPc..', '..CPPPPPPPPPPc..', '..CPPPPPPPPPPc..', '..CPPPPPPPPPPc..', '..Cccccccccccc..', '...kkkkkkkkkk...'],
+    lampe: ['........A.......', '.......AA.......', '.......AAa......', '......AaAa......', '.......aa.......', '.......kk.......', '..CC..CCCC......', '.CccCCCCCCCC....',
+      '.C..CCCCCCCCCCC.', '.Cc.CCCCCCCCCCcc', '..CCCCCCCCCCccc.', '....CCCCCCcccc..', '.....cccccck....', '......CCCc......', '.....CCCCcc.....', '.....kkkkkk.....'],
+    turban: ['................', '................', '.....CCCCCC.....', '...CCCCcCCCCc...', '..CCCccCCCcCCc..', '.CCccCCCCccCCcc.', '.CcCCCCccCCCccc.', '.CCCCccCCCCcCcc.',
+      '.CCccCCCCccCccc.', '.cCCCCccCCCcccc.', '..AAAAAAAAAAaa..', '..aAAAAAAAAaaa..', '...kkkkkkkkkk...', '................', '................', '................'],
+    cheche: ['................', '.....CCCCCC.....', '...CCCCcCCCCc...', '..CCCccCCCcCCc..', '.CCccCCCCccCCcc.', '.CcCCCCccCCCccc.', '.CCCCccCCCCcCcc.', '.cCccCCCCccCccc.',
+      '..AAAAAAAAAAaa..', '..CccccccccCCc..', '..CCcCCCCCcCCc..', '...CccCCccCCc...', '....CCccccCCc...', '.....CCCCCCc.c..', '......cccc..Cc..', '............ck..'],
+    calotte: ['................', '................', '................', '................', '.....CCCCCC.....', '...CCCCCCCCcc...', '..CCCCCCCCCCcc..', '..CCCCCCCCCccc..',
+      '..CCCCCCCCcccc..', '..AaAaAaAaAaAa..', '..aAaAaAaAaAaa..', '...kkkkkkkkkk...', '................', '................', '................', '................'],
+    casque: ['.......CC.......', '.......CC.......', '......CCCc......', '....CCCCCCcc....', '...CCCCCCCCcc...', '..CCCCCCCCCccc..', '..CCCCCCCCCccc..', '..CCCCCCCCcccc..',
+      '..CCCCCCCccccc..', '..AAAAAAAAAAaa..', '..Ck........ck..', '..Ck........ck..', '..ck........ck..', '...k........k...', '................', '................'],
+    casque_turban: ['.......II.......', '.......II.......', '......IIIi......', '....IIIIIIii....', '...IIIIIIIIii...', '..IIIIIIIIIiii..', '.AAAaAAAAaAAAaa.', '.AaAAAAaAAAAaAa.',
+      '.AAAaAAAAaAAaaa.', '..aaaaaaaaaaaa..', '..Ii........ii..', '..Ii........ii..', '..ii........ii..', '...i........i...', '................', '................'],
+    casque_bandes: ['................', '......CCCc......', '.....CCCCcc.....', '....CaCCCCac....', '...CCaCCCCacc...', '..CCCaCCCCaccc..', '..CCCaCCCCaccc..', '..CCCaCCCcaccc..',
+      '..AAAAAAAAAAaa..', '..aAaAaAaAaAaa..', '..Ck........ck..', '..Ck........ck..', '..ck........ck..', '...k........k...', '................', '................'],
+    coiffe_mailles: ['................', '......CcCc......', '....CcCcCcCc....', '...CcCcCcCcCc...', '..CcCcCcCcCcCc..', '..cCcCcCcCcCcC..', '..CcC......cCc..', '..cCc......CcC..',
+      '..CcC......cCc..', '..cCc......CcC..', '..CcCc....CcCc..', '.CcCcCc..CcCcCc.', '.cCcCcCccCcCcCc.', '..cCcCcCcCcCcC..', '...kkkkkkkkkk...', '................'],
+    tunique: ['.....CCC.CCC....', '..CCCCCCcCCCCCC.', '.CCCCCCCCCCCCCCc', '.CCCcCCCCCCCcCCc', '.CCc.CCCCCCC.cCc', '.cc..CCCCCCC..cc', '.....CCCCCCCc...', '.....AAAAAAAa...',
+      '.....CCCCCCCc...', '....CCCCCCCCc...', '....CCCCCCCCcc..', '....CCCCCCCCcc..', '...CCCCCCCCCCc..', '...CCCCCCCCCcc..', '...cccccccccck..', '....kkkkkkkkk...'],
+    manteau: ['......CCCC......', '....CCCCCCCC....', '...CCCCkkCCCC...', '..CCCCCk.CCCCc..', '..CCCCCk.cCCCc..', '.CCCCCCk.cCCCCc.', '.CCCCCCk.cCCCCc.', '.CCCCCCk.cCCCCc.',
+      '.CCCCCck.ccCCCc.', 'CCCCCCck.ccCCCCc', 'CCCCCCck.ccCCCCc', 'CCCCCcck.cccCCCc', 'CCCCCcck.cccCCcc', 'AAAAAAak.aAAAAAa', '.aaaaaak.aaaaaa.', '................'],
+    burnous: ['.......CC.......', '......CCCc......', '.....CCCCCc.....', '....CCCkkCCc....', '...CCCCk.CCCc...', '..CCCCCk.cCCCc..', '..CCCCCk.cCCCc..', '.CCCCCCk.cCCCCc.',
+      '.CCCCCCk.cCCCCc.', '.CCCCCck.ccCCCc.', 'CCCCCCck.ccCCCCc', 'CCCCCCck.ccCCCCc', 'CCCCCcck.cccCCCc', 'CCCCCcck.cccCCcc', 'AAAAAAak.aAAAAAa', '.aaaaaak.aaaaaa.'],
+    cuir: ['................', '...CCC....CCC...', '..CCCCc..CCCCc..', '..CCCCCccCCCCc..', '..CCCCCCCCCCCc..', '...CCCCaACCCc...', '...CCCCAaCCCc...', '...CCCCaACCCc...',
+      '...CCCCAaCCCc...', '...CCCCaACCCc...', '...CCCCAaCCCc...', '...CCCCCCCCCc...', '...AAAAAAAAAa...', '...cCCCCCCCcc...', '....ccccccck....', '................']
+  };
+  Object.keys(ICO).forEach(k => { if (ICO[k].length !== 16 || ICO[k].some(r => r.length !== 16)) throw new Error('icône mal formée : ' + k); });
+  // motifs posés sur une silhouette : mailles en damier, lamelles en rangs, piqûre, rayures
+  const motif = (base, fn) => ICO[base].map((row, y) => row.split('').map((m, x) => fn(m, x, y)).join(''));
+  ICO.mailles = motif('tunique', (m, x, y) => m === 'C' ? ((x + y) % 2 ? 'C' : 'c') : m === 'A' || m === 'a' ? 'k' : m);
+  ICO.lamelles = motif('cuir', (m, x, y) => 'Cc'.indexOf(m) >= 0 ? (y % 2 ? (x % 2 ? 'C' : 'c') : 'k') : m === 'a' ? 'A' : m);
+  ICO.matelassee = motif('tunique', (m, x, y) => m === 'C' && (x + y) % 3 === 0 ? 'c' : m);
+  ICO.manteau_raye = motif('manteau', (m, x) => m === 'C' && x % 3 === 1 ? 'A' : m);
+  ICO.massue = ICO.masse; ICO.etoffe = ICO.tunique; ICO.ecu = ICO.bouclier; ICO.outil = ICO.gourde;
+
+  const rgb = h => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+  const mix = (a, b, t) => { const x = rgb(a), y = rgb(b); return '#' + [0, 1, 2].map(i => Math.round(x[i] + (y[i] - x[i]) * t).toString(16).padStart(2, '0')).join(''); };
+  const icache = {};
+  Gr.icon = function (id) { // image de 18 × 18 : le dessin et son liseré
+    if (icache[id]) return icache[id];
+    const g = D.GEAR[id], T = ICO[g.ico] || ICO[g.t] || ICO.tunique, c0 = (g.c && g.c[0]) || '#c3c8d2', c1 = (g.c && g.c[1]) || '#8a6238';
+    const pal = { C: mix(c0, '#fff6dc', 0.28), c: mix(c0, '#2a1c3a', 0.2), k: mix(c0, '#20143a', 0.52), A: mix(c1, '#fff6dc', 0.18), a: mix(c1, '#20143a', 0.42), I: '#c3c8d2', i: '#7f8794', W: '#8a6238', w: '#5a3d22', P: '#f3e9cf', N: '#2a2233', K: mix(c0, '#20143a', 0.52) };
+    const cv = G.mk(18, 18), c = cv.getContext('2d');
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const col = pal[T[y][x]]; if (col) { c.fillStyle = col; c.fillRect(x + 1, y + 1, 1, 1); } }
+    const im = c.getImageData(0, 0, 18, 18), d = im.data, solid = (x, y) => x >= 0 && y >= 0 && x < 18 && y < 18 && d[(y * 18 + x) * 4 + 3] > 200, add = [];
+    for (let y = 0; y < 18; y++) for (let x = 0; x < 18; x++) if (!solid(x, y) && (solid(x + 1, y) || solid(x - 1, y) || solid(x, y + 1) || solid(x, y - 1))) add.push(x, y);
+    for (let i = 0; i < add.length; i += 2) { const o = (add[i + 1] * 18 + add[i]) * 4; d[o] = 21; d[o + 1] = 15; d[o + 2] = 29; d[o + 3] = 255; }
+    c.putImageData(im, 0, 0);
+    return (icache[id] = cv);
+  };
+  const ucache = {};
+  Gr.iconURL = id => ucache[id] || (ucache[id] = Gr.icon(id).toDataURL());
+  Gr.img = (id, cls) => `<img class="gi${cls ? ' ' + cls : ''}" alt="" src="${Gr.iconURL(id)}">`;
+
+  /* ================= recevoir, proposer ================= */
+  Gr.learn = function () { const d = Gr.state(); if (d.vuGear) return; d.vuGear = 1; if (I.oeuvres && I.oeuvres.learn) I.oeuvres.learn('equipement'); };
+  // une pièce arrive dans la réserve ; si elle améliore quelqu'un du groupe, on propose aussitôt de la porter
+  Gr.receive = async function (id, n) {
+    const g = D.GEAR[id], W = I.world; n = n || 1; Gr.add(id, n); I.audio.sfx('ok');
+    S.toast(`Reçu : ${Gr.img(id)} <b>${I.esc(g.name)}</b>${n > 1 ? ' ×' + n : ''}<br><small>${Gr.effets(g)}</small>`, 3600);
+    Gr.learn();
+    if (!W.saga || !W.party.length) return;
+    if (I.debug.auto) { Gr.bestAll(); return; }
+    await Gr.offer(id);
+  };
+  Gr.offer = async function (id) {
+    const W = I.world, slot = Gr.slotOf(id), g = D.GEAR[id], gain = h => Gr.score(h.def, id) - (Gr.of(h)[slot] ? Gr.score(h.def, Gr.of(h)[slot]) : 0);
+    const who = W.party.map(x => W.hero(x)).filter(h => Gr.can(h.def, id) && gain(h) > 0.01).sort((a, b) => gain(b) - gain(a));
+    if (!who.length) return;
+    const opts = who.map(h => ({ html: `<b>${I.esc(h.def.name)}</b> · ${Gr.delta(h, slot, id)}` })).concat([{ t: 'Personne pour l’instant : à la réserve' }]);
+    const i = await S.menuPick({ cls: 'gear', html: `${Gr.img(id)} <span><b>${I.esc(g.name)}</b> · ${D.SLOTS[slot].toLowerCase()}<br><small>${Gr.effets(g)}</small></span><em>Qui la porte ?</em>` }, opts);
+    if (i < who.length && Gr.put(who[i], slot, id)) { I.audio.sfx('light'); S.toast(`<b>${I.esc(who[i].def.name)}</b> porte désormais : ${I.esc(g.name)}.`, 2400); }
+  };
+
+  /* ================= pages de la halte ================= */
+  const roles = g => (g.roles || D.GEAR_TYPES[g.t].roles);
+  const ROLE = { guerrier: 'guerriers', gardien: 'gardiens', sage: 'sages', soigneur: 'soigneurs', stratege: 'stratèges' };
+  const NOTE = '<p class="src">Convention de jeu : des objets ordinaires de l’époque, sans relique ni inscription. Le jeu ne dit pas qui portait quoi. Le fer aide à tenir ; il ne remplace pas la provision du cœur.</p>';
+  Gr.ligne = (h, s) => { const id = Gr.of(h)[s], g = D.GEAR[id]; return `<div class="gslot"><small>${D.SLOTS[s]}</small>${g ? Gr.img(id) + `<span><b>${I.esc(g.name)}</b><br><small>${Gr.effets(g)}</small></span>` : '<i class="gi vide"></i><span class="rien">rien</span>'}</div>`; };
+  Gr.fiche = function (h) {
+    const st = I.calc.of(h), e = D.ELEMENTS[h.def.el];
+    return `<div class="stat gear"><img class="fig" alt="" src="${G.charURL(Gr.look(h))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> <small>· niveau ${h.lvl}</small><br><small>Constance ${st.hp} · Souffle ${st.sp} · Force ${Math.round(st.atk)} · Esprit ${Math.round(st.mag)} · Garde ${Math.round(st.def)} · Élan ${Math.round(st.spd)}</small>${SLOTS.map(s => Gr.ligne(h, s)).join('')}</div></div>`;
+  };
+  Gr.paneGroupe = function () {
+    const W = I.world, n = Gr.reserve().reduce((a, id) => a + Gr.stock(id), 0), b = Gr.better();
+    return '<h3>Équipement</h3>' + ((W.saga && W.party.length) ? W.party.map(id => Gr.fiche(W.hero(id))).join('') : '<p>Aucun groupe pour l’instant.</p>') +
+      `<p>Réserve : <b>${n}</b> pièce${n > 1 ? 's' : ''}.${b ? ` <em>${I.esc(D.GEAR[b.id].name)}</em> irait mieux à ${I.esc(b.h.def.name)}.` : ''}</p>` + NOTE;
+  };
+  const actuel = (h, slot, id) => { const cur = Gr.of(h)[slot], g = D.GEAR[cur]; return cur === id ? '<p class="src">C’est ce qu’il porte.</p>' : `<p class="src">Il porte : ${g ? Gr.img(cur) + ' ' + I.esc(g.name) + ' (' + Gr.effets(g) + ')' : 'rien'}.</p>`; };
+  Gr.panePiece = function (h, slot, id, extra) {
+    const g = D.GEAR[id]; if (!g) return `<h3>${D.SLOTS[slot]}</h3><p>Ne rien porter ici.</p><div class="gcmp">${Gr.compare(h, slot, null)}</div>`;
+    return `<h3>${Gr.img(id, 'big')} ${I.esc(g.name)}</h3><p class="src">${D.GEAR_TYPES[g.t].name} · ${D.SLOTS[slot].toLowerCase()} · pour les ${roles(g).map(r => ROLE[r]).join(', ')}${extra ? ' · ' + extra : ''}</p><p>${I.esc(g.desc)}</p><p><b>${Gr.effets(g)}</b></p>` +
+      `<p class="src">Pour ${I.esc(h.def.name)} :</p><div class="gcmp">${Gr.compare(h, slot, id)}</div>` + actuel(h, slot, id);
+  };
+  Gr.paneReserve = function () {
+    const L = Gr.reserve();
+    return '<h3>La réserve</h3>' + (L.length ? SLOTS.map(s => { const P = L.filter(id => Gr.slotOf(id) === s); return P.length ? `<p class="src">${D.SLOTS[s]}</p>` + P.map(id => `<div class="gslot">${Gr.img(id)}<span><b>${I.esc(D.GEAR[id].name)}</b>${Gr.stock(id) > 1 ? ' ×' + Gr.stock(id) : ''}<br><small>${Gr.effets(D.GEAR[id])}</small></span></div>`).join('') : ''; }).join('') : '<p>La réserve est vide. Les coffres et les comptoirs la rempliront.</p>') + NOTE;
+  };
+  Gr.ICO = ICO;
+})();
+
 /* ==== src/core/battle.js ==== */
 /* ISNAD — combat : ordre des tours visible (CTB), voiles et faiblesses, Niyya (élan), Sakîna (ultime). */
 (function () {
@@ -3465,6 +3961,8 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
 
   I.calc = {
     hero(def, lvl) { const r = D.ROLES[def.role], b = base(lvl); return { hp: Math.round(b.hp * r.hp), sp: Math.round(b.sp * r.sp), atk: b.atk * r.atk, mag: b.atk * r.mag, def: b.def * r.def, spd: b.spd * r.spd }; },
+    // le même, avec ce que le héros porte : l'équipement ajoute des pourcentages (gear.js)
+    of(h, eq) { const st = I.calc.hero(h.def, h.lvl), m = I.gear ? I.gear.mods(h, eq) : null; if (!m) return st; const f = k => 1 + m[k] / 100; return { hp: Math.round(st.hp * f('hp')), sp: Math.round(st.sp * f('sp')), atk: st.atk * f('atk'), mag: st.mag * f('mag'), def: st.def * f('def'), spd: st.spd * f('spd') }; },
     enemy(def, nHeroes, nFoes) {
       const t0 = TIER[def.tier], early = def.tier === 'boss' && def.lvl <= 4, t = early ? Object.assign({}, t0, { hp: t0.hp * 0.75, atk: t0.atk * 0.9 }) : t0, b = base(def.lvl), ps = (nHeroes >= 3 ? 1 : nHeroes === 2 ? 0.64 : 0.42) * (def.tier === 'elite' && def.lvl <= 3 ? 0.85 : 1), crowd = nFoes >= 3 ? 0.85 : 1;
       return { hp: Math.round(b.hp * t.hp * ps * crowd), atk: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.84 : 1), mag: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.84 : 1), def: b.def * t.def, spd: b.spd * t.spd };
@@ -3522,9 +4020,9 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
   const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
   B.relayout = function () { if (!C) return; C.all.forEach(e => { e.x = bx(e.x0); }); refresh(); };
   function mkHero(id, i) {
-    const h = I.world.hero(id), st = I.calc.hero(h.def, h.lvl);
+    const h = I.world.hero(id), st = I.calc.of(h);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
-      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(Object.assign({ kind: 'compagnon' }, h.def.look)), color: D.ELEMENTS[h.def.el].color };
+      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) };
   }
   // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
   function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, W.hero(W.party[0]).lvl) }) : d; }
@@ -3555,7 +4053,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     C = null; if (mark !== undefined) I.input.trim(mark);
     I.setScene(prev || I.world); G.clearParts();
     const W = I.world; if ((prev || W) === W && W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; I.audio.music(env.music || 'silence'); }
-    const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0;
+    const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0; document.body.classList.remove('noir');
   };
 
   async function run(opts, first) {
@@ -3564,7 +4062,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     C = { opts, hue, bg: paintBg(opts.bg || 'noos', hue), all: [], t: 0, cursor: null, log: [], turn: 0 };
     W.party.forEach((id, i) => C.all.push(mkHero(id, i)));
     const nH = C.all.length; opts.group.forEach((id, i) => C.all.push(mkFoe(id, i, opts.group.length, nH)));
-    C.all.forEach(e => { e.ct = 1000 / eff(e, 'spd') * (0.6 + Math.random() * 0.4) * (e.side === 'foe' ? 1.15 : 1); });
+    C.all.forEach(e => { e.ct = 1000 / eff(e, 'spd') * (0.6 + Math.random() * 0.4) * (e.side === 'foe' ? 1.15 : 1) * (e.gear && e.gear.prime ? 0.55 : 1); });
     if (first) { I.audio.sfx('glitch'); G.flash('#fff'); await S.fade('out', 220); }
     I.setScene(B.scene); B.active = true; G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue, n: 0 };
     document.body.classList.add('in-battle'); $('#hud').hidden = true; $('#toasts').innerHTML = ''; $('#battle').hidden = false; refresh();
@@ -3622,7 +4120,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     if (result === 'win') { I.audio.afterJingle = C.prevMus || null; I.audio.music('victoire'); } else I.audio.music('deuil');
     if (result === 'win') await victory(); else await defeat();
     // retour
-    C.all.filter(e => e.side === 'hero').forEach(e => { const h = e.ref, st = I.calc.hero(h.def, h.lvl); h.hp = Math.min(st.hp, Math.max(1, e.hp) + Math.round(st.hp * 0.35)); h.sp = Math.min(st.sp, e.sp + Math.round(st.sp * 0.35)); h.sakina = e.sakina; });
+    C.all.filter(e => e.side === 'hero').forEach(e => { const h = e.ref, st = I.calc.of(h); h.hp = Math.min(st.hp, Math.max(1, e.hp) + Math.round(st.hp * 0.35)); h.sp = Math.min(st.sp, e.sp + Math.round(st.sp * 0.35)); h.sakina = e.sakina; });
     await S.fade('out', 260);
     $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = '';
     I.setScene(prev); G.clearParts();
@@ -3700,10 +4198,10 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       const desc = I.el('div', 'mdesc'); if (o.desc) box.appendChild(desc);
       let idx = o.start || 0; const btns = [];
       const sel = i => { idx = (i + items.length) % items.length; btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); if (o.desc) desc.innerHTML = items[idx].desc || ''; if (o.onSel) o.onSel(idx); btns[idx].scrollIntoView && btns[idx].scrollIntoView({ block: 'nearest' }); };
-      const done = v => { I.input.pop(h); res(v); };
+      const done = v => { I.input.pop(h); res(v); }, ne = performance.now();
       items.forEach((it, i) => {
         const b = I.el('button', 'mi' + (it.disabled ? ' off' : '') + (it.cls ? ' ' + it.cls : ''), `<span>${it.label}</span>${it.sub ? `<small>${it.sub}</small>` : ''}`); b.type = 'button';
-        b.onclick = ev => { ev.stopPropagation(); sel(i); if (!it.disabled) { I.audio.sfx('ok'); done(i); } else I.audio.sfx('dark'); };
+        b.onclick = ev => { ev.stopPropagation(); if (performance.now() - ne < 250) return; sel(i); if (!it.disabled) { I.audio.sfx('ok'); done(i); } else I.audio.sfx('dark'); }; // pas de toucher fantôme
         b.onmouseenter = () => sel(i); btns.push(b); list.appendChild(b);
       });
       if (o.back) { const bk = I.el('button', 'mback', '◂ Retour'); bk.type = 'button'; bk.onclick = ev => { ev.stopPropagation(); done(-1); }; box.appendChild(bk); }
@@ -3743,7 +4241,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       const wire = () => box.querySelectorAll('.nb').forEach(b => b.onclick = ev => { ev.stopPropagation(); setBoost(+b.dataset.d); });
       const lum = lightOf(h);
       const items = [
-        { label: `${elc('fer')} Frapper`, sub: boost ? `${1 + boost} coups` : 'Force' },
+        { label: `${elc('fer')} Frapper`, sub: boost ? `${1 + boost} coups` : (h.gear.arme ? D.GEAR_TYPES[h.gear.arme.t].name : 'Force') },
         { label: `${elc(lum.el)} Éclairer`, sub: D.ELEMENTS[lum.el].name },
         { label: '✦ Vertus', sub: `Souffle ${h.sp}`, disabled: !!h.st.doute },
         { label: '◍ Objets' },
@@ -3794,7 +4292,9 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     const col = sk.el ? D.ELEMENTS[sk.el].color : (hero ? e.color : `hsl(${e.def.hue},90%,65%)`), dir = hero ? -1 : 1;
     // élan vers l'avant
     await tween(e, 'ox', dir * 14, 110);
-    const hits = (sk.hits || 1) + (sk.basic && hero ? boost : 0), mult = sk.basic ? 1 : 1 + 0.5 * boost;
+    // l'arme en main : une dague frappe parfois deux fois, une masse étourdit parfois
+    const fer = hero && sk.basic && sk.el === 'fer', vif = fer && e.gear.vif && Math.random() < e.gear.vif; if (vif) floater(e, 'Coup double', 'info');
+    const hits = (sk.hits || 1) + (sk.basic && hero ? boost : 0) + (vif ? 1 : 0), mult = sk.basic ? 1 : 1 + 0.5 * boost;
     let targets = cmd.targets.filter(t => t.alive || sk.revive);
     if (sk.pow) {
       for (let hI = 0; hI < hits; hI++) {
@@ -3803,6 +4303,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
         I.audio.sfx(sk.el === 'fer' ? (hero ? 'slash' : 'hit') : hero ? 'light' : 'dark');
         await I.sleep(hits > 1 ? 190 : 300);
       }
+      if (fer && e.gear.choc) for (const t of cmd.targets) if (t.alive && t.hp > 0) applyFx(e, t, { st: 'stun', chance: e.gear.choc }, 0);
       for (const t of cmd.targets) if (t.alive && t.hp <= 0) await kill(t);
       for (const t of cmd.targets) if (t.side === 'foe' && t.alive) await checkPhase(t);
     } else { fx(sk.anim || (sk.heal ? 'heal' : 'glyph'), sk.target === 'self' ? e : targets[0] || e, col); I.audio.sfx(sk.heal ? 'heal' : hero ? 'light' : 'dark'); }
@@ -3828,13 +4329,16 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     const immune = t.side === 'foe' && (t.def.immune || []).includes(el), weak = t.side === 'foe' && t.def.weak.includes(el);
     if (t.side === 'foe') t.tried[el] = true;
     if (immune) { t.known[el] = 'x'; floater(t, 'Sans effet', 'info'); fx('guard', t, '#889'); return; }
-    let d = stat * sk.pow * mult * 2.2 * (50 / (50 + eff(t, 'df'))) * (0.92 + Math.random() * 0.16);
+    // l'équipement : une lance perce une part de la garde ; un bouclier pare parfois un coup de fer
+    const gA = a.gear || {}, gT = t.gear || {}, perce = el === 'fer' && gA.perce ? 1 - gA.perce : 1;
+    let d = stat * sk.pow * mult * 2.2 * (50 / (50 + eff(t, 'df') * perce)) * (0.92 + Math.random() * 0.16);
+    const pare = el === 'fer' && gT.parade && !t.st.stun && Math.random() < gT.parade; if (pare) d *= 0.5;
     if (weak) d *= 1.3; if (t.broken) d *= 1.5; if (t.st.garde) d *= 0.5;
     d *= a.side === 'hero' ? (C.pLien || 1) * (1 - 0.08 * (C.lack || 0)) : (C.pJust || 1) * (1 + 0.08 * (C.lack || 0));
     d = Math.max(1, Math.round(d));
     t.hp = Math.max(0, t.hp - d); t.flash = 1; t.shake = 0.25;
-    floater(t, d, 'dmg' + (weak ? ' weak' : '') + (t.side === 'hero' ? ' hero' : ''));
-    fx(sk.anim || (el === 'fer' ? 'slash' : 'light'), t, col);
+    floater(t, d, 'dmg' + (weak ? ' weak' : '') + (t.side === 'hero' ? ' hero' : '')); if (pare) { floater(t, 'Paré', 'info'); fx('guard', t, '#c3c8d2'); }
+    fx((sk.basic && el === 'fer' && gA.anim) || sk.anim || (el === 'fer' ? 'slash' : 'light'), t, col, a);
     if (t.side === 'hero') { t.sakina = Math.min(100, t.sakina + d / t.max.hp * 70); G.shake(160); C.minHp = Math.min(C.minHp === undefined ? 1 : C.minHp, t.hp / t.max.hp); if (t.hp <= 0) C.kos = (C.kos || 0) + 1; }
     if (weak) {
       t.known[el] = true; if (a.side === 'hero') a.sakina = Math.min(100, a.sakina + 7);
@@ -3848,7 +4352,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     const turns = (f.turns || 3) + (a.side === 'hero' ? boost : 0);
     switch (f.st) {
       case 'atk': case 'mag': case 'def': case 'spd': { const k = f.st === 'def' ? 'df' : f.st; t.buffs[k] = { v: f.v, t: turns }; floater(t, `${STN[f.st]} ${f.v > 0 ? '▲' : '▼'}`, f.v > 0 ? 'buff' : 'debuff'); break; }
-      case 'stun': if (t.side === 'foe' && t.def.tier === 'boss' && t.stunned) break; t.st.stun = 1; t.stunned = true; floater(t, 'Étourdi', 'debuff'); break;
+      case 'stun': if (t.side === 'foe' && t.def.tier === 'boss' && t.stunned) break; if (t.gear && t.gear.ferme && Math.random() < t.gear.ferme) { floater(t, 'Tient bon', 'buff'); break; } t.st.stun = 1; t.stunned = true; floater(t, 'Étourdi', 'debuff'); break;
       case 'doute': t.st.doute = f.turns || 2; floater(t, 'Doute', 'debuff'); break;
       case 'waswas': t.st.waswas = turns; floater(t, 'Waswâs', 'debuff'); break;
       case 'regen': t.st.regen = turns; floater(t, 'Régén.', 'buff'); break;
@@ -3886,7 +4390,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     const W = I.world, lines = [];
     W.party.forEach(id => { const h = W.hero(id); h.xp += xp; let up = false;
       while (h.xp >= I.calc.xpNeed(h.lvl) && h.lvl < 12) { h.xp -= I.calc.xpNeed(h.lvl); h.lvl++; up = true; h.def.skills.filter(k => k.lvl === h.lvl).forEach(k => lines.push(`<li><b>${h.def.name}</b> apprend <em>${k.name}</em></li>`)); }
-      if (up) { lines.unshift(`<li><b>${h.def.name}</b> atteint le niveau <b>${h.lvl}</b></li>`); const st = I.calc.hero(h.def, h.lvl); h.hp = st.hp; h.sp = st.sp; } });
+      if (up) { lines.unshift(`<li><b>${h.def.name}</b> atteint le niveau <b>${h.lvl}</b></li>`); const st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp; } });
     W.persistHeroes(); return lines;
   };
   async function victory() {
@@ -3896,7 +4400,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     C.all.filter(e => e.side === 'hero').forEach(e => {
       const h = e.ref; h.xp += xp; let up = false;
       while (h.xp >= I.calc.xpNeed(h.lvl) && h.lvl < 12) { h.xp -= I.calc.xpNeed(h.lvl); h.lvl++; up = true; h.def.skills.filter(k => k.lvl === h.lvl).forEach(k => lines.push(`<li><b>${h.def.name}</b> apprend <em>${k.name}</em></li>`)); }
-      if (up) { lines.unshift(`<li><b>${h.def.name}</b> atteint le niveau <b>${h.lvl}</b></li>`); const st = I.calc.hero(h.def, h.lvl); e.max = { hp: st.hp, sp: st.sp }; e.hp = st.hp; e.sp = st.sp; }
+      if (up) { lines.unshift(`<li><b>${h.def.name}</b> atteint le niveau <b>${h.lvl}</b></li>`); const st = I.calc.of(h); e.max = { hp: st.hp, sp: st.sp }; e.hp = st.hp; e.sp = st.sp; }
     });
     let drop = '';
     if (C.opts.boss || Math.random() < 0.4) { const k = C.opts.boss ? I.pick(['musc', 'lait', 'eau']) : I.pick(['dattes', 'dattes', 'pain', 'eau', 'miel', 'siwak']); sv.items[k] = (sv.items[k] || 0) + 1; drop = `<li>Trouvé : <b>${D.ITEMS[k].name}</b></li>`; }
@@ -3913,9 +4417,13 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
   /* ================= présentation ================= */
   function tween(e, k, to, ms) { const from = e[k], t0 = performance.now(); ms = ms / I.speed; return new Promise(res => { (function st() { const f = Math.min(1, (performance.now() - t0) / ms); e[k] = from + (to - from) * f; if (f < 1) requestAnimationFrame(st); else res(); })(); }); }
   function pos(e) { return { x: e.x + e.ox, y: e.y - (e.side === 'foe' ? e.size * 0.55 : 26) }; }
-  function fx(kind, e, col) {
+  function fx(kind, e, col, from) {
     const p = pos(e), x = p.x, y = p.y;
     switch (kind) {
+      // coups portés avec l'arme en main : estoc de lance, flèche, choc de masse ou de bâton
+      case 'thrust': { const s = from && from.x < x ? 1 : -1; for (let i = 0; i < 14; i++) G.spawn({ x: x - s * (40 - i * 3), y: y + (Math.random() - 0.5) * 3, vx: s * (200 + Math.random() * 140), vy: (Math.random() - 0.5) * 16, life: 0.24, size: 1.2, color: i % 3 ? '#fff' : col, type: 'spark' }); G.spawn({ x, y, type: 'ring', r0: 3, r1: 18, life: 0.3, size: 2, color: '#fff' }); break; }
+      case 'arrow': { const fp = from ? pos(from) : { x: x + 120, y: y }, T = 0.16; for (let i = 0; i < 8; i++) G.spawn({ x: fp.x + (x - fp.x) * i * 0.035, y: fp.y + (y - fp.y) * i * 0.035, vx: (x - fp.x) / T, vy: (y - fp.y) / T, life: T, size: 1.1, color: i ? '#e6dcc4' : '#fff', type: 'spark' }); setTimeout(() => { G.spawn({ x, y, type: 'ring', r0: 2, r1: 14, life: 0.3, size: 2, color: '#fff' }); for (let i = 0; i < 7; i++) G.spawn({ x, y, vx: (Math.random() - 0.5) * 150, vy: (Math.random() - 0.5) * 150, life: 0.3, size: 0.9, color: col, type: 'spark' }); }, T * 1000 / I.speed); break; }
+      case 'smash': G.spawn({ x, y: y + 16, type: 'ring', r0: 6, r1: 36, life: 0.36, size: 3, color: '#fff' }); for (let i = 0; i < 16; i++) G.spawn({ x: x + (Math.random() - 0.5) * 22, y: y + 12, vx: (Math.random() - 0.5) * 220, vy: -60 - Math.random() * 170, grav: 520, life: 0.5, size: 1.2, color: i % 2 ? col : '#e6dcc4', type: 'spark' }); G.shake(150); break;
       case 'slash': G.spawn({ x, y, type: 'arc', r0: 18, a0: -2.4, sweep: 2.6, life: 0.28, size: 2, color: col }); G.spawn({ x, y, type: 'arc', r0: 14, a0: 0.7, sweep: 2.4, life: 0.32, size: 1.5, color: '#fff' }); for (let i = 0; i < 10; i++) G.spawn({ x, y, vx: (Math.random() - 0.5) * 260, vy: (Math.random() - 0.5) * 200, life: 0.35, size: 0.9, color: col, type: 'spark' }); break;
       case 'light': G.spawn({ x, y: y + 22, type: 'pillar', w: 12, life: 0.5, color: col, a: 0.8 }); G.spawn({ x, y, type: 'ring', r0: 4, r1: 30, life: 0.45, size: 2, color: col }); G.spawn({ x, y, type: 'glow', size: 5, life: 0.4, color: col }); break;
       case 'burst': for (let i = 0; i < 26; i++) { const a = Math.random() * 6.28, v = 80 + Math.random() * 200; G.spawn({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.5, size: 1.1, color: i % 3 ? col : '#fff', type: 'spark' }); } G.spawn({ x, y, type: 'ring', r0: 6, r1: 44, life: 0.4, size: 3, color: col }); break;
@@ -4250,7 +4758,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     const close = () => { if (fl) fl.destroy(); screen('#menu', false); U.menuOpen = false; if (onClose) onClose(); };
     const mkb = (label, fn, cls) => { const b = I.el('button', cls || '', label); b.type = 'button'; b.onclick = ev => { ev.stopPropagation(); fn(b); }; return b; };
     const build = (items, o) => { if (fl) fl.destroy(); side.innerHTML = ''; const btns = []; items.forEach(it => { if (it.cat) { side.appendChild(I.el('div', 'cat', it.cat)); return; } const b = mkb(it.label, it.fn); b._show = it.show; b._after = it.after; side.appendChild(b); btns.push(b); }); fl = focusList(btns, Object.assign({ onSel: b => { if (b._show) pane.innerHTML = b._show(); if (b._after) b._after(pane); } }, o)); $('#menu .cols').classList.toggle('large', !!(o && o.large)); };
-    const party = () => (W.saga && W.party.length) ? W.party.map(id => { const h = W.hero(id), st = I.calc.hero(h.def, h.lvl), e = D.ELEMENTS[h.def.el]; return `<div class="stat"><span class="seal" style="background-image:url(${G.sealURL(h.def.arabic, e.color)})"></span><img class="fig" alt="" src="${G.charURL(Object.assign({ kind: 'compagnon' }, h.def.look))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> ${h.def.title ? '<em>' + I.esc(h.def.title) + '</em>' : ''} <small>· niveau ${h.lvl} · ${e.name}</small><br><small>Constance ${Math.ceil(h.hp)}/${st.hp} · Souffle ${h.sp}/${st.sp} · Force ${Math.round(st.atk)} · Esprit ${Math.round(st.mag)} · Garde ${Math.round(st.def)} · Élan ${Math.round(st.spd)}</small><div class="sk">${h.def.skills.filter(k => k.lvl <= h.lvl).map(k => I.esc(k.name)).join(' · ')}</div></div></div>`; }).join('') : '<p>Aucun groupe pour l’instant.</p>';
+    const party = () => (W.saga && W.party.length) ? W.party.map(id => { const h = W.hero(id), st = I.calc.of(h), e = D.ELEMENTS[h.def.el], eq = I.gear.of(h); return `<div class="stat"><span class="seal" style="background-image:url(${G.sealURL(h.def.arabic, e.color)})"></span><img class="fig" alt="" src="${G.charURL(Object.assign({ kind: 'compagnon' }, h.def.look))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> ${h.def.title ? '<em>' + I.esc(h.def.title) + '</em>' : ''} <small>· niveau ${h.lvl} · ${e.name}</small><br><small>Constance ${Math.ceil(h.hp)}/${st.hp} · Souffle ${h.sp}/${st.sp} · Force ${Math.round(st.atk)} · Esprit ${Math.round(st.mag)} · Garde ${Math.round(st.def)} · Élan ${Math.round(st.spd)}</small><div class="sk">${h.def.skills.filter(k => k.lvl <= h.lvl).map(k => I.esc(k.name)).join(' · ')}</div><div class="port">${I.gear.SLOTS.filter(s => eq[s]).map(s => I.gear.img(eq[s]) + ' ' + I.esc(D.GEAR[eq[s]].name)).join(' · ') || 'Rien d’équipé'}</div></div></div>`; }).join('') : '<p>Aucun groupe pour l’instant.</p>';
     const bag = () => '<h3>Besace</h3>' + (Object.keys(D.ITEMS).filter(k => (sv.items[k] || 0) > 0).map(k => `<p><b>${D.ITEMS[k].name}</b> ×${sv.items[k]}<br><small>${D.ITEMS[k].desc}</small></p>`).join('') || '<p>La besace est vide.</p>') + '<p class="src">Les objets s’utilisent en combat. Le groupe reprend des forces après chaque victoire.</p>';
     const journal = () => { const o = W.cur && W.cur(); return `<h3>${W.ch ? I.esc(W.ch.title) : 'Journal'}</h3><p class="src">${W.ch ? I.esc(W.ch.sub) : ''}</p><p>${o && o.text ? '◆ ' + I.esc(o.text) : 'Aucun objectif en cours.'}</p><p class="src">Le bouton <b>?</b> explique l’objectif et peut montrer le chemin.</p><p class="src">Fidélité à la Chaîne : ${sv.isnad.ok} / ${sv.isnad.total} · Lumières : ${sv.lights.map(l => D.ELEMENTS[l].name).join(', ') || 'aucune'}</p>`; };
     const pillars = () => { const P = W.pillars(); const eff = { priere: 'Sakîna au début des combats ; sérénité dans les pourparlers', savoir: 'failles révélées d’emblée ; arguments ouverts par le savoir', justice: 'dégâts reçus réduits', lien: 'dégâts infligés accrus ; renforts d’alliés' }; return `<h3>${W.saga && W.saga.veillees ? 'La Citadelle du Caïd' : 'Ce que ce règne a bâti'}</h3>` + Object.keys(D.PILLARS).map(k => `<p><b>${D.PILLARS[k].glyph} ${D.PILLARS[k].name}</b> ${'◆'.repeat(P[k] || 0)}${'◇'.repeat(5 - (P[k] || 0))}<br><small>${eff[k]}</small></p>`).join('') + '<p class="src">Les piliers montent par la prière tenue, le savoir appris, la justice rendue et les pactes noués ; ils descendent quand la parole échoue.</p>'; };
@@ -4260,7 +4768,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       const items = [{ label: 'Reprendre', fn: close, show: journal }];
       if (inWorld) items.push({ label: 'Que faire ?', fn() { close(); U.guide(); }, show: () => '<h3>Que faire ?</h3><p>L’objectif expliqué, sa direction, et le chemin montré au sol si tu le demandes. Le même bouton <b>?</b> est toujours en haut de l’écran.</p>' });
       if (inWorld && W.map) items.push({ label: 'Carte', fn: carte, show: () => '<h3>Carte</h3><p>Le lieu entier, avec ta position, l’objectif, la natte et les lieux nommés. On l’ouvre aussi en touchant la mini-carte, ou par la touche <kbd>C</kbd>.</p>' });
-      items.push({ cat: 'Le groupe' }, { label: 'Compagnons', fn() {}, show: () => '<h3>Le groupe</h3>' + party() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Piliers', fn() {}, show: pillars });
+      items.push({ cat: 'Le groupe' }, { label: 'Compagnons', fn() {}, show: () => '<h3>Le groupe</h3>' + party() }, { label: 'Équipement', fn() { equip(); }, show: () => I.gear.paneGroupe() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Piliers', fn() {}, show: pillars });
       items.push({ cat: 'Le cœur' }, { label: 'Œuvres et lames', fn() {}, show: () => I.oeuvres.paneOeuvres() }, { label: 'Compagnons de lumière', fn: betes, show: () => I.oeuvres.paneAnimaux() });
       items.push({ cat: 'Le savoir' }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` },
         { label: 'Aide du jeu', fn: aide, show: () => '<h3>Aide du jeu</h3><p>Les règles, thème par thème : ' + U.AIDE.map(a => a[0].toLowerCase()).join(', ') + '.</p>' });
@@ -4300,6 +4808,28 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       $('#menu h2').textContent = 'Carte';
       build([{ label: '◂ Retour', fn: back, show: carteHTML, after: carteDraw }], { onCancel: back, large: true });
     };
+    // l'équipement : quatre emplacements par compagnon, une réserve commune ; on choisit une pièce en voyant ce qu'elle change
+    const equip = start => {
+      const Gr = I.gear, items = [{ label: '◂ Retour', fn: mode === 'equip' ? close : root, show: () => Gr.paneGroupe() }];
+      if (W.saga && W.party.length) {
+        items.push({ label: '✦ Au mieux, pour tout le groupe', fn() { const n = Gr.bestAll(); I.audio.sfx(n ? 'light' : 'blip'); S.toast(n ? `${n} pièce${n > 1 ? 's' : ''} changée${n > 1 ? 's' : ''}.` : 'Chacun porte déjà ce que la réserve a de mieux pour lui.', 2400); equip(1); }, show: () => Gr.paneGroupe() });
+        W.party.forEach((id, pi) => { const h = W.hero(id); items.push({ cat: I.esc(h.def.name) });
+          Gr.SLOTS.forEach((s, si) => { const cur = Gr.of(h)[s], g = D.GEAR[cur]; items.push({ label: g ? Gr.img(cur) + ' ' + I.esc(g.name) : '<i class="gi vide"></i> <span class="rien">' + D.SLOTS[s] + ' : rien</span>', fn() { pieces(h, s, 2 + pi * 4 + si); }, show: () => '<h3>' + I.esc(h.def.name) + '</h3>' + Gr.fiche(h) + '<p class="src">Choisis un emplacement pour voir ce que la réserve propose.</p>' }); }); });
+      }
+      items.push({ cat: 'Réserve' }, { label: 'Voir la réserve', fn() {}, show: () => Gr.paneReserve() });
+      $('#menu h2').textContent = 'Équipement';
+      build(items, { onCancel: mode === 'equip' ? close : root, start: start || 0 });
+    };
+    const pieces = (h, s, back) => {
+      const Gr = I.gear, cur = Gr.of(h)[s], retour = () => equip(back), items = [{ label: '◂ Retour', fn: retour, show: () => '<h3>' + D.SLOTS[s] + '</h3>' + Gr.fiche(h) }];
+      const prendre = (id, avant) => () => { if (avant) avant(); if (Gr.put(h, s, id)) I.audio.sfx(id ? 'light' : 'blip'); retour(); };
+      Gr.reserve(s).filter(id => Gr.can(h.def, id)).forEach(id => items.push({ label: Gr.img(id) + ' ' + I.esc(D.GEAR[id].name) + (Gr.stock(id) > 1 ? ' ×' + Gr.stock(id) : ''), fn: prendre(id), show: () => Gr.panePiece(h, s, id) }));
+      Gr.ailleurs(h, s).forEach(a => items.push({ label: Gr.img(a.id) + ' ' + I.esc(D.GEAR[a.id].name) + ' <small>· ' + I.esc(a.name) + '</small>', fn: prendre(a.id, () => Gr.rappeler(a.key, s)), show: () => Gr.panePiece(h, s, a.id, 'porté par ' + I.esc(a.name) + ', resté en arrière') }));
+      if (cur) items.push({ label: '<i class="gi vide"></i> Ne rien porter', fn: prendre(null), show: () => Gr.panePiece(h, s, null) });
+      if (items.length === (cur ? 2 : 1)) items.push({ label: 'Rien d’autre pour lui', fn() {}, show: () => '<h3>' + D.SLOTS[s] + '</h3><p>La réserve n’a rien que ' + I.esc(h.def.name) + ' puisse porter ici. Les coffres et les comptoirs la rempliront.</p>' });
+      $('#menu h2').textContent = D.SLOTS[s] + ' · ' + h.def.name;
+      build(items, { onCancel: retour, start: items.length > 1 ? 1 : 0 });
+    };
     const betes = () => {
       const d = I.oeuvres.state(), A = I.sagas.coeur.animaux, items = [{ label: '◂ Retour', fn: root, show: () => I.oeuvres.paneAnimaux() }];
       D.ANIMAUX.filter(id => d.animaux[id]).forEach(id => items.push({ label: (d.animal === id ? '● ' : '○ ') + A[id].name, fn() { d.animal = id; I.save.store(); I.audio.sfx('light'); betes(); }, show: () => I.oeuvres.paneAnimaux() }));
@@ -4319,7 +4849,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       $('#menu h2').textContent = 'Le Recueil';
       build(items, { onCancel: mode === 'codex' ? close : root });
     };
-    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'aide') aide(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
+    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'aide') aide(); else if (mode === 'equip') equip(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
   };
 
   /* ---------- l'aide du jeu, thème par thème ---------- */
@@ -4331,10 +4861,12 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     ['Les étoiles', '<p>On s’oriente au ciel. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche : <b>al-Jady</b> (la Polaire) au nord, <b>Suhayl</b> au sud, <b>an-Nasr at-Tâ’ir</b> à l’est et à l’ouest, <b>al-’Ayyûq</b> et <b>al-’Aqrab</b> entre eux. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>'],
     ['Caravanes', '<p>Aux ballots du souk ou du camp, on vend, on achète, et l’on confie une cargaison à une caravane : elle revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue, que des pactes sont noués et que des méharistes la gardent. Si elle est pillée, on lève des renforts, on parle d’abord, et l’on rend à chacun ce qui lui revient.</p>'],
     ['Bâtir', '<p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose case par case, devant soi ou en touchant la case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>'],
+    ['Équipement', '<p>Chaque compagnon a quatre emplacements : <b>main droite</b> (épée, lance, arc, dague, masse, bâton ou calame), <b>main gauche</b> (bouclier, ou un outil pour qui n’en porte pas), <b>tête</b> (turban, calotte ou casque) et <b>corps</b> (étoffe, cuir ou armure). Chaque rôle a ses pièces : un sage ne porte pas de cotte de mailles, un guerrier n’a que faire d’un calame.</p><p>Les pièces viennent des <b>coffres</b> et des <b>comptoirs</b> : chaque lieu a ses artisans, et l’on n’y trouve pas la même chose à Médine, au camp ou dans une ville de Rûm. Elles vont dans une <b>réserve</b> commune à toute la Chaîne ; à la fin d’un maillon, ce que le groupe portait y retourne.</p><p>Dans la halte, <b>Équipement</b> montre ce que chaque pièce change avant de la choisir ; <b>Au mieux</b> habille tout le groupe d’un geste. Une lance perce la garde, une dague frappe parfois deux fois, un arc tire le premier, une masse étourdit, un bouclier pare, un casque évite d’être étourdi ; le fer protège mais ralentit.</p><p>Ce sont des objets ordinaires, sans relique ni inscription. Le fer aide à tenir : il ne remplace pas la provision du cœur.</p>'],
     ['Les œuvres et la provision', '<p>Sur la natte d’une mosquée, on prie, et l’on accomplit les <b>œuvres du jour</b> : le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite ; parfois le pèlerinage. Trois par chapitre au plus, la prière en sus. Chacune ajoute à la <b>provision du cœur</b> (♥, cinq au plus).</p><p>Plus une épreuve est lourde, plus elle en demande : une idole pèse 2, un mal du cœur 3. Qui s’y présente sans provision combat <b>le cœur lourd</b> : il frappe moins fort et reçoit davantage. Le bouton <b>?</b> annonce le poids de l’épreuve qui vient.</p><p>Un jour de <b>jeûne</b>, les vivres de la besace attendent le soir. L’aumône coûte des dirhams. Ces œuvres ne sont pas des sortilèges : le jeu traduit à sa façon ce qu’elles font au cœur.</p>'],
     ['Lames et maux du cœur', '<p>Sept maux du cœur se tiennent derrière les idoles : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. On les rencontre à la fin de chaque rencontre de la Cité-Miroir, et tous ceux qui restent au dernier chapitre.</p><p>Une œuvre pratiquée forge une <b>lame</b> : trois jeûnes pour le Contentement, trois prières pour la Sincérité, trois aumônes pour la Largesse, trois études pour l’Ardeur, trois visites pour la Bienveillance, trois dhikr pour la Longanimité, un pèlerinage pour l’Humilité. Sans sa lame, un mal est seulement <b>repoussé</b> : il revient. Avec elle, il est <b>tranché</b>.</p><p>La page « Œuvres et lames » de la halte tient le compte.</p>'],
     ['Idées noires et énigmes', '<p>Dans un pourparler, il arrive que la <b>honte</b>, la <b>peur</b>, le <b>soupçon</b>, la <b>rancune</b> ou le <b>désespoir</b> parlent plus fort que toi. Il faut alors dissiper cette idée noire dans la noosphère : on ne la combat pas contre l’homme, mais pour lui. Après quoi il écoute, et la confiance monte.</p><p>Une <b>énigme du cœur</b> : un compagnon languit sans fièvre ni blessure. Il tient moins bien au combat tant qu’on n’a pas trouvé ce qu’il a cessé de faire. Les anciens donnent des indices ; la bonne œuvre, accomplie sur la natte, le remet debout.</p>'],
     ['Compagnons de lumière', '<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>'],
+    ['Si le jeu s’arrête', '<p>Si l’écran reste noir ou si plus rien ne répond pendant un quart de minute, un bouton <b>Reprendre</b> apparaît en bas de l’écran : il ramène au dernier objectif atteint, sans rien perdre de ce qui a été sauvegardé.</p><p>Dans la halte, <b>Diagnostic</b> donne la version du jeu, l’appareil, l’état du son et les incidents relevés : c’est ce qu’il faut transmettre pour qu’une panne soit comprise. Couper le son ou la musique (Réglages) suffit parfois à la contourner.</p>'],
     ['La Chaîne', '<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>']
   ];
 
@@ -4360,9 +4892,10 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     if (qv && dq.vices[qv] !== 'tranche' && !dq.lames[qv]) out.push('Au bout de ce maillon, dans la Cité-Miroir, un mal du cœur attend. ' + I.oeuvres.quete(qv) + '. Sans sa lame, il ne sera que repoussé.');
     const en = I.oeuvres.enigme();
     if (en) out.push('<em>Énigme du cœur.</em> ' + I.esc(en.signe) + ' Cherche ce qu’il a cessé de faire : la bonne œuvre, sur la natte, le remettra debout. Les anciens ont peut-être remarqué quelque chose.');
-    const tired = W.party.some(id => { const h = W.hero(id); return h.hp < I.calc.hero(h.def, h.lvl).hp * 0.5; });
+    const tired = W.party.some(id => { const h = W.hero(id); return h.hp < I.calc.of(h).hp * 0.5; });
     if (tired) out.push('Le groupe est éprouvé : la natte d’une mosquée, au cœur de l’étoile à huit branches, le repose.');
     else if (o.foe && !S.flags._prayed && W.prayerPts().length) out.push('Avant l’épreuve, une prière sur la natte donne la Sakîna au groupe.');
+    const mieux = I.gear.better(); if (mieux) out.push('La réserve tient une pièce qui irait mieux à ' + I.esc(mieux.h.def.name) + ' : <em>' + I.esc(D.GEAR[mieux.id].name) + '</em>. Halte, puis <b>Équipement</b>.');
     if ((W.unsaved || 0) > 300) out.push('Tu n’as pas sauvegardé depuis un moment : cela se fait sur la natte d’une mosquée.');
     return out;
   };
@@ -4399,7 +4932,7 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
     try { I.battle.abort(W); } catch (e) { /* le combat n'était pas ouvert */ }
     S.depth = 0; W.lock = false; W._autoBusy = false; U.menuOpen = false; S.hideDialog(); $('#choice').hidden = true; document.body.classList.remove('in-dialog', 'in-screen', 'in-build');
     const c = $('#card'); c.classList.remove('on'); c.hidden = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
-    I.input.reset(); const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0;
+    I.input.reset(); const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0; document.body.classList.remove('noir');
     const sv = I.save.data;
     if (sv.cp && I.sagas[sv.cp.saga]) { W.roster = {}; W.saga = null; W.startChapter(sv.cp.saga, sv.cp.ci, sv.cp); }
     else if (!sv.prologue) { W.roster = {}; W.saga = null; W.startChapter('idris', 0); }
@@ -4488,6 +5021,13 @@ window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
       if (q.hold || e.type === 'pointercancel') W.stop(); else { const p = where(e); W.tap(p[0], p[1]); }
     };
     st.addEventListener('pointerup', up); st.addEventListener('pointercancel', up);
+    // hors de la scène (sur un écran en hauteur, toute la zone sous l'image) : toucher fait avancer le texte, comme toucher la scène
+    document.addEventListener('pointerup', e => {
+      const t = e.target; if (e.button || (t !== document.body && t !== document.documentElement && t.id !== 'app')) return;
+      I.audio.unlock();
+      if (U.menuOpen || I.battle.active || I.debug.auto || !$('#choice').hidden || $('#dialog').hidden) return;
+      I.input.emit('ok');
+    });
     // doigt maintenu : le héros le suit
     U.pointerTick = now => {
       if (!ptr || !ptr.world) return;
@@ -4687,7 +5227,7 @@ ISNAD.registerSaga({
         { id: 'gamin', name: 'Enfant', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Monsieur, c’est vrai qu’avant le ciel était noir, la nuit, avec des points dedans ?']] },
         { id: 'yunus_n', name: 'Maître Yûnus', hero: 'yunus', map: 'archives', at: 'bureau', talk: [['say', 'yunus_n', 'La Chaîne t’attend au fond de la salle, Idris.']] }
       ],
-      chests: [{ map: 'archives', at: ['rayonnages', 2, 1], item: 'dattes', n: 2 }],
+      chests: [{ map: 'archives', at: ['bureau', 1, 1], gear: 'lampe' }, { map: 'archives', at: ['rayonnages', 2, 1], item: 'dattes', n: 2 }],
       intro: [
         ['title', 'ISNAD', 'An 1508 de l’Hégire · 2084 · Cité-Miroir'],
         ['nar', 'Dans la Cité-Miroir, on ne lève plus les yeux. Le ciel est un écran, et l’écran regarde en retour.'],
@@ -4760,7 +5300,7 @@ ISNAD.registerSaga({
         { id: 'f2', map: 'noos', at: 'noeud2', group: ['score', 'marque'], bg: 'cite' },
         { id: 'f3', map: 'noos', at: 'noeud3', group: ['flux'], bg: 'cite', boss: true }
       ],
-      chests: [{ map: 'noos', at: 'faille', item: 'musc', n: 2 }, { map: 'noos', at: 'miroir', item: 'lait', n: 2 }, { map: 'noos', at: ['noeud3', 2, 0], item: 'eau', n: 2 }],
+      chests: [{ map: 'noos', at: ['noeud1', 1, 1], gear: 'epee_maitre' }, { map: 'noos', at: 'faille', item: 'musc', n: 2 }, { map: 'noos', at: 'miroir', item: 'lait', n: 2 }, { map: 'noos', at: ['noeud3', 2, 0], item: 'eau', n: 2 }],
       intro: [
         ['title', 'Le Cœur de l’Agrégor', 'An 1508 de l’Hégire · Cité-Miroir'],
         ['nar', 'Idris rouvre les yeux. Cinq Lumières brûlent en lui, et aucune n’est la sienne : on les lui a confiées.'],
@@ -5807,7 +6347,7 @@ ISNAD.registerSaga({
           ['say', 'imam', "Prie d'abord. Tu décideras ensuite. On ne tranche pas bien avec un cœur qui court."]
         ] }
       ],
-      chests: [{ at: ['greniers', 1, 0], item: 'dattes', n: 2 }, { at: ['jardin', 1, 1], item: 'eau', n: 1 }],
+      chests: [{ at: ['salle', 1, 1], gear: 'burnous' }, { at: ['greniers', 1, 0], item: 'dattes', n: 2 }, { at: ['jardin', 1, 1], item: 'eau', n: 1 }],
       intro: [
         ['flag', 'v1_vrai', false], ['flag', 'v1_tu', false], ['flag', 'v1_pacte', false],
         ['title', 'La Nuit du père', 'Veillée de la Véracité'],
@@ -5947,7 +6487,7 @@ ISNAD.registerSaga({
         ] },
         { id: 'meksa', name: 'Amghar Meksa', at: 'cour', hidden: true, look: { kind: 'berbere', robe: '#3f5a3a', head: '#e6dcc4', cloak: '#2a2a3a' } }
       ],
-      chests: [{ at: ['tour', 1, 1], item: 'miel', n: 1 }, { at: ['greniers', 0, 1], item: 'pain', n: 2 }],
+      chests: [{ at: ['remparts', 1, 1], gear: 'bouclier_lamt' }, { at: ['tour', 1, 1], item: 'miel', n: 1 }, { at: ['greniers', 0, 1], item: 'pain', n: 2 }],
       intro: [
         ['flag', 'v2_egale', false], ['flag', 'v2_meksa', false],
         ['title', 'La Sentinelle', 'Veillée de la Justice'],
@@ -6085,7 +6625,7 @@ ISNAD.registerSaga({
         { id: 'warsen', name: "L'ancien Warsen", map: 'desert', at: 'oasis', look: { kind: 'ancien', robe: '#7a6a4a', head: '#e6dcc4' },
           talk: [['say', 'warsen', "Parle, Caïd. Nous avons soif, mais nous avons encore des oreilles."]] }
       ],
-      chests: [{ at: ['palmeraie', 1, 0], item: 'dattes', n: 2 }, { map: 'desert', at: ['oasis', -2, 1], item: 'eau', n: 2 }],
+      chests: [{ at: ['souk', 1, 1], gear: 'cheche' }, { at: ['palmeraie', 1, 0], item: 'dattes', n: 2 }, { map: 'desert', at: ['oasis', -2, 1], item: 'eau', n: 2 }],
       intro: [
         ['flag', 'v3_pacte', false], ['flag', 'v3_rengaine', false], ['flag', 'v3_farrokh', false],
         ['title', 'Le Général et la Tour', 'Veillée du Courage'],
@@ -6224,7 +6764,7 @@ ISNAD.registerSaga({
         { id: 'chambellan', name: 'Maymûn, le chambellan', at: ['salle', 2, 0], look: { kind: 'marchand', robe: '#5a2f4a', head: '#e6dcc4', cloak: '#c9a13f' },
           talk: [['say', 'chambellan', "Le peuple souffre, seigneur. Il faut le comprendre. Il faut toujours comprendre le peuple."]] }
       ],
-      chests: [{ at: ['souk', 2, 1], item: 'musc', n: 1 }, { at: ['palmeraie', 0, 1], item: 'eau', n: 2 }],
+      chests: [{ at: ['cour', 1, 1], gear: 'houlette' }, { at: ['souk', 2, 1], item: 'musc', n: 1 }, { at: ['palmeraie', 0, 1], item: 'eau', n: 2 }],
       intro: [
         ['flag', 'v4_calme', false], ['flag', 'v4_cede', false],
         ['title', 'La Rumeur du puits', 'Veillée de la Miséricorde'],
@@ -6360,7 +6900,7 @@ ISNAD.registerSaga({
         { id: 'pur1', name: 'Un Pur', at: ['cour', 2, 1], look: { kind: 'homme', robe: '#cfc8b8', head: '#cfc8b8' },
           talk: [['say', 'pur1', "La citadelle n'appartient qu'à Dieu ! …C'est tout ce que j'ai à te dire. C'est tout ce qu'il y a à dire."]] }
       ],
-      chests: [{ at: ['ecole', 2, -1], codex: 'slogan_purs' }, { at: ['jardin', 0, 1], item: 'musc', n: 1 }],
+      chests: [{ at: ['tour', 1, 0], gear: 'cotte_serree' }, { at: ['ecole', 2, -1], codex: 'slogan_purs' }, { at: ['jardin', 0, 1], item: 'musc', n: 1 }],
       intro: [
         ['flag', 'v5_force', false], ['flag', 'v5_gagne', false],
         ['title', 'Les Purs', 'Veillée du Savoir'],
@@ -6621,6 +7161,7 @@ ISNAD.registerSaga({
     { id: 'lames', cat: 'Cœur', title: 'Les sept lames', text: 'Dans la noosphère, une vertu longuement pratiquée prend le fil d’une lame. Le jeûne forge le Contentement, le pèlerinage l’Humilité, la prière la Sincérité, l’aumône la Largesse, l’étude l’Ardeur, la visite la Bienveillance, le dhikr la Longanimité. Sans sa lame, un mal du cœur peut être repoussé ; il revient. Avec elle, il est tranché. Ces lames sont une image du jeu : ce ne sont pas des reliques, et aucune n’a appartenu à personne.' },
     { id: 'idees_noires', cat: 'Cœur', title: 'Les idées noires', text: 'La honte, la peur, le soupçon, la rancune, le désespoir. Il arrive qu’un homme n’entende plus rien parce que l’une d’elles parle plus fort que toi. On ne la combat pas contre lui, mais pour lui : dans la noosphère, elle a un corps, et l’on peut le dissiper. Après quoi il écoute.' },
     { id: 'figures_ciel', cat: 'Cœur', title: 'Les compagnons de lumière (fiction)', text: 'Les Arabes donnaient aux étoiles des noms de bêtes : l’Aigle qui vole, le Lion, les bonds de la Gazelle. Dans la noosphère d’ISNAD, ces noms ont pris corps. Le Renard des sables et le Phénix viennent, eux, des contes. Ce sont des figures de fiction : aucune n’accompagne un Compagnon dans le récit historique.' },
+    { id: 'equipement', cat: 'Objets', title: 'Ce que l’on porte', text: 'Épées, lances, arcs, boucliers, casques, cottes, turbans et manteaux : le jeu range sous quatre emplacements ce qu’un groupe pouvait porter en ce temps-là. C’est une *convention de jeu*. Aucune de ces pièces n’est une relique, aucune n’a appartenu à un personnage de l’histoire, aucune ne porte d’inscription, et le jeu ne dit pas qui portait quoi. Leurs noms viennent de la poésie arabe ancienne, où une bonne lame est dite *muhannad* (d’acier de l’Inde), *yamânî* (du Yémen) ou *mashrafî* ; une bonne lance, *khattî* (d’al-Khatt, port du Bahreïn) ou *samharî* ; un bon arc est de bois de *nab\'* ; une bonne cotte est *salûqî*. Le fer aide à tenir ; il ne remplace pas la provision du cœur.', src: 'Convention de jeu. Vocabulaire des poètes anciens, à faire vérifier.' },
     { id: 'enigmes', cat: 'Cœur', title: 'Les énigmes du cœur', text: 'Il arrive qu’un compagnon languisse sans fièvre ni blessure. Les anciens de la Citadelle disaient : « Cherche d’abord ce qu’il a cessé de faire. » Une prière laissée, une porte où l’on ne frappe plus, une main qu’on a fermée. Ce n’est pas une punition : c’est un poids, et il se pose en reprenant ce qu’on avait laissé.' }
   ],
 
@@ -6968,6 +7509,7 @@ ISNAD.registerSaga({
         { id: 'f_palm', at: 'palmeraie', group: ['murmure', 'murmure'], bg: 'ville' }
       ],
       chests: [
+        { at: ['halle', 1, 1], gear: 'calame_encrier' },
         { at: ['souk', 1, 1], item: 'dattes', n: 2 },
         { at: ['priere', 1, 1], codex: 'imamat' },
         { map: 'noos', at: 'faille', item: 'musc', n: 1 }
@@ -7167,6 +7709,7 @@ ISNAD.registerSaga({
         { id: 'f_n2', map: 'noos', at: 'noeud1', group: ['mot_clan', 'mot_clan', 'reniement'], bg: 'noos' }
       ],
       chests: [
+        { at: ['palmeraie', 1, 1], gear: 'turban_voyage' },
         { at: ['puits', 1, 0], item: 'eau', n: 1 },
         { at: ['souk', 3, -1], codex: 'registre_courtier' },
         { map: 'desert', at: ['oasis', 1, 1], item: 'pain', n: 2 },
@@ -7392,6 +7935,7 @@ ISNAD.registerSaga({
         { id: 'f_camp', at: 'enclos', group: ['reniement', 'reniement'], bg: 'camp' }
       ],
       chests: [
+        { at: ['feu', 1, 1], gear: 'baton_acacia' },
         { at: ['tentes', 1, 1], item: 'lait', n: 1 },
         { map: 'medine', at: ['puits', 1, 0], item: 'musc', n: 1 },
         { map: 'noos', at: 'faille', item: 'miel', n: 1 }
@@ -7871,6 +8415,7 @@ ISNAD.registerSaga({
         { id: 'f2', map: 'noos', at: 'noeud1', group: ['soupcon', 'murmure', 'murmure'], bg: 'noos' }
       ],
       chests: [
+        { at: ['halle', 1, 1], gear: 'calame_fin' },
         { at: ['puits', 1, 0], item: 'dattes', n: 2 },
         { at: ['palmeraie', 1, 1], item: 'musc', n: 1 },
         { map: 'noos', at: 'faille', item: 'miel', n: 1 },
@@ -8079,6 +8624,7 @@ ISNAD.registerSaga({
         { id: 'f3', map: 'noos', at: 'miroir', group: ['clameur', 'clameur'], bg: 'noos' }
       ],
       chests: [
+        { map: 'camp', at: ['lignes', 1, 1], gear: 'lance_samhari' },
         { at: ['puits', 0, 1], item: 'eau', n: 1 },
         { map: 'camp', at: ['enclos', 1, 0], item: 'dattes', n: 2 },
         { map: 'camp', at: ['enclos', -1, 1], codex: 'registre_double' },
@@ -8318,6 +8864,7 @@ ISNAD.registerSaga({
         { id: 'f3', map: 'noos', at: 'miroir', group: ['lame', 'lame', 'lame'], bg: 'noos' }
       ],
       chests: [
+        { at: ['feu', 1, 1], gear: 'arc_double' },
         { at: ['enclos', 1, 0], item: 'eau', n: 2 },
         { at: ['tertre', 0, 1], item: 'siwak', n: 1 },
         { map: 'noos', at: 'faille', item: 'lait', n: 1 }
@@ -8854,6 +9401,7 @@ ISNAD.registerSaga({
         { id: 'f3', at: 'ruines', group: ['murmure', 'murmure', 'murmure'], bg: 'desert' }
       ],
       chests: [
+        { at: ['rochers', 1, 1], gear: 'arc_nab' },
         { at: ['ruines', 1, 1], item: 'dattes', n: 2 },
         { at: ['dunes', 2, -1], item: 'siwak', n: 1 },
         { at: ['ruines', -1, 1], codex: 'routes_desert' },
@@ -9052,6 +9600,7 @@ ISNAD.registerSaga({
         { id: 'f4', map: 'noos', at: 'faille', group: ['decompte', 'decompte', 'decompte'], bg: 'noos' }
       ],
       chests: [
+        { at: ['lignes', 1, 1], gear: 'lance_khatt' },
         { at: ['tentes', 2, 0], item: 'pain', n: 2 },
         { at: ['etendard', -1, 1], item: 'musc', n: 1 },
         { map: 'noos', at: 'miroir', item: 'lait', n: 1 }
@@ -9227,6 +9776,7 @@ ISNAD.registerSaga({
         { id: 'f3', map: 'noos', at: 'faille', group: ['echo', 'echo', 'echo'], bg: 'noos' }
       ],
       chests: [
+        { at: ['marche', 1, 1], gear: 'epee_inde' },
         { at: ['palais', 1, 1], item: 'eau', n: 2 },
         { at: ['jardin', 1, 0], item: 'miel', n: 1 },
         { at: ['fontaine', 2, 0], codex: 'comptes_intendant' },
@@ -9757,6 +10307,7 @@ ISNAD.registerSaga({
         { id: 'f3', map: 'noos', at: 'noeud2', group: ['cendre', 'cendre'], bg: 'noos' }
       ],
       chests: [
+        { at: ['halle', 1, 1], gear: 'manteau_laine' },
         { at: ['souk', 2, 1], item: 'dattes', n: 2 },
         { at: ['souk', -1, 1], codex: 'registre_farine' },
         { map: 'noos', at: ['faille', 0, 0], item: 'musc', n: 1 }
@@ -9968,6 +10519,7 @@ ISNAD.registerSaga({
         { id: 'f_cardo', map: 'romaine', at: 'cardo', group: ['faste', 'mirage'], bg: 'romaine' }
       ],
       chests: [
+        { map: 'romaine', at: ['fontaine', 1, 1], gear: 'rondache' },
         { at: ['oasis', -1, 1], item: 'eau', n: 1 },
         { map: 'romaine', at: ['jardin', 0, 1], item: 'miel', n: 1 },
         { map: 'romaine', at: ['quartier', 1, 1], codex: 'bannissement' },
@@ -10173,6 +10725,7 @@ ISNAD.registerSaga({
         { id: 'f_jardin', map: 'palais', at: 'jardin', group: ['reflet', 'reflet', 'reflet'], bg: 'palais' }
       ],
       chests: [
+        { map: 'palais', at: ['jardin', 1, 0], gear: 'ecritoire' },
         { at: ['palmeraie', 0, 1], item: 'pain', n: 1 },
         { map: 'palais', at: ['tresor', 0, 0], item: 'lait', n: 1 },
         { map: 'palais', at: ['colonnade', 1, 0], item: 'musc', n: 1 }
@@ -10703,6 +11256,7 @@ ISNAD.registerSaga({
         { id: 'f_noeud', map: 'noos', at: 'noeud2', group: ['variante', 'variante', 'murmure'], bg: 'noos' }
       ],
       chests: [
+        { at: ['ecole', 1, 1], gear: 'tablette' },
         { at: ['palmeraie', 1, 0], item: 'dattes', n: 2 },
         { at: ['halle', 2, 1], codex: 'tabayyun' },
         { map: 'noos', at: 'faille', item: 'musc', n: 1 }
@@ -10892,6 +11446,7 @@ ISNAD.registerSaga({
         { id: 'f_faille2', map: 'noos', at: 'faille', group: ['ecume', 'variante'], bg: 'mer' }
       ],
       chests: [
+        { map: 'navire', at: ['mat', 1, 1], gear: 'dague' },
         { at: ['souk', 1, 0], item: 'pain', n: 1 },
         { map: 'navire', at: ['pont', 2, 0], item: 'eau', n: 1 },
         { map: 'noos', at: 'miroir', item: 'siwak', n: 1 }
@@ -11079,6 +11634,7 @@ ISNAD.registerSaga({
         { id: 'f_faille3', map: 'noos', at: 'faille', group: ['echo', 'ouidire', 'ouidire'], bg: 'noos' }
       ],
       chests: [
+        { at: ['maison', 1, 1], gear: 'manteau_raye' },
         { at: 'colline', item: 'miel', n: 1 },
         { at: ['palmeraie', 1, 0], item: 'eau', n: 1 },
         { at: ['porte_sud', -2, -1], codex: 'griefs' },

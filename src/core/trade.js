@@ -76,9 +76,10 @@
       Tr.lore('caravanes'); I.audio.sfx('ok');
       const pick = (q, o) => I.debug.auto ? Promise.resolve(o._auto || 0) : S.menuPick(q, o);
       for (;;) {
-        const car = sp().caravan, top = [{ t: 'Vendre' }, { t: 'Acheter' }, { t: car ? `Caravane en route : ${car.name}` : 'Confier une cargaison à une caravane' }, { t: 'Partir' }];
-        const i = I.debug.auto ? (Tr._autoStep = (Tr._autoStep || 0) + 1, [0, 1, 2, 3][Math.min(3, Tr._autoStep - 1)]) : await S.menuPick(`Le comptoir des caravanes · ${Tr.dirhams()} dirhams`, top);
-        if (i === 3) break;
+        const car = sp().caravan, art = (D.GEAR_SHOPS[W.map.id] || []).length, top = [{ t: 'Vendre' }, { t: 'Acheter' }, { t: car ? `Caravane en route : ${car.name}` : 'Confier une cargaison à une caravane' }, { t: art ? 'Les artisans : armes, boucliers, coiffes, tenues' : 'Revendre une pièce de la réserve' }, { t: 'Partir' }];
+        const i = I.debug.auto ? (Tr._autoStep = (Tr._autoStep || 0) + 1, [0, 1, 2, 3, 4][Math.min(4, Tr._autoStep - 1)]) : await S.menuPick(`Le comptoir des caravanes · ${Tr.dirhams()} dirhams`, top);
+        if (i === 4) break;
+        if (i === 3) { await Tr.artisans(); continue; }
         if (i === 0) for (;;) {
           const L = SELL.filter(e => stock(e[0], e[1]) > 0), o = L.map(e => ({ t: `${nameOf(e[0], e[1])} · tu en as ${stock(e[0], e[1])} · ${e[2]} dirhams pièce` })).concat([{ t: 'Retour' }]);
           const j = I.debug.auto ? (L.length && !Tr._sold ? (Tr._sold = 1, 0) : L.length) : await S.menuPick(`Vendre · ${Tr.dirhams()} dirhams`, o);
@@ -100,6 +101,30 @@
         }
       }
     } finally { S.depth--; S.hideDialog(); }
+  };
+  // les artisans du lieu : chaque comptoir vend ce que l'on fabrique ou ce qui passe par là (D.GEAR_SHOPS)
+  Tr.artisans = async function () {
+    const Gr = I.gear, shop = D.GEAR_SHOPS[W.map.id] || [], heroes = W.party.map(id => W.hero(id));
+    const mieux = (h, id) => Gr.can(h.def, id) && Gr.score(h.def, id) > (Gr.of(h)[Gr.slotOf(id)] ? Gr.score(h.def, Gr.of(h)[Gr.slotOf(id)]) : 0) + 0.01;
+    if (I.debug.auto) { // le joueur de test achète la pièce utile la moins chère, s'il lui reste de quoi faire l'aumône
+      const pick = shop.filter(id => Tr.dirhams() >= Gr.prix(id) + 12 && !Gr.stock(id) && heroes.some(h => mieux(h, id))).sort((a, b) => Gr.prix(a) - Gr.prix(b))[0];
+      if (pick && !Tr._forge) { Tr._forge = 1; Tr.dirhams(-Gr.prix(pick)); await Gr.receive(pick); } return; }
+    const vendre = async () => { for (;;) { const L = Gr.reserve(), o = L.map(id => ({ html: `${Gr.img(id)} ${I.esc(D.GEAR[id].name)}${Gr.stock(id) > 1 ? ' ×' + Gr.stock(id) : ''} · ${Gr.revente(id)} dirhams` })).concat([{ t: 'Retour' }]);
+      const j = await S.menuPick(L.length ? `Revendre · ${Tr.dirhams()} dirhams` : 'La réserve est vide.', o); if (j >= L.length) return; Gr.add(L[j], -1); Tr.dirhams(Gr.revente(L[j])); I.audio.sfx('blip'); } };
+    if (!shop.length) return vendre();
+    for (;;) {
+      const cats = Gr.SLOTS.filter(s => shop.some(id => Gr.slotOf(id) === s));
+      const o = cats.map(s => ({ t: `${D.SLOTS[s]} · ${shop.filter(id => Gr.slotOf(id) === s).length} pièces` })).concat([{ t: 'Revendre une pièce de la réserve' }, { t: 'Retour' }]);
+      const i = await S.menuPick(`Les artisans de ${D.MAPS[W.map.id].label} · ${Tr.dirhams()} dirhams`, o);
+      if (i > cats.length) return; if (i === cats.length) { await vendre(); continue; }
+      for (;;) {
+        const L = shop.filter(id => Gr.slotOf(id) === cats[i]), bo = L.map(id => { const g = D.GEAR[id], who = heroes.filter(h => Gr.can(h.def, id));
+          return { html: `${Gr.img(id)} <b>${I.esc(g.name)}</b> · ${Gr.prix(id)} dirhams${Tr.dirhams() < Gr.prix(id) ? ' (trop cher)' : ''}<br><small>${Gr.effets(g)}${who.length ? (who.some(h => mieux(h, id)) ? ' · mieux pour ' + who.filter(h => mieux(h, id)).map(h => I.esc(h.def.name)).join(', ') : '') : ' · personne ici ne peut la porter'}</small>` }; }).concat([{ t: 'Retour' }]);
+        const j = await S.menuPick(`${D.SLOTS[cats[i]]} · ${Tr.dirhams()} dirhams`, bo); if (j >= L.length) break;
+        if (Tr.dirhams() < Gr.prix(L[j])) { S.toast('Il te manque des dirhams.', 1500); I.audio.sfx('dark'); continue; }
+        Tr.dirhams(-Gr.prix(L[j])); await Gr.receive(L[j]);
+      }
+    }
   };
   // au début d'un chapitre : la caravane revient, ou des hommes rentrent à pied
   Tr.resolve = async function () {

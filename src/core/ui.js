@@ -230,7 +230,7 @@
     const close = () => { if (fl) fl.destroy(); screen('#menu', false); U.menuOpen = false; if (onClose) onClose(); };
     const mkb = (label, fn, cls) => { const b = I.el('button', cls || '', label); b.type = 'button'; b.onclick = ev => { ev.stopPropagation(); fn(b); }; return b; };
     const build = (items, o) => { if (fl) fl.destroy(); side.innerHTML = ''; const btns = []; items.forEach(it => { if (it.cat) { side.appendChild(I.el('div', 'cat', it.cat)); return; } const b = mkb(it.label, it.fn); b._show = it.show; b._after = it.after; side.appendChild(b); btns.push(b); }); fl = focusList(btns, Object.assign({ onSel: b => { if (b._show) pane.innerHTML = b._show(); if (b._after) b._after(pane); } }, o)); $('#menu .cols').classList.toggle('large', !!(o && o.large)); };
-    const party = () => (W.saga && W.party.length) ? W.party.map(id => { const h = W.hero(id), st = I.calc.hero(h.def, h.lvl), e = D.ELEMENTS[h.def.el]; return `<div class="stat"><span class="seal" style="background-image:url(${G.sealURL(h.def.arabic, e.color)})"></span><img class="fig" alt="" src="${G.charURL(Object.assign({ kind: 'compagnon' }, h.def.look))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> ${h.def.title ? '<em>' + I.esc(h.def.title) + '</em>' : ''} <small>· niveau ${h.lvl} · ${e.name}</small><br><small>Constance ${Math.ceil(h.hp)}/${st.hp} · Souffle ${h.sp}/${st.sp} · Force ${Math.round(st.atk)} · Esprit ${Math.round(st.mag)} · Garde ${Math.round(st.def)} · Élan ${Math.round(st.spd)}</small><div class="sk">${h.def.skills.filter(k => k.lvl <= h.lvl).map(k => I.esc(k.name)).join(' · ')}</div></div></div>`; }).join('') : '<p>Aucun groupe pour l’instant.</p>';
+    const party = () => (W.saga && W.party.length) ? W.party.map(id => { const h = W.hero(id), st = I.calc.of(h), e = D.ELEMENTS[h.def.el], eq = I.gear.of(h); return `<div class="stat"><span class="seal" style="background-image:url(${G.sealURL(h.def.arabic, e.color)})"></span><img class="fig" alt="" src="${G.charURL(Object.assign({ kind: 'compagnon' }, h.def.look))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> ${h.def.title ? '<em>' + I.esc(h.def.title) + '</em>' : ''} <small>· niveau ${h.lvl} · ${e.name}</small><br><small>Constance ${Math.ceil(h.hp)}/${st.hp} · Souffle ${h.sp}/${st.sp} · Force ${Math.round(st.atk)} · Esprit ${Math.round(st.mag)} · Garde ${Math.round(st.def)} · Élan ${Math.round(st.spd)}</small><div class="sk">${h.def.skills.filter(k => k.lvl <= h.lvl).map(k => I.esc(k.name)).join(' · ')}</div><div class="port">${I.gear.SLOTS.filter(s => eq[s]).map(s => I.gear.img(eq[s]) + ' ' + I.esc(D.GEAR[eq[s]].name)).join(' · ') || 'Rien d’équipé'}</div></div></div>`; }).join('') : '<p>Aucun groupe pour l’instant.</p>';
     const bag = () => '<h3>Besace</h3>' + (Object.keys(D.ITEMS).filter(k => (sv.items[k] || 0) > 0).map(k => `<p><b>${D.ITEMS[k].name}</b> ×${sv.items[k]}<br><small>${D.ITEMS[k].desc}</small></p>`).join('') || '<p>La besace est vide.</p>') + '<p class="src">Les objets s’utilisent en combat. Le groupe reprend des forces après chaque victoire.</p>';
     const journal = () => { const o = W.cur && W.cur(); return `<h3>${W.ch ? I.esc(W.ch.title) : 'Journal'}</h3><p class="src">${W.ch ? I.esc(W.ch.sub) : ''}</p><p>${o && o.text ? '◆ ' + I.esc(o.text) : 'Aucun objectif en cours.'}</p><p class="src">Le bouton <b>?</b> explique l’objectif et peut montrer le chemin.</p><p class="src">Fidélité à la Chaîne : ${sv.isnad.ok} / ${sv.isnad.total} · Lumières : ${sv.lights.map(l => D.ELEMENTS[l].name).join(', ') || 'aucune'}</p>`; };
     const pillars = () => { const P = W.pillars(); const eff = { priere: 'Sakîna au début des combats ; sérénité dans les pourparlers', savoir: 'failles révélées d’emblée ; arguments ouverts par le savoir', justice: 'dégâts reçus réduits', lien: 'dégâts infligés accrus ; renforts d’alliés' }; return `<h3>${W.saga && W.saga.veillees ? 'La Citadelle du Caïd' : 'Ce que ce règne a bâti'}</h3>` + Object.keys(D.PILLARS).map(k => `<p><b>${D.PILLARS[k].glyph} ${D.PILLARS[k].name}</b> ${'◆'.repeat(P[k] || 0)}${'◇'.repeat(5 - (P[k] || 0))}<br><small>${eff[k]}</small></p>`).join('') + '<p class="src">Les piliers montent par la prière tenue, le savoir appris, la justice rendue et les pactes noués ; ils descendent quand la parole échoue.</p>'; };
@@ -240,7 +240,7 @@
       const items = [{ label: 'Reprendre', fn: close, show: journal }];
       if (inWorld) items.push({ label: 'Que faire ?', fn() { close(); U.guide(); }, show: () => '<h3>Que faire ?</h3><p>L’objectif expliqué, sa direction, et le chemin montré au sol si tu le demandes. Le même bouton <b>?</b> est toujours en haut de l’écran.</p>' });
       if (inWorld && W.map) items.push({ label: 'Carte', fn: carte, show: () => '<h3>Carte</h3><p>Le lieu entier, avec ta position, l’objectif, la natte et les lieux nommés. On l’ouvre aussi en touchant la mini-carte, ou par la touche <kbd>C</kbd>.</p>' });
-      items.push({ cat: 'Le groupe' }, { label: 'Compagnons', fn() {}, show: () => '<h3>Le groupe</h3>' + party() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Piliers', fn() {}, show: pillars });
+      items.push({ cat: 'Le groupe' }, { label: 'Compagnons', fn() {}, show: () => '<h3>Le groupe</h3>' + party() }, { label: 'Équipement', fn() { equip(); }, show: () => I.gear.paneGroupe() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Piliers', fn() {}, show: pillars });
       items.push({ cat: 'Le cœur' }, { label: 'Œuvres et lames', fn() {}, show: () => I.oeuvres.paneOeuvres() }, { label: 'Compagnons de lumière', fn: betes, show: () => I.oeuvres.paneAnimaux() });
       items.push({ cat: 'Le savoir' }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` },
         { label: 'Aide du jeu', fn: aide, show: () => '<h3>Aide du jeu</h3><p>Les règles, thème par thème : ' + U.AIDE.map(a => a[0].toLowerCase()).join(', ') + '.</p>' });
@@ -280,6 +280,28 @@
       $('#menu h2').textContent = 'Carte';
       build([{ label: '◂ Retour', fn: back, show: carteHTML, after: carteDraw }], { onCancel: back, large: true });
     };
+    // l'équipement : quatre emplacements par compagnon, une réserve commune ; on choisit une pièce en voyant ce qu'elle change
+    const equip = start => {
+      const Gr = I.gear, items = [{ label: '◂ Retour', fn: mode === 'equip' ? close : root, show: () => Gr.paneGroupe() }];
+      if (W.saga && W.party.length) {
+        items.push({ label: '✦ Au mieux, pour tout le groupe', fn() { const n = Gr.bestAll(); I.audio.sfx(n ? 'light' : 'blip'); S.toast(n ? `${n} pièce${n > 1 ? 's' : ''} changée${n > 1 ? 's' : ''}.` : 'Chacun porte déjà ce que la réserve a de mieux pour lui.', 2400); equip(1); }, show: () => Gr.paneGroupe() });
+        W.party.forEach((id, pi) => { const h = W.hero(id); items.push({ cat: I.esc(h.def.name) });
+          Gr.SLOTS.forEach((s, si) => { const cur = Gr.of(h)[s], g = D.GEAR[cur]; items.push({ label: g ? Gr.img(cur) + ' ' + I.esc(g.name) : '<i class="gi vide"></i> <span class="rien">' + D.SLOTS[s] + ' : rien</span>', fn() { pieces(h, s, 2 + pi * 4 + si); }, show: () => '<h3>' + I.esc(h.def.name) + '</h3>' + Gr.fiche(h) + '<p class="src">Choisis un emplacement pour voir ce que la réserve propose.</p>' }); }); });
+      }
+      items.push({ cat: 'Réserve' }, { label: 'Voir la réserve', fn() {}, show: () => Gr.paneReserve() });
+      $('#menu h2').textContent = 'Équipement';
+      build(items, { onCancel: mode === 'equip' ? close : root, start: start || 0 });
+    };
+    const pieces = (h, s, back) => {
+      const Gr = I.gear, cur = Gr.of(h)[s], retour = () => equip(back), items = [{ label: '◂ Retour', fn: retour, show: () => '<h3>' + D.SLOTS[s] + '</h3>' + Gr.fiche(h) }];
+      const prendre = (id, avant) => () => { if (avant) avant(); if (Gr.put(h, s, id)) I.audio.sfx(id ? 'light' : 'blip'); retour(); };
+      Gr.reserve(s).filter(id => Gr.can(h.def, id)).forEach(id => items.push({ label: Gr.img(id) + ' ' + I.esc(D.GEAR[id].name) + (Gr.stock(id) > 1 ? ' ×' + Gr.stock(id) : ''), fn: prendre(id), show: () => Gr.panePiece(h, s, id) }));
+      Gr.ailleurs(h, s).forEach(a => items.push({ label: Gr.img(a.id) + ' ' + I.esc(D.GEAR[a.id].name) + ' <small>· ' + I.esc(a.name) + '</small>', fn: prendre(a.id, () => Gr.rappeler(a.key, s)), show: () => Gr.panePiece(h, s, a.id, 'porté par ' + I.esc(a.name) + ', resté en arrière') }));
+      if (cur) items.push({ label: '<i class="gi vide"></i> Ne rien porter', fn: prendre(null), show: () => Gr.panePiece(h, s, null) });
+      if (items.length === (cur ? 2 : 1)) items.push({ label: 'Rien d’autre pour lui', fn() {}, show: () => '<h3>' + D.SLOTS[s] + '</h3><p>La réserve n’a rien que ' + I.esc(h.def.name) + ' puisse porter ici. Les coffres et les comptoirs la rempliront.</p>' });
+      $('#menu h2').textContent = D.SLOTS[s] + ' · ' + h.def.name;
+      build(items, { onCancel: retour, start: items.length > 1 ? 1 : 0 });
+    };
     const betes = () => {
       const d = I.oeuvres.state(), A = I.sagas.coeur.animaux, items = [{ label: '◂ Retour', fn: root, show: () => I.oeuvres.paneAnimaux() }];
       D.ANIMAUX.filter(id => d.animaux[id]).forEach(id => items.push({ label: (d.animal === id ? '● ' : '○ ') + A[id].name, fn() { d.animal = id; I.save.store(); I.audio.sfx('light'); betes(); }, show: () => I.oeuvres.paneAnimaux() }));
@@ -299,7 +321,7 @@
       $('#menu h2').textContent = 'Le Recueil';
       build(items, { onCancel: mode === 'codex' ? close : root });
     };
-    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'aide') aide(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
+    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'aide') aide(); else if (mode === 'equip') equip(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
   };
 
   /* ---------- l'aide du jeu, thème par thème ---------- */
@@ -311,10 +333,12 @@
     ['Les étoiles', '<p>On s’oriente au ciel. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche : <b>al-Jady</b> (la Polaire) au nord, <b>Suhayl</b> au sud, <b>an-Nasr at-Tâ’ir</b> à l’est et à l’ouest, <b>al-’Ayyûq</b> et <b>al-’Aqrab</b> entre eux. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>'],
     ['Caravanes', '<p>Aux ballots du souk ou du camp, on vend, on achète, et l’on confie une cargaison à une caravane : elle revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue, que des pactes sont noués et que des méharistes la gardent. Si elle est pillée, on lève des renforts, on parle d’abord, et l’on rend à chacun ce qui lui revient.</p>'],
     ['Bâtir', '<p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose case par case, devant soi ou en touchant la case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>'],
+    ['Équipement', '<p>Chaque compagnon a quatre emplacements : <b>main droite</b> (épée, lance, arc, dague, masse, bâton ou calame), <b>main gauche</b> (bouclier, ou un outil pour qui n’en porte pas), <b>tête</b> (turban, calotte ou casque) et <b>corps</b> (étoffe, cuir ou armure). Chaque rôle a ses pièces : un sage ne porte pas de cotte de mailles, un guerrier n’a que faire d’un calame.</p><p>Les pièces viennent des <b>coffres</b> et des <b>comptoirs</b> : chaque lieu a ses artisans, et l’on n’y trouve pas la même chose à Médine, au camp ou dans une ville de Rûm. Elles vont dans une <b>réserve</b> commune à toute la Chaîne ; à la fin d’un maillon, ce que le groupe portait y retourne.</p><p>Dans la halte, <b>Équipement</b> montre ce que chaque pièce change avant de la choisir ; <b>Au mieux</b> habille tout le groupe d’un geste. Une lance perce la garde, une dague frappe parfois deux fois, un arc tire le premier, une masse étourdit, un bouclier pare, un casque évite d’être étourdi ; le fer protège mais ralentit.</p><p>Ce sont des objets ordinaires, sans relique ni inscription. Le fer aide à tenir : il ne remplace pas la provision du cœur.</p>'],
     ['Les œuvres et la provision', '<p>Sur la natte d’une mosquée, on prie, et l’on accomplit les <b>œuvres du jour</b> : le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite ; parfois le pèlerinage. Trois par chapitre au plus, la prière en sus. Chacune ajoute à la <b>provision du cœur</b> (♥, cinq au plus).</p><p>Plus une épreuve est lourde, plus elle en demande : une idole pèse 2, un mal du cœur 3. Qui s’y présente sans provision combat <b>le cœur lourd</b> : il frappe moins fort et reçoit davantage. Le bouton <b>?</b> annonce le poids de l’épreuve qui vient.</p><p>Un jour de <b>jeûne</b>, les vivres de la besace attendent le soir. L’aumône coûte des dirhams. Ces œuvres ne sont pas des sortilèges : le jeu traduit à sa façon ce qu’elles font au cœur.</p>'],
     ['Lames et maux du cœur', '<p>Sept maux du cœur se tiennent derrière les idoles : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. On les rencontre à la fin de chaque rencontre de la Cité-Miroir, et tous ceux qui restent au dernier chapitre.</p><p>Une œuvre pratiquée forge une <b>lame</b> : trois jeûnes pour le Contentement, trois prières pour la Sincérité, trois aumônes pour la Largesse, trois études pour l’Ardeur, trois visites pour la Bienveillance, trois dhikr pour la Longanimité, un pèlerinage pour l’Humilité. Sans sa lame, un mal est seulement <b>repoussé</b> : il revient. Avec elle, il est <b>tranché</b>.</p><p>La page « Œuvres et lames » de la halte tient le compte.</p>'],
     ['Idées noires et énigmes', '<p>Dans un pourparler, il arrive que la <b>honte</b>, la <b>peur</b>, le <b>soupçon</b>, la <b>rancune</b> ou le <b>désespoir</b> parlent plus fort que toi. Il faut alors dissiper cette idée noire dans la noosphère : on ne la combat pas contre l’homme, mais pour lui. Après quoi il écoute, et la confiance monte.</p><p>Une <b>énigme du cœur</b> : un compagnon languit sans fièvre ni blessure. Il tient moins bien au combat tant qu’on n’a pas trouvé ce qu’il a cessé de faire. Les anciens donnent des indices ; la bonne œuvre, accomplie sur la natte, le remet debout.</p>'],
     ['Compagnons de lumière', '<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>'],
+    ['Si le jeu s’arrête', '<p>Si l’écran reste noir ou si plus rien ne répond pendant un quart de minute, un bouton <b>Reprendre</b> apparaît en bas de l’écran : il ramène au dernier objectif atteint, sans rien perdre de ce qui a été sauvegardé.</p><p>Dans la halte, <b>Diagnostic</b> donne la version du jeu, l’appareil, l’état du son et les incidents relevés : c’est ce qu’il faut transmettre pour qu’une panne soit comprise. Couper le son ou la musique (Réglages) suffit parfois à la contourner.</p>'],
     ['La Chaîne', '<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>']
   ];
 
@@ -340,9 +364,10 @@
     if (qv && dq.vices[qv] !== 'tranche' && !dq.lames[qv]) out.push('Au bout de ce maillon, dans la Cité-Miroir, un mal du cœur attend. ' + I.oeuvres.quete(qv) + '. Sans sa lame, il ne sera que repoussé.');
     const en = I.oeuvres.enigme();
     if (en) out.push('<em>Énigme du cœur.</em> ' + I.esc(en.signe) + ' Cherche ce qu’il a cessé de faire : la bonne œuvre, sur la natte, le remettra debout. Les anciens ont peut-être remarqué quelque chose.');
-    const tired = W.party.some(id => { const h = W.hero(id); return h.hp < I.calc.hero(h.def, h.lvl).hp * 0.5; });
+    const tired = W.party.some(id => { const h = W.hero(id); return h.hp < I.calc.of(h).hp * 0.5; });
     if (tired) out.push('Le groupe est éprouvé : la natte d’une mosquée, au cœur de l’étoile à huit branches, le repose.');
     else if (o.foe && !S.flags._prayed && W.prayerPts().length) out.push('Avant l’épreuve, une prière sur la natte donne la Sakîna au groupe.');
+    const mieux = I.gear.better(); if (mieux) out.push('La réserve tient une pièce qui irait mieux à ' + I.esc(mieux.h.def.name) + ' : <em>' + I.esc(D.GEAR[mieux.id].name) + '</em>. Halte, puis <b>Équipement</b>.');
     if ((W.unsaved || 0) > 300) out.push('Tu n’as pas sauvegardé depuis un moment : cela se fait sur la natte d’une mosquée.');
     return out;
   };
@@ -379,7 +404,7 @@
     try { I.battle.abort(W); } catch (e) { /* le combat n'était pas ouvert */ }
     S.depth = 0; W.lock = false; W._autoBusy = false; U.menuOpen = false; S.hideDialog(); $('#choice').hidden = true; document.body.classList.remove('in-dialog', 'in-screen', 'in-build');
     const c = $('#card'); c.classList.remove('on'); c.hidden = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
-    I.input.reset(); const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0;
+    I.input.reset(); const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0; document.body.classList.remove('noir');
     const sv = I.save.data;
     if (sv.cp && I.sagas[sv.cp.saga]) { W.roster = {}; W.saga = null; W.startChapter(sv.cp.saga, sv.cp.ci, sv.cp); }
     else if (!sv.prologue) { W.roster = {}; W.saga = null; W.startChapter('idris', 0); }
@@ -468,6 +493,13 @@
       if (q.hold || e.type === 'pointercancel') W.stop(); else { const p = where(e); W.tap(p[0], p[1]); }
     };
     st.addEventListener('pointerup', up); st.addEventListener('pointercancel', up);
+    // hors de la scène (sur un écran en hauteur, toute la zone sous l'image) : toucher fait avancer le texte, comme toucher la scène
+    document.addEventListener('pointerup', e => {
+      const t = e.target; if (e.button || (t !== document.body && t !== document.documentElement && t.id !== 'app')) return;
+      I.audio.unlock();
+      if (U.menuOpen || I.battle.active || I.debug.auto || !$('#choice').hidden || $('#dialog').hidden) return;
+      I.input.emit('ok');
+    });
     // doigt maintenu : le héros le suit
     U.pointerTick = now => {
       if (!ptr || !ptr.world) return;

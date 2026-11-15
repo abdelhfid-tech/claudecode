@@ -28,7 +28,9 @@ flowchart TD
   maps --> world[world.js<br>exploration, objectifs,<br>points de reprise]
   script[script.js<br>interprète de scripts] --> world
   world --> oeuvres[oeuvres.js<br>le cœur : provision,<br>lames, énigmes]
+  world --> gear[gear.js<br>équipement : réserve,<br>emplacements, icônes]
   oeuvres --> battle[battle.js<br>combat]
+  gear --> battle
   world --> battle
   script --> battle
   battle --> ui[ui.js<br>titre, Chaîne, menus,<br>boucle principale]
@@ -41,7 +43,7 @@ flowchart TD
 
 Chaque module est une fonction immédiate qui s'attache à `window.ISNAD`. L'ordre de chargement est
 fixé dans `tools/build.js` : `defs`, `base`, `gfx`, `sprites`, `maps`, `script`, `world`, `build`,
-`trade`, `oeuvres`, `battle`, `ui`, puis `frame.js`, `music.js`, `caid.js`, `coeur.js`, puis les sagas
+`trade`, `oeuvres`, `gear`, `battle`, `ui`, puis `frame.js`, `music.js`, `caid.js`, `coeur.js`, puis les sagas
 par ordre alphabétique, puis le démarrage (`ISNAD.ui.boot()`).
 
 **Fenêtre visible.** Le canevas garde toujours 384 × 216 pixels logiques. Sur un écran en hauteur,
@@ -52,6 +54,12 @@ rendu, et les plaques posées sur l'image se placent par rapport à cette fenêt
 **Chemin au doigt.** `W.route` parcourt la grille en largeur jusqu'à la case praticable la plus proche
 du point touché ; `W.goTo` fait suivre ce chemin en coupant les angles quand la ligne droite est libre.
 `W.tap` décide de ce que le toucher veut dire : aller là, parler, ouvrir, s'adresser à une chose.
+
+**Équipement.** `gear.js` ne connaît que trois choses : ce que chacun porte (`equip`, par héros), la
+réserve commune (`gear`) et le catalogue de `defs.js`. Les statistiques d'un héros se demandent toujours
+à `I.calc.of(h)`, qui applique les pourcentages des pièces portées à `I.calc.hero(def, niveau)` ; le
+combat lit en plus `gear.traits(h)` (percer, parer, tenir bon…) et dessine `gear.look(h)`, la silhouette
+du héros telle qu'il est équipé. Hors combat, la silhouette reste celle du fichier de saga.
 
 ## Rendu rétro-HD
 
@@ -100,8 +108,8 @@ de gestionnaires : le plus récent (un menu, un dialogue) reçoit l'action.
 
 À chaque objectif atteint, `world.checkpoint()` enregistre : saga, chapitre, indice d'objectif, carte
 et options, position, groupe, état des PNJ (cachés, position), ennemis vaincus, coffres ouverts,
-drapeaux. S'y ajoutent les niveaux des héros, la besace, le codex, les Lumières et le compte de
-fidélité. Toute lecture ou écriture est protégée : sans stockage, le jeu fonctionne, sans reprise.
+drapeaux. S'y ajoutent les niveaux des héros, la besace, la réserve d'équipement et ce que chacun porte, le
+codex, les Lumières et le compte de fidélité. Toute lecture ou écriture est protégée : sans stockage, le jeu fonctionne, sans reprise.
 Un objectif interrompu en cours de script est rejoué depuis son début.
 
 ## Flux du produit et chemin dans le schéma
@@ -121,6 +129,11 @@ Un objectif interrompu en cours de script est rejoué depuis son début.
 - `tools/smoke.js` ouvre le jeu dans Chromium, prend des captures, puis joue la partie entière en mode
   automatique : dialogues et choix avancent seuls, les combats sont menés par une IA de test, et
   l'accessibilité à pied de chaque objectif est vérifiée par un parcours en largeur sur la grille.
+  Il ouvre aussi les coffres du lieu, et relève tout texte affiché sous le noir d'un fondu (« TEXTE CACHÉ »).
+- `tools/doigt.js` joue le prologue comme un joueur, au doigt et sans aucun raccourci, sur trois tailles
+  d'écran. Avant chaque toucher il regarde l'écran : ce que le jeu attend est-il dans l'image, ni vide, ni
+  transparent, ni sous un fondu ? Il compte aussi les menus de choix : un menu qui se referme sans avoir été
+  touché trahit un toucher fantôme. `smoke.js` prouve que le récit se déroule ; `doigt.js`, qu'il se voit.
 
 ## Ajouts de la version 2
 

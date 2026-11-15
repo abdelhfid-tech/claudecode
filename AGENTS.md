@@ -23,6 +23,7 @@ toute considération de jeu.
 | `index.html`, `dist/isnad.html` | **générés** | ne jamais les éditer à la main |
 | `src/core/build.js` | bâtir : matériaux, pièces, chantiers, troupeaux | pièces et matériaux déclarés dans `defs.js` |
 | `src/core/oeuvres.js` | le cœur : œuvres et provision, lames, maux du cœur, énigmes, compagnons de lumière | règles et dessin seulement ; œuvres, maux et compagnons déclarés dans `defs.js` |
+| `src/core/gear.js` | l'équipement : quatre emplacements, réserve commune, icônes, pages de la halte | règles et dessin seulement ; pièces, types et étals déclarés dans `defs.js` (`D.GEAR`, `D.GEAR_TYPES`, `D.GEAR_SHOPS`) |
 | `src/data/coeur.js` | contenu commun à toutes les sagas : textes des œuvres, lames, maux, idées noires, compagnons de lumière | `commun: true`, aucun chapitre ; ses égrégores sont utilisables partout |
 | `src/data/caid.js` | les veillées du Caïd | même format, `frame: true`, `veillees: true`, un chapitre par saga (`after`) |
 | `src/data/music.js` | bande-son | `ISNAD.registerMusic(nom, piste)`, validée par `tools/validate-music.js` |
@@ -41,15 +42,18 @@ node tools/smoke.js auto            # prologue, cinq sagas, épilogue joués aut
 node tools/smoke.js walk            # idem en marchant réellement (clavier simulé, vraies collisions)
 node tools/smoke.js tap             # idem en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
 node tools/smoke.js wrong           # idem en prenant d'abord chaque mauvaise réponse
+node tools/doigt.js                 # le prologue au doigt, sans raccourci : ce que le jeu attend se voit-il, se touche-t-il ?
 node tools/smoke.js shots           # captures bureau et mobile dans .smoke/
 node tools/promo.js all             # livret et planches : captures, sprites, assemblage, export
 node tools/promo.js planches        # après une retouche du texte : réassemble et réexporte seulement
 ```
 
 **Règle.** Toute modification de contenu (`src/data/`) repasse le validateur, puis le build, puis
-`smoke.js auto`. Toute modification du moteur repasse le build, `smoke.js auto`, `smoke.js walk` et `smoke.js tap`. Un changement n'est
+`smoke.js auto`. Toute modification du moteur repasse le build, `smoke.js auto`, `smoke.js walk`, `smoke.js tap` et `doigt.js`. Un changement n'est
 terminé que si le validateur affiche ✓, que le test se termine sans « BLOQUÉ », sans « INACCESSIBLE »,
-sans « ABSENT » et sans erreur console.
+sans « ABSENT », sans « TEXTE CACHÉ » (un texte affiché sous le noir d'un fondu), sans « INVISIBLE » et sans erreur console.
+Un parcours automatique prouve que le récit se déroule, pas qu'il se voit : tout changement d'écran
+ou de mise en page se vérifie aussi sur une capture.
 
 ## Contrat de données
 
@@ -61,6 +65,9 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
   fichier de saga ne fixe jamais de points de vie ni de dégâts.
 - `choice` a exactement une option `ok: true` ; chaque option fausse porte une réponse `r` qui explique.
 - Un objectif `talk` ou `foe` vise un PNJ ou un ennemi présent sur la carte courante à ce moment-là.
+- Un coffre contient un objet (`item`), un feuillet (`codex`) ou une pièce d'équipement (`gear`) ; `give` accepte un
+  objet ou une pièce. Les effets d'une pièce sont des pourcentages déclarés dans `defs.js` : un fichier de saga
+  n'en fixe aucun.
 - Une manche de pourparler peut porter une idée noire (`noir`) : seulement chez un interlocuteur de
   fiction. Une énigme du cœur (`enigme`) et le pèlerinage (`hajj`) n'existent que dans la fiction
   (histoire-cadre, veillées) : le validateur les refuse ailleurs.
@@ -107,6 +114,11 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     comme telles au joueur. Une lame n'est ni une relique ni l'épée d'un personnage historique, et ne
     porte aucune inscription. Une idée noire ne s'attache qu'à un interlocuteur de fiction. Aucune
     figure du ciel n'accompagne un Compagnon dans le récit historique.
+
+17. L'équipement est fait d'objets ordinaires. Ni relique, ni arme ou vêtement d'un personnage de
+    l'histoire, ni inscription, ni or ni soie, ni talisman, ni vertu prêtée à un objet : ses effets sont
+    matériels (force, garde, élan, souffle). Le jeu ne dit jamais qui portait quoi. Hors combat et hors
+    menu, chaque personnage garde sa silhouette. Aucun dessin de pièce ne doit évoquer un symbole religieux.
 
 ## Qui fait quoi
 

@@ -20,6 +20,17 @@
     return { name: who, seal: G.sealURL('', '#c8b48a'), color: '#c8b48a' };
   }
 
+  /* ----- rien de ce que le joueur doit lire ne reste sous le noir d'un fondu -----
+     Un script peut fondre au noir puis raconter (« fade out », un carton, des narrations) : le texte passe alors
+     au-dessus du noir (classe « noir »). Le joueur de test signale tout texte qui resterait caché. */
+  const noirci = () => +($('#fade').style.opacity || 0) > 0.5;
+  function lisible(el) {
+    if (!noirci()) return;
+    if (S.TEXTE_SUR_NOIR) document.body.classList.add('noir');
+    if (I.debug.log) { const z = e => +getComputedStyle(e).zIndex || 0; if (z(el) <= z($('#fade'))) I.debug.log.push('TEXTE CACHÉ sous le fondu : #' + el.id + ' « ' + (el.textContent || '').trim().slice(0, 50) + ' »'); }
+  }
+  S.TEXTE_SUR_NOIR = true; // à « false », on retrouve l'ancien comportement : le joueur de test doit alors signaler « TEXTE CACHÉ »
+
   /* ----- boîte de dialogue ----- */
   let typing = null;
   async function showLine(kind, sp, text) {
@@ -42,7 +53,7 @@
       let tick = 0;
       typing = setInterval(() => { i += 2; tx.textContent = plain.slice(0, i); if (++tick % 3 === 0) I.audio.sfx('step'); if (i >= plain.length) finish(); }, 22);
     });
-    $('#dialog .next').style.visibility = 'visible';
+    $('#dialog .next').style.visibility = 'visible'; lisible(box);
     await I.sleep(60);
     if (I.debug.auto) await I.sleep(30); else await I.input.wait(['ok', 'cancel']);
     I.audio.sfx('blip');
@@ -52,7 +63,7 @@
   /* ----- cartons ----- */
   async function card(cls, html, auto) {
     const c = $('#card'); c.className = cls; c.innerHTML = html; c.hidden = false;
-    void c.offsetWidth; c.classList.add('on');
+    void c.offsetWidth; c.classList.add('on'); lisible(c);
     if (I.debug.auto) await I.sleep(60);
     else if (auto) await I.input.waitTimed(['ok', 'cancel'], auto, 500);
     else { await I.sleep(350); await I.input.wait(['ok', 'cancel']); }
@@ -74,10 +85,12 @@
       let idx = 0; const btns = [];
       const locked = o => o.need !== undefined && !known(o.need);
       const sel = i => { idx = (i + btns.length) % btns.length; btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); };
-      const done = i => { if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; I.audio.sfx('ok'); res(i); };
-      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + I.fmt(o.t) + (o.need !== undefined ? ' <span class="kn">✧ savoir</span>' : '')); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
-      sel(Math.max(0, options.findIndex(o => !locked(o))));
-      const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); I.audio.sfx('move'); } else if (a === 'ok') done(idx); return true; });
+      const ne = performance.now(); // un menu n'accepte rien pendant un tiers de seconde : le toucher qui vient de faire avancer le texte ne répond pas à la place du joueur
+      const done = i => { if (!I.debug.auto && performance.now() - ne < 350) return; if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; I.audio.sfx('ok'); res(i); };
+      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ savoir</span>' : '')); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
+      sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box);
+      const vue = () => { if (btns[idx].scrollIntoView) btns[idx].scrollIntoView({ block: 'nearest' }); }; // une longue liste suit la sélection
+      const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); vue(); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); vue(); I.audio.sfx('move'); } else if (a === 'ok') done(idx); return true; });
       if (I.debug.auto) setTimeout(() => {
         const open = options.map((o, i) => i).filter(i => !locked(options[i]));
         if (options.some(o => typeof o.v === 'number')) { const pick = open.slice().sort((x, y) => I.debug.pickWrong ? options[x].v - options[y].v : options[y].v - options[x].v)[0]; return done(pick); }
@@ -134,6 +147,7 @@
   };
   S.fade = async function (dir, ms) {
     const f = $('#fade'); ms = (ms || 450) / I.speed; f.style.transition = `opacity ${ms}ms ease`; f.style.opacity = dir === 'out' ? 1 : 0;
+    if (dir !== 'out') document.body.classList.remove('noir'); // le jour revient : le texte reprend sa place sous les écrans
     await new Promise(r => setTimeout(r, ms + 30));
   };
 
@@ -192,7 +206,7 @@
       case 'flash': G.flash(a || '#fff'); break;
       case 'sfx': I.audio.sfx(a); break;
       case 'amb': I.audio.amb(a); break;
-      case 'give': { const n = b || 1, it = D.ITEMS[a]; const inv = I.save.data.items; inv[a] = (inv[a] || 0) + n; S.toast(`Reçu : <b>${it.name}</b>${n > 1 ? ' ×' + n : ''}`); I.audio.sfx('ok'); break; }
+      case 'give': { if (D.GEAR[a]) { await I.gear.receive(a, b || 1); break; } const n = b || 1, it = D.ITEMS[a]; const inv = I.save.data.items; inv[a] = (inv[a] || 0) + n; S.toast(`Reçu : <b>${it.name}</b>${n > 1 ? ' ×' + n : ''}`); I.audio.sfx('ok'); break; }
       case 'join': W.join(a); break;
       case 'leave': W.leave(a); break;
       case 'codex': I.ui.unlockCodex(a); break;

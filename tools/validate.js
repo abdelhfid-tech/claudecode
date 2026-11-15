@@ -26,6 +26,27 @@ function savoirConnu(ref) { lireAutres(); const [sid, id] = ref.split('/'); retu
 function ennemisCommuns() { lireAutres(); return communs; }
 
 let totalErr = 0;
+// l'équipement (D.GEAR) : chaque pièce a un type, un rang, un nom, une description sobre ; aucun mot qui en ferait une relique
+{ const E = [], STATS = ['atk', 'mag', 'def', 'spd', 'hp', 'sp'], TRAITS = ['perce', 'vif', 'choc', 'parade', 'ferme'], INTERDIT = /allah|dieu|proph|bén[ie]|sacr|saint|relique|talisman|amulette|miracl|\bor\b|doré|soie/i;
+  Object.keys(D.GEAR).forEach(id => { const g = D.GEAR[id], T = D.GEAR_TYPES[g.t];
+    if (!T) { E.push(`${id}: type « ${g.t} » inconnu`); return; }
+    if (!D.SLOTS[T.slot]) E.push(`${id}: emplacement « ${T.slot} » inconnu`);
+    if (!(Number.isInteger(g.r) && g.r >= 0 && g.r < D.GEAR_PRIX.length)) E.push(`${id}: rang invalide`);
+    if (typeof g.name !== 'string' || typeof g.desc !== 'string') E.push(`${id}: nom ou description manquant`);
+    else if (INTERDIT.test(g.name + ' ' + g.desc)) E.push(`${id}: un objet ne reçoit ni nom divin, ni vertu, ni or, ni soie (exigences 8, 15, 16)`);
+    if (D.ITEMS[id]) E.push(`${id}: même identifiant qu'un objet de la besace`);
+    STATS.forEach(k => { if (g[k] !== undefined && !(typeof g[k] === 'number' && Math.abs(g[k]) <= 25)) E.push(`${id}: ${k} hors bornes (±25 %)`); });
+    TRAITS.forEach(k => { if (g[k] !== undefined && !(g[k] > 0 && g[k] <= 0.6)) E.push(`${id}: ${k} hors bornes (0 à 0,6)`); });
+    if (!STATS.some(k => g[k]) && !TRAITS.some(k => g[k]) && !g.prime) E.push(`${id}: pièce sans effet`);
+    (g.roles || T.roles).forEach(r => { if (!D.ROLES[r]) E.push(`${id}: rôle « ${r} » inconnu`); });
+    if (g.port && !D.PORTES.includes(g.port)) E.push(`${id}: port « ${g.port} » inconnu`);
+    if (g.tete && !D.COIFFES.includes(g.tete)) E.push(`${id}: tete « ${g.tete} » inconnue`);
+    if (g.corps && !D.ARMURES.includes(g.corps)) E.push(`${id}: corps « ${g.corps} » inconnu`);
+    if (!Array.isArray(g.c) || g.c.length !== 2 || g.c.some(c => !/^#[0-9a-f]{6}$/i.test(c))) E.push(`${id}: c attend deux couleurs #rrggbb`); });
+  Object.keys(D.GEAR_TYPES).forEach(t => { const T = D.GEAR_TYPES[t]; if (T.port && !D.PORTES.includes(T.port)) E.push(`type ${t}: port inconnu`); if (T.anim && !['slash', 'thrust', 'arrow', 'smash'].includes(T.anim)) E.push(`type ${t}: anim inconnue`); });
+  Object.keys(D.GEAR_SHOPS).forEach(m => { if (!D.MAPS[m] || !D.MAPS[m].spots.includes('comptoir')) E.push(`boutique « ${m} » : carte sans comptoir`); D.GEAR_SHOPS[m].forEach(id => { if (!D.GEAR[id]) E.push(`boutique ${m}: pièce « ${id} » inconnue`); }); });
+  Object.keys(D.ROLES).forEach(r => Object.keys(D.SLOTS).forEach(s => { if (!Object.keys(D.GEAR).some(id => D.GEAR_TYPES[D.GEAR[id].t].slot === s && (D.GEAR[id].roles || D.GEAR_TYPES[D.GEAR[id].t].roles).includes(r))) E.push(`aucune pièce pour le rôle ${r} à l'emplacement ${s}`); }));
+  if (E.length) { console.log(`✗ src/core/defs.js — équipement\n   ` + E.join('\n   ')); totalErr += E.length; } }
 for (const file of files) {
   const errs = [];
   const warn = [];
@@ -100,6 +121,7 @@ function checkSaga(s, E, W) {
     if (l.coiffe !== undefined && !D.COIFFES.includes(l.coiffe)) E.push(`${where}: look.coiffe « ${l.coiffe} » invalide (${D.COIFFES.join('|')})`);
     if (l.manteau !== undefined && !D.MANTEAUX.includes(l.manteau)) E.push(`${where}: look.manteau « ${l.manteau} » invalide (${D.MANTEAUX.join('|')})`);
     if (l.motif !== undefined && !D.MOTIFS.includes(l.motif)) E.push(`${where}: look.motif « ${l.motif} » invalide (${D.MOTIFS.join('|')})`);
+    if (l.armure !== undefined && !D.ARMURES.includes(l.armure)) E.push(`${where}: look.armure « ${l.armure} » invalide (${D.ARMURES.join('|')})`);
     if (l.item !== undefined && l.item !== null) [].concat(l.item).forEach(it => { if (!D.PORTES.includes(it)) E.push(`${where}: look.item « ${it} » invalide (${D.PORTES.join('|')})`); });
     ['echarpe', 'court', 'cuirasse', 'chale'].forEach(k => { if (l[k] !== undefined && typeof l[k] !== 'boolean') E.push(`${where}: look.${k} vaut true ou false`); });
     ['robe', 'head', 'cloak', 'aura', 'trim', 'legs'].forEach(k => { if (l[k] !== undefined && !/^#[0-9a-fA-F]{6}$/.test(l[k])) E.push(`${where}: look.${k} doit être une couleur #rrggbb`); });
@@ -228,6 +250,7 @@ function checkSaga(s, E, W) {
     (c.chests || []).forEach((x, i) => {
       checkAt(x.at, x.map || c.map, `${w}/coffre ${i}`);
       if (x.codex !== undefined) { if (!codexIds.has(x.codex)) E.push(`${w}/coffre ${i}: codex « ${x.codex} » inconnu`); }
+      else if (x.gear !== undefined) { if (!D.GEAR[x.gear]) E.push(`${w}/coffre ${i}: pièce d'équipement « ${x.gear} » inconnue`); if (x.item !== undefined) E.push(`${w}/coffre ${i}: « gear » ou « item », pas les deux`); }
       else if (!D.ITEMS[x.item]) E.push(`${w}/coffre ${i}: objet « ${x.item} » inconnu`);
     });
 
@@ -291,7 +314,7 @@ function checkSaga(s, E, W) {
           case 'fade': if (!['in', 'out'].includes(o[1])) E.push(`${wo}: fade in|out`); break;
           case 'sfx': if (!D.SFX.includes(o[1])) E.push(`${wo}: sfx « ${o[1]} » invalide (${D.SFX.join('|')})`); break;
           case 'amb': if (!D.AMB.includes(o[1])) E.push(`${wo}: amb « ${o[1]} » invalide (${D.AMB.join('|')})`); break;
-          case 'give': if (!D.ITEMS[o[1]]) E.push(`${wo}: objet « ${o[1]} » inconnu (${Object.keys(D.ITEMS).join('|')})`); break;
+          case 'give': if (!D.ITEMS[o[1]] && !D.GEAR[o[1]]) E.push(`${wo}: objet ou pièce d'équipement « ${o[1]} » inconnu (${Object.keys(D.ITEMS).join('|')}, ou une pièce de D.GEAR)`); break;
           case 'join': case 'leave': if (!heroes[o[1]]) E.push(`${wo}: héros « ${o[1]} » inconnu`); break;
           case 'codex': if (!codexIds.has(o[1])) E.push(`${wo}: entrée de codex « ${o[1]} » inconnue`); break;
           case 'if': checkOps(o[2], wo + '.then'); if (o[3]) checkOps(o[3], wo + '.else'); break;

@@ -29,6 +29,8 @@ body.portrait #app { justify-content: flex-start; padding-top: 6px; }
 #stage { touch-action: none; }
 #ui { position: absolute; inset: 0; font-size: calc(max(13px, var(--u) * 7.2) * var(--tz, 1)); line-height: 1.32; }
 #fade { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 40; }
+/* un récit sur fond noir se lit : les cartons passent toujours au-dessus du fondu, le dialogue et les choix quand l'écran est noir */
+body.noir #dialog { z-index: 41; } body.noir #choice { z-index: 42; }
 
 /* ---------- HUD ---------- */
 #hud { position: absolute; left: 2.2%; top: 3%; max-width: 62%; pointer-events: none; text-shadow: 0 1px 3px #000, 0 0 12px rgba(0, 0, 0, .8); }
@@ -61,7 +63,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 @keyframes bob { 50% { transform: translateY(.25em); } }
 
 /* ---------- choix ---------- */
-#choice { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: min(86%, 34em); display: flex; flex-direction: column; gap: .45em; z-index: 25; max-height: 96%; overflow-y: auto; scrollbar-width: thin; }
+#choice { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: min(86%, 34em); display: flex; flex-direction: column; gap: .45em; z-index: 25; max-height: 90%; overflow-y: auto; scrollbar-width: thin; }
 #choice .prompt.guide { text-align: left; font-family: var(--f-body); letter-spacing: 0; color: var(--sand); display: flex; flex-direction: column; gap: .35em; padding: .7em 1em; border: 1px solid var(--line); background: var(--panel2); }
 #choice .prompt.guide .gt { font-family: var(--f-display); letter-spacing: .14em; color: var(--acc); font-size: .9em; }
 #choice .prompt.guide .gl b { color: #fff6dc; } #choice .prompt.guide kbd { font-size: .8em; }
@@ -70,7 +72,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 #choice .opt.sel { border-left-color: var(--acc); border-color: var(--line); background: var(--panel2); transform: translateX(.5em); color: #fff; }
 
 /* ---------- cartons ---------- */
-#card { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6vh max(24px, 8vw); background: radial-gradient(ellipse at center, rgba(8, 7, 18, .82), rgba(4, 3, 10, .96)); opacity: 0; transition: opacity .28s; z-index: 35; cursor: pointer; font-size: calc(clamp(16.5px, 2.3vmin + 7.5px, 26px) * var(--tz, 1)); }
+#card { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6vh max(24px, 8vw); background: radial-gradient(ellipse at center, rgba(8, 7, 18, .82), rgba(4, 3, 10, .96)); opacity: 0; transition: opacity .28s; z-index: 45; cursor: pointer; font-size: calc(clamp(16.5px, 2.3vmin + 7.5px, 26px) * var(--tz, 1)); }
 #card.on { opacity: 1; }
 #card h1 { font-family: var(--f-display); font-weight: 700; letter-spacing: .14em; font-size: 2em; margin: .1em 0; color: var(--gold); text-wrap: balance; text-shadow: 0 0 30px rgba(233, 200, 119, .35); }
 #card p { margin: .3em 0; max-width: 34em; }
@@ -216,6 +218,7 @@ body.portrait #dialog .seal { width: 3.8em; height: 3.8em; margin-top: -1.9em; l
 body.portrait #dialog.nar { padding-left: 1.2em; }
 body.portrait #choice { top: calc(100% + 10px); transform: translateX(-50%); width: calc(100% - 12px); max-height: calc(100vh - 100% - 30px); max-height: calc(100dvh - 100% - 30px); }
 body.portrait #choice .opt { padding: .58em .9em; }
+body.portrait #choice .opt.sel { transform: none; } /* pas de décalage : la liste occupe déjà toute la largeur */
 body.portrait #battle .panel { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; grid-template-columns: 1fr; }
 body.portrait #battle .order { font-size: calc(10.5px * var(--tz, 1)); } body.portrait .plate { font-size: calc(10.5px * var(--tz, 1)); min-width: 6.4em; } body.portrait #battle .banner { font-size: calc(13.5px * var(--tz, 1)); }
 body.portrait .fl { font-size: calc(15px * var(--tz, 1)); }
@@ -316,3 +319,31 @@ body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.
 #compass .lab small { font-size: .66em; color: var(--sand); letter-spacing: .12em; text-transform: uppercase; }
 body.portrait #compass { top: 34%; font-size: 10px; } body.touch:not(.portrait) #compass { top: 24%; }
 body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
+
+/* ---------- équipement ---------- */
+.gi { width: 1.5em; height: 1.5em; image-rendering: pixelated; vertical-align: -.36em; flex: none; }
+.gi.big { width: 2.4em; height: 2.4em; vertical-align: -.7em; }
+i.gi.vide { display: inline-block; border: 1px dashed rgba(255, 255, 255, .22); border-radius: 3px; box-sizing: border-box; }
+.rien { color: var(--dim); font-style: italic; }
+.stat.gear { grid-template-columns: 3.4em 1fr; align-items: start; } .stat.gear .fig { width: 3.4em; height: 5.1em; }
+.gslot { display: grid; grid-template-columns: 6.2em 1.6em 1fr; gap: .5em; align-items: center; padding: .28em 0; border-top: 1px solid rgba(255, 255, 255, .06); line-height: 1.25; }
+.gslot > small:first-child { color: var(--dim); font-size: .72em; letter-spacing: .08em; text-transform: uppercase; }
+.pane > .gslot { grid-template-columns: 1.6em 1fr; }
+.gslot small { color: var(--dim); }
+.gcmp { display: flex; flex-direction: column; gap: .2em; margin: .3em 0 .6em; font-variant-numeric: tabular-nums; }
+.gcmp span { padding: .22em .6em; background: rgba(255, 255, 255, .04); border-left: 2px solid var(--line); }
+.gcmp .up { border-left-color: #7fd69a; } .gcmp .up b { color: #9be8b2; } .gcmp .down { border-left-color: #ff7a5c; } .gcmp .down b { color: #ff9c84; }
+.stat .port { font-size: .8em; color: var(--dim); margin-top: .25em; } .stat .port .gi { width: 1.2em; height: 1.2em; vertical-align: -.26em; }
+#menu .side button .gi { margin-right: .15em; } #menu .side button small { color: var(--dim); }
+#choice .prompt.gear { display: grid; grid-template-columns: auto 1fr; gap: .2em .7em; align-items: center; text-align: left; font-family: var(--f-body); letter-spacing: 0; color: var(--sand); }
+#choice .prompt.gear .gi { width: 2.2em; height: 2.2em; } #choice .prompt.gear em { grid-column: 1 / -1; font-family: var(--f-display); font-style: normal; letter-spacing: .08em; color: var(--acc); }
+#choice .opt .gi { margin-right: .25em; } #choice .opt small { color: var(--dim); }
+#toasts .gi { width: 1.4em; height: 1.4em; }
+/* la halte en portrait : liste sur deux colonnes, page dessous */
+body.portrait #menu .cols { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, auto) minmax(0, 1fr); gap: .6em; }
+body.portrait #menu .side { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: max-content; gap: .28em; max-height: 40vh; align-content: start; overflow-y: auto; }
+body.portrait #menu .side .cat { grid-column: 1 / -1; margin-top: .3em; }
+body.portrait #menu .side button { padding: .5em .6em; font-size: .86em; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body.portrait #menu .pane { padding: .8em .9em; }
+body.portrait #menu header { margin-bottom: .5em; }
+body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot > small:first-child { grid-column: 1 / -1; margin-bottom: -.3em; }

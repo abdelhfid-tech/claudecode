@@ -43,6 +43,17 @@ joue le prologue, les cinq sagas et l'épilogue de bout en bout sans erreur.
 | Le renard « compagnon » rappelle le conte dont on s'inspire ailleurs | moyenne | moyen | Exigence 14 : aucun épisode repris ; il n'est pas apprivoisé, il rejoint celui qui a résolu une énigme. À faire relire avec D55. |
 | Le doigt jamais essayé sur un vrai téléphone | forte | moyen | Parcours `tap` complet (vraies collisions), captures en émulation ; la croix tactile reste disponible en réglage. |
 
+## Risques ajoutés par la version 6 (premier retour de jeu, équipement)
+
+| Risque | Prob. | Impact | Parade mise en œuvre |
+|---|---|---|---|
+| **Avéré.** Un test automatique passe sur un jeu qu'un joueur ne peut pas dépasser (écran noir à la fin du prologue, depuis la première version) | forte | fort | Le texte passe au-dessus d'un fondu ; le moteur signale tout texte caché (« TEXTE CACHÉ ») ; `tools/doigt.js` joue le prologue au doigt en regardant l'écran. Reste que l'outil ne couvre que le prologue : un essai humain par version demeure nécessaire. |
+| Un toucher répond à la place du joueur (menu apparu sous le doigt) | moyenne | moyen | Délai de garde sur les menus de choix et les commandes de combat ; le test compte les menus ouverts et touchés. |
+| Qu'une pièce d'équipement passe pour une relique, ou qu'on croie que le jeu dit ce que portait un Compagnon | moyenne | fort | Exigence 17 : objets ordinaires, sans inscription, ni or ni soie, aucun élément-vertu ; le validateur refuse les mots qui sacralisent ; le Recueil et la halte disent « convention de jeu » ; hors combat, personne ne change de silhouette. Question 8 posée au décideur. |
+| Noms de pièces inexacts (vocabulaire des poètes anciens, provenances) | moyenne | moyen | Formulations prudentes (« les poètes anciens la nomment », « à la manière de ») ; le Recueil dit « à faire vérifier » ; D79 reste ouverte. |
+| Qu'un dessin de pièce évoque un symbole religieux | faible | fort | Deux dessins refaits (casque à bandes, grand bouclier) ; règle écrite dans la charte : jamais de bande au milieu, bosse ronde sans tige. |
+| L'équipement rend le jeu trop facile, ou relègue les œuvres | faible | moyen | Bonus en pourcentage et modestes ; même parcours de test avant et après : 421 puis 427 tours sur 64 combats, Constance minimale moyenne inchangée (91 %). |
+
 ## Verdict
 
 Aucun risque classé « tue le projet » n'est sans parade, mais la parade du risque 1 est incomplète
