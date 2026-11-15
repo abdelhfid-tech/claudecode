@@ -106,11 +106,12 @@
   O.natte = async function () {
     S.depth++;
     try {
-      // la première fois : dire en une phrase ce que la natte permet
-      if (!st().vuNatte && !I.debug.auto) { st().vuNatte = true; O.learn('oeuvres'); S.toast('Sur la natte : <b>prier</b> (le groupe se repose, Constance et Souffle reviennent à 100 %) et accomplir les <b>œuvres du jour</b>. Chaque œuvre nourrit la provision du cœur (♥), que les grandes épreuves consomment. La partie se garde toute seule.', 12000); }
+      // la première fois : dire en deux lignes ce que la natte permet, dans l'en-tête du menu (un message à part recouvrait les choix)
+      let premiere = false; if (!st().vuNatte && !I.debug.auto) { st().vuNatte = true; O.learn('oeuvres'); premiere = true; }
       while (true) {
         const d = st(), left = MAX_JOUR - O.dayCount();
-        const i = I.debug.auto ? 3 : await S.menuPick('Une natte tournée vers La Mecque, au cœur de l’étoile.', [
+        const titre = { html: 'Une natte tournée vers La Mecque, au cœur de l’étoile.' + (premiere ? '<small>On y prie, et le groupe s’y repose. On y accomplit aussi les œuvres du jour : chacune nourrit la provision du cœur (♥), que les grandes épreuves consomment.</small>' : '') };
+        const i = I.debug.auto ? 3 : await S.menuPick(titre, [
           { t: 'Prier et se reposer : Constance et Souffle à 100 %, la Sakîna descend' },
           { t: 'Les œuvres du jour (' + (left > 0 ? 'encore ' + left : 'journée pleine') + ') · provision ♥ ' + d.zad + ' / ' + MAX_ZAD },
           { t: 'Garder une copie de la partie (elle se sauvegarde déjà toute seule)' }, { t: 'Plus tard' }]);

@@ -292,6 +292,7 @@ body.portrait #hud .enig { display: block; background: var(--panel); }
 .lm { display: grid; grid-template-columns: 1.5em 1fr; gap: .7em; align-items: center; opacity: .62; }
 .lm.ok { opacity: 1; } .lm img { height: 3.6em; image-rendering: pixelated; justify-self: center; filter: grayscale(.85) brightness(.7); } .lm.ok img { filter: drop-shadow(0 0 6px rgba(255, 240, 200, .5)); }
 .lm small { color: var(--dim); }
+#choice .prompt small { display: block; margin-top: .4em; font-family: var(--f-body); font-size: .86em; letter-spacing: 0; color: var(--dim); line-height: 1.35; }
 .stat.bete { grid-template-columns: 5.4em 1fr; } .stat.bete .fig { width: 5.4em; height: auto; } .stat.bete.off { opacity: .55; } .stat.bete.off .fig { display: grid; place-items: center; height: 2.6em; font-family: var(--f-display); font-size: 1.3em; color: var(--dim); border: 1px dashed rgba(255, 255, 255, .2); width: 3.4em; }
 .stat.bete.cur { border-bottom-color: var(--gold); }
 
