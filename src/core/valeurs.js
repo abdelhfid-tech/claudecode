@@ -125,8 +125,13 @@
     try {
       const E = C0().enemies || {}, Lm = T('lames');
       const titre = { html: I.esc(Pk.invite) + '<small>' + I.esc(P.question || '') + '</small>' };
-      const i = await S.menuPick(titre, L.map(x => ({ t: E[x].name + ' · *' + (O.hasBlade(x) ? (P.avecLame || 'lame forgée') + ' : ' + Lm[x].name : (P.sansLame || 'sans lame')) + '*' })).concat([{ t: P.plusTard || 'Pas maintenant' }]));
-      if (i >= 0 && i < L.length) v = L[i];
+      // un menu court : les maux dont la lame est forgée ; les autres derrière une seule entrée ; « pas maintenant » toujours en vue
+      const avec = L.filter(x => O.hasBlade(x)), sans = L.filter(x => !O.hasBlade(x)), tard = { t: P.plusTard || 'Pas maintenant' };
+      const opts = avec.map(x => ({ t: E[x].name + ' · *' + (P.avecLame || 'lame forgée') + ' : ' + Lm[x].name + '*' }));
+      if (sans.length) opts.push({ t: (P.autres || 'Un mal dont la lame n’est pas forgée') + ' · *' + (P.sansLame || 'il ne sera que repoussé') + '*' });
+      const i = await S.menuPick(titre, opts.concat([tard]));
+      if (i >= 0 && i < avec.length) v = avec[i];
+      else if (sans.length && i === avec.length) { const j = await S.menuPick(P.lequel || 'Lequel ?', sans.map(x => ({ t: E[x].name })).concat([tard])); if (j >= 0 && j < sans.length) v = sans[j]; }
     } finally { S.depth--; S.hideDialog(); }
     return v ? V.descendre(k, v) : null;
   };

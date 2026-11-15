@@ -326,7 +326,7 @@ async function coeur(browser, errors) {
   await choix(T, 0); await attends(T, carton, 'oeuvre'); await T.p.waitForTimeout(500); await T.shot('oeuvre-dhikr');
   await T.p.keyboard.press('Enter'); await T.p.waitForTimeout(900);
   await attends(T, T => T.ev(() => { const c = document.querySelector('#choice'); return !c.hidden && /noosphère/.test(c.textContent); }), null, 40);
-  await T.p.waitForTimeout(400); await sansToasts(T); await T.shot('porte'); // dans le dhikr, la noosphère est proche
+  await T.p.waitForTimeout(400); await sansToasts(T); // dans le dhikr, la noosphère est proche : la porte s'offre
   await choix(T, -1); await choix(T, 1); // pas maintenant ; retour aux œuvres du jour
   await T.ev(() => { window.ISNAD.oeuvres.state().oeuvres.aumone = 2; });
   await choix(T, 3); await attends(T, carton, 'oeuvre'); await T.p.waitForTimeout(400); await T.p.keyboard.press('Enter');

@@ -477,7 +477,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2026-11-15 14:50 UTC · 372e54d+";
+window.ISNAD_VERSION = "2026-11-15 15:30 UTC · e15c38e+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -4394,8 +4394,13 @@ window.ISNAD_VERSION = "2026-11-15 14:50 UTC · 372e54d+";
     try {
       const E = C0().enemies || {}, Lm = T('lames');
       const titre = { html: I.esc(Pk.invite) + '<small>' + I.esc(P.question || '') + '</small>' };
-      const i = await S.menuPick(titre, L.map(x => ({ t: E[x].name + ' · *' + (O.hasBlade(x) ? (P.avecLame || 'lame forgée') + ' : ' + Lm[x].name : (P.sansLame || 'sans lame')) + '*' })).concat([{ t: P.plusTard || 'Pas maintenant' }]));
-      if (i >= 0 && i < L.length) v = L[i];
+      // un menu court : les maux dont la lame est forgée ; les autres derrière une seule entrée ; « pas maintenant » toujours en vue
+      const avec = L.filter(x => O.hasBlade(x)), sans = L.filter(x => !O.hasBlade(x)), tard = { t: P.plusTard || 'Pas maintenant' };
+      const opts = avec.map(x => ({ t: E[x].name + ' · *' + (P.avecLame || 'lame forgée') + ' : ' + Lm[x].name + '*' }));
+      if (sans.length) opts.push({ t: (P.autres || 'Un mal dont la lame n’est pas forgée') + ' · *' + (P.sansLame || 'il ne sera que repoussé') + '*' });
+      const i = await S.menuPick(titre, opts.concat([tard]));
+      if (i >= 0 && i < avec.length) v = avec[i];
+      else if (sans.length && i === avec.length) { const j = await S.menuPick(P.lequel || 'Lequel ?', sans.map(x => ({ t: E[x].name })).concat([tard])); if (j >= 0 && j < sans.length) v = sans[j]; }
     } finally { S.depth--; S.hideDialog(); }
     return v ? V.descendre(k, v) : null;
   };
@@ -8181,7 +8186,7 @@ ISNAD.registerSaga({
     sommeil: { titre: 'En songe', invite: 'Le sommeil vient. Entre veille et songe, la noosphère est toute proche.', menu: 'S’endormir : un songe peut ouvrir la noosphère' },
     question: 'Veux-tu y descendre, râwî, et faire face à ce qui te pèse ? Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. Ce n’est pas le cœur des Compagnons que tu vas voir : c’est le tien.',
     plusTard: 'Pas maintenant', rien: 'Rien ne te pèse plus de ce côté-là : les sept maux du cœur sont tranchés.', deja: 'Cette porte s’est déjà ouverte dans ce chapitre.',
-    avecLame: 'lame forgée', sansLame: 'sans lame : ce mal ne sera que repoussé',
+    avecLame: 'lame forgée', sansLame: 'il ne sera que repoussé', autres: 'Un mal dont la lame n’est pas forgée', lequel: 'Lequel ? Sans sa lame, il ne sera que repoussé : il reviendra.',
     seuil: 'La noosphère s’ouvre. Tu y descends seul.',
     remonte: { titre: 'La noosphère se referme', h1: 'Ce mal pèse encore', texte: 'On ne tranche pas un mal du cœur d’un seul coup. L’œuvre forge la lame : reviens quand elle sera prête.' }
   },

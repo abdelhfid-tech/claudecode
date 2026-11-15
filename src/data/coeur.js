@@ -251,7 +251,7 @@ ISNAD.registerSaga({
     sommeil: { titre: 'En songe', invite: 'Le sommeil vient. Entre veille et songe, la noosphère est toute proche.', menu: 'S’endormir : un songe peut ouvrir la noosphère' },
     question: 'Veux-tu y descendre, râwî, et faire face à ce qui te pèse ? Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. Ce n’est pas le cœur des Compagnons que tu vas voir : c’est le tien.',
     plusTard: 'Pas maintenant', rien: 'Rien ne te pèse plus de ce côté-là : les sept maux du cœur sont tranchés.', deja: 'Cette porte s’est déjà ouverte dans ce chapitre.',
-    avecLame: 'lame forgée', sansLame: 'sans lame : ce mal ne sera que repoussé',
+    avecLame: 'lame forgée', sansLame: 'il ne sera que repoussé', autres: 'Un mal dont la lame n’est pas forgée', lequel: 'Lequel ? Sans sa lame, il ne sera que repoussé : il reviendra.',
     seuil: 'La noosphère s’ouvre. Tu y descends seul.',
     remonte: { titre: 'La noosphère se referme', h1: 'Ce mal pèse encore', texte: 'On ne tranche pas un mal du cœur d’un seul coup. L’œuvre forge la lame : reviens quand elle sera prête.' }
   },
