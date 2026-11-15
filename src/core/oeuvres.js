@@ -107,13 +107,13 @@
     S.depth++;
     try {
       // la première fois : dire en une phrase ce que la natte permet
-      if (!st().vuNatte && !I.debug.auto) { st().vuNatte = true; O.learn('oeuvres'); S.toast('Sur la natte : <b>prier</b>, accomplir les <b>œuvres du jour</b>, <b>sauvegarder</b>. Chaque œuvre nourrit la provision du cœur (♥), que les grandes épreuves consomment.', 11000); }
+      if (!st().vuNatte && !I.debug.auto) { st().vuNatte = true; O.learn('oeuvres'); S.toast('Sur la natte : <b>prier</b> (le groupe se repose, Constance et Souffle reviennent à 100 %) et accomplir les <b>œuvres du jour</b>. Chaque œuvre nourrit la provision du cœur (♥), que les grandes épreuves consomment. La partie se garde toute seule.', 12000); }
       while (true) {
         const d = st(), left = MAX_JOUR - O.dayCount();
         const i = I.debug.auto ? 3 : await S.menuPick('Une natte tournée vers La Mecque, au cœur de l’étoile.', [
-          { t: 'Prier : le groupe se repose, la Sakîna descend' },
+          { t: 'Prier et se reposer : Constance et Souffle à 100 %, la Sakîna descend' },
           { t: 'Les œuvres du jour (' + (left > 0 ? 'encore ' + left : 'journée pleine') + ') · provision ♥ ' + d.zad + ' / ' + MAX_ZAD },
-          { t: 'Sauvegarder la partie' }, { t: 'Plus tard' }]);
+          { t: 'Garder une copie de la partie (elle se sauvegarde déjà toute seule)' }, { t: 'Plus tard' }]);
         if (i === 0) { await W.pray(); return; }
         if (i === 2) { await I.ui.saveMenu(); return; }
         if (i === 3) return;

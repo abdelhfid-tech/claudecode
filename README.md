@@ -86,8 +86,10 @@ Tout cela est une fiction de jeu, dite comme telle : ni relique, ni pouvoir, ni 
 - **Chaque rôle a ses pièces**, et chaque famille son caractère : une lance perce la garde, une dague
   frappe parfois deux fois, un arc tire le premier, une masse étourdit, un bouclier pare, un casque évite
   d'être étourdi ; le fer protège mais ralentit.
-- **Coffres et comptoirs.** Un coffre par chapitre ; six comptoirs dont les étals diffèrent selon le lieu.
-  La réserve est commune à toute la Chaîne.
+- **Coffres, victoires, boutique.** Un coffre par chapitre. Chaque victoire rapporte du matériel : quelques
+  dirhams, et parfois une pièce d'équipement (toujours après une idole). Au comptoir, la boutique
+  d'équipement vend ce que font les artisans du lieu : six étals différents. La réserve est commune à
+  toute la Chaîne.
 - **On voit ce que l'on porte** en combat et dans la halte, où chaque pièce montre ce qu'elle change
   avant d'être choisie ; « Au mieux » habille tout le groupe d'un geste.
 
@@ -124,10 +126,13 @@ du quartier, le fossé de Médine avant la nuit de Dhû l-Qassa, la mosquée de 
 
 ## Sauvegarder
 
-On ne sauvegarde que **dans les mosquées** : sur la natte, au cœur de l'étoile, on peut prier (le groupe se
-repose) et sauvegarder sur l'un des trois emplacements. L'écran de la Chaîne offre aussi la natte des
-Archives. Il n'y a pas de sauvegarde automatique : fermer la page sans sauvegarder fait perdre ce qui a
-été joué depuis. « Continuer », à l'écran-titre, propose les emplacements remplis.
+**La partie se garde toute seule** : à chaque objectif atteint, toutes les douze secondes en promenade, et
+sur l'écran de la Chaîne. On peut fermer la page ; « Continuer », à l'écran-titre, ramène là où l'on était.
+Si le jeu se bloquait, recharger la page suffit.
+
+**La mosquée est le lieu du repos** : sur la natte, au cœur de l'étoile, on prie, et le groupe retrouve
+toute sa Constance et tout son Souffle. On y accomplit aussi les œuvres du jour. On peut en plus y
+garder une copie de la partie dans l'un des trois emplacements, comme depuis l'écran de la Chaîne.
 
 ## Version 2 : la parole avant le sabre
 

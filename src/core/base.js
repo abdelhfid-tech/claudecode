@@ -94,8 +94,9 @@
       items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, gear: {}, equip: {}, gearInit: {}, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
       opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 } };
   }
-  // La progression ne s'écrit que dans une mosquée (trois emplacements). Les options, elles, se gardent à part.
-  const OKEY = 'isnad.opts.v1', SLOT = n => 'isnad.slot.' + n;
+  // La partie se garde toute seule, à chaque point de reprise (AKEY) : fermer la page ne fait rien perdre. Les trois
+  // emplacements de la mosquée restent, pour qui veut garder une copie. Les options, elles, se gardent à part.
+  const OKEY = 'isnad.opts.v1', SLOT = n => 'isnad.slot.' + n, AKEY = 'isnad.auto.v1';
   I.save = {
     data: fresh(),
     slots() { return [1, 2, 3].map(n => { try { const d = JSON.parse(localStorage.getItem(SLOT(n)) || 'null'); return d && d.v === 1 ? d : null; } catch (e) { return null; } }); },
@@ -110,7 +111,13 @@
     store() { try { localStorage.setItem(OKEY, JSON.stringify(this.data.opts)); } catch (e) { /* ignore */ } },
     write(n, meta) { this.data.meta = Object.assign({ when: Date.now() }, meta || {}); this.data.started = true; try { localStorage.setItem(SLOT(n), JSON.stringify(this.data)); return true; } catch (e) { return false; } },
     read(n) { const d = this.slots()[n - 1]; if (!d) return false; const o = this.data.opts; this.data = Object.assign(fresh(), d); this.data.opts = o; return true; },
-    reset() { const o = this.data.opts; this.data = fresh(); this.data.opts = Object.assign(this.data.opts, o); }
+    reset() { const o = this.data.opts; this.data = fresh(); this.data.opts = Object.assign(this.data.opts, o); },
+    // sauvegarde automatique : l'état au dernier point de reprise. Même format que les emplacements (v: 1).
+    auto(label) { if (!this.data.started) return false; this.data.meta = { when: Date.now(), auto: true, label: label || (this.data.meta && this.data.meta.label) || '' };
+      try { localStorage.setItem(AKEY, JSON.stringify(this.data)); this.autoAt = Date.now(); return true; } catch (e) { this.autoKo = true; return false; } },
+    autoGet() { try { const d = JSON.parse(localStorage.getItem(AKEY) || 'null'); return d && d.v === 1 && d.started ? d : null; } catch (e) { return null; } },
+    readAuto() { const d = this.autoGet(); if (!d) return false; const o = this.data.opts; this.data = Object.assign(fresh(), d); this.data.opts = o; return true; },
+    clearAuto() { try { localStorage.removeItem(AKEY); } catch (e) { /* ignore */ } }
   };
 
   /* ---------- son : ambiances (bruit filtré) + percussions (duff) + bruitages ; la bande-son est plus bas. Aucune voix. ---------- */

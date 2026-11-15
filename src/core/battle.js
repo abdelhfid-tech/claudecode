@@ -174,8 +174,11 @@
     if (prev === W) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; }
     I.audio.amb(prevAmb || 'vent'); if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.music(C.prevMus || 'silence'); else I.audio.afterJingle = C.prevMus || null; }
     const foes0 = C.all.filter(e => e.side === 'foe');
+    const prise = C.prise;
     if (result === 'win') { await S.fade('in', 260); await I.oeuvres.leave(opts, foes0, result); }
     C = null;
+    // la pièce trouvée : on propose aussitôt de la porter (le joueur de test s'équipe au mieux)
+    if (result === 'win' && prise) { I.gear.learn(); if (I.debug.auto) I.gear.bestAll(); else await I.gear.offer(prise); if (prev === W) W.hud(); }
     return result;
   }
 
@@ -451,9 +454,16 @@
     });
     let drop = '';
     if (C.opts.boss || Math.random() < 0.4) { const k = C.opts.boss ? I.pick(['musc', 'lait', 'eau']) : I.pick(['dattes', 'dattes', 'pain', 'eau', 'miel', 'siwak']); sv.items[k] = (sv.items[k] || 0) + 1; drop = `<li>Trouvé : <b>${D.ITEMS[k].name}</b></li>`; }
+    // une victoire rapporte aussi du matériel : quelques dirhams, et parfois une pièce d'équipement (toujours après une idole).
+    // Rien de tel après un mal du cœur ou une idée noire : ce combat-là ne se paie pas.
+    const maux = C.all.filter(e => e.side === 'foe' && e.def.vice), materiel = !maux.length && !C.opts.noir;
+    if (materiel) {
+      const piece = I.gear.prise({ boss: !!C.opts.boss, elite: C.all.some(e => e.side === 'foe' && e.def.tier !== 'minion') });
+      if (piece) { I.gear.add(piece, 1); C.prise = piece; drop += `<li>Trouvé : ${I.gear.img(piece)} <b>${I.esc(D.GEAR[piece].name)}</b></li>`; }
+      if (I.trade && W.saga && (!W.saga.frame || W.saga.veillees)) { const dh = C.opts.boss ? 8 + Math.floor(Math.random() * 7) : 2 + Math.floor(Math.random() * 4); I.trade.dirhams(dh); drop += `<li>Trouvé : <b>${dh} dirhams</b></li>`; }
+    }
     W.persistHeroes();
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
-    const maux = C.all.filter(e => e.side === 'foe' && e.def.vice);
     await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? 'La lame a tranché' : 'Sans sa lame, le mal recule') : C.opts.noir ? 'On ne l’a pas combattue contre lui, mais pour lui' : C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>${maux.length ? (maux.every(e => e.cut) ? 'Tranché' : maux.some(e => e.cut) ? 'Tranché et repoussé' : 'Repoussé') : C.opts.noir ? 'L’idée noire se dissipe' : 'Dévoilement'}</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
   async function defeat() {

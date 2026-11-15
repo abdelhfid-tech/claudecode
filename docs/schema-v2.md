@@ -197,7 +197,7 @@ chapitre. Une pièce pleine est refusée si elle coupe l'accès à un lieu : on 
 | objectif `{ text, build: { piece: 'tranchee', n: 6 } }` | accompli quand la carte courante compte n pièces de ce type |
 | objectif `{ text, build: { site: 'id' } }` | accompli quand le chantier est achevé |
 
-Une mosquée achevée devient un lieu de prière et de sauvegarde (sur sa natte) ; Prière +1, Lien +1.
+Une mosquée achevée devient un lieu de prière et de repos (sur sa natte) ; Prière +1, Lien +1.
 Un puits et trois palmiers font une oasis (Lien +1). Six segments de tranchée gardent un lieu ; les
 égrégores visibles ne les franchissent pas. Les troupeaux versent leur dû à chaque chapitre (Justice +1).
 **Règle de respect** : quand les sources ne disent pas qu'on a bâti à tel endroit, le texte le dit

@@ -350,6 +350,37 @@ retour d'un joueur réel.
   la mise en page. Avec `loin`, il poursuit jusqu'à la fin du premier chapitre de la saga I, en hauteur
   comme en largeur : rien d'autre n'y est caché. Au-delà (bâtir, comptoir, natte), il reste à étendre.
 
+- [ ] **D87. Le blocage est « au niveau des chaînes, juste après ».** Précision du décideur : ce n'est pas
+  l'écran noir (D75), c'est l'écran de la Chaîne, où l'on choisit un maillon. **Non reproduit** : dans
+  Chromium, à six tailles d'écran, le premier maillon répond au doigt et la saga s'ouvre. *Lecture de
+  l'agent* : soit le toucher ne produit pas de clic sur l'appareil du décideur, soit l'écran ne disait pas
+  assez qu'il faut choisir un maillon. Les deux sont traités, sans certitude sur la cause :
+  - un grand bouton en haut de l'écran : « ▶ Ouvrir le maillon I : Abû Bakr as-Siddîq » (ou « Reprendre ») ;
+    chaque maillon porte « Ouvrir ▸ » ; une ligne dit quoi faire ;
+  - les boutons du titre, de la Chaîne et de la halte répondent au toucher relâché même si le
+    navigateur n'envoie pas le clic attendu ; au doigt, plus de « survol » simulé ;
+  - la version du jeu est affichée sur cet écran.
+  **À confirmer par le décideur** : que montre l'écran quand il bloque, et que se passe-t-il quand il
+  touche un maillon ? (question 7)
+- [x] **D88. Sauvegarde automatique (demande du décideur).** « On ne peut pas tout reprendre depuis la
+  mosquée en cas de blocage. » La partie se garde toute seule : à chaque point de reprise, toutes les
+  douze secondes en promenade, en quittant la halte, sur l'écran de la Chaîne, et quand la page passe à
+  l'arrière-plan. « Continuer » la reprend, à la position exacte. Jamais au milieu d'un récit : un
+  objectif interrompu est rejoué depuis son début. Cela **remplace** la règle des versions 1 à 5 (« on ne
+  sauvegarde que dans les mosquées »). Les trois emplacements restent, comme copies. Même format de
+  données, nouvelle clé `isnad.auto.v1` : aucune sauvegarde existante n'est touchée.
+  *Faille trouvée à la relecture, corrigée avant publication* : une prière jouée par le récit (22 dans le
+  jeu) prenait un point de reprise au milieu de son objectif. Écrit sur l'appareil, il faisait rejouer
+  l'objectif depuis le lieu de la prière : choix de fidélité comptés deux fois ('Alî 1, Khâlid 3, 'Umar 2),
+  et objectif sans cible sur la carte retrouvée ('Alî 2, Khâlid 3). Les parcours automatiques ne le
+  voyaient pas : ils ne ferment jamais la page. Désormais une prière de récit repose le groupe sans prendre
+  de point de reprise ; celle de la natte, faite au repos, en prend un. Le bouton de secours repart de la
+  partie écrite, non de la mémoire. Vérifié en fermant la page après chacune des 22 prières de récit :
+  objectif atteignable, compteurs identiques à ceux d'une partie jouée d'une traite.
+- [x] **D89. La mosquée est le lieu du repos (demande du décideur).** Prier sur la natte rend toute la
+  Constance et tout le Souffle, et le menu le dit. Après un combat, le groupe ne reprend toujours qu'un
+  tiers de ses forces.
+
 ## Équipement : armes, armures, boucliers, casques (remarque du décideur)
 
 Remarque reçue : « je ne vois de variété dans les armes, armures, boucliers, casques : inspire-toi de
@@ -386,6 +417,13 @@ Final Fantasy !! »
 - [x] **D81. Où les trouver.** Un coffre par chapitre (vingt-deux pièces) ; six comptoirs aux étals
   différents (Médine, le désert, le camp, la ville de Rûm, Koufa, la Citadelle) ; de 8 à 85 dirhams,
   revente à moitié prix. La même bourse sert à l'aumône : il faut choisir.
+- [x] **D81 bis. Boutique et gains de victoire (demande du décideur : « boutique d'équipement, ainsi que gain
+  de matériel à chaque combat ou guerre »).** Au comptoir, la boutique d'équipement est la première
+  entrée. Chaque victoire rapporte quelques dirhams (deux à cinq, huit à quatorze après une idole) et
+  parfois une pièce : toujours après une idole, trois fois sur dix après un combat où figure une élite,
+  une fois sur sept sinon. La pièce est de celles que le groupe peut porter et, si possible, qu'il n'a
+  pas ; son rang suit le niveau. *Limite posée par l'agent* : rien de tel après un mal du cœur ou une
+  idée noire. Le mot « butin » n'est pas employé : le jeu dit « Trouvé », comme pour les vivres.
 - [x] **D82. Ne pas alourdir.** Quand une pièce arrive, le jeu propose aussitôt « Qui la porte ? » si
   elle améliore quelqu'un. « Au mieux » habille tout le groupe d'un geste. « Que faire ? » signale une
   meilleure pièce restée dans la réserve.
@@ -441,8 +479,8 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
 4. Quelle suite : approfondir ces cinq sagas, ou en ajouter d'autres ?
 5. Les sept maux retenus et leurs noms (D61), les deux versets (D60), les noms d'étoiles (D67) : qui les relit ?
 6. Les œuvres comptent-elles au bon prix (trois par chapitre, 8 % par point manquant), ou faut-il durcir ?
-7. L'arrêt après le premier combat (D75) : était-ce bien un écran noir, une fois arrivé devant la
-   Chaîne au fond des Archives ? Si le jeu s'arrête encore ailleurs : sur quel appareil, que montre
-   l'écran, et que dit la page Diagnostic de la halte ?
+7. Le blocage sur l'écran de la Chaîne (D87) : sur quel appareil et dans quelle application ? Que se
+   passe-t-il quand on touche le grand bouton doré, ou un maillon ? Une capture d'écran suffirait, avec
+   la version affichée en bas de cet écran.
 8. L'équipement (D76 à D84) : qui relit les noms et les provenances des pièces ? L'équipement doit-il
    se voir en combat sur les Compagnons eux-mêmes, ou seulement sur les personnages de fiction ?

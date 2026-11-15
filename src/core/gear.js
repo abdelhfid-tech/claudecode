@@ -96,6 +96,18 @@
     return null;
   };
 
+  // ce qu'une victoire peut rapporter : une pièce que quelqu'un du groupe peut porter, de préférence une que l'on n'a pas ;
+  // toujours après une idole, de temps en temps sinon ; d'un rang qui suit le niveau du groupe (le rang 4 ne se trouve qu'en coffre)
+  Gr.prise = function (o) {
+    const W = I.world, heroes = W.party.map(id => W.hero(id)); if (!heroes.length) return null;
+    if (Math.random() > (o.boss ? 1 : o.elite ? 0.3 : 0.14)) return null;
+    const lvl = heroes[0].lvl, rmax = lvl >= 6 ? 3 : lvl >= 3 ? 2 : 1, rmin = o.boss ? Math.max(1, rmax - 1) : Math.max(0, rmax - 2), d = Gr.state(), porte = new Set();
+    Object.values(d.equip).forEach(e => SLOTS.forEach(s => { if (e[s]) porte.add(e[s]); }));
+    let L = Object.keys(D.GEAR).filter(id => { const g = D.GEAR[id]; return g.r >= rmin && g.r <= rmax && heroes.some(h => Gr.can(h.def, id)); });
+    const neuf = L.filter(id => !Gr.stock(id) && !porte.has(id)); if (neuf.length) L = neuf;
+    return L.length ? I.pick(L) : null;
+  };
+
   /* ================= dire : effets, comparaisons ================= */
   const pc = v => (v > 0 ? '+' : '−') + Math.abs(v) + ' %';
   Gr.effets = function (g) {
@@ -259,7 +271,8 @@
   Gr.paneGroupe = function () {
     const W = I.world, n = Gr.reserve().reduce((a, id) => a + Gr.stock(id), 0), b = Gr.better();
     return '<h3>Équipement</h3>' + ((W.saga && W.party.length) ? W.party.map(id => Gr.fiche(W.hero(id))).join('') : '<p>Aucun groupe pour l’instant.</p>') +
-      `<p>Réserve : <b>${n}</b> pièce${n > 1 ? 's' : ''}.${b ? ` <em>${I.esc(D.GEAR[b.id].name)}</em> irait mieux à ${I.esc(b.h.def.name)}.` : ''}</p>` + NOTE;
+      `<p>Réserve : <b>${n}</b> pièce${n > 1 ? 's' : ''}.${b ? ` <em>${I.esc(D.GEAR[b.id].name)}</em> irait mieux à ${I.esc(b.h.def.name)}.` : ''}</p>` +
+      `<p class="src">On en trouve dans les coffres, après les victoires, et à la <b>boutique d’équipement</b> : ${W.map && W.map.spots.comptoir && (D.GEAR_SHOPS[W.map.id] || []).length && W.saga && (!W.saga.frame || W.saga.veillees) ? 'au comptoir de ce lieu (le cercle doré de la Carte)' : 'il n’y en a pas dans ce lieu'}.</p>` + NOTE;
   };
   const actuel = (h, slot, id) => { const cur = Gr.of(h)[slot], g = D.GEAR[cur]; return cur === id ? '<p class="src">C’est ce qu’il porte.</p>' : `<p class="src">Il porte : ${g ? Gr.img(cur) + ' ' + I.esc(g.name) + ' (' + Gr.effets(g) + ')' : 'rien'}.</p>`; };
   Gr.panePiece = function (h, slot, id, extra) {

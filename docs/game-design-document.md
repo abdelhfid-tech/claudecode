@@ -167,8 +167,8 @@ ouvert ; une pièce pleine est refusée si elle isole un lieu ou un personnage.
 | Mur, sol, pilier, niche, natte, tapis, lanterne, rosace | pisé, palme, pierre, laine | pièces de mosquée |
 
 Chantier de mosquée : ouvert par le récit sur une terre gagnée, avec une liste de pièces à poser dans un
-enclos tracé au sol. Achevée, la mosquée donne Prière +1 et Lien +1, et sa natte devient un point de
-prière et de sauvegarde.
+enclos tracé au sol. Achevée, la mosquée donne Prière +1 et Lien +1, et sa natte devient un lieu de
+prière et de repos (la partie, elle, se garde toute seule depuis la version 6).
 
 ## Routes (version 4)
 

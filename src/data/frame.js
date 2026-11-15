@@ -167,7 +167,7 @@ ISNAD.registerSaga({
         { text: 'Descendre aux Archives basses (au bout de la rue)', goto: 'ascenseur', then: [
           ['sfx', 'door'], ['map', 'archives', 'entree'],
           ['nar', 'Quarante étages sous la rue, là où le Flux ne descend pas : les Archives basses.'],
-          ['nar', 'Dans un angle, une natte tournée vers La Mecque. Ici comme dans chaque mosquée de la Chaîne, on peut prier, et c’est là seulement que l’on *sauvegarde* la partie.']
+          ['nar', 'Dans un angle, une natte tournée vers La Mecque. Ici comme dans chaque mosquée de la Chaîne, on peut prier : le groupe s’y *repose*. La partie, elle, se garde toute seule.']
         ] },
         { text: 'Parler à Maître Yûnus', talk: 'yunus_n', then: [
           ['say', 'yunus_n', 'Te voilà, Idris. Assieds-toi. Ce soir, je te remets ce qu’on m’a remis.'],

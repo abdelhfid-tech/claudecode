@@ -76,8 +76,9 @@
       Tr.lore('caravanes'); I.audio.sfx('ok');
       const pick = (q, o) => I.debug.auto ? Promise.resolve(o._auto || 0) : S.menuPick(q, o);
       for (;;) {
-        const car = sp().caravan, art = (D.GEAR_SHOPS[W.map.id] || []).length, top = [{ t: 'Vendre' }, { t: 'Acheter' }, { t: car ? `Caravane en route : ${car.name}` : 'Confier une cargaison à une caravane' }, { t: art ? 'Les artisans : armes, boucliers, coiffes, tenues' : 'Revendre une pièce de la réserve' }, { t: 'Partir' }];
-        const i = I.debug.auto ? (Tr._autoStep = (Tr._autoStep || 0) + 1, [0, 1, 2, 3, 4][Math.min(4, Tr._autoStep - 1)]) : await S.menuPick(`Le comptoir des caravanes · ${Tr.dirhams()} dirhams`, top);
+        const car = sp().caravan, art = (D.GEAR_SHOPS[W.map.id] || []).length, top = [{ t: art ? 'Boutique d’équipement : armes, boucliers, coiffes, tenues' : 'Revendre une pièce d’équipement' }, { t: 'Vendre des vivres ou des matériaux' }, { t: 'Acheter des vivres ou des matériaux' }, { t: car ? `Caravane en route : ${car.name}` : 'Confier une cargaison à une caravane' }, { t: 'Partir' }];
+        // l'ordre affiché : boutique, vendre, acheter, caravane, partir ; la suite du code garde ses anciens numéros (0 vendre, 1 acheter, 2 caravane, 3 boutique, 4 partir)
+        const i = I.debug.auto ? (Tr._autoStep = (Tr._autoStep || 0) + 1, [0, 1, 2, 3, 4][Math.min(4, Tr._autoStep - 1)]) : [3, 0, 1, 2, 4][await S.menuPick(`Le comptoir : boutique et caravanes · ${Tr.dirhams()} dirhams`, top)];
         if (i === 4) break;
         if (i === 3) { await Tr.artisans(); continue; }
         if (i === 0) for (;;) {
@@ -115,7 +116,7 @@
     for (;;) {
       const cats = Gr.SLOTS.filter(s => shop.some(id => Gr.slotOf(id) === s));
       const o = cats.map(s => ({ t: `${D.SLOTS[s]} · ${shop.filter(id => Gr.slotOf(id) === s).length} pièces` })).concat([{ t: 'Revendre une pièce de la réserve' }, { t: 'Retour' }]);
-      const i = await S.menuPick(`Les artisans de ${D.MAPS[W.map.id].label} · ${Tr.dirhams()} dirhams`, o);
+      const i = await S.menuPick(`Boutique d’équipement · ${D.MAPS[W.map.id].label} · ${Tr.dirhams()} dirhams`, o);
       if (i > cats.length) return; if (i === cats.length) { await vendre(); continue; }
       for (;;) {
         const L = shop.filter(id => Gr.slotOf(id) === cats[i]), bo = L.map(id => { const g = D.GEAR[id], who = heroes.filter(h => Gr.can(h.def, id));

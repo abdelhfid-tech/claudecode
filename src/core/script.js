@@ -183,7 +183,7 @@
       }
       case 'ask': { S.hideDialog(); const i = await menuPick(a, b); if (b[i].r) await S.run(b[i].r); break; }
       case 'parley': await runParley(a); break;
-      case 'pray': await W.pray(a); break;
+      case 'pray': await W.pray(a, true); break; // jouée par le récit : pas de point de reprise au milieu d'un objectif
       case 'emote': W.emote(a, b); break;
       case 'save': await I.ui.saveMenu(); break;
       case 'pillar': W.pillar(a, b); break;

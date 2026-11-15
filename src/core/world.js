@@ -54,16 +54,18 @@
     const p = pose && D.POSES.includes(pose) ? pose : null;
     if (who === 'groupe') W.pose = W.party.map(() => p); else if (who === 'hero') W.pose[0] = p; else { const n = W.npcs.find(x => x.id === who); if (n) n.pose = p; }
   };
-  W.pray = async function (moment) {
+  // `parLeRecit` : la prière est une étape d'un objectif en cours. Elle repose le groupe, mais ne prend pas de point de
+  // reprise : écrit à ce moment-là, il ferait rejouer l'objectif depuis un lieu où il ne peut plus s'accomplir.
+  W.pray = async function (moment, parLeRecit) {
     const env = W.map ? W.map.env : {}, m = moment || ({ dawn: 'fajr', day: 'dhuhr', dusk: 'maghrib', night: 'isha' })[env.time] || 'isha';
     S.depth++;
     try {
       S.hideDialog(); W.emote('groupe', 'prie'); await I.sleep(I.debug.auto ? 10 : 700); await S.fade('out', 600); I.audio.sfx('light');
       const fz = $('#fade'); fz.style.transition = 'none'; fz.style.opacity = 0; // le carton prend le relais du fondu
-      await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>La prière</h1><p>${I.pick(PRAY_LINES[m])}</p><p class="small">Le groupe est reposé · Sakîna</p><div class="hint">▼</div>`, 6500);
+      await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>La prière</h1><p>${I.pick(PRAY_LINES[m])}</p><p class="small">Le groupe est reposé : Constance et Souffle à 100 % · Sakîna</p><div class="hint">▼</div>`, 6500);
       W.healAll(); W.gainSakina(35); S.flags._prayed = true;
       if (!S.flags._prayPillar) { S.flags._prayPillar = true; W.pillar('priere', 1); await I.oeuvres.gain('priere'); } // la première prière du chapitre nourrit la provision
-      if (W.map) W.checkpoint();
+      if (W.map && !parLeRecit) W.checkpoint();
     } finally { S.depth--; S.hideDialog(); W.emote('groupe', null); }
   };
   W.prayerPts = function () { const m = W.map, out = []; if (!m) return out; if (m.spots.priere) out.push(m.spots.priere); if (I.build && W.saga) I.build.prayerPoints().forEach(q => out.push(q)); return out; };
@@ -186,6 +188,8 @@
     const npcs = {}; W.npcs.forEach(n => { npcs[n.id] = { h: n.hidden ? 1 : 0, x: n.placed && n.map === W.map.id ? Math.round(n.x) : undefined, y: n.placed && n.map === W.map.id ? Math.round(n.y) : undefined }; });
     I.save.data.cp = { saga: W.saga.id, ci: W.ci, obj: W.objIndex, map: W.map.id, opts: W.mapOpts, pos: [Math.round(W.player.x), Math.round(W.player.y)], party: W.party.slice(), npcs, foes: W.foes.filter(f => f.done).map(f => f.id), chests: W.chests.map((c, i) => c.open ? i : -1).filter(i => i >= 0), flags: S.flags };
     W.persistHeroes(); I.save.store();
+    { const lead = W.party.length ? W.hero(W.party[0]) : null; const ok = I.save.auto(`${W.saga.name} · ${W.ch.title}${lead ? ' · niv. ' + lead.lvl : ''}`); W.unsaved = 0;
+      if (!ok && !W._sansStock) { W._sansStock = true; S.toast('Ce navigateur refuse le stockage : la partie ne pourra pas être reprise après la fermeture de la page.', 9000); } } // la partie se garde toute seule
   };
   // exécute les objectifs automatiques ; termine le chapitre s'il n'en reste plus
   W.advance = async function () {
@@ -301,8 +305,8 @@
       else p.moving = false;
       const o = W.cur();
       if (o && o.goto) { const s = W.spotPx(o.goto), pr = W.map.spots.priere, near = pr && s && Math.hypot(pr[0] * T + 8 - s[0], pr[1] * T + 13 - s[1]) < 70; if (s && Math.hypot(s[0] - p.x, s[1] - p.y) < (near ? 20 : 36)) W.complete(); }
-      // rappel : on ne sauvegarde que dans les mosquées
-      W.unsaved = (W.unsaved || 0) + dt; if (W.unsaved > 480 && !W._warned) { W._warned = true; S.toast('Tu n’as pas sauvegardé depuis un moment. La natte d’une mosquée, au cœur de l’étoile, garde ta partie.', 6000); }
+      // en promenade : un point de reprise toutes les douze secondes (jamais au milieu d'un récit : il serait rejoué à moitié fait)
+      W.unsaved = (W.unsaved || 0) + dt; if (W.unsaved > 12 && !S.busy && !W.lock && !I.debug.auto && !I.debug.walk && !(I.ui && I.ui.menuOpen)) W.checkpoint();
       for (const f of W.foes) {
         if (f.done || f.map !== W.map.id || !f.placed) continue;
         const d = Math.hypot(f.x - p.x, f.y - p.y);

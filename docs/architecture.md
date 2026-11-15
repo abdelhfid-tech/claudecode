@@ -112,6 +112,15 @@ drapeaux. S'y ajoutent les niveaux des héros, la besace, la réserve d'équipem
 codex, les Lumières et le compte de fidélité. Toute lecture ou écriture est protégée : sans stockage, le jeu fonctionne, sans reprise.
 Un objectif interrompu en cours de script est rejoué depuis son début.
 
+**Sauvegarde automatique.** Chaque point de reprise écrit toute la partie dans `isnad.auto.v1` (même
+format que les trois emplacements). En promenade libre, un point de reprise est pris toutes les douze
+secondes, jamais pendant un récit : l'état écrit est toujours celui d'un moment de repos, et un objectif
+interrompu se rejoue en entier sans rien compter deux fois. L'écran de la Chaîne écrit aussi la partie
+(point de reprise vide : « Continuer » rouvre la Chaîne). Les trois emplacements (`isnad.slot.N`) ne
+servent plus qu'à garder des copies. Règle à tenir : **on n'écrit jamais la partie au milieu d'un objectif**.
+Une prière jouée par le récit (opération `pray`) repose le groupe sans prendre de point de reprise ; le
+bouton de secours relit la partie écrite avant de repartir.
+
 ## Flux du produit et chemin dans le schéma
 
 | Flux | Chemin |
