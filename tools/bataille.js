@@ -7,6 +7,7 @@
 
    Au doigt : le carton se lit, le champ se voit, « Ordonner » se touche, chaque rang et chaque ordre se voient et se
    touchent, le stratège reçoit ses manœuvres, un flanc découvert s'annonce sans couvrir le champ, la bataille se termine.
+   ECHELLE=2 devant la commande : des captures deux fois plus fines, pour les montrer.
    Écrit « INVISIBLE » (une entrée de menu hors de l'écran, le champ sous un menu ou sous un bandeau) et « BLOQUÉ »
    (la bataille ne se termine pas). Captures dans .smoke/. Les mesures comparent durée, Constance et défaites du joueur
    de test, dans les mêmes conditions (groupe, provision, enracinement remis avant chaque essai) : « ÉCART » au-delà de 20 %. */
@@ -20,7 +21,7 @@ const prep = faux => { const I = window.ISNAD; I.debug.log = []; I.debug.auto = 
 
 (async () => {
   const browser = await chromium.launch(), errors = []; let rate = 0;
-  const ouvrir = async (w, h, doigt) => { const ctx = await browser.newContext(Object.assign({ viewport: { width: w, height: h }, deviceScaleFactor: 1 }, doigt ? { hasTouch: true, isMobile: true } : {})); const p = await ctx.newPage(); p.on('pageerror', e => errors.push('pageerror: ' + e.message + ' ' + (e.stack || '').split('\n').slice(0, 3).join(' | '))); p.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); }); await p.goto(url); await p.waitForTimeout(1500); await p.evaluate(prep, faux && mode === 'mesures'); return p; };
+  const ouvrir = async (w, h, doigt) => { const ctx = await browser.newContext(Object.assign({ viewport: { width: w, height: h }, deviceScaleFactor: +process.env.ECHELLE || 1 }, doigt ? { hasTouch: true, isMobile: true } : {})); const p = await ctx.newPage(); p.on('pageerror', e => errors.push('pageerror: ' + e.message + ' ' + (e.stack || '').split('\n').slice(0, 3).join(' | '))); p.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); }); await p.goto(url); await p.waitForTimeout(1500); await p.evaluate(prep, faux && mode === 'mesures'); return p; };
 
   if (mode === 'mesures') {
     const veut = A[1] && !/^\d+$/.test(A[1]) ? A[1] : null, N = +(A.find(x => /^\d+$/.test(x)) || 4);
