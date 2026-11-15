@@ -743,6 +743,8 @@ ISNAD.registerSaga({
     /* ═════ Chapitre 3 ═════ */
     {
       id: 'a3', title: 'Nahrawân, puis l’aube', sub: 'An 38–40 H · 658–661 · Nahrawân, Koufa',
+      // bataille déclarée, sans rangs : la bataille de Nahrawân est racontée, non rejouée
+      bataille: { rangs: [], mot: 'La bataille de Nahrawân est racontée, non rejouée. Contre le Juge, il n’y a pas de rangs à mener : on ne range pas des hommes contre une phrase.' },
       map: 'camp', opts: { time: 'day' }, start: 'entree',
       party: ['ali', 'ibnabbas', 'qays'],
       npcs: [

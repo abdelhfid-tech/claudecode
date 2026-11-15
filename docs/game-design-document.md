@@ -271,8 +271,9 @@ le groupe.
 | La mission | elle dit quels rangs et quels ordres existent ; là où il n'y a pas d'armée à mener, la bataille se déclare sans rangs |
 
 Un rang éprouvé se replie et se reforme : personne ne tombe. Le jeu ne donne aucun effectif et n'attribue
-aucune manœuvre à un jour de l'histoire (exigence 19, proposée). Le pilote couvre la saga de Khâlid ; les
-autres maillons attendent l'avis du décideur.
+aucune manœuvre à un jour de l'histoire (exigence 19, proposée). Toute idole est annoncée par le carton ;
+des rangs existent dans quatre chapitres (La Traversée, Yarmoûk, L'Armée d'Usâma, La Bataille des Mâts).
+Partout ailleurs la bataille se déclare sans rangs : le tableau est dans `docs/decisions.md` (D111).
 
 ## Feuille de route proposée
 

@@ -412,6 +412,8 @@ ISNAD.registerSaga({
     /* ============ III — LE GÉNÉRAL ET LA TOUR (Courage de rengainer) ============ */
     {
       id: 'v_khalid', after: 'khalid', minLvl: 6, last: true, hajj: true,
+      // bataille déclarée, sans rangs : les armes nourrissent le Tambour
+      bataille: { rangs: [], mot: 'Les armes le nourrissent : on n’aligne personne contre lui.' },
       title: 'Le Général et la Tour', sub: 'Veillée du Courage · après Khâlid',
       enigme: { id: 'bahram_deperit', who: 'geometre', cure: 'visite', title: 'Maître Bahrâm dépérit',
         signe: "Maître Bahrâm dépérit, sans cause visible.",

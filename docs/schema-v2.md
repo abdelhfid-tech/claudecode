@@ -189,7 +189,8 @@ enseigné, `etage: 'image'` pour les images du jeu ; les deux premiers rangs cit
 ## 5 quinquies. La bataille déclarée (version 7)
 
 Module `src/core/rangs.js` ; types, ordres et manœuvres dans `defs.js` (`D.RANGS`, `D.ORDRES`, `D.MANOEUVRES`) ; la
-mission dans le chapitre (`bataille`, décrit dans `schema-saga.md`). Pilote : la saga de Khâlid.
+mission dans le chapitre (`bataille`, décrit dans `schema-saga.md`). Toute idole est annoncée par le carton
+« Bataille déclarée » ; sans champ `bataille`, le carton dit qu'il n'y a pas de rangs à mener.
 
 - **Le champ** : cinq colonnes sur trois couloirs (aile nord, centre, aile sud). Notre camp à droite, l'idole à
   gauche ; la dernière colonne est à son pied. Le combat du groupe continue comme avant : le champ s'y ajoute, et se

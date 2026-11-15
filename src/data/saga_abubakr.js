@@ -303,6 +303,8 @@ ISNAD.registerSaga({
     /* ═════════ 1. LE JOUR LE PLUS SOMBRE ═════════ */
     {
       id: 'ab1', title: "Le Jour le plus sombre", sub: "An 11 H · 632 · Médine",
+      // bataille déclarée, sans rangs : sous l'auvent, il n'y a que des gens à réunir
+      bataille: { rangs: [], mot: 'Sous l’auvent, il n’y a pas de rangs à mener : il y a des gens à réunir.' },
       map: 'medine', opts: { time: 'day' }, start: 'porte_sud',
       party: ['abubakr'],
       npcs: [
@@ -499,6 +501,8 @@ ISNAD.registerSaga({
     /* ═════════ 2. L'ARMÉE D'USÂMA ═════════ */
     {
       id: 'ab2', title: "L'Armée d'Usâma", sub: "An 11 H · 632 · Médine",
+      // bataille déclarée : l'armée est au loin, la ville se garde ; ni charge ni tir
+      bataille: { base: 2, rangs: [{ t: 'fantassins', name: 'Gardes des passes', voie: 'centre' }, { t: 'gens', name: 'Veilleurs de Médine', voie: 'nord' }], ordres: ['tenir', 'avancer', 'glisser', 'replier'] },
       map: 'medine', opts: { time: 'dusk' }, start: 'maison',
       party: ['abubakr'],
       npcs: [
@@ -729,6 +733,8 @@ ISNAD.registerSaga({
     /* ═════════ 3. YAMÂMA — LE MENTEUR ═════════ */
     {
       id: 'ab3', title: "Yamâma — le Menteur", sub: "An 11–12 H · 632–633 · Dhû l-Qassa",
+      // bataille déclarée, sans rangs : les colonnes sont parties sans lui (c'est le conseil qu'il a reçu, plus bas)
+      bataille: { rangs: [], mot: 'Les colonnes sont parties sans lui : celui qui tient l’ensemble ne se risque pas comme une seule lance. Il n’a pas de rangs à mener ici.' },
       map: 'camp', opts: { time: 'day' }, start: 'entree',
       party: ['abubakr', 'umar', 'abuubayda'],
       npcs: [

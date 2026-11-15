@@ -485,7 +485,7 @@ Décisions prises par le décideur, en réponse aux questions de l'agent :
   l'interlocuteur est un égrégore : cela reste un combat, et le carton le dit.
 - [x] **D95. L'enracinement.** Une jauge par idole, effet léger, rien ne bloque.
 - [x] **D96. La bataille déclarée.** « Des rangs dans le combat, dans le style des jeux tactiques, avec de
-  la stratégie, là où Khâlid excelle. » Pilote livré sur la saga de Khâlid : D103 à D109, ci-dessous.
+  la stratégie, là où Khâlid excelle. » Pilote sur la saga de Khâlid, puis généralisation prudente : D103 à D111, ci-dessous.
 
 Ce que l'agent a ajouté ou lu, et qui reste à valider :
 
@@ -606,6 +606,43 @@ ou la corriger après avoir joué Yarmoûk. Rien n'est repris d'un jeu existant 
   « gens du lieu », les éclaireurs des Banû Zurayr (clan de fiction) en cavaliers.
 - [ ] **D109. Exigence 19, proposée dans `AGENTS.md`.** Au décideur de la confirmer, de la reformuler ou
   de la retirer.
+- [ ] **D110. Toute idole est annoncée.** L'échelle des réponses dit : l'idole, par une bataille déclarée.
+  Le carton « Bataille déclarée » ouvre donc le combat de chacune des vingt-deux idoles, avec son
+  enracinement. Là où le chapitre ne déclare aucune mission, il dit : « Il n'y a pas de rangs à mener ici :
+  ce combat se livre sans armée. »
+- [ ] **D111. Les rangs des autres maillons : tableau proposé.** Règle suivie : des rangs seulement là où
+  le récit du chapitre met déjà une troupe aux côtés du héros ; sinon la bataille est déclarée sans rangs,
+  et le carton dit pourquoi. Chaque ligne se valide ou se corrige séparément.
+
+  | Maillon | Chapitre | Idole | Proposition | Le carton, ou les rangs | Appui dans le chapitre |
+  |---|---|---|---|---|---|
+  | I | Le Jour le plus sombre | al-'Asabiyya | sans rangs | « Sous l'auvent, il n'y a pas de rangs à mener : il y a des gens à réunir. » | une délibération, pas une bataille |
+  | I | L'Armée d'Usâma | l'Avare du dû | **rangs** | Gardes des passes (fantassins, centre), Veilleurs de Médine (gens du lieu, aile nord) ; tenir, avancer, glisser, se replier : ni charge ni tir | le garde du chapitre dit déjà que les passes de la ville sont tenues ; l'armée est au loin |
+  | I | Yamâma — le Menteur | al-Kadhdhâb | sans rangs | « Les colonnes sont parties sans lui : celui qui tient l'ensemble ne se risque pas comme une seule lance. Il n'a pas de rangs à mener ici. » | le chapitre montre le calife retenu à Médine : lui donner des rangs au Yamâma le contredirait |
+  | II | Les Rondes de nuit | l'Accapareur | sans rangs | carton par défaut | une ronde de nuit |
+  | II | Les Clés de Jérusalem | l'Aigle | sans rangs | « Pas une épée n'a été tirée dans la ville : il n'y a pas de rangs à mener ici. » | la ville se rend par un pacte ; le soldat du chapitre le dit |
+  | II | Le Trône et la Natte | le Trône | sans rangs | carton par défaut | gouverner, non combattre |
+  | IV | Les Feuillets | Babel | sans rangs | carton par défaut | un travail de scribes |
+  | IV | La Bataille des Mâts | l'Abîme | **rangs** | Hommes du pont (fantassins, centre), Archers du bord (aile sud), Hommes de la passerelle (fantassins, aile nord, au niveau 4) ; en renfort, les pilotes du port (gens du lieu) ; personne ne charge : pas de cavaliers en mer | « les rangs se forment sur les ponts » |
+  | IV | La Maison assiégée | la Rumeur | sans rangs | « Il a interdit qu'on se batte pour lui : il n'y a pas de rangs à mener ici. » | le choix de fidélité du chapitre et la parole citée |
+  | V | Le Bouclier et le Juge | le Privilège | sans rangs | carton par défaut | un procès |
+  | V | La Parole détournée | le Slogan | sans rangs | carton par défaut | un débat |
+  | V | Nahrawân, puis l'aube | le Juge | sans rangs | « La bataille de Nahrawân est racontée, non rejouée. Contre le Juge, il n'y a pas de rangs à mener : on ne range pas des hommes contre une phrase. » | exigence 5 : des nuées rangées face à des rangs se liraient comme deux armées de croyants |
+  | Veillées | les cinq | | sans rangs | carton par défaut ; le Tambour : « Les armes le nourrissent : on n'aligne personne contre lui. » | fiction ; l'idole ne s'y dresse que si la parole a échoué |
+  | 2084 | la Cité-Miroir | le Flux, l'Agrégor | sans rangs | carton par défaut | fiction |
+
+  Trois points que l'agent n'a pas tranchés seul. **Qui ordonne.** Dans la Bataille des Mâts, c'est
+  l'amiral qui commande la flotte ; le jeu laisse pourtant un compagnon ordonner les rangs, comme partout :
+  c'est une convention, dite ici pour être validée ou refusée. **Yamâma et Nahrawân.** Ce furent des
+  batailles ; elles restent sans rangs, pour les raisons du tableau. Si le décideur veut des rangs à
+  Nahrawân, l'agent propose de s'en tenir à « tenir » et « glisser » (on rapporte qu'il fut ordonné de ne
+  pas engager le combat le premier : à vérifier avant tout emploi). **Les chapitres civils.** Veilleurs de
+  nuit, scribes, juges : l'agent n'en a pas fait des rangs. Des « soldats en nombre » n'y ont pas leur place.
+- **Mesures après la généralisation** (cinq essais par cas, mêmes conditions avec et sans rangs). Bonnes
+  réponses : L'Armée d'Usâma 5,8 tours contre 7,2 ; La Traversée 7,8 contre 7,8 ; Yarmoûk 17,2 contre 17,4 ;
+  La Bataille des Mâts 14,0 contre 13,0. Mauvaises réponses (enracinement 4 ou 5) : 7,0 contre 6,2 ; 10,0
+  contre 10,6 ; 26,4 contre 27,4 ; 19,4 contre 19,2. Aucune défaite, aucune nuée n'a percé. Batterie complète
+  sans anomalie, les vingt-deux cartons compris.
 - **Ce qui se voit.** Chaque rang porte un numéro, le même sur le champ et dans le menu ; trois points
   disent sa tenue, un chevron son ordre. Écran en hauteur : le champ occupe la scène, le menu des ordres
   vient dessous. Écran en largeur : le champ tient dans le haut de la scène, le menu sur deux colonnes en
@@ -681,9 +718,10 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     Yûnus, les quarante lignes des échanges et le tableau des racines sont des propositions. Qui les relit ?
     Les six racines marquées « sensible » conviennent-elles, ou vaut-il mieux ne pas donner de racine à ces
     idoles ?
-12. La bataille déclarée (D103 à D109) : après avoir joué Yarmoûk, la forme convient-elle (un champ à côté
+12. La bataille déclarée (D103 à D111) : après avoir joué Yarmoûk, la forme convient-elle (un champ à côté
     du combat, des ordres permanents, un pas après chaque tour de l'idole), ou faut-il autre chose : un vrai
     déplacement case par case, un champ plus grand, des rangs plus nombreux ? Les trois manœuvres et leurs
-    noms conviennent-ils ? Le tableau des rangs des autres maillons (ci-dessus) est-il juste ?
+    noms conviennent-ils ? Le tableau des rangs des autres maillons (D111) est-il juste, ligne par ligne ?
+    Faut-il des rangs à Yamâma ou à Nahrawân, et qui y ordonne ?
 10. La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

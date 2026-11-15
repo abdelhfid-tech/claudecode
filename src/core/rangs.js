@@ -68,12 +68,13 @@
 
   // le carton qui annonce la bataille : l'idole, son enracinement, les rangs présents
   R.declare = async function (C, opts) {
-    const B = W.ch && W.ch.bataille; if (!B || !I.mal.estIdole(opts)) return;
+    if (!I.mal.estIdole(opts)) return; // toute idole se combat par une bataille déclarée ; la mission dit s'il y a des rangs
+    const B = (W.ch && W.ch.bataille) || {};
     I.oeuvres.learn('bataille');
     const ch = C.champ, lead = C.all.find(e => e.side === 'foe' && I.mal.lignee(W.saga, W.ch).idoles.includes(e.id)) || C.all.find(e => e.side === 'foe');
     const rangs = ch ? ch.rangs.map(r => `<li><b>${I.esc(r.name)}</b> · ${NOMS[r.l]}</li>`).join('') : '';
     await S.card('title parley bataille', `<p class="small">Bataille déclarée</p><h1>${I.esc(lead.name)}</h1><p>Enracinement ${I.mal.traits(I.mal.niveau())}</p>` +
-      (rangs ? `<ul class="rangs">${rangs}</ul><p class="small">En face, des nuées : jamais des hommes. Au tour d’un compagnon, « Ordonner » dirige un rang.</p>` : `<p>${I.fmt(B.mot || 'Aucun rang à mener ici.')}</p>`) + '<div class="rule"></div><div class="hint">▼</div>');
+      (rangs ? `<ul class="rangs">${rangs}</ul><p class="small">En face, des nuées : jamais des hommes. Au tour d’un compagnon, « Ordonner » dirige un rang.</p>` : `<p>${I.fmt(B.mot || 'Il n’y a pas de rangs à mener ici : ce combat se livre sans armée.')}</p>`) + '<div class="rule"></div><div class="hint">▼</div>');
   };
 
   /* ================= le pas : nos rangs, puis les nuées ================= */

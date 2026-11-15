@@ -103,6 +103,8 @@ const prep = faux => { const I = window.ISNAD; I.debug.log = []; I.debug.auto = 
         if (!(await toucher('Frapper'))) { const L = await p.$$('#battle .cmd .mi'); if (L.length) { await L[0].tap(); await p.waitForTimeout(600); } continue; }
         await p.waitForTimeout(400); const pl = await p.$('#battle .plates .plate'); if (pl) { await pl.tap(); await p.waitForTimeout(600); } else { const L = await p.$$('#battle .cmd .mi'); if (L.length) { await L[0].tap(); await p.waitForTimeout(600); } }
       }
+      // au-delà de seize tours au doigt, le joueur de test finit la bataille : on lui laisse le temps
+      if (!(await etat()).fini) { await p.evaluate(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 40; }); try { await p.waitForFunction(() => window.__bataille === 'finie', null, { timeout: 150000 }); } catch (e) { /* dit plus bas */ } }
       const fin = await etat();
       dit(`${tours} tours au doigt · champ vu ${vuChamp ? 'oui' : 'NON'} · ordre donné ${ordre ? 'oui' : 'NON'} · manœuvre ${man ? 'oui' : 'non'} · flanc découvert ${flanc ? 'oui' : 'non'} · ${fin.fini ? 'bataille terminée' : 'BLOQUÉ : la bataille ne se termine pas'}`);
       if (!fin.fini) rate++; if (!vuChamp || !ordre) { dit('ABSENT : le champ ou « Ordonner »'); rate++; }

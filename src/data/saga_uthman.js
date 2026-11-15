@@ -458,6 +458,8 @@ ISNAD.registerSaga({
     /* ═══════ Chapitre 2 — La Bataille des Mâts ═══════ */
     {
       id: 'ut2', title: 'La Bataille des Mâts', sub: 'An 28–34 H · 649–655 · Médine, puis la mer',
+      // bataille déclarée : des ponts à tenir ; pas de cavaliers en mer. Aucun effectif n'est donné.
+      bataille: { base: 2, rangs: [{ t: 'fantassins', name: 'Hommes du pont', voie: 'centre' }, { t: 'archers', name: 'Archers du bord', voie: 'sud' }, { t: 'fantassins', name: 'Hommes de la passerelle', voie: 'nord' }] },
       map: 'medine', opts: { time: 'day' }, start: 'maison',
       party: ['uthman', 'zayd', 'hudhayfa'],
       npcs: [
@@ -644,7 +646,7 @@ ISNAD.registerSaga({
         ] },
         { text: "Descendre au cœur, face à l'Abîme", goto: 'coeur', then: [
           ['battle', { group: ['abime'], bg: 'mer', boss: true, intro: 'Sous les coques, quelque chose ouvre les bras.',
-            allies: [{ flag: 'ut_pilotes', name: 'Les pilotes du port' }] }],
+            allies: [{ flag: 'ut_pilotes', name: 'Les pilotes du port', rang: 'gens' }] }],
           ['nar', "L'Abîme se referme. Là-haut, au même instant, la ligne de l'empereur se rompt. Constant échappe de peu ; sa flotte se disperse vers le nord."],
           ['map', 'navire', 'proue', { time: 'day' }],
           ['say', 'ibnsad', "C'est fini. Qu'on dise au Commandeur des croyants que pas un de ces hommes n'a été traîné ici. C'est pour cela qu'ils ont tenu."]
@@ -660,6 +662,8 @@ ISNAD.registerSaga({
     /* ═══════ Chapitre 3 — La Maison assiégée ═══════ */
     {
       id: 'ut3', title: 'La Maison assiégée', sub: 'An 35 H · 656 · Médine',
+      // bataille déclarée, sans rangs : il a interdit qu'on se batte pour lui
+      bataille: { rangs: [], mot: 'Il a interdit qu’on se batte pour lui : il n’y a pas de rangs à mener ici.' },
       map: 'medine', opts: { time: 'dusk' }, start: 'mosquee_porte',
       party: ['uthman', 'zayd'],
       npcs: [

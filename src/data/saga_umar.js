@@ -526,6 +526,8 @@ ISNAD.registerSaga({
     /* ═══ 2. LES CLÉS DE JÉRUSALEM ═══ */
     {
       id: 'u2', title: 'Les Clés de Jérusalem', sub: "An 16 H · 637 · De Médine à Îliyâ'",
+      // bataille déclarée, sans rangs : la ville s'est rendue par un pacte
+      bataille: { rangs: [], mot: 'Pas une épée n’a été tirée dans la ville : il n’y a pas de rangs à mener ici.' },
       map: 'desert', opts: { time: 'day' }, start: 'depart',
       party: ['umar', 'aslam'],
       npcs: [

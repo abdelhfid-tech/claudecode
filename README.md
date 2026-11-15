@@ -92,7 +92,7 @@ refuse. En bas, les images du jeu : les idées noires, les égrégores, les idol
 
 Les textes de cette page sont des propositions, à relire (`docs/decisions.md`, D97 à D102).
 
-### La bataille déclarée (pilote : la saga de Khâlid)
+### La bataille déclarée
 
 Contre une idole, on ne se bat plus seul. Un carton déclare la bataille, et à côté du combat s'ouvre un champ de
 cinq colonnes sur trois couloirs : nos rangs y font face aux nuées de l'idole, qui ne sont jamais des hommes.
@@ -105,7 +105,12 @@ cinq colonnes sur trois couloirs : nos rangs y font face aux nuées de l'idole, 
   l'enveloppement, le repli feint.
 - **Personne ne tombe.** Un rang éprouvé se replie et se reforme. Le jeu ne donne aucun effectif.
 
-Règles proposées, à valider après essai (`docs/decisions.md`, D103 à D109). `node tools/bataille.js` la joue au doigt.
+Toute idole est annoncée par ce carton. Des rangs existent là où le récit met déjà une troupe aux côtés du héros :
+La Traversée et Yarmoûk (saga de Khâlid), L'Armée d'Usâma (les gardes des passes), La Bataille des Mâts (les ponts).
+Ailleurs la bataille se déclare sans rangs, et le carton dit pourquoi.
+
+Règles et tableau des rangs proposés, à valider après essai (`docs/decisions.md`, D103 à D111). `node tools/bataille.js`
+la joue au doigt.
 
 ## L'équipement
 

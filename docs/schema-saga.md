@@ -196,7 +196,8 @@ Noosphère), 2–3 paroles.
 }
 ```
 
-**Bataille déclarée** (facultatif, version 7). Un chapitre qui a un combat d'idole (`boss: true`) peut porter :
+**Bataille déclarée** (facultatif, version 7). Toute idole est annoncée par un carton « Bataille déclarée ». Un
+chapitre qui a un combat d'idole (`boss: true`) peut dire quelle mission l'accompagne :
 
 ```js
 bataille: { base: 3,                    // rangs menés d'emblée ; un de plus au niveau 4, un autre au niveau 8, quatre au plus
