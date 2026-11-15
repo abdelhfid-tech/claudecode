@@ -451,6 +451,20 @@ de fond ; la musique s'est tue « dans la noosphère à Médine ».
   L'exigence 9 cite les « ambiances » parmi les sons permis : elle autorise sans imposer, l'agent n'y
   touche pas (question 9).
 
+- [ ] **D91. « Dans la noosphère la musique s'est arrêtée » (Médine, saga I).** *Un défaut certain est
+  corrigé ; l'arrêt complet n'a pas été reproduit.* Écoute réelle par `tools/son.js` :
+  - après une défaite puis une reprise, la carte gardait l'air de deuil au lieu de sa piste (le combat
+    retenait la musique à retrouver à chaque tentative). Reproduit, corrigé : la musique du lieu a une
+    seule vérité (`A.scene`, `A.back`) ;
+  - minuteries bridées, le séquenceur perdait des notes (3 à 5 dB de moins). Il est maintenant poussé
+    aussi par l'affichage et programme 1,2 s d'avance : bridé, le niveau ne bouge plus ;
+  - six incidents sonores coupaient la musique pour toute la séance : c'est devenu une pause, puis une
+    relance ; un contexte audio suspendu ou interrompu est relancé au premier geste ;
+  - `noos` était la piste la plus faible (−23,4 dB) : remontée à −21,2 dB, avec `rencontre`, `chaine`
+    et `cite`.
+  *Ce que l'agent avait d'abord supposé et que la mesure dément* : le grondement de fond ne couvrait
+  pas la musique (D90). **À confirmer par le décideur** (question 10).
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
@@ -505,3 +519,5 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
    se voir en combat sur les Compagnons eux-mêmes, ou seulement sur les personnages de fiction ?
 9. Le son (D90) : le mot « ambiances » doit-il sortir de l'exigence 9, maintenant qu'il n'y en a plus ?
    Le souffle de foule (`crowd`) doit-il revenir ?
+10. La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
+    dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

@@ -418,7 +418,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
+window.ISNAD_VERSION = "2026-11-15 10:53 UTC · 4f88156+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -830,7 +830,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
      (les nappes de bruit filtré ont été retirées à la demande du décideur, D90). ---------- */
   const A = I.audio = { ctx: null, on: true, master: null, rhythm: null };
   A.unlock = function () {
-    if (A.ctx) { if (A.ctx.state === 'suspended') A.ctx.resume(); return; }
+    if (A.ctx) { if (A.ctx.state !== 'running') { const p = A.ctx.resume(); if (p && p.catch) p.catch(() => {}); } return; } // suspendu, ou « interrompu » sur un téléphone : on relance
     try {
       const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
       A.ctx = new AC();
@@ -917,6 +917,9 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
      cuivres, cloches, timbales, synthés et percussions. Détail : docs/musique.md. */
   I.music = {}; I.registerMusic = function (name, def) { I.music[name] = def; };
   A.musicOn = true; A.curTrack = null; A.wantTrack = null;
+  A.place = null;                                    // la piste du lieu : carte, écran, ou humeur posée par le récit (A.scene)
+  A.stats = { notes: 0, sautees: 0, relances: 0 };  // ce que le séquenceur a vraiment programmé (page Diagnostic, tools/son.js)
+  const AVANCE = 1.2;                                // secondes de musique programmées d'avance
   const MG = 0.26;                                   // gain du bus musique : la bande-son reste sous les bruitages
   const SEMI = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
   function freqOf(n) { const m = n.match(/^([A-G])(#|b)?(\d)$/); if (!m) return 0; const midi = 12 * (+m[3] + 1) + SEMI[m[1]] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0); return 440 * Math.pow(2, (midi - 69) / 12); }
@@ -1063,22 +1066,41 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
     A.hasMusic = true; A.stopBeat();
     const c = A.ctx, ev = parseTrack(def), spb = 60 / def.bpm, intro = def.intro || 0, t0 = c.currentTime + 0.12, bus = c.createGain();
     A.mbus.gain.cancelScheduledValues(c.currentTime); A.mbus.gain.setTargetAtTime(MG, c.currentTime, 0.03); bus.connect(A.mbus);
-    const st = { name, i: 0, base: t0, pass: 0, timer: 0, bus, outs: voiceOuts(c, def, bus), leave: false };
+    const st = { name, i: 0, base: t0, pass: 0, timer: 0, bus, outs: voiceOuts(c, def, bus), leave: false, errs: 0, net: 0 };
     const tick = () => {
       if (!A.ctx || A.curTrack !== st) return; const now = c.currentTime;
       if (st.leave && now >= t0 + intro * spb - 0.03) { const n = A._after; A._after = null; A.music(n && n !== name ? n : 'silence'); return; }
       if (now > st.base + def.beats * spb + 1) { if (intro) st.pass = 1; st.base = now + 0.1 - (st.pass ? intro * spb : 0); st.i = st.pass ? def._i0 : 0; } // onglet en veille : on repart proprement
-      let guard = 0;
+      // L'avance : plus d'une seconde, pour qu'une minuterie retardée ou un affichage qui peine ne fasse pas de trou.
+      // Courte pendant une intro : la piste qui suit la fanfare doit entrer au bon moment.
+      const avance = intro && !st.pass ? 0.3 : AVANCE; let guard = 0;
       while (guard++ < 600) {
         if (st.i >= ev.length) { if (def._i0 >= ev.length) return; st.base += (def.beats - intro) * spb; st.i = def._i0; st.pass++; }
-        const e = ev[st.i], t = st.base + e.t * spb; if (t > now + 0.3) break;
+        const e = ev[st.i], t = st.base + e.t * spb; if (t > now + avance) break;
         if (st.leave && !st.pass && e.t >= intro - 1e-6) break;               // on s'en va après l'intro : rien de la boucle n'est lancé
-        st.i++; if (t < now - 0.05) continue;
-        play(c, st.outs, def, e, t, spb);
+        st.i++; if (t < now - 0.25) { A.stats.sautees++; continue; }          // trop tard pour être juste : on la saute
+        play(c, st.outs, def, e, Math.max(t, now + 0.005), spb); A.stats.notes++;   // un peu en retard : jouée tout de suite
       }
+      if (st.errs && now - st.net > 20) { st.errs = 0; A.repos = 0; }          // vingt secondes sans incident : l'ardoise est effacée
     };
-    const sur = () => { try { tick(); } catch (e) { A.fails++; if (A.fails === 1) I.report(e, 'son (séquenceur)'); if (A.fails > 5) { clearInterval(st.timer); if (A.curTrack === st) A.curTrack = null; } } };
-    st.timer = setInterval(sur, 70); A.curTrack = st; sur();
+    // Un incident ne coupe plus la musique pour la séance : au sixième sur la même piste, elle se tait un moment, puis la veille la relance.
+    const sur = () => { try { tick(); } catch (e) { A.fails++; st.errs++; st.net = c.currentTime; if (A.fails === 1) I.report(e, 'son (séquenceur)'); if (st.errs > 5) { clearInterval(st.timer); if (A.curTrack === st) A.curTrack = null; souffler(); } } };
+    st.sur = sur; st.timer = setInterval(sur, 70); A.curTrack = st; sur();
+  };
+  // Après des incidents répétés : une pause qui s'allonge (15 s, 30 s… deux minutes au plus), jamais une coupure définitive.
+  function souffler() { A.repos = Math.min(120000, (A.repos || 7500) * 2); A.pauseJusqua = performance.now() + A.repos; }
+  // La musique du lieu : une carte, un écran, ou l'humeur que le récit pose (opération `mus`). Tout le reste est de passage
+  // (combat, fanfare, deuil, forge, pourparler) : A.back() ramène la piste du lieu, quelle qu'ait été la piste de passage.
+  A.scene = function (name) { A.place = name; A.music(name); };
+  A.back = function () { A.music(A.place || 'silence'); };
+  // Poussé à chaque image par la boucle d'affichage : le séquenceur ne dépend plus des seules minuteries. Et si aucune piste
+  // ne joue alors qu'une est voulue (contexte relancé, incident passé), elle repart.
+  let veille = 0;
+  A.pump = function () {
+    const st = A.curTrack; if (st) { st.sur(); return; }
+    if (!A.ctx || !A.mbus || !A.musicOn || A.ctx.state !== 'running') return;
+    const now = performance.now(); if (now - veille < 2000 || now < (A.pauseJusqua || 0)) return; veille = now;
+    const n = A.wantTrack; if (n && n !== 'silence' && I.music[n]) { A.stats.relances++; A.music(n); }
   };
   // battle.js pose `afterJingle` deux fois : avant la fanfare (la piste à reprendre), puis quand la carte de victoire se ferme.
   // Posé pendant que « victoire » joue, il veut dire « on s'en va » : la piste suivante entre dès que la fanfare est finie.
@@ -1106,13 +1128,17 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
   A.stopBeat = function () { A.pendingRhythm = null; if (A.rhythm) { clearInterval(A.rhythm.timer); A.rhythm = null; } };
 
   // Le son ne doit jamais arrêter le jeu. Sur un appareil qui refuse une opération sonore, l'appel devient sans effet,
-  // l'incident est retenu une fois (page Diagnostic) et, s'il se répète, la musique se tait d'elle-même.
+  // l'incident est retenu une fois (page Diagnostic). Une piste qui ne démarre pas se tait un moment, puis la veille la
+  // relance : rien ne coupe plus la musique pour toute la séance, et un bruitage en échec ne la regarde pas.
   A.fails = 0;
-  ['unlock', 'setOn', 'sfx', 'beat', 'stopBeat', 'music', 'setMusic', 'dum', 'tek'].forEach(k => {
+  ['unlock', 'setOn', 'sfx', 'beat', 'stopBeat', 'music', 'setMusic', 'scene', 'back', 'pump', 'dum', 'tek'].forEach(k => {
     const fn = A[k]; if (typeof fn !== 'function') return;
     A[k] = function () {
       try { return fn.apply(A, arguments); }
-      catch (e) { A.fails++; if (A.fails === 1) I.report(e, 'son (' + k + ')'); if (A.fails === 6 && A.musicOn) { A.musicOn = false; try { if (A.curTrack) { clearInterval(A.curTrack.timer); A.curTrack = null; } } catch (x) { /* rien */ } } }
+      catch (e) {
+        A.fails++; if (A.fails === 1) I.report(e, 'son (' + k + ')');
+        if (k === 'music' || k === 'setMusic' || k === 'scene' || k === 'back') { try { if (A.curTrack) { clearInterval(A.curTrack.timer); A.curTrack = null; } } catch (x) { /* rien */ } souffler(); }
+      }
     };
   });
   { const d = Object.getOwnPropertyDescriptor(A, 'afterJingle'); if (d && d.set) Object.defineProperty(A, 'afterJingle', { configurable: true, enumerable: true, get: d.get, set(v) { try { d.set.call(A, v); } catch (e) { A._after = v || null; A.fails++; if (A.fails === 1) I.report(e, 'son (enchaînement)'); } } }); }
@@ -2329,7 +2355,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
       await card('defeat', `<p class="small">Pourparler · ${I.esc(P.title)}</p><h1>La parole n’a pas suffi</h1><p>Confiance : ${conf} / ${P.goal}. Ce qui n’a pas été noué par la parole devra l’être autrement, et coûtera davantage.</p><div class="hint">▼</div>`);
       await S.run(P.lose);
     }
-    const env = W.map && W.map.env; if (env && I.scene === W) I.audio.music(env.music || 'silence');
+    const env = W.map && W.map.env; if (env && I.scene === W) I.audio.scene(env.music || 'silence'); else I.audio.back();
   }
 
   S.toast = function (html, ms) {
@@ -2379,7 +2405,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
       case 'emote': W.emote(a, b); break;
       case 'save': await I.ui.saveMenu(); break;
       case 'pillar': W.pillar(a, b); break;
-      case 'mus': I.audio.music(a); break;
+      case 'mus': I.audio.scene(a); break; // l'humeur posée par le récit devient la musique du lieu, jusqu'à la carte suivante
       case 'mat': I.build.give(a, b === undefined ? 1 : b); break;
       case 'lore': I.trade.lore(a); break;
       case 'raid': S.hideDialog(); await I.trade.raid(a || {}); break;
@@ -2499,7 +2525,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
     W.mapOpts = opts; if (I.build && I.build.on && !I.build.outdoor(id)) I.build.set(false);
     const ks = Object.keys(mapCache); if (ks.length > 4) ks.filter(k2 => k2 !== key).slice(0, ks.length - 4).forEach(k2 => { delete mapCache[k2]; });
     const env = W.map.env; G.clearParts(); G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 };
-    I.audio.music(env.music || 'silence');
+    I.audio.scene(env.music || 'silence');
     W.npcs.forEach(n => { if (n.map === id) W.place(n); });
     W.foes.forEach(f => { if (f.map === id && !f.placed) { const p = W.resolve(f.at, id, f); if (p) { f.x = p[0]; f.y = p[1]; f.placed = true; } } });
     W.chests.forEach(c => { if (c.map === id && !c.placed) { const p = W.resolve(c.at, id, c); if (p) { c.x = p[0]; c.y = p[1]; c.placed = true; } } });
@@ -3078,7 +3104,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
     st.done = true; const nt = (Bd.peek(st.map) || []).find(e => e.t === 'natte' && e.x >= st.x && e.x < st.x + st.w && e.y >= st.y && e.y < st.y + st.h); if (nt) { st.nx = nt.x; st.ny = nt.y; }
     S.depth++;
     try {
-      I.audio.sfx('roll'); G.flash('#fff3c8'); I.audio.music('espoir');
+      I.audio.sfx('roll'); G.flash('#fff3c8'); I.audio.scene('espoir');
       await S.card('lightcard', `<div class="glyph" style="color:#ffe08a">✦</div><p class="small">Mosquée fondée</p><h1 style="color:#ffe08a">${I.esc(st.name)}</h1><p>Bloc après bloc, de tes mains. Sur sa natte, on peut désormais prier, se reposer et accomplir les œuvres du jour.</p><div class="hint">▼</div>`);
       W.pillar('priere', 1); W.pillar('lien', 1);
     } finally { S.depth--; S.hideDialog(); }
@@ -3363,7 +3389,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
     await S.run(ops);
     if (mine) { const part = S.flags._raid_part, back = Math.round(o.loss * (part === 'tout' ? 1 : part === 'part' ? 0.7 : 0.5)); Tr.dirhams(back); S.toast(`Tu retrouves <b>${back} dirhams</b> de ta mise de ${o.loss}.`, 4200); }
     delete S.flags._r1; delete S.flags._r2; delete S.flags._raid_part;
-    const env = W.map && W.map.env; if (env && I.scene === W) I.audio.music(env.music || 'silence');
+    const env = W.map && W.map.env; if (env && I.scene === W) I.audio.scene(env.music || 'silence'); else I.audio.back();
   };
 })();
 
@@ -3541,7 +3567,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
     const L = C0().lames[v], E = C0().enemies[v];
     I.audio.sfx('roll'); G.flash(L.couleur); if (D.TRACKS.includes('lame')) I.audio.music('lame');
     await S.card('lame', '<img class="lame" alt="" src="' + O.lameURL(v) + '"><p class="small">Une lame est forgée</p><h1 style="color:' + L.couleur + '">' + I.esc(L.name) + '</h1><p class="ar">' + I.esc(L.ar) + '</p><p>' + I.fmt(L.texte) + '</p><p class="small">Elle tranche ' + I.esc(bas(E.name)) + '</p><div class="hint">▼</div>');
-    const env = W.map && W.map.env; if (env && I.scene === W && D.TRACKS.includes('lame')) I.audio.music(env.music || 'silence');
+    if (D.TRACKS.includes('lame')) I.audio.back();
   };
 
   /* ----- compagnons de lumière ----- */
@@ -4065,7 +4091,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
     $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = ''; $('#battle .cmd').innerHTML = ''; $('#battle .banner').hidden = true;
     C = null; if (mark !== undefined) I.input.trim(mark);
     I.setScene(prev || I.world); G.clearParts();
-    const W = I.world; if ((prev || W) === W && W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; I.audio.music(env.music || 'silence'); }
+    const W = I.world; if ((prev || W) === W && W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; } I.audio.back();
     const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0; document.body.classList.remove('noir');
   };
 
@@ -4079,7 +4105,8 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
     if (first) { I.audio.sfx('glitch'); G.flash('#fff'); await S.fade('out', 220); }
     I.setScene(B.scene); B.active = true; G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue, n: 0 };
     document.body.classList.add('in-battle'); $('#hud').hidden = true; $('#toasts').innerHTML = ''; $('#battle').hidden = false; refresh();
-    const prevMus = I.audio.wantTrack; C.prevMus = prevMus;
+    // la musique à retrouver n'est plus retenue ici : c'est celle du lieu (I.audio.place). Retenue à chaque tentative, elle
+    // devenait l'air de deuil après une défaite, et la carte le gardait jusqu'à ce qu'on la quitte.
     I.audio.music(opts.group.some(id => (foeDef(id) || {}).vice) && D.TRACKS.includes('vice') ? 'vice' : opts.boss ? 'boss' : 'combat'); I.audio.beat(opts.boss ? 'malfuf' : (opts.bg === 'romaine' || opts.bg === 'palais') ? 'marche' : (opts.bg === 'cite' || opts.bg === 'noos') ? 'cyber' : 'ayyub');
     await S.fade('in', 260);
     // piliers de la Citadelle : ce qui a été bâti pèse dans le combat
@@ -4118,7 +4145,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
       alive('foe').forEach(e => { if (!e.broken && al.veil !== 0) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; floater(e, 'DÉVOILÉ', 'break'); } else floater(e, 'Voile ôté', 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * (al.hp === undefined ? 0.08 : al.hp))); e.flash = 1; fx('light', e, '#ffe08a'); });
       refresh(); await I.sleep(700);
     }
-    let result = null;
+    let result = first && I.debug.perd ? (I.debug.perd--, 'lose') : null; // crochet de test : une défaite forcée à la première tentative
     while (!result) {
       // prochain acteur
       const act = C.all.filter(e => e.alive).sort((a, b) => a.ct - b.ct)[0]; const dt = act.ct; C.all.forEach(e => { if (e.alive) e.ct -= dt; });
@@ -4130,7 +4157,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
     }
     B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result };
     I.audio.stopBeat(); $('#battle .cmd').innerHTML = ''; C.cursor = null;
-    if (result === 'win') { I.audio.afterJingle = C.prevMus || null; I.audio.music('victoire'); } else I.audio.music('deuil');
+    if (result === 'win') { I.audio.afterJingle = I.audio.place || null; I.audio.music('victoire'); } else I.audio.music('deuil');
     if (result === 'win') await victory(); else await defeat();
     // retour
     C.all.filter(e => e.side === 'hero').forEach(e => { const h = e.ref, st = I.calc.of(h); h.hp = Math.min(st.hp, Math.max(1, e.hp) + Math.round(st.hp * 0.35)); h.sp = Math.min(st.sp, e.sp + Math.round(st.sp * 0.35)); h.sakina = e.sakina; });
@@ -4138,7 +4165,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
     $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = '';
     I.setScene(prev); G.clearParts();
     if (prev === W) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; }
-    if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.music(C.prevMus || 'silence'); else I.audio.afterJingle = C.prevMus || null; }
+    if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.back(); else I.audio.afterJingle = I.audio.place || null; }
     const foes0 = C.all.filter(e => e.side === 'foe');
     const prise = C.prise;
     if (result === 'win') { await S.fade('in', 260); await I.oeuvres.leave(opts, foes0, result); }
@@ -4633,7 +4660,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
 
   /* ---------- titre ---------- */
   U.showTitle = function () {
-    I.setScene(U.titleScene); G.clearParts(); G.amb = { kind: 'dust', rate: 5, n: 0 }; I.audio.music('titre'); I.audio.beat('veille');
+    I.setScene(U.titleScene); G.clearParts(); G.amb = { kind: 'dust', rate: 5, n: 0 }; I.audio.scene('titre'); I.audio.beat('veille');
     $('#hud').hidden = true; document.body.dataset.theme = 'orient';
     const box = $('#title .vmenu'); box.innerHTML = ''; const sv = I.save.data, has = I.save.slots().some(Boolean), auto = I.save.autoGet(); let fl;
     const mk = (label, fn, dis) => { const b = I.el('button', '', label); b.type = 'button'; b.disabled = !!dis; tapable(b, () => { I.audio.unlock(); fn(b); }); box.appendChild(b); return b; };
@@ -4691,7 +4718,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
 
   /* ---------- la Chaîne (choix de saga) ---------- */
   U.showChain = async function (msg) {
-    I.setScene(U.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue: 40, n: 0 }; I.audio.stopBeat(); I.audio.music('chaine');
+    I.setScene(U.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue: 40, n: 0 }; I.audio.stopBeat(); I.audio.scene('chaine');
     $('#hud').hidden = true; document.body.dataset.theme = 'orient'; S.hideDialog(); $('#toasts').innerHTML = '';
     const sv = I.save.data, list = I.sagaList.filter(s => !s.frame), box = $('#chain .links'); box.innerHTML = '';
     const allDone = list.every(s => sv.sagas[s.id] && sv.sagas[s.id].done);
@@ -4766,7 +4793,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
     if (!saga.frame && I.sagas.caid) {
       const vi = I.sagas.caid.chapters.findIndex(c => c.after === saga.id);
       if (vi >= 0 && !(sv.veillees && sv.veillees[saga.id])) {
-        if (!Object.keys(sv.veillees || {}).length && !sv.caidIntro) { sv.caidIntro = true; I.audio.music('citadelle'); await S.run([['title', 'Les Veillées de la Citadelle', 'un autre maillon de la Chaîne'], ['nar', 'Des siècles après les Compagnons, au bord du désert, un seigneur berbère lisait leurs vies à la lueur d’une lampe. Il n’y cherchait pas des récits. Il y cherchait comment tenir.'], ['nar', 'On l’appelait le Caïd. Chaque Lumière que tu retrouves, il l’a reçue avant toi, et il lui a fallu en faire quelque chose.']]); }
+        if (!Object.keys(sv.veillees || {}).length && !sv.caidIntro) { sv.caidIntro = true; I.audio.scene('citadelle'); await S.run([['title', 'Les Veillées de la Citadelle', 'un autre maillon de la Chaîne'], ['nar', 'Des siècles après les Compagnons, au bord du désert, un seigneur berbère lisait leurs vies à la lueur d’une lampe. Il n’y cherchait pas des récits. Il y cherchait comment tenir.'], ['nar', 'On l’appelait le Caïd. Chaque Lumière que tu retrouves, il l’a reçue avant toi, et il lui a fallu en faire quelque chose.']]); }
         W.roster = {}; W.saga = null; return W.startChapter('caid', vi);
       }
     }
@@ -4997,7 +5024,7 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
       ['Scène', st.clientWidth + ' × ' + st.clientHeight + (document.body.classList.contains('portrait') ? ' · en hauteur' : ' · en largeur') + (U.zoom ? ' · agrandie' : '') + ' · échelle ' + G.k + (G.low ? ' · 2D simple' : '')],
       ['Entrée', (document.body.classList.contains('touch') ? 'tactile' : 'clavier ou souris')],
       ['Sauvegarde automatique', I.save.autoKo ? 'refusée par le navigateur (stockage indisponible)' : I.save.autoAt ? 'il y a ' + Math.round((Date.now() - I.save.autoAt) / 1000) + ' s' : 'pas encore écrite'],
-      ['Son', (A.ctx ? A.ctx.state + ' · ' + A.ctx.sampleRate + ' Hz' : 'aucun contexte') + ' · piste ' + ((A.curTrack && A.curTrack.name) || 'aucune') + ' · incidents ' + (A.fails || 0)],
+      ['Son', (A.ctx ? A.ctx.state + ' · ' + A.ctx.sampleRate + ' Hz' : 'aucun contexte') + ' · piste ' + ((A.curTrack && A.curTrack.name) || 'aucune') + ' · voulue ' + (A.wantTrack || 'aucune') + ' · lieu ' + (A.place || 'aucun') + ' · incidents ' + (A.fails || 0) + ' · notes ' + A.stats.notes + ', sautées ' + A.stats.sautees + ', relances ' + A.stats.relances],
       ['Partie', (W.saga ? W.saga.id + ' / ' + (W.ch && W.ch.id) + ' / objectif ' + W.objIndex : 'hors chapitre') + ' · récit ' + (S.busy ? 'occupé (' + S.depth + ')' : 'libre') + ' · provision ' + d.zad]];
     return '<h3>Diagnostic</h3><p>Si le jeu s’arrête ou se comporte mal, une capture de cette page dit où regarder.</p><p class="diag">' + L.map(x => '<b>' + x[0] + '</b> ' + I.esc(String(x[1]))).join('<br>') + '</p>' +
       '<h3>Incidents relevés</h3><p class="diag">' + (e.length ? e.slice().reverse().map(x => new Date(x.t).toLocaleTimeString('fr-FR') + ' · ' + I.esc(x.msg) + (x.n > 1 ? ' (×' + x.n + ')' : '') + (x.st ? '<br><small>' + I.esc(x.st) + '</small>' : '')).join('<br>') : 'Aucun.') + '</p>';
@@ -5104,10 +5131,13 @@ window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
     $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); I.build.set(!I.build.on); });
     $('#helpbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.guide(); });
     pad(); pointer();
+    // tout geste déverrouille ou relance le son, y compris un toucher sur un bouton de menu (qui ne passe pas par les commandes du jeu)
+    ['pointerup', 'touchend', 'click', 'keydown'].forEach(t => document.addEventListener(t, () => I.audio.unlock(), true));
     $('#secours button').addEventListener('click', ev => { ev.stopPropagation(); U.secours(); });
     I.onError = msg => { if (!I.debug.auto) S.toast('Incident technique (le jeu continue) : <b>' + I.esc(msg.slice(0, 90)) + '</b>', 7000); };
     let last = performance.now();
     (function frame(now) {
+      I.audio.pump(); // la musique avance aussi à chaque image
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
       if (sc) { try {
         if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW)) { U.zoomW = sc === W; layout(); }
@@ -5867,11 +5897,11 @@ ISNAD.registerSaga({
     const p = 'D:3 G/D:3 | D | Bb/D | C/D | D:3 Gm/D:3 | D | Em7:3 A7sus:3 | A7 | G:3 D/F#:3 | Em:3 Bm:3 | Bb | Gm6:3 A7:3 | D | A/D | G/D:3 Gm/D:3 | D';
     const st = pads(p, 6, 'F#3'); for (let i = 0; i < 4; i++) st[i] = '-/6';
     R('chaine', { bpm: 132, beats: 96, voices: [
-      { wave: 'bell', vol: 0.42, notes: B(6, 'A5/2 G5/1 B5/2 A5/1', 'D6/5 -/1', 'Bb5/3 A5/2 F5/1', 'G5/3 E5/2 D5/1', 'A5/2 G5/1 Bb5/2 A5/1', 'D6/5 -/1', 'B5/2 A5/1 G5/2 E5/1', 'F#5/3 E5/3',
+      { wave: 'bell', vol: 0.5, notes: B(6, 'A5/2 G5/1 B5/2 A5/1', 'D6/5 -/1', 'Bb5/3 A5/2 F5/1', 'G5/3 E5/2 D5/1', 'A5/2 G5/1 Bb5/2 A5/1', 'D6/5 -/1', 'B5/2 A5/1 G5/2 E5/1', 'F#5/3 E5/3',
         'F#5/2 E5/1 D5/2 B4/1', 'G4/2 A4/1 B4/3', 'D5/2 F5/1 A5/3', 'G5/2 E5/1 C#5/3', 'D5/3 F#5/3', 'E5/6', 'B4/3 Bb4/3', 'A4/5 D5/1') },
-      { wave: 'harp', vol: 0.5, pan: -0.2, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/1 3/1 2/1 3/1 4/1 3/1', 3: '0/1 2/1 3/1' })) },
-      { wave: 'strings', vol: 0.22, pan: 0.2, notes: B(6, ...st) },
-      { wave: 'triangle', vol: 0.26, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/6', 3: '0/3' })) }
+      { wave: 'harp', vol: 0.6, pan: -0.2, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/1 3/1 2/1 3/1 4/1 3/1', 3: '0/1 2/1 3/1' })) },
+      { wave: 'strings', vol: 0.26, pan: 0.2, notes: B(6, ...st) },
+      { wave: 'triangle', vol: 0.3, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/6', 3: '0/3' })) }
     ] });
   })();
 
@@ -6012,12 +6042,12 @@ ISNAD.registerSaga({
   (function () {
     const p = 'Cm | Cm | Abm | Abm | Em | Em | G | Gaug | Cm | Abm | Em | Gaug | Cm | Abm | Em | G Gaug';
     R('noos', { bpm: 104, beats: 64, voices: [
-      { wave: 'bell', vol: 0.42, notes: B(4, 'G5/2 Eb5/2', 'D5/1 Eb5/1 G5/2', 'Ab5/2 Eb5/2', 'B4/1 Eb5/1 Ab5/2', 'G5/2 E5/2', 'F#5/1 G5/1 B5/2', 'D5/2 B4/2', 'B4/1 D#5/1 G5/2',
+      { wave: 'bell', vol: 0.58, notes: B(4, 'G5/2 Eb5/2', 'D5/1 Eb5/1 G5/2', 'Ab5/2 Eb5/2', 'B4/1 Eb5/1 Ab5/2', 'G5/2 E5/2', 'F#5/1 G5/1 B5/2', 'D5/2 B4/2', 'B4/1 D#5/1 G5/2',
         'C5/1 Eb5/1 G5/1 C6/1', 'B5/2 Ab5/1 Eb5/1', 'E5/1 G5/1 B5/2', 'G5/2 D#5/2', 'Eb5/2 D5/1 C5/1', 'Eb5/2 B4/2', 'E5/2 G5/1 F#5/1', 'D5/2 D#5/2') },
-      { wave: 'pulse', vol: 0.3, pan: -0.3, notes: B(4, ...acc(p, 4, '^C4', { 4: '0/.5 1/.5 2/.5 1/.5 3/.5 1/.5 2/.5 1/.5', 2: '0/.5 1/.5 2/.5 1/.5' })) },
-      { wave: 'pad', vol: 0.24, pan: 0.2, notes: B(4, ...pads(p, 4, 'G3')) },
-      { wave: 'bass', vol: 0.4, notes: B(4, ...acc(p, 4, 'C2', { 4: '0/1 -/.5 0/.5 0/1 -/1', 2: '0/1 -/.5 0/.5' })) },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('k/1 t/.5 h/.5 -/.5 h/.5 t/.5 h/.5', 16)) }
+      { wave: 'pulse', vol: 0.42, pan: -0.3, notes: B(4, ...acc(p, 4, '^C4', { 4: '0/.5 1/.5 2/.5 1/.5 3/.5 1/.5 2/.5 1/.5', 2: '0/.5 1/.5 2/.5 1/.5' })) },
+      { wave: 'pad', vol: 0.3, pan: 0.2, notes: B(4, ...pads(p, 4, 'G3')) },
+      { wave: 'bass', vol: 0.46, notes: B(4, ...acc(p, 4, 'C2', { 4: '0/1 -/.5 0/.5 0/1 -/1', 2: '0/1 -/.5 0/.5' })) },
+      { wave: 'drums', vol: 0.38, notes: B(4, ...N('k/1 t/.5 h/.5 -/.5 h/.5 t/.5 h/.5', 16)) }
     ] });
   })();
 
@@ -6028,12 +6058,12 @@ ISNAD.registerSaga({
     const beat = { 4: '0/.5 0/.5 0/.5 0/.5 0/.5 0/.5 o/.5 0/.5', 2: '0/.5 0/.5 o/.5 0/.5' };
     const kit = 'k/1 h/.5 h/.5 s/1 h/.5 k/.5', fill = 'k/1 h/.5 h/.5 s/1 s/.25 s/.25 k/.5';
     R('cite', { bpm: 112, beats: 64, voices: [
-      { wave: 'pulse', vol: 0.46, notes: B(4, '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'A4/1 B4/2 -/1', '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'E4/1 G4/2 -/1', '-/.5 C5/.5 E5/1 G5/.5 E5/1 C5/.5', 'D5/1 E5/2 -/1', '-/.5 D5/.5 F#5/1 A5/.5 F#5/1 D5/.5', 'F#5/1 D#5/1 B4/2',
+      { wave: 'pulse', vol: 0.54, notes: B(4, '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'A4/1 B4/2 -/1', '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'E4/1 G4/2 -/1', '-/.5 C5/.5 E5/1 G5/.5 E5/1 C5/.5', 'D5/1 E5/2 -/1', '-/.5 D5/.5 F#5/1 A5/.5 F#5/1 D5/.5', 'F#5/1 D#5/1 B4/2',
         'D5/2 B4/1 D5/1', 'F#5/2 A5/1 D5/1', 'G5/1.5 F#5/.5 E5/1 B4/1', 'G5/2 E5/2', 'E5/1 G5/1 B5/1.5 A5/.5', 'G5/2 D5/2', 'C5/1 E5/1 A5/1.5 G5/.5', 'F#5/2 D#5/1 B4/1') },
-      { wave: 'square', vol: 0.22, pan: -0.35, notes: B(4, ...acc(pA, 4, '^E4', arp), ...acc(pB, 4, '^E4', arp)) },
-      { wave: 'pad', vol: 0.22, pan: 0.25, notes: B(4, ...pads(pA.replace(/CM7/g, 'C'), 4, 'G3'), ...pads(pB, 4, 'G3')) },
-      { wave: 'bass', vol: 0.4, notes: B(4, ...acc(pA, 4, 'C2', beat), ...acc(pB, 4, 'C2', beat)) },
-      { wave: 'drums', vol: 0.34, notes: B(4, ...N(kit, 7), fill, ...N(kit, 7), fill) }
+      { wave: 'square', vol: 0.26, pan: -0.35, notes: B(4, ...acc(pA, 4, '^E4', arp), ...acc(pB, 4, '^E4', arp)) },
+      { wave: 'pad', vol: 0.25, pan: 0.25, notes: B(4, ...pads(pA.replace(/CM7/g, 'C'), 4, 'G3'), ...pads(pB, 4, 'G3')) },
+      { wave: 'bass', vol: 0.44, notes: B(4, ...acc(pA, 4, 'C2', beat), ...acc(pB, 4, 'C2', beat)) },
+      { wave: 'drums', vol: 0.38, notes: B(4, ...N(kit, 7), fill, ...N(kit, 7), fill) }
     ] });
   })();
 
@@ -6222,12 +6252,12 @@ ISNAD.registerSaga({
   (function () {
     const p = 'AM7 | F#m7 | DM7 | Dm6 | A/C# | Bm7 | E7sus | E7sus | F#m7 | C#m7 | DM7 | A/C# | Bm7 | Dm6 | Aadd9 | Esus';
     R('rencontre', { bpm: 84, beats: 64, voices: [
-      { wave: 'bell', vol: 0.5, notes: B(4, '-/1 E5/1 A5/1 G#5/1', 'E5/2 C#5/2', '-/1 D5/1 F#5/1 A5/1', 'B5/2 A5/1 F5/1', 'E5/2 C#5/1 E5/1', 'D5/1 F#5/1 A5/2', 'E5/1 F#5/1 A5/1 B5/1', 'B5/3 -/1', ...N('-/4', 8)) },
-      { wave: 'flute', vol: 0.5, pan: 0.15, notes: B(4, ...N('-/4', 8), 'A4/2 C#5/1 E5/1', 'E5/2 B4/1 G#4/1', 'F#4/1 A4/1 C#5/2', 'E5/2 C#5/1 A4/1', 'D5/2 B4/1 D5/1', 'F5/2 D5/1 B4/1', 'C#5/2 B4/1 A4/1', 'A4/2 B4/2') },
-      { wave: 'square', vol: 0.24, pan: -0.3, notes: B(4, ...acc(p.replace(/DM7/g, 'Dadd9'), 4, '^A3', { 4: '0/.5 1/.5 2/.5 3/.5 2/.5 1/.5 2/.5 1/.5' })) },
-      { wave: 'pad', vol: 0.22, pan: 0.2, notes: B(4, ...pads(p.replace('AM7', 'A').replace(/DM7/g, 'D'), 4, 'E3')) },
-      { wave: 'triangle', vol: 0.24, notes: B(4, ...acc(p, 4, 'D2', { 4: '0/2.5 0/.5 0/1' })) },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('-/1 h/1 -/1 h/1', 16)) }
+      { wave: 'bell', vol: 0.64, notes: B(4, '-/1 E5/1 A5/1 G#5/1', 'E5/2 C#5/2', '-/1 D5/1 F#5/1 A5/1', 'B5/2 A5/1 F5/1', 'E5/2 C#5/1 E5/1', 'D5/1 F#5/1 A5/2', 'E5/1 F#5/1 A5/1 B5/1', 'B5/3 -/1', ...N('-/4', 8)) },
+      { wave: 'flute', vol: 0.64, pan: 0.15, notes: B(4, ...N('-/4', 8), 'A4/2 C#5/1 E5/1', 'E5/2 B4/1 G#4/1', 'F#4/1 A4/1 C#5/2', 'E5/2 C#5/1 A4/1', 'D5/2 B4/1 D5/1', 'F5/2 D5/1 B4/1', 'C#5/2 B4/1 A4/1', 'A4/2 B4/2') },
+      { wave: 'square', vol: 0.31, pan: -0.3, notes: B(4, ...acc(p.replace(/DM7/g, 'Dadd9'), 4, '^A3', { 4: '0/.5 1/.5 2/.5 3/.5 2/.5 1/.5 2/.5 1/.5' })) },
+      { wave: 'pad', vol: 0.27, pan: 0.2, notes: B(4, ...pads(p.replace('AM7', 'A').replace(/DM7/g, 'D'), 4, 'E3')) },
+      { wave: 'triangle', vol: 0.3, notes: B(4, ...acc(p, 4, 'D2', { 4: '0/2.5 0/.5 0/1' })) },
+      { wave: 'drums', vol: 0.36, notes: B(4, ...N('-/1 h/1 -/1 h/1', 16)) }
     ] });
   })();
 })();

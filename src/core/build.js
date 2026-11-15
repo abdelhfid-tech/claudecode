@@ -91,7 +91,7 @@
     st.done = true; const nt = (Bd.peek(st.map) || []).find(e => e.t === 'natte' && e.x >= st.x && e.x < st.x + st.w && e.y >= st.y && e.y < st.y + st.h); if (nt) { st.nx = nt.x; st.ny = nt.y; }
     S.depth++;
     try {
-      I.audio.sfx('roll'); G.flash('#fff3c8'); I.audio.music('espoir');
+      I.audio.sfx('roll'); G.flash('#fff3c8'); I.audio.scene('espoir');
       await S.card('lightcard', `<div class="glyph" style="color:#ffe08a">✦</div><p class="small">Mosquée fondée</p><h1 style="color:#ffe08a">${I.esc(st.name)}</h1><p>Bloc après bloc, de tes mains. Sur sa natte, on peut désormais prier, se reposer et accomplir les œuvres du jour.</p><div class="hint">▼</div>`);
       W.pillar('priere', 1); W.pillar('lien', 1);
     } finally { S.depth--; S.hideDialog(); }

@@ -137,7 +137,7 @@
       await card('defeat', `<p class="small">Pourparler · ${I.esc(P.title)}</p><h1>La parole n’a pas suffi</h1><p>Confiance : ${conf} / ${P.goal}. Ce qui n’a pas été noué par la parole devra l’être autrement, et coûtera davantage.</p><div class="hint">▼</div>`);
       await S.run(P.lose);
     }
-    const env = W.map && W.map.env; if (env && I.scene === W) I.audio.music(env.music || 'silence');
+    const env = W.map && W.map.env; if (env && I.scene === W) I.audio.scene(env.music || 'silence'); else I.audio.back();
   }
 
   S.toast = function (html, ms) {
@@ -187,7 +187,7 @@
       case 'emote': W.emote(a, b); break;
       case 'save': await I.ui.saveMenu(); break;
       case 'pillar': W.pillar(a, b); break;
-      case 'mus': I.audio.music(a); break;
+      case 'mus': I.audio.scene(a); break; // l'humeur posée par le récit devient la musique du lieu, jusqu'à la carte suivante
       case 'mat': I.build.give(a, b === undefined ? 1 : b); break;
       case 'lore': I.trade.lore(a); break;
       case 'raid': S.hideDialog(); await I.trade.raid(a || {}); break;

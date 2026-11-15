@@ -99,7 +99,7 @@
     $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = ''; $('#battle .cmd').innerHTML = ''; $('#battle .banner').hidden = true;
     C = null; if (mark !== undefined) I.input.trim(mark);
     I.setScene(prev || I.world); G.clearParts();
-    const W = I.world; if ((prev || W) === W && W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; I.audio.music(env.music || 'silence'); }
+    const W = I.world; if ((prev || W) === W && W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; } I.audio.back();
     const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0; document.body.classList.remove('noir');
   };
 
@@ -113,7 +113,8 @@
     if (first) { I.audio.sfx('glitch'); G.flash('#fff'); await S.fade('out', 220); }
     I.setScene(B.scene); B.active = true; G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue, n: 0 };
     document.body.classList.add('in-battle'); $('#hud').hidden = true; $('#toasts').innerHTML = ''; $('#battle').hidden = false; refresh();
-    const prevMus = I.audio.wantTrack; C.prevMus = prevMus;
+    // la musique à retrouver n'est plus retenue ici : c'est celle du lieu (I.audio.place). Retenue à chaque tentative, elle
+    // devenait l'air de deuil après une défaite, et la carte le gardait jusqu'à ce qu'on la quitte.
     I.audio.music(opts.group.some(id => (foeDef(id) || {}).vice) && D.TRACKS.includes('vice') ? 'vice' : opts.boss ? 'boss' : 'combat'); I.audio.beat(opts.boss ? 'malfuf' : (opts.bg === 'romaine' || opts.bg === 'palais') ? 'marche' : (opts.bg === 'cite' || opts.bg === 'noos') ? 'cyber' : 'ayyub');
     await S.fade('in', 260);
     // piliers de la Citadelle : ce qui a été bâti pèse dans le combat
@@ -152,7 +153,7 @@
       alive('foe').forEach(e => { if (!e.broken && al.veil !== 0) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; floater(e, 'DÉVOILÉ', 'break'); } else floater(e, 'Voile ôté', 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * (al.hp === undefined ? 0.08 : al.hp))); e.flash = 1; fx('light', e, '#ffe08a'); });
       refresh(); await I.sleep(700);
     }
-    let result = null;
+    let result = first && I.debug.perd ? (I.debug.perd--, 'lose') : null; // crochet de test : une défaite forcée à la première tentative
     while (!result) {
       // prochain acteur
       const act = C.all.filter(e => e.alive).sort((a, b) => a.ct - b.ct)[0]; const dt = act.ct; C.all.forEach(e => { if (e.alive) e.ct -= dt; });
@@ -164,7 +165,7 @@
     }
     B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result };
     I.audio.stopBeat(); $('#battle .cmd').innerHTML = ''; C.cursor = null;
-    if (result === 'win') { I.audio.afterJingle = C.prevMus || null; I.audio.music('victoire'); } else I.audio.music('deuil');
+    if (result === 'win') { I.audio.afterJingle = I.audio.place || null; I.audio.music('victoire'); } else I.audio.music('deuil');
     if (result === 'win') await victory(); else await defeat();
     // retour
     C.all.filter(e => e.side === 'hero').forEach(e => { const h = e.ref, st = I.calc.of(h); h.hp = Math.min(st.hp, Math.max(1, e.hp) + Math.round(st.hp * 0.35)); h.sp = Math.min(st.sp, e.sp + Math.round(st.sp * 0.35)); h.sakina = e.sakina; });
@@ -172,7 +173,7 @@
     $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = '';
     I.setScene(prev); G.clearParts();
     if (prev === W) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; }
-    if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.music(C.prevMus || 'silence'); else I.audio.afterJingle = C.prevMus || null; }
+    if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.back(); else I.audio.afterJingle = I.audio.place || null; }
     const foes0 = C.all.filter(e => e.side === 'foe');
     const prise = C.prise;
     if (result === 'win') { await S.fade('in', 260); await I.oeuvres.leave(opts, foes0, result); }

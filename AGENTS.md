@@ -44,15 +44,19 @@ node tools/smoke.js tap             # idem en marchant comme au doigt (chemin tr
 node tools/smoke.js wrong           # idem en prenant d'abord chaque mauvaise réponse
 node tools/doigt.js                 # le prologue au doigt, sans raccourci : ce que le jeu attend se voit-il, se touche-t-il ?
 node tools/doigt.js loin            # idem, puis tout le premier chapitre de la saga I (ajouter 844x390 pour le paysage)
+node tools/son.js                   # la musique pour de vrai : le bus écouté pendant qu'on joue (victoire, défaite puis reprise, minuteries bridées)
+node tools/mesure-musique.js        # crête et niveau moyen de chaque piste, et ce qu'en rend un petit haut-parleur
 node tools/smoke.js shots           # captures bureau et mobile dans .smoke/
 node tools/promo.js all             # livret et planches : captures, sprites, assemblage, export
 node tools/promo.js planches        # après une retouche du texte : réassemble et réexporte seulement
 ```
 
 **Règle.** Toute modification de contenu (`src/data/`) repasse le validateur, puis le build, puis
-`smoke.js auto`. Toute modification du moteur repasse le build, `smoke.js auto`, `smoke.js walk`, `smoke.js tap` et `doigt.js`. Un changement n'est
+`smoke.js auto`. Toute modification du moteur repasse le build, `smoke.js auto`, `smoke.js walk`, `smoke.js tap` et `doigt.js` ;
+toute modification du son repasse aussi `son.js`. Un changement n'est
 terminé que si le validateur affiche ✓, que le test se termine sans « BLOQUÉ », sans « INACCESSIBLE »,
-sans « ABSENT », sans « TEXTE CACHÉ » (un texte affiché sous le noir d'un fondu), sans « INVISIBLE » et sans erreur console.
+sans « ABSENT », sans « TEXTE CACHÉ » (un texte affiché sous le noir d'un fondu), sans « INVISIBLE », sans « MUSIQUE »
+(la piste voulue n'est pas celle du lieu, ou le bus de la musique se tait) et sans erreur console.
 Un parcours automatique prouve que le récit se déroule, pas qu'il se voit : tout changement d'écran
 ou de mise en page se vérifie aussi sur une capture.
 

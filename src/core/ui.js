@@ -82,7 +82,7 @@
 
   /* ---------- titre ---------- */
   U.showTitle = function () {
-    I.setScene(U.titleScene); G.clearParts(); G.amb = { kind: 'dust', rate: 5, n: 0 }; I.audio.music('titre'); I.audio.beat('veille');
+    I.setScene(U.titleScene); G.clearParts(); G.amb = { kind: 'dust', rate: 5, n: 0 }; I.audio.scene('titre'); I.audio.beat('veille');
     $('#hud').hidden = true; document.body.dataset.theme = 'orient';
     const box = $('#title .vmenu'); box.innerHTML = ''; const sv = I.save.data, has = I.save.slots().some(Boolean), auto = I.save.autoGet(); let fl;
     const mk = (label, fn, dis) => { const b = I.el('button', '', label); b.type = 'button'; b.disabled = !!dis; tapable(b, () => { I.audio.unlock(); fn(b); }); box.appendChild(b); return b; };
@@ -140,7 +140,7 @@
 
   /* ---------- la Chaîne (choix de saga) ---------- */
   U.showChain = async function (msg) {
-    I.setScene(U.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue: 40, n: 0 }; I.audio.stopBeat(); I.audio.music('chaine');
+    I.setScene(U.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue: 40, n: 0 }; I.audio.stopBeat(); I.audio.scene('chaine');
     $('#hud').hidden = true; document.body.dataset.theme = 'orient'; S.hideDialog(); $('#toasts').innerHTML = '';
     const sv = I.save.data, list = I.sagaList.filter(s => !s.frame), box = $('#chain .links'); box.innerHTML = '';
     const allDone = list.every(s => sv.sagas[s.id] && sv.sagas[s.id].done);
@@ -215,7 +215,7 @@
     if (!saga.frame && I.sagas.caid) {
       const vi = I.sagas.caid.chapters.findIndex(c => c.after === saga.id);
       if (vi >= 0 && !(sv.veillees && sv.veillees[saga.id])) {
-        if (!Object.keys(sv.veillees || {}).length && !sv.caidIntro) { sv.caidIntro = true; I.audio.music('citadelle'); await S.run([['title', 'Les Veillées de la Citadelle', 'un autre maillon de la Chaîne'], ['nar', 'Des siècles après les Compagnons, au bord du désert, un seigneur berbère lisait leurs vies à la lueur d’une lampe. Il n’y cherchait pas des récits. Il y cherchait comment tenir.'], ['nar', 'On l’appelait le Caïd. Chaque Lumière que tu retrouves, il l’a reçue avant toi, et il lui a fallu en faire quelque chose.']]); }
+        if (!Object.keys(sv.veillees || {}).length && !sv.caidIntro) { sv.caidIntro = true; I.audio.scene('citadelle'); await S.run([['title', 'Les Veillées de la Citadelle', 'un autre maillon de la Chaîne'], ['nar', 'Des siècles après les Compagnons, au bord du désert, un seigneur berbère lisait leurs vies à la lueur d’une lampe. Il n’y cherchait pas des récits. Il y cherchait comment tenir.'], ['nar', 'On l’appelait le Caïd. Chaque Lumière que tu retrouves, il l’a reçue avant toi, et il lui a fallu en faire quelque chose.']]); }
         W.roster = {}; W.saga = null; return W.startChapter('caid', vi);
       }
     }
@@ -446,7 +446,7 @@
       ['Scène', st.clientWidth + ' × ' + st.clientHeight + (document.body.classList.contains('portrait') ? ' · en hauteur' : ' · en largeur') + (U.zoom ? ' · agrandie' : '') + ' · échelle ' + G.k + (G.low ? ' · 2D simple' : '')],
       ['Entrée', (document.body.classList.contains('touch') ? 'tactile' : 'clavier ou souris')],
       ['Sauvegarde automatique', I.save.autoKo ? 'refusée par le navigateur (stockage indisponible)' : I.save.autoAt ? 'il y a ' + Math.round((Date.now() - I.save.autoAt) / 1000) + ' s' : 'pas encore écrite'],
-      ['Son', (A.ctx ? A.ctx.state + ' · ' + A.ctx.sampleRate + ' Hz' : 'aucun contexte') + ' · piste ' + ((A.curTrack && A.curTrack.name) || 'aucune') + ' · incidents ' + (A.fails || 0)],
+      ['Son', (A.ctx ? A.ctx.state + ' · ' + A.ctx.sampleRate + ' Hz' : 'aucun contexte') + ' · piste ' + ((A.curTrack && A.curTrack.name) || 'aucune') + ' · voulue ' + (A.wantTrack || 'aucune') + ' · lieu ' + (A.place || 'aucun') + ' · incidents ' + (A.fails || 0) + ' · notes ' + A.stats.notes + ', sautées ' + A.stats.sautees + ', relances ' + A.stats.relances],
       ['Partie', (W.saga ? W.saga.id + ' / ' + (W.ch && W.ch.id) + ' / objectif ' + W.objIndex : 'hors chapitre') + ' · récit ' + (S.busy ? 'occupé (' + S.depth + ')' : 'libre') + ' · provision ' + d.zad]];
     return '<h3>Diagnostic</h3><p>Si le jeu s’arrête ou se comporte mal, une capture de cette page dit où regarder.</p><p class="diag">' + L.map(x => '<b>' + x[0] + '</b> ' + I.esc(String(x[1]))).join('<br>') + '</p>' +
       '<h3>Incidents relevés</h3><p class="diag">' + (e.length ? e.slice().reverse().map(x => new Date(x.t).toLocaleTimeString('fr-FR') + ' · ' + I.esc(x.msg) + (x.n > 1 ? ' (×' + x.n + ')' : '') + (x.st ? '<br><small>' + I.esc(x.st) + '</small>' : '')).join('<br>') : 'Aucun.') + '</p>';
@@ -553,10 +553,13 @@
     $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); I.build.set(!I.build.on); });
     $('#helpbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.guide(); });
     pad(); pointer();
+    // tout geste déverrouille ou relance le son, y compris un toucher sur un bouton de menu (qui ne passe pas par les commandes du jeu)
+    ['pointerup', 'touchend', 'click', 'keydown'].forEach(t => document.addEventListener(t, () => I.audio.unlock(), true));
     $('#secours button').addEventListener('click', ev => { ev.stopPropagation(); U.secours(); });
     I.onError = msg => { if (!I.debug.auto) S.toast('Incident technique (le jeu continue) : <b>' + I.esc(msg.slice(0, 90)) + '</b>', 7000); };
     let last = performance.now();
     (function frame(now) {
+      I.audio.pump(); // la musique avance aussi à chaque image
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
       if (sc) { try {
         if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW)) { U.zoomW = sc === W; layout(); }

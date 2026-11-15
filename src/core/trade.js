@@ -181,6 +181,6 @@
     await S.run(ops);
     if (mine) { const part = S.flags._raid_part, back = Math.round(o.loss * (part === 'tout' ? 1 : part === 'part' ? 0.7 : 0.5)); Tr.dirhams(back); S.toast(`Tu retrouves <b>${back} dirhams</b> de ta mise de ${o.loss}.`, 4200); }
     delete S.flags._r1; delete S.flags._r2; delete S.flags._raid_part;
-    const env = W.map && W.map.env; if (env && I.scene === W) I.audio.music(env.music || 'silence');
+    const env = W.map && W.map.env; if (env && I.scene === W) I.audio.scene(env.music || 'silence'); else I.audio.back();
   };
 })();

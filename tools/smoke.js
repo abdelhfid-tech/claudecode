@@ -5,7 +5,8 @@
    auto : saute d'objectif en objectif · walk : marche réellement (clavier simulé, vraies collisions)
    tap : marche comme au doigt (chemin tracé jusqu'à l'objectif, vraies collisions)
    wrong : choisit d'abord toutes les mauvaises réponses avant la bonne
-   SANS_OEUVRES=1 : le joueur automatique n'accomplit aucune œuvre (épreuves abordées le cœur lourd) */
+   SANS_OEUVRES=1 : le joueur automatique n'accomplit aucune œuvre (épreuves abordées le cœur lourd)
+   « MUSIQUE » : à un point de reprise, ou après une défaite forcée dans la noosphère, la piste voulue n'est pas celle du lieu */
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
@@ -73,8 +74,14 @@ const url = 'file://' + path.join(__dirname, '../index.html');
       I.save.reset(); I.save.data.started = true;
       const hide = () => document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
       // instrumentation des combats
-      const orig = I.battle.start; let cur = null;
-      I.battle.start = async function (o) { const t0 = performance.now(); let tries = 0; const oc = I.script.card; I.script.card = async function (cls, html, a) { if (cls === 'defeat') tries++; return oc(cls, html, a); }; await orig(o); I.script.card = oc; stats.push({ saga: W.saga.id, ch: W.ch.id, group: o.group.join('+'), boss: !!o.boss, defeats: tries, turns: I.battle.last.turns, kos: I.battle.last.kos, min: Math.round(I.battle.last.minHp * 100), lv: W.party.map(id => W.hero(id).lvl).join('/'), hp: W.party.map(id => Math.round(W.hero(id).hp)).join('/') }); };
+      // La musique. Dans chaque saga, le premier combat livré dans la noosphère est perdu une fois exprès (I.debug.perd) : après la
+      // reprise et la victoire, la carte doit retrouver sa piste. Et à chaque point de reprise, la piste voulue est celle du lieu.
+      const orig = I.battle.start, forcees = {}, PASSAGE = ['victoire', 'combat', 'boss', 'vice', 'lame'];
+      const ock = W.checkpoint; W.checkpoint = function () { const A = I.audio; if (I.scene === W && !I.battle.active && (A.wantTrack !== A.place || PASSAGE.includes(A.place))) log.push(`MUSIQUE ${W.saga.id}/${W.ch.id} objectif ${W.objIndex} : voulue « ${A.wantTrack} », lieu « ${A.place} »`); return ock.apply(this, arguments); };
+      I.battle.start = async function (o) { const t0 = performance.now(); let tries = 0; const force = !!(W.map && W.map.id === 'noos' && I.scene === W && !o.noir && !forcees[W.saga.id]); if (force) { forcees[W.saga.id] = true; I.debug.perd = 1; }
+        const oc = I.script.card; I.script.card = async function (cls, html, a) { if (cls === 'defeat') tries++; return oc(cls, html, a); }; await orig(o); I.script.card = oc;
+        if (force && I.audio.wantTrack !== I.audio.place) log.push(`MUSIQUE ${W.saga.id}/${W.ch.id} après une défaite : voulue « ${I.audio.wantTrack} », lieu « ${I.audio.place} »`);
+        stats.push({ saga: W.saga.id, ch: W.ch.id, group: o.group.join('+'), boss: !!o.boss, defeats: tries - (force ? 1 : 0), forcee: force, turns: I.battle.last.turns, kos: I.battle.last.kos, min: Math.round(I.battle.last.minHp * 100), lv: W.party.map(id => W.hero(id).lvl).join('/'), hp: W.party.map(id => Math.round(W.hero(id).hp)).join('/') }); };
       const waitChain = () => new Promise(res => { const t0 = Date.now(); const iv = setInterval(() => { if (!document.querySelector('#chain').hidden || !document.querySelector('#title').hidden) { clearInterval(iv); res(true); } else if (Date.now() - t0 > 240000) { clearInterval(iv); res(false); } }, 100); });
       const order = [['idris', 0], ['abubakr'], ['umar'], ['khalid'], ['uthman'], ['ali'], ['idris', 1]];
       for (const [sid, ci] of order) {
@@ -94,7 +101,7 @@ const url = 'file://' + path.join(__dirname, '../index.html');
     }, [mode, process.env.SANS_OEUVRES || '']);
     console.log(res.log.join('\n'));
     console.log('--- combats ---');
-    res.stats.forEach(s => console.log(`${s.saga}/${s.ch} ${s.boss ? 'BOSS ' : ''}${s.group}  défaites:${s.defeats} tours:${s.turns} KO:${s.kos} PVmin:${s.min}%  niv:${s.lv}`));
+    res.stats.forEach(s => console.log(`${s.saga}/${s.ch} ${s.boss ? 'BOSS ' : ''}${s.group}  défaites:${s.defeats}${s.forcee ? ' (+1 forcée)' : ''} tours:${s.turns} KO:${s.kos} PVmin:${s.min}%  niv:${s.lv}`));
     console.log('--- sauvegarde ---', JSON.stringify(res.save));
     await shot(page, '30-fin-auto');
     await page.close();

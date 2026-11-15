@@ -171,7 +171,7 @@
     const L = C0().lames[v], E = C0().enemies[v];
     I.audio.sfx('roll'); G.flash(L.couleur); if (D.TRACKS.includes('lame')) I.audio.music('lame');
     await S.card('lame', '<img class="lame" alt="" src="' + O.lameURL(v) + '"><p class="small">Une lame est forgée</p><h1 style="color:' + L.couleur + '">' + I.esc(L.name) + '</h1><p class="ar">' + I.esc(L.ar) + '</p><p>' + I.fmt(L.texte) + '</p><p class="small">Elle tranche ' + I.esc(bas(E.name)) + '</p><div class="hint">▼</div>');
-    const env = W.map && W.map.env; if (env && I.scene === W && D.TRACKS.includes('lame')) I.audio.music(env.music || 'silence');
+    if (D.TRACKS.includes('lame')) I.audio.back();
   };
 
   /* ----- compagnons de lumière ----- */

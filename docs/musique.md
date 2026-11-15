@@ -162,3 +162,51 @@ passe :
 
 Avant la première passe, les crêtes montaient jusqu'à −0,4 dB avant limiteur pour un niveau moyen
 comparable : c'était le sursaut de fin de note.
+
+## Troisième passe : la musique du lieu, la tenue du séquenceur, les pistes faibles
+
+Le décideur a signalé que la musique s'était tue dans la noosphère de Médine. Deux outils ont été
+ajoutés pour le voir au lieu de le supposer :
+
+- `node tools/son.js` joue le premier chapitre de la saga I dans un navigateur dont le son tourne
+  vraiment, et écoute le bus de la musique : quelle piste, à quel niveau, avec quels silences. Trois
+  variantes : victoire du premier coup ; défaite puis reprise ; minuteries bridées à une par seconde et
+  affichage à deux images par seconde pendant l'écoute.
+- `node tools/mesure-musique.js` rend chaque piste hors ligne et donne sa crête, son niveau moyen, et
+  le niveau moyen au-dessus de 400 Hz (ce que rend un petit haut-parleur).
+
+Ce qu'ils ont montré, et ce qui a changé :
+
+- **Un défaut certain.** Après une défaite puis une reprise, la carte gardait l'air de deuil au lieu de
+  sa piste : le combat retenait la musique à retrouver à chaque tentative. Il y a maintenant une seule
+  vérité : `A.scene(nom)` pose la piste du lieu (une carte, un écran, l'humeur posée par l'opération
+  `mus`) ; `A.back()` y revient après une piste de passage (combat, fanfare, deuil, forge, pourparler).
+- **Un séquenceur qui dépendait des seules minuteries.** Bridé, il perdait des notes : 3 à 5 dB de moins
+  à l'écoute. Il est maintenant poussé aussi par la boucle d'affichage, programme 1,2 s d'avance (0,3 s
+  pendant une intro, pour que la piste qui suit la fanfare entre juste), et joue tout de suite une note
+  en retard de moins d'un quart de seconde. Bridé, le niveau ne bouge plus.
+- **Plus de coupure pour toute la séance.** Six incidents sonores, de quelque nature que ce soit,
+  coupaient la musique jusqu'au rechargement. Désormais une piste qui échoue se tait un moment (15 s,
+  puis 30 s, deux minutes au plus) et une veille la relance ; un bruitage en échec ne la regarde pas.
+- **Contexte relancé.** Tout contexte qui n'est pas « running » (suspendu, ou interrompu sur un
+  téléphone) est relancé au premier geste, y compris un toucher sur un bouton de menu.
+- **Quatre pistes remontées** vers le niveau des autres, crêtes toujours sous −4,3 dB :
+
+  | Piste | avant (moyen · au-dessus de 400 Hz) | après |
+  |---|---|---|
+  | `noos` | −23,4 · −22,5 dB | −21,2 · −20,0 dB |
+  | `rencontre` | −23,0 · −22,3 dB | −20,9 · −20,2 dB |
+  | `chaine` | −22,0 · −24,3 dB | −20,6 · −22,9 dB |
+  | `cite` | −21,9 · −21,7 dB | −20,8 · −20,4 dB |
+
+  Toutes les pistes tiennent maintenant entre −18,9 dB (`rome`) et −21,2 dB (`noos`).
+- La page Diagnostic de la halte dit la piste voulue, celle du lieu, les notes programmées, sautées, et
+  les relances.
+
+Les nappes de fond (vent, mer, grondement de la noosphère…) ont été retirées dans la même passe, à la
+demande du décideur (D90). Mesuré avant retrait : dans la noosphère, le grondement était 7 dB sous la
+musique et presque absent au-dessus de 400 Hz. Il n'expliquait donc pas une musique qui se tait.
+
+**Ce qui n'est pas établi.** L'arrêt complet de la musique n'a pas été reproduit dans Chromium. Si cela
+se reproduit sur l'appareil du décideur, la ligne « Son » de la page Diagnostic dira lequel des cas
+s'est produit (D91).

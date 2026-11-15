@@ -124,7 +124,7 @@
      (les nappes de bruit filtré ont été retirées à la demande du décideur, D90). ---------- */
   const A = I.audio = { ctx: null, on: true, master: null, rhythm: null };
   A.unlock = function () {
-    if (A.ctx) { if (A.ctx.state === 'suspended') A.ctx.resume(); return; }
+    if (A.ctx) { if (A.ctx.state !== 'running') { const p = A.ctx.resume(); if (p && p.catch) p.catch(() => {}); } return; } // suspendu, ou « interrompu » sur un téléphone : on relance
     try {
       const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
       A.ctx = new AC();
@@ -211,6 +211,9 @@
      cuivres, cloches, timbales, synthés et percussions. Détail : docs/musique.md. */
   I.music = {}; I.registerMusic = function (name, def) { I.music[name] = def; };
   A.musicOn = true; A.curTrack = null; A.wantTrack = null;
+  A.place = null;                                    // la piste du lieu : carte, écran, ou humeur posée par le récit (A.scene)
+  A.stats = { notes: 0, sautees: 0, relances: 0 };  // ce que le séquenceur a vraiment programmé (page Diagnostic, tools/son.js)
+  const AVANCE = 1.2;                                // secondes de musique programmées d'avance
   const MG = 0.26;                                   // gain du bus musique : la bande-son reste sous les bruitages
   const SEMI = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
   function freqOf(n) { const m = n.match(/^([A-G])(#|b)?(\d)$/); if (!m) return 0; const midi = 12 * (+m[3] + 1) + SEMI[m[1]] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0); return 440 * Math.pow(2, (midi - 69) / 12); }
@@ -357,22 +360,41 @@
     A.hasMusic = true; A.stopBeat();
     const c = A.ctx, ev = parseTrack(def), spb = 60 / def.bpm, intro = def.intro || 0, t0 = c.currentTime + 0.12, bus = c.createGain();
     A.mbus.gain.cancelScheduledValues(c.currentTime); A.mbus.gain.setTargetAtTime(MG, c.currentTime, 0.03); bus.connect(A.mbus);
-    const st = { name, i: 0, base: t0, pass: 0, timer: 0, bus, outs: voiceOuts(c, def, bus), leave: false };
+    const st = { name, i: 0, base: t0, pass: 0, timer: 0, bus, outs: voiceOuts(c, def, bus), leave: false, errs: 0, net: 0 };
     const tick = () => {
       if (!A.ctx || A.curTrack !== st) return; const now = c.currentTime;
       if (st.leave && now >= t0 + intro * spb - 0.03) { const n = A._after; A._after = null; A.music(n && n !== name ? n : 'silence'); return; }
       if (now > st.base + def.beats * spb + 1) { if (intro) st.pass = 1; st.base = now + 0.1 - (st.pass ? intro * spb : 0); st.i = st.pass ? def._i0 : 0; } // onglet en veille : on repart proprement
-      let guard = 0;
+      // L'avance : plus d'une seconde, pour qu'une minuterie retardée ou un affichage qui peine ne fasse pas de trou.
+      // Courte pendant une intro : la piste qui suit la fanfare doit entrer au bon moment.
+      const avance = intro && !st.pass ? 0.3 : AVANCE; let guard = 0;
       while (guard++ < 600) {
         if (st.i >= ev.length) { if (def._i0 >= ev.length) return; st.base += (def.beats - intro) * spb; st.i = def._i0; st.pass++; }
-        const e = ev[st.i], t = st.base + e.t * spb; if (t > now + 0.3) break;
+        const e = ev[st.i], t = st.base + e.t * spb; if (t > now + avance) break;
         if (st.leave && !st.pass && e.t >= intro - 1e-6) break;               // on s'en va après l'intro : rien de la boucle n'est lancé
-        st.i++; if (t < now - 0.05) continue;
-        play(c, st.outs, def, e, t, spb);
+        st.i++; if (t < now - 0.25) { A.stats.sautees++; continue; }          // trop tard pour être juste : on la saute
+        play(c, st.outs, def, e, Math.max(t, now + 0.005), spb); A.stats.notes++;   // un peu en retard : jouée tout de suite
       }
+      if (st.errs && now - st.net > 20) { st.errs = 0; A.repos = 0; }          // vingt secondes sans incident : l'ardoise est effacée
     };
-    const sur = () => { try { tick(); } catch (e) { A.fails++; if (A.fails === 1) I.report(e, 'son (séquenceur)'); if (A.fails > 5) { clearInterval(st.timer); if (A.curTrack === st) A.curTrack = null; } } };
-    st.timer = setInterval(sur, 70); A.curTrack = st; sur();
+    // Un incident ne coupe plus la musique pour la séance : au sixième sur la même piste, elle se tait un moment, puis la veille la relance.
+    const sur = () => { try { tick(); } catch (e) { A.fails++; st.errs++; st.net = c.currentTime; if (A.fails === 1) I.report(e, 'son (séquenceur)'); if (st.errs > 5) { clearInterval(st.timer); if (A.curTrack === st) A.curTrack = null; souffler(); } } };
+    st.sur = sur; st.timer = setInterval(sur, 70); A.curTrack = st; sur();
+  };
+  // Après des incidents répétés : une pause qui s'allonge (15 s, 30 s… deux minutes au plus), jamais une coupure définitive.
+  function souffler() { A.repos = Math.min(120000, (A.repos || 7500) * 2); A.pauseJusqua = performance.now() + A.repos; }
+  // La musique du lieu : une carte, un écran, ou l'humeur que le récit pose (opération `mus`). Tout le reste est de passage
+  // (combat, fanfare, deuil, forge, pourparler) : A.back() ramène la piste du lieu, quelle qu'ait été la piste de passage.
+  A.scene = function (name) { A.place = name; A.music(name); };
+  A.back = function () { A.music(A.place || 'silence'); };
+  // Poussé à chaque image par la boucle d'affichage : le séquenceur ne dépend plus des seules minuteries. Et si aucune piste
+  // ne joue alors qu'une est voulue (contexte relancé, incident passé), elle repart.
+  let veille = 0;
+  A.pump = function () {
+    const st = A.curTrack; if (st) { st.sur(); return; }
+    if (!A.ctx || !A.mbus || !A.musicOn || A.ctx.state !== 'running') return;
+    const now = performance.now(); if (now - veille < 2000 || now < (A.pauseJusqua || 0)) return; veille = now;
+    const n = A.wantTrack; if (n && n !== 'silence' && I.music[n]) { A.stats.relances++; A.music(n); }
   };
   // battle.js pose `afterJingle` deux fois : avant la fanfare (la piste à reprendre), puis quand la carte de victoire se ferme.
   // Posé pendant que « victoire » joue, il veut dire « on s'en va » : la piste suivante entre dès que la fanfare est finie.
@@ -400,13 +422,17 @@
   A.stopBeat = function () { A.pendingRhythm = null; if (A.rhythm) { clearInterval(A.rhythm.timer); A.rhythm = null; } };
 
   // Le son ne doit jamais arrêter le jeu. Sur un appareil qui refuse une opération sonore, l'appel devient sans effet,
-  // l'incident est retenu une fois (page Diagnostic) et, s'il se répète, la musique se tait d'elle-même.
+  // l'incident est retenu une fois (page Diagnostic). Une piste qui ne démarre pas se tait un moment, puis la veille la
+  // relance : rien ne coupe plus la musique pour toute la séance, et un bruitage en échec ne la regarde pas.
   A.fails = 0;
-  ['unlock', 'setOn', 'sfx', 'beat', 'stopBeat', 'music', 'setMusic', 'dum', 'tek'].forEach(k => {
+  ['unlock', 'setOn', 'sfx', 'beat', 'stopBeat', 'music', 'setMusic', 'scene', 'back', 'pump', 'dum', 'tek'].forEach(k => {
     const fn = A[k]; if (typeof fn !== 'function') return;
     A[k] = function () {
       try { return fn.apply(A, arguments); }
-      catch (e) { A.fails++; if (A.fails === 1) I.report(e, 'son (' + k + ')'); if (A.fails === 6 && A.musicOn) { A.musicOn = false; try { if (A.curTrack) { clearInterval(A.curTrack.timer); A.curTrack = null; } } catch (x) { /* rien */ } } }
+      catch (e) {
+        A.fails++; if (A.fails === 1) I.report(e, 'son (' + k + ')');
+        if (k === 'music' || k === 'setMusic' || k === 'scene' || k === 'back') { try { if (A.curTrack) { clearInterval(A.curTrack.timer); A.curTrack = null; } } catch (x) { /* rien */ } souffler(); }
+      }
     };
   });
   { const d = Object.getOwnPropertyDescriptor(A, 'afterJingle'); if (d && d.set) Object.defineProperty(A, 'afterJingle', { configurable: true, enumerable: true, get: d.get, set(v) { try { d.set.call(A, v); } catch (e) { A._after = v || null; A.fails++; if (A.fails === 1) I.report(e, 'son (enchaînement)'); } } }); }

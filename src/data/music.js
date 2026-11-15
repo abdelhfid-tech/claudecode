@@ -112,11 +112,11 @@
     const p = 'D:3 G/D:3 | D | Bb/D | C/D | D:3 Gm/D:3 | D | Em7:3 A7sus:3 | A7 | G:3 D/F#:3 | Em:3 Bm:3 | Bb | Gm6:3 A7:3 | D | A/D | G/D:3 Gm/D:3 | D';
     const st = pads(p, 6, 'F#3'); for (let i = 0; i < 4; i++) st[i] = '-/6';
     R('chaine', { bpm: 132, beats: 96, voices: [
-      { wave: 'bell', vol: 0.42, notes: B(6, 'A5/2 G5/1 B5/2 A5/1', 'D6/5 -/1', 'Bb5/3 A5/2 F5/1', 'G5/3 E5/2 D5/1', 'A5/2 G5/1 Bb5/2 A5/1', 'D6/5 -/1', 'B5/2 A5/1 G5/2 E5/1', 'F#5/3 E5/3',
+      { wave: 'bell', vol: 0.5, notes: B(6, 'A5/2 G5/1 B5/2 A5/1', 'D6/5 -/1', 'Bb5/3 A5/2 F5/1', 'G5/3 E5/2 D5/1', 'A5/2 G5/1 Bb5/2 A5/1', 'D6/5 -/1', 'B5/2 A5/1 G5/2 E5/1', 'F#5/3 E5/3',
         'F#5/2 E5/1 D5/2 B4/1', 'G4/2 A4/1 B4/3', 'D5/2 F5/1 A5/3', 'G5/2 E5/1 C#5/3', 'D5/3 F#5/3', 'E5/6', 'B4/3 Bb4/3', 'A4/5 D5/1') },
-      { wave: 'harp', vol: 0.5, pan: -0.2, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/1 3/1 2/1 3/1 4/1 3/1', 3: '0/1 2/1 3/1' })) },
-      { wave: 'strings', vol: 0.22, pan: 0.2, notes: B(6, ...st) },
-      { wave: 'triangle', vol: 0.26, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/6', 3: '0/3' })) }
+      { wave: 'harp', vol: 0.6, pan: -0.2, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/1 3/1 2/1 3/1 4/1 3/1', 3: '0/1 2/1 3/1' })) },
+      { wave: 'strings', vol: 0.26, pan: 0.2, notes: B(6, ...st) },
+      { wave: 'triangle', vol: 0.3, notes: B(6, ...acc(p, 6, 'D2', { 6: '0/6', 3: '0/3' })) }
     ] });
   })();
 
@@ -257,12 +257,12 @@
   (function () {
     const p = 'Cm | Cm | Abm | Abm | Em | Em | G | Gaug | Cm | Abm | Em | Gaug | Cm | Abm | Em | G Gaug';
     R('noos', { bpm: 104, beats: 64, voices: [
-      { wave: 'bell', vol: 0.42, notes: B(4, 'G5/2 Eb5/2', 'D5/1 Eb5/1 G5/2', 'Ab5/2 Eb5/2', 'B4/1 Eb5/1 Ab5/2', 'G5/2 E5/2', 'F#5/1 G5/1 B5/2', 'D5/2 B4/2', 'B4/1 D#5/1 G5/2',
+      { wave: 'bell', vol: 0.58, notes: B(4, 'G5/2 Eb5/2', 'D5/1 Eb5/1 G5/2', 'Ab5/2 Eb5/2', 'B4/1 Eb5/1 Ab5/2', 'G5/2 E5/2', 'F#5/1 G5/1 B5/2', 'D5/2 B4/2', 'B4/1 D#5/1 G5/2',
         'C5/1 Eb5/1 G5/1 C6/1', 'B5/2 Ab5/1 Eb5/1', 'E5/1 G5/1 B5/2', 'G5/2 D#5/2', 'Eb5/2 D5/1 C5/1', 'Eb5/2 B4/2', 'E5/2 G5/1 F#5/1', 'D5/2 D#5/2') },
-      { wave: 'pulse', vol: 0.3, pan: -0.3, notes: B(4, ...acc(p, 4, '^C4', { 4: '0/.5 1/.5 2/.5 1/.5 3/.5 1/.5 2/.5 1/.5', 2: '0/.5 1/.5 2/.5 1/.5' })) },
-      { wave: 'pad', vol: 0.24, pan: 0.2, notes: B(4, ...pads(p, 4, 'G3')) },
-      { wave: 'bass', vol: 0.4, notes: B(4, ...acc(p, 4, 'C2', { 4: '0/1 -/.5 0/.5 0/1 -/1', 2: '0/1 -/.5 0/.5' })) },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('k/1 t/.5 h/.5 -/.5 h/.5 t/.5 h/.5', 16)) }
+      { wave: 'pulse', vol: 0.42, pan: -0.3, notes: B(4, ...acc(p, 4, '^C4', { 4: '0/.5 1/.5 2/.5 1/.5 3/.5 1/.5 2/.5 1/.5', 2: '0/.5 1/.5 2/.5 1/.5' })) },
+      { wave: 'pad', vol: 0.3, pan: 0.2, notes: B(4, ...pads(p, 4, 'G3')) },
+      { wave: 'bass', vol: 0.46, notes: B(4, ...acc(p, 4, 'C2', { 4: '0/1 -/.5 0/.5 0/1 -/1', 2: '0/1 -/.5 0/.5' })) },
+      { wave: 'drums', vol: 0.38, notes: B(4, ...N('k/1 t/.5 h/.5 -/.5 h/.5 t/.5 h/.5', 16)) }
     ] });
   })();
 
@@ -273,12 +273,12 @@
     const beat = { 4: '0/.5 0/.5 0/.5 0/.5 0/.5 0/.5 o/.5 0/.5', 2: '0/.5 0/.5 o/.5 0/.5' };
     const kit = 'k/1 h/.5 h/.5 s/1 h/.5 k/.5', fill = 'k/1 h/.5 h/.5 s/1 s/.25 s/.25 k/.5';
     R('cite', { bpm: 112, beats: 64, voices: [
-      { wave: 'pulse', vol: 0.46, notes: B(4, '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'A4/1 B4/2 -/1', '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'E4/1 G4/2 -/1', '-/.5 C5/.5 E5/1 G5/.5 E5/1 C5/.5', 'D5/1 E5/2 -/1', '-/.5 D5/.5 F#5/1 A5/.5 F#5/1 D5/.5', 'F#5/1 D#5/1 B4/2',
+      { wave: 'pulse', vol: 0.54, notes: B(4, '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'A4/1 B4/2 -/1', '-/.5 B4/.5 E5/1 D5/.5 B4/1 G4/.5', 'E4/1 G4/2 -/1', '-/.5 C5/.5 E5/1 G5/.5 E5/1 C5/.5', 'D5/1 E5/2 -/1', '-/.5 D5/.5 F#5/1 A5/.5 F#5/1 D5/.5', 'F#5/1 D#5/1 B4/2',
         'D5/2 B4/1 D5/1', 'F#5/2 A5/1 D5/1', 'G5/1.5 F#5/.5 E5/1 B4/1', 'G5/2 E5/2', 'E5/1 G5/1 B5/1.5 A5/.5', 'G5/2 D5/2', 'C5/1 E5/1 A5/1.5 G5/.5', 'F#5/2 D#5/1 B4/1') },
-      { wave: 'square', vol: 0.22, pan: -0.35, notes: B(4, ...acc(pA, 4, '^E4', arp), ...acc(pB, 4, '^E4', arp)) },
-      { wave: 'pad', vol: 0.22, pan: 0.25, notes: B(4, ...pads(pA.replace(/CM7/g, 'C'), 4, 'G3'), ...pads(pB, 4, 'G3')) },
-      { wave: 'bass', vol: 0.4, notes: B(4, ...acc(pA, 4, 'C2', beat), ...acc(pB, 4, 'C2', beat)) },
-      { wave: 'drums', vol: 0.34, notes: B(4, ...N(kit, 7), fill, ...N(kit, 7), fill) }
+      { wave: 'square', vol: 0.26, pan: -0.35, notes: B(4, ...acc(pA, 4, '^E4', arp), ...acc(pB, 4, '^E4', arp)) },
+      { wave: 'pad', vol: 0.25, pan: 0.25, notes: B(4, ...pads(pA.replace(/CM7/g, 'C'), 4, 'G3'), ...pads(pB, 4, 'G3')) },
+      { wave: 'bass', vol: 0.44, notes: B(4, ...acc(pA, 4, 'C2', beat), ...acc(pB, 4, 'C2', beat)) },
+      { wave: 'drums', vol: 0.38, notes: B(4, ...N(kit, 7), fill, ...N(kit, 7), fill) }
     ] });
   })();
 
@@ -467,12 +467,12 @@
   (function () {
     const p = 'AM7 | F#m7 | DM7 | Dm6 | A/C# | Bm7 | E7sus | E7sus | F#m7 | C#m7 | DM7 | A/C# | Bm7 | Dm6 | Aadd9 | Esus';
     R('rencontre', { bpm: 84, beats: 64, voices: [
-      { wave: 'bell', vol: 0.5, notes: B(4, '-/1 E5/1 A5/1 G#5/1', 'E5/2 C#5/2', '-/1 D5/1 F#5/1 A5/1', 'B5/2 A5/1 F5/1', 'E5/2 C#5/1 E5/1', 'D5/1 F#5/1 A5/2', 'E5/1 F#5/1 A5/1 B5/1', 'B5/3 -/1', ...N('-/4', 8)) },
-      { wave: 'flute', vol: 0.5, pan: 0.15, notes: B(4, ...N('-/4', 8), 'A4/2 C#5/1 E5/1', 'E5/2 B4/1 G#4/1', 'F#4/1 A4/1 C#5/2', 'E5/2 C#5/1 A4/1', 'D5/2 B4/1 D5/1', 'F5/2 D5/1 B4/1', 'C#5/2 B4/1 A4/1', 'A4/2 B4/2') },
-      { wave: 'square', vol: 0.24, pan: -0.3, notes: B(4, ...acc(p.replace(/DM7/g, 'Dadd9'), 4, '^A3', { 4: '0/.5 1/.5 2/.5 3/.5 2/.5 1/.5 2/.5 1/.5' })) },
-      { wave: 'pad', vol: 0.22, pan: 0.2, notes: B(4, ...pads(p.replace('AM7', 'A').replace(/DM7/g, 'D'), 4, 'E3')) },
-      { wave: 'triangle', vol: 0.24, notes: B(4, ...acc(p, 4, 'D2', { 4: '0/2.5 0/.5 0/1' })) },
-      { wave: 'drums', vol: 0.3, notes: B(4, ...N('-/1 h/1 -/1 h/1', 16)) }
+      { wave: 'bell', vol: 0.64, notes: B(4, '-/1 E5/1 A5/1 G#5/1', 'E5/2 C#5/2', '-/1 D5/1 F#5/1 A5/1', 'B5/2 A5/1 F5/1', 'E5/2 C#5/1 E5/1', 'D5/1 F#5/1 A5/2', 'E5/1 F#5/1 A5/1 B5/1', 'B5/3 -/1', ...N('-/4', 8)) },
+      { wave: 'flute', vol: 0.64, pan: 0.15, notes: B(4, ...N('-/4', 8), 'A4/2 C#5/1 E5/1', 'E5/2 B4/1 G#4/1', 'F#4/1 A4/1 C#5/2', 'E5/2 C#5/1 A4/1', 'D5/2 B4/1 D5/1', 'F5/2 D5/1 B4/1', 'C#5/2 B4/1 A4/1', 'A4/2 B4/2') },
+      { wave: 'square', vol: 0.31, pan: -0.3, notes: B(4, ...acc(p.replace(/DM7/g, 'Dadd9'), 4, '^A3', { 4: '0/.5 1/.5 2/.5 3/.5 2/.5 1/.5 2/.5 1/.5' })) },
+      { wave: 'pad', vol: 0.27, pan: 0.2, notes: B(4, ...pads(p.replace('AM7', 'A').replace(/DM7/g, 'D'), 4, 'E3')) },
+      { wave: 'triangle', vol: 0.3, notes: B(4, ...acc(p, 4, 'D2', { 4: '0/2.5 0/.5 0/1' })) },
+      { wave: 'drums', vol: 0.36, notes: B(4, ...N('-/1 h/1 -/1 h/1', 16)) }
     ] });
   })();
 })();
