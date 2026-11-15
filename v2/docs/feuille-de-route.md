@@ -2,6 +2,18 @@
 
 *Plan approuvé par le décideur le 15 novembre. Il se tient à jour : chaque chantier terminé y est noté.*
 
+## Avancement
+
+| Lot | État | Ce qui a été vérifié |
+|---|---|---|
+| 0 — geler la 1.31, ouvrir `v2/` | **fait** le 15 novembre (commit `e42c1a9`) | toute la batterie sur la copie, sans anomalie ni erreur console ; compte rendu du parcours automatique identique à celui de la 1.31, au hasard des combats près ; `gel.js` : 37 fichiers conformes |
+| 1.1 — le validateur en module | **fait** le 15 novembre | même sortie qu'avant sur tout le contenu ; huit copies fautives d'une saga et une de la musique refusées avec les mêmes messages par la 1.31 et par la 2.0 |
+| 1.2 — les paquets, les lieux par gabarit | à faire | |
+| 1.3 — les livres | à faire | |
+| 1.4 — la partie du joueur | à faire | |
+| 1.5 — le personnage du joueur | à faire | |
+| 1.6 — la preuve par un paquet d'essai | à faire | |
+
 ## Contexte
 
 Le décideur prépare la suite du jeu et pose une règle nette :
@@ -78,14 +90,16 @@ Six lots. Chacun est livré, testé par toute la batterie de la 2.0, contrôlé 
 
 ### 1.1 Le validateur devient un module
 
-- `v2/tools/regles.js` : les règles de `validate.js` (`checkSaga`, contrôle de l'équipement) et de
-  `validate-music.js`, en fonctions pures (`verifierSaga`, `verifierEquipement`, `verifierPiste`, `verifierPaquet`),
-  sans accès au disque. Chargeable par Node et par un navigateur, comme `src/core/defs.js` l'est déjà : la page
-  d'administration s'en servira telle quelle.
+- `v2/src/core/regles.js` : les règles de `validate.js` (`checkSaga`, contrôle de l'équipement) et de
+  `validate-music.js`, en fonctions pures (`verifierSaga`, `verifierEquipement`, `verifierPistes`, `verifierEnsemble`,
+  puis `verifierPaquet` au lot 1.2), sans accès au disque. Chargeable par Node et par un navigateur, comme
+  `src/core/defs.js` l'est déjà : la page d'administration s'en servira telle quelle. *(Réalisé : le module est rangé
+  avec le moteur plutôt qu'avec les outils, pour que le jeu lui-même contrôle un paquet avant de le poser.)*
 - `v2/tools/validate.js` reste la commande : mêmes lignes ✓ et ✗, même code de sortie. Sans argument, elle contrôle
   tout le contenu, cadre, veillées et contenu commun compris.
 - Contrôles ajoutés : `after` désigne une saga qui existe ; `order` est unique dans son livre ; le livre et le lieu
-  d'un chapitre sont déclarés.
+  d'un chapitre sont déclarés. *(Réalisé : les deux premiers ici, dans le contrôle d'ensemble ; le lieu l'était déjà ;
+  le livre déclaré vient avec le lot 1.3.)*
 
 ### 1.2 Les paquets
 

@@ -901,6 +901,14 @@ après un premier plan qui modifiait le moteur actuel :
   À la relecture, non : l'exigence vise ce que l'on frappe, les compétences et les sprites, et un héros du jeu porte déjà
   le prénom 'Abd ar-Rahmân. Je propose donc de refuser seulement le Nom divin employé seul, les noms que le validateur
   interdit déjà et ceux des héros du jeu. La question des noms des prophètes reste au décideur.
+- [ ] **D137. Les règles du contenu en un module (lot 1.1).** Les règles de `validate.js` et de `validate-music.js` sont
+  sorties de leurs scripts, mot pour mot, dans `v2/src/core/regles.js` : des fonctions sans accès au disque, que chargent
+  la commande de contrôle, le jeu et, plus tard, la page d'administration. Le module est rangé avec le moteur pour que
+  le jeu contrôle lui-même un paquet avant de le poser. Deux contrôles d'ensemble s'ajoutent : `after` désigne une saga
+  qui existe ; `order` est unique dans son livre. Preuve : même sortie qu'avant sur tout le contenu ; huit copies
+  fautives d'une saga et une de la musique sont refusées avec les mêmes messages par la 1.31 et par la 2.0. Constat au
+  passage : le validateur de la 1.31 laisse passer un égrégore qui fixerait ses points de vie (`hp`), que le moteur
+  ignore de toute façon ; la 2.0 le refusera dans un paquet.
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
