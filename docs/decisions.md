@@ -942,6 +942,16 @@ après un premier plan qui modifiait le moteur actuel :
   livre s'ouvrent dès le prologue passé, comme ceux du livre I ; le grand bouton propose d'abord le livre I, puis le
   dernier maillon, puis les autres livres ; au dernier maillon d'un autre livre, la Chaîne dit « Le livre II est
   achevé. » ; une saga ajoutée n'a ni veillée du Caïd ni rencontre de la Cité-Miroir.
+- [ ] **D144. La partie du joueur (lot 1.4).** Une partie de la 2.0 est au format 2 : les champs de la 1.31, plus le
+  profil du personnage et les paquets posés quand elle a été écrite. Une fonction de mise à jour (`migrer`) relit le
+  format 1 ; un format plus récent est refusé. La partie s'exporte en un texte — fichier `isnad-partie.json`, ou texte à
+  copier là où le téléchargement est bloqué — depuis la Chaîne et la halte, et se réimporte depuis l'écran-titre, après
+  contrôle et confirmation. Une partie venue d'ailleurs n'est pas crue sur parole : taille, format et forme de chaque
+  champ sont contrôlés avant quoi que ce soit. Une partie qui cite un paquet absent se charge : le point de reprise est
+  levé s'il le faut, une pièce inconnue passe à la réserve, le joueur est prévenu, rien n'est perdu. La 2.0 ne lit ni
+  n'écrit les clés de la 1.31 ; elle sait relire une partie au format de la 1.31 si on la lui donne. Le bouton
+  « Importer une partie » est dans un coin de l'écran-titre, hors de la colonne : celle-ci garde, à chaque taille
+  d'écran, la hauteur qu'elle a dans la 1.31.
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 

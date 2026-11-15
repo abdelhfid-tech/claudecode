@@ -9,8 +9,8 @@
 | 0 — geler la 1.31, ouvrir `v2/` | **fait** le 15 novembre (commit `e42c1a9`) | toute la batterie sur la copie, sans anomalie ni erreur console ; compte rendu du parcours automatique identique à celui de la 1.31, au hasard des combats près ; `gel.js` : 37 fichiers conformes |
 | 1.1 — le validateur en module | **fait** le 15 novembre (commit `91f1e3b`) | même sortie qu'avant sur tout le contenu ; huit copies fautives d'une saga et une de la musique refusées avec les mêmes messages par la 1.31 et par la 2.0 |
 | 1.2 — les paquets, les lieux par gabarit | **fait** le 15 novembre (commit `00b4617`) | les 65 cartes que le contenu demande, identiques à celles de la 1.31 (`cartes.js`) ; le paquet d'essai contrôlé, assemblé à part et joué de trois façons, 21 copies fautives refusées pour la bonne raison, 5 paquets fautifs refusés par le jeu sans l'arrêter (`paquet.js`) ; toute la batterie du jeu de base, sans anomalie |
-| 1.3 — les livres | **fait** le 15 novembre | l'écran de la Chaîne identique à celui de la 1.31 en huit moments, du prologue à la Chaîne transmise (`ecrans.js`) ; dans le jeu d'essai, deux livres rangés sous leur titre, le dernier maillon ouvert par les seuls maillons du livre I, 24 copies fautives refusées (`paquet.js`) ; toute la batterie du jeu de base, sans anomalie |
-| 1.4 — la partie du joueur | à faire | |
+| 1.3 — les livres | **fait** le 15 novembre (commit `01a5cd9`) | l'écran de la Chaîne identique à celui de la 1.31 en huit moments, du prologue à la Chaîne transmise (`ecrans.js`) ; dans le jeu d'essai, deux livres rangés sous leur titre, le dernier maillon ouvert par les seuls maillons du livre I, 24 copies fautives refusées (`paquet.js`) ; toute la batterie du jeu de base, sans anomalie |
+| 1.4 — la partie du joueur | **fait** le 15 novembre | par les vrais boutons : une partie exportée (texte et fichier), effacée, réimportée à l'identique, reprise au milieu d'un chapitre ; dix textes qui ne sont pas des parties refusés sans rien changer ; une partie de la 1.31 acceptée et remise à jour ; les clés de la 1.31 intactes (`partie.js`) ; une partie faite avec le paquet d'essai portée dans le jeu livré puis rapportée, sans rien perdre (`paquet.js`) ; toute la batterie, sans anomalie |
 | 1.5 — le personnage du joueur | à faire | |
 | 1.6 — la preuve par un paquet d'essai | à faire | |
 
@@ -152,6 +152,11 @@ celui de la 1.31 pour prouver que rien ne se voit tant qu'il n'y a qu'un livre.
 - Une partie qui cite un paquet absent se charge quand même : la saga manquante est masquée, rien ne plante.
 - Les parties de la 1.31 restent dans la 1.31. La 2.0 saura lire leur format, pour le jour où les deux versions
   seront servies par le même site ; elle ne les modifie jamais.
+
+*Réalisé (15 novembre).* Comme prévu. Trois précisions : une partie importée n'est pas crue sur parole (taille, format
+et forme de chaque champ sont contrôlés avant quoi que ce soit) ; le profil est une case vide, que le lot 1.5 remplit ;
+« Importer une partie » est dans un coin de l'écran-titre plutôt que dans la colonne, qui ne tient déjà plus sur un
+petit écran dès qu'on lui ajoute un bouton.
 
 ### 1.5 Le personnage du joueur
 

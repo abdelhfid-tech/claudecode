@@ -119,9 +119,13 @@
   window.addEventListener('keyup', e => { const a = KEY[e.code]; if (a && a in held) held[a] = false; });
   window.addEventListener('blur', () => I.input.clearHeld());
 
-  /* ---------- sauvegarde ---------- */
+  /* ---------- sauvegarde ----------
+     Format 2 (ISNAD 2.0). Une partie porte son format (v), le profil du joueur et les paquets posés quand elle a été écrite.
+     Lue, une partie d'un format plus ancien est remise à jour (migrer) ; d'un format plus récent, elle est refusée. Elle
+     s'exporte en un texte, que l'on garde ou que l'on porte ailleurs, et se réimporte après contrôle. */
+  const FORMAT = 2;
   function fresh() {
-    return { v: 1, started: false, prologue: false, epilogue: false, lights: [], sagas: {}, heroes: {},
+    return { v: FORMAT, profil: {}, paquets: {}, started: false, prologue: false, epilogue: false, lights: [], sagas: {}, heroes: {},
       items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, gear: {}, equip: {}, gearInit: {}, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
       opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 } };
   }
@@ -129,9 +133,49 @@
   // emplacements de la mosquée restent, pour qui veut garder une copie. Les options, elles, se gardent à part.
   // La 2.0 a ses propres clés : elle ne lit ni n'écrit jamais celles de la 1.31 (isnad.auto.v1, isnad.slot.N, isnad.opts.v1).
   const OKEY = 'isnad2.opts', SLOT = n => 'isnad2.slot.' + n, AKEY = 'isnad2.auto';
+  const estObjet = v => !!v && typeof v === 'object' && !Array.isArray(v), naturel = v => Number.isInteger(v) && v >= 0;
+  // Remet une partie au format courant, sans toucher à ce qu'on lui donne. → la partie, ou null si elle n'est pas lisible.
+  // Le format 1 est celui de la 1.31 et des premiers assemblages de la 2.0 : les mêmes champs, sans profil ni paquets.
+  function migrer(d) {
+    if (!estObjet(d)) return null;
+    const p = Object.assign({}, d); if (p.v === 1) p.v = 2;
+    if (p.v !== FORMAT) return null;
+    if (!estObjet(p.profil)) p.profil = {}; if (!estObjet(p.paquets)) p.paquets = {};
+    return p;
+  }
+  // Ce qui, dans une partie venue d'ailleurs, n'a pas la forme attendue. Un champ absent prendra sa valeur de départ ; un
+  // champ d'une autre forme ferait trébucher le jeu : la partie est alors refusée. → [champs fautifs]
+  function controler(d) {
+    const E = [], objet = k => { if (d[k] === undefined) return false; if (!estObjet(d[k])) { E.push(k); return false; } return true; };
+    ['started', 'prologue', 'epilogue'].forEach(k => { if (d[k] !== undefined && typeof d[k] !== 'boolean') E.push(k); });
+    if (d.lights !== undefined && (!Array.isArray(d.lights) || d.lights.some(l => !D.ELEMENTS[l]))) E.push('lights');
+    if (d.codex !== undefined && (!Array.isArray(d.codex) || d.codex.some(c => typeof c !== 'string'))) E.push('codex');
+    if (objet('sagas')) Object.keys(d.sagas).forEach(k => { const s = d.sagas[k]; if (!estObjet(s) || !naturel(s.ch) || (s.flags !== undefined && !estObjet(s.flags))) E.push('sagas.' + k); });
+    if (objet('heroes')) Object.keys(d.heroes).forEach(k => { const h = d.heroes[k]; if (!estObjet(h) || !(Number.isInteger(h.lvl) && h.lvl >= 1 && h.lvl <= 99) || typeof h.xp !== 'number') E.push('heroes.' + k); });
+    ['items', 'gear'].forEach(t => { if (objet(t)) Object.keys(d[t]).forEach(k => { if (!naturel(d[t][k])) E.push(t + '.' + k); }); });
+    if (objet('equip')) Object.keys(d.equip).forEach(k => { const e = d.equip[k]; if (!estObjet(e) || Object.keys(e).some(s => typeof e[s] !== 'string')) E.push('equip.' + k); });
+    ['gearInit', 'veillees', 'rencontres', 'citadel', 'parley', 'isnad', 'meta', 'profil', 'paquets'].forEach(k => { objet(k); });
+    if (estObjet(d.isnad) && !(naturel(d.isnad.ok) && naturel(d.isnad.total))) E.push('isnad');
+    if (d.cp !== undefined && d.cp !== null) { const c = d.cp; if (!estObjet(c) || typeof c.saga !== 'string' || !naturel(c.ci) || !naturel(c.obj) || typeof c.map !== 'string' || !Array.isArray(c.party) || c.party.some(x => typeof x !== 'string')) E.push('cp'); }
+    return E;
+  }
+  // Une partie peut citer un contenu qui n'est pas dans ce jeu : un paquet retiré, ou pas encore reçu. Rien n'est effacé : ce
+  // qui en dépend est mis de côté, et se retrouve quand le contenu revient. → { paquets: [absents], reprise, pieces }
+  function assainir(d) {
+    const A = { paquets: Object.keys(d.paquets || {}).filter(k => !I.paquets[k]), reprise: false, pieces: 0 };
+    // le point de reprise : dans une saga, un chapitre et un lieu que ce jeu connaît — sinon on reprend à la Chaîne
+    const c = d.cp; if (c && !(I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci] && D.MAPS[c.map])) { d.cp = null; A.reprise = true; }
+    // l'équipement porté : une pièce inconnue retourne à la réserve, où elle attend sans gêner
+    Object.keys(d.equip || {}).forEach(k => { const e = d.equip[k]; Object.keys(e).forEach(s => { const id = e[s]; if (D.GEAR[id]) return; delete e[s]; d.gear[id] = (d.gear[id] || 0) + 1; A.pieces++; }); });
+    return A;
+  }
+  // les paquets posés au moment où la partie s'écrit
+  const marquer = d => { d.v = FORMAT; d.paquets = {}; Object.keys(I.paquets).forEach(k => { d.paquets[k] = I.paquets[k].version; }); return d; };
+  const lire = cle => { try { return migrer(JSON.parse(localStorage.getItem(cle) || 'null')); } catch (e) { return null; } };
   I.save = {
     data: fresh(),
-    slots() { return [1, 2, 3].map(n => { try { const d = JSON.parse(localStorage.getItem(SLOT(n)) || 'null'); return d && d.v === 1 ? d : null; } catch (e) { return null; } }); },
+    avis: null,   // ce que la dernière partie adoptée citait d'absent (assainir) ; l'écran qui suit le dit au joueur
+    slots() { return [1, 2, 3].map(n => lire(SLOT(n))); },
     load() {
       try {
         const o = JSON.parse(localStorage.getItem(OKEY) || 'null'); if (o) Object.assign(this.data.opts, o);
@@ -139,15 +183,40 @@
       return this.slots().some(Boolean);
     },
     store() { try { localStorage.setItem(OKEY, JSON.stringify(this.data.opts)); } catch (e) { /* ignore */ } },
-    write(n, meta) { this.data.meta = Object.assign({ when: Date.now() }, meta || {}); this.data.started = true; try { localStorage.setItem(SLOT(n), JSON.stringify(this.data)); return true; } catch (e) { return false; } },
-    read(n) { const d = this.slots()[n - 1]; if (!d) return false; const o = this.data.opts; this.data = Object.assign(fresh(), d); this.data.opts = o; return true; },
-    reset() { const o = this.data.opts; this.data = fresh(); this.data.opts = Object.assign(this.data.opts, o); },
-    // sauvegarde automatique : l'état au dernier point de reprise. Même format que les emplacements (v: 1).
+    write(n, meta) { this.data.meta = Object.assign({ when: Date.now() }, meta || {}); this.data.started = true; try { localStorage.setItem(SLOT(n), JSON.stringify(marquer(this.data))); return true; } catch (e) { return false; } },
+    read(n) { const d = this.slots()[n - 1]; return d ? this.adopter(d) : false; },
+    // adopte une partie lue : au format courant, avec les options de cet appareil, et sans renvoi vers un contenu absent
+    adopter(d) { const o = this.data.opts; this.data = Object.assign(fresh(), d); this.data.opts = o; this.avis = assainir(this.data); return true; },
+    reset() { const o = this.data.opts; this.data = fresh(); this.data.opts = Object.assign(this.data.opts, o); this.avis = null; },
+    // sauvegarde automatique : l'état au dernier point de reprise. Même format que les emplacements.
     auto(label) { if (!this.data.started) return false; this.data.meta = { when: Date.now(), auto: true, label: label || (this.data.meta && this.data.meta.label) || '' };
-      try { localStorage.setItem(AKEY, JSON.stringify(this.data)); this.autoAt = Date.now(); return true; } catch (e) { this.autoKo = true; return false; } },
-    autoGet() { try { const d = JSON.parse(localStorage.getItem(AKEY) || 'null'); return d && d.v === 1 && d.started ? d : null; } catch (e) { return null; } },
-    readAuto() { const d = this.autoGet(); if (!d) return false; const o = this.data.opts; this.data = Object.assign(fresh(), d); this.data.opts = o; return true; },
-    clearAuto() { try { localStorage.removeItem(AKEY); } catch (e) { /* ignore */ } }
+      try { localStorage.setItem(AKEY, JSON.stringify(marquer(this.data))); this.autoAt = Date.now(); return true; } catch (e) { this.autoKo = true; return false; } },
+    autoGet() { const d = lire(AKEY); return d && d.started ? d : null; },
+    readAuto() { const d = this.autoGet(); return d ? this.adopter(d) : false; },
+    clearAuto() { try { localStorage.removeItem(AKEY); } catch (e) { /* ignore */ } },
+    // les maillons achevés d'une partie : des sagas de la Chaîne — ni l'histoire-cadre ni les veillées, qui y tiennent aussi leur compte
+    maillons(d) { return Object.keys((d || this.data).sagas || {}).filter(k => (d || this.data).sagas[k].done && !(I.sagas[k] && I.sagas[k].frame)); },
+    /* ----- porter sa partie ailleurs -----
+       exporter() rend un texte : la partie, son format, la version du jeu et la date. Les options (son, rendu, taille du
+       texte) restent à l'appareil. lireTexte() contrôle un texte reçu sans rien changer ; adopter() fait le reste. */
+    FORMAT,
+    exporter() { const d = Object.assign({}, marquer(this.data)); delete d.opts; return JSON.stringify({ isnad: 'partie', format: FORMAT, jeu: window.ISNAD_VERSION || '', quand: Date.now(), partie: d }); },
+    // → { ok: false, erreur } ou { ok: true, partie, resume: { etiquette, quand, lumieres, maillons, absents, format } }
+    lireTexte(texte) {
+      if (typeof texte !== 'string' || !texte.trim()) return { ok: false, erreur: 'Il n’y a rien à lire.' };
+      if (texte.length > 2000000) return { ok: false, erreur: 'Ce texte est trop long pour être une partie.' };
+      let o; try { o = JSON.parse(texte); } catch (e) { return { ok: false, erreur: 'Ce n’est pas une partie d’ISNAD : le texte est incomplet ou abîmé.' }; }
+      const nue = estObjet(o) && o.isnad !== 'partie' && o.v !== undefined, brut = nue ? o : (estObjet(o) && o.isnad === 'partie' ? o.partie : null);
+      if (!estObjet(brut)) return { ok: false, erreur: 'Ce n’est pas une partie d’ISNAD.' };
+      const format = brut.v;
+      if (Number.isInteger(format) && format > FORMAT) return { ok: false, erreur: 'Cette partie vient d’une version plus récente du jeu (format ' + format + '). Ce jeu lit jusqu’au format ' + FORMAT + '.' };
+      const d = migrer(brut); if (!d) return { ok: false, erreur: 'Le format de cette partie n’est pas reconnu.' };
+      const fautes = controler(d); if (fautes.length) return { ok: false, erreur: 'Cette partie est abîmée (' + fautes.slice(0, 4).join(', ') + (fautes.length > 4 ? '…' : '') + ').' };
+      delete d.opts; d.started = true;
+      const faits = I.save.maillons(d);
+      return { ok: true, partie: d, resume: { etiquette: (d.meta && typeof d.meta.label === 'string' && d.meta.label) || '', quand: (d.meta && typeof d.meta.when === 'number' && d.meta.when) || (estObjet(o) && typeof o.quand === 'number' ? o.quand : 0),
+        lumieres: (d.lights || []).filter(l => l !== 'sabr').length, maillons: faits.length, inconnus: faits.filter(k => !I.sagas[k]).length, absents: Object.keys(d.paquets).filter(k => !I.paquets[k]), format } };
+    }
   };
 
   /* ---------- son : percussions (duff) et bruitages brefs ; la bande-son est plus bas. Aucune voix, aucune nappe de fond

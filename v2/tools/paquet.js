@@ -229,6 +229,59 @@ const url = 'file://' + path.join(out, 'index.html');
   }
   sansErreur('en visitant les lieux'); await page.close();
 
+  // La partie et le paquet. Une partie faite avec le paquet — sa saga achevée, une de ses pièces portée, un point de reprise
+  // dans l'un de ses lieux — est portée dans le jeu livré, qui n'a pas ce paquet : rien ne casse, le joueur est prévenu,
+  // rien n'est perdu. Rapportée dans le jeu d'essai, tout y est encore.
+  if ((P.sagas || []).length && fs.existsSync(path.join(V2, 'index.html'))) {
+    const s0 = P.sagas[0];
+    page = await mkPage(); await jouer(page, s0.id, 'auto');
+    const exp = await page.evaluate(([pid, sid, pieces]) => { const I = window.ISNAD, W = I.world, Gr = I.gear, sv = I.save.data; W.saga = I.sagas[sid]; W.roster = {};
+      let porte = null; pieces.forEach(id => { if (porte) return; const h = Object.keys(W.saga.heroes).map(k => W.hero(k)).find(x => Gr.can(x.def, id)); if (!h) return; Gr.add(id, 1); if (Gr.put(h, Gr.slotOf(id), id)) porte = { id, qui: Gr.key(h) }; });
+      const lieu = I.paquets[pid].lieux[0] || null;
+      if (lieu) sv.cp = { saga: sid, ci: 0, obj: 0, map: lieu, opts: {}, pos: I.D.MAPS[lieu].spots[0], party: W.saga.chapters[0].party.slice(), npcs: {}, foes: [], chests: [], flags: {} };
+      const total = id => (sv.gear[id] || 0) + Object.keys(sv.equip).filter(k => Object.keys(sv.equip[k]).some(s => sv.equip[k][s] === id)).length;
+      return { texte: I.save.exporter(), porte, lieu, pieces: pieces.reduce((o, id) => { o[id] = total(id); return o; }, {}), objets: Object.assign({}, sv.items), fait: !!sv.sagas[sid].done, lumieres: sv.lights.slice().sort() }; }, [P.id, s0.id, Object.keys(P.equipement || {})]);
+    await page.close();
+    // dans le jeu livré, sans le paquet
+    const ctxB = await browser.newContext({ viewport: { width: 960, height: 540 } }), pb = await ctxB.newPage();
+    pb.on('pageerror', e => errors.push('pageerror: ' + e.message)); pb.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
+    await pb.goto('file://' + path.join(V2, 'index.html')); await pb.waitForTimeout(1700);
+    const lu = await pb.evaluate(async ([texte, pieces]) => { const I = window.ISNAD, W = I.world, r = I.save.lireTexte(texte); if (!r.ok) return { ok: false, erreur: r.erreur };
+      I.audio.setOn(false); I.speed = 40; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
+      I.save.adopter(r.partie); const A = JSON.parse(JSON.stringify(I.save.avis)), sv = I.save.data; await I.ui.resume();
+      const total = id => (sv.gear[id] || 0) + Object.keys(sv.equip).filter(k => Object.keys(sv.equip[k]).some(s => sv.equip[k][s] === id)).length;
+      const vu = { ok: true, absents: r.resume.absents, avis: A, cp: sv.cp, portees: pieces.filter(id => JSON.stringify(sv.equip).includes('"' + id + '"')), pieces: pieces.reduce((o, id) => { o[id] = total(id); return o; }, {}), objets: Object.assign({}, sv.items),
+        chaine: !document.querySelector('#chain').hidden, accueil: document.querySelector('#chain header p').textContent, maillons: Array.from(document.querySelectorAll('#chain .links h3')).map(e => e.textContent), paquetsDuJeu: Object.keys(I.paquets) };
+      // et le jeu de base se joue, avec dans la réserve des pièces qu'il ne connaît pas : halte, équipement, un chapitre entier
+      const log = I.debug.log = []; I.debug.auto = true; let pages = 0; try { ['equip', 'codex', 'mal'].forEach(m => { I.ui.pause(m); pages++; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.ui.menuOpen = false; }); } catch (e) { vu.halte = e.message; }
+      document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); W.roster = {}; W.saga = null; I.ui.startSaga(I.sagas.abubakr);
+      vu.joue = await new Promise(res => { const t0 = Date.now(), iv = setInterval(() => { if (!document.querySelector('#chain').hidden) { clearInterval(iv); res(true); } else if (Date.now() - t0 > 200000) { clearInterval(iv); res(false); } }, 100); });
+      vu.log = log.filter(l => /BLOQUÉ|INACCESSIBLE|ABSENT|ERR /.test(l)); vu.pages = pages; vu.retour = I.save.exporter(); return vu; }, [exp.texte, Object.keys(P.equipement || {})]);
+    await ctxB.close();
+    if (!lu.ok) ko(`REFUS le jeu livré refuse une partie faite avec le paquet : ${lu.erreur}`);
+    else {
+      if (lu.paquetsDuJeu.length) ko(`ÉCART le jeu livré porte déjà des paquets (${lu.paquetsDuJeu.join(', ')}) : l'essai ne prouve rien`);
+      if (!lu.absents.includes(P.id) || !lu.avis.paquets.includes(P.id)) ko(`ÉCART le jeu livré ne dit pas que le paquet ${P.id} manque : ${JSON.stringify(lu.avis)}`);
+      else if (exp.lieu && (lu.cp || !lu.avis.reprise || !lu.chaine)) ko(`ÉCART point de reprise dans un lieu absent : ${JSON.stringify({ cp: lu.cp, reprise: lu.avis.reprise, chaine: lu.chaine })}`);
+      else if (lu.portees.length) ko(`ÉCART une pièce inconnue est restée portée : ${lu.portees.join(', ')}`);
+      else if (JSON.stringify(lu.pieces) !== JSON.stringify(exp.pieces) || Object.keys(P.objets || {}).some(k => (lu.objets[k] || 0) !== (exp.objets[k] || 0))) ko(`ÉCART des objets ou des pièces du paquet ont été perdus : ${JSON.stringify(lu.pieces)} / ${JSON.stringify(exp.pieces)}`);
+      else if (lu.maillons.some(n => (P.sagas || []).some(s => s.name === n))) ko('ÉCART la Chaîne du jeu livré montre une saga du paquet');
+      else ok(`une partie faite avec le paquet, portée dans le jeu livré qui ne l'a pas : acceptée, rien de perdu${exp.porte ? ', la pièce portée (' + exp.porte.id + ') mise en réserve' : ''}${exp.lieu ? ', reprise à la Chaîne' : ''} — « ${lu.accueil.slice(0, 150)} »`);
+      if (lu.halte || !lu.joue || lu.log.length) ko(`BLOQUÉ avec cette partie, le jeu livré ne se joue plus : ${lu.halte || lu.log.join(' ; ') || 'le premier maillon ne se termine pas'}`);
+      else ok(`avec cette partie, le jeu livré se joue : ${lu.pages} pages de la halte ouvertes, le premier maillon joué jusqu'au bout`);
+      sansErreur('dans le jeu livré, avec une partie qui cite le paquet');
+      // et retour dans le jeu d'essai : ce qui avait été mis de côté est là
+      page = await mkPage();
+      const re = await page.evaluate(([texte, sid, pieces]) => { const I = window.ISNAD, r = I.save.lireTexte(texte); if (!r.ok) return { ok: false, erreur: r.erreur }; I.save.adopter(r.partie); const sv = I.save.data, A = I.save.avis;
+        const total = id => (sv.gear[id] || 0) + Object.keys(sv.equip).filter(k => Object.keys(sv.equip[k]).some(s => sv.equip[k][s] === id)).length;
+        return { ok: true, absents: A.paquets, fait: !!(sv.sagas[sid] && sv.sagas[sid].done), pieces: pieces.reduce((o, id) => { o[id] = total(id); return o; }, {}), objets: Object.assign({}, sv.items), lumieres: sv.lights.slice().sort(), base: !!(sv.sagas.abubakr && sv.sagas.abubakr.done) }; }, [lu.retour, s0.id, Object.keys(P.equipement || {})]);
+      if (!re.ok) ko(`REFUS la partie ne revient pas dans le jeu d'essai : ${re.erreur}`);
+      else if (re.absents.length || !re.fait || !re.base || JSON.stringify(re.pieces) !== JSON.stringify(exp.pieces) || Object.keys(P.objets || {}).some(k => (re.objets[k] || 0) < (exp.objets[k] || 0))) ko(`ÉCART de retour dans le jeu d'essai, quelque chose manque : ${JSON.stringify(re)}`);
+      else ok(`rapportée dans le jeu d'essai : la saga du paquet est toujours achevée, ses pièces et ses objets sont là, et le maillon joué entre-temps aussi`);
+      sansErreur('de retour dans le jeu d’essai'); await page.close();
+    }
+  }
+
   // un paquet fautif est refusé par le jeu, qui continue : cinq essais, puis un chapitre du jeu de base
   page = await mkPage();
   const refus = await page.evaluate(P => { const I = window.ISNAD, D = I.D, t = () => JSON.stringify([Object.keys(D.MAPS), Object.keys(D.GEAR), Object.keys(D.ITEMS), D.GEAR_SHOPS, D.TRACKS, D.LIVRES, Object.keys(I.sagas), I.sagaList.length, Object.keys(I.music)]), avant = t(), n0 = I.refuses.length;

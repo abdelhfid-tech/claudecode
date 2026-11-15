@@ -104,6 +104,9 @@
     btns.push(mk('Texte : ' + TZ[sv.opts.tz || 0], b => { sv.opts.tz = ((sv.opts.tz || 0) + 1) % 3; I.save.store(); U.applyOpts(); b.textContent = 'Texte : ' + TZ[sv.opts.tz]; }));
     btns.push(mk('Plein écran', () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } }));
     { const v = $('#title .ver'); if (v) v.textContent = 'version ' + (window.ISNAD_VERSION || 'de travail'); }
+    // importer une partie : dans un coin, hors de la colonne — l'écran-titre garde la hauteur qu'il a toujours eue
+    { let coin = $('#title .coin'); if (!coin) { coin = I.el('div', 'coin'); $('#title').appendChild(coin); } coin.innerHTML = '';
+      const b = I.el('button', '', 'Importer une partie'); b.type = 'button'; tapable(b, () => { I.audio.unlock(); close(); U.partie('importer', () => U.showTitle()); }); coin.appendChild(b); btns.push(b); }
     screen('#title', true); fl = focusList(btns);
   };
   const slotLabel = (d, n) => d ? `Emplacement ${n} · ${I.esc((d.meta && d.meta.label) || 'Partie')} · ${new Date((d.meta && d.meta.when) || 0).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })} ${new Date((d.meta && d.meta.when) || 0).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}` : `Emplacement ${n} · vide`;
@@ -131,11 +134,60 @@
     try { const k = await S.menuPick('Reprendre quelle copie ?', idx.map(i => ({ t: slotLabel(slots[i], i + 1) })).concat([{ t: 'Retour' }])); if (k >= idx.length) return false; return I.save.read(idx[k] + 1); }
     finally { S.depth--; S.hideDialog(); }
   };
+  // Une partie adoptée peut citer un contenu que ce jeu n'a pas (I.save.avis) : on le dit, une fois, là où l'on reprend.
+  const avisAbsent = A => { if (!A || !(A.paquets.length || A.reprise || A.pieces)) return '';
+    return 'Cette partie cite un contenu que ce jeu n’a pas' + (A.paquets.length ? ' (' + A.paquets.map(I.esc).join(', ') + ')' : '') + '. Ce qui en dépend est mis de côté, sans être perdu : il reviendra avec lui.' + (A.reprise ? ' Tu reprends à la Chaîne.' : ''); };
   U.resume = function () {
-    const sv = I.save.data;
-    if (sv.cp && I.sagas[sv.cp.saga]) { W.roster = {}; W.saga = null; return W.startChapter(sv.cp.saga, sv.cp.ci, sv.cp); }
+    const sv = I.save.data, dit = avisAbsent(I.save.avis); I.save.avis = null;
+    if (sv.cp && I.sagas[sv.cp.saga]) { W.roster = {}; W.saga = null; const p = W.startChapter(sv.cp.saga, sv.cp.ci, sv.cp); if (dit) S.toast(dit, 14000); return p; }
     if (!sv.prologue) { W.roster = {}; W.saga = null; return W.startChapter('idris', 0); }
-    return U.showChain();
+    return U.showChain(dit || undefined);
+  };
+  /* ---------- ta partie : l'exporter, l'importer ----------
+     Exporter : la partie en un texte, à enregistrer en fichier ou à copier. Importer : coller le texte ou choisir le
+     fichier ; le texte est contrôlé (I.save.lireTexte), on montre ce qu'il contient, et rien ne change avant le oui. */
+  U.partie = function (mode, retour) {
+    const box = $('#partie .corps'), tete = $('#partie header p'); let fl = null;
+    const fermer = () => { if (fl) fl.destroy(); fl = null; screen('#partie', false); U.menuOpen = false; }, revenir = () => { fermer(); retour(); };
+    const bouton = (label, fn, cls) => { const b = I.el('button', cls || '', label); b.type = 'button'; tapable(b, () => fn(b)); return b; };
+    const jour = t => (t ? new Date(t).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' à ' + new Date(t).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : 'à une date inconnue');
+    const pl = (n, un, des) => n + ' ' + (n > 1 ? des : un);
+    const poser = (enfants, btns, debut) => { box.innerHTML = ''; enfants.forEach(e => box.appendChild(e)); if (fl) fl.destroy(); fl = focusList(btns, { onCancel: revenir, start: debut || 0 }); $('#partie').scrollTop = 0; };
+    const rangee = btns => { const r = I.el('div', 'rang'); btns.forEach(b => r.appendChild(b)); return r; };
+    const zone = (lu, dit) => { const ta = I.el('textarea'); ta.spellcheck = false; ta.readOnly = !!lu; ta.setAttribute('aria-label', dit); ta.autocapitalize = 'off'; ta.autocomplete = 'off'; return ta; };
+    const exporter = () => {
+      const sv = I.save.data, texte = I.save.exporter(), ta = zone(true, 'Ta partie, en texte'), note = I.el('p', 'note', ''); ta.value = texte;
+      tete.innerHTML = 'Ta partie tient dans ce texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.';
+      const dire = (ok, m) => { note.className = 'note ' + (ok ? 'ok' : 'ko'); note.textContent = m; };
+      const bF = bouton('Enregistrer le fichier', () => { try { const a = document.createElement('a'), u = URL.createObjectURL(new Blob([texte], { type: 'application/json' })); a.href = u; a.download = 'isnad-partie.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 5000);
+        dire(true, 'Fichier « isnad-partie.json » remis au navigateur. S’il n’apparaît pas, copie le texte.'); } catch (e) { dire(false, 'Ce navigateur ne laisse pas enregistrer un fichier ici. Copie le texte.'); } });
+      const bC = bouton('Copier le texte', async () => { let ok = false; try { await navigator.clipboard.writeText(texte); ok = true; } catch (e) { try { ta.focus(); ta.select(); ok = document.execCommand('copy'); } catch (x) { ok = false; } }
+        if (ok) dire(true, 'Texte copié. Colle-le dans une note ou un message pour le garder.'); else { ta.focus(); ta.select(); dire(false, 'La copie n’a pas pu se faire : le texte est sélectionné, copie-le à la main.'); } });
+      const bR = bouton('◂ Retour', revenir);
+      const faits = I.save.maillons().length;
+      poser([I.el('p', 'resume', `<b>${I.esc((sv.meta && sv.meta.label) || 'Partie en cours')}</b><br>${pl(sv.lights.filter(l => l !== 'sabr').length, 'Lumière', 'Lumières')} · ${pl(faits, 'maillon achevé', 'maillons achevés')} · ${pl(sv.codex.length, 'savoir', 'savoirs')}<br><small>${(texte.length / 1024).toFixed(0)} Ko de texte · format ${I.save.FORMAT}</small>`), rangee([bF, bC, bR]), note, ta], [bF, bC, bR]);
+    };
+    const confirmer = r => {
+      const R = r.resume, ici = !!(I.save.autoGet() || I.save.slots().some(Boolean));
+      tete.innerHTML = 'Cette partie peut être reprise ici.';
+      const lignes = [`<b>${I.esc(R.etiquette || 'Partie')}</b> · gardée le ${jour(R.quand)}`, `${pl(R.lumieres, 'Lumière', 'Lumières')} · ${pl(R.maillons, 'maillon achevé', 'maillons achevés')}` + (R.format !== I.save.FORMAT ? ` <small>· partie d’un format plus ancien (${I.esc(String(R.format))}), remise à jour</small>` : '')];
+      if (R.absents.length) lignes.push(`Elle cite un contenu que ce jeu n’a pas : ${R.absents.map(I.esc).join(', ')}. Ce qui en dépend sera mis de côté, sans être perdu.`);
+      if (ici) lignes.push('<small>La partie en cours sur cet appareil sera remplacée. Les copies gardées à la mosquée restent.</small>');
+      const bO = bouton(ici ? 'Remplacer ma partie par celle-ci' : 'Reprendre cette partie', () => { I.save.adopter(r.partie); I.save.auto(R.etiquette || 'Partie importée'); I.audio.sfx('roll'); fermer(); U.resume(); }, 'fort');
+      const bN = bouton('Annuler', () => importer());
+      poser([I.el('p', 'resume', lignes.join('<br>')), rangee([bO, bN])], [bO, bN], ici ? 1 : 0);   // s'il y a une partie à remplacer, le choix proposé d'abord est « Annuler »
+    };
+    const importer = garde => {
+      tete.innerHTML = 'Colle ici le texte d’une partie exportée, ou choisis son fichier. Rien ne change tant que tu n’as pas confirmé.';
+      const ta = zone(false, 'Texte de la partie à importer'), note = I.el('p', 'note', ''), fi = document.createElement('input'); ta.placeholder = 'Le texte de la partie…'; if (garde) ta.value = garde;
+      fi.type = 'file'; fi.accept = '.json,application/json,text/plain'; fi.hidden = true;
+      const lire = () => { const r = I.save.lireTexte(ta.value); if (!r.ok) { note.className = 'note ko'; note.textContent = r.erreur; I.audio.sfx('dark'); return; } I.audio.sfx('ok'); confirmer(r); };
+      fi.addEventListener('change', () => { const f = fi.files && fi.files[0]; if (!f) return; if (f.size > 2000000) { note.className = 'note ko'; note.textContent = 'Ce fichier est trop gros pour être une partie.'; return; }
+        const rd = new FileReader(); rd.onload = () => { ta.value = String(rd.result || ''); lire(); }; rd.onerror = () => { note.className = 'note ko'; note.textContent = 'Le fichier n’a pas pu être lu.'; }; rd.readAsText(f); });
+      const bL = bouton('Lire cette partie', lire, 'fort'), bF = bouton('Choisir un fichier', () => fi.click()), bR = bouton('◂ Retour', revenir);
+      poser([ta, fi, rangee([bL, bF, bR]), note], [bL, bF, bR]);
+    };
+    U.menuOpen = true; I.input.clearHeld(); screen('#partie', true); if (mode === 'importer') importer(); else exporter();
   };
 
   /* ---------- la Chaîne (choix de saga) ---------- */
@@ -189,6 +241,7 @@
     { const d = I.oeuvres.state(), nl = Object.keys(d.lames).length, nv = Object.keys(d.vices).filter(v => d.vices[v] === 'tranche').length; if (nl || nv || d.zad) foot.appendChild(I.el('span', 'pill', `Lames : <b>${nl}</b> / 7 · maux tranchés : <b>${nv}</b> / 7 · ♥ ${d.zad}`)); }
     const pied = (label, fn) => { const b = I.el('button', '', label); b.type = 'button'; tapable(b, fn); foot.appendChild(b); btns.push(b); };
     pied('Garder une copie', async () => { close(); await U.saveMenu(); U.showChain(); });
+    pied('Exporter la partie', () => { close(); U.partie('exporter', () => U.showChain()); });
     pied('Recueil', () => { close(); U.pause('codex', () => U.showChain()); });
     pied('Aide', () => { close(); U.pause('aide', () => U.showChain()); });
     pied('Organigramme', () => { close(); U.pause('mal', () => U.showChain()); });
@@ -296,6 +349,7 @@
         toggle('Son', () => I.audio.on ? 'activé' : 'coupé', () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, 'Coupe ou rétablit tout le son : musique, percussions et bruitages.'),
         toggle('Musique', () => I.audio.musicOn ? 'activée' : 'coupée', () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, 'Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.'),
         toggle('Rendu', () => G.low ? '2D simple' : 'rétro-HD', () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, 'Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.'));
+      items.push({ label: 'Exporter la partie', fn() { close(); U.partie('exporter', () => {}); }, show: () => '<h3>Exporter la partie</h3><p>Ta partie tient dans un texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.</p><p class="src">Elle se garde aussi toute seule sur cet appareil, à chaque objectif atteint.</p>' });
       items.push({ label: 'Diagnostic', fn() {}, show: U.diagnostic });
       if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre là où tu l’as laissé : la partie se garde toute seule, même si tu fermes la page.</p>' });
       $('#menu h2').textContent = 'Halte';

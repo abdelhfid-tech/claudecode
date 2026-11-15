@@ -4,6 +4,7 @@
    voir : même texte d'accueil, mêmes maillons, mêmes mots, même bouton. Cet outil charge la 1.31 gelée (../index.html,
    lue seulement) et la 2.0 (index.html), pose des deux côtés la même partie — sept moments, du prologue à la Chaîne
    transmise — et compare l'écran : le texte, la structure, les boutons actifs ou scellés.
+   Ce que la 2.0 ajoute à cet écran est déclaré ici (AJOUTS) : tout le reste doit être identique.
    Usage : node tools/ecrans.js       code de sortie 1 au premier écart (« ÉCART ») */
 const path = require('path');
 const { chromium } = require('playwright');
@@ -20,7 +21,7 @@ const releve = async () => {
     return { accueil: c.querySelector('header p').innerHTML, bouton: (c.querySelector('header .cta') || {}).textContent || '', aide: (c.querySelector('header .comment') || {}).textContent || '',
       maillons: Array.from(c.querySelectorAll('.links > *')).map(b => b.tagName + '.' + b.className.replace(/\s*sel\b/, '') + (b.disabled ? '[scellé]' : '') + ' ' + b.innerHTML.replace(/url\([^)]*\)/g, 'url()')),
       sceaux: Array.from(c.querySelectorAll('.links .seal')).map(s => s.style.backgroundImage.length),
-      pied: sansVersion(c.querySelector('.chainfoot')).textContent, piedBoutons: Array.from(c.querySelectorAll('.chainfoot button')).map(b => b.textContent) }; };
+      pied: (k => { k.querySelectorAll('button').forEach(b => b.remove()); return k.textContent; })(sansVersion(c.querySelector('.chainfoot'))), piedBoutons: Array.from(c.querySelectorAll('.chainfoot button')).map(b => b.textContent) }; };
   const fermer = () => { document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); };
   const res = {};
   const voir = async (nom, faites, plus, msg) => { fermer(); partie(faites, plus); await I.ui.showChain(msg); res[nom] = lire(); };
@@ -45,12 +46,16 @@ const releve = async () => {
   const p1 = await page(V1), p2 = await page(V2);
   const a = await p1.evaluate(releve), b = await p2.evaluate(releve);
   await browser.close();
+  // ce que la 2.0 ajoute, et rien d'autre : un bouton au pied de la Chaîne
+  const AJOUTS = { piedBoutons: ['Exporter la partie'] }, vus = {};
+  Object.keys(b).forEach(nom => Object.keys(AJOUTS).forEach(k => { b[nom][k] = b[nom][k].filter(x => { if (AJOUTS[k].includes(x)) { vus[x] = 1; return false; } return true; }); }));
   let ecarts = 0, lignes = 0;
   Object.keys(a).forEach(nom => { const x = a[nom], y = b[nom]; let ici = 0;
     Object.keys(x).forEach(k => { const u = JSON.stringify(x[k]), v = JSON.stringify(y[k]); lignes += Array.isArray(x[k]) ? x[k].length : 1;
       if (u !== v) { ici++; ecarts++; let i = 0; while (i < u.length && u[i] === v[i]) i++; console.log(`ÉCART ${nom} · ${k} :\n   1.31 …${u.slice(Math.max(0, i - 60), i + 90)}\n   2.0  …${v.slice(Math.max(0, i - 60), i + 90)}`); } });
     if (!ici) console.log(`OK  ${nom} — ${x.maillons.length} maillons, « ${x.bouton || 'aucun bouton'} »`); });
   if (erreurs.length) { console.log('--- ERREURS ---'); [...new Set(erreurs)].slice(0, 10).forEach(e => console.log(e)); }
-  console.log(ecarts || erreurs.length ? `✗ ${ecarts} écart(s)` : `✓ CHAÎNE IDENTIQUE à celle de la 1.31 — ${Object.keys(a).length} moments, ${lignes} éléments comparés`);
+  const ajouts = Object.keys(vus);
+  console.log(ecarts || erreurs.length ? `✗ ${ecarts} écart(s)` : `✓ CHAÎNE IDENTIQUE à celle de la 1.31 — ${Object.keys(a).length} moments, ${lignes} éléments comparés` + (ajouts.length ? ` · ajout déclaré de la 2.0 : ${ajouts.map(x => '« ' + x + ' »').join(', ')}` : ''));
   process.exit(ecarts || erreurs.length ? 1 : 0);
 })();

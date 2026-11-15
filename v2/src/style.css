@@ -183,6 +183,24 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 .chainfoot { margin-top: 1em; display: flex; gap: .6em; flex-wrap: wrap; justify-content: center; align-items: center; font-size: .84em; color: var(--dim); }
 .chainfoot button, .pill { padding: .3em 1em; border: 1px solid var(--line); background: rgba(10, 8, 20, .7); border-radius: 2em; font-size: .9em; }
 .chainfoot button.sel { background: rgba(233, 200, 119, .2); color: #fff; }
+/* « Ta partie » : exporter, importer */
+#title .coin { position: absolute; top: max(10px, 2vh); right: max(12px, 3vw); }
+#title .coin button { padding: .35em .9em; font-size: .7em; letter-spacing: .04em; color: var(--dim); background: rgba(10, 8, 20, .6); border: 1px solid var(--line); border-radius: 2em; }
+#title .coin button.sel { color: #fff; border-color: var(--gold); background: rgba(233, 200, 119, .18); }
+#partie { background: linear-gradient(180deg, rgba(7, 6, 13, .95), rgba(10, 8, 24, .98)); }
+#partie header { text-align: center; margin-bottom: 1em; }
+#partie h2 { font-family: var(--f-display); letter-spacing: .2em; font-size: 1.4em; margin: 0; color: var(--gold); }
+#partie header p { margin: .3em auto 0; color: var(--dim); font-size: .86em; max-width: 40em; }
+#partie .corps { width: min(100%, 40em); display: flex; flex-direction: column; gap: .7em; }
+#partie .resume { margin: 0; padding: .6em .9em; background: var(--panel); border-left: 3px solid var(--gold); font-size: .92em; line-height: 1.5; }
+#partie .resume small { color: var(--dim); }
+#partie .rang { display: flex; flex-wrap: wrap; gap: .5em; }
+#partie .rang button { flex: 1 1 auto; padding: .55em 1em; background: rgba(10, 8, 20, .72); border: 1px solid rgba(233, 200, 119, .25); font-family: var(--f-display); letter-spacing: .1em; font-size: .84em; }
+#partie .rang button.sel { background: rgba(233, 200, 119, .18); border-color: var(--gold); color: #fff; box-shadow: 0 0 22px rgba(233, 200, 119, .25); }
+#partie .rang button.fort { border-color: var(--gold); color: var(--gold); }
+#partie textarea { width: 100%; min-height: 9em; resize: vertical; background: rgba(4, 3, 10, .8); color: var(--sand); border: 1px solid var(--line); padding: .6em; font: .72em/1.4 var(--f-mono); word-break: break-all; }
+#partie textarea:focus { outline: 2px solid var(--acc); outline-offset: 1px; }
+#partie .note { margin: 0; min-height: 1.4em; font-size: .86em; color: var(--dim); } #partie .note.ko { color: #ff9a8a; } #partie .note.ok { color: #9be6b0; }
 .lights i { font-style: normal; font-size: 1.2em; margin: 0 .12em; opacity: .25; } .lights i.on { opacity: 1; text-shadow: 0 0 10px currentColor; }
 #menu .cols { display: grid; grid-template-columns: minmax(10em, 15em) 1fr; gap: 1em; width: min(100%, 62em); flex: 1; min-height: 0; }
 #menu .side { display: flex; flex-direction: column; gap: .3em; overflow-y: auto; }

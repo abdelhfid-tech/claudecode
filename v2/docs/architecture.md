@@ -30,6 +30,7 @@ pour s'y comparer, et ne fait que la lire.
 | `v2/tools/cartes.js` | les lieux du livre I sortent-ils comme dans la 1.31 ? |
 | `v2/tools/ecrans.js` | l'écran de la Chaîne du livre I est-il celui de la 1.31 ? |
 | `v2/tools/paquet.js`, `v2/tools/essais/` | éprouver un paquet ; le paquet d'essai (pure fiction, jamais livré) |
+| `v2/tools/partie.js` | la partie du joueur : format, export, import |
 | `v2/tools/gel.js`, `v2/gel-1.31.json` | la garantie que la 1.31 ne bouge pas |
 | `v2/docs/` | feuille de route, architecture, contrat d'un paquet |
 
@@ -77,6 +78,38 @@ montre le livre I — ses maillons, puis le dernier maillon —, puis les autres
 romains et les comptes (« cinq Lumières ») sont calculés. Le dernier maillon ne dépend que des maillons du livre I :
 une saga ajoutée ne peut pas bloquer la fin du jeu de base. Avec un seul livre, l'écran est celui de la 1.31, élément
 pour élément : `node v2/tools/ecrans.js` le compare en huit moments, du prologue à la Chaîne transmise.
+
+## La partie du joueur
+
+Une partie de la 2.0 est au **format 2** : les champs de la 1.31, plus `profil` (le nom et la tenue du personnage,
+lot 1.5) et `paquets` (les paquets posés quand elle a été écrite, avec leur version). Elle vit sous les clés
+`isnad2.auto` (la partie en cours, gardée toute seule), `isnad2.slot.1` à `3` (les copies gardées à la mosquée) et
+`isnad2.opts` (les options de l'appareil). La 2.0 ne lit ni n'écrit jamais les clés de la 1.31.
+
+| Fonction (`ISNAD.save`, dans `base.js`) | Ce qu'elle fait |
+|---|---|
+| `migrer` (interne) | remet une partie lue au format courant sans toucher à l'original ; le format 1 — celui de la 1.31 — est accepté ; un format plus récent est refusé |
+| `exporter()` | la partie en un texte : `{ isnad: 'partie', format, jeu, quand, partie }`, sans les options de l'appareil |
+| `lireTexte(texte)` | contrôle un texte reçu **sans rien changer** : forme, format, champs ; rend la partie et un résumé, ou une erreur dite en clair |
+| `adopter(partie)` | la partie devient la partie en cours ; ce qui renvoie à un contenu absent est mis de côté (`avis`) |
+
+**Exporter, importer.** « Exporter la partie » (pied de la Chaîne, halte) montre le texte, l'enregistre en fichier
+`isnad-partie.json` ou le copie — là où le téléchargement est bloqué, le texte reste à copier. « Importer une partie »
+(coin de l'écran-titre) lit un texte collé ou un fichier choisi, montre ce qu'il contient, et ne remplace la partie en
+cours qu'après confirmation ; les copies gardées à la mosquée ne sont pas touchées.
+
+**Une partie venue d'ailleurs n'est pas crue sur parole.** Elle est bornée en taille, son format est lu d'abord, puis
+chaque champ que le moteur parcourt doit avoir la forme attendue (Lumières connues, niveaux de 1 à 99, besace et
+réserve en nombres, point de reprise complet). Sinon elle est refusée, et rien n'a changé.
+
+**Un contenu absent ne casse rien et ne perd rien.** Une partie peut citer un paquet que ce jeu n'a pas. À l'adoption :
+un point de reprise situé dans une saga ou un lieu absents est levé (on reprend à la Chaîne) ; une pièce d'équipement
+inconnue quitte le héros pour la réserve, où elle attend sans gêner ; objets, savoirs et maillons achevés restent
+dans la partie, invisibles. Le joueur est prévenu une fois. Quand le paquet revient, tout est là.
+
+`node v2/tools/partie.js` le prouve par les vrais boutons : jouer, exporter (texte et fichier), effacer, réimporter à
+l'identique, reprendre au milieu d'un chapitre ; dix textes qui ne sont pas des parties, refusés sans rien changer ;
+une partie prise dans la 1.31 gelée, acceptée et remise à jour ; les clés de la 1.31 intactes.
 
 ## Les règles du contenu : `src/core/regles.js`
 
@@ -127,12 +160,13 @@ node v2/tools/build.js               # v2/index.html et v2/dist/isnad.html (avec
 node v2/tools/cartes.js              # « CARTES IDENTIQUES à celles de la 1.31 »
 node v2/tools/ecrans.js              # « CHAÎNE IDENTIQUE à celle de la 1.31 »
 node v2/tools/paquet.js [fichier]    # éprouve un paquet, hors du jeu puis dans un jeu d'essai assemblé à part
+node v2/tools/partie.js              # la partie du joueur : exportée, effacée, réimportée à l'identique
 node v2/tools/smoke.js auto          # et walk, tap, wrong, shots — comme en 1.31
 node v2/tools/doigt.js [loin [844x390]]
 node v2/tools/son.js
 node v2/tools/bataille.js [mesures]
 ```
 
-**Règle de la 2.0.** Celle d'`AGENTS.md`, avec trois contrôles de plus à chaque changement du moteur ou des règles :
-`cartes.js` doit afficher « CARTES IDENTIQUES », `ecrans.js` « CHAÎNE IDENTIQUE », et `paquet.js` doit finir sans
-« REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE » ni « ÉCART ». Et `gel.js` doit afficher « 1.31 INTACTE » avant chaque enregistrement.
+**Règle de la 2.0.** Celle d'`AGENTS.md`, avec quatre contrôles de plus à chaque changement du moteur ou des règles :
+`cartes.js` doit afficher « CARTES IDENTIQUES », `ecrans.js` « CHAÎNE IDENTIQUE », et `paquet.js` comme `partie.js`
+doivent finir sans « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE » ni « ÉCART ». Et `gel.js` doit afficher « 1.31 INTACTE » avant chaque enregistrement.
