@@ -5,7 +5,7 @@
   const I = window.ISNAD = {
     D, sagas: {}, sagaList: [],
     // commun: true — contenu partagé par toutes les sagas (src/data/coeur.js) : ni maillon ni chapitre
-    registerSaga(s) { this.sagas[s.id] = s; if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => ((a.livre || 1) - (b.livre || 1)) || (a.order - b.order)); },   // par livre, puis par ordre
+    registerSaga(s) { this.sagas[s.id] = s; if (this.perso) { this.perso.relever(s); if (this.perso.nom() !== this.perso.NOM) this.perso.appliquer(); } if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => ((a.livre || 1) - (b.livre || 1)) || (a.order - b.order)); },   // par livre, puis par ordre
     speed: 1, debug: {}
   };
 
@@ -186,8 +186,8 @@
     write(n, meta) { this.data.meta = Object.assign({ when: Date.now() }, meta || {}); this.data.started = true; try { localStorage.setItem(SLOT(n), JSON.stringify(marquer(this.data))); return true; } catch (e) { return false; } },
     read(n) { const d = this.slots()[n - 1]; return d ? this.adopter(d) : false; },
     // adopte une partie lue : au format courant, avec les options de cet appareil, et sans renvoi vers un contenu absent
-    adopter(d) { const o = this.data.opts; this.data = Object.assign(fresh(), d); this.data.opts = o; this.avis = assainir(this.data); return true; },
-    reset() { const o = this.data.opts; this.data = fresh(); this.data.opts = Object.assign(this.data.opts, o); this.avis = null; },
+    adopter(d) { const o = this.data.opts; this.data = Object.assign(fresh(), d); this.data.opts = o; this.avis = assainir(this.data); if (I.perso) I.perso.appliquer(); return true; },
+    reset() { const o = this.data.opts; this.data = fresh(); this.data.opts = Object.assign(this.data.opts, o); this.avis = null; if (I.perso) I.perso.appliquer(); },
     // sauvegarde automatique : l'état au dernier point de reprise. Même format que les emplacements.
     auto(label) { if (!this.data.started) return false; this.data.meta = { when: Date.now(), auto: true, label: label || (this.data.meta && this.data.meta.label) || '' };
       try { localStorage.setItem(AKEY, JSON.stringify(marquer(this.data))); this.autoAt = Date.now(); return true; } catch (e) { this.autoKo = true; return false; } },

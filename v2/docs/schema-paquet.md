@@ -41,6 +41,10 @@ base de données servira (chantier 2). Le contrat d'une saga, lui, ne change pas
 
 Toute autre clé est refusée : une faute de frappe (`equipment`) ne passe pas en silence.
 
+**Le râwî s'écrit « Idris ».** Un texte qui parle du personnage du joueur le nomme Idris, comme ceux du livre I. Le jeu
+le redit au nom que le joueur a choisi, élision comprise (« d’Idris » devient « de Khalil ») : un paquet n'a rien à
+prévoir, et n'écrit jamais lui-même le nom d'un joueur.
+
 ## 1 bis. Les livres
 
 La Chaîne est rangée en **livres**. Le **livre I** est celui du jeu de base : le prologue, ses cinq maillons, puis le

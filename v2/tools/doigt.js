@@ -46,6 +46,7 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
       if (I.debug.auto) return { quoi: 'attente', ou };
       if (vis(q('#chain'))) { const l = [...q('#chain').querySelectorAll('.link')].find(b => !b.disabled && !b.classList.contains('done')) || q('#chain .link'); return l ? on('chaine', l, null, { ou }) : { quoi: 'attente', ou }; }
       if (vis(q('#title'))) return on('titre', q('#title .vmenu button'), null, { ou });
+      if (vis(q('#perso'))) return on('personnage', q('#perso .ok'), null, { ou }); // 2.0 : le nom et la tenue du râwî, déjà choisis — un toucher pour commencer
       if (vis(q('#card')) && q('#card').classList.contains('on')) return on('carton', q('#card'), [innerWidth / 2, innerHeight * 0.8], { ou });
       if (vis(q('#menu'))) return on('halte', q('#menu .side button'), null, { ou }); // ouverte par mégarde : on la referme
       if (vis(q('#choice'))) { const o = [...q('#choice').querySelectorAll('.opt:not(.locked)')], pr = q('#choice .prompt'); return on('choix', o[o.length - 1], null, { ou, n: o.length, rects: o.map(mid), prompt: pr ? pr.textContent.trim().slice(0, 44) : '' }); }

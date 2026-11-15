@@ -51,7 +51,8 @@ module.exports = {
     tagline: 'Saga d’essai, de pure fiction : un copiste porte ses feuillets d’une halte à un puits.',
     intro: [
       ['nar', 'Ceci est une saga d’essai. Elle ne raconte rien de l’histoire : elle montre qu’un paquet peut ajouter un maillon à la Chaîne.'],
-      ['nar', 'Un copiste inventé, dans une halte inventée, porte des feuillets jusqu’à un puits.']
+      ['nar', 'Un copiste inventé, dans une halte inventée, porte des feuillets jusqu’à un puits.'],
+      ['nar', 'Par-dessus l’épaule du copiste, le regard d’Idris suit la ligne.']   // le râwî est nommé : le jeu le redira au nom du joueur
     ],
     outro: [
       ['nar', 'Les feuillets sont arrivés. L’essai est terminé.'],

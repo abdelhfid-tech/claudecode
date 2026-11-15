@@ -23,6 +23,7 @@ pour s'y comparer, et ne fait que la lire.
 |---|---|
 | `v2/src/core/defs.js` | les énumérations, comme en 1.31 ; en plus : les gabarits de carte (`D.GABARITS`), le contrat d'un paquet (`D.paquet`, `D.MOTEUR`), les livres (`D.LIVRES`) |
 | `v2/src/core/regles.js` | **les règles du contenu**, en un module (voir plus bas) |
+| `v2/src/core/perso.js` | le personnage du joueur : son nom dans les textes, sa tenue |
 | `v2/src/core/*.js` | le moteur |
 | `v2/src/data/` | le jeu de base : le contenu de la 1.31, mot pour mot |
 | `v2/paquets/*.json` | les paquets publiés, embarqués à l'assemblage — aucun aujourd'hui |
@@ -31,6 +32,7 @@ pour s'y comparer, et ne fait que la lire.
 | `v2/tools/ecrans.js` | l'écran de la Chaîne du livre I est-il celui de la 1.31 ? |
 | `v2/tools/paquet.js`, `v2/tools/essais/` | éprouver un paquet ; le paquet d'essai (pure fiction, jamais livré) |
 | `v2/tools/partie.js` | la partie du joueur : format, export, import |
+| `v2/tools/personnage.js` | le personnage du joueur : nom, tenue |
 | `v2/tools/gel.js`, `v2/gel-1.31.json` | la garantie que la 1.31 ne bouge pas |
 | `v2/docs/` | feuille de route, architecture, contrat d'un paquet |
 
@@ -111,6 +113,48 @@ dans la partie, invisibles. Le joueur est prévenu une fois. Quand le paquet rev
 l'identique, reprendre au milieu d'un chapitre ; dix textes qui ne sont pas des parties, refusés sans rien changer ;
 une partie prise dans la 1.31 gelée, acceptée et remise à jour ; les clés de la 1.31 intactes.
 
+## Le personnage du joueur : `src/core/perso.js`
+
+Le joueur donne un nom et une tenue au **râwî** — le héros de l'histoire-cadre, personnage de fiction. Les Compagnons
+gardent leur nom et leur silhouette. Le choix est dans la partie : `profil: { nom, tenue }`.
+
+**Les textes ne changent pas.** Ils disent « Idris », en 2.0 comme en 1.31. Quand une saga est posée, `perso.js` relève
+chaque phrase qui nomme le râwî (29 dans le jeu de base) ; quand le profil change, ces phrases-là sont redites à partir
+de l'original, avec le nom choisi et la bonne élision :
+
+| Texte d'origine | Khalil | Elyas |
+|---|---|---|
+| « la Patience d’Idris » | « la Patience de Khalil » | « la Patience d’Elyas » |
+| « celui qu’Idris attendait » | « celui que Khalil attendait » | « celui qu’Elyas attendait » |
+
+Tout ce qui lit le contenu — dialogues, cartons, objectifs, Recueil, combat — voit donc le nom choisi sans qu'aucun
+écran ait été retouché. Avec le nom d'origine, rien n'est touché : phrases, sceau et silhouette sont ceux de la 1.31,
+à l'identique. Un paquet qui écrit « Idris » dans ses textes obtient le même traitement.
+
+| `ISNAD.perso` | Ce qu'elle fait |
+|---|---|
+| `profil()`, `nom()`, `tenue()` | le profil de la partie, ramené au personnage d'origine s'il est absent ou abîmé |
+| `refus(nom)` | la raison pour laquelle un nom ne se prend pas, ou rien |
+| `dire(texte, nom)` | une phrase d'origine, redite avec un nom |
+| `relever(saga)` | relève les phrases qui nomment le râwî (appelée par `registerSaga`) |
+| `appliquer()` | pose le nom dans les phrases relevées, le sceau et la tenue (appelée quand la partie change) |
+| `choisir(nom, tenue)` | contrôle, écrit le profil, applique |
+
+**Les noms refusés** : vide, plus de seize signes, autre chose que des lettres (avec espace, apostrophe, trait d'union) ;
+le Nom divin employé seul ; Iblîs, démon, djinn ; le nom du Prophète ﷺ ; les noms des héros et des maillons du jeu, pour
+ne pas brouiller les dialogues. Un nom n'étant fait que de lettres, il ne peut rien glisser dans la page.
+
+**Les tenues** (`D.TENUES`, dans `defs.js`) : six silhouettes faites des coiffes, des manteaux et des couleurs que
+`sprites.js` dessine déjà. La première est la tenue de toujours. Personne n'a de visage. Avec un autre nom, le sceau du
+râwî ne porte plus son nom en arabe : il montre l'étoile à huit branches, seule.
+
+**L'écran « Ton personnage »** s'ouvre à chaque nouvelle partie, avant le prologue, avec « Idris » et sa tenue de
+toujours déjà choisis — un toucher suffit à commencer. Il se rouvre depuis la halte et depuis le pied de la Chaîne.
+
+`node v2/tools/personnage.js` le prouve : les noms acceptés et refusés ; chaque phrase redite avec six noms ; le profil
+d'origine qui ne change rien ; puis, par les vrais boutons et en quatre tailles d'écran, un prologue entier joué sous
+un autre nom — tout ce qui s'affiche est relevé, « Idris » n'y paraît plus — ; enfin le choix gardé, rechargé, exporté.
+
 ## Les règles du contenu : `src/core/regles.js`
 
 En 1.31, les règles vivent dans deux scripts (`tools/validate.js`, `tools/validate-music.js`) qui lisent le disque et
@@ -161,12 +205,13 @@ node v2/tools/cartes.js              # « CARTES IDENTIQUES à celles de la 1.31
 node v2/tools/ecrans.js              # « CHAÎNE IDENTIQUE à celle de la 1.31 »
 node v2/tools/paquet.js [fichier]    # éprouve un paquet, hors du jeu puis dans un jeu d'essai assemblé à part
 node v2/tools/partie.js              # la partie du joueur : exportée, effacée, réimportée à l'identique
+node v2/tools/personnage.js          # le nom et la tenue du râwî : choisis, joués, gardés
 node v2/tools/smoke.js auto          # et walk, tap, wrong, shots — comme en 1.31
 node v2/tools/doigt.js [loin [844x390]]
 node v2/tools/son.js
 node v2/tools/bataille.js [mesures]
 ```
 
-**Règle de la 2.0.** Celle d'`AGENTS.md`, avec quatre contrôles de plus à chaque changement du moteur ou des règles :
-`cartes.js` doit afficher « CARTES IDENTIQUES », `ecrans.js` « CHAÎNE IDENTIQUE », et `paquet.js` comme `partie.js`
-doivent finir sans « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE » ni « ÉCART ». Et `gel.js` doit afficher « 1.31 INTACTE » avant chaque enregistrement.
+**Règle de la 2.0.** Celle d'`AGENTS.md`, avec cinq contrôles de plus à chaque changement du moteur ou des règles :
+`cartes.js` doit afficher « CARTES IDENTIQUES », `ecrans.js` « CHAÎNE IDENTIQUE », et `paquet.js`, `partie.js` et
+`personnage.js` doivent finir sans « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE » ni « ÉCART ». Et `gel.js` doit afficher « 1.31 INTACTE » avant chaque enregistrement.

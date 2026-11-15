@@ -46,8 +46,8 @@ const releve = async () => {
   const p1 = await page(V1), p2 = await page(V2);
   const a = await p1.evaluate(releve), b = await p2.evaluate(releve);
   await browser.close();
-  // ce que la 2.0 ajoute, et rien d'autre : un bouton au pied de la Chaîne
-  const AJOUTS = { piedBoutons: ['Exporter la partie'] }, vus = {};
+  // ce que la 2.0 ajoute, et rien d'autre : deux boutons au pied de la Chaîne
+  const AJOUTS = { piedBoutons: ['Exporter la partie', 'Ton personnage'] }, vus = {};
   Object.keys(b).forEach(nom => Object.keys(AJOUTS).forEach(k => { b[nom][k] = b[nom][k].filter(x => { if (AJOUTS[k].includes(x)) { vus[x] = 1; return false; } return true; }); }));
   let ecarts = 0, lignes = 0;
   Object.keys(a).forEach(nom => { const x = a[nom], y = b[nom]; let ici = 0;

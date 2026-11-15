@@ -952,6 +952,28 @@ après un premier plan qui modifiait le moteur actuel :
   n'écrit les clés de la 1.31 ; elle sait relire une partie au format de la 1.31 si on la lui donne. Le bouton
   « Importer une partie » est dans un coin de l'écran-titre, hors de la colonne : celle-ci garde, à chaque taille
   d'écran, la hauteur qu'elle a dans la 1.31.
+- [x] **D145. Le plan de reprise et ses choix.** *Approuvé par le décideur le 15 novembre, avec le plan de reprise qui
+  les listait comme choix par défaut.* (1) Noms refusés pour le personnage : vide, trop long, autre chose que des
+  lettres ; le Nom divin employé seul ; Iblîs, démon, djinn ; les noms des héros du jeu ; et, par prudence, le nom du
+  Prophète ﷺ — les autres noms de prophètes passent, le râwî s'appelle déjà Idris. (2) « Ton personnage » s'ouvre à
+  chaque nouvelle partie, avant le prologue, avec « Idris » et la tenue actuelle déjà choisis ; il se rouvre depuis la
+  halte. (3) Les maillons d'un livre ajouté s'ouvrent dès le prologue passé ; le dernier maillon ne dépend que des cinq
+  maillons du livre I. (4) Pas d'étiquette `v1.31` posée ni poussée. Et un écart avec le plan d'origine : les textes du
+  livre I ne changent pas d'un mot — le nom choisi remplace « Idris » à l'affichage, au lieu d'un marqueur dans les
+  textes.
+- [ ] **D146. Le personnage du joueur (lot 1.5).** C'est le râwî, personnage de fiction ; les Compagnons gardent leur nom
+  et leur silhouette. `v2/src/core/perso.js` relève, quand une saga est posée, chaque phrase qui nomme le râwî (29 dans
+  le jeu de base, dont 3 avec une élision) et la redit avec le nom choisi : « d'Idris » devient « de Khalil » ou
+  « d'Elyas », « qu'Idris » devient « que Khalil ». Avec le nom d'origine, rien n'est touché : phrases, sceau et
+  silhouette restent ceux de la 1.31. Avec un autre nom, le sceau ne porte plus le nom en arabe : il montre l'étoile à
+  huit branches, seule. Précisions de l'agent, à confirmer : le Nom divin « employé seul » s'entend d'une courte liste
+  de formes (Allah, Dieu, Rabb, ar-Rahmân, al-Quddûs, as-Samad…), et un prénom en « 'Abd » passe ; 'Abd ar-Rahmân est
+  refusé parce qu'un héros du jeu le porte ; un nom ne contient que des lettres, des espaces, des apostrophes et des
+  traits d'union, seize signes au plus ; un profil abîmé dans une partie importée ramène le râwî à Idris. Six tenues
+  (`D.TENUES`), faites de ce que le moteur dessine déjà, sans visage : manteau des Archives (la tenue actuelle), capuche
+  d'encre, veste de la ruelle, écharpe du copiste, manteau du veilleur, calotte du lettré — leurs noms et leurs
+  couleurs sont une proposition, à voir sur la planche. `v2/tools/personnage.js` joue tout cela par les vrais boutons,
+  en quatre tailles d'écran.
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
@@ -1027,16 +1049,17 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     pour l'impression ? Le livret en ligne doit-il reprendre la correction « Douze planches » ?
 17. La version suivante : par quelle étape commencer, et le décideur veut-il une note d'architecture chiffrée avant
     de choisir ?
-18. *Répondu en partie le 15 novembre : oui, c'est Idris (« Ok pour tes propositions »).* Le personnage du joueur : faut-il
-    refuser aussi les noms des prophètes (D136) ? Les six tenues proposées conviennent-elles, une fois vues sur capture ?
+18. *Répondu le 15 novembre, sauf la dernière question : c'est Idris (« Ok pour tes propositions ») ; le nom du Prophète ﷺ
+    est refusé, les autres noms de prophètes passent (D145).* Les six tenues proposées conviennent-elles, une fois vues
+    sur la planche (D146) ?
 19. Le financement : des sagas vendues en achat unique, sans monnaie achetée ni objet payant qui rend plus fort,
     est-ce la bonne voie ?
 20. Les sagas à venir : lesquelles d'abord, qui les relit, et quelle ligne pour les époques de dissensions ?
-21. La 2.0 (D132 à D135) : faut-il poser une étiquette `v1.31` dans le dépôt et la pousser ? Quel titre pour le
+21. *Répondu le 15 novembre pour l'étiquette : pas d'étiquette `v1.31` (D145).* La 2.0 (D132 à D135) : quel titre pour le
     livre I, le jour où un livre II existera ?
 22. Les paquets (D138 à D142) : la liste des mots refusés dans le nom d'un objet convient-elle (D141) ? Un paquet
     doit-il pouvoir un jour apporter, pour ses sagas, une veillée du Caïd ou une rencontre de la Cité-Miroir ?
-23. Les livres (D143) : les maillons d'un livre ajouté doivent-ils s'ouvrir dès le prologue, ou attendre que le livre I
-    soit achevé ? « Les cinq Lumières » convient-il comme titre du livre I ?
+23. *Répondu le 15 novembre pour l'ouverture : dès le prologue (D145).* Les livres (D143) : « Les cinq Lumières »
+    convient-il comme titre du livre I ?
 10. *Répondu le 15 novembre : « Ça a l'air ok ».* La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

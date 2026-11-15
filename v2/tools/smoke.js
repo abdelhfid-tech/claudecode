@@ -32,6 +32,7 @@ const url = 'file://' + path.join(__dirname, '../index.html');
     const page = await mkPage({ width: 1280, height: 720 });
     await shot(page, '01-titre');
     await page.keyboard.press('Enter'); // Nouvelle partie
+    await page.waitForTimeout(700); await shot(page, '01b-personnage'); await page.keyboard.press('Enter'); // 2.0 : « Ton personnage », puis Commencer
     await page.waitForTimeout(1500); await shot(page, '02-carton');
     for (let i = 0; i < 8; i++) { await page.keyboard.press('Enter'); await page.waitForTimeout(450); }
     await page.waitForTimeout(600); await shot(page, '03-cite');

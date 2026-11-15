@@ -341,6 +341,19 @@
 
   D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole', 'Cœur', 'Objets'];
 
+  /* ---------- Le personnage du joueur (2.0) ----------
+     Les tenues du râwî : des silhouettes faites des coiffes, des manteaux et des couleurs que sprites.js dessine déjà.
+     La première est sa tenue de toujours, à l'identique. Personne n'a de visage (exigence 2) : une tenue ne change que
+     l'étoffe, la coupe et la couleur. Le nom, lui, est contrôlé par perso.js. */
+  D.TENUES = [
+    { id: 'archives', nom: 'Manteau des Archives', look: { kind: 'cyber', robe: '#2a3048', head: '#1c2030', cloak: '#39424f' } },
+    { id: 'encre',    nom: 'Capuche d’encre',      look: { kind: 'cyber', robe: '#1d2b36', head: '#131d26', cloak: '#2b4656', trim: '#39e6ff' } },
+    { id: 'ruelle',   nom: 'Veste de la ruelle',   look: { kind: 'cyber', robe: '#3b2c4a', head: '#251a31', cloak: '#4e3b60', manteau: 'aucun', trim: '#ff4fd8' } },
+    { id: 'copiste',  nom: 'Écharpe du copiste',   look: { kind: 'cyber', robe: '#2d3b34', head: '#1d2722', cloak: '#3f4e45', echarpe: true, trim: '#7dffb0' } },
+    { id: 'veilleur', nom: 'Manteau du veilleur',  look: { kind: 'cyber', robe: '#3b3027', head: '#2a221b', cloak: '#57473a', manteau: 'ample', trim: '#ffe08a' } },
+    { id: 'lettre',   nom: 'Calotte du lettré',    look: { kind: 'cyber', coiffe: 'calotte', robe: '#27344a', head: '#d8d2c4', cloak: '#3f4f66', manteau: 'epaule', trim: '#39e6ff' } }
+  ];
+
   /* ---------- Les paquets (2.0) ----------
      Un paquet est un document de données pures (JSON) qui ajoute du contenu au jeu de base :
        { id, version, moteur, titre, note, livres, sagas, lieux, objets, equipement, etals, pistes }

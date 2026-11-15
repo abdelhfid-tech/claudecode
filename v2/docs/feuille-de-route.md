@@ -10,8 +10,8 @@
 | 1.1 — le validateur en module | **fait** le 15 novembre (commit `91f1e3b`) | même sortie qu'avant sur tout le contenu ; huit copies fautives d'une saga et une de la musique refusées avec les mêmes messages par la 1.31 et par la 2.0 |
 | 1.2 — les paquets, les lieux par gabarit | **fait** le 15 novembre (commit `00b4617`) | les 65 cartes que le contenu demande, identiques à celles de la 1.31 (`cartes.js`) ; le paquet d'essai contrôlé, assemblé à part et joué de trois façons, 21 copies fautives refusées pour la bonne raison, 5 paquets fautifs refusés par le jeu sans l'arrêter (`paquet.js`) ; toute la batterie du jeu de base, sans anomalie |
 | 1.3 — les livres | **fait** le 15 novembre (commit `01a5cd9`) | l'écran de la Chaîne identique à celui de la 1.31 en huit moments, du prologue à la Chaîne transmise (`ecrans.js`) ; dans le jeu d'essai, deux livres rangés sous leur titre, le dernier maillon ouvert par les seuls maillons du livre I, 24 copies fautives refusées (`paquet.js`) ; toute la batterie du jeu de base, sans anomalie |
-| 1.4 — la partie du joueur | **fait** le 15 novembre | par les vrais boutons : une partie exportée (texte et fichier), effacée, réimportée à l'identique, reprise au milieu d'un chapitre ; dix textes qui ne sont pas des parties refusés sans rien changer ; une partie de la 1.31 acceptée et remise à jour ; les clés de la 1.31 intactes (`partie.js`) ; une partie faite avec le paquet d'essai portée dans le jeu livré puis rapportée, sans rien perdre (`paquet.js`) ; toute la batterie, sans anomalie |
-| 1.5 — le personnage du joueur | à faire | |
+| 1.4 — la partie du joueur | **fait** le 15 novembre (commit `32e18f2`) | par les vrais boutons : une partie exportée (texte et fichier), effacée, réimportée à l'identique, reprise au milieu d'un chapitre ; dix textes qui ne sont pas des parties refusés sans rien changer ; une partie de la 1.31 acceptée et remise à jour ; les clés de la 1.31 intactes (`partie.js`) ; une partie faite avec le paquet d'essai portée dans le jeu livré puis rapportée, sans rien perdre (`paquet.js`) ; toute la batterie, sans anomalie |
+| 1.5 — le personnage du joueur | **fait** le 15 novembre | les noms acceptés et refusés ; les 29 phrases du jeu qui nomment le râwî, redites avec six noms, élision juste ; le profil d'origine qui ne change rien ; par les vrais boutons et en quatre tailles d'écran, un prologue entier joué sous un autre nom sans qu'un seul « Idris » s'affiche ; le choix gardé, rechargé, exporté (`personnage.js`) ; toute la batterie, sans anomalie |
 | 1.6 — la preuve par un paquet d'essai | à faire | |
 
 ## Contexte
@@ -174,6 +174,13 @@ petit écran dès qu'on lui ajoute un bouton.
 - Nouvel outil `v2/tools/personnage.js` : crée un personnage au doigt, en hauteur et en largeur, prend les
   captures, puis vérifie que le nom choisi paraît dans le dialogue, au combat et à la halte, et qu'aucun « Idris »
   ne reste affiché.
+
+*Réalisé (15 novembre).* Avec un écart approuvé dans le plan de reprise : pas de marqueur dans les textes, qui ne
+changent pas d'un mot ; le nom choisi remplace « Idris » à l'affichage, à partir des phrases relevées quand une saga
+est posée. Le validateur n'a donc pas à signaler un « Idris » en dur : c'est la forme attendue. Deux précisions : un
+prénom en « 'Abd » passe ('Abd al-Karîm), mais 'Abd ar-Rahmân est refusé parce qu'un héros du jeu le porte ; le nom du
+Prophète ﷺ est refusé, les autres noms de prophètes passent. « Ton personnage » se rouvre aussi depuis le pied de la
+Chaîne.
 
 ### 1.6 La preuve par un paquet d'essai
 

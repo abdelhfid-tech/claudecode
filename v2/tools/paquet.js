@@ -179,6 +179,14 @@ const url = 'file://' + path.join(out, 'index.html');
     }
   }
 
+  // le nom du joueur dans les textes du paquet : une phrase qui dit « Idris » est redite avec le nom choisi, puis rendue
+  if (JSON.stringify(P.sagas || []).includes('Idris')) { page = await mkPage();
+    const nm = await page.evaluate(id => { const I = window.ISNAD, X = I.perso, lire = () => JSON.stringify(I.paquets[id].sagas.map(k => I.sagas[k])), avant = lire(); I.save.reset();
+      const r = X.choisir('Khalil', I.D.TENUES[0].id), pendant = lire(); X.choisir(X.NOM, I.D.TENUES[0].id); const apres = lire(); I.save.reset();
+      const i = pendant.indexOf('Khalil'); return { r, reste: /(^|[^A-Za-zÀ-ÿ])Idris(?![A-Za-zÀ-ÿ])/.test(pendant), nomme: i >= 0, rendu: apres === avant, extrait: i >= 0 ? pendant.slice(Math.max(0, i - 44), i + 22) : '' }; }, P.id);
+    if (nm.r || nm.reste || !nm.nomme || !nm.rendu) ko(`ÉCART le nom du joueur dans les textes du paquet : ${JSON.stringify(nm)}`); else ok(`une phrase du paquet qui nomme le râwî est redite au nom du joueur — « …${nm.extrait}… » — puis rendue telle quelle`);
+    sansErreur('en nommant le râwî dans le paquet'); await page.close(); }
+
   // la Chaîne avec plusieurs livres : chaque saga du paquet est rangée dans le sien, sous son titre, après le livre I et son
   // dernier maillon ; et le dernier maillon ne dépend que des maillons du livre I
   if ((P.sagas || []).length) {

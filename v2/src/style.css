@@ -183,6 +183,34 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 .chainfoot { margin-top: 1em; display: flex; gap: .6em; flex-wrap: wrap; justify-content: center; align-items: center; font-size: .84em; color: var(--dim); }
 .chainfoot button, .pill { padding: .3em 1em; border: 1px solid var(--line); background: rgba(10, 8, 20, .7); border-radius: 2em; font-size: .9em; }
 .chainfoot button.sel { background: rgba(233, 200, 119, .2); color: #fff; }
+/* « Ton personnage » : le nom et la tenue du râwî */
+#perso { background: linear-gradient(180deg, rgba(7, 6, 13, .95), rgba(10, 8, 24, .98)); }
+#perso header { text-align: center; margin-bottom: .8em; }
+#perso h2 { font-family: var(--f-display); letter-spacing: .2em; font-size: 1.4em; margin: 0; color: var(--gold); }
+#perso header p { margin: .3em auto 0; color: var(--dim); font-size: .86em; max-width: 40em; }
+#perso .corps { width: min(100%, 46em); display: grid; grid-template-columns: auto 1fr; gap: 1em 1.4em; align-items: start; }
+#perso .vue { display: flex; flex-direction: column; align-items: center; gap: .3em; padding: .8em 1em; background: radial-gradient(circle at 50% 40%, rgba(57, 230, 255, .12), rgba(10, 8, 20, .7)); border: 1px solid var(--line); }
+#perso .vue .deux { display: flex; gap: .6em; align-items: flex-end; }
+#perso .vue img { width: 6em; height: 9em; image-rendering: pixelated; }
+#perso .vue .qui { font-family: var(--f-display); letter-spacing: .08em; color: var(--gold); font-size: 1.05em; }
+#perso .vue .sous { font-size: .78em; color: var(--dim); }
+#perso .choix { display: flex; flex-direction: column; gap: .6em; min-width: 0; }
+#perso label { font-size: .7em; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); font-family: var(--f-mono); }
+#perso .saisie { display: flex; gap: .5em; align-items: stretch; }
+#perso input { flex: 1 1 auto; min-width: 0; padding: .45em .7em; background: rgba(4, 3, 10, .8); color: #fff; border: 1px solid rgba(233, 200, 119, .4); font: 1.05em var(--f-body); }
+#perso input:focus { outline: 2px solid var(--acc); outline-offset: 1px; }
+#perso .tenues { display: grid; grid-template-columns: repeat(3, 1fr); gap: .4em; }
+#perso .tenue { display: flex; flex-direction: column; align-items: center; gap: .15em; padding: .35em .3em .4em; background: rgba(10, 8, 20, .72); border: 1px solid rgba(255, 255, 255, .12); font-size: .74em; line-height: 1.2; text-align: center; }
+#perso .tenue img { width: 2.9em; height: 4.35em; image-rendering: pixelated; }
+#perso .tenue.choisie { border-color: var(--gold); background: rgba(233, 200, 119, .14); color: #fff; }
+#perso .tenue.sel, #perso .rang button.sel, #perso .saisie button.sel { box-shadow: 0 0 0 2px #fff, 0 0 18px rgba(233, 200, 119, .35); }
+#perso .note { margin: 0; min-height: 1.4em; font-size: .86em; color: var(--dim); } #perso .note.ko { color: #ff9a8a; }
+/* la rangée des boutons reste au bas de l'écran, même s'il faut défiler pour voir toutes les tenues */
+#perso .rang { display: flex; flex-wrap: wrap; gap: .5em; position: sticky; bottom: 0; padding: .6em 0 .2em; background: linear-gradient(180deg, rgba(10, 8, 24, 0), rgba(10, 8, 24, .97) 38%); }
+#perso .rang button, #perso .saisie button { padding: .55em 1em; background: rgba(10, 8, 20, .72); border: 1px solid rgba(233, 200, 119, .25); font-family: var(--f-display); letter-spacing: .1em; font-size: .84em; }
+#perso .rang button.fort { flex: 1 1 auto; border-color: var(--gold); color: #1a1420; background: linear-gradient(180deg, #ffe9a8, #e9c877); }
+#perso .rang button:disabled { opacity: .4; }
+body.portrait #perso .corps { grid-template-columns: 1fr; } body.portrait #perso .vue { flex-direction: row; justify-content: center; gap: 1em; } body.portrait #perso .vue img { width: 4.4em; height: 6.6em; }
 /* « Ta partie » : exporter, importer */
 #title .coin { position: absolute; top: max(10px, 2vh); right: max(12px, 3vw); }
 #title .coin button { padding: .35em .9em; font-size: .7em; letter-spacing: .04em; color: var(--dim); background: rgba(10, 8, 20, .6); border: 1px solid var(--line); border-radius: 2em; }

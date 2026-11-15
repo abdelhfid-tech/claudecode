@@ -95,7 +95,7 @@
     btns.push(mk('Nouvelle partie', async b => {
       close();
       if (auto && (auto.prologue || auto.cp)) { I.setScene(U.blank); S.depth++; let k = 1; try { k = await S.menuPick('Une partie est en cours. En commencer une nouvelle la remplacera ; les copies gardées à la mosquée restent.', [{ t: 'Commencer une nouvelle partie' }, { t: 'Garder ma partie' }]); } finally { S.depth--; S.hideDialog(); } if (k !== 0) return U.showTitle(); }
-      I.save.reset(); I.save.data.started = true; W.roster = {}; W.saga = null; W.startChapter('idris', 0);
+      I.save.reset(); I.save.data.started = true; W.roster = {}; W.saga = null; U.personnage(() => W.startChapter('idris', 0), true);
     }));
     btns.push(mk('Son : ' + (I.audio.on ? 'activé' : 'coupé'), b => { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = 'Son : ' + (I.audio.on ? 'activé' : 'coupé'); }));
     btns.push(mk('Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'), b => { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'); }));
@@ -142,6 +142,37 @@
     if (sv.cp && I.sagas[sv.cp.saga]) { W.roster = {}; W.saga = null; const p = W.startChapter(sv.cp.saga, sv.cp.ci, sv.cp); if (dit) S.toast(dit, 14000); return p; }
     if (!sv.prologue) { W.roster = {}; W.saga = null; return W.startChapter('idris', 0); }
     return U.showChain(dit || undefined);
+  };
+  /* ---------- ton personnage : le nom et la tenue du râwî ----------
+     Au début d'une partie (debut), « Idris » et sa tenue de toujours sont déjà choisis : un toucher suffit à commencer.
+     Le nom est contrôlé à chaque lettre (I.perso.refus) ; une tenue est l'une de celles de D.TENUES, montrée de face et de
+     profil telle que le moteur la dessine. retour(change) : true si le joueur a validé. */
+  U.personnage = function (retour, debut) {
+    const P = I.perso, box = $('#perso .corps'), p0 = P.profil(); let tenue = p0.tenue, fl = null;
+    const fermer = () => { if (fl) fl.destroy(); fl = null; screen('#perso', false); U.menuOpen = false; }, quitter = v => { fermer(); retour(v); };
+    const bouton = (label, fn, cls) => { const b = I.el('button', cls || '', label); b.type = 'button'; tapable(b, () => fn(b)); return b; };
+    const figure = (t, dir) => G.charURL(Object.assign({ kind: 'compagnon' }, t.look), dir);
+    $('#perso header p').textContent = debut ? 'Avant de descendre aux Archives : comment s’appelle ton râwî, et que porte-t-il ? Tu pourras en changer plus tard.' : 'Le nom et la tenue de ton râwî. Les Compagnons, eux, gardent leur nom et leur silhouette.';
+    box.innerHTML = '';
+    const vue = I.el('div', 'vue'), deux = I.el('div', 'deux'), face = new Image(), profil = new Image(), qui = I.el('div', 'qui'), sous = I.el('div', 'sous'), texte = I.el('div');
+    face.alt = ''; profil.alt = ''; deux.appendChild(face); deux.appendChild(profil); texte.appendChild(qui); texte.appendChild(sous); vue.appendChild(deux); vue.appendChild(texte);
+    const choix = I.el('div', 'choix'), ligne = I.el('div', 'saisie'), champ = document.createElement('input'), note = I.el('p', 'note', ''), grille = I.el('div', 'tenues');
+    champ.type = 'text'; champ.maxLength = P.MAX; champ.value = p0.nom; champ.autocomplete = 'off'; champ.spellcheck = false; champ.autocapitalize = 'words'; champ.enterKeyHint = 'done'; champ.id = 'perso-nom'; champ.setAttribute('aria-label', 'Nom du râwî');
+    const lab1 = I.el('label', '', 'Son nom'), lab2 = I.el('label', '', 'Sa tenue'); lab1.htmlFor = 'perso-nom';
+    const bNom = bouton('Écrire', () => { champ.focus(); champ.select(); });
+    const bt = D.TENUES.map(t => { const b = bouton(`<img alt="" src="${figure(t, 0)}"><span>${I.esc(t.nom)}</span>`, () => { tenue = t.id; peindre(); }, 'tenue'); grille.appendChild(b); return b; });
+    const valider = () => { const r = P.choisir(champ.value, tenue); if (r) { peindre(); I.audio.sfx('dark'); return; } I.audio.sfx('roll'); quitter(true); };
+    const bOk = bouton(debut ? 'Commencer' : 'Garder', valider, 'fort ok'), bR = debut ? null : bouton('◂ Retour', () => quitter(false));
+    function peindre() { const t = P.tenue(tenue), r = P.refus(champ.value); face.src = figure(t, 0); profil.src = figure(t, 1); qui.textContent = r ? '…' : P.propre(champ.value); sous.textContent = t.nom;
+      bt.forEach((b, i) => b.classList.toggle('choisie', D.TENUES[i].id === tenue)); note.textContent = r; note.className = 'note' + (r ? ' ko' : ''); bOk.disabled = !!r; }
+    champ.addEventListener('input', peindre);
+    champ.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); champ.blur(); } else if (e.key === 'Escape') { champ.blur(); } });
+    ligne.appendChild(champ); ligne.appendChild(bNom);
+    const rang = I.el('div', 'rang'); rang.appendChild(bOk); if (bR) rang.appendChild(bR);
+    [lab1, ligne, note, lab2, grille, rang].forEach(e => choix.appendChild(e)); box.appendChild(vue); box.appendChild(choix);
+    const liste = [bOk].concat(bR ? [bR] : [], [bNom], bt);
+    U.menuOpen = true; I.input.clearHeld(); screen('#perso', true); $('#perso').scrollTop = 0; peindre();
+    fl = focusList(liste, { onCancel: bR ? () => quitter(false) : null, start: 0 });
   };
   /* ---------- ta partie : l'exporter, l'importer ----------
      Exporter : la partie en un texte, à enregistrer en fichier ou à copier. Importer : coller le texte ou choisir le
@@ -210,7 +241,7 @@
     // un grand bouton dit quoi faire : ouvrir le maillon suivant (ou reprendre celui qui est entamé)
     { const hd = $('#chain header'); let go = hd.querySelector('.go'); if (!go) { go = I.el('div', 'go'); hd.appendChild(go); } go.innerHTML = '';
       const s = suivant, sp = s ? (sv.sagas[s.id] || { ch: 0 }) : null;
-      if (s || allDone) { const b = I.el('button', 'cta', s ? (sp.ch > 0 ? `▶ Reprendre : ${I.esc(s.name)} · chapitre ${sp.ch + 1}` : `▶ Ouvrir le maillon ${rang(s)} : ${I.esc(s.name)}`) : (sv.epilogue ? '▶ Rejouer le dernier maillon' : '▶ Ouvrir le dernier maillon : Idris')); b.type = 'button';
+      if (s || allDone) { const b = I.el('button', 'cta', s ? (sp.ch > 0 ? `▶ Reprendre : ${I.esc(s.name)} · chapitre ${sp.ch + 1}` : `▶ Ouvrir le maillon ${rang(s)} : ${I.esc(s.name)}`) : (sv.epilogue ? '▶ Rejouer le dernier maillon' : '▶ Ouvrir le dernier maillon : ' + I.esc(I.perso.nom()))); b.type = 'button';
         if (s) b.style.setProperty('--c', D.ELEMENTS[s.light].color); tapable(b, () => (s ? ouvrir(s) : dernier())); go.appendChild(b); btns.push(b); }
       go.appendChild(I.el('p', 'comment', (tactile ? 'Ou touche le maillon de ton choix, plus bas.' : 'Ou clique sur le maillon de ton choix. Au clavier : flèches, puis Entrée.') + ' La partie se garde toute seule.')); }
     const maillon = (s, i) => {
@@ -227,7 +258,7 @@
     titreLivre(un); un.sagas.forEach(maillon);
     const fr = I.sagas.idris;
     if (fr) {
-      const b = I.el('button', 'link' + (allDone ? '' : ' locked'), `<span class="seal" style="background-image:url(${G.sealURL('إسناد', '#39e6ff')})"></span><span class="lt"><span class="ord">DERNIER MAILLON · 1508 H · 2084</span><h3>Idris</h3><span class="ep">Le Cœur de l’Agrégor <small>· cyberpunk</small></span><span class="tl">${allDone ? `Rapporter les ${nb} Lumières à la Cité-Miroir.` : `Scellé tant que les ${nb} Lumières ne sont pas réunies.`}</span><span class="stt${sv.epilogue ? ' done' : ''}">${sv.epilogue ? 'Chaîne transmise' : allDone ? 'Ouvert' : un.sagas.filter(fait).length + ' / ' + un.sagas.length + ' Lumières'}</span></span>`);
+      const b = I.el('button', 'link' + (allDone ? '' : ' locked'), `<span class="seal" style="background-image:url(${G.sealURL('إسناد', '#39e6ff')})"></span><span class="lt"><span class="ord">DERNIER MAILLON · 1508 H · 2084</span><h3>${I.esc(I.perso.nom())}</h3><span class="ep">Le Cœur de l’Agrégor <small>· cyberpunk</small></span><span class="tl">${allDone ? `Rapporter les ${nb} Lumières à la Cité-Miroir.` : `Scellé tant que les ${nb} Lumières ne sont pas réunies.`}</span><span class="stt${sv.epilogue ? ' done' : ''}">${sv.epilogue ? 'Chaîne transmise' : allDone ? 'Ouvert' : un.sagas.filter(fait).length + ' / ' + un.sagas.length + ' Lumières'}</span></span>`);
       b.type = 'button'; b.style.setProperty('--c', '#39e6ff'); b.disabled = !allDone && !I.debug.all;
       tapable(b, dernier);
       box.appendChild(b); btns.push(b);
@@ -242,6 +273,7 @@
     const pied = (label, fn) => { const b = I.el('button', '', label); b.type = 'button'; tapable(b, fn); foot.appendChild(b); btns.push(b); };
     pied('Garder une copie', async () => { close(); await U.saveMenu(); U.showChain(); });
     pied('Exporter la partie', () => { close(); U.partie('exporter', () => U.showChain()); });
+    pied('Ton personnage', () => { close(); U.personnage(() => U.showChain()); });
     pied('Recueil', () => { close(); U.pause('codex', () => U.showChain()); });
     pied('Aide', () => { close(); U.pause('aide', () => U.showChain()); });
     pied('Organigramme', () => { close(); U.pause('mal', () => U.showChain()); });
@@ -290,14 +322,14 @@
     if (saga.frame && ch.after) {
       sv.rencontres = sv.rencontres || {}; sv.rencontres[ch.after] = true; I.save.store();
       const s2 = I.sagas[ch.after], e2 = D.ELEMENTS[s2.light], left2 = resteDans(s2);
-      return U.showChain(`<b style="color:${e2.color}">${e2.glyph} ${s2.lightName}</b> — ce qu’Idris a reçu de ${I.esc(s2.name)} a servi dans la Cité-Miroir. ${left2 ? `Encore ${left2} maillon${left2 > 1 ? 's' : ''}.` : finLivre(s2)}`);
+      return U.showChain(I.perso.dire(`<b style="color:${e2.color}">${e2.glyph} ${s2.lightName}</b> — ce qu’Idris a reçu de ${I.esc(s2.name)} a servi dans la Cité-Miroir. ${left2 ? `Encore ${left2} maillon${left2 > 1 ? 's' : ''}.` : finLivre(s2)}`));
     }
     if (saga.frame) {
       if (W.ci === 0) { sv.prologue = true; I.save.store(); return U.showChain('La Chaîne s’ouvre. Cinq maillons, cinq témoins. Commence par le premier : Abû Bakr, le jour où tout aurait pu se défaire.'); }
       sv.epilogue = true; I.save.store(); await U.credits(); return U.showTitle();
     }
     const e = D.ELEMENTS[saga.light]; const left = resteDans(saga);
-    return U.showChain(`<b style="color:${e.color}">${e.glyph} ${saga.lightName}</b> — la Lumière de ${I.esc(saga.name)} rejoint Idris. ${left ? `Encore ${left} maillon${left > 1 ? 's' : ''}.` : finLivre(saga)}`);
+    return U.showChain(I.perso.dire(`<b style="color:${e.color}">${e.glyph} ${saga.lightName}</b> — la Lumière de ${I.esc(saga.name)} rejoint Idris. ${left ? `Encore ${left} maillon${left > 1 ? 's' : ''}.` : finLivre(saga)}`));
   };
   U.credits = async function () {
     await S.card('credits', `<h1>ISNAD</h1><p class="small">Chroniques des Compagnons</p>
@@ -349,6 +381,7 @@
         toggle('Son', () => I.audio.on ? 'activé' : 'coupé', () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, 'Coupe ou rétablit tout le son : musique, percussions et bruitages.'),
         toggle('Musique', () => I.audio.musicOn ? 'activée' : 'coupée', () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, 'Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.'),
         toggle('Rendu', () => G.low ? '2D simple' : 'rétro-HD', () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, 'Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.'));
+      items.push({ label: 'Ton personnage', fn() { close(); U.personnage(() => { if (I.scene === W && W.map) W.hud(); }); }, show: () => { const p = I.perso.profil(); return '<h3>Ton personnage</h3><p>Le râwî porte le nom et la tenue que tu lui donnes : <b>' + I.esc(p.nom) + '</b>, ' + I.esc(I.perso.tenue().nom.toLowerCase()) + '. Les Compagnons, eux, gardent leur nom et leur silhouette.</p>'; } });
       items.push({ label: 'Exporter la partie', fn() { close(); U.partie('exporter', () => {}); }, show: () => '<h3>Exporter la partie</h3><p>Ta partie tient dans un texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.</p><p class="src">Elle se garde aussi toute seule sur cet appareil, à chaque objectif atteint.</p>' });
       items.push({ label: 'Diagnostic', fn() {}, show: U.diagnostic });
       if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre là où tu l’as laissé : la partie se garde toute seule, même si tu fermes la page.</p>' });
