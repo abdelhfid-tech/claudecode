@@ -12,7 +12,7 @@
 | 1.3 — les livres | **fait** le 15 novembre (commit `01a5cd9`) | l'écran de la Chaîne identique à celui de la 1.31 en huit moments, du prologue à la Chaîne transmise (`ecrans.js`) ; dans le jeu d'essai, deux livres rangés sous leur titre, le dernier maillon ouvert par les seuls maillons du livre I, 24 copies fautives refusées (`paquet.js`) ; toute la batterie du jeu de base, sans anomalie |
 | 1.4 — la partie du joueur | **fait** le 15 novembre (commit `32e18f2`) | par les vrais boutons : une partie exportée (texte et fichier), effacée, réimportée à l'identique, reprise au milieu d'un chapitre ; dix textes qui ne sont pas des parties refusés sans rien changer ; une partie de la 1.31 acceptée et remise à jour ; les clés de la 1.31 intactes (`partie.js`) ; une partie faite avec le paquet d'essai portée dans le jeu livré puis rapportée, sans rien perdre (`paquet.js`) ; toute la batterie, sans anomalie |
 | 1.5 — le personnage du joueur | **fait** le 15 novembre (commit `0a40f26`) | les noms acceptés et refusés ; les 29 phrases du jeu qui nomment le râwî, redites avec six noms, élision juste ; le profil d'origine qui ne change rien ; par les vrais boutons et en quatre tailles d'écran, un prologue entier joué sous un autre nom sans qu'un seul « Idris » s'affiche ; le choix gardé, rechargé, exporté (`personnage.js`) ; toute la batterie, sans anomalie |
-| 1.6 — la preuve par un paquet d'essai, la publication | **fait** le 15 novembre | dernier passage de tous les outils sur l'assemblage publié ; dans un Artifact, l'export ne propose que la copie du texte (`partie.js`) ; la 2.0 publiée dans son propre Artifact privé, celui de la 1.31 resté à sa version 31 |
+| 1.6 — la preuve par un paquet d'essai, la publication | **fait** le 15 novembre (commit `885646e`) | dernier passage de tous les outils sur l'assemblage publié ; dans un Artifact, l'export ne propose que la copie du texte (`partie.js`) ; la 2.0 publiée dans son propre Artifact privé, celui de la 1.31 resté à sa version 31 |
 
 ## Contexte
 
@@ -191,6 +191,13 @@ Chaîne.
   que l'export et l'import de la partie tiennent, et qu'une partie chargée sans le paquet ne plante pas.
 - Documentation de la 2.0 dans `v2/docs/` : `schema-paquet.md` (le contrat d'un paquet), `architecture.md`.
 - La 2.0 est publiée dans un **nouvel** Artifact privé. Celui de la 1.31 n'est pas touché.
+
+*Réalisé (15 novembre).* Le paquet d'essai et son outil étaient arrivés dès le lot 1.2 ; ce lot a repassé tous les
+outils sur l'assemblage final, ajouté trois garde-fous (pas de bouton de fichier dans un Artifact, où il ne ferait
+rien ; aucune balise dans un texte ; une copie gardée abîmée qui se relit) et publié la 2.0 dans son propre Artifact
+privé : https://claude.ai/artifact/6TYXTHubyPkSTa22DMpsMN (version 1). Celui de la 1.31 est resté à sa version 31.
+
+**Le chantier 1 est terminé.** La suite — la base et la page d'administration — attend l'accord du décideur.
 
 ## Chantiers 2 à 5 — esquisse, à détailler le moment venu
 

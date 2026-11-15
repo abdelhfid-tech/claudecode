@@ -18,7 +18,8 @@ une valeur, pour dévoiler l'Agrégor.
   **paquets** (sagas, lieux, objets, équipement, étals, musiques) rangés en **livres** ; une partie que l'on exporte et
   que l'on réimporte ; un personnage dont le joueur choisit le nom et la tenue. Elle a ses propres outils (`v2/tools/`)
   et ses propres sauvegardes. À lire : `v2/docs/feuille-de-route.md` (où l'on en est), `v2/docs/architecture.md`
-  (comment c'est fait), `v2/docs/schema-paquet.md` (le contrat d'un paquet).
+  (comment c'est fait), `v2/docs/schema-paquet.md` (le contrat d'un paquet). Elle se joue dans son propre Artifact
+  privé, distinct de celui de la 1.31.
 
 Ce qui suit décrit la 1.31.
 
