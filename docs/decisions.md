@@ -602,8 +602,10 @@ ou la corriger après avoir joué Yarmoûk. Rien n'est repris d'un jeu existant 
 - [ ] **D108. Le renfort devient un rang.** Un allié gagné par la parole retirait, en ouverture, un voile à
   chaque égrégore. Dans une bataille déclarée qui a des rangs, il prend place sur le champ (au milieu, avec
   l'ordre d'avancer quand la mission le permet) : c'est en atteignant le pied de l'idole qu'il fait tomber
-  un voile. Sans rangs (L'Épée au fourreau), il agit comme avant. Les chameliers d'al-Hîra viennent en
-  « gens du lieu », les éclaireurs des Banû Zurayr (clan de fiction) en cavaliers.
+  un voile. Sans rangs (L'Épée au fourreau), il agit comme avant. Seul un allié que le récit donne pour une
+  troupe (`rang`) devient un rang : les chameliers d'al-Hîra et les pilotes du port en « gens du lieu », les
+  éclaireurs des Banû Zurayr (clan de fiction) en cavaliers. Une veille commune, un dû versé, des greniers
+  ouverts ne sont pas des troupes : ils agissent comme avant.
 - [ ] **D109. Exigence 19, proposée dans `AGENTS.md`.** Au décideur de la confirmer, de la reformuler ou
   de la retirer.
 - [ ] **D110. Toute idole est annoncée.** L'échelle des réponses dit : l'idole, par une bataille déclarée.
@@ -658,7 +660,8 @@ ou la corriger après avoir joué Yarmoûk. Rien n'est repris d'un jeu existant 
 - **Limites connues.** Le joueur de test ne sait qu'ajuster un ordre par tour avec Khâlid : les mesures
   disent que le champ ne casse rien, pas qu'il est bien dosé pour quelqu'un qui joue. La Traversée est
   courte : on n'y voit guère plus de deux pas. Les nuées ne percent presque jamais tant que trois couloirs
-  sont tenus : le champ récompense (un flanc découvert) plus qu'il ne menace.
+  sont tenus : le champ récompense (un flanc découvert) plus qu'il ne menace. Dans les dix-huit combats
+  d'idole sans rangs, la bataille déclarée n'est qu'un carton : c'est voulu, et cela peut se discuter.
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
