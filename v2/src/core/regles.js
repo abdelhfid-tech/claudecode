@@ -503,6 +503,7 @@
       sagas.forEach(s => (s.chapters || []).forEach(c => { if (c.after !== undefined && !ids.has(c.after)) E.push(`${s.id}/${c.id}: « after: ${c.after} » ne désigne aucune saga`); }));
       jouables.forEach(s => { const L = s.livre === undefined ? 1 : s.livre;
         if (!(Number.isInteger(L) && L >= 1)) { E.push(`saga ${s.id}: « livre » doit être un entier à partir de 1`); return; }
+        if (D.LIVRES && !D.LIVRES[L]) E.push(`saga ${s.id}: le livre ${L} n'est pas déclaré (livres: { ${L}: { titre } })`);
         const k = L + ':' + s.order; if (vus[k]) E.push(`sagas ${vus[k]} et ${s.id}: même ordre ${s.order} dans le livre ${L}`); vus[k] = s.id; });
       return E;
     }
@@ -530,6 +531,8 @@
     siennes.forEach(s => {
       // le contenu commun, l'histoire-cadre et les veillées appartiennent au jeu de base : un paquet apporte des maillons
       if (s.commun || s.frame || s.veillees) { erreurs.push(`saga ${s.id}: le contenu commun, l'histoire-cadre et les veillées appartiennent au jeu de base ; un paquet apporte des maillons de la Chaîne`); return; }
+      // le livre I est celui du jeu de base, avec ses cinq maillons et sa fin : un paquet range ses sagas dans un autre livre
+      if ((s.livre === undefined ? 1 : s.livre) === 1) erreurs.push(`saga ${s.id}: le livre I est celui du jeu de base ; un paquet range ses sagas dans un autre livre (livre: 2, ou plus)`);
       const r = R.verifierSaga(s); r.erreurs.forEach(e => erreurs.push(e)); r.avis.forEach(a => avis.push(a)); });
     R.verifierEnsemble(toutes).forEach(e => erreurs.push(e));
     // ce qui est déclaré sans jamais servir : rien de faux, mais le joueur ne le verra pas

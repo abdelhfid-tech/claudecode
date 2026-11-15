@@ -177,6 +177,9 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 .link .stt.done { color: var(--c); }
 .link .qt { font-size: .7em; color: var(--dim); letter-spacing: .04em; margin-top: .15em; }
 .link.locked { opacity: .45; }
+.links .livre { grid-column: 1 / -1; display: flex; align-items: baseline; gap: .5em; margin-top: .7em; padding-bottom: .25em; border-bottom: 1px solid var(--line); font-family: var(--f-display); letter-spacing: .12em; font-size: .9em; color: var(--sand); }
+.links .livre:first-child { margin-top: 0; } .links .livre b { color: var(--gold); font-weight: normal; letter-spacing: .2em; }
+.links .livre small { margin-left: auto; font-family: var(--f-mono); font-size: .72em; letter-spacing: .14em; color: var(--dim); text-transform: uppercase; }
 .chainfoot { margin-top: 1em; display: flex; gap: .6em; flex-wrap: wrap; justify-content: center; align-items: center; font-size: .84em; color: var(--dim); }
 .chainfoot button, .pill { padding: .3em 1em; border: 1px solid var(--line); background: rgba(10, 8, 20, .7); border-radius: 2em; font-size: .9em; }
 .chainfoot button.sel { background: rgba(233, 200, 119, .2); color: #fff; }

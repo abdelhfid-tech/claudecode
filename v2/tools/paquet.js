@@ -6,7 +6,8 @@
    2. Pour le paquet d'essai seulement : des copies fautives sont-elles refusées, chacune pour la bonne raison ?
    3. Un jeu d'essai est assemblé à part (.smoke/essai/index.html) : le jeu livré n'est pas touché.
    4. Dans ce jeu : le paquet est-il posé ? Chaque lieu se bâtit-il à chaque heure, ses lieux nommés se rejoignent-ils, sa
-      piste est-elle la bonne ? Chaque saga se joue-t-elle jusqu'au bout — en sautant, à pied, au doigt ? Les objets, les
+      piste est-elle la bonne ? Chaque saga se joue-t-elle jusqu'au bout — en sautant, à pied, au doigt ? La Chaîne la
+      range-t-elle dans son livre, sous son titre, sans que le dernier maillon du livre I en dépende ? Les objets, les
       pièces et les étals sont-ils là, les pistes sonnent-elles ? Un paquet fautif est-il refusé sans arrêter le jeu ?
    Sortie : une ligne « OK » par preuve ; « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE » ou « ÉCART » sinon. Code 1 à la première anomalie. */
 const fs = require('fs'), path = require('path'), vm = require('vm');
@@ -37,7 +38,7 @@ console.log(r.erreurs.length ? `✗ paquet ${P.id} — ${r.erreurs.length} erreu
 r.erreurs.forEach(e => console.log('   - ' + e)); r.avis.forEach(a => console.log('   ! ' + a));
 if (r.erreurs.length) { anomalies += r.erreurs.length; console.log('✗ le paquet ne passe pas les règles : rien n’est assemblé'); process.exit(1); }
 
-/* ---------- 2. le paquet d'essai, abîmé de dix-huit façons : chacune doit être refusée, pour la bonne raison ---------- */
+/* ---------- 2. le paquet d'essai, abîmé de bien des façons : chacune doit être refusée, pour la bonne raison ---------- */
 if (estEssai) {
   const S0 = p => p.sagas[0], C0 = p => S0(p).chapters[0];
   const FAUTES = [
@@ -59,6 +60,9 @@ if (estEssai) {
     ['l’histoire-cadre dans un paquet', p => { S0(p).frame = true; }, 'jeu de base'],
     ['une saga du jeu de base redéclarée', p => { S0(p).id = 'abubakr'; }, 'existe déjà'],
     ['deux sagas au même rang du même livre', p => { const s = JSON.parse(JSON.stringify(S0(p))); s.id = 'essai_bis'; p.sagas.push(s); }, 'même ordre'],
+    ['une saga rangée dans le livre I, celui du jeu de base', p => { S0(p).livre = 1; }, 'livre I'],
+    ['une saga dans un livre que personne ne déclare', p => { S0(p).livre = 3; }, 'pas déclaré'],
+    ['un livre du jeu de base renommé', p => { p.livres[1] = { titre: 'Autre titre' }; }, 'existe déjà'],
     ['un lieu du jeu de base redéclaré', p => { p.lieux.medine = { gabarit: 'ville', nom: 'Autre' }; }, 'existe déjà'],
     ['un moteur trop récent', p => { p.moteur = 99; }, 'moteur'],
     ['une clé inconnue', p => { p.equipment = {}; }, 'inconnue']
@@ -136,6 +140,7 @@ const url = 'file://' + path.join(out, 'index.html');
     I.battle.start = orig; W.loadMap = ol;
     const sv = I.save.data;
     return { ok, s: (performance.now() - t0) / 1000, log, stats, pistesVues, ou: ok ? '' : `chapitre ${W.ch && W.ch.id}, objectif ${W.objIndex}, carte ${W.map && W.map.id}`,
+      accueil: document.querySelector('#chain header p').textContent, resteAuLivre: I.sagaList.filter(x => !x.frame && (x.livre || 1) === (I.sagas[sid].livre || 1) && x.id !== sid).length, livre: I.romain(I.sagas[sid].livre || 1),
       fait: !!(sv.sagas[sid] && sv.sagas[sid].done), lumieres: sv.lights, objets: sv.items, pieces: JSON.stringify([sv.gear, sv.equip]), savoirs: sv.codex.filter(c => c.indexOf(sid + '/') === 0).length, musique: I.audio.wantTrack };
   }, [sid, marche]);
   const MODES = [['auto', 'en sautant d’objectif en objectif'], ['walk', 'à pied, avec les vraies collisions'], ['tap', 'au doigt, par un chemin tracé']];
@@ -147,7 +152,8 @@ const url = 'file://' + path.join(out, 'index.html');
       if (!j.ok) ko(`BLOQUÉ saga ${s.id} (${mode}) — ${j.ou}`);
       else if (mauvais.length) mauvais.slice(0, 6).forEach(l => ko(`${l}   [saga ${s.id}, ${mode}]`));
       else if (!j.fait) ko(`ÉCART saga ${s.id} (${mode}) : revenue à la Chaîne sans être marquée achevée`);
-      else ok(`saga ${s.id} jouée ${dit} : ${j.s.toFixed(1)} s, ${j.stats.length} combat(s), ${j.stats.reduce((a, x) => a + x.defaites, 0)} défaite(s), ${j.savoirs} savoir(s), Lumière ${j.lumieres.join('+') || 'aucune'}`);
+      else if (!(j.resteAuLivre ? /Encore \d+ maillon/.test(j.accueil) : j.accueil.includes(`Le livre ${j.livre} est achevé.`))) ko(`ÉCART saga ${s.id} (${mode}) : au retour, la Chaîne dit « ${j.accueil} »`);
+      else ok(`saga ${s.id} jouée ${dit} : ${j.s.toFixed(1)} s, ${j.stats.length} combat(s), ${j.stats.reduce((a, x) => a + x.defaites, 0)} défaite(s), ${j.savoirs} savoir(s), Lumière ${j.lumieres.join('+') || 'aucune'}${mode === 'auto' ? ` · au retour : « ${j.accueil.replace(/^.*— /, '')} »` : ''}`);
       sansErreur(`saga ${s.id}, ${mode}`);
       if (mode === 'auto') { // ce que la partie a gardé du paquet
         Object.keys(P.objets || {}).forEach(k => { if (JSON.stringify(s).includes('"' + k + '"')) { if (!(j.objets[k] > 0)) ko(`ABSENT objet ${k} : donné par la saga ${s.id}, il n'est pas dans la besace`); else ok(`objet ${k} : dans la besace après la saga (×${j.objets[k]})`); } });
@@ -171,6 +177,37 @@ const url = 'file://' + path.join(out, 'index.html');
         sansErreur('à l’étal'); await page.close();
       }
     }
+  }
+
+  // la Chaîne avec plusieurs livres : chaque saga du paquet est rangée dans le sien, sous son titre, après le livre I et son
+  // dernier maillon ; et le dernier maillon ne dépend que des maillons du livre I
+  if ((P.sagas || []).length) {
+    const lireChaine = async (pg, id) => pg.evaluate(async id => { const I = window.ISNAD; I.audio.setOn(false); I.speed = 40;
+      const fermer = () => document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
+      const lire = () => { const c = document.querySelector('#chain'); return { titres: Array.from(c.querySelectorAll('.links .livre')).map(e => e.textContent),
+        ordre: Array.from(c.querySelectorAll('.links > *')).map(e => (e.classList.contains('livre') ? '§' + e.querySelector('b').textContent : e.querySelector('h3').textContent)),
+        scelles: Array.from(c.querySelectorAll('.links button')).filter(b => b.disabled).map(b => b.querySelector('h3').textContent), bouton: (c.querySelector('header .cta') || {}).textContent || '', accueil: c.querySelector('header p').textContent }; };
+      const L = I.livres(), base = (L.find(x => x.n === 1) || { sagas: [] }).sagas.map(s => s.id), res = {};
+      const voir = async (nom, faites, plus) => { fermer(); I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; faites.forEach(k => { sv.sagas[k] = { ch: 0, done: true, flags: {} }; sv.lights.push(I.sagas[k].light); }); Object.assign(sv, plus || {}); await I.ui.showChain(); res[nom] = lire(); };
+      await voir('livre1', base); await voir('transmise', base, { epilogue: true }); await voir('debut', []);
+      return { res, livres: L.map(x => ({ n: x.n, titre: x.titre, rom: I.romain(x.n), sagas: x.sagas.map(s => s.id), noms: x.sagas.map(s => s.name) })), nBase: base.length }; }, id);
+    page = await mkPage({ width: 1280, height: 720 }); const ch = await lireChaine(page, P.id), R = ch.res;
+    await page.waitForTimeout(400); await page.screenshot({ path: path.join(out, 'chaine-livres.png') });
+    await page.evaluate(() => { const c = document.querySelector('#chain'); c.scrollTop = c.scrollHeight; }); await page.waitForTimeout(300); await page.screenshot({ path: path.join(out, 'chaine-livres-bas.png') });
+    await page.close();
+    const attendu = []; ch.livres.forEach(L => { attendu.push('§LIVRE ' + L.rom); L.noms.forEach(n => attendu.push(n)); if (L.n === 1) attendu.push('Idris'); });
+    (P.sagas || []).forEach(s => { const L = ch.livres.find(x => x.sagas.includes(s.id)); if (!L || L.n !== s.livre) ko(`ÉCART saga ${s.id} : rangée dans le livre ${L ? L.n : '?'}, déclarée dans le livre ${s.livre}`);
+      else if (P.livres && P.livres[s.livre] && L.titre !== P.livres[s.livre].titre) ko(`ÉCART livre ${s.livre} : titre « ${L.titre} », déclaré « ${P.livres[s.livre].titre} »`); });
+    if (ch.livres.length < 2) ko('ÉCART la Chaîne ne montre qu’un livre');
+    else if (JSON.stringify(R.debut.ordre) !== JSON.stringify(attendu)) ko(`ÉCART ordre de la Chaîne : ${R.debut.ordre.join(' · ')} — attendu : ${attendu.join(' · ')}`);
+    else ok(`la Chaîne range ${ch.livres.length} livres : ${R.debut.titres.join(' | ')}`);
+    if (JSON.stringify(R.debut.scelles) !== '["Idris"]') ko(`ÉCART au début, sont scellés : ${R.debut.scelles.join(', ') || 'aucun'} — attendu : le dernier maillon seulement`);
+    else if (R.livre1.scelles.length || !/dernier maillon/.test(R.livre1.bouton)) ko(`ÉCART les ${ch.nBase} maillons du livre I achevés, le dernier maillon reste scellé (« ${R.livre1.bouton} ») : une saga ajoutée bloque la fin du jeu de base`);
+    else if (!/du livre [IVX]+ : /.test(R.transmise.bouton)) ko(`ÉCART la Chaîne transmise, le bouton ne propose pas le maillon d'un autre livre : « ${R.transmise.bouton} »`);
+    else ok(`le dernier maillon s'ouvre dès que les ${ch.nBase} maillons du livre I sont achevés (« ${R.livre1.bouton} ») ; ensuite : « ${R.transmise.bouton} »`);
+    page = await mkPage({ width: 390, height: 844 }); await lireChaine(page, P.id); await page.evaluate(() => { const c = document.querySelector('#chain'); c.scrollTop = c.scrollHeight; }); await page.waitForTimeout(400);
+    await page.screenshot({ path: path.join(out, 'chaine-livres-mobile.png') }); await page.close();
+    sansErreur('sur la Chaîne');
   }
 
   // chaque lieu du paquet, pour le voir : une capture du lieu, une de sa carte à la halte — où ses lieux portent les noms qu'il déclare

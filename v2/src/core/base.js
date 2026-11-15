@@ -5,7 +5,7 @@
   const I = window.ISNAD = {
     D, sagas: {}, sagaList: [],
     // commun: true — contenu partagé par toutes les sagas (src/data/coeur.js) : ni maillon ni chapitre
-    registerSaga(s) { this.sagas[s.id] = s; if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => a.order - b.order); },
+    registerSaga(s) { this.sagas[s.id] = s; if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => ((a.livre || 1) - (b.livre || 1)) || (a.order - b.order)); },   // par livre, puis par ordre
     speed: 1, debug: {}
   };
 
@@ -65,6 +65,11 @@
   I.$ = sel => document.querySelector(sel);
   I.el = function (tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; };
   I.esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  // les livres de la Chaîne : les maillons (ni l'histoire-cadre ni les veillées) rangés par livre. Le livre I est celui du jeu
+  // de base ; un paquet range ses sagas dans un autre. → [{ n, titre, sagas }]
+  I.livres = function () { const L = {}; I.sagaList.filter(s => !s.frame).forEach(s => { const n = s.livre || 1; (L[n] || (L[n] = { n, titre: (D.LIVRES[n] || {}).titre || '', sagas: [] })).sagas.push(s); }); return Object.keys(L).map(Number).sort((a, b) => a - b).map(n => L[n]); };
+  I.romain = function (n) { let r = ''; [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']].forEach(p => { while (n >= p[0]) { r += p[1]; n -= p[0]; } }); return r; };
+  I.enLettres = n => ['zéro', 'une', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix', 'onze', 'douze'][n] || String(n);   // au féminin : des Lumières
   // *emphase* -> <em>
   I.fmt = s => I.esc(s).replace(/\*([^*]+)\*/g, '<em>$1</em>');
 

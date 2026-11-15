@@ -28,6 +28,7 @@ pour s'y comparer, et ne fait que la lire.
 | `v2/paquets/*.json` | les paquets publiés, embarqués à l'assemblage — aucun aujourd'hui |
 | `v2/tools/` | assemblage, contrôle, parcours de test — les outils de la 1.31, tournés vers `v2/` |
 | `v2/tools/cartes.js` | les lieux du livre I sortent-ils comme dans la 1.31 ? |
+| `v2/tools/ecrans.js` | l'écran de la Chaîne du livre I est-il celui de la 1.31 ? |
 | `v2/tools/paquet.js`, `v2/tools/essais/` | éprouver un paquet ; le paquet d'essai (pure fiction, jamais livré) |
 | `v2/tools/gel.js`, `v2/gel-1.31.json` | la garantie que la 1.31 ne bouge pas |
 | `v2/docs/` | feuille de route, architecture, contrat d'un paquet |
@@ -69,6 +70,14 @@ dit si l'on y bâtit. Koufa est une `ville` dans sa variante `fleuve`.
 - Un lieu déclaré par un paquet a son propre identifiant, donc sa propre graine : même plan, autre répartition des
   palmiers et des rochers. Si un lieu nommé s'y trouvait coupé des autres, le moteur rebat les cartes (`M.relie`).
 
+### Les livres
+
+`I.livres()` range les maillons par livre (`saga.livre`, 1 par défaut ; titres dans `D.LIVRES`). L'écran de la Chaîne
+montre le livre I — ses maillons, puis le dernier maillon —, puis les autres livres sous leur titre ; les chiffres
+romains et les comptes (« cinq Lumières ») sont calculés. Le dernier maillon ne dépend que des maillons du livre I :
+une saga ajoutée ne peut pas bloquer la fin du jeu de base. Avec un seul livre, l'écran est celui de la 1.31, élément
+pour élément : `node v2/tools/ecrans.js` le compare en huit moments, du prologue à la Chaîne transmise.
+
 ## Les règles du contenu : `src/core/regles.js`
 
 En 1.31, les règles vivent dans deux scripts (`tools/validate.js`, `tools/validate-music.js`) qui lisent le disque et
@@ -99,7 +108,8 @@ contenu qui ne passe pas les exigences de respect n'entre pas dans le jeu, d'où
 Règles ajoutées par la 2.0 :
 
 - un égrégore ne fixe ni Constance ni dégâts (`hp`, `atk`…) : le moteur les calcule — la 1.31 l'ignorait sans le dire ;
-- `after` désigne une saga qui existe ; `order` est unique dans son livre ;
+- `after` désigne une saga qui existe ; `order` est unique dans son livre ; le livre d'une saga est déclaré ; un paquet
+  range ses sagas hors du livre I ;
 - un objet de la besace n'a que des effets connus, dans leurs bornes, et des mots sobres ;
 - le contenu commun, l'histoire-cadre et les veillées appartiennent au jeu de base : un paquet apporte des maillons.
 
@@ -115,6 +125,7 @@ node v2/tools/validate.js fichiers   # seulement ces fichiers
 node v2/tools/validate-music.js
 node v2/tools/build.js               # v2/index.html et v2/dist/isnad.html (avec les paquets de v2/paquets/)
 node v2/tools/cartes.js              # « CARTES IDENTIQUES à celles de la 1.31 »
+node v2/tools/ecrans.js              # « CHAÎNE IDENTIQUE à celle de la 1.31 »
 node v2/tools/paquet.js [fichier]    # éprouve un paquet, hors du jeu puis dans un jeu d'essai assemblé à part
 node v2/tools/smoke.js auto          # et walk, tap, wrong, shots — comme en 1.31
 node v2/tools/doigt.js [loin [844x390]]
@@ -122,6 +133,6 @@ node v2/tools/son.js
 node v2/tools/bataille.js [mesures]
 ```
 
-**Règle de la 2.0.** Celle d'`AGENTS.md`, avec deux contrôles de plus à chaque changement du moteur ou des règles :
-`cartes.js` doit afficher « CARTES IDENTIQUES », `paquet.js` doit finir sans « REFUS », « BLOQUÉ », « ABSENT »,
-« INACCESSIBLE » ni « ÉCART ». Et `gel.js` doit afficher « 1.31 INTACTE » avant chaque enregistrement.
+**Règle de la 2.0.** Celle d'`AGENTS.md`, avec trois contrôles de plus à chaque changement du moteur ou des règles :
+`cartes.js` doit afficher « CARTES IDENTIQUES », `ecrans.js` « CHAÎNE IDENTIQUE », et `paquet.js` doit finir sans
+« REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE » ni « ÉCART ». Et `gel.js` doit afficher « 1.31 INTACTE » avant chaque enregistrement.

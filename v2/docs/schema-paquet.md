@@ -31,8 +31,8 @@ base de données servira (chantier 2). Le contrat d'une saga, lui, ne change pas
 | `version` | oui | un entier, 1 ou plus : il monte à chaque publication du paquet. |
 | `moteur` | oui | ce que le paquet demande au jeu (voir §5). Aujourd'hui : `1`. |
 | `titre`, `note` | non | pour la page Diagnostic et pour l'administration. |
-| `livres` | non | `{ numéro: { titre } }`. Un livre déjà déclaré garde son titre : le redéclarer autrement est refusé. |
-| `sagas` | non | une liste de sagas. Chacune porte `livre` (1 par défaut) et un `order` unique dans son livre. |
+| `livres` | non | `{ numéro: { titre } }`, à partir de 2. Un livre déjà déclaré garde son titre : le redéclarer autrement est refusé. |
+| `sagas` | non | une liste de sagas. Chacune porte `livre` — 2 ou plus, un livre déclaré — et un `order` unique dans son livre (§1 bis). |
 | `lieux` | non | des lieux bâtis sur un gabarit (§2). |
 | `objets` | non | des objets de la besace (§3). |
 | `equipement` | non | des pièces d'une famille existante (§3). |
@@ -40,6 +40,21 @@ base de données servira (chantier 2). Le contrat d'une saga, lui, ne change pas
 | `pistes` | non | des pistes écrites en notes (`docs/musique.md`) : chaque voix dure exactement `beats` temps. |
 
 Toute autre clé est refusée : une faute de frappe (`equipment`) ne passe pas en silence.
+
+## 1 bis. Les livres
+
+La Chaîne est rangée en **livres**. Le **livre I** est celui du jeu de base : le prologue, ses cinq maillons, puis le
+dernier maillon, qui s'ouvre quand **ses** cinq maillons sont achevés — et seulement eux. Un paquet ne lui ajoute rien :
+il range ses sagas dans un autre livre, qu'il déclare (`livres`) s'il ne l'est pas déjà. Deux paquets peuvent nourrir
+le même livre, sous le même titre.
+
+- Sur l'écran de la Chaîne, chaque livre a son titre — « LIVRE II · … » — et son compte de maillons. Avec un seul
+  livre, aucun titre : c'est l'écran de la 1.31.
+- Les maillons d'un livre se rangent par `order` et portent des chiffres romains calculés (maillon I, II, III…).
+- Les maillons d'un autre livre s'ouvrent dès que le prologue est passé, comme ceux du livre I ; le grand bouton, lui,
+  propose d'abord le livre I, puis le dernier maillon, puis les autres livres.
+- Une saga d'un autre livre peut rendre une Lumière déjà reçue : elle n'est comptée qu'une fois.
+- Une saga ajoutée n'a ni veillée du Caïd ni rencontre de la Cité-Miroir : à sa fin, on revient à la Chaîne.
 
 ## 2. Les lieux : dix gabarits
 

@@ -83,7 +83,9 @@ const url = 'file://' + path.join(__dirname, '../index.html');
         if (force && I.audio.wantTrack !== I.audio.place) log.push(`MUSIQUE ${W.saga.id}/${W.ch.id} après une défaite : voulue « ${I.audio.wantTrack} », lieu « ${I.audio.place} »`);
         stats.push({ saga: W.saga.id, ch: W.ch.id, group: o.group.join('+'), boss: !!o.boss, interieur: !!o.interieur, secours: !!I.battle.last.secours, defeats: tries - (force ? 1 : 0), forcee: force, rac, champ: I.battle.last.champ, turns: I.battle.last.turns, kos: I.battle.last.kos, min: Math.round(I.battle.last.minHp * 100), lv: W.party.map(id => W.hero(id).lvl).join('/'), hp: W.party.map(id => Math.round(W.hero(id).hp)).join('/') }); };
       const waitChain = () => new Promise(res => { const t0 = Date.now(); const iv = setInterval(() => { if (!document.querySelector('#chain').hidden || !document.querySelector('#title').hidden) { clearInterval(iv); res(true); } else if (Date.now() - t0 > 240000) { clearInterval(iv); res(false); } }, 100); });
-      const order = [['idris', 0], ['abubakr'], ['umar'], ['khalid'], ['uthman'], ['ali'], ['idris', 1]];
+      // le parcours vient des données : le prologue, les maillons du livre I, le dernier maillon, puis les autres livres
+      const maillons = n => I.sagaList.filter(s => !s.frame && ((s.livre || 1) === 1) === n).map(s => [s.id]);
+      const order = [['idris', 0]].concat(maillons(true), [['idris', 1]], maillons(false));
       for (const [sid, ci] of order) {
         hide(); W.roster = {}; W.saga = null; const t0 = performance.now();
         if (ci !== undefined) W.startChapter(sid, ci); else I.ui.startSaga(I.sagas[sid]);

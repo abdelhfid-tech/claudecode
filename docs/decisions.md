@@ -934,6 +934,14 @@ après un premier plan qui modifiait le moteur actuel :
   chapitre dans un livre II, deux lieux, un objet, une épée, deux étals, une piste. `v2/tools/paquet.js` le contrôle,
   vérifie que vingt et une copies fautives sont refusées chacune pour la bonne raison, assemble un jeu à part, y joue la
   saga de trois façons, et vérifie qu'un paquet fautif est refusé par le jeu sans l'arrêter.
+- [ ] **D143. Les livres (lot 1.3).** La Chaîne est rangée en livres (`livre` sur une saga, titres dans `D.LIVRES`). Le
+  livre I est celui du jeu de base : un paquet n'y range rien, et le dernier maillon ne dépend que de ses cinq maillons
+  — une saga ajoutée ne peut pas bloquer la fin. Avec un seul livre, l'écran est celui de la 1.31, élément pour élément
+  (`v2/tools/ecrans.js` : huit moments, du prologue à la Chaîne transmise). Choix de l'agent, à confirmer : le titre
+  provisoire du livre I, « Les cinq Lumières », qui ne s'affiche que s'il existe un autre livre ; les maillons d'un autre
+  livre s'ouvrent dès le prologue passé, comme ceux du livre I ; le grand bouton propose d'abord le livre I, puis le
+  dernier maillon, puis les autres livres ; au dernier maillon d'un autre livre, la Chaîne dit « Le livre II est
+  achevé. » ; une saga ajoutée n'a ni veillée du Caïd ni rencontre de la Cité-Miroir.
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
@@ -1018,5 +1026,7 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     livre I, le jour où un livre II existera ?
 22. Les paquets (D138 à D142) : la liste des mots refusés dans le nom d'un objet convient-elle (D141) ? Un paquet
     doit-il pouvoir un jour apporter, pour ses sagas, une veillée du Caïd ou une rencontre de la Cité-Miroir ?
+23. Les livres (D143) : les maillons d'un livre ajouté doivent-ils s'ouvrir dès le prologue, ou attendre que le livre I
+    soit achevé ? « Les cinq Lumières » convient-il comme titre du livre I ?
 10. *Répondu le 15 novembre : « Ça a l'air ok ».* La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

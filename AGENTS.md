@@ -21,8 +21,9 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   « 1.31 INTACTE » **avant chaque enregistrement**.
 - La suite de ce document décrit la 1.31. Elle vaut pour la 2.0 en lisant `v2/` devant chaque chemin : mêmes exigences de
   respect, même règle de test, avec les outils de `v2/tools/`. Ce qui est propre à la 2.0 est écrit dans `v2/docs/`.
-- La 2.0 a deux contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
-  `node v2/tools/cartes.js` (les lieux du livre I sortent comme dans la 1.31 : « CARTES IDENTIQUES ») et
+- La 2.0 a trois contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
+  `node v2/tools/cartes.js` (les lieux du livre I sortent comme dans la 1.31 : « CARTES IDENTIQUES »),
+  `node v2/tools/ecrans.js` (l'écran de la Chaîne du livre I est celui de la 1.31 : « CHAÎNE IDENTIQUE ») et
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code : aucun « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE »,
   « ÉCART »). Tout contenu ajouté à la 2.0 arrive par un paquet (`v2/docs/schema-paquet.md`) et passe les règles de
   `v2/src/core/regles.js`, exigences de respect comprises : le jeu lui-même refuse un paquet qui ne les passe pas.
@@ -81,6 +82,7 @@ node tools/promo.js all             # livret et planches : captures, sprites, as
 node tools/promo.js planches        # après une retouche du texte : réassemble et réexporte seulement
 node v2/tools/gel.js                # la 1.31 est-elle intacte ? À lancer avant chaque enregistrement de la 2.0
 node v2/tools/cartes.js             # 2.0 : les lieux du livre I, bâtis des deux côtés, sont-ils ceux de la 1.31 ?
+node v2/tools/ecrans.js             # 2.0 : l'écran de la Chaîne du livre I, en huit moments, est-il celui de la 1.31 ?
 node v2/tools/paquet.js [fichier]   # 2.0 : éprouve un paquet (par défaut le paquet d'essai), hors du jeu puis dans un jeu assemblé à part
 node tools/promo.js pdf             # le livret en PDF (promo/livret.pdf) : A5 paysage, deux colonnes, pages équilibrées ; demande poppler (pdfinfo, pdftoppm)
 ```

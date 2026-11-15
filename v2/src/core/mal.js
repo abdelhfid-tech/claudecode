@@ -151,7 +151,8 @@
   };
   // les maillons où l'on rencontre des idoles ; l'histoire-cadre en dernier
   const ROMAIN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
-  M.epoques = () => (I.sagaList || Object.values(I.sagas)).filter(s => !s.commun && (s.chapters || []).some(ch => M.lignee(s, ch).idoles.length || ch.vice)).sort((a, b) => (a.frame && !a.veillees ? 99 : a.order) - (b.frame && !b.veillees ? 99 : b.order));
+  const rangEpoque = s => s.frame && !s.veillees ? 1e6 : (s.livre || 1) * 1000 + s.order;   // par livre, puis par ordre ; l'histoire-cadre en dernier
+  M.epoques = () => (I.sagaList || Object.values(I.sagas)).filter(s => !s.commun && (s.chapters || []).some(ch => M.lignee(s, ch).idoles.length || ch.vice)).sort((a, b) => rangEpoque(a) - rangEpoque(b));
   M.nomEpoque = s => s.veillees ? 'Les veillées de la Citadelle' : s.frame ? 'La Cité-Miroir · ' + String(s.years).split('·')[0].trim() : 'Maillon ' + (ROMAIN[s.order] || s.order) + ' · ' + String(s.years).split('·')[0].trim();
   M.paneEpoque = function (s) {
     const sv = I.save.data, T = C0().mal || {}, vu = id => sv.codex.includes('foe:' + (s.enemies[id] ? s.id : '_') + ':' + id), ici = ch => W.saga === s && W.ch === ch;

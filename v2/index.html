@@ -187,6 +187,9 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 .link .stt.done { color: var(--c); }
 .link .qt { font-size: .7em; color: var(--dim); letter-spacing: .04em; margin-top: .15em; }
 .link.locked { opacity: .45; }
+.links .livre { grid-column: 1 / -1; display: flex; align-items: baseline; gap: .5em; margin-top: .7em; padding-bottom: .25em; border-bottom: 1px solid var(--line); font-family: var(--f-display); letter-spacing: .12em; font-size: .9em; color: var(--sand); }
+.links .livre:first-child { margin-top: 0; } .links .livre b { color: var(--gold); font-weight: normal; letter-spacing: .2em; }
+.links .livre small { margin-left: auto; font-family: var(--f-mono); font-size: .72em; letter-spacing: .14em; color: var(--dim); text-transform: uppercase; }
 .chainfoot { margin-top: 1em; display: flex; gap: .6em; flex-wrap: wrap; justify-content: center; align-items: center; font-size: .84em; color: var(--dim); }
 .chainfoot button, .pill { padding: .3em 1em; border: 1px solid var(--line); background: rgba(10, 8, 20, .7); border-radius: 2em; font-size: .9em; }
 .chainfoot button.sel { background: rgba(233, 200, 119, .2); color: #fff; }
@@ -494,7 +497,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.0 · 2026-11-15 19:45 UTC · 91f1e3b+";
+window.ISNAD_VERSION = "2.0 · 2026-11-15 20:06 UTC · 00b4617+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -1433,6 +1436,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 19:45 UTC · 91f1e3b+";
       sagas.forEach(s => (s.chapters || []).forEach(c => { if (c.after !== undefined && !ids.has(c.after)) E.push(`${s.id}/${c.id}: « after: ${c.after} » ne désigne aucune saga`); }));
       jouables.forEach(s => { const L = s.livre === undefined ? 1 : s.livre;
         if (!(Number.isInteger(L) && L >= 1)) { E.push(`saga ${s.id}: « livre » doit être un entier à partir de 1`); return; }
+        if (D.LIVRES && !D.LIVRES[L]) E.push(`saga ${s.id}: le livre ${L} n'est pas déclaré (livres: { ${L}: { titre } })`);
         const k = L + ':' + s.order; if (vus[k]) E.push(`sagas ${vus[k]} et ${s.id}: même ordre ${s.order} dans le livre ${L}`); vus[k] = s.id; });
       return E;
     }
@@ -1460,6 +1464,8 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 19:45 UTC · 91f1e3b+";
     siennes.forEach(s => {
       // le contenu commun, l'histoire-cadre et les veillées appartiennent au jeu de base : un paquet apporte des maillons
       if (s.commun || s.frame || s.veillees) { erreurs.push(`saga ${s.id}: le contenu commun, l'histoire-cadre et les veillées appartiennent au jeu de base ; un paquet apporte des maillons de la Chaîne`); return; }
+      // le livre I est celui du jeu de base, avec ses cinq maillons et sa fin : un paquet range ses sagas dans un autre livre
+      if ((s.livre === undefined ? 1 : s.livre) === 1) erreurs.push(`saga ${s.id}: le livre I est celui du jeu de base ; un paquet range ses sagas dans un autre livre (livre: 2, ou plus)`);
       const r = R.verifierSaga(s); r.erreurs.forEach(e => erreurs.push(e)); r.avis.forEach(a => avis.push(a)); });
     R.verifierEnsemble(toutes).forEach(e => erreurs.push(e));
     // ce qui est déclaré sans jamais servir : rien de faux, mais le joueur ne le verra pas
@@ -1483,7 +1489,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 19:45 UTC · 91f1e3b+";
   const I = window.ISNAD = {
     D, sagas: {}, sagaList: [],
     // commun: true — contenu partagé par toutes les sagas (src/data/coeur.js) : ni maillon ni chapitre
-    registerSaga(s) { this.sagas[s.id] = s; if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => a.order - b.order); },
+    registerSaga(s) { this.sagas[s.id] = s; if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => ((a.livre || 1) - (b.livre || 1)) || (a.order - b.order)); },   // par livre, puis par ordre
     speed: 1, debug: {}
   };
 
@@ -1543,6 +1549,11 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 19:45 UTC · 91f1e3b+";
   I.$ = sel => document.querySelector(sel);
   I.el = function (tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; };
   I.esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  // les livres de la Chaîne : les maillons (ni l'histoire-cadre ni les veillées) rangés par livre. Le livre I est celui du jeu
+  // de base ; un paquet range ses sagas dans un autre. → [{ n, titre, sagas }]
+  I.livres = function () { const L = {}; I.sagaList.filter(s => !s.frame).forEach(s => { const n = s.livre || 1; (L[n] || (L[n] = { n, titre: (D.LIVRES[n] || {}).titre || '', sagas: [] })).sagas.push(s); }); return Object.keys(L).map(Number).sort((a, b) => a - b).map(n => L[n]); };
+  I.romain = function (n) { let r = ''; [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']].forEach(p => { while (n >= p[0]) { r += p[1]; n -= p[0]; } }); return r; };
+  I.enLettres = n => ['zéro', 'une', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix', 'onze', 'douze'][n] || String(n);   // au féminin : des Lumières
   // *emphase* -> <em>
   I.fmt = s => I.esc(s).replace(/\*([^*]+)\*/g, '<em>$1</em>');
 
@@ -4968,7 +4979,8 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 19:45 UTC · 91f1e3b+";
   };
   // les maillons où l'on rencontre des idoles ; l'histoire-cadre en dernier
   const ROMAIN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
-  M.epoques = () => (I.sagaList || Object.values(I.sagas)).filter(s => !s.commun && (s.chapters || []).some(ch => M.lignee(s, ch).idoles.length || ch.vice)).sort((a, b) => (a.frame && !a.veillees ? 99 : a.order) - (b.frame && !b.veillees ? 99 : b.order));
+  const rangEpoque = s => s.frame && !s.veillees ? 1e6 : (s.livre || 1) * 1000 + s.order;   // par livre, puis par ordre ; l'histoire-cadre en dernier
+  M.epoques = () => (I.sagaList || Object.values(I.sagas)).filter(s => !s.commun && (s.chapters || []).some(ch => M.lignee(s, ch).idoles.length || ch.vice)).sort((a, b) => rangEpoque(a) - rangEpoque(b));
   M.nomEpoque = s => s.veillees ? 'Les veillées de la Citadelle' : s.frame ? 'La Cité-Miroir · ' + String(s.years).split('·')[0].trim() : 'Maillon ' + (ROMAIN[s.order] || s.order) + ' · ' + String(s.years).split('·')[0].trim();
   M.paneEpoque = function (s) {
     const sv = I.save.data, T = C0().mal || {}, vu = id => sv.codex.includes('foe:' + (s.enemies[id] ? s.id : '_') + ':' + id), ici = ch => W.saga === s && W.ch === ch;
@@ -6249,36 +6261,45 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 19:45 UTC · 91f1e3b+";
   U.showChain = async function (msg) {
     I.setScene(U.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue: 40, n: 0 }; I.audio.stopBeat(); I.audio.scene('chaine');
     $('#hud').hidden = true; document.body.dataset.theme = 'orient'; S.hideDialog(); $('#toasts').innerHTML = '';
-    const sv = I.save.data, list = I.sagaList.filter(s => !s.frame), box = $('#chain .links'); box.innerHTML = '';
-    const allDone = list.every(s => sv.sagas[s.id] && sv.sagas[s.id].done);
-    $('#chain header p').innerHTML = msg || (allDone ? 'Les cinq Lumières sont réunies. Le dernier maillon t’attend : le tien.' : 'Chaque maillon est un témoin. Choisis celui dont tu veux suivre la trace ; l’ordre est libre, mais la Chaîne se lit du premier au dernier.');
+    const sv = I.save.data, box = $('#chain .links'); box.innerHTML = '';
+    // Les livres. Le livre I : ses maillons, puis le dernier maillon, qui s'ouvre quand les siens sont achevés. Les autres
+    // livres viennent ensuite, chacun sous son titre. Avec un seul livre, aucun titre : c'est l'écran de toujours.
+    const livres = I.livres(), fait = s => !!(sv.sagas[s.id] && sv.sagas[s.id].done), un = livres.find(L => L.n === 1) || { n: 1, titre: '', sagas: [] }, autres = livres.filter(L => L.n !== 1);
+    const allDone = un.sagas.every(fait), nb = I.enLettres(un.sagas.length);
+    $('#chain header p').innerHTML = msg || (allDone ? `Les ${nb} Lumières sont réunies. Le dernier maillon t’attend : le tien.` : 'Chaque maillon est un témoin. Choisis celui dont tu veux suivre la trace ; l’ordre est libre, mais la Chaîne se lit du premier au dernier.');
     const btns = []; let fl;
     const close = () => { fl.destroy(); screen('#chain', false); };
-    const ROM = ['I', 'II', 'III', 'IV', 'V'], tactile = document.body.classList.contains('touch'), next = list.findIndex(s => !(sv.sagas[s.id] && sv.sagas[s.id].done));
+    const tactile = document.body.classList.contains('touch');
+    // le maillon à ouvrir : ceux du livre I d'abord, puis le dernier maillon, puis ceux des autres livres
+    const suivant = un.sagas.find(s => !fait(s)) || ((sv.epilogue || !I.sagas.idris) && autres.reduce((r, L) => r || L.sagas.find(s => !fait(s)), null)) || null;
+    const rang = s => { const L = livres.find(x => x.sagas.includes(s)); return I.romain(L.sagas.indexOf(s) + 1) + (L.n === 1 ? '' : ' du livre ' + I.romain(L.n)); };
     const ouvrir = s => { close(); U.startSaga(s); }, dernier = () => { close(); W.roster = {}; W.saga = null; W.startChapter('idris', 1); };
     // un grand bouton dit quoi faire : ouvrir le maillon suivant (ou reprendre celui qui est entamé)
     { const hd = $('#chain header'); let go = hd.querySelector('.go'); if (!go) { go = I.el('div', 'go'); hd.appendChild(go); } go.innerHTML = '';
-      const s = next >= 0 ? list[next] : null, sp = s ? (sv.sagas[s.id] || { ch: 0 }) : null;
-      if (s || allDone) { const b = I.el('button', 'cta', s ? (sp.ch > 0 ? `▶ Reprendre : ${I.esc(s.name)} · chapitre ${sp.ch + 1}` : `▶ Ouvrir le maillon ${ROM[next] || next + 1} : ${I.esc(s.name)}`) : (sv.epilogue ? '▶ Rejouer le dernier maillon' : '▶ Ouvrir le dernier maillon : Idris')); b.type = 'button';
+      const s = suivant, sp = s ? (sv.sagas[s.id] || { ch: 0 }) : null;
+      if (s || allDone) { const b = I.el('button', 'cta', s ? (sp.ch > 0 ? `▶ Reprendre : ${I.esc(s.name)} · chapitre ${sp.ch + 1}` : `▶ Ouvrir le maillon ${rang(s)} : ${I.esc(s.name)}`) : (sv.epilogue ? '▶ Rejouer le dernier maillon' : '▶ Ouvrir le dernier maillon : Idris')); b.type = 'button';
         if (s) b.style.setProperty('--c', D.ELEMENTS[s.light].color); tapable(b, () => (s ? ouvrir(s) : dernier())); go.appendChild(b); btns.push(b); }
       go.appendChild(I.el('p', 'comment', (tactile ? 'Ou touche le maillon de ton choix, plus bas.' : 'Ou clique sur le maillon de ton choix. Au clavier : flèches, puis Entrée.') + ' La partie se garde toute seule.')); }
-    list.forEach((s, i) => {
+    const maillon = (s, i) => {
       const sp = sv.sagas[s.id] || { ch: 0, done: false }, e = D.ELEMENTS[s.light];
       const vl = (sv.veillees && sv.veillees[s.id] ? ' · veillée du Caïd ✓' : '') + (sv.rencontres && sv.rencontres[s.id] ? ' · rencontre ✓' : '');
       const qv = I.oeuvres.viceApres(s.id), qt = qv ? `<span class="qt">⚔ ${I.oeuvres.quete(qv)}</span>` : '';
       const st = sp.done ? `<span class="stt done">${e.glyph} ${s.lightName} retrouvée${vl}</span>` : sp.ch > 0 ? `<span class="stt">Chapitre ${sp.ch + 1} / ${s.chapters.length}</span>` : '<span class="stt">Maillon à ouvrir</span>';
-      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">MAILLON ${['I', 'II', 'III', 'IV', 'V'][i] || i + 1} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}<span class="ouvrir">${sp.done ? 'Rejouer' : sp.ch > 0 ? 'Reprendre' : 'Ouvrir'} ▸</span></span>`);
+      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">MAILLON ${I.romain(i + 1)} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}<span class="ouvrir">${sp.done ? 'Rejouer' : sp.ch > 0 ? 'Reprendre' : 'Ouvrir'} ▸</span></span>`);
       b.type = 'button'; b.style.setProperty('--c', e.color);
       tapable(b, () => ouvrir(s));
       box.appendChild(b); btns.push(b);
-    });
+    };
+    const titreLivre = L => { if (livres.length < 2) return; box.appendChild(I.el('div', 'livre', `<b>LIVRE ${I.romain(L.n)}</b>${L.titre ? ' · ' + I.esc(L.titre) : ''}<small>${L.sagas.filter(fait).length} / ${L.sagas.length} maillon${L.sagas.length > 1 ? 's' : ''}</small>`)); };
+    titreLivre(un); un.sagas.forEach(maillon);
     const fr = I.sagas.idris;
     if (fr) {
-      const b = I.el('button', 'link' + (allDone ? '' : ' locked'), `<span class="seal" style="background-image:url(${G.sealURL('إسناد', '#39e6ff')})"></span><span class="lt"><span class="ord">DERNIER MAILLON · 1508 H · 2084</span><h3>Idris</h3><span class="ep">Le Cœur de l’Agrégor <small>· cyberpunk</small></span><span class="tl">${allDone ? 'Rapporter les cinq Lumières à la Cité-Miroir.' : 'Scellé tant que les cinq Lumières ne sont pas réunies.'}</span><span class="stt${sv.epilogue ? ' done' : ''}">${sv.epilogue ? 'Chaîne transmise' : allDone ? 'Ouvert' : sv.lights.filter(l => l !== 'sabr').length + ' / 5 Lumières'}</span></span>`);
+      const b = I.el('button', 'link' + (allDone ? '' : ' locked'), `<span class="seal" style="background-image:url(${G.sealURL('إسناد', '#39e6ff')})"></span><span class="lt"><span class="ord">DERNIER MAILLON · 1508 H · 2084</span><h3>Idris</h3><span class="ep">Le Cœur de l’Agrégor <small>· cyberpunk</small></span><span class="tl">${allDone ? `Rapporter les ${nb} Lumières à la Cité-Miroir.` : `Scellé tant que les ${nb} Lumières ne sont pas réunies.`}</span><span class="stt${sv.epilogue ? ' done' : ''}">${sv.epilogue ? 'Chaîne transmise' : allDone ? 'Ouvert' : un.sagas.filter(fait).length + ' / ' + un.sagas.length + ' Lumières'}</span></span>`);
       b.type = 'button'; b.style.setProperty('--c', '#39e6ff'); b.disabled = !allDone && !I.debug.all;
       tapable(b, dernier);
       box.appendChild(b); btns.push(b);
     }
+    autres.forEach(L => { titreLivre(L); L.sagas.forEach(maillon); });
     const foot = $('#chain .chainfoot'); foot.innerHTML = '';
     foot.appendChild(I.el('span', 'lights', 'Lumières ' + Object.keys(D.ELEMENTS).filter(k => k !== 'fer').map(k => `<i class="${sv.lights.includes(k) || (k === 'sabr' && sv.epilogue) ? 'on' : ''}" style="color:${D.ELEMENTS[k].color}" title="${D.ELEMENTS[k].name}">${D.ELEMENTS[k].glyph}</i>`).join('')));
     foot.appendChild(I.el('span', 'pill', `Fidélité à la Chaîne : <b>${sv.isnad.ok}</b> / ${sv.isnad.total}`));
@@ -6312,6 +6333,10 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 19:45 UTC · 91f1e3b+";
   };
   // la rencontre de la Cité-Miroir qui suit une saga : chapitre de l'histoire-cadre marqué « after »
   const rencontre = id => { const sv = I.save.data; sv.rencontres = sv.rencontres || {}; const fr = I.sagas.idris; if (!fr || !sv.prologue || sv.rencontres[id]) return -1; return fr.chapters.findIndex(c => c.after === id); };
+  // ce qu'il reste à ouvrir dans le livre d'une saga, et ce que l'on dit quand il n'y reste rien
+  const duLivre = s => I.sagaList.filter(x => !x.frame && (x.livre || 1) === (s.livre || 1));
+  const resteDans = s => duLivre(s).filter(x => !(I.save.data.sagas[x.id] && I.save.data.sagas[x.id].done)).length;
+  const finLivre = s => (s.livre || 1) === 1 ? `Les ${I.enLettres(duLivre(s).length)} Lumières sont réunies.` : `Le livre ${I.romain(s.livre)} est achevé.`;
   U.afterSaga = async function (saga, ch) {
     const sv = I.save.data;
     if (saga.veillees) {
@@ -6330,15 +6355,15 @@ window.ISNAD_VERSION = "2.0 · 2026-11-15 19:45 UTC · 91f1e3b+";
     if (!saga.frame) { const ri = rencontre(saga.id); if (ri >= 0) { W.roster = {}; W.saga = null; return W.startChapter('idris', ri); } }
     if (saga.frame && ch.after) {
       sv.rencontres = sv.rencontres || {}; sv.rencontres[ch.after] = true; I.save.store();
-      const s2 = I.sagas[ch.after], e2 = D.ELEMENTS[s2.light], left2 = I.sagaList.filter(s => !s.frame && !(sv.sagas[s.id] && sv.sagas[s.id].done)).length;
-      return U.showChain(`<b style="color:${e2.color}">${e2.glyph} ${s2.lightName}</b> — ce qu’Idris a reçu de ${I.esc(s2.name)} a servi dans la Cité-Miroir. ${left2 ? `Encore ${left2} maillon${left2 > 1 ? 's' : ''}.` : 'Les cinq Lumières sont réunies.'}`);
+      const s2 = I.sagas[ch.after], e2 = D.ELEMENTS[s2.light], left2 = resteDans(s2);
+      return U.showChain(`<b style="color:${e2.color}">${e2.glyph} ${s2.lightName}</b> — ce qu’Idris a reçu de ${I.esc(s2.name)} a servi dans la Cité-Miroir. ${left2 ? `Encore ${left2} maillon${left2 > 1 ? 's' : ''}.` : finLivre(s2)}`);
     }
     if (saga.frame) {
       if (W.ci === 0) { sv.prologue = true; I.save.store(); return U.showChain('La Chaîne s’ouvre. Cinq maillons, cinq témoins. Commence par le premier : Abû Bakr, le jour où tout aurait pu se défaire.'); }
       sv.epilogue = true; I.save.store(); await U.credits(); return U.showTitle();
     }
-    const e = D.ELEMENTS[saga.light]; const left = I.sagaList.filter(s => !s.frame && !(sv.sagas[s.id] && sv.sagas[s.id].done)).length;
-    return U.showChain(`<b style="color:${e.color}">${e.glyph} ${saga.lightName}</b> — la Lumière de ${I.esc(saga.name)} rejoint Idris. ${left ? `Encore ${left} maillon${left > 1 ? 's' : ''}.` : 'Les cinq Lumières sont réunies.'}`);
+    const e = D.ELEMENTS[saga.light]; const left = resteDans(saga);
+    return U.showChain(`<b style="color:${e.color}">${e.glyph} ${saga.lightName}</b> — la Lumière de ${I.esc(saga.name)} rejoint Idris. ${left ? `Encore ${left} maillon${left > 1 ? 's' : ''}.` : finLivre(saga)}`);
   };
   U.credits = async function () {
     await S.card('credits', `<h1>ISNAD</h1><p class="small">Chroniques des Compagnons</p>
