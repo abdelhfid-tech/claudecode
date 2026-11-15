@@ -85,14 +85,17 @@ et ne décrivent aucun trait physique : ni taille, ni corpulence, ni visage (exi
 
 ### L'organigramme du mal
 
-Une page de texte, pas une galerie. Deux étages, séparés par un trait d'or en pointillé.
+Un organigramme que l'on lit d'un coup d'œil. Deux étages, séparés par un trait d'or en pointillé. Chaque rang tient en
+une ligne ; on la touche pour déplier son texte. (La première version était une longue colonne de texte : le décideur n'y
+voyait ni les égrégores ni les idées noires.)
 
 - **En haut, ce qui est enseigné** : trois cadres en pointillé, sans aucune image. Iblîs est un nom dans un
   cadre ; ni dessin, ni sceau calligraphié, ni couleur propre. Les souffleurs de même.
 - **Les liens du haut sont en pointillé** et le dernier s'arrête au cœur. Aucun trait ne descend d'un
   souffleur vers une idole.
-- **En bas, les images du jeu** : cadres pleins, et les égrégores tels qu'ils sont déjà dessinés (formes
-  abstraites, exigence 6).
+- **En bas, les images du jeu** : cadres pleins. On y **voit** tout : les cinq idées noires et les sept maux du cœur,
+  puis, maillon par maillon, tous les égrégores et toutes les idoles, tels qu'ils sont déjà dessinés (formes abstraites,
+  exigence 6), chacun avec son nom. Un trait d'or souligne ce que l'on a déjà rencontré ; le reste est estompé, non caché.
 - **La jauge** : cinq barres dorées, `▮▮▮▯▯`. Elle accompagne le nom d'une idole, jamais celui d'un
   maillon ; les maillons sont désignés par leur numéro et leurs années.
 

@@ -491,6 +491,12 @@ Décisions prises par le décideur, en réponse aux questions de l'agent :
 
 Ce que l'agent a ajouté ou lu, et qui reste à valider :
 
+- [x] **D97 bis. « Je ne vois pas les égrégores, idées noires etc. dans l'organigramme du mal » (le décideur, 15
+  novembre).** La vue d'ensemble était une colonne de texte : les idées noires tout en bas, les égrégores et les idoles
+  réduits à un chiffre. Elle est refaite en organigramme : le haut tient en trois lignes (on les touche pour lire le
+  texte) ; en dessous, on voit les cinq idées noires, les sept maux du cœur, puis les 43 égrégores et les 22 idoles,
+  maillon par maillon, avec leurs noms. Ce qui n'a pas encore été rencontré est estompé, non caché ; un trait d'or
+  marque ce qui l'a été. Le détail de chaque maillon est derrière une seule entrée du menu.
 - [ ] **D97. Deux étages et une couture.** Le haut de l'organigramme dit ce qui est enseigné (Iblîs, les
   souffleurs, le cœur) ; le bas, les images du jeu (idées noires et maux, égrégores, idoles). *Ajouts de
   l'agent* : un rang « le cœur » entre les deux, parce que le souffle appelle et que c'est le cœur qui

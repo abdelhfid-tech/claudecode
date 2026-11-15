@@ -374,8 +374,11 @@
     };
     // l'organigramme du mal : la vue d'ensemble, puis les idoles rencontrées, maillon par maillon
     const mal = () => {
-      const Ml = I.mal, back = mode === 'mal' ? close : root, items = [{ label: '◂ Retour', fn: back, show: () => Ml.paneVue() }, { label: 'Vue d’ensemble', fn() {}, show: () => Ml.paneVue() }, { cat: 'Les idoles rencontrées' }];
-      Ml.epoques().forEach(s => items.push({ label: I.esc(Ml.nomEpoque(s)), fn() {}, show: () => Ml.paneEpoque(s) }));
+      // l'organigramme d'abord ; le détail de chaque maillon est derrière une seule entrée, pour que la page reste en vue au téléphone
+      const Ml = I.mal, back = mode === 'mal' ? close : root, items = [{ label: '◂ Retour', fn: back, show: () => Ml.paneVue() }, { label: 'L’organigramme', fn() {}, show: () => Ml.paneVue() }];
+      const maillons = () => { const L = [{ label: '◂ L’organigramme', fn: () => mal(), show: () => Ml.paneVue() }]; Ml.epoques().forEach(s => L.push({ label: I.esc(Ml.nomEpoque(s)), fn() {}, show: () => Ml.paneEpoque(s) }));
+        $('#menu h2').textContent = 'Organigramme du mal · les maillons'; build(L, { onCancel: () => mal(), start: 1 }); };
+      items.push({ label: 'Maillon par maillon ▸', fn: maillons, show: () => Ml.paneEpoque(Ml.epoques().find(s => s === W.saga) || Ml.epoques()[0]) });
       if (mode !== 'mal') items.push({ cat: 'Du côté du bien' }, { label: 'Valeurs et attributs', fn: valeurs, show: () => I.valeurs.paneVue() });
       Ml.apprendre(); $('#menu h2').textContent = 'Organigramme du mal';
       build(items, { onCancel: back, start: 1 });

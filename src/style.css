@@ -304,6 +304,23 @@ body.portrait #hud .enig { display: block; background: var(--panel); }
 .orga .lien.pt::before { border-left-style: dotted; }
 .orga .couture { margin: .7em 0 .6em; padding: .5em 0 0; border-top: 1px dashed var(--gold); color: var(--dim); font-size: .84em; font-style: italic; }
 .orga.epoque { gap: .5em; } .orga .inconnue { opacity: .5; }
+/* la vue d'ensemble : un organigramme. Chaque rang tient en une ligne (on la touche pour lire le texte) ; ce que l'on rencontre se voit en images */
+.orga.vue { max-width: none; } .orga.vue .rg { padding: .32em .7em; }
+.orga.vue summary { cursor: pointer; list-style: none; display: grid; grid-template-columns: 1fr auto; gap: .1em .7em; align-items: baseline; } .orga.vue summary::-webkit-details-marker { display: none; }
+.orga.vue summary::after { content: '＋'; color: var(--dim); font-size: .8em; } .orga.vue details[open] > summary::after { content: '－'; }
+.orga.vue .rg.bas > .rep { margin: .05em 0 .25em; } .orga.vue .couture { margin: .45em 0 .4em; max-width: none; }
+.orga.vue .lien { text-align: left; padding: .05em 0 .1em 1.4em; line-height: 1; } .orga.vue .lien::before { display: inline-block; height: 1em; margin: 0 .55em -.15em 0; }
+.orga .eps { display: grid; margin-top: .35em; }
+.orga .ep { display: grid; grid-template-columns: 10.6em 1fr; gap: .15em .8em; align-items: start; padding: .35em 0; border-top: 1px solid rgba(255, 255, 255, .09); }
+.orga .epn { color: var(--gold); font-family: var(--f-display); letter-spacing: .05em; font-size: .8em; margin: .2em 0 0; grid-row: span 2; white-space: nowrap; }
+.orga .epe::before, .orga .epi::before { color: var(--dim); font-size: .72em; min-width: 5.2em; } .orga .epe::before { content: 'égrégores'; } .orga .epi::before { content: 'idoles'; }
+.orga .epe, .orga .epi { display: flex; flex-wrap: wrap; gap: .25em .75em; align-items: center; }
+.orga .tu { display: inline-flex; align-items: center; gap: .25em; font-size: .78em; color: var(--dim); opacity: .78; } .orga .tu img { width: 1.9em; height: 1.9em; image-rendering: pixelated; border-bottom: 2px solid transparent; } .orga .tu i { font-style: normal; }
+.orga .tu.vu { opacity: 1; color: var(--sand); } .orga .tu.vu img { border-bottom-color: var(--gold); }
+.orga .ti { display: inline-flex; align-items: center; gap: .35em; font-size: .9em; opacity: .85; } .orga .ti img { width: 2.5em; height: 2.5em; image-rendering: pixelated; border-bottom: 2px solid transparent; }
+.orga .ti b { font-family: var(--f-display); font-weight: 400; letter-spacing: .04em; color: #fff6dc; } .orga .ti small { color: var(--dim); white-space: nowrap; }
+.orga .ti.vu, .orga .ti.tombee { opacity: 1; } .orga .ti.vu img, .orga .ti.tombee img { border-bottom-color: var(--gold); }
+body.portrait .orga .ep { grid-template-columns: 1fr; } body.portrait .orga .epn { grid-row: auto; }
 .pus { display: flex; flex-wrap: wrap; gap: .25em .7em; margin: .3em 0; }
 .pu { display: inline-flex; align-items: center; gap: .3em; font-size: .86em; white-space: nowrap; } .pu img { width: 1.9em; height: 1.9em; image-rendering: pixelated; } .pu.vice { color: var(--dim); }
 .orga .lg { display: flex; flex-wrap: wrap; align-items: center; gap: .2em .7em; } .orga .lg .et { color: var(--dim); font-size: .78em; min-width: 5.2em; }

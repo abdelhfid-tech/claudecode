@@ -119,14 +119,34 @@
   // vue d'ensemble : deux étages séparés par une couture ; le lien en pointillé s'arrête au cœur
   M.paneVue = function () {
     const T = C0().mal || { rangs: {} }, R = T.rangs, sv = I.save.data;
-    const rang = (k, plus) => { const r = R[k]; if (!r) return ''; return `<div class="rg ${r.etage === 'image' ? 'bas' : 'haut'} r-${k}"><p class="nm"><b>${I.esc(r.name)}</b> <em>${I.esc(r.sous)}</em></p><p>${I.fmt(r.texte)}</p>${plus || ''}<p class="rep">▸ ${I.fmt(r.reponse)}</p>${r.src ? `<p class="src">${I.esc(r.src)}</p>` : ''}</div>`; };
+    const vuDe = (s, id) => sv.codex.includes('foe:' + (s && s.enemies && s.enemies[id] ? s.id : '_') + ':' + id);
+    const tete = r => `<span class="nm"><b>${I.esc(r.name)}</b> <em>${I.esc(r.sous)}</em></span>`;
+    // étage du haut : une ligne par rang ; on la touche pour lire le texte et sa référence
+    const haut = k => { const r = R[k]; if (!r) return ''; return `<details class="rg haut r-${k}"><summary>${tete(r)}</summary><p>${I.fmt(r.texte)}</p><p class="rep">▸ ${I.fmt(r.reponse)}</p>${r.src ? `<p class="src">${I.esc(r.src)}</p>` : ''}</details>`; };
+    // étage du bas : l'en-tête et la réponse en une ligne, puis ce que l'on rencontre, en images
+    const bas = (k, corps) => { const r = R[k]; if (!r) return ''; return `<div class="rg bas r-${k}"><details><summary>${tete(r)}</summary><p>${I.fmt(r.texte)}</p></details><p class="rep">▸ ${I.fmt(r.reponse)}</p>${corps || ''}</div>`; };
     const lien = (t, pt) => `<div class="lien${pt ? ' pt' : ''}">${I.esc(t)}</div>`;
     const racines = '<div class="pus">' + D.NOIRS.map(id => puce(id, null, 'noir')).join('') + '</div><div class="pus">' + Object.keys(D.VICES).map(id => puce(id, null, 'vice')).join('') + '</div>';
-    const nE = sv.codex.filter(c => c.indexOf('foe:') === 0).length, nI = Object.keys(st().tombees).length;
-    return `<h3>${I.esc(T.titre || 'Organigramme du mal')}</h3><p class="src">${I.fmt(T.chapeau || '')}</p><div class="orga">` +
-      rang('iblis') + lien('à son service', true) + rang('souffleurs') + lien('souffle', true) + rang('coeur') +
+    // maillon par maillon : tous ses égrégores, puis ses idoles. Un trait d'or sous ce que l'on a déjà rencontré.
+    let nE = 0, tE = 0, nI = 0, tI = 0;
+    const eps = M.epoques().map(s => {
+      const eg = [], ido = [];
+      s.chapters.forEach(ch => { const L = M.lignee(s, ch);
+        L.egregores.forEach(id => { if (!eg.includes(id) && defDe(s, id) && !defDe(s, id).vice && D.NOIRS.indexOf(id) < 0) eg.push(id); });
+        L.idoles.forEach(id => { if (!ido.some(x => x.id === id)) ido.push({ id, ch }); }); });
+      ido.forEach(x => { const k = eg.indexOf(x.id); if (k >= 0) eg.splice(k, 1); });
+      const E = eg.map(id => { const e = defDe(s, id), v = vuDe(s, id); tE++; if (v) nE++; return `<span class="tu${v ? ' vu' : ''}"><img alt="" src="${M.url(id, s)}"><i>${I.esc(e.name)}</i></span>`; }).join('');
+      const Io = ido.map(x => { const e = defDe(s, x.id), tb = st().tombees[s.id + ':' + x.id], v = tb !== undefined || vuDe(s, x.id); tI++; if (tb !== undefined) nI++;
+        return `<span class="ti${tb !== undefined ? ' tombee' : v ? ' vu' : ''}"><img alt="" src="${M.url(x.id, s)}"><b>${I.esc(e.name)}</b>${tb !== undefined ? `<small>${traits(tb)} tombée</small>` : v ? `<small>${traits(M.niveau(s, x.ch))}</small>` : ''}</span>`; }).join('');
+      return `<div class="ep"><p class="epn">${I.esc(M.nomEpoque(s))}</p><div class="epe">${E}</div><div class="epi">${Io}</div></div>`; }).join('');
+    const RE = R.egregores || {}, RI = R.idoles || {};
+    const maillons = `<div class="rg bas r-epoques"><details><summary><span class="nm"><b>${I.esc(RE.name || '')}</b> <em>${I.esc(RE.sous || '')}</em></span></summary><p>${I.fmt(RE.texte || '')}</p></details><p class="rep">▸ ${I.fmt(RE.reponse || '')}</p>` +
+      `<details><summary><span class="nm"><b>${I.esc(RI.name || '')}</b> <em>${I.esc(RI.sous || '')}</em></span></summary><p>${I.fmt(RI.texte || '')}</p></details><p class="rep">▸ ${I.fmt(RI.reponse || '')}</p>` +
+      `<p class="src">Égrégores rencontrés : <b>${nE}</b> / ${tE} · idoles tombées : <b>${nI}</b> / ${tI}. Un trait d’or : déjà rencontré. Chaque idole a sa jauge d’enracinement.</p><div class="eps">${eps}</div></div>`;
+    return `<h3>${I.esc(T.titre || 'Organigramme du mal')}</h3><p class="src">${I.fmt(T.chapeau || '')}</p><div class="orga vue">` +
+      haut('iblis') + lien('à son service', true) + haut('souffleurs') + lien('souffle', true) + haut('coeur') +
       `<p class="couture">${I.fmt(T.couture || '')}</p>` +
-      rang('racines', racines) + lien('reprise par beaucoup de cœurs') + rang('egregores', `<p class="src">Rencontrés jusqu’ici : <b>${nE}</b>.</p>`) + lien('enracinée') + rang('idoles', `<p class="src">Tombées jusqu’ici : <b>${nI}</b>. Chacune a sa jauge : ${traits(3)}</p>`) +
+      bas('racines', racines) + lien('reprise par beaucoup de cœurs, puis enracinée') + maillons +
       '</div>';
   };
   // les maillons où l'on rencontre des idoles ; l'histoire-cadre en dernier
@@ -140,7 +160,7 @@
       const L = M.lignee(s, ch), eg = L.egregores.filter(vu).map(id => puce(id, s)).join('');
       L.idoles.forEach(id => {
         const e = defDe(s, id), tombee = st().tombees[s.id + ':' + id], connue = tombee !== undefined || vu(id) || ici(ch);
-        if (!connue) { h += '<div class="rg bas inconnue"><p class="src">Pas encore rencontrée.</p></div>'; return; }
+        if (!connue) { h += `<div class="rg bas inconnue"><p class="src">${I.esc(ch.title)}</p><p class="nm"><img class="ido" alt="" src="${M.url(id, s)}"><b>${I.esc(e.name)}</b> <small>pas encore rencontrée</small></p></div>`; return; }
         rien = false;
         const n = tombee !== undefined ? tombee : M.niveau(s, ch), etat = tombee !== undefined ? 'idole tombée' : ici(ch) ? 'devant toi' : 'idole rencontrée';
         const rc = [].concat(e.racine || []).map(r => puce(r, null, defDe(null, r) && defDe(null, r).vice ? 'vice' : 'noir')).join('');
