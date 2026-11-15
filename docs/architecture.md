@@ -133,7 +133,9 @@ Un objectif interrompu en cours de script est rejoué depuis son début.
 - `tools/doigt.js` joue le prologue comme un joueur, au doigt et sans aucun raccourci, sur trois tailles
   d'écran. Avant chaque toucher il regarde l'écran : ce que le jeu attend est-il dans l'image, ni vide, ni
   transparent, ni sous un fondu ? Il compte aussi les menus de choix : un menu qui se referme sans avoir été
-  touché trahit un toucher fantôme. `smoke.js` prouve que le récit se déroule ; `doigt.js`, qu'il se voit.
+  touché trahit un toucher fantôme. Avec `loin`, il poursuit jusqu'à la fin du premier chapitre de la
+  saga I (le premier combat au doigt, les suivants par l'IA de test). `smoke.js` prouve que le récit se
+  déroule ; `doigt.js`, qu'il se voit.
 
 ## Ajouts de la version 2
 

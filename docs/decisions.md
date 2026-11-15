@@ -347,7 +347,8 @@ retour d'un joueur réel.
   les menus ouverts et les menus touchés : l'écart est un échec.
 - [x] **D86. `tools/doigt.js`.** Le prologue joué au doigt, sans raccourci, sur trois tailles d'écran,
   avec un regard sur l'écran avant chaque toucher. À passer après toute modification du moteur ou de
-  la mise en page. Il ne couvre que le prologue : l'étendre aux sagas est à faire.
+  la mise en page. Avec `loin`, il poursuit jusqu'à la fin du premier chapitre de la saga I, en hauteur
+  comme en largeur : rien d'autre n'y est caché. Au-delà (bâtir, comptoir, natte), il reste à étendre.
 
 ## Équipement : armes, armures, boucliers, casques (remarque du décideur)
 

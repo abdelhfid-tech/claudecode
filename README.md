@@ -161,6 +161,7 @@ node tools/smoke.js walk        # même partie, mais le héros marche réellemen
 node tools/smoke.js tap         # même partie, en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
 node tools/smoke.js wrong       # choisit d'abord toutes les mauvaises réponses et perd chaque pourparler
 node tools/doigt.js             # joue le prologue au doigt, sans raccourci, et vérifie que tout ce que le jeu attend se voit
+node tools/doigt.js loin        # idem, puis tout le premier chapitre de la saga I
 node tools/validate-music.js    # vérifie les vingt et une pistes
 node tools/smoke.js shots       # captures d'écran bureau et mobile dans .smoke/
 node tools/promo.js all         # livret du joueur et planches : captures, sprites, assemblage, export

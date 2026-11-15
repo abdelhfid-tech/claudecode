@@ -43,6 +43,7 @@ node tools/smoke.js walk            # idem en marchant réellement (clavier simu
 node tools/smoke.js tap             # idem en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
 node tools/smoke.js wrong           # idem en prenant d'abord chaque mauvaise réponse
 node tools/doigt.js                 # le prologue au doigt, sans raccourci : ce que le jeu attend se voit-il, se touche-t-il ?
+node tools/doigt.js loin            # idem, puis tout le premier chapitre de la saga I (ajouter 844x390 pour le paysage)
 node tools/smoke.js shots           # captures bureau et mobile dans .smoke/
 node tools/promo.js all             # livret et planches : captures, sprites, assemblage, export
 node tools/promo.js planches        # après une retouche du texte : réassemble et réexporte seulement

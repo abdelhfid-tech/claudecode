@@ -89,15 +89,18 @@ un contrôle permanent signale désormais tout texte caché (voir `decisions.md`
 le récit se déroule, pas qu'il se voit. Cinq parcours complets passaient sur un jeu qu'un joueur ne
 pouvait pas dépasser sans deviner. Un outil a été ajouté, `tools/doigt.js` : il joue le prologue au
 doigt, sans raccourci, et regarde l'écran avant chaque toucher. Dès son premier passage il a trouvé un
-second défaut (un toucher qui répondait à un menu de choix à la place du joueur, D85). Il ne couvre
-que le prologue. Rien ne remplace un essai humain.
+second défaut (un toucher qui répondait à un menu de choix à la place du joueur, D85). Étendu au
+premier chapitre de la saga I, il n'en trouve pas d'autre. Il ne va pas plus loin, et il ne juge ni
+le plaisir ni la clarté : rien ne remplace un essai humain.
 
 ## Version 6 : équipement, et ce que le joueur voit
 
 Rejoué de bout en bout par les cinq parcours (`auto`, `walk`, `tap`, `wrong`, `auto` sans œuvres) :
 aucun blocage, aucun texte caché, aucune erreur console, aucune défaite du joueur de test. Puis par
 `tools/doigt.js` sur trois tailles d'écran (390 × 844, 360 × 560, 844 × 390) : le prologue se termine au
-doigt, tout ce que le jeu attend se voit, le menu de choix est vu avant d'être touché.
+doigt, tout ce que le jeu attend se voit, le menu de choix est vu avant d'être touché. Puis `doigt.js loin`,
+en hauteur et en largeur : le premier chapitre de la saga I se joue au doigt de bout en bout (trente
+cartons, sept choix, une cinquantaine de touchers de marche) sans rien de caché.
 
 - Le joueur de test ouvre désormais les coffres de chaque lieu : tous sont accessibles à pied, y
   compris les vingt-deux coffres d'équipement. Il s'équipe « au mieux » à chaque pièce reçue et achète
