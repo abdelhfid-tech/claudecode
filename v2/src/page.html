@@ -1,0 +1,54 @@
+<title>Isnad Chroniques des Compagnons</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400&family=Amiri&family=Cinzel:wght@500;700&family=Reem+Kufi:wght@500;700&family=Share+Tech+Mono&display=swap">
+<style>
+/*CSS*/
+</style>
+<div id="app">
+  <div id="stage">
+    <div id="view"><canvas id="cv" aria-label="Scène de jeu"></canvas></div>
+    <div id="ui">
+      <div id="hud" hidden><div class="chap"></div><div class="sub"></div><div class="obj"></div><div class="enig" hidden></div><div class="pil"></div></div>
+      <button id="menubtn" type="button" aria-label="Menu" hidden>☰</button>
+      <button id="buildbtn" type="button" aria-label="Bâtir" hidden>▦</button>
+      <button id="helpbtn" type="button" aria-label="Que faire ?" hidden>?</button>
+      <div id="compass" hidden><canvas aria-label="Cadran des étoiles"></canvas><div class="lab"></div></div>
+      <div id="toasts"></div>
+      <div id="battle" hidden>
+        <div class="order"></div><div class="plates"></div><div class="front" hidden></div><div class="banner" hidden></div>
+        <div class="panel"><div class="heroes"></div><div class="cmd"></div></div>
+      </div>
+      <div id="floaters"></div>
+      <div id="noms"></div>
+      <div id="dialog" hidden><div class="seal"></div><img class="fig" alt="" hidden><div class="name"></div><div class="text"></div><div class="next">▼</div></div>
+      <div id="choice" hidden></div>
+      <div id="buildbar" hidden><div class="mats"></div><div class="pieces"></div><div class="info"></div><div class="keys"><kbd>Entrée</kbd> poser devant soi · <kbd>C</kbd> <kbd>V</kbd> changer de pièce · <kbd>B</kbd> ou <kbd>Échap</kbd> quitter</div></div>
+    </div>
+  </div>
+  <div id="pad">
+    <div class="dpad"><button type="button" class="u" aria-label="Haut">▲</button><button type="button" class="l" aria-label="Gauche">◀</button><button type="button" class="r" aria-label="Droite">▶</button><button type="button" class="d" aria-label="Bas">▼</button></div>
+    <div class="ab"><button type="button" class="b" aria-label="Menu ou retour">MENU</button><button type="button" class="a" aria-label="Valider">OK</button></div>
+  </div>
+</div>
+<div id="card" hidden></div>
+<section id="title" class="screen" hidden>
+  <div class="ar" lang="ar" dir="rtl">إسناد</div>
+  <h1>ISNAD</h1>
+  <div class="tag">Chroniques des Compagnons</div>
+  <div class="vmenu"></div>
+  <p class="foot">Un JRPG rétro-HD en cinq sagas, de la mort du Prophète ﷺ à la fin du califat bien guidé. Fiction inspirée de sources historiques ; le Prophète ﷺ n’est jamais représenté et aucun personnage n’a de visage.<br><kbd>Flèches</kbd>/<kbd>ZQSD</kbd> ou clic : se déplacer · <kbd>Entrée</kbd> valider · <kbd>Échap</kbd> halte · <kbd>H</kbd> que faire ? · au doigt sur écran tactile<br><span class="ver"></span></p>
+</section>
+<section id="chain" class="screen" hidden>
+  <header><h2>La Chaîne</h2><p></p></header>
+  <div class="links"></div>
+  <div class="chainfoot"></div>
+</section>
+<section id="menu" class="screen" hidden>
+  <header><h2>Halte</h2></header>
+  <div class="cols"><div class="side"></div><div class="pane"></div></div>
+</section>
+<div id="fade"></div>
+<div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
+<script>
+/*JS*/
+</script>

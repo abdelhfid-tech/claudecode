@@ -1,0 +1,209 @@
+# ISNAD 2.0 — feuille de route
+
+*Plan approuvé par le décideur le 15 novembre. Il se tient à jour : chaque chantier terminé y est noté.*
+
+## Contexte
+
+Le décideur prépare la suite du jeu et pose une règle nette :
+
+> « Pas de régression sur le jeu actuel que tu peux renommer V1.31 au lieu de V31 (la dernière), là on parle d'une
+> vraie version 2.0 maintenant, qui n'impacte et ne modifie pas la version légère actuelle (1 fichier). »
+> « C'est une nouvelle version que tu crées, pas de modification du jeu actuel. »
+
+Ce que la 2.0 doit apporter, dans ses mots :
+
+- « Je veux pouvoir gérer / administrer le jeu via une base de données » ;
+- pour le personnage principal, « le choix du nom et du style selon le joueur » ;
+- « que je puisse rajouter des saga [...] donc l'architecture doit pouvoir le permettre de manière natives, mais
+  aussi des objets des armes des armures etc » ;
+- se financer par du contenu vendu, mettre le jeu en ligne puis sur des plateformes ; pas de jeu en réseau.
+
+Ses quatre réponses du 15 novembre restent valables : commencer par **le socle du jeu** ; la base sur **Supabase,
+nouveau projet** ; administrer par **une page en français** ; ranger les sagas ajoutées **en livres**.
+
+**Ce plan remplace le précédent, qui modifiait le moteur actuel : c'était contraire à la règle.**
+
+## Deux versions, deux arbres
+
+| | ISNAD 1.31 | ISNAD 2.0 |
+|---|---|---|
+| Ce que c'est | le jeu actuel, léger, en un fichier | une nouvelle version, administrée par une base |
+| Où | `src/`, `index.html`, `dist/isnad.html`, les outils de `tools/` | un nouveau dossier `v2/`, avec son moteur, son contenu, ses outils |
+| État | **gelée** : plus une ligne ne change, plus d'assemblage, plus de publication | en construction |
+| Publication | l'Artifact privé actuel, resté à sa version 31 | un **autre** Artifact privé, puis un site |
+| Parties des joueurs | ses clés de stockage, jamais lues ni écrites par la 2.0 | ses propres clés (`isnad2.…`) |
+
+La 1.31 est l'état du dépôt au commit `46fc869` : c'est le dernier qui touche `src/`, `index.html` ou `dist/`, et
+c'est ce que montre l'Artifact en version 31. Empreintes relevées : `index.html` `6a252ddb…`, `dist/isnad.html`
+`01df28af…`.
+
+« 1.31 » devient son nom dans la documentation. Le jeu lui-même n'est pas réassemblé pour l'afficher : ce serait
+le modifier.
+
+**La garantie.** Un outil `v2/tools/gel.js` compare `src/`, `index.html` et `dist/isnad.html` aux empreintes
+gelées (`v2/gel-1.31.json`). Il tourne avant chaque enregistrement de la 2.0 et doit afficher « 1.31 INTACTE ».
+
+## Feuille de route de la 2.0
+
+| | Chantier | Ce que vous y gagnez | Ce qu'il demande de vous |
+|---|---|---|---|
+| 0 | **Geler et copier** | la 1.31 protégée ; une 2.0 de départ, identique au jeu actuel, dans `v2/` | rien |
+| 1 | **Le socle** | la 2.0 reçoit des paquets (sagas, objets, lieux, musiques) rangés en livres ; partie exportable ; nom et tenue du personnage | rien : tout se passe dans le dépôt |
+| 2 | **La base et l'administration** | une page en français pour gérer objets, prix, sagas, relectures et publications | votre accord pour créer le projet Supabase ; les adresses autorisées à administrer |
+| 3 | **Le site** | page d'accueil, jeu installable et jouable hors ligne, livret | un hébergeur et un nom de domaine ; site privé d'abord |
+| 4 | **Comptes et vente** | connexion Google, partie gardée en ligne, sagas vendues en achat unique | un prestataire de paiement, un statut pour encaisser, les pages légales |
+| 5 | **Les magasins** | itch.io, puis Android, puis iOS | les comptes de développeur |
+
+**Approuver ce plan lance les chantiers 0 et 1.** Je vous redemande l'accord avant chacun des suivants, et avant
+toute création sur votre compte, toute mise en ligne et toute dépense.
+
+## Chantier 0 — geler la 1.31, ouvrir la 2.0
+
+- `v2/gel-1.31.json` : l'empreinte de chaque fichier de `src/`, de `index.html` et de `dist/isnad.html`, avec le
+  commit `46fc869`. `v2/tools/gel.js` les vérifie.
+- `v2/` reçoit une copie de `src/` (moteur, contenu, page, style) et des outils du jeu : `build.js`,
+  `validate.js`, `validate-music.js`, `mesure-musique.js`, `smoke.js`, `doigt.js`, `bataille.js`, `son.js`. Leurs
+  chemins pointent vers `v2/`. Sorties : `v2/index.html`, `v2/dist/isnad.html`.
+- Seuls écarts de la copie : les clés de stockage (`isnad2.…`) et la version affichée (« 2.0 », avec la date et le
+  commit).
+- **Contrôle de départ** : la 2.0 copiée passe toute la batterie, et son parcours automatique donne le même
+  compte rendu que celui de la 1.31.
+- `AGENTS.md` : une section « Deux versions » en tête — ce qui est gelé, où vit la 2.0, la commande `gel.js`. Les
+  exigences de respect valent pour les deux et ne sont pas retouchées.
+- `docs/decisions.md` : la règle du décideur, mot pour mot, et ce plan.
+
+## Chantier 1 — le socle de la 2.0 (tout sous `v2/`)
+
+Six lots. Chacun est livré, testé par toute la batterie de la 2.0, contrôlé par `gel.js` et enregistré séparément.
+
+### 1.1 Le validateur devient un module
+
+- `v2/tools/regles.js` : les règles de `validate.js` (`checkSaga`, contrôle de l'équipement) et de
+  `validate-music.js`, en fonctions pures (`verifierSaga`, `verifierEquipement`, `verifierPiste`, `verifierPaquet`),
+  sans accès au disque. Chargeable par Node et par un navigateur, comme `src/core/defs.js` l'est déjà : la page
+  d'administration s'en servira telle quelle.
+- `v2/tools/validate.js` reste la commande : mêmes lignes ✓ et ✗, même code de sortie. Sans argument, elle contrôle
+  tout le contenu, cadre, veillées et contenu commun compris.
+- Contrôles ajoutés : `after` désigne une saga qui existe ; `order` est unique dans son livre ; le livre et le lieu
+  d'un chapitre sont déclarés.
+
+### 1.2 Les paquets
+
+- Un **paquet** est un document de données pures, donc du JSON :
+  `{ id, version, moteur, livres, sagas, equipement, objets, etals, lieux, pistes }`. C'est la forme que la base
+  servira.
+- `v2/src/core/base.js` : `ISNAD.registerPack(p)` range chaque partie dans son registre ; `registerSaga` reste et
+  devient un paquet d'une seule saga. Un paquet déclare la version du moteur qu'il demande ; trop récent, il est
+  refusé avec un message, sans arrêter le jeu. Deux paquets ne peuvent pas porter le même identifiant.
+- Ce qu'un paquet apporte sans code : des sagas ; des pièces d'équipement d'une famille existante (`D.GEAR`) ; des
+  objets aux effets existants (`D.ITEMS`) ; des étals (`D.GEAR_SHOPS`) ; des pistes de musique, écrites en notes ;
+  des **lieux**.
+- Les lieux : un paquet déclare un lieu par **gabarit** — `{ gabarit: 'ville', nom, lieux, piste }` — parmi les dix
+  générateurs de `maps.js` (l'un d'eux sert déjà Médine et Koufa). `M.build` lit ce registre au lieu de son
+  `switch` ; le thème de l'interface (`world.js:89`) et les cartes où l'on bâtit (`build.js:6`) suivent le gabarit.
+- Ce qui reste dans le moteur : une nouvelle famille d'arme ou un nouveau dessin porté, un nouveau gabarit de
+  carte, une nouvelle forme d'égrégore, une nouvelle opération de script.
+- Le contenu copié de la 1.31 devient le paquet de base de la 2.0, sans changer un mot.
+
+### 1.3 Les livres
+
+- Une saga porte `livre` (1 par défaut). Les cinq sagas, le prologue et le dernier maillon forment le livre I,
+  inchangé : sa fin s'ouvre quand **ses** sagas sont achevées.
+- `v2/src/core/ui.js`, écran de la Chaîne : un groupe par livre, des chiffres romains calculés, des compteurs lus
+  dans les données. Le titre d'un livre ne s'affiche que s'il y en a plusieurs.
+- Une saga d'un autre livre peut reprendre une Lumière existante ; veillée et rencontre restent facultatives.
+- `v2/tools/smoke.js` tire son parcours des données : prologue, livre I, épilogue, puis les autres livres.
+
+### 1.4 La partie du joueur
+
+- `v2/src/core/base.js` : format `v: 2`, avec `profil` (nom, tenue) et les paquets connus ; une fonction de
+  migration pour les formats à venir.
+- **Exporter** la partie dans un fichier `isnad-partie.json`, ou en texte à copier là où le téléchargement est
+  bloqué. **Importer** un fichier ou un texte : contrôle, confirmation avant de remplacer.
+- Une partie qui cite un paquet absent se charge quand même : la saga manquante est masquée, rien ne plante.
+- Les parties de la 1.31 restent dans la 1.31. La 2.0 saura lire leur format, pour le jour où les deux versions
+  seront servies par le même site ; elle ne les modifie jamais.
+
+### 1.5 Le personnage du joueur
+
+- C'est Idris, le râwî. Les Compagnons gardent leur nom et leur silhouette.
+- À « Nouvelle partie », un écran **Ton personnage** : le nom (Idris par défaut, seize lettres au plus) et la
+  tenue, choisie parmi six silhouettes faites des coiffes, manteaux et couleurs que le moteur dessine déjà, avec
+  aperçu de face et de profil. Modifiable ensuite depuis la halte. Toujours sans visage.
+- Le nom dans les textes : les occurrences écrites en dur (cadre, quatre sagas, veillées, interface) deviennent un
+  marqueur, remplacé à l'affichage (`I.fmt`, `speaker` dans `script.js`). Le marqueur gère l'élision : « d'Idris »,
+  « de Khalil ». Le validateur signale tout « Idris » resté en dur.
+- Noms refusés : vide, trop long, le Nom divin employé seul, les noms que le validateur interdit déjà (Iblîs, démon,
+  djinn) et ceux des héros du jeu, pour ne pas brouiller les dialogues. Un prénom composé comme 'Abd ar-Rahmân est
+  admis : un héros du jeu le porte déjà.
+- Le sceau d'Idris porte son nom en arabe : avec un autre nom, il montre l'étoile à huit branches.
+- Nouvel outil `v2/tools/personnage.js` : crée un personnage au doigt, en hauteur et en largeur, prend les
+  captures, puis vérifie que le nom choisi paraît dans le dialogue, au combat et à la halte, et qu'aucun « Idris »
+  ne reste affiché.
+
+### 1.6 La preuve par un paquet d'essai
+
+- `v2/tools/essais/paquet_essai.js` : un paquet de pure fiction, jamais livré — une saga d'un chapitre dans un
+  livre II, un lieu déclaré par gabarit, une épée d'une famille existante, un objet, un étal, une piste.
+- Nouvel outil `v2/tools/paquet.js` : contrôle le paquet par `regles.js`, assemble un jeu d'essai, joue la saga
+  automatiquement et vérifie qu'elle paraît sous le livre II, que l'épée se vend et s'équipe, que la piste joue,
+  que l'export et l'import de la partie tiennent, et qu'une partie chargée sans le paquet ne plante pas.
+- Documentation de la 2.0 dans `v2/docs/` : `schema-paquet.md` (le contrat d'un paquet), `architecture.md`.
+- La 2.0 est publiée dans un **nouvel** Artifact privé. Celui de la 1.31 n'est pas touché.
+
+## Chantiers 2 à 5 — esquisse, à détailler le moment venu
+
+**2. La base et l'administration.**
+- Un projet Supabase en Europe, créé avec votre accord (organisation en formule gratuite, deux projets en pause).
+- La base est la source des contenus de la 2.0. Un outil d'export en tire les paquets publiés, pour assembler et
+  tester la 2.0 sans réseau.
+- États d'un contenu : brouillon, relu, publié. Un contenu qui touche l'histoire ou la religion ne se publie pas
+  sans relecture nommée et datée. Journal de qui a changé quoi.
+- La page d'administration, sous `v2/admin/` : objets et équipement, étals et prix, sagas (fiche, livre, ordre,
+  état), relectures, publications. Chaque enregistrement passe par `regles.js` et montre le rapport en français.
+  Une saga entière s'y dépose comme un document contrôlé ; un éditeur de chapitre visuel viendra plus tard.
+
+**3. Le site.** Page d'accueil tirée du livret, jeu installable et jouable hors ligne, polices embarquées, icône.
+La 2.0 y charge les paquets publiés. La 1.31 peut y rester proposée telle quelle, comme version légère. Site privé
+tant que la relecture par un spécialiste n'est pas faite.
+
+**4. Comptes et vente.** Connexion Google, et Apple sur iOS ; partie gardée en ligne ; sagas en achat unique, sans
+monnaie achetée ni objet payant qui rend plus fort. Un contenu payant n'est jamais servi en clair à qui n'y a pas
+droit.
+
+**5. Les magasins.** itch.io, puis Android, puis iOS.
+
+## Ce qui ne change pas
+
+- La 1.31 : son code, son fichier, son Artifact, ses parties.
+- Le livret et son PDF, qui décrivent la 1.31. Le livret en ligne n'est pas republié sans votre accord.
+- Les exigences de respect d'`AGENTS.md`, pour les deux versions : tout paquet passe par le validateur, d'où qu'il
+  vienne.
+- Le livre I de la 2.0 : les textes, la fin et les cinq Lumières de la 1.31.
+
+## Vérification
+
+1. **À chaque enregistrement** : `node v2/tools/gel.js` affiche « 1.31 INTACTE », et `git diff 46fc869 -- src
+   index.html dist` est vide.
+2. Chantier 0 : la batterie de la 2.0 copiée passe, et son parcours automatique donne le même compte rendu que
+   celui de la 1.31.
+3. Après chaque lot du chantier 1, sous `v2/tools/` : `validate.js`, `validate-music.js`, `build.js`, puis
+   `smoke.js` (auto, walk, tap, wrong), `doigt.js` (trois formats), `son.js`, `bataille.js` et
+   `bataille.js mesures`. Aucun « BLOQUÉ », « INACCESSIBLE », « ABSENT », « TEXTE CACHÉ », « INVISIBLE », « ÉCART »,
+   « MUSIQUE », aucune erreur console.
+4. Lot 1.1 : la sortie du validateur sur le contenu copié est la même avant et après.
+5. Lot 1.4 : une partie s'exporte, s'efface et se réimporte à l'identique.
+6. Lot 1.5 : `node v2/tools/personnage.js`, et ses captures relues en hauteur et en largeur.
+7. Lot 1.6 : `node v2/tools/paquet.js`.
+8. En fin de chantier 1 : la 2.0 publiée dans son propre Artifact privé, jouée à la main sur le prologue ; l'Artifact
+   de la 1.31 toujours en version 31.
+
+## Ce qui reste au décideur
+
+- Faut-il poser une étiquette `v1.31` dans le dépôt et la pousser ? Je ne pousse aujourd'hui que la branche de
+  travail.
+- Le titre du livre I, qui ne s'affichera que le jour où un livre II existe.
+- Les noms refusés pour le personnage : faut-il aussi écarter les noms des prophètes ?
+- Les six tenues proposées, à voir sur capture avant de les garder.
+- Avant le chantier 2 : l'accord pour créer le projet Supabase, et qui administre.
+- Avant toute nouvelle saga : laquelle d'abord, qui la relit, et la ligne pour les époques de dissensions.

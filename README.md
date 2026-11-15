@@ -9,6 +9,15 @@ agrégeant l'attention de millions de regards. Idris, jeune *râwî* (transmette
 remonte la **Chaîne** (*isnâd*) de témoin en témoin. Chaque saga lui rend une **Lumière**, c'est-à-dire
 une valeur, pour dévoiler l'Agrégor.
 
+## Deux versions
+
+- **ISNAD 1.31** : le jeu léger en un seul fichier (`index.html`, sources dans `src/`). Il est **gelé** : on ne le modifie
+  plus. `node v2/tools/gel.js` le vérifie.
+- **ISNAD 2.0** : une nouvelle version, en construction dans `v2/`, administrée par une base de données. Sa feuille de
+  route est dans `v2/docs/feuille-de-route.md`. Elle a ses propres outils (`v2/tools/`) et ses propres sauvegardes.
+
+Ce qui suit décrit la 1.31.
+
 ## Jouer
 
 - En ligne : la version publiée en Artifact (lien donné dans la session de travail).

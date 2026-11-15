@@ -873,6 +873,35 @@ Réponse de l'agent, pour mémoire (rien n'est exécuté) :
   vivant du Prophète ﷺ, que le jeu ne met jamais en scène. Les époques omeyyade et abbasside sont des temps de
   dissensions : l'exigence 5 y pèse plus lourd encore.
 
+## ISNAD 2.0 : une nouvelle version, à côté de la 1.31 gelée (décision du décideur, 15 novembre)
+
+Le décideur : « Je veux pouvoir gérer / administrer le jeu via une base de données », « Ok pour tes propositions ». Puis,
+après un premier plan qui modifiait le moteur actuel :
+
+> « Pas de régression sur le jeu actuel que tu peux renommer V1.31 au lieu de V31 (la dernière), la on Parle d'une vraie
+> version 2.0 maintenant, qui n'impacte et ne modifie pas la version légère actuelle (1 fichier). »
+> « C'est une nouvelle version que tu crée, pas de modification du jeu actuel. »
+
+- [x] **D132. Deux versions.** *Décision du décideur.* Le jeu actuel devient **ISNAD 1.31** et ne change plus. **ISNAD
+  2.0** est une nouvelle version, construite à part dans `v2/`. La feuille de route approuvée est dans
+  `v2/docs/feuille-de-route.md`.
+- [x] **D133. Les quatre choix du décideur pour la 2.0.** Commencer par le socle du jeu ; la base sur Supabase, dans un
+  nouveau projet ; administrer par une page en français ; ranger les sagas ajoutées en livres, le livre I gardant ses
+  cinq maillons et sa fin.
+- [ ] **D134. Le gel de la 1.31.** C'est l'état du dépôt au commit `46fc869`, dernier à toucher `src/`, `index.html` ou
+  `dist/`, et c'est ce que montre l'Artifact privé du jeu en version 31. Trente-sept fichiers sont sous empreinte
+  (`v2/gel-1.31.json`) : `src/`, `index.html`, `dist/isnad.html` et les huit outils du jeu. `node v2/tools/gel.js` les
+  contrôle avant chaque enregistrement. « 1.31 » est son nom dans la documentation : le jeu n'est pas réassemblé pour
+  l'afficher, ce serait le modifier. Son Artifact n'est plus republié.
+- [ ] **D135. La 2.0 de départ.** `v2/` reçoit une copie de `src/` et des outils du jeu. Trois écarts seulement : ses
+  propres clés de stockage (`isnad2.…`), pour ne jamais lire ni écrire une partie de la 1.31 ; la version affichée
+  (« 2.0 », avec la date et le commit) ; et le retrait d'une reprise d'ancienne partie, qui effaçait une clé de la
+  version 1. La 2.0 se publiera dans un autre Artifact privé.
+- [ ] **D136. Une correction de l'agent.** J'avais écrit qu'un nom choisi pour le personnage touchait l'exigence 8.
+  À la relecture, non : l'exigence vise ce que l'on frappe, les compétences et les sprites, et un héros du jeu porte déjà
+  le prénom 'Abd ar-Rahmân. Je propose donc de refuser seulement le Nom divin employé seul, les noms que le validateur
+  interdit déjà et ceux des héros du jeu. La question des noms des prophètes reste au décideur.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
@@ -947,10 +976,12 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     pour l'impression ? Le livret en ligne doit-il reprendre la correction « Douze planches » ?
 17. La version suivante : par quelle étape commencer, et le décideur veut-il une note d'architecture chiffrée avant
     de choisir ?
-18. Le personnage du joueur : est-ce bien Idris dont on choisit le nom et la tenue ? Que faire d'un nom qui porte le
-    Nom divin (exigence 8) ?
+18. *Répondu en partie le 15 novembre : oui, c'est Idris (« Ok pour tes propositions »).* Le personnage du joueur : faut-il
+    refuser aussi les noms des prophètes (D136) ? Les six tenues proposées conviennent-elles, une fois vues sur capture ?
 19. Le financement : des sagas vendues en achat unique, sans monnaie achetée ni objet payant qui rend plus fort,
     est-ce la bonne voie ?
 20. Les sagas à venir : lesquelles d'abord, qui les relit, et quelle ligne pour les époques de dissensions ?
+21. La 2.0 (D132 à D135) : faut-il poser une étiquette `v1.31` dans le dépôt et la pousser ? Quel titre pour le
+    livre I, le jour où un livre II existera ?
 10. *Répondu le 15 novembre : « Ça a l'air ok ».* La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?
