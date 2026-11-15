@@ -451,7 +451,9 @@ de fond ; la musique s'est tue « dans la noosphère à Médine ».
   L'exigence 9 cite les « ambiances » parmi les sons permis : elle autorise sans imposer, l'agent n'y
   touche pas (question 9).
 
-- [ ] **D91. « Dans la noosphère la musique s'est arrêtée » (Médine, saga I).** *Un défaut certain est
+- [x] **D91. « Dans la noosphère la musique s'est arrêtée » (Médine, saga I).** *Réponse du décideur le 15 novembre, au
+  dernier point du compte rendu : « Ça a l'air ok. » Lu comme : la musique tient maintenant sur son appareil. Si ce mot
+  visait autre chose, la question reste ouverte.* *Un défaut certain est
   corrigé ; l'arrêt complet n'a pas été reproduit.* Écoute réelle par `tools/son.js` :
   - après une défaite puis une reprise, la carte gardait l'air de deuil au lieu de sa piste (le combat
     retenait la musique à retrouver à chaque tentative). Reproduit, corrigé : la musique du lieu a une
@@ -680,7 +682,12 @@ Les mots du décideur, tels qu'il les a écrits :
 - [x] **D117.** « Quand je disait Khalid c'est Khalid ibn al Walid ! » C'est bien lui : la saga III, sur laquelle la bataille
   avec des rangs a été construite.
 
-Ce que l'agent a construit pour y répondre, et qui reste à valider :
+**Réponses du décideur au compte rendu (15 novembre)**, point par point : « 1. Choisi le meilleur game play, 2. Ok
+3. Ok. 4. Ok. 5. Ok 6. Ok. 7. Ça a l'air ok. » Les six premiers points étaient : les sept Valeurs ; les attributs
+divins et leur rapprochement avec les Valeurs ; pas d'organigramme du bien ; le secours comme exception aux exigences 13
+et 15 ; le combat intérieur réservé au râwî ; « au sortir de la prière ». Le septième est lu comme la musique (D91).
+
+Ce que l'agent a construit pour y répondre :
 
 - [ ] **D118. La préparation.** Avant chaque combat d'idole, et à chaque reprise, une page « Bataille déclarée ·
   préparation » : les hommes (rangs présents, renfort, alliés venus ou non), le groupe (niveau, Constance, Souffle),
@@ -688,7 +695,8 @@ Ce que l'agent a construit pour y répondre, et qui reste à valider :
   le cœur (provision contre poids de l'épreuve, prière tenue). Chaque point est marqué ◆ ou ◇. On peut encore s'y
   équiper. Rien ne bloque, et l'on ne recule pas : la seule sortie est de déclarer la bataille. Elle remplace le carton
   « Bataille déclarée ». J'ai lu « verrues » comme « vertus ».
-- [ ] **D119. Le secours.** Dans un combat d'idole, quand le dernier compagnon va tomber et si la prière a été tenue
+- [x] **D119. Le secours.** *Validé (« 4. Ok ») : le secours reste une exception dite aux exigences 13 et 15, qui ne sont
+  pas réécrites.* Dans un combat d'idole, quand le dernier compagnon va tomber et si la prière a été tenue
   dans le chapitre, le groupe est relevé, une fois par tentative : tous debout à la moitié de leur Constance et de leur
   Souffle, le doute levé, la Sakîna en hausse, l'idole un instant retenue. Rien ne le déclenche pendant le combat. Il ne
   vient pas dans un combat ordinaire ni dans un combat intérieur. À l'écran : un éclat clair et une colonne de lumière
@@ -698,7 +706,9 @@ Ce que l'agent a construit pour y répondre, et qui reste à valider :
   rapporte des anges dans les batailles des Compagnons après la mort du Prophète ﷺ : le jeu dit donc que c'est son
   image, cite Badr, et n'affirme rien d'un autre jour (exigences 3 et 16). (3) « À jour dans leurs prières » ne peut pas
   se dire d'un Compagnon : la page de préparation s'adresse au râwî (« Tu n'es pas encore passé par la natte »).
-- [ ] **D120. Les sept Valeurs.** J'ai lu « 7 valeurs » comme les sept vertus des sept lames, une en face de chaque mal
+- [x] **D120. Les sept Valeurs.** *« 1. Choisi le meilleur game play » : le décideur laisse le choix à l'agent. Sont
+  retenues les sept vertus des sept lames : c'est la liste qui se joue le mieux, parce qu'elle s'emboîte dans ce qui
+  existe déjà (l'œuvre forge la lame, la lame tranche le mal, la Valeur reste) sans rien ajouter à apprendre.* J'ai lu « 7 valeurs » comme les sept vertus des sept lames, une en face de chaque mal
   du cœur ; ce ne sont pas les six Lumières des Compagnons, qui restent ce qu'elles étaient. Une Valeur est gardée quand
   son mal est tranché par sa lame. **Si le décideur pensait à sept autres valeurs, cette liste se remplace sans rien
   casser.**
@@ -713,7 +723,8 @@ Ce que l'agent a construit pour y répondre, et qui reste à valider :
   | l'Envie | la visite | la Bienveillance (an-Nasîha) | Se réjouir du bien d'autrui comme du sien. |
   | la Colère | le dhikr | la Longanimité (al-Hilm) | Garder son calme quand on pourrait frapper. |
 
-- [ ] **D121. Les sept attributs divins.** Un par Valeur, reconnu quand l'œuvre a forgé la lame. Chaque Nom figure dans le
+- [x] **D121. Les sept attributs divins.** *Validé (« 2. Ok »). La relecture des sept rapprochements par un tiers reste
+  conseillée par l'agent : elle n'a pas eu lieu.* Un par Valeur, reconnu quand l'œuvre a forgé la lame. Chaque Nom figure dans le
   verset cité. Traduction de Muhammad Hamidullah, lue mot à mot le 15 novembre sur api.quran.com (traduction n° 31),
   d'abord par un agent de lecture, puis directement pour les fins de versets. À relire par le décideur.
 
@@ -731,10 +742,10 @@ Ce que l'agent a construit pour y répondre, et qui reste à valider :
   Nom sur un sprite (exigence 8). Le « badge » d'un attribut est un médaillon de texte. On dit qu'on le reconnaît, jamais
   qu'on le possède. **Le rapprochement entre une Valeur et un attribut, et les sept « mots du jeu », sont de l'agent :**
   ce sont les lignes les plus délicates de ce lot, et elles demandent un relecteur.
-- [ ] **D122. Pas d'organigramme du bien.** Le décideur a nommé le côté du bien ; l'agent n'en a pas fait un organigramme
+- [x] **D122. Pas d'organigramme du bien.** *Validé (« 3. Ok »).* Le décideur a nommé le côté du bien ; l'agent n'en a pas fait un organigramme
   en miroir. Mettre un sommet « en face » d'Iblîs serait un dualisme : Iblîs n'est qu'une créature. La page dit : « Il
   n'y a pas d'organigramme du bien : rien ne se tient en face du Créateur. »
-- [ ] **D123. Les portes de la noosphère.** Trois moments, sur la natte : au sortir de la prière, dans le dhikr, en songe
+- [x] **D123. Les portes de la noosphère.** *Validé (« 5. Ok » : le râwî seul ; « 6. Ok » : « au sortir de la prière »).* Trois moments, sur la natte : au sortir de la prière, dans le dhikr, en songe
   (une entrée « S'endormir » est ajoutée au menu de la natte). Une descente par porte et par chapitre. On choisit un mal
   du cœur qui n'est pas encore tranché ; avec sa lame il est tranché et la Valeur gardée, sans elle il n'est que
   repoussé. Si le mal l'emporte, on remonte : pas de reprise forcée. **Qui combat.** Dans les sagas, le groupe est fait
@@ -743,8 +754,8 @@ Ce que l'agent a construit pour y répondre, et qui reste à valider :
   la descente : « Ce n'est pas le cœur des Compagnons que tu vas voir : c'est le tien. » **Les mots.** « Démons
   intérieurs » est gardé comme une façon de parler, expliquée aussitôt : « ce ne sont pas des démons : ce sont les maux
   du cœur ». J'ai écrit « au sortir de la prière » plutôt que « pendant », pour que la prière reste sobre.
-- [ ] **D124. Exigences 20, 21 et 22, proposées dans `AGENTS.md`.** Au décideur de les confirmer, de les reformuler ou de
-  les retirer, et de dire si les exigences 13 et 15 doivent être ajustées pour le secours.
+- [x] **D124. Exigences 20, 21 et 22 dans `AGENTS.md`.** Leurs choix essentiels sont validés par les réponses ci-dessus ;
+  leur formulation reste celle de l'agent, que le décideur peut retoucher. Les exigences 13 et 15 ne sont pas ajustées.
 - [ ] **D125. Le livret.** Le PDF est le livret mis en pages. L'Artifact du livret, partagé par lien, n'est pas republié
   tant que le décideur n'a pas relu les textes nouveaux.
 - **Vérifications.** Batterie complète sans anomalie (cinq parcours automatiques, rechargement, trois parcours au
@@ -820,12 +831,12 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     déplacement case par case, un champ plus grand, des rangs plus nombreux ? Les trois manœuvres et leurs
     noms conviennent-ils ? Le tableau des rangs des autres maillons (D111) est-il juste, ligne par ligne ?
     Faut-il des rangs à Yamâma ou à Nahrawân, et qui y ordonne ?
-13. Valeurs et attributs (D120 à D122) : « 7 valeurs », était-ce bien les sept vertus des lames ? Les sept attributs
+13. *Répondu le 15 novembre (D120 à D122).* Valeurs et attributs (D120 à D122) : « 7 valeurs », était-ce bien les sept vertus des lames ? Les sept attributs
     divins, leurs versets et les sept « mots du jeu » conviennent-ils, et qui les relit ? Un attribut divin peut-il
     rester un « badge », même fait de texte seul ?
-14. Le secours (D119) : la formulation convient-elle ? Faut-il ajuster les exigences 13 et 15, ou garder le secours
+14. *Répondu le 15 novembre (D119), sauf la dernière question.* Le secours (D119) : la formulation convient-elle ? Faut-il ajuster les exigences 13 et 15, ou garder le secours
     comme une exception dite ? Doit-il venir aussi hors des batailles d'idole ?
-15. Les portes de la noosphère (D123) : le combat intérieur est celui du râwî, jamais d'un Compagnon. Est-ce bien
+15. *Répondu le 15 novembre (D123).* Les portes de la noosphère (D123) : le combat intérieur est celui du râwî, jamais d'un Compagnon. Est-ce bien
     l'intention ? « Au sortir de la prière » convient-il, ou faut-il « pendant » ?
-10. La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
+10. *Répondu le 15 novembre : « Ça a l'air ok ».* La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

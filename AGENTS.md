@@ -165,7 +165,7 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     ou pas de rangs du tout. Les manœuvres du stratège sont des manœuvres d'école : le jeu ne dit pas que l'une d'elles
     fut faite tel jour, en tel lieu. L'issue d'une bataille déclarée ne change aucun fait de l'histoire.
 
-20. *(Demandée par le décideur ; formulation proposée par l'agent, à confirmer.)* Le secours. Dans une bataille déclarée
+20. *(Demandée par le décideur, qui en a validé les choix le 15 novembre ; formulation de l'agent.)* Le secours. Dans une bataille déclarée
     presque perdue, le groupe est relevé, une fois par tentative, si la prière a été tenue dans le chapitre. Aucun ange
     n'est dessiné, nommé, compté ni mis en dialogue : de la lumière et un verset, rien d'autre. Le jeu cite ce que le Coran
     rapporte de Badr, en traduction du sens, et ne dit pas que des anges sont venus tel jour de l'histoire des Compagnons.
@@ -173,14 +173,14 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     sa prière : la page de préparation parle au râwî. C'est une exception aux exigences 13 et 15, voulue par le décideur ;
     l'agent ne les a pas réécrites.
 
-21. *(Demandée par le décideur ; formulation proposée par l'agent, à confirmer.)* Valeurs et attributs. Du côté du bien,
+21. *(Demandée par le décideur, qui en a validé les choix le 15 novembre ; formulation de l'agent.)* Valeurs et attributs. Du côté du bien,
     on ne dit ni djinn, ni égrégore, ni idole. Il n'y a pas d'organigramme du bien en miroir de celui du mal : rien ne se
     tient en face du Créateur. Une Valeur est une image du jeu, marquée d'un badge sans inscription. Un attribut divin
     vient du Coran, avec son verset en traduction du sens et sa référence, vérifiés mot à mot ; il n'est jamais dessiné,
     personnifié, « équipé » ni changé en pouvoir ; son Nom est du texte, jamais un sprite (l'exigence 8 reste entière) ;
     on dit qu'on le reconnaît, jamais qu'on le possède.
 
-22. *(Demandée par le décideur ; formulation proposée par l'agent, à confirmer.)* Descendre dans la noosphère. Au sortir
+22. *(Demandée par le décideur, qui en a validé les choix le 15 novembre ; formulation de l'agent.)* Descendre dans la noosphère. Au sortir
     de la prière, dans le dhikr, en songe, on peut y descendre pour faire face à ses maux du cœur. C'est le combat du râwî,
     personnage de fiction, seul : jamais celui d'un Compagnon, à qui le jeu ne prête aucun mal du cœur. « Démons
     intérieurs » est une façon de parler, que le jeu explique aussitôt : aucun combattant ne porte le nom d'un démon. La
