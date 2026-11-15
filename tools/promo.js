@@ -264,7 +264,7 @@ async function decors(browser, errors) {
   for (const [name, saga, ci, alt, spot, dx, dy, dir, tx, ty] of DECORS) {
     if (only && !only.includes(name)) continue;
     // le jeu automatique est enclenché avant le départ du chapitre : sinon un carton d'introduction attend une touche
-    await ev(([s, c]) => { const I = window.ISNAD, W = I.world; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen');
+    await ev(([s, c]) => { const I = window.ISNAD, W = I.world; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); /* l'écran masqué n'écoute plus les touches */
       window.__stop = () => true; window.__stopped = false; I.debug.auto = true; I.speed = 30; W.roster = {}; W.saga = null; I.script.flags = {}; W.startChapter(s, c); }, [saga, ci]);
     let ok = false; for (let i = 0; i < 400; i++) { if (await ev(() => window.__stopped)) { ok = true; break; } await p.waitForTimeout(50); }
     if (!ok) { console.log('  ! décor sauté :', name, JSON.stringify(await T.state())); continue; }
@@ -303,7 +303,7 @@ async function coeur(browser, errors) {
   const ouvrir = async () => { const T = await openGame(browser, errors); await T.ev(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 30; });
     await T.p.keyboard.press('Enter'); for (let i = 0; i < 600; i++) { if (await T.ev(chainShown)) break; await T.p.waitForTimeout(100); } return T; };
   const aller = async (T, saga, ci) => { // même départ que les décors : jeu automatique jusqu'au premier repos
-    await T.ev(([s, c]) => { const I = window.ISNAD, W = I.world; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen');
+    await T.ev(([s, c]) => { const I = window.ISNAD, W = I.world; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); /* l'écran masqué n'écoute plus les touches */
       window.__stop = () => true; window.__stopped = false; I.debug.auto = true; I.debug.noOeuvres = true; I.speed = 30; W.roster = {}; W.saga = null; I.script.flags = {}; W.startChapter(s, c); }, [saga, ci]);
     for (let i = 0; i < 500; i++) { if (await T.ev(() => window.__stopped)) break; await T.p.waitForTimeout(50); }
     await T.p.waitForTimeout(300); await T.ev(() => { const W = window.ISNAD.world; W.foes = []; document.querySelector('#toasts').innerHTML = ''; });
@@ -367,7 +367,7 @@ async function equipement(browser, errors) {
   const T = await openGame(browser, errors); await T.ev(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 30; });
   await T.p.keyboard.press('Enter'); for (let i = 0; i < 600; i++) { if (await T.ev(chainShown)) break; await T.p.waitForTimeout(100); }
   // saga III, chapitre 2 : trois compagnons d'armes, et une réserve comme on en a après un maillon
-  await T.ev(() => { const I = window.ISNAD, W = I.world; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen');
+  await T.ev(() => { const I = window.ISNAD, W = I.world; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); /* l'écran masqué n'écoute plus les touches */
     window.__stop = () => true; window.__stopped = false; I.debug.auto = true; I.debug.noOeuvres = true; I.speed = 30; W.roster = {}; W.saga = null; I.script.flags = {}; W.startChapter('khalid', 1); });
   for (let i = 0; i < 500; i++) { if (await T.ev(() => window.__stopped)) break; await T.p.waitForTimeout(50); }
   await T.p.waitForTimeout(300);
