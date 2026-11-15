@@ -8,7 +8,7 @@ ISNAD.registerSaga({
   tagline: "Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui.",
 
   intro: [
-    ['amb', 'vent'], ['mus', 'chaine'],
+    ['mus', 'chaine'],
     ['title', "'Uthmân ibn 'Affân", 'Le Généreux · 23–35 H'],
     ['nar', "An 23 de l'Hégire. 'Umar est tombé à la prière de l'aube. Six hommes se concertent trois jours ; au matin, les mains se tendent vers 'Uthmân ibn 'Affân."],
     ['nar', "Il a près de soixante-dix ans. Marchand prospère, il a tant donné qu'on a cessé de compter : un puits racheté pour que tous y boivent, l'armée des jours difficiles équipée de ses deniers."],
@@ -19,7 +19,7 @@ ISNAD.registerSaga({
   ],
 
   outro: [
-    ['amb', 'silence'], ['mus', 'deuil'],
+    ['mus', 'deuil'],
     ['flash', '#ffffff'],
     ['nar', "Le vendredi 18 Dhû l-Hijja de l'an 35, on força sa porte. Il jeûnait. Le Livre était ouvert devant lui."],
     ['nar', "La Chaîne se tait ici. Elle ne montre pas. Elle dit seulement : il avait plus de quatre-vingts ans, il avait gouverné douze années, et nul n'était mort pour le défendre — parce qu'il l'avait interdit."],
@@ -324,14 +324,13 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Les Feuillets', "Vers l'an 30 de l'Hégire · Médine"],
-        ['amb', 'foule'],
         ['nar', "Médine a changé. Des caravanes arrivent du Shâm, d'Égypte, d'Irak. On y parle dix accents, et le Livre se récite désormais sous des cieux que le Hijâz n'a jamais vus."],
         ['nar', "Au temps d'Abû Bakr, Zayd ibn Thâbit avait réuni la Révélation en feuillets. Ils reposent à Médine. Mais au loin, chaque garnison apprend de son maître — et chacune tient sa récitation pour la meilleure."],
         ['nar', "'Uthmân sort de chez lui. On dit qu'un cavalier approche de la porte nord, couvert de la poussière des frontières."]
       ],
       objectives: [
         { text: 'Gagner la porte nord, où un cavalier arrive du front', goto: 'porte_nord', then: [
-          ['show', 'hudhayfa'], ['sfx', 'wind'],
+          ['show', 'hudhayfa'],
           ['say', 'hudhayfa', "Commandeur des croyants. Je reviens des marches d'Arménie et d'Azerbaïdjan. J'y ai vu une chose qui m'a ôté le sommeil."],
           ['say', 'uthman', "Parle, Hudhayfa. Tu n'es pas homme à t'alarmer pour peu."],
           ['say', 'hudhayfa', "Les gens du Shâm et ceux d'Irak combattent côte à côte. Le soir, ils se disputent sur la récitation. L'un dit à l'autre : « Ma lecture vaut mieux que la tienne. » Peu s'en faut qu'ils ne se renient."],
@@ -431,7 +430,7 @@ ISNAD.registerSaga({
           ['nar', "Les calames crissent. Mais chaque ligne tracée dérange quelque chose, de l'autre côté. Une nuée s'amasse au-dessus de la halle : toutes les querelles de toutes les garnisons, nouées en une seule tour."],
           ['say', 'hudhayfa', "C'est elle que j'ai vue grandir aux frontières. Elle a un nom ancien."],
           ['sfx', 'glitch'],
-          ['map', 'noos', 'seuil', { hue: 275 }], ['amb', 'noos'],
+          ['map', 'noos', 'seuil', { hue: 275 }],
           ['nar', "La noosphère de Médine. Ici, les voix ont un poids et les mots une forme. Au cœur du réseau, Babel attend."]
         ] },
         { text: 'Dénouer les variantes qui barrent le réseau', foe: 'f_noeud', then: [
@@ -441,7 +440,7 @@ ISNAD.registerSaga({
           ['battle', { group: ['babel'], bg: 'noos', boss: true, intro: "Mille lectures — et pas une qui écoute l'autre.",
             allies: [{ flag: 'ut_garnisons', name: 'Les deux colonnes réconciliées' }] }],
           ['nar', "La tour de voix se défait. Il n'en reste qu'une récitation, portée par plusieurs souffles — diverse dans ses tons, une dans son tracé."],
-          ['map', 'medine', 'halle', { time: 'dusk' }], ['amb', 'vent'],
+          ['map', 'medine', 'halle', { time: 'dusk' }],
           ['say', 'zayd', "C'est achevé. Nous avons comparé chaque ligne aux feuillets. Rien n'y manque, rien n'y est ajouté."]
         ] }
       ],
@@ -514,7 +513,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'La Bataille des Mâts', "An 34 de l'Hégire · Dhât as-Sawârî"],
-        ['amb', 'vent'],
         ['nar', "Les Arabes sont gens de pistes et de puits. La mer, ils la regardent depuis le rivage du Shâm — et de la mer viennent, chaque saison, les flottes de Constantinople."],
         ['nar', "Mu'âwiya, gouverneur du Shâm, avait demandé à 'Umar la permission de prendre la mer. 'Umar avait refusé : il ne risquerait pas un seul homme sur cette étendue sans rivage."],
         ['nar', "An 28. La demande revient, cette fois devant 'Uthmân. Un émissaire du Shâm attend à la porte de la mosquée."]
@@ -538,7 +536,7 @@ ISNAD.registerSaga({
           ['quote', "« Ne choisis personne et ne tire personne au sort. Laisse-leur le choix : celui qui choisit de partir de son plein gré, transporte-le et aide-le. »", "On rapporte — 'Uthmân à Mu'âwiya, at-Tabarî, Târîkh (an 28 H)"],
           ['codex', 'flotte'], ['pillar', 'justice', 1],
           ['nar', "Cette année-là, la flotte quitte les ports du Shâm. Sa première escale n'est pas une bataille : c'est une île, si proche qu'on y entend, disait l'émissaire, aboyer les chiens."],
-          ['map', 'navire', 'poupe', { time: 'dusk' }], ['amb', 'mer'], ['sfx', 'wave'], ['mus', 'mer'],
+          ['map', 'navire', 'poupe', { time: 'dusk' }], ['mus', 'mer'],
           ['nar', "An 28, devant Chypre. 'Uthmân n'a pas embarqué : il est à Médine, et ses compagnons aussi. Mais sa consigne voyage avec ceux qu'il envoie, et c'est elle que tu portes sur ce pont, tel que les marins l'ont raconté."],
           ['nar', "Une barque se détache du rivage. Des anciens du port montent à bord, sans armes : ils viennent voir si l'on peut parler à cette flotte avant qu'elle ne parle la première."]
         ] },
@@ -605,7 +603,7 @@ ISNAD.registerSaga({
           ['nar', "Un pacte est un puits creusé entre deux campements : chacun y descend son seau, et nul n'a besoin d'aimer l'autre pour y boire."],
           ['nar', "Six ans passent. Dans les chantiers d'Égypte et du Shâm, des cavaliers apprennent à tenir debout sur un pont."],
           ['nar', "An 34. L'empereur Constant arme cinq cents voiles pour reprendre la mer. 'Abdallâh ibn Sa'd, gouverneur d'Égypte, sort à sa rencontre au large de la Lycie."],
-          ['map', 'navire', 'poupe', { time: 'dawn' }], ['amb', 'mer'], ['sfx', 'wave'],
+          ['map', 'navire', 'poupe', { time: 'dawn' }], 
           ['show', 'ibnsad'], ['show', 'vigie'],
           ['nar', "Dans la noosphère de la flotte, la décision du calife a un poids : nul n'est ici contre son gré. Rejoins l'amiral au pied du mât."]
         ] },
@@ -638,7 +636,7 @@ ISNAD.registerSaga({
           ['nar', "On rapporte que l'on se battit ce jour-là sur les ponts comme sur la terre ferme, et que la mer changea de couleur. Les marins de l'empereur tinrent longtemps : c'étaient des hommes braves, et la mer était à eux."],
           ['nar', "Les chroniqueurs n'en disent guère plus, et la Chaîne ne montre pas ce qu'ils taisent. Mais sous les coques, autre chose se bat : la somme de toutes les peurs tombées à l'eau."],
           ['sfx', 'glitch'],
-          ['map', 'noos', 'seuil', { hue: 205 }], ['amb', 'noos'],
+          ['map', 'noos', 'seuil', { hue: 205 }],
           ['nar', "La noosphère du large. Ni sol ni horizon : seulement des nœuds de lumière jetés sur le vide, comme des navires enchaînés."]
         ] },
         { text: "Tenir le premier nœud contre l'écume", foe: 'f_large', then: [
@@ -648,7 +646,7 @@ ISNAD.registerSaga({
           ['battle', { group: ['abime'], bg: 'mer', boss: true, intro: 'Sous les coques, quelque chose ouvre les bras.',
             allies: [{ flag: 'ut_pilotes', name: 'Les pilotes du port' }] }],
           ['nar', "L'Abîme se referme. Là-haut, au même instant, la ligne de l'empereur se rompt. Constant échappe de peu ; sa flotte se disperse vers le nord."],
-          ['map', 'navire', 'proue', { time: 'day' }], ['amb', 'mer'],
+          ['map', 'navire', 'proue', { time: 'day' }],
           ['say', 'ibnsad', "C'est fini. Qu'on dise au Commandeur des croyants que pas un de ces hommes n'a été traîné ici. C'est pour cela qu'ils ont tenu."]
         ] }
       ],
@@ -703,7 +701,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'La Maison assiégée', "An 35 de l'Hégire · Médine"],
-        ['amb', 'foule'],
         ['nar', "Douze ans de califat. Les trésors ont afflué, et avec eux les comparaisons. Dans les garnisons d'Égypte et d'Irak, des griefs circulent — certains fondés, d'autres grossis de bouche en bouche."],
         ['nar', "Des lettres passent de main en main. Nul ne sait dire qui les a écrites. Des hommes venus de Fustât, de Koufa et de Bassora campent maintenant aux portes de Médine."],
         ['nar', "Ce soir encore, il dirige la prière du couchant dans la mosquée qu'il a rebâtie. Bientôt, on l'en empêchera."],
@@ -812,7 +809,6 @@ ISNAD.registerSaga({
           ['nar', "Confondu ou non, Abû l-Akhbâr n'était qu'une bouche. La Rumeur en a mille autres, et elle marche déjà vers la maison."]
         ] },
         { text: 'Rentrer à la maison, que le cercle enserre', goto: 'maison', then: [
-          ['amb', 'nuit'],
           ['nar', "Les jours passent. Le cercle se resserre autour de la maison ; on lui coupe l'eau — à lui qui avait offert un puits à toute la ville."],
           ['say', 'hasan', "Mon père nous a postés à ta porte, mon frère et moi. Dis un mot, et nous sortons."],
           ['say', 'ibnzubayr3', "Nous sommes des centaines, dans la maison et alentour. Laisse-nous faire : ils ne tiendront pas."],
@@ -840,7 +836,7 @@ ISNAD.registerSaga({
           ['say', 'zayd', "Tu ne veux pas te défendre contre eux. Mais il y a autre chose à cette porte, qui n'est pas un homme."],
           ['say', 'uthman', "Celle-là, je veux bien la regarder en face."],
           ['sfx', 'glitch'],
-          ['map', 'noos', 'seuil', { hue: 320 }], ['amb', 'noos'],
+          ['map', 'noos', 'seuil', { hue: 320 }],
           ['nar', "La noosphère de Médine, saturée de voix. La Rumeur ignore les distances : à al-Madâ'in, à des semaines de marche, Hudhayfa l'entend aussi — et lui tient tête. Ici, il est à tes côtés."],
           ['join', 'hudhayfa'],
           ['say', 'hudhayfa', "J'ai gardé un secret toute ma vie. Je sais ce que vaut une parole qu'on ne répète pas."]
@@ -857,7 +853,7 @@ ISNAD.registerSaga({
           ['nar', "L'emprise se brise. Un instant, les voix se taisent — et dans ce silence, chacun pourrait entendre qu'il ne sait pas ce qu'il répète."],
           ['nar', "Mais briser une emprise n'est pas dissoudre une foule. Dehors, les hommes sont réels, et leur colère aussi. 'Uthmân le sait. Il ne demandait pas à être sauvé : seulement que nul ne tue en son nom."],
           ['codex', 'rumeur_n'],
-          ['map', 'medine', 'maison', { time: 'night' }], ['amb', 'silence']
+          ['map', 'medine', 'maison', { time: 'night' }]
         ] }
       ],
       outro: [

@@ -42,8 +42,7 @@
 
   D.TIMES = ['day', 'dusk', 'night', 'dawn'];
 
-  D.SFX = ['duff', 'tek', 'roll', 'hit', 'break', 'light', 'wind', 'door', 'crowd', 'wave', 'glitch', 'blip'];
-  D.AMB = ['vent', 'nuit', 'foule', 'feu', 'mer', 'noos', 'cite', 'silence', 'bataille'];
+  D.SFX = ['duff', 'tek', 'roll', 'hit', 'break', 'light', 'door', 'glitch', 'blip'];
 
   // Cartes disponibles et leurs lieux nommés (spots).
   const VILLE = ['mosquee_cour', 'mosquee_porte', 'place', 'souk', 'halle', 'maison', 'puits',
@@ -209,7 +208,7 @@
   D.OPS = {
     say: [2, 2], nar: [1, 1], quote: [2, 2], title: [1, 2], choice: [2, 2], ask: [2, 2],
     battle: [1, 1], map: [2, 3], tp: [2, 2], walk: [2, 2], face: [2, 2], show: [1, 1], hide: [1, 1],
-    fade: [1, 2], wait: [1, 1], shake: [0, 1], flash: [0, 1], sfx: [1, 1], amb: [1, 1],
+    fade: [1, 2], wait: [1, 1], shake: [0, 1], flash: [0, 1], sfx: [1, 1],
     give: [1, 2], join: [1, 1], leave: [1, 1], codex: [1, 1], heal: [0, 0],
     flag: [1, 2], if: [2, 3], tint: [1, 1], light: [1, 1],
     pray: [0, 1], emote: [2, 2], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1], lore: [1, 1], raid: [0, 1],

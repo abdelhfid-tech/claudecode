@@ -410,7 +410,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
+window.ISNAD_VERSION = "2026-11-15 10:33 UTC · e341fd4+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -456,8 +456,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
 
   D.TIMES = ['day', 'dusk', 'night', 'dawn'];
 
-  D.SFX = ['duff', 'tek', 'roll', 'hit', 'break', 'light', 'wind', 'door', 'crowd', 'wave', 'glitch', 'blip'];
-  D.AMB = ['vent', 'nuit', 'foule', 'feu', 'mer', 'noos', 'cite', 'silence', 'bataille'];
+  D.SFX = ['duff', 'tek', 'roll', 'hit', 'break', 'light', 'door', 'glitch', 'blip'];
 
   // Cartes disponibles et leurs lieux nommés (spots).
   const VILLE = ['mosquee_cour', 'mosquee_porte', 'place', 'souk', 'halle', 'maison', 'puits',
@@ -623,7 +622,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
   D.OPS = {
     say: [2, 2], nar: [1, 1], quote: [2, 2], title: [1, 2], choice: [2, 2], ask: [2, 2],
     battle: [1, 1], map: [2, 3], tp: [2, 2], walk: [2, 2], face: [2, 2], show: [1, 1], hide: [1, 1],
-    fade: [1, 2], wait: [1, 1], shake: [0, 1], flash: [0, 1], sfx: [1, 1], amb: [1, 1],
+    fade: [1, 2], wait: [1, 1], shake: [0, 1], flash: [0, 1], sfx: [1, 1],
     give: [1, 2], join: [1, 1], leave: [1, 1], codex: [1, 1], heal: [0, 0],
     flag: [1, 2], if: [2, 3], tint: [1, 1], light: [1, 1],
     pray: [0, 1], emote: [2, 2], parley: [1, 1], pillar: [2, 2], mus: [1, 1], mat: [1, 2], site: [1, 1], lore: [1, 1], raid: [0, 1],
@@ -819,8 +818,9 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     clearAuto() { try { localStorage.removeItem(AKEY); } catch (e) { /* ignore */ } }
   };
 
-  /* ---------- son : ambiances (bruit filtré) + percussions (duff) + bruitages ; la bande-son est plus bas. Aucune voix. ---------- */
-  const A = I.audio = { ctx: null, on: true, master: null, ambNode: null, ambName: null, rhythm: null };
+  /* ---------- son : percussions (duff) et bruitages brefs ; la bande-son est plus bas. Aucune voix, aucune nappe de fond
+     (les nappes de bruit filtré ont été retirées à la demande du décideur, D90). ---------- */
+  const A = I.audio = { ctx: null, on: true, master: null, rhythm: null };
   A.unlock = function () {
     if (A.ctx) { if (A.ctx.state === 'suspended') A.ctx.resume(); return; }
     try {
@@ -828,7 +828,6 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
       A.ctx = new AC();
       const oc = outChain(A.ctx); A.master = oc.master; A.limiter = oc.lim; A.master.gain.value = A.on ? 0.8 : 0;
       noiseBuf(A.ctx);
-      if (A.pendingAmb) { const n = A.pendingAmb; A.pendingAmb = null; A.amb(n); }
       if (A.pendingRhythm) { const n = A.pendingRhythm; A.pendingRhythm = null; A.beat(n); }
       A.mbus = musicBus(A.ctx, A.master); A.mbus.gain.value = A.musicOn ? MG : 0;
       if (A.wantTrack) { const n = A.wantTrack; A.curTrack = null; A.music(n); }
@@ -869,40 +868,11 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
       case 'break': A.noiseHit(t, 0.8, 6000, 0.5, 'highpass', 800); A.dum(t, 1, 70); A.tek(t + 0.02, 0.9, 5000); break;
       case 'light': A.noiseHit(t, 0.35, 1200, 0.7, 'bandpass', 7000); break;
       case 'heal': A.noiseHit(t, 0.25, 2500, 0.6, 'bandpass', 5500); break;
-      case 'wind': A.noiseHit(t, 0.5, 300, 1.4, 'bandpass', 900); break;
       case 'door': A.dum(t, 0.6, 80); A.noiseHit(t, 0.3, 400, 0.2, 'lowpass'); break;
-      case 'crowd': A.noiseHit(t, 0.4, 600, 1.2, 'bandpass', 500); break;
-      case 'wave': A.noiseHit(t, 0.5, 250, 1.6, 'lowpass', 700); break;
       case 'glitch': for (let i = 0; i < 5; i++) A.tek(t + Math.random() * 0.25, 0.4, 800 + Math.random() * 6000); break;
       case 'dark': A.noiseHit(t, 0.6, 200, 0.5, 'lowpass', 60); break;
       case 'step': A.noiseHit(t, 0.06, 500, 0.05, 'lowpass'); break;
     }
-  };
-  // ambiances : chaînes bruit -> filtre -> gain modulé
-  const AMB = {
-    vent: [{ f: 420, q: 0.8, g: 0.22, lfo: 0.13, depth: 0.14 }, { f: 1500, q: 1.5, g: 0.04, lfo: 0.21, depth: 0.03 }],
-    nuit: [{ f: 300, q: 0.7, g: 0.10, lfo: 0.09, depth: 0.06 }, { f: 5200, q: 9, g: 0.012, lfo: 5.5, depth: 0.012 }],
-    foule: [{ f: 520, q: 1.1, g: 0.14, lfo: 0.7, depth: 0.07 }, { f: 950, q: 2, g: 0.05, lfo: 1.3, depth: 0.04 }],
-    feu: [{ f: 180, q: 0.7, g: 0.16, lfo: 3.1, depth: 0.08 }, { f: 3200, q: 3, g: 0.03, lfo: 9, depth: 0.03 }],
-    mer: [{ f: 320, q: 0.5, g: 0.22, lfo: 0.16, depth: 0.2 }, { f: 2400, q: 0.8, g: 0.03, lfo: 0.16, depth: 0.03 }],
-    noos: [{ f: 140, q: 3, g: 0.2, lfo: 0.07, depth: 0.1 }, { f: 3800, q: 6, g: 0.02, lfo: 0.3, depth: 0.02 }],
-    cite: [{ f: 5200, q: 0.4, g: 0.05, lfo: 0.3, depth: 0.02 }, { f: 110, q: 2, g: 0.2, lfo: 0.05, depth: 0.08 }],
-    bataille: [{ f: 150, q: 0.8, g: 0.24, lfo: 0.9, depth: 0.14 }, { f: 700, q: 1, g: 0.06, lfo: 0.4, depth: 0.05 }],
-    silence: []
-  };
-  A.amb = function (name) {
-    if (!A.ctx) { A.pendingAmb = name; return; }
-    if (A.ambName === name) return; A.ambName = name;
-    const t = A.ctx.currentTime;
-    if (A.ambNode) { const old = A.ambNode; old.gain.gain.setTargetAtTime(0, t, 0.5); setTimeout(() => { old.stop(); }, 2500); }
-    const out = A.ctx.createGain(); out.gain.value = 0; out.connect(A.master); out.gain.setTargetAtTime(1, t, 0.8);
-    const nodes = [];
-    (AMB[name] || []).forEach(c => {
-      const n = noiseSrc(true), f = A.ctx.createBiquadFilter(), g = A.ctx.createGain(), l = A.ctx.createOscillator(), lg = A.ctx.createGain();
-      f.type = 'bandpass'; f.frequency.value = c.f; f.Q.value = c.q; g.gain.value = c.g; l.frequency.value = c.lfo; lg.gain.value = c.depth;
-      l.connect(lg); lg.connect(g.gain); n.connect(f); f.connect(g); g.connect(out); n.start(0, Math.random() * 1.5); l.start(); nodes.push(n, l);
-    });
-    A.ambNode = { gain: out, stop() { nodes.forEach(n => { try { n.stop(); } catch (e) { /* déjà arrêté */ } }); out.disconnect(); } };
   };
   // rythmes de duff : D = dum, T = tek, k = ka (léger), . = silence ; 8 ou 16 pas
   const BEATS = {
@@ -1130,7 +1100,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
   // Le son ne doit jamais arrêter le jeu. Sur un appareil qui refuse une opération sonore, l'appel devient sans effet,
   // l'incident est retenu une fois (page Diagnostic) et, s'il se répète, la musique se tait d'elle-même.
   A.fails = 0;
-  ['unlock', 'setOn', 'sfx', 'amb', 'beat', 'stopBeat', 'music', 'setMusic', 'dum', 'tek'].forEach(k => {
+  ['unlock', 'setOn', 'sfx', 'beat', 'stopBeat', 'music', 'setMusic', 'dum', 'tek'].forEach(k => {
     const fn = A[k]; if (typeof fn !== 'function') return;
     A[k] = function () {
       try { return fn.apply(A, arguments); }
@@ -2015,7 +1985,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     if (id === 'koufa') { b.fill(0, 0, 2, 46, 'water'); b.scatter('cypress', 5, 3, 2, 3, 40); }
     b.scatter('palm', 14, 0, 0, 60, 46); b.scatter('rock', 8, 0, 0, 60, 46); b.scatter('bush', 8, 0, 0, 60, 46);
     const t = o.time || 'day';
-    return b.finish(envFor(t, { particles: t === 'night' ? 'fireflies' : 'dust', rate: t === 'night' ? 3 : 8, sound: t === 'night' ? 'nuit' : 'vent', bg: 'ville', music: t === 'night' ? 'nuit' : 'medine' }));
+    return b.finish(envFor(t, { particles: t === 'night' ? 'fireflies' : 'dust', rate: t === 'night' ? 3 : 8, bg: 'ville', music: t === 'night' ? 'nuit' : 'medine' }));
   }
 
   /* ---------- Désert ---------- */
@@ -2035,7 +2005,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     b.spot('arrivee', 76, 20);
     b.scatter('rock', 22, 0, 0, 80, 40); b.scatter('thorn', 10, 0, 0, 80, 40); b.scatter('bigrock', 6, 0, 0, 80, 40);
     const t = o.time || 'day';
-    return b.finish(envFor(t, { particles: 'sand', rate: t === 'night' ? 4 : 14, sound: 'vent', bg: 'desert', haze: true, music: 'desert' }));
+    return b.finish(envFor(t, { particles: 'sand', rate: t === 'night' ? 4 : 14, bg: 'desert', haze: true, music: 'desert' }));
   }
 
   /* ---------- Camp militaire ---------- */
@@ -2058,7 +2028,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     b.obj('bigrock', 40, 5); b.obj('rock', 44, 4); b.obj('rock', 37, 3); b.spot('tertre', 41, 8);
     b.scatter('rock', 10, 0, 0, 52, 38); b.scatter('bush', 8, 0, 0, 52, 38); b.scatter('jar', 4, 6, 6, 40, 26); b.scatter('crate', 4, 6, 6, 40, 26);
     const t = o.time || 'dusk';
-    return b.finish(envFor(t, { particles: 'embers', rate: 5, sound: 'feu', bg: 'camp', music: 'camp' }));
+    return b.finish(envFor(t, { particles: 'embers', rate: 5, bg: 'camp', music: 'camp' }));
   }
 
   /* ---------- Cité romaine (Damas, Jérusalem, Homs) ---------- */
@@ -2089,7 +2059,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     b.spot('remparts', 54, 40);
     b.scatter('jar', 6, 2, 16, 60, 24); b.scatter('cypress', 6, 0, 0, 64, 40);
     const t = o.time || 'day';
-    return b.finish(envFor(t, { particles: 'dust', rate: 6, sound: 'foule', bg: 'romaine', music: 'rome' }));
+    return b.finish(envFor(t, { particles: 'dust', rate: 6, bg: 'romaine', music: 'rome' }));
   }
 
   /* ---------- Palais perse (salle du trône) ---------- */
@@ -2104,7 +2074,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     for (let y = 8; y < 26; y += 3) b.obj('column', 6, y); b.spot('colonnade', 9, 17);
     b.fill(29, 19, 9, 8, 'grass'); b.obj('fountain', 33, 22); b.obj('cypress', 30, 20); b.obj('cypress', 37, 25); b.spot('jardin', 33, 25); b.obj('mat', 36, 20); b.spot('priere', 36, 21);
     b.obj('carpetroll', 4, 5); b.obj('jar', 3, 26); b.obj('brazier', 10, 26); b.light(10, 25, 60, '#ffb45a', 0.2);
-    return b.finish(Object.assign(envFor('dusk'), { clouds: false, ambient: '#8a78a8', grade: ['#ffb060', 0.18], particles: 'dust', rate: 4, sound: 'silence', bg: 'palais', rays: { a: 0.06, color: '#ffe0b0' }, bloom: 0.24, music: 'palais' }));
+    return b.finish(Object.assign(envFor('dusk'), { clouds: false, ambient: '#8a78a8', grade: ['#ffb060', 0.18], particles: 'dust', rate: 4, bg: 'palais', rays: { a: 0.06, color: '#ffe0b0' }, bloom: 0.24, music: 'palais' }));
   }
 
   /* ---------- Navires enchaînés ---------- */
@@ -2116,7 +2086,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     b.obj('mast', 14, 10); b.obj('mast', 39, 10); b.obj('crate', 10, 9); b.obj('crate', 20, 14); b.obj('jar', 21, 9); b.obj('sack', 34, 14); b.obj('crate', 44, 9); b.obj('lamp', 6, 11); b.light(6, 10, 50, '#ffc878', 0.15); b.obj('lamp', 47, 11); b.light(47, 10, 50, '#ffc878', 0.15);
     b.obj('mat', 10, 13); b.spot('priere', 10, 14); b.spot('poupe', 7, 12); b.spot('pont', 17, 12); b.spot('mat', 15, 13); b.spot('proue', 23, 11); b.spot('passerelle', 27, 11); b.spot('pont2', 37, 12);
     const t = o.time || 'day';
-    return b.finish(envFor(t, { particles: 'spray', rate: 8, sound: 'mer', bg: 'mer', bob: true, music: 'mer' }));
+    return b.finish(envFor(t, { particles: 'spray', rate: 8, bg: 'mer', bob: true, music: 'mer' }));
   }
 
   /* ---------- Noosphère ---------- */
@@ -2128,7 +2098,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     room('seuil', 6, 20, 3, 2); room('noeud1', 18, 20, 3, 3); room('noeud2', 30, 11, 3, 2); room('noeud3', 30, 28, 3, 2); room('faille', 18, 8, 2, 2); room('miroir', 18, 32, 2, 2); room('coeur', 48, 20, 6, 5);
     [[3, 18], [9, 18], [15, 17], [21, 17], [15, 23], [21, 23], [27, 9], [33, 9], [27, 30], [33, 30], [42, 15], [54, 15], [42, 25], [54, 25], [16, 6], [20, 6], [16, 34], [20, 34]].forEach(p => { if (b.free(p[0], p[1])) b.obj('pylon', p[0], p[1], { hue }); });
     b.light(48, 20, 150, `hsl(${(hue + 150) % 360},100%,65%)`, 0.15);
-    return b.finish({ time: 'noos', ambient: '#6a62c8', grade: [`hsl(${hue},90%,55%)`, 0.2], particles: 'noos', hue, rate: 9, sound: 'noos', bg: 'noos', scan: true, bloom: 0.36, lightA: 1, music: 'noos' });
+    return b.finish({ time: 'noos', ambient: '#6a62c8', grade: [`hsl(${hue},90%,55%)`, 0.2], particles: 'noos', hue, rate: 9, bg: 'noos', scan: true, bloom: 0.36, lightA: 1, music: 'noos' });
   }
 
   /* ---------- La Citadelle du Caïd (ksar au bord du désert) ---------- */
@@ -2163,7 +2133,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     b.scatter('rock', 10, 0, 0, 58, 5); b.scatter('thorn', 6, 0, 38, 58, 8); b.scatter('bigrock', 3, 52, 0, 6, 46);
     b.scatter('jar', 4, 10, 18, 40, 16);
     const t = o.time || 'dusk';
-    return b.finish(envFor(t, { particles: t === 'night' ? 'fireflies' : 'dust', rate: 6, sound: t === 'night' ? 'nuit' : 'vent', bg: 'ville', music: t === 'night' ? 'nuit' : 'citadelle' }));
+    return b.finish(envFor(t, { particles: t === 'night' ? 'fireflies' : 'dust', rate: 6, bg: 'ville', music: t === 'night' ? 'nuit' : 'citadelle' }));
   }
 
   /* ---------- Cité-Miroir (cyberpunk) ---------- */
@@ -2176,7 +2146,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     b.set(56, 8, 'arch', true); b.light(56, 9, 60, '#ffe08a', 0.1);
     b.spot('parvis', 4, 13); b.spot('rue', 16, 13); b.spot('ecran', 30, 11); b.spot('ruelle', 44, 14); b.spot('ascenseur', 56, 10);
     b.scatter('crate', 5, 2, 9, 56, 8);
-    return b.finish({ time: 'cite', ambient: '#5a5ca8', grade: ['#7a2cff', 0.2], particles: 'rain', rate: 70, sound: 'cite', bg: 'cite', scan: true, bloom: 0.3, lightA: 1, music: 'cite' });
+    return b.finish({ time: 'cite', ambient: '#5a5ca8', grade: ['#7a2cff', 0.2], particles: 'rain', rate: 70, bg: 'cite', scan: true, bloom: 0.3, lightA: 1, music: 'cite' });
   }
 
   /* ---------- Archives basses ---------- */
@@ -2189,7 +2159,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     b.fill(22, 6, 9, 9, 'nfloor', false); b.obj('isnad', 26, 9); b.light(26, 9, 110, '#ffd27a', 0.2); b.spot('chaine', 26, 12);
     b.obj('rack', 30, 4); b.obj('rack', 21, 4); b.obj('rack', 30, 19); b.obj('lamp', 20, 12); b.light(20, 11, 60, '#39e6ff', 0.1); b.light(8, 8, 80, '#ffb45a', 0.1);
     b.spot('entree', 17, 21); b.spot('rayonnages', 14, 13); b.obj('mat', 27, 19); b.spot('priere', 27, 20); b.light(27, 19, 50, '#fff0c0', 0.05);
-    return b.finish({ time: 'archives', ambient: '#6a66a0', grade: ['#ffb45a', 0.14], particles: 'dust', rate: 5, sound: 'noos', bg: 'cite', rays: { a: 0.05, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine' });
+    return b.finish({ time: 'archives', ambient: '#6a66a0', grade: ['#ffb45a', 0.14], particles: 'dust', rate: 5, bg: 'cite', rays: { a: 0.05, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine' });
   }
 
   M.drawRosette = drawRosette;
@@ -2419,7 +2389,6 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
       case 'shake': G.shake(a || 400); I.audio.sfx('hit'); break;
       case 'flash': G.flash(a || '#fff'); break;
       case 'sfx': I.audio.sfx(a); break;
-      case 'amb': I.audio.amb(a); break;
       case 'give': { if (D.GEAR[a]) { await I.gear.receive(a, b || 1); break; } const n = b || 1, it = D.ITEMS[a]; const inv = I.save.data.items; inv[a] = (inv[a] || 0) + n; S.toast(`Reçu : <b>${it.name}</b>${n > 1 ? ' ×' + n : ''}`); I.audio.sfx('ok'); break; }
       case 'join': W.join(a); break;
       case 'leave': W.leave(a); break;
@@ -2522,7 +2491,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     W.mapOpts = opts; if (I.build && I.build.on && !I.build.outdoor(id)) I.build.set(false);
     const ks = Object.keys(mapCache); if (ks.length > 4) ks.filter(k2 => k2 !== key).slice(0, ks.length - 4).forEach(k2 => { delete mapCache[k2]; });
     const env = W.map.env; G.clearParts(); G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 };
-    I.audio.amb(env.sound || 'vent'); I.audio.music(env.music || 'silence');
+    I.audio.music(env.music || 'silence');
     W.npcs.forEach(n => { if (n.map === id) W.place(n); });
     W.foes.forEach(f => { if (f.map === id && !f.placed) { const p = W.resolve(f.at, id, f); if (p) { f.x = p[0]; f.y = p[1]; f.placed = true; } } });
     W.chests.forEach(c => { if (c.map === id && !c.placed) { const p = W.resolve(c.at, id, c); if (p) { c.x = p[0]; c.y = p[1]; c.placed = true; } } });
@@ -3122,7 +3091,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     S.depth++;
     try {
       const i = await _ask('De l’eau.', [{ t: 'Puiser (+2 eau)' }, { t: 'Pétrir des briques de terre (2 eau → 3 pisé)' }, { t: 'Plus tard' }]);
-      if (i === 0) { I.audio.sfx('wave'); Bd.give('eau', 2); }
+      if (i === 0) { I.audio.sfx('blip'); Bd.give('eau', 2); }
       else if (i === 1) { if (Bd.mats().eau < 2) S.toast('Il faut deux mesures d’eau.', 1800); else { Bd.give('eau', -2, true); I.audio.sfx('door'); Bd.give('pise', 3); } }
     } finally { S.depth--; S.hideDialog(); }
   };
@@ -3346,7 +3315,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     S.flags._r1 = R >= 1; S.flags._r2 = R >= 2;
     const who1 = gd.camels ? 'Les méharistes de tes enclos' : 'Ceux que tes pactes ont liés', who2 = 'Les hommes du voisinage, levés à ton appel';
     const ops = [
-      ['mus', 'conseil'], ['sfx', 'crowd'],
+      ['mus', 'conseil'],
       ['nar', v ? 'Des chameliers rentrent à pied, sans leurs bêtes. La caravane a été prise à deux jours de marche, entre deux puits.' : 'Des hommes rentrent à pied, sans leurs bêtes. La caravane a été pillée sur la piste : en ces mois de trouble, des bandes tiennent les routes.'],
       ['say', 'Un caravanier', 'Ils ne nous ont pas tués. Ils ont dit que la route était à eux désormais, et que nul ne viendrait la leur reprendre.'],
       ['nar', v ? 'Mon père disait : « Une cité se juge à ses routes. Là où le marchand voyage sans crainte, le prince peut dormir. »' : 'On rapporte cette promesse : un jour, le voyageur irait de San’â’ au Hadramawt sans craindre autre chose qu’Allah, et le loup pour ses brebis. Une route sûre est le visage de la justice.'],
@@ -4093,7 +4062,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
   };
 
   async function run(opts, first) {
-    const W = I.world, prev = I.scene, prevAmb = I.audio.ambName;
+    const W = I.world, prev = I.scene;
     const d0 = foeDef(opts.group[0]), hue = d0.hue;
     C = { opts, hue, bg: paintBg(opts.bg || 'noos', hue), all: [], t: 0, cursor: null, log: [], turn: 0 };
     W.party.forEach((id, i) => C.all.push(mkHero(id, i)));
@@ -4103,7 +4072,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     I.setScene(B.scene); B.active = true; G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue, n: 0 };
     document.body.classList.add('in-battle'); $('#hud').hidden = true; $('#toasts').innerHTML = ''; $('#battle').hidden = false; refresh();
     const prevMus = I.audio.wantTrack; C.prevMus = prevMus;
-    I.audio.amb('noos'); I.audio.music(opts.group.some(id => (foeDef(id) || {}).vice) && D.TRACKS.includes('vice') ? 'vice' : opts.boss ? 'boss' : 'combat'); I.audio.beat(opts.boss ? 'malfuf' : (opts.bg === 'romaine' || opts.bg === 'palais') ? 'marche' : (opts.bg === 'cite' || opts.bg === 'noos') ? 'cyber' : 'ayyub');
+    I.audio.music(opts.group.some(id => (foeDef(id) || {}).vice) && D.TRACKS.includes('vice') ? 'vice' : opts.boss ? 'boss' : 'combat'); I.audio.beat(opts.boss ? 'malfuf' : (opts.bg === 'romaine' || opts.bg === 'palais') ? 'marche' : (opts.bg === 'cite' || opts.bg === 'noos') ? 'cyber' : 'ayyub');
     await S.fade('in', 260);
     // piliers de la Citadelle : ce qui a été bâti pèse dans le combat
     const P = W.pillars(); C.pJust = 1 - 0.03 * (P.justice || 0); C.pLien = 1 + 0.03 * (P.lien || 0);
@@ -4161,7 +4130,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
     $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = '';
     I.setScene(prev); G.clearParts();
     if (prev === W) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; }
-    I.audio.amb(prevAmb || 'vent'); if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.music(C.prevMus || 'silence'); else I.audio.afterJingle = C.prevMus || null; }
+    if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.music(C.prevMus || 'silence'); else I.audio.afterJingle = C.prevMus || null; }
     const foes0 = C.all.filter(e => e.side === 'foe');
     const prise = C.prise;
     if (result === 'win') { await S.fade('in', 260); await I.oeuvres.leave(opts, foes0, result); }
@@ -4656,7 +4625,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
 
   /* ---------- titre ---------- */
   U.showTitle = function () {
-    I.setScene(U.titleScene); G.clearParts(); G.amb = { kind: 'dust', rate: 5, n: 0 }; I.audio.amb('vent'); I.audio.music('titre'); I.audio.beat('veille');
+    I.setScene(U.titleScene); G.clearParts(); G.amb = { kind: 'dust', rate: 5, n: 0 }; I.audio.music('titre'); I.audio.beat('veille');
     $('#hud').hidden = true; document.body.dataset.theme = 'orient';
     const box = $('#title .vmenu'); box.innerHTML = ''; const sv = I.save.data, has = I.save.slots().some(Boolean), auto = I.save.autoGet(); let fl;
     const mk = (label, fn, dis) => { const b = I.el('button', '', label); b.type = 'button'; b.disabled = !!dis; tapable(b, () => { I.audio.unlock(); fn(b); }); box.appendChild(b); return b; };
@@ -4714,7 +4683,7 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
 
   /* ---------- la Chaîne (choix de saga) ---------- */
   U.showChain = async function (msg) {
-    I.setScene(U.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue: 40, n: 0 }; I.audio.amb('noos'); I.audio.stopBeat(); I.audio.music('chaine');
+    I.setScene(U.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue: 40, n: 0 }; I.audio.stopBeat(); I.audio.music('chaine');
     $('#hud').hidden = true; document.body.dataset.theme = 'orient'; S.hideDialog(); $('#toasts').innerHTML = '';
     const sv = I.save.data, list = I.sagaList.filter(s => !s.frame), box = $('#chain .links'); box.innerHTML = '';
     const allDone = list.every(s => sv.sagas[s.id] && sv.sagas[s.id].done);
@@ -4851,8 +4820,8 @@ window.ISNAD_VERSION = "2026-11-15 09:52 UTC · a627611+";
       items.push({ cat: 'Réglages' },
         toggle('Texte', () => ['normal', 'grand', 'très grand'][o.tz || 0], () => { o.tz = ((o.tz || 0) + 1) % 3; U.applyOpts(); }, 'Taille des caractères dans les dialogues, les menus et les combats.'),
         toggle('Croix tactile', () => o.pad ? 'affichée' : 'masquée', () => { o.pad = !o.pad; U.applyOpts(); }, 'Sur un écran tactile, on se déplace en touchant la scène. La croix directionnelle reste disponible pour qui la préfère.'),
-        toggle('Son', () => I.audio.on ? 'activé' : 'coupé', () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, 'Coupe ou rétablit tout le son : ambiances, bruitages et musique.'),
-        toggle('Musique', () => I.audio.musicOn ? 'activée' : 'coupée', () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, 'Bande-son originale synthétisée, une piste par ambiance. Coupée, il reste les ambiances, les percussions de duff et les bruitages.'),
+        toggle('Son', () => I.audio.on ? 'activé' : 'coupé', () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, 'Coupe ou rétablit tout le son : musique, percussions et bruitages.'),
+        toggle('Musique', () => I.audio.musicOn ? 'activée' : 'coupée', () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, 'Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.'),
         toggle('Rendu', () => G.low ? '2D simple' : 'rétro-HD', () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, 'Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.'));
       items.push({ label: 'Diagnostic', fn() {}, show: U.diagnostic });
       if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre là où tu l’as laissé : la partie se garde toute seule, même si tu fermes la page.</p>' });
@@ -5354,7 +5323,7 @@ ISNAD.registerSaga({
           ['say', 'Maître Yûnus', 'Deux choses reviennent dans toutes ces vies, et tu les retrouveras partout : la prière, qui repose et rassemble, et le savoir, qui ouvre ce que la force ne peut ouvrir. Le sabre ne vient qu’après, quand la parole a tout essayé.'],
           ['say', 'Maître Yûnus', 'Elle commence au jour le plus sombre. Le jour où tout aurait pu se défaire.'],
           ['codex', 'lumieres'], ['codex', 'piliers'], ['codex', 'parole'],
-          ['fade', 'out', 900], ['amb', 'vent'], ['flash', '#fff3d0'],
+          ['fade', 'out', 900], ['flash', '#fff3d0'],
           ['title', 'Médine', '12 Rabî’ al-Awwal, an 11 de l’Hégire · juin 632'],
           ['nar', 'Ce lundi-là, la plus grande lumière que la terre ait portée quitta ce monde. Le Messager d’Allah ﷺ venait de rejoindre son Seigneur.'],
           ['nar', 'Médine vacilla. Des hommes qui avaient affronté des armées restèrent sans voix. D’autres refusèrent d’y croire. Dans le désert, les vieilles idoles relevèrent la tête.'],
@@ -5453,7 +5422,7 @@ ISNAD.registerSaga({
             { flag: 'ami_admire', name: 'L’Admiré est descendu, sans public', hp: 0.03, veil: 0 }, { flag: 'ami_compteur', name: 'Le Compteur donne ses regards à ceux qu’on ne voit pas', hp: 0.03, veil: 0 },
             { flag: 'ami_carto', name: 'Le Cartographe écrit des noms en marge de sa carte', hp: 0.03, veil: 0 }] }],
           ['nar', 'L’Agrégor ne s’effondre pas. Il se tait. Pour la première fois depuis des années, les écrans de la Cité-Miroir n’ont rien à montrer.'],
-          ['map', 'cite', 'ecran'], ['show', 'gamin2'], ['amb', 'vent'],
+          ['map', 'cite', 'ecran'], ['show', 'gamin2'],
           ['nar', 'Dans la rue, des milliers de têtes se relèvent. Derrière le verre éteint, le ciel est noir. Avec des points dedans.'],
           ['say', 'gamin2', 'Monsieur… c’est quoi, ces lumières, là-haut ?'],
           ['say', 'idris', 'Assieds-toi. Je vais te raconter. Mais d’abord, retiens de qui je le tiens.'],
@@ -7260,7 +7229,7 @@ ISNAD.registerSaga({
   tagline: "Le jour où tout pouvait se défaire, un homme doux a dit le vrai.",
 
   intro: [
-    ['amb', 'silence'], ['mus', 'chaine'],
+    ['mus', 'chaine'],
     ['title', "Abû Bakr as-Siddîq", "Saga I · Le Véridique"],
     ['nar', "Râwî, voici le premier maillon. 'Abdallâh ibn Abî Quhâfa, marchand d'étoffes de La Mecque, que tous appelaient Abû Bakr. Un homme doux, prompt aux larmes ; parmi les tout premiers à croire."],
     ['nar', "Il donna sa fortune pour racheter des croyants opprimés. Sur la route de l'Hégire, il fut le compagnon de la Grotte, quand ils n'étaient que deux."],
@@ -7272,7 +7241,7 @@ ISNAD.registerSaga({
   ],
 
   outro: [
-    ['amb', 'silence'], ['mus', 'deuil'],
+    ['mus', 'deuil'],
     ['nar', "Deux ans, trois mois et quelques jours. En ce peu de temps : l'Arabie rassemblée, le Coran recueilli, les armées en marche vers l'Irak et la Syrie. Puis la fièvre le prend, à l'été de l'an 13."],
     ['nar', "Il consulte les Compagnons, puis dicte à 'Uthmân son dernier acte : il désigne 'Umar. À ceux qui redoutent la rudesse de 'Umar, il répond qu'elle s'adoucira sous la charge."],
     ['nar', "Il fait rendre au Trésor ce qu'il en a reçu pour vivre. 'Umar pleure : « Qu'Allah fasse miséricorde à Abû Bakr ; il a épuisé ceux qui viendront après lui. »"],
@@ -7594,7 +7563,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', "Le Jour le plus sombre", "Lundi 12 Rabî' al-Awwal, an 11 de l'Hégire"],
-        ['amb', 'foule'], ['mus', 'deuil'],
+        ['mus', 'deuil'],
         ['nar', "Médine, juin 632. Ce matin encore, on croyait la fièvre du Messager d'Allah ﷺ en recul, et les cœurs s'étaient rassurés. Abû Bakr était rentré chez lui, à as-Sunh, aux abords de la ville."],
         ['nar', "Puis un cavalier est venu, sans pouvoir achever sa phrase. Abû Bakr a sellé sa monture. Il entre dans Médine par le sud."],
         ['codex', 'abubakr_bio']
@@ -7613,7 +7582,6 @@ ISNAD.registerSaga({
           ['nar', "Les murmures se défont. Mais plus loin, vers la mosquée, quelque chose de bien plus grand s'amasse."]
         ] },
         { text: "Gagner la porte de la mosquée", goto: 'mosquee_porte', then: [
-          ['sfx', 'crowd'],
           ['nar', "Devant la mosquée, la foule. Au milieu d'elle, 'Umar, debout, la voix brisée, jurant à qui veut l'entendre."],
           ['quote', "Le Messager d'Allah ﷺ n'est pas mort ! Il est allé vers son Seigneur, comme y alla Mûsâ fils de 'Imrân, qui s'absenta quarante nuits puis revint aux siens.", "'Umar ibn al-Khattâb, ce jour-là — Ibn Hishâm, as-Sîra"],
           ['nar', "Abû Bakr ne dit rien à personne. Il traverse la foule et entre dans la demeure. On l'entend dire, à travers ses larmes :"],
@@ -7631,14 +7599,12 @@ ISNAD.registerSaga({
           ]],
           ['nar', "Mais au-dessus de la cour, dans l'envers du lieu, le refus de tout un peuple a déjà pris forme. Avant que la parole porte, il faut le traverser."],
           ['map', 'noos', 'seuil', { hue: 215 }],
-          ['amb', 'noos'],
           ['nar', "La noosphère de la mosquée. Ici le chagrin porte un masque vide, et il a un nom : le Déni."]
         ] },
         { text: "Noosphère : affronter le Déni, au cœur", foe: 'f_deni', then: [
           ['sfx', 'light'], ['flash', '#ffe9a8'],
           ['map', 'medine', 'mosquee_cour', { time: 'day' }],
           ['tp', 'umar', ['mosquee_cour', 1, 0]],
-          ['amb', 'silence'],
           ['quote', "Ô gens ! Que celui qui adorait Muhammad sache que Muhammad est mort. Et que celui qui adore Allah sache qu'Allah est Vivant et ne meurt pas.", "Abû Bakr, dans la mosquée de Médine — al-Bukhârî, as-Sahîh"],
           ['quote', "Muhammad n'est qu'un messager ; des messagers avant lui sont passés. S'il mourait donc, ou s'il était tué, retourneriez-vous sur vos talons ? Quiconque retourne sur ses talons ne nuira en rien à Allah ; et Allah récompensera bientôt les reconnaissants.", "Coran 3:144 — traduction du sens"],
           ['nar', "Ibn 'Abbâs dira : « Ce fut comme si les gens n'avaient jamais su que ce verset avait été révélé, avant qu'Abû Bakr ne le récite. » Ce jour-là, toute la ville le répétait."],
@@ -7728,7 +7694,6 @@ ISNAD.registerSaga({
         ] },
         { auto: true, then: [
           ['map', 'medine', 'mosquee_porte', { time: 'dawn' }],
-          ['amb', 'silence'],
           ['nar', "Le lendemain. La mosquée est pleine : tous viennent prêter allégeance. Abû Bakr n'a pas dormi. Il n'a jamais voulu de cette charge, et il sait ce qu'elle pèse."]
         ] },
         { text: "Prendre la parole devant les croyants", goto: 'mosquee_cour', then: [
@@ -7795,7 +7760,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', "L'Armée d'Usâma", "Été de l'an 11 de l'Hégire"],
-        ['amb', 'vent'],
         ['nar', "La nouvelle a couru plus vite que les chameaux. De tribu en tribu, on dit : « L'homme est mort ; nos pactes aussi. » Certains renient. D'autres gardent la prière et refusent la zakât. D'autres suivent des menteurs."],
         ['nar', "Les chroniqueurs disent que les musulmans étaient alors « comme des brebis sous la pluie, par une nuit d'hiver ». Et le calife de ce peuple transi, ce soir, porte des étoffes sur son épaule."]
       ],
@@ -7936,7 +7900,6 @@ ISNAD.registerSaga({
         { auto: true, then: [
           ['nar', "Trois nuits plus tard, ils vinrent."],
           ['map', 'desert', 'depart', { time: 'night' }],
-          ['amb', 'nuit'],
           ['nar', "Les abords de Médine, sur la piste de Dhû l-Qassa. Le calife est sorti lui-même, de nuit, à la tête de ceux qui restaient. Dans l'envers du désert, le reniement a pris corps."],
           ['nar', "Pas de lune. On marche aux étoiles, comme toujours ici : al-Jady, le Chevreau qui ne bouge pas, à main gauche ; Suhayl dans le dos. Lève les yeux vers le cadran : l'étoile qui brille est ta route."],
           ['lore', 'etoiles']
@@ -7959,7 +7922,6 @@ ISNAD.registerSaga({
         { text: "Trouver la source du refus, dans les ruines", goto: 'ruines', then: [
           ['nar', "Entre les pierres d'un vieux fortin, l'air tremble. Ici l'on a compté, pesé, soustrait : « La prière, soit. Mais ma part reste à moi. »"],
           ['map', 'noos', 'seuil', { hue: 42 }],
-          ['amb', 'noos'],
           ['heal'],
           ['nar', "La noosphère du refus. Au loin, une tour de pièces. Pas une ne tombe."]
         ] },
@@ -7969,7 +7931,7 @@ ISNAD.registerSaga({
           ['sfx', 'break'], ['flash', '#ffe08a'],
           ['nar', "La tour s'effondre en pluie claire. Ce que l'Avare retenait retourne à ceux à qui c'était dû."],
           ['map', 'medine', 'porte_nord', { time: 'dawn' }],
-          ['amb', 'vent'], ['sfx', 'duff'],
+          ['sfx', 'duff'],
           ['nar', "Quarante jours ont passé ; d'autres disent soixante-dix. À la porte nord, une poussière : l'armée d'Usâma revient, sauve et chargée."],
           ['nar', "Les tribus qui l'avaient vue passer s'étaient dit : « Si ces gens étaient faibles, ils n'auraient pas envoyé pareille armée. » Une parole tenue avait gardé Médine mieux qu'un rempart."],
           ['mus', 'espoir'],
@@ -8020,7 +7982,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', "Yamâma — le Menteur", "Dhû l-Qassa, fin de l'an 11 de l'Hégire"],
-        ['amb', 'feu'],
         ['nar', "Dhû l-Qassa, à une étape de Médine. L'armée d'Usâma est rentrée ; le calife reprend l'initiative. Partout en Arabie, des hommes se sont levés qui se disent inspirés. Le plus puissant tient le Yamâma."],
         ['nar', "Il se nomme Musaylima, des Banû Hanîfa. Naguère, il avait écrit pour réclamer « la moitié de la terre ». La réponse l'avait nommé d'un mot, qui lui est resté : al-Kadhdhâb, le Menteur."]
       ],
@@ -8053,7 +8014,6 @@ ISNAD.registerSaga({
         ] },
         { auto: true, then: [
           ['map', 'medine', 'porte_nord', { time: 'night' }],
-          ['amb', 'nuit'],
           ['nar', "Médine, des semaines plus tard. Tulayha est défait ; les colonnes ont convergé vers le Yamâma. Depuis, plus de nouvelles. Le calife ne dort guère."],
           ['if', 'thamir_demasque', [
             ['nar', "Au souk, nul ne colporte de fausses nouvelles ce soir : la balance a changé de mains, et les langues avec elle."]
@@ -8087,7 +8047,6 @@ ISNAD.registerSaga({
           ['say', 'abubakr', "Si je ne puis être à leurs côtés, que du moins rien de faux ne reste debout derrière eux."],
           ['heal'],
           ['map', 'noos', 'seuil', { hue: 305 }],
-          ['amb', 'noos'],
           ['nar', "La noosphère du Yamâma. Des rimes creuses flottent comme des feuilles mortes. Tout y ressemble au vrai. Rien ne l'est."]
         ] },
         { text: "Noosphère : briser les fausses rimes", foe: 'f_k1', then: [
@@ -8105,7 +8064,6 @@ ISNAD.registerSaga({
           ['sfx', 'break'], ['flash', '#ffe9a8'],
           ['nar', "Le miroir se fend. Il n'y avait rien derrière. À la même heure, dans le jardin, le Menteur tombe, et les Banû Hanîfa déposent les armes."],
           ['map', 'medine', 'mosquee_cour', { time: 'dawn' }],
-          ['amb', 'silence'],
           ['nar', "L'aube. Les rangs de la prière sont clairsemés : tant d'hommes sont au loin, et l'on ne sait pas encore lesquels reviendront."],
           ['pray', 'fajr'],
           ['show', 'courrier']
@@ -8163,7 +8121,6 @@ ISNAD.registerSaga({
   tagline: "Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour.",
 
   intro: [
-    ['amb', 'silence'],
     ['title', "'Alî ibn Abî Tâlib", 'Cinquième maillon · La Porte du Savoir'],
     ['nar', "Médine, fin de l'an 35. 'Uthmân vient de tomber, et la communauté cherche un homme vers qui se tourner. On se presse à la porte de 'Alî. Il refuse d'abord. On insiste. Il n'accepte qu'à la mosquée, devant tous : son serment ne sera pas secret."],
     ['nar', "Il a grandi dans la maison du Messager d'Allah ﷺ et fut parmi les tout premiers à croire, enfant encore. La nuit de l'Hégire, il dormit dans le lit du Messager ﷺ pour couvrir son départ. À Khaybar, il porta l'étendard."],
@@ -8175,7 +8132,6 @@ ISNAD.registerSaga({
   ],
 
   outro: [
-    ['amb', 'silence'],
     ['mus', 'deuil'],
     ['nar', "'Alî ibn Abî Tâlib meurt à Koufa, en Ramadan de l'an 40, deux jours après le coup. Son meurtrier ne reçoit qu'une frappe. Aucun autre sang ne coule en son nom."],
     ['quote', "Un homme vous a quittés hier, que les premiers n'ont pas devancé par le savoir et que les derniers n'atteindront pas. Il n'a laissé ni or ni argent, sinon sept cents dirhams.", "Al-Hasan ibn 'Alî, au lendemain de sa mort — Ahmad, al-Musnad ; Ibn Sa'd, Tabaqât"],
@@ -8501,7 +8457,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Le Bouclier et le Juge', 'An 36 de l’Hégire · Koufa'],
-        ['amb', 'foule'],
         ['nar', "Koufa, près de l'Euphrate. 'Alî y a porté le siège du califat. On rapporte qu'il refusa le palais du gouverneur et logea simplement, à deux pas de la mosquée où il enseigne."],
         ['quote', "Interrogez-moi sur le Livre d'Allah : il n'est pas un verset dont je ne sache s'il est descendu de nuit ou de jour, en plaine ou en montagne.", "'Alî ibn Abî Tâlib — Ibn Sa'd, Tabaqât"],
         ['nar', "Ce matin-là, une pièce manque à son équipement : une vieille cuirasse, égarée en route. Il n'y pense plus. Il sort inspecter le souk, comme chaque jour."],
@@ -8552,7 +8507,6 @@ ISNAD.registerSaga({
           ['nar', "Un silence tombe sur la halle. Tous les regards vont du juge au calife. Nul n'imagine que le calife puisse perdre. Et de cette attente, dans l'envers du lieu, quelque chose se couronne."],
           ['sfx', 'glitch'],
           ['map', 'noos', 'seuil', { hue: 48 }],
-          ['amb', 'noos'],
           ['nar', "La noosphère de Koufa. Ici, l'attente de la foule a pris corps : une couronne vide, qui grandit de chaque regard levé vers le rang."],
           ['codex', 'privilege']
         ] },
@@ -8566,7 +8520,6 @@ ISNAD.registerSaga({
           ['sfx', 'break'],
           ['nar', "La couronne se fend. Dans la halle, rien n'a bougé : un juge attend la réponse d'un plaideur."],
           ['map', 'koufa', 'halle', { time: 'day' }],
-          ['amb', 'foule'],
           ['choice', 'Le juge a écarté le témoignage. Que fait le calife ?', [
             { t: "Rappeler au juge de qui il tient sa charge", r: [
               ['nar', "La chaîne vacille. Ce n'est pas ce qui fut rapporté. Un juge qui tremble devant celui qui le nomme n'est plus un juge — et 'Alî le savait mieux que quiconque."]
@@ -8710,12 +8663,10 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'La Parole détournée', 'An 37 de l’Hégire · Harûrâ’'],
-        ['amb', 'silence'],
         ['nar', "Siffîn, sur l'Euphrate. Deux armées de croyants se font face durant des semaines. Dans chaque rang on prie, et l'on pleure les morts de l'autre. La Chaîne ne s'y attarde pas : elle baisse les yeux."],
         ['nar', "'Ammâr ibn Yâsir y tombe, à plus de quatre-vingt-dix ans. Puis des feuillets du Livre sont levés au bout des lances, et l'on convient de s'en remettre à deux arbitres. Les armes se taisent. Autre chose commence."],
         ['codex', 'siffin'],
         ['nar', "Sur la route du retour, des milliers d'hommes quittent les rangs. Ils refusent l'arbitrage, crient une phrase tirée du Livre, et dressent leurs tentes à Harûrâ', aux portes de Koufa."],
-        ['amb', 'foule'],
         ['nar', "Avant de parler aux hommes, on se tait devant Celui qui les a faits. Qui se relève de sa prière ne plaide plus pour avoir raison : il plaide pour ramener."],
         ['pray', 'fajr']
       ],
@@ -8736,7 +8687,6 @@ ISNAD.registerSaga({
           ['nar', "Il revêt son plus beau manteau du Yémen et part seul, à l'heure où le soleil est au plus haut. La Chaîne te fait marcher dans ses pas."],
           ['leave', 'ali'], ['leave', 'qays'],
           ['map', 'camp', 'entree', { time: 'day' }],
-          ['amb', 'vent'],
           ['nar', "Harûrâ'. « Je n'avais jamais vu, dira Ibn 'Abbâs, de gens plus appliqués à l'adoration » : marqués par les prosternations, épuisés par les veilles. Leur piété n'est pas feinte. C'est ce qui rend l'idole si forte."],
           ['say', 'Une voix', "Bienvenue, Ibn 'Abbâs. Mais que fait sur toi ce manteau de prix ?"],
           ['say', 'ibnabbas', "Que me reprochez-vous ? J'ai vu sur le Messager d'Allah ﷺ les plus beaux manteaux."],
@@ -8821,7 +8771,6 @@ ISNAD.registerSaga({
           ['nar', "Nul ne plaide seul dans la noosphère : le savoir de 'Alî et la droiture de Qays y marchent avec Ibn 'Abbâs."],
           ['sfx', 'glitch'],
           ['map', 'noos', 'seuil', { hue: 285 }],
-          ['amb', 'noos']
         ] },
         { text: 'Faire taire les échos', foe: 'f2', then: [
           ['say', 'qays', "Aucun d'eux n'a lu la phrase qu'il crie. Ils se la passent de bouche en bouche comme un mot d'ordre."],
@@ -8836,7 +8785,6 @@ ISNAD.registerSaga({
           ['sfx', 'break'],
           ['nar', "L'étendard de mots se défait, lettre à lettre. La phrase retombe où elle était : dans le Livre, entière, avec ce qui la précède et ce qui la suit."],
           ['map', 'camp', 'feu', { time: 'dusk' }],
-          ['amb', 'vent'],
           ['show', 'repenti'],
           ['say', 'repenti', "Je croyais défendre le Livre. Je ne défendais qu'une phrase que j'avais cessé d'écouter. Je rentre à Koufa."],
           ['nar', "Deux mille hommes se lèvent ce jour-là et reprennent la route de la ville — davantage, selon d'autres récits. Les autres restent près de leurs feux, et se taisent."],
@@ -8846,7 +8794,6 @@ ISNAD.registerSaga({
           ['codex', 'harura'],
           ['map', 'koufa', 'mosquee_porte', { time: 'dusk' }],
           ['leave', 'ibnabbas'], ['join', 'ibnabbas'],
-          ['amb', 'foule'],
           ['nar', "Ce soir-là, à la mosquée de Koufa, les rangs sont plus longs de deux mille hommes."],
           ['pray', 'maghrib'],
           ['show', 'crieur'],
@@ -8949,7 +8896,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Nahrawân, puis l’aube', 'An 38 de l’Hégire'],
-        ['amb', 'vent'],
         ['nar', "Ils sont quatre mille au bord du canal de Nahrawân. Ils se sont choisi un chef, et ont jugé le monde entier : quiconque ne pense pas comme eux a quitté la foi, et son sang ne compte plus."],
         ['nar', "Sur leur route passe un voyageur : 'Abdallâh, fils du Compagnon Khabbâb, avec les siens. Ils l'interrogent. Ses réponses sont celles d'un croyant. Ils le tuent, et les siens avec lui."],
         ['nar', "Le même jour, rapporte-t-on, l'un d'eux ramasse une datte tombée d'un palmier ; ses compagnons le reprennent : « Tu l'as prise sans en payer le prix ! » Scrupule pour une datte. Aucun pour le sang."]
@@ -9058,7 +9004,6 @@ ISNAD.registerSaga({
           ['nar', "Ils ne répondent que par leur cri, et chargent : « En route vers le Paradis ! » Dans l'envers de la plaine, une balance immense se dresse. Elle n'a qu'un plateau."],
           ['sfx', 'glitch'],
           ['map', 'noos', 'seuil', { hue: 215 }],
-          ['amb', 'noos']
         ] },
         { text: 'Briser le Scrupule inversé', foe: 'f2', then: [
           ['say', 'ali', "Il pèse la datte et ne voit pas le sang. Voilà ce que devient la règle quand on en retire le savoir."]
@@ -9071,7 +9016,6 @@ ISNAD.registerSaga({
           ['sfx', 'break'],
           ['nar', "La balance se brise. Dans la plaine, tout est déjà fini : la bataille n'a pas duré une matinée. Du côté de 'Alî, on compte moins de dix morts."],
           ['map', 'camp', 'tertre', { time: 'dusk' }],
-          ['amb', 'vent'],
           ['nar', "Il marche parmi les tombés, sans joie. Un homme l'arrête : « Commandeur des croyants, étaient-ils des polythéistes ? »"],
           ['choice', "Ils l'avaient déclaré mécréant. Que répond 'Alî ?", [
             { t: '« Oui. Qui excommunie mérite de l’être. »', r: [
@@ -9090,7 +9034,6 @@ ISNAD.registerSaga({
           ['nar', "Deux années passent. La Syrie, l'Égypte, les routes : rien n'est apaisé. À Koufa, 'Alî dit parfois sa lassitude, et il continue. Ramadan de l'an 40."],
           ['leave', 'ibnabbas'], ['leave', 'qays'],
           ['map', 'koufa', 'maison', { time: 'dawn' }],
-          ['amb', 'nuit'],
           ['say', 'ibnnabbah', "Commandeur des croyants, c'est l'heure de la prière."]
         ] },
         { text: "Marcher vers la mosquée pour la prière de l'aube", goto: 'mosquee_porte', then: [
@@ -9100,7 +9043,6 @@ ISNAD.registerSaga({
           ['nar', "Une ombre se détache du seuil. Un cri : « Le jugement est à Allah, 'Alî — non à toi ! » La phrase de Harûrâ' est devenue une lame."],
           ['sfx', 'hit'], ['flash', '#ffffff'], ['shake', 700],
           ['wait', 900],
-          ['amb', 'silence'],
           ['mus', 'deuil'],
           ['nar', "Il ne laisse pas la prière se perdre : on rapporte qu'il fit avancer Ja'da ibn Hubayra pour la diriger à sa place."],
           ['pray', 'fajr'],
@@ -9153,7 +9095,7 @@ ISNAD.registerSaga({
 
   intro: [
     ['title', 'Khâlid ibn al-Walîd', 'Le Sabre dégainé'],
-    ['amb', 'vent'], ['mus', 'desert'],
+    ['mus', 'desert'],
     ['nar', "An 13 de l'Hégire. L'Arabie est de nouveau une. Au nord, deux empires se regardent depuis des siècles par-dessus le désert : Rome et la Perse. Entre eux marche un homme que nul n'a encore vu vaincu."],
     ['nar', "Khâlid, fils d'al-Walîd, des Banû Makhzûm. À Uhud, il chargeait contre les musulmans. Depuis l'an 8, il charge avec eux. Le Messager d'Allah ﷺ l'a nommé « un sabre d'entre les sabres d'Allah »."],
     ['quote', "Neuf sabres se sont brisés dans ma main le jour de Mu'ta ; il ne m'est resté en main qu'une large lame yéménite.", 'Khâlid ibn al-Walîd — al-Bukhârî'],
@@ -9165,14 +9107,14 @@ ISNAD.registerSaga({
   ],
 
   outro: [
-    ['amb', 'silence'], ['mus', 'deuil'],
+    ['mus', 'deuil'],
     ['title', 'Homs', "An 21 de l'Hégire"],
     ['nar', "Khâlid ne commandera plus. Il vit à Homs quatre années encore, simple croyant parmi ceux qu'il a menés. Il ne récrimine pas. Quand la mort vient, elle le trouve dans son lit, et c'est la seule chose qu'il lui reproche."],
     ['quote', "J'ai pris part à tant de combats ; il n'est pas sur mon corps un empan sans une blessure de sabre, de lance ou de flèche… et voici que je meurs sur ma couche. Que les yeux des lâches ne connaissent pas le sommeil !", "Khâlid ibn al-Walîd, sur son lit de mort — Ibn 'Asâkir ; Ibn Kathîr, al-Bidâya"],
     ['nar', "Il ne laisse ni or ni domaine : son cheval, ses armes et un serviteur, qu'il lègue pour la cause d'Allah. On rapporte que 'Umar dit : « Qu'Allah fasse miséricorde à Abû Sulaymân ; il était autre que ce que nous pensions. »"],
     ['codex', 'mort_khalid'],
     ['nar', "Les villes qu'il avait prises par un écrit étaient encore debout, et leurs portes ouvertes. Celles-là ne chantent pas son nom. Elles vivent : c'est une louange qui ne fabrique pas d'idole."],
-    ['amb', 'cite'], ['mus', 'espoir'],
+    ['mus', 'espoir'],
     ['nar', "Idris rouvre les yeux dans les Archives basses. Sur tous les écrans de la Cité-Miroir, l'Agrégor dresse ses colosses du jour. Il sait maintenant comment on les fend : non en frappant plus fort, mais en refusant le socle."],
     ['nar', "Le courage n'est pas seulement de dégainer. C'est de rengainer quand la vérité l'exige. Une Lumière s'allume sur la Chaîne."],
     ['sfx', 'light'],
@@ -9487,10 +9429,9 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'La Traversée', "An 13 de l'Hégire · Désert de la Samâwa"],
-        ['amb', 'vent'],
         ['nar', "Mais avant le désert, il y eut une ville. La Chaîne remonte d'une année : an 12, sous les murs d'al-Hîra, la cité blanche des anciens rois arabes d'Irak."],
         ['map', 'camp', 'entree', { time: 'day' }],
-        ['mus', 'conseil'], ['amb', 'foule'],
+        ['mus', 'conseil'],
         ['title', 'Al-Hîra', "An 12 de l'Hégire · un an plus tôt"],
         ['nar', "Les forts d'al-Hîra sont cernés. Les échelles sont prêtes, et les hommes aussi. Khâlid fait dire aux notables qu'il les recevra sous sa tente."],
         ['nar', "Une ville forcée n'est qu'un tas de pierres qu'il te faut garder. Une ville qui t'ouvre sa porte est une sentinelle de plus sur ton rempart."]
@@ -9548,7 +9489,7 @@ ISNAD.registerSaga({
             ]
           }],
           ['map', 'desert', 'caravane', { time: 'dusk' }],
-          ['mus', 'desert'], ['amb', 'vent'],
+          ['mus', 'desert'],
           ['title', 'Qurâqir', "An 13 de l'Hégire · un an plus tard"],
           ['nar', "Al-Hîra est en paix, l'Euphrate est tenu. C'est alors qu'arrive une lettre de Médine : en Syrie, les armées musulmanes font face à la plus grande levée que Rome ait rassemblée."],
           ['quote', "Par Allah, je ferai oublier aux Romains les suggestions du diable par Khâlid ibn al-Walîd.", 'On rapporte d\'Abû Bakr as-Siddîq — at-Tabarî, Târîkh'],
@@ -9580,7 +9521,6 @@ ISNAD.registerSaga({
           ['quote', "Que votre voie ne se divise pas et que votre certitude ne faiblisse pas. Sachez que le secours vient à la mesure de l'intention, et la récompense à la mesure de ce que l'on espère d'Allah.", 'Khâlid, au départ de Qurâqir — at-Tabarî, Târîkh'],
           ['tp', 'rafi', ['depart', 1, 0]],
           ['say', 'rafi', "Nous marcherons de nuit. Le jour, on se tait et on garde sa salive."],
-          ['sfx', 'wind']
         ] },
         { text: "S'enfoncer dans les dunes", goto: 'dunes', then: [
           ['tp', 'rafi', ['dunes', 1, 0]],
@@ -9685,7 +9625,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Yarmoûk', 'La veillée des émirs'],
-        ['amb', 'feu'],
         ['nar', "Les émirs de Syrie ont réuni leurs armées au bord du Yarmoûk. En face, la plaine est couverte de tentes romaines. Les transmetteurs divergent sur l'année ; la Chaîne suit ici le récit d'at-Tabarî."],
         ['nar', "Depuis des semaines, les deux camps s'observent. Chaque soir, des hommes montent sur le tertre et comptent les feux d'en face. Chaque soir, ils en trouvent davantage."]
       ],
@@ -9775,12 +9714,11 @@ ISNAD.registerSaga({
         { text: "Gagner les lignes avant l'aube", goto: 'lignes', then: [
           ['nar', "Avant le jour, chaque émir range les siens pour la prière. Khâlid prie dans le rang, l'épaule contre celle d'un homme dont il ne sait pas le nom."],
           ['pray', 'fajr'],
-          ['amb', 'bataille'], ['sfx', 'roll'],
+          ['sfx', 'roll'],
           ['nar', "L'aube. En face, les rangs romains s'ébranlent, enseignes levées, dans un grondement qui fait trembler l'eau des gourdes."],
           ['nar', "Et dans la noosphère, la peur de tous ceux qui ont compté les feux se lève d'un bloc. Tant qu'elle tiendra debout, aucun escadron ne tiendra."],
           ['sfx', 'glitch'],
           ['map', 'noos', 'seuil', { hue: 270 }],
-          ['amb', 'noos'],
           ['say', 'dirar', "Des lances jusqu'au bout du regard. Et pas un seul bras pour les tenir."]
         ] },
         { text: 'Fendre la forêt de lances qui garde le passage', foe: 'f3', then: [
@@ -9795,7 +9733,7 @@ ISNAD.registerSaga({
             [['battle', { group: ['decompte', 'peur_nombre', 'decompte', 'ombre_lance'], bg: 'noos', boss: true, intro: 'La Peur du Nombre déploie ses mille lances, et celles du gué avec elles.' }]]],
           ['sfx', 'break'], ['flash', '#ffffff'],
           ['map', 'camp', 'tente_chef', { time: 'dusk' }],
-          ['amb', 'vent'], ['mus', 'deuil'],
+          ['mus', 'deuil'],
           ['nar', "La bataille fut longue et rude ; les chroniques en gardent le fracas. Au plus fort de la mêlée, 'Ikrima ibn Abî Jahl et quatre cents hommes firent serment de ne pas reculer. La cavalerie de Khâlid sépara les cavaliers romains de leur infanterie, et la plaine bascula."],
           ['if', 'zurayr_ecart',
             [['nar', "Les Banû Zurayr gardèrent leur gué tout le jour, et rien d'autre. Au soir, leurs tentes étaient pleines, et pas une lance de Khâlid n'avait eu à les chercher."]],
@@ -9862,7 +9800,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', "L'Épée au fourreau", "An 17 de l'Hégire · Qinnasrîn"],
-        ['amb', 'foule'],
         ['nar', "Quatre ans ont passé. La Syrie est ouverte, d'Antioche à Jérusalem. Khâlid gouverne Qinnasrîn sous l'autorité d'Abû 'Ubayda. Il revient d'une expédition heureuse, chargé de butin."],
         ['nar', "Les gens affluent vers lui de toutes parts : solliciteurs, poètes, curieux. On vient voir l'homme qui ne perd jamais. On repart en racontant qu'on l'a vu."],
         ['nar', "Ce matin, pourtant, un homme l'attend qui ne vient pas l'admirer : l'ancien d'un bourg fortifié du district, le Fort des Oliviers, dont les portes sont closes depuis l'hiver."]
@@ -9922,7 +9859,6 @@ ISNAD.registerSaga({
           ['nar', "L'ancien reparti, la foule du matin reflue vers le forum. On y attend Khâlid comme on attend un spectacle."]
         ] },
         { text: "Traverser Qinnasrîn jusqu'au forum", goto: 'forum', then: [
-          ['sfx', 'crowd'],
           ['say', 'poete', "Voici celui devant qui les forteresses ouvrent leurs portes ! Celui dont le nom marche devant lui comme une avant-garde !"],
           ['nar', "La foule reprend. Khâlid écoute. Il est généreux de nature : à un solliciteur de marque, il fait compter dix mille dirhams, pris sur sa part."],
           ['say', 'qaqa', 'Émir… Dix mille. Cela se saura à Médine avant la fin du mois.'],
@@ -9956,7 +9892,6 @@ ISNAD.registerSaga({
           ['show', 'abu_ubayda'], ['show', 'bilal'],
           ['title', 'Homs', "L'armée est assemblée sur l'esplanade"],
           ['fade', 'in'],
-          ['amb', 'foule']
         ] },
         { text: "Se présenter devant Abû 'Ubayda, sur l'esplanade", talk: 'abu_ubayda', then: [
           ['nar', "L'armée est rassemblée. Abû 'Ubayda est monté en chaire, et il se tait : l'ordre qu'il a reçu lui pèse. C'est Bilâl, l'envoyé du Calife, qui se lève."],
@@ -9983,7 +9918,6 @@ ISNAD.registerSaga({
           ['nar', "Khâlid a obéi. Mais dans les rangs, la colère enfle : « Ils ont osé. Lui ! » Et cette colère-là ne monte pas vers Allah. Elle monte vers un socle."],
           ['sfx', 'glitch'], ['shake', 500],
           ['map', 'noos', 'seuil', { hue: 48 }],
-          ['amb', 'noos'],
           ['nar', "La noosphère de Homs. Au bout d'une allée de lumière, un colosse d'or sans visage, coulé dans quatre ans d'acclamations. Il porte au côté un sabre que Khâlid reconnaît."]
         ] },
         { text: "Abattre le Laurier qui couronne l'allée", foe: 'f2', then: [
@@ -10004,7 +9938,7 @@ ISNAD.registerSaga({
           ['nar', "Le colosse se fend du sommet au socle. Dedans, il n'y a rien : pas même un homme. Seulement le creux où d'autres avaient versé leur confiance."],
           ['map', 'romaine', 'porte', { time: 'dawn' }],
           ['hide', 'poete'], ['hide', 'soldat'], ['hide', 'estafette'], ['hide', 'ancien_bourg'], ['hide', 'scribe'], ['hide', 'ghalib'],
-          ['amb', 'vent'], ['mus', 'espoir'],
+          ['mus', 'espoir'],
           ['nar', "Avant de monter en selle, il prie l'aube avec ceux qui restent. Personne ne l'acclame ; quelqu'un lui tient son étrier."],
           ['pray', 'fajr'],
           ['nar', "Khâlid prend la route de Médine. 'Umar l'y reçoit, examine ses comptes, et le trouve intègre. Puis le Calife écrit aux provinces."],
@@ -10038,7 +9972,6 @@ ISNAD.registerSaga({
   tagline: "Deux empires tombèrent sous son califat. Lui dormait sur une natte.",
 
   intro: [
-    ['amb', 'vent'],
     ['title', "'Umar ibn al-Khattâb", 'Saga II · Al-Fârûq'],
     ['nar', "An 13 de l'Hégire. Abû Bakr s'éteint, et son dernier dépôt tient en un nom : 'Umar. Médine retient son souffle. On connaît sa rigueur ; on ignore encore jusqu'où elle ira contre lui-même."],
     ['nar', "En dix ans, Shâm, l'Irak, la Perse et l'Égypte s'ouvrent. Jamais tant d'or, de trônes et d'aigles n'ont regardé un seul homme. Et cet homme porte un manteau rapiécé."],
@@ -10049,7 +9982,6 @@ ISNAD.registerSaga({
   ],
 
   outro: [
-    ['amb', 'silence'],
     ['mus', 'deuil'],
     ['nar', "La prière achevée, on le porte chez lui. Sa première question : qui m'a frappé ?"],
     ['quote', "« Louange à Allah, qui n'a pas placé ma mort entre les mains d'un homme se réclamant de l'islam. »", "al-Bukhârî, Sahîh (3700)"],
@@ -10391,7 +10323,6 @@ ISNAD.registerSaga({
         { map: 'noos', at: ['faille', 0, 0], item: 'musc', n: 1 }
       ],
       intro: [
-        ['amb', 'nuit'],
         ['title', 'Les Rondes de nuit', "An 18 de l'Hégire · l'Année des cendres"],
         ['nar', "Neuf mois sans pluie. La terre du Hijâz a pris la couleur de la cendre, et les tribus affamées campent autour de Médine."],
         ['nar', "Chaque nuit, quand la ville dort, un homme sort de chez lui sans escorte et marche dans les ruelles. Il veut voir de ses yeux ce dont il devra répondre."]
@@ -10428,7 +10359,6 @@ ISNAD.registerSaga({
           ['show', 'voyageur'], ['show', 'enfant1'], ['show', 'enfant2']
         ] },
         { text: 'Rejoindre le feu des voyageurs, près des enclos', goto: 'enclos', then: [
-          ['amb', 'feu'],
           ['say', 'umar', "Paix sur vous, gens de la lumière."],
           ['nar', "Une famille de voyageurs. Une marmite sur le feu. Autour, des enfants qui pleurent."],
           ['say', 'umar', "Pourquoi ces enfants pleurent-ils ?"],
@@ -10439,7 +10369,6 @@ ISNAD.registerSaga({
           ['say', 'umar', "Qu'Allah te fasse miséricorde… Comment 'Umar saurait-il ce qui vous arrive ?"],
           ['say', 'voyageur', "Il se charge de nos affaires, puis il nous oublie ?"],
           ['nar', "'Umar ne répond rien. Il se détourne, et il court vers la ville."],
-          ['sfx', 'wind']
         ] },
         { text: 'Courir aux réserves de farine du souk', goto: 'souk', then: [
           ['nar', "Dâr ad-Daqîq, la Maison de la farine. Le commis de garde se lève d'un bond."],
@@ -10529,7 +10458,6 @@ ISNAD.registerSaga({
           ['nar', "Dans l'envers de Médine, quelque chose a tout entendu — et s'en irrite."],
           ['sfx', 'glitch'],
           ['map', 'noos', 'seuil', { hue: 45 }],
-          ['amb', 'noos'],
           ['nar', "La Chaîne te montre l'envers de cette nuit. Ici se dresse ce que mille greniers fermés ont bâti sans le savoir."],
           ['codex', 'ego_accapareur']
         ] },
@@ -10543,14 +10471,12 @@ ISNAD.registerSaga({
       ],
       outro: [
         ['map', 'medine', 'place', { time: 'dawn' }],
-        ['amb', 'vent'],
         ['nar', "'Umar écrit aux gouverneurs : « Au secours ! Au secours ! » D'Égypte, 'Amr répond : « Je t'envoie une caravane dont la tête sera chez toi quand la queue sera encore chez moi. »"],
         ['nar', "De Shâm, Abû 'Ubayda arrive le premier, avec quatre mille montures chargées de vivres. Mais le ciel reste fermé. Alors 'Umar sort avec les gens, sans apparat, et fait avancer al-'Abbâs, l'oncle du Prophète ﷺ."],
         ['quote', "« Ô Allah, nous Te sollicitions par notre Prophète et Tu nous donnais la pluie ; nous Te sollicitons par l'oncle de notre Prophète : donne-nous la pluie. »", "Invocation de 'Umar — al-Bukhârî, Sahîh (1010), traduction du sens"],
         ['pray'],
         ['codex', 'istisqa'],
         ['mus', 'espoir'],
-        ['sfx', 'wind'],
         ['nar', "Et la pluie vient. Les gens rentrent en relevant leurs manteaux ; la terre couleur de cendre boit jusqu'au soir."],
         ['nar', "On rapporte qu'il disait : si la disette avait duré, j'aurais logé chaque famille pauvre chez une famille aisée — car nul ne périt en partageant la moitié de son repas."],
         ['codex', 'bio_umar'],
@@ -10604,7 +10530,6 @@ ISNAD.registerSaga({
         { map: 'romaine', at: ['remparts', 1, 0], item: 'siwak', n: 1 }
       ],
       intro: [
-        ['amb', 'vent'],
         ['title', 'Les Clés de Jérusalem', "An 16 de l'Hégire"],
         ['nar', "La Chaîne remonte de deux années. Îliyâ' — Jérusalem — est assiégée par l'armée d'Abû 'Ubayda. Le patriarche Sophrone consent à ouvrir les portes, à une condition : ne remettre la ville qu'au calife en personne."],
         ['nar', "'Umar confie Médine à 'Alî et prend la route de Shâm. Ni escorte de parade, ni litière : un compagnon de route, une monture, un sac de dattes et d'orge."]
@@ -10640,7 +10565,6 @@ ISNAD.registerSaga({
           ['say', 'abuubayda', "Tu dis vrai. Marchons."],
           ['hide', 'abu_pnj'], ['join', 'abuubayda'], ['codex', 'bio_abuubayda'],
           ['map', 'romaine', 'porte', { time: 'day' }],
-          ['amb', 'foule'],
           ['mus', 'rome'],
           ['nar', "Îliyâ'. Les remparts, les colonnes, les coupoles. Une foule muette regarde entrer le maître du nouvel empire : un homme à pied, qui mène sa monture par la bride."],
           ['say', 'abuubayda', "Le patriarche attend devant la basilique. Mais écoute d'abord la ville, si tu veux savoir ce qu'on te demandera : au quartier bas, un ancien venu de Tibériade patiente depuis l'aube."]
@@ -10729,7 +10653,6 @@ ISNAD.registerSaga({
           ['nar', "Les couronnes de pourpre tombent en poussière. Mais leur maître attend plus haut, là où convergent tous les regards de la ville."]
         ] },
         { text: "Monter à l'esplanade", goto: 'esplanade', then: [
-          ['amb', 'silence'],
           ['nar', "L'esplanade. Des siècles d'abandon l'ont couverte de décombres. Au-dessus, dans l'envers du lieu, une enseigne d'airain déploie ses ailes."],
           ['say', "L'Aigle d'Airain", "Enfin, un vainqueur. Rome m'a porté, et d'autres avant elle. Entre en César, fils d'al-Khattâb : la ville n'attend que cela pour t'aimer."],
           ['say', 'umar', "Elle attend la justice. Toi, tu n'es que l'habitude qu'ont les hommes de se courber."],
@@ -10809,7 +10732,6 @@ ISNAD.registerSaga({
         { map: 'palais', at: ['colonnade', 1, 0], item: 'musc', n: 1 }
       ],
       intro: [
-        ['amb', 'silence'],
         ['title', 'Le Trône et la Natte', 'Les années perses'],
         ['nar', "Al-Qâdisiyya. Al-Madâ'in. Nihâwand. En quelques années, l'empire des Chosroès s'effondre, et ses dépouilles prennent la route d'une ville de terre et de palmes."],
         ['nar', "On amène à Médine al-Hurmuzân, prince perse capturé à Tustar, en habits de brocart, couronne en tête. Il cherche le palais du roi des Arabes. On le conduit à la mosquée."],
@@ -10922,7 +10844,6 @@ ISNAD.registerSaga({
           ['codex', 'bio_abdarrahman']
         ] },
         { text: "Recevoir le convoi d'al-Madâ'in sur la place", goto: 'place', then: [
-          ['amb', 'foule'],
           ['nar', "On déroule les nattes. L'épée de Kisrâ, sa ceinture, ses bracelets, sa couronne — si lourde qu'une chaîne d'or la tenait suspendue au-dessus du trône."],
           ['say', 'umar', "Des hommes qui ont remis cela sans rien en distraire sont des hommes sûrs."],
           ['quote', "« Tu t'es abstenu, alors tes sujets se sont abstenus. Si tu t'étais servi, ils se seraient servis. »", "Parole de 'Alî à 'Umar — at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya"],
@@ -10976,7 +10897,6 @@ ISNAD.registerSaga({
           ['say', 'abdarrahman', "L'or de Kisrâ est partagé. Mais regarde l'envers des choses : son trône, lui, ne se partage pas. Il attend."],
           ['sfx', 'glitch'],
           ['map', 'palais', 'entree', { time: 'night' }],
-          ['amb', 'noos'],
           ['nar', "Le Palais blanc d'al-Madâ'in, tel que la noosphère s'en souvient. Tout y est encore debout : les tapis, les colonnes — et, au fond, une place vide qui appelle."],
           ['codex', 'ego_trone']
         ] },
@@ -10985,7 +10905,6 @@ ISNAD.registerSaga({
           ['nar', "La chaîne d'or casse. La couronne roule sur les dalles et s'y défait en reflets."]
         ] },
         { text: "Marcher jusqu'au trône", goto: 'trone', then: [
-          ['amb', 'silence'],
           ['say', 'Le Trône vide', "Te voilà. J'ai porté Kisrâ, et ses pères avant lui. Les hommes passent ; la place reste. Assieds-toi."],
           ['say', 'umar', "J'ai une natte dans une mosquée. Elle me suffit."],
           ['say', 'Le Trône vide', "Tous disent cela. Puis vient l'or, et la peur de le perdre, et les gardes pour le garder. Tu as pleuré tout à l'heure : tu me connais déjà."],
@@ -10999,7 +10918,6 @@ ISNAD.registerSaga({
       ],
       outro: [
         ['map', 'medine', 'mosquee_cour', { time: 'dawn' }],
-        ['amb', 'silence'],
         ['mus', 'silence'],
         ['nar', "Médine, avant l'aube. La natte est à sa place. 'Umar aussi."],
         ['quote', "« Ô Allah, accorde-moi le martyre dans Ton sentier, et fais que ma mort ait lieu dans la ville de Ton Messager. »", "Invocation de 'Umar — al-Bukhârî, Sahîh (1890)"],
@@ -11025,7 +10943,7 @@ ISNAD.registerSaga({
   tagline: "Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui.",
 
   intro: [
-    ['amb', 'vent'], ['mus', 'chaine'],
+    ['mus', 'chaine'],
     ['title', "'Uthmân ibn 'Affân", 'Le Généreux · 23–35 H'],
     ['nar', "An 23 de l'Hégire. 'Umar est tombé à la prière de l'aube. Six hommes se concertent trois jours ; au matin, les mains se tendent vers 'Uthmân ibn 'Affân."],
     ['nar', "Il a près de soixante-dix ans. Marchand prospère, il a tant donné qu'on a cessé de compter : un puits racheté pour que tous y boivent, l'armée des jours difficiles équipée de ses deniers."],
@@ -11036,7 +10954,7 @@ ISNAD.registerSaga({
   ],
 
   outro: [
-    ['amb', 'silence'], ['mus', 'deuil'],
+    ['mus', 'deuil'],
     ['flash', '#ffffff'],
     ['nar', "Le vendredi 18 Dhû l-Hijja de l'an 35, on força sa porte. Il jeûnait. Le Livre était ouvert devant lui."],
     ['nar', "La Chaîne se tait ici. Elle ne montre pas. Elle dit seulement : il avait plus de quatre-vingts ans, il avait gouverné douze années, et nul n'était mort pour le défendre — parce qu'il l'avait interdit."],
@@ -11341,14 +11259,13 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Les Feuillets', "Vers l'an 30 de l'Hégire · Médine"],
-        ['amb', 'foule'],
         ['nar', "Médine a changé. Des caravanes arrivent du Shâm, d'Égypte, d'Irak. On y parle dix accents, et le Livre se récite désormais sous des cieux que le Hijâz n'a jamais vus."],
         ['nar', "Au temps d'Abû Bakr, Zayd ibn Thâbit avait réuni la Révélation en feuillets. Ils reposent à Médine. Mais au loin, chaque garnison apprend de son maître — et chacune tient sa récitation pour la meilleure."],
         ['nar', "'Uthmân sort de chez lui. On dit qu'un cavalier approche de la porte nord, couvert de la poussière des frontières."]
       ],
       objectives: [
         { text: 'Gagner la porte nord, où un cavalier arrive du front', goto: 'porte_nord', then: [
-          ['show', 'hudhayfa'], ['sfx', 'wind'],
+          ['show', 'hudhayfa'],
           ['say', 'hudhayfa', "Commandeur des croyants. Je reviens des marches d'Arménie et d'Azerbaïdjan. J'y ai vu une chose qui m'a ôté le sommeil."],
           ['say', 'uthman', "Parle, Hudhayfa. Tu n'es pas homme à t'alarmer pour peu."],
           ['say', 'hudhayfa', "Les gens du Shâm et ceux d'Irak combattent côte à côte. Le soir, ils se disputent sur la récitation. L'un dit à l'autre : « Ma lecture vaut mieux que la tienne. » Peu s'en faut qu'ils ne se renient."],
@@ -11448,7 +11365,7 @@ ISNAD.registerSaga({
           ['nar', "Les calames crissent. Mais chaque ligne tracée dérange quelque chose, de l'autre côté. Une nuée s'amasse au-dessus de la halle : toutes les querelles de toutes les garnisons, nouées en une seule tour."],
           ['say', 'hudhayfa', "C'est elle que j'ai vue grandir aux frontières. Elle a un nom ancien."],
           ['sfx', 'glitch'],
-          ['map', 'noos', 'seuil', { hue: 275 }], ['amb', 'noos'],
+          ['map', 'noos', 'seuil', { hue: 275 }],
           ['nar', "La noosphère de Médine. Ici, les voix ont un poids et les mots une forme. Au cœur du réseau, Babel attend."]
         ] },
         { text: 'Dénouer les variantes qui barrent le réseau', foe: 'f_noeud', then: [
@@ -11458,7 +11375,7 @@ ISNAD.registerSaga({
           ['battle', { group: ['babel'], bg: 'noos', boss: true, intro: "Mille lectures — et pas une qui écoute l'autre.",
             allies: [{ flag: 'ut_garnisons', name: 'Les deux colonnes réconciliées' }] }],
           ['nar', "La tour de voix se défait. Il n'en reste qu'une récitation, portée par plusieurs souffles — diverse dans ses tons, une dans son tracé."],
-          ['map', 'medine', 'halle', { time: 'dusk' }], ['amb', 'vent'],
+          ['map', 'medine', 'halle', { time: 'dusk' }],
           ['say', 'zayd', "C'est achevé. Nous avons comparé chaque ligne aux feuillets. Rien n'y manque, rien n'y est ajouté."]
         ] }
       ],
@@ -11531,7 +11448,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'La Bataille des Mâts', "An 34 de l'Hégire · Dhât as-Sawârî"],
-        ['amb', 'vent'],
         ['nar', "Les Arabes sont gens de pistes et de puits. La mer, ils la regardent depuis le rivage du Shâm — et de la mer viennent, chaque saison, les flottes de Constantinople."],
         ['nar', "Mu'âwiya, gouverneur du Shâm, avait demandé à 'Umar la permission de prendre la mer. 'Umar avait refusé : il ne risquerait pas un seul homme sur cette étendue sans rivage."],
         ['nar', "An 28. La demande revient, cette fois devant 'Uthmân. Un émissaire du Shâm attend à la porte de la mosquée."]
@@ -11555,7 +11471,7 @@ ISNAD.registerSaga({
           ['quote', "« Ne choisis personne et ne tire personne au sort. Laisse-leur le choix : celui qui choisit de partir de son plein gré, transporte-le et aide-le. »", "On rapporte — 'Uthmân à Mu'âwiya, at-Tabarî, Târîkh (an 28 H)"],
           ['codex', 'flotte'], ['pillar', 'justice', 1],
           ['nar', "Cette année-là, la flotte quitte les ports du Shâm. Sa première escale n'est pas une bataille : c'est une île, si proche qu'on y entend, disait l'émissaire, aboyer les chiens."],
-          ['map', 'navire', 'poupe', { time: 'dusk' }], ['amb', 'mer'], ['sfx', 'wave'], ['mus', 'mer'],
+          ['map', 'navire', 'poupe', { time: 'dusk' }], ['mus', 'mer'],
           ['nar', "An 28, devant Chypre. 'Uthmân n'a pas embarqué : il est à Médine, et ses compagnons aussi. Mais sa consigne voyage avec ceux qu'il envoie, et c'est elle que tu portes sur ce pont, tel que les marins l'ont raconté."],
           ['nar', "Une barque se détache du rivage. Des anciens du port montent à bord, sans armes : ils viennent voir si l'on peut parler à cette flotte avant qu'elle ne parle la première."]
         ] },
@@ -11622,7 +11538,7 @@ ISNAD.registerSaga({
           ['nar', "Un pacte est un puits creusé entre deux campements : chacun y descend son seau, et nul n'a besoin d'aimer l'autre pour y boire."],
           ['nar', "Six ans passent. Dans les chantiers d'Égypte et du Shâm, des cavaliers apprennent à tenir debout sur un pont."],
           ['nar', "An 34. L'empereur Constant arme cinq cents voiles pour reprendre la mer. 'Abdallâh ibn Sa'd, gouverneur d'Égypte, sort à sa rencontre au large de la Lycie."],
-          ['map', 'navire', 'poupe', { time: 'dawn' }], ['amb', 'mer'], ['sfx', 'wave'],
+          ['map', 'navire', 'poupe', { time: 'dawn' }], 
           ['show', 'ibnsad'], ['show', 'vigie'],
           ['nar', "Dans la noosphère de la flotte, la décision du calife a un poids : nul n'est ici contre son gré. Rejoins l'amiral au pied du mât."]
         ] },
@@ -11655,7 +11571,7 @@ ISNAD.registerSaga({
           ['nar', "On rapporte que l'on se battit ce jour-là sur les ponts comme sur la terre ferme, et que la mer changea de couleur. Les marins de l'empereur tinrent longtemps : c'étaient des hommes braves, et la mer était à eux."],
           ['nar', "Les chroniqueurs n'en disent guère plus, et la Chaîne ne montre pas ce qu'ils taisent. Mais sous les coques, autre chose se bat : la somme de toutes les peurs tombées à l'eau."],
           ['sfx', 'glitch'],
-          ['map', 'noos', 'seuil', { hue: 205 }], ['amb', 'noos'],
+          ['map', 'noos', 'seuil', { hue: 205 }],
           ['nar', "La noosphère du large. Ni sol ni horizon : seulement des nœuds de lumière jetés sur le vide, comme des navires enchaînés."]
         ] },
         { text: "Tenir le premier nœud contre l'écume", foe: 'f_large', then: [
@@ -11665,7 +11581,7 @@ ISNAD.registerSaga({
           ['battle', { group: ['abime'], bg: 'mer', boss: true, intro: 'Sous les coques, quelque chose ouvre les bras.',
             allies: [{ flag: 'ut_pilotes', name: 'Les pilotes du port' }] }],
           ['nar', "L'Abîme se referme. Là-haut, au même instant, la ligne de l'empereur se rompt. Constant échappe de peu ; sa flotte se disperse vers le nord."],
-          ['map', 'navire', 'proue', { time: 'day' }], ['amb', 'mer'],
+          ['map', 'navire', 'proue', { time: 'day' }],
           ['say', 'ibnsad', "C'est fini. Qu'on dise au Commandeur des croyants que pas un de ces hommes n'a été traîné ici. C'est pour cela qu'ils ont tenu."]
         ] }
       ],
@@ -11720,7 +11636,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'La Maison assiégée', "An 35 de l'Hégire · Médine"],
-        ['amb', 'foule'],
         ['nar', "Douze ans de califat. Les trésors ont afflué, et avec eux les comparaisons. Dans les garnisons d'Égypte et d'Irak, des griefs circulent — certains fondés, d'autres grossis de bouche en bouche."],
         ['nar', "Des lettres passent de main en main. Nul ne sait dire qui les a écrites. Des hommes venus de Fustât, de Koufa et de Bassora campent maintenant aux portes de Médine."],
         ['nar', "Ce soir encore, il dirige la prière du couchant dans la mosquée qu'il a rebâtie. Bientôt, on l'en empêchera."],
@@ -11829,7 +11744,6 @@ ISNAD.registerSaga({
           ['nar', "Confondu ou non, Abû l-Akhbâr n'était qu'une bouche. La Rumeur en a mille autres, et elle marche déjà vers la maison."]
         ] },
         { text: 'Rentrer à la maison, que le cercle enserre', goto: 'maison', then: [
-          ['amb', 'nuit'],
           ['nar', "Les jours passent. Le cercle se resserre autour de la maison ; on lui coupe l'eau — à lui qui avait offert un puits à toute la ville."],
           ['say', 'hasan', "Mon père nous a postés à ta porte, mon frère et moi. Dis un mot, et nous sortons."],
           ['say', 'ibnzubayr3', "Nous sommes des centaines, dans la maison et alentour. Laisse-nous faire : ils ne tiendront pas."],
@@ -11857,7 +11771,7 @@ ISNAD.registerSaga({
           ['say', 'zayd', "Tu ne veux pas te défendre contre eux. Mais il y a autre chose à cette porte, qui n'est pas un homme."],
           ['say', 'uthman', "Celle-là, je veux bien la regarder en face."],
           ['sfx', 'glitch'],
-          ['map', 'noos', 'seuil', { hue: 320 }], ['amb', 'noos'],
+          ['map', 'noos', 'seuil', { hue: 320 }],
           ['nar', "La noosphère de Médine, saturée de voix. La Rumeur ignore les distances : à al-Madâ'in, à des semaines de marche, Hudhayfa l'entend aussi — et lui tient tête. Ici, il est à tes côtés."],
           ['join', 'hudhayfa'],
           ['say', 'hudhayfa', "J'ai gardé un secret toute ma vie. Je sais ce que vaut une parole qu'on ne répète pas."]
@@ -11874,7 +11788,7 @@ ISNAD.registerSaga({
           ['nar', "L'emprise se brise. Un instant, les voix se taisent — et dans ce silence, chacun pourrait entendre qu'il ne sait pas ce qu'il répète."],
           ['nar', "Mais briser une emprise n'est pas dissoudre une foule. Dehors, les hommes sont réels, et leur colère aussi. 'Uthmân le sait. Il ne demandait pas à être sauvé : seulement que nul ne tue en son nom."],
           ['codex', 'rumeur_n'],
-          ['map', 'medine', 'maison', { time: 'night' }], ['amb', 'silence']
+          ['map', 'medine', 'maison', { time: 'night' }]
         ] }
       ],
       outro: [

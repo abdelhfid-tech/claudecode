@@ -120,8 +120,9 @@
     clearAuto() { try { localStorage.removeItem(AKEY); } catch (e) { /* ignore */ } }
   };
 
-  /* ---------- son : ambiances (bruit filtré) + percussions (duff) + bruitages ; la bande-son est plus bas. Aucune voix. ---------- */
-  const A = I.audio = { ctx: null, on: true, master: null, ambNode: null, ambName: null, rhythm: null };
+  /* ---------- son : percussions (duff) et bruitages brefs ; la bande-son est plus bas. Aucune voix, aucune nappe de fond
+     (les nappes de bruit filtré ont été retirées à la demande du décideur, D90). ---------- */
+  const A = I.audio = { ctx: null, on: true, master: null, rhythm: null };
   A.unlock = function () {
     if (A.ctx) { if (A.ctx.state === 'suspended') A.ctx.resume(); return; }
     try {
@@ -129,7 +130,6 @@
       A.ctx = new AC();
       const oc = outChain(A.ctx); A.master = oc.master; A.limiter = oc.lim; A.master.gain.value = A.on ? 0.8 : 0;
       noiseBuf(A.ctx);
-      if (A.pendingAmb) { const n = A.pendingAmb; A.pendingAmb = null; A.amb(n); }
       if (A.pendingRhythm) { const n = A.pendingRhythm; A.pendingRhythm = null; A.beat(n); }
       A.mbus = musicBus(A.ctx, A.master); A.mbus.gain.value = A.musicOn ? MG : 0;
       if (A.wantTrack) { const n = A.wantTrack; A.curTrack = null; A.music(n); }
@@ -170,40 +170,11 @@
       case 'break': A.noiseHit(t, 0.8, 6000, 0.5, 'highpass', 800); A.dum(t, 1, 70); A.tek(t + 0.02, 0.9, 5000); break;
       case 'light': A.noiseHit(t, 0.35, 1200, 0.7, 'bandpass', 7000); break;
       case 'heal': A.noiseHit(t, 0.25, 2500, 0.6, 'bandpass', 5500); break;
-      case 'wind': A.noiseHit(t, 0.5, 300, 1.4, 'bandpass', 900); break;
       case 'door': A.dum(t, 0.6, 80); A.noiseHit(t, 0.3, 400, 0.2, 'lowpass'); break;
-      case 'crowd': A.noiseHit(t, 0.4, 600, 1.2, 'bandpass', 500); break;
-      case 'wave': A.noiseHit(t, 0.5, 250, 1.6, 'lowpass', 700); break;
       case 'glitch': for (let i = 0; i < 5; i++) A.tek(t + Math.random() * 0.25, 0.4, 800 + Math.random() * 6000); break;
       case 'dark': A.noiseHit(t, 0.6, 200, 0.5, 'lowpass', 60); break;
       case 'step': A.noiseHit(t, 0.06, 500, 0.05, 'lowpass'); break;
     }
-  };
-  // ambiances : chaînes bruit -> filtre -> gain modulé
-  const AMB = {
-    vent: [{ f: 420, q: 0.8, g: 0.22, lfo: 0.13, depth: 0.14 }, { f: 1500, q: 1.5, g: 0.04, lfo: 0.21, depth: 0.03 }],
-    nuit: [{ f: 300, q: 0.7, g: 0.10, lfo: 0.09, depth: 0.06 }, { f: 5200, q: 9, g: 0.012, lfo: 5.5, depth: 0.012 }],
-    foule: [{ f: 520, q: 1.1, g: 0.14, lfo: 0.7, depth: 0.07 }, { f: 950, q: 2, g: 0.05, lfo: 1.3, depth: 0.04 }],
-    feu: [{ f: 180, q: 0.7, g: 0.16, lfo: 3.1, depth: 0.08 }, { f: 3200, q: 3, g: 0.03, lfo: 9, depth: 0.03 }],
-    mer: [{ f: 320, q: 0.5, g: 0.22, lfo: 0.16, depth: 0.2 }, { f: 2400, q: 0.8, g: 0.03, lfo: 0.16, depth: 0.03 }],
-    noos: [{ f: 140, q: 3, g: 0.2, lfo: 0.07, depth: 0.1 }, { f: 3800, q: 6, g: 0.02, lfo: 0.3, depth: 0.02 }],
-    cite: [{ f: 5200, q: 0.4, g: 0.05, lfo: 0.3, depth: 0.02 }, { f: 110, q: 2, g: 0.2, lfo: 0.05, depth: 0.08 }],
-    bataille: [{ f: 150, q: 0.8, g: 0.24, lfo: 0.9, depth: 0.14 }, { f: 700, q: 1, g: 0.06, lfo: 0.4, depth: 0.05 }],
-    silence: []
-  };
-  A.amb = function (name) {
-    if (!A.ctx) { A.pendingAmb = name; return; }
-    if (A.ambName === name) return; A.ambName = name;
-    const t = A.ctx.currentTime;
-    if (A.ambNode) { const old = A.ambNode; old.gain.gain.setTargetAtTime(0, t, 0.5); setTimeout(() => { old.stop(); }, 2500); }
-    const out = A.ctx.createGain(); out.gain.value = 0; out.connect(A.master); out.gain.setTargetAtTime(1, t, 0.8);
-    const nodes = [];
-    (AMB[name] || []).forEach(c => {
-      const n = noiseSrc(true), f = A.ctx.createBiquadFilter(), g = A.ctx.createGain(), l = A.ctx.createOscillator(), lg = A.ctx.createGain();
-      f.type = 'bandpass'; f.frequency.value = c.f; f.Q.value = c.q; g.gain.value = c.g; l.frequency.value = c.lfo; lg.gain.value = c.depth;
-      l.connect(lg); lg.connect(g.gain); n.connect(f); f.connect(g); g.connect(out); n.start(0, Math.random() * 1.5); l.start(); nodes.push(n, l);
-    });
-    A.ambNode = { gain: out, stop() { nodes.forEach(n => { try { n.stop(); } catch (e) { /* déjà arrêté */ } }); out.disconnect(); } };
   };
   // rythmes de duff : D = dum, T = tek, k = ka (léger), . = silence ; 8 ou 16 pas
   const BEATS = {
@@ -431,7 +402,7 @@
   // Le son ne doit jamais arrêter le jeu. Sur un appareil qui refuse une opération sonore, l'appel devient sans effet,
   // l'incident est retenu une fois (page Diagnostic) et, s'il se répète, la musique se tait d'elle-même.
   A.fails = 0;
-  ['unlock', 'setOn', 'sfx', 'amb', 'beat', 'stopBeat', 'music', 'setMusic', 'dum', 'tek'].forEach(k => {
+  ['unlock', 'setOn', 'sfx', 'beat', 'stopBeat', 'music', 'setMusic', 'dum', 'tek'].forEach(k => {
     const fn = A[k]; if (typeof fn !== 'function') return;
     A[k] = function () {
       try { return fn.apply(A, arguments); }

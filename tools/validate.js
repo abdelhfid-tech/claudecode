@@ -313,7 +313,6 @@ function checkSaga(s, E, W) {
           case 'show': case 'hide': if (!npcIds.has(o[1])) E.push(`${wo}: pnj « ${o[1]} » inconnu`); break;
           case 'fade': if (!['in', 'out'].includes(o[1])) E.push(`${wo}: fade in|out`); break;
           case 'sfx': if (!D.SFX.includes(o[1])) E.push(`${wo}: sfx « ${o[1]} » invalide (${D.SFX.join('|')})`); break;
-          case 'amb': if (!D.AMB.includes(o[1])) E.push(`${wo}: amb « ${o[1]} » invalide (${D.AMB.join('|')})`); break;
           case 'give': if (!D.ITEMS[o[1]] && !D.GEAR[o[1]]) E.push(`${wo}: objet ou pièce d'équipement « ${o[1]} » inconnu (${Object.keys(D.ITEMS).join('|')}, ou une pièce de D.GEAR)`); break;
           case 'join': case 'leave': if (!heroes[o[1]]) E.push(`${wo}: héros « ${o[1]} » inconnu`); break;
           case 'codex': if (!codexIds.has(o[1])) E.push(`${wo}: entrée de codex « ${o[1]} » inconnue`); break;
@@ -401,8 +400,8 @@ function checkSaga(s, E, W) {
   });
   // intro/outro de saga : pas de carte (cartons narratifs uniquement)
   const flat = ops => (ops || []).forEach((o, i) => {
-    if (!Array.isArray(o) || !['nar', 'quote', 'title', 'say', 'wait', 'sfx', 'amb', 'codex', 'light', 'flash', 'fade', 'tint', 'mus', 'pillar'].includes(o[0]))
-      E.push(`${W0}.intro/outro[${i}]: seules nar|quote|title|say|wait|sfx|amb|codex|light|flash|fade|tint|mus|pillar sont permises ici`);
+    if (!Array.isArray(o) || !['nar', 'quote', 'title', 'say', 'wait', 'sfx', 'codex', 'light', 'flash', 'fade', 'tint', 'mus', 'pillar'].includes(o[0]))
+      E.push(`${W0}.intro/outro[${i}]: seules nar|quote|title|say|wait|sfx|codex|light|flash|fade|tint|mus|pillar sont permises ici`);
     if (o[0] === 'codex' && !codexIds.has(o[1])) E.push(`${W0}.intro/outro[${i}]: codex « ${o[1]} » inconnu`);
   });
   flat(s.intro); flat(s.outro);

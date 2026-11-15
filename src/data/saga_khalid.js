@@ -16,7 +16,7 @@ ISNAD.registerSaga({
 
   intro: [
     ['title', 'Khâlid ibn al-Walîd', 'Le Sabre dégainé'],
-    ['amb', 'vent'], ['mus', 'desert'],
+    ['mus', 'desert'],
     ['nar', "An 13 de l'Hégire. L'Arabie est de nouveau une. Au nord, deux empires se regardent depuis des siècles par-dessus le désert : Rome et la Perse. Entre eux marche un homme que nul n'a encore vu vaincu."],
     ['nar', "Khâlid, fils d'al-Walîd, des Banû Makhzûm. À Uhud, il chargeait contre les musulmans. Depuis l'an 8, il charge avec eux. Le Messager d'Allah ﷺ l'a nommé « un sabre d'entre les sabres d'Allah »."],
     ['quote', "Neuf sabres se sont brisés dans ma main le jour de Mu'ta ; il ne m'est resté en main qu'une large lame yéménite.", 'Khâlid ibn al-Walîd — al-Bukhârî'],
@@ -28,14 +28,14 @@ ISNAD.registerSaga({
   ],
 
   outro: [
-    ['amb', 'silence'], ['mus', 'deuil'],
+    ['mus', 'deuil'],
     ['title', 'Homs', "An 21 de l'Hégire"],
     ['nar', "Khâlid ne commandera plus. Il vit à Homs quatre années encore, simple croyant parmi ceux qu'il a menés. Il ne récrimine pas. Quand la mort vient, elle le trouve dans son lit, et c'est la seule chose qu'il lui reproche."],
     ['quote', "J'ai pris part à tant de combats ; il n'est pas sur mon corps un empan sans une blessure de sabre, de lance ou de flèche… et voici que je meurs sur ma couche. Que les yeux des lâches ne connaissent pas le sommeil !", "Khâlid ibn al-Walîd, sur son lit de mort — Ibn 'Asâkir ; Ibn Kathîr, al-Bidâya"],
     ['nar', "Il ne laisse ni or ni domaine : son cheval, ses armes et un serviteur, qu'il lègue pour la cause d'Allah. On rapporte que 'Umar dit : « Qu'Allah fasse miséricorde à Abû Sulaymân ; il était autre que ce que nous pensions. »"],
     ['codex', 'mort_khalid'],
     ['nar', "Les villes qu'il avait prises par un écrit étaient encore debout, et leurs portes ouvertes. Celles-là ne chantent pas son nom. Elles vivent : c'est une louange qui ne fabrique pas d'idole."],
-    ['amb', 'cite'], ['mus', 'espoir'],
+    ['mus', 'espoir'],
     ['nar', "Idris rouvre les yeux dans les Archives basses. Sur tous les écrans de la Cité-Miroir, l'Agrégor dresse ses colosses du jour. Il sait maintenant comment on les fend : non en frappant plus fort, mais en refusant le socle."],
     ['nar', "Le courage n'est pas seulement de dégainer. C'est de rengainer quand la vérité l'exige. Une Lumière s'allume sur la Chaîne."],
     ['sfx', 'light'],
@@ -350,10 +350,9 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'La Traversée', "An 13 de l'Hégire · Désert de la Samâwa"],
-        ['amb', 'vent'],
         ['nar', "Mais avant le désert, il y eut une ville. La Chaîne remonte d'une année : an 12, sous les murs d'al-Hîra, la cité blanche des anciens rois arabes d'Irak."],
         ['map', 'camp', 'entree', { time: 'day' }],
-        ['mus', 'conseil'], ['amb', 'foule'],
+        ['mus', 'conseil'],
         ['title', 'Al-Hîra', "An 12 de l'Hégire · un an plus tôt"],
         ['nar', "Les forts d'al-Hîra sont cernés. Les échelles sont prêtes, et les hommes aussi. Khâlid fait dire aux notables qu'il les recevra sous sa tente."],
         ['nar', "Une ville forcée n'est qu'un tas de pierres qu'il te faut garder. Une ville qui t'ouvre sa porte est une sentinelle de plus sur ton rempart."]
@@ -411,7 +410,7 @@ ISNAD.registerSaga({
             ]
           }],
           ['map', 'desert', 'caravane', { time: 'dusk' }],
-          ['mus', 'desert'], ['amb', 'vent'],
+          ['mus', 'desert'],
           ['title', 'Qurâqir', "An 13 de l'Hégire · un an plus tard"],
           ['nar', "Al-Hîra est en paix, l'Euphrate est tenu. C'est alors qu'arrive une lettre de Médine : en Syrie, les armées musulmanes font face à la plus grande levée que Rome ait rassemblée."],
           ['quote', "Par Allah, je ferai oublier aux Romains les suggestions du diable par Khâlid ibn al-Walîd.", 'On rapporte d\'Abû Bakr as-Siddîq — at-Tabarî, Târîkh'],
@@ -443,7 +442,6 @@ ISNAD.registerSaga({
           ['quote', "Que votre voie ne se divise pas et que votre certitude ne faiblisse pas. Sachez que le secours vient à la mesure de l'intention, et la récompense à la mesure de ce que l'on espère d'Allah.", 'Khâlid, au départ de Qurâqir — at-Tabarî, Târîkh'],
           ['tp', 'rafi', ['depart', 1, 0]],
           ['say', 'rafi', "Nous marcherons de nuit. Le jour, on se tait et on garde sa salive."],
-          ['sfx', 'wind']
         ] },
         { text: "S'enfoncer dans les dunes", goto: 'dunes', then: [
           ['tp', 'rafi', ['dunes', 1, 0]],
@@ -548,7 +546,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Yarmoûk', 'La veillée des émirs'],
-        ['amb', 'feu'],
         ['nar', "Les émirs de Syrie ont réuni leurs armées au bord du Yarmoûk. En face, la plaine est couverte de tentes romaines. Les transmetteurs divergent sur l'année ; la Chaîne suit ici le récit d'at-Tabarî."],
         ['nar', "Depuis des semaines, les deux camps s'observent. Chaque soir, des hommes montent sur le tertre et comptent les feux d'en face. Chaque soir, ils en trouvent davantage."]
       ],
@@ -638,12 +635,11 @@ ISNAD.registerSaga({
         { text: "Gagner les lignes avant l'aube", goto: 'lignes', then: [
           ['nar', "Avant le jour, chaque émir range les siens pour la prière. Khâlid prie dans le rang, l'épaule contre celle d'un homme dont il ne sait pas le nom."],
           ['pray', 'fajr'],
-          ['amb', 'bataille'], ['sfx', 'roll'],
+          ['sfx', 'roll'],
           ['nar', "L'aube. En face, les rangs romains s'ébranlent, enseignes levées, dans un grondement qui fait trembler l'eau des gourdes."],
           ['nar', "Et dans la noosphère, la peur de tous ceux qui ont compté les feux se lève d'un bloc. Tant qu'elle tiendra debout, aucun escadron ne tiendra."],
           ['sfx', 'glitch'],
           ['map', 'noos', 'seuil', { hue: 270 }],
-          ['amb', 'noos'],
           ['say', 'dirar', "Des lances jusqu'au bout du regard. Et pas un seul bras pour les tenir."]
         ] },
         { text: 'Fendre la forêt de lances qui garde le passage', foe: 'f3', then: [
@@ -658,7 +654,7 @@ ISNAD.registerSaga({
             [['battle', { group: ['decompte', 'peur_nombre', 'decompte', 'ombre_lance'], bg: 'noos', boss: true, intro: 'La Peur du Nombre déploie ses mille lances, et celles du gué avec elles.' }]]],
           ['sfx', 'break'], ['flash', '#ffffff'],
           ['map', 'camp', 'tente_chef', { time: 'dusk' }],
-          ['amb', 'vent'], ['mus', 'deuil'],
+          ['mus', 'deuil'],
           ['nar', "La bataille fut longue et rude ; les chroniques en gardent le fracas. Au plus fort de la mêlée, 'Ikrima ibn Abî Jahl et quatre cents hommes firent serment de ne pas reculer. La cavalerie de Khâlid sépara les cavaliers romains de leur infanterie, et la plaine bascula."],
           ['if', 'zurayr_ecart',
             [['nar', "Les Banû Zurayr gardèrent leur gué tout le jour, et rien d'autre. Au soir, leurs tentes étaient pleines, et pas une lance de Khâlid n'avait eu à les chercher."]],
@@ -725,7 +721,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', "L'Épée au fourreau", "An 17 de l'Hégire · Qinnasrîn"],
-        ['amb', 'foule'],
         ['nar', "Quatre ans ont passé. La Syrie est ouverte, d'Antioche à Jérusalem. Khâlid gouverne Qinnasrîn sous l'autorité d'Abû 'Ubayda. Il revient d'une expédition heureuse, chargé de butin."],
         ['nar', "Les gens affluent vers lui de toutes parts : solliciteurs, poètes, curieux. On vient voir l'homme qui ne perd jamais. On repart en racontant qu'on l'a vu."],
         ['nar', "Ce matin, pourtant, un homme l'attend qui ne vient pas l'admirer : l'ancien d'un bourg fortifié du district, le Fort des Oliviers, dont les portes sont closes depuis l'hiver."]
@@ -785,7 +780,6 @@ ISNAD.registerSaga({
           ['nar', "L'ancien reparti, la foule du matin reflue vers le forum. On y attend Khâlid comme on attend un spectacle."]
         ] },
         { text: "Traverser Qinnasrîn jusqu'au forum", goto: 'forum', then: [
-          ['sfx', 'crowd'],
           ['say', 'poete', "Voici celui devant qui les forteresses ouvrent leurs portes ! Celui dont le nom marche devant lui comme une avant-garde !"],
           ['nar', "La foule reprend. Khâlid écoute. Il est généreux de nature : à un solliciteur de marque, il fait compter dix mille dirhams, pris sur sa part."],
           ['say', 'qaqa', 'Émir… Dix mille. Cela se saura à Médine avant la fin du mois.'],
@@ -819,7 +813,6 @@ ISNAD.registerSaga({
           ['show', 'abu_ubayda'], ['show', 'bilal'],
           ['title', 'Homs', "L'armée est assemblée sur l'esplanade"],
           ['fade', 'in'],
-          ['amb', 'foule']
         ] },
         { text: "Se présenter devant Abû 'Ubayda, sur l'esplanade", talk: 'abu_ubayda', then: [
           ['nar', "L'armée est rassemblée. Abû 'Ubayda est monté en chaire, et il se tait : l'ordre qu'il a reçu lui pèse. C'est Bilâl, l'envoyé du Calife, qui se lève."],
@@ -846,7 +839,6 @@ ISNAD.registerSaga({
           ['nar', "Khâlid a obéi. Mais dans les rangs, la colère enfle : « Ils ont osé. Lui ! » Et cette colère-là ne monte pas vers Allah. Elle monte vers un socle."],
           ['sfx', 'glitch'], ['shake', 500],
           ['map', 'noos', 'seuil', { hue: 48 }],
-          ['amb', 'noos'],
           ['nar', "La noosphère de Homs. Au bout d'une allée de lumière, un colosse d'or sans visage, coulé dans quatre ans d'acclamations. Il porte au côté un sabre que Khâlid reconnaît."]
         ] },
         { text: "Abattre le Laurier qui couronne l'allée", foe: 'f2', then: [
@@ -867,7 +859,7 @@ ISNAD.registerSaga({
           ['nar', "Le colosse se fend du sommet au socle. Dedans, il n'y a rien : pas même un homme. Seulement le creux où d'autres avaient versé leur confiance."],
           ['map', 'romaine', 'porte', { time: 'dawn' }],
           ['hide', 'poete'], ['hide', 'soldat'], ['hide', 'estafette'], ['hide', 'ancien_bourg'], ['hide', 'scribe'], ['hide', 'ghalib'],
-          ['amb', 'vent'], ['mus', 'espoir'],
+          ['mus', 'espoir'],
           ['nar', "Avant de monter en selle, il prie l'aube avec ceux qui restent. Personne ne l'acclame ; quelqu'un lui tient son étrier."],
           ['pray', 'fajr'],
           ['nar', "Khâlid prend la route de Médine. 'Umar l'y reçoit, examine ses comptes, et le trouve intègre. Puis le Calife écrit aux provinces."],

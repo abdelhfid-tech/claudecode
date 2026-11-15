@@ -432,6 +432,25 @@ Final Fantasy !! »
 - [ ] **D84. Exigence 17 ajoutée à `AGENTS.md`** (l'équipement est fait d'objets ordinaires) : rédigée par
   l'agent pour que la règle reste applicable, à valider par le décideur.
 
+## Le son : nappes retirées, musique de la noosphère (demandes du décideur)
+
+Demande : « Dans la noosphère la musique s'est arrêtée. Supprime le son des vagues ou du vent. C'est
+inutile et ça encombre l'ambiance sonore. » Précisions données ensuite : retirer **toutes** les nappes
+de fond ; la musique s'est tue « dans la noosphère à Médine ».
+
+- [x] **D90. Plus aucune nappe de fond.** Les neuf ambiances (vent, nuit, foule, feu, mer, noosphère,
+  cité, bataille, silence) étaient une seule famille : du bruit filtré en boucle, branché sur la sortie
+  générale. Le mécanisme entier est retiré : la table, l'opération
+  `amb`, ses 74 emplois dans les récits, la clé `sound` des dix cartes. Les bruitages `wind` et `wave`
+  sont retirés avec eux. *Lecture de l'agent* : `crowd`, un souffle de foule d'une seconde (trois
+  emplois), est de la même famille et part aussi ; il se rétablit en trois lignes si le décideur le veut.
+  Restent la bande-son, les percussions de duff quand la musique est coupée, et les bruitages brefs.
+  *Mesuré* dans la noosphère de Médine, avant retrait : le grondement était 7 dB sous la musique, et
+  presque absent au-dessus de 400 Hz (−46 dB). Il encombrait, mais il ne couvrait pas la musique : son
+  retrait ne suffit pas à expliquer une musique qui se tait (voir D91).
+  L'exigence 9 cite les « ambiances » parmi les sons permis : elle autorise sans imposer, l'agent n'y
+  touche pas (question 9).
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
@@ -484,3 +503,5 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
    la version affichée en bas de cet écran.
 8. L'équipement (D76 à D84) : qui relit les noms et les provenances des pièces ? L'équipement doit-il
    se voir en combat sur les Compagnons eux-mêmes, ou seulement sur les personnages de fiction ?
+9. Le son (D90) : le mot « ambiances » doit-il sortir de l'exigence 9, maintenant qu'il n'y en a plus ?
+   Le souffle de foule (`crowd`) doit-il revenir ?

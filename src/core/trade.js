@@ -141,7 +141,7 @@
     S.flags._r1 = R >= 1; S.flags._r2 = R >= 2;
     const who1 = gd.camels ? 'Les méharistes de tes enclos' : 'Ceux que tes pactes ont liés', who2 = 'Les hommes du voisinage, levés à ton appel';
     const ops = [
-      ['mus', 'conseil'], ['sfx', 'crowd'],
+      ['mus', 'conseil'],
       ['nar', v ? 'Des chameliers rentrent à pied, sans leurs bêtes. La caravane a été prise à deux jours de marche, entre deux puits.' : 'Des hommes rentrent à pied, sans leurs bêtes. La caravane a été pillée sur la piste : en ces mois de trouble, des bandes tiennent les routes.'],
       ['say', 'Un caravanier', 'Ils ne nous ont pas tués. Ils ont dit que la route était à eux désormais, et que nul ne viendrait la leur reprendre.'],
       ['nar', v ? 'Mon père disait : « Une cité se juge à ses routes. Là où le marchand voyage sans crainte, le prince peut dormir. »' : 'On rapporte cette promesse : un jour, le voyageur irait de San’â’ au Hadramawt sans craindre autre chose qu’Allah, et le loup pour ses brebis. Une route sûre est le visage de la justice.'],

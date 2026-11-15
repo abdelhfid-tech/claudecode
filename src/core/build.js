@@ -112,7 +112,7 @@
     S.depth++;
     try {
       const i = await _ask('De l’eau.', [{ t: 'Puiser (+2 eau)' }, { t: 'Pétrir des briques de terre (2 eau → 3 pisé)' }, { t: 'Plus tard' }]);
-      if (i === 0) { I.audio.sfx('wave'); Bd.give('eau', 2); }
+      if (i === 0) { I.audio.sfx('blip'); Bd.give('eau', 2); }
       else if (i === 1) { if (Bd.mats().eau < 2) S.toast('Il faut deux mesures d’eau.', 1800); else { Bd.give('eau', -2, true); I.audio.sfx('door'); Bd.give('pise', 3); } }
     } finally { S.depth--; S.hideDialog(); }
   };

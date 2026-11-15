@@ -93,7 +93,7 @@ tailles.
 | Sceaux | Médaillon géométrique avec le nom en arabe, dessiné sur canevas |
 | Cartes | Boîte à outils (`MB`) : remplissage, maisons, routes, dispersion, lieux nommés ; dix générateurs ; sol précalculé |
 | Décors de combat | Dégradé, silhouettes selon le lieu, grille en perspective animée |
-| Son | Web Audio : bruit filtré pour les ambiances, percussions synthétisées, séquenceur de rythmes |
+| Son | Web Audio : bande-son synthétisée (séquenceur multi-voix), percussions, bruitages brefs ; aucune nappe de fond |
 
 Tout est déterministe : la même carte donne le même dessin.
 

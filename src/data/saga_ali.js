@@ -12,7 +12,6 @@ ISNAD.registerSaga({
   tagline: "Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour.",
 
   intro: [
-    ['amb', 'silence'],
     ['title', "'Alî ibn Abî Tâlib", 'Cinquième maillon · La Porte du Savoir'],
     ['nar', "Médine, fin de l'an 35. 'Uthmân vient de tomber, et la communauté cherche un homme vers qui se tourner. On se presse à la porte de 'Alî. Il refuse d'abord. On insiste. Il n'accepte qu'à la mosquée, devant tous : son serment ne sera pas secret."],
     ['nar', "Il a grandi dans la maison du Messager d'Allah ﷺ et fut parmi les tout premiers à croire, enfant encore. La nuit de l'Hégire, il dormit dans le lit du Messager ﷺ pour couvrir son départ. À Khaybar, il porta l'étendard."],
@@ -24,7 +23,6 @@ ISNAD.registerSaga({
   ],
 
   outro: [
-    ['amb', 'silence'],
     ['mus', 'deuil'],
     ['nar', "'Alî ibn Abî Tâlib meurt à Koufa, en Ramadan de l'an 40, deux jours après le coup. Son meurtrier ne reçoit qu'une frappe. Aucun autre sang ne coule en son nom."],
     ['quote', "Un homme vous a quittés hier, que les premiers n'ont pas devancé par le savoir et que les derniers n'atteindront pas. Il n'a laissé ni or ni argent, sinon sept cents dirhams.", "Al-Hasan ibn 'Alî, au lendemain de sa mort — Ahmad, al-Musnad ; Ibn Sa'd, Tabaqât"],
@@ -350,7 +348,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Le Bouclier et le Juge', 'An 36 de l’Hégire · Koufa'],
-        ['amb', 'foule'],
         ['nar', "Koufa, près de l'Euphrate. 'Alî y a porté le siège du califat. On rapporte qu'il refusa le palais du gouverneur et logea simplement, à deux pas de la mosquée où il enseigne."],
         ['quote', "Interrogez-moi sur le Livre d'Allah : il n'est pas un verset dont je ne sache s'il est descendu de nuit ou de jour, en plaine ou en montagne.", "'Alî ibn Abî Tâlib — Ibn Sa'd, Tabaqât"],
         ['nar', "Ce matin-là, une pièce manque à son équipement : une vieille cuirasse, égarée en route. Il n'y pense plus. Il sort inspecter le souk, comme chaque jour."],
@@ -401,7 +398,6 @@ ISNAD.registerSaga({
           ['nar', "Un silence tombe sur la halle. Tous les regards vont du juge au calife. Nul n'imagine que le calife puisse perdre. Et de cette attente, dans l'envers du lieu, quelque chose se couronne."],
           ['sfx', 'glitch'],
           ['map', 'noos', 'seuil', { hue: 48 }],
-          ['amb', 'noos'],
           ['nar', "La noosphère de Koufa. Ici, l'attente de la foule a pris corps : une couronne vide, qui grandit de chaque regard levé vers le rang."],
           ['codex', 'privilege']
         ] },
@@ -415,7 +411,6 @@ ISNAD.registerSaga({
           ['sfx', 'break'],
           ['nar', "La couronne se fend. Dans la halle, rien n'a bougé : un juge attend la réponse d'un plaideur."],
           ['map', 'koufa', 'halle', { time: 'day' }],
-          ['amb', 'foule'],
           ['choice', 'Le juge a écarté le témoignage. Que fait le calife ?', [
             { t: "Rappeler au juge de qui il tient sa charge", r: [
               ['nar', "La chaîne vacille. Ce n'est pas ce qui fut rapporté. Un juge qui tremble devant celui qui le nomme n'est plus un juge — et 'Alî le savait mieux que quiconque."]
@@ -559,12 +554,10 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'La Parole détournée', 'An 37 de l’Hégire · Harûrâ’'],
-        ['amb', 'silence'],
         ['nar', "Siffîn, sur l'Euphrate. Deux armées de croyants se font face durant des semaines. Dans chaque rang on prie, et l'on pleure les morts de l'autre. La Chaîne ne s'y attarde pas : elle baisse les yeux."],
         ['nar', "'Ammâr ibn Yâsir y tombe, à plus de quatre-vingt-dix ans. Puis des feuillets du Livre sont levés au bout des lances, et l'on convient de s'en remettre à deux arbitres. Les armes se taisent. Autre chose commence."],
         ['codex', 'siffin'],
         ['nar', "Sur la route du retour, des milliers d'hommes quittent les rangs. Ils refusent l'arbitrage, crient une phrase tirée du Livre, et dressent leurs tentes à Harûrâ', aux portes de Koufa."],
-        ['amb', 'foule'],
         ['nar', "Avant de parler aux hommes, on se tait devant Celui qui les a faits. Qui se relève de sa prière ne plaide plus pour avoir raison : il plaide pour ramener."],
         ['pray', 'fajr']
       ],
@@ -585,7 +578,6 @@ ISNAD.registerSaga({
           ['nar', "Il revêt son plus beau manteau du Yémen et part seul, à l'heure où le soleil est au plus haut. La Chaîne te fait marcher dans ses pas."],
           ['leave', 'ali'], ['leave', 'qays'],
           ['map', 'camp', 'entree', { time: 'day' }],
-          ['amb', 'vent'],
           ['nar', "Harûrâ'. « Je n'avais jamais vu, dira Ibn 'Abbâs, de gens plus appliqués à l'adoration » : marqués par les prosternations, épuisés par les veilles. Leur piété n'est pas feinte. C'est ce qui rend l'idole si forte."],
           ['say', 'Une voix', "Bienvenue, Ibn 'Abbâs. Mais que fait sur toi ce manteau de prix ?"],
           ['say', 'ibnabbas', "Que me reprochez-vous ? J'ai vu sur le Messager d'Allah ﷺ les plus beaux manteaux."],
@@ -670,7 +662,6 @@ ISNAD.registerSaga({
           ['nar', "Nul ne plaide seul dans la noosphère : le savoir de 'Alî et la droiture de Qays y marchent avec Ibn 'Abbâs."],
           ['sfx', 'glitch'],
           ['map', 'noos', 'seuil', { hue: 285 }],
-          ['amb', 'noos']
         ] },
         { text: 'Faire taire les échos', foe: 'f2', then: [
           ['say', 'qays', "Aucun d'eux n'a lu la phrase qu'il crie. Ils se la passent de bouche en bouche comme un mot d'ordre."],
@@ -685,7 +676,6 @@ ISNAD.registerSaga({
           ['sfx', 'break'],
           ['nar', "L'étendard de mots se défait, lettre à lettre. La phrase retombe où elle était : dans le Livre, entière, avec ce qui la précède et ce qui la suit."],
           ['map', 'camp', 'feu', { time: 'dusk' }],
-          ['amb', 'vent'],
           ['show', 'repenti'],
           ['say', 'repenti', "Je croyais défendre le Livre. Je ne défendais qu'une phrase que j'avais cessé d'écouter. Je rentre à Koufa."],
           ['nar', "Deux mille hommes se lèvent ce jour-là et reprennent la route de la ville — davantage, selon d'autres récits. Les autres restent près de leurs feux, et se taisent."],
@@ -695,7 +685,6 @@ ISNAD.registerSaga({
           ['codex', 'harura'],
           ['map', 'koufa', 'mosquee_porte', { time: 'dusk' }],
           ['leave', 'ibnabbas'], ['join', 'ibnabbas'],
-          ['amb', 'foule'],
           ['nar', "Ce soir-là, à la mosquée de Koufa, les rangs sont plus longs de deux mille hommes."],
           ['pray', 'maghrib'],
           ['show', 'crieur'],
@@ -798,7 +787,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Nahrawân, puis l’aube', 'An 38 de l’Hégire'],
-        ['amb', 'vent'],
         ['nar', "Ils sont quatre mille au bord du canal de Nahrawân. Ils se sont choisi un chef, et ont jugé le monde entier : quiconque ne pense pas comme eux a quitté la foi, et son sang ne compte plus."],
         ['nar', "Sur leur route passe un voyageur : 'Abdallâh, fils du Compagnon Khabbâb, avec les siens. Ils l'interrogent. Ses réponses sont celles d'un croyant. Ils le tuent, et les siens avec lui."],
         ['nar', "Le même jour, rapporte-t-on, l'un d'eux ramasse une datte tombée d'un palmier ; ses compagnons le reprennent : « Tu l'as prise sans en payer le prix ! » Scrupule pour une datte. Aucun pour le sang."]
@@ -907,7 +895,6 @@ ISNAD.registerSaga({
           ['nar', "Ils ne répondent que par leur cri, et chargent : « En route vers le Paradis ! » Dans l'envers de la plaine, une balance immense se dresse. Elle n'a qu'un plateau."],
           ['sfx', 'glitch'],
           ['map', 'noos', 'seuil', { hue: 215 }],
-          ['amb', 'noos']
         ] },
         { text: 'Briser le Scrupule inversé', foe: 'f2', then: [
           ['say', 'ali', "Il pèse la datte et ne voit pas le sang. Voilà ce que devient la règle quand on en retire le savoir."]
@@ -920,7 +907,6 @@ ISNAD.registerSaga({
           ['sfx', 'break'],
           ['nar', "La balance se brise. Dans la plaine, tout est déjà fini : la bataille n'a pas duré une matinée. Du côté de 'Alî, on compte moins de dix morts."],
           ['map', 'camp', 'tertre', { time: 'dusk' }],
-          ['amb', 'vent'],
           ['nar', "Il marche parmi les tombés, sans joie. Un homme l'arrête : « Commandeur des croyants, étaient-ils des polythéistes ? »"],
           ['choice', "Ils l'avaient déclaré mécréant. Que répond 'Alî ?", [
             { t: '« Oui. Qui excommunie mérite de l’être. »', r: [
@@ -939,7 +925,6 @@ ISNAD.registerSaga({
           ['nar', "Deux années passent. La Syrie, l'Égypte, les routes : rien n'est apaisé. À Koufa, 'Alî dit parfois sa lassitude, et il continue. Ramadan de l'an 40."],
           ['leave', 'ibnabbas'], ['leave', 'qays'],
           ['map', 'koufa', 'maison', { time: 'dawn' }],
-          ['amb', 'nuit'],
           ['say', 'ibnnabbah', "Commandeur des croyants, c'est l'heure de la prière."]
         ] },
         { text: "Marcher vers la mosquée pour la prière de l'aube", goto: 'mosquee_porte', then: [
@@ -949,7 +934,6 @@ ISNAD.registerSaga({
           ['nar', "Une ombre se détache du seuil. Un cri : « Le jugement est à Allah, 'Alî — non à toi ! » La phrase de Harûrâ' est devenue une lame."],
           ['sfx', 'hit'], ['flash', '#ffffff'], ['shake', 700],
           ['wait', 900],
-          ['amb', 'silence'],
           ['mus', 'deuil'],
           ['nar', "Il ne laisse pas la prière se perdre : on rapporte qu'il fit avancer Ja'da ibn Hubayra pour la diriger à sa place."],
           ['pray', 'fajr'],

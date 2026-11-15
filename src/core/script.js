@@ -205,7 +205,6 @@
       case 'shake': G.shake(a || 400); I.audio.sfx('hit'); break;
       case 'flash': G.flash(a || '#fff'); break;
       case 'sfx': I.audio.sfx(a); break;
-      case 'amb': I.audio.amb(a); break;
       case 'give': { if (D.GEAR[a]) { await I.gear.receive(a, b || 1); break; } const n = b || 1, it = D.ITEMS[a]; const inv = I.save.data.items; inv[a] = (inv[a] || 0) + n; S.toast(`Reçu : <b>${it.name}</b>${n > 1 ? ' ×' + n : ''}`); I.audio.sfx('ok'); break; }
       case 'join': W.join(a); break;
       case 'leave': W.leave(a); break;

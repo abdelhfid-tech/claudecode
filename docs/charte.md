@@ -158,13 +158,14 @@ dans la noosphère : silhouette du lieu à l'horizon, grille de lumière au sol.
 
 ## Son
 
-Trois familles, toutes synthétisées par le code :
+Trois familles, toutes synthétisées par le code : la bande-son (`docs/musique.md`), les percussions et les
+bruitages. Il n'y a **pas de nappe de fond** : le vent, la mer, la rumeur de foule et le grondement de la
+noosphère, faits de bruit filtré, ont été retirés à la demande du décideur, qui les jugeait inutiles et
+encombrants (D90). C'est la musique qui porte le lieu.
 
-- **Ambiances** : vent, nuit, foule, feu, mer, noosphère, cité, bataille, silence. Du bruit filtré et
-  modulé lentement.
 - **Percussions** : frappes graves et sèches de duff. Six rythmes : maqsûm, ayyûb, malfûf, marche,
   cyber, veille. Ils accompagnent l'écran-titre et les combats.
-- **Bruitages** : validation, pas, coup, voile brisé, lumière, soin, porte, vague, parasite.
+- **Bruitages** : validation, pas, coup, voile brisé, lumière, soin, porte, parasite. Tous brefs.
 
 **Bande-son originale synthétisée** (version 2, à la demande du décideur) : vingt et une pistes, dans le métier des partitions de JRPG 16 bits, avec une couleur arabo-andalouse là où le récit l'appelle ; un thème de six notes, celui de la Chaîne, revient d'une piste à l'autre (détail : `docs/musique.md`). Aucune voix, aucune récitation, aucun appel à la prière synthétisé. Le son peut être coupé depuis
 l'écran-titre et le menu.

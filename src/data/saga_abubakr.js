@@ -11,7 +11,7 @@ ISNAD.registerSaga({
   tagline: "Le jour où tout pouvait se défaire, un homme doux a dit le vrai.",
 
   intro: [
-    ['amb', 'silence'], ['mus', 'chaine'],
+    ['mus', 'chaine'],
     ['title', "Abû Bakr as-Siddîq", "Saga I · Le Véridique"],
     ['nar', "Râwî, voici le premier maillon. 'Abdallâh ibn Abî Quhâfa, marchand d'étoffes de La Mecque, que tous appelaient Abû Bakr. Un homme doux, prompt aux larmes ; parmi les tout premiers à croire."],
     ['nar', "Il donna sa fortune pour racheter des croyants opprimés. Sur la route de l'Hégire, il fut le compagnon de la Grotte, quand ils n'étaient que deux."],
@@ -23,7 +23,7 @@ ISNAD.registerSaga({
   ],
 
   outro: [
-    ['amb', 'silence'], ['mus', 'deuil'],
+    ['mus', 'deuil'],
     ['nar', "Deux ans, trois mois et quelques jours. En ce peu de temps : l'Arabie rassemblée, le Coran recueilli, les armées en marche vers l'Irak et la Syrie. Puis la fièvre le prend, à l'été de l'an 13."],
     ['nar', "Il consulte les Compagnons, puis dicte à 'Uthmân son dernier acte : il désigne 'Umar. À ceux qui redoutent la rudesse de 'Umar, il répond qu'elle s'adoucira sous la charge."],
     ['nar', "Il fait rendre au Trésor ce qu'il en a reçu pour vivre. 'Umar pleure : « Qu'Allah fasse miséricorde à Abû Bakr ; il a épuisé ceux qui viendront après lui. »"],
@@ -345,7 +345,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', "Le Jour le plus sombre", "Lundi 12 Rabî' al-Awwal, an 11 de l'Hégire"],
-        ['amb', 'foule'], ['mus', 'deuil'],
+        ['mus', 'deuil'],
         ['nar', "Médine, juin 632. Ce matin encore, on croyait la fièvre du Messager d'Allah ﷺ en recul, et les cœurs s'étaient rassurés. Abû Bakr était rentré chez lui, à as-Sunh, aux abords de la ville."],
         ['nar', "Puis un cavalier est venu, sans pouvoir achever sa phrase. Abû Bakr a sellé sa monture. Il entre dans Médine par le sud."],
         ['codex', 'abubakr_bio']
@@ -364,7 +364,6 @@ ISNAD.registerSaga({
           ['nar', "Les murmures se défont. Mais plus loin, vers la mosquée, quelque chose de bien plus grand s'amasse."]
         ] },
         { text: "Gagner la porte de la mosquée", goto: 'mosquee_porte', then: [
-          ['sfx', 'crowd'],
           ['nar', "Devant la mosquée, la foule. Au milieu d'elle, 'Umar, debout, la voix brisée, jurant à qui veut l'entendre."],
           ['quote', "Le Messager d'Allah ﷺ n'est pas mort ! Il est allé vers son Seigneur, comme y alla Mûsâ fils de 'Imrân, qui s'absenta quarante nuits puis revint aux siens.", "'Umar ibn al-Khattâb, ce jour-là — Ibn Hishâm, as-Sîra"],
           ['nar', "Abû Bakr ne dit rien à personne. Il traverse la foule et entre dans la demeure. On l'entend dire, à travers ses larmes :"],
@@ -382,14 +381,12 @@ ISNAD.registerSaga({
           ]],
           ['nar', "Mais au-dessus de la cour, dans l'envers du lieu, le refus de tout un peuple a déjà pris forme. Avant que la parole porte, il faut le traverser."],
           ['map', 'noos', 'seuil', { hue: 215 }],
-          ['amb', 'noos'],
           ['nar', "La noosphère de la mosquée. Ici le chagrin porte un masque vide, et il a un nom : le Déni."]
         ] },
         { text: "Noosphère : affronter le Déni, au cœur", foe: 'f_deni', then: [
           ['sfx', 'light'], ['flash', '#ffe9a8'],
           ['map', 'medine', 'mosquee_cour', { time: 'day' }],
           ['tp', 'umar', ['mosquee_cour', 1, 0]],
-          ['amb', 'silence'],
           ['quote', "Ô gens ! Que celui qui adorait Muhammad sache que Muhammad est mort. Et que celui qui adore Allah sache qu'Allah est Vivant et ne meurt pas.", "Abû Bakr, dans la mosquée de Médine — al-Bukhârî, as-Sahîh"],
           ['quote', "Muhammad n'est qu'un messager ; des messagers avant lui sont passés. S'il mourait donc, ou s'il était tué, retourneriez-vous sur vos talons ? Quiconque retourne sur ses talons ne nuira en rien à Allah ; et Allah récompensera bientôt les reconnaissants.", "Coran 3:144 — traduction du sens"],
           ['nar', "Ibn 'Abbâs dira : « Ce fut comme si les gens n'avaient jamais su que ce verset avait été révélé, avant qu'Abû Bakr ne le récite. » Ce jour-là, toute la ville le répétait."],
@@ -479,7 +476,6 @@ ISNAD.registerSaga({
         ] },
         { auto: true, then: [
           ['map', 'medine', 'mosquee_porte', { time: 'dawn' }],
-          ['amb', 'silence'],
           ['nar', "Le lendemain. La mosquée est pleine : tous viennent prêter allégeance. Abû Bakr n'a pas dormi. Il n'a jamais voulu de cette charge, et il sait ce qu'elle pèse."]
         ] },
         { text: "Prendre la parole devant les croyants", goto: 'mosquee_cour', then: [
@@ -546,7 +542,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', "L'Armée d'Usâma", "Été de l'an 11 de l'Hégire"],
-        ['amb', 'vent'],
         ['nar', "La nouvelle a couru plus vite que les chameaux. De tribu en tribu, on dit : « L'homme est mort ; nos pactes aussi. » Certains renient. D'autres gardent la prière et refusent la zakât. D'autres suivent des menteurs."],
         ['nar', "Les chroniqueurs disent que les musulmans étaient alors « comme des brebis sous la pluie, par une nuit d'hiver ». Et le calife de ce peuple transi, ce soir, porte des étoffes sur son épaule."]
       ],
@@ -687,7 +682,6 @@ ISNAD.registerSaga({
         { auto: true, then: [
           ['nar', "Trois nuits plus tard, ils vinrent."],
           ['map', 'desert', 'depart', { time: 'night' }],
-          ['amb', 'nuit'],
           ['nar', "Les abords de Médine, sur la piste de Dhû l-Qassa. Le calife est sorti lui-même, de nuit, à la tête de ceux qui restaient. Dans l'envers du désert, le reniement a pris corps."],
           ['nar', "Pas de lune. On marche aux étoiles, comme toujours ici : al-Jady, le Chevreau qui ne bouge pas, à main gauche ; Suhayl dans le dos. Lève les yeux vers le cadran : l'étoile qui brille est ta route."],
           ['lore', 'etoiles']
@@ -710,7 +704,6 @@ ISNAD.registerSaga({
         { text: "Trouver la source du refus, dans les ruines", goto: 'ruines', then: [
           ['nar', "Entre les pierres d'un vieux fortin, l'air tremble. Ici l'on a compté, pesé, soustrait : « La prière, soit. Mais ma part reste à moi. »"],
           ['map', 'noos', 'seuil', { hue: 42 }],
-          ['amb', 'noos'],
           ['heal'],
           ['nar', "La noosphère du refus. Au loin, une tour de pièces. Pas une ne tombe."]
         ] },
@@ -720,7 +713,7 @@ ISNAD.registerSaga({
           ['sfx', 'break'], ['flash', '#ffe08a'],
           ['nar', "La tour s'effondre en pluie claire. Ce que l'Avare retenait retourne à ceux à qui c'était dû."],
           ['map', 'medine', 'porte_nord', { time: 'dawn' }],
-          ['amb', 'vent'], ['sfx', 'duff'],
+          ['sfx', 'duff'],
           ['nar', "Quarante jours ont passé ; d'autres disent soixante-dix. À la porte nord, une poussière : l'armée d'Usâma revient, sauve et chargée."],
           ['nar', "Les tribus qui l'avaient vue passer s'étaient dit : « Si ces gens étaient faibles, ils n'auraient pas envoyé pareille armée. » Une parole tenue avait gardé Médine mieux qu'un rempart."],
           ['mus', 'espoir'],
@@ -771,7 +764,6 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', "Yamâma — le Menteur", "Dhû l-Qassa, fin de l'an 11 de l'Hégire"],
-        ['amb', 'feu'],
         ['nar', "Dhû l-Qassa, à une étape de Médine. L'armée d'Usâma est rentrée ; le calife reprend l'initiative. Partout en Arabie, des hommes se sont levés qui se disent inspirés. Le plus puissant tient le Yamâma."],
         ['nar', "Il se nomme Musaylima, des Banû Hanîfa. Naguère, il avait écrit pour réclamer « la moitié de la terre ». La réponse l'avait nommé d'un mot, qui lui est resté : al-Kadhdhâb, le Menteur."]
       ],
@@ -804,7 +796,6 @@ ISNAD.registerSaga({
         ] },
         { auto: true, then: [
           ['map', 'medine', 'porte_nord', { time: 'night' }],
-          ['amb', 'nuit'],
           ['nar', "Médine, des semaines plus tard. Tulayha est défait ; les colonnes ont convergé vers le Yamâma. Depuis, plus de nouvelles. Le calife ne dort guère."],
           ['if', 'thamir_demasque', [
             ['nar', "Au souk, nul ne colporte de fausses nouvelles ce soir : la balance a changé de mains, et les langues avec elle."]
@@ -838,7 +829,6 @@ ISNAD.registerSaga({
           ['say', 'abubakr', "Si je ne puis être à leurs côtés, que du moins rien de faux ne reste debout derrière eux."],
           ['heal'],
           ['map', 'noos', 'seuil', { hue: 305 }],
-          ['amb', 'noos'],
           ['nar', "La noosphère du Yamâma. Des rimes creuses flottent comme des feuilles mortes. Tout y ressemble au vrai. Rien ne l'est."]
         ] },
         { text: "Noosphère : briser les fausses rimes", foe: 'f_k1', then: [
@@ -856,7 +846,6 @@ ISNAD.registerSaga({
           ['sfx', 'break'], ['flash', '#ffe9a8'],
           ['nar', "Le miroir se fend. Il n'y avait rien derrière. À la même heure, dans le jardin, le Menteur tombe, et les Banû Hanîfa déposent les armes."],
           ['map', 'medine', 'mosquee_cour', { time: 'dawn' }],
-          ['amb', 'silence'],
           ['nar', "L'aube. Les rangs de la prière sont clairsemés : tant d'hommes sont au loin, et l'on ne sait pas encore lesquels reviendront."],
           ['pray', 'fajr'],
           ['show', 'courrier']

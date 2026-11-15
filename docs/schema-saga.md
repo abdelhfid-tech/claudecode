@@ -61,7 +61,7 @@ ISNAD.registerSaga({
   light: 'adl', lightName: 'Justice',
   ambiance: 'orientale · romaine',            // texte libre affiché
   tagline: 'Une phrase d’accroche.',
-  intro: [ /* cartons : nar | quote | title | say | wait | sfx | amb | codex | flash | fade | tint */ ],
+  intro: [ /* cartons : nar | quote | title | say | wait | sfx | codex | flash | fade | tint */ ],
   outro: [ /* idem ; doit finir par ['light', '<light>'] */ ],
   heroes: { /* §3 */ }, enemies: { /* §4 */ }, codex: [ /* §5 */ ],
   chapters: [ /* §6 — exactement 3 chapitres */ ]
@@ -225,8 +225,7 @@ Un PNJ ou un `foe` peut vivre sur une autre carte que celle du chapitre via `map
 | `['face', qui, 'up'|'down'|'left'|'right']` | oriente |
 | `['show', pnj]` / `['hide', pnj]` | fait apparaître / disparaître un PNJ (`hidden:true` au départ) |
 | `['fade', 'out'|'in', ms?]`, `['wait', ms]`, `['shake', ms?]`, `['flash', couleur?]`, `['tint', couleur|null]` | mise en scène |
-| `['sfx', nom]` | `duff, tek, roll, hit, break, light, wind, door, crowd, wave, glitch, blip` |
-| `['amb', nom]` | ambiance : `vent, nuit, foule, feu, mer, noos, cite, silence, bataille` |
+| `['sfx', nom]` | `duff, tek, roll, hit, break, light, door, glitch, blip` (bruitages brefs ; il n'y a plus de nappe de fond ni d'opération `amb`) |
 | `['give', objet, n?]` | `dattes, eau, pain, miel, musc, lait, siwak`, ou une pièce d'équipement de `D.GEAR` |
 | `['join', héros]` / `['leave', héros]` | modifie le groupe |
 | `['codex', id]` | débloque une entrée |

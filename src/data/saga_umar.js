@@ -11,7 +11,6 @@ ISNAD.registerSaga({
   tagline: "Deux empires tombèrent sous son califat. Lui dormait sur une natte.",
 
   intro: [
-    ['amb', 'vent'],
     ['title', "'Umar ibn al-Khattâb", 'Saga II · Al-Fârûq'],
     ['nar', "An 13 de l'Hégire. Abû Bakr s'éteint, et son dernier dépôt tient en un nom : 'Umar. Médine retient son souffle. On connaît sa rigueur ; on ignore encore jusqu'où elle ira contre lui-même."],
     ['nar', "En dix ans, Shâm, l'Irak, la Perse et l'Égypte s'ouvrent. Jamais tant d'or, de trônes et d'aigles n'ont regardé un seul homme. Et cet homme porte un manteau rapiécé."],
@@ -22,7 +21,6 @@ ISNAD.registerSaga({
   ],
 
   outro: [
-    ['amb', 'silence'],
     ['mus', 'deuil'],
     ['nar', "La prière achevée, on le porte chez lui. Sa première question : qui m'a frappé ?"],
     ['quote', "« Louange à Allah, qui n'a pas placé ma mort entre les mains d'un homme se réclamant de l'islam. »", "al-Bukhârî, Sahîh (3700)"],
@@ -364,7 +362,6 @@ ISNAD.registerSaga({
         { map: 'noos', at: ['faille', 0, 0], item: 'musc', n: 1 }
       ],
       intro: [
-        ['amb', 'nuit'],
         ['title', 'Les Rondes de nuit', "An 18 de l'Hégire · l'Année des cendres"],
         ['nar', "Neuf mois sans pluie. La terre du Hijâz a pris la couleur de la cendre, et les tribus affamées campent autour de Médine."],
         ['nar', "Chaque nuit, quand la ville dort, un homme sort de chez lui sans escorte et marche dans les ruelles. Il veut voir de ses yeux ce dont il devra répondre."]
@@ -401,7 +398,6 @@ ISNAD.registerSaga({
           ['show', 'voyageur'], ['show', 'enfant1'], ['show', 'enfant2']
         ] },
         { text: 'Rejoindre le feu des voyageurs, près des enclos', goto: 'enclos', then: [
-          ['amb', 'feu'],
           ['say', 'umar', "Paix sur vous, gens de la lumière."],
           ['nar', "Une famille de voyageurs. Une marmite sur le feu. Autour, des enfants qui pleurent."],
           ['say', 'umar', "Pourquoi ces enfants pleurent-ils ?"],
@@ -412,7 +408,6 @@ ISNAD.registerSaga({
           ['say', 'umar', "Qu'Allah te fasse miséricorde… Comment 'Umar saurait-il ce qui vous arrive ?"],
           ['say', 'voyageur', "Il se charge de nos affaires, puis il nous oublie ?"],
           ['nar', "'Umar ne répond rien. Il se détourne, et il court vers la ville."],
-          ['sfx', 'wind']
         ] },
         { text: 'Courir aux réserves de farine du souk', goto: 'souk', then: [
           ['nar', "Dâr ad-Daqîq, la Maison de la farine. Le commis de garde se lève d'un bond."],
@@ -502,7 +497,6 @@ ISNAD.registerSaga({
           ['nar', "Dans l'envers de Médine, quelque chose a tout entendu — et s'en irrite."],
           ['sfx', 'glitch'],
           ['map', 'noos', 'seuil', { hue: 45 }],
-          ['amb', 'noos'],
           ['nar', "La Chaîne te montre l'envers de cette nuit. Ici se dresse ce que mille greniers fermés ont bâti sans le savoir."],
           ['codex', 'ego_accapareur']
         ] },
@@ -516,14 +510,12 @@ ISNAD.registerSaga({
       ],
       outro: [
         ['map', 'medine', 'place', { time: 'dawn' }],
-        ['amb', 'vent'],
         ['nar', "'Umar écrit aux gouverneurs : « Au secours ! Au secours ! » D'Égypte, 'Amr répond : « Je t'envoie une caravane dont la tête sera chez toi quand la queue sera encore chez moi. »"],
         ['nar', "De Shâm, Abû 'Ubayda arrive le premier, avec quatre mille montures chargées de vivres. Mais le ciel reste fermé. Alors 'Umar sort avec les gens, sans apparat, et fait avancer al-'Abbâs, l'oncle du Prophète ﷺ."],
         ['quote', "« Ô Allah, nous Te sollicitions par notre Prophète et Tu nous donnais la pluie ; nous Te sollicitons par l'oncle de notre Prophète : donne-nous la pluie. »", "Invocation de 'Umar — al-Bukhârî, Sahîh (1010), traduction du sens"],
         ['pray'],
         ['codex', 'istisqa'],
         ['mus', 'espoir'],
-        ['sfx', 'wind'],
         ['nar', "Et la pluie vient. Les gens rentrent en relevant leurs manteaux ; la terre couleur de cendre boit jusqu'au soir."],
         ['nar', "On rapporte qu'il disait : si la disette avait duré, j'aurais logé chaque famille pauvre chez une famille aisée — car nul ne périt en partageant la moitié de son repas."],
         ['codex', 'bio_umar'],
@@ -577,7 +569,6 @@ ISNAD.registerSaga({
         { map: 'romaine', at: ['remparts', 1, 0], item: 'siwak', n: 1 }
       ],
       intro: [
-        ['amb', 'vent'],
         ['title', 'Les Clés de Jérusalem', "An 16 de l'Hégire"],
         ['nar', "La Chaîne remonte de deux années. Îliyâ' — Jérusalem — est assiégée par l'armée d'Abû 'Ubayda. Le patriarche Sophrone consent à ouvrir les portes, à une condition : ne remettre la ville qu'au calife en personne."],
         ['nar', "'Umar confie Médine à 'Alî et prend la route de Shâm. Ni escorte de parade, ni litière : un compagnon de route, une monture, un sac de dattes et d'orge."]
@@ -613,7 +604,6 @@ ISNAD.registerSaga({
           ['say', 'abuubayda', "Tu dis vrai. Marchons."],
           ['hide', 'abu_pnj'], ['join', 'abuubayda'], ['codex', 'bio_abuubayda'],
           ['map', 'romaine', 'porte', { time: 'day' }],
-          ['amb', 'foule'],
           ['mus', 'rome'],
           ['nar', "Îliyâ'. Les remparts, les colonnes, les coupoles. Une foule muette regarde entrer le maître du nouvel empire : un homme à pied, qui mène sa monture par la bride."],
           ['say', 'abuubayda', "Le patriarche attend devant la basilique. Mais écoute d'abord la ville, si tu veux savoir ce qu'on te demandera : au quartier bas, un ancien venu de Tibériade patiente depuis l'aube."]
@@ -702,7 +692,6 @@ ISNAD.registerSaga({
           ['nar', "Les couronnes de pourpre tombent en poussière. Mais leur maître attend plus haut, là où convergent tous les regards de la ville."]
         ] },
         { text: "Monter à l'esplanade", goto: 'esplanade', then: [
-          ['amb', 'silence'],
           ['nar', "L'esplanade. Des siècles d'abandon l'ont couverte de décombres. Au-dessus, dans l'envers du lieu, une enseigne d'airain déploie ses ailes."],
           ['say', "L'Aigle d'Airain", "Enfin, un vainqueur. Rome m'a porté, et d'autres avant elle. Entre en César, fils d'al-Khattâb : la ville n'attend que cela pour t'aimer."],
           ['say', 'umar', "Elle attend la justice. Toi, tu n'es que l'habitude qu'ont les hommes de se courber."],
@@ -782,7 +771,6 @@ ISNAD.registerSaga({
         { map: 'palais', at: ['colonnade', 1, 0], item: 'musc', n: 1 }
       ],
       intro: [
-        ['amb', 'silence'],
         ['title', 'Le Trône et la Natte', 'Les années perses'],
         ['nar', "Al-Qâdisiyya. Al-Madâ'in. Nihâwand. En quelques années, l'empire des Chosroès s'effondre, et ses dépouilles prennent la route d'une ville de terre et de palmes."],
         ['nar', "On amène à Médine al-Hurmuzân, prince perse capturé à Tustar, en habits de brocart, couronne en tête. Il cherche le palais du roi des Arabes. On le conduit à la mosquée."],
@@ -895,7 +883,6 @@ ISNAD.registerSaga({
           ['codex', 'bio_abdarrahman']
         ] },
         { text: "Recevoir le convoi d'al-Madâ'in sur la place", goto: 'place', then: [
-          ['amb', 'foule'],
           ['nar', "On déroule les nattes. L'épée de Kisrâ, sa ceinture, ses bracelets, sa couronne — si lourde qu'une chaîne d'or la tenait suspendue au-dessus du trône."],
           ['say', 'umar', "Des hommes qui ont remis cela sans rien en distraire sont des hommes sûrs."],
           ['quote', "« Tu t'es abstenu, alors tes sujets se sont abstenus. Si tu t'étais servi, ils se seraient servis. »", "Parole de 'Alî à 'Umar — at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya"],
@@ -949,7 +936,6 @@ ISNAD.registerSaga({
           ['say', 'abdarrahman', "L'or de Kisrâ est partagé. Mais regarde l'envers des choses : son trône, lui, ne se partage pas. Il attend."],
           ['sfx', 'glitch'],
           ['map', 'palais', 'entree', { time: 'night' }],
-          ['amb', 'noos'],
           ['nar', "Le Palais blanc d'al-Madâ'in, tel que la noosphère s'en souvient. Tout y est encore debout : les tapis, les colonnes — et, au fond, une place vide qui appelle."],
           ['codex', 'ego_trone']
         ] },
@@ -958,7 +944,6 @@ ISNAD.registerSaga({
           ['nar', "La chaîne d'or casse. La couronne roule sur les dalles et s'y défait en reflets."]
         ] },
         { text: "Marcher jusqu'au trône", goto: 'trone', then: [
-          ['amb', 'silence'],
           ['say', 'Le Trône vide', "Te voilà. J'ai porté Kisrâ, et ses pères avant lui. Les hommes passent ; la place reste. Assieds-toi."],
           ['say', 'umar', "J'ai une natte dans une mosquée. Elle me suffit."],
           ['say', 'Le Trône vide', "Tous disent cela. Puis vient l'or, et la peur de le perdre, et les gardes pour le garder. Tu as pleuré tout à l'heure : tu me connais déjà."],
@@ -972,7 +957,6 @@ ISNAD.registerSaga({
       ],
       outro: [
         ['map', 'medine', 'mosquee_cour', { time: 'dawn' }],
-        ['amb', 'silence'],
         ['mus', 'silence'],
         ['nar', "Médine, avant l'aube. La natte est à sa place. 'Umar aussi."],
         ['quote', "« Ô Allah, accorde-moi le martyre dans Ton sentier, et fais que ma mort ait lieu dans la ville de Ton Messager. »", "Invocation de 'Umar — al-Bukhârî, Sahîh (1890)"],

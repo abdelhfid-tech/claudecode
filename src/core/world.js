@@ -80,7 +80,7 @@
     W.mapOpts = opts; if (I.build && I.build.on && !I.build.outdoor(id)) I.build.set(false);
     const ks = Object.keys(mapCache); if (ks.length > 4) ks.filter(k2 => k2 !== key).slice(0, ks.length - 4).forEach(k2 => { delete mapCache[k2]; });
     const env = W.map.env; G.clearParts(); G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 };
-    I.audio.amb(env.sound || 'vent'); I.audio.music(env.music || 'silence');
+    I.audio.music(env.music || 'silence');
     W.npcs.forEach(n => { if (n.map === id) W.place(n); });
     W.foes.forEach(f => { if (f.map === id && !f.placed) { const p = W.resolve(f.at, id, f); if (p) { f.x = p[0]; f.y = p[1]; f.placed = true; } } });
     W.chests.forEach(c => { if (c.map === id && !c.placed) { const p = W.resolve(c.at, id, c); if (p) { c.x = p[0]; c.y = p[1]; c.placed = true; } } });

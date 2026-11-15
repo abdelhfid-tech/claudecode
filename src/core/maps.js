@@ -137,7 +137,7 @@
     if (id === 'koufa') { b.fill(0, 0, 2, 46, 'water'); b.scatter('cypress', 5, 3, 2, 3, 40); }
     b.scatter('palm', 14, 0, 0, 60, 46); b.scatter('rock', 8, 0, 0, 60, 46); b.scatter('bush', 8, 0, 0, 60, 46);
     const t = o.time || 'day';
-    return b.finish(envFor(t, { particles: t === 'night' ? 'fireflies' : 'dust', rate: t === 'night' ? 3 : 8, sound: t === 'night' ? 'nuit' : 'vent', bg: 'ville', music: t === 'night' ? 'nuit' : 'medine' }));
+    return b.finish(envFor(t, { particles: t === 'night' ? 'fireflies' : 'dust', rate: t === 'night' ? 3 : 8, bg: 'ville', music: t === 'night' ? 'nuit' : 'medine' }));
   }
 
   /* ---------- Désert ---------- */
@@ -157,7 +157,7 @@
     b.spot('arrivee', 76, 20);
     b.scatter('rock', 22, 0, 0, 80, 40); b.scatter('thorn', 10, 0, 0, 80, 40); b.scatter('bigrock', 6, 0, 0, 80, 40);
     const t = o.time || 'day';
-    return b.finish(envFor(t, { particles: 'sand', rate: t === 'night' ? 4 : 14, sound: 'vent', bg: 'desert', haze: true, music: 'desert' }));
+    return b.finish(envFor(t, { particles: 'sand', rate: t === 'night' ? 4 : 14, bg: 'desert', haze: true, music: 'desert' }));
   }
 
   /* ---------- Camp militaire ---------- */
@@ -180,7 +180,7 @@
     b.obj('bigrock', 40, 5); b.obj('rock', 44, 4); b.obj('rock', 37, 3); b.spot('tertre', 41, 8);
     b.scatter('rock', 10, 0, 0, 52, 38); b.scatter('bush', 8, 0, 0, 52, 38); b.scatter('jar', 4, 6, 6, 40, 26); b.scatter('crate', 4, 6, 6, 40, 26);
     const t = o.time || 'dusk';
-    return b.finish(envFor(t, { particles: 'embers', rate: 5, sound: 'feu', bg: 'camp', music: 'camp' }));
+    return b.finish(envFor(t, { particles: 'embers', rate: 5, bg: 'camp', music: 'camp' }));
   }
 
   /* ---------- Cité romaine (Damas, Jérusalem, Homs) ---------- */
@@ -211,7 +211,7 @@
     b.spot('remparts', 54, 40);
     b.scatter('jar', 6, 2, 16, 60, 24); b.scatter('cypress', 6, 0, 0, 64, 40);
     const t = o.time || 'day';
-    return b.finish(envFor(t, { particles: 'dust', rate: 6, sound: 'foule', bg: 'romaine', music: 'rome' }));
+    return b.finish(envFor(t, { particles: 'dust', rate: 6, bg: 'romaine', music: 'rome' }));
   }
 
   /* ---------- Palais perse (salle du trône) ---------- */
@@ -226,7 +226,7 @@
     for (let y = 8; y < 26; y += 3) b.obj('column', 6, y); b.spot('colonnade', 9, 17);
     b.fill(29, 19, 9, 8, 'grass'); b.obj('fountain', 33, 22); b.obj('cypress', 30, 20); b.obj('cypress', 37, 25); b.spot('jardin', 33, 25); b.obj('mat', 36, 20); b.spot('priere', 36, 21);
     b.obj('carpetroll', 4, 5); b.obj('jar', 3, 26); b.obj('brazier', 10, 26); b.light(10, 25, 60, '#ffb45a', 0.2);
-    return b.finish(Object.assign(envFor('dusk'), { clouds: false, ambient: '#8a78a8', grade: ['#ffb060', 0.18], particles: 'dust', rate: 4, sound: 'silence', bg: 'palais', rays: { a: 0.06, color: '#ffe0b0' }, bloom: 0.24, music: 'palais' }));
+    return b.finish(Object.assign(envFor('dusk'), { clouds: false, ambient: '#8a78a8', grade: ['#ffb060', 0.18], particles: 'dust', rate: 4, bg: 'palais', rays: { a: 0.06, color: '#ffe0b0' }, bloom: 0.24, music: 'palais' }));
   }
 
   /* ---------- Navires enchaînés ---------- */
@@ -238,7 +238,7 @@
     b.obj('mast', 14, 10); b.obj('mast', 39, 10); b.obj('crate', 10, 9); b.obj('crate', 20, 14); b.obj('jar', 21, 9); b.obj('sack', 34, 14); b.obj('crate', 44, 9); b.obj('lamp', 6, 11); b.light(6, 10, 50, '#ffc878', 0.15); b.obj('lamp', 47, 11); b.light(47, 10, 50, '#ffc878', 0.15);
     b.obj('mat', 10, 13); b.spot('priere', 10, 14); b.spot('poupe', 7, 12); b.spot('pont', 17, 12); b.spot('mat', 15, 13); b.spot('proue', 23, 11); b.spot('passerelle', 27, 11); b.spot('pont2', 37, 12);
     const t = o.time || 'day';
-    return b.finish(envFor(t, { particles: 'spray', rate: 8, sound: 'mer', bg: 'mer', bob: true, music: 'mer' }));
+    return b.finish(envFor(t, { particles: 'spray', rate: 8, bg: 'mer', bob: true, music: 'mer' }));
   }
 
   /* ---------- Noosphère ---------- */
@@ -250,7 +250,7 @@
     room('seuil', 6, 20, 3, 2); room('noeud1', 18, 20, 3, 3); room('noeud2', 30, 11, 3, 2); room('noeud3', 30, 28, 3, 2); room('faille', 18, 8, 2, 2); room('miroir', 18, 32, 2, 2); room('coeur', 48, 20, 6, 5);
     [[3, 18], [9, 18], [15, 17], [21, 17], [15, 23], [21, 23], [27, 9], [33, 9], [27, 30], [33, 30], [42, 15], [54, 15], [42, 25], [54, 25], [16, 6], [20, 6], [16, 34], [20, 34]].forEach(p => { if (b.free(p[0], p[1])) b.obj('pylon', p[0], p[1], { hue }); });
     b.light(48, 20, 150, `hsl(${(hue + 150) % 360},100%,65%)`, 0.15);
-    return b.finish({ time: 'noos', ambient: '#6a62c8', grade: [`hsl(${hue},90%,55%)`, 0.2], particles: 'noos', hue, rate: 9, sound: 'noos', bg: 'noos', scan: true, bloom: 0.36, lightA: 1, music: 'noos' });
+    return b.finish({ time: 'noos', ambient: '#6a62c8', grade: [`hsl(${hue},90%,55%)`, 0.2], particles: 'noos', hue, rate: 9, bg: 'noos', scan: true, bloom: 0.36, lightA: 1, music: 'noos' });
   }
 
   /* ---------- La Citadelle du Caïd (ksar au bord du désert) ---------- */
@@ -285,7 +285,7 @@
     b.scatter('rock', 10, 0, 0, 58, 5); b.scatter('thorn', 6, 0, 38, 58, 8); b.scatter('bigrock', 3, 52, 0, 6, 46);
     b.scatter('jar', 4, 10, 18, 40, 16);
     const t = o.time || 'dusk';
-    return b.finish(envFor(t, { particles: t === 'night' ? 'fireflies' : 'dust', rate: 6, sound: t === 'night' ? 'nuit' : 'vent', bg: 'ville', music: t === 'night' ? 'nuit' : 'citadelle' }));
+    return b.finish(envFor(t, { particles: t === 'night' ? 'fireflies' : 'dust', rate: 6, bg: 'ville', music: t === 'night' ? 'nuit' : 'citadelle' }));
   }
 
   /* ---------- Cité-Miroir (cyberpunk) ---------- */
@@ -298,7 +298,7 @@
     b.set(56, 8, 'arch', true); b.light(56, 9, 60, '#ffe08a', 0.1);
     b.spot('parvis', 4, 13); b.spot('rue', 16, 13); b.spot('ecran', 30, 11); b.spot('ruelle', 44, 14); b.spot('ascenseur', 56, 10);
     b.scatter('crate', 5, 2, 9, 56, 8);
-    return b.finish({ time: 'cite', ambient: '#5a5ca8', grade: ['#7a2cff', 0.2], particles: 'rain', rate: 70, sound: 'cite', bg: 'cite', scan: true, bloom: 0.3, lightA: 1, music: 'cite' });
+    return b.finish({ time: 'cite', ambient: '#5a5ca8', grade: ['#7a2cff', 0.2], particles: 'rain', rate: 70, bg: 'cite', scan: true, bloom: 0.3, lightA: 1, music: 'cite' });
   }
 
   /* ---------- Archives basses ---------- */
@@ -311,7 +311,7 @@
     b.fill(22, 6, 9, 9, 'nfloor', false); b.obj('isnad', 26, 9); b.light(26, 9, 110, '#ffd27a', 0.2); b.spot('chaine', 26, 12);
     b.obj('rack', 30, 4); b.obj('rack', 21, 4); b.obj('rack', 30, 19); b.obj('lamp', 20, 12); b.light(20, 11, 60, '#39e6ff', 0.1); b.light(8, 8, 80, '#ffb45a', 0.1);
     b.spot('entree', 17, 21); b.spot('rayonnages', 14, 13); b.obj('mat', 27, 19); b.spot('priere', 27, 20); b.light(27, 19, 50, '#fff0c0', 0.05);
-    return b.finish({ time: 'archives', ambient: '#6a66a0', grade: ['#ffb45a', 0.14], particles: 'dust', rate: 5, sound: 'noos', bg: 'cite', rays: { a: 0.05, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine' });
+    return b.finish({ time: 'archives', ambient: '#6a66a0', grade: ['#ffb45a', 0.14], particles: 'dust', rate: 5, bg: 'cite', rays: { a: 0.05, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine' });
   }
 
   M.drawRosette = drawRosette;

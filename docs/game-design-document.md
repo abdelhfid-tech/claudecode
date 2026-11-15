@@ -112,7 +112,7 @@ déclenchent au contact ; certains sont facultatifs.
 
 Voir `charte.md`. En bref : pixel art 384 × 216 composé en HD (lumière, halo, profondeur de champ,
 particules) ; personnages sans visage, Compagnons au visage de lumière ; sceaux calligraphiés à la
-place des portraits ; égrégores abstraits ; son fait d'ambiances, de percussions et de bruitages.
+place des portraits ; égrégores abstraits ; son fait d'une bande-son synthétisée, de percussions et de bruitages brefs.
 
 ## Plateformes et contrôles
 
