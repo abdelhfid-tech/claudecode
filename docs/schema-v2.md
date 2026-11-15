@@ -153,7 +153,9 @@ niveau se cale sur celui du groupe. Ils sont utilisables dans tous les fichiers 
 
 | Champ | Où | Forme | Règle |
 |---|---|---|---|
-| `noir` | une manche de pourparler | `{ name, group: [égrégore], intro, say?, after?, v?, bg? }` | Combat avant le choix de la manche ; `v` (1 par défaut, 2 au plus) s'ajoute à la confiance. Interlocuteur de fiction seulement. |
+| `noir` | une manche de pourparler | `{ name, group: [égrégore], intro, say?, after?, v?, bg? }` | Avant le choix de la manche ; `v` (1 par défaut, 2 au plus) s'ajoute à la confiance. Interlocuteur de fiction seulement. Si `group` est l'une des cinq idées noires (`D.NOIRS`, une seule), on lui **répond** : pas de combat (version 7). Sinon ce sont des égrégores, et cela se combat. |
+| `racine` | un égrégore (fichier de saga) | identifiant de `D.RACINES`, ou tableau | Obligatoire sur l'idole d'un combat lancé avec `boss: true` (son membre de plus haut palier, maux du cœur exceptés). Elle redit la description de l'idole ; l'organigramme l'affiche. |
+| `idee: true`, `parole` | les cinq idées noires de `coeur.js` | `parole: { voies: [m1, m2], dit: [l1, l2], rep: {…}, non: {…}, oui?: [l1, l2] }` | Deux voiles. `voies` : la manière qui porte à chaque voile (`parole`, `pedagogie`, `bienveillance`). `rep` : ce que dit le joueur pour chaque manière ; `non` : pourquoi elle ne porte pas. |
 | `enigme` | un chapitre de l'histoire-cadre ou des veillées | `{ id, who, cure, title, signe, mot, intro?, solved? }` | `who` est un héros du groupe ; `cure` une œuvre (sauf le pèlerinage) ; la carte doit avoir une natte. |
 | `hajj: true` | un chapitre des veillées | booléen | Propose l'intention du pèlerinage sur la natte ; il s'accomplit à la fin du chapitre. |
 | `vice` | un chapitre « after » de l'histoire-cadre | identifiant de `D.VICES` | Annonce le mal du cœur de la rencontre (affiché sur la Chaîne et dans « Que faire ? »). |
@@ -163,6 +165,25 @@ niveau se cale sur celui du groupe. Ils sont utilisables dans tous les fichiers 
 Drapeaux posés par le moteur, lisibles par `['if', …]` : `lame_<mal>` (lame forgée),
 `tranche_<mal>` (mal tranché), `sept_tranches`. Les drapeaux `_o_*` sont ceux de la journée et
 s'effacent à chaque chapitre.
+
+## 5 quater. L'organigramme du mal (version 7)
+
+Module `src/core/mal.js` ; textes dans `coeur.js` (`mal` : six rangs, `etage: 'enseigne'` pour ce qui est
+enseigné, `etage: 'image'` pour les images du jeu ; les deux premiers rangs citent leur référence dans `src`).
+
+- **L'échelle des réponses** (décision du décideur) : l'idée noire par la parole, la pédagogie, la
+  bienveillance ; l'égrégore par le combat ; l'idole par une bataille déclarée ; ni Iblîs ni les souffleurs
+  ne se combattent, et l'on ne s'en prend à aucun djinn.
+- **La lignée d'un chapitre** est déduite de son récit par `D.parcours` : son idole, ses égrégores.
+- **L'enracinement** : de 1 à 5 par idole, part de 3 (plafond 4 au premier chapitre d'un maillon).
+  −1 : pourparler gagné, idée noire dissipée du premier coup, égrégore dissipé chez un interlocuteur.
+  +1 : pourparler perdu, premier acte choisi que les transmetteurs n'ont pas rapporté. Effets : poids de
+  l'épreuve 1, 2 ou 3 ; un voile de moins à 1, un de plus à 5 (première tentative).
+- **Sauvegarde** : `mal: { ev: { 'saga/chapitre': { clé: −1 | 0 | 1 } }, tombees: { 'saga:idole': niveau } }`,
+  ajouté à la volée (même clé de sauvegarde, aucune migration). Les événements sont à clé : rejouer un
+  objectif réécrit la même clé.
+- **Garde de nom** du validateur : aucun ennemi, aucune compétence, aucun personnage, aucun interlocuteur
+  ne porte le nom d'Iblîs, d'un démon ou d'un djinn. Elle ne regarde ni les textes ni les citations.
 
 ## 6. Musique (`src/data/music.js`)
 

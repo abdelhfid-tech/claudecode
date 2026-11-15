@@ -113,9 +113,15 @@
       const R = P.rounds[r];
       await showLine('say', sp, R.say); S.hideDialog();
       if (R.noir) {
-        const N = R.noir, gain = N.v || 1; I.oeuvres.learn('idees_noires');
-        await card('title parley noir', `<p class="small">Une idée noire</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">On ne la combat pas contre lui, mais pour lui</p><div class="rule"></div><div class="hint">▼</div>`);
-        await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || 'Elle parle plus fort que toi. Dissipe-la.' });
+        const N = R.noir, gain = N.v || 1;
+        // L'échelle des réponses (décision du décideur) : une idée noire pèse sur une personne, on lui répond par la parole ;
+        // un égrégore le tient (rencontres de la Cité-Miroir), cela se combat.
+        if (I.mal.estIdee(N)) await I.mal.dissiper(N, P);
+        else {
+          await card('title parley noir', `<p class="small">Un égrégore le tient</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">On ne le combat pas contre lui, mais pour lui</p><div class="rule"></div><div class="hint">▼</div>`);
+          await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || 'Il parle plus fort que toi. Dissipe-le.' });
+          I.mal.note('n', P.title + '|' + N.name, -1);
+        }
         conf += gain; I.audio.music('conseil'); S.toast(`<b>Confiance +${gain}</b> — son regard s’éclaircit`, 2400);
         if (N.after) { await showLine('say', sp, N.after); S.hideDialog(); }
       }
@@ -126,6 +132,7 @@
     }
     S.hideDialog(); sv.parley.total++;
     const ok = conf >= P.goal;
+    I.mal.note('p', P.title, ok ? -1 : 1); // la parole qui porte déracine l'idée ; la parole manquée la laisse s'enfoncer
     if (ok) {
       sv.parley.won++; I.audio.sfx('roll'); G.flash('#ffe08a');
       const xp = P.xp || Math.round(22 + 12 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
@@ -172,7 +179,8 @@
         sv.isnad.total++; const spc = sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} }); spc.cTot = (spc.cTot || 0) + 1;
         while (true) {
           const i = await menuPick(a, opts); const o = opts[i];
-          if (o.ok) { if (first) { sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; S.toast('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.'); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); } if (o.r) await S.run(o.r); break; }
+          if (o.ok) { if (first) { sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; S.toast('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.'); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); I.mal.note('c', a, 0); } if (o.r) await S.run(o.r); break; }
+          if (first) I.mal.note('c', a, 1); // un acte que les transmetteurs n'ont pas rapporté : l'idée s'enracine
           first = false; I.audio.sfx('glitch'); G.shake(260); G.flash('#7a5cff');
           S.toast('<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.');
           if (o.r) await S.run(o.r);

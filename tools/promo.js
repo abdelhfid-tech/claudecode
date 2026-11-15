@@ -349,7 +349,10 @@ async function coeur(browser, errors) {
     const P = find(I.sagas.abubakr.chapters[1].objectives); I.debug.auto = false; I.speed = 1; I.script.run([['parley', P]]); });
   for (let i = 0; i < 40; i++) { if (await carton(T, 'noir')) break; await T.p.keyboard.press('Enter'); await T.p.waitForTimeout(420); }
   await T.p.waitForTimeout(600); await sansToasts(T); await T.shot('idee-noire');
-  await T.p.keyboard.press('Enter'); await attends(T, pret, null, 160); await T.p.waitForTimeout(400); await T.shot('idee-noire-combat');
+  // on lui répond : après le carton, l'interlocuteur dit ce qui le retient, puis les trois manières s'offrent
+  const offre = T => T.ev(() => { const c = document.querySelector('#choice'); return !c.hidden && c.querySelectorAll('.opt').length === 3 && !!c.querySelector('.voie'); });
+  for (let i = 0; i < 30; i++) { if (await offre(T)) break; await T.p.keyboard.press('Enter'); await T.p.waitForTimeout(450); }
+  await T.p.waitForTimeout(500); await sansToasts(T); await T.shot('idee-noire-reponse');
   await T.p.close();
 
   // e. une énigme du cœur, dans la Citadelle

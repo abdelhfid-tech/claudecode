@@ -121,7 +121,7 @@ ISNAD.registerSaga({
       taunts: ['La mienne. Pas la tienne.'],
       desc: "Une lettre détachée de sa récitation, qui ne sert plus à lire mais à l'emporter sur l'autre. Le Savoir la remet à sa place dans la ligne."
     },
-    babel: {
+    babel: { racine: 'noir_soupcon',
       name: 'Babel', art: 'swarm', hue: 275, scale: 2, lvl: 3, tier: 'elite',
       weak: ['ilm', 'sidq'], veils: 4,
       skills: [
@@ -146,7 +146,7 @@ ISNAD.registerSaga({
       ],
       desc: "La peur d'un seul homme, tombée par-dessus bord. Elle ne mord pas : elle fait lâcher la rame."
     },
-    abime: {
+    abime: { racine: 'noir_peur',
       name: "L'Abîme", art: 'wave', hue: 215, scale: 3, lvl: 5, tier: 'boss',
       weak: ['shajaa', 'rahma', 'sidq'], veils: 6,
       skills: [
@@ -195,7 +195,7 @@ ISNAD.registerSaga({
       taunts: ['Et toi, combien as-tu reçu ?'],
       desc: "Égrégore des richesses amassées. Les conquêtes firent affluer à Médine plus de biens qu'elle n'en avait jamais vus ; avec eux vinrent la comparaison et l'envie. La Miséricorde, qui donne, et la Véracité, qui rend compte, lui retirent ses voiles."
     },
-    rumeur: {
+    rumeur: { racine: 'noir_soupcon',
       name: 'La Rumeur', art: 'lens', hue: 320, scale: 3, lvl: 9, tier: 'boss',
       weak: ['sidq', 'rahma'], immune: ['fer'], veils: 6,
       skills: [

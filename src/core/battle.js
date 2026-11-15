@@ -122,12 +122,14 @@
     C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 6 * (P.priere || 0)); else { e.def.weak.slice(0, Math.floor((P.savoir || 0) / 2)).forEach(w => { e.known[w] = true; }); } });
     // le cœur : l'épreuve consomme la provision ; ce qui manque pèse. Celui qui languit tient moins.
     const HC = I.oeuvres.enter(opts, first); C.lack = HC.lack || 0;
+    // l'enracinement de l'idole : il a déjà pesé sur l'épreuve (O.weight) ; ici, sur ses voiles
+    C.rac = I.mal.entree(opts, first, C.all.filter(e => e.side === 'foe'));
     C.all.forEach(e => { if (e.side === 'hero' && I.oeuvres.afflicted(e.id)) { e.max.hp = Math.round(e.max.hp * 0.75); e.hp = Math.min(e.hp, e.max.hp); } });
     refresh();
     if (first && opts.intro) await banner(I.esc(opts.intro), readTime(opts.intro), true, 'speech intro');
     else if (first) await banner(opts.boss ? `${d0.name} se dresse.` : 'Une emprise se referme…', 1100);
     if (HC.w) {
-      await banner(`<small>Épreuve de poids ${HC.w} · provision du cœur ${HC.had}</small>${C.lack ? 'Le cœur est lourd' : 'Le cœur est prêt'}`, 1500, false, C.lack ? 'speech foe' : 'speech intro');
+      await banner(`<small>Épreuve de poids ${HC.w} · provision du cœur ${HC.had}${C.rac ? ' · enracinement ' + I.mal.traits(C.rac) : ''}</small>${C.lack ? 'Le cœur est lourd' : 'Le cœur est prêt'}`, 1500, false, C.lack ? 'speech foe' : 'speech intro');
       if (!C.lack) C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 10); });
     }
     for (const e of alive('foe')) {
@@ -176,7 +178,7 @@
     if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.back(); else I.audio.afterJingle = I.audio.place || null; }
     const foes0 = C.all.filter(e => e.side === 'foe');
     const prise = C.prise;
-    if (result === 'win') { await S.fade('in', 260); await I.oeuvres.leave(opts, foes0, result); }
+    if (result === 'win') { await S.fade('in', 260); I.mal.chute(opts); await I.oeuvres.leave(opts, foes0, result); }
     C = null;
     // la pièce trouvée : on propose aussitôt de la porter (le joueur de test s'équipe au mieux)
     if (result === 'win' && prise) { I.gear.learn(); if (I.debug.auto) I.gear.bestAll(); else await I.gear.offer(prise); if (prev === W) W.hud(); }
@@ -465,7 +467,7 @@
     }
     W.persistHeroes();
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
-    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? 'La lame a tranché' : 'Sans sa lame, le mal recule') : C.opts.noir ? 'On ne l’a pas combattue contre lui, mais pour lui' : C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>${maux.length ? (maux.every(e => e.cut) ? 'Tranché' : maux.some(e => e.cut) ? 'Tranché et repoussé' : 'Repoussé') : C.opts.noir ? 'L’idée noire se dissipe' : 'Dévoilement'}</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
+    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? 'La lame a tranché' : 'Sans sa lame, le mal recule') : C.opts.noir ? 'On ne l’a pas combattu contre lui, mais pour lui' : C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>${maux.length ? (maux.every(e => e.cut) ? 'Tranché' : maux.some(e => e.cut) ? 'Tranché et repoussé' : 'Repoussé') : C.opts.noir ? 'L’égrégore lâche prise' : 'Dévoilement'}</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
   async function defeat() {
     I.audio.sfx('dark');

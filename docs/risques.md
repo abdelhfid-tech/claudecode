@@ -54,6 +54,16 @@ joue le prologue, les cinq sagas et l'épilogue de bout en bout sans erreur.
 | Qu'un dessin de pièce évoque un symbole religieux | faible | fort | Deux dessins refaits (casque à bandes, grand bouclier) ; règle écrite dans la charte : jamais de bande au milieu, bosse ronde sans tige. |
 | L'équipement rend le jeu trop facile, ou relègue les œuvres | faible | moyen | Bonus en pourcentage et modestes ; même parcours de test avant et après : 421 puis 427 tours sur 64 combats, Constance minimale moyenne inchangée (91 %). |
 
+## Risques ajoutés par la version 7 (organigramme du mal)
+
+| Risque | Probabilité | Gravité | Parade |
+|---|---|---|---|
+| Que l'organigramme passe pour une démonologie, ou pour un dualisme | moyenne | forte | Exigence 18 (proposée) ; aucun nom, aucune figure, aucun nombre ; « il appelle, et c'est tout » ; le cœur entre le souffle et tout le reste |
+| Que le jeu semble dire qu'un souffle a fait agir des personnes ou des camps de l'histoire | moyenne | forte | Couture visible ; le lien s'arrête au cœur ; aucune flèche vers une idole ou un maillon ; racines limitées à redire la description ; six idoles sensibles à valider une à une |
+| Que la jauge se lise comme un jugement sur une époque | moyenne | forte | Elle se dit d'une idole ; les maillons sont désignés par numéro et années ; texte répété sur la page et dans l'aide |
+| Qu'un verset soit mal cité | faible | forte | Deux versets seulement, lus mot à mot sur une traduction publiée ; à relire par le décideur |
+| Qu'un texte ou un ennemi nomme un jour un djinn | faible | forte | Garde de nom dans le validateur |
+
 ## Verdict
 
 Aucun risque classé « tue le projet » n'est sans parade, mais la parade du risque 1 est incomplète

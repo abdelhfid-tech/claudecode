@@ -229,6 +229,29 @@ le joueur. Un bonus en points aurait écrasé le début de chaque saga ; un pour
 niveau. Les bonus sont volontairement modestes (une pièce de haut rang : 15 à 20 %) : la provision du
 cœur doit toujours peser davantage que le fer.
 
+## L'organigramme du mal (version 7)
+
+Demande du décideur : un organigramme du mal dans la noosphère, le Diable au sommet, des djinns à son
+service, les idées noires qu'ils soufflent, l'égrégore, puis l'idole quand l'idée s'est enracinée. Et une
+échelle des réponses : à chaque étage la sienne, et pas une de plus.
+
+| Rang | Ce que c'est | Comment on y répond | Garde-fou |
+|---|---|---|---|
+| Iblîs | l'ennemi déclaré | on ne le combat pas | nommé, jamais dessiné, jamais mis en scène (exigence 18) |
+| Les souffleurs | des démons d'entre les djinns, et parfois des hommes | on ne les combat pas ; aucun djinn n'est inquiété | ni nom, ni figure, ni nombre |
+| Le cœur | il consent ou refuse | par les œuvres | le lien en pointillé s'arrête ici |
+| Les idées noires | ce qui pèse sur une personne | la parole, la pédagogie, la bienveillance | interlocuteurs de fiction seulement |
+| Les égrégores | l'idée reprise par beaucoup | le combat | formes abstraites (exigence 6) |
+| Les idoles | l'idée enracinée | une bataille déclarée | la jauge se dit de l'idole, jamais d'une époque |
+
+**Répondre à une idée noire.** Deux voiles. À chacun, l'interlocuteur dit ce qui le retient, et le joueur
+choisit : dire vrai, expliquer, rassurer. La bonne manière fait tomber le voile ; une autre reçoit une
+explication, et l'on recommence. L'échange donne la confiance et la sagesse que donnait le combat.
+
+**Enracinement.** De 1 à 5 par idole, part de 3. La parole qui porte la fait baisser, la parole manquée la
+fait monter. Elle règle le poids de l'épreuve (1, 2 ou 3 sur la provision du cœur) et, aux extrêmes, un
+voile de moins ou de plus. Effet léger par décision du décideur : rien ne bloque.
+
 ## Feuille de route proposée
 
 1. Relecture historique par un spécialiste, puis corrections de texte.

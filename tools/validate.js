@@ -105,6 +105,10 @@ function checkSaga(s, E, W) {
     return true;
   };
   const W0 = `saga ${s.id || '?'}`, commun = !!s.commun;
+  // exigences 6 et 18 : aucun combattant, aucune compétence, aucun personnage ne porte le nom d'Iblîs, d'un démon ou d'un djinn.
+  // La garde ne regarde que les noms, jamais un texte ni une citation (mots entiers : « Démontrer » passe).
+  const NOM_INTERDIT = /(^|[^a-zà-ÿ])(ibl[iî]s|satan|sh?a[iy]t[aâ]ne?s?|chayt[aâ]ne?s?|diables?|d[ée]mons?|d?jinns?)(?![a-zà-ÿ])/i;
+  const garde = (nom, where) => { if (typeof nom === 'string' && NOM_INTERDIT.test(nom)) E.push(`${where}: « ${nom} » — aucun combattant, aucune compétence, aucun personnage ne porte le nom d'Iblîs, d'un démon ou d'un djinn (exigences 6 et 18)`); };
   (commun ? ['id', 'name'] : ['id', 'name', 'epithet', 'arabic', 'years', 'light', 'lightName', 'tagline']).forEach(k => req(s, k, 'string', W0));
   if (!commun) req(s, 'order', 'number', W0);
   if (s.light && !D.ELEMENTS[s.light]) E.push(`${W0}: light « ${s.light} » inconnue`);
@@ -149,7 +153,7 @@ function checkSaga(s, E, W) {
 
   for (const [id, h] of Object.entries(heroes)) {
     const w = `héros ${id}`;
-    req(h, 'name', 'string', w); req(h, 'arabic', 'string', w);
+    req(h, 'name', 'string', w); req(h, 'arabic', 'string', w); garde(h.name, w); (h.skills || []).concat(h.limit || []).forEach(k => garde(k && k.name, w));
     if (!D.ROLES[h.role]) E.push(`${w}: role « ${h.role} » invalide (${Object.keys(D.ROLES).join('|')})`);
     if (!D.ELEMENTS[h.el]) E.push(`${w}: el « ${h.el} » invalide`);
     if (req(h, 'look', 'object', w)) { ['robe', 'head'].forEach(k => req(h.look, k, 'string', w + '.look')); checkLook(h.look, w); }
@@ -184,6 +188,11 @@ function checkSaga(s, E, W) {
       (p.addSkills || []).forEach(k => checkSkill(k, w + '.phase', false));
     });
     if (typeof e.desc !== 'string') E.push(`${w}: « desc » manquant`);
+    // l'organigramme du mal : la racine d'une idole est l'une des douze ; « idee » marque les cinq idées noires du contenu commun
+    if (e.racine !== undefined && ![].concat(e.racine).every(r => D.RACINES.includes(r))) E.push(`${w}: racine « ${e.racine} » inconnue (${D.RACINES.join('|')})`);
+    if (e.idee !== undefined && !(commun && D.NOIRS.includes(id) && e.idee === true)) E.push(`${w}: « idee » est réservé aux cinq idées noires du contenu commun (D.NOIRS)`);
+    garde(e.name, w); (e.skills || []).forEach(k => garde(k && k.name, w)); (e.taunts || []).forEach(t => garde(t, w + ' (réplique)'));
+    (e.phases || []).forEach(p => { garde(p.say, w + ' (phase)'); (p.addSkills || []).forEach(k => garde(k && k.name, w)); });
   }
 
   (s.codex || []).forEach(c => {
@@ -200,6 +209,17 @@ function checkSaga(s, E, W) {
     Object.keys(T).forEach(k => { if (!D.OEUVRES.includes(k)) E.push(`œuvre ${k}: inconnue de D.OEUVRES`); });
     Object.keys(D.VICES).forEach(v => { const l = L[v]; if (!l) E.push(`lame ${v}: texte manquant`); else ['name', 'ar', 'couleur', 'texte'].forEach(x => req(l, x, 'string', `lame ${v}`)); if (!propres[v] || propres[v].vice !== v) E.push(`mal ${v}: égrégore manquant (enemies.${v} avec vice: '${v}')`); if (!D.OEUVRES.includes(D.VICES[v].oeuvre)) E.push(`mal ${v}: œuvre inconnue`); });
     D.ANIMAUX.forEach(a => { const x = A[a]; if (!x) E.push(`compagnon de lumière ${a}: texte manquant`); else ['name', 'ar', 'couleur', 'don', 'effet', 'vient', 'texte'].forEach(k => req(x, k, 'string', `compagnon de lumière ${a}`)); });
+    // les idées noires : on leur répond (deux voiles, et pour chacun la manière qui porte) ; l'organigramme : six rangs
+    D.NOIRS.forEach(n => { const e = propres[n], X = e && e.parole, V = Object.keys(D.VOIES);
+      if (!e || e.idee !== true) { E.push(`idée noire ${n}: égrégore manquant (enemies.${n} avec idee: true)`); return; }
+      if (!X || !Array.isArray(X.voies) || X.voies.length !== 2 || X.voies[0] === X.voies[1] || X.voies.some(v => !D.VOIES[v])) { E.push(`idée noire ${n}: parole.voies attend deux manières différentes (${V.join('|')})`); return; }
+      if (!Array.isArray(X.dit) || X.dit.length !== 2 || X.dit.some(t => typeof t !== 'string')) E.push(`idée noire ${n}: parole.dit attend deux répliques`);
+      V.forEach(v => { if (!X.rep || typeof X.rep[v] !== 'string') E.push(`idée noire ${n}: parole.rep.${v} manquant`); if (!X.non || typeof X.non[v] !== 'string') E.push(`idée noire ${n}: parole.non.${v} manquant (une manière qui ne porte pas reçoit une explication)`); });
+      if (X.oui !== undefined && (!Array.isArray(X.oui) || X.oui.length !== 2 || X.oui.some(t => typeof t !== 'string'))) E.push(`idée noire ${n}: parole.oui attend deux lignes`); });
+    { const Ml = s.mal || {}, Rg = Ml.rangs || {};
+      ['iblis', 'souffleurs', 'coeur', 'racines', 'egregores', 'idoles'].forEach(k => { const r = Rg[k]; if (!r) { E.push(`organigramme: rang « ${k} » manquant`); return; } ['name', 'sous', 'texte', 'reponse'].forEach(x => req(r, x, 'string', `organigramme ${k}`)); if (!['enseigne', 'image'].includes(r.etage)) E.push(`organigramme ${k}: etage vaut 'enseigne' ou 'image'`); });
+      ['iblis', 'souffleurs'].forEach(k => { if (Rg[k] && typeof Rg[k].src !== 'string') E.push(`organigramme ${k}: « src » requis (ce rang relève de ce qui est enseigné : il cite sa référence)`); });
+      ['titre', 'chapeau', 'couture'].forEach(x => req(Ml, x, 'string', 'organigramme')); }
     if ((s.chapters || []).length) E.push(`${W0}: un contenu commun n'a pas de chapitres`);
     return;
   }
@@ -216,7 +236,7 @@ function checkSaga(s, E, W) {
       if (c.party.length < 1 || c.party.length > 3) E.push(`${w}: party de 1 à 3 héros`);
       c.party.forEach(p => { if (!heroes[p]) E.push(`${w}: héros « ${p} » inconnu dans party`); });
     }
-    const npcIds = new Set(), foeIds = new Set();
+    const npcIds = new Set(), foeIds = new Set(), meneurs = [];
     const npcMap = {};
     if (c.hajj !== undefined && c.hajj !== true) E.push(`${w}: « hajj » vaut true ou s'omet`);
     if (c.vice !== undefined && (!D.VICES[c.vice] || !c.after || !s.frame)) E.push(`${w}: « vice » annonce le mal du cœur d'une rencontre (chapitre « after » de l'histoire-cadre) et doit figurer dans D.VICES`);
@@ -229,7 +249,7 @@ function checkSaga(s, E, W) {
     };
     (c.npcs || []).forEach(n => {
       const wn = `${w}/pnj ${n.id}`;
-      req(n, 'id', 'string', wn); req(n, 'name', 'string', wn);
+      req(n, 'id', 'string', wn); req(n, 'name', 'string', wn); garde(n.name, wn);
       if (npcIds.has(n.id)) E.push(`${wn}: id en double`); npcIds.add(n.id);
       npcMap[n.id] = n.map || c.map;
       checkAt(n.at, n.map || c.map, wn);
@@ -246,6 +266,7 @@ function checkSaga(s, E, W) {
       if (!Array.isArray(f.group) || !f.group.length || f.group.length > 4) E.push(`${wf}: group de 1 à 4 ennemis`);
       (f.group || []).forEach(g => { if (!enemies[g]) E.push(`${wf}: ennemi « ${g} » inconnu`); });
       if (f.bg && !D.BATTLE_BG.includes(f.bg)) E.push(`${wf}: bg invalide`);
+      if (f.boss) meneurs.push([f.group || [], wf]);
     });
     (c.chests || []).forEach((x, i) => {
       checkAt(x.at, x.map || c.map, `${w}/coffre ${i}`);
@@ -266,7 +287,7 @@ function checkSaga(s, E, W) {
         const n = o.length - 1;
         if (n < def[0] || n > def[1]) E.push(`${wo}: « ${o[0]} » attend ${def[0]}–${def[1]} argument(s), reçu ${n}`);
         switch (o[0]) {
-          case 'say': if (typeof o[1] !== 'string' || typeof o[2] !== 'string') E.push(`${wo}: say(speaker, texte)`);
+          case 'say': garde(o[1], wo); if (typeof o[1] !== 'string' || typeof o[2] !== 'string') E.push(`${wo}: say(speaker, texte)`);
             else if (o[2].length > 330) W.push(`${wo}: réplique longue (${o[2].length} car.) — couper en deux`); break;
           case 'nar': if (typeof o[1] !== 'string') E.push(`${wo}: nar(texte)`);
             else if (o[1].length > 360) W.push(`${wo}: narration longue (${o[1].length} car.)`); break;
@@ -295,6 +316,7 @@ function checkSaga(s, E, W) {
             (b.group || []).forEach(g => { if (!enemies[g]) E.push(`${wo}: ennemi « ${g} » inconnu`); });
             if (b.bg && !D.BATTLE_BG.includes(b.bg)) E.push(`${wo}: bg « ${b.bg} » invalide`);
             (b.allies || []).forEach(al => { if (!al || typeof al.flag !== 'string' || typeof al.name !== 'string') E.push(`${wo}: battle.allies attend [{flag, name}]`); });
+            if (b.boss) meneurs.push([b.group || [], wo]);
             break;
           }
           case 'map':
@@ -326,7 +348,7 @@ function checkSaga(s, E, W) {
           case 'mus': if (!D.TRACKS.includes(o[1])) E.push(`${wo}: piste « ${o[1]} » inconnue (${D.TRACKS.join('|')})`); break;
           case 'parley': {
             const P = o[1] || {};
-            ['with', 'title', 'intro'].forEach(k => { if (typeof P[k] !== 'string') E.push(`${wo}: parley.${k} manquant`); });
+            ['with', 'title', 'intro'].forEach(k => { if (typeof P[k] !== 'string') E.push(`${wo}: parley.${k} manquant`); }); garde(P.with, wo);
             if (typeof P.goal !== 'number') E.push(`${wo}: parley.goal manquant`);
             if (!Array.isArray(P.rounds) || P.rounds.length < 3 || P.rounds.length > 5) { E.push(`${wo}: parley.rounds de 3 à 5 manches`); break; }
             let max = 0, maxFree = 0, min = 0;
@@ -340,6 +362,7 @@ function checkSaga(s, E, W) {
                 if (!Array.isArray(N.group) || !N.group.length || N.group.length > 3) E.push(`${wo}: manche ${ri} : noir.group de 1 à 3`);
                 (N.group || []).forEach(g => { if (!enemies[g]) E.push(`${wo}: manche ${ri} : idée noire « ${g} » inconnue`); else if (enemies[g].vice || enemies[g].tier === 'boss') E.push(`${wo}: manche ${ri} : une idée noire n'est ni une idole ni un mal du cœur`); });
                 if (typeof noirV !== 'number' || noirV < 1 || noirV > 2) E.push(`${wo}: manche ${ri} : noir.v vaut 1 ou 2`);
+                { const ids = (N.group || []).filter(g => enemies[g]), nI = ids.filter(g => enemies[g].idee).length; if (nI && (nI !== ids.length || ids.length !== 1)) E.push(`${wo}: manche ${ri} : une manche « noir » porte une seule idée noire (on lui répond), ou bien des égrégores (on les combat)`); }
                 if (N.bg && !D.BATTLE_BG.includes(N.bg)) E.push(`${wo}: manche ${ri} : noir.bg invalide`);
               }
               if (!Array.isArray(r.opts) || r.opts.length < 2 || r.opts.length > 4) { E.push(`${wo}: manche ${ri} : 2 à 4 options`); return; }
@@ -397,6 +420,9 @@ function checkSaga(s, E, W) {
     });
     if (c.outro) checkOps(c.outro, `${w}.outro`);
     (c.npcs || []).forEach(n => { if (n.talk) { const save = state.map; checkOps(n.talk, `${w}/pnj ${n.id}.talk`); state.map = save; } });
+    // l'idole d'un combat lancé avec boss: true (son membre de plus haut palier, maux du cœur exceptés) dit sa racine
+    { const PAL = { boss: 3, elite: 2, minion: 1 };
+      meneurs.forEach(([g, where]) => { const t = g.filter(x => enemies[x]).sort((a, b) => (PAL[enemies[b].tier] || 0) - (PAL[enemies[a].tier] || 0))[0]; if (t && !enemies[t].vice && enemies[t].racine === undefined) E.push(`${where}: l'idole « ${t} » n'a pas de « racine » (${D.RACINES.join('|')})`); }); }
   });
   // intro/outro de saga : pas de carte (cartons narratifs uniquement)
   const flat = ops => (ops || []).forEach((o, i) => {

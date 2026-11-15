@@ -137,7 +137,7 @@ ISNAD.registerSaga({
       taunts: ['Les nôtres d’abord.'],
       desc: "Un cri de ralliement détaché de toute bouche. Il ne demande pas qui a raison, seulement de quel côté l'on est."
     },
-    clan: {
+    clan: { racine: 'noir_peur',
       name: "Al-'Asabiyya — le Clan", art: 'banner', hue: 15, scale: 3,
       lvl: 3, tier: 'elite', weak: ['ilm', 'rahma', 'adl'], veils: 4,
       skills: [
@@ -162,7 +162,7 @@ ISNAD.registerSaga({
       taunts: ['L’homme est mort ; nos pactes aussi.'],
       desc: "Ce que des tribus entières se sont dit à la même heure : « L'homme est mort, nos pactes aussi. » Elle recule devant le courage et se défait devant la véracité."
     },
-    avare: {
+    avare: { racine: 'avarice',
       name: "L'Avare du dû", art: 'tower', hue: 45, scale: 2,
       lvl: 5, tier: 'elite', weak: ['adl', 'rahma', 'sidq'], veils: 4,
       skills: [
@@ -209,7 +209,7 @@ ISNAD.registerSaga({
       ],
       desc: "Le rempart derrière lequel un mensonge se met à l'abri de toute question. Le courage le franchit — comme al-Barâ' ibn Mâlik, jeté par-dessus le mur sur des boucliers."
     },
-    kadhdhab: {
+    kadhdhab: { racine: 'avidite',
       name: 'Al-Kadhdhâb — le Menteur', art: 'mirror', hue: 305, scale: 3,
       lvl: 8, tier: 'boss', weak: ['sidq', 'ilm', 'sabr'], veils: 6,
       skills: [

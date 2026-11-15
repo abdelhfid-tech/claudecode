@@ -137,7 +137,7 @@ ISNAD.registerSaga({
       skills: [{ w: 2, name: 'Insinuation', target: 'foe', el: 'fer', pow: 0.8, fx: [{ st: 'waswas', turns: 2, chance: 0.5 }], anim: 'dark' }],
       desc: 'Un masque vide qui prête à chacun une arrière-pensée. Il ne résiste ni à celui qui vérifie, ni à celui qui attend la preuve avant de parler.'
     },
-    privilege: {
+    privilege: { racine: 'noir_desespoir',
       name: 'Le Privilège', art: 'crown', hue: 45, scale: 2, lvl: 3, tier: 'elite',
       weak: ['adl', 'sabr'], veils: 3,
       skills: [
@@ -168,7 +168,7 @@ ISNAD.registerSaga({
       ],
       desc: 'Une nuée de mots criés pour ne pas entendre la réponse. Elle couvre les voix : celui qu’elle atteint doute et se tait.'
     },
-    slogan: {
+    slogan: { racine: 'noir_soupcon',
       name: 'Le Slogan', art: 'banner', hue: 280, scale: 3, lvl: 5, tier: 'boss',
       weak: ['ilm', 'sidq'], immune: ['fer'], veils: 5,
       skills: [
@@ -202,7 +202,7 @@ ISNAD.registerSaga({
       phases: [{ at: 0.4, say: 'Une datte prise sans la payer : voilà la faute. Le reste n’est que poussière.', fx: [{ st: 'atk', v: 1 }] }],
       desc: 'Une grappe de lentilles qui grossit l’infime et ne voit plus l’immense. Il pèse une datte tombée et enjambe le sang d’un innocent. Le savoir lui rend les proportions ; la miséricorde, le sens.'
     },
-    juge: {
+    juge: { racine: 'noir_rancune',
       name: 'Le Juge sans miséricorde', art: 'scale', hue: 215, scale: 3, lvl: 9, tier: 'boss',
       weak: ['ilm', 'rahma'], immune: ['adl'], veils: 6,
       skills: [

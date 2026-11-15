@@ -61,6 +61,11 @@ réserve commune (`gear`) et le catalogue de `defs.js`. Les statistiques d'un h�
 combat lit en plus `gear.traits(h)` (percer, parer, tenir bon…) et dessine `gear.look(h)`, la silhouette
 du héros telle qu'il est équipé. Hors combat, la silhouette reste celle du fichier de saga.
 
+**Version 7.** `mal.js` (l'organigramme du mal) se charge après `gear.js` : enracinement d'une idole,
+réponse parlée à une idée noire, page de la halte. Il lit les récits par `D.parcours` (`defs.js`), le même
+parcours que le validateur. Outils ajoutés : `tools/son.js` (la musique écoutée pendant que le jeu se joue)
+et `tools/mesure-musique.js` (niveau de chaque piste).
+
 ## Rendu rétro-HD
 
 Le monde est dessiné sur une **couche pixel de 384 × 216**, puis composé sur le canevas d'affichage,

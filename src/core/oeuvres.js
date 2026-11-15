@@ -190,11 +190,11 @@
 
   /* ----- le combat : poids de l'épreuve, provision, maux tranchés ou repoussés ----- */
   const defOf = id => (W.saga && W.saga.enemies[id]) || (I.common && I.common.enemies[id]) || {};
-  // 0 : escarmouche · 2 : idole · 3 : mal du cœur
+  // 0 : escarmouche · 1 à 3 : idole, selon son enracinement (2 tant que rien n'a bougé) · 3 : mal du cœur
   O.weight = function (opts) {
     if (opts.noir) return 0; if (typeof opts.w === 'number') return opts.w;
     const defs = opts.group.map(defOf);
-    return defs.some(d => d.vice) ? 3 : (opts.boss || defs.some(d => d.tier === 'boss')) ? 2 : 0;
+    return defs.some(d => d.vice) ? 3 : (opts.boss || defs.some(d => d.tier === 'boss')) ? I.mal.poids(opts) : 0;
   };
   // à l'entrée : l'épreuve consomme la provision ; ce qui manque pèse sur le cœur (allégé à chaque reprise)
   O.enter = function (opts, first) {
@@ -207,7 +207,7 @@
   O.leave = async function (opts, foes, result) {
     if (result !== 'win') return;
     const d = st(), c = opts._coeur || {};
-    if (c.w >= 2 && !c.lack) d.pret = (d.pret || 0) + 1;
+    if ((c.w >= 2 || I.mal.estIdole(opts)) && !c.lack) d.pret = (d.pret || 0) + 1; // une idole déracinée ne pèse que 1 : elle compte tout de même
     foes.forEach(e => { const v = e.def.vice; if (v) { d.vices[v] = O.hasBlade(v) ? 'tranche' : (d.vices[v] || 'repousse'); O.learn('maux'); } });
     O.syncFlags();
     await O.rally();
@@ -288,7 +288,7 @@
   /* ----- pages de la halte ----- */
   O.paneOeuvres = function () {
     const d = st(), T = C0().oeuvres, L = C0().lames, E = C0().enemies;
-    let h = '<h3>Œuvres et lames</h3><p>Provision du cœur : <b>♥ ' + d.zad + ' / ' + MAX_ZAD + '</b>. Chaque œuvre y ajoute ; une idole en demande 2, un mal du cœur 3. Qui s’y présente sans provision combat le cœur lourd.</p>' +
+    let h = '<h3>Œuvres et lames</h3><p>Provision du cœur : <b>♥ ' + d.zad + ' / ' + MAX_ZAD + '</b>. Chaque œuvre y ajoute ; une idole en demande de 1 à 3 selon son enracinement, un mal du cœur 3. Qui s’y présente sans provision combat le cœur lourd.</p>' +
       '<p class="src">Les œuvres s’accomplissent sur la natte d’une mosquée : trois par chapitre au plus, la prière en sus.' + (O.fasting() ? ' <b>Jeûne en cours</b> : les vivres attendent le soir.' : '') + '</p>';
     h += '<div class="lames">' + Object.keys(D.VICES).map(v => { const V = D.VICES[v], n = O.count(V.oeuvre), ok = !!d.lames[v], stt = d.vices[v];
       return '<div class="lm' + (ok ? ' ok' : '') + '"><img alt="" src="' + O.lameURL(v) + '"><div><b style="color:' + (ok ? L[v].couleur : 'inherit') + '">' + I.esc(L[v].name) + '</b> <small>' + I.esc(L[v].ar) + '</small><br><small>' + I.esc(T[V.oeuvre].court) + ' ' + Math.min(n, V.need) + ' / ' + V.need + ' · contre ' + I.esc(bas(E[v].name)) + (stt === 'tranche' ? ' — <b>tranché' + e_(v) + '</b>' : stt === 'repousse' ? ' — repoussé' + e_(v) : '') + '</small></div></div>'; }).join('') + '</div>';

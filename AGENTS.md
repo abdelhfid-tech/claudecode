@@ -24,7 +24,8 @@ toute considération de jeu.
 | `src/core/build.js` | bâtir : matériaux, pièces, chantiers, troupeaux | pièces et matériaux déclarés dans `defs.js` |
 | `src/core/oeuvres.js` | le cœur : œuvres et provision, lames, maux du cœur, énigmes, compagnons de lumière | règles et dessin seulement ; œuvres, maux et compagnons déclarés dans `defs.js` |
 | `src/core/gear.js` | l'équipement : quatre emplacements, réserve commune, icônes, pages de la halte | règles et dessin seulement ; pièces, types et étals déclarés dans `defs.js` (`D.GEAR`, `D.GEAR_TYPES`, `D.GEAR_SHOPS`) |
-| `src/data/coeur.js` | contenu commun à toutes les sagas : textes des œuvres, lames, maux, idées noires, compagnons de lumière | `commun: true`, aucun chapitre ; ses égrégores sont utilisables partout |
+| `src/core/mal.js` | l'organigramme du mal : enracinement d'une idole, réponse parlée à une idée noire, page de la halte | règles et dessin seulement ; racines, manières et parcours des récits déclarés dans `defs.js` (`D.RACINES`, `D.VOIES`, `D.parcours`) ; textes dans `coeur.js` (`mal`, `parole`) |
+| `src/data/coeur.js` | contenu commun à toutes les sagas : textes des œuvres, lames, maux, idées noires, compagnons de lumière, organigramme du mal | `commun: true`, aucun chapitre ; ses égrégores sont utilisables partout |
 | `src/data/caid.js` | les veillées du Caïd | même format, `frame: true`, `veillees: true`, un chapitre par saga (`after`) |
 | `src/data/music.js` | bande-son | `ISNAD.registerMusic(nom, piste)`, validée par `tools/validate-music.js` |
 | `docs/schema-saga.md`, `docs/schema-v2.md` | contrat de données et bible narrative | à relire avant d'écrire du contenu |
@@ -74,8 +75,12 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
   objet ou une pièce. Les effets d'une pièce sont des pourcentages déclarés dans `defs.js` : un fichier de saga
   n'en fixe aucun.
 - Une manche de pourparler peut porter une idée noire (`noir`) : seulement chez un interlocuteur de
-  fiction. Une énigme du cœur (`enigme`) et le pèlerinage (`hajj`) n'existent que dans la fiction
-  (histoire-cadre, veillées) : le validateur les refuse ailleurs.
+  fiction. Une idée noire (l'une des cinq de `D.NOIRS`) ne se combat pas : on lui répond, par la parole,
+  la pédagogie ou la bienveillance. Un égrégore, lui, se combat. Une énigme du cœur (`enigme`) et le
+  pèlerinage (`hajj`) n'existent que dans la fiction (histoire-cadre, veillées) : le validateur les refuse ailleurs.
+- L'idole d'un chapitre (le membre de plus haut palier d'un combat lancé avec `boss: true`) porte une
+  `racine` prise dans `D.RACINES`. Aucun combattant, aucune compétence, aucun personnage ne porte le nom
+  d'Iblîs, d'un démon ou d'un djinn : le validateur le refuse.
 
 ## Exigences de respect (non négociables)
 
@@ -124,6 +129,15 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     l'histoire, ni inscription, ni or ni soie, ni talisman, ni vertu prêtée à un objet : ses effets sont
     matériels (force, garde, élan, souffle). Le jeu ne dit jamais qui portait quoi. Hors combat et hors
     menu, chaque personnage garde sa silhouette. Aucun dessin de pièce ne doit évoquer un symbole religieux.
+
+18. *(Proposée par l'agent, à confirmer par le décideur.)* L'organigramme du mal est une lecture, pas une
+    démonologie. Iblîs est nommé, jamais dessiné, jamais mis en scène, jamais combattu ; le jeu ne lui prête
+    aucune parole hors d'un verset cité en traduction du sens. Les souffleurs n'ont ni nom, ni figure, ni
+    nombre ; aucun nom de djinn n'est tiré d'un récit ; aucun djinn n'est inquiété. Le Diable n'a d'autre
+    pouvoir que de souffler : le cœur reste responsable. Aucun lien n'est tracé d'un souffleur à un
+    événement de l'histoire. L'emprise se dit d'une idée et d'une idole, jamais d'un Compagnon, d'un peuple,
+    d'une religion, d'une époque ou d'un camp. À chaque étage sa réponse, et pas une de plus : l'idée noire
+    par la parole, l'égrégore par le combat, l'idole par une bataille déclarée.
 
 ## Qui fait quoi
 

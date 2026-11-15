@@ -77,7 +77,7 @@ ISNAD.registerSaga({
       skills: [{ w: 3, name: 'Notation', target: 'foe', el: 'adl', pow: 1.3, fx: [{ st: 'atk', v: -1, chance: 0.6 }], anim: 'dark' }, { w: 2, name: 'Classement', target: 'foes', el: 'fer', pow: 0.8, anim: 'wave' }],
       phases: [{ at: 0.5, say: 'Vous valez ce que je dis que vous valez.', fx: [{ st: 'atk', v: 1 }] }],
       desc: 'La valeur d’un homme réduite à un nombre que d’autres lui attribuent. Une balance fausse : la miséricorde et la justice la renversent.' },
-    flux: { name: 'Le Flux', art: 'wave', hue: 200, scale: 2, lvl: 9, tier: 'elite', weak: ['sabr', 'ilm'], immune: ['fer'], veils: 4,
+    flux: { racine: 'insouciance', name: 'Le Flux', art: 'wave', hue: 200, scale: 2, lvl: 9, tier: 'elite', weak: ['sabr', 'ilm'], immune: ['fer'], veils: 4,
       skills: [{ w: 3, name: 'Défilement sans fin', target: 'foes', el: 'ilm', pow: 0.8, fx: [{ st: 'waswas', turns: 2, chance: 0.5 }], anim: 'wave' }, { w: 1, name: 'Lecture automatique', target: 'self', fx: [{ st: 'spd', v: 1 }], anim: 'guard' }],
       phases: [{ at: 0.5, say: 'Encore un. Encore un. Encore un.', fx: [{ st: 'spd', v: 1 }] }],
       desc: 'Héritier de la Rumeur : mille voix à la fois, dont aucune ne répond de ce qu’elle dit. On ne le frappe pas ; on cesse de le suivre.' },
@@ -101,7 +101,7 @@ ISNAD.registerSaga({
       skills: [{ w: 3, name: 'Relevé', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'spd', v: -1, chance: 0.3 }], anim: 'glyph' }],
       taunts: ['Combien l’ont vu ?'],
       desc: 'Un savoir fait d’additions, que personne n’est allé vérifier. Il sait tout et n’a rien vu. Il cède quand on lui demande de qui il le tient.' },
-    agregor: { name: "L'AGRÉGOR", art: 'idol', hue: 285, scale: 3, lvl: 11, tier: 'boss', weak: ['sidq', 'adl', 'shajaa', 'rahma', 'ilm', 'sabr'], veils: 7,
+    agregor: { racine: ['avidite', 'orgueil', 'ostentation', 'avarice', 'insouciance', 'envie', 'colere'], name: "L'AGRÉGOR", art: 'idol', hue: 285, scale: 3, lvl: 11, tier: 'boss', weak: ['sidq', 'adl', 'shajaa', 'rahma', 'ilm', 'sabr'], veils: 7,
       skills: [
         { w: 3, name: 'Mille regards', target: 'foes', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'wave' },
         { w: 3, name: 'Culte', target: 'foe', el: 'ilm', pow: 1.5, anim: 'dark' },
@@ -186,6 +186,9 @@ ISNAD.registerSaga({
           ['ask', 'Que demander à Maître Yûnus ?', [
             { t: 'Pourquoi les idoles reviennent-elles toujours ?', r: [['say', 'yunus_n', 'Parce que le cœur ne reste jamais vide. Ôte-lui ce qui est plus grand que lui, il se prosternera devant ce qui est plus petit : un clan, un chef, un chiffre.']] },
             { t: 'Qu’est-ce que l’isnâd ?', r: [['say', 'yunus_n', 'La chaîne. « Untel m’a rapporté, d’après untel, qui l’a vu. » Des hommes ont passé leur vie à vérifier chaque maillon. C’est ainsi qu’une parole traverse quatorze siècles sans se dissoudre.']] },
+            { t: 'D’où viennent les idées noires ?', r: [
+              ['say', 'yunus_n', 'On nous a enseigné qu’il en est qui soufflent, parmi les djinns et parmi les hommes, et qu’ils n’ont d’autre pouvoir que celui-là. Je ne te les montrerai pas : nul ne les voit, et ce n’est pas eux que tu rencontreras.'],
+              ['say', 'yunus_n', 'Tu rencontreras ce qu’un cœur fait de ce qu’il a entendu. Retiens ceci : le souffle appelle, le cœur répond. C’est au cœur qu’on demande des comptes.']] },
             { t: 'Je suis prêt.', r: [['say', 'yunus_n', 'Personne ne l’est. C’est pour cela qu’on ne marche pas seul.']] }
           ]],
           ['codex', 'isnad'],

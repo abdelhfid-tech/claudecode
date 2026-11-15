@@ -229,6 +229,28 @@
   };
   D.ANIMAUX = ['renard', 'aigle', 'phenix', 'lion', 'gazelle'];
 
+  // L'organigramme du mal (version 7). Les cinq idées noires : ce qui pèse sur une personne. Avec les sept maux du cœur,
+  // elles font les douze racines qu'une idole peut redire (`racine`, dans les fichiers de saga). Textes : src/data/coeur.js.
+  D.NOIRS = ['noir_honte', 'noir_peur', 'noir_soupcon', 'noir_rancune', 'noir_desespoir'];
+  D.RACINES = Object.keys(D.VICES).concat(D.NOIRS);
+  // Les trois manières de répondre à une idée noire (décision du décideur : la parole, la pédagogie, la bienveillance).
+  D.VOIES = {
+    parole:        { name: 'Dire vrai', de: 'la parole' },
+    pedagogie:     { name: 'Expliquer', de: 'la pédagogie' },
+    bienveillance: { name: 'Rassurer',  de: 'la bienveillance' }
+  };
+  // Parcours d'un récit et de ses sous-récits (pourparler, choix, question, condition, maux du dernier chapitre) : le moteur
+  // et le validateur lisent les scripts de la même façon.
+  D.parcours = function (ops, fn) {
+    (ops || []).forEach(o => {
+      if (!Array.isArray(o)) return; fn(o);
+      if (o[0] === 'parley' && o[1]) { D.parcours(o[1].win, fn); D.parcours(o[1].lose, fn); }
+      else if ((o[0] === 'choice' || o[0] === 'ask') && Array.isArray(o[2])) o[2].forEach(c => D.parcours(c && c.r, fn));
+      else if (o[0] === 'if') { D.parcours(o[2], fn); D.parcours(o[3], fn); }
+      else if (o[0] === 'vices' && o[1]) ['avant', 'aucun', 'tous', 'reste'].forEach(k => D.parcours(o[1][k], fn));
+    });
+  };
+
   // v4 — s'orienter aux étoiles. Huit caps, nommés comme le feront les pilotes arabes : par l'étoile qui
   // s'y lève (à l'est) ou s'y couche (à l'ouest). Ordre : E, SE, S, SO, O, NO, N, NE (secteurs de 45°).
   D.STARS = [

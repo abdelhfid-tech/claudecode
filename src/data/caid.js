@@ -57,7 +57,7 @@ ISNAD.registerSaga({
       skills: [{ w: 2, name: '« On dit que… »', target: 'foe', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'dark' }],
       taunts: ['Il dort seulement.', 'Qui te l’a dit ? Personne. Tout le monde.'],
       desc: "Ce qui se dit à mi-voix dans une maison où l'on cache une mort. Il n'a pas de corps : il emprunte celui de qui le répète. Une parole dite à voix haute le dissipe." },
-    ombre_pere: { name: "L'Ombre du Père", art: 'throne', hue: 35, scale: 2, lvl: 4, tier: 'elite', weak: ['sidq', 'sabr'], veils: 4,
+    ombre_pere: { racine: 'noir_peur', name: "L'Ombre du Père", art: 'throne', hue: 35, scale: 2, lvl: 4, tier: 'elite', weak: ['sidq', 'sabr'], veils: 4,
       skills: [
         { w: 3, name: '« Il dort seulement »', target: 'foes', el: 'ilm', pow: 0.75, fx: [{ st: 'spd', v: -1, chance: 0.5 }], anim: 'wave' },
         { w: 2, name: 'Poids du nom', target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'atk', v: -1, chance: 0.5 }], anim: 'dark' },
@@ -71,7 +71,7 @@ ISNAD.registerSaga({
       skills: [{ w: 2, name: 'Prix du repos', target: 'foe', el: 'fer', pow: 1.0, fx: [{ st: 'def', v: -1, chance: 0.4 }], anim: 'dark' }],
       taunts: ['Dix pièces la nuit. Qui s’en plaindrait ?'],
       desc: "Une petite pile de pièces contre une nuit de sommeil. Chacune pèse peu ; ensemble, elles retirent un homme du rempart et en écrasent un autre. La même loi pour tous les fait tomber." },
-    sommeil: { name: 'Le Sommeil', art: 'wave', hue: 230, scale: 2, lvl: 6, tier: 'elite', weak: ['adl', 'shajaa'], veils: 4,
+    sommeil: { racine: 'insouciance', name: 'Le Sommeil', art: 'wave', hue: 230, scale: 2, lvl: 6, tier: 'elite', weak: ['adl', 'shajaa'], veils: 4,
       skills: [
         { w: 3, name: 'Torpeur', target: 'foes', el: 'ilm', pow: 0.7, fx: [{ st: 'spd', v: -1, chance: 0.6 }], anim: 'wave' },
         { w: 2, name: 'Paupières lourdes', target: 'foe', el: 'fer', pow: 1.0, fx: [{ st: 'stun', chance: 0.35 }], anim: 'dark' },
@@ -80,7 +80,7 @@ ISNAD.registerSaga({
       phases: [{ at: 0.5, say: 'À quoi bon savoir ? Punis le petit, et que chacun retourne à son lit.', fx: [{ st: 'def', v: 1 }] }],
       taunts: ['Demain. Tout cela peut attendre demain.'],
       desc: "Le désir de toute une ville de ne pas savoir ce qui se vend sur son rempart. Il ne veut de mal à personne : il veut seulement qu'on le laisse. La Justice et le Courage le déchirent." },
-    tambour: { name: 'Le Tambour', art: 'banner', hue: 8, scale: 3, lvl: 6, tier: 'boss', weak: ['sabr', 'rahma'], immune: ['fer'], veils: 5,
+    tambour: { racine: 'ostentation', name: 'Le Tambour', art: 'banner', hue: 8, scale: 3, lvl: 6, tier: 'boss', weak: ['sabr', 'rahma'], immune: ['fer'], veils: 5,
       skills: [
         { w: 3, name: 'Roulement', target: 'foes', el: 'fer', pow: 0.85, anim: 'wave' },
         { w: 2, name: '« Son nom ! Son nom ! »', target: 'self', fx: [{ st: 'atk', v: 1 }], anim: 'guard' },
@@ -97,7 +97,7 @@ ISNAD.registerSaga({
       skills: [{ w: 3, name: 'De bonne source', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'waswas', turns: 2, chance: 0.4 }], anim: 'dark' }],
       taunts: ['Je le tiens de quelqu’un de sûr.', 'Il n’y a pas de fumée sans feu.'],
       desc: "Une phrase sans auteur. Chacun la tient d'un autre, qui la tient d'un autre. Demander « qui l'a dit ? » suffit le plus souvent à la défaire." },
-    bouc: { name: 'Le Bouc émissaire', art: 'mask', hue: 0, scale: 3, lvl: 7, tier: 'boss', weak: ['rahma', 'ilm', 'sidq'], veils: 5,
+    bouc: { racine: 'noir_rancune', name: 'Le Bouc émissaire', art: 'mask', hue: 0, scale: 3, lvl: 7, tier: 'boss', weak: ['rahma', 'ilm', 'sidq'], veils: 5,
       skills: [
         { w: 3, name: '« C’est eux »', target: 'foe', el: 'fer', pow: 1.5, fx: [{ st: 'def', v: -1, chance: 0.5 }], anim: 'dark' },
         { w: 3, name: 'Soif de coupable', target: 'foes', el: 'ilm', pow: 0.85, fx: [{ st: 'doute', turns: 1, chance: 0.3 }], anim: 'wave' },
@@ -110,7 +110,7 @@ ISNAD.registerSaga({
       ],
       taunts: ['Il faut bien que ce soit la faute de quelqu’un.', 'Ils ne sont pas d’ici.'],
       desc: "Un masque vide qui cherche un visage à qui s'ajuster. Il naît quand une foule qui souffre préfère un coupable à une cause. Lui en livrer un ne l'apaise pas : il en demande un second. Le Savoir, la Véracité et la Miséricorde le brisent." },
-    pur: { name: 'Le Pur', art: 'blade', hue: 200, scale: 3, lvl: 8, tier: 'boss', weak: ['ilm', 'rahma'], immune: ['adl'], veils: 6,
+    pur: { racine: 'orgueil', name: 'Le Pur', art: 'blade', hue: 200, scale: 3, lvl: 8, tier: 'boss', weak: ['ilm', 'rahma'], immune: ['adl'], veils: 6,
       skills: [
         { w: 3, name: 'Anathème', target: 'foe', el: 'adl', pow: 1.6, anim: 'slash' },
         { w: 3, name: 'Phrase unique', target: 'foes', el: 'adl', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.3 }], anim: 'wave' },

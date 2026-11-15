@@ -293,6 +293,25 @@ body.portrait #hud .enig { display: block; background: var(--panel); }
 .lm.ok { opacity: 1; } .lm img { height: 3.6em; image-rendering: pixelated; justify-self: center; filter: grayscale(.85) brightness(.7); } .lm.ok img { filter: drop-shadow(0 0 6px rgba(255, 240, 200, .5)); }
 .lm small { color: var(--dim); }
 #choice .prompt small { display: block; margin-top: .4em; font-family: var(--f-body); font-size: .86em; letter-spacing: 0; color: var(--dim); line-height: 1.35; }
+/* organigramme du mal : deux étages et une couture. Les deux premiers rangs n'ont pas d'image (exigence 18). */
+.orga { display: grid; gap: 0; margin: .5em 0; max-width: 44em; }
+.orga .rg { border: 1px solid var(--line); border-radius: .35em; padding: .45em .7em; background: var(--panel2); }
+.orga .rg.haut { border-style: dashed; background: transparent; }
+.orga .rg p { margin: .2em 0; } .orga .rg .nm b { font-family: var(--f-display); letter-spacing: .05em; } .orga .rg .nm em { color: var(--dim); font-size: .88em; } .orga .rg .nm small { color: var(--dim); }
+.orga .rg .rep { color: var(--gold); font-size: .92em; }
+.orga .lien { text-align: center; color: var(--dim); font-size: .78em; line-height: 1.1; padding: .1em 0 .25em; }
+.orga .lien::before { content: ''; display: block; width: 0; height: 1em; margin: 0 auto .1em; border-left: 2px solid var(--line); }
+.orga .lien.pt::before { border-left-style: dotted; }
+.orga .couture { margin: .7em 0 .6em; padding: .5em 0 0; border-top: 1px dashed var(--gold); color: var(--dim); font-size: .84em; font-style: italic; }
+.orga.epoque { gap: .5em; } .orga .inconnue { opacity: .5; }
+.pus { display: flex; flex-wrap: wrap; gap: .25em .7em; margin: .3em 0; }
+.pu { display: inline-flex; align-items: center; gap: .3em; font-size: .86em; white-space: nowrap; } .pu img { width: 1.9em; height: 1.9em; image-rendering: pixelated; } .pu.vice { color: var(--dim); }
+.orga .lg { display: flex; flex-wrap: wrap; align-items: center; gap: .2em .7em; } .orga .lg .et { color: var(--dim); font-size: .78em; min-width: 5.2em; }
+.orga .ido { width: 2.6em; height: 2.6em; image-rendering: pixelated; vertical-align: middle; margin-right: .4em; }
+.rac { letter-spacing: .08em; color: var(--gold); white-space: nowrap; } .rac i { font-style: normal; opacity: .35; }
+#card.noir img.idee { height: 5.2em; image-rendering: pixelated; margin-bottom: .3em; filter: drop-shadow(0 0 14px rgba(201, 184, 255, .5)); }
+.phead .seal.idee { border-radius: 0; background-size: contain; background-repeat: no-repeat; background-position: center; image-rendering: pixelated; }
+#choice .opt .voie { color: var(--dim); }
 .stat.bete { grid-template-columns: 5.4em 1fr; } .stat.bete .fig { width: 5.4em; height: auto; } .stat.bete.off { opacity: .55; } .stat.bete.off .fig { display: grid; place-items: center; height: 2.6em; font-family: var(--f-display); font-size: 1.3em; color: var(--dim); border: 1px dashed rgba(255, 255, 255, .2); width: 3.4em; }
 .stat.bete.cur { border-bottom-color: var(--gold); }
 

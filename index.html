@@ -303,6 +303,25 @@ body.portrait #hud .enig { display: block; background: var(--panel); }
 .lm.ok { opacity: 1; } .lm img { height: 3.6em; image-rendering: pixelated; justify-self: center; filter: grayscale(.85) brightness(.7); } .lm.ok img { filter: drop-shadow(0 0 6px rgba(255, 240, 200, .5)); }
 .lm small { color: var(--dim); }
 #choice .prompt small { display: block; margin-top: .4em; font-family: var(--f-body); font-size: .86em; letter-spacing: 0; color: var(--dim); line-height: 1.35; }
+/* organigramme du mal : deux étages et une couture. Les deux premiers rangs n'ont pas d'image (exigence 18). */
+.orga { display: grid; gap: 0; margin: .5em 0; max-width: 44em; }
+.orga .rg { border: 1px solid var(--line); border-radius: .35em; padding: .45em .7em; background: var(--panel2); }
+.orga .rg.haut { border-style: dashed; background: transparent; }
+.orga .rg p { margin: .2em 0; } .orga .rg .nm b { font-family: var(--f-display); letter-spacing: .05em; } .orga .rg .nm em { color: var(--dim); font-size: .88em; } .orga .rg .nm small { color: var(--dim); }
+.orga .rg .rep { color: var(--gold); font-size: .92em; }
+.orga .lien { text-align: center; color: var(--dim); font-size: .78em; line-height: 1.1; padding: .1em 0 .25em; }
+.orga .lien::before { content: ''; display: block; width: 0; height: 1em; margin: 0 auto .1em; border-left: 2px solid var(--line); }
+.orga .lien.pt::before { border-left-style: dotted; }
+.orga .couture { margin: .7em 0 .6em; padding: .5em 0 0; border-top: 1px dashed var(--gold); color: var(--dim); font-size: .84em; font-style: italic; }
+.orga.epoque { gap: .5em; } .orga .inconnue { opacity: .5; }
+.pus { display: flex; flex-wrap: wrap; gap: .25em .7em; margin: .3em 0; }
+.pu { display: inline-flex; align-items: center; gap: .3em; font-size: .86em; white-space: nowrap; } .pu img { width: 1.9em; height: 1.9em; image-rendering: pixelated; } .pu.vice { color: var(--dim); }
+.orga .lg { display: flex; flex-wrap: wrap; align-items: center; gap: .2em .7em; } .orga .lg .et { color: var(--dim); font-size: .78em; min-width: 5.2em; }
+.orga .ido { width: 2.6em; height: 2.6em; image-rendering: pixelated; vertical-align: middle; margin-right: .4em; }
+.rac { letter-spacing: .08em; color: var(--gold); white-space: nowrap; } .rac i { font-style: normal; opacity: .35; }
+#card.noir img.idee { height: 5.2em; image-rendering: pixelated; margin-bottom: .3em; filter: drop-shadow(0 0 14px rgba(201, 184, 255, .5)); }
+.phead .seal.idee { border-radius: 0; background-size: contain; background-repeat: no-repeat; background-position: center; image-rendering: pixelated; }
+#choice .opt .voie { color: var(--dim); }
 .stat.bete { grid-template-columns: 5.4em 1fr; } .stat.bete .fig { width: 5.4em; height: auto; } .stat.bete.off { opacity: .55; } .stat.bete.off .fig { display: grid; place-items: center; height: 2.6em; font-family: var(--f-display); font-size: 1.3em; color: var(--dim); border: 1px dashed rgba(255, 255, 255, .2); width: 3.4em; }
 .stat.bete.cur { border-bottom-color: var(--gold); }
 
@@ -419,7 +438,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
+window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -651,6 +670,28 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
     colere:      { oeuvre: 'dhikr',  need: 3 }
   };
   D.ANIMAUX = ['renard', 'aigle', 'phenix', 'lion', 'gazelle'];
+
+  // L'organigramme du mal (version 7). Les cinq idées noires : ce qui pèse sur une personne. Avec les sept maux du cœur,
+  // elles font les douze racines qu'une idole peut redire (`racine`, dans les fichiers de saga). Textes : src/data/coeur.js.
+  D.NOIRS = ['noir_honte', 'noir_peur', 'noir_soupcon', 'noir_rancune', 'noir_desespoir'];
+  D.RACINES = Object.keys(D.VICES).concat(D.NOIRS);
+  // Les trois manières de répondre à une idée noire (décision du décideur : la parole, la pédagogie, la bienveillance).
+  D.VOIES = {
+    parole:        { name: 'Dire vrai', de: 'la parole' },
+    pedagogie:     { name: 'Expliquer', de: 'la pédagogie' },
+    bienveillance: { name: 'Rassurer',  de: 'la bienveillance' }
+  };
+  // Parcours d'un récit et de ses sous-récits (pourparler, choix, question, condition, maux du dernier chapitre) : le moteur
+  // et le validateur lisent les scripts de la même façon.
+  D.parcours = function (ops, fn) {
+    (ops || []).forEach(o => {
+      if (!Array.isArray(o)) return; fn(o);
+      if (o[0] === 'parley' && o[1]) { D.parcours(o[1].win, fn); D.parcours(o[1].lose, fn); }
+      else if ((o[0] === 'choice' || o[0] === 'ask') && Array.isArray(o[2])) o[2].forEach(c => D.parcours(c && c.r, fn));
+      else if (o[0] === 'if') { D.parcours(o[2], fn); D.parcours(o[3], fn); }
+      else if (o[0] === 'vices' && o[1]) ['avant', 'aucun', 'tous', 'reste'].forEach(k => D.parcours(o[1][k], fn));
+    });
+  };
 
   // v4 — s'orienter aux étoiles. Huit caps, nommés comme le feront les pilotes arabes : par l'étoile qui
   // s'y lève (à l'est) ou s'y couche (à l'ouest). Ordre : E, SE, S, SO, O, NO, N, NE (secteurs de 45°).
@@ -2332,9 +2373,15 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
       const R = P.rounds[r];
       await showLine('say', sp, R.say); S.hideDialog();
       if (R.noir) {
-        const N = R.noir, gain = N.v || 1; I.oeuvres.learn('idees_noires');
-        await card('title parley noir', `<p class="small">Une idée noire</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">On ne la combat pas contre lui, mais pour lui</p><div class="rule"></div><div class="hint">▼</div>`);
-        await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || 'Elle parle plus fort que toi. Dissipe-la.' });
+        const N = R.noir, gain = N.v || 1;
+        // L'échelle des réponses (décision du décideur) : une idée noire pèse sur une personne, on lui répond par la parole ;
+        // un égrégore le tient (rencontres de la Cité-Miroir), cela se combat.
+        if (I.mal.estIdee(N)) await I.mal.dissiper(N, P);
+        else {
+          await card('title parley noir', `<p class="small">Un égrégore le tient</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">On ne le combat pas contre lui, mais pour lui</p><div class="rule"></div><div class="hint">▼</div>`);
+          await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || 'Il parle plus fort que toi. Dissipe-le.' });
+          I.mal.note('n', P.title + '|' + N.name, -1);
+        }
         conf += gain; I.audio.music('conseil'); S.toast(`<b>Confiance +${gain}</b> — son regard s’éclaircit`, 2400);
         if (N.after) { await showLine('say', sp, N.after); S.hideDialog(); }
       }
@@ -2345,6 +2392,7 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
     }
     S.hideDialog(); sv.parley.total++;
     const ok = conf >= P.goal;
+    I.mal.note('p', P.title, ok ? -1 : 1); // la parole qui porte déracine l'idée ; la parole manquée la laisse s'enfoncer
     if (ok) {
       sv.parley.won++; I.audio.sfx('roll'); G.flash('#ffe08a');
       const xp = P.xp || Math.round(22 + 12 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
@@ -2391,7 +2439,8 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
         sv.isnad.total++; const spc = sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} }); spc.cTot = (spc.cTot || 0) + 1;
         while (true) {
           const i = await menuPick(a, opts); const o = opts[i];
-          if (o.ok) { if (first) { sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; S.toast('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.'); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); } if (o.r) await S.run(o.r); break; }
+          if (o.ok) { if (first) { sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; S.toast('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.'); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); I.mal.note('c', a, 0); } if (o.r) await S.run(o.r); break; }
+          if (first) I.mal.note('c', a, 1); // un acte que les transmetteurs n'ont pas rapporté : l'idée s'enracine
           first = false; I.audio.sfx('glitch'); G.shake(260); G.flash('#7a5cff');
           S.toast('<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.');
           if (o.r) await S.run(o.r);
@@ -2591,7 +2640,7 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
     W.saga = saga; W.ci = ci; W.ch = ch; W.minLvl = saga.frame ? (ch.minLvl || 1) : (MINLVL[ci] || 6);
     const sp = I.save.data.sagas[sagaId] || (I.save.data.sagas[sagaId] = { ch: 0, done: false, flags: {} });
     S.flags = cp ? (cp.flags || {}) : Object.assign({}, sp.flags || {});
-    if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); }
+    if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); I.mal.ouvre(); }
     I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
     W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.charSheet(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
@@ -3587,11 +3636,11 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
 
   /* ----- le combat : poids de l'épreuve, provision, maux tranchés ou repoussés ----- */
   const defOf = id => (W.saga && W.saga.enemies[id]) || (I.common && I.common.enemies[id]) || {};
-  // 0 : escarmouche · 2 : idole · 3 : mal du cœur
+  // 0 : escarmouche · 1 à 3 : idole, selon son enracinement (2 tant que rien n'a bougé) · 3 : mal du cœur
   O.weight = function (opts) {
     if (opts.noir) return 0; if (typeof opts.w === 'number') return opts.w;
     const defs = opts.group.map(defOf);
-    return defs.some(d => d.vice) ? 3 : (opts.boss || defs.some(d => d.tier === 'boss')) ? 2 : 0;
+    return defs.some(d => d.vice) ? 3 : (opts.boss || defs.some(d => d.tier === 'boss')) ? I.mal.poids(opts) : 0;
   };
   // à l'entrée : l'épreuve consomme la provision ; ce qui manque pèse sur le cœur (allégé à chaque reprise)
   O.enter = function (opts, first) {
@@ -3604,7 +3653,7 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
   O.leave = async function (opts, foes, result) {
     if (result !== 'win') return;
     const d = st(), c = opts._coeur || {};
-    if (c.w >= 2 && !c.lack) d.pret = (d.pret || 0) + 1;
+    if ((c.w >= 2 || I.mal.estIdole(opts)) && !c.lack) d.pret = (d.pret || 0) + 1; // une idole déracinée ne pèse que 1 : elle compte tout de même
     foes.forEach(e => { const v = e.def.vice; if (v) { d.vices[v] = O.hasBlade(v) ? 'tranche' : (d.vices[v] || 'repousse'); O.learn('maux'); } });
     O.syncFlags();
     await O.rally();
@@ -3685,7 +3734,7 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
   /* ----- pages de la halte ----- */
   O.paneOeuvres = function () {
     const d = st(), T = C0().oeuvres, L = C0().lames, E = C0().enemies;
-    let h = '<h3>Œuvres et lames</h3><p>Provision du cœur : <b>♥ ' + d.zad + ' / ' + MAX_ZAD + '</b>. Chaque œuvre y ajoute ; une idole en demande 2, un mal du cœur 3. Qui s’y présente sans provision combat le cœur lourd.</p>' +
+    let h = '<h3>Œuvres et lames</h3><p>Provision du cœur : <b>♥ ' + d.zad + ' / ' + MAX_ZAD + '</b>. Chaque œuvre y ajoute ; une idole en demande de 1 à 3 selon son enracinement, un mal du cœur 3. Qui s’y présente sans provision combat le cœur lourd.</p>' +
       '<p class="src">Les œuvres s’accomplissent sur la natte d’une mosquée : trois par chapitre au plus, la prière en sus.' + (O.fasting() ? ' <b>Jeûne en cours</b> : les vivres attendent le soir.' : '') + '</p>';
     h += '<div class="lames">' + Object.keys(D.VICES).map(v => { const V = D.VICES[v], n = O.count(V.oeuvre), ok = !!d.lames[v], stt = d.vices[v];
       return '<div class="lm' + (ok ? ' ok' : '') + '"><img alt="" src="' + O.lameURL(v) + '"><div><b style="color:' + (ok ? L[v].couleur : 'inherit') + '">' + I.esc(L[v].name) + '</b> <small>' + I.esc(L[v].ar) + '</small><br><small>' + I.esc(T[V.oeuvre].court) + ' ' + Math.min(n, V.need) + ' / ' + V.need + ' · contre ' + I.esc(bas(E[v].name)) + (stt === 'tranche' ? ' — <b>tranché' + e_(v) + '</b>' : stt === 'repousse' ? ' — repoussé' + e_(v) : '') + '</small></div></div>'; }).join('') + '</div>';
@@ -3991,6 +4040,163 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
   Gr.ICO = ICO;
 })();
 
+/* ==== src/core/mal.js ==== */
+/* ISNAD — l'organigramme du mal : l'enracinement d'une idole, la réponse parlée à une idée noire, la page de la halte.
+   Les textes sont du contenu (src/data/coeur.js : `mal`, et `parole` sur chaque idée noire) ; la racine de chaque idole est
+   dans son fichier de saga (`racine`). Ici, seulement les règles et le dessin.
+
+   Garde-fous (exigences 6 et 18) : Iblîs et les souffleurs sont des lignes de texte, jamais des combattants, des images
+   ou des voix. Aucun lien n'est tracé d'un souffleur à une idole : le souffle s'arrête au cœur. La jauge se dit d'une
+   idole, telle qu'elle se dresse devant le voyageur ; jamais d'une époque, de ses gens, d'un Compagnon ou d'un camp. */
+(function () {
+  'use strict';
+  const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, W = I.world;
+  const M = I.mal = {};
+  const C0 = () => I.sagas.coeur || { enemies: {}, mal: { rangs: {} }, codex: [] };
+  const PALIER = { boss: 3, elite: 2, minion: 1 };
+  const defDe = (saga, id) => (saga && saga.enemies && saga.enemies[id]) || (I.common && I.common.enemies[id]) || C0().enemies[id] || null;
+  const clef = (saga, ch) => saga.id + '/' + ch.id;
+  const traits = n => '<span class="rac" title="enracinement ' + n + ' sur 5">' + '▮'.repeat(n) + '<i>' + '▯'.repeat(5 - n) + '</i></span>';
+  M.traits = traits;
+
+  /* ----- état sauvegardé : des événements à clé, non un compteur. Rejouer un objectif réécrit la même clé. ----- */
+  function st() { const d = I.save.data; d.mal = d.mal || {}; d.mal.ev = d.mal.ev || {}; d.mal.tombees = d.mal.tombees || {}; return d.mal; }
+  M.state = st;
+
+  /* ----- la lignée d'un chapitre, lue dans son récit ----- */
+  // L'idole : le membre de plus haut palier d'un combat lancé avec boss: true, maux du cœur exceptés.
+  // Les égrégores : tous les autres que le chapitre fait rencontrer.
+  const lignees = {};
+  M.lignee = function (saga, ch) {
+    const k = clef(saga, ch); if (lignees[k]) return lignees[k];
+    const E = id => defDe(saga, id) || {}, idoles = [], vus = [];
+    const tete = g => g.slice().sort((a, b) => (PALIER[E(b).tier] || 0) - (PALIER[E(a).tier] || 0))[0];
+    const combat = (g, boss) => { if (!Array.isArray(g)) return; if (boss) { const t = tete(g); if (t && !E(t).vice && !idoles.includes(t)) idoles.push(t); } g.forEach(id => { if (!vus.includes(id)) vus.push(id); }); };
+    const lire = ops => D.parcours(ops, o => {
+      if (o[0] === 'battle' && o[1]) combat(o[1].group, !!o[1].boss);
+      else if (o[0] === 'parley' && o[1]) (o[1].rounds || []).forEach(r => { if (r.noir) combat(r.noir.group, false); });
+    });
+    (ch.foes || []).forEach(f => combat(f.group, !!f.boss));
+    lire(ch.intro); (ch.objectives || []).forEach(o => lire(o.then)); lire(ch.outro); (ch.npcs || []).forEach(n => lire(n.talk));
+    return (lignees[k] = { idoles, egregores: vus.filter(id => !idoles.includes(id) && !E(id).vice && !E(id).idee), idees: vus.filter(id => E(id).idee) });
+  };
+  M.idole = (saga, ch) => M.lignee(saga, ch).idoles[0] || null;
+  // ce combat est-il celui de l'idole du chapitre en cours ?
+  M.estIdole = opts => !!(opts && opts.boss && Array.isArray(opts.group) && W.saga && W.ch && M.lignee(W.saga, W.ch).idoles.some(id => opts.group.includes(id)));
+
+  /* ----- l'enracinement : de 1 à 5, part de 3 ; plafonné à 4 dans le premier chapitre d'une saga ----- */
+  M.niveau = function (saga, ch) {
+    saga = saga || W.saga; ch = ch || W.ch; if (!saga || !ch) return 3;
+    const ev = st().ev[clef(saga, ch)] || {}; let n = 3; Object.keys(ev).forEach(k => { n += ev[k]; });
+    return I.clamp(n, 1, saga.chapters.indexOf(ch) === 0 ? 4 : 5);
+  };
+  // un chapitre qui commence repart de 3 (une reprise garde ce qui était écrit)
+  M.ouvre = function () { if (W.saga && W.ch) delete st().ev[clef(W.saga, W.ch)]; };
+  // Un événement du chapitre en cours : pourparler ('p'), idée noire ('n'), choix de fidélité ('c'). `d` vaut −1, 0 ou +1.
+  // Jamais une œuvre ni une prière (exigences 13 et 15) : seule la parole déracine.
+  M.note = function (sorte, nom, d) {
+    if (!W.saga || !W.ch || !M.idole(W.saga, W.ch)) return;
+    const k = clef(W.saga, W.ch), ev = st().ev[k] || (st().ev[k] = {}), avant = M.niveau();
+    ev[sorte + I.hash(String(nom))] = d;
+    const apres = M.niveau(); if (apres === avant) return;
+    I.oeuvres.learn('enracinement');
+    S.toast((apres < avant ? '<b>L’idée perd une racine</b> ' : '<b>L’idée s’enracine</b> ') + traits(apres), 2600);
+  };
+  // le poids de l'épreuve suit l'enracinement : 1, 2 ou 3 (2 tant que rien n'a bougé)
+  M.poids = function (opts) { if (!M.estIdole(opts)) return 2; const n = M.niveau(); return n <= 2 ? 1 : n >= 4 ? 3 : 2; };
+  // à l'entrée du combat : un voile de moins quand l'idée est déracinée ; un de plus, à la première tentative seulement,
+  // quand elle a pris toute sa place. Rend le niveau, ou null si ce combat n'est pas celui d'une idole.
+  M.entree = function (opts, first, foes) {
+    if (!M.estIdole(opts)) return null; const n = M.niveau(), ids = M.lignee(W.saga, W.ch).idoles, d = n === 1 ? -1 : (n === 5 && first) ? 1 : 0;
+    if (d) foes.forEach(e => { if (ids.includes(e.id) && !e.cut) { e.veilsMax = Math.max(1, e.veilsMax + d); e.veils = e.veilsMax; } });
+    I.oeuvres.learn('enracinement');
+    return n;
+  };
+  M.chute = function (opts) { if (!M.estIdole(opts)) return; const n = M.niveau(); M.lignee(W.saga, W.ch).idoles.forEach(id => { if (opts.group.includes(id)) st().tombees[W.saga.id + ':' + id] = n; }); };
+
+  /* ----- l'idée noire : on lui répond, par la parole, la pédagogie, la bienveillance ----- */
+  M.estIdee = N => !!(N && Array.isArray(N.group) && N.group.length && N.group.every(id => (defDe(W.saga, id) || {}).idee));
+  M.dissiper = async function (N, P) {
+    const id = N.group[0], e = defDe(W.saga, id), X = e.parole, sv = I.save.data; let fautes = 0;
+    I.oeuvres.learn('idees_noires'); M.apprendre(['echelle']);
+    await S.card('title parley noir', `<img class="idee" alt="" src="${M.url(id)}"><p class="small">Une idée noire</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">On ne la combat pas : on lui répond. Par la parole, la pédagogie, la bienveillance.</p><div class="rule"></div><div class="hint">▼</div>`);
+    for (let k = 0; k < X.voies.length; k++) {
+      await S.run([['say', P.with, X.dit[k]]]); S.hideDialog();
+      let reste = Object.keys(D.VOIES);
+      for (;;) {
+        let pips = ''; for (let i = 0; i < X.voies.length; i++) pips += `<i class="pip${i >= k ? ' on' : ''}"></i>`;
+        const tete = `<span class="seal idee" style="background-image:url(${M.url(id)})"></span><span class="pt"><b>${I.esc(N.name)}</b><small>une idée noire : on lui répond</small></span><span class="trust">Voiles <span class="pips">${pips}</span></span>`;
+        const opts = reste.map(v => ({ ok: v === X.voies[k], html: `<b>${D.VOIES[v].name}</b> <small class="voie">${D.VOIES[v].de}</small><br>${I.fmt(X.rep[v])}` }));
+        // ce qu'il vient de dire reste sous les yeux pendant que l'on choisit
+        const v = reste[await S.menuPick({ html: 'Comment lui réponds-tu ?<small>« ' + I.fmt(X.dit[k]) + ' »</small>' }, opts, tete)];
+        if (v === X.voies[k]) { I.audio.sfx('light'); S.toast('<b>Un voile tombe</b>', 1800); if (X.oui && X.oui[k]) await S.run([['nar', X.oui[k]]]); S.hideDialog(); break; }
+        fautes++; I.audio.sfx('dark'); await S.run([['nar', X.non[v]]]); S.hideDialog(); reste = reste.filter(x => x !== v);
+      }
+    }
+    // dissipée : elle entre au Recueil comme un égrégore rencontré ; la sagesse vient de l'échange, non d'un combat
+    const cid = 'foe:_:' + id; if (!sv.codex.includes(cid)) sv.codex.push(cid);
+    const xp = Math.round(I.calc.xpOf(Object.assign({}, e, { lvl: Math.max(1, W.hero(W.party[0]).lvl) })) * 0.7), lignes = I.battle.grantXP(xp);
+    I.audio.sfx('roll'); G.flash('#ffe08a');
+    await S.card('victory', `<p class="small">${fautes ? 'Il a fallu s’y reprendre' : 'Du premier coup'}</p><h1>L’idée noire se dissipe</h1><ul><li>${I.esc(e.name)} : ${X.voies.map(v => D.VOIES[v].de).join(', puis ')}</li><li>Sagesse acquise : <b>+${xp}</b></li>${lignes.join('')}</ul><div class="hint">▼</div>`);
+    M.note('n', P.title + '|' + N.name, fautes ? 0 : -1);
+    return fautes;
+  };
+
+  /* ----- le Recueil : les entrées de l'organigramme s'ouvrent ensemble, sans quatre messages ----- */
+  M.apprendre = function (ids) {
+    const sv = I.save.data, L = (ids || ['iblis', 'souffleurs', 'echelle', 'enracinement']).filter(id => !sv.codex.includes('coeur/' + id) && (C0().codex || []).some(c => c.id === id));
+    if (!L.length) return; L.forEach(id => sv.codex.push('coeur/' + id));
+    S.toast(L.length > 1 ? 'Recueil : <b>' + L.length + ' entrées</b> sur l’organigramme du mal' : 'Recueil : <b>' + I.esc(C0().codex.find(c => c.id === L[0]).title) + '</b>');
+  };
+
+  /* ----- dessin : l'image d'un égrégore, gardée en mémoire (les deux premiers rangs n'ont pas d'image) ----- */
+  const urls = {};
+  M.url = function (id, saga) {
+    const e = defDe(saga || W.saga, id); if (!e) return ''; const k = e.art + '|' + e.hue;
+    if (urls[k] === undefined) { try { urls[k] = G.enemy(e.art, e.hue, 1, 0).toDataURL(); } catch (x) { urls[k] = ''; } }
+    return urls[k];
+  };
+  const puce = (id, saga, cls) => { const e = defDe(saga, id); return e ? `<span class="pu ${cls || ''}"><img alt="" src="${M.url(id, saga)}">${I.esc(e.name)}</span>` : ''; };
+
+  /* ----- la page de la halte ----- */
+  // vue d'ensemble : deux étages séparés par une couture ; le lien en pointillé s'arrête au cœur
+  M.paneVue = function () {
+    const T = C0().mal || { rangs: {} }, R = T.rangs, sv = I.save.data;
+    const rang = (k, plus) => { const r = R[k]; if (!r) return ''; return `<div class="rg ${r.etage === 'image' ? 'bas' : 'haut'} r-${k}"><p class="nm"><b>${I.esc(r.name)}</b> <em>${I.esc(r.sous)}</em></p><p>${I.fmt(r.texte)}</p>${plus || ''}<p class="rep">▸ ${I.fmt(r.reponse)}</p>${r.src ? `<p class="src">${I.esc(r.src)}</p>` : ''}</div>`; };
+    const lien = (t, pt) => `<div class="lien${pt ? ' pt' : ''}">${I.esc(t)}</div>`;
+    const racines = '<div class="pus">' + D.NOIRS.map(id => puce(id, null, 'noir')).join('') + '</div><div class="pus">' + Object.keys(D.VICES).map(id => puce(id, null, 'vice')).join('') + '</div>';
+    const nE = sv.codex.filter(c => c.indexOf('foe:') === 0).length, nI = Object.keys(st().tombees).length;
+    return `<h3>${I.esc(T.titre || 'Organigramme du mal')}</h3><p class="src">${I.fmt(T.chapeau || '')}</p><div class="orga">` +
+      rang('iblis') + lien('à son service', true) + rang('souffleurs') + lien('souffle', true) + rang('coeur') +
+      `<p class="couture">${I.fmt(T.couture || '')}</p>` +
+      rang('racines', racines) + lien('reprise par beaucoup de cœurs') + rang('egregores', `<p class="src">Rencontrés jusqu’ici : <b>${nE}</b>.</p>`) + lien('enracinée') + rang('idoles', `<p class="src">Tombées jusqu’ici : <b>${nI}</b>. Chacune a sa jauge : ${traits(3)}</p>`) +
+      '</div>';
+  };
+  // les maillons où l'on rencontre des idoles ; l'histoire-cadre en dernier
+  const ROMAIN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+  M.epoques = () => (I.sagaList || Object.values(I.sagas)).filter(s => !s.commun && (s.chapters || []).some(ch => M.lignee(s, ch).idoles.length || ch.vice)).sort((a, b) => (a.frame && !a.veillees ? 99 : a.order) - (b.frame && !b.veillees ? 99 : b.order));
+  M.nomEpoque = s => s.veillees ? 'Les veillées de la Citadelle' : s.frame ? 'La Cité-Miroir · ' + String(s.years).split('·')[0].trim() : 'Maillon ' + (ROMAIN[s.order] || s.order) + ' · ' + String(s.years).split('·')[0].trim();
+  M.paneEpoque = function (s) {
+    const sv = I.save.data, T = C0().mal || {}, vu = id => sv.codex.includes('foe:' + (s.enemies[id] ? s.id : '_') + ':' + id), ici = ch => W.saga === s && W.ch === ch;
+    let h = `<h3>${I.esc(M.nomEpoque(s))}</h3><p class="src">${I.fmt((T.jauge || {}).note || '')}</p><div class="orga epoque">`, rien = true;
+    s.chapters.forEach(ch => {
+      const L = M.lignee(s, ch), eg = L.egregores.filter(vu).map(id => puce(id, s)).join('');
+      L.idoles.forEach(id => {
+        const e = defDe(s, id), tombee = st().tombees[s.id + ':' + id], connue = tombee !== undefined || vu(id) || ici(ch);
+        if (!connue) { h += '<div class="rg bas inconnue"><p class="src">Pas encore rencontrée.</p></div>'; return; }
+        rien = false;
+        const n = tombee !== undefined ? tombee : M.niveau(s, ch), etat = tombee !== undefined ? 'idole tombée' : ici(ch) ? 'devant toi' : 'idole rencontrée';
+        const rc = [].concat(e.racine || []).map(r => puce(r, null, defDe(null, r) && defDe(null, r).vice ? 'vice' : 'noir')).join('');
+        h += `<div class="rg bas"><p class="src">${I.esc(ch.title)}</p><p class="nm"><img class="ido" alt="" src="${M.url(id, s)}"><b>${I.esc(e.name)}</b> ${traits(n)} <small>${etat}</small></p>` +
+          (rc ? `<p class="lg"><span class="et">racine</span>${rc}</p>` : '') + (eg ? `<p class="lg"><span class="et">égrégores</span>${eg}</p>` : '') + `<p class="rep">▸ ${I.fmt(((T.rangs || {}).idoles || {}).reponse || '')}</p></div>`;
+      });
+      if (!L.idoles.length && ch.vice && (eg || ici(ch))) { rien = false; const m = defDe(null, ch.vice);
+        h += `<div class="rg bas"><p class="src">${I.esc(ch.title)}</p>${eg ? `<p class="lg"><span class="et">égrégore</span>${eg}</p>` : ''}<p class="lg"><span class="et">derrière lui</span>${puce(ch.vice, null, 'vice')}</p><p class="rep">▸ ${I.esc(m ? 'Le mal du cœur : par l’œuvre, qui forge sa lame.' : '')}</p></div>`; }
+    });
+    return h + '</div>' + (rien ? '<p>Aucune idole rencontrée ici pour l’instant.</p>' : '');
+  };
+})();
+
 /* ==== src/core/battle.js ==== */
 /* ISNAD — combat : ordre des tours visible (CTB), voiles et faiblesses, Niyya (élan), Sakîna (ultime). */
 (function () {
@@ -4116,12 +4322,14 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
     C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 6 * (P.priere || 0)); else { e.def.weak.slice(0, Math.floor((P.savoir || 0) / 2)).forEach(w => { e.known[w] = true; }); } });
     // le cœur : l'épreuve consomme la provision ; ce qui manque pèse. Celui qui languit tient moins.
     const HC = I.oeuvres.enter(opts, first); C.lack = HC.lack || 0;
+    // l'enracinement de l'idole : il a déjà pesé sur l'épreuve (O.weight) ; ici, sur ses voiles
+    C.rac = I.mal.entree(opts, first, C.all.filter(e => e.side === 'foe'));
     C.all.forEach(e => { if (e.side === 'hero' && I.oeuvres.afflicted(e.id)) { e.max.hp = Math.round(e.max.hp * 0.75); e.hp = Math.min(e.hp, e.max.hp); } });
     refresh();
     if (first && opts.intro) await banner(I.esc(opts.intro), readTime(opts.intro), true, 'speech intro');
     else if (first) await banner(opts.boss ? `${d0.name} se dresse.` : 'Une emprise se referme…', 1100);
     if (HC.w) {
-      await banner(`<small>Épreuve de poids ${HC.w} · provision du cœur ${HC.had}</small>${C.lack ? 'Le cœur est lourd' : 'Le cœur est prêt'}`, 1500, false, C.lack ? 'speech foe' : 'speech intro');
+      await banner(`<small>Épreuve de poids ${HC.w} · provision du cœur ${HC.had}${C.rac ? ' · enracinement ' + I.mal.traits(C.rac) : ''}</small>${C.lack ? 'Le cœur est lourd' : 'Le cœur est prêt'}`, 1500, false, C.lack ? 'speech foe' : 'speech intro');
       if (!C.lack) C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 10); });
     }
     for (const e of alive('foe')) {
@@ -4170,7 +4378,7 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
     if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.back(); else I.audio.afterJingle = I.audio.place || null; }
     const foes0 = C.all.filter(e => e.side === 'foe');
     const prise = C.prise;
-    if (result === 'win') { await S.fade('in', 260); await I.oeuvres.leave(opts, foes0, result); }
+    if (result === 'win') { await S.fade('in', 260); I.mal.chute(opts); await I.oeuvres.leave(opts, foes0, result); }
     C = null;
     // la pièce trouvée : on propose aussitôt de la porter (le joueur de test s'équipe au mieux)
     if (result === 'win' && prise) { I.gear.learn(); if (I.debug.auto) I.gear.bestAll(); else await I.gear.offer(prise); if (prev === W) W.hud(); }
@@ -4459,7 +4667,7 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
     }
     W.persistHeroes();
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
-    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? 'La lame a tranché' : 'Sans sa lame, le mal recule') : C.opts.noir ? 'On ne l’a pas combattue contre lui, mais pour lui' : C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>${maux.length ? (maux.every(e => e.cut) ? 'Tranché' : maux.some(e => e.cut) ? 'Tranché et repoussé' : 'Repoussé') : C.opts.noir ? 'L’idée noire se dissipe' : 'Dévoilement'}</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
+    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? 'La lame a tranché' : 'Sans sa lame, le mal recule') : C.opts.noir ? 'On ne l’a pas combattu contre lui, mais pour lui' : C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>${maux.length ? (maux.every(e => e.cut) ? 'Tranché' : maux.some(e => e.cut) ? 'Tranché et repoussé' : 'Repoussé') : C.opts.noir ? 'L’égrégore lâche prise' : 'Dévoilement'}</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
   async function defeat() {
     I.audio.sfx('dark');
@@ -4762,6 +4970,7 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
     pied('Garder une copie', async () => { close(); await U.saveMenu(); U.showChain(); });
     pied('Recueil', () => { close(); U.pause('codex', () => U.showChain()); });
     pied('Aide', () => { close(); U.pause('aide', () => U.showChain()); });
+    pied('Organigramme', () => { close(); U.pause('mal', () => U.showChain()); });
     pied('Écran-titre', () => { close(); U.showTitle(); });
     foot.appendChild(I.el('span', 'ver', 'version ' + (window.ISNAD_VERSION || 'de travail')));
     screen('#chain', true); $('#chain').scrollTop = 0;
@@ -4853,6 +5062,7 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
       items.push({ cat: 'Le groupe' }, { label: 'Compagnons', fn() {}, show: () => '<h3>Le groupe</h3>' + party() }, { label: 'Équipement', fn() { equip(); }, show: () => I.gear.paneGroupe() }, { label: 'Besace', fn() {}, show: bag }, { label: 'Piliers', fn() {}, show: pillars });
       items.push({ cat: 'Le cœur' }, { label: 'Œuvres et lames', fn() {}, show: () => I.oeuvres.paneOeuvres() }, { label: 'Compagnons de lumière', fn: betes, show: () => I.oeuvres.paneAnimaux() });
       items.push({ cat: 'Le savoir' }, { label: 'Recueil', fn: codex, show: () => `<h3>Le Recueil</h3><p>Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère. ${sv.codex.length} entrée${sv.codex.length > 1 ? 's' : ''} pour l’instant. Chaque savoir peut ouvrir un argument dans un pourparler.</p>` },
+        { label: 'Organigramme du mal', fn: mal, show: () => I.mal.paneVue() },
         { label: 'Aide du jeu', fn: aide, show: () => '<h3>Aide du jeu</h3><p>Les règles, thème par thème : ' + U.AIDE.map(a => a[0].toLowerCase()).join(', ') + '.</p>' });
       items.push({ cat: 'Réglages' },
         toggle('Texte', () => ['normal', 'grand', 'très grand'][o.tz || 0], () => { o.tz = ((o.tz || 0) + 1) % 3; U.applyOpts(); }, 'Taille des caractères dans les dialogues, les menus et les combats.'),
@@ -4931,7 +5141,14 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
       $('#menu h2').textContent = 'Le Recueil';
       build(items, { onCancel: mode === 'codex' ? close : root });
     };
-    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'aide') aide(); else if (mode === 'equip') equip(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
+    // l'organigramme du mal : la vue d'ensemble, puis les idoles rencontrées, maillon par maillon
+    const mal = () => {
+      const Ml = I.mal, back = mode === 'mal' ? close : root, items = [{ label: '◂ Retour', fn: back, show: () => Ml.paneVue() }, { label: 'Vue d’ensemble', fn() {}, show: () => Ml.paneVue() }, { cat: 'Les idoles rencontrées' }];
+      Ml.epoques().forEach(s => items.push({ label: I.esc(Ml.nomEpoque(s)), fn() {}, show: () => Ml.paneEpoque(s) }));
+      Ml.apprendre(); $('#menu h2').textContent = 'Organigramme du mal';
+      build(items, { onCancel: back, start: 1 });
+    };
+    screen('#menu', true); if (mode === 'codex') codex(); else if (mode === 'mal') mal(); else if (mode === 'aide') aide(); else if (mode === 'equip') equip(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
   };
 
   /* ---------- l'aide du jeu, thème par thème ---------- */
@@ -4944,9 +5161,10 @@ window.ISNAD_VERSION = "2026-11-15 11:17 UTC · 44b80ca+";
     ['Caravanes', '<p>Aux ballots du souk ou du camp, on vend, on achète, et l’on confie une cargaison à une caravane : elle revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue, que des pactes sont noués et que des méharistes la gardent. Si elle est pillée, on lève des renforts, on parle d’abord, et l’on rend à chacun ce qui lui revient.</p>'],
     ['Bâtir', '<p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose case par case, devant soi ou en touchant la case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>'],
     ['Équipement', '<p>Chaque compagnon a quatre emplacements : <b>main droite</b> (épée, lance, arc, dague, masse, bâton ou calame), <b>main gauche</b> (bouclier, ou un outil pour qui n’en porte pas), <b>tête</b> (turban, calotte ou casque) et <b>corps</b> (étoffe, cuir ou armure). Chaque rôle a ses pièces : un sage ne porte pas de cotte de mailles, un guerrier n’a que faire d’un calame.</p><p>Les pièces viennent des <b>coffres</b>, des <b>victoires</b> (toujours après une idole, parfois après un combat ordinaire) et de la <b>boutique d’équipement</b>, au comptoir : chaque lieu a ses artisans, et l’on n’y trouve pas la même chose à Médine, au camp ou dans une ville de Rûm. Elles vont dans une <b>réserve</b> commune à toute la Chaîne ; à la fin d’un maillon, ce que le groupe portait y retourne.</p><p>Dans la halte, <b>Équipement</b> montre ce que chaque pièce change avant de la choisir ; <b>Au mieux</b> habille tout le groupe d’un geste. Une lance perce la garde, une dague frappe parfois deux fois, un arc tire le premier, une masse étourdit, un bouclier pare, un casque évite d’être étourdi ; le fer protège mais ralentit.</p><p>Ce sont des objets ordinaires, sans relique ni inscription. Le fer aide à tenir : il ne remplace pas la provision du cœur.</p>'],
-    ['Les œuvres et la provision', '<p>Sur la natte d’une mosquée, on prie, et l’on accomplit les <b>œuvres du jour</b> : le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite ; parfois le pèlerinage. Trois par chapitre au plus, la prière en sus. Chacune ajoute à la <b>provision du cœur</b> (♥, cinq au plus).</p><p>Plus une épreuve est lourde, plus elle en demande : une idole pèse 2, un mal du cœur 3. Qui s’y présente sans provision combat <b>le cœur lourd</b> : il frappe moins fort et reçoit davantage. Le bouton <b>?</b> annonce le poids de l’épreuve qui vient.</p><p>Un jour de <b>jeûne</b>, les vivres de la besace attendent le soir. L’aumône coûte des dirhams. Ces œuvres ne sont pas des sortilèges : le jeu traduit à sa façon ce qu’elles font au cœur.</p>'],
+    ['Les œuvres et la provision', '<p>Sur la natte d’une mosquée, on prie, et l’on accomplit les <b>œuvres du jour</b> : le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite ; parfois le pèlerinage. Trois par chapitre au plus, la prière en sus. Chacune ajoute à la <b>provision du cœur</b> (♥, cinq au plus).</p><p>Plus une épreuve est lourde, plus elle en demande : une idole pèse de 1 à 3 selon son enracinement, un mal du cœur 3. Qui s’y présente sans provision combat <b>le cœur lourd</b> : il frappe moins fort et reçoit davantage. Le bouton <b>?</b> annonce le poids de l’épreuve qui vient.</p><p>Un jour de <b>jeûne</b>, les vivres de la besace attendent le soir. L’aumône coûte des dirhams. Ces œuvres ne sont pas des sortilèges : le jeu traduit à sa façon ce qu’elles font au cœur.</p>'],
     ['Lames et maux du cœur', '<p>Sept maux du cœur se tiennent derrière les idoles : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. On les rencontre à la fin de chaque rencontre de la Cité-Miroir, et tous ceux qui restent au dernier chapitre.</p><p>Une œuvre pratiquée forge une <b>lame</b> : trois jeûnes pour le Contentement, trois prières pour la Sincérité, trois aumônes pour la Largesse, trois études pour l’Ardeur, trois visites pour la Bienveillance, trois dhikr pour la Longanimité, un pèlerinage pour l’Humilité. Sans sa lame, un mal est seulement <b>repoussé</b> : il revient. Avec elle, il est <b>tranché</b>.</p><p>La page « Œuvres et lames » de la halte tient le compte.</p>'],
-    ['Idées noires et énigmes', '<p>Dans un pourparler, il arrive que la <b>honte</b>, la <b>peur</b>, le <b>soupçon</b>, la <b>rancune</b> ou le <b>désespoir</b> parlent plus fort que toi. Il faut alors dissiper cette idée noire dans la noosphère : on ne la combat pas contre l’homme, mais pour lui. Après quoi il écoute, et la confiance monte.</p><p>Une <b>énigme du cœur</b> : un compagnon languit sans fièvre ni blessure. Il tient moins bien au combat tant qu’on n’a pas trouvé ce qu’il a cessé de faire. Les anciens donnent des indices ; la bonne œuvre, accomplie sur la natte, le remet debout.</p>'],
+    ['À chaque mal sa réponse', '<p>L’<b>organigramme du mal</b> (halte, « Le savoir ») range ce que l’on rencontre et dit comment y répondre. À l’<b>idée noire</b>, qui pèse sur une personne : la parole, la pédagogie, la bienveillance. À l’<b>égrégore</b>, que beaucoup de cœurs nourrissent : le combat. À l’<b>idole</b>, enracinée : une bataille déclarée. On ne combat ni Iblîs ni ceux qui soufflent, et l’on ne s’en prend à aucun djinn : on répond à ce qui a été soufflé.</p><p>Chaque idole a une jauge d’<b>enracinement</b>, de ▮ à ▮▮▮▮▮. Un pourparler gagné, une idée noire dissipée du premier coup la font baisser ; une parole manquée, un acte que les transmetteurs n’ont pas rapporté la font monter. Déracinée, l’idole pèse moins sur la provision du cœur et garde un voile de moins ; enracinée, elle pèse davantage. La jauge se dit d’une idole, jamais d’une époque ni de ses gens.</p>'],
+    ['Idées noires et énigmes', '<p>Dans un pourparler, il arrive que la <b>honte</b>, la <b>peur</b>, le <b>soupçon</b>, la <b>rancune</b> ou le <b>désespoir</b> parlent plus fort que toi. On ne la combat pas : on lui <b>répond</b>. Elle a deux voiles ; à chacun, tu choisis ta manière : <b>dire vrai</b> (la parole), <b>expliquer</b> (la pédagogie) ou <b>rassurer</b> (la bienveillance). La bonne manière fait tomber le voile ; une autre t’apprend pourquoi elle ne portait pas. Après quoi il écoute, et la confiance monte.</p><p>Une <b>énigme du cœur</b> : un compagnon languit sans fièvre ni blessure. Il tient moins bien au combat tant qu’on n’a pas trouvé ce qu’il a cessé de faire. Les anciens donnent des indices ; la bonne œuvre, accomplie sur la natte, le remet debout.</p>'],
     ['Compagnons de lumière', '<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>'],
     ['Si le jeu s’arrête', '<p>Si l’écran reste noir ou si plus rien ne répond pendant un quart de minute, un bouton <b>Reprendre</b> apparaît en bas de l’écran : il ramène au dernier objectif atteint, sans rien perdre de ce qui a été sauvegardé.</p><p>La partie se garde toute seule : en dernier recours, <b>recharge la page</b> puis choisis « Continuer ».</p><p>Dans la halte, <b>Diagnostic</b> donne la version du jeu, l’appareil, l’état du son et les incidents relevés : c’est ce qu’il faut transmettre pour qu’une panne soit comprise. Couper le son ou la musique (Réglages) suffit parfois à la contourner.</p>'],
     ['La Chaîne', '<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>']
@@ -5241,7 +5459,7 @@ ISNAD.registerSaga({
       skills: [{ w: 3, name: 'Notation', target: 'foe', el: 'adl', pow: 1.3, fx: [{ st: 'atk', v: -1, chance: 0.6 }], anim: 'dark' }, { w: 2, name: 'Classement', target: 'foes', el: 'fer', pow: 0.8, anim: 'wave' }],
       phases: [{ at: 0.5, say: 'Vous valez ce que je dis que vous valez.', fx: [{ st: 'atk', v: 1 }] }],
       desc: 'La valeur d’un homme réduite à un nombre que d’autres lui attribuent. Une balance fausse : la miséricorde et la justice la renversent.' },
-    flux: { name: 'Le Flux', art: 'wave', hue: 200, scale: 2, lvl: 9, tier: 'elite', weak: ['sabr', 'ilm'], immune: ['fer'], veils: 4,
+    flux: { racine: 'insouciance', name: 'Le Flux', art: 'wave', hue: 200, scale: 2, lvl: 9, tier: 'elite', weak: ['sabr', 'ilm'], immune: ['fer'], veils: 4,
       skills: [{ w: 3, name: 'Défilement sans fin', target: 'foes', el: 'ilm', pow: 0.8, fx: [{ st: 'waswas', turns: 2, chance: 0.5 }], anim: 'wave' }, { w: 1, name: 'Lecture automatique', target: 'self', fx: [{ st: 'spd', v: 1 }], anim: 'guard' }],
       phases: [{ at: 0.5, say: 'Encore un. Encore un. Encore un.', fx: [{ st: 'spd', v: 1 }] }],
       desc: 'Héritier de la Rumeur : mille voix à la fois, dont aucune ne répond de ce qu’elle dit. On ne le frappe pas ; on cesse de le suivre.' },
@@ -5265,7 +5483,7 @@ ISNAD.registerSaga({
       skills: [{ w: 3, name: 'Relevé', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'spd', v: -1, chance: 0.3 }], anim: 'glyph' }],
       taunts: ['Combien l’ont vu ?'],
       desc: 'Un savoir fait d’additions, que personne n’est allé vérifier. Il sait tout et n’a rien vu. Il cède quand on lui demande de qui il le tient.' },
-    agregor: { name: "L'AGRÉGOR", art: 'idol', hue: 285, scale: 3, lvl: 11, tier: 'boss', weak: ['sidq', 'adl', 'shajaa', 'rahma', 'ilm', 'sabr'], veils: 7,
+    agregor: { racine: ['avidite', 'orgueil', 'ostentation', 'avarice', 'insouciance', 'envie', 'colere'], name: "L'AGRÉGOR", art: 'idol', hue: 285, scale: 3, lvl: 11, tier: 'boss', weak: ['sidq', 'adl', 'shajaa', 'rahma', 'ilm', 'sabr'], veils: 7,
       skills: [
         { w: 3, name: 'Mille regards', target: 'foes', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'wave' },
         { w: 3, name: 'Culte', target: 'foe', el: 'ilm', pow: 1.5, anim: 'dark' },
@@ -5350,6 +5568,9 @@ ISNAD.registerSaga({
           ['ask', 'Que demander à Maître Yûnus ?', [
             { t: 'Pourquoi les idoles reviennent-elles toujours ?', r: [['say', 'yunus_n', 'Parce que le cœur ne reste jamais vide. Ôte-lui ce qui est plus grand que lui, il se prosternera devant ce qui est plus petit : un clan, un chef, un chiffre.']] },
             { t: 'Qu’est-ce que l’isnâd ?', r: [['say', 'yunus_n', 'La chaîne. « Untel m’a rapporté, d’après untel, qui l’a vu. » Des hommes ont passé leur vie à vérifier chaque maillon. C’est ainsi qu’une parole traverse quatorze siècles sans se dissoudre.']] },
+            { t: 'D’où viennent les idées noires ?', r: [
+              ['say', 'yunus_n', 'On nous a enseigné qu’il en est qui soufflent, parmi les djinns et parmi les hommes, et qu’ils n’ont d’autre pouvoir que celui-là. Je ne te les montrerai pas : nul ne les voit, et ce n’est pas eux que tu rencontreras.'],
+              ['say', 'yunus_n', 'Tu rencontreras ce qu’un cœur fait de ce qu’il a entendu. Retiens ceci : le souffle appelle, le cœur répond. C’est au cœur qu’on demande des comptes.']] },
             { t: 'Je suis prêt.', r: [['say', 'yunus_n', 'Personne ne l’est. C’est pour cela qu’on ne marche pas seul.']] }
           ]],
           ['codex', 'isnad'],
@@ -6324,7 +6545,7 @@ ISNAD.registerSaga({
       skills: [{ w: 2, name: '« On dit que… »', target: 'foe', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'dark' }],
       taunts: ['Il dort seulement.', 'Qui te l’a dit ? Personne. Tout le monde.'],
       desc: "Ce qui se dit à mi-voix dans une maison où l'on cache une mort. Il n'a pas de corps : il emprunte celui de qui le répète. Une parole dite à voix haute le dissipe." },
-    ombre_pere: { name: "L'Ombre du Père", art: 'throne', hue: 35, scale: 2, lvl: 4, tier: 'elite', weak: ['sidq', 'sabr'], veils: 4,
+    ombre_pere: { racine: 'noir_peur', name: "L'Ombre du Père", art: 'throne', hue: 35, scale: 2, lvl: 4, tier: 'elite', weak: ['sidq', 'sabr'], veils: 4,
       skills: [
         { w: 3, name: '« Il dort seulement »', target: 'foes', el: 'ilm', pow: 0.75, fx: [{ st: 'spd', v: -1, chance: 0.5 }], anim: 'wave' },
         { w: 2, name: 'Poids du nom', target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'atk', v: -1, chance: 0.5 }], anim: 'dark' },
@@ -6338,7 +6559,7 @@ ISNAD.registerSaga({
       skills: [{ w: 2, name: 'Prix du repos', target: 'foe', el: 'fer', pow: 1.0, fx: [{ st: 'def', v: -1, chance: 0.4 }], anim: 'dark' }],
       taunts: ['Dix pièces la nuit. Qui s’en plaindrait ?'],
       desc: "Une petite pile de pièces contre une nuit de sommeil. Chacune pèse peu ; ensemble, elles retirent un homme du rempart et en écrasent un autre. La même loi pour tous les fait tomber." },
-    sommeil: { name: 'Le Sommeil', art: 'wave', hue: 230, scale: 2, lvl: 6, tier: 'elite', weak: ['adl', 'shajaa'], veils: 4,
+    sommeil: { racine: 'insouciance', name: 'Le Sommeil', art: 'wave', hue: 230, scale: 2, lvl: 6, tier: 'elite', weak: ['adl', 'shajaa'], veils: 4,
       skills: [
         { w: 3, name: 'Torpeur', target: 'foes', el: 'ilm', pow: 0.7, fx: [{ st: 'spd', v: -1, chance: 0.6 }], anim: 'wave' },
         { w: 2, name: 'Paupières lourdes', target: 'foe', el: 'fer', pow: 1.0, fx: [{ st: 'stun', chance: 0.35 }], anim: 'dark' },
@@ -6347,7 +6568,7 @@ ISNAD.registerSaga({
       phases: [{ at: 0.5, say: 'À quoi bon savoir ? Punis le petit, et que chacun retourne à son lit.', fx: [{ st: 'def', v: 1 }] }],
       taunts: ['Demain. Tout cela peut attendre demain.'],
       desc: "Le désir de toute une ville de ne pas savoir ce qui se vend sur son rempart. Il ne veut de mal à personne : il veut seulement qu'on le laisse. La Justice et le Courage le déchirent." },
-    tambour: { name: 'Le Tambour', art: 'banner', hue: 8, scale: 3, lvl: 6, tier: 'boss', weak: ['sabr', 'rahma'], immune: ['fer'], veils: 5,
+    tambour: { racine: 'ostentation', name: 'Le Tambour', art: 'banner', hue: 8, scale: 3, lvl: 6, tier: 'boss', weak: ['sabr', 'rahma'], immune: ['fer'], veils: 5,
       skills: [
         { w: 3, name: 'Roulement', target: 'foes', el: 'fer', pow: 0.85, anim: 'wave' },
         { w: 2, name: '« Son nom ! Son nom ! »', target: 'self', fx: [{ st: 'atk', v: 1 }], anim: 'guard' },
@@ -6364,7 +6585,7 @@ ISNAD.registerSaga({
       skills: [{ w: 3, name: 'De bonne source', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'waswas', turns: 2, chance: 0.4 }], anim: 'dark' }],
       taunts: ['Je le tiens de quelqu’un de sûr.', 'Il n’y a pas de fumée sans feu.'],
       desc: "Une phrase sans auteur. Chacun la tient d'un autre, qui la tient d'un autre. Demander « qui l'a dit ? » suffit le plus souvent à la défaire." },
-    bouc: { name: 'Le Bouc émissaire', art: 'mask', hue: 0, scale: 3, lvl: 7, tier: 'boss', weak: ['rahma', 'ilm', 'sidq'], veils: 5,
+    bouc: { racine: 'noir_rancune', name: 'Le Bouc émissaire', art: 'mask', hue: 0, scale: 3, lvl: 7, tier: 'boss', weak: ['rahma', 'ilm', 'sidq'], veils: 5,
       skills: [
         { w: 3, name: '« C’est eux »', target: 'foe', el: 'fer', pow: 1.5, fx: [{ st: 'def', v: -1, chance: 0.5 }], anim: 'dark' },
         { w: 3, name: 'Soif de coupable', target: 'foes', el: 'ilm', pow: 0.85, fx: [{ st: 'doute', turns: 1, chance: 0.3 }], anim: 'wave' },
@@ -6377,7 +6598,7 @@ ISNAD.registerSaga({
       ],
       taunts: ['Il faut bien que ce soit la faute de quelqu’un.', 'Ils ne sont pas d’ici.'],
       desc: "Un masque vide qui cherche un visage à qui s'ajuster. Il naît quand une foule qui souffre préfère un coupable à une cause. Lui en livrer un ne l'apaise pas : il en demande un second. Le Savoir, la Véracité et la Miséricorde le brisent." },
-    pur: { name: 'Le Pur', art: 'blade', hue: 200, scale: 3, lvl: 8, tier: 'boss', weak: ['ilm', 'rahma'], immune: ['adl'], veils: 6,
+    pur: { racine: 'orgueil', name: 'Le Pur', art: 'blade', hue: 200, scale: 3, lvl: 8, tier: 'boss', weak: ['ilm', 'rahma'], immune: ['adl'], veils: 6,
       skills: [
         { w: 3, name: 'Anathème', target: 'foe', el: 'adl', pow: 1.6, anim: 'slash' },
         { w: 3, name: 'Phrase unique', target: 'foes', el: 'adl', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.3 }], anim: 'wave' },
@@ -7096,7 +7317,11 @@ ISNAD.registerSaga({
      Ce ne sont pas des reliques, et aucune n'est attribuée à un personnage historique ;
    - les sept maux sont des égrégores abstraits. La liste de sept est un choix du jeu ;
    - les compagnons de lumière sont des figures du ciel : des noms d'étoiles qui prennent corps
-     dans la noosphère. Aucun n'accompagne un Compagnon dans le récit historique. */
+     dans la noosphère. Aucun n'accompagne un Compagnon dans le récit historique ;
+   - l'organigramme du mal (`mal`) est une lecture, pas une démonologie : Iblîs est nommé, jamais
+     montré ni combattu ; les souffleurs n'ont ni nom, ni figure, ni nombre ; aucun lien n'est tracé
+     d'un souffleur à un événement de l'histoire. Une idée noire ne se combat pas : on lui répond
+     (`parole` : deux voiles, et pour chacun la manière qui porte). Textes proposés, à valider. */
 ISNAD.registerSaga({
   id: 'coeur', commun: true, frame: true,
   name: 'Le cœur', epithet: 'Œuvres, lames et maux du cœur',
@@ -7225,19 +7450,100 @@ ISNAD.registerSaga({
 
     noir_honte: { name: 'La Honte', art: 'mirror', hue: 300, scale: 2, lvl: 0, tier: 'elite', weak: ['rahma', 'sidq'], veils: 2,
       skills: [{ w: 3, name: 'Que diront-ils ?', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'atk', v: -1, chance: 0.3 }], anim: 'dark' }, { w: 1, name: 'Baisser les yeux', target: 'foes', el: 'ilm', pow: 0.55, anim: 'wave' }],
-      desc: 'Une idée noire : la peur du regard des siens. Elle ne ment pas sur la faute, elle ment sur ce qu’on vaut encore. La miséricorde et la parole vraie la dissipent.' },
+      idee: true,
+      parole: { voies: ['bienveillance', 'parole'],
+        dit: ['Comment veux-tu que je reparaisse devant les miens, après cela ?', 'Tu es bon de le dire. Mais ce que j’ai fait, je l’ai fait.'],
+        rep: { bienveillance: '« Tu as failli, et tu restes des nôtres. L’un n’efface pas l’autre. »',
+          parole: '« Appelons la faute par son nom. Elle a cette taille-là, pas davantage, et elle se répare. »',
+          pedagogie: '« Laisse-moi te dire comment d’autres, avant toi, s’en sont relevés. »' },
+        non: { parole: 'Il baisse la tête. La faute, il la connaît mieux que toi : c’est son poids qui l’écrase. Il lui faut d’abord une main.',
+          pedagogie: 'Il n’écoute pas. On n’apprend rien tant qu’on se croit perdu aux yeux des siens.',
+          bienveillance: 'Il te remercie, et rien ne bouge. La douceur seule laisse la faute sans nom, donc sans fin. Il attend qu’on la mesure.' },
+        oui: ['Il relève un peu la tête.', 'Il respire. La faute a maintenant un nom et une taille : on peut la porter.'] },
+      desc: 'Une idée noire : la peur du regard des siens. Elle ne ment pas sur la faute, elle ment sur ce qu’on vaut encore. On lui répond par la bienveillance, puis par la parole vraie.' },
     noir_peur: { name: 'La Peur', art: 'wisp', hue: 262, scale: 2, lvl: 0, tier: 'elite', weak: ['shajaa', 'sidq'], veils: 2,
       skills: [{ w: 3, name: 'Et si ?', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'spd', v: -1, chance: 0.3 }], anim: 'dark' }, { w: 1, name: 'Le pire d’abord', target: 'foes', el: 'ilm', pow: 0.55, anim: 'wave' }],
-      desc: 'Une idée noire : ce qui n’est pas arrivé, vécu comme si c’était fait. Le courage et la parole vraie la dissipent.' },
+      idee: true,
+      parole: { voies: ['pedagogie', 'parole'],
+        dit: ['Et si tout tournait mal ? Je le vois déjà.', 'Soit. Mais le risque est là, tout de même.'],
+        rep: { pedagogie: '« Regardons ensemble ce qui est là, aujourd’hui. Pas ce qui pourrait venir : ce qui est. »',
+          parole: '« Oui, il y a un risque. Le voici, tel qu’il est. Je ne te le cache pas, et je ne le grossis pas. »',
+          bienveillance: '« N’aie pas peur. Tout ira bien. »' },
+        non: { parole: 'Tu nommes le danger, et il n’entend que ce mot. Sa peur vit de ce qui n’est pas arrivé : il faut d’abord la ramener à ce qui est.',
+          bienveillance: '« Tout ira bien » : il n’en croit rien, et il a raison de ne pas te croire sur parole. La peur ne cède pas aux promesses.',
+          pedagogie: 'Tu expliques encore, et il te soupçonne d’esquiver. Il a vu ce qui est ; il veut maintenant qu’on lui dise le risque en face.' },
+        oui: ['Il compte avec toi. Ce qui est là est plus petit que ce qu’il voyait.', 'Il hoche la tête. Un danger qu’on lui dit en face, il peut le regarder.'] },
+      desc: 'Une idée noire : ce qui n’est pas arrivé, vécu comme si c’était fait. On lui répond en regardant ce qui est, puis en disant le risque tel qu’il est.' },
     noir_soupcon: { name: 'Le Soupçon', art: 'lens', hue: 96, scale: 2, lvl: 0, tier: 'elite', weak: ['sidq', 'ilm'], veils: 2,
       skills: [{ w: 3, name: 'Il cache quelque chose', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'def', v: -1, chance: 0.3 }], anim: 'dark' }, { w: 1, name: 'On m’a déjà trompé', target: 'foes', el: 'ilm', pow: 0.55, anim: 'wave' }],
-      desc: 'Une idée noire : la blessure d’hier qui lit la main d’aujourd’hui. La parole vraie et le savoir la dissipent.' },
+      idee: true,
+      parole: { voies: ['parole', 'pedagogie'],
+        dit: ['Tu veux quelque chose. Tout le monde veut quelque chose.', 'Admettons. Qu’est-ce qui me prouve que tu dis vrai ?'],
+        rep: { parole: '« Oui, je veux quelque chose, et je vais te dire quoi. Tu jugeras. »',
+          pedagogie: '« Ne me crois pas sur parole. Voici de qui je le tiens, et comment tu peux le vérifier. »',
+          bienveillance: '« Je ne te veux que du bien, crois-moi. »' },
+        non: { bienveillance: '« Crois-moi » : c’est ce que disait celui qui l’a trompé. Sa méfiance se referme.',
+          pedagogie: 'Tu apportes tes preuves trop tôt. Il cherche d’abord ce que tu caches : tant que tu n’as pas dit ce que tu veux, tout argument est une ruse de plus.',
+          parole: 'Tu répètes que tu dis vrai. Il l’a entendu. Il demande maintenant de quoi vérifier, et tu ne lui donnes que ta parole.' },
+        oui: ['Il te regarde autrement : tu n’as pas nié avoir un but.', 'Il vérifiera. C’est tout ce que tu lui demandais.'] },
+      desc: 'Une idée noire : la blessure d’hier qui lit la main d’aujourd’hui. On lui répond par la parole vraie, puis en donnant de quoi vérifier.' },
     noir_rancune: { name: 'La Rancune', art: 'mask', hue: 2, scale: 2, lvl: 0, tier: 'elite', weak: ['rahma', 'adl'], veils: 2,
       skills: [{ w: 3, name: 'Je n’oublie pas', target: 'foe', el: 'fer', pow: 1.05, anim: 'slash' }, { w: 1, name: 'Compter les torts', target: 'foes', el: 'ilm', pow: 0.55, fx: [{ st: 'waswas', turns: 2, chance: 0.25 }], anim: 'wave' }],
-      desc: 'Une idée noire : un tort que l’on garde chaud. Elle veut moins réparation que mémoire. La miséricorde et la justice rendue la dissipent.' },
+      idee: true,
+      parole: { voies: ['parole', 'bienveillance'],
+        dit: ['On m’a fait tort. Personne ne l’a jamais dit.', 'C’est dit. Et maintenant, je devrais oublier ?'],
+        rep: { parole: '« On t’a fait tort. C’est vrai, et je le dis devant toi. »',
+          bienveillance: '« Je ne te demande pas d’oublier. Je te demande de ne plus porter cela seul. »',
+          pedagogie: '« Réfléchis : la rancune te coûte plus qu’à celui qui t’a lésé. »' },
+        non: { pedagogie: 'Il se raidit. On ne raisonne pas un homme dont personne n’a encore reconnu le tort : ta leçon sonne comme un reproche de plus.',
+          bienveillance: 'Ta douceur glisse sur lui. Elle vient trop tôt : tant que le tort n’est pas dit, toute consolation ressemble à une manière de le faire taire.',
+          parole: 'Tu redis le tort. Il le sait, et tu viens de l’y ramener. Ce qu’il lui faut à présent, c’est quelqu’un à côté de lui.' },
+        oui: ['Ses épaules s’abaissent. Quelqu’un l’a dit.', 'Il garde la mémoire du tort. Il n’en garde plus la braise.'] },
+      desc: 'Une idée noire : un tort que l’on garde chaud. Elle veut moins réparation que mémoire. On lui répond en disant le tort, puis en restant près de celui qui le porte.' },
     noir_desespoir: { name: 'Le Désespoir', art: 'wave', hue: 238, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'rahma'], veils: 2,
       skills: [{ w: 3, name: 'Il est trop tard', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'mag', v: -1, chance: 0.3 }], anim: 'dark' }, { w: 1, name: 'À quoi bon', target: 'foes', el: 'ilm', pow: 0.55, fx: [{ st: 'spd', v: -1, chance: 0.25 }], anim: 'wave' }],
-      desc: 'Une idée noire : croire qu’aucune porte ne reste. La patience et la miséricorde la dissipent.' }
+      idee: true,
+      parole: { voies: ['bienveillance', 'pedagogie'],
+        dit: ['À quoi bon ? Tout est joué.', 'Tu es là, c’est vrai. Mais que veux-tu que je fasse ?'],
+        rep: { bienveillance: '« Je ne te dis pas que c’est facile. Je reste là, c’est tout. »',
+          pedagogie: '« Pas tout. Une seule chose, la plus petite, celle qui est à ta portée ce soir. »',
+          parole: '« Tu te trompes : rien n’est joué. »' },
+        non: { parole: '« Tu te trompes » : il entend qu’on ne l’a pas écouté. Celui qui ne voit plus de porte n’a que faire d’un démenti.',
+          pedagogie: 'Tu lui montres un chemin, et il ne lève pas les yeux. Il faut d’abord quelqu’un près de lui ; les chemins viennent après.',
+          bienveillance: 'Tu restes, et il t’en sait gré. Mais rester ne suffit plus : il demande ce qu’il peut faire, et il lui faut un premier pas, un seul.' },
+        oui: ['Il ne répond pas. Mais il ne te demande pas de partir.', 'Une chose. Il peut faire une chose. Le reste attendra demain.'] },
+      desc: 'Une idée noire : croire qu’aucune porte ne reste. On lui répond en restant là, puis en montrant un seul pas.' }
+  },
+
+  /* ----- l'organigramme du mal : une lecture, pas une démonologie (exigence 18, proposée). Deux étages : ce qui est
+     enseigné (`etage: 'enseigne'`), puis les images du jeu (`etage: 'image'`). Textes proposés par l'agent, à valider. ----- */
+  mal: {
+    titre: 'Organigramme du mal',
+    chapeau: 'Qui souffle, qui consent, et ce que cela devient. À chaque étage sa réponse, et pas une de plus.',
+    rangs: {
+      iblis: { etage: 'enseigne', name: 'Iblîs', sous: 'l’ennemi déclaré',
+        texte: 'Le Coran le dit du nombre des djinns, et l’appelle un ennemi déclaré. Il n’a reçu aucun pouvoir sur les hommes : il appelle, et c’est tout. Le jeu le nomme ; il ne le montre pas, ne le fait pas parler et ne le fait pas combattre.',
+        reponse: 'On ne le combat pas. On cherche refuge contre lui, et l’on défait ce qu’il a soufflé.',
+        src: 'Coran 18:50 ; 2:168 ; 14:22' },
+      souffleurs: { etage: 'enseigne', name: 'Les souffleurs', sous: 'des démons d’entre les djinns, et parfois des hommes',
+        texte: 'Le Coran parle de celui « qui souffle le mal dans les poitrines des hommes, qu’il (le conseiller) soit un djinn, ou un être humain ». Dans le jeu, ils n’ont ni nom, ni figure, ni nombre. Tous les djinns ne soufflent pas : il en est de vertueux, et ceux qui ne nuisent à personne vont leur chemin.',
+        reponse: 'On ne les combat pas, et l’on ne s’en prend à aucun djinn. On répond à ce qui a été soufflé.',
+        src: 'Traduction du sens, Coran 114:5-6 ; voir aussi 72:11' },
+      coeur: { etage: 'enseigne', name: 'Le cœur', sous: 'il entend, et il consent ou refuse',
+        texte: 'Le souffle s’arrête ici. Rien n’entre que le cœur n’ait laissé entrer : nul ne pourra dire qu’on l’y a forcé.',
+        reponse: 'Par les œuvres. Elles ne donnent aucun pouvoir : elles tiennent le cœur éveillé.' },
+      racines: { etage: 'image', name: 'Les idées noires', sous: 'ce qui pèse sur une personne',
+        texte: 'La honte, la peur, le soupçon, la rancune, le désespoir. En face, dans le cœur de chacun, sept maux qui leur ouvrent la porte : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère.',
+        reponse: 'L’idée noire : par la parole, la pédagogie, la bienveillance. Le mal du cœur : par l’œuvre, qui forge sa lame.' },
+      egregores: { etage: 'image', name: 'Les égrégores', sous: 'l’idée reprise par beaucoup de cœurs',
+        texte: 'Ce que beaucoup de cœurs regardent ensemble prend corps dans la noosphère. Nourri de peur ou d’orgueil, il se retourne contre ceux qui le portent.',
+        reponse: 'Par le combat : chercher la faille, retirer les voiles.' },
+      idoles: { etage: 'image', name: 'Les idoles', sous: 'l’idée enracinée : elle commande',
+        texte: 'Une chose fabriquée par les hommes, et qui finit par les commander. Plus l’idée a pris racine, plus l’idole pèse.',
+        reponse: 'Par une bataille déclarée.' }
+    },
+    couture: 'Au-dessus de ce trait : ce qui est enseigné. Au-dessous : des images, que le jeu emploie pour parler de ce que les hommes pensent, craignent et désirent ensemble. Le jeu ne dit de personne, ni d’aucun jour de l’histoire, qu’un souffle l’a fait agir.',
+    jauge: { note: 'La jauge appartient à l’idole, telle qu’elle se dresse devant le voyageur. Elle ne dit rien d’une époque ni de ses gens. Un pourparler gagné, une idée noire dissipée du premier coup la font baisser ; une parole manquée la fait monter.' }
   },
 
   codex: [
@@ -7246,7 +7552,11 @@ ISNAD.registerSaga({
     { id: 'dhikr', cat: 'Cœur', title: 'Le dhikr', text: 'Le rappel : redire, à voix basse ou dans le cœur, les mots par lesquels on se souvient de son Seigneur. « N’est-ce point par l’évocation d’Allah que se tranquillisent les cœurs ? »', src: 'Traduction du sens, Coran 13:28' },
     { id: 'maux', cat: 'Cœur', title: 'Les sept maux du cœur', text: 'L’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. Les traités de morale en décrivent davantage et les rangent autrement ; al-Ghazâlî leur consacre un quart de son *Ihyâ’*, celui qu’il intitule *al-muhlikât*, « ce qui perd ». La liste de sept est un choix du jeu, et les sept égrégores qui la portent sont une image : on ne les rencontre nulle part ailleurs que dans le cœur.', src: 'D’après al-Ghazâlî, Ihyâ’ ’ulûm ad-dîn (plan de l’ouvrage) ; la liste de sept est une fiction du jeu' },
     { id: 'lames', cat: 'Cœur', title: 'Les sept lames', text: 'Dans la noosphère, une vertu longuement pratiquée prend le fil d’une lame. Le jeûne forge le Contentement, le pèlerinage l’Humilité, la prière la Sincérité, l’aumône la Largesse, l’étude l’Ardeur, la visite la Bienveillance, le dhikr la Longanimité. Sans sa lame, un mal du cœur peut être repoussé ; il revient. Avec elle, il est tranché. Ces lames sont une image du jeu : ce ne sont pas des reliques, et aucune n’a appartenu à personne.' },
-    { id: 'idees_noires', cat: 'Cœur', title: 'Les idées noires', text: 'La honte, la peur, le soupçon, la rancune, le désespoir. Il arrive qu’un homme n’entende plus rien parce que l’une d’elles parle plus fort que toi. On ne la combat pas contre lui, mais pour lui : dans la noosphère, elle a un corps, et l’on peut le dissiper. Après quoi il écoute.' },
+    { id: 'idees_noires', cat: 'Cœur', title: 'Les idées noires', text: 'La honte, la peur, le soupçon, la rancune, le désespoir. Il arrive qu’un homme n’entende plus rien parce que l’une d’elles parle plus fort que toi. On ne la combat pas : on lui répond, par la parole, la pédagogie ou la bienveillance, selon ce qui la tient. Chacune a deux voiles, et chaque voile sa manière. Après quoi il écoute.' },
+    { id: 'echelle', cat: 'Noosphère', title: 'À chaque mal sa réponse', text: 'À l’idée noire, qui pèse sur une personne : la parole, la pédagogie, la bienveillance. À l’égrégore, que beaucoup de cœurs nourrissent : le combat. À l’idole, enracinée : une bataille déclarée. Aux souffleurs : rien, on ne les combat pas ; et l’on ne s’en prend à aucun djinn qui ne nuit à personne. Le sabre ne vient qu’après, quand la parole a tout essayé.' },
+    { id: 'souffleurs', cat: 'Noosphère', title: 'Ceux qui soufflent', text: 'Le Coran enseigne à chercher protection « contre le mal du mauvais conseiller, furtif, qui souffle le mal dans les poitrines des hommes, qu’il (le conseiller) soit un djinn, ou un être humain ». Dans ISNAD, on ne les voit pas, on ne les nomme pas, on ne les compte pas, on ne les combat pas. Tous les djinns ne soufflent pas, et le jeu ne s’en prend à aucun. Ce que l’on rencontre, c’est ce qu’un cœur fait de ce qu’il a entendu.', src: 'Traduction du sens, Coran 114:4-6' },
+    { id: 'iblis', cat: 'Noosphère', title: 'Iblîs, l’ennemi déclaré', text: 'Le jeu le nomme et ne le montre pas. Il ne parle dans aucune scène, et l’on ne le combat nulle part : ce n’est pas une épée qui en protège. Le Coran rapporte ce qu’il dira, quand tout sera accompli, à ceux qui l’auront suivi : « Je n’avais aucune autorité sur vous si ce n’est que je vous ai appelés, et que vous m’avez répondu. Ne me faites donc pas de reproches ; mais faites-en à vous-mêmes. » Il appelle. C’est le cœur qui répond.', src: 'Traduction du sens, Coran 14:22' },
+    { id: 'enracinement', cat: 'Noosphère', title: 'L’enracinement', text: 'Une idée noire dans un seul cœur se dissipe par la parole. Reprise par beaucoup, elle prend corps : c’est un égrégore. Quand on ne la voit plus tant elle est partout, elle commande : c’est une idole. Le jeu mesure cela d’un à cinq, pour chaque idole. La parole qui porte la déracine ; la parole manquée la laisse s’enfoncer. Déracinée, l’idole pèse moins et garde un voile de moins ; enracinée, elle pèse davantage. C’est une image du jeu : la jauge se dit d’une idole, jamais d’une époque ni de ses gens.' },
     { id: 'figures_ciel', cat: 'Cœur', title: 'Les compagnons de lumière (fiction)', text: 'Les Arabes donnaient aux étoiles des noms de bêtes : l’Aigle qui vole, le Lion, les bonds de la Gazelle. Dans la noosphère d’ISNAD, ces noms ont pris corps. Le Renard des sables et le Phénix viennent, eux, des contes. Ce sont des figures de fiction : aucune n’accompagne un Compagnon dans le récit historique.' },
     { id: 'equipement', cat: 'Objets', title: 'Ce que l’on porte', text: 'Épées, lances, arcs, boucliers, casques, cottes, turbans et manteaux : le jeu range sous quatre emplacements ce qu’un groupe pouvait porter en ce temps-là. C’est une *convention de jeu*. Aucune de ces pièces n’est une relique, aucune n’a appartenu à un personnage de l’histoire, aucune ne porte d’inscription, et le jeu ne dit pas qui portait quoi. Leurs noms viennent de la poésie arabe ancienne, où une bonne lame est dite *muhannad* (d’acier de l’Inde), *yamânî* (du Yémen) ou *mashrafî* ; une bonne lance, *khattî* (d’al-Khatt, port du Bahreïn) ou *samharî* ; un bon arc est de bois de *nab\'* ; une bonne cotte est *salûqî*. Le fer aide à tenir ; il ne remplace pas la provision du cœur.', src: 'Convention de jeu. Vocabulaire des poètes anciens, à faire vérifier.' },
     { id: 'enigmes', cat: 'Cœur', title: 'Les énigmes du cœur', text: 'Il arrive qu’un compagnon languisse sans fièvre ni blessure. Les anciens de la Citadelle disaient : « Cherche d’abord ce qu’il a cessé de faire. » Une prière laissée, une porte où l’on ne frappe plus, une main qu’on a fermée. Ce n’est pas une punition : c’est un poids, et il se pose en reprenant ce qu’on avait laissé.' }
@@ -7395,7 +7705,7 @@ ISNAD.registerSaga({
       taunts: ['Les nôtres d’abord.'],
       desc: "Un cri de ralliement détaché de toute bouche. Il ne demande pas qui a raison, seulement de quel côté l'on est."
     },
-    clan: {
+    clan: { racine: 'noir_peur',
       name: "Al-'Asabiyya — le Clan", art: 'banner', hue: 15, scale: 3,
       lvl: 3, tier: 'elite', weak: ['ilm', 'rahma', 'adl'], veils: 4,
       skills: [
@@ -7420,7 +7730,7 @@ ISNAD.registerSaga({
       taunts: ['L’homme est mort ; nos pactes aussi.'],
       desc: "Ce que des tribus entières se sont dit à la même heure : « L'homme est mort, nos pactes aussi. » Elle recule devant le courage et se défait devant la véracité."
     },
-    avare: {
+    avare: { racine: 'avarice',
       name: "L'Avare du dû", art: 'tower', hue: 45, scale: 2,
       lvl: 5, tier: 'elite', weak: ['adl', 'rahma', 'sidq'], veils: 4,
       skills: [
@@ -7467,7 +7777,7 @@ ISNAD.registerSaga({
       ],
       desc: "Le rempart derrière lequel un mensonge se met à l'abri de toute question. Le courage le franchit — comme al-Barâ' ibn Mâlik, jeté par-dessus le mur sur des boucliers."
     },
-    kadhdhab: {
+    kadhdhab: { racine: 'avidite',
       name: 'Al-Kadhdhâb — le Menteur', art: 'mirror', hue: 305, scale: 3,
       lvl: 8, tier: 'boss', weak: ['sidq', 'ilm', 'sabr'], veils: 6,
       skills: [
@@ -8286,7 +8596,7 @@ ISNAD.registerSaga({
       skills: [{ w: 2, name: 'Insinuation', target: 'foe', el: 'fer', pow: 0.8, fx: [{ st: 'waswas', turns: 2, chance: 0.5 }], anim: 'dark' }],
       desc: 'Un masque vide qui prête à chacun une arrière-pensée. Il ne résiste ni à celui qui vérifie, ni à celui qui attend la preuve avant de parler.'
     },
-    privilege: {
+    privilege: { racine: 'noir_desespoir',
       name: 'Le Privilège', art: 'crown', hue: 45, scale: 2, lvl: 3, tier: 'elite',
       weak: ['adl', 'sabr'], veils: 3,
       skills: [
@@ -8317,7 +8627,7 @@ ISNAD.registerSaga({
       ],
       desc: 'Une nuée de mots criés pour ne pas entendre la réponse. Elle couvre les voix : celui qu’elle atteint doute et se tait.'
     },
-    slogan: {
+    slogan: { racine: 'noir_soupcon',
       name: 'Le Slogan', art: 'banner', hue: 280, scale: 3, lvl: 5, tier: 'boss',
       weak: ['ilm', 'sidq'], immune: ['fer'], veils: 5,
       skills: [
@@ -8351,7 +8661,7 @@ ISNAD.registerSaga({
       phases: [{ at: 0.4, say: 'Une datte prise sans la payer : voilà la faute. Le reste n’est que poussière.', fx: [{ st: 'atk', v: 1 }] }],
       desc: 'Une grappe de lentilles qui grossit l’infime et ne voit plus l’immense. Il pèse une datte tombée et enjambe le sang d’un innocent. Le savoir lui rend les proportions ; la miséricorde, le sens.'
     },
-    juge: {
+    juge: { racine: 'noir_rancune',
       name: 'Le Juge sans miséricorde', art: 'scale', hue: 215, scale: 3, lvl: 9, tier: 'boss',
       weak: ['ilm', 'rahma'], immune: ['adl'], veils: 6,
       skills: [
@@ -9249,7 +9559,7 @@ ISNAD.registerSaga({
       taunts: ['Viens. Encore dix pas.'],
       desc: "Né de ce que toute une armée regarde la même eau qui n'existe pas. Il recule quand on avance et détourne de la piste. La patience le dissipe."
     },
-    soif: {
+    soif: { racine: 'noir_desespoir',
       name: 'La Soif', art: 'lens', hue: 25, scale: 2, lvl: 3, tier: 'elite',
       weak: ['sabr', 'shajaa'], veils: 3,
       skills: [
@@ -9283,7 +9593,7 @@ ISNAD.registerSaga({
       ],
       desc: "Des lances sans porteurs : ce que l'œil effrayé voit quand il regarde une armée. La science de la manœuvre y ouvre des brèches."
     },
-    peur_nombre: {
+    peur_nombre: { racine: 'noir_peur',
       name: 'La Peur du Nombre', art: 'swarm', hue: 270, scale: 3, lvl: 5, tier: 'boss',
       weak: ['shajaa', 'sidq'], veils: 5,
       skills: [
@@ -9325,7 +9635,7 @@ ISNAD.registerSaga({
       taunts: ['Un vers de plus, et tu seras immortel.'],
       desc: "Couronne tressée par les poètes. Chaque feuille porte un vers ; aucun ne nomme Celui qui donne la victoire. Elle coiffe l'Idole du Héros."
     },
-    idole_heros: {
+    idole_heros: { racine: 'ostentation',
       name: "L'Idole du Héros", art: 'colossus', hue: 46, scale: 3, lvl: 9, tier: 'boss',
       weak: ['sabr', 'sidq'], immune: ['fer'], veils: 6,
       skills: [
@@ -10145,7 +10455,7 @@ ISNAD.registerSaga({
       ],
       desc: "Nuée grise levée par neuf mois de sécheresse. Elle se nourrit du découragement et use lentement ceux qu'elle entoure. La Patience et la Miséricorde la font retomber."
     },
-    accapareur: {
+    accapareur: { racine: 'noir_peur',
       name: "L'Accapareur", art: 'tower', hue: 45, scale: 2,
       lvl: 3, tier: 'elite', weak: ['rahma', 'adl'], veils: 3,
       skills: [
@@ -10180,7 +10490,7 @@ ISNAD.registerSaga({
       taunts: ['Un maître se reconnaît à sa suite.'],
       desc: "Petite couronne de pourpre, née de la pompe des cours. Elle persuade que l'autorité se mesure au cortège. La simplicité patiente la fait tomber en poussière."
     },
-    aigle: {
+    aigle: { racine: 'orgueil',
       name: "L'Aigle d'Airain", art: 'eagle', hue: 35, scale: 3,
       lvl: 5, tier: 'boss', weak: ['sabr', 'adl'], veils: 5,
       skills: [
@@ -10221,7 +10531,7 @@ ISNAD.registerSaga({
       ],
       desc: "La couronne de Kisrâ était si lourde qu'une chaîne d'or la tenait suspendue au-dessus du trône. Son égrégore pèse de même sur les esprits. La Justice rompt la chaîne ; la Véracité dit son poids réel."
     },
-    trone: {
+    trone: { racine: 'orgueil',
       name: 'Le Trône vide', art: 'throne', hue: 48, scale: 3,
       lvl: 8, tier: 'boss', weak: ['adl', 'rahma'], veils: 6,
       skills: [
@@ -11096,7 +11406,7 @@ ISNAD.registerSaga({
       taunts: ['La mienne. Pas la tienne.'],
       desc: "Une lettre détachée de sa récitation, qui ne sert plus à lire mais à l'emporter sur l'autre. Le Savoir la remet à sa place dans la ligne."
     },
-    babel: {
+    babel: { racine: 'noir_soupcon',
       name: 'Babel', art: 'swarm', hue: 275, scale: 2, lvl: 3, tier: 'elite',
       weak: ['ilm', 'sidq'], veils: 4,
       skills: [
@@ -11121,7 +11431,7 @@ ISNAD.registerSaga({
       ],
       desc: "La peur d'un seul homme, tombée par-dessus bord. Elle ne mord pas : elle fait lâcher la rame."
     },
-    abime: {
+    abime: { racine: 'noir_peur',
       name: "L'Abîme", art: 'wave', hue: 215, scale: 3, lvl: 5, tier: 'boss',
       weak: ['shajaa', 'rahma', 'sidq'], veils: 6,
       skills: [
@@ -11170,7 +11480,7 @@ ISNAD.registerSaga({
       taunts: ['Et toi, combien as-tu reçu ?'],
       desc: "Égrégore des richesses amassées. Les conquêtes firent affluer à Médine plus de biens qu'elle n'en avait jamais vus ; avec eux vinrent la comparaison et l'envie. La Miséricorde, qui donne, et la Véracité, qui rend compte, lui retirent ses voiles."
     },
-    rumeur: {
+    rumeur: { racine: 'noir_soupcon',
       name: 'La Rumeur', art: 'lens', hue: 320, scale: 3, lvl: 9, tier: 'boss',
       weak: ['sidq', 'rahma'], immune: ['fer'], veils: 6,
       skills: [

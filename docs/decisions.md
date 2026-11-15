@@ -465,6 +465,100 @@ de fond ; la musique s'est tue « dans la noosphère à Médine ».
   *Ce que l'agent avait d'abord supposé et que la mesure dément* : le grondement de fond ne couvrait
   pas la musique (D90). **À confirmer par le décideur** (question 10).
 
+## L'organigramme du mal et l'échelle des réponses (demande du décideur)
+
+Demande : « Ajoute un organigramme du mal dans la noosphère avec comme maître du mal le diable et des
+jinns à son service qui deviennent des égrégores qui soufflent des idées noires aux gens ; plus l'idée
+noire est enracinée dans une époque, plus on est sous l'emprise de l'égrégore, qui devient une idole à
+combattre. »
+
+Décisions prises par le décideur, en réponse aux questions de l'agent :
+
+- [x] **D92. Le sommet.** Iblîs est nommé, jamais montré, jamais mis en dialogue, jamais combattu. Maître
+  Yûnus l'explique en deux répliques. Deux versets au plus, en traduction du sens, à relire.
+- [x] **D93. Les djinns.** Souffleurs invisibles, sans nom ni figure. « Les jinns sont libres de circuler
+  tant qu'ils sont inoffensifs » : le jeu ne s'en prend à aucun djinn.
+- [x] **D94. L'échelle des réponses.** « L'idée noire se combat par la parole, la pédagogie, la
+  bienveillance. L'égrégore se combat par le combat. L'idole se combat par une bataille déclarée. »
+  **Cela modifie D64** : une idée noire ne lance plus de combat. Elle a deux voiles ; à chacun, le joueur
+  choisit de dire vrai, d'expliquer ou de rassurer. Dans les cinq rencontres de la Cité-Miroir, ce qui tient
+  l'interlocuteur est un égrégore : cela reste un combat, et le carton le dit.
+- [x] **D95. L'enracinement.** Une jauge par idole, effet léger, rien ne bloque.
+- [x] **D96. La bataille déclarée.** « Des rangs dans le combat, dans le style des jeux tactiques, avec de
+  la stratégie, là où Khâlid excelle. » Lot suivant.
+
+Ce que l'agent a ajouté ou lu, et qui reste à valider :
+
+- [ ] **D97. Deux étages et une couture.** Le haut de l'organigramme dit ce qui est enseigné (Iblîs, les
+  souffleurs, le cœur) ; le bas, les images du jeu (idées noires et maux, égrégores, idoles). *Ajouts de
+  l'agent* : un rang « le cœur » entre les deux, parce que le souffle appelle et que c'est le cœur qui
+  consent ; le lien qui descend des souffleurs est en pointillé et s'arrête au cœur ; aucune flèche ne relie
+  un souffleur à une idole ou à un maillon. *Pourquoi* : sans cela, le jeu affirmerait de l'invisible sur
+  des événements de l'histoire (exigence 3), prêterait un souffle à des personnes ou à des camps
+  (exigences 5 et 10), et ferait de la jauge un jugement sur une époque (exigence 12). La jauge appartient
+  à l'idole, telle qu'elle se dresse devant le voyageur ; les maillons ne servent qu'à ranger, et la page
+  les désigne par leur numéro et leurs années, non par le nom d'un Compagnon.
+- [ ] **D98. Textes proposés, à relire.** Les six rangs (`coeur.js`, `mal`), quatre entrées du Recueil
+  (« À chaque mal sa réponse », « Ceux qui soufflent », « Iblîs, l'ennemi déclaré », « L'enracinement »),
+  l'entrée « Les idées noires » réécrite, une quatrième question au prologue (« D'où viennent les idées
+  noires ? », deux répliques de Maître Yûnus), deux rubriques de l'aide. **Versets cités**, lus mot à mot
+  sur une traduction publiée (celle de M. Hamidullah, telle qu'elle est en ligne) : Coran 114:4-6, et un
+  extrait de 14:22. **Références sans citation**, lues de même : 18:50, 2:168, 72:11. Seule la typographie
+  française (espaces avant les signes doubles) a été ajustée.
+- [ ] **D99. Les trois manières de répondre.** Dire vrai (la parole), expliquer (la pédagogie), rassurer (la
+  bienveillance). *Lecture de l'agent* pour l'ordre qui porte : la honte, rassurer puis dire vrai ; la peur,
+  expliquer puis dire vrai ; le soupçon, dire vrai puis expliquer ; la rancune, dire vrai puis rassurer ; le
+  désespoir, rassurer puis expliquer. Une manière qui ne porte pas reçoit une explication, et l'on
+  recommence : rien ne bloque. Quarante lignes de fiction, sans formule religieuse. Ce sont les mots du
+  râwî, jamais ceux d'un Compagnon ; les interlocuteurs sont tous de fiction (exigence 16).
+- [ ] **D100. La racine de chaque idole.** Elle ne fait que redire la description déjà écrite de l'idole.
+  Pour les six qui touchent à des dissensions, seulement une idée noire, jamais un mal du cœur :
+  **à valider ligne à ligne.**
+
+  | Maillon | Idole | Racine proposée | Ce que dit déjà sa description |
+  |---|---|---|---|
+  | I | le Clan *(sensible)* | la peur | le récit dit des siens qu'ils « craignent ce que demain fera d'eux » |
+  | I | l'Avare du dû | l'avarice | « retranche la part du pauvre » |
+  | I | le Menteur | l'avidité | « promet à chacun ce qu'il désire » |
+  | II | l'Accapareur | la peur | « se nourrit de la peur de manquer » |
+  | II | l'Aigle d'Airain | l'orgueil | « l'orgueil d'empire » |
+  | II | le Trône vide | l'orgueil | « la place du roi », qui « exige d'être occupée » |
+  | III | la Soif | le désespoir | « égrégore du désespoir » |
+  | III | la Peur du Nombre | la peur | son nom |
+  | III | l'Idole du Héros | l'ostentation | « coulé dans les acclamations » |
+  | IV | Babel *(sensible)* | le soupçon | « un motif de se préférer à l'autre » |
+  | IV | l'Abîme | la peur | « la peur de la mer » |
+  | IV | la Rumeur *(sensible)* | le soupçon | « répétant ce qu'il n'a pas vu » |
+  | V | le Privilège *(sensible)* | le désespoir | « chacun trouve normal que la règle plie » |
+  | V | le Slogan *(sensible)* | le soupçon | « une parole vraie… qui devient une arme » |
+  | V | le Juge sans miséricorde *(sensible)* | la rancune | « ne sait que condamner » |
+  | Veillées | l'Ombre du Père | la peur | « que la peur veut garder occupée » |
+  | Veillées | le Sommeil | l'insouciance | « le désir de ne pas savoir » |
+  | Veillées | le Tambour | l'ostentation | « né des acclamations » |
+  | Veillées | le Bouc émissaire | la rancune | « préfère un coupable à une cause » |
+  | Veillées | le Pur | l'orgueil | « se croit la justice même » |
+  | 2084 | le Flux | l'insouciance | « on cesse de le suivre » |
+  | 2084 | l'Agrégor | les sept maux | « sous chacun de ces noms, il y avait toujours les mêmes » |
+
+- [ ] **D101. Règles de la jauge.** De 1 à 5 ; elle part de 3. Un cran de moins : pourparler gagné, idée
+  noire dissipée du premier coup, égrégore dissipé chez un interlocuteur. Un cran de plus : pourparler
+  perdu, premier acte choisi que les transmetteurs n'ont pas rapporté. Plafond à 4 dans le premier chapitre
+  d'un maillon. Jamais par une œuvre ni par la prière (exigences 13 et 15). Effets sur le seul combat de
+  cette idole : l'épreuve pèse 1, 2 ou 3 sur la provision du cœur (2 jusqu'ici) ; un voile de moins à 1 ;
+  un voile de plus à 5, à la première tentative seulement. Tenue comme une liste d'événements à clé :
+  rejouer un objectif réécrit la même clé, rien n'est compté deux fois.
+  *Mesuré* sur les parcours automatiques, avant puis après. En répondant juste : 63 puis 56 combats (les
+  sept idées noires ne sont plus des combats), 222 puis 204 tours contre les idoles, Constance minimale
+  25 puis 46 %, mêmes niveaux au dernier combat. En se trompant d'abord partout (jauge à 4 ou 5 sur toutes
+  les idoles) : 305 puis 355 tours contre les idoles, Constance minimale 29 puis 18 %, aucune défaite.
+  La page fermée après chacune des 22 prières de récit : la jauge et les compteurs sont identiques.
+- [ ] **D102. Exigence 18, proposée dans `AGENTS.md`.** Au décideur de la confirmer, de la reformuler ou de
+  la retirer.
+- **Piste écartée faute de vérification.** Un récit rapporté d'Ibn 'Abbâs (al-Bukhârî, commentaire de la
+  sourate Nûh) sur l'origine des idoles du peuple de Noé aurait éclairé « l'enracinement ». La source n'a
+  pas pu être lue pendant ce travail : elle n'est pas citée dans le jeu. À vérifier par le décideur ou par
+  un relecteur avant tout emploi.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
@@ -519,5 +613,9 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
    se voir en combat sur les Compagnons eux-mêmes, ou seulement sur les personnages de fiction ?
 9. Le son (D90) : le mot « ambiances » doit-il sortir de l'exigence 9, maintenant qu'il n'y en a plus ?
    Le souffle de foule (`crowd`) doit-il revenir ?
+11. L'organigramme du mal (D97 à D102) : les textes des six rangs, les deux versets, les répliques de Maître
+    Yûnus, les quarante lignes des échanges et le tableau des racines sont des propositions. Qui les relit ?
+    Les six racines marquées « sensible » conviennent-elles, ou vaut-il mieux ne pas donner de racine à ces
+    idoles ?
 10. La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

@@ -144,7 +144,7 @@ ISNAD.registerSaga({
       ],
       desc: "Nuée grise levée par neuf mois de sécheresse. Elle se nourrit du découragement et use lentement ceux qu'elle entoure. La Patience et la Miséricorde la font retomber."
     },
-    accapareur: {
+    accapareur: { racine: 'noir_peur',
       name: "L'Accapareur", art: 'tower', hue: 45, scale: 2,
       lvl: 3, tier: 'elite', weak: ['rahma', 'adl'], veils: 3,
       skills: [
@@ -179,7 +179,7 @@ ISNAD.registerSaga({
       taunts: ['Un maître se reconnaît à sa suite.'],
       desc: "Petite couronne de pourpre, née de la pompe des cours. Elle persuade que l'autorité se mesure au cortège. La simplicité patiente la fait tomber en poussière."
     },
-    aigle: {
+    aigle: { racine: 'orgueil',
       name: "L'Aigle d'Airain", art: 'eagle', hue: 35, scale: 3,
       lvl: 5, tier: 'boss', weak: ['sabr', 'adl'], veils: 5,
       skills: [
@@ -220,7 +220,7 @@ ISNAD.registerSaga({
       ],
       desc: "La couronne de Kisrâ était si lourde qu'une chaîne d'or la tenait suspendue au-dessus du trône. Son égrégore pèse de même sur les esprits. La Justice rompt la chaîne ; la Véracité dit son poids réel."
     },
-    trone: {
+    trone: { racine: 'orgueil',
       name: 'Le Trône vide', art: 'throne', hue: 48, scale: 3,
       lvl: 8, tier: 'boss', weak: ['adl', 'rahma'], veils: 6,
       skills: [

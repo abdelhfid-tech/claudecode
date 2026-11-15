@@ -7,7 +7,7 @@ const path = require('path');
 const root = path.join(__dirname, '..');
 const read = f => fs.readFileSync(path.join(root, f), 'utf8');
 
-const core = ['defs', 'base', 'gfx', 'sprites', 'maps', 'script', 'world', 'build', 'trade', 'oeuvres', 'gear', 'battle', 'ui'].map(n => `src/core/${n}.js`);
+const core = ['defs', 'base', 'gfx', 'sprites', 'maps', 'script', 'world', 'build', 'trade', 'oeuvres', 'gear', 'mal', 'battle', 'ui'].map(n => `src/core/${n}.js`);
 const data = ['src/data/frame.js', 'src/data/music.js', 'src/data/caid.js', 'src/data/coeur.js'].filter(f => fs.existsSync(path.join(root, f))).concat(fs.readdirSync(path.join(root, 'src/data')).filter(f => /^saga_.*\.js$/.test(f)).sort().map(f => 'src/data/' + f));
 // version lisible par le joueur (écran-titre, page Diagnostic) : date de l'assemblage et dernier commit
 // « + » : des sources ont changé depuis ce commit (les fichiers générés ne comptent pas)

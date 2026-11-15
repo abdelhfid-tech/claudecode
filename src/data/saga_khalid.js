@@ -130,7 +130,7 @@ ISNAD.registerSaga({
       taunts: ['Viens. Encore dix pas.'],
       desc: "Né de ce que toute une armée regarde la même eau qui n'existe pas. Il recule quand on avance et détourne de la piste. La patience le dissipe."
     },
-    soif: {
+    soif: { racine: 'noir_desespoir',
       name: 'La Soif', art: 'lens', hue: 25, scale: 2, lvl: 3, tier: 'elite',
       weak: ['sabr', 'shajaa'], veils: 3,
       skills: [
@@ -164,7 +164,7 @@ ISNAD.registerSaga({
       ],
       desc: "Des lances sans porteurs : ce que l'œil effrayé voit quand il regarde une armée. La science de la manœuvre y ouvre des brèches."
     },
-    peur_nombre: {
+    peur_nombre: { racine: 'noir_peur',
       name: 'La Peur du Nombre', art: 'swarm', hue: 270, scale: 3, lvl: 5, tier: 'boss',
       weak: ['shajaa', 'sidq'], veils: 5,
       skills: [
@@ -206,7 +206,7 @@ ISNAD.registerSaga({
       taunts: ['Un vers de plus, et tu seras immortel.'],
       desc: "Couronne tressée par les poètes. Chaque feuille porte un vers ; aucun ne nomme Celui qui donne la victoire. Elle coiffe l'Idole du Héros."
     },
-    idole_heros: {
+    idole_heros: { racine: 'ostentation',
       name: "L'Idole du Héros", art: 'colossus', hue: 46, scale: 3, lvl: 9, tier: 'boss',
       weak: ['sabr', 'sidq'], immune: ['fer'], veils: 6,
       skills: [

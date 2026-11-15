@@ -83,6 +83,19 @@ et ne décrivent aucun trait physique : ni taille, ni corpulence, ni visage (exi
 - **Les gens d'armes sans nom** varient comme les autres : casque, arme, bouclier et armure se
   déduisent de qui ils sont, toujours les mêmes pour un même personnage.
 
+### L'organigramme du mal
+
+Une page de texte, pas une galerie. Deux étages, séparés par un trait d'or en pointillé.
+
+- **En haut, ce qui est enseigné** : trois cadres en pointillé, sans aucune image. Iblîs est un nom dans un
+  cadre ; ni dessin, ni sceau calligraphié, ni couleur propre. Les souffleurs de même.
+- **Les liens du haut sont en pointillé** et le dernier s'arrête au cœur. Aucun trait ne descend d'un
+  souffleur vers une idole.
+- **En bas, les images du jeu** : cadres pleins, et les égrégores tels qu'ils sont déjà dessinés (formes
+  abstraites, exigence 6).
+- **La jauge** : cinq barres dorées, `▮▮▮▯▯`. Elle accompagne le nom d'une idole, jamais celui d'un
+  maillon ; les maillons sont désignés par leur numéro et leurs années.
+
 ## Version précédente : personnages en blocs, décors sublimés (demande du décideur)
 
 Les personnages sont faits de blocs : une tête cubique d'étoffe, un corps, deux bras, deux jambes, avec

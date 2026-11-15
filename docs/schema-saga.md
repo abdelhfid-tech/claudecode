@@ -134,9 +134,16 @@ accapareur: {
   phases: [ { at: 0.5, say: 'Ce que je garde, nul n’aura faim de le voir…', fx: [{ st: 'atk', v: 1 }],
               addSkills: [ { w: 3, name: 'Greniers clos', target: 'foes', el: 'fer', pow: 1.0, anim: 'dark' } ] } ],
   taunts: ['Encore un peu. Juste un peu plus.'],             // murmures aléatoires (optionnel)
-  desc: 'Texte de codex : de quoi cet égrégore se nourrit, comment il est brisé.'
+  desc: 'Texte de codex : de quoi cet égrégore se nourrit, comment il est brisé.',
+  racine: 'noir_peur'                                         // seulement sur l'idole du chapitre : voir ci-dessous
 }
 ```
+
+**Racine (version 7).** L'idole d'un chapitre est le membre de plus haut palier d'un combat lancé avec
+`boss: true`. Elle porte `racine`, l'une des douze de `D.RACINES` : cinq idées noires (`noir_honte`,
+`noir_peur`, `noir_soupcon`, `noir_rancune`, `noir_desespoir`) et sept maux du cœur. La racine **redit la
+description** de l'idole, rien de plus ; pour une idole qui touche à une dissension, seulement une idée
+noire. Aucun nom d'ennemi, de compétence ou de personnage ne nomme Iblîs, un démon ou un djinn.
 
 `target` côté ennemi : `foe`/`foes` = les héros ; `self`/`ally`/`allies` = les égrégores. `w` = poids.
 Formes (`art`) : `wisp` murmure · `mask` masque vide · `eagle` enseigne impériale · `crown` couronne ·

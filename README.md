@@ -78,6 +78,20 @@ dans la Cité-Miroir, qui rend la sixième Lumière, la Patience (*sabr*).
 
 Tout cela est une fiction de jeu, dite comme telle : ni relique, ni pouvoir, ni récit historique.
 
+### L'organigramme du mal, et à chaque mal sa réponse
+
+Une page de la halte range ce que l'on rencontre. En haut, ce qui est enseigné : Iblîs, que le jeu nomme
+sans jamais le montrer ni le combattre ; ceux qui soufflent, sans nom ni figure ; le cœur, qui consent ou
+refuse. En bas, les images du jeu : les idées noires, les égrégores, les idoles.
+
+- **Une idée noire ne se combat plus : on lui répond.** Elle a deux voiles ; à chacun, on choisit de dire
+  vrai, d'expliquer ou de rassurer. Une manière qui ne porte pas reçoit son explication.
+- **Un égrégore se combat**, comme avant.
+- **Une idole a une jauge d'enracinement**, de 1 à 5. La parole qui porte la déracine : elle pèse alors
+  moins sur la provision du cœur. La jauge se dit d'une idole, jamais d'une époque ni de ses gens.
+
+Les textes de cette page sont des propositions, à relire (`docs/decisions.md`, D97 à D102).
+
 ## L'équipement
 
 - **Quatre emplacements** par compagnon : main droite (épée, lance, arc, dague, masse, bâton ou calame),
