@@ -196,6 +196,24 @@ Noosphère), 2–3 paroles.
 }
 ```
 
+**Bataille déclarée** (facultatif, version 7). Un chapitre qui a un combat d'idole (`boss: true`) peut porter :
+
+```js
+bataille: { base: 3,                    // rangs menés d'emblée ; un de plus au niveau 4, un autre au niveau 8, quatre au plus
+  rangs: [ { t: 'fantassins', name: 'Fantassins du centre', voie: 'centre' },            // t : fantassins | cavaliers | archers | gens
+           { t: 'cavaliers', name: 'Cavaliers de réserve', voie: 'centre', ligne: 0 } ],  // voie : nord | centre | sud ; ligne : 0 (au camp) ou 1 (première ligne, par défaut)
+  ordres: ['tenir', 'avancer', 'replier'] }   // facultatif : les seuls ordres que la mission permet (« tenir » toujours)
+// ou bien, là où il n'y a pas de rangs à mener :
+bataille: { rangs: [], mot: 'Pourquoi il n’y a pas de rangs ici.' }
+```
+
+Les rangs sont pris dans l'ordre : avec `base: 2`, seuls les deux premiers sont là au début. Aucun chiffre dans le nom
+d'un rang, aucun effectif nulle part ; un rang de la mission porte un nom de fonction, jamais un nom de personne
+(exigence 19). Le moteur calcule les forces. Un héros peut porter `stratege: true` : il ordonne sans perdre son tour
+et connaît les manœuvres de `D.MANOEUVRES`. Dans un `battle`, un allié `{ flag, name, rang: 'cavaliers' }` dont le
+drapeau est levé prend place sur le champ comme un rang de plus (`rang` pris dans `D.RANGS`, `gens` par défaut) ;
+sans bataille déclarée, ou sans rangs, il frappe en ouverture comme avant. Vérification : `node tools/bataille.js`.
+
 **Objectifs** (séquentiels) : un seul déclencheur parmi `goto:'lieu'` (atteindre un lieu de la carte
 courante), `talk:'pnj'` (le PNJ doit être sur la carte courante), `foe:'id'` (vaincre un ennemi visible de
 la carte courante), `auto:true` (immédiat). `text` est affiché dans le journal de quête ; une flèche guide

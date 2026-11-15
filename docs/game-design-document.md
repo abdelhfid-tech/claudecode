@@ -252,6 +252,28 @@ explication, et l'on recommence. L'échange donne la confiance et la sagesse que
 fait monter. Elle règle le poids de l'épreuve (1, 2 ou 3 sur la provision du cœur) et, aux extrêmes, un
 voile de moins ou de plus. Effet léger par décision du décideur : rien ne bloque.
 
+## La bataille déclarée (version 7, pilote)
+
+Demande du décideur : « des rangs dans le combat, dans le style des jeux tactiques, avec de la stratégie, là
+où Khâlid excelle ». L'idole ne se combat plus seul : la bataille est déclarée, et des rangs la livrent avec
+le groupe.
+
+| Élément | Règle |
+|---|---|
+| Le champ | cinq colonnes sur trois couloirs ; notre camp à droite, l'idole à gauche, la dernière colonne à son pied |
+| Nos rangs | un à quatre selon la mission et le niveau, plus un allié gagné par la parole ; fantassins, cavaliers, archers, gens du lieu |
+| Les nuées | les égrégores du chapitre ; jamais des hommes ; leur nombre et leur cadence suivent l'enracinement |
+| Le pas | après chaque tour de l'idole, au plus tard tous les trois tours : nos rangs, puis les nuées |
+| Flanc, tenaille | une nuée bordée par un autre rang est prise de flanc ; prise des deux côtés, elle se dissipe |
+| L'enjeu | un rang au pied de l'idole découvre son flanc : un voile tombe, une faille se révèle ; une nuée au camp sème le doute |
+| Ordonner | au tour d'un compagnon, à la place de son action ; Khâlid ordonne sans perdre son tour |
+| Le stratège | trois manœuvres d'école : réserve mobile, enveloppement, repli feint |
+| La mission | elle dit quels rangs et quels ordres existent ; là où il n'y a pas d'armée à mener, la bataille se déclare sans rangs |
+
+Un rang éprouvé se replie et se reforme : personne ne tombe. Le jeu ne donne aucun effectif et n'attribue
+aucune manœuvre à un jour de l'histoire (exigence 19, proposée). Le pilote couvre la saga de Khâlid ; les
+autres maillons attendent l'avis du décideur.
+
 ## Feuille de route proposée
 
 1. Relecture historique par un spécialiste, puis corrections de texte.

@@ -312,6 +312,24 @@ body.portrait #hud .enig { display: block; background: var(--panel); }
 #card.noir img.idee { height: 5.2em; image-rendering: pixelated; margin-bottom: .3em; filter: drop-shadow(0 0 14px rgba(201, 184, 255, .5)); }
 .phead .seal.idee { border-radius: 0; background-size: contain; background-repeat: no-repeat; background-position: center; image-rendering: pixelated; }
 #choice .opt .voie { color: var(--dim); }
+/* bataille déclarée : la bande du champ pendant le duel ; pendant un ordre ou un pas, le champ prend toute la scène */
+#battle .front { position: absolute; right: 2%; top: 11%; display: grid; grid-template-columns: repeat(5, 1.05em); gap: 0 .1em; padding: .2em .45em; font-size: .72em; line-height: 1.15; background: rgba(8, 7, 18, .66); border: 1px solid var(--line); border-radius: .3em; pointer-events: none; }
+#battle .front i { font-style: normal; text-align: center; color: var(--dim); opacity: .7; } #battle .front i.r { color: var(--gold); opacity: 1; } #battle .front i.r.m { color: #fff6dc; } #battle .front i.n { opacity: 1; } #battle .front i.f { color: var(--gold); opacity: 1; }
+#battle.champ .plates, #battle.champ .order { display: none; }
+/* le champ de bataille : les bandeaux se rangent hors du champ (au-dessus, écran en hauteur ; entre le champ et le panneau sinon) */
+#battle.champ .banner, #battle.champ .banner.speech, #battle.champ .banner.intro { top: 56.5%; }
+body.portrait #battle.champ .banner, body.portrait #battle.champ .banner.speech, body.portrait #battle.champ .banner.intro { top: 4%; }
+/* écran en hauteur : pendant qu'on ordonne, le menu remonte sous le champ (les plaques du groupe reviennent après) */
+body.portrait #battle.ordre .heroes { display: none; }
+/* écran en largeur : le menu des ordres prend toute la largeur du panneau, sur deux colonnes, et ne monte jamais jusqu'au champ
+   (le champ s'arrête à 112 points du canevas ; le menu n'en dépasse pas 98, au-dessus des 2 % du bas) */
+body:not(.portrait) #battle.ordre .heroes { display: none; }
+body:not(.portrait) #battle.ordre .panel { grid-template-columns: 1fr; }
+body:not(.portrait) #battle.ordre .cmd { max-height: calc(var(--u) * 98); }
+body:not(.portrait) #battle.ordre .mlist { display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+body:not(.portrait) #battle.ordre .mdesc { min-height: 1.3em; }
+.mi .num, .mtitle .num { display: inline-grid; place-items: center; min-width: 1.35em; height: 1.35em; margin-right: .25em; background: rgba(8, 7, 18, .86); color: var(--gold); font-family: var(--f-mono); font-size: .86em; font-weight: 700; border-radius: 2px; }
+#card.bataille h1 { color: var(--gold); } #card.bataille .rangs { list-style: none; padding: 0; margin: .5em 0; } #card.bataille .rangs li { margin: .15em 0; } #card.bataille .rac { font-size: 1.1em; }
 .stat.bete { grid-template-columns: 5.4em 1fr; } .stat.bete .fig { width: 5.4em; height: auto; } .stat.bete.off { opacity: .55; } .stat.bete.off .fig { display: grid; place-items: center; height: 2.6em; font-family: var(--f-display); font-size: 1.3em; color: var(--dim); border: 1px dashed rgba(255, 255, 255, .2); width: 3.4em; }
 .stat.bete.cur { border-bottom-color: var(--gold); }
 

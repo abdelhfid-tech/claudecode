@@ -66,6 +66,7 @@
   const bx = x => G.view.w < G.PW ? Math.round(G.PW / 2 + (x - G.PW / 2) * I.clamp((G.view.w - 20) / 350, 0.5, 1)) : x;
   const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
   B.relayout = function () { if (!C) return; C.all.forEach(e => { e.x = bx(e.x0); }); refresh(); };
+  B.champ = () => (C && C.champ) || null; // le champ de la bataille en cours, pour les outils de test
   function mkHero(id, i) {
     const h = I.world.hero(id), st = I.calc.of(h);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
@@ -82,6 +83,16 @@
   const eff = (e, k) => { const bv = e.buffs[k]; const v = k === 'df' ? e.df : e[k]; return v * (bv ? (bv.v > 0 ? 1.3 : 0.72) : 1); };
   const alive = side => C.all.filter(e => e.side === side && e.alive);
 
+  // Ce que le combat prête au champ de bataille (rangs.js) : ses menus, ses bandeaux, ses effets sur l'idole et sur le groupe.
+  const champApi = {
+    floater, banner, refresh, listMenu, box: () => $('#battle .cmd'), heros: () => alive('hero'),
+    dessous: () => document.body.classList.contains('portrait'), // le panneau est sous la scène : le champ a toute la hauteur
+    idole: () => { if (!C) return null; const L = I.mal.lignee(I.world.saga, I.world.ch).idoles; return C.all.find(e => e.side === 'foe' && e.alive && L.includes(e.id)) || alive('foe')[0] || null; },
+    voile(e) { if (e.broken || e.veils <= 0) return null; e.veils--; e.flash = 1; if (e.veils <= 0) { e.broken = true; e.ct += 400; return 'devoile'; } return 'ote'; },
+    revele(e) { const w = e.def.weak.find(x => !e.known[x]); if (w) e.known[w] = true; },
+    doute(h) { h.st.waswas = Math.max(h.st.waswas || 0, 2); h.flash = 1; }
+  };
+
   B.start = async function (opts) {
     const W = I.world, prev = I.scene === B.scene ? W : I.scene, mark = I.input.mark(); let first = true;
     while (true) {
@@ -96,7 +107,7 @@
   // sortie de secours : referme le combat où qu'il en soit et rend l'écran
   B.abort = function (prev, mark) {
     try { I.audio.stopBeat(); } catch (e) { /* le son ne compte pas ici */ }
-    $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = ''; $('#battle .cmd').innerHTML = ''; $('#battle .banner').hidden = true;
+    $('#battle').hidden = true; $('#battle').classList.remove('champ', 'ordre'); document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = ''; $('#battle .cmd').innerHTML = ''; $('#battle .banner').hidden = true;
     C = null; if (mark !== undefined) I.input.trim(mark);
     I.setScene(prev || I.world); G.clearParts();
     const W = I.world; if ((prev || W) === W && W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; } I.audio.back();
@@ -124,8 +135,11 @@
     const HC = I.oeuvres.enter(opts, first); C.lack = HC.lack || 0;
     // l'enracinement de l'idole : il a déjà pesé sur l'épreuve (O.weight) ; ici, sur ses voiles
     C.rac = I.mal.entree(opts, first, C.all.filter(e => e.side === 'foe'));
+    // la bataille déclarée : nos rangs sur le champ, et en face les nuées de l'idole
+    C.champ = I.rangs.ouvre(C, opts, champApi);
     C.all.forEach(e => { if (e.side === 'hero' && I.oeuvres.afflicted(e.id)) { e.max.hp = Math.round(e.max.hp * 0.75); e.hp = Math.min(e.hp, e.max.hp); } });
     refresh();
+    if (first) await I.rangs.declare(C, opts);
     if (first && opts.intro) await banner(I.esc(opts.intro), readTime(opts.intro), true, 'speech intro');
     else if (first) await banner(opts.boss ? `${d0.name} se dresse.` : 'Une emprise se referme…', 1100);
     if (HC.w) {
@@ -151,28 +165,35 @@
     }
     for (const al of (opts.allies || [])) {
       if (!S.flags[al.flag]) continue;
+      if (C.champ && C.champ.rangs.some(r => r.allie && r.name === al.name)) continue; // bataille déclarée : le renfort est un rang, sur le champ
       await banner(`<small>Renfort</small>${I.esc(al.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(500);
       alive('foe').forEach(e => { if (!e.broken && al.veil !== 0) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; floater(e, 'DÉVOILÉ', 'break'); } else floater(e, 'Voile ôté', 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * (al.hp === undefined ? 0.08 : al.hp))); e.flash = 1; fx('light', e, '#ffe08a'); });
       refresh(); await I.sleep(700);
     }
+    // le champ, d'un coup d'œil, avant le premier tour ; le renfort gagné par la parole y prend place
+    if (C.champ && first && !I.debug.auto) { const ch = C.champ; ch.vue = true; refresh();
+      for (const r of ch.rangs.filter(x => x.allie)) { ch.sel = r; banner(`<small>Renfort</small>${I.esc(r.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(1900); }
+      await I.sleep(ch.rangs.some(x => x.allie) ? 500 : 1700); ch.sel = null; ch.vue = false; refresh(); }
     let result = first && I.debug.perd ? (I.debug.perd--, 'lose') : null; // crochet de test : une défaite forcée à la première tentative
     while (!result) {
       // prochain acteur
       const act = C.all.filter(e => e.alive).sort((a, b) => a.ct - b.ct)[0]; const dt = act.ct; C.all.forEach(e => { if (e.alive) e.ct -= dt; });
       C.active = act; C.turn++; refresh();
       await takeTurn(act);
+      // après chaque tour de l'idole, et au plus tard tous les trois tours : nos rangs exécutent leur ordre, puis ses nuées avancent
+      if (C.champ && I.rangs.du(C, act) && alive('foe').length && alive('hero').length) await I.rangs.pas(C);
       act.ct = 1000 / eff(act, 'spd');
       C.active = null;
       if (!alive('foe').length) result = 'win'; else if (!alive('hero').length) result = 'lose';
     }
-    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result };
+    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result, champ: C.champ ? Object.assign({ rangs: C.champ.rangs.length, pas: C.champ.pas, flancs: C.champ.flancs.filter(Boolean).length }, C.champ.stats) : null };
     I.audio.stopBeat(); $('#battle .cmd').innerHTML = ''; C.cursor = null;
     if (result === 'win') { I.audio.afterJingle = I.audio.place || null; I.audio.music('victoire'); } else I.audio.music('deuil');
     if (result === 'win') await victory(); else await defeat();
     // retour
     C.all.filter(e => e.side === 'hero').forEach(e => { const h = e.ref, st = I.calc.of(h); h.hp = Math.min(st.hp, Math.max(1, e.hp) + Math.round(st.hp * 0.35)); h.sp = Math.min(st.sp, e.sp + Math.round(st.sp * 0.35)); h.sakina = e.sakina; });
     await S.fade('out', 260);
-    $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = '';
+    $('#battle').hidden = true; $('#battle').classList.remove('champ', 'ordre'); document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = '';
     I.setScene(prev); G.clearParts();
     if (prev === W) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; }
     if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.back(); else I.audio.afterJingle = I.audio.place || null; }
@@ -227,6 +248,7 @@
 
   /* ----- commande automatique (tests) ----- */
   function autoCmd(h) {
+    if (C.champ) I.rangs.auto(C, h); // le stratège ajuste un rang sans que cela lui coûte son tour
     const skills = h.def.skills.filter(k => k.lvl <= h.lvl && k.cost <= h.sp && !h.st.doute), foes = alive('foe'), allies = alive('hero');
     const low = allies.slice().sort((a, b) => a.hp / a.max.hp - b.hp / b.max.hp)[0];
     const down = C.all.find(x => x.side === 'hero' && !x.alive);
@@ -300,7 +322,8 @@
         { label: '◍ Objets' },
         { label: '⛨ Garde', sub: '+ Niyya' }
       ];
-      if (h.sakina >= 100) items.push({ label: `❂ ${h.def.limit.name}`, sub: 'Sakîna', cls: 'limit' });
+      const iOrd = C.champ ? items.push({ label: '⚑ Ordonner', sub: h.def.stratege && C.champ.libre !== C.turn ? 'sans perdre son tour' : 'les rangs' }) - 1 : -1;
+      const iLim = h.sakina >= 100 ? items.push({ label: `❂ ${h.def.limit.name}`, sub: 'Sakîna', cls: 'limit' }) - 1 : -1;
       const p = listMenu(box, title(), items, { start, onLR: setBoost, cls: 'main' }); wire();
       const i = await p; start = i;
       if (i === 0 || i === 1) { const sk = i === 0 ? FER : lum; const t = await pickTarget(alive('foe'), sk.name); if (!t) continue; return { type: 'skill', skill: sk, targets: [t], boost }; }
@@ -319,7 +342,8 @@
         return { type: 'item', item: ids[j], targets: tg };
       }
       if (i === 4) return { type: 'guard' };
-      if (i === 5) { const sk = h.def.limit; const tg = await chooseTargets(h, sk); if (!tg) continue; return { type: 'skill', skill: sk, targets: tg, boost: 0, limit: true }; }
+      if (i === iOrd) { const fait = await I.rangs.ordonner(C, h); if (fait === true) return { type: 'ordre' }; continue; } // 'libre' : le stratège garde son tour
+      if (i === iLim) { const sk = h.def.limit; const tg = await chooseTargets(h, sk); if (!tg) continue; return { type: 'skill', skill: sk, targets: tg, boost: 0, limit: true }; }
     }
   }
   async function chooseTargets(h, sk) {
@@ -331,6 +355,7 @@
   /* ================= résolution ================= */
   async function perform(e, cmd) {
     $('#battle .cmd').innerHTML = '';
+    if (cmd.type === 'ordre') { floater(e, 'Ordonne', 'info'); await I.sleep(260); return; } // son tour est allé à l'ordre donné aux rangs
     if (cmd.type === 'guard') { e.st.garde = 1; e.niyya = Math.min(5, e.niyya + 1); e.sakina = Math.min(100, e.sakina + 8); fx('guard', e, e.color); floater(e, 'Garde', 'info'); I.audio.sfx('tek'); await I.sleep(420); return; }
     if (cmd.type === 'item') {
       const it = D.ITEMS[cmd.item]; I.save.data.items[cmd.item]--; await banner(it.name, 700);
@@ -511,6 +536,7 @@
 
   function refresh() {
     if (!C) return;
+    { const fr = $('#battle .front'), ch = C.champ, bt = $('#battle'); bt.classList.toggle('champ', !!(ch && ch.vue)); bt.classList.toggle('ordre', !!(ch && ch.vue && ch.menu)); if (fr) { fr.hidden = !ch || ch.vue; if (ch && !ch.vue) fr.innerHTML = I.rangs.bande(C); } }
     // ordre des tours (simulation)
     const sim = C.all.filter(e => e.alive).map(e => ({ e, ct: e === C.active ? -1 : e.ct })); const ord = [];
     for (let i = 0; i < 8 && sim.length; i++) { sim.sort((a, b) => a.ct - b.ct); const s = sim[0]; ord.push(s.e); const d = Math.max(0, s.ct); sim.forEach(x => x.ct -= d); s.ct = 1000 / eff(s.e, 'spd'); }
@@ -540,11 +566,13 @@
   }
 
   B.scene = {
-    update(dt) { if (C) { C.t += dt; C.all.forEach(e => { if (e.flash > 0) e.flash -= dt * 4; if (e.shake > 0) e.shake -= dt; }); } },
+    update(dt) { if (C) { C.t += dt; if (C.champ) I.rangs.maj(C, dt); C.all.forEach(e => { if (e.flash > 0) e.flash -= dt * 4; if (e.shake > 0) e.shake -= dt; }); } },
     render() {
       const c = G.px; if (!C) { c.fillStyle = '#000'; c.fillRect(0, 0, G.PW, G.PH); return {}; }
       const t = C.t, lights = [];
+      if (C.champ && C.champ.vue) return I.rangs.dessine(C, c, t); // le champ de bataille, le temps d'un ordre ou d'un pas
       c.drawImage(C.bg, 0, 0); drawGrid(c, C.hue, t);
+      if (C.champ) I.rangs.masse(C, c, t); // nos rangs, derrière le groupe
       const list = C.all.slice().sort((a, b) => a.y - b.y);
       for (const e of list) {
         const jx = e.shake > 0 ? (Math.random() - 0.5) * 4 : 0;

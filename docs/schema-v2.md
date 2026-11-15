@@ -60,7 +60,8 @@ qui retombe sur les épaules ; `look.trim` donne la couleur du cordon et de la c
 Coffre de savoir : `chests: [{ at, codex: 'id' }]` (un feuillet : débloque l'entrée de codex).
 `ask` accepte `need: 'idCodex'` sur une option (verrouillée tant que l'entrée n'est pas connue).
 `battle` accepte `allies: [{ flag: 'nom_du_drapeau', name: 'Les cavaliers de …' }]` : chaque allié dont le
-drapeau est levé frappe en ouverture (un voile retiré à chaque égrégore).
+drapeau est levé frappe en ouverture (un voile retiré à chaque égrégore). Dans une bataille déclarée qui a des
+rangs (5 quinquies), il prend place sur le champ à la place : `rang: 'cavaliers'` dit quel rang il forme.
 
 ### Le pourparler
 
@@ -184,6 +185,30 @@ enseigné, `etage: 'image'` pour les images du jeu ; les deux premiers rangs cit
   objectif réécrit la même clé.
 - **Garde de nom** du validateur : aucun ennemi, aucune compétence, aucun personnage, aucun interlocuteur
   ne porte le nom d'Iblîs, d'un démon ou d'un djinn. Elle ne regarde ni les textes ni les citations.
+
+## 5 quinquies. La bataille déclarée (version 7)
+
+Module `src/core/rangs.js` ; types, ordres et manœuvres dans `defs.js` (`D.RANGS`, `D.ORDRES`, `D.MANOEUVRES`) ; la
+mission dans le chapitre (`bataille`, décrit dans `schema-saga.md`). Pilote : la saga de Khâlid.
+
+- **Le champ** : cinq colonnes sur trois couloirs (aile nord, centre, aile sud). Notre camp à droite, l'idole à
+  gauche ; la dernière colonne est à son pied. Le combat du groupe continue comme avant : le champ s'y ajoute, et se
+  montre le temps d'un ordre ou d'un pas. Pendant le duel, une bande de quinze cases dit où sont rangs et nuées.
+- **Nos rangs** : un à quatre selon la mission et le niveau, plus un allié gagné par la parole. Chacun garde un ordre
+  permanent : tenir, avancer, charger (cavaliers), tirer (archers), glisser vers un couloir voisin, se replier. Trois
+  points de tenue ; à zéro, le rang se replie et se reforme au camp trois pas plus tard. Personne ne tombe.
+- **Les nuées** : les égrégores du chapitre, tels qu'ils sont déjà dessinés. Jamais des hommes. Leur nombre et leur
+  cadence suivent l'enracinement (deux nuées et une toutes les quatre pas, jusqu'à quatre et une tous les deux pas).
+- **Le pas** : après chaque tour de l'idole, et au plus tard tous les trois tours. Nos rangs d'abord, ceux de l'avant
+  en premier ; puis les nuées. Une nuée bordée par un autre rang est prise de flanc ; prise des deux côtés, elle se
+  dissipe. Un rang au pied de l'idole découvre son flanc : un voile tombe, une faille se révèle (une fois par couloir).
+  Une nuée qui atteint le camp sème le doute chez un compagnon.
+- **Ordonner** : au tour d'un compagnon, à la place de son action. Le stratège (`stratege: true`) ordonne sans perdre
+  son tour, une fois par tour, et connaît trois manœuvres d'école : réserve mobile, enveloppement, repli feint.
+- **Garde-fous** : exigence 19 (proposée). Le validateur refuse un type de rang ou un ordre inconnu, un chiffre dans
+  le nom d'un rang, deux rangs à la même place, une bataille sans combat d'idole, une bataille sans rangs qui ne dit
+  pas pourquoi.
+- **Rien n'est sauvegardé** : le champ naît et meurt avec le combat.
 
 ## 6. Musique (`src/data/music.js`)
 

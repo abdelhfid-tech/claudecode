@@ -96,6 +96,22 @@ Une page de texte, pas une galerie. Deux étages, séparés par un trait d'or en
 - **La jauge** : cinq barres dorées, `▮▮▮▯▯`. Elle accompagne le nom d'une idole, jamais celui d'un
   maillon ; les maillons sont désignés par leur numéro et leurs années.
 
+### Le champ de bataille
+
+Une vue à part, le temps d'un ordre ou d'un pas : le décor du combat, assombri, et un damier de quinze cases.
+
+- **Nos rangs** : les silhouettes de troupe du jeu, en nombre, sans visage. Deux lignes pour un rang à pied,
+  la ligne du fond dessinée d'abord ; un cavalier par point de tenue, sur une monture sombre et sans trait.
+  Aucun étendard, aucune inscription, aucun emblème.
+- **Par-dessus chaque rang** : son numéro dans un petit cartouche sombre (le même que dans le menu), trois
+  points dorés pour sa tenue, un signe pour son ordre (un chevron vers l'idole : avancer ; deux : charger ;
+  un chevron vers le camp : se replier ; trois points : tirer ; un chevron vers le couloir voisin : glisser).
+- **Les nuées** : les égrégores du chapitre, plus petits, à demi effacés quand ils faiblissent.
+- **L'idole** : immobile, à gauche. La dernière colonne est à son pied ; un flanc découvert la teinte d'or.
+- **Un rang éprouvé ne tombe pas** : il perd des silhouettes, puis quitte le champ et y revient.
+- **Pendant le duel**, les rangs se tiennent en retrait derrière le groupe, estompés, et une bande de
+  quinze cases, en haut à droite, dit où chacun se trouve.
+
 ## Version précédente : personnages en blocs, décors sublimés (demande du décideur)
 
 Les personnages sont faits de blocs : une tête cubique d'étoffe, un corps, deux bras, deux jambes, avec

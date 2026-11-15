@@ -153,6 +153,7 @@ function checkSaga(s, E, W) {
 
   for (const [id, h] of Object.entries(heroes)) {
     const w = `héros ${id}`;
+    if (h.stratege !== undefined && h.stratege !== true) E.push(`${w}: « stratege » vaut true ou s'omet`);
     req(h, 'name', 'string', w); req(h, 'arabic', 'string', w); garde(h.name, w); (h.skills || []).concat(h.limit || []).forEach(k => garde(k && k.name, w));
     if (!D.ROLES[h.role]) E.push(`${w}: role « ${h.role} » invalide (${Object.keys(D.ROLES).join('|')})`);
     if (!D.ELEMENTS[h.el]) E.push(`${w}: el « ${h.el} » invalide`);
@@ -241,6 +242,21 @@ function checkSaga(s, E, W) {
     if (c.hajj !== undefined && c.hajj !== true) E.push(`${w}: « hajj » vaut true ou s'omet`);
     if (c.vice !== undefined && (!D.VICES[c.vice] || !c.after || !s.frame)) E.push(`${w}: « vice » annonce le mal du cœur d'une rencontre (chapitre « after » de l'histoire-cadre) et doit figurer dans D.VICES`);
     if (c.hajj && !s.veillees) E.push(`${w}: le pèlerinage n'est proposé que dans la fiction des veillées`);
+    // la bataille déclarée : les rangs que la mission aligne, les ordres qu'elle permet. Aucun effectif (exigence 19).
+    if (c.bataille !== undefined) { const Bt = c.bataille || {}, wb = `${w}.bataille`;
+      if (!Array.isArray(Bt.rangs) || Bt.rangs.length > 4) E.push(`${wb}: « rangs » attend un tableau de 0 à 4 rangs`);
+      (Array.isArray(Bt.rangs) ? Bt.rangs : []).forEach((r, i) => { if (!r || !D.RANGS[r.t]) { E.push(`${wb}: rang ${i} : type inconnu (${Object.keys(D.RANGS).join('|')})`); return; }
+        if (r.name !== undefined) { if (typeof r.name !== 'string') E.push(`${wb}: rang ${i} : « name » doit être une chaîne`); else { garde(r.name, wb); if (/\d/.test(r.name)) E.push(`${wb}: rang ${i} : aucun effectif dans le nom d'un rang (exigence 19)`); } }
+        if (r.voie !== undefined && !['nord', 'centre', 'sud'].includes(r.voie)) E.push(`${wb}: rang ${i} : « voie » vaut nord, centre ou sud`);
+        if (r.ligne !== undefined && r.ligne !== 0 && r.ligne !== 1) E.push(`${wb}: rang ${i} : « ligne » vaut 0 (au camp) ou 1 (en première ligne)`);
+        if (r.ligne !== undefined && r.voie === undefined) E.push(`${wb}: rang ${i} : « ligne » ne va pas sans « voie »`);
+        if (r.look) checkLook(r.look, wb); });
+      { const vues = {}; (Array.isArray(Bt.rangs) ? Bt.rangs : []).forEach((r, i) => { if (!r || !r.voie) return; const k = r.voie + '/' + (r.ligne === 0 ? 0 : 1); if (vues[k] !== undefined) E.push(`${wb}: rangs ${vues[k]} et ${i} à la même place (${k})`); vues[k] = i; }); }
+      if (Bt.ordres !== undefined && (!Array.isArray(Bt.ordres) || Bt.ordres.some(o => !D.ORDRES[o]))) E.push(`${wb}: « ordres » inconnus (${Object.keys(D.ORDRES).join('|')})`);
+      if (Array.isArray(Bt.ordres) && !Bt.ordres.includes('tenir')) E.push(`${wb}: « ordres » garde au moins « tenir »`);
+      if (Bt.base !== undefined && !(Number.isInteger(Bt.base) && Bt.base >= 0 && Bt.base <= 4)) E.push(`${wb}: « base » vaut de 0 à 4`);
+      if (Bt.mot !== undefined && typeof Bt.mot !== 'string') E.push(`${wb}: « mot » doit être une chaîne`);
+      if (Array.isArray(Bt.rangs) && !Bt.rangs.length && typeof Bt.mot !== 'string') E.push(`${wb}: une bataille sans rangs dit pourquoi (« mot »)`); }
     const checkAt = (at, mapId, where) => {
       const spot = Array.isArray(at) ? at[0] : at;
       if (!D.MAPS[mapId]) { E.push(`${where}: carte « ${mapId} » inconnue`); return; }
@@ -315,7 +331,8 @@ function checkSaga(s, E, W) {
             if (!Array.isArray(b.group) || !b.group.length || b.group.length > 4) E.push(`${wo}: battle.group de 1 à 4`);
             (b.group || []).forEach(g => { if (!enemies[g]) E.push(`${wo}: ennemi « ${g} » inconnu`); });
             if (b.bg && !D.BATTLE_BG.includes(b.bg)) E.push(`${wo}: bg « ${b.bg} » invalide`);
-            (b.allies || []).forEach(al => { if (!al || typeof al.flag !== 'string' || typeof al.name !== 'string') E.push(`${wo}: battle.allies attend [{flag, name}]`); });
+            (b.allies || []).forEach(al => { if (!al || typeof al.flag !== 'string' || typeof al.name !== 'string') E.push(`${wo}: battle.allies attend [{flag, name}]`);
+              else { garde(al.name, wo); if (al.rang !== undefined && !D.RANGS[al.rang]) E.push(`${wo}: battle.allies : « rang » inconnu (${Object.keys(D.RANGS).join('|')})`); if (al.look) checkLook(al.look, wo); } });
             if (b.boss) meneurs.push([b.group || [], wo]);
             break;
           }
@@ -420,6 +437,7 @@ function checkSaga(s, E, W) {
     });
     if (c.outro) checkOps(c.outro, `${w}.outro`);
     (c.npcs || []).forEach(n => { if (n.talk) { const save = state.map; checkOps(n.talk, `${w}/pnj ${n.id}.talk`); state.map = save; } });
+    if (c.bataille !== undefined && !meneurs.length) E.push(`${w}: « bataille » sans combat d'idole (boss: true) dans ce chapitre`);
     // l'idole d'un combat lancé avec boss: true (son membre de plus haut palier, maux du cœur exceptés) dit sa racine
     { const PAL = { boss: 3, elite: 2, minion: 1 };
       meneurs.forEach(([g, where]) => { const t = g.filter(x => enemies[x]).sort((a, b) => (PAL[enemies[b].tier] || 0) - (PAL[enemies[a].tier] || 0))[0]; if (t && !enemies[t].vice && enemies[t].racine === undefined) E.push(`${where}: l'idole « ${t} » n'a pas de « racine » (${D.RACINES.join('|')})`); }); }

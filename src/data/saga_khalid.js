@@ -45,7 +45,7 @@ ISNAD.registerSaga({
   /* ───────────────────────────── HÉROS ───────────────────────────── */
   heroes: {
     khalid: {
-      name: 'Khâlid', title: 'Le Sabre dégainé', arabic: 'خالد',
+      name: 'Khâlid', title: 'Le Sabre dégainé', arabic: 'خالد', stratege: true, // dans une bataille déclarée, il ordonne sans perdre son tour
       role: 'guerrier', el: 'shajaa',
       look: { robe: '#7a2f2a', head: '#e9dcc0', cloak: '#8e2f2a', aura: '#ff9a70', coiffe: 'casque_turban', cuirasse: true, manteau: 'epaule', item: 'sabre' },
       skills: [
@@ -297,6 +297,8 @@ ISNAD.registerSaga({
     /* ═══ 1. LA TRAVERSÉE ═══ */
     {
       id: 'k1', title: 'La Traversée', sub: 'An 13 H · 634 · Désert de la Samâwa',
+      // bataille déclarée : une colonne à tenir dans le désert ; ni charge ni tir
+      bataille: { base: 2, rangs: [{ t: 'fantassins', name: 'Hommes de la colonne', voie: 'centre' }, { t: 'cavaliers', name: 'Avant-garde', voie: 'nord' }], ordres: ['tenir', 'avancer', 'replier'] },
       map: 'desert', opts: { time: 'dusk' }, start: 'caravane',
       party: ['khalid'],
       npcs: [
@@ -486,7 +488,7 @@ ISNAD.registerSaga({
           ['say', 'La Soif', "Nul homme n'a franchi ces cinq nuits avant toi. Couche-toi. Le sable est doux à qui renonce."],
           ['say', 'khalid', "Je n'ai pas promis d'arriver. J'ai promis de marcher."],
           ['battle', { group: ['soif', 'mirage'], bg: 'desert', boss: true, intro: 'La Soif barre le chemin de la source.',
-            allies: [{ flag: 'hira_amie', name: "Les chameliers d'al-Hîra" }] }],
+            allies: [{ flag: 'hira_amie', name: "Les chameliers d'al-Hîra", rang: 'gens' }] }],
           ['tint', null], ['sfx', 'light'],
           ['nar', "On creuse. Le sable devient sombre, puis humide. Puis l'eau monte, froide, entre les doigts."],
           ['say', 'rafi', "Par Allah, je ne suis venu à cette eau qu'une seule fois, enfant, avec mon père."],
@@ -506,6 +508,8 @@ ISNAD.registerSaga({
     /* ═══ 2. YARMOÛK ═══ */
     {
       id: 'k2', title: 'Yarmoûk', sub: 'An 13 ou 15 H · 634–636 · Vallée du Yarmoûk',
+      // bataille déclarée : les trois armes. Aucun effectif n'est donné ; en face, les nuées de la Peur du Nombre.
+      bataille: { base: 3, rangs: [{ t: 'fantassins', name: 'Fantassins du centre', voie: 'centre' }, { t: 'cavaliers', name: 'Cavaliers de réserve', voie: 'centre', ligne: 0 }, { t: 'archers', name: 'Archers', voie: 'sud' }, { t: 'fantassins', name: 'Fantassins de l’aile', voie: 'nord' }] },
       map: 'camp', opts: { time: 'night' }, start: 'entree',
       party: ['khalid', 'qaqa', 'dirar'],
       npcs: [
@@ -650,7 +654,7 @@ ISNAD.registerSaga({
           ['say', 'khalid', "Les armées ne sont nombreuses que par la victoire. Tu n'es qu'un chiffre qui a pris peur de lui-même."],
           ['if', 'zurayr_ecart',
             [['battle', { group: ['decompte', 'peur_nombre', 'decompte'], bg: 'noos', boss: true, intro: 'La Peur du Nombre déploie ses mille lances. Mais un gué, sur son flanc, ne compte plus pour elle.',
-              allies: [{ flag: 'zurayr_ecart', name: 'Les éclaireurs des Banû Zurayr' }] }]],
+              allies: [{ flag: 'zurayr_ecart', name: 'Les éclaireurs des Banû Zurayr', rang: 'cavaliers' }] }]],
             [['battle', { group: ['decompte', 'peur_nombre', 'decompte', 'ombre_lance'], bg: 'noos', boss: true, intro: 'La Peur du Nombre déploie ses mille lances, et celles du gué avec elles.' }]]],
           ['sfx', 'break'], ['flash', '#ffffff'],
           ['map', 'camp', 'tente_chef', { time: 'dusk' }],
@@ -677,6 +681,8 @@ ISNAD.registerSaga({
     /* ═══ 3. L'ÉPÉE AU FOURREAU ═══ */
     {
       id: 'k3', title: "L'Épée au fourreau", sub: 'An 17 H · 638 · Qinnasrîn, puis Homs',
+      // bataille déclarée, sans rangs : il n'a plus d'armée à mener
+      bataille: { rangs: [], mot: 'Il n’y a pas de rangs à mener ici. L’armée est restée derrière lui : ce combat-là est le sien.' },
       map: 'romaine', opts: { time: 'day' }, start: 'palais',
       party: ['khalid', 'qaqa', 'dirar'],
       npcs: [

@@ -63,6 +63,9 @@ joue le prologue, les cinq sagas et l'épilogue de bout en bout sans erreur.
 | Que la jauge se lise comme un jugement sur une époque | moyenne | forte | Elle se dit d'une idole ; les maillons sont désignés par numéro et années ; texte répété sur la page et dans l'aide |
 | Qu'un verset soit mal cité | faible | forte | Deux versets seulement, lus mot à mot sur une traduction publiée ; à relire par le décideur |
 | Qu'un texte ou un ennemi nomme un jour un djinn | faible | forte | Garde de nom dans le validateur |
+| Qu'une bataille déclarée passe pour la reconstitution d'une bataille de l'histoire | moyenne | forte | Exigence 19 (proposée) ; en face, des nuées, jamais des hommes ; aucun effectif, aucun nom d'unité ; les manœuvres sont dites « d'école » et ne sont rattachées à aucun jour |
+| Qu'on voie des hommes tomber | faible | forte | Un rang éprouvé se replie et se reforme ; aucun corps à l'écran |
+| Que le champ alourdisse ou bloque le combat | moyenne | moyenne | `tools/bataille.js` : parcours au doigt à trois tailles, mesures avec et sans rangs, « ÉCART » au-delà de 20 % |
 
 ## Verdict
 

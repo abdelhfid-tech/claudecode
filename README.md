@@ -92,6 +92,21 @@ refuse. En bas, les images du jeu : les idées noires, les égrégores, les idol
 
 Les textes de cette page sont des propositions, à relire (`docs/decisions.md`, D97 à D102).
 
+### La bataille déclarée (pilote : la saga de Khâlid)
+
+Contre une idole, on ne se bat plus seul. Un carton déclare la bataille, et à côté du combat s'ouvre un champ de
+cinq colonnes sur trois couloirs : nos rangs y font face aux nuées de l'idole, qui ne sont jamais des hommes.
+
+- **Ordonner.** Au tour d'un compagnon, on change l'ordre d'un rang : tenir, avancer, charger, tirer, glisser,
+  se replier. Après chaque tour de l'idole, les rangs exécutent leur ordre, puis les nuées avancent.
+- **Le flanc.** Un rang qui atteint le pied de l'idole découvre son flanc : un voile tombe, une faille se révèle.
+  Une nuée prise entre deux rangs se dissipe ; une nuée qui perce jusqu'au camp sème le doute.
+- **Khâlid.** Il ordonne sans perdre son tour et connaît trois manœuvres d'école : la réserve mobile,
+  l'enveloppement, le repli feint.
+- **Personne ne tombe.** Un rang éprouvé se replie et se reforme. Le jeu ne donne aucun effectif.
+
+Règles proposées, à valider après essai (`docs/decisions.md`, D103 à D109). `node tools/bataille.js` la joue au doigt.
+
 ## L'équipement
 
 - **Quatre emplacements** par compagnon : main droite (épée, lance, arc, dague, masse, bâton ou calame),

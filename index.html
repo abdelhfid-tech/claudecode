@@ -322,6 +322,24 @@ body.portrait #hud .enig { display: block; background: var(--panel); }
 #card.noir img.idee { height: 5.2em; image-rendering: pixelated; margin-bottom: .3em; filter: drop-shadow(0 0 14px rgba(201, 184, 255, .5)); }
 .phead .seal.idee { border-radius: 0; background-size: contain; background-repeat: no-repeat; background-position: center; image-rendering: pixelated; }
 #choice .opt .voie { color: var(--dim); }
+/* bataille déclarée : la bande du champ pendant le duel ; pendant un ordre ou un pas, le champ prend toute la scène */
+#battle .front { position: absolute; right: 2%; top: 11%; display: grid; grid-template-columns: repeat(5, 1.05em); gap: 0 .1em; padding: .2em .45em; font-size: .72em; line-height: 1.15; background: rgba(8, 7, 18, .66); border: 1px solid var(--line); border-radius: .3em; pointer-events: none; }
+#battle .front i { font-style: normal; text-align: center; color: var(--dim); opacity: .7; } #battle .front i.r { color: var(--gold); opacity: 1; } #battle .front i.r.m { color: #fff6dc; } #battle .front i.n { opacity: 1; } #battle .front i.f { color: var(--gold); opacity: 1; }
+#battle.champ .plates, #battle.champ .order { display: none; }
+/* le champ de bataille : les bandeaux se rangent hors du champ (au-dessus, écran en hauteur ; entre le champ et le panneau sinon) */
+#battle.champ .banner, #battle.champ .banner.speech, #battle.champ .banner.intro { top: 56.5%; }
+body.portrait #battle.champ .banner, body.portrait #battle.champ .banner.speech, body.portrait #battle.champ .banner.intro { top: 4%; }
+/* écran en hauteur : pendant qu'on ordonne, le menu remonte sous le champ (les plaques du groupe reviennent après) */
+body.portrait #battle.ordre .heroes { display: none; }
+/* écran en largeur : le menu des ordres prend toute la largeur du panneau, sur deux colonnes, et ne monte jamais jusqu'au champ
+   (le champ s'arrête à 112 points du canevas ; le menu n'en dépasse pas 98, au-dessus des 2 % du bas) */
+body:not(.portrait) #battle.ordre .heroes { display: none; }
+body:not(.portrait) #battle.ordre .panel { grid-template-columns: 1fr; }
+body:not(.portrait) #battle.ordre .cmd { max-height: calc(var(--u) * 98); }
+body:not(.portrait) #battle.ordre .mlist { display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+body:not(.portrait) #battle.ordre .mdesc { min-height: 1.3em; }
+.mi .num, .mtitle .num { display: inline-grid; place-items: center; min-width: 1.35em; height: 1.35em; margin-right: .25em; background: rgba(8, 7, 18, .86); color: var(--gold); font-family: var(--f-mono); font-size: .86em; font-weight: 700; border-radius: 2px; }
+#card.bataille h1 { color: var(--gold); } #card.bataille .rangs { list-style: none; padding: 0; margin: .5em 0; } #card.bataille .rangs li { margin: .15em 0; } #card.bataille .rac { font-size: 1.1em; }
 .stat.bete { grid-template-columns: 5.4em 1fr; } .stat.bete .fig { width: 5.4em; height: auto; } .stat.bete.off { opacity: .55; } .stat.bete.off .fig { display: grid; place-items: center; height: 2.6em; font-family: var(--f-display); font-size: 1.3em; color: var(--dim); border: 1px dashed rgba(255, 255, 255, .2); width: 3.4em; }
 .stat.bete.cur { border-bottom-color: var(--gold); }
 
@@ -403,7 +421,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
       <div id="compass" hidden><canvas aria-label="Cadran des étoiles"></canvas><div class="lab"></div></div>
       <div id="toasts"></div>
       <div id="battle" hidden>
-        <div class="order"></div><div class="plates"></div><div class="banner" hidden></div>
+        <div class="order"></div><div class="plates"></div><div class="front" hidden></div><div class="banner" hidden></div>
         <div class="panel"><div class="heroes"></div><div class="cmd"></div></div>
       </div>
       <div id="floaters"></div>
@@ -438,7 +456,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
+window.ISNAD_VERSION = "2026-11-15 13:28 UTC · 42cf877+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -691,6 +709,29 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
       else if (o[0] === 'if') { D.parcours(o[2], fn); D.parcours(o[3], fn); }
       else if (o[0] === 'vices' && o[1]) ['avant', 'aucun', 'tous', 'reste'].forEach(k => D.parcours(o[1][k], fn));
     });
+  };
+
+  // La bataille déclarée (version 7) : les rangs qu'une mission peut aligner, les ordres qu'on leur donne, et les trois
+  // manœuvres d'école du stratège. La mission est dans le chapitre (`bataille`) ; règles et dessin : src/core/rangs.js.
+  // `pas` : cases par pas · `ferme` : tient mieux quand il tient · `monte` : rang monté (charge, réserve mobile).
+  D.RANGS = {
+    fantassins: { name: 'Fantassins', desc: 'Des fantassins : ils tiennent le couloir, et encaissent mieux quand ils tiennent.', ordres: ['tenir', 'avancer', 'glisser', 'replier'], ferme: true, look: { kind: 'soldat', coiffe: 'casque', item: ['lance', 'bouclier_bois'] } },
+    cavaliers:  { name: 'Cavaliers', desc: 'Des cavaliers : ils chargent de deux cases, et frappent plus fort à l’arrivée.', ordres: ['tenir', 'avancer', 'charger', 'glisser', 'replier'], monte: true, look: { kind: 'soldat', coiffe: 'casque_turban', item: 'lance', robe: '#6f5a48' } },
+    archers:    { name: 'Archers', desc: 'Des archers : ils tirent dans leur couloir, jusqu’à trois cases, sans bouger.', ordres: ['tirer', 'tenir', 'glisser', 'replier'], look: { kind: 'soldat', coiffe: 'casque_cuir', item: 'arc', robe: '#7d7a5a' } },
+    gens:       { name: 'Gens du lieu', desc: 'Les gens de la mission : ils tiennent et avancent, sans charge ni tir.', ordres: ['tenir', 'avancer', 'replier'], look: { kind: 'homme', robe: '#8c7d68' } }
+  };
+  D.ORDRES = {
+    tenir:   { name: 'Tenir', desc: 'Le rang reste où il est et frappe ce qui vient à lui. Des fantassins qui tiennent encaissent mieux.' },
+    avancer: { name: 'Avancer', desc: 'Une case vers l’idole à chaque pas. Le rang frappe la nuée qui lui barre le couloir.' },
+    charger: { name: 'Charger', desc: 'Deux cases d’un élan, et un coup plus fort à l’arrivée.' },
+    tirer:   { name: 'Tirer', desc: 'Frappe la première nuée du couloir, jusqu’à trois cases, sans bouger.' },
+    glisser: { name: 'Glisser', desc: 'Change de couloir, pour border une nuée et la prendre de flanc.' },
+    replier: { name: 'Se replier', desc: 'Une case en arrière.' }
+  };
+  D.MANOEUVRES = {
+    garde:    { name: 'Réserve mobile', desc: 'Les cavaliers sont portés d’un coup là où le rang plie : une case libre de notre moitié du champ.' },
+    tenaille: { name: 'Enveloppement', desc: 'Les deux ailes avancent de deux cases et se rabattent : une nuée du centre prise entre elles se dissipe.' },
+    feinte:   { name: 'Repli feint', desc: 'Un rang recule d’une case. La nuée qui le suivait s’avance et se découvre : le prochain coup porte double.' }
   };
 
   // v4 — s'orienter aux étoiles. Huit caps, nommés comme le feront les pilotes arabes : par l'étoile qui
@@ -4197,6 +4238,296 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
   };
 })();
 
+/* ==== src/core/rangs.js ==== */
+/* ISNAD — la bataille déclarée : des rangs, un terrain, des ordres.
+   Dans un chapitre qui déclare une `bataille`, le combat de l'idole se double d'un champ de cinq colonnes sur trois
+   couloirs. Nos rangs y tiennent, avancent, chargent, tirent. En face, jamais des hommes : les nuées de l'idole, c'est-à-dire
+   ses égrégores, tels qu'ils sont déjà dessinés. Le combat du groupe continue comme avant ; le champ s'y ajoute.
+
+   Inspiré du genre tactique (terrain quadrillé, prise de flanc, tenaille, tour par tour), sans rien reprendre d'un jeu
+   existant : ni nom, ni écran, ni règle copiée.
+
+   Règles et dessin seulement. Types de rangs, ordres et manœuvres : defs.js (D.RANGS, D.ORDRES, D.MANOEUVRES). La mission
+   (quels rangs, quels ordres) : le champ `bataille` du chapitre. Le moteur calcule les forces ; un fichier de saga n'en fixe aucune.
+
+   Garde-fous (exigences 6 et 19) : il n'y a jamais d'hommes en face ; un rang éprouvé se replie et se reforme, personne ne
+   tombe à l'écran ; aucun effectif n'est affirmé ; les ordres se limitent à ce que la mission permet ; l'issue du combat ne
+   change rien à l'histoire. Les manœuvres du stratège sont des manœuvres d'école : le jeu ne dit pas que l'une d'elles fut
+   faite tel jour. */
+(function () {
+  'use strict';
+  const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, W = I.world;
+  const R = I.rangs = {};
+  const COLS = 5, VOIES = 3, NOMS = ['aile nord', 'centre', 'aile sud'], LIGNES = ['au camp', 'en première ligne', 'au milieu du champ', 'en avant', 'au pied de l’idole'];
+  const PALIER = { boss: 3, elite: 2, minion: 1 }, VOIE = { nord: 0, centre: 1, sud: 2 };
+  const ou = u => NOMS[u.l] + ', ' + LIGNES[u.c];
+  const tenue = n => '▮'.repeat(Math.max(0, n)) + '▯'.repeat(Math.max(0, 3 - n));
+  const num = r => `<b class="num">${r.no}</b>`; // le numéro du rang : le même sur le champ et dans les menus
+
+  /* ================= mise en place ================= */
+  // la mission du chapitre en cours, si ce combat est celui de son idole
+  R.mission = function (opts) { const B = W.ch && W.ch.bataille; return B && I.mal.estIdole(opts) ? B : null; };
+  // combien de rangs le groupe peut mener : ce que la mission donne, plus un au niveau 4, un autre au niveau 8
+  R.combien = function (B) { const lvl = W.party.length ? W.hero(W.party[0]).lvl : 1; return Math.min((B.rangs || []).length, 4, (B.base || 2) + (lvl >= 4 ? 1 : 0) + (lvl >= 8 ? 1 : 0)); };
+  // api : ce que le combat prête au champ (ses menus, ses bandeaux, ses effets sur l'idole et sur le groupe)
+  R.ouvre = function (C, opts, api) {
+    const B = R.mission(opts); if (!B) return null;
+    const n = R.combien(B), saga = W.saga, niv = I.mal.niveau(), L = I.mal.lignee(saga, W.ch);
+    const ch = { B, api, rangs: [], nuees: [], flancs: [false, false, false], pas: 0, vue: false, libre: -1, sel: null, cibles: [], seq: 0,
+      ordres: (B.ordres || null), cadence: niv <= 2 ? 4 : niv === 3 ? 3 : 2, max: niv <= 2 ? 2 : niv === 3 ? 3 : 4, niv };
+    // la place de départ : celle que la mission donne (`voie`, `ligne`), sinon la première libre, le centre d'abord
+    const libres = [[1, 1], [1, 0], [1, 2], [0, 1], [0, 0], [0, 2]], prend = (c, l) => { const k = libres.findIndex(p => p[0] === c && p[1] === l); return k < 0 ? null : libres.splice(k, 1)[0]; };
+    const mission = (B.rangs || []).slice(0, n), places = mission.map(r => r.voie ? prend(r.ligne === 0 ? 0 : 1, VOIE[r.voie]) : null).map(p => p || libres.shift());
+    mission.forEach((r, i) => { const T = D.RANGS[r.t], ordres = R.ordresDe(ch, { T }), veut = T.ordres.includes('tirer') ? 'tirer' : 'tenir';
+      ch.rangs.push({ id: 'r' + i, no: i + 1, t: r.t, T, name: r.name || T.name, c: places[i][0], l: places[i][1], tenue: 3, ordre: ordres.includes(veut) ? veut : ordres[0], repos: 0,
+        sheet: G.charSheet(Object.assign({ kind: 'soldat', robe: '#8a7355', head: '#cdbf9f' }, T.look, r.look)), flash: 0 }); });
+    // un allié gagné par la parole, si le récit en fait une troupe (`rang`) : le « renfort » devient un rang, déjà engagé au
+    // milieu du champ (un par bataille au plus). Les autres alliés (une veille commune, un dû versé) agissent comme avant.
+    (n ? (opts.allies || []) : []).filter(al => al.rang && S.flags[al.flag]).slice(0, 1).forEach(al => { const T = D.RANGS[al.rang] || D.RANGS.gens, ordres = R.ordresDe(ch, { T }), tir = x => ch.rangs.some(r => r.l === x && r.T.ordres.includes('tirer')) ? 1 : 0;
+      const l = [2, 0, 1].sort((a, b) => tir(a) - tir(b)).find(x => !ch.rangs.some(r => r.l === x && r.c === 2)); // pas devant des archers : il leur boucherait le couloir
+      if (l === undefined) return;
+      ch.rangs.push({ id: 'r' + ch.rangs.length, no: ch.rangs.length + 1, t: al.rang || 'gens', T, name: al.name, allie: true, c: 2, l, tenue: 3, ordre: ordres.includes('avancer') ? 'avancer' : 'tenir', repos: 0,
+        sheet: G.charSheet(Object.assign({ kind: 'soldat', robe: '#7a6a58', head: '#d9cfb4' }, T.look, al.look)), flash: 0 }); });
+    // les nuées : les égrégores du chapitre (les plus humbles d'abord), une par couloir pour commencer
+    const pool = L.egregores.filter(id => saga.enemies[id]).sort((a, b) => (PALIER[saga.enemies[a].tier] || 0) - (PALIER[saga.enemies[b].tier] || 0)); ch.pool = pool.length ? pool : L.idoles.slice(0, 1);
+    const voies = [1, 0, 2]; for (let i = 0; i < Math.min(ch.max, VOIES); i++) { const c = 4 - (i === 0 ? 1 : 0); if (!en(ch, c, voies[i])) nuee(ch, c, voies[i]); }
+    ch.rangs.concat(ch.nuees).forEach(u => { u.px = null; });
+    ch.stats = { perces: 0, dissipees: 0, eprouves: 0 }; ch.depuis = 0;
+    return n ? ch : null; // sans rangs, pas de champ : la bataille est déclarée, et le groupe la livre seul
+  };
+  // Le champ bouge après chaque tour de l'idole, et au plus tard tous les trois tours.
+  R.du = function (C, act) {
+    const ch = C.champ; if (!ch) return false; ch.depuis++;
+    if ((act.side === 'foe' && I.mal.lignee(W.saga, W.ch).idoles.includes(act.id)) || ch.depuis >= 3) { ch.depuis = 0; return true; }
+    return false;
+  };
+  function nuee(ch, c, l) { const id = ch.pool[ch.seq % ch.pool.length], def = W.saga.enemies[id] || (I.common && I.common.enemies[id]); ch.nuees.push({ id: 'n' + (ch.seq++), def, name: def.name, c, l, corps: 2, decouverte: false, spr: G.enemy(def.art, def.hue, 1, ch.seq), flash: 0, ph: Math.random() * 6, px: null }); }
+  const en = (ch, c, l) => ch.rangs.find(r => !r.repos && r.c === c && r.l === l) || ch.nuees.find(n => n.c === c && n.l === l) || null;
+  const rangEn = (ch, c, l) => ch.rangs.find(r => !r.repos && r.c === c && r.l === l) || null;
+  const nueeEn = (ch, c, l) => ch.nuees.find(n => n.c === c && n.l === l) || null;
+  const actifs = ch => ch.rangs.filter(r => !r.repos);
+
+  // le carton qui annonce la bataille : l'idole, son enracinement, les rangs présents
+  R.declare = async function (C, opts) {
+    const B = W.ch && W.ch.bataille; if (!B || !I.mal.estIdole(opts)) return;
+    I.oeuvres.learn('bataille');
+    const ch = C.champ, lead = C.all.find(e => e.side === 'foe' && I.mal.lignee(W.saga, W.ch).idoles.includes(e.id)) || C.all.find(e => e.side === 'foe');
+    const rangs = ch ? ch.rangs.map(r => `<li><b>${I.esc(r.name)}</b> · ${NOMS[r.l]}</li>`).join('') : '';
+    await S.card('title parley bataille', `<p class="small">Bataille déclarée</p><h1>${I.esc(lead.name)}</h1><p>Enracinement ${I.mal.traits(I.mal.niveau())}</p>` +
+      (rangs ? `<ul class="rangs">${rangs}</ul><p class="small">En face, des nuées : jamais des hommes. Au tour d’un compagnon, « Ordonner » dirige un rang.</p>` : `<p>${I.fmt(B.mot || 'Aucun rang à mener ici.')}</p>`) + '<div class="rule"></div><div class="hint">▼</div>');
+  };
+
+  /* ================= le pas : nos rangs, puis les nuées ================= */
+  // frappe d'un rang sur une nuée : de flanc si un autre rang la borde dans le couloir voisin ; en tenaille si elle est prise des deux côtés
+  function frappe(ch, r, n, elan) {
+    const cote = d => !!rangEn(ch, n.c, n.l + d), av = !!rangEn(ch, n.c - 1, n.l), ar = !!rangEn(ch, n.c + 1, n.l);
+    const tenaille = (cote(-1) && cote(1)) || (av && ar), flanc = cote(-1) || cote(1) || n.decouverte;
+    const d = tenaille ? 9 : 1 + (elan ? 1 : 0) + (flanc ? 1 : 0); n.corps -= d; n.flash = 1; r.flash = 0.6; n.decouverte = false;
+    dire(ch, n, tenaille ? 'En tenaille' : flanc ? 'De flanc' : elan ? 'Charge' : 'Touchée', tenaille || flanc ? 'break' : 'info');
+    return d;
+  }
+  // un mot au-dessus d'une case : en haut pour une nuée, en bas pour un rang, pour que deux voisins ne se recouvrent pas
+  function dire(ch, u, txt, cls) { const g = geo(ch), bas = !u.def; u.mots = ((u.mots || 0) + 1) % 2; ch.api.floater({ x: g.cx(u.c), x0: g.cx(u.c), y: g.cy(u.l) + (bas ? 53 + u.mots * 9 : 29 - u.mots * 9), ox: 0, side: 'hero', size: 0 }, txt, cls || 'info'); }
+  function direIdole(ch, txt, cls) { const g = geo(ch); ch.api.floater({ x: g.xi, x0: g.xi, y: g.y0 + VOIES * g.chh / 2 + 20, ox: 0, side: 'hero', size: 0 }, txt, cls || 'info'); }
+  // un rang exécute son ordre
+  function agit(ch, r) {
+    const T = r.T, devant = nueeEn(ch, r.c + 1, r.l);
+    if (r.ordre === 'tirer') { for (let d = 1; d <= 3; d++) { const n = nueeEn(ch, r.c + d, r.l); if (n) { frappe(ch, r, n, false); return; } if (rangEn(ch, r.c + d, r.l)) return; } return; }
+    if (r.ordre === 'tenir') { if (devant) frappe(ch, r, devant, false); return; }
+    if (r.ordre === 'replier') { if (r.c > 0 && !en(ch, r.c - 1, r.l)) r.c--; r.ordre = 'tenir'; return; }
+    if (r.ordre === 'glisser-' || r.ordre === 'glisser+') { const l = r.l + (r.ordre === 'glisser-' ? -1 : 1); if (l >= 0 && l < VOIES && !en(ch, r.c, l)) r.l = l; r.ordre = r.avant || 'tenir'; const n = nueeEn(ch, r.c + 1, r.l); if (n) frappe(ch, r, n, false); return; }
+    // avancer, charger : une case (deux pour une charge), et le coup si une nuée barre le couloir
+    const pas = r.ordre === 'charger' ? 2 : 1; let fait = 0;
+    for (let k = 0; k < pas; k++) { if (r.c + 1 < COLS && !en(ch, r.c + 1, r.l)) { r.c++; fait++; } else break; }
+    const n = nueeEn(ch, r.c + 1, r.l); if (n) frappe(ch, r, n, r.ordre === 'charger' && fait > 0);
+  }
+  R.pas = async function (C) {
+    const ch = C.champ; if (!ch) return; const api = ch.api, vite = I.debug.auto;
+    ch.pas++; ch.vue = true; api.refresh(); if (!vite) await I.sleep(300);
+    // 1. nos rangs, ceux de l'avant d'abord
+    actifs(ch).sort((a, b) => b.c - a.c).forEach(r => agit(ch, r));
+    balaie(ch); if (!vite) await I.sleep(620);
+    // 2. les nuées : elles avancent d'une case, ou frappent le rang qui leur barre le couloir
+    let perce = 0;
+    ch.nuees.slice().sort((a, b) => a.c - b.c).forEach(n => {
+      const r = rangEn(ch, n.c - 1, n.l);
+      if (r) { const tient = r.ordre === 'tenir' && r.T.ferme && Math.random() < 0.5; if (tient) dire(ch, r, 'Tient bon', 'info'); else { r.tenue--; r.flash = 1; dire(ch, r, 'Éprouvé', 'dmg'); if (r.tenue <= 0) { r.repos = 3; ch.stats.eprouves++; dire(ch, r, 'Se replie', 'info'); } } return; }
+      if (n.c === 0) { n.corps = 0; n.passe = true; perce++; ch.stats.perces++; return; }
+      if (!en(ch, n.c - 1, n.l)) n.c--;
+    });
+    balaie(ch);
+    if (perce) { const hs = api.heros(); if (hs.length) { const h = I.pick(hs); api.doute(h); } if (!vite) await api.banner('<small>Le champ</small>Une nuée a percé : le doute gagne', 1300, false, 'speech foe'); }
+    // 3. un couloir ouvert jusqu'au pied de l'idole découvre son flanc : un voile tombe, une faille se révèle
+    for (const r of actifs(ch)) { if (r.c === COLS - 1 && !ch.flancs[r.l]) { ch.flancs[r.l] = true; r.ordre = 'tenir'; const idole = api.idole(); if (idole) { const v = api.voile(idole); api.revele(idole); direIdole(ch, v === 'devoile' ? 'DÉVOILÉ' : 'Voile ôté', 'break'); } I.audio.sfx('roll');
+      if (!vite) await api.banner(`<small>${I.esc(r.name)} · ${NOMS[r.l]}</small>Flanc découvert : un voile tombe`, 1500, false, 'speech intro'); } }
+    // 4. les rangs repliés se reforment ; l'idole envoie une nuée de plus, à sa cadence
+    ch.rangs.forEach(r => { if (r.repos && --r.repos <= 0) { const l = [1, 0, 2].find(x => !en(ch, 0, x)); if (l === undefined) { r.repos = 1; return; } r.c = 0; r.l = l; r.tenue = 2; r.ordre = 'tenir'; r.px = null; } });
+    if (ch.pas % ch.cadence === 0 && ch.nuees.length < ch.max) { const l = [1, 0, 2].filter(x => !ch.flancs[x] && !en(ch, COLS - 1, x)); if (l.length) nuee(ch, COLS - 1, I.pick(l)); }
+    api.refresh(); if (!vite) await I.sleep(460);
+    ch.vue = false; ch.sel = null; ch.cibles = []; api.refresh();
+  };
+  function balaie(ch) { ch.nuees = ch.nuees.filter(n => { if (n.corps > 0) return true; if (!n.passe) { ch.stats.dissipees++; dire(ch, n, 'Dissipée', 'break'); } return false; }); }
+
+  /* ================= ordonner ================= */
+  const stratege = (C, h) => !!(h && h.def.stratege);
+  R.ordresDe = function (ch, r) { let L = r.T.ordres.slice(); if (ch.ordres) L = L.filter(o => ch.ordres.includes(o)); return L; };
+  // au tour d'un compagnon. Rend 'libre' (l'ordre n'a pas coûté le tour : le stratège), true (le tour est donné à l'ordre) ou false (rien)
+  R.ordonner = async function (C, h) {
+    const ch = C.champ, api = ch.api, box = api.box(); if (!actifs(ch).length) { api.banner('Aucun rang à ordonner pour l’instant.', 900); return false; }
+    ch.vue = true; ch.menu = true; api.refresh();
+    const fin = v => { ch.vue = false; ch.menu = false; ch.sel = null; ch.cibles = []; api.refresh(); return v; };
+    const gratuit = stratege(C, h) && ch.libre !== C.turn, cout = gratuit ? 'sans perdre son tour' : 'à la place de son action';
+    for (;;) {
+      const L = actifs(ch), items = L.map(r => ({ label: `${num(r)} ${I.esc(r.name)}`, sub: `${nomOrdre(r.ordre)} ${tenue(r.tenue)}`, desc: `${ou(r)}. ${r.T.desc || ''}` }));
+      const man = stratege(C, h) ? Object.keys(D.MANOEUVRES).filter(m => possible(ch, m)) : [];
+      man.forEach(m => items.push({ label: `✦ ${D.MANOEUVRES[m].name}`, sub: 'stratège', desc: D.MANOEUVRES[m].desc, cls: 'limit' }));
+      const i = await api.listMenu(box, `<b style="color:${h.color}">${I.esc(h.name)} ordonne</b> <span class="niyya">${cout}</span>`, items, { desc: true, back: true, onSel: k => { ch.sel = k < L.length ? L[k] : null; ch.cibles = []; } });
+      if (i < 0) return fin(false);
+      if (i >= L.length) { if (!(await manoeuvre(C, h, man[i - L.length]))) continue; }
+      else {
+        const r = L[i], O = R.ordresDe(ch, r), its = [];
+        O.forEach(o => { if (o === 'glisser') { [-1, 1].forEach(d => { const l = r.l + d; if (l >= 0 && l < VOIES) its.push({ o: d < 0 ? 'glisser-' : 'glisser+', label: 'Glisser vers ' + (NOMS[l] === 'centre' ? 'le centre' : 'l’' + NOMS[l]), desc: D.ORDRES.glisser.desc, c: [r.c, l] }); }); }
+          else its.push({ o, label: D.ORDRES[o].name, desc: D.ORDRES[o].desc, c: o === 'avancer' ? [r.c + 1, r.l] : o === 'charger' ? [r.c + 2, r.l] : o === 'replier' ? [r.c - 1, r.l] : null }); });
+        ch.sel = r;
+        const j = await api.listMenu(box, `<b>${num(r)} ${I.esc(r.name)}</b> <span class="niyya">${ou(r)}</span>`, its.map(x => ({ label: x.label, sub: x.o === r.ordre ? 'ordre actuel' : '', desc: x.desc })), { desc: true, back: true, onSel: k => { ch.cibles = its[k] && its[k].c ? [its[k].c] : []; } });
+        if (j < 0) { ch.cibles = []; continue; }
+        if (its[j].o.indexOf('glisser') === 0) r.avant = r.ordre.indexOf('glisser') === 0 ? (r.avant || 'tenir') : r.ordre;
+        r.ordre = its[j].o; dire(ch, r, nomOrdre(r.ordre), 'info'); I.audio.sfx('tek');
+      }
+      if (gratuit) { ch.libre = C.turn; await I.sleep(380); return fin('libre'); }
+      await I.sleep(380); return fin(true);
+    }
+  };
+  const nomOrdre = o => o === 'glisser-' || o === 'glisser+' ? 'glisser' : (D.ORDRES[o] ? D.ORDRES[o].name.toLowerCase() : o);
+  // les manœuvres du stratège : des manœuvres d'école, que le jeu prête à celui dont c'est le métier
+  function possible(ch, m) {
+    const A = actifs(ch);
+    if (m === 'garde') return A.some(r => r.T.monte);
+    if (m === 'tenaille') return !!(A.find(r => r.l === 0) && A.find(r => r.l === 2));
+    if (m === 'feinte') return A.some(r => r.c > 0 && !en(ch, r.c - 1, r.l) && [1, 2, 3].some(d => nueeEn(ch, r.c + d, r.l)));
+    return false;
+  }
+  async function manoeuvre(C, h, m) {
+    const ch = C.champ, api = ch.api, box = api.box(), A = actifs(ch);
+    if (m === 'garde') {
+      // une place par couloir : la case libre la plus avancée de notre moitié du champ, sans passer derrière une nuée
+      const r = A.find(x => x.T.monte), libres = [];
+      for (let l = 0; l < VOIES; l++) { let c = -1; for (let k = 0; k <= 2; k++) { if (nueeEn(ch, k, l)) break; if (!en(ch, k, l)) c = k; } if (c >= 0 && !(r.l === l && r.c === c)) libres.push([c, l]); }
+      if (!libres.length) { api.banner('Aucune case libre de notre côté.', 900); return false; }
+      ch.sel = r;
+      const j = await api.listMenu(box, `<b>${D.MANOEUVRES.garde.name}</b> <span class="niyya">${num(r)} ${I.esc(r.name)}</span>`, libres.map(p => ({ label: NOMS[p[1]] + ', ' + LIGNES[p[0]] })), { back: true, onSel: k => { ch.cibles = [libres[k]]; } });
+      if (j < 0) { ch.cibles = []; return false; }
+      r.c = libres[j][0]; r.l = libres[j][1]; ch.cibles = []; dire(ch, r, D.MANOEUVRES.garde.name, 'info');
+    } else if (m === 'tenaille') {
+      [A.find(r => r.l === 0), A.find(r => r.l === 2)].forEach(r => { for (let k = 0; k < 2; k++) if (r.c + 1 < COLS && !en(ch, r.c + 1, r.l)) r.c++; });
+      // une nuée du centre bordée des deux côtés se dissipe sur-le-champ
+      ch.nuees.forEach(n => { if (rangEn(ch, n.c, n.l - 1) && rangEn(ch, n.c, n.l + 1)) { n.corps = 0; n.flash = 1; dire(ch, n, 'Enveloppée', 'break'); } });
+      balaie(ch);
+    } else if (m === 'feinte') {
+      const L = A.filter(r => r.c > 0 && !en(ch, r.c - 1, r.l) && [1, 2, 3].some(d => nueeEn(ch, r.c + d, r.l)));
+      let r = L[0]; if (L.length > 1) { const j = await api.listMenu(box, `<b>${D.MANOEUVRES.feinte.name}</b>`, L.map(x => ({ label: `${num(x)} ${I.esc(x.name)}`, sub: NOMS[x.l], desc: ou(x) })), { desc: true, back: true, onSel: k => { ch.sel = L[k]; } }); if (j < 0) return false; r = L[j]; }
+      const n = [1, 2, 3].map(d => nueeEn(ch, r.c + d, r.l)).find(Boolean); r.c--;
+      while (n.c - 1 > r.c && !en(ch, n.c - 1, n.l)) n.c--; n.decouverte = true; dire(ch, n, 'Découverte', 'info');
+    }
+    I.audio.sfx('roll'); api.refresh(); return true;
+  }
+  // le joueur de test : le stratège ajuste un rang par tour, sans que cela lui coûte
+  R.auto = function (C, h) {
+    const ch = C.champ; if (!ch || !stratege(C, h) || ch.libre === C.turn) return;
+    for (const r of actifs(ch)) {
+      const O = R.ordresDe(ch, r), pres = [1, 2].some(d => nueeEn(ch, r.c + d, r.l));
+      const veut = O.includes('tirer') ? 'tirer' : pres ? (O.includes('charger') ? 'charger' : 'tenir') : (O.includes('avancer') ? 'avancer' : 'tenir');
+      if (veut !== r.ordre) { r.ordre = veut; ch.libre = C.turn; return; }
+    }
+  };
+
+  /* ================= dessin ================= */
+  // Le champ se dessine là où le panneau du combat ne le couvre pas : toute la scène quand l'écran est en hauteur (le panneau
+  // est dessous), le haut de la scène sinon.
+  function geo(ch) {
+    const vx = G.view.x, vw = G.view.w, sous = ch.api.dessous(), cw = Math.min(42, Math.floor((vw - 26) / (COLS + 1.85))), chh = sous ? 38 : 31, x1 = vx + vw - 26, y0 = sous ? 64 : 19;
+    const gx = x1 - COLS * cw, wi = Math.round(Math.min(VOIES * chh - 6, cw * 2.6));
+    return { vx, vw, cw, chh, x1, y0, gx, wi, cx: c => x1 - (c + 0.5) * cw, cy: l => y0 + (l + 0.5) * chh, xi: Math.round(Math.max(vx + wi / 2 - 6, gx - cw * 0.55)) };
+  }
+  // le cadre du champ sur la scène, en points du canevas : pour les outils, qui vérifient que rien ne le couvre
+  R.cadre = function (ch) { const g = geo(ch); return { x: g.gx, y: g.y0, w: COLS * g.cw, h: VOIES * g.chh, vx: g.vx, vw: g.vw, ph: G.PH }; };
+  R.maj = function (C, dt) {
+    const ch = C.champ; if (!ch) return; const g = geo(ch), k = Math.min(1, dt * 9);
+    ch.rangs.concat(ch.nuees).forEach(u => { const tx = g.cx(u.c), ty = g.cy(u.l); if (u.px === null) { u.px = tx; u.py = ty; } u.px += (tx - u.px) * k; u.py += (ty - u.py) * k; if (u.flash > 0) u.flash -= dt * 3; });
+  };
+  // un cheval : une silhouette sombre, sans aucun trait
+  function cheval(c, x, y) { c.fillStyle = '#3a2a1e'; c.fillRect(x - 7, y - 9, 13, 5); c.fillRect(x - 9, y - 12, 4, 5); c.fillRect(x - 10, y - 13, 3, 3); c.fillRect(x - 6, y - 4, 2, 4); c.fillRect(x - 2, y - 4, 2, 4); c.fillRect(x + 3, y - 4, 2, 4); c.fillRect(x + 6, y - 9, 2, 5); }
+  // un rang, autour de (x0, y0) : deux lignes de silhouettes, celle du fond d'abord ; des cavaliers : un par point de tenue, en selle
+  function troupe(c, r, x0, y0, f) {
+    const n = r.tenue; if (n <= 0) return;
+    c.fillStyle = 'rgba(4,3,10,.42)'; c.fillRect(Math.round(x0 - 4 - n * 4), Math.round(y0 + 9), n * 8 + 8, 3);
+    if (r.T.monte) { for (let i = 0; i < n; i++) { const x = Math.round(x0 - (n - 1) * 4.5 - 8 + i * 9), y = Math.round(y0 - 13); cheval(c, x + 8, y + 24); c.drawImage(r.sheet, f * 16, 24, 16, 24, x, y - 5, 16, 24); } return; }
+    for (let lig = 0; lig < 2; lig++) for (let i = 0; i < n; i++) { const x = Math.round(x0 - (n - 1) * 3.5 - 8 + i * 7 + (lig ? 0 : 3)), y = Math.round(y0 - 13 - (lig ? 0 : 5)); c.drawImage(r.sheet, f * 16, 24, 16, 24, x, y, 16, 24); }
+  }
+  // le numéro d'un rang, en gros points : le même que dans les menus
+  const CHIFFRES = { 1: ['.#.', '##.', '.#.', '.#.', '###'], 2: ['##.', '..#', '.#.', '#..', '###'], 3: ['##.', '..#', '.#.', '..#', '##.'], 4: ['#.#', '#.#', '###', '..#', '..#'], 5: ['###', '#..', '##.', '..#', '##.'] };
+  function chiffre(c, n, x, y) { const gl = CHIFFRES[n]; if (!gl) return; c.fillStyle = 'rgba(8,7,18,.86)'; c.fillRect(x, y, 10, 14); c.fillStyle = '#e9c877'; gl.forEach((row, j) => { for (let i = 0; i < 3; i++) if (row[i] === '#') c.fillRect(x + 2 + i * 2, y + 2 + j * 2, 2, 2); }); }
+  // l'ordre courant d'un rang, d'un signe : un chevron vers l'idole (avancer), deux (charger), un vers le camp (se replier),
+  // des points (tirer), un chevron vers le couloir voisin (glisser). Rien : il tient.
+  function signe(c, r, g) {
+    const xl = Math.round(r.px - g.cw / 2) + 2, xr = Math.round(r.px + g.cw / 2) - 3, y = Math.round(r.py), o = r.ordre; c.fillStyle = '#e9c877';
+    const chev = (x, s) => { for (let i = 0; i < 3; i++) { c.fillRect(x + s * i, y - i, 1, 1); c.fillRect(x + s * i, y + i, 1, 1); } };
+    if (o === 'avancer') chev(xl, 1); else if (o === 'charger') { chev(xl, 1); chev(xl + 3, 1); } else if (o === 'replier') chev(xr, -1);
+    else if (o === 'tirer') { for (let i = 0; i < 3; i++) c.fillRect(xl - 1 - i * 3, y, 1, 1); }
+    else if (o === 'glisser-' || o === 'glisser+') { const s = o === 'glisser-' ? -1 : 1, yy = Math.round(r.py + s * (g.chh / 2 - 3)), x = Math.round(r.px); for (let i = 0; i < 3; i++) { c.fillRect(x - i, yy - s * i, 1, 1); c.fillRect(x + i, yy - s * i, 1, 1); } }
+  }
+  R.dessine = function (C, c, t) {
+    const ch = C.champ, g = geo(ch), hue = C.hue, lights = [], H = VOIES * g.chh;
+    c.drawImage(C.bg, 0, 0); c.fillStyle = 'rgba(6,5,14,.5)'; c.fillRect(0, 0, G.PW, G.PH);
+    // le champ : trois couloirs, cinq colonnes ; notre camp à droite, l'idole à gauche
+    for (let l = 0; l < VOIES; l++) for (let k = 0; k < COLS; k++) {
+      const x = g.x1 - (k + 1) * g.cw, y = g.y0 + l * g.chh;
+      c.fillStyle = `hsla(${hue},66%,${(k + l) % 2 ? 27 : 21}%,.6)`; c.fillRect(x, y, g.cw - 1, g.chh - 1);
+      if (ch.flancs[l] && k === COLS - 1) { c.fillStyle = 'rgba(233,200,119,.28)'; c.fillRect(x, y, g.cw - 1, g.chh - 1); }
+    }
+    c.fillStyle = 'rgba(233,200,119,.07)'; c.fillRect(g.x1, g.y0, 26, H - 1);
+    ch.cibles.forEach(p => { if (p[0] < 0 || p[0] >= COLS || p[1] < 0 || p[1] >= VOIES) return; const x = g.x1 - (p[0] + 1) * g.cw, y = g.y0 + p[1] * g.chh, a = 0.35 + 0.25 * Math.sin(t * 6); c.fillStyle = `rgba(233,200,119,${a})`; c.fillRect(x, y, g.cw - 1, g.chh - 1); });
+    // l'idole, immobile : c'est une chose. La dernière colonne est à son pied.
+    const idole = ch.api.idole();
+    if (idole) { const w = g.wi, x = Math.round(g.xi - w / 2), y = Math.round(g.y0 + H / 2 - w / 2 + Math.sin(t * 1.6) * 2);
+      c.globalAlpha = idole.broken ? 0.7 : 1; c.drawImage(idole.spr, x, y, w, w); c.globalAlpha = 1; lights.push({ x: g.xi, y: g.y0 + H / 2, r: w * 0.8, color: `hsl(${idole.def.hue},90%,55%)`, a: 0.8 }); }
+    // le camp : les compagnons, à droite du champ
+    C.all.filter(e => e.side === 'hero').forEach((e, i) => { if (!e.sheet) return; const x = Math.round(g.x1 + 4 + (i % 2) * 4), y = Math.round(g.y0 + 4 + i * Math.round(g.chh * 0.84)); c.globalAlpha = e.alive ? 1 : 0.5; c.drawImage(e.sheet, 0, 24, 16, 24, x, y, 16, 24); c.globalAlpha = 1; });
+    // nuées et rangs, du fond vers l'avant
+    const U = ch.nuees.map(n => ({ n, y: n.py })).concat(ch.rangs.filter(r => !r.repos).map(r => ({ r, y: r.py }))).sort((a, b) => a.y - b.y);
+    for (const u of U) {
+      if (u.n) { const n = u.n, w = Math.min(32, g.cw + 4), x = Math.round(n.px - w / 2), y = Math.round(n.py - w / 2 - 2 + Math.sin(t * 2 + n.ph) * 1.5);
+        c.globalAlpha = n.corps > 1 ? 1 : 0.6; c.drawImage(n.spr, x, y, w, w); if (n.flash > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, n.flash); c.drawImage(n.spr, x, y, w, w); c.globalCompositeOperation = 'source-over'; } c.globalAlpha = 1;
+        if (n.decouverte) { c.fillStyle = '#ffe08a'; c.fillRect(Math.round(n.px - 4), Math.round(n.py + w / 2 - 2), 8, 1); }
+        lights.push({ x: n.px, y: n.py, r: 18, color: `hsl(${n.def.hue},90%,55%)`, a: 0.5 });
+      } else { const r = u.r, marche = Math.abs(r.px - g.cx(r.c)) > 0.6 || Math.abs(r.py - g.cy(r.l)) > 0.6;
+        troupe(c, r, r.px, r.py, marche ? [1, 0, 2, 0][Math.floor(t * 6 + r.no) % 4] : 0);
+        if (r.flash > 0) { c.fillStyle = `rgba(255,246,220,${Math.min(0.5, r.flash * 0.6)})`; c.fillRect(Math.round(r.px - g.cw / 2), Math.round(r.py - g.chh / 2), g.cw - 1, g.chh - 1); }
+      }
+    }
+    // par-dessus : la tenue de chaque rang (trois points), son ordre, son numéro ; le cadre du rang choisi
+    ch.rangs.forEach(r => { if (r.repos) return; const x = Math.round(r.px - g.cw / 2), y = Math.round(r.py - g.chh / 2);
+      for (let i = 0; i < 3; i++) { c.fillStyle = i < r.tenue ? '#e9c877' : 'rgba(255,255,255,.2)'; c.fillRect(Math.round(r.px) - 7 + i * 5, y + g.chh - 5, 4, 2); }
+      signe(c, r, g); chiffre(c, r.no, x + 1, y + 1); });
+    if (ch.sel && !ch.sel.repos) { const x = Math.round(ch.sel.px - g.cw / 2), y = Math.round(ch.sel.py - g.chh / 2); c.strokeStyle = '#fff6dc'; c.lineWidth = 1; c.strokeRect(x + 0.5, y + 0.5, g.cw - 2, g.chh - 2); }
+    return { ambient: '#b4aeee', lights, bloom: 0.22, scan: true, grade: [`hsl(${hue},80%,50%)`, 0.1], vignette: 0.42, tilt: false };
+  };
+  // Pendant le duel, nos rangs se tiennent derrière le groupe : on voit qu'on ne combat pas seul. Leur place sur le champ,
+  // elle, se lit sur la bande et sur le champ lui-même.
+  R.masse = function (C, c, t) {
+    const ch = C.champ; if (!ch) return; const hs = C.all.filter(e => e.side === 'hero'); if (!hs.length) return;
+    const x0 = Math.round(hs.reduce((s, e) => s + e.x, 0) / hs.length), A = actifs(ch);
+    c.globalAlpha = 0.62; A.forEach((r, i) => troupe(c, r, x0 - (A.length - 1) * 13 + i * 26, 105 + (i % 2) * 5, 0)); c.globalAlpha = 1;
+  };
+  // la bande du champ, visible pendant le duel : où sont nos rangs, où sont les nuées
+  R.bande = function (C) {
+    const ch = C.champ; if (!ch) return ''; let h = '';
+    for (let l = 0; l < VOIES; l++) for (let k = COLS - 1; k >= 0; k--) { const r = rangEn(ch, k, l), n = nueeEn(ch, k, l);
+      h += r ? `<i class="r${r.T.monte ? ' m' : ''}" title="${I.esc(r.name)}">▮</i>` : n ? `<i class="n" style="color:hsl(${n.def.hue},80%,66%)">●</i>` : `<i class="${ch.flancs[l] && k === COLS - 1 ? 'f' : ''}">·</i>`; }
+    return h;
+  };
+})();
+
 /* ==== src/core/battle.js ==== */
 /* ISNAD — combat : ordre des tours visible (CTB), voiles et faiblesses, Niyya (élan), Sakîna (ultime). */
 (function () {
@@ -4266,6 +4597,7 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
   const bx = x => G.view.w < G.PW ? Math.round(G.PW / 2 + (x - G.PW / 2) * I.clamp((G.view.w - 20) / 350, 0.5, 1)) : x;
   const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
   B.relayout = function () { if (!C) return; C.all.forEach(e => { e.x = bx(e.x0); }); refresh(); };
+  B.champ = () => (C && C.champ) || null; // le champ de la bataille en cours, pour les outils de test
   function mkHero(id, i) {
     const h = I.world.hero(id), st = I.calc.of(h);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
@@ -4282,6 +4614,16 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
   const eff = (e, k) => { const bv = e.buffs[k]; const v = k === 'df' ? e.df : e[k]; return v * (bv ? (bv.v > 0 ? 1.3 : 0.72) : 1); };
   const alive = side => C.all.filter(e => e.side === side && e.alive);
 
+  // Ce que le combat prête au champ de bataille (rangs.js) : ses menus, ses bandeaux, ses effets sur l'idole et sur le groupe.
+  const champApi = {
+    floater, banner, refresh, listMenu, box: () => $('#battle .cmd'), heros: () => alive('hero'),
+    dessous: () => document.body.classList.contains('portrait'), // le panneau est sous la scène : le champ a toute la hauteur
+    idole: () => { if (!C) return null; const L = I.mal.lignee(I.world.saga, I.world.ch).idoles; return C.all.find(e => e.side === 'foe' && e.alive && L.includes(e.id)) || alive('foe')[0] || null; },
+    voile(e) { if (e.broken || e.veils <= 0) return null; e.veils--; e.flash = 1; if (e.veils <= 0) { e.broken = true; e.ct += 400; return 'devoile'; } return 'ote'; },
+    revele(e) { const w = e.def.weak.find(x => !e.known[x]); if (w) e.known[w] = true; },
+    doute(h) { h.st.waswas = Math.max(h.st.waswas || 0, 2); h.flash = 1; }
+  };
+
   B.start = async function (opts) {
     const W = I.world, prev = I.scene === B.scene ? W : I.scene, mark = I.input.mark(); let first = true;
     while (true) {
@@ -4296,7 +4638,7 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
   // sortie de secours : referme le combat où qu'il en soit et rend l'écran
   B.abort = function (prev, mark) {
     try { I.audio.stopBeat(); } catch (e) { /* le son ne compte pas ici */ }
-    $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = ''; $('#battle .cmd').innerHTML = ''; $('#battle .banner').hidden = true;
+    $('#battle').hidden = true; $('#battle').classList.remove('champ', 'ordre'); document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = ''; $('#battle .cmd').innerHTML = ''; $('#battle .banner').hidden = true;
     C = null; if (mark !== undefined) I.input.trim(mark);
     I.setScene(prev || I.world); G.clearParts();
     const W = I.world; if ((prev || W) === W && W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; } I.audio.back();
@@ -4324,8 +4666,11 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
     const HC = I.oeuvres.enter(opts, first); C.lack = HC.lack || 0;
     // l'enracinement de l'idole : il a déjà pesé sur l'épreuve (O.weight) ; ici, sur ses voiles
     C.rac = I.mal.entree(opts, first, C.all.filter(e => e.side === 'foe'));
+    // la bataille déclarée : nos rangs sur le champ, et en face les nuées de l'idole
+    C.champ = I.rangs.ouvre(C, opts, champApi);
     C.all.forEach(e => { if (e.side === 'hero' && I.oeuvres.afflicted(e.id)) { e.max.hp = Math.round(e.max.hp * 0.75); e.hp = Math.min(e.hp, e.max.hp); } });
     refresh();
+    if (first) await I.rangs.declare(C, opts);
     if (first && opts.intro) await banner(I.esc(opts.intro), readTime(opts.intro), true, 'speech intro');
     else if (first) await banner(opts.boss ? `${d0.name} se dresse.` : 'Une emprise se referme…', 1100);
     if (HC.w) {
@@ -4351,28 +4696,35 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
     }
     for (const al of (opts.allies || [])) {
       if (!S.flags[al.flag]) continue;
+      if (C.champ && C.champ.rangs.some(r => r.allie && r.name === al.name)) continue; // bataille déclarée : le renfort est un rang, sur le champ
       await banner(`<small>Renfort</small>${I.esc(al.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(500);
       alive('foe').forEach(e => { if (!e.broken && al.veil !== 0) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; floater(e, 'DÉVOILÉ', 'break'); } else floater(e, 'Voile ôté', 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * (al.hp === undefined ? 0.08 : al.hp))); e.flash = 1; fx('light', e, '#ffe08a'); });
       refresh(); await I.sleep(700);
     }
+    // le champ, d'un coup d'œil, avant le premier tour ; le renfort gagné par la parole y prend place
+    if (C.champ && first && !I.debug.auto) { const ch = C.champ; ch.vue = true; refresh();
+      for (const r of ch.rangs.filter(x => x.allie)) { ch.sel = r; banner(`<small>Renfort</small>${I.esc(r.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(1900); }
+      await I.sleep(ch.rangs.some(x => x.allie) ? 500 : 1700); ch.sel = null; ch.vue = false; refresh(); }
     let result = first && I.debug.perd ? (I.debug.perd--, 'lose') : null; // crochet de test : une défaite forcée à la première tentative
     while (!result) {
       // prochain acteur
       const act = C.all.filter(e => e.alive).sort((a, b) => a.ct - b.ct)[0]; const dt = act.ct; C.all.forEach(e => { if (e.alive) e.ct -= dt; });
       C.active = act; C.turn++; refresh();
       await takeTurn(act);
+      // après chaque tour de l'idole, et au plus tard tous les trois tours : nos rangs exécutent leur ordre, puis ses nuées avancent
+      if (C.champ && I.rangs.du(C, act) && alive('foe').length && alive('hero').length) await I.rangs.pas(C);
       act.ct = 1000 / eff(act, 'spd');
       C.active = null;
       if (!alive('foe').length) result = 'win'; else if (!alive('hero').length) result = 'lose';
     }
-    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result };
+    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result, champ: C.champ ? Object.assign({ rangs: C.champ.rangs.length, pas: C.champ.pas, flancs: C.champ.flancs.filter(Boolean).length }, C.champ.stats) : null };
     I.audio.stopBeat(); $('#battle .cmd').innerHTML = ''; C.cursor = null;
     if (result === 'win') { I.audio.afterJingle = I.audio.place || null; I.audio.music('victoire'); } else I.audio.music('deuil');
     if (result === 'win') await victory(); else await defeat();
     // retour
     C.all.filter(e => e.side === 'hero').forEach(e => { const h = e.ref, st = I.calc.of(h); h.hp = Math.min(st.hp, Math.max(1, e.hp) + Math.round(st.hp * 0.35)); h.sp = Math.min(st.sp, e.sp + Math.round(st.sp * 0.35)); h.sakina = e.sakina; });
     await S.fade('out', 260);
-    $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = '';
+    $('#battle').hidden = true; $('#battle').classList.remove('champ', 'ordre'); document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = '';
     I.setScene(prev); G.clearParts();
     if (prev === W) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; }
     if (result === 'win') { if (!(I.audio.curTrack && I.audio.curTrack.name === 'victoire')) I.audio.back(); else I.audio.afterJingle = I.audio.place || null; }
@@ -4427,6 +4779,7 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
 
   /* ----- commande automatique (tests) ----- */
   function autoCmd(h) {
+    if (C.champ) I.rangs.auto(C, h); // le stratège ajuste un rang sans que cela lui coûte son tour
     const skills = h.def.skills.filter(k => k.lvl <= h.lvl && k.cost <= h.sp && !h.st.doute), foes = alive('foe'), allies = alive('hero');
     const low = allies.slice().sort((a, b) => a.hp / a.max.hp - b.hp / b.max.hp)[0];
     const down = C.all.find(x => x.side === 'hero' && !x.alive);
@@ -4500,7 +4853,8 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
         { label: '◍ Objets' },
         { label: '⛨ Garde', sub: '+ Niyya' }
       ];
-      if (h.sakina >= 100) items.push({ label: `❂ ${h.def.limit.name}`, sub: 'Sakîna', cls: 'limit' });
+      const iOrd = C.champ ? items.push({ label: '⚑ Ordonner', sub: h.def.stratege && C.champ.libre !== C.turn ? 'sans perdre son tour' : 'les rangs' }) - 1 : -1;
+      const iLim = h.sakina >= 100 ? items.push({ label: `❂ ${h.def.limit.name}`, sub: 'Sakîna', cls: 'limit' }) - 1 : -1;
       const p = listMenu(box, title(), items, { start, onLR: setBoost, cls: 'main' }); wire();
       const i = await p; start = i;
       if (i === 0 || i === 1) { const sk = i === 0 ? FER : lum; const t = await pickTarget(alive('foe'), sk.name); if (!t) continue; return { type: 'skill', skill: sk, targets: [t], boost }; }
@@ -4519,7 +4873,8 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
         return { type: 'item', item: ids[j], targets: tg };
       }
       if (i === 4) return { type: 'guard' };
-      if (i === 5) { const sk = h.def.limit; const tg = await chooseTargets(h, sk); if (!tg) continue; return { type: 'skill', skill: sk, targets: tg, boost: 0, limit: true }; }
+      if (i === iOrd) { const fait = await I.rangs.ordonner(C, h); if (fait === true) return { type: 'ordre' }; continue; } // 'libre' : le stratège garde son tour
+      if (i === iLim) { const sk = h.def.limit; const tg = await chooseTargets(h, sk); if (!tg) continue; return { type: 'skill', skill: sk, targets: tg, boost: 0, limit: true }; }
     }
   }
   async function chooseTargets(h, sk) {
@@ -4531,6 +4886,7 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
   /* ================= résolution ================= */
   async function perform(e, cmd) {
     $('#battle .cmd').innerHTML = '';
+    if (cmd.type === 'ordre') { floater(e, 'Ordonne', 'info'); await I.sleep(260); return; } // son tour est allé à l'ordre donné aux rangs
     if (cmd.type === 'guard') { e.st.garde = 1; e.niyya = Math.min(5, e.niyya + 1); e.sakina = Math.min(100, e.sakina + 8); fx('guard', e, e.color); floater(e, 'Garde', 'info'); I.audio.sfx('tek'); await I.sleep(420); return; }
     if (cmd.type === 'item') {
       const it = D.ITEMS[cmd.item]; I.save.data.items[cmd.item]--; await banner(it.name, 700);
@@ -4711,6 +5067,7 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
 
   function refresh() {
     if (!C) return;
+    { const fr = $('#battle .front'), ch = C.champ, bt = $('#battle'); bt.classList.toggle('champ', !!(ch && ch.vue)); bt.classList.toggle('ordre', !!(ch && ch.vue && ch.menu)); if (fr) { fr.hidden = !ch || ch.vue; if (ch && !ch.vue) fr.innerHTML = I.rangs.bande(C); } }
     // ordre des tours (simulation)
     const sim = C.all.filter(e => e.alive).map(e => ({ e, ct: e === C.active ? -1 : e.ct })); const ord = [];
     for (let i = 0; i < 8 && sim.length; i++) { sim.sort((a, b) => a.ct - b.ct); const s = sim[0]; ord.push(s.e); const d = Math.max(0, s.ct); sim.forEach(x => x.ct -= d); s.ct = 1000 / eff(s.e, 'spd'); }
@@ -4740,11 +5097,13 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
   }
 
   B.scene = {
-    update(dt) { if (C) { C.t += dt; C.all.forEach(e => { if (e.flash > 0) e.flash -= dt * 4; if (e.shake > 0) e.shake -= dt; }); } },
+    update(dt) { if (C) { C.t += dt; if (C.champ) I.rangs.maj(C, dt); C.all.forEach(e => { if (e.flash > 0) e.flash -= dt * 4; if (e.shake > 0) e.shake -= dt; }); } },
     render() {
       const c = G.px; if (!C) { c.fillStyle = '#000'; c.fillRect(0, 0, G.PW, G.PH); return {}; }
       const t = C.t, lights = [];
+      if (C.champ && C.champ.vue) return I.rangs.dessine(C, c, t); // le champ de bataille, le temps d'un ordre ou d'un pas
       c.drawImage(C.bg, 0, 0); drawGrid(c, C.hue, t);
+      if (C.champ) I.rangs.masse(C, c, t); // nos rangs, derrière le groupe
       const list = C.all.slice().sort((a, b) => a.y - b.y);
       for (const e of list) {
         const jx = e.shake > 0 ? (Math.random() - 0.5) * 4 : 0;
@@ -5164,6 +5523,7 @@ window.ISNAD_VERSION = "2026-11-15 11:31 UTC · 6b9aa5d+";
     ['Les œuvres et la provision', '<p>Sur la natte d’une mosquée, on prie, et l’on accomplit les <b>œuvres du jour</b> : le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite ; parfois le pèlerinage. Trois par chapitre au plus, la prière en sus. Chacune ajoute à la <b>provision du cœur</b> (♥, cinq au plus).</p><p>Plus une épreuve est lourde, plus elle en demande : une idole pèse de 1 à 3 selon son enracinement, un mal du cœur 3. Qui s’y présente sans provision combat <b>le cœur lourd</b> : il frappe moins fort et reçoit davantage. Le bouton <b>?</b> annonce le poids de l’épreuve qui vient.</p><p>Un jour de <b>jeûne</b>, les vivres de la besace attendent le soir. L’aumône coûte des dirhams. Ces œuvres ne sont pas des sortilèges : le jeu traduit à sa façon ce qu’elles font au cœur.</p>'],
     ['Lames et maux du cœur', '<p>Sept maux du cœur se tiennent derrière les idoles : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. On les rencontre à la fin de chaque rencontre de la Cité-Miroir, et tous ceux qui restent au dernier chapitre.</p><p>Une œuvre pratiquée forge une <b>lame</b> : trois jeûnes pour le Contentement, trois prières pour la Sincérité, trois aumônes pour la Largesse, trois études pour l’Ardeur, trois visites pour la Bienveillance, trois dhikr pour la Longanimité, un pèlerinage pour l’Humilité. Sans sa lame, un mal est seulement <b>repoussé</b> : il revient. Avec elle, il est <b>tranché</b>.</p><p>La page « Œuvres et lames » de la halte tient le compte.</p>'],
     ['À chaque mal sa réponse', '<p>L’<b>organigramme du mal</b> (halte, « Le savoir ») range ce que l’on rencontre et dit comment y répondre. À l’<b>idée noire</b>, qui pèse sur une personne : la parole, la pédagogie, la bienveillance. À l’<b>égrégore</b>, que beaucoup de cœurs nourrissent : le combat. À l’<b>idole</b>, enracinée : une bataille déclarée. On ne combat ni Iblîs ni ceux qui soufflent, et l’on ne s’en prend à aucun djinn : on répond à ce qui a été soufflé.</p><p>Chaque idole a une jauge d’<b>enracinement</b>, de ▮ à ▮▮▮▮▮. Un pourparler gagné, une idée noire dissipée du premier coup la font baisser ; une parole manquée, un acte que les transmetteurs n’ont pas rapporté la font monter. Déracinée, l’idole pèse moins sur la provision du cœur et garde un voile de moins ; enracinée, elle pèse davantage. La jauge se dit d’une idole, jamais d’une époque ni de ses gens.</p>'],
+    ['La bataille déclarée', '<p>Contre une <b>idole</b>, un carton <b>déclare la bataille</b> : l’idole, son enracinement, les <b>rangs</b> présents. Le combat du groupe se joue comme d’habitude. À côté, un <b>champ</b> de cinq colonnes sur trois couloirs : nos rangs y font face aux <b>nuées</b> de l’idole. Ce ne sont jamais des hommes.</p><p>Après chaque tour de l’idole, et au plus tard tous les trois tours, les rangs exécutent leur ordre, puis les nuées avancent. Au tour d’un compagnon, <b>Ordonner</b> change l’ordre d’un rang, à la place de son action : tenir, avancer, charger (cavaliers), tirer (archers), glisser vers un autre couloir, se replier. Sur le champ, chaque rang porte son <b>numéro</b>, celui du menu ; trois points disent sa tenue, un chevron son ordre. Une nuée bordée par un autre rang est prise <b>de flanc</b> ; prise des deux côtés, <b>en tenaille</b>, elle se dissipe. Un rang qui atteint le pied de l’idole <b>découvre son flanc</b> : un voile tombe, une faille se révèle. Une nuée qui perce jusqu’au camp sème le doute.</p><p>Un rang éprouvé se replie et se reforme : personne ne tombe. Le nombre de rangs suit la mission et le niveau du groupe ; un allié gagné par la parole vient en <b>renfort</b> et prend place sur le champ. <b>Khâlid</b>, dont c’est le métier, ordonne sans perdre son tour, et connaît trois manœuvres d’école : la réserve mobile, l’enveloppement, le repli feint.</p>'],
     ['Idées noires et énigmes', '<p>Dans un pourparler, il arrive que la <b>honte</b>, la <b>peur</b>, le <b>soupçon</b>, la <b>rancune</b> ou le <b>désespoir</b> parlent plus fort que toi. On ne la combat pas : on lui <b>répond</b>. Elle a deux voiles ; à chacun, tu choisis ta manière : <b>dire vrai</b> (la parole), <b>expliquer</b> (la pédagogie) ou <b>rassurer</b> (la bienveillance). La bonne manière fait tomber le voile ; une autre t’apprend pourquoi elle ne portait pas. Après quoi il écoute, et la confiance monte.</p><p>Une <b>énigme du cœur</b> : un compagnon languit sans fièvre ni blessure. Il tient moins bien au combat tant qu’on n’a pas trouvé ce qu’il a cessé de faire. Les anciens donnent des indices ; la bonne œuvre, accomplie sur la natte, le remet debout.</p>'],
     ['Compagnons de lumière', '<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>'],
     ['Si le jeu s’arrête', '<p>Si l’écran reste noir ou si plus rien ne répond pendant un quart de minute, un bouton <b>Reprendre</b> apparaît en bas de l’écran : il ramène au dernier objectif atteint, sans rien perdre de ce qui a été sauvegardé.</p><p>La partie se garde toute seule : en dernier recours, <b>recharge la page</b> puis choisis « Continuer ».</p><p>Dans la halte, <b>Diagnostic</b> donne la version du jeu, l’appareil, l’état du son et les incidents relevés : c’est ce qu’il faut transmettre pour qu’une panne soit comprise. Couper le son ou la musique (Réglages) suffit parfois à la contourner.</p>'],
@@ -7556,6 +7916,7 @@ ISNAD.registerSaga({
     { id: 'echelle', cat: 'Noosphère', title: 'À chaque mal sa réponse', text: 'À l’idée noire, qui pèse sur une personne : la parole, la pédagogie, la bienveillance. À l’égrégore, que beaucoup de cœurs nourrissent : le combat. À l’idole, enracinée : une bataille déclarée. Aux souffleurs : rien, on ne les combat pas ; et l’on ne s’en prend à aucun djinn qui ne nuit à personne. Le sabre ne vient qu’après, quand la parole a tout essayé.' },
     { id: 'souffleurs', cat: 'Noosphère', title: 'Ceux qui soufflent', text: 'Le Coran enseigne à chercher protection « contre le mal du mauvais conseiller, furtif, qui souffle le mal dans les poitrines des hommes, qu’il (le conseiller) soit un djinn, ou un être humain ». Dans ISNAD, on ne les voit pas, on ne les nomme pas, on ne les compte pas, on ne les combat pas. Tous les djinns ne soufflent pas, et le jeu ne s’en prend à aucun. Ce que l’on rencontre, c’est ce qu’un cœur fait de ce qu’il a entendu.', src: 'Traduction du sens, Coran 114:4-6' },
     { id: 'iblis', cat: 'Noosphère', title: 'Iblîs, l’ennemi déclaré', text: 'Le jeu le nomme et ne le montre pas. Il ne parle dans aucune scène, et l’on ne le combat nulle part : ce n’est pas une épée qui en protège. Le Coran rapporte ce qu’il dira, quand tout sera accompli, à ceux qui l’auront suivi : « Je n’avais aucune autorité sur vous si ce n’est que je vous ai appelés, et que vous m’avez répondu. Ne me faites donc pas de reproches ; mais faites-en à vous-mêmes. » Il appelle. C’est le cœur qui répond.', src: 'Traduction du sens, Coran 14:22' },
+    { id: 'bataille', cat: 'Noosphère', title: 'La bataille déclarée', text: 'Contre une idole, on ne se bat plus seul, et l’on ne se bat pas sans le dire. La bataille est déclarée : chacun sait ce qui se dresse, et qui tient les rangs. En face, il n’y a jamais d’hommes : des nuées, que l’idole envoie. Nos rangs ne tombent pas : éprouvés, ils se replient et se reforment. C’est une image du jeu. Il ne dit pas combien d’hommes il y avait tel jour, ni qui fit telle manœuvre : la réserve mobile, l’enveloppement et le repli feint sont des manœuvres d’école.' },
     { id: 'enracinement', cat: 'Noosphère', title: 'L’enracinement', text: 'Une idée noire dans un seul cœur se dissipe par la parole. Reprise par beaucoup, elle prend corps : c’est un égrégore. Quand on ne la voit plus tant elle est partout, elle commande : c’est une idole. Le jeu mesure cela d’un à cinq, pour chaque idole. La parole qui porte la déracine ; la parole manquée la laisse s’enfoncer. Déracinée, l’idole pèse moins et garde un voile de moins ; enracinée, elle pèse davantage. C’est une image du jeu : la jauge se dit d’une idole, jamais d’une époque ni de ses gens.' },
     { id: 'figures_ciel', cat: 'Cœur', title: 'Les compagnons de lumière (fiction)', text: 'Les Arabes donnaient aux étoiles des noms de bêtes : l’Aigle qui vole, le Lion, les bonds de la Gazelle. Dans la noosphère d’ISNAD, ces noms ont pris corps. Le Renard des sables et le Phénix viennent, eux, des contes. Ce sont des figures de fiction : aucune n’accompagne un Compagnon dans le récit historique.' },
     { id: 'equipement', cat: 'Objets', title: 'Ce que l’on porte', text: 'Épées, lances, arcs, boucliers, casques, cottes, turbans et manteaux : le jeu range sous quatre emplacements ce qu’un groupe pouvait porter en ce temps-là. C’est une *convention de jeu*. Aucune de ces pièces n’est une relique, aucune n’a appartenu à un personnage de l’histoire, aucune ne porte d’inscription, et le jeu ne dit pas qui portait quoi. Leurs noms viennent de la poésie arabe ancienne, où une bonne lame est dite *muhannad* (d’acier de l’Inde), *yamânî* (du Yémen) ou *mashrafî* ; une bonne lance, *khattî* (d’al-Khatt, port du Bahreïn) ou *samharî* ; un bon arc est de bois de *nab\'* ; une bonne cotte est *salûqî*. Le fer aide à tenir ; il ne remplace pas la provision du cœur.', src: 'Convention de jeu. Vocabulaire des poètes anciens, à faire vérifier.' },
@@ -9474,7 +9835,7 @@ ISNAD.registerSaga({
   /* ───────────────────────────── HÉROS ───────────────────────────── */
   heroes: {
     khalid: {
-      name: 'Khâlid', title: 'Le Sabre dégainé', arabic: 'خالد',
+      name: 'Khâlid', title: 'Le Sabre dégainé', arabic: 'خالد', stratege: true, // dans une bataille déclarée, il ordonne sans perdre son tour
       role: 'guerrier', el: 'shajaa',
       look: { robe: '#7a2f2a', head: '#e9dcc0', cloak: '#8e2f2a', aura: '#ff9a70', coiffe: 'casque_turban', cuirasse: true, manteau: 'epaule', item: 'sabre' },
       skills: [
@@ -9726,6 +10087,8 @@ ISNAD.registerSaga({
     /* ═══ 1. LA TRAVERSÉE ═══ */
     {
       id: 'k1', title: 'La Traversée', sub: 'An 13 H · 634 · Désert de la Samâwa',
+      // bataille déclarée : une colonne à tenir dans le désert ; ni charge ni tir
+      bataille: { base: 2, rangs: [{ t: 'fantassins', name: 'Hommes de la colonne', voie: 'centre' }, { t: 'cavaliers', name: 'Avant-garde', voie: 'nord' }], ordres: ['tenir', 'avancer', 'replier'] },
       map: 'desert', opts: { time: 'dusk' }, start: 'caravane',
       party: ['khalid'],
       npcs: [
@@ -9915,7 +10278,7 @@ ISNAD.registerSaga({
           ['say', 'La Soif', "Nul homme n'a franchi ces cinq nuits avant toi. Couche-toi. Le sable est doux à qui renonce."],
           ['say', 'khalid', "Je n'ai pas promis d'arriver. J'ai promis de marcher."],
           ['battle', { group: ['soif', 'mirage'], bg: 'desert', boss: true, intro: 'La Soif barre le chemin de la source.',
-            allies: [{ flag: 'hira_amie', name: "Les chameliers d'al-Hîra" }] }],
+            allies: [{ flag: 'hira_amie', name: "Les chameliers d'al-Hîra", rang: 'gens' }] }],
           ['tint', null], ['sfx', 'light'],
           ['nar', "On creuse. Le sable devient sombre, puis humide. Puis l'eau monte, froide, entre les doigts."],
           ['say', 'rafi', "Par Allah, je ne suis venu à cette eau qu'une seule fois, enfant, avec mon père."],
@@ -9935,6 +10298,8 @@ ISNAD.registerSaga({
     /* ═══ 2. YARMOÛK ═══ */
     {
       id: 'k2', title: 'Yarmoûk', sub: 'An 13 ou 15 H · 634–636 · Vallée du Yarmoûk',
+      // bataille déclarée : les trois armes. Aucun effectif n'est donné ; en face, les nuées de la Peur du Nombre.
+      bataille: { base: 3, rangs: [{ t: 'fantassins', name: 'Fantassins du centre', voie: 'centre' }, { t: 'cavaliers', name: 'Cavaliers de réserve', voie: 'centre', ligne: 0 }, { t: 'archers', name: 'Archers', voie: 'sud' }, { t: 'fantassins', name: 'Fantassins de l’aile', voie: 'nord' }] },
       map: 'camp', opts: { time: 'night' }, start: 'entree',
       party: ['khalid', 'qaqa', 'dirar'],
       npcs: [
@@ -10079,7 +10444,7 @@ ISNAD.registerSaga({
           ['say', 'khalid', "Les armées ne sont nombreuses que par la victoire. Tu n'es qu'un chiffre qui a pris peur de lui-même."],
           ['if', 'zurayr_ecart',
             [['battle', { group: ['decompte', 'peur_nombre', 'decompte'], bg: 'noos', boss: true, intro: 'La Peur du Nombre déploie ses mille lances. Mais un gué, sur son flanc, ne compte plus pour elle.',
-              allies: [{ flag: 'zurayr_ecart', name: 'Les éclaireurs des Banû Zurayr' }] }]],
+              allies: [{ flag: 'zurayr_ecart', name: 'Les éclaireurs des Banû Zurayr', rang: 'cavaliers' }] }]],
             [['battle', { group: ['decompte', 'peur_nombre', 'decompte', 'ombre_lance'], bg: 'noos', boss: true, intro: 'La Peur du Nombre déploie ses mille lances, et celles du gué avec elles.' }]]],
           ['sfx', 'break'], ['flash', '#ffffff'],
           ['map', 'camp', 'tente_chef', { time: 'dusk' }],
@@ -10106,6 +10471,8 @@ ISNAD.registerSaga({
     /* ═══ 3. L'ÉPÉE AU FOURREAU ═══ */
     {
       id: 'k3', title: "L'Épée au fourreau", sub: 'An 17 H · 638 · Qinnasrîn, puis Homs',
+      // bataille déclarée, sans rangs : il n'a plus d'armée à mener
+      bataille: { rangs: [], mot: 'Il n’y a pas de rangs à mener ici. L’armée est restée derrière lui : ce combat-là est le sien.' },
       map: 'romaine', opts: { time: 'day' }, start: 'palais',
       party: ['khalid', 'qaqa', 'dirar'],
       npcs: [

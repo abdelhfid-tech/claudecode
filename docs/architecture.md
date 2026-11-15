@@ -66,6 +66,12 @@ réponse parlée à une idée noire, page de la halte. Il lit les récits par `D
 parcours que le validateur. Outils ajoutés : `tools/son.js` (la musique écoutée pendant que le jeu se joue)
 et `tools/mesure-musique.js` (niveau de chaque piste).
 
+`rangs.js` (la bataille déclarée) se charge après `mal.js` et avant `battle.js`. Il ne touche pas au combat : le
+combat lui prête ses menus, ses bandeaux et trois effets (`champApi` : ôter un voile à l'idole, révéler une faille,
+semer le doute) et l'appelle à quatre endroits : la mise en place, le pas (après un tour de l'idole), l'entrée
+« Ordonner » du menu, le dessin. Le champ se dessine là où le panneau du combat ne le couvre pas (toute la scène en
+hauteur, le haut de la scène en largeur). Outil : `tools/bataille.js`.
+
 ## Rendu rétro-HD
 
 Le monde est dessiné sur une **couche pixel de 384 × 216**, puis composé sur le canevas d'affichage,

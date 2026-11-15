@@ -485,7 +485,7 @@ Décisions prises par le décideur, en réponse aux questions de l'agent :
   l'interlocuteur est un égrégore : cela reste un combat, et le carton le dit.
 - [x] **D95. L'enracinement.** Une jauge par idole, effet léger, rien ne bloque.
 - [x] **D96. La bataille déclarée.** « Des rangs dans le combat, dans le style des jeux tactiques, avec de
-  la stratégie, là où Khâlid excelle. » Lot suivant.
+  la stratégie, là où Khâlid excelle. » Pilote livré sur la saga de Khâlid : D103 à D109, ci-dessous.
 
 Ce que l'agent a ajouté ou lu, et qui reste à valider :
 
@@ -559,6 +559,70 @@ Ce que l'agent a ajouté ou lu, et qui reste à valider :
   pas pu être lue pendant ce travail : elle n'est pas citée dans le jeu. À vérifier par le décideur ou par
   un relecteur avant tout emploi.
 
+## La bataille déclarée (demande du décideur)
+
+« Des rangs dans le combat, dans le style des jeux tactiques, avec de la stratégie, là où Khâlid excelle. »
+Le pilote est la saga de Khâlid. Tout ce qui suit est une proposition de l'agent : le décideur peut l'arrêter
+ou la corriger après avoir joué Yarmoûk. Rien n'est repris d'un jeu existant : ni nom, ni écran, ni règle.
+
+- [ ] **D103. Les règles.** Un chapitre qui déclare une `bataille` donne à son combat d'idole un champ de
+  cinq colonnes sur trois couloirs (aile nord, centre, aile sud) : notre camp à droite, l'idole à gauche.
+  Le combat du groupe se joue comme avant ; le champ s'y ajoute. Un carton « Bataille déclarée » nomme
+  l'idole, son enracinement et les rangs présents. Nos rangs gardent un ordre permanent : tenir, avancer,
+  charger (cavaliers), tirer (archers), glisser vers un couloir voisin, se replier. En face, les **nuées**
+  de l'idole : ses égrégores, tels qu'ils sont déjà dessinés. Après chaque tour de l'idole, et au plus tard
+  tous les trois tours, le champ fait un pas : nos rangs d'abord, puis les nuées. Une nuée bordée par un
+  autre rang est prise de flanc ; prise des deux côtés, en tenaille, elle se dissipe. Un rang qui atteint le
+  pied de l'idole découvre son flanc : un voile tombe et une faille se révèle (une fois par couloir). Une
+  nuée qui atteint le camp sème le doute chez un compagnon (l'effet qui existait déjà). « Ordonner », au
+  tour d'un compagnon, change l'ordre d'un rang à la place de son action.
+- [ ] **D104. Personne ne tombe, et il n'y a jamais d'hommes en face.** Un rang a trois points de tenue. À
+  zéro il se replie, et se reforme au camp trois pas plus tard. Aucun mort, aucun blessé, aucun effectif :
+  le validateur refuse un chiffre dans le nom d'un rang.
+- [ ] **D105. Les missions de la saga III.**
+
+  | Chapitre | Idole | Rangs de la mission | Ordres permis | Raison |
+  |---|---|---|---|---|
+  | La Traversée | la Soif | Hommes de la colonne (fantassins, au centre), Avant-garde (cavaliers, aile nord) | tenir, avancer, se replier | une colonne à tenir dans le désert : ni charge ni tir |
+  | Yarmoûk | la Peur du Nombre | Fantassins du centre, Cavaliers de réserve (au camp, derrière le centre), Archers (aile sud), Fantassins de l'aile (aile nord) | tous | les trois armes |
+  | L'Épée au fourreau | l'Idole du Héros | aucun | aucun | « Il n'y a pas de rangs à mener ici. L'armée est restée derrière lui : ce combat-là est le sien. » |
+
+  Le nombre de rangs suit aussi le niveau du groupe : un de plus au niveau 4, un autre au niveau 8, quatre
+  au plus. Les noms sont des noms de fonction ; aucun ne désigne une personne, une tribu ou un corps cité
+  par les chroniques.
+- [ ] **D106. Là où Khâlid excelle.** Khâlid porte `stratege: true`. Il ordonne sans perdre son tour, une
+  fois par tour, et lui seul connaît trois manœuvres : la **réserve mobile** (les cavaliers portés d'un coup
+  sur la case libre la plus avancée d'un couloir, dans notre moitié du champ), l'**enveloppement** (les deux
+  ailes avancent de deux cases ; une nuée du centre prise entre elles se dissipe), le **repli feint** (un
+  rang recule d'une case ; la nuée qui le suivait s'avance et se découvre : le coup suivant porte double).
+- [ ] **D107. Ce que le jeu ne dit pas.** Le Recueil rapporte déjà, à l'entrée du Yarmoûk, l'ordonnance en
+  escadrons. Pour le reste, **l'agent n'a vérifié aucune source sur le détail des manœuvres** : c'est
+  pourquoi le jeu les dit « d'école », dans l'aide et dans le Recueil, et n'en attribue aucune à un jour ou à
+  un lieu. Si le décideur veut les rattacher aux chroniques, il faut d'abord une source lue.
+- [ ] **D108. Le renfort devient un rang.** Un allié gagné par la parole retirait, en ouverture, un voile à
+  chaque égrégore. Dans une bataille déclarée qui a des rangs, il prend place sur le champ (au milieu, avec
+  l'ordre d'avancer quand la mission le permet) : c'est en atteignant le pied de l'idole qu'il fait tomber
+  un voile. Sans rangs (L'Épée au fourreau), il agit comme avant. Les chameliers d'al-Hîra viennent en
+  « gens du lieu », les éclaireurs des Banû Zurayr (clan de fiction) en cavaliers.
+- [ ] **D109. Exigence 19, proposée dans `AGENTS.md`.** Au décideur de la confirmer, de la reformuler ou
+  de la retirer.
+- **Ce qui se voit.** Chaque rang porte un numéro, le même sur le champ et dans le menu ; trois points
+  disent sa tenue, un chevron son ordre. Écran en hauteur : le champ occupe la scène, le menu des ordres
+  vient dessous. Écran en largeur : le champ tient dans le haut de la scène, le menu sur deux colonnes en
+  bas, borné pour ne jamais monter jusqu'au champ.
+- **Mesures** (`node tools/bataille.js mesures`, mêmes conditions avec et sans rangs). Six essais par
+  cas. Après les bonnes réponses (enracinement 2) : La Traversée, 8,5 tours avec trois rangs contre 8,0 sans,
+  Constance minimale 83 % contre 87 % ; Yarmoûk, 17,5 tours avec cinq rangs contre 17,8 sans, 72 % contre
+  74 %, un flanc et demi découvert en moyenne. Après les mauvaises réponses : La Traversée (enracinement 4),
+  10,2 tours contre 11,2, 66 % contre 77 % ; Yarmoûk (enracinement 5), 27,0 tours contre 28,2, 37 % contre
+  41 %. Aucune défaite, aucune nuée n'a percé, aucun rang ne s'est replié. Batterie complète : les cinq
+  parcours automatiques, le rechargement après chaque prière de récit, les trois parcours au doigt, le son,
+  et la bataille au doigt à 390 × 844, 844 × 390, 667 × 375, 360 × 560 et 960 × 540 : aucune anomalie.
+- **Limites connues.** Le joueur de test ne sait qu'ajuster un ordre par tour avec Khâlid : les mesures
+  disent que le champ ne casse rien, pas qu'il est bien dosé pour quelqu'un qui joue. La Traversée est
+  courte : on n'y voit guère plus de deux pas. Les nuées ne percent presque jamais tant que trois couloirs
+  sont tenus : le champ récompense (un flanc découvert) plus qu'il ne menace.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
@@ -617,5 +681,9 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     Yûnus, les quarante lignes des échanges et le tableau des racines sont des propositions. Qui les relit ?
     Les six racines marquées « sensible » conviennent-elles, ou vaut-il mieux ne pas donner de racine à ces
     idoles ?
+12. La bataille déclarée (D103 à D109) : après avoir joué Yarmoûk, la forme convient-elle (un champ à côté
+    du combat, des ordres permanents, un pas après chaque tour de l'idole), ou faut-il autre chose : un vrai
+    déplacement case par case, un champ plus grand, des rangs plus nombreux ? Les trois manœuvres et leurs
+    noms conviennent-ils ? Le tableau des rangs des autres maillons (ci-dessus) est-il juste ?
 10. La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

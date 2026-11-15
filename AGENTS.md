@@ -25,6 +25,7 @@ toute considération de jeu.
 | `src/core/oeuvres.js` | le cœur : œuvres et provision, lames, maux du cœur, énigmes, compagnons de lumière | règles et dessin seulement ; œuvres, maux et compagnons déclarés dans `defs.js` |
 | `src/core/gear.js` | l'équipement : quatre emplacements, réserve commune, icônes, pages de la halte | règles et dessin seulement ; pièces, types et étals déclarés dans `defs.js` (`D.GEAR`, `D.GEAR_TYPES`, `D.GEAR_SHOPS`) |
 | `src/core/mal.js` | l'organigramme du mal : enracinement d'une idole, réponse parlée à une idée noire, page de la halte | règles et dessin seulement ; racines, manières et parcours des récits déclarés dans `defs.js` (`D.RACINES`, `D.VOIES`, `D.parcours`) ; textes dans `coeur.js` (`mal`, `parole`) |
+| `src/core/rangs.js` | la bataille déclarée : le champ (cinq colonnes, trois couloirs), nos rangs, les nuées de l'idole, les ordres, les manœuvres du stratège | règles et dessin seulement ; types de rangs, ordres et manœuvres déclarés dans `defs.js` (`D.RANGS`, `D.ORDRES`, `D.MANOEUVRES`) ; la mission est dans le chapitre (`bataille`) |
 | `src/data/coeur.js` | contenu commun à toutes les sagas : textes des œuvres, lames, maux, idées noires, compagnons de lumière, organigramme du mal | `commun: true`, aucun chapitre ; ses égrégores sont utilisables partout |
 | `src/data/caid.js` | les veillées du Caïd | même format, `frame: true`, `veillees: true`, un chapitre par saga (`after`) |
 | `src/data/music.js` | bande-son | `ISNAD.registerMusic(nom, piste)`, validée par `tools/validate-music.js` |
@@ -47,6 +48,8 @@ node tools/doigt.js                 # le prologue au doigt, sans raccourci : ce 
 node tools/doigt.js loin            # idem, puis tout le premier chapitre de la saga I (ajouter 844x390 pour le paysage)
 node tools/son.js                   # la musique pour de vrai : le bus écouté pendant qu'on joue (victoire, défaite puis reprise, minuteries bridées)
 node tools/mesure-musique.js        # crête et niveau moyen de chaque piste, et ce qu'en rend un petit haut-parleur
+node tools/bataille.js              # la bataille déclarée au doigt (Yarmoûk) : le champ se voit-il, chaque rang et chaque ordre se touchent-ils ?
+node tools/bataille.js mesures      # chaque combat d'idole qui a des rangs, joué avec et sans : durée, Constance, défaites (« ÉCART » au-delà de 20 %)
 node tools/smoke.js shots           # captures bureau et mobile dans .smoke/
 node tools/promo.js all             # livret et planches : captures, sprites, assemblage, export
 node tools/promo.js planches        # après une retouche du texte : réassemble et réexporte seulement
@@ -54,9 +57,11 @@ node tools/promo.js planches        # après une retouche du texte : réassemble
 
 **Règle.** Toute modification de contenu (`src/data/`) repasse le validateur, puis le build, puis
 `smoke.js auto`. Toute modification du moteur repasse le build, `smoke.js auto`, `smoke.js walk`, `smoke.js tap` et `doigt.js` ;
-toute modification du son repasse aussi `son.js`. Un changement n'est
+toute modification du son repasse aussi `son.js` ; toute modification de la bataille déclarée (`rangs.js`, un champ
+`bataille`) repasse aussi `bataille.js` et `bataille.js mesures`. Un changement n'est
 terminé que si le validateur affiche ✓, que le test se termine sans « BLOQUÉ », sans « INACCESSIBLE »,
-sans « ABSENT », sans « TEXTE CACHÉ » (un texte affiché sous le noir d'un fondu), sans « INVISIBLE », sans « MUSIQUE »
+sans « ABSENT », sans « TEXTE CACHÉ » (un texte affiché sous le noir d'un fondu), sans « INVISIBLE », sans « ÉCART » (une bataille déclarée
+qui allonge le combat de plus de 20 % ou lui ajoute une défaite), sans « MUSIQUE »
 (la piste voulue n'est pas celle du lieu, ou le bus de la musique se tait) et sans erreur console.
 Un parcours automatique prouve que le récit se déroule, pas qu'il se voit : tout changement d'écran
 ou de mise en page se vérifie aussi sur une capture.
@@ -81,6 +86,12 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
 - L'idole d'un chapitre (le membre de plus haut palier d'un combat lancé avec `boss: true`) porte une
   `racine` prise dans `D.RACINES`. Aucun combattant, aucune compétence, aucun personnage ne porte le nom
   d'Iblîs, d'un démon ou d'un djinn : le validateur le refuse.
+- Un chapitre peut déclarer une `bataille` pour son combat d'idole : les rangs que la mission aligne (`t` pris dans
+  `D.RANGS`, un nom sans aucun chiffre, une place `voie` / `ligne`), les ordres qu'elle permet (`ordres`, pris dans
+  `D.ORDRES`, « tenir » toujours) et, s'il n'y a pas de rangs, le `mot` qui dit pourquoi. Le moteur calcule les forces :
+  un fichier de saga ne fixe ni effectif ni dégâts. `stratege: true` se pose sur un héros (il ordonne sans perdre son
+  tour et connaît les manœuvres de `D.MANOEUVRES`). Un allié d'un combat (`allies`) peut porter `rang` : dans une
+  bataille déclarée, il prend place sur le champ au lieu de frapper en ouverture.
 
 ## Exigences de respect (non négociables)
 
@@ -138,6 +149,15 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     événement de l'histoire. L'emprise se dit d'une idée et d'une idole, jamais d'un Compagnon, d'un peuple,
     d'une religion, d'une époque ou d'un camp. À chaque étage sa réponse, et pas une de plus : l'idée noire
     par la parole, l'égrégore par le combat, l'idole par une bataille déclarée.
+
+19. *(Proposée par l'agent, à confirmer par le décideur.)* Une bataille déclarée n'est pas une reconstitution. En face,
+    jamais d'hommes : les nuées de l'idole, c'est-à-dire ses égrégores. Nos rangs ne tombent pas : éprouvés, ils se
+    replient et se reforment ; ni mort ni blessé à l'écran. Aucun effectif n'est affirmé, ni par un nombre ni par le nom
+    d'un rang. Un rang de la mission porte un nom de fonction (fantassins, cavaliers, archers, gens du lieu), jamais un
+    nom de personne ; un allié gagné par la parole garde le nom que le récit lui donne déjà. Les ordres se limitent à ce
+    que la mission permet : là où l'histoire ne connaît pas de bataille, ou là où le sang fut refusé, ni charge ni tir,
+    ou pas de rangs du tout. Les manœuvres du stratège sont des manœuvres d'école : le jeu ne dit pas que l'une d'elles
+    fut faite tel jour, en tel lieu. L'issue d'une bataille déclarée ne change aucun fait de l'histoire.
 
 ## Qui fait quoi
 

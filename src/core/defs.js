@@ -251,6 +251,29 @@
     });
   };
 
+  // La bataille déclarée (version 7) : les rangs qu'une mission peut aligner, les ordres qu'on leur donne, et les trois
+  // manœuvres d'école du stratège. La mission est dans le chapitre (`bataille`) ; règles et dessin : src/core/rangs.js.
+  // `pas` : cases par pas · `ferme` : tient mieux quand il tient · `monte` : rang monté (charge, réserve mobile).
+  D.RANGS = {
+    fantassins: { name: 'Fantassins', desc: 'Des fantassins : ils tiennent le couloir, et encaissent mieux quand ils tiennent.', ordres: ['tenir', 'avancer', 'glisser', 'replier'], ferme: true, look: { kind: 'soldat', coiffe: 'casque', item: ['lance', 'bouclier_bois'] } },
+    cavaliers:  { name: 'Cavaliers', desc: 'Des cavaliers : ils chargent de deux cases, et frappent plus fort à l’arrivée.', ordres: ['tenir', 'avancer', 'charger', 'glisser', 'replier'], monte: true, look: { kind: 'soldat', coiffe: 'casque_turban', item: 'lance', robe: '#6f5a48' } },
+    archers:    { name: 'Archers', desc: 'Des archers : ils tirent dans leur couloir, jusqu’à trois cases, sans bouger.', ordres: ['tirer', 'tenir', 'glisser', 'replier'], look: { kind: 'soldat', coiffe: 'casque_cuir', item: 'arc', robe: '#7d7a5a' } },
+    gens:       { name: 'Gens du lieu', desc: 'Les gens de la mission : ils tiennent et avancent, sans charge ni tir.', ordres: ['tenir', 'avancer', 'replier'], look: { kind: 'homme', robe: '#8c7d68' } }
+  };
+  D.ORDRES = {
+    tenir:   { name: 'Tenir', desc: 'Le rang reste où il est et frappe ce qui vient à lui. Des fantassins qui tiennent encaissent mieux.' },
+    avancer: { name: 'Avancer', desc: 'Une case vers l’idole à chaque pas. Le rang frappe la nuée qui lui barre le couloir.' },
+    charger: { name: 'Charger', desc: 'Deux cases d’un élan, et un coup plus fort à l’arrivée.' },
+    tirer:   { name: 'Tirer', desc: 'Frappe la première nuée du couloir, jusqu’à trois cases, sans bouger.' },
+    glisser: { name: 'Glisser', desc: 'Change de couloir, pour border une nuée et la prendre de flanc.' },
+    replier: { name: 'Se replier', desc: 'Une case en arrière.' }
+  };
+  D.MANOEUVRES = {
+    garde:    { name: 'Réserve mobile', desc: 'Les cavaliers sont portés d’un coup là où le rang plie : une case libre de notre moitié du champ.' },
+    tenaille: { name: 'Enveloppement', desc: 'Les deux ailes avancent de deux cases et se rabattent : une nuée du centre prise entre elles se dissipe.' },
+    feinte:   { name: 'Repli feint', desc: 'Un rang recule d’une case. La nuée qui le suivait s’avance et se découvre : le prochain coup porte double.' }
+  };
+
   // v4 — s'orienter aux étoiles. Huit caps, nommés comme le feront les pilotes arabes : par l'étoile qui
   // s'y lève (à l'est) ou s'y couche (à l'ouest). Ordre : E, SE, S, SO, O, NO, N, NE (secteurs de 45°).
   D.STARS = [
