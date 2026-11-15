@@ -9,6 +9,18 @@
     speed: 1, debug: {}
   };
 
+  /* ---------- incidents : on les retient, on les montre, le jeu continue ---------- */
+  I.errors = [];
+  I.report = function (e, where) {
+    const msg = (where ? where + ' : ' : '') + (e && e.message ? e.message : String(e)), st = e && e.stack ? String(e.stack).split('\n').slice(1, 4).map(l => l.trim().replace(/\(?(?:file|https?):[^)]*\/([^/)]+)\)?/, '$1')).join(' ← ') : '';
+    if (I.errors.length && I.errors[I.errors.length - 1].msg === msg) { I.errors[I.errors.length - 1].n++; return; }
+    I.errors.push({ t: Date.now(), msg, st, n: 1 }); if (I.errors.length > 10) I.errors.shift();
+    try { console.error('[ISNAD] ' + msg, e); } catch (x) { /* console absente */ }
+    if (I.onError) { try { I.onError(msg); } catch (x) { /* l'affichage ne doit pas ajouter un incident */ } }
+  };
+  window.addEventListener('error', ev => { I.report(ev.error || ev.message || 'erreur', 'erreur'); });
+  window.addEventListener('unhandledrejection', ev => { I.report(ev.reason || 'promesse rejetée', 'suite interrompue'); });
+
   /* ---------- utilitaires ---------- */
   I.rng = function (seed) {
     let s = (seed >>> 0) || 1;
@@ -47,6 +59,8 @@
     pop(fn) { const i = stack.lastIndexOf(fn); if (i >= 0) stack.splice(i, 1); },
     emit,
     clearHeld() { held.up = held.down = held.left = held.right = false; },
+    // secours : on ne garde que l'écouteur du monde (le premier posé), les autres appartenaient à une suite interrompue
+    mark() { return stack.length; }, trim(n) { if (stack.length > n) stack.length = Math.max(1, n); }, reset() { stack.length = Math.min(stack.length, 1); held.up = held.down = held.left = held.right = false; },
     // attend une action OU un délai ; l'écouteur est toujours retiré (sinon il avalerait les touches suivantes)
     waitTimed(actions, ms, delay) {
       return new Promise(res => {
@@ -379,7 +393,8 @@
         play(c, st.outs, def, e, t, spb);
       }
     };
-    st.timer = setInterval(tick, 70); A.curTrack = st; tick();
+    const sur = () => { try { tick(); } catch (e) { A.fails++; if (A.fails === 1) I.report(e, 'son (séquenceur)'); if (A.fails > 5) { clearInterval(st.timer); if (A.curTrack === st) A.curTrack = null; } } };
+    st.timer = setInterval(sur, 70); A.curTrack = st; sur();
   };
   // battle.js pose `afterJingle` deux fois : avant la fanfare (la piste à reprendre), puis quand la carte de victoire se ferme.
   // Posé pendant que « victoire » joue, il veut dire « on s'en va » : la piste suivante entre dès que la fanfare est finie.
@@ -405,4 +420,16 @@
 
 
   A.stopBeat = function () { A.pendingRhythm = null; if (A.rhythm) { clearInterval(A.rhythm.timer); A.rhythm = null; } };
+
+  // Le son ne doit jamais arrêter le jeu. Sur un appareil qui refuse une opération sonore, l'appel devient sans effet,
+  // l'incident est retenu une fois (page Diagnostic) et, s'il se répète, la musique se tait d'elle-même.
+  A.fails = 0;
+  ['unlock', 'setOn', 'sfx', 'amb', 'beat', 'stopBeat', 'music', 'setMusic', 'dum', 'tek'].forEach(k => {
+    const fn = A[k]; if (typeof fn !== 'function') return;
+    A[k] = function () {
+      try { return fn.apply(A, arguments); }
+      catch (e) { A.fails++; if (A.fails === 1) I.report(e, 'son (' + k + ')'); if (A.fails === 6 && A.musicOn) { A.musicOn = false; try { if (A.curTrack) { clearInterval(A.curTrack.timer); A.curTrack = null; } } catch (x) { /* rien */ } } }
+    };
+  });
+  { const d = Object.getOwnPropertyDescriptor(A, 'afterJingle'); if (d && d.set) Object.defineProperty(A, 'afterJingle', { configurable: true, enumerable: true, get: d.get, set(v) { try { d.set.call(A, v); } catch (e) { A._after = v || null; A.fails++; if (A.fails === 1) I.report(e, 'son (enchaînement)'); } } }); }
 })();

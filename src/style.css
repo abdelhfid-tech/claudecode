@@ -247,6 +247,13 @@ body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 #card.pray { background: radial-gradient(ellipse at center, rgba(20, 16, 40, .95), rgba(4, 3, 10, 1)); }
 #card.parley h1 { font-size: 1.6em; }
 
+/* ---------- garde-fou : si le jeu s'arrête, on peut toujours reprendre ---------- */
+#secours { position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 60; width: min(92vw, 26em); padding: .8em 1em; text-align: center; background: var(--panel2); border: 1px solid var(--gold); border-radius: 4px; box-shadow: 0 10px 40px rgba(0, 0, 0, .7); font-size: calc(16px * var(--tz, 1)); }
+#secours p { margin: 0 0 .5em; } #secours button { padding: .5em 1em; background: rgba(233, 200, 119, .2); border: 1px solid var(--gold); color: #fff; font-family: var(--f-display); letter-spacing: .06em; }
+#secours small { display: block; margin-top: .5em; color: var(--dim); font-size: .72em; word-break: break-word; }
+#title .foot .ver { font-family: var(--f-mono); font-size: .9em; opacity: .7; }
+.diag { font-family: var(--f-mono); font-size: .8em; line-height: 1.5; word-break: break-word; } .diag b { color: var(--gold); font-weight: 400; }
+
 /* ---------- qui est qui, et où : noms au-dessus des personnages, silhouette de celui qui parle, carte ---------- */
 #noms { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3; }
 .nom { position: absolute; transform: translate(-50%, -100%); padding: .02em .5em .08em; font-size: .6em; line-height: 1.25; white-space: nowrap; color: #fff6dc; background: rgba(8, 7, 18, .74); border-bottom: 1px solid var(--c, var(--gold)); border-radius: 2px; text-shadow: 0 1px 2px #000; animation: nomin .25s ease; }

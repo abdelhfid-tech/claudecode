@@ -79,6 +79,13 @@ Rejoué de bout en bout, sans blocage ni erreur console, par cinq parcours autom
 - Vérifié sur des captures en 390 × 844 : la scène agrandie, le texte, l'objectif sous l'image, le
   menu des œuvres, le combat. **Aucun essai sur un vrai téléphone ni avec un vrai doigt.**
 
+## Premier retour de jeu réel : « le jeu s'arrête après le premier combat »
+
+Signalé par le décideur. **Non reproduit** dans Chromium, ni au clavier ni au doigt émulé, son activé.
+Le moteur a été durci pour qu'une panne ne fige plus la partie (voir `decisions.md`, D75) ; trois
+pannes simulées sont traversées. Ce qui manque pour conclure : l'appareil, le navigateur ou
+l'application, ce que montrait l'écran, et la page Diagnostic de la halte.
+
 ## Ce qui n'a pas été testé
 
 - **Aucun test humain.** Ni le plaisir de jeu, ni la clarté des règles, ni le rythme, ni la longueur

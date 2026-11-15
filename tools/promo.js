@@ -111,8 +111,8 @@ async function captures(browser, errors) {
   await p.waitForTimeout(600); await shot('explorer');
   // la natte : prier, sauvegarder
   await place('priere', 0, 14, 3); await p.waitForTimeout(900);
-  await key('Enter', 1, 700); await shot('natte');
-  await key('ArrowDown', 1, 200); await key('Enter', 1, 700); await shot('emplacements');
+  await key('Enter', 1, 700);
+  await key('ArrowDown', 2, 200); await key('Enter', 1, 700); await shot('emplacements');
   await key('Escape', 1, 500); await until(idle, 6);
   await place('priere', 0, 14, 3); await p.waitForTimeout(400);
   await key('Enter', 1, 600); await key('Enter', 1, 1300); await shot('priere');

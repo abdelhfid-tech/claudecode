@@ -315,6 +315,25 @@ arabo-andalouses ».
 - [ ] **D74. Couleur arabo-andalouse** dans la bande-son : passe en cours, bornée à quelques pistes
   (la Citadelle d'abord) ; voir `docs/musique.md`. À juger à l'oreille.
 
+## « Le jeu s'arrête après le premier combat » (signalement du décideur)
+
+Signalement reçu sans autre précision (appareil, navigateur, ce que montre l'écran).
+
+- [x] **D75. Non reproduit, donc durci.** Le début du jeu a été rejoué « à la main » par un pilote qui
+  n'utilise aucun raccourci de test (son activé, clavier puis doigt, bureau et téléphone émulé) : le
+  premier combat se termine et le récit reprend, dans Chromium. Ni Safari ni Firefox ne sont
+  disponibles ici. *Lecture de l'agent* : une erreur propre à l'appareil (le plus probable : le son,
+  entre le fondu de sortie du combat et la reprise de la musique) laissait l'écran noir ou le combat
+  figé, sans rien dire. Le moteur ne se tait plus et ne reste plus bloqué :
+  - une panne du son coupe la musique, pas la partie ;
+  - une opération de récit qui échoue est passée et consignée ; un combat qui échoue est quitté proprement ;
+  - si le jeu attend plus de quinze secondes sans rien afficher, un bouton **Reprendre** ramène au
+    dernier objectif atteint ;
+  - la halte a une page **Diagnostic** (version, appareil, état du son, incidents relevés) et
+    l'écran-titre affiche la version.
+  Vérifié par trois pannes simulées (oscillateur refusé, gain refusé, suite qui ne rend jamais la
+  main). **Reste à savoir ce qui s'est passé chez le décideur** : voir la question 7.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
@@ -359,3 +378,5 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
 4. Quelle suite : approfondir ces cinq sagas, ou en ajouter d'autres ?
 5. Les sept maux retenus et leurs noms (D61), les deux versets (D60), les noms d'étoiles (D67) : qui les relit ?
 6. Les œuvres comptent-elles au bon prix (trois par chapitre, 8 % par point manquant), ou faut-il durcir ?
+7. L'arrêt après le premier combat (D75) : sur quel appareil et dans quelle application ? L'écran
+   était-il noir, figé sur le combat, ou le héros ne bougeait-il plus ? Que dit la page Diagnostic de la halte ?

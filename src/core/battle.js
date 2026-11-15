@@ -81,12 +81,24 @@
   const alive = side => C.all.filter(e => e.side === side && e.alive);
 
   B.start = async function (opts) {
-    const W = I.world; let first = true;
+    const W = I.world, prev = I.scene === B.scene ? W : I.scene, mark = I.input.mark(); let first = true;
     while (true) {
-      const res = await run(opts, first); first = false;
+      let res;
+      try { res = await run(opts, first); }
+      catch (e) { I.report(e, 'combat'); B.abort(prev, mark); res = 'win'; } // un incident ne doit pas arrêter le récit : on rend la main, le combat compte pour gagné
+      first = false;
       if (res === 'win') break;
       W.healAll(); W.party.forEach(id => { W.hero(id).sakina = 50; });
     }
+  };
+  // sortie de secours : referme le combat où qu'il en soit et rend l'écran
+  B.abort = function (prev, mark) {
+    try { I.audio.stopBeat(); } catch (e) { /* le son ne compte pas ici */ }
+    $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = ''; $('#battle .cmd').innerHTML = ''; $('#battle .banner').hidden = true;
+    C = null; if (mark !== undefined) I.input.trim(mark);
+    I.setScene(prev || I.world); G.clearParts();
+    const W = I.world; if ((prev || W) === W && W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; I.audio.music(env.music || 'silence'); }
+    const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0;
   };
 
   async function run(opts, first) {

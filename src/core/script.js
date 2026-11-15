@@ -141,7 +141,7 @@
   S.run = async function (ops) {
     if (!ops || !ops.length) return;
     S.depth++;
-    try { for (const op of ops) await exec(op); }
+    try { for (const op of ops) { try { await exec(op); } catch (e) { I.report(e, 'récit (' + (op && op[0]) + ')'); } } }
     finally { S.depth--; if (S.depth === 0) S.hideDialog(); }
   };
 

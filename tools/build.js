@@ -9,7 +9,11 @@ const read = f => fs.readFileSync(path.join(root, f), 'utf8');
 
 const core = ['defs', 'base', 'gfx', 'sprites', 'maps', 'script', 'world', 'build', 'trade', 'oeuvres', 'battle', 'ui'].map(n => `src/core/${n}.js`);
 const data = ['src/data/frame.js', 'src/data/music.js', 'src/data/caid.js', 'src/data/coeur.js'].filter(f => fs.existsSync(path.join(root, f))).concat(fs.readdirSync(path.join(root, 'src/data')).filter(f => /^saga_.*\.js$/.test(f)).sort().map(f => 'src/data/' + f));
-const js = core.concat(data).map(f => `/* ==== ${f} ==== */\n` + read(f)).join('\n') +
+// version lisible par le joueur (écran-titre, page Diagnostic) : date de l'assemblage et dernier commit
+// « + » : des sources ont changé depuis ce commit (les fichiers générés ne comptent pas)
+let rev = ''; try { const sh = c => require('child_process').execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); rev = sh('git rev-parse --short HEAD') + (sh('git status --porcelain -- src tools') ? '+' : ''); } catch (e) { /* hors dépôt */ }
+const version = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC' + (rev ? ' · ' + rev : '');
+const js = `window.ISNAD_VERSION = ${JSON.stringify(version)};\n` + core.concat(data).map(f => `/* ==== ${f} ==== */\n` + read(f)).join('\n') +
   '\n(window.claude && window.claude.hot && window.claude.hot.ready) ? window.claude.hot.ready(function () { ISNAD.ui.boot(); }) : ISNAD.ui.boot();\n';
 if (js.includes('</script')) throw new Error('</script> trouvé dans le JS');
 

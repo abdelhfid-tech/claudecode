@@ -251,6 +251,13 @@ body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 #card.pray { background: radial-gradient(ellipse at center, rgba(20, 16, 40, .95), rgba(4, 3, 10, 1)); }
 #card.parley h1 { font-size: 1.6em; }
 
+/* ---------- garde-fou : si le jeu s'arrête, on peut toujours reprendre ---------- */
+#secours { position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 60; width: min(92vw, 26em); padding: .8em 1em; text-align: center; background: var(--panel2); border: 1px solid var(--gold); border-radius: 4px; box-shadow: 0 10px 40px rgba(0, 0, 0, .7); font-size: calc(16px * var(--tz, 1)); }
+#secours p { margin: 0 0 .5em; } #secours button { padding: .5em 1em; background: rgba(233, 200, 119, .2); border: 1px solid var(--gold); color: #fff; font-family: var(--f-display); letter-spacing: .06em; }
+#secours small { display: block; margin-top: .5em; color: var(--dim); font-size: .72em; word-break: break-word; }
+#title .foot .ver { font-family: var(--f-mono); font-size: .9em; opacity: .7; }
+.diag { font-family: var(--f-mono); font-size: .8em; line-height: 1.5; word-break: break-word; } .diag b { color: var(--gold); font-weight: 400; }
+
 /* ---------- qui est qui, et où : noms au-dessus des personnages, silhouette de celui qui parle, carte ---------- */
 #noms { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3; }
 .nom { position: absolute; transform: translate(-50%, -100%); padding: .02em .5em .08em; font-size: .6em; line-height: 1.25; white-space: nowrap; color: #fff6dc; background: rgba(8, 7, 18, .74); border-bottom: 1px solid var(--c, var(--gold)); border-radius: 2px; text-shadow: 0 1px 2px #000; animation: nomin .25s ease; }
@@ -347,7 +354,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   <h1>ISNAD</h1>
   <div class="tag">Chroniques des Compagnons</div>
   <div class="vmenu"></div>
-  <p class="foot">Un JRPG rétro-HD en cinq sagas, de la mort du Prophète ﷺ à la fin du califat bien guidé. Fiction inspirée de sources historiques ; le Prophète ﷺ n’est jamais représenté et aucun personnage n’a de visage.<br><kbd>Flèches</kbd>/<kbd>ZQSD</kbd> ou clic : se déplacer · <kbd>Entrée</kbd> valider · <kbd>Échap</kbd> halte · <kbd>H</kbd> que faire ? · au doigt sur écran tactile</p>
+  <p class="foot">Un JRPG rétro-HD en cinq sagas, de la mort du Prophète ﷺ à la fin du califat bien guidé. Fiction inspirée de sources historiques ; le Prophète ﷺ n’est jamais représenté et aucun personnage n’a de visage.<br><kbd>Flèches</kbd>/<kbd>ZQSD</kbd> ou clic : se déplacer · <kbd>Entrée</kbd> valider · <kbd>Échap</kbd> halte · <kbd>H</kbd> que faire ? · au doigt sur écran tactile<br><span class="ver"></span></p>
 </section>
 <section id="chain" class="screen" hidden>
   <header><h2>La Chaîne</h2><p></p></header>
@@ -359,7 +366,9 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   <div class="cols"><div class="side"></div><div class="pane"></div></div>
 </section>
 <div id="fade"></div>
+<div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
+window.ISNAD_VERSION = "2026-11-15 06:41 UTC · 82057c5+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -545,6 +554,18 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     speed: 1, debug: {}
   };
 
+  /* ---------- incidents : on les retient, on les montre, le jeu continue ---------- */
+  I.errors = [];
+  I.report = function (e, where) {
+    const msg = (where ? where + ' : ' : '') + (e && e.message ? e.message : String(e)), st = e && e.stack ? String(e.stack).split('\n').slice(1, 4).map(l => l.trim().replace(/\(?(?:file|https?):[^)]*\/([^/)]+)\)?/, '$1')).join(' ← ') : '';
+    if (I.errors.length && I.errors[I.errors.length - 1].msg === msg) { I.errors[I.errors.length - 1].n++; return; }
+    I.errors.push({ t: Date.now(), msg, st, n: 1 }); if (I.errors.length > 10) I.errors.shift();
+    try { console.error('[ISNAD] ' + msg, e); } catch (x) { /* console absente */ }
+    if (I.onError) { try { I.onError(msg); } catch (x) { /* l'affichage ne doit pas ajouter un incident */ } }
+  };
+  window.addEventListener('error', ev => { I.report(ev.error || ev.message || 'erreur', 'erreur'); });
+  window.addEventListener('unhandledrejection', ev => { I.report(ev.reason || 'promesse rejetée', 'suite interrompue'); });
+
   /* ---------- utilitaires ---------- */
   I.rng = function (seed) {
     let s = (seed >>> 0) || 1;
@@ -583,6 +604,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     pop(fn) { const i = stack.lastIndexOf(fn); if (i >= 0) stack.splice(i, 1); },
     emit,
     clearHeld() { held.up = held.down = held.left = held.right = false; },
+    // secours : on ne garde que l'écouteur du monde (le premier posé), les autres appartenaient à une suite interrompue
+    mark() { return stack.length; }, trim(n) { if (stack.length > n) stack.length = Math.max(1, n); }, reset() { stack.length = Math.min(stack.length, 1); held.up = held.down = held.left = held.right = false; },
     // attend une action OU un délai ; l'écouteur est toujours retiré (sinon il avalerait les touches suivantes)
     waitTimed(actions, ms, delay) {
       return new Promise(res => {
@@ -915,7 +938,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
         play(c, st.outs, def, e, t, spb);
       }
     };
-    st.timer = setInterval(tick, 70); A.curTrack = st; tick();
+    const sur = () => { try { tick(); } catch (e) { A.fails++; if (A.fails === 1) I.report(e, 'son (séquenceur)'); if (A.fails > 5) { clearInterval(st.timer); if (A.curTrack === st) A.curTrack = null; } } };
+    st.timer = setInterval(sur, 70); A.curTrack = st; sur();
   };
   // battle.js pose `afterJingle` deux fois : avant la fanfare (la piste à reprendre), puis quand la carte de victoire se ferme.
   // Posé pendant que « victoire » joue, il veut dire « on s'en va » : la piste suivante entre dès que la fanfare est finie.
@@ -941,6 +965,18 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
 
 
   A.stopBeat = function () { A.pendingRhythm = null; if (A.rhythm) { clearInterval(A.rhythm.timer); A.rhythm = null; } };
+
+  // Le son ne doit jamais arrêter le jeu. Sur un appareil qui refuse une opération sonore, l'appel devient sans effet,
+  // l'incident est retenu une fois (page Diagnostic) et, s'il se répète, la musique se tait d'elle-même.
+  A.fails = 0;
+  ['unlock', 'setOn', 'sfx', 'amb', 'beat', 'stopBeat', 'music', 'setMusic', 'dum', 'tek'].forEach(k => {
+    const fn = A[k]; if (typeof fn !== 'function') return;
+    A[k] = function () {
+      try { return fn.apply(A, arguments); }
+      catch (e) { A.fails++; if (A.fails === 1) I.report(e, 'son (' + k + ')'); if (A.fails === 6 && A.musicOn) { A.musicOn = false; try { if (A.curTrack) { clearInterval(A.curTrack.timer); A.curTrack = null; } } catch (x) { /* rien */ } } }
+    };
+  });
+  { const d = Object.getOwnPropertyDescriptor(A, 'afterJingle'); if (d && d.set) Object.defineProperty(A, 'afterJingle', { configurable: true, enumerable: true, get: d.get, set(v) { try { d.set.call(A, v); } catch (e) { A._after = v || null; A.fails++; if (A.fails === 1) I.report(e, 'son (enchaînement)'); } } }); }
 })();
 
 /* ==== src/core/gfx.js ==== */
@@ -2129,7 +2165,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   S.run = async function (ops) {
     if (!ops || !ops.length) return;
     S.depth++;
-    try { for (const op of ops) await exec(op); }
+    try { for (const op of ops) { try { await exec(op); } catch (e) { I.report(e, 'récit (' + (op && op[0]) + ')'); } } }
     finally { S.depth--; if (S.depth === 0) S.hideDialog(); }
   };
 
@@ -3502,12 +3538,24 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
   const alive = side => C.all.filter(e => e.side === side && e.alive);
 
   B.start = async function (opts) {
-    const W = I.world; let first = true;
+    const W = I.world, prev = I.scene === B.scene ? W : I.scene, mark = I.input.mark(); let first = true;
     while (true) {
-      const res = await run(opts, first); first = false;
+      let res;
+      try { res = await run(opts, first); }
+      catch (e) { I.report(e, 'combat'); B.abort(prev, mark); res = 'win'; } // un incident ne doit pas arrêter le récit : on rend la main, le combat compte pour gagné
+      first = false;
       if (res === 'win') break;
       W.healAll(); W.party.forEach(id => { W.hero(id).sakina = 50; });
     }
+  };
+  // sortie de secours : referme le combat où qu'il en soit et rend l'écran
+  B.abort = function (prev, mark) {
+    try { I.audio.stopBeat(); } catch (e) { /* le son ne compte pas ici */ }
+    $('#battle').hidden = true; document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = ''; $('#battle .cmd').innerHTML = ''; $('#battle .banner').hidden = true;
+    C = null; if (mark !== undefined) I.input.trim(mark);
+    I.setScene(prev || I.world); G.clearParts();
+    const W = I.world; if ((prev || W) === W && W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; I.audio.music(env.music || 'silence'); }
+    const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0;
   };
 
   async function run(opts, first) {
@@ -4056,6 +4104,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     const TZ = ['normal', 'grand', 'très grand'];
     btns.push(mk('Texte : ' + TZ[sv.opts.tz || 0], b => { sv.opts.tz = ((sv.opts.tz || 0) + 1) % 3; I.save.store(); U.applyOpts(); b.textContent = 'Texte : ' + TZ[sv.opts.tz]; }));
     btns.push(mk('Plein écran', () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } }));
+    { const v = $('#title .ver'); if (v) v.textContent = 'version ' + (window.ISNAD_VERSION || 'de travail'); }
     screen('#title', true); fl = focusList(btns);
   };
   const slotLabel = (d, n) => d ? `Emplacement ${n} · ${I.esc((d.meta && d.meta.label) || 'Partie')} · ${new Date((d.meta && d.meta.when) || 0).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })} ${new Date((d.meta && d.meta.when) || 0).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}` : `Emplacement ${n} · vide`;
@@ -4221,6 +4270,7 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
         toggle('Son', () => I.audio.on ? 'activé' : 'coupé', () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, 'Coupe ou rétablit tout le son : ambiances, bruitages et musique.'),
         toggle('Musique', () => I.audio.musicOn ? 'activée' : 'coupée', () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, 'Bande-son originale synthétisée, une piste par ambiance. Coupée, il reste les ambiances, les percussions de duff et les bruitages.'),
         toggle('Rendu', () => G.low ? '2D simple' : 'rétro-HD', () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, 'Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.'));
+      items.push({ label: 'Diagnostic', fn() {}, show: U.diagnostic });
       if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre au dernier objectif atteint, tant que la page reste ouverte. Rien n’est écrit tant que tu n’as pas sauvegardé dans une mosquée ou à la natte des Archives.</p>' });
       $('#menu h2').textContent = 'Halte';
       build(items, { onCancel: close });
@@ -4330,6 +4380,42 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     else if (k === 'aide') U.pause('aide');
   };
 
+  /* ---------- garde-fou : le jeu ne doit jamais rester arrêté sans issue ---------- */
+  let figeDepuis = 0;
+  // « arrêté » : le jeu se dit occupé (ou l'écran est noir), et rien à l'écran n'attend le joueur, depuis quinze secondes
+  U.veille = function (now) {
+    const box = $('#secours'), fade = +($('#fade').style.opacity || 0);
+    const attend = !$('#dialog').hidden || !$('#choice').hidden || !$('#card').hidden || !!document.querySelector('.screen:not([hidden])') ||
+      (I.battle.active && ($('#battle .cmd').childElementCount > 0 || !$('#battle .banner').hidden || $('#floaters').childElementCount > 0));
+    const libre = I.scene === W && !S.busy && !W.lock && fade < 0.5;
+    if (libre || attend || I.debug.auto || !I.save.data.started) { figeDepuis = 0; if (!box.hidden) box.hidden = true; return; }
+    if (!figeDepuis) figeDepuis = now;
+    if (now - figeDepuis > 15000 && box.hidden) { const e = I.errors[I.errors.length - 1]; box.querySelector('small').textContent = e ? 'Incident : ' + e.msg : 'Aucun incident relevé : le jeu attendait quelque chose qui n’est pas venu.'; box.hidden = false; }
+  };
+  // reprise au dernier objectif atteint : on referme tout ce qui était en cours, puis on repart du point de reprise
+  U.secours = function () {
+    $('#secours').hidden = true; figeDepuis = 0;
+    I.errors.push({ t: Date.now(), msg: 'reprise demandée par le joueur', st: '', n: 1 });
+    try { I.battle.abort(W); } catch (e) { /* le combat n'était pas ouvert */ }
+    S.depth = 0; W.lock = false; W._autoBusy = false; U.menuOpen = false; S.hideDialog(); $('#choice').hidden = true; document.body.classList.remove('in-dialog', 'in-screen', 'in-build');
+    const c = $('#card'); c.classList.remove('on'); c.hidden = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
+    I.input.reset(); const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0;
+    const sv = I.save.data;
+    if (sv.cp && I.sagas[sv.cp.saga]) { W.roster = {}; W.saga = null; W.startChapter(sv.cp.saga, sv.cp.ci, sv.cp); }
+    else if (!sv.prologue) { W.roster = {}; W.saga = null; W.startChapter('idris', 0); }
+    else U.showChain();
+  };
+  U.diagnostic = function () {
+    const A = I.audio, st = $('#stage'), d = I.oeuvres.state(), e = I.errors;
+    const L = [['Version', window.ISNAD_VERSION || 'de travail'], ['Navigateur', navigator.userAgent], ['Fenêtre', window.innerWidth + ' × ' + window.innerHeight + ' · densité ' + (window.devicePixelRatio || 1)],
+      ['Scène', st.clientWidth + ' × ' + st.clientHeight + (document.body.classList.contains('portrait') ? ' · en hauteur' : ' · en largeur') + (U.zoom ? ' · agrandie' : '') + ' · échelle ' + G.k + (G.low ? ' · 2D simple' : '')],
+      ['Entrée', (document.body.classList.contains('touch') ? 'tactile' : 'clavier ou souris')],
+      ['Son', (A.ctx ? A.ctx.state + ' · ' + A.ctx.sampleRate + ' Hz' : 'aucun contexte') + ' · piste ' + ((A.curTrack && A.curTrack.name) || 'aucune') + ' · incidents ' + (A.fails || 0)],
+      ['Partie', (W.saga ? W.saga.id + ' / ' + (W.ch && W.ch.id) + ' / objectif ' + W.objIndex : 'hors chapitre') + ' · récit ' + (S.busy ? 'occupé (' + S.depth + ')' : 'libre') + ' · provision ' + d.zad]];
+    return '<h3>Diagnostic</h3><p>Si le jeu s’arrête ou se comporte mal, une capture de cette page dit où regarder.</p><p class="diag">' + L.map(x => '<b>' + x[0] + '</b> ' + I.esc(String(x[1]))).join('<br>') + '</p>' +
+      '<h3>Incidents relevés</h3><p class="diag">' + (e.length ? e.slice().reverse().map(x => new Date(x.t).toLocaleTimeString('fr-FR') + ' · ' + I.esc(x.msg) + (x.n > 1 ? ' (×' + x.n + ')' : '') + (x.st ? '<br><small>' + I.esc(x.st) + '</small>' : '')).join('<br>') : 'Aucun.') + '</p>';
+  };
+
   /* ---------- noms au-dessus des personnages ---------- */
   let still = 0;
   U.noms = function (now) {
@@ -4423,6 +4509,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
     $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); I.build.set(!I.build.on); });
     $('#helpbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.guide(); });
     pad(); pointer();
+    $('#secours button').addEventListener('click', ev => { ev.stopPropagation(); U.secours(); });
+    I.onError = msg => { if (!I.debug.auto) S.toast('Incident technique (le jeu continue) : <b>' + I.esc(msg.slice(0, 90)) + '</b>', 7000); };
     let last = performance.now();
     (function frame(now) {
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
@@ -4431,7 +4519,8 @@ body.zoom #compass { top: auto; bottom: 3%; left: 2%; font-size: 11px; }
         if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) { if (I.debug.walk === 'tap') W.tapStep(); else W.walkStep(); } W.update(1 / 60); } I.input.clearHeld(); }
         else { U.pointerTick(now); if (sc.update) sc.update(dt); }
         G.present(dt, sc.render(dt) || {});
-      } catch (e) { if (!U._err) { U._err = e; console.error(e); } } }
+      } catch (e) { if (!U._err) U._err = e; I.report(e, 'affichage'); } }
+      if ((U._vf = (U._vf || 0) + 1) % 30 === 0) U.veille(now);
       if ((U._nf = (U._nf || 0) + 1) % 3 === 0) U.noms(now);
       const tx = U.zoom ? -G.view.x * U.scale : 0; if (tx !== U._tx) { U._tx = tx; cvEl.style.transform = tx ? 'translateX(' + tx + 'px)' : ''; }
       $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden); $('#helpbtn').hidden = $('#menubtn').hidden;

@@ -84,6 +84,7 @@
     const TZ = ['normal', 'grand', 'très grand'];
     btns.push(mk('Texte : ' + TZ[sv.opts.tz || 0], b => { sv.opts.tz = ((sv.opts.tz || 0) + 1) % 3; I.save.store(); U.applyOpts(); b.textContent = 'Texte : ' + TZ[sv.opts.tz]; }));
     btns.push(mk('Plein écran', () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } }));
+    { const v = $('#title .ver'); if (v) v.textContent = 'version ' + (window.ISNAD_VERSION || 'de travail'); }
     screen('#title', true); fl = focusList(btns);
   };
   const slotLabel = (d, n) => d ? `Emplacement ${n} · ${I.esc((d.meta && d.meta.label) || 'Partie')} · ${new Date((d.meta && d.meta.when) || 0).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })} ${new Date((d.meta && d.meta.when) || 0).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}` : `Emplacement ${n} · vide`;
@@ -249,6 +250,7 @@
         toggle('Son', () => I.audio.on ? 'activé' : 'coupé', () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, 'Coupe ou rétablit tout le son : ambiances, bruitages et musique.'),
         toggle('Musique', () => I.audio.musicOn ? 'activée' : 'coupée', () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, 'Bande-son originale synthétisée, une piste par ambiance. Coupée, il reste les ambiances, les percussions de duff et les bruitages.'),
         toggle('Rendu', () => G.low ? '2D simple' : 'rétro-HD', () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, 'Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.'));
+      items.push({ label: 'Diagnostic', fn() {}, show: U.diagnostic });
       if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre au dernier objectif atteint, tant que la page reste ouverte. Rien n’est écrit tant que tu n’as pas sauvegardé dans une mosquée ou à la natte des Archives.</p>' });
       $('#menu h2').textContent = 'Halte';
       build(items, { onCancel: close });
@@ -358,6 +360,42 @@
     else if (k === 'aide') U.pause('aide');
   };
 
+  /* ---------- garde-fou : le jeu ne doit jamais rester arrêté sans issue ---------- */
+  let figeDepuis = 0;
+  // « arrêté » : le jeu se dit occupé (ou l'écran est noir), et rien à l'écran n'attend le joueur, depuis quinze secondes
+  U.veille = function (now) {
+    const box = $('#secours'), fade = +($('#fade').style.opacity || 0);
+    const attend = !$('#dialog').hidden || !$('#choice').hidden || !$('#card').hidden || !!document.querySelector('.screen:not([hidden])') ||
+      (I.battle.active && ($('#battle .cmd').childElementCount > 0 || !$('#battle .banner').hidden || $('#floaters').childElementCount > 0));
+    const libre = I.scene === W && !S.busy && !W.lock && fade < 0.5;
+    if (libre || attend || I.debug.auto || !I.save.data.started) { figeDepuis = 0; if (!box.hidden) box.hidden = true; return; }
+    if (!figeDepuis) figeDepuis = now;
+    if (now - figeDepuis > 15000 && box.hidden) { const e = I.errors[I.errors.length - 1]; box.querySelector('small').textContent = e ? 'Incident : ' + e.msg : 'Aucun incident relevé : le jeu attendait quelque chose qui n’est pas venu.'; box.hidden = false; }
+  };
+  // reprise au dernier objectif atteint : on referme tout ce qui était en cours, puis on repart du point de reprise
+  U.secours = function () {
+    $('#secours').hidden = true; figeDepuis = 0;
+    I.errors.push({ t: Date.now(), msg: 'reprise demandée par le joueur', st: '', n: 1 });
+    try { I.battle.abort(W); } catch (e) { /* le combat n'était pas ouvert */ }
+    S.depth = 0; W.lock = false; W._autoBusy = false; U.menuOpen = false; S.hideDialog(); $('#choice').hidden = true; document.body.classList.remove('in-dialog', 'in-screen', 'in-build');
+    const c = $('#card'); c.classList.remove('on'); c.hidden = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
+    I.input.reset(); const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0;
+    const sv = I.save.data;
+    if (sv.cp && I.sagas[sv.cp.saga]) { W.roster = {}; W.saga = null; W.startChapter(sv.cp.saga, sv.cp.ci, sv.cp); }
+    else if (!sv.prologue) { W.roster = {}; W.saga = null; W.startChapter('idris', 0); }
+    else U.showChain();
+  };
+  U.diagnostic = function () {
+    const A = I.audio, st = $('#stage'), d = I.oeuvres.state(), e = I.errors;
+    const L = [['Version', window.ISNAD_VERSION || 'de travail'], ['Navigateur', navigator.userAgent], ['Fenêtre', window.innerWidth + ' × ' + window.innerHeight + ' · densité ' + (window.devicePixelRatio || 1)],
+      ['Scène', st.clientWidth + ' × ' + st.clientHeight + (document.body.classList.contains('portrait') ? ' · en hauteur' : ' · en largeur') + (U.zoom ? ' · agrandie' : '') + ' · échelle ' + G.k + (G.low ? ' · 2D simple' : '')],
+      ['Entrée', (document.body.classList.contains('touch') ? 'tactile' : 'clavier ou souris')],
+      ['Son', (A.ctx ? A.ctx.state + ' · ' + A.ctx.sampleRate + ' Hz' : 'aucun contexte') + ' · piste ' + ((A.curTrack && A.curTrack.name) || 'aucune') + ' · incidents ' + (A.fails || 0)],
+      ['Partie', (W.saga ? W.saga.id + ' / ' + (W.ch && W.ch.id) + ' / objectif ' + W.objIndex : 'hors chapitre') + ' · récit ' + (S.busy ? 'occupé (' + S.depth + ')' : 'libre') + ' · provision ' + d.zad]];
+    return '<h3>Diagnostic</h3><p>Si le jeu s’arrête ou se comporte mal, une capture de cette page dit où regarder.</p><p class="diag">' + L.map(x => '<b>' + x[0] + '</b> ' + I.esc(String(x[1]))).join('<br>') + '</p>' +
+      '<h3>Incidents relevés</h3><p class="diag">' + (e.length ? e.slice().reverse().map(x => new Date(x.t).toLocaleTimeString('fr-FR') + ' · ' + I.esc(x.msg) + (x.n > 1 ? ' (×' + x.n + ')' : '') + (x.st ? '<br><small>' + I.esc(x.st) + '</small>' : '')).join('<br>') : 'Aucun.') + '</p>';
+  };
+
   /* ---------- noms au-dessus des personnages ---------- */
   let still = 0;
   U.noms = function (now) {
@@ -451,6 +489,8 @@
     $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); I.build.set(!I.build.on); });
     $('#helpbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.guide(); });
     pad(); pointer();
+    $('#secours button').addEventListener('click', ev => { ev.stopPropagation(); U.secours(); });
+    I.onError = msg => { if (!I.debug.auto) S.toast('Incident technique (le jeu continue) : <b>' + I.esc(msg.slice(0, 90)) + '</b>', 7000); };
     let last = performance.now();
     (function frame(now) {
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
@@ -459,7 +499,8 @@
         if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) { if (I.debug.walk === 'tap') W.tapStep(); else W.walkStep(); } W.update(1 / 60); } I.input.clearHeld(); }
         else { U.pointerTick(now); if (sc.update) sc.update(dt); }
         G.present(dt, sc.render(dt) || {});
-      } catch (e) { if (!U._err) { U._err = e; console.error(e); } } }
+      } catch (e) { if (!U._err) U._err = e; I.report(e, 'affichage'); } }
+      if ((U._vf = (U._vf || 0) + 1) % 30 === 0) U.veille(now);
       if ((U._nf = (U._nf || 0) + 1) % 3 === 0) U.noms(now);
       const tx = U.zoom ? -G.view.x * U.scale : 0; if (tx !== U._tx) { U._tx = tx; cvEl.style.transform = tx ? 'translateX(' + tx + 'px)' : ''; }
       $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden); $('#helpbtn').hidden = $('#menubtn').hidden;
