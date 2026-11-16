@@ -52,6 +52,10 @@ pas, c'est toujours la v2 » : rien de ce qui suit ne touche la version légère
 | C5 | la progression : un besoin, un outil, puis sans aide ; une seule décision nouvelle par séquence (une partie neuve reçoit ses outils un à un : premiers pas, commandes du combat, pages de la halte) | **fait** (D163) ; l'ordre des outils et leurs douze lignes sont à valider |
 | C6 | les postures — le héros, le sage, le saint — selon le tempérament (le rôle) et l'avancée (niveaux 4 et 7) | **fait** (D164) ; noms, effets et attribution à valider, exigence 24 proposée |
 
+*Publié le 16 novembre : l'Artifact privé de la 2.x en est à sa version 4 (lots C1 à C6, commit `db7179e`) ; celui des
+lots N1 à N4 était la version 3 (commit `125f0a2`). Dans l'Artifact, « Enregistrer le fichier » (export de la partie) ne
+fait rien — la visionneuse refuse les téléchargements — ; « Copier le texte » fonctionne.*
+
 ## Contexte
 
 Le décideur prépare la suite du jeu et pose une règle nette :
