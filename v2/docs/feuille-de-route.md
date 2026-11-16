@@ -49,8 +49,8 @@ pas, c'est toujours la v2 » : rien de ce qui suit ne touche la version légère
 | C2 | le voile de chaque Compagnon rayonne d'une couleur qui lui est propre, la même partout | **fait** (D159) ; les vingt-sept couleurs sont à valider |
 | C3 | plus de combats : dans les labyrinthes, de petits égrégores rôdent sur les ponts et l'on frappe en temps réel avec l'arme que l'on porte ; dans la descente du râwî, un coup sonne ce qui rôde | **fait** (D160) ; la lecture retenue (pas d'idée noire dans les récits) est à valider |
 | C4 | les sagas menées de front (un point de reprise par récit), « Revenir en 2084 » à tout moment, trois rebondissements au retour, la Citadelle où Idris est né | **fait** (D161, D162) ; les textes de fiction sont à relire |
-| C5 | la progression : un besoin, un outil, puis sans aide ; une seule décision nouvelle par séquence | à faire |
-| C6 | les postures — le héros, le sage, le saint — selon le tempérament ou l'avancée | à faire |
+| C5 | la progression : un besoin, un outil, puis sans aide ; une seule décision nouvelle par séquence (une partie neuve reçoit ses outils un à un : premiers pas, commandes du combat, pages de la halte) | **fait** (D163) ; l'ordre des outils et leurs douze lignes sont à valider |
+| C6 | les postures — le héros, le sage, le saint — selon le tempérament (le rôle) et l'avancée (niveaux 4 et 7) | **fait** (D164) ; noms, effets et attribution à valider, exigence 24 proposée |
 
 ## Contexte
 

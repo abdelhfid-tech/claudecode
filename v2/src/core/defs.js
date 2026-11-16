@@ -41,6 +41,27 @@
     return best ? this.RAYONS[best] : null;
   };
 
+  // 2.x — la progression : ce que le joueur apprend à faire, un outil à la fois (lecons.js). `geste` : un simple geste, qui
+  // n'a pas besoin d'avoir resservi pour que l'outil suivant soit donné.
+  D.OUTILS = {
+    marcher: { nom: 'Se déplacer' }, parler: { nom: 'Parler', geste: true }, aide: { nom: 'Demander son chemin', geste: true },
+    frapper: { nom: 'Frapper la faille' }, vertus: { nom: 'Les vertus' }, garde: { nom: 'La garde et la Niyya' }, objets: { nom: 'La besace' },
+    halte: { nom: 'La halte', geste: true }, source: { nom: 'Retrouver une source' }, equipement: { nom: 'S’équiper' }, etoiles: { nom: 'S’orienter aux étoiles', geste: true },
+    frappe: { nom: 'Frapper ce qui rôde' }, postures: { nom: 'Prendre une posture' }
+  };
+
+  // 2.x — les postures : trois manières de se tenir devant l'épreuve. Des pourcentages, rien d'autre ; aucune n'est au-dessus
+  // d'une autre. Le tempérament vient du rôle ; les deux autres postures s'ouvrent aux niveaux de D.POSTURE_NIVEAUX.
+  // (Demandé par le décideur le 16 novembre ; noms, effets et attribution proposés par l'agent, à valider.)
+  D.POSTURE_IDS = ['heros', 'sage', 'saint'];
+  D.POSTURES = {
+    heros: { nom: 'Le héros', court: 'héros', atk: 0.10, niyya: 1, menace: 0.5 },   // il s'expose : plus de force, l'élan d'emblée, et les coups viennent à lui
+    sage:  { nom: 'Le sage', court: 'sage', mag: 0.10, faille: 1 },                 // il discerne : plus d'esprit, une faille de chaque égrégore connue d'emblée
+    saint: { nom: 'Le saint', court: 'saint', soin: 0.15, sakina: 20 }              // il s'efface : il soigne mieux et garde le calme
+  };
+  D.TEMPERAMENTS = { guerrier: 'heros', gardien: 'heros', stratege: 'sage', sage: 'sage', soigneur: 'saint' };
+  D.POSTURE_NIVEAUX = [1, 4, 7];
+
   // 2.x — frapper ce qui rôde dans un labyrinthe : le geste de « Frapper », fait sur les ponts, avec l'arme que porte celui
   // qui mène. Par type d'arme : portee et large (en points, devant soi), cadence (secondes entre deux coups), sonne (secondes
   // pendant lesquelles ce qui est frappé reste sonné), recul (cases), force (voiles ôtés). Rien d'autre que du matériel :

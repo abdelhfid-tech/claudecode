@@ -213,7 +213,7 @@
     const T = 16, G = I.gfx, id = f.group[0], def = (W.saga.enemies || {})[id] || {}, E = W.excursion;
     // repoussé de case en case dans le sens du coup, tant que le passage est libre ; puis sonné
     let tx = Math.floor(f.x / T), ty = Math.floor(f.y / T), k = 0; while (k < F.recul && passable(f, tx + fx, ty + fy)) { tx += fx; ty += fy; k++; }
-    f.pousse = k ? [tx * T + 8, ty * T + 8] : null; f.sonne = F.sonne; f.dx = fx; f.dy = fy; f.touche = W.t; R.touches = (R.touches || 0) + 1;
+    f.pousse = k ? [tx * T + 8, ty * T + 8] : null; f.sonne = F.sonne; f.dx = fx; f.dy = fy; f.touche = W.t; R.touches = (R.touches || 0) + 1; if (I.lecons) I.lecons.reemploi('frappe');
     for (let i = 0; i < 8; i++) G.spawn({ x: f.x - W.cam.x + (Math.random() - 0.5) * 10, y: f.y - W.cam.y - 14 + (Math.random() - 0.5) * 10, vx: (Math.random() - 0.5) * 90 + fx * 40, vy: (Math.random() - 0.5) * 90 + fy * 40, life: 0.45, size: 0.9, color: `hsl(${def.hue || 260},90%,72%)`, type: 'spark' });
     if (E) { // la descente du râwî : un coup sonne ; il n'entame une idée noire que lame forgée en main, et accompagné
       if (!(def.idee && R.peutFaireFace(id))) { if (!E.ditSonne) { E.ditSonne = true; S.toast(I.esc(P().sonne || ''), 5200); } return; }
@@ -272,7 +272,7 @@
     const p = W.player, surPont = m.g0(p.x, p.y) === 'npont';
     R._champT = (R._champT || 0) - dt; if (R._champT <= 0 || R._champ === undefined) { R._champ = surPont ? champDe(p) : null; R._champT = 0.25; }
     for (const f of L) { if (etourdi(f, dt)) continue; avance(f, dt, R._champ); const dist = Math.hypot(f.x - p.x, f.y - p.y);
-      if (dist < 96 && !R._ditRode) { R._ditRode = true; O().learn('frappe'); S.toast(I.esc(P().rode || ''), 7000); } // le besoin d'abord : on apprend à frapper quand quelque chose approche
+      if (dist < 96 && !R._ditRode && !I.save.data.codex.includes('coeur/frappe')) { const dire = () => { O().learn('frappe', true); S.toast(I.esc(P().rode || ''), 7000); }; if (I.lecons.proposer('frappe', dire)) R._ditRode = true; } // le besoin d'abord : on apprend à frapper quand quelque chose approche
       if (surPont && dist < 14) return R.contactMeute(f); }
     viser();
   }

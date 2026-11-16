@@ -177,9 +177,10 @@
         S.hideDialog();
         let opts = b.slice(), first = true; const sv = I.save.data;
         sv.isnad.total++; const spc = sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} }); spc.cTot = (spc.cTot || 0) + 1;
+        if (I.lecons && I.lecons.actif()) I.lecons.proposer('source', () => I.lecons.dit('source', 10000)); // 2.x : au premier acte à retrouver, on apprend où sont les sources
         while (true) {
           const i = await menuPick(a, opts); const o = opts[i];
-          if (o.ok) { if (first) { sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; S.toast('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.'); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); I.mal.note('c', a, 0); } if (o.r) await S.run(o.r); break; }
+          if (o.ok) { if (first) { if (I.lecons) I.lecons.reemploi('source'); sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; S.toast('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.'); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); I.mal.note('c', a, 0); } if (o.r) await S.run(o.r); break; }
           if (first) I.mal.note('c', a, 1); // un acte que les transmetteurs n'ont pas rapporté : l'idée s'enracine
           first = false; I.audio.sfx('glitch'); G.shake(260); G.flash('#7a5cff');
           S.toast('<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.');

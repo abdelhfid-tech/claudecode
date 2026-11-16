@@ -138,7 +138,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 .mi { display: flex; justify-content: space-between; align-items: baseline; gap: .6em; padding: .26em .55em; background: rgba(255, 255, 255, .04); border: 1px solid transparent; border-left: 2px solid transparent; text-align: left; border-radius: 2px; }
 .mi small { color: var(--dim); font-size: .78em; font-family: var(--f-mono); white-space: nowrap; }
 .mi.sel { background: rgba(233, 200, 119, .16); border-color: var(--line); border-left-color: var(--gold); color: #fff; }
-.mi.off { opacity: .4; } .mi.limit { color: #fff0b0; text-shadow: 0 0 8px var(--gold); }
+.mi.off { opacity: .4; } .mi.cache { display: none; } .mi.limit { color: #fff0b0; text-shadow: 0 0 8px var(--gold); }
 .mi .el { font-style: normal; display: inline-block; width: 1.1em; text-align: center; }
 .mdesc { font-size: .8em; color: var(--dim); font-style: italic; min-height: 2.5em; } .mhint { font-size: .8em; color: var(--dim); }
 .mback { align-self: flex-start; background: transparent; border: 1px solid rgba(255, 255, 255, .2); border-radius: 2em; padding: .1em .8em; font-size: .78em; color: var(--dim); }

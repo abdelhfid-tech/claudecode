@@ -44,9 +44,9 @@
     c.fillStyle = '#fff6dc'; c.beginPath(); c.arc(0, 0, 3, 0, 6.3); c.fill(); c.restore();
     const key = st ? D.STARS.indexOf(st) + st.name : '-';
     if (key !== lastKey) { lastKey = key; el.querySelector('.lab').innerHTML = st ? `<span lang="ar" dir="rtl">${st.ar}</span><b>${st.way ? st.way + ' d’' : ''}${st.name}</b><small>${st.dir}</small>` : '<small>al-Jady au nord, Suhayl au sud</small>';
-      if (st && !I.save.data._lore_etoiles) { I.save.data._lore_etoiles = 1; Tr.lore('etoiles'); } }
+      if (st && !I.save.data._lore_etoiles && (!I.lecons || I.lecons.proposer('etoiles'))) { I.save.data._lore_etoiles = 1; Tr.lore('etoiles'); } } // 2.x : dans une partie neuve, pas au premier écran — un outil à la fois (lecons.js)
   };
-  Tr.lore = function (id) { const cid = 'idris/' + id, sv = I.save.data; if (sv.codex.includes(cid) || !I.ui.codexEntry(cid)) return; sv.codex.push(cid); S.toast(`Recueil : <b>${I.esc(I.ui.codexEntry(cid).title)}</b>`); };
+  Tr.lore = function (id) { const cid = 'idris/' + id, sv = I.save.data; if (sv.codex.includes(cid) || !I.ui.codexEntry(cid)) return; sv.codex.push(cid); if (!I.lecons || I.lecons.annonce()) S.toast(`Recueil : <b>${I.esc(I.ui.codexEntry(cid).title)}</b>`); };
 
   /* ================= commerce ================= */
   Tr.dirhams = function (d) { const sv = I.save.data; if (sv.dirhams === undefined) sv.dirhams = 20; if (d) sv.dirhams = Math.max(0, sv.dirhams + d); return sv.dirhams; };

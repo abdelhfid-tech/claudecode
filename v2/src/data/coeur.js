@@ -60,6 +60,32 @@ ISNAD.registerSaga({
     colere:      { name: 'La Longanimité',  ar: 'al-Hilm',    couleur: '#ff9a7a', texte: 'Forgée par le dhikr, qui rend le cœur à son calme.' }
   },
 
+  /* ----- 2.x : les leçons — une ligne par outil, dite quand le besoin se présente (textes proposés par l'agent, à valider) ----- */
+  lecons: {
+    marcher: { clavier: '*Flèches* ou *ZQSD* — ou un clic là où tu veux aller : marcher.', doigt: 'Touche un endroit pour t’y rendre.' },
+    parler: { clavier: 'Près de quelqu’un, *Entrée* : lui parler.', doigt: 'Touche un personnage pour lui parler.' },
+    aide: { clavier: 'Tu cherches ton chemin ? *H*, ou le bouton *?* : l’objectif expliqué, et le chemin si tu le demandes.', doigt: 'Tu cherches ton chemin ? Le bouton *?* : l’objectif expliqué, et le chemin si tu le demandes.' },
+    halte: { clavier: '*Échap*, ou le bouton *☰* : la halte. Le groupe, la besace, ce que tu as appris.', doigt: 'Le bouton *☰* : la halte. Le groupe, la besace, ce que tu as appris.' },
+    equipement: 'La réserve tient de quoi mieux équiper ce groupe : *Halte*, puis *Équipement*.',
+    source: 'Un seul de ces actes est celui que les transmetteurs ont rapporté. Ce que tu as appris est au *Recueil* : la halte le garde.',
+    vertus: 'Nouveau — *Vertus*. Chacune coûte du Souffle ; celle qui est la faille d’un égrégore lui ôte un voile.',
+    garde: 'Nouveau — *Garde*, et la *Niyya*. Se garder rend un point de Niyya ; ◂ ▸ en dépensent jusqu’à trois pour frapper plus fort.',
+    objets: 'Nouveau — *Objets*. La besace sert aussi en combat.'
+  },
+
+  /* ----- 2.x : les postures — trois manières de se tenir devant l'épreuve (textes proposés par l'agent, à valider) ----- */
+  postures: {
+    titre: 'Les postures',
+    texte: 'Devant l’épreuve, on peut se tenir de trois manières. Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent en chemin. On en prend une ici, ou en préparant une bataille.',
+    noms: {
+      heros: { nom: 'Le héros', devise: 'Il s’expose : il va au-devant, et prend sur lui.' },
+      sage:  { nom: 'Le sage', devise: 'Il discerne : il regarde avant d’agir.' },
+      saint: { nom: 'Le saint', devise: 'Il s’efface : il porte les autres.' }
+    },
+    note: 'Aucune n’est au-dessus d’une autre, et le jeu ne dit de personne qu’il est l’un des trois : on prend une posture, on ne la possède pas. Image du jeu.',
+    ouverte: 'Une autre posture s’ouvre à %s. *Halte*, puis *Postures*.'
+  },
+
   /* ----- les compagnons de lumière : figures du ciel (fiction) ----- */
   animaux: {
     renard:  { name: 'Le Renard des sables', ar: 'ath-Tha’lab', couleur: '#f2c27a', don: 'Flair', effet: 'Au début du combat, il flaire une faille de chaque égrégore.',
@@ -327,6 +353,7 @@ ISNAD.registerSaga({
     { id: 'bataille', cat: 'Noosphère', title: 'La bataille déclarée', text: 'Contre une idole, on ne se bat plus seul, et l’on ne se bat pas sans le dire. La bataille est déclarée : chacun sait ce qui se dresse, et qui tient les rangs. En face, il n’y a jamais d’hommes : des nuées, que l’idole envoie. Nos rangs ne tombent pas : éprouvés, ils se replient et se reforment. C’est une image du jeu. Il ne dit pas combien d’hommes il y avait tel jour, ni qui fit telle manœuvre : la réserve mobile, l’enveloppement et le repli feint sont des manœuvres d’école.' },
     { id: 'valeurs', cat: 'Cœur', title: 'Les sept Valeurs', text: 'Du côté du bien, on ne dit ni djinn, ni égrégore, ni idole : on dit des Valeurs. Il y en a sept, une en face de chaque mal du cœur : le Contentement, l’Humilité, la Sincérité, la Largesse, l’Ardeur, la Bienveillance, la Longanimité. L’œuvre forge la lame ; la lame tranche le mal ; ce qui reste alors, c’est la Valeur. Le jeu la marque d’un badge. C’est une image : une valeur ne se possède pas comme un objet, elle se garde en la pratiquant.' },
     { id: 'attributs', cat: 'Cœur', title: 'Les attributs divins', text: 'Chaque Valeur s’appuie sur un attribut d’Allah, que le jeu nomme d’après le Coran, avec son verset et sa référence : ar-Razzâq, al-Kabîr, al-Khabîr, al-Wahhâb, al-Hayy al-Qayyûm, al-Latîf, al-Halîm. On ne possède pas un attribut divin : on le reconnaît. Le jeu ne le dessine pas, ne lui prête aucune figure et n’en fait ni une arme ni un pouvoir ; le badge marque seulement que le rappel a été reçu. Il n’y a pas d’organigramme du bien : rien ne se tient en face du Créateur.', src: 'Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.' },
+    { id: 'postures', cat: 'Noosphère', title: 'Les trois postures', text: 'Devant l’épreuve, on peut se tenir de trois manières. Le héros s’expose : il va au-devant, et prend sur lui. Le sage discerne : il regarde avant d’agir. Le saint s’efface : il porte les autres. Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent en chemin, et le même homme les prend tour à tour. Aucune n’est au-dessus d’une autre, et le jeu ne dit de personne qu’il est l’un des trois : on prend une posture, on ne la possède pas. Image du jeu.' },
     { id: 'frappe', cat: 'Noosphère', title: 'Frapper ce qui rôde', text: 'Dans un labyrinthe de la noosphère, de petits égrégores vont et viennent sur les ponts, jamais dans les lieux que le récit nomme. On les frappe comme en combat, avec l’arme que porte celui qui mène : Entrée, ou un toucher sur ce qui rôde. Chaque coup ôte un voile et sonne un instant ; sans voile, l’égrégore se dissipe. S’il vous rejoint avant, c’est un combat ordinaire. L’allonge, le poids et la vitesse viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, les coups ne font que sonner : seul, on ne vainc pas ce qui pèse sur le cœur. Image du jeu.' },
     { id: 'noos_interieure', cat: 'Noosphère', title: 'Descendre en soi', text: 'Au sortir de la prière, dans le dhikr, en songe : à ces moments-là, la noosphère est toute proche, et l’on peut y descendre pour faire face à ce qui pèse. Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. C’est le combat du râwî, seul. Ce n’est jamais celui d’un Compagnon : le jeu ne prête à aucun d’eux un mal du cœur. Avec la lame que l’œuvre a forgée, le mal est tranché ; sans elle, il n’est que repoussé. Image du jeu, dite comme telle.' },
     { id: 'secours', cat: 'Cœur', title: 'Le secours', text: 'À Badr, les croyants étaient en petit nombre. Le Coran rapporte qu’ils implorèrent le secours, et ce qui leur fut répondu : « Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres. » Puis : « Allah ne fit cela que pour (vous) apporter une bonne nouvelle et pour qu’avec cela vos cœurs se tranquillisent. Et il n’y a de victoire que de la part d’Allah. » Dans ISNAD, quand une bataille déclarée est presque perdue, le secours relève le groupe, une fois, si la prière a été tenue dans le chapitre. C’est une image du jeu. Il ne montre pas les anges, ne les nomme pas, ne les compte pas, et il ne dit pas qu’ils sont venus tel jour de l’histoire des Compagnons. On ne commande pas le secours : on tient sa prière, et l’on combat.', src: 'Traduction du sens, Coran 8:9-10. Règle de jeu.' },

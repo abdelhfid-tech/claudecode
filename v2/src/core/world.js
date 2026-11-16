@@ -176,9 +176,13 @@
       await S.fade('in', 500);
       if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); await I.oeuvres.openChapter(); }
       if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) { I.build.yields(); await I.trade.resolve(); } }
-      if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Touche un endroit pour t’y rendre, un personnage pour lui parler · <b>?</b> : que faire' : '<b>Flèches</b>, <b>ZQSD</b> ou clic : marcher · <b>Entrée</b> : parler · <b>H</b> ou <b>?</b> : que faire · <b>Échap</b> : halte', 10000);
+      // 2.x — la progression (lecons.js) : dans une partie neuve, un seul outil à la fois. Au début du prologue, se déplacer, et rien d'autre.
+      const appr = I.lecons && I.lecons.actif();
+      if (appr) { if (saga.frame && !saga.veillees && ci === 0) I.lecons.depart(); }
+      else if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Touche un endroit pour t’y rendre, un personnage pour lui parler · <b>?</b> : que faire' : '<b>Flèches</b>, <b>ZQSD</b> ou clic : marcher · <b>Entrée</b> : parler · <b>H</b> ou <b>?</b> : que faire · <b>Échap</b> : halte', 10000);
       // l'équipement : le joueur de test s'habille au mieux ; le joueur est prévenu quand la réserve tient mieux que ce qu'il porte
-      if (I.debug.auto) I.gear.bestAll(); else if (!cp && I.gear.better()) S.toast('La réserve tient de quoi mieux équiper ce groupe : <b>Halte</b>, puis <b>Équipement</b>.', 7000);
+      if (I.debug.auto) I.gear.bestAll(); else if (!cp) { if (appr) I.lecons.chapitre(); else if (I.gear.better()) S.toast('La réserve tient de quoi mieux équiper ce groupe : <b>Halte</b>, puis <b>Équipement</b>.', 7000); }
+      if (!cp && I.postures) I.postures.veille(); // une posture s'ouvre à quelqu'un du groupe : on le dit, une fois
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
   };
@@ -222,7 +226,7 @@
       W.hud();
       if (o.foe) { const f = W.foes.find(f => f.id === o.foe); if (f && f.done) { await W.complete(true); continue; } }
       if (o.build && I.build.objectiveDone(o.build)) { await W.complete(true); continue; }
-      if (!o.auto) return;
+      if (!o.auto) { if (I.lecons) I.lecons.objectif(o); return; }
       await W.complete(true);
     }
   };
@@ -232,6 +236,7 @@
     try {
       if (!o.auto) { I.audio.sfx('light'); }
       if (o.then) await S.run(o.then);
+      if (I.lecons) I.lecons.atteint(o, W._mene === W.objIndex); // une séquence s'achève (lecons.js)
       W.objIndex++; W.hud(); W.checkpoint();
     } finally { S.depth--; S.hideDialog(); }
     if (!noAdvance) await W.advance();
@@ -318,7 +323,8 @@
     const can = !S.busy && !W.lock && !I.ui.menuOpen;
     if (can && I.rodeurs && I.rodeurs.attente && !W.excursion && !W._autoBusy) { I.rodeurs.depart(); return; } // la descente demandée commence dès que le joueur a la main
     if (can && I.debug.auto && !W._autoBusy && !I.debug.walk) { if (!W.excursion) W.autoStep(); W.updateCam(); return; }
-    if (I.rodeurs) { if (can) I.rodeurs.tic(dt); else I.rodeurs.cache(); } // le chrono ne court que lorsque le joueur a la main
+    if (I.rodeurs) { if (can) I.rodeurs.tic(dt); else I.rodeurs.cache(); }
+    if (can && I.lecons && !I.debug.auto) I.lecons.temps(dt); // le chrono ne court que lorsque le joueur a la main
     if (can && (W.solidAt(p.x - 4, p.y - 5) || W.solidAt(p.x + 4, p.y) || W.solidAt(p.x - 4, p.y) || W.solidAt(p.x + 4, p.y - 5))) { const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; W.resetTrail(); } }
     if (can) {
       let dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0);
@@ -391,6 +397,7 @@
   // conduit le héros jusqu'à l'objectif : l'aide « M'y conduire », et le test « au doigt »
   W.lead = function () {
     const tg = W.target(), p = W.player; if (!tg) return false;
+    W._mene = W.objIndex; // conduit vers cet objectif : y arriver ne compte pas pour « sans aide » (lecons.js)
     const face = e => { const dx = e.x - p.x, dy = e.y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
     if (tg.kind === 'talk') W.goTo(tg.gx, tg.gy, { ent: tg.ent, stop: 21, then() { face(tg.ent); W.interact(tg.ent); } });
     else if (tg.kind === 'foe') W.goTo(tg.gx, tg.gy, { ent: tg.ent, stop: 3 });

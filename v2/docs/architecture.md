@@ -138,6 +138,50 @@ Champs nouveaux de la partie, tous facultatifs : `cps`, `retours`, `rebonds` —
 vérifie, `assainir` écarte un récit rangé dont le contenu manque. `node v2/tools/retours.js` joue le tout par les vrais
 boutons : « RETOURS CONFORMES ».
 
+### La progression : un outil à la fois (`src/core/lecons.js`)
+
+Règle du décideur : *un besoin, un outil, puis sans aide ; une décision nouvelle par séquence.* Un **outil**
+(`D.OUTILS`) est ce que le joueur apprend à faire. Une **séquence** est un objectif du récit ou un combat
+(`I.lecons.sequence()`). Quand le **besoin** d'un outil se présente, le jeu appelle `I.lecons.proposer(id, dire)` :
+l'outil n'est donné — `dire` affiche sa leçon, une ligne de `coeur.js` (`lecons`) — que si aucun autre ne l'a été dans
+cette séquence et si le dernier reçu a **resservi** sans aide (`I.lecons.reemploi(id)`), ou si c'est un simple geste
+(`geste`), ou si trois séquences ont passé (`PATIENCE`) : le jeu n'attend jamais indéfiniment. Sinon rien n'est dit, et
+le besoin se représentera. La partie garde `lecons` : `{ seq, recus: { outil: séquence }, re: { outil: fois }, dernier,
+donne }` ; `I.lecons.journal` (non gardé) sert au contrôle.
+
+| Outil | Le besoin | Le réemploi |
+|---|---|---|
+| `marcher` | le premier objectif du prologue | atteindre un lieu sans y avoir été conduit (`W._mene`) |
+| `parler` (geste) | le premier objectif « parler à » | parler de nouveau |
+| `aide` (geste) | vingt-cinq secondes sans avancer | rouvrir « ? » |
+| `frapper` | le premier combat : Frapper, Éclairer | les choisir de nouveau, à un autre tour |
+| `vertus`, `garde`, `objets` | les combats suivants, un par combat | les choisir de nouveau |
+| `halte` (geste) | l'ouverture du premier récit | ouvrir la halte |
+| `equipement` | la réserve tient mieux que ce que l'on porte | ouvrir la page |
+| `source` | le premier acte à retrouver (`choice`) | retrouver le suivant du premier coup, ou ouvrir le Recueil |
+| `frappe` | quelque chose rôde à six cases | frapper de nouveau |
+| `postures` | une deuxième posture s'ouvre à quelqu'un | en changer |
+
+**Ce qui ne se montre pas avant d'être reçu.** En combat, `listMenu` saute les commandes marquées `cache`
+(`I.lecons.voit`) ; devant une idole, `I.lecons.combat(true)` donne tout. À la halte, `I.lecons.page(nom)` : une page
+paraît quand son système a été rencontré (son feuillet est au Recueil, ou son outil est reçu). **Le mode n'existe que si
+la partie porte `lecons`**, ce que fait « Nouvelle partie » (`I.lecons.ouvrir()`) : une partie d'avant, une partie
+importée d'avant, ou un état posé par un outil de contrôle, a tout d'emblée — aucun autre contrôle n'en dépend.
+**Ajouter un système**, c'est lui donner un outil dans `D.OUTILS`, appeler `proposer` là où son besoin naît, `reemploi`
+là où il sert, et écrire sa ligne dans `coeur.js`. `node v2/tools/progression.js` : « PROGRESSION CONFORME ».
+
+### Les postures (`src/core/postures.js`)
+
+`D.POSTURES` (`heros`, `sage`, `saint`) déclare les effets, en pourcentages ; `D.TEMPERAMENTS` donne à chaque rôle sa
+première posture ; `D.POSTURE_NIVEAUX` (1, 4, 7) ouvre les deux autres. `I.postures.de(h)` rend celle qu'un héros a
+prise (par défaut celle de son tempérament), `choisir(h, k)` la change, `ouvertes(h)` liste celles qui lui sont
+ouvertes. La partie garde `postures` (`saga:héros` → posture). `battle.js` les applique en posant le combattant
+(`mkHero` : force, esprit, Niyya et Sakîna de départ, `soin`, `menace`) ; un sage dans le groupe fait connaître d'emblée
+une faille de chaque égrégore ; un héros est plus souvent visé (`targetsFor`). La page « Postures » de la halte — et de
+la préparation d'une bataille — ne paraît que lorsqu'un choix s'offre à quelqu'un du groupe (`offertes()`), et la leçon
+se dit ce jour-là (`veille()`). Exigence 24 : on prend une posture, on ne la possède pas ; aucune n'est au-dessus d'une
+autre.
+
 ## Le personnage du joueur : `src/core/perso.js`
 
 Le joueur donne un nom et une tenue au **râwî** — le héros de l'histoire-cadre, personnage de fiction. Les Compagnons

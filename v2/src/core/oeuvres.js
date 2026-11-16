@@ -25,10 +25,10 @@
   const bas = n => n.replace(/^L(’|a |e )/, (m, x) => 'l' + x); // « L’Avarice » → « l’Avarice » en cours de phrase
   const e_ = v => v === 'orgueil' ? '' : 'e'; // accord : l'orgueil est le seul masculin des sept
   // le Recueil du cœur s'ouvre à mesure : une entrée la première fois que l'on rencontre la chose
-  O.learn = function (id) {
+  O.learn = function (id, muet) { // muet : le feuillet entre au Recueil sans son annonce (la leçon qui l'accompagne la remplace)
     const cid = 'coeur/' + id, sv = I.save.data; if (sv.codex.includes(cid)) return;
     const e = (C0().codex || []).find(c => c.id === id); if (!e) return;
-    sv.codex.push(cid); S.toast('Recueil : <b>' + I.esc(e.title) + '</b>');
+    sv.codex.push(cid); if (!muet && (!I.lecons || I.lecons.annonce())) S.toast('Recueil : <b>' + I.esc(e.title) + '</b>');
   };
   const hasPurse = () => !!(I.trade && W.saga && (!W.saga.frame || W.saga.veillees));
   // les lames et les maux tranchés sont visibles des scripts : ['if', 'lame_avarice', …], ['if', 'tranche_avarice', …]

@@ -151,6 +151,16 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     await I.ui.showChain(); I.debug.auto = true; T.toucher(T.maillon("'Umar")); const okk = await T.jusqua(1); const a = sv.cps && sv.cps.abubakr; return { okk, garde, range: a ? JSON.stringify([a.saga, a.ci, a.obj]) : null, cp: sv.cp && sv.cp.saga }; });
   if (!ancien.okk || ancien.range !== ancien.garde || ancien.cp !== 'umar') ko('ÉCART un point de reprise resté courant est écrasé par un autre récit : ' + JSON.stringify(ancien)); else ok('une partie d’avant (un point de reprise resté courant) : ouvrir un autre récit le range au lieu de l’écraser');
 
+  // ---------- 6. une veillée quittée en chemin attend elle aussi : la Chaîne la reprend ----------
+  { const v0 = await ev(async () => { const I = window.ISNAD, W = I.world, T = window.__t; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); W.roster = {}; W.saga = null; I.debug.auto = true; W.startChapter('caid', 0); const okk = await T.jusqua(1); return Object.assign({ okk }, T.etat()); });
+    const rv = await revenir();
+    const cv = await ev(() => ({ bouton: window.__t.chaine().bouton, cps: Object.keys(window.ISNAD.save.data.cps || {}).sort() }));
+    if (!v0.okk || rv === null || !cv.cps.includes('caid:0') || !/^▶ Reprendre : la veillée/.test(cv.bouton)) ko('ÉCART une veillée quittée en chemin n’est pas rangée ou pas offerte : ' + JSON.stringify({ v0: [v0.okk, v0.saga, v0.obj], rv, cv }));
+    else { await ev(() => window.__t.toucher('#chain header .cta')); await ev(() => window.__t.attendre(() => window.__t.calme(), 30000)); await page.waitForTimeout(300);
+      const v1 = await ev(() => window.__t.etat());
+      if (v1.saga !== 'caid' || v1.ci !== 0 || v1.obj !== v0.obj || v1.carte !== v0.carte || Math.hypot(v1.x - v0.x, v1.y - v0.y) > 3) ko(`ÉCART la veillée ne reprend pas là où on l’a laissée :\n   laissée ${JSON.stringify(v0)}\n   reprise ${JSON.stringify(v1)}`);
+      else ok(`une veillée quittée en chemin attend elle aussi (« ${cv.bouton} ») et reprend à son objectif ${v1.obj}, à sa place`); } }
+
   if (errors.length) { anomalies++; console.log('--- ERREURS ---'); [...new Set(errors)].slice(0, 10).forEach(e => console.log(e)); }
   console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ RETOURS CONFORMES — récits menés de front, retours en 2084, Citadelle (captures dans ${path.relative(path.join(__dirname, '..'), out)})`);
   await browser.close();

@@ -131,8 +131,8 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
   /* ---------- C. frapper ce qui rôde ---------- */
   await p.evaluate(() => { const I = window.ISNAD; I.debug.sansMeutes = false; I.debug.profondeur = 3; });
   const pres = (id, cases, gele) => p.evaluate(([id, cases, gele]) => { const I = window.ISNAD, W = I.world, R = I.rodeurs, f = W.foes.find(q => q.id === id), T = 16, m = W.map; if (!f) return null;
-    // sur le pont du rôdeur, à « cases » cases de lui, tourné vers lui
-    let ou = null; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(q => { if (ou) return; let bon = true; for (let k = 1; k <= cases; k++) { const x = Math.floor(f.x / T) + q[0] * k, y = Math.floor(f.y / T) + q[1] * k; if (x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x] || m.g0(x * T + 8, y * T + 8) !== 'npont') bon = false; } if (bon) ou = [Math.floor(f.x / T) + q[0] * cases, Math.floor(f.y / T) + q[1] * cases]; });
+    // près du rôdeur, à « cases » cases de lui en ligne droite, tourné vers lui
+    let ou = null; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(q => { if (ou) return; let bon = true; for (let k = 1; k <= cases; k++) { const x = Math.floor(f.x / T) + q[0] * k, y = Math.floor(f.y / T) + q[1] * k; if (x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x] || !['npont', 'nfloor'].includes(m.g0(x * T + 8, y * T + 8))) bon = false; } if (bon) ou = [Math.floor(f.x / T) + q[0] * cases, Math.floor(f.y / T) + q[1] * cases]; }); // (dans la descente, ce qui rôde peut se trouver dans une salle : on s'y place aussi)
     if (!ou) return null; if (gele) { f.v = 0; f.sonne = 0; f.pousse = null; f.x = Math.floor(f.x / T) * T + 8; f.y = Math.floor(f.y / T) * T + 8; f.cx = null; }
     W.player.x = ou[0] * T + 8; W.player.y = ou[1] * T + 8; W.dest = null; const dx = f.x - W.player.x, dy = f.y - W.player.y; W.player.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); W.updateCam(true); R._pret = 0;
     return { d: Math.round(Math.hypot(dx, dy)), voiles: f.voiles, coups: R.coups | 0, touches: R.touches | 0 }; }, [id, cases, gele]);
@@ -187,11 +187,18 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
     si(r1.n === 0 && r1.off && r2.n === c.n && !r2.off, `après une remontée au chrono, plus rien ne rôde ; une nouvelle descente du récit en ramène ${r2.n}`, `remontée : ${JSON.stringify(r1)} ; nouvelle descente : ${JSON.stringify(r2)}`);
     await p.evaluate(async () => { const I = window.ISNAD, W = I.world; I.debug.sansMeutes = true; W.checkpoint(); const cp = JSON.parse(JSON.stringify(I.save.data.cp)); cp.map = 'medine'; cp.opts = { time: 'day' }; cp.pos = [488, 701]; I.save.data.cp = cp; await W.startChapter(cp.saga, cp.ci, cp); }); await calme();
   }
+  // dans la descente : pour éprouver la frappe sur un rôdeur, on fige les autres et on le pose sur un pont à l'écart du seuil
+  // et de l'issue (sans quoi l'épreuve pourrait finir la descente par l'issue, ou par un autre rôdeur)
+  const isoler = id => p.evaluate(id => { const I = window.ISNAD, W = I.world, m = W.map, T = 16, f = W.foes.find(q => q.id === id), lieux = ['seuil', 'issue', 'abri', 'refuge'].map(k => W.spotPx(k)).filter(Boolean);
+    W.foes.forEach(q => { if (q.rodeur) { q.v = 0; q.cx = null; } });
+    const libre = (m.env.dedale.loin || []).find(c => { const x = c[0] * T + 8, y = c[1] * T + 8; if (m.g0(x, y) !== 'npont' || m.g0(x + T, y) !== 'npont' && m.g0(x - T, y) !== 'npont' && m.g0(x, y + T) !== 'npont' && m.g0(x, y - T) !== 'npont') return false;
+      return lieux.every(s => Math.hypot(s[0] - x, s[1] - y) > 6 * T) && W.foes.every(q => q === f || !q.rodeur || q.done || Math.hypot(q.x - x, q.y - y) > 5 * T); });
+    if (!libre) return false; f.x = libre[0] * T + 8; f.y = libre[1] * T + 8; f.sonne = 0; f.pousse = null; return true; }, id);
   { // la descente du râwî, seul : un coup sonne, il ne vainc pas
     await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.repos(); window.__bete = I.save.data.animal; I.save.data.animal = null; });
     await descendre('sommeil');
     const s0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.rodeur && q.placed && !q.done); window.__r = f.id; return { accompagne: W.excursion.accompagne, id: f.group[0], peut: I.rodeurs.peutFaireFace(f.group[0]) }; });
-    const rid = await p.evaluate(() => window.__r); await pres(rid, 1, true); await p.waitForTimeout(200); await p.keyboard.press('Enter'); await p.waitForTimeout(200);
+    const rid = await p.evaluate(() => window.__r); await isoler(rid); await pres(rid, 1, true); await p.waitForTimeout(200); await p.keyboard.press('Enter'); await p.waitForTimeout(200);
     const s1 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.id === window.__r); return { sonne: f.sonne > 0, tenue: f.tenue, fini: f.done, coups: I.rodeurs.coups | 0 }; });
     await p.screenshot({ path: path.join(out, 'C-3-descente-sonne.png') });
     const s2 = await p.evaluate(() => new Promise(res => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.id === window.__r); f.sonne = 3; f.pousse = null; W.player.x = f.x; W.player.y = f.y + 2; setTimeout(() => res({ encore: !!W.excursion && !W.excursion.fin, combat: I.battle.active }), 700); }));
@@ -203,15 +210,15 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
     await descendre('sommeil');
     const n0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.rodeur && q.placed && !q.done && I.D.NOIRS.includes(q.group[0])); if (!f) return null; window.__r = f.id; return { id: f.group[0], peut: I.rodeurs.peutFaireFace(f.group[0]), accompagne: W.excursion.accompagne }; });
     if (!n0) ko('aucune idée noire ne rôde dans cette descente');
-    else { const nid = await p.evaluate(() => window.__r); let k = 0;
+    else { const nid = await p.evaluate(() => window.__r); let k = 0; await isoler(nid);
       for (; k < 12 && await p.evaluate(() => !window.ISNAD.world.foes.find(q => q.id === window.__r).done); k++) { await pres(nid, 1, true); await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.frappe(I.world.foes.find(q => q.id === window.__r)); }); await p.waitForTimeout(100); }
       const n1b = await p.evaluate(id => { const I = window.ISNAD, W = I.world, E = W.excursion, f = W.foes.find(q => q.id === window.__r); return { fini: f.done, note: !!(E && E.flags['_noir_' + id]), encore: !!E && !E.fin, combat: I.battle.active }; }, n0.id);
       await p.waitForTimeout(300); await p.screenshot({ path: path.join(out, 'C-4-descente-dissipee.png') });
       si(n0.peut && n0.accompagne && n1b.fini && n1b.note && n1b.encore && !n1b.combat, `lame forgée et accompagné : ${k} coups entament une idée noire (${n0.id}) jusqu'à la dissiper, sans combat ; la descente continue`, `l'idée noire frappée : ${JSON.stringify(n0)} ${JSON.stringify(n1b)} en ${k} coups`);
       // un mal du cœur, lui, ne s'entame pas : il faut lui faire face
       const m0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.rodeur && q.placed && !q.done && !I.D.NOIRS.includes(q.group[0])); if (!f) return null; window.__r = f.id; return f.group[0]; });
-      if (m0) { const mid = await p.evaluate(() => window.__r); for (let i = 0; i < 6; i++) { await pres(mid, 1, true); await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.frappe(I.world.foes.find(q => q.id === window.__r)); }); await p.waitForTimeout(80); }
-        const m1b = await p.evaluate(() => { const f = window.ISNAD.world.foes.find(q => q.id === window.__r); return { fini: f.done, tenue: f.tenue, sonne: f.sonne > 0 }; });
+      if (m0) { const mid = await p.evaluate(() => window.__r), trace = []; await isoler(mid); for (let i = 0; i < 6; i++) { const pr = await pres(mid, 1, true); const fr = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.id === window.__r), r = I.rodeurs.frappe(f); return [r, Math.round(Math.hypot(f.x - W.player.x, f.y - W.player.y)), +(f.sonne || 0).toFixed(2), I.script.busy, W.lock, !!(W.excursion && (W.excursion.fin || W.excursion.combat)), W.map.g0(f.x, f.y)]; }); trace.push([pr ? pr.d : null].concat(fr)); await p.waitForTimeout(80); }
+        const m1b = await p.evaluate(() => { const f = window.ISNAD.world.foes.find(q => q.id === window.__r); return { fini: f.done, tenue: f.tenue, sonne: f.sonne > 0 }; }); m1b.trace = trace;
         si(!m1b.fini && m1b.tenue === undefined && m1b.sonne, `un mal du cœur (${m0}) ne s'entame pas à coups répétés : sonné, il reste debout — il faut lui faire face`, `le mal du cœur frappé : ${JSON.stringify(m1b)}`); }
       await aller('issue'); await p.waitForTimeout(500); await remonter();
       const fin = await p.evaluate(id => ({ drapeau: !!window.ISNAD.script.flags['_noir_' + id], saga: window.ISNAD.world.saga.id }), n0.id);

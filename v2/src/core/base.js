@@ -170,7 +170,8 @@
     // 2.x : les points de reprise des récits quittés en chemin, les retours en 2084 et ce qui s'y est déjà passé (champs absents des parties d'avant)
     if (objet('cps')) Object.keys(d.cps).forEach(k => { if (!reprise(d.cps[k])) E.push('cps.' + k); });
     if (d.retours !== undefined && !naturel(d.retours)) E.push('retours');
-    objet('rebonds');
+    objet('rebonds'); objet('lecons'); // 2.x : `lecons` — les outils reçus (lecons.js), dans une partie commencée par « Nouvelle partie »
+    if (objet('postures')) Object.keys(d.postures).forEach(k => { if (!D.POSTURES || !D.POSTURES[d.postures[k]]) E.push('postures.' + k); }); // 2.x : la posture prise par chacun (absente : celle de son tempérament)
     return E;
   }
   // Une partie peut citer un contenu qui n'est pas dans ce jeu : un paquet retiré, ou pas encore reçu. Rien n'est effacé : ce

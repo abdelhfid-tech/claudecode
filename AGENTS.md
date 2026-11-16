@@ -25,7 +25,7 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   « 1.32 INTACTE » **avant chaque enregistrement**.
 - La suite de ce document décrit la 1.32. Elle vaut pour la 2.0 en lisant `v2/` devant chaque chemin : mêmes exigences de
   respect, même règle de test, avec les outils de `v2/tools/`. Ce qui est propre à la 2.0 est écrit dans `v2/docs/`.
-- La 2.0 a neuf contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
+- La 2.0 a dix contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
   `node v2/tools/cartes.js` (les lieux du livre I sortent comme dans la 1.32 : « CARTES IDENTIQUES »),
   `node v2/tools/ecrans.js` (l'écran de la Chaîne du livre I est celui de la 1.32 : « CHAÎNE IDENTIQUE »),
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
@@ -37,7 +37,9 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   (dans le jeu : le labyrinthe d'un chapitre, son chrono, la remontée, la reprise ; la descente du râwî et ses quatre
   issues ; ce qui rôde et la frappe : « DESCENTE CONFORME ») et `node v2/tools/retours.js` (deux récits quittés par la
   halte puis repris à leur place, la partie exportée et réimportée avec eux, les retours en 2084 joués, la Citadelle
-  visitée : « RETOURS CONFORMES ») : aucun « REFUS », « BLOQUÉ »,
+  visitée : « RETOURS CONFORMES ») et `node v2/tools/progression.js` (une partie neuve par les vrais boutons : une seule
+  leçon par séquence, les commandes du combat reçues une à une, les pages de la halte ; une partie d'avant garde tout ;
+  les trois postures et leurs effets : « PROGRESSION CONFORME ») : aucun « REFUS », « BLOQUÉ »,
   « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages » ;
   `JEU=../index.html node v2/tools/silhouettes.js` passe le même contrôle sur la 1.32. Les textes de la 2.0
@@ -56,6 +58,14 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
 - La noosphère de la 2.x est un labyrinthe (exigences 22 et 23) : `v2/src/core/dedale.js` le tire, `v2/src/core/rodeurs.js`
   y pose la graine, le chrono, ce qui rôde, la frappe et la descente du râwî ; `v2/docs/architecture.md`, « Les
   labyrinthes de la noosphère ». Un changement de l'un ou de l'autre repasse `dedales.js`, puis toute la batterie.
+- Dans la 2.x, une partie neuve apprend **un outil à la fois** (règle du décideur, 16 novembre : « le joueur découvre
+  un besoin, apprend un outil, puis le réutilise sans aide avant d'en recevoir un autre ; une nouvelle décision
+  importante par séquence ») : `v2/src/core/lecons.js`, `D.OUTILS`, `v2/docs/architecture.md`, « La progression ». Une
+  leçon ne se dit que par `I.lecons.proposer(id, dire)`, quand le besoin se présente ; une commande ou une page que
+  l'outil commande ne se montre qu'une fois l'outil reçu. Ajouter un système au jeu, c'est lui donner son outil, son
+  besoin et son réemploi — jamais un message de plus au début d'un chapitre. Contrôle : `node v2/tools/progression.js`
+  (« PROGRESSION CONFORME »).
+- Dans la 2.x, les postures (exigence 24) : `v2/src/core/postures.js`, `D.POSTURES`, `D.TEMPERAMENTS`.
 - Dans la 2.x, les récits se mènent de front (`v2/docs/architecture.md`, « Mener plusieurs récits ») : la halte offre
   « Revenir en 2084 » à tout moment, le récit quitté est rangé là où on le laisse (`cps`, dans la partie) et se reprend
   là. Au retour, un chapitre de l'histoire-cadre marqué `retour: n` peut se jouer, une fois ; un chapitre marqué
@@ -125,6 +135,7 @@ node v2/tools/silhouettes.js        # 2.0 : les personnages — petits sprites i
 node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] : une planche)
 node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
+node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois postures
 node tools/promo.js pdf             # le livret en PDF (promo/livret.pdf) : A5 paysage, deux colonnes, pages équilibrées ; demande poppler (pdfinfo, pdftoppm)
 ```
 
@@ -297,6 +308,17 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     pas : il ne court que lorsque le joueur a la main — ni pendant un combat, ni pendant un dialogue, ni dans un menu ;
     écoulé, on remonte au seuil, le labyrinthe se redessine un cran plus simple, et rien n'est perdu. Aucun texte ne lie
     le temps qui passe à une faute, à une œuvre manquée ni à un Compagnon.
+
+24. *(Demandée par le décideur le 16 novembre — « intégrer les postures de saint, sage ou héros […] selon les
+    tempéraments des compagnons ou leur progression » ; formulation de l'agent, à valider.)* Les postures. Le héros, le
+    sage, le saint : trois manières de se tenir devant l'épreuve, dans la 2.x. On en prend une, on ne la possède pas :
+    aucun texte ne dit de quelqu'un — Compagnon ou personnage de fiction — qu'il *est* un héros, un sage ou un saint.
+    Aucune n'est au-dessus d'une autre, et le jeu ne classe pas les Compagnons entre eux : chacun a d'abord celle de
+    son tempérament (son rôle), et les deux autres s'ouvrent à tous avec l'avancée. La troisième ne prête aucun
+    pouvoir (exigences 13 et 15) : elle règle les soins et le calme, rien de plus. Leurs effets sont des pourcentages
+    déclarés dans `defs.js` (`D.POSTURES`). La distinction vient de Max Scheler (ses « modèles » : le saint, le génie,
+    le héros) ; on n'en reprend ni phrase ni hiérarchie, et ni l'auteur ni son œuvre ne sont nommés dans le jeu, le
+    livret, les planches ou le README : ils ne le sont qu'ici et dans `docs/`, pour que la règle reste applicable.
 
 ## Qui fait quoi
 

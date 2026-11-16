@@ -1179,6 +1179,43 @@ après un premier plan qui modifiait le moteur actuel :
   fiction ajoutée à l'histoire-cadre : le lien de naissance, le vieil amghar et ses phrases sont proposés par l'agent, à
   valider.** Rien n'y touche l'histoire des Compagnons.
 
+- [x] **D163. La progression : un besoin, un outil, puis sans aide.** *Règle donnée par le décideur, le 16 novembre
+  (« le joueur découvre un besoin, apprend un outil, puis le réutilise sans aide avant d'en recevoir un autre. Il ne
+  faut donc pas forcément "un système par chapitre", mais une nouvelle décision importante par séquence. Se déplacer,
+  retrouver une source et choisir une tactique ne doivent pas être enseignés dans le même écran ») ; lot C5.*
+  **Ce qui n'allait pas :** au premier écran, une seule ligne enseignait quatre choses (marcher, parler, « que
+  faire ? », la halte) ; le premier combat montrait cinq commandes et la Niyya ; la halte montrait toutes ses pages
+  avant qu'on ait rencontré ce dont elles parlent. **Ce qui est fait** (`v2/src/core/lecons.js`) : douze *outils*
+  (`D.OUTILS`) ; une *séquence* est un objectif du récit ou un combat ; un outil n'est donné que lorsque son *besoin* se
+  présente, s'il n'y en a pas eu d'autre dans la séquence et si le précédent a *resservi sans aide* (au bout de trois
+  séquences, le jeu n'attend plus : il ne bloque jamais). Au début : se déplacer, seul ; parler, quand il faut parler ;
+  « ? », seulement si l'on reste vingt-cinq secondes sans avancer ; la halte, au premier récit ; l'équipement, quand la
+  réserve tient mieux que ce que l'on porte ; les sources (le Recueil), au premier acte à retrouver. En combat : Frapper
+  et Éclairer d'abord, puis les Vertus, puis la Garde et la Niyya, puis la besace — une commande nouvelle par combat,
+  une fois la précédente réemployée ; devant une idole, rien ne manque. À la halte, une page paraît quand son système a
+  été rencontré. **Ce mode ne vaut que pour une partie commencée par « Nouvelle partie »** (elle porte `lecons`) : une
+  partie en cours garde tout, comme avant. Les récits ne changent pas d'un mot. **À valider :** l'ordre des outils, les
+  douze lignes de leçon (`coeur.js`, `lecons`), la patience de trois séquences. Contrôle nouveau :
+  `v2/tools/progression.js` (« PROGRESSION CONFORME »).
+
+- [x] **D164. Les postures : le héros, le sage, le saint.** *Demande du décideur, le 16 novembre (« n'hésite pas à
+  intégrer les postures de saint, sage ou héros (de Max Scheler sans le citer) selon les tempéraments des compagnons ou
+  leur progression ») ; lot C6.* Trois manières de se tenir devant l'épreuve (`v2/src/core/postures.js`,
+  `D.POSTURES`) : **le héros s'expose** (Force +10 %, un point de Niyya de plus au départ, il attire plus souvent les
+  coups) ; **le sage discerne** (Esprit +10 %, une faille de chaque égrégore connue d'emblée) ; **le saint s'efface**
+  (soins +15 %, Sakîna +20 au départ). **Selon le tempérament :** chacun a d'abord la posture de son rôle (guerrier et
+  gardien : le héros ; sage et stratège : le sage ; soigneur : le saint). **Selon la progression :** les deux autres
+  s'ouvrent aux niveaux 4 et 7 ; on en change à la halte (« Postures ») ou en préparant une bataille.
+  **Choix de l'agent, à valider :** (1) le jeu ne dit de personne qu'il *est* un héros, un sage ou un saint — on prend
+  une posture, on ne la possède pas ; (2) aucune n'est au-dessus d'une autre et les trois s'ouvrent à tous, pour ne pas
+  classer les Compagnons entre eux (chez l'auteur, elles sont hiérarchisées : *je ne l'ai pas repris* — au décideur de
+  dire s'il veut au contraire une montée héros → sage → saint) ; (3) la troisième ne prête aucun pouvoir : des soins et
+  du calme (exigences 13 et 15) ; (4) l'attribution par rôle donne, par exemple, le sage à Abû Bakr et à Ibn 'Abbâs, le
+  héros à Khâlid, à 'Alî et à 'Umar, le saint à 'Uthmân et à 'Ammâr comme *première* posture — c'est le point le plus
+  délicat, à relire nom par nom ; (5) le mot « saint » lui-même est celui du décideur : à lui de dire s'il convient
+  dans le jeu, ou s'il préfère un autre mot. Une exigence 24 est proposée. L'auteur n'est nommé que dans `AGENTS.md` et
+  `docs/`. Contrôle : `progression.js`.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
