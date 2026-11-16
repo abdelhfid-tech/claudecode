@@ -13,7 +13,30 @@
 | 1.4 — la partie du joueur | **fait** le 15 novembre (commit `32e18f2`) | par les vrais boutons : une partie exportée (texte et fichier), effacée, réimportée à l'identique, reprise au milieu d'un chapitre ; dix textes qui ne sont pas des parties refusés sans rien changer ; une partie de la 1.31 acceptée et remise à jour ; les clés de la 1.31 intactes (`partie.js`) ; une partie faite avec le paquet d'essai portée dans le jeu livré puis rapportée, sans rien perdre (`paquet.js`) ; toute la batterie, sans anomalie |
 | 1.5 — le personnage du joueur | **fait** le 15 novembre (commit `0a40f26`) | les noms acceptés et refusés ; les 29 phrases du jeu qui nomment le râwî, redites avec six noms, élision juste ; le profil d'origine qui ne change rien ; par les vrais boutons et en quatre tailles d'écran, un prologue entier joué sous un autre nom sans qu'un seul « Idris » s'affiche ; le choix gardé, rechargé, exporté (`personnage.js`) ; toute la batterie, sans anomalie |
 | P — les personnages redessinés d'après les modèles du décideur | **fait** le 16 novembre — la 2.0 : commits `39ac7eb`, `edb1613`, Artifact en version 2 ; la version légère, devenue la 1.32 : commit `8c21125`, Artifact en version 32, gel refait | `silhouettes.js` : les petits sprites des cartes inchangés au pixel près (397 silhouettes) ; l'interrupteur rend le grand sprite d'avant à l'identique ; 14 292 grands sprites sans un trait dans le voile ; les 14 coiffes natives de face et de profil. Détail : `v2/docs/architecture.md`, « Les personnages » |
+| A — trois têtes reprises (capuche, coiffe de mailles, chèche), et l'étoffe du désert | **fait** le 16 novembre, dans la 2.0 seulement (D151) | `silhouettes.js` : « SILHOUETTES CONFORMES » ; toute la batterie de la 2.0 sur une copie ; planche avant/après envoyée au décideur |
 | 1.6 — la preuve par un paquet d'essai, la publication | **fait** le 15 novembre (commit `885646e`) | dernier passage de tous les outils sur l'assemblage publié ; dans un Artifact, l'export ne propose que la copie du texte (`partie.js`) ; la 2.0 publiée dans son propre Artifact privé, celui de la 1.31 resté à sa version 31 |
+
+## La 2.x : un rendu plus fin, la noosphère en labyrinthes
+
+*Plan approuvé par le décideur le 16 novembre (D150 à D153). La version légère s'arrête à la 1.32 : tout ce qui suit ne
+concerne que `v2/`.*
+
+| Lot | Contenu | État |
+|---|---|---|
+| A | les trois têtes redessinées, les onze autres relues | **fait** (D151) |
+| B1 | la même scène rendue de trois façons — aujourd'hui · définition doublée · doublée et lissée — pour que le décideur choisisse sur image | à faire |
+| B2 | le rendu retenu, appliqué à tout le jeu : 768 × 432, grands personnages sur les cartes (dos et marche de dos à dessiner), décors affinés, plus de lignes de balayage | à faire |
+| N0 | le tirage des labyrinthes (`v2/src/core/dedale.js`) et sa preuve (`v2/tools/dedales.js`, dix mille graines par profondeur) | à faire |
+| N1 | la noosphère des chapitres devient un labyrinthe : les lieux que les récits nomment y sont toujours, les récits ne changent pas d'un mot | à faire |
+| N2 | le chrono ; écoulé, on remonte au seuil, le labyrinthe se redessine un cran plus simple, rien n'est perdu | à faire |
+| N3 | la noosphère du râwî : un lieu à part, ses maux du cœur et les cinq idées noires y rôdent | à faire |
+| N4 | réglages par simulation, documentation, formulations des exigences à valider, Artifact de la 2.x | à faire |
+
+Choix par défaut du plan, que le décideur peut refuser un par un : les combats de l'histoire restent au tour par tour ;
+les égrégores d'un chapitre restent à leurs places, seuls ceux du râwî rôdent ; le plan en haut de l'écran montre tout le
+labyrinthe et les aides restent offertes dans celui d'un chapitre ; sortir vaut un niveau, s'abriter 1 d'Esprit et 2 de
+Souffle, dix fois au plus ; une idée noire se vainc avec n'importe quelle lame forgée, un mal du cœur avec la sienne ;
+aucune image générée n'entre dans le jeu.
 
 ## Contexte
 

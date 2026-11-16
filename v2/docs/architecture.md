@@ -188,6 +188,11 @@ sprite agrandi deux fois.
 - Les mêmes lettres nomment les mêmes matières dans les deux tailles (`T t u` la coiffe, `V` le voile, `C c k` le
   manteau, `R r` le buste…). Le grand sprite en ajoute quatre : `H` et `D` (coiffe en pleine lumière, dans l'ombre),
   `J` et `j` (fer). Un vide d'un pixel entre deux formes devient un trait sombre : c'est le liseré qui le peint.
+- Une tête peut descendre sur le corps : au-delà de sa vingtième ligne, ses lignes recouvrent le col et les épaules (le
+  pan d'un turban, le camail d'une capuche ou d'une coiffe de mailles, le voile d'un chèche, les pans de l'étoffe du
+  désert). Une tête ne doit jamais être plus large que les épaules à hauteur du visage : c'est ce qui faisait, le
+  16 novembre, des « têtes d'extraterrestres » (D151). Les mailles d'une tête s'écrivent « # » : `mailler()` choisit
+  l'anneau clair ou sombre selon sa place.
 - De dos, le grand sprite garde le dessin d'avant : le jeu ne le montre jamais.
 - `gfx.natif = false` rend partout le grand sprite d'avant, à l'identique : pour comparer.
 

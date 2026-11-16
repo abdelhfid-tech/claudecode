@@ -1013,11 +1013,50 @@ après un premier plan qui modifiait le moteur actuel :
   personnes voient donc les nouveaux personnages. Le livret est régénéré dans le dépôt (`node tools/promo.js all` :
   258 images, 10 planches, le PDF de 74 pages), pas remis en ligne. Lever le gel reste une décision du décideur.
 
+- [x] **D150. La version légère s'arrête à la 1.32 ; la suite ne se fait que dans la 2.x.** *Décision du décideur, le
+  16 novembre (« Que la 2.0 : la version légère s'arrête là », puis « maintenant on se concentre sur la v2.x »).* Plus
+  aucun changement dans `src/`, `index.html`, `dist/isnad.html`, les outils de la 1.32, son livret ni son Artifact — pas
+  même les corrections qui suivent. Conséquence dite au décideur : la 1.32 garde les têtes qu'il a critiquées (D151) ;
+  les y reporter demanderait de lever le gel une fois de plus, ce qui reste sa décision.
+
+- [x] **D151. Trois têtes reprises : la capuche, la coiffe de mailles, le chèche.** *Remarque du décideur, le 16 novembre
+  (« Pourquoi des têtes en forme d'extraterrestres ? »), sur la planche des coiffes de D148.* Faute de dessin de
+  l'agent : la capuche était un grand dôme rond, plus large que le cou et presque autant que les épaules, avec un ovale
+  sombre au milieu ; la coiffe de mailles était cette capuche recoloriée en damier ; le chèche de profil, une boule sans
+  structure. Redessinées dans la 2.0 seulement (`v2/src/core/sprites.js`) : une capuche à pointe, plus étroite que les
+  épaules, qui se resserre au cou puis retombe en camail d'étoffe sur le col ; une coiffe de mailles ajustée au crâne,
+  dont le camail s'évase sur les épaules et dont le bas est dans l'ombre, pour se détacher d'une cotte ; un chèche dont
+  on lit le rouleau du turban, la bande du visage et le voile, un ton plus bas, resserré au cou. Les onze autres ont été
+  relues avec le même œil : l'étoffe des gens du désert, de face, avait le même défaut de largeur et a été reprise
+  (elle tombe droit le long des joues et finit en deux pans). Contrôles : `silhouettes.js` (« SILHOUETTES CONFORMES » :
+  petits sprites inchangés, aucun trait dans un voile), toute la batterie de la 2.0.
+
+- [x] **D152. La 2.x : un rendu plus fin, la noosphère en labyrinthes.** *Demandes du décideur, le 16 novembre ; plan
+  approuvé le même jour (`v2/docs/feuille-de-route.md`, « La 2.x »).* « Je n'aime pas le rendu pixelisé » : définition
+  doublée (768 × 432), grands personnages jusque sur les cartes, décors affinés, plus de lignes de balayage ; le choix
+  final se fait sur image (la même scène rendue de trois façons). « Dans la noosphère […] des labyrinthes aléatoires
+  […] avec un timer, plus on avance dans l'histoire plus ça devient difficile » : la noosphère d'un chapitre devient un
+  labyrinthe tiré au hasard, sous un chrono qui ne fait rien perdre ; celle du râwî, un labyrinthe où rôdent ses maux
+  du cœur et les cinq idées noires (sortir : un niveau ; s'abriter jusqu'au bout du chrono : de l'Esprit et du
+  Souffle ; rattrapé : dormir une fois sans songe ; armé d'une lame forgée et accompagné : faire face). Les combats de
+  l'histoire restent au tour par tour. Les formulations des exigences que cela touche (18, 22, une 23ᵉ) sont proposées
+  par l'agent au lot N4 et restent à valider par le décideur.
+
+- [x] **D153. Six images de référence demandées à un générateur.** *Accord du décideur, le 16 novembre (« Pourquoi pas
+  image 2 ? », puis plan approuvé : « six images au plus, sur vos crédits »).* Générées par GPT Image 2, à travers le
+  connecteur de la session : deux planches des quatorze coiffes (face et profil), deux planches de trois personnages
+  (face, profil, dos), deux vues d'une place d'oasis. Coût relevé : 1 108 crédits du connecteur, soit environ 0,22 $.
+  Les demandes ne nomment ni le projet, ni un personnage, ni une personne : des silhouettes sans visage (un ovale de
+  lumière), sans texte ni symbole. **Aucune de ces images n'entre dans le jeu, ni dans le dépôt** : ce sont des modèles
+  pour la main, comme la planche de D148 ; le jeu reste dessiné par le code (« Conventions » d'`AGENTS.md`). Rien
+  d'autre n'a été dépensé, et rien ne le sera sans un nouvel accord.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
 
-1. **Services payants de génération** (voix, musique, images) : non utilisés. Tout est produit par le code.
+1. **Services payants de génération** (voix, musique, images) : tout ce que le jeu contient est produit par le code.
+   *Seule exception, accordée le 16 novembre :* six images de référence (D153), qui n'entrent pas dans le jeu.
 2. **Partage ou passage en public de l'Artifact** : le jeu reste privé. *Constat du 15 novembre* : la
    plateforme indique que l'Artifact du **livret** est partagé « par lien ». Ce réglage ne se fait que
    du côté de son propriétaire ; l'agent ne l'a pas fait et ne peut pas le changer. Chaque mise à jour

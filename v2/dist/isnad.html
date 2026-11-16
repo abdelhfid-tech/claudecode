@@ -543,7 +543,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.0 · 2026-11-16 07:06 UTC · 39ac7eb+";
+window.ISNAD_VERSION = "2.0 · 2026-11-16 11:14 UTC · 4e3d877+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -3047,37 +3047,61 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 07:06 UTC · 39ac7eb+";
   { const h = [VIDE, VIDE, VIDE, '...........WWWWWWWWWw...........', '..........WWWWWWWWWWww..........', '.........WWWWWwWWWWWWww.........', '.........WWWWwWWWWWwWww.........', '.........WWwWWWWWWwWWww.........',
       '.........aaaaaaaaaaaaaa.........', '..........aaaaaaaaaaaa..........'];
     tete('casque_cuir', { d: h.concat(FACE_D), l: recule(h, -1).concat(FACE_L) }); }
-  // la capuche, d'après le septième modèle : profonde, le visage dans son ombre
+  // la capuche, d'après le septième modèle : une pointe, des pans plus étroits que les épaules, le visage dans son ombre ;
+  // elle se resserre au cou, puis son camail d'étoffe retombe en plis sur le col (les lignes au-delà de la vingtième
+  // descendent sur le corps)
   tete('capuche', {
-    d: [VIDE, VIDE, VIDE, '............tTTTTTtu............', '..........tTTHTTTTTtuu..........', '.........tTTTTTTTTTTtuu.........', '........tTTTTtttttTTTtuu........', '........TTTtuvvvvvvutTtu........',
-        '.......tTTtuvVVVVVVvutTtu.......', '.......TTtuVVVVVVVVVVutTu.......', '.......TTtuVVVVVVVVVVutTu.......', '.......TTtuVVVVVVVVVVutTu.......', '.......TTtuVVVVVVVVVVutTu.......',
-        '.......TTtuVVVVVVVVVVuttu.......', '.......tTtuvVVVVVVVVvutuu.......', '........TtuuvVVVVVVvuutu........', '........ttuuuvVVVVvuuutu........', '.........ttuuuuvvuuuuuu.........',
-        '..........tTtuuuuuuuuu..........', '...........ttuuuuuuuu...........'],
-    l: [VIDE, VIDE, VIDE, '............tTTTTTtu............', '..........tTTHTTTTTtuu..........', '.........tTTTTTTTTTTTtuu........', '........tTTTTTTTTTTTTTtuu.......', '.......tTuvvvvTTTTTTTTttu.......',
-        '.......TuvVVVVvuTTTTTTttuu......', '.......TuVVVVVVVutTTTTtttu......', '.......TuVVVVVVVutTTTTtttu......', '.......TuVVVVVVVutTTTTtttu......', '.......TuVVVVVVVutTTTttttu......',
-        '.......tuVVVVVVVutTTtttuuu......', '.......tuvVVVVVvutTttttuu.......', '........tuvVVVVvuttttuuu........', '.........tuuvVVvuuttuuu.........', '..........ttuuvvuuuuuu..........',
-        '...........tTtuuuuuuu...........', '............ttuuuuuu............']
+    d: [VIDE, '...............tu...............', '..............tTtu..............', '.............tTHTtu.............', '............tTHTTTtu............', '...........tTHTTTTTtu...........',
+        '..........tTTTTTTTTTtu..........', '.........tTTTtttttttTtu.........', '.........TTtuuuuuuuutTu.........', '.........TtuuvVVVVvuutu.........', '.........TtuvVVVVVVvutu.........',
+        '.........TtuVVVVVVVVutu.........', '.........TtuVVVVVVVVutu.........', '.........TtuVVVVVVVVutu.........', '.........TtuVVVVVVVVutu.........', '.........TtuvVVVVVVvutu.........',
+        '.........tTtuvVVVVvuttu.........', '..........ttuuvVVvuutu..........', '........tTTtuuuuuuuuttTu........', '.......tTTTTtttuuuutttTTu.......', '......tTTTTTTTtttttTTTTTTu......',
+        '......TTTTTTTTTttTTTTTTTtu......', '.......tTTTTTTttttTTTTTtu.......', '.........uttttuuuuttttu.........'],
+    l: [VIDE, '..................tu............', '................tTTtu...........', '..............tTHTTtu...........', '............tTHTTTTTtu..........', '..........tTHTTTTTtTTtu.........',
+        '.........tTTTTTTTTTtTTtu........', '........tTTTttTTTTTTtTtu........', '.......tTtuuuutTTTTTtTtu........', '.......TtuvVVvutTTTTtTtu........', '.......TtuVVVVVutTTTTttu........',
+        '.......TtuVVVVVutTTTTttu........', '.......TtuVVVVVutTTTtttu........', '.......TtuVVVVVutTTTttu.........', '.......tTuVVVVVuttTttuu.........', '........tuvVVVvuttTttu..........',
+        '........ttuvVvuutttuu...........', '.........tuuuuuuttuu............', '.......tTTtuuuttTTttu...........', '......tTTTTtttTTTTTttu..........', '......TTTTTTTTTTTTTtttu.........',
+        '.......tTTTTTtTTTTtttuu.........', '.........utttttttttuuu..........']
   });
-  // coiffe de mailles : un capuchon d'anneaux, taillé sur la capuche
-  { const mail = rows => rows.map((r, y) => r.split('').map((m, x) => 'HTtuD'.indexOf(m) >= 0 ? ((x + y) % 2 ? 'I' : 'i') : m).join(''));
-    tete('coiffe_mailles', { d: mail(TETES.capuche.d), l: mail(TETES.capuche.l) }); }
-  // le chèche et son voile, d'après le sixième modèle : une bande de visage entre le turban et le litham
-  { const sombre = ['.........uuuuuuuuuuuuuu.........'], sombreL = ['........uuuuuuuuuuuuuuuu........'];
+  // les mailles : « # » devient un anneau clair ou sombre selon sa place — la lumière vient d'en haut à gauche,
+  // le bord droit et le bas sont dans l'ombre, et rien ne brille contre le voile
+  const mailler = rows => rows.map((r, y) => r.split('').map((m, x) => { if (m !== '#') return m;
+    const en = (dx, dy) => { const q = rows[y + dy]; return q ? (q[x + dx] || '.') : '.'; }, vide = c => c === '.', voile = c => c === 'V' || c === 'v';
+    let n = 1; if (vide(en(-1, 0)) || vide(en(0, -1))) n--; if (vide(en(1, 0)) || vide(en(0, 1))) n++;
+    if (voile(en(-1, 0)) || voile(en(1, 0)) || voile(en(0, 1))) n = Math.max(n, 1);
+    return ['JI', 'Ii', 'ij'][Math.max(0, Math.min(2, n))][(x + y) & 1]; }).join(''));
+  // coiffe de mailles : des anneaux ajustés au crâne, qui encadrent le voile et retombent en camail sur les épaules ;
+  // le bas du camail est dans l'ombre, pour qu'il se détache d'une cotte
+  tete('coiffe_mailles', {
+    d: mailler([VIDE, VIDE, VIDE, VIDE, '.............######.............', '...........##########...........', '..........############..........', '..........############..........', '..........############..........',
+        '..........###vvvvvv###..........', '..........##vVVVVVVv##..........', '..........##VVVVVVVV##..........', '..........##VVVVVVVV##..........', '..........##VVVVVVVV##..........', '..........##VVVVVVVV##..........',
+        '..........##vVVVVVVv##..........', '..........###vVVVVv###..........', '..........####vVVv####..........', '.........##############.........', '........################........', '.......##################.......',
+        '.......jjjjjjjjjjjjjjjjjj.......']),
+    l: mailler([VIDE, VIDE, VIDE, VIDE, '............######..............', '..........##########............', '.........############...........', '........##############..........', '........###############.........',
+        '........###############.........', '.........vVVVVv########.........', '........vVVVVVV########.........', '........VVVVVVV########.........', '........VVVVVVV########.........', '........VVVVVVV#######..........',
+        '........vVVVVVv#######..........', '.........vVVVVv######...........', '..........vVVv#######...........', '.........############...........', '........##############..........', '.......################.........',
+        '.......jjjjjjjjjjjjjjjjj........'])
+  });
+  // le chèche et son voile, d'après le sixième modèle : le rouleau du turban, une bande de visage, puis l'étoffe du voile,
+  // un ton plus bas, qui se resserre au cou et retombe sur le col ; deux plis la creusent
+  { const sombre = ['.........uuuuuuuuuuuuuu.........'];
     tete('litham', {
-      d: H_IMAMA.concat(sombre, ['..........tuvVVVVVVvut..........', '..........TuVVVVVVVVut..........', '..........TuvVVVVVVvut..........', '..........TtTTTTuTTTtu..........', '..........TTTTuuTTTttu..........',
-        '..........tTTuTTTTtttu..........', '..........tTTTTTtTttuu..........', '..........ttTTtTTtttuu..........', '...........tTTtTtttuu...........', '............tTtttuuu............', '.............ttuuuu.............']),
-      l: H_IMAMA_L.concat(sombreL, ['.........vVVVVvuttttuuu.........', '........vVVVVVVutTttuuu.........', '........vVVVVVvutTttuu..........', '........TTTTuTTttTtuuu..........', '........tTTuTTTtuttuuu..........',
-        '........tTTTTTtuttuuuu..........', '........ttTTtTtuttuuu...........', '.........tTTtttuutuuu...........', '..........tTttuuttuu............', '............tTttuuuu............', '.............ttuuuu.............']) }); }
+      d: H_IMAMA.concat(sombre, ['..........tuvVVVVVVvut..........', '..........TuVVVVVVVVut..........', '..........tuvVVVVVVvuu..........', '.........tTTTTTTTTTTTtu.........', '.........ttDuuuuuuuuDuu.........',
+        '.........ttDuuuuuuuuDuu.........', '..........ttDuuuuuuDuu..........', '..........ttDuuuuuuDuu..........', '...........ttDuuuuDuu...........', '..........tttDuuuuDuuu..........', '.........tttttDuuDuuuuu.........',
+        '.........tttttDuuDuuuuu.........', '..........DDDDDDDDDDDD..........']),
+      l: H_IMAMA_L.concat(sombre, ['.........vVVVVvDttTTtuu.........', '.........VVVVVVDttTTtuu.........', '.........vVVVVvDtTTttu..........', '........tTTTTTTDtTttu...........', '........ttuuuuuDtttuu...........',
+        '........ttuuuuDuttuu............', '.........ttuuDuuttuu............', '..........tuDuuutuu.............', '.........ttDuuuuttuu............', '........ttDuuuuutttuu...........', '.......ttDuuuuuuttttuu..........',
+        '.......ttDuuuuuuutttuuu.........', '........DDDDDDDDDDDDDD..........']) }); }
   // la tiare : un haut bonnet ceint d'un galon
   { const h = ['...........tTTTTTTTtu...........', '..........tTTHTTTTTTtu..........', '..........TTTTTTTTTTtu..........', '..........TTTTTTTTTttu..........', '..........aAAAAAAAAAAa..........', '..........aaAAAAAAAAaa..........',
       '.........tTTTTTTTTTTTtu.........', '.........uttttttttttuuu.........', '.........uuuuuuuuuuuuuu.........', '..........uuuuuuuuuuuu..........'];
     tete('tiare', { d: h.concat(FACE_D), l: h.concat(FACE_L) }); }
-  // l'étoffe de tête des gens du désert : un voile retenu par un cordon, qui retombe sur les épaules (stylisation)
+  // l'étoffe de tête des gens du désert : un voile retenu par un cordon ; il tombe droit le long des joues, s'évase sur les
+  // épaules et finit en deux pans, de part et d'autre de la poitrine (stylisation)
   { const h = [VIDE, '............tTTTTTtu............', '..........tTTHTTTTTTtu..........', '.........tTTTTTTTTTTTtu.........', '.........aAAAAAAAAAAAAa.........', '.........aaAAAAAAAAAAaa.........', '........tTTTtTTTTTTtTTtu........'];
     tete('keffieh', {
-      d: h.concat(['........TTtuuuuuuuuuutTu........', '.......tTTuuvVVVVVVvuutTu.......', '.......TTtuuVVVVVVVVuutTu.......', '.......TTtuuVVVVVVVVuutTu.......', '.......TTtuuVVVVVVVVuutTu.......', '.......TTtuuVVVVVVVVuutTu.......',
-        '.......TTtuuVVVVVVVVuutTu.......', '.......TTtuuvVVVVVVvuutTu.......', '.......tTTtuuvVVVVvuuttTu.......', '.......tTtTtuuvVVvuutTtuu.......', '.......TTtTTtuuuuuutTtTuu.......', '......tTTtTTttuuuuttTtTtuu......',
-        '......TTtTTtuttuuuutuTtTtu......']),
+      d: h.slice(0, 6).concat(['.........tTTtTTTTTTtTTu.........', '.........TTtuuuuuuuutTu.........', '.........TtuvVVVVVVvutu.........', '.........TtuVVVVVVVVutu.........', '.........TtuVVVVVVVVutu.........', '.........TtuVVVVVVVVutu.........',
+        '.........TtuVVVVVVVVutu.........', '........tTtuVVVVVVVVutTu........', '........TTtuvVVVVVVvutTu........', '........TtTtuvVVVVvutTtu........', '.......tTtTTtuvVVvutTtTuu.......', '.......TTtTTttuuuuttTtTtu.......',
+        '......tTTtTTtTtuutTtTTtTtu......', '......TTtTTtTTtuutTTtTTttu......', '......TTtTTt........tTTtTu......', '......tTtTTt........tTtTtu......', '.......uttu..........uttu.......']),
       l: h.concat(['........TTuuuuuTTTTTTttu........', '.........vVVVVvuTTtTTTtu........', '........vVVVVVVuTTTtTTttu.......', '........VVVVVVVuTTtTTTttu.......', '........VVVVVVVuTTTTtTtuu.......', '........VVVVVVVuTtTTTttuu.......',
         '........vVVVVVvuTTTtTTtuu.......', '.........vVVVVvuTTtTTttuu.......', '..........vVVvuuTtTTTtuuu.......', '............tuuTTTtTtuuu........', '............tuTTtTTTtuuu........', '...........tTuTTTtTTtuuu........',
         '...........TtuTtTTTttuu.........']) }); }
