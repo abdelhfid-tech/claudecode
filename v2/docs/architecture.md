@@ -157,6 +157,61 @@ toujours déjà choisis — un toucher suffit à commencer. Il se rouvre depuis 
 d'origine qui ne change rien ; puis, par les vrais boutons et en quatre tailles d'écran, un prologue entier joué sous
 un autre nom — tout ce qui s'affiche est relevé, « Idris » n'y paraît plus — ; enfin le choix gardé, rechargé, exporté.
 
+## Les personnages : `src/core/sprites.js`
+
+Un personnage est dessiné par le code, en deux tailles, à partir de la même description (`look` : coiffe, manteau,
+couleurs, objets ; l'équipement s'y ajoute par `gear.js`). Aucune image n'entre dans le jeu.
+
+| | Le petit sprite | Le grand sprite |
+|---|---|---|
+| Taille | 16 × 24 | 32 × 48 |
+| Où il se voit | sur les cartes | en combat, en dialogue, à la page d'équipement, à l'écran « Ton personnage » |
+| Gabarits | `HEADS`, `BODIES`, `POSES` | `TETES`, `CORPS`, `ALLURES` |
+| État | celui de la 1.31, au pixel près | redessiné d'après les modèles du décideur |
+
+**Le grand sprite a ses propres gabarits**, aux proportions des modèles : une tête de dix-sept lignes environ, un corps
+de vingt-neuf (le petit sprite, lui, a une tête presque aussi haute que son corps). Avant, il n'était que le petit
+sprite agrandi deux fois.
+
+- `grid()` compose toujours le personnage en 16 × 24 et reste seul à dire **qui porte quoi** : la coiffe, le manteau,
+  le motif, l'armure, les objets tenus, la pose. Le petit sprite en sort tel quel.
+- `natifGrille()` redessine cette composition en 32 × 48 : le corps (`CORPS[vue]` : repos, pas A, pas B ; ou
+  `ALLURES[pose][vue]`), les règles de tenue écrites à cette échelle (manteau absent, sur une épaule, ample ; rayures,
+  bandes ; mailles, lamelles, cuir, toile piquée ; écharpe, châle, étoffe drapée, néon), les objets tenus — ceux de
+  `grid()`, agrandis et ramenés à la hauteur de la main —, puis la tête (`TETES[coiffe][vue]`), inclinée ou abaissée
+  selon la pose.
+- `grand()` peint : cinq tons par matière, une seule lumière en haut à gauche, l'ombre d'une matière sur celle qu'elle
+  recouvre, le galon au bas de la robe. Le voile est peint à part, en dégradé depuis son centre.
+- Les mêmes lettres nomment les mêmes matières dans les deux tailles (`T t u` la coiffe, `V` le voile, `C c k` le
+  manteau, `R r` le buste…). Le grand sprite en ajoute quatre : `H` et `D` (coiffe en pleine lumière, dans l'ombre),
+  `J` et `j` (fer). Un vide d'un pixel entre deux formes devient un trait sombre : c'est le liseré qui le peint.
+- De dos, le grand sprite garde le dessin d'avant : le jeu ne le montre jamais.
+- `gfx.natif = false` rend partout le grand sprite d'avant, à l'identique : pour comparer.
+
+**Trois gardes, au chargement.** Le moteur refuse de démarrer si un gabarit natif n'a pas ses lignes de 32 lettres, si
+une coiffe ou une pose n'a pas son grand dessin, ou si le voile d'une tête n'est pas **une seule surface** — d'un seul
+tenant sur chaque ligne et chaque colonne. Aucun gabarit ne peut donc porter un trait de visage : ni œil, ni bouche,
+ni barre qui couperait le voile.
+
+**Ajouter une coiffe**, c'est donc la dessiner deux fois : dans `HEADS` (11 lignes de 16, trois vues) et dans `TETES`
+(20 lignes de 32, face et profil ; les deux dernières recouvrent le col). Une tête se compose d'un haut de huit lignes,
+d'un bandeau de deux et d'un tour de visage de dix, que les turbans partagent (`turban()`), comme les casques partagent
+leur camail. **Ajouter une pose** : ses lignes dans `POSES` et dans `ALLURES`, à partir du corps au repos (`varie()`).
+
+`node v2/tools/silhouettes.js` le vérifie sur tout ce que le jeu peut dessiner — les héros, les gens, les rangs, les
+tenues du râwî, les quatorze coiffes sous chaque manteau, les variantes d'équipement :
+
+1. les petits sprites sont ceux relevés avant ce travail (`tools/essais/silhouettes.json`) : sinon « ÉCART » ;
+2. l'interrupteur rend le grand sprite d'avant, à l'identique : sinon « ÉCART » ;
+3. dans chaque grand sprite — toutes les vues, les pas, les poses — le voile est une seule surface, sans trou ni
+   marque : sinon « TRAIT » ;
+4. chaque coiffe a sa tête native de face et de profil, rien ne sort de la grille, aucun sprite n'est vide : sinon
+   « ABSENT ».
+
+`node v2/tools/silhouettes.js planches [modèles.png]` écrit des planches agrandies dans `.smoke/silhouettes/` : la
+comparaison avec les modèles, les héros, les coiffes, la marche et les poses, l'équipement. Tout changement de dessin
+se relit là, puis sur une capture du jeu.
+
 ## Les règles du contenu : `src/core/regles.js`
 
 En 1.31, les règles vivent dans deux scripts (`tools/validate.js`, `tools/validate-music.js`) qui lisent le disque et
@@ -217,12 +272,15 @@ node v2/tools/ecrans.js              # « CHAÎNE IDENTIQUE à celle de la 1.31 
 node v2/tools/paquet.js [fichier]    # éprouve un paquet, hors du jeu puis dans un jeu d'essai assemblé à part
 node v2/tools/partie.js              # la partie du joueur : exportée, effacée, réimportée à l'identique
 node v2/tools/personnage.js          # le nom et la tenue du râwî : choisis, joués, gardés
+node v2/tools/silhouettes.js         # « SILHOUETTES CONFORMES » : petits sprites inchangés, aucun trait dans un voile
+node v2/tools/silhouettes.js planches [modèles.png]   # planches agrandies dans .smoke/silhouettes/
 node v2/tools/smoke.js auto          # et walk, tap, wrong, shots — comme en 1.31
 node v2/tools/doigt.js [loin [844x390]]
 node v2/tools/son.js
 node v2/tools/bataille.js [mesures]
 ```
 
-**Règle de la 2.0.** Celle d'`AGENTS.md`, avec cinq contrôles de plus à chaque changement du moteur ou des règles :
-`cartes.js` doit afficher « CARTES IDENTIQUES », `ecrans.js` « CHAÎNE IDENTIQUE », et `paquet.js`, `partie.js` et
-`personnage.js` doivent finir sans « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE » ni « ÉCART ». Et `gel.js` doit afficher « 1.31 INTACTE » avant chaque enregistrement.
+**Règle de la 2.0.** Celle d'`AGENTS.md`, avec six contrôles de plus à chaque changement du moteur ou des règles :
+`cartes.js` doit afficher « CARTES IDENTIQUES », `ecrans.js` « CHAÎNE IDENTIQUE », `silhouettes.js` « SILHOUETTES
+CONFORMES », et `paquet.js`, `partie.js` et `personnage.js` doivent finir sans « REFUS », « BLOQUÉ », « ABSENT »,
+« INACCESSIBLE », « INVISIBLE », « TRAIT » ni « ÉCART ». Et `gel.js` doit afficher « 1.31 INTACTE » avant chaque enregistrement.

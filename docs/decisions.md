@@ -983,6 +983,23 @@ après un premier plan qui modifiait le moteur actuel :
   (« < », « > ») — aucun des 13 628 textes du jeu de base n'en contient —, et une copie gardée abîmée sur l'appareil se
   relit sans faire trébucher le jeu.
 
+- [x] **D148. Le grand personnage redessiné d'après les modèles du décideur.** *Demandé par le décideur le 16 novembre
+  (« Voici les personnages améliorés pour les v1 et v2 »), plan approuvé le même jour.* Le décideur a remis une planche
+  de sept modèles (face et profil, 32 × 48), faite avec le texte de `docs/prompt-images.md`. Le grand sprite du jeu —
+  combat, dialogue, équipement, « Ton personnage », livret — n'était que le petit sprite agrandi deux fois ; il a
+  maintenant ses propres gabarits, de 32 de large, aux proportions des modèles (une tête de dix-sept lignes environ, un
+  corps de vingt-neuf). Tous les personnages en profitent, pas seulement les sept : un combat en montre trois ou quatre
+  côte à côte, et deux styles ne peuvent pas s'y côtoyer. Les petits sprites des cartes ne changent pas d'un pixel.
+  **Écart avec le plan, dit au décideur en cours de route :** le plan prévoyait d'affiner l'ancien dessin case par case
+  en gardant le corps du jeu ; la première planche a montré que cela ne suffisait pas, et le corps a pris lui aussi les
+  proportions des modèles — plus fidèle, dans le même fichier, sous les mêmes contrôles. **Ce qui n'est pas repris :**
+  une copie au pixel (les personnages restent faits de pièces, pour porter l'équipement et les poses) ; la ligne courbe
+  sous un visage, la barre nasale qui coupe un autre, les gardes d'épée en croix. Garde ajoutée : le moteur refuse tout
+  gabarit de tête dont le voile n'est pas une seule surface, et `v2/tools/silhouettes.js` le revérifie sur chaque grand
+  sprite que le jeu peut dessiner (« TRAIT » sinon). Les images reçues ne sont pas versionnées. À voir par le
+  décideur sur les planches : la taille de la tête et du voile de lumière (plus petits qu'avant, comme sur les
+  modèles), le dessin de chaque coiffe.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
@@ -1069,5 +1086,7 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     doit-il pouvoir un jour apporter, pour ses sagas, une veillée du Caïd ou une rencontre de la Cité-Miroir ?
 23. *Répondu le 15 novembre pour l'ouverture : dès le prologue (D145).* Les livres (D143) : « Les cinq Lumières »
     convient-il comme titre du livre I ?
+24. Les personnages redessinés (D148) : la taille de la tête et du voile de lumière convient-elle ? Y a-t-il une coiffe
+    ou une attitude à reprendre ? Le livret doit-il être remis en ligne avec ces personnages ?
 10. *Répondu le 15 novembre : « Ça a l'air ok ».* La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

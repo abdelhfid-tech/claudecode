@@ -53,11 +53,11 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     I.save.reset(); return { a, change, b, tenue0: JSON.stringify(I.D.TENUES[0].look) === JSON.stringify(look0) }; });
   if (!neutre.a || !neutre.b || !neutre.tenue0) ko(`ÉCART le profil d'origine ne laisse pas le jeu intact : ${JSON.stringify(neutre)}`); else if (!neutre.change) ko('ÉCART choisir un nom et une tenue ne change pas le râwî');
   else ok('sans rien choisir, rien ne change : phrases, sceau et silhouette d’origine, à l’identique — et l’on y revient en rechoisissant « Idris » et sa tenue de toujours');
-  // la planche des six tenues : de face, de profil, de dos, telles que le moteur les dessine
-  const planche = await page.evaluate(() => { const I = window.ISNAD, G = I.gfx, T = I.D.TENUES, k = 4, cv = document.createElement('canvas'); cv.width = T.length * 3 * 34 * k + 16; cv.height = 62 * k + 16; const c = cv.getContext('2d'); c.imageSmoothingEnabled = false;
+  // la planche des six tenues : de face et de profil, telles que le jeu les montre en grand (jamais de dos)
+  const planche = await page.evaluate(() => { const I = window.ISNAD, G = I.gfx, T = I.D.TENUES, k = 4, cv = document.createElement('canvas'); cv.width = T.length * 2 * 34 * k + 16; cv.height = 62 * k + 16; const c = cv.getContext('2d'); c.imageSmoothingEnabled = false;
     c.fillStyle = '#12101c'; c.fillRect(0, 0, cv.width, cv.height);
-    T.forEach((t, i) => { const L = Object.assign({ kind: 'compagnon' }, t.look); [0, 1, 3].forEach((d, j) => { const g = G.charGrand(L, d); c.drawImage(g, 8 + (i * 3 + j) * 34 * k, 8, g.width * k, g.height * k); });
-      c.fillStyle = '#e9c877'; c.font = '14px sans-serif'; c.fillText((i + 1) + ' · ' + t.nom, 12 + i * 3 * 34 * k, 50 * k + 28); });
+    T.forEach((t, i) => { const L = Object.assign({ kind: 'compagnon' }, t.look); [0, 1].forEach((d, j) => { const g = G.charGrand(L, d); c.drawImage(g, 8 + (i * 2 + j) * 34 * k, 8, g.width * k, g.height * k); });
+      c.fillStyle = '#e9c877'; c.font = '14px sans-serif'; c.fillText((i + 1) + ' · ' + t.nom, 12 + i * 2 * 34 * k, 50 * k + 28); });
     return { url: cv.toDataURL('image/png'), noms: T.map(t => t.nom), distinctes: new Set(T.map(t => G.charURL(Object.assign({ kind: 'compagnon' }, t.look), 0))).size }; });
   fs.writeFileSync(path.join(out, 'tenues.png'), Buffer.from(planche.url.split(',')[1], 'base64'));
   if (planche.distinctes !== planche.noms.length) ko(`ÉCART des tenues se dessinent pareil : ${planche.distinctes} silhouettes pour ${planche.noms.length} tenues`); else ok(`six tenues, six silhouettes différentes : ${planche.noms.join(', ')} — planche dans ${path.relative(process.cwd(), path.join(out, 'tenues.png'))}`);

@@ -234,13 +234,13 @@
 
   /* ---------- composition d'une image : grille de 16 × 24 matières ---------- */
   function grid(look, dir, frame, pose, opt) { // opt : demandé par le grand sprite, qui veut aussi les objets tenus à part — sans effet sur le dessin
-    const K = kindOf(look), it = opt ? [] : null; let couche = null; // it : les objets tenus, seuls, pour le grand sprite
+    const K = kindOf(look), objets = opt ? [] : null; let couche = null; // objets : chaque objet tenu, seul sur sa grille, pour le grand sprite
     const key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l';
     const P = pose && POSES[pose] && POSES[pose][key] ? POSES[pose] : null;
     let bodyRows = P ? P[key] : BODIES[key][frame || 0]; const hy = P ? (P.hy || 0) : 0, kneel = !!(P && P.kneel);
     const petit = K.petit && !kneel ? 3 : 0; if (petit) bodyRows = bodyRows.filter((r, j) => j !== 3 && j !== 7 && j !== 8); // enfant : trois lignes de moins
     const extra = P ? (key === 'd' ? P.extraD : key === 'l' ? P.extraL : P.extraU) : null;
-    const g = []; for (let y = 0; y < H; y++) { g.push(new Array(W).fill('.')); if (it) it.push(new Array(W).fill('.')); }
+    const g = []; for (let y = 0; y < H; y++) g.push(new Array(W).fill('.'));
     const put = (x, y, m) => { if (x >= 0 && x < W && y >= 0 && y < H && m !== '.') { g[y][x] = m; if (couche) couche[y][x] = m; } };
     const b0 = kneel ? H - 8 : 11 + petit; // un corps à genoux tient en 8 lignes, posées au sol
     bodyRows.forEach((row, j) => { for (let x = 0; x < W; x++) put(x, b0 + j, row[x]); });
@@ -261,8 +261,9 @@
     if (K.echarpe && !kneel) { const pts = key === 'd' ? [[5, 0], [6, 0], [6, 1], [7, 1], [7, 2], [8, 2], [8, 3], [9, 3]] : key === 'l' ? [[4, 1], [5, 1], [5, 2], [6, 2], [6, 3]] : [];
       pts.forEach(([x, dy]) => { if ('RrSs'.indexOf(g[b0 + dy][x]) >= 0) g[b0 + dy][x] = 'A'; }); }
     // attributs tenus ou portés (un ou plusieurs)
-    const hip = b0 + 5; couche = it;
+    const hip = b0 + 5;
     for (const it of [].concat(K.item || [])) {
+    if (objets) { couche = []; for (let y = 0; y < H; y++) couche.push(new Array(W).fill('.')); objets.push({ nom: it, g: couche }); }
     // le bouclier se porte du côté libre : à droite de l'image quand la main droite tient une hampe
     const hampe = [].concat(K.item || []).some(q => ['lance', 'baton', 'masse', 'arc', 'durra', 'etendard', 'calame'].indexOf(q) >= 0), ecuX = key === 'd' ? (hampe ? 12 : 0) : key === 'u' ? (hampe ? 0 : 12) : 9;
     if (it === 'bouclier' || it === 'bouclier_cuir' || it === 'bouclier_bois') { const x0 = ecuX, fer = it === 'bouclier', m1 = fer ? 'I' : 'W', m2 = fer ? 'i' : 'w';
@@ -302,7 +303,7 @@
     }
     if (extra) extra.forEach(([x, y, m]) => put(x, y, m));
     if (dir === 2) for (let y = 0; y < H; y++) g[y].reverse();
-    return { g, K, key, b0, kneel, objets: it }; // objets : dans le repère non retourné
+    return { g, K, key, b0, kneel, objets }; // objets : dans le repère non retourné
   }
 
   /* ---------- rendu ---------- */
@@ -371,6 +372,7 @@
      Le voile (V) d'une tête est une surface d'un seul tenant : le moteur refuse de démarrer sinon — personne n'a de visage. */
   const W2 = W * 2, H2 = H * 2, TETES = {}, CORPS = { d: [], l: [] }, ALLURES = {};
   const PETIT = [7, 8, 17, 18, 21, 22]; // enfant : six lignes de corps en moins
+  const HAMPES = ['lance', 'baton', 'masse', 'durra', 'etendard', 'calame']; // ce qui se tient à pleine main
   const VIDE = '................................';
   function voileUni(rows) { // → null si le voile est d'un seul tenant, sur chaque ligne et chaque colonne ; sinon ce qui cloche
     const V = (x, y) => y >= 0 && y < rows.length && (rows[y][x] === 'V' || rows[y][x] === 'v'), lignes = [];
@@ -592,8 +594,9 @@
     if (K.neon) { const x = key === 'd' ? 15 : key === 'l' ? 11 : -1; if (x >= 0) for (let y = cou + 3; y < cou + 10; y++) if (L[y][x] !== '.') L[y][x] = 'Y';
       for (let y = cou + 10; y < cou + 12; y++) for (let x2 = 0; x2 < W2; x2++) if ('Aa'.indexOf(L[y][x2]) >= 0) L[y][x2] = 'y'; }
     // les objets tenus : ceux de grid(), agrandis, ramenés à la hauteur de la main
-    const o2 = scale2x(r.objets), dyo = kneel ? 0 : (cou + 13 - (K.petit ? 2 : 0)) - (2 * r.b0 + 10);
-    for (let y = 0; y < H2; y++) for (let x = 0; x < W2; x++) { const m = o2[y][x], Y = y + dyo; if (m !== '.' && Y >= 0 && Y < H2) { L[Y][x] = m; am[Y][x] = 0; fin[Y][x] = 1; } }
+    const dyo = kneel ? 0 : (cou + 13 - (K.petit ? 2 : 0)) - (2 * r.b0 + 10);
+    r.objets.forEach(o => { const o2 = scale2x(o.g), dxo = key === 'd' ? (HAMPES.indexOf(o.nom) >= 0 ? 2 : 0) : (o.nom === 'durra' || o.nom === 'calame') ? 10 : 0; // la hampe vient contre la main
+      for (let y = 0; y < H2; y++) for (let x = 0; x < W2; x++) { const m = o2[y][x], X = x + dxo, Y = y + dyo; if (m !== '.' && X < W2 && Y >= 0 && Y < H2 && L[Y][X] !== 'N') { L[Y][X] = m; am[Y][X] = 0; fin[Y][X] = 1; } } });
     // la tête, inclinée ou abaissée selon la pose ; le cimier suit le sommet du casque
     const y0 = cou - 18 + 2 * hy, x0 = hy && key === 'l' ? -2 : 0, pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1; } };
     for (let j = 0; j < (kneel ? 20 : tt.length); j++) for (let x = 0; x < W2; x++) if (tt[j][x] !== '.') pose1(x + x0, y0 + j, tt[j][x]); // à genoux, le pan du turban ne descend pas
@@ -624,7 +627,9 @@
       else if (!fin[y][x]) { const f = FAM[m];                               // le modelé du corps : une seule lumière, en haut à gauche
         if (!plein(x, y - 1)) i--; else if (!meme(x, y - 1, f) && !voile(at(x, y - 1))) i++;   // l'arête du haut la reçoit ; sous une autre matière, son ombre
         if (!plein(x - 1, y) && meme(x + 1, y, f)) i--;                       // le bord gauche est éclairé
-        if (!plein(x + 1, y) && meme(x - 1, y, f)) i++; }                     // le bord droit est dans l'ombre
+        if (!plein(x + 1, y) && meme(x - 1, y, f)) i++;                       // le bord droit est dans l'ombre
+        const dessous = at(x, y + 1);                                         // le galon : au bas de la robe longue et des pans du manteau
+        if (pal.a && y > h * 0.6 && ((m === 'Z' && !K.court && (dessous === '.' || dessous === 'F' || dessous === 'f')) || ((m === 'E' || m === 'e') && !plein(x, y + 1)))) { px(x, y, pal.a); continue; } }
       px(x, y, r.t[Math.max(0, Math.min(r.t.length - 1, i))]); }
     outline(c, w, h);
     return (scache[k] = cv);

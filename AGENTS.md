@@ -21,12 +21,15 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   « 1.31 INTACTE » **avant chaque enregistrement**.
 - La suite de ce document décrit la 1.31. Elle vaut pour la 2.0 en lisant `v2/` devant chaque chemin : mêmes exigences de
   respect, même règle de test, avec les outils de `v2/tools/`. Ce qui est propre à la 2.0 est écrit dans `v2/docs/`.
-- La 2.0 a cinq contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
+- La 2.0 a six contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
   `node v2/tools/cartes.js` (les lieux du livre I sortent comme dans la 1.31 : « CARTES IDENTIQUES »),
   `node v2/tools/ecrans.js` (l'écran de la Chaîne du livre I est celui de la 1.31 : « CHAÎNE IDENTIQUE »),
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
-  réimporte à l'identique) et `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
-  se gardent) : aucun « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « ÉCART ». Les textes de la 2.0
+  réimporte à l'identique), `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
+  se gardent) et `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel, aucun
+  grand personnage ne porte un trait dans son voile : « SILHOUETTES CONFORMES ») : aucun « REFUS », « BLOQUÉ »,
+  « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART ». Le grand personnage (32 × 48) de la 2.0 a ses
+  propres gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages ». Les textes de la 2.0
   disent « Idris » : on n'y écrit jamais le nom d'un joueur, c'est `v2/src/core/perso.js` qui le pose à l'affichage. Une partie de la 2.0 a
   un format (2) et une fonction de mise à jour (`migrer`, dans `v2/src/core/base.js`) : on ne change jamais ce format
   sans y ajouter le passage depuis l'ancien. Tout contenu ajouté à la 2.0 arrive par un paquet (`v2/docs/schema-paquet.md`) et passe les règles de
@@ -90,6 +93,7 @@ node v2/tools/ecrans.js             # 2.0 : l'écran de la Chaîne du livre I, e
 node v2/tools/paquet.js [fichier]   # 2.0 : éprouve un paquet (par défaut le paquet d'essai), hors du jeu puis dans un jeu assemblé à part
 node v2/tools/partie.js             # 2.0 : la partie du joueur, exportée par les vrais boutons, effacée, réimportée à l'identique
 node v2/tools/personnage.js         # 2.0 : le nom et la tenue du râwî, choisis par les vrais boutons, joués sur tout le prologue, gardés
+node v2/tools/silhouettes.js        # 2.0 : les personnages — petits sprites inchangés, voiles sans trait, une tête native par coiffe (planches : … planches [modèles.png])
 node tools/promo.js pdf             # le livret en PDF (promo/livret.pdf) : A5 paysage, deux colonnes, pages équilibrées ; demande poppler (pdfinfo, pdftoppm)
 ```
 

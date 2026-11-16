@@ -93,3 +93,20 @@ DANS CETTE IMAGE
 - Aucun visage, même esquissé ; aucune lettre ; aucun symbole.
 - Les silhouettes du livret se reconnaissent.
 - Les droits d'usage du service permettent l'emploi prévu : à vérifier par le décideur.
+
+## Ce que l'on fait d'une planche reçue
+
+Première planche reçue le 16 novembre : les sept personnages principaux, de face et de profil.
+
+1. **On la mesure avant de la redessiner.** Les modèles n'ont pas gardé les proportions demandées : leur tête est plus
+   petite (16 × 17 pixels contre 20 × 20 dans le jeu), leur corps plus long (29 lignes contre 26). C'est ce que le
+   décideur a retenu comme « personnages améliorés » : le grand sprite du jeu a donc pris ces proportions.
+2. **On la redessine en gabarits, pièce par pièce** (`src/core/sprites.js`, « le grand sprite natif ») : une tête par
+   coiffe, un corps, ses attitudes. Deux personnages qui portent la même coiffe la partagent ; les couleurs restent
+   celles du jeu ; l'équipement, la marche et les poses continuent de s'appliquer. Ce qui est propre à un seul modèle
+   (des manches pendantes, un baudrier) ne passe pas.
+3. **On écarte ce qui contrevient aux exigences.** Sur cette planche : une ligne courbe sous un visage, qui se lit
+   comme une bouche ; une barre nasale qui coupe un visage en deux taches claires ; deux gardes d'épée en croix. Le
+   moteur refuse désormais tout gabarit dont le voile n'est pas une seule surface.
+4. **L'image elle-même n'entre ni dans le jeu ni dans le dépôt.** Elle ne sert qu'à la planche de comparaison
+   (`node v2/tools/silhouettes.js planches image.png`), écrite dans `.smoke/`.
