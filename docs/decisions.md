@@ -1008,8 +1008,10 @@ après un premier plan qui modifiait le moteur actuel :
   une fois, sa batterie entière rejouée sur une copie (validateur, cinq parcours, doigt en trois formats, son, bataille
   et ses mesures : aucune anomalie, aucune erreur console), puis regelé : `v2/gel-1.32.json`, commit `8c21125`. Les petits
   sprites des cartes sont inchangés au pixel près, et aucun grand sprite ne porte un trait dans son voile
-  (`JEU=../index.html node v2/tools/silhouettes.js`). Les parties des joueurs ne changent pas. Son Artifact privé
-  passe en version 32. Lever le gel reste une décision du décideur.
+  (`JEU=../index.html node v2/tools/silhouettes.js`). Les parties des joueurs ne changent pas. Son Artifact est
+  republié : version 32 — son partage, réglé par le décideur, est « toute personne disposant du lien » : ces
+  personnes voient donc les nouveaux personnages. Le livret est régénéré dans le dépôt (`node tools/promo.js all` :
+  258 images, 10 planches, le PDF de 74 pages), pas remis en ligne. Lever le gel reste une décision du décideur.
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
