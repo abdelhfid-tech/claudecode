@@ -160,6 +160,59 @@ toujours déjà choisis — un toucher suffit à commencer. Il se rouvre depuis 
 d'origine qui ne change rien ; puis, par les vrais boutons et en quatre tailles d'écran, un prologue entier joué sous
 un autre nom — tout ce qui s'affiche est relevé, « Idris » n'y paraît plus — ; enfin le choix gardé, rechargé, exporté.
 
+## La définition du dessin : `src/core/gfx.js`
+
+*Depuis le 16 novembre (D154). Le décideur : « je n'aime pas le rendu pixelisé ».*
+
+Le jeu se pense en **points logiques** : une scène de 384 × 216, des cases de 16. `gfx.D` dit combien de points réels en
+fait un — 1, le dessin d'origine (celui de la 1.32) ; 2, un dessin deux fois plus fin, sur 768 × 432. Le code du jeu ne
+change pas de repère : positions, collisions, cartes, tout reste en points logiques.
+
+- **Une toile fine** (`gfx.toile(l, h)`) a `D` fois plus de points que sa taille logique ; elle porte sa définition
+  (`toile.hd`), et son contexte dessine en points logiques. `drawImage` y pose une autre toile à sa taille logique, quelle
+  que soit sa définition : le code qui dessine n'a pas à le savoir. La scène (`gfx.pcv`), la carte cuite d'un lieu, le fond
+  d'un combat, le fond du titre sont des toiles fines.
+- **Ce qui est tracé au trait** (égrégores, palmes, tentes, ombres, grilles de la noosphère) gagne tout seul : ses courbes
+  ont deux fois plus de points.
+- **Les cases** (`gfx.tile`) : un trait d'un point se trace d'un demi-point (joints, lattes, reflets), le semis d'une
+  matière est trois fois plus serré, et un grain léger casse les aplats. **Les objets** (`gfx.obj`) : leurs escaliers sont
+  arrondis (la règle d'EPX, appliquée aux pavés unis) et leur bord est encré d'un point réel.
+- **Les lisières** (`maps.js`, `lisieres`) : deux sols naturels qui se touchent ne se coupent plus au cordeau ; le plus
+  haut (herbe, puis chemin, puis dune, puis sable) déborde sur l'autre d'une frange irrégulière. Le sol reste le même case
+  par case : seule l'image change.
+- **Les personnages** : sur les cartes, le grand personnage (32 × 48) remplace le petit — un point de gabarit pour un point
+  réel ; en combat et dans les menus, il est retracé en 64 × 96 (`grand(…, 2)`) : même composition, formes arrondies,
+  liseré et lumière du voile deux fois plus fins. `gfx.planche`, `gfx.pose` et `gfx.figure` rendent le personnage à la
+  définition courante ; `charSheet`, `charPose` et `charGrand` rendent toujours les dessins bruts, que les outils lisent.
+- **La vue** glisse par demi-points ; plus de lignes de balayage ; un peu de poussière sous les pas, sur le sable.
+
+**Trois dessins au choix du joueur** (Réglages, « Dessin » ; `gfx.DESSINS`, `gfx.definir`) : *fin* (par défaut), *fin,
+adouci* (le même, l'agrandissement final lissé et les figures adoucies sans perdre leurs contours) et *d'origine*. Le
+choix se garde avec les autres réglages (`opts.dessin`). Changer en cours de partie refait la carte et les planches de
+marche (`gfx.surDefinition`) : rien d'autre ne bouge.
+
+**Le dessin d'origine est celui de la 1.32, au pixel près** : tout ce qui précède est conditionné à `D > 1`. `?def=1`
+dans l'adresse force ce dessin (`?def=2`, `?def=2l` les deux autres) et passe avant le réglage gardé : `cartes.js`
+s'en sert pour se comparer à la 1.32. Une carte fine pèse quatre fois plus : le jeu en garde deux en mémoire au lieu de
+quatre.
+
+**Ce qui n'est pas fait** : les objets et les cases restent ceux d'avant, affinés par le calcul — seul le palmier a été
+redessiné ; les compagnons de lumière, les lames et les icônes gardent leur dessin. Aucune image générée n'entre dans le
+jeu (D153).
+
+## Les labyrinthes de la noosphère : `src/core/dedale.js`
+
+*Lot N0 (D155). Le module ne dessine rien et ne connaît pas le jeu : il tire un plan et sait dire s'il est bon.*
+
+`plan(hasard, profondeur, genre)` rend une carte de 60 × 40 cases (vide, pont, sol de salle, sol d'abri), ses lieux
+nommés et de quoi mesurer sa complexité. Les salles sont posées sur une maille — de 6 cases à la profondeur 0 à 3 cases à
+la profondeur 5 —, chacune dans sa zone : le seuil à l'ouest, le cœur à l'est, un nœud au nord, un au sud, la faille et le
+miroir en cul-de-sac (`genre` « chapitre ») ; ou le seuil, l'issue et deux abris (`genre` « descente »). Un arbre relie
+tous les carrefours, une salle y comptant pour un seul nœud ; quelques impasses sont percées en raccourcis, de moins en
+moins quand on descend. `verifie(plan, genre)` contrôle que les lieux y sont, du bon côté, assez grands, tous reliés, et
+que les culs-de-sac en sont ; `plan` retire jusqu'à obtenir un plan bon. La même suite de hasard rend le même plan.
+`node v2/tools/dedales.js` l'éprouve sur dix mille graines par profondeur et par genre (« DÉDALES CONFORMES »).
+
 ## Les personnages : `src/core/sprites.js`
 
 Un personnage est dessiné par le code, en deux tailles, à partir de la même description (`look` : coiffe, manteau,
@@ -168,7 +221,7 @@ couleurs, objets ; l'équipement s'y ajoute par `gear.js`). Aucune image n'entre
 | | Le petit sprite | Le grand sprite |
 |---|---|---|
 | Taille | 16 × 24 | 32 × 48 |
-| Où il se voit | sur les cartes | en combat, en dialogue, à la page d'équipement, à l'écran « Ton personnage » |
+| Où il se voit | sur les cartes, dans le dessin d'origine | partout dans le dessin fin ; en combat, en dialogue, à la page d'équipement, à l'écran « Ton personnage » dans tous les dessins |
 | Gabarits | `HEADS`, `BODIES`, `POSES` | `TETES`, `CORPS`, `ALLURES` |
 | État | celui de la 1.32, au pixel près | redessiné d'après les modèles du décideur |
 
@@ -193,7 +246,10 @@ sprite agrandi deux fois.
   désert). Une tête ne doit jamais être plus large que les épaules à hauteur du visage : c'est ce qui faisait, le
   16 novembre, des « têtes d'extraterrestres » (D151). Les mailles d'une tête s'écrivent « # » : `mailler()` choisit
   l'anneau clair ou sombre selon sa place.
-- De dos, le grand sprite garde le dessin d'avant : le jeu ne le montre jamais.
+- De dos (lot B2) : le corps a les mêmes colonnes que de face, `C` en haut puis `B` — le pan du dos : la couleur du
+  manteau ; sans manteau, la robe ; en tenue courte, les jambes. Les têtes de dos n'ont pas de voile : une nuque d'étoffe
+  enroulée sous les turbans, le camail sous les casques. `grand(…, 2)` retrace le tout en 64 × 96 (voir « La définition
+  du dessin »).
 - `gfx.natif = false` rend partout le grand sprite d'avant, à l'identique : pour comparer.
 
 **Trois gardes, au chargement.** Le moteur refuse de démarrer si un gabarit natif n'a pas ses lignes de 32 lettres, si

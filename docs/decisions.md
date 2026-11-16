@@ -1051,6 +1051,28 @@ après un premier plan qui modifiait le moteur actuel :
   pour la main, comme la planche de D148 ; le jeu reste dessiné par le code (« Conventions » d'`AGENTS.md`). Rien
   d'autre n'a été dépensé, et rien ne le sera sans un nouvel accord.
 
+- [x] **D154. Le dessin fin de la 2.x.** *Demande du décideur (« je n'aime pas le rendu pixelisé, tu peux pas affiner un
+  peu plus et rendre le truc un peu plus action RPG, plus fin »), plan approuvé le 16 novembre.* Le jeu se dessine deux
+  fois plus fin : 768 × 432 points au lieu de 384 × 216. Sur les cartes, les grands personnages remplacent les petits
+  (leur dos a été dessiné : corps, marche, trois poses, quatorze têtes) ; en combat et dans les menus, ils sont retracés
+  en 64 × 96. Les traits des cases sont deux fois plus fins, leur semis plus serré ; les objets ont leurs escaliers
+  arrondis et un bord encré ; deux sols naturels se joignent par une lisière irrégulière ; les égrégores, tracés au
+  trait, y gagnent d'eux-mêmes. Plus de lignes de balayage ; la vue glisse par demi-points ; un peu de poussière sous
+  les pas. **Trois images ont été envoyées au décideur** (la même rue, le même combat : aujourd'hui · définition doublée
+  · doublée et lissée) : *il choisit* ; en attendant, le jeu sort en « fin », et les trois dessins sont dans les
+  réglages (« Dessin » : fin, fin et adouci, d'origine). Le dessin d'origine reste celui de la 1.32 au pixel près
+  (`cartes.js`, ouvert avec `?def=1` : « CARTES IDENTIQUES »). **Ce qui n'est pas fait, dit au décideur :** les cases et
+  les objets ne sont pas redessinés un par un (seul le palmier l'a été) ; un rendu « peint », comme les images de
+  référence de D153, demanderait de faire entrer des images dans le jeu — une autre règle, à décider par lui. Les
+  combats de l'histoire restent au tour par tour.
+
+- [x] **D155. Le tirage des labyrinthes de la noosphère.** *Demande du décideur (« dans la noosphère […] des labyrinthes
+  aléatoires […] plus on avance dans l'histoire plus ça devient difficile »), plan approuvé le 16 novembre ; lot N0.*
+  `v2/src/core/dedale.js` tire un plan sur la carte de 60 × 40 de la noosphère : des salles nommées posées chacune de
+  son côté, un dédale de ponts qui les relie, six profondeurs (d'une vingtaine de carrefours à plus de cent soixante-dix
+  entre les salles, de moins en moins de raccourcis). `v2/tools/dedales.js` l'éprouve hors du jeu : 120 000 plans, tous
+  bons, la même graine rendant le même plan. Rien n'est encore branché dans le jeu : c'est l'objet des lots N1 à N3.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

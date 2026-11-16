@@ -81,6 +81,7 @@ const VOILES = looks => {
     for (let y = 0; y < H; y++) { let runs = 0; for (let x = 0; x < W; x++) if (V(x, y) && !V(x - 1, y)) runs++; if (runs > 1) return `le voile est coupé en deux sur la ligne ${y}`; }
     for (let x = 0; x < W; x++) { let runs = 0; for (let y = 0; y < H; y++) if (V(x, y) && !V(x, y - 1)) runs++; if (runs > 1) return `le voile est coupé en deux sur la colonne ${x}`; }
     return null; };
+  let fines = 0;
   looks.forEach(({ nom, look }) => [0, 1, 2, 3].forEach(dir => [[0, null], [1, null], [2, null]].concat(POSES.map(p => [0, p])).forEach(([f, p]) => {
     const r = G.charGrille(look, dir, f, p), ou = `${nom} · ${['face', 'profil gauche', 'profil droit', 'dos'][dir]}${p ? ' · ' + p : f ? ' · pas ' + f : ''}`; vues++;
     if (r.natif) natives++;
@@ -88,8 +89,10 @@ const VOILES = looks => {
     if (r.lignes.length !== 48 || r.lignes.some(l => l.length !== 32)) faux.push(['ABSENT', ou + ' : la grille n’a pas 32 × 48']);
     else if (pleines < 120) faux.push(['ABSENT', ou + ` : sprite presque vide (${pleines} cases)`]);
     if (r.hors) faux.push(['ABSENT', ou + ` : ${r.hors} case(s) de la tête sortent de la grille`]);
-    const t = voile(r.lignes); if (t) faux.push(['TRAIT', ou + ' : ' + t]); })));
-  return { faux, vues, natives };
+    const t = voile(r.lignes); if (t) faux.push(['TRAIT', ou + ' : ' + t]);
+    // 2.x : le même personnage tracé deux fois plus fin (le combat, les menus) — sa grille de 64 × 96 obéit à la même règle
+    if (r.natif && G.figure) { const rf = G.charGrille(look, dir, f, p, 2); fines++; if (rf.lignes.length !== 96 || rf.lignes.some(l => l.length !== 64)) faux.push(['ABSENT', ou + ' : la grille fine n’a pas 64 × 96']); else { const tf = voile(rf.lignes); if (tf) faux.push(['TRAIT', ou + ' (dessin fin) : ' + tf]); } } })));
+  return { faux, vues, natives, fines };
 };
 /* ---------- dans la page : une planche (les cases de gauche à droite, agrandies k fois) ---------- */
 const PLANCHE = async ({ cases, k, cols, titre }) => {
@@ -183,17 +186,17 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     if (ecartsG.length) ko(`ÉCART l'interrupteur ne rend pas le grand sprite d'avant pour ${ecartsG.length} silhouette(s) : ${ecartsG.slice(0, 8).join(', ')}${ecartsG.length > 8 ? '…' : ''}`);
     else ok(`l'interrupteur (gfx.natif = false) rend le grand sprite d'avant, à l'identique : ${cles.length - neufs} silhouettes × 36 images`);
     // 3 et 4. le voile, les têtes natives, la grille
-    const R = await parPaquets(inv.map(q => ({ nom: q.nom, look: q.look })), 120, VOILES), faux = R.flatMap(r => r.faux), vues = R.reduce((s, r) => s + r.vues, 0);
+    const R = await parPaquets(inv.map(q => ({ nom: q.nom, look: q.look })), 120, VOILES), faux = R.flatMap(r => r.faux), vues = R.reduce((s, r) => s + r.vues, 0), fines = R.reduce((s, r) => s + (r.fines || 0), 0);
     const traits = faux.filter(f => f[0] === 'TRAIT'), absents = faux.filter(f => f[0] === 'ABSENT');
     if (traits.length) { traits.slice(0, 10).forEach(f => ko('TRAIT ' + f[1])); if (traits.length > 10) console.log(`   … et ${traits.length - 10} autre(s)`); }
-    else ok(`personne n'a de visage : ${vues} grands sprites (toutes les vues, les pas, les poses) — le voile y est une seule surface, sans trou ni marque`);
+    else ok(`personne n'a de visage : ${vues} grands sprites (toutes les vues, les pas, les poses)${fines ? ` et leurs ${fines} tracés fins de 64 × 96` : ''} — le voile y est une seule surface, sans trou ni marque`);
     if (absents.length) { absents.slice(0, 10).forEach(f => ko('ABSENT ' + f[1])); if (absents.length > 10) console.log(`   … et ${absents.length - 10} autre(s)`); }
     page = await ouvrir();
-    const T = await page.evaluate(C => { const G = window.ISNAD.gfx, sans = [], connues = G.COIFFES || []; C.concat(connues.filter(c => !C.includes(c))).forEach(c => [0, 1, 2].forEach(dir => { const r = G.charGrille({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4', coiffe: c, manteau: 'long' }, dir, 0, null); if (!r.natif) sans.push(c + ' (' + ['face', 'profil gauche', 'profil droit'][dir] + ')'); }));
-      return { sans, connues, oubli: connues.filter(c => !C.includes(c)), inconnues: C.filter(c => !connues.includes(c)) }; }, COIFFES); await page.context().close();
+    const T = await page.evaluate(C => { const G = window.ISNAD.gfx, sans = [], connues = G.COIFFES || []; const vuesT = G.figure ? [0, 1, 2, 3] : [0, 1, 2]; C.concat(connues.filter(c => !C.includes(c))).forEach(c => vuesT.forEach(dir => { const r = G.charGrille({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4', coiffe: c, manteau: 'long' }, dir, 0, null); if (!r.natif) sans.push(c + ' (' + ['face', 'profil gauche', 'profil droit'][dir] + ')'); }));
+      return { sans, connues, dos: vuesT.length > 3, oubli: connues.filter(c => !C.includes(c)), inconnues: C.filter(c => !connues.includes(c)) }; }, COIFFES); await page.context().close();
     if (T.oubli.length || T.inconnues.length) ko(`ABSENT la liste des coiffes de cet outil n'est plus celle du moteur : ${T.oubli.concat(T.inconnues).join(', ')}`);
     if (T.sans.length) ko(`ABSENT ${T.sans.length} coiffe(s) et vue(s) sans grand sprite natif : ${T.sans.slice(0, 12).join(', ')}${T.sans.length > 12 ? '…' : ''}`);
-    else if (!absents.length) ok(`${T.connues.length} coiffes, chacune avec sa tête native de face et de profil ; aucune ne sort de la grille, aucun sprite n'est vide`);
+    else if (!absents.length) ok(`${T.connues.length} coiffes, chacune avec sa tête native de face${T.dos ? ', de profil et de dos' : ' et de profil'} ; aucune ne sort de la grille, aucun sprite n'est vide`);
   }
   if (errors.length) ko(`ÉCART erreur console : ${[...new Set(errors)].slice(0, 3).join(' | ').slice(0, 400)}`);
   await browser.close();

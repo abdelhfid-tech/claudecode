@@ -8,7 +8,7 @@
   /* ---------- scènes de fond ---------- */
   let titleBg = null;
   function paintTitle() {
-    const cv = G.mk(G.PW, G.PH), c = cv.getContext('2d'), H0 = 136, r = I.rng(77);
+    const cv = G.toile(G.PW, G.PH), c = cv.getContext('2d'), H0 = 136, r = I.rng(77);
     const g = c.createLinearGradient(0, 0, 0, H0); g.addColorStop(0, '#04031a'); g.addColorStop(0.45, '#231252'); g.addColorStop(0.82, '#a8446a'); g.addColorStop(1, '#f2a25e'); c.fillStyle = g; c.fillRect(0, 0, G.PW, H0);
     for (let i = 0; i < 120; i++) { c.fillStyle = `rgba(255,255,255,${0.15 + r() * 0.8})`; c.fillRect(Math.floor(r() * G.PW), Math.floor(r() * 90), 1, 1); }
     const sg = c.createRadialGradient(192, 126, 4, 192, 126, 92); sg.addColorStop(0, 'rgba(255,244,210,1)'); sg.addColorStop(0.22, 'rgba(255,200,120,.75)'); sg.addColorStop(1, 'rgba(255,120,80,0)'); c.fillStyle = sg; c.fillRect(90, 30, 204, 110);
@@ -99,6 +99,7 @@
     }));
     btns.push(mk('Son : ' + (I.audio.on ? 'activé' : 'coupé'), b => { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = 'Son : ' + (I.audio.on ? 'activé' : 'coupé'); }));
     btns.push(mk('Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'), b => { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'); }));
+    btns.push(mk('Dessin : ' + dessinNom(), b => { dessinSuivant(); b.textContent = 'Dessin : ' + dessinNom(); }));
     btns.push(mk('Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'); }));
     const TZ = ['normal', 'grand', 'très grand'];
     btns.push(mk('Texte : ' + TZ[sv.opts.tz || 0], b => { sv.opts.tz = ((sv.opts.tz || 0) + 1) % 3; I.save.store(); U.applyOpts(); b.textContent = 'Texte : ' + TZ[sv.opts.tz]; }));
@@ -382,6 +383,7 @@
         toggle('Croix tactile', () => o.pad ? 'affichée' : 'masquée', () => { o.pad = !o.pad; U.applyOpts(); }, 'Sur un écran tactile, on se déplace en touchant la scène. La croix directionnelle reste disponible pour qui la préfère.'),
         toggle('Son', () => I.audio.on ? 'activé' : 'coupé', () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, 'Coupe ou rétablit tout le son : musique, percussions et bruitages.'),
         toggle('Musique', () => I.audio.musicOn ? 'activée' : 'coupée', () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, 'Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.'),
+        toggle('Dessin', dessinNom, dessinSuivant, 'Fin : deux fois plus de points, les grands personnages jusque sur les cartes, des lisières irrégulières. Fin, adouci : le même, les contours fondus. D’origine : le dessin de la version légère.'),
         toggle('Rendu', () => G.low ? '2D simple' : 'rétro-HD', () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, 'Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.'));
       items.push({ label: 'Ton personnage', fn() { close(); U.personnage(() => { if (I.scene === W && W.map) W.hud(); }); }, show: () => { const p = I.perso.profil(); return '<h3>Ton personnage</h3><p>Le râwî porte le nom et la tenue que tu lui donnes : <b>' + I.esc(p.nom) + '</b>, ' + I.esc(I.perso.tenue().nom.toLowerCase()) + '. Les Compagnons, eux, gardent leur nom et leur silhouette.</p>'; } });
       items.push({ label: 'Exporter la partie', fn() { close(); U.partie('exporter', () => {}); }, show: () => '<h3>Exporter la partie</h3><p>Ta partie tient dans un texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.</p><p class="src">Elle se garde aussi toute seule sur cet appareil, à chaque objectif atteint.</p>' });
@@ -402,9 +404,9 @@
     };
     const carteDraw = pane => {
       const cv = pane.querySelector('.carte canvas'); if (!cv) return; const m = W.map, src = W.carte(), c = cv.getContext('2d'), tg = W.target(), T = 16;
-      cv.width = src.width; cv.height = src.height; c.drawImage(src, 0, 0);
+      const q = src.hd || 1; cv.width = src.width; cv.height = src.height; c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(src, 0, 0); c.setTransform(q, 0, 0, q, 0, 0); // la suite se trace en points logiques
       c.fillStyle = 'rgba(8,6,16,.18)'; c.fillRect(0, 0, cv.width, cv.height);
-      const k = Math.max(1, src.width / 480), star = (x, y, r, col, n) => { c.fillStyle = col; c.beginPath(); for (let q = 0; q < n * 2; q++) { const rr = q % 2 ? r * 0.42 : r, a = q * Math.PI / n - Math.PI / 2; c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } c.closePath(); c.fill(); };
+      const k = Math.max(1, src.width / q / 480), star = (x, y, r, col, n) => { c.fillStyle = col; c.beginPath(); for (let q = 0; q < n * 2; q++) { const rr = q % 2 ? r * 0.42 : r, a = q * Math.PI / n - Math.PI / 2; c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } c.closePath(); c.fill(); };
       const halo = (x, y, r) => { c.fillStyle = 'rgba(10,8,20,.75)'; c.beginPath(); c.arc(x, y, r, 0, 6.3); c.fill(); };
       W.prayerPts().forEach(sp => { const x = sp[0] * T + 8, y = sp[1] * T + 10; halo(x, y, 9 * k); star(x, y, 7.5 * k, '#7fe6e0', 8); });
       if (m.spots.comptoir) { const x = m.spots.comptoir[0] * T + 8, y = m.spots.comptoir[1] * T + 8; halo(x, y, 8 * k); c.strokeStyle = '#e9c877'; c.lineWidth = 2 * k; c.beginPath(); c.arc(x, y, 5 * k, 0, 6.3); c.stroke(); c.fillStyle = '#e9c877'; c.beginPath(); c.arc(x, y, 1.6 * k, 0, 6.3); c.fill(); }
@@ -617,8 +619,13 @@
   };
 
   /* ---------- réglages d'affichage ---------- */
+  // le dessin : fin (par défaut), fin et adouci, ou d'origine — gardé avec les autres réglages
+  const dessinNom = () => (G.DESSINS.find(d => d[0] === G.dessin()) || G.DESSINS[0])[1];
+  const dessinSuivant = () => { const i = G.DESSINS.findIndex(d => d[0] === G.dessin()), n = G.DESSINS[(i + 1) % G.DESSINS.length][0]; G.definir(n); I.save.data.opts.dessin = n; I.save.store(); };
+  G.surDefinition.push(() => { titleBg = null; document.body.classList.toggle('fin', G.D > 1); });
   U.applyOpts = function () {
     const o = I.save.data.opts;
+    if (o.dessin && !G.defForce) G.definir(o.dessin); document.body.classList.toggle('fin', G.D > 1);
     document.documentElement.style.setProperty('--tz', [1, 1.16, 1.34][o.tz || 0]);
     document.body.classList.toggle('padon', !!o.pad);
     layout();
@@ -655,7 +662,7 @@
   let ptr = null;
   function pointer() {
     const cv = cvEl, st = $('#stage'), bare = e => e.target === cv || e.target === st || e.target.id === 'ui' || e.target.id === 'view', free = () => I.scene === W && !S.busy && !W.lock && !U.menuOpen && !I.debug.auto && !I.debug.walk;
-    const where = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * G.PW + Math.round(W.cam.x), (e.clientY - r.top) / r.height * G.PH + Math.round(W.cam.y)]; };
+    const where = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * G.PW + G.cale(W.cam.x), (e.clientY - r.top) / r.height * G.PH + G.cale(W.cam.y)]; };
     st.addEventListener('pointerdown', e => {
       if (e.button || !bare(e)) return;
       I.audio.unlock();

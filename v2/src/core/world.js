@@ -28,7 +28,7 @@
   };
   W.leave = function (id) { const i = W.party.indexOf(id); if (i < 0 || W.party.length <= 1) return; W.party.splice(i, 1); W.refreshSheets(); };
   function lookOf(def) { return Object.assign({ kind: 'compagnon' }, def.look); }
-  W.refreshSheets = function () { W.sheets = W.party.map(id => G.charSheet(lookOf(W.saga.heroes[id]))); };
+  W.refreshSheets = function () { W.sheets = W.party.map(id => G.planche(lookOf(W.saga.heroes[id]))); };
 
   /* ----- piliers de la Citadelle, prière ----- */
   W.pillars = function () {
@@ -78,7 +78,7 @@
     if (bl && bl.length) { W.map = I.maps.build(id, opts); bl.forEach(e => I.build.apply(e, W.map)); } // ce qui a été bâti reste
     else W.map = mapCache[key] || (mapCache[key] = I.maps.build(id, opts));
     W.mapOpts = opts; if (I.build && I.build.on && !I.build.outdoor(id)) I.build.set(false);
-    const ks = Object.keys(mapCache); if (ks.length > 4) ks.filter(k2 => k2 !== key).slice(0, ks.length - 4).forEach(k2 => { delete mapCache[k2]; });
+    const garde = G.D > 1 ? 2 : 4, ks = Object.keys(mapCache); if (ks.length > garde) ks.filter(k2 => k2 !== key).slice(0, ks.length - garde).forEach(k2 => { delete mapCache[k2]; }); // une carte fine pèse quatre fois plus : on en garde moins
     const env = W.map.env; G.clearParts(); G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 };
     I.audio.scene(env.music || 'silence');
     W.npcs.forEach(n => { if (n.map === id) W.place(n); });
@@ -90,6 +90,11 @@
     $('#ui').style.setProperty('--mini', (W.map.mini ? ((27 + W.map.h + 6) / G.PH * 100).toFixed(1) : '14') + '%'); // les annonces s'empilent sous la mini-carte
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
+  // la définition du dessin a changé : la carte et les planches de marche se refont, rien d'autre ne bouge
+  G.surDefinition.push(() => { Object.keys(mapCache).forEach(k => { delete mapCache[k]; }); if (!W.map || !W.saga) return;
+    const id = W.map.id, opts = W.mapOpts || {}, bl = I.build ? I.build.peek(id) : null;
+    if (bl && bl.length) { W.map = I.maps.build(id, opts); bl.forEach(e => I.build.apply(e, W.map)); } else W.map = mapCache[W.mapKey] = I.maps.build(id, opts);
+    W.refreshSheets(); W.npcs.forEach(n => { if (n.sheet && n.sheet.look) n.sheet = G.planche(n.sheet.look); }); });
   W.solidAt = function (px, py) { const m = W.map, tx = Math.floor(px / T), ty = Math.floor(py / T); if (tx < 0 || ty < 0 || tx >= m.w || ty >= m.h) return true; return !!m.solid[ty * m.w + tx]; };
   function occupied(x, y, self) {
     const near = e => e !== self && !e.hidden && e.map === W.map.id && e.placed !== false && Math.abs(e.x - x) < 12 && Math.abs(e.y - y) < 10;
@@ -148,7 +153,7 @@
     if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); I.mal.ouvre(); }
     I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
-    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.charSheet(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
+    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.planche(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
     W.foes = (ch.foes || []).map(f => Object.assign({}, f, { map: f.map || ch.map, done: false, placed: false, ph: Math.random() * 6 }));
     W.chests = (ch.chests || []).map(c => Object.assign({}, c, { map: c.map || ch.map, open: false, placed: false }));
     W.objIndex = cp ? cp.obj : 0;
@@ -463,7 +468,7 @@
     else done();
   };
   W.carte = function () {
-    const m = W.map, cv = G.mk(m.w * T, m.h * T), c = cv.getContext('2d');
+    const m = W.map, cv = G.toile(m.w * T, m.h * T), c = cv.getContext('2d');
     c.drawImage(m.canvas, 0, 0);
     m.objs.slice().sort((a, b) => a.y - b.y).forEach(o => { try { c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2), o.y - o.h + 1); } catch (e) { /* objet sans dessin */ } });
     return cv;
@@ -479,18 +484,20 @@
   };
 
   /* ----- rendu ----- */
+  const POUSSIERE = { sand: '#ecd9aa', dune: '#ecd9aa', path: '#d8be8e' }; // les sols qui lèvent de la poussière, en dessin fin
   function drawChar(c, sheet, x, y, dir, moving, t, aura, pose) {
     const f = moving ? [1, 0, 2, 0][Math.floor(t * 8) % 4] : 0;
-    c.fillStyle = 'rgba(20,12,30,.32)'; c.beginPath(); c.ellipse(Math.round(x), Math.round(y) + 1, 6, 2.5, 0, 0, 6.3); c.fill();
-    if (pose && !moving && sheet.look) { c.drawImage(G.charPose(sheet.look, dir, pose), Math.round(x) - 8, Math.round(y) - 22 - (pose === 'surpris' ? 2 : 0)); return; }
-    c.drawImage(sheet, f * 16, dir * 24, 16, 24, Math.round(x) - 8, Math.round(y) - 22 - (moving && f ? 1 : 0), 16, 24);
+    x = G.cale(x); y = G.cale(y);
+    c.fillStyle = 'rgba(20,12,30,.32)'; c.beginPath(); c.ellipse(x, y + 1, 6, 2.5, 0, 0, 6.3); c.fill();
+    if (pose && !moving && sheet.look) { c.drawImage(G.pose(sheet.look, dir, pose), x - 8, y - 22 - (pose === 'surpris' ? 2 : 0)); return; }
+    c.drawImage(sheet, f * 16, dir * 24, 16, 24, x - 8, y - 22 - (moving && f ? 1 : 0), 16, 24);
   }
   W.drawChar = drawChar;
   function drawFlame(c, x, y, t, big) {
     const n = big ? 7 : 5; for (let i = 0; i < n; i++) { const hgt = 3 + ((Math.sin(t * 13 + i * 2.1) + 1) * (big ? 4 : 3)) | 0; c.fillStyle = i % 2 ? '#ffb347' : '#ff7a2a'; c.fillRect(x - n + i * 2, y - hgt, 2, hgt); c.fillStyle = '#fff0a8'; c.fillRect(x - n + i * 2, y - Math.max(1, hgt - 3), 1, Math.max(1, hgt - 3)); }
   }
   W.render = function (dt) {
-    const c = G.px, m = W.map, cx = Math.round(W.cam.x), cy = Math.round(W.cam.y), t = W.t, env = m.env;
+    const c = G.px, m = W.map, cx = G.cale(W.cam.x), cy = G.cale(W.cam.y), t = W.t, env = m.env; // en dessin fin, la vue glisse par demi-points
     c.fillStyle = env.time === 'noos' ? '#04051a' : '#0a0810'; c.fillRect(0, 0, G.PW, G.PH);
     c.drawImage(m.canvas, -cx, -cy);
     // eau animée
@@ -526,7 +533,9 @@
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
       else if (e.bete) { const tr = e.tr, im = I.oeuvres.bete(e.bete, true), bx = Math.round(tr[0] - cx), by = Math.round(tr[1] - cy - im.height - 1 + Math.sin(t * 3) * 1.2); c.globalAlpha = 0.92; if (tr[2] === 2) { c.save(); c.translate(bx, 0); c.scale(-1, 1); c.drawImage(im, -Math.round(im.width / 2), by); c.restore(); } else c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 24, color: (I.sagas.coeur.animaux[e.bete] || {}).couleur || '#ffe9a8', a: 0.7 }); }
       else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null)); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (W.saga.heroes[W.party[e.fol]].look.aura || '#ffe9a8'), a: 0.4 }); }
-      else if (e.p) { const p = W.player; drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null)); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lk.aura || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+      else if (e.p) { const p = W.player;
+        if (G.D > 1 && p.moving && !G.low && POUSSIERE[m.g0 ? m.g0(p.x, p.y) : ''] && Math.random() < 0.3) G.spawn({ x: p.x - cx + (Math.random() - 0.5) * 6, y: p.y - cy + 1, vx: (Math.random() - 0.5) * 10, vy: -4 - Math.random() * 5, life: 0.5 + Math.random() * 0.3, size: 0.6 + Math.random() * 0.5, color: POUSSIERE[m.g0(p.x, p.y)], a: 0.3, type: 'mote', blend: 'source-over' }); // la poussière sous les pas
+        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null)); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lk.aura || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {

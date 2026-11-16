@@ -5,6 +5,71 @@
   const G = I.gfx = { PW: 384, PH: 216, T: 16, k: 3 };
   const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
   G.mk = mk;
+
+  /* ================= LA DÉFINITION =================
+     Le jeu se pense en points logiques : 384 × 216, des cases de 16. G.D dit combien de points réels en fait un :
+     1, le dessin d'origine ; 2, un dessin deux fois plus fin (768 × 432). Le code du jeu ne change pas de repère :
+     une « toile » créée par G.toile a D fois plus de points que sa taille logique, son contexte dessine en points
+     logiques, et drawImage y pose une autre toile à sa taille logique. G.lisse adoucit l'agrandissement final. */
+  G.D = 2; G.lisse = false;
+  try { const q = /[?&]def=([12])([dl]?)/.exec(location.search); if (q) { G.D = +q[1]; G.lisse = q[2] === 'l'; G.defForce = true; } } catch (e) { /* hors navigateur */ } // ?def=1 : les outils qui comparent à la 1.32
+  // Les trois dessins que le joueur peut choisir (Réglages, « Dessin »). Changer en cours de partie : les images déjà faites
+  // sont oubliées, et chaque module qui en garde (la carte, les planches de marche, le fond du titre) refait les siennes.
+  G.DESSINS = [['fin', 'fin', 2, false], ['doux', 'fin, adouci', 2, true], ['origine', 'd’origine', 1, false]];
+  G.dessin = () => (G.DESSINS.find(d => d[2] === G.D && d[3] === !!G.lisse) || G.DESSINS[0])[0];
+  G.surDefinition = [];
+  G.definir = function (nom) { const d = G.DESSINS.find(q => q[0] === nom) || G.DESSINS[0]; if (d[2] === G.D && d[3] === !!G.lisse) return false;
+    G.D = d[2]; G.lisse = d[3]; [tcache, ocache, ecache].forEach(c => { Object.keys(c).forEach(k => { delete c[k]; }); });
+    if (G.cv) { G.pcv = G.toile(G.PW, G.PH); G.px = G.pcv.getContext('2d'); G.resize(); }
+    G.surDefinition.forEach(f => { try { f(); } catch (e) { console.error(e); } }); return true; };
+  function fin(c) { // un contexte qui connaît la définition des images qu'on lui donne
+    if (c._fin) return c; c._fin = true; const di = c.drawImage;
+    c.drawImage = function (img, a, b, w, h, x, y, W, H) { const q = img.hd || 1, n = arguments.length;
+      if (n <= 3) return q === 1 ? di.call(c, img, a, b) : di.call(c, img, a, b, img.width / q, img.height / q);
+      if (n <= 5) return di.call(c, img, a, b, w, h);
+      return di.call(c, img, a * q, b * q, w * q, h * q, x, y, W, H); };
+    return c; }
+  G.toile = function (w, h, d) { d = d || G.D; const cv = mk(Math.round(w * d), Math.round(h * d)), c = cv.getContext('2d'); cv.hd = d; c.imageSmoothingEnabled = false; if (d !== 1) c.setTransform(d, 0, 0, d, 0, 0); fin(c); return cv; };
+  G.fin = fin;
+  G.cale = v => Math.round(v * G.D) / G.D; // la position la plus proche qui tombe sur un point réel
+  // Agrandit deux fois un dessin au pixel en arrondissant ses escaliers (EPX) : deux voisins de même couleur, en équerre,
+  // gagnent le coin qui les sépare. Aucune couleur n'est inventée : un voile reste une seule surface.
+  G.epx = function (src) {
+    const w = src.width, h = src.height, a = src.getContext('2d').getImageData(0, 0, w, h), s = new Uint32Array(a.data.buffer);
+    const cv = mk(w * 2, h * 2), c = cv.getContext('2d'), o = c.createImageData(w * 2, h * 2), t = new Uint32Array(o.data.buffer);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const p = s[y * w + x], A = y ? s[(y - 1) * w + x] : p, B = x < w - 1 ? s[y * w + x + 1] : p, C = x ? s[y * w + x - 1] : p, Dn = y < h - 1 ? s[(y + 1) * w + x] : p, i = y * 2 * w * 2 + x * 2;
+      t[i] = (C === A && C !== Dn && A !== B) ? A : p; t[i + 1] = (A === B && A !== C && B !== Dn) ? B : p;
+      t[i + w * 2] = (Dn === C && Dn !== B && C !== A) ? C : p; t[i + w * 2 + 1] = (B === Dn && B !== A && Dn !== C) ? Dn : p; }
+    c.putImageData(o, 0, 0); cv.hd = (src.hd || 1) * 2; return cv; };
+  // Dans une toile fine, ce qui a été tracé au rectangle est encore fait de pavés de 2 × 2 : on en arrondit les escaliers
+  // (la même règle qu'EPX, appliquée aux pavés unis), sans toucher à ce qui a été tracé au trait.
+  function arrondir(cv) { const W = cv.width, H = cv.height, w = W >> 1, h = H >> 1, c = cv.getContext('2d'), a = c.getImageData(0, 0, W, H), s = new Uint32Array(a.data.buffer), t = new Uint32Array(s);
+    const bloc = new Float64Array(w * h); // la couleur d'un pavé uni, ou un nombre négatif propre à chaque pavé mêlé
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = y * 2 * W + x * 2, p = s[i]; bloc[y * w + x] = (s[i + 1] === p && s[i + W] === p && s[i + W + 1] === p) ? p : -1 - (y * w + x); }
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const p = bloc[y * w + x]; if (p < 0) continue;
+      const A = y ? bloc[(y - 1) * w + x] : p, B = x < w - 1 ? bloc[y * w + x + 1] : p, C = x ? bloc[y * w + x - 1] : p, Dn = y < h - 1 ? bloc[(y + 1) * w + x] : p, i = y * 2 * W + x * 2;
+      if (C === A && C !== Dn && A !== B && A >= 0) t[i] = A; if (A === B && A !== C && B !== Dn && B >= 0) t[i + 1] = B;
+      if (Dn === C && Dn !== B && C !== A && C >= 0) t[i + W] = C; if (B === Dn && B !== A && Dn !== C && Dn >= 0) t[i + W + 1] = Dn; }
+    s.set(t); c.putImageData(a, 0, 0); return cv; }
+  // l'encre : le bord d'un objet s'assombrit d'un point réel, comme le liseré des personnages
+  function encrer(cv, f) { const W = cv.width, H = cv.height, c = cv.getContext('2d'), a = c.getImageData(0, 0, W, H), d = a.data, bord = [];
+    const plein = (x, y) => x >= 0 && y >= 0 && x < W && y < H && d[(y * W + x) * 4 + 3] > 127;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (plein(x, y) && !(plein(x - 1, y) && plein(x + 1, y) && plein(x, y - 1) && plein(x, y + 1))) bord.push((y * W + x) * 4);
+    bord.forEach(i => { d[i] = d[i] * (1 - f) + 26 * f; d[i + 1] = d[i + 1] * (1 - f) + 18 * f; d[i + 2] = d[i + 2] * (1 - f) + 30 * f; });
+    c.putImageData(a, 0, 0); return cv; }
+  // Adoucit un dessin sans en perdre les contours : chaque point se fond avec ceux de ses voisins qui lui ressemblent (les
+  // tons d'une même étoffe), jamais avec un trait d'encre ni avec une autre matière. Le voile reste une seule surface.
+  G.adoucir = function (cv, seuil, passes) { const W = cv.width, H = cv.height, c = cv.getContext('2d'), a = c.getImageData(0, 0, W, H), d = a.data;
+    for (let n = 0; n < (passes || 2); n++) { const s = new Uint8ClampedArray(d);
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const i = (y * W + x) * 4; if (s[i + 3] < 128) continue; let r = s[i] * 4, g = s[i + 1] * 4, b = s[i + 2] * 4, k = 4;
+        for (let q = 0; q < 4; q++) { const X = x + (q === 0 ? 1 : q === 1 ? -1 : 0), Y = y + (q === 2 ? 1 : q === 3 ? -1 : 0); if (X < 0 || Y < 0 || X >= W || Y >= H) continue; const j = (Y * W + X) * 4;
+          if (s[j + 3] < 128 || Math.abs(s[j] - s[i]) + Math.abs(s[j + 1] - s[i + 1]) + Math.abs(s[j + 2] - s[i + 2]) > (seuil || 84)) continue; r += s[j] * 1.5; g += s[j + 1] * 1.5; b += s[j + 2] * 1.5; k += 1.5; }
+        d[i] = r / k; d[i + 1] = g / k; d[i + 2] = b / k; } }
+    c.putImageData(a, 0, 0); return cv; };
+  // le grain d'un sol fin : chaque point réel reçoit un rien de clair ou de sombre, pour que la matière ne soit plus faite de pavés
+  function grain(cv, r, f) { const c = cv.getContext('2d'), w = cv.width, h = cv.height, a = c.getImageData(0, 0, w, h), d = a.data;
+    for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue; const k = 1 + (r() - 0.5) * f; d[i] = Math.min(255, d[i] * k); d[i + 1] = Math.min(255, d[i + 1] * k); d[i + 2] = Math.min(255, d[i + 2] * k); }
+    c.putImageData(a, 0, 0); return cv; }
   const R = (c, col, x, y, w, h) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
 
   function shade(hex, f) { // f<1 assombrit, >1 éclaircit
@@ -16,7 +81,9 @@
 
   /* ================= TUILES ================= */
   const tcache = {};
-  function speck(c, r, cols, n) { R(c, cols[0], 0, 0, 16, 16); for (let i = 0; i < n; i++) R(c, cols[1 + Math.floor(r() * (cols.length - 1))], Math.floor(r() * 16), Math.floor(r() * 16), 1, 1); }
+  function speck(c, r, cols, n) { R(c, cols[0], 0, 0, 16, 16);
+    if (G.D > 1) { for (let i = 0; i < n * 3; i++) R(c, cols[1 + Math.floor(r() * (cols.length - 1))], Math.floor(r() * 32) / 2, Math.floor(r() * 32) / 2, r() < 0.3 ? 1 : 0.5, 0.5); return; } // en dessin fin : un semis trois fois plus serré, de demi-points
+    for (let i = 0; i < n; i++) R(c, cols[1 + Math.floor(r() * (cols.length - 1))], Math.floor(r() * 16), Math.floor(r() * 16), 1, 1); }
   const P = {
     sand: ['#dbb97c', '#d2ae70', '#e4c58b', '#cba769'], path: ['#bd9a67', '#b08c5a', '#c7a573', '#a8855a'],
     stone: ['#b9b1a0', '#a9a08f', '#c7c0b0', '#9d9585'], grass: ['#6f9a4c', '#5f8a42', '#7fa957', '#557d3b'],
@@ -72,13 +139,17 @@
     bwall(c, r) { R(c, '#d9b37f', 0, 0, 16, 9); R(c, '#e8c896', 0, 0, 16, 2); R(c, '#b98f5c', 0, 9, 16, 7); R(c, '#a07a4c', 0, 15, 16, 1); c.fillStyle = '#a98252'; c.fillRect(0, 12, 16, 1); c.fillRect(5, 9, 1, 3); c.fillRect(11, 12, 1, 3); c.fillStyle = '#c9a56e'; for (let i = 0; i < 6; i++) c.fillRect(Math.floor(r() * 15), 2 + Math.floor(r() * 6), 1, 1); },
     dark(c) { R(c, '#07060c', 0, 0, 16, 16); }
   };
+  const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet']); // lumière, vide et carreaux vernis restent nets
   const SOLID = new Set(['bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull']);
   G.isSolidTile = n => SOLID.has(n);
   G.tile = function (name, variant, hue) {
     const key = name + '|' + (variant || 0) + '|' + (hue || 0);
     if (tcache[key]) return tcache[key];
-    const cv = mk(16, 16), c = cv.getContext('2d');
+    const cv = G.toile(16, 16), c = cv.getContext('2d');
+    if (G.D > 1) { const fr = c.fillRect.bind(c), bord = (v, n) => v === 0 ? 0 : v + n >= 16 ? v + 0.5 : v + 0.25; // en dessin fin, un trait d'un point se trace deux fois plus fin : joints, lattes, reflets
+      c.fillRect = (x, y, w, h) => { if (h === 1 && w > 1) fr(x, bord(y, 1), w, 0.5); else if (w === 1 && h > 1) fr(bord(x, 1), y, 0.5, h); else fr(x, y, w, h); }; }
     (TILE[name] || TILE.dark)(c, I.rng(I.hash(key)), variant || 0, hue || 0);
+    if (G.D > 1 && !SANS_GRAIN.has(name)) grain(cv, I.rng(I.hash('g' + key)), 0.09);
     return (tcache[key] = cv);
   };
 
@@ -86,6 +157,13 @@
   // chaque objet : { w, h, fw, fh (empreinte au sol, px), draw(c, r, opt) }
   const OBJ = {
     palm: { w: 28, h: 44, fw: 6, fh: 4, draw(c, r) {
+      if (G.D > 1) { // en dessin fin : un tronc aux anneaux serrés, des palmes en lames courbes avec leurs folioles
+        for (let y = 18; y < 44; y += 0.5) { const x = 13 + Math.sin(y / 9) * 1.5; R(c, (Math.floor(y * 2) % 5) ? '#8a6238' : '#6e4c2a', x, y, 3, 0.5); R(c, '#a57a48', x, y, 0.75, 0.5); R(c, '#5e4124', x + 2.5, y, 0.5, 0.5); }
+        const palme = (ang, len, col, col2) => { const ox = 14.5, oy = 17, ex = ox + Math.cos(ang) * len, ey = oy + Math.sin(ang) * len + len * len * 0.022, mx = ox + Math.cos(ang) * len * 0.5, my = oy + Math.sin(ang) * len * 0.5 - 2.2;
+          c.fillStyle = col; c.beginPath(); c.moveTo(ox, oy - 1); c.quadraticCurveTo(mx, my - 1.6, ex, ey); c.quadraticCurveTo(mx, my + 1.8, ox, oy + 1); c.fill();
+          c.strokeStyle = col2; c.lineWidth = 0.5; for (let i = 2; i < len - 1; i += 1.5) { const t = i / len, x = (1 - t) * (1 - t) * ox + 2 * (1 - t) * t * mx + t * t * ex, y = (1 - t) * (1 - t) * oy + 2 * (1 - t) * t * my + t * t * ey; c.beginPath(); c.moveTo(x, y); c.lineTo(x + 0.3, y + 2.4 * (1 - t * 0.5)); c.stroke(); } };
+        [[-2.9, 13], [-2.3, 14], [-1.7, 12], [-1.2, 13], [-0.6, 14], [-0.15, 13], [3.5, 11], [-0.9, 10]].forEach(([a, l], i) => palme(a, l, i % 2 ? '#4f8a3c' : '#3f7631', i % 2 ? '#3a6d2c' : '#2f5c26'));
+        c.fillStyle = '#7a4a22'; c.beginPath(); c.arc(13, 17.5, 1.2, 0, 6.3); c.fill(); c.fillStyle = '#b5651d'; c.beginPath(); c.arc(16, 18.2, 1.2, 0, 6.3); c.fill(); return; }
       for (let y = 18; y < 44; y++) { const x = 13 + Math.round(Math.sin(y / 9) * 1.5); R(c, y % 3 ? '#8a6238' : '#6e4c2a', x, y, 3, 1); R(c, '#a57a48', x, y, 1, 1); }
       const fr = (ang, len, col) => { for (let i = 0; i < len; i++) { const x = 14 + Math.cos(ang) * i, y = 16 + Math.sin(ang) * i + i * i * 0.022; R(c, col, Math.round(x), Math.round(y), 2, 1); if (i % 2) R(c, col, Math.round(x), Math.round(y) + 1, 1, 2); } };
       [[-2.9, 13], [-2.3, 14], [-1.7, 12], [-1.2, 13], [-0.6, 14], [-0.15, 13], [3.5, 11], [-0.9, 10]].forEach(([a, l], i) => fr(a, l, i % 2 ? '#4f8a3c' : '#3f7631'));
@@ -139,11 +217,12 @@
     spring: { w: 20, h: 12, fw: 0, fh: 0, flat: true, draw(c) { c.fillStyle = '#3a95b6'; c.beginPath(); c.ellipse(10, 6, 9, 5, 0, 0, 6.3); c.fill(); c.fillStyle = '#8fd3e4'; c.fillRect(6, 4, 4, 1); c.fillRect(11, 7, 3, 1); } }
   };
   G.OBJ = OBJ;
-  const ocache = {};
+  const ocache = {}, ecache = {};
   G.obj = function (type, opt, seed) {
     const key = type + JSON.stringify(opt || {}) + (seed || 0);
     if (ocache[key]) return ocache[key];
-    const d = OBJ[type]; const cv = mk(d.w, d.h); d.draw(cv.getContext('2d'), I.rng(I.hash(key)), opt);
+    const d = OBJ[type]; const cv = G.toile(d.w, d.h); d.draw(cv.getContext('2d'), I.rng(I.hash(key)), opt);
+    if (cv.hd === 2) { arrondir(cv); if (!d.flat && !d.hue) encrer(cv, 0.42); } // en dessin fin : escaliers arrondis, bord à l'encre (pas sur ce qui est posé à plat ni sur la lumière)
     return (ocache[key] = cv);
   };
 
@@ -152,11 +231,10 @@
   G.DIRS = { down: 0, left: 1, right: 2, up: 3 };
 
   /* ================= ÉGRÉGORES ================= */
-  const ecache = {};
   G.enemy = function (art, hue, scale, seed) {
     const key = art + '|' + hue + '|' + scale + '|' + (seed || 0); if (ecache[key]) return ecache[key];
-    const S = scale >= 3 ? 112 : scale === 2 ? 80 : 52;
-    const cv = mk(S, S), c = cv.getContext('2d'), r = I.rng(I.hash(key));
+    const S0 = scale >= 3 ? 112 : scale === 2 ? 80 : 52, S = S0 * G.D; // tracé au trait : à définition double, ses bords et son liseré sont deux fois plus fins
+    const cv = mk(S, S), c = cv.getContext('2d'), r = I.rng(I.hash(key)); cv.hd = G.D;
     const col = (l, s) => `hsl(${hue},${s === undefined ? 55 : s}%,${l}%)`;
     const c0 = col(14, 40), c1 = col(26, 50), c2 = col(42, 60), c3 = col(64, 80), c4 = col(84, 100), alt = `hsl(${(hue + 150) % 360},90%,70%)`;
     const u = S / 100; c.save(); c.scale(u, u);
@@ -226,7 +304,7 @@
   /* ================= COMPOSITION ================= */
   G.init = function (canvas) {
     G.cv = canvas; G.out = canvas.getContext('2d');
-    G.pcv = mk(G.PW, G.PH); G.px = G.pcv.getContext('2d'); G.px.imageSmoothingEnabled = false;
+    G.pcv = G.toile(G.PW, G.PH); G.px = G.pcv.getContext('2d');
     G.bcv = mk(G.PW / 4, G.PH / 4); G.bx = G.bcv.getContext('2d');
     G.lcv = mk(G.PW / 2, G.PH / 2); G.lx = G.lcv.getContext('2d');
     G.resize();
@@ -237,6 +315,9 @@
     const st = document.getElementById('stage') || G.cv.parentElement, dpr = Math.min(window.devicePixelRatio || 1, 2);
     const w = st.clientHeight * G.PW / G.PH > st.clientWidth + 1 ? st.clientHeight * G.PW / G.PH : st.clientWidth, coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
     G.k = Math.max(2, Math.min(G.low ? 2 : coarse ? 3 : 4, Math.ceil(w * dpr / G.PW)));
+    // un dessin deux fois plus fin ne s'agrandit proprement que d'un nombre entier de fois ; sur un écran tactile, il est
+    // montré tel quel (768 × 432 : moins de points à composer qu'avant, pour un dessin plus fin) et l'écran fait le reste
+    if (G.D === 2) G.k = (G.low || coarse || G.k < 3) ? 2 : G.lisse ? G.k : 4;
     if (G.cv.width !== G.PW * G.k) { G.cv.width = G.PW * G.k; G.cv.height = G.PH * G.k; }
     st.style.setProperty('--u', (st.clientHeight / G.PH) + 'px');
   };
@@ -274,7 +355,7 @@
     let sx = 0, sy = 0;
     if (G.shakeT > 0) { G.shakeT -= dt; sx = (Math.random() - 0.5) * 6 * k * Math.min(1, G.shakeT * 4); sy = (Math.random() - 0.5) * 6 * k * Math.min(1, G.shakeT * 4); }
     c.setTransform(1, 0, 0, 1, 0, 0); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1;
-    c.imageSmoothingEnabled = false;
+    c.imageSmoothingEnabled = !!G.lisse; if (G.lisse) c.imageSmoothingQuality = 'high';
     c.fillStyle = '#05040a'; c.fillRect(0, 0, W, H);
     c.drawImage(G.pcv, sx, sy, W, H);
     // flou basse résolution réutilisé pour le halo et le tilt-shift
@@ -352,7 +433,7 @@
     if (o.grade) { c.globalCompositeOperation = o.grade[2] || 'soft-light'; c.globalAlpha = o.grade[1]; c.fillStyle = o.grade[0]; c.fillRect(0, 0, W, H); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
     if (o.tint) { c.globalAlpha = 0.28; c.fillStyle = o.tint; c.fillRect(0, 0, W, H); c.globalAlpha = 1; }
     // balayage cyber
-    if (o.scan) { c.globalAlpha = 0.07; c.fillStyle = '#000'; for (let y = 0; y < H; y += k * 2) c.fillRect(0, y, W, k); c.globalAlpha = 1;
+    if (o.scan) { if (G.D === 1) { c.globalAlpha = 0.07; c.fillStyle = '#000'; for (let y = 0; y < H; y += k * 2) c.fillRect(0, y, W, k); c.globalAlpha = 1; } // les lignes de balayage : seulement dans le dessin d'origine
       if (Math.random() < 0.02) { const y = Math.random() * H, h = 4 * k; c.drawImage(G.cv, 0, y, W, h, (Math.random() - 0.5) * 20 * k, y, W, h); } }
     // vignette
     const vcx = (G.view.x + G.view.w / 2) * k, vr = Math.hypot(G.view.w / 2, G.PH / 2) / Math.hypot(G.PW / 2, G.PH / 2);

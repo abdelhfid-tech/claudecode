@@ -370,7 +370,7 @@
      Les règles de tenue (manteau, motif, armure, écharpe…) sont celles de grid(), écrites à cette échelle ; les objets
      tenus viennent de grid() lui-même, agrandis. Ce qui n'a pas encore son gabarit garde le grand sprite d'avant.
      Le voile (V) d'une tête est une surface d'un seul tenant : le moteur refuse de démarrer sinon — personne n'a de visage. */
-  const W2 = W * 2, H2 = H * 2, TETES = {}, CORPS = { d: [], l: [] }, ALLURES = {};
+  const W2 = W * 2, H2 = H * 2, TETES = {}, CORPS = { d: [], l: [], u: [] }, ALLURES = {};
   const PETIT = [7, 8, 17, 18, 21, 22]; // enfant : six lignes de corps en moins
   const HAMPES = ['lance', 'baton', 'masse', 'durra', 'etendard', 'calame']; // ce qui se tient à pleine main
   const VIDE = '................................';
@@ -458,6 +458,29 @@
         '....LLLLLLLLLLlLLlkeeeeEEE......', '....LLLLLLLLLlLLLlkeeeeEEEE.....', '....ZZZZZZZZZZZZZZkeeeeEEE......', VIDE]), 20) };
   }
   D.POSES.forEach(p => { if (!ALLURES[p] || !ALLURES[p].d || !ALLURES[p].l) throw new Error('pose sans grand dessin : ' + p); });
+  /* ---------- de dos ----------
+     Le manteau couvre le dos : C en haut, puis B (le pan du dos : couleur du manteau ; sans manteau, la robe ; en tenue
+     courte, les jambes), son pli au milieu. Mêmes colonnes que de face : les règles de tenue s'y appliquent telles quelles. */
+  { const U0 = CORPS.u[0] = gabarit('corps de dos', [
+      '.........cCCCCCCCCCCCck.........', '.......CCCCCCCCCCCCCCCcck.......', '......CCCCCCCCCCCCCCCCCcck......', '.....CCCCCCCCCCCCCCCCCCCcck.....',
+      '.....CCCc.cCCCCCCCCCCc.cCck.....', '.....CCCc.cCCCCCCCCCCc.cCck.....', '.....CCcc.cCCCCCCCCCCc.cCck.....', '.....CCcc.cCCCCCCCCCcc.cCck.....',
+      '.....CCcc.cCCCCCcCCCcc.cckk.....', '.....CCcc.cCCCCCcCCCcc.cckk.....', '.....Cccc.cCCCCCcCCCcc.cckk.....', '.....Cccc.ccCCCCcCCccc.cckk.....',
+      '.....kkkk.kBBBBBBBBBBk.kkkk.....', '......NNN.kBBBBBBBBBbk.NNN......', '......NNN.kBBBBBbBBBbk.NNN......', '......ENE.kBBBBBbBBBbk.ENe......',
+      '......EEE.kBBBBBbBBBbk.EEe......', '......EEekBBBBBBbBBBBbkEEe......', '......EEekBBbBBBbBBBbBkEEe......', '......EEekBBbBBBbBBBbBkEee......',
+      '.....EEEekBBbBBBmmBBBbBkEEe.....', '.....EEEekBBbBBBmmBBBbBkEEe.....', '.....EEEekBBbBBBmmBBBbBkEee.....', '.....EEEekBBbBBBmmBBBbBkEee.....',
+      '.....EEeekBBbBBBmmBBBbBkEee.....', '.....EeeekZZZZZZMMZZZZZkeee.....', '..........FFFFf..FFFFf..........', '..........FFFFf..FFFFf..........',
+      '..........FFFFf..FFFFf..........', '................................'], 30);
+    const g = r => r.slice(0, 10), m = r => r.slice(10, 22), d = r => r.slice(22), borne = j => Math.max(11, Math.min(16, j));
+    const pas = (dg, dd, leve) => gabarit('marche de dos', U0.map((r, j) => j >= 11 && j <= 16 ? g(U0[borne(j - dg)]) + m(r) + d(U0[borne(j - dd)])
+      : j >= 27 && j <= 28 ? (leve === 'd' ? r.slice(0, 16) + '.'.repeat(16) : '.'.repeat(16) + r.slice(16)) : r), 30);
+    CORPS.u[1] = pas(1, -1, 'd'); CORPS.u[2] = pas(-1, 1, 'g');
+    const sansMains = rows => rows.map(r => r.replace(/NNN/g, '...').replace('ENE', 'EEE').replace('ENe', 'EEe'));
+    ALLURES.prie.u = gabarit('recueillement de dos', sansMains(U0), 30);
+    // résolution : le bras levé est, de dos, du côté droit de l'image
+    ALLURES.resolu.u = { haut: 10, rows: gabarit('résolution de dos', [VIDE].concat(['NNN', 'NNN', 'NNN', 'kkk', 'CCc', 'CCc', 'CCc', 'CCc', 'CCc'].map(s3 => '.'.repeat(24) + s3 + '.'.repeat(5)),
+      U0.map((r, j) => j >= 4 && j <= 12 ? r.slice(0, 22) + '.'.repeat(10) : j >= 13 && j <= 16 ? r.slice(0, 23) + '.'.repeat(9) : r)), 40) };
+    ALLURES.accable.u = gabarit('accablement de dos', U0.slice(0, 12).concat(['.....kkkk.kBBBBbBBBBBk.kkkk.....', '......NNNkBBBBBbBBBBBkNNN.......', '.....eNNkBBBBBBbBBBBBBkNNe......', '....EeekBBBBBBBbBBBBBBBkeee.....',
+      '...EEeekBBBBBBBBbBBBBBBBkeee....', '...EEeekBBBbBBBBbBBBBbBBkeeee...', '..EEEeekZZZZZZZZZZZZZZZZkeeee...', VIDE]), 20); }
 
   /* ---------- têtes natives ----------
      Une tête = un haut (8 lignes : le sommet de la coiffe), un bandeau (2 lignes) et un tour de visage (10 lignes, dont
@@ -569,7 +592,33 @@
       l: h.concat(['........TTuuuuuTTTTTTttu........', '.........vVVVVvuTTtTTTtu........', '........vVVVVVVuTTTtTTttu.......', '........VVVVVVVuTTtTTTttu.......', '........VVVVVVVuTTTTtTtuu.......', '........VVVVVVVuTtTTTttuu.......',
         '........vVVVVVvuTTTtTTtuu.......', '.........vVVVVvuTTtTTttuu.......', '..........vVVvuuTtTTTtuuu.......', '............tuuTTTtTtuuu........', '............tuTTtTTTtuuu........', '...........tTuTTTtTTtuuu........',
         '...........TtuTtTTTttuu.........']) }); }
-  Object.keys(HEADS).forEach(c => { if (!TETES[c]) throw new Error('coiffe sans tête native : ' + c); });
+  /* ---------- les têtes, de dos ----------
+     Pas de voile : de dos, on ne voit que l'étoffe ou le fer. Les turbans partagent la nuque ; les casques, le camail. */
+  { const dos = (nom, rows) => { const t = voileUni(gabarit('tête ' + nom + '.u', rows, 20)); if (t) throw new Error('tête native ' + nom + '.u : ' + t); if (rows.some(r => /[Vv]/.test(r))) throw new Error('tête native ' + nom + '.u : un voile, de dos'); TETES[nom].u = rows; };
+    const NUQUE = ['..........ttTTTTTTtttu..........', '..........tttttttttuuu..........', '..........tTTTTTTttttu..........', '..........tttttttttuuu..........', '..........ttTTTTTttttu..........',
+      '..........tttttttttuuu..........', '..........tttTTTtttuuu..........', '...........tttttttuuu...........', '............ttttuuuu............', '.............ttuuuu.............']; // l'étoffe enroulée, dans l'ombre du turban
+    const MAIL_U = mailler(['..........############..........', '..........############..........', '..........############..........', '..........############..........', '..........############..........',
+      '..........############..........', '..........############..........', '...........##########...........', '...........##########...........', '............########............']);
+    dos('imama', H_IMAMA.concat(BAND_D, NUQUE)); dos('imama_large', H_LARGE.concat(BAND_D, NUQUE)); dos('imama_haute', H_HAUTE.concat(BAND_D, NUQUE)); dos('calotte', H_CALOTTE.concat(BAND_D, NUQUE));
+    // le pan du turban descend au milieu du dos
+    dos('imama_queue', TETES.imama.u.concat(new Array(5).fill(VIDE)).map((r, y) => y >= 8 && y <= 24 ? r.slice(0, 15) + ((y + (y >> 1)) % 2 ? 'Tt' : 'tu') + r.slice(17) : r));
+    dos('casque_turban', H_CASQUE.concat(CEINT, MAIL_U)); dos('casque', H_CASQUE.concat(BORD, MAIL_U));
+    dos('casque_bandes', TETES.casque_bandes.d.slice(0, 10).concat(MAIL_U)); dos('casque_cuir', TETES.casque_cuir.d.slice(0, 10).concat(NUQUE)); dos('tiare', TETES.tiare.d.slice(0, 10).concat(NUQUE));
+    dos('capuche', [VIDE, '...............tu...............', '..............tTtu..............', '.............tTHTtu.............', '............tTHTTTtu............', '...........tTHTTTTTtu...........',
+      '..........tTTTTTTTTTtu..........', '.........tTTTTTTtTTTTtu.........', '.........TTTTTTTtTTTTtu.........', '.........TTTTTTTtTTTTtu.........', '.........TTTTTTTtTTTTtu.........',
+      '.........TTTTTTTtTTTTtu.........', '.........TTTTTTTtTTTTtu.........', '.........TTTTTTTtTTTTtu.........', '.........TTTTTTTtTTTttu.........', '.........TTTTTTTtTTTttu.........',
+      '.........tTTTTTTtTTTttu.........', '..........ttTTTTtTTttu..........', '........tTTtttttttttttTu........', '.......tTTTTTtttttttTTTTu.......', '......tTTTTTTTTTTTTTTTTTTu......',
+      '......TTTTTTTTTTTTTTTTTTtu......', '.......tTTTTTTTTTTTTTTTtu.......', '.........uttttttttttttu.........']);
+    dos('coiffe_mailles', mailler([VIDE, VIDE, VIDE, VIDE, '.............######.............', '...........##########...........', '..........############..........', '..........############..........', '..........############..........',
+      '..........############..........', '..........############..........', '..........############..........', '..........############..........', '..........############..........', '..........############..........',
+      '..........############..........', '..........############..........', '..........############..........', '.........##############.........', '........################........', '.......##################.......',
+      '.......jjjjjjjjjjjjjjjjjj.......']));
+    dos('litham', H_IMAMA.concat(['.........uuuuuuuuuuuuuu.........', '..........tttttttttttu..........', '..........ttttttDttttu..........', '..........tttttDtttttu..........'], TETES.litham.d.slice(12)));
+    dos('keffieh', TETES.keffieh.d.slice(0, 6).concat(['........tTTTtTTTTTTtTTtu........', '........TTTTTTTtTTTTTTtu........', '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........',
+      '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........', '.......tTTtTTTTtTTTTtTTtu.......',
+      '.......TTTtTTTTtTTTTtTTtu.......', '......tTTTtTTTTtTTTTtTTTtu......', '......TTTTtTTTTtTTTTtTTTtu......', '.......tTTTtTTTtTTTtTTTtu.......', '.........tTTtTTtTTtTTtu.........', '...........tTtTtTtTtu...........',
+      '.............tTtTtu.............', '...............tu...............'])); }
+  Object.keys(HEADS).forEach(c => { if (!TETES[c] || !TETES[c].d || !TETES[c].l || !TETES[c].u) throw new Error('coiffe sans tête native : ' + c); });
 
   // familles de tons : les lettres d'une même matière, de la plus claire à la plus sombre
   const FAM = { H: 'Ttu', T: 'Ttu', t: 'Ttu', u: 'Ttu', D: 'Ttu', C: 'Cck', c: 'Cck', k: 'Cck', E: 'Cck', e: 'Cck', B: 'Cck', b: 'Cck', m: 'Cck', R: 'Rr', r: 'Rr', S: 'Ss', s: 'Ss', M: 'Ss',
@@ -619,7 +668,7 @@
       for (let y = cou + 10; y < cou + 12; y++) for (let x2 = 0; x2 < W2; x2++) if ('Aa'.indexOf(L[y][x2]) >= 0) L[y][x2] = 'y'; }
     // les objets tenus : ceux de grid(), agrandis, ramenés à la hauteur de la main
     const dyo = kneel ? 0 : (cou + 13 - (K.petit ? 2 : 0)) - (2 * r.b0 + 10);
-    r.objets.forEach(o => { const o2 = scale2x(o.g), dxo = key === 'd' ? (HAMPES.indexOf(o.nom) >= 0 ? 2 : 0) : (o.nom === 'durra' || o.nom === 'calame') ? 10 : 0; // la hampe vient contre la main
+    r.objets.forEach(o => { const o2 = scale2x(o.g), dxo = key === 'd' ? (HAMPES.indexOf(o.nom) >= 0 ? 2 : 0) : key === 'l' && (o.nom === 'durra' || o.nom === 'calame') ? 10 : 0; // la hampe vient contre la main
       for (let y = 0; y < H2; y++) for (let x = 0; x < W2; x++) { const m = o2[y][x], X = x + dxo, Y = y + dyo; if (m !== '.' && X < W2 && Y >= 0 && Y < H2 && L[Y][X] !== 'N') { L[Y][X] = m; am[Y][X] = 0; fin[Y][X] = 1; } } });
     // la tête, inclinée ou abaissée selon la pose ; le cimier suit le sommet du casque
     const y0 = cou - 18 + 2 * hy, x0 = hy && key === 'l' ? -2 : 0, pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1; } };
@@ -628,26 +677,36 @@
     if (dir === 2) [L, am, fin].forEach(t => t.forEach(row => row.reverse()));
     return { L, K, am, fin, hors };
   }
-  function grand(look, dir, frame, pose) {
-    if (!G.natif) return ancien(look, dir, frame, pose);
-    const k = 'n' + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
-    const n = natifGrille(look, dir, frame, pose); if (!n) return (scache[k] = ancien(look, dir, frame, pose));
-    const { L, K, am, fin } = n, pal = palette(look, K), R = rampes(pal), w = W2, h = H2;
-    const cv = mk(w, h), c = cv.getContext('2d'), px = (x, y, col) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } };
+  // la même grille de matières, deux fois plus grande, ses escaliers arrondis (la règle d'EPX, sur des lettres)
+  function grilleFine(g, w, h) { const o = []; for (let y = 0; y < h * 2; y++) o.push(new Array(w * 2)); const at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? '.' : g[y][x];
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const p = g[y][x], a = at(x, y - 1), b = at(x + 1, y), c = at(x - 1, y), d = at(x, y + 1);
+      o[y * 2][x * 2] = (c === a && c !== d && a !== b) ? a : p; o[y * 2][x * 2 + 1] = (a === b && a !== c && b !== d) ? b : p;
+      o[y * 2 + 1][x * 2] = (d === c && d !== b && c !== a) ? c : p; o[y * 2 + 1][x * 2 + 1] = (b === d && b !== a && d !== c) ? d : p; }
+    return o; }
+  const doubler = t => { const o = []; t.forEach(r => { const q = []; r.forEach(v => q.push(v, v)); o.push(q, q.slice()); }); return o; };
+  // fin = 2 : le même personnage tracé en 64 × 96 — même composition, formes arrondies, liseré, arêtes et lumière du voile
+  // deux fois plus fins. C'est lui que montrent le combat et les menus en dessin fin (gfx.D = 2).
+  function grand(look, dir, frame, pose, fin2) {
+    const s = fin2 === 2 ? 2 : 1;
+    if (!G.natif) { if (s === 1) return ancien(look, dir, frame, pose); const ka = 'A' + ck(look, dir, frame, pose); return scache[ka] || (scache[ka] = G.epx(ancien(look, dir, frame, pose))); }
+    const k = (s === 2 ? 'N' : 'n') + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
+    const n = natifGrille(look, dir, frame, pose); if (!n) return (scache[k] = s === 2 ? G.epx(ancien(look, dir, frame, pose)) : ancien(look, dir, frame, pose));
+    const K = n.K, L = s === 2 ? grilleFine(n.L, W2, H2) : n.L, am = s === 2 ? doubler(n.am) : n.am, fin = s === 2 ? doubler(n.fin) : n.fin, pal = palette(look, K), R = rampes(pal), w = W2 * s, h = H2 * s;
+    const cv = mk(w, h), c = cv.getContext('2d'), px = (x, y, col) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } }; if (s === 2) cv.hd = 2;
     const voile = m => m === 'V' || m === 'v', at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? '.' : L[y][x];
     const plein = (x, y) => { const m = at(x, y); return m !== '.' && (voile(m) || pal[m] != null); }, meme = (x, y, f) => { const m = at(x, y); return m !== '.' && FAM[m] === f && !!R[m]; };
     // le voile : une lumière qui se dégrade du centre vers le bord (Compagnons), une étoffe unie sinon — jamais un trait
     let x0 = 99, x1 = -1, y0 = 99, y1 = -1; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (voile(L[y][x])) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
     const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 - 0.5, rx = (x1 - x0) / 2 + 0.5, ry = (y1 - y0) / 2 + 0.5;
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const m = L[y][x]; if (m === '.') continue;
-      if (voile(m)) { const dd = Math.hypot((x - cx) / rx, (y - cy) / ry); px(x, y, K.lit ? (dd < 0.5 ? '#ffffff' : dd < 0.82 ? pal.V : pal.v) : (y - y0 < 2 || dd > 0.86 ? pal.v : pal.V)); continue; }
+      if (voile(m)) { const dd = Math.hypot((x - cx) / rx, (y - cy) / ry); px(x, y, K.lit ? (dd < 0.5 ? '#ffffff' : dd < 0.82 ? pal.V : pal.v) : (y - y0 < 2 * s || dd > 0.86 ? pal.v : pal.V)); continue; }
       const r = R[m]; if (!r) { px(x, y, pal[m]); continue; }                  // main, parchemin, néon, cimier : à plat
       let i = r.i;
-      if (am[y][x]) { const a = K.armure, bordG = !am[y][x - 1], bordD = !am[y][x + 1];   // l'armure : mailles fines, lamelles en rangs, cuir cousu, toile piquée
-        if (a === 'mailles') i = bordG ? 1 : bordD ? 3 : ((x + y) & 1) ? 2 : 1 + ((x * 3 + y) % 7 === 0 ? -1 : 0);
-        else if (a === 'lamelles') i = (y % 3 === 2) ? 3 : (x % 3 === 2 ? 2 : bordG ? 0 : 1);
-        else if (a === 'cuir') { if (y % 4 === 3 || (x + (y >> 2) * 2) % 5 === 0) i++; }
-        else if ((x + y) % 4 === 0 || (x - y + 48) % 4 === 0) i++; }
+      if (am[y][x]) { const a = K.armure, bordG = !am[y][x - 1], bordD = !am[y][x + 1], X = (x / s) | 0, Y = (y / s) | 0;   // l'armure : mailles fines, lamelles en rangs, cuir cousu, toile piquée — le motif garde sa taille, son bord s'affine
+        if (a === 'mailles') i = bordG ? 1 : bordD ? 3 : ((X + Y) & 1) ? 2 : 1 + ((X * 3 + Y) % 7 === 0 ? -1 : 0);
+        else if (a === 'lamelles') i = (Y % 3 === 2) ? 3 : (X % 3 === 2 ? 2 : bordG ? 0 : 1);
+        else if (a === 'cuir') { if (Y % 4 === 3 || (X + (Y >> 2) * 2) % 5 === 0) i++; }
+        else if ((X + Y) % 4 === 0 || (X - Y + 48) % 4 === 0) i++; }
       else if (!fin[y][x]) { const f = FAM[m];                               // le modelé du corps : une seule lumière, en haut à gauche
         if (!plein(x, y - 1)) i--; else if (!meme(x, y - 1, f) && !voile(at(x, y - 1))) i++;   // l'arête du haut la reçoit ; sous une autre matière, son ombre
         if (!plein(x - 1, y) && meme(x + 1, y, f)) i--;                       // le bord gauche est éclairé
@@ -669,11 +728,25 @@
   };
   G.charPose = (look, dir, pose) => small(look, dir, 0, pose);
   G.charGrand = (look, dir, frame, pose) => grand(look, dir, frame || 0, pose);
+  // Les personnages tels que le jeu les montre, à la définition courante (gfx.D). En dessin fin, la carte montre le grand
+  // personnage — un point de gabarit pour un point réel — et le combat, ce même personnage agrandi, ses escaliers arrondis.
+  // charSheet, charPose et charGrand, eux, rendent toujours les dessins bruts : les outils de contrôle les lisent.
+  G.planche = function (look) { if (G.D < 2) return G.charSheet(look);
+    const k = 'P' + (G.natif ? 'n' : 'a') + JSON.stringify(look); if (scache[k]) return scache[k];
+    const cv = mk(96, 192), c = cv.getContext('2d');
+    for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) c.drawImage(grand(look, dir, f), f * 32, dir * 48);
+    cv.look = look; cv.hd = 2; return (scache[k] = cv); };
+  G.pose = function (look, dir, pose) { if (G.D < 2) return small(look, dir, 0, pose);
+    const k = 'Q' + (G.natif ? 'n' : 'a') + ck(look, dir, 0, pose); if (scache[k]) return scache[k];
+    const g = grand(look, dir, 0, pose), cv = mk(g.width, g.height); cv.getContext('2d').drawImage(g, 0, 0); cv.hd = 2; return (scache[k] = cv); };
+  G.figure = function (look, dir, frame, pose) { if (G.D < 2) return grand(look, dir, frame || 0, pose); const g = grand(look, dir, frame || 0, pose, 2); if (!G.lisse) return g;
+    const k = 'F' + (G.natif ? 'n' : 'a') + ck(look, dir, frame || 0, pose); if (scache[k]) return scache[k];
+    const cv = mk(g.width, g.height); cv.getContext('2d').drawImage(g, 0, 0); cv.hd = 2; return (scache[k] = G.adoucir(cv)); };
   const ucache = {}; // image du grand sprite, pour les menus
-  G.charURL = (look, dir, pose) => { const k = (G.natif ? 'n' : 'a') + ck(look, dir || 0, 0, pose); return ucache[k] || (ucache[k] = grand(look, dir || 0, 0, pose).toDataURL()); };
+  G.charURL = (look, dir, pose) => { const k = (G.natif ? 'n' : 'a') + G.D + ck(look, dir || 0, 0, pose); return ucache[k] || (ucache[k] = grand(look, dir || 0, 0, pose, G.D).toDataURL()); }; // en dessin fin : le personnage de 64 × 96
   G.KINDS = KINDS; G.COIFFES = Object.keys(HEADS);
   G.natif = true; // false : le grand sprite d'avant, pour comparer
   // la grille de matières d'un grand sprite, pour le contrôle (tools/silhouettes.js) : 48 lignes de 32 lettres
-  G.charGrille = (look, dir, frame, pose) => { const r = natifGrille(look, dir || 0, frame || 0, pose); if (r) return { lignes: r.L.map(l => l.join('')), natif: true, hors: r.hors };
+  G.charGrille = (look, dir, frame, pose, fin2) => { const r = natifGrille(look, dir || 0, frame || 0, pose); if (r) return { lignes: (fin2 === 2 ? grilleFine(r.L, W2, H2) : r.L).map(l => l.join('')), natif: true, hors: r.hors }; // fin2 = 2 : la grille du personnage fin (64 × 96)
     return { lignes: scale2x(grid(look, dir || 0, frame || 0, pose).g).map(l => l.join('')), natif: false, hors: 0 }; };
 })();

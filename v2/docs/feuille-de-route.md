@@ -24,9 +24,9 @@ concerne que `v2/`.*
 | Lot | Contenu | État |
 |---|---|---|
 | A | les trois têtes redessinées, les onze autres relues | **fait** (D151) |
-| B1 | la même scène rendue de trois façons — aujourd'hui · définition doublée · doublée et lissée — pour que le décideur choisisse sur image | à faire |
-| B2 | le rendu retenu, appliqué à tout le jeu : 768 × 432, grands personnages sur les cartes (dos et marche de dos à dessiner), décors affinés, plus de lignes de balayage | à faire |
-| N0 | le tirage des labyrinthes (`v2/src/core/dedale.js`) et sa preuve (`v2/tools/dedales.js`, dix mille graines par profondeur) | à faire |
+| B1 | la même scène rendue de trois façons — aujourd'hui · définition doublée · doublée et lissée — pour que le décideur choisisse sur image | **fait** : trois images envoyées le 16 novembre ; sans réponse, le jeu sort en « fin » |
+| B2 | le rendu fin, appliqué à tout le jeu : 768 × 432, grands personnages sur les cartes (leur dos dessiné), personnages du combat retracés en 64 × 96, cases et objets affinés, lisières, plus de lignes de balayage ; réglage « Dessin » (fin, fin et adouci, d'origine) | **fait** (D154) |
+| N0 | le tirage des labyrinthes (`v2/src/core/dedale.js`) et sa preuve (`v2/tools/dedales.js`, dix mille graines par profondeur) | **fait** (D155) : 120 000 plans, aucun écart |
 | N1 | la noosphère des chapitres devient un labyrinthe : les lieux que les récits nomment y sont toujours, les récits ne changent pas d'un mot | à faire |
 | N2 | le chrono ; écoulé, on remonte au seuil, le labyrinthe se redessine un cran plus simple, rien n'est perdu | à faire |
 | N3 | la noosphère du râwî : un lieu à part, ses maux du cœur et les cinq idées noires y rôdent | à faire |

@@ -7,7 +7,7 @@
    Usage : node tools/cartes.js       code de sortie 1 au premier écart (« ÉCART ») */
 const path = require('path');
 const { chromium } = require('playwright');
-const V1 = 'file://' + path.join(__dirname, '../../index.html'), V2 = 'file://' + path.join(__dirname, '../index.html');
+const V1 = 'file://' + path.join(__dirname, '../../index.html'), V2 = 'file://' + path.join(__dirname, '../index.html') + '?def=1'; // la comparaison se fait dans le dessin d'origine : c'est lui que la 1.32 connaît
 
 // dans la page : toutes les cartes que le contenu demande, puis une empreinte de chacune
 const releve = () => {

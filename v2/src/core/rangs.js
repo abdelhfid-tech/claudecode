@@ -39,14 +39,14 @@
     const mission = (B.rangs || []).slice(0, n), places = mission.map(r => r.voie ? prend(r.ligne === 0 ? 0 : 1, VOIE[r.voie]) : null).map(p => p || libres.shift());
     mission.forEach((r, i) => { const T = D.RANGS[r.t], ordres = R.ordresDe(ch, { T }), veut = T.ordres.includes('tirer') ? 'tirer' : 'tenir';
       ch.rangs.push({ id: 'r' + i, no: i + 1, t: r.t, T, name: r.name || T.name, c: places[i][0], l: places[i][1], tenue: 3, ordre: ordres.includes(veut) ? veut : ordres[0], repos: 0,
-        sheet: G.charSheet(Object.assign({ kind: 'soldat', robe: '#8a7355', head: '#cdbf9f' }, T.look, r.look)), flash: 0 }); });
+        sheet: G.planche(Object.assign({ kind: 'soldat', robe: '#8a7355', head: '#cdbf9f' }, T.look, r.look)), flash: 0 }); });
     // un allié gagné par la parole, si le récit en fait une troupe (`rang`) : le « renfort » devient un rang, déjà engagé au
     // milieu du champ (un par bataille au plus). Les autres alliés (une veille commune, un dû versé) agissent comme avant.
     (n ? (opts.allies || []) : []).filter(al => al.rang && S.flags[al.flag]).slice(0, 1).forEach(al => { const T = D.RANGS[al.rang] || D.RANGS.gens, ordres = R.ordresDe(ch, { T }), tir = x => ch.rangs.some(r => r.l === x && r.T.ordres.includes('tirer')) ? 1 : 0;
       const l = [2, 0, 1].sort((a, b) => tir(a) - tir(b)).find(x => !ch.rangs.some(r => r.l === x && r.c === 2)); // pas devant des archers : il leur boucherait le couloir
       if (l === undefined) return;
       ch.rangs.push({ id: 'r' + ch.rangs.length, no: ch.rangs.length + 1, t: al.rang || 'gens', T, name: al.name, allie: true, c: 2, l, tenue: 3, ordre: ordres.includes('avancer') ? 'avancer' : 'tenir', repos: 0,
-        sheet: G.charSheet(Object.assign({ kind: 'soldat', robe: '#7a6a58', head: '#d9cfb4' }, T.look, al.look)), flash: 0 }); });
+        sheet: G.planche(Object.assign({ kind: 'soldat', robe: '#7a6a58', head: '#d9cfb4' }, T.look, al.look)), flash: 0 }); });
     // les nuées : les égrégores du chapitre (les plus humbles d'abord), une par couloir pour commencer
     const pool = L.egregores.filter(id => saga.enemies[id]).sort((a, b) => (PALIER[saga.enemies[a].tier] || 0) - (PALIER[saga.enemies[b].tier] || 0)); ch.pool = pool.length ? pool : L.idoles.slice(0, 1);
     const voies = [1, 0, 2]; for (let i = 0; i < Math.min(ch.max, VOIES); i++) { const c = 4 - (i === 0 ? 1 : 0); if (!en(ch, c, voies[i])) nuee(ch, c, voies[i]); }

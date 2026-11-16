@@ -46,13 +46,33 @@
     road(x1, y1, x2, y2, t, wd) { wd = wd || 2; const sx = Math.min(x1, x2), ex = Math.max(x1, x2), sy = Math.min(y1, y2), ey = Math.max(y1, y2); this.fillSoft(sx, y1, ex - sx + wd, wd, t); this.fillSoft(x2, sy, wd, ey - sy + wd, t); }
     fillSoft(x, y, w, h, t) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) { const xx = this.X(x + i); if (xx < 0 || y + j < 0 || xx >= this.w || y + j >= this.h) continue; if (!this.solid[(y + j) * this.w + xx]) this.g[(y + j) * this.w + xx] = t; } }
     patch(t, cx, cy, rad, solid) { for (let j = -rad; j <= rad; j++) for (let i = -rad; i <= rad; i++) if (i * i + j * j <= rad * rad + this.r() * rad) this.set(cx + i, cy + j, t, solid); }
+    // En dessin fin, deux sols naturels qui se touchent ne se coupent plus au cordeau : le plus « haut » (l'herbe sur le
+    // chemin, le chemin sur le sable) déborde sur l'autre d'une frange irrégulière. Le sol reste le même case par case :
+    // seule l'image change.
+    lisieres(c) {
+      const RANG = { sand: 0, dune: 1, path: 2, grass: 3 }, w = this.w, h = this.h, g = this.g, hue = this.hue;
+      const at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? -1 : (RANG[g[y * w + x]] === undefined ? -1 : RANG[g[y * w + x]]);
+      const br = k => { const n = Math.sin(k * 12.9898) * 43758.5453; return n - Math.floor(n); }, vague = (u, k) => { const a = Math.floor(u / 3), f = u / 3 - a, s = f * f * (3 - 2 * f); return (br(a * 7.13 + k) * (1 - s) + br((a + 1) * 7.13 + k) * s); };
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const r0 = at(x, y); if (r0 < 0) continue; const v = (x * 7 + y * 13 + ((x * y) % 5)) % 4, X = x * T, Y = y * T;
+        [[0, -1], [1, 0], [0, 1], [-1, 0]].forEach(([dx, dy], q) => { const r1 = at(x + dx, y + dy); if (r1 <= r0) return; const n = g[(y + dy) * w + x + dx];
+          c.save(); c.beginPath();
+          for (let i = 0; i <= 32; i++) { const u = i / 2, gl = (dy ? X : Y) + u, p = 0.6 + vague(gl * 2, (dy ? y + (dy > 0 ? 1 : 0) : x + (dx > 0 ? 1 : 0)) * 3.7 + (dy ? 0 : 91)) * 2.6; // la frange suit la ligne de partage : elle ne casse pas d'une case à l'autre
+            const px = dy ? X + u : (dx > 0 ? X + T - p : X + p), py = dy ? (dy > 0 ? Y + T - p : Y + p) : Y + u; if (i) c.lineTo(px, py); else c.moveTo(px, py); }
+          if (dy) { c.lineTo(X + T, dy > 0 ? Y + T : Y); c.lineTo(X, dy > 0 ? Y + T : Y); } else { c.lineTo(dx > 0 ? X + T : X, Y + T); c.lineTo(dx > 0 ? X + T : X, Y); }
+          c.closePath(); c.clip(); c.drawImage(G.tile(n, v, hue), X, Y); c.restore(); });
+        // les coins : un sol plus haut qui ne touche que par la pointe arrondit son angle
+        [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(([dx, dy]) => { const r1 = at(x + dx, y + dy); if (r1 <= r0 || at(x + dx, y) > r0 || at(x, y + dy) > r0) return;
+          c.save(); c.beginPath(); c.arc(dx > 0 ? X + T : X, dy > 0 ? Y + T : Y, 1.2 + br(x * 3.1 + y * 5.7) * 1.4, 0, 6.3); c.clip(); c.drawImage(G.tile(g[(y + dy) * w + x + dx], v, hue), X, Y); c.restore(); });
+      }
+    }
     finish(env) {
-      const cv = G.mk(this.w * T, this.h * T), c = cv.getContext('2d'); const anim = [];
+      const cv = G.toile(this.w * T, this.h * T), c = cv.getContext('2d'); const anim = [];
       for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) {
         const n = this.g[y * this.w + x], v = (x * 7 + y * 13 + ((x * y) % 5)) % 4;
         c.drawImage(G.tile(n, v, this.hue), x * T, y * T);
         if (n === 'water' || n === 'sea') anim.push({ x, y, n });
       }
+      if (cv.hd > 1) this.lisieres(c);
       (this.decals || []).forEach(d => drawRosette(c, d));
       // ombres portées au pied des bâtiments
       (this.shadows || []).forEach(sh => { const g = c.createLinearGradient(0, sh[1] * T, 0, sh[1] * T + 9); g.addColorStop(0, 'rgba(30,18,44,.42)'); g.addColorStop(1, 'rgba(30,18,44,0)'); c.fillStyle = g; c.fillRect(sh[0] * T + 3, sh[1] * T, sh[2] * T, 9); });
@@ -64,7 +84,8 @@
       // ombres portées douces sous les objets
       c.fillStyle = 'rgba(30,20,40,.22)';
       this.objs.filter(o => !o.flat && G.OBJ[o.type].fw).forEach(o => { c.beginPath(); c.ellipse(o.x + 3, o.y + 1, Math.max(5, G.OBJ[o.type].fw * 0.7), 3, 0, 0, 6.3); c.fill(); });
-      return { id: this.id, w: this.w, h: this.h, canvas: cv, mini, solid: this.solid, objs: this.objs.filter(o => !o.flat), lights: this.lights, spots: this.spots, anim, env: env || {}, opts: this.opts, hue: this.hue };
+      const sols = this.g, lw = this.w, lh = this.h;
+      return { id: this.id, w: this.w, h: this.h, canvas: cv, mini, g0: (px, py) => { const x = Math.floor(px / T), y = Math.floor(py / T); return x < 0 || y < 0 || x >= lw || y >= lh ? '' : sols[y * lw + x]; }, solid: this.solid, objs: this.objs.filter(o => !o.flat), lights: this.lights, spots: this.spots, anim, env: env || {}, opts: this.opts, hue: this.hue };
     }
   }
 

@@ -25,13 +25,15 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   « 1.32 INTACTE » **avant chaque enregistrement**.
 - La suite de ce document décrit la 1.32. Elle vaut pour la 2.0 en lisant `v2/` devant chaque chemin : mêmes exigences de
   respect, même règle de test, avec les outils de `v2/tools/`. Ce qui est propre à la 2.0 est écrit dans `v2/docs/`.
-- La 2.0 a six contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
+- La 2.0 a sept contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
   `node v2/tools/cartes.js` (les lieux du livre I sortent comme dans la 1.32 : « CARTES IDENTIQUES »),
   `node v2/tools/ecrans.js` (l'écran de la Chaîne du livre I est celui de la 1.32 : « CHAÎNE IDENTIQUE »),
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
   réimporte à l'identique), `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
-  se gardent) et `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel, aucun
-  grand personnage ne porte un trait dans son voile : « SILHOUETTES CONFORMES ») : aucun « REFUS », « BLOQUÉ »,
+  se gardent), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel, aucun
+  grand personnage ne porte un trait dans son voile, de face, de profil, de dos, ni dans son tracé fin :
+  « SILHOUETTES CONFORMES ») et `node v2/tools/dedales.js` (les labyrinthes de la noosphère : dix mille tirages par
+  profondeur, chaque lieu présent, du bon côté, relié aux autres : « DÉDALES CONFORMES ») : aucun « REFUS », « BLOQUÉ »,
   « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages » ;
   `JEU=../index.html node v2/tools/silhouettes.js` passe le même contrôle sur la 1.32. Les textes de la 2.0
@@ -39,6 +41,10 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   un format (2) et une fonction de mise à jour (`migrer`, dans `v2/src/core/base.js`) : on ne change jamais ce format
   sans y ajouter le passage depuis l'ancien. Tout contenu ajouté à la 2.0 arrive par un paquet (`v2/docs/schema-paquet.md`) et passe les règles de
   `v2/src/core/regles.js`, exigences de respect comprises : le jeu lui-même refuse un paquet qui ne les passe pas.
+- La 2.x se dessine deux fois plus fin que la 1.32 (`gfx.D = 2` : 768 × 432 points, les grands personnages jusque sur
+  les cartes) ; le joueur choisit son dessin dans les réglages (fin, fin et adouci, d'origine). Le dessin d'origine reste
+  celui de la 1.32, au pixel près : `cartes.js` ouvre le jeu avec `?def=1` pour s'y comparer. Tout est décrit dans
+  `v2/docs/architecture.md`, « La définition du dessin ». Un dessin ne se juge que sur une capture, dans les trois réglages.
 - Le livret (`promo/`, `tools/promo.js`) décrit la 1.32.
 
 ## Le projet en trois phrases
@@ -99,6 +105,7 @@ node v2/tools/paquet.js [fichier]   # 2.0 : éprouve un paquet (par défaut le p
 node v2/tools/partie.js             # 2.0 : la partie du joueur, exportée par les vrais boutons, effacée, réimportée à l'identique
 node v2/tools/personnage.js         # 2.0 : le nom et la tenue du râwî, choisis par les vrais boutons, joués sur tout le prologue, gardés
 node v2/tools/silhouettes.js        # 2.0 : les personnages — petits sprites inchangés, voiles sans trait, une tête native par coiffe (planches : … planches [modèles.png])
+node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] : une planche)
 node tools/promo.js pdf             # le livret en PDF (promo/livret.pdf) : A5 paysage, deux colonnes, pages équilibrées ; demande poppler (pdfinfo, pdftoppm)
 ```
 

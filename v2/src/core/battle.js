@@ -28,7 +28,7 @@
   /* ================= décor ================= */
   const SKY = { desert: ['#150c30', '#5c2756', '#e08a4a'], ville: ['#0c0e2c', '#35285c', '#c8785a'], camp: ['#080a20', '#281e4c', '#9a4a48'], romaine: ['#0e1232', '#383876', '#d8a070'], palais: ['#120a26', '#48205c', '#c89040'], mer: ['#051028', '#123c66', '#5fb4cc'], cite: ['#04030d', '#180e3c', '#7a2cff'], noos: ['#02021a', '#0a0d36', '#30209a'] };
   function paintBg(kind, hue) {
-    const cv = G.mk(G.PW, G.PH), c = cv.getContext('2d'), sky = SKY[kind] || SKY.noos, H0 = 100, r = I.rng(I.hash(kind + hue));
+    const cv = G.toile(G.PW, G.PH), c = cv.getContext('2d'), sky = SKY[kind] || SKY.noos, H0 = 100, r = I.rng(I.hash(kind + hue));
     const g = c.createLinearGradient(0, 0, 0, H0); g.addColorStop(0, sky[0]); g.addColorStop(0.6, sky[1]); g.addColorStop(1, sky[2]); c.fillStyle = g; c.fillRect(0, 0, G.PW, H0);
     for (let i = 0; i < 70; i++) { c.fillStyle = `rgba(255,255,255,${0.2 + r() * 0.7})`; c.fillRect(Math.floor(r() * G.PW), Math.floor(r() * 62), 1, 1); }
     // astre
@@ -71,7 +71,7 @@
   function mkHero(x, i) {
     const h = typeof x === 'string' ? I.world.hero(x) : x, id = h.id, st = I.calc.of(h);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
-      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.charSheet(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) };
+      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.planche(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) };
   }
   // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
   function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, (chef || W.hero(W.party[0])).lvl) }) : d; }
@@ -620,10 +620,10 @@
           const x = Math.round(e.x + e.ox + jx), y = Math.round(e.y), act = C.active === e;
           c.fillStyle = 'rgba(0,0,0,.4)'; c.beginPath(); c.ellipse(x, y + 1, 12, 4, 0, 0, 6.3); c.fill();
           const look = e.sheet.look;
-          if (!e.alive) { c.globalAlpha = 0.62; c.drawImage(G.charGrand(look, 1, 0, 'accable'), x - 16, y - 46); c.globalAlpha = 1; }
+          if (!e.alive) { c.globalAlpha = 0.62; c.drawImage(G.figure(look, 1, 0, 'accable'), x - 16, y - 46); c.globalAlpha = 1; }
           else {
             const f = act ? [1, 0, 2, 0][Math.floor(t * 6) % 4] : 0, bob = act ? 0 : Math.round(Math.sin(t * 2 + e.x) * 0.6);
-            const pose = e.pose || (e.st.garde ? 'garde' : (!act && e.hp / e.max.hp < 0.2) ? 'accable' : null), img = G.charGrand(look, 1, pose ? 0 : f, pose);
+            const pose = e.pose || (e.st.garde ? 'garde' : (!act && e.hp / e.max.hp < 0.2) ? 'accable' : null), img = G.figure(look, 1, pose ? 0 : f, pose);
             c.drawImage(img, x - 16, y - 46 + bob);
             if (e.flash > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, e.flash) * 0.8; c.drawImage(img, x - 16, y - 46 + bob); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
             if (e.st.garde) { c.strokeStyle = e.color; c.lineWidth = 1; c.beginPath(); c.ellipse(x - 14, y - 24, 4, 20, 0, 0, 6.3); c.stroke(); }

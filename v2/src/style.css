@@ -311,6 +311,7 @@ body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 .nom { position: absolute; transform: translate(-50%, -100%); padding: .02em .5em .08em; font-size: .6em; line-height: 1.25; white-space: nowrap; color: #fff6dc; background: rgba(8, 7, 18, .74); border-bottom: 1px solid var(--c, var(--gold)); border-radius: 2px; text-shadow: 0 1px 2px #000; animation: nomin .25s ease; }
 @keyframes nomin { from { opacity: 0; } }
 body.portrait .nom { font-size: .66em; }
+body.fin #dialog .fig, body.fin .stat .fig, body.fin #perso .vue img, body.fin #perso .tenue img { image-rendering: auto; } /* en dessin fin, la figure a deux fois plus de points : on la réduit en douceur */
 #dialog .fig { position: absolute; left: 1.75em; top: 50%; height: 4.5em; width: 3em; margin-top: -2.5em; image-rendering: pixelated; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .6)); }
 #dialog.avecfig .seal { opacity: .38; }
 body.portrait #dialog .fig { left: 1.2em; height: 3.9em; width: 2.6em; margin-top: -2.1em; }
