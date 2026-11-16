@@ -311,8 +311,9 @@
     G.lcv = mk(G.PW / 2, G.PH / 2); G.lx = G.lcv.getContext('2d');
     G.resize();
   };
-  // fenêtre visible, en pixels logiques : sur un écran en hauteur, on ne montre qu'une partie de la largeur, agrandie
-  G.view = { x: 0, w: G.PW, t: 0 };
+  // fenêtre visible, en pixels logiques : sur un écran en hauteur, on ne montre qu'une partie de la largeur, agrandie ;
+  // quand le joueur agrandit l'image (2.x, ui.js : U.zf), une partie de la hauteur aussi (y, h)
+  G.view = { x: 0, y: 0, w: G.PW, h: G.PH, t: 0, ty: 0 };
   G.resize = function () {
     const st = document.getElementById('stage') || G.cv.parentElement, dpr = Math.min(window.devicePixelRatio || 1, 2);
     const w = st.clientHeight * G.PW / G.PH > st.clientWidth + 1 ? st.clientHeight * G.PW / G.PH : st.clientWidth, coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
@@ -438,8 +439,8 @@
     if (o.scan) { if (G.D === 1) { c.globalAlpha = 0.07; c.fillStyle = '#000'; for (let y = 0; y < H; y += k * 2) c.fillRect(0, y, W, k); c.globalAlpha = 1; } // les lignes de balayage : seulement dans le dessin d'origine
       if (Math.random() < 0.02) { const y = Math.random() * H, h = 4 * k; c.drawImage(G.cv, 0, y, W, h, (Math.random() - 0.5) * 20 * k, y, W, h); } }
     // vignette
-    const vcx = (G.view.x + G.view.w / 2) * k, vr = Math.hypot(G.view.w / 2, G.PH / 2) / Math.hypot(G.PW / 2, G.PH / 2);
-    const vg = c.createRadialGradient(vcx, H / 2, H * 0.35 * vr, vcx, H / 2, H * 0.95 * vr); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(4,3,12,${o.vignette === undefined ? 0.55 : o.vignette})`);
+    const vcx = (G.view.x + G.view.w / 2) * k, vcy = (G.view.y + G.view.h / 2) * k, vr = Math.hypot(G.view.w / 2, G.view.h / 2) / Math.hypot(G.PW / 2, G.PH / 2); // autour de ce que l'on voit
+    const vg = c.createRadialGradient(vcx, vcy, H * 0.35 * vr, vcx, vcy, H * 0.95 * vr); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(4,3,12,${o.vignette === undefined ? 0.55 : o.vignette})`);
     c.fillStyle = vg; c.fillRect(0, 0, W, H);
     if (G.flashA > 0) { c.globalAlpha = G.flashA; c.fillStyle = G.flashC; c.fillRect(0, 0, W, H); c.globalAlpha = 1; G.flashA -= dt * 2.4; }
   };

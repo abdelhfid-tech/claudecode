@@ -25,7 +25,8 @@ em { font-style: italic; color: #fff3d0; }
 body.portrait #app { justify-content: flex-start; padding-top: 6px; }
 #stage { position: relative; flex: none; background: #000; box-shadow: 0 0 0 1px rgba(233, 200, 119, .18), 0 30px 80px rgba(0, 0, 0, .7); }
 #view { position: absolute; inset: 0; overflow: hidden; }
-#cv { width: 100%; height: 100%; display: block; touch-action: none; }
+#cv { width: 100%; height: 100%; display: block; touch-action: none; transform-origin: 0 0; }
+body.agrandi:not(.doux) #cv { image-rendering: pixelated; } /* l'image agrandie par le joueur garde ses points nets */
 #stage { touch-action: none; }
 #ui { position: absolute; inset: 0; font-size: calc(max(13px, var(--u) * 7.2) * var(--tz, 1)); line-height: 1.32; }
 #fade { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 40; }
@@ -41,6 +42,9 @@ body[data-theme="cyber"] #hud .sub { font-family: var(--f-mono); }
 #hud .obj::before { content: "◆ "; color: var(--acc); font-size: .8em; }
 #menubtn, #helpbtn { position: absolute; right: 2%; top: 3%; width: 2.4em; height: 2.4em; border-radius: 50%; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; padding: 0; }
 #helpbtn { right: calc(2% + 2.9em); font-family: var(--f-display); font-weight: 700; }
+/* l'agrandissement de l'image : un bouton qui dit où l'on en est (× 1 · × 1,5 · × 2 · × 3) */
+#zoombtn { position: absolute; right: calc(2% + 6.7em); top: 3%; height: 2.77em; min-width: 2.77em; padding: 0 .6em; border-radius: 1.4em; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .78em; z-index: 5; font-family: var(--f-mono); letter-spacing: -.02em; white-space: nowrap; }
+body.batir #zoombtn { right: calc(2% + 10.05em); } body.descente.batir #zoombtn { right: calc(2% + 6.7em); } /* à gauche du bouton « Bâtir », quand il est là */
 #toasts { position: absolute; right: 2%; top: var(--mini, 14%); display: flex; flex-direction: column; gap: .4em; align-items: flex-end; pointer-events: none; z-index: 30; }
 .toast { padding: .32em .8em; background: var(--panel); border-right: 2px solid var(--acc); font-size: .82em; animation: tin .3s ease; transition: opacity .4s, transform .4s; max-width: 22em; }
 .toast b { color: var(--acc); }
@@ -269,7 +273,7 @@ body.portrait #choice { top: calc(100% + 10px); transform: translateX(-50%); wid
 body.portrait #choice .opt { padding: .58em .9em; }
 body.portrait #choice .opt.sel { transform: none; } /* pas de décalage : la liste occupe déjà toute la largeur */
 body.portrait #battle .panel { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; grid-template-columns: 1fr; }
-body.portrait #battle .order { font-size: calc(10.5px * var(--tz, 1)); } body.portrait .plate { font-size: calc(10.5px * var(--tz, 1)); min-width: 6.4em; } body.portrait #battle .banner { font-size: calc(13.5px * var(--tz, 1)); }
+body.portrait #battle .order { font-size: calc(11px * var(--tz, 1)); } body.portrait .plate { font-size: calc(11.5px * var(--tz, 1)); min-width: 6.4em; } body.portrait #battle .banner { font-size: calc(14px * var(--tz, 1)); }
 body.portrait .fl { font-size: calc(15px * var(--tz, 1)); }
 body.portrait .mlist { max-height: 13em; } body.portrait .mi { padding: .5em .6em; } body.portrait .hrow { padding: .4em .55em; }
 /* l'objectif et les piliers passent sous la scène : la vue reste dégagée */
@@ -277,11 +281,15 @@ body.portrait #hud { top: calc(100% + 8px); left: 8px; right: 8px; max-width: no
 body.portrait #hud .obj { display: block; background: var(--panel); border: 1px solid rgba(255, 255, 255, .1); border-left: 3px solid var(--acc); padding: .45em .7em; font-size: 1em; }
 body.portrait.in-dialog #hud, body.portrait.in-build #hud { visibility: hidden; }
 body.portrait #menubtn, body.portrait #helpbtn, body.portrait #buildbtn { font-size: 1.1em; }
+body.portrait #zoombtn { font-size: .95em; }
 body.portrait #toasts { top: 3.6em; right: 2%; left: 30%; } body.portrait .toast { max-width: none; font-size: .78em; }
 body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 @media (prefers-reduced-motion: reduce) { .toast, .fl, #card, .link { animation-duration: .01s; transition: none; } }
 
-@media (orientation: landscape) and (max-height: 480px) { #ui { font-size: max(11px, calc(var(--u) * 6.4)); } .hrow { padding: .12em .5em; } #battle .cmd { padding: .25em .4em; } .mi { padding: .16em .5em; } #dialog { min-height: 30%; } }
+/* un téléphone tenu en largeur : l'écran-titre range ses réglages sur deux colonnes, pour tenir dans la hauteur */
+@media (orientation: landscape) and (max-height: 480px) { #title .vmenu { display: grid; grid-template-columns: 1fr 1fr; width: min(100%, 34em); } #title .vmenu button:first-child { grid-column: 1 / -1; } #title .tag { margin-bottom: .9em; } #title .foot { margin-top: 1em; } }
+/* un téléphone tenu en largeur : la taille du texte choisie par le joueur y vaut aussi (2.x) */
+@media (orientation: landscape) and (max-height: 480px) { #ui { font-size: calc(max(12px, var(--u) * 6.8) * var(--tz, 1)); } .hrow { padding: .12em .5em; } #battle .cmd { padding: .25em .4em; } .mi { padding: .16em .5em; } #dialog { min-height: 30%; } }
 
 /* ---------- v2 : piliers, pourparlers, prière ---------- */
 #hud .pil { margin-top: .35em; display: flex; gap: .7em; font-size: .72em; font-family: var(--f-mono); color: var(--sand); }
@@ -475,7 +483,7 @@ i.gi.vide { display: inline-block; border: 1px dashed rgba(255, 255, 255, .22); 
 body.portrait #menu .cols { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, auto) minmax(0, 1fr); gap: .6em; }
 body.portrait #menu .side { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: max-content; gap: .28em; max-height: 40vh; align-content: start; overflow-y: auto; }
 body.portrait #menu .side .cat { grid-column: 1 / -1; margin-top: .3em; }
-body.portrait #menu .side button { padding: .5em .6em; font-size: .86em; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body.portrait #menu .side button { padding: .5em .6em; font-size: .86em; min-width: 0; overflow: hidden; white-space: normal; line-height: 1.15; overflow-wrap: anywhere; } /* un titre long passe à la ligne : il n'est plus coupé */
 body.portrait #menu .pane { padding: .8em .9em; }
 body.portrait #menu header { margin-bottom: .5em; }
 body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot > small:first-child { grid-column: 1 / -1; margin-bottom: -.3em; }
@@ -490,3 +498,19 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 .link:disabled .ouvrir { display: none; }
 .chainfoot .ver { flex-basis: 100%; text-align: center; font-size: .78em; opacity: .7; }
 .vmenu button small { display: block; font-family: var(--f-body); letter-spacing: 0; font-size: .78em; color: var(--dim); margin-top: .15em; text-transform: none; }
+
+/* ---------- écran tactile : pas de texte minuscule (2.x) ----------
+   Demande du décideur : sur un téléphone, les textes étaient trop petits. Les plus petits ont ici un plancher ; la taille
+   générale se règle (« Texte »), et vaut « grand » d'emblée sur un écran tactile. */
+body.touch #ui small, body.touch .screen small { font-size: max(.83em, 10.5px); } /* tout « petit texte » sans règle plus précise : une annonce, une note */
+body.touch .nom { font-size: max(.68em, 11.5px); }
+body.touch #hud .sub, body.touch #hud .pil { font-size: max(.74em, 11.5px); }
+body.touch:not(.portrait) .plate, body.touch:not(.portrait) #battle .order { font-size: max(.68em, 10.5px); }
+body.touch .hrow .hn small, body.touch .mi small { font-size: max(.8em, 10.5px); }
+body.touch #title .foot { font-size: max(.72em, 11.5px); }
+body.touch #title .coin button { font-size: max(.74em, 12px); }
+body.touch #menu .side .cat, body.touch .link .ord, body.touch .link .stt, body.touch .link .qt { font-size: max(.7em, 11px); }
+body.touch #compass .lab b { font-size: max(.74em, 10.5px); } body.touch #compass .lab small { font-size: max(.66em, 10px); }
+body.touch #battle .order .olab, body.touch #battle .order i { font-size: max(.86em, 10px); } body.touch #battle .order i.foe { font-size: max(.7em, 10px); }
+body.touch #battle .cmd .niyya { font-size: max(.74em, 10.5px); }
+body.touch .hrow .hbars .bar { height: max(.82em, 11px); } body.touch .hrow .bar em { font-size: max(.78em, 10px); line-height: 1.1; top: 0; } /* les deux barres qui portent un nombre */

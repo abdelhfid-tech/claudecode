@@ -26,7 +26,8 @@ une valeur, pour dévoiler l'Agrégor.
   où on l'a laissé, avec parfois du nouveau aux Archives basses, et la Citadelle où Idris est né. Une partie neuve
   apprend un outil à la fois (un besoin, un outil, puis sans aide), et chacun peut prendre trois postures devant
   l'épreuve. Les personnages y bougent — des foulées franches, un souffle au repos, l'élan et le coup avec l'arme en
-  main — et ceux qui ne sont pas des Compagnons y ont un visage ; les Compagnons gardent leur voile de lumière. La
+  main — et ceux qui ne sont pas des Compagnons y ont un visage ; les Compagnons gardent leur voile de lumière. Sur
+  un téléphone, l'image s'agrandit (deux doigts qui s'écartent, ou le bouton « × ») et les textes sont plus grands. La
   version légère, elle, s'arrête à la 1.32. Elle a ses propres outils (`v2/tools/`)
   et ses propres sauvegardes. À lire : `v2/docs/feuille-de-route.md` (où l'on en est), `v2/docs/architecture.md`
   (comment c'est fait), `v2/docs/schema-paquet.md` (le contrat d'un paquet). Elle se joue dans son propre Artifact

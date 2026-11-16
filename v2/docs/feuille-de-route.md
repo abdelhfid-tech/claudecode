@@ -53,6 +53,8 @@ pas, c'est toujours la v2 » : rien de ce qui suit ne touche la version légère
 | C6 | les postures — le héros, le sage, le saint — selon le tempérament (le rôle) et l'avancée (niveaux 4 et 7) | **fait** (D164) ; noms, effets et attribution à valider, exigence 24 proposée |
 | D1 | des pas et des gestes que l'on voit : foulées franches dans les quatre directions, souffle au repos, élan et coup avec l'arme en main — en combat et dans les labyrinthes | **fait** (D166) ; l'arme visible le temps du coup dans un labyrinthe est à confirmer (exigence 17) |
 | D2 | un visage pour ceux qui ne sont pas des Compagnons : teint, yeux, barbe selon l'âge, de face et de profil ; les Compagnons gardent leur voile de lumière | **fait** (D165) ; exigence 2 réécrite, à valider ; la liste de ceux qui restent sans visage est à relire nom par nom |
+| E1 | sur un téléphone, l'image s'agrandit : deux doigts qui s'écartent, le bouton « × », le réglage « Image » ; d'office × 1,5 en hauteur, × 1,25 en largeur ; le combat garde son cadrage | **fait** (D167) ; au décideur de dire s'il veut aussi agrandir le combat |
+| E2 | sur un téléphone, les textes se lisent : « grand » d'office, un quatrième cran (« géant »), aucun texte sous dix points, les listes de choix tiennent à l'écran | **fait** (D168) |
 
 *Publié le 16 novembre : l'Artifact privé de la 2.x en est à sa version 5 (lots D1 et D2, commit `bba7c3d`) ; la
 version 4 portait les lots C1 à C6 (commit `db7179e`) ; celui des

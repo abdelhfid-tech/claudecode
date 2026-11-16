@@ -101,8 +101,8 @@
     btns.push(mk('Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'), b => { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'); }));
     btns.push(mk('Dessin : ' + dessinNom(), b => { dessinSuivant(); b.textContent = 'Dessin : ' + dessinNom(); }));
     btns.push(mk('Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'); }));
-    const TZ = ['normal', 'grand', 'très grand'];
-    btns.push(mk('Texte : ' + TZ[sv.opts.tz || 0], b => { sv.opts.tz = ((sv.opts.tz || 0) + 1) % 3; I.save.store(); U.applyOpts(); b.textContent = 'Texte : ' + TZ[sv.opts.tz]; }));
+    btns.push(mk('Texte : ' + U.TZ[U.tz()][0], b => { U.tzSuivant(); b.textContent = 'Texte : ' + U.TZ[U.tz()][0]; }));
+    btns.push(mk('Image : ' + zoomNom(), b => { U.zoomSuivant(); b.textContent = 'Image : ' + zoomNom(); }));
     btns.push(mk('Plein écran', () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } }));
     { const v = $('#title .ver'); if (v) v.textContent = 'version ' + (window.ISNAD_VERSION || 'de travail'); }
     // importer une partie : dans un coin, hors de la colonne — l'écran-titre garde la hauteur qu'il a toujours eue
@@ -423,7 +423,8 @@
         ...(page('valeurs') ? [{ label: 'Valeurs et attributs', fn: valeurs, show: () => I.valeurs.paneVue() }] : []),
         { label: 'Aide du jeu', fn: aide, show: () => '<h3>Aide du jeu</h3><p>Les règles, thème par thème : ' + U.AIDE.map(a => a[0].toLowerCase()).join(', ') + '.</p>' });
       items.push({ cat: 'Réglages' },
-        toggle('Texte', () => ['normal', 'grand', 'très grand'][o.tz || 0], () => { o.tz = ((o.tz || 0) + 1) % 3; U.applyOpts(); }, 'Taille des caractères dans les dialogues, les menus et les combats.'),
+        toggle('Texte', () => U.TZ[U.tz()][0], U.tzSuivant, 'Taille des caractères dans les dialogues, les menus et les combats.'),
+        toggle('Image', zoomNom, U.zoomSuivant, 'Agrandit l’image pendant l’exploration : on voit moins loin, mais en plus grand. Sur l’image elle-même : deux doigts qui s’écartent, la molette, ou le bouton « × » en haut de la scène.'),
         toggle('Croix tactile', () => o.pad ? 'affichée' : 'masquée', () => { o.pad = !o.pad; U.applyOpts(); }, 'Sur un écran tactile, on se déplace en touchant la scène. La croix directionnelle reste disponible pour qui la préfère.'),
         toggle('Son', () => I.audio.on ? 'activé' : 'coupé', () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, 'Coupe ou rétablit tout le son : musique, percussions et bruitages.'),
         toggle('Musique', () => I.audio.musicOn ? 'activée' : 'coupée', () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, 'Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.'),
@@ -577,6 +578,7 @@
     ['Mener plusieurs récits', '<p>On n’est pas tenu de finir un récit pour en ouvrir un autre. Dans la halte, <b>Revenir en 2084</b> te ramène aux Archives basses, devant la Chaîne : le récit que tu quittes reste où tu le laisses, et tu le reprends là — même après en avoir suivi un autre. La Chaîne dit lesquels sont <b>en route</b>, et son grand bouton reprend le dernier quitté.</p><p>Pendant que tu suis un récit, la Cité-Miroir ne t’attend pas : en revenant, il arrive qu’il s’y soit passé quelque chose. Et dès la première veillée entendue, la Chaîne ouvre le chemin de <b>la Citadelle</b>, où Idris est né.</p>'],
     ['Frapper ce qui rôde', '<p>Dans un labyrinthe de la noosphère, de petits égrégores vont et viennent sur les ponts. <kbd>Entrée</kbd> — ou un toucher sur ce qui rôde — le <b>frappe</b>, avec l’arme que porte celui qui mène : un voile de moins, et il reste sonné un instant, le temps de passer. Sans voile, il se dissipe. S’il vous rejoint avant, c’est un combat ordinaire.</p><p>L’allonge, la cadence et le recul viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, un coup ne fait que sonner : seul, on ne vainc pas ce qui pèse sur le cœur.</p>'],
     ['Les postures', '<p>Devant l’épreuve, on peut se tenir de trois manières. <b>Le héros</b> s’expose : plus de Force, un point de Niyya d’emblée, et les coups viennent à lui. <b>Le sage</b> discerne : plus d’Esprit, et une faille de chaque égrégore connue d’emblée. <b>Le saint</b> s’efface : il soigne mieux et garde le calme.</p><p>Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent aux niveaux 4 et 7. On en change à la halte (<b>Postures</b>) ou en préparant une bataille. Aucune n’est au-dessus d’une autre : on prend une posture, on ne la possède pas.</p>'],
+    ['Agrandir l’image et le texte', '<p>Pendant l’exploration, l’image s’agrandit autour de celui qui mène : on voit moins loin, mais en plus grand. Sur un écran tactile, pose <b>deux doigts</b> sur l’image et écarte-les ; rapproche-les pour revoir plus large. Le bouton <b>×</b>, en haut de la scène, fait le tour des grandeurs (× 1, × 1,5, × 2, × 3) ; à la souris, la molette. Le combat garde son cadrage.</p><p>La taille des caractères se règle à part : <b>Texte</b>, dans les réglages de la halte ou de l’écran-titre — normal, grand, très grand, géant. Sur un téléphone, le jeu commence en « grand », l’image agrandie une fois et demie.</p>']
     ['La Chaîne', '<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>']
   ];
 
@@ -668,13 +670,13 @@
   U.noms = function (now) {
     const box = $('#noms'), ok = I.scene === W && W.map && W.saga && !S.busy && !W.lock && !U.menuOpen && !(I.build && I.build.on) && !$('#hud').hidden;
     if (!ok) { if (box.childElementCount) box.innerHTML = ''; return; }
-    const p = W.player, sc = U.scale || 1, cx = Math.round(W.cam.x) + (U.zoom ? G.view.x : 0), cy = Math.round(W.cam.y), tg = W.target(), list = [], m = W.map;
+    const p = W.player, sc = U.scale || 1, cx = Math.round(W.cam.x) + G.view.x, cy = Math.round(W.cam.y) + G.view.y, tg = W.target(), list = [], m = W.map; // ce que l'on voit de l'image : rogné en hauteur d'écran, agrandi si le joueur l'a voulu
     if (p.moving) still = now;
     W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y); if (d < 60 || (tg && tg.ent === n && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y, d, c: n.aura || '#f3e7cc' }); });
     list.sort((a, b) => a.d - b.d); list.length = Math.min(list.length, 5);
     if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.trail[Math.min(W.trail.length - 1, i * 13)] : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
-    const seen = {}, w = $('#stage').clientWidth;
-    list.forEach(e => { const x = (e.x - cx) * sc, y = (e.y - cy - 25) * sc; if (x < 8 || x > w - 8 || y < 4) return; seen[e.k] = 1;
+    const seen = {}, w = $('#stage').clientWidth, hh = $('#stage').clientHeight;
+    list.forEach(e => { const x = (e.x - cx) * sc, y = (e.y - cy - 25) * sc; if (x < 8 || x > w - 8 || y < 4 || y > hh - 4) return; seen[e.k] = 1;
       let el = box.querySelector('[data-k="' + e.k + '"]'); if (!el) { el = I.el('span', 'nom', I.esc(e.t)); el.dataset.k = e.k; el.style.setProperty('--c', e.c); box.appendChild(el); }
       el.style.left = x.toFixed(1) + 'px'; el.style.top = y.toFixed(1) + 'px'; });
     [...box.children].forEach(el => { if (!seen[el.dataset.k]) el.remove(); });
@@ -684,13 +686,37 @@
   // le dessin : fin (par défaut), fin et adouci, ou d'origine — gardé avec les autres réglages
   const dessinNom = () => (G.DESSINS.find(d => d[0] === G.dessin()) || G.DESSINS[0])[1];
   const dessinSuivant = () => { const i = G.DESSINS.findIndex(d => d[0] === G.dessin()), n = G.DESSINS[(i + 1) % G.DESSINS.length][0]; G.definir(n); I.save.data.opts.dessin = n; I.save.store(); };
-  G.surDefinition.push(() => { titleBg = null; document.body.classList.toggle('fin', G.D > 1); });
+  G.surDefinition.push(() => { titleBg = null; document.body.classList.toggle('fin', G.D > 1); document.body.classList.toggle('doux', !!G.lisse); });
+  /* ----- l'agrandissement de l'image (2.x) -----
+     Demande du décideur : sur un téléphone, les personnages sont trop petits — « il faut pouvoir zoomer dans l'image ».
+     Pendant l'exploration, l'image s'agrandit de U.zf (1 à 3) autour de celui qui mène : on en voit moins, en plus grand.
+     Deux doigts qui s'écartent sur l'image, la molette, le bouton « × » de la scène ou le réglage « Image ». Sans choix du
+     joueur, sur un écran tactile où l'image est petite : × 1,5 tenu en hauteur, × 1,25 en largeur (où il reste moins de
+     champ au-dessus du héros) ; × 1 ailleurs. Le combat garde son cadrage. */
+  U.ZOOMS = [1, 1.5, 2, 3]; U.zf = 1;
+  const tactile = () => !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  const zoomAuto = (base, haut) => tactile() && base < 2.3 ? (haut ? 1.5 : 1.25) : 1;
+  const zoomNom = () => '× ' + String(Math.round(U.zf * 100) / 100).replace('.', ',');
+  const zoomBouton = () => { const b = $('#zoombtn'); if (b) { b.textContent = zoomNom(); b.setAttribute('aria-label', 'Agrandir l’image : ' + zoomNom()); } };
+  // garder = false : pendant que les doigts bougent (rien n'est écrit) ; sinon l'agrandissement est arrondi et gardé avec les réglages
+  U.zoomer = function (z, garder) {
+    z = I.clamp(+z || 1, 1, 3); if (garder !== false) { z = Math.round(z * 20) / 20; if (z < 1.08) z = 1; }
+    const change = Math.abs(z - U.zf) > 0.0005; U.zf = z; U._zVif = garder === false;   // pendant le geste, la mise en page ne revient pas à la grandeur d'office
+    if (garder !== false) { I.save.data.opts.zoom = z; I.save.store(); }
+    if (change) layout(); zoomBouton(); return z;
+  };
+  U.zoomSuivant = () => U.zoomer(U.ZOOMS.find(z => z > U.zf + 0.01) || 1);
+  U.TZ = [['normal', 1], ['grand', 1.16], ['très grand', 1.34], ['géant', 1.55]];
+  // la taille du texte : celle que le joueur a choisie ; sinon « grand » sur un écran tactile, « normal » ailleurs
+  U.tz = () => { const o = I.save.data.opts; return typeof o.tz === 'number' && U.TZ[o.tz] ? o.tz : tactile() ? 1 : 0; };
+  U.tzSuivant = () => { const o = I.save.data.opts; o.tz = (U.tz() + 1) % U.TZ.length; I.save.store(); U.applyOpts(); };
   U.applyOpts = function () {
     const o = I.save.data.opts;
-    if (o.dessin && !G.defForce) G.definir(o.dessin); document.body.classList.toggle('fin', G.D > 1);
-    document.documentElement.style.setProperty('--tz', [1, 1.16, 1.34][o.tz || 0]);
+    if (o.dessin && !G.defForce) G.definir(o.dessin); document.body.classList.toggle('fin', G.D > 1); document.body.classList.toggle('doux', !!G.lisse);
+    document.documentElement.style.setProperty('--tz', U.TZ[U.tz()][1]);
     document.body.classList.toggle('padon', !!o.pad);
-    layout();
+    if (typeof o.zoom === 'number') U.zf = I.clamp(o.zoom, 1, 3);   // sinon : la grandeur d'office, que la mise en page règle sur l'écran
+    layout(); zoomBouton();
   };
 
   /* ---------- mise en page et démarrage ---------- */
@@ -705,11 +731,16 @@
     else { w = Math.max(240, Math.floor(Math.min(aw, (portrait ? ah * 0.46 : ah) * 16 / 9))); h = Math.round(w * 9 / 16); }
     st.style.width = w + 'px'; st.style.height = h + 'px';
     if (cvEl) cvEl.style.width = Math.max(w, Math.round(h * 16 / 9)) + 'px';
-    U.zoom = zoom; U.scale = h / G.PH;
-    const vw = Math.min(G.PW, w / U.scale);
-    const changed = Math.abs(G.view.w - vw) > 0.5; G.view.w = vw;
-    if (I.scene !== W) { G.view.x = G.view.t = Math.round((G.PW - vw) / 2); if (changed && I.battle.active) I.battle.relayout(); } else if (changed && W.map) W.updateCam(true);
-    document.body.classList.toggle('zoom', vw < G.PW - 0.5);
+    // U.base : points d'écran par point logique ; U.Z : l'agrandissement voulu par le joueur, pendant l'exploration seulement ;
+    // U.scale : les deux ensemble — c'est l'échelle de ce que l'on voit
+    U.zoom = zoom; U.base = h / G.PH;
+    if (typeof I.save.data.opts.zoom !== 'number' && !U._zVif) { const za = zoomAuto(U.base, portrait); if (za !== U.zf) { U.zf = za; zoomBouton(); } }   // sans choix du joueur : selon l'écran, et il suit le téléphone que l'on tourne
+    U.Z = I.scene === W ? U.zf : 1; U.scale = U.base * U.Z; U._sceneW = I.scene === W;
+    const vw = Math.min(G.PW, w / U.scale), vh = Math.min(G.PH, h / U.scale);
+    const changed = Math.abs(G.view.w - vw) > 0.01 || Math.abs(G.view.h - vh) > 0.01; G.view.w = vw; G.view.h = vh;
+    if (I.scene !== W) { G.view.x = G.view.t = Math.round((G.PW - vw) / 2); G.view.y = G.view.ty = 0; if (changed && I.battle.active) I.battle.relayout(); } else if (changed && W.map) W.updateCam(true);
+    document.body.classList.toggle('zoom', w / U.base < G.PW - 0.5);   // « zoom » : l'image rognée d'un écran en hauteur (pas l'agrandissement voulu)
+    document.body.classList.toggle('agrandi', U.Z > 1.01);
     G.resize();
   }
   function pad() {
@@ -725,21 +756,33 @@
   function pointer() {
     const cv = cvEl, st = $('#stage'), bare = e => e.target === cv || e.target === st || e.target.id === 'ui' || e.target.id === 'view', free = () => I.scene === W && !S.busy && !W.lock && !U.menuOpen && !I.debug.auto && !I.debug.walk;
     const where = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * G.PW + G.cale(W.cam.x), (e.clientY - r.top) / r.height * G.PH + G.cale(W.cam.y)]; };
+    // deux doigts sur l'image : l'agrandir ou la réduire (2.x). Le premier doigt n'est alors plus un toucher.
+    const doigts = new Map(); let pince = null;
+    const ecart = () => { const a = [...doigts.values()]; return Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]); };
+    U.pince = () => !!pince;
     st.addEventListener('pointerdown', e => {
       if (e.button || !bare(e)) return;
       I.audio.unlock();
+      if (e.pointerType !== 'mouse') { doigts.set(e.pointerId, [e.clientX, e.clientY]);
+        if (doigts.size >= 2) { if (ptr) { ptr.world = false; ptr.dead = true; ptr.pince = true; }
+          if (doigts.size === 2 && I.scene === W && !U.menuOpen && !I.debug.auto && !I.debug.walk) { pince = { d0: Math.max(24, ecart()), z0: U.zf }; W.stop(); e.preventDefault(); } return; } }
       ptr = { id: e.pointerId, world: free(), x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t0: performance.now(), hold: false, last: 0 };
       if (ptr.world) { e.preventDefault(); try { st.setPointerCapture(e.pointerId); } catch (x) { /* sans capture : le relâchement suffit */ } }
     });
-    st.addEventListener('pointermove', e => { if (!ptr || ptr.id !== e.pointerId) return; ptr.x = e.clientX; ptr.y = e.clientY; if (Math.hypot(e.clientX - ptr.x0, e.clientY - ptr.y0) > 14) ptr.hold = true; });
+    st.addEventListener('pointermove', e => {
+      const d = doigts.get(e.pointerId); if (d) { d[0] = e.clientX; d[1] = e.clientY; if (pince && doigts.size >= 2) { U.zoomer(pince.z0 * ecart() / pince.d0, false); return; } }
+      if (!ptr || ptr.id !== e.pointerId) return; ptr.x = e.clientX; ptr.y = e.clientY; if (Math.hypot(e.clientX - ptr.x0, e.clientY - ptr.y0) > 14) ptr.hold = true; });
     const up = e => {
+      if (doigts.delete(e.pointerId) && pince && doigts.size < 2) { pince = null; U.zoomer(U.zf); }   // les doigts se lèvent : l'agrandissement est gardé
       if (!ptr || ptr.id !== e.pointerId) return;
-      const q = ptr; ptr = null;
+      const q = ptr; ptr = null; if (q.pince) return;
       if (!q.world) { if (q.dead || e.type === 'pointercancel' || !$('#choice').hidden || I.battle.active || U.menuOpen) return; I.input.emit('ok'); return; }
       if (!free()) return;
       if (q.hold || e.type === 'pointercancel') W.stop(); else { const p = where(e); W.tap(p[0], p[1]); }
     };
     st.addEventListener('pointerup', up); st.addEventListener('pointercancel', up);
+    // la molette, sur l'image : agrandir, réduire
+    st.addEventListener('wheel', e => { if (!bare(e) || I.scene !== W || U.menuOpen || !e.deltaY) return; e.preventDefault(); U.zoomer(U.zf * (e.deltaY < 0 ? 1.12 : 1 / 1.12)); }, { passive: false });
     // hors de la scène (sur un écran en hauteur, toute la zone sous l'image) : toucher fait avancer le texte, comme toucher la scène
     document.addEventListener('pointerup', e => {
       const t = e.target; if (e.button || (t !== document.body && t !== document.documentElement && t.id !== 'app')) return;
@@ -772,6 +815,7 @@
     $('#menubtn').addEventListener('click', e => { e.stopPropagation(); if (I.scene === W && !S.busy) U.pause(); });
     $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); I.build.set(!I.build.on); });
     $('#helpbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.guide(); });
+    $('#zoombtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.zoomSuivant(); });
     pad(); pointer();
     // tout geste déverrouille ou relance le son, y compris un toucher sur un bouton de menu (qui ne passe pas par les commandes du jeu)
     ['pointerup', 'touchend', 'click', 'keydown'].forEach(t => document.addEventListener(t, () => I.audio.unlock(), true));
@@ -782,16 +826,18 @@
       I.audio.pump(); // la musique avance aussi à chaque image
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
       if (sc) { try {
-        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW)) { U.zoomW = sc === W; layout(); }
+        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW) || (sc === W) !== !!U._sceneW) { U.zoomW = sc === W; layout(); }
         if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) { if (I.debug.walk === 'tap') W.tapStep(); else W.walkStep(); } W.update(1 / 60); } I.input.clearHeld(); }
         else { U.pointerTick(now); if (sc.update) sc.update(dt); }
         G.present(dt, sc.render(dt) || {});
       } catch (e) { if (!U._err) U._err = e; I.report(e, 'affichage'); } }
       if ((U._vf = (U._vf || 0) + 1) % 30 === 0) U.veille(now);
       if ((U._nf = (U._nf || 0) + 1) % 3 === 0) U.noms(now);
-      const tx = U.zoom ? -G.view.x * U.scale : 0; if (tx !== U._tx) { U._tx = tx; cvEl.style.transform = tx ? 'translateX(' + tx + 'px)' : ''; }
-      $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden); $('#helpbtn').hidden = $('#menubtn').hidden;
+      { const Zc = U.Z || 1, tx = U.zoom || Zc > 1 ? -G.view.x * U.scale : 0, ty = Zc > 1 ? -G.view.y * U.scale : 0, tr = Zc > 1 ? 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + Zc + ')' : tx ? 'translateX(' + tx + 'px)' : '';
+        if (tr !== U._tr) { U._tr = tr; cvEl.style.transform = tr; } }   // l'image glisse sous la scène, et grandit si le joueur l'a voulu
+      $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden); $('#helpbtn').hidden = $('#menubtn').hidden; $('#zoombtn').hidden = $('#menubtn').hidden;
       $('#buildbtn').hidden = $('#menubtn').hidden || !W.saga || (W.saga.frame && !W.saga.veillees) || !I.build.outdoor(W.map.id);
+      { const bt = !$('#buildbtn').hidden; if (bt !== U._bt) { U._bt = bt; document.body.classList.toggle('batir', bt); } }
       if (I.build.on) $('#buildbar').hidden = S.busy || I.scene !== W;
       I.trade.drawCompass(now / 1000);
       requestAnimationFrame(frame);

@@ -139,8 +139,15 @@
       const f = W.focus, half = V.w / 2 - 22, off = f && f.map === m.id && !f.hidden && f.placed ? I.clamp((f.x - W.player.x) / 2, -half, half) : 0;
       W.foff = snap ? off : (W.foff || 0) + (off - (W.foff || 0)) * 0.1;
       const lo = Math.max(0, -cx), hi = Math.min(G.PW, mw - cx) - V.w, want = hi < lo ? (lo + hi) / 2 : I.clamp(W.player.x + W.foff - cx - V.w / 2, lo, hi);
-      V.t = snap ? want : V.t + (want - V.t) * 0.14; V.x = Math.round(V.t);
+      V.t = snap ? want : V.t + (want - V.t) * 0.14; V.x = V.h < G.PH ? G.cale(V.t) : Math.round(V.t);
     } else { V.x = 0; V.t = 0; }
+    // 2.x — l'image agrandie : la fenêtre suit aussi le héros de haut en bas, et s'arrête aux bords de la carte
+    if (V.h < G.PH) {
+      const f = W.focus, half = V.h / 2 - 26, off = f && f.map === m.id && !f.hidden && f.placed ? I.clamp((f.y - W.player.y) / 2, -half, half) : 0;
+      W.foffY = snap ? off : (W.foffY || 0) + (off - (W.foffY || 0)) * 0.1;
+      const lo = Math.max(0, -cy), hi = Math.min(G.PH, mh - cy) - V.h, want = hi < lo ? (lo + hi) / 2 : I.clamp(W.player.y - 10 + W.foffY - cy - V.h / 2, lo, hi);
+      V.ty = snap ? want : V.ty + (want - V.ty) * 0.14; V.y = G.cale(V.ty);
+    } else { V.y = 0; V.ty = 0; }
   };
 
   /* ----- chapitres et objectifs ----- */
@@ -584,9 +591,9 @@
     if (tg) {
       const sx = tg.x - cx, sy = tg.y - cy;
       if (tg.kind !== 'goto' && sx > 0 && sx < G.PW && sy > 0 && sy < G.PH) { const by = sy + Math.sin(t * 5) * 2; c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(sx, by + 4); c.lineTo(sx - 4, by - 2); c.lineTo(sx, by - 6); c.lineTo(sx + 4, by - 2); c.fill(); c.fillStyle = '#fff6dc'; c.fillRect(sx - 1, by - 3, 2, 3); }
-      const v0 = G.view.x, v1 = G.view.x + G.view.w;
-      if (sx < v0 + 6 || sx > v1 - 6 || sy < 6 || sy > G.PH - 6) {
-        const ang = Math.atan2(sy - G.PH / 2, sx - (v0 + v1) / 2), ex = I.clamp(sx, v0 + 12, v1 - 12), ey = I.clamp(sy, 22, G.PH - 12), pu = 1 + Math.sin(t * 6) * 0.2;
+      const v0 = G.view.x, v1 = G.view.x + G.view.w, w0 = G.view.y, w1 = G.view.y + G.view.h, zq = (I.ui && I.ui.Z) || 1; // ce que l'on voit de l'image (elle peut être agrandie)
+      if (sx < v0 + 6 || sx > v1 - 6 || sy < w0 + 6 || sy > w1 - 6) {
+        const ang = Math.atan2(sy - (w0 + w1) / 2, sx - (v0 + v1) / 2), ex = I.clamp(sx, v0 + 12 / zq, v1 - 12 / zq), ey = I.clamp(sy, w0 + 22 / zq, w1 - 12 / zq), pu = (1 + Math.sin(t * 6) * 0.2) / Math.sqrt(zq);
         c.save(); c.translate(ex, ey); c.rotate(ang); c.scale(pu, pu); c.rotate(-ang + t * 0.6); const star = (r, col) => { c.fillStyle = col; c.beginPath(); for (let q = 0; q < 8; q++) { const rr = q % 2 ? r * 0.3 : r, aa = q * Math.PI / 4; c.lineTo(Math.cos(aa) * rr, Math.sin(aa) * rr); } c.closePath(); c.fill(); }; star(8, '#1a1420'); star(6.5, '#ffe9a8'); star(2.5, '#fff'); c.restore(); lights.push({ x: ex, y: ey, r: 16, color: '#ffe9a8', a: 0.7 });
       }
     }
@@ -607,11 +614,15 @@
     if (la > 0) for (const L of m.lights) { const x = L.x - cx, y = L.y - cy; if (x < -L.r || y < -L.r || x > G.PW + L.r || y > G.PH + L.r) continue; lights.push({ x, y, r: L.r, color: L.color, a: la * (1 - L.flicker * (0.5 + 0.5 * Math.sin(t * 9 + L.x))) }); }
     // mini-carte (hors dialogue)
     if (!S.busy && m.mini) {
-      const mw = m.w, mh = m.h, crop = G.view.w < G.PW, mx = crop ? G.view.x + 5 : G.PW - mw - 8, my = crop ? 5 : 27; c.globalAlpha = 0.82; W.miniRect = [mx - 2, my - 2, mw + 4, mh + 4]; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, mw + 4, mh + 4); c.drawImage(m.mini, mx, my); c.globalAlpha = 1;
-      c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = 1; c.strokeRect(mx - 1.5, my - 1.5, mw + 3, mh + 3);
-      if (tg && Math.floor(t * 3) % 2) { c.fillStyle = '#ffe08a'; c.fillRect(mx + Math.floor(tg.x / T) - 1, my + Math.floor((tg.kind === 'goto' ? tg.y : tg.y + 28) / T) - 1, 3, 3); }
-      W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) { c.fillStyle = '#ff6a8a'; c.fillRect(mx + Math.floor(f.x / T), my + Math.floor(f.y / T), 1, 1); } });
-      c.fillStyle = Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a'; c.fillRect(mx + Math.floor(W.player.x / T) - 1, my + Math.floor(W.player.y / T) - 1, 3, 3);
+      // le plan : dans le coin de ce que l'on voit ; quand l'image est agrandie, il ne grossit que d'un quart sur un écran en
+      // hauteur (il y est seul dans son coin) et pas du tout en largeur, où le pouce passe à côté pour marcher (q : son échelle)
+      const V = G.view, Zm = (I.ui && I.ui.Z) || 1, haut = I.ui && I.ui.zoom, q = Math.min(1, (haut ? 1.25 : 1) / Zm), mw = m.w * q, mh = m.h * q, crop = V.w < G.PW || V.h < G.PH;
+      const mx = !crop ? G.PW - mw - 8 : haut ? V.x + 5 / Zm : V.x + V.w - mw - 8 / Zm, my = !crop ? 27 : V.y + (haut ? 5 : 27) / Zm, b2 = 2 * q;
+      c.globalAlpha = 0.82; W.miniRect = [mx - b2, my - b2, mw + 2 * b2, mh + 2 * b2]; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - b2, my - b2, mw + 2 * b2, mh + 2 * b2); c.drawImage(m.mini, mx, my, mw, mh); c.globalAlpha = 1;
+      c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = q; c.strokeRect(mx - 1.5 * q, my - 1.5 * q, mw + 3 * q, mh + 3 * q);
+      if (tg && Math.floor(t * 3) % 2) { c.fillStyle = '#ffe08a'; c.fillRect(mx + (Math.floor(tg.x / T) - 1) * q, my + (Math.floor((tg.kind === 'goto' ? tg.y : tg.y + 28) / T) - 1) * q, 3 * q, 3 * q); }
+      W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) { c.fillStyle = '#ff6a8a'; c.fillRect(mx + Math.floor(f.x / T) * q, my + Math.floor(f.y / T) * q, q, q); } });
+      c.fillStyle = Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a'; c.fillRect(mx + (Math.floor(W.player.x / T) - 1) * q, my + (Math.floor(W.player.y / T) - 1) * q, 3 * q, 3 * q);
     } else W.miniRect = null;
     return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint, clouds: env.clouds ? { x: cx, y: cy } : null };
   };

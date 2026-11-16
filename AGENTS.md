@@ -25,7 +25,7 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   « 1.32 INTACTE » **avant chaque enregistrement**.
 - La suite de ce document décrit la 1.32. Elle vaut pour la 2.0 en lisant `v2/` devant chaque chemin : mêmes exigences de
   respect, même règle de test, avec les outils de `v2/tools/`. Ce qui est propre à la 2.0 est écrit dans `v2/docs/`.
-- La 2.0 a dix contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
+- La 2.0 a onze contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
   `node v2/tools/cartes.js` (les lieux du livre I sortent comme dans la 1.32 : « CARTES IDENTIQUES »),
   `node v2/tools/ecrans.js` (l'écran de la Chaîne du livre I est celui de la 1.32 : « CHAÎNE IDENTIQUE »),
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
@@ -38,9 +38,12 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   (dans le jeu : le labyrinthe d'un chapitre, son chrono, la remontée, la reprise ; la descente du râwî et ses quatre
   issues ; ce qui rôde et la frappe : « DESCENTE CONFORME ») et `node v2/tools/retours.js` (deux récits quittés par la
   halte puis repris à leur place, la partie exportée et réimportée avec eux, les retours en 2084 joués, la Citadelle
-  visitée : « RETOURS CONFORMES ») et `node v2/tools/progression.js` (une partie neuve par les vrais boutons : une seule
+  visitée : « RETOURS CONFORMES »), `node v2/tools/progression.js` (une partie neuve par les vrais boutons : une seule
   leçon par séquence, les commandes du combat reçues une à une, les pages de la halte ; une partie d'avant garde tout ;
-  les trois postures et leurs effets : « PROGRESSION CONFORME ») : aucun « REFUS », « BLOQUÉ »,
+  les trois postures et leurs effets : « PROGRESSION CONFORME ») et `node v2/tools/loupe.js` (sur un téléphone, en
+  hauteur et en largeur : l'image s'agrandit — d'office, en écartant deux doigts, par le bouton —, le toucher tombe
+  juste, les étiquettes restent sur leurs personnages, le combat garde son cadrage, aucun texte n'est sous dix points :
+  « LOUPE CONFORME ») : aucun « REFUS », « BLOQUÉ »,
   « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages » ;
   `JEU=../index.html node v2/tools/silhouettes.js` passe le même contrôle sur la 1.32. Les textes de la 2.0
@@ -87,6 +90,15 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   moteur la pose dans la main le temps du geste et la fait tourner (`G.arme`, `G.frappe`) — du bois, du fer, une corde,
   rien d'autre (exigence 17). Le dessin d'origine garde les pas de la 1.32. `v2/docs/architecture.md`, « Le
   mouvement ». Un changement de ces gabarits repasse `silhouettes.js`, puis toute la batterie.
+- Dans la 2.x, l'image s'agrandit (demande du décideur, 16 novembre : « les personnages et les textes sont trop petits
+  dans mon téléphone, il faut pouvoir zoomer dans l'image ») : pendant l'exploration, de × 1 à × 3 autour de celui qui
+  mène — deux doigts qui s'écartent, la molette, le bouton « × » de la scène, le réglage « Image » ; d'office × 1,5 sur
+  un téléphone tenu en hauteur, × 1,25 en largeur. Le combat garde son cadrage. La fenêtre visible a deux dimensions
+  (`G.view` : `x`, `y`, `w`, `h`) : tout ce qui se pose sur la scène — étiquettes, plan, flèche d'objectif, toucher — passe
+  par elle et par `U.scale`, jamais par la taille de la scène seule. Sur un écran tactile, le texte est « grand »
+  d'office et aucun n'est sous dix points (`src/style.css`, « écran tactile ») ; une liste de choix qui déborderait se
+  resserre (`S.ajuster`). `v2/docs/architecture.md`, « L'image agrandie ». Tout changement de mise en page se relit sur
+  un téléphone, en hauteur et en largeur : `loupe.js`, puis `doigt.js`.
 - Le livret (`promo/`, `tools/promo.js`) décrit la 1.32.
 
 ## Le projet en trois phrases
@@ -151,6 +163,7 @@ node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère, ti
 node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois postures
+node v2/tools/loupe.js              # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles
 node tools/promo.js pdf             # le livret en PDF (promo/livret.pdf) : A5 paysage, deux colonnes, pages équilibrées ; demande poppler (pdfinfo, pdftoppm)
 ```
 

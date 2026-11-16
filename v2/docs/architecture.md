@@ -267,6 +267,46 @@ simulation, le jeu y tient 60 images par seconde, comme le dessin d'origine.
 redessiné ; les compagnons de lumière, les lames et les icônes gardent leur dessin. Aucune image générée n'entre dans le
 jeu (D153).
 
+### L'image agrandie, les textes sur un téléphone
+
+*Demande du décideur, le 16 novembre : « les personnages et les textes sont trop petits dans mon téléphone, il faut
+pouvoir zoomer dans l'image » (D167, D168).*
+
+Sur un téléphone tenu en hauteur, la scène fait 390 points de large : un personnage de 16 × 24 points logiques n'y
+occupait que 26 × 40 points d'écran. Deux réponses, dans `ui.js` et `style.css`.
+
+- **L'agrandissement** (`U.zf`, de 1 à 3). Pendant l'exploration seulement, la scène ne montre qu'une part de l'image,
+  agrandie d'autant, autour de celui qui mène : `layout()` calcule l'échelle (`U.base`, points d'écran par point
+  logique ; `U.Z`, l'agrandissement en cours ; `U.scale`, leur produit) et la **fenêtre visible** `G.view` — `x`, `y`,
+  `w`, `h`, en points logiques dans l'image de 384 × 216. `world.js` (`updateCam`) la fait suivre le héros dans les deux
+  sens, la tourne vers celui qui parle et l'arrête aux bords de la carte ; la boucle d'affichage glisse et agrandit le
+  canevas par une transformation (`translate … scale`), ses points restant nets. Le jeu ne dessine rien de plus : il
+  montre moins, en plus grand.
+- **Les gestes.** Deux doigts qui s'écartent sur l'image (`pointer()` : le premier doigt cesse alors d'être un toucher,
+  personne ne marche) ; la molette ; le bouton « × » en haut de la scène, qui fait le tour de `U.ZOOMS` ; le réglage
+  « Image », à l'écran-titre et à la halte. `U.zoomer(z, garder)` est le seul point d'entrée : il borne, arrondit, garde
+  (`opts.zoom`) et remet en page. **Sans choix du joueur**, la grandeur est d'office : × 1,5 sur un écran tactile tenu
+  en hauteur, × 1,25 en largeur, × 1 ailleurs — et elle suit le téléphone que l'on tourne.
+- **Ce qui se pose sur la scène** passe par la fenêtre et par `U.scale` : les étiquettes de noms (`U.noms`), le plan (dans
+  le coin de ce que l'on voit ; il ne grossit que d'un quart en hauteur, pas du tout en largeur, où le pouce passe à côté
+  pour marcher), la flèche d'objectif (au bord de ce que l'on voit), la vignette. Le toucher n'a rien à savoir : il lit
+  la boîte du canevas, transformation comprise (`getBoundingClientRect`).
+- **Le combat garde son cadrage** (`U.Z = 1` hors de l'exploration) : son tableau est fixe, les deux camps déjà
+  rapprochés sur un écran étroit (`bx()`).
+- **Les textes.** « Texte » a quatre crans (`U.TZ` : normal, grand, très grand, géant) ; sans choix du joueur, « grand »
+  sur un écran tactile. Un téléphone tenu en largeur suit lui aussi ce réglage (il l'ignorait). Sur un écran tactile
+  (`body.touch`), les plus petits textes ont un plancher : noms, sous-titres, plaques et ordre des tours du combat,
+  nombres des barres, cadran des étoiles — aucun sous dix points. Une liste de choix qui déborderait de l'écran resserre
+  ses caractères, cran par cran, sans descendre sous « normal » (`S.ajuster`, `script.js`). À la halte, un titre long
+  passe à la ligne ; l'écran-titre d'un téléphone en largeur range ses réglages sur deux colonnes.
+
+`node v2/tools/loupe.js` le prouve sur un téléphone, en hauteur puis en largeur, par les vrais gestes (le pincement est
+envoyé comme deux doigts) : la grandeur d'office, le pincement dans les deux sens sans que personne marche, le tour du
+bouton, un toucher qui mène à la case touchée à × 2, les étiquettes sur leurs personnages, le combat à × 1 et le retour
+à la grandeur choisie, le réglage gardé d'une page à l'autre, et aucun texte sous dix points à l'écran-titre, sur la
+carte, dans un dialogue, en combat et à la halte : « LOUPE CONFORME ». `doigt.js` rejoue ensuite le début du jeu avec
+l'image agrandie.
+
 ## Les labyrinthes de la noosphère : `src/core/dedale.js`
 
 *Lot N0 (D155). Le module ne dessine rien et ne connaît pas le jeu : il tire un plan et sait dire s'il est bon.*
@@ -530,13 +570,14 @@ node v2/tools/partie.js              # la partie du joueur : exportée, effacée
 node v2/tools/personnage.js          # le nom et la tenue du râwî : choisis, joués, gardés
 node v2/tools/silhouettes.js         # « SILHOUETTES CONFORMES » : petits sprites inchangés, aucun trait dans un voile
 node v2/tools/silhouettes.js planches [modèles.png]   # planches agrandies dans .smoke/silhouettes/
+node v2/tools/loupe.js               # « LOUPE CONFORME » : sur un téléphone, l'image agrandie, le toucher juste, les textes lisibles
 node v2/tools/smoke.js auto          # et walk, tap, wrong, shots — comme en 1.32
 node v2/tools/doigt.js [loin [844x390]]
 node v2/tools/son.js
 node v2/tools/bataille.js [mesures]
 ```
 
-**Règle de la 2.0.** Celle d'`AGENTS.md`, avec six contrôles de plus à chaque changement du moteur ou des règles :
-`cartes.js` doit afficher « CARTES IDENTIQUES », `ecrans.js` « CHAÎNE IDENTIQUE », `silhouettes.js` « SILHOUETTES
-CONFORMES », et `paquet.js`, `partie.js` et `personnage.js` doivent finir sans « REFUS », « BLOQUÉ », « ABSENT »,
-« INACCESSIBLE », « INVISIBLE », « TRAIT » ni « ÉCART ». Et `gel.js` doit afficher « 1.32 INTACTE » avant chaque enregistrement.
+**Règle de la 2.0.** Celle d'`AGENTS.md`, avec onze contrôles de plus à chaque changement du moteur ou des règles —
+`cartes.js`, `ecrans.js`, `paquet.js`, `partie.js`, `personnage.js`, `silhouettes.js`, `dedales.js`, `descente.js`,
+`retours.js`, `progression.js` et `loupe.js` ; la liste, et ce que chacun doit afficher, est dans `AGENTS.md`. Aucun ne
+doit finir sur « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT » ni « ÉCART ». Et `gel.js` doit afficher « 1.32 INTACTE » avant chaque enregistrement.

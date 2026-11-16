@@ -64,6 +64,8 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
         const x = (t.gx - Math.round(W.cam.x)) / G.PW * c.width + c.left, y = (t.gy - 6 - Math.round(W.cam.y)) / G.PH * c.height + c.top, bas = s.bottom - s.top > 300 ? 90 : 64;
         // le pouce ne vise pas un bouton de la manette pour marcher : s'il tombait dessus, il vise juste au-dessus
         const pt = [Math.max(s.left + 14, Math.min(s.right - 14, x)), Math.max(s.top + bas, Math.min(s.bottom - 14, y))];
+        // ni le plan, dans son coin : le toucher ouvre la carte — il vise juste en dessous
+        if (W.miniRect) { const r = W.miniRect, l = c.left + r[0] / G.PW * c.width, t2 = c.top + r[1] / G.PH * c.height, d = l + r[2] / G.PW * c.width, b2 = t2 + r[3] / G.PH * c.height; if (pt[0] > l - 8 && pt[0] < d + 8 && pt[1] > t2 - 8 && pt[1] < b2 + 8) pt[1] = Math.min(s.bottom - 14, b2 + 12); }
         document.querySelectorAll('#pad button').forEach(b => { const r = b.getBoundingClientRect(); if (r.width > 4 && getComputedStyle(b).visibility !== 'hidden' && pt[0] > r.left - 5 && pt[0] < r.right + 5 && pt[1] > r.top - 5 && pt[1] < r.bottom + 5) pt[1] = r.top - 9; });
         return { quoi: 'marche', ou, pt, souci: +getComputedStyle(f).opacity > 0.5 ? 'scène sous le noir du fondu' : '', texte: 'objectif ' + W.objIndex, pos: Math.round(W.player.x) + ',' + Math.round(W.player.y) }; }
       return { quoi: 'attente', ou };

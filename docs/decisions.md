@@ -1251,6 +1251,24 @@ après un premier plan qui modifiait le moteur actuel :
   formes abstraites, ne changent pas. Contrôle : `silhouettes.js` (les gabarits des gestes obéissent à la règle du
   voile), puis toute la batterie.
 
+- [x] **D167. Agrandir l'image.** *Demande du décideur, le 16 novembre (« les personnages et les textes sont trop petits
+  dans mon téléphone, il faut pouvoir zoomer dans l'image ») ; lot E1, dans la 2.x.* Constat : sur un téléphone tenu en
+  hauteur, un personnage ne faisait que 26 × 40 points d'écran, et rien ne permettait d'agrandir (la scène refuse les
+  gestes du navigateur, pour que le toucher serve à marcher). **Fait :** pendant l'exploration, l'image s'agrandit de × 1
+  à × 3 autour de celui qui mène — deux doigts qui s'écartent, la molette, un bouton « × » sur la scène, un réglage
+  « Image » ; le choix est gardé avec les réglages. **Choix de l'agent, à valider :** (1) sans choix du joueur, × 1,5 sur
+  un téléphone tenu en hauteur (un personnage y fait 40 × 60 points) et × 1,25 en largeur, où il reste moins de champ ;
+  × 1 sur un ordinateur ; (2) **le combat garde son cadrage** : son tableau est fixe et tient déjà tout juste dans un
+  écran étroit — au décideur de dire s'il veut une vue qui suive celui qui agit ; (3) agrandie, l'image montre moins
+  loin : dans un labyrinthe, on voit venir de moins loin ce qui rôde — le plan, lui, montre toujours tout ; (4) le plan
+  ne grossit presque pas avec l'image, pour ne pas prendre la place où l'on touche pour marcher. Contrôle : `loupe.js`.
+- [x] **D168. Des textes qui se lisent sur un téléphone.** *Même demande ; lot E2, dans la 2.x.* « Texte » passe à quatre
+  crans (normal, grand, très grand, géant) et vaut « grand » d'office sur un écran tactile ; un téléphone tenu en
+  largeur suit enfin ce réglage ; les plus petits textes — noms au-dessus des personnages, sous-titres, plaques et ordre
+  des tours du combat, nombres des barres, cadran des étoiles — ont un plancher : aucun sous dix points. Une liste de
+  choix trop longue pour l'écran resserre ses caractères plutôt que de déborder. Contrôle : `loupe.js` (aucun texte sous
+  dix points sur cinq écrans, dans les deux sens) et `doigt.js` (aucun choix hors de l'écran).
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

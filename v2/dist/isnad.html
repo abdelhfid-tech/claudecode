@@ -29,7 +29,8 @@ em { font-style: italic; color: #fff3d0; }
 body.portrait #app { justify-content: flex-start; padding-top: 6px; }
 #stage { position: relative; flex: none; background: #000; box-shadow: 0 0 0 1px rgba(233, 200, 119, .18), 0 30px 80px rgba(0, 0, 0, .7); }
 #view { position: absolute; inset: 0; overflow: hidden; }
-#cv { width: 100%; height: 100%; display: block; touch-action: none; }
+#cv { width: 100%; height: 100%; display: block; touch-action: none; transform-origin: 0 0; }
+body.agrandi:not(.doux) #cv { image-rendering: pixelated; } /* l'image agrandie par le joueur garde ses points nets */
 #stage { touch-action: none; }
 #ui { position: absolute; inset: 0; font-size: calc(max(13px, var(--u) * 7.2) * var(--tz, 1)); line-height: 1.32; }
 #fade { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 40; }
@@ -45,6 +46,9 @@ body[data-theme="cyber"] #hud .sub { font-family: var(--f-mono); }
 #hud .obj::before { content: "◆ "; color: var(--acc); font-size: .8em; }
 #menubtn, #helpbtn { position: absolute; right: 2%; top: 3%; width: 2.4em; height: 2.4em; border-radius: 50%; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; padding: 0; }
 #helpbtn { right: calc(2% + 2.9em); font-family: var(--f-display); font-weight: 700; }
+/* l'agrandissement de l'image : un bouton qui dit où l'on en est (× 1 · × 1,5 · × 2 · × 3) */
+#zoombtn { position: absolute; right: calc(2% + 6.7em); top: 3%; height: 2.77em; min-width: 2.77em; padding: 0 .6em; border-radius: 1.4em; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .78em; z-index: 5; font-family: var(--f-mono); letter-spacing: -.02em; white-space: nowrap; }
+body.batir #zoombtn { right: calc(2% + 10.05em); } body.descente.batir #zoombtn { right: calc(2% + 6.7em); } /* à gauche du bouton « Bâtir », quand il est là */
 #toasts { position: absolute; right: 2%; top: var(--mini, 14%); display: flex; flex-direction: column; gap: .4em; align-items: flex-end; pointer-events: none; z-index: 30; }
 .toast { padding: .32em .8em; background: var(--panel); border-right: 2px solid var(--acc); font-size: .82em; animation: tin .3s ease; transition: opacity .4s, transform .4s; max-width: 22em; }
 .toast b { color: var(--acc); }
@@ -273,7 +277,7 @@ body.portrait #choice { top: calc(100% + 10px); transform: translateX(-50%); wid
 body.portrait #choice .opt { padding: .58em .9em; }
 body.portrait #choice .opt.sel { transform: none; } /* pas de décalage : la liste occupe déjà toute la largeur */
 body.portrait #battle .panel { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; grid-template-columns: 1fr; }
-body.portrait #battle .order { font-size: calc(10.5px * var(--tz, 1)); } body.portrait .plate { font-size: calc(10.5px * var(--tz, 1)); min-width: 6.4em; } body.portrait #battle .banner { font-size: calc(13.5px * var(--tz, 1)); }
+body.portrait #battle .order { font-size: calc(11px * var(--tz, 1)); } body.portrait .plate { font-size: calc(11.5px * var(--tz, 1)); min-width: 6.4em; } body.portrait #battle .banner { font-size: calc(14px * var(--tz, 1)); }
 body.portrait .fl { font-size: calc(15px * var(--tz, 1)); }
 body.portrait .mlist { max-height: 13em; } body.portrait .mi { padding: .5em .6em; } body.portrait .hrow { padding: .4em .55em; }
 /* l'objectif et les piliers passent sous la scène : la vue reste dégagée */
@@ -281,11 +285,15 @@ body.portrait #hud { top: calc(100% + 8px); left: 8px; right: 8px; max-width: no
 body.portrait #hud .obj { display: block; background: var(--panel); border: 1px solid rgba(255, 255, 255, .1); border-left: 3px solid var(--acc); padding: .45em .7em; font-size: 1em; }
 body.portrait.in-dialog #hud, body.portrait.in-build #hud { visibility: hidden; }
 body.portrait #menubtn, body.portrait #helpbtn, body.portrait #buildbtn { font-size: 1.1em; }
+body.portrait #zoombtn { font-size: .95em; }
 body.portrait #toasts { top: 3.6em; right: 2%; left: 30%; } body.portrait .toast { max-width: none; font-size: .78em; }
 body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 @media (prefers-reduced-motion: reduce) { .toast, .fl, #card, .link { animation-duration: .01s; transition: none; } }
 
-@media (orientation: landscape) and (max-height: 480px) { #ui { font-size: max(11px, calc(var(--u) * 6.4)); } .hrow { padding: .12em .5em; } #battle .cmd { padding: .25em .4em; } .mi { padding: .16em .5em; } #dialog { min-height: 30%; } }
+/* un téléphone tenu en largeur : l'écran-titre range ses réglages sur deux colonnes, pour tenir dans la hauteur */
+@media (orientation: landscape) and (max-height: 480px) { #title .vmenu { display: grid; grid-template-columns: 1fr 1fr; width: min(100%, 34em); } #title .vmenu button:first-child { grid-column: 1 / -1; } #title .tag { margin-bottom: .9em; } #title .foot { margin-top: 1em; } }
+/* un téléphone tenu en largeur : la taille du texte choisie par le joueur y vaut aussi (2.x) */
+@media (orientation: landscape) and (max-height: 480px) { #ui { font-size: calc(max(12px, var(--u) * 6.8) * var(--tz, 1)); } .hrow { padding: .12em .5em; } #battle .cmd { padding: .25em .4em; } .mi { padding: .16em .5em; } #dialog { min-height: 30%; } }
 
 /* ---------- v2 : piliers, pourparlers, prière ---------- */
 #hud .pil { margin-top: .35em; display: flex; gap: .7em; font-size: .72em; font-family: var(--f-mono); color: var(--sand); }
@@ -479,7 +487,7 @@ i.gi.vide { display: inline-block; border: 1px dashed rgba(255, 255, 255, .22); 
 body.portrait #menu .cols { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, auto) minmax(0, 1fr); gap: .6em; }
 body.portrait #menu .side { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: max-content; gap: .28em; max-height: 40vh; align-content: start; overflow-y: auto; }
 body.portrait #menu .side .cat { grid-column: 1 / -1; margin-top: .3em; }
-body.portrait #menu .side button { padding: .5em .6em; font-size: .86em; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body.portrait #menu .side button { padding: .5em .6em; font-size: .86em; min-width: 0; overflow: hidden; white-space: normal; line-height: 1.15; overflow-wrap: anywhere; } /* un titre long passe à la ligne : il n'est plus coupé */
 body.portrait #menu .pane { padding: .8em .9em; }
 body.portrait #menu header { margin-bottom: .5em; }
 body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot > small:first-child { grid-column: 1 / -1; margin-bottom: -.3em; }
@@ -495,6 +503,22 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 .chainfoot .ver { flex-basis: 100%; text-align: center; font-size: .78em; opacity: .7; }
 .vmenu button small { display: block; font-family: var(--f-body); letter-spacing: 0; font-size: .78em; color: var(--dim); margin-top: .15em; text-transform: none; }
 
+/* ---------- écran tactile : pas de texte minuscule (2.x) ----------
+   Demande du décideur : sur un téléphone, les textes étaient trop petits. Les plus petits ont ici un plancher ; la taille
+   générale se règle (« Texte »), et vaut « grand » d'emblée sur un écran tactile. */
+body.touch #ui small, body.touch .screen small { font-size: max(.83em, 10.5px); } /* tout « petit texte » sans règle plus précise : une annonce, une note */
+body.touch .nom { font-size: max(.68em, 11.5px); }
+body.touch #hud .sub, body.touch #hud .pil { font-size: max(.74em, 11.5px); }
+body.touch:not(.portrait) .plate, body.touch:not(.portrait) #battle .order { font-size: max(.68em, 10.5px); }
+body.touch .hrow .hn small, body.touch .mi small { font-size: max(.8em, 10.5px); }
+body.touch #title .foot { font-size: max(.72em, 11.5px); }
+body.touch #title .coin button { font-size: max(.74em, 12px); }
+body.touch #menu .side .cat, body.touch .link .ord, body.touch .link .stt, body.touch .link .qt { font-size: max(.7em, 11px); }
+body.touch #compass .lab b { font-size: max(.74em, 10.5px); } body.touch #compass .lab small { font-size: max(.66em, 10px); }
+body.touch #battle .order .olab, body.touch #battle .order i { font-size: max(.86em, 10px); } body.touch #battle .order i.foe { font-size: max(.7em, 10px); }
+body.touch #battle .cmd .niyya { font-size: max(.74em, 10.5px); }
+body.touch .hrow .hbars .bar { height: max(.82em, 11px); } body.touch .hrow .bar em { font-size: max(.78em, 10px); line-height: 1.1; top: 0; } /* les deux barres qui portent un nombre */
+
 </style>
 <div id="app">
   <div id="stage">
@@ -504,6 +528,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
       <button id="menubtn" type="button" aria-label="Menu" hidden>☰</button>
       <button id="buildbtn" type="button" aria-label="Bâtir" hidden>▦</button>
       <button id="helpbtn" type="button" aria-label="Que faire ?" hidden>?</button>
+      <button id="zoombtn" type="button" aria-label="Agrandir l’image" hidden>× 1</button>
       <div id="compass" hidden><canvas aria-label="Cadran des étoiles"></canvas><div class="lab"></div></div>
       <div id="toasts"></div>
       <div id="battle" hidden>
@@ -550,7 +575,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
+window.ISNAD_VERSION = "2.0 · 2026-11-16 21:06 UTC · d2ad338+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -2709,8 +2734,9 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
     G.lcv = mk(G.PW / 2, G.PH / 2); G.lx = G.lcv.getContext('2d');
     G.resize();
   };
-  // fenêtre visible, en pixels logiques : sur un écran en hauteur, on ne montre qu'une partie de la largeur, agrandie
-  G.view = { x: 0, w: G.PW, t: 0 };
+  // fenêtre visible, en pixels logiques : sur un écran en hauteur, on ne montre qu'une partie de la largeur, agrandie ;
+  // quand le joueur agrandit l'image (2.x, ui.js : U.zf), une partie de la hauteur aussi (y, h)
+  G.view = { x: 0, y: 0, w: G.PW, h: G.PH, t: 0, ty: 0 };
   G.resize = function () {
     const st = document.getElementById('stage') || G.cv.parentElement, dpr = Math.min(window.devicePixelRatio || 1, 2);
     const w = st.clientHeight * G.PW / G.PH > st.clientWidth + 1 ? st.clientHeight * G.PW / G.PH : st.clientWidth, coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
@@ -2836,8 +2862,8 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
     if (o.scan) { if (G.D === 1) { c.globalAlpha = 0.07; c.fillStyle = '#000'; for (let y = 0; y < H; y += k * 2) c.fillRect(0, y, W, k); c.globalAlpha = 1; } // les lignes de balayage : seulement dans le dessin d'origine
       if (Math.random() < 0.02) { const y = Math.random() * H, h = 4 * k; c.drawImage(G.cv, 0, y, W, h, (Math.random() - 0.5) * 20 * k, y, W, h); } }
     // vignette
-    const vcx = (G.view.x + G.view.w / 2) * k, vr = Math.hypot(G.view.w / 2, G.PH / 2) / Math.hypot(G.PW / 2, G.PH / 2);
-    const vg = c.createRadialGradient(vcx, H / 2, H * 0.35 * vr, vcx, H / 2, H * 0.95 * vr); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(4,3,12,${o.vignette === undefined ? 0.55 : o.vignette})`);
+    const vcx = (G.view.x + G.view.w / 2) * k, vcy = (G.view.y + G.view.h / 2) * k, vr = Math.hypot(G.view.w / 2, G.view.h / 2) / Math.hypot(G.PW / 2, G.PH / 2); // autour de ce que l'on voit
+    const vg = c.createRadialGradient(vcx, vcy, H * 0.35 * vr, vcx, vcy, H * 0.95 * vr); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(4,3,12,${o.vignette === undefined ? 0.55 : o.vignette})`);
     c.fillStyle = vg; c.fillRect(0, 0, W, H);
     if (G.flashA > 0) { c.globalAlpha = G.flashA; c.fillStyle = G.flashC; c.fillRect(0, 0, W, H); c.globalAlpha = 1; G.flashA -= dt * 2.4; }
   };
@@ -4229,6 +4255,14 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
     if (I.debug.log) { const z = e => +getComputedStyle(e).zIndex || 0; if (z(el) <= z($('#fade'))) I.debug.log.push('TEXTE CACHÉ sous le fondu : #' + el.id + ' « ' + (el.textContent || '').trim().slice(0, 50) + ' »'); }
   }
   S.TEXTE_SUR_NOIR = true; // à « false », on retrouve l'ancien comportement : le joueur de test doit alors signaler « TEXTE CACHÉ »
+  // 2.x — une liste de choix tient à l'écran. Quand le joueur a agrandi le texte (ou sur un téléphone, où il est « grand »
+  // d'emblée), une longue liste déborderait sous l'écran : ses caractères se resserrent alors, cran par cran, sans jamais
+  // descendre sous la taille « normal ». Au-delà, la liste défile, comme avant.
+  function ajuster(box) {
+    box.style.fontSize = ''; const tz = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tz')) || 1, mini = Math.min(1, 1 / tz);
+    for (const f of [0.94, 0.88, 0.82, 0.76, 0.7].filter(v => v > mini + 0.01).concat(mini)) { if (box.scrollHeight <= box.clientHeight + 2) break; box.style.fontSize = f.toFixed(3) + 'em'; }
+  }
+  S.ajuster = ajuster;
 
   /* ----- boîte de dialogue ----- */
   let typing = null;
@@ -4287,7 +4321,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
       const ne = performance.now(); // un menu n'accepte rien pendant un tiers de seconde : le toucher qui vient de faire avancer le texte ne répond pas à la place du joueur
       const done = i => { if (!I.debug.auto && performance.now() - ne < 350) return; if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; I.audio.sfx('ok'); res(i); };
       options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ savoir</span>' : '')); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
-      sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box);
+      sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box); ajuster(box);
       const vue = () => { if (btns[idx].scrollIntoView) btns[idx].scrollIntoView({ block: 'nearest' }); }; // une longue liste suit la sélection
       const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); vue(); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); vue(); I.audio.sfx('move'); } else if (a === 'ok') done(idx); return true; });
       if (I.debug.auto) setTimeout(() => {
@@ -4574,8 +4608,15 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
       const f = W.focus, half = V.w / 2 - 22, off = f && f.map === m.id && !f.hidden && f.placed ? I.clamp((f.x - W.player.x) / 2, -half, half) : 0;
       W.foff = snap ? off : (W.foff || 0) + (off - (W.foff || 0)) * 0.1;
       const lo = Math.max(0, -cx), hi = Math.min(G.PW, mw - cx) - V.w, want = hi < lo ? (lo + hi) / 2 : I.clamp(W.player.x + W.foff - cx - V.w / 2, lo, hi);
-      V.t = snap ? want : V.t + (want - V.t) * 0.14; V.x = Math.round(V.t);
+      V.t = snap ? want : V.t + (want - V.t) * 0.14; V.x = V.h < G.PH ? G.cale(V.t) : Math.round(V.t);
     } else { V.x = 0; V.t = 0; }
+    // 2.x — l'image agrandie : la fenêtre suit aussi le héros de haut en bas, et s'arrête aux bords de la carte
+    if (V.h < G.PH) {
+      const f = W.focus, half = V.h / 2 - 26, off = f && f.map === m.id && !f.hidden && f.placed ? I.clamp((f.y - W.player.y) / 2, -half, half) : 0;
+      W.foffY = snap ? off : (W.foffY || 0) + (off - (W.foffY || 0)) * 0.1;
+      const lo = Math.max(0, -cy), hi = Math.min(G.PH, mh - cy) - V.h, want = hi < lo ? (lo + hi) / 2 : I.clamp(W.player.y - 10 + W.foffY - cy - V.h / 2, lo, hi);
+      V.ty = snap ? want : V.ty + (want - V.ty) * 0.14; V.y = G.cale(V.ty);
+    } else { V.y = 0; V.ty = 0; }
   };
 
   /* ----- chapitres et objectifs ----- */
@@ -5019,9 +5060,9 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
     if (tg) {
       const sx = tg.x - cx, sy = tg.y - cy;
       if (tg.kind !== 'goto' && sx > 0 && sx < G.PW && sy > 0 && sy < G.PH) { const by = sy + Math.sin(t * 5) * 2; c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(sx, by + 4); c.lineTo(sx - 4, by - 2); c.lineTo(sx, by - 6); c.lineTo(sx + 4, by - 2); c.fill(); c.fillStyle = '#fff6dc'; c.fillRect(sx - 1, by - 3, 2, 3); }
-      const v0 = G.view.x, v1 = G.view.x + G.view.w;
-      if (sx < v0 + 6 || sx > v1 - 6 || sy < 6 || sy > G.PH - 6) {
-        const ang = Math.atan2(sy - G.PH / 2, sx - (v0 + v1) / 2), ex = I.clamp(sx, v0 + 12, v1 - 12), ey = I.clamp(sy, 22, G.PH - 12), pu = 1 + Math.sin(t * 6) * 0.2;
+      const v0 = G.view.x, v1 = G.view.x + G.view.w, w0 = G.view.y, w1 = G.view.y + G.view.h, zq = (I.ui && I.ui.Z) || 1; // ce que l'on voit de l'image (elle peut être agrandie)
+      if (sx < v0 + 6 || sx > v1 - 6 || sy < w0 + 6 || sy > w1 - 6) {
+        const ang = Math.atan2(sy - (w0 + w1) / 2, sx - (v0 + v1) / 2), ex = I.clamp(sx, v0 + 12 / zq, v1 - 12 / zq), ey = I.clamp(sy, w0 + 22 / zq, w1 - 12 / zq), pu = (1 + Math.sin(t * 6) * 0.2) / Math.sqrt(zq);
         c.save(); c.translate(ex, ey); c.rotate(ang); c.scale(pu, pu); c.rotate(-ang + t * 0.6); const star = (r, col) => { c.fillStyle = col; c.beginPath(); for (let q = 0; q < 8; q++) { const rr = q % 2 ? r * 0.3 : r, aa = q * Math.PI / 4; c.lineTo(Math.cos(aa) * rr, Math.sin(aa) * rr); } c.closePath(); c.fill(); }; star(8, '#1a1420'); star(6.5, '#ffe9a8'); star(2.5, '#fff'); c.restore(); lights.push({ x: ex, y: ey, r: 16, color: '#ffe9a8', a: 0.7 });
       }
     }
@@ -5042,11 +5083,15 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
     if (la > 0) for (const L of m.lights) { const x = L.x - cx, y = L.y - cy; if (x < -L.r || y < -L.r || x > G.PW + L.r || y > G.PH + L.r) continue; lights.push({ x, y, r: L.r, color: L.color, a: la * (1 - L.flicker * (0.5 + 0.5 * Math.sin(t * 9 + L.x))) }); }
     // mini-carte (hors dialogue)
     if (!S.busy && m.mini) {
-      const mw = m.w, mh = m.h, crop = G.view.w < G.PW, mx = crop ? G.view.x + 5 : G.PW - mw - 8, my = crop ? 5 : 27; c.globalAlpha = 0.82; W.miniRect = [mx - 2, my - 2, mw + 4, mh + 4]; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, mw + 4, mh + 4); c.drawImage(m.mini, mx, my); c.globalAlpha = 1;
-      c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = 1; c.strokeRect(mx - 1.5, my - 1.5, mw + 3, mh + 3);
-      if (tg && Math.floor(t * 3) % 2) { c.fillStyle = '#ffe08a'; c.fillRect(mx + Math.floor(tg.x / T) - 1, my + Math.floor((tg.kind === 'goto' ? tg.y : tg.y + 28) / T) - 1, 3, 3); }
-      W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) { c.fillStyle = '#ff6a8a'; c.fillRect(mx + Math.floor(f.x / T), my + Math.floor(f.y / T), 1, 1); } });
-      c.fillStyle = Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a'; c.fillRect(mx + Math.floor(W.player.x / T) - 1, my + Math.floor(W.player.y / T) - 1, 3, 3);
+      // le plan : dans le coin de ce que l'on voit ; quand l'image est agrandie, il ne grossit que d'un quart sur un écran en
+      // hauteur (il y est seul dans son coin) et pas du tout en largeur, où le pouce passe à côté pour marcher (q : son échelle)
+      const V = G.view, Zm = (I.ui && I.ui.Z) || 1, haut = I.ui && I.ui.zoom, q = Math.min(1, (haut ? 1.25 : 1) / Zm), mw = m.w * q, mh = m.h * q, crop = V.w < G.PW || V.h < G.PH;
+      const mx = !crop ? G.PW - mw - 8 : haut ? V.x + 5 / Zm : V.x + V.w - mw - 8 / Zm, my = !crop ? 27 : V.y + (haut ? 5 : 27) / Zm, b2 = 2 * q;
+      c.globalAlpha = 0.82; W.miniRect = [mx - b2, my - b2, mw + 2 * b2, mh + 2 * b2]; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - b2, my - b2, mw + 2 * b2, mh + 2 * b2); c.drawImage(m.mini, mx, my, mw, mh); c.globalAlpha = 1;
+      c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = q; c.strokeRect(mx - 1.5 * q, my - 1.5 * q, mw + 3 * q, mh + 3 * q);
+      if (tg && Math.floor(t * 3) % 2) { c.fillStyle = '#ffe08a'; c.fillRect(mx + (Math.floor(tg.x / T) - 1) * q, my + (Math.floor((tg.kind === 'goto' ? tg.y : tg.y + 28) / T) - 1) * q, 3 * q, 3 * q); }
+      W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) { c.fillStyle = '#ff6a8a'; c.fillRect(mx + Math.floor(f.x / T) * q, my + Math.floor(f.y / T) * q, q, q); } });
+      c.fillStyle = Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a'; c.fillRect(mx + (Math.floor(W.player.x / T) - 1) * q, my + (Math.floor(W.player.y / T) - 1) * q, 3 * q, 3 * q);
     } else W.miniRect = null;
     return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint, clouds: env.clouds ? { x: cx, y: cy } : null };
   };
@@ -7920,8 +7965,8 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
     btns.push(mk('Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'), b => { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = 'Musique : ' + (I.audio.musicOn ? 'activée' : 'coupée'); }));
     btns.push(mk('Dessin : ' + dessinNom(), b => { dessinSuivant(); b.textContent = 'Dessin : ' + dessinNom(); }));
     btns.push(mk('Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = 'Rendu : ' + (G.low ? '2D simple' : 'rétro-HD'); }));
-    const TZ = ['normal', 'grand', 'très grand'];
-    btns.push(mk('Texte : ' + TZ[sv.opts.tz || 0], b => { sv.opts.tz = ((sv.opts.tz || 0) + 1) % 3; I.save.store(); U.applyOpts(); b.textContent = 'Texte : ' + TZ[sv.opts.tz]; }));
+    btns.push(mk('Texte : ' + U.TZ[U.tz()][0], b => { U.tzSuivant(); b.textContent = 'Texte : ' + U.TZ[U.tz()][0]; }));
+    btns.push(mk('Image : ' + zoomNom(), b => { U.zoomSuivant(); b.textContent = 'Image : ' + zoomNom(); }));
     btns.push(mk('Plein écran', () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } }));
     { const v = $('#title .ver'); if (v) v.textContent = 'version ' + (window.ISNAD_VERSION || 'de travail'); }
     // importer une partie : dans un coin, hors de la colonne — l'écran-titre garde la hauteur qu'il a toujours eue
@@ -8242,7 +8287,8 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
         ...(page('valeurs') ? [{ label: 'Valeurs et attributs', fn: valeurs, show: () => I.valeurs.paneVue() }] : []),
         { label: 'Aide du jeu', fn: aide, show: () => '<h3>Aide du jeu</h3><p>Les règles, thème par thème : ' + U.AIDE.map(a => a[0].toLowerCase()).join(', ') + '.</p>' });
       items.push({ cat: 'Réglages' },
-        toggle('Texte', () => ['normal', 'grand', 'très grand'][o.tz || 0], () => { o.tz = ((o.tz || 0) + 1) % 3; U.applyOpts(); }, 'Taille des caractères dans les dialogues, les menus et les combats.'),
+        toggle('Texte', () => U.TZ[U.tz()][0], U.tzSuivant, 'Taille des caractères dans les dialogues, les menus et les combats.'),
+        toggle('Image', zoomNom, U.zoomSuivant, 'Agrandit l’image pendant l’exploration : on voit moins loin, mais en plus grand. Sur l’image elle-même : deux doigts qui s’écartent, la molette, ou le bouton « × » en haut de la scène.'),
         toggle('Croix tactile', () => o.pad ? 'affichée' : 'masquée', () => { o.pad = !o.pad; U.applyOpts(); }, 'Sur un écran tactile, on se déplace en touchant la scène. La croix directionnelle reste disponible pour qui la préfère.'),
         toggle('Son', () => I.audio.on ? 'activé' : 'coupé', () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, 'Coupe ou rétablit tout le son : musique, percussions et bruitages.'),
         toggle('Musique', () => I.audio.musicOn ? 'activée' : 'coupée', () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, 'Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.'),
@@ -8396,6 +8442,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
     ['Mener plusieurs récits', '<p>On n’est pas tenu de finir un récit pour en ouvrir un autre. Dans la halte, <b>Revenir en 2084</b> te ramène aux Archives basses, devant la Chaîne : le récit que tu quittes reste où tu le laisses, et tu le reprends là — même après en avoir suivi un autre. La Chaîne dit lesquels sont <b>en route</b>, et son grand bouton reprend le dernier quitté.</p><p>Pendant que tu suis un récit, la Cité-Miroir ne t’attend pas : en revenant, il arrive qu’il s’y soit passé quelque chose. Et dès la première veillée entendue, la Chaîne ouvre le chemin de <b>la Citadelle</b>, où Idris est né.</p>'],
     ['Frapper ce qui rôde', '<p>Dans un labyrinthe de la noosphère, de petits égrégores vont et viennent sur les ponts. <kbd>Entrée</kbd> — ou un toucher sur ce qui rôde — le <b>frappe</b>, avec l’arme que porte celui qui mène : un voile de moins, et il reste sonné un instant, le temps de passer. Sans voile, il se dissipe. S’il vous rejoint avant, c’est un combat ordinaire.</p><p>L’allonge, la cadence et le recul viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, un coup ne fait que sonner : seul, on ne vainc pas ce qui pèse sur le cœur.</p>'],
     ['Les postures', '<p>Devant l’épreuve, on peut se tenir de trois manières. <b>Le héros</b> s’expose : plus de Force, un point de Niyya d’emblée, et les coups viennent à lui. <b>Le sage</b> discerne : plus d’Esprit, et une faille de chaque égrégore connue d’emblée. <b>Le saint</b> s’efface : il soigne mieux et garde le calme.</p><p>Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent aux niveaux 4 et 7. On en change à la halte (<b>Postures</b>) ou en préparant une bataille. Aucune n’est au-dessus d’une autre : on prend une posture, on ne la possède pas.</p>'],
+    ['Agrandir l’image et le texte', '<p>Pendant l’exploration, l’image s’agrandit autour de celui qui mène : on voit moins loin, mais en plus grand. Sur un écran tactile, pose <b>deux doigts</b> sur l’image et écarte-les ; rapproche-les pour revoir plus large. Le bouton <b>×</b>, en haut de la scène, fait le tour des grandeurs (× 1, × 1,5, × 2, × 3) ; à la souris, la molette. Le combat garde son cadrage.</p><p>La taille des caractères se règle à part : <b>Texte</b>, dans les réglages de la halte ou de l’écran-titre — normal, grand, très grand, géant. Sur un téléphone, le jeu commence en « grand », l’image agrandie une fois et demie.</p>']
     ['La Chaîne', '<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>']
   ];
 
@@ -8487,13 +8534,13 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
   U.noms = function (now) {
     const box = $('#noms'), ok = I.scene === W && W.map && W.saga && !S.busy && !W.lock && !U.menuOpen && !(I.build && I.build.on) && !$('#hud').hidden;
     if (!ok) { if (box.childElementCount) box.innerHTML = ''; return; }
-    const p = W.player, sc = U.scale || 1, cx = Math.round(W.cam.x) + (U.zoom ? G.view.x : 0), cy = Math.round(W.cam.y), tg = W.target(), list = [], m = W.map;
+    const p = W.player, sc = U.scale || 1, cx = Math.round(W.cam.x) + G.view.x, cy = Math.round(W.cam.y) + G.view.y, tg = W.target(), list = [], m = W.map; // ce que l'on voit de l'image : rogné en hauteur d'écran, agrandi si le joueur l'a voulu
     if (p.moving) still = now;
     W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y); if (d < 60 || (tg && tg.ent === n && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y, d, c: n.aura || '#f3e7cc' }); });
     list.sort((a, b) => a.d - b.d); list.length = Math.min(list.length, 5);
     if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.trail[Math.min(W.trail.length - 1, i * 13)] : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
-    const seen = {}, w = $('#stage').clientWidth;
-    list.forEach(e => { const x = (e.x - cx) * sc, y = (e.y - cy - 25) * sc; if (x < 8 || x > w - 8 || y < 4) return; seen[e.k] = 1;
+    const seen = {}, w = $('#stage').clientWidth, hh = $('#stage').clientHeight;
+    list.forEach(e => { const x = (e.x - cx) * sc, y = (e.y - cy - 25) * sc; if (x < 8 || x > w - 8 || y < 4 || y > hh - 4) return; seen[e.k] = 1;
       let el = box.querySelector('[data-k="' + e.k + '"]'); if (!el) { el = I.el('span', 'nom', I.esc(e.t)); el.dataset.k = e.k; el.style.setProperty('--c', e.c); box.appendChild(el); }
       el.style.left = x.toFixed(1) + 'px'; el.style.top = y.toFixed(1) + 'px'; });
     [...box.children].forEach(el => { if (!seen[el.dataset.k]) el.remove(); });
@@ -8503,13 +8550,37 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
   // le dessin : fin (par défaut), fin et adouci, ou d'origine — gardé avec les autres réglages
   const dessinNom = () => (G.DESSINS.find(d => d[0] === G.dessin()) || G.DESSINS[0])[1];
   const dessinSuivant = () => { const i = G.DESSINS.findIndex(d => d[0] === G.dessin()), n = G.DESSINS[(i + 1) % G.DESSINS.length][0]; G.definir(n); I.save.data.opts.dessin = n; I.save.store(); };
-  G.surDefinition.push(() => { titleBg = null; document.body.classList.toggle('fin', G.D > 1); });
+  G.surDefinition.push(() => { titleBg = null; document.body.classList.toggle('fin', G.D > 1); document.body.classList.toggle('doux', !!G.lisse); });
+  /* ----- l'agrandissement de l'image (2.x) -----
+     Demande du décideur : sur un téléphone, les personnages sont trop petits — « il faut pouvoir zoomer dans l'image ».
+     Pendant l'exploration, l'image s'agrandit de U.zf (1 à 3) autour de celui qui mène : on en voit moins, en plus grand.
+     Deux doigts qui s'écartent sur l'image, la molette, le bouton « × » de la scène ou le réglage « Image ». Sans choix du
+     joueur, sur un écran tactile où l'image est petite : × 1,5 tenu en hauteur, × 1,25 en largeur (où il reste moins de
+     champ au-dessus du héros) ; × 1 ailleurs. Le combat garde son cadrage. */
+  U.ZOOMS = [1, 1.5, 2, 3]; U.zf = 1;
+  const tactile = () => !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  const zoomAuto = (base, haut) => tactile() && base < 2.3 ? (haut ? 1.5 : 1.25) : 1;
+  const zoomNom = () => '× ' + String(Math.round(U.zf * 100) / 100).replace('.', ',');
+  const zoomBouton = () => { const b = $('#zoombtn'); if (b) { b.textContent = zoomNom(); b.setAttribute('aria-label', 'Agrandir l’image : ' + zoomNom()); } };
+  // garder = false : pendant que les doigts bougent (rien n'est écrit) ; sinon l'agrandissement est arrondi et gardé avec les réglages
+  U.zoomer = function (z, garder) {
+    z = I.clamp(+z || 1, 1, 3); if (garder !== false) { z = Math.round(z * 20) / 20; if (z < 1.08) z = 1; }
+    const change = Math.abs(z - U.zf) > 0.0005; U.zf = z; U._zVif = garder === false;   // pendant le geste, la mise en page ne revient pas à la grandeur d'office
+    if (garder !== false) { I.save.data.opts.zoom = z; I.save.store(); }
+    if (change) layout(); zoomBouton(); return z;
+  };
+  U.zoomSuivant = () => U.zoomer(U.ZOOMS.find(z => z > U.zf + 0.01) || 1);
+  U.TZ = [['normal', 1], ['grand', 1.16], ['très grand', 1.34], ['géant', 1.55]];
+  // la taille du texte : celle que le joueur a choisie ; sinon « grand » sur un écran tactile, « normal » ailleurs
+  U.tz = () => { const o = I.save.data.opts; return typeof o.tz === 'number' && U.TZ[o.tz] ? o.tz : tactile() ? 1 : 0; };
+  U.tzSuivant = () => { const o = I.save.data.opts; o.tz = (U.tz() + 1) % U.TZ.length; I.save.store(); U.applyOpts(); };
   U.applyOpts = function () {
     const o = I.save.data.opts;
-    if (o.dessin && !G.defForce) G.definir(o.dessin); document.body.classList.toggle('fin', G.D > 1);
-    document.documentElement.style.setProperty('--tz', [1, 1.16, 1.34][o.tz || 0]);
+    if (o.dessin && !G.defForce) G.definir(o.dessin); document.body.classList.toggle('fin', G.D > 1); document.body.classList.toggle('doux', !!G.lisse);
+    document.documentElement.style.setProperty('--tz', U.TZ[U.tz()][1]);
     document.body.classList.toggle('padon', !!o.pad);
-    layout();
+    if (typeof o.zoom === 'number') U.zf = I.clamp(o.zoom, 1, 3);   // sinon : la grandeur d'office, que la mise en page règle sur l'écran
+    layout(); zoomBouton();
   };
 
   /* ---------- mise en page et démarrage ---------- */
@@ -8524,11 +8595,16 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
     else { w = Math.max(240, Math.floor(Math.min(aw, (portrait ? ah * 0.46 : ah) * 16 / 9))); h = Math.round(w * 9 / 16); }
     st.style.width = w + 'px'; st.style.height = h + 'px';
     if (cvEl) cvEl.style.width = Math.max(w, Math.round(h * 16 / 9)) + 'px';
-    U.zoom = zoom; U.scale = h / G.PH;
-    const vw = Math.min(G.PW, w / U.scale);
-    const changed = Math.abs(G.view.w - vw) > 0.5; G.view.w = vw;
-    if (I.scene !== W) { G.view.x = G.view.t = Math.round((G.PW - vw) / 2); if (changed && I.battle.active) I.battle.relayout(); } else if (changed && W.map) W.updateCam(true);
-    document.body.classList.toggle('zoom', vw < G.PW - 0.5);
+    // U.base : points d'écran par point logique ; U.Z : l'agrandissement voulu par le joueur, pendant l'exploration seulement ;
+    // U.scale : les deux ensemble — c'est l'échelle de ce que l'on voit
+    U.zoom = zoom; U.base = h / G.PH;
+    if (typeof I.save.data.opts.zoom !== 'number' && !U._zVif) { const za = zoomAuto(U.base, portrait); if (za !== U.zf) { U.zf = za; zoomBouton(); } }   // sans choix du joueur : selon l'écran, et il suit le téléphone que l'on tourne
+    U.Z = I.scene === W ? U.zf : 1; U.scale = U.base * U.Z; U._sceneW = I.scene === W;
+    const vw = Math.min(G.PW, w / U.scale), vh = Math.min(G.PH, h / U.scale);
+    const changed = Math.abs(G.view.w - vw) > 0.01 || Math.abs(G.view.h - vh) > 0.01; G.view.w = vw; G.view.h = vh;
+    if (I.scene !== W) { G.view.x = G.view.t = Math.round((G.PW - vw) / 2); G.view.y = G.view.ty = 0; if (changed && I.battle.active) I.battle.relayout(); } else if (changed && W.map) W.updateCam(true);
+    document.body.classList.toggle('zoom', w / U.base < G.PW - 0.5);   // « zoom » : l'image rognée d'un écran en hauteur (pas l'agrandissement voulu)
+    document.body.classList.toggle('agrandi', U.Z > 1.01);
     G.resize();
   }
   function pad() {
@@ -8544,21 +8620,33 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
   function pointer() {
     const cv = cvEl, st = $('#stage'), bare = e => e.target === cv || e.target === st || e.target.id === 'ui' || e.target.id === 'view', free = () => I.scene === W && !S.busy && !W.lock && !U.menuOpen && !I.debug.auto && !I.debug.walk;
     const where = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * G.PW + G.cale(W.cam.x), (e.clientY - r.top) / r.height * G.PH + G.cale(W.cam.y)]; };
+    // deux doigts sur l'image : l'agrandir ou la réduire (2.x). Le premier doigt n'est alors plus un toucher.
+    const doigts = new Map(); let pince = null;
+    const ecart = () => { const a = [...doigts.values()]; return Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]); };
+    U.pince = () => !!pince;
     st.addEventListener('pointerdown', e => {
       if (e.button || !bare(e)) return;
       I.audio.unlock();
+      if (e.pointerType !== 'mouse') { doigts.set(e.pointerId, [e.clientX, e.clientY]);
+        if (doigts.size >= 2) { if (ptr) { ptr.world = false; ptr.dead = true; ptr.pince = true; }
+          if (doigts.size === 2 && I.scene === W && !U.menuOpen && !I.debug.auto && !I.debug.walk) { pince = { d0: Math.max(24, ecart()), z0: U.zf }; W.stop(); e.preventDefault(); } return; } }
       ptr = { id: e.pointerId, world: free(), x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t0: performance.now(), hold: false, last: 0 };
       if (ptr.world) { e.preventDefault(); try { st.setPointerCapture(e.pointerId); } catch (x) { /* sans capture : le relâchement suffit */ } }
     });
-    st.addEventListener('pointermove', e => { if (!ptr || ptr.id !== e.pointerId) return; ptr.x = e.clientX; ptr.y = e.clientY; if (Math.hypot(e.clientX - ptr.x0, e.clientY - ptr.y0) > 14) ptr.hold = true; });
+    st.addEventListener('pointermove', e => {
+      const d = doigts.get(e.pointerId); if (d) { d[0] = e.clientX; d[1] = e.clientY; if (pince && doigts.size >= 2) { U.zoomer(pince.z0 * ecart() / pince.d0, false); return; } }
+      if (!ptr || ptr.id !== e.pointerId) return; ptr.x = e.clientX; ptr.y = e.clientY; if (Math.hypot(e.clientX - ptr.x0, e.clientY - ptr.y0) > 14) ptr.hold = true; });
     const up = e => {
+      if (doigts.delete(e.pointerId) && pince && doigts.size < 2) { pince = null; U.zoomer(U.zf); }   // les doigts se lèvent : l'agrandissement est gardé
       if (!ptr || ptr.id !== e.pointerId) return;
-      const q = ptr; ptr = null;
+      const q = ptr; ptr = null; if (q.pince) return;
       if (!q.world) { if (q.dead || e.type === 'pointercancel' || !$('#choice').hidden || I.battle.active || U.menuOpen) return; I.input.emit('ok'); return; }
       if (!free()) return;
       if (q.hold || e.type === 'pointercancel') W.stop(); else { const p = where(e); W.tap(p[0], p[1]); }
     };
     st.addEventListener('pointerup', up); st.addEventListener('pointercancel', up);
+    // la molette, sur l'image : agrandir, réduire
+    st.addEventListener('wheel', e => { if (!bare(e) || I.scene !== W || U.menuOpen || !e.deltaY) return; e.preventDefault(); U.zoomer(U.zf * (e.deltaY < 0 ? 1.12 : 1 / 1.12)); }, { passive: false });
     // hors de la scène (sur un écran en hauteur, toute la zone sous l'image) : toucher fait avancer le texte, comme toucher la scène
     document.addEventListener('pointerup', e => {
       const t = e.target; if (e.button || (t !== document.body && t !== document.documentElement && t.id !== 'app')) return;
@@ -8591,6 +8679,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
     $('#menubtn').addEventListener('click', e => { e.stopPropagation(); if (I.scene === W && !S.busy) U.pause(); });
     $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); I.build.set(!I.build.on); });
     $('#helpbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.guide(); });
+    $('#zoombtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.zoomSuivant(); });
     pad(); pointer();
     // tout geste déverrouille ou relance le son, y compris un toucher sur un bouton de menu (qui ne passe pas par les commandes du jeu)
     ['pointerup', 'touchend', 'click', 'keydown'].forEach(t => document.addEventListener(t, () => I.audio.unlock(), true));
@@ -8601,16 +8690,18 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 18:59 UTC · b332205+";
       I.audio.pump(); // la musique avance aussi à chaque image
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
       if (sc) { try {
-        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW)) { U.zoomW = sc === W; layout(); }
+        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW) || (sc === W) !== !!U._sceneW) { U.zoomW = sc === W; layout(); }
         if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) { if (I.debug.walk === 'tap') W.tapStep(); else W.walkStep(); } W.update(1 / 60); } I.input.clearHeld(); }
         else { U.pointerTick(now); if (sc.update) sc.update(dt); }
         G.present(dt, sc.render(dt) || {});
       } catch (e) { if (!U._err) U._err = e; I.report(e, 'affichage'); } }
       if ((U._vf = (U._vf || 0) + 1) % 30 === 0) U.veille(now);
       if ((U._nf = (U._nf || 0) + 1) % 3 === 0) U.noms(now);
-      const tx = U.zoom ? -G.view.x * U.scale : 0; if (tx !== U._tx) { U._tx = tx; cvEl.style.transform = tx ? 'translateX(' + tx + 'px)' : ''; }
-      $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden); $('#helpbtn').hidden = $('#menubtn').hidden;
+      { const Zc = U.Z || 1, tx = U.zoom || Zc > 1 ? -G.view.x * U.scale : 0, ty = Zc > 1 ? -G.view.y * U.scale : 0, tr = Zc > 1 ? 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + Zc + ')' : tx ? 'translateX(' + tx + 'px)' : '';
+        if (tr !== U._tr) { U._tr = tr; cvEl.style.transform = tr; } }   // l'image glisse sous la scène, et grandit si le joueur l'a voulu
+      $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden); $('#helpbtn').hidden = $('#menubtn').hidden; $('#zoombtn').hidden = $('#menubtn').hidden;
       $('#buildbtn').hidden = $('#menubtn').hidden || !W.saga || (W.saga.frame && !W.saga.veillees) || !I.build.outdoor(W.map.id);
+      { const bt = !$('#buildbtn').hidden; if (bt !== U._bt) { U._bt = bt; document.body.classList.toggle('batir', bt); } }
       if (I.build.on) $('#buildbar').hidden = S.busy || I.scene !== W;
       I.trade.drawCompass(now / 1000);
       requestAnimationFrame(frame);

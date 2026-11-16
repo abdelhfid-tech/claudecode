@@ -30,6 +30,14 @@
     if (I.debug.log) { const z = e => +getComputedStyle(e).zIndex || 0; if (z(el) <= z($('#fade'))) I.debug.log.push('TEXTE CACHÉ sous le fondu : #' + el.id + ' « ' + (el.textContent || '').trim().slice(0, 50) + ' »'); }
   }
   S.TEXTE_SUR_NOIR = true; // à « false », on retrouve l'ancien comportement : le joueur de test doit alors signaler « TEXTE CACHÉ »
+  // 2.x — une liste de choix tient à l'écran. Quand le joueur a agrandi le texte (ou sur un téléphone, où il est « grand »
+  // d'emblée), une longue liste déborderait sous l'écran : ses caractères se resserrent alors, cran par cran, sans jamais
+  // descendre sous la taille « normal ». Au-delà, la liste défile, comme avant.
+  function ajuster(box) {
+    box.style.fontSize = ''; const tz = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tz')) || 1, mini = Math.min(1, 1 / tz);
+    for (const f of [0.94, 0.88, 0.82, 0.76, 0.7].filter(v => v > mini + 0.01).concat(mini)) { if (box.scrollHeight <= box.clientHeight + 2) break; box.style.fontSize = f.toFixed(3) + 'em'; }
+  }
+  S.ajuster = ajuster;
 
   /* ----- boîte de dialogue ----- */
   let typing = null;
@@ -88,7 +96,7 @@
       const ne = performance.now(); // un menu n'accepte rien pendant un tiers de seconde : le toucher qui vient de faire avancer le texte ne répond pas à la place du joueur
       const done = i => { if (!I.debug.auto && performance.now() - ne < 350) return; if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; I.audio.sfx('ok'); res(i); };
       options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ savoir</span>' : '')); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
-      sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box);
+      sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box); ajuster(box);
       const vue = () => { if (btns[idx].scrollIntoView) btns[idx].scrollIntoView({ block: 'nearest' }); }; // une longue liste suit la sélection
       const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); vue(); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); vue(); I.audio.sfx('move'); } else if (a === 'ok') done(idx); return true; });
       if (I.debug.auto) setTimeout(() => {
