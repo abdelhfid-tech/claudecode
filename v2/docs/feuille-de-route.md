@@ -56,8 +56,8 @@ pas, c'est toujours la v2 » : rien de ce qui suit ne touche la version légère
 | E1 | sur un téléphone, l'image s'agrandit : deux doigts qui s'écartent, le bouton « × », le réglage « Image » ; d'office × 1,5 en hauteur, × 1,25 en largeur ; le combat garde son cadrage | **fait** (D167) ; au décideur de dire s'il veut aussi agrandir le combat |
 | E2 | sur un téléphone, les textes se lisent : « grand » d'office, un quatrième cran (« géant »), aucun texte sous dix points, les listes de choix tiennent à l'écran | **fait** (D168) |
 
-*Publié le 16 novembre : l'Artifact privé de la 2.x en est à sa version 5 (lots D1 et D2, commit `bba7c3d`) ; la
-version 4 portait les lots C1 à C6 (commit `db7179e`) ; celui des
+*Publié le 16 novembre : l'Artifact privé de la 2.x en est à sa version 6 (lots E1 et E2, commit `4629da6`) ; la
+version 5 portait les lots D1 et D2 (commit `bba7c3d`), la version 4 les lots C1 à C6 (commit `db7179e`) ; celui des
 lots N1 à N4 était la version 3 (commit `125f0a2`). Dans l'Artifact, « Enregistrer le fichier » (export de la partie) ne
 fait rien — la visionneuse refuse les téléchargements — ; « Copier le texte » fonctionne.*
 
