@@ -996,7 +996,9 @@ après un premier plan qui modifiait le moteur actuel :
   une copie au pixel (les personnages restent faits de pièces, pour porter l'équipement et les poses) ; la ligne courbe
   sous un visage, la barre nasale qui coupe un autre, les gardes d'épée en croix. Garde ajoutée : le moteur refuse tout
   gabarit de tête dont le voile n'est pas une seule surface, et `v2/tools/silhouettes.js` le revérifie sur chaque grand
-  sprite que le jeu peut dessiner (« TRAIT » sinon). Les images reçues ne sont pas versionnées. À voir par le
+  sprite que le jeu peut dessiner (« TRAIT » sinon). Les images reçues ne sont pas versionnées. Les objets tenus sont,
+  pour l'heure, ceux d'avant, agrandis et ramenés à la main : les redessiner finement reste à faire. La 2.0 est
+  republiée dans son Artifact privé : version 2, assemblage du commit `edb1613`. À voir par le
   décideur sur les planches : la taille de la tête et du voile de lumière (plus petits qu'avant, comme sur les
   modèles), le dessin de chaque coiffe.
 

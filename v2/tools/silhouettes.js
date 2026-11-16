@@ -139,11 +139,17 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
         if (modele) cases.push({ image: modele, sx: col, sy: dir, legende: `${id} · ${N[dir]} · le modèle` }); }); });
       await ecrire(nom, { cases, k: 8, cols: modele ? 6 : 4, titre: 'Aujourd’hui · demain' + (modele ? ' · le modèle' : '') });
     }
-    // 2. tous les héros : face, profil, dos
-    for (let i = 0; i < H.length; i += 7) await ecrire('heros-' + (i / 7 + 1), { cases: [0, 1, 3].flatMap(dir => H.slice(i, i + 7).map(q => ({ look: q.look, dir, legende: ident(q) + ' · ' + N[dir] }))), k: 6, cols: Math.min(7, H.length - i), titre: 'Les héros' });
-    // 3. toutes les coiffes : face, profil, dos (manteau long)
+    // 1 bis. les sept d'un coup d'œil : une rangée par état, de face puis de profil
+    for (const [nom, dir] of [['les-sept-face', 0], ['les-sept-profil', 1]]) {
+      const cases = sept.map(q => ({ look: q.look, dir, ancien: true, legende: ident(q) + ' · aujourd’hui' })).concat(sept.map(q => ({ look: q.look, dir, legende: ident(q) + ' · demain' })),
+        modele ? sept.map(q => ({ image: modele, sx: SEPT.indexOf(ident(q)), sy: dir, legende: ident(q) + ' · le modèle' })) : []);
+      await ecrire(nom, { cases, k: 6, cols: sept.length, titre: (dir ? 'De profil' : 'De face') + ' — aujourd’hui · demain' + (modele ? ' · le modèle' : '') });
+    }
+    // 2. tous les héros : face et profil (le dos, jamais montré en grand, garde le dessin d'avant)
+    for (let i = 0; i < H.length; i += 7) await ecrire('heros-' + (i / 7 + 1), { cases: [0, 1].flatMap(dir => H.slice(i, i + 7).map(q => ({ look: q.look, dir, legende: ident(q) + ' · ' + N[dir] }))), k: 6, cols: Math.min(7, H.length - i), titre: 'Les héros' });
+    // 3. toutes les coiffes : face et profil (manteau long)
     const C = de('coiffes').filter(q => q.nom.endsWith('long'));
-    for (let i = 0; i < C.length; i += 7) await ecrire('coiffes-' + (i / 7 + 1), { cases: [0, 1, 3].flatMap(dir => C.slice(i, i + 7).map(q => ({ look: q.look, dir, legende: q.nom.split(' · ')[0] + ' · ' + N[dir] }))), k: 6, cols: Math.min(7, C.length - i), titre: 'Les coiffes' });
+    for (let i = 0; i < C.length; i += 7) await ecrire('coiffes-' + (i / 7 + 1), { cases: [0, 1].flatMap(dir => C.slice(i, i + 7).map(q => ({ look: q.look, dir, legende: q.nom.split(' · ')[0] + ' · ' + N[dir] }))), k: 6, cols: Math.min(7, C.length - i), titre: 'Les coiffes' });
     // 4. le combat : de profil, les trois pas et les poses ; puis l'équipement
     const combat = q => [0, 1, 2].map(f => ({ look: q.look, dir: 1, frame: f, legende: ident(q) + ' · pas ' + f })).concat(['garde', 'accable', 'resolu', 'salut'].map(p => ({ look: q.look, dir: 1, pose: p, legende: ident(q) + ' · ' + p })));
     for (let i = 0; i < sept.length; i += 2) await ecrire('combat-' + (i / 2 + 1), { cases: sept.slice(i, i + 2).flatMap(combat), k: 6, cols: 7, titre: 'En combat : la marche et les poses' });

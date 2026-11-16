@@ -254,7 +254,8 @@ JSON (620 Ko en tout). C'est ce qui permettra de le ranger dans une base.
 ## Publier
 
 `node v2/tools/build.js` écrit `v2/dist/isnad.html` : le jeu en un fragment, pour un Artifact privé. La 2.0 a **son**
-Artifact, sous le titre « ISNAD 2.0 » : https://claude.ai/artifact/6TYXTHubyPkSTa22DMpsMN (privé). Celui de la 1.31 reste à sa version 31 et
+Artifact, sous le titre « ISNAD 2.0 » : https://claude.ai/artifact/6TYXTHubyPkSTa22DMpsMN (privé ; version 2 depuis le
+16 novembre, avec les personnages redessinés). Celui de la 1.31 reste à sa version 31 et
 n'est plus republié. Chaque Artifact
 a son propre stockage : une partie ne passe de l'un à l'autre que par l'export et l'import. On ne publie que
 l'assemblage que toute la batterie a joué.
