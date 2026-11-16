@@ -7,6 +7,10 @@ Direction artistique, sonore et rédactionnelle. Les valeurs font foi dans `src/
 
 1. **Personne n'a de visage.** Les personnages sont des silhouettes : coiffe, robe, manteau. La zone
    du visage est une teinte unie, sans yeux ni bouche. Cela vaut pour tous, dans toutes les époques.
+   *Dans la 2.x, depuis le 16 novembre (décision du décideur, D165) : cela ne vaut plus que pour les
+   Compagnons — et pour ceux que le jeu laisse sans visage dans le doute. Les autres personnages ont un
+   visage sur le grand personnage : `v2/docs/architecture.md`, « Les visages ». La version légère (1.32)
+   ne change pas.*
 2. **Les Compagnons ont un visage de lumière.** Leur visage est un aplat clair, et une lueur douce les
    accompagne sur la carte. On reconnaît un Compagnon à sa lumière, non à ses traits.
 3. **Le Prophète ﷺ n'apparaît jamais.** Ni sprite, ni silhouette, ni sceau, ni réplique.

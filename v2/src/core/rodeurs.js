@@ -198,7 +198,7 @@
     const A = enMain(), F = A.F, p = W.player, T = 16;
     if (vers) { const dx = vers.x - p.x, dy = vers.y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); }
     const fx = [0, -1, 1, 0][p.dir], fy = [1, 0, 0, -1][p.dir];
-    W.stop(); R._pret = W.t + F.cadence; R.geste = { t: W.t, dir: p.dir, type: A.type, F }; R.coups = (R.coups || 0) + 1;
+    W.stop(); R._pret = W.t + F.cadence; R.geste = { t: W.t, dir: p.dir, type: A.type, F, port: A.piece ? (A.piece.port || (D.GEAR_TYPES[A.piece.t] || {}).port || null) : null }; R.coups = (R.coups || 0) + 1;
     I.audio.sfx(A.type === 'arc' ? 'blip' : 'tek');
     // le geste, dessiné : un arc d'étincelles devant soi ; pour l'arc, un trait qui file
     const G = I.gfx, sx = p.x - W.cam.x, sy = p.y - W.cam.y - 12, coul = A.piece ? '#fff3c8' : '#d8d2e6';

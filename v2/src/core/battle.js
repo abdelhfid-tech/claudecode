@@ -394,8 +394,9 @@
     if (hero && !sk.basic) { e.pose = 'resolu'; setTimeout(() => { e.pose = null; }, 900 / I.speed); }
     if (cmd.limit) { G.flash(e.color); I.audio.sfx('roll'); await I.sleep(350); }
     const col = sk.el ? D.ELEMENTS[sk.el].color : (hero ? e.color : `hsl(${e.def.hue},90%,65%)`), dir = hero ? -1 : 1;
-    // élan vers l'avant
-    await tween(e, 'ox', dir * 14, 110);
+    // quelques pas vers l'avant ; puis, à chaque coup, le geste : l'élan, le coup (2.x)
+    const ga = hero ? e.gear.arme : null, fer0 = sk.basic && sk.el === 'fer', geste = hero && sk.pow ? { anim: fer0 ? (e.gear.anim || (ga ? 'slash' : 'geste')) : 'geste', port: fer0 && ga ? (ga.port || (D.GEAR_TYPES[ga.t] || {}).port || null) : null } : null; // « Frapper » : avec l'arme en main ; « Éclairer » et les vertus qui portent un coup : le geste seul
+    if (hero) e.marche = 1; await tween(e, 'ox', dir * (hero ? 16 : 14), hero ? 180 : 110); e.marche = 0;
     // l'arme en main : une dague frappe parfois deux fois, une masse étourdit parfois
     const fer = hero && sk.basic && sk.el === 'fer', vif = fer && e.gear.vif && Math.random() < e.gear.vif; if (vif) floater(e, 'Coup double', 'info');
     const hits = (sk.hits || 1) + (sk.basic && hero ? boost : 0) + (vif ? 1 : 0), mult = sk.basic ? 1 : 1 + 0.5 * boost;
@@ -403,6 +404,7 @@
     if (sk.pow) {
       for (let hI = 0; hI < hits; hI++) {
         targets = targets.filter(t => t.alive); if (!targets.length) break;
+        if (geste) { e.geste = Object.assign({ t0: performance.now() }, geste); await I.sleep((G.FRAPPE.elan + G.FRAPPE.balai * 0.5) * 1000); } // le coup porte au milieu du balai
         for (const t of targets) strike(e, t, sk, mult, col);
         I.audio.sfx(sk.el === 'fer' ? (hero ? 'slash' : 'hit') : hero ? 'light' : 'dark');
         await I.sleep(hits > 1 ? 190 : 300);
@@ -424,8 +426,8 @@
       const tg = f.self ? [e] : targets.filter(t => t.alive);
       tg.forEach(t => applyFx(e, t, f, boost));
     });
-    await I.sleep(240);
-    await tween(e, 'ox', 0, 120);
+    await I.sleep(240); e.geste = null;
+    if (hero) e.marche = 1; await tween(e, 'ox', 0, hero ? 170 : 120); e.marche = 0;
   }
 
   function strike(a, t, sk, mult, col) {
@@ -642,8 +644,10 @@
           const look = e.sheet.look;
           if (!e.alive) { c.globalAlpha = 0.62; c.drawImage(G.figure(look, 1, 0, 'accable'), x - 16, y - 46); c.globalAlpha = 1; }
           else {
-            const f = act ? [1, 0, 2, 0][Math.floor(t * 6) % 4] : 0, bob = act ? 0 : Math.round(Math.sin(t * 2 + e.x) * 0.6);
-            const pose = e.pose || (e.st.garde ? 'garde' : (!act && e.hp / e.max.hp < 0.2) ? 'accable' : null), img = G.figure(look, 1, pose ? 0 : f, pose);
+            // il marche quand il s'avance ou revient ; sinon il respire — plus vite quand c'est à lui (le dessin d'origine garde son piétinement)
+            const fin2 = G.D > 1 && G.natif, f = e.marche ? [1, 0, 2, 0][Math.floor(t * 11) % 4] : fin2 ? (Math.sin(t * (act ? 5.2 : 2.2) + e.x) > 0.3 ? 3 : 0) : act ? [1, 0, 2, 0][Math.floor(t * 6) % 4] : 0, bob = fin2 || act ? 0 : Math.round(Math.sin(t * 2 + e.x) * 0.6);
+            const pose = e.pose || (e.st.garde ? 'garde' : (!act && e.hp / e.max.hp < 0.2) ? 'accable' : null), img = G.figure(look, 1, pose && !e.marche ? 0 : f, e.marche ? null : pose);
+            const gs = e.geste; if (!(gs && G.frappe && G.frappe(c, look, 1, x - 16, y - 46, gs, (performance.now() - gs.t0) / 1000 * I.speed, 'combat')))
             c.drawImage(img, x - 16, y - 46 + bob);
             if (e.flash > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, e.flash) * 0.8; c.drawImage(img, x - 16, y - 46 + bob); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
             if (e.st.garde) { c.strokeStyle = e.color; c.lineWidth = 1; c.beginPath(); c.ellipse(x - 14, y - 24, 4, 20, 0, 0, 6.3); c.stroke(); }

@@ -1216,6 +1216,41 @@ après un premier plan qui modifiait le moteur actuel :
   dans le jeu, ou s'il préfère un autre mot. Une exigence 24 est proposée. L'auteur n'est nommé que dans `AGENTS.md` et
   `docs/`. Contrôle : `progression.js`.
 
+- [x] **D165. Un visage pour ceux qui ne sont pas des Compagnons.** *Décision du décideur, le 16 novembre (« en
+  dehors des compagnons tous les autres personnages peuvent avoir un visage quand même ! ») ; lot D2, dans la 2.x.*
+  Le moteur peint un visage dans l'ouverture de la coiffe du grand personnage (`visage()`, `v2/src/core/sprites.js`) :
+  teint, yeux, barbe selon l'âge, bouche ; de face et de profil, rien de dos. Les Compagnons gardent leur voile de
+  lumière, sans un trait. L'exigence 2 est réécrite en conséquence (formulation de l'agent, à valider), ainsi que les
+  trois phrases du jeu qui disaient « aucun personnage n'a de visage » (écran-titre, crédits, feuillet
+  « Avertissement » : « aucun Compagnon n'a de visage : un voile de lumière en tient lieu »).
+  **Choix de l'agent, à valider :** (1) **dans le doute, pas de visage** — restent sans visage, bien que les récits ne
+  les dessinent pas en Compagnons : *Abû Bakr* : le vieil Ansârî, le soldat d'Usâma, le récitateur ; *'Alî* : le juge
+  Shurayh, Mâlik al-Ashtar, Farwa ibn Nawfal, Kumayl ibn Ziyâd ; *Khâlid* : Râfi' ibn 'Umayra, le vétéran de Badr ;
+  *'Uthmân* : 'Abdallâh ibn Sa'd (`D.SANS_VISAGE`, à relire nom par nom) ; (2) **les gens sans autre désignation**
+  (« un fidèle », « un Médinois », « un ancien de Médine », les soldats sans nom) **ont un visage** — or, à Médine dans
+  les années 11 à 35, beaucoup seraient des Compagnons : au décideur de dire s'il préfère les laisser sans visage dans
+  les récits des Compagnons (c'est une ligne à changer) ; (3) ont un visage les figures de l'histoire qui ne sont pas
+  des Compagnons — Sophrone, al-Hurmuzân, Jabala ibn al-Ayham, 'Amr ibn 'Abd al-Masîh, Qanbar, Ibn al-Kawwâ', Ibn
+  an-Nabbâh ; (4) le teint et la barbe viennent des couleurs du personnage, jamais de son peuple ni de sa religion
+  (exigence 10) ; aucun texte ne décrit un trait ; (5) le râwî a un visage, le même sous chaque tenue — le joueur ne le
+  choisit pas encore ; (6) les petits personnages du dessin d'origine (16 × 24) et la 1.32 ne changent pas : personne
+  n'y a de visage. Contrôle : `silhouettes.js` (aucun trait dans le voile d'un Compagnon ; un visage chez les autres).
+- [x] **D166. Des pas et des gestes que l'on voit.** *Demande du décideur, le 16 novembre (« je veux quand même qu'on
+  voie les pas et les gestes des bras quand ils marchent ou quand ils frappent (comme dans Chrono Trigger), sinon ils
+  sont trop inanimés ») ; lot D1, dans la 2.x.* **La marche** : deux foulées franches par direction — bras qui
+  balancent, robe qui s'ouvre, pieds qui s'écartent ; le corps se hausse quand les jambes se croisent. **Le repos** :
+  chacun respire. **La frappe** : deux attitudes de plus pour le grand personnage, l'élan et le coup, dans les trois
+  vues ; le moteur pose l'arme dans la main et la fait tourner (sabre, dague, lance, bâton, masse, calame, arc), avec
+  un sillage. En combat : quelques pas vers l'adversaire, le geste à chaque coup de « Frapper » ou d'« Éclairer », le
+  retour ; celui dont c'est le tour ne piétine plus, il respire plus vite. Dans les labyrinthes : le geste de celui qui
+  mène, quand il frappe ce qui rôde. **Choix de l'agent, à valider :** (1) les gestes ne sont pas des poses du récit
+  (`D.POSES`) : aucun récit ne les demande ; (2) l'arme n'est faite que de bois, de fer et de corde, sans rien d'écrit
+  (exigence 17) ; (3) **dans un labyrinthe, l'arme paraît dans la main le temps du coup** (un tiers de seconde), alors
+  que l'exigence 17 dit que « hors combat et hors menu, chaque personnage garde sa silhouette » : je l'ai lu comme un
+  geste de combat, au décideur de le confirmer ; (4) le dessin d'origine garde les pas de la 1.32 ; (5) les égrégores,
+  formes abstraites, ne changent pas. Contrôle : `silhouettes.js` (les gabarits des gestes obéissent à la règle du
+  voile), puis toute la batterie.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

@@ -152,7 +152,7 @@
     const P = I.perso, box = $('#perso .corps'), p0 = P.profil(); let tenue = p0.tenue, fl = null;
     const fermer = () => { if (fl) fl.destroy(); fl = null; screen('#perso', false); U.menuOpen = false; }, quitter = v => { fermer(); retour(v); };
     const bouton = (label, fn, cls) => { const b = I.el('button', cls || '', label); b.type = 'button'; tapable(b, () => fn(b)); return b; };
-    const figure = (t, dir) => G.charURL(Object.assign({ kind: 'compagnon' }, t.look), dir);
+    const figure = (t, dir) => G.charURL(Object.assign({ kind: 'compagnon' }, P.look(t)), dir);
     $('#perso header p').textContent = debut ? 'Avant de descendre aux Archives : comment s’appelle ton râwî, et que porte-t-il ? Tu pourras en changer plus tard.' : 'Le nom et la tenue de ton râwî. Les Compagnons, eux, gardent leur nom et leur silhouette.';
     box.innerHTML = '';
     const vue = I.el('div', 'vue'), deux = I.el('div', 'deux'), face = new Image(), profil = new Image(), qui = I.el('div', 'qui'), sous = I.el('div', 'sous'), texte = I.el('div');
@@ -373,7 +373,7 @@
   };
   U.credits = async function () {
     await S.card('credits', `<h1>ISNAD</h1><p class="small">Chroniques des Compagnons</p>
-      <p>Cette œuvre est une fiction interactive inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles présentées en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun personnage n’a de visage.</p>
+      <p>Cette œuvre est une fiction interactive inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles présentées en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun Compagnon n’a de visage : un voile de lumière en tient lieu.</p>
       <p><b>Sources principales.</b> Ibn Hishâm, <em>as-Sîra an-Nabawiyya</em> · at-Tabarî, <em>Târîkh ar-Rusul wa-l-Mulûk</em> · Ibn Sa'd, <em>at-Tabaqât al-Kubrâ</em> · Ibn Kathîr, <em>al-Bidâya wa-n-Nihâya</em> · al-Bukhârî et Muslim, <em>as-Sahîh</em> · Ibn 'Asâkir, <em>Târîkh Dimashq</em>.</p>
       <p><b>Noosphère et égrégore.</b> « Noosphère » vient de Vernadsky et Teilhard de Chardin ; « égrégore » désigne une forme-pensée collective. Le jeu s’en sert comme d’une image pour parler des valeurs partagées et des idoles que les hommes se fabriquent.</p>
       <p><b>Les veillées de la Citadelle</b> et <b>les rencontres de la Cité-Miroir</b> sont une fiction, comme les sept lames, les sept maux du cœur et les compagnons de lumière : des images pour parler de ce que les œuvres font au cœur. La musique est originale.</p>\n      <p>Qu’Allah agrée les Compagnons. Toute erreur est celle des auteurs ; vérifiez auprès des savants et des sources.</p>

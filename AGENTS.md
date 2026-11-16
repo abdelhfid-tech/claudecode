@@ -30,8 +30,9 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   `node v2/tools/ecrans.js` (l'écran de la Chaîne du livre I est celui de la 1.32 : « CHAÎNE IDENTIQUE »),
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
   réimporte à l'identique), `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
-  se gardent), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel, aucun
-  grand personnage ne porte un trait dans son voile, de face, de profil, de dos, ni dans son tracé fin :
+  se gardent), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel ; aucun
+  Compagnon ne porte un trait dans son voile, de face, de profil, de dos, dans ses pas, ses poses, ses gestes de
+  frappe ni dans son tracé fin ; les autres personnages ont un visage de face et de profil, rien de dos :
   « SILHOUETTES CONFORMES »), `node v2/tools/dedales.js` (les labyrinthes de la noosphère : dix mille tirages par
   profondeur, chaque lieu présent, du bon côté, relié aux autres : « DÉDALES CONFORMES »), `node v2/tools/descente.js`
   (dans le jeu : le labyrinthe d'un chapitre, son chrono, la remontée, la reprise ; la descente du râwî et ses quatre
@@ -72,6 +73,20 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   `visite` s'ouvre depuis la Chaîne (la Citadelle, où Idris est né — une fiction, proposée par le décideur). Dans ces
   chapitres-là, qui se rejouent, aucune œuvre n'est comptée et l'on ne descend pas dans la noosphère. Un changement de
   ce mécanisme repasse `retours.js`.
+- Dans la 2.x, qui n'est pas un Compagnon a un visage (exigence 2, décision du décideur du 16 novembre) : le moteur le
+  peint dans l'ouverture de la coiffe du grand personnage (`visage()`, dans `v2/src/core/sprites.js`) — de face et de
+  profil, les yeux clos dans le recueillement et l'accablement, dans l'ombre sous une capuche, les yeux seuls sous un
+  chèche. Un fichier de saga n'écrit ni teint ni trait : tout vient des couleurs du personnage. Un Compagnon n'en reçoit
+  jamais (type `compagnon`), ni ceux de `D.SANS_VISAGE` (`defs.js`, par récit, sous le nom exact que le récit leur
+  donne). Ajouter un personnage d'histoire à un récit, c'est se demander s'il y entre. `v2/docs/architecture.md`,
+  « Les visages ». Contrôle : `silhouettes.js`.
+- Dans la 2.x, les personnages bougent (demande du décideur, 16 novembre : « qu'on voie les pas et les gestes des bras
+  quand ils marchent ou quand ils frappent ») : des foulées franches dans les quatre directions, un souffle au repos
+  (une quatrième image par direction), et deux gestes de frappe — l'élan, le coup — que le moteur seul prend
+  (`GESTES` : ce ne sont pas des poses du récit, `D.POSES` ne les connaît pas). L'arme n'est pas dans le gabarit : le
+  moteur la pose dans la main le temps du geste et la fait tourner (`G.arme`, `G.frappe`) — du bois, du fer, une corde,
+  rien d'autre (exigence 17). Le dessin d'origine garde les pas de la 1.32. `v2/docs/architecture.md`, « Le
+  mouvement ». Un changement de ces gabarits repasse `silhouettes.js`, puis toute la batterie.
 - Le livret (`promo/`, `tools/promo.js`) décrit la 1.32.
 
 ## Le projet en trois phrases
@@ -87,7 +102,7 @@ toute considération de jeu.
 |---|---|---|
 | `src/core/defs.js` | énumérations : éléments, rôles, cartes et lieux, opérations, objets | source de vérité du schéma, lue par le navigateur et par le validateur |
 | `src/core/*.js` | moteur | modules en IIFE attachés à `window.ISNAD`, ordre de chargement fixé dans `tools/build.js` |
-| `src/core/sprites.js` | personnages : petits gabarits de 16 × 24 (les cartes) et grands gabarits de 32 de large (combat, dialogue, équipement, livret) — coiffes, corps, attributs, poses | chaque lettre d'un gabarit nomme une matière ; les poses sont déclarées dans `defs.js` ; une coiffe ou une pose se dessine dans les deux tailles ; le voile d'une tête est une seule surface, le moteur refuse de démarrer sinon |
+| `src/core/sprites.js` | personnages : petits gabarits de 16 × 24 (les cartes) et grands gabarits de 32 de large (combat, dialogue, équipement, livret) — coiffes, corps, attributs, poses | chaque lettre d'un gabarit nomme une matière ; les poses sont déclarées dans `defs.js` ; une coiffe ou une pose se dessine dans les deux tailles ; le voile d'une tête est une seule surface, le moteur refuse de démarrer sinon ; dans la 2.x, le moteur y peint un visage pour qui n'est pas un Compagnon (`visage()`), et le grand personnage a ses foulées, son souffle et ses deux gestes de frappe (`GESTES`, `G.frappe`) |
 | `src/data/saga_<id>.js` | une saga | un seul appel à `ISNAD.registerSaga({...})`, JavaScript pur, sans DOM |
 | `src/data/frame.js` | histoire-cadre : prologue, dernier maillon (`fin: true`) et cinq rencontres de la Cité-Miroir ; dans la 2.x, trois retours en 2084 et la visite de la Citadelle | même format, `frame: true` ; une rencontre porte `after: '<saga>'` et se joue après la veillée de cette saga ; un retour porte `retour: n`, une visite `visite: '<lieu>'` |
 | `src/page.html`, `src/style.css` | gabarit et interface | |
@@ -194,10 +209,17 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
 ## Exigences de respect (non négociables)
 
 1. Le Prophète ﷺ n'est jamais représenté ni mis en scène en dialogue. On l'évoque seulement.
-2. Personne n'a de visage. Les personnages sont des silhouettes dessinées au pixel (coiffe, vêtement,
-   manteau, attribut), sans aucun trait ; les Compagnons portent un voile de lumière. Ne jamais décrire
-   de traits physiques, ne jamais dessiner d'yeux ni de bouche. Le caractère et l'émotion passent par
-   le costume, l'attribut et l'attitude du corps (`D.POSES`).
+2. *(Réécrite le 16 novembre à la demande du décideur — « en dehors des Compagnons, tous les autres personnages
+   peuvent avoir un visage » ; formulation de l'agent, à valider.)* Les Compagnons n'ont pas de visage : ils portent
+   un voile de lumière, d'une seule surface, sans un trait — ni yeux, ni bouche, ni barbe —, dans toutes les vues et
+   à toutes les tailles. Dans le doute, pas de visage : celui que l'histoire range, ou que certaines sources rangent,
+   parmi les Compagnons garde un voile sans trait, même quand le jeu ne le dessine pas en Compagnon (`D.SANS_VISAGE` :
+   liste à valider par le décideur, nom par nom). Dans la 2.x, les autres personnages — gens de fiction, gens sans
+   nom, figures de l'histoire qui ne sont pas des Compagnons — ont un visage sur le grand personnage : un teint, des
+   yeux, une barbe selon l'âge, tirés du personnage lui-même, jamais de son peuple ni de sa religion (exigence 10) ;
+   rien de dos. Aucun texte ne décrit de traits physiques, pour personne. Le caractère et l'émotion passent toujours
+   par le costume, l'attribut et l'attitude du corps (`D.POSES`). Dans la 1.32, et sur les petits personnages du
+   dessin d'origine, personne n'a de visage.
 3. Seulement des événements attestés. Une parole attestée passe par `['quote', texte, source]`. En cas
    de doute, écrire « On rapporte » dans la source et signaler la discussion dans le codex.
 4. Sobriété : le récit reste centré sur les Compagnons et leurs alliés ; pas d'intrigue sentimentale ;

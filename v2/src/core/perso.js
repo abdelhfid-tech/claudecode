@@ -4,7 +4,8 @@
    cela, chaque phrase qui nomme le râwî est relevée une fois, dans les sagas posées ; quand le nom change, ces phrases-là
    sont récrites à partir de l'original, toujours. Avec le nom d'origine, rien n'est touché.
    La tenue est l'une de celles de D.TENUES : des silhouettes faites des coiffes, des manteaux et des couleurs que le
-   moteur dessine déjà. Personne n'a de visage. Les Compagnons gardent leur nom et leur silhouette. */
+   moteur dessine déjà. Le râwî a un visage (2.x), le même sous chaque tenue. Les Compagnons gardent leur nom et leur
+   silhouette. */
 (function () {
   'use strict';
   const I = window.ISNAD, D = I.D;
@@ -59,6 +60,8 @@
     Object.keys(v).forEach(k => { const x = v[k]; if (typeof x === 'string') { if (x.indexOf(NOM) >= 0 && CITE.test(x)) cases.push({ o: v, k, t: x }); } else va(x); }); })(racine); };
   P.phrases = () => cases.map(c => c.t);
 
+  // l'apparence d'une tenue : le râwî change de tenue, pas de visage — chacune garde la marque de sa tenue de toujours
+  P.look = t => { const L = Object.assign({}, t.look); if (t.id !== D.TENUES[0].id && I.gfx && I.gfx.signe) L.visage = I.gfx.signe(D.TENUES[0].look); return L; };
   /* ---------- appliquer le profil : le nom dans les phrases relevées, le sceau et la tenue du râwî ---------- */
   let origine = null;   // le sceau et la silhouette d'origine du râwî, gardés ici : sa fiche ne reçoit aucun champ de plus
   P.appliquer = function () {
@@ -67,7 +70,7 @@
     const fr = I.sagas.idris, h = fr && fr.heroes && fr.heroes.idris;
     if (h) { if (!origine) origine = { arabic: h.arabic, look: h.look };
       h.arabic = p.nom === NOM ? origine.arabic : '';   // le sceau porte le nom en arabe ; avec un autre nom, il montre l'étoile à huit branches, seule
-      h.look = p.tenue === D.TENUES[0].id ? origine.look : Object.assign({}, P.tenue(p.tenue).look); }   // la tenue de toujours : l'objet d'origine, intact
+      h.look = p.tenue === D.TENUES[0].id ? origine.look : P.look(P.tenue(p.tenue)); }   // la tenue de toujours : l'objet d'origine, intact
     const W = I.world; if (W && W.saga && W.party && W.party.length && W.refreshSheets) { try { W.refreshSheets(); } catch (e) { /* hors chapitre */ } }
     return p;
   };

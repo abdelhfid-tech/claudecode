@@ -214,8 +214,9 @@ le Nom divin employé seul ; Iblîs, démon, djinn ; le nom du Prophète ﷺ ; l
 ne pas brouiller les dialogues. Un nom n'étant fait que de lettres, il ne peut rien glisser dans la page.
 
 **Les tenues** (`D.TENUES`, dans `defs.js`) : six silhouettes faites des coiffes, des manteaux et des couleurs que
-`sprites.js` dessine déjà. La première est la tenue de toujours. Personne n'a de visage. Avec un autre nom, le sceau du
-râwî ne porte plus son nom en arabe : il montre l'étoile à huit branches, seule.
+`sprites.js` dessine déjà. La première est la tenue de toujours. Le râwî a un visage (« Les visages », plus bas) : le
+même sous chaque tenue — `perso.look(tenue)` garde la marque de la tenue de toujours (`look.visage`). Avec un autre nom,
+le sceau du râwî ne porte plus son nom en arabe : il montre l'étoile à huit branches, seule.
 
 **L'écran « Ton personnage »** s'ouvre à chaque nouvelle partie, avant le prologue, avec « Idris » et sa tenue de
 toujours déjà choisis — un toucher suffit à commencer. Il se rouvre depuis la halte et depuis le pied de la Chaîne.
@@ -335,7 +336,7 @@ couleurs, objets ; l'équipement s'y ajoute par `gear.js`). Aucune image n'entre
 |---|---|---|
 | Taille | 16 × 24 | 32 × 48 |
 | Où il se voit | sur les cartes, dans le dessin d'origine | partout dans le dessin fin ; en combat, en dialogue, à la page d'équipement, à l'écran « Ton personnage » dans tous les dessins |
-| Gabarits | `HEADS`, `BODIES`, `POSES` | `TETES`, `CORPS`, `ALLURES` |
+| Gabarits | `HEADS`, `BODIES`, `POSES` | `TETES`, `CORPS`, `ALLURES`, `GESTES` |
 | État | celui de la 1.32, au pixel près | redessiné d'après les modèles du décideur |
 
 **Le grand sprite a ses propres gabarits**, aux proportions des modèles : une tête de dix-sept lignes environ, un corps
@@ -345,12 +346,13 @@ sprite agrandi deux fois.
 - `grid()` compose toujours le personnage en 16 × 24 et reste seul à dire **qui porte quoi** : la coiffe, le manteau,
   le motif, l'armure, les objets tenus, la pose. Le petit sprite en sort tel quel.
 - `natifGrille()` redessine cette composition en 32 × 48 : le corps (`CORPS[vue]` : repos, pas A, pas B ; ou
-  `ALLURES[pose][vue]`), les règles de tenue écrites à cette échelle (manteau absent, sur une épaule, ample ; rayures,
+  `ALLURES[pose][vue]` ; ou, le temps d'un coup, `GESTES[geste][vue]`), les règles de tenue écrites à cette échelle (manteau absent, sur une épaule, ample ; rayures,
   bandes ; mailles, lamelles, cuir, toile piquée ; écharpe, châle, étoffe drapée, néon), les objets tenus — ceux de
   `grid()`, agrandis et ramenés à la hauteur de la main —, puis la tête (`TETES[coiffe][vue]`), inclinée ou abaissée
   selon la pose.
 - `grand()` peint : cinq tons par matière, une seule lumière en haut à gauche, l'ombre d'une matière sur celle qu'elle
-  recouvre, le galon au bas de la robe. Le voile est peint à part, en dégradé depuis son centre.
+  recouvre, le galon au bas de la robe. Le voile est peint à part : une lumière en dégradé depuis son centre pour un
+  Compagnon, un visage pour les autres (« Les visages »).
 - Les mêmes lettres nomment les mêmes matières dans les deux tailles (`T t u` la coiffe, `V` le voile, `C c k` le
   manteau, `R r` le buste…). Le grand sprite en ajoute quatre : `H` et `D` (coiffe en pleine lumière, dans l'ombre),
   `J` et `j` (fer). Un vide d'un pixel entre deux formes devient un trait sombre : c'est le liseré qui le peint.
@@ -368,7 +370,8 @@ sprite agrandi deux fois.
 **Trois gardes, au chargement.** Le moteur refuse de démarrer si un gabarit natif n'a pas ses lignes de 32 lettres, si
 une coiffe ou une pose n'a pas son grand dessin, ou si le voile d'une tête n'est pas **une seule surface** — d'un seul
 tenant sur chaque ligne et chaque colonne. Aucun gabarit ne peut donc porter un trait de visage : ni œil, ni bouche,
-ni barre qui couperait le voile.
+ni barre qui couperait le voile. Un visage, là où il y en a un, n'est jamais dans un gabarit : c'est `grand()` qui le
+peint dans cette surface, et seulement pour qui n'est pas un Compagnon.
 
 **Ajouter une coiffe**, c'est donc la dessiner deux fois : dans `HEADS` (11 lignes de 16, trois vues) et dans `TETES`
 (20 lignes de 32, face et profil ; les deux dernières recouvrent le col). Une tête se compose d'un haut de huit lignes,
@@ -380,14 +383,68 @@ tenues du râwî, les quatorze coiffes sous chaque manteau, les variantes d'équ
 
 1. les petits sprites sont ceux relevés avant ce travail (`tools/essais/silhouettes.json`) : sinon « ÉCART » ;
 2. l'interrupteur rend le grand sprite d'avant, à l'identique : sinon « ÉCART » ;
-3. dans chaque grand sprite — toutes les vues, les pas, les poses — le voile est une seule surface, sans trou ni
-   marque : sinon « TRAIT » ;
-4. chaque coiffe a sa tête native de face et de profil, rien ne sort de la grille, aucun sprite n'est vide : sinon
+3. dans chaque grand sprite — toutes les vues, les pas, les poses, les gestes de frappe — le voile est une seule
+   surface, sans trou ni marque ; et, une fois peint, celui d'un Compagnon (ou de qui le jeu laisse sans visage) ne
+   porte que sa lumière ou son étoffe — trois tons au plus, jamais la couleur d'un œil : sinon « TRAIT » ;
+4. les autres personnages ont un visage de face et de profil, et rien de dos : sinon « ABSENT » ;
+5. chaque coiffe a sa tête native de face et de profil, rien ne sort de la grille, aucun sprite n'est vide : sinon
    « ABSENT ».
 
 `node v2/tools/silhouettes.js planches [modèles.png]` écrit des planches agrandies dans `.smoke/silhouettes/` : la
-comparaison avec les modèles, les héros, les coiffes, la marche et les poses, l'équipement. Tout changement de dessin
-se relit là, puis sur une capture du jeu.
+comparaison avec les modèles, les héros, les coiffes, la marche et les poses, les gestes de frappe, l'équipement, les
+gens. Tout changement de dessin se relit là, puis sur une capture du jeu.
+
+### Les visages
+
+*Décision du décideur, le 16 novembre : « en dehors des Compagnons, tous les autres personnages peuvent avoir un
+visage » (D165, exigence 2).*
+
+- **Qui n'en a pas.** Un Compagnon — type `compagnon`, voile de lumière — n'a jamais de visage. Ni ceux de
+  `D.SANS_VISAGE` (`defs.js`) : des Compagnons que les récits dessinent sans voile de lumière, des hommes que certaines
+  sources comptent parmi eux, et ceux que leur nom même range parmi eux (un Ansârî, un vétéran de Badr, un soldat de
+  l'armée d'Usâma, un récitateur de Médine en l'an 12). La liste se tient **par récit**, sous le nom exact que le récit
+  donne (sans accents ni apostrophes, comme `D.rayon` les lit) ; `I.rayonner` (`base.js`) pose alors
+  `look.sansVisage` — un fichier de saga ne l'écrit pas. Dans le doute, pas de visage. L'histoire-cadre et les veillées
+  sont de la fiction : tout le monde y a un visage.
+- **Ce qui est peint** (`visage()`, appelée par `grand()` pour chaque point du voile) : un teint, pris parmi cinq ; des
+  yeux, avec leur blanc et les sourcils en dessin fin ; une barbe — pleine, courte ou aucune —, blanche chez les
+  anciens, grise chez certains savants et moines, absente chez les enfants ; une bouche ; l'ombre de la coiffe sur le
+  front, la lumière sur le nez de profil. Les yeux se ferment dans le recueillement et l'accablement. Sous une capuche,
+  le visage reste dans l'ombre ; sous un chèche, on ne voit que les yeux. De dos, rien. Les mains prennent le teint.
+- **D'où cela vient.** Du personnage lui-même : `signe(look)` tire un nombre de ses couleurs (type, robe, coiffe,
+  manteau), toujours le même pour le même — jamais de son peuple, de sa religion ni de son camp (exigence 10) ; l'âge
+  vient de son type (`ancien`, `enfant`). L'équipement n'y change rien. Un fichier de saga peut fixer `look.teint` ;
+  il n'écrit aucun trait.
+- **Où.** Sur le grand personnage, dans les trois dessins. Les petits personnages (16 × 24, le dessin d'origine sur les
+  cartes) restent ceux de la 1.32 : personne n'y a de visage.
+
+### Le mouvement
+
+*Demande du décideur, le 16 novembre : « qu'on voie les pas et les gestes des bras quand ils marchent ou quand ils
+frappent (comme dans Chrono Trigger), sinon ils sont trop inanimés » (D166).*
+
+- **La marche.** `CORPS[vue][1]` et `[2]` sont deux foulées franches. De face et de dos (`foulee()`) : le bras du côté
+  qui avance descend de deux points, l'autre remonte ; la robe tombe sur le genou qui avance ; un pied grandit, l'autre
+  s'efface. De profil (`balance()`, `jambes()`, dessinés à la main) : le bras balance depuis l'épaule — la main dépasse
+  devant la robe, puis passe derrière le dos —, la robe s'ouvre en triangle, un pied à plat devant, l'autre sur la
+  pointe. La lettre `M` y est le pli entre les jambes : une ombre sous une robe, un vide en tenue courte (deux jambes).
+  `world.js` enchaîne foulée, repos, foulée, repos, huit fois par seconde ; le corps se hausse d'un point quand les
+  jambes se croisent.
+- **Le souffle.** Une quatrième image par direction (`grand(…, 3)`) : le haut du corps remonté d'un point. La planche
+  d'un personnage (`G.planche`) a donc quatre colonnes en dessin fin (`sheet.souffle`). Immobile, chacun respire à son
+  rythme ; en combat, celui dont c'est le tour respire plus vite (il ne piétine plus).
+- **Les gestes de frappe** (`GESTES.elan`, `GESTES.coup`, trois vues chacun) : le bras armé levé, puis tendu vers ce
+  qu'il frappe ; de profil, le corps se fend. Le bras est tracé par `membre()` — un trait épais de l'épaule au poignet
+  par le coude, son revers, la main, un liseré qui le détache du corps — et rend la place de la main. Ce ne sont pas des
+  poses du récit : `D.POSES` ne les connaît pas, les petits personnages non plus.
+- **L'arme.** Elle n'est pas dans le gabarit. `G.arme(nom, angle, échelle)` la dessine le long de son axe — sabre,
+  dague, lance, bâton, masse, calame, arc et flèche : du bois, du fer, une corde (exigence 17) — et `G.frappe()` la
+  pose dans la main, puis la fait tourner : l'élan (0,11 s), le balai (0,07 s, trois images la suivent), la tenue du
+  coup (0,15 s). La manière vient du type de l'arme (`D.GEAR_TYPES[…].anim` : `slash`, `smash`, `thrust`, `arrow`) ; à
+  mains nues ou pour « Éclairer », le geste seul. Pendant le geste, l'arme portée à la ceinture n'est pas dessinée.
+- **Où.** En combat (`battle.js`, `perform`) : quelques pas, le geste à chaque coup de « Frapper » ou d'« Éclairer »,
+  le retour. Dans un labyrinthe (`rodeurs.js`, `R.geste` ; `world.js`, `drawChar`) : le geste de celui qui mène, avec
+  l'arme qu'il porte. Le dessin d'origine garde les pas de la 1.32 sur les cartes, et lève le bras comme avant.
 
 ### Le rayonnement d'un Compagnon
 

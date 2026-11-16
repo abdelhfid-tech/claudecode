@@ -25,7 +25,9 @@ une valeur, pour dévoiler l'Agrégor.
   qui lui est propre ; et les récits se mènent de front — « Revenir en 2084 » à tout moment, chaque récit reprenant là
   où on l'a laissé, avec parfois du nouveau aux Archives basses, et la Citadelle où Idris est né. Une partie neuve
   apprend un outil à la fois (un besoin, un outil, puis sans aide), et chacun peut prendre trois postures devant
-  l'épreuve. La version légère, elle, s'arrête à la 1.32. Elle a ses propres outils (`v2/tools/`)
+  l'épreuve. Les personnages y bougent — des foulées franches, un souffle au repos, l'élan et le coup avec l'arme en
+  main — et ceux qui ne sont pas des Compagnons y ont un visage ; les Compagnons gardent leur voile de lumière. La
+  version légère, elle, s'arrête à la 1.32. Elle a ses propres outils (`v2/tools/`)
   et ses propres sauvegardes. À lire : `v2/docs/feuille-de-route.md` (où l'on en est), `v2/docs/architecture.md`
   (comment c'est fait), `v2/docs/schema-paquet.md` (le contrat d'un paquet). Elle se joue dans son propre Artifact
   privé, distinct de celui de la 1.32.
@@ -288,6 +290,7 @@ siennes et signale les récits dont la chaîne est discutée.
 
 ISNAD est une fiction interactive inspirée de sources historiques. Les dialogues sont une
 dramatisation ; seules les paroles présentées en carton, avec leur source, sont des citations
-rapportées. Le Prophète ﷺ n'est jamais représenté et aucun personnage n'a de visage. Le contenu
+rapportées. Le Prophète ﷺ n'est jamais représenté et aucun Compagnon n'a de visage (dans la version
+légère, personne n'en a ; dans la 2.x, les autres personnages en ont un). Le contenu
 historique n'a pas été relu par un spécialiste : toute erreur est celle des auteurs, et le texte doit
 être vérifié auprès des sources et des savants avant toute diffusion.

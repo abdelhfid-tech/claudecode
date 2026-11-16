@@ -54,6 +54,9 @@
     const pose = (look, nom) => { const c = look && D.rayon(nom); if (c) look.rayon = c; };
     if (!s.frame) Object.keys(s.heroes || {}).forEach(id => { const h = s.heroes[id]; if (h.look && (h.look.kind || 'compagnon') === 'compagnon') pose(h.look, h.name); });
     (s.chapters || []).forEach(c => (c.npcs || []).forEach(n => { if (n.look && n.look.kind === 'compagnon') pose(n.look, n.name); }));
+    // 2.x — le visage : ceux que les récits ne dessinent pas en Compagnons mais qui en sont, ou pourraient en être, n'en reçoivent
+    // pas (D.SANS_VISAGE). Dans les récits des Compagnons seulement : l'histoire-cadre et les veillées sont de la fiction.
+    if (!s.frame) (s.chapters || []).forEach(c => (c.npcs || []).forEach(n => { if (n.look && n.look.kind !== 'compagnon' && D.sansVisage(n.name, s.id)) n.look.sansVisage = true; }));
   };
 
   /* ---------- utilitaires ---------- */

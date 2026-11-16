@@ -51,6 +51,8 @@ pas, c'est toujours la v2 » : rien de ce qui suit ne touche la version légère
 | C4 | les sagas menées de front (un point de reprise par récit), « Revenir en 2084 » à tout moment, trois rebondissements au retour, la Citadelle où Idris est né | **fait** (D161, D162) ; les textes de fiction sont à relire |
 | C5 | la progression : un besoin, un outil, puis sans aide ; une seule décision nouvelle par séquence (une partie neuve reçoit ses outils un à un : premiers pas, commandes du combat, pages de la halte) | **fait** (D163) ; l'ordre des outils et leurs douze lignes sont à valider |
 | C6 | les postures — le héros, le sage, le saint — selon le tempérament (le rôle) et l'avancée (niveaux 4 et 7) | **fait** (D164) ; noms, effets et attribution à valider, exigence 24 proposée |
+| D1 | des pas et des gestes que l'on voit : foulées franches dans les quatre directions, souffle au repos, élan et coup avec l'arme en main — en combat et dans les labyrinthes | **fait** (D166) ; l'arme visible le temps du coup dans un labyrinthe est à confirmer (exigence 17) |
+| D2 | un visage pour ceux qui ne sont pas des Compagnons : teint, yeux, barbe selon l'âge, de face et de profil ; les Compagnons gardent leur voile de lumière | **fait** (D165) ; exigence 2 réécrite, à valider ; la liste de ceux qui restent sans visage est à relire nom par nom |
 
 *Publié le 16 novembre : l'Artifact privé de la 2.x en est à sa version 4 (lots C1 à C6, commit `db7179e`) ; celui des
 lots N1 à N4 était la version 3 (commit `125f0a2`). Dans l'Artifact, « Enregistrer le fichier » (export de la partie) ne

@@ -520,12 +520,18 @@
 
   /* ----- rendu ----- */
   const POUSSIERE = { sand: '#ecd9aa', dune: '#ecd9aa', path: '#d8be8e' }; // les sols qui lèvent de la poussière, en dessin fin
-  function drawChar(c, sheet, x, y, dir, moving, t, aura, pose) {
-    const f = moving ? [1, 0, 2, 0][Math.floor(t * 8) % 4] : 0;
+  // geste : { anim, port, tau } — celui qui frappe (R.geste) ; le dessin fin seul le connaît.
+  function drawChar(c, sheet, x, y, dir, moving, t, aura, pose, geste) {
+    let f = moving ? [1, 0, 2, 0][Math.floor(t * 8) % 4] : 0;
     x = G.cale(x); y = G.cale(y);
     c.fillStyle = 'rgba(20,12,30,.32)'; c.beginPath(); c.ellipse(x, y + 1, 6, 2.5, 0, 0, 6.3); c.fill();
+    if (geste && sheet.look && G.frappe && G.frappe(c, sheet.look, dir, x - 8, y - 22, geste, geste.tau, 'carte')) return;
     if (pose && !moving && sheet.look) { c.drawImage(G.pose(sheet.look, dir, pose), x - 8, y - 22 - (pose === 'surpris' ? 2 : 0)); return; }
-    c.drawImage(sheet, f * 16, dir * 24, 16, 24, x - 8, y - 22 - (moving && f ? 1 : 0), 16, 24);
+    if (!sheet.souffle) { c.drawImage(sheet, f * 16, dir * 24, 16, 24, x - 8, y - 22 - (moving && f ? 1 : 0), 16, 24); return; } // le dessin d'origine : comme dans la 1.32
+    // en dessin fin : immobile, il respire (une image sur quatre, à son rythme) ; en marche, le corps se hausse d'un point
+    // quand les jambes se croisent et se pose quand le pied touche le sol
+    if (!moving && Math.sin(t * 2.3) > 0.42) f = 3;
+    c.drawImage(sheet, f * 16, dir * 24, 16, 24, x - 8, y - 22 - (moving && !f ? 0.5 : 0), 16, 24);
   }
   W.drawChar = drawChar;
   function drawFlame(c, x, y, t, big) {
@@ -563,14 +569,16 @@
     const lights = [];
     for (const e of list) {
       if (e.o) { const o = e.o; c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2) - cx, o.y - o.h + 1 - cy); if (o.anim) drawFlame(c, o.x - cx, o.y - cy - (o.type === 'brazier' ? 10 : 3), t + o.seed, o.type === 'fire'); if (G.OBJ[o.type].herd) I.build.herd(c, o, o.x - cx, o.y - cy, t); }
-      else if (e.n) { const n = e.n; drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
+      else if (e.n) { const n = e.n; if (n.ph === undefined) n.ph = (I.hash((n.id || n.name || '') + '|' + (n.map || '')) >>> 0) % 628 / 100; /* chacun respire à son rythme */ drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t + n.ph, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
       else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = f.sonne > 0 ? 0.4 + Math.sin(t * 22) * 0.12 : 0.86 + Math.sin(t * 5 + f.ph) * 0.12; c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; if (f.rodeur && (f.voiles > 0 || f.tenue > 0) && (f.meute || f.tenue !== undefined)) { const nv = Math.ceil(f.meute ? f.voiles : f.tenue); c.fillStyle = f.sonne > 0 ? '#fff3c8' : `hsl(${d.hue},90%,78%)`; for (let i = 0; i < nv; i++) c.fillRect(Math.round(f.x - cx - nv * 2 + i * 4 + 1), Math.round(f.y - cy - s - 7 + bob), 2, 2); } /* ce qui rôde : ses voiles, et le tremblement de qui vient d'être frappé */ lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
       else if (e.bete) { const tr = e.tr, im = I.oeuvres.bete(e.bete, true), bx = Math.round(tr[0] - cx), by = Math.round(tr[1] - cy - im.height - 1 + Math.sin(t * 3) * 1.2); c.globalAlpha = 0.92; if (tr[2] === 2) { c.save(); c.translate(bx, 0); c.scale(-1, 1); c.drawImage(im, -Math.round(im.width / 2), by); c.restore(); } else c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 24, color: (I.sagas.coeur.animaux[e.bete] || {}).couleur || '#ffe9a8', a: 0.7 }); }
       else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null)); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (lueur(W.saga.heroes[W.party[e.fol]].look) || '#ffe9a8'), a: 0.4 }); }
       else if (e.p) { const p = W.player;
         if (G.D > 1 && p.moving && !G.low && POUSSIERE[m.g0 ? m.g0(p.x, p.y) : ''] && Math.random() < 0.3) G.spawn({ x: p.x - cx + (Math.random() - 0.5) * 6, y: p.y - cy + 1, vx: (Math.random() - 0.5) * 10, vy: -4 - Math.random() * 5, life: 0.5 + Math.random() * 0.3, size: 0.6 + Math.random() * 0.5, color: POUSSIERE[m.g0(p.x, p.y)], a: 0.3, type: 'mote', blend: 'source-over' }); // la poussière sous les pas
-        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (I.rodeurs && I.rodeurs.geste && W.t - I.rodeurs.geste.t >= 0 && W.t - I.rodeurs.geste.t < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null)); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+        const rg = I.rodeurs && I.rodeurs.geste, tau = rg ? W.t - rg.t : -1, gt = rg && D.GEAR_TYPES[rg.type];   // celui qui mène frappe : l'élan, le coup, l'arme en main (s'il repart, le geste s'efface après le coup)
+        const frappe = rg && tau >= 0 && tau < (p.moving ? G.FRAPPE.elan + G.FRAPPE.balai : G.dureeFrappe) ? { anim: (gt && gt.anim) || 'geste', port: (rg.port !== undefined ? rg.port : gt && gt.port) || null, tau } : null;
+        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {

@@ -373,6 +373,7 @@
   const W2 = W * 2, H2 = H * 2, TETES = {}, CORPS = { d: [], l: [], u: [] }, ALLURES = {};
   const PETIT = [7, 8, 17, 18, 21, 22]; // enfant : six lignes de corps en moins
   const HAMPES = ['lance', 'baton', 'masse', 'durra', 'etendard', 'calame']; // ce qui se tient à pleine main
+  const EN_MAIN = ['sabre', 'lance', 'baton', 'masse', 'dague', 'arc', 'calame', 'durra']; // ce avec quoi l'on frappe : pendant un geste, le moteur le pose dans la main
   const VIDE = '................................';
   function voileUni(rows) { // → null si le voile est d'un seul tenant, sur chaque ligne et chaque colonne ; sinon ce qui cloche
     const V = (x, y) => y >= 0 && y < rows.length && (rows[y][x] === 'V' || rows[y][x] === 'v'), lignes = [];
@@ -410,15 +411,62 @@
   /* ---------- la marche et les attitudes ----------
      Chaque corps part du corps au repos ; on n'en redessine que les lignes qui changent. */
   const varie = (quoi, rows, ch, n) => gabarit(quoi, rows.map((r, j) => ch[j] !== undefined ? ch[j] : r), n || 30);
+  const ANCIENS = {}; // les pas d'avant la 2.x (un point de balancement) : gardés pour la comparaison, non dessinés
+  const pose = (r, x, t) => { let o = r; for (let i = 0; i < t.length; i++) { const X = x + i; if (X >= 0 && X < W2 && t[i] !== ' ') o = o.slice(0, X) + t[i] + o.slice(X + 1); } return o; }; // écrit t dans la ligne à partir de x (' ' : ne rien changer)
+  // De face ou de dos : le pas du côté `cote` ('g' : la gauche de l'image avance). Mêmes colonnes pour les deux vues.
+  function foulee(quoi, V0, cote) {
+    const borne = j => Math.max(10, Math.min(17, j)), G0 = r => r.slice(0, 10), M0 = r => r.slice(10, 22), D0 = r => r.slice(22), av = cote === 'g';
+    const rows = V0.map((r, j) => (j >= 10 && j <= 17) ? G0(V0[borne(j - (av ? 2 : -2))]) + M0(r) + D0(V0[borne(j - (av ? -2 : 2))]) : r); // le bras qui avance descend, l'autre remonte
+    // le bas de la robe : la moitié qui avance descend d'un point, l'autre remonte d'un point (lignes 20 à 25)
+    const moitie = (r, gauche) => gauche ? r.slice(0, 16) : r.slice(16), vide = '.'.repeat(16);
+    for (let j = 25; j >= 20; j--) { const ga = av ? V0[j - 1] : V0[Math.min(25, j + 1)], dr = av ? V0[Math.min(25, j + 1)] : V0[j - 1]; rows[j] = moitie(ga, true) + moitie(dr, false); }
+    // les pieds : celui qui avance est entier et dépasse d'un point ; l'autre n'est plus qu'un talon sous la robe
+    const P = V0[26], Pb = V0[28];
+    rows[26] = av ? moitie(V0[25], true) + moitie(P, false) : moitie(P, true) + moitie(V0[25], false);   // l'ourlet descendu couvre le haut du pied qui avance
+    rows[27] = av ? moitie(P, true) + vide : vide + moitie(P, false);
+    rows[28] = av ? moitie(P, true) + vide : vide + moitie(P, false);
+    rows[29] = av ? moitie(Pb, true) + vide : vide + moitie(Pb, false);
+    return gabarit(quoi, rows, 30);
+  }
+  // De profil (tourné vers la gauche) : deux foulées dessinées à la main. Le bras que l'on voit balance depuis l'épaule —
+  // loin devant, la main dépassant de la robe, puis derrière le dos ; la robe s'ouvre en triangle sur le pas (M : le pli
+  // entre les jambes — en tenue courte, le vide qui les sépare) ; un pied à plat devant, l'autre sur la pointe derrière.
+  // `devant` : la jambe proche est devant (elle prend la lumière) ; le bras proche part alors en arrière.
+  const balance = devant => devant ? {   // le bras en arrière : la main passe derrière le dos
+      5: '.........RRRRrrc.CCcc.ck........', 6: '.........RRRRrrc.CCcc.ck........', 7: '.........RRRRrrcc.CCcc.k........', 8: '.........RRRRrrcc.CCcc.k........',
+      9: '.........RRRrrrccc.Cccc.........', 10: '.........AAAAAaccc.Cccc.........', 11: '.........aAAAaacccc.cccc........', 12: '.........SSSSSssske.kkkk........',
+      13: '.........SSSSSssskee.NNN........', 14: '.........SSSSSssskeee.NNN.......', 15: '.........SSSSSssskeeeeeE........'
+    } : {                     // le bras en avant : la main dépasse de la robe
+      4: '.........RRRRR.CCCc.ccck........', 5: '.........RRRRr.CCcc.ccck........', 6: '.........RRRR.CCcc.cccck........', 7: '.........RRR.CCcc.cccckk........',
+      8: '.........RRR.CCcc.cccckk........', 9: '.........RR.Cccc.ccccckk........', 10: '.........A.Cccc.cccccckk........', 11: '.........akkkk.ccccccckk........',
+      12: '........NNN.SSssskkkkeee........', 13: '........NNN.SSssskkkeeee........', 14: '.........SSSSSssskkeeeee........', 15: '.........SSSSSssskeeeeeE........' };
+  function jambes(devant) {
+    // la robe ouverte sur le pas ; le côté de la jambe proche est dans la lumière (L), l'autre dans l'ombre (l)
+    const A = devant ? 'L' : 'l', B = devant ? 'l' : 'L', P = devant ? 'F' : 'f', Q = devant ? 'f' : 'F';
+    return {
+      20: '......' + A.repeat(8) + 'l' + B + 'l' + B + 'keeeeEE.......',
+      21: '......' + A.repeat(6) + 'M' + A + B + 'l' + B + B + 'keeeeEE.......',
+      22: '.....' + A.repeat(6) + 'MMM' + B + B + 'l' + B + B + 'keeeeEE......',
+      23: '....' + A.repeat(6) + 'MMMMM' + B + B + 'l' + B + B + 'keeeeEE.....',
+      24: '....' + A.repeat(6) + 'MMMMMM' + B + B + 'l' + B + 'keeeeEE.....',
+      25: '...ZZZZZZMMMMMMMZZZZZkeeeeE.....',
+      26: '....' + P.repeat(4) + 'f..........' + Q + Q + 'f..........',   // un pied à plat devant, l'autre sur la pointe derrière
+      27: '...' + P.repeat(5) + 'f.........' + Q + Q + 'f...........',
+      28: '..' + P.repeat(5) + 'ff.......' + Q + Q + Q + 'f............' };
+  }
+  const enjambee = (L0, devant) => varie('marche de profil', L0, Object.assign({}, balance(devant), jambes(devant)));
   { // de face : un bras descend d'un pixel, l'autre monte ; un pied se lève
     const D0 = CORPS.d[0], g = r => r.slice(0, 10), m = r => r.slice(10, 22), d = r => r.slice(22), borne = j => Math.max(11, Math.min(16, j));
+    // 2.x — des pas que l'on voit (demande du décideur : « qu'on voie les pas et les gestes des bras quand ils marchent »).
+    // De face : le bras du côté qui avance descend de deux points, l'autre remonte d'autant ; la robe tombe sur le genou
+    // qui avance et se relève sur la jambe qui reste ; le pied de devant grandit, l'autre s'efface.
     const pas = (dg, dd, leve) => gabarit('marche de face', D0.map((r, j) => j >= 11 && j <= 16 ? g(D0[borne(j - dg)]) + m(r) + d(D0[borne(j - dd)])
       : j >= 27 && j <= 28 ? (leve === 'd' ? r.slice(0, 16) + '.'.repeat(16) : '.'.repeat(16) + r.slice(16)) : r), 30);
-    CORPS.d[1] = pas(1, -1, 'd'); CORPS.d[2] = pas(-1, 1, 'g');
-    // de profil : le bras balance d'un pixel, les pieds s'écartent puis se croisent
-    const L0 = CORPS.l[0], balance = (r, n) => r.slice(0, 15) + (n < 0 ? r.slice(16, 22) + '.' : '.' + r.slice(15, 21)) + r.slice(22);
-    CORPS.l[1] = varie('marche de profil', L0.map((r, j) => j >= 12 && j <= 15 ? balance(r, -1) : r), { 26: '.........FFFFf.....FFf..........', 27: '........FFFFFf.....Ff...........', 28: '.......FFFFFff..................' });
-    CORPS.l[2] = varie('marche de profil', L0.map((r, j) => j >= 12 && j <= 15 ? balance(r, 1) : r), { 26: '...........FFf....FFFFf.........', 27: '...........Ff....FFFFFf.........', 28: '................FFFFFff.........' });
+    CORPS.d[1] = foulee('marche de face', D0, 'g'); CORPS.d[2] = foulee('marche de face', D0, 'd');
+    // de profil : le bras balance depuis l'épaule, la robe s'ouvre sur la foulée, les pieds s'écartent franchement
+    const L0 = CORPS.l[0];
+    CORPS.l[1] = enjambee(L0, false); CORPS.l[2] = enjambee(L0, true);
+    ANCIENS.d = [pas(1, -1, 'd'), pas(-1, 1, 'g')];
     // recueillement : la tête inclinée, les mains posées l'une sur l'autre
     const sansMainD = { 12: '..........kSSSSSSSSSSk..........', 13: '..........kSSSSSsSSSSk..........', 14: '..........kSSsSSsSSSsk..........', 15: '......eee.kSSsSSsSSSsk.eee......' };
     const sansMainL = { 12: '.........SSSSSs......ekk........', 13: '.........SSSSSs......eek........', 14: '.........SSSSSss.....eek........', 15: '.........SSSSSssk....eeE........' };
@@ -473,7 +521,7 @@
     const g = r => r.slice(0, 10), m = r => r.slice(10, 22), d = r => r.slice(22), borne = j => Math.max(11, Math.min(16, j));
     const pas = (dg, dd, leve) => gabarit('marche de dos', U0.map((r, j) => j >= 11 && j <= 16 ? g(U0[borne(j - dg)]) + m(r) + d(U0[borne(j - dd)])
       : j >= 27 && j <= 28 ? (leve === 'd' ? r.slice(0, 16) + '.'.repeat(16) : '.'.repeat(16) + r.slice(16)) : r), 30);
-    CORPS.u[1] = pas(1, -1, 'd'); CORPS.u[2] = pas(-1, 1, 'g');
+    CORPS.u[1] = foulee('marche de dos', U0, 'd'); CORPS.u[2] = foulee('marche de dos', U0, 'g'); ANCIENS.u = [pas(1, -1, 'd'), pas(-1, 1, 'g')];
     const sansMains = rows => rows.map(r => r.replace(/NNN/g, '...').replace('ENE', 'EEE').replace('ENe', 'EEe'));
     ALLURES.prie.u = gabarit('recueillement de dos', sansMains(U0), 30);
     // résolution : le bras levé est, de dos, du côté droit de l'image
@@ -481,6 +529,52 @@
       U0.map((r, j) => j >= 4 && j <= 12 ? r.slice(0, 22) + '.'.repeat(10) : j >= 13 && j <= 16 ? r.slice(0, 23) + '.'.repeat(9) : r)), 40) };
     ALLURES.accable.u = gabarit('accablement de dos', U0.slice(0, 12).concat(['.....kkkk.kBBBBbBBBBBk.kkkk.....', '......NNNkBBBBBbBBBBBkNNN.......', '.....eNNkBBBBBBbBBBBBBkNNe......', '....EeekBBBBBBBbBBBBBBBkeee.....',
       '...EEeekBBBBBBBBbBBBBBBBkeee....', '...EEeekBBBbBBBBbBBBBbBBkeeee...', '..EEEeekZZZZZZZZZZZZZZZZkeeee...', VIDE]), 20); }
+
+  /* ---------- les gestes de frappe (2.x) ----------
+     Deux attitudes de plus pour le grand personnage : l'élan (le bras armé levé) et le coup (le bras tendu vers ce qu'il
+     frappe), dans les trois vues. Ce ne sont pas des poses du récit (D.POSES) : le moteur seul les prend, le temps d'un
+     coup, en combat et dans les labyrinthes. Le bras est tracé d'un trait épais, de l'épaule au poignet par le coude ;
+     l'arme n'est pas dans le gabarit : le moteur la pose dans la main (G.arme) et la fait tourner. */
+  const GESTES = {}, HAUT_GESTE = 10;
+  // un membre : la manche, son revers, la main ; un liseré d'un point le détache de ce qu'il recouvre (pas à l'épaule, où
+  // il s'attache). pts : épaule, coude, poignet — en colonnes et en lignes du corps (négatif : au-dessus des épaules).
+  function membre(rows, pts) {
+    const L = rows.map(r => r.split('')), Hn = L.length, P = pts.map(q => [q[0], q[1] + HAUT_GESTE]), pris = new Map(), cle = (x, y) => y * W2 + x;
+    const disque = (cx, cy, r, f) => { for (let y = Math.floor(cy - r); y <= Math.ceil(cy + r); y++) for (let x = Math.floor(cx - r); x <= Math.ceil(cx + r); x++) if (x >= 0 && x < W2 && y >= 0 && y < Hn && Math.hypot(x + 0.5 - cx, y + 0.5 - cy) <= r) f(x, y); };
+    let ux = 0, uy = 0;
+    for (let i = 1; i < P.length; i++) { const a = P[i - 1], dx = P[i][0] - a[0], dy = P[i][1] - a[1], l = Math.hypot(dx, dy); ux = dx / l; uy = dy / l;
+      let nx = -uy, ny = ux; if (nx + ny > 0) { nx = -nx; ny = -ny; }                      /* la normale qui regarde la lumière, en haut à gauche */
+      for (let t = 0; t <= l; t += 0.25) { const cx = a[0] + ux * t, cy = a[1] + uy * t;
+        disque(cx, cy, 2.05, (x, y) => pris.set(cle(x, y), (x + 0.5 - cx) * nx + (y + 0.5 - cy) * ny > -0.35 ? 'C' : 'c')); } }
+    const fin = P[P.length - 1], le = (x, y) => (x + 0.5 - fin[0]) * ux + (y + 0.5 - fin[1]) * uy;   /* le long de l'avant-bras, depuis le poignet */
+    [...pris.keys()].forEach(k => { const x = k % W2, y = (k - x) / W2, d = le(x, y); if (d > 0.3) pris.delete(k); else if (d > -1.0) pris.set(k, 'k'); });   /* le revers de la manche */
+    const main = [fin[0] + ux * 1.7, fin[1] + uy * 1.7];
+    disque(main[0], main[1], 1.72, (x, y) => { if (!pris.has(cle(x, y)) || le(x, y) > 0.3) pris.set(cle(x, y), 'N'); });
+    pris.forEach((m, k) => { const x = k % W2, y = (k - x) / W2; L[y][x] = m; });
+    pris.forEach((m, k) => { const x = k % W2, y = (k - x) / W2; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => { const X = x + dx, Y = y + dy;
+      if (X < 0 || X >= W2 || Y < 0 || Y >= Hn || pris.has(cle(X, Y)) || L[Y][X] === '.') return; if (Math.hypot(X + 0.5 - P[0][0], Y + 0.5 - P[0][1]) < 3.3) return; L[Y][X] = '.'; }); });
+    return { rows: L.map(r => r.join('')), main };
+  }
+  { const D0 = CORPS.d[0], L0 = CORPS.l[0], U0 = CORPS.u[0], dessus = []; for (let i = 0; i < HAUT_GESTE; i++) dessus.push(VIDE);
+    const glisse = (r, n) => n > 0 ? '.'.repeat(n) + r.slice(0, W2 - n) : n < 0 ? r.slice(-n) + '.'.repeat(-n) : r, penche = (rows, f) => rows.map((r, j) => glisse(r, f(j)));
+    // de profil, le corps sans son bras : le flanc paraît, dans l'ombre du manteau
+    const sansBrasL = varie('profil sans bras', L0, { 3: '.........RRRRRrcccccccck........', 4: '.........RRRRRrcccccccck........', 5: '.........RRRRrrcccccccck........', 6: '.........RRRRrrcccccccck........',
+      7: '.........RRRRrrccccccckk........', 8: '.........RRRRrrccccccckk........', 9: '.........RRRrrrccccccckk........', 10: '.........AAAAAaccccccckk........', 11: '.........aAAAaaccccccckk........',
+      12: '.........SSSSSssskkkkeee........', 13: '.........SSSSSssskkkeeee........', 14: '.........SSSSSssskkeeeee........', 15: '.........SSSSSssskeeeeeE........' });
+    // de face, le bras qui frappe est à gauche de l'image ; de dos, à droite (le même bras)
+    const sansBrasD = D0.map((r, j) => j >= 4 && j <= 14 ? '.'.repeat(10) + r.slice(10) : j === 15 ? '......eee.' + r.slice(10) : r);
+    const sansBrasU = U0.map((r, j) => j >= 4 && j <= 12 ? r.slice(0, 22) + '.'.repeat(10) : j >= 13 && j <= 14 ? r.slice(0, 23) + '.'.repeat(9) : j === 15 ? r.slice(0, 22) + '.eee......' : r);
+    const geste = (quoi, corps, pts, tete) => { const m = membre(dessus.concat(corps), pts); return { haut: HAUT_GESTE, rows: gabarit(quoi, m.rows, 40), main: m.main, tete: tete || [0, 0] }; };
+    GESTES.elan = {   // le bras armé levé : derrière la tête de profil, sur le côté de face et de dos
+      l: geste('élan de profil', penche(sansBrasL, j => j <= 8 ? 1 : 0), [[19.5, 2.6], [25, 0.2], [26, -5.6]], [1, 0]),
+      d: geste('élan de face', sansBrasD, [[7.5, 3], [3.6, 1], [2.9, -4.4]]),
+      u: geste('élan de dos', sansBrasU, [[24.5, 3], [28.2, 1], [28.9, -4.4]]) };
+    GESTES.coup = {   // le bras tendu vers ce qu'il frappe ; de profil, le corps se fend
+      l: geste('coup de profil', penche(varie('fente', sansBrasL, jambes(true)), j => j <= 6 ? -2 : j <= 12 ? -1 : 0), [[15.5, 4], [10.6, 5.4], [6.2, 6.9]], [-3, 1]),
+      d: geste('coup de face', sansBrasD, [[7.5, 3.4], [7.3, 9], [11.4, 12.4]], [0, 1]),
+      u: geste('coup de dos', sansBrasU, [[24.5, 3], [27.6, 0.2], [25.8, -4.4]]) };
+    G.GESTES = Object.keys(GESTES);
+  }
 
   /* ---------- têtes natives ----------
      Une tête = un haut (8 lignes : le sommet de la coiffe), un bandeau (2 lignes) et un tour de visage (10 lignes, dont
@@ -621,7 +715,7 @@
   Object.keys(HEADS).forEach(c => { if (!TETES[c] || !TETES[c].d || !TETES[c].l || !TETES[c].u) throw new Error('coiffe sans tête native : ' + c); });
 
   // familles de tons : les lettres d'une même matière, de la plus claire à la plus sombre
-  const FAM = { H: 'Ttu', T: 'Ttu', t: 'Ttu', u: 'Ttu', D: 'Ttu', C: 'Cck', c: 'Cck', k: 'Cck', E: 'Cck', e: 'Cck', B: 'Cck', b: 'Cck', m: 'Cck', R: 'Rr', r: 'Rr', S: 'Ss', s: 'Ss', M: 'Ss',
+  const FAM = { H: 'Ttu', T: 'Ttu', t: 'Ttu', u: 'Ttu', D: 'Ttu', C: 'Cck', c: 'Cck', k: 'Cck', E: 'Cck', e: 'Cck', B: 'Cck', b: 'Cck', m: 'Cck', R: 'Rr', r: 'Rr', S: 'Ss', s: 'Ss', M: 'LlZ',
     L: 'LlZ', l: 'LlZ', Z: 'LlZ', J: 'Ii', I: 'Ii', i: 'Ii', j: 'Ii', W: 'Ww', w: 'Ww', F: 'Ff', f: 'Ff', A: 'Aa', a: 'Aa' };
   function rampes(pal) { // par lettre : ses cinq tons et sa place parmi eux
     const R = {}, faites = {};
@@ -636,10 +730,11 @@
   // la grille de 32 × 48 d'un personnage, ou null si sa tête ou son corps n'ont pas encore de gabarit natif
   function natifGrille(look, dir, frame, pose) {
     const K0 = kindOf(look), key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l', nom = HEADS[K0.coiffe] ? K0.coiffe : 'imama';
-    const tt = TETES[nom] && TETES[nom][key], P = pose && POSES[pose] && POSES[pose][key] ? POSES[pose] : null;
-    const A = P ? (ALLURES[pose] && ALLURES[pose][key]) : (CORPS[key] && CORPS[key][frame || 0]);
+    const Ge = pose && GESTES[pose] ? GESTES[pose][key] : null; if (Ge) frame = 0;   // un geste de frappe : son propre gabarit, pas une pose du récit
+    const tt = TETES[nom] && TETES[nom][key], P = !Ge && pose && POSES[pose] && POSES[pose][key] ? POSES[pose] : null;
+    const A = Ge || (P ? (ALLURES[pose] && ALLURES[pose][key]) : (CORPS[key] && CORPS[key][frame || 0]));
     if (!tt || !A) return null;
-    const r = grid(look, dir, frame, pose, {}), K = r.K, kneel = r.kneel, hy = P ? (P.hy || 0) : 0, haut = A.haut || 0;
+    const r = grid(look, dir, frame, Ge ? null : pose, {}), K = r.K, kneel = r.kneel, hy = P ? (P.hy || 0) : 0, haut = A.haut || 0;
     let rows = A.rows || A; if (K.petit && !kneel) rows = rows.filter((x, j) => PETIT.indexOf(j - haut) < 0);
     const bT = H2 - rows.length, cou = bT + haut, y1 = kneel ? H2 : H2 - 4, L = [], am = [], fin = []; let hors = 0; // am : l'armure ; fin : dessiné tel quel, sans modelé
     for (let y = 0; y < H2; y++) { L.push(new Array(W2).fill('.')); am.push(new Array(W2).fill(0)); fin.push(new Array(W2).fill(0)); }
@@ -664,18 +759,19 @@
     if (K.chale && !kneel) for (let y = cou; y < cou + 4; y++) for (let x = 0; x < W2; x++) if ('Cck'.indexOf(L[y][x]) >= 0) L[y][x] = (x + y) % 3 ? 'T' : 't';
     if (K.drape && !kneel) for (let y = cou; y < cou + 4; y++) for (let x = 0; x < W2; x++) if ((x <= 10 || x >= 21) && 'Cck'.indexOf(L[y][x]) >= 0) L[y][x] = y < cou + 2 ? 't' : 'u'; // l'étoffe de tête retombe sur les épaules
     if (K.raies) [3, 6, 9].forEach(dy => { for (let x = 0; x < W2; x++) if ('RrCc'.indexOf(L[cou + dy][x]) >= 0) L[cou + dy][x] = 'T'; });
-    if (K.neon) { const x = key === 'd' ? 15 : key === 'l' ? 11 : -1; if (x >= 0) for (let y = cou + 3; y < cou + 10; y++) if (L[y][x] !== '.') L[y][x] = 'Y';
+    if (K.neon) { const x = key === 'd' ? 15 : key === 'l' ? 11 : -1; if (x >= 0) for (let y = cou + 3; y < cou + 10; y++) if ('RrSsIiWw'.indexOf(L[y][x]) >= 0) L[y][x] = 'Y'; /* sur le buste seulement : une manche qui passe devant le cache */
       for (let y = cou + 10; y < cou + 12; y++) for (let x2 = 0; x2 < W2; x2++) if ('Aa'.indexOf(L[y][x2]) >= 0) L[y][x2] = 'y'; }
     // les objets tenus : ceux de grid(), agrandis, ramenés à la hauteur de la main
     const dyo = kneel ? 0 : (cou + 13 - (K.petit ? 2 : 0)) - (2 * r.b0 + 10);
-    r.objets.forEach(o => { const o2 = scale2x(o.g), dxo = key === 'd' ? (HAMPES.indexOf(o.nom) >= 0 ? 2 : 0) : key === 'l' && (o.nom === 'durra' || o.nom === 'calame') ? 10 : 0; // la hampe vient contre la main
+    r.objets.forEach(o => { if (Ge && EN_MAIN.indexOf(o.nom) >= 0) return; /* l'arme qui frappe : le moteur la pose dans la main */ const o2 = scale2x(o.g), dxo = key === 'd' ? (HAMPES.indexOf(o.nom) >= 0 ? 2 : 0) : key === 'l' && (o.nom === 'durra' || o.nom === 'calame') ? 10 : 0; // la hampe vient contre la main
       for (let y = 0; y < H2; y++) for (let x = 0; x < W2; x++) { const m = o2[y][x], X = x + dxo, Y = y + dyo; if (m !== '.' && X < W2 && Y >= 0 && Y < H2 && L[Y][X] !== 'N') { L[Y][X] = m; am[Y][X] = 0; fin[Y][X] = 1; } } });
     // la tête, inclinée ou abaissée selon la pose ; le cimier suit le sommet du casque
-    const y0 = cou - 18 + 2 * hy, x0 = hy && key === 'l' ? -2 : 0, pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1; } };
+    const y0 = cou - 18 + 2 * hy + (Ge ? Ge.tete[1] : 0), x0 = (hy && key === 'l' ? -2 : 0) + (Ge ? Ge.tete[0] : 0), pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1; } };
     for (let j = 0; j < (kneel ? 20 : tt.length); j++) for (let x = 0; x < W2; x++) if (tt[j][x] !== '.') pose1(x + x0, y0 + j, tt[j][x]); // à genoux, le pan du turban ne descend pas
     if (K.cimier) { const xs = key === 'l' ? [10, 21] : [14, 17]; for (let x = xs[0]; x <= xs[1]; x++) { let y = 0; while (y < tt.length && tt[y][x] === '.') y++; if (y < tt.length) for (let dy = 1; dy <= 2; dy++) pose1(x + x0, y0 + Math.max(dy - 1, y - dy), 'X'); } }
     if (dir === 2) [L, am, fin].forEach(t => t.forEach(row => row.reverse()));
-    return { L, K, am, fin, hors };
+    const main = Ge ? [dir === 2 ? W2 - Ge.main[0] : Ge.main[0], bT + Ge.main[1]] : null;   // où est la main qui frappe, dans la grille de 32 × 48
+    return { L, K, am, fin, hors, main };
   }
   // la même grille de matières, deux fois plus grande, ses escaliers arrondis (la règle d'EPX, sur des lettres)
   function grilleFine(g, w, h) { const o = []; for (let y = 0; y < h * 2; y++) o.push(new Array(w * 2)); const at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? '.' : g[y][x];
@@ -684,14 +780,67 @@
       o[y * 2 + 1][x * 2] = (d === c && d !== b && c !== a) ? c : p; o[y * 2 + 1][x * 2 + 1] = (b === d && b !== a && d !== c) ? d : p; }
     return o; }
   const doubler = t => { const o = []; t.forEach(r => { const q = []; r.forEach(v => q.push(v, v)); o.push(q, q.slice()); }); return o; };
+  /* ---------- le visage (2.x) ----------
+     Les Compagnons n'ont pas de visage : leur voile est une lumière. Les autres personnages en ont un (décision du décideur,
+     16 novembre) : un teint, des yeux, des sourcils, une barbe selon l'âge — peints dans l'ouverture de leur coiffe, de face
+     et de profil ; rien de dos. Le teint et la barbe viennent du personnage lui-même (ses couleurs), jamais de son peuple
+     (exigence 10) ; l'âge, de son type (ancien, enfant). look.sansVisage : quelqu'un que le jeu ne dessine pas en Compagnon
+     mais qui en est un, ou que certains comptent parmi eux — dans le doute, pas de visage (D.SANS_VISAGE).
+     → une fonction (x, y) → couleur pour chaque point du voile, ou null. */
+  const TEINTS = ['#ecc49a', '#deab7c', '#cb9566', '#b47d50', '#9a6540'], POILS = ['#2c1e17', '#1f1613', '#402c1e', '#4d3626'];
+  // ce qui distingue un personnage d'un autre : toujours le même pour le même. look.visage : la marque gardée d'une tenue à l'autre (le râwî change de tenue, pas de visage)
+  const signe = look => look.visage !== undefined ? look.visage >>> 0 : I.hash((look.kind || '') + '|' + (look.robe || '') + '|' + (look.head || '') + '|' + (look.cloak || '') + '|' + (look.sel === undefined ? '' : look.sel)) >>> 0;
+  G.signe = signe;
+  function visage(look, K, dir, pose, s, x0, x1, y0, y1) {
+    if (K.lit || look.sansVisage || dir === 3 || x1 < x0) return null;
+    const h = signe(look);
+    const kd = look.kind || 'homme', age = kd === 'enfant' ? 0 : kd === 'ancien' ? 2 : (kd === 'savant' || kd === 'moine') ? ((h >>> 3) % 2 ? 2 : 1.5) : 1; // 0 enfant · 1 adulte · 1,5 grisonnant · 2 âgé
+    let peau = look.teint || TEINTS[h % TEINTS.length]; if (K.sombre) peau = mix(peau, '#1c1430', 0.34);            // sous une capuche, le visage est dans l'ombre
+    const ombre = mix(peau, '#3a1e30', 0.30), nuit = mix(peau, '#221632', 0.5), clair = mix(peau, '#fff1d6', 0.28);
+    const poil = age >= 2 ? '#ece7dc' : age > 1 ? '#aaa296' : POILS[(h >>> 5) % POILS.length], poilO = mix(poil, '#20143a', 0.4);
+    const barbe = age === 0 ? 0 : age >= 2 ? 2 : [2, 1, 2, 0, 1, 2][(h >>> 7) % 6];                                    // 0 : glabre · 1 : courte · 2 : pleine
+    const oeil = '#1b1420', blanc = mix('#fbf3e2', peau, 0.15), levre = mix(peau, '#6a2420', 0.5), sourcil = mix(peau, age >= 1.5 ? '#8a8378' : poil, 0.7);
+    const w = x1 - x0 + 1, hh = y1 - y0 + 1, fente = hh < 5 * s, profil = dir === 1 || dir === 2, clos = pose === 'prie' || pose === 'accable';
+    const yo = fente ? y0 + s : y0 + Math.round(hh * 0.40), yb = y0 + Math.round(hh * 0.64), ym = y0 + Math.round(hh * 0.74); // les yeux, le haut de la barbe, la bouche
+    const ex = Math.round(w * 0.22);                                                                                  // de face : l'écart d'un œil au bord
+    return function (x, y) {
+      const fx = profil ? (dir === 2 ? x1 - x : x - x0) : x - x0, gx = w - 1 - fx, dy = y - y0;                         // fx : depuis le devant du visage (profil) ou sa gauche (face)
+      const dansOeil = profil ? (fx >= s && fx < 2 * s) : ((fx >= ex && fx < ex + s) || (gx >= ex && gx < ex + s));
+      if (y >= yo && y < yo + s && dansOeil) { if (clos) return y === yo + s - 1 ? sourcil : peau; return oeil; }
+      if (!clos && s === 2 && y >= yo && y < yo + s && (profil ? fx === 2 * s : (fx === ex - 1 || gx === ex - 1))) return blanc; // en dessin fin : le blanc de l'œil, du côté du dehors
+      if (!fente && s === 2 && y === yo - 2 && (profil ? (fx >= 1 && fx <= 4) : ((fx >= ex - 1 && fx <= ex + 1) || (gx >= ex - 1 && gx <= ex + 1)))) return sourcil; // les sourcils : en dessin fin seulement (à 32 points de large, ils alourdiraient le regard)
+      if (!fente && barbe && y >= yb) {
+        if (profil && fx >= w - s - (barbe === 2 ? 0 : s)) return ombre;                                              // vers la nuque : la joue, dans l'ombre de l'étoffe
+        if (barbe === 1 && y < ym && !(profil ? fx < 2 * s : Math.abs(fx - gx) <= 2 * s)) return peau;                 // barbe courte : la moustache seule, au-dessus
+        if (y === ym && (profil ? fx < s : Math.abs(fx - gx) < s + 1)) return poilO;                                   // la bouche, une ombre dans la barbe
+        return ((x + y) % 3 === 0 && s === 2) ? poilO : poil;
+      }
+      if (!fente && !barbe && y === ym && (profil ? fx < 2 * s : Math.abs(fx - gx) <= s + (s - 1))) return levre;
+      if (dy < s) return nuit;                                                                                         // l'ombre de la coiffe sur le front
+      if (!fente && !profil && s === 2 && fx === (w >> 1) && y > yo + s && y < yb) return ombre;                       // l'arête du nez
+      if (profil ? fx === 0 && y > yo && y < yb : false) return clair;                                                 // de profil : le nez et la pommette prennent la lumière
+      if (profil ? fx >= w - s : gx < s) return ombre;                                                                 // le côté dans l'ombre
+      if (!profil && fx < s && dy >= s) return clair;
+      return peau;
+    };
+  }
+  G.teint = look => { const K = kindOf(look); if (K.lit || look.sansVisage) return null; return look.teint || TEINTS[signe(look) % TEINTS.length]; };
+  G.aVisage = look => !(kindOf(look).lit || look.sansVisage); // un Compagnon n'en a pas, ni ceux que le jeu laisse sans visage
   // fin = 2 : le même personnage tracé en 64 × 96 — même composition, formes arrondies, liseré, arêtes et lumière du voile
   // deux fois plus fins. C'est lui que montrent le combat et les menus en dessin fin (gfx.D = 2).
   function grand(look, dir, frame, pose, fin2) {
     const s = fin2 === 2 ? 2 : 1;
+    if (frame === 3 && G.natif) { // le souffle : le personnage au repos, le haut du corps remonté d'un point (la ligne de la taille se dédouble)
+      const k3 = (s === 2 ? 'N' : 'n') + ck(look, dir, 3, pose); if (scache[k3]) return scache[k3];
+      const g0 = grand(look, dir, 0, pose, fin2), cv3 = mk(g0.width, g0.height), c3 = cv3.getContext('2d'), taille = Math.round(g0.height * 0.66);
+      c3.drawImage(g0, 0, taille, g0.width, g0.height - taille, 0, taille, g0.width, g0.height - taille); c3.drawImage(g0, 0, 1, g0.width, taille - 1, 0, 0, g0.width, taille - 1); c3.drawImage(g0, 0, taille, g0.width, 1, 0, taille - 1, g0.width, 1);
+      if (g0.hd) cv3.hd = g0.hd; return (scache[k3] = cv3); }
     if (!G.natif) { if (s === 1) return ancien(look, dir, frame, pose); const ka = 'A' + ck(look, dir, frame, pose); return scache[ka] || (scache[ka] = G.epx(ancien(look, dir, frame, pose))); }
     const k = (s === 2 ? 'N' : 'n') + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
     const n = natifGrille(look, dir, frame, pose); if (!n) return (scache[k] = s === 2 ? G.epx(ancien(look, dir, frame, pose)) : ancien(look, dir, frame, pose));
-    const K = n.K, L = s === 2 ? grilleFine(n.L, W2, H2) : n.L, am = s === 2 ? doubler(n.am) : n.am, fin = s === 2 ? doubler(n.fin) : n.fin, pal = palette(look, K), R = rampes(pal), w = W2 * s, h = H2 * s;
+    const K = n.K, L = s === 2 ? grilleFine(n.L, W2, H2) : n.L, am = s === 2 ? doubler(n.am) : n.am, fin = s === 2 ? doubler(n.fin) : n.fin, pal = palette(look, K), w = W2 * s, h = H2 * s;
+    const tn = G.teint(look); if (tn) pal.N = mix(K.sombre ? mix(tn, '#1c1430', 0.2) : tn, '#fff1d6', 0.1); // qui a un visage a des mains du même teint (le grand personnage seulement)
+    const R = rampes(pal);
     const cv = mk(w, h), c = cv.getContext('2d'), px = (x, y, col) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } }; if (s === 2) cv.hd = 2;
     const voile = m => m === 'V' || m === 'v', at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? '.' : L[y][x];
     const plein = (x, y) => { const m = at(x, y); return m !== '.' && (voile(m) || pal[m] != null); }, meme = (x, y, f) => { const m = at(x, y); return m !== '.' && FAM[m] === f && !!R[m]; };
@@ -700,8 +849,9 @@
     const ray = K.lit && G.D > 1 && look.rayon ? look.rayon : null, ray1 = ray && mix(ray, '#ffffff', 0.5), ray2 = ray && mix(ray, '#ffffff', 0.08);
     let x0 = 99, x1 = -1, y0 = 99, y1 = -1; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (voile(L[y][x])) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
     const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 - 0.5, rx = (x1 - x0) / 2 + 0.5, ry = (y1 - y0) / 2 + 0.5;
+    const trait = visage(look, K, dir, pose, s, x0, x1, y0, y1); // null pour un Compagnon : son voile reste une lumière, sans un trait
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const m = L[y][x]; if (m === '.') continue;
-      if (voile(m)) { const dd = Math.hypot((x - cx) / rx, (y - cy) / ry); px(x, y, K.lit ? (ray ? (dd < 0.4 ? '#ffffff' : dd < 0.74 ? ray1 : ray2) : (dd < 0.5 ? '#ffffff' : dd < 0.82 ? pal.V : pal.v)) : (y - y0 < 2 * s || dd > 0.86 ? pal.v : pal.V)); continue; }
+      if (voile(m)) { if (trait) { px(x, y, trait(x, y)); continue; } const dd = Math.hypot((x - cx) / rx, (y - cy) / ry); px(x, y, K.lit ? (ray ? (dd < 0.4 ? '#ffffff' : dd < 0.74 ? ray1 : ray2) : (dd < 0.5 ? '#ffffff' : dd < 0.82 ? pal.V : pal.v)) : (y - y0 < 2 * s || dd > 0.86 ? pal.v : pal.V)); continue; }
       const r = R[m]; if (!r) { px(x, y, pal[m]); continue; }                  // main, parchemin, néon, cimier : à plat
       let i = r.i;
       if (am[y][x]) { const a = K.armure, bordG = !am[y][x - 1], bordD = !am[y][x + 1], X = (x / s) | 0, Y = (y / s) | 0;   // l'armure : mailles fines, lamelles en rangs, cuir cousu, toile piquée — le motif garde sa taille, son bord s'affine
@@ -735,9 +885,9 @@
   // charSheet, charPose et charGrand, eux, rendent toujours les dessins bruts : les outils de contrôle les lisent.
   G.planche = function (look) { if (G.D < 2) return G.charSheet(look);
     const k = 'P' + (G.natif ? 'n' : 'a') + JSON.stringify(look); if (scache[k]) return scache[k];
-    const cv = mk(96, 192), c = cv.getContext('2d');
-    for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) c.drawImage(grand(look, dir, f), f * 32, dir * 48);
-    cv.look = look; cv.hd = 2; return (scache[k] = cv); };
+    const cv = mk(128, 192), c = cv.getContext('2d');   // quatre images par direction : repos, pas A, pas B, souffle
+    for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 4; f++) c.drawImage(grand(look, dir, f), f * 32, dir * 48);
+    cv.look = look; cv.hd = 2; cv.souffle = true; return (scache[k] = cv); };
   G.pose = function (look, dir, pose) { if (G.D < 2) return small(look, dir, 0, pose);
     const k = 'Q' + (G.natif ? 'n' : 'a') + ck(look, dir, 0, pose); if (scache[k]) return scache[k];
     const g = grand(look, dir, 0, pose), cv = mk(g.width, g.height); cv.getContext('2d').drawImage(g, 0, 0); cv.hd = 2; return (scache[k] = cv); };
@@ -746,6 +896,63 @@
     const cv = mk(g.width, g.height); cv.getContext('2d').drawImage(g, 0, 0); cv.hd = 2; return (scache[k] = G.adoucir(cv)); };
   const ucache = {}; // image du grand sprite, pour les menus
   G.charURL = (look, dir, pose) => { const k = (G.natif ? 'n' : 'a') + G.D + ck(look, dir || 0, 0, pose); return ucache[k] || (ucache[k] = grand(look, dir || 0, 0, pose, G.D).toDataURL()); }; // en dessin fin : le personnage de 64 × 96
+  /* ---------- l'arme en main, le temps d'un geste (2.x) ----------
+     Le moteur la dessine lui-même, son manche dans la main, et la fait tourner : du bois, du fer, une corde — des objets
+     ordinaires, sans or, sans rien d'écrit (exigence 17). Chaque arme est décrite le long de son axe (u : depuis la main
+     vers la pointe ; v : en travers) et rend la matière du point, ou rien. */
+  const ARMES = {
+    sabre: (u, v) => { if (u < -3 || u > 14) return null; if (u < 0) return Math.abs(v) <= 0.75 ? 'bois' : null; if (u < 1.2) return Math.abs(v) <= 2.2 ? 'fonte' : null;
+      const c = v + 0.011 * u * u, l = u > 10.5 ? 1.25 * (14 - u) / 3.5 : 1.25; return Math.abs(c) <= l ? 'fer' : null; },
+    dague: (u, v) => { if (u < -2 || u > 7) return null; if (u < 0) return Math.abs(v) <= 0.7 ? 'bois' : null; if (u < 1) return Math.abs(v) <= 1.6 ? 'fonte' : null; return Math.abs(v) <= (u > 4 ? (7 - u) / 3 : 1) ? 'fer' : null; },
+    lance: (u, v) => { if (u < -10 || u > 20) return null; if (u < 15) return Math.abs(v) <= 0.62 ? 'bois' : null; return Math.abs(v) <= 1.6 * (20 - u) / 5 + 0.2 ? 'fer' : null; },
+    baton: (u, v) => u >= -6 && u <= 15 && Math.abs(v) <= 0.75 ? 'bois' : null,
+    masse: (u, v) => Math.hypot(u - 11.2, v) <= 2.6 ? 'fer' : (u >= -3 && u <= 9.5 && Math.abs(v) <= 0.66 ? 'bois' : null),
+    calame: (u, v) => u >= -1.5 && u < 4 && Math.abs(v) <= 0.56 ? 'bois' : (u >= 4 && u <= 5.4 && Math.abs(v) <= 0.45 ? 'sombre' : null),
+    durra: (u, v) => u >= -2 && u <= 8.5 && Math.abs(v) <= 0.62 ? 'bois' : null,
+    arc: (u, v) => { if (Math.abs(v) > 7.9) return null; if (u >= -1.6 && Math.abs(Math.hypot(u + 7, v) - 9.5) <= 0.7) return 'bois'; return Math.abs(u + 1.75) <= 0.3 && Math.abs(v) <= 7.6 ? 'corde' : null; },
+    arc_tendu: (u, v) => { if (Math.abs(v) > 7.9) return null; if (u >= -1.6 && Math.abs(Math.hypot(u + 7, v) - 9.5) <= 0.7) return 'bois'; return u <= -1.5 && u >= -6.3 && Math.abs(u + 6.2 - Math.abs(v) * 0.6) <= 0.34 ? 'corde' : null; },
+    fleche: (u, v) => { if (u < -9 || u > 2.6) return null; if (u > 0) return Math.abs(v) <= 1.2 * (2.6 - u) / 2.6 + 0.15 ? 'fer' : null; if (u < -6.8) return Math.abs(v) <= 1.1 ? 'corde' : null; return Math.abs(v) <= 0.42 ? 'bois' : null; }
+  };
+  const MATIERES = { fer: ['#dde2ea', '#8e96a4'], fonte: ['#8e96a4', '#666d7a'], bois: ['#9a6f41', '#5a3d22'], sombre: ['#3a2a1c', '#3a2a1c'], corde: ['#efe6cc', '#cfc4a4'] }, acache = {};
+  // a : l'angle, en radians (0 : vers la droite ; il croît dans le sens des aiguilles d'une montre). e : points réels par
+  // point de gabarit. → une image carrée, la main en son centre (cv.r : du coin au centre, en points logiques).
+  G.arme = function (nom, a, e) {
+    const f = ARMES[nom]; if (!f) return null; const pas = Math.PI / 24, ai = ((Math.round(a / pas) % 48) + 48) % 48, k = nom + '|' + ai + '|' + e + '|' + G.D; if (acache[k]) return acache[k];
+    a = ai * pas; const R = Math.ceil(22 * e) + 2, S = 2 * R + 1, cv = mk(S, S), c = cv.getContext('2d'), ca = Math.cos(a), sa = Math.sin(a), clair = sa - ca > 0 ? 1 : -1; // de quel côté de l'axe vient la lumière (en haut à gauche)
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) { const X = (x - R) / e, Y = (y - R) / e, u = X * ca + Y * sa, v = -X * sa + Y * ca, m = f(u, v); if (!m) continue;
+      c.fillStyle = MATIERES[m][v * clair > 0 ? 0 : 1]; c.fillRect(x, y, 1, 1); }
+    outline(c, S, S); cv.hd = G.D; cv.r = (R + 0.5) / G.D; return (acache[k] = cv); };
+  G.ARMES = Object.keys(ARMES);
+  // un geste de frappe, tel que le moteur le montre : l'image du corps et la place de la main (en points logiques, depuis
+  // le coin de l'image). grandeur : 'carte' (le personnage des cartes — en dessin fin seulement) ou 'combat'.
+  const gcache = {};
+  G.geste = function (look, dir, nom, grandeur) {
+    if (!G.natif || !GESTES[nom]) return null; const carte = grandeur === 'carte'; if (carte && G.D < 2) return null;
+    const k = ck(look, dir, 0, nom); let m = gcache[k]; if (m === undefined) { const n = natifGrille(look, dir, 0, nom); m = gcache[k] = n && n.main ? n.main : null; } if (!m) return null;
+    return { img: carte ? G.pose(look, dir, nom) : G.figure(look, dir, 0, nom), main: carte ? [m[0] / 2, m[1] / 2] : [m[0], m[1]], e: carte ? 1 : G.D, q: carte ? 0.5 : 1 };
+  };
+  // Celui qui frappe : l'élan (le bras levé, l'arme haute), le balai (l'arme décrit son arc, trois images la suivent) puis
+  // la tenue du coup. Par manière de frapper (D.GEAR_TYPES[…].anim) : les angles de l'arme pour qui regarde à gauche, en
+  // degrés, du départ à l'arrivée (a) ; de dos, les siens (h).
+  const DUREES = { elan: 0.11, balai: 0.07, tenue: 0.15 };
+  const MANIERES = { slash: { a: [-70, -200], h: [-5, -98] }, smash: { a: [-84, -196], h: [-18, -96] }, thrust: { a: [174, 180], h: [-96, -90], pointe: true }, arrow: { a: [180, 180], h: [-90, -90], tir: true }, geste: { a: [-60, -172], h: [-8, -100] } };
+  const versDir = (A, pp, dir) => { const a = A.a[0] + (A.a[1] - A.a[0]) * pp; return (dir === 1 ? a : dir === 2 ? 180 - a : dir === 0 ? a + 270 : A.h[0] + (A.h[1] - A.h[0]) * pp) * Math.PI / 180; }; // de dos : ses propres angles (h), l'arme finit droite au-dessus de la main
+  G.FRAPPE = DUREES; G.dureeFrappe = DUREES.elan + DUREES.balai + DUREES.tenue;
+  // dessine le geste à l'instant tau (secondes depuis son début), le coin de l'image en (x, y). g : { anim, port }.
+  // → false si le geste est fini, ou si ce dessin ne le connaît pas : l'appelant dessine alors le personnage comme avant.
+  G.frappe = function (c, look, dir, x, y, g, tau, grandeur) {
+    const T = DUREES; if (!(tau >= 0) || tau >= G.dureeFrappe) return false;
+    const A = MANIERES[g.anim] || MANIERES.geste, enCoup = tau >= T.elan, ge = G.geste(look, dir, enCoup || A.tir ? 'coup' : 'elan', grandeur); if (!ge) return false;
+    const p = !enCoup ? 0 : Math.min(1, (tau - T.elan) / T.balai), angle = pp => versDir(A, 1 - (1 - pp) * (1 - pp), dir);
+    const hx = x + ge.main[0], hy = y + ge.main[1];
+    const pose = (nom, ang, alpha, recul) => { const im = G.arme(nom, ang, ge.e); if (!im) return; c.globalAlpha = alpha; c.drawImage(im, hx + Math.cos(ang) * (recul || 0) * ge.q - im.r, hy + Math.sin(ang) * (recul || 0) * ge.q - im.r); c.globalAlpha = 1; };
+    const arme = () => { if (!g.port || !ARMES[g.port]) return;
+      if (A.tir) { const ang = angle(1); pose(enCoup ? 'arc' : 'arc_tendu', ang, 1); if (!enCoup) pose('fleche', ang, 1, 3); else { const d = (tau - T.elan) * 520; if (d < 150) pose('fleche', ang, Math.max(0, 1 - d / 150), 9 + d); } return; }
+      if (A.pointe) { pose(g.port, angle(p), 1, enCoup ? 4 * p : -5); return; }
+      if (enCoup && p < 1) for (let i = 3; i >= 1; i--) pose(g.port, angle(Math.max(0, p - i * 0.2)), 0.14 * (4 - i)); // le sillage de l'arme
+      pose(g.port, angle(p), 1); };
+    if (dir === 3) arme(); c.drawImage(ge.img, x, y); if (dir !== 3) arme(); return true;
+  };
   G.KINDS = KINDS; G.COIFFES = Object.keys(HEADS);
   G.natif = true; // false : le grand sprite d'avant, pour comparer
   // la grille de matières d'un grand sprite, pour le contrôle (tools/silhouettes.js) : 48 lignes de 32 lettres

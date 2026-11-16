@@ -8,10 +8,15 @@
       les personnages du jeu, les tenues du râwî, toutes les coiffes et les variantes d'équipement. Ils sont ceux relevés
       avant que le grand sprite soit redessiné (tools/essais/silhouettes.json) : sinon « ÉCART ».
    2. L'interrupteur (gfx.natif = false) rend le grand sprite d'avant, à l'identique : sinon « ÉCART ».
-   3. Personne n'a de visage : dans chaque grand sprite — toutes les vues, les pas, les poses — le voile est une seule
-      surface, d'un seul tenant sur chaque ligne et chaque colonne, sans trou : sinon « TRAIT ».
-   4. Chaque coiffe a sa tête native de face et de profil (le dos, jamais montré en grand, garde le dessin d'avant) ;
-      aucune tête ne sort de la grille, aucun sprite n'est vide : sinon « ABSENT ».
+   3. Les Compagnons n'ont pas de visage. Dans chaque grand sprite — toutes les vues, les pas, les poses, les gestes de
+      frappe — le voile est une seule surface, d'un seul tenant sur chaque ligne et chaque colonne, sans trou ; et, une
+      fois peint, celui d'un Compagnon (ou de qui le jeu laisse sans visage, D.SANS_VISAGE) ne porte que sa lumière ou
+      son étoffe, pas un trait : sinon « TRAIT ». Les autres personnages ont un visage (2.x, décision du décideur) : de
+      face et de profil, il se voit ; de dos, rien : sinon « ABSENT ».
+   4. Chaque coiffe a sa tête native de face, de profil et de dos ; aucune tête ne sort de la grille, aucun sprite
+      n'est vide : sinon « ABSENT ».
+   5. Les gestes de frappe (2.x) : l'élan et le coup ont leur image et la place de leur main dans les quatre directions,
+      sur la carte et en combat ; chaque arme que l'on peut tenir se dessine ; le geste dure, puis cesse : sinon « ABSENT ».
    Sortie : « OK » par preuve, puis « SILHOUETTES CONFORMES ». Code 1 à la première anomalie.
    JEU=../index.html node tools/silhouettes.js : le même contrôle sur la version légère, qui porte le même sprites.js. */
 const fs = require('fs'), path = require('path');
@@ -81,8 +86,18 @@ const VOILES = looks => {
     for (let y = 0; y < H; y++) { let runs = 0; for (let x = 0; x < W; x++) if (V(x, y) && !V(x - 1, y)) runs++; if (runs > 1) return `le voile est coupé en deux sur la ligne ${y}`; }
     for (let x = 0; x < W; x++) { let runs = 0; for (let y = 0; y < H; y++) if (V(x, y) && !V(x, y - 1)) runs++; if (runs > 1) return `le voile est coupé en deux sur la colonne ${x}`; }
     return null; };
-  let fines = 0;
-  looks.forEach(({ nom, look }) => [0, 1, 2, 3].forEach(dir => [[0, null], [1, null], [2, null]].concat(POSES.map(p => [0, p])).forEach(([f, p]) => {
+  let fines = 0, lumieres = 0, visages = 0;
+  // ce qui est peint dans le voile : les couleurs d'une image, aux cases V de sa grille (k : points d'image par case)
+  const peint = (cv, lignes) => { const k = cv.width / lignes[0].length, d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data, vus = new Set(); let n = 0;
+    for (let y = 0; y < lignes.length; y++) for (let x = 0; x < lignes[y].length; x++) if (lignes[y][x] === 'V' || lignes[y][x] === 'v') { n++; for (let j = 0; j < k; j++) for (let i = 0; i < k; i++) { const o = ((y * k + j) * cv.width + x * k + i) * 4; vus.add(d[o] << 16 | d[o + 1] << 8 | d[o + 2]); } }
+    return { n, couleurs: vus.size, oeil: vus.has(0x1b1420) }; };
+  const aVisage = look => G.aVisage ? G.aVisage(look) : false, GESTES = G.GESTES || [];
+  // le voile peint : une lumière ou une étoffe (trois tons au plus, jamais la couleur d'un œil) pour qui n'a pas de visage ;
+  // un visage, de face et de profil, pour les autres — et rien de dos
+  const regard = (cv, lignes, look, dir, ou) => { const q = peint(cv, lignes); if (!q.n) return;
+    if (!aVisage(look) || dir === 3) { lumieres++; if (q.couleurs > 3 || q.oeil) faux.push(['TRAIT', ou + ` : ${q.couleurs} couleurs dans le voile${q.oeil ? ', dont celle d’un œil' : ''}`]); }
+    else { visages++; if (q.couleurs < 4) faux.push(['ABSENT', ou + ` : pas de visage (${q.couleurs} couleur(s) dans l’ouverture de la coiffe)`]); } };
+  looks.forEach(({ nom, look }) => [0, 1, 2, 3].forEach(dir => [[0, null], [1, null], [2, null]].concat(POSES.map(p => [0, p]), GESTES.map(g => [0, g])).forEach(([f, p]) => {
     const r = G.charGrille(look, dir, f, p), ou = `${nom} · ${['face', 'profil gauche', 'profil droit', 'dos'][dir]}${p ? ' · ' + p : f ? ' · pas ' + f : ''}`; vues++;
     if (r.natif) natives++;
     const pleines = r.lignes.reduce((s, l) => s + l.replace(/\./g, '').length, 0);
@@ -90,9 +105,10 @@ const VOILES = looks => {
     else if (pleines < 120) faux.push(['ABSENT', ou + ` : sprite presque vide (${pleines} cases)`]);
     if (r.hors) faux.push(['ABSENT', ou + ` : ${r.hors} case(s) de la tête sortent de la grille`]);
     const t = voile(r.lignes); if (t) faux.push(['TRAIT', ou + ' : ' + t]);
+    if (r.natif && G.aVisage) regard(G.charGrand(look, dir, f, p), r.lignes, look, dir, ou);
     // 2.x : le même personnage tracé deux fois plus fin (le combat, les menus) — sa grille de 64 × 96 obéit à la même règle
-    if (r.natif && G.figure) { const rf = G.charGrille(look, dir, f, p, 2); fines++; if (rf.lignes.length !== 96 || rf.lignes.some(l => l.length !== 64)) faux.push(['ABSENT', ou + ' : la grille fine n’a pas 64 × 96']); else { const tf = voile(rf.lignes); if (tf) faux.push(['TRAIT', ou + ' (dessin fin) : ' + tf]); } } })));
-  return { faux, vues, natives, fines };
+    if (r.natif && G.figure) { const rf = G.charGrille(look, dir, f, p, 2); fines++; if (rf.lignes.length !== 96 || rf.lignes.some(l => l.length !== 64)) faux.push(['ABSENT', ou + ' : la grille fine n’a pas 64 × 96']); else { const tf = voile(rf.lignes); if (tf) faux.push(['TRAIT', ou + ' (dessin fin) : ' + tf]); else if (G.aVisage && G.D > 1 && !G.lisse) regard(G.figure(look, dir, f, p), rf.lignes, look, dir, ou + ' (dessin fin)'); } } })));
+  return { faux, vues, natives, fines, lumieres, visages };
 };
 /* ---------- dans la page : une planche (les cases de gauche à droite, agrandies k fois) ---------- */
 const PLANCHE = async ({ cases, k, cols, titre }) => {
@@ -119,7 +135,8 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
   let page = await ouvrir();
   const inv = await page.evaluate(INVENTAIRE, COIFFES), natif = await page.evaluate(() => typeof window.ISNAD.gfx.charGrille === 'function'); await page.context().close();
   // la couleur du rayonnement (look.rayon) ne touche que le voile du grand personnage, en dessin fin : l'empreinte d'un petit sprite se cherche sans elle
-  const sansRayon = look => { const L = Object.assign({}, look); delete L.rayon; return L; };
+  // (de même look.sansVisage, qui ne touche que le grand personnage)
+  const sansRayon = look => { const L = Object.assign({}, look); delete L.rayon; delete L.sansVisage; delete L.visage; return L; };
   const cles = inv.map(q => JSON.stringify(sansRayon(q.look))), groupes = {}; inv.forEach(q => { groupes[q.groupe] = (groupes[q.groupe] || 0) + 1; });
   const detail = Object.entries(groupes).map(([g, n]) => `${n} ${g}`).join(', ');
 
@@ -160,6 +177,9 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     // 4. le combat : de profil, les trois pas et les poses ; puis l'équipement
     const combat = q => [0, 1, 2].map(f => ({ look: q.look, dir: 1, frame: f, legende: ident(q) + ' · pas ' + f })).concat(['garde', 'accable', 'resolu', 'salut'].map(p => ({ look: q.look, dir: 1, pose: p, legende: ident(q) + ' · ' + p })));
     for (let i = 0; i < sept.length; i += 2) await ecrire('combat-' + (i / 2 + 1), { cases: sept.slice(i, i + 2).flatMap(combat), k: 6, cols: 7, titre: 'En combat : la marche et les poses' });
+    const gestes = q => [1, 0, 3].flatMap(dir => ['elan', 'coup'].map(g => ({ look: q.look, dir, pose: g, legende: ident(q) + ' · ' + N[dir] + ' · ' + (g === 'elan' ? 'élan' : g) })));
+    if (await (async () => { const p = await ouvrir(), r = await p.evaluate(() => !!(window.ISNAD.gfx.GESTES || []).length); await p.context().close(); return r; })())
+      for (let i = 0; i < sept.length; i += 2) await ecrire('gestes-' + (i / 2 + 1), { cases: sept.slice(i, i + 2).flatMap(gestes), k: 6, cols: 6, titre: 'Les gestes de frappe : l’élan, le coup (l’arme, le moteur la pose dans la main)' });
     const poses = q => [null].concat(['prie', 'resolu', 'accable', 'salut', 'surpris', 'garde']).map(p => ({ look: q.look, dir: 0, pose: p, legende: ident(q) + ' · ' + (p || 'debout') }));
     for (let i = 0; i < sept.length; i += 2) await ecrire('poses-' + (i / 2 + 1), { cases: sept.slice(i, i + 2).flatMap(poses), k: 6, cols: 7, titre: 'De face : les six attitudes' });
     const Eq = de('équipement');
@@ -189,9 +209,12 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     else ok(`l'interrupteur (gfx.natif = false) rend le grand sprite d'avant, à l'identique : ${cles.length - neufs} silhouettes × 36 images`);
     // 3 et 4. le voile, les têtes natives, la grille
     const R = await parPaquets(inv.map(q => ({ nom: q.nom, look: q.look })), 120, VOILES), faux = R.flatMap(r => r.faux), vues = R.reduce((s, r) => s + r.vues, 0), fines = R.reduce((s, r) => s + (r.fines || 0), 0);
+    const lumieres = R.reduce((s, r) => s + (r.lumieres || 0), 0), visages = R.reduce((s, r) => s + (r.visages || 0), 0);
     const traits = faux.filter(f => f[0] === 'TRAIT'), absents = faux.filter(f => f[0] === 'ABSENT');
     if (traits.length) { traits.slice(0, 10).forEach(f => ko('TRAIT ' + f[1])); if (traits.length > 10) console.log(`   … et ${traits.length - 10} autre(s)`); }
-    else ok(`personne n'a de visage : ${vues} grands sprites (toutes les vues, les pas, les poses)${fines ? ` et leurs ${fines} tracés fins de 64 × 96` : ''} — le voile y est une seule surface, sans trou ni marque`);
+    else if (!visages && !lumieres) ok(`personne n'a de visage : ${vues} grands sprites (toutes les vues, les pas, les poses)${fines ? ` et leurs ${fines} tracés fins de 64 × 96` : ''} — le voile y est une seule surface, sans trou ni marque`);
+    else ok(`les Compagnons n'ont pas de visage : ${vues} grands sprites (toutes les vues, les pas, les poses, les gestes)${fines ? ` et leurs ${fines} tracés fins de 64 × 96` : ''} — le voile y est une seule surface, sans trou ni marque ; peint, il ne porte que sa lumière ou son étoffe dans ${lumieres} images (Compagnons, ceux que le jeu laisse sans visage, tous de dos)`);
+    if (visages && !absents.some(f => /pas de visage/.test(f[1]))) ok(`les autres personnages ont un visage, de face et de profil : ${visages} images`);
     if (absents.length) { absents.slice(0, 10).forEach(f => ko('ABSENT ' + f[1])); if (absents.length > 10) console.log(`   … et ${absents.length - 10} autre(s)`); }
     page = await ouvrir();
     const T = await page.evaluate(C => { const G = window.ISNAD.gfx, sans = [], connues = G.COIFFES || []; const vuesT = G.figure ? [0, 1, 2, 3] : [0, 1, 2]; C.concat(connues.filter(c => !C.includes(c))).forEach(c => vuesT.forEach(dir => { const r = G.charGrille({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4', coiffe: c, manteau: 'long' }, dir, 0, null); if (!r.natif) sans.push(c + ' (' + ['face', 'profil gauche', 'profil droit'][dir] + ')'); }));
@@ -199,6 +222,22 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     if (T.oubli.length || T.inconnues.length) ko(`ABSENT la liste des coiffes de cet outil n'est plus celle du moteur : ${T.oubli.concat(T.inconnues).join(', ')}`);
     if (T.sans.length) ko(`ABSENT ${T.sans.length} coiffe(s) et vue(s) sans grand sprite natif : ${T.sans.slice(0, 12).join(', ')}${T.sans.length > 12 ? '…' : ''}`);
     else if (!absents.length) ok(`${T.connues.length} coiffes, chacune avec sa tête native de face${T.dos ? ', de profil et de dos' : ' et de profil'} ; aucune ne sort de la grille, aucun sprite n'est vide`);
+    // 6. les gestes de frappe (2.x) : chaque geste a son image et la place de sa main ; chaque arme se dessine ; le geste dure, puis cesse
+    page = await ouvrir();
+    const Ge = await page.evaluate(() => { const I = window.ISNAD, G = I.gfx, D = I.D; if (!G.geste || !G.frappe || !G.arme) return null; const faux = []; let n = 0;
+      const look = { kind: 'compagnon', robe: '#8a7355', head: '#e6dcc4', cloak: '#5a4632' }, N = ['face', 'profil gauche', 'profil droit', 'dos'];
+      (G.GESTES || []).forEach(g => [0, 1, 2, 3].forEach(dir => ['combat', 'carte'].forEach(gr => { if (gr === 'carte' && G.D < 2) return; const r = G.geste(look, dir, g, gr), ou = `${g} · ${N[dir]} · ${gr}`; n++;
+        if (!r || !r.img || !r.main) { faux.push(ou + ' : pas d’image'); return; }
+        const w = r.img.width / (r.img.hd || 1), h = r.img.height / (r.img.hd || 1); if (!(r.main[0] >= 0 && r.main[0] <= w && r.main[1] >= 0 && r.main[1] <= h)) faux.push(ou + ' : la main est hors de l’image'); })));
+      const ports = [...new Set(Object.values(D.GEAR_TYPES).filter(t => t.slot === 'md' && t.port).map(t => t.port))];
+      ports.forEach(p => { for (let a = 0; a < 8; a++) { const im = G.arme(p, a * Math.PI / 4, 1); if (!im) { faux.push('arme ' + p + ' : pas de dessin'); return; }
+        const d = im.getContext('2d').getImageData(0, 0, im.width, im.height).data; let pleins = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 200) pleins++; if (pleins < 8) { faux.push('arme ' + p + ' : dessin vide'); return; } } });
+      const cv = G.toile(64, 64), c = cv.getContext('2d'), g = { anim: 'slash', port: 'sabre' };
+      if (![0.02, 0.12, 0.15, 0.25].every(t => G.frappe(c, look, 1, 16, 8, g, t, 'combat'))) faux.push('G.frappe ne dessine pas le geste pendant toute sa durée');
+      if (G.frappe(c, look, 1, 16, 8, g, G.dureeFrappe + 0.01, 'combat')) faux.push('G.frappe ne cesse pas à la fin du geste');
+      return { faux, n, ports }; });
+    await page.context().close();
+    if (Ge) { if (Ge.faux.length) Ge.faux.slice(0, 10).forEach(f => ko('ABSENT ' + f)); else ok(`les gestes de frappe : ${Ge.n} images (l'élan, le coup — quatre directions, sur la carte et en combat), chacune avec la place de sa main ; ${Ge.ports.length} armes dessinées sous huit angles (${Ge.ports.join(', ')}) ; le geste dure, puis cesse`); }
   }
   if (errors.length) ko(`ÉCART erreur console : ${[...new Set(errors)].slice(0, 3).join(' | ').slice(0, 400)}`);
   await browser.close();

@@ -34,9 +34,23 @@
     'abdallah ibn az zubayr': '#ff8a7a', 'abu ayyub': '#6fd9ff', 'abu hurayra': '#8fe6cf', 'al hasan': '#ffe9a8', 'al hubab': '#cfe36a', 'anas': '#ffa3c4',
     'bashir': '#ffb48f', 'bilal': '#ffa83a', 'said ibn al as': '#b3a6ff', 'suraqa': '#e6c98a', 'usama': '#9fd4ff', 'zayd ibn al khattab': '#7fa8ff'
   };
+  // 2.x — qui a un visage. Un Compagnon n'en a jamais : son voile est une lumière (type « compagnon »). Les autres personnages
+  // en ont un (décision du décideur, 16 novembre). Restent sans visage ceux que voici, récit par récit, sous le nom exact que
+  // le récit leur donne : des Compagnons que les récits dessinent sans voile de lumière, des hommes que certaines sources
+  // comptent parmi eux, et ceux que leur nom même range parmi eux (un Ansârî, un vétéran de Badr, un soldat de l'armée
+  // d'Usâma, un récitateur de Médine en l'an 12) — dans le doute, pas de visage. Les gens sans autre désignation (« un
+  // fidèle », « un Médinois ») ont un visage. (Liste dressée par l'agent ; à valider par le décideur, nom par nom.)
+  D.SANS_VISAGE = {
+    abubakr: ['vieil ansari', 'soldat dusama', 'un recitateur'],   // les noms sans accents ni apostrophes, comme D.rayon les lit
+    ali: ['le juge shurayh', 'malik al ashtar', 'farwa ibn nawfal', 'kumayl ibn ziyad'],
+    khalid: ['rafi ibn umayra', 'veteran de badr'],
+    uthman: ['abdallah ibn sad']
+  };
+  const sansAccent = nom => String(nom || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/['’ʿʾ`]/g, '').replace(/[-‑]/g, ' ').replace(/\s+/g, ' ').trim();
+  D.sansVisage = function (nom, recit) { const n = sansAccent(nom); return !!this.rayon(nom) || (this.SANS_VISAGE[recit] || []).indexOf(n) >= 0; };
   // la couleur d'un Compagnon d'après son nom, tel que les récits l'écrivent (« 'Alî », « 'Alî ibn Abî Tâlib ») ; null sinon
   D.rayon = function (nom) {
-    const n = String(nom || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/['’ʿʾ`]/g, '').replace(/[-‑]/g, ' ').replace(/\s+/g, ' ').trim();
+    const n = sansAccent(nom);
     let best = null; Object.keys(this.RAYONS).forEach(k => { if ((n === k || n.indexOf(k + ' ') === 0) && (!best || k.length > best.length)) best = k; });
     return best ? this.RAYONS[best] : null;
   };
