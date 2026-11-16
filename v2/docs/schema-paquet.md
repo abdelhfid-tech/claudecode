@@ -87,7 +87,11 @@ Un lieu : `{ gabarit, nom, variante?, piste?, noms? }`.
 - `piste` : remplace la piste du gabarit — une piste du jeu, ou une piste du paquet.
 - `noms` : `{ lieu: 'nom' }` renomme un lieu sur la carte de la halte ; `null` ne l'affiche pas. Seulement des lieux que
   le gabarit possède : un paquet ne crée pas de lieu nommé.
-- La noosphère d'un combat reste le lieu `noos` du jeu, teinté par `['map', 'noos', 'seuil', { hue }]`.
+- La noosphère d'un combat reste le lieu `noos` du jeu, teinté par `['map', 'noos', 'seuil', { hue }]`. Depuis la 2.x, y
+  descendre, c'est trouver un labyrinthe tiré au hasard, sous un chrono : le paquet n'a rien à écrire pour cela. Les sept
+  lieux nommés du gabarit (`seuil`, `noeud1` à `noeud3`, `faille`, `miroir`, `coeur`) y sont toujours ; les options `g`,
+  `n` et `descente` sont réservées au moteur, et un paquet qui les écrit est refusé. Une idée noire ne se place ni parmi
+  les ennemis d'un chapitre ni dans un combat : elle ne prend corps que dans la descente du râwî.
 
 Un étal demande un lieu qui a un `comptoir` : `ville`, `desert`, `camp`, `romaine` ou `citadelle`.
 

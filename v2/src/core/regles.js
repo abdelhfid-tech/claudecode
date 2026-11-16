@@ -266,7 +266,7 @@
             else { if (n.look.kind && !D.NPC_KINDS.includes(n.look.kind)) E.push(`${wn}: look.kind « ${n.look.kind} » invalide`); checkLook(n.look, wn); }
           } else if (!heroes[n.hero]) E.push(`${wn}: hero « ${n.hero} » inconnu`);
         });
-        (c.foes || []).forEach(f => {
+        (c.foes || []).forEach(f => { (f.group || []).forEach(g => { if (D.NOIRS.includes(g)) E.push(`${w} ennemi « ${f.id} »: une idée noire (« ${g} ») ne se place pas parmi les ennemis d’un chapitre`); }); // 2.x
           const wf = `${w}/foe ${f.id}`;
           req(f, 'id', 'string', wf);
           if (foeIds.has(f.id)) E.push(`${wf}: id en double`); foeIds.add(f.id);
@@ -322,6 +322,7 @@
                 const b = o[1] || {};
                 if (!Array.isArray(b.group) || !b.group.length || b.group.length > 4) E.push(`${wo}: battle.group de 1 à 4`);
                 (b.group || []).forEach(g => { if (!enemies[g]) E.push(`${wo}: ennemi « ${g} » inconnu`); });
+                (b.group || []).forEach(g => { if (D.NOIRS.includes(g)) E.push(`${wo}: une idée noire (« ${g} ») ne se combat pas dans un récit : on lui répond, dans un pourparler ; elle ne prend corps que dans la descente du râwî`); }); // 2.x
                 if (b.bg && !D.BATTLE_BG.includes(b.bg)) E.push(`${wo}: bg « ${b.bg} » invalide`);
                 (b.allies || []).forEach(al => { if (!al || typeof al.flag !== 'string' || typeof al.name !== 'string') E.push(`${wo}: battle.allies attend [{flag, name}]`);
                   else { garde(al.name, wo); if (al.rang !== undefined && !D.RANGS[al.rang]) E.push(`${wo}: battle.allies : « rang » inconnu (${Object.keys(D.RANGS).join('|')})`); if (al.look) checkLook(al.look, wo); } });
@@ -332,6 +333,7 @@
                 if (!D.MAPS[o[1]]) E.push(`${wo}: carte « ${o[1]} » inconnue`);
                 else { state.map = o[1]; checkAt(o[2], o[1], wo); }
                 if (o[3] && o[3].time && !D.TIMES.includes(o[3].time)) E.push(`${wo}: time invalide`);
+                if (o[3] && ['g', 'n', 'descente'].some(k => o[3][k] !== undefined)) E.push(`${wo}: « g », « n » et « descente » sont réservés au moteur (le labyrinthe de la noosphère se tire tout seul ; la descente est celle du râwî)`); // 2.x
                 break;
               case 'tp': case 'walk': {
                 const who = o[1];

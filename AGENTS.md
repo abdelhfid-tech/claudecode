@@ -25,15 +25,17 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   « 1.32 INTACTE » **avant chaque enregistrement**.
 - La suite de ce document décrit la 1.32. Elle vaut pour la 2.0 en lisant `v2/` devant chaque chemin : mêmes exigences de
   respect, même règle de test, avec les outils de `v2/tools/`. Ce qui est propre à la 2.0 est écrit dans `v2/docs/`.
-- La 2.0 a sept contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
+- La 2.0 a huit contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
   `node v2/tools/cartes.js` (les lieux du livre I sortent comme dans la 1.32 : « CARTES IDENTIQUES »),
   `node v2/tools/ecrans.js` (l'écran de la Chaîne du livre I est celui de la 1.32 : « CHAÎNE IDENTIQUE »),
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
   réimporte à l'identique), `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
   se gardent), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel, aucun
   grand personnage ne porte un trait dans son voile, de face, de profil, de dos, ni dans son tracé fin :
-  « SILHOUETTES CONFORMES ») et `node v2/tools/dedales.js` (les labyrinthes de la noosphère : dix mille tirages par
-  profondeur, chaque lieu présent, du bon côté, relié aux autres : « DÉDALES CONFORMES ») : aucun « REFUS », « BLOQUÉ »,
+  « SILHOUETTES CONFORMES »), `node v2/tools/dedales.js` (les labyrinthes de la noosphère : dix mille tirages par
+  profondeur, chaque lieu présent, du bon côté, relié aux autres : « DÉDALES CONFORMES ») et `node v2/tools/descente.js`
+  (dans le jeu : le labyrinthe d'un chapitre, son chrono, la remontée, la reprise ; la descente du râwî et ses quatre
+  issues : « DESCENTE CONFORME ») : aucun « REFUS », « BLOQUÉ »,
   « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages » ;
   `JEU=../index.html node v2/tools/silhouettes.js` passe le même contrôle sur la 1.32. Les textes de la 2.0
@@ -45,6 +47,9 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   les cartes) ; le joueur choisit son dessin dans les réglages (fin, fin et adouci, d'origine). Le dessin d'origine reste
   celui de la 1.32, au pixel près : `cartes.js` ouvre le jeu avec `?def=1` pour s'y comparer. Tout est décrit dans
   `v2/docs/architecture.md`, « La définition du dessin ». Un dessin ne se juge que sur une capture, dans les trois réglages.
+- La noosphère de la 2.x est un labyrinthe (exigences 22 et 23) : `v2/src/core/dedale.js` le tire, `v2/src/core/rodeurs.js`
+  y pose la graine, le chrono et la descente du râwî ; `v2/docs/architecture.md`, « Les labyrinthes de la noosphère ». Un
+  changement de l'un ou de l'autre repasse `dedales.js`, puis toute la batterie.
 - Le livret (`promo/`, `tools/promo.js`) décrit la 1.32.
 
 ## Le projet en trois phrases
@@ -106,6 +111,7 @@ node v2/tools/partie.js             # 2.0 : la partie du joueur, exportée par l
 node v2/tools/personnage.js         # 2.0 : le nom et la tenue du râwî, choisis par les vrais boutons, joués sur tout le prologue, gardés
 node v2/tools/silhouettes.js        # 2.0 : les personnages — petits sprites inchangés, voiles sans trait, une tête native par coiffe (planches : … planches [modèles.png])
 node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] : une planche)
+node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî
 node tools/promo.js pdf             # le livret en PDF (promo/livret.pdf) : A5 paysage, deux colonnes, pages équilibrées ; demande poppler (pdfinfo, pdftoppm)
 ```
 
@@ -137,6 +143,9 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
   fiction. Une idée noire (l'une des cinq de `D.NOIRS`) ne se combat pas : on lui répond, par la parole,
   la pédagogie ou la bienveillance. Un égrégore, lui, se combat. Une énigme du cœur (`enigme`) et le
   pèlerinage (`hajj`) n'existent que dans la fiction (histoire-cadre, veillées) : le validateur les refuse ailleurs.
+  Dans la 2.x, une idée noire ne prend corps que dans la descente du râwî (exigence 22) : aucun chapitre ne la place
+  parmi ses ennemis, ni dans un combat — le validateur le refuse. Les options d'un lieu `g`, `n` et `descente` sont
+  réservées au moteur : le labyrinthe de la noosphère se tire tout seul (exigence 23).
 - L'idole d'un chapitre (le membre de plus haut palier d'un combat lancé avec `boss: true`) porte une
   `racine` prise dans `D.RACINES`. Aucun combattant, aucune compétence, aucun personnage ne porte le nom
   d'Iblîs, d'un démon ou d'un djinn : le validateur le refuse.
@@ -206,7 +215,10 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     pouvoir que de souffler : le cœur reste responsable. Aucun lien n'est tracé d'un souffleur à un
     événement de l'histoire. L'emprise se dit d'une idée et d'une idole, jamais d'un Compagnon, d'un peuple,
     d'une religion, d'une époque ou d'un camp. À chaque étage sa réponse, et pas une de plus : l'idée noire
-    par la parole, l'égrégore par le combat, l'idole par une bataille déclarée.
+    par la parole, l'égrégore par le combat, l'idole par une bataille déclarée. *Exception demandée par le
+    décideur le 16 novembre (formulation de l'agent, à valider) :* dans la descente du râwî (exigence 22), une
+    idée noire prend corps ; on ne l'y affronte que lame forgée en main, et accompagné. Dans les récits, elle
+    ne se combat toujours pas.
 
 19. *(Proposée par l'agent, à confirmer par le décideur.)* Une bataille déclarée n'est pas une reconstitution. En face,
     jamais d'hommes : les nuées de l'idole, c'est-à-dire ses égrégores. Nos rangs ne tombent pas : éprouvés, ils se
@@ -232,12 +244,30 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     personnifié, « équipé » ni changé en pouvoir ; son Nom est du texte, jamais un sprite (l'exigence 8 reste entière) ;
     on dit qu'on le reconnaît, jamais qu'on le possède.
 
-22. *(Demandée par le décideur, qui en a validé les choix le 15 novembre ; formulation de l'agent.)* Descendre dans la noosphère. Au sortir
-    de la prière, dans le dhikr, en songe, on peut y descendre pour faire face à ses maux du cœur. C'est le combat du râwî,
-    personnage de fiction, seul : jamais celui d'un Compagnon, à qui le jeu ne prête aucun mal du cœur. « Démons
-    intérieurs » est une façon de parler, que le jeu explique aussitôt : aucun combattant ne porte le nom d'un démon. La
-    prière elle-même reste sobre : la porte s'ouvre quand elle est dite. Une descente par porte et par chapitre ; si le
-    mal l'emporte, on remonte, et rien n'est perdu.
+22. *(Demandée par le décideur, qui en a validé les choix le 15 novembre ; réécrite le 16 novembre à sa demande —
+    « la noosphère personnelle, dont l'objectif est soit de sortir du labyrinthe, soit de se réfugier » ; formulation de
+    l'agent, à valider.)* Descendre dans la noosphère. Au sortir de la prière, dans le dhikr, en songe, le râwî peut y
+    descendre pour faire face à ses maux du cœur. C'est sa descente, celle d'un personnage de fiction : jamais celle d'un
+    Compagnon, à qui le jeu ne prête aucun mal du cœur ; et jamais un Compagnon ne l'y accompagne — seulement un
+    compagnon de lumière ou, dans l'histoire-cadre, ses compagnons de fiction. Dans la 2.x, c'est un labyrinthe : ses maux
+    du cœur encore debout et les cinq idées noires y rôdent. Seul, il ne les vainc pas : il cherche l'issue, ou un abri où
+    rien n'entre. Armé d'une lame forgée et accompagné, il peut faire face. « Démons intérieurs » est une façon de
+    parler, que le jeu explique aussitôt : aucun combattant ne porte le nom d'un démon. La prière elle-même reste sobre :
+    la porte s'ouvre quand elle est dite. Ce que le râwî gagne en bas — un niveau à l'issue, de l'Esprit et du Souffle
+    à l'abri — vient de sa descente, non de la prière : c'est tout de même une exception aux exigences 13 et 15, voulue
+    par le décideur, et l'agent ne les a pas réécrites. Une descente par porte et par chapitre. Rattrapé, il remonte
+    épuisé : les portes restent closes jusqu'à ce qu'il ait dormi une fois, d'un sommeil sans songe ; rien d'autre n'est
+    perdu.
+
+23. *(Demandée par le décideur le 16 novembre — « des labyrinthes aléatoires […] avec un timer, plus on avance dans
+    l'histoire plus ça devient difficile » ; formulation de l'agent, à valider.)* Le labyrinthe et son chrono. Dans la
+    2.x, la noosphère où un récit fait descendre est un labyrinthe tiré au hasard, de plus en plus serré à mesure que
+    l'histoire avance. Les lieux que les récits nomment y sont toujours, chacun de son côté, et les récits ne changent
+    pas d'un mot : le labyrinthe est la forme d'un lieu de fiction, il ne dit rien de l'histoire. Les égrégores d'un
+    chapitre y restent à leurs places : seuls ceux du râwî rôdent, et seulement dans sa descente. Le chrono ne punit
+    pas : il ne court que lorsque le joueur a la main — ni pendant un combat, ni pendant un dialogue, ni dans un menu ;
+    écoulé, on remonte au seuil, le labyrinthe se redessine un cran plus simple, et rien n'est perdu. Aucun texte ne lie
+    le temps qui passe à une faute, à une œuvre manquée ni à un Compagnon.
 
 ## Qui fait quoi
 

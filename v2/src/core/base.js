@@ -154,7 +154,8 @@
     if (objet('heroes')) Object.keys(d.heroes).forEach(k => { const h = d.heroes[k]; if (!estObjet(h) || !(Number.isInteger(h.lvl) && h.lvl >= 1 && h.lvl <= 99) || typeof h.xp !== 'number') E.push('heroes.' + k); });
     ['items', 'gear'].forEach(t => { if (objet(t)) Object.keys(d[t]).forEach(k => { if (!naturel(d[t][k])) E.push(t + '.' + k); }); });
     if (objet('equip')) Object.keys(d.equip).forEach(k => { const e = d.equip[k]; if (!estObjet(e) || Object.keys(e).some(s => typeof e[s] !== 'string')) E.push('equip.' + k); });
-    ['gearInit', 'veillees', 'rencontres', 'citadel', 'parley', 'isnad', 'meta', 'profil', 'paquets'].forEach(k => { objet(k); });
+    ['gearInit', 'veillees', 'rencontres', 'citadel', 'parley', 'isnad', 'meta', 'profil', 'paquets', 'dedale'].forEach(k => { objet(k); });
+    if (estObjet(d.dedale) && !(naturel(d.dedale.sel) && naturel(d.dedale.n))) E.push('dedale'); // 2.x : le sel et le compte des descentes (un champ absent prend sa valeur de départ : le format reste le 2)
     if (estObjet(d.isnad) && !(naturel(d.isnad.ok) && naturel(d.isnad.total))) E.push('isnad');
     if (d.cp !== undefined && d.cp !== null) { const c = d.cp; if (!estObjet(c) || typeof c.saga !== 'string' || !naturel(c.ci) || !naturel(c.obj) || typeof c.map !== 'string' || !Array.isArray(c.party) || c.party.some(x => typeof x !== 'string')) E.push('cp'); }
     return E;

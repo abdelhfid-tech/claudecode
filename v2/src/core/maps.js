@@ -73,12 +73,13 @@
         if (n === 'water' || n === 'sea') anim.push({ x, y, n });
       }
       if (cv.hd > 1) this.lisieres(c);
+      if (this.aretes) this.aretes(c);
       (this.decals || []).forEach(d => drawRosette(c, d));
       // ombres portées au pied des bâtiments
       (this.shadows || []).forEach(sh => { const g = c.createLinearGradient(0, sh[1] * T, 0, sh[1] * T + 9); g.addColorStop(0, 'rgba(30,18,44,.42)'); g.addColorStop(1, 'rgba(30,18,44,0)'); c.fillStyle = g; c.fillRect(sh[0] * T + 3, sh[1] * T, sh[2] * T, 9); });
       // mini-carte : 1 pixel par case
       const mini = G.mk(this.w, this.h), mc = mini.getContext('2d');
-      for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) { const n = this.g[y * this.w + x], so = this.solid[y * this.w + x]; mc.fillStyle = (n === 'water' || n === 'sea') ? 'rgba(70,150,200,.75)' : n === 'void' ? 'rgba(8,8,30,.5)' : so ? 'rgba(20,14,30,.8)' : (n === 'path' || n === 'stone' || n === 'nbridge' || n === 'wood' || n === 'marble' || n === 'mosaic' || n === 'carpet') ? 'rgba(240,225,190,.75)' : 'rgba(200,180,140,.5)'; mc.fillRect(x, y, 1, 1); }
+      for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) { const n = this.g[y * this.w + x], so = this.solid[y * this.w + x]; mc.fillStyle = (n === 'water' || n === 'sea') ? 'rgba(70,150,200,.75)' : n === 'void' ? 'rgba(8,8,30,.5)' : so ? 'rgba(20,14,30,.8)' : (n === 'path' || n === 'stone' || n === 'nbridge' || n === 'wood' || n === 'marble' || n === 'mosaic' || n === 'carpet') ? 'rgba(240,225,190,.75)' : n === 'npont' ? 'rgba(150,190,255,.7)' : n === 'nabri' ? 'rgba(255,230,170,.85)' : 'rgba(200,180,140,.5)'; mc.fillRect(x, y, 1, 1); }
       // objets plats (nattes, sources) cuits dans le sol
       this.objs.filter(o => o.flat).forEach(o => c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2), o.y - o.h + 1));
       // ombres portées douces sous les objets
@@ -265,13 +266,33 @@
   /* ---------- Noosphère ---------- */
   function noos(id, o, L, graine) {
     const b = new MB(id, 60, 40, 'void', o, graine); const hue = b.hue = (o.hue === undefined ? 210 : o.hue);
+    const env = { time: 'noos', ambient: '#6a62c8', grade: [`hsl(${hue},90%,55%)`, 0.2], particles: 'noos', hue, rate: 9, bg: 'noos', scan: true, bloom: 0.36, lightA: 1, music: 'noos' };
+    // 2.x : une graine (o.g) fait du lieu un labyrinthe, tiré par dedale.js à la profondeur o.n ; sans graine, le lieu d'avant
+    if (o.g !== undefined && window.ISNAD_DEDALE) { const p = window.ISNAD_DEDALE.plan(I.rng(o.g >>> 0), o.n | 0, o.descente ? 'descente' : 'chapitre'); if (p) return dedale(b, p, hue, env, o); }
     const room = (name, cx, cy, hw, hh) => { b.fill(cx - hw, cy - hh, hw * 2 + 1, hh * 2 + 1, 'nfloor', false); b.spot(name, cx, cy); b.light(cx, cy, 70 + hw * 10, `hsl(${hue},90%,60%)`, 0.1); };
     const bridge = (x1, y1, x2, y2) => { const sx = Math.min(x1, x2), ex = Math.max(x1, x2), sy = Math.min(y1, y2), ey = Math.max(y1, y2); for (let x = sx; x <= ex; x++) for (let k = 0; k < 2; k++) if (b.g[(y1 + k) * b.w + x] === 'void') b.set(x, y1 + k, 'nbridge', false); for (let y = sy; y <= ey + 1; y++) for (let k = 0; k < 2; k++) if (b.g[y * b.w + x2 + k] === 'void') b.set(x2 + k, y, 'nbridge', false); };
     bridge(6, 20, 18, 20); bridge(18, 20, 30, 11); bridge(18, 20, 30, 28); bridge(18, 8, 18, 20); bridge(18, 20, 18, 32); bridge(30, 11, 47, 19); bridge(30, 28, 47, 21);
     room('seuil', 6, 20, 3, 2); room('noeud1', 18, 20, 3, 3); room('noeud2', 30, 11, 3, 2); room('noeud3', 30, 28, 3, 2); room('faille', 18, 8, 2, 2); room('miroir', 18, 32, 2, 2); room('coeur', 48, 20, 6, 5);
     [[3, 18], [9, 18], [15, 17], [21, 17], [15, 23], [21, 23], [27, 9], [33, 9], [27, 30], [33, 30], [42, 15], [54, 15], [42, 25], [54, 25], [16, 6], [20, 6], [16, 34], [20, 34]].forEach(p => { if (b.free(p[0], p[1])) b.obj('pylon', p[0], p[1], { hue }); });
     b.light(48, 20, 150, `hsl(${(hue + 150) % 360},100%,65%)`, 0.15);
-    return b.finish({ time: 'noos', ambient: '#6a62c8', grade: [`hsl(${hue},90%,55%)`, 0.2], particles: 'noos', hue, rate: 9, bg: 'noos', scan: true, bloom: 0.36, lightA: 1, music: 'noos' });
+    return b.finish(env);
+  }
+  // Le labyrinthe : les ponts et les salles du plan, un lieu nommé au milieu de chaque salle, sa lumière, des pylônes aux
+  // coins des grandes salles (jamais contre une porte). Le plan a déjà été vérifié : tous les lieux y sont reliés.
+  function dedale(b, p, hue, env, o) {
+    const sol = (x, y) => x >= 0 && y >= 0 && x < p.w && y < p.h ? p.g[y * p.w + x] : 0;
+    for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) { const t = sol(x, y); if (t) b.set(x, y, t === 1 ? 'npont' : t === 3 ? 'nabri' : 'nfloor', false); }
+    // les arêtes : tout ce qui se marche est bordé d'un trait de lumière, là où il touche le vide — on lit le dédale d'un coup d'œil
+    b.aretes = c => { const e = G.D > 1 ? 0.5 : 1;
+      for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) { const t = sol(x, y); if (!t) continue; const X = x * T, Y = y * T, h2 = t === 3 ? 44 : hue;
+        [[0, -1, X, Y, T, e, X, Y, T, 3], [0, 1, X, Y + T - e, T, e, X, Y + T - 3, T, 3], [-1, 0, X, Y, e, T, X, Y, 3, T], [1, 0, X + T - e, Y, e, T, X + T - 3, Y, 3, T]].forEach(q => { if (sol(x + q[0], y + q[1])) return;
+          c.fillStyle = `hsla(${h2},100%,72%,.2)`; c.fillRect(q[6], q[7], q[8], q[9]); c.fillStyle = `hsla(${h2},100%,${t === 1 ? 76 : 80}%,${t === 1 ? 0.9 : 0.95})`; c.fillRect(q[2], q[3], q[4], q[5]); }); } };
+    Object.keys(p.lieux).forEach(nom => { const l = p.lieux[nom], s = p.salles[nom], abri = sol(l[0], l[1]) === 3;
+      b.spot(nom, l[0], l[1]); b.light(l[0], l[1], 60 + s[2] * 7, abri ? '#ffe9b0' : `hsl(${nom === 'coeur' || nom === 'issue' ? (hue + 150) % 360 : hue},90%,60%)`, 0.1);
+      if (s[2] >= 7 && s[3] >= 5) [[s[0], s[1]], [s[0] + s[2] - 1, s[1]], [s[0], s[1] + s[3] - 1], [s[0] + s[2] - 1, s[1] + s[3] - 1]].forEach(q => {
+        if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(d => sol(q[0] + d[0], q[1] + d[1]) === 1)) return; if (b.free(q[0], q[1])) b.obj('pylon', q[0], q[1], { hue }); }); });
+    env.dedale = { n: o.n | 0, tour: p.tour, graine: o.g, descente: !!o.descente, loin: p.loin, pas: p.pas };
+    return b.finish(env);
   }
 
   /* ---------- La Citadelle du Caïd (ksar au bord du désert) ---------- */

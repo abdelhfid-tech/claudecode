@@ -357,6 +357,7 @@
 
   /* ---------- menu de pause ---------- */
   U.pause = function (mode, onClose) {
+    if (W.excursion) { S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return; }
     if (U.menuOpen) return; U.menuOpen = true; I.input.clearHeld(); I.audio.sfx('ok');
     const sv = I.save.data, side = $('#menu .side'), pane = $('#menu .pane'); let fl = null;
     const close = () => { if (fl) fl.destroy(); screen('#menu', false); U.menuOpen = false; if (I.scene === W && W.map && W.saga && !S.busy && !W.lock) W.checkpoint(); if (onClose) onClose(); }; // ce qui a été changé dans la halte est gardé
@@ -550,6 +551,7 @@
   };
   U.guide = async function () {
     if (I.scene !== W || S.busy || W.lock || U.menuOpen || !W.ch) return;
+    if (W.excursion) { S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return; }
     const tg = W.target(), opts = [];
     if (tg) opts.push({ t: 'Montrer le chemin', k: 'way' }, { t: 'M’y conduire', k: 'go' });
     opts.push({ t: 'Toute l’aide du jeu', k: 'aide' }, { t: 'Reprendre', k: '' });

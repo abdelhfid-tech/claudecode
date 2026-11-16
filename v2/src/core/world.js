@@ -88,6 +88,7 @@
     W.resetTrail(); W.tint = null; W.pose = []; W.dest = null; W.focus = null; W._way = null; W.updateCam(true);
     document.body.dataset.theme = (D.gabarit(id) || {}).theme || 'orient'; // le thème de l'interface suit le gabarit du lieu
     $('#ui').style.setProperty('--mini', (W.map.mini ? ((27 + W.map.h + 6) / G.PH * 100).toFixed(1) : '14') + '%'); // les annonces s'empilent sous la mini-carte
+    if (I.rodeurs) I.rodeurs.arme(); // un labyrinthe de la noosphère arme son chrono
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
   // la définition du dessin a changé : la carte et les planches de marche se refont, rien d'autre ne bouge
@@ -190,6 +191,7 @@
     $('#hud .obj').hidden = !(o && o.text);
   };
   W.checkpoint = function () {
+    if (W.excursion) return; // pendant la descente du râwî, le point de reprise reste celui d'avant
     const npcs = {}; W.npcs.forEach(n => { npcs[n.id] = { h: n.hidden ? 1 : 0, x: n.placed && n.map === W.map.id ? Math.round(n.x) : undefined, y: n.placed && n.map === W.map.id ? Math.round(n.y) : undefined }; });
     I.save.data.cp = { saga: W.saga.id, ci: W.ci, obj: W.objIndex, map: W.map.id, opts: W.mapOpts, pos: [Math.round(W.player.x), Math.round(W.player.y)], party: W.party.slice(), npcs, foes: W.foes.filter(f => f.done).map(f => f.id), chests: W.chests.map((c, i) => c.open ? i : -1).filter(i => i >= 0), flags: S.flags };
     W.persistHeroes(); I.save.store();
@@ -228,10 +230,11 @@
       $('#hud').hidden = true;
       if (W.ci + 1 < saga.chapters.length && !(saga.frame && ch.last)) {
         sp.ch = Math.max(sp.ch, W.ci + 1); I.save.store();
+        S.hideDialog(); // la dernière ligne du chapitre a été lue : elle ne reste pas sous le noir pendant que le lieu suivant se bâtit
         await S.fade('out', 500);
         S.depth--; try { await W.startChapter(saga.id, W.ci + 1); } finally { S.depth++; }
       } else {
-        await S.fade('out', 600); I.setScene(I.ui.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 6, hue: 40, n: 0 }; await S.fade('in', 400);
+        S.hideDialog(); await S.fade('out', 600); I.setScene(I.ui.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 6, hue: 40, n: 0 }; await S.fade('in', 400);
         if (saga.outro && (!saga.frame || (saga.veillees ? W.ci === saga.chapters.length - 1 : !!ch.fin))) await S.run(saga.outro);
         if (!saga.frame && sp.cTot) {
           const perfect = (sp.cOk || 0) === sp.cTot;
@@ -285,6 +288,7 @@
   /* ----- mise à jour ----- */
   W.onInput = function (a) {
     if (I.scene !== W || S.busy || W.lock) return false;
+    if (W.excursion) { if (a === 'ok') I.rodeurs.attendre(); else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
     if (a === 'build') { I.build.set(!I.build.on); return true; }
     if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel') { I.build.set(false); return true; } if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
     if (a === 'ok') { W.stop(); W.interact(); return true; }
@@ -296,7 +300,9 @@
   W.update = function (dt) {
     W.t += dt; const p = W.player, h = I.input.held;
     const can = !S.busy && !W.lock && !I.ui.menuOpen;
-    if (can && I.debug.auto && !W._autoBusy && !I.debug.walk) { W.autoStep(); W.updateCam(); return; }
+    if (can && I.rodeurs && I.rodeurs.attente && !W.excursion && !W._autoBusy) { I.rodeurs.depart(); return; } // la descente demandée commence dès que le joueur a la main
+    if (can && I.debug.auto && !W._autoBusy && !I.debug.walk) { if (!W.excursion) W.autoStep(); W.updateCam(); return; }
+    if (I.rodeurs) { if (can) I.rodeurs.tic(dt); else I.rodeurs.cache(); } // le chrono ne court que lorsque le joueur a la main
     if (can && (W.solidAt(p.x - 4, p.y - 5) || W.solidAt(p.x + 4, p.y) || W.solidAt(p.x - 4, p.y) || W.solidAt(p.x + 4, p.y - 5))) { const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; W.resetTrail(); } }
     if (can) {
       let dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0);
@@ -313,7 +319,7 @@
       // en promenade : un point de reprise toutes les douze secondes (jamais au milieu d'un récit : il serait rejoué à moitié fait)
       W.unsaved = (W.unsaved || 0) + dt; if (W.unsaved > 12 && !S.busy && !W.lock && !I.debug.auto && !I.debug.walk && !(I.ui && I.ui.menuOpen)) W.checkpoint();
       for (const f of W.foes) {
-        if (f.done || f.map !== W.map.id || !f.placed) continue;
+        if (f.done || f.map !== W.map.id || !f.placed || f.rodeur) continue; // ceux qui rôdent dans la descente ont leur propre allure (rodeurs.js)
         const d = Math.hypot(f.x - p.x, f.y - p.y);
         if (d < 15) { W.fight(f); break; }
         if (d < 72 && !f.boss) { const vx = (p.x - f.x) / d * 22 * dt, vy = (p.y - f.y) / d * 22 * dt, m2 = W.map, stop = (x, y) => W.solidAt(x, y) || (m2.trench && m2.trench.has(Math.floor(y / T) * m2.w + Math.floor(x / T))); if (!stop(f.x + vx, f.y)) f.x += vx; if (!stop(f.x, f.y + vy)) f.y += vy; }
@@ -387,7 +393,7 @@
     if (!W.dest) { st.led++; W.lead(); }
   };
   // un toucher sur la scène, en coordonnées de la carte : aller là, parler à celui qu'on touche, agir sur ce qu'on touche
-  W.tap = function (wx, wy) {
+  W.tap = function (wx, wy) { if (W.excursion && I.rodeurs.touche(arguments[0], arguments[1])) return;
     if (I.scene !== W || S.busy || W.lock || I.ui.menuOpen || I.debug.auto || I.debug.walk) return false;
     const p = W.player, m = W.map, here = e => !e.hidden && e.map === m.id && e.placed;
     { const r = W.miniRect, sx = wx - Math.round(W.cam.x), sy = wy - Math.round(W.cam.y); if (r && sx >= r[0] && sx <= r[0] + r[2] && sy >= r[1] && sy <= r[1] + r[3]) { W.stop(); I.ui.pause('carte'); return true; } }
@@ -408,6 +414,10 @@
     if (mat) { W.goTo(mat[0] * T + 8, mat[1] * T + 13, { stop: 7, then() { W.interact(); } }); return true; }
     const cs = m.spots.comptoir;
     if (cs && I.trade && W.saga && (!W.saga.frame || W.saga.veillees) && Math.hypot(cs[0] * T + 8 - wx, cs[1] * T + 9 - wy) < 15) { W.goTo(cs[0] * T + 8, cs[1] * T + 13, { stop: 24, then() { W.interact(); } }); return true; }
+    // 2.x, dans le labyrinthe d'un chapitre : toucher le vide en direction de l'objectif, c'est demander d'y être conduit (la même
+    // aide que « M'y conduire ») — sans quoi, au doigt, on irait buter au fond de l'impasse la plus proche de l'objectif
+    if (m.env.dedale && !W.excursion && W.solidAt(wx, wy)) { const tg = W.target(); if (tg) { const ax = wx - p.x, ay = wy - p.y, bx = tg.gx - p.x, by = tg.gy - p.y, na = Math.hypot(ax, ay), nb = Math.hypot(bx, by);
+      if (na > 24 && nb > 24 && (ax * bx + ay * by) / (na * nb) > 0.8) { W.wayT = W.t + 8; W.lead(); return true; } } }
     if (W.solidAt(wx, wy)) W.goTo(wx, wy, { then() { face(wx, wy); W.interact(); } }); // un palmier, un rocher, un puits : on s'en approche et l'on s'y adresse
     else W.goTo(wx, wy);
     return true;
@@ -475,6 +485,7 @@
   };
   W.spotPx = function (at) { const m = W.map, name = Array.isArray(at) ? at[0] : at, s = m.spots[name]; if (!s) return null; return [(s[0] + (Array.isArray(at) ? at[1] : 0)) * T + 8, (s[1] + (Array.isArray(at) ? at[2] : 0)) * T + 13]; };
   W.target = function () {
+    if (W.excursion) return I.rodeurs.cible();
     const o = W.cur(); if (!o) return null;
     if (o.goto) { const s = W.spotPx(o.goto); return s && { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto' }; }
     if (o.build) { const st = o.build.site && I.build.sites()[o.build.site]; return st && st.map === W.map.id ? { x: (st.x + st.w / 2) * T, y: (st.y + st.h / 2) * T, gx: (st.x + st.w / 2) * T, gy: (st.y + st.h) * T + 8, kind: 'goto', site: true } : null; }

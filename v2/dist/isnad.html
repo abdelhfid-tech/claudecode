@@ -316,6 +316,12 @@ body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 @keyframes nomin { from { opacity: 0; } }
 body.portrait .nom { font-size: .66em; }
 body.fin #dialog .fig, body.fin .stat .fig, body.fin #perso .vue img, body.fin #perso .tenue img { image-rendering: auto; } /* en dessin fin, la figure a deux fois plus de points : on la réduit en douceur */
+/* le chrono d'une descente dans la noosphère : en haut, au milieu ; il rougit dans les vingt dernières secondes */
+#chrono { position: absolute; left: 50%; top: .55em; transform: translateX(-50%); z-index: 6; padding: .22em .7em .3em; min-width: 4.6em; text-align: center; font: 600 1.02em/1.1 var(--mono, ui-monospace, monospace); letter-spacing: .06em; color: #e9f4ff; background: rgba(8, 10, 34, .74); border: 1px solid rgba(140, 200, 255, .45); border-radius: .5em; pointer-events: none; }
+#chrono i { display: block; height: .2em; margin-top: .22em; background: rgba(140, 200, 255, .18); border-radius: .1em; overflow: hidden; } #chrono b { display: block; height: 100%; background: #8cd0ff; }
+#chrono.presse { color: #ffd9d0; border-color: rgba(255, 120, 100, .7); } #chrono.presse b { background: #ff8a70; }
+body.portrait #chrono { top: auto; bottom: 30%; }
+body.descente #buildbtn { display: none; } /* dans la descente du râwî, on ne bâtit pas */
 #dialog .fig { position: absolute; left: 1.75em; top: 50%; height: 4.5em; width: 3em; margin-top: -2.5em; image-rendering: pixelated; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .6)); }
 #dialog.avecfig .seal { opacity: .38; }
 body.portrait #dialog .fig { left: 1.2em; height: 3.9em; width: 2.6em; margin-top: -2.1em; }
@@ -544,7 +550,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
+window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -1259,7 +1265,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
             else { if (n.look.kind && !D.NPC_KINDS.includes(n.look.kind)) E.push(`${wn}: look.kind « ${n.look.kind} » invalide`); checkLook(n.look, wn); }
           } else if (!heroes[n.hero]) E.push(`${wn}: hero « ${n.hero} » inconnu`);
         });
-        (c.foes || []).forEach(f => {
+        (c.foes || []).forEach(f => { (f.group || []).forEach(g => { if (D.NOIRS.includes(g)) E.push(`${w} ennemi « ${f.id} »: une idée noire (« ${g} ») ne se place pas parmi les ennemis d’un chapitre`); }); // 2.x
           const wf = `${w}/foe ${f.id}`;
           req(f, 'id', 'string', wf);
           if (foeIds.has(f.id)) E.push(`${wf}: id en double`); foeIds.add(f.id);
@@ -1315,6 +1321,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
                 const b = o[1] || {};
                 if (!Array.isArray(b.group) || !b.group.length || b.group.length > 4) E.push(`${wo}: battle.group de 1 à 4`);
                 (b.group || []).forEach(g => { if (!enemies[g]) E.push(`${wo}: ennemi « ${g} » inconnu`); });
+                (b.group || []).forEach(g => { if (D.NOIRS.includes(g)) E.push(`${wo}: une idée noire (« ${g} ») ne se combat pas dans un récit : on lui répond, dans un pourparler ; elle ne prend corps que dans la descente du râwî`); }); // 2.x
                 if (b.bg && !D.BATTLE_BG.includes(b.bg)) E.push(`${wo}: bg « ${b.bg} » invalide`);
                 (b.allies || []).forEach(al => { if (!al || typeof al.flag !== 'string' || typeof al.name !== 'string') E.push(`${wo}: battle.allies attend [{flag, name}]`);
                   else { garde(al.name, wo); if (al.rang !== undefined && !D.RANGS[al.rang]) E.push(`${wo}: battle.allies : « rang » inconnu (${Object.keys(D.RANGS).join('|')})`); if (al.look) checkLook(al.look, wo); } });
@@ -1325,6 +1332,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
                 if (!D.MAPS[o[1]]) E.push(`${wo}: carte « ${o[1]} » inconnue`);
                 else { state.map = o[1]; checkAt(o[2], o[1], wo); }
                 if (o[3] && o[3].time && !D.TIMES.includes(o[3].time)) E.push(`${wo}: time invalide`);
+                if (o[3] && ['g', 'n', 'descente'].some(k => o[3][k] !== undefined)) E.push(`${wo}: « g », « n » et « descente » sont réservés au moteur (le labyrinthe de la noosphère se tire tout seul ; la descente est celle du râwî)`); // 2.x
                 break;
               case 'tp': case 'walk': {
                 const who = o[1];
@@ -1829,7 +1837,8 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
     if (objet('heroes')) Object.keys(d.heroes).forEach(k => { const h = d.heroes[k]; if (!estObjet(h) || !(Number.isInteger(h.lvl) && h.lvl >= 1 && h.lvl <= 99) || typeof h.xp !== 'number') E.push('heroes.' + k); });
     ['items', 'gear'].forEach(t => { if (objet(t)) Object.keys(d[t]).forEach(k => { if (!naturel(d[t][k])) E.push(t + '.' + k); }); });
     if (objet('equip')) Object.keys(d.equip).forEach(k => { const e = d.equip[k]; if (!estObjet(e) || Object.keys(e).some(s => typeof e[s] !== 'string')) E.push('equip.' + k); });
-    ['gearInit', 'veillees', 'rencontres', 'citadel', 'parley', 'isnad', 'meta', 'profil', 'paquets'].forEach(k => { objet(k); });
+    ['gearInit', 'veillees', 'rencontres', 'citadel', 'parley', 'isnad', 'meta', 'profil', 'paquets', 'dedale'].forEach(k => { objet(k); });
+    if (estObjet(d.dedale) && !(naturel(d.dedale.sel) && naturel(d.dedale.n))) E.push('dedale'); // 2.x : le sel et le compte des descentes (un champ absent prend sa valeur de départ : le format reste le 2)
     if (estObjet(d.isnad) && !(naturel(d.isnad.ok) && naturel(d.isnad.total))) E.push('isnad');
     if (d.cp !== undefined && d.cp !== null) { const c = d.cp; if (!estObjet(c) || typeof c.saga !== 'string' || !naturel(c.ci) || !naturel(c.obj) || typeof c.map !== 'string' || !Array.isArray(c.party) || c.party.some(x => typeof x !== 'string')) E.push('cp'); }
     return E;
@@ -2423,6 +2432,8 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
     cwall(c, r) { speck(c, r, ['#191b27', '#141620', '#20232f'], 10); R(c, '#2d3147', 0, 0, 16, 1); c.fillStyle = '#0d0e16'; c.fillRect(0, 8, 16, 1); if (r() < 0.6) R(c, r() < 0.5 ? '#39e6ff' : '#ffb347', 3 + Math.floor(r() * 8), 3, 3, 2); },
     croof(c, r) { speck(c, r, ['#10121b', '#0c0d15', '#161927'], 8); R(c, '#272b3d', 0, 14, 16, 2); },
     nfloor(c, r, v, hue) { R(c, '#0c0f2c', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,65%,.55)`; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = `hsla(${hue},90%,70%,.14)`; c.fillRect(1, 1, 15, 15); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.8)`; if (r() < 0.35) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); },
+    nabri(c, r, v, hue) { R(c, '#141833', 0, 0, 16, 16); c.fillStyle = 'rgba(255,233,176,.5)'; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = 'rgba(255,233,176,.13)'; c.fillRect(1, 1, 15, 15); c.fillStyle = 'rgba(255,246,220,.8)'; if (r() < 0.3) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); }, // le sol d'un abri : une lumière chaude, là où rien ne rôde
+    npont(c, r, v, hue) { R(c, '#0b0f2e', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,72%,.17)`; c.fillRect(0, 0, 16, 16); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.6)`; if (r() < 0.22) c.fillRect(2 + Math.floor(r() * 12), 2 + Math.floor(r() * 12), 1, 1); }, // un pont du labyrinthe : ses arêtes de lumière sont tracées par la carte, selon ses voisins
     nbridge(c, r, v, hue) { R(c, '#080a20', 0, 0, 16, 16); c.fillStyle = `hsla(${(hue + 150) % 360},100%,70%,.75)`; c.fillRect(0, 3, 16, 1); c.fillRect(0, 12, 16, 1); c.fillStyle = `hsla(${(hue + 150) % 360},100%,70%,.18)`; c.fillRect(0, 4, 16, 8); },
     void(c, r) { R(c, '#04051a', 0, 0, 16, 16); if (r() < 0.3) R(c, '#3b3f8a', Math.floor(r() * 16), Math.floor(r() * 16), 1, 1); if (r() < 0.08) R(c, '#cfd6ff', Math.floor(r() * 16), Math.floor(r() * 16), 1, 1); },
     // zellige « étoile et croix » : l'étoile à huit branches naît de deux carrés superposés
@@ -2436,7 +2447,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
     bwall(c, r) { R(c, '#d9b37f', 0, 0, 16, 9); R(c, '#e8c896', 0, 0, 16, 2); R(c, '#b98f5c', 0, 9, 16, 7); R(c, '#a07a4c', 0, 15, 16, 1); c.fillStyle = '#a98252'; c.fillRect(0, 12, 16, 1); c.fillRect(5, 9, 1, 3); c.fillRect(11, 12, 1, 3); c.fillStyle = '#c9a56e'; for (let i = 0; i < 6; i++) c.fillRect(Math.floor(r() * 15), 2 + Math.floor(r() * 6), 1, 1); },
     dark(c) { R(c, '#07060c', 0, 0, 16, 16); }
   };
-  const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet']); // lumière, vide et carreaux vernis restent nets
+  const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nabri', 'npont', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet']); // lumière, vide et carreaux vernis restent nets
   const SOLID = new Set(['bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull']);
   G.isSolidTile = n => SOLID.has(n);
   G.tile = function (name, variant, hue) {
@@ -3570,12 +3581,13 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
         if (n === 'water' || n === 'sea') anim.push({ x, y, n });
       }
       if (cv.hd > 1) this.lisieres(c);
+      if (this.aretes) this.aretes(c);
       (this.decals || []).forEach(d => drawRosette(c, d));
       // ombres portées au pied des bâtiments
       (this.shadows || []).forEach(sh => { const g = c.createLinearGradient(0, sh[1] * T, 0, sh[1] * T + 9); g.addColorStop(0, 'rgba(30,18,44,.42)'); g.addColorStop(1, 'rgba(30,18,44,0)'); c.fillStyle = g; c.fillRect(sh[0] * T + 3, sh[1] * T, sh[2] * T, 9); });
       // mini-carte : 1 pixel par case
       const mini = G.mk(this.w, this.h), mc = mini.getContext('2d');
-      for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) { const n = this.g[y * this.w + x], so = this.solid[y * this.w + x]; mc.fillStyle = (n === 'water' || n === 'sea') ? 'rgba(70,150,200,.75)' : n === 'void' ? 'rgba(8,8,30,.5)' : so ? 'rgba(20,14,30,.8)' : (n === 'path' || n === 'stone' || n === 'nbridge' || n === 'wood' || n === 'marble' || n === 'mosaic' || n === 'carpet') ? 'rgba(240,225,190,.75)' : 'rgba(200,180,140,.5)'; mc.fillRect(x, y, 1, 1); }
+      for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) { const n = this.g[y * this.w + x], so = this.solid[y * this.w + x]; mc.fillStyle = (n === 'water' || n === 'sea') ? 'rgba(70,150,200,.75)' : n === 'void' ? 'rgba(8,8,30,.5)' : so ? 'rgba(20,14,30,.8)' : (n === 'path' || n === 'stone' || n === 'nbridge' || n === 'wood' || n === 'marble' || n === 'mosaic' || n === 'carpet') ? 'rgba(240,225,190,.75)' : n === 'npont' ? 'rgba(150,190,255,.7)' : n === 'nabri' ? 'rgba(255,230,170,.85)' : 'rgba(200,180,140,.5)'; mc.fillRect(x, y, 1, 1); }
       // objets plats (nattes, sources) cuits dans le sol
       this.objs.filter(o => o.flat).forEach(o => c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2), o.y - o.h + 1));
       // ombres portées douces sous les objets
@@ -3762,13 +3774,33 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
   /* ---------- Noosphère ---------- */
   function noos(id, o, L, graine) {
     const b = new MB(id, 60, 40, 'void', o, graine); const hue = b.hue = (o.hue === undefined ? 210 : o.hue);
+    const env = { time: 'noos', ambient: '#6a62c8', grade: [`hsl(${hue},90%,55%)`, 0.2], particles: 'noos', hue, rate: 9, bg: 'noos', scan: true, bloom: 0.36, lightA: 1, music: 'noos' };
+    // 2.x : une graine (o.g) fait du lieu un labyrinthe, tiré par dedale.js à la profondeur o.n ; sans graine, le lieu d'avant
+    if (o.g !== undefined && window.ISNAD_DEDALE) { const p = window.ISNAD_DEDALE.plan(I.rng(o.g >>> 0), o.n | 0, o.descente ? 'descente' : 'chapitre'); if (p) return dedale(b, p, hue, env, o); }
     const room = (name, cx, cy, hw, hh) => { b.fill(cx - hw, cy - hh, hw * 2 + 1, hh * 2 + 1, 'nfloor', false); b.spot(name, cx, cy); b.light(cx, cy, 70 + hw * 10, `hsl(${hue},90%,60%)`, 0.1); };
     const bridge = (x1, y1, x2, y2) => { const sx = Math.min(x1, x2), ex = Math.max(x1, x2), sy = Math.min(y1, y2), ey = Math.max(y1, y2); for (let x = sx; x <= ex; x++) for (let k = 0; k < 2; k++) if (b.g[(y1 + k) * b.w + x] === 'void') b.set(x, y1 + k, 'nbridge', false); for (let y = sy; y <= ey + 1; y++) for (let k = 0; k < 2; k++) if (b.g[y * b.w + x2 + k] === 'void') b.set(x2 + k, y, 'nbridge', false); };
     bridge(6, 20, 18, 20); bridge(18, 20, 30, 11); bridge(18, 20, 30, 28); bridge(18, 8, 18, 20); bridge(18, 20, 18, 32); bridge(30, 11, 47, 19); bridge(30, 28, 47, 21);
     room('seuil', 6, 20, 3, 2); room('noeud1', 18, 20, 3, 3); room('noeud2', 30, 11, 3, 2); room('noeud3', 30, 28, 3, 2); room('faille', 18, 8, 2, 2); room('miroir', 18, 32, 2, 2); room('coeur', 48, 20, 6, 5);
     [[3, 18], [9, 18], [15, 17], [21, 17], [15, 23], [21, 23], [27, 9], [33, 9], [27, 30], [33, 30], [42, 15], [54, 15], [42, 25], [54, 25], [16, 6], [20, 6], [16, 34], [20, 34]].forEach(p => { if (b.free(p[0], p[1])) b.obj('pylon', p[0], p[1], { hue }); });
     b.light(48, 20, 150, `hsl(${(hue + 150) % 360},100%,65%)`, 0.15);
-    return b.finish({ time: 'noos', ambient: '#6a62c8', grade: [`hsl(${hue},90%,55%)`, 0.2], particles: 'noos', hue, rate: 9, bg: 'noos', scan: true, bloom: 0.36, lightA: 1, music: 'noos' });
+    return b.finish(env);
+  }
+  // Le labyrinthe : les ponts et les salles du plan, un lieu nommé au milieu de chaque salle, sa lumière, des pylônes aux
+  // coins des grandes salles (jamais contre une porte). Le plan a déjà été vérifié : tous les lieux y sont reliés.
+  function dedale(b, p, hue, env, o) {
+    const sol = (x, y) => x >= 0 && y >= 0 && x < p.w && y < p.h ? p.g[y * p.w + x] : 0;
+    for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) { const t = sol(x, y); if (t) b.set(x, y, t === 1 ? 'npont' : t === 3 ? 'nabri' : 'nfloor', false); }
+    // les arêtes : tout ce qui se marche est bordé d'un trait de lumière, là où il touche le vide — on lit le dédale d'un coup d'œil
+    b.aretes = c => { const e = G.D > 1 ? 0.5 : 1;
+      for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) { const t = sol(x, y); if (!t) continue; const X = x * T, Y = y * T, h2 = t === 3 ? 44 : hue;
+        [[0, -1, X, Y, T, e, X, Y, T, 3], [0, 1, X, Y + T - e, T, e, X, Y + T - 3, T, 3], [-1, 0, X, Y, e, T, X, Y, 3, T], [1, 0, X + T - e, Y, e, T, X + T - 3, Y, 3, T]].forEach(q => { if (sol(x + q[0], y + q[1])) return;
+          c.fillStyle = `hsla(${h2},100%,72%,.2)`; c.fillRect(q[6], q[7], q[8], q[9]); c.fillStyle = `hsla(${h2},100%,${t === 1 ? 76 : 80}%,${t === 1 ? 0.9 : 0.95})`; c.fillRect(q[2], q[3], q[4], q[5]); }); } };
+    Object.keys(p.lieux).forEach(nom => { const l = p.lieux[nom], s = p.salles[nom], abri = sol(l[0], l[1]) === 3;
+      b.spot(nom, l[0], l[1]); b.light(l[0], l[1], 60 + s[2] * 7, abri ? '#ffe9b0' : `hsl(${nom === 'coeur' || nom === 'issue' ? (hue + 150) % 360 : hue},90%,60%)`, 0.1);
+      if (s[2] >= 7 && s[3] >= 5) [[s[0], s[1]], [s[0] + s[2] - 1, s[1]], [s[0], s[1] + s[3] - 1], [s[0] + s[2] - 1, s[1] + s[3] - 1]].forEach(q => {
+        if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(d => sol(q[0] + d[0], q[1] + d[1]) === 1)) return; if (b.free(q[0], q[1])) b.obj('pylon', q[0], q[1], { hue }); }); });
+    env.dedale = { n: o.n | 0, tour: p.tour, graine: o.g, descente: !!o.descente, loin: p.loin, pas: p.pas };
+    return b.finish(env);
   }
 
   /* ---------- La Citadelle du Caïd (ksar au bord du désert) ---------- */
@@ -4068,7 +4100,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
       case 'vices': S.hideDialog(); await I.oeuvres.finale(a || {}); break;
       case 'site': I.build.openSite(a); break;
       case 'battle': S.hideDialog(); await I.battle.start(a); break;
-      case 'map': S.hideDialog(); await S.fade('out'); W.loadMap(a, c || {}, b); await S.fade('in'); break;
+      case 'map': S.hideDialog(); await S.fade('out'); W.loadMap(a, I.rodeurs ? I.rodeurs.graine(a, c || {}) : (c || {}), b); await S.fade('in'); break; // 2.x : descendre dans la noosphère, c'est y trouver un labyrinthe
       case 'tp': { const e = W.ent(a); if (e) { const p = W.resolve(b, e === W.player ? W.map.id : e.map, e); if (p) { e.x = p[0]; e.y = p[1]; e.placed = true; e.placedMap = W.map.id; if (e === W.player) W.resetTrail(); } else { e.at = b; e.placed = false; } } break; }
       case 'walk': { const e = W.ent(a); if (e) { const p = W.resolve(b, e === W.player ? W.map.id : e.map, e); if (p) { if (e.hidden || I.debug.auto) { e.x = p[0]; e.y = p[1]; } else await W.walkTo(e, p[0], p[1]); if (e !== W.player) { e.placed = true; e.placedMap = W.map.id; } } else { e.at = b; e.placed = false; } } break; }
       case 'face': { const e = W.ent(a); if (e) e.dir = G.DIRS[b]; break; }
@@ -4189,6 +4221,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
     W.resetTrail(); W.tint = null; W.pose = []; W.dest = null; W.focus = null; W._way = null; W.updateCam(true);
     document.body.dataset.theme = (D.gabarit(id) || {}).theme || 'orient'; // le thème de l'interface suit le gabarit du lieu
     $('#ui').style.setProperty('--mini', (W.map.mini ? ((27 + W.map.h + 6) / G.PH * 100).toFixed(1) : '14') + '%'); // les annonces s'empilent sous la mini-carte
+    if (I.rodeurs) I.rodeurs.arme(); // un labyrinthe de la noosphère arme son chrono
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
   // la définition du dessin a changé : la carte et les planches de marche se refont, rien d'autre ne bouge
@@ -4291,6 +4324,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
     $('#hud .obj').hidden = !(o && o.text);
   };
   W.checkpoint = function () {
+    if (W.excursion) return; // pendant la descente du râwî, le point de reprise reste celui d'avant
     const npcs = {}; W.npcs.forEach(n => { npcs[n.id] = { h: n.hidden ? 1 : 0, x: n.placed && n.map === W.map.id ? Math.round(n.x) : undefined, y: n.placed && n.map === W.map.id ? Math.round(n.y) : undefined }; });
     I.save.data.cp = { saga: W.saga.id, ci: W.ci, obj: W.objIndex, map: W.map.id, opts: W.mapOpts, pos: [Math.round(W.player.x), Math.round(W.player.y)], party: W.party.slice(), npcs, foes: W.foes.filter(f => f.done).map(f => f.id), chests: W.chests.map((c, i) => c.open ? i : -1).filter(i => i >= 0), flags: S.flags };
     W.persistHeroes(); I.save.store();
@@ -4329,10 +4363,11 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
       $('#hud').hidden = true;
       if (W.ci + 1 < saga.chapters.length && !(saga.frame && ch.last)) {
         sp.ch = Math.max(sp.ch, W.ci + 1); I.save.store();
+        S.hideDialog(); // la dernière ligne du chapitre a été lue : elle ne reste pas sous le noir pendant que le lieu suivant se bâtit
         await S.fade('out', 500);
         S.depth--; try { await W.startChapter(saga.id, W.ci + 1); } finally { S.depth++; }
       } else {
-        await S.fade('out', 600); I.setScene(I.ui.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 6, hue: 40, n: 0 }; await S.fade('in', 400);
+        S.hideDialog(); await S.fade('out', 600); I.setScene(I.ui.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 6, hue: 40, n: 0 }; await S.fade('in', 400);
         if (saga.outro && (!saga.frame || (saga.veillees ? W.ci === saga.chapters.length - 1 : !!ch.fin))) await S.run(saga.outro);
         if (!saga.frame && sp.cTot) {
           const perfect = (sp.cOk || 0) === sp.cTot;
@@ -4386,6 +4421,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
   /* ----- mise à jour ----- */
   W.onInput = function (a) {
     if (I.scene !== W || S.busy || W.lock) return false;
+    if (W.excursion) { if (a === 'ok') I.rodeurs.attendre(); else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
     if (a === 'build') { I.build.set(!I.build.on); return true; }
     if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel') { I.build.set(false); return true; } if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
     if (a === 'ok') { W.stop(); W.interact(); return true; }
@@ -4397,7 +4433,9 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
   W.update = function (dt) {
     W.t += dt; const p = W.player, h = I.input.held;
     const can = !S.busy && !W.lock && !I.ui.menuOpen;
-    if (can && I.debug.auto && !W._autoBusy && !I.debug.walk) { W.autoStep(); W.updateCam(); return; }
+    if (can && I.rodeurs && I.rodeurs.attente && !W.excursion && !W._autoBusy) { I.rodeurs.depart(); return; } // la descente demandée commence dès que le joueur a la main
+    if (can && I.debug.auto && !W._autoBusy && !I.debug.walk) { if (!W.excursion) W.autoStep(); W.updateCam(); return; }
+    if (I.rodeurs) { if (can) I.rodeurs.tic(dt); else I.rodeurs.cache(); } // le chrono ne court que lorsque le joueur a la main
     if (can && (W.solidAt(p.x - 4, p.y - 5) || W.solidAt(p.x + 4, p.y) || W.solidAt(p.x - 4, p.y) || W.solidAt(p.x + 4, p.y - 5))) { const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; W.resetTrail(); } }
     if (can) {
       let dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0);
@@ -4414,7 +4452,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
       // en promenade : un point de reprise toutes les douze secondes (jamais au milieu d'un récit : il serait rejoué à moitié fait)
       W.unsaved = (W.unsaved || 0) + dt; if (W.unsaved > 12 && !S.busy && !W.lock && !I.debug.auto && !I.debug.walk && !(I.ui && I.ui.menuOpen)) W.checkpoint();
       for (const f of W.foes) {
-        if (f.done || f.map !== W.map.id || !f.placed) continue;
+        if (f.done || f.map !== W.map.id || !f.placed || f.rodeur) continue; // ceux qui rôdent dans la descente ont leur propre allure (rodeurs.js)
         const d = Math.hypot(f.x - p.x, f.y - p.y);
         if (d < 15) { W.fight(f); break; }
         if (d < 72 && !f.boss) { const vx = (p.x - f.x) / d * 22 * dt, vy = (p.y - f.y) / d * 22 * dt, m2 = W.map, stop = (x, y) => W.solidAt(x, y) || (m2.trench && m2.trench.has(Math.floor(y / T) * m2.w + Math.floor(x / T))); if (!stop(f.x + vx, f.y)) f.x += vx; if (!stop(f.x, f.y + vy)) f.y += vy; }
@@ -4488,7 +4526,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
     if (!W.dest) { st.led++; W.lead(); }
   };
   // un toucher sur la scène, en coordonnées de la carte : aller là, parler à celui qu'on touche, agir sur ce qu'on touche
-  W.tap = function (wx, wy) {
+  W.tap = function (wx, wy) { if (W.excursion && I.rodeurs.touche(arguments[0], arguments[1])) return;
     if (I.scene !== W || S.busy || W.lock || I.ui.menuOpen || I.debug.auto || I.debug.walk) return false;
     const p = W.player, m = W.map, here = e => !e.hidden && e.map === m.id && e.placed;
     { const r = W.miniRect, sx = wx - Math.round(W.cam.x), sy = wy - Math.round(W.cam.y); if (r && sx >= r[0] && sx <= r[0] + r[2] && sy >= r[1] && sy <= r[1] + r[3]) { W.stop(); I.ui.pause('carte'); return true; } }
@@ -4509,6 +4547,10 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
     if (mat) { W.goTo(mat[0] * T + 8, mat[1] * T + 13, { stop: 7, then() { W.interact(); } }); return true; }
     const cs = m.spots.comptoir;
     if (cs && I.trade && W.saga && (!W.saga.frame || W.saga.veillees) && Math.hypot(cs[0] * T + 8 - wx, cs[1] * T + 9 - wy) < 15) { W.goTo(cs[0] * T + 8, cs[1] * T + 13, { stop: 24, then() { W.interact(); } }); return true; }
+    // 2.x, dans le labyrinthe d'un chapitre : toucher le vide en direction de l'objectif, c'est demander d'y être conduit (la même
+    // aide que « M'y conduire ») — sans quoi, au doigt, on irait buter au fond de l'impasse la plus proche de l'objectif
+    if (m.env.dedale && !W.excursion && W.solidAt(wx, wy)) { const tg = W.target(); if (tg) { const ax = wx - p.x, ay = wy - p.y, bx = tg.gx - p.x, by = tg.gy - p.y, na = Math.hypot(ax, ay), nb = Math.hypot(bx, by);
+      if (na > 24 && nb > 24 && (ax * bx + ay * by) / (na * nb) > 0.8) { W.wayT = W.t + 8; W.lead(); return true; } } }
     if (W.solidAt(wx, wy)) W.goTo(wx, wy, { then() { face(wx, wy); W.interact(); } }); // un palmier, un rocher, un puits : on s'en approche et l'on s'y adresse
     else W.goTo(wx, wy);
     return true;
@@ -4576,6 +4618,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
   };
   W.spotPx = function (at) { const m = W.map, name = Array.isArray(at) ? at[0] : at, s = m.spots[name]; if (!s) return null; return [(s[0] + (Array.isArray(at) ? at[1] : 0)) * T + 8, (s[1] + (Array.isArray(at) ? at[2] : 0)) * T + 13]; };
   W.target = function () {
+    if (W.excursion) return I.rodeurs.cible();
     const o = W.cur(); if (!o) return null;
     if (o.goto) { const s = W.spotPx(o.goto); return s && { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto' }; }
     if (o.build) { const st = o.build.site && I.build.sites()[o.build.site]; return st && st.map === W.map.id ? { x: (st.x + st.w / 2) * T, y: (st.y + st.h / 2) * T, gx: (st.x + st.w / 2) * T, gy: (st.y + st.h) * T + 8, kind: 'goto', site: true } : null; }
@@ -5954,29 +5997,19 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
     } finally { S.depth--; S.hideDialog(); }
     return res;
   };
-  // Au sortir de la prière, dans le dhikr, en songe : la porte s'ouvre, et l'on choisit de descendre ou non.
+  // Au sortir de la prière, dans le dhikr, en songe : la porte s'ouvre, et l'on choisit de descendre ou non. Depuis la 2.x,
+  // on descend dans un labyrinthe (rodeurs.js) : ses maux du cœur et les idées noires y rôdent. Épuisé — rattrapé lors d'une
+  // descente —, le râwî trouve les portes closes : il lui faut d'abord dormir, d'un sommeil sans songe.
   V.porte = async function (k) {
-    const P = T('portes'), Pk = P[k]; if (!Pk || !W.saga) return null;
-    const L = V.restent(), O = I.oeuvres;
-    if (I.debug.auto) { // le joueur de test ne descend que pour trancher : une lame forgée, un mal encore debout
-      if (I.debug.noOeuvres || V.ouverte(k)) return null; const v = L.find(x => O.hasBlade(x)); return v ? V.descendre(k, v) : null;
-    }
+    const P = T('portes'), Pk = P[k], R = I.rodeurs; if (!Pk || !W.saga || !R || W.excursion) return null;
+    if (R.clos()) { if (k === 'sommeil') { R.repos(); S.toast(I.esc(P.sansSonge || ''), 4600); } return null; }
     if (V.ouverte(k)) { if (k === 'sommeil') S.toast(I.esc(P.deja || ''), 2600); return null; }
-    if (!L.length) { if (k === 'sommeil') S.toast(I.esc(P.rien || ''), 3200); return null; }
+    if (I.debug.auto || I.debug.walk) return I.debug.noOeuvres ? null : R.demande(k); // le joueur de test descend, et remonte par l'issue
     S.depth++;
-    let v = null;
-    try {
-      const E = C0().enemies || {}, Lm = T('lames');
-      const titre = { html: I.esc(Pk.invite) + '<small>' + I.esc(P.question || '') + '</small>' };
-      // un menu court : les maux dont la lame est forgée ; les autres derrière une seule entrée ; « pas maintenant » toujours en vue
-      const avec = L.filter(x => O.hasBlade(x)), sans = L.filter(x => !O.hasBlade(x)), tard = { t: P.plusTard || 'Pas maintenant' };
-      const opts = avec.map(x => ({ t: E[x].name + ' · *' + (P.avecLame || 'lame forgée') + ' : ' + Lm[x].name + '*' }));
-      if (sans.length) opts.push({ t: (P.autres || 'Un mal dont la lame n’est pas forgée') + ' · *' + (P.sansLame || 'il ne sera que repoussé') + '*' });
-      const i = await S.menuPick(titre, opts.concat([tard]));
-      if (i >= 0 && i < avec.length) v = avec[i];
-      else if (sans.length && i === avec.length) { const j = await S.menuPick(P.lequel || 'Lequel ?', sans.map(x => ({ t: E[x].name })).concat([tard])); if (j >= 0 && j < sans.length) v = sans[j]; }
-    } finally { S.depth--; S.hideDialog(); }
-    return v ? V.descendre(k, v) : null;
+    let oui = false;
+    try { const i = await S.menuPick({ html: I.esc(Pk.invite) + '<small>' + I.esc(P.question || '') + '</small><small>' + I.esc(P.regle || '') + '</small>' }, [{ t: P.descendre || 'Descendre' }, { t: P.plusTard || 'Pas maintenant' }]); oui = i === 0; }
+    finally { S.depth--; S.hideDialog(); }
+    return oui ? R.demande(k) : null;
   };
 })();
 
@@ -6321,7 +6354,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
   I.calc = {
     hero(def, lvl) { const r = D.ROLES[def.role], b = base(lvl); return { hp: Math.round(b.hp * r.hp), sp: Math.round(b.sp * r.sp), atk: b.atk * r.atk, mag: b.atk * r.mag, def: b.def * r.def, spd: b.spd * r.spd }; },
     // le même, avec ce que le héros porte : l'équipement ajoute des pourcentages (gear.js)
-    of(h, eq) { const st = I.calc.hero(h.def, h.lvl), m = I.gear ? I.gear.mods(h, eq) : null; if (!m) return st; const f = k => 1 + m[k] / 100; return { hp: Math.round(st.hp * f('hp')), sp: Math.round(st.sp * f('sp')), atk: st.atk * f('atk'), mag: st.mag * f('mag'), def: st.def * f('def'), spd: st.spd * f('spd') }; },
+    of(h, eq) { const st0 = I.calc.hero(h.def, h.lvl), st = h.id === 'idris' && I.rodeurs ? I.rodeurs.avecAbris(st0) : st0, m = I.gear ? I.gear.mods(h, eq) : null; if (!m) return st; const f = k => 1 + m[k] / 100; return { hp: Math.round(st.hp * f('hp')), sp: Math.round(st.sp * f('sp')), atk: st.atk * f('atk'), mag: st.mag * f('mag'), def: st.def * f('def'), spd: st.spd * f('spd') }; }, // 2.x : ce que les abris de la noosphère ont laissé au râwî
     enemy(def, nHeroes, nFoes) {
       const t0 = TIER[def.tier], early = def.tier === 'boss' && def.lvl <= 4, t = early ? Object.assign({}, t0, { hp: t0.hp * 0.75, atk: t0.atk * 0.9 }) : t0, b = base(def.lvl), ps = (nHeroes >= 3 ? 1 : nHeroes === 2 ? 0.64 : 0.42) * (def.tier === 'elite' && def.lvl <= 3 ? 0.85 : 1), crowd = nFoes >= 3 ? 0.85 : 1;
       return { hp: Math.round(b.hp * t.hp * ps * crowd), atk: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.84 : 1), mag: b.atk * t.atk * (nHeroes === 1 ? 0.72 : nHeroes === 2 ? 0.84 : 1), def: b.def * t.def, spd: b.spd * t.spd };
@@ -6953,6 +6986,200 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
   function cursor(c, x, y, t) { const b = Math.sin(t * 8) * 2; c.fillStyle = '#1a1420'; c.beginPath(); c.moveTo(x - 6, y - 9 + b); c.lineTo(x + 6, y - 9 + b); c.lineTo(x, y + 1 + b); c.fill(); c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(x - 4, y - 8 + b); c.lineTo(x + 4, y - 8 + b); c.lineTo(x, y - 1 + b); c.fill(); }
 })();
 
+/* ==== src/core/rodeurs.js ==== */
+/* ISNAD 2.x — la noosphère en labyrinthes : la graine d'une descente, son chrono, la remontée.
+   Le tirage lui-même est dans dedale.js, et le lieu se bâtit dans maps.js. Ici : ce qui se passe quand on y est.
+
+   - La graine. Quand un récit dit « on descend » (l'opération « map » vers un lieu de gabarit « noos »), le lieu reçoit une
+     graine et une profondeur : il se bâtit alors en labyrinthe. La graine voyage avec le lieu (ses options), donc avec le
+     point de reprise : reprendre une partie redonne le même labyrinthe. Un lieu sans graine se bâtit comme avant.
+   - La profondeur (0 à 5) suit ce que le joueur a achevé de l'histoire : plus on avance, plus le dédale est serré.
+   - Le chrono. 30 secondes, plus le temps d'un tour de tous les lieux multiplié par un facteur qui se resserre avec la
+     profondeur. Il ne court que lorsque le joueur a la main : ni pendant un combat, ni pendant un dialogue, ni dans un
+     menu. Écoulé, on remonte au seuil ; le labyrinthe se redessine, un cran plus simple ; rien n'est perdu.
+   Les textes sont ceux d'une règle du jeu : ils ne disent rien de l'histoire. */
+(function () {
+  'use strict';
+  const I = window.ISNAD, D = I.D, $ = I.$, W = I.world, S = I.script, Dd = window.ISNAD_DEDALE;
+  const R = I.rodeurs = { chrono: null };
+  // les mêmes nombres que tools/dedales.js, qui vérifie que le chrono laisse le temps du tour
+  R.VITESSE = 62; R.FACTEURS = [3.0, 2.7, 2.4, 2.1, 1.9, 1.7];
+  R.duree = (n, tour) => 30 + R.FACTEURS[Math.max(0, Math.min(5, n | 0))] * tour * 16 / R.VITESSE;
+  const estNoos = id => !!(D.MAPS[id] && D.MAPS[id].gabarit === 'noos');
+
+  // la profondeur : la part de l'histoire déjà achevée, de 0 à 5
+  R.profondeur = function () {
+    if (I.debug.profondeur !== undefined) return Math.max(0, Math.min(5, I.debug.profondeur | 0));
+    const sv = I.save.data; let fait = 0, total = 0;
+    Object.keys(I.sagas).forEach(k => { const s = I.sagas[k]; if (!s.chapters || !s.chapters.length || s.frame || s.commun) return; const n = s.chapters.length, sp = sv.sagas[s.id]; total += n; fait += sp ? (sp.done ? n : Math.min(n, sp.ch || 0)) : 0; });
+    return total ? Math.min(5, Math.floor(6 * fait / total)) : 0;
+  };
+  // une graine neuve : propre à la partie (son sel), différente à chaque descente et à chaque remontée
+  function neuve() {
+    if (I.debug.graine !== undefined) return (I.debug.graine >>> 0) + (R._tirages = (R._tirages || 0) + 1) - 1;
+    const sv = I.save.data, dd = sv.dedale && typeof sv.dedale === 'object' ? sv.dedale : (sv.dedale = { sel: Math.floor(Math.random() * 1e9), n: 0 });
+    dd.n = (dd.n | 0) + 1; return I.hash(dd.sel + '/' + dd.n + '/' + (W.saga ? W.saga.id + '/' + W.ci : ''));
+  }
+  // les options d'un lieu où l'on descend : une graine et une profondeur, s'il est de la noosphère et n'en a pas déjà
+  R.graine = function (id, opts) {
+    opts = opts || {}; if (!Dd || !estNoos(id) || opts.g !== undefined || R.sans) return opts;
+    return Object.assign({}, opts, { g: neuve(), n: R.profondeur() });
+  };
+
+  /* ---------- le chrono ---------- */
+  let el = null;
+  function affiche() {
+    const c = R.chrono;
+    if (!el) { el = document.createElement('div'); el.id = 'chrono'; el.setAttribute('role', 'timer'); el.innerHTML = '<span class="t"></span><i><b></b></i>'; $('#ui').appendChild(el); }
+    const montre = !!c && I.scene === W && !S.busy && !W.lock; el.hidden = !montre; if (!c) return;
+    const s = Math.max(0, Math.ceil(c.reste)), txt = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    if (el._txt !== txt) { el._txt = txt; el.querySelector('.t').textContent = txt; el.setAttribute('aria-label', 'Temps restant avant de remonter : ' + txt); }
+    el.querySelector('b').style.width = Math.max(0, Math.min(100, c.reste / c.total * 100)).toFixed(1) + '%';
+    el.classList.toggle('presse', c.reste <= 20);
+  }
+  // appelé quand un lieu vient d'être chargé : un labyrinthe arme son chrono, tout autre lieu l'éteint
+  R.arme = function () {
+    const d = W.map && W.map.env && W.map.env.dedale;
+    if (W.excursion) return; // la descente du râwî arme le sien
+    R.chrono = d && !d.descente ? { total: R.duree(d.n, d.tour), reste: R.duree(d.n, d.tour), n: d.n } : null; affiche();
+  };
+  // appelé à chaque pas du monde, quand le joueur a la main
+  R.tic = function (dt) {
+    if (W.excursion) return ticDescente(dt);
+    const c = R.chrono; if (!c || c.fini) { if (el && !el.hidden && !c) el.hidden = true; return; }
+    if (I.debug.compte !== undefined) { c.reste = Math.min(c.reste, I.debug.compte); I.debug.compte = undefined; }
+    c.reste -= dt; if (c.reste <= 0) { c.fini = true; R.remonte(); } else affiche();
+  };
+  R.cache = function () { if (el) el.hidden = true; };
+  // le temps est écoulé : on remonte au seuil, le labyrinthe se redessine un cran plus simple, rien n'est perdu
+  R.remonte = async function () {
+    const id = W.map.id, o = Object.assign({}, W.mapOpts), n = Math.max(0, (o.n | 0) - 1);
+    W.stop(); W.lock = true; R.cache(); R.remontees = (R.remontees || 0) + 1;
+    try {
+      S.toast('Le temps de la descente est écoulé. <b>On remonte au seuil</b> : le labyrinthe se redessine, un peu plus simple. Rien n’est perdu.', 6500); I.audio.sfx('light');
+      await S.fade('out', 500);
+      W.foes.forEach(f => { if (f.map === id && !f.done) f.placed = false; }); W.chests.forEach(c => { if (c.map === id) c.placed = false; });
+      W.loadMap(id, Object.assign(o, { g: neuve(), n }), 'seuil');
+      await S.fade('in', 500);
+    } finally { W.lock = false; }
+    if (W.saga && !I.debug.auto) W.checkpoint();
+  };
+  /* ================= la descente du râwî =================
+     Au sortir de la prière, dans le dhikr, en songe, le râwî peut descendre dans sa propre noosphère : un labyrinthe où
+     rôdent ses maux du cœur encore debout et les cinq idées noires. C'est une fiction, et c'est la sienne : jamais celle
+     d'un Compagnon. Seul, il ne les vainc pas : il trouve l'issue (un niveau), ou un abri où attendre la fin du chrono
+     (de l'Esprit, du Souffle). Rattrapé, il remonte épuisé : les portes restent closes jusqu'à un sommeil sans songe.
+     Armé d'une lame forgée et accompagné, il peut faire face.
+     La descente se joue dans le moteur des cartes, entre deux points de reprise : celui d'avant est gardé, et c'est par
+     lui que l'on revient au récit, comme on reprend une partie. Rien du récit ne bouge pendant ce temps. */
+  const C0 = () => I.sagas.coeur || {}, P = () => (C0().portes || {}), O = () => I.oeuvres, V = () => I.valeurs;
+  const dd = () => { const sv = I.save.data; return sv.dedale && typeof sv.dedale === 'object' ? sv.dedale : (sv.dedale = { sel: Math.floor(Math.random() * 1e9), n: 0 }); };
+  R.NOMBRE = [2, 2, 3, 3, 4, 5]; R.ALLURE = [0.55, 0.62, 0.7, 0.78, 0.85, 0.92]; R.ABRIS_MAX = 10; R.MARCHE = 82;
+  R.clos = () => !!dd().clos;                                   // épuisé : les portes sont closes
+  R.repos = function () { delete dd().clos; I.save.store(); };  // un sommeil sans songe les rouvre
+  R.abris = () => Math.max(0, Math.min(R.ABRIS_MAX, dd().abris | 0));
+  // ce que les abris ont laissé au râwî : de l'Esprit et du Souffle, pour de bon (battle.js, I.calc.of)
+  R.avecAbris = function (st) { const n = R.abris(); if (!n) return st; return Object.assign({}, st, { mag: st.mag + n, sp: st.sp + 2 * n }); };
+  const lameDe = id => { const d = (C0().enemies || {})[id] || {}; return d.vice ? O().hasBlade(d.vice) : V().IDS.some(v => O().hasBlade(v)); }; // un mal : sa lame ; une idée noire : n'importe quelle lame forgée
+  R.peutFaireFace = id => !!(W.excursion && W.excursion.accompagne && lameDe(id));
+
+  // V.porte l'appelle : la descente commencera dès que le joueur aura la main (le menu refermé)
+  R.demande = function (k) { if (W.excursion || R.attente) return null; R.attente = k; return 'descente'; };
+
+  R.entrer = async function (k) {
+    const T0 = P(), Pk = T0[k] || {}, rawi = V().rawi(), cadre = W.saga.id === 'idris' && W.party.includes('idris') ? W.party.slice() : null; if (!rawi || !Dd) return;
+    S.flags['_o_porte_' + k] = true; O().learn('noos_interieure');
+    W.stop(); W.checkpoint(); const cp = JSON.parse(JSON.stringify(I.save.data.cp)); // le point de reprise d'avant : c'est par lui que l'on reviendra
+    const n = R.profondeur(), heros = cadre ? cadre.map(id => W.hero(id)) : [rawi], vices = V().restent(), noirs = (D.NOIRS || []).filter(id => !S.flags['_noir_' + id]);
+    const E = { k, cp, rawi, heros, n, flags: {}, t: 0, accompagne: !!O().animal() || heros.length > 1, abri: null, fin: false };
+    S.depth++;
+    try {
+      if (!I.debug.auto && !I.debug.walk) await S.card('title noos', `<p class="small">${I.esc(Pk.titre || '')}</p><h1>La noosphère</h1><p>${I.esc(T0.seuil || '')}</p><div class="rule"></div><div class="hint">▼</div>`, 6000);
+      await S.fade('out', 300);
+      // un récit d'un seul chapitre, sans objectif : le râwî (et, dans l'histoire-cadre, ceux qui l'accompagnent)
+      const ch = { id: 'descente', title: 'La noosphère', sub: (Pk.titre || '') + ' · ' + (T0.sousTitre || 'ta descente'), objectives: [], party: heros.map(h => h.id) };
+      W.excursion = E; W.saga = { id: 'idris', name: 'La noosphère', frame: true, heroes: I.sagas.idris.heroes, enemies: C0().enemies || {}, chapters: [ch] }; W.ci = 0; W.ch = ch; W.objIndex = 0; W.minLvl = 1;
+      W.roster = {}; heros.forEach(h => { W.roster[h.id] = h; }); W.party = ch.party.slice(); W.refreshSheets(); W.npcs = []; W.chests = []; W.foes = [];
+      // ceux qui rôdent : tour à tour un mal du cœur encore debout, une idée noire — posés loin du seuil
+      const qui = []; for (let i = 0; qui.length < R.NOMBRE[n] && (i < vices.length || i < noirs.length); i++) { if (i < vices.length) qui.push(vices[i]); if (i < noirs.length && qui.length < R.NOMBRE[n]) qui.push(noirs[i]); }
+      W.loadMap('noos', { hue: 262, g: neuve(), n, descente: true }, 'seuil');
+      W.foes = qui.map((id, i) => ({ id: 'rodeur' + i, group: [id], map: 'noos', rodeur: true, done: false, placed: false, ph: i * 1.7, v: R.MARCHE * R.ALLURE[n] }));
+      const m = W.map, d = m.env.dedale, T = 16, loin = (d.loin || []).slice(); E.duree = R.duree(n, d.tour); R.chrono = { total: E.duree, reste: E.duree, n };
+      W.foes.forEach((f, i) => { let q = loin.find(c => W.foes.every(g => !g.placed || Math.hypot(g.x - (c[0] * T + 16), g.y - (c[1] * T + 16)) > 6 * T)) || loin[i] || loin[0]; if (!q) { f.done = true; return; } f.x = q[0] * T + 16; f.y = q[1] * T + 16; f.placed = true; f.cx = null; });
+      W.player.dir = 2; W.hud(); $('#hud').hidden = false; document.body.classList.add('descente');
+      await S.fade('in', 500);
+      S.toast(I.esc(T0.regle || ''), 9000);
+    } finally { S.depth--; S.hideDialog(); }
+    if (I.debug.auto || I.debug.walk) return R.finir(I.debug.issue || 'issue'); // le joueur de test ne s'y promène pas : il en éprouve l'entrée, une issue et le retour
+  };
+
+  // la cible que montre l'écran : l'issue
+  R.cible = function () { const s = W.spotPx('issue'); return s ? { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto' } : null; };
+  const salleDe = (px, py) => { const n = W.map.g0 ? W.map.g0(px, py) : ''; return n === 'nabri' ? 'abri' : n; };
+  // un rôdeur avance de case en case : il erre, et prend en chasse quand le râwî est à portée ; il n'entre jamais dans un abri
+  function avance(f, dt, champ) {
+    const m = W.map, T = 16, tx = Math.floor(f.x / T), ty = Math.floor(f.y / T), passe = (x, y) => { if (x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; const n = m.g0(x * T + 8, y * T + 8); return n === 'npont' || n === 'nfloor'; };
+    if (f.cx === null || f.cx === undefined || (Math.abs(f.x - (f.cx * T + 8)) < 1 && Math.abs(f.y - (f.cy * T + 8)) < 1)) { // au milieu d'une case : choisir la suivante
+      const ici = champ ? champ[ty * m.w + tx] : -1, voisins = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(q => passe(tx + q[0], ty + q[1]));
+      let pick = null;
+      if (ici > 0 && ici <= 16) pick = voisins.find(q => champ[(ty + q[1]) * m.w + tx + q[0]] === ici - 1) || null; // en chasse : vers le râwî
+      if (!pick && voisins.length) { const avant = voisins.filter(q => !(f.dx === -q[0] && f.dy === -q[1])), tout = avant.length ? avant : voisins, droit = tout.find(q => q[0] === f.dx && q[1] === f.dy); pick = droit && Math.random() < 0.7 ? droit : tout[Math.floor(Math.random() * tout.length)]; }
+      if (!pick) return; f.dx = pick[0]; f.dy = pick[1]; f.cx = tx + pick[0]; f.cy = ty + pick[1];
+    }
+    const gx = f.cx * T + 8, gy = f.cy * T + 8, L = Math.hypot(gx - f.x, gy - f.y), pas = Math.min(L, f.v * dt); if (L > 0) { f.x += (gx - f.x) / L * pas; f.y += (gy - f.y) / L * pas; }
+  }
+  // les distances au râwî, de case en case, par où un rôdeur peut passer (jamais par un abri)
+  function champDe(p) { const m = W.map, T = 16, d = new Int16Array(m.w * m.h).fill(-1), sx = Math.floor(p.x / T), sy = Math.floor(p.y / T), q = [sy * m.w + sx]; if (salleDe(p.x, p.y) === 'abri') return d; d[q[0]] = 0;
+    for (let k = 0; k < q.length; k++) { const c = q[k], x = c % m.w, y = (c - x) / m.w; if (d[c] >= 16) continue; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(o => { const X = x + o[0], Y = y + o[1]; if (X < 0 || Y < 0 || X >= m.w || Y >= m.h) return; const j = Y * m.w + X; if (d[j] >= 0 || m.solid[j]) return; const n = m.g0(X * T + 8, Y * T + 8); if (n !== 'npont' && n !== 'nfloor') return; d[j] = d[c] + 1; q.push(j); }); }
+    return d; }
+  function ticDescente(dt) {
+    const E = W.excursion, p = W.player, c = R.chrono; if (!E || E.fin || E.combat) return; E.t += dt;
+    if (I.debug.compte !== undefined) { c.reste = Math.min(c.reste, I.debug.compte); I.debug.compte = undefined; }
+    c.reste -= dt; affiche();
+    const ici = salleDe(p.x, p.y), s = W.spotPx('issue');
+    if (s && Math.hypot(s[0] - p.x, s[1] - p.y) < 30) return R.finir('issue');
+    if (ici === 'abri' && !E.abri) { E.abri = true; S.toast(I.esc(P().aLAbri || ''), 6000); I.audio.sfx('light'); } else if (ici !== 'abri') E.abri = false;
+    if (c.reste <= 0) return R.finir(E.abri ? 'abri' : 'temps');
+    E.champT = (E.champT || 0) - dt; if (E.champT <= 0 || !E.champ) { E.champ = champDe(p); E.champT = 0.25; }
+    for (const f of W.foes) { if (f.done || !f.rodeur || !f.placed) continue; avance(f, dt, E.champ); if (Math.hypot(f.x - p.x, f.y - p.y) < 14 && ici !== 'abri') return R.contact(f); }
+  }
+  // dans un abri, on peut laisser passer le temps d'un coup : Entrée, ou toucher son personnage
+  R.attendre = function () { const E = W.excursion; if (E && E.abri && !E.fin && R.chrono) { R.chrono.reste = 0; return true; } return false; };
+  R.touche = (x, y) => !!(W.excursion && W.excursion.abri && Math.hypot(x - W.player.x, y - 10 - W.player.y) < 16 && R.attendre());
+  R.depart = function () { const k = R.attente; R.attente = null; if (k) R.entrer(k); };
+  R.texte = k => I.esc(P()[k] || '');
+
+  R.contact = async function (f) {
+    const E = W.excursion, id = f.group[0], def = (C0().enemies || {})[id] || {}; if (!E || E.fin || E.combat) return;
+    if (!R.peutFaireFace(id)) return R.finir('rattrape', def);
+    E.combat = true; W.stop(); S.depth++; let res = 'lose';
+    try { S.toast(I.esc((P().face || '').replace('%s', def.name || '')), 4200);
+      res = await I.battle.start({ group: [id], bg: 'noos', w: 1, interieur: true, sansReprise: true, heros: E.heros, intro: (def.name || '') + ' te barre le pont.' }); }
+    finally { S.depth--; S.hideDialog(); E.combat = false; }
+    if (res !== 'win') return R.finir('rattrape', def);
+    f.done = true; if (def.idee) E.flags['_noir_' + id] = true; // une idée noire vaincue est dissipée jusqu'au chapitre suivant ; un mal tranché l'est pour de bon (oeuvres.js)
+    document.body.classList.add('descente');
+  };
+
+  R.finir = async function (issue, def) {
+    const E = W.excursion; if (!E || E.fin) return; E.fin = true; W.stop(); W.lock = true; R.cache(); R.derniere = issue;
+    const T0 = P(), h = E.rawi, X = (T0.issues || {})[issue] || {}, d = dd(); let plus = '';
+    S.depth++;
+    try {
+      if (issue === 'issue') { if (h.lvl < 12 && !S.flags._o_issue) { h.lvl++; h.xp = 0; plus = T0.niveau || ''; E.flags._o_issue = true; } else { h.xp += Math.round(I.calc.xpNeed(h.lvl) / 2); while (h.xp >= I.calc.xpNeed(h.lvl) && h.lvl < 12) { h.xp -= I.calc.xpNeed(h.lvl); h.lvl++; } plus = T0.acquis || ''; } }
+      else if (issue === 'abri') { if ((d.abris | 0) < R.ABRIS_MAX) { d.abris = (d.abris | 0) + 1; plus = T0.lucide || ''; } else plus = T0.connus || ''; }
+      else if (issue === 'rattrape') d.clos = true;
+      E.heros.forEach(q => { I.save.data.heroes[q.key || ('idris:' + q.id)] = { lvl: q.lvl, xp: q.xp }; }); // ce que le râwî (et ceux qui l'accompagnaient) ont appris leur reste
+      I.audio.sfx(issue === 'rattrape' ? 'dark' : 'light');
+      if (!I.debug.auto && !I.debug.walk) await S.card(issue === 'rattrape' ? 'defeat' : 'title noos', `<p class="small">${I.esc(X.titre || 'La noosphère se referme')}</p><h1>${I.esc((X.h1 || '').replace('%s', (def && def.name) || ''))}</h1><p>${I.esc(X.texte || '')}</p>${plus ? '<p><b>' + I.esc(plus) + '</b></p>' : ''}<div class="hint">▼</div>`);
+    } finally { S.depth--; S.hideDialog(); }
+    // le retour au récit : par le point de reprise d'avant la descente, comme on reprend une partie
+    const cp = E.cp; cp.flags = Object.assign(cp.flags || {}, E.flags); W.excursion = null; R.chrono = null; document.body.classList.remove('descente');
+    I.save.data.cp = cp; I.save.store(); W.lock = false;
+    await W.startChapter(cp.saga, cp.ci, cp);
+  };
+})();
+
 /* ==== src/core/ui.js ==== */
 /* ISNAD — écrans (titre, Chaîne, menu, codex), boucle principale, mise en page, manette tactile. */
 (function () {
@@ -7313,6 +7540,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
 
   /* ---------- menu de pause ---------- */
   U.pause = function (mode, onClose) {
+    if (W.excursion) { S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return; }
     if (U.menuOpen) return; U.menuOpen = true; I.input.clearHeld(); I.audio.sfx('ok');
     const sv = I.save.data, side = $('#menu .side'), pane = $('#menu .pane'); let fl = null;
     const close = () => { if (fl) fl.destroy(); screen('#menu', false); U.menuOpen = false; if (I.scene === W && W.map && W.saga && !S.busy && !W.lock) W.checkpoint(); if (onClose) onClose(); }; // ce qui a été changé dans la halte est gardé
@@ -7506,6 +7734,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 11:59 UTC · 71f3de8+";
   };
   U.guide = async function () {
     if (I.scene !== W || S.busy || W.lock || U.menuOpen || !W.ch) return;
+    if (W.excursion) { S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return; }
     const tg = W.target(), opts = [];
     if (tg) opts.push({ t: 'Montrer le chemin', k: 'way' }, { t: 'M’y conduire', k: 'go' });
     opts.push({ t: 'Toute l’aide du jeu', k: 'aide' }, { t: 'Reprendre', k: '' });
@@ -9875,7 +10104,20 @@ ISNAD.registerSaga({
     question: 'Veux-tu y descendre, râwî, et faire face à ce qui te pèse ? Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. Ce n’est pas le cœur des Compagnons que tu vas voir : c’est le tien.',
     plusTard: 'Pas maintenant', rien: 'Rien ne te pèse plus de ce côté-là : les sept maux du cœur sont tranchés.', deja: 'Cette porte s’est déjà ouverte dans ce chapitre.',
     avecLame: 'lame forgée', sansLame: 'il ne sera que repoussé', autres: 'Un mal dont la lame n’est pas forgée', lequel: 'Lequel ? Sans sa lame, il ne sera que repoussé : il reviendra.',
-    seuil: 'La noosphère s’ouvre. Tu y descends seul.',
+    seuil: 'La noosphère s’ouvre. Tu y descends.',
+    // 2.x : la descente est un labyrinthe (textes proposés par l'agent, à valider par le décideur)
+    descendre: 'Descendre', sousTitre: 'ta descente',
+    regle: 'C’est un labyrinthe. Tes maux du cœur et les idées noires y rôdent : seul, on ne les vainc pas. Trouve l’issue, ou un abri où attendre que le temps passe.',
+    aLAbri: 'Un abri : rien de ce qui rôde n’y entre. Attends-y la fin du chrono — Entrée, ou touche ton personnage, pour laisser passer le temps.',
+    face: '%s te barre le pont. Ta lame est forgée, et tu n’es pas seul : tu fais face.',
+    pasDeHalte: 'Pas de halte ici : une descente se fait d’une traite.',
+    sansSonge: 'Tu dors d’un sommeil sans songe. Tes forces reviennent : les portes de la noosphère se rouvriront.',
+    niveau: 'Le râwî gagne un niveau.', acquis: 'Le râwî gagne en expérience.', lucide: 'Esprit +1 · Souffle +2, pour de bon.', connus: 'Ces abris ne t’apprennent plus rien : tu les connais.',
+    issues: {
+      issue: { titre: 'La noosphère se referme', h1: 'Tu as trouvé l’issue', texte: 'On ne traverse pas ce labyrinthe-là sans en sortir un peu grandi.' },
+      abri: { titre: 'La noosphère se referme', h1: 'Tu as tenu', texte: 'À l’abri, tu as laissé passer ce qui rôdait. On en remonte plus lucide, le souffle plus long.' },
+      temps: { titre: 'La noosphère se referme', h1: 'Le temps est écoulé', texte: 'Tu remontes sans avoir trouvé l’issue ni un abri. Rien n’est perdu : la porte se rouvrira.' },
+      rattrape: { titre: 'La noosphère se referme', h1: '%s t’a rattrapé', texte: 'Seul, on ne vainc pas ce qui pèse sur le cœur. Tu remontes épuisé : il te faudra dormir, d’un sommeil sans songe, avant de redescendre.' } },
     remonte: { titre: 'La noosphère se referme', h1: 'Ce mal pèse encore', texte: 'On ne tranche pas un mal du cœur d’un seul coup. L’œuvre forge la lame : reviens quand elle sera prête.' }
   },
 

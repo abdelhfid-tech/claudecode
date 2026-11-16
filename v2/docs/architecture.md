@@ -194,7 +194,9 @@ marche (`gfx.surDefinition`) : rien d'autre ne bouge.
 **Le dessin d'origine est celui de la 1.32, au pixel près** : tout ce qui précède est conditionné à `D > 1`. `?def=1`
 dans l'adresse force ce dessin (`?def=2`, `?def=2l` les deux autres) et passe avant le réglage gardé : `cartes.js`
 s'en sert pour se comparer à la 1.32. Une carte fine pèse quatre fois plus : le jeu en garde deux en mémoire au lieu de
-quatre.
+quatre. Sur un ordinateur, le dessin fin est agrandi deux fois, pixels nets (ou lissé, en « fin, adouci ») ; sur un écran
+tactile, il est composé à sa taille — 768 × 432, moins de points qu'avant — et c'est l'écran qui l'agrandit : en
+simulation, le jeu y tient 60 images par seconde, comme le dessin d'origine.
 
 **Ce qui n'est pas fait** : les objets et les cases restent ceux d'avant, affinés par le calcul — seul le palmier a été
 redessiné ; les compagnons de lumière, les lames et les icônes gardent leur dessin. Aucune image générée n'entre dans le
@@ -212,6 +214,34 @@ tous les carrefours, une salle y comptant pour un seul nœud ; quelques impasses
 moins quand on descend. `verifie(plan, genre)` contrôle que les lieux y sont, du bon côté, assez grands, tous reliés, et
 que les culs-de-sac en sont ; `plan` retire jusqu'à obtenir un plan bon. La même suite de hasard rend le même plan.
 `node v2/tools/dedales.js` l'éprouve sur dix mille graines par profondeur et par genre (« DÉDALES CONFORMES »).
+
+**Dans les chapitres** (lots N1 et N2, `rodeurs.js`). Quand un récit dit « on descend » — l'opération `map` vers un lieu de
+gabarit `noos` —, le lieu reçoit une graine (`g`) et une profondeur (`n`, de 0 à 5 : la part de l'histoire déjà achevée) :
+`maps.js` le bâtit alors d'après le plan, ponts bordés de lumière, salles et pylônes, un lieu nommé au milieu de chaque
+salle. La graine voyage avec le lieu, donc avec le point de reprise : reprendre une partie redonne le même labyrinthe. Un
+lieu sans graine se bâtit comme avant (une partie gardée avant la 2.x le retrouve tel quel ; `cartes.js` s'y compare
+toujours). Les récits ne changent pas d'un mot : ennemis, coffres et personnages se placent sur les mêmes lieux nommés.
+**Le chrono** : 30 secondes, plus le temps d'un tour de tous les lieux multiplié par un facteur qui se resserre (de 3
+à 1,7). Il ne court que lorsque le joueur a la main (`world.js` l'appelle à chaque pas) ; écoulé, on remonte au seuil, le
+labyrinthe se redessine un cran plus simple, ennemis et coffres retrouvent leurs lieux, rien n'est perdu. La graine vient
+d'un sel propre à la partie et d'un compte des descentes (`dedale` dans la partie : un champ absent prend sa valeur de
+départ, le format reste le 2). **Au doigt**, toucher le vide en direction de l'objectif demande d'y être conduit (la même
+aide que « M'y conduire ») : sans cela, on irait buter au fond de l'impasse la plus proche de l'objectif.
+
+**La descente du râwî** (lot N3). Au sortir de la prière, dans le dhikr, en songe, `valeurs.porte` propose de descendre ;
+la descente commence dès que le joueur a la main. Elle se joue dans le moteur des cartes, **entre deux points de
+reprise** : celui d'avant est gardé, le monde reçoit un récit d'un seul chapitre sans objectif (`world.excursion`), et
+l'on revient au récit par ce point de reprise, comme on reprend une partie. Pendant ce temps aucun point de reprise n'est
+écrit, et la halte est fermée. Le lieu est le labyrinthe de genre « descente » : le seuil, l'issue, deux abris. Ceux qui
+rôdent — tour à tour un mal du cœur encore debout, une idée noire — partent des carrefours les plus lointains, errent de
+case en case, prennent en chasse à moins de seize cases, et n'entrent jamais dans un abri ; ils sont de 2 à 5 et vont de
+0,55 à 0,92 fois le pas du râwî. Quatre issues : **l'issue** (un niveau, une fois par chapitre, puis de l'expérience) ;
+**un abri** jusqu'à la fin du chrono (+1 d'Esprit, +2 de Souffle pour de bon, dix fois au plus ; Entrée, ou toucher son
+personnage, laisse passer le temps) ; **le temps écoulé** hors d'un abri (on remonte, rien n'est perdu) ; **rattrapé**
+(on remonte épuisé : les portes restent closes jusqu'à un sommeil sans songe). Armé d'une lame forgée — la sienne pour un
+mal du cœur, n'importe laquelle pour une idée noire — **et** accompagné — un compagnon de lumière, ou le groupe de
+fiction dans l'histoire-cadre —, le râwî fait face : un mal vaincu est tranché (`oeuvres.js`), une idée noire est
+dissipée jusqu'au chapitre suivant. Le joueur de test entre, prend l'issue et revient : il n'y marche pas.
 
 ## Les personnages : `src/core/sprites.js`
 

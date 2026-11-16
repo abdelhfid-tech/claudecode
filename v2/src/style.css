@@ -312,6 +312,12 @@ body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 @keyframes nomin { from { opacity: 0; } }
 body.portrait .nom { font-size: .66em; }
 body.fin #dialog .fig, body.fin .stat .fig, body.fin #perso .vue img, body.fin #perso .tenue img { image-rendering: auto; } /* en dessin fin, la figure a deux fois plus de points : on la réduit en douceur */
+/* le chrono d'une descente dans la noosphère : en haut, au milieu ; il rougit dans les vingt dernières secondes */
+#chrono { position: absolute; left: 50%; top: .55em; transform: translateX(-50%); z-index: 6; padding: .22em .7em .3em; min-width: 4.6em; text-align: center; font: 600 1.02em/1.1 var(--mono, ui-monospace, monospace); letter-spacing: .06em; color: #e9f4ff; background: rgba(8, 10, 34, .74); border: 1px solid rgba(140, 200, 255, .45); border-radius: .5em; pointer-events: none; }
+#chrono i { display: block; height: .2em; margin-top: .22em; background: rgba(140, 200, 255, .18); border-radius: .1em; overflow: hidden; } #chrono b { display: block; height: 100%; background: #8cd0ff; }
+#chrono.presse { color: #ffd9d0; border-color: rgba(255, 120, 100, .7); } #chrono.presse b { background: #ff8a70; }
+body.portrait #chrono { top: auto; bottom: 30%; }
+body.descente #buildbtn { display: none; } /* dans la descente du râwî, on ne bâtit pas */
 #dialog .fig { position: absolute; left: 1.75em; top: 50%; height: 4.5em; width: 3em; margin-top: -2.5em; image-rendering: pixelated; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .6)); }
 #dialog.avecfig .seal { opacity: .38; }
 body.portrait #dialog .fig { left: 1.2em; height: 3.9em; width: 2.6em; margin-top: -2.1em; }

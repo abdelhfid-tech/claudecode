@@ -17,7 +17,10 @@ une valeur, pour dévoiler l'Agrégor.
   socle est posé : le livre I de la 1.32, mot pour mot, et de quoi lui ajouter du contenu sans toucher au code — des
   **paquets** (sagas, lieux, objets, équipement, étals, musiques) rangés en **livres** ; une partie que l'on exporte et
   que l'on réimporte ; un personnage dont le joueur choisit le nom et la tenue ; de grands personnages (combat,
-  dialogue, équipement) redessinés d'après les modèles du décideur. Elle a ses propres outils (`v2/tools/`)
+  dialogue, équipement) redessinés d'après les modèles du décideur. Depuis le 16 novembre (la « 2.x »), elle se
+  dessine deux fois plus fin — 768 × 432 points, les grands personnages jusque sur les cartes, trois dessins au choix
+  dans les réglages — et sa noosphère est un labyrinthe tiré au hasard, sous un chrono : celle des chapitres, et celle
+  du râwî, où l'on cherche l'issue ou un abri. La version légère, elle, s'arrête à la 1.32. Elle a ses propres outils (`v2/tools/`)
   et ses propres sauvegardes. À lire : `v2/docs/feuille-de-route.md` (où l'on en est), `v2/docs/architecture.md`
   (comment c'est fait), `v2/docs/schema-paquet.md` (le contrat d'un paquet). Elle se joue dans son propre Artifact
   privé, distinct de celui de la 1.32.

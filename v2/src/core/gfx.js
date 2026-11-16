@@ -126,6 +126,8 @@
     cwall(c, r) { speck(c, r, ['#191b27', '#141620', '#20232f'], 10); R(c, '#2d3147', 0, 0, 16, 1); c.fillStyle = '#0d0e16'; c.fillRect(0, 8, 16, 1); if (r() < 0.6) R(c, r() < 0.5 ? '#39e6ff' : '#ffb347', 3 + Math.floor(r() * 8), 3, 3, 2); },
     croof(c, r) { speck(c, r, ['#10121b', '#0c0d15', '#161927'], 8); R(c, '#272b3d', 0, 14, 16, 2); },
     nfloor(c, r, v, hue) { R(c, '#0c0f2c', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,65%,.55)`; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = `hsla(${hue},90%,70%,.14)`; c.fillRect(1, 1, 15, 15); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.8)`; if (r() < 0.35) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); },
+    nabri(c, r, v, hue) { R(c, '#141833', 0, 0, 16, 16); c.fillStyle = 'rgba(255,233,176,.5)'; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = 'rgba(255,233,176,.13)'; c.fillRect(1, 1, 15, 15); c.fillStyle = 'rgba(255,246,220,.8)'; if (r() < 0.3) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); }, // le sol d'un abri : une lumière chaude, là où rien ne rôde
+    npont(c, r, v, hue) { R(c, '#0b0f2e', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,72%,.17)`; c.fillRect(0, 0, 16, 16); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.6)`; if (r() < 0.22) c.fillRect(2 + Math.floor(r() * 12), 2 + Math.floor(r() * 12), 1, 1); }, // un pont du labyrinthe : ses arêtes de lumière sont tracées par la carte, selon ses voisins
     nbridge(c, r, v, hue) { R(c, '#080a20', 0, 0, 16, 16); c.fillStyle = `hsla(${(hue + 150) % 360},100%,70%,.75)`; c.fillRect(0, 3, 16, 1); c.fillRect(0, 12, 16, 1); c.fillStyle = `hsla(${(hue + 150) % 360},100%,70%,.18)`; c.fillRect(0, 4, 16, 8); },
     void(c, r) { R(c, '#04051a', 0, 0, 16, 16); if (r() < 0.3) R(c, '#3b3f8a', Math.floor(r() * 16), Math.floor(r() * 16), 1, 1); if (r() < 0.08) R(c, '#cfd6ff', Math.floor(r() * 16), Math.floor(r() * 16), 1, 1); },
     // zellige « étoile et croix » : l'étoile à huit branches naît de deux carrés superposés
@@ -139,7 +141,7 @@
     bwall(c, r) { R(c, '#d9b37f', 0, 0, 16, 9); R(c, '#e8c896', 0, 0, 16, 2); R(c, '#b98f5c', 0, 9, 16, 7); R(c, '#a07a4c', 0, 15, 16, 1); c.fillStyle = '#a98252'; c.fillRect(0, 12, 16, 1); c.fillRect(5, 9, 1, 3); c.fillRect(11, 12, 1, 3); c.fillStyle = '#c9a56e'; for (let i = 0; i < 6; i++) c.fillRect(Math.floor(r() * 15), 2 + Math.floor(r() * 6), 1, 1); },
     dark(c) { R(c, '#07060c', 0, 0, 16, 16); }
   };
-  const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet']); // lumière, vide et carreaux vernis restent nets
+  const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nabri', 'npont', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet']); // lumière, vide et carreaux vernis restent nets
   const SOLID = new Set(['bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull']);
   G.isSolidTile = n => SOLID.has(n);
   G.tile = function (name, variant, hue) {

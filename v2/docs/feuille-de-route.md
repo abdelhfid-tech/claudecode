@@ -27,10 +27,10 @@ concerne que `v2/`.*
 | B1 | la même scène rendue de trois façons — aujourd'hui · définition doublée · doublée et lissée — pour que le décideur choisisse sur image | **fait** : trois images envoyées le 16 novembre ; sans réponse, le jeu sort en « fin » |
 | B2 | le rendu fin, appliqué à tout le jeu : 768 × 432, grands personnages sur les cartes (leur dos dessiné), personnages du combat retracés en 64 × 96, cases et objets affinés, lisières, plus de lignes de balayage ; réglage « Dessin » (fin, fin et adouci, d'origine) | **fait** (D154) |
 | N0 | le tirage des labyrinthes (`v2/src/core/dedale.js`) et sa preuve (`v2/tools/dedales.js`, dix mille graines par profondeur) | **fait** (D155) : 120 000 plans, aucun écart |
-| N1 | la noosphère des chapitres devient un labyrinthe : les lieux que les récits nomment y sont toujours, les récits ne changent pas d'un mot | à faire |
-| N2 | le chrono ; écoulé, on remonte au seuil, le labyrinthe se redessine un cran plus simple, rien n'est perdu | à faire |
-| N3 | la noosphère du râwî : un lieu à part, ses maux du cœur et les cinq idées noires y rôdent | à faire |
-| N4 | réglages par simulation, documentation, formulations des exigences à valider, Artifact de la 2.x | à faire |
+| N1 | la noosphère des chapitres devient un labyrinthe : les lieux que les récits nomment y sont toujours, les récits ne changent pas d'un mot | **fait** (D156) |
+| N2 | le chrono ; écoulé, on remonte au seuil, le labyrinthe se redessine un cran plus simple, rien n'est perdu | **fait** (D156) |
+| N3 | la noosphère du râwî : un labyrinthe à part (seuil, issue, deux abris), ses maux du cœur et les cinq idées noires y rôdent | **fait** (D157) |
+| N4 | documentation, formulations des exigences à valider (18, 22, une 23ᵉ), Artifact de la 2.x | **fait** (D157) ; les réglages chiffrés restent à éprouver en jouant |
 
 Choix par défaut du plan, que le décideur peut refuser un par un : les combats de l'histoire restent au tour par tour ;
 les égrégores d'un chapitre restent à leurs places, seuls ceux du râwî rôdent ; le plan en haut de l'écran montre tout le

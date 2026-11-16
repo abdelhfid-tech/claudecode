@@ -202,7 +202,7 @@
       case 'vices': S.hideDialog(); await I.oeuvres.finale(a || {}); break;
       case 'site': I.build.openSite(a); break;
       case 'battle': S.hideDialog(); await I.battle.start(a); break;
-      case 'map': S.hideDialog(); await S.fade('out'); W.loadMap(a, c || {}, b); await S.fade('in'); break;
+      case 'map': S.hideDialog(); await S.fade('out'); W.loadMap(a, I.rodeurs ? I.rodeurs.graine(a, c || {}) : (c || {}), b); await S.fade('in'); break; // 2.x : descendre dans la noosphère, c'est y trouver un labyrinthe
       case 'tp': { const e = W.ent(a); if (e) { const p = W.resolve(b, e === W.player ? W.map.id : e.map, e); if (p) { e.x = p[0]; e.y = p[1]; e.placed = true; e.placedMap = W.map.id; if (e === W.player) W.resetTrail(); } else { e.at = b; e.placed = false; } } break; }
       case 'walk': { const e = W.ent(a); if (e) { const p = W.resolve(b, e === W.player ? W.map.id : e.map, e); if (p) { if (e.hidden || I.debug.auto) { e.x = p[0]; e.y = p[1]; } else await W.walkTo(e, p[0], p[1]); if (e !== W.player) { e.placed = true; e.placedMap = W.map.id; } } else { e.at = b; e.placed = false; } } break; }
       case 'face': { const e = W.ent(a); if (e) e.dir = G.DIRS[b]; break; }

@@ -111,28 +111,18 @@
     } finally { S.depth--; S.hideDialog(); }
     return res;
   };
-  // Au sortir de la prière, dans le dhikr, en songe : la porte s'ouvre, et l'on choisit de descendre ou non.
+  // Au sortir de la prière, dans le dhikr, en songe : la porte s'ouvre, et l'on choisit de descendre ou non. Depuis la 2.x,
+  // on descend dans un labyrinthe (rodeurs.js) : ses maux du cœur et les idées noires y rôdent. Épuisé — rattrapé lors d'une
+  // descente —, le râwî trouve les portes closes : il lui faut d'abord dormir, d'un sommeil sans songe.
   V.porte = async function (k) {
-    const P = T('portes'), Pk = P[k]; if (!Pk || !W.saga) return null;
-    const L = V.restent(), O = I.oeuvres;
-    if (I.debug.auto) { // le joueur de test ne descend que pour trancher : une lame forgée, un mal encore debout
-      if (I.debug.noOeuvres || V.ouverte(k)) return null; const v = L.find(x => O.hasBlade(x)); return v ? V.descendre(k, v) : null;
-    }
+    const P = T('portes'), Pk = P[k], R = I.rodeurs; if (!Pk || !W.saga || !R || W.excursion) return null;
+    if (R.clos()) { if (k === 'sommeil') { R.repos(); S.toast(I.esc(P.sansSonge || ''), 4600); } return null; }
     if (V.ouverte(k)) { if (k === 'sommeil') S.toast(I.esc(P.deja || ''), 2600); return null; }
-    if (!L.length) { if (k === 'sommeil') S.toast(I.esc(P.rien || ''), 3200); return null; }
+    if (I.debug.auto || I.debug.walk) return I.debug.noOeuvres ? null : R.demande(k); // le joueur de test descend, et remonte par l'issue
     S.depth++;
-    let v = null;
-    try {
-      const E = C0().enemies || {}, Lm = T('lames');
-      const titre = { html: I.esc(Pk.invite) + '<small>' + I.esc(P.question || '') + '</small>' };
-      // un menu court : les maux dont la lame est forgée ; les autres derrière une seule entrée ; « pas maintenant » toujours en vue
-      const avec = L.filter(x => O.hasBlade(x)), sans = L.filter(x => !O.hasBlade(x)), tard = { t: P.plusTard || 'Pas maintenant' };
-      const opts = avec.map(x => ({ t: E[x].name + ' · *' + (P.avecLame || 'lame forgée') + ' : ' + Lm[x].name + '*' }));
-      if (sans.length) opts.push({ t: (P.autres || 'Un mal dont la lame n’est pas forgée') + ' · *' + (P.sansLame || 'il ne sera que repoussé') + '*' });
-      const i = await S.menuPick(titre, opts.concat([tard]));
-      if (i >= 0 && i < avec.length) v = avec[i];
-      else if (sans.length && i === avec.length) { const j = await S.menuPick(P.lequel || 'Lequel ?', sans.map(x => ({ t: E[x].name })).concat([tard])); if (j >= 0 && j < sans.length) v = sans[j]; }
-    } finally { S.depth--; S.hideDialog(); }
-    return v ? V.descendre(k, v) : null;
+    let oui = false;
+    try { const i = await S.menuPick({ html: I.esc(Pk.invite) + '<small>' + I.esc(P.question || '') + '</small><small>' + I.esc(P.regle || '') + '</small>' }, [{ t: P.descendre || 'Descendre' }, { t: P.plusTard || 'Pas maintenant' }]); oui = i === 0; }
+    finally { S.depth--; S.hideDialog(); }
+    return oui ? R.demande(k) : null;
   };
 })();

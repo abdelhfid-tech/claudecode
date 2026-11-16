@@ -1073,6 +1073,31 @@ après un premier plan qui modifiait le moteur actuel :
   entre les salles, de moins en moins de raccourcis). `v2/tools/dedales.js` l'éprouve hors du jeu : 120 000 plans, tous
   bons, la même graine rendant le même plan. Rien n'est encore branché dans le jeu : c'est l'objet des lots N1 à N3.
 
+- [x] **D156. La noosphère des chapitres en labyrinthe, sous un chrono.** *Demande du décideur, plan approuvé le
+  16 novembre ; lots N1 et N2.* Descendre dans la noosphère, c'est maintenant trouver un labyrinthe tiré par `dedale.js`,
+  à la profondeur que donne l'avancée dans l'histoire. Les sept lieux que les récits nomment y sont toujours (le seuil à
+  l'ouest, le cœur à l'est) : aucun récit n'a été touché. Un chrono court quand le joueur a la main ; écoulé, on remonte
+  au seuil et le labyrinthe se redessine, un cran plus simple. Choix par défaut du plan : les égrégores restent à leurs
+  places, le plan en haut de l'écran montre tout le labyrinthe, les aides « Montrer le chemin » et « M'y conduire »
+  restent offertes — et, au doigt, toucher le vide en direction de l'objectif demande d'y être conduit (la première
+  batterie avait montré un joueur au doigt bloqué au fond d'une impasse). Deux autres choses corrigées en chemin : la
+  dernière ligne d'un chapitre ne reste plus affichée sous le noir pendant que le lieu suivant se bâtit ; l'épreuve
+  du son ne prend plus la descente du râwî pour la noosphère du chapitre. La partie garde un sel et un compte des descentes (`dedale`) : champ nouveau, absent des parties
+  d'avant, qui prend alors sa valeur de départ — le format reste le 2.
+
+- [x] **D157. La descente du râwî : sortir, s'abriter, ou faire face.** *Demande du décideur (« la noosphère
+  personnelle, dont l'objectif est soit de sortir du labyrinthe, soit de se réfugier dans une pièce sans démon, car
+  impossible de vaincre seul […] ; les 5, on ne peut les vaincre qu'à l'aide des épées légendaires ET accompagné »), plan
+  approuvé le 16 novembre ; lot N3.* Réglages retenus par défaut, **à éprouver en jouant** : de 2 à 5 rôdeurs, de 0,55 à
+  0,92 fois le pas du râwî ; l'issue vaut un niveau (une fois par chapitre, puis de l'expérience) ; un abri vaut 1
+  d'Esprit et 2 de Souffle, dix fois au plus ; « accompagné » veut dire un compagnon de lumière, ou le groupe de fiction
+  dans l'histoire-cadre ; une idée noire se vainc avec n'importe quelle lame forgée, un mal du cœur avec la sienne.
+  **Règles écrites en conséquence, formulées par l'agent et à valider par le décideur** : l'exigence 18 (son exception),
+  l'exigence 22 (réécrite), une exigence 23 (le labyrinthe et son chrono), le contrat de données. **Point signalé** :
+  gagner un niveau au sortir d'une descente ouverte par la prière rapproche une œuvre d'un « pouvoir » ; c'est écrit
+  comme une exception aux exigences 13 et 15, voulue par le décideur — à lui de dire s'il préfère un autre gain. Les
+  textes de la descente (`coeur.js`, `portes`) sont proposés par l'agent : à relire.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

@@ -252,7 +252,20 @@ ISNAD.registerSaga({
     question: 'Veux-tu y descendre, râwî, et faire face à ce qui te pèse ? Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. Ce n’est pas le cœur des Compagnons que tu vas voir : c’est le tien.',
     plusTard: 'Pas maintenant', rien: 'Rien ne te pèse plus de ce côté-là : les sept maux du cœur sont tranchés.', deja: 'Cette porte s’est déjà ouverte dans ce chapitre.',
     avecLame: 'lame forgée', sansLame: 'il ne sera que repoussé', autres: 'Un mal dont la lame n’est pas forgée', lequel: 'Lequel ? Sans sa lame, il ne sera que repoussé : il reviendra.',
-    seuil: 'La noosphère s’ouvre. Tu y descends seul.',
+    seuil: 'La noosphère s’ouvre. Tu y descends.',
+    // 2.x : la descente est un labyrinthe (textes proposés par l'agent, à valider par le décideur)
+    descendre: 'Descendre', sousTitre: 'ta descente',
+    regle: 'C’est un labyrinthe. Tes maux du cœur et les idées noires y rôdent : seul, on ne les vainc pas. Trouve l’issue, ou un abri où attendre que le temps passe.',
+    aLAbri: 'Un abri : rien de ce qui rôde n’y entre. Attends-y la fin du chrono — Entrée, ou touche ton personnage, pour laisser passer le temps.',
+    face: '%s te barre le pont. Ta lame est forgée, et tu n’es pas seul : tu fais face.',
+    pasDeHalte: 'Pas de halte ici : une descente se fait d’une traite.',
+    sansSonge: 'Tu dors d’un sommeil sans songe. Tes forces reviennent : les portes de la noosphère se rouvriront.',
+    niveau: 'Le râwî gagne un niveau.', acquis: 'Le râwî gagne en expérience.', lucide: 'Esprit +1 · Souffle +2, pour de bon.', connus: 'Ces abris ne t’apprennent plus rien : tu les connais.',
+    issues: {
+      issue: { titre: 'La noosphère se referme', h1: 'Tu as trouvé l’issue', texte: 'On ne traverse pas ce labyrinthe-là sans en sortir un peu grandi.' },
+      abri: { titre: 'La noosphère se referme', h1: 'Tu as tenu', texte: 'À l’abri, tu as laissé passer ce qui rôdait. On en remonte plus lucide, le souffle plus long.' },
+      temps: { titre: 'La noosphère se referme', h1: 'Le temps est écoulé', texte: 'Tu remontes sans avoir trouvé l’issue ni un abri. Rien n’est perdu : la porte se rouvrira.' },
+      rattrape: { titre: 'La noosphère se referme', h1: '%s t’a rattrapé', texte: 'Seul, on ne vainc pas ce qui pèse sur le cœur. Tu remontes épuisé : il te faudra dormir, d’un sommeil sans songe, avant de redescendre.' } },
     remonte: { titre: 'La noosphère se referme', h1: 'Ce mal pèse encore', texte: 'On ne tranche pas un mal du cœur d’un seul coup. L’œuvre forge la lame : reviens quand elle sera prête.' }
   },
 

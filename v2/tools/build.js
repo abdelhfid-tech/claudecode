@@ -17,7 +17,7 @@ for (let i = 0; i < args.length; i++) {
 }
 if (avec.length && !vers) { console.error('--avec demande --vers : un assemblage d’essai ne remplace jamais le jeu livré'); process.exit(2); }
 
-const core = ['defs', 'regles', 'dedale', 'base', 'perso', 'gfx', 'sprites', 'maps', 'script', 'world', 'build', 'trade', 'oeuvres', 'gear', 'mal', 'valeurs', 'rangs', 'battle', 'ui'].map(n => `src/core/${n}.js`);
+const core = ['defs', 'regles', 'dedale', 'base', 'perso', 'gfx', 'sprites', 'maps', 'script', 'world', 'build', 'trade', 'oeuvres', 'gear', 'mal', 'valeurs', 'rangs', 'battle', 'rodeurs', 'ui'].map(n => `src/core/${n}.js`);
 const data = ['src/data/frame.js', 'src/data/music.js', 'src/data/caid.js', 'src/data/coeur.js'].filter(f => fs.existsSync(path.join(root, f))).concat(fs.readdirSync(path.join(root, 'src/data')).filter(f => /^saga_.*\.js$/.test(f)).sort().map(f => 'src/data/' + f));
 // les paquets : ceux du dépôt, dans l'ordre de leurs noms, puis ceux de l'essai. Un paquet est de la donnée : il entre tel quel.
 const DOSSIER = path.join(root, 'paquets');
