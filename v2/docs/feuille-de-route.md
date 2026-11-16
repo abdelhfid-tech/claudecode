@@ -54,7 +54,8 @@ pas, c'est toujours la v2 » : rien de ce qui suit ne touche la version légère
 | D1 | des pas et des gestes que l'on voit : foulées franches dans les quatre directions, souffle au repos, élan et coup avec l'arme en main — en combat et dans les labyrinthes | **fait** (D166) ; l'arme visible le temps du coup dans un labyrinthe est à confirmer (exigence 17) |
 | D2 | un visage pour ceux qui ne sont pas des Compagnons : teint, yeux, barbe selon l'âge, de face et de profil ; les Compagnons gardent leur voile de lumière | **fait** (D165) ; exigence 2 réécrite, à valider ; la liste de ceux qui restent sans visage est à relire nom par nom |
 
-*Publié le 16 novembre : l'Artifact privé de la 2.x en est à sa version 4 (lots C1 à C6, commit `db7179e`) ; celui des
+*Publié le 16 novembre : l'Artifact privé de la 2.x en est à sa version 5 (lots D1 et D2, commit `bba7c3d`) ; la
+version 4 portait les lots C1 à C6 (commit `db7179e`) ; celui des
 lots N1 à N4 était la version 3 (commit `125f0a2`). Dans l'Artifact, « Enregistrer le fichier » (export de la partie) ne
 fait rien — la visionneuse refuse les téléchargements — ; « Copier le texte » fonctionne.*
 
