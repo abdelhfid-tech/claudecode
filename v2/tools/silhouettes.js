@@ -12,10 +12,12 @@
       surface, d'un seul tenant sur chaque ligne et chaque colonne, sans trou : sinon « TRAIT ».
    4. Chaque coiffe a sa tête native de face et de profil (le dos, jamais montré en grand, garde le dessin d'avant) ;
       aucune tête ne sort de la grille, aucun sprite n'est vide : sinon « ABSENT ».
-   Sortie : « OK » par preuve, puis « SILHOUETTES CONFORMES ». Code 1 à la première anomalie. */
+   Sortie : « OK » par preuve, puis « SILHOUETTES CONFORMES ». Code 1 à la première anomalie.
+   JEU=../index.html node tools/silhouettes.js : le même contrôle sur la version légère, qui porte le même sprites.js. */
 const fs = require('fs'), path = require('path');
 const { chromium } = require('playwright');
-const V2 = path.join(__dirname, '..'), FICHE = path.join(__dirname, 'essais', 'silhouettes.json'), out = path.join(V2, '.smoke/silhouettes'), url = 'file://' + path.join(V2, 'index.html');
+const V2 = path.join(__dirname, '..'), FICHE = path.join(__dirname, 'essais', 'silhouettes.json'), out = path.join(V2, '.smoke/silhouettes');
+const url = 'file://' + path.resolve(V2, process.env.JEU || 'index.html'); // JEU=../index.html : le même contrôle sur la version légère
 const mode = process.argv[2] || '';
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); };
 const COIFFES = ['imama', 'imama_haute', 'imama_large', 'imama_queue', 'calotte', 'casque', 'casque_turban', 'casque_cuir', 'casque_bandes', 'coiffe_mailles', 'capuche', 'tiare', 'litham', 'keffieh'];
