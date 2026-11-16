@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-/* ISNAD 2.0 — les lieux du jeu de base sortent-ils comme dans la 1.31 ?
-   La 2.0 bâtit un lieu d'après son gabarit (D.MAPS, D.GABARITS) au lieu d'une liste en dur. Cet outil charge la 1.31
+/* ISNAD 2.0 — les lieux du jeu de base sortent-ils comme dans la 1.32 ?
+   La 2.0 bâtit un lieu d'après son gabarit (D.MAPS, D.GABARITS) au lieu d'une liste en dur. Cet outil charge la 1.32
    gelée (../index.html, lue seulement) et la 2.0 (index.html), bâtit des deux côtés chaque carte que le contenu demande
    — le lieu de chaque chapitre, chaque opération « map », avec ses options — et compare : le dessin du sol, point par
    point, la mini-carte, les cases pleines, les lieux nommés, les objets, les lumières, l'ambiance et la piste.
@@ -37,14 +37,14 @@ const releve = () => {
   const v1 = await p1.evaluate(() => window.ISNAD_VERSION), v2 = await p2.evaluate(() => window.ISNAD_VERSION);
   await browser.close();
   const CHAMPS = ['id', 'taille', 'sol', 'mini', 'pleines', 'lieux', 'objets', 'nObjets', 'lumieres', 'eau', 'ambiance'];
-  // un champ que la 1.31 ne rend pas deux fois pareil ne prouve rien : on le dit, et on ne le compare pas
+  // un champ que la 1.32 ne rend pas deux fois pareil ne prouve rien : on le dit, et on ne le compare pas
   const instables = {}; a.forEach((x, i) => CHAMPS.forEach(k => { if (x[k] !== a2[i][k]) instables[k] = (instables[k] || 0) + 1; }));
   let ecarts = 0; const parB = {}; b.forEach(x => { parB[x.cle] = x; });
   a.forEach(x => { const y = parB[x.cle]; if (!y) { ecarts++; console.log(`ÉCART ${x.cle} : la 2.0 ne bâtit pas cette carte`); return; }
     const diff = CHAMPS.filter(k => !instables[k] && x[k] !== y[k]); if (diff.length) { ecarts++; console.log(`ÉCART ${x.cle} : ${diff.join(', ')}`); } });
-  console.log(`1.31 : ${v1}`); console.log(`2.0  : ${v2}`);
-  console.log(`${a.length} cartes bâties des deux côtés (${new Set(a.map(x => x.id)).size} lieux) · comparé : ${CHAMPS.filter(k => !instables[k]).join(', ')}` + (Object.keys(instables).length ? ` · non comparé, instable dans la 1.31 elle-même : ${Object.keys(instables).join(', ')}` : ''));
+  console.log(`1.32 : ${v1}`); console.log(`2.0  : ${v2}`);
+  console.log(`${a.length} cartes bâties des deux côtés (${new Set(a.map(x => x.id)).size} lieux) · comparé : ${CHAMPS.filter(k => !instables[k]).join(', ')}` + (Object.keys(instables).length ? ` · non comparé, instable dans la 1.32 elle-même : ${Object.keys(instables).join(', ')}` : ''));
   if (erreurs.length) { console.log('--- ERREURS ---'); [...new Set(erreurs)].slice(0, 10).forEach(e => console.log(e)); }
-  console.log(ecarts || erreurs.length ? `✗ ${ecarts} écart(s)` : '✓ CARTES IDENTIQUES à celles de la 1.31');
+  console.log(ecarts || erreurs.length ? `✗ ${ecarts} écart(s)` : '✓ CARTES IDENTIQUES à celles de la 1.32');
   process.exit(ecarts || erreurs.length ? 1 : 0);
 })();

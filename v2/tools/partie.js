@@ -6,8 +6,8 @@
       « Continuer » la retrouve. Même chose au milieu d'un chapitre : on reprend au même objectif, dans le même lieu.
    2. Ce qui n'est pas une partie est refusé avec un message, et rien ne change : texte vide, texte abîmé, autre chose
       qu'une partie, partie d'un format plus récent, partie dont un champ n'a pas la forme attendue.
-   3. Une partie de la 1.31 (format 1), prise dans la 1.31 gelée — lue seulement —, est acceptée et remise à jour.
-   4. La 2.0 ne touche jamais aux clés de la 1.31, même posées dans le même navigateur.
+   3. Une partie de la 1.32 (format 1), prise dans la 1.32 gelée — lue seulement —, est acceptée et remise à jour.
+   4. La 2.0 ne touche jamais aux clés de la 1.32, même posées dans le même navigateur.
    Sortie : « OK » par preuve, « ÉCART » ou « BLOQUÉ » sinon ; captures dans .smoke/partie/. Code 1 à la première anomalie. */
 const fs = require('fs'), path = require('path'), os = require('os');
 const { chromium } = require('playwright');
@@ -29,7 +29,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
 
   /* ---------- 1. jouer, exporter, effacer, importer ---------- */
   let page = await ouvrir();
-  // les clés de la 1.31, posées dans ce navigateur : la 2.0 ne doit ni les lire, ni les changer, ni les effacer
+  // les clés de la 1.32, posées dans ce navigateur : la 2.0 ne doit ni les lire, ni les changer, ni les effacer
   const TEMOINS = { 'isnad.auto.v1': '{"v":1,"temoin":"auto"}', 'isnad.slot.1': '{"v":1,"temoin":"slot"}', 'isnad.opts.v1': '{"temoin":"opts"}', 'isnad.save.v1': 'temoin' };
   await page.evaluate(T => { Object.keys(T).forEach(k => localStorage.setItem(k, T[k])); }, TEMOINS);
   const joue = await page.evaluate(async () => { const I = window.ISNAD, W = I.world; I.debug.auto = true; I.speed = 40; I.audio.setOn(false); I.save.reset(); I.save.data.started = true;
@@ -60,7 +60,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   if (await page.locator('#chain').isHidden()) ko('ÉCART « Retour » ne ramène pas à la Chaîne');
   const cles = await page.evaluate(T => Object.keys(T).filter(k => localStorage.getItem(k) !== T[k]), TEMOINS);
   const miennes = await page.evaluate(() => Object.keys(localStorage).filter(k => k.indexOf('isnad2.') === 0).sort());
-  if (cles.length) ko(`ÉCART la 2.0 a touché aux clés de la 1.31 : ${cles.join(', ')}`); else ok(`les clés de la 1.31 posées dans le même navigateur sont intactes ; la 2.0 n'écrit que les siennes (${miennes.join(', ')})`);
+  if (cles.length) ko(`ÉCART la 2.0 a touché aux clés de la 1.32 : ${cles.join(', ')}`); else ok(`les clés de la 1.32 posées dans le même navigateur sont intactes ; la 2.0 n'écrit que les siennes (${miennes.join(', ')})`);
   sansErreur('en exportant'); await page.close();
 
   // un autre navigateur, vide : l'écran-titre n'a rien à continuer ; on importe par les vrais boutons, en collant le texte
@@ -120,21 +120,21 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   if (await etat() !== e0) ko('ÉCART un import refusé a changé quelque chose'); else if (bien === REFUS.length) ok(`${bien} textes qui ne sont pas des parties, tous refusés avec leur message, sans rien changer (${REFUS.map(x => x[0]).join(' ; ')})`);
   sansErreur('en refusant'); await page.close();
 
-  /* ---------- 3. une partie de la 1.31, prise dans la 1.31 gelée (lue seulement) ---------- */
+  /* ---------- 3. une partie de la 1.32, prise dans la 1.32 gelée (lue seulement) ---------- */
   const p1 = await ouvrir(null, url131);
   const v1 = await p1.evaluate(async () => { const I = window.ISNAD, W = I.world; I.debug.auto = true; I.speed = 40; I.audio.setOn(false); I.save.reset(); I.save.data.started = true;
     document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); W.roster = {}; W.saga = null; W.startChapter('idris', 0);
     const fin = await new Promise(res => { const t0 = Date.now(), iv = setInterval(() => { if (!document.querySelector('#chain').hidden) { clearInterval(iv); res(true); } else if (Date.now() - t0 > 120000) { clearInterval(iv); res(false); } }, 100); });
     return { fin, version: window.ISNAD_VERSION, texte: JSON.stringify(I.save.data), v: I.save.data.v }; });
   await p1.close(); errors = [];
-  if (!v1.fin || v1.v !== 1) ko(`BLOQUÉ la 1.31 ne donne pas de partie au format 1 (${JSON.stringify({ fin: v1.fin, v: v1.v })})`);
+  if (!v1.fin || v1.v !== 1) ko(`BLOQUÉ la 1.32 ne donne pas de partie au format 1 (${JSON.stringify({ fin: v1.fin, v: v1.v })})`);
   else { const p = await ouvrir(); await bouton(p, '#title', 'Importer une partie').click(); await p.waitForSelector('#partie:not([hidden])'); await p.locator('#partie textarea').fill(v1.texte); await bouton(p, '#partie', 'Lire cette partie').click(); await p.waitForTimeout(400);
-    const resume = (await p.locator('#partie .resume').textContent().catch(() => '')) || ''; await p.screenshot({ path: path.join(out, '06-partie-de-la-1.31.png') });
-    if (!/format plus ancien/.test(resume)) ko(`ÉCART une partie de la 1.31 n'est pas reconnue comme un format plus ancien : « ${resume} »`);
+    const resume = (await p.locator('#partie .resume').textContent().catch(() => '')) || ''; await p.screenshot({ path: path.join(out, '06-partie-de-la-1.32.png') });
+    if (!/format plus ancien/.test(resume)) ko(`ÉCART une partie de la 1.32 n'est pas reconnue comme un format plus ancien : « ${resume} »`);
     else { await bouton(p, '#partie', /Reprendre cette partie|Remplacer ma partie/).click(); await p.waitForTimeout(1500);
       const s = await p.evaluate(() => { const d = window.ISNAD.save.data; return { v: d.v, prologue: d.prologue, profil: typeof d.profil, paquets: typeof d.paquets, chaine: !document.querySelector('#chain').hidden, savoirs: d.codex.length }; });
-      if (s.v !== 2 || !s.prologue || !s.chaine || s.profil !== 'object') ko(`ÉCART partie de la 1.31 mal reprise : ${JSON.stringify(s)}`); else ok(`une partie de la 1.31 (« ${v1.version} », format 1) est acceptée, remise au format ${s.v}, et se reprend à la Chaîne — ${s.savoirs} savoirs`); }
-    sansErreur('en reprenant une partie de la 1.31'); await p.close(); }
+      if (s.v !== 2 || !s.prologue || !s.chaine || s.profil !== 'object') ko(`ÉCART partie de la 1.32 mal reprise : ${JSON.stringify(s)}`); else ok(`une partie de la 1.32 (« ${v1.version} », format 1) est acceptée, remise au format ${s.v}, et se reprend à la Chaîne — ${s.savoirs} savoirs`); }
+    sansErreur('en reprenant une partie de la 1.32'); await p.close(); }
 
   /* ---------- 3 bis. dans un Artifact, la page ne peut pas remettre un fichier : l'export n'y propose que la copie ---------- */
   { const ctx = await browser.newContext({ viewport: { width: 960, height: 540 } }); await ctx.addInitScript(() => { window.claude = { hot: {} }; }); const p = await ctx.newPage();

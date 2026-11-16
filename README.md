@@ -11,18 +11,18 @@ une valeur, pour dévoiler l'Agrégor.
 
 ## Deux versions
 
-- **ISNAD 1.31** : le jeu léger en un seul fichier (`index.html`, sources dans `src/`). Il est **gelé** : on ne le modifie
-  plus. `node v2/tools/gel.js` le vérifie.
+- **ISNAD 1.32** : le jeu léger en un seul fichier (`index.html`, sources dans `src/`). Il est **gelé** : on ne le modifie
+  plus. `node v2/tools/gel.js` le vérifie. C'est la 1.31, avec ses grands personnages redessinés le 16 novembre.
 - **ISNAD 2.0** : une nouvelle version, en construction dans `v2/`, qui sera administrée par une base de données. Son
-  socle est posé : le livre I de la 1.31, mot pour mot, et de quoi lui ajouter du contenu sans toucher au code — des
+  socle est posé : le livre I de la 1.32, mot pour mot, et de quoi lui ajouter du contenu sans toucher au code — des
   **paquets** (sagas, lieux, objets, équipement, étals, musiques) rangés en **livres** ; une partie que l'on exporte et
   que l'on réimporte ; un personnage dont le joueur choisit le nom et la tenue ; de grands personnages (combat,
   dialogue, équipement) redessinés d'après les modèles du décideur. Elle a ses propres outils (`v2/tools/`)
   et ses propres sauvegardes. À lire : `v2/docs/feuille-de-route.md` (où l'on en est), `v2/docs/architecture.md`
   (comment c'est fait), `v2/docs/schema-paquet.md` (le contrat d'un paquet). Elle se joue dans son propre Artifact
-  privé, distinct de celui de la 1.31.
+  privé, distinct de celui de la 1.32.
 
-Ce qui suit décrit la 1.31.
+Ce qui suit décrit la 1.32.
 
 ## Jouer
 

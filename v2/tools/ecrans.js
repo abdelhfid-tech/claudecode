@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-/* ISNAD 2.0 — l'écran de la Chaîne du livre I est-il celui de la 1.31 ?
+/* ISNAD 2.0 — l'écran de la Chaîne du livre I est-il celui de la 1.32 ?
    La 2.0 range la Chaîne par livre et lit ses comptes dans les données. Tant qu'il n'y a qu'un livre, rien ne doit se
-   voir : même texte d'accueil, mêmes maillons, mêmes mots, même bouton. Cet outil charge la 1.31 gelée (../index.html,
+   voir : même texte d'accueil, mêmes maillons, mêmes mots, même bouton. Cet outil charge la 1.32 gelée (../index.html,
    lue seulement) et la 2.0 (index.html), pose des deux côtés la même partie — sept moments, du prologue à la Chaîne
    transmise — et compare l'écran : le texte, la structure, les boutons actifs ou scellés.
    Ce que la 2.0 ajoute à cet écran est déclaré ici (AJOUTS) : tout le reste doit être identique.
@@ -52,10 +52,10 @@ const releve = async () => {
   let ecarts = 0, lignes = 0;
   Object.keys(a).forEach(nom => { const x = a[nom], y = b[nom]; let ici = 0;
     Object.keys(x).forEach(k => { const u = JSON.stringify(x[k]), v = JSON.stringify(y[k]); lignes += Array.isArray(x[k]) ? x[k].length : 1;
-      if (u !== v) { ici++; ecarts++; let i = 0; while (i < u.length && u[i] === v[i]) i++; console.log(`ÉCART ${nom} · ${k} :\n   1.31 …${u.slice(Math.max(0, i - 60), i + 90)}\n   2.0  …${v.slice(Math.max(0, i - 60), i + 90)}`); } });
+      if (u !== v) { ici++; ecarts++; let i = 0; while (i < u.length && u[i] === v[i]) i++; console.log(`ÉCART ${nom} · ${k} :\n   1.32 …${u.slice(Math.max(0, i - 60), i + 90)}\n   2.0  …${v.slice(Math.max(0, i - 60), i + 90)}`); } });
     if (!ici) console.log(`OK  ${nom} — ${x.maillons.length} maillons, « ${x.bouton || 'aucun bouton'} »`); });
   if (erreurs.length) { console.log('--- ERREURS ---'); [...new Set(erreurs)].slice(0, 10).forEach(e => console.log(e)); }
   const ajouts = Object.keys(vus);
-  console.log(ecarts || erreurs.length ? `✗ ${ecarts} écart(s)` : `✓ CHAÎNE IDENTIQUE à celle de la 1.31 — ${Object.keys(a).length} moments, ${lignes} éléments comparés` + (ajouts.length ? ` · ajout déclaré de la 2.0 : ${ajouts.map(x => '« ' + x + ' »').join(', ')}` : ''));
+  console.log(ecarts || erreurs.length ? `✗ ${ecarts} écart(s)` : `✓ CHAÎNE IDENTIQUE à celle de la 1.32 — ${Object.keys(a).length} moments, ${lignes} éléments comparés` + (ajouts.length ? ` · ajout déclaré de la 2.0 : ${ajouts.map(x => '« ' + x + ' »').join(', ')}` : ''));
   process.exit(ecarts || erreurs.length ? 1 : 0);
 })();

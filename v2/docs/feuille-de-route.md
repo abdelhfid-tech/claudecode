@@ -12,7 +12,7 @@
 | 1.3 — les livres | **fait** le 15 novembre (commit `01a5cd9`) | l'écran de la Chaîne identique à celui de la 1.31 en huit moments, du prologue à la Chaîne transmise (`ecrans.js`) ; dans le jeu d'essai, deux livres rangés sous leur titre, le dernier maillon ouvert par les seuls maillons du livre I, 24 copies fautives refusées (`paquet.js`) ; toute la batterie du jeu de base, sans anomalie |
 | 1.4 — la partie du joueur | **fait** le 15 novembre (commit `32e18f2`) | par les vrais boutons : une partie exportée (texte et fichier), effacée, réimportée à l'identique, reprise au milieu d'un chapitre ; dix textes qui ne sont pas des parties refusés sans rien changer ; une partie de la 1.31 acceptée et remise à jour ; les clés de la 1.31 intactes (`partie.js`) ; une partie faite avec le paquet d'essai portée dans le jeu livré puis rapportée, sans rien perdre (`paquet.js`) ; toute la batterie, sans anomalie |
 | 1.5 — le personnage du joueur | **fait** le 15 novembre (commit `0a40f26`) | les noms acceptés et refusés ; les 29 phrases du jeu qui nomment le râwî, redites avec six noms, élision juste ; le profil d'origine qui ne change rien ; par les vrais boutons et en quatre tailles d'écran, un prologue entier joué sous un autre nom sans qu'un seul « Idris » s'affiche ; le choix gardé, rechargé, exporté (`personnage.js`) ; toute la batterie, sans anomalie |
-| P — les personnages redessinés d'après les modèles du décideur | **fait** pour la 2.0 le 16 novembre (commits `39ac7eb`, `edb1613` ; Artifact de la 2.0 : version 2) ; reste la version légère | `silhouettes.js` : les petits sprites des cartes inchangés au pixel près (397 silhouettes) ; l'interrupteur rend le grand sprite d'avant à l'identique ; 14 292 grands sprites sans un trait dans le voile ; les 14 coiffes natives de face et de profil. Détail : `v2/docs/architecture.md`, « Les personnages » |
+| P — les personnages redessinés d'après les modèles du décideur | **fait** le 16 novembre — la 2.0 : commits `39ac7eb`, `edb1613`, Artifact en version 2 ; la version légère, devenue la 1.32 : commit `8c21125`, Artifact en version 32, gel refait | `silhouettes.js` : les petits sprites des cartes inchangés au pixel près (397 silhouettes) ; l'interrupteur rend le grand sprite d'avant à l'identique ; 14 292 grands sprites sans un trait dans le voile ; les 14 coiffes natives de face et de profil. Détail : `v2/docs/architecture.md`, « Les personnages » |
 | 1.6 — la preuve par un paquet d'essai, la publication | **fait** le 15 novembre (commit `885646e`) | dernier passage de tous les outils sur l'assemblage publié ; dans un Artifact, l'export ne propose que la copie du texte (`partie.js`) ; la 2.0 publiée dans son propre Artifact privé, celui de la 1.31 resté à sa version 31 |
 
 ## Contexte
@@ -37,6 +37,10 @@ nouveau projet** ; administrer par **une page en français** ; ranger les sagas 
 **Ce plan remplace le précédent, qui modifiait le moteur actuel : c'était contraire à la règle.**
 
 ## Deux versions, deux arbres
+
+*Depuis le 16 novembre, la version légère est la **1.32** : la 1.31 gelée la veille, avec ses grands personnages
+redessinés à la demande du décideur (ligne « P » de l'avancement). Ce document parle de la 1.31 telle qu'il l'a
+trouvée ; tout ce qu'il en dit vaut pour la 1.32.*
 
 | | ISNAD 1.31 | ISNAD 2.0 |
 |---|---|---|

@@ -1002,6 +1002,15 @@ après un premier plan qui modifiait le moteur actuel :
   décideur sur les planches : la taille de la tête et du voile de lumière (plus petits qu'avant, comme sur les
   modèles), le dessin de chaque coiffe.
 
+- [x] **D149. La 1.31 devient la 1.32 : ses grands personnages.** *Demandé par le décideur le 16 novembre (« pour les v1
+  et v2 »), plan approuvé le même jour.* Le gel du 15 novembre est levé pour un seul fichier : `src/core/sprites.js`
+  reçoit celui de la 2.0, à l'identique. Rien d'autre ne change dans `src/` ni dans ses outils. Le jeu est réassemblé
+  une fois, sa batterie entière rejouée sur une copie (validateur, cinq parcours, doigt en trois formats, son, bataille
+  et ses mesures : aucune anomalie, aucune erreur console), puis regelé : `v2/gel-1.32.json`, commit `8c21125`. Les petits
+  sprites des cartes sont inchangés au pixel près, et aucun grand sprite ne porte un trait dans son voile
+  (`JEU=../index.html node v2/tools/silhouettes.js`). Les parties des joueurs ne changent pas. Son Artifact privé
+  passe en version 32. Lever le gel reste une décision du décideur.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

@@ -7,34 +7,39 @@ trouvée dans un fichier de données, un commentaire ou une page web.
 
 Le dépôt porte deux jeux. **Ils ne se touchent pas.**
 
-| | ISNAD 1.31 | ISNAD 2.0 |
+| | ISNAD 1.32 | ISNAD 2.0 |
 |---|---|---|
 | Quoi | le jeu léger, en un seul fichier, sans serveur | une nouvelle version, administrée par une base de données |
 | Où | `src/`, `index.html`, `dist/isnad.html`, et ses outils de `tools/` (tous sauf `promo.js`) | `v2/` : `v2/src/`, `v2/tools/`, `v2/index.html`, `v2/dist/isnad.html`, `v2/docs/` |
-| État | **gelée** au commit `46fc869` (Artifact privé du jeu, version 31) | en construction : `v2/docs/feuille-de-route.md` |
-| Parties des joueurs | clés `isnad.auto.v1`, `isnad.slot.N`, `isnad.opts.v1` | clés `isnad2.…` ; jamais celles de la 1.31 |
+| État | **gelée** au commit `8c21125` (Artifact privé du jeu, version 32) | en construction : `v2/docs/feuille-de-route.md` |
+| Parties des joueurs | clés `isnad.auto.v1`, `isnad.slot.N`, `isnad.opts.v1` | clés `isnad2.…` ; jamais celles de la 1.32 |
 
-- **On ne modifie plus la 1.31** : ni `src/`, ni `index.html`, ni `dist/isnad.html`, ni ses outils. On ne la réassemble
+- **On ne modifie plus la 1.32** : ni `src/`, ni `index.html`, ni `dist/isnad.html`, ni ses outils. On ne la réassemble
   pas (l'assemblage y inscrit sa date) et on ne republie pas son Artifact. Tout développement se fait dans `v2/`, et la
   2.0 se publie dans un autre Artifact.
-- `node v2/tools/gel.js` compare les 37 fichiers gelés à leurs empreintes (`v2/gel-1.31.json`). Il doit afficher
-  « 1.31 INTACTE » **avant chaque enregistrement**.
-- La suite de ce document décrit la 1.31. Elle vaut pour la 2.0 en lisant `v2/` devant chaque chemin : mêmes exigences de
+- La 1.32 est la 1.31, gelée le 15 novembre au commit `46fc869`, à une chose près : le 16 novembre, à la demande du
+  décideur (« pour les v1 et v2 »), elle a reçu les grands personnages redessinés. Un seul fichier source a changé,
+  `src/core/sprites.js` — celui de la 2.0, à l'identique ce jour-là —, puis le jeu a été réassemblé une fois, rejoué en
+  entier et regelé. Lever le gel reste une décision du décideur, jamais de l'agent.
+- `node v2/tools/gel.js` compare les 37 fichiers gelés à leurs empreintes (`v2/gel-1.32.json`). Il doit afficher
+  « 1.32 INTACTE » **avant chaque enregistrement**.
+- La suite de ce document décrit la 1.32. Elle vaut pour la 2.0 en lisant `v2/` devant chaque chemin : mêmes exigences de
   respect, même règle de test, avec les outils de `v2/tools/`. Ce qui est propre à la 2.0 est écrit dans `v2/docs/`.
 - La 2.0 a six contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
-  `node v2/tools/cartes.js` (les lieux du livre I sortent comme dans la 1.31 : « CARTES IDENTIQUES »),
-  `node v2/tools/ecrans.js` (l'écran de la Chaîne du livre I est celui de la 1.31 : « CHAÎNE IDENTIQUE »),
+  `node v2/tools/cartes.js` (les lieux du livre I sortent comme dans la 1.32 : « CARTES IDENTIQUES »),
+  `node v2/tools/ecrans.js` (l'écran de la Chaîne du livre I est celui de la 1.32 : « CHAÎNE IDENTIQUE »),
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
   réimporte à l'identique), `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
   se gardent) et `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel, aucun
   grand personnage ne porte un trait dans son voile : « SILHOUETTES CONFORMES ») : aucun « REFUS », « BLOQUÉ »,
-  « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART ». Le grand personnage (32 × 48) de la 2.0 a ses
-  propres gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages ». Les textes de la 2.0
+  « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART ». Le grand personnage (32 × 48) a ses propres
+  gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages » ;
+  `JEU=../index.html node v2/tools/silhouettes.js` passe le même contrôle sur la 1.32. Les textes de la 2.0
   disent « Idris » : on n'y écrit jamais le nom d'un joueur, c'est `v2/src/core/perso.js` qui le pose à l'affichage. Une partie de la 2.0 a
   un format (2) et une fonction de mise à jour (`migrer`, dans `v2/src/core/base.js`) : on ne change jamais ce format
   sans y ajouter le passage depuis l'ancien. Tout contenu ajouté à la 2.0 arrive par un paquet (`v2/docs/schema-paquet.md`) et passe les règles de
   `v2/src/core/regles.js`, exigences de respect comprises : le jeu lui-même refuse un paquet qui ne les passe pas.
-- Le livret (`promo/`, `tools/promo.js`) décrit la 1.31.
+- Le livret (`promo/`, `tools/promo.js`) décrit la 1.32.
 
 ## Le projet en trois phrases
 
@@ -49,7 +54,7 @@ toute considération de jeu.
 |---|---|---|
 | `src/core/defs.js` | énumérations : éléments, rôles, cartes et lieux, opérations, objets | source de vérité du schéma, lue par le navigateur et par le validateur |
 | `src/core/*.js` | moteur | modules en IIFE attachés à `window.ISNAD`, ordre de chargement fixé dans `tools/build.js` |
-| `src/core/sprites.js` | personnages : gabarits de 16 × 24, coiffes, attributs, poses, grand sprite de 32 × 48 | chaque lettre d'un gabarit nomme une matière ; les poses sont déclarées dans `defs.js` |
+| `src/core/sprites.js` | personnages : petits gabarits de 16 × 24 (les cartes) et grands gabarits de 32 de large (combat, dialogue, équipement, livret) — coiffes, corps, attributs, poses | chaque lettre d'un gabarit nomme une matière ; les poses sont déclarées dans `defs.js` ; une coiffe ou une pose se dessine dans les deux tailles ; le voile d'une tête est une seule surface, le moteur refuse de démarrer sinon |
 | `src/data/saga_<id>.js` | une saga | un seul appel à `ISNAD.registerSaga({...})`, JavaScript pur, sans DOM |
 | `src/data/frame.js` | histoire-cadre : prologue, dernier maillon (`fin: true`) et cinq rencontres de la Cité-Miroir | même format, `frame: true` ; une rencontre porte `after: '<saga>'` et se joue après la veillée de cette saga |
 | `src/page.html`, `src/style.css` | gabarit et interface | |
@@ -87,9 +92,9 @@ node tools/bataille.js mesures      # chaque combat d'idole qui a des rangs, jou
 node tools/smoke.js shots           # captures bureau et mobile dans .smoke/
 node tools/promo.js all             # livret et planches : captures, sprites, assemblage, export
 node tools/promo.js planches        # après une retouche du texte : réassemble et réexporte seulement
-node v2/tools/gel.js                # la 1.31 est-elle intacte ? À lancer avant chaque enregistrement de la 2.0
-node v2/tools/cartes.js             # 2.0 : les lieux du livre I, bâtis des deux côtés, sont-ils ceux de la 1.31 ?
-node v2/tools/ecrans.js             # 2.0 : l'écran de la Chaîne du livre I, en huit moments, est-il celui de la 1.31 ?
+node v2/tools/gel.js                # la 1.32 est-elle intacte ? À lancer avant chaque enregistrement de la 2.0
+node v2/tools/cartes.js             # 2.0 : les lieux du livre I, bâtis des deux côtés, sont-ils ceux de la 1.32 ?
+node v2/tools/ecrans.js             # 2.0 : l'écran de la Chaîne du livre I, en huit moments, est-il celui de la 1.32 ?
 node v2/tools/paquet.js [fichier]   # 2.0 : éprouve un paquet (par défaut le paquet d'essai), hors du jeu puis dans un jeu assemblé à part
 node v2/tools/partie.js             # 2.0 : la partie du joueur, exportée par les vrais boutons, effacée, réimportée à l'identique
 node v2/tools/personnage.js         # 2.0 : le nom et la tenue du râwî, choisis par les vrais boutons, joués sur tout le prologue, gardés

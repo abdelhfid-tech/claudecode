@@ -56,7 +56,7 @@ il range ses sagas dans un autre livre, qu'il déclare (`livres`) s'il ne l'est 
 le même livre, sous le même titre.
 
 - Sur l'écran de la Chaîne, chaque livre a son titre — « LIVRE II · … » — et son compte de maillons. Avec un seul
-  livre, aucun titre : c'est l'écran de la 1.31.
+  livre, aucun titre : c'est l'écran de la 1.32.
 - Les maillons d'un livre se rangent par `order` et portent des chiffres romains calculés (maillon I, II, III…).
 - Les maillons d'un autre livre s'ouvrent dès que le prologue est passé, comme ceux du livre I ; le grand bouton, lui,
   propose d'abord le livre I, puis le dernier maillon, puis les autres livres.
@@ -137,7 +137,7 @@ Un paquet passe deux contrôles, toujours les mêmes, où qu'il soit lu :
 1. **Sa forme et ses identifiants** (`D.paquet.refus`, dans `defs.js`) : les clés, le moteur demandé, chaque identifiant
    neuf, chaque renvoi vers une chose qui existe.
 2. **Les règles du contenu** (`verifierPaquet`, dans `regles.js`), sur une copie des tables étendue de ce que le paquet
-   déclare : les règles de chaque saga (celles de la 1.31, exigences de respect comprises), de l'équipement, des objets,
+   déclare : les règles de chaque saga (celles de la 1.32, exigences de respect comprises), de l'équipement, des objets,
    des pistes, des noms de lieux, puis de l'ensemble avec le contenu déjà posé (`after`, ordre dans le livre).
 
 Trois lecteurs pour ce même texte de règles :

@@ -45,8 +45,12 @@ précédente (section suivante) sont remplacés par des silhouettes dessinées p
   s'écartent), garde (le manteau ramené devant soi). Le moteur s'en sert seul en combat (garde, vertu
   dite le bras levé, épuisement sous 20 % de Constance, salut à la victoire) et pendant la prière ; un
   script les pose avec `['emote', qui, pose]`.
-- **Le grand sprite** (32 × 48) sert au combat, au menu du groupe et au livret. C'est le même dessin,
-  agrandi par Scale2x puis enrichi : dégradé du voile, plis des étoffes, galon au bas du manteau.
+- **Le grand sprite** (32 × 48) sert au combat, au dialogue, au menu du groupe et au livret. Depuis le
+  16 novembre il a ses propres gabarits, de 32 de large, dessinés d'après les modèles du décideur : une
+  tête plus petite, un corps plus long, les bras détachés du buste ; cinq tons par matière, une seule
+  lumière, le galon au bas de la robe. Le petit sprite des cartes (16 × 24) n'a pas changé. Le voile
+  d'une tête est une seule surface : le moteur refuse de démarrer sinon (`src/core/sprites.js`,
+  « le grand sprite natif »).
 
 ### Qui est qui (demande du décideur : « ils ont tous la même coupe et quasiment les mêmes habits »)
 

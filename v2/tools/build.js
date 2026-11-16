@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* ISNAD 2.0 — assemble le jeu de v2/ en un seul fichier (la 1.31, à la racine du dépôt, a son propre outil et ne bouge plus).
+/* ISNAD 2.0 — assemble le jeu de v2/ en un seul fichier (la 1.32, à la racine du dépôt, a son propre outil et ne bouge plus).
    - index.html          : page autonome (dépôt, hébergement statique)
    - dist/isnad.html     : fragment sans <html>/<head>/<body> (publication en Artifact)
    Les paquets publiés (paquets/*.json) sont embarqués après le jeu de base ; le jeu les contrôle lui-même en les posant.
@@ -29,7 +29,7 @@ const poser = f => { const p = JSON.parse(fs.readFileSync(f, 'utf8'));
 // version lisible par le joueur (écran-titre, page Diagnostic) : date de l'assemblage et dernier commit
 // « + » : des sources ont changé depuis ce commit (les fichiers générés ne comptent pas)
 let rev = ''; try { const sh = c => require('child_process').execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); rev = sh('git rev-parse --short HEAD') + (sh('git status --porcelain -- src tools paquets') ? '+' : ''); } catch (e) { /* hors dépôt */ }
-const NUMERO = '2.0'; // la 1.31 est le jeu léger gelé à la racine du dépôt
+const NUMERO = '2.0'; // la 1.32 est le jeu léger gelé à la racine du dépôt
 const version = NUMERO + (vers ? ' · essai' : '') + ' · ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC' + (rev ? ' · ' + rev : '');
 const js = `window.ISNAD_VERSION = ${JSON.stringify(version)};\n` + core.concat(data).map(f => `/* ==== ${f} ==== */\n` + read(f)).concat(paquets.map(poser)).join('\n') +
   '\n(window.claude && window.claude.hot && window.claude.hot.ready) ? window.claude.hot.ready(function () { ISNAD.ui.boot(); }) : ISNAD.ui.boot();\n';
