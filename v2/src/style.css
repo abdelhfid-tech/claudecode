@@ -253,8 +253,8 @@ body.in-dialog #pad, body.in-battle #pad, body.in-screen #pad { display: none; }
 body.padon #pad .dpad { visibility: visible; }
 #pad .dpad button { position: absolute; width: 44px; height: 44px; background: rgba(20, 16, 36, .55); border: 1px solid rgba(233, 200, 119, .45); color: var(--gold); border-radius: 8px; font-size: 16px; touch-action: none; }
 #pad .dpad .u { left: 44px; top: 0; } #pad .dpad .d { left: 44px; top: 88px; } #pad .dpad .l { left: 0; top: 44px; } #pad .dpad .r { left: 88px; top: 44px; }
-#pad .ab { display: flex; gap: 14px; align-items: flex-end; pointer-events: auto; }
-#pad .ab button { width: 62px; height: 62px; border-radius: 50%; background: rgba(20, 16, 36, .55); border: 1px solid rgba(233, 200, 119, .5); color: var(--gold); font-family: var(--f-display); font-size: 13px; touch-action: none; }
+#pad .ab { display: flex; gap: 14px; align-items: flex-end; pointer-events: none; } /* seuls les boutons reçoivent le toucher : entre eux, on touche la scène */
+#pad .ab button { pointer-events: auto; width: 62px; height: 62px; border-radius: 50%; background: rgba(20, 16, 36, .55); border: 1px solid rgba(233, 200, 119, .5); color: var(--gold); font-family: var(--f-display); font-size: 13px; touch-action: none; }
 #pad .ab .b { width: 48px; height: 48px; font-size: 11px; }
 #pad button.down { background: rgba(233, 200, 119, .35); }
 

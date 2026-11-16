@@ -8,6 +8,11 @@
      B. La descente du râwî : l'entrée, ceux qui rôdent, la cible ; l'issue (un niveau) ; l'abri (Esprit et Souffle),
         où rien n'entre ; le temps écoulé ; rattrapé (épuisé : la porte reste close, un sommeil sans songe la rouvre) ;
         lame forgée et accompagné, on fait face à une idée noire puis à un mal du cœur.
+     C. Frapper ce qui rôde : dans le labyrinthe d'un chapitre, de petits égrégores vont et viennent sur les ponts, jamais
+        dans les lieux nommés ; « Entrée » ou un toucher les frappe (un voile de moins, sonnés, ils laissent passer), sans
+        voile ils se dissipent et ne reviennent pas ; s'ils rejoignent le groupe, c'est un combat ; après une remontée, plus
+        rien ne rôde. Dans la descente du râwî : un coup sonne et ne vainc pas ; lame forgée et accompagné, les coups
+        entament une idée noire jusqu'à la dissiper.
    « DESCENTE CONFORME », sinon « ÉCART ». Captures dans .smoke/descente. */
 const { chromium } = require('playwright'); const fs = require('fs'), path = require('path');
 const V2 = path.join(__dirname, '..'), out = path.join(V2, '.smoke/descente'), url = 'file://' + path.join(V2, 'index.html');
@@ -22,7 +27,7 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
   // la touche Entrée n'est donnée que si un carton ou un dialogue est affiché : sinon elle irait à l'écran-titre, que l'on contourne ici
   const entree = async () => { if (await p.evaluate(() => ['#card', '#dialog'].some(q => { const e = document.querySelector(q); return e && !e.hidden; }))) await p.keyboard.press('Enter'); };
   const calme = async (n = 60) => { for (let i = 0; i < n && await p.evaluate(() => window.ISNAD.script.busy || window.ISNAD.world.lock); i++) { await entree(); await p.waitForTimeout(160); } await p.waitForTimeout(250); };
-  await p.evaluate(() => { const I = window.ISNAD; I.save.reset(); I.save.data.started = true; I.debug.graine = 20261116; /* des graines fixes : chaque passage voit les mêmes labyrinthes ; leur variété, c'est dedales.js qui l'éprouve */ document.querySelectorAll('.screen').forEach(e => e.hidden = true); document.body.classList.remove('in-screen'); I.input.reset(); // l'écran-titre est contourné : son écouteur aussi, pour que les touches aillent au monde comme en jeu
+  await p.evaluate(() => { const I = window.ISNAD; I.save.reset(); I.save.data.started = true; I.debug.sansMeutes = true; /* A et B éprouvent le labyrinthe et la descente ; ce qui rôde dans un récit, c'est C */ I.debug.graine = 20261116; /* des graines fixes : chaque passage voit les mêmes labyrinthes ; leur variété, c'est dedales.js qui l'éprouve */ document.querySelectorAll('.screen').forEach(e => e.hidden = true); document.body.classList.remove('in-screen'); I.input.reset(); // l'écran-titre est contourné : son écouteur aussi, pour que les touches aillent au monde comme en jeu
     I.debug.auto = true; I.speed = 30; I.world.roster = {}; I.world.saga = null; I.world.startChapter('abubakr', 0); setTimeout(() => { I.debug.auto = false; I.speed = 1; }, 250); });
   await p.waitForTimeout(1800); await calme();
   const empreinte = () => p.evaluate(() => { const m = window.ISNAD.world.map; let h = 2166136261; for (let i = 0; i < m.solid.length; i++) { h ^= m.solid[i]; h = Math.imul(h, 16777619); } return (h >>> 0) + ' ' + JSON.stringify(m.spots); });
@@ -122,8 +127,98 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
   await p.screenshot({ path: path.join(out, 'B-6-face.png') }); await aller('issue'); await p.waitForTimeout(500); await remonter();
   const e5 = await etat(), fl = await p.evaluate(id => !!window.ISNAD.script.flags['_noir_' + id], n1.id || '');
   si(e5.saga === 'abubakr' && e5.derniere === 'issue' && fl, 'de retour au récit : l’idée noire dissipée le reste jusqu’au chapitre suivant', `de retour : ${JSON.stringify(e5)} drapeau ${fl}`);
+
+  /* ---------- C. frapper ce qui rôde ---------- */
+  await p.evaluate(() => { const I = window.ISNAD; I.debug.sansMeutes = false; I.debug.profondeur = 3; });
+  const pres = (id, cases, gele) => p.evaluate(([id, cases, gele]) => { const I = window.ISNAD, W = I.world, R = I.rodeurs, f = W.foes.find(q => q.id === id), T = 16, m = W.map; if (!f) return null;
+    // sur le pont du rôdeur, à « cases » cases de lui, tourné vers lui
+    let ou = null; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(q => { if (ou) return; let bon = true; for (let k = 1; k <= cases; k++) { const x = Math.floor(f.x / T) + q[0] * k, y = Math.floor(f.y / T) + q[1] * k; if (x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x] || m.g0(x * T + 8, y * T + 8) !== 'npont') bon = false; } if (bon) ou = [Math.floor(f.x / T) + q[0] * cases, Math.floor(f.y / T) + q[1] * cases]; });
+    if (!ou) return null; if (gele) { f.v = 0; f.sonne = 0; f.pousse = null; f.x = Math.floor(f.x / T) * T + 8; f.y = Math.floor(f.y / T) * T + 8; f.cx = null; }
+    W.player.x = ou[0] * T + 8; W.player.y = ou[1] * T + 8; W.dest = null; const dx = f.x - W.player.x, dy = f.y - W.player.y; W.player.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); W.updateCam(true); R._pret = 0;
+    return { d: Math.round(Math.hypot(dx, dy)), voiles: f.voiles, coups: R.coups | 0, touches: R.touches | 0 }; }, [id, cases, gele]);
+  { const c = await p.evaluate(async () => { const I = window.ISNAD, W = I.world, R = I.rodeurs; await I.script.run([['map', 'noos', 'seuil', { hue: 210 }]]);
+      const L = R.rodent(), m = W.map, s0 = W.spotPx('seuil'), E = W.saga.enemies; window.__depart = L.map(f => [f.id, f.x, f.y]);
+      return { n: L.length, attendu: R.MEUTES[3], ponts: L.every(f => m.g0(f.x, f.y) === 'npont'), loin: L.every(f => Math.hypot(f.x - s0[0], f.y - s0[1]) > 9 * 16), petits: L.every(f => E[f.group[0]] && E[f.group[0]].tier === 'minion' && !I.D.NOIRS.includes(f.group[0])), voiles: L.map(f => f.voiles).join(','), arme: R.enMain().type }; });
+    si(c.n === c.attendu && c.n > 0 && c.ponts && c.loin && c.petits, `le labyrinthe d'un chapitre : ${c.n} petits égrégores du récit rôdent, posés sur des ponts, à l'écart du seuil (voiles : ${c.voiles}) ; aucune idée noire`, `ce qui rôde : ${JSON.stringify(c)}`);
+    // trente secondes de va-et-vient, le groupe restant au seuil : toujours sur les ponts, jamais dans un lieu nommé
+    const v = await p.evaluate(() => { const I = window.ISNAD, W = I.world, R = I.rodeurs, m = W.map; let hors = 0; const c0 = R.chrono.reste; for (let i = 0; i < 900; i++) { R.tic(1 / 30); R.rodent().forEach(f => { if (m.g0(f.x, f.y) !== 'npont') hors++; }); } R.chrono.reste = c0;
+      const bouge = R.rodent().filter(f => { const d = window.__depart.find(q => q[0] === f.id); return d && Math.hypot(f.x - d[1], f.y - d[2]) > 16; }).length; return { hors, bouge, n: R.rodent().length, combat: I.battle.active }; });
+    si(!v.hors && v.bouge >= 1 && v.n === c.n && !v.combat, `trente secondes de va-et-vient : ${v.bouge} sur ${v.n} ont bougé, aucun n'a quitté les ponts ni rejoint le groupe au seuil`, `va-et-vient : ${JSON.stringify(v)}`);
+    await calme(8);
+    // « Entrée » frappe : un voile de moins, sonné ; sonné, il laisse passer
+    const a0 = await pres('meute0', 1, true); await p.waitForTimeout(250); await p.keyboard.press('Enter'); await p.waitForTimeout(200);
+    const a1 = await p.evaluate(() => { const I = window.ISNAD, R = I.rodeurs, f = I.world.foes.find(q => q.id === 'meute0'); return { coups: R.coups | 0, touches: R.touches | 0, voiles: f.voiles, sonne: f.sonne > 0, dialogue: !document.querySelector('#dialog').hidden, lecon: I.save.data.codex.includes('coeur/frappe') }; });
+    await p.screenshot({ path: path.join(out, 'C-1-frappe.png') });
+    si(a0 && a1.coups === a0.coups + 1 && a1.touches === a0.touches + 1 && a1.voiles === a0.voiles - 1 && a1.sonne && !a1.dialogue, `« Entrée », face à ce qui rôde, le frappe (arme en main : ${c.arme}) : un voile de moins, il est sonné`, `la frappe au clavier : ${JSON.stringify(a0)} → ${JSON.stringify(a1)}`);
+    const a2 = await p.evaluate(() => new Promise(res => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.id === 'meute0'); f.sonne = 3; f.pousse = null; W.player.x = f.x; W.player.y = f.y + 2; setTimeout(() => res({ combat: I.battle.active, busy: I.script.busy, sonne: f.sonne > 0 }), 700); }));
+    si(!a2.combat && !a2.busy && a2.sonne, 'sonné, il laisse passer : on le traverse sans combat', `sonné : ${JSON.stringify(a2)}`);
+    // frappé jusqu'au bout, il se dissipe ; le groupe y gagne, le Recueil le connaît, il ne revient pas
+    const x0 = await p.evaluate(() => { const W = window.ISNAD.world, h = W.hero(W.party[0]); return h.lvl * 1000 + h.xp; });
+    for (let i = 0; i < 8 && await p.evaluate(() => !window.ISNAD.world.foes.find(q => q.id === 'meute0').done); i++) { await pres('meute0', 1, true); await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.frappe(I.world.foes.find(q => q.id === 'meute0')); }); await p.waitForTimeout(120); }
+    const a3 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, R = I.rodeurs, f = W.foes.find(q => q.id === 'meute0'), h = W.hero(W.party[0]); return { fini: f.done, drapeau: !!I.script.flags[f.cle], gain: h.lvl * 1000 + h.xp, recueil: I.save.data.codex.includes('foe:' + W.saga.id + ':' + f.group[0]), dissipes: R.dissipes | 0, restent: R.rodent().length }; });
+    await p.waitForTimeout(300); await p.screenshot({ path: path.join(out, 'C-2-dissipe.png') });
+    si(a3.fini && a3.drapeau && a3.gain > x0 && a3.recueil && a3.restent === c.n - 1, 'sans voile, il se dissipe : le groupe y gagne de l’expérience, le Recueil le connaît, il en reste un de moins', `dissipé : ${JSON.stringify(a3)} (avant ${x0})`);
+    // au doigt : toucher ce qui rôde, à trois cases, c'est s'en approcher puis le frapper
+    const t0 = await pres('meute1', 3, true);
+    if (t0) { const pt = await p.evaluate(() => { const I = window.ISNAD, W = I.world, G = I.gfx, f = W.foes.find(q => q.id === 'meute1'), r = document.getElementById('cv').getBoundingClientRect(); return { x: r.left + (f.x - G.cale(W.cam.x)) / G.PW * r.width, y: r.top + (f.y - 12 - G.cale(W.cam.y)) / G.PH * r.height }; });
+      await p.mouse.click(pt.x, pt.y); await p.waitForTimeout(1800);
+      const t1 = await p.evaluate(() => { const I = window.ISNAD, R = I.rodeurs, f = I.world.foes.find(q => q.id === 'meute1'); return { touches: R.touches | 0, voiles: f.voiles, d: Math.round(Math.hypot(f.x - I.world.player.x, f.y - I.world.player.y)), combat: I.battle.active }; });
+      si(t1.touches > t0.touches && t1.voiles < t0.voiles && !t1.combat, `au doigt : toucher ce qui rôde, à trois cases, c'est s'en approcher puis le frapper (de ${t0.d} à ${t1.d} points, un voile de moins)`, `au doigt : ${JSON.stringify(t0)} → ${JSON.stringify(t1)}`);
+    } else ko('au doigt : aucun pont droit de trois cases près du deuxième rôdeur');
+    // s'il rejoint le groupe : un combat ordinaire, après quoi il n'est plus là
+    // (le joueur de test ne mène que ce combat-là : sitôt fini, il rend la main — sinon il continuerait le récit)
+    await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.id === 'meute1'), os = I.battle.start; window.__combats = 0;
+      I.battle.start = async function (o) { window.__combats++; I.debug.auto = true; I.speed = 30; try { return await os.call(this, o); } finally { I.debug.auto = false; I.speed = 1; I.battle.start = os; } };
+      f.sonne = 0; f.pousse = null; f.v = 30; W.player.x = f.x + 3; W.player.y = f.y; W.dest = null; });
+    for (let i = 0; i < 40 && !(await p.evaluate(() => window.__combats)); i++) await p.waitForTimeout(120);
+    const b0 = await p.evaluate(() => window.__combats === 1); await p.waitForTimeout(400);
+    for (let i = 0; i < 240 && await p.evaluate(() => window.ISNAD.battle.active || window.ISNAD.script.busy); i++) await p.waitForTimeout(250);
+    await p.waitForTimeout(300);
+    const b1 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.id === 'meute1'); return { fini: f.done, drapeau: !!I.script.flags[f.cle], carte: W.map.id, restent: I.rodeurs.rodent().length }; });
+    si(b0 && b1.fini && b1.drapeau && b1.carte === 'noos' && b1.restent === c.n - 2, 's’il rejoint le groupe : un combat ordinaire ; vaincu, il ne rôde plus', `le contact : combat ${b0} ${JSON.stringify(b1)}`);
+    // la partie reprise : ceux qui sont dissipés ou vaincus ne reviennent pas, les autres sont là
+    await p.evaluate(async () => { const I = window.ISNAD, W = I.world; W.player.x = W.spotPx('seuil')[0]; W.player.y = W.spotPx('seuil')[1]; W.checkpoint(); const cp = JSON.parse(JSON.stringify(I.save.data.cp)); W.loadMap('medine', {}, null); await W.startChapter(cp.saga, cp.ci, cp); }); await calme();
+    const r0 = await p.evaluate(() => window.ISNAD.rodeurs.rodent().map(f => f.id).join(','));
+    si(r0 === (c.n > 2 ? 'meute2' : ''), `reprise : ce qui a été dissipé ou vaincu ne revient pas (reste : ${r0 || 'rien'})`, `reprise : il rôde « ${r0} »`);
+    // le chrono écoulé : on remonte, et plus rien ne rôde ; une nouvelle descente du récit les ramène
+    await p.evaluate(() => { window.ISNAD.debug.compte = 0.4; }); await p.waitForTimeout(2600); await calme();
+    const r1 = await p.evaluate(() => ({ n: window.ISNAD.rodeurs.rodent().length, off: !!window.ISNAD.script.flags._meutes_off }));
+    const r2 = await p.evaluate(async () => { const I = window.ISNAD; await I.script.run([['map', 'noos', 'seuil', { hue: 210 }]]); return { n: I.rodeurs.rodent().length, off: !!I.script.flags._meutes_off }; });
+    si(r1.n === 0 && r1.off && r2.n === c.n && !r2.off, `après une remontée au chrono, plus rien ne rôde ; une nouvelle descente du récit en ramène ${r2.n}`, `remontée : ${JSON.stringify(r1)} ; nouvelle descente : ${JSON.stringify(r2)}`);
+    await p.evaluate(async () => { const I = window.ISNAD, W = I.world; I.debug.sansMeutes = true; W.checkpoint(); const cp = JSON.parse(JSON.stringify(I.save.data.cp)); cp.map = 'medine'; cp.opts = { time: 'day' }; cp.pos = [488, 701]; I.save.data.cp = cp; await W.startChapter(cp.saga, cp.ci, cp); }); await calme();
+  }
+  { // la descente du râwî, seul : un coup sonne, il ne vainc pas
+    await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.repos(); window.__bete = I.save.data.animal; I.save.data.animal = null; });
+    await descendre('sommeil');
+    const s0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.rodeur && q.placed && !q.done); window.__r = f.id; return { accompagne: W.excursion.accompagne, id: f.group[0], peut: I.rodeurs.peutFaireFace(f.group[0]) }; });
+    const rid = await p.evaluate(() => window.__r); await pres(rid, 1, true); await p.waitForTimeout(200); await p.keyboard.press('Enter'); await p.waitForTimeout(200);
+    const s1 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.id === window.__r); return { sonne: f.sonne > 0, tenue: f.tenue, fini: f.done, coups: I.rodeurs.coups | 0 }; });
+    await p.screenshot({ path: path.join(out, 'C-3-descente-sonne.png') });
+    const s2 = await p.evaluate(() => new Promise(res => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.id === window.__r); f.sonne = 3; f.pousse = null; W.player.x = f.x; W.player.y = f.y + 2; setTimeout(() => res({ encore: !!W.excursion && !W.excursion.fin, combat: I.battle.active }), 700); }));
+    si(!s0.accompagne && !s0.peut && s1.sonne && s1.tenue === undefined && !s1.fini && s2.encore && !s2.combat, `la descente, seul : frappé, ce qui rôde (${s0.id}) est sonné et laisse passer ; rien ne l'entame`, `la descente, seul : ${JSON.stringify(s0)} ${JSON.stringify(s1)} ${JSON.stringify(s2)}`);
+    await p.evaluate(() => { const W = window.ISNAD.world, f = W.foes.find(q => q.id === window.__r); f.sonne = 0.05; }); await p.waitForTimeout(600); await remonter();
+    const s3 = await etat(); si(s3.derniere === 'rattrape' && s3.clos, 'le coup passé, il rattrape : seul, on ne vainc pas', `après le coup : ${JSON.stringify(s3)}`);
+    await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.repos(); I.save.data.animal = window.__bete; });
+    // lame forgée et accompagné : les coups entament une idée noire, jusqu'à la dissiper
+    await descendre('sommeil');
+    const n0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.rodeur && q.placed && !q.done && I.D.NOIRS.includes(q.group[0])); if (!f) return null; window.__r = f.id; return { id: f.group[0], peut: I.rodeurs.peutFaireFace(f.group[0]), accompagne: W.excursion.accompagne }; });
+    if (!n0) ko('aucune idée noire ne rôde dans cette descente');
+    else { const nid = await p.evaluate(() => window.__r); let k = 0;
+      for (; k < 12 && await p.evaluate(() => !window.ISNAD.world.foes.find(q => q.id === window.__r).done); k++) { await pres(nid, 1, true); await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.frappe(I.world.foes.find(q => q.id === window.__r)); }); await p.waitForTimeout(100); }
+      const n1b = await p.evaluate(id => { const I = window.ISNAD, W = I.world, E = W.excursion, f = W.foes.find(q => q.id === window.__r); return { fini: f.done, note: !!(E && E.flags['_noir_' + id]), encore: !!E && !E.fin, combat: I.battle.active }; }, n0.id);
+      await p.waitForTimeout(300); await p.screenshot({ path: path.join(out, 'C-4-descente-dissipee.png') });
+      si(n0.peut && n0.accompagne && n1b.fini && n1b.note && n1b.encore && !n1b.combat, `lame forgée et accompagné : ${k} coups entament une idée noire (${n0.id}) jusqu'à la dissiper, sans combat ; la descente continue`, `l'idée noire frappée : ${JSON.stringify(n0)} ${JSON.stringify(n1b)} en ${k} coups`);
+      // un mal du cœur, lui, ne s'entame pas : il faut lui faire face
+      const m0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.rodeur && q.placed && !q.done && !I.D.NOIRS.includes(q.group[0])); if (!f) return null; window.__r = f.id; return f.group[0]; });
+      if (m0) { const mid = await p.evaluate(() => window.__r); for (let i = 0; i < 6; i++) { await pres(mid, 1, true); await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.frappe(I.world.foes.find(q => q.id === window.__r)); }); await p.waitForTimeout(80); }
+        const m1b = await p.evaluate(() => { const f = window.ISNAD.world.foes.find(q => q.id === window.__r); return { fini: f.done, tenue: f.tenue, sonne: f.sonne > 0 }; });
+        si(!m1b.fini && m1b.tenue === undefined && m1b.sonne, `un mal du cœur (${m0}) ne s'entame pas à coups répétés : sonné, il reste debout — il faut lui faire face`, `le mal du cœur frappé : ${JSON.stringify(m1b)}`); }
+      await aller('issue'); await p.waitForTimeout(500); await remonter();
+      const fin = await p.evaluate(id => ({ drapeau: !!window.ISNAD.script.flags['_noir_' + id], saga: window.ISNAD.world.saga.id }), n0.id);
+      si(fin.drapeau && fin.saga === 'abubakr', 'de retour au récit : l’idée noire dissipée à coups de lame le reste jusqu’au chapitre suivant', `de retour : ${JSON.stringify(fin)}`); }
+  }
   await b.close();
   if (errors.length) { [...new Set(errors)].slice(0, 6).forEach(e => ko('erreur console : ' + e)); } else ok('aucune erreur console');
-  console.log(ecarts ? `✗ ${ecarts} ÉCART(S)` : '✓ DESCENTE CONFORME — le labyrinthe d’un chapitre et la descente du râwî (captures dans .smoke/descente)');
+  console.log(ecarts ? `✗ ${ecarts} ÉCART(S)` : '✓ DESCENTE CONFORME — le labyrinthe d’un chapitre, la descente du râwî, ce qui rôde et la frappe (captures dans .smoke/descente)');
   process.exit(ecarts ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

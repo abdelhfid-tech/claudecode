@@ -695,11 +695,13 @@
     const cv = mk(w, h), c = cv.getContext('2d'), px = (x, y, col) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } }; if (s === 2) cv.hd = 2;
     const voile = m => m === 'V' || m === 'v', at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? '.' : L[y][x];
     const plein = (x, y) => { const m = at(x, y); return m !== '.' && (voile(m) || pal[m] != null); }, meme = (x, y, f) => { const m = at(x, y); return m !== '.' && FAM[m] === f && !!R[m]; };
-    // le voile : une lumière qui se dégrade du centre vers le bord (Compagnons), une étoffe unie sinon — jamais un trait
+    // le voile : une lumière qui se dégrade du centre vers le bord (Compagnons), une étoffe unie sinon — jamais un trait.
+    // En dessin fin, celle d'un Compagnon rayonne de la couleur qui lui est propre (look.rayon) : un cœur blanc, puis sa couleur.
+    const ray = K.lit && G.D > 1 && look.rayon ? look.rayon : null, ray1 = ray && mix(ray, '#ffffff', 0.5), ray2 = ray && mix(ray, '#ffffff', 0.08);
     let x0 = 99, x1 = -1, y0 = 99, y1 = -1; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (voile(L[y][x])) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
     const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 - 0.5, rx = (x1 - x0) / 2 + 0.5, ry = (y1 - y0) / 2 + 0.5;
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const m = L[y][x]; if (m === '.') continue;
-      if (voile(m)) { const dd = Math.hypot((x - cx) / rx, (y - cy) / ry); px(x, y, K.lit ? (dd < 0.5 ? '#ffffff' : dd < 0.82 ? pal.V : pal.v) : (y - y0 < 2 * s || dd > 0.86 ? pal.v : pal.V)); continue; }
+      if (voile(m)) { const dd = Math.hypot((x - cx) / rx, (y - cy) / ry); px(x, y, K.lit ? (ray ? (dd < 0.4 ? '#ffffff' : dd < 0.74 ? ray1 : ray2) : (dd < 0.5 ? '#ffffff' : dd < 0.82 ? pal.V : pal.v)) : (y - y0 < 2 * s || dd > 0.86 ? pal.v : pal.V)); continue; }
       const r = R[m]; if (!r) { px(x, y, pal[m]); continue; }                  // main, parchemin, néon, cimier : à plat
       let i = r.i;
       if (am[y][x]) { const a = K.armure, bordG = !am[y][x - 1], bordD = !am[y][x + 1], X = (x / s) | 0, Y = (y / s) | 0;   // l'armure : mailles fines, lamelles en rangs, cuir cousu, toile piquée — le motif garde sa taille, son bord s'affine

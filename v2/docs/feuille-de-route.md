@@ -38,6 +38,20 @@ labyrinthe et les aides restent offertes dans celui d'un chapitre ; sortir vaut 
 Souffle, dix fois au plus ; une idée noire se vainc avec n'importe quelle lame forgée, un mal du cœur avec la sienne ;
 aucune image générée n'entre dans le jeu.
 
+## La 2.x, suite : reconnaître, frapper, choisir sa route
+
+*Demandes du décideur du 16 novembre, après la livraison des labyrinthes (D158 et suivantes). « Lorsque je ne précise
+pas, c'est toujours la v2 » : rien de ce qui suit ne touche la version légère.*
+
+| Lot | Contenu | État |
+|---|---|---|
+| C1 | en combat, on choisit une cible en la touchant elle-même, pas seulement sa plaque | **fait** (D158) |
+| C2 | le voile de chaque Compagnon rayonne d'une couleur qui lui est propre, la même partout | **fait** (D159) ; les vingt-sept couleurs sont à valider |
+| C3 | plus de combats : dans les labyrinthes, de petits égrégores rôdent sur les ponts et l'on frappe en temps réel avec l'arme que l'on porte ; dans la descente du râwî, un coup sonne ce qui rôde | **fait** (D160) ; la lecture retenue (pas d'idée noire dans les récits) est à valider |
+| C4 | les sagas menées de front (un point de reprise par récit), « Revenir en 2084 » à tout moment, trois rebondissements au retour, la Citadelle où Idris est né | **fait** (D161, D162) ; les textes de fiction sont à relire |
+| C5 | la progression : un besoin, un outil, puis sans aide ; une seule décision nouvelle par séquence | à faire |
+| C6 | les postures — le héros, le sage, le saint — selon le tempérament ou l'avancée | à faire |
+
 ## Contexte
 
 Le décideur prépare la suite du jeu et pose une règle nette :

@@ -3,6 +3,10 @@
    veillée, Idris remonte dans la rue et rencontre un habitant enfermé dans une idole. Il le dénoue par la parole ;
    les meilleurs arguments demandent un savoir appris chez le Compagnon ou à la Citadelle (need: 'saga/id').
    Tout y est de fiction. Les types sont anciens ; les images et les phrases sont originales. */
+/* 2.x — trois retours (x_*, marqués « retour: n ») : ce qui s'est passé aux Archives basses pendant qu'Idris suivait un
+   récit, joué une fois quand il revient en 2084 pour la n-ième fois (ou plus tard). Et une visite (« visite: 'citadelle' ») :
+   la Citadelle du Caïd, où Idris est né, ouverte depuis la Chaîne dès la première veillée entendue. Le moteur pose
+   l'état de 2084 en drapeaux (_2084_*) : un récit les lit, il ne les écrit pas. Textes proposés par l'agent, à relire. */
 /* Depuis la version du cœur : chaque rencontre porte, à sa deuxième manche, l'idée noire de celui à qui l'on
    parle (« noir »), et s'achève devant le mal du cœur qui se tenait derrière lui. Le dernier chapitre fait se
    dresser ceux qui n'ont pas été tranchés (['vices', …]). Textes des maux et des lames : src/data/coeur.js. */
@@ -135,6 +139,10 @@ ISNAD.registerSaga({
     { id: 'r_admire', cat: 'Noosphère', title: 'L’Admiré', text: 'Sous le grand écran, un homme que des millions de fenêtres applaudissent. Derrière les fenêtres, il n’y a personne. Il ne sait plus qui il serait sans ce bruit. Descendre du socle demande plus de courage que d’y monter : nul n’applaudit celui qui descend. Personnage de fiction.' },
     { id: 'r_compteur', cat: 'Noosphère', title: 'Le Compteur', text: 'Il achète des regards quand personne n’en veut et les garde dans un coffre, sans jamais en poser un sur quelqu’un. Ce qu’on donne, on sait où il est ; ce qu’on amasse, on le perd de vue. Personnage de fiction.' },
     { id: 'r_cartographe', cat: 'Noosphère', title: 'Le Cartographe', text: 'Il dessine la Cité sans y marcher, d’après des millions de relevés. Il demande « combien l’ont vu ? » et jamais « qui ? ». Sa carte porte un mur là où un enfant sait qu’il y a une porte. Un savoir se corrige en allant voir, et se garde avec le nom de celui qui a vu. Personnage de fiction.' },
+    { id: 'x_veiller', cat: 'Noosphère', title: 'Veiller les Archives', text: 'Chaque fois qu’Idris remonte la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus, et envoie voir. On peut suivre plusieurs récits à la fois : chacun attend là où on l’a laissé. Mais des archives qu’on ne veille pas, un autre les raconte à votre place. Fiction.' },
+    { id: 'x_question', cat: 'Noosphère', title: '« Tu pars où ? »', text: 'L’enfant du parvis est descendu jusqu’aux Archives basses pour poser sa question. Idris lui a montré un nom, puis celui qui vient après : c’est ainsi que Maître Yûnus avait commencé avec lui. Personnage de fiction.' },
+    { id: 'x_avis', cat: 'Noosphère', title: 'L’agent du relevé', text: 'Il mesure un lieu au nombre de ceux qui le regardent. Il n’est pas un ennemi : il fait son relevé, et voudrait rentrer chez lui. Mais il est descendu voir, ce que ne font pas ceux qui décident d’en haut. On ne garde pas des archives en les cachant : on y amène quelqu’un. Personnage de fiction.' },
+    { id: 'citadelle_2084', cat: 'Lieu', title: 'La Citadelle, où Idris est né', text: 'Idris est né à la Citadelle, au bord du désert, des siècles après le Caïd dont il entend les veillées. C’est de là qu’on l’envoya apprendre aux Archives basses. Ce que le Caïd décide dans les veillées s’y lit encore : la prière, le savoir, la justice et le lien y tiennent, ou y manquent. Le lieu, le Caïd et Idris sont de fiction.' },
     { id: 'enfant', cat: 'Noosphère', title: 'L’enfant du parvis', text: 'Il est là chaque soir, sous le grand écran, avec une question. Il ne lâche jamais la deuxième. Idris a commencé par lui répondre ; il a fini par l’attendre. On répond de ceux à qui l’on a commencé de répondre : c’est aussi cela, transmettre. Personnage de fiction.' },
     { id: 'avertissement', cat: 'Parole', title: 'Avertissement', text: 'ISNAD est une fiction inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun personnage n’a de visage. Toute erreur est celle des auteurs : vérifiez auprès des sources et des savants.' }
   ],
@@ -617,6 +625,163 @@ ISNAD.registerSaga({
           ['say', 'gamin', 'Moi, sur une carte !'],
           ['say', 'idris', 'C’est ainsi qu’une chose vraie se garde : avec le nom de celui qui l’a vue. Chez ’Alî, j’ai appris à poser la question avant de juger.'],
           ['codex', 'r_cartographe'], ['codex', 'enfant']
+        ] }
+      ]
+    },
+    /* ---------- 2.x : ce qui s'est passé en 2084 pendant qu'Idris suivait un récit ---------- */
+    {
+      id: 'x_descendu', retour: 1, title: 'Ce qui est descendu', sub: 'Cité-Miroir · Archives basses', minLvl: 2, last: true,
+      map: 'archives', start: 'chaine', party: ['idris'],
+      npcs: [
+        { id: 'yunus_x', name: 'Maître Yûnus', hero: 'yunus', at: ['rayonnages', 0, 1], talk: [['say', 'yunus_x', 'Parle bas.']] }
+      ],
+      intro: [
+        ['title', 'Ce qui est descendu', 'Cité-Miroir · Archives basses'],
+        ['nar', 'Idris rouvre les yeux. La lampe du bureau est éteinte. Maître Yûnus n’éteint jamais la lampe.'],
+        ['nar', 'L’ascenseur est en bas, grille ouverte. Personne ne l’a appelé.']
+      ],
+      objectives: [
+        { text: 'Trouver Maître Yûnus, entre les rayonnages', talk: 'yunus_x', then: [
+          ['say', 'yunus_x', 'Parle bas. Quelque chose est descendu avec l’ascenseur. Trois lueurs froides : elles cherchent ce qui brille.'],
+          ['say', 'idris', 'Le Flux ne descend pas jusqu’ici.'],
+          ['say', 'yunus_x', 'Il ne descendait pas. Chaque fois que tu remontes la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus. Il envoie voir.'],
+          ['sfx', 'glitch'], ['hide', 'yunus_x'], ['join', 'yunus'],
+          ['battle', { group: ['notif', 'notif', 'notif'], bg: 'cite', intro: 'Trois notifications entre les rayonnages. Elles ne supportent pas qu’on leur résiste avec patience.' }],
+          ['leave', 'yunus'], ['show', 'yunus_x'],
+          ['say', 'yunus_x', 'Elles ne t’ont pas trouvé, toi. Elles ont trouvé que tu n’étais pas là-haut. Pour l’Agrégor, c’est déjà une faute.'],
+          ['say', 'yunus_x', 'Tu peux suivre plusieurs traces à la fois. Les transmetteurs n’apprenaient pas d’un seul maître : ils allaient de ville en ville, et gardaient chaque chaîne à part.'],
+          ['say', 'yunus_x', 'Mais reviens. Des archives qu’on ne veille pas, un autre les raconte à ta place.'],
+          ['codex', 'x_veiller']
+        ] },
+        { text: 'Rallumer la lampe, au bureau', goto: 'bureau', then: [
+          ['sfx', 'light'],
+          ['nar', 'La lampe se rallume. Dans la poussière du bureau, trois petites traces froides s’effacent déjà.'],
+          ['nar', 'Au fond de la salle, la Chaîne tourne toujours. Chaque récit attend là où Idris l’a laissé.']
+        ] }
+      ]
+    },
+    {
+      id: 'x_enfant', retour: 3, title: '« Tu pars où ? »', sub: 'Cité-Miroir · Archives basses', minLvl: 2, last: true,
+      map: 'archives', start: 'chaine', party: ['idris'],
+      npcs: [
+        { id: 'gamin_x', name: 'L’enfant du parvis', at: ['chaine', -2, 1], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin_x', 'D’après. D’après. D’après.']] },
+        { id: 'yunus_x', name: 'Maître Yûnus', hero: 'yunus', at: 'bureau', talk: [['say', 'yunus_x', 'Il a pris l’ascenseur tout seul. Je n’ai pas eu le cœur de le renvoyer.']] }
+      ],
+      intro: [
+        ['title', '« Tu pars où ? »', 'Cité-Miroir · Archives basses'],
+        ['nar', 'Idris rouvre les yeux. Quelqu’un est assis par terre devant la Chaîne, et attend.'],
+        ['nar', 'L’enfant du parvis. Quarante étages plus bas que là où il devrait être.']
+      ],
+      objectives: [
+        { text: 'Répondre à l’enfant', talk: 'gamin_x', then: [
+          ['say', 'gamin_x', 'J’ai pris l’ascenseur derrière toi. Tu fermes les yeux et tu ne bouges plus. Tu pars où ?'],
+          ['ask', 'Que répondre à l’enfant ?', [
+            { t: 'Je ne pars pas. J’écoute des gens qui ont vu.', r: [['say', 'gamin_x', 'Ils sont là ?'], ['say', 'idris', 'Ils ont vécu il y a très longtemps. C’est pour cela qu’il faut savoir qui a rapporté ce qu’ils ont fait, et de qui il le tenait.']] },
+            { t: 'Dans une chaîne. Chaque anneau est quelqu’un qui a dit : « Je le tiens d’untel. »', r: [['say', 'gamin_x', 'Et le premier anneau, il le tient de qui ?'], ['say', 'idris', 'De ce qu’il a vu de ses yeux. C’est pour cela qu’on l’appelle un témoin.']] },
+            { t: 'Ce n’est pas un endroit pour toi.', r: [['say', 'gamin_x', 'C’est ce qu’on dit quand on ne veut pas répondre.'], ['say', 'idris', 'Tu as raison. Je recommence : j’écoute des gens qui ont vu, et ceux qui l’ont rapporté après eux.']] }
+          ]],
+          ['say', 'gamin_x', 'Là-haut, le grand écran a parlé de toi. Pas longtemps. Entre deux tendances. « Un homme ne regarde plus. »'],
+          ['say', 'idris', 'Il a dit mon nom ?'],
+          ['say', 'gamin_x', 'Non. Il a dit « un homme ». Mais j’ai su que c’était toi.']
+        ] },
+        { text: 'Parler à Maître Yûnus', talk: 'yunus_x', then: [
+          ['say', 'yunus_x', 'Il t’a suivi parce que tu lui réponds. Le jour où tu cesseras, il remontera regarder l’écran.'],
+          ['say', 'yunus_x', 'Garde-le une heure. Montre-lui un nom, puis celui qui vient après. C’est ainsi que j’ai commencé avec toi.'],
+          ['pillar', 'lien', 1], ['codex', 'x_question']
+        ] },
+        { text: 'Revenir devant la Chaîne, avec l’enfant', goto: 'chaine', then: [
+          ['nar', 'L’enfant suit les anneaux du doigt, sans les toucher. « D’après », lit-il. « D’après. D’après. » Il ne demande plus où tu pars.'],
+          ['nar', 'Quand il sera remonté, la Chaîne sera là. Les récits aussi.']
+        ] }
+      ]
+    },
+    {
+      id: 'x_avis', retour: 5, title: 'L’avis', sub: 'Cité-Miroir · Archives basses', minLvl: 2, last: true,
+      map: 'archives', start: 'chaine', party: ['idris'],
+      npcs: [
+        { id: 'agent', name: 'L’agent du relevé', at: ['entree', 0, -1], look: { kind: 'cyber', robe: '#4a4c52', head: '#2c2e33', cloak: '#3a3c42' }, talk: [['say', 'agent', 'Je note, et je remonte.']] },
+        { id: 'yunus_x', name: 'Maître Yûnus', hero: 'yunus', at: 'bureau', talk: [['say', 'yunus_x', 'Laisse-le compter. Puis parle-lui.']] }
+      ],
+      intro: [
+        ['title', 'L’avis', 'Cité-Miroir · Archives basses'],
+        ['nar', 'Idris rouvre les yeux sur un bruit qu’on n’entend jamais ici : des pas qui ne sont ni les siens ni ceux de Maître Yûnus.'],
+        ['nar', 'Un homme en gris se tient près de l’ascenseur, une tablette à la main. Il compte les rayonnages.']
+      ],
+      objectives: [
+        { text: 'Aller au-devant de l’homme en gris', talk: 'agent', then: [
+          ['say', 'agent', 'Archives basses, niveau moins quarante. Audience des trente derniers jours : deux personnes. Je pose l’avis et je remonte.'],
+          ['say', 'idris', 'Quel avis ?'],
+          ['say', 'agent', 'Réaffectation. Un lieu que personne ne regarde ne sert à personne. Ce n’est pas moi qui le dis : c’est le relevé.'],
+          ['parley', {
+            with: 'agent', title: 'Ce que vaut un lieu sans audience',
+            intro: 'Il n’est pas un ennemi : il fait son relevé, et il voudrait rentrer chez lui. Il faut lui donner une raison d’écrire autre chose que zéro.',
+            goal: 4,
+            rounds: [
+              { say: 'Deux visiteurs en un mois. Donnez-moi une raison de ne pas écrire zéro.', opts: [
+                { t: 'Deux qui savent de qui ils tiennent ce qu’ils savent. Combien, là-haut, peuvent en dire autant ?', el: 'ilm', v: 2, r: 'Aucun, sans doute. Ce n’est pas une colonne de mon relevé.' },
+                { t: 'Vous n’avez rien à faire ici.', el: 'adl', v: -1, r: 'J’ai un ordre de mission. Vous, vous avez une lampe.' },
+                { t: 'Chez ’Uthmân, j’ai appris une règle qui tient en deux questions : de qui tiens-tu cela ? et lui, de qui le tenait-il ? Ici, chaque feuillet y répond.', el: 'ilm', v: 2, need: 'uthman/tabayyun', r: 'Deux questions… Mon relevé n’en pose qu’une : combien.' }
+              ] },
+              { say: 'Admettons. Mais un lieu qui ne rapporte rien, pourquoi le garder ?', opts: [
+                { t: 'Parce que ce qu’on garde ici ne diminue pas quand on le partage.', el: 'rahma', v: 2, r: 'Tout diminue. C’est dans mes barèmes… Presque tout.' },
+                { t: 'Vous ne comprendriez pas.', el: 'ilm', v: -1, r: 'C’est ce qu’on me répond partout où l’on n’a rien à montrer.' },
+                { t: 'À Médine, l’eau douce d’un puits se vendait. ’Uthmân l’acheta de son bien et en fit don à tous. Ce lieu est un puits de cette sorte.', el: 'rahma', v: 2, need: 'uthman/ruma', r: 'Un puits qui ne rapporte rien à celui qui l’a payé… Il n’y a pas de case pour cela.' }
+              ] },
+              { say: 'Si j’écris « à conserver », on me demandera pourquoi. Qu’est-ce que je réponds ?', opts: [
+                { t: 'Que vous êtes descendu voir, et que vous dites ce que vous avez vu.', el: 'sidq', v: 2, r: 'Signer de mon nom ce que j’ai vu… On ne nous le demande plus.' },
+                { t: 'Répondez ce que vous voudrez.', el: 'sabr', v: 0, r: 'Alors j’écrirai zéro. C’est ce qui demande le moins d’explications.' },
+                { t: 'Un seigneur du désert a annoncé lui-même, à l’aube, la nouvelle qu’il aurait pu taire sept jours. Il y a perdu de l’avance, et gagné d’être cru.', el: 'sidq', v: 2, need: 'caid/aube_vraie', r: 'Être cru… Voilà une chose que mon relevé ne mesure pas, et dont il a besoin.' }
+              ] }
+            ],
+            win: [['flag', 'x_sursis'], ['pillar', 'savoir', 1], ['emote', 'agent', 'salut'], ['nar', 'Il écrit longtemps. Puis il raye une ligne, et signe. « Lieu consulté. À conserver. Vu par le soussigné. »']],
+            lose: [['pillar', 'savoir', -1], ['nar', 'Il pose l’avis contre la grille. « Réaffectation à l’étude. » Il n’a pas écrit zéro : il a écrit qu’il reviendrait.']]
+          }]
+        ] },
+        { text: 'Parler à Maître Yûnus', talk: 'yunus_x', then: [
+          ['say', 'yunus_x', 'Qu’il ait signé ou non, il est descendu. C’est plus que n’en font ceux qui décident.'],
+          ['say', 'yunus_x', 'On ne garde pas des archives en les cachant. On les garde en y amenant quelqu’un. Tu viens d’en amener un.'],
+          ['codex', 'x_avis']
+        ] }
+      ]
+    },
+    /* ---------- 2.x : la Citadelle, où Idris est né (ouverte depuis la Chaîne dès la première veillée entendue) ---------- */
+    {
+      id: 'c_citadelle', visite: 'citadelle', title: 'La Citadelle', sub: 'An 1508 de l’Hégire · au bord du désert', minLvl: 1, last: true,
+      map: 'citadelle', opts: { time: 'dusk' }, start: 'porte', party: ['idris'],
+      npcs: [
+        { id: 'amghar', name: 'Le vieil amghar', at: ['puits', 2, 0], look: { kind: 'ancien', robe: '#5a4a38', head: '#d8cfba' }, talk: [['say', 'amghar', 'Le puits donne encore. Assieds-toi.']] },
+        { id: 'ecolier', name: 'Un écolier', at: ['ecole', 1, 1], look: { kind: 'enfant', robe: '#4a5a3a', head: '#2c3424' }, talk: [['say', 'ecolier', 'On apprend les noms dans l’ordre : celui qui a dit, puis celui qui a entendu.']] }
+      ],
+      intro: [
+        ['title', 'La Citadelle', 'An 1508 de l’Hégire · au bord du désert'],
+        ['mus', 'citadelle'],
+        ['nar', 'Idris est né ici. Il n’y était pas revenu depuis qu’on l’avait envoyé apprendre aux Archives basses.'],
+        ['nar', 'Les murs de pisé ont été refaits bien des fois. Ce sont les mêmes murs : ceux du Caïd dont il entend les veillées.'],
+        ['nar', 'Aucun écran dans la cour. Le ciel, ici, est encore le ciel.']
+      ],
+      objectives: [
+        { text: 'Aller jusqu’au puits, dans la cour', goto: 'puits', then: [
+          ['nar', 'Le puits est là où il a toujours été. Un vieil homme y remplit une outre, sans se presser.']
+        ] },
+        { text: 'Parler au vieil amghar', talk: 'amghar', then: [
+          ['say', 'amghar', 'Idris. L’enfant de la maison près du cèdre. On m’a dit que tu remontais la Chaîne.'],
+          ['say', 'idris', 'J’entends aussi celui qui a tenu ces murs.'],
+          ['say', 'amghar', 'Alors regarde ce qu’il en reste. Un homme ne laisse pas ce qu’il a voulu : il laisse ce qu’il a fait.'],
+          ['if', '_2084_pilier_priere', [['say', 'amghar', 'La mosquée n’a jamais fermé. On y entre encore côte à côte, celui qui possède et celui qui doit.']], [['say', 'amghar', 'La mosquée est ouverte. Les rangs y sont clairsemés : on a longtemps cru qu’elle tiendrait sans nous.']]],
+          ['if', '_2084_pilier_savoir', [['say', 'amghar', 'L’école tient. On y apprend à dire de qui l’on tient une chose avant de la répéter.']], [['say', 'amghar', 'L’école a perdu des maîtres. Il reste des livres, et peu de gens pour dire qui les a écrits.']]],
+          ['if', '_2084_pilier_justice', [['say', 'amghar', 'Le tour d’eau est le même pour tous. Personne ne paie pour passer devant.']], [['say', 'amghar', 'Le tour d’eau se discute chaque été. Quand la règle plie pour l’un, tous veulent qu’elle plie.']]],
+          ['if', '_2084_pilier_lien', [['say', 'amghar', 'Les familles d’ici se doivent encore quelque chose. C’est cela, une ville : des gens qui se doivent quelque chose.']], [['say', 'amghar', 'Beaucoup sont partis vers la Cité-Miroir. Ceux qui restent se connaissent moins qu’avant.']]],
+          ['if', '_2084_debout', [['nar', 'La Citadelle est debout. Non par ses pierres : par ce que le Caïd y a laissé, veillée après veillée.']],
+            [['if', '_2084_tient', [['nar', 'La Citadelle tient, et demande qu’on la veille. Ce que le Caïd décide dans les veillées se lit ici.']], [['nar', 'La Citadelle se lézarde. Ce que les veillées n’ont pas encore bâti manque ici, des siècles plus tard.']]]]],
+          ['say', 'amghar', 'Tu n’es pas venu pour rester. Passe par l’école avant de repartir. C’est là que tu as appris à demander : « De qui le tiens-tu ? »']
+        ] },
+        { text: 'Passer par l’école', goto: 'ecole', then: [
+          ['nar', 'Sur le mur de l’école, des noms, et après chaque nom : « d’après ». La première chaîne qu’Idris ait vue, bien avant les anneaux d’or des Archives.'],
+          ['codex', 'citadelle_2084']
+        ] },
+        { text: 'Regagner la porte, et la route de la Cité-Miroir', goto: 'porte', then: [
+          ['say', 'idris', 'Je tiens d’ici plus que je ne croyais.'],
+          ['nar', 'Idris reprend la route de la Cité-Miroir. Il pourra revenir : la Citadelle ne ferme pas sa porte à ceux qui y sont nés.']
         ] }
       ]
     }

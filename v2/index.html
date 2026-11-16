@@ -263,8 +263,8 @@ body.in-dialog #pad, body.in-battle #pad, body.in-screen #pad { display: none; }
 body.padon #pad .dpad { visibility: visible; }
 #pad .dpad button { position: absolute; width: 44px; height: 44px; background: rgba(20, 16, 36, .55); border: 1px solid rgba(233, 200, 119, .45); color: var(--gold); border-radius: 8px; font-size: 16px; touch-action: none; }
 #pad .dpad .u { left: 44px; top: 0; } #pad .dpad .d { left: 44px; top: 88px; } #pad .dpad .l { left: 0; top: 44px; } #pad .dpad .r { left: 88px; top: 44px; }
-#pad .ab { display: flex; gap: 14px; align-items: flex-end; pointer-events: auto; }
-#pad .ab button { width: 62px; height: 62px; border-radius: 50%; background: rgba(20, 16, 36, .55); border: 1px solid rgba(233, 200, 119, .5); color: var(--gold); font-family: var(--f-display); font-size: 13px; touch-action: none; }
+#pad .ab { display: flex; gap: 14px; align-items: flex-end; pointer-events: none; } /* seuls les boutons reçoivent le toucher : entre eux, on touche la scène */
+#pad .ab button { pointer-events: auto; width: 62px; height: 62px; border-radius: 50%; background: rgba(20, 16, 36, .55); border: 1px solid rgba(233, 200, 119, .5); color: var(--gold); font-family: var(--f-display); font-size: 13px; touch-action: none; }
 #pad .ab .b { width: 48px; height: 48px; font-size: 11px; }
 #pad button.down { background: rgba(233, 200, 119, .35); }
 
@@ -558,7 +558,7 @@ body.portrait .gslot { grid-template-columns: 1.6em 1fr; } body.portrait .gslot 
 <div id="fade"></div>
 <div id="secours" hidden><p>Le jeu semble arrêté.</p><button type="button">Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
+window.ISNAD_VERSION = "2.0 · 2026-11-16 15:15 UTC · 125f0a2+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -585,6 +585,38 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   };
 
   D.TIERS = ['minion', 'elite', 'boss'];
+
+  // 2.x — le rayonnement de chaque Compagnon : son voile de lumière prend une couleur qui lui est propre, la même partout où
+  // il paraît, pour qu'on le reconnaisse. La couleur ne dit rien de lui : aucune n'est celle d'une bannière, d'un camp ni
+  // d'un rang. (Demandé par le décideur le 16 novembre ; couleurs proposées par l'agent, à valider.)
+  D.RAYONS = {
+    'abu bakr': '#ffcf4a', 'umar': '#4fa3ff', 'uthman': '#2fd9c0', 'ali': '#9a7bff', 'khalid': '#ff7742',
+    'abu ubayda': '#5fd883', 'abd ar rahman': '#ffc57a', 'ammar': '#7fdca4', 'al qaqa': '#a6e05a', 'aslam': '#8f9cff', 'dirar': '#ff6f91',
+    'hudhayfa': '#f2e35c', 'ibn abbas': '#ffe36e', 'qays': '#40d4ee', 'zayd ibn thabit': '#e08cff',
+    'abdallah ibn az zubayr': '#ff8a7a', 'abu ayyub': '#6fd9ff', 'abu hurayra': '#8fe6cf', 'al hasan': '#ffe9a8', 'al hubab': '#cfe36a', 'anas': '#ffa3c4',
+    'bashir': '#ffb48f', 'bilal': '#ffa83a', 'said ibn al as': '#b3a6ff', 'suraqa': '#e6c98a', 'usama': '#9fd4ff', 'zayd ibn al khattab': '#7fa8ff'
+  };
+  // la couleur d'un Compagnon d'après son nom, tel que les récits l'écrivent (« 'Alî », « 'Alî ibn Abî Tâlib ») ; null sinon
+  D.rayon = function (nom) {
+    const n = String(nom || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/['’ʿʾ`]/g, '').replace(/[-‑]/g, ' ').replace(/\s+/g, ' ').trim();
+    let best = null; Object.keys(this.RAYONS).forEach(k => { if ((n === k || n.indexOf(k + ' ') === 0) && (!best || k.length > best.length)) best = k; });
+    return best ? this.RAYONS[best] : null;
+  };
+
+  // 2.x — frapper ce qui rôde dans un labyrinthe : le geste de « Frapper », fait sur les ponts, avec l'arme que porte celui
+  // qui mène. Par type d'arme : portee et large (en points, devant soi), cadence (secondes entre deux coups), sonne (secondes
+  // pendant lesquelles ce qui est frappé reste sonné), recul (cases), force (voiles ôtés). Rien d'autre que du matériel :
+  // l'allonge, le poids, la vitesse d'une arme (exigence 17). « nu » : sans arme en main.
+  D.FRAPPES = {
+    epee:   { portee: 28, large: 20, cadence: 0.45, sonne: 1.6, recul: 1, force: 1 },
+    lance:  { portee: 42, large: 14, cadence: 0.60, sonne: 1.4, recul: 2, force: 1 },
+    arc:    { portee: 104, large: 12, cadence: 0.90, sonne: 1.2, recul: 0, force: 1, trait: true },
+    dague:  { portee: 22, large: 16, cadence: 0.30, sonne: 1.0, recul: 0, force: 1 },
+    masse:  { portee: 26, large: 20, cadence: 0.80, sonne: 2.6, recul: 2, force: 2 },
+    baton:  { portee: 32, large: 20, cadence: 0.50, sonne: 1.8, recul: 1, force: 1 },
+    calame: { portee: 24, large: 16, cadence: 0.50, sonne: 1.4, recul: 1, force: 1 },
+    nu:     { portee: 20, large: 16, cadence: 0.50, sonne: 1.0, recul: 1, force: 1 }
+  };
 
   // Formes procédurales des égrégores (aucun être animé figuratif : formes abstraites).
   D.ART = ['wisp', 'mask', 'eagle', 'crown', 'throne', 'tower', 'lens', 'mirror', 'swarm',
@@ -1241,6 +1273,9 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
         if (c.hajj !== undefined && c.hajj !== true) E.push(`${w}: « hajj » vaut true ou s'omet`);
         if (c.vice !== undefined && (!D.VICES[c.vice] || !c.after || !s.frame)) E.push(`${w}: « vice » annonce le mal du cœur d'une rencontre (chapitre « after » de l'histoire-cadre) et doit figurer dans D.VICES`);
         if (c.hajj && !s.veillees) E.push(`${w}: le pèlerinage n'est proposé que dans la fiction des veillées`);
+        // 2.x : ce qui se joue au retour en 2084 (« retour: n ») et une visite ouverte depuis la Chaîne (« visite ») — l'histoire-cadre seulement
+        if (c.retour !== undefined && !(Number.isInteger(c.retour) && c.retour >= 1 && s.frame && !s.veillees && c.last === true && !c.after)) E.push(`${w}: « retour » est un entier ≥ 1, sur un chapitre « last » de l'histoire-cadre, sans « after »`);
+        if (c.visite !== undefined && !(typeof c.visite === 'string' && c.visite === c.map && s.frame && !s.veillees && c.last === true && !c.after && c.retour === undefined)) E.push(`${w}: « visite » nomme le lieu du chapitre (sa carte), sur un chapitre « last » de l'histoire-cadre, sans « after » ni « retour »`);
         // la bataille déclarée : les rangs que la mission aligne, les ordres qu'elle permet. Aucun effectif (exigence 19).
         if (c.bataille !== undefined) { const Bt = c.bataille || {}, wb = `${w}.bataille`;
           if (!Array.isArray(Bt.rangs) || Bt.rangs.length > 4) E.push(`${wb}: « rangs » attend un tableau de 0 à 4 rangs`);
@@ -1696,7 +1731,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   const I = window.ISNAD = {
     D, sagas: {}, sagaList: [],
     // commun: true — contenu partagé par toutes les sagas (src/data/coeur.js) : ni maillon ni chapitre
-    registerSaga(s) { this.sagas[s.id] = s; if (this.perso) { this.perso.relever(s); if (this.perso.nom() !== this.perso.NOM) this.perso.appliquer(); } if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => ((a.livre || 1) - (b.livre || 1)) || (a.order - b.order)); },   // par livre, puis par ordre
+    registerSaga(s) { this.sagas[s.id] = s; this.rayonner(s); if (this.perso) { this.perso.relever(s); if (this.perso.nom() !== this.perso.NOM) this.perso.appliquer(); } if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => ((a.livre || 1) - (b.livre || 1)) || (a.order - b.order)); },   // par livre, puis par ordre
     speed: 1, debug: {}
   };
 
@@ -1737,6 +1772,14 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     I.paquets[p.id] = { id: p.id, version: p.version, titre: p.titre || p.id, sagas: (p.sagas || []).map(s => s.id), lieux: Object.keys(p.lieux || {}),
       objets: Object.keys(p.objets || {}), equipement: Object.keys(p.equipement || {}), pistes: Object.keys(p.pistes || {}) };
     return true;
+  };
+
+  // 2.x — chaque Compagnon rayonne d'une couleur qui lui est propre (D.RAYONS) : elle est posée sur son apparence quand le
+  // récit s'enregistre (look.rayon). Les récits ne changent pas ; les personnages de fiction n'en ont pas.
+  I.rayonner = function (s) {
+    const pose = (look, nom) => { const c = look && D.rayon(nom); if (c) look.rayon = c; };
+    if (!s.frame) Object.keys(s.heroes || {}).forEach(id => { const h = s.heroes[id]; if (h.look && (h.look.kind || 'compagnon') === 'compagnon') pose(h.look, h.name); });
+    (s.chapters || []).forEach(c => (c.npcs || []).forEach(n => { if (n.look && n.look.kind === 'compagnon') pose(n.look, n.name); }));
   };
 
   /* ---------- utilitaires ---------- */
@@ -1848,7 +1891,12 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     ['gearInit', 'veillees', 'rencontres', 'citadel', 'parley', 'isnad', 'meta', 'profil', 'paquets', 'dedale'].forEach(k => { objet(k); });
     if (estObjet(d.dedale) && !(naturel(d.dedale.sel) && naturel(d.dedale.n))) E.push('dedale'); // 2.x : le sel et le compte des descentes (un champ absent prend sa valeur de départ : le format reste le 2)
     if (estObjet(d.isnad) && !(naturel(d.isnad.ok) && naturel(d.isnad.total))) E.push('isnad');
-    if (d.cp !== undefined && d.cp !== null) { const c = d.cp; if (!estObjet(c) || typeof c.saga !== 'string' || !naturel(c.ci) || !naturel(c.obj) || typeof c.map !== 'string' || !Array.isArray(c.party) || c.party.some(x => typeof x !== 'string')) E.push('cp'); }
+    const reprise = c => estObjet(c) && typeof c.saga === 'string' && naturel(c.ci) && naturel(c.obj) && typeof c.map === 'string' && Array.isArray(c.party) && !c.party.some(x => typeof x !== 'string');
+    if (d.cp !== undefined && d.cp !== null && !reprise(d.cp)) E.push('cp');
+    // 2.x : les points de reprise des récits quittés en chemin, les retours en 2084 et ce qui s'y est déjà passé (champs absents des parties d'avant)
+    if (objet('cps')) Object.keys(d.cps).forEach(k => { if (!reprise(d.cps[k])) E.push('cps.' + k); });
+    if (d.retours !== undefined && !naturel(d.retours)) E.push('retours');
+    objet('rebonds');
     return E;
   }
   // Une partie peut citer un contenu qui n'est pas dans ce jeu : un paquet retiré, ou pas encore reçu. Rien n'est effacé : ce
@@ -1856,7 +1904,9 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   function assainir(d) {
     const A = { paquets: Object.keys(d.paquets || {}).filter(k => !I.paquets[k]), reprise: false, pieces: 0 };
     // le point de reprise : dans une saga, un chapitre et un lieu que ce jeu connaît — sinon on reprend à la Chaîne
-    const c = d.cp; if (c && !(I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci] && D.MAPS[c.map])) { d.cp = null; A.reprise = true; }
+    const connu = c => !!(c && I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci] && D.MAPS[c.map]);
+    const c = d.cp; if (c && !connu(c)) { d.cp = null; A.reprise = true; }
+    if (estObjet(d.cps)) Object.keys(d.cps).forEach(k => { if (!connu(d.cps[k])) delete d.cps[k]; }); else if (d.cps !== undefined) delete d.cps; // un récit rangé dont le contenu manque : on le reprendra à son chapitre
     // l'équipement porté : une pièce inconnue retourne à la réserve, où elle attend sans gêner
     // (une copie gardée sur l'appareil n'est pas contrôlée comme une partie importée : ce qui n'a pas la forme attendue est écarté ici)
     if (!estObjet(d.equip)) d.equip = {}; if (!estObjet(d.gear)) d.gear = {};
@@ -3457,11 +3507,13 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     const cv = mk(w, h), c = cv.getContext('2d'), px = (x, y, col) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } }; if (s === 2) cv.hd = 2;
     const voile = m => m === 'V' || m === 'v', at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? '.' : L[y][x];
     const plein = (x, y) => { const m = at(x, y); return m !== '.' && (voile(m) || pal[m] != null); }, meme = (x, y, f) => { const m = at(x, y); return m !== '.' && FAM[m] === f && !!R[m]; };
-    // le voile : une lumière qui se dégrade du centre vers le bord (Compagnons), une étoffe unie sinon — jamais un trait
+    // le voile : une lumière qui se dégrade du centre vers le bord (Compagnons), une étoffe unie sinon — jamais un trait.
+    // En dessin fin, celle d'un Compagnon rayonne de la couleur qui lui est propre (look.rayon) : un cœur blanc, puis sa couleur.
+    const ray = K.lit && G.D > 1 && look.rayon ? look.rayon : null, ray1 = ray && mix(ray, '#ffffff', 0.5), ray2 = ray && mix(ray, '#ffffff', 0.08);
     let x0 = 99, x1 = -1, y0 = 99, y1 = -1; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (voile(L[y][x])) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
     const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 - 0.5, rx = (x1 - x0) / 2 + 0.5, ry = (y1 - y0) / 2 + 0.5;
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const m = L[y][x]; if (m === '.') continue;
-      if (voile(m)) { const dd = Math.hypot((x - cx) / rx, (y - cy) / ry); px(x, y, K.lit ? (dd < 0.5 ? '#ffffff' : dd < 0.82 ? pal.V : pal.v) : (y - y0 < 2 * s || dd > 0.86 ? pal.v : pal.V)); continue; }
+      if (voile(m)) { const dd = Math.hypot((x - cx) / rx, (y - cy) / ry); px(x, y, K.lit ? (ray ? (dd < 0.4 ? '#ffffff' : dd < 0.74 ? ray1 : ray2) : (dd < 0.5 ? '#ffffff' : dd < 0.82 ? pal.V : pal.v)) : (y - y0 < 2 * s || dd > 0.86 ? pal.v : pal.V)); continue; }
       const r = R[m]; if (!r) { px(x, y, pal[m]); continue; }                  // main, parchemin, néon, cimier : à plat
       let i = r.i;
       if (am[y][x]) { const a = K.armure, bordG = !am[y][x - 1], bordD = !am[y][x + 1], X = (x / s) | 0, Y = (y / s) | 0;   // l'armure : mailles fines, lamelles en rangs, cuir cousu, toile piquée — le motif garde sa taille, son bord s'affine
@@ -4169,6 +4221,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   };
   W.leave = function (id) { const i = W.party.indexOf(id); if (i < 0 || W.party.length <= 1) return; W.party.splice(i, 1); W.refreshSheets(); };
   function lookOf(def) { return Object.assign({ kind: 'compagnon' }, def.look); }
+  const lueur = look => (G.D > 1 && look.rayon) || look.aura || null; // en dessin fin, un Compagnon rayonne de sa couleur propre (D.RAYONS)
   W.refreshSheets = function () { W.sheets = W.party.map(id => G.planche(lookOf(W.saga.heroes[id]))); };
 
   /* ----- piliers de la Citadelle, prière ----- */
@@ -4205,7 +4258,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
       const fz = $('#fade'); fz.style.transition = 'none'; fz.style.opacity = 0; // le carton prend le relais du fondu
       await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>La prière</h1><p>${I.pick(PRAY_LINES[m])}</p><p class="small">Le groupe est reposé : Constance et Souffle à 100 % · Sakîna</p><div class="hint">▼</div>`, 6500);
       W.healAll(); W.gainSakina(35); S.flags._prayed = true;
-      if (!S.flags._prayPillar) { S.flags._prayPillar = true; W.pillar('priere', 1); await I.oeuvres.gain('priere'); } // la première prière du chapitre nourrit la provision
+      if (!S.flags._prayPillar && !(I.oeuvres.sobre && I.oeuvres.sobre())) { S.flags._prayPillar = true; W.pillar('priere', 1); await I.oeuvres.gain('priere'); } // la première prière du chapitre nourrit la provision (pas celle d'une visite : elle se rejoue)
       if (W.map && !parLeRecit) W.checkpoint();
     } finally { S.depth--; S.hideDialog(); W.emote('groupe', null); }
   };
@@ -4293,9 +4346,10 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     const sp = I.save.data.sagas[sagaId] || (I.save.data.sagas[sagaId] = { ch: 0, done: false, flags: {} });
     S.flags = cp ? (cp.flags || {}) : Object.assign({}, sp.flags || {});
     if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); I.mal.ouvre(); }
+    if (saga.frame && !saga.veillees && (Number.isInteger(ch.retour) || ch.visite) && I.ui.drapeaux2084) I.ui.drapeaux2084(S.flags); // 2.x : l'état de 2084, pour un retour ou une visite
     I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
-    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.planche(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
+    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.planche(look), aura: def ? (lueur(def.look) || '#ffe9a8') : (look.kind === 'compagnon' ? (lueur(look) || '#ffe9a8') : null) }); });
     W.foes = (ch.foes || []).map(f => Object.assign({}, f, { map: f.map || ch.map, done: false, placed: false, ph: Math.random() * 6 }));
     W.chests = (ch.chests || []).map(c => Object.assign({}, c, { map: c.map || ch.map, open: false, placed: false }));
     W.objIndex = cp ? cp.obj : 0;
@@ -4331,8 +4385,22 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     $('#hud .obj').textContent = (o && o.text ? o.text : '') + (o && o.build ? I.build.objectiveText(o.build) : '');
     $('#hud .obj').hidden = !(o && o.text);
   };
+  /* Mener plusieurs récits de front (2.x). La partie garde un point de reprise courant (cp) et, rangés à part, ceux des
+     récits que l'on a quittés en chemin (cps) : un par saga de la Chaîne, un par chapitre de l'histoire-cadre ou des
+     veillées. Quitter un récit range son point ; le rouvrir le reprend. Champ absent des parties d'avant : le format reste le 2. */
+  W.cleReprise = function (c) { const s = I.sagas[c.saga]; return s && s.frame ? c.saga + ':' + c.ci : c.saga; };
+  W.ranger = function () { const sv = I.save.data, c = sv.cp; if (!c) return null; c.t = Date.now(); (sv.cps = sv.cps || {})[W.cleReprise(c)] = c; sv.cp = null; return c; };
+  // le point de reprise de ce récit, s'il en a un : il redevient le point courant (celui d'un autre récit est rangé)
+  W.reprise = function (sagaId, ci) {
+    const sv = I.save.data, k = W.cleReprise({ saga: sagaId, ci });
+    if (sv.cp && W.cleReprise(sv.cp) === k) return sv.cp;
+    const c = sv.cps && sv.cps[k]; if (!c) return null;
+    W.ranger(); delete sv.cps[k]; sv.cp = c; return c;
+  };
+  W.rangees = function () { const sv = I.save.data; return Object.keys(sv.cps || {}).map(k => sv.cps[k]).filter(c => c && I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci]).sort((x, y) => (y.t || 0) - (x.t || 0)); };
   W.checkpoint = function () {
     if (W.excursion) return; // pendant la descente du râwî, le point de reprise reste celui d'avant
+    { const sv = I.save.data, k = W.cleReprise({ saga: W.saga.id, ci: W.ci }); if (sv.cp && W.cleReprise(sv.cp) !== k) W.ranger(); if (sv.cps && sv.cps[k]) delete sv.cps[k]; } // le point d'un autre récit est rangé, jamais écrasé
     const npcs = {}; W.npcs.forEach(n => { npcs[n.id] = { h: n.hidden ? 1 : 0, x: n.placed && n.map === W.map.id ? Math.round(n.x) : undefined, y: n.placed && n.map === W.map.id ? Math.round(n.y) : undefined }; });
     I.save.data.cp = { saga: W.saga.id, ci: W.ci, obj: W.objIndex, map: W.map.id, opts: W.mapOpts, pos: [Math.round(W.player.x), Math.round(W.player.y)], party: W.party.slice(), npcs, foes: W.foes.filter(f => f.done).map(f => f.id), chests: W.chests.map((c, i) => c.open ? i : -1).filter(i => i >= 0), flags: S.flags };
     W.persistHeroes(); I.save.store();
@@ -4367,7 +4435,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     try {
       if (ch.outro) await S.run(ch.outro);
       await I.oeuvres.endChapter();
-      const sp = sv.sagas[saga.id]; sp.flags = S.flags; W.persistHeroes(); sv.cp = null;
+      const sp = sv.sagas[saga.id]; sp.flags = S.flags; W.persistHeroes(); if (sv.cp && W.cleReprise(sv.cp) !== W.cleReprise({ saga: saga.id, ci: W.ci })) W.ranger(); sv.cp = null; if (sv.cps) delete sv.cps[W.cleReprise({ saga: saga.id, ci: W.ci })];
       $('#hud').hidden = true;
       if (W.ci + 1 < saga.chapters.length && !(saga.frame && ch.last)) {
         sp.ch = Math.max(sp.ch, W.ci + 1); I.save.store();
@@ -4429,10 +4497,10 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   /* ----- mise à jour ----- */
   W.onInput = function (a) {
     if (I.scene !== W || S.busy || W.lock) return false;
-    if (W.excursion) { if (a === 'ok') I.rodeurs.attendre(); else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
+    if (W.excursion) { if (a === 'ok') { if (!I.rodeurs.attendre()) I.rodeurs.frappe(); } else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
     if (a === 'build') { I.build.set(!I.build.on); return true; }
     if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel') { I.build.set(false); return true; } if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
-    if (a === 'ok') { W.stop(); W.interact(); return true; }
+    if (a === 'ok') { W.stop(); if (I.rodeurs && I.rodeurs.aFrapper()) I.rodeurs.frappe(); else W.interact(); return true; } // 2.x : dans un labyrinthe, quand quelque chose rôde à portée, « Valider » frappe
     if (a === 'help') { W.stop(); I.ui.guide(); return true; }
     if (a === 'prev') { W.stop(); I.ui.pause('carte'); return true; }
     if (a === 'menu' || a === 'cancel') { W.stop(); I.ui.pause(); return true; }
@@ -4544,6 +4612,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
       if (Math.max(Math.abs(tx - Math.floor(p.x / T)), Math.abs(ty - Math.floor((p.y - 3) / T))) <= 2) put(); else W.goTo(tx * T + 8, ty * T + 11, { stop: 27, then: put });
       return true;
     }
+    if (I.rodeurs && I.rodeurs.viseDu(wx, wy)) return true; // 2.x : toucher ce qui rôde, c'est le frapper (rodeurs.js)
     const n = W.npcs.find(n => here(n) && Math.abs(n.x - wx) < 10 && wy > n.y - 27 && wy < n.y + 6);
     if (n) { W.goTo(n.x, n.y, { ent: n, stop: 21, then() { face(n.x, n.y); W.interact(n); } }); return true; }
     const f = W.foes.find(f => !f.done && f.map === m.id && f.placed && Math.abs(f.x - wx) < 15 && wy > f.y - 36 && wy < f.y + 6);
@@ -4681,13 +4750,13 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     for (const e of list) {
       if (e.o) { const o = e.o; c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2) - cx, o.y - o.h + 1 - cy); if (o.anim) drawFlame(c, o.x - cx, o.y - cy - (o.type === 'brazier' ? 10 : 3), t + o.seed, o.type === 'fire'); if (G.OBJ[o.type].herd) I.build.herd(c, o, o.x - cx, o.y - cy, t); }
       else if (e.n) { const n = e.n; drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
-      else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = 0.86 + Math.sin(t * 5 + f.ph) * 0.12; c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
+      else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = f.sonne > 0 ? 0.4 + Math.sin(t * 22) * 0.12 : 0.86 + Math.sin(t * 5 + f.ph) * 0.12; c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; if (f.rodeur && (f.voiles > 0 || f.tenue > 0) && (f.meute || f.tenue !== undefined)) { const nv = Math.ceil(f.meute ? f.voiles : f.tenue); c.fillStyle = f.sonne > 0 ? '#fff3c8' : `hsl(${d.hue},90%,78%)`; for (let i = 0; i < nv; i++) c.fillRect(Math.round(f.x - cx - nv * 2 + i * 4 + 1), Math.round(f.y - cy - s - 7 + bob), 2, 2); } /* ce qui rôde : ses voiles, et le tremblement de qui vient d'être frappé */ lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
       else if (e.bete) { const tr = e.tr, im = I.oeuvres.bete(e.bete, true), bx = Math.round(tr[0] - cx), by = Math.round(tr[1] - cy - im.height - 1 + Math.sin(t * 3) * 1.2); c.globalAlpha = 0.92; if (tr[2] === 2) { c.save(); c.translate(bx, 0); c.scale(-1, 1); c.drawImage(im, -Math.round(im.width / 2), by); c.restore(); } else c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 24, color: (I.sagas.coeur.animaux[e.bete] || {}).couleur || '#ffe9a8', a: 0.7 }); }
-      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null)); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (W.saga.heroes[W.party[e.fol]].look.aura || '#ffe9a8'), a: 0.4 }); }
+      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null)); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (lueur(W.saga.heroes[W.party[e.fol]].look) || '#ffe9a8'), a: 0.4 }); }
       else if (e.p) { const p = W.player;
         if (G.D > 1 && p.moving && !G.low && POUSSIERE[m.g0 ? m.g0(p.x, p.y) : ''] && Math.random() < 0.3) G.spawn({ x: p.x - cx + (Math.random() - 0.5) * 6, y: p.y - cy + 1, vx: (Math.random() - 0.5) * 10, vy: -4 - Math.random() * 5, life: 0.5 + Math.random() * 0.3, size: 0.6 + Math.random() * 0.5, color: POUSSIERE[m.g0(p.x, p.y)], a: 0.3, type: 'mote', blend: 'source-over' }); // la poussière sous les pas
-        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null)); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lk.aura || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (I.rodeurs && I.rodeurs.geste && W.t - I.rodeurs.geste.t >= 0 && W.t - I.rodeurs.geste.t < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null)); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {
@@ -5152,6 +5221,8 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
 
   /* ----- le chapitre : une journée ----- */
   O.newChapter = function () { Object.keys(S.flags).forEach(k => { if (k.indexOf('_o_') === 0) delete S.flags[k]; }); };
+  // 2.x : une visite ou un retour en 2084 se rejouent à volonté — on s'y repose, mais aucune œuvre n'y est comptée
+  O.sobre = () => !!(W.ch && (W.ch.visite || Number.isInteger(W.ch.retour)));
   O.enigme = function () { const e = W.ch && W.ch.enigme; return e && !st().enigmes[e.id] ? e : null; };
   O.afflicted = id => { const e = O.enigme(); return !!(e && e.who === id); };
   O.openChapter = async function () {
@@ -5179,6 +5250,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   // '' si l'œuvre est possible ici et maintenant ; sinon la raison
   O.can = function (k) {
     const T = C0().oeuvres[k]; if (!T || !W.saga) return 'indisponible';
+    if (O.sobre()) return 'tu es de passage : les œuvres se comptent dans les récits';
     if (S.flags['_o_' + k]) return k === 'hajj' ? 'intention formulée' : 'déjà accompli aujourd’hui';
     if (k === 'hajj') return !(W.ch && W.ch.hajj) ? 'aucune caravane ne part' : O.count('hajj') >= 1 ? 'déjà accompli' : '';
     if (O.dayCount() >= MAX_JOUR) return 'la journée est pleine';
@@ -5224,6 +5296,11 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
         const d = st(), left = MAX_JOUR - O.dayCount();
         const titre = { html: 'Une natte tournée vers La Mecque, au cœur de l’étoile.' + (premiere ? '<small>On y prie, et le groupe s’y repose. On y accomplit aussi les œuvres du jour : chacune nourrit la provision du cœur (♥), que les grandes épreuves consomment.</small>' : '') };
         const songe = ((C0().portes || {}).sommeil || {}).menu || 'S’endormir';
+        if (O.sobre()) { // de passage : on prie, on se repose, on garde une copie — les œuvres se comptent dans les récits
+          const j = I.debug.auto ? 2 : await S.menuPick({ html: 'Une natte tournée vers La Mecque.<small>Tu es de passage : on y prie et l’on s’y repose. Les œuvres se comptent dans les récits.</small>' }, [{ t: 'Prier et se reposer : Constance et Souffle à 100 %, la Sakîna descend' }, { t: 'Garder une copie de la partie (elle se sauvegarde déjà toute seule)' }, { t: 'Plus tard' }]);
+          if (j === 0) await W.pray(); else if (j === 1) await I.ui.saveMenu();
+          return;
+        }
         const i = I.debug.auto ? 4 : await S.menuPick(titre, [
           { t: 'Prier et se reposer : Constance et Souffle à 100 %, la Sakîna descend' },
           { t: 'Les œuvres du jour (' + (left > 0 ? 'encore ' + left : 'journée pleine') + ') · provision ♥ ' + d.zad + ' / ' + MAX_ZAD },
@@ -5251,6 +5328,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   };
   // tests : accomplit ce qui est possible, comme le ferait un joueur appliqué (l'ordre tourne d'un chapitre à l'autre)
   O.auto = async function () {
+    if (O.sobre()) return;
     const off = ((W.ci || 0) * 2 + (W.saga.order || 0)) % JOUR.length, en = O.enigme();
     let ks = JOUR.slice(off).concat(JOUR.slice(0, off), ['hajj']);
     if (en && JOUR.includes(en.cure)) ks = [en.cure].concat(ks.filter(k => k !== en.cure)); // l'énigme d'abord
@@ -6010,6 +6088,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   // descente —, le râwî trouve les portes closes : il lui faut d'abord dormir, d'un sommeil sans songe.
   V.porte = async function (k) {
     const P = T('portes'), Pk = P[k], R = I.rodeurs; if (!Pk || !W.saga || !R || W.excursion) return null;
+    if (W.ch && (W.ch.visite || Number.isInteger(W.ch.retour))) return null; // 2.x : une visite ou un retour en 2084 se rejouent — on n'y descend pas (une descente par porte et par chapitre d'un récit)
     if (R.clos()) { if (k === 'sommeil') { R.repos(); S.toast(I.esc(P.sansSonge || ''), 4600); } return null; }
     if (V.ouverte(k)) { if (k === 'sommeil') S.toast(I.esc(P.deja || ''), 2600); return null; }
     if (I.debug.auto || I.debug.walk) return I.debug.noOeuvres ? null : R.demande(k); // le joueur de test descend, et remonte par l'issue
@@ -6424,7 +6503,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   function mkHero(x, i) {
     const h = typeof x === 'string' ? I.world.hero(x) : x, id = h.id, st = I.calc.of(h);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
-      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.planche(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) };
+      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.planche(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, ray: (G.D > 1 && h.def.look && h.def.look.rayon) || D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) }; // ray : la couleur à laquelle on le reconnaît (son rayonnement, en dessin fin) ; color : celle de sa Lumière, pour les effets
   }
   // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
   function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, (chef || W.hero(W.party[0])).lvl) }) : d; }
@@ -6652,15 +6731,25 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   }
   B.listMenu = listMenu;
 
+  // Toucher ou cliquer un combattant sur la scène : pendant le choix d'une cible, c'est le choisir — comme toucher sa plaque.
+  // (x, y) en points logiques. survol : seulement montrer celui que l'on vise.
+  function sous(lx, ly) { let best = null, bd = 1e9; if (!C) return null;
+    C.all.forEach(e => { let x0, y0, w, h; if (e.side === 'foe') { if (!e.alive || e.fade <= 0) return; w = e.size; h = e.size; x0 = e.x + e.ox - w / 2; y0 = e.y - h - 6; } else { w = 32; h = 48; x0 = e.x + e.ox - 16; y0 = e.y - 46; }
+      if (lx < x0 - 4 || lx > x0 + w + 4 || ly < y0 - 4 || ly > y0 + h + 8) return; const d = Math.hypot(lx - (x0 + w / 2), ly - (y0 + h / 2)); if (d < bd) { bd = d; best = e; } });
+    return best; }
+  B.touche = function (lx, ly) { if (!C || !C.pickCb) return false; const e = sous(lx, ly); if (!e) return false; const cb = C.pickCb; cb(e); return true; };
+  B.survol = function (lx, ly) { if (!C || !C.pickSel) return; const e = sous(lx, ly); if (e) C.pickSel(e); };
+  // où se tient chacun sur la scène, en points logiques, et qui peut être choisi en ce moment : pour les outils de contrôle (doigt.js)
+  B.places = function () { return !C ? [] : C.all.filter(e => e.alive && (e.side !== 'foe' || e.fade > 0)).map(e => ({ nom: e.name, camp: e.side, x: e.x + e.ox, y: e.side === 'foe' ? e.y - 6 - e.size / 2 : e.y - 22, choix: !!(C.pool && C.pool.includes(e)) })); };
   function pickTarget(pool, label) {
     return new Promise(res => {
-      const box = $('#battle .cmd'); box.innerHTML = `<div class="mtitle">${label}</div><div class="mhint">Choisis une cible · ◂ ▸ puis Valider</div>`;
+      const box = $('#battle .cmd'); box.innerHTML = `<div class="mtitle">${label}</div><div class="mhint">Choisis une cible · touche-la, ou ◂ ▸ puis Valider</div>`;
       const bk = I.el('button', 'mback', '◂ Retour'); bk.type = 'button'; box.appendChild(bk);
       let idx = 0; const sel = i => { idx = (i + pool.length) % pool.length; C.cursor = pool[idx]; refresh(); bind(); };
-      const done = v => { I.input.pop(h); C.cursor = null; C.pickCb = null; refresh(); res(v); };
+      const done = v => { I.input.pop(h); C.cursor = null; C.pickCb = null; C.pickSel = null; C.pool = null; refresh(); res(v); };
       bk.onclick = ev => { ev.stopPropagation(); done(null); };
-      const bind = () => { C.pickCb = e => { if (pool.includes(e)) { I.audio.sfx('ok'); done(e); } }; };
-      sel(0);
+      const bind = () => { C.pickCb = e => { if (pool.includes(e)) { I.audio.sfx('ok'); done(e); } }; C.pickSel = e => { const i = pool.indexOf(e); if (i >= 0 && i !== idx) sel(i); }; };
+      C.pool = pool; sel(0);
       const h = I.input.push(a => { if (a === 'up' || a === 'left') { sel(idx - 1); I.audio.sfx('move'); } else if (a === 'down' || a === 'right') { sel(idx + 1); I.audio.sfx('move'); } else if (a === 'ok') { I.audio.sfx('ok'); done(pool[idx]); } else if (a === 'cancel') done(null); return true; });
     });
   }
@@ -6670,7 +6759,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     const elc = el => `<i class="el" style="color:${D.ELEMENTS[el].color}">${D.ELEMENTS[el].glyph}</i>`;
     while (true) {
       const pips = () => { let s = ''; for (let i = 0; i < 5; i++) s += `<i class="pip${i < h.niyya - boost ? ' on' : i < h.niyya ? ' use' : ''}"></i>`; return s; };
-      const title = () => `<b style="color:${h.color}">${h.name}</b><span class="niyya"><button type="button" class="nb" data-d="-1">−</button>Niyya ${pips()}<button type="button" class="nb" data-d="1">+</button>${boost ? `<em>élan ×${boost}</em>` : ''}</span>`;
+      const title = () => `<b style="color:${h.ray || h.color}">${h.name}</b><span class="niyya"><button type="button" class="nb" data-d="-1">−</button>Niyya ${pips()}<button type="button" class="nb" data-d="1">+</button>${boost ? `<em>élan ×${boost}</em>` : ''}</span>`;
       const setBoost = d => { const was = boost; boost = I.clamp(boost + d, 0, Math.min(3, h.niyya)); if (boost > was) { G.spawn({ x: h.x, y: h.y - 24, type: 'ring', r0: 6, r1: 24 + boost * 4, life: 0.4, size: 2, color: h.color }); for (let q = 0; q < 8; q++) G.spawn({ x: h.x + (Math.random() - 0.5) * 20, y: h.y, vy: -50 - Math.random() * 40, life: 0.6, size: 0.9, color: h.color, type: 'spark' }); } const t = box.querySelector('.mtitle'); if (t) { t.innerHTML = title(); wire(); } I.audio.sfx('move'); };
       const wire = () => box.querySelectorAll('.nb').forEach(b => b.onclick = ev => { ev.stopPropagation(); setBoost(+b.dataset.d); });
       const lum = lightOf(h);
@@ -6921,7 +7010,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     // ordre des tours (simulation)
     const sim = C.all.filter(e => e.alive).map(e => ({ e, ct: e === C.active ? -1 : e.ct })); const ord = [];
     for (let i = 0; i < 8 && sim.length; i++) { sim.sort((a, b) => a.ct - b.ct); const s = sim[0]; ord.push(s.e); const d = Math.max(0, s.ct); sim.forEach(x => x.ct -= d); s.ct = 1000 / eff(s.e, 'spd'); }
-    $('#battle .order').innerHTML = '<span class="olab">Tours</span>' + ord.map((e, i) => `<i class="${e.side}${i === 0 ? ' now' : ''}${e.broken ? ' brk' : ''}" style="--c:${e.side === 'hero' ? e.color : `hsl(${e.def.hue},80%,62%)`}">${I.esc(e.name.replace(/^(L'|Le |La |Les |Al-|Abû |Ibn |')/, '').slice(0, 2))}</i>`).join('');
+    $('#battle .order').innerHTML = '<span class="olab">Tours</span>' + ord.map((e, i) => `<i class="${e.side}${i === 0 ? ' now' : ''}${e.broken ? ' brk' : ''}" style="--c:${e.side === 'hero' ? e.ray || e.color : `hsl(${e.def.hue},80%,62%)`}">${I.esc(e.name.replace(/^(L'|Le |La |Les |Al-|Abû |Ibn |')/, '').slice(0, 2))}</i>`).join('');
     // plaques ennemies
     const pl = $('#battle .plates'); pl.innerHTML = '';
     C.all.filter(e => e.side === 'foe' && e.alive).forEach(e => {
@@ -6938,7 +7027,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
       let pips = ''; for (let i = 0; i < 5; i++) pips += `<i class="pip${i < e.niyya ? ' on' : ''}"></i>`;
       const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${STN[k === 'df' ? 'def' : k]}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="${k === 'regen' || k === 'garde' || k === 'taunt' ? 'up' : 'dn'}">${STN[k] || k}</b>`).join('');
       const r = I.el('button', 'hrow' + (e === C.active ? ' act' : '') + (e.alive ? '' : ' ko') + (C.cursor === e ? ' cur' : ''),
-        `<span class="hs" style="background-image:url(${G.sealURL(e.def.arabic, e.color)})"></span><span class="hn"><b style="color:${e.color}">${I.esc(e.name)}</b><small>Niv. ${e.ref.lvl} ${sts}</small></span>
+        `<span class="hs" style="background-image:url(${G.sealURL(e.def.arabic, e.ray || e.color)})"></span><span class="hn"><b style="color:${e.ray || e.color}">${I.esc(e.name)}</b><small>Niv. ${e.ref.lvl} ${sts}</small></span>
          <span class="hbars"><span class="bar hp"><i style="width:${e.hp / e.max.hp * 100}%"></i><em>${e.alive ? Math.ceil(e.hp) : 'Éprouvé'}</em></span><span class="bar sp"><i style="width:${e.max.sp ? e.sp / e.max.sp * 100 : 0}%"></i><em>${e.sp}</em></span></span>
          <span class="hx"><span class="pips">${pips}</span><span class="bar sk${e.sakina >= 100 ? ' full' : ''}"><i style="width:${e.sakina}%"></i></span></span>`);
       r.type = 'button'; r.onclick = ev => { ev.stopPropagation(); if (C.pickCb) C.pickCb(e); };
@@ -6981,10 +7070,11 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
             if (e.flash > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, e.flash) * 0.8; c.drawImage(img, x - 16, y - 46 + bob); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
             if (e.st.garde) { c.strokeStyle = e.color; c.lineWidth = 1; c.beginPath(); c.ellipse(x - 14, y - 24, 4, 20, 0, 0, 6.3); c.stroke(); }
             lights.push({ x, y: y - 26, r: act ? 46 : 32, color: e.color, a: act ? 0.9 : 0.5 });
+            if (G.D > 1 && look.rayon && e.alive) lights.push({ x: x - 3, y: y - 38, r: 15, color: look.rayon, a: 0.55 }); // son visage rayonne de la couleur qui lui est propre
             if (e.sakina >= 100 && Math.random() < 0.3) G.spawn({ x: x + (Math.random() - 0.5) * 18, y: y - 4, vy: -30, life: 0.9, size: 0.8, color: e.color, type: 'mote' });
           }
           if (C.cursor === e) cursor(c, x, y - 52, t);
-          if (act && e.alive) { c.fillStyle = e.color; c.fillRect(x - 10, y + 4, 20, 1); }
+          if (act && e.alive) { c.fillStyle = e.ray || e.color; c.fillRect(x - 10, y + 4, 20, 1); }
         }
       }
       if (C.bete) { const im = I.oeuvres.bete(C.bete), h0 = C.all.find(e => e.side === 'hero'), bx = Math.round(h0.x + 26), by = Math.round(h0.y - 58 + Math.sin(t * 2.2) * 2); c.globalAlpha = 0.9; c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 30, color: I.sagas.coeur.animaux[C.bete].couleur, a: 0.8 }); if (Math.random() < 0.12) G.spawn({ x: bx + (Math.random() - 0.5) * 20, y: by + 8, vy: -8, life: 1.2, size: 0.6, color: '#fff', type: 'mote' }); }
@@ -7005,6 +7095,10 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
    - Le chrono. 30 secondes, plus le temps d'un tour de tous les lieux multiplié par un facteur qui se resserre avec la
      profondeur. Il ne court que lorsque le joueur a la main : ni pendant un combat, ni pendant un dialogue, ni dans un
      menu. Écoulé, on remonte au seuil ; le labyrinthe se redessine, un cran plus simple ; rien n'est perdu.
+   - Ce qui rôde (2.x). Dans le labyrinthe d'un récit, de petits égrégores du chapitre vont et viennent sur les ponts —
+     jamais dans les lieux que le récit nomme. On les frappe en temps réel, avec l'arme que porte celui qui mène (D.FRAPPES) :
+     chaque coup ôte un voile, sans voile ils se dissipent ; s'ils touchent le groupe, c'est un combat ordinaire. Dans la
+     descente du râwî, les mêmes coups ne font que sonner et repousser — voir plus bas.
    Les textes sont ceux d'une règle du jeu : ils ne disent rien de l'histoire. */
 (function () {
   'use strict';
@@ -7031,6 +7125,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   // les options d'un lieu où l'on descend : une graine et une profondeur, s'il est de la noosphère et n'en a pas déjà
   R.graine = function (id, opts) {
     opts = opts || {}; if (!Dd || !estNoos(id) || opts.g !== undefined || R.sans) return opts;
+    delete S.flags._meutes_off;
     return Object.assign({}, opts, { g: neuve(), n: R.profondeur() });
   };
 
@@ -7050,13 +7145,14 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     const d = W.map && W.map.env && W.map.env.dedale;
     if (W.excursion) return; // la descente du râwî arme le sien
     R.chrono = d && !d.descente ? { total: R.duree(d.n, d.tour), reste: R.duree(d.n, d.tour), n: d.n } : null; affiche();
+    poserMeutes();
   };
   // appelé à chaque pas du monde, quand le joueur a la main
   R.tic = function (dt) {
     if (W.excursion) return ticDescente(dt);
     const c = R.chrono; if (!c || c.fini) { if (el && !el.hidden && !c) el.hidden = true; return; }
     if (I.debug.compte !== undefined) { c.reste = Math.min(c.reste, I.debug.compte); I.debug.compte = undefined; }
-    c.reste -= dt; if (c.reste <= 0) { c.fini = true; R.remonte(); } else affiche();
+    c.reste -= dt; if (c.reste <= 0) { c.fini = true; R.remonte(); } else { affiche(); ticMeutes(dt); }
   };
   R.cache = function () { if (el) el.hidden = true; };
   // le temps est écoulé : on remonte au seuil, le labyrinthe se redessine un cran plus simple, rien n'est perdu
@@ -7066,6 +7162,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     try {
       S.toast('Le temps de la descente est écoulé. <b>On remonte au seuil</b> : le labyrinthe se redessine, un peu plus simple. Rien n’est perdu.', 6500); I.audio.sfx('light');
       await S.fade('out', 500);
+      W.foes = W.foes.filter(f => !f.meute); S.flags._meutes_off = true; // ce qui rôdait s'est dispersé : le labyrinthe redessiné est plus simple, et vide de rôdeurs
       W.foes.forEach(f => { if (f.map === id && !f.done) f.placed = false; }); W.chests.forEach(c => { if (c.map === id) c.placed = false; });
       W.loadMap(id, Object.assign(o, { g: neuve(), n }), 'seuil');
       await S.fade('in', 500);
@@ -7124,13 +7221,15 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   // la cible que montre l'écran : l'issue
   R.cible = function () { const s = W.spotPx('issue'); return s ? { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto' } : null; };
   const salleDe = (px, py) => { const n = W.map.g0 ? W.map.g0(px, py) : ''; return n === 'nabri' ? 'abri' : n; };
+  // par où passe ce qui rôde : les ponts et les salles, jamais un abri ; dans le labyrinthe d'un récit, les ponts seulement
+  function passable(f, x, y) { const m = W.map, T = 16; if (x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; const n = m.g0(x * T + 8, y * T + 8); return n === 'npont' || (n === 'nfloor' && !f.meute); }
   // un rôdeur avance de case en case : il erre, et prend en chasse quand le râwî est à portée ; il n'entre jamais dans un abri
   function avance(f, dt, champ) {
-    const m = W.map, T = 16, tx = Math.floor(f.x / T), ty = Math.floor(f.y / T), passe = (x, y) => { if (x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; const n = m.g0(x * T + 8, y * T + 8); return n === 'npont' || n === 'nfloor'; };
+    const m = W.map, T = 16, tx = Math.floor(f.x / T), ty = Math.floor(f.y / T), passe = (x, y) => passable(f, x, y);
     if (f.cx === null || f.cx === undefined || (Math.abs(f.x - (f.cx * T + 8)) < 1 && Math.abs(f.y - (f.cy * T + 8)) < 1)) { // au milieu d'une case : choisir la suivante
       const ici = champ ? champ[ty * m.w + tx] : -1, voisins = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(q => passe(tx + q[0], ty + q[1]));
       let pick = null;
-      if (ici > 0 && ici <= 16) pick = voisins.find(q => champ[(ty + q[1]) * m.w + tx + q[0]] === ici - 1) || null; // en chasse : vers le râwî
+      if (ici > 0 && ici <= (f.vue || 16)) pick = voisins.find(q => champ[(ty + q[1]) * m.w + tx + q[0]] === ici - 1) || null; // en chasse : vers celui qui marche
       if (!pick && voisins.length) { const avant = voisins.filter(q => !(f.dx === -q[0] && f.dy === -q[1])), tout = avant.length ? avant : voisins, droit = tout.find(q => q[0] === f.dx && q[1] === f.dy); pick = droit && Math.random() < 0.7 ? droit : tout[Math.floor(Math.random() * tout.length)]; }
       if (!pick) return; f.dx = pick[0]; f.dy = pick[1]; f.cx = tx + pick[0]; f.cy = ty + pick[1];
     }
@@ -7149,13 +7248,127 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     if (ici === 'abri' && !E.abri) { E.abri = true; S.toast(I.esc(P().aLAbri || ''), 6000); I.audio.sfx('light'); } else if (ici !== 'abri') E.abri = false;
     if (c.reste <= 0) return R.finir(E.abri ? 'abri' : 'temps');
     E.champT = (E.champT || 0) - dt; if (E.champT <= 0 || !E.champ) { E.champ = champDe(p); E.champT = 0.25; }
-    for (const f of W.foes) { if (f.done || !f.rodeur || !f.placed) continue; avance(f, dt, E.champ); if (Math.hypot(f.x - p.x, f.y - p.y) < 14 && ici !== 'abri') return R.contact(f); }
+    for (const f of W.foes) { if (f.done || !f.rodeur || !f.placed) continue; if (etourdi(f, dt)) continue; avance(f, dt, E.champ); if (Math.hypot(f.x - p.x, f.y - p.y) < 14 && ici !== 'abri') return R.contact(f); }
+    viser();
   }
   // dans un abri, on peut laisser passer le temps d'un coup : Entrée, ou toucher son personnage
   R.attendre = function () { const E = W.excursion; if (E && E.abri && !E.fin && R.chrono) { R.chrono.reste = 0; return true; } return false; };
   R.touche = (x, y) => !!(W.excursion && W.excursion.abri && Math.hypot(x - W.player.x, y - 10 - W.player.y) < 16 && R.attendre());
   R.depart = function () { const k = R.attente; R.attente = null; if (k) R.entrer(k); };
   R.texte = k => I.esc(P()[k] || '');
+
+  /* ================= frapper ce qui rôde (2.x) =================
+     « Valider » — ou toucher ce qui rôde — frappe devant soi, avec l'arme que porte celui qui mène : le geste de
+     « Frapper », fait sur les ponts. Ce qui est frappé est repoussé et sonné : il ne bouge plus, et laisse passer.
+     - Dans le labyrinthe d'un récit : chaque coup ôte un voile à un petit égrégore ; sans voile, il se dissipe.
+     - Dans la descente du râwî : un coup sonne, il ne vainc pas — seul, le râwî ne vainc rien. Lame forgée en main et
+       accompagné, chaque coup entame une idée noire, qui finit par se dissiper jusqu'au chapitre suivant. Un mal du cœur
+       ne se tranche qu'en lui faisant face. */
+  R.MEUTES = [1, 2, 2, 3, 3, 4]; R.VOILES = [2, 2, 3, 3, 4, 4]; R.VUE = 6; R.PAS_MEUTE = 0.5; R.TENUE = [3, 3, 4, 4, 5, 6];
+  const enMain = () => { const h = W.party.length ? W.hero(W.party[0]) : null; let g = null; try { const e = h && I.gear ? I.gear.of(h) : null; g = e && D.GEAR[e.md]; } catch (x) { g = null; } const t = g && D.FRAPPES[g.t] ? g.t : 'nu'; return { h, piece: g || null, type: t, F: D.FRAPPES[t] }; };
+  R.enMain = enMain;
+  const rodent = () => W.map ? W.foes.filter(f => f.rodeur && !f.done && f.placed && f.map === W.map.id) : [];
+  R.rodent = rodent;
+  // ce qui est sonné : glisse jusqu'où le coup l'a repoussé, puis attend
+  function etourdi(f, dt) {
+    if (!(f.sonne > 0)) return false; f.sonne -= dt;
+    if (f.pousse) { const L = Math.hypot(f.pousse[0] - f.x, f.pousse[1] - f.y), pas = Math.min(L, 220 * dt); if (L > 0.5) { f.x += (f.pousse[0] - f.x) / L * pas; f.y += (f.pousse[1] - f.y) / L * pas; } else f.pousse = null; }
+    if (f.sonne <= 0) { f.sonne = 0; f.pousse = null; f.cx = null; }
+    return true;
+  }
+  // y a-t-il de quoi frapper ? (un rôdeur à portée de vue : « Valider » frappe alors, au lieu d'agir sur le décor)
+  R.aFrapper = function () { const d = W.map && W.map.env && W.map.env.dedale; if (!d) return false; const p = W.player, F = enMain().F; return rodent().some(f => Math.hypot(f.x - p.x, f.y - p.y) < F.portee + 24); };
+  // frapper devant soi (vers : celui que l'on a touché du doigt)
+  R.frappe = function (vers) {
+    const d = W.map && W.map.env && W.map.env.dedale; if (!d || I.scene !== W || S.busy || W.lock || (W.excursion && (W.excursion.fin || W.excursion.combat))) return false;
+    if (R._pret && W.t < R._pret) return false;
+    const A = enMain(), F = A.F, p = W.player, T = 16;
+    if (vers) { const dx = vers.x - p.x, dy = vers.y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); }
+    const fx = [0, -1, 1, 0][p.dir], fy = [1, 0, 0, -1][p.dir];
+    W.stop(); R._pret = W.t + F.cadence; R.geste = { t: W.t, dir: p.dir, type: A.type, F }; R.coups = (R.coups || 0) + 1;
+    I.audio.sfx(A.type === 'arc' ? 'blip' : 'tek');
+    // le geste, dessiné : un arc d'étincelles devant soi ; pour l'arc, un trait qui file
+    const G = I.gfx, sx = p.x - W.cam.x, sy = p.y - W.cam.y - 12, coul = A.piece ? '#fff3c8' : '#d8d2e6';
+    if (F.trait) for (let i = 1; i <= 7; i++) G.spawn({ x: sx + fx * i * F.portee / 7, y: sy + fy * i * F.portee / 7, vx: fx * 60, vy: fy * 60, life: 0.16 + i * 0.012, size: 0.8, color: coul, type: 'spark' });
+    else for (let i = -3; i <= 3; i++) { const a = i / 3 * 0.9, cx = fx * Math.cos(a) - fy * Math.sin(a), cy = fy * Math.cos(a) + fx * Math.sin(a); G.spawn({ x: sx + cx * (F.portee - 6), y: sy + cy * (F.portee - 6), vx: cx * 50, vy: cy * 50, life: 0.2, size: 1, color: coul, type: 'spark' }); }
+    let touches = 0;
+    rodent().forEach(f => { const dx = f.x - p.x, dy = f.y - p.y, av = dx * fx + dy * fy, cote = Math.abs(dx * fy - dy * fx); if (av < -6 || av > F.portee + 6 || cote > F.large) return; touches++; coup(f, F, fx, fy); });
+    if (touches) { G.shake(120); I.audio.sfx('hit'); }
+    return true;
+  };
+  function coup(f, F, fx, fy) {
+    const T = 16, G = I.gfx, id = f.group[0], def = (W.saga.enemies || {})[id] || {}, E = W.excursion;
+    // repoussé de case en case dans le sens du coup, tant que le passage est libre ; puis sonné
+    let tx = Math.floor(f.x / T), ty = Math.floor(f.y / T), k = 0; while (k < F.recul && passable(f, tx + fx, ty + fy)) { tx += fx; ty += fy; k++; }
+    f.pousse = k ? [tx * T + 8, ty * T + 8] : null; f.sonne = F.sonne; f.dx = fx; f.dy = fy; f.touche = W.t; R.touches = (R.touches || 0) + 1;
+    for (let i = 0; i < 8; i++) G.spawn({ x: f.x - W.cam.x + (Math.random() - 0.5) * 10, y: f.y - W.cam.y - 14 + (Math.random() - 0.5) * 10, vx: (Math.random() - 0.5) * 90 + fx * 40, vy: (Math.random() - 0.5) * 90 + fy * 40, life: 0.45, size: 0.9, color: `hsl(${def.hue || 260},90%,72%)`, type: 'spark' });
+    if (E) { // la descente du râwî : un coup sonne ; il n'entame une idée noire que lame forgée en main, et accompagné
+      if (!(def.idee && R.peutFaireFace(id))) { if (!E.ditSonne) { E.ditSonne = true; S.toast(I.esc(P().sonne || ''), 5200); } return; }
+      f.tenue = (f.tenue === undefined ? R.TENUE[E.n] : f.tenue) - F.force;
+      if (f.tenue > 0) return;
+      f.done = true; E.flags['_noir_' + id] = true; I.audio.sfx('light'); G.flash('#fff3d0'); S.toast(I.esc((P().dissipee || '').replace('%s', def.name || '')), 5200);
+      return;
+    }
+    f.voiles = (f.voiles === undefined ? R.VOILES[W.map.env.dedale.n] : f.voiles) - F.force;
+    if (f.voiles > 0) return;
+    dissiper(f);
+  }
+  // un petit égrégore du chapitre, sans voile, se dissipe : ce que le groupe y gagne est ce qu'un combat lui aurait donné, en moins
+  function dissiper(f) {
+    const sv = I.save.data, E0 = W.saga.enemies || {}; let xp = 0;
+    f.group.forEach(id => { const def = E0[id]; if (!def) return; xp += I.calc.xpOf(def); const cid = 'foe:' + W.saga.id + ':' + id; if (!sv.codex.includes(cid)) sv.codex.push(cid); });
+    f.done = true; if (f.cle) S.flags[f.cle] = true; R.dissipes = (R.dissipes || 0) + 1;
+    const lignes = I.battle.grantXP(Math.round(xp * 0.6)), nom = (E0[f.group[0]] || {}).name || '';
+    I.audio.sfx('light'); I.gfx.flash('#fff3d0');
+    S.toast(`<b>${I.esc(nom)}</b> se dissipe.` + (lignes.length ? ' ' + lignes.map(l => l.replace(/<\/?li>/g, '')).join(' · ') : ''), lignes.length ? 6000 : 2600);
+    if (W.saga && !I.debug.auto) W.checkpoint();
+  }
+  // au doigt : toucher ce qui rôde, c'est le frapper — de là où l'on est s'il est à portée, sinon en s'en approchant
+  R.viseDu = function (x, y) {
+    const d = W.map && W.map.env && W.map.env.dedale; if (!d) return false;
+    const f = rodent().find(q => Math.abs(q.x - x) < 16 && y > q.y - 38 && y < q.y + 8); if (!f) return false;
+    const p = W.player, F = enMain().F;
+    if (Math.hypot(f.x - p.x, f.y - p.y) <= F.portee + 2) { R.frappe(f); return true; }
+    R._vise = f; W.goTo(f.x, f.y, { ent: f, stop: Math.max(10, F.portee - 6) }); return true;
+  };
+  function viser() { const f = R._vise; if (!f) return; if (f.done || !f.placed) { R._vise = null; return; } const p = W.player, F = enMain().F; if (Math.hypot(f.x - p.x, f.y - p.y) <= F.portee) { R._vise = null; R.frappe(f); } else if (!W.dest) R._vise = null; }
+
+  /* ----- ce qui rôde dans le labyrinthe d'un récit ----- */
+  function poserMeutes() {
+    W.foes = (W.foes || []).filter(f => !f.meute); R._champ = null; R._vise = null;
+    const m = W.map, d = m && m.env && m.env.dedale, T = 16; if (!d || d.descente || W.excursion || !W.saga) return;
+    if (S.flags._meutes_off || I.debug.sansMeutes) return;
+    const E0 = W.saga.enemies || {}, petits = Object.keys(E0).filter(k => E0[k].tier === 'minion' && !E0[k].idee && !E0[k].vice && !E0[k].racine);
+    if (!petits.length) return;
+    const g = W.mapOpts && W.mapOpts.g, r = I.rng(I.hash('meutes/' + g)), n = R.MEUTES[d.n] | 0;
+    // des carrefours, sur les ponts, à l'écart du seuil et à l'écart les uns des autres
+    const seuil = W.spotPx('seuil') || [0, 0], libres = (d.loin || []).filter(c => m.g0(c[0] * T + 8, c[1] * T + 8) === 'npont' && Math.hypot(c[0] * T + 8 - seuil[0], c[1] * T + 8 - seuil[1]) > 9 * T);
+    const pris = [];
+    for (let i = 0; i < n && libres.length; i++) {
+      let c = null; for (let essai = 0; essai < 24 && !c; essai++) { const q = libres[Math.floor(r() * libres.length)]; if (pris.every(o => Math.hypot(o[0] - q[0], o[1] - q[1]) > 7)) c = q; }
+      if (!c) break; pris.push(c);
+      const id = petits[Math.floor(r() * petits.length)], cle = '_meute_' + g + '_' + i;
+      if (S.flags[cle]) continue; // déjà dissipé, ou vaincu : il ne revient pas
+      W.foes.push({ id: 'meute' + i, group: [id], map: m.id, rodeur: true, meute: true, cle, done: false, placed: true, x: c[0] * T + 8, y: c[1] * T + 8, cx: null, ph: i * 1.9, v: R.MARCHE * R.PAS_MEUTE, vue: R.VUE, voiles: R.VOILES[d.n] });
+    }
+  }
+  R.poserMeutes = poserMeutes;
+  function ticMeutes(dt) {
+    const m = W.map, d = m && m.env && m.env.dedale; if (!d || d.descente) return;
+    const L = W.foes.filter(f => f.meute && !f.done && f.placed && f.map === m.id); if (!L.length) { R._vise = null; return; }
+    const p = W.player, surPont = m.g0(p.x, p.y) === 'npont';
+    R._champT = (R._champT || 0) - dt; if (R._champT <= 0 || R._champ === undefined) { R._champ = surPont ? champDe(p) : null; R._champT = 0.25; }
+    for (const f of L) { if (etourdi(f, dt)) continue; avance(f, dt, R._champ); const dist = Math.hypot(f.x - p.x, f.y - p.y);
+      if (dist < 96 && !R._ditRode) { R._ditRode = true; O().learn('frappe'); S.toast(I.esc(P().rode || ''), 7000); } // le besoin d'abord : on apprend à frapper quand quelque chose approche
+      if (surPont && dist < 14) return R.contactMeute(f); }
+    viser();
+  }
+  // un petit égrégore a rejoint le groupe : un combat ordinaire
+  R.contactMeute = async function (f) {
+    if (f.enCombat || S.busy || W.lock) return; f.enCombat = true; W.stop(); R._vise = null; S.depth++;
+    try { await I.battle.start({ group: f.group, bg: W.map.env.bg, intro: ((W.saga.enemies[f.group[0]] || {}).name || '') + ' vous a rejoints sur le pont.' }); f.done = true; if (f.cle) S.flags[f.cle] = true; W.checkpoint(); }
+    finally { S.depth--; f.enCombat = false; }
+  };
 
   R.contact = async function (f) {
     const E = W.excursion, id = f.group[0], def = (C0().enemies || {})[id] || {}; if (!E || E.fin || E.combat) return;
@@ -7285,7 +7498,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     if (has) btns.push(mk(auto ? 'Reprendre une copie gardée' : 'Continuer', async () => { close(); const ok = await U.loadMenu(); if (ok) U.resume(); else U.showTitle(); }));
     btns.push(mk('Nouvelle partie', async b => {
       close();
-      if (auto && (auto.prologue || auto.cp)) { I.setScene(U.blank); S.depth++; let k = 1; try { k = await S.menuPick('Une partie est en cours. En commencer une nouvelle la remplacera ; les copies gardées à la mosquée restent.', [{ t: 'Commencer une nouvelle partie' }, { t: 'Garder ma partie' }]); } finally { S.depth--; S.hideDialog(); } if (k !== 0) return U.showTitle(); }
+      if (auto && (auto.prologue || auto.cp || (auto.cps && Object.keys(auto.cps).length))) { I.setScene(U.blank); S.depth++; let k = 1; try { k = await S.menuPick('Une partie est en cours. En commencer une nouvelle la remplacera ; les copies gardées à la mosquée restent.', [{ t: 'Commencer une nouvelle partie' }, { t: 'Garder ma partie' }]); } finally { S.depth--; S.hideDialog(); } if (k !== 0) return U.showTitle(); }
       I.save.reset(); I.save.data.started = true; W.roster = {}; W.saga = null; U.personnage(() => W.startChapter('idris', 0), true);
     }));
     btns.push(mk('Son : ' + (I.audio.on ? 'activé' : 'coupé'), b => { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = 'Son : ' + (I.audio.on ? 'activé' : 'coupé'); }));
@@ -7332,7 +7545,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
   U.resume = function () {
     const sv = I.save.data, dit = avisAbsent(I.save.avis); I.save.avis = null;
     if (sv.cp && I.sagas[sv.cp.saga]) { W.roster = {}; W.saga = null; const p = W.startChapter(sv.cp.saga, sv.cp.ci, sv.cp); if (dit) S.toast(dit, 14000); return p; }
-    if (!sv.prologue) { W.roster = {}; W.saga = null; return W.startChapter('idris', 0); }
+    if (!sv.prologue) { W.roster = {}; W.saga = null; const cp = W.reprise('idris', 0); return W.startChapter('idris', 0, cp || undefined); } // le prologue, quitté en chemin, se reprend là
     return U.showChain(dit || undefined);
   };
   /* ---------- ton personnage : le nom et la tenue du râwî ----------
@@ -7433,17 +7646,24 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     const rang = s => { const L = livres.find(x => x.sagas.includes(s)); return I.romain(L.sagas.indexOf(s) + 1) + (L.n === 1 ? '' : ' du livre ' + I.romain(L.n)); };
     const ouvrir = s => { close(); U.startSaga(s); }, dernier = () => { close(); W.roster = {}; W.saga = null; W.startChapter('idris', 1); };
     // un grand bouton dit quoi faire : ouvrir le maillon suivant (ou reprendre celui qui est entamé)
+    // 2.x : les récits quittés en chemin (points de reprise rangés). Le plus récent passe devant : on le reprend d'un toucher.
+    const rangees = W.rangees(), enRoute = id => rangees.find(c => c.saga === id) || null;
+    const reprendre = c => { close(); const sg = I.sagas[c.saga]; if (!sg.frame) return U.startSaga(sg); W.roster = {}; W.saga = null; const cp = W.reprise(c.saga, c.ci); return W.startChapter(c.saga, c.ci, cp || undefined); };
     { const hd = $('#chain header'); let go = hd.querySelector('.go'); if (!go) { go = I.el('div', 'go'); hd.appendChild(go); } go.innerHTML = '';
-      const s = suivant, sp = s ? (sv.sagas[s.id] || { ch: 0 }) : null;
-      if (s || allDone) { const b = I.el('button', 'cta', s ? (sp.ch > 0 ? `▶ Reprendre : ${I.esc(s.name)} · chapitre ${sp.ch + 1}` : `▶ Ouvrir le maillon ${rang(s)} : ${I.esc(s.name)}`) : (sv.epilogue ? '▶ Rejouer le dernier maillon' : '▶ Ouvrir le dernier maillon : ' + I.esc(I.perso.nom()))); b.type = 'button';
+      if (rangees.length) { const c = rangees[0], sg = I.sagas[c.saga], chp = sg.chapters[c.ci];
+        const b = I.el('button', 'cta', `▶ Reprendre : ${I.esc(sg.veillees ? 'la veillée' : sg.frame ? I.perso.nom() : sg.name)} · ${I.esc(chp.title)}`); b.type = 'button';
+        if (!sg.frame) b.style.setProperty('--c', D.ELEMENTS[sg.light].color); tapable(b, () => reprendre(c)); go.appendChild(b); btns.push(b); }
+      const s = suivant && !(rangees.length && rangees[0].saga === suivant.id) ? suivant : null, sp = s ? (sv.sagas[s.id] || { ch: 0 }) : null; // (le récit que le premier bouton reprend déjà n'est pas offert deux fois)
+      if (s || (allDone && !suivant)) { const b = I.el('button', 'cta', s ? ((sp.ch > 0 || enRoute(s.id)) ? `▶ Reprendre : ${I.esc(s.name)} · chapitre ${sp.ch + 1}` : `▶ Ouvrir le maillon ${rang(s)} : ${I.esc(s.name)}`) : (sv.epilogue ? '▶ Rejouer le dernier maillon' : '▶ Ouvrir le dernier maillon : ' + I.esc(I.perso.nom()))); b.type = 'button';
         if (s) b.style.setProperty('--c', D.ELEMENTS[s.light].color); tapable(b, () => (s ? ouvrir(s) : dernier())); go.appendChild(b); btns.push(b); }
       go.appendChild(I.el('p', 'comment', (tactile ? 'Ou touche le maillon de ton choix, plus bas.' : 'Ou clique sur le maillon de ton choix. Au clavier : flèches, puis Entrée.') + ' La partie se garde toute seule.')); }
     const maillon = (s, i) => {
       const sp = sv.sagas[s.id] || { ch: 0, done: false }, e = D.ELEMENTS[s.light];
       const vl = (sv.veillees && sv.veillees[s.id] ? ' · veillée du Caïd ✓' : '') + (sv.rencontres && sv.rencontres[s.id] ? ' · rencontre ✓' : '');
       const qv = I.oeuvres.viceApres(s.id), qt = qv ? `<span class="qt">⚔ ${I.oeuvres.quete(qv)}</span>` : '';
-      const st = sp.done ? `<span class="stt done">${e.glyph} ${s.lightName} retrouvée${vl}</span>` : sp.ch > 0 ? `<span class="stt">Chapitre ${sp.ch + 1} / ${s.chapters.length}</span>` : '<span class="stt">Maillon à ouvrir</span>';
-      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">MAILLON ${I.romain(i + 1)} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}<span class="ouvrir">${sp.done ? 'Rejouer' : sp.ch > 0 ? 'Reprendre' : 'Ouvrir'} ▸</span></span>`);
+      const er = !sp.done && enRoute(s.id), route = er ? ' · en route' : '';
+      const st = sp.done ? `<span class="stt done">${e.glyph} ${s.lightName} retrouvée${vl}</span>` : (sp.ch > 0 || er) ? `<span class="stt">Chapitre ${sp.ch + 1} / ${s.chapters.length}${route}</span>` : '<span class="stt">Maillon à ouvrir</span>';
+      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">MAILLON ${I.romain(i + 1)} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}<span class="ouvrir">${sp.done ? 'Rejouer' : (sp.ch > 0 || er) ? 'Reprendre' : 'Ouvrir'} ▸</span></span>`);
       b.type = 'button'; b.style.setProperty('--c', e.color);
       tapable(b, () => ouvrir(s));
       box.appendChild(b); btns.push(b);
@@ -7465,6 +7685,8 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     if (I.sagas.caid && Object.keys(sv.veillees || {}).length) foot.appendChild(I.el('span', 'pill', 'Citadelle du Caïd : ' + Object.keys(D.PILLARS).map(k => `${D.PILLARS[k].glyph} <b>${sv.citadel[k]}</b>`).join(' · ')));
     { const d = I.oeuvres.state(), nl = Object.keys(d.lames).length, nv = Object.keys(d.vices).filter(v => d.vices[v] === 'tranche').length; if (nl || nv || d.zad) foot.appendChild(I.el('span', 'pill', `Lames : <b>${nl}</b> / 7 · maux tranchés : <b>${nv}</b> / 7 · ♥ ${d.zad}`)); }
     const pied = (label, fn) => { const b = I.el('button', '', label); b.type = 'button'; tapable(b, fn); foot.appendChild(b); btns.push(b); };
+    { const fr2 = I.sagas.idris, vi = fr2 ? fr2.chapters.findIndex(c => c.visite === 'citadelle') : -1; // 2.x : la Citadelle, en 2084
+      if (vi >= 0 && I.sagas.caid && Object.keys(sv.veillees || {}).some(k => sv.veillees[k])) pied('La Citadelle', () => { close(); W.roster = {}; W.saga = null; const cp = W.reprise('idris', vi); W.startChapter('idris', vi, cp || undefined); }); }
     pied('Garder une copie', async () => { close(); await U.saveMenu(); U.showChain(); });
     pied('Exporter la partie', () => { close(); U.partie('exporter', () => U.showChain()); });
     pied('Ton personnage', () => { close(); U.personnage(() => U.showChain()); });
@@ -7481,7 +7703,8 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     const sv = I.save.data, sp = sv.sagas[s.id] || (sv.sagas[s.id] = { ch: 0, done: false, flags: {} });
     W.roster = {}; W.saga = s; S.flags = {};
     let ci = sp.done ? 0 : sp.ch;
-    if (sp.done) { sp.ch = 0; sp.flags = {}; }
+    if (sp.done) { sp.ch = 0; sp.flags = {}; if (sv.cps) delete sv.cps[s.id]; }
+    else W.reprise(s.id); // 2.x : ce récit, quitté en chemin, reprend là où on l'a laissé — même si l'on en a joué un autre depuis
     if (ci === 0 && !(sv.cp && sv.cp.saga === s.id && sv.cp.obj > 0)) { sp.cOk = 0; sp.cTot = 0; }
     const resume0 = sv.cp && sv.cp.saga === s.id && sv.cp.ci === 0 && sv.cp.obj > 0 && !sp.done;
     if (ci === 0 && !resume0) {
@@ -7491,6 +7714,29 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     const cp = sv.cp && sv.cp.saga === s.id && sv.cp.ci === ci && ci > 0 ? sv.cp : (sv.cp && sv.cp.saga === s.id && sv.cp.ci === 0 && ci === 0 && sv.cp.obj > 0 ? sv.cp : null);
     await W.startChapter(s.id, ci, cp || undefined);
   };
+  /* 2.x — revenir en 2084. Le récit que l'on quitte est rangé (W.ranger) : il se reprendra là. En remontant d'un récit
+     des Compagnons ou d'une veillée, il peut s'être passé quelque chose dans la Cité-Miroir : un chapitre de
+     l'histoire-cadre marqué « retour: n » se joue au n-ième retour (ou à un retour suivant), une seule fois. */
+  const rebond = () => { const sv = I.save.data, fr = I.sagas.idris; if (!fr || !sv.prologue || sv.epilogue) return -1; const fait = sv.rebonds || {}, n = sv.retours || 0;
+    let ri = -1, rn = 1e9; fr.chapters.forEach((c, i) => { if (Number.isInteger(c.retour) && !fait[c.id] && c.retour <= n && c.retour < rn) { rn = c.retour; ri = i; } }); return ri; };
+  U.rebond = rebond;
+  U.partir = async function (ailleurs) {
+    const sv = I.save.data; W.ranger(); if (ailleurs) sv.retours = (sv.retours || 0) + 1;
+    $('#hud').hidden = true; S.depth++; try { await S.fade('out', 300); } finally { S.depth--; }
+    const ri = ailleurs ? rebond() : -1;
+    if (ri >= 0) { W.roster = {}; W.saga = null; return W.startChapter('idris', ri); }
+    U.showChain(ailleurs ? I.perso.dire('Idris rouvre les yeux. Les Archives basses, la lampe, la Chaîne. Chaque récit attend là où tu l’as laissé.') : undefined); return S.fade('in', 300);
+  };
+  // l'état de 2084, en drapeaux, pour les chapitres de l'histoire-cadre qui se jouent au retour ou en visite : veillées
+  // entendues, Lumières reçues, ce que tient la Citadelle. Posés par le moteur ; un récit ne les écrit pas.
+  U.drapeaux2084 = function (F) { const sv = I.save.data, c = sv.citadel || {}, tot = (c.priere || 0) + (c.savoir || 0) + (c.justice || 0) + (c.lien || 0);
+    Object.keys(F).forEach(k => { if (k.indexOf('_2084_') === 0) delete F[k]; });
+    Object.keys(sv.veillees || {}).forEach(k => { if (sv.veillees[k]) F['_2084_veillee_' + k] = true; });
+    I.save.maillons().forEach(k => { F['_2084_maillon_' + k] = true; });
+    if (tot >= 12) F._2084_debout = true; else if (tot >= 7) F._2084_tient = true; else F._2084_lezarde = true;
+    Object.keys(D.PILLARS).forEach(k => { if ((c[k] || 0) >= 3) F['_2084_pilier_' + k] = true; });
+    if (W.rangees().some(x => !I.sagas[x.saga].frame)) F._2084_en_route = true;
+    return F; };
   // la rencontre de la Cité-Miroir qui suit une saga : chapitre de l'histoire-cadre marqué « after »
   const rencontre = id => { const sv = I.save.data; sv.rencontres = sv.rencontres || {}; const fr = I.sagas.idris; if (!fr || !sv.prologue || sv.rencontres[id]) return -1; return fr.chapters.findIndex(c => c.after === id); };
   // ce qu'il reste à ouvrir dans le livre d'une saga, et ce que l'on dit quand il n'y reste rien
@@ -7517,6 +7763,10 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
       sv.rencontres = sv.rencontres || {}; sv.rencontres[ch.after] = true; I.save.store();
       const s2 = I.sagas[ch.after], e2 = D.ELEMENTS[s2.light], left2 = resteDans(s2);
       return U.showChain(I.perso.dire(`<b style="color:${e2.color}">${e2.glyph} ${s2.lightName}</b> — ce qu’Idris a reçu de ${I.esc(s2.name)} a servi dans la Cité-Miroir. ${left2 ? `Encore ${left2} maillon${left2 > 1 ? 's' : ''}.` : finLivre(s2)}`));
+    }
+    if (saga.frame && !saga.veillees && (Number.isInteger(ch.retour) || ch.visite)) { // 2.x : ce qui s'est passé au retour en 2084, ou une visite : on revient à la Chaîne
+      if (Number.isInteger(ch.retour)) { sv.rebonds = sv.rebonds || {}; sv.rebonds[ch.id] = true; } I.save.store();
+      return U.showChain(I.perso.dire(ch.visite ? 'Idris est revenu aux Archives basses. La Chaîne tourne dans la pénombre.' : 'Les Archives basses retrouvent leur silence. La Chaîne attend.'));
     }
     if (saga.frame) {
       if (W.ci === 0) { sv.prologue = true; I.save.store(); return U.showChain('La Chaîne s’ouvre. Cinq maillons, cinq témoins. Commence par le premier : Abû Bakr, le jour où tout aurait pu se défaire.'); }
@@ -7580,7 +7830,10 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
       items.push({ label: 'Ton personnage', fn() { close(); U.personnage(() => { if (I.scene === W && W.map) W.hud(); }); }, show: () => { const p = I.perso.profil(); return '<h3>Ton personnage</h3><p>Le râwî porte le nom et la tenue que tu lui donnes : <b>' + I.esc(p.nom) + '</b>, ' + I.esc(I.perso.tenue().nom.toLowerCase()) + '. Les Compagnons, eux, gardent leur nom et leur silhouette.</p>'; } });
       items.push({ label: 'Exporter la partie', fn() { close(); U.partie('exporter', () => {}); }, show: () => '<h3>Exporter la partie</h3><p>Ta partie tient dans un texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.</p><p class="src">Elle se garde aussi toute seule sur cet appareil, à chaque objectif atteint.</p>' });
       items.push({ label: 'Diagnostic', fn() {}, show: U.diagnostic });
-      if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre là où tu l’as laissé : la partie se garde toute seule, même si tu fermes la page.</p>' });
+      // 2.x : on peut à tout moment quitter un récit pour revenir en 2084 ; il est rangé là où on le laisse, et les autres aussi
+      if (inWorld && !W.excursion) { const ailleurs = !!(W.saga && (!W.saga.frame || W.saga.veillees)), nom = ailleurs ? 'Revenir en 2084' : 'Retour à la Chaîne';
+        items.push({ cat: 'Partir' }, { label: nom, fn() { W.checkpoint(); close(); U.partir(ailleurs); },
+          show: () => `<h3>${nom}</h3><p>${ailleurs ? 'Tu rouvres les yeux aux Archives basses, devant la Chaîne. Ce récit reste où tu le laisses : tu le reprendras là, même après en avoir suivi un autre.' : 'Tu reprendras ce chapitre là où tu l’as laissé.'} La partie se garde toute seule, même si tu fermes la page.</p>${ailleurs ? '<p class="src">La Cité-Miroir ne t’attend pas : il peut s’y être passé quelque chose.</p>' : ''}` }); }
       $('#menu h2').textContent = 'Halte';
       build(items, { onCancel: close });
     };
@@ -7709,6 +7962,8 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     ['Idées noires et énigmes', '<p>Dans un pourparler, il arrive que la <b>honte</b>, la <b>peur</b>, le <b>soupçon</b>, la <b>rancune</b> ou le <b>désespoir</b> parlent plus fort que toi. On ne la combat pas : on lui <b>répond</b>. Elle a deux voiles ; à chacun, tu choisis ta manière : <b>dire vrai</b> (la parole), <b>expliquer</b> (la pédagogie) ou <b>rassurer</b> (la bienveillance). La bonne manière fait tomber le voile ; une autre t’apprend pourquoi elle ne portait pas. Après quoi il écoute, et la confiance monte.</p><p>Une <b>énigme du cœur</b> : un compagnon languit sans fièvre ni blessure. Il tient moins bien au combat tant qu’on n’a pas trouvé ce qu’il a cessé de faire. Les anciens donnent des indices ; la bonne œuvre, accomplie sur la natte, le remet debout.</p>'],
     ['Compagnons de lumière', '<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>'],
     ['Si le jeu s’arrête', '<p>Si l’écran reste noir ou si plus rien ne répond pendant un quart de minute, un bouton <b>Reprendre</b> apparaît en bas de l’écran : il ramène au dernier objectif atteint, sans rien perdre de ce qui a été sauvegardé.</p><p>La partie se garde toute seule : en dernier recours, <b>recharge la page</b> puis choisis « Continuer ».</p><p>Dans la halte, <b>Diagnostic</b> donne la version du jeu, l’appareil, l’état du son et les incidents relevés : c’est ce qu’il faut transmettre pour qu’une panne soit comprise. Couper le son ou la musique (Réglages) suffit parfois à la contourner.</p>'],
+    ['Mener plusieurs récits', '<p>On n’est pas tenu de finir un récit pour en ouvrir un autre. Dans la halte, <b>Revenir en 2084</b> te ramène aux Archives basses, devant la Chaîne : le récit que tu quittes reste où tu le laisses, et tu le reprends là — même après en avoir suivi un autre. La Chaîne dit lesquels sont <b>en route</b>, et son grand bouton reprend le dernier quitté.</p><p>Pendant que tu suis un récit, la Cité-Miroir ne t’attend pas : en revenant, il arrive qu’il s’y soit passé quelque chose. Et dès la première veillée entendue, la Chaîne ouvre le chemin de <b>la Citadelle</b>, où Idris est né.</p>'],
+    ['Frapper ce qui rôde', '<p>Dans un labyrinthe de la noosphère, de petits égrégores vont et viennent sur les ponts. <kbd>Entrée</kbd> — ou un toucher sur ce qui rôde — le <b>frappe</b>, avec l’arme que porte celui qui mène : un voile de moins, et il reste sonné un instant, le temps de passer. Sans voile, il se dissipe. S’il vous rejoint avant, c’est un combat ordinaire.</p><p>L’allonge, la cadence et le recul viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, un coup ne fait que sonner : seul, on ne vainc pas ce qui pèse sur le cœur.</p>'],
     ['La Chaîne', '<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>']
   ];
 
@@ -7803,7 +8058,7 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     if (p.moving) still = now;
     W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y); if (d < 60 || (tg && tg.ent === n && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y, d, c: n.aura || '#f3e7cc' }); });
     list.sort((a, b) => a.d - b.d); list.length = Math.min(list.length, 5);
-    if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.trail[Math.min(W.trail.length - 1, i * 13)] : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: D.ELEMENTS[h.el].color }); });
+    if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.trail[Math.min(W.trail.length - 1, i * 13)] : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
     const seen = {}, w = $('#stage').clientWidth;
     list.forEach(e => { const x = (e.x - cx) * sc, y = (e.y - cy - 25) * sc; if (x < 8 || x > w - 8 || y < 4) return; seen[e.k] = 1;
       let el = box.querySelector('[data-k="' + e.k + '"]'); if (!el) { el = I.el('span', 'nom', I.esc(e.t)); el.dataset.k = e.k; el.style.setProperty('--c', e.c); box.appendChild(el); }
@@ -7896,6 +8151,10 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
     $('#dialog').addEventListener('click', () => I.input.emit('ok'));
     $('#card').addEventListener('click', () => I.input.emit('ok'));
     $('#battle .banner').addEventListener('click', () => I.input.emit('ok'));
+    // en combat, on choisit une cible en la touchant elle-même, pas seulement sa plaque
+    { const pt = e => { const r = cvEl.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * G.PW, (e.clientY - r.top) / r.height * G.PH]; }, hors = e => !I.battle.active || (e.target.closest && e.target.closest('button, .cmd, .banner'));
+      $('#battle').addEventListener('click', e => { if (hors(e)) return; const q = pt(e); if (I.battle.touche(q[0], q[1])) e.stopPropagation(); });
+      $('#battle').addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && !hors(e)) { const q = pt(e); I.battle.survol(q[0], q[1]); } }); }
     $('#menubtn').addEventListener('click', e => { e.stopPropagation(); if (I.scene === W && !S.busy) U.pause(); });
     $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); I.build.set(!I.build.on); });
     $('#helpbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.guide(); });
@@ -7934,6 +8193,10 @@ window.ISNAD_VERSION = "2.0 · 2026-11-16 13:16 UTC · c39de5a+";
    veillée, Idris remonte dans la rue et rencontre un habitant enfermé dans une idole. Il le dénoue par la parole ;
    les meilleurs arguments demandent un savoir appris chez le Compagnon ou à la Citadelle (need: 'saga/id').
    Tout y est de fiction. Les types sont anciens ; les images et les phrases sont originales. */
+/* 2.x — trois retours (x_*, marqués « retour: n ») : ce qui s'est passé aux Archives basses pendant qu'Idris suivait un
+   récit, joué une fois quand il revient en 2084 pour la n-ième fois (ou plus tard). Et une visite (« visite: 'citadelle' ») :
+   la Citadelle du Caïd, où Idris est né, ouverte depuis la Chaîne dès la première veillée entendue. Le moteur pose
+   l'état de 2084 en drapeaux (_2084_*) : un récit les lit, il ne les écrit pas. Textes proposés par l'agent, à relire. */
 /* Depuis la version du cœur : chaque rencontre porte, à sa deuxième manche, l'idée noire de celui à qui l'on
    parle (« noir »), et s'achève devant le mal du cœur qui se tenait derrière lui. Le dernier chapitre fait se
    dresser ceux qui n'ont pas été tranchés (['vices', …]). Textes des maux et des lames : src/data/coeur.js. */
@@ -8066,6 +8329,10 @@ ISNAD.registerSaga({
     { id: 'r_admire', cat: 'Noosphère', title: 'L’Admiré', text: 'Sous le grand écran, un homme que des millions de fenêtres applaudissent. Derrière les fenêtres, il n’y a personne. Il ne sait plus qui il serait sans ce bruit. Descendre du socle demande plus de courage que d’y monter : nul n’applaudit celui qui descend. Personnage de fiction.' },
     { id: 'r_compteur', cat: 'Noosphère', title: 'Le Compteur', text: 'Il achète des regards quand personne n’en veut et les garde dans un coffre, sans jamais en poser un sur quelqu’un. Ce qu’on donne, on sait où il est ; ce qu’on amasse, on le perd de vue. Personnage de fiction.' },
     { id: 'r_cartographe', cat: 'Noosphère', title: 'Le Cartographe', text: 'Il dessine la Cité sans y marcher, d’après des millions de relevés. Il demande « combien l’ont vu ? » et jamais « qui ? ». Sa carte porte un mur là où un enfant sait qu’il y a une porte. Un savoir se corrige en allant voir, et se garde avec le nom de celui qui a vu. Personnage de fiction.' },
+    { id: 'x_veiller', cat: 'Noosphère', title: 'Veiller les Archives', text: 'Chaque fois qu’Idris remonte la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus, et envoie voir. On peut suivre plusieurs récits à la fois : chacun attend là où on l’a laissé. Mais des archives qu’on ne veille pas, un autre les raconte à votre place. Fiction.' },
+    { id: 'x_question', cat: 'Noosphère', title: '« Tu pars où ? »', text: 'L’enfant du parvis est descendu jusqu’aux Archives basses pour poser sa question. Idris lui a montré un nom, puis celui qui vient après : c’est ainsi que Maître Yûnus avait commencé avec lui. Personnage de fiction.' },
+    { id: 'x_avis', cat: 'Noosphère', title: 'L’agent du relevé', text: 'Il mesure un lieu au nombre de ceux qui le regardent. Il n’est pas un ennemi : il fait son relevé, et voudrait rentrer chez lui. Mais il est descendu voir, ce que ne font pas ceux qui décident d’en haut. On ne garde pas des archives en les cachant : on y amène quelqu’un. Personnage de fiction.' },
+    { id: 'citadelle_2084', cat: 'Lieu', title: 'La Citadelle, où Idris est né', text: 'Idris est né à la Citadelle, au bord du désert, des siècles après le Caïd dont il entend les veillées. C’est de là qu’on l’envoya apprendre aux Archives basses. Ce que le Caïd décide dans les veillées s’y lit encore : la prière, le savoir, la justice et le lien y tiennent, ou y manquent. Le lieu, le Caïd et Idris sont de fiction.' },
     { id: 'enfant', cat: 'Noosphère', title: 'L’enfant du parvis', text: 'Il est là chaque soir, sous le grand écran, avec une question. Il ne lâche jamais la deuxième. Idris a commencé par lui répondre ; il a fini par l’attendre. On répond de ceux à qui l’on a commencé de répondre : c’est aussi cela, transmettre. Personnage de fiction.' },
     { id: 'avertissement', cat: 'Parole', title: 'Avertissement', text: 'ISNAD est une fiction inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun personnage n’a de visage. Toute erreur est celle des auteurs : vérifiez auprès des sources et des savants.' }
   ],
@@ -8548,6 +8815,163 @@ ISNAD.registerSaga({
           ['say', 'gamin', 'Moi, sur une carte !'],
           ['say', 'idris', 'C’est ainsi qu’une chose vraie se garde : avec le nom de celui qui l’a vue. Chez ’Alî, j’ai appris à poser la question avant de juger.'],
           ['codex', 'r_cartographe'], ['codex', 'enfant']
+        ] }
+      ]
+    },
+    /* ---------- 2.x : ce qui s'est passé en 2084 pendant qu'Idris suivait un récit ---------- */
+    {
+      id: 'x_descendu', retour: 1, title: 'Ce qui est descendu', sub: 'Cité-Miroir · Archives basses', minLvl: 2, last: true,
+      map: 'archives', start: 'chaine', party: ['idris'],
+      npcs: [
+        { id: 'yunus_x', name: 'Maître Yûnus', hero: 'yunus', at: ['rayonnages', 0, 1], talk: [['say', 'yunus_x', 'Parle bas.']] }
+      ],
+      intro: [
+        ['title', 'Ce qui est descendu', 'Cité-Miroir · Archives basses'],
+        ['nar', 'Idris rouvre les yeux. La lampe du bureau est éteinte. Maître Yûnus n’éteint jamais la lampe.'],
+        ['nar', 'L’ascenseur est en bas, grille ouverte. Personne ne l’a appelé.']
+      ],
+      objectives: [
+        { text: 'Trouver Maître Yûnus, entre les rayonnages', talk: 'yunus_x', then: [
+          ['say', 'yunus_x', 'Parle bas. Quelque chose est descendu avec l’ascenseur. Trois lueurs froides : elles cherchent ce qui brille.'],
+          ['say', 'idris', 'Le Flux ne descend pas jusqu’ici.'],
+          ['say', 'yunus_x', 'Il ne descendait pas. Chaque fois que tu remontes la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus. Il envoie voir.'],
+          ['sfx', 'glitch'], ['hide', 'yunus_x'], ['join', 'yunus'],
+          ['battle', { group: ['notif', 'notif', 'notif'], bg: 'cite', intro: 'Trois notifications entre les rayonnages. Elles ne supportent pas qu’on leur résiste avec patience.' }],
+          ['leave', 'yunus'], ['show', 'yunus_x'],
+          ['say', 'yunus_x', 'Elles ne t’ont pas trouvé, toi. Elles ont trouvé que tu n’étais pas là-haut. Pour l’Agrégor, c’est déjà une faute.'],
+          ['say', 'yunus_x', 'Tu peux suivre plusieurs traces à la fois. Les transmetteurs n’apprenaient pas d’un seul maître : ils allaient de ville en ville, et gardaient chaque chaîne à part.'],
+          ['say', 'yunus_x', 'Mais reviens. Des archives qu’on ne veille pas, un autre les raconte à ta place.'],
+          ['codex', 'x_veiller']
+        ] },
+        { text: 'Rallumer la lampe, au bureau', goto: 'bureau', then: [
+          ['sfx', 'light'],
+          ['nar', 'La lampe se rallume. Dans la poussière du bureau, trois petites traces froides s’effacent déjà.'],
+          ['nar', 'Au fond de la salle, la Chaîne tourne toujours. Chaque récit attend là où Idris l’a laissé.']
+        ] }
+      ]
+    },
+    {
+      id: 'x_enfant', retour: 3, title: '« Tu pars où ? »', sub: 'Cité-Miroir · Archives basses', minLvl: 2, last: true,
+      map: 'archives', start: 'chaine', party: ['idris'],
+      npcs: [
+        { id: 'gamin_x', name: 'L’enfant du parvis', at: ['chaine', -2, 1], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin_x', 'D’après. D’après. D’après.']] },
+        { id: 'yunus_x', name: 'Maître Yûnus', hero: 'yunus', at: 'bureau', talk: [['say', 'yunus_x', 'Il a pris l’ascenseur tout seul. Je n’ai pas eu le cœur de le renvoyer.']] }
+      ],
+      intro: [
+        ['title', '« Tu pars où ? »', 'Cité-Miroir · Archives basses'],
+        ['nar', 'Idris rouvre les yeux. Quelqu’un est assis par terre devant la Chaîne, et attend.'],
+        ['nar', 'L’enfant du parvis. Quarante étages plus bas que là où il devrait être.']
+      ],
+      objectives: [
+        { text: 'Répondre à l’enfant', talk: 'gamin_x', then: [
+          ['say', 'gamin_x', 'J’ai pris l’ascenseur derrière toi. Tu fermes les yeux et tu ne bouges plus. Tu pars où ?'],
+          ['ask', 'Que répondre à l’enfant ?', [
+            { t: 'Je ne pars pas. J’écoute des gens qui ont vu.', r: [['say', 'gamin_x', 'Ils sont là ?'], ['say', 'idris', 'Ils ont vécu il y a très longtemps. C’est pour cela qu’il faut savoir qui a rapporté ce qu’ils ont fait, et de qui il le tenait.']] },
+            { t: 'Dans une chaîne. Chaque anneau est quelqu’un qui a dit : « Je le tiens d’untel. »', r: [['say', 'gamin_x', 'Et le premier anneau, il le tient de qui ?'], ['say', 'idris', 'De ce qu’il a vu de ses yeux. C’est pour cela qu’on l’appelle un témoin.']] },
+            { t: 'Ce n’est pas un endroit pour toi.', r: [['say', 'gamin_x', 'C’est ce qu’on dit quand on ne veut pas répondre.'], ['say', 'idris', 'Tu as raison. Je recommence : j’écoute des gens qui ont vu, et ceux qui l’ont rapporté après eux.']] }
+          ]],
+          ['say', 'gamin_x', 'Là-haut, le grand écran a parlé de toi. Pas longtemps. Entre deux tendances. « Un homme ne regarde plus. »'],
+          ['say', 'idris', 'Il a dit mon nom ?'],
+          ['say', 'gamin_x', 'Non. Il a dit « un homme ». Mais j’ai su que c’était toi.']
+        ] },
+        { text: 'Parler à Maître Yûnus', talk: 'yunus_x', then: [
+          ['say', 'yunus_x', 'Il t’a suivi parce que tu lui réponds. Le jour où tu cesseras, il remontera regarder l’écran.'],
+          ['say', 'yunus_x', 'Garde-le une heure. Montre-lui un nom, puis celui qui vient après. C’est ainsi que j’ai commencé avec toi.'],
+          ['pillar', 'lien', 1], ['codex', 'x_question']
+        ] },
+        { text: 'Revenir devant la Chaîne, avec l’enfant', goto: 'chaine', then: [
+          ['nar', 'L’enfant suit les anneaux du doigt, sans les toucher. « D’après », lit-il. « D’après. D’après. » Il ne demande plus où tu pars.'],
+          ['nar', 'Quand il sera remonté, la Chaîne sera là. Les récits aussi.']
+        ] }
+      ]
+    },
+    {
+      id: 'x_avis', retour: 5, title: 'L’avis', sub: 'Cité-Miroir · Archives basses', minLvl: 2, last: true,
+      map: 'archives', start: 'chaine', party: ['idris'],
+      npcs: [
+        { id: 'agent', name: 'L’agent du relevé', at: ['entree', 0, -1], look: { kind: 'cyber', robe: '#4a4c52', head: '#2c2e33', cloak: '#3a3c42' }, talk: [['say', 'agent', 'Je note, et je remonte.']] },
+        { id: 'yunus_x', name: 'Maître Yûnus', hero: 'yunus', at: 'bureau', talk: [['say', 'yunus_x', 'Laisse-le compter. Puis parle-lui.']] }
+      ],
+      intro: [
+        ['title', 'L’avis', 'Cité-Miroir · Archives basses'],
+        ['nar', 'Idris rouvre les yeux sur un bruit qu’on n’entend jamais ici : des pas qui ne sont ni les siens ni ceux de Maître Yûnus.'],
+        ['nar', 'Un homme en gris se tient près de l’ascenseur, une tablette à la main. Il compte les rayonnages.']
+      ],
+      objectives: [
+        { text: 'Aller au-devant de l’homme en gris', talk: 'agent', then: [
+          ['say', 'agent', 'Archives basses, niveau moins quarante. Audience des trente derniers jours : deux personnes. Je pose l’avis et je remonte.'],
+          ['say', 'idris', 'Quel avis ?'],
+          ['say', 'agent', 'Réaffectation. Un lieu que personne ne regarde ne sert à personne. Ce n’est pas moi qui le dis : c’est le relevé.'],
+          ['parley', {
+            with: 'agent', title: 'Ce que vaut un lieu sans audience',
+            intro: 'Il n’est pas un ennemi : il fait son relevé, et il voudrait rentrer chez lui. Il faut lui donner une raison d’écrire autre chose que zéro.',
+            goal: 4,
+            rounds: [
+              { say: 'Deux visiteurs en un mois. Donnez-moi une raison de ne pas écrire zéro.', opts: [
+                { t: 'Deux qui savent de qui ils tiennent ce qu’ils savent. Combien, là-haut, peuvent en dire autant ?', el: 'ilm', v: 2, r: 'Aucun, sans doute. Ce n’est pas une colonne de mon relevé.' },
+                { t: 'Vous n’avez rien à faire ici.', el: 'adl', v: -1, r: 'J’ai un ordre de mission. Vous, vous avez une lampe.' },
+                { t: 'Chez ’Uthmân, j’ai appris une règle qui tient en deux questions : de qui tiens-tu cela ? et lui, de qui le tenait-il ? Ici, chaque feuillet y répond.', el: 'ilm', v: 2, need: 'uthman/tabayyun', r: 'Deux questions… Mon relevé n’en pose qu’une : combien.' }
+              ] },
+              { say: 'Admettons. Mais un lieu qui ne rapporte rien, pourquoi le garder ?', opts: [
+                { t: 'Parce que ce qu’on garde ici ne diminue pas quand on le partage.', el: 'rahma', v: 2, r: 'Tout diminue. C’est dans mes barèmes… Presque tout.' },
+                { t: 'Vous ne comprendriez pas.', el: 'ilm', v: -1, r: 'C’est ce qu’on me répond partout où l’on n’a rien à montrer.' },
+                { t: 'À Médine, l’eau douce d’un puits se vendait. ’Uthmân l’acheta de son bien et en fit don à tous. Ce lieu est un puits de cette sorte.', el: 'rahma', v: 2, need: 'uthman/ruma', r: 'Un puits qui ne rapporte rien à celui qui l’a payé… Il n’y a pas de case pour cela.' }
+              ] },
+              { say: 'Si j’écris « à conserver », on me demandera pourquoi. Qu’est-ce que je réponds ?', opts: [
+                { t: 'Que vous êtes descendu voir, et que vous dites ce que vous avez vu.', el: 'sidq', v: 2, r: 'Signer de mon nom ce que j’ai vu… On ne nous le demande plus.' },
+                { t: 'Répondez ce que vous voudrez.', el: 'sabr', v: 0, r: 'Alors j’écrirai zéro. C’est ce qui demande le moins d’explications.' },
+                { t: 'Un seigneur du désert a annoncé lui-même, à l’aube, la nouvelle qu’il aurait pu taire sept jours. Il y a perdu de l’avance, et gagné d’être cru.', el: 'sidq', v: 2, need: 'caid/aube_vraie', r: 'Être cru… Voilà une chose que mon relevé ne mesure pas, et dont il a besoin.' }
+              ] }
+            ],
+            win: [['flag', 'x_sursis'], ['pillar', 'savoir', 1], ['emote', 'agent', 'salut'], ['nar', 'Il écrit longtemps. Puis il raye une ligne, et signe. « Lieu consulté. À conserver. Vu par le soussigné. »']],
+            lose: [['pillar', 'savoir', -1], ['nar', 'Il pose l’avis contre la grille. « Réaffectation à l’étude. » Il n’a pas écrit zéro : il a écrit qu’il reviendrait.']]
+          }]
+        ] },
+        { text: 'Parler à Maître Yûnus', talk: 'yunus_x', then: [
+          ['say', 'yunus_x', 'Qu’il ait signé ou non, il est descendu. C’est plus que n’en font ceux qui décident.'],
+          ['say', 'yunus_x', 'On ne garde pas des archives en les cachant. On les garde en y amenant quelqu’un. Tu viens d’en amener un.'],
+          ['codex', 'x_avis']
+        ] }
+      ]
+    },
+    /* ---------- 2.x : la Citadelle, où Idris est né (ouverte depuis la Chaîne dès la première veillée entendue) ---------- */
+    {
+      id: 'c_citadelle', visite: 'citadelle', title: 'La Citadelle', sub: 'An 1508 de l’Hégire · au bord du désert', minLvl: 1, last: true,
+      map: 'citadelle', opts: { time: 'dusk' }, start: 'porte', party: ['idris'],
+      npcs: [
+        { id: 'amghar', name: 'Le vieil amghar', at: ['puits', 2, 0], look: { kind: 'ancien', robe: '#5a4a38', head: '#d8cfba' }, talk: [['say', 'amghar', 'Le puits donne encore. Assieds-toi.']] },
+        { id: 'ecolier', name: 'Un écolier', at: ['ecole', 1, 1], look: { kind: 'enfant', robe: '#4a5a3a', head: '#2c3424' }, talk: [['say', 'ecolier', 'On apprend les noms dans l’ordre : celui qui a dit, puis celui qui a entendu.']] }
+      ],
+      intro: [
+        ['title', 'La Citadelle', 'An 1508 de l’Hégire · au bord du désert'],
+        ['mus', 'citadelle'],
+        ['nar', 'Idris est né ici. Il n’y était pas revenu depuis qu’on l’avait envoyé apprendre aux Archives basses.'],
+        ['nar', 'Les murs de pisé ont été refaits bien des fois. Ce sont les mêmes murs : ceux du Caïd dont il entend les veillées.'],
+        ['nar', 'Aucun écran dans la cour. Le ciel, ici, est encore le ciel.']
+      ],
+      objectives: [
+        { text: 'Aller jusqu’au puits, dans la cour', goto: 'puits', then: [
+          ['nar', 'Le puits est là où il a toujours été. Un vieil homme y remplit une outre, sans se presser.']
+        ] },
+        { text: 'Parler au vieil amghar', talk: 'amghar', then: [
+          ['say', 'amghar', 'Idris. L’enfant de la maison près du cèdre. On m’a dit que tu remontais la Chaîne.'],
+          ['say', 'idris', 'J’entends aussi celui qui a tenu ces murs.'],
+          ['say', 'amghar', 'Alors regarde ce qu’il en reste. Un homme ne laisse pas ce qu’il a voulu : il laisse ce qu’il a fait.'],
+          ['if', '_2084_pilier_priere', [['say', 'amghar', 'La mosquée n’a jamais fermé. On y entre encore côte à côte, celui qui possède et celui qui doit.']], [['say', 'amghar', 'La mosquée est ouverte. Les rangs y sont clairsemés : on a longtemps cru qu’elle tiendrait sans nous.']]],
+          ['if', '_2084_pilier_savoir', [['say', 'amghar', 'L’école tient. On y apprend à dire de qui l’on tient une chose avant de la répéter.']], [['say', 'amghar', 'L’école a perdu des maîtres. Il reste des livres, et peu de gens pour dire qui les a écrits.']]],
+          ['if', '_2084_pilier_justice', [['say', 'amghar', 'Le tour d’eau est le même pour tous. Personne ne paie pour passer devant.']], [['say', 'amghar', 'Le tour d’eau se discute chaque été. Quand la règle plie pour l’un, tous veulent qu’elle plie.']]],
+          ['if', '_2084_pilier_lien', [['say', 'amghar', 'Les familles d’ici se doivent encore quelque chose. C’est cela, une ville : des gens qui se doivent quelque chose.']], [['say', 'amghar', 'Beaucoup sont partis vers la Cité-Miroir. Ceux qui restent se connaissent moins qu’avant.']]],
+          ['if', '_2084_debout', [['nar', 'La Citadelle est debout. Non par ses pierres : par ce que le Caïd y a laissé, veillée après veillée.']],
+            [['if', '_2084_tient', [['nar', 'La Citadelle tient, et demande qu’on la veille. Ce que le Caïd décide dans les veillées se lit ici.']], [['nar', 'La Citadelle se lézarde. Ce que les veillées n’ont pas encore bâti manque ici, des siècles plus tard.']]]]],
+          ['say', 'amghar', 'Tu n’es pas venu pour rester. Passe par l’école avant de repartir. C’est là que tu as appris à demander : « De qui le tiens-tu ? »']
+        ] },
+        { text: 'Passer par l’école', goto: 'ecole', then: [
+          ['nar', 'Sur le mur de l’école, des noms, et après chaque nom : « d’après ». La première chaîne qu’Idris ait vue, bien avant les anneaux d’or des Archives.'],
+          ['codex', 'citadelle_2084']
+        ] },
+        { text: 'Regagner la porte, et la route de la Cité-Miroir', goto: 'porte', then: [
+          ['say', 'idris', 'Je tiens d’ici plus que je ne croyais.'],
+          ['nar', 'Idris reprend la route de la Cité-Miroir. Il pourra revenir : la Citadelle ne ferme pas sa porte à ceux qui y sont nés.']
         ] }
       ]
     }
@@ -10116,6 +10540,10 @@ ISNAD.registerSaga({
     // 2.x : la descente est un labyrinthe (textes proposés par l'agent, à valider par le décideur)
     descendre: 'Descendre', sousTitre: 'ta descente',
     regle: 'C’est un labyrinthe. Tes maux du cœur et les idées noires y rôdent : seul, on ne les vainc pas. Trouve l’issue, ou un abri où attendre que le temps passe.',
+    // 2.x : frapper ce qui rôde (textes proposés par l'agent, à valider par le décideur)
+    sonne: 'Frappé, ce qui rôde reste sonné un instant : passe. Seul, tu ne le vaincs pas.',
+    dissipee: '%s se dissipe sous ta lame : tu n’étais pas seul. Elle ne reviendra pas avant le prochain chapitre.',
+    rode: 'Quelque chose rôde sur les ponts. Entrée — ou touche-le — pour le frapper : chaque coup lui ôte un voile.',
     aLAbri: 'Un abri : rien de ce qui rôde n’y entre. Attends-y la fin du chrono — Entrée, ou touche ton personnage, pour laisser passer le temps.',
     face: '%s te barre le pont. Ta lame est forgée, et tu n’es pas seul : tu fais face.',
     pasDeHalte: 'Pas de halte ici : une descente se fait d’une traite.',
@@ -10183,6 +10611,7 @@ ISNAD.registerSaga({
     { id: 'bataille', cat: 'Noosphère', title: 'La bataille déclarée', text: 'Contre une idole, on ne se bat plus seul, et l’on ne se bat pas sans le dire. La bataille est déclarée : chacun sait ce qui se dresse, et qui tient les rangs. En face, il n’y a jamais d’hommes : des nuées, que l’idole envoie. Nos rangs ne tombent pas : éprouvés, ils se replient et se reforment. C’est une image du jeu. Il ne dit pas combien d’hommes il y avait tel jour, ni qui fit telle manœuvre : la réserve mobile, l’enveloppement et le repli feint sont des manœuvres d’école.' },
     { id: 'valeurs', cat: 'Cœur', title: 'Les sept Valeurs', text: 'Du côté du bien, on ne dit ni djinn, ni égrégore, ni idole : on dit des Valeurs. Il y en a sept, une en face de chaque mal du cœur : le Contentement, l’Humilité, la Sincérité, la Largesse, l’Ardeur, la Bienveillance, la Longanimité. L’œuvre forge la lame ; la lame tranche le mal ; ce qui reste alors, c’est la Valeur. Le jeu la marque d’un badge. C’est une image : une valeur ne se possède pas comme un objet, elle se garde en la pratiquant.' },
     { id: 'attributs', cat: 'Cœur', title: 'Les attributs divins', text: 'Chaque Valeur s’appuie sur un attribut d’Allah, que le jeu nomme d’après le Coran, avec son verset et sa référence : ar-Razzâq, al-Kabîr, al-Khabîr, al-Wahhâb, al-Hayy al-Qayyûm, al-Latîf, al-Halîm. On ne possède pas un attribut divin : on le reconnaît. Le jeu ne le dessine pas, ne lui prête aucune figure et n’en fait ni une arme ni un pouvoir ; le badge marque seulement que le rappel a été reçu. Il n’y a pas d’organigramme du bien : rien ne se tient en face du Créateur.', src: 'Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.' },
+    { id: 'frappe', cat: 'Noosphère', title: 'Frapper ce qui rôde', text: 'Dans un labyrinthe de la noosphère, de petits égrégores vont et viennent sur les ponts, jamais dans les lieux que le récit nomme. On les frappe comme en combat, avec l’arme que porte celui qui mène : Entrée, ou un toucher sur ce qui rôde. Chaque coup ôte un voile et sonne un instant ; sans voile, l’égrégore se dissipe. S’il vous rejoint avant, c’est un combat ordinaire. L’allonge, le poids et la vitesse viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, les coups ne font que sonner : seul, on ne vainc pas ce qui pèse sur le cœur. Image du jeu.' },
     { id: 'noos_interieure', cat: 'Noosphère', title: 'Descendre en soi', text: 'Au sortir de la prière, dans le dhikr, en songe : à ces moments-là, la noosphère est toute proche, et l’on peut y descendre pour faire face à ce qui pèse. Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. C’est le combat du râwî, seul. Ce n’est jamais celui d’un Compagnon : le jeu ne prête à aucun d’eux un mal du cœur. Avec la lame que l’œuvre a forgée, le mal est tranché ; sans elle, il n’est que repoussé. Image du jeu, dite comme telle.' },
     { id: 'secours', cat: 'Cœur', title: 'Le secours', text: 'À Badr, les croyants étaient en petit nombre. Le Coran rapporte qu’ils implorèrent le secours, et ce qui leur fut répondu : « Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres. » Puis : « Allah ne fit cela que pour (vous) apporter une bonne nouvelle et pour qu’avec cela vos cœurs se tranquillisent. Et il n’y a de victoire que de la part d’Allah. » Dans ISNAD, quand une bataille déclarée est presque perdue, le secours relève le groupe, une fois, si la prière a été tenue dans le chapitre. C’est une image du jeu. Il ne montre pas les anges, ne les nomme pas, ne les compte pas, et il ne dit pas qu’ils sont venus tel jour de l’histoire des Compagnons. On ne commande pas le secours : on tient sa prière, et l’on combat.', src: 'Traduction du sens, Coran 8:9-10. Règle de jeu.' },
     { id: 'enracinement', cat: 'Noosphère', title: 'L’enracinement', text: 'Une idée noire dans un seul cœur se dissipe par la parole. Reprise par beaucoup, elle prend corps : c’est un égrégore. Quand on ne la voit plus tant elle est partout, elle commande : c’est une idole. Le jeu mesure cela d’un à cinq, pour chaque idole. La parole qui porte la déracine ; la parole manquée la laisse s’enfoncer. Déracinée, l’idole pèse moins et garde un voile de moins ; enracinée, elle pèse davantage. C’est une image du jeu : la jauge se dit d’une idole, jamais d’une époque ni de ses gens.' },

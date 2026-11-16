@@ -144,6 +144,21 @@ nouveau (`talk` → `codex`). Dans le pourparler :
 À l'épilogue, `allies: [{ flag, name, hp, veil }]` fait revenir les amis gagnés ; `hp` (facultatif) règle la part
 de Constance ôtée à l'adversaire, 0.08 par défaut ; `veil: 0` laisse ses voiles intacts.
 
+### Dans la 2.x : les retours en 2084 et les visites
+
+Deux marques de plus sur un chapitre de l'histoire-cadre (`v2/src/data/frame.js`), toujours `last: true`, jamais `after` :
+
+- `retour: n` — ce qui s'est passé aux Archives basses pendant qu'Idris suivait un récit. Le chapitre se joue quand le
+  joueur revient en 2084 par la halte pour la n-ième fois (ou à un retour suivant), une seule fois ; puis la Chaîne.
+- `visite: '<lieu>'` — un lieu où Idris se rend depuis la Chaîne (`'citadelle'` : la Citadelle, où il est né, offerte dès
+  la première veillée entendue). Le chapitre se rejoue à volonté ; sa carte est ce lieu.
+
+À leur ouverture, le moteur pose l'état de 2084 en drapeaux, que le récit lit par `['if', …]` et n'écrit jamais :
+`_2084_veillee_<saga>`, `_2084_maillon_<saga>`, `_2084_pilier_<priere|savoir|justice|lien>` (pilier de la Citadelle à 3
+ou plus), `_2084_debout` / `_2084_tient` / `_2084_lezarde` (la somme des piliers : 12 et plus, 7 et plus, moins),
+`_2084_en_route` (un récit des Compagnons attend, rangé). Ces chapitres se rejouant, aucune œuvre n'y est comptée et
+l'on n'y descend pas dans la noosphère : pas de `pray` de récit, pas d'énigme, pas de pèlerinage. Tout y est de fiction.
+
 ## 5 ter. Le cœur (version 5)
 
 Contenu commun : `src/data/coeur.js`, un appel à `registerSaga` avec `commun: true` et `chapters: []`.

@@ -8,6 +8,10 @@
    - Le chrono. 30 secondes, plus le temps d'un tour de tous les lieux multiplié par un facteur qui se resserre avec la
      profondeur. Il ne court que lorsque le joueur a la main : ni pendant un combat, ni pendant un dialogue, ni dans un
      menu. Écoulé, on remonte au seuil ; le labyrinthe se redessine, un cran plus simple ; rien n'est perdu.
+   - Ce qui rôde (2.x). Dans le labyrinthe d'un récit, de petits égrégores du chapitre vont et viennent sur les ponts —
+     jamais dans les lieux que le récit nomme. On les frappe en temps réel, avec l'arme que porte celui qui mène (D.FRAPPES) :
+     chaque coup ôte un voile, sans voile ils se dissipent ; s'ils touchent le groupe, c'est un combat ordinaire. Dans la
+     descente du râwî, les mêmes coups ne font que sonner et repousser — voir plus bas.
    Les textes sont ceux d'une règle du jeu : ils ne disent rien de l'histoire. */
 (function () {
   'use strict';
@@ -34,6 +38,7 @@
   // les options d'un lieu où l'on descend : une graine et une profondeur, s'il est de la noosphère et n'en a pas déjà
   R.graine = function (id, opts) {
     opts = opts || {}; if (!Dd || !estNoos(id) || opts.g !== undefined || R.sans) return opts;
+    delete S.flags._meutes_off;
     return Object.assign({}, opts, { g: neuve(), n: R.profondeur() });
   };
 
@@ -53,13 +58,14 @@
     const d = W.map && W.map.env && W.map.env.dedale;
     if (W.excursion) return; // la descente du râwî arme le sien
     R.chrono = d && !d.descente ? { total: R.duree(d.n, d.tour), reste: R.duree(d.n, d.tour), n: d.n } : null; affiche();
+    poserMeutes();
   };
   // appelé à chaque pas du monde, quand le joueur a la main
   R.tic = function (dt) {
     if (W.excursion) return ticDescente(dt);
     const c = R.chrono; if (!c || c.fini) { if (el && !el.hidden && !c) el.hidden = true; return; }
     if (I.debug.compte !== undefined) { c.reste = Math.min(c.reste, I.debug.compte); I.debug.compte = undefined; }
-    c.reste -= dt; if (c.reste <= 0) { c.fini = true; R.remonte(); } else affiche();
+    c.reste -= dt; if (c.reste <= 0) { c.fini = true; R.remonte(); } else { affiche(); ticMeutes(dt); }
   };
   R.cache = function () { if (el) el.hidden = true; };
   // le temps est écoulé : on remonte au seuil, le labyrinthe se redessine un cran plus simple, rien n'est perdu
@@ -69,6 +75,7 @@
     try {
       S.toast('Le temps de la descente est écoulé. <b>On remonte au seuil</b> : le labyrinthe se redessine, un peu plus simple. Rien n’est perdu.', 6500); I.audio.sfx('light');
       await S.fade('out', 500);
+      W.foes = W.foes.filter(f => !f.meute); S.flags._meutes_off = true; // ce qui rôdait s'est dispersé : le labyrinthe redessiné est plus simple, et vide de rôdeurs
       W.foes.forEach(f => { if (f.map === id && !f.done) f.placed = false; }); W.chests.forEach(c => { if (c.map === id) c.placed = false; });
       W.loadMap(id, Object.assign(o, { g: neuve(), n }), 'seuil');
       await S.fade('in', 500);
@@ -127,13 +134,15 @@
   // la cible que montre l'écran : l'issue
   R.cible = function () { const s = W.spotPx('issue'); return s ? { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto' } : null; };
   const salleDe = (px, py) => { const n = W.map.g0 ? W.map.g0(px, py) : ''; return n === 'nabri' ? 'abri' : n; };
+  // par où passe ce qui rôde : les ponts et les salles, jamais un abri ; dans le labyrinthe d'un récit, les ponts seulement
+  function passable(f, x, y) { const m = W.map, T = 16; if (x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; const n = m.g0(x * T + 8, y * T + 8); return n === 'npont' || (n === 'nfloor' && !f.meute); }
   // un rôdeur avance de case en case : il erre, et prend en chasse quand le râwî est à portée ; il n'entre jamais dans un abri
   function avance(f, dt, champ) {
-    const m = W.map, T = 16, tx = Math.floor(f.x / T), ty = Math.floor(f.y / T), passe = (x, y) => { if (x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; const n = m.g0(x * T + 8, y * T + 8); return n === 'npont' || n === 'nfloor'; };
+    const m = W.map, T = 16, tx = Math.floor(f.x / T), ty = Math.floor(f.y / T), passe = (x, y) => passable(f, x, y);
     if (f.cx === null || f.cx === undefined || (Math.abs(f.x - (f.cx * T + 8)) < 1 && Math.abs(f.y - (f.cy * T + 8)) < 1)) { // au milieu d'une case : choisir la suivante
       const ici = champ ? champ[ty * m.w + tx] : -1, voisins = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(q => passe(tx + q[0], ty + q[1]));
       let pick = null;
-      if (ici > 0 && ici <= 16) pick = voisins.find(q => champ[(ty + q[1]) * m.w + tx + q[0]] === ici - 1) || null; // en chasse : vers le râwî
+      if (ici > 0 && ici <= (f.vue || 16)) pick = voisins.find(q => champ[(ty + q[1]) * m.w + tx + q[0]] === ici - 1) || null; // en chasse : vers celui qui marche
       if (!pick && voisins.length) { const avant = voisins.filter(q => !(f.dx === -q[0] && f.dy === -q[1])), tout = avant.length ? avant : voisins, droit = tout.find(q => q[0] === f.dx && q[1] === f.dy); pick = droit && Math.random() < 0.7 ? droit : tout[Math.floor(Math.random() * tout.length)]; }
       if (!pick) return; f.dx = pick[0]; f.dy = pick[1]; f.cx = tx + pick[0]; f.cy = ty + pick[1];
     }
@@ -152,13 +161,127 @@
     if (ici === 'abri' && !E.abri) { E.abri = true; S.toast(I.esc(P().aLAbri || ''), 6000); I.audio.sfx('light'); } else if (ici !== 'abri') E.abri = false;
     if (c.reste <= 0) return R.finir(E.abri ? 'abri' : 'temps');
     E.champT = (E.champT || 0) - dt; if (E.champT <= 0 || !E.champ) { E.champ = champDe(p); E.champT = 0.25; }
-    for (const f of W.foes) { if (f.done || !f.rodeur || !f.placed) continue; avance(f, dt, E.champ); if (Math.hypot(f.x - p.x, f.y - p.y) < 14 && ici !== 'abri') return R.contact(f); }
+    for (const f of W.foes) { if (f.done || !f.rodeur || !f.placed) continue; if (etourdi(f, dt)) continue; avance(f, dt, E.champ); if (Math.hypot(f.x - p.x, f.y - p.y) < 14 && ici !== 'abri') return R.contact(f); }
+    viser();
   }
   // dans un abri, on peut laisser passer le temps d'un coup : Entrée, ou toucher son personnage
   R.attendre = function () { const E = W.excursion; if (E && E.abri && !E.fin && R.chrono) { R.chrono.reste = 0; return true; } return false; };
   R.touche = (x, y) => !!(W.excursion && W.excursion.abri && Math.hypot(x - W.player.x, y - 10 - W.player.y) < 16 && R.attendre());
   R.depart = function () { const k = R.attente; R.attente = null; if (k) R.entrer(k); };
   R.texte = k => I.esc(P()[k] || '');
+
+  /* ================= frapper ce qui rôde (2.x) =================
+     « Valider » — ou toucher ce qui rôde — frappe devant soi, avec l'arme que porte celui qui mène : le geste de
+     « Frapper », fait sur les ponts. Ce qui est frappé est repoussé et sonné : il ne bouge plus, et laisse passer.
+     - Dans le labyrinthe d'un récit : chaque coup ôte un voile à un petit égrégore ; sans voile, il se dissipe.
+     - Dans la descente du râwî : un coup sonne, il ne vainc pas — seul, le râwî ne vainc rien. Lame forgée en main et
+       accompagné, chaque coup entame une idée noire, qui finit par se dissiper jusqu'au chapitre suivant. Un mal du cœur
+       ne se tranche qu'en lui faisant face. */
+  R.MEUTES = [1, 2, 2, 3, 3, 4]; R.VOILES = [2, 2, 3, 3, 4, 4]; R.VUE = 6; R.PAS_MEUTE = 0.5; R.TENUE = [3, 3, 4, 4, 5, 6];
+  const enMain = () => { const h = W.party.length ? W.hero(W.party[0]) : null; let g = null; try { const e = h && I.gear ? I.gear.of(h) : null; g = e && D.GEAR[e.md]; } catch (x) { g = null; } const t = g && D.FRAPPES[g.t] ? g.t : 'nu'; return { h, piece: g || null, type: t, F: D.FRAPPES[t] }; };
+  R.enMain = enMain;
+  const rodent = () => W.map ? W.foes.filter(f => f.rodeur && !f.done && f.placed && f.map === W.map.id) : [];
+  R.rodent = rodent;
+  // ce qui est sonné : glisse jusqu'où le coup l'a repoussé, puis attend
+  function etourdi(f, dt) {
+    if (!(f.sonne > 0)) return false; f.sonne -= dt;
+    if (f.pousse) { const L = Math.hypot(f.pousse[0] - f.x, f.pousse[1] - f.y), pas = Math.min(L, 220 * dt); if (L > 0.5) { f.x += (f.pousse[0] - f.x) / L * pas; f.y += (f.pousse[1] - f.y) / L * pas; } else f.pousse = null; }
+    if (f.sonne <= 0) { f.sonne = 0; f.pousse = null; f.cx = null; }
+    return true;
+  }
+  // y a-t-il de quoi frapper ? (un rôdeur à portée de vue : « Valider » frappe alors, au lieu d'agir sur le décor)
+  R.aFrapper = function () { const d = W.map && W.map.env && W.map.env.dedale; if (!d) return false; const p = W.player, F = enMain().F; return rodent().some(f => Math.hypot(f.x - p.x, f.y - p.y) < F.portee + 24); };
+  // frapper devant soi (vers : celui que l'on a touché du doigt)
+  R.frappe = function (vers) {
+    const d = W.map && W.map.env && W.map.env.dedale; if (!d || I.scene !== W || S.busy || W.lock || (W.excursion && (W.excursion.fin || W.excursion.combat))) return false;
+    if (R._pret && W.t < R._pret) return false;
+    const A = enMain(), F = A.F, p = W.player, T = 16;
+    if (vers) { const dx = vers.x - p.x, dy = vers.y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); }
+    const fx = [0, -1, 1, 0][p.dir], fy = [1, 0, 0, -1][p.dir];
+    W.stop(); R._pret = W.t + F.cadence; R.geste = { t: W.t, dir: p.dir, type: A.type, F }; R.coups = (R.coups || 0) + 1;
+    I.audio.sfx(A.type === 'arc' ? 'blip' : 'tek');
+    // le geste, dessiné : un arc d'étincelles devant soi ; pour l'arc, un trait qui file
+    const G = I.gfx, sx = p.x - W.cam.x, sy = p.y - W.cam.y - 12, coul = A.piece ? '#fff3c8' : '#d8d2e6';
+    if (F.trait) for (let i = 1; i <= 7; i++) G.spawn({ x: sx + fx * i * F.portee / 7, y: sy + fy * i * F.portee / 7, vx: fx * 60, vy: fy * 60, life: 0.16 + i * 0.012, size: 0.8, color: coul, type: 'spark' });
+    else for (let i = -3; i <= 3; i++) { const a = i / 3 * 0.9, cx = fx * Math.cos(a) - fy * Math.sin(a), cy = fy * Math.cos(a) + fx * Math.sin(a); G.spawn({ x: sx + cx * (F.portee - 6), y: sy + cy * (F.portee - 6), vx: cx * 50, vy: cy * 50, life: 0.2, size: 1, color: coul, type: 'spark' }); }
+    let touches = 0;
+    rodent().forEach(f => { const dx = f.x - p.x, dy = f.y - p.y, av = dx * fx + dy * fy, cote = Math.abs(dx * fy - dy * fx); if (av < -6 || av > F.portee + 6 || cote > F.large) return; touches++; coup(f, F, fx, fy); });
+    if (touches) { G.shake(120); I.audio.sfx('hit'); }
+    return true;
+  };
+  function coup(f, F, fx, fy) {
+    const T = 16, G = I.gfx, id = f.group[0], def = (W.saga.enemies || {})[id] || {}, E = W.excursion;
+    // repoussé de case en case dans le sens du coup, tant que le passage est libre ; puis sonné
+    let tx = Math.floor(f.x / T), ty = Math.floor(f.y / T), k = 0; while (k < F.recul && passable(f, tx + fx, ty + fy)) { tx += fx; ty += fy; k++; }
+    f.pousse = k ? [tx * T + 8, ty * T + 8] : null; f.sonne = F.sonne; f.dx = fx; f.dy = fy; f.touche = W.t; R.touches = (R.touches || 0) + 1;
+    for (let i = 0; i < 8; i++) G.spawn({ x: f.x - W.cam.x + (Math.random() - 0.5) * 10, y: f.y - W.cam.y - 14 + (Math.random() - 0.5) * 10, vx: (Math.random() - 0.5) * 90 + fx * 40, vy: (Math.random() - 0.5) * 90 + fy * 40, life: 0.45, size: 0.9, color: `hsl(${def.hue || 260},90%,72%)`, type: 'spark' });
+    if (E) { // la descente du râwî : un coup sonne ; il n'entame une idée noire que lame forgée en main, et accompagné
+      if (!(def.idee && R.peutFaireFace(id))) { if (!E.ditSonne) { E.ditSonne = true; S.toast(I.esc(P().sonne || ''), 5200); } return; }
+      f.tenue = (f.tenue === undefined ? R.TENUE[E.n] : f.tenue) - F.force;
+      if (f.tenue > 0) return;
+      f.done = true; E.flags['_noir_' + id] = true; I.audio.sfx('light'); G.flash('#fff3d0'); S.toast(I.esc((P().dissipee || '').replace('%s', def.name || '')), 5200);
+      return;
+    }
+    f.voiles = (f.voiles === undefined ? R.VOILES[W.map.env.dedale.n] : f.voiles) - F.force;
+    if (f.voiles > 0) return;
+    dissiper(f);
+  }
+  // un petit égrégore du chapitre, sans voile, se dissipe : ce que le groupe y gagne est ce qu'un combat lui aurait donné, en moins
+  function dissiper(f) {
+    const sv = I.save.data, E0 = W.saga.enemies || {}; let xp = 0;
+    f.group.forEach(id => { const def = E0[id]; if (!def) return; xp += I.calc.xpOf(def); const cid = 'foe:' + W.saga.id + ':' + id; if (!sv.codex.includes(cid)) sv.codex.push(cid); });
+    f.done = true; if (f.cle) S.flags[f.cle] = true; R.dissipes = (R.dissipes || 0) + 1;
+    const lignes = I.battle.grantXP(Math.round(xp * 0.6)), nom = (E0[f.group[0]] || {}).name || '';
+    I.audio.sfx('light'); I.gfx.flash('#fff3d0');
+    S.toast(`<b>${I.esc(nom)}</b> se dissipe.` + (lignes.length ? ' ' + lignes.map(l => l.replace(/<\/?li>/g, '')).join(' · ') : ''), lignes.length ? 6000 : 2600);
+    if (W.saga && !I.debug.auto) W.checkpoint();
+  }
+  // au doigt : toucher ce qui rôde, c'est le frapper — de là où l'on est s'il est à portée, sinon en s'en approchant
+  R.viseDu = function (x, y) {
+    const d = W.map && W.map.env && W.map.env.dedale; if (!d) return false;
+    const f = rodent().find(q => Math.abs(q.x - x) < 16 && y > q.y - 38 && y < q.y + 8); if (!f) return false;
+    const p = W.player, F = enMain().F;
+    if (Math.hypot(f.x - p.x, f.y - p.y) <= F.portee + 2) { R.frappe(f); return true; }
+    R._vise = f; W.goTo(f.x, f.y, { ent: f, stop: Math.max(10, F.portee - 6) }); return true;
+  };
+  function viser() { const f = R._vise; if (!f) return; if (f.done || !f.placed) { R._vise = null; return; } const p = W.player, F = enMain().F; if (Math.hypot(f.x - p.x, f.y - p.y) <= F.portee) { R._vise = null; R.frappe(f); } else if (!W.dest) R._vise = null; }
+
+  /* ----- ce qui rôde dans le labyrinthe d'un récit ----- */
+  function poserMeutes() {
+    W.foes = (W.foes || []).filter(f => !f.meute); R._champ = null; R._vise = null;
+    const m = W.map, d = m && m.env && m.env.dedale, T = 16; if (!d || d.descente || W.excursion || !W.saga) return;
+    if (S.flags._meutes_off || I.debug.sansMeutes) return;
+    const E0 = W.saga.enemies || {}, petits = Object.keys(E0).filter(k => E0[k].tier === 'minion' && !E0[k].idee && !E0[k].vice && !E0[k].racine);
+    if (!petits.length) return;
+    const g = W.mapOpts && W.mapOpts.g, r = I.rng(I.hash('meutes/' + g)), n = R.MEUTES[d.n] | 0;
+    // des carrefours, sur les ponts, à l'écart du seuil et à l'écart les uns des autres
+    const seuil = W.spotPx('seuil') || [0, 0], libres = (d.loin || []).filter(c => m.g0(c[0] * T + 8, c[1] * T + 8) === 'npont' && Math.hypot(c[0] * T + 8 - seuil[0], c[1] * T + 8 - seuil[1]) > 9 * T);
+    const pris = [];
+    for (let i = 0; i < n && libres.length; i++) {
+      let c = null; for (let essai = 0; essai < 24 && !c; essai++) { const q = libres[Math.floor(r() * libres.length)]; if (pris.every(o => Math.hypot(o[0] - q[0], o[1] - q[1]) > 7)) c = q; }
+      if (!c) break; pris.push(c);
+      const id = petits[Math.floor(r() * petits.length)], cle = '_meute_' + g + '_' + i;
+      if (S.flags[cle]) continue; // déjà dissipé, ou vaincu : il ne revient pas
+      W.foes.push({ id: 'meute' + i, group: [id], map: m.id, rodeur: true, meute: true, cle, done: false, placed: true, x: c[0] * T + 8, y: c[1] * T + 8, cx: null, ph: i * 1.9, v: R.MARCHE * R.PAS_MEUTE, vue: R.VUE, voiles: R.VOILES[d.n] });
+    }
+  }
+  R.poserMeutes = poserMeutes;
+  function ticMeutes(dt) {
+    const m = W.map, d = m && m.env && m.env.dedale; if (!d || d.descente) return;
+    const L = W.foes.filter(f => f.meute && !f.done && f.placed && f.map === m.id); if (!L.length) { R._vise = null; return; }
+    const p = W.player, surPont = m.g0(p.x, p.y) === 'npont';
+    R._champT = (R._champT || 0) - dt; if (R._champT <= 0 || R._champ === undefined) { R._champ = surPont ? champDe(p) : null; R._champT = 0.25; }
+    for (const f of L) { if (etourdi(f, dt)) continue; avance(f, dt, R._champ); const dist = Math.hypot(f.x - p.x, f.y - p.y);
+      if (dist < 96 && !R._ditRode) { R._ditRode = true; O().learn('frappe'); S.toast(I.esc(P().rode || ''), 7000); } // le besoin d'abord : on apprend à frapper quand quelque chose approche
+      if (surPont && dist < 14) return R.contactMeute(f); }
+    viser();
+  }
+  // un petit égrégore a rejoint le groupe : un combat ordinaire
+  R.contactMeute = async function (f) {
+    if (f.enCombat || S.busy || W.lock) return; f.enCombat = true; W.stop(); R._vise = null; S.depth++;
+    try { await I.battle.start({ group: f.group, bg: W.map.env.bg, intro: ((W.saga.enemies[f.group[0]] || {}).name || '') + ' vous a rejoints sur le pont.' }); f.done = true; if (f.cle) S.flags[f.cle] = true; W.checkpoint(); }
+    finally { S.depth--; f.enCombat = false; }
+  };
 
   R.contact = async function (f) {
     const E = W.excursion, id = f.group[0], def = (C0().enemies || {})[id] || {}; if (!E || E.fin || E.combat) return;

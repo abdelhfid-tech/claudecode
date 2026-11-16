@@ -24,6 +24,38 @@
 
   D.TIERS = ['minion', 'elite', 'boss'];
 
+  // 2.x — le rayonnement de chaque Compagnon : son voile de lumière prend une couleur qui lui est propre, la même partout où
+  // il paraît, pour qu'on le reconnaisse. La couleur ne dit rien de lui : aucune n'est celle d'une bannière, d'un camp ni
+  // d'un rang. (Demandé par le décideur le 16 novembre ; couleurs proposées par l'agent, à valider.)
+  D.RAYONS = {
+    'abu bakr': '#ffcf4a', 'umar': '#4fa3ff', 'uthman': '#2fd9c0', 'ali': '#9a7bff', 'khalid': '#ff7742',
+    'abu ubayda': '#5fd883', 'abd ar rahman': '#ffc57a', 'ammar': '#7fdca4', 'al qaqa': '#a6e05a', 'aslam': '#8f9cff', 'dirar': '#ff6f91',
+    'hudhayfa': '#f2e35c', 'ibn abbas': '#ffe36e', 'qays': '#40d4ee', 'zayd ibn thabit': '#e08cff',
+    'abdallah ibn az zubayr': '#ff8a7a', 'abu ayyub': '#6fd9ff', 'abu hurayra': '#8fe6cf', 'al hasan': '#ffe9a8', 'al hubab': '#cfe36a', 'anas': '#ffa3c4',
+    'bashir': '#ffb48f', 'bilal': '#ffa83a', 'said ibn al as': '#b3a6ff', 'suraqa': '#e6c98a', 'usama': '#9fd4ff', 'zayd ibn al khattab': '#7fa8ff'
+  };
+  // la couleur d'un Compagnon d'après son nom, tel que les récits l'écrivent (« 'Alî », « 'Alî ibn Abî Tâlib ») ; null sinon
+  D.rayon = function (nom) {
+    const n = String(nom || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/['’ʿʾ`]/g, '').replace(/[-‑]/g, ' ').replace(/\s+/g, ' ').trim();
+    let best = null; Object.keys(this.RAYONS).forEach(k => { if ((n === k || n.indexOf(k + ' ') === 0) && (!best || k.length > best.length)) best = k; });
+    return best ? this.RAYONS[best] : null;
+  };
+
+  // 2.x — frapper ce qui rôde dans un labyrinthe : le geste de « Frapper », fait sur les ponts, avec l'arme que porte celui
+  // qui mène. Par type d'arme : portee et large (en points, devant soi), cadence (secondes entre deux coups), sonne (secondes
+  // pendant lesquelles ce qui est frappé reste sonné), recul (cases), force (voiles ôtés). Rien d'autre que du matériel :
+  // l'allonge, le poids, la vitesse d'une arme (exigence 17). « nu » : sans arme en main.
+  D.FRAPPES = {
+    epee:   { portee: 28, large: 20, cadence: 0.45, sonne: 1.6, recul: 1, force: 1 },
+    lance:  { portee: 42, large: 14, cadence: 0.60, sonne: 1.4, recul: 2, force: 1 },
+    arc:    { portee: 104, large: 12, cadence: 0.90, sonne: 1.2, recul: 0, force: 1, trait: true },
+    dague:  { portee: 22, large: 16, cadence: 0.30, sonne: 1.0, recul: 0, force: 1 },
+    masse:  { portee: 26, large: 20, cadence: 0.80, sonne: 2.6, recul: 2, force: 2 },
+    baton:  { portee: 32, large: 20, cadence: 0.50, sonne: 1.8, recul: 1, force: 1 },
+    calame: { portee: 24, large: 16, cadence: 0.50, sonne: 1.4, recul: 1, force: 1 },
+    nu:     { portee: 20, large: 16, cadence: 0.50, sonne: 1.0, recul: 1, force: 1 }
+  };
+
   // Formes procédurales des égrégores (aucun être animé figuratif : formes abstraites).
   D.ART = ['wisp', 'mask', 'eagle', 'crown', 'throne', 'tower', 'lens', 'mirror', 'swarm',
            'idol', 'scale', 'blade', 'wave', 'banner', 'colossus'];

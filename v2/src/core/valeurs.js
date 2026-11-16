@@ -116,6 +116,7 @@
   // descente —, le râwî trouve les portes closes : il lui faut d'abord dormir, d'un sommeil sans songe.
   V.porte = async function (k) {
     const P = T('portes'), Pk = P[k], R = I.rodeurs; if (!Pk || !W.saga || !R || W.excursion) return null;
+    if (W.ch && (W.ch.visite || Number.isInteger(W.ch.retour))) return null; // 2.x : une visite ou un retour en 2084 se rejouent — on n'y descend pas (une descente par porte et par chapitre d'un récit)
     if (R.clos()) { if (k === 'sommeil') { R.repos(); S.toast(I.esc(P.sansSonge || ''), 4600); } return null; }
     if (V.ouverte(k)) { if (k === 'sommeil') S.toast(I.esc(P.deja || ''), 2600); return null; }
     if (I.debug.auto || I.debug.walk) return I.debug.noOeuvres ? null : R.demande(k); // le joueur de test descend, et remonte par l'issue

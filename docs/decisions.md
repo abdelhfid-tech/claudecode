@@ -1098,6 +1098,87 @@ après un premier plan qui modifiait le moteur actuel :
   comme une exception aux exigences 13 et 15, voulue par le décideur — à lui de dire s'il préfère un autre gain. Les
   textes de la descente (`coeur.js`, `portes`) sont proposés par l'agent : à relire.
 
+- [x] **D158. En combat, on choisit une cible en la touchant elle-même.** *Demande du décideur, le 16 novembre (« lors
+  d'un combat je veux pouvoir cliquer sur l'ennemi pour le sélectionner et pas seulement sur son titre ») ; lot C1.*
+  Pendant le choix d'une cible, cliquer ou toucher le corps d'un égrégore sur la scène le choisit, comme le faisait
+  déjà sa plaque ; pour un soin, c'est l'un des nôtres que l'on touche. À la souris, celui que l'on survole est montré
+  avant le clic. La plaque, les flèches et « Valider » restent. Le joueur au doigt de `v2/tools/doigt.js` touche
+  désormais l'égrégore lui-même, dans les trois formats d'écran : si cela ne le choisit pas, l'outil dit
+  « INACCESSIBLE ».
+
+- [x] **D159. Le rayonnement propre à chaque Compagnon.** *Demande du décideur, le 16 novembre (« chaque visage d'un
+  compagnon peut être rayonnant selon une couleur spécifique de manière à le reconnaître ») ; lot C2.* Le voile de
+  lumière de chacun des vingt-sept Compagnons que les récits font paraître prend une couleur qui lui est propre
+  (`D.RAYONS`, dans `v2/src/core/defs.js`) : un cœur blanc, puis sa couleur. C'est la même partout où il paraît — sur
+  la carte, sous son nom, dans un dialogue, en combat (son nom, son sceau, sa place dans l'ordre des tours, la lueur
+  autour de lui). Le voile reste une seule surface, sans aucun trait (exigence 2, contrôlée par `silhouettes.js`) ; les
+  personnages de fiction n'ont pas de rayonnement propre. En dessin d'origine, rien ne change : ce dessin reste celui
+  de la 1.32 au pixel près. **Les vingt-sept couleurs sont proposées par l'agent, à valider par le décideur** ; aucune
+  ne veut rien dire — ni rang, ni mérite, ni camp, ni bannière : c'est un repère pour l'œil, et le jeu ne lui prête
+  aucun sens. **Limite dite :** vingt-sept teintes ne peuvent pas être toutes éloignées (plusieurs bleus, plusieurs
+  ors) ; celles des Compagnons qui marchent ensemble dans un même récit le sont. Une planche a été envoyée au décideur.
+
+  | Compagnon | Couleur | Compagnon | Couleur | Compagnon | Couleur |
+  |---|---|---|---|---|---|
+  | Abû Bakr | or `#ffcf4a` | 'Umar | bleu `#4fa3ff` | 'Uthmân | turquoise `#2fd9c0` |
+  | 'Alî | violet `#9a7bff` | Khâlid | orangé `#ff7742` | Abû 'Ubayda | vert `#5fd883` |
+  | 'Abd ar-Rahmân | ambre `#ffc57a` | 'Ammâr | vert d'eau `#7fdca4` | Al-Qa'qâ' | vert vif `#a6e05a` |
+  | Aslam | pervenche `#8f9cff` | Dirâr | rose vif `#ff6f91` | Hudhayfa | jaune `#f2e35c` |
+  | Ibn 'Abbâs | jaune clair `#ffe36e` | Qays | cyan `#40d4ee` | Zayd ibn Thâbit | mauve `#e08cff` |
+  | 'Abdallâh ibn az-Zubayr | corail `#ff8a7a` | Abû Ayyûb | bleu ciel `#6fd9ff` | Abû Hurayra | menthe `#8fe6cf` |
+  | Al-Hasan | ivoire doré `#ffe9a8` | Al-Hubâb | vert anis `#cfe36a` | Anas | rose `#ffa3c4` |
+  | Bashîr | pêche `#ffb48f` | Bilâl | orange `#ffa83a` | Sa'îd ibn al-'Âs | lavande `#b3a6ff` |
+  | Surâqa | sable `#e6c98a` | Usâma | bleu pâle `#9fd4ff` | Zayd ibn al-Khattâb | bleu lavande `#7fa8ff` |
+
+- [x] **D160. Plus de combats : frapper ce qui rôde, en temps réel.** *Demande du décideur, le 16 novembre (« je veux
+  plus de combats. Les idées noires peuvent circuler dans les labyrinthes, on peut les frapper en mode Zelda avec les
+  armes disponibles ») ; lot C3.* Dans un labyrinthe, « Entrée » — ou un toucher sur ce qui rôde — frappe devant soi
+  avec l'arme que porte celui qui mène : le geste de « Frapper », fait sur les ponts. L'allonge, la cadence, le recul et
+  le temps où l'adversaire reste sonné viennent du type d'arme (`D.FRAPPES` : épée, lance, arc, dague, masse, bâton,
+  calame, ou rien en main) — du matériel, rien d'autre (exigence 17).
+  **Lecture retenue par l'agent, à valider :** *dans le labyrinthe d'un récit*, ce qui rôde, ce sont de petits
+  égrégores du chapitre (de 1 à 4 selon la profondeur), sur les ponts seulement, jamais dans les lieux que le récit
+  nomme ; chaque coup leur ôte un voile, sans voile ils se dissipent (le groupe y gagne un peu moins qu'à un combat) ;
+  s'ils rejoignent le groupe, c'est un combat ordinaire ; après une remontée au chrono, plus rien ne rôde. *Les idées
+  noires, elles, ne rôdent que dans la descente du râwî*, comme avant : une idée noire ne s'attache qu'à un personnage
+  de fiction (exigence 16), et le jeu ne prête aucun mal du cœur à un Compagnon (exigence 22). Dans cette descente, un
+  coup **sonne et repousse** ce qui rôde — le râwî passe — mais ne vainc pas : « seul, on ne les vainc pas » reste vrai.
+  Lame forgée en main **et** accompagné, ses coups entament une idée noire jusqu'à la dissiper, sans combat ; un mal du
+  cœur ne se tranche toujours qu'en lui faisant face, avec sa lame. *Si le décideur veut des idées noires aussi dans les
+  labyrinthes des récits, c'est une ligne à changer — et une exigence à réécrire avec lui.* Formulations touchées, de
+  l'agent, à valider : exigences 18, 22 et 23, contrat de données. Contrôle : `descente.js` (section C).
+  **Corrigé en chemin**, grâce à la batterie : sur un écran tactile tenu en largeur, la bande entre les boutons « MENU »
+  et « OK » avalait le toucher (le héros ne bougeait pas) ; seuls les boutons le reçoivent maintenant.
+
+- [x] **D161. Mener les sagas de front, revenir en 2084 à tout moment.** *Demande du décideur, le 16 novembre (« que le
+  joueur puisse mener les différentes sagas en parallèle ; il doit à tout moment pouvoir revenir en 2084 et choisir sa
+  saga, et en revenant en 2084 il peut se passer des rebondissements ») ; lot C4.* Jusque-là, une saga gardait son
+  chapitre, mais la partie n'avait qu'un seul point de reprise : ouvrir une autre saga faisait perdre l'endroit où l'on
+  était dans la première. La partie garde maintenant un point de reprise **par récit** (`cps`, à côté du point
+  courant) : la halte offre « Revenir en 2084 » à tout moment où le joueur a la main ; le récit est rangé là où on le
+  laisse — objectif, lieu, place, groupe, ce qui a été dit et fait — et se reprend là. La Chaîne dit quels récits sont
+  « en route » et son grand bouton reprend le dernier quitté. Le format de la partie reste le 2 : `cps`, `retours` et
+  `rebonds` sont des champs nouveaux, absents des parties d'avant ; une partie d'avant dont le point de reprise était
+  resté courant ne le perd plus en ouvrant un autre récit. **Les rebondissements** : trois chapitres de l'histoire-cadre,
+  joués une fois, au premier, au troisième et au cinquième retour — « Ce qui est descendu » (le Flux a trouvé
+  l'ascenseur : un combat aux côtés de Maître Yûnus), « Tu pars où ? » (l'enfant du parvis est descendu aux Archives),
+  « L'avis » (un agent vient compter les visiteurs : un pourparler). **Tout y est de fiction ; les textes sont proposés
+  par l'agent, à relire par le décideur**, comme ceux des rencontres. Ces chapitres se rejouant, aucune œuvre n'y est
+  comptée et l'on n'y descend pas dans la noosphère (sans quoi on y forgerait des lames à volonté). Contrôle nouveau :
+  `v2/tools/retours.js` (« RETOURS CONFORMES »).
+
+- [x] **D162. La Citadelle, où Idris est né.** *Questions du décideur, le 16 novembre (« comment accéder à la
+  Citadelle ? Dès qu'on finit une saga ? Le personnage principal peut accéder à la Citadelle, qui est son lieu de
+  naissance ? ») ; lot C4.* **Réponse.** Jusqu'ici, on n'y « allait » pas : à la fin de chaque saga, la veillée du Caïd
+  se jouait d'elle-même, puis la rencontre de la Cité-Miroir, puis la Chaîne. C'est toujours le cas. **Ajout, suivant
+  la proposition du décideur :** Idris est né à la Citadelle — des siècles après le Caïd dont il entend les veillées —
+  et il peut y retourner : dès la première veillée entendue, donc dès la première saga achevée, la Chaîne offre « La
+  Citadelle ». Il y retrouve le puits, un vieil amghar, l'école où il a vu sa première chaîne de noms ; ce que l'amghar
+  lui dit dépend de ce que le joueur a bâti dans les veillées (les quatre piliers : la mosquée, l'école, le tour d'eau,
+  les familles ; et l'état d'ensemble : debout, elle tient, elle se lézarde). La visite se rejoue à volonté. **C'est une
+  fiction ajoutée à l'histoire-cadre : le lien de naissance, le vieil amghar et ses phrases sont proposés par l'agent, à
+  valider.** Rien n'y touche l'histoire des Compagnons.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

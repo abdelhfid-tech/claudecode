@@ -51,7 +51,10 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
       if (vis(q('#menu'))) return on('halte', q('#menu .side button'), null, { ou }); // ouverte par mégarde : on la referme
       if (vis(q('#choice'))) { const o = [...q('#choice').querySelectorAll('.opt:not(.locked)')], pr = q('#choice .prompt'); return on('choix', o[o.length - 1], null, { ou, n: o.length, rects: o.map(mid), prompt: pr ? pr.textContent.trim().slice(0, 44) : '' }); }
       if (I.battle.active) { const c = q('#battle .cmd'), b = q('#battle .banner');
-        if (c && c.querySelector('.mhint')) { const pl = q('.plate'); return pl ? on('cible', pl, null, { ou }) : { quoi: 'attente', ou }; }
+        if (c && c.querySelector('.mhint')) { const pl = q('.plate'), cible = (I.battle.places ? I.battle.places() : []).find(e => e.choix && e.camp === 'foe');
+          // l'égrégore lui-même, sur la scène, et non sa plaque : c'est lui que le pouce vise
+          if (cible) { const r = q('#cv').getBoundingClientRect(); return on('cible', q('#battle'), [r.left + cible.x / G.PW * r.width, r.top + cible.y / G.PH * r.height], { ou, texte: cible.nom, corps: cible.nom, plaque: pl ? mid(pl) : null }); }
+          return pl ? on('cible', pl, null, { ou }) : { quoi: 'attente', ou }; }
         if (c && c.querySelectorAll('.mi').length && !(b && !b.hidden)) return on('commande', c.querySelectorAll('.mi')[1], null, { ou });
         if (b && !b.hidden) return on('bandeau', b, null, { ou });
         return { quoi: 'attente', ou }; }
@@ -59,12 +62,16 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
       if (I.scene === W && !I.script.busy && !W.lock && W.map) { const t = W.target && W.target(), c = q('#cv').getBoundingClientRect(), s = q('#stage').getBoundingClientRect();
         if (!t) return { quoi: 'attente', ou };
         const x = (t.gx - Math.round(W.cam.x)) / G.PW * c.width + c.left, y = (t.gy - 6 - Math.round(W.cam.y)) / G.PH * c.height + c.top, bas = s.bottom - s.top > 300 ? 90 : 64;
-        return { quoi: 'marche', ou, pt: [Math.max(s.left + 14, Math.min(s.right - 14, x)), Math.max(s.top + bas, Math.min(s.bottom - 14, y))], souci: +getComputedStyle(f).opacity > 0.5 ? 'scène sous le noir du fondu' : '', texte: 'objectif ' + W.objIndex, pos: Math.round(W.player.x) + ',' + Math.round(W.player.y) }; }
+        // le pouce ne vise pas un bouton de la manette pour marcher : s'il tombait dessus, il vise juste au-dessus
+        const pt = [Math.max(s.left + 14, Math.min(s.right - 14, x)), Math.max(s.top + bas, Math.min(s.bottom - 14, y))];
+        document.querySelectorAll('#pad button').forEach(b => { const r = b.getBoundingClientRect(); if (r.width > 4 && getComputedStyle(b).visibility !== 'hidden' && pt[0] > r.left - 5 && pt[0] < r.right + 5 && pt[1] > r.top - 5 && pt[1] < r.bottom + 5) pt[1] = r.top - 9; });
+        return { quoi: 'marche', ou, pt, souci: +getComputedStyle(f).opacity > 0.5 ? 'scène sous le noir du fondu' : '', texte: 'objectif ' + W.objIndex, pos: Math.round(W.player.x) + ',' + Math.round(W.player.y) }; }
       return { quoi: 'attente', ou };
     });
-    const t0 = Date.now(), compte = {}, tours = {}, limite = loin ? 900000 : 240000; let fini = false, dernier = '', depuis = Date.now(), prologue = 0, lieu = '';
+    const t0 = Date.now(), compte = {}, tours = {}, limite = loin ? 900000 : 240000; let fini = false, dernier = '', depuis = Date.now(), prologue = 0, lieu = '', rates = 0, corps = 0, visait = false;
     while (Date.now() - t0 < limite) {
       const s = await etat(); if (s.ou) lieu = s.ou;
+      if (visait && s.quoi !== 'cible') { corps++; visait = false; } // le choix s'est refermé : le toucher sur le corps a choisi
       if (!loin && s.quoi === 'chaine') { fini = true; break; }
       if (loin && /^abubakr\/ab2/.test(s.ou || '')) { fini = true; break; } // le premier chapitre de la saga I est derrière nous
       if (s.quoi === 'chaine' && !prologue) prologue = Date.now() - t0;
@@ -76,6 +83,8 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
         if (s2.souci) { const m = s.quoi + ' ' + s2.souci + ' : « ' + s.texte + ' » (' + (s.ou || 'avant la partie') + ')'; if (!soucis.includes(m)) { soucis.push(m); await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-' + soucis.length + '.png') }); } } }
       compte[s.quoi] = (compte[s.quoi] || 0) + 1;
       let pt = s.pt;
+      // la cible se choisit en la touchant elle-même : si trois touchers sur son corps ne la choisissent pas, c'est un défaut ; on finit par sa plaque
+      if (s.quoi === 'cible' && s.corps) { visait = true; if (++rates > 3) { visait = false; const m = 'INACCESSIBLE en combat, toucher « ' + s.corps + ' » sur la scène ne le choisit pas (' + (s.ou || '') + ')'; if (!soucis.includes(m)) soucis.push(m); if (s.plaque) pt = s.plaque; } } else rates = 0;
       if (s.quoi === 'choix' && s.rects && s.rects.length) { const k = s.prompt + '|' + s.n, i = tours[k] = (tours[k] === undefined ? s.n - 1 : (tours[k] + s.n - 1) % s.n); pt = s.rects[Math.min(i, s.rects.length - 1)]; } // une mauvaise réponse revient : on en essaie une autre
       await p.touchscreen.tap(pt[0], pt[1]);
       await p.waitForTimeout(s.quoi === 'marche' ? 850 : s.quoi === 'chaine' ? 1200 : 430);
@@ -84,7 +93,8 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
     if (menus > (compte.choix || 0)) soucis.push('un menu de choix a été répondu sans avoir été touché (' + menus + ' ouverts, ' + (compte.choix || 0) + ' touchés) : toucher fantôme');
     if (!fini) { echecs++; const s = await etat(); await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-bloque.png') }); console.log(`BLOQUÉ au doigt ${w}×${h} — ${lieu || 'avant la partie'} — le jeu attend : ${s.quoi}${s.texte ? ' « ' + s.texte + ' »' : ''} (${resume})`); }
     else console.log(`OK  au doigt ${w}×${h} — ${quoi} en ${((Date.now() - t0) / 1000).toFixed(0)} s${loin && prologue ? ' (prologue : ' + (prologue / 1000).toFixed(0) + ' s)' : ''} (${resume})`);
-    soucis.forEach(m => { echecs++; console.log('  INVISIBLE ' + m); });
+    soucis.forEach(m => { echecs++; console.log(/^INACCESSIBLE/.test(m) ? '  ' + m : '  INVISIBLE ' + m); });
+    if (fini && corps) console.log(`      en combat, la cible a été choisie ${corps} fois en la touchant elle-même, sur la scène`);
     if (errors.length) { echecs++; [...new Set(errors)].slice(0, 8).forEach(e => console.log('  ERREUR ' + e)); }
     await p.close();
   }

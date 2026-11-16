@@ -94,7 +94,7 @@
     if (has) btns.push(mk(auto ? 'Reprendre une copie gardée' : 'Continuer', async () => { close(); const ok = await U.loadMenu(); if (ok) U.resume(); else U.showTitle(); }));
     btns.push(mk('Nouvelle partie', async b => {
       close();
-      if (auto && (auto.prologue || auto.cp)) { I.setScene(U.blank); S.depth++; let k = 1; try { k = await S.menuPick('Une partie est en cours. En commencer une nouvelle la remplacera ; les copies gardées à la mosquée restent.', [{ t: 'Commencer une nouvelle partie' }, { t: 'Garder ma partie' }]); } finally { S.depth--; S.hideDialog(); } if (k !== 0) return U.showTitle(); }
+      if (auto && (auto.prologue || auto.cp || (auto.cps && Object.keys(auto.cps).length))) { I.setScene(U.blank); S.depth++; let k = 1; try { k = await S.menuPick('Une partie est en cours. En commencer une nouvelle la remplacera ; les copies gardées à la mosquée restent.', [{ t: 'Commencer une nouvelle partie' }, { t: 'Garder ma partie' }]); } finally { S.depth--; S.hideDialog(); } if (k !== 0) return U.showTitle(); }
       I.save.reset(); I.save.data.started = true; W.roster = {}; W.saga = null; U.personnage(() => W.startChapter('idris', 0), true);
     }));
     btns.push(mk('Son : ' + (I.audio.on ? 'activé' : 'coupé'), b => { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = 'Son : ' + (I.audio.on ? 'activé' : 'coupé'); }));
@@ -141,7 +141,7 @@
   U.resume = function () {
     const sv = I.save.data, dit = avisAbsent(I.save.avis); I.save.avis = null;
     if (sv.cp && I.sagas[sv.cp.saga]) { W.roster = {}; W.saga = null; const p = W.startChapter(sv.cp.saga, sv.cp.ci, sv.cp); if (dit) S.toast(dit, 14000); return p; }
-    if (!sv.prologue) { W.roster = {}; W.saga = null; return W.startChapter('idris', 0); }
+    if (!sv.prologue) { W.roster = {}; W.saga = null; const cp = W.reprise('idris', 0); return W.startChapter('idris', 0, cp || undefined); } // le prologue, quitté en chemin, se reprend là
     return U.showChain(dit || undefined);
   };
   /* ---------- ton personnage : le nom et la tenue du râwî ----------
@@ -242,17 +242,24 @@
     const rang = s => { const L = livres.find(x => x.sagas.includes(s)); return I.romain(L.sagas.indexOf(s) + 1) + (L.n === 1 ? '' : ' du livre ' + I.romain(L.n)); };
     const ouvrir = s => { close(); U.startSaga(s); }, dernier = () => { close(); W.roster = {}; W.saga = null; W.startChapter('idris', 1); };
     // un grand bouton dit quoi faire : ouvrir le maillon suivant (ou reprendre celui qui est entamé)
+    // 2.x : les récits quittés en chemin (points de reprise rangés). Le plus récent passe devant : on le reprend d'un toucher.
+    const rangees = W.rangees(), enRoute = id => rangees.find(c => c.saga === id) || null;
+    const reprendre = c => { close(); const sg = I.sagas[c.saga]; if (!sg.frame) return U.startSaga(sg); W.roster = {}; W.saga = null; const cp = W.reprise(c.saga, c.ci); return W.startChapter(c.saga, c.ci, cp || undefined); };
     { const hd = $('#chain header'); let go = hd.querySelector('.go'); if (!go) { go = I.el('div', 'go'); hd.appendChild(go); } go.innerHTML = '';
-      const s = suivant, sp = s ? (sv.sagas[s.id] || { ch: 0 }) : null;
-      if (s || allDone) { const b = I.el('button', 'cta', s ? (sp.ch > 0 ? `▶ Reprendre : ${I.esc(s.name)} · chapitre ${sp.ch + 1}` : `▶ Ouvrir le maillon ${rang(s)} : ${I.esc(s.name)}`) : (sv.epilogue ? '▶ Rejouer le dernier maillon' : '▶ Ouvrir le dernier maillon : ' + I.esc(I.perso.nom()))); b.type = 'button';
+      if (rangees.length) { const c = rangees[0], sg = I.sagas[c.saga], chp = sg.chapters[c.ci];
+        const b = I.el('button', 'cta', `▶ Reprendre : ${I.esc(sg.veillees ? 'la veillée' : sg.frame ? I.perso.nom() : sg.name)} · ${I.esc(chp.title)}`); b.type = 'button';
+        if (!sg.frame) b.style.setProperty('--c', D.ELEMENTS[sg.light].color); tapable(b, () => reprendre(c)); go.appendChild(b); btns.push(b); }
+      const s = suivant && !(rangees.length && rangees[0].saga === suivant.id) ? suivant : null, sp = s ? (sv.sagas[s.id] || { ch: 0 }) : null; // (le récit que le premier bouton reprend déjà n'est pas offert deux fois)
+      if (s || (allDone && !suivant)) { const b = I.el('button', 'cta', s ? ((sp.ch > 0 || enRoute(s.id)) ? `▶ Reprendre : ${I.esc(s.name)} · chapitre ${sp.ch + 1}` : `▶ Ouvrir le maillon ${rang(s)} : ${I.esc(s.name)}`) : (sv.epilogue ? '▶ Rejouer le dernier maillon' : '▶ Ouvrir le dernier maillon : ' + I.esc(I.perso.nom()))); b.type = 'button';
         if (s) b.style.setProperty('--c', D.ELEMENTS[s.light].color); tapable(b, () => (s ? ouvrir(s) : dernier())); go.appendChild(b); btns.push(b); }
       go.appendChild(I.el('p', 'comment', (tactile ? 'Ou touche le maillon de ton choix, plus bas.' : 'Ou clique sur le maillon de ton choix. Au clavier : flèches, puis Entrée.') + ' La partie se garde toute seule.')); }
     const maillon = (s, i) => {
       const sp = sv.sagas[s.id] || { ch: 0, done: false }, e = D.ELEMENTS[s.light];
       const vl = (sv.veillees && sv.veillees[s.id] ? ' · veillée du Caïd ✓' : '') + (sv.rencontres && sv.rencontres[s.id] ? ' · rencontre ✓' : '');
       const qv = I.oeuvres.viceApres(s.id), qt = qv ? `<span class="qt">⚔ ${I.oeuvres.quete(qv)}</span>` : '';
-      const st = sp.done ? `<span class="stt done">${e.glyph} ${s.lightName} retrouvée${vl}</span>` : sp.ch > 0 ? `<span class="stt">Chapitre ${sp.ch + 1} / ${s.chapters.length}</span>` : '<span class="stt">Maillon à ouvrir</span>';
-      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">MAILLON ${I.romain(i + 1)} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}<span class="ouvrir">${sp.done ? 'Rejouer' : sp.ch > 0 ? 'Reprendre' : 'Ouvrir'} ▸</span></span>`);
+      const er = !sp.done && enRoute(s.id), route = er ? ' · en route' : '';
+      const st = sp.done ? `<span class="stt done">${e.glyph} ${s.lightName} retrouvée${vl}</span>` : (sp.ch > 0 || er) ? `<span class="stt">Chapitre ${sp.ch + 1} / ${s.chapters.length}${route}</span>` : '<span class="stt">Maillon à ouvrir</span>';
+      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">MAILLON ${I.romain(i + 1)} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}<span class="ouvrir">${sp.done ? 'Rejouer' : (sp.ch > 0 || er) ? 'Reprendre' : 'Ouvrir'} ▸</span></span>`);
       b.type = 'button'; b.style.setProperty('--c', e.color);
       tapable(b, () => ouvrir(s));
       box.appendChild(b); btns.push(b);
@@ -274,6 +281,8 @@
     if (I.sagas.caid && Object.keys(sv.veillees || {}).length) foot.appendChild(I.el('span', 'pill', 'Citadelle du Caïd : ' + Object.keys(D.PILLARS).map(k => `${D.PILLARS[k].glyph} <b>${sv.citadel[k]}</b>`).join(' · ')));
     { const d = I.oeuvres.state(), nl = Object.keys(d.lames).length, nv = Object.keys(d.vices).filter(v => d.vices[v] === 'tranche').length; if (nl || nv || d.zad) foot.appendChild(I.el('span', 'pill', `Lames : <b>${nl}</b> / 7 · maux tranchés : <b>${nv}</b> / 7 · ♥ ${d.zad}`)); }
     const pied = (label, fn) => { const b = I.el('button', '', label); b.type = 'button'; tapable(b, fn); foot.appendChild(b); btns.push(b); };
+    { const fr2 = I.sagas.idris, vi = fr2 ? fr2.chapters.findIndex(c => c.visite === 'citadelle') : -1; // 2.x : la Citadelle, en 2084
+      if (vi >= 0 && I.sagas.caid && Object.keys(sv.veillees || {}).some(k => sv.veillees[k])) pied('La Citadelle', () => { close(); W.roster = {}; W.saga = null; const cp = W.reprise('idris', vi); W.startChapter('idris', vi, cp || undefined); }); }
     pied('Garder une copie', async () => { close(); await U.saveMenu(); U.showChain(); });
     pied('Exporter la partie', () => { close(); U.partie('exporter', () => U.showChain()); });
     pied('Ton personnage', () => { close(); U.personnage(() => U.showChain()); });
@@ -290,7 +299,8 @@
     const sv = I.save.data, sp = sv.sagas[s.id] || (sv.sagas[s.id] = { ch: 0, done: false, flags: {} });
     W.roster = {}; W.saga = s; S.flags = {};
     let ci = sp.done ? 0 : sp.ch;
-    if (sp.done) { sp.ch = 0; sp.flags = {}; }
+    if (sp.done) { sp.ch = 0; sp.flags = {}; if (sv.cps) delete sv.cps[s.id]; }
+    else W.reprise(s.id); // 2.x : ce récit, quitté en chemin, reprend là où on l'a laissé — même si l'on en a joué un autre depuis
     if (ci === 0 && !(sv.cp && sv.cp.saga === s.id && sv.cp.obj > 0)) { sp.cOk = 0; sp.cTot = 0; }
     const resume0 = sv.cp && sv.cp.saga === s.id && sv.cp.ci === 0 && sv.cp.obj > 0 && !sp.done;
     if (ci === 0 && !resume0) {
@@ -300,6 +310,29 @@
     const cp = sv.cp && sv.cp.saga === s.id && sv.cp.ci === ci && ci > 0 ? sv.cp : (sv.cp && sv.cp.saga === s.id && sv.cp.ci === 0 && ci === 0 && sv.cp.obj > 0 ? sv.cp : null);
     await W.startChapter(s.id, ci, cp || undefined);
   };
+  /* 2.x — revenir en 2084. Le récit que l'on quitte est rangé (W.ranger) : il se reprendra là. En remontant d'un récit
+     des Compagnons ou d'une veillée, il peut s'être passé quelque chose dans la Cité-Miroir : un chapitre de
+     l'histoire-cadre marqué « retour: n » se joue au n-ième retour (ou à un retour suivant), une seule fois. */
+  const rebond = () => { const sv = I.save.data, fr = I.sagas.idris; if (!fr || !sv.prologue || sv.epilogue) return -1; const fait = sv.rebonds || {}, n = sv.retours || 0;
+    let ri = -1, rn = 1e9; fr.chapters.forEach((c, i) => { if (Number.isInteger(c.retour) && !fait[c.id] && c.retour <= n && c.retour < rn) { rn = c.retour; ri = i; } }); return ri; };
+  U.rebond = rebond;
+  U.partir = async function (ailleurs) {
+    const sv = I.save.data; W.ranger(); if (ailleurs) sv.retours = (sv.retours || 0) + 1;
+    $('#hud').hidden = true; S.depth++; try { await S.fade('out', 300); } finally { S.depth--; }
+    const ri = ailleurs ? rebond() : -1;
+    if (ri >= 0) { W.roster = {}; W.saga = null; return W.startChapter('idris', ri); }
+    U.showChain(ailleurs ? I.perso.dire('Idris rouvre les yeux. Les Archives basses, la lampe, la Chaîne. Chaque récit attend là où tu l’as laissé.') : undefined); return S.fade('in', 300);
+  };
+  // l'état de 2084, en drapeaux, pour les chapitres de l'histoire-cadre qui se jouent au retour ou en visite : veillées
+  // entendues, Lumières reçues, ce que tient la Citadelle. Posés par le moteur ; un récit ne les écrit pas.
+  U.drapeaux2084 = function (F) { const sv = I.save.data, c = sv.citadel || {}, tot = (c.priere || 0) + (c.savoir || 0) + (c.justice || 0) + (c.lien || 0);
+    Object.keys(F).forEach(k => { if (k.indexOf('_2084_') === 0) delete F[k]; });
+    Object.keys(sv.veillees || {}).forEach(k => { if (sv.veillees[k]) F['_2084_veillee_' + k] = true; });
+    I.save.maillons().forEach(k => { F['_2084_maillon_' + k] = true; });
+    if (tot >= 12) F._2084_debout = true; else if (tot >= 7) F._2084_tient = true; else F._2084_lezarde = true;
+    Object.keys(D.PILLARS).forEach(k => { if ((c[k] || 0) >= 3) F['_2084_pilier_' + k] = true; });
+    if (W.rangees().some(x => !I.sagas[x.saga].frame)) F._2084_en_route = true;
+    return F; };
   // la rencontre de la Cité-Miroir qui suit une saga : chapitre de l'histoire-cadre marqué « after »
   const rencontre = id => { const sv = I.save.data; sv.rencontres = sv.rencontres || {}; const fr = I.sagas.idris; if (!fr || !sv.prologue || sv.rencontres[id]) return -1; return fr.chapters.findIndex(c => c.after === id); };
   // ce qu'il reste à ouvrir dans le livre d'une saga, et ce que l'on dit quand il n'y reste rien
@@ -326,6 +359,10 @@
       sv.rencontres = sv.rencontres || {}; sv.rencontres[ch.after] = true; I.save.store();
       const s2 = I.sagas[ch.after], e2 = D.ELEMENTS[s2.light], left2 = resteDans(s2);
       return U.showChain(I.perso.dire(`<b style="color:${e2.color}">${e2.glyph} ${s2.lightName}</b> — ce qu’Idris a reçu de ${I.esc(s2.name)} a servi dans la Cité-Miroir. ${left2 ? `Encore ${left2} maillon${left2 > 1 ? 's' : ''}.` : finLivre(s2)}`));
+    }
+    if (saga.frame && !saga.veillees && (Number.isInteger(ch.retour) || ch.visite)) { // 2.x : ce qui s'est passé au retour en 2084, ou une visite : on revient à la Chaîne
+      if (Number.isInteger(ch.retour)) { sv.rebonds = sv.rebonds || {}; sv.rebonds[ch.id] = true; } I.save.store();
+      return U.showChain(I.perso.dire(ch.visite ? 'Idris est revenu aux Archives basses. La Chaîne tourne dans la pénombre.' : 'Les Archives basses retrouvent leur silence. La Chaîne attend.'));
     }
     if (saga.frame) {
       if (W.ci === 0) { sv.prologue = true; I.save.store(); return U.showChain('La Chaîne s’ouvre. Cinq maillons, cinq témoins. Commence par le premier : Abû Bakr, le jour où tout aurait pu se défaire.'); }
@@ -389,7 +426,10 @@
       items.push({ label: 'Ton personnage', fn() { close(); U.personnage(() => { if (I.scene === W && W.map) W.hud(); }); }, show: () => { const p = I.perso.profil(); return '<h3>Ton personnage</h3><p>Le râwî porte le nom et la tenue que tu lui donnes : <b>' + I.esc(p.nom) + '</b>, ' + I.esc(I.perso.tenue().nom.toLowerCase()) + '. Les Compagnons, eux, gardent leur nom et leur silhouette.</p>'; } });
       items.push({ label: 'Exporter la partie', fn() { close(); U.partie('exporter', () => {}); }, show: () => '<h3>Exporter la partie</h3><p>Ta partie tient dans un texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.</p><p class="src">Elle se garde aussi toute seule sur cet appareil, à chaque objectif atteint.</p>' });
       items.push({ label: 'Diagnostic', fn() {}, show: U.diagnostic });
-      if (inWorld) items.push({ cat: 'Partir' }, { label: 'Retour à la Chaîne', fn() { W.checkpoint(); close(); $('#hud').hidden = true; S.fade('out', 300).then(() => { U.showChain(); S.fade('in', 300); }); }, show: () => '<h3>Retour à la Chaîne</h3><p>Tu reprendras ce chapitre là où tu l’as laissé : la partie se garde toute seule, même si tu fermes la page.</p>' });
+      // 2.x : on peut à tout moment quitter un récit pour revenir en 2084 ; il est rangé là où on le laisse, et les autres aussi
+      if (inWorld && !W.excursion) { const ailleurs = !!(W.saga && (!W.saga.frame || W.saga.veillees)), nom = ailleurs ? 'Revenir en 2084' : 'Retour à la Chaîne';
+        items.push({ cat: 'Partir' }, { label: nom, fn() { W.checkpoint(); close(); U.partir(ailleurs); },
+          show: () => `<h3>${nom}</h3><p>${ailleurs ? 'Tu rouvres les yeux aux Archives basses, devant la Chaîne. Ce récit reste où tu le laisses : tu le reprendras là, même après en avoir suivi un autre.' : 'Tu reprendras ce chapitre là où tu l’as laissé.'} La partie se garde toute seule, même si tu fermes la page.</p>${ailleurs ? '<p class="src">La Cité-Miroir ne t’attend pas : il peut s’y être passé quelque chose.</p>' : ''}` }); }
       $('#menu h2').textContent = 'Halte';
       build(items, { onCancel: close });
     };
@@ -518,6 +558,8 @@
     ['Idées noires et énigmes', '<p>Dans un pourparler, il arrive que la <b>honte</b>, la <b>peur</b>, le <b>soupçon</b>, la <b>rancune</b> ou le <b>désespoir</b> parlent plus fort que toi. On ne la combat pas : on lui <b>répond</b>. Elle a deux voiles ; à chacun, tu choisis ta manière : <b>dire vrai</b> (la parole), <b>expliquer</b> (la pédagogie) ou <b>rassurer</b> (la bienveillance). La bonne manière fait tomber le voile ; une autre t’apprend pourquoi elle ne portait pas. Après quoi il écoute, et la confiance monte.</p><p>Une <b>énigme du cœur</b> : un compagnon languit sans fièvre ni blessure. Il tient moins bien au combat tant qu’on n’a pas trouvé ce qu’il a cessé de faire. Les anciens donnent des indices ; la bonne œuvre, accomplie sur la natte, le remet debout.</p>'],
     ['Compagnons de lumière', '<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>'],
     ['Si le jeu s’arrête', '<p>Si l’écran reste noir ou si plus rien ne répond pendant un quart de minute, un bouton <b>Reprendre</b> apparaît en bas de l’écran : il ramène au dernier objectif atteint, sans rien perdre de ce qui a été sauvegardé.</p><p>La partie se garde toute seule : en dernier recours, <b>recharge la page</b> puis choisis « Continuer ».</p><p>Dans la halte, <b>Diagnostic</b> donne la version du jeu, l’appareil, l’état du son et les incidents relevés : c’est ce qu’il faut transmettre pour qu’une panne soit comprise. Couper le son ou la musique (Réglages) suffit parfois à la contourner.</p>'],
+    ['Mener plusieurs récits', '<p>On n’est pas tenu de finir un récit pour en ouvrir un autre. Dans la halte, <b>Revenir en 2084</b> te ramène aux Archives basses, devant la Chaîne : le récit que tu quittes reste où tu le laisses, et tu le reprends là — même après en avoir suivi un autre. La Chaîne dit lesquels sont <b>en route</b>, et son grand bouton reprend le dernier quitté.</p><p>Pendant que tu suis un récit, la Cité-Miroir ne t’attend pas : en revenant, il arrive qu’il s’y soit passé quelque chose. Et dès la première veillée entendue, la Chaîne ouvre le chemin de <b>la Citadelle</b>, où Idris est né.</p>'],
+    ['Frapper ce qui rôde', '<p>Dans un labyrinthe de la noosphère, de petits égrégores vont et viennent sur les ponts. <kbd>Entrée</kbd> — ou un toucher sur ce qui rôde — le <b>frappe</b>, avec l’arme que porte celui qui mène : un voile de moins, et il reste sonné un instant, le temps de passer. Sans voile, il se dissipe. S’il vous rejoint avant, c’est un combat ordinaire.</p><p>L’allonge, la cadence et le recul viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, un coup ne fait que sonner : seul, on ne vainc pas ce qui pèse sur le cœur.</p>'],
     ['La Chaîne', '<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>']
   ];
 
@@ -612,7 +654,7 @@
     if (p.moving) still = now;
     W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y); if (d < 60 || (tg && tg.ent === n && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y, d, c: n.aura || '#f3e7cc' }); });
     list.sort((a, b) => a.d - b.d); list.length = Math.min(list.length, 5);
-    if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.trail[Math.min(W.trail.length - 1, i * 13)] : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: D.ELEMENTS[h.el].color }); });
+    if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.trail[Math.min(W.trail.length - 1, i * 13)] : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
     const seen = {}, w = $('#stage').clientWidth;
     list.forEach(e => { const x = (e.x - cx) * sc, y = (e.y - cy - 25) * sc; if (x < 8 || x > w - 8 || y < 4) return; seen[e.k] = 1;
       let el = box.querySelector('[data-k="' + e.k + '"]'); if (!el) { el = I.el('span', 'nom', I.esc(e.t)); el.dataset.k = e.k; el.style.setProperty('--c', e.c); box.appendChild(el); }
@@ -705,6 +747,10 @@
     $('#dialog').addEventListener('click', () => I.input.emit('ok'));
     $('#card').addEventListener('click', () => I.input.emit('ok'));
     $('#battle .banner').addEventListener('click', () => I.input.emit('ok'));
+    // en combat, on choisit une cible en la touchant elle-même, pas seulement sa plaque
+    { const pt = e => { const r = cvEl.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * G.PW, (e.clientY - r.top) / r.height * G.PH]; }, hors = e => !I.battle.active || (e.target.closest && e.target.closest('button, .cmd, .banner'));
+      $('#battle').addEventListener('click', e => { if (hors(e)) return; const q = pt(e); if (I.battle.touche(q[0], q[1])) e.stopPropagation(); });
+      $('#battle').addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && !hors(e)) { const q = pt(e); I.battle.survol(q[0], q[1]); } }); }
     $('#menubtn').addEventListener('click', e => { e.stopPropagation(); if (I.scene === W && !S.busy) U.pause(); });
     $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); I.build.set(!I.build.on); });
     $('#helpbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.guide(); });

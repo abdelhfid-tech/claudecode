@@ -40,6 +40,8 @@
 
   /* ----- le chapitre : une journée ----- */
   O.newChapter = function () { Object.keys(S.flags).forEach(k => { if (k.indexOf('_o_') === 0) delete S.flags[k]; }); };
+  // 2.x : une visite ou un retour en 2084 se rejouent à volonté — on s'y repose, mais aucune œuvre n'y est comptée
+  O.sobre = () => !!(W.ch && (W.ch.visite || Number.isInteger(W.ch.retour)));
   O.enigme = function () { const e = W.ch && W.ch.enigme; return e && !st().enigmes[e.id] ? e : null; };
   O.afflicted = id => { const e = O.enigme(); return !!(e && e.who === id); };
   O.openChapter = async function () {
@@ -67,6 +69,7 @@
   // '' si l'œuvre est possible ici et maintenant ; sinon la raison
   O.can = function (k) {
     const T = C0().oeuvres[k]; if (!T || !W.saga) return 'indisponible';
+    if (O.sobre()) return 'tu es de passage : les œuvres se comptent dans les récits';
     if (S.flags['_o_' + k]) return k === 'hajj' ? 'intention formulée' : 'déjà accompli aujourd’hui';
     if (k === 'hajj') return !(W.ch && W.ch.hajj) ? 'aucune caravane ne part' : O.count('hajj') >= 1 ? 'déjà accompli' : '';
     if (O.dayCount() >= MAX_JOUR) return 'la journée est pleine';
@@ -112,6 +115,11 @@
         const d = st(), left = MAX_JOUR - O.dayCount();
         const titre = { html: 'Une natte tournée vers La Mecque, au cœur de l’étoile.' + (premiere ? '<small>On y prie, et le groupe s’y repose. On y accomplit aussi les œuvres du jour : chacune nourrit la provision du cœur (♥), que les grandes épreuves consomment.</small>' : '') };
         const songe = ((C0().portes || {}).sommeil || {}).menu || 'S’endormir';
+        if (O.sobre()) { // de passage : on prie, on se repose, on garde une copie — les œuvres se comptent dans les récits
+          const j = I.debug.auto ? 2 : await S.menuPick({ html: 'Une natte tournée vers La Mecque.<small>Tu es de passage : on y prie et l’on s’y repose. Les œuvres se comptent dans les récits.</small>' }, [{ t: 'Prier et se reposer : Constance et Souffle à 100 %, la Sakîna descend' }, { t: 'Garder une copie de la partie (elle se sauvegarde déjà toute seule)' }, { t: 'Plus tard' }]);
+          if (j === 0) await W.pray(); else if (j === 1) await I.ui.saveMenu();
+          return;
+        }
         const i = I.debug.auto ? 4 : await S.menuPick(titre, [
           { t: 'Prier et se reposer : Constance et Souffle à 100 %, la Sakîna descend' },
           { t: 'Les œuvres du jour (' + (left > 0 ? 'encore ' + left : 'journée pleine') + ') · provision ♥ ' + d.zad + ' / ' + MAX_ZAD },
@@ -139,6 +147,7 @@
   };
   // tests : accomplit ce qui est possible, comme le ferait un joueur appliqué (l'ordre tourne d'un chapitre à l'autre)
   O.auto = async function () {
+    if (O.sobre()) return;
     const off = ((W.ci || 0) * 2 + (W.saga.order || 0)) % JOUR.length, en = O.enigme();
     let ks = JOUR.slice(off).concat(JOUR.slice(0, off), ['hajj']);
     if (en && JOUR.includes(en.cure)) ks = [en.cure].concat(ks.filter(k => k !== en.cure)); // l'énigme d'abord

@@ -71,7 +71,7 @@
   function mkHero(x, i) {
     const h = typeof x === 'string' ? I.world.hero(x) : x, id = h.id, st = I.calc.of(h);
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: st.atk, mag: st.mag, df: st.def, spd: st.spd,
-      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.planche(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) };
+      buffs: {}, st: {}, niyya: 1, sakina: h.sakina || 0, x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.planche(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, ray: (G.D > 1 && h.def.look && h.def.look.rayon) || D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) }; // ray : la couleur à laquelle on le reconnaît (son rayonnement, en dessin fin) ; color : celle de sa Lumière, pour les effets
   }
   // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
   function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, (chef || W.hero(W.party[0])).lvl) }) : d; }
@@ -299,15 +299,25 @@
   }
   B.listMenu = listMenu;
 
+  // Toucher ou cliquer un combattant sur la scène : pendant le choix d'une cible, c'est le choisir — comme toucher sa plaque.
+  // (x, y) en points logiques. survol : seulement montrer celui que l'on vise.
+  function sous(lx, ly) { let best = null, bd = 1e9; if (!C) return null;
+    C.all.forEach(e => { let x0, y0, w, h; if (e.side === 'foe') { if (!e.alive || e.fade <= 0) return; w = e.size; h = e.size; x0 = e.x + e.ox - w / 2; y0 = e.y - h - 6; } else { w = 32; h = 48; x0 = e.x + e.ox - 16; y0 = e.y - 46; }
+      if (lx < x0 - 4 || lx > x0 + w + 4 || ly < y0 - 4 || ly > y0 + h + 8) return; const d = Math.hypot(lx - (x0 + w / 2), ly - (y0 + h / 2)); if (d < bd) { bd = d; best = e; } });
+    return best; }
+  B.touche = function (lx, ly) { if (!C || !C.pickCb) return false; const e = sous(lx, ly); if (!e) return false; const cb = C.pickCb; cb(e); return true; };
+  B.survol = function (lx, ly) { if (!C || !C.pickSel) return; const e = sous(lx, ly); if (e) C.pickSel(e); };
+  // où se tient chacun sur la scène, en points logiques, et qui peut être choisi en ce moment : pour les outils de contrôle (doigt.js)
+  B.places = function () { return !C ? [] : C.all.filter(e => e.alive && (e.side !== 'foe' || e.fade > 0)).map(e => ({ nom: e.name, camp: e.side, x: e.x + e.ox, y: e.side === 'foe' ? e.y - 6 - e.size / 2 : e.y - 22, choix: !!(C.pool && C.pool.includes(e)) })); };
   function pickTarget(pool, label) {
     return new Promise(res => {
-      const box = $('#battle .cmd'); box.innerHTML = `<div class="mtitle">${label}</div><div class="mhint">Choisis une cible · ◂ ▸ puis Valider</div>`;
+      const box = $('#battle .cmd'); box.innerHTML = `<div class="mtitle">${label}</div><div class="mhint">Choisis une cible · touche-la, ou ◂ ▸ puis Valider</div>`;
       const bk = I.el('button', 'mback', '◂ Retour'); bk.type = 'button'; box.appendChild(bk);
       let idx = 0; const sel = i => { idx = (i + pool.length) % pool.length; C.cursor = pool[idx]; refresh(); bind(); };
-      const done = v => { I.input.pop(h); C.cursor = null; C.pickCb = null; refresh(); res(v); };
+      const done = v => { I.input.pop(h); C.cursor = null; C.pickCb = null; C.pickSel = null; C.pool = null; refresh(); res(v); };
       bk.onclick = ev => { ev.stopPropagation(); done(null); };
-      const bind = () => { C.pickCb = e => { if (pool.includes(e)) { I.audio.sfx('ok'); done(e); } }; };
-      sel(0);
+      const bind = () => { C.pickCb = e => { if (pool.includes(e)) { I.audio.sfx('ok'); done(e); } }; C.pickSel = e => { const i = pool.indexOf(e); if (i >= 0 && i !== idx) sel(i); }; };
+      C.pool = pool; sel(0);
       const h = I.input.push(a => { if (a === 'up' || a === 'left') { sel(idx - 1); I.audio.sfx('move'); } else if (a === 'down' || a === 'right') { sel(idx + 1); I.audio.sfx('move'); } else if (a === 'ok') { I.audio.sfx('ok'); done(pool[idx]); } else if (a === 'cancel') done(null); return true; });
     });
   }
@@ -317,7 +327,7 @@
     const elc = el => `<i class="el" style="color:${D.ELEMENTS[el].color}">${D.ELEMENTS[el].glyph}</i>`;
     while (true) {
       const pips = () => { let s = ''; for (let i = 0; i < 5; i++) s += `<i class="pip${i < h.niyya - boost ? ' on' : i < h.niyya ? ' use' : ''}"></i>`; return s; };
-      const title = () => `<b style="color:${h.color}">${h.name}</b><span class="niyya"><button type="button" class="nb" data-d="-1">−</button>Niyya ${pips()}<button type="button" class="nb" data-d="1">+</button>${boost ? `<em>élan ×${boost}</em>` : ''}</span>`;
+      const title = () => `<b style="color:${h.ray || h.color}">${h.name}</b><span class="niyya"><button type="button" class="nb" data-d="-1">−</button>Niyya ${pips()}<button type="button" class="nb" data-d="1">+</button>${boost ? `<em>élan ×${boost}</em>` : ''}</span>`;
       const setBoost = d => { const was = boost; boost = I.clamp(boost + d, 0, Math.min(3, h.niyya)); if (boost > was) { G.spawn({ x: h.x, y: h.y - 24, type: 'ring', r0: 6, r1: 24 + boost * 4, life: 0.4, size: 2, color: h.color }); for (let q = 0; q < 8; q++) G.spawn({ x: h.x + (Math.random() - 0.5) * 20, y: h.y, vy: -50 - Math.random() * 40, life: 0.6, size: 0.9, color: h.color, type: 'spark' }); } const t = box.querySelector('.mtitle'); if (t) { t.innerHTML = title(); wire(); } I.audio.sfx('move'); };
       const wire = () => box.querySelectorAll('.nb').forEach(b => b.onclick = ev => { ev.stopPropagation(); setBoost(+b.dataset.d); });
       const lum = lightOf(h);
@@ -568,7 +578,7 @@
     // ordre des tours (simulation)
     const sim = C.all.filter(e => e.alive).map(e => ({ e, ct: e === C.active ? -1 : e.ct })); const ord = [];
     for (let i = 0; i < 8 && sim.length; i++) { sim.sort((a, b) => a.ct - b.ct); const s = sim[0]; ord.push(s.e); const d = Math.max(0, s.ct); sim.forEach(x => x.ct -= d); s.ct = 1000 / eff(s.e, 'spd'); }
-    $('#battle .order').innerHTML = '<span class="olab">Tours</span>' + ord.map((e, i) => `<i class="${e.side}${i === 0 ? ' now' : ''}${e.broken ? ' brk' : ''}" style="--c:${e.side === 'hero' ? e.color : `hsl(${e.def.hue},80%,62%)`}">${I.esc(e.name.replace(/^(L'|Le |La |Les |Al-|Abû |Ibn |')/, '').slice(0, 2))}</i>`).join('');
+    $('#battle .order').innerHTML = '<span class="olab">Tours</span>' + ord.map((e, i) => `<i class="${e.side}${i === 0 ? ' now' : ''}${e.broken ? ' brk' : ''}" style="--c:${e.side === 'hero' ? e.ray || e.color : `hsl(${e.def.hue},80%,62%)`}">${I.esc(e.name.replace(/^(L'|Le |La |Les |Al-|Abû |Ibn |')/, '').slice(0, 2))}</i>`).join('');
     // plaques ennemies
     const pl = $('#battle .plates'); pl.innerHTML = '';
     C.all.filter(e => e.side === 'foe' && e.alive).forEach(e => {
@@ -585,7 +595,7 @@
       let pips = ''; for (let i = 0; i < 5; i++) pips += `<i class="pip${i < e.niyya ? ' on' : ''}"></i>`;
       const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${STN[k === 'df' ? 'def' : k]}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="${k === 'regen' || k === 'garde' || k === 'taunt' ? 'up' : 'dn'}">${STN[k] || k}</b>`).join('');
       const r = I.el('button', 'hrow' + (e === C.active ? ' act' : '') + (e.alive ? '' : ' ko') + (C.cursor === e ? ' cur' : ''),
-        `<span class="hs" style="background-image:url(${G.sealURL(e.def.arabic, e.color)})"></span><span class="hn"><b style="color:${e.color}">${I.esc(e.name)}</b><small>Niv. ${e.ref.lvl} ${sts}</small></span>
+        `<span class="hs" style="background-image:url(${G.sealURL(e.def.arabic, e.ray || e.color)})"></span><span class="hn"><b style="color:${e.ray || e.color}">${I.esc(e.name)}</b><small>Niv. ${e.ref.lvl} ${sts}</small></span>
          <span class="hbars"><span class="bar hp"><i style="width:${e.hp / e.max.hp * 100}%"></i><em>${e.alive ? Math.ceil(e.hp) : 'Éprouvé'}</em></span><span class="bar sp"><i style="width:${e.max.sp ? e.sp / e.max.sp * 100 : 0}%"></i><em>${e.sp}</em></span></span>
          <span class="hx"><span class="pips">${pips}</span><span class="bar sk${e.sakina >= 100 ? ' full' : ''}"><i style="width:${e.sakina}%"></i></span></span>`);
       r.type = 'button'; r.onclick = ev => { ev.stopPropagation(); if (C.pickCb) C.pickCb(e); };
@@ -628,10 +638,11 @@
             if (e.flash > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, e.flash) * 0.8; c.drawImage(img, x - 16, y - 46 + bob); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
             if (e.st.garde) { c.strokeStyle = e.color; c.lineWidth = 1; c.beginPath(); c.ellipse(x - 14, y - 24, 4, 20, 0, 0, 6.3); c.stroke(); }
             lights.push({ x, y: y - 26, r: act ? 46 : 32, color: e.color, a: act ? 0.9 : 0.5 });
+            if (G.D > 1 && look.rayon && e.alive) lights.push({ x: x - 3, y: y - 38, r: 15, color: look.rayon, a: 0.55 }); // son visage rayonne de la couleur qui lui est propre
             if (e.sakina >= 100 && Math.random() < 0.3) G.spawn({ x: x + (Math.random() - 0.5) * 18, y: y - 4, vy: -30, life: 0.9, size: 0.8, color: e.color, type: 'mote' });
           }
           if (C.cursor === e) cursor(c, x, y - 52, t);
-          if (act && e.alive) { c.fillStyle = e.color; c.fillRect(x - 10, y + 4, 20, 1); }
+          if (act && e.alive) { c.fillStyle = e.ray || e.color; c.fillRect(x - 10, y + 4, 20, 1); }
         }
       }
       if (C.bete) { const im = I.oeuvres.bete(C.bete), h0 = C.all.find(e => e.side === 'hero'), bx = Math.round(h0.x + 26), by = Math.round(h0.y - 58 + Math.sin(t * 2.2) * 2); c.globalAlpha = 0.9; c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 30, color: I.sagas.coeur.animaux[C.bete].couleur, a: 0.8 }); if (Math.random() < 0.12) G.spawn({ x: bx + (Math.random() - 0.5) * 20, y: by + 8, vy: -8, life: 1.2, size: 0.6, color: '#fff', type: 'mote' }); }

@@ -118,7 +118,9 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
   const parPaquets = async (liste, n, fn, arg) => { const res = []; for (let i = 0; i < liste.length; i += n) { const page = await ouvrir(); res.push(await page.evaluate(fn, arg ? arg(liste.slice(i, i + n)) : liste.slice(i, i + n))); await page.context().close(); } return res; };
   let page = await ouvrir();
   const inv = await page.evaluate(INVENTAIRE, COIFFES), natif = await page.evaluate(() => typeof window.ISNAD.gfx.charGrille === 'function'); await page.context().close();
-  const cles = inv.map(q => JSON.stringify(q.look)), groupes = {}; inv.forEach(q => { groupes[q.groupe] = (groupes[q.groupe] || 0) + 1; });
+  // la couleur du rayonnement (look.rayon) ne touche que le voile du grand personnage, en dessin fin : l'empreinte d'un petit sprite se cherche sans elle
+  const sansRayon = look => { const L = Object.assign({}, look); delete L.rayon; return L; };
+  const cles = inv.map(q => JSON.stringify(sansRayon(q.look))), groupes = {}; inv.forEach(q => { groupes[q.groupe] = (groupes[q.groupe] || 0) + 1; });
   const detail = Object.entries(groupes).map(([g, n]) => `${n} ${g}`).join(', ');
 
   /* ---------- relever : une seule fois, avant de toucher au dessin ---------- */

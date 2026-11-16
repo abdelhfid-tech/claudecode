@@ -25,7 +25,7 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   « 1.32 INTACTE » **avant chaque enregistrement**.
 - La suite de ce document décrit la 1.32. Elle vaut pour la 2.0 en lisant `v2/` devant chaque chemin : mêmes exigences de
   respect, même règle de test, avec les outils de `v2/tools/`. Ce qui est propre à la 2.0 est écrit dans `v2/docs/`.
-- La 2.0 a huit contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
+- La 2.0 a neuf contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
   `node v2/tools/cartes.js` (les lieux du livre I sortent comme dans la 1.32 : « CARTES IDENTIQUES »),
   `node v2/tools/ecrans.js` (l'écran de la Chaîne du livre I est celui de la 1.32 : « CHAÎNE IDENTIQUE »),
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
@@ -33,9 +33,11 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   se gardent), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel, aucun
   grand personnage ne porte un trait dans son voile, de face, de profil, de dos, ni dans son tracé fin :
   « SILHOUETTES CONFORMES »), `node v2/tools/dedales.js` (les labyrinthes de la noosphère : dix mille tirages par
-  profondeur, chaque lieu présent, du bon côté, relié aux autres : « DÉDALES CONFORMES ») et `node v2/tools/descente.js`
+  profondeur, chaque lieu présent, du bon côté, relié aux autres : « DÉDALES CONFORMES »), `node v2/tools/descente.js`
   (dans le jeu : le labyrinthe d'un chapitre, son chrono, la remontée, la reprise ; la descente du râwî et ses quatre
-  issues : « DESCENTE CONFORME ») : aucun « REFUS », « BLOQUÉ »,
+  issues ; ce qui rôde et la frappe : « DESCENTE CONFORME ») et `node v2/tools/retours.js` (deux récits quittés par la
+  halte puis repris à leur place, la partie exportée et réimportée avec eux, les retours en 2084 joués, la Citadelle
+  visitée : « RETOURS CONFORMES ») : aucun « REFUS », « BLOQUÉ »,
   « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages » ;
   `JEU=../index.html node v2/tools/silhouettes.js` passe le même contrôle sur la 1.32. Les textes de la 2.0
@@ -47,9 +49,19 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   les cartes) ; le joueur choisit son dessin dans les réglages (fin, fin et adouci, d'origine). Le dessin d'origine reste
   celui de la 1.32, au pixel près : `cartes.js` ouvre le jeu avec `?def=1` pour s'y comparer. Tout est décrit dans
   `v2/docs/architecture.md`, « La définition du dessin ». Un dessin ne se juge que sur une capture, dans les trois réglages.
+- Dans la 2.x, le voile de chaque Compagnon rayonne d'une couleur qui lui est propre (`D.RAYONS`, dans `v2/src/core/defs.js` ;
+  couleurs proposées par l'agent, à valider par le décideur). Le moteur la pose (`look.rayon`) : un fichier de saga ne
+  l'écrit jamais, un personnage de fiction n'en a pas, et le voile reste une seule surface. La couleur ne dit rien de
+  celui qui la porte : aucun texte ne lui prête un sens. Un nouveau Compagnon reçoit sa ligne dans `D.RAYONS`.
 - La noosphère de la 2.x est un labyrinthe (exigences 22 et 23) : `v2/src/core/dedale.js` le tire, `v2/src/core/rodeurs.js`
-  y pose la graine, le chrono et la descente du râwî ; `v2/docs/architecture.md`, « Les labyrinthes de la noosphère ». Un
-  changement de l'un ou de l'autre repasse `dedales.js`, puis toute la batterie.
+  y pose la graine, le chrono, ce qui rôde, la frappe et la descente du râwî ; `v2/docs/architecture.md`, « Les
+  labyrinthes de la noosphère ». Un changement de l'un ou de l'autre repasse `dedales.js`, puis toute la batterie.
+- Dans la 2.x, les récits se mènent de front (`v2/docs/architecture.md`, « Mener plusieurs récits ») : la halte offre
+  « Revenir en 2084 » à tout moment, le récit quitté est rangé là où on le laisse (`cps`, dans la partie) et se reprend
+  là. Au retour, un chapitre de l'histoire-cadre marqué `retour: n` peut se jouer, une fois ; un chapitre marqué
+  `visite` s'ouvre depuis la Chaîne (la Citadelle, où Idris est né — une fiction, proposée par le décideur). Dans ces
+  chapitres-là, qui se rejouent, aucune œuvre n'est comptée et l'on ne descend pas dans la noosphère. Un changement de
+  ce mécanisme repasse `retours.js`.
 - Le livret (`promo/`, `tools/promo.js`) décrit la 1.32.
 
 ## Le projet en trois phrases
@@ -67,7 +79,7 @@ toute considération de jeu.
 | `src/core/*.js` | moteur | modules en IIFE attachés à `window.ISNAD`, ordre de chargement fixé dans `tools/build.js` |
 | `src/core/sprites.js` | personnages : petits gabarits de 16 × 24 (les cartes) et grands gabarits de 32 de large (combat, dialogue, équipement, livret) — coiffes, corps, attributs, poses | chaque lettre d'un gabarit nomme une matière ; les poses sont déclarées dans `defs.js` ; une coiffe ou une pose se dessine dans les deux tailles ; le voile d'une tête est une seule surface, le moteur refuse de démarrer sinon |
 | `src/data/saga_<id>.js` | une saga | un seul appel à `ISNAD.registerSaga({...})`, JavaScript pur, sans DOM |
-| `src/data/frame.js` | histoire-cadre : prologue, dernier maillon (`fin: true`) et cinq rencontres de la Cité-Miroir | même format, `frame: true` ; une rencontre porte `after: '<saga>'` et se joue après la veillée de cette saga |
+| `src/data/frame.js` | histoire-cadre : prologue, dernier maillon (`fin: true`) et cinq rencontres de la Cité-Miroir ; dans la 2.x, trois retours en 2084 et la visite de la Citadelle | même format, `frame: true` ; une rencontre porte `after: '<saga>'` et se joue après la veillée de cette saga ; un retour porte `retour: n`, une visite `visite: '<lieu>'` |
 | `src/page.html`, `src/style.css` | gabarit et interface | |
 | `index.html`, `dist/isnad.html` | **générés** | ne jamais les éditer à la main |
 | `src/core/build.js` | bâtir : matériaux, pièces, chantiers, troupeaux | pièces et matériaux déclarés dans `defs.js` |
@@ -111,7 +123,8 @@ node v2/tools/partie.js             # 2.0 : la partie du joueur, exportée par l
 node v2/tools/personnage.js         # 2.0 : le nom et la tenue du râwî, choisis par les vrais boutons, joués sur tout le prologue, gardés
 node v2/tools/silhouettes.js        # 2.0 : les personnages — petits sprites inchangés, voiles sans trait, une tête native par coiffe (planches : … planches [modèles.png])
 node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] : une planche)
-node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî
+node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe
+node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
 node tools/promo.js pdf             # le livret en PDF (promo/livret.pdf) : A5 paysage, deux colonnes, pages équilibrées ; demande poppler (pdfinfo, pdftoppm)
 ```
 
@@ -145,7 +158,14 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
   pèlerinage (`hajj`) n'existent que dans la fiction (histoire-cadre, veillées) : le validateur les refuse ailleurs.
   Dans la 2.x, une idée noire ne prend corps que dans la descente du râwî (exigence 22) : aucun chapitre ne la place
   parmi ses ennemis, ni dans un combat — le validateur le refuse. Les options d'un lieu `g`, `n` et `descente` sont
-  réservées au moteur : le labyrinthe de la noosphère se tire tout seul (exigence 23).
+  réservées au moteur : le labyrinthe de la noosphère se tire tout seul (exigence 23). Ce qui rôde sur les ponts d'un
+  labyrinthe est posé par le moteur, parmi les égrégores de palier `minion` de la saga : un fichier de saga ne le place
+  pas. La frappe se règle par type d'arme dans `D.FRAPPES` (`defs.js`) : allonge, cadence, recul — rien d'autre que du
+  matériel (exigence 17).
+- Dans la 2.x, un chapitre de l'histoire-cadre peut porter `retour: n` (il se joue au n-ième retour en 2084, ou à un
+  retour suivant, une seule fois) ou `visite: '<lieu>'` (il s'ouvre depuis la Chaîne, et se rejoue) : toujours `last`,
+  jamais `after`. Les drapeaux `_2084_…` (veillées entendues, maillons achevés, ce que tient la Citadelle) sont posés
+  par le moteur à leur ouverture : un récit les lit par `if`, il ne les écrit pas.
 - L'idole d'un chapitre (le membre de plus haut palier d'un combat lancé avec `boss: true`) porte une
   `racine` prise dans `D.RACINES`. Aucun combattant, aucune compétence, aucun personnage ne porte le nom
   d'Iblîs, d'un démon ou d'un djinn : le validateur le refuse.
@@ -217,8 +237,9 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     d'une religion, d'une époque ou d'un camp. À chaque étage sa réponse, et pas une de plus : l'idée noire
     par la parole, l'égrégore par le combat, l'idole par une bataille déclarée. *Exception demandée par le
     décideur le 16 novembre (formulation de l'agent, à valider) :* dans la descente du râwî (exigence 22), une
-    idée noire prend corps ; on ne l'y affronte que lame forgée en main, et accompagné. Dans les récits, elle
-    ne se combat toujours pas.
+    idée noire prend corps ; on peut l'y frapper pour passer — un coup la sonne et la repousse, rien de plus ; on ne
+    l'y entame et on ne l'y affronte que lame forgée en main, et accompagné. Dans les récits, elle ne se combat
+    toujours pas, et n'y rôde pas.
 
 19. *(Proposée par l'agent, à confirmer par le décideur.)* Une bataille déclarée n'est pas une reconstitution. En face,
     jamais d'hommes : les nuées de l'idole, c'est-à-dire ses égrégores. Nos rangs ne tombent pas : éprouvés, ils se
@@ -251,7 +272,10 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     Compagnon, à qui le jeu ne prête aucun mal du cœur ; et jamais un Compagnon ne l'y accompagne — seulement un
     compagnon de lumière ou, dans l'histoire-cadre, ses compagnons de fiction. Dans la 2.x, c'est un labyrinthe : ses maux
     du cœur encore debout et les cinq idées noires y rôdent. Seul, il ne les vainc pas : il cherche l'issue, ou un abri où
-    rien n'entre. Armé d'une lame forgée et accompagné, il peut faire face. « Démons intérieurs » est une façon de
+    rien n'entre. Il peut les frapper avec l'arme qu'il porte (demande du décideur, le 16 novembre : « on peut les frapper
+    en mode Zelda avec les armes disponibles ») : frappés, ils restent sonnés un instant et le laissent passer — cela ne
+    les vainc pas. Armé d'une lame forgée et accompagné, il peut faire face, et ses coups entament une idée noire jusqu'à
+    la dissiper ; un mal du cœur ne se tranche qu'en lui faisant face, avec sa lame. « Démons intérieurs » est une façon de
     parler, que le jeu explique aussitôt : aucun combattant ne porte le nom d'un démon. La prière elle-même reste sobre :
     la porte s'ouvre quand elle est dite. Ce que le râwî gagne en bas — un niveau à l'issue, de l'Esprit et du Souffle
     à l'abri — vient de sa descente, non de la prière : c'est tout de même une exception aux exigences 13 et 15, voulue
@@ -263,8 +287,13 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     l'histoire plus ça devient difficile » ; formulation de l'agent, à valider.)* Le labyrinthe et son chrono. Dans la
     2.x, la noosphère où un récit fait descendre est un labyrinthe tiré au hasard, de plus en plus serré à mesure que
     l'histoire avance. Les lieux que les récits nomment y sont toujours, chacun de son côté, et les récits ne changent
-    pas d'un mot : le labyrinthe est la forme d'un lieu de fiction, il ne dit rien de l'histoire. Les égrégores d'un
-    chapitre y restent à leurs places : seuls ceux du râwî rôdent, et seulement dans sa descente. Le chrono ne punit
+    pas d'un mot : le labyrinthe est la forme d'un lieu de fiction, il ne dit rien de l'histoire. Les égrégores que le
+    récit place y restent à leurs places. *(Ajout du 16 novembre, à la demande du décideur — « je veux plus de
+    combats » ; formulation de l'agent, à valider :)* de petits égrégores du même chapitre vont et viennent sur les ponts,
+    jamais dans les lieux que le récit nomme ; on les frappe en temps réel avec l'arme que porte celui qui mène — un voile
+    par coup, sans voile ils se dissipent — et, s'ils rejoignent le groupe, c'est un combat ordinaire. Ce ne sont jamais
+    des idées noires : celles-ci ne rôdent que dans la descente du râwî (exigences 16 et 22), où aucun Compagnon ne
+    descend. Après une remontée au chrono, plus rien ne rôde. Le chrono ne punit
     pas : il ne court que lorsque le joueur a la main — ni pendant un combat, ni pendant un dialogue, ni dans un menu ;
     écoulé, on remonte au seuil, le labyrinthe se redessine un cran plus simple, et rien n'est perdu. Aucun texte ne lie
     le temps qui passe à une faute, à une œuvre manquée ni à un Compagnon.

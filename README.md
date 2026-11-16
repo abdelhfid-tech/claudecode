@@ -20,7 +20,11 @@ une valeur, pour dévoiler l'Agrégor.
   dialogue, équipement) redessinés d'après les modèles du décideur. Depuis le 16 novembre (la « 2.x »), elle se
   dessine deux fois plus fin — 768 × 432 points, les grands personnages jusque sur les cartes, trois dessins au choix
   dans les réglages — et sa noosphère est un labyrinthe tiré au hasard, sous un chrono : celle des chapitres, et celle
-  du râwî, où l'on cherche l'issue ou un abri. La version légère, elle, s'arrête à la 1.32. Elle a ses propres outils (`v2/tools/`)
+  du râwî, où l'on cherche l'issue ou un abri. On y frappe en temps réel ce qui rôde sur les ponts, avec l'arme que l'on
+  porte ; en combat, on choisit une cible en la touchant elle-même ; le voile de chaque Compagnon rayonne d'une couleur
+  qui lui est propre ; et les récits se mènent de front — « Revenir en 2084 » à tout moment, chaque récit reprenant là
+  où on l'a laissé, avec parfois du nouveau aux Archives basses, et la Citadelle où Idris est né. La version légère,
+  elle, s'arrête à la 1.32. Elle a ses propres outils (`v2/tools/`)
   et ses propres sauvegardes. À lire : `v2/docs/feuille-de-route.md` (où l'on en est), `v2/docs/architecture.md`
   (comment c'est fait), `v2/docs/schema-paquet.md` (le contrat d'un paquet). Elle se joue dans son propre Artifact
   privé, distinct de celui de la 1.32.

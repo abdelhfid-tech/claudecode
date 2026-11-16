@@ -5,7 +5,7 @@
   const I = window.ISNAD = {
     D, sagas: {}, sagaList: [],
     // commun: true — contenu partagé par toutes les sagas (src/data/coeur.js) : ni maillon ni chapitre
-    registerSaga(s) { this.sagas[s.id] = s; if (this.perso) { this.perso.relever(s); if (this.perso.nom() !== this.perso.NOM) this.perso.appliquer(); } if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => ((a.livre || 1) - (b.livre || 1)) || (a.order - b.order)); },   // par livre, puis par ordre
+    registerSaga(s) { this.sagas[s.id] = s; this.rayonner(s); if (this.perso) { this.perso.relever(s); if (this.perso.nom() !== this.perso.NOM) this.perso.appliquer(); } if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => ((a.livre || 1) - (b.livre || 1)) || (a.order - b.order)); },   // par livre, puis par ordre
     speed: 1, debug: {}
   };
 
@@ -46,6 +46,14 @@
     I.paquets[p.id] = { id: p.id, version: p.version, titre: p.titre || p.id, sagas: (p.sagas || []).map(s => s.id), lieux: Object.keys(p.lieux || {}),
       objets: Object.keys(p.objets || {}), equipement: Object.keys(p.equipement || {}), pistes: Object.keys(p.pistes || {}) };
     return true;
+  };
+
+  // 2.x — chaque Compagnon rayonne d'une couleur qui lui est propre (D.RAYONS) : elle est posée sur son apparence quand le
+  // récit s'enregistre (look.rayon). Les récits ne changent pas ; les personnages de fiction n'en ont pas.
+  I.rayonner = function (s) {
+    const pose = (look, nom) => { const c = look && D.rayon(nom); if (c) look.rayon = c; };
+    if (!s.frame) Object.keys(s.heroes || {}).forEach(id => { const h = s.heroes[id]; if (h.look && (h.look.kind || 'compagnon') === 'compagnon') pose(h.look, h.name); });
+    (s.chapters || []).forEach(c => (c.npcs || []).forEach(n => { if (n.look && n.look.kind === 'compagnon') pose(n.look, n.name); }));
   };
 
   /* ---------- utilitaires ---------- */
@@ -157,7 +165,12 @@
     ['gearInit', 'veillees', 'rencontres', 'citadel', 'parley', 'isnad', 'meta', 'profil', 'paquets', 'dedale'].forEach(k => { objet(k); });
     if (estObjet(d.dedale) && !(naturel(d.dedale.sel) && naturel(d.dedale.n))) E.push('dedale'); // 2.x : le sel et le compte des descentes (un champ absent prend sa valeur de départ : le format reste le 2)
     if (estObjet(d.isnad) && !(naturel(d.isnad.ok) && naturel(d.isnad.total))) E.push('isnad');
-    if (d.cp !== undefined && d.cp !== null) { const c = d.cp; if (!estObjet(c) || typeof c.saga !== 'string' || !naturel(c.ci) || !naturel(c.obj) || typeof c.map !== 'string' || !Array.isArray(c.party) || c.party.some(x => typeof x !== 'string')) E.push('cp'); }
+    const reprise = c => estObjet(c) && typeof c.saga === 'string' && naturel(c.ci) && naturel(c.obj) && typeof c.map === 'string' && Array.isArray(c.party) && !c.party.some(x => typeof x !== 'string');
+    if (d.cp !== undefined && d.cp !== null && !reprise(d.cp)) E.push('cp');
+    // 2.x : les points de reprise des récits quittés en chemin, les retours en 2084 et ce qui s'y est déjà passé (champs absents des parties d'avant)
+    if (objet('cps')) Object.keys(d.cps).forEach(k => { if (!reprise(d.cps[k])) E.push('cps.' + k); });
+    if (d.retours !== undefined && !naturel(d.retours)) E.push('retours');
+    objet('rebonds');
     return E;
   }
   // Une partie peut citer un contenu qui n'est pas dans ce jeu : un paquet retiré, ou pas encore reçu. Rien n'est effacé : ce
@@ -165,7 +178,9 @@
   function assainir(d) {
     const A = { paquets: Object.keys(d.paquets || {}).filter(k => !I.paquets[k]), reprise: false, pieces: 0 };
     // le point de reprise : dans une saga, un chapitre et un lieu que ce jeu connaît — sinon on reprend à la Chaîne
-    const c = d.cp; if (c && !(I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci] && D.MAPS[c.map])) { d.cp = null; A.reprise = true; }
+    const connu = c => !!(c && I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci] && D.MAPS[c.map]);
+    const c = d.cp; if (c && !connu(c)) { d.cp = null; A.reprise = true; }
+    if (estObjet(d.cps)) Object.keys(d.cps).forEach(k => { if (!connu(d.cps[k])) delete d.cps[k]; }); else if (d.cps !== undefined) delete d.cps; // un récit rangé dont le contenu manque : on le reprendra à son chapitre
     // l'équipement porté : une pièce inconnue retourne à la réserve, où elle attend sans gêner
     // (une copie gardée sur l'appareil n'est pas contrôlée comme une partie importée : ce qui n'a pas la forme attendue est écarté ici)
     if (!estObjet(d.equip)) d.equip = {}; if (!estObjet(d.gear)) d.gear = {};

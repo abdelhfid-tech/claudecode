@@ -28,6 +28,7 @@
   };
   W.leave = function (id) { const i = W.party.indexOf(id); if (i < 0 || W.party.length <= 1) return; W.party.splice(i, 1); W.refreshSheets(); };
   function lookOf(def) { return Object.assign({ kind: 'compagnon' }, def.look); }
+  const lueur = look => (G.D > 1 && look.rayon) || look.aura || null; // en dessin fin, un Compagnon rayonne de sa couleur propre (D.RAYONS)
   W.refreshSheets = function () { W.sheets = W.party.map(id => G.planche(lookOf(W.saga.heroes[id]))); };
 
   /* ----- piliers de la Citadelle, prière ----- */
@@ -64,7 +65,7 @@
       const fz = $('#fade'); fz.style.transition = 'none'; fz.style.opacity = 0; // le carton prend le relais du fondu
       await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>La prière</h1><p>${I.pick(PRAY_LINES[m])}</p><p class="small">Le groupe est reposé : Constance et Souffle à 100 % · Sakîna</p><div class="hint">▼</div>`, 6500);
       W.healAll(); W.gainSakina(35); S.flags._prayed = true;
-      if (!S.flags._prayPillar) { S.flags._prayPillar = true; W.pillar('priere', 1); await I.oeuvres.gain('priere'); } // la première prière du chapitre nourrit la provision
+      if (!S.flags._prayPillar && !(I.oeuvres.sobre && I.oeuvres.sobre())) { S.flags._prayPillar = true; W.pillar('priere', 1); await I.oeuvres.gain('priere'); } // la première prière du chapitre nourrit la provision (pas celle d'une visite : elle se rejoue)
       if (W.map && !parLeRecit) W.checkpoint();
     } finally { S.depth--; S.hideDialog(); W.emote('groupe', null); }
   };
@@ -152,9 +153,10 @@
     const sp = I.save.data.sagas[sagaId] || (I.save.data.sagas[sagaId] = { ch: 0, done: false, flags: {} });
     S.flags = cp ? (cp.flags || {}) : Object.assign({}, sp.flags || {});
     if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); I.mal.ouvre(); }
+    if (saga.frame && !saga.veillees && (Number.isInteger(ch.retour) || ch.visite) && I.ui.drapeaux2084) I.ui.drapeaux2084(S.flags); // 2.x : l'état de 2084, pour un retour ou une visite
     I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
-    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.planche(look), aura: def ? (def.look.aura || '#ffe9a8') : (look.kind === 'compagnon' ? '#ffe9a8' : null) }); });
+    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.planche(look), aura: def ? (lueur(def.look) || '#ffe9a8') : (look.kind === 'compagnon' ? (lueur(look) || '#ffe9a8') : null) }); });
     W.foes = (ch.foes || []).map(f => Object.assign({}, f, { map: f.map || ch.map, done: false, placed: false, ph: Math.random() * 6 }));
     W.chests = (ch.chests || []).map(c => Object.assign({}, c, { map: c.map || ch.map, open: false, placed: false }));
     W.objIndex = cp ? cp.obj : 0;
@@ -190,8 +192,22 @@
     $('#hud .obj').textContent = (o && o.text ? o.text : '') + (o && o.build ? I.build.objectiveText(o.build) : '');
     $('#hud .obj').hidden = !(o && o.text);
   };
+  /* Mener plusieurs récits de front (2.x). La partie garde un point de reprise courant (cp) et, rangés à part, ceux des
+     récits que l'on a quittés en chemin (cps) : un par saga de la Chaîne, un par chapitre de l'histoire-cadre ou des
+     veillées. Quitter un récit range son point ; le rouvrir le reprend. Champ absent des parties d'avant : le format reste le 2. */
+  W.cleReprise = function (c) { const s = I.sagas[c.saga]; return s && s.frame ? c.saga + ':' + c.ci : c.saga; };
+  W.ranger = function () { const sv = I.save.data, c = sv.cp; if (!c) return null; c.t = Date.now(); (sv.cps = sv.cps || {})[W.cleReprise(c)] = c; sv.cp = null; return c; };
+  // le point de reprise de ce récit, s'il en a un : il redevient le point courant (celui d'un autre récit est rangé)
+  W.reprise = function (sagaId, ci) {
+    const sv = I.save.data, k = W.cleReprise({ saga: sagaId, ci });
+    if (sv.cp && W.cleReprise(sv.cp) === k) return sv.cp;
+    const c = sv.cps && sv.cps[k]; if (!c) return null;
+    W.ranger(); delete sv.cps[k]; sv.cp = c; return c;
+  };
+  W.rangees = function () { const sv = I.save.data; return Object.keys(sv.cps || {}).map(k => sv.cps[k]).filter(c => c && I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci]).sort((x, y) => (y.t || 0) - (x.t || 0)); };
   W.checkpoint = function () {
     if (W.excursion) return; // pendant la descente du râwî, le point de reprise reste celui d'avant
+    { const sv = I.save.data, k = W.cleReprise({ saga: W.saga.id, ci: W.ci }); if (sv.cp && W.cleReprise(sv.cp) !== k) W.ranger(); if (sv.cps && sv.cps[k]) delete sv.cps[k]; } // le point d'un autre récit est rangé, jamais écrasé
     const npcs = {}; W.npcs.forEach(n => { npcs[n.id] = { h: n.hidden ? 1 : 0, x: n.placed && n.map === W.map.id ? Math.round(n.x) : undefined, y: n.placed && n.map === W.map.id ? Math.round(n.y) : undefined }; });
     I.save.data.cp = { saga: W.saga.id, ci: W.ci, obj: W.objIndex, map: W.map.id, opts: W.mapOpts, pos: [Math.round(W.player.x), Math.round(W.player.y)], party: W.party.slice(), npcs, foes: W.foes.filter(f => f.done).map(f => f.id), chests: W.chests.map((c, i) => c.open ? i : -1).filter(i => i >= 0), flags: S.flags };
     W.persistHeroes(); I.save.store();
@@ -226,7 +242,7 @@
     try {
       if (ch.outro) await S.run(ch.outro);
       await I.oeuvres.endChapter();
-      const sp = sv.sagas[saga.id]; sp.flags = S.flags; W.persistHeroes(); sv.cp = null;
+      const sp = sv.sagas[saga.id]; sp.flags = S.flags; W.persistHeroes(); if (sv.cp && W.cleReprise(sv.cp) !== W.cleReprise({ saga: saga.id, ci: W.ci })) W.ranger(); sv.cp = null; if (sv.cps) delete sv.cps[W.cleReprise({ saga: saga.id, ci: W.ci })];
       $('#hud').hidden = true;
       if (W.ci + 1 < saga.chapters.length && !(saga.frame && ch.last)) {
         sp.ch = Math.max(sp.ch, W.ci + 1); I.save.store();
@@ -288,10 +304,10 @@
   /* ----- mise à jour ----- */
   W.onInput = function (a) {
     if (I.scene !== W || S.busy || W.lock) return false;
-    if (W.excursion) { if (a === 'ok') I.rodeurs.attendre(); else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
+    if (W.excursion) { if (a === 'ok') { if (!I.rodeurs.attendre()) I.rodeurs.frappe(); } else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
     if (a === 'build') { I.build.set(!I.build.on); return true; }
     if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel') { I.build.set(false); return true; } if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
-    if (a === 'ok') { W.stop(); W.interact(); return true; }
+    if (a === 'ok') { W.stop(); if (I.rodeurs && I.rodeurs.aFrapper()) I.rodeurs.frappe(); else W.interact(); return true; } // 2.x : dans un labyrinthe, quand quelque chose rôde à portée, « Valider » frappe
     if (a === 'help') { W.stop(); I.ui.guide(); return true; }
     if (a === 'prev') { W.stop(); I.ui.pause('carte'); return true; }
     if (a === 'menu' || a === 'cancel') { W.stop(); I.ui.pause(); return true; }
@@ -403,6 +419,7 @@
       if (Math.max(Math.abs(tx - Math.floor(p.x / T)), Math.abs(ty - Math.floor((p.y - 3) / T))) <= 2) put(); else W.goTo(tx * T + 8, ty * T + 11, { stop: 27, then: put });
       return true;
     }
+    if (I.rodeurs && I.rodeurs.viseDu(wx, wy)) return true; // 2.x : toucher ce qui rôde, c'est le frapper (rodeurs.js)
     const n = W.npcs.find(n => here(n) && Math.abs(n.x - wx) < 10 && wy > n.y - 27 && wy < n.y + 6);
     if (n) { W.goTo(n.x, n.y, { ent: n, stop: 21, then() { face(n.x, n.y); W.interact(n); } }); return true; }
     const f = W.foes.find(f => !f.done && f.map === m.id && f.placed && Math.abs(f.x - wx) < 15 && wy > f.y - 36 && wy < f.y + 6);
@@ -540,13 +557,13 @@
     for (const e of list) {
       if (e.o) { const o = e.o; c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2) - cx, o.y - o.h + 1 - cy); if (o.anim) drawFlame(c, o.x - cx, o.y - cy - (o.type === 'brazier' ? 10 : 3), t + o.seed, o.type === 'fire'); if (G.OBJ[o.type].herd) I.build.herd(c, o, o.x - cx, o.y - cy, t); }
       else if (e.n) { const n = e.n; drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
-      else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = 0.86 + Math.sin(t * 5 + f.ph) * 0.12; c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
+      else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = f.sonne > 0 ? 0.4 + Math.sin(t * 22) * 0.12 : 0.86 + Math.sin(t * 5 + f.ph) * 0.12; c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; if (f.rodeur && (f.voiles > 0 || f.tenue > 0) && (f.meute || f.tenue !== undefined)) { const nv = Math.ceil(f.meute ? f.voiles : f.tenue); c.fillStyle = f.sonne > 0 ? '#fff3c8' : `hsl(${d.hue},90%,78%)`; for (let i = 0; i < nv; i++) c.fillRect(Math.round(f.x - cx - nv * 2 + i * 4 + 1), Math.round(f.y - cy - s - 7 + bob), 2, 2); } /* ce qui rôde : ses voiles, et le tremblement de qui vient d'être frappé */ lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
       else if (e.bete) { const tr = e.tr, im = I.oeuvres.bete(e.bete, true), bx = Math.round(tr[0] - cx), by = Math.round(tr[1] - cy - im.height - 1 + Math.sin(t * 3) * 1.2); c.globalAlpha = 0.92; if (tr[2] === 2) { c.save(); c.translate(bx, 0); c.scale(-1, 1); c.drawImage(im, -Math.round(im.width / 2), by); c.restore(); } else c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 24, color: (I.sagas.coeur.animaux[e.bete] || {}).couleur || '#ffe9a8', a: 0.7 }); }
-      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null)); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (W.saga.heroes[W.party[e.fol]].look.aura || '#ffe9a8'), a: 0.4 }); }
+      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null)); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (lueur(W.saga.heroes[W.party[e.fol]].look) || '#ffe9a8'), a: 0.4 }); }
       else if (e.p) { const p = W.player;
         if (G.D > 1 && p.moving && !G.low && POUSSIERE[m.g0 ? m.g0(p.x, p.y) : ''] && Math.random() < 0.3) G.spawn({ x: p.x - cx + (Math.random() - 0.5) * 6, y: p.y - cy + 1, vx: (Math.random() - 0.5) * 10, vy: -4 - Math.random() * 5, life: 0.5 + Math.random() * 0.3, size: 0.6 + Math.random() * 0.5, color: POUSSIERE[m.g0(p.x, p.y)], a: 0.3, type: 'mote', blend: 'source-over' }); // la poussière sous les pas
-        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null)); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lk.aura || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (I.rodeurs && I.rodeurs.geste && W.t - I.rodeurs.geste.t >= 0 && W.t - I.rodeurs.geste.t < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null)); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {

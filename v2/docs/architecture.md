@@ -118,6 +118,26 @@ sur l'appareil qui serait abîmée se relit de la même façon : ce qui n'a pas 
 l'identique, reprendre au milieu d'un chapitre ; dix textes qui ne sont pas des parties, refusés sans rien changer ;
 une partie prise dans la 1.32 gelée, acceptée et remise à jour ; les clés de la 1.32 intactes.
 
+### Mener plusieurs récits : un point de reprise par récit
+
+La partie garde un point de reprise courant (`cp`) et, **rangés à part, ceux des récits quittés en chemin** (`cps`) : un
+par saga de la Chaîne (clé : l'identifiant de la saga), un par chapitre de l'histoire-cadre ou des veillées (clé :
+`saga:chapitre`). `world.js` : `W.ranger()` range le point courant, `W.reprise(saga, chapitre)` rend celui d'un récit —
+il redevient courant, et celui d'un autre récit est rangé —, `W.rangees()` les donne du plus récent au plus ancien.
+`W.checkpoint()` n'écrase jamais le point d'un autre récit : il le range d'abord. La halte offre **« Revenir en 2084 »**
+dans un récit des Compagnons ou une veillée (« Retour à la Chaîne » dans l'histoire-cadre) : `U.partir()` range le récit,
+compte le retour (`retours`), puis ouvre la Chaîne — ou, s'il s'est passé quelque chose en 2084, le chapitre de
+l'histoire-cadre marqué `retour: n` dont le tour est venu (`rebonds` note ceux qui ont été joués). La Chaîne lit
+`W.rangees()` : chaque maillon dit s'il est « en route », et le grand bouton reprend le récit quitté en dernier.
+`U.startSaga()` reprend le point rangé de la saga qu'on ouvre. Un chapitre marqué `visite` s'ouvre depuis le pied de la
+Chaîne (la Citadelle, dès qu'une veillée a été entendue) et se rejoue. À l'ouverture d'un retour ou d'une visite, le
+moteur pose l'état de 2084 en drapeaux (`U.drapeaux2084` : `_2084_veillee_<saga>`, `_2084_maillon_<saga>`,
+`_2084_pilier_<pilier>`, `_2084_debout` / `_2084_tient` / `_2084_lezarde`, `_2084_en_route`). Ces chapitres se rejouant,
+`oeuvres.sobre()` y ferme les œuvres (la natte ne sert qu'au repos) et `valeurs.porte` n'y ouvre pas de descente.
+Champs nouveaux de la partie, tous facultatifs : `cps`, `retours`, `rebonds` — **le format reste le 2**, `controler` les
+vérifie, `assainir` écarte un récit rangé dont le contenu manque. `node v2/tools/retours.js` joue le tout par les vrais
+boutons : « RETOURS CONFORMES ».
+
 ## Le personnage du joueur : `src/core/perso.js`
 
 Le joueur donne un nom et une tenue au **râwî** — le héros de l'histoire-cadre, personnage de fiction. Les Compagnons
@@ -243,6 +263,25 @@ mal du cœur, n'importe laquelle pour une idée noire — **et** accompagné —
 fiction dans l'histoire-cadre —, le râwî fait face : un mal vaincu est tranché (`oeuvres.js`), une idée noire est
 dissipée jusqu'au chapitre suivant. Le joueur de test entre, prend l'issue et revient : il n'y marche pas.
 
+**Ce qui rôde, et la frappe** (lot C3, `rodeurs.js`). Dans un labyrinthe, « Valider » — ou un toucher sur ce qui rôde —
+frappe devant soi : `R.frappe()`. L'arme est celle que porte celui qui mène (`gear.of(h).md`) ; son type règle le geste
+(`D.FRAPPES` : `portee`, `large`, `cadence`, `sonne`, `recul`, `force`). Ce qui est touché est repoussé de case en case
+dans le sens du coup, puis reste **sonné** : il ne bouge plus, et on le traverse sans contact. `world.js` n'appelle la
+frappe que si quelque chose rôde à portée de vue (`R.aFrapper()`) : sinon « Valider » agit sur le décor, comme avant. Au
+doigt, `R.viseDu()` : toucher ce qui rôde le frappe s'il est à portée, sinon y conduit puis frappe.
+*Dans le labyrinthe d'un récit*, `poserMeutes()` pose à l'armement du lieu de 1 à 4 petits égrégores (`R.MEUTES`), tirés
+parmi ceux de palier `minion` de la saga, sur des carrefours de ponts à plus de neuf cases du seuil et à l'écart les uns
+des autres ; le tirage ne dépend que de la graine du lieu, donc une partie reprise les retrouve. Ils ne passent que par
+les ponts (jamais une salle : les lieux que le récit nomme restent sûrs), errent, et ne prennent en chasse qu'à six
+cases, à demi-pas. Chaque coup ôte un voile (`R.VOILES`, de 2 à 4) ; sans voile, l'égrégore se dissipe : le groupe
+reçoit six dixièmes de l'expérience d'un combat, le Recueil le connaît, et un drapeau du chapitre (`_meute_<graine>_<i>`)
+l'empêche de revenir. S'il rejoint le groupe sur un pont, c'est un combat ordinaire. Après une remontée au chrono, plus
+rien ne rôde (`_meutes_off`) jusqu'à la prochaine descente que décide le récit : on ne revient pas chercher des combats
+au chrono. *Dans la descente du râwî*, un coup sonne et repousse, rien de plus ; lame forgée en main et accompagné
+(`R.peutFaireFace`), chaque coup entame une idée noire (`R.TENUE`, de 3 à 6) jusqu'à la dissiper — un mal du cœur, lui,
+ne s'entame pas. La première fois que quelque chose approche, le jeu donne la leçon (« Frapper ce qui rôde », au
+Recueil). `tools/descente.js`, section C, éprouve tout cela.
+
 ## Les personnages : `src/core/sprites.js`
 
 Un personnage est dessiné par le code, en deux tailles, à partir de la même description (`look` : coiffe, manteau,
@@ -305,6 +344,27 @@ tenues du râwî, les quatorze coiffes sous chaque manteau, les variantes d'équ
 `node v2/tools/silhouettes.js planches [modèles.png]` écrit des planches agrandies dans `.smoke/silhouettes/` : la
 comparaison avec les modèles, les héros, les coiffes, la marche et les poses, l'équipement. Tout changement de dessin
 se relit là, puis sur une capture du jeu.
+
+### Le rayonnement d'un Compagnon
+
+Chaque Compagnon a une couleur qui lui est propre : `D.RAYONS` (`defs.js`), un nom sans accent ni apostrophe → une
+couleur ; `D.rayon(nom)` la retrouve d'après le nom tel que les récits l'écrivent (« 'Alî », « 'Alî ibn Abî Tâlib »), en
+prenant la plus longue entrée qui commence ce nom. Quand un récit s'enregistre, `I.rayonner` (`base.js`) la pose sur
+l'apparence de ses héros et de ses personnages de type `compagnon` (`look.rayon`) : **un fichier de saga n'écrit jamais
+cette couleur**, et un personnage de fiction n'en reçoit pas. En dessin fin (`gfx.D > 1`), `grand()` peint alors le
+voile d'un cœur blanc puis de cette couleur — toujours une seule surface, sans trait ; la carte éclaire le personnage
+de la même teinte (`lueur()`, `world.js`), son étiquette en est soulignée (`ui.js`), et le combat s'en sert pour le
+reconnaître (`ray` : nom, sceau, ordre des tours), la couleur de sa Lumière restant celle des effets (`color`). En
+dessin d'origine, rien de tout cela ne joue. Les petits sprites ne dépendent pas de `rayon` : `silhouettes.js` cherche
+leur empreinte sans lui. **Ajouter un Compagnon**, c'est ajouter sa ligne à `D.RAYONS` — une couleur proposée au
+décideur, comme les autres (D159).
+
+### En combat : toucher celui que l'on vise
+
+`battle.js` sait qui se tient sous un point de la scène (`sous(x, y)`, en points logiques : la boîte du dessin de
+l'égrégore, ou les 32 × 48 de l'un des nôtres). Pendant le choix d'une cible, `I.battle.touche(x, y)` le choisit et
+`I.battle.survol(x, y)` le montre ; `ui.js` leur passe les clics et le survol de la scène. `I.battle.places()` dit aux
+outils où se tient chacun et qui peut être choisi : `tools/doigt.js` s'en sert pour toucher l'égrégore lui-même (D158).
 
 ## Les règles du contenu : `src/core/regles.js`
 
