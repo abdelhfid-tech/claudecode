@@ -3,3 +3,8 @@ node_modules/
 .claude/worktrees/
 # le livret en PDF se refait par : node tools/promo.js pdf (une vingtaine de Mo, non versionné)
 promo/livret.pdf
+# les shorts se refont par : node v2/tools/shorts.js (films et prises non versionnés) ;
+# les plans d'ambiance générés par IA n'entrent pas dans le dépôt
+promo/shorts/films/
+promo/shorts/plans-ia/
+promo/shorts/.prises/
