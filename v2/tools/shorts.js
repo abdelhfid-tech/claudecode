@@ -41,7 +41,10 @@ const CSS = `
 html, body { background: #06050d !important; }
 body { padding-left: 0 !important; padding-right: 0 !important; }
 #app { position: absolute !important; left: 0 !important; top: var(--film-haut, 0px) !important; width: ${L}px !important; height: var(--film-app, ${H}px) !important; padding-top: 0 !important; }
-#pad { display: none !important; }
+body:not(.f-pad) #pad { display: none !important; }
+body.f-rangees #battle .heroes { display: none !important; }
+body.f-panneau #battle .panel { visibility: hidden !important; }
+body.f-bandeau #battle .banner { visibility: hidden !important; }
 #stage { box-shadow: 0 0 0 1px rgba(233, 200, 119, .22) !important; }
 body.f-boutons #menubtn, body.f-boutons #helpbtn, body.f-boutons #zoombtn, body.f-boutons #buildbtn { visibility: hidden !important; }
 body.f-annonces #toasts { visibility: hidden !important; }
@@ -54,8 +57,9 @@ body.f-titre #title .vmenu, body.f-titre #title .foot, body.f-titre #title .coin
 #film-ia { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; }
 #film-ombre { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6, 5, 13, .55), rgba(6, 5, 13, .1) 30%, rgba(6, 5, 13, .1) 60%, rgba(6, 5, 13, .7)); opacity: 0; }
 #film-noir { position: absolute; inset: 0; background: #000; opacity: 0; }
+.film-doigt { position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; border: 2px solid rgba(255, 246, 220, .95); background: rgba(255, 246, 220, .22); box-shadow: 0 0 14px rgba(0, 0, 0, .6); opacity: 0; }
 #film-legendes { position: absolute; inset: 0; }
-.film-leg { position: absolute; left: 20px; right: 20px; text-align: center; text-wrap: balance; opacity: 0; color: #f3e7cc; font-family: "Alegreya", Georgia, serif; font-size: 21px; line-height: 1.2; text-shadow: 0 1px 2px #000, 0 0 12px rgba(0, 0, 0, .95), 0 0 26px rgba(0, 0, 0, .8); }
+.film-leg { position: absolute; left: 20px; right: 20px; text-align: center; text-wrap: balance; opacity: 0; color: #f3e7cc; font-family: "Alegreya", Georgia, "Amiri", serif; font-size: 22px; line-height: 1.2; text-shadow: 0 1px 2px #000, 0 0 12px rgba(0, 0, 0, .95), 0 0 26px rgba(0, 0, 0, .8); }
 .film-leg.accroche { font-family: "Cinzel", "Times New Roman", serif; font-weight: 700; font-size: 31px; letter-spacing: .03em; line-height: 1.12; color: #e9c877; }
 .film-leg.titre { font-family: "Cinzel", "Times New Roman", serif; font-weight: 700; font-size: 23px; letter-spacing: .06em; line-height: 1.15; color: #e9c877; }
 .film-leg.italique { font-style: italic; color: #fff6dc; }
@@ -91,12 +95,17 @@ function installer() {
     if (o.taille) el.style.fontSize = o.taille + 'px';
     $('#film-legendes').appendChild(el); const c = { el, t0: o.t0, t1: o.t1, fi: o.fi, fo: o.fo, dy: o.dy }; F.calques.push(c); return el.getBoundingClientRect().toJSON(); };
   F.effacer = () => { F.calques.forEach(c => c.el.remove()); F.calques = []; };
+  F.defiler = (sel, vers, d) => { const el = $(sel); if (el) F.defile = { el, de: el.scrollTop, vers, t0: F.t, d }; };
+  // le doigt du joueur : un rond qui se pose (tap) ou qui glisse de (x0, y0) à (x1, y1)
+  F.doigt = (x0, y0, x1, y1, d, dans) => { const el = document.createElement('div'); el.className = 'film-doigt'; hote.insertBefore(el, $('#film-noir')); (F.doigts = F.doigts || []).push({ el, x0, y0, x1: x1 === undefined ? x0 : x1, y1: y1 === undefined ? y0 : y1, t0: F.t + (dans || 0), d: d || 0.45, tap: x1 === undefined }); };
   // une image du film : t, en secondes de film
   F.pas = async t => { F.t = t; F.n++; F.anims();
     F.calques = F.calques.filter(c => { if (t > c.t1 + 0.05) { c.el.remove(); return false; }
       const a = doux(borne((t - c.t0) / c.fi, 0, 1)) * doux(borne((c.t1 - t) / c.fo, 0, 1)); c.el.style.opacity = a.toFixed(3); c.el.style.transform = 'translateY(' + ((1 - doux(borne((t - c.t0) / c.fi, 0, 1))) * c.dy).toFixed(2) + 'px)'; return true; });
     $('#film-noir').style.opacity = valeur('noir').toFixed(3); $('#film-ombre').style.opacity = valeur('ombre').toFixed(3);
     if (F.rampes.zoom && F.rampes.zoom.d) { const z = valeur('zoom'); I.ui.zoomer(z, false); }
+    if (F.defile) { const q = F.defile, k = doux(borne((t - q.t0) / q.d, 0, 1)); q.el.scrollTop = q.de + (q.vers - q.de) * k; if (k >= 1) F.defile = null; }
+    F.doigts = (F.doigts || []).filter(q => { const k = (t - q.t0) / q.d; if (k >= 1) { q.el.remove(); return false; } const x = q.x0 + (q.x1 - q.x0) * doux(borne(k, 0, 1)), y = q.y0 + (q.y1 - q.y0) * doux(borne(k, 0, 1)); q.el.style.left = x + 'px'; q.el.style.top = y + 'px'; q.el.style.opacity = (k < 0 ? 0 : Math.min(1, k * 8) * Math.min(1, (1 - k) * 4)).toFixed(3); q.el.style.transform = 'scale(' + (q.tap ? 0.7 + 0.5 * borne(k, 0, 1) : 1).toFixed(3) + ')'; return true; });
     const img = $('#film-ia');
     if (F.ia) { const q = F.ia, i = Math.max(1, Math.min(q.n, 1 + Math.floor((t - q.t0) * q.ips + 1e-6))), src = q.base + String(i).padStart(4, '0') + '.jpg';
       img.hidden = false; img.style.opacity = (q.fondu ? doux(borne((q.t1 - t) / q.fondu, 0, 1)) : 1).toFixed(3);
@@ -106,6 +115,7 @@ function installer() {
   };
   F.cadre = (haut, app) => { const st = document.documentElement.style; st.setProperty('--film-haut', haut + 'px'); st.setProperty('--film-app', app + 'px'); window.dispatchEvent(new Event('resize')); const r = $('#stage').getBoundingClientRect(); return [r.top, r.height]; };
   F.propre = o => { const b = document.body.classList; ['boutons', 'annonces', 'boussole', 'hud', 'noms'].forEach(k => b.toggle('f-' + k, !o[k])); F.sansCible = o.cible === false;
+    b.toggle('f-pad', !!o.pad); b.toggle('f-rangees', !o.rangees); b.toggle('f-panneau', o.panneau === false); b.toggle('f-bandeau', o.bandeau === false);
     const m = W.map; if (m) { if (!o.carte) { if (m.mini) m._mini = m.mini; m.mini = null; } else if (m._mini) { m.mini = m._mini; m._mini = null; } } };
   // une réplique du jeu, retrouvée par un fragment : ['say' | 'nar' | 'quote' | 'title', …] tel que le récit l'écrit
   F.trouver = (saga, frag) => { const vu = new Set(), but = sansApo(frag); let r = null;
@@ -167,8 +177,10 @@ class Plateau {
   }
   ev(fn, arg) { return this.p.evaluate(fn, arg); }
   /* --- le temps --- */
+  // le pas du jeu par image : 1 = allure normale ; 0,5 = ralenti (le jeu avance d'un seul battement par image)
+  ralenti(k) { this.pasJeu = Math.max(16, Math.round(PAS * (k || 1) / 16) * 16); }
   async image() {
-    await this.p.clock.runFor(PAS);
+    await this.p.clock.runFor(this.pasJeu || PAS);
     await this.p.evaluate(t => window.__film.pas(t), this.t);
     if (this.ff) { const buf = await this.p.screenshot({ type: 'png' }); if (!this.ff.stdin.write(buf)) await new Promise(r => this.ff.stdin.once('drain', r)); }
     this.n++;
@@ -222,6 +234,18 @@ class Plateau {
   // toucher un point du lieu (en points du monde), ou un personnage : le doigt du joueur
   async toucherMonde(wx, wy) { const q = await this.ev(a => window.__film.ecran(a[0], a[1]), [wx, wy]); await this.p.touchscreen.tap(q[0], q[1]); return q; }
   async toucherPnj(id) { const n = await this.ev(id => { const n = window.ISNAD.world.npcs.find(n => n.id === id); return n ? [n.x, n.y] : null; }, id); if (!n) { this.dit('! personnage absent : ' + id); return null; } return this.toucherMonde(n[0], n[1] - 10); }
+  // ouvre un combat dans le chapitre en cours ; une idole se déclare (la page de préparation est passée) ; rend la main quand les commandes sont là
+  async combat(groupe, o) { o = o || {};
+    await this.ev(([g, o]) => { window.ISNAD.battle.start({ group: g, bg: o.fond || 'noos', boss: !!o.idole, sansReprise: true }); }, [groupe, o]);
+    if (o.idole) { await this.jusqua(() => !!document.querySelector('.screen:not([hidden]) button, #choice:not([hidden]) .opt'), null, 8000); await this.avancer(300); await this.touche('Enter'); }
+    await this.jusqua(() => !!document.querySelector('#battle .cmd .mi'), null, 30000); await this.avancer(o.attente === undefined ? 400 : o.attente); }
+  // le combat se joue tout seul (comme le joueur de test), à l'allure normale : de l'action, sans menu qui attend
+  auto(on) { return this.ev(on => { const I = window.ISNAD; I.debug.auto = !!on; I.speed = 1; }, on !== false); }
+  defiler(sel, vers, sec) { return this.ev(([s, v, d]) => window.__film.defiler(s, v, d), [sel, vers, sec]); }
+  // montre le doigt : un toucher en (x, y), ou un glissé jusqu'à (x1, y1) — en points de l'écran
+  doigt(x, y, x1, y1, sec, dans) { return this.ev(a => window.__film.doigt(...a), [x, y, x1, y1, sec, dans]); }
+  // ce que le jeu dit d'un récit : son nom, sa Lumière, ses années, sa phrase
+  recit(id) { return this.ev(id => { const g = window.ISNAD.sagas[id]; return { nom: g.name, epithete: g.epithet, lumiere: g.lightName, annees: g.years, phrase: g.tagline }; }, id); }
   // passe ce qui est affiché (carton, dialogue) sans le filmer
   async passer(n) { for (let i = 0; i < (n || 1); i++) { await this.touche('Enter'); await this.avancer(420); } }
   // avance le récit sans le filmer jusqu'à la réplique qui contient ce fragment, écrite en entier
