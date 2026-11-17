@@ -20,9 +20,9 @@
      des zones que les applications recouvrent. L'adresse du carton final n'est écrite qu'à un endroit : v2/tools/promotion.js.
    · Le son : des percussions seules. Le scénario écrit ses mesures ; le moteur de son du jeu les rend hors ligne
      (ISNAD.audio.render), sans mélodie ni voix (exigence 9).
-   · Le plan final : la mention du soutien et le logo (v2/tools/promotion.js), portés par la fanfare du jeu (la piste
-     « victoire », ses neuf premiers temps, rendue hors ligne : cuivres et percussions, aucune voix). Il s'ajoute au bout
-     du film sans le réencoder : l'image et le son du film restent identiques, et l'outil le vérifie.
+   · Le plan final : la mention du soutien et le logo (v2/tools/promotion.js), sur les percussions du short, jusqu'à la
+     dernière image (le décideur a écarté la musique, le 17 novembre). Il s'ajoute au bout du film sans le réencoder :
+     l'image et le son du film restent identiques, et l'outil le vérifie.
      node v2/tools/shorts.js fin [NN] [essai]  complète un short déjà livré (promo/shorts/films/livres/), sans le refilmer.
    · Un plan d'ambiance généré par IA peut ouvrir un short (promo/shorts/plans-ia/, hors du dépôt) : un paysage, un
      lieu vide — jamais une personne, un animal, un texte ni un lieu saint. S'il manque, le short s'ouvre sur le jeu.
@@ -347,37 +347,26 @@ function monter(scn, video, wav, duree, sortie) {
 function planche(film, duree, sortie, n) { n = n || 12; const col = 6, pas = duree / n;
   ffmpeg(['-i', film, '-vf', `fps=1/${pas.toFixed(4)}:start_time=${(pas / 2).toFixed(3)}:round=down,scale=300:-1,tile=${col}x${Math.ceil(n / col)}:padding=6:color=0x06050d`, '-frames:v', '1', '-q:v', '3', sortie]); }
 
-/* ---------- le plan final : la mention du soutien, la fanfare, l'assemblage ---------- */
+/* ---------- le plan final : la mention du soutien, ses percussions, l'assemblage ---------- */
 const LIVRES = path.join(FILMS, 'livres');              // les shorts tels qu'ils ont été livrés : on n'y touche pas
-const SOUTIEN_SEC = 4.8, SOUTIEN_FONDU = 0.5, SOUTIEN_ENTREE = 0.45;   // durée du plan ; fondu depuis la fin du film ; entrée de la phrase (sur la cymbale)
-const FANFARE = { piste: 'victoire', temps: 9 };        // la fanfare du jeu : le thème de la Chaîne aux cuivres, ses neuf premiers temps
-const CIBLE = -16, PLAFOND = -1.5;                       // niveau de la fanfare (LUFS) et crête (dB) : un peu au-dessus des percussions (≈ −19 LUFS)
-function niveau(fichier, filtre) {
-  const r = spawnSync('ffmpeg', ['-hide_banner', '-nostats', '-i', fichier, '-vn', '-af', (filtre ? filtre + ',' : '') + 'ebur128=peak=true', '-f', 'null', '-'], { encoding: 'utf8' }), t = (r.stderr || '').split('Summary:').pop();
-  const i = /I:\s+(-?[\d.]+) LUFS/.exec(t), c = /Peak:\s+(-?[\d.]+) dBFS/.exec(t); return { lufs: i ? parseFloat(i[1]) : -70, crete: c ? parseFloat(c[1]) : -70 };
-}
-// la fanfare, rendue hors ligne par le séquenceur du jeu, avec ses timbres, son bus et son limiteur
-async function fanfare(browser, sec) {
-  const c = await browser.newContext(), p = await c.newPage(); await p.goto(JEU);
-  await p.waitForFunction(n => window.ISNAD && window.ISNAD.audio && window.ISNAD.music && window.ISNAD.music[n], FANFARE.piste, { timeout: 15000 });
-  const b64 = await p.evaluate(async ([nom, temps, sec]) => { const I = window.ISNAD, src = I.music[nom];
-    // seulement la fanfare : les notes qui commencent avant `temps` ; la boucle douce qui suit n'est pas jouée
-    const voices = src.voices.map(v => { let t = 0; const garde = []; String(v.notes).trim().split(/\s+/).forEach(tk => { const k = tk.match(/^(.+)\/(\d*\.?\d+)$/); if (!k) return; if (t < temps - 1e-6) garde.push(tk); t += parseFloat(k[2]); }); return Object.assign({}, v, { notes: garde.join(' ') }); });
-    I.registerMusic('film', { bpm: src.bpm, beats: src.beats, intro: 0, voices }); const buf = await I.audio.render('film', sec), n = buf.length, sr = buf.sampleRate, g = buf.getChannelData(0), d = buf.numberOfChannels > 1 ? buf.getChannelData(1) : g;
-    const o = new DataView(new ArrayBuffer(44 + n * 4)), w = (q, s) => { for (let i = 0; i < s.length; i++) o.setUint8(q + i, s.charCodeAt(i)); };
-    w(0, 'RIFF'); o.setUint32(4, 36 + n * 4, true); w(8, 'WAVEfmt '); o.setUint32(16, 16, true); o.setUint16(20, 1, true); o.setUint16(22, 2, true); o.setUint32(24, sr, true); o.setUint32(28, sr * 4, true); o.setUint16(32, 4, true); o.setUint16(34, 16, true); w(36, 'data'); o.setUint32(40, n * 4, true);
-    for (let i = 0; i < n; i++) { o.setInt16(44 + i * 4, Math.max(-1, Math.min(1, g[i])) * 32767, true); o.setInt16(46 + i * 4, Math.max(-1, Math.min(1, d[i])) * 32767, true); }
-    let s = ''; const u = new Uint8Array(o.buffer); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); }, [FANFARE.piste, FANFARE.temps, sec + 0.3]);
-  await c.close();
-  const wav = path.join(PRISES, 'soutien.fanfare.wav'); fs.writeFileSync(wav, Buffer.from(b64, 'base64')); return wav;
-}
-// le plan du soutien, filmé une fois par invocation : { video, wav }
-async function planSoutien() {
+const SOUTIEN_SEC = 4.8, SOUTIEN_FONDU = 0.5, SOUTIEN_ENTREE = 0.45;   // durée du plan (deux mesures à 100 à la noire) ; fondu depuis la fin du film ; entrée de la phrase
+// les percussions du plan final, dans la langue des shorts (pas à pas, un pas = un quart de temps) : le grand tambour sur le
+// fondu, un balancement de duff sous la phrase et le logo, et l'on s'arrête sur un dum. Rien d'autre : ni mélodie ni voix.
+const SOUTIEN_RYTHME = { a: 'b.....t.D...t...D.....t.D.......', b: '....r.......r.......r...........' };
+// la crête d'un son (dB) : le plan final frappe aussi fort que les percussions du film qu'il prolonge
+function crete(f) { const r = spawnSync('ffmpeg', ['-hide_banner', '-nostats', '-i', f, '-vn', '-af', 'volumedetect', '-f', 'null', '-'], { encoding: 'utf8' }), m = /max_volume: (-?[\d.]+) dB/.exec(r.stderr || ''); return m ? parseFloat(m[1]) : -90; }
+// le plan du soutien, filmé une fois par invocation, et ses percussions rendues par le moteur de son du jeu, à chaque tempo
+// demandé (celui des shorts) : { video, percussions: { bpm: wav } }
+async function planSoutien(tempos) {
   const s = new Plateau({ id: 'soutien', graine: 1 }, {}); await s.ouvrir();
   try { await s.soutien(SOUTIEN_SEC); } finally { if (s.ff) { s.ff.stdin.end(); await s.ffFin; } }
-  const wav = await fanfare(s.browser, SOUTIEN_SEC); await s.browser.close();
+  const c = await s.browser.newContext(), p = await c.newPage(); await p.goto(JEU);
+  await p.waitForFunction(() => window.ISNAD && window.ISNAD.audio && window.ISNAD.registerMusic, null, { timeout: 15000 });
+  const percussions = {};
+  for (const bpm of [...new Set(tempos)]) percussions[bpm] = await Plateau.prototype.bande.call({ scn: { id: 'soutien-' + bpm, bpm, rythme: [SOUTIEN_RYTHME] }, t: SOUTIEN_SEC }, p);
+  await s.browser.close();
   if (s.erreurs.length) throw new Error('plan du soutien : ' + [...new Set(s.erreurs)].join(' | ').slice(0, 400));
-  return { video: s.video, wav };
+  return { video: s.video, percussions };
 }
 // empreintes d'un film, image par image et son : pour prouver que la partie livrée n'a pas changé
 function empreintes(f, n, sec) {
@@ -386,15 +375,15 @@ function empreintes(f, n, sec) {
   return { v, a: require('crypto').createHash('md5').update(a).digest('hex'), octets: a.length };
 }
 // le film complet = le film (recopié tel quel, sans réencodage) + le plan final (encodé avec les mêmes réglages)
-function completer(id, corps, plan, sortie) {
+function completer(id, corps, plan, sortie, bpm) {
   const st = sonde(corps), v = st.find(x => x.codec_type === 'video') || {}, a = st.find(x => x.codec_type === 'audio'), n = +v.nb_frames, duree = parseFloat(v.duration);
   if (v.width !== 1080 || v.height !== 1920 || v.r_frame_rate !== IPS + '/1' || !a) throw new Error(id + ' : le film n’a pas le format attendu');
   const derniere = path.join(PRISES, id + '.derniere.png'), queue = path.join(PRISES, id + '.soutien.mp4'), liste = path.join(PRISES, id + '.liste.txt');
   ffmpeg(['-sseof', '-0.3', '-i', corps, '-update', '1', derniere]);
-  const brut = niveau(plan.wav, 'atrim=start=0.1'), gain = Math.min(30, CIBLE - brut.lufs);
-  ffmpeg(['-loop', '1', '-framerate', String(IPS), '-t', String(SOUTIEN_FONDU), '-i', derniere, '-i', plan.video, '-i', plan.wav, '-filter_complex',
+  const wav = plan.percussions[bpm], cible = crete(corps), gain = Math.min(30, cible - crete(wav));
+  ffmpeg(['-loop', '1', '-framerate', String(IPS), '-t', String(SOUTIEN_FONDU), '-i', derniere, '-i', plan.video, '-i', wav, '-filter_complex',
     `[0:v]fps=${IPS},format=yuv420p,settb=AVTB[a];[1:v]fps=${IPS},format=yuv420p,settb=AVTB[b];[a][b]xfade=transition=fade:duration=${SOUTIEN_FONDU}:offset=0,format=yuv420p[v];` +
-    `[2:a]atrim=start=0.1,asetpts=PTS-STARTPTS,volume=${gain.toFixed(2)}dB,afade=t=out:st=${(SOUTIEN_SEC - 0.6).toFixed(2)}:d=0.6,alimiter=limit=${Math.pow(10, PLAFOND / 20).toFixed(3)}:level=0:attack=4:release=60,apad,atrim=duration=${SOUTIEN_SEC}[s]`,
+    `[2:a]volume=${gain.toFixed(2)}dB,afade=t=out:st=${(SOUTIEN_SEC - 0.6).toFixed(2)}:d=0.6,alimiter=limit=${Math.min(1, Math.pow(10, cible / 20)).toFixed(3)}:level=0:attack=4:release=60,apad,atrim=duration=${SOUTIEN_SEC}[s]`,   // comme dans les films : le son part avec l'image, au dixième de seconde près
     '-map', '[v]', '-map', '[s]', '-c:v', 'libx264', '-preset', 'slow', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', String(IPS), '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2',
     '-video_track_timescale', String(IPS * 512), '-t', String(SOUTIEN_SEC), '-movflags', '+faststart', queue]);
   fs.writeFileSync(liste, "file '" + corps.replace(/'/g, "'\\''") + "'\nfile '" + queue.replace(/'/g, "'\\''") + "'\n");
@@ -406,7 +395,7 @@ function completer(id, corps, plan, sortie) {
   const memeImage = avant.v.length === n && avant.v.every((h, i) => h === apres.v[i]), memeSon = avant.a === apres.a && avant.octets > 0;
   const queueJuste = q.v.length > 0 && q.v.every((h, i) => h === tout.v[n + i]);
   const decode = spawnSync('ffmpeg', ['-v', 'error', '-i', sortie, '-f', 'null', '-'], { encoding: 'utf8' }).stderr.trim();
-  return { duree: duree + SOUTIEN_SEC, memeImage, memeSon, queueJuste, decode, fanfare: { brut: brut.lufs, gain }, mesure: niveau(queue) };
+  return { duree: duree + SOUTIEN_SEC, memeImage, memeSon, queueJuste, decode, cible, crete: crete(queue) };
 }
 
 module.exports = { Plateau, PRISES, FILMS, IPS };
@@ -418,16 +407,17 @@ if (require.main === module) (async () => {
   let anomalies = 0;
   // « fin » : chaque short livré (promo/shorts/films/livres/) reçoit le plan final du soutien, sans être refilmé ni réencodé
   if (args.includes('fin')) {
-    const t0 = Date.now(), plan = await planSoutien(); console.log(`plan du soutien filmé, fanfare rendue (${((Date.now() - t0) / 1000).toFixed(0)} s)`);
+    const tempo = f => require(path.join(SCN, f)).bpm || 100;
+    const t0 = Date.now(), plan = await planSoutien(choisis.map(tempo)); console.log(`plan du soutien filmé, percussions rendues (${((Date.now() - t0) / 1000).toFixed(0)} s)`);
     for (const f of choisis) {
       const id = f.replace(/\.js$/, ''), corps = path.join(LIVRES, id + '.mp4'), sortie = path.join(FILMS, id + (args.includes('essai') ? '.essai' : '') + '.mp4');
       if (!fs.existsSync(corps)) { anomalies++; console.log(`  ✗ ${id} : pas de film livré dans ${path.relative(RACINE, LIVRES)}/`); continue; }
       try {
-        const r = completer(id, corps, plan, sortie), st = sonde(sortie), v = st.find(x => x.codec_type === 'video') || {}, a = st.find(x => x.codec_type === 'audio');
-        const bon = r.memeImage && r.memeSon && r.queueJuste && !r.decode && v.width === 1080 && v.height === 1920 && v.r_frame_rate === IPS + '/1' && !!a && r.mesure.crete <= PLAFOND + 0.3;
+        const r = completer(id, corps, plan, sortie, tempo(f)), st = sonde(sortie), v = st.find(x => x.codec_type === 'video') || {}, a = st.find(x => x.codec_type === 'audio');
+        const bon = r.memeImage && r.memeSon && r.queueJuste && !r.decode && v.width === 1080 && v.height === 1920 && v.r_frame_rate === IPS + '/1' && !!a && Math.abs(r.crete - r.cible) <= 1;
         if (!bon) anomalies++;
         const vu = SOUTIEN_SEC + 1.2; ffmpeg(['-sseof', '-' + vu.toFixed(2), '-i', sortie, '-vf', `fps=6/${vu.toFixed(2)},scale=300:-1,tile=6x1:padding=6:color=0x06050d`, '-frames:v', '1', '-q:v', '3', sortie.replace(/\.mp4$/, '.fin.jpg')]);   // la fin, à relire
-        console.log(`  ${bon ? '✓' : '✗'} ${path.relative(RACINE, sortie)} — ${r.duree.toFixed(1)} s · partie livrée : ${r.memeImage ? 'images identiques' : 'IMAGES DIFFÉRENTES'}, ${r.memeSon ? 'son identique' : 'SON DIFFÉRENT'} · plan final : ${r.queueJuste ? 'décodé juste' : 'MAL DÉCODÉ'}${r.decode ? ' · ' + r.decode.slice(0, 200) : ''} · fanfare ${r.mesure.lufs.toFixed(1)} LUFS, crête ${r.mesure.crete.toFixed(1)} dB · ${(fs.statSync(sortie).size / 1e6).toFixed(1)} Mo`);
+        console.log(`  ${bon ? '✓' : '✗'} ${path.relative(RACINE, sortie)} — ${r.duree.toFixed(1)} s · partie livrée : ${r.memeImage ? 'images identiques' : 'IMAGES DIFFÉRENTES'}, ${r.memeSon ? 'son identique' : 'SON DIFFÉRENT'} · plan final : ${r.queueJuste ? 'décodé juste' : 'MAL DÉCODÉ'}${r.decode ? ' · ' + r.decode.slice(0, 200) : ''} · percussions du plan final : crête ${r.crete.toFixed(1)} dB (le film : ${r.cible.toFixed(1)} dB) · ${(fs.statSync(sortie).size / 1e6).toFixed(1)} Mo`);
       } catch (e) { anomalies++; console.log('  ✗ ' + id + ' : ' + e.message); }
     }
     console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ ${choisis.length} short(s) complété(s) — dans promo/shorts/films/ ; les films livrés restent dans promo/shorts/films/livres/`);
