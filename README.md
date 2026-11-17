@@ -287,16 +287,19 @@ Quatre outils travaillent à côté du jeu, sans en changer un fichier. Rien de 
 ```sh
 node v2/tools/shorts.js             # seize films verticaux (1080 × 1920), le jeu filmé image par image
 node v2/tools/shorts.js 01 brouillon   # un seul, en demi-définition, pour régler son scénario
+node v2/tools/shorts.js fin         # les shorts livrés reçoivent le plan final du soutien, sans être refilmés
 node v2/tools/galerie.js            # une page qui montre les films avec leur texte d'accompagnement
 node v2/tools/jouable.js essai      # la démo jouable, assemblée puis jouée au doigt de bout en bout
-node v2/tools/livret.js             # le livret court : douze pages au format d'un téléphone, et son PDF
+node v2/tools/livret.js             # le livret court : treize pages au format d'un téléphone, et son PDF
 ```
 
 Un short est un scénario (`promo/shorts/NN-nom.js`) : où aller dans le jeu, quoi faire, quelles phrases poser. Les
 répliques sont celles du jeu, retrouvées par un fragment et dites par le moteur ; le son est fait de percussions
 seules, rendues par le moteur de son du jeu. Les shorts 1 à 10 présentent le jeu, le 11 la noosphère, les shorts 12 à
 16 une saga chacun : ces cinq-là partagent une base (`promo/shorts/_saga.js`) et ne montrent que ce que le jeu dit
-lui-même. L'adresse, la devise et la réserve s'écrivent à un seul endroit : `v2/tools/promotion.js`.
+lui-même. Chaque short finit sur un plan à part, et le livret court sur une page : « Une initiative soutenue par
+l'Institut Islam Actuel », avec le logo de l'Institut tel qu'il l'a fourni (`promo/partenaires/`). L'adresse, la
+devise, la réserve et cette mention s'écrivent à un seul endroit : `v2/tools/promotion.js`.
 
 ## Sources
 

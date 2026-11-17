@@ -56,9 +56,9 @@ pas, c'est toujours la v2 » : rien de ce qui suit ne touche la version légère
 | E1 | sur un téléphone, l'image s'agrandit : deux doigts qui s'écartent, le bouton « × », le réglage « Image » ; d'office × 1,5 en hauteur, × 1,25 en largeur ; le combat garde son cadrage | **fait** (D167) ; au décideur de dire s'il veut aussi agrandir le combat |
 | E2 | sur un téléphone, les textes se lisent : « grand » d'office, un quatrième cran (« géant »), aucun texte sous dix points, les listes de choix tiennent à l'écran | **fait** (D168) |
 
-| S | seize shorts pour faire connaître le jeu — dix sur le jeu, un sur la noosphère, un par saga : le jeu filmé image par image sur un écran de téléphone (`v2/tools/shorts.js`, un scénario par film), percussions seules, deux plans d'ambiance générés par IA en ouverture | **fait** (D170 à D172, D176 à D178) ; sujets, légendes, paroles choisies et rythmes à valider ; rien n'est publié |
+| S | seize shorts pour faire connaître le jeu — dix sur le jeu, un sur la noosphère, un par saga : le jeu filmé image par image sur un écran de téléphone (`v2/tools/shorts.js`, un scénario par film), percussions seules, deux plans d'ambiance générés par IA en ouverture | **fait** (D170 à D172, D176 à D179) ; chaque film finit sur le plan du soutien de l'Institut Islam Actuel ; sujets, légendes, paroles choisies et rythmes à valider ; rien n'est publié |
 | J | une démo jouable d'une quarantaine de secondes : le labyrinthe, un combat, le bouton « Jouer » (`v2/tools/jouable.js`) | **fait** (D173) ; jouée au doigt de bout en bout par son contrôle |
-| L | un livret court pour présenter le jeu : douze pages au format d'un téléphone, images de la 2.x (`v2/tools/livret.js`) | **fait** (D174) ; textes à valider |
+| L | un livret court pour présenter le jeu : treize pages au format d'un téléphone, images de la 2.x, la dernière pour le soutien de l'Institut Islam Actuel (`v2/tools/livret.js`) | **fait** (D174, D180) ; textes à valider |
 
 *Promotion, 17 novembre : le jeu n'a pas changé (l'Artifact de la 2.x reste en version 6). Trois pages privées
 s'ajoutent — les shorts (dix, puis seize), la démo jouable, le livret court. Les films, la démo et le PDF se refont par

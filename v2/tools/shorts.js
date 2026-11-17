@@ -22,7 +22,8 @@
      (ISNAD.audio.render), sans mélodie ni voix (exigence 9).
    · Le plan final : la mention du soutien et le logo (v2/tools/promotion.js), sur les percussions du short, jusqu'à la
      dernière image (le décideur a écarté la musique, le 17 novembre). Il s'ajoute au bout du film sans le réencoder :
-     l'image et le son du film restent identiques, et l'outil le vérifie.
+     l'image et le son du film restent identiques, et l'outil le vérifie. Une prise complète le reçoit d'elle-même (sauf
+     si le scénario dit « soutien: false »).
      node v2/tools/shorts.js fin [NN] [essai]  complète un short déjà livré (promo/shorts/films/livres/), sans le refilmer.
    · Un plan d'ambiance généré par IA peut ouvrir un short (promo/shorts/plans-ia/, hors du dépôt) : un paysage, un
      lieu vide — jamais une personne, un animal, un texte ni un lieu saint. S'il manque, le short s'ouvre sur le jeu.
@@ -374,8 +375,10 @@ function empreintes(f, n, sec) {
   const a = spawnSync('ffmpeg', ['-v', 'error', '-i', f, '-map', '0:a', '-t', sec.toFixed(3), '-f', 's16le', '-ac', '2', '-ar', '48000', '-'], { maxBuffer: 1 << 28 }).stdout;
   return { v, a: require('crypto').createHash('md5').update(a).digest('hex'), octets: a.length };
 }
-// le film complet = le film (recopié tel quel, sans réencodage) + le plan final (encodé avec les mêmes réglages)
-function completer(id, corps, plan, sortie, bpm) {
+// le film complet = le film (recopié tel quel, sans réencodage) + le plan final (encodé avec les mêmes réglages que lui)
+const REGLAGES = { film: { preset: 'slow', crf: '17' }, brouillon: { preset: 'veryfast', crf: '23' } };   // ceux de Plateau.ouvrir
+function completer(id, corps, plan, sortie, bpm, reglages) {
+  reglages = reglages || REGLAGES.film;
   const st = sonde(corps), v = st.find(x => x.codec_type === 'video') || {}, a = st.find(x => x.codec_type === 'audio'), n = +v.nb_frames, duree = parseFloat(v.duration);
   if (v.width !== 1080 || v.height !== 1920 || v.r_frame_rate !== IPS + '/1' || !a) throw new Error(id + ' : le film n’a pas le format attendu');
   const derniere = path.join(PRISES, id + '.derniere.png'), queue = path.join(PRISES, id + '.soutien.mp4'), liste = path.join(PRISES, id + '.liste.txt');
@@ -384,7 +387,7 @@ function completer(id, corps, plan, sortie, bpm) {
   ffmpeg(['-loop', '1', '-framerate', String(IPS), '-t', String(SOUTIEN_FONDU), '-i', derniere, '-i', plan.video, '-i', wav, '-filter_complex',
     `[0:v]fps=${IPS},format=yuv420p,settb=AVTB[a];[1:v]fps=${IPS},format=yuv420p,settb=AVTB[b];[a][b]xfade=transition=fade:duration=${SOUTIEN_FONDU}:offset=0,format=yuv420p[v];` +
     `[2:a]volume=${gain.toFixed(2)}dB,afade=t=out:st=${(SOUTIEN_SEC - 0.6).toFixed(2)}:d=0.6,alimiter=limit=${Math.min(1, Math.pow(10, cible / 20)).toFixed(3)}:level=0:attack=4:release=60,apad,atrim=duration=${SOUTIEN_SEC}[s]`,   // comme dans les films : le son part avec l'image, au dixième de seconde près
-    '-map', '[v]', '-map', '[s]', '-c:v', 'libx264', '-preset', 'slow', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', String(IPS), '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2',
+    '-map', '[v]', '-map', '[s]', '-c:v', 'libx264', '-preset', reglages.preset, '-crf', reglages.crf, '-pix_fmt', 'yuv420p', '-r', String(IPS), '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2',
     '-video_track_timescale', String(IPS * 512), '-t', String(SOUTIEN_SEC), '-movflags', '+faststart', queue]);
   fs.writeFileSync(liste, "file '" + corps.replace(/'/g, "'\\''") + "'\nfile '" + queue.replace(/'/g, "'\\''") + "'\n");
   // -copyts : les horodatages du film sont gardés tels quels — sans cela, l'amorce du son AAC (1 024 échantillons) n'est
@@ -404,11 +407,11 @@ if (require.main === module) (async () => {
   const tous = fs.existsSync(SCN) ? fs.readdirSync(SCN).filter(f => /^\d\d-.*\.js$/.test(f)).sort() : [];
   const choisis = voulus.length ? tous.filter(f => voulus.some(v => f.startsWith(v) || f.includes(v))) : tous;
   if (!choisis.length) { console.log('Aucun scénario' + (voulus.length ? ' ne répond à « ' + voulus.join(' ') + ' »' : '') + ' dans promo/shorts/.'); process.exit(1); }
-  let anomalies = 0;
+  let anomalies = 0, plan = null;
   // « fin » : chaque short livré (promo/shorts/films/livres/) reçoit le plan final du soutien, sans être refilmé ni réencodé
   if (args.includes('fin')) {
     const tempo = f => require(path.join(SCN, f)).bpm || 100;
-    const t0 = Date.now(), plan = await planSoutien(choisis.map(tempo)); console.log(`plan du soutien filmé, percussions rendues (${((Date.now() - t0) / 1000).toFixed(0)} s)`);
+    const t0 = Date.now(); plan = await planSoutien(choisis.map(tempo)); console.log(`plan du soutien filmé, percussions rendues (${((Date.now() - t0) / 1000).toFixed(0)} s)`);
     for (const f of choisis) {
       const id = f.replace(/\.js$/, ''), corps = path.join(LIVRES, id + '.mp4'), sortie = path.join(FILMS, id + (args.includes('essai') ? '.essai' : '') + '.mp4');
       if (!fs.existsSync(corps)) { anomalies++; console.log(`  ✗ ${id} : pas de film livré dans ${path.relative(RACINE, LIVRES)}/`); continue; }
@@ -430,12 +433,23 @@ if (require.main === module) (async () => {
     await s.ouvrir();
     try { await scn.film(s); } catch (e) { anomalies++; console.log('  ✗ ' + (e.stack || e.message)); }
     const duree = s.t, wav = await s.fermer(), sortie = path.join(FILMS, scn.id + (brouillon ? '.brouillon' : '') + '.mp4');
-    monter(scn, s.video, wav, duree, sortie); planche(sortie, duree, sortie.replace(/\.mp4$/, '.jpg'), scn.planche);
+    // le film, puis — sauf si le scénario dit « soutien: false » — le plan final du soutien, ajouté sans réencoder le film
+    let fin = null;
+    if (scn.soutien === false) monter(scn, s.video, wav, duree, sortie);
+    else {
+      const corps = path.join(PRISES, scn.id + (brouillon ? '.brouillon' : '') + '.corps.mp4'); monter(scn, s.video, wav, duree, corps);
+      plan = plan || await planSoutien([100, ...choisis.map(f => require(path.join(SCN, f)).bpm || 100)]);
+      try { fin = completer(scn.id, corps, plan, sortie, scn.bpm || 100, brouillon ? REGLAGES.brouillon : REGLAGES.film); }
+      catch (e) { fin = { erreur: e.message }; }
+      if (fin.erreur || !fin.memeImage || !fin.memeSon || !fin.queueJuste || fin.decode) { anomalies++; console.log('  ✗ plan final : ' + (fin.erreur || [fin.memeImage ? '' : 'images différentes', fin.memeSon ? '' : 'son différent', fin.queueJuste ? '' : 'mal décodé', fin.decode].filter(Boolean).join(', '))); }
+    }
+    const total = fin && fin.duree ? fin.duree : duree;
+    planche(sortie, total, sortie.replace(/\.mp4$/, '.jpg'), scn.planche);
     const st = sonde(sortie), v = st.find(x => x.codec_type === 'video') || {}, a = st.find(x => x.codec_type === 'audio');
     const bon = v.width === 1080 && v.height === 1920 && v.r_frame_rate === IPS + '/1' && (!scn.rythme || !!a);
     if (!bon) anomalies++;
     if (s.erreurs.length) { anomalies++; console.log('  ✗ erreurs : ' + [...new Set(s.erreurs)].slice(0, 4).join(' | ').slice(0, 500)); }
-    console.log(`  ${bon ? '✓' : '✗'} ${path.relative(RACINE, sortie)} — ${v.width} × ${v.height}, ${v.r_frame_rate} i/s, ${duree.toFixed(1)} s, ${a ? 'son ' + a.codec_name : 'sans son'}, ${(fs.statSync(sortie).size / 1e6).toFixed(1)} Mo · filmé en ${((Date.now() - t0) / 1000).toFixed(0)} s`);
+    console.log(`  ${bon ? '✓' : '✗'} ${path.relative(RACINE, sortie)} — ${v.width} × ${v.height}, ${v.r_frame_rate} i/s, ${total.toFixed(1)} s${fin && fin.duree ? ' (dont le plan final : ' + SOUTIEN_SEC + ' s)' : ''}, ${a ? 'son ' + a.codec_name : 'sans son'}, ${(fs.statSync(sortie).size / 1e6).toFixed(1)} Mo · filmé en ${((Date.now() - t0) / 1000).toFixed(0)} s`);
     if (s.marques.length) console.log('  repères : ' + s.marques.map(m => m[0] + ' ' + m[1] + ' s').join(' · '));
     if (s.journal.length) console.log('  répliques du jeu : ' + s.journal.map(j => '« ' + j.slice(0, 70) + (j.length > 70 ? '…' : '') + ' »').join(' · '));
   }

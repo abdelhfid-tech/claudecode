@@ -1365,6 +1365,28 @@ pages privées de son compte.
   passage du héros : on ne filme qu'une marche. **Typographie :** sur le carton d'une parole, l'outil pose une espace
   insécable devant « : ; ? ! » et dans les guillemets, pour qu'aucun de ces signes n'ouvre une ligne ; pas un mot n'est
   changé. Le jeu, lui, pose là une espace ordinaire : à reporter dans le jeu (question 27).
+- [x] **D179. Le plan final du soutien.** *Demande du décideur, 17 novembre : « intègre à la fin de chaque short la
+  phrase "une initiative soutenue par l'institut islam actuel" avec le logo » ; ses choix : un plan à part, « l'Institut
+  Islam Actuel », « sans toucher aux shorts déjà livrés » ; essai sur le short 2, puis « ok lance pour les 15 autres ».*
+  Chaque short se termine par un plan de 4,8 s : depuis le carton ISNAD, un fondu vers un fond d'encre, puis « Une
+  initiative soutenue par l'Institut Islam Actuel » et le logo, tel que l'Institut l'a fourni — fond transparent, aucune
+  retouche. Le logo est versionné (`promo/partenaires/islam-actuel.webp`) : un fichier extérieur au jeu, fourni par le
+  décideur pour cet usage, qui n'entre pas dans le jeu. La phrase et le logo s'écrivent dans `v2/tools/promotion.js`.
+  **Le son.** Une fanfare du jeu (la piste « victoire ») a d'abord porté l'essai ; le décideur l'a écartée (« supprime la
+  musique […] garde juste les percussions jusqu'à la fin »). Le plan final est donc porté par des percussions de duff,
+  dans la langue des shorts, rendues par le moteur de son du jeu et réglées aussi fort que celles du film. La règle de
+  D169 tient : percussions seules. **Les films livrés ne sont pas touchés.** Ils sont gardés tels quels
+  (`promo/shorts/films/livres/`, hors du dépôt comme tous les films). `node v2/tools/shorts.js fin` leur ajoute le plan
+  final sans les réencoder et vérifie, film par film, que la partie livrée est identique, image par image et son
+  compris. Une prise complète reçoit le plan final d'elle-même. Les films passent de 17–29 s à 22–33 s. Remarque :
+  le carton ISNAD des films livrés finit sur une seconde de silence avant que les percussions ne reprennent sous la
+  mention ; les faire durer changerait la dernière seconde du son des films livrés — proposé, pas fait.
+- [x] **D180. La page du soutien dans le livret court.** *Demande du décideur (« intègre le soutien dans le livret ») ;
+  son choix : une page finale à part.* Le livret court passe de douze à treize pages : la treizième porte la même
+  phrase et le même logo, centrés sur le fond du livret. Les douze autres ne changent pas, hormis leur numéro de page
+  (« 2 / 13 »…) ; leurs images ne sont pas refaites. `v2/tools/livret.js` pose la phrase et le logo depuis
+  `v2/tools/promotion.js` (le logo en données dans la page, sans copie) ; son contrôle vérifie treize pages, la mention
+  et le logo chargé (« LIVRET CONFORME »). Le livret de la version légère (1.32) n'est pas concerné.
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
@@ -1456,7 +1478,7 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     convient-il comme titre du livre I ?
 24. Les personnages redessinés (D148) : la taille de la tête et du voile de lumière convient-elle ? Y a-t-il une coiffe
     ou une attitude à reprendre ? Le livret doit-il être remis en ligne avec ces personnages ?
-25. La promotion (D169 à D178) : les seize sujets, les accroches et les légendes conviennent-ils ? Les percussions,
+25. La promotion (D169 à D180) : les seize sujets, les accroches et les légendes conviennent-ils ? Les percussions,
     une fois écoutées ? Le short 6 peut-il montrer le carton d'une parole du Prophète ﷺ ? Faut-il d'autres plans
     d'ambiance — et, si oui, sur quel compte —, ou s'en passer ? Qui joue dans la démo : Idris, comme proposé ? Pour
     les shorts de saga (D178) : les cinq paroles et les cinq idoles ; l'idole qui parle (le Clan, le Slogan) ; la

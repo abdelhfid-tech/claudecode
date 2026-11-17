@@ -1,11 +1,13 @@
 #!/usr/bin/env node
-/* ISNAD 2.x — le livret de présentation : douze pages au format d'un écran de téléphone, en français.
+/* ISNAD 2.x — le livret de présentation : treize pages au format d'un écran de téléphone, en français.
    Usage : node v2/tools/livret.js           captures dans le jeu, assemblage, contrôle, PDF
            node v2/tools/livret.js textes    après une retouche du texte : assemble, contrôle et refait le PDF, sans captures
    Le gabarit est promo/livret-2x/livret.src.html. L'outil y pose :
      · l'adresse, la devise et la réserve (v2/tools/promotion.js) ;
      · les cinq sagas, lues dans les données du jeu (nom, Lumière, années, phrase) : rien n'y est retapé ;
-     · douze images, toutes capturées en jouant le jeu assemblé (v2/index.html) — aucune n'est inventée.
+     · douze images, toutes capturées en jouant le jeu assemblé (v2/index.html) — aucune n'est inventée ;
+     · la dernière page : la mention du soutien et le logo de l'Institut, tel qu'il l'a fourni (v2/tools/promotion.js,
+       promo/partenaires/), posé dans la page en données, sans copie ni retouche.
    Il écrit, dans promo/livret-2x/ : img/*.jpg, donnees.json, livret.html (à lire, à imprimer), livret.artifact.html (la
    même page, pour un Artifact privé) et livret.pdf (non versionné).
    Le contrôle écrit « LIVRET CONFORME », sinon « DÉBORDE » (un texte dépasse sa page), « ABSENT » (une image, une saga,
@@ -14,7 +16,7 @@ const fs = require('fs'), path = require('path');
 const { chromium } = require('playwright');
 const P = require('./promotion.js');
 const V2 = path.join(__dirname, '..'), RACINE = path.join(V2, '..'), DOS = path.join(RACINE, 'promo/livret-2x'), IMG = path.join(DOS, 'img');
-const PAGES = 12, LE = { 'Véracité': 'la', 'Justice': 'la', 'Courage': 'le', 'Miséricorde': 'la', 'Savoir': 'le' };
+const PAGES = 13, LE = { 'Véracité': 'la', 'Justice': 'la', 'Courage': 'le', 'Miséricorde': 'la', 'Savoir': 'le' };
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 /* ---------- 1. les images : capturées en jouant ---------- */
@@ -66,7 +68,10 @@ async function captures() {
 function assembler() {
   const src = fs.readFileSync(path.join(DOS, 'livret.src.html'), 'utf8'), D = JSON.parse(fs.readFileSync(path.join(DOS, 'donnees.json'), 'utf8'));
   const saga = id => { const g = D.sagas[id]; if (!g) return '<p>ABSENT : ' + id + '</p>'; return `<p class="saga"><b>${esc(g.nom)}</b><i>${LE[g.lumiere] || 'la'} ${esc(g.lumiere)} · ${esc(g.annees.split(' · ').pop())}</i><span>${esc(g.phrase)}</span></p>`; };
-  const corps = src.replace(/\{\{SAGA:(\w+)\}\}/g, (m, id) => saga(id)).replace(/\{\{(\w+)\}\}/g, (m, k) => (P[k] !== undefined ? esc(P[k]) : m));
+  // le soutien : la phrase, la part en or, et le logo (en données : la page n'appelle aucun fichier de plus)
+  const i = P.SOUTIEN.lastIndexOf(P.SOUTIEN_NOM), mention = i > 0 ? esc(P.SOUTIEN.slice(0, i).trim()) + ' <b>' + esc(P.SOUTIEN_NOM) + '</b>' : esc(P.SOUTIEN);
+  const logo = 'data:image/webp;base64,' + fs.readFileSync(path.join(RACINE, P.SOUTIEN_LOGO)).toString('base64');
+  const corps = src.replace('{{SOUTIEN_HTML}}', mention).replace('{{SOUTIEN_LOGO}}', logo).replace(/\{\{SAGA:(\w+)\}\}/g, (m, id) => saga(id)).replace(/\{\{(\w+)\}\}/g, (m, k) => (P[k] !== undefined ? esc(P[k]) : m));
   fs.writeFileSync(path.join(DOS, 'livret.artifact.html'), corps);
   fs.writeFileSync(path.join(DOS, 'livret.html'), '<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' + corps.replace(/<meta name="claude:[^>]*>\n/, '').replace(/(<\/style>\n)/, '$1</head>\n<body>\n') + '</body>\n</html>\n');
   return corps;
@@ -80,15 +85,18 @@ async function controler(corps) {
   await p.goto('file://' + path.join(DOS, 'livret.html')); await p.waitForTimeout(1200); await p.evaluate(() => document.fonts.ready);
   const r = await p.evaluate(() => ({ pages: document.querySelectorAll('.page').length, large: document.documentElement.scrollWidth - innerWidth,
     deborde: [...document.querySelectorAll('.page')].filter(g => { const f = g.querySelector('.feuille'); return f.scrollHeight > f.clientHeight + 1 || f.scrollWidth > f.clientWidth + 1; }).map(g => g.id + ' (' + (g.querySelector('.feuille').scrollHeight - g.querySelector('.feuille').clientHeight) + ' points)'),
-    images: [...document.images].filter(i => !i.complete || !i.naturalWidth).map(i => i.getAttribute('src')), petits: [...document.querySelectorAll('.feuille *')].filter(e => e.children.length === 0 && e.textContent.trim().length > 3 && parseFloat(getComputedStyle(e).fontSize) < 9.5).map(e => e.textContent.trim().slice(0, 24)) }));
+    images: [...document.images].filter(i => !i.complete || !i.naturalWidth).map(i => (i.getAttribute('src') || '').slice(0, 40)), vues: document.querySelectorAll('img.vue').length,
+    logo: [...document.querySelectorAll('img.logo')].map(i => i.complete ? i.naturalWidth + ' × ' + i.naturalHeight : 'non chargé'), petits: [...document.querySelectorAll('.feuille *')].filter(e => e.children.length === 0 && e.textContent.trim().length > 3 && parseFloat(getComputedStyle(e).fontSize) < 9.5).map(e => e.textContent.trim().slice(0, 24)) }));
   dit(r.pages === PAGES, 'ÉCART', `${r.pages} pages (attendu : ${PAGES})`);
   dit(!r.deborde.length, 'DÉBORDE', r.deborde.length ? 'un texte dépasse sa page : ' + r.deborde.join(', ') : 'aucun texte ne dépasse sa page (sur un téléphone de 400 points de large)');
-  dit(!r.images.length, 'ABSENT', r.images.length ? 'images manquantes : ' + r.images.join(', ') : 'les douze images sont là');
+  dit(!r.images.length && r.vues === 12, 'ABSENT', r.images.length ? 'images manquantes : ' + r.images.join(', ') : `les ${r.vues} images du jeu sont là`);
+  dit(r.logo.length === 1 && /^\d+ × \d+$/.test(r.logo[0]), 'ABSENT', 'le logo du soutien : ' + (r.logo.join(', ') || 'absent'));
   dit(r.large <= 0, 'DÉBORDE', 'la page ne défile pas en largeur sur un téléphone');
   dit(!r.petits.length, 'ÉCART', r.petits.length ? 'textes trop petits : ' + r.petits.slice(0, 4).join(' · ') : 'aucun texte sous dix points');
   const texte = corps.replace(/<style>[\s\S]*?<\/style>/, '').replace(/<[^>]+>/g, ' ');
   dit(texte.includes(P.RESERVE.replace(/&/g, '&amp;')) || texte.includes(P.RESERVE), 'ABSENT', 'la réserve y est : « ' + P.RESERVE + ' »');
   dit(texte.includes(P.ADRESSE), 'ABSENT', 'l’adresse y est : ' + P.ADRESSE);
+  dit(texte.replace(/\s+/g, ' ').includes(esc(P.SOUTIEN)), 'ABSENT', 'la mention du soutien y est : « ' + P.SOUTIEN + ' »');
   dit(!/ABSENT :/.test(corps) && !/\{\{/.test(corps), 'ABSENT', 'les cinq sagas viennent des données du jeu, aucun champ n’est resté vide');
   // les noms que la promotion ne doit pas porter (exigences 14 et 24) : l'outil ne les écrit pas, il compare des empreintes
   const interdits = ['c2FpbnQtZXh1cA==', 'c2FpbnQgZXh1cA==', 'c2NoZWxlcg=='].map(x => Buffer.from(x, 'base64').toString());

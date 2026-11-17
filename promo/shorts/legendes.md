@@ -6,6 +6,10 @@ personne d'autre que ceux que le jeu nomme.
 
 Les films se refont par `node v2/tools/shorts.js` (dans `promo/shorts/films/`, non versionnés).
 
+Chaque film finit sur un plan de 4,8 s : « Une initiative soutenue par l'Institut Islam Actuel », avec le logo de
+l'Institut, sur les percussions du film. Les films tels qu'ils ont d'abord été livrés, sans ce plan, sont gardés dans
+`promo/shorts/films/livres/`.
+
 Les shorts 1 à 10 présentent le jeu ; le 11 dit ce qu'est la noosphère ; les shorts 12 à 16 présentent chacun une
 saga — le Compagnon, la phrase de sa saga, une parole avec sa source, l'idole qu'on y combat. Dans ces cinq-là, tout ce
 qu'on lit à l'image vient du jeu.
@@ -26,7 +30,7 @@ jeu lui-même, filmé image par image.
 
 ## 1 — « Qui te l'a dit ? »
 
-`01-qui-te-la-dit.mp4` · 25 s
+`01-qui-te-la-dit.mp4` · 30 s
 
 **Titre.** « Qui te l'a dit ? »
 
@@ -35,7 +39,7 @@ archiviste retrouve une chaîne de témoins. Elle commence à Médine, en juin 6
 
 ## 2 — « Cinq sagas, cinq Lumières »
 
-`02-cinq-sagas.mp4` · 21 s
+`02-cinq-sagas.mp4` · 26 s
 
 **Titre.** Cinq sagas, cinq Lumières
 
@@ -44,7 +48,7 @@ Véracité, la Justice, le Courage, la Miséricorde, le Savoir.
 
 ## 3 — « On n'y combat jamais des personnes »
 
-`03-jamais-des-personnes.mp4` · 22 s
+`03-jamais-des-personnes.mp4` · 27 s
 
 **Titre.** On n'y combat jamais des personnes
 
@@ -53,7 +57,7 @@ la haïssant. On la dévoile : on montre qu'elle est vide.
 
 ## 4 — « La parole avant le sabre »
 
-`04-la-parole.mp4` · 22 s
+`04-la-parole.mp4` · 27 s
 
 **Titre.** La parole avant le sabre
 
@@ -62,7 +66,7 @@ la confiance.
 
 ## 5 — « Le labyrinthe »
 
-`05-le-labyrinthe.mp4` · 17 s
+`05-le-labyrinthe.mp4` · 22 s
 
 **Titre.** Le labyrinthe
 
@@ -71,7 +75,7 @@ ponts. Ce qui rôde, on le frappe.
 
 ## 6 — « Ce que ce jeu s'interdit »
 
-`06-ce-que-le-jeu-s-interdit.mp4` · 19 s
+`06-ce-que-le-jeu-s-interdit.mp4` · 24 s
 
 **Titre.** Ce que ce jeu s'interdit
 
@@ -83,7 +87,7 @@ l'absent. », sermon de l'Adieu — al-Bukhârî et Muslim), tel que le jeu l'af
 
 ## 7 — « Bâtir, s'orienter »
 
-`07-batir-s-orienter.mp4` · 17 s
+`07-batir-s-orienter.mp4` · 22 s
 
 **Titre.** Bâtir, s'orienter
 
@@ -92,7 +96,7 @@ s'orienter aux étoiles.
 
 ## 8 — « Tenir les rangs »
 
-`08-tenir-les-rangs.mp4` · 17 s
+`08-tenir-les-rangs.mp4` · 22 s
 
 **Titre.** Tenir les rangs
 
@@ -101,7 +105,7 @@ d'une idole.
 
 ## 9 — « Trois époques, une seule chaîne »
 
-`09-trois-epoques.mp4` · 19 s
+`09-trois-epoques.mp4` · 24 s
 
 **Titre.** Trois époques, une seule chaîne
 
@@ -110,7 +114,7 @@ chaîne de témoins pour les relier.
 
 ## 10 — « Dans ta main »
 
-`10-dans-ta-main.mp4` · 17 s
+`10-dans-ta-main.mp4` · 22 s
 
 **Titre.** Dans ta main
 
@@ -119,7 +123,7 @@ s'agrandit.
 
 ## 11 — « La noosphère »
 
-`11-la-noosphere.mp4` · 29 s
+`11-la-noosphere.mp4` · 34 s
 
 **Titre.** La noosphère
 
@@ -132,7 +136,7 @@ ne montre pas) ; le carton de l'issue est celui du jeu, avec sa ligne « Le râw
 
 ## 12 — Abû Bakr, la Véracité
 
-`12-saga-abu-bakr.mp4` · 21 s
+`12-saga-abu-bakr.mp4` · 25 s
 
 **Titre.** Abû Bakr as-Siddîq — la Véracité
 
@@ -144,7 +148,7 @@ telle que le jeu l'affiche ; et la phrase par laquelle le jeu annonce l'idole �
 
 ## 13 — 'Umar, la Justice
 
-`13-saga-umar.mp4` · 22 s
+`13-saga-umar.mp4` · 27 s
 
 **Titre.** 'Umar ibn al-Khattâb — la Justice
 
@@ -156,7 +160,7 @@ d'Aslam, at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya), telle que le jeu l'aff
 
 ## 14 — Khâlid, le Courage
 
-`14-saga-khalid.mp4` · 25 s
+`14-saga-khalid.mp4` · 30 s
 
 **Titre.** Khâlid ibn al-Walîd — le Courage
 
@@ -169,7 +173,7 @@ telle que le jeu l'affiche.*
 
 ## 15 — 'Uthmân, la Miséricorde
 
-`15-saga-uthman.mp4` · 25 s
+`15-saga-uthman.mp4` · 30 s
 
 **Titre.** 'Uthmân ibn 'Affân — la Miséricorde
 
@@ -183,7 +187,7 @@ hommes. Rechange prêt : la parole de Hudhayfa sur le Livre (al-Bukhârî) et l'
 
 ## 16 — 'Alî, le Savoir
 
-`16-saga-ali.mp4` · 22 s
+`16-saga-ali.mp4` · 27 s
 
 **Titre.** 'Alî ibn Abî Tâlib — le Savoir
 

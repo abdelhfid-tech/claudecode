@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400&family=Amiri&family=Cinzel:wght@500;700&family=Reem+Kufi:wght@500&display=swap">
 <style>
-/* douze pages au format d'un écran de téléphone (9 × 16) ; l'habit du jeu : encre et or. Tout se mesure à la largeur de
+/* treize pages au format d'un écran de téléphone (9 × 16) ; l'habit du jeu : encre et or. Tout se mesure à la largeur de
    la page (unités cqw) : la même mise en page sur un téléphone, sur un grand écran et dans le PDF. */
 :root {
   color-scheme: dark;
@@ -46,6 +46,12 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
 .devise { margin-top: .7em; font-style: italic; font-size: 1.12em; color: var(--clair); text-wrap: balance; }
 .adresse { align-self: center; padding: .5em 1em .44em; font-family: var(--f-titre); font-weight: 700; font-size: 1.1em; letter-spacing: .05em; color: var(--clair); border: 1px solid var(--or); background: rgba(233, 200, 119, .08); }
 .reserve { padding: .7em .9em; border: 1px solid var(--trait); color: var(--clair); }
+/* la page du soutien : la phrase, puis le logo, tel que l'Institut l'a fourni (fond transparent, aucune retouche) */
+.soutien .feuille { align-items: center; justify-content: center; text-align: center; gap: 0; }
+.soutien .feuille > .pied { align-self: stretch; }
+.mention { margin-top: auto !important; font-size: 1.22em; line-height: 1.4; color: var(--sable); text-wrap: balance; }
+.mention b { display: block; font-family: var(--f-titre); font-weight: 700; font-size: 1.08em; letter-spacing: .04em; color: var(--or); }
+.logo { display: block; width: 84%; height: auto; margin: 1.7em auto 0; }
 @media print {
   @page { size: 360px 640px; margin: 0; }
   body { padding: 0; background: var(--page); }
@@ -54,7 +60,7 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
   .page { width: 360px; height: 640px; max-width: none; aspect-ratio: auto; border: 0; break-after: page; }
 }
 </style>
-<p class="entete"><b>Livret de présentation — {{NOM}}, {{SOUS_TITRE}}.</b> Douze pages au format d’un écran de téléphone. Les textes sont des propositions, à valider.</p>
+<p class="entete"><b>Livret de présentation — {{NOM}}, {{SOUS_TITRE}}.</b> Treize pages au format d’un écran de téléphone. Les textes sont des propositions, à valider.</p>
 <main class="livret">
 
   <section class="page couverture" id="p1"><div class="feuille">
@@ -73,7 +79,7 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
     <p class="chapo">Un jeu de rôle au tour par tour, en pixel art éclairé. Cinq sagas, de la mort du Prophète ﷺ à la fin du califat bien guidé. Dans le navigateur, sans installation.</p>
     <p>On y traverse Médine, le désert, la mer, Koufa. On y parle avant de combattre. On y creuse une tranchée, on y bâtit un puits. Et l’on y affronte des idoles — jamais des personnes.</p>
     <p>Le sujet est religieux et historique : l’exactitude et le respect y passent avant toute considération de jeu.</p>
-    <p class="pied"><span>{{NOM}}</span><span>2 / 12</span></p>
+    <p class="pied"><span>{{NOM}}</span><span>2 / 13</span></p>
   </div></section>
 
   <section class="page" id="p3"><div class="feuille">
@@ -82,7 +88,7 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
     <p class="chapo"><i>Isnâd</i> : la chaîne de ceux qui transmettent.</p>
     <p class="dit">« Untel m’a rapporté, d’après untel, qui l’a vu. » Des hommes ont passé leur vie à vérifier chaque maillon. C’est ainsi qu’une parole traverse quatorze siècles sans se dissoudre.<small>Maître Yûnus — personnage du jeu</small></p>
     <p>Le jeu en fait son fil. En 2084, un archiviste — un <i>râwî</i>, un transmetteur — remonte la Chaîne : cinq maillons, cinq témoins.</p>
-    <p class="pied"><span>{{NOM}}</span><span>3 / 12</span></p>
+    <p class="pied"><span>{{NOM}}</span><span>3 / 13</span></p>
   </div></section>
 
   <section class="page" id="p4"><div class="feuille">
@@ -95,7 +101,7 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
       <li><b>Ni voix, ni récitation,</b> ni appel à la prière dans le son du jeu.</li>
       <li><b>Aucun groupe n’est un ennemi par nature.</b> Chez chacun, des gens d’honneur.</li>
     </ul>
-    <p class="pied"><span>{{NOM}}</span><span>4 / 12</span></p>
+    <p class="pied"><span>{{NOM}}</span><span>4 / 13</span></p>
   </div></section>
 
   <section class="page" id="p5"><div class="feuille">
@@ -105,7 +111,7 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
     {{SAGA:abubakr}}
     {{SAGA:umar}}
     {{SAGA:khalid}}
-    <p class="pied"><span>{{NOM}}</span><span>5 / 12</span></p>
+    <p class="pied"><span>{{NOM}}</span><span>5 / 13</span></p>
   </div></section>
 
   <section class="page" id="p6"><div class="feuille">
@@ -114,7 +120,7 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
     {{SAGA:ali}}
     <p>Autour de ces vies, deux récits de fiction, dits comme tels : en 2084, Idris, l’archiviste ; au bord du désert, un Caïd qui lit ces vies à la veillée pour apprendre à tenir sa citadelle.</p>
     <p class="petit">Les dissensions entre Compagnons sont évoquées avec retenue, sans désigner de coupable.</p>
-    <p class="pied"><span>{{NOM}}</span><span>6 / 12</span></p>
+    <p class="pied"><span>{{NOM}}</span><span>6 / 13</span></p>
   </div></section>
 
   <section class="page" id="p7"><div class="feuille">
@@ -126,7 +132,7 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
       <li><b>Bâtir, s’orienter, commercer :</b> un puits, des palmiers, une tranchée ; la nuit, le cadran des étoiles.</li>
       <li><b>La noosphère :</b> un labyrinthe tiré au hasard, où rôdent de petits égrégores.</li>
     </ul>
-    <p class="pied"><span>{{NOM}}</span><span>7 / 12</span></p>
+    <p class="pied"><span>{{NOM}}</span><span>7 / 13</span></p>
   </div></section>
 
   <section class="page" id="p8"><div class="feuille">
@@ -135,7 +141,7 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
     <p>Une parole attestée paraît dans un carton, avec sa source : al-Bukhârî, Muslim, Ibn Hishâm, Ibn Sa’d, at-Tabarî… Quand une attribution est discutée, le jeu écrit « On rapporte » et le signale dans son recueil.</p>
     <p>Les versets sont donnés en traduction du sens, avec leur référence.</p>
     <p>Ce qui varie selon les choix du joueur est fictif ou local : l’issue d’un pourparler ne change jamais un fait de l’histoire.</p>
-    <p class="pied"><span>{{NOM}}</span><span>8 / 12</span></p>
+    <p class="pied"><span>{{NOM}}</span><span>8 / 13</span></p>
   </div></section>
 
   <section class="page" id="p9"><div class="feuille">
@@ -144,7 +150,7 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
     <p>Prière, dhikr, étude du Coran, jeûne, aumône, visite, pèlerinage : le jeu les décrit sobrement, sans formule, sans verset ni parole inventés. Il n’en fait pas des sortilèges. Il en tire une « provision du cœur » ; la prière y repose le groupe.</p>
     <p>Maux du cœur, lames, compagnons de lumière : des images de fiction, dites comme telles. Aucun mal du cœur n’est prêté à un Compagnon.</p>
     <p class="petit">À savoir : dans une bataille presque perdue, le groupe peut être relevé. Le jeu cite alors ce que le Coran rapporte de Badr, en traduction du sens, et ne montre aucun ange.</p>
-    <p class="pied"><span>{{NOM}}</span><span>9 / 12</span></p>
+    <p class="pied"><span>{{NOM}}</span><span>9 / 13</span></p>
   </div></section>
 
   <section class="page" id="p10"><div class="feuille">
@@ -156,7 +162,7 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
       <li><b>Fiction et histoire :</b> le jeu mêle les deux, et dit toujours laquelle il raconte.</li>
       <li><b>Il tient dans une page :</b> ni compte à créer, ni achat, ni publicité dans le jeu. Tout est en français ; le texte et l’image s’agrandissent.</li>
     </ul>
-    <p class="pied"><span>{{NOM}}</span><span>10 / 12</span></p>
+    <p class="pied"><span>{{NOM}}</span><span>10 / 13</span></p>
   </div></section>
 
   <section class="page" id="p11"><div class="feuille">
@@ -166,7 +172,7 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
     <p class="dit">Autrefois on demandait : « Qui te l’a dit ? » Maintenant on demande : « Combien l’ont vu ? »<small>Deux phrases du jeu</small></p>
     <p>La fiction de 2084 pose la question du jeu : que vaut une parole dont on ne sait plus de qui on la tient ?</p>
     <p class="chapo">Les idoles changent de nom. La chaîne, elle, ne rompt pas.</p>
-    <p class="pied"><span>{{NOM}}</span><span>11 / 12</span></p>
+    <p class="pied"><span>{{NOM}}</span><span>11 / 13</span></p>
   </div></section>
 
   <section class="page" id="p12"><div class="feuille">
@@ -177,7 +183,13 @@ h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spa
     <h2 style="margin-top: .5em">Où jouer</h2>
     <p class="adresse">{{ADRESSE}}</p>
     <p class="petit" style="text-align: center">Dans le navigateur, sur téléphone ou sur ordinateur. Sans installation.</p>
-    <p class="pied"><span>{{NOM}}</span><span>12 / 12</span></p>
+    <p class="pied"><span>{{NOM}}</span><span>12 / 13</span></p>
+  </div></section>
+
+  <section class="page soutien" id="p13"><div class="feuille">
+    <p class="mention">{{SOUTIEN_HTML}}</p>
+    <img class="logo" src="{{SOUTIEN_LOGO}}" alt="Logo de l’Institut Islam Actuel">
+    <p class="pied"><span>{{NOM}}</span><span>13 / 13</span></p>
   </div></section>
 
 </main>

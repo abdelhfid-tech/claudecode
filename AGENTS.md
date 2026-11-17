@@ -101,17 +101,22 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   un téléphone, en hauteur et en largeur : `loupe.js`, puis `doigt.js`.
 - Le livret (`promo/`, `tools/promo.js`) décrit la 1.32.
 - La promotion de la 2.x (demande du décideur, 17 novembre : dix shorts, une démo jouable, un livret court ; puis six
-  shorts de plus — la noosphère, et un par saga) se fait
+  shorts de plus — la noosphère, et un par saga ; puis le soutien de l'Institut Islam Actuel) se fait
   **à côté du jeu**, sans en changer un fichier : `v2/tools/shorts.js` filme le jeu assemblé image par image (un scénario par
   film, `promo/shorts/NN-nom.js`), `v2/tools/jouable.js` assemble la démo (`promo/jouable/`), `v2/tools/livret.js` fait le
   livret (`promo/livret-2x/`). Règles : tout ce qu'on montre vient du jeu — une réplique se demande par un fragment
   (`s.dire`), elle n'est jamais retapée ; les phrases ajoutées sont des propositions, à valider par le décideur ; un plan
   d'ambiance généré par IA ne montre jamais une personne, un animal, un texte ni un lieu saint, et n'entre ni dans le jeu
-  ni dans le dépôt ; le son d'un short est fait de percussions seules (exigence 9) ; aucun support ne nomme les auteurs
-  des exigences 14 et 24 ; la réserve de la décision 39 reste sur chaque support ; l'adresse, la devise et la réserve ne
-  s'écrivent qu'à un endroit, `v2/tools/promotion.js`. **L'agent ne publie rien** hors de pages privées (décisions 14 et
-  39) et n'engage aucune dépense sans accord. Un changement du jeu qui touche une scène filmée demande de refaire les
-  films concernés. `docs/decisions.md`, D169 à D175.
+  ni dans le dépôt ; le son d'un short est fait de percussions seules (exigence 9 ; une musique a été essayée deux fois,
+  puis écartée par le décideur) ; aucun support ne nomme les auteurs des exigences 14 et 24 ; la réserve de la décision
+  39 reste sur chaque support ; chaque short finit sur le plan du soutien et le livret court sur sa page (« Une
+  initiative soutenue par l'Institut Islam Actuel » et le logo, tel que l'Institut l'a fourni, sans retouche :
+  `promo/partenaires/`) ; l'adresse, la devise, la réserve et le soutien ne s'écrivent qu'à un endroit,
+  `v2/tools/promotion.js`. Les films livrés ne se retouchent pas : ils sont gardés dans `promo/shorts/films/livres/`, et
+  `v2/tools/shorts.js fin` leur ajoute le plan final sans les réencoder, en vérifiant que la partie livrée est identique.
+  **L'agent ne publie rien** hors de pages privées (décisions 14 et 39) et n'engage aucune dépense sans accord. Un
+  changement du jeu qui touche une scène filmée demande de refaire les films concernés. `docs/decisions.md`, D169 à
+  D180.
 
 ## Le projet en trois phrases
 
@@ -143,10 +148,11 @@ toute considération de jeu.
 | `docs/schema-saga.md`, `docs/schema-v2.md` | contrat de données et bible narrative | à relire avant d'écrire du contenu |
 | `promo/livret.src.html` | livret du joueur et planches de présentation | gabarit ; `tools/promo.js` y injecte les données du jeu |
 | `promo/livret.html`, `promo/livret.artifact.html`, `promo/livret.pdf`, `promo/planches/`, `promo/img/` | **générés** | ne rien y inventer : écrans capturés en jouant, sprites du moteur ; le PDF n’est pas versionné (`node tools/promo.js pdf` le refait) |
-| `v2/tools/promotion.js` | l'adresse, la devise, la réserve de la promotion (2.x) | le seul endroit où elles s'écrivent ; lu par `shorts.js`, `galerie.js`, `jouable.js`, `livret.js` |
+| `v2/tools/promotion.js` | l'adresse, la devise, la réserve et le soutien de la promotion (2.x) | le seul endroit où elles s'écrivent ; lu par `shorts.js`, `galerie.js`, `jouable.js`, `livret.js` |
 | `promo/shorts/NN-nom.js`, `promo/shorts/_saga.js`, `promo/shorts/legendes.md` | les scénarios des shorts (2.x), la base commune des cinq shorts de saga, et leurs textes d'accompagnement | un scénario dit où aller dans le jeu, quoi faire, quelles phrases poser ; un short de saga ne donne que des clés et des fragments (le lieu, la parole, l'idole) ; les films (`films/`), la galerie et les plans d'ambiance (`plans-ia/`) ne sont pas versionnés |
 | `promo/jouable/demarrage.js`, `demarrage.css` | le démarrage de la démo jouable (2.x) | ajouté au jeu assemblé par `v2/tools/jouable.js` ; `jouable.html` est **généré**, non versionné |
-| `promo/livret-2x/livret.src.html` | le gabarit du livret court (2.x) | `v2/tools/livret.js` y pose les sagas (lues dans le jeu) et la réserve ; `img/`, `donnees.json`, `livret.html`, `livret.artifact.html` sont **générés** ; le PDF n'est pas versionné |
+| `promo/partenaires/islam-actuel.webp` | le logo de l'Institut Islam Actuel, tel qu'il l'a fourni | posé, sans retouche, sur le plan final des shorts et la dernière page du livret court ; il n'entre pas dans le jeu |
+| `promo/livret-2x/livret.src.html` | le gabarit du livret court (2.x) | `v2/tools/livret.js` y pose les sagas (lues dans le jeu), la réserve et le soutien ; `img/`, `donnees.json`, `livret.html`, `livret.artifact.html` sont **générés** ; le PDF n'est pas versionné |
 
 ## Commandes
 
@@ -181,6 +187,7 @@ node v2/tools/retours.js            # 2.x : deux récits menés de front, les re
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois postures
 node v2/tools/loupe.js              # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles
 node v2/tools/shorts.js [NN] [brouillon]  # 2.x : les shorts — le jeu filmé image par image (promo/shorts/NN-nom.js → promo/shorts/films/, non versionnés)
+node v2/tools/shorts.js fin [NN]    # 2.x : un short livré (promo/shorts/films/livres/) reçoit le plan final du soutien, sans être refilmé ni réencodé
 node v2/tools/galerie.js            # 2.x : la page qui montre les films avec leur texte (promo/shorts/galerie/, non versionnée)
 node v2/tools/jouable.js [essai]    # 2.x : la démo jouable (promo/jouable/jouable.html) ; essai : jouée au doigt de bout en bout — « JOUABLE CONFORME »
 node v2/tools/livret.js [textes]    # 2.x : le livret court (promo/livret-2x/) : captures, assemblage, contrôle, PDF — « LIVRET CONFORME »
