@@ -15,7 +15,7 @@
    · Rien n'est inventé à l'image : les lieux, les personnages et les répliques sont ceux du jeu. Une réplique se
      demande par un fragment (s.dire) : l'outil la retrouve dans les données du jeu et le moteur la dit telle quelle.
    · Les phrases ajoutées (accroche, légendes, carton final) sont posées dans la page, avec les polices du jeu, hors
-     des zones que les applications recouvrent. L'adresse du carton final n'est écrite qu'ici : ADRESSE.
+     des zones que les applications recouvrent. L'adresse du carton final n'est écrite qu'à un endroit : v2/tools/promotion.js.
    · Le son : des percussions seules. Le scénario écrit ses mesures ; le moteur de son du jeu les rend hors ligne
      (ISNAD.audio.render), sans mélodie ni voix (exigence 9).
    · Un plan d'ambiance généré par IA peut ouvrir un short (promo/shorts/plans-ia/, hors du dépôt) : un paysage, un
@@ -26,10 +26,8 @@ const { chromium, devices } = require('playwright');
 const V2 = path.join(__dirname, '..'), RACINE = path.join(V2, '..'), JEU = 'file://' + path.resolve(V2, process.env.JEU || 'index.html');
 const SCN = path.join(RACINE, 'promo/shorts'), FILMS = path.join(SCN, 'films'), PRISES = path.join(SCN, '.prises'), PLANS = path.join(SCN, 'plans-ia');
 
-/* ---------- ce que disent tous les shorts : un seul endroit ---------- */
-const ADRESSE = 'www.isnad-game.org';
-const DEVISE = 'Savoir de qui l’on tient ce que l’on sait.';
-const ETAT = 'Version de travail';
+/* ---------- ce que disent tous les shorts : écrit à un seul endroit, v2/tools/promotion.js ---------- */
+const { ADRESSE, DEVISE, ETAT } = require('./promotion.js');
 
 /* ---------- le film ---------- */
 const L = 360, H = 640;        // l'écran du téléphone, en points ; × 3 = 1080 × 1920

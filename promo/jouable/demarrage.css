@@ -1,0 +1,21 @@
+/* ISNAD 2.x — la démo jouable : ce qui s'ajoute à la feuille de style du jeu (promo/jouable/demarrage.js). */
+body.demo #title .vmenu, body.demo #title .foot, body.demo #title .coin { display: none !important; }   /* l'écran-titre du jeu, sans son menu */
+body.demo #menubtn, body.demo #helpbtn, body.demo #buildbtn, body.demo #hud { display: none !important; }  /* ni halte, ni guide : la démo tient en une scène */
+body.demo #pad, body.demo #compass { display: none !important; }                                       /* tout se fait en touchant la scène */
+body.demo-carton #chrono, body.demo-carton #toasts, body.demo.in-battle #chrono { display: none !important; }
+body.demo #title .tag { margin-bottom: 1.1em; }
+#demo { position: fixed; inset: 0; z-index: 60; pointer-events: none; font-family: var(--f-body); color: var(--sand); }
+/* un carton (l'accueil, la fin) : sous le titre du jeu */
+.demo-carte { display: flex; flex-direction: column; align-items: center; gap: .6em; padding: 0 8px; text-align: center; font-size: clamp(17px, 2.2vmin + 9px, 24px); }
+.demo-mot { margin: 0; font-style: italic; color: #fff6dc; }
+.demo-devise { margin: 0; font-style: italic; color: #fff6dc; text-wrap: balance; max-width: 16em; }
+.demo-bouton { display: inline-block; min-width: 9em; padding: .62em 1.6em .56em; font-family: var(--f-display); font-weight: 700; font-size: 1.05em; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; color: #1a1408;
+  background: linear-gradient(180deg, #ffe9a8, #e9c877); border: 1px solid #fff3d0; border-radius: .3em; box-shadow: 0 0 22px rgba(233, 200, 119, .55); cursor: pointer; }
+.demo-bouton:active { transform: translateY(1px); }
+.demo-adresse { margin: 0; font-family: var(--f-display); letter-spacing: .06em; font-size: .78em; color: var(--sand); }
+.demo-lien { margin-top: .2em; padding: .4em .9em; background: none; border: 1px solid var(--line); border-radius: 2em; color: var(--dim); font-size: .72em; }
+.demo-petit { margin: 0; font-size: .62em; letter-spacing: .08em; color: var(--dim); }
+/* la consigne : une phrase, au bas de l'écran */
+.demo-consigne { position: absolute; left: 12px; right: 12px; bottom: 5%; padding: .7em 1em; text-align: center; font-size: clamp(16px, 2vmin + 8px, 22px); line-height: 1.25; background: rgba(10, 8, 20, .82); border: 1px solid var(--line); border-radius: .35em; text-wrap: balance; }
+.demo-consigne b { color: var(--gold); font-weight: 700; }
+@media (orientation: landscape) { .demo-consigne { left: 22%; right: 22%; bottom: 4%; padding: .45em .9em; } .demo-carte { gap: .35em; font-size: clamp(15px, 1.6vmin + 9px, 20px); } body.demo #title .tag { margin-bottom: 1em; } }

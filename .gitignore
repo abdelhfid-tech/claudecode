@@ -9,3 +9,6 @@ promo/shorts/films/
 promo/shorts/plans-ia/
 promo/shorts/.prises/
 promo/shorts/99-*.js
+# la démo jouable se refait par : node v2/tools/jouable.js (le jeu assemblé, plus son démarrage)
+promo/jouable/jouable.html
+promo/shorts/galerie/
