@@ -9,8 +9,10 @@
 
    Comment c'est fait.
    · Le jeu assemblé (v2/index.html) est ouvert sur un écran de téléphone tenu en hauteur. Son horloge est simulée
-     (page.clock) : chaque image du film fait avancer le jeu de 32 millièmes de seconde, puis est capturée. Le hasard est
-     fixé. Le même scénario redonne donc le même film, sans une image floue ni un à-coup.
+     (page.clock) et arrêtée avant même qu'il ne s'ouvre : chaque image du film fait avancer le jeu de 32 millièmes de
+     seconde, puis est capturée. Le hasard est fixé. Le même scénario redonne donc le même film — mêmes plans, mêmes
+     instants, sans une image floue ni un à-coup ; il peut rester, dans certains plans, d'infimes écarts d'image d'une
+     prise à l'autre (mesuré sur un short filmé deux fois : la plupart des images identiques au point près).
    · Un scénario (promo/shorts/NN-nom.js) dit où aller dans le jeu, quoi y faire, quelles phrases poser et quand.
    · Rien n'est inventé à l'image : les lieux, les personnages et les répliques sont ceux du jeu. Une réplique se
      demande par un fragment (s.dire) : l'outil la retrouve dans les données du jeu et le moteur la dit telle quelle.
@@ -30,6 +32,7 @@ const SCN = path.join(RACINE, 'promo/shorts'), FILMS = path.join(SCN, 'films'), 
 const { ADRESSE, DEVISE, ETAT } = require('./promotion.js');
 
 /* ---------- le film ---------- */
+const FIGE = process.env.FIGE !== '0';   // l'horloge arrêtée dès l'ouverture du jeu (FIGE=0 : l'ancienne manière, arrêtée après l'écran-titre)
 const L = 360, H = 640;        // l'écran du téléphone, en points ; × 3 = 1080 × 1920
 const IPS = 30, PAS = 32;      // images par seconde ; millièmes de seconde de jeu par image (deux battements de l'horloge du jeu)
 // zones que les applications recouvrent (en points d'écran) : rien d'écrit au-dessus de HAUT_SUR ni au-dessous de BAS_SUR
@@ -163,12 +166,15 @@ class Plateau {
     this.ctx = await this.browser.newContext({ viewport: { width: L, height: H }, deviceScaleFactor: this.brouillon ? 1.5 : 3, hasTouch: true, isMobile: true, userAgent: devices['iPhone 13'].userAgent });
     const p = this.p = await this.ctx.newPage(); this.pages = (this.pages || 0) + 1;
     p.on('pageerror', e => this.erreurs.push('pageerror: ' + e.message)); p.on('console', m => { if (m.type() === 'error') this.erreurs.push('console: ' + m.text()); });
+    // l'horloge est arrêtée avant même que le jeu ne s'ouvre, et le hasard fixé dès sa première ligne : d'une prise à l'autre,
+    // le jeu part exactement du même état
     await p.clock.install({ time: new Date('2026-01-01T10:00:00Z') });
-    await p.goto(JEU); await p.waitForFunction(() => window.ISNAD && window.ISNAD.scene && !document.querySelector('#title').hidden, null, { timeout: 15000 }); await p.waitForTimeout(350);
+    if (FIGE) { await p.clock.pauseAt(new Date('2026-01-01T10:00:01Z')); await p.addInitScript(g => { let a = g >>> 0; Math.random = function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }, this.scn.graine || 632); }
+    await p.goto(JEU); await p.waitForFunction(() => window.ISNAD && window.ISNAD.scene && !document.querySelector('#title').hidden, null, { timeout: 15000 }); if (FIGE) await p.clock.runFor(96); else await p.waitForTimeout(350);
     await p.addStyleTag({ content: CSS });
     await p.evaluate(installer);
     await p.evaluate(() => Promise.all(['700 30px Cinzel', '500 20px Cinzel', '400 20px Alegreya', 'italic 400 20px Alegreya', '700 20px Alegreya', '500 20px "Reem Kufi"', '700 20px "Reem Kufi"', '400 20px Amiri', '400 14px "Share Tech Mono"'].map(f => document.fonts.load(f).catch(() => {}))));
-    const t0 = await p.evaluate(() => Date.now()); await p.clock.pauseAt(new Date(t0 + 64));
+    if (!FIGE) { const t0 = await p.evaluate(() => Date.now()); await p.clock.pauseAt(new Date(t0 + 64)); }
     await this.ev(([g, v, t]) => { const I = window.ISNAD, F = window.__film; F.graine(g); F.t = t; I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => e.hidden = true); document.body.classList.remove('in-screen'); I.input.reset(); I.setScene(I.ui.blank); F.rampe('noir', v.noir, 0); F.rampe('ombre', v.ombre, 0); document.querySelector('#film-noir').style.opacity = v.noir; },
       [this.scn.graine || 632, this.voiles, this.t]);
     await this.cadre(this._cadre); await this.propre();

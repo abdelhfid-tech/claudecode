@@ -1,0 +1,183 @@
+<title>Livret {{NOM}}</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400&family=Amiri&family=Cinzel:wght@500;700&family=Reem+Kufi:wght@500&display=swap">
+<style>
+/* douze pages au format d'un écran de téléphone (9 × 16) ; l'habit du jeu : encre et or. Tout se mesure à la largeur de
+   la page (unités cqw) : la même mise en page sur un téléphone, sur un grand écran et dans le PDF. */
+:root {
+  color-scheme: dark;
+  --encre: #07060d; --page: #0c0a17; --or: #e9c877; --sable: #f3e7cc; --terne: #a79c86; --clair: #fff6dc; --trait: rgba(233, 200, 119, .34);
+  --f-titre: "Cinzel", "Trajan Pro", "Times New Roman", serif; --f-texte: "Alegreya", "Iowan Old Style", Georgia, "Amiri", serif; --f-ar: "Reem Kufi", "Amiri", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body { margin: 0; background: var(--encre); color: var(--sable); font-family: var(--f-texte);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 26px 48px; }
+.entete { max-width: 62ch; margin: 0 auto 26px; text-align: center; font-size: 15px; line-height: 1.45; color: var(--terne); }
+.entete b { color: var(--sable); font-weight: 700; }
+.livret { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 360px)); gap: 24px; justify-content: center; }
+.page { container-type: inline-size; width: 100%; max-width: 360px; aspect-ratio: 9 / 16; margin: 0 auto; background: var(--page); border: 1px solid var(--trait); overflow: hidden; }
+.feuille { height: 100%; display: flex; flex-direction: column; gap: .62em; padding: 4em 3.2em 2.4em; font-size: 4.2cqw; line-height: 1.36; }
+.feuille > * { margin: 0; min-width: 0; }
+.vue { display: block; width: calc(100% + 6.4em); max-width: none; margin: -4em -3.2em .3em; aspect-ratio: 16 / 9; object-fit: cover; border-bottom: 1px solid var(--trait); }
+.vue.basse { aspect-ratio: 2 / 1; }
+.vue.carte { aspect-ratio: 9 / 5; }
+h2 { font-family: var(--f-titre); font-weight: 700; font-size: 1.42em; letter-spacing: .05em; line-height: 1.16; color: var(--or); text-wrap: balance; }
+p { text-wrap: pretty; }
+.chapo { font-size: 1.08em; color: var(--clair); }
+.dit { padding: .1em 0 .1em .85em; border-left: 2px solid var(--or); font-style: italic; color: var(--clair); }
+.dit small { display: block; margin-top: .3em; font-style: normal; font-size: .8em; letter-spacing: .06em; color: var(--terne); }
+ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: .5em; }
+li { padding-left: 1.15em; position: relative; }
+li::before { content: "◆"; position: absolute; left: 0; top: .28em; font-size: .62em; color: var(--or); }
+li b, p b { color: var(--or); font-weight: 700; }
+.saga { display: flex; flex-direction: column; gap: .12em; padding-left: .85em; border-left: 2px solid var(--trait); }
+.saga b { font-family: var(--f-titre); font-size: 1.02em; letter-spacing: .04em; color: var(--or); }
+.saga i { font-style: normal; font-size: .84em; letter-spacing: .05em; color: var(--terne); font-variant-numeric: tabular-nums; }
+.saga span { color: var(--clair); }
+.pied { margin-top: auto; padding-top: .7em; display: flex; justify-content: space-between; gap: 1em; white-space: nowrap; font-family: var(--f-titre); font-size: .76em; letter-spacing: .14em; text-transform: uppercase; color: var(--terne); font-variant-numeric: tabular-nums; }
+.petit { font-size: .84em; color: var(--terne); }
+/* la couverture, la dernière page */
+.couverture .feuille { align-items: center; text-align: center; gap: .5em; }
+.couverture .vue { aspect-ratio: 9 / 8; margin-bottom: 1.3em; }
+.ar { font-family: var(--f-ar); font-size: 2.1em; line-height: 1; color: var(--or); }
+h1 { font-family: var(--f-titre); font-weight: 700; font-size: 3.5em; letter-spacing: .26em; margin-right: -.26em; line-height: 1; color: var(--clair); }
+.sous { font-family: var(--f-titre); font-size: .86em; letter-spacing: .34em; text-transform: uppercase; }
+.devise { margin-top: .7em; font-style: italic; font-size: 1.12em; color: var(--clair); text-wrap: balance; }
+.adresse { align-self: center; padding: .5em 1em .44em; font-family: var(--f-titre); font-weight: 700; font-size: 1.1em; letter-spacing: .05em; color: var(--clair); border: 1px solid var(--or); background: rgba(233, 200, 119, .08); }
+.reserve { padding: .7em .9em; border: 1px solid var(--trait); color: var(--clair); }
+@media print {
+  @page { size: 360px 640px; margin: 0; }
+  body { padding: 0; background: var(--page); }
+  .entete { display: none; }
+  .livret { display: block; }
+  .page { width: 360px; height: 640px; max-width: none; aspect-ratio: auto; border: 0; break-after: page; }
+}
+</style>
+<p class="entete"><b>Livret de présentation — {{NOM}}, {{SOUS_TITRE}}.</b> Douze pages au format d’un écran de téléphone. Les textes sont des propositions, à valider.</p>
+<main class="livret">
+
+  <section class="page couverture" id="p1"><div class="feuille">
+    <img class="vue" src="img/01-titre.jpg" alt="L’écran-titre du jeu : une ville au couchant, des palmiers, des tours.">
+    <p class="ar" lang="ar" dir="rtl">إسناد</p>
+    <h1>{{NOM}}</h1>
+    <p class="sous">{{SOUS_TITRE}}</p>
+    <p class="devise">« {{DEVISE}} »</p>
+    <p class="petit" style="margin-top: .9em">Un jeu de rôle sur les Compagnons,<br>après la mort du Prophète ﷺ</p>
+    <p class="pied" style="align-self: stretch"><span>Présentation</span><span>{{ETAT}}</span></p>
+  </div></section>
+
+  <section class="page" id="p2"><div class="feuille">
+    <img class="vue" src="img/02-medine.jpg" alt="Médine : Abû Bakr et Abû ’Ubayda, un voile de lumière pour visage, près de la porte sud.">
+    <h2>Le jeu, en une page</h2>
+    <p class="chapo">Un jeu de rôle au tour par tour, en pixel art éclairé. Cinq sagas, de la mort du Prophète ﷺ à la fin du califat bien guidé. Dans le navigateur, sans installation.</p>
+    <p>On y traverse Médine, le désert, la mer, Koufa. On y parle avant de combattre. On y creuse une tranchée, on y bâtit un puits. Et l’on y affronte des idoles — jamais des personnes.</p>
+    <p>Le sujet est religieux et historique : l’exactitude et le respect y passent avant toute considération de jeu.</p>
+    <p class="pied"><span>{{NOM}}</span><span>2 / 12</span></p>
+  </div></section>
+
+  <section class="page" id="p3"><div class="feuille">
+    <img class="vue" src="img/03-chaine.jpg" alt="L’écran de la Chaîne : le premier maillon, Abû Bakr as-Siddîq, et son sceau.">
+    <h2>L’isnâd : la chaîne</h2>
+    <p class="chapo"><i>Isnâd</i> : la chaîne de ceux qui transmettent.</p>
+    <p class="dit">« Untel m’a rapporté, d’après untel, qui l’a vu. » Des hommes ont passé leur vie à vérifier chaque maillon. C’est ainsi qu’une parole traverse quatorze siècles sans se dissoudre.<small>Maître Yûnus — personnage du jeu</small></p>
+    <p>Le jeu en fait son fil. En 2084, un archiviste — un <i>râwî</i>, un transmetteur — remonte la Chaîne : cinq maillons, cinq témoins.</p>
+    <p class="pied"><span>{{NOM}}</span><span>3 / 12</span></p>
+  </div></section>
+
+  <section class="page" id="p4"><div class="feuille">
+    <img class="vue basse" src="img/04-voile.jpg" alt="Abû Bakr, de près : un voile de lumière dorée tient lieu de visage.">
+    <h2>Ce que le jeu s’interdit</h2>
+    <ul>
+      <li><b>Le Prophète ﷺ n’est jamais représenté</b>, ni mis en scène. On l’évoque ; on le cite, avec la source.</li>
+      <li><b>Aucun Compagnon n’a de visage :</b> un voile de lumière en tient lieu.</li>
+      <li><b>Aucun ennemi n’est une personne,</b> un peuple ni une religion : seulement des égrégores, les idoles que les cœurs fabriquent ensemble.</li>
+      <li><b>Ni voix, ni récitation,</b> ni appel à la prière dans le son du jeu.</li>
+      <li><b>Aucun groupe n’est un ennemi par nature.</b> Chez chacun, des gens d’honneur.</li>
+    </ul>
+    <p class="pied"><span>{{NOM}}</span><span>4 / 12</span></p>
+  </div></section>
+
+  <section class="page" id="p5"><div class="feuille">
+    <img class="vue basse" src="img/05-camp.jpg" alt="Un camp au désert, au couchant : Khâlid et ses compagnons près des tentes.">
+    <h2>Cinq sagas, cinq Lumières</h2>
+    <p>Chaque saga suit un Compagnon et porte une Lumière.</p>
+    {{SAGA:abubakr}}
+    {{SAGA:umar}}
+    {{SAGA:khalid}}
+    <p class="pied"><span>{{NOM}}</span><span>5 / 12</span></p>
+  </div></section>
+
+  <section class="page" id="p6"><div class="feuille">
+    <img class="vue basse" src="img/06-koufa.jpg" alt="Koufa : ’Alî et Ibn ’Abbâs sur une place aux carreaux étoilés.">
+    {{SAGA:uthman}}
+    {{SAGA:ali}}
+    <p>Autour de ces vies, deux récits de fiction, dits comme tels : en 2084, Idris, l’archiviste ; au bord du désert, un Caïd qui lit ces vies à la veillée pour apprendre à tenir sa citadelle.</p>
+    <p class="petit">Les dissensions entre Compagnons sont évoquées avec retenue, sans désigner de coupable.</p>
+    <p class="pied"><span>{{NOM}}</span><span>6 / 12</span></p>
+  </div></section>
+
+  <section class="page" id="p7"><div class="feuille">
+    <img class="vue basse" src="img/07-combat.jpg" alt="Un combat : trois Compagnons face au Trône vide, une idole.">
+    <h2>Comment on y joue</h2>
+    <ul>
+      <li><b>La parole avant le sabre.</b> Un pourparler se gagne par des réponses vraies ; menacer ou flatter fait perdre la confiance.</li>
+      <li><b>Le combat, au tour par tour,</b> contre des égrégores. « On ne détruit pas une idole en la haïssant. On la dévoile : on montre qu’elle est vide. »</li>
+      <li><b>Bâtir, s’orienter, commercer :</b> un puits, des palmiers, une tranchée ; la nuit, le cadran des étoiles.</li>
+      <li><b>La noosphère :</b> un labyrinthe tiré au hasard, où rôdent de petits égrégores.</li>
+    </ul>
+    <p class="pied"><span>{{NOM}}</span><span>7 / 12</span></p>
+  </div></section>
+
+  <section class="page" id="p8"><div class="feuille">
+    <img class="vue carte" src="img/08-citation.jpg" alt="Un carton du jeu : « S’il l’a dit, il a dit vrai. » — Abû Bakr, rapporté par Ibn Hishâm, as-Sîra.">
+    <h2>Les paroles et leurs sources</h2>
+    <p>Une parole attestée paraît dans un carton, avec sa source : al-Bukhârî, Muslim, Ibn Hishâm, Ibn Sa’d, at-Tabarî… Quand une attribution est discutée, le jeu écrit « On rapporte » et le signale dans son recueil.</p>
+    <p>Les versets sont donnés en traduction du sens, avec leur référence.</p>
+    <p>Ce qui varie selon les choix du joueur est fictif ou local : l’issue d’un pourparler ne change jamais un fait de l’histoire.</p>
+    <p class="pied"><span>{{NOM}}</span><span>8 / 12</span></p>
+  </div></section>
+
+  <section class="page" id="p9"><div class="feuille">
+    <img class="vue basse" src="img/09-mosquee.jpg" alt="Médine : devant la mosquée, des Compagnons et des gens de la ville.">
+    <h2>Le cœur et les œuvres</h2>
+    <p>Prière, dhikr, étude du Coran, jeûne, aumône, visite, pèlerinage : le jeu les décrit sobrement, sans formule, sans verset ni parole inventés. Il n’en fait pas des sortilèges. Il en tire une « provision du cœur » ; la prière y repose le groupe.</p>
+    <p>Maux du cœur, lames, compagnons de lumière : des images de fiction, dites comme telles. Aucun mal du cœur n’est prêté à un Compagnon.</p>
+    <p class="petit">À savoir : dans une bataille presque perdue, le groupe peut être relevé. Le jeu cite alors ce que le Coran rapporte de Badr, en traduction du sens, et ne montre aucun ange.</p>
+    <p class="pied"><span>{{NOM}}</span><span>9 / 12</span></p>
+  </div></section>
+
+  <section class="page" id="p10"><div class="feuille">
+    <img class="vue basse" src="img/10-batir.jpg" alt="Médine au couchant : une tranchée creusée, un puits, deux palmiers.">
+    <h2>Pour les parents, pour ceux qui enseignent</h2>
+    <ul>
+      <li><b>Ce qu’il peut faire :</b> donner envie d’ouvrir les livres ; faire sentir ce qui sépare une parole sourcée d’une rumeur.</li>
+      <li><b>Ce qu’il ne fait pas :</b> il ne remplace ni un livre, ni un cours, ni un savant.</li>
+      <li><b>Fiction et histoire :</b> le jeu mêle les deux, et dit toujours laquelle il raconte.</li>
+      <li><b>Il tient dans une page :</b> ni compte à créer, ni achat, ni publicité dans le jeu. Tout est en français ; le texte et l’image s’agrandissent.</li>
+    </ul>
+    <p class="pied"><span>{{NOM}}</span><span>10 / 12</span></p>
+  </div></section>
+
+  <section class="page" id="p11"><div class="feuille">
+    <img class="vue basse" src="img/11-cite.jpg" alt="La Cité-Miroir, en 2084 : une rue sous la pluie, un grand écran.">
+    <h2>Pourquoi 2084 ?</h2>
+    <p class="dit">Dans la Cité-Miroir, on ne lève plus les yeux. Le ciel est un écran, et l’écran regarde en retour.</p>
+    <p class="dit">Autrefois on demandait : « Qui te l’a dit ? » Maintenant on demande : « Combien l’ont vu ? »<small>Deux phrases du jeu</small></p>
+    <p>La fiction de 2084 pose la question du jeu : que vaut une parole dont on ne sait plus de qui on la tient ?</p>
+    <p class="chapo">Les idoles changent de nom. La chaîne, elle, ne rompt pas.</p>
+    <p class="pied"><span>{{NOM}}</span><span>11 / 12</span></p>
+  </div></section>
+
+  <section class="page" id="p12"><div class="feuille">
+    <img class="vue basse" src="img/12-labyrinthe.jpg" alt="La noosphère : un labyrinthe bleu, un chrono, un Compagnon au voile de lumière.">
+    <h2>Où en est le projet</h2>
+    <p class="reserve">{{RESERVE}}</p>
+    <p>Une erreur — une date, une attribution, une formulation ? Signalez-la : le jeu se corrige. Et vérifiez toujours auprès des sources et de ceux qui savent.</p>
+    <h2 style="margin-top: .5em">Où jouer</h2>
+    <p class="adresse">{{ADRESSE}}</p>
+    <p class="petit" style="text-align: center">Dans le navigateur, sur téléphone ou sur ordinateur. Sans installation.</p>
+    <p class="pied"><span>{{NOM}}</span><span>12 / 12</span></p>
+  </div></section>
+
+</main>

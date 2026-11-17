@@ -1,0 +1,39 @@
+{
+  "sagas": {
+    "abubakr": {
+      "nom": "Abû Bakr as-Siddîq",
+      "epithete": "As-Siddîq",
+      "lumiere": "Véracité",
+      "annees": "11–13 H · 632–634",
+      "phrase": "Le jour où tout pouvait se défaire, un homme doux a dit le vrai."
+    },
+    "umar": {
+      "nom": "'Umar ibn al-Khattâb",
+      "epithete": "Al-Fârûq",
+      "lumiere": "Justice",
+      "annees": "13–23 H · 634–644",
+      "phrase": "Deux empires tombèrent sous son califat. Lui dormait sur une natte."
+    },
+    "khalid": {
+      "nom": "Khâlid ibn al-Walîd",
+      "epithete": "Le Sabre dégainé",
+      "lumiere": "Courage",
+      "annees": "13–21 H · 634–642",
+      "phrase": "Il n'a jamais perdu une bataille. Il lui reste à vaincre sa propre statue."
+    },
+    "uthman": {
+      "nom": "'Uthmân ibn 'Affân",
+      "epithete": "Le Généreux",
+      "lumiere": "Miséricorde",
+      "annees": "23–35 H · 644–656",
+      "phrase": "Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui."
+    },
+    "ali": {
+      "nom": "'Alî ibn Abî Tâlib",
+      "epithete": "La Porte du Savoir",
+      "lumiere": "Savoir",
+      "annees": "35–40 H · 656–661",
+      "phrase": "Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour."
+    }
+  }
+}

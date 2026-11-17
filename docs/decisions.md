@@ -1269,12 +1269,73 @@ après un premier plan qui modifiait le moteur actuel :
   choix trop longue pour l'écran resserre ses caractères plutôt que de déborder. Contrôle : `loupe.js` (aucun texte sous
   dix points sur cinq écrans, dans les deux sens) et `doigt.js` (aucun choix hors de l'écran).
 
+## Faire connaître le jeu : dix shorts, une démo jouable, un livret (demande du décideur, 17 novembre)
+
+Demande : « fais moi 10 shorts pour promouvoir le jeu sur les réseaux, voire de la publicité jouable comme higgsfield »,
+puis un « livret pour promouvoir le jeu auprès des musulmans ». **Aucun fichier du jeu n'a changé** : tout se fait avec
+des outils à côté (`v2/tools/shorts.js`, `galerie.js`, `jouable.js`, `livret.js`, `promotion.js`). **Rien n'est
+publié** : les décisions 14 et 39 tiennent. Les films, la démo et le livret sont remis au décideur, et déposés sur trois
+pages privées de son compte.
+
+- [x] **D169. Ce que le décideur a tranché.** *17 novembre.* Les shorts montrent le jeu, avec quelques plans d'ambiance
+  générés par IA ; le son est fait de percussions seules ; chaque film finit sur l'adresse `www.isnad-game.org` (« Le
+  site existe ») ; la publicité jouable est une démo d'une quarantaine de secondes, en privé ; le livret est court, en
+  français, lisible sur un téléphone. Trois plans IA d'essai sont accordés « sans attendre », le prix annoncé au passage.
+- [x] **D170. Dix shorts, tirés du jeu lui-même.** `v2/tools/shorts.js` ouvre le jeu assemblé sur un écran de téléphone
+  tenu en hauteur et le filme image par image, son horloge simulée et son hasard fixé : 1080 × 1920, 30 images par
+  seconde, de 17 à 25 secondes. Un scénario par film (`promo/shorts/NN-nom.js`) dit où aller, quoi faire, quelles
+  phrases poser. **Rien n'est inventé à l'image** : lieux, personnages et répliques sont ceux du jeu ; une réplique se
+  demande par un fragment, l'outil la retrouve dans les données et le moteur la dit telle quelle. Chaque changement de
+  lieu repart d'une page neuve du jeu, pour que rien ne traîne d'un plan précédent. **Choix de l'agent, à valider :** les
+  dix sujets et leur ordre ; les accroches et les légendes (celles du livret déjà validé, quand elles existent) ; le
+  cadre — la scène du jeu en haut, carrée, le texte dessous, hors des zones que les applications recouvrent ; le carton
+  final (l'écran-titre du jeu, la devise, l'adresse, « Version de travail ») ; les rythmes des percussions, écrits pas à
+  pas dans chaque scénario et rendus par le moteur de son du jeu, sans mélodie ni voix (exigence 9) — personne ne les a
+  encore écoutés. `promo/shorts/legendes.md` propose un titre et une description par film.
+- [x] **D171. Les plans d'ambiance générés par IA.** Trois essais de cinq secondes étaient accordés (prix annoncé par
+  l'outil : 42 014 crédits ElevenLabs, 8,40 $). **Deux ont été générés** — un désert à l'aube, une cave d'archives avec
+  une lampe et des rouleaux : 28 010 crédits, 5,60 $. **Le troisième a été refusé** (une rue sous un ciel-écran) : le
+  quota du compte ne le couvrait plus ; il reste 7 728 crédits sur 40 000. L'agent ne pouvait pas lire ce solde avant de
+  lancer ; il n'a rien relancé. Règle tenue, à garder : jamais une personne, un animal, un texte ni un lieu saint ;
+  chaque plan est relu image par image ; il n'entre **ni dans le jeu ni dans le dépôt** ; il n'ouvre un short que pendant
+  deux secondes (shorts 1 et 2) et se signale à la publication. Plus aucune dépense sans accord.
+- [x] **D172. Ce que les shorts laissent hors champ.** *Choix de l'agent, à valider.* (1) En combat, les rangées du
+  groupe ne sont pas montrées : elles portent, à côté du nom d'un Compagnon, le mot de sa posture — « héros », « sage »,
+  « saint » — et l'exigence 24 attend encore sa validation. (2) Le bandeau où une idole parle n'est pas montré : hors de
+  son contexte, une phrase comme celle du Trône vide se lirait mal. (3) Le pourparler du short 4 est pris dans
+  l'histoire-cadre (2084) : l'interlocuteur et les réponses y sont de fiction ; aucun mot inventé n'est placé près d'un
+  Compagnon. (4) Le short 6 montre le carton d'une parole du Prophète ﷺ (« Que celui qui est présent transmette à
+  l'absent. », sermon de l'Adieu — al-Bukhârî et Muslim), tel que le jeu l'affiche : à valider de près, par le décideur
+  et par un spécialiste. (5) Le short 8 ne dit pas qu'on rejoue un jour de l'histoire (exigence 19).
+- [x] **D173. La démo jouable.** `v2/tools/jouable.js` assemble `promo/jouable/jouable.html` : le jeu, un préambule qui
+  garde les parties en mémoire — **rien n'est lu ni écrit sur l'appareil** — et un démarrage : un mot d'accueil, le
+  labyrinthe de la noosphère où l'on touche ce qui rôde pour le frapper, un combat, puis le carton final et son bouton
+  « Jouer ». **Choix de l'agent, à valider :** celui qui joue est Idris, le râwî de 2084 — un personnage de fiction —,
+  plutôt qu'un Compagnon mis sous le doigt du joueur dans une publicité ; la démo avance seule si l'on ne fait rien
+  (personne ne reste bloqué). On n'en sort que par une fonction (`allerJouer`) : c'est le seul endroit à brancher pour
+  une régie publicitaire, qui demandera aussi de retirer l'appel aux polices. Contrôle : `node v2/tools/jouable.js essai`
+  la joue au doigt de bout en bout, en hauteur et en largeur (« JOUABLE CONFORME »).
+- [x] **D174. Le livret court.** `v2/tools/livret.js` fait douze pages au format d'un écran de téléphone
+  (`promo/livret-2x/`) : douze images capturées en jouant la 2.x, les cinq sagas lues dans les données du jeu, la réserve
+  de la décision 39. Ni avis, ni chiffre, ni durée de jeu, ni caution d'un savant. **Textes proposés par l'agent, à
+  valider un par un**, en particulier : la page « Ce que le jeu s'interdit » ; la page « Le cœur et les œuvres », qui dit
+  le secours d'une bataille presque perdue (exigence 20) plutôt que de le taire ; la page « Pour les parents, pour ceux
+  qui enseignent ». Le livret dit « Signalez-la » pour une erreur, sans donner d'adresse de contact : à fournir par le
+  décideur. Contrôle : aucun texte ne dépasse sa page, aucun n'est sous dix points, les images sont là, aucun auteur
+  n'est nommé (« LIVRET CONFORME »). Le livret de `promo/` continue de décrire la 1.32.
+- [x] **D175. Un seul endroit pour l'adresse ; rien n'est publié.** L'adresse, la devise et la réserve s'écrivent dans
+  `v2/tools/promotion.js` et nulle part ailleurs : si l'adresse change, une commande refait les films, la démo et le
+  livret. L'agent n'a pas testé le site (il le fera si on le lui demande). Il n'a créé aucun compte, n'en a relié aucun,
+  et n'a rien posté : Postiz n'a aucun compte relié, et aucun connecteur Higgsfield n'a été trouvé — il n'en fallait pas.
+  **Mettre ces contenus en ligne, c'est lever les décisions 14 et 39 : cela reste le geste du décideur.**
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
 
 1. **Services payants de génération** (voix, musique, images) : tout ce que le jeu contient est produit par le code.
-   *Seule exception, accordée le 16 novembre :* six images de référence (D153), qui n'entrent pas dans le jeu.
+   *Exceptions accordées :* le 16 novembre, six images de référence (D153) ; le 17 novembre, trois plans vidéo
+   d'essai pour les shorts, dont deux ont été générés (D171). Rien de cela n'entre dans le jeu ni dans le dépôt.
 2. **Partage ou passage en public de l'Artifact** : le jeu reste privé. *Constat du 15 novembre* : la
    plateforme indique que l'Artifact du **livret** est partagé « par lien ». Ce réglage ne se fait que
    du côté de son propriétaire ; l'agent ne l'a pas fait et ne peut pas le changer. Chaque mise à jour
@@ -1358,5 +1419,10 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     convient-il comme titre du livre I ?
 24. Les personnages redessinés (D148) : la taille de la tête et du voile de lumière convient-elle ? Y a-t-il une coiffe
     ou une attitude à reprendre ? Le livret doit-il être remis en ligne avec ces personnages ?
+25. La promotion (D169 à D175) : les dix sujets, les accroches et les légendes conviennent-ils ? Les percussions,
+    une fois écoutées ? Le short 6 peut-il montrer le carton d'une parole du Prophète ﷺ ? Faut-il d'autres plans
+    d'ambiance — et, si oui, sur quel compte —, ou s'en passer ? Qui joue dans la démo : Idris, comme proposé ?
+26. Le livret court (D174) : ses douze pages, texte par texte ; une adresse de contact pour signaler une erreur ; et
+    le jour où un spécialiste aura relu, ce que devient la réserve.
 10. *Répondu le 15 novembre : « Ça a l'air ok ».* La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

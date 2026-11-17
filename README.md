@@ -280,6 +280,23 @@ docs/                 artefacts du framework « De l'idée à la production »
 Les consignes pour un agent codeur sont dans `AGENTS.md`, le contrat de données dans
 `docs/schema-saga.md`, les décisions à valider dans `docs/decisions.md`.
 
+### Faire connaître le jeu (2.x)
+
+Quatre outils travaillent à côté du jeu, sans en changer un fichier. Rien de ce qu'ils produisent n'est publié.
+
+```sh
+node v2/tools/shorts.js             # dix films verticaux (1080 × 1920), le jeu filmé image par image
+node v2/tools/shorts.js 01 brouillon   # un seul, en demi-définition, pour régler son scénario
+node v2/tools/galerie.js            # une page qui montre les films avec leur texte d'accompagnement
+node v2/tools/jouable.js essai      # la démo jouable, assemblée puis jouée au doigt de bout en bout
+node v2/tools/livret.js             # le livret court : douze pages au format d'un téléphone, et son PDF
+```
+
+Un short est un scénario (`promo/shorts/NN-nom.js`) : où aller dans le jeu, quoi faire, quelles phrases poser. Les
+répliques sont celles du jeu, retrouvées par un fragment et dites par le moteur ; le son est fait de percussions
+seules, rendues par le moteur de son du jeu. L'adresse, la devise et la réserve s'écrivent à un seul endroit :
+`v2/tools/promotion.js`.
+
 ## Sources
 
 Ibn Hishâm, *as-Sîra an-Nabawiyya* · at-Tabarî, *Târîkh ar-Rusul wa-l-Mulûk* · Ibn Sa'd,
