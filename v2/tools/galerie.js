@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* ISNAD 2.x — la galerie des shorts : une page qui montre les dix films, chacun avec son texte d'accompagnement.
+/* ISNAD 2.x — la galerie des shorts : une page qui montre les films, chacun avec son texte d'accompagnement.
    Usage : node v2/tools/galerie.js
    Elle lit les films de promo/shorts/films/ (v2/tools/shorts.js) et les textes de promo/shorts/legendes.md, et écrit
    dans promo/shorts/galerie/ : index.html, films/NN.mp4 (des copies allégées, 720 × 1280, pour la page seulement) et
@@ -31,6 +31,10 @@ liste.forEach(s => { const src = path.join(FILMS, s.fichier), nn = String(s.n).p
   ff('ffmpeg', ['-v', 'error', '-y', '-ss', '1.3', '-i', src, '-frames:v', '1', '-vf', 'scale=540:960:flags=lanczos', '-q:v', '4', path.join(DOS, s.affiche)]);
   poids += fs.statSync(path.join(DOS, s.film)).size; });
 
+// le nombre de films, en toutes lettres, et l'étendue de leurs durées : la page les dit, elle ne les suppose pas
+const EN_LETTRES = ['zéro', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix', 'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf', 'vingt'];
+const combien = EN_LETTRES[liste.length] || String(liste.length), Combien = combien[0].toUpperCase() + combien.slice(1);
+const courte = Math.min(...liste.map(s => s.duree)), longue = Math.max(...liste.map(s => s.duree));
 const commun = `${P.NOM} — ${P.SOUS_TITRE}. Un jeu de rôle au tour par tour, en pixel art éclairé. Dans le navigateur, sans installation : ${P.ADRESSE}\n\n${P.RESERVE}`;
 const cartes = liste.map(s => { const nn = String(s.n).padStart(2, '0');
   return `    <article class="film">
@@ -41,7 +45,7 @@ const cartes = liste.map(s => { const nn = String(s.n).padStart(2, '0');
       <button type="button" class="copier" id="copier-${nn}" data-texte="${esc(s.titre + '\n\n' + s.description + '\n\n' + commun)}">Copier le texte</button>
     </article>`; }).join('\n');
 
-const html = `<title>Dix shorts ${P.NOM}</title>
+const html = `<title>${Combien} shorts ${P.NOM}</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;700&display=swap">
 <style>
@@ -76,11 +80,11 @@ footer b { color: var(--sable); font-weight: 700; }
 </style>
 <main>
   <header>
-    <h1>Dix shorts pour ${P.NOM}</h1>
-    <p>Dix films verticaux de quinze à vingt-cinq secondes, tirés du jeu lui-même, avec le texte proposé pour chacun.</p>
+    <h1>${Combien} shorts pour ${P.NOM}</h1>
+    <p>${Combien} films verticaux de ${courte} à ${longue} secondes, tirés du jeu lui-même, avec le texte proposé pour chacun.</p>
     <p class="note">Rien n’est publié : cette page est privée, et les films vous ont été remis à part, en pleine définition. Ici, ce sont des copies allégées, pour les revoir d’un coup d’œil.</p>
   </header>
-  <section class="grille" aria-label="Les dix shorts">
+  <section class="grille" aria-label="Les ${combien} shorts">
 ${cartes}
   </section>
   <footer>

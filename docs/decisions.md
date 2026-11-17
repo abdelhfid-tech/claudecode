@@ -1328,6 +1328,43 @@ pages privées de son compte.
   livret. L'agent n'a pas testé le site (il le fera si on le lui demande). Il n'a créé aucun compte, n'en a relié aucun,
   et n'a rien posté : Postiz n'a aucun compte relié, et aucun connecteur Higgsfield n'a été trouvé — il n'en fallait pas.
   **Mettre ces contenus en ligne, c'est lever les décisions 14 et 39 : cela reste le geste du décideur.**
+- [x] **D176. La musique, demandée puis écartée : percussions seules.** *17 novembre.* Le décideur a demandé de la
+  musique (« les percussions c'est pas suffisant »), puis y a renoncé avant qu'un seul film en musique ne lui soit
+  remis : « finalement j'aime bien sans la musique ». L'agent avait branché la bande-son du jeu dans l'outil (ses
+  propres pistes, rendues hors ligne, sans voix) ; il l'a retirée sans l'enregistrer. Les dix films sont revenus tels
+  que le décideur les a reçus — comparés fichier par fichier, identiques. **Le choix de D169 est confirmé : le son d'un
+  short est fait de percussions seules.**
+- [x] **D177. Un onzième short : « La noosphère ».** *Demande du décideur (« un autre short sur la noosphère ») ; plan
+  approuvé le 17 novembre.* Le short 5 montre la noosphère d'un chapitre ; celui-ci dit ce qu'elle est, puis montre la
+  descente du râwî (exigence 22) : le labyrinthe et ce qui y rôde ; la réplique de Maître Yûnus aux Archives basses
+  (« Tu sais ce qu'est la noosphère ? L'envers de la ville… ») ; le carton du jeu « En songe — La noosphère s'ouvre. Tu
+  y descends. » ; la règle telle que le jeu la donne (`ISNAD.rodeurs.texte('regle')`) ; un mal du cœur ou une idée noire
+  frappé au ralenti — sonné, il laisse passer ; l'issue et son carton (« Tu as trouvé l'issue »). Vingt-neuf secondes :
+  la réplique demande huit secondes de lecture. **Choix approuvés avec le plan :** on entre « en songe », ni par la
+  prière ni par le dhikr — un film de promotion qui montrerait la prière comme une porte pourrait être mal compris
+  (exigences 13 et 15) ; le râwî descend seul, aucun Compagnon n'est dans le labyrinthe ; le carton de l'issue est montré
+  tel quel, avec sa ligne « Le râwî gagne un niveau. » ; aucun nom d'auteur à l'écran (la fiche du jeu sur la noosphère
+  en cite deux : on ne la montre pas). Seul le titre de l'accroche est ajouté. La descente est déclenchée comme le fait
+  le contrôle du jeu (`v2/tools/descente.js`) ; le labyrinthe du film est toujours le même (graine fixée).
+- [x] **D178. Un short par saga (12 à 16).** *Demande du décideur (« tu peux faire un short par saga », puis « relance
+  le short par saga ») ; plan approuvé le 17 novembre.* Les cinq films sont bâtis par une base commune
+  (`promo/shorts/_saga.js`) et ne montrent que ce que le jeu dit lui-même : le lieu de la saga ; le nom du Compagnon, sa
+  Lumière et ses années ; la phrase de la saga (celle de l'écran de la Chaîne) ; une parole avec sa source, sur le carton
+  du jeu ; l'idole, combattue comme le récit la lance (`idoleDe`, dans `v2/tools/shorts.js`, lit son groupe, son fond,
+  son nom et la phrase qui l'annonce). Un scénario ne donne que des clés et des fragments. **Choix approuvés avec le
+  plan, les paroles restant à relire par un spécialiste :** Abû Bakr — « S'il l'a dit, il a dit vrai. » (Ibn Hishâm), le
+  Clan ; 'Umar — « Porteras-tu mon fardeau à ma place, au Jour de la Résurrection ? » (récit d'Aslam, at-Tabarî ; Ibn
+  Kathîr), l'Accapareur ; Khâlid — « Ce jour est l'un des jours d'Allah : il n'y sied ni vanité ni injustice… » (at-
+  Tabarî), l'Idole du Héros ; 'Uthmân — « Te plairait-il de tuer tous les gens, et moi avec eux ?… » (Ibn Sa'd), la
+  Rumeur ; 'Alî — « Parole de vérité par laquelle on vise le faux. » (Muslim), le Slogan. **Deux points signalés au
+  décideur :** (1) sous le nom de l'idole, le film pose la phrase par laquelle le jeu l'annonce ; pour le Clan et le
+  Slogan, c'est l'idole qui parle — le bandeau des actions, lui, reste caché comme en D172 ; (2) la parole de 'Uthmân
+  vient du siège de sa maison, épisode délicat : le film ne montre que son refus du sang, et l'ennemi est la Rumeur,
+  jamais des hommes (exigences 5 et 6) ; un rechange est noté dans le scénario (la parole de Hudhayfa sur le Livre,
+  l'idole « Babel »). Le temps de la prise, l'objectif « aller à tel endroit » du chapitre ne se déclenche pas au
+  passage du héros : on ne filme qu'une marche. **Typographie :** sur le carton d'une parole, l'outil pose une espace
+  insécable devant « : ; ? ! » et dans les guillemets, pour qu'aucun de ces signes n'ouvre une ligne ; pas un mot n'est
+  changé. Le jeu, lui, pose là une espace ordinaire : à reporter dans le jeu (question 27).
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
@@ -1419,10 +1456,16 @@ Chacun est signalé au joueur dans le codex. À relire en priorité par le valid
     convient-il comme titre du livre I ?
 24. Les personnages redessinés (D148) : la taille de la tête et du voile de lumière convient-elle ? Y a-t-il une coiffe
     ou une attitude à reprendre ? Le livret doit-il être remis en ligne avec ces personnages ?
-25. La promotion (D169 à D175) : les dix sujets, les accroches et les légendes conviennent-ils ? Les percussions,
+25. La promotion (D169 à D178) : les seize sujets, les accroches et les légendes conviennent-ils ? Les percussions,
     une fois écoutées ? Le short 6 peut-il montrer le carton d'une parole du Prophète ﷺ ? Faut-il d'autres plans
-    d'ambiance — et, si oui, sur quel compte —, ou s'en passer ? Qui joue dans la démo : Idris, comme proposé ?
+    d'ambiance — et, si oui, sur quel compte —, ou s'en passer ? Qui joue dans la démo : Idris, comme proposé ? Pour
+    les shorts de saga (D178) : les cinq paroles et les cinq idoles ; l'idole qui parle (le Clan, le Slogan) ; la
+    parole de 'Uthmân, ou son rechange. Pour la noosphère (D177) : l'entrée « en songe », le carton de l'issue.
 26. Le livret court (D174) : ses douze pages, texte par texte ; une adresse de contact pour signaler une erreur ; et
     le jour où un spécialiste aura relu, ce que devient la réserve.
+27. Typographie du jeu (vu en filmant, D178) : le jeu pose une espace ordinaire devant « : ; ? ! » et dans les
+    guillemets ; sur un écran étroit, un de ces signes peut ouvrir une ligne (un carton de parole de la saga de Khâlid
+    le montrait). Faut-il des espaces insécables dans le jeu ? C'est un changement de l'affichage : la batterie de la
+    2.x serait à repasser.
 10. *Répondu le 15 novembre : « Ça a l'air ok ».* La musique (D91) : tient-elle maintenant dans la noosphère de Médine ? Si elle se tait encore, que
     dit la ligne « Son » de la page Diagnostic (halte, tout en bas) ?

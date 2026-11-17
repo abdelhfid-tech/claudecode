@@ -250,6 +250,14 @@ class Plateau {
   doigt(x, y, x1, y1, sec, dans) { return this.ev(a => window.__film.doigt(...a), [x, y, x1, y1, sec, dans]); }
   // ce que le jeu dit d'un récit : son nom, sa Lumière, ses années, sa phrase
   recit(id) { return this.ev(id => { const g = window.ISNAD.sagas[id]; return { nom: g.name, epithete: g.epithet, lumiere: g.lightName, annees: g.years, phrase: g.tagline }; }, id); }
+  // le combat d'une idole tel que le récit le lance : son chapitre, son groupe, son fond, son nom et la phrase qui l'annonce dans le jeu
+  async idoleDe(recit, cle) {
+    const d = await this.ev(([recit, cle]) => { const s = window.ISNAD.sagas[recit]; let op = null, ci = -1;
+      s.chapters.forEach((c, i) => { const vu = new Set(), voir = x => { if (!x || typeof x !== 'object' || vu.has(x)) return; vu.add(x); if (Array.isArray(x) && x[0] === 'battle' && x[1] && Array.isArray(x[1].group) && x[1].group.includes(cle) && !op) { op = x[1]; ci = i; } (Array.isArray(x) ? x : Object.keys(x).map(k => x[k])).forEach(voir); }; voir(c); });
+      return op && { ci, groupe: op.group, fond: op.bg, mot: op.intro || '', nom: ((s.enemies || {})[cle] || {}).name || '' }; }, [recit, cle]);
+    if (!d) throw new Error('aucun combat de « ' + cle + ' » dans le récit « ' + recit + ' »');
+    this.journal.push(d.nom + ' — ' + d.mot); return d;
+  }
   // passe ce qui est affiché (carton, dialogue) sans le filmer
   async passer(n) { for (let i = 0; i < (n || 1); i++) { await this.touche('Enter'); await this.avancer(420); } }
   // avance le récit sans le filmer jusqu'à la réplique qui contient ce fragment, écrite en entier

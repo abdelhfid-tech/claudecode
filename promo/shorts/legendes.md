@@ -1,10 +1,14 @@
-# Les dix shorts — textes d'accompagnement
+# Les seize shorts — textes d'accompagnement
 
 **Propositions de l'agent, à valider par le décideur.** Rien ici n'est publié : ces textes sont prêts à coller le jour où
 les films seront postés. Ils ne promettent rien que le jeu ne fasse (ni avis, ni chiffre, ni durée de jeu), et ne nomment
 personne d'autre que ceux que le jeu nomme.
 
 Les films se refont par `node v2/tools/shorts.js` (dans `promo/shorts/films/`, non versionnés).
+
+Les shorts 1 à 10 présentent le jeu ; le 11 dit ce qu'est la noosphère ; les shorts 12 à 16 présentent chacun une
+saga — le Compagnon, la phrase de sa saga, une parole avec sa source, l'idole qu'on y combat. Dans ces cinq-là, tout ce
+qu'on lit à l'image vient du jeu.
 
 ## À joindre à chaque publication
 
@@ -112,3 +116,79 @@ chaîne de témoins pour les relier.
 
 **Description.** Sur ton téléphone, dans le navigateur, sans installation. Tu touches : il y va. Deux doigts : l'image
 s'agrandit.
+
+## 11 — « La noosphère »
+
+`11-la-noosphere.mp4` · 29 s
+
+**Titre.** La noosphère
+
+**Description.** « L'envers de la ville. La sphère de tout ce que les hommes pensent, craignent et désirent. » En songe,
+le râwî y descend : un labyrinthe où rôde ce qui lui pèse. Seul, il ne le vainc pas — il frappe pour passer, et cherche
+l'issue.
+
+*À valider de près : on y entre « en songe » (le jeu offre aussi la porte de la prière et celle du dhikr, que ce film
+ne montre pas) ; le carton de l'issue est celui du jeu, avec sa ligne « Le râwî gagne un niveau. ».*
+
+## 12 — Abû Bakr, la Véracité
+
+`12-saga-abu-bakr.mp4` · 21 s
+
+**Titre.** Abû Bakr as-Siddîq — la Véracité
+
+**Description.** Médine, 632. Le jour où tout pouvait se défaire, un homme doux a dit le vrai. En face de lui, pas des
+hommes : une idole, le Clan.
+
+*À valider de près : la parole citée (« S'il l'a dit, il a dit vrai. » — Abû Bakr, rapporté par Ibn Hishâm, as-Sîra),
+telle que le jeu l'affiche ; et la phrase par laquelle le jeu annonce l'idole — ici, c'est l'idole qui parle.*
+
+## 13 — 'Umar, la Justice
+
+`13-saga-umar.mp4` · 22 s
+
+**Titre.** 'Umar ibn al-Khattâb — la Justice
+
+**Description.** Deux empires tombèrent sous son califat. Lui dormait sur une natte — et, la nuit, il faisait sa ronde.
+En face de lui, une idole : l'Accapareur, la peur de manquer.
+
+*À valider de près : la parole citée (« Porteras-tu mon fardeau à ma place, au Jour de la Résurrection ? » — récit
+d'Aslam, at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya), telle que le jeu l'affiche.*
+
+## 14 — Khâlid, le Courage
+
+`14-saga-khalid.mp4` · 25 s
+
+**Titre.** Khâlid ibn al-Walîd — le Courage
+
+**Description.** Il n'a jamais perdu une bataille. Il lui reste à vaincre sa propre statue : l'Idole du Héros. Le fer ne
+l'entame pas.
+
+*À valider de près : la parole citée (« Ce jour est l'un des jours d'Allah : il n'y sied ni vanité ni injustice. Rendez
+votre combat sincère, et ne cherchez par vos œuvres qu'Allah. » — Khâlid, au conseil des émirs, at-Tabarî, Târîkh),
+telle que le jeu l'affiche.*
+
+## 15 — 'Uthmân, la Miséricorde
+
+`15-saga-uthman.mp4` · 25 s
+
+**Titre.** 'Uthmân ibn 'Affân — la Miséricorde
+
+**Description.** Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui. En face,
+une idole : la Rumeur. Mille bouches, pas un témoin.
+
+*À valider de près : la parole citée vient du siège de sa maison (« Te plairait-il de tuer tous les gens, et moi avec
+eux ? Par Allah, si tu tues un seul homme, c'est comme si tu avais tué tous les gens. » — 'Uthmân à Abû Hurayra, Ibn
+Sa'd, Tabaqât). L'épisode est délicat : le film ne montre que son refus du sang, et l'ennemi est la Rumeur, jamais des
+hommes. Rechange prêt : la parole de Hudhayfa sur le Livre (al-Bukhârî) et l'idole « Babel ».*
+
+## 16 — 'Alî, le Savoir
+
+`16-saga-ali.mp4` · 22 s
+
+**Titre.** 'Alî ibn Abî Tâlib — le Savoir
+
+**Description.** Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour. En face, une idole :
+le Slogan — une parole vraie, par laquelle on vise le faux.
+
+*À valider de près : la parole citée (« Parole de vérité par laquelle on vise le faux. » — 'Alî ibn Abî Tâlib, Muslim),
+telle que le jeu l'affiche ; et la phrase par laquelle le jeu annonce l'idole — ici, c'est l'idole qui parle.*

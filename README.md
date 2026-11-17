@@ -285,7 +285,7 @@ Les consignes pour un agent codeur sont dans `AGENTS.md`, le contrat de données
 Quatre outils travaillent à côté du jeu, sans en changer un fichier. Rien de ce qu'ils produisent n'est publié.
 
 ```sh
-node v2/tools/shorts.js             # dix films verticaux (1080 × 1920), le jeu filmé image par image
+node v2/tools/shorts.js             # seize films verticaux (1080 × 1920), le jeu filmé image par image
 node v2/tools/shorts.js 01 brouillon   # un seul, en demi-définition, pour régler son scénario
 node v2/tools/galerie.js            # une page qui montre les films avec leur texte d'accompagnement
 node v2/tools/jouable.js essai      # la démo jouable, assemblée puis jouée au doigt de bout en bout
@@ -294,8 +294,9 @@ node v2/tools/livret.js             # le livret court : douze pages au format d'
 
 Un short est un scénario (`promo/shorts/NN-nom.js`) : où aller dans le jeu, quoi faire, quelles phrases poser. Les
 répliques sont celles du jeu, retrouvées par un fragment et dites par le moteur ; le son est fait de percussions
-seules, rendues par le moteur de son du jeu. L'adresse, la devise et la réserve s'écrivent à un seul endroit :
-`v2/tools/promotion.js`.
+seules, rendues par le moteur de son du jeu. Les shorts 1 à 10 présentent le jeu, le 11 la noosphère, les shorts 12 à
+16 une saga chacun : ces cinq-là partagent une base (`promo/shorts/_saga.js`) et ne montrent que ce que le jeu dit
+lui-même. L'adresse, la devise et la réserve s'écrivent à un seul endroit : `v2/tools/promotion.js`.
 
 ## Sources
 

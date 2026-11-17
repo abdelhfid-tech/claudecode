@@ -100,8 +100,9 @@ Le dépôt porte deux jeux. **Ils ne se touchent pas.**
   resserre (`S.ajuster`). `v2/docs/architecture.md`, « L'image agrandie ». Tout changement de mise en page se relit sur
   un téléphone, en hauteur et en largeur : `loupe.js`, puis `doigt.js`.
 - Le livret (`promo/`, `tools/promo.js`) décrit la 1.32.
-- La promotion de la 2.x (demande du décideur, 17 novembre : dix shorts, une démo jouable, un livret court) se fait **à
-  côté du jeu**, sans en changer un fichier : `v2/tools/shorts.js` filme le jeu assemblé image par image (un scénario par
+- La promotion de la 2.x (demande du décideur, 17 novembre : dix shorts, une démo jouable, un livret court ; puis six
+  shorts de plus — la noosphère, et un par saga) se fait
+  **à côté du jeu**, sans en changer un fichier : `v2/tools/shorts.js` filme le jeu assemblé image par image (un scénario par
   film, `promo/shorts/NN-nom.js`), `v2/tools/jouable.js` assemble la démo (`promo/jouable/`), `v2/tools/livret.js` fait le
   livret (`promo/livret-2x/`). Règles : tout ce qu'on montre vient du jeu — une réplique se demande par un fragment
   (`s.dire`), elle n'est jamais retapée ; les phrases ajoutées sont des propositions, à valider par le décideur ; un plan
@@ -143,7 +144,7 @@ toute considération de jeu.
 | `promo/livret.src.html` | livret du joueur et planches de présentation | gabarit ; `tools/promo.js` y injecte les données du jeu |
 | `promo/livret.html`, `promo/livret.artifact.html`, `promo/livret.pdf`, `promo/planches/`, `promo/img/` | **générés** | ne rien y inventer : écrans capturés en jouant, sprites du moteur ; le PDF n’est pas versionné (`node tools/promo.js pdf` le refait) |
 | `v2/tools/promotion.js` | l'adresse, la devise, la réserve de la promotion (2.x) | le seul endroit où elles s'écrivent ; lu par `shorts.js`, `galerie.js`, `jouable.js`, `livret.js` |
-| `promo/shorts/NN-nom.js`, `promo/shorts/legendes.md` | les scénarios des shorts (2.x) et leurs textes d'accompagnement | un scénario dit où aller dans le jeu, quoi faire, quelles phrases poser ; les films (`films/`), la galerie et les plans d'ambiance (`plans-ia/`) ne sont pas versionnés |
+| `promo/shorts/NN-nom.js`, `promo/shorts/_saga.js`, `promo/shorts/legendes.md` | les scénarios des shorts (2.x), la base commune des cinq shorts de saga, et leurs textes d'accompagnement | un scénario dit où aller dans le jeu, quoi faire, quelles phrases poser ; un short de saga ne donne que des clés et des fragments (le lieu, la parole, l'idole) ; les films (`films/`), la galerie et les plans d'ambiance (`plans-ia/`) ne sont pas versionnés |
 | `promo/jouable/demarrage.js`, `demarrage.css` | le démarrage de la démo jouable (2.x) | ajouté au jeu assemblé par `v2/tools/jouable.js` ; `jouable.html` est **généré**, non versionné |
 | `promo/livret-2x/livret.src.html` | le gabarit du livret court (2.x) | `v2/tools/livret.js` y pose les sagas (lues dans le jeu) et la réserve ; `img/`, `donnees.json`, `livret.html`, `livret.artifact.html` sont **générés** ; le PDF n'est pas versionné |
 
