@@ -20,6 +20,10 @@
      des zones que les applications recouvrent. L'adresse du carton final n'est écrite qu'à un endroit : v2/tools/promotion.js.
    · Le son : des percussions seules. Le scénario écrit ses mesures ; le moteur de son du jeu les rend hors ligne
      (ISNAD.audio.render), sans mélodie ni voix (exigence 9).
+   · Le plan final : la mention du soutien et le logo (v2/tools/promotion.js), portés par la fanfare du jeu (la piste
+     « victoire », ses neuf premiers temps, rendue hors ligne : cuivres et percussions, aucune voix). Il s'ajoute au bout
+     du film sans le réencoder : l'image et le son du film restent identiques, et l'outil le vérifie.
+     node v2/tools/shorts.js fin [NN] [essai]  complète un short déjà livré (promo/shorts/films/livres/), sans le refilmer.
    · Un plan d'ambiance généré par IA peut ouvrir un short (promo/shorts/plans-ia/, hors du dépôt) : un paysage, un
      lieu vide — jamais une personne, un animal, un texte ni un lieu saint. S'il manque, le short s'ouvre sur le jeu.
    Le jeu n'est pas modifié : l'outil n'écrit rien dans v2/src ni dans les fichiers assemblés. */
@@ -29,7 +33,7 @@ const V2 = path.join(__dirname, '..'), RACINE = path.join(V2, '..'), JEU = 'file
 const SCN = path.join(RACINE, 'promo/shorts'), FILMS = path.join(SCN, 'films'), PRISES = path.join(SCN, '.prises'), PLANS = path.join(SCN, 'plans-ia');
 
 /* ---------- ce que disent tous les shorts : écrit à un seul endroit, v2/tools/promotion.js ---------- */
-const { ADRESSE, DEVISE, ETAT } = require('./promotion.js');
+const { ADRESSE, DEVISE, ETAT, SOUTIEN, SOUTIEN_NOM, SOUTIEN_LOGO } = require('./promotion.js');
 
 /* ---------- le film ---------- */
 const FIGE = process.env.FIGE !== '0';   // l'horloge arrêtée dès l'ouverture du jeu (FIGE=0 : l'ancienne manière, arrêtée après l'écran-titre)
@@ -58,6 +62,10 @@ body.f-titre #title .vmenu, body.f-titre #title .foot, body.f-titre #title .coin
 #film-ia { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; }
 #film-ombre { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6, 5, 13, .55), rgba(6, 5, 13, .1) 30%, rgba(6, 5, 13, .1) 60%, rgba(6, 5, 13, .7)); opacity: 0; }
 #film-noir { position: absolute; inset: 0; background: #000; opacity: 0; }
+#film-fond { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 42%, #191433, #0b0918 55%, #06050d); opacity: 0; }
+.film-leg.soutien { font-size: 21px; line-height: 1.4; color: #f3e7cc; }
+.film-leg.soutien b { display: block; font-family: "Cinzel", "Times New Roman", serif; font-weight: 700; font-size: 1.08em; letter-spacing: .04em; color: #e9c877; }
+.film-leg.logo img { display: block; width: 320px; height: auto; margin: 0 auto; }
 .film-doigt { position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; border: 2px solid rgba(255, 246, 220, .95); background: rgba(255, 246, 220, .22); box-shadow: 0 0 14px rgba(0, 0, 0, .6); opacity: 0; }
 #film-legendes { position: absolute; inset: 0; }
 .film-leg { position: absolute; left: 20px; right: 20px; text-align: center; text-wrap: balance; opacity: 0; color: #f3e7cc; font-family: "Alegreya", Georgia, "Amiri", serif; font-size: 22px; line-height: 1.2; text-shadow: 0 1px 2px #000, 0 0 12px rgba(0, 0, 0, .95), 0 0 26px rgba(0, 0, 0, .8); }
@@ -76,7 +84,7 @@ body.f-titre #title .vmenu, body.f-titre #title .foot, body.f-titre #title .coin
 function installer() {
   const I = window.ISNAD, W = I.world, $ = q => document.querySelector(q);
   const hote = document.createElement('div'); hote.id = 'film';
-  hote.innerHTML = '<img id="film-ia" alt="" hidden><div id="film-ombre"></div><div id="film-legendes"></div><div id="film-noir"></div>';
+  hote.innerHTML = '<img id="film-ia" alt="" hidden><div id="film-ombre"></div><div id="film-fond"></div><div id="film-legendes"></div><div id="film-noir"></div>';
   document.body.appendChild(hote);
   const borne = (v, a, b) => Math.max(a, Math.min(b, v)), doux = x => x * x * (3 - 2 * x), sansApo = s => String(s).replace(/[’']/g, "'");
   const F = window.__film = { t: 0, calques: [], rampes: {}, ia: null, n: 0 };
@@ -103,7 +111,7 @@ function installer() {
   F.pas = async t => { F.t = t; F.n++; F.anims();
     F.calques = F.calques.filter(c => { if (t > c.t1 + 0.05) { c.el.remove(); return false; }
       const a = doux(borne((t - c.t0) / c.fi, 0, 1)) * doux(borne((c.t1 - t) / c.fo, 0, 1)); c.el.style.opacity = a.toFixed(3); c.el.style.transform = 'translateY(' + ((1 - doux(borne((t - c.t0) / c.fi, 0, 1))) * c.dy).toFixed(2) + 'px)'; return true; });
-    $('#film-noir').style.opacity = valeur('noir').toFixed(3); $('#film-ombre').style.opacity = valeur('ombre').toFixed(3);
+    $('#film-noir').style.opacity = valeur('noir').toFixed(3); $('#film-ombre').style.opacity = valeur('ombre').toFixed(3); $('#film-fond').style.opacity = valeur('fond').toFixed(3);
     if (F.rampes.zoom && F.rampes.zoom.d) { const z = valeur('zoom'); I.ui.zoomer(z, false); }
     if (F.defile) { const q = F.defile, k = doux(borne((t - q.t0) / q.d, 0, 1)); q.el.scrollTop = q.de + (q.vers - q.de) * k; if (k >= 1) F.defile = null; }
     F.doigts = (F.doigts || []).filter(q => { const k = (t - q.t0) / q.d; if (k >= 1) { q.el.remove(); return false; } const x = q.x0 + (q.x1 - q.x0) * doux(borne(k, 0, 1)), y = q.y0 + (q.y1 - q.y0) * doux(borne(k, 0, 1)); q.el.style.left = x + 'px'; q.el.style.top = y + 'px'; q.el.style.opacity = (k < 0 ? 0 : Math.min(1, k * 8) * Math.min(1, (1 - k) * 4)).toFixed(3); q.el.style.transform = 'scale(' + (q.tap ? 0.7 + 0.5 * borne(k, 0, 1) : 1).toFixed(3) + ')'; return true; });
@@ -292,6 +300,19 @@ class Plateau {
     await this.legende(ETAT, { y: bas + 164, style: 'petit', duree: sec, dans: 1.1, fo: 0.01 });
     await this.tourner(sec);
   }
+  // le plan du soutien : sur un fond d'encre, la phrase, puis le logo — tel que l'Institut l'a fourni. Il est filmé à part,
+  // une fois, puis ajouté au bout de chaque film (completer) : son premier fondu part de la dernière image du film.
+  async soutien(sec) {
+    await this.effacer(); this._cadre = 'ecran'; await this.neuf();
+    await this.ev(() => window.__film.rampe('fond', 1, 0));
+    const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'), i = SOUTIEN.lastIndexOf(SOUTIEN_NOM);
+    const phrase = i > 0 ? esc(SOUTIEN.slice(0, i).trim()) + '<b>' + esc(SOUTIEN_NOM) + '</b>' : esc(SOUTIEN);
+    const logo = 'data:image/webp;base64,' + fs.readFileSync(path.join(RACINE, SOUTIEN_LOGO)).toString('base64');
+    const p = await this.legende(phrase, { y: 204, style: 'soutien', duree: sec, dans: SOUTIEN_ENTREE, fi: 0.5, fo: 0.01 });
+    const l = await this.legende('<img src="' + logo + '" alt="">', { y: Math.round(p.bottom) + 30, style: 'logo', duree: sec, dans: SOUTIEN_ENTREE + 0.15, fi: 0.6, fo: 0.01, dy: 0 });
+    if (p.top < HAUT_SUR || l.bottom > BAS_SUR) this.erreurs.push('plan du soutien hors des zones sûres : ' + Math.round(p.top) + ' – ' + Math.round(l.bottom));
+    await this.tourner(sec);
+  }
   /* --- la fin : le film, le son, la planche --- */
   async fermer() {
     if (this.ff) { this.ff.stdin.end(); await this.ffFin; }
@@ -326,13 +347,92 @@ function monter(scn, video, wav, duree, sortie) {
 function planche(film, duree, sortie, n) { n = n || 12; const col = 6, pas = duree / n;
   ffmpeg(['-i', film, '-vf', `fps=1/${pas.toFixed(4)}:start_time=${(pas / 2).toFixed(3)}:round=down,scale=300:-1,tile=${col}x${Math.ceil(n / col)}:padding=6:color=0x06050d`, '-frames:v', '1', '-q:v', '3', sortie]); }
 
+/* ---------- le plan final : la mention du soutien, la fanfare, l'assemblage ---------- */
+const LIVRES = path.join(FILMS, 'livres');              // les shorts tels qu'ils ont été livrés : on n'y touche pas
+const SOUTIEN_SEC = 4.8, SOUTIEN_FONDU = 0.5, SOUTIEN_ENTREE = 0.45;   // durée du plan ; fondu depuis la fin du film ; entrée de la phrase (sur la cymbale)
+const FANFARE = { piste: 'victoire', temps: 9 };        // la fanfare du jeu : le thème de la Chaîne aux cuivres, ses neuf premiers temps
+const CIBLE = -16, PLAFOND = -1.5;                       // niveau de la fanfare (LUFS) et crête (dB) : un peu au-dessus des percussions (≈ −19 LUFS)
+function niveau(fichier, filtre) {
+  const r = spawnSync('ffmpeg', ['-hide_banner', '-nostats', '-i', fichier, '-vn', '-af', (filtre ? filtre + ',' : '') + 'ebur128=peak=true', '-f', 'null', '-'], { encoding: 'utf8' }), t = (r.stderr || '').split('Summary:').pop();
+  const i = /I:\s+(-?[\d.]+) LUFS/.exec(t), c = /Peak:\s+(-?[\d.]+) dBFS/.exec(t); return { lufs: i ? parseFloat(i[1]) : -70, crete: c ? parseFloat(c[1]) : -70 };
+}
+// la fanfare, rendue hors ligne par le séquenceur du jeu, avec ses timbres, son bus et son limiteur
+async function fanfare(browser, sec) {
+  const c = await browser.newContext(), p = await c.newPage(); await p.goto(JEU);
+  await p.waitForFunction(n => window.ISNAD && window.ISNAD.audio && window.ISNAD.music && window.ISNAD.music[n], FANFARE.piste, { timeout: 15000 });
+  const b64 = await p.evaluate(async ([nom, temps, sec]) => { const I = window.ISNAD, src = I.music[nom];
+    // seulement la fanfare : les notes qui commencent avant `temps` ; la boucle douce qui suit n'est pas jouée
+    const voices = src.voices.map(v => { let t = 0; const garde = []; String(v.notes).trim().split(/\s+/).forEach(tk => { const k = tk.match(/^(.+)\/(\d*\.?\d+)$/); if (!k) return; if (t < temps - 1e-6) garde.push(tk); t += parseFloat(k[2]); }); return Object.assign({}, v, { notes: garde.join(' ') }); });
+    I.registerMusic('film', { bpm: src.bpm, beats: src.beats, intro: 0, voices }); const buf = await I.audio.render('film', sec), n = buf.length, sr = buf.sampleRate, g = buf.getChannelData(0), d = buf.numberOfChannels > 1 ? buf.getChannelData(1) : g;
+    const o = new DataView(new ArrayBuffer(44 + n * 4)), w = (q, s) => { for (let i = 0; i < s.length; i++) o.setUint8(q + i, s.charCodeAt(i)); };
+    w(0, 'RIFF'); o.setUint32(4, 36 + n * 4, true); w(8, 'WAVEfmt '); o.setUint32(16, 16, true); o.setUint16(20, 1, true); o.setUint16(22, 2, true); o.setUint32(24, sr, true); o.setUint32(28, sr * 4, true); o.setUint16(32, 4, true); o.setUint16(34, 16, true); w(36, 'data'); o.setUint32(40, n * 4, true);
+    for (let i = 0; i < n; i++) { o.setInt16(44 + i * 4, Math.max(-1, Math.min(1, g[i])) * 32767, true); o.setInt16(46 + i * 4, Math.max(-1, Math.min(1, d[i])) * 32767, true); }
+    let s = ''; const u = new Uint8Array(o.buffer); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); }, [FANFARE.piste, FANFARE.temps, sec + 0.3]);
+  await c.close();
+  const wav = path.join(PRISES, 'soutien.fanfare.wav'); fs.writeFileSync(wav, Buffer.from(b64, 'base64')); return wav;
+}
+// le plan du soutien, filmé une fois par invocation : { video, wav }
+async function planSoutien() {
+  const s = new Plateau({ id: 'soutien', graine: 1 }, {}); await s.ouvrir();
+  try { await s.soutien(SOUTIEN_SEC); } finally { if (s.ff) { s.ff.stdin.end(); await s.ffFin; } }
+  const wav = await fanfare(s.browser, SOUTIEN_SEC); await s.browser.close();
+  if (s.erreurs.length) throw new Error('plan du soutien : ' + [...new Set(s.erreurs)].join(' | ').slice(0, 400));
+  return { video: s.video, wav };
+}
+// empreintes d'un film, image par image et son : pour prouver que la partie livrée n'a pas changé
+function empreintes(f, n, sec) {
+  const v = spawnSync('ffmpeg', ['-v', 'error', '-i', f, '-map', '0:v', '-frames:v', String(n), '-f', 'framemd5', '-'], { encoding: 'utf8', maxBuffer: 1 << 26 }).stdout.split('\n').filter(l => l && l[0] !== '#').map(l => l.split(',').pop().trim());
+  const a = spawnSync('ffmpeg', ['-v', 'error', '-i', f, '-map', '0:a', '-t', sec.toFixed(3), '-f', 's16le', '-ac', '2', '-ar', '48000', '-'], { maxBuffer: 1 << 28 }).stdout;
+  return { v, a: require('crypto').createHash('md5').update(a).digest('hex'), octets: a.length };
+}
+// le film complet = le film (recopié tel quel, sans réencodage) + le plan final (encodé avec les mêmes réglages)
+function completer(id, corps, plan, sortie) {
+  const st = sonde(corps), v = st.find(x => x.codec_type === 'video') || {}, a = st.find(x => x.codec_type === 'audio'), n = +v.nb_frames, duree = parseFloat(v.duration);
+  if (v.width !== 1080 || v.height !== 1920 || v.r_frame_rate !== IPS + '/1' || !a) throw new Error(id + ' : le film n’a pas le format attendu');
+  const derniere = path.join(PRISES, id + '.derniere.png'), queue = path.join(PRISES, id + '.soutien.mp4'), liste = path.join(PRISES, id + '.liste.txt');
+  ffmpeg(['-sseof', '-0.3', '-i', corps, '-update', '1', derniere]);
+  const brut = niveau(plan.wav, 'atrim=start=0.1'), gain = Math.min(30, CIBLE - brut.lufs);
+  ffmpeg(['-loop', '1', '-framerate', String(IPS), '-t', String(SOUTIEN_FONDU), '-i', derniere, '-i', plan.video, '-i', plan.wav, '-filter_complex',
+    `[0:v]fps=${IPS},format=yuv420p,settb=AVTB[a];[1:v]fps=${IPS},format=yuv420p,settb=AVTB[b];[a][b]xfade=transition=fade:duration=${SOUTIEN_FONDU}:offset=0,format=yuv420p[v];` +
+    `[2:a]atrim=start=0.1,asetpts=PTS-STARTPTS,volume=${gain.toFixed(2)}dB,afade=t=out:st=${(SOUTIEN_SEC - 0.6).toFixed(2)}:d=0.6,alimiter=limit=${Math.pow(10, PLAFOND / 20).toFixed(3)}:level=0:attack=4:release=60,apad,atrim=duration=${SOUTIEN_SEC}[s]`,
+    '-map', '[v]', '-map', '[s]', '-c:v', 'libx264', '-preset', 'slow', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', String(IPS), '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2',
+    '-video_track_timescale', String(IPS * 512), '-t', String(SOUTIEN_SEC), '-movflags', '+faststart', queue]);
+  fs.writeFileSync(liste, "file '" + corps.replace(/'/g, "'\\''") + "'\nfile '" + queue.replace(/'/g, "'\\''") + "'\n");
+  // -copyts : les horodatages du film sont gardés tels quels — sans cela, l'amorce du son AAC (1 024 échantillons) n'est
+  // plus retirée au décodage, et le son du film glisse de 21 millièmes de seconde
+  ffmpeg(['-copyts', '-f', 'concat', '-safe', '0', '-i', liste, '-c', 'copy', '-movflags', '+faststart', sortie]);
+  // la preuve : la partie livrée, décodée, est identique image par image et son compris ; le plan final se décode sans faute
+  const avant = empreintes(corps, n, duree - 0.05), apres = empreintes(sortie, n, duree - 0.05), q = empreintes(queue, 9999, SOUTIEN_SEC - 0.05), tout = empreintes(sortie, 99999, duree + SOUTIEN_SEC);
+  const memeImage = avant.v.length === n && avant.v.every((h, i) => h === apres.v[i]), memeSon = avant.a === apres.a && avant.octets > 0;
+  const queueJuste = q.v.length > 0 && q.v.every((h, i) => h === tout.v[n + i]);
+  const decode = spawnSync('ffmpeg', ['-v', 'error', '-i', sortie, '-f', 'null', '-'], { encoding: 'utf8' }).stderr.trim();
+  return { duree: duree + SOUTIEN_SEC, memeImage, memeSon, queueJuste, decode, fanfare: { brut: brut.lufs, gain }, mesure: niveau(queue) };
+}
+
 module.exports = { Plateau, PRISES, FILMS, IPS };
 if (require.main === module) (async () => {
-  const args = process.argv.slice(2), brouillon = args.includes('brouillon'), voulus = args.filter(a => a !== 'brouillon');
+  const mots = ['brouillon', 'fin', 'essai'], args = process.argv.slice(2), brouillon = args.includes('brouillon'), voulus = args.filter(a => !mots.includes(a));
   const tous = fs.existsSync(SCN) ? fs.readdirSync(SCN).filter(f => /^\d\d-.*\.js$/.test(f)).sort() : [];
   const choisis = voulus.length ? tous.filter(f => voulus.some(v => f.startsWith(v) || f.includes(v))) : tous;
   if (!choisis.length) { console.log('Aucun scénario' + (voulus.length ? ' ne répond à « ' + voulus.join(' ') + ' »' : '') + ' dans promo/shorts/.'); process.exit(1); }
   let anomalies = 0;
+  // « fin » : chaque short livré (promo/shorts/films/livres/) reçoit le plan final du soutien, sans être refilmé ni réencodé
+  if (args.includes('fin')) {
+    const t0 = Date.now(), plan = await planSoutien(); console.log(`plan du soutien filmé, fanfare rendue (${((Date.now() - t0) / 1000).toFixed(0)} s)`);
+    for (const f of choisis) {
+      const id = f.replace(/\.js$/, ''), corps = path.join(LIVRES, id + '.mp4'), sortie = path.join(FILMS, id + (args.includes('essai') ? '.essai' : '') + '.mp4');
+      if (!fs.existsSync(corps)) { anomalies++; console.log(`  ✗ ${id} : pas de film livré dans ${path.relative(RACINE, LIVRES)}/`); continue; }
+      try {
+        const r = completer(id, corps, plan, sortie), st = sonde(sortie), v = st.find(x => x.codec_type === 'video') || {}, a = st.find(x => x.codec_type === 'audio');
+        const bon = r.memeImage && r.memeSon && r.queueJuste && !r.decode && v.width === 1080 && v.height === 1920 && v.r_frame_rate === IPS + '/1' && !!a && r.mesure.crete <= PLAFOND + 0.3;
+        if (!bon) anomalies++;
+        const vu = SOUTIEN_SEC + 1.2; ffmpeg(['-sseof', '-' + vu.toFixed(2), '-i', sortie, '-vf', `fps=6/${vu.toFixed(2)},scale=300:-1,tile=6x1:padding=6:color=0x06050d`, '-frames:v', '1', '-q:v', '3', sortie.replace(/\.mp4$/, '.fin.jpg')]);   // la fin, à relire
+        console.log(`  ${bon ? '✓' : '✗'} ${path.relative(RACINE, sortie)} — ${r.duree.toFixed(1)} s · partie livrée : ${r.memeImage ? 'images identiques' : 'IMAGES DIFFÉRENTES'}, ${r.memeSon ? 'son identique' : 'SON DIFFÉRENT'} · plan final : ${r.queueJuste ? 'décodé juste' : 'MAL DÉCODÉ'}${r.decode ? ' · ' + r.decode.slice(0, 200) : ''} · fanfare ${r.mesure.lufs.toFixed(1)} LUFS, crête ${r.mesure.crete.toFixed(1)} dB · ${(fs.statSync(sortie).size / 1e6).toFixed(1)} Mo`);
+      } catch (e) { anomalies++; console.log('  ✗ ' + id + ' : ' + e.message); }
+    }
+    console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ ${choisis.length} short(s) complété(s) — dans promo/shorts/films/ ; les films livrés restent dans promo/shorts/films/livres/`);
+    process.exit(anomalies ? 1 : 0);
+  }
   for (const f of choisis) {
     const scn = require(path.join(SCN, f)); scn.id = scn.id || f.replace(/\.js$/, '');
     console.log(`${scn.id} — ${scn.titre || ''}${brouillon ? ' (brouillon)' : ''}`);
