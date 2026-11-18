@@ -42,10 +42,15 @@ const PAGE = () => {
   const browser = await chromium.launch(), rapport = { annonces: {}, menus: {}, recits: {} }, ANN = annoncesDuCode(); let reprendre = 0;
   const ouvrir = async (l, vp) => { const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 1, hasTouch: true, isMobile: true, userAgent: devices['iPhone 13'].userAgent }); const p = await ctx.newPage();
     const errs = []; p.on('pageerror', e => errs.push(e.message)); await p.goto(URL + (l === 'fr' ? '' : '?lang=' + l)); await p.waitForTimeout(2000); await p.evaluate(PAGE); p.__errs = errs; return p; };
+  // le chapitre 3 de Khâlid, posé comme le fait loupe.js : l'IA de test un quart de seconde, puis on passe à la main ce qui
+  // reste à lire, jusqu'à ce que le joueur ait la main dans le lieu (la mesure se fait dans la mise en page de l'exploration)
   const chapitre = async p => { await p.evaluate(() => { const I = window.ISNAD; I.audio.setOn(false); I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset();
-      I.debug.auto = true; I.speed = 40; I.world.roster = {}; I.world.saga = null; I.world.startChapter('khalid', 2); });
-    for (let i = 0; i < 100 && await p.evaluate(() => window.ISNAD.script.busy || window.ISNAD.world.lock || !!window.ISNAD.world.excursion); i++) { await p.evaluate(() => { const I = window.ISNAD; if (I.world.excursion && !I.script.busy) I.rodeurs.finir('issue'); }); await p.waitForTimeout(150); }
-    await p.evaluate(() => { const I = window.ISNAD; I.debug.auto = false; I.speed = 1; I.script.filVide(); }); await p.waitForTimeout(500); };
+      I.debug.auto = true; I.speed = 30; I.world.roster = {}; I.world.saga = null; I.world.startChapter('khalid', 2); setTimeout(() => { I.debug.auto = false; I.speed = 1; }, 250); });
+    await p.waitForTimeout(1800);
+    for (let i = 0; i < 160; i++) { const e = await p.evaluate(() => { const I = window.ISNAD, W = I.world, q = s => document.querySelector(s); if (W.excursion && !I.script.busy) I.rodeurs.finir('issue');
+        return { libre: I.scene === W && !!W.map && !I.script.busy && !W.lock && !W.excursion && q('#choice').hidden && q('#dialog').hidden && q('#card').hidden, choix: !q('#choice').hidden, lire: !q('#dialog').hidden || !q('#card').hidden || I.battle.active }; });
+      if (e.libre) break; if (e.choix) await p.evaluate(() => { const o = document.querySelectorAll('#choice .opt:not(.locked)'); if (o.length) o[o.length - 1].click(); }); else if (e.lire) await p.keyboard.press('Enter'); await p.waitForTimeout(180); }
+    await p.evaluate(() => { window.ISNAD.script.filVide(); }); await p.waitForTimeout(500); };
 
   /* 1 et 3 — les textes de l'interface dans le fil ; les répliques et narrations dans la boîte de dialogue (390 × 844) */
   for (const l of LANGUES) {
@@ -90,15 +95,16 @@ const PAGE = () => {
       const e = await p.evaluate(() => { const q = s => document.querySelector(s), c = q('#choice'), d = q('#dialog'), k = q('#card');
         return { carton: !k.hidden && k.classList.contains('on'), dialogue: !d.hidden && q('#dialog .next').style.visibility === 'visible', choix: !c.hidden && !!c.querySelector('.opt') ? (c.querySelector('.seal.idee') ? 'noir' : 'liste') : '' }; });
       if (e.choix && !vu[e.choix]) { await p.waitForTimeout(500);
+        // une réponse compte entière quand son texte finit au-dessus du repère (ou du bas de la boîte)
         vu[e.choix] = await p.evaluate(() => { const box = document.querySelector('#choice'), r = box.getBoundingClientRect(), bas = Math.min(r.bottom, innerHeight), opts = [...box.querySelectorAll('.opt')], rep = box.querySelector('.repere');
-          return { haut: Math.round(r.top), bas: Math.round(r.bottom), libre: Math.round(innerHeight - r.bottom), defile: box.scrollHeight - box.clientHeight, police: box.style.fontSize || '1em', reponses: opts.length,
-            entieres: opts.filter(o => { const g = document.createRange(); g.selectNodeContents(o); const q = g.getBoundingClientRect(); return q.top >= r.top - 1 && q.bottom <= (rep && !rep.classList.contains('fin') ? Math.min(bas, rep.getBoundingClientRect().top) : bas) + 2; }).length, // le texte de la réponse, entier au-dessus du repère repere: rep && !rep.classList.contains('fin') ? rep.textContent : '' }; });
+          return { monde: window.ISNAD.scene === window.ISNAD.world, haut: Math.round(r.top), bas: Math.round(r.bottom), libre: Math.round(innerHeight - r.bottom), defile: box.scrollHeight - box.clientHeight, police: box.style.fontSize || '1em', reponses: opts.length,
+            entieres: opts.filter(o => { const g = document.createRange(); g.selectNodeContents(o); const q = g.getBoundingClientRect(); return q.top >= r.top - 1 && q.bottom <= (rep && !rep.classList.contains('fin') ? Math.min(bas, rep.getBoundingClientRect().top) : bas) + 2; }).length, repere: rep && !rep.classList.contains('fin') ? rep.textContent : '' }; });
         await p.screenshot({ path: path.join(out, `${nom}-${l}-${e.choix}.png`) }); }
       if (e.carton || e.dialogue) await p.keyboard.press('Enter'); else if (e.choix) await p.keyboard.press('Enter');
       await p.waitForTimeout(e.choix ? 450 : 220);
     }
     (rapport.menus[nom] = rapport.menus[nom] || {})[l] = vu;
-    const dit = (quoi, m) => !m ? `${quoi} : non atteint` : `${quoi} : ${m.entieres}/${m.reponses} réponses entières, ${m.defile > 2 ? `la liste défile (${m.repere || 'repère absent'})` : `tient, ${m.libre} points libres dessous`}${m.police !== '1em' ? `, resserrée à ${m.police}` : ''}`;
+    const dit = (quoi, m) => !m ? `${quoi} : non atteint` : `${quoi} : ${m.entieres}/${m.reponses} réponses entières, ${m.defile > 2 ? `la liste défile (${m.repere || 'repère absent'})` : `tient, ${m.libre} points libres dessous`}${m.police !== '1em' ? `, resserrée à ${m.police}` : ''}${m.monde ? '' : ' (mesure hors du lieu : à refaire)'}`;
     console.log(`${nom} ${l} · ${dit('idée noire', vu.noir)} · ${dit('pourparler', vu.liste)}`);
     if (nom === '390x844' && vu.noir && vu.noir.defile > 2 && !vu.noir.repere) { reprendre++; console.log(`  À REPRENDRE ${l} · le menu d'une idée noire déborde en 390 × 844 sans son repère`); }
     if (nom === '390x844' && l === 'ja') console.log(`  cas suivi — le menu d'une idée noire en japonais, 390 × 844 : ${vu.noir ? (vu.noir.defile > 2 ? 'il défile, avec son repère' : `il tient, ${vu.noir.libre} points libres dessous`) : 'non atteint'} (avant la 2.12, sa troisième manière était coupée)`);

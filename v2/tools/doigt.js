@@ -102,8 +102,9 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
     if (fini && corps) console.log(`      en combat, la cible a été choisie ${corps} fois en la touchant elle-même, sur la scène`);
     if (fini && tours.cmd) console.log(`      en combat, les commandes, vues ${tours.cmd} fois : chacune dans l'écran, sous le doigt`);
     // 2.12 (D189) : un combat où tout est reçu (une partie d'avant), le groupe de Khâlid — les cinq commandes, chacune dans l'écran et sous le doigt
-    // (en 360 × 560, Vertus, Objets et Garde tombaient sous le bord de l'écran ; en 360 × 640, Garde à moitié)
-    if (fini) { await p.evaluate(() => { const I = window.ISNAD, W = I.world; I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('khalid', 2); }); // un groupe de trois : le panneau est plein
+    // (en 360 × 560, Vertus, Objets et Garde tombaient sous le bord de l'écran ; en 360 × 640, Garde à moitié). Pas avec « loin » :
+    // les combats y sont menés par l'IA de test après le premier.
+    if (fini && !loin) { await p.evaluate(() => { const I = window.ISNAD, W = I.world; I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('khalid', 2); }); // un groupe de trois : le panneau est plein
       const libre = () => p.evaluate(() => { const I = window.ISNAD, W = I.world; return I.scene === W && !!W.map && !I.script.busy && !W.lock; }), lecture = () => p.evaluate(() => ['#card', '#dialog'].some(q => !document.querySelector(q).hidden));
       for (let i = 0; i < 120 && !(await libre()); i++) { if (await lecture()) await p.keyboard.press('Enter'); await p.waitForTimeout(170); }
       await p.evaluate(() => { const I = window.ISNAD, E = I.world.saga.enemies; I.battle.start({ group: Object.keys(E).filter(k => E[k].tier === 'minion' && !E[k].racine).slice(0, 2), bg: 'desert' }); });
