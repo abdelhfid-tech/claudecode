@@ -1,0 +1,299 @@
+[
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 22,
+    "fr": "Neuf sabres se sont brisés dans ma main le jour de Mu'ta ; il ne m'est resté en main qu'une large lame yéménite.",
+    "source_fr": "Khâlid ibn al-Walîd — al-Bukhârî",
+    "nature": "hadith",
+    "ar": {
+      "texte": "لَقَدِ انْقَطَعَتْ فِي يَدِي يَوْمَ مُوتَةَ تِسْعَةُ أَسْيَافٍ، فَمَا بَقِيَ فِي يَدِي إِلاَّ صَفِيحَةٌ يَمَانِيَةٌ",
+      "reference": "خالد بن الوليد — صحيح البخاري، كتاب المغازي، رقم ٤٢٦٥",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "On the day (of the battle of) Mu'tah, nine swords were broken in my hand, and nothing was left in my hand except a Yemenite sword of mine",
+      "origine": "publiee",
+      "reference": "Khalid ibn al-Walid — Sahih al-Bukhari, no. 4265 (Book of Military Expeditions, al-Maghazi), translated by Muhsin Khan",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "ムウタの日、私の手の中で九振りの剣が折れ、手に残ったのは幅広のイエメンの剣ただ一振りであった。",
+      "origine": "de_l_arabe",
+      "reference": "ハーリド・イブン・アル=ワリード — ブハーリー『真正集』遠征の書、4265番(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Le français ne donne pas de numéro : c'est le hadith n° 4265 (livre des expéditions, al-Maghâzî ; livre 64, hadith 299 dans l'édition lue). Le n° 4266 en donne une variante (« دُقَّ … وصبرت في يدي صفيحة لي يمانية »). La traduction anglaise publiée (Muhsin Khan, édition « eng-bukhari » de hadith-api) est recopiée telle quelle, sans la mention du rapporteur ni point final ; son « of mine » répond au « لي » du n° 4266, absent du n° 4265. Aucune traduction japonaise publiée n'a pu être lue en ligne : le japonais est traduit de l'arabe."
+  },
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 34,
+    "fr": "J'ai pris part à tant de combats ; il n'est pas sur mon corps un empan sans une blessure de sabre, de lance ou de flèche… et voici que je meurs sur ma couche. Que les yeux des lâches ne connaissent pas le sommeil !",
+    "source_fr": "Khâlid ibn al-Walîd, sur son lit de mort — Ibn 'Asâkir ; Ibn Kathîr, al-Bidâya",
+    "nature": "chronique",
+    "ar": {
+      "texte": "لقد حضرت كذا وكذا زحفا، وما في جسدي شبرا إلا وفيه ضربة سيف، أو طعنة برمح، أو رمية بسهم، وها أنا أموت على فراشي … فلا نامت أعين الجبناء",
+      "reference": "خالد بن الوليد، عند وفاته — ابن كثير، البداية والنهاية، ج ٧ ص ١٢٩ (عن الواقدي)؛ وبنحوه ابن عساكر، تاريخ دمشق، ج ١٦ ص ٢٧٣",
+      "lu_sur": "https://shamela.ws/book/8376/2560",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "I have been present at so many battles, and there is not a hand's span of my body without a sword-stroke, a spear-thrust or an arrow-wound; and here I am, dying on my bed … May the eyes of cowards never sleep!",
+      "origine": "de_l_arabe",
+      "reference": "Khalid ibn al-Walid, on his deathbed — Ibn Kathir, al-Bidaya wa-l-Nihaya, vol. 7, p. 129; likewise Ibn 'Asakir, History of Damascus, vol. 16, p. 273 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "私は数々の戦いに臨んできた。この身には、剣の一撃か、槍の一突きか、矢の一射の痕がない所は、掌ひとつ分とてない。それが今、私は床の上で死んでゆく……臆病者どもの目に眠りの訪れぬように。",
+      "origine": "de_l_arabe",
+      "reference": "ハーリド・イブン・アル=ワリード、臨終の床にて — イブン・カスィール『始まりと終わり』第7巻129頁、イブン・アサーキル『ダマスカス史』第16巻273頁にも同様(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Les points de suspension du français sont placés avant « et voici que je meurs sur ma couche », où l'arabe n'omet rien ; ce que le français laisse de côté vient juste après ces mots : « حتف أنفي كما يموت البعير » (« de ma belle mort, comme meurt le chameau »). L'arabe, l'anglais et le japonais placent la coupe à cet endroit-là. « tant de combats » rend « كذا وكذا زحفا » (« tant et tant de batailles » : le rapporteur tait le nombre).",
+    "note": "Texte relevé dans Ibn Kathîr (éd. 'Alî Shîrî, Dâr Ihyâ' at-Turâth al-'Arabî, 1988), qui le rapporte d'après al-Wâqidî ; l'arabe y porte « شبرا », gardé tel qu'imprimé. Ibn 'Asâkir (éd. Dâr al-Fikr, 1995, ج ١٦ ص ٢٧٣, lu sur https://shamela.ws/book/71/7161) donne la même parole par la même chaîne, avec « لقيت » au lieu de « لقد حضرت », l'ordre « sabre, flèche, lance », et, dans le texte lu, « تحف أنفي » (coquille pour « حتف أنفي » ; une note y signale la variante « العير » pour « البعير »). L'ordre du français (sabre, lance, flèche) est celui d'Ibn Kathîr."
+  },
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 370,
+    "fr": "Nous les avons bâties pour l'insensé, afin de le retenir jusqu'à ce que vienne le sage qui l'en empêche.",
+    "source_fr": "On rapporte — 'Amr ibn 'Abd al-Masîh à Khâlid, at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "بَنَيْنَاهَا لِلسَّفِيهِ نَحْبِسُهُ حَتَّى يَجِيءَ الْحَلِيمُ فَيَنْهَاهُ",
+      "reference": "يُروى — عبد المسيح بن عمرو بن بُقيلة لخالد، الطبري، تاريخ الرسل والملوك، سنة ١٢، ج ٣ ص ٣٤٥",
+      "lu_sur": "https://shamela.ws/book/9783/1618",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "We built them for the fool, to hold him in until the man of forbearance comes and restrains him.",
+      "origine": "de_l_arabe",
+      "reference": "It is reported — 'Abd al-Masih ibn 'Amr ibn Buqayla to Khalid, al-Tabari, History, year 12, vol. 3, p. 345 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "あれは愚か者のために築いたものです。思慮ある者が来て諫めるまで、その者を閉じ込めておくために。",
+      "origine": "de_l_arabe",
+      "reference": "と伝えられる — アブドゥルマスィーフ・イブン・アムル・イブン・ブカイラがハーリドに答えた言葉、タバリー『諸使徒と諸王の歴史』ヒジュラ暦12年、第3巻345頁(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Dans at-Tabarî, cette réponse se lit dans le récit de Hishâm ibn al-Kalbî (d'après Abû Mikhnaf), où celui qui parle à Khâlid est nommé « عبد المسيح بن عمرو بن بقيلة » ('Abd al-Masîh ibn 'Amr ibn Buqayla). Le nom que donne le français, « 'Amr ibn 'Abd al-Masîh », est celui du récit de Sayf (ج ٣ ص ٣٦١-٣٦٤), où cette réplique ne figure pas. Les références arabe, anglaise et japonaise portent le nom du passage lu.",
+    "note": "Édition lue pour at-Tabarî : Muhammad Abû l-Fadl Ibrâhîm, Dâr al-Ma'ârif, 2e éd. 1967 (pagination de l'imprimé). La question de Khâlid qui précède : « فما هذه الحصون التي أرى؟ »."
+  },
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 418,
+    "fr": "Par Allah, je ferai oublier aux Romains les suggestions du diable par Khâlid ibn al-Walîd.",
+    "source_fr": "On rapporte d'Abû Bakr as-Siddîq — at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "وَاللَّهِ لأُنْسِيَنَّ الرُّومَ وَسَاوِسَ الشَّيْطَانِ بِخَالِدِ بْنِ الْوَلِيدِ",
+      "reference": "يُروى عن أبي بكر الصدّيق — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٤٠٨",
+      "lu_sur": "https://shamela.ws/book/9783/1681",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "By Allah, I shall make the Romans forget the whisperings of Satan through Khalid ibn al-Walid.",
+      "origine": "de_l_arabe",
+      "reference": "It is reported from Abu Bakr al-Siddiq — al-Tabari, History, year 13, vol. 3, p. 408 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "アッラーにかけて、私はハーリド・イブン・アル=ワリードをもって、ローマ人(ビザンツ)に悪魔の囁きを忘れさせてみせよう。",
+      "origine": "de_l_arabe",
+      "reference": "アブー・バクル・アッ=スィッディークの言葉と伝えられる — タバリー『諸使徒と諸王の歴史』ヒジュラ暦13年、第3巻408頁(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Lu sous le titre « خبر اليرموك » ; at-Tabarî poursuit : « فكتب إليه بهذا الكتاب … »."
+  },
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 444,
+    "fr": "Que votre voie ne se divise pas et que votre certitude ne faiblisse pas. Sachez que le secours vient à la mesure de l'intention, et la récompense à la mesure de ce que l'on espère d'Allah.",
+    "source_fr": "Khâlid, au départ de Qurâqir — at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "لا يَخْتَلِفَنَّ هَدْيُكُمْ، وَلا يَضْعُفَنَّ يَقِينُكُمْ، وَاعْلَمُوا أَنَّ الْمَعُونَةَ تَأْتِي على قدر النية، والأجر على قدر الحسبة",
+      "reference": "خالد بن الوليد، عند الخروج من قُراقِر — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٤٠٩",
+      "lu_sur": "https://shamela.ws/book/9783/1682",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "Let not your course be divided, nor your certainty weaken. Know that help comes in the measure of the intention, and the reward in the measure of what one hopes for from Allah.",
+      "origine": "de_l_arabe",
+      "reference": "Khalid ibn al-Walid, on setting out from Quraqir — al-Tabari, History, year 13, vol. 3, p. 409 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "そなたたちの歩む道を違えてはならぬ。確信を弱めてはならぬ。知るがよい、助けは志(ニーヤ)の程に応じて訪れ、報いはアッラーに報奨を願う心の程に応じて与えられるのだ。",
+      "origine": "de_l_arabe",
+      "reference": "ハーリド・イブン・アル=ワリード、クラーキル出立にあたって — タバリー『諸使徒と諸王の歴史』ヒジュラ暦13年、第3巻409頁(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Dans la phrase lue (« فقام فيهم، فقال »), celui qui parle n'est pas nommé ; le contexte désigne Khâlid (on lui répond : « أنت رجل قد جمع الله لك الخير، فشأنك »). « ce que l'on espère d'Allah » rend « الحسبة » (le fait de compter sur la récompense d'Allah). Le discours continue dans l'arabe (« وإن المسلم لا ينبغي له أن يكترث بشيء … ») : le français ne le cite pas."
+  },
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 466,
+    "fr": "Nous sommes à Allah et c'est à Lui que nous retournons ! Vous êtes perdus, par Allah, et moi avec vous. Regardez encore !",
+    "source_fr": "Râfi' ibn 'Umayra — at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ راجِعُونَ! هَلَكْتُمْ وَاللَّهِ إِذًا وهلكت، لا ابالكم! انْظُرُوا",
+      "reference": "رافع بن عُميرة — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٤١٦",
+      "lu_sur": "https://shamela.ws/book/9783/1689",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "We belong to Allah, and to Him we return! Then, by Allah, you are lost, and I am lost with you — may you have no father! Look!",
+      "origine": "de_l_arabe",
+      "reference": "Rafi' ibn 'Umayra — al-Tabari, History, year 13, vol. 3, p. 416 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "まことに我らはアッラーのもの、我らはかれの御許に帰りゆく。それならば、アッラーにかけて、お前たちは滅びた、この私もだ。ええい、よく見よ!",
+      "origine": "de_l_arabe",
+      "reference": "ラーフィウ・イブン・ウマイラ — タバリー『諸使徒と諸王の歴史』ヒジュラ暦13年、第3巻416頁(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Le français omet « إذًا » (« alors ») et l'exclamation « لا أبا لكم ! », et il ajoute « encore » : l'arabe dit seulement « انظروا » (« Regardez ! »).",
+    "note": "« لا أبا لكم » (mot à mot « puissiez-vous n'avoir point de père ») est une formule de vive exhortation, sans valeur d'injure ; l'édition lue l'imprime « لا ابالكم », gardé tel quel. L'anglais la rend mot à mot, le japonais par une interjection. La première phrase est la formule de Coran 2:156, dite ici par Râfi' : elle est traduite avec le reste, de l'arabe."
+  },
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 498,
+    "fr": "Qu'ils sont bénis, les yeux de Râfi' : comme il a su trouver sa route ! De Qurâqir à Suwâ il a coupé le désert — cinq nuits où le lâche, s'il s'y engage, pleure.",
+    "source_fr": "Vers d'un homme de l'armée — at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "لله عينا رَافِعٍ أَنَّى اهْتَدَى ... فَوْز مِنْ قُرَاقِرَ إِلَى سَوَى!\nخَمْسًا إِذَا مَا سَارَهَا الْجَيْشُ بَكَى",
+      "reference": "شاعر من المسلمين — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٤١٦",
+      "lu_sur": "https://shamela.ws/book/9783/1689",
+      "etat": "approchant"
+    },
+    "en": {
+      "texte": "How wondrous are the eyes of Rafi' — how well he found the way!\nHe crossed the desert from Quraqir to Suwa,\na five days' march at which an army, setting out on it, weeps.",
+      "origine": "de_l_arabe",
+      "reference": "Verses by a poet among the Muslims — al-Tabari, History, year 13, vol. 3, p. 416 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "ラーフィウの眼の何と見事なことか、よくぞ道を見いだした。\nクラーキルからスワーへ、荒野を渡りきった。\n五日の道のり、軍勢さえも進めば涙する道を。",
+      "origine": "de_l_arabe",
+      "reference": "ムスリムのある詩人の詩 — タバリー『諸使徒と諸王の歴史』ヒジュラ暦13年、第3巻416頁(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Le texte d'at-Tabarî lu porte « الجيش » (« l'armée » : « cinq jours où l'armée, si elle s'y engage, pleure ») là où le français dit « le lâche », ce qui traduit une autre leçon du même vers, « الجِبْس », transmise hors d'at-Tabarî. « cinq nuits » rend « خمسًا » (« cinq », sans le mot « nuits »). Le français s'arrête avant le dernier hémistiche (« ما سارها قبلك إنسي يرى »), sans le marquer. L'anglais et le japonais suivent le texte d'at-Tabarî (« l'armée »).",
+    "note": "La leçon « الجبس » (« خمسا إذا ما سارها الجبس بكى ») a été lue chez ad-Dâraqutnî, al-Mu'talif wa-l-mukhtalif, ج ٣ ص ١٧٠٥ (https://shamela.ws/book/12581/1522), et chez al-Khatîb al-Baghdâdî, al-Kifâya, ص ١٦٣ (https://shamela.ws/book/13055/570), qui rapporte que lire « الجيش » y est une faute de copie ; tous deux ont « لله درّ رافع » au lieu de « لله عينا رافع ». Dans l'arabe relevé, « ... » est le séparateur d'hémistiches de l'édition, non une coupe. At-Tabarî dit : « فقال شاعر من المسلمين » (un poète d'entre les musulmans)."
+  },
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 559,
+    "fr": "Que les Romains sont peu nombreux et que les musulmans sont nombreux ! Les armées ne sont nombreuses que par la victoire et peu nombreuses que par la défaite, non par le nombre des hommes.",
+    "source_fr": "Khâlid ibn al-Walîd, au Yarmoûk — at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "مَا أَقَلَّ الرُّومَ وَأَكْثَرَ الْمُسْلِمِينَ! إِنَّمَا تَكْثُرُ الْجُنُودُ بِالنَّصْرِ وَتَقِلُّ بِالْخِذْلانِ، لا بِعَدَدِ الرِّجَالِ",
+      "reference": "خالد بن الوليد، يوم اليرموك — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٣٩٨",
+      "lu_sur": "https://shamela.ws/book/9783/1671",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "How few are the Romans, and how many the Muslims! Armies grow many only through victory and few only through being forsaken, not through the number of men.",
+      "origine": "de_l_arabe",
+      "reference": "Khalid ibn al-Walid, at the Yarmuk — al-Tabari, History, year 13, vol. 3, p. 398 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "ローマ人(ビザンツ)の何と少なく、ムスリムの何と多いことか。軍勢は勝利によってこそ多くなり、見放されることによってこそ少なくなる。兵の数によるのではない。",
+      "origine": "de_l_arabe",
+      "reference": "ハーリド・イブン・アル=ワリード、ヤルムークにて — タバリー『諸使徒と諸王の歴史』ヒジュラ暦13年、第3巻398頁(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "« défaite » rend « الخِذلان », mot à mot « l'abandon » (être délaissé, privé de secours) : l'arabe oppose le secours reçu (« النصر ») au secours retiré, non la victoire à la défaite.",
+    "note": "Réponse de Khâlid à un homme qui lui disait (ج ٣ ص ٣٩٧, https://shamela.ws/book/9783/1670) : « ما أكثر الروم وأقل المسلمين! ». La phrase continue dans l'arabe (« والله لوددت أن الأشقر براء … ») : le français ne la cite pas."
+  },
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 566,
+    "fr": "Ce jour est l'un des jours d'Allah : il n'y sied ni vanité ni injustice. Rendez votre combat sincère, et ne cherchez par vos œuvres qu'Allah.",
+    "source_fr": "Khâlid, au conseil des émirs — at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "إِنَّ هَذَا يَوْمٌ مِنْ أَيَّامِ اللَّهِ، لا يَنْبَغِي فِيهِ الْفَخْرُ وَلا الْبَغْيُ أَخْلِصُوا جِهَادَكُمْ، وَأَرِيدُوا اللَّهَ بِعَمَلِكُمْ",
+      "reference": "خالد بن الوليد، يخاطب الأمراء — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٣٩٥",
+      "lu_sur": "https://shamela.ws/book/9783/1668",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "This is one of the days of Allah: neither boasting nor transgression befits it. Make your striving sincere, and seek Allah by your deeds.",
+      "origine": "de_l_arabe",
+      "reference": "Khalid ibn al-Walid, to the assembled commanders — al-Tabari, History, year 13, vol. 3, p. 395 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "今日はアッラーの日々のうちの一日である。この日には、驕りも横暴もふさわしくない。そなたたちの奮闘(ジハード)を純粋なものとし、その行いによってアッラーを求めよ。",
+      "origine": "de_l_arabe",
+      "reference": "ハーリド・イブン・アル=ワリード、諸将を前にして — タバリー『諸使徒と諸王の歴史』ヒジュラ暦13年、第3巻395頁(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Le français dit « ne cherchez par vos œuvres qu'Allah » ; l'arabe dit sans tour restrictif « وأريدوا الله بعملكم » (« et recherchez Allah par vos œuvres »).",
+    "note": "At-Tabarî écrit que Khâlid « سار فيهم » (alla parmi eux) quand les émirs voulaient sortir chacun de son côté ; le mot « conseil » est du français. « vanité » rend « الفخر » (la jactance), « injustice » rend « البغي » (l'outrance, l'agression) ; « combat » rend « جهادكم »."
+  },
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 703,
+    "fr": "Voici ce que Khâlid ibn al-Walîd accorde aux habitants de Damas s'il y entre : la sécurité pour leurs personnes, leurs biens et leurs églises. L'enceinte de leur ville ne sera pas démolie, et nul n'occupera leurs maisons. Tant qu'ils s'acquittent du tribut, il ne leur sera fait que du bien.",
+    "source_fr": "al-Balâdhurî, Futûh al-Buldân — traduction du sens, abrégée",
+    "nature": "chronique",
+    "ar": {
+      "texte": "هَذَا ما أعطى خَالِد بْن الوليد أهل دمشق إذا دخلها أعطاهم أمانا عَلَى أنفسهم وأموالهم وكنائسهم وسور مدينتهم لا يهدم ولا يسكن شيء من دورهم […] لا يعرض لهم إلا بخير إذا أعطوا الجزية",
+      "reference": "البلاذري، فتوح البلدان، فتح مدينة دمشق وأرضها، ص ١٢٤ — مختصرًا",
+      "lu_sur": "https://shamela.ws/book/12221/121",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "This is what Khalid ibn al-Walid has granted to the people of Damascus, should he enter it: he has granted them security for their persons, their property and their churches. The wall of their city shall not be torn down, nor shall any of their houses be occupied. […] Nothing but good shall befall them, so long as they pay the jizya.",
+      "origine": "de_l_arabe",
+      "reference": "al-Baladhuri, Futuh al-Buldan, \"The Conquest of the City of Damascus and Its Territory\", p. 124 — abridged (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "これは、ハーリド・イブン・アル=ワリードがダマスカスに入るにあたり、その民に与えるものである。彼は、彼らの生命と財産と教会の安全を保障した。町の城壁は壊されず、彼らの家々には誰も住みつかない。[…]ジズヤを納めるかぎり、彼らには善きことのほか何もなされない。",
+      "origine": "de_l_arabe",
+      "reference": "バラーズリー『諸国征服史』「ダマスカスの町とその地の征服」124頁 — 抄録(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Le français, donné comme « abrégée », ne marque pas où il coupe. Il laisse l'invocation initiale « بسم الله الرحمن الرحيم » et, au milieu, « لهم بذلك عهد الله وذمة رسول الله صلى الله عليه وسلم والخلفاء والمؤمنين » (« ils ont pour cela le pacte d'Allah et la protection du Messager d'Allah ﷺ, des califes et des croyants »). L'arabe, l'anglais et le japonais coupent au même endroit et le marquent par « […] ».",
+    "note": "Édition lue : Dâr wa-Maktabat al-Hilâl, Beyrouth, 1988. « tribut » rend « الجزية » (gardé « jizya » en anglais, « ジズヤ » en japonais). Le français place la condition (« Tant qu'ils s'acquittent du tribut ») avant « il ne leur sera fait que du bien » ; l'arabe la met après."
+  },
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 872,
+    "fr": "Je n'ai pas destitué Khâlid par mécontentement ni pour trahison ; mais les gens ont été éblouis par lui, et j'ai craint qu'ils ne s'en remettent à lui. J'ai voulu qu'ils sachent que c'est Allah qui agit.",
+    "source_fr": "'Umar ibn al-Khattâb, lettre aux provinces — at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "إِنِّي لَمْ أَعْزِلْ خَالِدًا عَنْ سَخْطَةٍ وَلا خِيَانَةٍ، وَلَكِنَّ النَّاسَ فُتِنُوا بِهِ، فَخِفْتُ أَنْ يوكلوا إِلَيْهِ وَيُبْتُلُوا بِهِ، فَأَحْبَبْتُ أَنْ يَعْلَمُوا أَنَّ اللَّهَ هُوَ الصَّانِعُ",
+      "reference": "عمر بن الخطاب، كتابه إلى الأمصار — الطبري، تاريخ الرسل والملوك، سنة ١٧، ج ٤ ص ٦٨",
+      "lu_sur": "https://shamela.ws/book/9783/1959",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "I did not dismiss Khalid out of displeasure or for any breach of trust; but the people were captivated by him, and I feared they would place their reliance on him and be put to trial through him. I wished them to know that it is Allah who is the Doer.",
+      "origine": "de_l_arabe",
+      "reference": "'Umar ibn al-Khattab, letter to the provinces — al-Tabari, History, year 17, vol. 4, p. 68 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "私がハーリドを解任したのは、不満からでも、背信があったからでもない。ただ、人々が彼に心を奪われたので、彼に頼りきり、彼によって試みられることを私は恐れた。事を成したもうのはアッラーであると、人々に知ってほしかったのである。",
+      "origine": "de_l_arabe",
+      "reference": "ウマル・イブン・アル=ハッターブ、諸地方への書簡 — タバリー『諸使徒と諸王の歴史』ヒジュラ暦17年、第4巻68頁(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Le français omet « ويبتلوا به » (« et qu'ils ne soient éprouvés par lui ») et s'arrête avant la fin de la phrase : « وألا يكونوا بعرض فتنة » (« et qu'ils ne soient pas exposés à une épreuve »), non relevée ici. « éblouis » rend « فُتِنوا به » (« ont été séduits, mis à l'épreuve par lui »).",
+    "note": "Récit de Sayf, d'après 'Adî ibn Suhayl : « كتب عمر إلى الأمصار »."
+  }
+]

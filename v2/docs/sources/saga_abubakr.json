@@ -1,0 +1,542 @@
+[
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 19,
+    "fr": "S'il l'a dit, il a dit vrai.",
+    "source_fr": "Abû Bakr — rapporté par Ibn Hishâm, as-Sîra",
+    "nature": "chronique",
+    "ar": {
+      "texte": "وَاَللَّهِ لَئِنْ كَانَ قَالَهُ لَقَدْ صَدَقَ",
+      "reference": "ابن هشام، السيرة النبوية (ت. السقا ورفاقه)، ج ١ ص ٣٩٩",
+      "lu_sur": "https://shamela.ws/book/23833/422",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "By Allah, if he said it, then he has spoken the truth.",
+      "origine": "de_l_arabe",
+      "reference": "Ibn Hisham, al-Sira al-Nabawiyya, vol. 1, p. 399 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "アッラーにかけて、彼がそう言ったのであれば、それはまさしく真実である。",
+      "origine": "de_l_arabe",
+      "reference": "イブン・ヒシャーム『預言者伝』第1巻399頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le français omet le serment qui ouvre la phrase (« وَاَللَّهِ », « Par Allah ») ; l'arabe dit « Par Allah, s'il l'a dit, il a certes dit vrai ».",
+    "note": "Récit du Voyage nocturne (rapporté d'al-Hasan). L'arabe, l'anglais et le japonais gardent le serment."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 30,
+    "fr": "Lavez ces deux vêtements que je porte, et ensevelissez-moi dedans. Le vivant a plus besoin du neuf que le mort.",
+    "source_fr": "Abû Bakr, sur son lit de mort — al-Bukhârî, as-Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "اغْسِلُوا ثَوْبِي هَذَا، وَزِيدُوا عَلَيْهِ ثَوْبَيْنِ فَكَفِّنُونِي فِيهَا … إِنَّ الْحَىَّ أَحَقُّ بِالْجَدِيدِ مِنَ الْمَيِّتِ",
+      "reference": "صحيح البخاري، رقم ١٣٨٧",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "approchant"
+    },
+    "en": {
+      "texte": "Wash this garment of mine and add two more garments and shroud me in them. … A living person has more right to wear new clothes than a dead one.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 1387 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "私のこの衣を洗い、それに二枚の布を加えて、私をそれらに包んで葬りなさい。……生きている者のほうが、死者よりも新しいものを受けるにふさわしい。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』1387番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Chez al-Bukhârî (n° 1387), Abû Bakr demande qu'on lave le vêtement qu'il porte (un seul : « ثوبي هذا »), qu'on y ajoute deux autres et qu'on l'ensevelisse dans les trois ; le français dit « ces deux vêtements » et « ensevelissez-moi dedans ». Al-Bukhârî dit « أحقّ » (« a plus droit au neuf ») ; « a plus besoin » rend « أحوج », qui est le mot d'autres récits : Ibn Sa'd, at-Tabaqât (éd. Sâdir), t. 3 p. 196 — « انظروا ملاءتي هاتين فإذا مت فاغسلوهما وكفنوني فيهما فإن الحي أحوج إلى الجديد من الميت » (lu sur https://shamela.ws/book/9351/1078) —, et Mâlik, al-Muwatta' (n° 525 de l'édition du même CDN). Le français paraît donc suivre Ibn Sa'd plutôt qu'al-Bukhârî. Les deux phrases sont séparées, chez al-Bukhârî, par une réplique de 'Â'isha (« Celui-ci est usé ») : coupe non signalée en français, marquée ici par « … ».",
+    "note": "L'arabe, l'anglais et le japonais suivent al-Bukhârî, source nommée. Dans la traduction anglaise, la phrase se poursuit après « dead one » (« ; the shroud is only for the body's pus ») : arrêtée là, avec un point. Graphie de l'édition lue (« ى » final pour « ي », formule de bénédiction écrite en toutes lettres), recopiée telle quelle."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 370,
+    "fr": "Le Messager d'Allah ﷺ n'est pas mort ! Il est allé vers son Seigneur, comme y alla Mûsâ fils de 'Imrân, qui s'absenta quarante nuits puis revint aux siens.",
+    "source_fr": "'Umar ibn al-Khattâb, ce jour-là — Ibn Hishâm, as-Sîra",
+    "nature": "chronique",
+    "ar": {
+      "texte": "إِنَّ رَسُولَ اللَّهِ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ مَا مَاتَ، وَلَكِنَّهُ ذَهَبَ إلَى رَبِّهِ كَمَا ذَهَبَ مُوسَى بْنُ عِمْرَانَ، فَقَدْ غَابَ عَنْ قَوْمِهِ أَرْبَعِينَ لَيْلَةً، ثُمَّ رَجَعَ إلَيْهِمْ",
+      "reference": "ابن هشام، السيرة النبوية (ت. السقا ورفاقه)، ج ٢ ص ٦٥٥",
+      "lu_sur": "https://shamela.ws/book/23833/1392",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "Indeed, the Messenger of Allah ﷺ has not died; rather, he has gone to his Lord as Musa son of Imran went: he was absent from his people for forty nights, then returned to them.",
+      "origine": "de_l_arabe",
+      "reference": "Ibn Hisham, al-Sira al-Nabawiyya, vol. 2, p. 655 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "アッラーの使徒ﷺは亡くなってはおられない。イムラーンの子ムーサーが赴いたように、主のもとへ赴かれたのである。ムーサーは四十夜のあいだ民のもとを離れ、その後、彼らのもとへ戻った。",
+      "origine": "de_l_arabe",
+      "reference": "イブン・ヒシャーム『預言者伝』第2巻655頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le français s'arrête avant la fin de la phrase : l'arabe poursuit « بَعْدَ أَنْ قِيلَ قد مَاتَ » (« après qu'on eut dit qu'il était mort »), coupe non signalée. La phrase commence en arabe par « Des hommes, parmi les hypocrites, prétendent que le Messager d'Allah est mort ; or… », que le français ne cite pas.",
+    "note": "Chapitre « مقالة عمر بعد وفاة الرسول ». Les trois langues s'arrêtent où s'arrête le français."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 372,
+    "fr": "Que mon père et ma mère te soient donnés en rançon ! Tu as été bon de ton vivant, et bon dans ta mort.",
+    "source_fr": "Abû Bakr — al-Bukhârî, as-Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "بِأَبِي أَنْتَ وَأُمِّي طِبْتَ حَيًّا وَمَيِّتًا",
+      "reference": "صحيح البخاري، رقم ٣٦٦٧",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "Let my mother and father be sacrificed for you, (O Allah's Messenger (ﷺ)), you are good in life and in death.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 3667 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "わが父も母もあなたの身代わりとなりますように。あなたは生きておられた時も、亡くなられた後も、清らかであられる。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』3667番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "L'édition lue donne le même texte sous les numéros 3667 et 3668. Dans la traduction anglaise publiée, « (O Allah's Messenger (ﷺ)) » est une incise du traducteur, absente de l'arabe."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 392,
+    "fr": "Ô gens ! Que celui qui adorait Muhammad sache que Muhammad est mort. Et que celui qui adore Allah sache qu'Allah est Vivant et ne meurt pas.",
+    "source_fr": "Abû Bakr, dans la mosquée de Médine — al-Bukhârî, as-Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "أَلاَ مَنْ كَانَ يَعْبُدُ مُحَمَّدًا صلى الله عليه وسلم فَإِنَّ مُحَمَّدًا قَدْ مَاتَ، وَمَنْ كَانَ يَعْبُدُ اللَّهَ فَإِنَّ اللَّهَ حَىٌّ لاَ يَمُوتُ",
+      "reference": "صحيح البخاري، رقم ٣٦٦٧",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "approchant"
+    },
+    "en": {
+      "texte": "No doubt! Whoever worshipped Muhammad, then Muhammad is dead, but whoever worshipped Allah, then Allah is Alive and shall never die.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 3667 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "聞け。ムハンマドﷺを崇めていた者よ、ムハンマドはすでに亡くなった。アッラーを崇めていた者よ、アッラーは生きておられ、死ぬことはない。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』3667番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "« Ô gens ! » n'est pas chez al-Bukhârî : le n° 3667 ouvre par « أَلاَ » (particule d'appel à l'attention), les n° 1242 et 4454 par « أَمَّا بَعْدُ ». L'apostrophe « أَيُّهَا النَّاسُ » est celle du récit d'Ibn Hishâm (as-Sîra, t. 2 p. 656 : « أَيُّهَا النَّاسُ، إنَّهُ مَنْ كَانَ يَعْبُدُ مُحَمَّدًا فَإِنَّ مُحَمَّدًا قَدْ مَاتَ، وَمَنْ كَانَ يَعْبُدُ اللَّهَ فَإِنَّ اللَّهَ حَيٌّ لَا يَمُوتُ », lu sur https://shamela.ws/book/23833/1393), que le français suit mot pour mot en nommant al-Bukhârî. Le français met le second verbe au présent (« adore ») ; l'arabe a le même passé dans les deux membres (« كان يعبد »).",
+    "note": "L'édition lue donne le même texte sous les numéros 3667 et 3668. L'arabe, l'anglais et le japonais suivent al-Bukhârî, source nommée, donc sans « Ô gens ! ». Graphie de l'édition lue (« ى » final pour « ي », formule de bénédiction écrite en toutes lettres), recopiée telle quelle."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 395,
+    "fr": "Par Allah, dès que j'entendis Abû Bakr le réciter, mes jambes ne me portèrent plus, et je tombai à terre. Je sus alors que le Prophète ﷺ était mort.",
+    "source_fr": "'Umar ibn al-Khattâb — al-Bukhârî, as-Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "وَاللَّهِ مَا هُوَ إِلاَّ أَنْ سَمِعْتُ أَبَا بَكْرٍ تَلاَهَا فَعَقِرْتُ حَتَّى مَا تُقِلُّنِي رِجْلاَىَ، وَحَتَّى أَهْوَيْتُ إِلَى الأَرْضِ حِينَ سَمِعْتُهُ تَلاَهَا أَنَّ النَّبِيَّ صلى الله عليه وسلم قَدْ مَاتَ",
+      "reference": "صحيح البخاري، رقم ٤٤٥٤",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "By Allah, when I heard Abu Bakr reciting it, my legs could not support me and I fell down at the very moment of hearing him reciting it, declaring that the Prophet (ﷺ) had died.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 4454 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "アッラーにかけて、アブー・バクルがそれを誦むのを聞いたとたん、私は立ちすくみ、両足は私を支えきれず、地に崩れ落ちた。彼がそれを誦むのを聞いて、預言者ﷺは亡くなられたのだと悟ったのである。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』4454番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "« Je sus alors » : dans le texte lu, aucun verbe « savoir » ; l'arabe dit, d'un seul tenant, « … et je tombai à terre lorsque je l'entendis le réciter : le Prophète ﷺ était mort » (« حِينَ سَمِعْتُهُ تَلاَهَا أَنَّ النَّبِيَّ … قَدْ مَاتَ »). Le français en fait une phrase à part et ne reprend pas « فَعَقِرْتُ » (« je restai interdit ») ni la répétition « lorsque je l'entendis le réciter ».",
+    "note": "L'édition lue donne le même texte sous les numéros 4452, 4453 et 4454 ; la parole de 'Umar (rapportée par Sa'îd ibn al-Musayyab) en est la dernière partie. Le japonais rend le verbe sous-entendu par « 悟った ». Graphie de l'édition lue (« ى » final pour « ي », formule de bénédiction écrite en toutes lettres), recopiée telle quelle."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 470,
+    "fr": "J'agrée pour vous l'un de ces deux hommes : prêtez allégeance à celui des deux que vous voudrez.",
+    "source_fr": "Abû Bakr à la Saqîfa — al-Bukhârî, as-Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "قَدْ رَضِيتُ لَكُمْ أَحَدَ هَذَيْنِ الرَّجُلَيْنِ، فَبَايِعُوا أَيَّهُمَا شِئْتُمْ",
+      "reference": "صحيح البخاري، رقم ٦٨٣٠",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "I am pleased to suggest that you choose either of these two men, so take the oath of allegiance to either of them as you wish.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 6830 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "私はあなたがたのために、この二人のうちのいずれかをよしとする。二人のうち、望むほうに忠誠を誓いなさい。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』6830番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Récit de 'Umar sur la Saqîfa ; les deux hommes sont 'Umar et Abû 'Ubayda ibn al-Jarrâh. Dans l'anglais publié, la phrase commence par « and » (« and I am pleased… »)."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 471,
+    "fr": "De tout ce qu'il dit, je ne détestai que cette parole. Par Allah, j'aurais préféré avoir le cou tranché, sans péché, plutôt que de commander à des gens parmi lesquels se trouve Abû Bakr.",
+    "source_fr": "'Umar ibn al-Khattâb — al-Bukhârî, as-Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "لَمْ أَكْرَهْ مِمَّا قَالَ غَيْرَهَا، كَانَ وَاللَّهِ أَنْ أُقَدَّمَ فَتُضْرَبَ عُنُقِي لاَ يُقَرِّبُنِي ذَلِكَ مِنْ إِثْمٍ، أَحَبَّ إِلَىَّ مِنْ أَنْ أَتَأَمَّرَ عَلَى قَوْمٍ فِيهِمْ أَبُو بَكْرٍ",
+      "reference": "صحيح البخاري، رقم ٦٨٣٠",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "I hated nothing of what he had said except that proposal, for by Allah, I would rather have my neck chopped off as expiator for a sin than become the ruler of a nation, one of whose members is Abu Bakr.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 6830 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "彼の言葉のうち、私が厭うたのはこの一言だけであった。アッラーにかけて、罪に近づくこともないまま前に引き出されて首を打たれるほうが、アブー・バクルのいる人々の上に立って指揮を執るよりも、私には好ましかった。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』6830番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "La traduction anglaise publiée rend « لاَ يُقَرِّبُنِي ذَلِكَ مِنْ إِثْمٍ » (« sans que cela m'approche d'un péché », le « sans péché » du français) par « as expiator for a sin » : à signaler au spécialiste. La phrase anglaise se poursuit après « Abu Bakr » (« , unless at the time of my death… ») : arrêtée là, avec un point, comme le français. Graphie de l'édition lue (« ى » final pour « ي », formule de bénédiction écrite en toutes lettres), recopiée telle quelle."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 487,
+    "fr": "Ô gens ! J'ai été placé à votre tête, et je ne suis pas le meilleur d'entre vous. Si j'agis bien, aidez-moi ; si j'agis mal, redressez-moi. La véracité est un dépôt, et le mensonge une trahison.",
+    "source_fr": "Abû Bakr, discours d'investiture — Ibn Hishâm, as-Sîra",
+    "nature": "chronique",
+    "ar": {
+      "texte": "أَيُّهَا النَّاسُ، فَإِنِّي قَدْ وُلِّيتُ عَلَيْكُمْ وَلَسْتُ بِخَيْرِكُمْ، فَإِنْ أَحْسَنْتُ فَأَعِينُونِي، وَإِنْ أَسَأْتُ فَقَوِّمُونِي، الصَّدْقُ أَمَانَةٌ، وَالْكَذِبُ خِيَانَةٌ",
+      "reference": "ابن هشام، السيرة النبوية (ت. السقا ورفاقه)، ج ٢ ص ٦٦١",
+      "lu_sur": "https://shamela.ws/book/23833/1398",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "O people, I have been placed in authority over you, though I am not the best of you. If I do well, help me; and if I do wrong, set me right. Truthfulness is a trust, and lying is a betrayal.",
+      "origine": "de_l_arabe",
+      "reference": "Ibn Hisham, al-Sira al-Nabawiyya, vol. 2, p. 661 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "人々よ、私はあなたがたの上に立つ者とされたが、あなたがたのうちで最も優れた者ではない。私が正しく行うならば私を助け、過ちを犯すならば私を正しなさい。誠実は信託であり、偽りは裏切りである。",
+      "origine": "de_l_arabe",
+      "reference": "イブン・ヒシャーム『預言者伝』第2巻661頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Chapitre « خطبة أبي بكر ». Le texte numérique lu porte « الصَّدْقُ » (fatha sur le ṣâd), vraisemblable coquille pour « الصِّدْقُ » : recopié tel quel, à faire corriger par le spécialiste. L'arabe fait précéder l'apostrophe de « أَمَّا بَعْدُ », que le français ne cite pas."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 488,
+    "fr": "Le faible parmi vous est fort auprès de moi, jusqu'à ce que je lui rende son droit. Le fort parmi vous est faible auprès de moi, jusqu'à ce que je lui reprenne le droit d'autrui.",
+    "source_fr": "Abû Bakr, discours d'investiture — Ibn Hishâm, as-Sîra",
+    "nature": "chronique",
+    "ar": {
+      "texte": "الضَّعِيفُ فِيكُمْ قَوِيٌّ عِنْدِي حَتَّى أُرِيحَ عَلَيْهِ حَقَّهُ إنْ شَاءَ اللَّهُ، وَالْقَوِيُّ فِيكُمْ ضَعِيفٌ عِنْدِي حَتَّى آخُذَ الْحَقَّ مِنْهُ إنْ شَاءَ اللَّهُ",
+      "reference": "ابن هشام، السيرة النبوية (ت. السقا ورفاقه)، ج ٢ ص ٦٦١",
+      "lu_sur": "https://shamela.ws/book/23833/1398",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "The weak among you is strong in my sight until I restore to him his right, if Allah wills; and the strong among you is weak in my sight until I take from him what is due, if Allah wills.",
+      "origine": "de_l_arabe",
+      "reference": "Ibn Hisham, al-Sira al-Nabawiyya, vol. 2, p. 661 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "あなたがたのうちの弱き者は、アッラーの御心ならば、私がその権利を取り戻してやるまで、私のもとでは強き者である。あなたがたのうちの強き者は、アッラーの御心ならば、私がその者から当然の権利を取り立てるまで、私のもとでは弱き者である。",
+      "origine": "de_l_arabe",
+      "reference": "イブン・ヒシャーム『預言者伝』第2巻661頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le français omet les deux « إنْ شَاءَ اللَّهُ » (« si Allah le veut ») qui ferment chacune des deux phrases. « le droit d'autrui » explicite l'arabe, qui dit seulement « jusqu'à ce que je prenne de lui le droit » (« حَتَّى آخُذَ الْحَقَّ مِنْهُ »).",
+    "note": "L'arabe, l'anglais et le japonais gardent les deux « si Allah le veut »."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 489,
+    "fr": "Obéissez-moi tant que j'obéis à Allah et à Son Messager. Si je leur désobéis, vous ne me devez plus obéissance.",
+    "source_fr": "Abû Bakr, discours d'investiture — Ibn Hishâm, as-Sîra",
+    "nature": "chronique",
+    "ar": {
+      "texte": "أَطِيعُونِي مَا أَطَعْتُ اللَّهَ وَرَسُولَهُ، فَإِذَا عَصَيْتُ اللَّهَ وَرَسُولَهُ فَلَا طَاعَةَ لِي عَلَيْكُمْ",
+      "reference": "ابن هشام، السيرة النبوية (ت. السقا ورفاقه)، ج ٢ ص ٦٦١",
+      "lu_sur": "https://shamela.ws/book/23833/1398",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "Obey me so long as I obey Allah and His Messenger; and if I disobey Allah and His Messenger, then you owe me no obedience.",
+      "origine": "de_l_arabe",
+      "reference": "Ibn Hisham, al-Sira al-Nabawiyya, vol. 2, p. 661 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "私がアッラーとその使徒に従うかぎり、私に従いなさい。私がアッラーとその使徒に背いたならば、あなたがたに私への服従の義務はない。",
+      "origine": "de_l_arabe",
+      "reference": "イブン・ヒシャーム『預言者伝』第2巻661頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": ""
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 568,
+    "fr": "Si, par ma vie, je vous les trairai. J'espère que ce qui m'arrive ne me changera pas.",
+    "source_fr": "On rapporte d'Abû Bakr — Ibn Sa'd, at-Tabaqât",
+    "nature": "chronique",
+    "ar": {
+      "texte": "بلى لعمري لأحلبنها لكم وإني لأرجو أن لا يغيرني ما دخلت فيه عن خلق كنت عليه",
+      "reference": "يُروى — ابن سعد، الطبقات الكبرى (ط. دار صادر)، ج ٣ ص ١٨٦",
+      "lu_sur": "https://shamela.ws/book/9351/1068",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "Yes indeed, by my life, I shall milk them for you; and I hope that what I have entered upon will not turn me from a habit I used to keep.",
+      "origine": "de_l_arabe",
+      "reference": "It is reported — Ibn Sa'd, al-Tabaqat al-Kubra, vol. 3, p. 186 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "いや、わが命にかけて、私はあなたがたのために必ず乳を搾ろう。私が引き受けたこの務めが、これまでの私の習いを変えてしまわぬよう願っている。",
+      "origine": "de_l_arabe",
+      "reference": "と伝えられる — イブン・サアド『タバカート・アル=クブラー』第3巻186頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le français abrège la fin : l'arabe dit « j'espère que ce dans quoi je suis entré ne me détournera pas d'une habitude que j'avais » (« عن خلق كنت عليه »), le français « ne me changera pas ».",
+    "note": "Chapitre « ذكر بيعة أبي بكر ». Même texte lu dans l'édition al-'Ilmiyya (t. 3 p. 139, https://shamela.ws/book/1686/817). Le texte numérique est sans voyelles."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 581,
+    "fr": "Par Celui qui tient mon âme dans Sa main, si je pensais que les fauves allaient m'emporter, j'enverrais l'armée d'Usâma comme l'a ordonné le Messager d'Allah ﷺ, dussé-je rester seul dans la cité.",
+    "source_fr": "Abû Bakr — at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "وَالَّذِي نَفْسُ أَبِي بَكْرٍ بِيَدِهِ، لَوْ ظَنَنْتُ أَنَّ السِّبَاعَ تَخَطَّفَنِي لأَنْفَذْتُ بَعْثَ أُسَامَةَ كَمَا امر به رسول الله ص، وَلَوْ لَمْ يَبْقَ فِي الْقُرَى غَيْرِي لأَنْفَذْتُهُ",
+      "reference": "الطبري، تاريخ الرسل والملوك، ج ٣ ص ٢٢٥",
+      "lu_sur": "https://shamela.ws/book/9783/1499",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "By Him in whose hand is the soul of Abu Bakr, even if I thought that wild beasts would snatch me away, I would send out the army of Usama as the Messenger of Allah ﷺ commanded; and even if no one but me were left in the towns, I would send it out.",
+      "origine": "de_l_arabe",
+      "reference": "al-Tabari, Tarikh al-Rusul wa-l-Muluk, vol. 3, p. 225 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "アブー・バクルの魂をその御手に握る御方にかけて、たとえ猛獣が私をさらっていくと思われても、私はアッラーの使徒ﷺが命じられたとおりにウサーマの軍を送り出す。たとえ町々に私のほか誰も残らなくなろうとも、私はそれを送り出す。",
+      "origine": "de_l_arabe",
+      "reference": "タバリー『諸使徒と諸王の歴史』第3巻225頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "« Par Celui qui tient mon âme » : l'arabe dit « l'âme d'Abû Bakr » (« نَفْسُ أَبِي بَكْرٍ »). « dussé-je rester seul dans la cité » : l'arabe dit « quand il ne resterait dans les bourgades (« فِي الْقُرَى », au pluriel) personne d'autre que moi, je l'enverrais » ; le français met le singulier et ne reprend pas le « je l'enverrais » final.",
+    "note": "Chapitre « ذكر امر ابى بكر في أول خلافته » (récit de Sayf, d'après Hishâm ibn 'Urwa). L'édition lue abrège la formule de bénédiction en « ص » et n'est vocalisée qu'en partie : recopié tel quel ; l'anglais et le japonais portent ﷺ. Même parole, entièrement vocalisée et avec ﷺ, chez Ibn Kathîr, al-Bidâya (éd. at-Turkî), t. 9 p. 422 (https://shamela.ws/book/4445/5295)."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 589,
+    "fr": "Par Allah, tu ne descendras pas, et je ne monterai pas ! Que m'en coûte-t-il de couvrir mes pieds de poussière, une heure, dans le sentier d'Allah ?",
+    "source_fr": "Abû Bakr à Usâma — at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "وَاللَّهِ لا تنزل وو الله لا أَرْكَبُ! وَمَا عَلَيَّ أَنْ أُغَبِّرَ قَدَمَيَّ فِي سَبِيلِ اللَّهِ سَاعَةً",
+      "reference": "الطبري، تاريخ الرسل والملوك، ج ٣ ص ٢٢٦",
+      "lu_sur": "https://shamela.ws/book/9783/1500",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "By Allah, you shall not dismount, and by Allah, I shall not ride! What harm is it to me to let my feet be covered with dust for an hour in the path of Allah?",
+      "origine": "de_l_arabe",
+      "reference": "al-Tabari, Tarikh al-Rusul wa-l-Muluk, vol. 3, p. 226 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "アッラーにかけて、そなたは降りてはならぬ。アッラーにかけて、私も乗りはしない。アッラーの道において、ひととき両足を砂塵にまみれさせたとて、私に何の差し障りがあろうか。",
+      "origine": "de_l_arabe",
+      "reference": "タバリー『諸使徒と諸王の歴史』第3巻226頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le français n'a qu'un serment ; l'arabe en a deux (« Par Allah, tu ne descendras pas, et par Allah, je ne monterai pas ! »).",
+    "note": "Récit d'al-Hasan al-Basrî. Le texte numérique lu écrit « وو الله » en deux mots (pour « وَوَاللَّهِ ») et n'est vocalisé qu'en partie : recopié tel quel, à faire relire. La phrase se poursuit en arabe (les mérites du combattant), que le français ne cite pas."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 610,
+    "fr": "Par Allah, je combattrai quiconque sépare la prière de la zakât, car la zakât est le droit dû sur les biens. S'ils me refusaient une entrave de chameau qu'ils remettaient au Messager d'Allah ﷺ, je les combattrais pour ce refus.",
+    "source_fr": "Abû Bakr — al-Bukhârî et Muslim",
+    "nature": "hadith",
+    "ar": {
+      "texte": "وَاللَّهِ لأُقَاتِلَنَّ مَنْ فَرَّقَ بَيْنَ الصَّلاَةِ وَالزَّكَاةِ، فَإِنَّ الزَّكَاةَ حَقُّ الْمَالِ، وَاللَّهِ لَوْ مَنَعُونِي عِقَالاً كَانُوا يُؤَدُّونَهُ إِلَى رَسُولِ اللَّهِ صلى الله عليه وسلم لَقَاتَلْتُهُمْ عَلَى مَنْعِهِ",
+      "reference": "صحيح البخاري، رقم ٧٢٨٤–٧٢٨٥ ؛ صحيح مسلم، رقم ٢٠",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "By Allah, I will fight him who discriminates between Zakat and prayers, for Zakat is the Compulsory right to be taken from the wealth By Allah, if they refuse to give me even a tying rope which they use to give to Allah's Messenger (ﷺ), I would fight them for withholding it.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 7284-7285 (trans. Muhsin Khan); see also Sahih Muslim 20",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "アッラーにかけて、礼拝とザカートとを分け隔てる者と私は必ず戦う。ザカートは財産に課せられた権利だからである。アッラーにかけて、彼らがアッラーの使徒ﷺに納めていた駱駝のつなぎ縄一本でも私に拒むならば、私はその拒否のゆえに彼らと戦う。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』7284-7285番、『サヒーフ・ムスリム』20番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le français omet le second serment (« وَاللَّهِ لَوْ مَنَعُونِي… », « Par Allah, s'ils me refusaient… »).",
+    "note": "L'édition lue donne le même texte sous les numéros 7284 et 7285 d'al-Bukhârî ; même formulation chez Muslim (n° 20 dans la numérotation arabe de l'édition lue, 124 dans sa numérotation suivie ; https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-muslim.min.json). Une traduction japonaise publiée de Muslim a été lue (Association musulmane du Japon, 『日訳サヒーフ・ムスリム』 t. 1 p. 41-43, https://www.muslim.or.jp/hadith/vol1-41.html) : elle paraphrase et ajoute au texte, elle n'a donc pas été retenue ; le japonais est traduit de l'arabe. « une entrave de chameau » rend « عِقَالاً » (al-Bukhârî 7284-7285, Muslim 20) ; d'autres versions d'al-Bukhârî (n° 1400, 6925) disent « عَنَاقًا » (une chevrette). Dans la traduction anglaise publiée, il manque un point entre « the wealth » et « By Allah » : recopié tel quel. Graphie de l'édition lue (« ى » final pour « ي », formule de bénédiction écrite en toutes lettres), recopiée telle quelle."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 611,
+    "fr": "Par Allah, je vis qu'Allah avait ouvert la poitrine d'Abû Bakr à cette décision, et je sus que c'était la vérité.",
+    "source_fr": "'Umar ibn al-Khattâb — al-Bukhârî et Muslim",
+    "nature": "hadith",
+    "ar": {
+      "texte": "وَاللَّهِ مَا هُوَ إِلاَّ أَنْ رَأَيْتُ اللَّهَ قَدْ شَرَحَ صَدْرَ أَبِي بَكْرٍ لِلْقِتَالِ فَعَرَفْتُ أَنَّهُ الْحَقُّ",
+      "reference": "صحيح البخاري، رقم ٧٢٨٤–٧٢٨٥ ؛ صحيح مسلم، رقم ٢٠",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "By Allah, It was nothing, except I saw that Allah had opened the chest of Abu Bakr to the fight, and I came to know for certain that was the truth.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 7284-7285 (trans. Muhsin Khan); see also Sahih Muslim 20",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "アッラーにかけて、アッラーがアブー・バクルの胸を戦いへと開かれたのを私が見て取るや、それこそが真理であると私は知った。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』7284-7285番、『サヒーフ・ムスリム』20番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "« à cette décision » : l'arabe dit « لِلْقِتَالِ » (« au combat »). Le tour restrictif « مَا هُوَ إِلاَّ أَنْ… » (« il a suffi que je voie… ») n'est pas rendu.",
+    "note": "L'édition lue donne le même texte sous les numéros 7284 et 7285 d'al-Bukhârî ; même formulation chez Muslim (n° 20 dans la numérotation arabe de l'édition lue, 124 dans sa numérotation suivie ; https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-muslim.min.json). Une traduction japonaise publiée de Muslim a été lue (Association musulmane du Japon, 『日訳サヒーフ・ムスリム』 t. 1 p. 41-43, https://www.muslim.or.jp/hadith/vol1-41.html) : elle paraphrase et ajoute au texte, elle n'a donc pas été retenue ; le japonais est traduit de l'arabe."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 782,
+    "fr": "Où vas-tu, successeur du Messager d'Allah ? Rengaine ton sabre, et ne nous afflige pas de ta perte. Retourne à Médine : par Allah, si nous te perdions, l'islam n'aurait plus d'ordre.",
+    "source_fr": "On rapporte que 'Alî le lui dit à Dhû l-Qassa — Ibn Kathîr, al-Bidâya wa-n-Nihâya",
+    "nature": "chronique",
+    "ar": {
+      "texte": "إِلَى أَيْنَ يَا خَلِيفَةَ رَسُولِ اللَّهِ ﷺ؟ أَقُولُ لَكَ مَا قَالَ رَسُولُ اللَّهِ ﷺ يَوْمَ أُحُدٍ «شِمْ سَيَفَكَ، وَلَا تَفْجَعْنَا بِنَفْسِكَ». وَارْجِعْ إِلَى الْمَدِينَةِ، فَوَاللَّهِ لَئِنْ فُجِعْنَا بِكَ لَا يَكُونُ لِلْإِسْلَامِ نِظَامٌ أَبَدًا",
+      "reference": "يُروى — ابن كثير، البداية والنهاية (ت. التركي)، ج ٩ ص ٤٤٦",
+      "lu_sur": "https://shamela.ws/book/4445/5319",
+      "etat": "approchant"
+    },
+    "en": {
+      "texte": "Where are you going, O successor of the Messenger of Allah ﷺ? I say to you what the Messenger of Allah ﷺ said on the day of Uhud: “Sheathe your sword, and do not grieve us with the loss of yourself.” Return to Medina; for by Allah, if we are bereft of you, Islam will never again have order.",
+      "origine": "de_l_arabe",
+      "reference": "It is reported — Ibn Kathir, al-Bidaya wa-l-Nihaya, vol. 9, p. 446 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "アッラーの使徒ﷺの後継者よ、どこへ行かれるのか。アッラーの使徒ﷺがウフドの日に言われたことを、私はあなたに申し上げる。「剣を鞘に納めよ。そなたを失う悲しみを我らに味わわせるな」と。マディーナへお戻りください。アッラーにかけて、もし我らがあなたを失えば、イスラームに秩序は二度と立たないであろう。",
+      "origine": "de_l_arabe",
+      "reference": "と伝えられる — イブン・カスィール『始まりと終わり（アル=ビダーヤ・ワン=ニハーヤ）』第9巻446頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le français retire une proposition : entre « Où vas-tu… ? » et « Rengaine ton sabre », l'arabe porte « أَقُولُ لَكَ مَا قَالَ رَسُولُ اللَّهِ ﷺ يَوْمَ أُحُدٍ » (« Je te dis ce qu'a dit le Messager d'Allah ﷺ le jour d'Uhud »). Dans la source, « Rengaine ton sabre, et ne nous afflige pas de ta perte » est donc une parole du Prophète ﷺ que 'Alî cite, et non une parole de 'Alî : à trancher par le décideur (exigences 1 et 3). « n'aurait plus d'ordre » : l'arabe ajoute « أَبَدًا » (« jamais »). Ibn Kathîr tient ce récit d'ad-Dâraqutnî (d'après Ibn 'Umar) et le dit « غريب » (isolé) par la voie de Mâlik.",
+    "note": "Chapitre « خروج أبي بكر إلى ذي القصة ». L'arabe, l'anglais et le japonais donnent le passage entier, tel que la source le porte. Le texte numérique lu écrit « سَيَفَكَ » (pour « سَيْفَكَ ») : recopié tel quel. Une seconde version, d'après 'Â'isha, suit dans la même page (« لَئِنْ أُصِبْنَا بِكَ »)."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 863,
+    "fr": "Il m'a devancé vers les deux biens : il a embrassé l'islam avant moi, et il est tombé martyr avant moi.",
+    "source_fr": "'Umar, à la mort de son frère Zayd — Ibn Sa'd, at-Tabaqât",
+    "nature": "chronique",
+    "ar": {
+      "texte": "سبَقَني إلى الحُسنَيَيْنِ، أَسلَمَ قبلِي، واستُشهِدَ قبلِي",
+      "reference": "ابن عبد البر، الاستيعاب في معرفة الأصحاب (ت. التركي)، ج ٣ ص ٨٢",
+      "lu_sur": "https://shamela.ws/book/1499/1258",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "He went before me to the two best things: he embraced Islam before me, and he was martyred before me.",
+      "origine": "de_l_arabe",
+      "reference": "Ibn 'Abd al-Barr, al-Isti'ab fi Ma'rifat al-Ashab, vol. 3, p. 82 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "彼は二つの最良のことにおいて私に先んじた。私より先にイスラームに入り、私より先に殉教を遂げたのである。",
+      "origine": "de_l_arabe",
+      "reference": "イブン・アブドゥルバッル『アル=イスティーアーブ』第3巻82頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "La parole n'a pas été retrouvée chez Ibn Sa'd : la notice de Zayd ibn al-Khattâb des Tabaqât (éd. al-'Ilmiyya, t. 3 p. 288-289, lue en entier sur https://shamela.ws/book/1686/966 et /967) rapporte le deuil de 'Umar et d'autres paroles (« إن الصبا لتهب فتأتيني بريح زيد بن الخطاب »), pas celle-ci. Elle est lue chez Ibn 'Abd al-Barr, al-Istî'âb, d'où elle est relevée ici, et, d'après un extrait lu sur ar.wikisource.org, chez Ibn Kathîr, al-Bidâya wa-n-Nihâya. Chez Ibn 'Abd al-Barr elle commence par « رحِمَ اللهُ أخي » (« Qu'Allah fasse miséricorde à mon frère »), que le français ne cite pas.",
+    "note": "Recherches : « سبقني إلى الحسنيين », « إلى الحسنيين », « الحسنيين », « استشهد قبلي », « أسلم قبلي », « رحم الله أخي » dans trois éditions des Tabaqât sur shamela.ws (Sâdir, al-'Ilmiyya, al-Khânjî) : aucun résultat ; recherche de la phrase sur ar.wikisource.org : trouvée dans al-Bidâya wa-n-Nihâya, Tahdhîb at-Tahdhîb et Usd al-Ghâba, pas dans les Tabaqât. La source française est à corriger ou à compléter par le décideur."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 874,
+    "fr": "Comment ferais-je une chose que le Messager d'Allah ﷺ n'a pas faite ?",
+    "source_fr": "Abû Bakr à 'Umar — al-Bukhârî, as-Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "كَيْفَ أَفْعَلُ شَيْئًا لَمْ يَفْعَلْهُ رَسُولُ اللَّهِ صلى الله عليه وسلم",
+      "reference": "صحيح البخاري، رقم ٤٦٧٩",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "How can I do something which Allah's Apostle has not done?",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 4679 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "アッラーの使徒ﷺがなさらなかったことを、どうして私が行えようか。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』4679番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Même parole, à la première personne, au n° 7191 ; le n° 4986 porte « كَيْفَ تَفْعَلُ » (« Comment ferais-tu »). La traduction anglaise publiée écrit ici « Allah's Apostle », sans ﷺ : recopié tel quel. La formule de bénédiction est écrite en toutes lettres dans l'édition lue."
+  },
+  {
+    "fichier": "v2/src/data/saga_abubakr.js",
+    "ligne": 882,
+    "fr": "Par Allah, s'ils m'avaient chargé de déplacer une montagne, cela ne m'eût pas été plus lourd que ce qu'il m'ordonna : rassembler le Coran.",
+    "source_fr": "Zayd ibn Thâbit — al-Bukhârî, as-Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "وَاللَّهِ لَوْ كَلَّفُونِي نَقْلَ جَبَلٍ مِنَ الْجِبَالِ مَا كَانَ أَثْقَلَ عَلَىَّ مِمَّا أَمَرَنِي مِنْ جَمْعِ الْقُرْآنِ",
+      "reference": "صحيح البخاري، رقم ٤٩٨٦",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "By Allah If they had ordered me to shift one of the mountains, it would not have been heavier for me than this ordering me to collect the Qur'an.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 4986 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "アッラーにかけて、もし彼らが山々の一つを移すよう私に課したとしても、彼が命じたクルアーンの収集ほどには、私にとって重くはなかったであろう。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』4986番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Le n° 4986 est la version qui porte le pluriel « كَلَّفُونِي » (« s'ils m'avaient chargé ») que suit le français ; les n° 4679 et 7191 ont le singulier « كَلَّفَنِي ». Graphie de l'édition lue (« ى » final pour « ي », formule de bénédiction écrite en toutes lettres), recopiée telle quelle."
+  }
+]

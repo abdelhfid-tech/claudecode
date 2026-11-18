@@ -1,0 +1,380 @@
+[
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 19,
+    "fr": "« Si une brebis périssait, égarée, au bord de l'Euphrate, je craindrais qu'Allah ne m'en demande compte au Jour de la Résurrection. »",
+    "source_fr": "Abû Nu'aym, Hilyat al-Awliyâ' ; Ibn Sa'd, Tabaqât (variantes)",
+    "nature": "chronique",
+    "ar": {
+      "texte": "لو ماتت شاة على شط الفرات ضائعة لظننت أن الله تعالى سائلي عنها يوم القيامة",
+      "reference": "أبو نعيم الأصبهاني، حلية الأولياء وطبقات الأصفياء، ج ١ ص ٥٣ (ط. السعادة)",
+      "lu_sur": "https://shamela.ws/book/10495/51",
+      "etat": "approchant"
+    },
+    "en": {
+      "texte": "Were a sheep to die untended on the bank of the Euphrates, I would think that Allah, exalted is He, would question me about it on the Day of Resurrection.",
+      "origine": "de_l_arabe",
+      "reference": "Abu Nu'aym, Hilyat al-Awliya', vol. 1, p. 53 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "もし一頭の羊がユーフラテスの岸辺で顧みる者もなく死んだなら、いと高きアッラーは復活の日にそのことで私を問われるであろうと、私は思う。",
+      "origine": "de_l_arabe",
+      "reference": "アブー・ヌアイム『聖者たちの飾り（ヒルヤト・アル=アウリヤー）』第1巻53頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le français dit « je craindrais » : c'est le verbe de la variante d'Ibn Sa'd (« لخشيت »), qui parle d'un chameau (« جمل ») et ne dit pas « au Jour de la Résurrection ». Le texte de la Hilya, seul des deux à dire la brebis et le Jour de la Résurrection, dit « لظننت » (je penserais, je tiendrais pour sûr) et porte « تعالى » après le nom divin. Le français assemble donc les deux variantes que sa source annonce.",
+    "note": "Variante d'Ibn Sa'd, lue sur https://shamela.ws/book/9351/1187 (Tabaqât, éd. Dâr Sâdir, t. 3, p. 305) : « لو مات جمل ضياعا على شط الفرات لخشيت أن يسألني الله عنه ». « ضائعة » est rendu par « untended » / « 顧みる者もなく » (laissée sans soin) ; le français dit « égarée »."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 26,
+    "fr": "« Louange à Allah, qui n'a pas placé ma mort entre les mains d'un homme se réclamant de l'islam. »",
+    "source_fr": "al-Bukhârî, Sahîh (3700)",
+    "nature": "hadith",
+    "ar": {
+      "texte": "الْحَمْدُ لِلَّهِ الَّذِي لَمْ يَجْعَلْ مَنِيَّتِي بِيَدِ رَجُلٍ يَدَّعِي الإِسْلاَمَ",
+      "reference": "صحيح البخاري، رقم ٣٧٠٠",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari/3700.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "All the Praises are for Allah Who has not caused me to die at the hand of a man who claims himself to be a Muslim.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 3700 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari/3700.min.json"
+    },
+    "ja": {
+      "texte": "アッラーに讃えあれ。かれは私の死を、イスラームを名乗る男の手にお委ねにならなかった。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』3700番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Numéro vérifié : le hadith 3700 de l'édition lue est bien le récit de la mort de 'Umar ('Amr ibn Maymûn)."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 28,
+    "fr": "« Je recommande à mon successeur les protégés d'Allah et de Son Messager : qu'il respecte leur pacte, qu'il les défende, et qu'on ne leur impose rien au-delà de leurs forces. »",
+    "source_fr": "al-Bukhârî, Sahîh (3700) — traduction du sens",
+    "nature": "hadith",
+    "ar": {
+      "texte": "وَأُوصِيهِ بِذِمَّةِ اللَّهِ وَذِمَّةِ رَسُولِهِ صلى الله عليه وسلم أَنْ يُوفَى لَهُمْ بِعَهْدِهِمْ، وَأَنْ يُقَاتَلَ مِنْ وَرَائِهِمْ، وَلاَ يُكَلَّفُوا إِلاَّ طَاقَتَهُمْ",
+      "reference": "صحيح البخاري، رقم ٣٧٠٠",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari/3700.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "I also recommend him concerning Allah's and His Apostle's protectees (i.e. Dhimmis) to fulfill their contracts and to fight for them and not to overburden them with what is beyond their ability.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 3700 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari/3700.min.json"
+    },
+    "ja": {
+      "texte": "また私は彼に、アッラーの庇護とその使徒 ﷺ の庇護のもとにある人々のことを言い遺す。彼らとの約定は果たされ、彼らを守るために戦いがなされ、彼らにはその力に余ることが課されてはならない。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』3700番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le texte dit « وأوصيه » (« et je lui recommande ») : « mon successeur » reprend « الخليفة من بعدي », dit plus haut dans le même testament. « Les protégés d'Allah et de Son Messager » rend « ذمة الله وذمة رسوله » (la protection d'Allah et celle de Son Messager) : traduction du sens, comme la source française l'annonce.",
+    "note": "La traduction anglaise publiée porte une glose du traducteur entre parenthèses, « (i.e. Dhimmis) », et dit « His Apostle's » sans ﷺ ; recopiée telle quelle."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 30,
+    "fr": "« Je voudrais en sortir quitte : rien pour moi, rien contre moi. »",
+    "source_fr": "al-Bukhârî, Sahîh (3700)",
+    "nature": "hadith",
+    "ar": {
+      "texte": "وَدِدْتُ أَنَّ ذَلِكَ كَفَافٌ لاَ عَلَىَّ وَلاَ لِي",
+      "reference": "صحيح البخاري، رقم ٣٧٠٠",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari/3700.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "I wish that all these privileges will counterbalance (my shortcomings) so that I will neither lose nor gain anything.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 3700 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari/3700.min.json"
+    },
+    "ja": {
+      "texte": "願わくは、それが差し引きなしとなり、私に不利にも有利にもならぬように。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』3700番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "L'arabe dit dans l'ordre inverse : « ni contre moi, ni pour moi ». Dans le hadith, c'est la réponse de 'Umar au jeune homme qui vient de louer sa compagnie du Prophète, son ancienneté et sa justice (« ذلك » : tout cela) ; elle précède le compte des dettes. La traduction anglaise publiée glose « (my shortcomings) » ; recopiée telle quelle."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 377,
+    "fr": "« Comment me soucierais-je du sort des gens, si ce qui les atteint ne m'atteint pas ? »",
+    "source_fr": "Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "كيف يعنيني شأن الرعية إذا لم يمسسني ما مسهم",
+      "reference": "الطبري، تاريخ الرسل والملوك، ذكر القحط وعام الرمادة، ج ٤ ص ٩٨",
+      "lu_sur": "https://shamela.ws/book/9783/1989",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "How can the state of the people concern me if what afflicts them does not afflict me?",
+      "origine": "de_l_arabe",
+      "reference": "al-Tabari, Tarikh al-Rusul wa-l-Muluk, vol. 4, p. 98 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "民を襲うものがこの身を襲わないのなら、どうして民のことが私の憂いとなろうか。",
+      "origine": "de_l_arabe",
+      "reference": "タバリー『諸使徒と諸王の歴史』第4巻98頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Lue chez at-Tabarî seulement. Dans les Tabaqât d'Ibn Sa'd, que la source française nomme en premier, la phrase n'a pas été retrouvée (recherche par mots dans deux éditions) : attribution à Ibn Sa'd à vérifier.",
+    "note": "Recherches sans résultat dans Ibn Sa'd sur shamela.ws (éd. Dâr Sâdir et éd. al-Khânjî) : « كيف يعنيني شأن الرعية », « يعنيني شأن الرعية », « شأن الرعية », « ما مسهم ». Chez at-Tabarî, récit de Sayf ibn 'Umar, à la suite de l'outre de lait et du beurre achetés quarante."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 421,
+    "fr": "« Porteras-tu mon fardeau à ma place, au Jour de la Résurrection ? »",
+    "source_fr": "Récit d'Aslam — at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya",
+    "nature": "chronique",
+    "ar": {
+      "texte": "أَنْتَ تَحْمِلُ عَنِّي وِزْرِي يَوْمَ الْقِيَامَةِ",
+      "reference": "رواية أسلم — الطبري، تاريخ الرسل والملوك، ذكر بعض سيره، ج ٤ ص ٢٠٦",
+      "lu_sur": "https://shamela.ws/book/9783/2097",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "Will you bear my burden for me on the Day of Resurrection?",
+      "origine": "de_l_arabe",
+      "reference": "Account of Aslam — al-Tabari, Tarikh al-Rusul wa-l-Muluk, vol. 4, p. 206 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "復活の日に、お前が私に代わって私の重荷を負うというのか。",
+      "origine": "de_l_arabe",
+      "reference": "アスラムの伝える話 — タバリー『諸使徒と諸王の歴史』第4巻206頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Chez at-Tabarî la phrase se poursuit par « لا أم لك » (apostrophe de reproche), que le français ne reprend pas. Ibn Kathîr (al-Bidâya, éd. at-Turkî, t. 10, p. 187, lu sur https://shamela.ws/book/4445/5728) : « أَنْتَ تَحْمِلُ وِزْرِي يَوْمَ الْقِيَامَةِ », sans « عني »."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 515,
+    "fr": "« Ô Allah, nous Te sollicitions par notre Prophète et Tu nous donnais la pluie ; nous Te sollicitons par l'oncle de notre Prophète : donne-nous la pluie. »",
+    "source_fr": "Invocation de 'Umar — al-Bukhârî, Sahîh (1010), traduction du sens",
+    "nature": "hadith",
+    "ar": {
+      "texte": "اللَّهُمَّ إِنَّا كُنَّا نَتَوَسَّلُ إِلَيْكَ بِنَبِيِّنَا فَتَسْقِينَا وَإِنَّا نَتَوَسَّلُ إِلَيْكَ بِعَمِّ نَبِيِّنَا فَاسْقِنَا",
+      "reference": "دعاء عمر — صحيح البخاري، رقم ١٠١٠",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari/1010.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "O Allah! We used to ask our Prophet to invoke You for rain, and You would bless us with rain, and now we ask his uncle to invoke You for rain. O Allah ! Bless us with rain.",
+      "origine": "publiee",
+      "reference": "Supplication of 'Umar — Sahih al-Bukhari 1010 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari/1010.min.json"
+    },
+    "ja": {
+      "texte": "アッラーよ、私たちはかつて私たちの預言者を通してあなたにおすがりし、あなたは私たちに雨をお恵みくださいました。いま私たちは、私たちの預言者の叔父を通してあなたにおすがりします。どうか私たちに雨をお恵みください。",
+      "origine": "de_l_arabe",
+      "reference": "ウマルの祈願 — 『サヒーフ・アル=ブハーリー』1010番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Numéro vérifié (livre de la demande de pluie, récit d'Anas). La traduction anglaise publiée interprète « نتوسل إليك بنبينا » : « ask our Prophet to invoke You for rain » (elle porte aussi un appel de note « (1) » après la phrase, non recopié) ; le français et le japonais restent au plus près de « نتوسل إليك بـ ». Le texte arabe ne porte pas de formule de bénédiction après « نبينا »."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 596,
+    "fr": "« Nous étions le peuple le plus humble, et Allah nous a honorés par l'islam. Si nous cherchons l'honneur ailleurs que dans ce par quoi Allah nous a honorés, Allah nous humiliera. »",
+    "source_fr": "al-Hâkim, al-Mustadrak",
+    "nature": "hadith",
+    "ar": {
+      "texte": "إنا كنا أذلَّ قومٍ فأعزَّنا الله بالإسلام، فمهما نطلبُ العزَّ بغير ما أعزَّنا اللهُ به، أذلَّنا الله",
+      "reference": "الحاكم، المستدرك على الصحيحين، كتاب الإيمان، رقم ٢٠٨ (ط. الرسالة)، ج ١ ص ٣٦٢",
+      "lu_sur": "https://shamela.ws/book/1424/355",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "We were the lowliest of peoples, and Allah honoured us through Islam. Whenever we seek honour through anything other than that by which Allah has honoured us, Allah will abase us.",
+      "origine": "de_l_arabe",
+      "reference": "al-Hakim, al-Mustadrak, Book of Faith, no. 208 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "私たちは最も卑しい民であったが、アッラーはイスラームによって私たちに栄誉をお与えになった。アッラーが私たちに栄誉をお与えになったもの以外によって栄誉を求めるなら、アッラーは私たちを卑しめられるであろう。",
+      "origine": "de_l_arabe",
+      "reference": "ハーキム『ムスタドラク』信仰の書、208番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Récit de Târiq ibn Shihâb (la venue de 'Umar à Shâm, le gué, Abû 'Ubayda). Le numéro 208 est celui de l'édition ar-Risâla, lu en tête du récit sur https://shamela.ws/book/1424/354 ; d'autres éditions numérotent autrement. Parole d'un Compagnon dans un recueil de hadiths : pas de traduction anglaise publiée lue."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 617,
+    "fr": "« Voici la sécurité qu'accorde le serviteur d'Allah, 'Umar, aux gens d'Îliyâ' : sécurité pour leurs personnes, leurs biens, leurs églises et leurs croix. Leurs églises ne seront ni occupées ni détruites. Nul ne sera contraint en sa religion, et nul d'entre eux ne sera lésé. »",
+    "source_fr": "at-Tabarî, Târîkh — traduction du sens, abrégée",
+    "nature": "chronique",
+    "ar": {
+      "texte": "هذا ما أعطى عبد اللَّه عمر أمير المؤمنين أهل إيلياء من الأمان، أعطاهم أمانا لأنفسهم وأموالهم، ولكنائسهم وصلبانهم … أنه لا تسكن كنائسهم ولا تهدم … ولا يكرهون على دينهم، ولا يضار أحد منهم",
+      "reference": "الطبري، تاريخ الرسل والملوك، ذكر فتح بيت المقدس، ج ٣ ص ٦٠٩ — باختصار",
+      "lu_sur": "https://shamela.ws/book/9783/1881",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "This is the assurance of safety that the servant of Allah, 'Umar, Commander of the Faithful, has granted to the people of Iliya'. He has granted them safety for their persons and their property, for their churches and their crosses … that their churches shall not be occupied nor demolished … They shall not be coerced in their religion, nor shall any one of them be harmed.",
+      "origine": "de_l_arabe",
+      "reference": "al-Tabari, Tarikh al-Rusul wa-l-Muluk, vol. 3, p. 609 — abridged (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "これは、アッラーのしもべ、信徒たちの長ウマルがイーリヤーの民に与えた安全の保障である。彼は、彼らの身命と財産、彼らの教会と十字架に安全を与えた。……彼らの教会は住まいとされることも、取り壊されることもない。……彼らはその宗教について強いられることなく、彼らのうちの誰ひとり害されることもない。",
+      "origine": "de_l_arabe",
+      "reference": "タバリー『諸使徒と諸王の歴史』第3巻609頁、抄録（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le français abrège sans le marquer ; les trois langues abrègent aux mêmes endroits et le marquent par « … ». Sont passés : « وسقيمها وبريئها وسائر ملتها » (ses malades, ses bien portants et toute sa communauté), puis « ولا ينتقص منها ولا من حيزها، ولا من صليبهم، ولا من شيء من أموالهم » (rien n'en sera retranché, ni de leur enclos, ni de leur croix, ni de leurs biens). Le français omet aussi le titre « أمير المؤمنين » après le nom de 'Umar. La phrase du pacte continue aussitôt par des clauses que le jeu ne cite pas (dont : nul juif n'habitera Îliyâ' avec eux ; la jizya ; le départ des Rûm).",
+    "note": "Récit de Sayf ibn 'Umar (d'après Khâlid et 'Ubâda) ; l'acte porte, à la fin, « سنة خمس عشرة » (an 15) et quatre témoins. « إيلياء » (Aelia) est le nom de Jérusalem dans l'acte ; gardé tel quel dans les trois langues."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 784,
+    "fr": "« Tu as gouverné avec justice ; alors tu as été en sécurité ; alors tu as dormi. »",
+    "source_fr": "On rapporte — parole attribuée à l'envoyé d'un roi devant 'Umar endormi",
+    "nature": "autre",
+    "ar": {
+      "texte": "عدلت فأمنت فَنمت",
+      "reference": "يُروى — الغزالي، فضائح الباطنية، الباب العاشر، ص ٢١٢",
+      "lu_sur": "https://shamela.ws/book/6554/212",
+      "etat": "approchant"
+    },
+    "en": {
+      "texte": "You were just, so you were safe, so you slept.",
+      "origine": "de_l_arabe",
+      "reference": "It is reported — al-Ghazali, Fada'ih al-Batiniyya, ch. 10, p. 212 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "あなたは公正であった。それゆえ安らかであり、それゆえ眠ったのだ。",
+      "origine": "de_l_arabe",
+      "reference": "と伝えられる — ガザーリー『バーティニー派の醜聞（ファダーイフ・アル=バーティニーヤ）』第10章、212頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Les ouvrages anciens lus disent trois verbes, « عدلت فأمنت فنمت » (tu as été juste, tu as été en sécurité, tu as dormi) ; le « tu as gouverné » du français répond à la forme courante aujourd'hui, « حكمت فعدلت فأمنت فنمت », trouvée seulement chez des prédicateurs contemporains, sans chaîne. L'attribution varie : l'envoyé de Yazdagird, dernier roi des Perses (al-Ghazâlî, texte retenu ici, puisque le français dit « l'envoyé d'un roi ») ; al-Hurmuzân lui-même, amené prisonnier (ath-Tha'âlibî, plus ancien). La source française ne nomme aucun ouvrage.",
+    "note": "Lu aussi : ath-Tha'âlibî, Thimâr al-Qulûb, p. 86 (https://shamela.ws/book/6896/84), parole d'al-Hurmuzân ; Ibn al-Azraq, Badâ'i' as-Silk, t. 1, p. 235 (https://shamela.ws/book/7236/201), même récit qu'al-Ghazâlî. Chez al-Ghazâlî le récit est introduit par « وقد حكي » et la parole continue : « وصاحبنا جار فخاف فسهر » (notre maître a été injuste, il a eu peur, il a veillé), que le jeu ne cite pas. Une fatwa d'islamweb (https://shamela.ws/book/27107/18338) dit de la forme à quatre verbes : « لم نقف لها على سند بهذا اللفظ ». Ni at-Tabarî ni Ibn Kathîr ne la donnent dans le récit de l'arrivée d'al-Hurmuzân, où le jeu la place."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 822,
+    "fr": "« L'islam vous a réunis, toi et lui. Tu ne l'emportes sur lui en rien, sinon par la piété. »",
+    "source_fr": "On rapporte — récit de Jabala : Ibn Kathîr, al-Bidâya ; al-Isfahânî, al-Aghânî (chaîne discutée), traduction du sens",
+    "nature": "chronique",
+    "ar": {
+      "texte": "إِنَّ الْإِسْلَامَ جَمَعَكَ وَإِيَّاهُ، فَلَسْتَ تَفْضُلُهُ إِلَّا بِالتَّقْوَى",
+      "reference": "يُروى — خبر جبلة: ابن كثير، البداية والنهاية، سنة ثلاث وخمسين، ج ١١ ص ٢٦٥ (ط. التركي)",
+      "lu_sur": "https://shamela.ws/book/4445/6488",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "Islam has brought you and him together; you are not above him except in piety.",
+      "origine": "de_l_arabe",
+      "reference": "It is reported — account of Jabala: Ibn Kathir, al-Bidaya wa-l-Nihaya, vol. 11, p. 265 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "イスラームはあなたと彼とを一つにした。あなたが彼に勝るのは、ただ敬虔さによってのみである。",
+      "origine": "de_l_arabe",
+      "reference": "と伝えられる — ジャバラの話：イブン・カスィール『初めと終わり（アル=ビダーヤ・ワン=ニハーヤ）』第11巻265頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Notice de Jabala ibn al-Ayham, sous l'an 53 ; Ibn Kathîr introduit le récit par « وقد روى ابن الكلبي وغيره ». Même texte relu sur ar.wikisource.org (البداية والنهاية/الجزء الثامن/جبلة بن الأيهم الغساني). Al-Aghânî, que la source française nomme aussi, n'a pas pu être lu : l'ouvrage n'est pas sur shamela.ws, et la recherche de la phrase sur ar.wikisource.org ne le renvoie pas. Des ouvrages tardifs donnent une variante plus longue, « بشيء إلا بالتقى والعافية », sans que sa source ait été lue."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 890,
+    "fr": "« Tu t'es abstenu, alors tes sujets se sont abstenus. Si tu t'étais servi, ils se seraient servis. »",
+    "source_fr": "Parole de 'Alî à 'Umar — at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya",
+    "nature": "chronique",
+    "ar": {
+      "texte": "إِنَّكَ عَفَفْتَ فَعَفَّتْ رَعِيَّتُكَ، وَلَوْ رَتَعْتَ لَرَتَعَتْ",
+      "reference": "قول عليّ لعمر — ابن كثير، البداية والنهاية، ذكر فتح المدائن، ج ١٠ ص ١٧ (ط. التركي)",
+      "lu_sur": "https://shamela.ws/book/4445/5558",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "You were restrained, so your subjects were restrained; had you indulged yourself, they would have indulged themselves.",
+      "origine": "de_l_arabe",
+      "reference": "Words of 'Ali to 'Umar — Ibn Kathir, al-Bidaya wa-l-Nihaya, vol. 10, p. 17 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "あなたが身を慎まれたから、あなたの民も身を慎んだのです。もしあなたがほしいままにされていたなら、民もまたほしいままにしたことでしょう。",
+      "origine": "de_l_arabe",
+      "reference": "アリーがウマルに語った言葉 — イブン・カスィール『初めと終わり（アル=ビダーヤ・ワン=ニハーヤ）』第10巻17頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "La seconde phrase (« Si tu t'étais servi, ils se seraient servis ») n'est que chez Ibn Kathîr. At-Tabarî, que la source française nomme en premier, n'a que la première moitié : « إِنَّكَ عَفَفْتَ فَعَفَّتِ الرَّعِيَّةُ » (t. 4, p. 20).",
+    "note": "At-Tabarî lu sur https://shamela.ws/book/9783/1911 (récit de Sayf, à l'arrivée de l'épée et de la ceinture de Kisrâ). Ibn Kathîr introduit la parole par « فروينا ». « رتع » : paître à sa guise, se servir sans retenue."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 898,
+    "fr": "« Louange à Allah, qui les a ôtés à Kisrâ fils de Hurmuz et en a paré Surâqa fils de Mâlik, un bédouin des Banû Mudlij. »",
+    "source_fr": "al-Bayhaqî, Dalâ'il an-Nubuwwa ; Ibn 'Abd al-Barr, al-Istî'âb",
+    "nature": "chronique",
+    "ar": {
+      "texte": "الْحَمْدُ لِلَّهِ الَّذِي سَلَبَهُمَا كِسْرَى بْنَ هُرْمُزَ وَأَلْبَسَهُمَا سُرَاقَةَ بْنَ جُعْشُمٍ أَعْرَابِيًّا مِنْ بَنِي مُدْلِجٍ",
+      "reference": "البيهقي، دلائل النبوة، ج ٦ ص ٣٢٦",
+      "lu_sur": "https://shamela.ws/book/7478/2790",
+      "etat": "approchant"
+    },
+    "en": {
+      "texte": "Praise be to Allah, who stripped them from Kisra son of Hurmuz and put them on Suraqa son of Ju'shum, a Bedouin of the Banu Mudlij.",
+      "origine": "de_l_arabe",
+      "reference": "al-Bayhaqi, Dala'il al-Nubuwwa, vol. 6, p. 326 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "アッラーに讃えあれ。かれはこの二つをフルムズの子キスラーから取り上げ、ムドリジュ族の一ベドウィン、ジュウシュムの子スラーカにまとわせられた。",
+      "origine": "de_l_arabe",
+      "reference": "バイハキー『預言者性の証（ダラーイル・アン=ヌブーワ）』第6巻326頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le texte des Dalâ'il nomme « سراقة بن جعشم » (Surâqa fils de Ju'shum, du nom de son aïeul), non « fils de Mâlik ». Al-Istî'âb dit bien « سراقة بن مالك بن جعشم », mais sa phrase est autre : elle insère « الذي كان يقول: أنا رب الناس » après le nom de Kisrâ et commence par « الله أكبر ». Dans les deux ouvrages, ce sont des mots que 'Umar fait dire à Surâqa (« قل »), et les Dalâ'il les rapportent d'après ash-Shâfi'î, sans chaîne (« قال الشافعي »). Le français correspond mot pour mot à la même parole telle qu'Ibn Kathîr la recopie (« سراقة بن مالك »).",
+    "note": "Al-Istî'âb (éd. at-Turkî, t. 6, p. 349), lu sur https://shamela.ws/book/1499/3427 : « الحمد لله الذي سَلَبَهما كِسْرى بنَ هُرْمُزَ الذي كان يقولُ: أنا رَبُّ الناسِ، فألبسهما سُراقة بن مالك بن جُعْشمٍ، أعرابيًّا مِن بني مُدْلِج ». Ibn Kathîr, al-Bidâya (éd. at-Turkî, t. 10, p. 18), lu sur https://shamela.ws/book/4445/5559 : « الْحَمْدُ لِلَّهِ الَّذِي سَلَبَهُمَا كِسْرَى بْنَ هُرْمُزَ وَأَلْبَسَهُمَا سُرَاقَةَ بْنَ مَالِكٍ أَعْرَابِيًّا مِنْ بَنِي مُدْلِجٍ ». Les Dalâ'il donnent, une page plus haut (t. 6, p. 325, avec chaîne, d'après al-Hasan), une autre parole de 'Umar : louange à Allah, les bracelets de Kisrâ au bras de Surâqa, un bédouin des Banû Mudlij."
+  },
+  {
+    "fichier": "v2/src/data/saga_umar.js",
+    "ligne": 964,
+    "fr": "« Ô Allah, accorde-moi le martyre dans Ton sentier, et fais que ma mort ait lieu dans la ville de Ton Messager. »",
+    "source_fr": "Invocation de 'Umar — al-Bukhârî, Sahîh (1890)",
+    "nature": "hadith",
+    "ar": {
+      "texte": "اللَّهُمَّ ارْزُقْنِي شَهَادَةً فِي سَبِيلِكَ، وَاجْعَلْ مَوْتِي فِي بَلَدِ رَسُولِكَ صلى الله عليه وسلم",
+      "reference": "دعاء عمر — صحيح البخاري، رقم ١٨٩٠",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari/1890.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "O Allah! Grant me martyrdom in Your cause, and let my death be in the city of Your Apostle",
+      "origine": "publiee",
+      "reference": "Supplication of 'Umar — Sahih al-Bukhari 1890 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari/1890.min.json"
+    },
+    "ja": {
+      "texte": "アッラーよ、あなたの道における殉教を私にお授けください。そして私の死を、あなたの使徒 ﷺ の町でのものとしてください。",
+      "origine": "de_l_arabe",
+      "reference": "ウマルの祈願 — 『サヒーフ・アル=ブハーリー』1890番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Numéro vérifié (dernier hadith du livre des mérites de Médine). La traduction anglaise publiée finit sans point et dit « Your Apostle » sans ﷺ ; recopiée telle quelle. Le texte arabe de l'édition lue écrit la bénédiction en toutes lettres (« صلى الله عليه وسلم »)."
+  }
+]

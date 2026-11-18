@@ -1,0 +1,245 @@
+[
+  {
+    "fichier": "v2/src/data/saga_uthman.js",
+    "ligne": 28,
+    "fr": "« On ne s'enquérait pas de la chaîne des transmetteurs. Puis, quand survint la discorde, on dit : Nommez-nous vos hommes. »",
+    "source_fr": "Muhammad ibn Sîrîn — rapporté par Muslim, introduction au Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "لَمْ يَكُونُوا يَسْأَلُونَ عَنِ الْإِسْنَادِ، فَلَمَّا وَقَعَتِ الْفِتْنَةُ قَالُوا: سَمُّوا لَنَا رِجَالَكُمْ",
+      "reference": "محمد بن سيرين — صحيح مسلم، المقدمة، باب في أن الإسناد من الدين",
+      "lu_sur": "https://shamela.ws/book/711/39",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "They used not to ask about the chain of transmission. Then, when the discord broke out, they said: Name your men to us.",
+      "origine": "de_l_arabe",
+      "reference": "Muhammad ibn Sirin — Sahih Muslim, Introduction (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "かつて人々は伝承の鎖(イスナード)について問うことがなかった。だが内乱が起こると、彼らは言った。あなたがたの伝承者たちの名を挙げよ、と。",
+      "origine": "de_l_arabe",
+      "reference": "ムハンマド・イブン・スィーリーン —『サヒーフ・ムスリム』序文(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Le français s'arrête à « Nommez-nous vos hommes » sans marquer la coupure : dans la source la phrase continue (« … on regardait alors les gens de la Sunna et l'on prenait leur hadith, on regardait les gens de l'innovation et l'on ne prenait pas le leur »).",
+    "note": "Parole d'Ibn Sîrîn (athar), sans numéro dans la numérotation courante du Sahîh ; lue dans l'édition turque (al-'Âmira) reproduite par la Shamela, t. 1 p. 11, et recoupée sur ar.wikisource.org (صحيح مسلم/المقدمة). L'édition anglaise de hadith-api (eng-muslim, Siddiqui) ne contient pas ce passage de l'introduction : anglais et japonais traduits de l'arabe."
+  },
+  {
+    "fichier": "v2/src/data/saga_uthman.js",
+    "ligne": 337,
+    "fr": "« Ô Commandeur des croyants ! Rattrape cette communauté avant qu'elle ne diverge au sujet du Livre… »",
+    "source_fr": "Hudhayfa ibn al-Yamân à 'Uthmân — al-Bukhârî, Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "يَا أَمِيرَ الْمُؤْمِنِينَ أَدْرِكْ هَذِهِ الأُمَّةَ قَبْلَ أَنْ يَخْتَلِفُوا فِي الْكِتَابِ …",
+      "reference": "صحيح البخاري، رقم ٤٩٨٧",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "O chief of the Believers! Save this nation before they differ about the Book (Qur'an) …",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 4987 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "信徒たちの長よ、このウンマをお救いください。彼らが啓典をめぐって相違してしまう前に …",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』4987番(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Les points de suspension du français tombent là où la source poursuit : « اخْتِلاَفَ الْيَهُودِ وَالنَّصَارَى » (comme ont divergé les juifs et les chrétiens) ; l'arabe, l'anglais et le japonais sont coupés au même endroit. La traduction anglaise publiée ajoute « (Qur'an) » entre parenthèses."
+  },
+  {
+    "fichier": "v2/src/data/saga_uthman.js",
+    "ligne": 410,
+    "fr": "« Par Allah, s'ils m'avaient chargé de déplacer une montagne, cela ne m'aurait pas été plus lourd que ce qu'ils m'ordonnèrent : réunir le Coran. »",
+    "source_fr": "Zayd ibn Thâbit — al-Bukhârî, Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "فَوَاللَّهِ لَوْ كَلَّفُونِي نَقْلَ جَبَلٍ مِنَ الْجِبَالِ مَا كَانَ أَثْقَلَ عَلَىَّ مِمَّا أَمَرَنِي مِنْ جَمْعِ الْقُرْآنِ",
+      "reference": "صحيح البخاري، رقم ٤٩٨٦",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "By Allah If they had ordered me to shift one of the mountains, it would not have been heavier for me than this ordering me to collect the Qur'an.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 4986 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "アッラーにかけて、たとえ山々の一つを移せと課されたとしても、彼が私に命じたクルアーンの収集ほど、私にとって重くはなかったであろう。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』4986番(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Le français dit « ce qu'ils m'ordonnèrent » (pluriel) ; le texte arabe du n° 4986 a « مِمَّا أَمَرَنِي » (ce qu'il m'ordonna : Abû Bakr), après un pluriel dans « لَوْ كَلَّفُونِي » (s'ils m'avaient chargé) ; il dit aussi « une montagne d'entre les montagnes ».",
+    "note": "Parole de Zayd sur la première réunion des feuillets, au temps d'Abû Bakr. Variantes dans le même recueil : n° 4679 (« لَوْ كَلَّفَنِي … مِمَّا أَمَرَنِي بِهِ », au singulier) et n° 7191. La traduction anglaise est recopiée telle quelle, ponctuation comprise."
+  },
+  {
+    "fichier": "v2/src/data/saga_uthman.js",
+    "ligne": 428,
+    "fr": "« Si vous divergez, vous et Zayd, sur un point du Coran, écrivez-le dans le parler de Quraysh : c'est dans leur langue qu'il est descendu. »",
+    "source_fr": "'Uthmân aux trois scribes qurayshites — al-Bukhârî, Sahîh",
+    "nature": "hadith",
+    "ar": {
+      "texte": "إِذَا اخْتَلَفْتُمْ أَنْتُمْ وَزَيْدُ بْنُ ثَابِتٍ فِي شَىْءٍ مِنَ الْقُرْآنِ فَاكْتُبُوهُ بِلِسَانِ قُرَيْشٍ فَإِنَّمَا نَزَلَ بِلِسَانِهِمْ",
+      "reference": "صحيح البخاري، رقم ٤٩٨٧",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "In case you disagree with Zaid bin Thabit on any point in the Qur'an, then write it in the dialect of Quraish, the Qur'an was revealed in their tongue.",
+      "origine": "publiee",
+      "reference": "Sahih al-Bukhari 4987 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "あなたがたとザイド・イブン・サービトとが、クルアーンの何かについて意見を異にしたときは、それをクライシュの言葉で書きなさい。それはまさに彼らの言葉で下されたのだから。",
+      "origine": "de_l_arabe",
+      "reference": "『サヒーフ・アル=ブハーリー』4987番(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Le français dit « vous et Zayd » ; l'arabe nomme « Zayd ibn Thâbit » (أَنْتُمْ وَزَيْدُ بْنُ ثَابِتٍ).",
+    "note": "Même hadith que la parole de Hudhayfa (n° 4987). La traduction anglaise publiée tourne la phrase autrement (« In case you disagree with Zaid bin Thabit ») et répète « the Qur'an » là où l'arabe a un pronom."
+  },
+  {
+    "fichier": "v2/src/data/saga_uthman.js",
+    "ligne": 471,
+    "fr": "« J'ai vu une créature immense que montent de petites créatures… Ils y sont comme des vers sur un bout de bois : s'il penche, ils se noient ; s'ils en réchappent, ils en restent éblouis. »",
+    "source_fr": "On rapporte — 'Amr ibn al-'Âs à 'Umar, at-Tabarî, Târîkh",
+    "nature": "chronique",
+    "ar": {
+      "texte": "إِنِّي رَأَيْتُ خَلْقًا كَبِيرًا يَرْكَبُهُ خَلْقٌ صَغِيرٌ … هُمْ فِيهِ كَدُودٍ عَلَى عُودٍ، إِنْ مَالَ غَرِقَ، وَإِنْ نجا برق",
+      "reference": "يُروى — الطبري، تاريخ الرسل والملوك، سنة ٢٨ هـ، ج ٤ ص ٢٥٧-٢٥٨",
+      "lu_sur": "https://shamela.ws/book/9783/2147",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "I have seen a great creature ridden by a small one … Upon it they are like worms on a twig: if it leans, they drown; and if they are saved, they are left dazed.",
+      "origine": "de_l_arabe",
+      "reference": "It is reported — al-Tabari, Tarikh al-Rusul wa-l-Muluk, year 28 AH (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "私は大いなる被造物を見ました。小さき被造物がそれに乗っているのです … 彼らはその上で、木切れにとりついた虫のようなもの。傾けば溺れ、助かっても茫然とするばかりです。",
+      "origine": "de_l_arabe",
+      "reference": "と伝えられる — タバリー『諸使徒と諸王の歴史』ヒジュラ暦28年の条(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Lettre de 'Amr ibn al-'Âs à 'Umar, rapportée par Sayf (récit de la campagne de Chypre, an 28). Le « … » du français tombe sur « إِنْ رَكَنَ خَرَقَ الْقُلُوبَ، وَإِنْ تَحَرَّكَ أَزَاغَ الْعُقُولَ، يَزْدَادُ فِيهِ الْيَقِينُ قِلَّةً، وَالشَّكُّ كَثْرَةً » : coupé au même endroit. En arabe « خلق صغير » et « إن مال غرق، وإن نجا برق » sont au singulier collectif ; les traductions gardent le pluriel du sens. La page de la Shamela (éd. Muhammad Abû l-Fadl Ibrâhîm) porte le n° 257 et la suivante le n° 259 ; les derniers mots y sont imprimés sans voyelles. Une seconde version, plus courte (« خَلْقًا عَظِيمًا … وَإِنَّمَا هُمْ كَدُودٍ عَلَى عُودٍ »), suit p. 259 (https://shamela.ws/book/9783/2148). Recoupé sur ar.wikisource.org (تاريخ الطبري/الجزء الرابع)."
+  },
+  {
+    "fichier": "v2/src/data/saga_uthman.js",
+    "ligne": 538,
+    "fr": "« Ne choisis personne et ne tire personne au sort. Laisse-leur le choix : celui qui choisit de partir de son plein gré, transporte-le et aide-le. »",
+    "source_fr": "On rapporte — 'Uthmân à Mu'âwiya, at-Tabarî, Târîkh (an 28 H)",
+    "nature": "chronique",
+    "ar": {
+      "texte": "لا تَنْتَخِبِ النَّاسَ، وَلا تَقْرَعْ بَيْنَهُمْ، خَيِّرْهُمْ، فَمَنِ اخْتَارَ الْغَزْوَ طَائِعًا فَاحْمِلْهُ وَأَعِنْهُ",
+      "reference": "يُروى — الطبري، تاريخ الرسل والملوك، سنة ٢٨ هـ، ج ٤ ص ٢٦٠",
+      "lu_sur": "https://shamela.ws/book/9783/2149",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "Do not pick the men out, and do not draw lots among them. Give them the choice: whoever chooses the campaign of his own free will, carry him and help him.",
+      "origine": "de_l_arabe",
+      "reference": "It is reported — al-Tabari, Tarikh al-Rusul wa-l-Muluk, year 28 AH (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "人々を選び立ててはならない。彼らの間でくじを引かせてもならない。彼ら自身に選ばせなさい。みずから進んで遠征を選ぶ者があれば、その者を運び、助けてやりなさい。",
+      "origine": "de_l_arabe",
+      "reference": "と伝えられる — タバリー『諸使徒と諸王の歴史』ヒジュラ暦28年の条(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Le français dit « celui qui choisit de partir » ; l'arabe dit « فَمَنِ اخْتَارَ الْغَزْوَ » (celui qui choisit l'expédition, la campagne).",
+    "note": "Récit de Sayf, d'après Khâlid ibn Ma'dân, sur la première campagne en mer. Recoupé sur ar.wikisource.org (تاريخ الطبري/الجزء الرابع)."
+  },
+  {
+    "fichier": "v2/src/data/saga_uthman.js",
+    "ligne": 833,
+    "fr": "« Te plairait-il de tuer tous les gens, et moi avec eux ? Par Allah, si tu tues un seul homme, c'est comme si tu avais tué tous les gens. »",
+    "source_fr": "'Uthmân à Abû Hurayra — Ibn Sa'd, Tabaqât",
+    "nature": "chronique",
+    "ar": {
+      "texte": "أيسرك أن تقتل الناس جميعا وإياي؟ فإنك والله إن قتلت رجلا واحدا فكأنما قتل الناس جميعا",
+      "reference": "ابن سعد، الطبقات الكبرى، ج ٣ ص ٧٠ (ط. دار صادر)",
+      "lu_sur": "https://shamela.ws/book/9351/952",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "Would it please you to kill all the people, and me with them? For by Allah, if you kill a single man, it is as though all the people had been killed.",
+      "origine": "de_l_arabe",
+      "reference": "Ibn Sa'd, al-Tabaqat al-Kubra, vol. 3 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "あなたは、すべての人々を、そしてこの私をも殺すことを望むのか。アッラーにかけて、あなたが一人でも殺すなら、それはすべての人々が殺されたも同じなのだ。",
+      "origine": "de_l_arabe",
+      "reference": "イブン・サアド『大伝記集(タバカート)』第3巻(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Le français enchaîne deux répliques que la source sépare par la réponse d'Abû Hurayra (« قال: قلت لا » : je dis : non) et laisse l'adresse « يا أبا هريرة » ; l'édition lue porte « فكأنما قتل الناس جميعا » (comme si tous les gens avaient été tués), là où le français dit « comme si tu avais tué » — leçon « قتلت » de la citation d'Ibn Sa'd par as-Suyûtî (ad-Durr al-manthûr, sourate 5).",
+    "note": "Récit d'Abû Hurayra, par Abû Mu'âwiya, al-A'mash et Abû Sâlih, dans le chapitre « ذكر ما قيل لعثمان في الخلع وما قال لهم ». Texte sans voyelles dans l'édition lue. L'édition al-'Ilmiyya de la Shamela (book/1686) saute les pages 52 à 57 du t. 3 : le passage n'y a pas pu être relu. Citation d'as-Suyûtî lue sur ar.wikisource.org (الدر المنثور/سورة المائدة)."
+  },
+  {
+    "fichier": "v2/src/data/saga_uthman.js",
+    "ligne": 834,
+    "fr": "« J'adjure quiconque estime me devoir écoute et obéissance de retenir sa main et son arme. […] Je ne serai pas le premier à succéder au Messager d'Allah ﷺ dans sa communauté en faisant couler le sang. »",
+    "source_fr": "On rapporte — Ibn Sa'd, Tabaqât ; Ahmad, Musnad",
+    "nature": "hadith",
+    "ar": {
+      "texte": "أَعْزِمُ عَلَى كُلِّ مَنْ رَأَى أَنَّ لِيَ عَلَيْهِ سَمْعًا وَطَاعَةً إِلَّا كَفَّ يَدَهُ وَسِلَاحَهُ […] فَلَنْ أَكُونَ أَوَّلَ مَنْ خَلَفَ رَسُولَ اللهِ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ فِي أُمَّتِهِ بِسَفْكِ الدِّمَاءِ",
+      "reference": "يُروى — نعيم بن حماد، الفتن، رقم ٤٤١؛ مسند أحمد، رقم ٤٨١",
+      "lu_sur": "https://shamela.ws/book/13047/442 ; https://shamela.ws/book/25794/495",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "I adjure everyone who holds that he owes me hearing and obedience to hold back his hand and his weapon. […] I will not be the first to succeed the Messenger of Allah ﷺ over his community by shedding blood.",
+      "origine": "de_l_arabe",
+      "reference": "It is reported — Nu'aym ibn Hammad, al-Fitan 441; Musnad Ahmad 481 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "私に聞き従う義務があると考える者すべてに、私は厳に求める。その手と武器を控えよ。[…] 私は、アッラーの使徒ﷺのウンマにおいて、流血をもってその後を継ぐ最初の者には決してならない。",
+      "origine": "de_l_arabe",
+      "reference": "と伝えられる — ヌアイム・イブン・ハンマード『フィタンの書』441番;『ムスナド・アフマド』481番(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "La première phrase n'a pas été retrouvée sous cette forme chez Ibn Sa'd, qui donne du même témoin ('Abdallâh ibn 'Âmir ibn Rabî'a) : « إن أعظمكم عني غناء رجل كف يده وسلاحه » (t. 3 p. 70, éd. Sâdir) ; l'adjuration est lue chez Nu'aym ibn Hammâd (al-Fitan, n° 441) et chez Khalîfa ibn Khayyât (Târîkh, p. 173). La seconde phrase est bien dans le Musnad d'Ahmad (n° 481), mais c'est un autre récit — la réponse de 'Uthmân à al-Mughîra ibn Shu'ba —, dont les éditeurs (ar-Risâla) jugent la chaîne faible, car interrompue.",
+    "note": "Deux récits réunis par « […] », comme dans le français. Chez Khalîfa ibn Khayyât : « أعزم عَلَى كل من رأى أَن عَلَيْهِ سمعا وَطَاعَة إِلَّا كف يَده وسلاحه » (https://shamela.ws/book/6615/125) ; Ibn Sa'd : https://shamela.ws/book/9351/952. Dans le Musnad la phrase commence par « أَمَّا أَنْ أَخْرُجَ فَأُقَاتِلَ » (quant à sortir combattre…) ; recoupé sur ar.wikisource.org (مسند أحمد بن حنبل/المجلد الأول/مسند عثمان بن عفان (2), où le récit porte le n° 451). La bénédiction est imprimée en toutes lettres dans l'édition lue."
+  },
+  {
+    "fichier": "v2/src/data/saga_uthman.js",
+    "ligne": 865,
+    "fr": "« Je vous adjure par Allah : savez-vous que j'ai acheté le puits de Rûma de mes propres biens, pour que mon seau y soit comme ceux des musulmans ? Et vous m'empêchez aujourd'hui d'en boire. »",
+    "source_fr": "'Uthmân aux assiégeants (abrégé) — at-Tirmidhî ; an-Nasâ'î",
+    "nature": "hadith",
+    "ar": {
+      "texte": "أَنْشُدُكُمْ بِاللَّهِ وَبِالإِسْلاَمِ هَلْ تَعْلَمُونَ أَنَّ رَسُولَ اللَّهِ صلى الله عليه وسلم قَدِمَ الْمَدِينَةَ وَلَيْسَ بِهَا مَاءٌ يُسْتَعْذَبُ غَيْرَ بِئْرِ رُومَةَ […] فَاشْتَرَيْتُهَا مِنْ صُلْبِ مَالِي فَجَعَلْتُ دَلْوِي فِيهَا مَعَ دِلاَءِ الْمُسْلِمِينَ وَأَنْتُمُ الْيَوْمَ تَمْنَعُونِي مِنَ الشُّرْبِ مِنْهَا",
+      "reference": "سنن النسائي، رقم ٣٦٠٨ (مختصرًا)؛ وبنحوه جامع الترمذي، رقم ٣٧٠٣",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-nasai.min.json",
+      "etat": "approchant"
+    },
+    "en": {
+      "texte": "I adjure you by Allah and by Islam, are you aware that when the Messenger of Allah came to Al-Madinah, and it had no water that was considered sweet (suitable for drinking) except the well of Rumah, […] and I bought it with my capital and dipped my bucket into it alongside the buckets of the Muslims? Yet today you are preventing me from drinking from it",
+      "origine": "publiee",
+      "reference": "Sunan an-Nasa'i 3608 (abridged); cf. Jami` at-Tirmidhi 3703",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-nasai.min.json"
+    },
+    "ja": {
+      "texte": "アッラーとイスラームにかけて、あなたがたに問う。あなたがたは知っているか。アッラーの使徒ﷺがマディーナに来られたとき、そこにはルーマの井戸のほかに甘い水がなかったことを。[…] そこで私は自分の財産の中からそれを買い取り、ムスリムたちの桶と並べて私の桶をそこに下ろした。それなのに今日、あなたがたは私がそこから飲むことを妨げている。",
+      "origine": "de_l_arabe",
+      "reference": "『スナン・アン=ナサーイー』3608番(抄);『ジャーミウ・アッ=ティルミズィー』3703番参照(アラビア語原文より訳出)",
+      "lu_sur": ""
+    },
+    "ecart": "Le français resserre le hadith plus qu'il ne l'abrège : il laisse « et par l'islam », la venue du Messager d'Allah ﷺ à Médine et sa parole sur le puits (remplacée ici par « […] »), tourne « j'y ai mis mon seau avec les seaux des musulmans » en « pour que mon seau y soit comme ceux des musulmans », et s'arrête avant « حَتَّى أَشْرَبَ مِنْ مَاءِ الْبَحْرِ » (au point de boire l'eau de la mer).",
+    "note": "Récit de Thumâma ibn Hazn al-Qushayrî. Le texte d'an-Nasâ'î (n° 3608) est le plus proche du français (il a « فَجَعَلْتُ دَلْوِي فِيهَا مَعَ دِلاَءِ الْمُسْلِمِينَ ») ; at-Tirmidhî, n° 3703 : « فَاشْتَرَيْتُهَا مِنْ صُلْبِ مَالِي فَأَنْتُمُ الْيَوْمَ تَمْنَعُونِي أَنْ أَشْرَبَ مِنْهَا حَتَّى أَشْرَبَ مِنْ مَاءِ الْبَحْرِ » (https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-tirmidhi.min.json). La proposition sur la venue à Médine est gardée pour que la phrase arabe tienne. L'édition anglaise de hadith-api (eng-nasai) ne nomme pas son traducteur et n'imprime pas ﷺ après « the Messenger of Allah » : elle est recopiée telle quelle. La bénédiction est imprimée en toutes lettres dans l'édition arabe."
+  }
+]

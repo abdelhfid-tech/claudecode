@@ -1,0 +1,29 @@
+[
+  {
+    "fichier": "v2/src/data/frame.js",
+    "ligne": 20,
+    "fr": "Que celui qui est présent transmette à l’absent.",
+    "source_fr": "Parole du Messager d’Allah ﷺ, sermon de l’Adieu — al-Bukhârî et Muslim",
+    "nature": "hadith",
+    "ar": {
+      "texte": "فَلْيُبَلِّغِ الشَّاهِدُ الْغَائِبَ",
+      "reference": "من قول رسول الله ﷺ في خطبته في حجة الوداع — صحيح مسلم، رقم ١٦٧٩؛ وبنحوه صحيح البخاري، رقم ٦٧",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-muslim.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "Let him who is present convey it to one who is absent.",
+      "origine": "publiee",
+      "reference": "Saying of the Messenger of Allah ﷺ, Farewell Sermon — Sahih Muslim 1679 (trans. Abdul Hamid Siddiqui); cf. Sahih al-Bukhari 67",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-muslim.min.json"
+    },
+    "ja": {
+      "texte": "ですからこの場に居合わせた者は不在だった者に伝えなさいよ。",
+      "origine": "publiee",
+      "reference": "アッラーの使徒ﷺの言葉、別離の巡礼の説教 ― 『サヒーフ・ムスリム』1679番(日本ムスリム協会訳、第2巻720-723頁)",
+      "lu_sur": "https://www.muslim.or.jp/hadith/vol2-720-2.html"
+    },
+    "ecart": "",
+    "note": "Les trois langues citent le même hadith : Muslim, n° 1679, d'après Abû Bakra, dans sa seconde version (n° 4384 dans la numérotation continue de l'édition lue, « 1679.02 » dans sa numérotation arabe) : le sermon du jour du Sacrifice, pendant le pèlerinage de l'Adieu. L'arabe y porte la particule initiale « فَ » (« فَلْيُبَلِّغِ »), que la traduction japonaise rend (「ですから」). Al-Bukhârî, n° 67 (même récit), dit « لِيُبَلِّغِ الشَّاهِدُ الْغَائِبَ », sans cette particule (lu sur https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json) ; sa traduction publiée (Muhsin Khan) : « It is incumbent upon those who are present to inform those who are absent » ; voir aussi al-Bukhârî n° 105, 1739, 1741 et 7078. Muslim a été retenu parce que ses deux traductions publiées, anglaise et japonaise, ont pu être lues ; aucune traduction japonaise publiée d'al-Bukhârî n'a pu être lue en ligne. Le site japonais ne nomme pas les traducteurs : ils ne sont pas nommés ici."
+  }
+]
