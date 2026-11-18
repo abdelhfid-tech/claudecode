@@ -4,13 +4,18 @@
            node tools/silhouettes.js relever            écrit les empreintes, une seule fois (refusé si elles existent déjà)
            node tools/silhouettes.js relever-grands     écrit l'empreinte des grands personnages natifs, une seule fois
                                                         (tools/essais/grands.json ; refusé si elle existe déjà)
+           node tools/silhouettes.js relever-nouveaux   ajoute aux deux fiches les silhouettes venues ensuite (le râwî composé,
+                                                        ses coiffes et ses objets : D193), et rien d'autre — refusé si une seule
+                                                        empreinte déjà relevée a changé
            node tools/silhouettes.js planches [modèles] planches agrandies dans .smoke/silhouettes/ ; [modèles] : une image de
                                                         sept modèles (7 × 2 cases de 32 × 48), pour la planche de comparaison
    1. Les petits sprites (16 × 24, ceux qui marchent sur les cartes) : quatre directions, trois pas, six poses, pour tous
       les personnages du jeu, les tenues du râwî, toutes les coiffes et les variantes d'équipement. Ils sont ceux relevés
       avant que le grand sprite soit redessiné (tools/essais/silhouettes.json) : sinon « ÉCART ». Le râwî composé par le
       joueur (D.RAWI) y entre aussi : son visage (teint, barbe, poil) n'est pas dans le petit sprite — sans eux, sa
-      silhouette doit être exactement celle qu'elle serait sans visage choisi.
+      silhouette doit être exactement celle qu'elle serait sans visage choisi ; ses coiffes, chacune sous chaque coupe ; ses
+      objets (la besace, la lanterne, D193), sous chaque coiffe ; des compositions entières. Les silhouettes venues après
+      les fiches y sont ajoutées à leur création (relever-nouveaux) : ensuite, elles aussi ne changent plus d'un point.
    1 bis. Les grands sprites natifs, tels que le jeu les montre dans ses trois dessins : 32 × 48 (la carte en dessin fin ;
       le combat et les menus dans le dessin d'origine) et 64 × 96 (le combat et les menus en dessin fin, puis fin et
       adouci), toutes les vues, les pas, les poses, les gestes. Ils sont ceux relevés avant que le joueur puisse composer
@@ -68,12 +73,20 @@ const INVENTAIRE = COIFFES => {
     Object.keys(R.etoffes).forEach(k => pose('râwî', 'étoffe ' + k, c({ etoffe: k })));
     Object.keys(R.neons).forEach(k => pose('râwî', 'néon ' + k, c({ neon: k })));
     R.objets.forEach(o => pose('râwî', 'objet ' + o, c({ objet: o })));
+    // 2.x (D193) — chaque coiffe sous chaque coupe (ce qu'elle refuse cède : la même silhouette n'entre qu'une fois), chaque objet
+    // sous chaque coiffe, et sur l'ensemble qui fait céder l'étoffe claire
+    R.coiffes.forEach(co => { R.manteaux.forEach(m => pose('râwî', 'coiffe ' + co + ' · ' + m, c({ coiffe: co, manteau: m })));
+      R.objets.forEach(o => pose('râwî', 'coiffe ' + co + ' · ' + o, c({ coiffe: co, objet: o }))); pose('râwî', 'lettre · coiffe ' + co, c({ coiffe: co }, 'lettre')); });
     // le teint le plus clair et le plus sombre sous chaque ensemble ; puis des compositions entières
     D.TENUES.forEach(t => { const ks = Object.keys(R.teints); [ks[0], ks[ks.length - 1]].forEach(k => pose('râwî', t.id + ' · teint ' + k, c({ teint: k }, t.id))); });
-    [[{ teint: 't7', barbe: 2, poil: 'p3', coiffe: 'calotte', manteau: 'ample', longue: true, echarpe: true, etoffe: 'e7', neon: 'n2', objet: 'feuillets' }, 'archives'],
+    [[{ teint: 't7', barbe: 2, poil: 'p3', coiffe: 'calotte', manteau: 'ample', longue: true, echarpe: true, etoffe: 'e7', neon: 'n2', objet: 'besace' }, 'archives'],
       [{ teint: 't1', barbe: 0, manteau: 'epaule', etoffe: 'e4', neon: 'n4' }, 'ruelle'],
-      [{ teint: 't5', poil: 'p1', coiffe: 'capuche', longue: true, etoffe: 'e3', neon: 'n5', objet: 'feuillets' }, 'lettre'],
-      [{ teint: 't6', barbe: 2, echarpe: false, manteau: 'long', neon: 'n3' }, 'copiste']].forEach(([k, tid], i) => pose('râwî', 'composition ' + (i + 1) + ' · ' + tid, c(k, tid)));
+      [{ teint: 't5', poil: 'p1', coiffe: 'capuche', longue: true, etoffe: 'e3', neon: 'n5', objet: 'lanterne' }, 'lettre'],
+      [{ teint: 't6', barbe: 2, echarpe: false, manteau: 'long', neon: 'n3' }, 'copiste'],
+      [{ teint: 't4', barbe: 1, coiffe: 'imama_haute', manteau: 'ample', longue: true, etoffe: 'e2', neon: 'n1', objet: 'lanterne' }, 'encre'],
+      [{ teint: 't2', barbe: 2, poil: 'p3', coiffe: 'litham', manteau: 'aucun', echarpe: true, etoffe: 'e5', objet: 'besace' }, 'veilleur'],
+      [{ teint: 't7', barbe: 0, coiffe: 'imama_haute', echarpe: true, etoffe: 'e7', neon: 'n3', objet: 'besace' }, 'ruelle'],
+      [{ teint: 't1', poil: 'p1', coiffe: 'litham', longue: true, etoffe: 'e6', neon: 'n5', objet: 'lanterne' }, 'lettre']].forEach(([k, tid], i) => pose('râwî', 'composition ' + (i + 1) + ' · ' + tid, c(k, tid)));
   }
   Object.keys(G.KINDS).forEach(k => { pose('types', k, { kind: k, robe: '#8a7355', head: '#e6dcc4' });
     if (k === 'soldat' || k === 'romain') for (let i = 0; i < 7; i++) pose('types', k + ' ' + i, { kind: k, robe: '#6a5a40', head: '#e2d8c2', sel: i }); });
@@ -209,6 +222,27 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     if (errors.length) { console.log('✗ erreur console : ' + errors[0]); await browser.close(); process.exit(1); }
     fs.writeFileSync(FICHE_G, JSON.stringify({ note: 'Empreintes des grands sprites natifs, tels que le jeu les montrait avant que le joueur puisse composer son râwî : [32 × 48 en dessin fin (4 directions × 4 images, poses et gestes), figure 64 × 96 en dessin fin, la même fin et adoucie, figure du dessin d’origine (32 × 48)]. La clé : l’apparence entière (look). Relevé par tools/silhouettes.js relever-grands.', grands }, null, 0).replace(/"\],"/g, '"],\n"') + '\n');
     console.log(`✓ grands relevés : ${looks.length} silhouettes (${detail}), dans les trois dessins`); await browser.close(); process.exit(0);
+  }
+
+  /* ---------- relever les nouveaux : les silhouettes venues après les fiches, à leur création ----------
+     Rien de ce qui est relevé ne change : on n'ajoute que ce qui manque, et seulement si tout ce qui est déjà relevé est encore
+     juste, au point près (sinon, c'est un écart, pas une nouveauté). */
+  if (mode === 'relever-nouveaux') {
+    if (!fs.existsSync(FICHE) || !fs.existsSync(FICHE_G)) { console.log('✗ les fiches manquent : relever, puis relever-grands'); await browser.close(); process.exit(1); }
+    const S = JSON.parse(fs.readFileSync(FICHE, 'utf8')), SG = JSON.parse(fs.readFileSync(FICHE_G, 'utf8'));
+    const E = (await parPaquets(inv.map(q => q.look), 60, EMPREINTES, l => [l, true, true])).flat(), faux = [];   // le petit sprite, et le grand d'avant (l'interrupteur)
+    cles.forEach((k, i) => { const a = S.sprites[k]; if (a && (a[0] !== E[i][0] || a[1] !== E[i][1])) faux.push(inv[i].nom); });
+    const connus = inv.filter(q => SG.grands[JSON.stringify(q.look)]), EG = await grandes(connus.map(q => q.look));
+    connus.forEach((q, i) => { if (JSON.stringify(SG.grands[JSON.stringify(q.look)]) !== JSON.stringify(EG[i])) faux.push(q.nom + ' (grand)'); });
+    if (faux.length || errors.length) { console.log(`✗ rien n'est ajouté : ${faux.length ? faux.length + ' silhouette(s) déjà relevée(s) ont changé (' + faux.slice(0, 6).join(', ') + ')' : 'erreur console : ' + errors[0]}`); await browser.close(); process.exit(1); }
+    let np = 0; cles.forEach((k, i) => { if (!S.sprites[k]) { S.sprites[k] = E[i]; np++; } });
+    const neuves = inv.filter(q => !SG.grands[JSON.stringify(q.look)]), EN = await grandes(neuves.map(q => q.look)); neuves.forEach((q, i) => { SG.grands[JSON.stringify(q.look)] = EN[i]; });
+    if (errors.length) { console.log('✗ erreur console : ' + errors[0]); await browser.close(); process.exit(1); }
+    const AJOUT = ' Les silhouettes venues ensuite (le râwî composé, ses coiffes et ses objets : D193) y sont ajoutées à leur création, sans qu’aucune empreinte déjà relevée ne change (tools/silhouettes.js relever-nouveaux).';
+    if (S.note.indexOf(AJOUT) < 0) S.note += AJOUT; if (SG.note.indexOf(AJOUT) < 0) SG.note += AJOUT;
+    if (np) fs.writeFileSync(FICHE, JSON.stringify({ note: S.note, sprites: S.sprites }, null, 0).replace(/"\],"/g, '"],\n"') + '\n');
+    if (neuves.length) fs.writeFileSync(FICHE_G, JSON.stringify({ note: SG.note, grands: SG.grands }, null, 0).replace(/"\],"/g, '"],\n"') + '\n');
+    console.log(`✓ ${np} petite(s) et ${neuves.length} grande(s) silhouette(s) ajoutée(s) aux fiches ; les ${cles.length - np} et ${connus.length} déjà relevées sont toujours justes, au point près`); await browser.close(); process.exit(0);
   }
 
   /* ---------- planches ---------- */

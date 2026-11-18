@@ -43,30 +43,40 @@
   // ce que donnent déjà l'ensemble et le visage d'origine, pièce par pièce
   P.base = function (t) { const L = t.look, v = visageOrigine();
     return { teint: v.teint, barbe: v.barbe, poil: v.poil, coiffe: L.coiffe || 'capuche', manteau: L.manteau || 'long', longue: L.court === false, echarpe: !!L.echarpe, etoffe: etoffeDe(t), neon: null, objet: null }; };
-  // ce qui diffère de l'ensemble seulement ; la calotte ne va jamais sans manteau (la silhouette de Sâlim, qui marche avec le
-  // râwî, et de Compagnons des récits) : c'est la coupe qui cède
+  // ce qu'une coiffe ne prend pas (D.RAWI.sans) : la coupe qu'elle a chez un Compagnon des récits ou chez Sâlim, qui marche
+  // avec le râwî — la calotte sans manteau, le turban haut avec le manteau long —, l'étoffe claire qui ferait du turban celui
+  // d'un Compagnon. → vrai si la pièce k (manteau, etoffe) peut valoir v sous cette coiffe
+  const exclus = (coiffe, k) => ((R.sans || {})[coiffe] || {})[k] || [];
+  P.va = (coiffe, k, v) => exclus(coiffe, k).indexOf(v) < 0;
+  // quand une pièce cède : la coupe qui garde un manteau, puis la première étoffe qui va
+  const REPLI = { manteau: () => ['long', 'epaule', 'ample', 'aucun'].filter(m => liste(R.manteaux, m)), etoffe: () => Object.keys(R.etoffes) };
+  // ce qui diffère de l'ensemble seulement ; ce qui ne va pas avec la coiffe cède (la coupe, l'étoffe) : la coiffe, elle, reste
   P.neutraliser = function (t, brut) { const B = P.base(t), c = P.compo(brut);
     Object.keys(c).forEach(k => { if (c[k] === B[k]) delete c[k]; });
-    const vaut = k => (c[k] !== undefined ? c[k] : B[k]);
-    if (vaut('coiffe') === 'calotte' && vaut('manteau') === 'aucun') { if (c.manteau === 'aucun') delete c.manteau; if (vaut('manteau') === 'aucun') c.manteau = 'long'; }
+    const vaut = k => (c[k] !== undefined ? c[k] : B[k]), co = vaut('coiffe');
+    ['manteau', 'etoffe'].forEach(k => { if (P.va(co, k, vaut(k))) return; delete c[k];
+      if (!P.va(co, k, vaut(k))) { const v = REPLI[k]().find(x => P.va(co, k, x)); if (v !== undefined && v !== B[k]) c[k] = v; } });
     return c; };
-  P.permis = (k, v, t, brut) => { const c = Object.assign({}, P.compo(brut)), B = P.base(t); c[k] = v; const vaut = q => (c[q] !== undefined ? c[q] : B[q]);
-    return !(vaut('coiffe') === 'calotte' && vaut('manteau') === 'aucun'); };
+  // une case de l'écran « Ton personnage » : une coiffe se prend toujours (ce qui ne va pas avec elle cède) ; une coupe ou une
+  // étoffe qui n'irait pas avec la coiffe portée s'éteint
+  P.permis = (k, v, t, brut) => { if (k !== 'manteau' && k !== 'etoffe') return true; const c = P.compo(brut), B = P.base(t);
+    return P.va(c.coiffe !== undefined ? c.coiffe : B.coiffe, k, v); };
   // un liseré jaune ou doré (une teinte entre l'orangé et le jaune, franche) : celui du veilleur (#ffe08a) en est un
   const dore = h => { const n = parseInt(String(h).slice(1, 7), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, mx = Math.max(r, g, b), d = mx - Math.min(r, g, b);
     if (!(d >= 40)) return false; let a = (mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60; if (a < 0) a += 360; return a >= 30 && a <= 70; };
   P.dore = dore;
   // l'apparence d'un ensemble et de ses pièces : le visage reste celui d'origine (sa marque, figée), le liseré n'est jamais
   // le beige doré que le moteur pose à défaut, ni le jaune pâle d'un ensemble (le veilleur, D146) qu'une pièce composée
-  // mettrait au jour — bandeau de la calotte, écharpe, bas de la robe longue (exigence 17 : ni or) : c'est le néon, ou le
-  // cyan de l'habit
+  // mettrait au jour — le bandeau d'une coiffe qui en a un (gfx.galon : la calotte ; sous le turban et le chèche, le bandeau
+  // du râwî est fait de ses deux néons, sprites.js), l'écharpe, le bas de la robe longue (exigence 17 : ni or) : c'est le
+  // néon, ou le cyan de l'habit
   P.composer = function (t, brut) {
     const c = P.neutraliser(t, brut); if (!Object.keys(c).length) return P.look(t);
     const L = Object.assign({}, t.look); L.visage = I.gfx.signe(D.TENUES[0].look);
     if (c.coiffe) L.coiffe = c.coiffe; if (c.manteau) L.manteau = c.manteau; if (c.longue !== undefined) L.court = !c.longue; if (c.echarpe !== undefined) L.echarpe = c.echarpe;
     if (c.etoffe) { const e = R.etoffes[c.etoffe]; L.robe = e.robe; L.head = e.head; L.cloak = e.cloak; if (e.legs) L.legs = e.legs; else delete L.legs; }
     if (c.neon) { L.neon = R.neons[c.neon].slice(); L.trim = L.neon[0]; }
-    else if ((!L.trim || dore(L.trim)) && (L.coiffe === 'calotte' || L.echarpe || L.court === false)) L.trim = '#39e6ff';
+    else if ((!L.trim || dore(L.trim)) && ((L.coiffe && I.gfx.galon(L.coiffe)) || L.echarpe || L.court === false)) L.trim = '#39e6ff';
     if (c.objet) L.porte = [c.objet];
     if (c.teint) L.teint = R.teints[c.teint]; if (c.barbe !== undefined) L.barbe = c.barbe; if (c.poil) L.poil = R.poils[c.poil];
     return L;
@@ -74,8 +84,8 @@
   // une tenue au hasard : la coiffe, la coupe, la robe, l'écharpe, l'étoffe, le néon, l'objet — jamais le visage
   P.hasard = function (t, brut, rnd) { const x = rnd || Math.random, un = a => a[Math.floor(x() * a.length) % a.length], c0 = P.compo(brut), avant = JSON.stringify(P.neutraliser(t, c0));
     for (let essai = 0; essai < 12; essai++) { const c = {}; VISAGE.forEach(k => { if (c0[k] !== undefined) c[k] = c0[k]; });
-      c.coiffe = un(R.coiffes); c.manteau = un(c.coiffe === 'calotte' ? R.manteaux.filter(m => m !== 'aucun') : R.manteaux);
-      c.longue = x() < 0.3; c.echarpe = x() < 0.3; c.etoffe = un(Object.keys(R.etoffes));
+      c.coiffe = un(R.coiffes); c.manteau = un(R.manteaux.filter(m => P.va(c.coiffe, 'manteau', m)));
+      c.longue = x() < 0.3; c.echarpe = x() < 0.3; c.etoffe = un(Object.keys(R.etoffes).filter(e => P.va(c.coiffe, 'etoffe', e)));
       const n = un([null].concat(Object.keys(R.neons))), o = un([null].concat(R.objets)); if (n) c.neon = n; if (o) c.objet = o;
       const r = P.neutraliser(t, c); if (JSON.stringify(r) !== avant) return r; }
     return P.neutraliser(t, c0); };

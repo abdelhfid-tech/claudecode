@@ -432,19 +432,36 @@
                 (t3 : celui d'Idris). TEINTS, que lisent tous les autres personnages, ne change pas.
        barbes   celles que le moteur dessine : glabre, courte (Idris), pleine — pour un adulte ; poils : ni gris ni
                 blanc, ce serait l'âge (p2 : Idris)
-       coiffes  la capuche et la calotte : les turbans sont ceux des Compagnons des récits ; keffieh, litham et tiare,
-                ceux de types de gens ; les casques, de l'équipement. La calotte ne se porte pas sans manteau : ce
-                serait la silhouette de Sâlim, qui marche avec le râwî, et de Compagnons (perso.js)
+       coiffes  la capuche, la calotte ; puis (D193) le turban haut, enroulé serré (imama_haute), et le chèche (litham),
+                sous lequel on ne voit que les yeux — des coiffes que le moteur dessine déjà, dans toutes les tailles.
+                Écartés : le turban des Compagnons (imama), le turban large et bas ('Umar, 'Uthmân, Qays : l'un d'eux le
+                porte sombre, comme le serait celui du râwî), le turban à pan (trois Compagnons, et Maître Yûnus, qui
+                marche avec le râwî) ; le keffieh et la tiare, qui disent dans le jeu les gens des tribus et les Perses
+                (exigence 10) — la tiare est aussi celle du Régent de 2084, et son galon est doré ; les casques et la
+                coiffe de mailles, qui sont de l'équipement
+       sans     ce qu'une coiffe ne prend pas, pour qu'aucune composition ne donne la silhouette d'un Compagnon des
+                récits ni celle de Sâlim : la coupe qu'elle a chez eux (manteau), l'étoffe claire qui en ferait un
+                turban de Compagnon (etoffe). Le joueur qui touche une coiffe la prend, et ce qui n'allait pas avec
+                elle cède sous ses yeux ; tant qu'il la porte, la coupe ou l'étoffe qui n'irait pas avec elle
+                s'éteint (perso.js). Et sous le turban et le chèche, le bandeau du râwî est fait de ses deux néons :
+                de dos, où l'on ne voit ni son visage ni le néon de sa poitrine, la marque de 2084 (sprites.js)
        etoffes  des étoffes harmonisées — robe, coiffe, manteau, jambes : celles des six ensembles, et une de plus
        neons    la bande et la ceinture qui éclairent l'habit [bande, ceinture] ; le liseré suit la bande. Ni or ni jaune ;
                 aucune n'est la couleur d'un rayonnement (D.RAYONS). Sans choix : le néon de l'ensemble.
-       objets   un objet ordinaire, sans effet, rangé hors de l'équipement (look.porte) : rien de ce qui est une arme,
-                une pièce d'équipement ou la marque d'une figure de 2084 */
+       objets   un objet ordinaire de 2084, sans effet, rangé hors de l'équipement (look.porte) : une besace portée en
+                bandoulière, une lanterne à la main. Rien de ce qui est une arme, une pièce d'équipement, la marque
+                d'une figure de 2084 ou l'attribut d'un Compagnon (D193 : les feuillets, ceux de Zayd ibn Thâbit et
+                d'Ibn 'Abbâs, sont retirés — une partie qui les portait revient à « rien ») */
   D.RAWI = {
     teints: { t1: '#ecc49a', t2: '#deab7c', t3: '#cb9566', t4: '#b47d50', t5: '#9a6540', t6: '#7e5034', t7: '#5f3a24' },
     barbes: [0, 1, 2],
     poils: { p1: '#121014', p2: '#2c1e17', p3: '#6b4a2e' },
-    coiffes: ['capuche', 'calotte'],
+    coiffes: ['capuche', 'calotte', 'imama_haute', 'litham'],
+    sans: {
+      calotte: { manteau: ['aucun'] },                       // Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit
+      imama_haute: { manteau: ['long'], etoffe: ['e6'] },    // Ibn 'Abbâs, 'Abd ar-Rahmân ; clair, ce serait un turban de Compagnon
+      litham: { etoffe: ['e6'] }                             // clair, de dos, ce serait un turban de Compagnon
+    },
     manteaux: ['long', 'aucun', 'epaule', 'ample'],
     etoffes: {
       e1: { robe: '#2a3048', head: '#1c2030', cloak: '#39424f' }, e2: { robe: '#1d2b36', head: '#131d26', cloak: '#2b4656' },
@@ -453,7 +470,7 @@
       e7: { robe: '#7d8492', head: '#5a606c', cloak: '#a9aeb8', legs: '#3a3c44' }
     },
     neons: { n1: ['#ff4fd8', '#39e6ff'], n2: ['#7dffb0', '#39e6ff'], n3: ['#b18cff', '#7dffb0'], n4: ['#ff6b6b', '#39e6ff'], n5: ['#e8f4ff', '#ff4fd8'] },
-    objets: ['feuillets']
+    objets: ['besace', 'lanterne']
   };
 
   /* ---------- Les paquets (2.0) ----------

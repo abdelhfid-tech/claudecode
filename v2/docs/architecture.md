@@ -216,20 +216,22 @@ le sceau du râwî ne porte plus son nom en arabe : il montre l'étoile à huit 
 ### Le râwî composé (2.x)
 
 *Demande du décideur, le 18 novembre : « configurer le personnage d'Idris — couleur de peau, habits, accessoires…
-je veux le permettre à l'utilisateur ». Palettes, coiffes et objets proposés par l'agent, à valider.*
+je veux le permettre à l'utilisateur ». Les palettes sont validées (D193) ; le décideur y a retiré les feuillets au profit
+d'une besace et d'une lanterne, et demandé plus de coiffes, sans silhouette de Compagnon (D193, réalisé par l'agent :
+coiffes, règles et dessins à valider).*
 
 Par-dessus son ensemble (une tenue de `D.TENUES`, qui devient un point de départ), le joueur change des pièces. Tout
-vient de `D.RAWI` (`defs.js`), rien n'est dessiné de neuf :
+vient de `D.RAWI` (`defs.js`) ; seuls les deux objets sont dessinés de neuf :
 
 | Pièce | Valeurs | Ce qu'elle pose sur l'apparence |
 |---|---|---|
 | `teint` | `t1` à `t7` : les cinq teints du moteur, puis deux plus sombres (`t3` : Idris) | `look.teint` |
 | `barbe`, `poil` | glabre, courte (Idris), pleine ; trois poils sombres, ni gris ni blanc (`p2` : Idris) | `look.barbe`, `look.poil` |
-| `coiffe` | la capuche, la calotte | `look.coiffe` |
+| `coiffe` | la capuche, la calotte ; le turban haut (`imama_haute`), le chèche (`litham`) | `look.coiffe` |
 | `manteau`, `longue`, `echarpe` | les quatre coupes ; la robe jusqu'aux pieds ; l'écharpe | `look.manteau`, `look.court`, `look.echarpe` |
 | `etoffe` | `e1` à `e6` (les six ensembles), `e7` | `look.robe`, `head`, `cloak`, `legs` |
 | `neon` | `n1` à `n5` : [bande, ceinture] ; sans choix, le néon de l'ensemble | `look.neon`, et le liseré suit la bande |
-| `objet` | les feuillets | `look.porte` |
+| `objet` | la besace, la lanterne (les feuillets, retirés : D193) | `look.porte` |
 
 - **Des identifiants, jamais une couleur.** La partie garde `compo: { teint: 't6', coiffe: 'calotte', … }` ; une teinte
   retouchée ne casse aucune partie, et un identifiant retiré redevient absent — on n'en retire ni n'en réordonne aucun,
@@ -244,20 +246,46 @@ vient de `D.RAWI` (`defs.js`), rien n'est dessiné de neuf :
   tire un habit, jamais un visage ; ↺ rend le râwî de toujours. Aucun mot ne dit un trait (exigence 2) : teint, barbe et
   poil se choisissent sur des pastilles et des vignettes ; leurs noms ne vivent que pour les lecteurs d'écran (« Choix 3
   sur 7 »).
-- **Ce qui n'est pas proposé.** Les turbans (ceux des Compagnons des récits), le keffieh, le litham et la tiare (ceux
-  de types de gens), les casques (de l'équipement). La calotte ne se prend pas sans manteau : ce serait la silhouette de
-  Sâlim, qui marche avec le râwî, et de Compagnons — à l'écran, la case qui ne va pas avec ce qui est choisi s'éteint.
-  Aucun objet qui soit une arme, une pièce d'équipement ou la marque d'une figure de 2084 (la bourse du Compteur) ; le
-  néon ne donne pas de lumière au râwî sur la carte (une lumière à soi est la marque d'un Compagnon) ; ni lueur ni
-  rayonnement. Ni or ni jaune : le liseré d'un habit composé n'est jamais le beige doré que le moteur pose à défaut, ni
-  le jaune pâle d'un ensemble (celui du veilleur, `#ffe08a`, D146) qu'une pièce composée mettrait au jour — le bandeau de
-  la calotte, l'écharpe, le bas de la robe longue : c'est alors le néon, ou le cyan de l'habit (`perso.dore`).
-- **Le moteur** (`sprites.js`) : `look.neon` colore la bande et la ceinture ; `look.porte` se dessine comme un objet
-  tenu, que l'équipement ne lit pas (`gear.js` : l'arme de départ reste le couteau, et l'objet se range au combat) ;
+- **Les coiffes, et ce qu'elles ne prennent pas** (`D.RAWI.sans`). Des coiffes que le moteur dessine déjà, dans toutes
+  les tailles : la capuche, la calotte, le turban haut et le chèche (sous lequel on ne voit que les yeux : `visage()`).
+  Aucune composition ne donne la silhouette d'un Compagnon des récits, ni de Sâlim ou de Maître Yûnus, qui marchent avec
+  le râwî : la calotte ne se prend pas sans manteau (Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit) ; le turban haut ni
+  avec le manteau long (Ibn 'Abbâs, 'Abd ar-Rahmân), ni dans l'étoffe claire (un turban clair est celui des
+  Compagnons) ; le chèche non plus dans l'étoffe claire (de dos, dans le petit personnage, il prend la forme d'un
+  turban). Et sous le turban et le chèche, le bandeau du râwî est fait de ses deux néons, la bande et la ceinture (`Y`,
+  `y` ; `NEON_TETE`, `sprites.js`) — deux lignes sous le turban du grand personnage, et, là où le bandeau n'a qu'une
+  ligne (le petit personnage, le chèche), les deux néons point par point : de dos, où l'on ne voit ni son visage ni le
+  néon de sa poitrine, c'est la marque de 2084 — le bandeau d'un Compagnon a sa couleur, d'un seul ton. À l'écran, une coiffe se prend toujours : ce qui
+  n'allait pas avec elle cède sous les yeux (la coupe revient à celle de l'ensemble, sinon à l'épaule ; l'étoffe, à la
+  première qui va) ; tant qu'on la porte, la case qui n'irait pas avec elle s'éteint. Le dé ne tire que ce qui va.
+- **Ce qui n'est pas proposé.** Le turban des Compagnons (`imama`) ; le turban large et bas ('Umar, 'Uthmân, Qays —
+  'Umar le porte sombre, comme le serait celui du râwî) ; le turban à pan (trois Compagnons, et Maître Yûnus) ; le keffieh
+  et la tiare, qui disent dans le jeu les gens des tribus et les Perses (exigence 10) — la tiare est aussi celle du
+  Régent de 2084, et son galon est doré ; les casques et la coiffe de mailles (de l'équipement). Aucun objet qui soit
+  une arme, une pièce d'équipement, la marque d'une figure de 2084 (la bourse du Compteur, les feuillets du Cartographe)
+  ou l'attribut d'un Compagnon (les feuillets de Zayd ibn Thâbit et d'Ibn 'Abbâs) ; le néon ne donne pas de lumière au
+  râwî sur la carte (une lumière à soi est la marque d'un Compagnon) ; ni lueur ni rayonnement.
+- **La besace et la lanterne** (D193), objets ordinaires de 2084, sans motif ni ornement (exigence 17), dessinés pour
+  chaque taille où le râwî paraît — 16 × 24 (le petit personnage du dessin d'origine), 32 × 48, 64 × 96 —, jamais
+  agrandis de la taille d'en dessous (`SAC`, `BESACE`, `LANTERNE`, `poserObjet`, `sprites.js`) ; le personnage fin
+  (`fine()`) les reçoit à sa taille, sous la tête, jamais sur une main. La besace : un sac de cuir à rabat, porté en
+  bandoulière — la sangle part de l'épaule, croise la poitrine sans couper la bande de néon, le sac pend à la hanche. La
+  lanterne : une lampe portative, une boîte de métal sombre autour d'un verre pâle, et son anse ; ni niche, ni arc, ni
+  globe, ni chaîne, ni croisillon, ni or, et elle ne donne aucune lumière. Elle pend à la main qui pend et suit le pas ;
+  quand cette main est prise (le recueillement, la surprise, la garde, un geste de frappe de profil), elle s'accroche à la
+  ceinture ; à genoux, elle est posée à côté de lui ; de dos, la main prise, on ne la voit pas. Comme tout objet porté,
+  elles se rangent au combat et sur la page d'équipement. Une partie gardée quand le râwî portait les feuillets s'ouvre
+  sans erreur : son objet revient à « rien ». Ni or ni jaune : le liseré d'un habit composé n'est jamais le beige doré que le moteur pose à défaut, ni
+  le jaune pâle d'un ensemble (celui du veilleur, `#ffe08a`, D146) qu'une pièce composée mettrait au jour — le bandeau
+  d'une coiffe qui en a un (`gfx.galon` : la calotte, le turban ; le chèche, de dos, dans le petit personnage), l'écharpe,
+  le bas de la robe longue : c'est alors le néon, ou le cyan de l'habit (`perso.dore`).
+- **Le moteur** (`sprites.js`) : `look.neon` colore la bande et la ceinture, et le bandeau du turban et du chèche ;
+  `look.porte` (la besace, la lanterne) se dessine à chaque taille, et l'équipement ne le lit pas (`gear.js` : l'arme de
+  départ reste le couteau, et l'objet se range au combat) ;
   `look.barbe` et `look.poil` ne valent que pour un adulte ; un teint plus sombre que tous ceux du moteur garde le blanc
   de l'œil jusque sur le personnage de 32 × 48, sous la même ombre de capuche que les autres — la gamme reste dans
   l'ordre. `G.traits(look)` dit le visage que le moteur tire d'une apparence ; `G.objet(nom)`, l'icône d'un objet, tirée
-  de son dessin. Un récit ou un paquet n'écrit ni `teint`, ni `barbe`, ni `poil`, ni `visage`, ni `neon`, ni `porte` :
+  de son dessin, à la taille du dessin choisi. Un récit ou un paquet n'écrit ni `teint`, ni `barbe`, ni `poil`, ni `visage`, ni `neon`, ni `porte` :
   `regles.js` le refuse (« réservé au râwî que compose le joueur »).
 
 **L'écran « Ton personnage »** (`U.personnage`, `ui.js`) : le nom, en haut — le clavier du téléphone ne le cache pas ;
@@ -277,16 +305,20 @@ de case en case (`focusList`, option `spatial`) ; une souris immobile sous l'éc
 
 `node v2/tools/personnage.js` le prouve : les noms acceptés et refusés ; chaque phrase redite avec six noms ; le profil
 d'origine qui ne change rien ; les règles du râwî composé (composition abîmée oubliée, visage inchangé par l'habit, le
-dé sur mille tirages, les teints dans l'ordre dans les trois dessins, aucune silhouette de Compagnon, l'arme de départ,
-le refus des règles) ; puis, par les vrais boutons et en quatre tailles d'écran, chaque choix touché et vu et un
+dé sur mille tirages, les teints dans l'ordre dans les trois dessins, aucune silhouette de Compagnon, de Sâlim ni de
+Maître Yûnus, aucun turban clair, le visage sous le turban et les yeux seuls sous le chèche, le bandeau aux deux néons de
+face, de profil et de dos, l'arme de départ, ni or ni jaune sous aucune coiffe ni sur les objets, les feuillets retirés et
+perdus sans erreur, le refus des règles) ; puis, par les vrais boutons et en quatre tailles d'écran, chaque choix touché et vu et un
 prologue entier joué sous un autre nom et un autre visage — tout ce qui s'affiche est relevé, « Idris » n'y paraît plus
 — ; sur les téléphones courants, en largeur et en hauteur (640 × 360, 667 × 375, 568 × 320, 320 × 568), aucun mot coupé
 ni rien hors de l'écran, à l'ouverture et dans chaque onglet ; le champ du nom, son nom pour les lecteurs d'écran et un
-clavier qui ne corrige pas un prénom ; ni néon ni liseré doré ; la composition entière, case par case ; enfin le choix
-gardé, rechargé, changé depuis la halte, exporté, importé ; l'écran en arabe ; au clavier. `silhouettes.js` y ajoute
-le râwî composé (chaque valeur de chaque pièce, et des compositions entières) et l'empreinte des grands personnages
-d'avant (`tools/essais/grands.json`) ; `partie.js`, une partie dont le râwî est composé, exportée puis réimportée à
-l'identique.
+clavier qui ne corrige pas un prénom ; ni néon ni liseré doré ; la composition entière, case par case ; chaque coiffe,
+et ce qui cède sous elle ou s'éteint ; enfin le choix gardé, rechargé, changé depuis la halte, exporté, importé — et une
+partie qui portait les feuillets, qui s'ouvre sans eux ; l'écran en arabe ; au clavier. `silhouettes.js` y ajoute le
+râwî composé (chaque valeur de chaque pièce, chaque coiffe sous chaque coupe, chaque objet sous chaque coiffe, et des
+compositions entières) et l'empreinte des grands personnages d'avant (`tools/essais/grands.json`) ; les silhouettes
+venues ensuite y sont ajoutées à leur création (`silhouettes.js relever-nouveaux`, qui refuse si une seule empreinte
+déjà relevée a changé) ; `partie.js`, une partie dont le râwî est composé, exportée puis réimportée à l'identique.
 
 ## La définition du dessin : `src/core/gfx.js`
 

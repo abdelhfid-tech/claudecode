@@ -188,8 +188,9 @@
      Chaîne et la halte, la composition entière, en quatre onglets : le visage, l'habit, les couleurs, l'objet.
      Aucun mot ne dit un trait (exigence 2) : un choix se voit, et ne se nomme que pour les lecteurs d'écran (« Choix 3
      sur 7 »). Le teint, la barbe et son poil ne tiennent à aucun habit, ni l'habit à eux (exigence 10). Le dé tire un
-     habit, jamais un visage ; ↺ rend le râwî de toujours. La calotte ne se prend pas sans manteau : la case qui ne va
-     pas avec ce qui est choisi s'éteint. retour(change) : true si le joueur a validé. */
+     habit, jamais un visage ; ↺ rend le râwî de toujours. Une coiffe se prend toujours : ce qui n'allait pas avec elle (la
+     coupe, l'étoffe : D.RAWI.sans) cède sous les yeux ; tant qu'on la porte, la case qui n'irait pas avec elle s'éteint.
+     retour(change) : true si le joueur a validé. */
   const SVG_ZERO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 1 0 2.05-4.95" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M4.2 3.6v4.9h4.9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const SVG_DE = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.6"/><circle cx="15.5" cy="15.5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="15.5" cy="8.5" r="1.6"/><circle cx="8.5" cy="15.5" r="1.6"/></svg>';
   const SVG_RIEN = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.7 17.3 17.3 6.7" stroke="currentColor" stroke-width="2"/></svg>';
@@ -242,19 +243,23 @@
       cells.forEach((b, i) => { const dit = noms ? noms[i] : I.t('Choix {n} sur {total}', { n: i + 1, total: cells.length }); b.setAttribute('aria-label', dit); b.title = dit; g.appendChild(b); }); return g; };
     const rangee = (...gs) => { const r = I.el('div', 'pv-rangee'); gs.forEach((g, i) => { if (i) r.appendChild(I.el('span', 'pv-sep')); r.appendChild(g); }); return r; };
     const poser = (k, v) => { compo = P.neutraliser(T(), avec(k, v)); proche = P.VISAGE.indexOf(k) >= 0; peindre(); };
-    const pastille = (fond, choisie, agir) => kase('pv-pastille', choisie, agir, b => { b.style.background = fond; });
+    const pastille = (fond, choisie, agir, permis) => kase('pv-pastille', choisie, agir, b => { b.style.background = fond; }, permis);
     const vignette = (cls, k, v) => kase('pv-vig ' + cls, () => vaut(k) === v, () => poser(k, v), b => image(b, fig(look(avec(k, v)), 0)), () => P.permis(k, v, T(), compo));
     const PRES = P.VISAGE.concat(['objet']);   // ce qu'un ensemble ne change pas : le visage, l'objet
     const ens = I.el('div', 'pv-ens');
     ens.appendChild(rangee(groupe(I.t('Ensemble'), D.TENUES.map(t => kase('pv-vig pv-fig44', () => tenue === t.id, () => { tenue = t.id; compo = P.neutraliser(T(), garde(PRES)); proche = false; peindre(); },
       b => { b.classList.toggle('retouche', tenue === t.id && P.HABIT.some(k => compo[k] !== undefined)); image(b, fig(look(garde(PRES), t), 0)); })), D.TENUES.map(t => t.nom))));
+    // sous le chèche, on ne voit que les yeux : les vignettes du visage le montrent sous la capuche, pour qu'on voie ce qu'on choisit
+    const fente = L => { const b = boite(L, 0); return !!b && b.h < 5 * (G.D > 1 ? 2 : 1); };
+    const montre = c => { const L = look(c); return fente(L) ? look(Object.assign({}, c, { coiffe: 'capuche' })) : L; };
     const PANNEAUX = {
       visage: () => [rangee(groupe(I.t('Teint'), Object.keys(R.teints).map(id => pastille(R.teints[id], () => vaut('teint') === id, () => poser('teint', id))))),
-        rangee(groupe(I.t('Barbe'), R.barbes.map(n => kase('pv-vig pv-tete', () => vaut('barbe') === n, () => poser('barbe', n), b => image(b, visage(look(avec('barbe', n))))))),
+        rangee(groupe(I.t('Barbe'), R.barbes.map(n => kase('pv-vig pv-tete', () => vaut('barbe') === n, () => poser('barbe', n), b => image(b, visage(montre(avec('barbe', n))))))),
           groupe(I.t('Couleur de la barbe'), Object.keys(R.poils).map(id => pastille(R.poils[id], () => vaut('poil') === id, () => poser('poil', id)))))],
-      habit: () => [rangee(groupe(I.t('Coiffe'), R.coiffes.map(v => vignette('pv-fig44', 'coiffe', v))), groupe(I.t('Longueur'), [false, true].map(v => vignette('pv-fig44', 'longue', v))),
-        groupe(I.t('Écharpe'), [false, true].map(v => vignette('pv-fig44', 'echarpe', v)))), rangee(groupe(I.t('Coupe'), R.manteaux.map(v => vignette('pv-grande', 'manteau', v))))],
-      couleurs: () => [rangee(groupe(I.t('Étoffe'), Object.keys(R.etoffes).map(id => { const e = R.etoffes[id]; return pastille(`conic-gradient(${e.cloak} 0 120deg, ${e.robe} 0 240deg, ${mixHex(e.head, '#6272a4', 0.3)} 0)`, () => vaut('etoffe') === id, () => poser('etoffe', id)); }))),
+      // deux rangées : la coiffe et la longueur de la robe ; l'écharpe et la coupe (quatre coiffes : une rangée de plus serait trop haute en largeur)
+      habit: () => [rangee(groupe(I.t('Coiffe'), R.coiffes.map(v => vignette('pv-fig44', 'coiffe', v))), groupe(I.t('Longueur'), [false, true].map(v => vignette('pv-fig44', 'longue', v)))),
+        rangee(groupe(I.t('Écharpe'), [false, true].map(v => vignette('pv-fig44', 'echarpe', v))), groupe(I.t('Coupe'), R.manteaux.map(v => vignette('pv-grande', 'manteau', v))))],
+      couleurs: () => [rangee(groupe(I.t('Étoffe'), Object.keys(R.etoffes).map(id => { const e = R.etoffes[id]; return pastille(`conic-gradient(${e.cloak} 0 120deg, ${e.robe} 0 240deg, ${mixHex(e.head, '#6272a4', 0.3)} 0)`, () => vaut('etoffe') === id, () => poser('etoffe', id), () => P.permis('etoffe', id, T(), compo)); }))),
         rangee(groupe(I.t('Néon'), [null].concat(Object.keys(R.neons)).map(id => { const n = id ? R.neons[id] : ['#39e6ff', '#ff4fd8']; return pastille(`linear-gradient(135deg, ${n[0]} 0 50%, ${n[1]} 50% 100%)`, () => vaut('neon') === id, () => poser('neon', id)); })))],
       objet: () => [rangee(groupe(I.t('Objet'), [null].concat(R.objets).map(o => kase('pv-objet', () => vaut('objet') === o, () => poser('objet', o), b => { if (!b._f) { b._f = 1; const u = o ? url('o' + o, () => G.objet(o)) : ''; b.innerHTML = u ? `<img alt="" src="${u}">` : SVG_RIEN; } }))))]
     };
@@ -264,7 +269,7 @@
     const onglets = complet ? ONGLETS.map(([id, nom]) => { const b = bouton(`<span class="ico"></span><span class="mot">${I.esc(nom)}</span>`, () => { if (onglet === id) return; onglet = id; proche = id === 'visage' && proche; construire(); }, 'pv-onglet', nom);
       b.setAttribute('role', 'tab'); b.dataset.o = id; barre.appendChild(b); return b; }) : [];
     const icones = L => { onglets.forEach(b => { const id = b.dataset.o, ico = b.firstChild, on = id === onglet; b.classList.toggle('choisie', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
-      if (id === 'visage') image(ico, visage(L)); else if (id === 'habit') image(ico, fig(L, dirP));
+      if (id === 'visage') image(ico, visage(montre(compo))); else if (id === 'habit') image(ico, fig(L, dirP));
       else if (id === 'couleurs') { const e = R.etoffes[vaut('etoffe')] || { robe: L.robe, head: L.head, cloak: L.cloak }, n = vaut('neon') ? R.neons[vaut('neon')][0] : '#39e6ff'; ico.style.background = `conic-gradient(${e.cloak} 0 120deg, ${e.robe} 0 240deg, ${mixHex(e.head, '#6272a4', 0.3)} 0)`; ico.style.boxShadow = `0 0 0 2px ${n}`; }
       else { const o = vaut('objet'), u = o ? url('o' + o, () => G.objet(o)) : ''; if (ico._o !== o) { ico._o = o; ico.innerHTML = u ? `<img alt="" src="${u}">` : SVG_RIEN; } } }); };
 
