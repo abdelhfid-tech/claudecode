@@ -1535,6 +1535,13 @@ pages privées de son compte.
   petit et en grand. **Plus de coiffes** (turban, chèche…), à condition qu'aucune ne reprenne la silhouette d'un
   Compagnon.
 
+- [x] **D194. Idris ne ressemble à personne (décision du décideur, 18 novembre : « les autres habitants de la Cité-Miroir ne
+  doivent pas ressembler à Idris »).** Quelle que soit sa composition, Idris reste reconnaissable entre tous : il porte
+  une marque qui n'appartient qu'à lui, aucun personnage de 2084 ou de la Citadelle ne la porte, et aucune composition ne
+  donne la silhouette d'un autre habitant ni d'un Compagnon. Au besoin, ce sont les habitants de 2084 qui changent de
+  couleurs ou de coiffe, jamais les Compagnons ni les personnages des sagas, ni l'Idris d'origine. Un contrôle le
+  vérifie (silhouettes.js ou personnage.js).
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
