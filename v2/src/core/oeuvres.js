@@ -87,7 +87,7 @@
     W.hud();
   };
   O.perform = async function (k) {
-    const why = O.can(k); if (why) { S.toast(I.esc(why.charAt(0).toUpperCase() + why.slice(1)) + '.', 1800); I.audio.sfx('dark'); return false; }
+    const why = O.can(k); if (why) { S.toast(I.esc(why.charAt(0).toUpperCase() + why.slice(1)) + (I.langue && I.langue.lang === 'ja' ? '。' : '.'), 1800); I.audio.sfx('dark'); return false; } // la raison est un fragment : le point final suit l'écriture
     const T = C0().oeuvres[k];
     S.flags['_o_' + k] = true;
     S.depth++;

@@ -136,8 +136,9 @@ parmi six (zéro, un, deux, trois à dix, onze à quatre-vingt-dix-neuf, cent et
 - **À distance du joueur** (décideur, 18 novembre : « gardons un peu de distance avec le joueur » ; version 2.08). Le
   jeu ne parle plus au joueur de son propre cœur, de sa prière, de sa vie ni de sa descente. La descente est celle du
   râwî, dite à la troisième personne (« نزول الراوي »، « صلّى الراوي في هذا الفصل »، « لن يعود منها داءٌ ما عاش
-  الراوي »), ou sans personne (« زاد القلب »، « يُتعرَّف إليه »، « في المرور العابر يُصلّى عليه ويُستراح »). Un choix de
-  menu qui touche à la prière ou à la descente prend le nom verbal, jamais l'impératif : « الصلاة والراحة »، « النزول »،
+  الراوي »), ou sans personne (« زاد القلب »، « يُتعرَّف إليه »), ou au « on » de l'arabe, celui qui passe (« عليه يُصلّي
+  العابر ويستريح »). Un choix de menu qui touche à la prière ou à la descente prend le nom verbal, jamais l'impératif :
+  « الصلاة والراحة »، « النزول »،
   « النوم » (et non « صلِّ واسترح »، « انزل »). Gardent le « tu » : les consignes de commande (« Entrée, ou touche… »),
   la conduite de la partie (sauvegarde, carte, choix d'un récit) et ce que le français dit encore au joueur (« plus fort
   que toi », « tu choisis ta manière »).
@@ -305,7 +306,10 @@ compétence, d'objet ni de lieu frappé ne contient** :
 ### 2.5 Le cœur (`coeur.js`)
 
 **Les œuvres** (`D.OEUVRES`) — elles ne donnent aucun pouvoir (exigence 15) : on ne les écrit jamais avec un verbe
-d'effet magique (لا « تمنح »، « تهب قوة »), mais « تُعِدّ القلب » (elles préparent le cœur), « تزيد الزاد ».
+d'effet magique (لا « تمنح »، « تهب قوة »), mais « تُعِدّ القلب » (elles préparent le cœur), « تزيد الزاد ». Le compte
+qu'en tient le jeu se dit **تُعَدّ** (vocalisé), jamais « تُحتسب » : avec « الأعمال », ce mot se lit comme l'iḥtisâb, la
+récompense qu'on espère d'Allah (« مَن صام رمضان إيمانًا واحتسابًا », al-Bukhârî n° 38, éd. du CDN), ou comme l'œuvre qui
+« compte » en droit ; le jeu ne dit rien de ce qui compte devant Allah (exigences 13 et 15).
 
 | Français | Arabe retenu (court · menu) | Source | Note |
 |---|---|---|---|
@@ -912,7 +916,9 @@ son verset tiré du registre, si un récit le demande un jour.
 13. **À distance du joueur** (18 novembre, version 2.08 ; § 1.8 ; proposé par l'agent, à valider) : la descente, la
     prière d'un chapitre et la vie sont celles du râwî, à la troisième personne ou sans personne. Choix de l'agent :
     le nom verbal pour les choix « Prier et se reposer » et « Descendre » (**الصلاة والراحة**، **النزول** ; l'arabe disait
-    « صلِّ واسترح »، « انزل ») ; « de passage » : **مرورٌ عابر** (pas « زيارة », qui est aussi l'œuvre de la visite) ;
+    « صلِّ واسترح »، « انزل ») ; « de passage » : **مرورٌ عابر** (pas « زيارة », qui est aussi l'œuvre de la visite), et
+    « De passage, on y prie et l'on s'y repose » : **عليه يُصلّي العابر ويستريح** (relecture : « في المرور العابر يُصلّى عليه
+    ويُستراح » était un calque) ; « les œuvres se comptent » : **تُعَدّ**, pas « تُحتسب » (§ 2.5) ;
     « se dresse(nt) », au dernier chapitre : **برز للقتال** (l'arabe ajoutait « في وجهكم », que le français ne dit pas) ;
     les attributs : **يُتعرَّف إليه**، **المُتعرَّف إليها** (l'arabe disait « تتعرّف إليه »، « تعرّفتَ إليها »).
 

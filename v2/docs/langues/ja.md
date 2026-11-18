@@ -201,7 +201,7 @@ Deux sources savantes reviennent souvent :
 | Cité-Miroir (la ville de 2084) | **鏡の街** | Proposition. | 鏡 est aussi un objet sacré du shintô (御神体) ; 街 et le contexte urbain l'en éloignent. Pas ミラーシティ (calque anglais). **À valider.** |
 | pourparler | **交渉** | Usage courant. | Neutre ; 談判 serait plus dur (sommation). |
 | bataille déclarée | **会戦** | デジタル大辞泉 : 「敵味方双方の多数の軍勢が出あって戦うこと。また、大規模な陸上戦」 (lu : <https://kotobank.jp/word/会戦>). | Le « déclaré » (chacun sait ce qui se dresse) se dit dans le recueil. Écarté : 名乗りの戦 (coutume des samouraïs). **À valider.** |
-| le secours | **助け** (bandeau : 「助けが来た」) | Proposition. Le verset de Badr est cité dans la traduction de 三田 (8:9 : 「あなたがたが主に援助を歎願した時」), par le registre. | Ni 援軍 (des troupes : on ne montre ni ne compte les anges, exigence 20), ni 救済／救い (salut, au sens chrétien ou bouddhique). **À valider.** *2.08 :* la prière tenue « dans ce chapitre », jamais par le joueur : 「この章で、礼拝は守られていた」 (et non 「あなたは礼拝を守っていた」) ; « il ne vient que si la prière a été tenue dans le chapitre » : 「助けが来るのは、この章で礼拝が守られていたときだけです」 ; « et ne dit pas qu'ils sont venus ce jour-là » : 「その日に天使が来たとも言わない」. « On ne le commande pas » : 「呼べば来るものではない」 (titre de la carte), 「こちらから呼ぶことはできません」 (préparation). |
+| le secours | **助け** (bandeau : 「助けが来た」) | Proposition. Le verset de Badr est cité dans la traduction de 三田 (8:9 : 「あなたがたが主に援助を歎願した時」), par le registre. | Ni 援軍 (des troupes : on ne montre ni ne compte les anges, exigence 20), ni 救済／救い (salut, au sens chrétien ou bouddhique). **À valider.** *2.08 :* la prière tenue « dans ce chapitre », jamais par le joueur : 「この章で、礼拝は守られていた」 (et non 「あなたは礼拝を守っていた」) ; « il ne vient que si la prière a été tenue dans le chapitre » : 「助けが来るのは、この章で礼拝が守られていたときだけです」 ; « et ne dit pas qu'ils sont venus ce jour-là » : 「この戦いの日に天使が来たとも言わない」 — le jour de la bataille jouée ; sur la carte, la ligne du dessus dit 「バドルでのこと」, et 「その日に」 pouvait se lire « le jour de Badr » (relecture 2.08, exigence 20). « On ne le commande pas » : 「呼べば来るものではない」 (titre de la carte), 「こちらから呼ぶことはできません」 (préparation). |
 | les degrés du mal (D183 ; autrefois « l'organigramme du mal ») | **悪の諸段階** | Proposition. | 諸段階 dit des degrés, une lecture étage par étage, et non une organisation : 「悪の組織図」 sonnerait comme « l'organisation du mal » des feuilletons (悪の組織) ; ni 位階 ni 階級, qui feraient une hiérarchie. Une lecture, pas une démonologie (exigence 18). L'ancien 悪の見取り図 n'est plus écrit. **À valider (D183).** |
 | les souffleurs | **囁く者たち** | 三田 114:4 : 「こっそりと忍び込み，囁く者の悪から」 (al-waswās). | Le mot même du Coran japonais. Ni nom, ni figure, ni nombre. |
 | Lumière (celle que chaque saga transmet) | **光** | Usage courant. | 「アブー・バクルの光」. |
@@ -460,7 +460,7 @@ l'image même de la transmission), **à valider** ; 図鑑 (catalogue de jeu) es
 Le carton de prière reste sobre (exigence 13) : 「彼らは礼拝した。」, comme le français « Ils prièrent. ».
 
 *2.08 (à distance du joueur, § 1.1) :* la natte « de passage » (une visite, un retour en 2084) : 「立ち寄っているだけ」,
-「立ち寄りのあいだは、ここで礼拝し、休むことができます」 ; la préparation d'une bataille : « Le râwî est passé par la
+「立ち寄っているあいだは、ここで礼拝し、休むことができます」 ; la préparation d'une bataille : « Le râwî est passé par la
 prière dans ce chapitre » → 「ラーウィーはこの章で礼拝を済ませています」 (済ませる, comme l'aide du pourparler) ; « la provision
 du cœur » → 「心の糧」, jamais 「あなたの心の糧」 ; le dû des troupeaux « est versé » → 「家畜の定めの分が納められました」.
 
