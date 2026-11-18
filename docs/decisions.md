@@ -1568,6 +1568,9 @@ pages privées de son compte.
   pas de robe longue (l'habit des moines du jeu) ; les sept nouvelles couleurs des habitants de 2084 (D194). Écartés :
   le turban des Compagnons, le turban large, le turban à pan, le keffieh, la tiare, les casques. Un contrôle compare
   chaque composition à chaque Compagnon et à chaque habitant (au plus 0,82, sous le seuil de 0,85).
+  Le chèche, demandé par le décideur (D193), est aussi dans le jeu la coiffe des personnages amazighs de fiction des
+  veillées (le Caïd, Amghar Idir, Amghar Meksa, Amezyan) : aucun texte ne le nomme ni ne le rattache à un peuple
+  (exigence 10), et aucune composition d'Idris ne leur ressemble (au plus 0,77).
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
