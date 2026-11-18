@@ -83,6 +83,21 @@ parole, un français fidèle au texte arabe relevé, à valider ensuite par vous
   repose-nous par elle » (Abû Dâwûd ; le français omet « établis la prière »), et la promesse rapportée par Khabbâb (de
   San'â' au Hadramawt, aussi dans le négoce). **Proposition** : les relever à leur source, comme les autres paroles.
 
+## 8. Relevé en écrivant le japonais (saga d'Abû Bakr)
+
+- **Une même ligne de source pour deux paroles** : « 'Umar ibn al-Khattâb — al-Bukhârî, as-Sahîh » sert à la parole de
+  la mort du Prophète ﷺ (n° 4454) et à celle de la Saqîfa (n° 6830). Une même ligne n'ayant qu'une clé, les autres
+  langues ne peuvent donner qu'un numéro. **Proposition** : écrire le numéro dans chacune des deux lignes françaises.
+- **« Les dix consignes »** (recueil) n'en énumère que huit. **Proposition** : relever les dix à la source, ou dire
+  « les consignes ».
+- **« ses joues sont mouillées »** décrit le visage d'un Compagnon (exigence 2). **Proposition** : « il pleure ».
+- **L'idole et l'homme** : « le Menteur » désigne à la fois l'idole et Musaylima (« le Menteur tombe »). Avec le
+  Faussaire pour l'idole (§ 1), l'homme garderait son nom.
+- **Une dizaine de paroles rapportées hors des cartons** (narration, recueil, compétences) n'ont pas de place dans le
+  registre : Abû 'Ubayda « homme de confiance », « Ô Bilâl… », « prise à leurs riches… », « Nous cherchons refuge… »,
+  la remarque d'Ibn 'Abbâs, « Il ne laissa pas un mot… », les paroles de Yamâma, « Le Messager ﷺ l'a nommé… », les
+  consignes, « Je ne dénouerai pas un étendard qu'il a noué ». **Proposition** : les relever à leur source.
+
 ## Si vous retenez un changement
 
 Le français change d'abord, puis les listes des langues se remettent à jour (`node v2/tools/langues.js releve`) : les
