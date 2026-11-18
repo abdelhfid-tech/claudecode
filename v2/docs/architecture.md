@@ -3,22 +3,16 @@
 *Ce qui est propre à la 2.0. Pour le reste — structure du moteur, contrat d'une saga, exigences de respect — lire
 `AGENTS.md` et `docs/` en mettant `v2/` devant chaque chemin. Ce document se tient à jour à chaque lot.*
 
-## Deux arbres qui ne se touchent pas
+## La 1.32 archivée
 
-*La version légère s'appelle la 1.32 depuis le 16 novembre : c'est la 1.31 gelée la veille, avec ses grands personnages
-redessinés (un seul fichier source, `src/core/sprites.js`, le même que celui de la 2.0 ce jour-là).*
+La version légère, la 1.32, est **archivée** dans `archive/v1.32/` depuis le 18 novembre (décision du décideur) :
+son jeu, ses outils et son livret, tels qu'ils étaient gelés au commit `8c21125`. On n'y touche plus. La 2.x ne s'y
+compare plus : `gel.js`, `cartes.js` et `ecrans.js` ont été retirés, et la 2.x peut s'en écarter — dessin d'origine
+et écran de la Chaîne compris. Ses parties (`isnad2.auto`, `isnad2.slot.N`, `isnad2.opts`) ne touchent pas celles de la
+1.32 (`isnad.auto.v1`, `isnad.slot.N`, `isnad.opts.v1`).
 
-| | ISNAD 1.32 | ISNAD 2.0 |
-|---|---|---|
-| Sources | `src/` | `v2/src/` |
-| Outils | `tools/` (sauf `promo.js`) | `v2/tools/` |
-| Jeu assemblé | `index.html`, `dist/isnad.html` | `v2/index.html`, `v2/dist/isnad.html` |
-| Parties des joueurs | `isnad.auto.v1`, `isnad.slot.N`, `isnad.opts.v1` | `isnad2.auto`, `isnad2.slot.N`, `isnad2.opts` |
-| État | gelée au commit `46fc869` | en construction |
-
-`node v2/tools/gel.js` compare les 37 fichiers de la 1.32 à leurs empreintes (`v2/gel-1.32.json`) et doit afficher
-« 1.32 INTACTE » avant chaque enregistrement. Aucun outil de `v2/` n'écrit hors de `v2/` ; `cartes.js` lit la 1.32
-pour s'y comparer, et ne fait que la lire.
+**Le numéro.** La 2.x avance par centièmes (2.01, 2.02…), d'un centième à chaque enregistrement qui change le jeu :
+`NUMERO`, dans `v2/tools/build.js`, qui le pose aussi dans le titre de la page.
 
 ## L'arbre de la 2.0
 
@@ -31,12 +25,9 @@ pour s'y comparer, et ne fait que la lire.
 | `v2/src/data/` | le jeu de base : le contenu de la 1.32, mot pour mot |
 | `v2/paquets/*.json` | les paquets publiés, embarqués à l'assemblage — aucun aujourd'hui |
 | `v2/tools/` | assemblage, contrôle, parcours de test — les outils de la 1.32, tournés vers `v2/` |
-| `v2/tools/cartes.js` | les lieux du livre I sortent-ils comme dans la 1.32 ? |
-| `v2/tools/ecrans.js` | l'écran de la Chaîne du livre I est-il celui de la 1.32 ? |
 | `v2/tools/paquet.js`, `v2/tools/essais/` | éprouver un paquet ; le paquet d'essai (pure fiction, jamais livré) |
 | `v2/tools/partie.js` | la partie du joueur : format, export, import |
 | `v2/tools/personnage.js` | le personnage du joueur : nom, tenue |
-| `v2/tools/gel.js`, `v2/gel-1.32.json` | la garantie que la 1.32 ne bouge pas |
 | `v2/docs/` | feuille de route, architecture, contrat d'un paquet |
 
 ## Le jeu de base et les paquets
@@ -70,7 +61,7 @@ En 1.32, `maps.js` choisit le générateur d'après le nom de la carte, et quatr
 noosphère, citadelle, Cité-Miroir, archives) ; le gabarit fixe les lieux nommés, le thème de l'interface, la piste, et
 dit si l'on y bâtit. Koufa est une `ville` dans sa variante `fleuve`.
 
-- Les onze lieux du jeu de base sortent **identiques** à ceux de la 1.32, point par point : `node v2/tools/cartes.js`
+- Les onze lieux du jeu de base sortaient **identiques** à ceux de la 1.32, point par point (contrôle `cartes.js`, retiré le 18 novembre avec l'archivage de la 1.32) :
   bâtit des deux côtés les 65 cartes que le contenu demande et compare le dessin, les cases pleines, les lieux nommés,
   les objets, les lumières, l'ambiance et la piste.
 - Un lieu déclaré par un paquet a son propre identifiant, donc sa propre graine : même plan, autre répartition des
@@ -81,8 +72,8 @@ dit si l'on y bâtit. Koufa est une `ville` dans sa variante `fleuve`.
 `I.livres()` range les maillons par livre (`saga.livre`, 1 par défaut ; titres dans `D.LIVRES`). L'écran de la Chaîne
 montre le livre I — ses maillons, puis le dernier maillon —, puis les autres livres sous leur titre ; les chiffres
 romains et les comptes (« cinq Lumières ») sont calculés. Le dernier maillon ne dépend que des maillons du livre I :
-une saga ajoutée ne peut pas bloquer la fin du jeu de base. Avec un seul livre, l'écran est celui de la 1.32, élément
-pour élément : `node v2/tools/ecrans.js` le compare en huit moments, du prologue à la Chaîne transmise.
+une saga ajoutée ne peut pas bloquer la fin du jeu de base. Avec un seul livre, l'écran était celui de la 1.32, élément
+pour élément (contrôle `ecrans.js`, retiré le 18 novembre : la 2.x peut désormais s'en écarter).
 
 ## La partie du joueur
 
@@ -256,9 +247,9 @@ adouci* (le même, l'agrandissement final lissé et les figures adoucies sans pe
 choix se garde avec les autres réglages (`opts.dessin`). Changer en cours de partie refait la carte et les planches de
 marche (`gfx.surDefinition`) : rien d'autre ne bouge.
 
-**Le dessin d'origine est celui de la 1.32, au pixel près** : tout ce qui précède est conditionné à `D > 1`. `?def=1`
-dans l'adresse force ce dessin (`?def=2`, `?def=2l` les deux autres) et passe avant le réglage gardé : `cartes.js`
-s'en sert pour se comparer à la 1.32. Une carte fine pèse quatre fois plus : le jeu en garde deux en mémoire au lieu de
+**Le dessin d'origine est celui de la 1.32** (il ne lui est plus comparé depuis son archivage) : tout ce qui précède est
+conditionné à `D > 1`. `?def=1` dans l'adresse force ce dessin (`?def=2`, `?def=2l` les deux autres) et passe avant le
+réglage gardé. Une carte fine pèse quatre fois plus : le jeu en garde deux en mémoire au lieu de
 quatre. Sur un ordinateur, le dessin fin est agrandi deux fois, pixels nets (ou lissé, en « fin, adouci ») ; sur un écran
 tactile, il est composé à sa taille — 768 × 432, moins de points qu'avant — et c'est l'écran qui l'agrandit : en
 simulation, le jeu y tient 60 images par seconde, comme le dessin d'origine.
@@ -324,8 +315,7 @@ que les culs-de-sac en sont ; `plan` retire jusqu'à obtenir un plan bon. La mê
 gabarit `noos` —, le lieu reçoit une graine (`g`) et une profondeur (`n`, de 0 à 5 : la part de l'histoire déjà achevée) :
 `maps.js` le bâtit alors d'après le plan, ponts bordés de lumière, salles et pylônes, un lieu nommé au milieu de chaque
 salle. La graine voyage avec le lieu, donc avec le point de reprise : reprendre une partie redonne le même labyrinthe. Un
-lieu sans graine se bâtit comme avant (une partie gardée avant la 2.x le retrouve tel quel ; `cartes.js` s'y compare
-toujours). Les récits ne changent pas d'un mot : ennemis, coffres et personnages se placent sur les mêmes lieux nommés.
+lieu sans graine se bâtit comme avant (une partie gardée avant la 2.x le retrouve tel quel). Les récits ne changent pas d'un mot : ennemis, coffres et personnages se placent sur les mêmes lieux nommés.
 **Le chrono** : 30 secondes, plus le temps d'un tour de tous les lieux multiplié par un facteur qui se resserre (de 3
 à 1,7). Il ne court que lorsque le joueur a la main (`world.js` l'appelle à chaque pas) ; écoulé, on remonte au seuil, le
 labyrinthe se redessine un cran plus simple, ennemis et coffres retrouvent leurs lieux, rien n'est perdu. La graine vient
@@ -558,13 +548,10 @@ l'assemblage que toute la batterie a joué.
 ## Commandes
 
 ```sh
-node v2/tools/gel.js                 # la 1.32 est-elle intacte ?
 node v2/tools/validate.js            # tout le contenu : sagas, histoire-cadre, veillées, contenu commun, puis l'ensemble
 node v2/tools/validate.js fichiers   # seulement ces fichiers
 node v2/tools/validate-music.js
 node v2/tools/build.js               # v2/index.html et v2/dist/isnad.html (avec les paquets de v2/paquets/)
-node v2/tools/cartes.js              # « CARTES IDENTIQUES à celles de la 1.32 »
-node v2/tools/ecrans.js              # « CHAÎNE IDENTIQUE à celle de la 1.32 »
 node v2/tools/paquet.js [fichier]    # éprouve un paquet, hors du jeu puis dans un jeu d'essai assemblé à part
 node v2/tools/partie.js              # la partie du joueur : exportée, effacée, réimportée à l'identique
 node v2/tools/personnage.js          # le nom et la tenue du râwî : choisis, joués, gardés
@@ -577,7 +564,7 @@ node v2/tools/son.js
 node v2/tools/bataille.js [mesures]
 ```
 
-**Règle de la 2.0.** Celle d'`AGENTS.md`, avec onze contrôles de plus à chaque changement du moteur ou des règles —
-`cartes.js`, `ecrans.js`, `paquet.js`, `partie.js`, `personnage.js`, `silhouettes.js`, `dedales.js`, `descente.js`,
+**Règle de la 2.x.** Celle d'`AGENTS.md`, avec neuf contrôles de plus à chaque changement du moteur ou des règles —
+`paquet.js`, `partie.js`, `personnage.js`, `silhouettes.js`, `dedales.js`, `descente.js`,
 `retours.js`, `progression.js` et `loupe.js` ; la liste, et ce que chacun doit afficher, est dans `AGENTS.md`. Aucun ne
-doit finir sur « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT » ni « ÉCART ». Et `gel.js` doit afficher « 1.32 INTACTE » avant chaque enregistrement.
+doit finir sur « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT » ni « ÉCART ».

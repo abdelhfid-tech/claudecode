@@ -11,9 +11,10 @@ une valeur, pour dévoiler l'Agrégor.
 
 ## Deux versions
 
-- **ISNAD 1.32** : le jeu léger en un seul fichier (`index.html`, sources dans `src/`). Il est **gelé** : on ne le modifie
-  plus. `node v2/tools/gel.js` le vérifie. C'est la 1.31, avec ses grands personnages redessinés le 16 novembre.
-- **ISNAD 2.0** : une nouvelle version, en construction dans `v2/`, qui sera administrée par une base de données. Son
+- **ISNAD 1.32** : le jeu léger en un seul fichier. Il est stable et **archivé** dans `archive/v1.32/` (décision du
+  décideur, 18 novembre) : on ne le modifie plus, et la 2.x ne s'y compare plus. Son Artifact privé reste en ligne.
+  `archive/v1.32/LISEZ-MOI.md` dit ce qu'il contient et comment le rejouer.
+- **ISNAD 2.x** (2.01, 2.02… : le numéro avance d'un centième à chaque changement du jeu) : la version en développement, dans `v2/`, qui sera administrée par une base de données. Son
   socle est posé : le livre I de la 1.32, mot pour mot, et de quoi lui ajouter du contenu sans toucher au code — des
   **paquets** (sagas, lieux, objets, équipement, étals, musiques) rangés en **livres** ; une partie que l'on exporte et
   que l'on réimporte ; un personnage dont le joueur choisit le nom et la tenue ; de grands personnages (combat,
@@ -27,18 +28,17 @@ une valeur, pour dévoiler l'Agrégor.
   apprend un outil à la fois (un besoin, un outil, puis sans aide), et chacun peut prendre trois postures devant
   l'épreuve. Les personnages y bougent — des foulées franches, un souffle au repos, l'élan et le coup avec l'arme en
   main — et ceux qui ne sont pas des Compagnons y ont un visage ; les Compagnons gardent leur voile de lumière. Sur
-  un téléphone, l'image s'agrandit (deux doigts qui s'écartent, ou le bouton « × ») et les textes sont plus grands. La
-  version légère, elle, s'arrête à la 1.32. Elle a ses propres outils (`v2/tools/`)
-  et ses propres sauvegardes. À lire : `v2/docs/feuille-de-route.md` (où l'on en est), `v2/docs/architecture.md`
+  un téléphone, l'image s'agrandit (deux doigts qui s'écartent, ou le bouton « × ») et les textes sont plus grands. Elle a
+  ses propres outils (`v2/tools/`) et ses propres sauvegardes. À lire : `v2/docs/feuille-de-route.md` (où l'on en est), `v2/docs/architecture.md`
   (comment c'est fait), `v2/docs/schema-paquet.md` (le contrat d'un paquet). Elle se joue dans son propre Artifact
   privé, distinct de celui de la 1.32.
 
-Ce qui suit décrit la 1.32.
+Ce qui suit décrit le jeu tel qu'il se joue ; ses fichiers et ses outils sont dans `v2/`.
 
 ## Jouer
 
 - En ligne : la version publiée en Artifact (lien donné dans la session de travail).
-- En local : ouvrir `index.html` dans un navigateur récent. Aucun serveur, aucune installation.
+- En local : ouvrir `v2/index.html` dans un navigateur récent (la 1.32 : `archive/v1.32/index.html`). Aucun serveur, aucune installation.
 
 | Action | Clavier | Souris ou doigt |
 |---|---|---|
@@ -233,31 +233,26 @@ garder une copie de la partie dans l'un des trois emplacements, comme depuis l'�
 ## Développer
 
 ```sh
-node tools/validate.js          # valide les sagas contre le schéma (src/core/defs.js)
-node tools/validate.js src/data/frame.js src/data/caid.js src/data/coeur.js   # histoire-cadre, veillées, contenu commun
-node tools/build.js             # assemble index.html et dist/isnad.html
-node tools/smoke.js auto        # joue la partie entière automatiquement dans Chromium
-node tools/smoke.js walk        # même partie, mais le héros marche réellement (vraies collisions)
-node tools/smoke.js tap         # même partie, en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
-node tools/smoke.js wrong       # choisit d'abord toutes les mauvaises réponses et perd chaque pourparler
-node tools/doigt.js             # joue le prologue au doigt, sans raccourci, et vérifie que tout ce que le jeu attend se voit
-node tools/doigt.js loin        # idem, puis tout le premier chapitre de la saga I
-node tools/validate-music.js    # vérifie les vingt et une pistes
-node tools/smoke.js shots       # captures d'écran bureau et mobile dans .smoke/
-node tools/promo.js all         # livret du joueur et planches : captures, sprites, assemblage, export
-node tools/promo.js pdf         # le livret en PDF : A5 paysage, deux colonnes (promo/livret.pdf)
+node v2/tools/validate.js          # valide les sagas contre le schéma (src/core/defs.js)
+node v2/tools/validate.js v2/src/data/frame.js v2/src/data/caid.js v2/src/data/coeur.js   # histoire-cadre, veillées, contenu commun
+node v2/tools/build.js             # assemble index.html et dist/isnad.html
+node v2/tools/smoke.js auto        # joue la partie entière automatiquement dans Chromium
+node v2/tools/smoke.js walk        # même partie, mais le héros marche réellement (vraies collisions)
+node v2/tools/smoke.js tap         # même partie, en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
+node v2/tools/smoke.js wrong       # choisit d'abord toutes les mauvaises réponses et perd chaque pourparler
+node v2/tools/doigt.js             # joue le prologue au doigt, sans raccourci, et vérifie que tout ce que le jeu attend se voit
+node v2/tools/doigt.js loin        # idem, puis tout le premier chapitre de la saga I
+node v2/tools/validate-music.js    # vérifie les vingt et une pistes
+node v2/tools/smoke.js shots       # captures d'écran bureau et mobile dans .smoke/
 ```
 
-Le livret du joueur et les planches de présentation sont dans `promo/` : `livret.html` s'ouvre tel
-quel, `planches/` contient les douze planches en images (onze en 1920 × 1080, une affiche verticale en
-1080 × 1350). Le texte se modifie dans `promo/livret.src.html`, puis `node tools/promo.js planches`
-réassemble la page et réexporte les images. Noms, dates, accroches, pièces et étoiles viennent des
-données du jeu. `node tools/promo.js pdf` en tire `promo/livret.pdf` : 74 pages A5 paysage, sommaire paginé,
-signets ; ce fichier n'est pas versionné, et l'outil demande `pdfinfo` et `pdftoppm` (poppler).
+Le livret du joueur et les planches de présentation de la 1.32 sont archivés avec elle, dans `archive/v1.32/promo/` :
+`livret.html` s'ouvre tel quel, `planches/` contient les douze planches en images. La promotion de la 2.x est plus bas.
 
 `smoke.js` demande Playwright et Chromium (`npm i playwright` hors de l'environnement d'origine).
 
 ```
+(dans v2/)
 index.html            jeu assemblé, page autonome
 dist/isnad.html       même jeu, en fragment pour publication en Artifact
 src/page.html         gabarit HTML          src/style.css   interface
@@ -272,7 +267,7 @@ src/core/battle.js    combat
 src/core/ui.js        titre, Chaîne, menus, codex, boucle principale
 src/data/frame.js     histoire-cadre (prologue, épilogue)
 src/data/saga_*.js    une saga par fichier
-tools/                build, validate, smoke, promo
+tools/                build, validate, smoke, contrôles, promotion
 promo/                livret du joueur (gabarit, page assemblée, images) et planches exportées
 docs/                 artefacts du framework « De l'idée à la production »
 ```

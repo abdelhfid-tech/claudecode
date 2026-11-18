@@ -1388,6 +1388,22 @@ pages privées de son compte.
   `v2/tools/promotion.js` (le logo en données dans la page, sans copie) ; son contrôle vérifie treize pages, la mention
   et le logo chargé (« LIVRET CONFORME »). Le livret de la version légère (1.32) n'est pas concerné.
 
+## La 1.32 archivée, la 2.x numérotée (décision du décideur, 18 novembre)
+
+- [x] **D181. La 1.32 est archivée ; la 2.x ne s'y compare plus ; elle avance par centièmes.** *Décision du décideur
+  (« oublie la V1, elle est stable, je veux que tu l'archives » ; « dossier archive comme recommandé + incrémenter la
+  version 2.x (2.01, 2.02, etc.) » ; les contrôles de comparaison : « les retirer »).*
+  - La 1.32 quitte la racine du dépôt pour `archive/v1.32/` : `src/`, `index.html`, `dist/`, `tools/` (avec `promo.js`)
+    et son livret (`promo/livret*.html`, `planches/`, `img/`, `fichiers.json`). Un déplacement, sans qu'un octet change ;
+    son Artifact privé (version 32) reste tel quel. `archive/v1.32/LISEZ-MOI.md` dit ce qu'elle contient.
+  - Les contrôles qui comparaient la 2.x à la 1.32 sont retirés : `gel.js` et ses empreintes (`v2/gel-1.32.json`),
+    `cartes.js` (« CARTES IDENTIQUES »), `ecrans.js` (« CHAÎNE IDENTIQUE »). La 2.x peut s'écarter de la 1.32, dessin
+    d'origine et écran de la Chaîne compris. Il lui reste neuf contrôles propres, en plus de la batterie commune.
+  - La 2.x avance d'un centième à chaque enregistrement qui change le jeu (2.01, 2.02…), dans `v2/tools/build.js`
+    (`NUMERO`). *Proposé par l'agent, à confirmer :* un centième par enregistrement du jeu, plutôt que par publication
+    sur la page privée.
+  - `AGENTS.md`, `README.md` et `v2/docs/architecture.md` sont mis à jour : la suite des consignes se lit dans `v2/`.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

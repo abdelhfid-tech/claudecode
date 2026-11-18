@@ -2,6 +2,9 @@
 
 *Plan approuvé par le décideur le 15 novembre. Il se tient à jour : chaque chantier terminé y est noté.*
 
+*18 novembre : la 1.32 est archivée dans `archive/v1.32/`, et les contrôles qui comparaient la 2.x à elle (`gel.js`,
+`cartes.js`, `ecrans.js`) sont retirés (`docs/decisions.md`, D181). Ce qui suit les mentionne comme ils étaient alors.*
+
 ## Avancement
 
 | Lot | État | Ce qui a été vérifié |
