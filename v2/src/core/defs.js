@@ -380,7 +380,7 @@
     pierre: { name: 'Pierre', g: '◆' }, grain: { name: 'Grain', g: '∴' }, laine: { name: 'Laine', g: '≋' }
   };
   D.PIECES = {
-    tranchee:  { name: 'Tranchée', cost: {}, tile: 'trench', group: 'Défendre', desc: 'Les égrégores qui rôdent ne la franchissent pas. Six segments gardent un lieu.' },
+    tranchee:  { name: 'Tranchée', cost: {}, tile: 'trench', group: 'Défendre', desc: 'Les chimères qui rôdent ne la franchissent pas. Six segments gardent un lieu.' },
     puits:     { name: 'Puits', cost: { pierre: 4 }, obj: 'well', solid: true, group: 'Eau et vivres', desc: 'Donne de l’eau. Palmiers, champs et troupeaux en ont besoin à moins de six pas.' },
     palmier:   { name: 'Palmier', cost: { eau: 1 }, obj: 'palm', solid: true, near: true, group: 'Eau et vivres', desc: 'Un puits et trois palmiers font une oasis. Donne des dattes à chaque chapitre.' },
     champ:     { name: 'Champ d’orge', cost: { eau: 1, grain: 1 }, tile: 'field', near: true, group: 'Eau et vivres', desc: 'Donne du grain et du pain à chaque chapitre.' },

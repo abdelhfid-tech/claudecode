@@ -16,11 +16,11 @@ ISNAD.registerSaga({
       look: { kind: 'berbere', robe: '#2f4a7a', head: '#1f2f55', cloak: '#e6dcc4' },
       skills: [
         { lvl: 1, id: 'veiller', name: 'Veiller', desc: "Tenir sans haine : frappe de Patience.", cost: 3, target: 'foe', el: 'sabr', pow: 1.4, anim: 'light' },
-        { lvl: 1, id: 'peser', name: "Peser l'homme", desc: "Regarder avant de juger : révèle les failles d'un égrégore.", cost: 2, target: 'foe', el: 'adl', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'glyph' },
+        { lvl: 1, id: 'peser', name: "Peser l'homme", desc: "Regarder avant de juger : révèle les failles d'une chimère.", cost: 2, target: 'foe', el: 'adl', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 1, id: 'rempart', name: 'Faire rempart', desc: "Se place devant les siens : attire les coups, Garde renforcée.", cost: 4, target: 'self', fx: [{ st: 'taunt', turns: 2 }, { st: 'def', v: 1 }], anim: 'guard' },
         { lvl: 2, id: 'parole_pere', name: '« Disait mon père »', desc: "Une parole reçue raffermit le groupe : Force et Esprit accrus.", cost: 6, target: 'allies', fx: [{ st: 'atk', v: 1 }, { st: 'mag', v: 1 }], anim: 'glyph' },
         { lvl: 3, id: 'dire_vrai', name: 'Dire le vrai', desc: "Nommer la chose telle qu'elle est : frappe de Véracité.", cost: 5, target: 'foe', el: 'sidq', pow: 1.6, anim: 'pillar' },
-        { lvl: 3, id: 'meme_loi', name: 'La même loi', desc: "Une seule balance pour tous : Justice sur tous les égrégores.", cost: 7, target: 'foes', el: 'adl', pow: 1.0, anim: 'wave' }
+        { lvl: 3, id: 'meme_loi', name: 'La même loi', desc: "Une seule balance pour tous : Justice sur toutes les chimères.", cost: 7, target: 'foes', el: 'adl', pow: 1.0, anim: 'wave' }
       ],
       limit: { id: 'citadelle', name: 'Ce qui tient les hommes', desc: "Relève, soigne et fortifie tout le groupe.", target: 'allies', heal: 0.9, revive: true, fx: [{ st: 'def', v: 1 }, { st: 'regen', turns: 3 }], anim: 'heal' }
     },
@@ -33,7 +33,7 @@ ISNAD.registerSaga({
         { lvl: 1, id: 'baume', name: 'Baume', desc: "Rend de la Constance à un compagnon.", cost: 4, target: 'ally', heal: 1.1, anim: 'heal' },
         { lvl: 2, id: 'partager_eau', name: "Partager l'eau", desc: "Rend de la Constance à tout le groupe.", cost: 8, target: 'allies', heal: 0.6, anim: 'heal' },
         { lvl: 3, id: 'lecon', name: 'Leçon du soir', desc: "Dissipe le doute et les murmures d'un compagnon, et lui rend du Souffle.", cost: 4, target: 'ally', sp: 0.25, fx: [{ st: 'cleanse' }], anim: 'light' },
-        { lvl: 3, id: 'pente_douce', name: 'La pente douce', desc: "Ce qui est bien tracé coule de soi : Savoir sur tous les égrégores.", cost: 7, target: 'foes', el: 'ilm', pow: 0.95, anim: 'wave' }
+        { lvl: 3, id: 'pente_douce', name: 'La pente douce', desc: "Ce qui est bien tracé coule de soi : Savoir sur toutes les chimères.", cost: 7, target: 'foes', el: 'ilm', pow: 0.95, anim: 'wave' }
       ],
       limit: { id: 'ce_qui_demeure', name: 'Ce qui demeure', desc: "Les empires brûlent, la mesure reste : Savoir sur tous, failles révélées, renforts dissipés.", target: 'foes', el: 'ilm', pow: 2.1, fx: [{ st: 'reveal' }, { st: 'dispel' }], anim: 'pillar' }
     },
@@ -127,7 +127,7 @@ ISNAD.registerSaga({
 
   codex: [
     { id: 'caid_bio', cat: 'Biographie', title: 'Le Caïd', text: "Seigneur berbère d'une citadelle au bord du désert, héritier d'un père assassiné. Il n'a pas de nom dans la Chaîne : seulement sa charge, et ce qu'il a transmis. Il apprit à gouverner dans les vies des Compagnons, que lui lisait un vieux maître, et consigna pour son fils ce qu'il en avait fait. Personnage de fiction : un maillon imaginé entre les témoins et Idris.", src: 'Fiction' },
-    { id: 'citadelle_lieu', cat: 'Lieu', title: 'La Citadelle', text: "Des murs de pisé, un puits, une mosquée, une école, des greniers, un cèdre planté par le vieux Caïd. Son fils disait qu'elle ne tenait pas par ses pierres mais par ce que les hommes s'y devaient les uns aux autres : « Ôtez cela, il reste un enclos. » Dans la noosphère, c'est l'égrégore qui éclaire : ce qui naît quand des hommes tiennent ensemble à plus grand qu'eux.", src: 'Fiction' },
+    { id: 'citadelle_lieu', cat: 'Lieu', title: 'La Citadelle', text: "Des murs de pisé, un puits, une mosquée, une école, des greniers, un cèdre planté par le vieux Caïd. Son fils disait qu'elle ne tenait pas par ses pierres mais par ce que les hommes s'y devaient les uns aux autres : « Ôtez cela, il reste un enclos. » Dans la noosphère, c'est le contraire d'une chimère : ce qui naît quand des hommes tiennent ensemble à plus grand qu'eux.", src: 'Fiction' },
     { id: 'piliers', cat: 'Noosphère', title: 'Les quatre piliers', text: "La Prière, qui remet l'homme à sa place et lui rend le repos. Le Savoir, qui empêche de prendre une phrase pour la vérité entière. La Justice, la même pour le fort et pour le faible. Le Lien, la parole donnée et tenue, par quoi des étrangers deviennent des voisins. Qu'un seul manque, et la Citadelle n'est plus qu'une muraille." },
     { id: 'chambellan', cat: 'Biographie', title: 'Maymûn, le chambellan', text: "Chambellan du vieux Caïd, puis de son fils. Il dit à chacun ce que chacun veut entendre, pleure quand on le regarde et plaint beaucoup le peuple, qui l'aime pour cela. On le reconnaît à ses belles manches. Il ne sert ni le Caïd ni la foule : il sert le besoin qu'ils ont de lui. Personnage de fiction.", src: 'Fiction' },
     { id: 'pere_parole', cat: 'Parole', title: 'La parole du bâtisseur', text: "« Qui partage un édifice n'obtient que des pierres. » Le vieux Caïd le disait des greniers, des puits et des tribus. Maître Bahrâm l'entendait aussi d'une vérité : coupée en morceaux pour être servie plus doucement, elle cesse d'en être une.", src: 'Fiction' },

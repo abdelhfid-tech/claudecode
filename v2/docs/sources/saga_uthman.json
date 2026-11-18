@@ -191,29 +191,29 @@
   {
     "fichier": "v2/src/data/saga_uthman.js",
     "ligne": 834,
-    "fr": "« J'adjure quiconque estime me devoir écoute et obéissance de retenir sa main et son arme. […] Je ne serai pas le premier à succéder au Messager d'Allah ﷺ dans sa communauté en faisant couler le sang. »",
-    "source_fr": "On rapporte — Ibn Sa'd, Tabaqât ; Ahmad, Musnad",
+    "fr": "« J'adjure quiconque estime me devoir écoute et obéissance de retenir sa main et son arme… »",
+    "source_fr": "On rapporte — Nu'aym ibn Hammâd, al-Fitan ; Khalîfa ibn Khayyât, Târîkh",
     "nature": "hadith",
     "ar": {
-      "texte": "أَعْزِمُ عَلَى كُلِّ مَنْ رَأَى أَنَّ لِيَ عَلَيْهِ سَمْعًا وَطَاعَةً إِلَّا كَفَّ يَدَهُ وَسِلَاحَهُ […] فَلَنْ أَكُونَ أَوَّلَ مَنْ خَلَفَ رَسُولَ اللهِ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ فِي أُمَّتِهِ بِسَفْكِ الدِّمَاءِ",
+      "texte": "أَعْزِمُ عَلَى كُلِّ مَنْ رَأَى أَنَّ لِيَ عَلَيْهِ سَمْعًا وَطَاعَةً إِلَّا كَفَّ يَدَهُ وَسِلَاحَهُ …",
       "reference": "يُروى — نعيم بن حماد، الفتن، رقم ٤٤١؛ مسند أحمد، رقم ٤٨١",
       "lu_sur": "https://shamela.ws/book/13047/442 ; https://shamela.ws/book/25794/495",
       "etat": "trouvé"
     },
     "en": {
-      "texte": "I adjure everyone who holds that he owes me hearing and obedience to hold back his hand and his weapon. […] I will not be the first to succeed the Messenger of Allah ﷺ over his community by shedding blood.",
+      "texte": "I adjure everyone who holds that he owes me hearing and obedience to hold back his hand and his weapon …",
       "origine": "de_l_arabe",
       "reference": "It is reported — Nu'aym ibn Hammad, al-Fitan 441; Musnad Ahmad 481 (translated from the Arabic)",
       "lu_sur": ""
     },
     "ja": {
-      "texte": "私に聞き従う義務があると考える者すべてに、私は厳に求める。その手と武器を控えよ。[…] 私は、アッラーの使徒ﷺのウンマにおいて、流血をもってその後を継ぐ最初の者には決してならない。",
+      "texte": "私に聞き従う義務があると考える者すべてに、私は厳に求める。その手と武器を控えよ……",
       "origine": "de_l_arabe",
       "reference": "と伝えられる — ヌアイム・イブン・ハンマード『フィタンの書』441番;『ムスナド・アフマド』481番(アラビア語原文より訳出)",
       "lu_sur": ""
     },
     "ecart": "La première phrase n'a pas été retrouvée sous cette forme chez Ibn Sa'd, qui donne du même témoin ('Abdallâh ibn 'Âmir ibn Rabî'a) : « إن أعظمكم عني غناء رجل كف يده وسلاحه » (t. 3 p. 70, éd. Sâdir) ; l'adjuration est lue chez Nu'aym ibn Hammâd (al-Fitan, n° 441) et chez Khalîfa ibn Khayyât (Târîkh, p. 173). La seconde phrase est bien dans le Musnad d'Ahmad (n° 481), mais c'est un autre récit — la réponse de 'Uthmân à al-Mughîra ibn Shu'ba —, dont les éditeurs (ar-Risâla) jugent la chaîne faible, car interrompue.",
-    "note": "Deux récits réunis par « […] », comme dans le français. Chez Khalîfa ibn Khayyât : « أعزم عَلَى كل من رأى أَن عَلَيْهِ سمعا وَطَاعَة إِلَّا كف يَده وسلاحه » (https://shamela.ws/book/6615/125) ; Ibn Sa'd : https://shamela.ws/book/9351/952. Dans le Musnad la phrase commence par « أَمَّا أَنْ أَخْرُجَ فَأُقَاتِلَ » (quant à sortir combattre…) ; recoupé sur ar.wikisource.org (مسند أحمد بن حنبل/المجلد الأول/مسند عثمان بن عفان (2), où le récit porte le n° 451). La bénédiction est imprimée en toutes lettres dans l'édition lue."
+    "note": "Deux récits réunis par « […] », comme dans le français. Chez Khalîfa ibn Khayyât : « أعزم عَلَى كل من رأى أَن عَلَيْهِ سمعا وَطَاعَة إِلَّا كف يَده وسلاحه » (https://shamela.ws/book/6615/125) ; Ibn Sa'd : https://shamela.ws/book/9351/952. Dans le Musnad la phrase commence par « أَمَّا أَنْ أَخْرُجَ فَأُقَاتِلَ » (quant à sortir combattre…) ; recoupé sur ar.wikisource.org (مسند أحمد بن حنبل/المجلد الأول/مسند عثمان بن عفان (2), où le récit porte le n° 451). La bénédiction est imprimée en toutes lettres dans l'édition lue. Le 18 novembre (D183), le français ne garde que la première phrase, avec la source où elle se lit (Nu'aym ibn Hammâd, Khalîfa ibn Khayyât) : l'arabe, l'anglais et le japonais sont coupés au même endroit, la coupe marquée « … » (« …… » en japonais), car chez Nu'aym (n° 441) comme chez Khalîfa la phrase se poursuit (« فَإِنَّ أَفْضَلَكُمْ عَنِّي غَنَاءً مَنْ كَفَّ يَدَهُ وَسِلَاحَهُ », relu sur https://shamela.ws/book/13047/442). La seconde phrase (Musnad d'Ahmad, n° 481) n'est plus citée : les champs « reference » nomment encore le Musnad et pas Khalîfa, et l'« ecart » décrit l'ancien texte ; ils restent à reprendre."
   },
   {
     "fichier": "v2/src/data/saga_uthman.js",

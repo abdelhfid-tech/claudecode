@@ -51,7 +51,7 @@ ISNAD.registerSaga({
           target: 'allies', sp: 0.3, anim: 'wave' },
         { lvl: 6, id: 'affranchir', name: 'Affranchir', desc: 'Délivre un compagnon de ses altérations et lui rend de la Constance.', cost: 5,
           target: 'ally', heal: 1.0, fx: [{ st: 'cleanse' }], anim: 'heal' },
-        { lvl: 8, id: 'patience', name: "Patience de l'assiégé", desc: "Tient sans rendre les coups : Patience sur tous les égrégores, et sa garde s'affermit.", cost: 9,
+        { lvl: 8, id: 'patience', name: "Patience de l'assiégé", desc: "Tient sans rendre les coups : Patience sur toutes les chimères, et sa garde s'affermit.", cost: 9,
           target: 'foes', el: 'sabr', pow: 1.1, fx: [{ st: 'def', v: 1, self: true }], anim: 'wave' }
       ],
       limit: { id: 'sans_effusion', name: 'Sans effusion de sang', desc: 'Refuse le sang : relève le groupe, dissipe ses maux et le garde.',
@@ -65,11 +65,11 @@ ISNAD.registerSaga({
       skills: [
         { lvl: 1, id: 'calame', name: 'Le Calame', desc: 'Trace net ce que la querelle brouille. Dégâts de Savoir.', cost: 3,
           target: 'foe', el: 'ilm', pow: 1.3, anim: 'glyph' },
-        { lvl: 1, id: 'collation', name: 'Collation', desc: "Compare ligne à ligne : révèle les failles d'un égrégore.", cost: 2,
+        { lvl: 1, id: 'collation', name: 'Collation', desc: "Compare ligne à ligne : révèle les failles d'une chimère.", cost: 2,
           target: 'foe', el: 'ilm', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'light' },
         { lvl: 2, id: 'temoins', name: 'Deux témoins', desc: "N'admet rien sans deux témoins. Dégâts de Véracité.", cost: 4,
           target: 'foe', el: 'sidq', pow: 1.5, anim: 'light' },
-        { lvl: 4, id: 'trace', name: 'Un seul tracé', desc: 'Ramène les lectures à une même ligne : Savoir sur tous les égrégores.', cost: 7,
+        { lvl: 4, id: 'trace', name: 'Un seul tracé', desc: 'Ramène les lectures à une même ligne : Savoir sur toutes les chimères.', cost: 7,
           target: 'foes', el: 'ilm', pow: 0.9, anim: 'wave' },
         { lvl: 6, id: 'dictee', name: 'Dictée', desc: "Chacun écrit d'une même voix : Esprit accru et Niyya pour le groupe.", cost: 6,
           target: 'allies', fx: [{ st: 'mag', v: 1 }, { st: 'niyya', v: 1 }], anim: 'glyph' },
@@ -88,9 +88,9 @@ ISNAD.registerSaga({
           target: 'foe', el: 'fer', pow: 1.4, anim: 'slash' },
         { lvl: 1, id: 'alarme', name: "Cri d'alarme", desc: 'Nomme le danger avant qu’il ne grandisse. Dégâts de Véracité.', cost: 3,
           target: 'foe', el: 'sidq', pow: 1.3, anim: 'light' },
-        { lvl: 2, id: 'demasquer', name: 'Démasquer', desc: "Voit ce qui se cache : révèle les failles et fend la garde d'un égrégore.", cost: 4,
+        { lvl: 2, id: 'demasquer', name: 'Démasquer', desc: "Voit ce qui se cache : révèle les failles et fend la garde d'une chimère.", cost: 4,
           target: 'foe', el: 'sidq', pow: 0.9, fx: [{ st: 'reveal' }, { st: 'def', v: -1 }], anim: 'glyph' },
-        { lvl: 4, id: 'ligne', name: 'Tenir la ligne', desc: "Comme à Nihâwand, relève l'étendard tombé : Courage sur tous les égrégores.", cost: 6,
+        { lvl: 4, id: 'ligne', name: 'Tenir la ligne', desc: "Comme à Nihâwand, relève l'étendard tombé : Courage sur toutes les chimères.", cost: 6,
           target: 'foes', el: 'shajaa', pow: 0.9, anim: 'burst' },
         { lvl: 6, id: 'veille', name: 'Veille aux frontières', desc: 'Le groupe gagne en Élan et en Garde.', cost: 5,
           target: 'allies', fx: [{ st: 'spd', v: 1 }, { st: 'def', v: 1 }], anim: 'guard' },
@@ -135,7 +135,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 3, name: 'Schisme', target: 'foes', el: 'fer', pow: 0.9, fx: [{ st: 'mag', v: -1, chance: 0.4 }], anim: 'burst' }] }
       ],
       taunts: ['Récite. Je te dirai en quoi tu te trompes.', 'Ils ne se comprennent déjà plus.'],
-      desc: "Égrégore de la discorde des lectures. Il naît quand une chose vraie, reçue par plusieurs voies, devient un motif de se préférer à l'autre. Le Savoir, qui compare et vérifie, et la Véracité, qui renonce à avoir raison seule, le défont."
+      desc: "Chimère de la discorde des lectures. Elle naît quand une chose vraie, reçue par plusieurs voies, devient un motif de se préférer à l'autre. Le Savoir, qui compare et vérifie, et la Véracité, qui renonce à avoir raison seule, la défont."
     },
     ecume: {
       name: "Écume d'effroi", art: 'wave', hue: 200, scale: 1, lvl: 4, tier: 'minion',
@@ -160,7 +160,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 3, name: 'Maelström', target: 'foes', el: 'fer', pow: 1.0, fx: [{ st: 'spd', v: -1, chance: 0.5 }], anim: 'wave' }] }
       ],
       taunts: ['Regarde en bas.', "Il n'y a ni piste ni puits, ici."],
-      desc: "Égrégore de la peur de la mer : l'effroi d'hommes du désert devant une étendue sans piste ni puits. Il grossit de chaque regard jeté par-dessus bord. Le Courage le fend ; la Miséricorde l'apaise ; la Véracité lui rappelle que nul n'a été contraint d'embarquer."
+      desc: "Chimère de la peur de la mer : l'effroi d'hommes du désert devant une étendue sans piste ni puits. Elle grossit de chaque regard jeté par-dessus bord. Le Courage la fend ; la Miséricorde l'apaise ; la Véracité lui rappelle que nul n'a été contraint d'embarquer."
     },
     ouidire: {
       name: 'Ouï-dire', art: 'mask', hue: 330, scale: 1, lvl: 5, tier: 'minion',
@@ -193,7 +193,7 @@ ISNAD.registerSaga({
           fx: [{ st: 'atk', v: 1 }] }
       ],
       taunts: ['Et toi, combien as-tu reçu ?'],
-      desc: "Égrégore des richesses amassées. Les conquêtes firent affluer à Médine plus de biens qu'elle n'en avait jamais vus ; avec eux vinrent la comparaison et l'envie. La Miséricorde, qui donne, et la Véracité, qui rend compte, lui retirent ses voiles."
+      desc: "Chimère des richesses amassées. Les conquêtes firent affluer à Médine plus de biens qu'elle n'en avait jamais vus ; avec eux vinrent la comparaison et l'envie. La Miséricorde, qui donne, et la Véracité, qui rend compte, lui retirent ses voiles."
     },
     rumeur: { racine: 'noir_soupcon',
       name: 'La Rumeur', art: 'lens', hue: 320, scale: 3, lvl: 9, tier: 'boss',
@@ -270,11 +270,11 @@ ISNAD.registerSaga({
     { id: 'akhbar_n', cat: 'Noosphère', title: 'Abû l-Akhbâr (personnage de fiction)',
       text: "Scribe de garnison et porteur de lettres, inventé pour ce récit : « le père des nouvelles » est un sobriquet. Il ne ment presque jamais. Il arrondit, ajoute un mot, tait une réserve, et dit toujours : « je ne fais que répéter ». Il n'est pas la Rumeur : il en est la petite bouche. Une seule question le désarme : qui te l'a dit ?" },
     { id: 'babel_n', cat: 'Noosphère', title: 'Babel',
-      text: "Égrégore de la discorde des lectures. Il naît quand une chose vraie, reçue par plusieurs voies, devient un motif de se préférer à l'autre. Il se nourrit d'une seule phrase : « Ma lecture vaut mieux que la tienne. » Il est défait par le Savoir, qui compare et vérifie, et par la Véracité, qui renonce à avoir raison seule." },
+      text: "Chimère de la discorde des lectures. Elle naît quand une chose vraie, reçue par plusieurs voies, devient un motif de se préférer à l'autre. Elle se nourrit d'une seule phrase : « Ma lecture vaut mieux que la tienne. » Elle est défaite par le Savoir, qui compare et vérifie, et par la Véracité, qui renonce à avoir raison seule." },
     { id: 'abime_n', cat: 'Noosphère', title: "L'Abîme",
-      text: "Égrégore de la peur de la mer : l'effroi d'hommes du désert devant une étendue sans piste ni puits. La contrainte l'aurait rendu invincible, car une peur imposée commande. 'Uthmân exigea que nul n'embarque contre son gré : la peur d'un homme libre reste la sienne, et il peut la regarder en face." },
+      text: "Chimère de la peur de la mer : l'effroi d'hommes du désert devant une étendue sans piste ni puits. La contrainte l'aurait rendue invincible, car une peur imposée commande. 'Uthmân exigea que nul n'embarque contre son gré : la peur d'un homme libre reste la sienne, et il peut la regarder en face." },
     { id: 'or_n', cat: 'Noosphère', title: "L'Or",
-      text: "Égrégore des richesses amassées. L'Or ne ment pas : il pèse, et fait pencher les regards. Là où chacun compte ce que l'autre a reçu, il dresse sa tour. Il sert de socle à la Rumeur, qui trouve dans l'envie des bouches toutes prêtes." },
+      text: "Chimère des richesses amassées. L'Or ne ment pas : il pèse, et fait pencher les regards. Là où chacun compte ce que l'autre a reçu, il dresse sa tour. Il sert de socle à la Rumeur, qui trouve dans l'envie des bouches toutes prêtes." },
     { id: 'rumeur_n', cat: 'Noosphère', title: 'La Rumeur',
       text: "Idole faite de bouches. Elle dit une chose et son contraire, et n'en est que plus forte : elle ne vit pas d'être crue, mais d'être redite. Nul ne l'a écrite, tous la signent. Le fer ne peut rien contre elle — la frapper, c'est lui donner un récit de plus. 'Uthmân lui refusa la seule chose qu'elle demandait : du sang. Dans la Cité-Miroir, l'Agrégor lui a donné un autre nom : le Flux." }
   ],
@@ -831,7 +831,7 @@ ISNAD.registerSaga({
             ] }
           ]],
           ['quote', "« Te plairait-il de tuer tous les gens, et moi avec eux ? Par Allah, si tu tues un seul homme, c'est comme si tu avais tué tous les gens. »", "'Uthmân à Abû Hurayra — Ibn Sa'd, Tabaqât"],
-          ['quote', "« J'adjure quiconque estime me devoir écoute et obéissance de retenir sa main et son arme. […] Je ne serai pas le premier à succéder au Messager d'Allah ﷺ dans sa communauté en faisant couler le sang. »", "On rapporte — Ibn Sa'd, Tabaqât ; Ahmad, Musnad"],
+          ['quote', "« J'adjure quiconque estime me devoir écoute et obéissance de retenir sa main et son arme… »", "On rapporte — Nu'aym ibn Hammâd, al-Fitan ; Khalîfa ibn Khayyât, Târîkh"],
           ['codex', 'parole_sang'], ['pillar', 'lien', 1],
           ['show', 'affranchi'],
           ['nar', "Le dernier matin se lève sur la maison. Avant le jour, il prie."],

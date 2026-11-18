@@ -25,7 +25,7 @@
   const pct = v => (v > 0 ? '+' : '') + Math.round(v * 100) + ' %';
   Po.dit = function (k) { const P = D.POSTURES[k], L = [];
     if (P.atk) L.push(I.t('Force {pct}', { pct: pct(P.atk) })); if (P.mag) L.push(I.t('Esprit {pct}', { pct: pct(P.mag) })); if (P.soin) L.push(I.t('soins {pct}', { pct: pct(P.soin) }));
-    if (P.niyya) L.push(I.t('Niyya +{n} au départ', { n: P.niyya })); if (P.sakina) L.push(I.t('Sakîna +{n} au départ', { n: P.sakina })); if (P.faille) L.push(I.t('une faille de chaque égrégore connue d’emblée')); if (P.menace) L.push(I.t('il attire plus souvent les coups'));
+    if (P.niyya) L.push(I.t('Niyya +{n} au départ', { n: P.niyya })); if (P.sakina) L.push(I.t('Sakîna +{n} au départ', { n: P.sakina })); if (P.faille) L.push(I.t('une faille de chaque chimère connue d’emblée')); if (P.menace) L.push(I.t('il attire plus souvent les coups'));
     return L.join(' · '); };
   // quand un choix s'ouvre pour la première fois à quelqu'un du groupe : la leçon, une fois (le besoin d'abord : avant cela, rien à choisir)
   Po.veille = function () {

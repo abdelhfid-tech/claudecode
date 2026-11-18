@@ -377,7 +377,7 @@ body.portrait #hud .enig { display: block; background: var(--panel); }
 .orga .eps { display: grid; margin-top: .35em; }
 .orga .ep { display: grid; grid-template-columns: 10.6em 1fr; gap: .15em .8em; align-items: start; padding: .35em 0; border-top: 1px solid rgba(255, 255, 255, .09); }
 .orga .epn { color: var(--gold); font-family: var(--f-display); letter-spacing: .05em; font-size: .8em; margin: .2em 0 0; grid-row: span 2; white-space: nowrap; }
-.orga .epe::before, .orga .epi::before { color: var(--dim); font-size: .72em; min-width: 5.2em; } .orga .epe::before { content: 'égrégores'; } .orga .epi::before { content: 'idoles'; }
+.orga .epe::before, .orga .epi::before { color: var(--dim); font-size: .72em; min-width: 5.2em; } .orga .epe::before { content: 'chimères'; } .orga .epi::before { content: 'idoles'; }
 .orga .epe, .orga .epi { display: flex; flex-wrap: wrap; gap: .25em .75em; align-items: center; }
 .orga .tu { display: inline-flex; align-items: center; gap: .25em; font-size: .78em; color: var(--dim); opacity: .78; } .orga .tu img { width: 1.9em; height: 1.9em; image-rendering: pixelated; border-bottom: 2px solid transparent; } .orga .tu i { font-style: normal; }
 .orga .tu.vu { opacity: 1; color: var(--sand); } .orga .tu.vu img { border-bottom-color: var(--gold); }

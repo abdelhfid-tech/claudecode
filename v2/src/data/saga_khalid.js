@@ -49,7 +49,7 @@ ISNAD.registerSaga({
       role: 'guerrier', el: 'shajaa',
       look: { robe: '#7a2f2a', head: '#e9dcc0', cloak: '#8e2f2a', aura: '#ff9a70', coiffe: 'casque_turban', cuirasse: true, manteau: 'epaule', item: 'sabre' },
       skills: [
-        { lvl: 1, id: 'charge', name: 'Charge', desc: 'Charge de cavalerie sur un égrégore.', cost: 3,
+        { lvl: 1, id: 'charge', name: 'Charge', desc: 'Charge de cavalerie sur une chimère.', cost: 3,
           target: 'foe', el: 'fer', pow: 1.4, anim: 'slash' },
         { lvl: 1, id: 'elan', name: 'Élan', desc: "Le courage fait reculer l'ombre.", cost: 3,
           target: 'foe', el: 'shajaa', pow: 1.3, anim: 'burst' },
@@ -72,7 +72,7 @@ ISNAD.registerSaga({
       skills: [
         { lvl: 1, id: 'estoc', name: 'Estoc', desc: 'Frappe rapide et précise.', cost: 2,
           target: 'foe', el: 'fer', pow: 1.2, anim: 'slash' },
-        { lvl: 1, id: 'eclaireur', name: "Œil de l'éclaireur", desc: "Révèle les failles d'un égrégore.", cost: 2,
+        { lvl: 1, id: 'eclaireur', name: "Œil de l'éclaireur", desc: "Révèle les failles d'une chimère.", cost: 2,
           target: 'foe', el: 'sabr', pow: 0.7, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 2, id: 'tenir', name: 'Tenir la ligne', desc: 'Frappe avec constance et affermit sa propre garde.', cost: 4,
           target: 'foe', el: 'sabr', pow: 1.3, fx: [{ st: 'def', v: 1, self: true }], anim: 'guard' },
@@ -83,7 +83,7 @@ ISNAD.registerSaga({
         { lvl: 6, id: 'voix', name: 'La Voix dans les rangs', desc: 'Sa voix vaut mille hommes : Force et Niyya pour tout le groupe.', cost: 7,
           target: 'allies', fx: [{ st: 'atk', v: 1 }, { st: 'niyya', v: 1 }], anim: 'glyph' }
       ],
-      limit: { id: 'vagues', name: 'Vagues de renfort', desc: 'Les cavaliers surgissent par vagues : tous les égrégores vacillent.',
+      limit: { id: 'vagues', name: 'Vagues de renfort', desc: 'Les cavaliers surgissent par vagues : toutes les chimères vacillent.',
                target: 'foes', el: 'sabr', pow: 1.5, fx: [{ st: 'stun', chance: 0.4 }, { st: 'veil', v: -1 }], anim: 'wave' }
     },
     dirar: {
@@ -91,7 +91,7 @@ ISNAD.registerSaga({
       role: 'guerrier', el: 'shajaa',
       look: { robe: '#c9a25a', head: '#f0e8d8', cloak: '#5a3a22', aura: '#ffb080', trim: '#b5462f', coiffe: 'imama_queue', manteau: 'aucun', court: true, legs: '#6b4a32', echarpe: true, item: 'lance' },
       skills: [
-        { lvl: 1, id: 'ruee', name: 'Ruée', desc: "Se jette sur l'égrégore.", cost: 2,
+        { lvl: 1, id: 'ruee', name: 'Ruée', desc: "Se jette sur la chimère.", cost: 2,
           target: 'foe', el: 'fer', pow: 1.25, anim: 'slash' },
         { lvl: 1, id: 'outre', name: "Partager l'outre", desc: "Donne sa part d'eau : rend de la Constance à un compagnon.", cost: 4,
           target: 'ally', heal: 1.0, anim: 'heal' },
@@ -143,7 +143,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 2, name: 'Outres vides', target: 'foes', el: 'fer', pow: 0.8, fx: [{ st: 'spd', v: -1, chance: 0.5 }], anim: 'wave' }] }
       ],
       taunts: ['Le sable est doux à qui renonce.'],
-      desc: "Égrégore du désespoir : cinq jours de gorges sèches lui donnent un corps. Elle ne tue pas, elle persuade de s'asseoir. On la brise en continuant de marcher."
+      desc: "Chimère du désespoir : cinq jours de gorges sèches lui donnent un corps. Elle ne tue pas, elle persuade de s'asseoir. On la brise en continuant de marcher."
     },
     decompte: {
       name: 'Le Décompte', art: 'swarm', hue: 255, scale: 1, lvl: 3, tier: 'minion',
@@ -262,11 +262,11 @@ ISNAD.registerSaga({
       text: "Après avoir vérifié les comptes de Khâlid et l'avoir trouvé intègre, 'Umar écrit aux provinces : « Je n'ai pas destitué Khâlid par mécontentement ni pour trahison ; mais les gens ont été éblouis par lui, et j'ai craint qu'ils ne s'en remettent à lui. J'ai voulu qu'ils sachent que c'est Allah qui agit. » La mesure ne vise pas l'homme, mais ce que d'autres bâtissaient autour de lui.",
       src: 'at-Tabarî, Târîkh' },
     { id: 'idole_soif', cat: 'Noosphère', title: 'Le Mirage et la Soif',
-      text: "Égrégores du désespoir. Le Mirage naît quand toute une armée regarde la même eau qui n'existe pas ; la Soif, quand chacun compte en silence les gorgées qui restent. Ils ne tuent pas : ils persuadent de s'asseoir. On les brise par la patience et le courage, en continuant de marcher vers une source qu'on ne voit pas encore." },
+      text: "Chimères du désespoir. Le Mirage naît quand toute une armée regarde la même eau qui n'existe pas ; la Soif, quand chacun compte en silence les gorgées qui restent. Ils ne tuent pas : ils persuadent de s'asseoir. On les brise par la patience et le courage, en continuant de marcher vers une source qu'on ne voit pas encore." },
     { id: 'idole_nombre', cat: 'Noosphère', title: 'La Peur du Nombre',
       text: "Idole faite de décomptes. Elle se nourrit de chaque regard qui dénombre l'adversaire et de chaque bouche qui répète le total. Elle fait croire que l'issue est une soustraction. Une parole vraie la fend : « Les armées ne sont nombreuses que par la victoire. » Dans la Cité-Miroir, l'Agrégor lui donne d'autres noms : audience, score, majorité." },
     { id: 'idole_heros', cat: 'Noosphère', title: "L'Idole du Héros",
-      text: "Le plus subtil des égrégores : il prend la silhouette d'un homme de bien. Chaque « avec lui, on ne perd jamais » lui ajoute une couche d'or. Il ne demande pas qu'on renie Allah ; seulement qu'on oublie de Le nommer. Le fer ne l'entame pas, car il est fait de victoires. Il se brise quand le héros lui-même refuse le socle. Le Laurier, louange des poètes, est sa couronne." },
+      text: "La plus subtile des chimères : elle prend la silhouette d'un homme de bien. Chaque « avec lui, on ne perd jamais » lui ajoute une couche d'or. Elle ne demande pas qu'on renie Allah ; seulement qu'on oublie de Le nommer. Le fer ne l'entame pas, car elle est faite de victoires. Elle se brise quand le héros lui-même refuse le socle. Le Laurier, louange des poètes, est sa couronne." },
     /* ── v2 : pactes, savoirs, fiction signalée ── */
     { id: 'hira', cat: 'Lieu', title: 'Al-Hîra',
       text: "Sur la rive occidentale de l'Euphrate, al-Hîra fut pendant trois siècles la capitale des rois lakhmides, Arabes alliés de la Perse. Ville de palais et de monastères, peuplée d'Arabes chrétiens que l'on nommait les 'Ibâd. La tradition rapporte que c'est d'al-Hîra et d'al-Anbâr que l'écriture arabe gagna le Hijâz. Après la conquête, Koufa sera fondée à quelques lieues de là.",

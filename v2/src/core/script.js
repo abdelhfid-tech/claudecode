@@ -126,7 +126,7 @@
         // un égrégore le tient (rencontres de la Cité-Miroir), cela se combat.
         if (I.mal.estIdee(N)) await I.mal.dissiper(N, P);
         else {
-          await card('title parley noir', `<p class="small">${I.t('Un égrégore le tient')}</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">${I.t('On ne le combat pas contre lui, mais pour lui')}</p><div class="rule"></div><div class="hint">▼</div>`);
+          await card('title parley noir', `<p class="small">${I.t('Une chimère le tient')}</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">${I.t('On ne le combat pas contre lui, mais pour lui')}</p><div class="rule"></div><div class="hint">▼</div>`);
           await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || I.t('Il parle plus fort que toi. Dissipe-le.') });
           I.mal.note('n', P.title + '|' + N.name, -1);
         }

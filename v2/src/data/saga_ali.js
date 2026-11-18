@@ -51,9 +51,9 @@ ISNAD.registerSaga({
           target: 'foe', el: 'ilm', pow: 1.4, anim: 'glyph' },
         { lvl: 4, id: 'khaybar', name: 'La Porte de Khaybar', desc: 'Il se fait rempart : garde du groupe renforcée, les coups viennent à lui.', cost: 5,
           target: 'allies', fx: [{ st: 'def', v: 1, turns: 3 }, { st: 'taunt', turns: 2, self: true }], anim: 'guard' },
-        { lvl: 6, id: 'interrogez', name: '« Interrogez-moi »', desc: 'Il répond à toutes les questions à la fois. Savoir sur tous les égrégores.', cost: 7,
+        { lvl: 6, id: 'interrogez', name: '« Interrogez-moi »', desc: 'Il répond à toutes les questions à la fois. Savoir sur toutes les chimères.', cost: 7,
           target: 'foes', el: 'ilm', pow: 0.9, anim: 'glyph' },
-        { lvl: 8, id: 'arret', name: 'Arrêt sans appel', desc: 'Justice forte ; retire les faveurs que l’égrégore s’est données.', cost: 8,
+        { lvl: 8, id: 'arret', name: 'Arrêt sans appel', desc: 'Justice forte ; retire les faveurs que la chimère s’est données.', cost: 8,
           target: 'foe', el: 'adl', pow: 1.9, fx: [{ st: 'dispel' }], anim: 'pillar' }
       ],
       limit: { id: 'haydar', name: 'Haydar', desc: 'Le Lion de Khaybar : nul voile ne tient devant lui.', target: 'foes',
@@ -93,7 +93,7 @@ ISNAD.registerSaga({
           target: 'allies', fx: [{ st: 'regen', turns: 3 }], anim: 'heal' },
         { lvl: 3, id: 'delier', name: 'Délier', desc: 'Dissipe les altérations d’un compagnon et le soigne un peu.', cost: 4,
           target: 'ally', heal: 0.5, fx: [{ st: 'cleanse' }], anim: 'heal' },
-        { lvl: 5, id: 'tenir', name: 'Tenir', desc: 'Patience sur tous les égrégores ; affaiblit leur assaut.', cost: 7,
+        { lvl: 5, id: 'tenir', name: 'Tenir', desc: 'Patience sur toutes les chimères ; affaiblit leur assaut.', cost: 7,
           target: 'foes', el: 'sabr', pow: 0.85, fx: [{ st: 'atk', v: -1, chance: 0.5 }], anim: 'wave' }
       ],
       limit: { id: 'premiers_jours', name: 'Patience des premiers jours', desc: 'Soigne tout le groupe, dissipe ses altérations, affermit sa garde.', target: 'allies',
@@ -148,7 +148,7 @@ ISNAD.registerSaga({
       phases: [{ at: 0.5, say: 'Tu es le calife. Un mot de toi, et le juge se taira. Qui t’en blâmerait ?', fx: [{ st: 'atk', v: 1 }],
                  addSkills: [{ w: 3, name: 'Passe-droit', target: 'foe', el: 'fer', pow: 1.5, fx: [{ st: 'doute', turns: 2, chance: 0.5 }], anim: 'burst' }] }],
       taunts: ['Tout le monde trouve cela normal.', 'La règle est pour les autres.'],
-      desc: 'Égrégore du rang. Il naît chaque fois qu’une foule attend que le puissant gagne parce qu’il est puissant. Il n’a pas besoin de corrompre le juge : il lui suffit que chacun trouve normal que la règle plie. La justice et la patience le brisent.'
+      desc: 'Chimère du rang. Elle naît chaque fois qu’une foule attend que le puissant gagne parce qu’il est puissant. Elle n’a pas besoin de corrompre le juge : il lui suffit que chacun trouve normal que la règle plie. La justice et la patience la brisent.'
     },
     echo: {
       name: 'Écho', art: 'wisp', hue: 285, scale: 1, lvl: 3, tier: 'minion',
@@ -179,7 +179,7 @@ ISNAD.registerSaga({
       phases: [{ at: 0.5, say: 'Je suis une parole vraie. On ne discute pas une parole vraie : on la crie.', fx: [{ st: 'spd', v: 1 }],
                  addSkills: [{ w: 3, name: 'Parole vidée', target: 'foes', el: 'fer', pow: 0.9, fx: [{ st: 'mag', v: -1, chance: 0.5 }], anim: 'burst' }] }],
       taunts: ['Répète. Ne réfléchis pas. Répète.', 'Qui me nuance me trahit.'],
-      desc: 'Égrégore de la formule. Une parole vraie, répétée par des milliers de bouches qui ne la comprennent plus, se détache de son sens et devient une arme. Le Slogan ne ment pas : il tronque. Le fer passe au travers ; le savoir et la véracité le font taire.'
+      desc: 'Chimère de la formule. Une parole vraie, répétée par des milliers de bouches qui ne la comprennent plus, se détache de son sens et devient une arme. Le Slogan ne ment pas : il tronque. Le fer passe au travers ; le savoir et la véracité le font taire.'
     },
     lame: {
       name: 'Lame pieuse', art: 'blade', hue: 200, scale: 1, lvl: 5, tier: 'minion',
@@ -243,7 +243,7 @@ ISNAD.registerSaga({
       text: "On rapporte que 'Alî, calife, reconnut sa cuirasse entre les mains d'un homme des Gens du Livre, à Koufa. Il ne la reprit pas : il le cita devant le juge Shurayh, en fonction depuis 'Umar. Faute de preuve recevable — le juge écarta le témoignage du fils en faveur de son père —, Shurayh trancha contre le calife, qui s'inclina. L'homme, bouleversé, reconnut les faits et embrassa l'islam ; 'Alî lui laissa la cuirasse. Le récit, très célèbre, est rapporté par Abû Nu'aym, al-Bayhaqî et Ibn Kathîr ; les spécialistes discutent la solidité de sa chaîne.",
       src: "Abû Nu'aym, Hilyat al-Awliyâ' ; al-Bayhaqî, as-Sunan al-Kubrâ ; Ibn Kathîr, al-Bidâya wa n-Nihâya" },
     { id: 'privilege', cat: 'Noosphère', title: 'Le Privilège',
-      text: "Égrégore du rang. Il naît chaque fois qu'une foule attend que le puissant gagne parce qu'il est puissant. Il n'a pas besoin de corrompre le juge : il lui suffit que chacun trouve normal que la règle plie. Il se brise quand le premier des hommes se tient devant le juge comme le dernier, et repart débouté sans colère." },
+      text: "Chimère du rang. Elle naît chaque fois qu'une foule attend que le puissant gagne parce qu'il est puissant. Elle n'a pas besoin de corrompre le juge : il lui suffit que chacun trouve normal que la règle plie. Elle se brise quand le premier des hommes se tient devant le juge comme le dernier, et repart débouté sans colère." },
     { id: 'siffin', cat: 'Événement', title: 'Siffîn',
       text: "En l'an 37, sur la rive de l'Euphrate, l'armée d'Irak et l'armée de Syrie se font face durant des semaines. De grands Compagnons se trouvent dans chaque rang ; d'autres s'abstiennent. Les combats cessent quand on convient de s'en remettre à deux arbitres. Les savants recommandent la retenue sur ces événements : tous étaient des croyants qui cherchaient le vrai, et l'on demande pour tous l'agrément d'Allah.",
       src: "at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya wa n-Nihâya" },
@@ -251,7 +251,7 @@ ISNAD.registerSaga({
       text: "Au retour de Siffîn, plusieurs milliers d'hommes refusent l'arbitrage et se retirent à Harûrâ', près de Koufa : on les appellera Harûriyya, puis Khawârij, « ceux qui sont sortis ». Ibn 'Abbâs vient débattre avec eux à l'heure de midi. Il écoute leurs griefs, puis y répond par le Coran (5:95 ; 4:35) et par l'exemple du Messager ﷺ à Hudaybiyya. Deux mille d'entre eux reviennent ce jour-là ; davantage, selon d'autres récits.",
       src: "an-Nasâ'î, as-Sunan al-Kubrâ ; al-Hâkim, al-Mustadrak ; 'Abd ar-Razzâq, al-Musannaf" },
     { id: 'slogan', cat: 'Noosphère', title: 'Le Slogan',
-      text: "Égrégore de la formule. Une parole vraie, répétée par des milliers de bouches qui ne la comprennent plus, se détache de son sens et devient une arme. Le Slogan ne ment pas : il tronque. Aucune lame ne l'entame ; seuls le savoir, qui rend à la phrase son contexte, et la véracité, qui rappelle ce qu'elle visait, le font taire. L'Agrégor de la Cité-Miroir en fabrique mille par jour." },
+      text: "Chimère de la formule. Une parole vraie, répétée par des milliers de bouches qui ne la comprennent plus, se détache de son sens et devient une arme. Le Slogan ne ment pas : il tronque. Aucune lame ne l'entame ; seuls le savoir, qui rend à la phrase son contexte, et la véracité, qui rappelle ce qu'elle visait, le font taire. L'Agrégor de la Cité-Miroir en fabrique mille par jour." },
     { id: 'parole_verite', cat: 'Parole', title: '« Parole de vérité… »',
       text: "Quand les sécessionnistes criaient « Le jugement n'appartient qu'à Allah », 'Alî répondit : « Parole de vérité par laquelle on vise le faux. » Il leur reconnut pourtant trois droits : l'accès aux mosquées, leur part du trésor tant que leurs mains restaient avec celles des musulmans, et de n'être jamais combattus les premiers. Il refusa de punir une opinion tant qu'elle ne versait pas le sang.",
       src: "Muslim ; Ibn Abî Shayba, al-Musannaf ; at-Tabarî, Târîkh" },
@@ -381,7 +381,7 @@ ISNAD.registerSaga({
             ] }
           ]],
           ['tp', 'homme', ['halle', -1, 2]],
-          ['say', 'ibnabbas', "Écoute ces murmures. Ils ne veulent pas de mal : ils trouvent seulement naturel que le rang l'emporte. C'est ainsi que naît un égrégore."]
+          ['say', 'ibnabbas', "Écoute ces murmures. Ils ne veulent pas de mal : ils trouvent seulement naturel que le rang l'emporte. C'est ainsi que naît une chimère."]
         ] },
         { text: 'Dissiper les murmures du souk', foe: 'f1', then: [
           ['nar', "Les murmures se dispersent. Mais dans l'envers de la ville, ils convergent vers la halle du juge, où quelque chose les attend et les rassemble."],
@@ -404,7 +404,7 @@ ISNAD.registerSaga({
         { text: "Traverser l'envers de la halle", foe: 'f2', then: [
           ['say', 'ammar', "J'ai connu La Mecque quand les puissants y avaient toujours raison. Je ne veux pas revoir cela sous un autre nom."]
         ] },
-        { text: 'Atteindre le cœur de l’égrégore', goto: 'coeur', then: [
+        { text: 'Atteindre le cœur de la chimère', goto: 'coeur', then: [
           ['say', 'ibnabbas', "Le voilà. Il ne cédera pas à la force : il s'en nourrit. Montre-lui la justice, et la patience de celui qui attend son tour."],
           ['heal'],
           ['battle', { group: ['privilege'], bg: 'noos', boss: true, intro: 'Tu es le premier des hommes. Pourquoi plaiderais-tu comme le dernier ?' }],

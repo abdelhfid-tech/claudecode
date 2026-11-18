@@ -520,7 +520,7 @@
     }
     W.persistHeroes();
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
-    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? I.t('La lame a tranché') : I.t('Sans sa lame, le mal recule')) : C.opts.noir ? I.t('On ne l’a pas combattu contre lui, mais pour lui') : C.opts.boss ? I.t('L’idole se brise') : I.t('L’emprise est brisée')}</p><h1>${maux.length ? (maux.every(e => e.cut) ? I.t('Tranché') : maux.some(e => e.cut) ? I.t('Tranché et repoussé') : I.t('Repoussé')) : C.opts.noir ? I.t('L’égrégore lâche prise') : I.t('Dévoilement')}</h1><ul><li>${I.t('Sagesse acquise : <b>+{n}</b>', { n: xp })}</li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
+    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? I.t('La lame a tranché') : I.t('Sans sa lame, le mal recule')) : C.opts.noir ? I.t('On ne l’a pas combattu contre lui, mais pour lui') : C.opts.boss ? I.t('L’idole se brise') : I.t('L’emprise est brisée')}</p><h1>${maux.length ? (maux.every(e => e.cut) ? I.t('Tranché') : maux.some(e => e.cut) ? I.t('Tranché et repoussé') : I.t('Repoussé')) : C.opts.noir ? I.t('La chimère lâche prise') : I.t('Dévoilement')}</h1><ul><li>${I.t('Sagesse acquise : <b>+{n}</b>', { n: xp })}</li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
   // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue dans le
   // chapitre, le groupe est relevé, une fois par tentative. On ne montre que de la lumière : ni figure, ni nom, ni nombre.

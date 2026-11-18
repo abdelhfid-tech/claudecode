@@ -47,7 +47,7 @@ ISNAD.registerSaga({
           target: 'foe', el: 'sidq', pow: 1.4, anim: 'light' },
         { lvl: 1, id: 'apaisement', name: 'Apaisement', desc: "Une parole douce relève un cœur : rend de la Constance à un compagnon.", cost: 4,
           target: 'ally', heal: 1.0, anim: 'heal' },
-        { lvl: 2, id: 'lignees', name: 'Science des lignées', desc: "Nul ne connaissait mieux les généalogies des Arabes : révèle les failles d'un égrégore.", cost: 2,
+        { lvl: 2, id: 'lignees', name: 'Science des lignées', desc: "Nul ne connaissait mieux les généalogies des Arabes : révèle les failles d'une chimère.", cost: 2,
           target: 'foe', el: 'ilm', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 3, id: 'fermete', name: 'Fermeté', desc: "« Je ne dénouerai pas un étendard qu'il a noué. » Renforce la garde du groupe.", cost: 5,
           target: 'allies', fx: [{ st: 'def', v: 1, turns: 3 }], anim: 'guard' },
@@ -56,7 +56,7 @@ ISNAD.registerSaga({
         { lvl: 7, id: 'certitude', name: 'Certitude', desc: "« S'il l'a dit, il a dit vrai. » Lourds dégâts de Véracité, déchire un voile.", cost: 8,
           target: 'foe', el: 'sidq', pow: 1.9, fx: [{ st: 'veil', v: -1 }], anim: 'pillar' }
       ],
-      limit: { id: 'siddiq', name: 'As-Siddîq', desc: "La véracité à nu : frappe tous les égrégores, déchire leurs voiles et révèle leurs failles.",
+      limit: { id: 'siddiq', name: 'As-Siddîq', desc: "La véracité à nu : frappe toutes les chimères, déchire leurs voiles et révèle leurs failles.",
                target: 'foes', el: 'sidq', pow: 1.6, fx: [{ st: 'veil', v: -2 }, { st: 'reveal' }], anim: 'pillar' }
     },
     umar: {
@@ -66,18 +66,18 @@ ISNAD.registerSaga({
       skills: [
         { lvl: 1, id: 'durra', name: 'La Durra', desc: "Coup de férule. Peut étourdir.", cost: 3,
           target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
-        { lvl: 1, id: 'firasa', name: 'Firâsa', desc: "Discerne les failles d'un égrégore. Légers dégâts de Justice.", cost: 2,
+        { lvl: 1, id: 'firasa', name: 'Firâsa', desc: "Discerne les failles d'une chimère. Légers dégâts de Justice.", cost: 2,
           target: 'foe', el: 'adl', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 2, id: 'rempart', name: 'Rempart', desc: "Se dresse devant les siens : attire les coups et les amortit.", cost: 4,
           target: 'self', fx: [{ st: 'taunt', turns: 2 }, { st: 'garde' }], anim: 'guard' },
-        { lvl: 4, id: 'equite', name: 'Équité', desc: "La même mesure pour tous : dégâts de Justice à tous les égrégores.", cost: 6,
+        { lvl: 4, id: 'equite', name: 'Équité', desc: "La même mesure pour tous : dégâts de Justice à toutes les chimères.", cost: 6,
           target: 'foes', el: 'adl', pow: 0.9, anim: 'wave' },
         { lvl: 6, id: 'hardiesse', name: 'Hardiesse', desc: "Charge sans calcul. Dégâts de Courage, abaisse la garde de la cible.", cost: 6,
           target: 'foe', el: 'shajaa', pow: 1.6, fx: [{ st: 'def', v: -1 }], anim: 'burst' },
         { lvl: 8, id: 'droit', name: 'Rendre le droit', desc: "Reprend au fort ce qu'il a pris. Lourds dégâts de Justice, dissipe les bonus.", cost: 8,
           target: 'foe', el: 'adl', pow: 1.9, fx: [{ st: 'dispel' }], anim: 'pillar' }
       ],
-      limit: { id: 'faruq', name: 'Al-Fârûq', desc: "Sépare le vrai du faux : frappe tous les égrégores, dissipe leurs bonus et déchire leurs voiles.",
+      limit: { id: 'faruq', name: 'Al-Fârûq', desc: "Sépare le vrai du faux : frappe toutes les chimères, dissipe leurs bonus et déchire leurs voiles.",
                target: 'foes', el: 'adl', pow: 1.5, fx: [{ st: 'dispel' }, { st: 'veil', v: -2 }], anim: 'pillar' }
     },
     abuubayda: {
@@ -126,7 +126,7 @@ ISNAD.registerSaga({
         { at: 0.5, say: "S'il n'est plus là, que vous reste-t-il ? Gardez au moins son souvenir, et prosternez-vous devant lui !", fx: [{ st: 'atk', v: 1 }] }
       ],
       taunts: ['Quiconque dira qu’il est mort…', 'Quarante nuits, et il reviendra.'],
-      desc: "Égrégore né du deuil de tout un peuple. Il ne veut aucun mal : il veut que rien ne change. Mais qui s'attache à la personne plutôt qu'au message finit par adorer un souvenir."
+      desc: "Chimère née du deuil de tout un peuple. Elle ne veut aucun mal : elle veut que rien ne change. Mais qui s'attache à la personne plutôt qu'au message finit par adorer un souvenir."
     },
     mot_clan: {
       name: "Mot d'ordre", art: 'wisp', hue: 20, scale: 1,
@@ -175,7 +175,7 @@ ISNAD.registerSaga({
           addSkills: [ { w: 3, name: 'Soustraction', target: 'foe', el: 'fer', pow: 1.4, fx: [{ st: 'def', v: -1, chance: 0.5 }], anim: 'slash' } ] }
       ],
       taunts: ['Ce qui est à moi est à moi.', 'Une entrave de chameau… pour si peu ?'],
-      desc: "Égrégore de la soustraction. Il ne renie rien : il garde la prière et retranche la part du pauvre. Une tour de pièces dont aucune ne tombe."
+      desc: "Chimère de la soustraction. Elle ne renie rien : elle garde la prière et retranche la part du pauvre. Une tour de pièces dont aucune ne tombe."
     },
     echo: {
       name: 'Écho flatteur', art: 'wisp', hue: 300, scale: 1,
@@ -224,7 +224,7 @@ ISNAD.registerSaga({
           addSkills: [ { w: 2, name: 'Fausse promesse', target: 'self', fx: [{ st: 'regen', turns: 3 }, { st: 'def', v: 1, turns: 2 }], anim: 'guard' } ] }
       ],
       taunts: ['Un prophète pour chaque tribu : n’est-ce pas plus juste ?', 'Regarde-toi en moi. Ne te plais-tu pas ?'],
-      desc: "Égrégore de la contrefaçon. Il n'attaque pas le vrai de front : il l'imite, l'allège, et promet à chacun ce qu'il désire. Un miroir tourné vers la foule ; seule la véracité le fend."
+      desc: "Chimère de la contrefaçon. Elle n'attaque pas le vrai de front : elle l'imite, l'allège, et promet à chacun ce qu'il désire. Un miroir tourné vers la foule ; seule la véracité le fend."
     }
   },
 
@@ -243,7 +243,7 @@ ISNAD.registerSaga({
       text: "Le lundi 12 Rabî' al-Awwal de l'an 11 de l'Hégire (juin 632), le Messager d'Allah ﷺ meurt à Médine après quelques jours de fièvre. La ville est frappée de stupeur ; 'Umar lui-même refuse d'abord d'y croire. Abû Bakr, revenu d'as-Sunh, rappelle aux gens qu'ils adorent Allah, le Vivant qui ne meurt pas, et récite le verset 3:144. Pour la première fois, la communauté doit tenir sans lui.",
       src: "al-Bukhârî, as-Sahîh ; Ibn Hishâm, as-Sîra" },
     { id: 'deni', cat: 'Noosphère', title: "Le Déni",
-      text: "Égrégore né du deuil de tout un peuple. Il ne veut aucun mal : il veut seulement que rien ne change, et murmure que l'être aimé reviendra. Mais qui s'attache à la personne plutôt qu'au message finit par adorer un souvenir. On le dissipe par la véracité, dite avec douceur, et par la patience. Il revient chaque fois qu'une foule préfère un nom à une vérité." },
+      text: "Chimère née du deuil de tout un peuple. Elle ne veut aucun mal : elle veut seulement que rien ne change, et murmure que l'être aimé reviendra. Mais qui s'attache à la personne plutôt qu'au message finit par adorer un souvenir. On la dissipe par la véracité, dite avec douceur, et par la patience. Elle revient chaque fois qu'une foule préfère un nom à une vérité." },
     { id: 'saqifa', cat: 'Événement', title: "La Saqîfa des Banû Sâ'ida",
       text: "Le jour même de la mort du Messager ﷺ, les Ansâr se réunissent sous l'auvent (saqîfa) des Banû Sâ'ida pour choisir un chef. Abû Bakr, 'Umar et Abû 'Ubayda les y rejoignent. Après un débat vif — « un émir parmi nous, un émir parmi vous » —, Abû Bakr propose 'Umar ou Abû 'Ubayda ; 'Umar lui prend la main et lui prête allégeance, suivi des Émigrés puis des Ansâr. L'allégeance générale a lieu le lendemain à la mosquée.",
       src: "al-Bukhârî, as-Sahîh (récit de 'Umar) ; Ibn Hishâm, as-Sîra" },
@@ -262,12 +262,12 @@ ISNAD.registerSaga({
       text: "À la mort du Messager ﷺ, une grande partie des tribus d'Arabie se détache de Médine : certaines renient l'islam, d'autres suivent de faux prophètes, d'autres encore refusent la zakât. Abû Bakr refuse de séparer la prière de la zakât, défend Médine à Dhû l-Qassa, puis y noue onze étendards pour onze armées. En moins d'un an (11–12 H), l'Arabie est de nouveau rassemblée.",
       src: "at-Tabarî, Târîkh ; al-Bukhârî ; Muslim" },
     { id: 'avare', cat: 'Noosphère', title: "L'Avare du dû",
-      text: "Égrégore de la soustraction. Il ne renie rien : il garde la prière et retranche la part du pauvre. Il prend la forme d'une tour de pièces dont aucune ne tombe. La justice l'ébranle, car la zakât est un droit et non une faveur ; la miséricorde et la véracité achèvent de le défaire. La plupart des idoles commencent ainsi : par une petite soustraction faite au vrai." },
+      text: "Chimère de la soustraction. Elle ne renie rien : elle garde la prière et retranche la part du pauvre. Elle prend la forme d'une tour de pièces dont aucune ne tombe. La justice l'ébranle, car la zakât est un droit et non une faveur ; la miséricorde et la véracité achèvent de la défaire. La plupart des idoles commencent ainsi : par une petite soustraction faite au vrai." },
     { id: 'yamama', cat: 'Événement', title: "Yamâma et le Jardin de la Mort",
       text: "À 'Aqrabâ', dans le Yamâma (fin 11 – début 12 H), l'armée de Khâlid ibn al-Walîd affronte les Banû Hanîfa rassemblés autour de Musaylima. C'est la bataille la plus dure de la Ridda ; les lignes des croyants plient avant de se reformer clan par clan. Les Banû Hanîfa se retranchent dans un verger clos qu'al-Barâ' ibn Mâlik ouvre de l'intérieur : on l'appellera le Jardin de la Mort. Musaylima y est tué. Environ douze cents musulmans tombent, dont de très nombreux récitateurs du Coran.",
       src: "at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya wa-n-Nihâya" },
     { id: 'kadhdhab', cat: 'Noosphère', title: "Al-Kadhdhâb — le Menteur",
-      text: "Égrégore de la contrefaçon, né autour de Musaylima. Il n'attaque pas le vrai de front : il l'imite, l'allège, et promet à chacun ce qu'il désire — un prophète de sa tribu, une religion sans exigence, « la moitié de la terre ». C'est un miroir tourné vers la foule. Seule la véracité le fend ; le savoir distingue l'original de la copie, et la patience refuse ses promesses rapides. Il change de nom à chaque époque." },
+      text: "Chimère de la contrefaçon, née autour de Musaylima. Elle n'attaque pas le vrai de front : elle l'imite, l'allège, et promet à chacun ce qu'il désire — un prophète de sa tribu, une religion sans exigence, « la moitié de la terre ». C'est un miroir tourné vers la foule. Seule la véracité le fend ; le savoir distingue l'original de la copie, et la patience refuse ses promesses rapides. Elle change de nom à chaque époque." },
     { id: 'jam_quran', cat: 'Événement', title: "Le rassemblement du Coran",
       text: "Après le Yamâma, 'Umar craint que le Coran ne se perde avec ses récitateurs et presse Abû Bakr de le rassembler. D'abord hésitant devant un acte que le Messager ﷺ n'avait pas accompli, Abû Bakr s'y résout et en charge Zayd ibn Thâbit, ancien scribe de la Révélation. Zayd recueille les versets sur les tiges de palmier, les pierres plates et dans la mémoire des hommes, en exigeant des témoins. Les feuillets restent chez Abû Bakr, puis chez 'Umar.",
       src: "al-Bukhârî, as-Sahîh (récit de Zayd ibn Thâbit)" },
@@ -779,7 +779,7 @@ ISNAD.registerSaga({
           ['nar', "Abû Bakr noue onze étendards pour onze chefs, et trace à chacun sa route : Khâlid ibn al-Walîd, 'Ikrima, Shurahbîl, 'Amr ibn al-'Âs, al-'Alâ' ibn al-Hadramî… L'Arabie entière, d'un seul geste."],
           ['say', 'khalid', "Mon étendard est noué. Tulayha d'abord ; puis le Yamâma, s'il plaît à Allah."],
           ['nar', "Puis le calife monte en selle, le sabre au côté, résolu à marcher lui-même en tête. Un homme saisit la bride de sa monture : 'Alî ibn Abî Tâlib."],
-          ['quote', "Où vas-tu, successeur du Messager d'Allah ? Rengaine ton sabre, et ne nous afflige pas de ta perte. Retourne à Médine : par Allah, si nous te perdions, l'islam n'aurait plus d'ordre.", "On rapporte que 'Alî le lui dit à Dhû l-Qassa — Ibn Kathîr, al-Bidâya wa-n-Nihâya"],
+          ['quote', "Où vas-tu, successeur du Messager d'Allah ? Rengaine ton sabre, et ne nous afflige pas de ta perte. Retourne à Médine : par Allah, si nous te perdions, l'islam n'aurait plus d'ordre.", "On rapporte que 'Alî le lui dit à Dhû l-Qassa, rappelant une parole du Prophète ﷺ au jour d'Uhud — Ibn Kathîr, al-Bidâya wa-n-Nihâya (récit dit gharîb)"],
           ['choice', "'Alî tient la bride. Que fait Abû Bakr ?", [
             { t: "Passer outre : un chef doit marcher devant ses hommes.", r: [
               ['nar', "Son courage n'était pas en cause : il l'avait prouvé la nuit de Dhû l-Qassa. Mais celui qui tient l'ensemble ne se risque pas comme une seule lance. Ce n'est pas ce qui fut rapporté."] ] },
@@ -860,7 +860,7 @@ ISNAD.registerSaga({
           ['say', 'courrier', "Successeur du Messager d'Allah : la victoire. Le Menteur est mort, et le Yamâma est revenu à l'islam."],
           ['mus', 'deuil'],
           ['say', 'courrier', "Mais nous avons enterré douze cents des nôtres. Zayd ibn al-Khattâb. Sâlim. Abû Hudhayfa. Thâbit ibn Qays. Et des récitateurs par dizaines, de ceux qui portaient le Coran tout entier."],
-          ['quote', "Il m'a devancé vers les deux biens : il a embrassé l'islam avant moi, et il est tombé martyr avant moi.", "'Umar, à la mort de son frère Zayd — Ibn Sa'd, at-Tabaqât"],
+          ['quote', "Il m'a devancé vers les deux biens : il a embrassé l'islam avant moi, et il est tombé martyr avant moi.", "'Umar, à la mort de son frère Zayd — Ibn 'Abd al-Barr, al-Istî'âb"],
           ['hide', 'courrier'],
           ['codex', 'yamama'], ['codex', 'kadhdhab'],
           ['nar', "Quelques jours passent. 'Umar revient trouver le calife, et ce n'est plus de son frère qu'il parle."],

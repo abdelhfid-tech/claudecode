@@ -91,7 +91,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     const e2b = await T.etat(), neufs = e2b.journal.slice(avantRecit).map(j => j.id), ditsRecit = await p.evaluate(() => window.__dits.map(x => x.t).slice(-3));
     si(neufs.join() === 'halte' && ditsRecit.some(t => /halte/i.test(t)), `le premier récit s'ouvre : un outil, la halte (« ${ditsRecit.find(t => /halte/i.test(t)) || ''} »)`, `à l'ouverture du premier récit : ${JSON.stringify({ neufs, ditsRecit })}`);
     const pages = await p.evaluate(() => { window.ISNAD.ui.pause(); const L = [...document.querySelectorAll('#menu .side button')].map(b => b.textContent.trim()); return L; }); await cap('A-3-halte'); await p.keyboard.press('Escape'); await p.waitForTimeout(300);
-    const absentes = ['Équipement', 'Œuvres et lames', 'Compagnons de lumière', 'Organigramme du mal', 'Valeurs et attributs', 'Postures'].filter(n => !pages.includes(n)), la = ['Reprendre', 'Compagnons', 'Besace', 'Recueil', 'Aide du jeu'].filter(n => pages.includes(n));
+    const absentes = ['Équipement', 'Œuvres et lames', 'Compagnons de lumière', 'Les degrés du mal', 'Valeurs et attributs', 'Postures'].filter(n => !pages.includes(n)), la = ['Reprendre', 'Compagnons', 'Besace', 'Recueil', 'Aide du jeu'].filter(n => pages.includes(n));
     si(la.length === 5 && absentes.length >= 4, `la halte, au début du premier récit : le groupe, la besace, le Recueil, l'aide ; pas encore ${absentes.join(', ')}`, `la halte : ${JSON.stringify(pages)}`);
     // de combat en combat : les Vertus, puis la Garde et la Niyya, puis la besace — une à la fois, la précédente ayant resservi
     const petit = await p.evaluate(() => { const W = window.ISNAD.world, E = W.saga.enemies; W.foes.forEach(f => { f.done = true; }); /* les égrégores de la carte sont écartés : seuls comptent les combats que l'outil lance */ return Object.keys(E).find(k => E[k].tier === 'minion' && !E[k].racine); });
@@ -138,7 +138,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     await p.evaluate(() => { window.ISNAD.battle.start({ group: ['notif'], bg: 'cite' }); });
     for (let i = 0; i < 80 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mlist.main .mi'))); i++) { await T.entree(); await p.waitForTimeout(170); }
     const c = await p.evaluate(() => ({ commandes: [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(b => !b.hidden && getComputedStyle(b).display !== 'none').length, niyya: document.querySelectorAll('#battle .cmd .nb').length }));
-    si(!d.lecons && d.dits.some(t => /parler/.test(t) && /halte/i.test(t)) && ['Équipement', 'Œuvres et lames', 'Organigramme du mal', 'Valeurs et attributs', 'Piliers'].every(n => pages.includes(n)) && c.commandes === 5 && c.niyya === 2,
+    si(!d.lecons && d.dits.some(t => /parler/.test(t) && /halte/i.test(t)) && ['Équipement', 'Œuvres et lames', 'Les degrés du mal', 'Valeurs et attributs', 'Piliers'].every(n => pages.includes(n)) && c.commandes === 5 && c.niyya === 2,
       'une partie d’avant (sans `lecons`) : la ligne d’accueil de toujours, toutes les pages de la halte, les cinq commandes et la Niyya', `une partie d'avant : ${JSON.stringify({ d, pages, c })}`);
     await p.context().close();
   }

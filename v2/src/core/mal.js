@@ -103,7 +103,7 @@
   M.apprendre = function (ids) {
     const sv = I.save.data, L = (ids || ['iblis', 'souffleurs', 'echelle', 'enracinement']).filter(id => !sv.codex.includes('coeur/' + id) && (C0().codex || []).some(c => c.id === id));
     if (!L.length) return; L.forEach(id => sv.codex.push('coeur/' + id));
-    S.toast(L.length > 1 ? I.t('Recueil : <b>{n} entrées</b> sur l’organigramme du mal', { n: L.length }) : I.t('Recueil : <b>{titre}</b>', { titre: I.esc(C0().codex.find(c => c.id === L[0]).title) }));
+    S.toast(L.length > 1 ? I.t('Recueil : <b>{n} entrées</b> sur les degrés du mal', { n: L.length }) : I.t('Recueil : <b>{titre}</b>', { titre: I.esc(C0().codex.find(c => c.id === L[0]).title) }));
   };
 
   /* ----- dessin : l'image d'un égrégore, gardée en mémoire (les deux premiers rangs n'ont pas d'image) ----- */
@@ -142,8 +142,8 @@
     const RE = R.egregores || {}, RI = R.idoles || {};
     const maillons = `<div class="rg bas r-epoques"><details><summary><span class="nm"><b>${I.esc(RE.name || '')}</b> <em>${I.esc(RE.sous || '')}</em></span></summary><p>${I.fmt(RE.texte || '')}</p></details><p class="rep">▸ ${I.fmt(RE.reponse || '')}</p>` +
       `<details><summary><span class="nm"><b>${I.esc(RI.name || '')}</b> <em>${I.esc(RI.sous || '')}</em></span></summary><p>${I.fmt(RI.texte || '')}</p></details><p class="rep">▸ ${I.fmt(RI.reponse || '')}</p>` +
-      `<p class="src">${I.t('Égrégores rencontrés : <b>{nE}</b> / {tE} · idoles tombées : <b>{nI}</b> / {tI}. Un trait d’or : déjà rencontré. Chaque idole a sa jauge d’enracinement.', { nE, tE, nI, tI })}</p><div class="eps">${eps}</div></div>`;
-    return `<h3>${I.esc(T.titre || I.t('Organigramme du mal'))}</h3><p class="src">${I.fmt(T.chapeau || '')}</p><div class="orga vue">` +
+      `<p class="src">${I.t('Chimères rencontrées : <b>{nE}</b> / {tE} · idoles tombées : <b>{nI}</b> / {tI}. Un trait d’or : déjà rencontré. Chaque idole a sa jauge d’enracinement.', { nE, tE, nI, tI })}</p><div class="eps">${eps}</div></div>`;
+    return `<h3>${I.esc(T.titre || I.t('Les degrés du mal'))}</h3><p class="src">${I.fmt(T.chapeau || '')}</p><div class="orga vue">` +
       haut('iblis') + lien(I.t('à son service'), true) + haut('souffleurs') + lien(I.t('souffle'), true) + haut('coeur') +
       `<p class="couture">${I.fmt(T.couture || '')}</p>` +
       bas('racines', racines) + lien(I.t('reprise par beaucoup de cœurs, puis enracinée')) + maillons +
@@ -166,10 +166,10 @@
         const n = tombee !== undefined ? tombee : M.niveau(s, ch), etat = tombee !== undefined ? I.t('idole tombée') : ici(ch) ? I.t('devant toi') : I.t('idole rencontrée');
         const rc = [].concat(e.racine || []).map(r => puce(r, null, defDe(null, r) && defDe(null, r).vice ? 'vice' : 'noir')).join('');
         h += `<div class="rg bas"><p class="src">${I.esc(ch.title)}</p><p class="nm"><img class="ido" alt="" src="${M.url(id, s)}"><b>${I.esc(e.name)}</b> ${traits(n)} <small>${etat}</small></p>` +
-          (rc ? `<p class="lg"><span class="et">${I.t('racine')}</span>${rc}</p>` : '') + (eg ? `<p class="lg"><span class="et">${I.t('égrégores')}</span>${eg}</p>` : '') + `<p class="rep">▸ ${I.fmt(((T.rangs || {}).idoles || {}).reponse || '')}</p></div>`;
+          (rc ? `<p class="lg"><span class="et">${I.t('racine')}</span>${rc}</p>` : '') + (eg ? `<p class="lg"><span class="et">${I.t('chimères')}</span>${eg}</p>` : '') + `<p class="rep">▸ ${I.fmt(((T.rangs || {}).idoles || {}).reponse || '')}</p></div>`;
       });
       if (!L.idoles.length && ch.vice && (eg || ici(ch))) { rien = false; const m = defDe(null, ch.vice);
-        h += `<div class="rg bas"><p class="src">${I.esc(ch.title)}</p>${eg ? `<p class="lg"><span class="et">${I.t('égrégore')}</span>${eg}</p>` : ''}<p class="lg"><span class="et">${I.t('derrière lui')}</span>${puce(ch.vice, null, 'vice')}</p><p class="rep">▸ ${I.esc(m ? I.t('Le mal du cœur : par l’œuvre, qui forge sa lame.') : '')}</p></div>`; }
+        h += `<div class="rg bas"><p class="src">${I.esc(ch.title)}</p>${eg ? `<p class="lg"><span class="et">${I.t('chimère')}</span>${eg}</p>` : ''}<p class="lg"><span class="et">${I.t('derrière elle')}</span>${puce(ch.vice, null, 'vice')}</p><p class="rep">▸ ${I.esc(m ? I.t('Le mal du cœur : par l’œuvre, qui forge sa lame.') : '')}</p></div>`; }
     });
     return h + '</div>' + (rien ? '<p>' + I.t('Aucune idole rencontrée ici pour l’instant.') + '</p>' : '');
   };

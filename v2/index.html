@@ -387,7 +387,7 @@ body.portrait #hud .enig { display: block; background: var(--panel); }
 .orga .eps { display: grid; margin-top: .35em; }
 .orga .ep { display: grid; grid-template-columns: 10.6em 1fr; gap: .15em .8em; align-items: start; padding: .35em 0; border-top: 1px solid rgba(255, 255, 255, .09); }
 .orga .epn { color: var(--gold); font-family: var(--f-display); letter-spacing: .05em; font-size: .8em; margin: .2em 0 0; grid-row: span 2; white-space: nowrap; }
-.orga .epe::before, .orga .epi::before { color: var(--dim); font-size: .72em; min-width: 5.2em; } .orga .epe::before { content: 'égrégores'; } .orga .epi::before { content: 'idoles'; }
+.orga .epe::before, .orga .epi::before { color: var(--dim); font-size: .72em; min-width: 5.2em; } .orga .epe::before { content: 'chimères'; } .orga .epi::before { content: 'idoles'; }
 .orga .epe, .orga .epi { display: flex; flex-wrap: wrap; gap: .25em .75em; align-items: center; }
 .orga .tu { display: inline-flex; align-items: center; gap: .25em; font-size: .78em; color: var(--dim); opacity: .78; } .orga .tu img { width: 1.9em; height: 1.9em; image-rendering: pixelated; border-bottom: 2px solid transparent; } .orga .tu i { font-style: normal; }
 .orga .tu.vu { opacity: 1; color: var(--sand); } .orga .tu.vu img { border-bottom-color: var(--gold); }
@@ -619,7 +619,7 @@ html[data-lang="ar"] #card.quote blockquote::before { content: "« "; } html[dat
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
+window.ISNAD_VERSION = "2.05 · 2026-11-18 13:04 UTC · c25a6b4+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -1003,7 +1003,7 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
     pierre: { name: 'Pierre', g: '◆' }, grain: { name: 'Grain', g: '∴' }, laine: { name: 'Laine', g: '≋' }
   };
   D.PIECES = {
-    tranchee:  { name: 'Tranchée', cost: {}, tile: 'trench', group: 'Défendre', desc: 'Les égrégores qui rôdent ne la franchissent pas. Six segments gardent un lieu.' },
+    tranchee:  { name: 'Tranchée', cost: {}, tile: 'trench', group: 'Défendre', desc: 'Les chimères qui rôdent ne la franchissent pas. Six segments gardent un lieu.' },
     puits:     { name: 'Puits', cost: { pierre: 4 }, obj: 'well', solid: true, group: 'Eau et vivres', desc: 'Donne de l’eau. Palmiers, champs et troupeaux en ont besoin à moins de six pas.' },
     palmier:   { name: 'Palmier', cost: { eau: 1 }, obj: 'palm', solid: true, near: true, group: 'Eau et vivres', desc: 'Un puits et trois palmiers font une oasis. Donne des dattes à chaque chapitre.' },
     champ:     { name: 'Champ d’orge', cost: { eau: 1, grain: 1 }, tile: 'field', near: true, group: 'Eau et vivres', desc: 'Donne du grain et du pain à chaque chapitre.' },
@@ -4665,7 +4665,7 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
         // un égrégore le tient (rencontres de la Cité-Miroir), cela se combat.
         if (I.mal.estIdee(N)) await I.mal.dissiper(N, P);
         else {
-          await card('title parley noir', `<p class="small">${I.t('Un égrégore le tient')}</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">${I.t('On ne le combat pas contre lui, mais pour lui')}</p><div class="rule"></div><div class="hint">▼</div>`);
+          await card('title parley noir', `<p class="small">${I.t('Une chimère le tient')}</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">${I.t('On ne le combat pas contre lui, mais pour lui')}</p><div class="rule"></div><div class="hint">▼</div>`);
           await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || I.t('Il parle plus fort que toi. Dissipe-le.') });
           I.mal.note('n', P.title + '|' + N.name, -1);
         }
@@ -6613,7 +6613,7 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
   M.apprendre = function (ids) {
     const sv = I.save.data, L = (ids || ['iblis', 'souffleurs', 'echelle', 'enracinement']).filter(id => !sv.codex.includes('coeur/' + id) && (C0().codex || []).some(c => c.id === id));
     if (!L.length) return; L.forEach(id => sv.codex.push('coeur/' + id));
-    S.toast(L.length > 1 ? I.t('Recueil : <b>{n} entrées</b> sur l’organigramme du mal', { n: L.length }) : I.t('Recueil : <b>{titre}</b>', { titre: I.esc(C0().codex.find(c => c.id === L[0]).title) }));
+    S.toast(L.length > 1 ? I.t('Recueil : <b>{n} entrées</b> sur les degrés du mal', { n: L.length }) : I.t('Recueil : <b>{titre}</b>', { titre: I.esc(C0().codex.find(c => c.id === L[0]).title) }));
   };
 
   /* ----- dessin : l'image d'un égrégore, gardée en mémoire (les deux premiers rangs n'ont pas d'image) ----- */
@@ -6652,8 +6652,8 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
     const RE = R.egregores || {}, RI = R.idoles || {};
     const maillons = `<div class="rg bas r-epoques"><details><summary><span class="nm"><b>${I.esc(RE.name || '')}</b> <em>${I.esc(RE.sous || '')}</em></span></summary><p>${I.fmt(RE.texte || '')}</p></details><p class="rep">▸ ${I.fmt(RE.reponse || '')}</p>` +
       `<details><summary><span class="nm"><b>${I.esc(RI.name || '')}</b> <em>${I.esc(RI.sous || '')}</em></span></summary><p>${I.fmt(RI.texte || '')}</p></details><p class="rep">▸ ${I.fmt(RI.reponse || '')}</p>` +
-      `<p class="src">${I.t('Égrégores rencontrés : <b>{nE}</b> / {tE} · idoles tombées : <b>{nI}</b> / {tI}. Un trait d’or : déjà rencontré. Chaque idole a sa jauge d’enracinement.', { nE, tE, nI, tI })}</p><div class="eps">${eps}</div></div>`;
-    return `<h3>${I.esc(T.titre || I.t('Organigramme du mal'))}</h3><p class="src">${I.fmt(T.chapeau || '')}</p><div class="orga vue">` +
+      `<p class="src">${I.t('Chimères rencontrées : <b>{nE}</b> / {tE} · idoles tombées : <b>{nI}</b> / {tI}. Un trait d’or : déjà rencontré. Chaque idole a sa jauge d’enracinement.', { nE, tE, nI, tI })}</p><div class="eps">${eps}</div></div>`;
+    return `<h3>${I.esc(T.titre || I.t('Les degrés du mal'))}</h3><p class="src">${I.fmt(T.chapeau || '')}</p><div class="orga vue">` +
       haut('iblis') + lien(I.t('à son service'), true) + haut('souffleurs') + lien(I.t('souffle'), true) + haut('coeur') +
       `<p class="couture">${I.fmt(T.couture || '')}</p>` +
       bas('racines', racines) + lien(I.t('reprise par beaucoup de cœurs, puis enracinée')) + maillons +
@@ -6676,10 +6676,10 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
         const n = tombee !== undefined ? tombee : M.niveau(s, ch), etat = tombee !== undefined ? I.t('idole tombée') : ici(ch) ? I.t('devant toi') : I.t('idole rencontrée');
         const rc = [].concat(e.racine || []).map(r => puce(r, null, defDe(null, r) && defDe(null, r).vice ? 'vice' : 'noir')).join('');
         h += `<div class="rg bas"><p class="src">${I.esc(ch.title)}</p><p class="nm"><img class="ido" alt="" src="${M.url(id, s)}"><b>${I.esc(e.name)}</b> ${traits(n)} <small>${etat}</small></p>` +
-          (rc ? `<p class="lg"><span class="et">${I.t('racine')}</span>${rc}</p>` : '') + (eg ? `<p class="lg"><span class="et">${I.t('égrégores')}</span>${eg}</p>` : '') + `<p class="rep">▸ ${I.fmt(((T.rangs || {}).idoles || {}).reponse || '')}</p></div>`;
+          (rc ? `<p class="lg"><span class="et">${I.t('racine')}</span>${rc}</p>` : '') + (eg ? `<p class="lg"><span class="et">${I.t('chimères')}</span>${eg}</p>` : '') + `<p class="rep">▸ ${I.fmt(((T.rangs || {}).idoles || {}).reponse || '')}</p></div>`;
       });
       if (!L.idoles.length && ch.vice && (eg || ici(ch))) { rien = false; const m = defDe(null, ch.vice);
-        h += `<div class="rg bas"><p class="src">${I.esc(ch.title)}</p>${eg ? `<p class="lg"><span class="et">${I.t('égrégore')}</span>${eg}</p>` : ''}<p class="lg"><span class="et">${I.t('derrière lui')}</span>${puce(ch.vice, null, 'vice')}</p><p class="rep">▸ ${I.esc(m ? I.t('Le mal du cœur : par l’œuvre, qui forge sa lame.') : '')}</p></div>`; }
+        h += `<div class="rg bas"><p class="src">${I.esc(ch.title)}</p>${eg ? `<p class="lg"><span class="et">${I.t('chimère')}</span>${eg}</p>` : ''}<p class="lg"><span class="et">${I.t('derrière elle')}</span>${puce(ch.vice, null, 'vice')}</p><p class="rep">▸ ${I.esc(m ? I.t('Le mal du cœur : par l’œuvre, qui forge sa lame.') : '')}</p></div>`; }
     });
     return h + '</div>' + (rien ? '<p>' + I.t('Aucune idole rencontrée ici pour l’instant.') + '</p>' : '');
   };
@@ -6844,7 +6844,7 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
   const pct = v => (v > 0 ? '+' : '') + Math.round(v * 100) + ' %';
   Po.dit = function (k) { const P = D.POSTURES[k], L = [];
     if (P.atk) L.push(I.t('Force {pct}', { pct: pct(P.atk) })); if (P.mag) L.push(I.t('Esprit {pct}', { pct: pct(P.mag) })); if (P.soin) L.push(I.t('soins {pct}', { pct: pct(P.soin) }));
-    if (P.niyya) L.push(I.t('Niyya +{n} au départ', { n: P.niyya })); if (P.sakina) L.push(I.t('Sakîna +{n} au départ', { n: P.sakina })); if (P.faille) L.push(I.t('une faille de chaque égrégore connue d’emblée')); if (P.menace) L.push(I.t('il attire plus souvent les coups'));
+    if (P.niyya) L.push(I.t('Niyya +{n} au départ', { n: P.niyya })); if (P.sakina) L.push(I.t('Sakîna +{n} au départ', { n: P.sakina })); if (P.faille) L.push(I.t('une faille de chaque chimère connue d’emblée')); if (P.menace) L.push(I.t('il attire plus souvent les coups'));
     return L.join(' · '); };
   // quand un choix s'ouvre pour la première fois à quelqu'un du groupe : la leçon, une fois (le besoin d'abord : avant cela, rien à choisir)
   Po.veille = function () {
@@ -7718,7 +7718,7 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
     }
     W.persistHeroes();
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
-    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? I.t('La lame a tranché') : I.t('Sans sa lame, le mal recule')) : C.opts.noir ? I.t('On ne l’a pas combattu contre lui, mais pour lui') : C.opts.boss ? I.t('L’idole se brise') : I.t('L’emprise est brisée')}</p><h1>${maux.length ? (maux.every(e => e.cut) ? I.t('Tranché') : maux.some(e => e.cut) ? I.t('Tranché et repoussé') : I.t('Repoussé')) : C.opts.noir ? I.t('L’égrégore lâche prise') : I.t('Dévoilement')}</h1><ul><li>${I.t('Sagesse acquise : <b>+{n}</b>', { n: xp })}</li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
+    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? I.t('La lame a tranché') : I.t('Sans sa lame, le mal recule')) : C.opts.noir ? I.t('On ne l’a pas combattu contre lui, mais pour lui') : C.opts.boss ? I.t('L’idole se brise') : I.t('L’emprise est brisée')}</p><h1>${maux.length ? (maux.every(e => e.cut) ? I.t('Tranché') : maux.some(e => e.cut) ? I.t('Tranché et repoussé') : I.t('Repoussé')) : C.opts.noir ? I.t('La chimère lâche prise') : I.t('Dévoilement')}</h1><ul><li>${I.t('Sagesse acquise : <b>+{n}</b>', { n: xp })}</li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
   // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue dans le
   // chapitre, le groupe est relevé, une fois par tentative. On ne montre que de la lumière : ni figure, ni nom, ni nombre.
@@ -8487,7 +8487,7 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
     pied(I.t('Ton personnage'), () => { close(); U.personnage(() => U.showChain()); });
     pied(I.t('Recueil'), () => { close(); U.pause('codex', () => U.showChain()); });
     pied(I.t('Aide'), () => { close(); U.pause('aide', () => U.showChain()); });
-    pied(I.t('Organigramme'), () => { close(); U.pause('mal', () => U.showChain()); });
+    pied(I.t('Les degrés du mal'), () => { close(); U.pause('mal', () => U.showChain()); });
     pied(I.t('Écran-titre'), () => { close(); U.showTitle(); });
     foot.appendChild(I.el('span', 'ver', window.ISNAD_VERSION ? I.t('version {v}', { v: window.ISNAD_VERSION }) : I.t('version de travail')));
     screen('#chain', true); $('#chain').scrollTop = 0;
@@ -8574,7 +8574,7 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
     await S.card('credits', `<h1>ISNAD</h1><p class="small">${I.t('Chroniques des Compagnons')}</p>
       <p>${I.t('Cette œuvre est une fiction interactive inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles présentées en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun Compagnon n’a de visage : un voile de lumière en tient lieu.')}</p>
       <p>${I.t("<b>Sources principales.</b> Ibn Hishâm, <em>as-Sîra an-Nabawiyya</em> · at-Tabarî, <em>Târîkh ar-Rusul wa-l-Mulûk</em> · Ibn Sa'd, <em>at-Tabaqât al-Kubrâ</em> · Ibn Kathîr, <em>al-Bidâya wa-n-Nihâya</em> · al-Bukhârî et Muslim, <em>as-Sahîh</em> · Ibn 'Asâkir, <em>Târîkh Dimashq</em>.")}</p>
-      <p>${I.t('<b>Noosphère et égrégore.</b> « Noosphère » vient de Vernadsky et Teilhard de Chardin ; « égrégore » désigne une forme-pensée collective. Le jeu s’en sert comme d’une image pour parler des valeurs partagées et des idoles que les hommes se fabriquent.')}</p>
+      <p>${I.t('<b>Noosphère et chimère.</b> « Noosphère » vient de Vernadsky et Teilhard de Chardin ; « chimère » désigne ici ce que les cœurs fabriquent ensemble et qui, approché, se révèle vide. Le jeu s’en sert comme d’une image pour parler des idoles que les hommes se fabriquent.')}</p>
       <p>${I.t('<b>Les veillées de la Citadelle</b> et <b>les rencontres de la Cité-Miroir</b> sont une fiction, comme les sept lames, les sept maux du cœur et les compagnons de lumière : des images pour parler de ce que les œuvres font au cœur. La musique est originale.')}</p>\n      <p>${I.t('Qu’Allah agrée les Compagnons. Toute erreur est celle des auteurs ; vérifiez auprès des savants et des sources.')}</p>
       <p class="small">${I.t('Fidélité à la Chaîne : {ok} / {total}', { ok: I.save.data.isnad.ok, total: I.save.data.isnad.total })}</p><div class="hint">▼</div>`);
   };
@@ -8618,7 +8618,7 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
       if (page('oeuvres')) items.push({ label: I.t('Œuvres et lames'), fn() {}, show: () => I.oeuvres.paneOeuvres() });
       if (page('animaux')) items.push({ label: I.t('Compagnons de lumière'), fn: betes, show: () => I.oeuvres.paneAnimaux() });
       items.push({ cat: I.t('Le savoir') }, { label: I.t('Recueil'), fn: codex, show: () => `<h3>${I.t('Le Recueil')}</h3><p>${I.t('Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère.')} ${I.t('{n} entrée pour l’instant.¦{n} entrées pour l’instant.', { n: sv.codex.length })} ${I.t('Chaque savoir peut ouvrir un argument dans un pourparler.')}</p>` },
-        ...(page('mal') ? [{ label: I.t('Organigramme du mal'), fn: mal, show: () => I.mal.paneVue() }] : []),
+        ...(page('mal') ? [{ label: I.t('Les degrés du mal'), fn: mal, show: () => I.mal.paneVue() }] : []),
         ...(page('valeurs') ? [{ label: I.t('Valeurs et attributs'), fn: valeurs, show: () => I.valeurs.paneVue() }] : []),
         { label: I.t('Aide du jeu'), fn: aide, show: () => '<h3>' + I.t('Aide du jeu') + '</h3><p>' + I.t('Les règles, thème par thème : {themes}.', { themes: U.AIDE.map(a => I.t(a[0]).toLowerCase()).join(', ') }) + '</p>' });
       items.push({ cat: I.t('Réglages') },
@@ -8738,12 +8738,12 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
     // l'organigramme du mal : la vue d'ensemble, puis les idoles rencontrées, maillon par maillon
     const mal = () => {
       // l'organigramme d'abord ; le détail de chaque maillon est derrière une seule entrée, pour que la page reste en vue au téléphone
-      const Ml = I.mal, back = mode === 'mal' ? close : root, items = [{ label: I.t('◂ Retour'), fn: back, show: () => Ml.paneVue() }, { label: I.t('L’organigramme'), fn() {}, show: () => Ml.paneVue() }];
-      const maillons = () => { const L = [{ label: I.t('◂ L’organigramme'), fn: () => mal(), show: () => Ml.paneVue() }]; Ml.epoques().forEach(s => L.push({ label: I.esc(Ml.nomEpoque(s)), fn() {}, show: () => Ml.paneEpoque(s) }));
-        $('#menu h2').textContent = I.t('Organigramme du mal · les maillons'); build(L, { onCancel: () => mal(), start: 1 }); };
+      const Ml = I.mal, back = mode === 'mal' ? close : root, items = [{ label: I.t('◂ Retour'), fn: back, show: () => Ml.paneVue() }, { label: I.t('Les degrés'), fn() {}, show: () => Ml.paneVue() }];
+      const maillons = () => { const L = [{ label: I.t('◂ Les degrés'), fn: () => mal(), show: () => Ml.paneVue() }]; Ml.epoques().forEach(s => L.push({ label: I.esc(Ml.nomEpoque(s)), fn() {}, show: () => Ml.paneEpoque(s) }));
+        $('#menu h2').textContent = I.t('Les degrés du mal · les maillons'); build(L, { onCancel: () => mal(), start: 1 }); };
       items.push({ label: I.t('Maillon par maillon ▸'), fn: maillons, show: () => Ml.paneEpoque(Ml.epoques().find(s => s === W.saga) || Ml.epoques()[0]) });
       if (mode !== 'mal') items.push({ cat: I.t('Du côté du bien') }, { label: I.t('Valeurs et attributs'), fn: valeurs, show: () => I.valeurs.paneVue() });
-      Ml.apprendre(); $('#menu h2').textContent = I.t('Organigramme du mal');
+      Ml.apprendre(); $('#menu h2').textContent = I.t('Les degrés du mal');
       build(items, { onCancel: back, start: 1 });
     };
     screen('#menu', true); if (mode === 'prepa') prepa(); else if (mode === 'codex') codex(); else if (mode === 'valeurs') valeurs(); else if (mode === 'mal') mal(); else if (mode === 'aide') aide(); else if (mode === 'equip') equip(); else if (mode === 'carte' && I.scene === W && W.map) carte(); else root();
@@ -8758,17 +8758,17 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
   /* ---------- l'aide du jeu, thème par thème ---------- */
   U.AIDE = [
     [I.T('Se déplacer, agir'), I.T('<p><b>Au doigt ou à la souris.</b> Touche un endroit : le héros s’y rend. Garde le doigt posé : il te suit. Touche un personnage pour lui parler ; touche un coffre, une natte, un palmier, un rocher ou un puits pour t’en servir.</p><p><b>Au clavier.</b> <kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : marcher, naviguer · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : halte, retour · <kbd>H</kbd> : que faire ? · <kbd>B</kbd> : bâtir.</p><p>Le bouton <b>?</b> dit toujours ce qu’il y a à faire, dans quelle direction, et peut montrer le chemin ou t’y conduire.</p><p><b>La carte.</b> La mini-carte, en haut de l’écran, montre le lieu et ta position. Touche-la, ou ouvre <b>Carte</b> dans la halte (touche <kbd>C</kbd>) : le lieu entier, l’objectif, la natte, les lieux nommés.</p><p><b>Qui est qui.</b> Chaque personnage a sa coiffe, son manteau et son attribut. À l’arrêt, le nom de ceux qui t’entourent s’affiche au-dessus d’eux.</p>')],
-    [I.T('Combat'), I.T('<p>On n’affronte jamais des personnes, seulement des <em>égrégores</em> : les idoles que les cœurs fabriquent ensemble. Chaque égrégore est protégé par des <b>voiles</b> (⛊). Frappe-le avec la <b>vertu</b> qui est sa faille pour retirer un voile ; à zéro, il est <b>dévoilé</b> : il perd son tour et subit bien plus.</p><p><b>Niyya</b> (l’intention) : un point par tour ; dépense-en jusqu’à trois (◂ ▸) pour multiplier les coups ou renforcer une vertu. <b>Sakîna</b> : la jauge dorée ; pleine, elle ouvre l’acte ultime du Compagnon.</p>')],
+    [I.T('Combat'), I.T('<p>On n’affronte jamais des personnes, seulement des <em>chimères</em> : les idoles que les cœurs fabriquent ensemble. Chaque chimère est protégée par des <b>voiles</b> (⛊). Frappe-la avec la <b>vertu</b> qui est sa faille pour retirer un voile ; à zéro, elle est <b>dévoilée</b> : elle perd son tour et subit bien plus.</p><p><b>Niyya</b> (l’intention) : un point par tour ; dépense-en jusqu’à trois (◂ ▸) pour multiplier les coups ou renforcer une vertu. <b>Sakîna</b> : la jauge dorée ; pleine, elle ouvre l’acte ultime du Compagnon.</p>')],
     [I.T('La parole avant le sabre'), I.T('<p>Un <b>pourparler</b> se gagne manche après manche : chaque argument fait monter ou baisser la confiance. Les meilleurs demandent un <b>savoir</b> (✧) appris d’un savant, d’un feuillet, d’un témoin. Avoir <b>prié</b> dans le chapitre donne la sérénité : +1 de confiance. Si la parole échoue, le récit continue, mais il en coûte.</p>')],
     [I.T('Prier, se reposer, reprendre'), I.T('<p>La natte d’une mosquée, au cœur de l’étoile à huit branches : on y <b>prie</b>, et le groupe s’y <b>repose</b>. Constance et Souffle reviennent à 100 %, la Sakîna descend. On y accomplit aussi les œuvres du jour.</p><p><b>La partie se garde toute seule</b>, à chaque objectif atteint et toutes les quelques secondes en promenade. Tu peux fermer la page : « Continuer », sur l’écran-titre, te ramène là où tu étais. Si le jeu se bloquait, recharge la page et continue.</p><p>Sur la natte, ou depuis l’écran de la Chaîne, on peut en plus <b>garder une copie</b> de la partie dans l’un des trois emplacements : utile avant un choix que l’on voudrait pouvoir rejouer.</p>')],
     [I.T('Les étoiles'), I.T('<p>On s’oriente au ciel. Le cadran montre huit caps, nommés par l’étoile qui s’y lève ou s’y couche : <b>al-Jady</b> (la Polaire) au nord, <b>Suhayl</b> au sud, <b>an-Nasr at-Tâ’ir</b> à l’est et à l’ouest, <b>al-’Ayyûq</b> et <b>al-’Aqrab</b> entre eux. L’étoile qui brille est celle de ton objectif ; au bord de l’écran, elle te précède.</p>')],
     [I.T('Caravanes'), I.T('<p>Aux ballots du souk ou du camp, on vend, on achète, et l’on confie une cargaison à une caravane : elle revient au chapitre suivant avec son gain, ou bien des hommes rentrent à pied. Une route est plus sûre quand la justice est rendue, que des pactes sont noués et que des méharistes la gardent. Si elle est pillée, on lève des renforts, on parle d’abord, et l’on rend à chacun ce qui lui revient.</p>')],
-    [I.T('Bâtir'), I.T('<p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose case par case, devant soi ou en touchant la case : tranchée qui arrête les égrégores, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>')],
+    [I.T('Bâtir'), I.T('<p>Touche <kbd>B</kbd> ou bouton ▦, à ciel ouvert. On récolte en s’adressant aux choses : un palmier donne de la <b>palme</b>, un rocher de la <b>pierre</b>, un puits ou une rive de l’<b>eau</b>, et l’eau pétrie donne du <b>pisé</b>. Puis on pose case par case, devant soi ou en touchant la case : tranchée qui arrête les chimères, puits, palmiers (un puits et trois palmiers font une oasis), champs, enclos de chèvres, de moutons, de chameaux, et les pièces d’une mosquée. Ce qui est bâti reste et rapporte à chaque chapitre. Sur une terre gagnée, un chantier s’ouvre : la mosquée achevée devient un lieu de prière et de sauvegarde.</p>')],
     [I.T('Équipement'), I.T('<p>Chaque compagnon a quatre emplacements : <b>main droite</b> (épée, lance, arc, dague, masse, bâton ou calame), <b>main gauche</b> (bouclier, ou un outil pour qui n’en porte pas), <b>tête</b> (turban, calotte ou casque) et <b>corps</b> (étoffe, cuir ou armure). Chaque rôle a ses pièces : un sage ne porte pas de cotte de mailles, un guerrier n’a que faire d’un calame.</p><p>Les pièces viennent des <b>coffres</b>, des <b>victoires</b> (toujours après une idole, parfois après un combat ordinaire) et de la <b>boutique d’équipement</b>, au comptoir : chaque lieu a ses artisans, et l’on n’y trouve pas la même chose à Médine, au camp ou dans une ville de Rûm. Elles vont dans une <b>réserve</b> commune à toute la Chaîne ; à la fin d’un maillon, ce que le groupe portait y retourne.</p><p>Dans la halte, <b>Équipement</b> montre ce que chaque pièce change avant de la choisir ; <b>Au mieux</b> habille tout le groupe d’un geste. Une lance perce la garde, une dague frappe parfois deux fois, un arc tire le premier, une masse étourdit, un bouclier pare, un casque évite d’être étourdi ; le fer protège mais ralentit.</p><p>Ce sont des objets ordinaires, sans relique ni inscription. Le fer aide à tenir : il ne remplace pas la provision du cœur.</p>')],
     [I.T('Les œuvres et la provision'), I.T('<p>Sur la natte d’une mosquée, on prie, et l’on accomplit les <b>œuvres du jour</b> : le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite ; parfois le pèlerinage. Trois par chapitre au plus, la prière en sus. Chacune ajoute à la <b>provision du cœur</b> (♥, cinq au plus).</p><p>Plus une épreuve est lourde, plus elle en demande : une idole pèse de 1 à 3 selon son enracinement, un mal du cœur 3. Qui s’y présente sans provision combat <b>le cœur lourd</b> : il frappe moins fort et reçoit davantage. Le bouton <b>?</b> annonce le poids de l’épreuve qui vient.</p><p>Un jour de <b>jeûne</b>, les vivres de la besace attendent le soir. L’aumône coûte des dirhams. Ces œuvres ne sont pas des sortilèges : le jeu traduit à sa façon ce qu’elles font au cœur.</p>')],
     [I.T('Lames et maux du cœur'), I.T('<p>Sept maux du cœur se tiennent derrière les idoles : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. On les rencontre à la fin de chaque rencontre de la Cité-Miroir, et tous ceux qui restent au dernier chapitre.</p><p>Une œuvre pratiquée forge une <b>lame</b> : trois jeûnes pour le Contentement, trois prières pour la Sincérité, trois aumônes pour la Largesse, trois études pour l’Ardeur, trois visites pour la Bienveillance, trois dhikr pour la Longanimité, un pèlerinage pour l’Humilité. Sans sa lame, un mal est seulement <b>repoussé</b> : il revient. Avec elle, il est <b>tranché</b>.</p><p>La page « Œuvres et lames » de la halte tient le compte.</p>')],
-    [I.T('À chaque mal sa réponse'), I.T('<p>L’<b>organigramme du mal</b> (halte, « Le savoir ») range ce que l’on rencontre et dit comment y répondre. À l’<b>idée noire</b>, qui pèse sur une personne : la parole, la pédagogie, la bienveillance. À l’<b>égrégore</b>, que beaucoup de cœurs nourrissent : le combat. À l’<b>idole</b>, enracinée : une bataille déclarée. On ne combat ni Iblîs ni ceux qui soufflent, et l’on ne s’en prend à aucun djinn : on répond à ce qui a été soufflé.</p><p>Chaque idole a une jauge d’<b>enracinement</b>, de ▮ à ▮▮▮▮▮. Un pourparler gagné, une idée noire dissipée du premier coup la font baisser ; une parole manquée, un acte que les transmetteurs n’ont pas rapporté la font monter. Déracinée, l’idole pèse moins sur la provision du cœur et garde un voile de moins ; enracinée, elle pèse davantage. La jauge se dit d’une idole, jamais d’une époque ni de ses gens.</p>')],
-    [I.T('Valeurs et attributs'), I.T('<p>Du côté du bien, on ne dit ni djinn, ni égrégore, ni idole : on dit des <b>Valeurs</b> et des <b>attributs</b>. Il y a sept Valeurs, une en face de chaque mal du cœur. L’<b>œuvre</b>, accomplie trois fois, forge la lame ; la lame <b>tranche</b> le mal ; la Valeur d’en face est alors gardée, et le jeu la marque d’un <b>badge</b>.</p><p>Quand une lame est forgée, l’œuvre rappelle aussi un <b>attribut divin</b>, nommé d’après le Coran, avec son verset. On ne possède pas un attribut : on le reconnaît. La page « Valeurs et attributs » de la halte les rassemble.</p>')],
+    [I.T('À chaque mal sa réponse'), I.T('<p>Les <b>degrés du mal</b> (halte, « Le savoir ») rangent ce que l’on rencontre et disent comment y répondre. À l’<b>idée noire</b>, qui pèse sur une personne : la parole, la pédagogie, la bienveillance. À la <b>chimère</b>, que beaucoup de cœurs nourrissent : le combat. À l’<b>idole</b>, enracinée : une bataille déclarée. On ne combat ni Iblîs ni ceux qui soufflent, et l’on ne s’en prend à aucun djinn : on répond à ce qui a été soufflé.</p><p>Chaque idole a une jauge d’<b>enracinement</b>, de ▮ à ▮▮▮▮▮. Un pourparler gagné, une idée noire dissipée du premier coup la font baisser ; une parole manquée, un acte que les transmetteurs n’ont pas rapporté la font monter. Déracinée, l’idole pèse moins sur la provision du cœur et garde un voile de moins ; enracinée, elle pèse davantage. La jauge se dit d’une idole, jamais d’une époque ni de ses gens.</p>')],
+    [I.T('Valeurs et attributs'), I.T('<p>Du côté du bien, on ne dit ni djinn, ni chimère, ni idole : on dit des <b>Valeurs</b> et des <b>attributs</b>. Il y a sept Valeurs, une en face de chaque mal du cœur. L’<b>œuvre</b>, accomplie trois fois, forge la lame ; la lame <b>tranche</b> le mal ; la Valeur d’en face est alors gardée, et le jeu la marque d’un <b>badge</b>.</p><p>Quand une lame est forgée, l’œuvre rappelle aussi un <b>attribut divin</b>, nommé d’après le Coran, avec son verset. On ne possède pas un attribut : on le reconnaît. La page « Valeurs et attributs » de la halte les rassemble.</p>')],
     [I.T('Descendre dans la noosphère'), I.T('<p>Trois moments ouvrent la noosphère à qui veut y descendre : <b>au sortir de la prière</b> sur la natte, <b>dans le dhikr</b>, et <b>en songe</b> (« S’endormir », sur la natte). Une descente par porte et par chapitre.</p><p>On y fait face à l’un de ses <b>maux du cœur</b> : ce que l’on appelle ses démons intérieurs. C’est le combat du <b>râwî</b>, seul ; ce n’est jamais celui d’un Compagnon. Avec la lame que l’œuvre a forgée, le mal est tranché et la Valeur gardée ; sans elle, il n’est que repoussé. Si le mal l’emporte, on remonte : rien n’est perdu.</p>')],
     [I.T('Le secours'), I.T('<p>Dans une <b>bataille déclarée</b> presque perdue, quand le dernier compagnon va tomber, le <b>secours</b> peut venir : le groupe est relevé, une fois. Il ne vient que si la <b>prière</b> a été tenue dans le chapitre, et l’on ne le commande pas.</p><p>Le jeu ne montre pas les anges, ne les nomme pas, ne les compte pas. Il cite ce que le Coran rapporte de Badr, et ne dit rien d’un autre jour.</p>')],
     [I.T('La bataille déclarée'), I.T('<p>Contre une <b>idole</b>, la bataille se <b>déclare</b>, et commence par une page de <b>préparation</b> : les hommes, le groupe, les armes et les boucliers, les vertus, la besace, le cœur. Elle signale ce qui manque sans rien bloquer, et l’on peut encore s’y équiper. Le combat du groupe se joue comme d’habitude. À côté, un <b>champ</b> de cinq colonnes sur trois couloirs : nos rangs y font face aux <b>nuées</b> de l’idole. Ce ne sont jamais des hommes. Là où il n’y a pas d’armée à mener, la bataille se déclare sans rangs, et le carton dit pourquoi.</p><p>Après chaque tour de l’idole, et au plus tard tous les trois tours, les rangs exécutent leur ordre, puis les nuées avancent. Au tour d’un compagnon, <b>Ordonner</b> change l’ordre d’un rang, à la place de son action : tenir, avancer, charger (cavaliers), tirer (archers), glisser vers un autre couloir, se replier. Sur le champ, chaque rang porte son <b>numéro</b>, celui du menu ; trois points disent sa tenue, un chevron son ordre. Une nuée bordée par un autre rang est prise <b>de flanc</b> ; prise des deux côtés, <b>en tenaille</b>, elle se dissipe. Un rang qui atteint le pied de l’idole <b>découvre son flanc</b> : un voile tombe, une faille se révèle. Une nuée qui perce jusqu’au camp sème le doute.</p><p>Un rang éprouvé se replie et se reforme : personne ne tombe. Le nombre de rangs suit la mission et le niveau du groupe ; un allié gagné par la parole vient en <b>renfort</b> et prend place sur le champ. <b>Khâlid</b>, dont c’est le métier, ordonne sans perdre son tour, et connaît trois manœuvres d’école : la réserve mobile, l’enveloppement, le repli feint.</p>')],
@@ -8776,8 +8776,8 @@ window.ISNAD_VERSION = "2.05 · 2026-11-18 12:32 UTC · f4fb9e9+";
     [I.T('Compagnons de lumière'), I.T('<p>Des figures du ciel : le Renard des sables, l’Aigle, le Phénix, le Lion, la Gazelle. Elles rejoignent celui qui a résolu une énigme, forgé une lame, tranché un mal, tenu trois grandes épreuves le cœur prêt, gagné cinq pourparlers. Une seule t’accompagne au combat ; on la choisit dans la halte. Fiction : aucune n’appartient au récit historique.</p>')],
     [I.T('Si le jeu s’arrête'), I.T('<p>Si l’écran reste noir ou si plus rien ne répond pendant un quart de minute, un bouton <b>Reprendre</b> apparaît en bas de l’écran : il ramène au dernier objectif atteint, sans rien perdre de ce qui a été sauvegardé.</p><p>La partie se garde toute seule : en dernier recours, <b>recharge la page</b> puis choisis « Continuer ».</p><p>Dans la halte, <b>Diagnostic</b> donne la version du jeu, l’appareil, l’état du son et les incidents relevés : c’est ce qu’il faut transmettre pour qu’une panne soit comprise. Couper le son ou la musique (Réglages) suffit parfois à la contourner.</p>')],
     [I.T('Mener plusieurs récits'), I.T('<p>On n’est pas tenu de finir un récit pour en ouvrir un autre. Dans la halte, <b>Revenir en 2084</b> te ramène aux Archives basses, devant la Chaîne : le récit que tu quittes reste où tu le laisses, et tu le reprends là — même après en avoir suivi un autre. La Chaîne dit lesquels sont <b>en route</b>, et son grand bouton reprend le dernier quitté.</p><p>Pendant que tu suis un récit, la Cité-Miroir ne t’attend pas : en revenant, il arrive qu’il s’y soit passé quelque chose. Et dès la première veillée entendue, la Chaîne ouvre le chemin de <b>la Citadelle</b>, où Idris est né.</p>')],
-    [I.T('Frapper ce qui rôde'), I.T('<p>Dans un labyrinthe de la noosphère, de petits égrégores vont et viennent sur les ponts. <kbd>Entrée</kbd> — ou un toucher sur ce qui rôde — le <b>frappe</b>, avec l’arme que porte celui qui mène : un voile de moins, et il reste sonné un instant, le temps de passer. Sans voile, il se dissipe. S’il vous rejoint avant, c’est un combat ordinaire.</p><p>L’allonge, la cadence et le recul viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, un coup ne fait que sonner : seul, on ne vainc pas ce qui pèse sur le cœur.</p>')],
-    [I.T('Les postures'), I.T('<p>Devant l’épreuve, on peut se tenir de trois manières. <b>Le héros</b> s’expose : plus de Force, un point de Niyya d’emblée, et les coups viennent à lui. <b>Le sage</b> discerne : plus d’Esprit, et une faille de chaque égrégore connue d’emblée. <b>Le saint</b> s’efface : il soigne mieux et garde le calme.</p><p>Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent aux niveaux 4 et 7. On en change à la halte (<b>Postures</b>) ou en préparant une bataille. Aucune n’est au-dessus d’une autre : on prend une posture, on ne la possède pas.</p>')],
+    [I.T('Frapper ce qui rôde'), I.T('<p>Dans un labyrinthe de la noosphère, de petites chimères vont et viennent sur les ponts. <kbd>Entrée</kbd> — ou un toucher sur ce qui rôde — le <b>frappe</b>, avec l’arme que porte celui qui mène : un voile de moins, et il reste sonné un instant, le temps de passer. Sans voile, il se dissipe. S’il vous rejoint avant, c’est un combat ordinaire.</p><p>L’allonge, la cadence et le recul viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, un coup ne fait que sonner : seul, on ne vainc pas ce qui pèse sur le cœur.</p>')],
+    [I.T('Les postures'), I.T('<p>Devant l’épreuve, on peut se tenir de trois manières. <b>Le héros</b> s’expose : plus de Force, un point de Niyya d’emblée, et les coups viennent à lui. <b>Le sage</b> discerne : plus d’Esprit, et une faille de chaque chimère connue d’emblée. <b>Le saint</b> s’efface : il soigne mieux et garde le calme.</p><p>Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent aux niveaux 4 et 7. On en change à la halte (<b>Postures</b>) ou en préparant une bataille. Aucune n’est au-dessus d’une autre : on prend une posture, on ne la possède pas.</p>')],
     [I.T('Agrandir l’image et le texte'), I.T('<p>Pendant l’exploration, l’image s’agrandit autour de celui qui mène : on voit moins loin, mais en plus grand. Sur un écran tactile, pose <b>deux doigts</b> sur l’image et écarte-les ; rapproche-les pour revoir plus large. Le bouton <b>×</b>, en haut de la scène, fait le tour des grandeurs (× 1, × 1,5, × 2, × 3) ; à la souris, la molette. Le combat garde son cadrage.</p><p>La taille des caractères se règle à part : <b>Texte</b>, dans les réglages de la halte ou de l’écran-titre — normal, grand, très grand, géant. Sur un téléphone, le jeu commence en « grand », l’image agrandie une fois et demie.</p>')]
     [I.T('La Chaîne'), I.T('<p>Aux moments décisifs, plusieurs actes te sont proposés. Un seul est celui que les transmetteurs ont rapporté. Te tromper ne change pas l’Histoire : la chaîne vacille, puis te ramène à ce qui fut.</p>')]
   ];
@@ -9080,7 +9080,7 @@ ISNAD.registerSaga({
       look: { kind: 'cyber', robe: '#2a3048', head: '#1c2030', cloak: '#39424f' },
       skills: [
         { lvl: 1, id: 'tenir', name: 'Tenir bon', desc: 'Résister sans haine : frappe de Patience.', cost: 3, target: 'foe', el: 'sabr', pow: 1.4, anim: 'light' },
-        { lvl: 1, id: 'citer', name: 'Citer la source', desc: '« De qui le tiens-tu ? » Révèle les failles d’un égrégore.', cost: 2, target: 'foe', el: 'ilm', pow: 0.7, fx: [{ st: 'reveal' }], anim: 'glyph' },
+        { lvl: 1, id: 'citer', name: 'Citer la source', desc: '« De qui le tiens-tu ? » Révèle les failles d’une chimère.', cost: 2, target: 'foe', el: 'ilm', pow: 0.7, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 1, id: 'souffle', name: 'Reprendre souffle', desc: 'Rend de la Constance à un compagnon.', cost: 4, target: 'ally', heal: 1.0, anim: 'heal' },
         { lvl: 9, id: 'l_sidq', name: 'Parole du Véridique', desc: 'La Lumière d’Abû Bakr : dire vrai quand tout vacille.', cost: 6, target: 'foe', el: 'sidq', pow: 1.8, anim: 'pillar' },
         { lvl: 9, id: 'l_adl', name: 'Mesure du Fârûq', desc: 'La Lumière de ’Umar : la même balance pour tous.', cost: 7, target: 'foes', el: 'adl', pow: 1.15, anim: 'wave' },
@@ -9108,7 +9108,7 @@ ISNAD.registerSaga({
       skills: [
         { lvl: 1, id: 'couper', name: 'Couper le signal', desc: 'Frappe nette.', cost: 3, target: 'foe', el: 'fer', pow: 1.5, anim: 'slash' },
         { lvl: 1, id: 'debrancher', name: 'Débrancher', desc: 'Oser dire non : frappe de Courage, retire les renforts.', cost: 5, target: 'foe', el: 'shajaa', pow: 1.4, fx: [{ st: 'dispel' }], anim: 'burst' },
-        { lvl: 1, id: 'brouillage', name: 'Brouillage', desc: 'Ralentit tous les égrégores.', cost: 6, target: 'foes', el: 'fer', pow: 0.7, fx: [{ st: 'spd', v: -1 }], anim: 'wave' },
+        { lvl: 1, id: 'brouillage', name: 'Brouillage', desc: 'Ralentit toutes les chimères.', cost: 6, target: 'foes', el: 'fer', pow: 0.7, fx: [{ st: 'spd', v: -1 }], anim: 'wave' },
         { lvl: 9, id: 'front', name: 'Faire front', desc: 'Attire les coups et se renforce.', cost: 4, target: 'self', fx: [{ st: 'taunt', turns: 2 }, { st: 'def', v: 1 }], anim: 'guard' },
         { lvl: 9, id: 'aveu', name: 'L’Aveu', desc: 'Dire ce qu’il a fait : frappe de Véracité.', cost: 6, target: 'foe', el: 'sidq', pow: 1.7, anim: 'light' }
       ],
@@ -9120,7 +9120,7 @@ ISNAD.registerSaga({
     notif: { name: 'Notification', art: 'wisp', hue: 190, scale: 1, lvl: 1, tier: 'minion', weak: ['sabr'], veils: 2,
       skills: [{ w: 2, name: 'Rappel insistant', target: 'foe', el: 'fer', pow: 0.8, anim: 'dark' }],
       taunts: ['Regarde. Juste une seconde.', 'Tu as manqué quelque chose.'],
-      desc: 'Le plus petit des égrégores du Flux : une faim d’attention, sans corps ni mémoire. Elle se dissipe dès qu’on lui oppose la patience.' },
+      desc: 'La plus petite des chimères du Flux : une faim d’attention, sans corps ni mémoire. Elle se dissipe dès qu’on lui oppose la patience.' },
     tendance: { name: 'La Tendance', art: 'swarm', hue: 320, scale: 1, lvl: 8, tier: 'minion', weak: ['ilm', 'sabr'], veils: 2,
       skills: [{ w: 3, name: 'Défilement', target: 'foes', el: 'fer', pow: 0.55, fx: [{ st: 'spd', v: -1, chance: 0.35 }], anim: 'wave' }],
       taunts: ['Tout le monde regarde. Pas toi ?'],
@@ -9169,23 +9169,23 @@ ISNAD.registerSaga({
         { at: 0.15, say: 'Brise-moi. Ils me rallumeront demain sous un autre nom.', fx: [{ st: 'spd', v: 1 }] }
       ],
       taunts: ['Je ne commande pas. J’additionne.', 'Quarante et un millions de regards. Et le tien ?'],
-      desc: 'L’agrégateur d’égrégores : une machine qui donne un corps à tout ce que des millions de regards désirent ensemble. Il n’a rien inventé ; il a industrialisé la fabrique des idoles. Chacune des six Lumières est pour lui une faille.' }
+      desc: 'L’agrégateur de chimères : une machine qui donne un corps à tout ce que des millions de regards désirent ensemble. Il n’a rien inventé ; il a industrialisé la fabrique des idoles. Chacune des six Lumières est pour lui une faille.' }
   },
 
   codex: [
     { id: 'noosphere', cat: 'Noosphère', title: 'La noosphère', text: 'Du grec *noûs*, l’esprit. Le mot vient de Vladimir Vernadsky et de Pierre Teilhard de Chardin : la sphère de la pensée humaine, comme il y a une atmosphère et une biosphère. Dans ISNAD, c’est l’envers invisible de chaque lieu : ce que les hommes y pensent, y craignent et y désirent ensemble. C’est là que se livrent les combats.', src: 'Vernadsky, La Biosphère ; Teilhard de Chardin, Le Phénomène humain' },
-    { id: 'egregore', cat: 'Noosphère', title: 'L’égrégore', text: 'Une forme née de l’attention de beaucoup de cœurs tournés vers la même chose. Nourri d’une valeur, la véracité, la justice, la miséricorde, il éclaire ceux qui le portent. Nourri de peur, d’orgueil ou d’avidité, il se retourne contre eux. Le jeu emploie ce mot comme une image, non comme une doctrine.' },
+    { id: 'egregore', cat: 'Noosphère', title: 'La chimère', text: 'Ce que beaucoup de cœurs fabriquent ensemble, à force de regarder la même chose. De loin, elle semble avoir un corps ; approchée, elle se révèle vide. Faite de peur, d’orgueil ou d’avidité, elle se retourne contre ceux qui la nourrissent. Le jeu emploie ce mot comme une image, non comme une doctrine.' },
     { id: 'idole', cat: 'Noosphère', title: 'L’idole', text: 'Une chose fabriquée par les hommes, et qui finit par les commander. Celles de pierre ont été brisées ; celles de la noosphère reviennent sous d’autres noms : le Clan, l’Empire, le Héros, l’Or, la Rumeur, le Juge sans miséricorde. On ne détruit pas une idole par la haine. On la dévoile : on montre qu’elle est vide.' },
     { id: 'agregor', cat: 'Noosphère', title: 'L’AGRÉGOR', text: 'Le moteur de la Cité-Miroir. Il agrège l’attention de millions de regards et donne un corps à ce qu’ils désirent ensemble : une tendance, une marque, le culte d’une personne. Il ne ment pas et ne commande pas. Il additionne, plus vite que les cœurs ne peuvent juger.' },
     { id: 'isnad', cat: 'Parole', title: 'L’isnâd', text: 'La chaîne de transmission : « Untel m’a rapporté, d’après untel, qui l’a vu. » Des générations de savants ont vérifié chaque maillon, la mémoire et la probité de chaque transmetteur. On rapporte de ’Abdallâh ibn al-Mubârak : « L’isnâd fait partie de la religion ; sans lui, chacun dirait ce qu’il veut. »', src: 'Muslim, introduction du Sahîh' },
-    { id: 'lumieres', cat: 'Noosphère', title: 'Les six Lumières', text: 'Véracité (*sidq*), Justice (*’adl*), Courage (*shajâ’a*), Miséricorde (*rahma*), Savoir (*’ilm*), Patience (*sabr*). Chaque saga en rend une à Idris ; la sixième est celle de quiconque transmet. En combat, chacune est une vertu qui dévoile certains égrégores.' },
+    { id: 'lumieres', cat: 'Noosphère', title: 'Les six Lumières', text: 'Véracité (*sidq*), Justice (*’adl*), Courage (*shajâ’a*), Miséricorde (*rahma*), Savoir (*’ilm*), Patience (*sabr*). Chaque saga en rend une à Idris ; la sixième est celle de quiconque transmet. En combat, chacune est une vertu qui dévoile certaines chimères.' },
     { id: 'jour', cat: 'Événement', title: 'Le jour le plus sombre', text: 'Le Messager d’Allah ﷺ meurt à Médine un lundi de Rabî’ al-Awwal de l’an 11 de l’Hégire (juin 632). La communauté, bouleversée, doit décider en quelques heures de ce qu’elle devient. C’est ici que commence la Chaîne.', src: 'Ibn Hishâm, as-Sîra ; al-Bukhârî' },
     { id: 'piliers', cat: 'Noosphère', title: 'Les quatre piliers', text: 'Ce qui tient une cité debout ne se voit pas : la Prière, qui repose les cœurs et les range côte à côte ; le Savoir, qui ouvre ce que la force ne peut ouvrir ; la Justice, la même pour le puissant et pour le pauvre ; le Lien, la parole donnée et les pactes tenus. On rapporte que le Messager d’Allah ﷺ disait de la prière : « Ô Bilâl, repose-nous par elle. »', src: 'Abû Dâwûd, as-Sunan' },
     { id: 'parole', cat: 'Noosphère', title: 'La parole avant le sabre', text: 'Délégations, pactes, arbitrages, alliances : la plupart des crises de ce temps se sont dénouées, ou auraient pu l’être, par la parole. Dans ISNAD, un pourparler se gagne par la justesse des arguments, par le savoir appris en chemin et par la sérénité de qui a prié. Le combat ne vient qu’en dernier recours, et toujours contre une idole, jamais contre des personnes.' },
     { id: 'etoiles', cat: 'Lieu', title: 'S’orienter aux étoiles', text: 'Les Arabes du désert lisaient leur route au ciel, et le Coran le rappelle : « Et des points de repère ; et au moyen des étoiles ils se guident » (16:16, traduction du sens). *Al-Jady* (الجدي), la Polaire, ne bouge pas : elle donne le nord. *Suhayl* (سهيل), Canopus, marque le sud. Entre eux, on nomme un cap par l’étoile qui s’y lève ou s’y couche : *an-Nasr at-Tâ’ir* (Altaïr), *al-’Ayyûq* (Capella), *al-’Aqrab* (le Scorpion). On connaît aussi *ath-Thurayyâ* (les Pléiades), *ad-Dabarân*, *ash-Shi’râ* (Sirius), *Banât Na’sh* (la Grande Ourse) et *al-Farqadân*. Le cadran du jeu simplifie en huit caps une rose que les pilotes arabes de l’océan Indien décriront plus tard en trente-deux.', src: 'Coran 16:16 et 6:97 ; Ibn Qutayba, Kitâb al-Anwâ’ ; Ibn Mâjid, Kitâb al-Fawâ’id' },
-    { id: 'caravanes', cat: 'Événement', title: 'Les caravanes', text: 'La Mecque vivait de deux voyages, que le Coran nomme : celui de l’hiver, vers le Yémen, et celui de l’été, vers le Shâm (sourate 106). Abû Bakr était marchand d’étoffes, ’Uthmân et ’Abd ar-Rahmân ibn ’Awf de grands négociants. À Médine, un marché fut établi sans taxe. Dans le jeu, on confie une cargaison à une caravane : elle revient au chapitre suivant, plus sûrement si la justice est rendue, si des pactes sont noués et si des méharistes gardent la route.', src: 'Coran 106 ; Ibn Sa’d, at-Tabaqât' },
+    { id: 'caravanes', cat: 'Événement', title: 'Les caravanes', text: 'La Mecque vivait de deux voyages : le Coran nomme le voyage d’hiver et celui d’été (sourate 106) ; les commentateurs les situent au Yémen et au Shâm. Abû Bakr était marchand d’étoffes, ’Uthmân et ’Abd ar-Rahmân ibn ’Awf de grands négociants. À Médine, un marché fut établi sans taxe. Dans le jeu, on confie une cargaison à une caravane : elle revient au chapitre suivant, plus sûrement si la justice est rendue, si des pactes sont noués et si des méharistes gardent la route.', src: 'Coran 106 ; Ibn Sa’d, at-Tabaqât' },
     { id: 'routes_sures', cat: 'Parole', title: 'La route sûre', text: 'On rapporte du Messager d’Allah ﷺ, aux jours où les croyants étaient persécutés, cette promesse : un temps viendrait où le voyageur irait de San’â’ au Hadramawt sans craindre autre chose qu’Allah, et le loup pour ses brebis. La sûreté des routes est restée la mesure d’un gouvernement juste. Dans les veillées, le père du Caïd dit la même chose à sa manière : une cité se juge à ses routes.', src: 'al-Bukhârî, as-Sahîh (récit de Khabbâb ibn al-Aratt)' },
-    { id: 'razzia', cat: 'Noosphère', title: 'La razzia', text: 'Avant l’islam, le coup de main contre une caravane ou un campement (*ghazw*) était une coutume, presque un honneur. Le jeu en fait un égrégore : « prendre parce qu’on le peut ». On ne le combat qu’en dernier recours ; on lève d’abord des renforts, parce qu’on écoute mieux celui qui n’est pas venu seul, puis on parle. Ce qui est repris est rendu à ceux qui l’avaient perdu, et les pillards sont remis au juge : ce n’est pas à celui qui poursuit de dire la peine.' },
+    { id: 'razzia', cat: 'Noosphère', title: 'La razzia', text: 'Avant l’islam, le coup de main contre une caravane ou un campement (*ghazw*) était une coutume, presque un honneur. Le jeu en fait une chimère : « prendre parce qu’on le peut ». On ne la combat qu’en dernier recours ; on lève d’abord des renforts, parce qu’on écoute mieux celui qui n’est pas venu seul, puis on parle. Ce qui est repris est rendu à ceux qui l’avaient perdu, et les pillards sont remis au juge : ce n’est pas à celui qui poursuit de dire la peine.' },
     { id: 'r_defile', cat: 'Noosphère', title: 'Celui qui défile', text: 'Un homme de la Cité-Miroir, dans une ruelle. Il regarde défiler pour oublier, et ce qu’il veut oublier, c’est le temps qu’il y passe. Le mépris l’y renfonce. On l’en tire en disant ce qui est, comme on l’annonce à quelqu’un qu’on respecte, et en restant à côté de lui. Personnage de fiction.' },
     { id: 'r_regent', cat: 'Noosphère', title: 'Le Régent', text: 'Il tient un tampon au pied d’une tour vide et accorde ce que l’écran a déjà décidé. Il n’a personne à commander, donc personne dont répondre. Il confond le siège et la charge : on peut avoir l’un sans l’autre, et c’est la charge qui fait dormir en paix. Personnage de fiction.' },
     { id: 'r_admire', cat: 'Noosphère', title: 'L’Admiré', text: 'Sous le grand écran, un homme que des millions de fenêtres applaudissent. Derrière les fenêtres, il n’y a personne. Il ne sait plus qui il serait sans ce bruit. Descendre du socle demande plus de courage que d’y monter : nul n’applaudit celui qui descend. Personnage de fiction.' },
@@ -9233,14 +9233,14 @@ ISNAD.registerSaga({
           ['say', 'yunus_n', 'Te voilà, Idris. Assieds-toi. Ce soir, je te remets ce qu’on m’a remis.'],
           ['say', 'yunus_n', 'Tu sais ce qu’est la *noosphère* ? L’envers de la ville. La sphère de tout ce que les hommes pensent, craignent et désirent. Invisible, et c’est pourtant là que tout se décide.'],
           ['codex', 'noosphere'],
-          ['say', 'yunus_n', 'Ce que beaucoup de cœurs regardent ensemble y prend corps. On appelle cela un *égrégore*. Nourri de justice ou de vérité, il éclaire. Nourri de peur ou d’orgueil, il devient idole.'],
+          ['say', 'yunus_n', 'Ce que beaucoup de cœurs regardent ensemble y prend corps. On appelle cela une *chimère* : approchée, elle se révèle vide. Si on la laisse grandir, elle devient idole.'],
           ['codex', 'egregore'], ['codex', 'idole'],
           ['say', 'idris', 'Et l’Agrégor ?'],
-          ['say', 'yunus_n', 'Une machine à fabriquer des égrégores, plus vite que les cœurs ne peuvent les juger. Il n’a rien inventé. Il a seulement industrialisé la plus vieille faute du monde.'],
+          ['say', 'yunus_n', 'Une machine à fabriquer des chimères, plus vite que les cœurs ne peuvent les juger. Il n’a rien inventé. Il a seulement industrialisé la plus vieille faute du monde.'],
           ['codex', 'agregor'],
           ['sfx', 'glitch'], ['shake', 300],
           ['nar', 'Une lueur froide glisse entre les rayonnages. Le Flux a trouvé un chemin jusqu’ici.'],
-          ['say', 'yunus_n', 'Une notification. Un petit égrégore, mais il a faim. Ne le frappe pas avec colère : cherche sa faille. Il ne supporte pas qu’on lui résiste avec patience.'],
+          ['say', 'yunus_n', 'Une notification. Une petite chimère, mais elle a faim. Ne la frappe pas avec colère : cherche sa faille. Elle ne supporte pas qu’on lui résiste avec patience.'],
           ['battle', { group: ['notif'], bg: 'cite', intro: 'Frappe la faille pour retirer ses voiles ⛊. « Éclairer » porte la Patience d’Idris.' }],
           ['say', 'yunus_n', 'Tu as vu ? On ne détruit pas une idole en la haïssant. On la *dévoile* : on montre qu’elle est vide.'],
           ['ask', 'Que demander à Maître Yûnus ?', [
@@ -10339,11 +10339,11 @@ ISNAD.registerSaga({
       look: { kind: 'berbere', robe: '#2f4a7a', head: '#1f2f55', cloak: '#e6dcc4' },
       skills: [
         { lvl: 1, id: 'veiller', name: 'Veiller', desc: "Tenir sans haine : frappe de Patience.", cost: 3, target: 'foe', el: 'sabr', pow: 1.4, anim: 'light' },
-        { lvl: 1, id: 'peser', name: "Peser l'homme", desc: "Regarder avant de juger : révèle les failles d'un égrégore.", cost: 2, target: 'foe', el: 'adl', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'glyph' },
+        { lvl: 1, id: 'peser', name: "Peser l'homme", desc: "Regarder avant de juger : révèle les failles d'une chimère.", cost: 2, target: 'foe', el: 'adl', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 1, id: 'rempart', name: 'Faire rempart', desc: "Se place devant les siens : attire les coups, Garde renforcée.", cost: 4, target: 'self', fx: [{ st: 'taunt', turns: 2 }, { st: 'def', v: 1 }], anim: 'guard' },
         { lvl: 2, id: 'parole_pere', name: '« Disait mon père »', desc: "Une parole reçue raffermit le groupe : Force et Esprit accrus.", cost: 6, target: 'allies', fx: [{ st: 'atk', v: 1 }, { st: 'mag', v: 1 }], anim: 'glyph' },
         { lvl: 3, id: 'dire_vrai', name: 'Dire le vrai', desc: "Nommer la chose telle qu'elle est : frappe de Véracité.", cost: 5, target: 'foe', el: 'sidq', pow: 1.6, anim: 'pillar' },
-        { lvl: 3, id: 'meme_loi', name: 'La même loi', desc: "Une seule balance pour tous : Justice sur tous les égrégores.", cost: 7, target: 'foes', el: 'adl', pow: 1.0, anim: 'wave' }
+        { lvl: 3, id: 'meme_loi', name: 'La même loi', desc: "Une seule balance pour tous : Justice sur toutes les chimères.", cost: 7, target: 'foes', el: 'adl', pow: 1.0, anim: 'wave' }
       ],
       limit: { id: 'citadelle', name: 'Ce qui tient les hommes', desc: "Relève, soigne et fortifie tout le groupe.", target: 'allies', heal: 0.9, revive: true, fx: [{ st: 'def', v: 1 }, { st: 'regen', turns: 3 }], anim: 'heal' }
     },
@@ -10356,7 +10356,7 @@ ISNAD.registerSaga({
         { lvl: 1, id: 'baume', name: 'Baume', desc: "Rend de la Constance à un compagnon.", cost: 4, target: 'ally', heal: 1.1, anim: 'heal' },
         { lvl: 2, id: 'partager_eau', name: "Partager l'eau", desc: "Rend de la Constance à tout le groupe.", cost: 8, target: 'allies', heal: 0.6, anim: 'heal' },
         { lvl: 3, id: 'lecon', name: 'Leçon du soir', desc: "Dissipe le doute et les murmures d'un compagnon, et lui rend du Souffle.", cost: 4, target: 'ally', sp: 0.25, fx: [{ st: 'cleanse' }], anim: 'light' },
-        { lvl: 3, id: 'pente_douce', name: 'La pente douce', desc: "Ce qui est bien tracé coule de soi : Savoir sur tous les égrégores.", cost: 7, target: 'foes', el: 'ilm', pow: 0.95, anim: 'wave' }
+        { lvl: 3, id: 'pente_douce', name: 'La pente douce', desc: "Ce qui est bien tracé coule de soi : Savoir sur toutes les chimères.", cost: 7, target: 'foes', el: 'ilm', pow: 0.95, anim: 'wave' }
       ],
       limit: { id: 'ce_qui_demeure', name: 'Ce qui demeure', desc: "Les empires brûlent, la mesure reste : Savoir sur tous, failles révélées, renforts dissipés.", target: 'foes', el: 'ilm', pow: 2.1, fx: [{ st: 'reveal' }, { st: 'dispel' }], anim: 'pillar' }
     },
@@ -10450,7 +10450,7 @@ ISNAD.registerSaga({
 
   codex: [
     { id: 'caid_bio', cat: 'Biographie', title: 'Le Caïd', text: "Seigneur berbère d'une citadelle au bord du désert, héritier d'un père assassiné. Il n'a pas de nom dans la Chaîne : seulement sa charge, et ce qu'il a transmis. Il apprit à gouverner dans les vies des Compagnons, que lui lisait un vieux maître, et consigna pour son fils ce qu'il en avait fait. Personnage de fiction : un maillon imaginé entre les témoins et Idris.", src: 'Fiction' },
-    { id: 'citadelle_lieu', cat: 'Lieu', title: 'La Citadelle', text: "Des murs de pisé, un puits, une mosquée, une école, des greniers, un cèdre planté par le vieux Caïd. Son fils disait qu'elle ne tenait pas par ses pierres mais par ce que les hommes s'y devaient les uns aux autres : « Ôtez cela, il reste un enclos. » Dans la noosphère, c'est l'égrégore qui éclaire : ce qui naît quand des hommes tiennent ensemble à plus grand qu'eux.", src: 'Fiction' },
+    { id: 'citadelle_lieu', cat: 'Lieu', title: 'La Citadelle', text: "Des murs de pisé, un puits, une mosquée, une école, des greniers, un cèdre planté par le vieux Caïd. Son fils disait qu'elle ne tenait pas par ses pierres mais par ce que les hommes s'y devaient les uns aux autres : « Ôtez cela, il reste un enclos. » Dans la noosphère, c'est le contraire d'une chimère : ce qui naît quand des hommes tiennent ensemble à plus grand qu'eux.", src: 'Fiction' },
     { id: 'piliers', cat: 'Noosphère', title: 'Les quatre piliers', text: "La Prière, qui remet l'homme à sa place et lui rend le repos. Le Savoir, qui empêche de prendre une phrase pour la vérité entière. La Justice, la même pour le fort et pour le faible. Le Lien, la parole donnée et tenue, par quoi des étrangers deviennent des voisins. Qu'un seul manque, et la Citadelle n'est plus qu'une muraille." },
     { id: 'chambellan', cat: 'Biographie', title: 'Maymûn, le chambellan', text: "Chambellan du vieux Caïd, puis de son fils. Il dit à chacun ce que chacun veut entendre, pleure quand on le regarde et plaint beaucoup le peuple, qui l'aime pour cela. On le reconnaît à ses belles manches. Il ne sert ni le Caïd ni la foule : il sert le besoin qu'ils ont de lui. Personnage de fiction.", src: 'Fiction' },
     { id: 'pere_parole', cat: 'Parole', title: 'La parole du bâtisseur', text: "« Qui partage un édifice n'obtient que des pierres. » Le vieux Caïd le disait des greniers, des puits et des tribus. Maître Bahrâm l'entendait aussi d'une vérité : coupée en morceaux pour être servie plus doucement, elle cesse d'en être une.", src: 'Fiction' },
@@ -11214,7 +11214,7 @@ ISNAD.registerSaga({
     halte: { clavier: '*Échap*, ou le bouton *☰* : la halte. Le groupe, la besace, ce que tu as appris.', doigt: 'Le bouton *☰* : la halte. Le groupe, la besace, ce que tu as appris.' },
     equipement: 'La réserve tient de quoi mieux équiper ce groupe : *Halte*, puis *Équipement*.',
     source: 'Un seul de ces actes est celui que les transmetteurs ont rapporté. Ce que tu as appris est au *Recueil* : la halte le garde.',
-    vertus: 'Nouveau — *Vertus*. Chacune coûte du Souffle ; celle qui est la faille d’un égrégore lui ôte un voile.',
+    vertus: 'Nouveau — *Vertus*. Chacune coûte du Souffle ; celle qui est la faille d’une chimère lui ôte un voile.',
     garde: 'Nouveau — *Garde*, et la *Niyya*. Se garder rend un point de Niyya ; ◂ ▸ en dépensent jusqu’à trois pour frapper plus fort.',
     objets: 'Nouveau — *Objets*. La besace sert aussi en combat.'
   },
@@ -11234,13 +11234,13 @@ ISNAD.registerSaga({
 
   /* ----- les compagnons de lumière : figures du ciel (fiction) ----- */
   animaux: {
-    renard:  { name: 'Le Renard des sables', ar: 'ath-Tha’lab', couleur: '#f2c27a', don: 'Flair', effet: 'Au début du combat, il flaire une faille de chaque égrégore.',
+    renard:  { name: 'Le Renard des sables', ar: 'ath-Tha’lab', couleur: '#f2c27a', don: 'Flair', effet: 'Au début du combat, il flaire une faille de chaque chimère.',
       vient: 'Il rejoint celui qui a résolu une énigme.', texte: 'Les chameliers disent qu’il naît d’une étoile tombée dans les dunes. Il ne suit personne ; il marche devant, et se retourne pour voir si l’on vient.' },
     aigle:   { name: 'L’Aigle', ar: 'an-Nasr', couleur: '#bfd6ff', don: 'Regard', effet: 'Le groupe agit plus tôt et gagne un point de Niyya.',
       vient: 'Il rejoint celui qui a forgé une première lame.', texte: 'An-Nasr at-Tâ’ir, « l’Aigle qui vole » : l’étoile qui se lève plein est. Dans la noosphère, le nom a pris des ailes.' },
     phenix:  { name: 'Le Phénix', ar: 'al-’Anqâ’', couleur: '#ff9a5c', don: 'Renaissance', effet: 'Une fois par combat, il relève le premier compagnon éprouvé.',
       vient: 'Il rejoint celui qui a tranché un premier mal.', texte: 'Al-’Anqâ’, l’oiseau des vieux contes arabes : personne ne l’a vu, tout le monde en parle. Il n’apparaît qu’où quelque chose a fini de brûler.' },
-    lion:    { name: 'Le Lion', ar: 'al-Asad', couleur: '#ffd76a', don: 'Présence', effet: 'Pendant trois tours, les égrégores frappent moins fort.',
+    lion:    { name: 'Le Lion', ar: 'al-Asad', couleur: '#ffd76a', don: 'Présence', effet: 'Pendant trois tours, les chimères frappent moins fort.',
       vient: 'Il rejoint celui qui a remporté trois grandes épreuves le cœur prêt.', texte: 'Al-Asad : les anciens Arabes voyaient au ciel un lion immense, étendu sur plusieurs de nos constellations. Il ne rugit pas. Il est là, et cela suffit.' },
     gazelle: { name: 'La Gazelle', ar: 'az-Zaby', couleur: '#9fe8d0', don: 'Apaisement', effet: 'Le groupe se régénère pendant trois tours et reçoit un peu de Sakîna.',
       vient: 'Elle rejoint celui qui a gagné cinq pourparlers.', texte: 'Trois couples d’étoiles, au nord, portent le nom de « bonds de la gazelle ». Elle ne s’approche que de ceux qui parlent avant de frapper.' }
@@ -11386,8 +11386,8 @@ ISNAD.registerSaga({
   // Aucun attribut n'est dessiné, personnifié ni « équipé » : on le reconnaît, on ne le possède pas (exigence 21, proposée).
   bien: {
     titre: 'Valeurs et attributs',
-    chapeau: 'Du côté du bien, rien ne se nomme djinn, égrégore ou idole. On dit des *Valeurs* : ce que le cœur garde quand un mal est tranché. Et des *attributs* : ceux d’Allah, que nul ne possède, que l’on reconnaît.',
-    note: 'Il n’y a pas d’organigramme du bien : Iblîs n’est qu’une créature, et rien ne se tient en face du Créateur. Les badges sont une image du jeu : ils marquent un rappel reçu, non une qualité acquise pour toujours.',
+    chapeau: 'Du côté du bien, rien ne se nomme djinn, chimère ou idole. On dit des *Valeurs* : ce que le cœur garde quand un mal est tranché. Et des *attributs* : ceux d’Allah, que nul ne possède, que l’on reconnaît.',
+    note: 'Les degrés du mal n’ont pas de miroir du côté du bien : Iblîs n’est qu’une créature, et rien ne se tient en face du Créateur. Les badges sont une image du jeu : ils marquent un rappel reçu, non une qualité acquise pour toujours.',
     gagner: 'Elle se garde quand ce mal est tranché par sa lame.', reconnaitre: 'Il se reconnaît quand l’œuvre a forgé la lame.'
   },
   valeurs: {
@@ -11458,7 +11458,7 @@ ISNAD.registerSaga({
   },
 
   mal: {
-    titre: 'Organigramme du mal',
+    titre: 'Les degrés du mal',
     chapeau: 'Qui souffle, qui consent, et ce que cela devient. À chaque étage sa réponse, et pas une de plus.',
     rangs: {
       iblis: { etage: 'enseigne', name: 'Iblîs', sous: 'l’ennemi déclaré',
@@ -11475,8 +11475,8 @@ ISNAD.registerSaga({
       racines: { etage: 'image', name: 'Les idées noires', sous: 'ce qui pèse sur une personne',
         texte: 'La honte, la peur, le soupçon, la rancune, le désespoir. En face, dans le cœur de chacun, sept maux qui leur ouvrent la porte : l’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère.',
         reponse: 'L’idée noire : par la parole, la pédagogie, la bienveillance. Le mal du cœur : par l’œuvre, qui forge sa lame.' },
-      egregores: { etage: 'image', name: 'Les égrégores', sous: 'l’idée reprise par beaucoup de cœurs',
-        texte: 'Ce que beaucoup de cœurs regardent ensemble prend corps dans la noosphère. Nourri de peur ou d’orgueil, il se retourne contre ceux qui le portent.',
+      egregores: { etage: 'image', name: 'Les chimères', sous: 'l’idée reprise par beaucoup de cœurs',
+        texte: 'Ce que beaucoup de cœurs fabriquent ensemble prend corps dans la noosphère. La chimère se retourne contre ceux qui la portent ; approchée, elle se révèle vide.',
         reponse: 'Par le combat : chercher la faille, retirer les voiles.' },
       idoles: { etage: 'image', name: 'Les idoles', sous: 'l’idée enracinée : elle commande',
         texte: 'Une chose fabriquée par les hommes, et qui finit par les commander. Plus l’idée a pris racine, plus l’idole pèse.',
@@ -11490,20 +11490,20 @@ ISNAD.registerSaga({
     { id: 'oeuvres', cat: 'Cœur', title: 'Les œuvres', text: 'La prière, le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite, le pèlerinage. Dans ISNAD, elles ne sont pas des sortilèges et ne donnent aucun pouvoir : elles préparent le cœur, et le jeu le traduit par une *provision*. Plus une épreuve est lourde, plus elle en demande. Qui s’y présente sans provision s’y présente le cœur lourd.' },
     { id: 'zad', cat: 'Cœur', title: 'La provision', text: 'Az-zâd : ce que le voyageur emporte. « Et prenez vos provisions ; mais vraiment la meilleure provision est la piété. » Chaque œuvre accomplie ajoute à la provision du groupe ; chaque épreuve en consomme selon son poids.', src: 'Traduction du sens, Coran 2:197' },
     { id: 'dhikr', cat: 'Cœur', title: 'Le dhikr', text: 'Le rappel : redire, à voix basse ou dans le cœur, les mots par lesquels on se souvient de son Seigneur. « N’est-ce point par l’évocation d’Allah que se tranquillisent les cœurs ? »', src: 'Traduction du sens, Coran 13:28' },
-    { id: 'maux', cat: 'Cœur', title: 'Les sept maux du cœur', text: 'L’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. Les traités de morale en décrivent davantage et les rangent autrement ; al-Ghazâlî leur consacre un quart de son *Ihyâ’*, celui qu’il intitule *al-muhlikât*, « ce qui perd ». La liste de sept est un choix du jeu, et les sept égrégores qui la portent sont une image : on ne les rencontre nulle part ailleurs que dans le cœur.', src: 'D’après al-Ghazâlî, Ihyâ’ ’ulûm ad-dîn (plan de l’ouvrage) ; la liste de sept est une fiction du jeu' },
+    { id: 'maux', cat: 'Cœur', title: 'Les sept maux du cœur', text: 'L’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. Les traités de morale en décrivent davantage et les rangent autrement ; al-Ghazâlî leur consacre un quart de son *Ihyâ’*, celui qu’il intitule *al-muhlikât*, « ce qui perd ». La liste de sept est un choix du jeu, et les sept chimères qui la portent sont une image : on ne les rencontre nulle part ailleurs que dans le cœur.', src: 'D’après al-Ghazâlî, Ihyâ’ ’ulûm ad-dîn (plan de l’ouvrage) ; la liste de sept est une fiction du jeu' },
     { id: 'lames', cat: 'Cœur', title: 'Les sept lames', text: 'Dans la noosphère, une vertu longuement pratiquée prend le fil d’une lame. Le jeûne forge le Contentement, le pèlerinage l’Humilité, la prière la Sincérité, l’aumône la Largesse, l’étude l’Ardeur, la visite la Bienveillance, le dhikr la Longanimité. Sans sa lame, un mal du cœur peut être repoussé ; il revient. Avec elle, il est tranché. Ces lames sont une image du jeu : ce ne sont pas des reliques, et aucune n’a appartenu à personne.' },
     { id: 'idees_noires', cat: 'Cœur', title: 'Les idées noires', text: 'La honte, la peur, le soupçon, la rancune, le désespoir. Il arrive qu’un homme n’entende plus rien parce que l’une d’elles parle plus fort que toi. On ne la combat pas : on lui répond, par la parole, la pédagogie ou la bienveillance, selon ce qui la tient. Chacune a deux voiles, et chaque voile sa manière. Après quoi il écoute.' },
-    { id: 'echelle', cat: 'Noosphère', title: 'À chaque mal sa réponse', text: 'À l’idée noire, qui pèse sur une personne : la parole, la pédagogie, la bienveillance. À l’égrégore, que beaucoup de cœurs nourrissent : le combat. À l’idole, enracinée : une bataille déclarée. Aux souffleurs : rien, on ne les combat pas ; et l’on ne s’en prend à aucun djinn qui ne nuit à personne. Le sabre ne vient qu’après, quand la parole a tout essayé.' },
+    { id: 'echelle', cat: 'Noosphère', title: 'À chaque mal sa réponse', text: 'À l’idée noire, qui pèse sur une personne : la parole, la pédagogie, la bienveillance. À la chimère, que beaucoup de cœurs nourrissent : le combat. À l’idole, enracinée : une bataille déclarée. Aux souffleurs : rien, on ne les combat pas ; et l’on ne s’en prend à aucun djinn qui ne nuit à personne. Le sabre ne vient qu’après, quand la parole a tout essayé.' },
     { id: 'souffleurs', cat: 'Noosphère', title: 'Ceux qui soufflent', text: 'Le Coran enseigne à chercher protection « contre le mal du mauvais conseiller, furtif, qui souffle le mal dans les poitrines des hommes, qu’il (le conseiller) soit un djinn, ou un être humain ». Dans ISNAD, on ne les voit pas, on ne les nomme pas, on ne les compte pas, on ne les combat pas. Tous les djinns ne soufflent pas, et le jeu ne s’en prend à aucun. Ce que l’on rencontre, c’est ce qu’un cœur fait de ce qu’il a entendu.', src: 'Traduction du sens, Coran 114:4-6' },
     { id: 'iblis', cat: 'Noosphère', title: 'Iblîs, l’ennemi déclaré', text: 'Le jeu le nomme et ne le montre pas. Il ne parle dans aucune scène, et l’on ne le combat nulle part : ce n’est pas une épée qui en protège. Le Coran rapporte ce qu’il dira, quand tout sera accompli, à ceux qui l’auront suivi : « Je n’avais aucune autorité sur vous si ce n’est que je vous ai appelés, et que vous m’avez répondu. Ne me faites donc pas de reproches ; mais faites-en à vous-mêmes. » Il appelle. C’est le cœur qui répond.', src: 'Traduction du sens, Coran 14:22' },
     { id: 'bataille', cat: 'Noosphère', title: 'La bataille déclarée', text: 'Contre une idole, on ne se bat plus seul, et l’on ne se bat pas sans le dire. La bataille est déclarée : chacun sait ce qui se dresse, et qui tient les rangs. En face, il n’y a jamais d’hommes : des nuées, que l’idole envoie. Nos rangs ne tombent pas : éprouvés, ils se replient et se reforment. C’est une image du jeu. Il ne dit pas combien d’hommes il y avait tel jour, ni qui fit telle manœuvre : la réserve mobile, l’enveloppement et le repli feint sont des manœuvres d’école.' },
-    { id: 'valeurs', cat: 'Cœur', title: 'Les sept Valeurs', text: 'Du côté du bien, on ne dit ni djinn, ni égrégore, ni idole : on dit des Valeurs. Il y en a sept, une en face de chaque mal du cœur : le Contentement, l’Humilité, la Sincérité, la Largesse, l’Ardeur, la Bienveillance, la Longanimité. L’œuvre forge la lame ; la lame tranche le mal ; ce qui reste alors, c’est la Valeur. Le jeu la marque d’un badge. C’est une image : une valeur ne se possède pas comme un objet, elle se garde en la pratiquant.' },
-    { id: 'attributs', cat: 'Cœur', title: 'Les attributs divins', text: 'Chaque Valeur s’appuie sur un attribut d’Allah, que le jeu nomme d’après le Coran, avec son verset et sa référence : ar-Razzâq, al-Kabîr, al-Khabîr, al-Wahhâb, al-Hayy al-Qayyûm, al-Latîf, al-Halîm. On ne possède pas un attribut divin : on le reconnaît. Le jeu ne le dessine pas, ne lui prête aucune figure et n’en fait ni une arme ni un pouvoir ; le badge marque seulement que le rappel a été reçu. Il n’y a pas d’organigramme du bien : rien ne se tient en face du Créateur.', src: 'Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.' },
+    { id: 'valeurs', cat: 'Cœur', title: 'Les sept Valeurs', text: 'Du côté du bien, on ne dit ni djinn, ni chimère, ni idole : on dit des Valeurs. Il y en a sept, une en face de chaque mal du cœur : le Contentement, l’Humilité, la Sincérité, la Largesse, l’Ardeur, la Bienveillance, la Longanimité. L’œuvre forge la lame ; la lame tranche le mal ; ce qui reste alors, c’est la Valeur. Le jeu la marque d’un badge. C’est une image : une valeur ne se possède pas comme un objet, elle se garde en la pratiquant.' },
+    { id: 'attributs', cat: 'Cœur', title: 'Les attributs divins', text: 'Chaque Valeur s’appuie sur un attribut d’Allah, que le jeu nomme d’après le Coran, avec son verset et sa référence : ar-Razzâq, al-Kabîr, al-Khabîr, al-Wahhâb, al-Hayy al-Qayyûm, al-Latîf, al-Halîm. On ne possède pas un attribut divin : on le reconnaît. Le jeu ne le dessine pas, ne lui prête aucune figure et n’en fait ni une arme ni un pouvoir ; le badge marque seulement que le rappel a été reçu. Les degrés du mal n’ont pas de miroir du côté du bien : rien ne se tient en face du Créateur.', src: 'Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.' },
     { id: 'postures', cat: 'Noosphère', title: 'Les trois postures', text: 'Devant l’épreuve, on peut se tenir de trois manières. Le héros s’expose : il va au-devant, et prend sur lui. Le sage discerne : il regarde avant d’agir. Le saint s’efface : il porte les autres. Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent en chemin, et le même homme les prend tour à tour. Aucune n’est au-dessus d’une autre, et le jeu ne dit de personne qu’il est l’un des trois : on prend une posture, on ne la possède pas. Image du jeu.' },
-    { id: 'frappe', cat: 'Noosphère', title: 'Frapper ce qui rôde', text: 'Dans un labyrinthe de la noosphère, de petits égrégores vont et viennent sur les ponts, jamais dans les lieux que le récit nomme. On les frappe comme en combat, avec l’arme que porte celui qui mène : Entrée, ou un toucher sur ce qui rôde. Chaque coup ôte un voile et sonne un instant ; sans voile, l’égrégore se dissipe. S’il vous rejoint avant, c’est un combat ordinaire. L’allonge, le poids et la vitesse viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, les coups ne font que sonner : seul, on ne vainc pas ce qui pèse sur le cœur. Image du jeu.' },
+    { id: 'frappe', cat: 'Noosphère', title: 'Frapper ce qui rôde', text: 'Dans un labyrinthe de la noosphère, de petites chimères vont et viennent sur les ponts, jamais dans les lieux que le récit nomme. On les frappe comme en combat, avec l’arme que porte celui qui mène : Entrée, ou un toucher sur ce qui rôde. Chaque coup ôte un voile et sonne un instant ; sans voile, la chimère se dissipe. Si elle vous rejoint avant, c’est un combat ordinaire. L’allonge, le poids et la vitesse viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, les coups ne font que sonner : seul, on ne vainc pas ce qui pèse sur le cœur. Image du jeu.' },
     { id: 'noos_interieure', cat: 'Noosphère', title: 'Descendre en soi', text: 'Au sortir de la prière, dans le dhikr, en songe : à ces moments-là, la noosphère est toute proche, et l’on peut y descendre pour faire face à ce qui pèse. Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. C’est le combat du râwî, seul. Ce n’est jamais celui d’un Compagnon : le jeu ne prête à aucun d’eux un mal du cœur. Avec la lame que l’œuvre a forgée, le mal est tranché ; sans elle, il n’est que repoussé. Image du jeu, dite comme telle.' },
     { id: 'secours', cat: 'Cœur', title: 'Le secours', text: 'À Badr, les croyants étaient en petit nombre. Le Coran rapporte qu’ils implorèrent le secours, et ce qui leur fut répondu : « Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres. » Puis : « Allah ne fit cela que pour (vous) apporter une bonne nouvelle et pour qu’avec cela vos cœurs se tranquillisent. Et il n’y a de victoire que de la part d’Allah. » Dans ISNAD, quand une bataille déclarée est presque perdue, le secours relève le groupe, une fois, si la prière a été tenue dans le chapitre. C’est une image du jeu. Il ne montre pas les anges, ne les nomme pas, ne les compte pas, et il ne dit pas qu’ils sont venus tel jour de l’histoire des Compagnons. On ne commande pas le secours : on tient sa prière, et l’on combat.', src: 'Traduction du sens, Coran 8:9-10. Règle de jeu.' },
-    { id: 'enracinement', cat: 'Noosphère', title: 'L’enracinement', text: 'Une idée noire dans un seul cœur se dissipe par la parole. Reprise par beaucoup, elle prend corps : c’est un égrégore. Quand on ne la voit plus tant elle est partout, elle commande : c’est une idole. Le jeu mesure cela d’un à cinq, pour chaque idole. La parole qui porte la déracine ; la parole manquée la laisse s’enfoncer. Déracinée, l’idole pèse moins et garde un voile de moins ; enracinée, elle pèse davantage. C’est une image du jeu : la jauge se dit d’une idole, jamais d’une époque ni de ses gens.' },
+    { id: 'enracinement', cat: 'Noosphère', title: 'L’enracinement', text: 'Une idée noire dans un seul cœur se dissipe par la parole. Reprise par beaucoup, elle prend corps : c’est une chimère. Quand on ne la voit plus tant elle est partout, elle commande : c’est une idole. Le jeu mesure cela d’un à cinq, pour chaque idole. La parole qui porte la déracine ; la parole manquée la laisse s’enfoncer. Déracinée, l’idole pèse moins et garde un voile de moins ; enracinée, elle pèse davantage. C’est une image du jeu : la jauge se dit d’une idole, jamais d’une époque ni de ses gens.' },
     { id: 'figures_ciel', cat: 'Cœur', title: 'Les compagnons de lumière (fiction)', text: 'Les Arabes donnaient aux étoiles des noms de bêtes : l’Aigle qui vole, le Lion, les bonds de la Gazelle. Dans la noosphère d’ISNAD, ces noms ont pris corps. Le Renard des sables et le Phénix viennent, eux, des contes. Ce sont des figures de fiction : aucune n’accompagne un Compagnon dans le récit historique.' },
     { id: 'equipement', cat: 'Objets', title: 'Ce que l’on porte', text: 'Épées, lances, arcs, boucliers, casques, cottes, turbans et manteaux : le jeu range sous quatre emplacements ce qu’un groupe pouvait porter en ce temps-là. C’est une *convention de jeu*. Aucune de ces pièces n’est une relique, aucune n’a appartenu à un personnage de l’histoire, aucune ne porte d’inscription, et le jeu ne dit pas qui portait quoi. Leurs noms viennent de la poésie arabe ancienne, où une bonne lame est dite *muhannad* (d’acier de l’Inde), *yamânî* (du Yémen) ou *mashrafî* ; une bonne lance, *khattî* (d’al-Khatt, port du Bahreïn) ou *samharî* ; un bon arc est de bois de *nab\'* ; une bonne cotte est *salûqî*. Le fer aide à tenir ; il ne remplace pas la provision du cœur.', src: 'Convention de jeu. Vocabulaire des poètes anciens, à faire vérifier.' },
     { id: 'enigmes', cat: 'Cœur', title: 'Les énigmes du cœur', text: 'Il arrive qu’un compagnon languisse sans fièvre ni blessure. Les anciens de la Citadelle disaient : « Cherche d’abord ce qu’il a cessé de faire. » Une prière laissée, une porte où l’on ne frappe plus, une main qu’on a fermée. Ce n’est pas une punition : c’est un poids, et il se pose en reprenant ce qu’on avait laissé.' }
@@ -11562,7 +11562,7 @@ ISNAD.registerSaga({
           target: 'foe', el: 'sidq', pow: 1.4, anim: 'light' },
         { lvl: 1, id: 'apaisement', name: 'Apaisement', desc: "Une parole douce relève un cœur : rend de la Constance à un compagnon.", cost: 4,
           target: 'ally', heal: 1.0, anim: 'heal' },
-        { lvl: 2, id: 'lignees', name: 'Science des lignées', desc: "Nul ne connaissait mieux les généalogies des Arabes : révèle les failles d'un égrégore.", cost: 2,
+        { lvl: 2, id: 'lignees', name: 'Science des lignées', desc: "Nul ne connaissait mieux les généalogies des Arabes : révèle les failles d'une chimère.", cost: 2,
           target: 'foe', el: 'ilm', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 3, id: 'fermete', name: 'Fermeté', desc: "« Je ne dénouerai pas un étendard qu'il a noué. » Renforce la garde du groupe.", cost: 5,
           target: 'allies', fx: [{ st: 'def', v: 1, turns: 3 }], anim: 'guard' },
@@ -11571,7 +11571,7 @@ ISNAD.registerSaga({
         { lvl: 7, id: 'certitude', name: 'Certitude', desc: "« S'il l'a dit, il a dit vrai. » Lourds dégâts de Véracité, déchire un voile.", cost: 8,
           target: 'foe', el: 'sidq', pow: 1.9, fx: [{ st: 'veil', v: -1 }], anim: 'pillar' }
       ],
-      limit: { id: 'siddiq', name: 'As-Siddîq', desc: "La véracité à nu : frappe tous les égrégores, déchire leurs voiles et révèle leurs failles.",
+      limit: { id: 'siddiq', name: 'As-Siddîq', desc: "La véracité à nu : frappe toutes les chimères, déchire leurs voiles et révèle leurs failles.",
                target: 'foes', el: 'sidq', pow: 1.6, fx: [{ st: 'veil', v: -2 }, { st: 'reveal' }], anim: 'pillar' }
     },
     umar: {
@@ -11581,18 +11581,18 @@ ISNAD.registerSaga({
       skills: [
         { lvl: 1, id: 'durra', name: 'La Durra', desc: "Coup de férule. Peut étourdir.", cost: 3,
           target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
-        { lvl: 1, id: 'firasa', name: 'Firâsa', desc: "Discerne les failles d'un égrégore. Légers dégâts de Justice.", cost: 2,
+        { lvl: 1, id: 'firasa', name: 'Firâsa', desc: "Discerne les failles d'une chimère. Légers dégâts de Justice.", cost: 2,
           target: 'foe', el: 'adl', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 2, id: 'rempart', name: 'Rempart', desc: "Se dresse devant les siens : attire les coups et les amortit.", cost: 4,
           target: 'self', fx: [{ st: 'taunt', turns: 2 }, { st: 'garde' }], anim: 'guard' },
-        { lvl: 4, id: 'equite', name: 'Équité', desc: "La même mesure pour tous : dégâts de Justice à tous les égrégores.", cost: 6,
+        { lvl: 4, id: 'equite', name: 'Équité', desc: "La même mesure pour tous : dégâts de Justice à toutes les chimères.", cost: 6,
           target: 'foes', el: 'adl', pow: 0.9, anim: 'wave' },
         { lvl: 6, id: 'hardiesse', name: 'Hardiesse', desc: "Charge sans calcul. Dégâts de Courage, abaisse la garde de la cible.", cost: 6,
           target: 'foe', el: 'shajaa', pow: 1.6, fx: [{ st: 'def', v: -1 }], anim: 'burst' },
         { lvl: 8, id: 'droit', name: 'Rendre le droit', desc: "Reprend au fort ce qu'il a pris. Lourds dégâts de Justice, dissipe les bonus.", cost: 8,
           target: 'foe', el: 'adl', pow: 1.9, fx: [{ st: 'dispel' }], anim: 'pillar' }
       ],
-      limit: { id: 'faruq', name: 'Al-Fârûq', desc: "Sépare le vrai du faux : frappe tous les égrégores, dissipe leurs bonus et déchire leurs voiles.",
+      limit: { id: 'faruq', name: 'Al-Fârûq', desc: "Sépare le vrai du faux : frappe toutes les chimères, dissipe leurs bonus et déchire leurs voiles.",
                target: 'foes', el: 'adl', pow: 1.5, fx: [{ st: 'dispel' }, { st: 'veil', v: -2 }], anim: 'pillar' }
     },
     abuubayda: {
@@ -11641,7 +11641,7 @@ ISNAD.registerSaga({
         { at: 0.5, say: "S'il n'est plus là, que vous reste-t-il ? Gardez au moins son souvenir, et prosternez-vous devant lui !", fx: [{ st: 'atk', v: 1 }] }
       ],
       taunts: ['Quiconque dira qu’il est mort…', 'Quarante nuits, et il reviendra.'],
-      desc: "Égrégore né du deuil de tout un peuple. Il ne veut aucun mal : il veut que rien ne change. Mais qui s'attache à la personne plutôt qu'au message finit par adorer un souvenir."
+      desc: "Chimère née du deuil de tout un peuple. Elle ne veut aucun mal : elle veut que rien ne change. Mais qui s'attache à la personne plutôt qu'au message finit par adorer un souvenir."
     },
     mot_clan: {
       name: "Mot d'ordre", art: 'wisp', hue: 20, scale: 1,
@@ -11690,7 +11690,7 @@ ISNAD.registerSaga({
           addSkills: [ { w: 3, name: 'Soustraction', target: 'foe', el: 'fer', pow: 1.4, fx: [{ st: 'def', v: -1, chance: 0.5 }], anim: 'slash' } ] }
       ],
       taunts: ['Ce qui est à moi est à moi.', 'Une entrave de chameau… pour si peu ?'],
-      desc: "Égrégore de la soustraction. Il ne renie rien : il garde la prière et retranche la part du pauvre. Une tour de pièces dont aucune ne tombe."
+      desc: "Chimère de la soustraction. Elle ne renie rien : elle garde la prière et retranche la part du pauvre. Une tour de pièces dont aucune ne tombe."
     },
     echo: {
       name: 'Écho flatteur', art: 'wisp', hue: 300, scale: 1,
@@ -11739,7 +11739,7 @@ ISNAD.registerSaga({
           addSkills: [ { w: 2, name: 'Fausse promesse', target: 'self', fx: [{ st: 'regen', turns: 3 }, { st: 'def', v: 1, turns: 2 }], anim: 'guard' } ] }
       ],
       taunts: ['Un prophète pour chaque tribu : n’est-ce pas plus juste ?', 'Regarde-toi en moi. Ne te plais-tu pas ?'],
-      desc: "Égrégore de la contrefaçon. Il n'attaque pas le vrai de front : il l'imite, l'allège, et promet à chacun ce qu'il désire. Un miroir tourné vers la foule ; seule la véracité le fend."
+      desc: "Chimère de la contrefaçon. Elle n'attaque pas le vrai de front : elle l'imite, l'allège, et promet à chacun ce qu'il désire. Un miroir tourné vers la foule ; seule la véracité le fend."
     }
   },
 
@@ -11758,7 +11758,7 @@ ISNAD.registerSaga({
       text: "Le lundi 12 Rabî' al-Awwal de l'an 11 de l'Hégire (juin 632), le Messager d'Allah ﷺ meurt à Médine après quelques jours de fièvre. La ville est frappée de stupeur ; 'Umar lui-même refuse d'abord d'y croire. Abû Bakr, revenu d'as-Sunh, rappelle aux gens qu'ils adorent Allah, le Vivant qui ne meurt pas, et récite le verset 3:144. Pour la première fois, la communauté doit tenir sans lui.",
       src: "al-Bukhârî, as-Sahîh ; Ibn Hishâm, as-Sîra" },
     { id: 'deni', cat: 'Noosphère', title: "Le Déni",
-      text: "Égrégore né du deuil de tout un peuple. Il ne veut aucun mal : il veut seulement que rien ne change, et murmure que l'être aimé reviendra. Mais qui s'attache à la personne plutôt qu'au message finit par adorer un souvenir. On le dissipe par la véracité, dite avec douceur, et par la patience. Il revient chaque fois qu'une foule préfère un nom à une vérité." },
+      text: "Chimère née du deuil de tout un peuple. Elle ne veut aucun mal : elle veut seulement que rien ne change, et murmure que l'être aimé reviendra. Mais qui s'attache à la personne plutôt qu'au message finit par adorer un souvenir. On la dissipe par la véracité, dite avec douceur, et par la patience. Elle revient chaque fois qu'une foule préfère un nom à une vérité." },
     { id: 'saqifa', cat: 'Événement', title: "La Saqîfa des Banû Sâ'ida",
       text: "Le jour même de la mort du Messager ﷺ, les Ansâr se réunissent sous l'auvent (saqîfa) des Banû Sâ'ida pour choisir un chef. Abû Bakr, 'Umar et Abû 'Ubayda les y rejoignent. Après un débat vif — « un émir parmi nous, un émir parmi vous » —, Abû Bakr propose 'Umar ou Abû 'Ubayda ; 'Umar lui prend la main et lui prête allégeance, suivi des Émigrés puis des Ansâr. L'allégeance générale a lieu le lendemain à la mosquée.",
       src: "al-Bukhârî, as-Sahîh (récit de 'Umar) ; Ibn Hishâm, as-Sîra" },
@@ -11777,12 +11777,12 @@ ISNAD.registerSaga({
       text: "À la mort du Messager ﷺ, une grande partie des tribus d'Arabie se détache de Médine : certaines renient l'islam, d'autres suivent de faux prophètes, d'autres encore refusent la zakât. Abû Bakr refuse de séparer la prière de la zakât, défend Médine à Dhû l-Qassa, puis y noue onze étendards pour onze armées. En moins d'un an (11–12 H), l'Arabie est de nouveau rassemblée.",
       src: "at-Tabarî, Târîkh ; al-Bukhârî ; Muslim" },
     { id: 'avare', cat: 'Noosphère', title: "L'Avare du dû",
-      text: "Égrégore de la soustraction. Il ne renie rien : il garde la prière et retranche la part du pauvre. Il prend la forme d'une tour de pièces dont aucune ne tombe. La justice l'ébranle, car la zakât est un droit et non une faveur ; la miséricorde et la véracité achèvent de le défaire. La plupart des idoles commencent ainsi : par une petite soustraction faite au vrai." },
+      text: "Chimère de la soustraction. Elle ne renie rien : elle garde la prière et retranche la part du pauvre. Elle prend la forme d'une tour de pièces dont aucune ne tombe. La justice l'ébranle, car la zakât est un droit et non une faveur ; la miséricorde et la véracité achèvent de la défaire. La plupart des idoles commencent ainsi : par une petite soustraction faite au vrai." },
     { id: 'yamama', cat: 'Événement', title: "Yamâma et le Jardin de la Mort",
       text: "À 'Aqrabâ', dans le Yamâma (fin 11 – début 12 H), l'armée de Khâlid ibn al-Walîd affronte les Banû Hanîfa rassemblés autour de Musaylima. C'est la bataille la plus dure de la Ridda ; les lignes des croyants plient avant de se reformer clan par clan. Les Banû Hanîfa se retranchent dans un verger clos qu'al-Barâ' ibn Mâlik ouvre de l'intérieur : on l'appellera le Jardin de la Mort. Musaylima y est tué. Environ douze cents musulmans tombent, dont de très nombreux récitateurs du Coran.",
       src: "at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya wa-n-Nihâya" },
     { id: 'kadhdhab', cat: 'Noosphère', title: "Al-Kadhdhâb — le Menteur",
-      text: "Égrégore de la contrefaçon, né autour de Musaylima. Il n'attaque pas le vrai de front : il l'imite, l'allège, et promet à chacun ce qu'il désire — un prophète de sa tribu, une religion sans exigence, « la moitié de la terre ». C'est un miroir tourné vers la foule. Seule la véracité le fend ; le savoir distingue l'original de la copie, et la patience refuse ses promesses rapides. Il change de nom à chaque époque." },
+      text: "Chimère de la contrefaçon, née autour de Musaylima. Elle n'attaque pas le vrai de front : elle l'imite, l'allège, et promet à chacun ce qu'il désire — un prophète de sa tribu, une religion sans exigence, « la moitié de la terre ». C'est un miroir tourné vers la foule. Seule la véracité le fend ; le savoir distingue l'original de la copie, et la patience refuse ses promesses rapides. Elle change de nom à chaque époque." },
     { id: 'jam_quran', cat: 'Événement', title: "Le rassemblement du Coran",
       text: "Après le Yamâma, 'Umar craint que le Coran ne se perde avec ses récitateurs et presse Abû Bakr de le rassembler. D'abord hésitant devant un acte que le Messager ﷺ n'avait pas accompli, Abû Bakr s'y résout et en charge Zayd ibn Thâbit, ancien scribe de la Révélation. Zayd recueille les versets sur les tiges de palmier, les pierres plates et dans la mémoire des hommes, en exigeant des témoins. Les feuillets restent chez Abû Bakr, puis chez 'Umar.",
       src: "al-Bukhârî, as-Sahîh (récit de Zayd ibn Thâbit)" },
@@ -12294,7 +12294,7 @@ ISNAD.registerSaga({
           ['nar', "Abû Bakr noue onze étendards pour onze chefs, et trace à chacun sa route : Khâlid ibn al-Walîd, 'Ikrima, Shurahbîl, 'Amr ibn al-'Âs, al-'Alâ' ibn al-Hadramî… L'Arabie entière, d'un seul geste."],
           ['say', 'khalid', "Mon étendard est noué. Tulayha d'abord ; puis le Yamâma, s'il plaît à Allah."],
           ['nar', "Puis le calife monte en selle, le sabre au côté, résolu à marcher lui-même en tête. Un homme saisit la bride de sa monture : 'Alî ibn Abî Tâlib."],
-          ['quote', "Où vas-tu, successeur du Messager d'Allah ? Rengaine ton sabre, et ne nous afflige pas de ta perte. Retourne à Médine : par Allah, si nous te perdions, l'islam n'aurait plus d'ordre.", "On rapporte que 'Alî le lui dit à Dhû l-Qassa — Ibn Kathîr, al-Bidâya wa-n-Nihâya"],
+          ['quote', "Où vas-tu, successeur du Messager d'Allah ? Rengaine ton sabre, et ne nous afflige pas de ta perte. Retourne à Médine : par Allah, si nous te perdions, l'islam n'aurait plus d'ordre.", "On rapporte que 'Alî le lui dit à Dhû l-Qassa, rappelant une parole du Prophète ﷺ au jour d'Uhud — Ibn Kathîr, al-Bidâya wa-n-Nihâya (récit dit gharîb)"],
           ['choice', "'Alî tient la bride. Que fait Abû Bakr ?", [
             { t: "Passer outre : un chef doit marcher devant ses hommes.", r: [
               ['nar', "Son courage n'était pas en cause : il l'avait prouvé la nuit de Dhû l-Qassa. Mais celui qui tient l'ensemble ne se risque pas comme une seule lance. Ce n'est pas ce qui fut rapporté."] ] },
@@ -12375,7 +12375,7 @@ ISNAD.registerSaga({
           ['say', 'courrier', "Successeur du Messager d'Allah : la victoire. Le Menteur est mort, et le Yamâma est revenu à l'islam."],
           ['mus', 'deuil'],
           ['say', 'courrier', "Mais nous avons enterré douze cents des nôtres. Zayd ibn al-Khattâb. Sâlim. Abû Hudhayfa. Thâbit ibn Qays. Et des récitateurs par dizaines, de ceux qui portaient le Coran tout entier."],
-          ['quote', "Il m'a devancé vers les deux biens : il a embrassé l'islam avant moi, et il est tombé martyr avant moi.", "'Umar, à la mort de son frère Zayd — Ibn Sa'd, at-Tabaqât"],
+          ['quote', "Il m'a devancé vers les deux biens : il a embrassé l'islam avant moi, et il est tombé martyr avant moi.", "'Umar, à la mort de son frère Zayd — Ibn 'Abd al-Barr, al-Istî'âb"],
           ['hide', 'courrier'],
           ['codex', 'yamama'], ['codex', 'kadhdhab'],
           ['nar', "Quelques jours passent. 'Umar revient trouver le calife, et ce n'est plus de son frère qu'il parle."],
@@ -12463,9 +12463,9 @@ ISNAD.registerSaga({
           target: 'foe', el: 'ilm', pow: 1.4, anim: 'glyph' },
         { lvl: 4, id: 'khaybar', name: 'La Porte de Khaybar', desc: 'Il se fait rempart : garde du groupe renforcée, les coups viennent à lui.', cost: 5,
           target: 'allies', fx: [{ st: 'def', v: 1, turns: 3 }, { st: 'taunt', turns: 2, self: true }], anim: 'guard' },
-        { lvl: 6, id: 'interrogez', name: '« Interrogez-moi »', desc: 'Il répond à toutes les questions à la fois. Savoir sur tous les égrégores.', cost: 7,
+        { lvl: 6, id: 'interrogez', name: '« Interrogez-moi »', desc: 'Il répond à toutes les questions à la fois. Savoir sur toutes les chimères.', cost: 7,
           target: 'foes', el: 'ilm', pow: 0.9, anim: 'glyph' },
-        { lvl: 8, id: 'arret', name: 'Arrêt sans appel', desc: 'Justice forte ; retire les faveurs que l’égrégore s’est données.', cost: 8,
+        { lvl: 8, id: 'arret', name: 'Arrêt sans appel', desc: 'Justice forte ; retire les faveurs que la chimère s’est données.', cost: 8,
           target: 'foe', el: 'adl', pow: 1.9, fx: [{ st: 'dispel' }], anim: 'pillar' }
       ],
       limit: { id: 'haydar', name: 'Haydar', desc: 'Le Lion de Khaybar : nul voile ne tient devant lui.', target: 'foes',
@@ -12505,7 +12505,7 @@ ISNAD.registerSaga({
           target: 'allies', fx: [{ st: 'regen', turns: 3 }], anim: 'heal' },
         { lvl: 3, id: 'delier', name: 'Délier', desc: 'Dissipe les altérations d’un compagnon et le soigne un peu.', cost: 4,
           target: 'ally', heal: 0.5, fx: [{ st: 'cleanse' }], anim: 'heal' },
-        { lvl: 5, id: 'tenir', name: 'Tenir', desc: 'Patience sur tous les égrégores ; affaiblit leur assaut.', cost: 7,
+        { lvl: 5, id: 'tenir', name: 'Tenir', desc: 'Patience sur toutes les chimères ; affaiblit leur assaut.', cost: 7,
           target: 'foes', el: 'sabr', pow: 0.85, fx: [{ st: 'atk', v: -1, chance: 0.5 }], anim: 'wave' }
       ],
       limit: { id: 'premiers_jours', name: 'Patience des premiers jours', desc: 'Soigne tout le groupe, dissipe ses altérations, affermit sa garde.', target: 'allies',
@@ -12560,7 +12560,7 @@ ISNAD.registerSaga({
       phases: [{ at: 0.5, say: 'Tu es le calife. Un mot de toi, et le juge se taira. Qui t’en blâmerait ?', fx: [{ st: 'atk', v: 1 }],
                  addSkills: [{ w: 3, name: 'Passe-droit', target: 'foe', el: 'fer', pow: 1.5, fx: [{ st: 'doute', turns: 2, chance: 0.5 }], anim: 'burst' }] }],
       taunts: ['Tout le monde trouve cela normal.', 'La règle est pour les autres.'],
-      desc: 'Égrégore du rang. Il naît chaque fois qu’une foule attend que le puissant gagne parce qu’il est puissant. Il n’a pas besoin de corrompre le juge : il lui suffit que chacun trouve normal que la règle plie. La justice et la patience le brisent.'
+      desc: 'Chimère du rang. Elle naît chaque fois qu’une foule attend que le puissant gagne parce qu’il est puissant. Elle n’a pas besoin de corrompre le juge : il lui suffit que chacun trouve normal que la règle plie. La justice et la patience la brisent.'
     },
     echo: {
       name: 'Écho', art: 'wisp', hue: 285, scale: 1, lvl: 3, tier: 'minion',
@@ -12591,7 +12591,7 @@ ISNAD.registerSaga({
       phases: [{ at: 0.5, say: 'Je suis une parole vraie. On ne discute pas une parole vraie : on la crie.', fx: [{ st: 'spd', v: 1 }],
                  addSkills: [{ w: 3, name: 'Parole vidée', target: 'foes', el: 'fer', pow: 0.9, fx: [{ st: 'mag', v: -1, chance: 0.5 }], anim: 'burst' }] }],
       taunts: ['Répète. Ne réfléchis pas. Répète.', 'Qui me nuance me trahit.'],
-      desc: 'Égrégore de la formule. Une parole vraie, répétée par des milliers de bouches qui ne la comprennent plus, se détache de son sens et devient une arme. Le Slogan ne ment pas : il tronque. Le fer passe au travers ; le savoir et la véracité le font taire.'
+      desc: 'Chimère de la formule. Une parole vraie, répétée par des milliers de bouches qui ne la comprennent plus, se détache de son sens et devient une arme. Le Slogan ne ment pas : il tronque. Le fer passe au travers ; le savoir et la véracité le font taire.'
     },
     lame: {
       name: 'Lame pieuse', art: 'blade', hue: 200, scale: 1, lvl: 5, tier: 'minion',
@@ -12655,7 +12655,7 @@ ISNAD.registerSaga({
       text: "On rapporte que 'Alî, calife, reconnut sa cuirasse entre les mains d'un homme des Gens du Livre, à Koufa. Il ne la reprit pas : il le cita devant le juge Shurayh, en fonction depuis 'Umar. Faute de preuve recevable — le juge écarta le témoignage du fils en faveur de son père —, Shurayh trancha contre le calife, qui s'inclina. L'homme, bouleversé, reconnut les faits et embrassa l'islam ; 'Alî lui laissa la cuirasse. Le récit, très célèbre, est rapporté par Abû Nu'aym, al-Bayhaqî et Ibn Kathîr ; les spécialistes discutent la solidité de sa chaîne.",
       src: "Abû Nu'aym, Hilyat al-Awliyâ' ; al-Bayhaqî, as-Sunan al-Kubrâ ; Ibn Kathîr, al-Bidâya wa n-Nihâya" },
     { id: 'privilege', cat: 'Noosphère', title: 'Le Privilège',
-      text: "Égrégore du rang. Il naît chaque fois qu'une foule attend que le puissant gagne parce qu'il est puissant. Il n'a pas besoin de corrompre le juge : il lui suffit que chacun trouve normal que la règle plie. Il se brise quand le premier des hommes se tient devant le juge comme le dernier, et repart débouté sans colère." },
+      text: "Chimère du rang. Elle naît chaque fois qu'une foule attend que le puissant gagne parce qu'il est puissant. Elle n'a pas besoin de corrompre le juge : il lui suffit que chacun trouve normal que la règle plie. Elle se brise quand le premier des hommes se tient devant le juge comme le dernier, et repart débouté sans colère." },
     { id: 'siffin', cat: 'Événement', title: 'Siffîn',
       text: "En l'an 37, sur la rive de l'Euphrate, l'armée d'Irak et l'armée de Syrie se font face durant des semaines. De grands Compagnons se trouvent dans chaque rang ; d'autres s'abstiennent. Les combats cessent quand on convient de s'en remettre à deux arbitres. Les savants recommandent la retenue sur ces événements : tous étaient des croyants qui cherchaient le vrai, et l'on demande pour tous l'agrément d'Allah.",
       src: "at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya wa n-Nihâya" },
@@ -12663,7 +12663,7 @@ ISNAD.registerSaga({
       text: "Au retour de Siffîn, plusieurs milliers d'hommes refusent l'arbitrage et se retirent à Harûrâ', près de Koufa : on les appellera Harûriyya, puis Khawârij, « ceux qui sont sortis ». Ibn 'Abbâs vient débattre avec eux à l'heure de midi. Il écoute leurs griefs, puis y répond par le Coran (5:95 ; 4:35) et par l'exemple du Messager ﷺ à Hudaybiyya. Deux mille d'entre eux reviennent ce jour-là ; davantage, selon d'autres récits.",
       src: "an-Nasâ'î, as-Sunan al-Kubrâ ; al-Hâkim, al-Mustadrak ; 'Abd ar-Razzâq, al-Musannaf" },
     { id: 'slogan', cat: 'Noosphère', title: 'Le Slogan',
-      text: "Égrégore de la formule. Une parole vraie, répétée par des milliers de bouches qui ne la comprennent plus, se détache de son sens et devient une arme. Le Slogan ne ment pas : il tronque. Aucune lame ne l'entame ; seuls le savoir, qui rend à la phrase son contexte, et la véracité, qui rappelle ce qu'elle visait, le font taire. L'Agrégor de la Cité-Miroir en fabrique mille par jour." },
+      text: "Chimère de la formule. Une parole vraie, répétée par des milliers de bouches qui ne la comprennent plus, se détache de son sens et devient une arme. Le Slogan ne ment pas : il tronque. Aucune lame ne l'entame ; seuls le savoir, qui rend à la phrase son contexte, et la véracité, qui rappelle ce qu'elle visait, le font taire. L'Agrégor de la Cité-Miroir en fabrique mille par jour." },
     { id: 'parole_verite', cat: 'Parole', title: '« Parole de vérité… »',
       text: "Quand les sécessionnistes criaient « Le jugement n'appartient qu'à Allah », 'Alî répondit : « Parole de vérité par laquelle on vise le faux. » Il leur reconnut pourtant trois droits : l'accès aux mosquées, leur part du trésor tant que leurs mains restaient avec celles des musulmans, et de n'être jamais combattus les premiers. Il refusa de punir une opinion tant qu'elle ne versait pas le sang.",
       src: "Muslim ; Ibn Abî Shayba, al-Musannaf ; at-Tabarî, Târîkh" },
@@ -12793,7 +12793,7 @@ ISNAD.registerSaga({
             ] }
           ]],
           ['tp', 'homme', ['halle', -1, 2]],
-          ['say', 'ibnabbas', "Écoute ces murmures. Ils ne veulent pas de mal : ils trouvent seulement naturel que le rang l'emporte. C'est ainsi que naît un égrégore."]
+          ['say', 'ibnabbas', "Écoute ces murmures. Ils ne veulent pas de mal : ils trouvent seulement naturel que le rang l'emporte. C'est ainsi que naît une chimère."]
         ] },
         { text: 'Dissiper les murmures du souk', foe: 'f1', then: [
           ['nar', "Les murmures se dispersent. Mais dans l'envers de la ville, ils convergent vers la halle du juge, où quelque chose les attend et les rassemble."],
@@ -12816,7 +12816,7 @@ ISNAD.registerSaga({
         { text: "Traverser l'envers de la halle", foe: 'f2', then: [
           ['say', 'ammar', "J'ai connu La Mecque quand les puissants y avaient toujours raison. Je ne veux pas revoir cela sous un autre nom."]
         ] },
-        { text: 'Atteindre le cœur de l’égrégore', goto: 'coeur', then: [
+        { text: 'Atteindre le cœur de la chimère', goto: 'coeur', then: [
           ['say', 'ibnabbas', "Le voilà. Il ne cédera pas à la force : il s'en nourrit. Montre-lui la justice, et la patience de celui qui attend son tour."],
           ['heal'],
           ['battle', { group: ['privilege'], bg: 'noos', boss: true, intro: 'Tu es le premier des hommes. Pourquoi plaiderais-tu comme le dernier ?' }],
@@ -13433,7 +13433,7 @@ ISNAD.registerSaga({
       role: 'guerrier', el: 'shajaa',
       look: { robe: '#7a2f2a', head: '#e9dcc0', cloak: '#8e2f2a', aura: '#ff9a70', coiffe: 'casque_turban', cuirasse: true, manteau: 'epaule', item: 'sabre' },
       skills: [
-        { lvl: 1, id: 'charge', name: 'Charge', desc: 'Charge de cavalerie sur un égrégore.', cost: 3,
+        { lvl: 1, id: 'charge', name: 'Charge', desc: 'Charge de cavalerie sur une chimère.', cost: 3,
           target: 'foe', el: 'fer', pow: 1.4, anim: 'slash' },
         { lvl: 1, id: 'elan', name: 'Élan', desc: "Le courage fait reculer l'ombre.", cost: 3,
           target: 'foe', el: 'shajaa', pow: 1.3, anim: 'burst' },
@@ -13456,7 +13456,7 @@ ISNAD.registerSaga({
       skills: [
         { lvl: 1, id: 'estoc', name: 'Estoc', desc: 'Frappe rapide et précise.', cost: 2,
           target: 'foe', el: 'fer', pow: 1.2, anim: 'slash' },
-        { lvl: 1, id: 'eclaireur', name: "Œil de l'éclaireur", desc: "Révèle les failles d'un égrégore.", cost: 2,
+        { lvl: 1, id: 'eclaireur', name: "Œil de l'éclaireur", desc: "Révèle les failles d'une chimère.", cost: 2,
           target: 'foe', el: 'sabr', pow: 0.7, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 2, id: 'tenir', name: 'Tenir la ligne', desc: 'Frappe avec constance et affermit sa propre garde.', cost: 4,
           target: 'foe', el: 'sabr', pow: 1.3, fx: [{ st: 'def', v: 1, self: true }], anim: 'guard' },
@@ -13467,7 +13467,7 @@ ISNAD.registerSaga({
         { lvl: 6, id: 'voix', name: 'La Voix dans les rangs', desc: 'Sa voix vaut mille hommes : Force et Niyya pour tout le groupe.', cost: 7,
           target: 'allies', fx: [{ st: 'atk', v: 1 }, { st: 'niyya', v: 1 }], anim: 'glyph' }
       ],
-      limit: { id: 'vagues', name: 'Vagues de renfort', desc: 'Les cavaliers surgissent par vagues : tous les égrégores vacillent.',
+      limit: { id: 'vagues', name: 'Vagues de renfort', desc: 'Les cavaliers surgissent par vagues : toutes les chimères vacillent.',
                target: 'foes', el: 'sabr', pow: 1.5, fx: [{ st: 'stun', chance: 0.4 }, { st: 'veil', v: -1 }], anim: 'wave' }
     },
     dirar: {
@@ -13475,7 +13475,7 @@ ISNAD.registerSaga({
       role: 'guerrier', el: 'shajaa',
       look: { robe: '#c9a25a', head: '#f0e8d8', cloak: '#5a3a22', aura: '#ffb080', trim: '#b5462f', coiffe: 'imama_queue', manteau: 'aucun', court: true, legs: '#6b4a32', echarpe: true, item: 'lance' },
       skills: [
-        { lvl: 1, id: 'ruee', name: 'Ruée', desc: "Se jette sur l'égrégore.", cost: 2,
+        { lvl: 1, id: 'ruee', name: 'Ruée', desc: "Se jette sur la chimère.", cost: 2,
           target: 'foe', el: 'fer', pow: 1.25, anim: 'slash' },
         { lvl: 1, id: 'outre', name: "Partager l'outre", desc: "Donne sa part d'eau : rend de la Constance à un compagnon.", cost: 4,
           target: 'ally', heal: 1.0, anim: 'heal' },
@@ -13527,7 +13527,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 2, name: 'Outres vides', target: 'foes', el: 'fer', pow: 0.8, fx: [{ st: 'spd', v: -1, chance: 0.5 }], anim: 'wave' }] }
       ],
       taunts: ['Le sable est doux à qui renonce.'],
-      desc: "Égrégore du désespoir : cinq jours de gorges sèches lui donnent un corps. Elle ne tue pas, elle persuade de s'asseoir. On la brise en continuant de marcher."
+      desc: "Chimère du désespoir : cinq jours de gorges sèches lui donnent un corps. Elle ne tue pas, elle persuade de s'asseoir. On la brise en continuant de marcher."
     },
     decompte: {
       name: 'Le Décompte', art: 'swarm', hue: 255, scale: 1, lvl: 3, tier: 'minion',
@@ -13646,11 +13646,11 @@ ISNAD.registerSaga({
       text: "Après avoir vérifié les comptes de Khâlid et l'avoir trouvé intègre, 'Umar écrit aux provinces : « Je n'ai pas destitué Khâlid par mécontentement ni pour trahison ; mais les gens ont été éblouis par lui, et j'ai craint qu'ils ne s'en remettent à lui. J'ai voulu qu'ils sachent que c'est Allah qui agit. » La mesure ne vise pas l'homme, mais ce que d'autres bâtissaient autour de lui.",
       src: 'at-Tabarî, Târîkh' },
     { id: 'idole_soif', cat: 'Noosphère', title: 'Le Mirage et la Soif',
-      text: "Égrégores du désespoir. Le Mirage naît quand toute une armée regarde la même eau qui n'existe pas ; la Soif, quand chacun compte en silence les gorgées qui restent. Ils ne tuent pas : ils persuadent de s'asseoir. On les brise par la patience et le courage, en continuant de marcher vers une source qu'on ne voit pas encore." },
+      text: "Chimères du désespoir. Le Mirage naît quand toute une armée regarde la même eau qui n'existe pas ; la Soif, quand chacun compte en silence les gorgées qui restent. Ils ne tuent pas : ils persuadent de s'asseoir. On les brise par la patience et le courage, en continuant de marcher vers une source qu'on ne voit pas encore." },
     { id: 'idole_nombre', cat: 'Noosphère', title: 'La Peur du Nombre',
       text: "Idole faite de décomptes. Elle se nourrit de chaque regard qui dénombre l'adversaire et de chaque bouche qui répète le total. Elle fait croire que l'issue est une soustraction. Une parole vraie la fend : « Les armées ne sont nombreuses que par la victoire. » Dans la Cité-Miroir, l'Agrégor lui donne d'autres noms : audience, score, majorité." },
     { id: 'idole_heros', cat: 'Noosphère', title: "L'Idole du Héros",
-      text: "Le plus subtil des égrégores : il prend la silhouette d'un homme de bien. Chaque « avec lui, on ne perd jamais » lui ajoute une couche d'or. Il ne demande pas qu'on renie Allah ; seulement qu'on oublie de Le nommer. Le fer ne l'entame pas, car il est fait de victoires. Il se brise quand le héros lui-même refuse le socle. Le Laurier, louange des poètes, est sa couronne." },
+      text: "La plus subtile des chimères : elle prend la silhouette d'un homme de bien. Chaque « avec lui, on ne perd jamais » lui ajoute une couche d'or. Elle ne demande pas qu'on renie Allah ; seulement qu'on oublie de Le nommer. Le fer ne l'entame pas, car elle est faite de victoires. Elle se brise quand le héros lui-même refuse le socle. Le Laurier, louange des poètes, est sa couronne." },
     /* ── v2 : pactes, savoirs, fiction signalée ── */
     { id: 'hira', cat: 'Lieu', title: 'Al-Hîra',
       text: "Sur la rive occidentale de l'Euphrate, al-Hîra fut pendant trois siècles la capitale des rois lakhmides, Arabes alliés de la Perse. Ville de palais et de monastères, peuplée d'Arabes chrétiens que l'on nommait les 'Ibâd. La tradition rapporte que c'est d'al-Hîra et d'al-Anbâr que l'écriture arabe gagna le Hijâz. Après la conquête, Koufa sera fondée à quelques lieues de là.",
@@ -14317,11 +14317,11 @@ ISNAD.registerSaga({
       skills: [
         { lvl: 1, id: 'durra', name: 'La Durra', desc: "Coup de férule. Peut étourdir.", cost: 3,
           target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
-        { lvl: 1, id: 'firasa', name: 'Firâsa', desc: "Discerne les failles d'un égrégore et le frappe d'un trait de Justice.", cost: 2,
+        { lvl: 1, id: 'firasa', name: 'Firâsa', desc: "Discerne les failles d'une chimère et la frappe d'un trait de Justice.", cost: 2,
           target: 'foe', el: 'adl', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 2, id: 'ronde', name: 'Ronde de nuit', desc: "Veille sur le groupe : régénération pendant 3 tours.", cost: 5,
           target: 'allies', fx: [{ st: 'regen', turns: 3 }], anim: 'heal' },
-        { lvl: 4, id: 'equite', name: 'Équité', desc: "La même mesure pour tous : Justice sur tous les égrégores.", cost: 6,
+        { lvl: 4, id: 'equite', name: 'Équité', desc: "La même mesure pour tous : Justice sur toutes les chimères.", cost: 6,
           target: 'foes', el: 'adl', pow: 0.9, anim: 'wave' },
         { lvl: 6, id: 'fardeau', name: 'Porter le fardeau', desc: "Prend la charge sur son dos : attire les coups, en garde, défense accrue.", cost: 4,
           target: 'self', fx: [{ st: 'taunt', turns: 2 }, { st: 'garde' }, { st: 'def', v: 1 }], anim: 'guard' },
@@ -14336,7 +14336,7 @@ ISNAD.registerSaga({
       role: 'soigneur', el: 'rahma',
       look: { robe: '#a08a5c', head: '#8a5a3a', cloak: '#5b4a33', aura: '#7fe3d6', coiffe: 'calotte', manteau: 'aucun', court: true, legs: '#5a4a3a' },
       skills: [
-        { lvl: 1, id: 'lanterne', name: 'La Lanterne', desc: "Éclaire ce qui rôde : Miséricorde sur un égrégore.", cost: 2,
+        { lvl: 1, id: 'lanterne', name: 'La Lanterne', desc: "Éclaire ce qui rôde : Miséricorde sur une chimère.", cost: 2,
           target: 'foe', el: 'rahma', pow: 1.2, anim: 'light' },
         { lvl: 1, id: 'panser', name: 'Panser', desc: "Rend de la Constance à un compagnon.", cost: 3,
           target: 'ally', heal: 1.0, anim: 'heal' },
@@ -14357,9 +14357,9 @@ ISNAD.registerSaga({
       role: 'stratege', el: 'sabr',
       look: { robe: '#6f7f6a', head: '#eae4d2', cloak: '#4b5a4a', aura: '#9be0ae', coiffe: 'calotte', manteau: 'aucun', echarpe: true },
       skills: [
-        { lvl: 1, id: 'depot', name: 'Garde du dépôt', desc: "Ce qu'on lui confie, il le rend : Patience sur un égrégore.", cost: 3,
+        { lvl: 1, id: 'depot', name: 'Garde du dépôt', desc: "Ce qu'on lui confie, il le rend : Patience sur une chimère.", cost: 3,
           target: 'foe', el: 'sabr', pow: 1.3, anim: 'light' },
-        { lvl: 1, id: 'droiture', name: 'Parole droite', desc: "Véracité sur un égrégore ; dissipe ses bonus.", cost: 4,
+        { lvl: 1, id: 'droiture', name: 'Parole droite', desc: "Véracité sur une chimère ; dissipe ses bonus.", cost: 4,
           target: 'foe', el: 'sidq', pow: 1.1, fx: [{ st: 'dispel' }], anim: 'glyph' },
         { lvl: 2, id: 'rangs', name: 'Rangs serrés', desc: "Resserre les rangs : défense du groupe accrue.", cost: 5,
           target: 'allies', fx: [{ st: 'def', v: 1 }], anim: 'guard' },
@@ -14378,9 +14378,9 @@ ISNAD.registerSaga({
       role: 'sage', el: 'sidq',
       look: { robe: '#e2d9c2', head: '#f4efe2', cloak: '#8a5c2e', aura: '#ffe7a0', coiffe: 'imama_haute', motif: 'rayures', item: 'bourse' },
       skills: [
-        { lvl: 1, id: 'loyal', name: 'Commerce loyal', desc: "Ni fraude ni serment vain : Véracité sur un égrégore.", cost: 3,
+        { lvl: 1, id: 'loyal', name: 'Commerce loyal', desc: "Ni fraude ni serment vain : Véracité sur une chimère.", cost: 3,
           target: 'foe', el: 'sidq', pow: 1.3, anim: 'light' },
-        { lvl: 1, id: 'peser', name: 'Peser juste', desc: "Révèle les failles d'un égrégore et déchire un voile.", cost: 4,
+        { lvl: 1, id: 'peser', name: 'Peser juste', desc: "Révèle les failles d'une chimère et déchire un voile.", cost: 4,
           target: 'foe', el: 'sidq', pow: 0.8, fx: [{ st: 'reveal' }, { st: 'veil', v: -1 }], anim: 'glyph' },
         { lvl: 2, id: 'caravane', name: 'Caravane offerte', desc: "Donne sans compter : rend de la Constance à tout le groupe.", cost: 6,
           target: 'allies', heal: 0.6, anim: 'heal' },
@@ -14405,7 +14405,7 @@ ISNAD.registerSaga({
         { w: 2, name: 'Creux', target: 'foe', el: 'fer', pow: 0.9, fx: [{ st: 'atk', v: -1, chance: 0.3 }], anim: 'dark' }
       ],
       taunts: ['Il n\'y en aura pas pour tous…'],
-      desc: "Menu égrégore né des ventres vides qui regardent ensemble vers les mêmes portes closes. Il ne veut rien : il répète seulement qu'il n'y en aura pas pour tous. Un geste de Miséricorde le dissipe."
+      desc: "Menue chimère née des ventres vides qui regardent ensemble vers les mêmes portes closes. Elle ne veut rien : elle répète seulement qu'il n'y en aura pas pour tous. Un geste de Miséricorde la dissipe."
     },
     cendre: {
       name: 'Plainte des cendres', art: 'swarm', hue: 12, scale: 1,
@@ -14429,7 +14429,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 3, name: 'Greniers clos', target: 'foes', el: 'fer', pow: 1.0, anim: 'dark' }] }
       ],
       taunts: ['Encore un peu. Juste un peu plus.', 'Attends que les prix montent.'],
-      desc: "Égrégore de la pénurie organisée. Chaque grenier fermé par calcul l'élève d'un étage ; il se nourrit de la peur de manquer, et la fabrique. Il cède devant la Miséricorde, qui donne, et la Justice, qui répartit."
+      desc: "Chimère de la pénurie organisée. Chaque grenier fermé par calcul l'élève d'un étage ; elle se nourrit de la peur de manquer, et la fabrique. Elle cède devant la Miséricorde, qui donne, et la Justice, qui répartit."
     },
     mirage: {
       name: 'Mirage de gloire', art: 'mask', hue: 200, scale: 1,
@@ -14466,7 +14466,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 3, name: 'Mille légions', target: 'foes', el: 'fer', pow: 1.1, fx: [{ st: 'def', v: -1, chance: 0.5 }], anim: 'burst' }] }
       ],
       taunts: ['Entre en César.', 'Ils veulent un maître à admirer. Donne-le-leur.'],
-      desc: "Égrégore de l'orgueil d'empire. Les légions meurent, l'enseigne reste : elle passe de vaincu en vainqueur. Elle cède devant la Patience des humbles et la Justice."
+      desc: "Chimère de l'orgueil d'empire. Les légions meurent, l'enseigne reste : elle passe de vaincu en vainqueur. Elle cède devant la Patience des humbles et la Justice."
     },
     reflet: {
       name: "Reflet d'or", art: 'mirror', hue: 50, scale: 1,
@@ -14490,7 +14490,7 @@ ISNAD.registerSaga({
         { at: 0.5, say: "Nul front ne peut me porter : c'est pourquoi tous se courbent.", fx: [{ st: 'atk', v: 1 }],
           addSkills: [{ w: 2, name: 'Courbez-vous', target: 'foes', el: 'fer', pow: 1.0, fx: [{ st: 'spd', v: -1, chance: 0.5 }], anim: 'dark' }] }
       ],
-      desc: "La couronne de Kisrâ était si lourde qu'une chaîne d'or la tenait suspendue au-dessus du trône. Son égrégore pèse de même sur les esprits. La Justice rompt la chaîne ; la Véracité dit son poids réel."
+      desc: "La couronne de Kisrâ était si lourde qu'une chaîne d'or la tenait suspendue au-dessus du trône. Sa chimère pèse de même sur les esprits. La Justice rompt la chaîne ; la Véracité dit son poids réel."
     },
     trone: { racine: 'orgueil',
       name: 'Le Trône vide', art: 'throne', hue: 48, scale: 3,
@@ -14508,7 +14508,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 3, name: 'Tyrannie', target: 'foes', el: 'fer', pow: 1.25, fx: [{ st: 'atk', v: -1, chance: 0.5 }], anim: 'burst' }] }
       ],
       taunts: ['Assieds-toi.', 'Les hommes passent. La place reste.', 'Un seul instant. Pour bien faire.'],
-      desc: "Égrégore de la tyrannie. Ce n'est pas un roi, mais la place du roi : un vide qui exige d'être occupé et survit à tous ceux qui s'y asseyent. Il cède devant la Justice, qui ne s'exempte pas elle-même, et la Miséricorde."
+      desc: "Chimère de la tyrannie. Ce n'est pas un roi, mais la place du roi : un vide qui exige d'être occupé et survit à tous ceux qui s'y asseyent. Elle cède devant la Justice, qui ne s'exempte pas elle-même, et la Miséricorde."
     }
   },
 
@@ -14578,13 +14578,13 @@ ISNAD.registerSaga({
       text: "On rapporte qu'Abû Mûsâ al-Ash'arî écrivit de Bassora : « Il nous vient de toi des lettres sans date. » 'Umar réunit les Compagnons, vers l'an 17. Les uns proposèrent de compter depuis la naissance du Prophète ﷺ, d'autres depuis sa mort ; on retint l'Hégire, sur l'avis de 'Alî dit-on, et le mois de Muharram pour ouvrir l'année. Ni une naissance ni un deuil : le jour où une communauté quitta sa ville pour sa foi.",
       src: "at-Tabarî, Târîkh ; al-Hâkim, al-Mustadrak ; Ibn Hajar, Fath al-Bârî" },
     { id: 'ego_accapareur', cat: 'Noosphère', title: "L'Accapareur",
-      text: "Égrégore de la pénurie organisée. Il naît lorsque beaucoup ferment ensemble leurs greniers en regardant monter les prix : chaque porte close l'élève d'un étage. Il se nourrit de la peur de manquer, et la fabrique à son tour. La force seule l'entame peu ; il cède devant la Miséricorde, qui donne, et la Justice, qui répartit.",
+      text: "Chimère de la pénurie organisée. Elle naît lorsque beaucoup ferment ensemble leurs greniers en regardant monter les prix : chaque porte close l'élève d'un étage. Elle se nourrit de la peur de manquer, et la fabrique à son tour. La force seule l'entame peu ; elle cède devant la Miséricorde, qui donne, et la Justice, qui répartit.",
       src: 'Lecture noosphérique du jeu' },
     { id: 'ego_aigle', cat: 'Noosphère', title: "L'Aigle d'Airain",
-      text: "Égrégore de l'orgueil d'empire. Les légions meurent, les aigles restent : l'enseigne passe du vaincu au vainqueur et murmure à chaque conquérant d'entrer en César. Il se nourrit des foules qui attendent un maître à admirer. À Jérusalem, 'Umar lui opposa un manteau rapiécé et un pacte. Il cède devant la Patience des humbles et la Justice.",
+      text: "Chimère de l'orgueil d'empire. Les légions meurent, les aigles restent : l'enseigne passe du vaincu au vainqueur et murmure à chaque conquérant d'entrer en César. Elle se nourrit des foules qui attendent un maître à admirer. À Jérusalem, 'Umar lui opposa un manteau rapiécé et un pacte. Elle cède devant la Patience des humbles et la Justice.",
       src: 'Lecture noosphérique du jeu' },
     { id: 'ego_trone', cat: 'Noosphère', title: 'Le Trône vide',
-      text: "Égrégore de la tyrannie. Ce n'est pas un roi, mais la place du roi : un vide qui exige d'être occupé et survit à tous ceux qui s'y asseyent. L'or est son appât ; la peur de perdre, sa chaîne. On ne le brise pas en s'y asseyant « pour bien faire ». Il cède devant la Justice, qui ne s'exempte pas elle-même, et devant la Miséricorde.",
+      text: "Chimère de la tyrannie. Ce n'est pas un roi, mais la place du roi : un vide qui exige d'être occupé et survit à tous ceux qui s'y asseyent. L'or est son appât ; la peur de perdre, sa chaîne. On ne la brise pas en s'y asseyant « pour bien faire ». Elle cède devant la Justice, qui ne s'exempte pas elle-même, et devant la Miséricorde.",
       src: 'Lecture noosphérique du jeu' }
   ],
 
@@ -14646,7 +14646,7 @@ ISNAD.registerSaga({
           ['choice', "Le peuple manque de tout. Que fait 'Umar du beurre et du lait ?", [
             { t: "Les donner en aumône, et s'en tenir à l'huile et au pain d'orge", ok: true, r: [
               ['say', 'umar', "Tu as payé cher. Donne-les en aumône : je répugne à manger avec excès."],
-              ['quote', "« Comment me soucierais-je du sort des gens, si ce qui les atteint ne m'atteint pas ? »", "Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh"]
+              ['quote', "« Comment me soucierais-je du sort des gens, si ce qui les atteint ne m'atteint pas ? »", "at-Tabarî, Târîkh"]
             ] },
             { t: "Les accepter : un chef affaibli ne sert personne", r: [
               ['nar', "Ce n'est pas ce qui fut rapporté. Cette année-là, 'Umar jura de ne goûter ni beurre ni viande tant que les gens n'en auraient pas."]
@@ -15299,7 +15299,7 @@ ISNAD.registerSaga({
           target: 'allies', sp: 0.3, anim: 'wave' },
         { lvl: 6, id: 'affranchir', name: 'Affranchir', desc: 'Délivre un compagnon de ses altérations et lui rend de la Constance.', cost: 5,
           target: 'ally', heal: 1.0, fx: [{ st: 'cleanse' }], anim: 'heal' },
-        { lvl: 8, id: 'patience', name: "Patience de l'assiégé", desc: "Tient sans rendre les coups : Patience sur tous les égrégores, et sa garde s'affermit.", cost: 9,
+        { lvl: 8, id: 'patience', name: "Patience de l'assiégé", desc: "Tient sans rendre les coups : Patience sur toutes les chimères, et sa garde s'affermit.", cost: 9,
           target: 'foes', el: 'sabr', pow: 1.1, fx: [{ st: 'def', v: 1, self: true }], anim: 'wave' }
       ],
       limit: { id: 'sans_effusion', name: 'Sans effusion de sang', desc: 'Refuse le sang : relève le groupe, dissipe ses maux et le garde.',
@@ -15313,11 +15313,11 @@ ISNAD.registerSaga({
       skills: [
         { lvl: 1, id: 'calame', name: 'Le Calame', desc: 'Trace net ce que la querelle brouille. Dégâts de Savoir.', cost: 3,
           target: 'foe', el: 'ilm', pow: 1.3, anim: 'glyph' },
-        { lvl: 1, id: 'collation', name: 'Collation', desc: "Compare ligne à ligne : révèle les failles d'un égrégore.", cost: 2,
+        { lvl: 1, id: 'collation', name: 'Collation', desc: "Compare ligne à ligne : révèle les failles d'une chimère.", cost: 2,
           target: 'foe', el: 'ilm', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'light' },
         { lvl: 2, id: 'temoins', name: 'Deux témoins', desc: "N'admet rien sans deux témoins. Dégâts de Véracité.", cost: 4,
           target: 'foe', el: 'sidq', pow: 1.5, anim: 'light' },
-        { lvl: 4, id: 'trace', name: 'Un seul tracé', desc: 'Ramène les lectures à une même ligne : Savoir sur tous les égrégores.', cost: 7,
+        { lvl: 4, id: 'trace', name: 'Un seul tracé', desc: 'Ramène les lectures à une même ligne : Savoir sur toutes les chimères.', cost: 7,
           target: 'foes', el: 'ilm', pow: 0.9, anim: 'wave' },
         { lvl: 6, id: 'dictee', name: 'Dictée', desc: "Chacun écrit d'une même voix : Esprit accru et Niyya pour le groupe.", cost: 6,
           target: 'allies', fx: [{ st: 'mag', v: 1 }, { st: 'niyya', v: 1 }], anim: 'glyph' },
@@ -15336,9 +15336,9 @@ ISNAD.registerSaga({
           target: 'foe', el: 'fer', pow: 1.4, anim: 'slash' },
         { lvl: 1, id: 'alarme', name: "Cri d'alarme", desc: 'Nomme le danger avant qu’il ne grandisse. Dégâts de Véracité.', cost: 3,
           target: 'foe', el: 'sidq', pow: 1.3, anim: 'light' },
-        { lvl: 2, id: 'demasquer', name: 'Démasquer', desc: "Voit ce qui se cache : révèle les failles et fend la garde d'un égrégore.", cost: 4,
+        { lvl: 2, id: 'demasquer', name: 'Démasquer', desc: "Voit ce qui se cache : révèle les failles et fend la garde d'une chimère.", cost: 4,
           target: 'foe', el: 'sidq', pow: 0.9, fx: [{ st: 'reveal' }, { st: 'def', v: -1 }], anim: 'glyph' },
-        { lvl: 4, id: 'ligne', name: 'Tenir la ligne', desc: "Comme à Nihâwand, relève l'étendard tombé : Courage sur tous les égrégores.", cost: 6,
+        { lvl: 4, id: 'ligne', name: 'Tenir la ligne', desc: "Comme à Nihâwand, relève l'étendard tombé : Courage sur toutes les chimères.", cost: 6,
           target: 'foes', el: 'shajaa', pow: 0.9, anim: 'burst' },
         { lvl: 6, id: 'veille', name: 'Veille aux frontières', desc: 'Le groupe gagne en Élan et en Garde.', cost: 5,
           target: 'allies', fx: [{ st: 'spd', v: 1 }, { st: 'def', v: 1 }], anim: 'guard' },
@@ -15383,7 +15383,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 3, name: 'Schisme', target: 'foes', el: 'fer', pow: 0.9, fx: [{ st: 'mag', v: -1, chance: 0.4 }], anim: 'burst' }] }
       ],
       taunts: ['Récite. Je te dirai en quoi tu te trompes.', 'Ils ne se comprennent déjà plus.'],
-      desc: "Égrégore de la discorde des lectures. Il naît quand une chose vraie, reçue par plusieurs voies, devient un motif de se préférer à l'autre. Le Savoir, qui compare et vérifie, et la Véracité, qui renonce à avoir raison seule, le défont."
+      desc: "Chimère de la discorde des lectures. Elle naît quand une chose vraie, reçue par plusieurs voies, devient un motif de se préférer à l'autre. Le Savoir, qui compare et vérifie, et la Véracité, qui renonce à avoir raison seule, la défont."
     },
     ecume: {
       name: "Écume d'effroi", art: 'wave', hue: 200, scale: 1, lvl: 4, tier: 'minion',
@@ -15408,7 +15408,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 3, name: 'Maelström', target: 'foes', el: 'fer', pow: 1.0, fx: [{ st: 'spd', v: -1, chance: 0.5 }], anim: 'wave' }] }
       ],
       taunts: ['Regarde en bas.', "Il n'y a ni piste ni puits, ici."],
-      desc: "Égrégore de la peur de la mer : l'effroi d'hommes du désert devant une étendue sans piste ni puits. Il grossit de chaque regard jeté par-dessus bord. Le Courage le fend ; la Miséricorde l'apaise ; la Véracité lui rappelle que nul n'a été contraint d'embarquer."
+      desc: "Chimère de la peur de la mer : l'effroi d'hommes du désert devant une étendue sans piste ni puits. Elle grossit de chaque regard jeté par-dessus bord. Le Courage la fend ; la Miséricorde l'apaise ; la Véracité lui rappelle que nul n'a été contraint d'embarquer."
     },
     ouidire: {
       name: 'Ouï-dire', art: 'mask', hue: 330, scale: 1, lvl: 5, tier: 'minion',
@@ -15441,7 +15441,7 @@ ISNAD.registerSaga({
           fx: [{ st: 'atk', v: 1 }] }
       ],
       taunts: ['Et toi, combien as-tu reçu ?'],
-      desc: "Égrégore des richesses amassées. Les conquêtes firent affluer à Médine plus de biens qu'elle n'en avait jamais vus ; avec eux vinrent la comparaison et l'envie. La Miséricorde, qui donne, et la Véracité, qui rend compte, lui retirent ses voiles."
+      desc: "Chimère des richesses amassées. Les conquêtes firent affluer à Médine plus de biens qu'elle n'en avait jamais vus ; avec eux vinrent la comparaison et l'envie. La Miséricorde, qui donne, et la Véracité, qui rend compte, lui retirent ses voiles."
     },
     rumeur: { racine: 'noir_soupcon',
       name: 'La Rumeur', art: 'lens', hue: 320, scale: 3, lvl: 9, tier: 'boss',
@@ -15518,11 +15518,11 @@ ISNAD.registerSaga({
     { id: 'akhbar_n', cat: 'Noosphère', title: 'Abû l-Akhbâr (personnage de fiction)',
       text: "Scribe de garnison et porteur de lettres, inventé pour ce récit : « le père des nouvelles » est un sobriquet. Il ne ment presque jamais. Il arrondit, ajoute un mot, tait une réserve, et dit toujours : « je ne fais que répéter ». Il n'est pas la Rumeur : il en est la petite bouche. Une seule question le désarme : qui te l'a dit ?" },
     { id: 'babel_n', cat: 'Noosphère', title: 'Babel',
-      text: "Égrégore de la discorde des lectures. Il naît quand une chose vraie, reçue par plusieurs voies, devient un motif de se préférer à l'autre. Il se nourrit d'une seule phrase : « Ma lecture vaut mieux que la tienne. » Il est défait par le Savoir, qui compare et vérifie, et par la Véracité, qui renonce à avoir raison seule." },
+      text: "Chimère de la discorde des lectures. Elle naît quand une chose vraie, reçue par plusieurs voies, devient un motif de se préférer à l'autre. Elle se nourrit d'une seule phrase : « Ma lecture vaut mieux que la tienne. » Elle est défaite par le Savoir, qui compare et vérifie, et par la Véracité, qui renonce à avoir raison seule." },
     { id: 'abime_n', cat: 'Noosphère', title: "L'Abîme",
-      text: "Égrégore de la peur de la mer : l'effroi d'hommes du désert devant une étendue sans piste ni puits. La contrainte l'aurait rendu invincible, car une peur imposée commande. 'Uthmân exigea que nul n'embarque contre son gré : la peur d'un homme libre reste la sienne, et il peut la regarder en face." },
+      text: "Chimère de la peur de la mer : l'effroi d'hommes du désert devant une étendue sans piste ni puits. La contrainte l'aurait rendue invincible, car une peur imposée commande. 'Uthmân exigea que nul n'embarque contre son gré : la peur d'un homme libre reste la sienne, et il peut la regarder en face." },
     { id: 'or_n', cat: 'Noosphère', title: "L'Or",
-      text: "Égrégore des richesses amassées. L'Or ne ment pas : il pèse, et fait pencher les regards. Là où chacun compte ce que l'autre a reçu, il dresse sa tour. Il sert de socle à la Rumeur, qui trouve dans l'envie des bouches toutes prêtes." },
+      text: "Chimère des richesses amassées. L'Or ne ment pas : il pèse, et fait pencher les regards. Là où chacun compte ce que l'autre a reçu, il dresse sa tour. Il sert de socle à la Rumeur, qui trouve dans l'envie des bouches toutes prêtes." },
     { id: 'rumeur_n', cat: 'Noosphère', title: 'La Rumeur',
       text: "Idole faite de bouches. Elle dit une chose et son contraire, et n'en est que plus forte : elle ne vit pas d'être crue, mais d'être redite. Nul ne l'a écrite, tous la signent. Le fer ne peut rien contre elle — la frapper, c'est lui donner un récit de plus. 'Uthmân lui refusa la seule chose qu'elle demandait : du sang. Dans la Cité-Miroir, l'Agrégor lui a donné un autre nom : le Flux." }
   ],
@@ -16079,7 +16079,7 @@ ISNAD.registerSaga({
             ] }
           ]],
           ['quote', "« Te plairait-il de tuer tous les gens, et moi avec eux ? Par Allah, si tu tues un seul homme, c'est comme si tu avais tué tous les gens. »", "'Uthmân à Abû Hurayra — Ibn Sa'd, Tabaqât"],
-          ['quote', "« J'adjure quiconque estime me devoir écoute et obéissance de retenir sa main et son arme. […] Je ne serai pas le premier à succéder au Messager d'Allah ﷺ dans sa communauté en faisant couler le sang. »", "On rapporte — Ibn Sa'd, Tabaqât ; Ahmad, Musnad"],
+          ['quote', "« J'adjure quiconque estime me devoir écoute et obéissance de retenir sa main et son arme… »", "On rapporte — Nu'aym ibn Hammâd, al-Fitan ; Khalîfa ibn Khayyât, Târîkh"],
           ['codex', 'parole_sang'], ['pillar', 'lien', 1],
           ['show', 'affranchi'],
           ['nar', "Le dernier matin se lève sur la maison. Avant le jour, il prie."],

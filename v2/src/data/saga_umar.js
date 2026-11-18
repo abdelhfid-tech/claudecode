@@ -45,11 +45,11 @@ ISNAD.registerSaga({
       skills: [
         { lvl: 1, id: 'durra', name: 'La Durra', desc: "Coup de férule. Peut étourdir.", cost: 3,
           target: 'foe', el: 'fer', pow: 1.3, fx: [{ st: 'stun', chance: 0.3 }], anim: 'slash' },
-        { lvl: 1, id: 'firasa', name: 'Firâsa', desc: "Discerne les failles d'un égrégore et le frappe d'un trait de Justice.", cost: 2,
+        { lvl: 1, id: 'firasa', name: 'Firâsa', desc: "Discerne les failles d'une chimère et la frappe d'un trait de Justice.", cost: 2,
           target: 'foe', el: 'adl', pow: 0.8, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 2, id: 'ronde', name: 'Ronde de nuit', desc: "Veille sur le groupe : régénération pendant 3 tours.", cost: 5,
           target: 'allies', fx: [{ st: 'regen', turns: 3 }], anim: 'heal' },
-        { lvl: 4, id: 'equite', name: 'Équité', desc: "La même mesure pour tous : Justice sur tous les égrégores.", cost: 6,
+        { lvl: 4, id: 'equite', name: 'Équité', desc: "La même mesure pour tous : Justice sur toutes les chimères.", cost: 6,
           target: 'foes', el: 'adl', pow: 0.9, anim: 'wave' },
         { lvl: 6, id: 'fardeau', name: 'Porter le fardeau', desc: "Prend la charge sur son dos : attire les coups, en garde, défense accrue.", cost: 4,
           target: 'self', fx: [{ st: 'taunt', turns: 2 }, { st: 'garde' }, { st: 'def', v: 1 }], anim: 'guard' },
@@ -64,7 +64,7 @@ ISNAD.registerSaga({
       role: 'soigneur', el: 'rahma',
       look: { robe: '#a08a5c', head: '#8a5a3a', cloak: '#5b4a33', aura: '#7fe3d6', coiffe: 'calotte', manteau: 'aucun', court: true, legs: '#5a4a3a' },
       skills: [
-        { lvl: 1, id: 'lanterne', name: 'La Lanterne', desc: "Éclaire ce qui rôde : Miséricorde sur un égrégore.", cost: 2,
+        { lvl: 1, id: 'lanterne', name: 'La Lanterne', desc: "Éclaire ce qui rôde : Miséricorde sur une chimère.", cost: 2,
           target: 'foe', el: 'rahma', pow: 1.2, anim: 'light' },
         { lvl: 1, id: 'panser', name: 'Panser', desc: "Rend de la Constance à un compagnon.", cost: 3,
           target: 'ally', heal: 1.0, anim: 'heal' },
@@ -85,9 +85,9 @@ ISNAD.registerSaga({
       role: 'stratege', el: 'sabr',
       look: { robe: '#6f7f6a', head: '#eae4d2', cloak: '#4b5a4a', aura: '#9be0ae', coiffe: 'calotte', manteau: 'aucun', echarpe: true },
       skills: [
-        { lvl: 1, id: 'depot', name: 'Garde du dépôt', desc: "Ce qu'on lui confie, il le rend : Patience sur un égrégore.", cost: 3,
+        { lvl: 1, id: 'depot', name: 'Garde du dépôt', desc: "Ce qu'on lui confie, il le rend : Patience sur une chimère.", cost: 3,
           target: 'foe', el: 'sabr', pow: 1.3, anim: 'light' },
-        { lvl: 1, id: 'droiture', name: 'Parole droite', desc: "Véracité sur un égrégore ; dissipe ses bonus.", cost: 4,
+        { lvl: 1, id: 'droiture', name: 'Parole droite', desc: "Véracité sur une chimère ; dissipe ses bonus.", cost: 4,
           target: 'foe', el: 'sidq', pow: 1.1, fx: [{ st: 'dispel' }], anim: 'glyph' },
         { lvl: 2, id: 'rangs', name: 'Rangs serrés', desc: "Resserre les rangs : défense du groupe accrue.", cost: 5,
           target: 'allies', fx: [{ st: 'def', v: 1 }], anim: 'guard' },
@@ -106,9 +106,9 @@ ISNAD.registerSaga({
       role: 'sage', el: 'sidq',
       look: { robe: '#e2d9c2', head: '#f4efe2', cloak: '#8a5c2e', aura: '#ffe7a0', coiffe: 'imama_haute', motif: 'rayures', item: 'bourse' },
       skills: [
-        { lvl: 1, id: 'loyal', name: 'Commerce loyal', desc: "Ni fraude ni serment vain : Véracité sur un égrégore.", cost: 3,
+        { lvl: 1, id: 'loyal', name: 'Commerce loyal', desc: "Ni fraude ni serment vain : Véracité sur une chimère.", cost: 3,
           target: 'foe', el: 'sidq', pow: 1.3, anim: 'light' },
-        { lvl: 1, id: 'peser', name: 'Peser juste', desc: "Révèle les failles d'un égrégore et déchire un voile.", cost: 4,
+        { lvl: 1, id: 'peser', name: 'Peser juste', desc: "Révèle les failles d'une chimère et déchire un voile.", cost: 4,
           target: 'foe', el: 'sidq', pow: 0.8, fx: [{ st: 'reveal' }, { st: 'veil', v: -1 }], anim: 'glyph' },
         { lvl: 2, id: 'caravane', name: 'Caravane offerte', desc: "Donne sans compter : rend de la Constance à tout le groupe.", cost: 6,
           target: 'allies', heal: 0.6, anim: 'heal' },
@@ -133,7 +133,7 @@ ISNAD.registerSaga({
         { w: 2, name: 'Creux', target: 'foe', el: 'fer', pow: 0.9, fx: [{ st: 'atk', v: -1, chance: 0.3 }], anim: 'dark' }
       ],
       taunts: ['Il n\'y en aura pas pour tous…'],
-      desc: "Menu égrégore né des ventres vides qui regardent ensemble vers les mêmes portes closes. Il ne veut rien : il répète seulement qu'il n'y en aura pas pour tous. Un geste de Miséricorde le dissipe."
+      desc: "Menue chimère née des ventres vides qui regardent ensemble vers les mêmes portes closes. Elle ne veut rien : elle répète seulement qu'il n'y en aura pas pour tous. Un geste de Miséricorde la dissipe."
     },
     cendre: {
       name: 'Plainte des cendres', art: 'swarm', hue: 12, scale: 1,
@@ -157,7 +157,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 3, name: 'Greniers clos', target: 'foes', el: 'fer', pow: 1.0, anim: 'dark' }] }
       ],
       taunts: ['Encore un peu. Juste un peu plus.', 'Attends que les prix montent.'],
-      desc: "Égrégore de la pénurie organisée. Chaque grenier fermé par calcul l'élève d'un étage ; il se nourrit de la peur de manquer, et la fabrique. Il cède devant la Miséricorde, qui donne, et la Justice, qui répartit."
+      desc: "Chimère de la pénurie organisée. Chaque grenier fermé par calcul l'élève d'un étage ; elle se nourrit de la peur de manquer, et la fabrique. Elle cède devant la Miséricorde, qui donne, et la Justice, qui répartit."
     },
     mirage: {
       name: 'Mirage de gloire', art: 'mask', hue: 200, scale: 1,
@@ -194,7 +194,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 3, name: 'Mille légions', target: 'foes', el: 'fer', pow: 1.1, fx: [{ st: 'def', v: -1, chance: 0.5 }], anim: 'burst' }] }
       ],
       taunts: ['Entre en César.', 'Ils veulent un maître à admirer. Donne-le-leur.'],
-      desc: "Égrégore de l'orgueil d'empire. Les légions meurent, l'enseigne reste : elle passe de vaincu en vainqueur. Elle cède devant la Patience des humbles et la Justice."
+      desc: "Chimère de l'orgueil d'empire. Les légions meurent, l'enseigne reste : elle passe de vaincu en vainqueur. Elle cède devant la Patience des humbles et la Justice."
     },
     reflet: {
       name: "Reflet d'or", art: 'mirror', hue: 50, scale: 1,
@@ -218,7 +218,7 @@ ISNAD.registerSaga({
         { at: 0.5, say: "Nul front ne peut me porter : c'est pourquoi tous se courbent.", fx: [{ st: 'atk', v: 1 }],
           addSkills: [{ w: 2, name: 'Courbez-vous', target: 'foes', el: 'fer', pow: 1.0, fx: [{ st: 'spd', v: -1, chance: 0.5 }], anim: 'dark' }] }
       ],
-      desc: "La couronne de Kisrâ était si lourde qu'une chaîne d'or la tenait suspendue au-dessus du trône. Son égrégore pèse de même sur les esprits. La Justice rompt la chaîne ; la Véracité dit son poids réel."
+      desc: "La couronne de Kisrâ était si lourde qu'une chaîne d'or la tenait suspendue au-dessus du trône. Sa chimère pèse de même sur les esprits. La Justice rompt la chaîne ; la Véracité dit son poids réel."
     },
     trone: { racine: 'orgueil',
       name: 'Le Trône vide', art: 'throne', hue: 48, scale: 3,
@@ -236,7 +236,7 @@ ISNAD.registerSaga({
           addSkills: [{ w: 3, name: 'Tyrannie', target: 'foes', el: 'fer', pow: 1.25, fx: [{ st: 'atk', v: -1, chance: 0.5 }], anim: 'burst' }] }
       ],
       taunts: ['Assieds-toi.', 'Les hommes passent. La place reste.', 'Un seul instant. Pour bien faire.'],
-      desc: "Égrégore de la tyrannie. Ce n'est pas un roi, mais la place du roi : un vide qui exige d'être occupé et survit à tous ceux qui s'y asseyent. Il cède devant la Justice, qui ne s'exempte pas elle-même, et la Miséricorde."
+      desc: "Chimère de la tyrannie. Ce n'est pas un roi, mais la place du roi : un vide qui exige d'être occupé et survit à tous ceux qui s'y asseyent. Elle cède devant la Justice, qui ne s'exempte pas elle-même, et la Miséricorde."
     }
   },
 
@@ -306,13 +306,13 @@ ISNAD.registerSaga({
       text: "On rapporte qu'Abû Mûsâ al-Ash'arî écrivit de Bassora : « Il nous vient de toi des lettres sans date. » 'Umar réunit les Compagnons, vers l'an 17. Les uns proposèrent de compter depuis la naissance du Prophète ﷺ, d'autres depuis sa mort ; on retint l'Hégire, sur l'avis de 'Alî dit-on, et le mois de Muharram pour ouvrir l'année. Ni une naissance ni un deuil : le jour où une communauté quitta sa ville pour sa foi.",
       src: "at-Tabarî, Târîkh ; al-Hâkim, al-Mustadrak ; Ibn Hajar, Fath al-Bârî" },
     { id: 'ego_accapareur', cat: 'Noosphère', title: "L'Accapareur",
-      text: "Égrégore de la pénurie organisée. Il naît lorsque beaucoup ferment ensemble leurs greniers en regardant monter les prix : chaque porte close l'élève d'un étage. Il se nourrit de la peur de manquer, et la fabrique à son tour. La force seule l'entame peu ; il cède devant la Miséricorde, qui donne, et la Justice, qui répartit.",
+      text: "Chimère de la pénurie organisée. Elle naît lorsque beaucoup ferment ensemble leurs greniers en regardant monter les prix : chaque porte close l'élève d'un étage. Elle se nourrit de la peur de manquer, et la fabrique à son tour. La force seule l'entame peu ; elle cède devant la Miséricorde, qui donne, et la Justice, qui répartit.",
       src: 'Lecture noosphérique du jeu' },
     { id: 'ego_aigle', cat: 'Noosphère', title: "L'Aigle d'Airain",
-      text: "Égrégore de l'orgueil d'empire. Les légions meurent, les aigles restent : l'enseigne passe du vaincu au vainqueur et murmure à chaque conquérant d'entrer en César. Il se nourrit des foules qui attendent un maître à admirer. À Jérusalem, 'Umar lui opposa un manteau rapiécé et un pacte. Il cède devant la Patience des humbles et la Justice.",
+      text: "Chimère de l'orgueil d'empire. Les légions meurent, les aigles restent : l'enseigne passe du vaincu au vainqueur et murmure à chaque conquérant d'entrer en César. Elle se nourrit des foules qui attendent un maître à admirer. À Jérusalem, 'Umar lui opposa un manteau rapiécé et un pacte. Elle cède devant la Patience des humbles et la Justice.",
       src: 'Lecture noosphérique du jeu' },
     { id: 'ego_trone', cat: 'Noosphère', title: 'Le Trône vide',
-      text: "Égrégore de la tyrannie. Ce n'est pas un roi, mais la place du roi : un vide qui exige d'être occupé et survit à tous ceux qui s'y asseyent. L'or est son appât ; la peur de perdre, sa chaîne. On ne le brise pas en s'y asseyant « pour bien faire ». Il cède devant la Justice, qui ne s'exempte pas elle-même, et devant la Miséricorde.",
+      text: "Chimère de la tyrannie. Ce n'est pas un roi, mais la place du roi : un vide qui exige d'être occupé et survit à tous ceux qui s'y asseyent. L'or est son appât ; la peur de perdre, sa chaîne. On ne la brise pas en s'y asseyant « pour bien faire ». Elle cède devant la Justice, qui ne s'exempte pas elle-même, et devant la Miséricorde.",
       src: 'Lecture noosphérique du jeu' }
   ],
 
@@ -374,7 +374,7 @@ ISNAD.registerSaga({
           ['choice', "Le peuple manque de tout. Que fait 'Umar du beurre et du lait ?", [
             { t: "Les donner en aumône, et s'en tenir à l'huile et au pain d'orge", ok: true, r: [
               ['say', 'umar', "Tu as payé cher. Donne-les en aumône : je répugne à manger avec excès."],
-              ['quote', "« Comment me soucierais-je du sort des gens, si ce qui les atteint ne m'atteint pas ? »", "Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh"]
+              ['quote', "« Comment me soucierais-je du sort des gens, si ce qui les atteint ne m'atteint pas ? »", "at-Tabarî, Târîkh"]
             ] },
             { t: "Les accepter : un chef affaibli ne sert personne", r: [
               ['nar', "Ce n'est pas ce qui fut rapporté. Cette année-là, 'Umar jura de ne goûter ni beurre ni viande tant que les gens n'en auraient pas."]
