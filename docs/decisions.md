@@ -1526,6 +1526,15 @@ pages privées de son compte.
   D67). L'exigence 16 (« aucune figure du ciel n'accompagne un Compagnon dans le récit historique ») est à ajuster
   avec D67, qui fait agir le compagnon de lumière dans tous les combats.
 
+- [x] **D193. Composer Idris (choix du décideur, 18 novembre ; version 2.10).** Le joueur compose Idris : le teint
+  (sept pastilles sans nom : les cinq du jeu et deux plus foncées), la barbe (sans, courte, pleine) et sa couleur (noir,
+  brun sombre, brun), la coiffe, la robe, l'écharpe, le manteau, sept étoffes, cinq néons (ni or ni jaune) ; un dé tire
+  l'habit, jamais le visage ; la composition entière s'ouvre après le prologue. Les palettes sont validées. Les
+  **feuillets** sont retirés (l'attribut de Zayd ibn Thâbit et d'Ibn 'Abbâs ; dans les récits, ceux du Coran ; presque
+  la silhouette du Cartographe) : à leur place, **une besace et une lanterne**, objets ordinaires de 2084, dessinés en
+  petit et en grand. **Plus de coiffes** (turban, chèche…), à condition qu'aucune ne reprenne la silhouette d'un
+  Compagnon.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
