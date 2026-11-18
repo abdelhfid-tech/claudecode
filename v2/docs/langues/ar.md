@@ -1178,5 +1178,6 @@ Pour qu'un spécialiste reprenne ces points :
 - *(18 novembre, lexique commun)* les titres arabes des sources marquées « référence non vérifiée » au § 1.12 (Ibn Hajar,
   adh-Dhahabî, *Futûh ash-Shâm*, Mâlik, ad-Dâraqutnî, Abû Yûsuf, Ibn 'Abd al-Hakam, Ibn Abî Dâwûd, Wakî', al-Isfahânî,
   Ibn Qutayba, Ibn Mâjid), et les noms arabes d'Eutychius (سعيد بن البطريق), de Théophane, d'Eusèbe et de la Geniza ;
-  « أمير البحر » pour « l'amiral » ; « مَرهم / بلسم » n'a pas été cherché chez les auteurs ; les pages de WP-ar (l'API
-  refusait les lectures ce soir-là).
+  « أمير البحر » pour « l'amiral » ; les noms de compétences du § 3.7 (« البلسم »، « التضميد »، « الجزم »، « النبذ »…),
+  qui sont de l'usage courant et n'ont pas été cherchés chez les auteurs ; les pages de WP-ar (l'API refusait les
+  lectures ce soir-là).
