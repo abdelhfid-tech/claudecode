@@ -984,8 +984,8 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
 19. **« Le grand acte du Compagnon »** (l'aide du combat, réécrite par D184) : le français y met une majuscule à
     « Compagnon » pour tout membre du groupe, Idris et le Caïd compris, alors qu'ailleurs « compagnon » (du groupe)
     s'écrit en minuscule. L'anglais ne peut pas écrire *the Companion’s great act* (*Companion*, avec sa majuscule, est
-    un Compagnon du Prophète ﷺ) : il dit « *each party member’s golden gauge; when it is full, it allows his great
-    act* ». Signalé au décideur : lui seul corrige le français.
+    un Compagnon du Prophète ﷺ) : il dit « *each party member’s golden gauge; when it is full, he can perform his
+    great act* ». Signalé au décideur : lui seul corrige le français.
 
 ## 5. Ce qui n'a pas pu être vérifié
 
