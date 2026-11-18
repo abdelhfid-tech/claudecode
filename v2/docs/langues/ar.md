@@ -238,6 +238,7 @@ compétence, d'objet ni de lieu frappé ne contient** :
 | **Souffle** (points de magie) | **النَّفَس** (toujours vocalisé) | usage courant (« نَفَس طويل »), référence non vérifiée | **à valider**. Sans la fatha, النفس se lit « l'âme » (al-Ghazâlî, [D], « بيان معنى النفس والروح والقلب والعقل ») : la voyelle est obligatoire partout. |
 | **éprouvé** (hors de combat) | **مُنهَك** (verbe : أُنهِك) | usage courant | **à valider**. Exigence 19 : jamais جريح، قتيل، صريع، سقط (blessé, tué, abattu). |
 | **voile** (la garde d'un égrégore), **voiles** | **حِجاب**, pl. **حُجُب** | al-Ghazâlî, [D] : parmi les cinq causes qui empêchent le miroir du cœur de refléter le vrai, « حجاب مرسل بين المرآة والصورة » | **à valider**. Un voile ôté : « انهتك حجاب » ou « سقط حجاب ». Ne pas confondre avec le « voile de lumière » des Compagnons (§ 2.9). |
+| chimère (D183, remplace « égrégore » en français) | **خيال** — inchangé | — | Le décideur a écarté « égrégore », mot de l'ésotérisme ; le mot de cette langue dit déjà l'illusion qu'on dévoile : il reste. |
 | **dévoilé** (un égrégore vaincu : on a montré qu'il est vide) | **انكشف** ; adj. **مكشوف** ; « انكشف خواؤه » | al-Ghazâlî, [D] : le cœur poli « … حتى يتلألأ فيه جلية الحق وينكشف » | **à valider**. Éviter الكشف seul (dévoilement mystique soufi). |
 | **Niyya** (l'intention, jauge) | **النيّة** | al-Ghazâlî, *Ihyâ'*, livre « النية والإخلاص والصدق » (quart des « المنجيات ») [A] | |
 | **Sakîna** (la sérénité, jauge) | **السَّكينة** | Coran 48:4 et 48:18 [K] | |

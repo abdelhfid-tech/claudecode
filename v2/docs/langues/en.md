@@ -194,7 +194,7 @@ Elles valent toutes. Celles-ci prennent en anglais une forme propre :
   une liste où « *Mammon* » mène « *the avarous* », « *Sathanas* » la colère, « *Belzebub* » l'envie). WP *Ghoul* :
   « *Jinn-like being* ». Décision D182 : ni *taghut* ni *ghoul* ne nomment l'égrégore, l'Agrégor ni aucun ennemi ;
   *taghut* peut s'expliquer au recueil, avec son verset tiré du registre. Les noms d'ennemis ne disent que ce que
-  l'idée fait (§ 3.7). Le mot *egregore* a lui-même un passé : § 2.1.
+  l'idée fait (§ 3.7). Le mot *egregore*, occultiste, est écarté : on dit *chimera* (D183).
 - **Les sept maux ne sont pas les « sept péchés capitaux ».** La liste de sept est un choix du jeu, d'après
   al-Ghazâlî (recueil « Les sept maux du cœur ») ; les péchés capitaux sont une autre liste (WP *Seven deadly sins* :
   *Lust, Gluttony, Envy, Greed, Sloth, Pride, Wrath*). On évite donc *Wrath*, *Sloth*, *Gluttony*, *Lust*, *deadly
@@ -228,7 +228,7 @@ quand ils comptent.
 | râwî (le joueur, Idris) | **rawi** ; titre d'Idris : **the Rawi** ; en apostrophe : « *Rawi, …* » | WP *Isnad* (*transmitter*) ; le mot *rāwī* n'a pas d'article propre dans WP (page d'homonymie) | **À valider** : on garde le mot arabe, glosé une fois au recueil (« *rawi, a transmitter* »), comme le français garde « râwî ». |
 | Lumière (une des six) | **Light** (« *the six Lights* ») | — | Majuscule, comme en français. |
 | noosphère | **noosphere** | WP *Noosphere* (« *developed and popularized by … Vladimir Vernadsky and … Pierre Teilhard de Chardin* » ; « *the planetary "sphere of reason"* ») ; Teilhard, *The Phenomenon of Man*, trad. B. Wall (titre et traducteur lus au catalogue d'archive.org, `https://archive.org/details/phenomenonofmanw0000unse` ; texte non lu) | Minuscule, sans tréma. |
-| égrégore | **egregore** (pl. *egregores*) | WP *Egregore* : « *a concept in Western esotericism of a non-physical entity or thoughtform that arises from the collective thoughts and emotions of a distinct group* » ; la même page : « *In the apocryphal Book of Enoch, the term had referred to angelic beings known as watchers* » | **À valider**, et point à trancher (§ 4) : en anglais le mot est occultiste, plus rare qu'en français, et il a nommé les « Veilleurs » du livre d'Hénoch, des êtres angéliques. Le jeu le dit « une image, non une doctrine » : le recueil anglais doit le dire dès la première rencontre. Repli possible : *thought-idol* (forgé, sans usage). Jamais *thoughtform* (le même univers ésotérique, selon la même page), jamais *spirit*. |
+| chimère (anciennement « égrégore ») | **chimera** (pl. *chimeras*) | Le mot courant de l'anglais pour « une créature de l'imagination, une illusion » ; il dit ce que fait le jeu : on approche, on dévoile, il n'y a rien. | **Décidé (D183)** : le décideur a écarté « égrégore » en français, mot de l'ésotérisme ; *egregore* en anglais l'est aussi (WP *Egregore* : « *a concept in Western esotericism…* »). Minuscule ; jamais *Chimera* comme nom propre. |
 | idole | **idol** | Bacon : « *idols and false notions which are now in possession of the human understanding, and have taken deep root therein* » (aph. XXXVIII) ; les quatre classes : « *Idols of the Tribe* », « *of the Cave* », « *of the Market-place* », « *of the Theatre* » (aph. XXXIX) ; SI 6:74 : « *Do you take idols as deities?* » | Le mot anglais porte les deux sens dont le jeu a besoin : l'idole de pierre et l'idole de l'esprit. |
 | racine (d'une idole, `racine`) ; enracinement (la jauge) ; enracinée, déracinée | **root** ; **Rooting** (la jauge, d'un à cinq) ; *deep-rooted*, *uprooted* ; « *the idea takes root* » | Bacon : « *have taken deep root therein* » | **À valider** pour le nom de la jauge. |
 | voile (la garde d'un égrégore) ; ôter un voile | **veil** ; **to strip a veil** | Winter : « *We have set veils over their hearts* » (verset cité), « *the unveiling of the secrets of the Unseen* » ; Skellie (*veil*, 62 occurrences) | **À valider** : l'usage soufi existe, l'emploi comme garde d'un ennemi est une image du jeu. |
@@ -272,7 +272,7 @@ quand ils comptent.
 | Sagesse (l'expérience gagnée) | **Wisdom** (« *Wisdom gained: +12* ») | — | **À valider**. |
 | dirhams | **dirhams** | — (mot reçu en anglais, dictionnaire non consulté) | |
 | la Cité-Miroir (2084) | **the Mirror City** | — | Nom de fiction, simple. |
-| l'AGRÉGOR | **the AGGREGOR** | — | Jeu de mots *egregore* / *aggregate* (« *il agrège* » → « *it aggregates* ») ; capitales comme en français. |
+| l'AGRÉGOR | **the AGGREGOR** | — | Jeu de mots sur *aggregate* (le français jouait sur égrégore / agréger) (« *il agrège* » → « *it aggregates* ») ; capitales comme en français. |
 
 ### 2.2 Les six Lumières et le Fer (`D.ELEMENTS`)
 
@@ -875,9 +875,8 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
 4. **La translittération** : IJMES pour les noms, ʿ (U+02BF) pour le *ʿayn*, ’ pour la *hamza*, article jamais assimilé
    (*al-Siddiq*, *ʿAbd al-Rahman*, là où le français écrit « as-Siddîq », « 'Abd ar-Rahmân ») ; *ʿAbdallah* en un mot,
    comme *Tabari* (§ 1.3). À confirmer sur une capture : le rendu de ʿ dans Cinzel et Share Tech Mono.
-5. **« Egregore ».** Le mot anglais est occultiste et a désigné les Veilleurs d'Hénoch (WP *Egregore*). Garder
-   *egregore* (proposition, par fidélité au mot du jeu, dit « une image » au recueil), ou forger un mot sans passé
-   (*thought-idol*) (§ 2.1).
+5. **« Egregore ».** *Tranché (D183)* : le français dit désormais « chimère », et l'anglais **chimera**. L'Agrégor
+   garde son nom (*the AGGREGOR*), au-dessus des chimères.
 6. **« The Saint ».** En anglais, *saint* fait d'abord entendre la canonisation chrétienne (avis de l'agent) ; Winter
    l'emploie dans un contexte musulman. Garder *the Hero, the Sage, the Saint* (proposition ; Scheler, en anglais, dit *the saint, the genius, the
    hero*), ou dire *the Selfless* pour le troisième (§ 2.8). Et *stance* pour « posture ».
