@@ -138,7 +138,7 @@
       const E = eg.map(id => { const e = defDe(s, id), v = vuDe(s, id); tE++; if (v) nE++; return `<span class="tu${v ? ' vu' : ''}"><img alt="" src="${M.url(id, s)}"><i>${I.esc(e.name)}</i></span>`; }).join('');
       const Io = ido.map(x => { const e = defDe(s, x.id), tb = st().tombees[s.id + ':' + x.id], v = tb !== undefined || vuDe(s, x.id); tI++; if (tb !== undefined) nI++;
         return `<span class="ti${tb !== undefined ? ' tombee' : v ? ' vu' : ''}"><img alt="" src="${M.url(x.id, s)}"><b>${I.esc(e.name)}</b>${tb !== undefined ? `<small>${traits(tb)} ${I.t('tombée')}</small>` : v ? `<small>${traits(M.niveau(s, x.ch))}</small>` : ''}</span>`; }).join('');
-      return `<div class="ep"><p class="epn">${I.esc(M.nomEpoque(s))}</p><div class="epe">${E}</div><div class="epi">${Io}</div></div>`; }).join('');
+      return `<div class="ep"><p class="epn">${I.esc(M.nomEpoque(s))}</p><div class="epe" data-lab="${I.esc(I.t('chimères'))}">${E}</div><div class="epi" data-lab="${I.esc(I.t('idoles'))}">${Io}</div></div>`; }).join('');
     const RE = R.egregores || {}, RI = R.idoles || {};
     const maillons = `<div class="rg bas r-epoques"><details><summary><span class="nm"><b>${I.esc(RE.name || '')}</b> <em>${I.esc(RE.sous || '')}</em></span></summary><p>${I.fmt(RE.texte || '')}</p></details><p class="rep">▸ ${I.fmt(RE.reponse || '')}</p>` +
       `<details><summary><span class="nm"><b>${I.esc(RI.name || '')}</b> <em>${I.esc(RI.sous || '')}</em></span></summary><p>${I.fmt(RI.texte || '')}</p></details><p class="rep">▸ ${I.fmt(RI.reponse || '')}</p>` +

@@ -439,24 +439,24 @@
   "nature": "chronique",
   "ar": {
    "texte": "إِلَى أَيْنَ يَا خَلِيفَةَ رَسُولِ اللَّهِ ﷺ؟ أَقُولُ لَكَ مَا قَالَ رَسُولُ اللَّهِ ﷺ يَوْمَ أُحُدٍ «شِمْ سَيَفَكَ، وَلَا تَفْجَعْنَا بِنَفْسِكَ». وَارْجِعْ إِلَى الْمَدِينَةِ، فَوَاللَّهِ لَئِنْ فُجِعْنَا بِكَ لَا يَكُونُ لِلْإِسْلَامِ نِظَامٌ أَبَدًا",
-   "reference": "يُروى — ابن كثير، البداية والنهاية (ت. التركي)، ج ٩ ص ٤٤٦",
+   "reference": "يُروى — عليٌّ يذكّر بقول النبي ﷺ يوم أحد — ابن كثير، البداية والنهاية (ت. التركي)، ج ٩ ص ٤٤٦ (رواية غريبة عند ابن كثير)",
    "lu_sur": "https://shamela.ws/book/4445/5319",
    "etat": "approchant"
   },
   "en": {
    "texte": "Where are you going, O successor of the Messenger of Allah ﷺ? I say to you what the Messenger of Allah ﷺ said on the day of Uhud: “Sheathe your sword, and do not grieve us with the loss of yourself.” Return to Medina; for by Allah, if we are bereft of you, Islam will never again have order.",
    "origine": "de_l_arabe",
-   "reference": "It is reported — Ibn Kathir, al-Bidaya wa-l-Nihaya, vol. 9, p. 446 (translated from the Arabic)",
+   "reference": "It is reported — ʿAli, recalling a saying of the Prophet ﷺ on the day of Uhud — Ibn Kathir, al-Bidaya wa-l-Nihaya, vol. 9, p. 446 (a report Ibn Kathir calls gharib; translated from the Arabic)",
    "lu_sur": ""
   },
   "ja": {
    "texte": "アッラーの使徒ﷺの後継者よ、どこへ行かれるのか。アッラーの使徒ﷺがウフドの日に言われたことを、私はあなたに申し上げる。「剣を鞘に納めよ。そなたを失う悲しみを我らに味わわせるな」と。マディーナへお戻りください。アッラーにかけて、もし我らがあなたを失えば、イスラームに秩序は二度と立たないであろう。",
    "origine": "de_l_arabe",
-   "reference": "と伝えられる — イブン・カスィール『始まりと終わり（アル=ビダーヤ・ワン=ニハーヤ）』第9巻446頁（アラビア語原文より訳出）",
+   "reference": "と伝えられる — アリーが、ウフドの日の預言者ﷺの言葉を思い起こさせて — イブン・カスィール『始まりと終わり（アル=ビダーヤ・ワン=ニハーヤ）』第9巻446頁（イブン・カスィールは稀な伝承とする。アラビア語原文より訳出）",
    "lu_sur": ""
   },
   "ecart": "Le français retire une proposition : entre « Où vas-tu… ? » et « Rengaine ton sabre », l'arabe porte « أَقُولُ لَكَ مَا قَالَ رَسُولُ اللَّهِ ﷺ يَوْمَ أُحُدٍ » (« Je te dis ce qu'a dit le Messager d'Allah ﷺ le jour d'Uhud »). Dans la source, « Rengaine ton sabre, et ne nous afflige pas de ta perte » est donc une parole du Prophète ﷺ que 'Alî cite, et non une parole de 'Alî : à trancher par le décideur (exigences 1 et 3). « n'aurait plus d'ordre » : l'arabe ajoute « أَبَدًا » (« jamais »). Ibn Kathîr tient ce récit d'ad-Dâraqutnî (d'après Ibn 'Umar) et le dit « غريب » (isolé) par la voie de Mâlik.",
-  "note": "Chapitre « خروج أبي بكر إلى ذي القصة ». L'arabe, l'anglais et le japonais donnent le passage entier, tel que la source le porte. Le texte numérique lu écrit « سَيَفَكَ » (pour « سَيْفَكَ ») : recopié tel quel. Une seconde version, d'après 'Â'isha, suit dans la même page (« لَئِنْ أُصِبْنَا بِكَ »)."
+  "note": "Chapitre « خروج أبي بكر إلى ذي القصة ». L'arabe, l'anglais et le japonais donnent le passage entier, tel que la source le porte. Le texte numérique lu écrit « سَيَفَكَ » (pour « سَيْفَكَ ») : recopié tel quel. Une seconde version, d'après 'Â'isha, suit dans la même page (« لَئِنْ أُصِبْنَا بِكَ »). D183 (18 novembre) : le décideur a fait corriger la source française, qui dit maintenant que 'Alî rappelle une parole du Prophète ﷺ au jour d'Uhud et que le récit est dit gharîb ; les références des trois langues le disent aussi."
  },
  {
   "fichier": "v2/src/data/saga_abubakr.js",
@@ -483,7 +483,7 @@
    "lu_sur": ""
   },
   "ecart": "La parole n'a pas été retrouvée chez Ibn Sa'd : la notice de Zayd ibn al-Khattâb des Tabaqât (éd. al-'Ilmiyya, t. 3 p. 288-289, lue en entier sur https://shamela.ws/book/1686/966 et /967) rapporte le deuil de 'Umar et d'autres paroles (« إن الصبا لتهب فتأتيني بريح زيد بن الخطاب »), pas celle-ci. Elle est lue chez Ibn 'Abd al-Barr, al-Istî'âb, d'où elle est relevée ici, et, d'après un extrait lu sur ar.wikisource.org, chez Ibn Kathîr, al-Bidâya wa-n-Nihâya. Chez Ibn 'Abd al-Barr elle commence par « رحِمَ اللهُ أخي » (« Qu'Allah fasse miséricorde à mon frère »), que le français ne cite pas.",
-  "note": "Recherches : « سبقني إلى الحسنيين », « إلى الحسنيين », « الحسنيين », « استشهد قبلي », « أسلم قبلي », « رحم الله أخي » dans trois éditions des Tabaqât sur shamela.ws (Sâdir, al-'Ilmiyya, al-Khânjî) : aucun résultat ; recherche de la phrase sur ar.wikisource.org : trouvée dans al-Bidâya wa-n-Nihâya, Tahdhîb at-Tahdhîb et Usd al-Ghâba, pas dans les Tabaqât. La source française est à corriger ou à compléter par le décideur."
+  "note": "Recherches : « سبقني إلى الحسنيين », « إلى الحسنيين », « الحسنيين », « استشهد قبلي », « أسلم قبلي », « رحم الله أخي » dans trois éditions des Tabaqât sur shamela.ws (Sâdir, al-'Ilmiyya, al-Khânjî) : aucun résultat ; recherche de la phrase sur ar.wikisource.org : trouvée dans al-Bidâya wa-n-Nihâya, Tahdhîb at-Tahdhîb et Usd al-Ghâba, pas dans les Tabaqât. La source française est à corriger ou à compléter par le décideur. D183 (18 novembre) : la source française est corrigée selon cet écart."
  },
  {
   "fichier": "v2/src/data/saga_abubakr.js",

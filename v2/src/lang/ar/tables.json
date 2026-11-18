@@ -245,7 +245,7 @@
 {"k":"gehfxo.5","fr":"Grain","t":"حَبّ","ou":"D.MATS.grain.name"},
 {"k":"vad44s.5","fr":"Laine","t":"صوف","ou":"D.MATS.laine.name"},
 {"k":"1ufzaih.8","fr":"Tranchée","t":"خندق","ou":"D.PIECES.tranchee.name"},
-{"k":"t16syd.26","fr":"Les égrégores qui rôdent ne la franchissent pas. Six segments gardent un lieu.","t":"لا تعبره الخيالات التي تحوم. وستُّ قطعٍ منه تحمي موضعًا.","ou":"D.PIECES.tranchee.desc"},
+{"k":"1meqj73.25","fr":"Les chimères qui rôdent ne la franchissent pas. Six segments gardent un lieu.","t":"لا تعبره الخيالات التي تحوم. وستُّ قطعٍ منه تحمي موضعًا.","ou":"D.PIECES.tranchee.desc","a_revoir":true,"fr_avant":"Les égrégores qui rôdent ne la franchissent pas. Six segments gardent un lieu."},
 {"k":"9hj420.8","fr":"Défendre","t":"الدفاع","ou":"D.PIECES.tranchee.group"},
 {"k":"tf5t7s.27","fr":"Donne de l’eau. Palmiers, champs et troupeaux en ont besoin à moins de six pas.","t":"تُعطي الماء. والنخل والحقول والمواشي تحتاج إليها على أقلّ من ستّ خطوات.","ou":"D.PIECES.puits.desc"},
 {"k":"1fwce38.d","fr":"Eau et vivres","t":"الماء والزاد","ou":"D.PIECES.puits.group"},
