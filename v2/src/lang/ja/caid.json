@@ -162,7 +162,7 @@
 {"k":"fc6nyv.b","fr":"Vieux garde","t":"老いた番兵","ou":"chapters[1].npcs[1].name"},
 {"k":"1eh06xs.p","fr":"Udad, officier du rempart","t":"城壁の士官ウダド","ou":"chapters[1].npcs[2].name"},
 {"k":"1p1dgys.c","fr":"Amghar Meksa","t":"アムガル・メクサ","ou":"chapters[1].npcs[4].name"},
-{"k":"kji80a.j","fr":"La langueur de Zîrî","t":"ズィーリーの衰え","ou":"chapters[1].enigme.title"},
+{"k":"kji80a.j","fr":"La langueur de Zîrî","t":"疲れの取れないズィーリー","ou":"chapters[1].enigme.title","note":"Relecture (D184, 1.8) : 衰え est le nom de 衰える, le mot de l’ancien « dépérir » (衰えゆくバフラーム師) que la relecture a retiré comme langue de l’envoûtement (glossaire § 2.10). Zîrî est las (le signe : 「疲れたまま」) : « La langueur de Zîrî » se dit par la fatigue qui ne passe pas, sur le modèle de 「眠れぬカーイド」 et 「食の細ったバフラーム師」."},
 {"k":"1oiglr5.1s","fr":"Zîrî est las depuis des jours, et le médecin ne lui trouve rien.","t":"ズィーリーはもう何日も疲れたままで、医師にも悪いところが見つからない。","ou":"chapters[1].enigme.signe"},
 {"k":"t6uqdq.27","fr":"Ce qui lui manquait : la prière de l'aube, laissée depuis ses nuits de rempart.","t":"欠けていたもの――城壁の夜番が続いてから、怠っていた夜明けの礼拝。","ou":"chapters[1].enigme.mot"},
 {"k":"fgdxh4.l","fr":"Le Général et la Tour","t":"将軍と塔","ou":"chapters[2].title"},

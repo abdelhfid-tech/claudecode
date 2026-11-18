@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* ISNAD 2.x — la progression : un besoin, un outil, puis sans aide ; et les trois postures.
+/* ISNAD 2.x — la progression : un besoin, un outil, puis sans aide ; et les trois figures (les « postures » du code).
    A. Une partie neuve, par les vrais boutons (« Nouvelle partie ») : au premier écran, une seule leçon, et elle ne parle
       que de marcher ; « parler » ne vient qu'au moment de parler ; jamais deux leçons dans la même séquence ; le premier
       combat ne montre que Frapper et Éclairer ; les Vertus, la Garde et la Niyya, puis la besace viennent une à une, de
@@ -184,7 +184,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   }
 
   if (errors.length) { anomalies++; console.log('--- ERREURS ---'); [...new Set(errors)].slice(0, 10).forEach(e => console.log(e)); } else ok('aucune erreur console');
-  console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ PROGRESSION CONFORME — un outil à la fois, les trois postures (captures dans ${path.relative(path.join(__dirname, '..'), out)})`);
+  console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ PROGRESSION CONFORME — un outil à la fois, les trois figures (captures dans ${path.relative(path.join(__dirname, '..'), out)})`);
   await browser.close();
   process.exit(anomalies ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });
