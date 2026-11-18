@@ -282,15 +282,15 @@ compétence, d'objet ni de lieu frappé ne contient** :
 | Objets (menu de combat), la besace | **المِزوَد** (le sac à provisions, de *zâd*) | usage courant, référence non vérifiée | Autre choix : الجِراب. |
 | Force (atk) · Esprit (mag) · Garde (def) · Élan (spd) | **القوّة · الذِّهن · المَنَعة · الخِفّة** | — | **à valider**. « Esprit » n'est pas الروح (sens religieux). |
 | niveau | **المرتبة** (« المرتبة ٣ ») | — | Autre choix : المستوى (plus moderne). |
-| Sagesse (ce que rapportent combats et pourparlers) | **الحِكمة** | — | Nom commun ; jamais الحكيم (Nom divin, § 2.2). |
+| Expérience (ce que rapportent combats et pourparlers ; « Sagesse acquise » jusqu'à D184, 2.5) | **الخِبرة** (« الخبرة: +٣ ») | usage courant (« نقاط الخبرة ») | **à valider (D184)**. On ne gagne pas la sagesse en gagnant un combat : الحكمة ne sert plus ici. Nom commun ; jamais الخبير, qui est un Nom divin (§ 2.5). |
 | doute (altération) | **التردّد** | — | |
 | murmure intérieur (altération `waswas`) | **الوسوسة** | Coran 114:4 [K] ; [D] « بالوساوس » | |
 | étourdi, sonné | **مذهول** | — | |
 | relever un compagnon éprouvé | **أنهضَ** (« نهض الرفيق ») | — | Jamais « أحيا » (rendre la vie : Allah seul). |
 | ôter les altérations | **يُزيل العوارض** | — | Jamais « يُطهِّر » (pureté rituelle). |
 | dirham (la monnaie du jeu) | **دِرهم**, pl. **دراهم** | — | |
-| rôles : guerrier · gardien · sage · soigneur · stratège | **المُقاتل · الحامي · العالِم · المُداوي · صاحب الرأي** | « صاحب الرأي » : WP-ar, « الحباب بن المنذر » : « وكان ذو رأي ومشورة » [L] | **à valider**. Le rôle « sage » (العالِم) n'est pas la posture « sage » (البصيرة, § 2.6). |
-| tempérament (d'où vient la première posture) | **الطَّبع** | al-Ghazâlî, [D] : « والهم على وفق الطبع » | |
+| rôles : guerrier · gardien · sage · soigneur · stratège | **المُقاتل · الحامي · العالِم · المُداوي · صاحب الرأي** | « صاحب الرأي » : WP-ar, « الحباب بن المنذر » : « وكان ذو رأي ومشورة » [L] | **à valider**. Le rôle « sage » (العالِم) n'est pas la figure « sage » (البصيرة, § 2.6). |
+| tempérament (d'où vient la première figure) | **الطَّبع** | al-Ghazâlî, [D] : « والهم على وفق الطبع » | |
 
 ### 2.5 Le cœur (`coeur.js`)
 

@@ -306,16 +306,37 @@ le **nom astronomique international**, jamais le nom d'une fête ou d'un culte d
 
 ### 2.5 Postures, portes, voies de la parole
 
-**Les postures** (`D.POSTURES`, exigence 24). Le mot « posture » : **構え**（かまえ） — la manière de se tenir, au sens
-du corps et de l'esprit ; 「構えをとる」 (prendre une posture). 姿勢 est l'autre choix, plus abstrait. **À valider.**
+**Les figures** (`D.POSTURES`, exigence 24 ; D184 : « posture » est devenu « figure »). Le mot : **姿勢**（しせい）, au
+lieu de 構え. **À valider (D184).**
+
+- *Ce qu'il dit.* L'attitude que l'on prend devant quelque chose, du corps et de l'esprit, au sens figuré d'abord :
+  「謙虚な姿勢」「学ぶ姿勢」「慎重な姿勢をとる」 (la langue des journaux pour « adopter une position »). On la prend, on la
+  change (「姿勢を改める」) : ce n'est jamais une identité. C'est le mot de la conduite morale, sans mystique.
+- *L'exigence 24.* On *prend* un 姿勢, on ne l'*est* pas : 「英雄の姿勢をとる」, jamais 「英雄である」 ; et 姿勢 ne classe personne.
+- *L'exigence 2.* 姿勢 est la tenue de tout le corps ; il ne touche ni au 顔 ni au 面 (le français « figure » dit aussi
+  « visage » : le japonais ne doit pas en hériter).
+- *Lisible partout.* L'outil « Prendre une figure » : 「姿勢をとる」 ; la halte « Figures » et le titre « Les figures » :
+  「姿勢」 ; le recueil « Les trois figures » : 「三つの姿勢」 ; « Khâlid · figure : le héros » : 「ハーリド・姿勢：英雄」 ; en
+  combat, la mention courte placée à côté du nom, « en héros », « en sage », « en saint » : **「英雄の姿勢」「賢者の姿勢」
+  「聖人の姿勢」** (jamais 英雄, 聖人 seuls à côté d'un nom de Compagnon : ils s'y liraient comme un titre, D172 ; ni
+  「聖人として」, qui dirait « en qualité de saint »). Les noms des trois, eux, restent nus (英雄, 賢者, 聖人) : le
+  jeu les affiche toujours sous l'étiquette 「姿勢」.
+- *Pourquoi plus 構え.* 構え est d'abord la garde des arts martiaux (「中段の構え」) : il faisait des trois figures des
+  gardes de combat (「聖人の構え」 sonne comme une école de kung-fu), et le jeu l'emploie déjà pour la garde du combat
+  (« En garde » : 「守りの構え」), qui le garde seul.
+- *Écartés.* 型 (« le type » : 英雄型 dit ce qu'on est) ; 姿 seul (「姿をとる」 dit « prendre forme », l'image de l'être qui
+  se transforme, et 姿 est l'apparence) ; 役, 役回り (se confondraient avec les rôles, `D.ROLES`, et sonnent théâtre) ;
+  道 (la voie : 武士道, 茶道, le tao — le français a écarté « voie » pour la même raison) ; 手本, 模範, 典型 (le *Vorbild* de
+  l'auteur de l'exigence 24, dont l'ouvrage japonais s'intitule 『典型と指導者』) ; ふるまい (« se conduire en » glisse
+  vers « faire comme si ») ; 心構え, 身構え (encore 構え).
 
 | Français | **Japonais** | Source | Note |
 |---|---|---|---|
 | Le héros | **英雄** | Réception japonaise de la typologie dont vient l'exigence 24 : 「聖人」「天才」「英雄」 (阿内正弘「シェーラーの典型論」, 筑波大学リポジトリ, lu : <https://tsukuba.repo.nii.ac.jp/record/5728/files/7.pdf>) ; l'ouvrage traduit : 『典型と指導者』, シェーラー著作集 15, 白水社 1978 (<https://ci.nii.ac.jp/ncid/BN00429006>). | Jamais 勇者 : c'est le héros des jeux de rôle japonais (la série *Dragon Quest*), et il dirait « l'élu ». **À valider.** |
 | Le sage | **賢者** | Usage courant (le jeu remplace « le génie » de la typologie par « le sage » : la source japonaise n'aide pas ici). | 賢者 est aussi une classe de personnage connue des jeux de rôle japonais : le contexte (« une manière de se tenir », non un métier) doit le lever. **À valider.** |
-| Le saint | **聖人**（せいじん） | Même article : 聖人 traduit le Heilige de la typologie. | Dans les études islamiques japonaises, **聖者** désigne le walī et le culte des saints (赤堀雅幸・東長靖・堀川徹編『イスラームの神秘主義と聖者信仰』, 東京大学出版会 2005 ; <https://ci.nii.ac.jp/ncid/BA70441332>) : 聖者 ferait de la posture un rang spirituel, sujet de controverse entre musulmans (exigence 5). 聖人 évite ce sens, mais porte celui des saints catholiques et du sage confucéen (聖人君子) ; et 「しょうにん」 est une lecture bouddhique : écrire la lecture une fois (§ 1.6). **À valider.** |
+| Le saint | **聖人**（せいじん） | Même article : 聖人 traduit le Heilige de la typologie. | Dans les études islamiques japonaises, **聖者** désigne le walī et le culte des saints (赤堀雅幸・東長靖・堀川徹編『イスラームの神秘主義と聖者信仰』, 東京大学出版会 2005 ; <https://ci.nii.ac.jp/ncid/BA70441332>) : 聖者 ferait de la figure un rang spirituel, sujet de controverse entre musulmans (exigence 5). 聖人 évite ce sens, mais porte celui des saints catholiques et du sage confucéen (聖人君子) ; et 「しょうにん」 est une lecture bouddhique : écrire la lecture une fois (§ 1.6). **À valider.** |
 
-Le jeu ne dit de personne qu'il **est** 英雄, 賢者 ou 聖人 : on écrit 「英雄の構えをとる」, jamais 「英雄である」 (exigence 24). Ni
+Le jeu ne dit de personne qu'il **est** 英雄, 賢者 ou 聖人 : on écrit 「英雄の姿勢をとる」, jamais 「英雄である」 (exigence 24). Ni
 l'auteur de la typologie ni son ouvrage ne sont nommés dans le jeu (même règle qu'en français).
 
 **Les portes de la noosphère** (`portes`)
