@@ -73,7 +73,7 @@ seul** système, celui ci-dessus ; une citation publiée garde sa graphie (c'est
 | Allah | **アッラー** (jamais 神 seul pour le nom ; 神 reste le mot commun : 「アッラーの外に神はなく」). | [三田], partout ; registre des sources (`versets.json`, 2:255 : 「アッラー，かれの外に神はなく」). |
 | Pronom divin | **かれ**, en hiragana, comme 三田 (「かれは幽玄界も現象界も知っておられる方」, 13:9), et le verbe en 尊敬語 (〜される, 〜なさる). | [三田] via `versets.json`. Le français met une majuscule (« Lui ») : le japonais n'en a pas ; c'est la graphie かれ + le 尊敬語 qui distingue. |
 | Le Prophète | **預言者ムハンマド** ; « le Messager d'Allah » = **アッラーの使徒**. | [Wiki-ja] 「ムハンマド・イブン＝アブドゥッラーフ」 (« イスラームの預言者 ») ; 「アッラーの使徒」 dans la traduction de *Muslim* (vol2-720-2). |
-| ﷺ après son nom | **Garder le signe ﷺ**, comme le français, partout où le français l'écrit (à trancher, § 4). | Deux usages japonais lus : (1) la traduction de *Muslim* du 日本ムスリム協会 n'ajoute **aucune formule** (« アッラーのみ使い », « 預言者 » seuls : vol2-174, vol2-720-2) ; (2) les publications de prédication écrivent 「預言者ムハンマド（彼にアッラーの祝福と平安あれ）」 (lu : 『諸々の徳 8』, サイード佐藤訳, <https://cdn.byenah.com/contents/6757/ja_08_Virtues_Of_The_Companions.pdf>). La formule entière fait 15 caractères : dans une boîte de dialogue de 36 caractères (§ 1.8), elle en prendrait la moitié. Le signe ﷺ dit la même chose en un caractère, s'affiche déjà dans le jeu, et se lit en japonais comme en arabe. |
+| ﷺ après son nom | **Garder le signe ﷺ**, comme le français, partout où le français l'écrit (à trancher, § 4). | Deux usages japonais lus : (1) la traduction de *Muslim* du 日本ムスリム協会 n'ajoute **aucune formule** (« アッラーのみ使い », « 預言者 » seuls : vol2-174, vol2-720-2) ; (2) les publications de prédication écrivent 「預言者ムハンマド（彼にアッラーの祝福と平安あれ）」 (lu : 『諸々の徳 8』, サイード佐藤訳, <https://cdn.byenah.com/contents/6757/ja_08_Virtues_Of_The_Companions.pdf>) ; (3) la traduction savante de 東長靖 (2015, [東長] au § 2) écrit 「彼［アッラー］の使徒【祝福】」, un mot entre crochets à la place de la formule. La formule entière fait 15 caractères : dans une boîte de dialogue de 36 caractères (§ 1.8), elle en prendrait la moitié. Le signe ﷺ dit la même chose en un caractère, s'affiche déjà dans le jeu, et se lit en japonais comme en arabe. |
 | Formule après un Compagnon (raḍiya Llāhu ʿanhu) | **Aucune**, comme le français — **à trancher par le décideur**. | Les publications de prédication écrivent 「（彼にアッラーのご満悦あれ）」 (même document, sur アブー・フライラ) ; la traduction de *Muslim* du 日本ムスリム協会 n'en met pas (「アリー はいった」, vol2-174). Si le décideur en veut une, proposer le signe arabe ﵁ (U+FD41) une fois par écran, plutôt que la formule japonaise. |
 | Les Compagnons | **教友**（サハーバ）. Dans le texte du joueur : 教友 seul ; la première fois dans le recueil : 「教友（サハーバ）」. | [Wiki-ja] « サハーバ » : 「日本語では『教友』と訳される」 ; même mot dans la traduction de サイード佐藤 (『預言者ムハンマド……の教友たちの徳』). La majuscule du français (« un Compagnon ») n'a pas d'équivalent : 教友 suffit. |
 | Les quatre premiers califes | **正統カリフ**. | [Wiki-ja] « 正統カリフ » (al-Khulafāʾ al-Rāshidūn). |
@@ -193,7 +193,7 @@ Deux sources savantes reviennent souvent :
 | veillée (les veillées du Caïd) | **夜語り** | Proposition (mot simple : « récit du soir »). | Jamais 夜伽 (veillée funèbre ou sens galant), 通夜 (veillée mortuaire), 夜話 (titre de recueils bouddhiques ou d'essais). **À valider.** |
 | Cité-Miroir (la ville de 2084) | **鏡の街** | Proposition. | 鏡 est aussi un objet sacré du shintô (御神体) ; 街 et le contexte urbain l'en éloignent. Pas ミラーシティ (calque anglais). **À valider.** |
 | pourparler | **交渉** | Usage courant. | Neutre ; 談判 serait plus dur (sommation). |
-| bataille déclarée | **会戦** | Terme d'histoire militaire : bataille rangée entre forces principales (usage courant, référence non vérifiée). | Le « déclaré » (chacun sait ce qui se dresse) se dit dans le recueil. Écarté : 名乗りの戦 (coutume des samouraïs). **À valider.** |
+| bataille déclarée | **会戦** | デジタル大辞泉 : 「敵味方双方の多数の軍勢が出あって戦うこと。また、大規模な陸上戦」 (lu : <https://kotobank.jp/word/会戦>). | Le « déclaré » (chacun sait ce qui se dresse) se dit dans le recueil. Écarté : 名乗りの戦 (coutume des samouraïs). **À valider.** |
 | le secours | **助け** (bandeau : 「助けが来た」) | Proposition. Le verset de Badr est cité dans la traduction de 三田 (8:9 : 「あなたがたが主に援助を歎願した時」), par le registre. | Ni 援軍 (des troupes : on ne montre ni ne compte les anges, exigence 20), ni 救済／救い (salut, au sens chrétien ou bouddhique). **À valider.** |
 | l'organigramme du mal | **悪の見取り図** | Proposition. | 「悪の組織図」 sonnerait comme « l'organisation du mal » des feuilletons (悪の組織) : à écarter. 見取り図 dit « une lecture, pas une démonologie » (exigence 18). **À valider.** |
 | les souffleurs | **囁く者たち** | 三田 114:4 : 「こっそりと忍び込み，囁く者の悪から」 (al-waswās). | Le mot même du Coran japonais. Ni nom, ni figure, ni nombre. |
@@ -476,8 +476,225 @@ le Nom est du texte, jamais un sprite ni une compétence (exigence 8).
 | 勇者, 使い魔, 守護霊, 式神, 図鑑 | Vocabulaire de jeu vidéo ou d'occultisme japonais qui déplacerait le sens. | 英雄 (posture), 光の道連れ, 聞き書き |
 | 傲慢・強欲・嫉妬・憤怒・怠惰 en série | La liste japonaise des péchés capitaux. | La liste du § 2.3 |
 | コーラン, マホメット, モハメッド | Formes anciennes ou fautives. | クルアーン, ムハンマド |
-| 回教, 回教徒 | Nom ancien, d'origine chinoise, aujourd'hui sorti de l'usage savant. | イスラーム, ムスリム |
+| 回教, 回教徒 | Nom ancien, venu du chinois (usage courant, référence non vérifiée). Le titre du dictionnaire de référence dit 「イスラーム」. | イスラーム, ムスリム |
 
-<!-- SECTION 3 -->
+## 3. Les noms propres
+
+Règles : un personnage historique prend la forme du § 1.2 (système du 『岩波イスラーム辞典』) ; la forme lue dans une source
+japonaise est notée quand elle existe. Un personnage de fiction prend une forme simple, en katakana, sans article. Une
+désignation (« Un Médinois », « Vieux soldat ») se traduit par un nom commun, jamais par un nom propre inventé. Les sigles
+**[W]** renvoient au titre ou à l'introduction d'un article de Wikipédia japonaise lu le 18 novembre (directement, ou par
+le lien de langue de Wikipédia anglaise) ; **[三田]** au verset où 三田 écrit le nom.
+
+### 3.1 Le Prophète ﷺ, les héros et leurs titres
+
+| Français | **Japonais** | Titre (français → japonais) | Source de la forme |
+|---|---|---|---|
+| Le Prophète (« le Messager d'Allah ﷺ ») | **預言者ムハンマド ﷺ** ; 「アッラーの使徒 ﷺ」 | — | [W] « ムハンマド・イブン＝アブドゥッラーフ » ; § 1.3 |
+| Abû Bakr as-Siddîq ('Abdallâh ibn Abî Quhâfa) | **アブー・バクル・アッ＝スィッディーク** (アブドゥッラー・イブン・アビー・クハーファ) | As-Siddîq → **アッ＝スィッディーク** ; « Le Véridique » → **真実の人** (à valider) | [W] « アブー・バクル » : 「アブー・バクル・アッ＝スィッディーク」 |
+| 'Umar ibn al-Khattâb | **ウマル・イブン・アル＝ハッターブ** (court : ウマル) | Al-Fârûq → **アル＝ファールーク** ; sens : 正邪を分かつ者 (à valider) | [W] « ウマル・イブン・ハッターブ » (sans article : on suit § 1.2) |
+| 'Uthmân ibn 'Affân | **ウスマーン・イブン・アッファーン** | Le Généreux → **惜しまぬ人** (à valider) | [W] « ウスマーン・イブン・アッファーン » |
+| 'Alî ibn Abî Tâlib | **アリー・イブン・アビー・ターリブ** | La Porte du Savoir → **知の門** | [W] « アリー・イブン・アビー・ターリブ » |
+| Khâlid ibn al-Walîd | **ハーリド・イブン・アル＝ワリード** | Le Sabre dégainé → **抜き放たれた剣** | [W] « ハーリド・イブン・アル＝ワリード » (qui dit aussi 「アッラーの剣」) |
+| Abû 'Ubayda ibn al-Jarrâh | **アブー・ウバイダ・イブン・アル＝ジャッラーフ** | Amîn al-Umma → **アミーン・アル＝ウンマ** ; « L'homme de confiance de la communauté » → **ウンマの信頼される人** | [W] « アブー・ウバイダ » |
+| Ibn 'Abbâs | **イブン・アッバース** | Le Docte de la communauté → **ウンマの碩学** | § 1.2 |
+| 'Ammâr ibn Yâsir | **アンマール・イブン・ヤースィル** | Le Vétéran → **古参** | § 1.2 |
+| Qays ibn Sa'd | **カイス・イブン・サアド** | Fils de Sa'd → **サアドの子** | § 1.2 |
+| Al-Qa'qâ' ibn 'Amr at-Tamîmî | **カアカーア・イブン・アムル・アッ＝タミーミー** (court : カアカーア) | Ibn 'Amr at-Tamîmî → **イブン・アムル・アッ＝タミーミー** | § 1.2 |
+| Dirâr ibn al-Azwar | **ディラール・イブン・アル＝アズワル** | Ibn al-Azwar → **イブン・アル＝アズワル** | § 1.2 |
+| Aslam | **アスラム** | L'affranchi de 'Umar → **ウマルに解放された者** (la traduction de *Muslim* dit 「マウラー」 : vol2-174) | § 1.2 |
+| 'Abd ar-Rahmân ibn 'Awf | **アブドゥッラフマーン・イブン・アウフ** | Ibn 'Awf → **イブン・アウフ** | § 1.2 (forme « 岩波方式 », alarabiyah.sakura.ne.jp) |
+| Zayd ibn Thâbit | **ザイド・イブン・サービト** | Le Scribe → **書記** | § 1.2 |
+| Hudhayfa ibn al-Yamân | **フザイファ・イブン・アル＝ヤマーン** | Le Gardien du secret → **秘密の守り手** | § 1.2 |
+| Le Caïd (fiction) | **カーイド** | Seigneur de la Citadelle → **城塞の主** | Fiction : forme simple de al-Qāʾid. 将軍 (le général d'Izem) et 殿様 (seigneur japonais) écartés. **À valider.** |
+| Maître Bahrâm (fiction) | **バフラーム師** | le Géomètre → **測量師** | Fiction. « Maître » → suffixe **師**, partout. |
+| Zîrî (fiction) | **ズィーリー** | Capitaine des sentinelles → **見張りの隊長** | Fiction. |
+| Idris (fiction) | **イドリース** | le Râwî → **ラーウィー** | Consigne du décideur (イドリース). Les textes disent « Idris » : le moteur pose le nom choisi par le joueur (`perso.js`). |
+| Maître Yûnus (fiction) | **ユーヌス師** | le Gardien → **守り人** | Fiction. |
+| Sâlim (fiction) | **サーリム** | le Repenti → **悔い改めた者** ([東長] dit 「改悛（tawba）」 pour le repentir) | Fiction. |
+
+**Rôles** (`D.ROLES`, s'ils s'affichent) : guerrier **戦士** · gardien **守り手** · sage **知者** · soigneur **癒し手** ·
+stratège **軍師**. Le rôle « sage » se dit 知者 pour ne pas se confondre avec la posture 賢者 (§ 2.5). **À valider.**
+
+**En-têtes de saga** : « Saga I · Le Véridique » → 「第一の環・真実の人」 ; « Lumière : Véracité (sidq) » → 「光：誠実」 ;
+« 11–13 H · 632–634 » → 「H11〜13・632〜634年」 (§ 1.4).
+
+### 3.2 Les personnages historiques des chapitres
+
+Tous sont des Compagnons ou des figures de l'histoire : forme du § 1.2. Ceux que `D.SANS_VISAGE` range sans visage gardent
+leur nom ordinaire ; seul le dessin change.
+
+| Saga | Français | **Japonais** | Source de la forme |
+|---|---|---|---|
+| abubakr | Al-Hubâb ibn al-Mundhir | **フバーブ・イブン・アル＝ムンズィル** | § 1.2 |
+| abubakr | Bashîr ibn Sa'd | **バシール・イブン・サアド** | § 1.2 |
+| abubakr | Usâma ibn Zayd | **ウサーマ・イブン・ザイド** | § 1.2 |
+| abubakr | Zayd ibn al-Khattâb | **ザイド・イブン・アル＝ハッターブ** | § 1.2 |
+| ali | Kumayl ibn Ziyâd | **クマイル・イブン・ズィヤード** | § 1.2 |
+| ali | Le juge Shurayh | **法官シュライフ** (qâdî : 法官 ; le recueil peut dire 「カーディー（法官）」) | § 1.2 |
+| ali | Qanbar | **カンバル** | § 1.2 |
+| ali | Al-Hasan (ibn 'Alî) | **ハサン** ; en entier **ハサン・イブン・アリー** | [W] « ハサン・イブン・アリー » |
+| ali | Mâlik al-Ashtar | **マーリク・アル＝アシュタル** | § 1.2 ([W] écrit 「マリク・イブン・アシュタル」 : forme fautive, ni voyelle longue ni nisba) |
+| ali | Abû Ayyûb al-Ansârî | **アブー・アイユーブ・アル＝アンサーリー** | § 1.2 |
+| ali | Farwa ibn Nawfal | **ファルワ・イブン・ナウファル** | § 1.2 |
+| ali | Ibn an-Nabbâh, le muezzin | **礼拝の呼びかけ役イブン・アン＝ナッバーフ** (muezzin : ムアッズィン) | § 1.2 |
+| ali | Ibn al-Kawwâ' | **イブン・アル＝カウワー** | § 1.2 |
+| khalid | Râfi' ibn 'Umayra | **ラーフィウ・イブン・ウマイラ** | § 1.2 |
+| khalid | 'Amr ibn 'Abd al-Masîh | **アムル・イブン・アブドゥルマスィーフ** | § 1.2 (règle du composé en ʿAbd) |
+| khalid | Wahb ibn Zurayr | **ワフブ・イブン・ズライル** | § 1.2 |
+| khalid, umar | Bilâl (ibn Rabâh) | **ビラール** ; en entier **ビラール・イブン・ラバーフ** | [W] écrit 「ビラール・ビン＝ラバーフ」 ; le jeu suit § 1.2 (イブン) |
+| umar | Sophrone | **ソフロニオス** | [W] « ソフロニオス » (エルサレムのソフロニオス) |
+| umar | Al-Hurmuzân | **フルムザーン** | § 1.2, d'après l'arabe (la forme persane serait ホルモザーン) |
+| umar | Anas ibn Mâlik | **アナス・イブン・マーリク** | § 1.2 |
+| umar | Surâqa ibn Mâlik | **スラーカ・イブン・マーリク** | § 1.2 |
+| umar | Jabala ibn al-Ayham | **ジャバラ・イブン・アル＝アイハム** | § 1.2 |
+| umar | Thawr ibn Mâlik | **サウル・イブン・マーリク** | § 1.2 |
+| umar | Kisrâ (titre des rois perses) | **キスラー** (le recueil : 「ホスロー」, forme des manuels japonais) | § 1.2 |
+| uthman | 'Abdallâh ibn az-Zubayr | **アブドゥッラー・イブン・アッ＝ズバイル** | [W] 「アブドゥッラー・イブン・アッズバイル」 (sans « ＝ » : on suit § 1.2) |
+| uthman | Sa'îd ibn al-'Âs | **サイード・イブン・アル＝アース** | § 1.2 |
+| uthman | 'Abdallâh ibn Sa'd | **アブドゥッラー・イブン・サアド** | § 1.2 |
+| uthman | Abû Hurayra | **アブー・フライラ** | [W] « アブー・フライラ » |
+| tous | les Ansâr / un Ansârî | **アンサール** / **アンサールの一人** | [三田] 59:9 「援助者〔アンサール〕」 |
+| tous | les Muhâjirûn | **ムハージルーン** (sens : 移住者) | [三田] 59:9 「移住者〔ムハージル〕」 |
+| ali | les sécessionnistes (Khawârij) | **離脱者** ; le recueil : 「ハワーリジュ」 | [協会訳ムスリム] vol2-174, titre : 「離脱者達の殺害の勧め」 ; 「ハワーリジュ」 |
+
+Les **personnages historiques non musulmans** (ソフロニオス, フルムザーン, ジャバラ…) gardent leur dignité : ni sobriquet, ni
+diminutif (schéma v2).
+
+### 3.3 Les personnages de fiction et les désignations
+
+Fiction (`caid`) : Maymûn, le chambellan **侍従マイムーン** · Amghar Idir **アムガル・イディール** (amghar, titre de chef
+berbère : **アムガル**) · Le vieil imam **老イマーム** · Anir, la sentinelle **見張りのアニール** · Vieux garde **老いた番兵** ·
+Udad, officier du rempart **城壁の士官ウダド** · Amghar Meksa **アムガル・メクサ** · Izem, le général **イゼム将軍** · Maître
+Yishaq, caravanier **隊商のイツハク師** (forme hébraïque, comme 「イツハク・ラビン」 ; le personnage est juif, sous pacte) ·
+Farrokh, géomètre **測量師ファッロフ** · Frère Cyprien, moine-médecin **医師の修道士キプリアン** · L'ancien Warsen **長老ワルセン**
+· Porteur d'eau **水運び** · Amezyan, le puisatier **井戸掘りのアメズヤン** · Le maître de l'école **学び舎の師** · Aderfi,
+prêcheur des Purs **「純なる者たち」の唱道者アデルフィ** · Un Pur **「純なる者」の一人**. « Les Purs » : **純なる者たち** (pas 清き者 :
+清め／穢れ sont des notions shintô). **À valider.**
+
+Fiction (`idris`, 2084) : Passant **通りすがりの人** · Employé **勤め人** · Vieil homme **老人** · Enfant **子ども** ·
+L'enfant du parvis **広場の子** · Celui qui défile **流し見る人** · Le Régent **統べる人** · L'Admiré **称えられる人** ·
+Le Compteur **数える人** · Le Cartographe **地図を描く人** · L'agent du relevé **記録係** · Le vieil amghar **老アムガル** · Un
+écolier **生徒**. Exigence 14 en japonais : ces six types viennent d'un conte dont les traductions japonaises ont leurs
+mots ; on n'en reprend **aucun** (ni le titre du roi, ni « la vanité », ni les métiers tels que le traducteur les a
+nommés). Les noms ci-dessus sont des descriptions neuves. **À valider.**
+
+Fiction des sagas : Thâmir le courtier **仲買人サーミル** (hypocrite fictif, exigence 11) · Dirghâm, cheikh des Banû Rimth
+**リムス族の長ディルガーム** (clan de fiction ; « cheikh » : **長** dans le récit, 「シャイフ」 au recueil) · Ma'dân, notable des
+greniers **穀物倉の有力者マアダーン** · Mâzin, chef des cavaliers de la Butte **丘の騎兵の長マーズィン** · Ghâlib, l'intendant
+**主計ガーリブ** · Hâzim (commis de la Maison de la farine / du Trésor) **「粉の館」の書記ハーズィム** / **国庫の書記ハーズィム** ·
+Abû Ghânim, marchand de grain **穀物商アブー・ガーニム** · Abû l-Akhbâr **アブー・アル＝アフバール**.
+
+Désignations (toutes sagas) : Un Médinois **マディーナの人** · Vieil Ansârî **年老いたアンサール** · Messager **使者** · Un
+fidèle **信者の一人** · Maître d'école **学び舎の師** · Vieux marchand **年老いた商人** · Garde des passes **峠の番人** ·
+Soldat d'Usâma **ウサーマ軍の兵** · Délégué des tribus **部族の使節** · Un récitateur / récitant **読誦者** (三田 72:1
+「読誦」 ; [東長] 「クルアーン読誦」) · Vieux soldat **老兵** · Veilleur **夜番** · Courrier **急使** · Envoyé de Najrân
+**ナジュラーンの使者** · Un étudiant **学徒** · Un peseur du souk **市場の計量人** · L'homme à la cuirasse **鎧の男** (pas
+鎖帷子, l'armure japonaise) · Le maître du cercle **学びの輪の師** · Un vétéran **古参兵** · Sentinelle **見張り** · Le
+porte-parole **代弁者** · Un éclaireur **斥候** · Le doyen des récitants **読誦者の長老** · Chamelier **ラクダ引き** · Ancien
+des Kalb **カルブ族の長老** · Économe du monastère **修道院の会計係** · Lettré d'al-Hîra **ヒーラの学者** · Homme de la troupe
+**隊の男** · Guetteur **物見** · Vétéran de Badr **バドルの古参兵** · Armurier **武具師** · Jeune soldat **若い兵** · Ermite du
+ravin **谷の隠者** · Un poète **詩人** · Marchand de Homs **ホムスの商人** · Ancien du Fort des Oliviers **オリーブ砦の長老** ·
+Scribe du dîwân **ディーワーンの書記** · Moine **修道士** · Bédouin réfugié **避難してきたベドウィン** · Ancien de Médine
+**マディーナの長老** · Voyageur **旅人** · Garde de la porte **門番** · Soldat de Shâm **シャームの兵** · Marchand d'Îliyâ'
+**イーリヤーの商人** · Ancien de Tibériade **ティベリアの長老** · Convoyeur d'al-Madâ'in **マダーインからの輸送人** · Homme des
+Fazâra **ファザーラ族の男** · Voyageur d'Égypte **エジプトからの旅人** · Émissaire du Shâm **シャームの使者** · Un ancien du
+port **港の長老** · Un prêtre du port **港の司祭** · Une vigie **見張り** · Un charpentier d'Alexandrie **アレクサンドリアの
+船大工** · Un volontaire **志願者** · Un colporteur / un autre **行商人／もう一人の行商人** · Un homme venu d'Égypte
+**エジプトから来た男** · Un affranchi **解放された者**.
+
+Familles et foules restent collectives (exigence 4) : 「ある一家」「人々」.
+
+### 3.4 Les lieux
+
+**Lieux de l'histoire** (titres, sous-titres, récits)
+
+| Français | **Japonais** | Source de la forme |
+|---|---|---|
+| Médine | **マディーナ** | [W] « Medina » → 「マディーナ」 ; [三田] 59:9 「アル・マディーナ」 |
+| La Mecque | **マッカ** | [W] « ウスマーン・イブン・アッファーン » : 「マッカ（メッカ）」 ; 「メッカ」 (titre [W]) est la forme courante, gardée pour l'expression 「メッカ巡礼」 seulement si le français la demande. |
+| Jérusalem / Îliyâ' | **エルサレム** / **イーリヤー** | Forme consacrée / § 1.2 |
+| la Saqîfa des Banû Sâ'ida | **サーイダ族のサキーファ** | § 1.2 |
+| Dhû l-Qassa | **ズー・アル＝カッサ** | § 1.2 |
+| Yamâma (« le Jardin de la Mort ») | **ヤマーマ** (「死の園」) | § 1.2 |
+| Najrân | **ナジュラーン** | [W] « Najran » → 「ナジュラーン」 |
+| Koufa | **クーファ** | [W] « Kufa » → 「クーファ」 |
+| Siffîn | **スィッフィーン** | [W] « スィッフィーンの戦い » |
+| Harûrâ' | **ハルーラー** | § 1.2 (la traduction de *Muslim* : 「ハルーラーウ」) |
+| Nahrawân | **ナフラワーン** | § 1.2 |
+| la Samâwa | **サマーワ砂漠** | § 1.2 |
+| le Yarmoûk | **ヤルムーク** | [W] « ヤルムークの戦い » |
+| al-Hîra | **ヒーラ** | [W] « Al-Hirah » → 「ヒーラ」 |
+| Damas | **ダマスカス** | Forme consacrée |
+| Homs | **ホムス** | [W] « Homs » → 「ホムス」 |
+| Qinnasrîn | **キンナスリーン** | § 1.2 |
+| Tibériade | **ティベリア** | [W] « Tiberias » → 「ティベリア」 |
+| al-Madâ'in (Ctésiphon) | **マダーイン** (le recueil : 「クテシフォン」) | § 1.2 ; [W] « Ctesiphon » → 「クテシフォン」 |
+| le Shâm / l'Irak / l'Égypte | **シャーム** / **イラク** / **エジプト** | § 1.2 / formes consacrées |
+| Chypre | **キプロス** | Forme consacrée |
+| Dhât as-Sawârî (la bataille des Mâts) | **ザート・アッ＝サワーリー**（「帆柱の戦い」） | § 1.2 |
+| Alexandrie | **アレクサンドリア** | Forme consacrée |
+| Badr | **バドル** | [W] « バドルの戦い » |
+| le puits de Rûma | **ルーマの井戸** | § 1.2 |
+| la Maison de la farine (fiction) | **粉の館** | — |
+
+**Cartes** (gabarits) : Médine **マディーナ** · Koufa **クーファ** · Désert **砂漠** · Camp **陣営** · Cité romaine **ローマの都**
+(les Byzantins, que les sources arabes appellent ar-Rûm ; le recueil peut dire 「ルーム」) · Palais **宮殿** · Navire **船** ·
+Noosphère **精神圏** · La Citadelle **城塞** · Cité-Miroir **鏡の街** · Archives basses **地下文書庫**.
+
+**Lieux nommés des cartes** (`D.LIEUX`)
+
+| Ville | Mosquée **モスク** (三田 dit 「マスジド」 : le recueil peut l'employer) · Place **広場** · Souk **スーク** · Halle **屋根付きの市** · Maisons **家々** · Puits **井戸** · Palmeraie **ナツメヤシ林** · Porte du nord **北門** · Porte du sud **南門** · Enclos **囲い** · Colline **丘** · École **学びの輪** (le cercle d'étude) |
+|---|---|
+| Désert | Départ **出発点** · Dunes **砂丘** · Rochers **岩場** · Oasis **オアシス** · Source **泉** · Caravane **隊商** · Crête **尾根** · Ruines **廃墟** · Arrivée **到着点** |
+| Camp | Entrée **入口** · Tente du chef **長の天幕** · Feu **焚き火** · Étendard **旗** · Lignes **戦列** · Tertre **小高い丘** (pas 塚 : tertre funéraire) · Tentes **天幕** |
+| Cité romaine | Porte **門** · Grande rue **大通り** · Forum **フォルム** · Basilique **バシリカ** (le bâtiment civil romain) · Esplanade **前庭** · Palais **宮殿** · Fontaine **噴水** · Remparts **城壁** · Jardin **庭園** · Marché **市場** · Quartier **街区** |
+| Palais | Nef **大広間** · Trône **玉座** · Trésor **宝物庫** · Colonnade **列柱廊** |
+| Navire | Poupe **船尾** · Pont **甲板** · Mât **帆柱** · Proue **船首** · Passerelle **渡り板** · Entrepont **中甲板** |
+| Noosphère | Seuil **敷居** · Nœud **結び目** · Faille **裂け目** · Miroir **鏡** · Cœur **核心** ; dans un labyrinthe, les « ponts » sont des **橋** (pas 甲板) |
+| Citadelle | Cour **中庭** · Tour **塔** · Grande salle **大広間** · Mosquée **モスク** · Greniers **穀物倉** · Poterne **裏門** |
+| Cité-Miroir | Rue **通り** · Grand écran **大画面** · Ruelle **路地** · Ascenseur **エレベーター** · Parvis **広場** · Rayonnages **書架** · Bureau **執務室** · La Chaîne **伝承の鎖** |
+
+Tenues du râwî (`D.TENUES`) : Manteau des Archives **文書庫の外套** · Capuche d'encre **墨色の頭巾** · Veste de la ruelle
+**路地の上着** · Écharpe du copiste **写字生の襟巻き** (jamais 写経) · Manteau du veilleur **夜番の外套** · Calotte du lettré
+**学者の帽子**.
+
+### 3.5 Les égrégores et les idoles
+
+Principe : un nom japonais qui dit la même chose avec les mots de la langue, pas un calque ; les mêmes familles de noms
+d'un récit à l'autre ; aucun nom de démon, d'esprit ou de monstre ; aucun nom de peuple, de religion, de personne
+(exigence 6). Familles : « Murmure… » → **つぶやき** ; « Chuchotement » → **ひそひそ声** ; « Écho… » → **反響** (pas こだま,
+écrit aussi 木霊, « l'esprit de l'arbre », ni やまびこ, nom d'un esprit des montagnes) ; « Mirage… » → **蜃気楼** ; « Le
+Trône… » → **玉座**. Tous **à valider** ; les noms marqués ◆ sont les idoles.
+
+| Récit | Français | **Japonais** |
+|---|---|---|
+| caid | Chuchotement · L'Ombre du Père · Dispense vendue · Le Sommeil · ◆ Le Tambour · On-dit · ◆ Le Bouc émissaire · ◆ Le Pur | ひそひそ声 · 父の影 · 売られた免除 · 眠り · ◆ 太鼓 · 噂 · ◆ 濡れ衣 · ◆ 純なる者 |
+| idris | Notification · La Tendance · La Marque · Le Score · Le Flux · Le Défilement · Le Petit Trône · L'Applaudissement · Le Compte · La Carte sans chemin · ◆ L'AGRÉGOR | 通知 · 流行り · ブランド · スコア · フィード · 流し見 · 小さな玉座 · 喝采 · 勘定 · 道のない地図 · ◆ アグレゴール |
+| abubakr | Murmure de deuil · ◆ Le Déni · Mot d'ordre · ◆ Al-'Asabiyya — le Clan · Nuée du reniement · L'Avare du dû · Écho flatteur · Fausse rime · Mur du Jardin · ◆ Al-Kadhdhâb — le Menteur | 喪のつぶやき · ◆ 否認 · 号令 · ◆ アサビーヤ――血の結束 · 離反の群れ · 出し惜しみ · へつらいの反響 · 偽りの韻 · 園の壁 · ◆ カッザーブ――偽る者 |
+| ali | Murmure de rang · Soupçon · Le Privilège · Écho · Clameur · ◆ Le Slogan · Lame pieuse · Le Scrupule inversé · ◆ Le Juge sans miséricorde | 序列のつぶやき · 疑い · 特権 · 反響 · どよめき · ◆ 掛け声 · 敬虔を装う刃 · 裏返しの潔癖 · ◆ 慈悲なき裁き手 |
+| khalid | Murmure de soif · Le Mirage · La Soif · Le Décompte · Forêt de lances · ◆ La Peur du Nombre · Écho de louange · Le Laurier · ◆ L'Idole du Héros | 渇きのつぶやき · 蜃気楼 · 渇き · 数え上げ · 槍の林 · ◆ 多勢への怖れ · 称賛の反響 · 栄冠 · ◆ 英雄の偶像 |
+| umar | Murmure de la faim · Plainte des cendres · L'Accapareur · Mirage de gloire · Le Faste · ◆ L'Aigle d'Airain · Reflet d'or · La Couronne suspendue · ◆ Le Trône vide | 飢えのつぶやき · 灰の嘆き · 買い占め · 栄光の蜃気楼 · 奢り · ◆ 青銅の鷲 · 金の照り返し · 吊るされた冠 · ◆ 空の玉座 |
+| uthman | Murmure · Variante querelleuse · Babel · Écume d'effroi · ◆ L'Abîme · Ouï-dire · Écho · L'Or · ◆ La Rumeur | つぶやき · 諍いの異文 · バベル · 怯えの泡 · ◆ 深淵 · 又聞き · 反響 · 黄金 · ◆ 流言 |
+
+Notes :
+
+- **Le Slogan → 掛け声** : le cri de ralliement qu'on répète (et 「掛け声倒れ」, les mots sans les actes). お題目 dirait mieux
+  « formule creuse », mais c'est d'abord l'invocation de l'école bouddhique de Nichiren : écarté.
+- **Al-'Asabiyya → アサビーヤ** : le mot arabe que les études japonaises gardent, glosé 「連帯意識（アサビーヤ）」 dans la
+  présentation de l'ouvrage de 森本公誠 sur Ibn Khaldûn (講談社学術文庫, lu : <https://www.kodansha.co.jp/book/products/0000211533>) ;
+  le jeu le fait suivre de 「血の結束」, plus proche du « Clan » qui déchire. **Al-Kadhdhâb → カッザーブ** : le surnom arabe, suivi de 「偽る者」. Le jeu ne relie l'idole à aucune
+  personne (exigence 6).
+- **Le Bouc émissaire → 濡れ衣** (la faute qu'on met sur un autre) : 生贄 et 贖罪の山羊 sont des images de sacrifice
+  religieux ; スケープゴート est un calque.
+- **On-dit → 噂** (caid) et **La Rumeur → 流言** (uthman) restent distincts, comme en français ; **Ouï-dire → 又聞き**.
+- **L'Idole du Héros → 英雄の偶像** répond, à dessein, à la posture 英雄 : l'idole est ce que devient la posture quand on
+  l'adore.
+- **L'AGRÉGOR → アグレゴール** : le français mêle « agrégateur » et « égrégore » ; アグレゴール garde l'écho de アグリゲーター
+  (le mot japonais du logiciel qui agrège), et sonne comme un nom propre. Si le décideur retient エグレゴール pour
+  « égrégore » (§ 2.1), le jeu de mots revient entier.
+- **Les sept maux et les cinq idées noires** prennent les noms du § 2.3.
+
+<!-- SECTION 3 FIN -->
 
 <!-- SECTION 4 -->

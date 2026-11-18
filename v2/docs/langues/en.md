@@ -30,7 +30,18 @@ Abréviations employées dans les tableaux.
 | **WP** | Wikipedia en anglais, titre de l'article (forme usuelle d'un nom) | `https://en.wikipedia.org/wiki/<titre>` ; titres vérifiés par l'API (`action=query&redirects=1`) |
 | **GF** | Google Fonts, feuilles de style des polices du jeu (Alegreya, Cinzel, Share Tech Mono) | `https://fonts.googleapis.com/css2?family=<police>` (plages `unicode-range`) |
 
-(La suite du tableau est complétée plus bas, au fil des sections.)
+| **Winter** | al-Ghazâlî, *On Disciplining the Soul & On Breaking the Two Desires* (livres XXII-XXIII de l'*Iḥyāʾ*), trad. T. J. Winter, Islamic Texts Society | traducteur et titre : `https://its.org.uk/catalogue/al-ghazali-on-disciplining-the-soul-and-on-breaking-the-two-desires/` ; texte : `https://archive.org/details/6-abu-hamid-muhammad-ghazali-on-disciplining-the-soul-and-breaking-the-two-desires` (djvu.txt, cherché par mots) |
+| **Skellie** | al-Ghazâlî, *The Marvels of the Heart* (livre XXI), trad. W. J. Skellie, Fons Vitae, 2010 | `https://fonsvitae.com/product/al-ghazali-the-marvels-of-the-heart-science-of-the-spirit-book-xxi-of-the-revival-of-the-religious-sciences/` ; texte (thèse de 1938) : `https://archive.org/details/GhazaliTheMarvelsOfTheHeartSkellie` |
+| **Rustom** | al-Ghazâlî, *On the Condemnation of Pride and Self-Admiration* (livre XXIX), trad. M. Rustom, Islamic Texts Society, 2018 | `https://its.org.uk/catalogue/al-ghazali-on-the-condemnation-of-pride-and-self-admiration/` |
+| **Shaker** | al-Ghazâlî, *On Intention, Sincerity and Truthfulness* (livre XXXVII), trad. A. F. Shaker, Islamic Texts Society | `https://its.org.uk/catalogue/al-ghazali-on-intention-sincerity-and-truthfulness/` |
+| **Ghazali.org** | liste des quarante livres de l'*Iḥyāʾ* et de leurs titres anglais (« *The Quarter of Perils* ») | `https://www.ghazali.org/?p=1322` |
+| **Karim** | al-Ghazâlî, *Revival of Religious Learnings*, vol. III, trad. Fazlul Karim | `https://archive.org/details/IhyaUlumAlDinVol3_20171108` (djvu.txt du vol. 3) |
+| **Bacon** | Francis Bacon, *Novum Organum*, livre I, aph. XXXVIII-XLIV, trad. J. Spedding et al. | `https://en.wikisource.org/wiki/Novum_Organum/Book_I_(Spedding)` |
+| **Scheler** | Max Scheler, « *Exemplars of Person and Leaders* », dans *Person and Self-Value: Three Essays*, éd. et trad. M. S. Frings, Nijhoff, 1987 | sommaire lu dans les notices de libraires (`https://sack.de/scheler-frings-person-and-self-value/9789401080651`, `https://lehmanns.de/shop/sozialwissenschaften/624835-9789024733804-person-and-self-value`) ; texte non lu |
+| **Bukhari-Khan** | al-Bukhârî, *Sahih*, trad. Muhsin Khan (édition du registre) | `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json` |
+| **Muslim-Siddiqui** | Muslim, *Sahih*, trad. ʿAbdul Hamid Siddiqui (édition du registre) | `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-muslim.min.json` |
+
+Les pages de Wikipedia lues pour un terme sont nommées dans la ligne du terme (« WP *Titre* »).
 
 ## 1. Conventions d'écriture
 

@@ -434,3 +434,100 @@ chroniques.
 | le camp | **المعسكر** | — | |
 | le stratège (qui ordonne sans perdre son tour) | **صاحب الرأي** | § 2.4 | |
 | la préparation (avant une idole) | **التأهّب** | — | |
+
+### 2.8 Les tables du moteur (`defs.js`)
+
+**Lumières** (`D.ELEMENTS` ; « Lumière » = **نور**, pl. **الأنوار** ; « la Lumière de Véracité » = « نور الصدق »)
+
+| Français | Arabe | Source | Note |
+|---|---|---|---|
+| Fer (l'élan physique) | **الحديد** | — | Autre choix : البأس. |
+| Véracité (sidq) | **الصِّدق** | *Ihyâ'*, « النية والإخلاص والصدق » [A] | |
+| Justice ('adl) | **العَدل** | usage courant | Nom commun (§ 2.2). |
+| Patience (sabr) | **الصَّبر** | *Ihyâ'*, « الصبر والشكر » [A] | |
+| Miséricorde (rahma) | **الرَّحمة** | usage courant | |
+| Courage (shajâ'a) | **الشَّجاعة** | usage courant | |
+| Savoir ('ilm) | **العِلم** | *Ihyâ'*, « كتاب العلم » [A] | |
+
+**Piliers de la Citadelle** (`D.PILLARS`) : Prière **الصلاة** · Savoir **العلم** · Justice **العدل** · Lien **الأُلفة**
+(ce qui tient les hommes ensemble : *Ihyâ'*, « آداب الألفة والأخوة » [A] ; à valider ; pas العصبية, qui est l'idole
+« le Clan », § 3.6).
+
+**Prières** (`D.PRAYERS`) : **صلاة الفجر · صلاة الظهر · صلاة العصر · صلاة المغرب · صلاة العشاء** (le nom suffit ; la
+glose française « l'aube, le midi… » ne se traduit pas). Le carton de prière reste sobre : « صلَّوا » (exigence 13).
+
+**Équipement** (`D.SLOTS`, `D.GEAR_TYPES`) :
+
+| Emplacement | Arabe | Type | Arabe | Type | Arabe |
+|---|---|---|---|---|---|
+| Main droite | **اليد اليمنى** | Épée | **السيف** | Bouclier | **التُّرس** |
+| Main gauche | **اليد اليسرى** | Lance | **الرمح** | Grand bouclier | **التُّرس الكبير** |
+| Tête | **الرأس** | Arc | **القوس** | Outil | **الأداة** |
+| Corps | **البدن** | Dague | **الخنجر** | Turban | **العمامة** |
+| | | Masse | **الهِراوة** | Calotte | **الكُمّة** (moderne : الطاقية) |
+| | | Bâton | **العصا** | Casque | **الخُوذة** (classique : البَيضة, qui se lit « l'œuf ») |
+| | | Calame | **القلم** | Étoffe | **الثوب** |
+| | | | | Cuir | **الجِلد** (vocalisé) |
+| | | | | Armure | **الدِّرع** |
+
+Les pièces (`D.GEAR`), quand leur nom en a besoin : les mots des poètes anciens que cite le recueil du jeu —
+**المُهنَّد** (WP-ar, « مهند (اسم) » : « اسم من أسماء السيوف المطبوعة من حديد الهند » [L]), **اليمانيّ**، **المَشرَفيّ**،
+**الرمح الخَطّيّ**، **السَّمهريّ**، **قوس النَّبع**، **الدرع السَّلوقيّة**، **درقة اللَّمط** — sont des termes reçus, mais leurs
+sources n'ont pas été relues ici (le recueil du jeu dit lui-même « à faire vérifier »). Autres pièces : Javelot
+**الحَربة** ; Couteau de ceinture **سكّين الحزام** ; Massue de tamaris **هراوة الطَّرفاء** ; Masse de fer **عمود الحديد** ;
+Houlette de berger **مِحجَن الراعي** ; Calame et encrier **القلم والدَّواة** ; Bouclier de cuir **الدَّرَقة** ; Gourde de cuir
+**الإداوة** ; Tablette de bois **اللوح** ; Lampe de veille **سراج السهر** ; Chèche des sables **لِثام الرمال** ; Coiffe de
+mailles **المِغفَر** ; Manteau de laine **كساء الصوف** ; Burnous **البُرنُس** ; Cotte de mailles **درع الزَّرَد** ; Cuirasse à
+lamelles **الجَوشَن**. **Exigence 17 en arabe** : le « manteau rayé du Yémen » est **الكساء اليمانيّ المخطّط**, jamais
+**الحِبَرة** ni **البُردة** (étoffes que la tradition attache au Prophète ﷺ ; le jeu ne dit jamais qui portait quoi) ; aucune
+pièce ne s'appelle **ذو الفقار** (§ 4).
+
+**Objets** (`D.ITEMS`) : Dattes de Médine **تمر المدينة** · Outre d'eau **قِربة ماء** · Pain d'orge **خبز الشعير** · Miel
+**عسل** · Musc **مِسك** · Lait chaud **لَبَنٌ دافئ** (vocalisé : sans voyelles, « لبن » est le lait en arabe classique mais
+le yaourt au Levant, et la brique crue, اللَّبِن, plus bas) · Siwâk **سِواك**.
+
+**Bâtir** (`D.MATS`, `D.PIECES`) : Eau **ماء** · Pisé **اللَّبِن** (la brique de terre crue) · Palme **سَعَف** · Pierre **حجر**
+· Grain **حَبّ** · Laine **صوف**. Tranchée **خندق** · Puits **بئر** · Palmier **نخلة** · Champ d'orge **حقل شعير** · Enclos
+de chèvres / de moutons / de chameaux **حظيرة الماعز / الغنم / الإبل** · Mur de pisé **جدار من لَبِن** · Sol à étoiles
+**أرضيّة بنقش النجوم** · Pilier de palmier **جِذع نخلة** · Niche de qibla **المِحراب** · Natte de prière **حصير الصلاة**
+(une natte, pas une سجّادة) · Tapis **بِساط** · Lanterne **قِنديل** · Rosace **نجمة ثُمانيّة**. Groupes : Défendre
+**الدفاع** · Eau et vivres **الماء والزاد** · Troupeaux **المواشي** · Mosquée **المسجد**.
+
+**Outils appris** (`D.OUTILS`, un à la fois) : Se déplacer **التنقّل** · Parler **الكلام** · Demander son chemin **السؤال
+عن الطريق** · Frapper la faille **ضرب الثُّلمة** · Les vertus **الخِصال** · La garde et la Niyya **التحصّن والنيّة** · La
+besace **المِزوَد** · La halte **الاستراحة** · Retrouver une source **تتبّع الرواية** · S'équiper **التجهّز** · S'orienter
+aux étoiles **الاهتداء بالنجوم** (Coran 16:16, « وبالنجم هم يهتدون » [K]) · Frapper ce qui rôde **ضرب ما يحوم** ·
+Prendre une posture **اتّخاذ وقفة**.
+
+**Le recueil** (le codex) : **الكُرّاسة** (le cahier où le râwî note ce qu'il a appris ; à valider ; autre choix :
+السِّجلّ). Catégories (`D.CODEX_CATS`, qui restent des clés françaises sous le capot) :
+
+| Français | Arabe | Source / note |
+|---|---|---|
+| Biographie | **التراجم** | le genre des notices biographiques (Ibn Sa'd, *at-Tabaqât al-kubrâ*) ; usage courant |
+| Événement | **الوقائع** | |
+| Noosphère | **عالم الأفكار** | § 2.3 |
+| Lieu | **البلدان** | le titre de Yâqût, *Mu'jam al-buldân*, cité par WP-ar, « عين تمر » [L] |
+| Parole | **الأقوال** | |
+| Cœur | **القلب** | autre choix : **الرقائق** (le genre des textes qui attendrissent le cœur) |
+| Objets | **المتاع** | |
+
+**Étoiles** (`D.STARS`, déjà en arabe dans le jeu) : **النسر الطائر** (WP-ar, « النسر الطائر (نجم) » [L]) · **العقرب**
+(son cœur rouge : **قلب العقرب**) · **سُهَيل** (WP-ar : « سُهيل اليماني », Canopus [L]) · **العَيُّوق** (WP-ar : Capella [L])
+· **الجَدْي** (la Polaire chez les Arabes ; WP-ar, « نجم قطبي », ne le confirme pas : référence non vérifiée ; vocaliser,
+car « الجدي » est aussi le Capricorne). Les caps : الشرق، الجنوب الشرقي، الجنوب، الجنوب الغربي، الغرب، الشمال الغربي،
+الشمال، الشمال الشرقي ; « à main gauche » : « عن يسارك ».
+
+**Tenues du râwî** (`D.TENUES`, 2084, fiction) : Manteau des Archives **معطف الخزانة** · Capuche d'encre **قلنسوة الحبر**
+· Veste de la ruelle **سترة الزقاق** · Écharpe du copiste **وشاح الناسخ** · Manteau du veilleur **معطف الساهر** · Calotte
+du lettré **كُمّة الأديب**.
+
+### 2.9 Le dessin et 2084
+
+| Français | Arabe retenu | Note |
+|---|---|---|
+| le voile de lumière (des Compagnons) | **غُلالةٌ من نور** | **à valider**. Jamais « حجابٌ من نور » : « حجابه النور » se dit d'Allah dans un hadith (Muslim, n° 179 d'Abd al-Bâqî ; CDN 445 [M]). |
+| un visage (exigence 2) | **وجه** | Aucun texte ne décrit de traits, pour personne. |
+| écran · notification · le grand écran · ascenseur | **شاشة · إشعار · الشاشة الكبرى · مِصعد** | arabe moderne ; jamais l'anglais translittéré. |
+| le relevé (L'agent du relevé) | **الإحصاء** (« موظّف الإحصاء ») | |
+| An 1508 de l'Hégire | **سنة ١٥٠٨ للهجرة** | § 1.5 |
