@@ -98,6 +98,16 @@ parole, un français fidèle au texte arabe relevé, à valider ensuite par vous
   la remarque d'Ibn 'Abbâs, « Il ne laissa pas un mot… », les paroles de Yamâma, « Le Messager ﷺ l'a nommé… », les
   consignes, « Je ne dénouerai pas un étendard qu'il a noué ». **Proposition** : les relever à leur source.
 
+## 9. Relevé en écrivant le japonais (saga de Khâlid)
+
+- **Exigence 19** : juste après la bataille déclarée du Yarmoûk, une narration dit « 'Ikrima ibn Abî Jahl et quatre cents
+  hommes » ; ailleurs, « plus de cent mille Romains » (recueil), « trois cents et quelques » et « une centaine d'hommes de
+  Badr » (le vétéran). **Proposition** : « 'Ikrima ibn Abî Jahl et les siens » près de la bataille déclarée ; les
+  autres nombres, attestés, à garder ou non selon votre lecture de l'exigence.
+- **Le nom du personnage d'al-Hîra** : chez at-Tabarî, la réponse sur les forteresses est celle de 'Abd al-Masîh ibn
+  'Amr ibn Buqayla ; le jeu le nomme « 'Amr ibn 'Abd al-Masîh » (le registre le note). **Proposition** : lui rendre son
+  nom.
+
 ## Si vous retenez un changement
 
 Le français change d'abord, puis les listes des langues se remettent à jour (`node v2/tools/langues.js releve`) : les
