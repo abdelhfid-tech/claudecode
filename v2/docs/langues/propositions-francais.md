@@ -8,6 +8,9 @@ glossaires (`ar.md`, `en.md`, `ja.md`) et le registre des sources (`v2/docs/sour
 français est moins juste que ce qu'on écrit dans les autres langues, ou plus exposé au regard des exigences. Le nombre
 entre parenthèses dit combien de fois le terme revient dans le jeu : c'est le coût du changement.
 
+Les parties 5 à 10 viennent de l'écriture du japonais. La partie 11 ajoute ce qu'a relevé l'écriture de l'arabe (sagas,
+histoire de 2084, veillées), rangé du plus grave au plus léger, avec une décision par point.
+
 ## 1. Ce qui touche les exigences (à trancher en premier)
 
 | Aujourd'hui | Proposition | Pourquoi |
