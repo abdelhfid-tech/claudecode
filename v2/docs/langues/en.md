@@ -159,6 +159,12 @@ confondrait avec un guillemet ouvrant).
   occurrence de « *may Allah be pleased with him* » ; « *Abu Bakr* » 1 058 fois, sans formule) ; WP-MOS retire « *RA* ».
   Si le décideur en veut une, la forme anglaise usuelle est « *(may Allah be pleased with him)* » (usage courant,
   référence non vérifiée), et elle ne vaudrait qu'au recueil, à la première mention. **À trancher par le décideur.**
+  *Lexique commun (18 novembre) :* le français l'écrit désormais au recueil, dans dix-huit feuillets des cinq récits : à
+  la fin d'une biographie (« … il mourut à soixante-trois ans. Qu'Allah l'agrée. ») et entre parenthèses après un nom
+  (« 'Âmir ibn 'Abdallâh ibn al-Jarrâh (qu'Allah l'agrée) », « (qu'Allah les agrée) »). Là où le français l'écrit,
+  l'anglais l'écrit aussi, et là seulement : **May Allah be pleased with him.** ; **(may Allah be pleased with him)** ;
+  **(may Allah be pleased with them)**. *Tabari* écrit « *may God be pleased with him* » (11 occurrences) ; « Allah »
+  selon § 1.4. Dans les répliques et la narration, rien, comme le français. **À valider.**
 - « On rapporte » (exigence 3) → **It is reported** ; « rapporté par » → **reported by** ; « d'après » → **after** dans
   une source (« *after al-Ghazali* »). Usage courant, référence non vérifiée ; le registre des sources fixe la forme
   de ses propres références.
@@ -269,6 +275,46 @@ Elles valent toutes. Celles-ci prennent en anglais une forme propre :
   la foi mérite d'en être exclu » → *Whoever excludes others from the faith deserves to be excluded from it*. **À valider
   (D184).**
 
+### 1.10 Les sources des feuillets (`codex[…].src`)
+
+*Lexique commun (18 novembre), à valider.* La source d'un feuillet est une ligne simple, **sans italique** (le français
+n'en met pas, et l'emphase `*…*` doit rester celle du français) : l'auteur, une virgule, le titre court que donne le
+français, selon § 1.3 (ʿ et ’ gardés, article *al-* jamais assimilé et **en minuscule même en tête de ligne**, comme les
+références du registre : « *al-Tabari, Tarikh al-Rusul wa-l-Muluk, vol. 3, p. 225* »). Le « ; » français, espacé,
+devient « ; » collé au mot qui précède : « at-Tabarî, Târîkh ; Ibn Sa'd, Tabaqât » → *al-Tabari, Tarikh; Ibn Saʿd,
+Tabaqat*. La source d'une **parole citée** (`<quote>2`) n'est pas concernée : elle se recopie du registre, au signe près
+(même quand le registre écrit l'apostrophe droite, « *Ibn Sa'd* »).
+
+| Français (les formes qui reviennent) | Anglais |
+|---|---|
+| at-Tabarî, Târîkh (31 feuillets) ; at-Tabarî, Tafsîr | al-Tabari, Tarikh ; al-Tabari, Tafsir |
+| Ibn Sa'd, Tabaqât (21) ; Ibn Sa'd, at-Tabaqât ; Ibn Sa'd, at-Tabaqât al-Kubrâ | Ibn Saʿd, Tabaqat ; Ibn Saʿd, al-Tabaqat ; Ibn Saʿd, al-Tabaqat al-Kubra |
+| al-Bukhârî (14) ; al-Bukhârî, Sahîh ; al-Bukhârî, as-Sahîh | al-Bukhari ; al-Bukhari, Sahih ; al-Bukhari, al-Sahih |
+| Muslim ; Muslim, Sahîh ; Muslim, as-Sahîh ; Muslim, introduction au (du) Sahîh | Muslim ; Muslim, Sahih ; Muslim, al-Sahih ; Muslim, introduction to the Sahih |
+| al-Balâdhurî, Futûh al-Buldân (14) | al-Baladhuri, Futuh al-Buldan |
+| Ibn Hishâm, as-Sîra ; Ibn Hishâm, Sîra | Ibn Hisham, al-Sira ; Ibn Hisham, Sira |
+| Ibn Kathîr, al-Bidâya ; Ibn Kathîr, al-Bidâya wa-n-Nihâya (et « wa n-Nihâya ») | Ibn Kathir, al-Bidaya ; Ibn Kathir, al-Bidaya wa-l-Nihaya (une seule forme, comme le registre) |
+| Ahmad, al-Musnad ; Ahmad, Musnad ; al-Hâkim, al-Mustadrak | Ahmad, al-Musnad ; Ahmad, Musnad ; al-Hakim, al-Mustadrak |
+| adh-Dhahabî, Siyar ; Ibn 'Abd al-Barr, al-Istî'âb ; Ibn Hajar, al-Isâba ; Ibn Hajar, Fath al-Bârî | al-Dhahabi, Siyar ; Ibn ʿAbd al-Barr, al-Istiʿab ; Ibn Hajar, al-Isaba ; Ibn Hajar, Fath al-Bari |
+| Ibn Abî Shayba, al-Musannaf ; 'Abd ar-Razzâq, al-Musannaf | Ibn Abi Shayba, al-Musannaf ; ʿAbd al-Razzaq, al-Musannaf |
+| Abû Dâwûd, as-Sunan ; at-Tirmidhî ; an-Nasâ'î ; an-Nasâ'î, as-Sunan al-Kubrâ ; ad-Dâraqutnî, as-Sunan ; al-Bayhaqî, as-Sunan al-Kubrâ | Abu Dawud, al-Sunan ; al-Tirmidhi ; al-Nasa’i ; al-Nasa’i, al-Sunan al-Kubra ; al-Daraqutni, al-Sunan ; al-Bayhaqi, al-Sunan al-Kubra |
+| Abû Yûsuf, Kitâb al-Kharâj ; Ibn Abî Dâwûd, Kitâb al-Masâhif ; al-Isfahânî, Kitâb al-Aghânî | Abu Yusuf, Kitab al-Kharaj ; Ibn Abi Dawud, Kitab al-Masahif ; al-Isfahani, Kitab al-Aghani |
+| al-Bayhaqî, Dalâ'il an-Nubuwwa ; Abû Nu'aym, Hilyat al-Awliyâ' ; Mâlik, al-Muwatta' ; Wakî', Akhbâr al-Qudât | al-Bayhaqi, Dala’il al-Nubuwwa ; Abu Nuʿaym, Hilyat al-Awliya’ ; Malik, al-Muwatta’ ; Wakiʿ, Akhbar al-Qudat |
+| Ibn 'Asâkir, Târîkh Dimashq ; Futûh ash-Shâm (attribué à al-Wâqidî) ; Ibn 'Abd al-Hakam, Futûh Misr | Ibn ʿAsakir, Tarikh Dimashq ; Futuh al-Sham (attributed to al-Waqidi) ; Ibn ʿAbd al-Hakam, Futuh Misr |
+| Nahj al-Balâgha, lettre 53 ; Ibn Qutayba, Kitâb al-Anwâ' ; Ibn Mâjid, Kitâb al-Fawâ'id ; al-Ghazâlî, Ihyâ' 'ulûm ad-dîn | Nahj al-Balagha, letter 53 ; Ibn Qutayba, Kitab al-Anwa’ ; Ibn Majid, Kitab al-Fawa’id ; al-Ghazali, Ihya’ ʿulum al-din |
+| Théophane, Chronographie ; Eutychius, Annales ; Eusèbe de Césarée, Histoire ecclésiastique ; chroniqueurs byzantins ; fragment de la Geniza du Caire | Theophanes, Chronographia ; Eutychius, Annals ; Eusebius of Caesarea, Ecclesiastical History ; Byzantine chroniclers ; a fragment from the Cairo Geniza |
+| Vernadsky, La Biosphère ; Teilhard de Chardin, Le Phénomène humain | Vernadsky, The Biosphere ; Teilhard de Chardin, The Phenomenon of Man (le titre de la traduction de B. Wall, § 2.1) |
+| Coran 49:6 ; Traduction du sens, Coran 2:197 | Qur’an 49:6 ; Translation of the meaning, Qur’an 2:197 (§ 1.5) |
+
+Les mentions : « (d'après Sayf ibn 'Umar) » → *(after Sayf ibn ʿUmar)* (§ 1.5) ; « (an 28 H) » → *(AH 28)* (§ 1.6) ;
+« (récit de 'Umar) » → *(account of ʿUmar)* ; « (texte du pacte) » → *(text of the pact)* ; « (Livre des
+expéditions) » → *(Book of Military Expeditions)*, comme le registre ; « (jugé authentique par adh-Dhahabî) » →
+*(judged sound by al-Dhahabi)* ; « traditions tardives, attributions discutées » → *later traditions, attributions
+disputed* ; « historiographie moderne » → *modern historiography* ; « — traduction du sens » → *— translation of the
+meaning* ; « Le personnage est fictif. » → *The character is fictional.* ; « Image du jeu » → *The game’s imagery*
+(§ 1.5) ; « Fiction » → *Fiction*. Titres d'ouvrages européens : la forme reçue de leur traduction anglaise (usage
+courant ; seul le titre de Teilhard a été lu, au catalogue).
+
 ## 2. Le vocabulaire du jeu
 
 Colonnes : le terme français ; **le terme anglais retenu** ; l'ouvrage où ce terme est employé dans ce sens (avec
@@ -286,7 +332,8 @@ quand ils comptent.
 | transmetteur | **transmitter** | WP *Isnad* (« *chain of transmitters* ») | |
 | râwî (Idris, le personnage du joueur) | **rawi** ; titre d'Idris : **the Rawi** ; en apostrophe : « *Rawi, …* » | WP *Isnad* (*transmitter*) ; le mot *rāwī* n'a pas d'article propre dans WP (page d'homonymie) | **À valider** : on garde le mot arabe, glosé une fois au recueil (« *rawi, a transmitter* »), comme le français garde « râwî ». *2.08* : « le râwî » du texte courant → *the rawi*, en minuscule, à la troisième personne (« *the rawi’s descent* ») ; jamais *you* pour sa descente, son cœur, sa prière ni sa vie (§ 1.1). |
 | Lumière (une des six) | **Light** (« *the six Lights* ») | — | Majuscule, comme en français. |
-| noosphère | **noosphere** | WP *Noosphere* (« *developed and popularized by … Vladimir Vernadsky and … Pierre Teilhard de Chardin* » ; « *the planetary "sphere of reason"* ») ; Teilhard, *The Phenomenon of Man*, trad. B. Wall (titre et traducteur lus au catalogue d'archive.org, `https://archive.org/details/phenomenonofmanw0000unse` ; texte non lu) | Minuscule, sans tréma. |
+| noosphère | **noosphere** | WP *Noosphere* (« *developed and popularized by … Vladimir Vernadsky and … Pierre Teilhard de Chardin* » ; « *the planetary "sphere of reason"* ») ; Teilhard, *The Phenomenon of Man*, trad. B. Wall (titre et traducteur lus au catalogue d'archive.org, `https://archive.org/details/phenomenonofmanw0000unse` ; texte non lu) | Minuscule, sans tréma. « la noosphère du Yamâma » → *the noosphere of al-Yamama*. |
+| l'envers (de chaque lieu : « l'envers de Médine, du lieu, de la ville, de la halle, du camp, du désert, de la plaine, de la piste, de cette nuit, des choses ») ; « dans l'envers de… » | **the reverse side** ; « dans l'envers de Médine » → *on the reverse side of Medina* ; « Râwî, regarde l'envers du lieu » → *Rawi, look at the reverse side of this place* ; « Traverser l'envers de la halle » → *Cross the reverse side of the hall* ; « regarde l'envers des choses » → *look at the reverse side of things* | L'image française est celle de l'étoffe, qui a un endroit et un envers ; l'anglais dit de même *the right side* et *the reverse side* d'un tissu, d'une médaille, d'une feuille (usage courant, dictionnaire non consulté). Les deux autres langues ont pris la même image : l'arabe **الوجه الآخر** (« l'autre face », `ar.md` § 3.8), le japonais **裏側** (« le revers »). | **À valider** (lexique commun, 18 novembre). Un seul terme, partout où le français dit « l'envers ». **Sans l'idée de « caché »** : « l'envers » ne la porte pas ; jamais *hidden side*, *unseen side*, *underside* (qui se lit « les bas-fonds »), *inner side*, ni *the within* (Teilhard oppose *the within* et *the without* des choses, mais la descente refuse déjà *within*, § 2.9). *The other side* est écarté : en anglais, *the Other Side* est aussi l'au-delà des spirites (usage courant, référence non vérifiée ; exigence 18, D183), et « *on the other side of Medina* » se lirait « à l'autre bout de la ville » ; *the flip side* est familier. Le feuillet « La noosphère » ajoute lui-même « invisible » (« l'envers invisible de chaque lieu ») : l'anglais le garde là, où le français l'écrit (*the invisible reverse side of every place*), et nulle part ailleurs. *Reposé avec le lexique commun :* le moteur (`trade.js`) disait « *on the hidden side of the track* » ; il dit « *on the reverse side of the track* ». |
 | chimère (anciennement « égrégore ») | **chimera** (pl. *chimeras*) | Le mot courant de l'anglais pour « une créature de l'imagination, une illusion » ; il dit ce que fait le jeu : on approche, on dévoile, il n'y a rien. | **Décidé (D183)** : le décideur a écarté « égrégore » en français, mot de l'ésotérisme ; *egregore* en anglais l'est aussi (WP *Egregore* : « *a concept in Western esotericism…* »). Minuscule ; jamais *Chimera* comme nom propre. *D184 (2.4)* : « des chimères, ce que les cœurs fabriquent ensemble ; la plus enracinée est une idole » → « *chimeras, what hearts make together; the most deeply rooted is an idol* » : la chimère n'est pas l'idole. |
 | idole | **idol** | Bacon : « *idols and false notions which are now in possession of the human understanding, and have taken deep root therein* » (aph. XXXVIII) ; les quatre classes : « *Idols of the Tribe* », « *of the Cave* », « *of the Market-place* », « *of the Theatre* » (aph. XXXIX) ; SI 6:74 : « *Do you take idols as deities?* » | Le mot anglais porte les deux sens dont le jeu a besoin : l'idole de pierre et l'idole de l'esprit. |
 | racine (d'une idole, `racine`) ; enracinement (la jauge) ; enracinée, déracinée | **root** ; **Rooting** (la jauge, d'un à cinq) ; *deep-rooted*, *uprooted* ; « *the idea takes root* » | Bacon : « *have taken deep root therein* » | **À valider** pour le nom de la jauge. |
@@ -669,6 +716,14 @@ b. al-Zubayr* », 240 occurrences ; WP écrit « *Abd Allah* » en deux mots).
 | Le cœur — Œuvres, lames et maux du cœur | **The Heart** — *Deeds, Blades and Ailments of the Heart* | |
 | Les cinq Lumières (`D.LIVRES`, livre I) | **The Five Lights** | |
 
+L'ambiance d'un récit (`ambiance`, sur l'écran de la Chaîne, après l'épithète : « As-Siddîq · orientale ») :
+« orientale · romaine · maritime · désert · citadelle · noosphère · cyberpunk » → **eastern · Roman · maritime · desert
+· citadel · noosphere · cyberpunk** (« orientale · maritime · noosphère » → *eastern · maritime · noosphere* ;
+« citadelle · désert » → *citadel · desert*). La minuscule du français, sauf pour l'adjectif tiré d'un nom propre
+(*Roman*). *Oriental* est écarté : en anglais américain, le mot a vieilli et blesse quand il désigne des gens (usage
+courant, référence non vérifiée). *Cyberpunk* reste tant que le français le garde. **À valider** (lexique commun, 18
+novembre).
+
 ### 3.2 Le groupe jouable : héros et titres (`heroes`)
 
 | Récit | Français — titre | Anglais retenu — titre | Source de la forme |
@@ -753,6 +808,15 @@ les langues : le nom anglais ne change rien au moteur, qui lit le nom français 
 Les autres désignations sans nom (« Un fidèle », « Courrier du Yamâma », « Scribe du dîwân »…) se traduisent en anglais
 simple, en gardant les noms de lieu de § 3.6 : *a worshipper*, *a courier from al-Yamama*, *a scribe of the diwan*
 (*Tabari* : *diwan*, 376 occurrences). Un « cheikh » de tribu : **shaykh** (IJMES).
+
+**Les étiquettes** (*lexique commun, 18 novembre*) : le nom d'un personnage sans nom propre, affiché au-dessus de lui et
+en tête de sa réplique, garde la forme du français. **Avec un article**, une seule majuscule, à l'initiale : « Un
+fidèle » → *A worshipper* ; « Un caravanier » → *A caravaneer* (le moteur) ; « Un vétéran de Siffîn » → *A veteran of
+Siffin* ; « Un sécessionniste » → *A seceder* (§ 3.9). **Sans article**, la majuscule des noms (*title case*, comme
+« Vieil homme » → *Old Man*, § 3.4) : « Veilleur » → *Watchman* ; « Chamelier » → *Cameleer* ; « Moine » → *Monk* ;
+« Enfant » → *Child* ; « Scribe du dîwân » → *Scribe of the Diwan* ; « Courrier du Yamâma » → *Courier from
+al-Yamama* ; « Envoyé de Najrân » → *Envoy from Najran* ; « Bédouin réfugié » → *Bedouin Refugee*. Dans le texte
+courant, la minuscule revient (« *a scribe of the diwan* »). **À valider.**
 
 ### 3.4 Les personnages de fiction
 
@@ -948,12 +1012,118 @@ the Empire, the Hero, Gold, Rumor, the Merciless Judge*. « La chimère La Razzi
 Les noms de compétences des héros et des ennemis ne sont pas fixés ici : on les écrit d'après les règles de § 1.9 et le
 vocabulaire de § 2 (*Truthful Word*, *Soothing*…), courts (22 signes), sans nom divin, sans nom de démon.
 
+### 3.8 Le lexique commun, posé « partout » (18 novembre)
+
+Avant l'écriture des récits, les 97 textes français qui reviennent dans plusieurs fichiers ont été posés une fois pour
+toutes (`node v2/tools/langues.js poser en partout …`, 210 emplacements) : les 40 qui étaient déjà écrits dans `moteur` ou
+`tables` y sont repris tels quels (les Lumières, les figures, des titres du recueil, « Médine », « Koufa », « Archers »,
+« Tenir », « Charge », « Dire vrai », « Lumière retrouvée », « Un caravanier »…) ; les 57 autres sont écrits ici. Un
+rédacteur les trouve déjà dans sa liste : il ne les réécrit pas, sauf erreur, qu'il signale. « La prière » est une seule
+clé pour la page de la natte et pour le nom de l'œuvre : *The Prayer*, comme le moteur l'écrit (§ 2.4 donnait
+*Prayer*). Un texte du moteur a été reposé avec eux, pour suivre le terme fixé de « l'envers » (`trade.js`, « dans
+l'envers de la piste » : *on the reverse side of the track*, au lieu de *on the hidden side*, § 2.1). Ceux qui suivent
+demandaient un choix ; **à valider** :
+
+| Français | Anglais posé | Où il revient | Pourquoi |
+|---|---|---|---|
+| Certitude | **Conviction** | compétence d'Abû Bakr (« S'il l'a dit, il a dit vrai ») ; le Pur ; le Juge sans miséricorde | *Certainty* est le mot anglais du *yaqîn* (Skellie : « *certainty (yaqin)* ») : une chimère ne brandit pas un degré de la foi (la même raison a écarté اليقين en arabe, `ar.md` § 3.7). *Conviction* dit l'assentiment sans hésitation d'Abû Bakr et la certitude fermée des deux chimères. |
+| Anathème | **Condemnation** | le Pur ; le Juge sans miséricorde | *Anathema* est un mot de l'Église, comme *excommunicate* (§ 1.9, D184 2.13) ; *cast out* dit l'exorcisme (§ 1.9). |
+| Sentence | **Verdict** | compétence de 'Umar (« Jugement sans appel ») ; le Juge | *Sentence* se lirait aussi « une phrase ». |
+| Mille bouches | **A Thousand Tongues** | trois chimères de la rumeur (le Bouc émissaire, la Clameur, la Rumeur) | L'image anglaise de la rumeur est la langue : « *Enter Rumour, painted full of tongues.* », « *Upon my tongues continual slanders ride* » (Shakespeare, *The Second Part of King Henry the Fourth*, Induction ; Yale Shakespeare, 1921, lu sur Wikisource, `Page:Henry_IV_Part_2_(1921)_Yale.djvu/13`) ; *mouths* serait un calque. |
+| « On dit que… » | **“They say…”** | le Chuchotement, le Ouï-dire | guillemets anglais (§ 1.7). |
+| Thésauriser | **Hoard** | l'Avarice, l'Accapareur, l'Or | le verbe de SI 9:34 (« *those who hoard gold and silver* », lu dans l'édition `en.sahih` d'alquran.cloud). |
+| Rangs serrés | **Serried Ranks** | la Forêt de lances ; Abû 'Ubayda | la locution anglaise (*serried*, du français « serré ») ; rien de l'image des rangs qu'Allah aime (61:4), comme en arabe. |
+| Tenir la ligne ; Serment tenu ; Vertige ; Greniers clos ; Flatterie ; Amplifier ; Écho | **Hold the Line ; Oath Kept ; Vertigo ; Closed Granaries ; Flattery ; Amplify ; Echo** | héros et chimères de plusieurs récits | « Tenir » → *Hold* (`D.ORDRES`) ; « Greniers » → *Granaries* (§ 3.5). |
+| Baume ; Panser ; Relever ; Affranchir | **Balm ; Bind Wounds ; Rally ; Set Free** | soins de sept héros | *Rally* : relever un éprouvé (§ 2.1), jamais *revive*. |
+| Rend de la Constance à un compagnon. ; Relève un compagnon éprouvé. ; Régénération pour tout le groupe. ; Frappe nette. | **Restores Constancy to one party member. ; Rallies a spent party member. ; Regeneration for the whole party. ; A clean strike.** | descriptions de compétences | la forme du moteur (« *Restores 40% Constancy to one party member.* », « *Rallies a spent party member (50% Constancy).* ») ; *party member*, jamais *companion* (§ 1.9). |
+| Donne sans compter : rend de la Constance à tout le groupe. | **Gives without counting: restores Constancy to the whole party.** | 'Abd ar-Rahmân, 'Uthmân | § 3.9 (« donner sans compter »). |
+| Largesse ; Équité ; Firâsa | **Largesse ; Equity ; Firasa** | Qays, 'Uthmân ; 'Umar | *Largesse* est anglais (« libéralité ») et laisse *Generosity* à la lame (§ 2.5) ; *Firasa* garde le mot arabe, comme le français. |
+| La Durra ; Coup de férule. Peut étourdir. | **The Dirra ; A stroke of the whip. May stun.** | 'Umar, dans deux récits | Le fouet de 'Umar est la **dirra** (الدِّرّة, ainsi vocalisée par `ar.md` § 3.7) ; *durra* (الدُّرّة) est « la perle » : le français écrit « Durra », **signalé au décideur** (§ 4, point 22). *Whip* est le mot des traducteurs de *Tabari* (« *He was the first to carry a whip and to use it* », vol. XIV) ; *ferule*, le calque de « férule », dirait en anglais la règle du maître d'école. |
+| Apaisement | **Soothing** | la Gazelle ; Abû Bakr | § 2.7. |
+| 'Umar ; Abû 'Ubayda ; Amîn al-Umma ; Al-Fârûq | **ʿUmar ; Abu ʿUbayda ; Amin al-Umma ; Al-Faruq** | héros de deux récits | § 3.2 : en tête de ligne, *Al-Faruq* ; *Amin al-Umma* nomme aussi le grand acte d'Abû 'Ubayda (récit de 'Umar). |
+| Un fidèle ; Veilleur ; Chamelier ; Moine ; Enfant ; Scribe du dîwân | **A worshipper ; Watchman ; Cameleer ; Monk ; Child ; Scribe of the Diwan** | étiquettes de plusieurs récits | la règle des étiquettes (§ 3.3) ; *Watchman* comme *Watchman's Coat* (§ 2.18), *Cameleer* comme *caravaneer*. |
+| les cinq idées noires (pourparlers, recueil) | **Shame · Fear · Suspicion · Resentment · Despair** | coeur et cinq récits | § 2.6, sans article. |
+| sources des feuillets (six formes communes) | « *al-Tabari, Tarikh* »… | cinq récits, le récit-cadre, les veillées | § 1.10. |
+
+### 3.9 Les mots de l'histoire et les formules des récits (lexique commun, 18 novembre)
+
+*Relevé dans les sept récits avant leur écriture ; chaque terme est **à valider**.* Les nombres entre parenthèses
+comptent les textes français où le mot revient ; ceux de *Tabari*, *Guillaume* et Muhsin Khan sont comptés dans les
+textes intégraux du tableau de tête (ordres de grandeur, § 5). « Bukhari-Khan » : l'édition `eng-bukhari` du registre.
+
+**Titres, fonctions, notions**
+
+| Français | Anglais retenu | Où l'anglais l'emploie | Note |
+|---|---|---|---|
+| le calife (81 textes) ; le califat | **the caliph** ; **the caliphate** | IJMES (*caliph*, § 1.3) ; *Tabari* | minuscule dans le texte courant. |
+| le successeur du Messager d'Allah ﷺ (Abû Bakr) ; « Ô successeur du Messager d'Allah ! » ; le premier successeur | **the successor of the Messenger of Allah** ; « *O successor of the Messenger of Allah!* » ; *the first successor* | *Tabari* rend le titre « *the Caliph of the Messenger of God* » (« *O Caliph of the Caliph of the Messenger of God* », vol. XIV) | Le français a choisi « successeur », qui dit le sens du titre ; l'anglais le suit, et dit *caliph* là où le français dit « calife ». |
+| le Commandeur des croyants (61) | **the Commander of the Faithful** ; en apostrophe : « *…, Commander of the Faithful.* » | *Tabari* (2 227 occurrences) ; WP *Amir al-Mu'minin* | Bukhari-Khan dit « *chief of the believers* » (60) : on ne le reprend que dans une parole du registre. |
+| gouverneur ; le palais du gouverneur | **governor** ; *the governor’s palace* | *Tabari* | |
+| le Trésor | **the Treasury** | *Tabari* (« *the treasury* », 115) ; § 3.4 (*of the Treasury*) | majuscule, comme le lieu « Trésor » (§ 3.5). |
+| la pension ; le registre des pensions ; le dîwân | **stipend** ; *the register of stipends* ; **the diwan** | *Tabari* : « *He was the first to institute the state registers … and assigned them stipends* » (vol. XIV) ; *stipend* (226) | |
+| le butin | **booty** | *Tabari* (461, contre 251 *spoils*) | |
+| un pacte ; un traité | **a pact** ; **a treaty** | *Tabari* (*pact* 192, *treaty* 252) | on garde la différence du français ; *covenant* ne vaut que là où le registre l'écrit. |
+| la sûreté (*amân*) ; la lettre de sûreté | **safe-conduct** (*aman*) ; *the letter of safe-conduct* | *Tabari* (*safe-conduct* 341, *guarantee of safety* 65) | |
+| le tribut | **tribute** | *Tabari* | |
+| la zakât ; le dû | **zakat** ; *the due*, *the dues* (« L'Avare du dû » → *The Withholder of Dues*, § 3.7) | IJMES (mot de *Merriam-Webster*, dictionnaire non consulté) ; *Tabari* (*zakat* 42, *alms tax* 33) | sans italique ni majuscule (Bukhari-Khan écrit *Zakat*) ; jamais *alms tax* ; ce n'est pas l'aumône libre, *Charity* (§ 2.4). |
+| les Émigrés ; les Ansâr ; Quraysh ; les Banû X ; une tribu | **the Emigrants** ; **the Ansar** ; **Quraysh** ; **the Banu X** ; *a tribe* | *Tabari* (*the Emigrants* 57, *the Muhajirun* 1) ; Bukhari-Khan (*emigrants* 120) ; § 3.3 | Le français traduit « Émigrés » : l'anglais aussi (*the Muhajirun* reste là où le français écrit « Muhâjirûn », § 3.3). |
+| les croyants ; les musulmans ; la communauté | **the believers** ; **the Muslims** ; **the community** | SI ; *Tabari* | |
+| la Révélation ; ancien scribe de la Révélation | **the Revelation** ; *a former scribe of the Revelation* | | |
+| le Livre (le Coran) ; le Livre d'Allah ; les Gens du Livre | **the Book** ; *the Book of Allah* ; **the People of the Book** | *Tabari* (*the Book of God* 132, *People of the Book* 40) | SI dit « *People of the Scripture* » : seulement dans un verset cité. |
+| les lectures (du Coran) ; « Ma lecture vaut mieux » ; les récitants ; les récitateurs du Coran | **the readings** ; « *My reading is better* » ; **the reciters** ; *reciters of the Qur’an* | WP *Qira'at* (« *'recitations' / 'readings'* ») ; § 3.4 (*the eldest of the reciters*) | |
+| l'arbitrage (Siffîn) ; deux arbitres | **the arbitration** ; *two arbitrators* | *Tabari* (*arbitration* 76 ; *arbitrator* 57, *arbiter* 32) ; WP *Battle of Siffin* | exigence 5 : avec retenue, sans coupable. |
+| les sécessionnistes ; un sécessionniste | **the seceders** ; *a seceder* (étiquette : *A seceder*) | les traducteurs de *Tabari*, en note : « *These seceders are known as the Kharijites (khawarij), because they "went out"* » (vol. XVII) ; « *The Kharijites … were "seceders" who had rebelled against ʿAli* » | Jamais *Kharijites* pour les désigner, ni en étiquette : c'est un nom de parti (exigence 5 ; l'arabe écarte de même الخوارج, `ar.md` § 2.10) ; le feuillet qui dit « on les appellera Harûriyya, puis Khawârij » le dit en anglais (*the Haruriyya*, *the Khawarij*), là seulement. *Secessionists* est écarté : il fait lire la guerre de Sécession. |
+| « Le jugement n'appartient qu'à Allah », **crié** par les gens de Harûrâ' (`saga_ali.js`, `caid.js`) | **“The decision is only for Allah”** | la proposition de SI en 6:57 et 12:67 (« *The decision is only for Allāh* », au registre, `versets.json`) | Ce cri n'est pas une citation du verset : c'est la même phrase, dite à d'autres fins, et le feuillet l'explique ; elle garde donc les mots de SI, sans le macron (§ 1.3). Là où le feuillet **cite** le verset, le texte du registre (6:57, 12:40, 12:67), tel quel : SI y dit aussi « *Legislation is not but for Allāh* » (12:40). Jamais un nom de compétence. |
+| les polythéistes ; les hypocrites | **the polytheists** ; **the hypocrites** | SI ; *Tabari* (*polytheists* 220) | jamais pour un personnage nommé (exigence 11). |
+| César ; Héraclius ; l'empereur ; les Perses ; les Arabes chrétiens ; le patriarche Sophrone | **Caesar** ; **Heraclius** ; *the emperor* ; **the Persians** ; *Christian Arabs* ; *the Patriarch Sophronius* | *Guillaume*, *Tabari* (*Caesar*) ; WP *Sophronius of Jerusalem* (« *Patriarch of Jerusalem from 634 to 638* ») | exigence 10. |
+| un bédouin ; les bédouins | **a Bedouin** ; **the Bedouins** | *Tabari* (*Bedouin* 257, *Bedouins* 43) | majuscule en anglais. |
+| une délégation ; un envoyé | **a delegation** ; **an envoy** | *Tabari* | |
+| la flotte ; l'amiral | **the fleet** ; **the admiral** | | |
+| la peste d'Emmaüs | **the plague of ʿAmwas** | WP *Plague of Amwas* (« *also spelled plague of Emmaus* ») ; *Tabari* (*Amwas*, 18) | |
+| l'un des dix à qui le Paradis fut annoncé | **one of the ten to whom Paradise was promised** | WP *The ten to whom Paradise was promised* (titre où renvoie *The Ten Promised Paradise*) | |
+| un martyr ; mourir en martyr | **a martyr** ; *to die a martyr* | | |
+
+**Les formules des répliques** (une parole relevée au registre garde son texte, même quand il dit autrement : « *We
+belong to Allah, and to Him we return!* », Râfi' ibn 'Umayra)
+
+| Français | Anglais retenu | Où l'anglais l'emploie |
+|---|---|---|
+| Par Allah (23 textes) | **By Allah** | Bukhari-Khan (952) ; *Tabari* « *By God* » (§ 1.4) |
+| Paix sur toi ; Paix sur vous | **Peace be upon you** | *Tabari* (79) |
+| Qu'Allah fasse miséricorde à X | **May Allah have mercy on X** | *Tabari* « *God have mercy on him* » (16) |
+| si Allah le veut ; s'il plaît à Allah | **if Allah wills** | SI 18:24 (« *If Allah wills* ») |
+| Louange à Allah | **Praise be to Allah** | Bukhari-Khan (14) |
+| Ô Allah ; Ô Commandeur des croyants | **O Allah** ; *O Commander of the Faithful* (jamais *Oh*) | Bukhari-Khan ; SI (« *O you who have believed* ») |
+| Tu dis vrai. | **You speak the truth.** | |
+
+**Les formules de la Chaîne**, que le moteur a fixées et que les récits reprennent
+
+| Français | Anglais retenu | Où |
+|---|---|---|
+| « La chaîne vacille. » (20 textes) ; « Ce n'est pas ce qui fut rapporté. » (31) ; « c'est ce qui fut rapporté » | **The chain wavers.** ; **This is not what was reported.** ; *this is what was reported* | le bandeau du moteur (`script.js`) : « *<b>The chain wavers…</b> this is not what was reported.* » ; « *<b>Chain intact</b> — this is what was reported.* » |
+| Les transmetteurs rapportent que… ; On rapporte que… ; Les sources disent… ; La tradition rapporte… | **The transmitters report that…** ; **It is reported that…** (§ 1.5) ; *The sources say…* ; *Tradition reports…* | § 1.5, § 2.1 |
+| Il n'y a pas de rangs à mener ici. | **There are no ranks to lead here.** | le moteur (`rangs.js`) |
+| « Qui te l'a dit ? » ; « De qui tiens-tu cela ? » ; « Et lui, de qui le tenait-il ? » ; « Je le tiens de… » ; « c'est de lui que je le tiens » (le refrain d'Idris) ; « retiens de qui je le tiens » | **“Who told you?”** ; **“From whom do you have this?”** ; **“And he, from whom did he have it?”** ; *I have it from…* ; **it is from him that I have it** ; *remember from whom I have it* | Une seule tournure, *to have it from someone*, pour « tenir de quelqu'un » : les deux questions du récit de 'Uthmân, du récit-cadre et des veillées se reconnaissent d'un récit à l'autre. |
+| « Untel m'a rapporté, d'après untel, qui l'a vu. » | **“So-and-so told me, on the authority of So-and-so, who saw it.”** | *Tabari* et *Guillaume* (*on the authority of*, 386 et 163) ; § 1.7 |
+| Râwî, retiens ceci : … ; Idris, retiens ceci : … ; Râwî, regarde… ; La Chaîne te montre… | **Rawi, remember this:** … ; **Idris, remember this:** … ; *Rawi, look…* ; **The Chain shows you…** | La voix du récit parle au râwî, un personnage (§ 2.1) : *you* lui revient ; jamais au joueur sur son propre cœur (§ 1.1). |
+| au jour le plus sombre ; « Le Jour le plus sombre » (titre) | *on the darkest day* ; **The Darkest Day** | |
+| donner sans compter | **to give without counting** | Garde l'écho du compte (le Compte, le Compteur, « Compter ») ; jamais *without counting the cost* (la prière dite d'Ignace de Loyola, « *to give and not to count the cost* » : référence non vérifiée), ni *without account*, *without reckoning* : c'est ce qu'Allah donne (SI 2:212, « *Allah gives provision to whom He wills without account* »). |
+| prendre corps (une chimère, une idée noire) ; se dresser | **to take shape** ; *to rise* | « *the refusal of a whole people has already taken shape* » ; jamais *incarnate*, *become flesh* (le mot chrétien de l'Incarnation, que l'arabe écarte aussi, `ar.md` § 3.8). |
+| l'envers | **the reverse side** | § 2.1 |
+
+**Les feuillets : la fiction.** « Personnage de fiction. » (16 feuillets) → **A fictional character.** ; « Le personnage
+est fictif. » → *The character is fictional.* ; « (fiction) » → *(fiction)* ; « Pièce de fiction. » → *A piece of
+fiction.* ; « inventé (imaginé) pour ce récit » → *invented for this story* ; « Image du jeu » → *The game’s imagery*
+(§ 1.5).
+
 ## 4. Points à trancher par le décideur
 
 Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, les agents écrivent la proposition.
 
 1. **La formule après un Compagnon.** Proposition : aucune, comme le jeu français, l'édition de Muhsin Khan et WP-MOS.
-   Autre choix : « *(may Allah be pleased with him)* », au recueil seulement, à la première mention (§ 1.5).
+   Autre choix : « *(may Allah be pleased with him)* », au recueil seulement, à la première mention (§ 1.5). *Depuis,
+   le français l'écrit dans dix-huit feuillets (« Qu'Allah l'agrée ») : l'anglais l'y écrit aussi, et là seulement
+   (« *May Allah be pleased with him.* », § 1.5).*
 2. **« Allah » ou « God ».** Proposition : *Allah*, comme le français et les versets de SI ; *Tabari*, *Guillaume* et
    WP-MOS disent *God* (§ 1.4).
 3. **L'orthographe américaine**, choisie pour s'accorder aux versets de SI (§ 1.2).
@@ -1007,6 +1177,17 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
     prays* », « *They are met at the end of each encounter* », « *what has been whispered is answered* »), jamais
     *you* ; *you* gardé pour les consignes de commande et les règles du jeu, comme le français garde « tu ». *One* est
     plus soutenu que le *you* générique de l'anglais courant : c'est voulu, pour garder la distance.
+21. **« L'envers »** (lexique commun, 18 novembre ; § 2.1) : *the reverse side*, l'image de l'étoffe, sans l'idée de
+    « caché » ; *the other side* écarté (l'au-delà des spirites), *hidden side* aussi. Le texte du moteur qui disait
+    « *the hidden side of the track* » a été reposé.
+22. **Le fouet de 'Umar** (§ 3.8). Le français écrit « La Durra » ; le fouet est la *dirra* (الدِّرّة), *durra*
+    (الدُّرّة) étant « la perle ». L'anglais écrit *The Dirra*, et l'arabe الدِّرّة ; le japonais a suivi le français
+    (ドゥッラ). Signalé au décideur : lui seul corrige le français ; si le français reste « Durra », dire si l'anglais
+    doit le suivre.
+23. **Le lexique commun** (§ 1.10, § 3.3, § 3.8, § 3.9) : à valider en bloc — en particulier *Conviction*
+    (« Certitude »), *Condemnation* (« Anathème »), *Verdict* (« Sentence »), *A Thousand Tongues* (« Mille bouches »),
+    *the seceders* (« les sécessionnistes »), *the successor of the Messenger of Allah*, *the Commander of the Faithful*,
+    et la règle des étiquettes (§ 3.3).
 
 ## 5. Ce qui n'a pas pu être vérifié
 
@@ -1021,7 +1202,13 @@ vérifié, à confirmer avant publication :
 - les épithètes des poètes pour l'équipement (*muhannad*, *mashrafi*, *khatti*, *samhari*, *nabʿ*, *lamt*, *saluqi*) :
   le français lui-même les dit « à faire vérifier » ;
 - les formes de *Rafiʿ ibn ʿUmayra* et d'*Ibn al-Nabbah* (ni WP ni l'OCR de *Tabari* ne les ont rendues) ;
-- le rendu des signes ʿ et ’ dans les polices du jeu (plages déclarées seulement).
+- le rendu des signes ʿ et ’ dans les polices du jeu (plages déclarées seulement) ;
+- *lexique commun (18 novembre)* : *the reverse side* d'une étoffe, *the Other Side* des spirites, *oriental* qui a
+  vieilli, *zakat* dans *Merriam-Webster* (dictionnaires non consultés) ; la prière dite d'Ignace de Loyola (citée de
+  mémoire pour écarter un mot, non relue : elle n'entre pas dans le jeu) ; les titres anglais reçus de Théophane,
+  d'Eutychius, d'Eusèbe et de Vernadsky (§ 1.10) ;
+  la vocalisation الدِّرّة du fouet de 'Umar, prise au glossaire arabe (le Wiktionnaire lu, `درة`, ne donne que la
+  perle et le lait).
 
 Le texte intégral de *Tabari*, de *Guillaume*, de Winter, de Skellie et de Karim a été lu par recherche de mots dans les
 fichiers OCR d'archive.org : les points souscrits y sont souvent perdus, et les comptes donnés sont des ordres de
