@@ -36,14 +36,14 @@
   // → '' si le nom convient, sinon la raison, dite au joueur
   P.refus = function (brut) {
     const nom = P.propre(brut), p = plat(nom);
-    if (!nom) return 'Il lui faut un nom.';
-    if (nom.length > MAX) return 'Seize signes au plus.';
-    if (!LETTRES.test(nom) || !DEBUT.test(nom) || !p) return 'Des lettres seulement, avec au besoin une espace, une apostrophe ou un trait d’union.';
+    if (!nom) return I.t('Il lui faut un nom.');
+    if (nom.length > MAX) return I.t('Seize signes au plus.');
+    if (!LETTRES.test(nom) || !DEBUT.test(nom) || !p) return I.t('Des lettres seulement, avec au besoin une espace, une apostrophe ou un trait d’union.');
     if (nom === NOM) return '';
-    if (DIVIN.includes(p)) return 'Ce Nom n’appartient qu’à Dieu. Porté avec « ’Abd », il devient un prénom.';
-    if (INTERDIT.test(nom) || INTERDIT.test(p)) return 'Ce nom ne se porte pas ici.';
-    if (RESERVE.includes(p)) return 'Dans ce jeu, ce nom ne désigne que le Prophète ﷺ : le râwî en porte un autre.';
-    if (P.prisParLeJeu()[p]) return 'Un personnage du jeu porte déjà ce nom : les dialogues s’y perdraient.';
+    if (DIVIN.includes(p)) return I.t('Ce Nom n’appartient qu’à Dieu. Porté avec « ’Abd », il devient un prénom.');
+    if (INTERDIT.test(nom) || INTERDIT.test(p)) return I.t('Ce nom ne se porte pas ici.');
+    if (RESERVE.includes(p)) return I.t('Dans ce jeu, ce nom ne désigne que le Prophète ﷺ : le râwî en porte un autre.');
+    if (P.prisParLeJeu()[p]) return I.t('Un personnage du jeu porte déjà ce nom : les dialogues s’y perdraient.');
     return '';
   };
 
@@ -52,8 +52,13 @@
   const ELIDE = new RegExp(BORD + '([Dd]|[A-Za-zÀ-ÖØ-öø-ÿ]*[Qq]u)[’\']' + NOM + SUITE, 'g'), SEUL = new RegExp(BORD + NOM + SUITE, 'g'), CITE = new RegExp(BORD + NOM + SUITE);
   const voyelle = nom => /^[aeiouy]/.test(plat(nom)) && !/^y[aeiou]/.test(plat(nom)) && !/^[’'ʿʾ]/.test(nom);   // « d’Elyas », mais « de Hamza », « de Yûnus », « de ’Imrân »
   // la phrase d'origine, dite avec un autre nom
-  P.dire = function (t, nom) { nom = nom || P.nom(); if (nom === NOM || typeof t !== 'string' || t.indexOf(NOM) < 0) return t;
+  // (dans une autre langue que le français, pas d'élision : le nom que la langue donne au râwî laisse sa place à celui du joueur)
+  P.dire = function (t, nom) { nom = nom || P.nom(); if (nom === NOM || typeof t !== 'string') return t;
+    if (I.langue.lang !== 'fr') { const d = I.langue.rawi(); return t.indexOf(d) < 0 ? t : t.split(d).join(nom); }
+    if (t.indexOf(NOM) < 0) return t;
     const e = voyelle(nom); return t.replace(ELIDE, (m, a, b) => a + (e ? b + '’' : b + 'e ') + nom).replace(SEUL, (m, a) => a + nom); };
+  // le nom du râwî tel qu'on l'affiche : celui du joueur, ou celui que la langue lui donne (« Idris », « إدريس », « イドリース »)
+  P.dit = () => { const n = P.nom(); return n === NOM ? I.langue.rawi() : n; };
   // relève, dans un contenu posé, chaque phrase qui nomme le râwî (une seule fois par saga)
   const cases = [], vues = new Set();
   P.relever = function (racine) { if (!racine || vues.has(racine)) return; (function va(v) { if (!v || typeof v !== 'object' || vues.has(v)) return; vues.add(v);
@@ -66,7 +71,7 @@
   let origine = null;   // le sceau et la silhouette d'origine du râwî, gardés ici : sa fiche ne reçoit aucun champ de plus
   P.appliquer = function () {
     const p = P.profil();
-    cases.forEach(c => { c.o[c.k] = P.dire(c.t, p.nom); });
+    cases.forEach(c => { c.o[c.k] = P.dire(I.langue.de(c.t), p.nom); });   // la phrase dans la langue du joueur, puis son nom
     const fr = I.sagas.idris, h = fr && fr.heroes && fr.heroes.idris;
     if (h) { if (!origine) origine = { arabic: h.arabic, look: h.look };
       h.arabic = p.nom === NOM ? origine.arabic : '';   // le sceau porte le nom en arabe ; avec un autre nom, il montre l'étoile à huit branches, seule
@@ -75,6 +80,7 @@
     return p;
   };
   // choisir : le nom est contrôlé, la tenue est l'une de celles du jeu. → '' ou la raison du refus
-  P.choisir = function (nom, tenue) { const r = P.refus(nom); if (r) return r; if (!D.TENUES.some(t => t.id === tenue)) return 'Cette tenue n’existe pas.';
+  P.choisir = function (nom, tenue) { if (P.propre(nom) === I.langue.rawi()) nom = NOM;   // le nom que la langue donne au râwî, laissé tel quel : c'est le nom d'origine
+    const r = P.refus(nom); if (r) return r; if (!D.TENUES.some(t => t.id === tenue)) return I.t('Cette tenue n’existe pas.');
     I.save.data.profil = { nom: P.propre(nom), tenue }; P.appliquer(); return ''; };
 })();

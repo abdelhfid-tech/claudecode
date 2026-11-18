@@ -5,7 +5,7 @@
   const I = window.ISNAD = {
     D, sagas: {}, sagaList: [],
     // commun: true — contenu partagé par toutes les sagas (src/data/coeur.js) : ni maillon ni chapitre
-    registerSaga(s) { this.sagas[s.id] = s; this.rayonner(s); if (this.perso) { this.perso.relever(s); if (this.perso.nom() !== this.perso.NOM) this.perso.appliquer(); } if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => ((a.livre || 1) - (b.livre || 1)) || (a.order - b.order)); },   // par livre, puis par ordre
+    registerSaga(s) { this.sagas[s.id] = s; this.rayonner(s); this.langue.relever(s); if (this.perso) { this.perso.relever(s); if (this.langue.lang !== 'fr') this.langue.appliquer(); else if (this.perso.nom() !== this.perso.NOM) this.perso.appliquer(); } if (s.commun) { if (this.common) Object.assign(this.common.enemies, s.enemies || {}); return; } this.sagaList.push(s); this.sagaList.sort((a, b) => ((a.livre || 1) - (b.livre || 1)) || (a.order - b.order)); },   // par livre, puis par ordre
     speed: 1, debug: {}
   };
 
@@ -68,6 +68,7 @@
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   };
+  window.ISNAD_LANGUE.brancher(I);   // la langue (langue.js) : I.langue, I.t, I.T — avant tout module qui dit un texte
   I.hash = function (str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
   I.clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   I.lerp = (a, b, t) => a + (b - a) * t;
@@ -226,15 +227,15 @@
     exporter() { const d = Object.assign({}, marquer(this.data)); delete d.opts; return JSON.stringify({ isnad: 'partie', format: FORMAT, jeu: window.ISNAD_VERSION || '', quand: Date.now(), partie: d }); },
     // → { ok: false, erreur } ou { ok: true, partie, resume: { etiquette, quand, lumieres, maillons, absents, format } }
     lireTexte(texte) {
-      if (typeof texte !== 'string' || !texte.trim()) return { ok: false, erreur: 'Il n’y a rien à lire.' };
-      if (texte.length > 2000000) return { ok: false, erreur: 'Ce texte est trop long pour être une partie.' };
-      let o; try { o = JSON.parse(texte); } catch (e) { return { ok: false, erreur: 'Ce n’est pas une partie d’ISNAD : le texte est incomplet ou abîmé.' }; }
+      if (typeof texte !== 'string' || !texte.trim()) return { ok: false, erreur: I.t('Il n’y a rien à lire.') };
+      if (texte.length > 2000000) return { ok: false, erreur: I.t('Ce texte est trop long pour être une partie.') };
+      let o; try { o = JSON.parse(texte); } catch (e) { return { ok: false, erreur: I.t('Ce n’est pas une partie d’ISNAD : le texte est incomplet ou abîmé.') }; }
       const nue = estObjet(o) && o.isnad !== 'partie' && o.v !== undefined, brut = nue ? o : (estObjet(o) && o.isnad === 'partie' ? o.partie : null);
-      if (!estObjet(brut)) return { ok: false, erreur: 'Ce n’est pas une partie d’ISNAD.' };
+      if (!estObjet(brut)) return { ok: false, erreur: I.t('Ce n’est pas une partie d’ISNAD.') };
       const format = brut.v;
-      if (Number.isInteger(format) && format > FORMAT) return { ok: false, erreur: 'Cette partie vient d’une version plus récente du jeu (format ' + format + '). Ce jeu lit jusqu’au format ' + FORMAT + '.' };
-      const d = migrer(brut); if (!d) return { ok: false, erreur: 'Le format de cette partie n’est pas reconnu.' };
-      const fautes = controler(d); if (fautes.length) return { ok: false, erreur: 'Cette partie est abîmée (' + fautes.slice(0, 4).join(', ') + (fautes.length > 4 ? '…' : '') + ').' };
+      if (Number.isInteger(format) && format > FORMAT) return { ok: false, erreur: I.t('Cette partie vient d’une version plus récente du jeu (format {format}). Ce jeu lit jusqu’au format {max}.', { format, max: FORMAT }) };
+      const d = migrer(brut); if (!d) return { ok: false, erreur: I.t('Le format de cette partie n’est pas reconnu.') };
+      const fautes = controler(d); if (fautes.length) return { ok: false, erreur: I.t('Cette partie est abîmée ({champs}).', { champs: fautes.slice(0, 4).join(', ') + (fautes.length > 4 ? '…' : '') }) };
       delete d.opts; d.started = true;
       const faits = I.save.maillons(d);
       return { ok: true, partie: d, resume: { etiquette: (d.meta && typeof d.meta.label === 'string' && d.meta.label) || '', quand: (d.meta && typeof d.meta.when === 'number' && d.meta.when) || (estObjet(o) && typeof o.quand === 'number' ? o.quand : 0),

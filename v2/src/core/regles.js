@@ -555,6 +555,70 @@
       nb(Object.keys(p.equipement || {}).length, 'pièce d’équipement', 'pièces d’équipement'), nb(Object.keys(p.etals || {}).length, 'étal', 'étals'), nb(Object.keys(p.pistes || {}).length, 'piste', 'pistes')).join(', ') || 'vide';
     return { erreurs, avis, resume };
   }
-  const api = { creer, verifierPaquet };
+  /* 2.x — les langues (src/core/langue.js). Les récits s'écrivent en français et passent les règles ci-dessus ; leurs textes
+     arabes, anglais et japonais passent celles-ci, emplacement par emplacement. Chaque emplacement a un genre, tiré de son
+     chemin dans le récit (genreDe) : un nom (combattant, compétence, personnage, lieu), un rang, un objet, un verset, une
+     référence de verset, ou un texte. Les mêmes exigences, dans les mots de chaque langue :
+       - aucun nom d'Iblîs, de démon ni de djinn pour un combattant, une compétence, un personnage ou un lieu (exigences 6, 18) ;
+       - jamais le Nom divin dans le nom d'une compétence ni de ce que l'on frappe (exigence 8) ;
+       - un objet ou une pièce : ni nom divin, ni vertu, ni or, ni soie, rien de sacré (exigences 8, 15, 17) ;
+       - aucun effectif dans le nom d'un rang, en chiffres de quelque écriture que ce soit (exigence 19) ;
+       - un verset entre les signes de sa langue ; sa référence porte les mêmes numéros que la française (exigence 7) ;
+       - ni l'auteur ni l'œuvre des exigences 14 et 24 ne sont nommés ;
+       - aucune balise. */
+  const AR = 'ء-ي', SANS_AR = `(^|[^${AR}])`, APRES_AR = `(?![${AR}])`, PROCLITIQUES = '(?:و|ف|ب|ل|ك)?(?:ال)?';
+  const LANG = {
+    ar: {
+      demon: new RegExp(`إبليس|شيطان|شياط[يى]ن|${SANS_AR}${PROCLITIQUES}(?:جن|جان|جنّ|جني|جنية|عفريت|عفاريت|مارد|مردة|غول|غيلان)${APRES_AR}`),
+      divin: new RegExp(`${SANS_AR}(?:و|ف|ب)?(?:الله|لله|إله|الإله|الرب|الرحمن|الرحيم)${APRES_AR}`),
+      sacre: /الله|إله|مقدّ?س|مبار[كك]|برك[ةه]|معجز|كرام[ةه]|تميم|حرز|تعويذ|رقي[ةه]|ذهب|حرير|قرآن|مصحف|سورة|زمزم|ملا[ئك]|نبيّ?|رسول/,
+      verset: ['﴿', '﴾'], say: 330, nar: 360
+    },
+    en: {
+      demon: /\b(iblis|satan|shaitans?|shaytans?|shayatin|devils?|demons?|djinns?|jinns?|jinni|genies?|ifrits?|ghouls?|fiends?)\b/i,
+      divin: /\b(allah|god|gods|lord)\b/i,
+      sacre: /\b(allah|god|lord|prophet|blessed|sacred|holy|saint(ly)?|relics?|talismans?|amulets?|miracles?|miraculous|gold|golden|gilded|silk|silken|zamzam|qur'?an|koran|mushaf|verses?|surah?|baraka|ruqya|angels?)\b/i,
+      verset: ['“', '”'], say: 330, nar: 360
+    },
+    ja: {
+      demon: /イブリース|サタン|シャイターン|悪魔|魔王|魔神|悪霊|鬼|妖怪|ジン(?![ァ-ヴー])|ジャーン|イフリート/,
+      divin: /アッラー|(?<!精)神(?!経)|主よ|創造主/,
+      sacre: /アッラー|(?<!精)神(?!経)|預言者|祝福|聖|遺物|護符|お守り|魔除け|奇跡|黄金|金色|金箔|金糸|金銀|絹|ザムザム|クルアーン|コーラン|啓典|章句|天使/,
+      verset: ['「', '」'], say: 160, nar: 175
+    }
+  };
+  const EFFECTIF = /[0-9٠-٩۰-۹０-９]|百|千|万|億|مئة|مائة|ألف|آلاف|\b(hundreds?|thousands?|dozens?)\b/i;
+  const AUTEURS = /exup[eé]ry|scheler|petit prince|little prince|إ?كزوبيري|شيلر|الأمير الصغير|テグジュペリ|シェーラー|星の王子/i;
+  const CHIFFRES = s => String(s).replace(/[٠-٩]/g, c => c.charCodeAt(0) - 0x660).replace(/[۰-۹]/g, c => c.charCodeAt(0) - 0x6F0).replace(/[０-９]/g, c => c.charCodeAt(0) - 0xFF10);
+  const NUMEROS = s => (CHIFFRES(s).match(/\d+/g) || []).join(' ');
+  // le genre d'un emplacement, d'après son chemin (langue.js : casesSaga, casesDefs)
+  function genreDe(ou) {
+    if (/attributs\.[^.]+\.verset$|secours\.verset$/.test(ou)) return 'verset';
+    if (/attributs\.[^.]+\.ref$|secours\.ref$/.test(ou)) return 'ref';
+    if (/bataille\.rangs\[\d+\]\.name$|^D\.RANGS\.[^.]+\.name$/.test(ou)) return 'rang';
+    if (/^D\.(ITEMS|GEAR)\.[^.]+\.(name|desc)$/.test(ou)) return 'objet';
+    if (/(skills|addSkills)\[\d+\]\.name$|\.limit\.name$|(^|\.)enemies\.[^.]+\.name$|noir\.name$/.test(ou)) return 'frappe';
+    if (/heroes\.[^.]+\.name$|npcs\[\d+\]\.name$|<say>1$|<parley>1\.with$|allies\[\d+\]\.name$|<site>1\.name$|^D\.(LIEUX|MAPS|GABARITS)\./.test(ou)) return 'nom';
+    if (/<say>2$/.test(ou)) return 'say';
+    if (/<nar>1$/.test(ou)) return 'nar';
+    return 'texte';
+  }
+  // cases : [{ ou, fr, t }] — t, le texte de la langue ; → { erreurs, avis }
+  function verifierLangue(lang, cases) {
+    const R = LANG[lang], erreurs = [], avis = []; if (!R) return { erreurs: [`langue « ${lang} » inconnue`], avis };
+    (cases || []).forEach(c => { const g = genreDe(c.ou), t = c.t, w = `${lang} ${c.ou}`;
+      if (typeof t !== 'string' || !t.trim()) { erreurs.push(`${w}: texte vide`); return; }
+      if (/[<>]/.test(t) && !/[<>]/.test(c.fr)) erreurs.push(`${w}: un texte ne contient ni « < » ni « > »`);
+      if (AUTEURS.test(t)) erreurs.push(`${w}: ni l'auteur ni l'œuvre des exigences 14 et 24 ne sont nommés`);
+      if ((g === 'nom' || g === 'frappe' || g === 'rang') && R.demon.test(t)) erreurs.push(`${w}: « ${t} » — ni Iblîs, ni démon, ni djinn dans un nom (exigences 6 et 18)`);
+      if (g === 'frappe' && R.divin.test(t)) erreurs.push(`${w}: « ${t} » — jamais le Nom divin dans une compétence ni dans ce que l'on frappe (exigence 8)`);
+      if (g === 'objet' && R.sacre.test(t)) erreurs.push(`${w}: un objet ne reçoit ni nom divin, ni vertu, ni or, ni soie, rien de sacré (exigences 8, 15 et 17)`);
+      if (g === 'rang' && EFFECTIF.test(t)) erreurs.push(`${w}: « ${t} » — aucun effectif dans le nom d'un rang (exigence 19)`);
+      if (g === 'verset') { const v = t.trim(); if (!(v.startsWith(R.verset[0]) && v.endsWith(R.verset[1]))) erreurs.push(`${w}: un verset se cite entre ${R.verset[0]} ${R.verset[1]} (exigence 7)`); }
+      if (g === 'ref' && NUMEROS(t).indexOf(NUMEROS(c.fr).split(' ').slice(0, 2).join(' ')) !== 0 && NUMEROS(t) !== NUMEROS(c.fr)) erreurs.push(`${w}: la référence ne porte pas les numéros de la française (${NUMEROS(c.fr)})`);
+      if ((g === 'say' || g === 'nar') && t.length > R[g]) avis.push(`${w}: ${g === 'say' ? 'réplique' : 'narration'} longue (${t.length} signes, ${R[g]} au plus)`); });
+    return { erreurs, avis };
+  }
+  const api = { creer, verifierPaquet, verifierLangue, genreDe, LANGUES_REGLES: LANG };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else racine.ISNAD_REGLES = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

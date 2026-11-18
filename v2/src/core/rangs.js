@@ -17,9 +17,9 @@
   'use strict';
   const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, W = I.world;
   const R = I.rangs = {};
-  const COLS = 5, VOIES = 3, NOMS = ['aile nord', 'centre', 'aile sud'], LIGNES = ['au camp', 'en première ligne', 'au milieu du champ', 'en avant', 'au pied de l’idole'];
+  const COLS = 5, VOIES = 3, NOMS = [I.T('aile nord'), I.T('centre'), I.T('aile sud')], LIGNES = [I.T('au camp'), I.T('en première ligne'), I.T('au milieu du champ'), I.T('en avant'), I.T('au pied de l’idole')];
   const PALIER = { boss: 3, elite: 2, minion: 1 }, VOIE = { nord: 0, centre: 1, sud: 2 };
-  const ou = u => NOMS[u.l] + ', ' + LIGNES[u.c];
+  const ou = u => I.t('{voie}, {ligne}', { voie: I.t(NOMS[u.l]), ligne: I.t(LIGNES[u.c]) });
   const tenue = n => '▮'.repeat(Math.max(0, n)) + '▯'.repeat(Math.max(0, 3 - n));
   const num = r => `<b class="num">${r.no}</b>`; // le numéro du rang : le même sur le champ et dans les menus
 
@@ -80,32 +80,32 @@
     const li = (ok, titre, html) => L.push(`<li class="${ok ? 'ok' : 'manque'}"><b>${titre}</b>${html}</li>`), noms = a => a.map(x => I.esc(x.name)).join(', ');
     // les hommes
     { let h = '', ok = true;
-      if (A.rangs.length) { h += `${A.rangs.length} rang${A.rangs.length > 1 ? 's' : ''} : ${noms(A.rangs)}.`; if (A.renfort.length) h += ` En renfort sur le champ : ${noms(A.renfort)}.`; if (A.plus > 0 && lvl < 8) h += ` <small>Un rang de plus au niveau ${lvl < 4 ? 4 : 8}.</small>`; }
-      else h += I.fmt(A.B.mot || 'Il n’y a pas de rangs à mener ici : ce combat se livre sans armée.');
-      if (A.venus.length) h += ` Avec vous dès l’ouverture : ${noms(A.venus)}.`;
-      if (A.absents.length) { ok = false; h += ` <em>N’est pas venu : ${noms(A.absents)}.</em> <small>Une parole mieux menée l’aurait gagné.</small>`; }
-      li(ok, 'Les hommes', h); }
+      if (A.rangs.length) { h += I.t('{n} rang : {noms}.¦{n} rangs : {noms}.', { n: A.rangs.length, noms: noms(A.rangs) }); if (A.renfort.length) h += ' ' + I.t('En renfort sur le champ : {noms}.', { noms: noms(A.renfort) }); if (A.plus > 0 && lvl < 8) h += ` <small>${I.t('Un rang de plus au niveau {n}.', { n: lvl < 4 ? 4 : 8 })}</small>`; }
+      else h += I.fmt(A.B.mot || I.t('Il n’y a pas de rangs à mener ici : ce combat se livre sans armée.'));
+      if (A.venus.length) h += ' ' + I.t('Avec vous dès l’ouverture : {noms}.', { noms: noms(A.venus) });
+      if (A.absents.length) { ok = false; h += ` <em>${I.t('N’est pas venu : {noms}.', { noms: noms(A.absents) })}</em> <small>${I.t('Une parole mieux menée l’aurait gagné.')}</small>`; }
+      li(ok, I.t('Les hommes'), h); }
     // le groupe
-    { let ok = true; const h = hs.map(x => { const st = I.calc.of(x), bas = x.hp < st.hp * 0.6 || x.sp < st.sp * 0.4; if (bas) ok = false; return `${I.esc(x.def.name)} · niveau ${x.lvl} · Constance ${Math.ceil(x.hp)}/${st.hp} · Souffle ${x.sp}/${st.sp}${x.hp <= 0 ? ' <em>(éprouvé)</em>' : bas ? ' <em>(entamé)</em>' : ''}`; }).join('<br>');
-      li(ok, 'Le groupe', h + (ok ? '' : '<br><small>Le groupe n’est pas reposé : une natte, ou la besace, l’aurait remis.</small>')); }
+    { let ok = true; const h = hs.map(x => { const st = I.calc.of(x), bas = x.hp < st.hp * 0.6 || x.sp < st.sp * 0.4; if (bas) ok = false; return `${I.t('{nom} · niveau {n} · Constance {hp}/{hpmax} · Souffle {sp}/{spmax}', { nom: I.esc(x.def.name), n: x.lvl, hp: Math.ceil(x.hp), hpmax: st.hp, sp: x.sp, spmax: st.sp })}${x.hp <= 0 ? ' <em>' + I.t('(éprouvé)') + '</em>' : bas ? ' <em>' + I.t('(entamé)') + '</em>' : ''}`; }).join('<br>');
+      li(ok, I.t('Le groupe'), h + (ok ? '' : '<br><small>' + I.t('Le groupe n’est pas reposé : une natte, ou la besace, l’aurait remis.') + '</small>')); }
     // armes, boucliers, casques, cuirasses
-    { let vides = 0, dispo = 0; const h = hs.map(x => { const eq = Gr.of(x); return I.esc(x.def.name) + ' : ' + Gr.SLOTS.map(s => { const id = eq[s]; if (id) return Gr.img(id) + ' ' + I.esc(D.GEAR[id].name); vides++; if (Gr.reserve(s).some(g => Gr.can(x.def, g))) dispo++; return `<span class="rien">${D.SLOTS[s].toLowerCase()} : rien</span>`; }).join(' · '); }).join('<br>');
-      li(!dispo, 'Armes, boucliers, casques, cuirasses', h + (dispo ? `<br><em>${dispo} emplacement${dispo > 1 ? 's' : ''} vide${dispo > 1 ? 's' : ''} alors que la réserve a de quoi.</em> <small>« Équiper au mieux » s’en charge.</small>` : vides ? '<br><small>La réserve n’a rien de plus pour eux : les coffres et les comptoirs la remplissent.</small>' : '')); }
+    { let vides = 0, dispo = 0; const h = hs.map(x => { const eq = Gr.of(x); return I.t('{nom} : {pieces}', { nom: I.esc(x.def.name), pieces: Gr.SLOTS.map(s => { const id = eq[s]; if (id) return Gr.img(id) + ' ' + I.esc(D.GEAR[id].name); vides++; if (Gr.reserve(s).some(g => Gr.can(x.def, g))) dispo++; return `<span class="rien">${I.t('{place_min} : rien', { place_min: D.SLOTS[s].toLowerCase(), place: D.SLOTS[s] })}</span>`; }).join(' · ') }); }).join('<br>');
+      li(!dispo, I.t('Armes, boucliers, casques, cuirasses'), h + (dispo ? `<br><em>${I.t('{n} emplacement vide alors que la réserve a de quoi.¦{n} emplacements vides alors que la réserve a de quoi.', { n: dispo })}</em> <small>${I.t('« Équiper au mieux » s’en charge.')}</small>` : vides ? '<br><small>' + I.t('La réserve n’a rien de plus pour eux : les coffres et les comptoirs la remplissent.') + '</small>' : '')); }
     // les vertus
     { const P = W.pillars(), connues = (E.weak || []).slice(0, Math.floor((P.savoir || 0) / 2)), port = {}; hs.forEach(x => { port[x.def.el] = 1; x.def.skills.filter(k => k.lvl <= x.lvl && k.el).forEach(k => { port[k.el] = 1; }); });
-      const mine = Object.keys(port).filter(e => D.ELEMENTS[e] && e !== 'fer').map(e => `<span style="color:${D.ELEMENTS[e].color}">${D.ELEMENTS[e].glyph} ${D.ELEMENTS[e].name}</span>`).join(' · ') || 'aucune';
+      const mine = Object.keys(port).filter(e => D.ELEMENTS[e] && e !== 'fer').map(e => `<span style="color:${D.ELEMENTS[e].color}">${D.ELEMENTS[e].glyph} ${D.ELEMENTS[e].name}</span>`).join(' · ') || I.t('aucune');
       const touche = connues.filter(e => port[e]);
-      li(!connues.length || touche.length > 0, 'Les vertus', `Lumières du groupe : ${mine}.<br>` + (connues.length ? `Failles connues de l’idole : ${connues.map(e => D.ELEMENTS[e].name).join(', ')}. ` + (touche.length ? 'Le groupe en porte.' : '<em>Le groupe n’en porte aucune.</em>') : '<small>Ses failles restent à découvrir en combattant ; un Savoir plus haut dans ce règne en révèle d’emblée.</small>')); }
+      li(!connues.length || touche.length > 0, I.t('Les vertus'), I.t('Lumières du groupe : {lumieres}.', { lumieres: mine }) + '<br>' + (connues.length ? I.t('Failles connues de l’idole : {failles}.', { failles: connues.map(e => D.ELEMENTS[e].name).join(', ') }) + ' ' + (touche.length ? I.t('Le groupe en porte.') : '<em>' + I.t('Le groupe n’en porte aucune.') + '</em>') : '<small>' + I.t('Ses failles restent à découvrir en combattant ; un Savoir plus haut dans ce règne en révèle d’emblée.') + '</small>')); }
     // la besace
     { const it = I.save.data.items || {}, ks = Object.keys(D.ITEMS).filter(k => (it[k] || 0) > 0);
-      li(ks.length > 0, 'La besace', ks.length ? ks.map(k => `${I.esc(D.ITEMS[k].name)} ×${it[k]}`).join(' · ') : '<em>Vide.</em> <small>Les coffres et les comptoirs la remplissent.</small>'); }
+      li(ks.length > 0, I.t('La besace'), ks.length ? ks.map(k => `${I.esc(D.ITEMS[k].name)} ×${it[k]}`).join(' · ') : '<em>' + I.t('Vide.') + '</em> <small>' + I.t('Les coffres et les comptoirs la remplissent.') + '</small>'); }
     // le cœur
     { const w = I.oeuvres.weight(opts), z = I.oeuvres.zad(), prie = !!S.flags._prayed;
-      li(z >= w && prie, 'Le cœur', `Provision ♥ ${z} · l’épreuve en demande ${w}. ` + (z >= w ? 'Le cœur est prêt.' : `<em>Il en manquera ${w - z} : le cœur sera lourd.</em> <small>Les œuvres du jour, sur la natte, nourrissent la provision.</small>`) +
-        '<br>' + (prie ? 'Tu es passé par la prière dans ce chapitre.' : '<em>Tu n’es pas encore passé par la natte dans ce chapitre.</em>') + R.motSecours(prie)); }
+      li(z >= w && prie, I.t('Le cœur'), I.t('Provision ♥ {z} · l’épreuve en demande {w}.', { z, w }) + ' ' + (z >= w ? I.t('Le cœur est prêt.') : `<em>${I.t('Il en manquera {n} : le cœur sera lourd.', { n: w - z })}</em> <small>${I.t('Les œuvres du jour, sur la natte, nourrissent la provision.')}</small>`) +
+        '<br>' + (prie ? I.t('Tu es passé par la prière dans ce chapitre.') : '<em>' + I.t('Tu n’es pas encore passé par la natte dans ce chapitre.') + '</em>') + R.motSecours(prie)); }
     const manque = L.filter(x => x.indexOf('class="manque"') > 0).length;
-    return `<h3>${I.esc(E.name)}</h3><p class="src">Bataille déclarée · enracinement ${I.mal.traits(I.mal.niveau())}</p><ul class="prepa">${L.join('')}</ul>` +
-      `<p class="src">${manque ? `${manque} point${manque > 1 ? 's' : ''} à regarder, marqué${manque > 1 ? 's' : ''} d’un ◇.` : 'Tout est là.'} Rien n’empêche de déclarer la bataille : cette page dit ce que l’on a, et ce qui manque.</p>`;
+    return `<h3>${I.esc(E.name)}</h3><p class="src">${I.t('Bataille déclarée · enracinement {traits}', { traits: I.mal.traits(I.mal.niveau()) })}</p><ul class="prepa">${L.join('')}</ul>` +
+      `<p class="src">${manque ? I.t('{n} point à regarder, marqué d’un ◇.¦{n} points à regarder, marqués d’un ◇.', { n: manque }) : I.t('Tout est là.')} ${I.t('Rien n’empêche de déclarer la bataille : cette page dit ce que l’on a, et ce qui manque.')}</p>`;
   };
   R.motSecours = prie => { const T = (I.sagas.coeur && I.sagas.coeur.secours) || {}, t = prie ? T.pret : T.absent; return t ? ` <small>${I.esc(t)}</small>` : ''; };
 
@@ -121,7 +121,7 @@
     const cote = d => !!rangEn(ch, n.c, n.l + d), av = !!rangEn(ch, n.c - 1, n.l), ar = !!rangEn(ch, n.c + 1, n.l);
     const tenaille = (cote(-1) && cote(1)) || (av && ar), flanc = cote(-1) || cote(1) || n.decouverte;
     const d = tenaille ? 9 : 1 + (elan ? 1 : 0) + (flanc ? 1 : 0); n.corps -= d; n.flash = 1; r.flash = 0.6; n.decouverte = false;
-    dire(ch, n, tenaille ? 'En tenaille' : flanc ? 'De flanc' : elan ? 'Charge' : 'Touchée', tenaille || flanc ? 'break' : 'info');
+    dire(ch, n, tenaille ? I.t('En tenaille') : flanc ? I.t('De flanc') : elan ? I.t('Charge') : I.t('Touchée'), tenaille || flanc ? 'break' : 'info');
     return d;
   }
   // un mot au-dessus d'une case : en haut pour une nuée, en bas pour un rang, pour que deux voisins ne se recouvrent pas
@@ -149,45 +149,45 @@
     let perce = 0;
     ch.nuees.slice().sort((a, b) => a.c - b.c).forEach(n => {
       const r = rangEn(ch, n.c - 1, n.l);
-      if (r) { const tient = r.ordre === 'tenir' && r.T.ferme && Math.random() < 0.5; if (tient) dire(ch, r, 'Tient bon', 'info'); else { r.tenue--; r.flash = 1; dire(ch, r, 'Éprouvé', 'dmg'); if (r.tenue <= 0) { r.repos = 3; ch.stats.eprouves++; dire(ch, r, 'Se replie', 'info'); } } return; }
+      if (r) { const tient = r.ordre === 'tenir' && r.T.ferme && Math.random() < 0.5; if (tient) dire(ch, r, I.t('Tient bon'), 'info'); else { r.tenue--; r.flash = 1; dire(ch, r, I.t('Éprouvé'), 'dmg'); if (r.tenue <= 0) { r.repos = 3; ch.stats.eprouves++; dire(ch, r, I.t('Se replie'), 'info'); } } return; }
       if (n.c === 0) { n.corps = 0; n.passe = true; perce++; ch.stats.perces++; return; }
       if (!en(ch, n.c - 1, n.l)) n.c--;
     });
     balaie(ch);
-    if (perce) { const hs = api.heros(); if (hs.length) { const h = I.pick(hs); api.doute(h); } if (!vite) await api.banner('<small>Le champ</small>Une nuée a percé : le doute gagne', 1300, false, 'speech foe'); }
+    if (perce) { const hs = api.heros(); if (hs.length) { const h = I.pick(hs); api.doute(h); } if (!vite) await api.banner('<small>' + I.t('Le champ') + '</small>' + I.t('Une nuée a percé : le doute gagne'), 1300, false, 'speech foe'); }
     // 3. un couloir ouvert jusqu'au pied de l'idole découvre son flanc : un voile tombe, une faille se révèle
-    for (const r of actifs(ch)) { if (r.c === COLS - 1 && !ch.flancs[r.l]) { ch.flancs[r.l] = true; r.ordre = 'tenir'; const idole = api.idole(); if (idole) { const v = api.voile(idole); api.revele(idole); direIdole(ch, v === 'devoile' ? 'DÉVOILÉ' : 'Voile ôté', 'break'); } I.audio.sfx('roll');
-      if (!vite) await api.banner(`<small>${I.esc(r.name)} · ${NOMS[r.l]}</small>Flanc découvert : un voile tombe`, 1500, false, 'speech intro'); } }
+    for (const r of actifs(ch)) { if (r.c === COLS - 1 && !ch.flancs[r.l]) { ch.flancs[r.l] = true; r.ordre = 'tenir'; const idole = api.idole(); if (idole) { const v = api.voile(idole); api.revele(idole); direIdole(ch, v === 'devoile' ? I.t('DÉVOILÉ') : I.t('Voile ôté'), 'break'); } I.audio.sfx('roll');
+      if (!vite) await api.banner(`<small>${I.esc(r.name)} · ${I.t(NOMS[r.l])}</small>${I.t('Flanc découvert : un voile tombe')}`, 1500, false, 'speech intro'); } }
     // 4. les rangs repliés se reforment ; l'idole envoie une nuée de plus, à sa cadence
     ch.rangs.forEach(r => { if (r.repos && --r.repos <= 0) { const l = [1, 0, 2].find(x => !en(ch, 0, x)); if (l === undefined) { r.repos = 1; return; } r.c = 0; r.l = l; r.tenue = 2; r.ordre = 'tenir'; r.px = null; } });
     if (ch.pas % ch.cadence === 0 && ch.nuees.length < ch.max) { const l = [1, 0, 2].filter(x => !ch.flancs[x] && !en(ch, COLS - 1, x)); if (l.length) nuee(ch, COLS - 1, I.pick(l)); }
     api.refresh(); if (!vite) await I.sleep(460);
     ch.vue = false; ch.sel = null; ch.cibles = []; api.refresh();
   };
-  function balaie(ch) { ch.nuees = ch.nuees.filter(n => { if (n.corps > 0) return true; if (!n.passe) { ch.stats.dissipees++; dire(ch, n, 'Dissipée', 'break'); } return false; }); }
+  function balaie(ch) { ch.nuees = ch.nuees.filter(n => { if (n.corps > 0) return true; if (!n.passe) { ch.stats.dissipees++; dire(ch, n, I.t('Dissipée'), 'break'); } return false; }); }
 
   /* ================= ordonner ================= */
   const stratege = (C, h) => !!(h && h.def.stratege);
   R.ordresDe = function (ch, r) { let L = r.T.ordres.slice(); if (ch.ordres) L = L.filter(o => ch.ordres.includes(o)); return L; };
   // au tour d'un compagnon. Rend 'libre' (l'ordre n'a pas coûté le tour : le stratège), true (le tour est donné à l'ordre) ou false (rien)
   R.ordonner = async function (C, h) {
-    const ch = C.champ, api = ch.api, box = api.box(); if (!actifs(ch).length) { api.banner('Aucun rang à ordonner pour l’instant.', 900); return false; }
+    const ch = C.champ, api = ch.api, box = api.box(); if (!actifs(ch).length) { api.banner(I.t('Aucun rang à ordonner pour l’instant.'), 900); return false; }
     ch.vue = true; ch.menu = true; api.refresh();
     const fin = v => { ch.vue = false; ch.menu = false; ch.sel = null; ch.cibles = []; api.refresh(); return v; };
-    const gratuit = stratege(C, h) && ch.libre !== C.turn, cout = gratuit ? 'sans perdre son tour' : 'à la place de son action';
+    const gratuit = stratege(C, h) && ch.libre !== C.turn, cout = gratuit ? I.t('sans perdre son tour') : I.t('à la place de son action');
     for (;;) {
       const L = actifs(ch), items = L.map(r => ({ label: `${num(r)} ${I.esc(r.name)}`, sub: `${nomOrdre(r.ordre)} ${tenue(r.tenue)}`, desc: `${ou(r)}. ${r.T.desc || ''}` }));
       const man = stratege(C, h) ? Object.keys(D.MANOEUVRES).filter(m => possible(ch, m)) : [];
-      man.forEach(m => items.push({ label: `✦ ${D.MANOEUVRES[m].name}`, sub: 'stratège', desc: D.MANOEUVRES[m].desc, cls: 'limit' }));
-      const i = await api.listMenu(box, `<b style="color:${h.color}">${I.esc(h.name)} ordonne</b> <span class="niyya">${cout}</span>`, items, { desc: true, back: true, onSel: k => { ch.sel = k < L.length ? L[k] : null; ch.cibles = []; } });
+      man.forEach(m => items.push({ label: `✦ ${D.MANOEUVRES[m].name}`, sub: I.t('stratège'), desc: D.MANOEUVRES[m].desc, cls: 'limit' }));
+      const i = await api.listMenu(box, `<b style="color:${h.color}">${I.t('{nom} ordonne', { nom: I.esc(h.name) })}</b> <span class="niyya">${cout}</span>`, items, { desc: true, back: true, onSel: k => { ch.sel = k < L.length ? L[k] : null; ch.cibles = []; } });
       if (i < 0) return fin(false);
       if (i >= L.length) { if (!(await manoeuvre(C, h, man[i - L.length]))) continue; }
       else {
         const r = L[i], O = R.ordresDe(ch, r), its = [];
-        O.forEach(o => { if (o === 'glisser') { [-1, 1].forEach(d => { const l = r.l + d; if (l >= 0 && l < VOIES) its.push({ o: d < 0 ? 'glisser-' : 'glisser+', label: 'Glisser vers ' + (NOMS[l] === 'centre' ? 'le centre' : 'l’' + NOMS[l]), desc: D.ORDRES.glisser.desc, c: [r.c, l] }); }); }
+        O.forEach(o => { if (o === 'glisser') { [-1, 1].forEach(d => { const l = r.l + d; if (l >= 0 && l < VOIES) its.push({ o: d < 0 ? 'glisser-' : 'glisser+', label: I.t('Glisser vers {le_voie}', { le_voie: NOMS[l] === 'centre' ? 'le centre' : 'l’' + NOMS[l], voie: I.t(NOMS[l]) }), desc: D.ORDRES.glisser.desc, c: [r.c, l] }); }); }
           else its.push({ o, label: D.ORDRES[o].name, desc: D.ORDRES[o].desc, c: o === 'avancer' ? [r.c + 1, r.l] : o === 'charger' ? [r.c + 2, r.l] : o === 'replier' ? [r.c - 1, r.l] : null }); });
         ch.sel = r;
-        const j = await api.listMenu(box, `<b>${num(r)} ${I.esc(r.name)}</b> <span class="niyya">${ou(r)}</span>`, its.map(x => ({ label: x.label, sub: x.o === r.ordre ? 'ordre actuel' : '', desc: x.desc })), { desc: true, back: true, onSel: k => { ch.cibles = its[k] && its[k].c ? [its[k].c] : []; } });
+        const j = await api.listMenu(box, `<b>${num(r)} ${I.esc(r.name)}</b> <span class="niyya">${ou(r)}</span>`, its.map(x => ({ label: x.label, sub: x.o === r.ordre ? I.t('ordre actuel') : '', desc: x.desc })), { desc: true, back: true, onSel: k => { ch.cibles = its[k] && its[k].c ? [its[k].c] : []; } });
         if (j < 0) { ch.cibles = []; continue; }
         if (its[j].o.indexOf('glisser') === 0) r.avant = r.ordre.indexOf('glisser') === 0 ? (r.avant || 'tenir') : r.ordre;
         r.ordre = its[j].o; dire(ch, r, nomOrdre(r.ordre), 'info'); I.audio.sfx('tek');
@@ -196,7 +196,7 @@
       await I.sleep(380); return fin(true);
     }
   };
-  const nomOrdre = o => o === 'glisser-' || o === 'glisser+' ? 'glisser' : (D.ORDRES[o] ? D.ORDRES[o].name.toLowerCase() : o);
+  const nomOrdre = o => o === 'glisser-' || o === 'glisser+' ? I.t('glisser') : (D.ORDRES[o] ? D.ORDRES[o].name.toLowerCase() : o);
   // les manœuvres du stratège : des manœuvres d'école, que le jeu prête à celui dont c'est le métier
   function possible(ch, m) {
     const A = actifs(ch);
@@ -211,21 +211,21 @@
       // une place par couloir : la case libre la plus avancée de notre moitié du champ, sans passer derrière une nuée
       const r = A.find(x => x.T.monte), libres = [];
       for (let l = 0; l < VOIES; l++) { let c = -1; for (let k = 0; k <= 2; k++) { if (nueeEn(ch, k, l)) break; if (!en(ch, k, l)) c = k; } if (c >= 0 && !(r.l === l && r.c === c)) libres.push([c, l]); }
-      if (!libres.length) { api.banner('Aucune case libre de notre côté.', 900); return false; }
+      if (!libres.length) { api.banner(I.t('Aucune case libre de notre côté.'), 900); return false; }
       ch.sel = r;
-      const j = await api.listMenu(box, `<b>${D.MANOEUVRES.garde.name}</b> <span class="niyya">${num(r)} ${I.esc(r.name)}</span>`, libres.map(p => ({ label: NOMS[p[1]] + ', ' + LIGNES[p[0]] })), { back: true, onSel: k => { ch.cibles = [libres[k]]; } });
+      const j = await api.listMenu(box, `<b>${D.MANOEUVRES.garde.name}</b> <span class="niyya">${num(r)} ${I.esc(r.name)}</span>`, libres.map(p => ({ label: I.t('{voie}, {ligne}', { voie: I.t(NOMS[p[1]]), ligne: I.t(LIGNES[p[0]]) }) })), { back: true, onSel: k => { ch.cibles = [libres[k]]; } });
       if (j < 0) { ch.cibles = []; return false; }
       r.c = libres[j][0]; r.l = libres[j][1]; ch.cibles = []; dire(ch, r, D.MANOEUVRES.garde.name, 'info');
     } else if (m === 'tenaille') {
       [A.find(r => r.l === 0), A.find(r => r.l === 2)].forEach(r => { for (let k = 0; k < 2; k++) if (r.c + 1 < COLS && !en(ch, r.c + 1, r.l)) r.c++; });
       // une nuée du centre bordée des deux côtés se dissipe sur-le-champ
-      ch.nuees.forEach(n => { if (rangEn(ch, n.c, n.l - 1) && rangEn(ch, n.c, n.l + 1)) { n.corps = 0; n.flash = 1; dire(ch, n, 'Enveloppée', 'break'); } });
+      ch.nuees.forEach(n => { if (rangEn(ch, n.c, n.l - 1) && rangEn(ch, n.c, n.l + 1)) { n.corps = 0; n.flash = 1; dire(ch, n, I.t('Enveloppée'), 'break'); } });
       balaie(ch);
     } else if (m === 'feinte') {
       const L = A.filter(r => r.c > 0 && !en(ch, r.c - 1, r.l) && [1, 2, 3].some(d => nueeEn(ch, r.c + d, r.l)));
-      let r = L[0]; if (L.length > 1) { const j = await api.listMenu(box, `<b>${D.MANOEUVRES.feinte.name}</b>`, L.map(x => ({ label: `${num(x)} ${I.esc(x.name)}`, sub: NOMS[x.l], desc: ou(x) })), { desc: true, back: true, onSel: k => { ch.sel = L[k]; } }); if (j < 0) return false; r = L[j]; }
+      let r = L[0]; if (L.length > 1) { const j = await api.listMenu(box, `<b>${D.MANOEUVRES.feinte.name}</b>`, L.map(x => ({ label: `${num(x)} ${I.esc(x.name)}`, sub: I.t(NOMS[x.l]), desc: ou(x) })), { desc: true, back: true, onSel: k => { ch.sel = L[k]; } }); if (j < 0) return false; r = L[j]; }
       const n = [1, 2, 3].map(d => nueeEn(ch, r.c + d, r.l)).find(Boolean); r.c--;
-      while (n.c - 1 > r.c && !en(ch, n.c - 1, n.l)) n.c--; n.decouverte = true; dire(ch, n, 'Découverte', 'info');
+      while (n.c - 1 > r.c && !en(ch, n.c - 1, n.l)) n.c--; n.decouverte = true; dire(ch, n, I.t('Découverte'), 'info');
     }
     I.audio.sfx('roll'); api.refresh(); return true;
   }

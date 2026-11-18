@@ -49,7 +49,7 @@
     if (!el) { el = document.createElement('div'); el.id = 'chrono'; el.setAttribute('role', 'timer'); el.innerHTML = '<span class="t"></span><i><b></b></i>'; $('#ui').appendChild(el); }
     const montre = !!c && I.scene === W && !S.busy && !W.lock; el.hidden = !montre; if (!c) return;
     const s = Math.max(0, Math.ceil(c.reste)), txt = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
-    if (el._txt !== txt) { el._txt = txt; el.querySelector('.t').textContent = txt; el.setAttribute('aria-label', 'Temps restant avant de remonter : ' + txt); }
+    if (el._txt !== txt) { el._txt = txt; el.querySelector('.t').textContent = txt; el.setAttribute('aria-label', I.t('Temps restant avant de remonter : {txt}', { txt })); }
     el.querySelector('b').style.width = Math.max(0, Math.min(100, c.reste / c.total * 100)).toFixed(1) + '%';
     el.classList.toggle('presse', c.reste <= 20);
   }
@@ -73,7 +73,7 @@
     const id = W.map.id, o = Object.assign({}, W.mapOpts), n = Math.max(0, (o.n | 0) - 1);
     W.stop(); W.lock = true; R.cache(); R.remontees = (R.remontees || 0) + 1;
     try {
-      S.toast('Le temps de la descente est écoulé. <b>On remonte au seuil</b> : le labyrinthe se redessine, un peu plus simple. Rien n’est perdu.', 6500); I.audio.sfx('light');
+      S.toast(I.t('Le temps de la descente est écoulé. <b>On remonte au seuil</b> : le labyrinthe se redessine, un peu plus simple. Rien n’est perdu.'), 6500); I.audio.sfx('light');
       await S.fade('out', 500);
       W.foes = W.foes.filter(f => !f.meute); S.flags._meutes_off = true; // ce qui rôdait s'est dispersé : le labyrinthe redessiné est plus simple, et vide de rôdeurs
       W.foes.forEach(f => { if (f.map === id && !f.done) f.placed = false; }); W.chests.forEach(c => { if (c.map === id) c.placed = false; });
@@ -112,11 +112,11 @@
     const E = { k, cp, rawi, heros, n, flags: {}, t: 0, accompagne: !!O().animal() || heros.length > 1, abri: null, fin: false };
     S.depth++;
     try {
-      if (!I.debug.auto && !I.debug.walk) await S.card('title noos', `<p class="small">${I.esc(Pk.titre || '')}</p><h1>La noosphère</h1><p>${I.esc(T0.seuil || '')}</p><div class="rule"></div><div class="hint">▼</div>`, 6000);
+      if (!I.debug.auto && !I.debug.walk) await S.card('title noos', `<p class="small">${I.esc(Pk.titre || '')}</p><h1>${I.t('La noosphère')}</h1><p>${I.esc(T0.seuil || '')}</p><div class="rule"></div><div class="hint">▼</div>`, 6000);
       await S.fade('out', 300);
       // un récit d'un seul chapitre, sans objectif : le râwî (et, dans l'histoire-cadre, ceux qui l'accompagnent)
-      const ch = { id: 'descente', title: 'La noosphère', sub: (Pk.titre || '') + ' · ' + (T0.sousTitre || 'ta descente'), objectives: [], party: heros.map(h => h.id) };
-      W.excursion = E; W.saga = { id: 'idris', name: 'La noosphère', frame: true, heroes: I.sagas.idris.heroes, enemies: C0().enemies || {}, chapters: [ch] }; W.ci = 0; W.ch = ch; W.objIndex = 0; W.minLvl = 1;
+      const ch = { id: 'descente', title: I.t('La noosphère'), sub: (Pk.titre || '') + ' · ' + (T0.sousTitre || I.t('ta descente')), objectives: [], party: heros.map(h => h.id) };
+      W.excursion = E; W.saga = { id: 'idris', name: I.t('La noosphère'), frame: true, heroes: I.sagas.idris.heroes, enemies: C0().enemies || {}, chapters: [ch] }; W.ci = 0; W.ch = ch; W.objIndex = 0; W.minLvl = 1;
       W.roster = {}; heros.forEach(h => { W.roster[h.id] = h; }); W.party = ch.party.slice(); W.refreshSheets(); W.npcs = []; W.chests = []; W.foes = [];
       // ceux qui rôdent : tour à tour un mal du cœur encore debout, une idée noire — posés loin du seuil
       const qui = []; for (let i = 0; qui.length < R.NOMBRE[n] && (i < vices.length || i < noirs.length); i++) { if (i < vices.length) qui.push(vices[i]); if (i < noirs.length && qui.length < R.NOMBRE[n]) qui.push(noirs[i]); }
@@ -233,7 +233,7 @@
     f.done = true; if (f.cle) S.flags[f.cle] = true; R.dissipes = (R.dissipes || 0) + 1;
     const lignes = I.battle.grantXP(Math.round(xp * 0.6)), nom = (E0[f.group[0]] || {}).name || '';
     I.audio.sfx('light'); I.gfx.flash('#fff3d0');
-    S.toast(`<b>${I.esc(nom)}</b> se dissipe.` + (lignes.length ? ' ' + lignes.map(l => l.replace(/<\/?li>/g, '')).join(' · ') : ''), lignes.length ? 6000 : 2600);
+    S.toast(I.t('<b>{nom}</b> se dissipe.', { nom: I.esc(nom) }) + (lignes.length ? ' ' + lignes.map(l => l.replace(/<\/?li>/g, '')).join(' · ') : ''), lignes.length ? 6000 : 2600);
     if (W.saga && !I.debug.auto) W.checkpoint();
   }
   // au doigt : toucher ce qui rôde, c'est le frapper — de là où l'on est s'il est à portée, sinon en s'en approchant
@@ -279,7 +279,7 @@
   // un petit égrégore a rejoint le groupe : un combat ordinaire
   R.contactMeute = async function (f) {
     if (f.enCombat || S.busy || W.lock) return; f.enCombat = true; W.stop(); R._vise = null; S.depth++;
-    try { await I.battle.start({ group: f.group, bg: W.map.env.bg, intro: ((W.saga.enemies[f.group[0]] || {}).name || '') + ' vous a rejoints sur le pont.' }); f.done = true; if (f.cle) S.flags[f.cle] = true; W.checkpoint(); }
+    try { await I.battle.start({ group: f.group, bg: W.map.env.bg, intro: I.t('{nom} vous a rejoints sur le pont.', { nom: (W.saga.enemies[f.group[0]] || {}).name || '' }) }); f.done = true; if (f.cle) S.flags[f.cle] = true; W.checkpoint(); }
     finally { S.depth--; f.enCombat = false; }
   };
 
@@ -288,7 +288,7 @@
     if (!R.peutFaireFace(id)) return R.finir('rattrape', def);
     E.combat = true; W.stop(); S.depth++; let res = 'lose';
     try { S.toast(I.esc((P().face || '').replace('%s', def.name || '')), 4200);
-      res = await I.battle.start({ group: [id], bg: 'noos', w: 1, interieur: true, sansReprise: true, heros: E.heros, intro: (def.name || '') + ' te barre le pont.' }); }
+      res = await I.battle.start({ group: [id], bg: 'noos', w: 1, interieur: true, sansReprise: true, heros: E.heros, intro: I.t('{nom} te barre le pont.', { nom: def.name || '' }) }); }
     finally { S.depth--; S.hideDialog(); E.combat = false; }
     if (res !== 'win') return R.finir('rattrape', def);
     f.done = true; if (def.idee) E.flags['_noir_' + id] = true; // une idée noire vaincue est dissipée jusqu'au chapitre suivant ; un mal tranché l'est pour de bon (oeuvres.js)
@@ -305,7 +305,7 @@
       else if (issue === 'rattrape') d.clos = true;
       E.heros.forEach(q => { I.save.data.heroes[q.key || ('idris:' + q.id)] = { lvl: q.lvl, xp: q.xp }; }); // ce que le râwî (et ceux qui l'accompagnaient) ont appris leur reste
       I.audio.sfx(issue === 'rattrape' ? 'dark' : 'light');
-      if (!I.debug.auto && !I.debug.walk) await S.card(issue === 'rattrape' ? 'defeat' : 'title noos', `<p class="small">${I.esc(X.titre || 'La noosphère se referme')}</p><h1>${I.esc((X.h1 || '').replace('%s', (def && def.name) || ''))}</h1><p>${I.esc(X.texte || '')}</p>${plus ? '<p><b>' + I.esc(plus) + '</b></p>' : ''}<div class="hint">▼</div>`);
+      if (!I.debug.auto && !I.debug.walk) await S.card(issue === 'rattrape' ? 'defeat' : 'title noos', `<p class="small">${I.esc(X.titre || I.t('La noosphère se referme'))}</p><h1>${I.esc((X.h1 || '').replace('%s', (def && def.name) || ''))}</h1><p>${I.esc(X.texte || '')}</p>${plus ? '<p><b>' + I.esc(plus) + '</b></p>' : ''}<div class="hint">▼</div>`);
     } finally { S.depth--; S.hideDialog(); }
     // le retour au récit : par le point de reprise d'avant la descente, comme on reprend une partie
     const cp = E.cp; cp.flags = Object.assign(cp.flags || {}, E.flags); W.excursion = null; R.chrono = null; document.body.classList.remove('descente');

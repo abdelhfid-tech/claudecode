@@ -545,6 +545,42 @@ n'est plus republié. Chaque Artifact
 a son propre stockage : une partie ne passe de l'un à l'autre que par l'export et l'import. On ne publie que
 l'assemblage que toute la batterie a joué.
 
+## Les langues
+
+*Demande du décideur, 18 novembre : l'arabe, l'anglais et le japonais, « en reprenant les concepts à la source dans la
+littérature de la langue elle-même et non en faisant des traductions du français » (exigence 25).*
+
+- **Le français ne bouge pas.** Il reste la langue des récits (`src/data/`), des tables (`defs.js`) et du code. Le jeu
+  s'ouvre en français, et s'y comporte comme avant.
+- **`src/core/langue.js`** se charge avant le socle (et sous Node, pour les outils).
+  - Il connaît la forme des récits : `casesSaga` donne chaque emplacement de texte d'un récit (noms, répliques,
+    narrations, options, pourparlers, recueil, égrégores, objectifs…), `casesDefs` ceux des tables. Tout le reste
+    (identifiants, couleurs, clés) n'est jamais touché.
+  - À l'enregistrement d'un récit, il en relève les emplacements, une fois, en français. Au changement de langue, il
+    pose sur place le texte de la langue rangé sous la clé du français (`cle(fr)` : l'empreinte FNV-1a et la
+    longueur), ou le français s'il n'y en a pas. Puis `perso.js` pose le nom du joueur, et la page reçoit ses textes
+    (`data-t`, `data-t-aria`…), sa direction (`dir="rtl"` en arabe) et sa langue (`lang`, `data-lang`).
+  - `I.t(fr, champs)` dit une phrase du code : en français, la phrase elle-même. Les formes selon un nombre sont
+    séparées par `¦` (une ou deux en français et en anglais, six en arabe, une en japonais). `I.T(fr)` marque un texte
+    d'une table écrite au chargement, que l'on dit plus tard par `I.t`.
+  - Ce qui sert de clé reste en français : le rayon et le voile d'un Compagnon sont posés d'après son nom avant toute
+    langue ; les catégories du recueil se comparent en français et se traduisent à l'affichage ; les empreintes que la
+    partie garde (`mal.note`) se prennent sur le texte français (`I.langue.fr`).
+  - L'écriture : le texte s'écrit deux signes à la fois en français et en anglais, un en japonais, un mot à la fois en
+    arabe (`L.avance`) ; une annonce de combat dure selon le poids du texte (`L.poids` : le japonais dit plus en moins
+    de signes) ; les initiales d'un nom se tirent selon la langue (`L.initiales`).
+- **Les textes des langues** : `src/lang/<langue>/<fichier>.json`, un fichier par récit, plus `tables` et `moteur`, une
+  entrée par ligne `{ k, fr, t, ou }`. L'assemblage les embarque (`ISNAD.langue.poser`) ; un `t` vide n'entre pas.
+  `node v2/tools/langues.js releve` met les listes à jour du français ; `node v2/tools/langues.js` contrôle.
+- **Le choix** : quatre boutons sur l'écran-titre (chacun écrit dans sa langue), et « Langue » dans la halte (le récit
+  reprend à son dernier point de reprise). C'est un réglage de l'appareil (`opts.lang`) : la partie est la même dans
+  toutes les langues. `?lang=ar` dans l'adresse force une langue, pour les contrôles.
+- **L'affichage** : polices Noto Naskh Arabic et Amiri Quran pour l'arabe, Noto Serif JP pour le japonais (Google
+  Fonts) ; ni lettres espacées, ni capitales, ni italique en arabe et en japonais ; la boîte de dialogue se retourne de
+  droite à gauche ; une parole citée prend les guillemets de sa langue ; la scène, elle, ne se retourne pas.
+- **Les règles** : `regles.js`, `verifierLangue(langue, emplacements)` — les exigences 6, 7, 8, 14, 15, 17, 18, 19 et 24
+  dans les mots de chaque langue, selon le genre de l'emplacement (`genreDe`).
+
 ## Commandes
 
 ```sh
@@ -552,6 +588,8 @@ node v2/tools/validate.js            # tout le contenu : sagas, histoire-cadre, 
 node v2/tools/validate.js fichiers   # seulement ces fichiers
 node v2/tools/validate-music.js
 node v2/tools/build.js               # v2/index.html et v2/dist/isnad.html (avec les paquets de v2/paquets/)
+node v2/tools/langues.js releve      # les listes de textes de chaque langue, à jour du français
+node v2/tools/langues.js [langue] [fichier]   # « LANGUES CONFORMES » : tout est écrit, et passe les règles
 node v2/tools/paquet.js [fichier]    # éprouve un paquet, hors du jeu puis dans un jeu d'essai assemblé à part
 node v2/tools/partie.js              # la partie du joueur : exportée, effacée, réimportée à l'identique
 node v2/tools/personnage.js          # le nom et la tenue du râwî : choisis, joués, gardés

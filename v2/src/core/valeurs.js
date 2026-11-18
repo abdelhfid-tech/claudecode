@@ -49,14 +49,14 @@
     const L = T('lames')[v], X = T('valeurs')[v] || {}; if (!L) return;
     I.oeuvres.learn('valeurs'); if (I.debug.auto) return;
     I.audio.sfx('light'); G.flash(L.couleur);
-    await S.card('lame valeur', `${img(v, true, 'grand')}<p class="small">Une Valeur</p><h1 style="color:${L.couleur}">${I.esc(L.name)}</h1><p class="ar">${I.esc(L.ar)}</p><p>${I.fmt(X.texte || '')}</p><p class="small">Valeurs gardées : ${V.compte().valeurs} / ${IDS.length}</p><div class="hint">▼</div>`);
+    await S.card('lame valeur', `${img(v, true, 'grand')}<p class="small">${I.t('Une Valeur')}</p><h1 style="color:${L.couleur}">${I.esc(L.name)}</h1><p class="ar">${I.esc(L.ar)}</p><p>${I.fmt(X.texte || '')}</p><p class="small">${I.t('Valeurs gardées : {n} / {sur}', { n: V.compte().valeurs, sur: IDS.length })}</p><div class="hint">▼</div>`);
   };
   // L'attribut divin que l'œuvre rappelle, quand la lame est forgée. Du texte, rien d'autre : ni figure, ni sprite.
   V.reconnait = async function (v) {
     const A = T('attributs')[v]; if (!A) return;
     I.oeuvres.learn('attributs'); if (I.debug.auto) return;
     I.audio.sfx('light');
-    await S.card('pray attribut', `<div class="orn">◌</div><p class="small">Un attribut divin à reconnaître</p><h1>${I.esc(A.nom)}</h1><p class="sens">${I.esc(A.sens)}</p><p>${I.esc(A.verset)}</p><p class="small">${I.esc(A.ref)}, traduction du sens</p><p class="mot">${I.esc(A.mot)}</p><div class="hint">▼</div>`);
+    await S.card('pray attribut', `<div class="orn">◌</div><p class="small">${I.t('Un attribut divin à reconnaître')}</p><h1>${I.esc(A.nom)}</h1><p class="sens">${I.esc(A.sens)}</p><p>${I.esc(A.verset)}</p><p class="small">${I.t('{ref}, traduction du sens', { ref: I.esc(A.ref) })}</p><p class="mot">${I.esc(A.mot)}</p><div class="hint">▼</div>`);
   };
 
   /* ================= la page de la halte ================= */
@@ -64,20 +64,20 @@
   function carte(v) {
     const L = T('lames')[v] || {}, X = T('valeurs')[v] || {}, A = T('attributs')[v] || {}, E = (C0().enemies || {})[v] || {}, B = T('bien'), a = V.acquise(v), r = V.reconnu(v), o = oeuvreDe(v);
     return `<div class="bien-l${a ? ' on' : ''}">${img(v, a)}<div class="val"><b style="color:${a ? L.couleur : 'inherit'}">${I.esc(L.name || '')}</b> <small>${I.esc(L.ar || '')}</small><br>` +
-      `<small>${a ? I.fmt(X.texte || '') : 'En face : ' + I.esc(E.name || '') + '. ' + I.esc(B.gagner || '')}</small></div>` +
-      `<div class="att${r ? ' on' : ''}"><i class="med">${r ? I.esc(A.nom || '') : '◌'}</i><small>${r ? '« ' + I.esc(A.sens || '') + ' » · ' + I.esc(A.ref || '') : I.esc(B.reconnaitre || '') + ' ' + I.esc(o.nom) + ' : ' + o.n + ' / ' + o.need}</small></div></div>`;
+      `<small>${a ? I.fmt(X.texte || '') : I.t('En face : {nom}.', { nom: I.esc(E.name || '') }) + ' ' + I.esc(B.gagner || '')}</small></div>` +
+      `<div class="att${r ? ' on' : ''}"><i class="med">${r ? I.esc(A.nom || '') : '◌'}</i><small>${r ? I.t('« {sens} » · {ref}', { sens: I.esc(A.sens || ''), ref: I.esc(A.ref || '') }) : I.esc(B.reconnaitre || '') + ' ' + I.t('{oeuvre} : {n} / {sur}', { oeuvre: I.esc(o.nom), n: o.n, sur: o.need })}</small></div></div>`;
   }
   V.paneVue = function () {
     const B = T('bien'), n = V.compte();
-    return `<h3>${I.esc(B.titre || 'Valeurs et attributs')}</h3><p>${I.fmt(B.chapeau || '')}</p><p class="src">Valeurs gardées : <b>${n.valeurs}</b> / ${n.sur} · attributs reconnus : <b>${n.attributs}</b> / ${n.sur}</p>` +
+    return `<h3>${I.esc(B.titre || I.t('Valeurs et attributs'))}</h3><p>${I.fmt(B.chapeau || '')}</p><p class="src">${I.t('Valeurs gardées : <b>{valeurs}</b> / {sur} · attributs reconnus : <b>{attributs}</b> / {sur}', { valeurs: n.valeurs, attributs: n.attributs, sur: n.sur })}</p>` +
       `<div class="bien">${IDS.map(carte).join('')}</div><p class="src">${I.fmt(B.note || '')}</p>`;
   };
   V.paneUne = function (v) {
     const L = T('lames')[v] || {}, X = T('valeurs')[v] || {}, A = T('attributs')[v] || {}, E = (C0().enemies || {})[v] || {}, B = T('bien'), a = V.acquise(v), r = V.reconnu(v), o = oeuvreDe(v);
     let h = `<h3 style="color:${L.couleur}">${img(v, a)} ${I.esc(L.name || '')} <small>${I.esc(L.ar || '')}</small></h3>`;
-    h += `<p>${I.fmt(X.texte || '')}</p><p class="src">${a ? 'Valeur gardée.' : 'En face : ' + I.esc(E.name || '') + ' (' + I.esc(X.face || '') + '). ' + I.esc(B.gagner || '')}</p>`;
-    h += `<p class="src">La lame : ${r ? 'forgée' : I.esc(o.nom) + ' ' + o.n + ' / ' + o.need}. ${a ? '' : 'On fait face à ce mal en descendant dans la noosphère : au sortir de la prière, dans le dhikr, en songe.'}</p>`;
-    h += '<h3>L’attribut</h3>' + (r ? `<p class="att on"><i class="med">${I.esc(A.nom || '')}</i> <span>« ${I.esc(A.sens || '')} »</span></p><p>${I.esc(A.verset || '')}</p><p class="src">${I.esc(A.ref || '')}, traduction du sens</p><p>${I.esc(A.mot || '')}</p>`
+    h += `<p>${I.fmt(X.texte || '')}</p><p class="src">${a ? I.t('Valeur gardée.') : I.t('En face : {nom} ({face}).', { nom: I.esc(E.name || ''), face: I.esc(X.face || '') }) + ' ' + I.esc(B.gagner || '')}</p>`;
+    h += `<p class="src">${r ? I.t('La lame : forgée.') : I.t('La lame : {oeuvre} {n} / {sur}.', { oeuvre: I.esc(o.nom), n: o.n, sur: o.need })} ${a ? '' : I.t('On fait face à ce mal en descendant dans la noosphère : au sortir de la prière, dans le dhikr, en songe.')}</p>`;
+    h += '<h3>' + I.t('L’attribut') + '</h3>' + (r ? `<p class="att on"><i class="med">${I.esc(A.nom || '')}</i> <span>${I.t('« {sens} »', { sens: I.esc(A.sens || '') })}</span></p><p>${I.esc(A.verset || '')}</p><p class="src">${I.t('{ref}, traduction du sens', { ref: I.esc(A.ref || '') })}</p><p>${I.esc(A.mot || '')}</p>`
       : `<p class="att"><i class="med">◌</i> <span>${I.esc(B.reconnaitre || '')}</span></p>`);
     return h;
   };
@@ -104,8 +104,8 @@
     let res = null;
     try {
       S.hideDialog();
-      if (!I.debug.auto) await S.card('title noos', `<p class="small">${I.esc((P[k] || {}).titre || '')}</p><h1>La noosphère</h1><p>${I.esc(P.seuil || '')}</p><div class="rule"></div><div class="hint">▼</div>`, 6000);
-      res = await I.battle.start({ group: [v], bg: 'noos', w: 1, interieur: true, sansReprise: true, heros: [h], intro: E.name + ' : ' + (X.face || '') + '.' });
+      if (!I.debug.auto) await S.card('title noos', `<p class="small">${I.esc((P[k] || {}).titre || '')}</p><h1>${I.t('La noosphère')}</h1><p>${I.esc(P.seuil || '')}</p><div class="rule"></div><div class="hint">▼</div>`, 6000);
+      res = await I.battle.start({ group: [v], bg: 'noos', w: 1, interieur: true, sansReprise: true, heros: [h], intro: I.t('{nom} : {face}.', { nom: E.name, face: X.face || '' }) });
       if (h.prete) I.save.data.heroes[h.key] = { lvl: h.lvl, xp: h.xp }; // ce que le râwî a appris lui reste
       if (W.map && W.saga && !W.lock) W.checkpoint();
     } finally { S.depth--; S.hideDialog(); }
@@ -122,7 +122,7 @@
     if (I.debug.auto || I.debug.walk) return I.debug.noOeuvres ? null : R.demande(k); // le joueur de test descend, et remonte par l'issue
     S.depth++;
     let oui = false;
-    try { const i = await S.menuPick({ html: I.esc(Pk.invite) + '<small>' + I.esc(P.question || '') + '</small><small>' + I.esc(P.regle || '') + '</small>' }, [{ t: P.descendre || 'Descendre' }, { t: P.plusTard || 'Pas maintenant' }]); oui = i === 0; }
+    try { const i = await S.menuPick({ html: I.esc(Pk.invite) + '<small>' + I.esc(P.question || '') + '</small><small>' + I.esc(P.regle || '') + '</small>' }, [{ t: P.descendre || I.t('Descendre') }, { t: P.plusTard || I.t('Pas maintenant') }]); oui = i === 0; }
     finally { S.depth--; S.hideDialog(); }
     return oui ? R.demande(k) : null;
   };

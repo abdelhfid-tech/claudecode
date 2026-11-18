@@ -514,3 +514,38 @@ body.touch #compass .lab b { font-size: max(.74em, 10.5px); } body.touch #compas
 body.touch #battle .order .olab, body.touch #battle .order i { font-size: max(.86em, 10px); } body.touch #battle .order i.foe { font-size: max(.7em, 10px); }
 body.touch #battle .cmd .niyya { font-size: max(.74em, 10.5px); }
 body.touch .hrow .hbars .bar { height: max(.82em, 11px); } body.touch .hrow .bar em { font-size: max(.78em, 10px); line-height: 1.1; top: 0; } /* les deux barres qui portent un nombre */
+
+/* ---------- les langues (src/core/langue.js) ----------
+   <html lang dir data-lang> : posés par le moteur. Le français ne reçoit aucune de ces règles. */
+#title .langues { position: absolute; top: max(10px, 2vh); left: 0; right: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .4em; padding: 0 max(12px, 3vw); direction: ltr; }
+#title .langues ~ .coin, #title .coin { top: calc(max(10px, 2vh) + 2.6em); }
+/* en paysage sur un téléphone, il y a de la place en largeur : les langues en haut à gauche, l'import en haut à droite */
+@media (orientation: landscape) and (max-height: 480px) { #title .langues { right: auto; left: max(12px, 3vw); justify-content: flex-start; padding: 0; max-width: 46%; } #title .langues ~ .coin, #title .coin { top: max(10px, 2vh); } }
+#title .langues button { padding: .35em .9em; font-size: .7em; color: var(--dim); background: rgba(10, 8, 20, .6); border: 1px solid var(--line); border-radius: 2em; font-family: var(--f-body); letter-spacing: 0; }
+#title .langues button[lang="ar"] { font-family: "Noto Naskh Arabic", "Amiri", "Geeza Pro", serif; }
+#title .langues button[lang="ja"] { font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif; }
+#title .langues button.on, #title .langues button.sel { color: #fff; border-color: var(--gold); background: rgba(233, 200, 119, .18); }
+body.touch #title .langues button { font-size: max(.74em, 12px); }
+/* l'arabe : une écriture liée, de droite à gauche — ni lettres espacées, ni capitales, ni italique ; des lignes plus hautes */
+html[data-lang="ar"] { --f-display: "Reem Kufi", "Noto Kufi Arabic", "Geeza Pro", "Segoe UI", sans-serif; --f-body: "Noto Naskh Arabic", "Amiri", "Geeza Pro", "Segoe UI", serif; }
+html[data-lang="ar"] body { line-height: 1.7; }
+html[data-lang="ar"] *:not(.latin), html[data-lang="ja"] *:not(.latin) { letter-spacing: 0 !important; text-transform: none !important; font-style: normal !important; }
+html[data-lang="ar"] .verset { font-family: "Amiri Quran", "Amiri", "Noto Naskh Arabic", serif; line-height: 2.1; }
+/* le japonais : pas d'espaces entre les mots — une ligne se coupe où elle peut, jamais avant une ponctuation */
+html[data-lang="ja"] { --f-display: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif; --f-body: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif; }
+html[data-lang="ja"] body { line-height: 1.65; line-break: strict; word-break: normal; overflow-wrap: anywhere; }
+/* le titre du jeu reste ce qu'il est, dans toutes les langues */
+#title h1 { direction: ltr; }
+html[data-lang] #title h1 { letter-spacing: .3em !important; }
+/* de droite à gauche : la boîte de dialogue se retourne (le sceau à droite, la suite à gauche) */
+html[dir="rtl"] #dialog { padding: .75em 6.4em .8em 1.2em; }
+html[dir="rtl"] #dialog .seal { left: auto; right: .9em; }
+html[dir="rtl"] #dialog .next { right: auto; left: .9em; }
+html[dir="rtl"] #dialog.nar { padding-left: 1.6em; padding-right: 1.6em; }
+/* la scène, elle, ne se retourne pas : l'image et ce qu'on y pose gardent leurs repères */
+#stage, #cv { direction: ltr; }
+
+/* une parole citée : les guillemets de chaque langue (le français garde « ») */
+html[data-lang="en"] #card.quote blockquote::before { content: "“"; } html[data-lang="en"] #card.quote blockquote::after { content: "”"; }
+html[data-lang="ja"] #card.quote blockquote::before { content: "「"; } html[data-lang="ja"] #card.quote blockquote::after { content: "」"; }
+html[data-lang="ar"] #card.quote blockquote::before { content: "« "; } html[data-lang="ar"] #card.quote blockquote::after { content: " »"; }

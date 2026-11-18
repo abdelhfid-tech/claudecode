@@ -90,6 +90,17 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   d'office et aucun n'est sous dix points (`src/style.css`, « écran tactile ») ; une liste de choix qui déborderait se
   resserre (`S.ajuster`). `v2/docs/architecture.md`, « L'image agrandie ». Tout changement de mise en page se relit sur
   un téléphone, en hauteur et en largeur : `loupe.js`, puis `doigt.js`.
+- **Les langues** (demande du décideur, 18 novembre ; exigence 25). La 2.x existe en français, en arabe, en anglais et
+  en japonais. Le français reste la langue des récits, des tables et du code ; les autres langues sont écrites à la
+  source (`v2/docs/langues/ecrire.md`) et rangées, texte par texte, sous la clé de leur texte français, dans
+  `v2/src/lang/<langue>/<fichier>.json`. `v2/src/core/langue.js` les pose sur place, comme `perso.js` le nom du joueur.
+  Dans le code, un texte du joueur passe par `I.t('Une phrase entière, avec ses {champs}', { champs })` — jamais une
+  phrase faite de morceaux ; `'une forme¦des formes'` selon `{n}` ; une table écrite au chargement marque ses textes par
+  `I.T('…')` et les dit par `I.t(…)` à l'affichage ; un texte de `page.html` porte `data-t`. Ce qui sert de clé
+  (catégories du recueil, noms d'où se tirent le rayon et le voile, empreintes gardées dans la partie) reste en français
+  sous le capot (`I.langue.fr`). Changer un texte français, c'est redemander son équivalent dans chaque langue :
+  `node v2/tools/langues.js releve` le remet dans les listes, `node v2/tools/langues.js` le signale. Contrôle :
+  « LANGUES CONFORMES ». Le français s'ouvre par défaut ; les shorts, la démo et le livret court restent en français.
 - Le livret de la 1.32 est archivé avec elle (`archive/v1.32/promo/`, `archive/v1.32/tools/promo.js`).
 - La promotion de la 2.x (demande du décideur, 17 novembre : dix shorts, une démo jouable, un livret court ; puis six
   shorts de plus — la noosphère, et un par saga ; puis le soutien de l'Institut Islam Actuel) se fait
@@ -151,6 +162,8 @@ node v2/tools/validate.js [fichiers]   # sans argument : tous les src/data/saga_
 node v2/tools/validate.js v2/src/data/frame.js v2/src/data/caid.js v2/src/data/coeur.js
 node v2/tools/validate-music.js         # chaque voix d'une piste dure exactement `beats` temps
 node v2/tools/build.js
+node v2/tools/langues.js releve        # les listes de textes de chaque langue, à jour du français (src/lang/<langue>/)
+node v2/tools/langues.js [langue] [fichier]   # tout est écrit, et passe les règles : « LANGUES CONFORMES »
 node v2/tools/smoke.js auto            # prologue, cinq sagas, épilogue joués automatiquement
 node v2/tools/smoke.js walk            # idem en marchant réellement (clavier simulé, vraies collisions)
 node v2/tools/smoke.js tap             # idem en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
@@ -365,6 +378,18 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
     déclarés dans `defs.js` (`D.POSTURES`). La distinction vient de Max Scheler (ses « modèles » : le saint, le génie,
     le héros) ; on n'en reprend ni phrase ni hiérarchie, et ni l'auteur ni son œuvre ne sont nommés dans le jeu, le
     livret, les planches ou le README : ils ne le sont qu'ici et dans `docs/`, pour que la règle reste applicable.
+
+25. *(Demandée par le décideur le 18 novembre — « les versions arabes, anglais, japonais, en reprenant les concepts à
+    la source dans la littérature de la langue elle-même et non en faisant des traductions du français » ; formulation
+    de l'agent, à valider.)* Dans chaque langue, à la source. Les quatre langues racontent les mêmes événements, dans le
+    même ordre, avec les mêmes sources ; aucune n'est traduite du français. Une parole citée ou un verset vient de sa
+    source, relevée dans `v2/docs/sources/`, jamais d'une traduction du français : en arabe, le texte du Coran, du recueil
+    ou de la chronique ; en anglais et en japonais, la traduction publiée qui fait référence (pour le Coran : *Saheeh
+    International* ; la traduction de Ryoichi Mita, de l'Association musulmane du Japon), ou, à défaut, une traduction du
+    sens faite sur l'arabe et dite comme telle. Rien n'entre de mémoire. Une parole dont l'arabe n'est pas retrouvé n'est
+    pas mise dans la bouche d'un Compagnon. Un écart entre le français et sa source est signalé au décideur : lui seul
+    corrige le français. Les termes viennent de la littérature de chaque langue (`v2/docs/langues/`). Les exigences 1 à
+    24 valent mot pour mot dans chaque langue, et `regles.js` les vérifie dans les mots de chacune.
 
 ## Qui fait quoi
 

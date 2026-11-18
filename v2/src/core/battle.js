@@ -18,10 +18,10 @@
     xpOf: def => Math.round((10 + 7 * def.lvl) * TIER[def.tier].xp)
   };
 
-  const FER = { id: '_fer', name: 'Frapper', target: 'foe', el: 'fer', pow: 1.0, anim: 'slash', basic: true };
-  const lightOf = h => ({ id: '_lum', name: 'Éclairer', target: 'foe', el: h.def.el, pow: 0.9, anim: 'light', basic: true });
-  const ASSAUT = { name: 'Assaut', target: 'foe', el: 'fer', pow: 1.0, anim: 'dark', w: 3 };
-  const STN = { atk: 'Force', mag: 'Esprit', def: 'Garde', spd: 'Élan', stun: 'Étourdi', doute: 'Doute', waswas: 'Waswâs', regen: 'Régén.', garde: 'En garde', taunt: 'Cible' };
+  const FER = { id: '_fer', name: I.T('Frapper'), target: 'foe', el: 'fer', pow: 1.0, anim: 'slash', basic: true };
+  const lightOf = h => ({ id: '_lum', name: I.T('Éclairer'), target: 'foe', el: h.def.el, pow: 0.9, anim: 'light', basic: true });
+  const ASSAUT = { name: I.T('Assaut'), target: 'foe', el: 'fer', pow: 1.0, anim: 'dark', w: 3 };
+  const STN = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan'), stun: I.T('Étourdi'), doute: I.T('Doute'), waswas: I.T('Waswâs'), regen: I.T('Régén.'), garde: I.T('En garde'), taunt: I.T('Cible') };
 
   let C = null; // contexte du combat en cours
 
@@ -153,39 +153,39 @@
     // 2.x — la progression (lecons.js) : dans une partie neuve, le combat donne une commande nouvelle à la fois
     C.neuf = I.lecons && !I.debug.auto ? I.lecons.combat(I.mal.estIdole(opts)) : null; C.neufVu = false;
     if (first && opts.intro) await banner(I.esc(opts.intro), readTime(opts.intro), true, 'speech intro');
-    else if (first) await banner(opts.boss ? `${d0.name} se dresse.` : 'Une emprise se referme…', 1100);
+    else if (first) await banner(opts.boss ? I.t('{nom} se dresse.', { nom: d0.name }) : I.t('Une emprise se referme…'), 1100);
     if (C.neuf && C.neuf !== 'frapper') { const t = I.lecons.banniere(C.neuf); if (t) await banner(t, readTime(t), true, 'speech intro'); }
     if (HC.w) {
-      await banner(`<small>Épreuve de poids ${HC.w} · provision du cœur ${HC.had}${C.rac ? ' · enracinement ' + I.mal.traits(C.rac) : ''}</small>${C.lack ? 'Le cœur est lourd' : 'Le cœur est prêt'}`, 1500, false, C.lack ? 'speech foe' : 'speech intro');
+      await banner(`<small>${C.rac ? I.t('Épreuve de poids {w} · provision du cœur {had} · enracinement {traits}', { w: HC.w, had: HC.had, traits: I.mal.traits(C.rac) }) : I.t('Épreuve de poids {w} · provision du cœur {had}', { w: HC.w, had: HC.had })}</small>${C.lack ? I.t('Le cœur est lourd') : I.t('Le cœur est prêt')}`, 1500, false, C.lack ? 'speech foe' : 'speech intro');
       if (!C.lack) C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 10); });
     }
     for (const e of alive('foe')) {
       const v = e.def.vice; if (!v) continue;
       const L = I.sagas.coeur.lames[v];
-      if (!I.oeuvres.hasBlade(v)) { if (first) await banner(`<small>Sans sa lame · ${I.esc(L.name)}</small>On ne peut que ${v === 'orgueil' ? 'le' : 'la'} repousser`, 1700, false, 'speech foe'); continue; }
-      await banner(`<small>Lame · ${I.esc(L.ar)}</small>${I.esc(L.name)} tranche ses voiles`, 1700, false, 'speech intro'); I.audio.sfx('slash'); G.flash(L.couleur);
+      if (!I.oeuvres.hasBlade(v)) { if (first) await banner(`<small>${I.t('Sans sa lame · {lame}', { lame: I.esc(L.name) })}</small>${v === 'orgueil' ? I.t('On ne peut que le repousser') : I.t('On ne peut que la repousser')}`, 1700, false, 'speech foe'); continue; }
+      await banner(`<small>${I.t('Lame · {ar}', { ar: I.esc(L.ar) })}</small>${I.t('{lame} tranche ses voiles', { lame: I.esc(L.name) })}`, 1700, false, 'speech intro'); I.audio.sfx('slash'); G.flash(L.couleur);
       e.cut = true; e.veilsMax = 1; e.veils = 1; e.hp = Math.round(e.max.hp * 0.6); e.def.weak.forEach(w => { e.known[w] = true; }); e.flash = 1; fx('slash', e, L.couleur); refresh(); await I.sleep(500);
     }
     C.bete = I.oeuvres.animal();
     if (C.bete && first) {
       const A = I.sagas.coeur.animaux[C.bete], hs = alive('hero'), fs = alive('foe');
-      await banner(`<small>Compagnon de lumière · ${I.esc(A.don)}</small>${I.esc(A.name)}`, 1300, false, 'speech intro'); I.audio.sfx('light');
-      if (C.bete === 'renard') fs.forEach(e => { const w = e.def.weak.find(x => !e.known[x]); if (w) { e.known[w] = true; floater(e, 'Faille flairée', 'info'); } });
-      else if (C.bete === 'aigle') hs.forEach(e => { e.ct *= 0.5; e.niyya = Math.min(5, e.niyya + 1); floater(e, '+Niyya', 'buff'); });
-      else if (C.bete === 'lion') fs.forEach(e => { e.buffs.atk = { v: -1, t: 3 }; floater(e, 'Force ▼', 'debuff'); });
-      else if (C.bete === 'gazelle') hs.forEach(e => { e.st.regen = 3; e.sakina = Math.min(100, e.sakina + 10); floater(e, 'Régén.', 'buff'); });
+      await banner(`<small>${I.t('Compagnon de lumière · {don}', { don: I.esc(A.don) })}</small>${I.esc(A.name)}`, 1300, false, 'speech intro'); I.audio.sfx('light');
+      if (C.bete === 'renard') fs.forEach(e => { const w = e.def.weak.find(x => !e.known[x]); if (w) { e.known[w] = true; floater(e, I.t('Faille flairée'), 'info'); } });
+      else if (C.bete === 'aigle') hs.forEach(e => { e.ct *= 0.5; e.niyya = Math.min(5, e.niyya + 1); floater(e, I.t('+Niyya'), 'buff'); });
+      else if (C.bete === 'lion') fs.forEach(e => { e.buffs.atk = { v: -1, t: 3 }; floater(e, I.t('Force') + ' ▼', 'debuff'); });
+      else if (C.bete === 'gazelle') hs.forEach(e => { e.st.regen = 3; e.sakina = Math.min(100, e.sakina + 10); floater(e, I.t('Régén.'), 'buff'); });
       refresh(); await I.sleep(500);
     }
     for (const al of (opts.allies || [])) {
       if (!S.flags[al.flag]) continue;
       if (C.champ && C.champ.rangs.some(r => r.allie && r.name === al.name)) continue; // bataille déclarée : le renfort est un rang, sur le champ
-      await banner(`<small>Renfort</small>${I.esc(al.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(500);
-      alive('foe').forEach(e => { if (!e.broken && al.veil !== 0) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; floater(e, 'DÉVOILÉ', 'break'); } else floater(e, 'Voile ôté', 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * (al.hp === undefined ? 0.08 : al.hp))); e.flash = 1; fx('light', e, '#ffe08a'); });
+      await banner(`<small>${I.t('Renfort')}</small>${I.esc(al.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(500);
+      alive('foe').forEach(e => { if (!e.broken && al.veil !== 0) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; floater(e, I.t('DÉVOILÉ'), 'break'); } else floater(e, I.t('Voile ôté'), 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * (al.hp === undefined ? 0.08 : al.hp))); e.flash = 1; fx('light', e, '#ffe08a'); });
       refresh(); await I.sleep(700);
     }
     // le champ, d'un coup d'œil, avant le premier tour ; le renfort gagné par la parole y prend place
     if (C.champ && first && !I.debug.auto) { const ch = C.champ; ch.vue = true; refresh();
-      for (const r of ch.rangs.filter(x => x.allie)) { ch.sel = r; banner(`<small>Renfort</small>${I.esc(r.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(1900); }
+      for (const r of ch.rangs.filter(x => x.allie)) { ch.sel = r; banner(`<small>${I.t('Renfort')}</small>${I.esc(r.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(1900); }
       await I.sleep(ch.rangs.some(x => x.allie) ? 500 : 1700); ch.sel = null; ch.vue = false; refresh(); }
     let result = first && I.debug.perd ? (I.debug.perd--, 'lose') : null; // crochet de test : une défaite forcée à la première tentative
     while (!result) {
@@ -227,8 +227,8 @@
     if (e.st.waswas) { const v = Math.max(1, Math.round(e.max.hp * (e.side === 'foe' ? 0.04 : 0.06))); e.hp = Math.max(e.side === 'hero' ? 1 : 0, e.hp - v); floater(e, v, 'dmg dot'); tick(e, 'waswas'); if (e.hp <= 0) { await kill(e); return; } }
     for (const k of ['atk', 'mag', 'df', 'spd']) if (e.buffs[k] && --e.buffs[k].t <= 0) delete e.buffs[k];
     if (e.st.taunt) tick(e, 'taunt');
-    if (e.side === 'foe' && e.broken) { e.broken = false; e.veils = e.veilsMax; floater(e, 'Se revoile', 'info'); refresh(); await I.sleep(500); return; }
-    if (e.st.stun) { delete e.st.stun; floater(e, 'Étourdi', 'info'); refresh(); await I.sleep(550); return; }
+    if (e.side === 'foe' && e.broken) { e.broken = false; e.veils = e.veilsMax; floater(e, I.t('Se revoile'), 'info'); refresh(); await I.sleep(500); return; }
+    if (e.st.stun) { delete e.st.stun; floater(e, I.t('Étourdi'), 'info'); refresh(); await I.sleep(550); return; }
     if (e.side === 'hero') { e.niyya = Math.min(5, e.niyya + 1); e.sakina = Math.min(100, e.sakina + 4); refresh(); }
     const cmd = e.side === 'hero' ? (I.debug.auto ? autoCmd(e) : await playerCmd(e)) : foeCmd(e);
     if (e.st.doute) tick(e, 'doute');
@@ -238,7 +238,7 @@
   function tick(e, k) { if (e.st[k] !== undefined && --e.st[k] <= 0) delete e.st[k]; }
 
   function foeCmd(e) {
-    if (e.def.taunts && Math.random() < 0.16) banner(`« ${I.pick(e.def.taunts)} »`, 1500);
+    if (e.def.taunts && Math.random() < 0.16) banner(I.t('« {parole} »', { parole: I.pick(e.def.taunts) }), 1500);
     let pool = [ASSAUT].concat(e.st.doute ? [] : e.skills);
     if (e.def.noBasic && pool.length > 1) pool = pool.slice(1);
     // évite de se soigner/renforcer en boucle
@@ -293,7 +293,7 @@
         b.onclick = ev => { ev.stopPropagation(); if (performance.now() - ne < 250) return; sel(i); if (!it.disabled) { I.audio.sfx('ok'); done(i); } else I.audio.sfx('dark'); }; // pas de toucher fantôme
         b.onmouseenter = () => sel(i); btns.push(b); list.appendChild(b);
       });
-      if (o.back) { const bk = I.el('button', 'mback', '◂ Retour'); bk.type = 'button'; bk.onclick = ev => { ev.stopPropagation(); done(-1); }; box.appendChild(bk); }
+      if (o.back) { const bk = I.el('button', 'mback', '◂ ' + I.t('Retour')); bk.type = 'button'; bk.onclick = ev => { ev.stopPropagation(); done(-1); }; box.appendChild(bk); }
       sel(idx);
       const h = I.input.push(a => {
         if (a === 'up' || (o.grid && a === 'left')) { sel(idx - 1, -1); I.audio.sfx('move'); }
@@ -320,8 +320,8 @@
     e.side === 'hero' ? { id: e.id, posture: e.posture || null, atk: e.atk, mag: e.mag, niyya: e.niyya, sakina: e.sakina, soin: e.soin || 0, menace: e.menace || 0 } : { connues: Object.keys(e.known).filter(k => e.known[k] === true).length })); };
   function pickTarget(pool, label) {
     return new Promise(res => {
-      const box = $('#battle .cmd'); box.innerHTML = `<div class="mtitle">${label}</div><div class="mhint">Choisis une cible · touche-la, ou ◂ ▸ puis Valider</div>`;
-      const bk = I.el('button', 'mback', '◂ Retour'); bk.type = 'button'; box.appendChild(bk);
+      const box = $('#battle .cmd'); box.innerHTML = `<div class="mtitle">${label}</div><div class="mhint">${I.t('Choisis une cible · touche-la, ou ◂ ▸ puis Valider')}</div>`;
+      const bk = I.el('button', 'mback', '◂ ' + I.t('Retour')); bk.type = 'button'; box.appendChild(bk);
       let idx = 0; const sel = i => { idx = (i + pool.length) % pool.length; C.cursor = pool[idx]; refresh(); bind(); };
       const done = v => { I.input.pop(h); C.cursor = null; C.pickCb = null; C.pickSel = null; C.pool = null; refresh(); res(v); };
       bk.onclick = ev => { ev.stopPropagation(); done(null); };
@@ -337,34 +337,34 @@
     while (true) {
       const pips = () => { let s = ''; for (let i = 0; i < 5; i++) s += `<i class="pip${i < h.niyya - boost ? ' on' : i < h.niyya ? ' use' : ''}"></i>`; return s; };
       const Lc = I.lecons, voit = k => !Lc || Lc.voit(k), sert = k => { const t = Lc && Lc.outilDe(k); if (!t) return; if (C.neuf === t && !C.neufVu) C.neufVu = true; else Lc.reemploi(t, true); }; // (la première fois, on vient de l'apprendre ; ensuite, c'est sans aide)
-      const title = () => `<b style="color:${h.ray || h.color}">${h.name}</b>` + (voit('niyya') ? `<span class="niyya"><button type="button" class="nb" data-d="-1">−</button>Niyya ${pips()}<button type="button" class="nb" data-d="1">+</button>${boost ? `<em>élan ×${boost}</em>` : ''}</span>` : '');
+      const title = () => `<b style="color:${h.ray || h.color}">${h.name}</b>` + (voit('niyya') ? `<span class="niyya"><button type="button" class="nb" data-d="-1">−</button>${I.t('Niyya')} ${pips()}<button type="button" class="nb" data-d="1">+</button>${boost ? `<em>${I.t('élan ×{n}', { n: boost })}</em>` : ''}</span>` : '');
       const setBoost = d => { if (!voit('niyya')) return; const was = boost; boost = I.clamp(boost + d, 0, Math.min(3, h.niyya)); if (boost > was) { G.spawn({ x: h.x, y: h.y - 24, type: 'ring', r0: 6, r1: 24 + boost * 4, life: 0.4, size: 2, color: h.color }); for (let q = 0; q < 8; q++) G.spawn({ x: h.x + (Math.random() - 0.5) * 20, y: h.y, vy: -50 - Math.random() * 40, life: 0.6, size: 0.9, color: h.color, type: 'spark' }); } const t = box.querySelector('.mtitle'); if (t) { t.innerHTML = title(); wire(); } I.audio.sfx('move'); };
       const wire = () => box.querySelectorAll('.nb').forEach(b => b.onclick = ev => { ev.stopPropagation(); setBoost(+b.dataset.d); });
       const lum = lightOf(h);
       const items = [
-        { label: `${elc('fer')} Frapper`, sub: boost ? `${1 + boost} coups` : (h.gear.arme ? D.GEAR_TYPES[h.gear.arme.t].name : 'Force') },
-        { label: `${elc(lum.el)} Éclairer`, sub: D.ELEMENTS[lum.el].name },
-        { label: '✦ Vertus', sub: `Souffle ${h.sp}`, disabled: !!h.st.doute, cache: !voit('skills') },
-        { label: '◍ Objets', cache: !voit('items') },
-        { label: '⛨ Garde', sub: '+ Niyya', cache: !voit('guard') }
+        { label: `${elc('fer')} ${I.t('Frapper')}`, sub: boost ? I.t('{n} coups', { n: 1 + boost }) : (h.gear.arme ? D.GEAR_TYPES[h.gear.arme.t].name : I.t('Force')) },
+        { label: `${elc(lum.el)} ${I.t('Éclairer')}`, sub: D.ELEMENTS[lum.el].name },
+        { label: '✦ ' + I.t('Vertus'), sub: I.t('Souffle {sp}', { sp: h.sp }), disabled: !!h.st.doute, cache: !voit('skills') },
+        { label: '◍ ' + I.t('Objets'), cache: !voit('items') },
+        { label: '⛨ ' + I.t('Garde'), sub: I.t('+ Niyya'), cache: !voit('guard') }
       ];
-      const iOrd = C.champ ? items.push({ label: '⚑ Ordonner', sub: h.def.stratege && C.champ.libre !== C.turn ? 'sans perdre son tour' : 'les rangs' }) - 1 : -1;
-      const iLim = h.sakina >= 100 ? items.push({ label: `❂ ${h.def.limit.name}`, sub: 'Sakîna', cls: 'limit' }) - 1 : -1;
+      const iOrd = C.champ ? items.push({ label: '⚑ ' + I.t('Ordonner'), sub: h.def.stratege && C.champ.libre !== C.turn ? I.t('sans perdre son tour') : I.t('les rangs') }) - 1 : -1;
+      const iLim = h.sakina >= 100 ? items.push({ label: `❂ ${h.def.limit.name}`, sub: I.t('Sakîna'), cls: 'limit' }) - 1 : -1;
       const p = listMenu(box, title(), items, { start, onLR: setBoost, cls: 'main' }); wire();
       const i = await p; start = i;
-      if (i === 0 || i === 1) { const sk = i === 0 ? FER : lum; const t = await pickTarget(alive('foe'), sk.name); if (!t) continue; sert('attack'); if (boost) sert('niyya'); return { type: 'skill', skill: sk, targets: [t], boost }; }
+      if (i === 0 || i === 1) { const sk = i === 0 ? FER : lum; const t = await pickTarget(alive('foe'), I.t(sk.name)); if (!t) continue; sert('attack'); if (boost) sert('niyya'); return { type: 'skill', skill: sk, targets: [t], boost }; }
       if (i === 2) {
         const sks = h.def.skills.filter(k => k.lvl <= h.lvl);
-        const j = await listMenu(box, `<b>Vertus</b> <span class="niyya">Souffle ${h.sp}/${h.max.sp}${boost ? ` · <em>élan ×${boost}</em>` : ''}</span>`, sks.map(k => ({ label: `${k.pow ? elc(k.el) : k.heal ? '<i class="el" style="color:#7fd69a">✚</i>' : '<i class="el">◇</i>'} ${k.name}`, sub: `${k.cost}`, disabled: k.cost > h.sp, desc: I.esc(k.desc) })), { back: true, desc: true });
+        const j = await listMenu(box, `<b>${I.t('Vertus')}</b> <span class="niyya">${I.t('Souffle {sp}/{max}', { sp: h.sp, max: h.max.sp })}${boost ? ` · <em>${I.t('élan ×{n}', { n: boost })}</em>` : ''}</span>`, sks.map(k => ({ label: `${k.pow ? elc(k.el) : k.heal ? '<i class="el" style="color:#7fd69a">✚</i>' : '<i class="el">◇</i>'} ${k.name}`, sub: `${k.cost}`, disabled: k.cost > h.sp, desc: I.esc(k.desc) })), { back: true, desc: true });
         if (j < 0) continue; const sk = sks[j]; const tg = await chooseTargets(h, sk); if (!tg) continue; sert('skills'); if (boost) sert('niyya'); return { type: 'skill', skill: sk, targets: tg, boost };
       }
       if (i === 3) {
         const inv = I.save.data.items, ids = Object.keys(D.ITEMS).filter(k => (inv[k] || 0) > 0);
-        if (!ids.length) { banner('La besace est vide.', 900); continue; }
+        if (!ids.length) { banner(I.t('La besace est vide.'), 900); continue; }
         const fast = I.oeuvres.fasting();
-        const j = await listMenu(box, '<b>Objets</b>' + (fast ? ' <span class="niyya">jour de jeûne</span>' : ''), ids.map(k => ({ label: D.ITEMS[k].name, sub: fast && D.ITEMS[k].vivre ? 'jeûne' : '×' + inv[k], disabled: fast && D.ITEMS[k].vivre, desc: fast && D.ITEMS[k].vivre ? 'Jour de jeûne : les vivres attendent le coucher du soleil.' : D.ITEMS[k].desc })), { back: true, desc: true });
+        const j = await listMenu(box, '<b>' + I.t('Objets') + '</b>' + (fast ? ' <span class="niyya">' + I.t('jour de jeûne') + '</span>' : ''), ids.map(k => ({ label: D.ITEMS[k].name, sub: fast && D.ITEMS[k].vivre ? I.t('jeûne') : '×' + inv[k], disabled: fast && D.ITEMS[k].vivre, desc: fast && D.ITEMS[k].vivre ? I.t('Jour de jeûne : les vivres attendent le coucher du soleil.') : D.ITEMS[k].desc })), { back: true, desc: true });
         if (j < 0) continue; const it = D.ITEMS[ids[j]];
-        let tg; if (it.target === 'allies') tg = alive('hero'); else { const pool = C.all.filter(e => e.side === 'hero' && (it.revive ? !e.alive : e.alive)); if (!pool.length) { banner('Personne n’en a besoin.', 900); continue; } const t = await pickTarget(pool, it.name); if (!t) continue; tg = [t]; }
+        let tg; if (it.target === 'allies') tg = alive('hero'); else { const pool = C.all.filter(e => e.side === 'hero' && (it.revive ? !e.alive : e.alive)); if (!pool.length) { banner(I.t('Personne n’en a besoin.'), 900); continue; } const t = await pickTarget(pool, it.name); if (!t) continue; tg = [t]; }
         sert('items'); return { type: 'item', item: ids[j], targets: tg };
       }
       if (i === 4) { sert('guard'); return { type: 'guard' }; }
@@ -381,16 +381,16 @@
   /* ================= résolution ================= */
   async function perform(e, cmd) {
     $('#battle .cmd').innerHTML = '';
-    if (cmd.type === 'ordre') { floater(e, 'Ordonne', 'info'); await I.sleep(260); return; } // son tour est allé à l'ordre donné aux rangs
-    if (cmd.type === 'guard') { e.st.garde = 1; e.niyya = Math.min(5, e.niyya + 1); e.sakina = Math.min(100, e.sakina + 8); fx('guard', e, e.color); floater(e, 'Garde', 'info'); I.audio.sfx('tek'); await I.sleep(420); return; }
+    if (cmd.type === 'ordre') { floater(e, I.t('Ordonne'), 'info'); await I.sleep(260); return; } // son tour est allé à l'ordre donné aux rangs
+    if (cmd.type === 'guard') { e.st.garde = 1; e.niyya = Math.min(5, e.niyya + 1); e.sakina = Math.min(100, e.sakina + 8); fx('guard', e, e.color); floater(e, I.t('Garde'), 'info'); I.audio.sfx('tek'); await I.sleep(420); return; }
     if (cmd.type === 'item') {
       const it = D.ITEMS[cmd.item]; I.save.data.items[cmd.item]--; await banner(it.name, 700);
-      cmd.targets.forEach(t => { if (it.revive && !t.alive) { t.alive = true; t.hp = Math.round(t.max.hp * it.revive); floater(t, 'Relevé', 'heal'); } if (it.hp && t.alive) heal(t, Math.round(t.max.hp * it.hp)); if (it.sp) { t.sp = Math.min(t.max.sp, t.sp + Math.round(t.max.sp * it.sp)); floater(t, '+Souffle', 'heal'); } if (it.cleanse) cleanse(t); if (it.niyya) { t.niyya = Math.min(5, t.niyya + it.niyya); floater(t, '+Niyya', 'info'); } fx('heal', t, '#7fd69a'); });
+      cmd.targets.forEach(t => { if (it.revive && !t.alive) { t.alive = true; t.hp = Math.round(t.max.hp * it.revive); floater(t, I.t('Relevé'), 'heal'); } if (it.hp && t.alive) heal(t, Math.round(t.max.hp * it.hp)); if (it.sp) { t.sp = Math.min(t.max.sp, t.sp + Math.round(t.max.sp * it.sp)); floater(t, I.t('+Souffle'), 'heal'); } if (it.cleanse) cleanse(t); if (it.niyya) { t.niyya = Math.min(5, t.niyya + it.niyya); floater(t, I.t('+Niyya'), 'info'); } fx('heal', t, '#7fd69a'); });
       I.audio.sfx('heal'); await I.sleep(520); return;
     }
     const sk = cmd.skill, boost = cmd.boost || 0, hero = e.side === 'hero';
     if (hero) { if (sk.cost) e.sp = Math.max(0, e.sp - sk.cost); e.niyya -= boost; if (cmd.limit) e.sakina = 0; }
-    if (!sk.basic || !hero) banner(sk.name, 800, false, cmd.limit ? 'limit' : hero ? '' : 'foe');
+    if (!sk.basic || !hero) banner(sk === ASSAUT ? I.t(sk.name) : sk.name, 800, false, cmd.limit ? 'limit' : hero ? '' : 'foe');
     if (hero && !sk.basic) { e.pose = 'resolu'; setTimeout(() => { e.pose = null; }, 900 / I.speed); }
     if (cmd.limit) { G.flash(e.color); I.audio.sfx('roll'); await I.sleep(350); }
     const col = sk.el ? D.ELEMENTS[sk.el].color : (hero ? e.color : `hsl(${e.def.hue},90%,65%)`), dir = hero ? -1 : 1;
@@ -398,7 +398,7 @@
     const ga = hero ? e.gear.arme : null, fer0 = sk.basic && sk.el === 'fer', geste = hero && sk.pow ? { anim: fer0 ? (e.gear.anim || (ga ? 'slash' : 'geste')) : 'geste', port: fer0 && ga ? (ga.port || (D.GEAR_TYPES[ga.t] || {}).port || null) : null } : null; // « Frapper » : avec l'arme en main ; « Éclairer » et les vertus qui portent un coup : le geste seul
     if (hero) e.marche = 1; await tween(e, 'ox', dir * (hero ? 16 : 14), hero ? 180 : 110); e.marche = 0;
     // l'arme en main : une dague frappe parfois deux fois, une masse étourdit parfois
-    const fer = hero && sk.basic && sk.el === 'fer', vif = fer && e.gear.vif && Math.random() < e.gear.vif; if (vif) floater(e, 'Coup double', 'info');
+    const fer = hero && sk.basic && sk.el === 'fer', vif = fer && e.gear.vif && Math.random() < e.gear.vif; if (vif) floater(e, I.t('Coup double'), 'info');
     const hits = (sk.hits || 1) + (sk.basic && hero ? boost : 0) + (vif ? 1 : 0), mult = sk.basic ? 1 : 1 + 0.5 * boost;
     let targets = cmd.targets.filter(t => t.alive || sk.revive);
     if (sk.pow) {
@@ -415,10 +415,10 @@
     } else { fx(sk.anim || (sk.heal ? 'heal' : 'glyph'), sk.target === 'self' ? e : targets[0] || e, col); I.audio.sfx(sk.heal ? 'heal' : hero ? 'light' : 'dark'); }
     if (sk.heal || sk.revive || sk.sp) {
       for (const t of targets) {
-        if (sk.revive && !t.alive) { t.alive = true; t.hp = 1; t.st = {}; floater(t, 'Relevé', 'heal'); }
+        if (sk.revive && !t.alive) { t.alive = true; t.hp = 1; t.st = {}; floater(t, I.t('Relevé'), 'heal'); }
         if (!t.alive) continue;
         if (sk.heal) heal(t, Math.round(eff(e, 'mag') * sk.heal * 2.7 * (1 + 0.4 * boost) * (1 + (e.soin || 0))));
-        if (sk.sp) { t.sp = Math.min(t.max.sp, t.sp + Math.round(t.max.sp * sk.sp)); floater(t, '+Souffle', 'heal'); }
+        if (sk.sp) { t.sp = Math.min(t.max.sp, t.sp + Math.round(t.max.sp * sk.sp)); floater(t, I.t('+Souffle'), 'heal'); }
         fx('heal', t, '#7fd69a');
       }
     }
@@ -434,7 +434,7 @@
     const el = sk.el, stat = el === 'fer' ? eff(a, 'atk') : eff(a, 'mag');
     const immune = t.side === 'foe' && (t.def.immune || []).includes(el), weak = t.side === 'foe' && t.def.weak.includes(el);
     if (t.side === 'foe') t.tried[el] = true;
-    if (immune) { t.known[el] = 'x'; floater(t, 'Sans effet', 'info'); fx('guard', t, '#889'); return; }
+    if (immune) { t.known[el] = 'x'; floater(t, I.t('Sans effet'), 'info'); fx('guard', t, '#889'); return; }
     // l'équipement : une lance perce une part de la garde ; un bouclier pare parfois un coup de fer
     const gA = a.gear || {}, gT = t.gear || {}, perce = el === 'fer' && gA.perce ? 1 - gA.perce : 1;
     let d = stat * sk.pow * mult * 2.2 * (50 / (50 + eff(t, 'df') * perce)) * (0.92 + Math.random() * 0.16);
@@ -443,12 +443,12 @@
     d *= a.side === 'hero' ? (C.pLien || 1) * (1 - 0.08 * (C.lack || 0)) : (C.pJust || 1) * (1 + 0.08 * (C.lack || 0));
     d = Math.max(1, Math.round(d));
     t.hp = Math.max(0, t.hp - d); t.flash = 1; t.shake = 0.25;
-    floater(t, d, 'dmg' + (weak ? ' weak' : '') + (t.side === 'hero' ? ' hero' : '')); if (pare) { floater(t, 'Paré', 'info'); fx('guard', t, '#c3c8d2'); }
+    floater(t, d, 'dmg' + (weak ? ' weak' : '') + (t.side === 'hero' ? ' hero' : '')); if (pare) { floater(t, I.t('Paré'), 'info'); fx('guard', t, '#c3c8d2'); }
     fx((sk.basic && el === 'fer' && gA.anim) || sk.anim || (el === 'fer' ? 'slash' : 'light'), t, col, a);
     if (t.side === 'hero') { t.sakina = Math.min(100, t.sakina + d / t.max.hp * 70); G.shake(160); C.minHp = Math.min(C.minHp === undefined ? 1 : C.minHp, t.hp / t.max.hp); if (t.hp <= 0) C.kos = (C.kos || 0) + 1; }
     if (weak) {
       t.known[el] = true; if (a.side === 'hero') a.sakina = Math.min(100, a.sakina + 7);
-      if (!t.broken) { t.veils--; if (t.veils <= 0) { t.broken = true; t.veils = 0; t.ct += 400; floater(t, 'DÉVOILÉ', 'break'); I.audio.sfx('break'); G.flash('#fff'); G.shake(380); if (a.side === 'hero') a.sakina = Math.min(100, a.sakina + 12); for (let i = 0; i < 26; i++) G.spawn({ x: t.x, y: t.y - t.size / 2, vx: (Math.random() - 0.5) * 240, vy: (Math.random() - 0.7) * 200, grav: 300, life: 0.9, size: 1.2, color: '#fff', type: 'spark' }); } }
+      if (!t.broken) { t.veils--; if (t.veils <= 0) { t.broken = true; t.veils = 0; t.ct += 400; floater(t, I.t('DÉVOILÉ'), 'break'); I.audio.sfx('break'); G.flash('#fff'); G.shake(380); if (a.side === 'hero') a.sakina = Math.min(100, a.sakina + 12); for (let i = 0; i < 26; i++) G.spawn({ x: t.x, y: t.y - t.size / 2, vx: (Math.random() - 0.5) * 240, vy: (Math.random() - 0.7) * 200, grav: 300, life: 0.9, size: 1.2, color: '#fff', type: 'spark' }); } }
     }
   }
   function heal(t, v) { if (!t.alive) return; t.hp = Math.min(t.max.hp, t.hp + v); floater(t, '+' + v, 'heal'); }
@@ -457,35 +457,35 @@
     if (f.chance !== undefined && Math.random() > f.chance * (t.def && t.def.tier === 'boss' && (f.st === 'stun' || f.st === 'doute') ? 0.5 : 1)) return;
     const turns = (f.turns || 3) + (a.side === 'hero' ? boost : 0);
     switch (f.st) {
-      case 'atk': case 'mag': case 'def': case 'spd': { const k = f.st === 'def' ? 'df' : f.st; t.buffs[k] = { v: f.v, t: turns }; floater(t, `${STN[f.st]} ${f.v > 0 ? '▲' : '▼'}`, f.v > 0 ? 'buff' : 'debuff'); break; }
-      case 'stun': if (t.side === 'foe' && t.def.tier === 'boss' && t.stunned) break; if (t.gear && t.gear.ferme && Math.random() < t.gear.ferme) { floater(t, 'Tient bon', 'buff'); break; } t.st.stun = 1; t.stunned = true; floater(t, 'Étourdi', 'debuff'); break;
-      case 'doute': t.st.doute = f.turns || 2; floater(t, 'Doute', 'debuff'); break;
-      case 'waswas': t.st.waswas = turns; floater(t, 'Waswâs', 'debuff'); break;
-      case 'regen': t.st.regen = turns; floater(t, 'Régén.', 'buff'); break;
-      case 'garde': t.st.garde = 1; floater(t, 'Garde', 'buff'); break;
-      case 'reveal': if (t.side === 'foe') { t.def.weak.forEach(w => t.known[w] = true); (t.def.immune || []).forEach(w => t.known[w] = 'x'); floater(t, 'Failles révélées', 'info'); } break;
-      case 'cleanse': cleanse(t); floater(t, 'Purifié', 'buff'); break;
-      case 'dispel': ['atk', 'mag', 'df', 'spd'].forEach(k => { if (t.buffs[k] && t.buffs[k].v > 0) delete t.buffs[k]; }); delete t.st.regen; floater(t, 'Dissipé', 'debuff'); break;
-      case 'veil': if (t.side === 'foe' && !t.broken) { t.veils = Math.max(0, t.veils + (f.v || -1)); if (t.veils <= 0) { t.broken = true; t.ct += 400; floater(t, 'DÉVOILÉ', 'break'); I.audio.sfx('break'); G.flash('#fff'); } } break;
-      case 'niyya': t.niyya = I.clamp((t.niyya || 0) + (f.v || 1), 0, 5); if (t.side === 'hero') floater(t, '+Niyya', 'buff'); break;
-      case 'sakina': if (t.side === 'hero') { t.sakina = I.clamp(t.sakina + (f.v || 20), 0, 100); floater(t, '+Sakîna', 'buff'); } break;
-      case 'taunt': t.st.taunt = turns; floater(t, 'Fait front', 'buff'); break;
+      case 'atk': case 'mag': case 'def': case 'spd': { const k = f.st === 'def' ? 'df' : f.st; t.buffs[k] = { v: f.v, t: turns }; floater(t, `${I.t(STN[f.st])} ${f.v > 0 ? '▲' : '▼'}`, f.v > 0 ? 'buff' : 'debuff'); break; }
+      case 'stun': if (t.side === 'foe' && t.def.tier === 'boss' && t.stunned) break; if (t.gear && t.gear.ferme && Math.random() < t.gear.ferme) { floater(t, I.t('Tient bon'), 'buff'); break; } t.st.stun = 1; t.stunned = true; floater(t, I.t('Étourdi'), 'debuff'); break;
+      case 'doute': t.st.doute = f.turns || 2; floater(t, I.t('Doute'), 'debuff'); break;
+      case 'waswas': t.st.waswas = turns; floater(t, I.t('Waswâs'), 'debuff'); break;
+      case 'regen': t.st.regen = turns; floater(t, I.t('Régén.'), 'buff'); break;
+      case 'garde': t.st.garde = 1; floater(t, I.t('Garde'), 'buff'); break;
+      case 'reveal': if (t.side === 'foe') { t.def.weak.forEach(w => t.known[w] = true); (t.def.immune || []).forEach(w => t.known[w] = 'x'); floater(t, I.t('Failles révélées'), 'info'); } break;
+      case 'cleanse': cleanse(t); floater(t, I.t('Purifié'), 'buff'); break;
+      case 'dispel': ['atk', 'mag', 'df', 'spd'].forEach(k => { if (t.buffs[k] && t.buffs[k].v > 0) delete t.buffs[k]; }); delete t.st.regen; floater(t, I.t('Dissipé'), 'debuff'); break;
+      case 'veil': if (t.side === 'foe' && !t.broken) { t.veils = Math.max(0, t.veils + (f.v || -1)); if (t.veils <= 0) { t.broken = true; t.ct += 400; floater(t, I.t('DÉVOILÉ'), 'break'); I.audio.sfx('break'); G.flash('#fff'); } } break;
+      case 'niyya': t.niyya = I.clamp((t.niyya || 0) + (f.v || 1), 0, 5); if (t.side === 'hero') floater(t, I.t('+Niyya'), 'buff'); break;
+      case 'sakina': if (t.side === 'hero') { t.sakina = I.clamp(t.sakina + (f.v || 20), 0, 100); floater(t, I.t('+Sakîna'), 'buff'); } break;
+      case 'taunt': t.st.taunt = turns; floater(t, I.t('Fait front'), 'buff'); break;
     }
   }
   async function kill(t) {
     if (!t.alive) return; t.alive = false; t.hp = 0; t.st = {}; t.buffs = {};
-    if (t.side === 'foe' && t.def.vice) floater(t, t.cut ? 'TRANCHÉ' : 'Repoussé', 'break');
+    if (t.side === 'foe' && t.def.vice) floater(t, t.cut ? I.t('TRANCHÉ') : I.t('Repoussé'), 'break');
     if (t.side === 'foe') { I.audio.sfx('break'); for (let i = 0; i < 40; i++) G.spawn({ x: t.x + (Math.random() - 0.5) * t.size * 0.7, y: t.y - Math.random() * t.size, vx: (Math.random() - 0.5) * 40, vy: -20 - Math.random() * 60, life: 1.2 + Math.random(), size: 1 + Math.random(), color: `hsl(${t.def.hue},100%,75%)`, type: 'glyph' }); await tween(t, 'fade', 0, 500); }
     else {
-      floater(t, 'Éprouvé', 'debuff'); I.audio.sfx('dark'); await I.sleep(300);
-      if (C.bete === 'phenix' && !C.phenix) { C.phenix = true; await banner('<small>Le Phénix</small>Ce qui a brûlé se relève', 1200, false, 'speech intro'); t.alive = true; t.hp = Math.round(t.max.hp * 0.4); floater(t, 'Relevé', 'heal'); fx('pillar', t, '#ff9a5c'); refresh(); }
+      floater(t, I.t('Éprouvé'), 'debuff'); I.audio.sfx('dark'); await I.sleep(300);
+      if (C.bete === 'phenix' && !C.phenix) { C.phenix = true; await banner('<small>' + I.t('Le Phénix') + '</small>' + I.t('Ce qui a brûlé se relève'), 1200, false, 'speech intro'); t.alive = true; t.hp = Math.round(t.max.hp * 0.4); floater(t, I.t('Relevé'), 'heal'); fx('pillar', t, '#ff9a5c'); refresh(); }
     }
   }
   async function checkPhase(t) {
     const ph = t.def.phases; if (!ph) return;
     while (t.phase < ph.length && t.alive && t.hp / t.max.hp <= ph[t.phase].at) {
       const p = ph[t.phase++]; G.shake(500); G.flash(`hsl(${t.def.hue},90%,60%)`); I.audio.sfx('dark');
-      if (p.say) await banner(`<small>${I.esc(t.name)}</small>« ${I.esc(p.say)} »`, readTime(p.say), true, 'foe speech');
+      if (p.say) await banner(`<small>${I.esc(t.name)}</small>${I.t('« {parole} »', { parole: I.esc(p.say) })}`, readTime(p.say), true, 'foe speech');
       (p.fx || []).forEach(f => applyFx(t, t, f, 0)); (p.addSkills || []).forEach(k => t.skills.push(k));
       t.broken = false; t.veils = t.veilsMax; refresh();
     }
@@ -495,8 +495,8 @@
   B.grantXP = function (xp) {
     const W = I.world, lines = [];
     W.party.forEach(id => { const h = W.hero(id); h.xp += xp; let up = false;
-      while (h.xp >= I.calc.xpNeed(h.lvl) && h.lvl < 12) { h.xp -= I.calc.xpNeed(h.lvl); h.lvl++; up = true; h.def.skills.filter(k => k.lvl === h.lvl).forEach(k => lines.push(`<li><b>${h.def.name}</b> apprend <em>${k.name}</em></li>`)); }
-      if (up) { lines.unshift(`<li><b>${h.def.name}</b> atteint le niveau <b>${h.lvl}</b></li>`); const st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp; } });
+      while (h.xp >= I.calc.xpNeed(h.lvl) && h.lvl < 12) { h.xp -= I.calc.xpNeed(h.lvl); h.lvl++; up = true; h.def.skills.filter(k => k.lvl === h.lvl).forEach(k => lines.push(`<li>${I.t('<b>{nom}</b> apprend <em>{vertu}</em>', { nom: h.def.name, vertu: k.name })}</li>`)); }
+      if (up) { lines.unshift(`<li>${I.t('<b>{nom}</b> atteint le niveau <b>{n}</b>', { nom: h.def.name, n: h.lvl })}</li>`); const st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp; } });
     W.persistHeroes(); return lines;
   };
   async function victory() {
@@ -505,39 +505,39 @@
     const lines = [];
     C.all.filter(e => e.side === 'hero').forEach(e => {
       const h = e.ref; h.xp += xp; let up = false;
-      while (h.xp >= I.calc.xpNeed(h.lvl) && h.lvl < 12) { h.xp -= I.calc.xpNeed(h.lvl); h.lvl++; up = true; h.def.skills.filter(k => k.lvl === h.lvl).forEach(k => lines.push(`<li><b>${h.def.name}</b> apprend <em>${k.name}</em></li>`)); }
-      if (up) { lines.unshift(`<li><b>${h.def.name}</b> atteint le niveau <b>${h.lvl}</b></li>`); const st = I.calc.of(h); e.max = { hp: st.hp, sp: st.sp }; e.hp = st.hp; e.sp = st.sp; }
+      while (h.xp >= I.calc.xpNeed(h.lvl) && h.lvl < 12) { h.xp -= I.calc.xpNeed(h.lvl); h.lvl++; up = true; h.def.skills.filter(k => k.lvl === h.lvl).forEach(k => lines.push(`<li>${I.t('<b>{nom}</b> apprend <em>{vertu}</em>', { nom: h.def.name, vertu: k.name })}</li>`)); }
+      if (up) { lines.unshift(`<li>${I.t('<b>{nom}</b> atteint le niveau <b>{n}</b>', { nom: h.def.name, n: h.lvl })}</li>`); const st = I.calc.of(h); e.max = { hp: st.hp, sp: st.sp }; e.hp = st.hp; e.sp = st.sp; }
     });
     let drop = '';
-    if (C.opts.boss || Math.random() < 0.4) { const k = C.opts.boss ? I.pick(['musc', 'lait', 'eau']) : I.pick(['dattes', 'dattes', 'pain', 'eau', 'miel', 'siwak']); sv.items[k] = (sv.items[k] || 0) + 1; drop = `<li>Trouvé : <b>${D.ITEMS[k].name}</b></li>`; }
+    if (C.opts.boss || Math.random() < 0.4) { const k = C.opts.boss ? I.pick(['musc', 'lait', 'eau']) : I.pick(['dattes', 'dattes', 'pain', 'eau', 'miel', 'siwak']); sv.items[k] = (sv.items[k] || 0) + 1; drop = `<li>${I.t('Trouvé : <b>{objet}</b>', { objet: D.ITEMS[k].name })}</li>`; }
     // une victoire rapporte aussi du matériel : quelques dirhams, et parfois une pièce d'équipement (toujours après une idole).
     // Rien de tel après un mal du cœur ou une idée noire : ce combat-là ne se paie pas.
     const maux = C.all.filter(e => e.side === 'foe' && e.def.vice), materiel = !maux.length && !C.opts.noir;
     if (materiel) {
       const piece = I.gear.prise({ boss: !!C.opts.boss, elite: C.all.some(e => e.side === 'foe' && e.def.tier !== 'minion') });
-      if (piece) { I.gear.add(piece, 1); C.prise = piece; drop += `<li>Trouvé : ${I.gear.img(piece)} <b>${I.esc(D.GEAR[piece].name)}</b></li>`; }
-      if (I.trade && W.saga && (!W.saga.frame || W.saga.veillees)) { const dh = C.opts.boss ? 8 + Math.floor(Math.random() * 7) : 2 + Math.floor(Math.random() * 4); I.trade.dirhams(dh); drop += `<li>Trouvé : <b>${dh} dirhams</b></li>`; }
+      if (piece) { I.gear.add(piece, 1); C.prise = piece; drop += `<li>${I.t('Trouvé : {img} <b>{objet}</b>', { img: I.gear.img(piece), objet: I.esc(D.GEAR[piece].name) })}</li>`; }
+      if (I.trade && W.saga && (!W.saga.frame || W.saga.veillees)) { const dh = C.opts.boss ? 8 + Math.floor(Math.random() * 7) : 2 + Math.floor(Math.random() * 4); I.trade.dirhams(dh); drop += `<li>${I.t('Trouvé : <b>{n} dirhams</b>', { n: dh })}</li>`; }
     }
     W.persistHeroes();
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
-    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? 'La lame a tranché' : 'Sans sa lame, le mal recule') : C.opts.noir ? 'On ne l’a pas combattu contre lui, mais pour lui' : C.opts.boss ? 'L’idole se brise' : 'L’emprise est brisée'}</p><h1>${maux.length ? (maux.every(e => e.cut) ? 'Tranché' : maux.some(e => e.cut) ? 'Tranché et repoussé' : 'Repoussé') : C.opts.noir ? 'L’égrégore lâche prise' : 'Dévoilement'}</h1><ul><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
+    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? I.t('La lame a tranché') : I.t('Sans sa lame, le mal recule')) : C.opts.noir ? I.t('On ne l’a pas combattu contre lui, mais pour lui') : C.opts.boss ? I.t('L’idole se brise') : I.t('L’emprise est brisée')}</p><h1>${maux.length ? (maux.every(e => e.cut) ? I.t('Tranché') : maux.some(e => e.cut) ? I.t('Tranché et repoussé') : I.t('Repoussé')) : C.opts.noir ? I.t('L’égrégore lâche prise') : I.t('Dévoilement')}</h1><ul><li>${I.t('Sagesse acquise : <b>+{n}</b>', { n: xp })}</li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
   // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue dans le
   // chapitre, le groupe est relevé, une fois par tentative. On ne montre que de la lumière : ni figure, ni nom, ni nombre.
   // On ne le commande pas : aucune action du combat ne le déclenche, et il ne vient pas dans un combat ordinaire.
   async function leSecours(opts) {
     if (C.secouru || !I.mal.estIdole(opts) || !S.flags._prayed) return false;
-    C.secouru = true; const T = (I.sagas.coeur && I.sagas.coeur.secours) || { titre: 'Le secours', bandeau: 'Le groupe est relevé' }, vite = I.debug.auto;
+    C.secouru = true; const T = (I.sagas.coeur && I.sagas.coeur.secours) || { titre: I.t('Le secours'), bandeau: I.t('Le groupe est relevé') }, vite = I.debug.auto;
     $('#battle .cmd').innerHTML = ''; I.audio.sfx('light'); G.flash('#fff6dc'); if (!vite) await I.sleep(650);
     C.all.forEach(e => {
       if (e.side !== 'hero') { if (e.alive) e.ct += 320; return; } // l'idole marque le pas
       e.alive = true; e.hp = Math.max(e.hp, Math.round(e.max.hp * 0.5)); e.sp = Math.max(e.sp, Math.round(e.max.sp * 0.5)); cleanse(e);
-      e.sakina = Math.min(100, e.sakina + 25); e.ct = Math.min(e.ct, 60); e.flash = 1; fx('pillar', e, '#fff6dc'); floater(e, 'Relevé', 'heal');
+      e.sakina = Math.min(100, e.sakina + 25); e.ct = Math.min(e.ct, 60); e.flash = 1; fx('pillar', e, '#fff6dc'); floater(e, I.t('Relevé'), 'heal');
     });
     I.audio.sfx('roll'); refresh(); I.oeuvres.learn('secours');
     const d = I.oeuvres.state();
     if (!d.vuSecours && !vite && T.verset) { d.vuSecours = true; await I.sleep(500);
-      await S.card('pray secours', `<div class="orn">✧</div><p class="small">${I.esc(T.titre)}</p><h1>On ne le commande pas</h1><p>${I.esc(T.verset)}</p><p class="small">${I.esc(T.ref)}</p><p class="mot">${I.esc(T.mot)}</p><div class="hint">▼</div>`); }
+      await S.card('pray secours', `<div class="orn">✧</div><p class="small">${I.esc(T.titre)}</p><h1>${I.t('On ne le commande pas')}</h1><p>${I.esc(T.verset)}</p><p class="small">${I.esc(T.ref)}</p><p class="mot">${I.esc(T.mot)}</p><div class="hint">▼</div>`); }
     else await banner(`<small>${I.esc(T.titre)}</small>${I.esc(T.bandeau)}`, 1700, false, 'speech intro');
     if (!vite) await I.sleep(500);
     return true;
@@ -546,7 +546,7 @@
     I.audio.sfx('dark');
     if (C.opts.interieur) { const T = ((I.sagas.coeur || {}).portes || {}).remonte || {}; // la noosphère intérieure : on remonte, rien n'est perdu
       await S.card('defeat', `<p class="small">${I.esc(T.titre || '')}</p><h1>${I.esc(T.h1 || '')}</h1><p>${I.esc(T.texte || '')}</p><div class="hint">▼</div>`); return; }
-    await S.card('defeat', `<p class="small">Le groupe est éprouvé</p><h1>La chaîne ne rompt pas</h1><p>Ce qui fut transmis ne se perd pas. Reprends, le cœur affermi : la Sakîna descend sur ceux qui persévèrent.</p><div class="hint">Reprendre ▼</div>`);
+    await S.card('defeat', `<p class="small">${I.t('Le groupe est éprouvé')}</p><h1>${I.t('La chaîne ne rompt pas')}</h1><p>${I.t('Ce qui fut transmis ne se perd pas. Reprends, le cœur affermi : la Sakîna descend sur ceux qui persévèrent.')}</p><div class="hint">${I.t('Reprendre')} ▼</div>`);
   }
 
   /* ================= présentation ================= */
@@ -575,7 +575,7 @@
     f.style.left = pctX(p.x + (Math.random() - 0.5) * 14); f.style.top = ((p.y - 6 - (e._fl = ((e._fl || 0) + 1) % 3) * 9) / G.PH * 100) + '%';
     $('#floaters').appendChild(f); setTimeout(() => f.remove(), 1100);
   }
-  const readTime = txt => I.clamp(1800 + String(txt).length * 48, 2400, 7500);
+  const readTime = txt => I.clamp(1800 + I.langue.poids(txt) * 48, 2400, 7500);   // le poids d'un texte dépend de son écriture (langue.js)
   let bannerT = null;
   function banner(html, ms, wait, cls) {
     const b = $('#battle .banner'); b.className = 'banner ' + (cls || ''); b.innerHTML = html; b.hidden = false; clearTimeout(bannerT);
@@ -590,13 +590,13 @@
     // ordre des tours (simulation)
     const sim = C.all.filter(e => e.alive).map(e => ({ e, ct: e === C.active ? -1 : e.ct })); const ord = [];
     for (let i = 0; i < 8 && sim.length; i++) { sim.sort((a, b) => a.ct - b.ct); const s = sim[0]; ord.push(s.e); const d = Math.max(0, s.ct); sim.forEach(x => x.ct -= d); s.ct = 1000 / eff(s.e, 'spd'); }
-    $('#battle .order').innerHTML = '<span class="olab">Tours</span>' + ord.map((e, i) => `<i class="${e.side}${i === 0 ? ' now' : ''}${e.broken ? ' brk' : ''}" style="--c:${e.side === 'hero' ? e.ray || e.color : `hsl(${e.def.hue},80%,62%)`}">${I.esc(e.name.replace(/^(L'|Le |La |Les |Al-|Abû |Ibn |')/, '').slice(0, 2))}</i>`).join('');
+    $('#battle .order').innerHTML = '<span class="olab">' + I.t('Tours') + '</span>' + ord.map((e, i) => `<i class="${e.side}${i === 0 ? ' now' : ''}${e.broken ? ' brk' : ''}" style="--c:${e.side === 'hero' ? e.ray || e.color : `hsl(${e.def.hue},80%,62%)`}">${I.esc(I.langue.initiales(e.name))}</i>`).join('');
     // plaques ennemies
     const pl = $('#battle .plates'); pl.innerHTML = '';
     C.all.filter(e => e.side === 'foe' && e.alive).forEach(e => {
-      const weak = e.def.weak.map(w => e.known[w] ? `<i style="color:${D.ELEMENTS[w].color}" title="${D.ELEMENTS[w].name}">${D.ELEMENTS[w].glyph}</i>` : '<i class="unk">?</i>').join('') + (e.def.immune || []).filter(w => e.known[w] === 'x').map(w => `<i class="imm" title="Insensible : ${D.ELEMENTS[w].name}">${D.ELEMENTS[w].glyph}</i>`).join('');
-      const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${STN[k === 'df' ? 'def' : k]}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="dn">${STN[k] || k}</b>`).join('');
-      const d = I.el('button', 'plate' + (C.cursor === e ? ' cur' : '') + (e.broken ? ' brk' : ''), `<span class="nm">${I.esc(e.name)}</span><span class="bar"><i style="width:${Math.max(0, e.hp / e.max.hp * 100)}%"></i></span><span class="row"><span class="veil">${e.broken ? 'DÉVOILÉ' : '⛊ ' + e.veils}</span><span class="wk">${weak}</span></span>${sts ? `<span class="sts">${sts}</span>` : ''}`);
+      const weak = e.def.weak.map(w => e.known[w] ? `<i style="color:${D.ELEMENTS[w].color}" title="${D.ELEMENTS[w].name}">${D.ELEMENTS[w].glyph}</i>` : '<i class="unk">?</i>').join('') + (e.def.immune || []).filter(w => e.known[w] === 'x').map(w => `<i class="imm" title="${I.t('Insensible : {element}', { element: D.ELEMENTS[w].name })}">${D.ELEMENTS[w].glyph}</i>`).join('');
+      const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${I.t(STN[k === 'df' ? 'def' : k])}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="dn">${I.t(STN[k] || k)}</b>`).join('');
+      const d = I.el('button', 'plate' + (C.cursor === e ? ' cur' : '') + (e.broken ? ' brk' : ''), `<span class="nm">${I.esc(e.name)}</span><span class="bar"><i style="width:${Math.max(0, e.hp / e.max.hp * 100)}%"></i></span><span class="row"><span class="veil">${e.broken ? I.t('DÉVOILÉ') : '⛊ ' + e.veils}</span><span class="wk">${weak}</span></span>${sts ? `<span class="sts">${sts}</span>` : ''}`);
       d.type = 'button'; d.style.left = pctX(e.x); d.style.top = (Math.max(44, e.y - e.size - 4) / G.PH * 100) + '%';
       d.onclick = ev => { ev.stopPropagation(); if (C.pickCb) C.pickCb(e); };
       pl.appendChild(d);
@@ -605,10 +605,10 @@
     const hb = $('#battle .heroes'); hb.innerHTML = '';
     C.all.filter(e => e.side === 'hero').forEach(e => {
       let pips = ''; if (!I.lecons || I.lecons.voit('niyya')) for (let i = 0; i < 5; i++) pips += `<i class="pip${i < e.niyya ? ' on' : ''}"></i>`; // la Niyya ne se montre qu'une fois reçue (lecons.js)
-      const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${STN[k === 'df' ? 'def' : k]}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="${k === 'regen' || k === 'garde' || k === 'taunt' ? 'up' : 'dn'}">${STN[k] || k}</b>`).join('');
+      const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${I.t(STN[k === 'df' ? 'def' : k])}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="${k === 'regen' || k === 'garde' || k === 'taunt' ? 'up' : 'dn'}">${I.t(STN[k] || k)}</b>`).join('');
       const r = I.el('button', 'hrow' + (e === C.active ? ' act' : '') + (e.alive ? '' : ' ko') + (C.cursor === e ? ' cur' : ''),
-        `<span class="hs" style="background-image:url(${G.sealURL(e.def.arabic, e.ray || e.color)})"></span><span class="hn"><b style="color:${e.ray || e.color}">${I.esc(e.name)}</b><small>Niv. ${e.ref.lvl}${e.posture && I.postures.offertes() ? ' · ' + D.POSTURES[e.posture].court : ''} ${sts}</small></span>
-         <span class="hbars"><span class="bar hp"><i style="width:${e.hp / e.max.hp * 100}%"></i><em>${e.alive ? Math.ceil(e.hp) : 'Éprouvé'}</em></span><span class="bar sp"><i style="width:${e.max.sp ? e.sp / e.max.sp * 100 : 0}%"></i><em>${e.sp}</em></span></span>
+        `<span class="hs" style="background-image:url(${G.sealURL(e.def.arabic, e.ray || e.color)})"></span><span class="hn"><b style="color:${e.ray || e.color}">${I.esc(e.name)}</b><small>${I.t('Niv. {n}', { n: e.ref.lvl })}${e.posture && I.postures.offertes() ? ' · ' + D.POSTURES[e.posture].court : ''} ${sts}</small></span>
+         <span class="hbars"><span class="bar hp"><i style="width:${e.hp / e.max.hp * 100}%"></i><em>${e.alive ? Math.ceil(e.hp) : I.t('Éprouvé')}</em></span><span class="bar sp"><i style="width:${e.max.sp ? e.sp / e.max.sp * 100 : 0}%"></i><em>${e.sp}</em></span></span>
          <span class="hx"><span class="pips">${pips}</span><span class="bar sk${e.sakina >= 100 ? ' full' : ''}"><i style="width:${e.sakina}%"></i></span></span>`);
       r.type = 'button'; r.onclick = ev => { ev.stopPropagation(); if (C.pickCb) C.pickCb(e); };
       hb.appendChild(r);

@@ -7,7 +7,7 @@
   const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script;
   const Gr = I.gear = {};
   const SLOTS = Object.keys(D.SLOTS), STATS = ['atk', 'mag', 'def', 'spd', 'hp', 'sp'];
-  const NOM = { atk: 'Force', mag: 'Esprit', def: 'Garde', spd: 'Élan', hp: 'Constance', sp: 'Souffle' };
+  const NOM = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan'), hp: I.T('Constance'), sp: I.T('Souffle') };
   const TRAITS = ['perce', 'vif', 'choc', 'parade', 'ferme'];
   Gr.SLOTS = SLOTS; Gr.NOM = NOM;
 
@@ -111,27 +111,27 @@
   /* ================= dire : effets, comparaisons ================= */
   const pc = v => (v > 0 ? '+' : '−') + Math.abs(v) + ' %';
   Gr.effets = function (g) {
-    const out = STATS.filter(k => g[k]).map(k => `${NOM[k]} ${pc(g[k])}`);
-    if (g.perce) out.push(`perce la garde (${Math.round(g.perce * 100)} %)`);
-    if (g.vif) out.push(`frappe parfois deux fois (${Math.round(g.vif * 100)} %)`);
-    if (g.prime) out.push('agit plus tôt au début du combat');
-    if (g.choc) out.push(`peut étourdir (${Math.round(g.choc * 100)} %)`);
-    if (g.parade) out.push(`pare un coup de fer (${Math.round(g.parade * 100)} %)`);
-    if (g.ferme) out.push(`tient bon face à l’étourdissement (${Math.round(g.ferme * 100)} %)`);
-    return out.join(' · ') || 'sans effet';
+    const out = STATS.filter(k => g[k]).map(k => `${I.t(NOM[k])} ${pc(g[k])}`);
+    if (g.perce) out.push(I.t('perce la garde ({n} %)', { n: Math.round(g.perce * 100) }));
+    if (g.vif) out.push(I.t('frappe parfois deux fois ({n} %)', { n: Math.round(g.vif * 100) }));
+    if (g.prime) out.push(I.t('agit plus tôt au début du combat'));
+    if (g.choc) out.push(I.t('peut étourdir ({n} %)', { n: Math.round(g.choc * 100) }));
+    if (g.parade) out.push(I.t('pare un coup de fer ({n} %)', { n: Math.round(g.parade * 100) }));
+    if (g.ferme) out.push(I.t('tient bon face à l’étourdissement ({n} %)', { n: Math.round(g.ferme * 100) }));
+    return out.join(' · ') || I.t('sans effet');
   };
   const avec = (h, slot, id) => { const e = Object.assign({}, Gr.of(h)); if (id) e[slot] = id; else delete e[slot]; return e; };
   const pts = (st, k) => Math.round(st[k]);
   // « Force 43 → 48 ▲ » pour chaque statistique qui bouge
   Gr.compare = function (h, slot, id) {
     const a = I.calc.of(h), b = I.calc.of(h, avec(h, slot, id));
-    const L = STATS.filter(k => pts(a, k) !== pts(b, k)).map(k => `<span class="${pts(b, k) > pts(a, k) ? 'up' : 'down'}">${NOM[k]} ${pts(a, k)} → <b>${pts(b, k)}</b> ${pts(b, k) > pts(a, k) ? '▲' : '▼'}</span>`);
-    return L.length ? L.join('') : '<span>Aucun chiffre ne change.</span>';
+    const L = STATS.filter(k => pts(a, k) !== pts(b, k)).map(k => `<span class="${pts(b, k) > pts(a, k) ? 'up' : 'down'}">${I.t(NOM[k])} ${pts(a, k)} → <b>${pts(b, k)}</b> ${pts(b, k) > pts(a, k) ? '▲' : '▼'}</span>`);
+    return L.length ? L.join('') : '<span>' + I.t('Aucun chiffre ne change.') + '</span>';
   };
   // le même constat en une ligne, pour un choix rapide
   Gr.delta = function (h, slot, id) {
     const a = I.calc.of(h), b = I.calc.of(h, avec(h, slot, id));
-    return STATS.filter(k => pts(a, k) !== pts(b, k)).map(k => `${NOM[k]} ${pts(b, k) > pts(a, k) ? '+' : '−'}${Math.abs(pts(b, k) - pts(a, k))}`).join(' · ') || 'rien ne change';
+    return STATS.filter(k => pts(a, k) !== pts(b, k)).map(k => `${I.t(NOM[k])} ${pts(b, k) > pts(a, k) ? '+' : '−'}${Math.abs(pts(b, k) - pts(a, k))}`).join(' · ') || I.t('rien ne change');
   };
 
   /* ================= montrer : le personnage équipé, tel qu'on le voit au combat ================= */
@@ -244,7 +244,7 @@
   // une pièce arrive dans la réserve ; si elle améliore quelqu'un du groupe, on propose aussitôt de la porter
   Gr.receive = async function (id, n) {
     const g = D.GEAR[id], W = I.world; n = n || 1; Gr.add(id, n); I.audio.sfx('ok');
-    S.toast(`Reçu : ${Gr.img(id)} <b>${I.esc(g.name)}</b>${n > 1 ? ' ×' + n : ''}<br><small>${Gr.effets(g)}</small>`, 3600);
+    S.toast(`${I.t('Reçu : {img} <b>{piece}</b>', { img: Gr.img(id), piece: I.esc(g.name) })}${n > 1 ? ' ×' + n : ''}<br><small>${Gr.effets(g)}</small>`, 3600);
     Gr.learn();
     if (!W.saga || !W.party.length) return;
     if (I.debug.auto) { Gr.bestAll(); return; }
@@ -254,35 +254,35 @@
     const W = I.world, slot = Gr.slotOf(id), g = D.GEAR[id], gain = h => Gr.score(h.def, id) - (Gr.of(h)[slot] ? Gr.score(h.def, Gr.of(h)[slot]) : 0);
     const who = W.party.map(x => W.hero(x)).filter(h => Gr.can(h.def, id) && gain(h) > 0.01).sort((a, b) => gain(b) - gain(a));
     if (!who.length) return;
-    const opts = who.map(h => ({ html: `<b>${I.esc(h.def.name)}</b> · ${Gr.delta(h, slot, id)}` })).concat([{ t: 'Personne pour l’instant : à la réserve' }]);
-    const i = await S.menuPick({ cls: 'gear', html: `${Gr.img(id)} <span><b>${I.esc(g.name)}</b> · ${D.SLOTS[slot].toLowerCase()}<br><small>${Gr.effets(g)}</small></span><em>Qui la porte ?</em>` }, opts);
-    if (i < who.length && Gr.put(who[i], slot, id)) { I.audio.sfx('light'); S.toast(`<b>${I.esc(who[i].def.name)}</b> porte désormais : ${I.esc(g.name)}.`, 2400); }
+    const opts = who.map(h => ({ html: `<b>${I.esc(h.def.name)}</b> · ${Gr.delta(h, slot, id)}` })).concat([{ t: I.t('Personne pour l’instant : à la réserve') }]);
+    const i = await S.menuPick({ cls: 'gear', html: `${Gr.img(id)} <span><b>${I.esc(g.name)}</b> · ${D.SLOTS[slot].toLowerCase()}<br><small>${Gr.effets(g)}</small></span><em>${I.t('Qui la porte ?')}</em>` }, opts);
+    if (i < who.length && Gr.put(who[i], slot, id)) { I.audio.sfx('light'); S.toast(I.t('<b>{nom}</b> porte désormais : {piece}.', { nom: I.esc(who[i].def.name), piece: I.esc(g.name) }), 2400); }
   };
 
   /* ================= pages de la halte ================= */
   const roles = g => (g.roles || D.GEAR_TYPES[g.t].roles);
-  const ROLE = { guerrier: 'guerriers', gardien: 'gardiens', sage: 'sages', soigneur: 'soigneurs', stratege: 'stratèges' };
-  const NOTE = '<p class="src">Convention de jeu : des objets ordinaires de l’époque, sans relique ni inscription. Le jeu ne dit pas qui portait quoi. Le fer aide à tenir ; il ne remplace pas la provision du cœur.</p>';
-  Gr.ligne = (h, s) => { const id = Gr.of(h)[s], g = D.GEAR[id]; return `<div class="gslot"><small>${D.SLOTS[s]}</small>${g ? Gr.img(id) + `<span><b>${I.esc(g.name)}</b><br><small>${Gr.effets(g)}</small></span>` : '<i class="gi vide"></i><span class="rien">rien</span>'}</div>`; };
+  const ROLE = { guerrier: I.T('guerriers'), gardien: I.T('gardiens'), sage: I.T('sages'), soigneur: I.T('soigneurs'), stratege: I.T('stratèges') };
+  const NOTE = () => '<p class="src">' + I.t('Convention de jeu : des objets ordinaires de l’époque, sans relique ni inscription. Le jeu ne dit pas qui portait quoi. Le fer aide à tenir ; il ne remplace pas la provision du cœur.') + '</p>';
+  Gr.ligne = (h, s) => { const id = Gr.of(h)[s], g = D.GEAR[id]; return `<div class="gslot"><small>${D.SLOTS[s]}</small>${g ? Gr.img(id) + `<span><b>${I.esc(g.name)}</b><br><small>${Gr.effets(g)}</small></span>` : '<i class="gi vide"></i><span class="rien">' + I.t('rien') + '</span>'}</div>`; };
   Gr.fiche = function (h) {
     const st = I.calc.of(h), e = D.ELEMENTS[h.def.el];
-    return `<div class="stat gear"><img class="fig" alt="" src="${G.charURL(Gr.look(h))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> <small>· niveau ${h.lvl}</small><br><small>Constance ${st.hp} · Souffle ${st.sp} · Force ${Math.round(st.atk)} · Esprit ${Math.round(st.mag)} · Garde ${Math.round(st.def)} · Élan ${Math.round(st.spd)}</small>${SLOTS.map(s => Gr.ligne(h, s)).join('')}</div></div>`;
+    return `<div class="stat gear"><img class="fig" alt="" src="${G.charURL(Gr.look(h))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> <small>· ${I.t('niveau {n}', { n: h.lvl })}</small><br><small>${I.t('Constance {hp} · Souffle {sp} · Force {atk} · Esprit {mag} · Garde {def} · Élan {spd}', { hp: st.hp, sp: st.sp, atk: Math.round(st.atk), mag: Math.round(st.mag), def: Math.round(st.def), spd: Math.round(st.spd) })}</small>${SLOTS.map(s => Gr.ligne(h, s)).join('')}</div></div>`;
   };
   Gr.paneGroupe = function () {
     const W = I.world, n = Gr.reserve().reduce((a, id) => a + Gr.stock(id), 0), b = Gr.better();
-    return '<h3>Équipement</h3>' + ((W.saga && W.party.length) ? W.party.map(id => Gr.fiche(W.hero(id))).join('') : '<p>Aucun groupe pour l’instant.</p>') +
-      `<p>Réserve : <b>${n}</b> pièce${n > 1 ? 's' : ''}.${b ? ` <em>${I.esc(D.GEAR[b.id].name)}</em> irait mieux à ${I.esc(b.h.def.name)}.` : ''}</p>` +
-      `<p class="src">On en trouve dans les coffres, après les victoires, et à la <b>boutique d’équipement</b> : ${W.map && W.map.spots.comptoir && (D.GEAR_SHOPS[W.map.id] || []).length && W.saga && (!W.saga.frame || W.saga.veillees) ? 'au comptoir de ce lieu (le cercle doré de la Carte)' : 'il n’y en a pas dans ce lieu'}.</p>` + NOTE;
+    return '<h3>' + I.t('Équipement') + '</h3>' + ((W.saga && W.party.length) ? W.party.map(id => Gr.fiche(W.hero(id))).join('') : '<p>' + I.t('Aucun groupe pour l’instant.') + '</p>') +
+      `<p>${I.t('Réserve : <b>{n}</b> pièce.¦Réserve : <b>{n}</b> pièces.', { n })}${b ? ' ' + I.t('<em>{piece}</em> irait mieux à {nom}.', { piece: I.esc(D.GEAR[b.id].name), nom: I.esc(b.h.def.name) }) : ''}</p>` +
+      `<p class="src">${W.map && W.map.spots.comptoir && (D.GEAR_SHOPS[W.map.id] || []).length && W.saga && (!W.saga.frame || W.saga.veillees) ? I.t('On en trouve dans les coffres, après les victoires, et à la <b>boutique d’équipement</b> : au comptoir de ce lieu (le cercle doré de la Carte).') : I.t('On en trouve dans les coffres, après les victoires, et à la <b>boutique d’équipement</b> : il n’y en a pas dans ce lieu.')}</p>` + NOTE();
   };
-  const actuel = (h, slot, id) => { const cur = Gr.of(h)[slot], g = D.GEAR[cur]; return cur === id ? '<p class="src">C’est ce qu’il porte.</p>' : `<p class="src">Il porte : ${g ? Gr.img(cur) + ' ' + I.esc(g.name) + ' (' + Gr.effets(g) + ')' : 'rien'}.</p>`; };
+  const actuel = (h, slot, id) => { const cur = Gr.of(h)[slot], g = D.GEAR[cur]; return cur === id ? '<p class="src">' + I.t('C’est ce qu’il porte.') + '</p>' : `<p class="src">${g ? I.t('Il porte : {img} {piece} ({effets}).', { img: Gr.img(cur), piece: I.esc(g.name), effets: Gr.effets(g) }) : I.t('Il porte : rien.')}</p>`; };
   Gr.panePiece = function (h, slot, id, extra) {
-    const g = D.GEAR[id]; if (!g) return `<h3>${D.SLOTS[slot]}</h3><p>Ne rien porter ici.</p><div class="gcmp">${Gr.compare(h, slot, null)}</div>`;
-    return `<h3>${Gr.img(id, 'big')} ${I.esc(g.name)}</h3><p class="src">${D.GEAR_TYPES[g.t].name} · ${D.SLOTS[slot].toLowerCase()} · pour les ${roles(g).map(r => ROLE[r]).join(', ')}${extra ? ' · ' + extra : ''}</p><p>${I.esc(g.desc)}</p><p><b>${Gr.effets(g)}</b></p>` +
-      `<p class="src">Pour ${I.esc(h.def.name)} :</p><div class="gcmp">${Gr.compare(h, slot, id)}</div>` + actuel(h, slot, id);
+    const g = D.GEAR[id]; if (!g) return `<h3>${D.SLOTS[slot]}</h3><p>${I.t('Ne rien porter ici.')}</p><div class="gcmp">${Gr.compare(h, slot, null)}</div>`;
+    return `<h3>${Gr.img(id, 'big')} ${I.esc(g.name)}</h3><p class="src">${D.GEAR_TYPES[g.t].name} · ${D.SLOTS[slot].toLowerCase()} · ${I.t('pour les {roles}', { roles: roles(g).map(r => I.t(ROLE[r])).join(I.t(', ')) })}${extra ? ' · ' + extra : ''}</p><p>${I.esc(g.desc)}</p><p><b>${Gr.effets(g)}</b></p>` +
+      `<p class="src">${I.t('Pour {nom} :', { nom: I.esc(h.def.name) })}</p><div class="gcmp">${Gr.compare(h, slot, id)}</div>` + actuel(h, slot, id);
   };
   Gr.paneReserve = function () {
     const L = Gr.reserve();
-    return '<h3>La réserve</h3>' + (L.length ? SLOTS.map(s => { const P = L.filter(id => Gr.slotOf(id) === s); return P.length ? `<p class="src">${D.SLOTS[s]}</p>` + P.map(id => `<div class="gslot">${Gr.img(id)}<span><b>${I.esc(D.GEAR[id].name)}</b>${Gr.stock(id) > 1 ? ' ×' + Gr.stock(id) : ''}<br><small>${Gr.effets(D.GEAR[id])}</small></span></div>`).join('') : ''; }).join('') : '<p>La réserve est vide. Les coffres et les comptoirs la rempliront.</p>') + NOTE;
+    return '<h3>' + I.t('La réserve') + '</h3>' + (L.length ? SLOTS.map(s => { const P = L.filter(id => Gr.slotOf(id) === s); return P.length ? `<p class="src">${D.SLOTS[s]}</p>` + P.map(id => `<div class="gslot">${Gr.img(id)}<span><b>${I.esc(D.GEAR[id].name)}</b>${Gr.stock(id) > 1 ? ' ×' + Gr.stock(id) : ''}<br><small>${Gr.effets(D.GEAR[id])}</small></span></div>`).join('') : ''; }).join('') : '<p>' + I.t('La réserve est vide. Les coffres et les comptoirs la rempliront.') + '</p>') + NOTE();
   };
   Gr.ICO = ICO;
 })();

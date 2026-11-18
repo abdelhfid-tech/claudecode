@@ -47,7 +47,7 @@
     $('#dialog .seal').style.backgroundImage = sp ? `url(${sp.seal})` : 'none';
     $('#dialog .seal').hidden = !sp;
     const fg = $('#dialog .fig'); fg.hidden = !(sp && sp.fig); if (sp && sp.fig) fg.src = sp.fig; box.classList.toggle('avecfig', !!(sp && sp.fig)); // la silhouette de celui qui parle
-    const nm = $('#dialog .name'); nm.textContent = sp ? sp.name : ((I.world.saga && I.world.saga.narrator) || 'La Chaîne'); nm.style.color = sp ? sp.color : '#ffe08a';
+    const nm = $('#dialog .name'); nm.textContent = sp ? sp.name : ((I.world.saga && I.world.saga.narrator) || I.t('La Chaîne')); nm.style.color = sp ? sp.color : '#ffe08a';
     const tx = $('#dialog .text'); const html = I.fmt(text);
     // effet machine à écrire sur le texte brut, puis rendu complet
     const plain = text.replace(/\*/g, ''); let i = 0, done = false;
@@ -59,7 +59,7 @@
       const h = I.input.push(a => { if (a === 'ok' || a === 'cancel') finish(); return true; });
       if (fast) return finish();
       let tick = 0;
-      typing = setInterval(() => { i += 2; tx.textContent = plain.slice(0, i); if (++tick % 3 === 0) I.audio.sfx('step'); if (i >= plain.length) finish(); }, 22);
+      typing = setInterval(() => { i = I.langue.avance(plain, i); tx.textContent = plain.slice(0, i); if (++tick % 3 === 0) I.audio.sfx('step'); if (i >= plain.length) finish(); }, 22);
     });
     $('#dialog .next').style.visibility = 'visible'; lisible(box);
     await I.sleep(60);
@@ -83,7 +83,7 @@
   const cid = id => id.indexOf('/') > 0 ? id : I.world.saga.id + '/' + id; // « saga/id » : un savoir appris ailleurs
   function known(id) { return I.save.data.codex.includes(cid(id)); }
   S.known = known;
-  function lockLabel(o) { const e = I.ui.codexEntry(cid(o.need)); return `<span class="lock">✧ Savoir requis${e ? ' : ' + I.esc(e.title) + (o.need.indexOf('/') > 0 ? ' (' + I.esc(e.saga.name) + ')' : '') : ''}</span>`; }
+  function lockLabel(o) { const e = I.ui.codexEntry(cid(o.need)); return `<span class="lock">✧ ${e ? (o.need.indexOf('/') > 0 ? I.t('Savoir requis : {titre} ({saga})', { titre: I.esc(e.title), saga: I.esc(e.saga.name) }) : I.t('Savoir requis : {titre}', { titre: I.esc(e.title) })) : I.t('Savoir requis')}</span>`; }
   function menuPick(prompt, options, head) {
     return new Promise(res => {
       const box = $('#choice'); box.hidden = false; box.innerHTML = '';
@@ -95,7 +95,7 @@
       const sel = i => { idx = (i + btns.length) % btns.length; btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); };
       const ne = performance.now(); // un menu n'accepte rien pendant un tiers de seconde : le toucher qui vient de faire avancer le texte ne répond pas à la place du joueur
       const done = i => { if (!I.debug.auto && performance.now() - ne < 350) return; if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; I.audio.sfx('ok'); res(i); };
-      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ savoir</span>' : '')); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
+      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ ' + I.t('savoir') + '</span>' : '')); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
       sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box); ajuster(box);
       const vue = () => { if (btns[idx].scrollIntoView) btns[idx].scrollIntoView({ block: 'nearest' }); }; // une longue liste suit la sélection
       const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); vue(); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); vue(); I.audio.sfx('move'); } else if (a === 'ok') done(idx); return true; });
@@ -115,8 +115,8 @@
     S.hideDialog(); I.audio.music('conseil');
     let conf = S.flags._prayed ? 1 : 0;
     const pips = () => { let h = ''; for (let i = 0; i < P.goal; i++) h += `<i class="pip${i < conf ? ' on' : ''}"></i>`; return h; };
-    const head = r => `<span class="seal" style="background-image:url(${sp.seal})"></span><span class="pt"><b>${I.esc(P.title)}</b><small>${I.esc(sp.name)} · manche ${r + 1} / ${n}</small></span><span class="trust">Confiance <span class="pips">${pips()}</span></span>`;
-    await card('title parley', `<p class="small">Pourparler</p><h1>${I.fmt(P.title)}</h1><p>${I.fmt(P.intro)}</p>${S.flags._prayed ? '<p class="small">Sérénité de la prière : +1 de confiance</p>' : ''}<div class="rule"></div><div class="hint">▼</div>`);
+    const head = r => `<span class="seal" style="background-image:url(${sp.seal})"></span><span class="pt"><b>${I.esc(P.title)}</b><small>${I.t('{nom} · manche {manche} / {total}', { nom: I.esc(sp.name), manche: r + 1, total: n })}</small></span><span class="trust">${I.t('Confiance')} <span class="pips">${pips()}</span></span>`;
+    await card('title parley', `<p class="small">${I.t('Pourparler')}</p><h1>${I.fmt(P.title)}</h1><p>${I.fmt(P.intro)}</p>${S.flags._prayed ? '<p class="small">' + I.t('Sérénité de la prière : +1 de confiance') + '</p>' : ''}<div class="rule"></div><div class="hint">▼</div>`);
     for (let r = 0; r < n; r++) {
       const R = P.rounds[r];
       await showLine('say', sp, R.say); S.hideDialog();
@@ -126,16 +126,16 @@
         // un égrégore le tient (rencontres de la Cité-Miroir), cela se combat.
         if (I.mal.estIdee(N)) await I.mal.dissiper(N, P);
         else {
-          await card('title parley noir', `<p class="small">Un égrégore le tient</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">On ne le combat pas contre lui, mais pour lui</p><div class="rule"></div><div class="hint">▼</div>`);
-          await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || 'Il parle plus fort que toi. Dissipe-le.' });
+          await card('title parley noir', `<p class="small">${I.t('Un égrégore le tient')}</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">${I.t('On ne le combat pas contre lui, mais pour lui')}</p><div class="rule"></div><div class="hint">▼</div>`);
+          await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || I.t('Il parle plus fort que toi. Dissipe-le.') });
           I.mal.note('n', P.title + '|' + N.name, -1);
         }
-        conf += gain; I.audio.music('conseil'); S.toast(`<b>Confiance +${gain}</b> — son regard s’éclaircit`, 2400);
+        conf += gain; I.audio.music('conseil'); S.toast(I.t('<b>Confiance +{gain}</b> — son regard s’éclaircit', { gain }), 2400);
         if (N.after) { await showLine('say', sp, N.after); S.hideDialog(); }
       }
-      const i = await menuPick('Que réponds-tu ?', R.opts, head(r)); const o = R.opts[i];
+      const i = await menuPick(I.t('Que réponds-tu ?'), R.opts, head(r)); const o = R.opts[i];
       conf = Math.max(0, conf + o.v);
-      S.toast(o.v > 0 ? `<b>Confiance +${o.v}</b>` : o.v < 0 ? `<b>Confiance ${o.v}</b> — il se ferme` : 'Il ne bouge pas.', 1800); I.audio.sfx(o.v > 0 ? 'light' : o.v < 0 ? 'dark' : 'blip');
+      S.toast(o.v > 0 ? I.t('<b>Confiance +{v}</b>', { v: o.v }) : o.v < 0 ? I.t('<b>Confiance {v}</b> — il se ferme', { v: o.v }) : I.t('Il ne bouge pas.'), 1800); I.audio.sfx(o.v > 0 ? 'light' : o.v < 0 ? 'dark' : 'blip');
       await showLine('say', sp, o.r);
     }
     S.hideDialog(); sv.parley.total++;
@@ -145,11 +145,11 @@
       sv.parley.won++; I.audio.sfx('roll'); G.flash('#ffe08a');
       const xp = P.xp || Math.round(22 + 12 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
       await I.oeuvres.rally();
-      await card('victory', `<p class="small">Pourparler · ${I.esc(P.title)}</p><h1>La parole a suffi</h1><ul><li>Confiance : <b>${conf} / ${P.goal}</b></li><li>Sagesse acquise : <b>+${xp}</b></li>${lines.join('')}</ul><div class="hint">▼</div>`);
+      await card('victory', `<p class="small">${I.t('Pourparler · {titre}', { titre: I.esc(P.title) })}</p><h1>${I.t('La parole a suffi')}</h1><ul><li>${I.t('Confiance : <b>{conf} / {but}</b>', { conf, but: P.goal })}</li><li>${I.t('Sagesse acquise : <b>+{xp}</b>', { xp })}</li>${lines.join('')}</ul><div class="hint">▼</div>`);
       await S.run(P.win);
     } else {
       I.audio.sfx('dark'); G.shake(260);
-      await card('defeat', `<p class="small">Pourparler · ${I.esc(P.title)}</p><h1>La parole n’a pas suffi</h1><p>Confiance : ${conf} / ${P.goal}. Ce qui n’a pas été noué par la parole devra l’être autrement, et coûtera davantage.</p><div class="hint">▼</div>`);
+      await card('defeat', `<p class="small">${I.t('Pourparler · {titre}', { titre: I.esc(P.title) })}</p><h1>${I.t('La parole n’a pas suffi')}</h1><p>${I.t('Confiance : {conf} / {but}. Ce qui n’a pas été noué par la parole devra l’être autrement, et coûtera davantage.', { conf, but: P.goal })}</p><div class="hint">▼</div>`);
       await S.run(P.lose);
     }
     const env = W.map && W.map.env; if (env && I.scene === W) I.audio.scene(env.music || 'silence'); else I.audio.back();
@@ -188,10 +188,10 @@
         if (I.lecons && I.lecons.actif()) I.lecons.proposer('source', () => I.lecons.dit('source', 10000)); // 2.x : au premier acte à retrouver, on apprend où sont les sources
         while (true) {
           const i = await menuPick(a, opts); const o = opts[i];
-          if (o.ok) { if (first) { if (I.lecons) I.lecons.reemploi('source'); sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; S.toast('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.'); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); I.mal.note('c', a, 0); } if (o.r) await S.run(o.r); break; }
+          if (o.ok) { if (first) { if (I.lecons) I.lecons.reemploi('source'); sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; S.toast(I.t('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.')); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); I.mal.note('c', a, 0); } if (o.r) await S.run(o.r); break; }
           if (first) I.mal.note('c', a, 1); // un acte que les transmetteurs n'ont pas rapporté : l'idée s'enracine
           first = false; I.audio.sfx('glitch'); G.shake(260); G.flash('#7a5cff');
-          S.toast('<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.');
+          S.toast(I.t('<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.'));
           if (o.r) await S.run(o.r);
           S.hideDialog();
           opts = opts.filter(x => x !== o); if (opts.length === 1 && I.debug.auto) { /* continue */ }
@@ -222,11 +222,11 @@
       case 'shake': G.shake(a || 400); I.audio.sfx('hit'); break;
       case 'flash': G.flash(a || '#fff'); break;
       case 'sfx': I.audio.sfx(a); break;
-      case 'give': { if (D.GEAR[a]) { await I.gear.receive(a, b || 1); break; } const n = b || 1, it = D.ITEMS[a]; const inv = I.save.data.items; inv[a] = (inv[a] || 0) + n; S.toast(`Reçu : <b>${it.name}</b>${n > 1 ? ' ×' + n : ''}`); I.audio.sfx('ok'); break; }
+      case 'give': { if (D.GEAR[a]) { await I.gear.receive(a, b || 1); break; } const n = b || 1, it = D.ITEMS[a]; const inv = I.save.data.items; inv[a] = (inv[a] || 0) + n; S.toast(I.t('Reçu : <b>{nom}</b>¦Reçu : <b>{nom}</b> ×{n}', { nom: it.name, n })); I.audio.sfx('ok'); break; }
       case 'join': W.join(a); break;
       case 'leave': W.leave(a); break;
       case 'codex': I.ui.unlockCodex(a); break;
-      case 'heal': W.healAll(); S.toast('Le groupe reprend son souffle.'); break;
+      case 'heal': W.healAll(); S.toast(I.t('Le groupe reprend son souffle.')); break;
       case 'flag': S.flags[a] = b === undefined ? true : b; break;
       case 'if': if (S.flags[a]) await S.run(b); else if (c) await S.run(c); break;
       case 'tint': W.tint = a || null; break;
@@ -234,7 +234,7 @@
         S.hideDialog(); const e = D.ELEMENTS[a]; const sv = I.save.data; if (!sv.lights.includes(a)) sv.lights.push(a); I.save.store();
         G.flash(e.color); I.audio.sfx('roll');
         for (let i = 0; i < 60; i++) G.spawn({ x: G.PW / 2, y: G.PH / 2, vx: (Math.random() - 0.5) * 220, vy: (Math.random() - 0.5) * 160, life: 1.6 + Math.random(), size: 1 + Math.random(), color: e.color, type: 'spark' });
-        await card('lightcard', `<div class="glyph" style="color:${e.color}">${e.glyph}</div><p class="small">Lumière retrouvée</p><h1 style="color:${e.color}">${e.name}</h1><p class="ar">${e.ar}</p><div class="hint">▼</div>`);
+        await card('lightcard', `<div class="glyph" style="color:${e.color}">${e.glyph}</div><p class="small">${I.t('Lumière retrouvée')}</p><h1 style="color:${e.color}">${e.name}</h1><p class="ar">${e.ar}</p><div class="hint">▼</div>`);
         break;
       }
     }

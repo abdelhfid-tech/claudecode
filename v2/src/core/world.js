@@ -24,7 +24,7 @@
     if (W.party.length >= 3) return;
     W.party.push(id); const h = W.hero(id); W.ensureLevel(h);
     const lead = W.hero(W.party[0]); if (lead && h.lvl < lead.lvl - 1) { h.lvl = lead.lvl - 1; const st = I.calc.of(h); h.hp = st.hp; h.sp = st.sp; }
-    W.refreshSheets(); S.toast(`<b>${h.def.name}</b> rejoint le groupe.`); I.audio.sfx('ok'); if (I.debug.auto) I.gear.best(h);
+    W.refreshSheets(); S.toast(I.t('<b>{nom}</b> rejoint le groupe.', { nom: h.def.name })); I.audio.sfx('ok'); if (I.debug.auto) I.gear.best(h);
   };
   W.leave = function (id) { const i = W.party.indexOf(id); if (i < 0 || W.party.length <= 1) return; W.party.splice(i, 1); W.refreshSheets(); };
   function lookOf(def) { return Object.assign({ kind: 'compagnon' }, def.look); }
@@ -41,14 +41,14 @@
   W.pillar = function (name, d) {
     const P = W.pillars(), def = D.PILLARS[name]; if (!def) return; const was = P[name] || 0;
     P[name] = I.clamp(was + d, 0, 5); W.hud();
-    if (P[name] !== was) { S.toast(`Pilier · <b>${def.name}</b> ${d > 0 ? '▲' : '▼'} <span class="pl">${def.glyph} ${P[name]}</span>`, 2800); I.audio.sfx(d > 0 ? 'light' : 'dark'); }
+    if (P[name] !== was) { S.toast(`${I.t('Pilier · <b>{nom}</b>', { nom: def.name })} ${d > 0 ? '▲' : '▼'} <span class="pl">${def.glyph} ${P[name]}</span>`, 2800); I.audio.sfx(d > 0 ? 'light' : 'dark'); }
   };
   const PRAY_LINES = {
-    fajr: ['Avant le jour, ils se rangèrent, épaule contre épaule. Puis la lumière vint, comme une réponse.', 'L’aube n’était encore qu’un fil. Ils prièrent, et le jour eut un commencement.'],
-    dhuhr: ['Au plus haut du soleil, ils posèrent ce qu’ils portaient. Rien ne pressait plus que cela.', 'Midi. La ville se tut le temps d’une prière, et chacun retrouva sa place.'],
-    asr: ['L’ombre s’allongeait. Ils prièrent, et la journée retrouva sa mesure.'],
-    maghrib: ['Le soleil toucha la terre. Ils prièrent, et le vacarme du jour retomba.'],
-    isha: ['La nuit était entière. Ils prièrent, et le silence cessa d’être vide.', 'Dernière prière. Ce qui restait à décider attendrait le matin, et s’en trouverait mieux.']
+    fajr: [I.T('Avant le jour, ils se rangèrent, épaule contre épaule. Puis la lumière vint, comme une réponse.'), I.T('L’aube n’était encore qu’un fil. Ils prièrent, et le jour eut un commencement.')],
+    dhuhr: [I.T('Au plus haut du soleil, ils posèrent ce qu’ils portaient. Rien ne pressait plus que cela.'), I.T('Midi. La ville se tut le temps d’une prière, et chacun retrouva sa place.')],
+    asr: [I.T('L’ombre s’allongeait. Ils prièrent, et la journée retrouva sa mesure.')],
+    maghrib: [I.T('Le soleil toucha la terre. Ils prièrent, et le vacarme du jour retomba.')],
+    isha: [I.T('La nuit était entière. Ils prièrent, et le silence cessa d’être vide.'), I.T('Dernière prière. Ce qui restait à décider attendrait le matin, et s’en trouverait mieux.')]
   };
   W.pose = [];
   W.emote = function (who, pose) {
@@ -63,7 +63,7 @@
     try {
       S.hideDialog(); W.emote('groupe', 'prie'); await I.sleep(I.debug.auto ? 10 : 700); await S.fade('out', 600); I.audio.sfx('light');
       const fz = $('#fade'); fz.style.transition = 'none'; fz.style.opacity = 0; // le carton prend le relais du fondu
-      await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>La prière</h1><p>${I.pick(PRAY_LINES[m])}</p><p class="small">Le groupe est reposé : Constance et Souffle à 100 % · Sakîna</p><div class="hint">▼</div>`, 6500);
+      await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>${I.t('La prière')}</h1><p>${I.t(I.pick(PRAY_LINES[m]))}</p><p class="small">${I.t('Le groupe est reposé : Constance et Souffle à 100 % · Sakîna')}</p><div class="hint">▼</div>`, 6500);
       W.healAll(); W.gainSakina(35); S.flags._prayed = true;
       if (!S.flags._prayPillar && !(I.oeuvres.sobre && I.oeuvres.sobre())) { S.flags._prayPillar = true; W.pillar('priere', 1); await I.oeuvres.gain('priere'); } // la première prière du chapitre nourrit la provision (pas celle d'une visite : elle se rejoue)
       if (W.map && !parLeRecit) W.checkpoint();
@@ -186,9 +186,9 @@
       // 2.x — la progression (lecons.js) : dans une partie neuve, un seul outil à la fois. Au début du prologue, se déplacer, et rien d'autre.
       const appr = I.lecons && I.lecons.actif();
       if (appr) { if (saga.frame && !saga.veillees && ci === 0) I.lecons.depart(); }
-      else if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? 'Touche un endroit pour t’y rendre, un personnage pour lui parler · <b>?</b> : que faire' : '<b>Flèches</b>, <b>ZQSD</b> ou clic : marcher · <b>Entrée</b> : parler · <b>H</b> ou <b>?</b> : que faire · <b>Échap</b> : halte', 10000);
+      else if (saga.frame && ci === 0) S.toast(document.body.classList.contains('touch') ? I.t('Touche un endroit pour t’y rendre, un personnage pour lui parler · <b>?</b> : que faire') : I.t('<b>Flèches</b>, <b>ZQSD</b> ou clic : marcher · <b>Entrée</b> : parler · <b>H</b> ou <b>?</b> : que faire · <b>Échap</b> : halte'), 10000);
       // l'équipement : le joueur de test s'habille au mieux ; le joueur est prévenu quand la réserve tient mieux que ce qu'il porte
-      if (I.debug.auto) I.gear.bestAll(); else if (!cp) { if (appr) I.lecons.chapitre(); else if (I.gear.better()) S.toast('La réserve tient de quoi mieux équiper ce groupe : <b>Halte</b>, puis <b>Équipement</b>.', 7000); }
+      if (I.debug.auto) I.gear.bestAll(); else if (!cp) { if (appr) I.lecons.chapitre(); else if (I.gear.better()) S.toast(I.t('La réserve tient de quoi mieux équiper ce groupe : <b>Halte</b>, puis <b>Équipement</b>.'), 7000); }
       if (!cp && I.postures) I.postures.veille(); // une posture s'ouvre à quelqu'un du groupe : on le dit, une fois
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
@@ -196,10 +196,10 @@
   W.hud = function () {
     const o = W.cur();
     $('#hud .chap').textContent = W.ch ? W.ch.title : '';
-    const tm = W.map && ({ dawn: 'Fajr', day: 'Dhuhr', dusk: 'Maghrib', night: '’Ishâ' })[W.map.env.time];
+    const tm = W.map && ({ dawn: I.t('Fajr'), day: I.t('Dhuhr'), dusk: I.t('Maghrib'), night: I.t('’Ishâ') })[W.map.env.time];
     $('#hud .sub').textContent = (W.ch ? W.ch.sub : '') + (tm ? '  ·  ◠ ' + tm : '');
-    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="Dirhams"><i>◎</i>${I.trade.dirhams()}</span>` : '') + `<span title="Provision du cœur" class="zad"><i>♥</i>${I.oeuvres.zad()}${I.oeuvres.fasting() ? ' <i>☾</i>jeûne' : ''}</span>`;
-    const en = I.oeuvres.enigme(); $('#hud .enig').hidden = !en; if (en) $('#hud .enig').textContent = 'Énigme : ' + en.signe;
+    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="${I.t('Dirhams')}"><i>◎</i>${I.trade.dirhams()}</span>` : '') + `<span title="${I.t('Provision du cœur')}" class="zad"><i>♥</i>${I.oeuvres.zad()}${I.oeuvres.fasting() ? ' <i>☾</i>' + I.t('jeûne') : ''}</span>`;
+    const en = I.oeuvres.enigme(); $('#hud .enig').hidden = !en; if (en) $('#hud .enig').textContent = I.t('Énigme : {signe}', { signe: en.signe });
     $('#hud .obj').textContent = (o && o.text ? o.text : '') + (o && o.build ? I.build.objectiveText(o.build) : '');
     $('#hud .obj').hidden = !(o && o.text);
   };
@@ -222,8 +222,8 @@
     const npcs = {}; W.npcs.forEach(n => { npcs[n.id] = { h: n.hidden ? 1 : 0, x: n.placed && n.map === W.map.id ? Math.round(n.x) : undefined, y: n.placed && n.map === W.map.id ? Math.round(n.y) : undefined }; });
     I.save.data.cp = { saga: W.saga.id, ci: W.ci, obj: W.objIndex, map: W.map.id, opts: W.mapOpts, pos: [Math.round(W.player.x), Math.round(W.player.y)], party: W.party.slice(), npcs, foes: W.foes.filter(f => f.done).map(f => f.id), chests: W.chests.map((c, i) => c.open ? i : -1).filter(i => i >= 0), flags: S.flags };
     W.persistHeroes(); I.save.store();
-    { const lead = W.party.length ? W.hero(W.party[0]) : null; const ok = I.save.auto(`${W.saga.name} · ${W.ch.title}${lead ? ' · niv. ' + lead.lvl : ''}`); W.unsaved = 0;
-      if (!ok && !W._sansStock) { W._sansStock = true; S.toast('Ce navigateur refuse le stockage : la partie ne pourra pas être reprise après la fermeture de la page.', 9000); } } // la partie se garde toute seule
+    { const lead = W.party.length ? W.hero(W.party[0]) : null; const ok = I.save.auto(lead ? I.t('{saga} · {chapitre} · niv. {niv}', { saga: W.saga.name, chapitre: W.ch.title, niv: lead.lvl }) : I.t('{saga} · {chapitre}', { saga: W.saga.name, chapitre: W.ch.title })); W.unsaved = 0;
+      if (!ok && !W._sansStock) { W._sansStock = true; S.toast(I.t('Ce navigateur refuse le stockage : la partie ne pourra pas être reprise après la fermeture de la page.'), 9000); } } // la partie se garde toute seule
   };
   // exécute les objectifs automatiques ; termine le chapitre s'il n'en reste plus
   W.advance = async function () {
@@ -267,7 +267,7 @@
         if (!saga.frame && sp.cTot) {
           const perfect = (sp.cOk || 0) === sp.cTot;
           if (perfect) { sv.items.siwak = (sv.items.siwak || 0) + 2; sv.items.musc = (sv.items.musc || 0) + 1; I.audio.sfx('roll'); }
-          await S.card('victory', `<p class="small">Fidélité à la Chaîne · ${I.esc(saga.name)}</p><h1>${perfect ? 'Isnâd sahîh' : 'Chaîne transmise'}</h1><ul><li>Actes retrouvés du premier coup : <b>${sp.cOk || 0} / ${sp.cTot}</b></li>${perfect ? '<li>Chaîne sans faille : chaque acte fut celui que les transmetteurs ont rapporté.</li><li>Reçu : <b>Siwâk ×2</b>, <b>Musc</b></li>' : '<li>Là où la chaîne a vacillé, relis le Recueil : chaque acte y a sa source.</li>'}</ul><div class="hint">▼</div>`);
+          await S.card('victory', `<p class="small">${I.t('Fidélité à la Chaîne · {saga}', { saga: I.esc(saga.name) })}</p><h1>${perfect ? I.t('Isnâd sahîh') : I.t('Chaîne transmise')}</h1><ul><li>${I.t('Actes retrouvés du premier coup : <b>{ok} / {total}</b>', { ok: sp.cOk || 0, total: sp.cTot })}</li>${perfect ? '<li>' + I.t('Chaîne sans faille : chaque acte fut celui que les transmetteurs ont rapporté.') + '</li><li>' + I.t('Reçu : <b>Siwâk ×2</b>, <b>Musc</b>') + '</li>' : '<li>' + I.t('Là où la chaîne a vacillé, relis le Recueil : chaque acte y a sa source.') + '</li>'}</ul><div class="hint">▼</div>`);
         }
         sp.done = true; sp.ch = saga.frame ? W.ci + 1 : 0;
         if (!saga.frame) I.gear.deposer(saga.id); // ce que ce groupe portait rejoint la réserve : le suivant s'en servira
@@ -298,7 +298,7 @@
       return;
     }
     const c = who && W.chests.includes(who) && !who.open && Math.hypot(who.x - p.x, who.y - p.y) < 30 ? who : W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
-    if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast('Un feuillet. Tu le lis lentement.'); await S.run([['codex', c.codex]]); } else await S.run([['give', c.gear || c.item, c.n || 1]]); W.checkpoint(); return; }
+    if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast(I.t('Un feuillet. Tu le lis lentement.')); await S.run([['codex', c.codex]]); } else await S.run([['give', c.gear || c.item, c.n || 1]]); W.checkpoint(); return; }
     if (W.nearPrayer()) {
       await I.oeuvres.natte();
     } else if (I.trade && I.trade.near()) await I.trade.open();

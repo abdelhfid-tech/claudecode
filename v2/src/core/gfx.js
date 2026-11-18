@@ -15,7 +15,7 @@
   try { const q = /[?&]def=([12])([dl]?)/.exec(location.search); if (q) { G.D = +q[1]; G.lisse = q[2] === 'l'; G.defForce = true; } } catch (e) { /* hors navigateur */ } // ?def=1 : les outils qui comparent à la 1.32
   // Les trois dessins que le joueur peut choisir (Réglages, « Dessin »). Changer en cours de partie : les images déjà faites
   // sont oubliées, et chaque module qui en garde (la carte, les planches de marche, le fond du titre) refait les siennes.
-  G.DESSINS = [['fin', 'fin', 2, false], ['doux', 'fin, adouci', 2, true], ['origine', 'd’origine', 1, false]];
+  G.DESSINS = [['fin', I.T('fin'), 2, false], ['doux', I.T('fin, adouci'), 2, true], ['origine', I.T('d’origine'), 1, false]];
   G.dessin = () => (G.DESSINS.find(d => d[2] === G.D && d[3] === !!G.lisse) || G.DESSINS[0])[0];
   G.surDefinition = [];
   G.definir = function (nom) { const d = G.DESSINS.find(q => q[0] === nom) || G.DESSINS[0]; if (d[2] === G.D && d[3] === !!G.lisse) return false;

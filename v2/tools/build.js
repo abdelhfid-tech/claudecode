@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* ISNAD 2.0 — assemble le jeu de v2/ en un seul fichier (la 1.32, à la racine du dépôt, a son propre outil et ne bouge plus).
+/* ISNAD 2.x — assemble le jeu de v2/ en un seul fichier (la 1.32 est archivée dans archive/v1.32/, avec son propre outil).
    - index.html          : page autonome (dépôt, hébergement statique)
    - dist/isnad.html     : fragment sans <html>/<head>/<body> (publication en Artifact)
    Les paquets publiés (paquets/*.json) sont embarqués après le jeu de base ; le jeu les contrôle lui-même en les posant.
@@ -17,7 +17,7 @@ for (let i = 0; i < args.length; i++) {
 }
 if (avec.length && !vers) { console.error('--avec demande --vers : un assemblage d’essai ne remplace jamais le jeu livré'); process.exit(2); }
 
-const core = ['defs', 'regles', 'dedale', 'base', 'perso', 'gfx', 'sprites', 'maps', 'script', 'world', 'build', 'trade', 'oeuvres', 'lecons', 'gear', 'mal', 'valeurs', 'postures', 'rangs', 'battle', 'rodeurs', 'ui'].map(n => `src/core/${n}.js`);
+const core = ['defs', 'regles', 'dedale', 'langue', 'base', 'perso', 'gfx', 'sprites', 'maps', 'script', 'world', 'build', 'trade', 'oeuvres', 'lecons', 'gear', 'mal', 'valeurs', 'postures', 'rangs', 'battle', 'rodeurs', 'ui'].map(n => `src/core/${n}.js`);
 const data = ['src/data/frame.js', 'src/data/music.js', 'src/data/caid.js', 'src/data/coeur.js'].filter(f => fs.existsSync(path.join(root, f))).concat(fs.readdirSync(path.join(root, 'src/data')).filter(f => /^saga_.*\.js$/.test(f)).sort().map(f => 'src/data/' + f));
 // les paquets : ceux du dépôt, dans l'ordre de leurs noms, puis ceux de l'essai. Un paquet est de la donnée : il entre tel quel.
 const DOSSIER = path.join(root, 'paquets');
@@ -29,16 +29,23 @@ const poser = f => { const p = JSON.parse(fs.readFileSync(f, 'utf8'));
 // version lisible par le joueur (écran-titre, page Diagnostic) : date de l'assemblage et dernier commit
 // « + » : des sources ont changé depuis ce commit (les fichiers générés ne comptent pas)
 let rev = ''; try { const sh = c => require('child_process').execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); rev = sh('git rev-parse --short HEAD') + (sh('git status --porcelain -- src tools paquets') ? '+' : ''); } catch (e) { /* hors dépôt */ }
-const NUMERO = '2.0'; // la 1.32 est le jeu léger gelé à la racine du dépôt
+// le numéro de la 2.x : il avance d'un centième à chaque enregistrement qui change le jeu (AGENTS.md ; docs/decisions.md, D181)
+const NUMERO = '2.01';
 const version = NUMERO + (vers ? ' · essai' : '') + ' · ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC' + (rev ? ' · ' + rev : '');
-const js = `window.ISNAD_VERSION = ${JSON.stringify(version)};\n` + core.concat(data).map(f => `/* ==== ${f} ==== */\n` + read(f)).concat(paquets.map(poser)).join('\n') +
+// les langues (src/lang/<langue>/<fichier>.json) : chaque texte est rangé sous la clé de son texte français (src/core/langue.js).
+// Un texte laissé vide n'entre pas : le jeu dira le français à cet endroit, et v2/tools/langues.js le signale.
+const LANGUE = require('../src/core/langue.js'), LANG = path.join(root, 'src/lang');
+const langues = LANGUE.ORDRE.filter(l => l !== 'fr' && fs.existsSync(path.join(LANG, l))).map(l => { const cat = {};
+  fs.readdirSync(path.join(LANG, l)).filter(f => /\.json$/.test(f)).sort().forEach(f => { (JSON.parse(fs.readFileSync(path.join(LANG, l, f), 'utf8')).textes || []).forEach(x => { if (x && typeof x.fr === 'string' && typeof x.t === 'string' && x.t) cat[LANGUE.cle(x.fr)] = x.t; }); });
+  return { l, n: Object.keys(cat).length, js: `/* ==== langue ${l} ==== */\nISNAD.langue.poser(${JSON.stringify(l)}, ${JSON.stringify(cat).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029')});` }; }).filter(x => x.n);
+const js = `window.ISNAD_VERSION = ${JSON.stringify(version)};\n` + core.concat(data).map(f => `/* ==== ${f} ==== */\n` + read(f)).concat(langues.map(x => x.js)).concat(paquets.map(poser)).join('\n') +
   '\n(window.claude && window.claude.hot && window.claude.hot.ready) ? window.claude.hot.ready(function () { ISNAD.ui.boot(); }) : ISNAD.ui.boot();\n';
 if (js.includes('</script')) throw new Error('</script> trouvé dans le JS');
 
-const page = read('src/page.html').replace('/*CSS*/', () => read('src/style.css')).replace('/*JS*/', () => js);
+const page = read('src/page.html').replace(/<title>[^<]*<\/title>/, `<title>ISNAD ${NUMERO}</title>`).replace('/*CSS*/', () => read('src/style.css')).replace('/*JS*/', () => js);
 const cut = page.indexOf('<div id="app">');
 const full = `<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="description" content="ISNAD — JRPG rétro-HD en cinq sagas : les Compagnons après la mort du Prophète ﷺ.">\n${page.slice(0, cut)}</head>\n<body>\n${page.slice(cut)}\n</body>\n</html>\n`;
-const resume = `${core.length + data.length} modules` + (paquets.length ? ` · ${paquets.length} paquet${paquets.length > 1 ? 's' : ''}` : '');
+const resume = `${core.length + data.length} modules` + (paquets.length ? ` · ${paquets.length} paquet${paquets.length > 1 ? 's' : ''}` : '') + (langues.length ? ' · ' + langues.map(x => `${x.l} ${x.n}`).join(', ') : '');
 if (vers) {
   fs.mkdirSync(vers, { recursive: true }); fs.writeFileSync(path.join(vers, 'index.html'), full);
   console.log(`essai : ${path.relative(process.cwd(), path.join(vers, 'index.html'))} ${(full.length / 1024).toFixed(0)} Ko · ${resume}`);

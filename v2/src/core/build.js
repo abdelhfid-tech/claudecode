@@ -15,7 +15,7 @@
   Bd.sites = function () { const sv = I.save.data, sp = sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} }); return sp.sites || (sp.sites = {}); };
   Bd.count = function (id) { const l = Bd.peek(W.map.id) || []; return l.filter(e => e.t === id).length; };
   const afford = id => { const c = D.PIECES[id].cost, m = Bd.mats(); return Object.keys(c).every(k => (m[k] || 0) >= c[k]); };
-  const costText = id => { const c = D.PIECES[id].cost, ks = Object.keys(c); return ks.length ? ks.map(k => `${c[k]} ${D.MATS[k].name.toLowerCase()}`).join(', ') : 'la peine de creuser'; };
+  const costText = id => { const c = D.PIECES[id].cost, ks = Object.keys(c); return ks.length ? ks.map(k => I.t('{n} {min_mat}', { n: c[k], min_mat: D.MATS[k].name.toLowerCase(), mat: D.MATS[k].name })).join(I.t(', ')) : I.t('la peine de creuser'); };
 
   /* ----- pose d'une pièce sur une carte (sans coût) ----- */
   Bd.apply = function (e, m) {
@@ -41,21 +41,21 @@
   }
   function flood(sx, sy) { const m = W.map, seen = new Uint8Array(m.w * m.h), q = [sy * m.w + sx]; seen[q[0]] = 1; while (q.length) { const i = q.pop(), x = i % m.w, y = (i - x) / m.w; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= m.w || ny >= m.h) continue; const j = ny * m.w + nx; if (seen[j] || m.solid[j]) continue; seen[j] = 1; q.push(j); } } return seen; }
   Bd.can = function (tx, ty, id) {
-    const m = W.map, p = D.PIECES[id]; if (!p) return 'Pièce inconnue.';
-    if (tx < 1 || ty < 1 || tx >= m.w - 1 || ty >= m.h - 1) return 'Trop près du bord.';
-    const i = ty * m.w + tx; if (m.solid[i]) return 'Le sol n’est pas libre ici.';
-    if (Bd.list().some(e => e.x === tx && e.y === ty)) return 'Quelque chose est déjà bâti ici.';
-    for (const k in m.spots) if (m.spots[k][0] === tx && m.spots[k][1] === ty) return 'On ne bâtit pas sur un lieu de passage.';
-    if (W.npcs.some(n => !n.hidden && n.map === m.id && n.placed && Math.floor(n.x / T) === tx && Math.floor((n.y - 3) / T) === ty)) return 'Quelqu’un se tient là.';
-    if (p.near && !waterNear(tx, ty)) return 'Il faut de l’eau à moins de six pas : creuse d’abord un puits.';
-    if (!afford(id)) return 'Il te manque : ' + costText(id) + '.';
+    const m = W.map, p = D.PIECES[id]; if (!p) return I.t('Pièce inconnue.');
+    if (tx < 1 || ty < 1 || tx >= m.w - 1 || ty >= m.h - 1) return I.t('Trop près du bord.');
+    const i = ty * m.w + tx; if (m.solid[i]) return I.t('Le sol n’est pas libre ici.');
+    if (Bd.list().some(e => e.x === tx && e.y === ty)) return I.t('Quelque chose est déjà bâti ici.');
+    for (const k in m.spots) if (m.spots[k][0] === tx && m.spots[k][1] === ty) return I.t('On ne bâtit pas sur un lieu de passage.');
+    if (W.npcs.some(n => !n.hidden && n.map === m.id && n.placed && Math.floor(n.x / T) === tx && Math.floor((n.y - 3) / T) === ty)) return I.t('Quelqu’un se tient là.');
+    if (p.near && !waterNear(tx, ty)) return I.t('Il faut de l’eau à moins de six pas : creuse d’abord un puits.');
+    if (!afford(id)) return I.t('Il te manque : {cout}.', { cout: costText(id) });
     if (p.solid) { // on ne mure pas un passage : chaque lieu doit rester accessible
-      const pl = W.player, px = Math.floor(pl.x / T), py = Math.floor((pl.y - 3) / T); if (px === tx && py === ty) return 'Recule d’un pas.';
+      const pl = W.player, px = Math.floor(pl.x / T), py = Math.floor((pl.y - 3) / T); if (px === tx && py === ty) return I.t('Recule d’un pas.');
       m.solid[i] = 1; const seen = flood(px, py); m.solid[i] = 0;
       const okAt = (x, y) => { for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { const xx = x + dx, yy = y + dy; if (xx >= 0 && yy >= 0 && xx < m.w && yy < m.h && seen[yy * m.w + xx]) return true; } return false; };
       const before = flood(px, py), was = (x, y) => { for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { const xx = x + dx, yy = y + dy; if (xx >= 0 && yy >= 0 && xx < m.w && yy < m.h && before[yy * m.w + xx]) return true; } return false; };
-      for (const k in m.spots) { const s = m.spots[k]; if (was(s[0], s[1]) && !okAt(s[0], s[1])) return 'On ne mure pas un passage.'; }
-      for (const n of W.npcs.concat(W.foes, W.chests)) if (!n.hidden && n.map === m.id && n.placed) { const x = Math.floor(n.x / T), y = Math.floor((n.y - 3) / T); if (was(x, y) && !okAt(x, y)) return 'On ne mure pas un passage.'; }
+      for (const k in m.spots) { const s = m.spots[k]; if (was(s[0], s[1]) && !okAt(s[0], s[1])) return I.t('On ne mure pas un passage.'); }
+      for (const n of W.npcs.concat(W.foes, W.chests)) if (!n.hidden && n.map === m.id && n.placed) { const x = Math.floor(n.x / T), y = Math.floor((n.y - 3) / T); if (was(x, y) && !okAt(x, y)) return I.t('On ne mure pas un passage.'); }
     }
     return '';
   };
@@ -70,7 +70,7 @@
   };
   Bd.place = async function () {
     const [tx, ty] = Bd.target();
-    if (Bd.sel === '_retirer') { const l = Bd.list(), k = l.findIndex(e => e.x === tx && e.y === ty); if (k < 0) { S.toast('Rien de bâti devant toi.', 1500); return; } const e = l.splice(k, 1)[0], c = D.PIECES[e.t].cost; Object.keys(c).forEach(q => Bd.give(q, c[q], true)); I.audio.sfx('door'); const p = W.player; W.loadMap(W.map.id, W.mapOpts, [p.x, p.y]); Bd.refresh(); return; }
+    if (Bd.sel === '_retirer') { const l = Bd.list(), k = l.findIndex(e => e.x === tx && e.y === ty); if (k < 0) { S.toast(I.t('Rien de bâti devant toi.'), 1500); return; } const e = l.splice(k, 1)[0], c = D.PIECES[e.t].cost; Object.keys(c).forEach(q => Bd.give(q, c[q], true)); I.audio.sfx('door'); const p = W.player; W.loadMap(W.map.id, W.mapOpts, [p.x, p.y]); Bd.refresh(); return; }
     const why = Bd.placeAt(tx, ty, Bd.sel); if (why) { S.toast(why, 2200); I.audio.sfx('dark'); return; }
     I.audio.sfx(D.PIECES[Bd.sel].tile === 'trench' ? 'hit' : 'door'); Bd.refresh(); await Bd.after();
   };
@@ -78,28 +78,28 @@
   Bd.after = async function () {
     const m = W.map, l = Bd.list(), sp = I.save.data.sagas[W.saga.id] || {}; sp.flags = sp.flags || {};
     const well = l.find(e => e.t === 'puits' && l.filter(q => q.t === 'palmier' && Math.abs(q.x - e.x) <= 6 && Math.abs(q.y - e.y) <= 6).length >= 3);
-    if (well && !S.flags['_oasis_' + m.id]) { S.flags['_oasis_' + m.id] = true; I.audio.sfx('roll'); S.toast('<b>Une oasis est née.</b> Là où il y a de l’eau et de l’ombre, les routes se rejoignent.', 4200); W.pillar('lien', 1); }
-    if (l.filter(e => e.t === 'tranchee').length >= 6 && !S.flags['_fosse_' + m.id]) { S.flags['_fosse_' + m.id] = true; S.toast('<b>Le fossé tient.</b> Ce qui rôde ne le franchira pas.', 3600); }
+    if (well && !S.flags['_oasis_' + m.id]) { S.flags['_oasis_' + m.id] = true; I.audio.sfx('roll'); S.toast(I.t('<b>Une oasis est née.</b> Là où il y a de l’eau et de l’ombre, les routes se rejoignent.'), 4200); W.pillar('lien', 1); }
+    if (l.filter(e => e.t === 'tranchee').length >= 6 && !S.flags['_fosse_' + m.id]) { S.flags['_fosse_' + m.id] = true; S.toast(I.t('<b>Le fossé tient.</b> Ce qui rôde ne le franchira pas.'), 3600); }
     const sites = Bd.sites();
     for (const id in sites) { const st = sites[id]; if (st.map !== m.id || st.done) continue; const pr = Bd.progress(st); if (Object.keys(st.need).every(k => pr[k] >= st.need[k])) await consecrate(st); }
     const o = W.cur(); if (o && o.build && Bd.objectiveDone(o.build) && !S.busy) { Bd.set(false); await W.complete(); } else W.hud();
   };
   Bd.progress = function (st) { const l = Bd.peek(st.map) || [], pr = {}; Object.keys(st.need).forEach(k => { pr[k] = l.filter(e => e.t === k && e.x >= st.x && e.x < st.x + st.w && e.y >= st.y && e.y < st.y + st.h).length; }); return pr; };
   Bd.objectiveDone = function (b) { if (b.site) { const st = Bd.sites()[b.site]; return !!(st && st.done); } return Bd.count(b.piece) >= b.n; };
-  Bd.objectiveText = function (b) { if (b.site) { const st = Bd.sites()[b.site]; if (!st) return ''; const pr = Bd.progress(st); return ' · ' + Object.keys(st.need).map(k => `${D.PIECES[k].name.split(' ')[0].toLowerCase()} ${Math.min(pr[k], st.need[k])}/${st.need[k]}`).join(', '); } return ` (${Math.min(Bd.count(b.piece), b.n)}/${b.n})`; };
+  Bd.objectiveText = function (b) { if (b.site) { const st = Bd.sites()[b.site]; if (!st) return ''; const pr = Bd.progress(st); return ' · ' + Object.keys(st.need).map(k => I.t('{min_piece} {n}/{sur}', { min_piece: D.PIECES[k].name.split(' ')[0].toLowerCase(), piece: D.PIECES[k].name, n: Math.min(pr[k], st.need[k]), sur: st.need[k] })).join(I.t(', ')); } return ` (${Math.min(Bd.count(b.piece), b.n)}/${b.n})`; };
   async function consecrate(st) {
     st.done = true; const nt = (Bd.peek(st.map) || []).find(e => e.t === 'natte' && e.x >= st.x && e.x < st.x + st.w && e.y >= st.y && e.y < st.y + st.h); if (nt) { st.nx = nt.x; st.ny = nt.y; }
     S.depth++;
     try {
       I.audio.sfx('roll'); G.flash('#fff3c8'); I.audio.scene('espoir');
-      await S.card('lightcard', `<div class="glyph" style="color:#ffe08a">✦</div><p class="small">Mosquée fondée</p><h1 style="color:#ffe08a">${I.esc(st.name)}</h1><p>Bloc après bloc, de tes mains. Sur sa natte, on peut désormais prier, se reposer et accomplir les œuvres du jour.</p><div class="hint">▼</div>`);
+      await S.card('lightcard', `<div class="glyph" style="color:#ffe08a">✦</div><p class="small">${I.t('Mosquée fondée')}</p><h1 style="color:#ffe08a">${I.esc(st.name)}</h1><p>${I.t('Bloc après bloc, de tes mains. Sur sa natte, on peut désormais prier, se reposer et accomplir les œuvres du jour.')}</p><div class="hint">▼</div>`);
       W.pillar('priere', 1); W.pillar('lien', 1);
     } finally { S.depth--; S.hideDialog(); }
   }
   Bd.openSite = function (def) {
     const m = W.map, name = Array.isArray(def.at) ? def.at[0] : def.at, s = m.spots[name] || [10, 10];
     const x = s[0] + (Array.isArray(def.at) ? def.at[1] : 0), y = s[1] + (Array.isArray(def.at) ? def.at[2] : 0), sites = Bd.sites();
-    if (!sites[def.id]) { sites[def.id] = { map: m.id, x, y, w: def.w || 9, h: def.h || 7, name: def.name, need: def.need, done: false }; Object.keys(def.give || {}).forEach(k => Bd.give(k, def.give[k], true)); S.toast(`Chantier ouvert : <b>${I.esc(def.name)}</b>. Les matériaux sont livrés.`, 4200); I.audio.sfx('ok'); }
+    if (!sites[def.id]) { sites[def.id] = { map: m.id, x, y, w: def.w || 9, h: def.h || 7, name: def.name, need: def.need, done: false }; Object.keys(def.give || {}).forEach(k => Bd.give(k, def.give[k], true)); S.toast(I.t('Chantier ouvert : <b>{nom}</b>. Les matériaux sont livrés.', { nom: I.esc(def.name) }), 4200); I.audio.sfx('ok'); }
     Bd.refresh();
   };
   // points de prière ajoutés par les mosquées bâties
@@ -111,9 +111,9 @@
   Bd.water = async function () {
     S.depth++;
     try {
-      const i = await _ask('De l’eau.', [{ t: 'Puiser (+2 eau)' }, { t: 'Pétrir des briques de terre (2 eau → 3 pisé)' }, { t: 'Plus tard' }]);
+      const i = await _ask(I.t('De l’eau.'), [{ t: I.t('Puiser (+2 eau)') }, { t: I.t('Pétrir des briques de terre (2 eau → 3 pisé)') }, { t: I.t('Plus tard') }]);
       if (i === 0) { I.audio.sfx('blip'); Bd.give('eau', 2); }
-      else if (i === 1) { if (Bd.mats().eau < 2) S.toast('Il faut deux mesures d’eau.', 1800); else { Bd.give('eau', -2, true); I.audio.sfx('door'); Bd.give('pise', 3); } }
+      else if (i === 1) { if (Bd.mats().eau < 2) S.toast(I.t('Il faut deux mesures d’eau.'), 1800); else { Bd.give('eau', -2, true); I.audio.sfx('door'); Bd.give('pise', 3); } }
     } finally { S.depth--; S.hideDialog(); }
   };
   Bd.gather = async function () {
@@ -122,9 +122,9 @@
     const o = m.objs.find(o => Math.abs(o.x - px) < 13 && Math.abs(o.y - 4 - py) < 13 && (o.type === 'palm' || o.type === 'rock' || o.type === 'bigrock' || o.type === 'stall' || WATER[o.type]));
     const [tx, ty] = Bd.target(), wt = m.anim.some(a => a.x === tx && a.y === ty);
     if (!o && !wt) return false;
-    if (o && o.type === 'stall') { if (o.used) S.toast('Le marchand n’a plus d’orge à céder aujourd’hui.', 1600); else { o.used = true; I.audio.sfx('ok'); Bd.give('grain', 2); } return true; }
-    if (o && o.type === 'palm') { if (o.used) S.toast('Ce palmier a déjà donné.', 1500); else { o.used = true; I.audio.sfx('slash'); Bd.give('palme', 1); } return true; }
-    if (o && (o.type === 'rock' || o.type === 'bigrock')) { if (o.used) S.toast('Il n’y a plus rien à tirer de ce rocher.', 1500); else { o.used = true; I.audio.sfx('hit'); Bd.give('pierre', o.type === 'rock' ? 1 : 2); } return true; }
+    if (o && o.type === 'stall') { if (o.used) S.toast(I.t('Le marchand n’a plus d’orge à céder aujourd’hui.'), 1600); else { o.used = true; I.audio.sfx('ok'); Bd.give('grain', 2); } return true; }
+    if (o && o.type === 'palm') { if (o.used) S.toast(I.t('Ce palmier a déjà donné.'), 1500); else { o.used = true; I.audio.sfx('slash'); Bd.give('palme', 1); } return true; }
+    if (o && (o.type === 'rock' || o.type === 'bigrock')) { if (o.used) S.toast(I.t('Il n’y a plus rien à tirer de ce rocher.'), 1500); else { o.used = true; I.audio.sfx('hit'); Bd.give('pierre', o.type === 'rock' ? 1 : 2); } return true; }
     await Bd.water(); return true;
   };
 
@@ -135,16 +135,16 @@
     const got = [], inv = I.save.data.items, add = (k, v, item) => { if (v <= 0) return; if (item) { inv[k] = (inv[k] || 0) + v; got.push(`${D.ITEMS[k].name} ×${v}`); } else { Bd.give(k, v, true); got.push(`${D.MATS[k].name} +${v}`); } };
     add('lait', Math.min(2, n.enclos), true); add('laine', Math.min(4, n.bergerie * 2)); add('pierre', Math.min(4, n.chamelier * 2));
     add('pain', Math.min(2, Math.floor(n.champ / 3)), true); add('grain', Math.min(4, n.champ)); add('dattes', Math.min(3, Math.floor(n.palmier / 2)), true); add('eau', Math.min(6, n.puits * 3));
-    if (got.length) S.toast('Ce que tu as bâti a donné : <b>' + got.join(', ') + '</b>', 5200);
+    if (got.length) S.toast(I.t('Ce que tu as bâti a donné : <b>{dons}</b>', { dons: got.join(I.t(', ')) }), 5200);
     // le dû des troupeaux : ce que la Ridda refusait de verser
-    if (n.enclos + n.bergerie + n.chamelier > 0) { S.toast('Tu verses le dû de tes troupeaux : la part des pauvres est prélevée avant la tienne.', 5200); W.pillar('justice', 1); }
+    if (n.enclos + n.bergerie + n.chamelier > 0) { S.toast(I.t('Tu verses le dû de tes troupeaux : la part des pauvres est prélevée avant la tienne.'), 5200); W.pillar('justice', 1); }
   };
 
   /* ----- mode Bâtir ----- */
   const ORDER = ['_retirer'].concat(Object.keys(D.PIECES));
   Bd.set = function (on) {
     if (on && (I.scene !== W || S.busy || !W.saga)) return;
-    if (on && !Bd.outdoor(W.map.id)) { S.toast('On ne bâtit pas ici. Cherche un sol à ciel ouvert.', 2200); return; }
+    if (on && !Bd.outdoor(W.map.id)) { S.toast(I.t('On ne bâtit pas ici. Cherche un sol à ciel ouvert.'), 2200); return; }
     Bd.on = !!on; document.body.classList.toggle('in-build', Bd.on); $('#buildbar').hidden = !Bd.on; if (Bd.on) { I.audio.sfx('ok'); Bd.refresh(); }
   };
   Bd.cycle = function (d) { const i = ORDER.indexOf(Bd.sel); Bd.sel = ORDER[(i + d + ORDER.length) % ORDER.length]; I.audio.sfx('move'); Bd.refresh(); };
@@ -154,8 +154,8 @@
     const bar = $('#buildbar'); if (!bar || bar.hidden) return; const m = Bd.mats();
     bar.querySelector('.mats').innerHTML = Object.keys(D.MATS).map(k => `<span title="${D.MATS[k].name}"><i>${D.MATS[k].g}</i>${D.MATS[k].name} <b>${m[k] || 0}</b></span>`).join('');
     const box = bar.querySelector('.pieces'); box.innerHTML = '';
-    ORDER.forEach(id => { const b = I.el('button', 'pc' + (id === Bd.sel ? ' sel' : '') + (id !== '_retirer' && !afford(id) ? ' poor' : ''), id === '_retirer' ? '<span class="ic">✕</span><span>Retirer</span>' : `<span class="ic" style="background-image:url(${icon(id)})"></span><span>${D.PIECES[id].name}</span>`); b.type = 'button'; b.onclick = ev => { ev.stopPropagation(); Bd.sel = id; I.audio.sfx('move'); Bd.refresh(); }; box.appendChild(b); if (id === Bd.sel) setTimeout(() => b.scrollIntoView && b.scrollIntoView({ block: 'nearest', inline: 'nearest' }), 0); });
-    bar.querySelector('.info').innerHTML = Bd.sel === '_retirer' ? '<b>Retirer</b> · reprend la pièce posée devant toi et rend ses matériaux.' : `<b>${D.PIECES[Bd.sel].name}</b> · ${D.PIECES[Bd.sel].desc} <em>Coût : ${costText(Bd.sel)}.</em>`;
+    ORDER.forEach(id => { const b = I.el('button', 'pc' + (id === Bd.sel ? ' sel' : '') + (id !== '_retirer' && !afford(id) ? ' poor' : ''), id === '_retirer' ? '<span class="ic">✕</span><span>' + I.t('Retirer') + '</span>' : `<span class="ic" style="background-image:url(${icon(id)})"></span><span>${D.PIECES[id].name}</span>`); b.type = 'button'; b.onclick = ev => { ev.stopPropagation(); Bd.sel = id; I.audio.sfx('move'); Bd.refresh(); }; box.appendChild(b); if (id === Bd.sel) setTimeout(() => b.scrollIntoView && b.scrollIntoView({ block: 'nearest', inline: 'nearest' }), 0); });
+    bar.querySelector('.info').innerHTML = Bd.sel === '_retirer' ? I.t('<b>Retirer</b> · reprend la pièce posée devant toi et rend ses matériaux.') : `<b>${D.PIECES[Bd.sel].name}</b> · ${D.PIECES[Bd.sel].desc} <em>${I.t('Coût : {cout}.', { cout: costText(Bd.sel) })}</em>`;
   };
 
   /* ----- rendu : case visée, chantiers, troupeaux ----- */
