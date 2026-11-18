@@ -468,7 +468,7 @@ ISNAD.registerSaga({
               ['nar', "Deux émirs, c'eût été deux communautés avant la fin de l'année : le Clan n'attendait que cela. Ce n'est pas ce qui fut rapporté."] ] },
             { t: "Proposer 'Umar ou Abû 'Ubayda, et s'effacer.", ok: true, r: [
               ['quote', "J'agrée pour vous l'un de ces deux hommes : prêtez allégeance à celui des deux que vous voudrez.", "Abû Bakr à la Saqîfa — al-Bukhârî, as-Sahîh"],
-              ['quote', "De tout ce qu'il dit, je ne détestai que cette parole. Par Allah, j'aurais préféré avoir le cou tranché, sans péché, plutôt que de commander à des gens parmi lesquels se trouve Abû Bakr.", "'Umar ibn al-Khattâb — al-Bukhârî, as-Sahîh"] ] }
+              ['quote', "De tout ce qu'il dit, je ne détestai que cette parole. Par Allah, j'aurais préféré avoir le cou tranché, sans péché, plutôt que de commander à des gens parmi lesquels se trouve Abû Bakr.", "'Umar ibn al-Khattâb — al-Bukhârî, as-Sahîh§6830"] ] }
           ]],
           ['say', 'umar', "Tends ta main, Abû Bakr."],
           ['sfx', 'duff'],

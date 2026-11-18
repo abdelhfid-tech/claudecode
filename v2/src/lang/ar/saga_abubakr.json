@@ -353,6 +353,7 @@
 {"k":"1ueoxs7.2o","fr":"J'agrée pour vous l'un de ces deux hommes : prêtez allégeance à celui des deux que vous voudrez.","t":"","ou":"chapters[0].objectives[5].then[16]<choice>2[2].r[0]<quote>1"},
 {"k":"1nrop15.17","fr":"Abû Bakr à la Saqîfa — al-Bukhârî, as-Sahîh","t":"","ou":"chapters[0].objectives[5].then[16]<choice>2[2].r[0]<quote>2"},
 {"k":"igs8hv.56","fr":"De tout ce qu'il dit, je ne détestai que cette parole. Par Allah, j'aurais préféré avoir le cou tranché, sans péché, plutôt que de commander à des gens parmi lesquels se trouve Abû Bakr.","t":"","ou":"chapters[0].objectives[5].then[16]<choice>2[2].r[1]<quote>1"},
+{"k":"1yp0agr.1c","fr":"'Umar ibn al-Khattâb — al-Bukhârî, as-Sahîh§6830","t":"","ou":"chapters[0].objectives[5].then[16]<choice>2[2].r[1]<quote>2"},
 {"k":"1rsqb19.o","fr":"Tends ta main, Abû Bakr.","t":"","ou":"chapters[0].objectives[5].then[17]<say>2","qui":"umar"},
 {"k":"1952m37.3n","fr":"'Umar lui prête allégeance. Puis les Émigrés. Puis les Ansâr, Bashîr ibn Sa'd parmi les premiers. Pas une goutte de sang n'a coulé.","t":"","ou":"chapters[0].objectives[5].then[19]<nar>1"},
 {"k":"898xic.4f","fr":"Le lendemain. La mosquée est pleine : tous viennent prêter allégeance. Abû Bakr n'a pas dormi. Il n'a jamais voulu de cette charge, et il sait ce qu'elle pèse.","t":"","ou":"chapters[0].objectives[6].then[1]<nar>1"},

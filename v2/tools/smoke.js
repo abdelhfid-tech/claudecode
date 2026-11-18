@@ -13,7 +13,7 @@ const fs = require('fs');
 const mode = process.argv[2] || 'all';
 const out = process.argv[3] || path.join(__dirname, '../.smoke');
 fs.mkdirSync(out, { recursive: true });
-const url = 'file://' + path.join(__dirname, '../index.html');
+const url = 'file://' + path.join(__dirname, '../index.html') + (process.env.LANGUE ? '?lang=' + process.env.LANGUE : ''); // LANGUE=ja : la partie jouée dans une autre langue
 
 (async () => {
   const browser = await chromium.launch();

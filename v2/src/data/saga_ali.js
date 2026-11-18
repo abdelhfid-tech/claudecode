@@ -262,7 +262,7 @@ ISNAD.registerSaga({
       text: "L'idole de ceux qui se font juges des cœurs. Elle porte l'habit de la justice, mais sa balance n'a qu'un plateau : elle ne sait que condamner. Scrupuleuse pour une datte, elle est sans égard pour le sang. La justice seule ne l'entame pas, car elle s'en croit le nom ; elle cède au savoir, qui distingue, et à la miséricorde, qui retient la main. 'Alî la brisa deux fois : à Nahrawân, en refusant de rendre l'anathème, puis sur son lit, en protégeant son propre meurtrier de la vengeance." },
     { id: 'consignes', cat: 'Parole', title: 'Les dernières consignes',
       text: "Frappé à l'aube, en Ramadan de l'an 40, 'Alî donna ses consignes au sujet de son agresseur, Ibn Muljam : qu'on le nourrisse et qu'on le traite bien ; s'il survivait, il déciderait lui-même ; s'il mourait, une seule frappe pour sa frappe, sans mutilation. Il interdit qu'on verse le sang d'autres musulmans en son nom. Il mourut deux jours plus tard, selon les récits les plus répandus.",
-      src: "Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh" },
+      src: "Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh§recueil" },
     { id: 'fiction_ali', cat: 'Biographie', title: 'Figures de fiction de cette saga',
       text: "Pour donner un visage aux enjeux, cette saga ajoute aux personnages historiques quatre figures inventées : Ma'dân, notable des greniers de Koufa ; Mâzin, chef des cavaliers de la Butte ; le maître du cercle d'étude ; le doyen des récitants de Nahrawân. Leurs paroles et leurs choix sont de fiction. Ce qui dépend d'eux change selon tes pourparlers ; ce que les sources rapportent des Compagnons ne change pas." },
     { id: 'lettre_juges', cat: 'Parole', title: "La lettre de 'Umar sur le jugement",
@@ -722,10 +722,10 @@ ISNAD.registerSaga({
               ['quote', "Emplis ton cœur de miséricorde pour tes administrés. […] Ils sont de deux sortes : ou bien ton frère en religion, ou bien ton semblable dans la création.", "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)"]
             ] },
             { t: 'Sur le choix des juges', r: [
-              ['quote', "Choisis, pour juger entre les gens, le meilleur de tes administrés : celui que les affaires n'accablent pas, que les plaideurs n'irritent pas, et qui ne persiste pas dans l'erreur.", "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)"]
+              ['quote', "Choisis, pour juger entre les gens, le meilleur de tes administrés : celui que les affaires n'accablent pas, que les plaideurs n'irritent pas, et qui ne persiste pas dans l'erreur.", "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)§l725"]
             ] },
             { t: 'Sur les flatteurs', r: [
-              ['quote', "Attache-toi aux gens scrupuleux et véridiques ; puis accoutume-les à ne pas te couvrir d'éloges, ni à te réjouir d'un bien que tu n'as pas fait.", "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)"]
+              ['quote', "Attache-toi aux gens scrupuleux et véridiques ; puis accoutume-les à ne pas te couvrir d'éloges, ni à te réjouir d'un bien que tu n'as pas fait.", "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)§l728"]
             ] }
           ]],
           ['say', 'ibnabbas', "Frère en religion, ou semblable dans la création. Il n'a laissé personne dehors."],

@@ -84,6 +84,9 @@ function registre() {
 }
 
 /* ---------- le contrôle ---------- */
+// un texte est-il celui de telle ligne du récit ? (le registre rattache un verset à sa ligne : le même mot ailleurs n'est pas une citation)
+const SOURCES_JS = {}; const auLigne = (f, n, fr) => { const L = SOURCES_JS[f] || (SOURCES_JS[f] = fs.existsSync(path.join(SRC, 'data', f + '.js')) ? fs.readFileSync(path.join(SRC, 'data', f + '.js'), 'utf8').split('\n') : []);
+  const bout = fr.replace(/[«»"']/g, '').slice(0, 40); return !n || !L.length || [L[n - 2], L[n - 1], L[n]].some(x => x && x.replace(/[«»"'\\]/g, '').indexOf(bout) >= 0); };
 const ECRITURE = { ar: /[؀-ۿ]/, ja: /[぀-ヿ一-鿿]/, en: /[A-Za-z]/ };
 const FORMES = { ar: 6, en: 2, ja: 1 };
 const champs = s => new Set((String(s).match(/\{(\w+)\}/g) || []));
@@ -109,9 +112,9 @@ function controler(l, F, REG) {
       if ((fr.match(/\*/g) || []).length !== (t.match(/\*/g) || []).length) avis.push(`${w} : pas la même emphase (*…*) que le français`);
       // une parole citée et sa source : celles du registre, au signe près
       const p = REG.paroles.get(fr); if (p && p[l]) { if (t !== p[l].texte) erreurs.push(`${w} : la parole n'est pas celle du registre (v2/docs/sources/)`); }
-      const s = REG.sources.get(fr); if (s && s.every(e => e[l]) && !s.some(e => t === e[l].reference)) erreurs.push(`${w} : la source n'est pas celle du registre`);
+      const s = /<quote>2$/.test(v.ou) && REG.sources.get(fr); if (s && s.every(e => e[l]) && !s.some(e => t === e[l].reference)) erreurs.push(`${w} : la source n'est pas celle du registre`);
       // un verset : le texte relevé dans le registre doit s'y trouver tel quel
-      REG.versets.filter(e => e.fr && path.basename(String(e.fichier || ''), '.js') === f && fr.indexOf(e.fr) >= 0 && e[l] && e[l].texte).forEach(e => { if (t.indexOf(e[l].texte) < 0) erreurs.push(`${w} : le verset ${e.sourate}:${e.versets} n'est pas cité tel que le registre le relève`); });
+      REG.versets.filter(e => e.fr && path.basename(String(e.fichier || ''), '.js') === f && fr.indexOf(e.fr) >= 0 && e[l] && e[l].texte && auLigne(f, e.ligne, fr)).forEach(e => { if (t.indexOf(e[l].texte) < 0) erreurs.push(`${w} : le verset ${e.sourate}:${e.versets} n'est pas cité tel que le registre le relève`); });
     }); });
   // un même texte français n'a qu'une clé : il ne peut être écrit que d'une façon, dans tous les fichiers où il revient
   const vu = new Map(); Object.keys(F).forEach(f => (lire(l, f).textes || []).forEach(x => { if (!x.t || !F[f].has(x.fr)) return; const a = vu.get(x.fr);

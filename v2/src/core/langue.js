@@ -170,11 +170,12 @@
       return p ? s.replace(/\{(\w+)\}/g, (m, c) => (p[c] == null ? m : p[c])) : s;
     };
     // relève, une fois, les emplacements de texte d'un récit posé (en français à ce moment-là)
-    L.relever = function (saga) { if (!saga || sues.has(saga)) return; sues.add(saga); casesSaga(saga, (o, k) => cases.push({ o, k, fr: o[k] })); };
+    const sans = s => (typeof s === 'string' && s.indexOf('§') > 0 ? s.slice(0, s.indexOf('§')) : s);   // « Texte§sens » se dit « Texte »
+    L.relever = function (saga) { if (!saga || sues.has(saga)) return; sues.add(saga); casesSaga(saga, (o, k) => { cases.push({ o, k, fr: o[k] }); o[k] = sans(o[k]); }); };
     casesDefs(D, (o, k) => cases.push({ o, k, fr: o[k] }));
     // pose la langue courante partout : les récits, les tables, puis le nom du râwî (perso.js) et la page
     L.appliquer = function () {
-      versFr.clear(); cases.forEach(c => { const t = L.de(c.fr); c.o[c.k] = t; if (t !== c.fr && !versFr.has(t)) versFr.set(t, c.fr); });
+      versFr.clear(); cases.forEach(c => { const t = L.de(c.fr), v = t === c.fr ? sans(t) : t; c.o[c.k] = v; if (v !== sans(c.fr) && !versFr.has(v)) versFr.set(v, sans(c.fr)); });
       if (I.perso) I.perso.appliquer();
       L.page();
     };

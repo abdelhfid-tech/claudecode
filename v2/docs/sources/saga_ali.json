@@ -1,353 +1,353 @@
 [
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 18,
-    "fr": "Le meilleur juge d'entre nous est 'Alî.",
-    "source_fr": "'Umar ibn al-Khattâb — al-Bukhârî",
-    "nature": "hadith",
-    "ar": {
-      "texte": "وَأَقْضَانَا عَلِيٌّ",
-      "reference": "عمر بن الخطاب — صحيح البخاري، رقم ٤٤٨١",
-      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Our best judge is `Ali.",
-      "origine": "publiee",
-      "reference": "'Umar ibn al-Khattab — Sahih al-Bukhari 4481 (trans. Muhsin Khan)",
-      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
-    },
-    "ja": {
-      "texte": "われらのうちで最も裁きに長けているのはアリーである。",
-      "origine": "de_l_arabe",
-      "reference": "ウマル・イブン・アル=ハッターブ ― 『サヒーフ・アル=ブハーリー』4481番(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "",
-    "note": "Al-Bukhârî, n° 4481 (livre du Tafsîr), d'après Ibn 'Abbâs : « أَقْرَؤُنَا أُبَىٌّ، وَأَقْضَانَا عَلِيٌّ ». Seule la seconde moitié est citée, comme en français ; l'arabe garde sa conjonction initiale « وَ », telle qu'imprimée. Anglais : traduction de Muhsin Khan, où la phrase est « …and our best judge is `Ali; … » : la majuscule initiale et le point final ont été posés ici, et l'accent grave devant « Ali » est celui de l'édition (il note le 'ayn). Aucune traduction japonaise publiée d'al-Bukhârî n'a pu être lue en ligne."
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 18,
+  "fr": "Le meilleur juge d'entre nous est 'Alî.",
+  "source_fr": "'Umar ibn al-Khattâb — al-Bukhârî",
+  "nature": "hadith",
+  "ar": {
+   "texte": "وَأَقْضَانَا عَلِيٌّ",
+   "reference": "عمر بن الخطاب — صحيح البخاري، رقم ٤٤٨١",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 28,
-    "fr": "Un homme vous a quittés hier, que les premiers n'ont pas devancé par le savoir et que les derniers n'atteindront pas. Il n'a laissé ni or ni argent, sinon sept cents dirhams.",
-    "source_fr": "Al-Hasan ibn 'Alî, au lendemain de sa mort — Ahmad, al-Musnad ; Ibn Sa'd, Tabaqât",
-    "nature": "hadith",
-    "ar": {
-      "texte": "لَقَدْ فَارَقَكُمْ رَجُلٌ بِالْأَمْسِ مَا سَبَقَهُ الْأَوَّلُونَ بِعِلْمٍ، وَلا أَدْرَكَهُ الْآخِرُونَ […] وَمَا تَرَكَ مِنْ صَفْرَاءَ وَلا بَيْضَاءَ، إِلا سَبْعَ مِائَةِ دِرْهَمٍ",
-      "reference": "الحسن بن علي، بعد مقتل علي — مسند أحمد، رقم ١٧٢٠",
-      "lu_sur": "https://shamela.ws/book/25794/1252",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "A man left you yesterday whom the first did not surpass in knowledge and whom the last have not overtaken. […] He left neither gold nor silver, save seven hundred dirhams.",
-      "origine": "de_l_arabe",
-      "reference": "Al-Hasan ibn 'Ali, after the killing of 'Ali — Musnad Ahmad 1720 (translated from the Arabic)",
-      "lu_sur": ""
-    },
-    "ja": {
-      "texte": "昨日、一人の人があなたがたのもとを去った。先の人々も知識において彼に先んじることはなく、後の人々も彼に追いつくことはなかった。[…] 彼は金も銀も遺さなかった。ただ七百ディルハムを除いては。",
-      "origine": "de_l_arabe",
-      "reference": "ハサン・イブン・アリー、アリー殺害の後に ― アフマド『ムスナド』1720番(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "Le français enchaîne deux phrases que le récit sépare, sans marquer la coupure : entre les deux, le texte (Ahmad, n° 1720) dit que le Messager d'Allah ﷺ lui confiait l'étendard et qu'il ne revenait pas sans la victoire ; la coupure est notée « […] » dans les trois langues. Le français s'arrête à « sept cents dirhams » ; l'arabe poursuit : « مِنْ عَطَائِهِ كَانَ يَرْصُدُهَا لِخَادِمٍ لِأَهْلِهِ » (restés de sa pension, qu'il réservait pour un serviteur des siens). « Les derniers n'atteindront pas » (futur) est la leçon du n° 1719 (« وَلا يُدْرِكُهُ الْآخِرُونَ », sans la phrase des dirhams) ; le n° 1720, seul à porter les deux phrases, dit « وَلا أَدْرَكَهُ الْآخِرُونَ » (ne l'ont pas atteint). Chez Ibn Sa'd (Tabaqât, t. 3, p. 38), second ouvrage nommé, « par le savoir » (بعلم) manque : « ما سبقه الأولون ولا يدركه الآخرون ».",
-    "note": "Musnad Ahmad, éd. ar-Risâla, t. 3, p. 247, n° 1720 (d'après 'Amr ibn Hubshî) ; n° 1719 lu sur https://shamela.ws/book/25794/1251 ; Ibn Sa'd, Tabaqât, éd. Dâr Sâdir, t. 3, p. 38, lu sur https://shamela.ws/book/9351/920. « صفراء ولا بيضاء » (ni jaune ni blanche) est rendu par « ni or ni argent », comme en français. Le Musnad n'a pas de traduction anglaise dans les éditions lisibles d'ici."
+  "en": {
+   "texte": "Our best judge is `Ali.",
+   "origine": "publiee",
+   "reference": "'Umar ibn al-Khattab — Sahih al-Bukhari 4481 (trans. Muhsin Khan)",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 303,
-    "fr": "Le savoir vaut mieux que la richesse : le savoir te garde, alors que toi, tu gardes la richesse.",
-    "source_fr": "'Alî ibn Abî Tâlib à Kumayl — on rapporte, Abû Nu'aym, Hilyat al-Awliyâ'",
-    "nature": "chronique",
-    "ar": {
-      "texte": "العلم خير من المال، العلم يحرسك وأنت تحرس المال.",
-      "reference": "يُروى عن علي بن أبي طالب في وصيته لكميل بن زياد — أبو نعيم، حلية الأولياء، ج ١ ص ٨٠",
-      "lu_sur": "https://shamela.ws/book/10495/78",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Knowledge is better than wealth: knowledge guards you, while you guard wealth.",
-      "origine": "de_l_arabe",
-      "reference": "It is reported: 'Ali ibn Abi Talib to Kumayl ibn Ziyad — Abu Nu'aym, Hilyat al-Awliya', vol. 1, p. 80 (translated from the Arabic)",
-      "lu_sur": ""
-    },
-    "ja": {
-      "texte": "知識は財産にまさる。知識はあなたを守り、財産はあなたがこれを守る。",
-      "origine": "de_l_arabe",
-      "reference": "アリー・イブン・アビー・ターリブがクマイル・イブン・ズィヤードに語ったと伝えられる ― アブー・ヌアイム『ヒルヤト・アル=アウリヤー』第1巻80頁(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "",
-    "note": "Hilyat al-Awliyâ', éd. as-Sa'âda, t. 1, p. 79-80, « وصيته لكميل بن زياد » ; la phrase est à la p. 80. La réserve « on rapporte » du français est gardée dans les trois références."
+  "ja": {
+   "texte": "われらのうちで最も裁きに長けているのはアリーである。",
+   "origine": "de_l_arabe",
+   "reference": "ウマル・イブン・アル=ハッターブ ― 『サヒーフ・アル=ブハーリー』4481番(アラビア語原文より訳出)",
+   "lu_sur": ""
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 352,
-    "fr": "Interrogez-moi sur le Livre d'Allah : il n'est pas un verset dont je ne sache s'il est descendu de nuit ou de jour, en plaine ou en montagne.",
-    "source_fr": "'Alî ibn Abî Tâlib — Ibn Sa'd, Tabaqât",
-    "nature": "chronique",
-    "ar": {
-      "texte": "سلوني عن كتاب الله فإنه ليس من آية إلا وقد عرفت بليل نزلت أم بنهار، في سهل أم في جبل.",
-      "reference": "علي بن أبي طالب — ابن سعد، الطبقات الكبرى، ج ٢ ص ٣٣٨",
-      "lu_sur": "https://shamela.ws/book/9351/835",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Ask me about the Book of Allah, for there is not a verse of which I do not know whether it came down by night or by day, on the plain or on the mountain.",
-      "origine": "de_l_arabe",
-      "reference": "'Ali ibn Abi Talib — Ibn Sa'd, al-Tabaqat al-Kubra, vol. 2, p. 338 (translated from the Arabic)",
-      "lu_sur": ""
-    },
-    "ja": {
-      "texte": "アッラーの書について私に問いなさい。夜に下ったのか昼に下ったのか、平地でか山でか、私の知らない節は一つとしてないのだから。",
-      "origine": "de_l_arabe",
-      "reference": "アリー・イブン・アビー・ターリブ ― イブン・サアド『大伝記集(タバカート)』第2巻338頁(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "",
-    "note": "Tabaqât, éd. Dâr Sâdir, t. 2, p. 338 (d'après Abû t-Tufayl) ; même texte, vocalisé, dans l'éd. al-Khânjî, t. 2, p. 292 (https://shamela.ws/book/146/772)."
+  "ecart": "",
+  "note": "Al-Bukhârî, n° 4481 (livre du Tafsîr), d'après Ibn 'Abbâs : « أَقْرَؤُنَا أُبَىٌّ، وَأَقْضَانَا عَلِيٌّ ». Seule la seconde moitié est citée, comme en français ; l'arabe garde sa conjonction initiale « وَ », telle qu'imprimée. Anglais : traduction de Muhsin Khan, où la phrase est « …and our best judge is `Ali; … » : la majuscule initiale et le point final ont été posés ici, et l'accent grave devant « Ali » est celui de l'édition (il note le 'ayn). Aucune traduction japonaise publiée d'al-Bukhârî n'a pu être lue en ligne."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 28,
+  "fr": "Un homme vous a quittés hier, que les premiers n'ont pas devancé par le savoir et que les derniers n'atteindront pas. Il n'a laissé ni or ni argent, sinon sept cents dirhams.",
+  "source_fr": "Al-Hasan ibn 'Alî, au lendemain de sa mort — Ahmad, al-Musnad ; Ibn Sa'd, Tabaqât",
+  "nature": "hadith",
+  "ar": {
+   "texte": "لَقَدْ فَارَقَكُمْ رَجُلٌ بِالْأَمْسِ مَا سَبَقَهُ الْأَوَّلُونَ بِعِلْمٍ، وَلا أَدْرَكَهُ الْآخِرُونَ […] وَمَا تَرَكَ مِنْ صَفْرَاءَ وَلا بَيْضَاءَ، إِلا سَبْعَ مِائَةِ دِرْهَمٍ",
+   "reference": "الحسن بن علي، بعد مقتل علي — مسند أحمد، رقم ١٧٢٠",
+   "lu_sur": "https://shamela.ws/book/25794/1252",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 696,
-    "fr": "Parole de vérité par laquelle on vise le faux.",
-    "source_fr": "'Alî ibn Abî Tâlib — Muslim",
-    "nature": "hadith",
-    "ar": {
-      "texte": "كَلِمَةُ حَقٍّ أُرِيدَ بِهَا بَاطِلٌ",
-      "reference": "علي بن أبي طالب — صحيح مسلم، رقم ١٠٦٦",
-      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-muslim.min.json",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "The statement is true but it is intentionally applied (to support) a wrong (cause).",
-      "origine": "publiee",
-      "reference": "'Ali ibn Abi Talib — Sahih Muslim 1066 (trans. Abdul Hamid Siddiqui)",
-      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-muslim.min.json"
-    },
-    "ja": {
-      "texte": "その言葉は真実である。しかしそれは悪用されているのだ。",
-      "origine": "publiee",
-      "reference": "アリー・イブン・アビー・ターリブ ― 『サヒーフ・ムスリム』1066番(日本ムスリム協会訳、第2巻174-177頁)",
-      "lu_sur": "https://www.muslim.or.jp/hadith/vol2-174.html"
-    },
-    "ecart": "",
-    "note": "Muslim, livre de la Zakât, n° 1066 (récit de 'Ubayd Allâh ibn Abî Râfi' ; n° 2468 dans la numérotation continue de l'édition lue, « 1066.07 » dans sa numérotation arabe). Les deux traductions publiées, recopiées telles quelles, paraphrasent : Siddiqui met des parenthèses explicatives, la version japonaise de l'Association musulmane du Japon dit « cette parole est vraie, mais on en fait un mauvais usage ». Si le décideur préfère le mot à mot, traduit de l'arabe : « A word of truth by which falsehood is intended. » / 「真実の言葉ではあるが、それによって偽りが意図されている。」 Le site japonais ne nomme pas les traducteurs : ils ne sont pas nommés ici."
+  "en": {
+   "texte": "A man left you yesterday whom the first did not surpass in knowledge and whom the last have not overtaken. […] He left neither gold nor silver, save seven hundred dirhams.",
+   "origine": "de_l_arabe",
+   "reference": "Al-Hasan ibn 'Ali, after the killing of 'Ali — Musnad Ahmad 1720 (translated from the Arabic)",
+   "lu_sur": ""
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 702,
-    "fr": "Vous avez sur nous trois droits : nous ne vous interdirons pas les mosquées d'Allah pour y évoquer Son nom ; nous ne vous priverons pas de votre part tant que vos mains seront avec les nôtres ; et nous ne vous combattrons pas les premiers.",
-    "source_fr": "'Alî ibn Abî Tâlib — Ibn Abî Shayba, al-Musannaf ; at-Tabarî, Târîkh",
-    "nature": "chronique",
-    "ar": {
-      "texte": "أما إن لكم عندنا ثلاثًا ما صحبتمونا: لا نمنعكم مساجد الله أن تذكروا فيها اسمه، ولا نمنعكم الفيء ما دامت أيديكم مع أيدينا، ولا نقاتلكم حتى تبدءونا",
-      "reference": "علي بن أبي طالب — الطبري، تاريخ الرسل والملوك، سنة ٣٧، ج ٥ ص ٧٣",
-      "lu_sur": "https://ar.wikisource.org/w/index.php?title=تاريخ_الطبري/الجزء_الخامس&action=raw",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Truly, you have three things from us so long as you keep our company: we will not bar you from the mosques of Allah, that you may mention His name in them; we will not withhold from you your share of the public revenue so long as your hands are with ours; and we will not fight you until you begin against us.",
-      "origine": "de_l_arabe",
-      "reference": "'Ali ibn Abi Talib — al-Tabari, Tarikh al-Rusul wa-l-Muluk, year 37, vol. 5, p. 73 (translated from the Arabic)",
-      "lu_sur": ""
-    },
-    "ja": {
-      "texte": "よいか、あなたがたがわれらと共にいる限り、われらはあなたがたに三つのことを認める。アッラーの御名を唱えるためにアッラーのモスクに入るのを妨げない。あなたがたの手がわれらの手と共にある限り、公の収入(ファイ)の分け前を拒まない。そして、あなたがたが先に仕掛けない限り、われらはあなたがたと戦わない。",
-      "origine": "de_l_arabe",
-      "reference": "アリー・イブン・アビー・ターリブ ― タバリー『諸使徒と諸王の歴史』ヒジュラ暦37年、第5巻73頁(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "Le français suit le texte d'at-Tabarî, mais laisse tomber « ما صحبتمونا » (tant que vous resterez en notre compagnie), qui conditionne les trois engagements ; « الفيء » (le fay', revenu commun) devient « votre part » ; « لكم عندنا ثلاثًا » (vous avez de nous trois choses) devient « trois droits » ; « لا نقاتلكم حتى تبدءونا » (nous ne vous combattrons pas tant que vous n'aurez pas commencé) devient « pas les premiers ». Chez Ibn Abî Shayba (n° 37930), premier ouvrage nommé, les mots diffèrent : « لَكُمْ عِنْدِي ثَلَاثُ خِلَالٍ مَا كُنْتُمْ مَعَنَا … وَلَا نُقَاتِلُكُمْ حَتَّى تُقَاتِلُوا ».",
-    "note": "At-Tabarî, année 37, « ذكر ما كان من خبر الخوارج عند توجيه علي الحكم للحكومة وخبر يوم النهر » (récit d'Abû Mikhnaf d'après Kathîr ibn Bahz al-Hadramî). Texte recopié de Wikisource (tome 5 entier) ; tome et page vérifiés sur https://shamela.ws/book/9783/2534 (même texte, vocalisation partielle). Ibn Abî Shayba, al-Musannaf, éd. al-Hût, t. 7, p. 562, n° 37930 : https://shamela.ws/book/9944/42742. « الفيء » est rendu par « public revenue » / 「公の収入(ファイ)」 : terme à faire valider."
+  "ja": {
+   "texte": "昨日、一人の人があなたがたのもとを去った。先の人々も知識において彼に先んじることはなく、後の人々も彼に追いつくことはなかった。[…] 彼は金も銀も遺さなかった。ただ七百ディルハムを除いては。",
+   "origine": "de_l_arabe",
+   "reference": "ハサン・イブン・アリー、アリー殺害の後に ― アフマド『ムスナド』1720番(アラビア語原文より訳出)",
+   "lu_sur": ""
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 722,
-    "fr": "Emplis ton cœur de miséricorde pour tes administrés. […] Ils sont de deux sortes : ou bien ton frère en religion, ou bien ton semblable dans la création.",
-    "source_fr": "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)",
-    "nature": "autre",
-    "ar": {
-      "texte": "وأشعر قلبك الرحمة للرعية […] فإنهم صنفان إما أخ لك في الدين وإما نظير لك في الخلق",
-      "reference": "يُروى عن علي بن أبي طالب في عهده لمالك الأشتر (في نسبته خلاف) — نهج البلاغة، بشرح محمد عبده، ج ٣ ص ٨٤",
-      "lu_sur": "https://raw.githubusercontent.com/OpenITI/0425AH/master/data/0406SharifRadi/0406SharifRadi.NahjBalagha/0406SharifRadi.NahjBalagha.Shia20200618-ara1.mARkdown",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Imbue your heart with mercy for your subjects. […] They are of two kinds: either your brother in religion, or your like in creation.",
-      "origine": "de_l_arabe",
-      "reference": "It is reported — letter of 'Ali to Malik al-Ashtar, Nahj al-Balagha (attribution disputed), ed. Muhammad 'Abduh, vol. 3, p. 84 (translated from the Arabic)",
-      "lu_sur": ""
-    },
-    "ja": {
-      "texte": "民への慈しみを、あなたの心にしみ込ませなさい。[…] 彼らは二種類である。宗教におけるあなたの兄弟か、さもなければ、被造物としてあなたと同じ者である。",
-      "origine": "de_l_arabe",
-      "reference": "アリーがマーリク・アル=アシュタルに宛てたと伝えられる書簡(帰属には異論がある) ― 『ナフジュ・アル=バラーガ』ムハンマド・アブドゥフ注釈版、第3巻84頁(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "",
-    "note": "Texte lu dans le corpus OpenITI (numérisation de l'édition commentée par Muhammad 'Abduh, 4 parties, 1412 H ; le fichier porte les repères de page de cette édition). Nahj al-Balâgha n'est ni sur shamela.ws ni, pour cette lettre, sur ar.wikisource.org ; le même « 'ahd » est reproduit, attribué à 'Alî, chez al-Qalqashandî, Subh al-A'shâ, t. 10, p. 11-13 (https://shamela.ws/book/9429/4599) et chez an-Nuwayrî, Nihâyat al-Arab, t. 6, p. 20-24 (https://shamela.ws/book/10283/1915). La lettre est connue comme la lettre 53 du recueil : ce numéro n'est pas imprimé dans l'édition lue, il n'est donc pas porté dans la référence. La coupure « […] » tombe au même endroit qu'en français : elle couvre « والمحبة لهم واللطف بهم. ولا تكونن عليهم سبعا ضاريا تغتنم أكلهم ». L'arabe garde ses particules initiales (« و », « فإنهم »), telles qu'imprimées."
+  "ecart": "Le français enchaîne deux phrases que le récit sépare, sans marquer la coupure : entre les deux, le texte (Ahmad, n° 1720) dit que le Messager d'Allah ﷺ lui confiait l'étendard et qu'il ne revenait pas sans la victoire ; la coupure est notée « […] » dans les trois langues. Le français s'arrête à « sept cents dirhams » ; l'arabe poursuit : « مِنْ عَطَائِهِ كَانَ يَرْصُدُهَا لِخَادِمٍ لِأَهْلِهِ » (restés de sa pension, qu'il réservait pour un serviteur des siens). « Les derniers n'atteindront pas » (futur) est la leçon du n° 1719 (« وَلا يُدْرِكُهُ الْآخِرُونَ », sans la phrase des dirhams) ; le n° 1720, seul à porter les deux phrases, dit « وَلا أَدْرَكَهُ الْآخِرُونَ » (ne l'ont pas atteint). Chez Ibn Sa'd (Tabaqât, t. 3, p. 38), second ouvrage nommé, « par le savoir » (بعلم) manque : « ما سبقه الأولون ولا يدركه الآخرون ».",
+  "note": "Musnad Ahmad, éd. ar-Risâla, t. 3, p. 247, n° 1720 (d'après 'Amr ibn Hubshî) ; n° 1719 lu sur https://shamela.ws/book/25794/1251 ; Ibn Sa'd, Tabaqât, éd. Dâr Sâdir, t. 3, p. 38, lu sur https://shamela.ws/book/9351/920. « صفراء ولا بيضاء » (ni jaune ni blanche) est rendu par « ni or ni argent », comme en français. Le Musnad n'a pas de traduction anglaise dans les éditions lisibles d'ici."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 303,
+  "fr": "Le savoir vaut mieux que la richesse : le savoir te garde, alors que toi, tu gardes la richesse.",
+  "source_fr": "'Alî ibn Abî Tâlib à Kumayl — on rapporte, Abû Nu'aym, Hilyat al-Awliyâ'",
+  "nature": "chronique",
+  "ar": {
+   "texte": "العلم خير من المال، العلم يحرسك وأنت تحرس المال.",
+   "reference": "يُروى عن علي بن أبي طالب في وصيته لكميل بن زياد — أبو نعيم، حلية الأولياء، ج ١ ص ٨٠",
+   "lu_sur": "https://shamela.ws/book/10495/78",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 725,
-    "fr": "Choisis, pour juger entre les gens, le meilleur de tes administrés : celui que les affaires n'accablent pas, que les plaideurs n'irritent pas, et qui ne persiste pas dans l'erreur.",
-    "source_fr": "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)",
-    "nature": "autre",
-    "ar": {
-      "texte": "ثم اختر للحكم بين الناس أفضل رعيتك في نفسك ممن لا تضيق به الأمور، ولا تمحكه الخصوم، ولا يتمادى في الزلة",
-      "reference": "يُروى عن علي بن أبي طالب في عهده لمالك الأشتر (في نسبته خلاف) — نهج البلاغة، بشرح محمد عبده، ج ٣ ص ٩٤",
-      "lu_sur": "https://raw.githubusercontent.com/OpenITI/0425AH/master/data/0406SharifRadi/0406SharifRadi.NahjBalagha/0406SharifRadi.NahjBalagha.Shia20200618-ara1.mARkdown",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Then choose, to judge between people, the best of your subjects in your own estimation: one whom matters do not overwhelm, whom litigants do not goad into obstinacy, and who does not persist in a slip.",
-      "origine": "de_l_arabe",
-      "reference": "It is reported — letter of 'Ali to Malik al-Ashtar, Nahj al-Balagha (attribution disputed), ed. Muhammad 'Abduh, vol. 3, p. 94 (translated from the Arabic)",
-      "lu_sur": ""
-    },
-    "ja": {
-      "texte": "次いで、人々の間を裁く者として、あなたの見るところ民のうちで最も優れた者を選びなさい。諸事に追い詰められることなく、争う者たちに煽られて意固地になることもなく、過ちに固執することもない者を。",
-      "origine": "de_l_arabe",
-      "reference": "アリーがマーリク・アル=アシュタルに宛てたと伝えられる書簡(帰属には異論がある) ― 『ナフジュ・アル=バラーガ』ムハンマド・アブドゥフ注釈版、第3巻94頁(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "Le français omet « في نفسك » : l'arabe dit « le meilleur de tes administrés à tes yeux ». La phrase arabe se poursuit après « l'erreur » par d'autres qualités du juge (« ولا يحصر من الفيء إلى الحق إذا عرفه … ») : le français s'arrête sans le marquer, les trois langues s'arrêtent au même mot.",
-    "note": "Texte lu dans le corpus OpenITI (numérisation de l'édition commentée par Muhammad 'Abduh, 4 parties, 1412 H ; le fichier porte les repères de page de cette édition). Nahj al-Balâgha n'est ni sur shamela.ws ni, pour cette lettre, sur ar.wikisource.org ; le même « 'ahd » est reproduit, attribué à 'Alî, chez al-Qalqashandî, Subh al-A'shâ, t. 10, p. 11-13 (https://shamela.ws/book/9429/4599) et chez an-Nuwayrî, Nihâyat al-Arab, t. 6, p. 20-24 (https://shamela.ws/book/10283/1915). La lettre est connue comme la lettre 53 du recueil : ce numéro n'est pas imprimé dans l'édition lue, il n'est donc pas porté dans la référence. Une espace placée avant une virgule dans le fichier lu (« الخصوم ، ») a été retirée ; rien d'autre n'est touché. « ثم » (puis) ouvre la phrase dans l'arabe."
+  "en": {
+   "texte": "Knowledge is better than wealth: knowledge guards you, while you guard wealth.",
+   "origine": "de_l_arabe",
+   "reference": "It is reported: 'Ali ibn Abi Talib to Kumayl ibn Ziyad — Abu Nu'aym, Hilyat al-Awliya', vol. 1, p. 80 (translated from the Arabic)",
+   "lu_sur": ""
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 728,
-    "fr": "Attache-toi aux gens scrupuleux et véridiques ; puis accoutume-les à ne pas te couvrir d'éloges, ni à te réjouir d'un bien que tu n'as pas fait.",
-    "source_fr": "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)",
-    "nature": "autre",
-    "ar": {
-      "texte": "والصق بأهل الورع والصدق، ثم رضهم على أن لا يطروك ولا يبجحوك بباطل لم تفعله",
-      "reference": "يُروى عن علي بن أبي طالب في عهده لمالك الأشتر (في نسبته خلاف) — نهج البلاغة، بشرح محمد عبده، ج ٣ ص ٨٨",
-      "lu_sur": "https://raw.githubusercontent.com/OpenITI/0425AH/master/data/0406SharifRadi/0406SharifRadi.NahjBalagha/0406SharifRadi.NahjBalagha.Shia20200618-ara1.mARkdown",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Keep close to the people of scruple and truthfulness; then accustom them not to lavish praise on you, nor to make you exult over a vain thing you have not done.",
-      "origine": "de_l_arabe",
-      "reference": "It is reported — letter of 'Ali to Malik al-Ashtar, Nahj al-Balagha (attribution disputed), ed. Muhammad 'Abduh, vol. 3, p. 88 (translated from the Arabic)",
-      "lu_sur": ""
-    },
-    "ja": {
-      "texte": "敬虔で誠実な人々に寄り添いなさい。そして、あなたを褒めそやさぬよう、また、あなたが行ってもいない虚しい事柄であなたを得意がらせぬよう、彼らを慣らしなさい。",
-      "origine": "de_l_arabe",
-      "reference": "アリーがマーリク・アル=アシュタルに宛てたと伝えられる書簡(帰属には異論がある) ― 『ナフジュ・アル=バラーガ』ムハンマド・アブドゥフ注釈版、第3巻88頁(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "« بباطل لم تفعله » veut dire « d'une chose vaine (fausse) que tu n'as pas faite » : le français écrit « un bien que tu n'as pas fait » ; le mot « bien » n'est pas dans l'arabe.",
-    "note": "Texte lu dans le corpus OpenITI (numérisation de l'édition commentée par Muhammad 'Abduh, 4 parties, 1412 H ; le fichier porte les repères de page de cette édition). Nahj al-Balâgha n'est ni sur shamela.ws ni, pour cette lettre, sur ar.wikisource.org ; le même « 'ahd » est reproduit, attribué à 'Alî, chez al-Qalqashandî, Subh al-A'shâ, t. 10, p. 11-13 (https://shamela.ws/book/9429/4599) et chez an-Nuwayrî, Nihâyat al-Arab, t. 6, p. 20-24 (https://shamela.ws/book/10283/1915). La lettre est connue comme la lettre 53 du recueil : ce numéro n'est pas imprimé dans l'édition lue, il n'est donc pas porté dans la référence. "
+  "ja": {
+   "texte": "知識は財産にまさる。知識はあなたを守り、財産はあなたがこれを守る。",
+   "origine": "de_l_arabe",
+   "reference": "アリー・イブン・アビー・ターリブがクマイル・イブン・ズィヤードに語ったと伝えられる ― アブー・ヌアイム『ヒルヤト・アル=アウリヤー』第1巻80頁(アラビア語原文より訳出)",
+   "lu_sur": ""
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 801,
-    "fr": "Nous les avons tous tués. Et nous tenons tous leur sang et le vôtre pour licite.",
-    "source_fr": "Réponse des gens de Nahrawân — at-Tabarî, Târîkh",
-    "nature": "chronique",
-    "ar": {
-      "texte": "كلنا قتلتهم، وكلنا نستحل دماءهم ودماءكم",
-      "reference": "جواب أهل النهروان — الطبري، تاريخ الرسل والملوك، سنة ٣٧، ج ٥ ص ٨٣",
-      "lu_sur": "https://ar.wikisource.org/w/index.php?title=تاريخ_الطبري/الجزء_الخامس&action=raw",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "All of us killed them, and all of us hold their blood and yours to be lawful.",
-      "origine": "de_l_arabe",
-      "reference": "Reply of the people of Nahrawan — al-Tabari, Tarikh al-Rusul wa-l-Muluk, year 37, vol. 5, p. 83 (translated from the Arabic)",
-      "lu_sur": ""
-    },
-    "ja": {
-      "texte": "われらは皆で彼らを殺した。そしてわれらは皆、彼らの血もあなたがたの血も、流してよいものと見なしている。",
-      "origine": "de_l_arabe",
-      "reference": "ナフラワーンの人々の返答 ― タバリー『諸使徒と諸王の歴史』ヒジュラ暦37年、第5巻83頁(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "",
-    "note": "At-Tabarî, année 37, récit d'Abû Mikhnaf d'après 'Abd Allâh ibn 'Awf. Texte recopié de Wikisource (tome 5 entier) ; tome et page vérifiés sur https://shamela.ws/book/9783/2544."
+  "ecart": "",
+  "note": "Hilyat al-Awliyâ', éd. as-Sa'âda, t. 1, p. 79-80, « وصيته لكميل بن زياد » ; la phrase est à la p. 80. La réserve « on rapporte » du français est gardée dans les trois références."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 352,
+  "fr": "Interrogez-moi sur le Livre d'Allah : il n'est pas un verset dont je ne sache s'il est descendu de nuit ou de jour, en plaine ou en montagne.",
+  "source_fr": "'Alî ibn Abî Tâlib — Ibn Sa'd, Tabaqât",
+  "nature": "chronique",
+  "ar": {
+   "texte": "سلوني عن كتاب الله فإنه ليس من آية إلا وقد عرفت بليل نزلت أم بنهار، في سهل أم في جبل.",
+   "reference": "علي بن أبي طالب — ابن سعد، الطبقات الكبرى، ج ٢ ص ٣٣٨",
+   "lu_sur": "https://shamela.ws/book/9351/835",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 918,
-    "fr": "Du polythéisme, ils ont fui. […] Les hypocrites n'évoquent Allah que très peu. […] Ce sont des gens qui se sont dressés contre nous.",
-    "source_fr": "'Alî ibn Abî Tâlib, interrogé sur les gens de Nahrawân — Ibn Abî Shayba, al-Musannaf",
-    "nature": "hadith",
-    "ar": {
-      "texte": "مِنَ الشِّرْكِ فَرُّوا […] إِنَّ الْمُنَافِقِينَ لَا يَذْكُرُونَ اللَّهَ إِلَّا قَلِيلًا […] قَوْمٌ بَغَوْا عَلَيْنَا",
-      "reference": "علي بن أبي طالب، وقد سُئل عن أهل النهر — ابن أبي شيبة، المصنف، رقم ٣٧٩٤٢",
-      "lu_sur": "https://shamela.ws/book/9944/42754",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "From polytheism they fled. […] The hypocrites remember Allah but little. […] They are a people who rose against us.",
-      "origine": "de_l_arabe",
-      "reference": "'Ali ibn Abi Talib, asked about the people of Nahrawan — Ibn Abi Shayba, al-Musannaf 37942 (translated from the Arabic)",
-      "lu_sur": ""
-    },
-    "ja": {
-      "texte": "彼らは多神崇拝から逃れたのだ。[…] 偽信者たちはアッラーをわずかしか念じない。[…] われらに背いた人々である。",
-      "origine": "de_l_arabe",
-      "reference": "アリー・イブン・アビー・ターリブ、ナフラワーンの人々について問われて ― イブン・アビー・シャイバ『ムサンナフ』37942番(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "",
-    "note": "Al-Musannaf, éd. al-Hût, t. 7, p. 563, n° 37942 (d'après Târiq ibn Shihâb) : trois réponses à trois questions (« Sont-ils polythéistes ? », « hypocrites ? », « que sont-ils donc ? »), que le français sépare par « […] » aux mêmes endroits. « بَغَوْا عَلَيْنَا » : se sont dressés contre nous, nous ont fait tort. Le n° 37763 (https://shamela.ws/book/9944/42573) rapporte les mêmes réponses à propos des gens du Chameau, avec « إِخْوَانُنَا بَغَوْا عَلَيْنَا »."
+  "en": {
+   "texte": "Ask me about the Book of Allah, for there is not a verse of which I do not know whether it came down by night or by day, on the plain or on the mountain.",
+   "origine": "de_l_arabe",
+   "reference": "'Ali ibn Abi Talib — Ibn Sa'd, al-Tabaqat al-Kubra, vol. 2, p. 338 (translated from the Arabic)",
+   "lu_sur": ""
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 953,
-    "fr": "Nourrissez-le bien et donnez-lui une couche douce. Si je vis, je serai seul juge de mon sang. Si je meurs, une frappe pour sa frappe — et ne mutilez pas l'homme.",
-    "source_fr": "'Alî ibn Abî Tâlib — on rapporte, Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh",
-    "nature": "chronique",
-    "ar": {
-      "texte": "أطيبوا طعامه وألينوا فراشه فإن أعِشْ فأنا وَلِيُّ دَمِى، عفوٌ أو قصاص […] إن أنا مت من ضربته هذه فاضربه ضربةً بضربة، ولا تمثل بالرجل",
-      "reference": "يُروى عن علي بن أبي طالب — ابن سعد، الطبقات الكبرى، ج ٣ ص ٣٥؛ الطبري، تاريخ الرسل والملوك، سنة ٤٠، ج ٥ ص ١٤٨",
-      "lu_sur": "https://shamela.ws/book/146/845 ; https://ar.wikisource.org/w/index.php?title=تاريخ_الطبري/الجزء_الخامس&action=raw",
-      "etat": "approchant"
-    },
-    "en": {
-      "texte": "Give him good food and a soft bed. If I live, I am the guardian of my own blood: pardon or retaliation. […] If I die of this blow of his, strike him one blow for his blow, and do not mutilate the man.",
-      "origine": "de_l_arabe",
-      "reference": "It is reported of 'Ali ibn Abi Talib — Ibn Sa'd, al-Tabaqat al-Kubra, vol. 3, p. 35; al-Tabari, Tarikh al-Rusul wa-l-Muluk, year 40, vol. 5, p. 148 (translated from the Arabic)",
-      "lu_sur": ""
-    },
-    "ja": {
-      "texte": "彼には良い食事を与え、寝床を柔らかくしてやりなさい。私が生き延びたなら、私の血のことは私自身が決める。赦すか、同害報復かである。[…] もし私が彼のこの一撃によって死んだなら、一撃には一撃をもって報いなさい。ただし、その男の体を損なってはならない。",
-      "origine": "de_l_arabe",
-      "reference": "アリー・イブン・アビー・ターリブの言葉と伝えられる ― イブン・サアド『大伝記集(タバカート)』第3巻35頁、タバリー『諸使徒と諸王の歴史』ヒジュラ暦40年、第5巻148頁(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "La parole française réunit deux récits en une seule citation. Les deux premières phrases viennent d'Ibn Sa'd (dites quand on amène l'homme), qui poursuit autrement : « وإنْ أمُتْ فألحِقُوه بي أُخاصمه عند ربّ العالمين » (si je meurs, faites-le me suivre : je plaiderai contre lui devant le Seigneur des mondes). La dernière phrase vient d'at-Tabarî, où elle est dite à al-Hasan ; at-Tabarî n'a pas « nourrissez-le bien », mais « النفس بالنفس، إن أنا مت فاقتلوه كما قتلني، وإن بقيت رأيت فيه رأيي ». La jonction est marquée « […] » dans les trois langues. Le français omet « عفوٌ أو قصاص » (pardon ou talion) et rend « فأنا وَلِيُّ دَمِى » (c'est à moi que revient mon sang) par « seul juge de mon sang ».",
-    "note": "Ibn Sa'd, éd. al-Khânjî, t. 3, p. 35 ; l'éd. Dâr Sâdir (t. 3, p. 37, https://shamela.ws/book/9351/919) lit « فأنا أولى بدمه عفوا وقصاصا », leçon que l'éditeur d'al-Khânjî signale comme fautive en note. At-Tabarî, année 40, « ذكر الخبر عن مقتل علي بن أبي طالب » ; tome et page vérifiés sur https://shamela.ws/book/9783/2609. Les deux copies numériques d'at-Tabarî impriment « أنامت » en un seul mot : l'espace a été rétablie (« إن أنا مت »), lecture confirmée par le Tahdhîb al-Âthâr du même auteur (« إِنْ أَنَا مِتُّ مِنْ ضَرْبَتِهِ هَذِهِ », https://shamela.ws/book/13091/177) ; à faire valider. « دَمِى » est l'orthographe de l'édition (yâ' finale sans points)."
+  "ja": {
+   "texte": "アッラーの書について私に問いなさい。夜に下ったのか昼に下ったのか、平地でか山でか、私の知らない節は一つとしてないのだから。",
+   "origine": "de_l_arabe",
+   "reference": "アリー・イブン・アビー・ターリブ ― イブン・サアド『大伝記集(タバカート)』第2巻338頁(アラビア語原文より訳出)",
+   "lu_sur": ""
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 954,
-    "fr": "N'allez pas verser le sang des musulmans en criant : « On a tué le Commandeur des croyants ! » Que seul mon meurtrier réponde de moi.",
-    "source_fr": "'Alî ibn Abî Tâlib — on rapporte, at-Tabarî, Târîkh",
-    "nature": "chronique",
-    "ar": {
-      "texte": "لا ألفينكم تخوضون دماء المسلمين، تقولون: قتل أمير المؤمنين، قتل أمير المؤمنين! ألا لا يقتلن إلا قاتلي.",
-      "reference": "يُروى عن علي بن أبي طالب — الطبري، تاريخ الرسل والملوك، سنة ٤٠، ج ٥ ص ١٤٨",
-      "lu_sur": "https://ar.wikisource.org/w/index.php?title=تاريخ_الطبري/الجزء_الخامس&action=raw",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Let me not find you wading in the blood of the Muslims, saying: “The Commander of the Faithful has been killed! The Commander of the Faithful has been killed!” Truly, none is to be killed but my killer.",
-      "origine": "de_l_arabe",
-      "reference": "It is reported of 'Ali ibn Abi Talib — al-Tabari, Tarikh al-Rusul wa-l-Muluk, year 40, vol. 5, p. 148 (translated from the Arabic)",
-      "lu_sur": ""
-    },
-    "ja": {
-      "texte": "「信徒たちの長が殺された、信徒たちの長が殺された」と言い立てて、あなたがたがムスリムの血の中に踏み入るのを、私に見せてはならない。よいか、私を殺した者のほかは、決して誰も殺されてはならない。",
-      "origine": "de_l_arabe",
-      "reference": "アリー・イブン・アビー・ターリブの言葉と伝えられる ― タバリー『諸使徒と諸王の歴史』ヒジュラ暦40年、第5巻148頁(アラビア語原文より訳出)",
-      "lu_sur": ""
-    },
-    "ecart": "Le français omet l'apostrophe qui ouvre la phrase, « يا بني عبد المطلب » (ô fils de 'Abd al-Muttalib : la parole s'adresse aux siens), et ne donne qu'une fois le cri que l'arabe répète. « ألا لا يقتلن إلا قاتلي » veut dire « que nul ne soit tué, sinon mon meurtrier » : le français écrit « que seul mon meurtrier réponde de moi ».",
-    "note": "At-Tabarî, année 40, « ذكر الخبر عن مقتل علي بن أبي طالب ». Texte recopié de Wikisource (tome 5 entier), à partir de « لا ألفينكم » ; tome et page vérifiés sur https://shamela.ws/book/9783/2609 (où l'on lit, collé, « لايقتلن الا قاتلى »). Dans at-Tabarî, cette phrase précède immédiatement « انظر يا حسن، إن أنا مت من ضربته هذه… », citée à la ligne 953."
-  }
+  "ecart": "",
+  "note": "Tabaqât, éd. Dâr Sâdir, t. 2, p. 338 (d'après Abû t-Tufayl) ; même texte, vocalisé, dans l'éd. al-Khânjî, t. 2, p. 292 (https://shamela.ws/book/146/772)."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 696,
+  "fr": "Parole de vérité par laquelle on vise le faux.",
+  "source_fr": "'Alî ibn Abî Tâlib — Muslim",
+  "nature": "hadith",
+  "ar": {
+   "texte": "كَلِمَةُ حَقٍّ أُرِيدَ بِهَا بَاطِلٌ",
+   "reference": "علي بن أبي طالب — صحيح مسلم، رقم ١٠٦٦",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-muslim.min.json",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "The statement is true but it is intentionally applied (to support) a wrong (cause).",
+   "origine": "publiee",
+   "reference": "'Ali ibn Abi Talib — Sahih Muslim 1066 (trans. Abdul Hamid Siddiqui)",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-muslim.min.json"
+  },
+  "ja": {
+   "texte": "その言葉は真実である。しかしそれは悪用されているのだ。",
+   "origine": "publiee",
+   "reference": "アリー・イブン・アビー・ターリブ ― 『サヒーフ・ムスリム』1066番(日本ムスリム協会訳、第2巻174-177頁)",
+   "lu_sur": "https://www.muslim.or.jp/hadith/vol2-174.html"
+  },
+  "ecart": "",
+  "note": "Muslim, livre de la Zakât, n° 1066 (récit de 'Ubayd Allâh ibn Abî Râfi' ; n° 2468 dans la numérotation continue de l'édition lue, « 1066.07 » dans sa numérotation arabe). Les deux traductions publiées, recopiées telles quelles, paraphrasent : Siddiqui met des parenthèses explicatives, la version japonaise de l'Association musulmane du Japon dit « cette parole est vraie, mais on en fait un mauvais usage ». Si le décideur préfère le mot à mot, traduit de l'arabe : « A word of truth by which falsehood is intended. » / 「真実の言葉ではあるが、それによって偽りが意図されている。」 Le site japonais ne nomme pas les traducteurs : ils ne sont pas nommés ici."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 702,
+  "fr": "Vous avez sur nous trois droits : nous ne vous interdirons pas les mosquées d'Allah pour y évoquer Son nom ; nous ne vous priverons pas de votre part tant que vos mains seront avec les nôtres ; et nous ne vous combattrons pas les premiers.",
+  "source_fr": "'Alî ibn Abî Tâlib — Ibn Abî Shayba, al-Musannaf ; at-Tabarî, Târîkh",
+  "nature": "chronique",
+  "ar": {
+   "texte": "أما إن لكم عندنا ثلاثًا ما صحبتمونا: لا نمنعكم مساجد الله أن تذكروا فيها اسمه، ولا نمنعكم الفيء ما دامت أيديكم مع أيدينا، ولا نقاتلكم حتى تبدءونا",
+   "reference": "علي بن أبي طالب — الطبري، تاريخ الرسل والملوك، سنة ٣٧، ج ٥ ص ٧٣",
+   "lu_sur": "https://ar.wikisource.org/w/index.php?title=تاريخ_الطبري/الجزء_الخامس&action=raw",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Truly, you have three things from us so long as you keep our company: we will not bar you from the mosques of Allah, that you may mention His name in them; we will not withhold from you your share of the public revenue so long as your hands are with ours; and we will not fight you until you begin against us.",
+   "origine": "de_l_arabe",
+   "reference": "'Ali ibn Abi Talib — al-Tabari, Tarikh al-Rusul wa-l-Muluk, year 37, vol. 5, p. 73 (translated from the Arabic)",
+   "lu_sur": ""
+  },
+  "ja": {
+   "texte": "よいか、あなたがたがわれらと共にいる限り、われらはあなたがたに三つのことを認める。アッラーの御名を唱えるためにアッラーのモスクに入るのを妨げない。あなたがたの手がわれらの手と共にある限り、公の収入(ファイ)の分け前を拒まない。そして、あなたがたが先に仕掛けない限り、われらはあなたがたと戦わない。",
+   "origine": "de_l_arabe",
+   "reference": "アリー・イブン・アビー・ターリブ ― タバリー『諸使徒と諸王の歴史』ヒジュラ暦37年、第5巻73頁(アラビア語原文より訳出)",
+   "lu_sur": ""
+  },
+  "ecart": "Le français suit le texte d'at-Tabarî, mais laisse tomber « ما صحبتمونا » (tant que vous resterez en notre compagnie), qui conditionne les trois engagements ; « الفيء » (le fay', revenu commun) devient « votre part » ; « لكم عندنا ثلاثًا » (vous avez de nous trois choses) devient « trois droits » ; « لا نقاتلكم حتى تبدءونا » (nous ne vous combattrons pas tant que vous n'aurez pas commencé) devient « pas les premiers ». Chez Ibn Abî Shayba (n° 37930), premier ouvrage nommé, les mots diffèrent : « لَكُمْ عِنْدِي ثَلَاثُ خِلَالٍ مَا كُنْتُمْ مَعَنَا … وَلَا نُقَاتِلُكُمْ حَتَّى تُقَاتِلُوا ».",
+  "note": "At-Tabarî, année 37, « ذكر ما كان من خبر الخوارج عند توجيه علي الحكم للحكومة وخبر يوم النهر » (récit d'Abû Mikhnaf d'après Kathîr ibn Bahz al-Hadramî). Texte recopié de Wikisource (tome 5 entier) ; tome et page vérifiés sur https://shamela.ws/book/9783/2534 (même texte, vocalisation partielle). Ibn Abî Shayba, al-Musannaf, éd. al-Hût, t. 7, p. 562, n° 37930 : https://shamela.ws/book/9944/42742. « الفيء » est rendu par « public revenue » / 「公の収入(ファイ)」 : terme à faire valider."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 722,
+  "fr": "Emplis ton cœur de miséricorde pour tes administrés. […] Ils sont de deux sortes : ou bien ton frère en religion, ou bien ton semblable dans la création.",
+  "source_fr": "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)",
+  "nature": "autre",
+  "ar": {
+   "texte": "وأشعر قلبك الرحمة للرعية […] فإنهم صنفان إما أخ لك في الدين وإما نظير لك في الخلق",
+   "reference": "يُروى عن علي بن أبي طالب في عهده لمالك الأشتر (في نسبته خلاف) — نهج البلاغة، بشرح محمد عبده، ج ٣ ص ٨٤",
+   "lu_sur": "https://raw.githubusercontent.com/OpenITI/0425AH/master/data/0406SharifRadi/0406SharifRadi.NahjBalagha/0406SharifRadi.NahjBalagha.Shia20200618-ara1.mARkdown",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Imbue your heart with mercy for your subjects. […] They are of two kinds: either your brother in religion, or your like in creation.",
+   "origine": "de_l_arabe",
+   "reference": "It is reported — letter of 'Ali to Malik al-Ashtar, Nahj al-Balagha (attribution disputed), ed. Muhammad 'Abduh, vol. 3, p. 84 (translated from the Arabic)",
+   "lu_sur": ""
+  },
+  "ja": {
+   "texte": "民への慈しみを、あなたの心にしみ込ませなさい。[…] 彼らは二種類である。宗教におけるあなたの兄弟か、さもなければ、被造物としてあなたと同じ者である。",
+   "origine": "de_l_arabe",
+   "reference": "アリーがマーリク・アル=アシュタルに宛てたと伝えられる書簡(帰属には異論がある) ― 『ナフジュ・アル=バラーガ』ムハンマド・アブドゥフ注釈版、第3巻84頁(アラビア語原文より訳出)",
+   "lu_sur": ""
+  },
+  "ecart": "",
+  "note": "Texte lu dans le corpus OpenITI (numérisation de l'édition commentée par Muhammad 'Abduh, 4 parties, 1412 H ; le fichier porte les repères de page de cette édition). Nahj al-Balâgha n'est ni sur shamela.ws ni, pour cette lettre, sur ar.wikisource.org ; le même « 'ahd » est reproduit, attribué à 'Alî, chez al-Qalqashandî, Subh al-A'shâ, t. 10, p. 11-13 (https://shamela.ws/book/9429/4599) et chez an-Nuwayrî, Nihâyat al-Arab, t. 6, p. 20-24 (https://shamela.ws/book/10283/1915). La lettre est connue comme la lettre 53 du recueil : ce numéro n'est pas imprimé dans l'édition lue, il n'est donc pas porté dans la référence. La coupure « […] » tombe au même endroit qu'en français : elle couvre « والمحبة لهم واللطف بهم. ولا تكونن عليهم سبعا ضاريا تغتنم أكلهم ». L'arabe garde ses particules initiales (« و », « فإنهم »), telles qu'imprimées."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 725,
+  "fr": "Choisis, pour juger entre les gens, le meilleur de tes administrés : celui que les affaires n'accablent pas, que les plaideurs n'irritent pas, et qui ne persiste pas dans l'erreur.",
+  "source_fr": "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)§l725",
+  "nature": "autre",
+  "ar": {
+   "texte": "ثم اختر للحكم بين الناس أفضل رعيتك في نفسك ممن لا تضيق به الأمور، ولا تمحكه الخصوم، ولا يتمادى في الزلة",
+   "reference": "يُروى عن علي بن أبي طالب في عهده لمالك الأشتر (في نسبته خلاف) — نهج البلاغة، بشرح محمد عبده، ج ٣ ص ٩٤",
+   "lu_sur": "https://raw.githubusercontent.com/OpenITI/0425AH/master/data/0406SharifRadi/0406SharifRadi.NahjBalagha/0406SharifRadi.NahjBalagha.Shia20200618-ara1.mARkdown",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Then choose, to judge between people, the best of your subjects in your own estimation: one whom matters do not overwhelm, whom litigants do not goad into obstinacy, and who does not persist in a slip.",
+   "origine": "de_l_arabe",
+   "reference": "It is reported — letter of 'Ali to Malik al-Ashtar, Nahj al-Balagha (attribution disputed), ed. Muhammad 'Abduh, vol. 3, p. 94 (translated from the Arabic)",
+   "lu_sur": ""
+  },
+  "ja": {
+   "texte": "次いで、人々の間を裁く者として、あなたの見るところ民のうちで最も優れた者を選びなさい。諸事に追い詰められることなく、争う者たちに煽られて意固地になることもなく、過ちに固執することもない者を。",
+   "origine": "de_l_arabe",
+   "reference": "アリーがマーリク・アル=アシュタルに宛てたと伝えられる書簡(帰属には異論がある) ― 『ナフジュ・アル=バラーガ』ムハンマド・アブドゥフ注釈版、第3巻94頁(アラビア語原文より訳出)",
+   "lu_sur": ""
+  },
+  "ecart": "Le français omet « في نفسك » : l'arabe dit « le meilleur de tes administrés à tes yeux ». La phrase arabe se poursuit après « l'erreur » par d'autres qualités du juge (« ولا يحصر من الفيء إلى الحق إذا عرفه … ») : le français s'arrête sans le marquer, les trois langues s'arrêtent au même mot.",
+  "note": "Texte lu dans le corpus OpenITI (numérisation de l'édition commentée par Muhammad 'Abduh, 4 parties, 1412 H ; le fichier porte les repères de page de cette édition). Nahj al-Balâgha n'est ni sur shamela.ws ni, pour cette lettre, sur ar.wikisource.org ; le même « 'ahd » est reproduit, attribué à 'Alî, chez al-Qalqashandî, Subh al-A'shâ, t. 10, p. 11-13 (https://shamela.ws/book/9429/4599) et chez an-Nuwayrî, Nihâyat al-Arab, t. 6, p. 20-24 (https://shamela.ws/book/10283/1915). La lettre est connue comme la lettre 53 du recueil : ce numéro n'est pas imprimé dans l'édition lue, il n'est donc pas porté dans la référence. Une espace placée avant une virgule dans le fichier lu (« الخصوم ، ») a été retirée ; rien d'autre n'est touché. « ثم » (puis) ouvre la phrase dans l'arabe."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 728,
+  "fr": "Attache-toi aux gens scrupuleux et véridiques ; puis accoutume-les à ne pas te couvrir d'éloges, ni à te réjouir d'un bien que tu n'as pas fait.",
+  "source_fr": "On rapporte — lettre de 'Alî à Mâlik al-Ashtar, Nahj al-Balâgha (attribution discutée)§l728",
+  "nature": "autre",
+  "ar": {
+   "texte": "والصق بأهل الورع والصدق، ثم رضهم على أن لا يطروك ولا يبجحوك بباطل لم تفعله",
+   "reference": "يُروى عن علي بن أبي طالب في عهده لمالك الأشتر (في نسبته خلاف) — نهج البلاغة، بشرح محمد عبده، ج ٣ ص ٨٨",
+   "lu_sur": "https://raw.githubusercontent.com/OpenITI/0425AH/master/data/0406SharifRadi/0406SharifRadi.NahjBalagha/0406SharifRadi.NahjBalagha.Shia20200618-ara1.mARkdown",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Keep close to the people of scruple and truthfulness; then accustom them not to lavish praise on you, nor to make you exult over a vain thing you have not done.",
+   "origine": "de_l_arabe",
+   "reference": "It is reported — letter of 'Ali to Malik al-Ashtar, Nahj al-Balagha (attribution disputed), ed. Muhammad 'Abduh, vol. 3, p. 88 (translated from the Arabic)",
+   "lu_sur": ""
+  },
+  "ja": {
+   "texte": "敬虔で誠実な人々に寄り添いなさい。そして、あなたを褒めそやさぬよう、また、あなたが行ってもいない虚しい事柄であなたを得意がらせぬよう、彼らを慣らしなさい。",
+   "origine": "de_l_arabe",
+   "reference": "アリーがマーリク・アル=アシュタルに宛てたと伝えられる書簡(帰属には異論がある) ― 『ナフジュ・アル=バラーガ』ムハンマド・アブドゥフ注釈版、第3巻88頁(アラビア語原文より訳出)",
+   "lu_sur": ""
+  },
+  "ecart": "« بباطل لم تفعله » veut dire « d'une chose vaine (fausse) que tu n'as pas faite » : le français écrit « un bien que tu n'as pas fait » ; le mot « bien » n'est pas dans l'arabe.",
+  "note": "Texte lu dans le corpus OpenITI (numérisation de l'édition commentée par Muhammad 'Abduh, 4 parties, 1412 H ; le fichier porte les repères de page de cette édition). Nahj al-Balâgha n'est ni sur shamela.ws ni, pour cette lettre, sur ar.wikisource.org ; le même « 'ahd » est reproduit, attribué à 'Alî, chez al-Qalqashandî, Subh al-A'shâ, t. 10, p. 11-13 (https://shamela.ws/book/9429/4599) et chez an-Nuwayrî, Nihâyat al-Arab, t. 6, p. 20-24 (https://shamela.ws/book/10283/1915). La lettre est connue comme la lettre 53 du recueil : ce numéro n'est pas imprimé dans l'édition lue, il n'est donc pas porté dans la référence. "
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 801,
+  "fr": "Nous les avons tous tués. Et nous tenons tous leur sang et le vôtre pour licite.",
+  "source_fr": "Réponse des gens de Nahrawân — at-Tabarî, Târîkh",
+  "nature": "chronique",
+  "ar": {
+   "texte": "كلنا قتلتهم، وكلنا نستحل دماءهم ودماءكم",
+   "reference": "جواب أهل النهروان — الطبري، تاريخ الرسل والملوك، سنة ٣٧، ج ٥ ص ٨٣",
+   "lu_sur": "https://ar.wikisource.org/w/index.php?title=تاريخ_الطبري/الجزء_الخامس&action=raw",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "All of us killed them, and all of us hold their blood and yours to be lawful.",
+   "origine": "de_l_arabe",
+   "reference": "Reply of the people of Nahrawan — al-Tabari, Tarikh al-Rusul wa-l-Muluk, year 37, vol. 5, p. 83 (translated from the Arabic)",
+   "lu_sur": ""
+  },
+  "ja": {
+   "texte": "われらは皆で彼らを殺した。そしてわれらは皆、彼らの血もあなたがたの血も、流してよいものと見なしている。",
+   "origine": "de_l_arabe",
+   "reference": "ナフラワーンの人々の返答 ― タバリー『諸使徒と諸王の歴史』ヒジュラ暦37年、第5巻83頁(アラビア語原文より訳出)",
+   "lu_sur": ""
+  },
+  "ecart": "",
+  "note": "At-Tabarî, année 37, récit d'Abû Mikhnaf d'après 'Abd Allâh ibn 'Awf. Texte recopié de Wikisource (tome 5 entier) ; tome et page vérifiés sur https://shamela.ws/book/9783/2544."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 918,
+  "fr": "Du polythéisme, ils ont fui. […] Les hypocrites n'évoquent Allah que très peu. […] Ce sont des gens qui se sont dressés contre nous.",
+  "source_fr": "'Alî ibn Abî Tâlib, interrogé sur les gens de Nahrawân — Ibn Abî Shayba, al-Musannaf",
+  "nature": "hadith",
+  "ar": {
+   "texte": "مِنَ الشِّرْكِ فَرُّوا […] إِنَّ الْمُنَافِقِينَ لَا يَذْكُرُونَ اللَّهَ إِلَّا قَلِيلًا […] قَوْمٌ بَغَوْا عَلَيْنَا",
+   "reference": "علي بن أبي طالب، وقد سُئل عن أهل النهر — ابن أبي شيبة، المصنف، رقم ٣٧٩٤٢",
+   "lu_sur": "https://shamela.ws/book/9944/42754",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "From polytheism they fled. […] The hypocrites remember Allah but little. […] They are a people who rose against us.",
+   "origine": "de_l_arabe",
+   "reference": "'Ali ibn Abi Talib, asked about the people of Nahrawan — Ibn Abi Shayba, al-Musannaf 37942 (translated from the Arabic)",
+   "lu_sur": ""
+  },
+  "ja": {
+   "texte": "彼らは多神崇拝から逃れたのだ。[…] 偽信者たちはアッラーをわずかしか念じない。[…] われらに背いた人々である。",
+   "origine": "de_l_arabe",
+   "reference": "アリー・イブン・アビー・ターリブ、ナフラワーンの人々について問われて ― イブン・アビー・シャイバ『ムサンナフ』37942番(アラビア語原文より訳出)",
+   "lu_sur": ""
+  },
+  "ecart": "",
+  "note": "Al-Musannaf, éd. al-Hût, t. 7, p. 563, n° 37942 (d'après Târiq ibn Shihâb) : trois réponses à trois questions (« Sont-ils polythéistes ? », « hypocrites ? », « que sont-ils donc ? »), que le français sépare par « […] » aux mêmes endroits. « بَغَوْا عَلَيْنَا » : se sont dressés contre nous, nous ont fait tort. Le n° 37763 (https://shamela.ws/book/9944/42573) rapporte les mêmes réponses à propos des gens du Chameau, avec « إِخْوَانُنَا بَغَوْا عَلَيْنَا »."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 953,
+  "fr": "Nourrissez-le bien et donnez-lui une couche douce. Si je vis, je serai seul juge de mon sang. Si je meurs, une frappe pour sa frappe — et ne mutilez pas l'homme.",
+  "source_fr": "'Alî ibn Abî Tâlib — on rapporte, Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh",
+  "nature": "chronique",
+  "ar": {
+   "texte": "أطيبوا طعامه وألينوا فراشه فإن أعِشْ فأنا وَلِيُّ دَمِى، عفوٌ أو قصاص […] إن أنا مت من ضربته هذه فاضربه ضربةً بضربة، ولا تمثل بالرجل",
+   "reference": "يُروى عن علي بن أبي طالب — ابن سعد، الطبقات الكبرى، ج ٣ ص ٣٥؛ الطبري، تاريخ الرسل والملوك، سنة ٤٠، ج ٥ ص ١٤٨",
+   "lu_sur": "https://shamela.ws/book/146/845 ; https://ar.wikisource.org/w/index.php?title=تاريخ_الطبري/الجزء_الخامس&action=raw",
+   "etat": "approchant"
+  },
+  "en": {
+   "texte": "Give him good food and a soft bed. If I live, I am the guardian of my own blood: pardon or retaliation. […] If I die of this blow of his, strike him one blow for his blow, and do not mutilate the man.",
+   "origine": "de_l_arabe",
+   "reference": "It is reported of 'Ali ibn Abi Talib — Ibn Sa'd, al-Tabaqat al-Kubra, vol. 3, p. 35; al-Tabari, Tarikh al-Rusul wa-l-Muluk, year 40, vol. 5, p. 148 (translated from the Arabic)",
+   "lu_sur": ""
+  },
+  "ja": {
+   "texte": "彼には良い食事を与え、寝床を柔らかくしてやりなさい。私が生き延びたなら、私の血のことは私自身が決める。赦すか、同害報復かである。[…] もし私が彼のこの一撃によって死んだなら、一撃には一撃をもって報いなさい。ただし、その男の体を損なってはならない。",
+   "origine": "de_l_arabe",
+   "reference": "アリー・イブン・アビー・ターリブの言葉と伝えられる ― イブン・サアド『大伝記集(タバカート)』第3巻35頁、タバリー『諸使徒と諸王の歴史』ヒジュラ暦40年、第5巻148頁(アラビア語原文より訳出)",
+   "lu_sur": ""
+  },
+  "ecart": "La parole française réunit deux récits en une seule citation. Les deux premières phrases viennent d'Ibn Sa'd (dites quand on amène l'homme), qui poursuit autrement : « وإنْ أمُتْ فألحِقُوه بي أُخاصمه عند ربّ العالمين » (si je meurs, faites-le me suivre : je plaiderai contre lui devant le Seigneur des mondes). La dernière phrase vient d'at-Tabarî, où elle est dite à al-Hasan ; at-Tabarî n'a pas « nourrissez-le bien », mais « النفس بالنفس، إن أنا مت فاقتلوه كما قتلني، وإن بقيت رأيت فيه رأيي ». La jonction est marquée « […] » dans les trois langues. Le français omet « عفوٌ أو قصاص » (pardon ou talion) et rend « فأنا وَلِيُّ دَمِى » (c'est à moi que revient mon sang) par « seul juge de mon sang ».",
+  "note": "Ibn Sa'd, éd. al-Khânjî, t. 3, p. 35 ; l'éd. Dâr Sâdir (t. 3, p. 37, https://shamela.ws/book/9351/919) lit « فأنا أولى بدمه عفوا وقصاصا », leçon que l'éditeur d'al-Khânjî signale comme fautive en note. At-Tabarî, année 40, « ذكر الخبر عن مقتل علي بن أبي طالب » ; tome et page vérifiés sur https://shamela.ws/book/9783/2609. Les deux copies numériques d'at-Tabarî impriment « أنامت » en un seul mot : l'espace a été rétablie (« إن أنا مت »), lecture confirmée par le Tahdhîb al-Âthâr du même auteur (« إِنْ أَنَا مِتُّ مِنْ ضَرْبَتِهِ هَذِهِ », https://shamela.ws/book/13091/177) ; à faire valider. « دَمِى » est l'orthographe de l'édition (yâ' finale sans points)."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 954,
+  "fr": "N'allez pas verser le sang des musulmans en criant : « On a tué le Commandeur des croyants ! » Que seul mon meurtrier réponde de moi.",
+  "source_fr": "'Alî ibn Abî Tâlib — on rapporte, at-Tabarî, Târîkh",
+  "nature": "chronique",
+  "ar": {
+   "texte": "لا ألفينكم تخوضون دماء المسلمين، تقولون: قتل أمير المؤمنين، قتل أمير المؤمنين! ألا لا يقتلن إلا قاتلي.",
+   "reference": "يُروى عن علي بن أبي طالب — الطبري، تاريخ الرسل والملوك، سنة ٤٠، ج ٥ ص ١٤٨",
+   "lu_sur": "https://ar.wikisource.org/w/index.php?title=تاريخ_الطبري/الجزء_الخامس&action=raw",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Let me not find you wading in the blood of the Muslims, saying: “The Commander of the Faithful has been killed! The Commander of the Faithful has been killed!” Truly, none is to be killed but my killer.",
+   "origine": "de_l_arabe",
+   "reference": "It is reported of 'Ali ibn Abi Talib — al-Tabari, Tarikh al-Rusul wa-l-Muluk, year 40, vol. 5, p. 148 (translated from the Arabic)",
+   "lu_sur": ""
+  },
+  "ja": {
+   "texte": "「信徒たちの長が殺された、信徒たちの長が殺された」と言い立てて、あなたがたがムスリムの血の中に踏み入るのを、私に見せてはならない。よいか、私を殺した者のほかは、決して誰も殺されてはならない。",
+   "origine": "de_l_arabe",
+   "reference": "アリー・イブン・アビー・ターリブの言葉と伝えられる ― タバリー『諸使徒と諸王の歴史』ヒジュラ暦40年、第5巻148頁(アラビア語原文より訳出)",
+   "lu_sur": ""
+  },
+  "ecart": "Le français omet l'apostrophe qui ouvre la phrase, « يا بني عبد المطلب » (ô fils de 'Abd al-Muttalib : la parole s'adresse aux siens), et ne donne qu'une fois le cri que l'arabe répète. « ألا لا يقتلن إلا قاتلي » veut dire « que nul ne soit tué, sinon mon meurtrier » : le français écrit « que seul mon meurtrier réponde de moi ».",
+  "note": "At-Tabarî, année 40, « ذكر الخبر عن مقتل علي بن أبي طالب ». Texte recopié de Wikisource (tome 5 entier), à partir de « لا ألفينكم » ; tome et page vérifiés sur https://shamela.ws/book/9783/2609 (où l'on lit, collé, « لايقتلن الا قاتلى »). Dans at-Tabarî, cette phrase précède immédiatement « انظر يا حسن، إن أنا مت من ضربته هذه… », citée à la ligne 953."
+ }
 ]
