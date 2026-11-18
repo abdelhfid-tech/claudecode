@@ -298,7 +298,185 @@ le **nom astronomique international**, jamais le nom d'une fête ou d'un culte d
 | al-Jady (la Polaire, le Chevreau) | アル＝ジャディ | **北極星**（「子山羊」） | 北辰, 妙見 (culte bouddhique et shintô de l'étoile polaire) |
 | les « bonds de la gazelle » (trois couples d'étoiles au nord) | — | **ガゼルの跳躍** (calque : pas de nom japonais) | — |
 
-<!-- SECTION 2 SUITE 2 -->
+### 2.5 Postures, portes, voies de la parole
+
+**Les postures** (`D.POSTURES`, exigence 24). Le mot « posture » : **構え**（かまえ） — la manière de se tenir, au sens
+du corps et de l'esprit ; 「構えをとる」 (prendre une posture). 姿勢 est l'autre choix, plus abstrait. **À valider.**
+
+| Français | **Japonais** | Source | Note |
+|---|---|---|---|
+| Le héros | **英雄** | Réception japonaise de la typologie dont vient l'exigence 24 : 「聖人」「天才」「英雄」 (阿内正弘「シェーラーの典型論」, 筑波大学リポジトリ, lu : <https://tsukuba.repo.nii.ac.jp/record/5728/files/7.pdf>) ; l'ouvrage traduit : 『典型と指導者』, シェーラー著作集 15, 白水社 1978 (<https://ci.nii.ac.jp/ncid/BN00429006>). | Jamais 勇者 : c'est le héros des jeux de rôle japonais (la série *Dragon Quest*), et il dirait « l'élu ». **À valider.** |
+| Le sage | **賢者** | Usage courant (le jeu remplace « le génie » de la typologie par « le sage » : la source japonaise n'aide pas ici). | 賢者 est aussi une classe de personnage connue des jeux de rôle japonais : le contexte (« une manière de se tenir », non un métier) doit le lever. **À valider.** |
+| Le saint | **聖人**（せいじん） | Même article : 聖人 traduit le Heilige de la typologie. | Dans les études islamiques japonaises, **聖者** désigne le walī et le culte des saints (赤堀雅幸・東長靖・堀川徹編『イスラームの神秘主義と聖者信仰』, 東京大学出版会 2005 ; <https://ci.nii.ac.jp/ncid/BA70441332>) : 聖者 ferait de la posture un rang spirituel, sujet de controverse entre musulmans (exigence 5). 聖人 évite ce sens, mais porte celui des saints catholiques et du sage confucéen (聖人君子) ; et 「しょうにん」 est une lecture bouddhique : écrire la lecture une fois (§ 1.6). **À valider.** |
+
+Le jeu ne dit de personne qu'il **est** 英雄, 賢者 ou 聖人 : on écrit 「英雄の構えをとる」, jamais 「英雄である」 (exigence 24). Ni
+l'auteur de la typologie ni son ouvrage ne sont nommés dans le jeu (même règle qu'en français).
+
+**Les portes de la noosphère** (`portes`)
+
+| Français | **Japonais** | Note |
+|---|---|---|
+| Au sortir de la prière | **礼拝を終えて** | — |
+| Dans le dhikr | **ズィクルのうちに** | — |
+| En songe | **夢のうちに** ; « un sommeil sans songe » : 「夢を見ない眠り」 | Jamais 夢告, 霊夢 (le songe oraculaire bouddhique ou shintô). |
+| « ses démons intérieurs » (façon de parler, aussitôt expliquée) | **「心の中の悪魔」** entre guillemets, dans la seule phrase où le jeu explique l'expression | Exigence 22 : le jeu dit que ce ne sont pas des démons. Le mot 悪魔 n'apparaît nulle part ailleurs hors citation. |
+
+**Les voies de la parole** (`D.VOIES`, la réponse aux idées noires)
+
+| Français | **Japonais** (bouton / nom de la voie) | Source | Note |
+|---|---|---|---|
+| Dire vrai (la parole) | **ありのままに言う** / **言葉** | Usage courant. | — |
+| Expliquer (la pédagogie) | **説き明かす** / **教え導き** | L'idée : 三田 16:125 「英知と良い話し方で……招け」. | Jamais 説法, 説教 (le sermon bouddhique ou chrétien). **À valider.** |
+| Rassurer (la bienveillance) | **寄り添う** / **思いやり** | Usage courant. | 寄り添う dit « rester près de lui », ce que les réponses du jeu font. **À valider.** |
+
+### 2.6 La bataille déclarée : rangs, ordres, manœuvres
+
+Exigence 19 : des noms de fonction, aucun nombre, aucun nom de personne ; nos rangs se replient, ils ne tombent pas.
+Termes de l'histoire militaire courante (usage courant, référence non vérifiée).
+
+| Rangs | Fantassins **歩兵** | Cavaliers **騎兵** | Archers **弓兵** | Gens du lieu **土地の者たち** | | |
+|---|---|---|---|---|---|---|
+| **Ordres** | Tenir **持ちこたえる** | Avancer **進む** | Charger **突撃** | Tirer **射る** | Glisser **横へ移る** | Se replier **退く** |
+| **Manœuvres** | Réserve mobile **遊撃の予備** | Enveloppement **包囲** | Repli feint **偽りの退却** | | | |
+
+Notes : « Se replier » se dit 退く, jamais 敗走 ni 撤退 de déroute ; « éprouvés, ils se replient et se reforment » :
+「力尽きた隊は退き、また列を組み直す」. Le repli feint n'est pas 釣り野伏せ (une tactique japonaise nommée, liée à un clan) ;
+la réserve mobile n'est pas 旗本 (garde d'un seigneur japonais). Le champ : **戦場** ; un couloir : **筋** ; une colonne :
+**列**. Le stratège (`stratege: true`) : **軍師** — **à valider** (le mot évoque les stratèges des romans chinois des Trois
+Royaumes ; 策士 serait péjoratif).
+
+### 2.7 Équipement, objets, matériaux, pièces à bâtir
+
+**Emplacements** (`gear.js`) : Main droite **右手** · Main gauche **左手** · Tête **頭** · Corps **胴**.
+
+**Types de pièces** (`D.GEAR_TYPES`) — exigence 17 : objets ordinaires ; aucun mot qui en fasse une relique ou un objet
+japonais.
+
+| Français | **Japonais** | Note |
+|---|---|---|
+| Épée | **剣** | Jamais 刀 (sabre japonais), 太刀, 聖剣. |
+| Lance | **槍** | — |
+| Arc | **弓** | — |
+| Dague | **短剣** | — |
+| Masse | **鎚矛**（メイス） → libellé : **メイス** | 鎚矛 se lit mal sans ruby. |
+| Bâton | **棒** | Pas 杖 (錫杖 du moine bouddhique, bâton de pèlerin) pour une arme. |
+| Calame | **葦ペン** | 三田 rend qalam par 「筆」 (68:1), qui en japonais est le pinceau : le calame du jeu est un roseau taillé. |
+| Bouclier / Grand bouclier | **盾** / **大盾** | — |
+| Outil | **道具** | — |
+| Turban | **ターバン** | — |
+| Calotte | **帽子** (libellé) ; description : 「縁のない小さな帽子」 | — |
+| Casque | **兜** | Mot général du casque ancien ; ne décrire ni cornes ni ornement (exigence 17 : aucun symbole). |
+| Étoffe / Cuir / Armure | **布** / **革** / **鎧** | — |
+
+**Objets de la besace** (`D.ITEMS`) — la besace : **旅袋** (jamais 頭陀袋, le sac du moine mendiant). **À valider.**
+
+| Dattes de Médine | Outre d'eau | Pain d'orge | Miel | Musc | Lait chaud | Siwâk |
+|---|---|---|---|---|---|---|
+| **マディーナのナツメヤシ** (三田 : ナツメヤシ, 21 versets) | **水袋** | **大麦のパン** | **蜂蜜** | **ジャコウ** (三田 83:26 「その封印はジャコウである」) | **温めた乳** | **スィワーク** (§ 1.2 ; on lit aussi ミスワーク, autre mot arabe pour le même bâtonnet) |
+
+**Matériaux et pièces** (`build.js`)
+
+| Matériaux | Eau **水** · Pisé **練り土** · Palme **ヤシの葉** · Pierre **石** · Grain **穀物** · Laine **羊毛** |
+|---|---|
+| **Pièces** | Tranchée **堀** · Puits **井戸** · Palmier **ナツメヤシの木** · Champ d'orge **大麦畑** · Enclos de chèvres / de moutons / de chameaux **山羊の囲い／羊の囲い／ラクダの囲い** · Mur de pisé **土塀** · Sol à étoiles **星模様の床** · Pilier de palmier **ヤシの幹の柱** · Niche de qibla **ミフラーブ** (description : 「キブラを示す壁のくぼみ」 ; 「キブラ」 : 三田 2:142–145) · Natte de prière **礼拝用のむしろ** · Tapis **絨毯** · Lanterne **ランタン** · Rosace **花形の飾り** |
+
+Notes : la natte n'est pas 座布団 ni ござ (objets domestiques japonais) ; la lanterne n'est jamais 灯籠 ni 提灯 (lanternes de
+temple, de sanctuaire, de fête). 「ミフラーブ」 : transcription selon § 1.2, usage courant, référence non vérifiée.
+
+### 2.8 Outils appris, halte, recueil, prières, combat
+
+**Outils** (`D.OUTILS`, une leçon à la fois)
+
+| Français | **Japonais** | Français | **Japonais** |
+|---|---|---|---|
+| Se déplacer | **歩く** | La halte | **休息** |
+| Parler | **話す** | Retrouver une source | **出典をたどる** |
+| Demander son chemin | **道をたずねる** | S'équiper | **装備する** |
+| Frapper la faille | **綻びを突く** (la faille d'un égrégore : **綻び**) | S'orienter aux étoiles | **星で方角を知る** |
+| Les vertus | **徳** | Frapper ce qui rôde | **さまようものを打つ** |
+| La garde et la Niyya | **守りとニーヤ** | Prendre une posture | **構えをとる** |
+| La besace | **旅袋** | | |
+
+« Faille » a deux sens dans le jeu : le point faible d'un égrégore (**綻び**, **à valider**) et le lieu de la noosphère
+nommé « Faille » (**裂け目**, § 3.4).
+
+**La halte** (`ui.js`) : Reprendre **再開** · Que faire ? **いますべきこと** · Carte **地図** · Le groupe **一行** ·
+Compagnons (les membres du groupe) **仲間** · Équipement **装備** · Postures **構え** · Besace **旅袋** · Piliers **柱** ·
+Le cœur **心** · Œuvres et lames **善行と刃** · Compagnons de lumière **光の道連れ** · Le savoir **知** · Recueil **聞き書き**
+· Organigramme du mal **悪の見取り図** · Valeurs et attributs **美徳と御名** · Aide du jeu **遊び方** · Réglages **設定** ·
+Ton personnage **あなたの人物** · Exporter la partie **記録を書き出す**.
+
+Deux pièges : **« compagnons » en minuscule** (les membres du groupe, le menu) se dit **仲間**, **« Compagnons »** (les
+Sahâba) **教友** — ne jamais les confondre ; **Recueil** se dit **聞き書き** (« ce que l'on a noté de ce qu'on a entendu »,
+l'image même de la transmission), **à valider** ; 図鑑 (catalogue de jeu) est écarté.
+
+**Catégories du recueil** (`D.CODEX_CATS`) : Biographie **人物** · Événement **出来事** · Noosphère **精神圏** · Lieu **場所**
+· Parole **言葉** · Cœur **心** · Objets **品々**.
+
+**Les cinq prières** (`['pray', moment]`) — noms et sens de [Wiki-ja] « サラート » (lu le 18 novembre) :
+
+| Fajr · l'aube | Dhuhr · le midi | 'Asr · l'après-midi | Maghrib · le couchant | 'Ishâ · la nuit |
+|---|---|---|---|---|
+| **ファジュル**・夜明け | **ズフル**・正午 | **アスル**・午後 | **マグリブ**・日没 | **イシャー**・夜 |
+
+Le carton de prière reste sobre (exigence 13) : 「彼らは礼拝した。」, comme le français « Ils prièrent. ».
+
+**Combat** (`battle.js`) : Frapper **打つ** · Éclairer **照らす** · Garde **守り** · Vertus **徳** · Objets **持ち物** ·
+Assaut (attaque d'un égrégore) **襲いかかる** · Force **力** · Esprit **精神** · Garde (stat) **守り** · Élan **勢い** ·
+Étourdi **ひるみ** · Doute **迷い** · Waswâs **囁き** (三田 114:4) · Régén. **回復** · En garde **守りの構え** · Cible **標的**
+· Sagesse (l'expérience) **知恵** · Niveau **レベル**. Jamais 魔法, 呪文, MP, 魔力, 霊力.
+
+### 2.9 L'organigramme du mal et le côté du bien
+
+**Les étages** (`coeur.js`, `mal.rangs`) — au-dessus du trait, « ce qui est enseigné » ; au-dessous, « des images ».
+
+| Français | **Japonais** | Source | Note |
+|---|---|---|---|
+| Iblîs, l'ennemi déclaré | **イブリース**、「公然の敵」 | 三田 18:50 「イブリース」 ; 2:168 「公然の敵」 ; [Wiki-ja] « イブリース ». | Nommé, jamais montré (exigence 18). Jamais サタン, 魔王, 悪魔の王. |
+| Les souffleurs : « des démons d'entre les djinns, et parfois des hommes » | **囁く者たち** : 「ジンの中の悪魔、そして時には人間」 | 三田 114:4–6 ; 6:112 「人間とジンの中の悪魔」. | Dans ce seul texte « enseigné », le mot 悪魔 (celui de 三田 pour shayṭān) est permis ; jamais pour un ennemi. |
+| djinn | **ジン** | 三田 72:1 「一団のジン」 ; 15:27 「幽精〔ジン〕」. | [Wiki-ja] décrit ジン comme 「精霊や妖怪、魔人などの一群」 : le jeu n'emploie **jamais** 精霊, 妖怪, 魔人, ni 幽精 (mot de 三田, mais rare). |
+| Le cœur (il entend, et il consent ou refuse) | **心** | — | — |
+| Les idées noires / Les égrégores / Les idoles | **暗い想い** / **虚像** / **偶像** | § 2.1 | — |
+| anges (le secours, la citation de Badr seulement) | **天使** | 三田 8:9 「一千の天使」. | Jamais montrés, nommés, comptés (exigence 20). |
+
+**Les sept attributs** (`attributs`) — le Nom en katakana (§ 1.2, article gardé comme en français) ; le **sens**
+reprend les mots de 三田 dans le verset que le jeu cite (le verset lui-même est donné par le registre des sources,
+`versets.json`, déjà rempli pour ces sept-là).
+
+| Mal | Nom | **Sens, d'après 三田** | Verset (traduction de 三田, dans le registre) |
+|---|---|---|---|
+| avidité | **アッ＝ラッザーク** | 糧を授けられる御方 | 51:58 「本当にアッラーこそは，糧を授けられる御方……」 |
+| orgueil | **アル＝カビール、アル＝ムタアール** | 偉大にして至高の方 | 13:9 |
+| ostentation | **アル＝ハビール** | 通暁される方 | 67:14 「……深奥を理解し通暁なされる」 |
+| avarice | **アル＝ワッハーブ** | 限りなく与えられる御方 | 3:8 |
+| insouciance | **アル＝ハイイ、アル＝カイユーム** | 永生に自存される御方 | 2:255 |
+| envie | **アッ＝ラティーフ** | しもべにやさしくあられる方 | 42:19 「アッラーはそのしもべに対して，やさしくあられ」 |
+| colère | **アル＝ハリーム** | 寛容な方 (voir note) | 2:263 |
+
+Note sur アル＝ハリーム : dans 2:263, 三田 rend ḥalīm par 「慈悲深く」 (「アッラーは富有にして慈悲深くあられる」), le même mot que
+pour raḥīm ; le sens donné sous le Nom ne peut donc pas reprendre 三田 mot à mot sans confondre deux Noms. Proposition :
+「寛容な方」, et la lame d'en face se dit 寛容 (§ 2.3). **À valider.** Pour アッ＝ラティーフ, 三田 a deux rendus selon le
+verset (42:19 「やさしくあられ」 ; 67:14 「深奥を理解し」) : le jeu suit celui du verset qu'il cite.
+
+Pour tous : on **reconnaît** un Nom (「御名を知る」「心に刻む」), on ne le possède pas, on ne l'« obtient » pas (exigence 21) ;
+le Nom est du texte, jamais un sprite ni une compétence (exigence 8).
+
+### 2.10 Mots à ne pas employer, et pourquoi
+
+| Mot | Pourquoi | À la place |
+|---|---|---|
+| 祈り, 祈る (pour la ṣalāt) | La demande, la duʿāʾ ; et le mot courant des prières bouddhiques et shintô. | 礼拝, 礼拝する |
+| 礼拝 lu らいはい | Lecture bouddhique (デジタル大辞泉). | れいはい (le donner une fois si le contexte hésite) |
+| 修行, お勤め, 勤行, 功徳, 供養, 成仏, 往生, 煩悩, 業, 因果, 輪廻, 転生, 悟り | Notions bouddhiques. | Les mots du § 2 |
+| 祓い, 穢れ, 禊, 御利益, 神社, 神棚, 参拝 | Notions shintô. | — |
+| 悪魔, 魔, 鬼, 妖怪, 物の怪, 魔物, 魔人, 魔王, 怨霊, 化け物, 精霊 | Noms de démons, de djinns ou de monstres : interdits pour un ennemi (exigences 6, 18). 悪魔 n'existe que dans les citations de 三田 et la seule ligne de l'organigramme (§ 2.9). | 虚像, 偶像, 悪徳, 暗い想い |
+| 魔法, 呪文, 呪い, 魔力, 霊力, 術, 法力, 加護, お守り, 護符 | Rien n'est sortilège ni talisman (exigences 13, 15, 17). | 徳, 息, 善行 |
+| 聖戦 | « Guerre sainte » : un sens que le jeu ne donne à aucun combat. | 戦い |
+| 異教徒, 邪教, 蛮族 | Désigner un groupe comme ennemi par nature (exigence 10). | Le nom du peuple, de la ville, de la tribu |
+| 勇者, 使い魔, 守護霊, 式神, 図鑑 | Vocabulaire de jeu vidéo ou d'occultisme japonais qui déplacerait le sens. | 英雄 (posture), 光の道連れ, 聞き書き |
+| 傲慢・強欲・嫉妬・憤怒・怠惰 en série | La liste japonaise des péchés capitaux. | La liste du § 2.3 |
+| コーラン, マホメット, モハメッド | Formes anciennes ou fautives. | クルアーン, ムハンマド |
+| 回教, 回教徒 | Nom ancien, d'origine chinoise, aujourd'hui sorti de l'usage savant. | イスラーム, ムスリム |
 
 <!-- SECTION 3 -->
 
