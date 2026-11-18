@@ -1542,6 +1542,17 @@ pages privées de son compte.
   couleurs ou de coiffe, jamais les Compagnons ni les personnages des sagas, ni l'Idris d'origine. Un contrôle le
   vérifie (silhouettes.js ou personnage.js).
 
+- [x] **D195. Les animaux, « en marge du récit » (choix du décideur, 18 novembre ; `v2/docs/propositions-animaux.md`).**
+  Chaque saga cache une bête dans le labyrinthe de sa noosphère, prise dans un danger qui est l'envers de la Lumière de
+  la saga : le Renard (Abû Bakr), le Lion ('Umar), le Phénix (Khâlid), la Gazelle ('Uthmân), l'Aigle ('Alî). Le râwî la
+  délivre d'un geste, « en marge du récit », sans qu'aucun Compagnon y touche ; devant la chimère de 2084 qui suit, elle
+  la dévoile d'entrée ; devant l'Agrégor, chaque bête présente lui ôte un voile. **Le verbe : elles « veillent sur
+  Idris »** — choix du décideur, fait en connaissant la remarque de l'agent (c'est le verbe des anges gardiens dans la
+  traduction de Hamidullah, 13:11 et 82:10) ; le jeu ne les appelle jamais des anges, et dans les autres langues le mot
+  est pris hors du vocabulaire coranique des gardiens (en arabe, ni la racine ḥ-f-ẓ ni « mu'aqqibât »). **Une bête
+  manquée** : avant le combat final, le joueur résout des énigmes pour la délivrer (énigmes de fiction, à valider une
+  par une) ; rien ne bloque. L'exigence 16 et D67 sont à réécrire (formulation de l'agent, à valider).
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
