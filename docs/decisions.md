@@ -1499,7 +1499,9 @@ pages privées de son compte.
   posée sur l'image (sauf les bandeaux courts du combat) ; la confiance s'écrit à côté du nom de celui qui répond ; les
   leçons s'écrivent là où sert l'outil ; aucun texte de récit n'est coupé ni réécrit. En trois lots : le premier ne
   change aucune scène filmée ; le deuxième touche les shorts 04 et 08, à refaire de toute façon (D184) ; le troisième
-  suit le Journal (D191).
+  suit le Journal (D191). *Précision du décideur, le 18 novembre : « Tu peux toucher les scènes filmées par les
+  shorts ».* Les lots 1 et 2 se font donc ensemble (version 2.12) ; les films dont une scène change sont refaits
+  ensuite, avec ceux que D183 et D184 rendaient déjà à refaire, et les films livrés restent gardés tels quels.
 - [x] **D190. « Éclairer » lève les voiles (choix du décideur, 18 novembre ; `v2/docs/propositions-eclairer-journal.md`).**
   Frapper ôte de la Constance (la Force, l'arme en main) et n'ôte un voile que si le Fer est la faille ; Éclairer lève
   les voiles — un par coup sur la faille de la chimère, un pour deux coups ailleurs, à 60 % de l'Esprit au lieu de 90 % ;
