@@ -228,7 +228,7 @@ quand ils comptent.
 | égrégore | **egregore** (pl. *egregores*) | WP *Egregore* : « *a concept in Western esotericism of a non-physical entity or thoughtform that arises from the collective thoughts and emotions of a distinct group* » ; la même page : « *In the apocryphal Book of Enoch, the term had referred to angelic beings known as watchers* » | **À valider**, et point à trancher (§ 4) : en anglais le mot est occultiste, plus rare qu'en français, et il a nommé les « Veilleurs » du livre d'Hénoch, des êtres angéliques. Le jeu le dit « une image, non une doctrine » : le recueil anglais doit le dire dès la première rencontre. Repli possible : *thought-idol* (forgé, sans usage). Jamais *thoughtform* (le même univers ésotérique, selon la même page), jamais *spirit*. |
 | idole | **idol** | Bacon : « *idols and false notions which are now in possession of the human understanding, and have taken deep root therein* » (aph. XXXVIII) ; les quatre classes : « *Idols of the Tribe* », « *of the Cave* », « *of the Market-place* », « *of the Theatre* » (aph. XXXIX) ; SI 6:74 : « *Do you take idols as deities?* » | Le mot anglais porte les deux sens dont le jeu a besoin : l'idole de pierre et l'idole de l'esprit. |
 | racine (d'une idole, `racine`) ; enracinement (la jauge) ; enracinée, déracinée | **root** ; **Rooting** (la jauge, d'un à cinq) ; *deep-rooted*, *uprooted* ; « *the idea takes root* » | Bacon : « *have taken deep root therein* » | **À valider** pour le nom de la jauge. |
-| voile (la garde d'un égrégore) ; ôter un voile | **veil** ; **to strip a veil** | Winter : « *We have set veils over their hearts* » (verset cité), « *the unveiling of the secrets of the Unseen* » ; l'image du voile entre le cœur et le vrai est celle d'al-Ghazâlî | **À valider** : l'usage soufi existe, l'emploi comme garde d'un ennemi est une image du jeu. |
+| voile (la garde d'un égrégore) ; ôter un voile | **veil** ; **to strip a veil** | Winter : « *We have set veils over their hearts* » (verset cité), « *the unveiling of the secrets of the Unseen* » ; Skellie (*veil*, 62 occurrences) | **À valider** : l'usage soufi existe, l'emploi comme garde d'un ennemi est une image du jeu. |
 | dévoilé (égrégore vaincu : on a montré qu'il est vide) ; dévoiler | **unveiled** ; **to unveil** | Winter (« *unveiling* ») | **À valider**. Jamais *killed*, *slain*, *destroyed* pour un égrégore. |
 | faille (le point faible d'un égrégore) ; « Frapper la faille » | **weak point** ; « *Strike the Weak Point* » | — (usage courant des jeux de rôle, référence non vérifiée) | **À valider**. Le lieu de carte « Faille » est autre chose (§ 3.5). |
 | Constance (points de vie) | **Constancy** | — | **À valider**. Pas *Health*, pas *HP*. Le mot dit la tenue morale, comme le français. |
@@ -237,7 +237,7 @@ quand ils comptent.
 | Niyya (l'intention ; jauge de combat) | **Niyya** (nom de jauge) ; glose : *intention* | WP *Niyyah* : « *variously transliterated niyyah, niyya … "intention"* » ; Shaker (titre : *Intention, Sincerity and Truthfulness*) | Forme en *-a* (§ 1.3). |
 | Sakîna (la sérénité ; jauge) | **Sakina** ; glose : *tranquility* | SI 48:4 : « *sent down tranquility into the hearts of the believers* » ; WP *Sakina* : « *Quranic term for peace or serenity* » | |
 | provision du cœur (*az-zâd*) | **provision** (« *the heart's provision* ») ; terme arabe au recueil : ***al-zad*** | SI 2:197 : « *take provisions, but indeed, the best provision is fear of Allāh* » | Article non assimilé (§ 1.3) : le français écrit « az-zâd ». |
-| œuvre (prière, dhikr, étude, jeûne, aumône, visite, pèlerinage) | **deed** (« *the deeds* », « *a deed done* ») | SI 2:25, 103:3 : « *believe and do righteous deeds* » | Pas *good works* (vocabulaire de la théologie chrétienne), pas *rituals*. Une œuvre « ne donne aucun pouvoir » : jamais *spell*, *power-up*, *buff* dans un texte du joueur. |
+| œuvre (prière, dhikr, étude, jeûne, aumône, visite, pèlerinage) | **deed** (« *the deeds* », « *a deed done* ») | SI 2:25, 103:3 : « *believe and do righteous deeds* » | Pas *good works*, pas *rituals*. Une œuvre « ne donne aucun pouvoir » : jamais *spell*, *power-up*, *buff* dans un texte du joueur. |
 | lame (forgée par une œuvre) ; forger ; trancher (un mal) | **blade** ; **to forge** ; **to sever** (« *Greed is severed* ») | — | **À valider** pour *sever*. |
 | mal du cœur (les sept) | **ailment of the heart** (« *the seven ailments of the heart* ») ; forme courte : *ailment* | Ghazali.org, titre du livre XXII : « *Treating the Ailments of the Heart* » ; Winter (sur la page de l'ITS) : « *sickness of the heart* » | |
 | les maux du cœur, chez al-Ghazâlî (*al-muhlikât*, « ce qui perd ») | **the Quarter of Perils** ; *muhlikat* « *what destroys* » | Ghazali.org : « *The Quarter of Perils (Rubaʿ al-muhlikāt)* » | Pour le texte du recueil sur la liste de sept. |
@@ -253,20 +253,20 @@ quand ils comptent.
 | réserve (l'équipement commun) | **stores** | — | |
 | comptoir | **trading post** | — | |
 | veillée (du Caïd) | **Evening** (« *the Caid's Evenings* » ; « *Evening of Truthfulness · after Abu Bakr* ») | — | **À valider**. *Vigil* serait plus proche, mais en anglais musulman *night vigil* désigne la prière de la nuit (usage courant, référence non vérifiée) : l'exigence 13 demande qu'on ne confonde pas une veillée de récit avec une prière. |
-| pourparler ; confiance (sa jauge) | **parley** ; **trust** | *parley* : nom et verbe anglais pour la négociation avec un adversaire (le moteur nomme déjà l'opération `parley`) | |
+| pourparler ; confiance (sa jauge) | **parley** ; **trust** | — (nom et verbe anglais de la négociation avec un adversaire ; dictionnaire non consulté) ; le moteur nomme déjà l'opération `parley` | |
 | bataille déclarée | **pitched battle** | WP *Pitched battle* : « *Where both sides commit to fight at a location* » | **À valider**. Le français insiste sur « déclarée » (« on ne se bat pas sans le dire ») ; *pitched battle* est le terme d'histoire militaire. Repli : *declared battle* (calque). |
 | le secours ; « le groupe est relevé » | **Relief** ; *the party rallies* | SI 8:9 : « *you were asking help of your Lord, and He answered you, "Indeed, I will reinforce you…"* » | **À valider**. Jamais *angelic aid*, *miracle*, *summon* (exigence 20). |
 | organigramme du mal | **the Chart of Evil** | — | **À valider**. *Hierarchy*, *order*, *pantheon* sont exclus : ils feraient une démonologie (exigence 18). |
 | Iblîs | **Iblis** | WP *Iblis* ; SI écrit « *Iblees* » (2:34, 18:50) | « *Iblees* » ne vit que dans les versets de SI. |
 | les souffleurs (*waswâs*) | **those who whisper** ; en apposition : *the whisperers*, toujours en minuscule | SI 114:4 : « *the retreating whisperer* », 114:5 : « *who whispers [evil] into the breasts of mankind* » ; Winter : « *waswas ('whispering')* » | Jamais un nom propre, jamais une majuscule : ils n'ont « ni nom, ni figure, ni nombre ». |
 | « des démons d'entre les djinns, et parfois des hommes » | **devils from among the jinn, and sometimes men** | SI 6:112 : « *devils from mankind and jinn* » | |
-| djinn | **jinn** (singulier et pluriel ; « *one of the jinn* ») | SI 114:6, 7:179 ; IJMES (mot de *Merriam-Webster*) | Jamais *genie*, jamais *djinn*. |
+| djinn | **jinn** (singulier et pluriel ; « *one of the jinn* ») | SI 114:6, 7:179 | Jamais *genie*, jamais *djinn*. |
 | démons intérieurs (façon de parler, exigence 22) | **inner demons** | — (locution anglaise courante) | Le jeu l'explique aussitôt, comme en français ; jamais un nom d'ennemi. |
 | Waswâs (altération de combat) | **Waswas** | Winter : « *waswas ('whispering')* » | Comme le français, qui garde le mot arabe. |
 | Doute (altération) | **Doubt** | | |
 | Étourdi | **Stunned** | | |
 | Sagesse (l'expérience gagnée) | **Wisdom** (« *Wisdom gained: +12* ») | — | **À valider**. |
-| dirhams | **dirhams** | IJMES (mot de *Merriam-Webster*) | |
+| dirhams | **dirhams** | — (mot reçu en anglais, dictionnaire non consulté) | |
 | la Cité-Miroir (2084) | **the Mirror City** | — | Nom de fiction, simple. |
 | l'AGRÉGOR | **the AGGREGOR** | — | Jeu de mots *egregore* / *aggregate* (« *il agrège* » → « *it aggregates* ») ; capitales comme en français. |
 
@@ -298,11 +298,11 @@ quand ils comptent.
 | Français (forme courte) | Anglais retenu (forme courte) | Où l'anglais l'emploie | Note |
 |---|---|---|---|
 | La prière (Prière) | **Prayer** (*Prayer*) | SI 2:153 ; Bukhari-Khan, livre 8 : « *Prayers (Salat)* » | La prière s'écrit sobrement : « *They prayed.* » (exigence 13). |
-| Le dhikr (Dhikr) | **Dhikr** (*Dhikr*) ; glose : *remembrance* | WP *Dhikr* : « *lit. 'remembrance, reminder, mention'* » ; Bukhari-Khan, livre 33 : « *Remembrance of Allah* » | Mot gardé, comme en français. |
+| Le dhikr (Dhikr) | **Dhikr** (*Dhikr*) ; glose : *remembrance* | WP *Dhikr* : « *lit. 'remembrance, reminder, mention'* » ; Bukhari-Khan, livre 33 : « *Retiring to a Mosque for Remembrance of Allah (I'tikaf)* » | Mot gardé, comme en français. |
 | L'étude du Coran (Étude) | **Studying the Qur’an** (*Study*) | Bukhari-Khan, livre 66 : « *Virtues of the Qur'an* » | |
 | Le jeûne (Jeûne) | **Fasting** (*Fast*) | Bukhari-Khan, livre 30 : « *Fasting* » ; SI 2:185 « *let him fast it* » | |
 | L'aumône (Aumône) | **Charity** (*Charity*) | SI 2:263 : « *Kind speech and forgiveness are better than charity followed by injury* » | C'est l'aumône libre (*sadaqa*) : pas *Zakat*, pas *almsgiving tax* (Bukhari-Khan nomme la zakat « *Obligatory Charity Tax* »). |
-| La visite (Visite) | **Visiting** (*Visit*) | Bukhari-Khan, livre 75 : « *Patients* » (les visites aux malades) | « Rendre visite à un proche, à un malade » → « *Visit a relative, or the sick* ». |
+| La visite (Visite) | **Visiting** (*Visit*) | Bukhari-Khan, livre 75 : « *Patients* » (titre seul) | « Rendre visite à un proche, à un malade » → « *Visit a relative, or the sick* ». |
 | Le pèlerinage (Pèlerinage) | **The Hajj** (*Hajj*) | SI 2:197 : « *Ḥajj is [during] well-known months* » ; Bukhari-Khan, livre 25 : « *Hajj (Pilgrimage)* » | *hajj* est un mot de *Merriam-Webster* : sans italique (IJMES). |
 
 ### 2.5 Les sept lames (Valeurs) et les sept maux du cœur
@@ -378,7 +378,7 @@ Les étoiles du cap (`D.STARS`) : le nom arabe selon § 1.3, puis le nom anglais
 |---|---|---|---|
 | Le héros | **the Hero** | Scheler (essai « *Exemplars of Person and Leaders* » : sections *the saint*, *the genius*, *the hero*) | **À valider**. |
 | Le sage | **the Sage** | — (Scheler dit *the genius*, non *the sage*) | **À valider**. Le rôle « sage » (classe de héros) se dit aussi *Sage* : même mot, comme en français. |
-| Le saint | **the Saint** | Scheler ; Winter emploie *saint* pour le *walī* (« *the characteristic traits of a saint* ») | **À valider**, et point à trancher (§ 4) : en anglais *saint* évoque d'abord la canonisation chrétienne. L'exigence 24 demande qu'aucun texte ne dise de quelqu'un qu'il *est* un saint : on écrit « *takes the Saint's stance* », jamais « *X is a saint* ». |
+| Le saint | **the Saint** | Scheler ; Winter emploie *saint* dans un contexte musulman (« *humility, generosity and kindness were regarded as the characteristic traits of a saint* ») | **À valider**, et point à trancher (§ 4) : avis de l'agent, en anglais *saint* fait d'abord entendre la canonisation chrétienne. L'exigence 24 demande qu'aucun texte ne dise de quelqu'un qu'il *est* un saint : on écrit « *takes the Saint's stance* », jamais « *X is a saint* ». |
 | une posture ; prendre une posture | **stance** ; **to take a stance** | — | **À valider**. *Posture* existe, mais *stance* dit mieux une manière de se tenir qu'on prend et qu'on quitte. |
 | tempérament | **temperament** | — | |
 
@@ -568,7 +568,7 @@ b. al-Zubayr* », 240 occurrences ; WP écrit « *Abd Allah* » en deux mots).
 |---|---|---|
 | Abû Bakr as-Siddîq — As-Siddîq — 11–13 H · 632–634 ; « Saga I · Le Véridique » | **Abu Bakr al-Siddiq** — **al-Siddiq** — **AH 11–13 · 632–634** ; « *Saga I · The Truthful* » | WP *Abu Bakr* ; *Tabari* « al-Siddiq » (132) ; WP *Siddiq* : « *Arabic term for truthful* ». |
 | 'Umar ibn al-Khattâb — Al-Fârûq — 13–23 H · 634–644 | **ʿUmar ibn al-Khattab** — **al-Faruq** — **AH 13–23 · 634–644** | WP *Umar*. |
-| Khâlid ibn al-Walîd — Le Sabre dégainé — 13–21 H · 634–642 | **Khalid ibn al-Walid** — **the Drawn Sword** — **AH 13–21 · 634–642** | WP *Khalid ibn al-Walid*. Jamais « *the Sword of God/Allah* » en titre (exigence 8, § 1.9) ; *Tabari* le donne pour surnom (« *He was nicknamed "the sword of God"* »), le recueil peut le rapporter en citation. |
+| Khâlid ibn al-Walîd — Le Sabre dégainé — 13–21 H · 634–642 | **Khalid ibn al-Walid** — **the Drawn Sword** — **AH 13–21 · 634–642** | WP *Khalid ibn al-Walid*. Jamais « *the Sword of God/Allah* » en titre (exigence 8, § 1.9) ; *Tabari* le donne pour surnom (« *He was nicknamed “the sword of God.”* »), le recueil peut le rapporter en citation. |
 | 'Uthmân ibn 'Affân — Le Généreux — 23–35 H · 644–656 | **ʿUthman ibn ʿAffan** — **the Generous** — **AH 23–35 · 644–656** | WP *Uthman*. |
 | 'Alî ibn Abî Tâlib — La Porte du Savoir — 35–40 H · 656–661 | **ʿAli ibn Abi Talib** — **the Gate of Knowledge** — **AH 35–40 · 656–661** | WP *Ali*. Le titre vient d'un hadith rendu en anglais « *I am the city of knowledge and ʿAli is its gate* » (usage courant, référence non vérifiée). |
 | Le Caïd — Seigneur de la Citadelle — un maillon de la Chaîne | **the Caid** — **Lord of the Citadel** — *a link in the Chain* | Fiction. *Caid* : forme reçue en anglais du mot arabe *qa’id* (usage courant, référence non vérifiée). |
@@ -588,7 +588,7 @@ b. al-Zubayr* », 240 occurrences ; WP écrit « *Abd Allah* » en deux mots).
 | idris | Sâlim — le Repenti | **Salim** — *the Penitent* | fiction |
 | abubakr | Abû Bakr — As-Siddîq | **Abu Bakr** — *al-Siddiq* | WP |
 | abubakr, umar | 'Umar — Al-Fârûq | **ʿUmar** — *al-Faruq* | WP |
-| abubakr | Abû 'Ubayda — Amîn al-Umma | **Abu ʿUbayda** — *Amin al-Umma* (glose : *the Trustee of the Community*) | WP *Abu Ubayda ibn al-Jarrah* ; *Tabari* « *faithful trustee* » |
+| abubakr | Abû 'Ubayda — Amîn al-Umma | **Abu ʿUbayda** — *Amin al-Umma* (glose : *the Trustee of the Community*) | WP *Abu Ubayda ibn al-Jarrah* ; glose : **à valider** |
 | umar | Abû 'Ubayda — L'homme de confiance de la communauté | **Abu ʿUbayda** — *the Trustee of the Community* | même glose : un seul titre anglais pour les deux récits |
 | ali | 'Alî — La Porte du Savoir | **ʿAli** — *the Gate of Knowledge* | WP |
 | ali | Ibn 'Abbâs — Le Docte de la communauté | **Ibn ʿAbbas** — *the Scholar of the Community* | WP *Ibn Abbas* ; titre : **à valider** |
@@ -659,8 +659,7 @@ les langues : le nom anglais ne change rien au moteur, qui lit le nom français 
 
 Les autres désignations sans nom (« Un fidèle », « Courrier du Yamâma », « Scribe du dîwân »…) se traduisent en anglais
 simple, en gardant les noms de lieu de § 3.6 : *a worshipper*, *a courier from al-Yamama*, *a scribe of the diwan*
-(WP *Diwan* : l'article sur le dîwân de ʿUmar n'existe pas sous ce titre ; *diwan* est un mot de *Merriam-Webster*,
-référence non vérifiée). Un « cheikh » de tribu : **shaykh** (IJMES).
+(*Tabari* : *diwan*, 376 occurrences). Un « cheikh » de tribu : **shaykh** (IJMES).
 
 ### 3.4 Les personnages de fiction
 
@@ -871,8 +870,8 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
 5. **« Egregore ».** Le mot anglais est occultiste et a désigné les Veilleurs d'Hénoch (WP *Egregore*). Garder
    *egregore* (proposition, par fidélité au mot du jeu, dit « une image » au recueil), ou forger un mot sans passé
    (*thought-idol*) (§ 2.1).
-6. **« The Saint ».** En anglais, *saint* fait d'abord entendre la canonisation chrétienne ; Winter l'emploie pour le
-   *walī*. Garder *the Hero, the Sage, the Saint* (proposition ; Scheler, en anglais, dit *the saint, the genius, the
+6. **« The Saint ».** En anglais, *saint* fait d'abord entendre la canonisation chrétienne (avis de l'agent) ; Winter
+   l'emploie dans un contexte musulman. Garder *the Hero, the Sage, the Saint* (proposition ; Scheler, en anglais, dit *the saint, the genius, the
    hero*), ou dire *the Selfless* pour le troisième (§ 2.8). Et *stance* pour « posture ».
 7. **Les mots de la jauge et des statistiques** : *Constancy* (Constance), *Breath* (Souffle), *spent* (éprouvé),
    *Mind* (Esprit), *Momentum* (Élan), *Wisdom* (Sagesse), *Rooting* (enracinement), *weak point* (faille), *veil* /
