@@ -169,3 +169,96 @@ Une boîte de dialogue tient **trois lignes sur un téléphone** (texte « grand
   en substance, sans guillemets, si elle est introuvable.
 - Employer un mot de la théologie spéculative (صفات، ذات، تجسيم…) ou d'un débat entre écoles là où un mot commun suffit
   (exigence 5).
+
+---
+
+## 2. Le vocabulaire du jeu
+
+Colonnes : **le français du jeu** ; **l'arabe retenu** (avec la vocalisation utile) ; **la source** : ouvrage, auteur,
+chapitre ou page, et l'adresse lue ; **la note** (l'autre terme possible, ce qu'il faut éviter). « à valider » : terme
+proposé faute d'équivalent établi, à faire confirmer par le décideur.
+
+Adresses lues pour cette section (toutes consultées le 18 novembre 2026) :
+
+- [A] WP-ar, *Ihyâ' 'ulûm ad-dîn*, tableau des quarante livres : `https://ar.wikipedia.org/wiki/إحياء_علوم_الدين`
+- [B] al-Ghazâlî, *Ihyâ'*, livre « ذم البخل وذم حب المال » (texte intégral, Wikisource) :
+  `https://ar.wikisource.org/wiki/إحياء_علوم_الدين/كتاب_ذم_البخل_وذم_حب_المال`
+- [C] al-Ghazâlî, *Ihyâ'*, livre « ذم الغضب والحقد والحسد » : `https://ar.wikisource.org/wiki/إحياء_علوم_الدين/كتاب_ذم_الغضب_والحقد_والحسد`
+- [D] al-Ghazâlî, *Ihyâ'*, livre « شرح عجائب القلب » : `https://ar.wikisource.org/wiki/إحياء_علوم_الدين/كتاب_شرح_عجائب_القلب`
+- [E] al-Ghazâlî, *Ihyâ'*, livre « ذم الدنيا » : `https://ar.wikisource.org/wiki/إحياء_علوم_الدين/كتاب_ذم_الدنيا`
+- [F] Ibn Rajab, *Jâmi' al-'ulûm wa-l-hikam*, commentaire du 13ᵉ hadith : `https://ar.wikisource.org/wiki/جامع_العلوم_والحكم/الحديث_الثالث_عشر`
+- [G] Ibn Kathîr, *al-Bidâya wa-n-nihâya* (éd. as-Sa'âda), t. 7 p. 11-12, « وقعة اليرموك » : `https://shamela.ws/book/23708/2132` et `/2133`
+- [H] Ibn Ma'sûm al-Madanî, *Anwâr ar-rabî' fî anwâ' al-badî'*, « الاستطراد » : `https://shamela.ws/book/5446/41`
+- [I] Ibn Khaldûn, *al-Muqaddima*, ch. « في أن العصبية إنما تكون من الالتحام بالنسب أو ما في معناه » :
+  `https://ar.wikisource.org/wiki/مقدمة_ابن_خلدون/الفصل_الثامن_في_أن_العصبية_إنما_تكون_من_الالتحام_بالنسب`
+- [J] Khâlis Jalabî, sur Malek Bennabi, *Mushkilat al-afkâr fî l-'âlam al-islâmî* (les trois mondes : الأشياء، الأشخاص،
+  الأفكار), *al-Watan*, 20 avril 2011 : `https://www.alwatan.com.sa/article/5297` (source secondaire ; le livre lui-même
+  n'a pas été lu en ligne)
+- [K] Occurrences coraniques, recherche sur le texte : `https://api.alquran.cloud/v1/search/<mot>/all/quran-simple-clean`
+- [L] WP-ar, pages citées par leur titre : `https://ar.wikipedia.org/wiki/<titre>`
+- [M] Sahîh Muslim, édition arabe du CDN : `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-muslim.min.json`
+
+### 2.1 Mots réservés
+
+| Français | Arabe | Règle |
+|---|---|---|
+| un Compagnon (du Prophète ﷺ) | **صحابيّ**, pl. **الصحابة** ; « صاحب رسول الله ﷺ » | réservé aux Compagnons. **Jamais** pour un membre du groupe, un compagnon de lumière, un ami de 2084. |
+| un compagnon (membre du groupe), les compagnons | **رفيق**, pl. **الرفاق** | « relève un compagnon éprouvé » → « يُنهِض رفيقًا مُنهَكًا ». |
+| le groupe (l'équipe du joueur) | **الرَّكْب** | à valider. Le *rakb* est la troupe qui voyage ensemble. Éviter **الجماعة** (« la Communauté », sens religieux et confessionnel) et **الفريق** (sportif). |
+| le Messager d'Allah ﷺ, le Prophète ﷺ | **رسول الله ﷺ**، **النبي ﷺ** | exigence 1. |
+| Commandeur des croyants | **أمير المؤمنين** | titre d'Umar, d'Uthmân, d'Alî dans les répliques. |
+| Iblîs | **إبليس** | nommé, jamais montré (exigence 18) ; jamais dans un nom de combattant ni de compétence. |
+
+### 2.2 Ce qu'aucun ennemi, aucune compétence, aucun objet ne s'appelle
+
+Le validateur refuse en français les noms d'Iblîs, d'un démon ou d'un djinn. En arabe, la liste est plus longue,
+parce que des mots ordinaires y portent un sens religieux ou confessionnel. **Aucun nom d'égrégore, d'idole, de
+compétence, d'objet ni de lieu frappé ne contient** :
+
+| Mot | Pourquoi |
+|---|---|
+| شيطان، شياطين، إبليس، جنّ، جنّي، جانّ، عفريت، مارد، غول، سِعلاة، قرين، هامة | démons, djinns, êtres du folklore (exigences 6 et 18). « القرين » est le compagnon-djinn de chaque homme. **Attention** : Dirâr ibn al-Azwar reçut des Rûm un surnom contenant « شيطان » (WP-ar, « ضرار بن الأزور ») : le jeu ne l'emploie jamais. |
+| فتنة، الفتنة | désigne en arabe les guerres entre Compagnons (WP-ar, « معركة صفين » : « تاريخ الفتنة الأولى ») : aucun égrégore ne s'appelle ainsi (exigence 5). |
+| خوارج، حرورية، مُحكِّمة، رافضة، ناصبة، أهل الأهواء، مبتدعة | noms de partis et de sectes : jamais pour un ennemi, jamais pour qualifier les gens de Harûrâ' ou de Nahrawân, qui sont des hommes (exigence 6). Dans un récit, on dit ce qu'ils font, sobrement. |
+| طاغوت | mot coranique qui vise aussi des hommes : trop lourd. |
+| الله, et les Noms divins employés comme noms : الحقّ، الحَكَم، الحكيم، الوليّ، المَلِك، القهّار، الجبّار، الرحمن، الرحيم، الكريم | exigence 8 : « Le Juge sans miséricorde » est **القاضي**, jamais الحَكَم ; « le sage » n'est pas الحكيم (§ 2.6). Les mots communs العدل، الرحمة، الكرم restent permis comme noms de vertus, jamais comme nom propre d'une chose qu'on frappe. |
+| العرش، الكرسيّ (dans les récits anciens) | en arabe classique, le Trône et le Siège sont d'abord ceux d'Allah : une idole nommée « العرش الخالي » se lirait de travers. Le trône d'un roi est **السرير** (« سرير المُلك », « سرير كسرى ») ; en 2084 seulement, **الكرسيّ** au sens moderne du pouvoir (§ 3.6). |
+| العُقاب | c'est le nom de la bannière du Prophète ﷺ dans la sîra (référence non vérifiée en ligne) : « l'Aigle d'Airain » n'est pas un عقاب. |
+| نَسر seul | Nasr est une idole nommée au Coran 71:23 [K] : le compagnon de lumière se dit toujours de son nom d'étoile entier, **النسر الطائر** ; l'idole de Rûm, **نسر النحاس** (§ 3.6). |
+| المَدَد، الغَوث، القُطب | mots des invocations soufies et de leurs débats (exigence 5) : « le secours » est **الفَرَج** (§ 2.5). |
+| الملحمة، الملاحم ; الجهاد | la première désigne les batailles de la fin des temps ; la seconde est une catégorie de la loi : une bataille déclarée contre une idole n'est ni l'une ni l'autre (exigence 19). |
+| الحساب | le Jugement (يوم الحساب) : « Le Compte » est **الرَّصيد** (§ 3.6). |
+| مَنافق pour un personnage nommé | exigence 11 : l'hypocrite est fictif ; le texte le montre, il ne le traite pas de منافق. |
+
+### 2.3 Les mots propres au jeu (AGENTS.md, « Conventions »)
+
+| Français | Arabe retenu | Source | Note |
+|---|---|---|---|
+| **Constance** (points de vie) | **الثَّبات** | Ibn Kathîr emploie le verbe dans ce sens à Yarmoûk : « إنكم لا تثبتون » (« vous ne tiendrez pas ») [G, p. 11] | **à valider**. Autre choix : الجَلَد (l'endurance), mais sans voyelles il se lit « la peau ». Abréviation d'interface : ثبات. |
+| **Souffle** (points de magie) | **النَّفَس** (toujours vocalisé) | usage courant (« نَفَس طويل »), référence non vérifiée | **à valider**. Sans la fatha, النفس se lit « l'âme » (al-Ghazâlî, [D], « بيان معنى النفس والروح والقلب والعقل ») : la voyelle est obligatoire partout. |
+| **éprouvé** (hors de combat) | **مُنهَك** (verbe : أُنهِك) | usage courant | **à valider**. Exigence 19 : jamais جريح، قتيل، صريع، سقط (blessé, tué, abattu). |
+| **voile** (la garde d'un égrégore), **voiles** | **حِجاب**, pl. **حُجُب** | al-Ghazâlî, [D] : parmi les cinq causes qui empêchent le miroir du cœur de refléter le vrai, « حجاب مرسل بين المرآة والصورة » | **à valider**. Un voile ôté : « انهتك حجاب » ou « سقط حجاب ». Ne pas confondre avec le « voile de lumière » des Compagnons (§ 2.9). |
+| **dévoilé** (un égrégore vaincu : on a montré qu'il est vide) | **انكشف** ; adj. **مكشوف** ; « انكشف خواؤه » | al-Ghazâlî, [D] : le cœur poli « … حتى يتلألأ فيه جلية الحق وينكشف » | **à valider**. Éviter الكشف seul (dévoilement mystique soufi). |
+| **Niyya** (l'intention, jauge) | **النيّة** | al-Ghazâlî, *Ihyâ'*, livre « النية والإخلاص والصدق » (quart des « المنجيات ») [A] | |
+| **Sakîna** (la sérénité, jauge) | **السَّكينة** | Coran 48:4 et 48:18 [K] | |
+| **râwî** (le transmetteur, le joueur) | **الراوي** ; au vocatif **يا راوي** | al-Khatîb al-Baghdâdî, *al-Jâmi' li-akhlâq ar-râwî wa-âdâb as-sâmi'* [L, « الجامع لأخلاق الراوي وآداب السامع »] | Le pluriel, **الرواة**. |
+| **isnad** | **الإسناد** (le titre du jeu : إسناد) | WP-ar, « سند (علم الحديث) » : « السند أو الإسناد … هو سلسلة الرواة الذين نقلوا الحديث واحدا عن الآخر » [L] | |
+| **la Chaîne** (l'écran des maillons) | **السِّلسلة** | même page : « سلسلة الرواة » [L] | « La Chaîne entière » (compétence d'Idris) : « السلسلة كاملةً ». |
+| **maillon** (une saga) | **الحَلْقة** (vocalisée à la première occurrence) | usage courant (« حلقة في سلسلة »), référence non vérifiée | La حَلَقة, elle, est un cercle d'étude (WP-ar, « حلقة علم ») : le jeu dit pour ce sens **مجلس العلم** (§ 3.3). |
+| **égrégore** (l'ennemi du jeu) | **خَيال**, pl. **خَيالات** | proposition tirée du théâtre d'ombres arabe, **خيال الظل**, aussi nommé « شخوص الخيال، طيف الخيال » : des figures découpées qui semblent vivre quand beaucoup les regardent ensemble à la lumière d'une lampe, et ne sont qu'une ombre (WP-ar, « خيال الظل » et « ابن دانيال », poète mamelouk de ce théâtre) [L] | **à valider**. Le mot n'évoque ni djinn ni démon, et dit ce que le jeu dit : une forme vide qui prend corps sous le regard. « un égrégore de la tyrannie » : « خيالُ الطغيان ». Autre choix : **وَهْم**, pl. أوهام (« une illusion »), plus abstrait. Écartés : طَيف (le mot sert aussi, chez des commentateurs, pour le toucher du diable en Coran 7:201 — référence non vérifiée), شَبَح (« fantôme » : esprit des morts, hantise), فتنة، طاغوت، هوى (§ 2.2). |
+| **idole** (l'égrégore d'un chapitre) | **الصَّنَم**, pl. **الأصنام** | Malek Bennabi : « عندما تغرب الفكرة يبزغ الصنم » (cité par le blog d'Al Jazeera « أفكارنا أصنامنا », 30 avril 2018, qui la situe dans *Shurût an-nahda* ; source secondaire, non relue dans le livre) | Autre choix : الوثن. Le carton « Bataille déclarée » dit : « صنمٌ يُنازَل ». |
+| **noosphère** (l'envers de la ville) | **عالم الأفكار** | Malek Bennabi, *Mushkilat al-afkâr fî l-'âlam al-islâmî* : عالم الأشياء، عالم الأشخاص، عالم الأفكار [J] | Chez Bennabi, c'est l'univers des idées d'une société ; le jeu en fait un lieu. Ne pas écrire النوسفير (calque). Carte : **عالم الأفكار** ; « dans la noosphère » : « في عالم الأفكار ». |
+| **idées noires** (cinq) | **الخواطر السُّود** (sg. خاطرٌ أسود) | al-Ghazâlî, [D] : « وأعني بالخواطر ما يحصل فيه من الأفكار والأذكار » ; « السود » rappelle « السوداء », l'humeur noire de la vieille médecine | **à valider**. Autre choix : **الهموم** (« les soucis »), mais la honte n'est pas un *hamm*. Les cinq : § 2.5. |
+| **maux du cœur** (sept) | **أمراض القلوب** ; un mal : **مرضٌ من أمراض القلب** | al-Ghazâlî, [C], « بيان الدواء الذي ينفي مرض الحسد عن القلب » : « الحسد من الأمراض العظيمة للقلوب، ولا تداوى أمراض القلوب إلا بالعلم والعمل » | Pas « مرض القلب » seul dans une interface (« maladie cardiaque ») : « داء القلب » en abrégé. |
+| **lames** (forgées par les œuvres) | **النِّصال** (sg. **نَصْل**) ; « forger » : **صَقَل** (« la prière a poli la lame de la Sincérité ») | l'image du cœur-miroir qu'on polit : al-Ghazâlî, [D] : « تزيد مرآة القلب جلاء وإشراقاً ونوراً » | **à valider** (le nom et le verbe). Éviter « مطبوع » (forgé, au sens ancien : WP-ar, « مهند (اسم) », « السيوف المطبوعة من حديد الهند ») : il se lit aujourd'hui « imprimé ». Exigence 16 : une lame n'a ni nom d'homme ni inscription. |
+| **provision du cœur** (zâd) | **الزاد** ; **زاد القلب** | Coran 2:197 [K] (le recueil du jeu cite ce verset) | |
+| **compagnons de lumière** (animaux de fiction) | **رفاق النور** | — | **à valider**. Jamais صحابة ni أصحاب (§ 2.1). |
+| **halte** (le menu) | **الاستراحة** | — | **à valider**. Autre choix : المَنزِل (la halte des caravanes), mais « المنزل » se lit « accueil » dans une interface. |
+| **veillée** (les veillées du Caïd) | **السَّمَر** ; une veillée : **ليلة** ; les veillées du Caïd : **ليالي القائد** ; « Veillée de la Véracité » : **ليلة الصدق** | Abû Hayyân at-Tawhîdî, *al-Imtâ' wa-l-mu'ânasa*, « ما جرى في سبع وثلاثين ليلة » [L, « الإمتاع والمؤانسة (كتاب) »] | **à valider**. |
+| **Cité-Miroir** (la ville de 2084) | **مدينة المرايا** | fiction | **à valider**. |
+| **pourparler** | **المُحاوَرة** (verbe : حاوَر) | Coran 18:34 et 18:37, « وهو يحاوره » [K] | **à valider**. Autre choix : المفاوضة (plus diplomatique). « Pourparler gagné / perdu » : « أقنعتِ المحاورة / لم تُقنِع ». |
+| **bataille déclarée** | **المُصافّة** (la bataille rangée, où chacun voit les rangs d'en face) | usage des chroniqueurs, référence non vérifiée en ligne ; les rangs eux-mêmes : « صفوف الروم » [G, p. 11] | **à valider**. Le carton dit : « مُصافّة مُعلَنة ». Écartés : الزحف (Coran 8:15 [K], contexte de combat contre des hommes), الملحمة, الجهاد (§ 2.2). |
+| **le secours** | **الفَرَج** (« جاء الفرج ») | at-Tanûkhî, *al-Faraj ba'd ash-shidda* (WP-ar, « الفرج بعد الشدة », qui cite aussi les livres du même titre d'al-Madâ'inî et d'Ibn Abî d-Dunyâ) [L] | **à valider**. Le *faraj* vient, on ne le commande pas : c'est ce que dit le jeu. Écartés : المَدَد، الغَوث (§ 2.2). |
+| **l'organigramme du mal** | **مراتب الشرّ** | — | **à valider**. Titre de la page : « مراتب الشر ». |
+| **les souffleurs** | **المُوَسْوِسون** | Coran 114:4, « الوسواس » [K] ; al-Ghazâlî, [D], « بيان تسلط الشيطان على القلب بالوساوس » | Jamais dessinés ni combattus. Le texte coranique, s'il est cité, vient du registre. |
+| **« démons intérieurs »** (façon de parler, aussitôt expliquée) | « **شياطين النفس** » (entre guillemets) | usage courant | **à valider**. Le jeu enchaîne : « ليست شياطين: إنها أمراض القلب ». |
