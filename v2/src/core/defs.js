@@ -445,7 +445,9 @@
                 coiffe de mailles, qui sont de l'équipement
        sans     ce qu'une coiffe ne prend pas, pour qu'aucune composition ne donne la silhouette d'un Compagnon des
                 récits ni celle de Sâlim : la coupe qu'elle a chez eux (manteau), l'étoffe claire qui en ferait un
-                turban de Compagnon (etoffe). Le joueur qui touche une coiffe la prend, et ce qui n'allait pas avec
+                turban de Compagnon (etoffe) ; sous le chèche, ni la claire ni la verte — de dos, dans le petit
+                personnage, il a le gabarit même du turban des Compagnons, et vert, ce serait 'Alî, son turban sombre
+                et sa robe verte (relecture de D193). Le joueur qui touche une coiffe la prend, et ce qui n'allait pas avec
                 elle cède sous ses yeux ; tant qu'il la porte, la coupe ou l'étoffe qui n'irait pas avec elle
                 s'éteint (perso.js). Et sous le turban et le chèche, le bandeau du râwî est fait de ses deux néons :
                 de dos, où l'on ne voit ni son visage ni le néon de sa poitrine, la marque de 2084 (sprites.js)
@@ -465,7 +467,7 @@
       capuche: { longue: [true] },                           // avec la robe longue, l'habit des moines du jeu (Frère Cyprien, les moines des récits)
       calotte: { manteau: ['aucun'] },                       // Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit
       imama_haute: { manteau: ['long'], etoffe: ['e6'] },    // Ibn 'Abbâs, 'Abd ar-Rahmân ; clair, ce serait un turban de Compagnon
-      litham: { etoffe: ['e6'] }                             // clair, de dos, ce serait un turban de Compagnon
+      litham: { etoffe: ['e6', 'e4'] }                       // de dos, le turban des Compagnons : clair, l'un d'eux ; vert, 'Alî
     },
     manteaux: ['long', 'aucun', 'epaule', 'ample'],
     etoffes: {

@@ -251,8 +251,9 @@ vient de `D.RAWI` (`defs.js`) ; seuls les deux objets sont dessinés de neuf :
   Aucune composition ne donne la silhouette d'un Compagnon des récits, ni de Sâlim ou de Maître Yûnus, qui marchent avec
   le râwî : la calotte ne se prend pas sans manteau (Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit) ; le turban haut ni
   avec le manteau long (Ibn 'Abbâs, 'Abd ar-Rahmân), ni dans l'étoffe claire (un turban clair est celui des
-  Compagnons) ; le chèche non plus dans l'étoffe claire (de dos, dans le petit personnage, il prend la forme d'un
-  turban). Et sous le turban et le chèche, le bandeau du râwî est fait de ses deux néons, la bande et la ceinture (`Y`,
+  Compagnons) ; le chèche ni dans l'étoffe claire ni dans la verte (de dos, dans le petit personnage, il a le gabarit
+  même du turban des Compagnons : clair, ce serait l'un d'eux ; vert, 'Alî, son turban sombre et sa robe verte — la
+  relecture de D193 l'a mesuré). Et sous le turban et le chèche, le bandeau du râwî est fait de ses deux néons, la bande et la ceinture (`Y`,
   `y` ; `NEON_TETE`, `sprites.js`) — deux lignes sous le turban du grand personnage, et, là où le bandeau n'a qu'une
   ligne (le petit personnage, le chèche), les deux néons point par point : de dos, où l'on ne voit ni son visage ni le
   néon de sa poitrine, c'est la marque de 2084 — le bandeau d'un Compagnon a sa couleur, d'un seul ton. À l'écran, une coiffe se prend toujours : ce qui
@@ -320,7 +321,8 @@ de case en case (`focusList`, option `spatial`) ; une souris immobile sous l'éc
 `node v2/tools/personnage.js` le prouve : les noms acceptés et refusés ; chaque phrase redite avec six noms ; le profil
 d'origine qui ne change rien ; les règles du râwî composé (composition abîmée oubliée, visage inchangé par l'habit, le
 dé sur mille tirages, les teints dans l'ordre dans les trois dessins, aucune silhouette de Compagnon, de Sâlim ni de
-Maître Yûnus, aucun turban clair, le visage sous le turban et les yeux seuls sous le chèche, le bandeau aux deux néons de
+Maître Yûnus, aucune composition qui ressemble à un Compagnon quelle que soit sa coiffe (moins de 85 % de points d'une
+couleur presque égale, de face, de profil et de dos, en 16 × 24 et en 32 × 48), aucun turban clair, le visage sous le turban et les yeux seuls sous le chèche, le bandeau aux deux néons de
 face, de profil et de dos, l'arme de départ, ni or ni jaune sous aucune coiffe ni sur les objets, les feuillets retirés et
 perdus sans erreur, le refus des règles) ; puis, par les vrais boutons et en quatre tailles d'écran, chaque choix touché et vu et un
 prologue entier joué sous un autre nom et un autre visage — tout ce qui s'affiche est relevé, « Idris » n'y paraît plus
