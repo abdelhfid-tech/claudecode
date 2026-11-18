@@ -54,7 +54,7 @@
 {"k":"8kg2m8.c","fr":"Chuchotement","t":"الوَشوَشة","ou":"enemies.chuchot.name"},
 {"k":"xtrcs5.4q","fr":"Ce qui se dit à mi-voix dans une maison où l'on cache une mort. Il n'a pas de corps : il n'a que la voix de ceux qui le répètent. Une parole dite à voix haute le dissipe.","t":"ما يُقال همسًا في بيتٍ يُكتَم فيه موت. لا جسد لها: ليس لها إلا صوتُ مَن يردّدها. وكلمةٌ تُقال جهرًا تُبدّدها.","ou":"enemies.chuchot.desc"},
 {"k":"1tqgehn.i","fr":"Il dort seulement.","t":"إنما هو نائم.","ou":"enemies.chuchot.taunts[0]"},
-{"k":"xr9x93.15","fr":"Qui te l’a dit ? Personne. Tout le monde.","t":"مَن قال لك؟ لا أحد. الناسُ كلّهم.","ou":"enemies.chuchot.taunts[1]"},
+{"k":"xr9x93.15","fr":"Qui te l’a dit ? Personne. Tout le monde.","t":"مَن حدّثك؟ لا أحد. الناسُ كلّهم.","ou":"enemies.chuchot.taunts[1]","note":"harmonisation : « Qui te l’a dit ? » est « مَن حدّثك؟ », la question de l’isnâd, comme dans le récit de ‘Uthmân et le récit-cadre"},
 {"k":"v2uewa.f","fr":"« On dit que… »","t":"«يُقال إنّ…»","ou":"enemies.chuchot.skills[0].name","note":"guillemets arabes sans espaces intérieures, comme le moteur"},
 {"k":"7wswfv.f","fr":"L'Ombre du Père","t":"ظلُّ الأب","ou":"enemies.ombre_pere.name"},
 {"k":"75as4d.52","fr":"Un trône que nul n'ose déclarer vide. Ce n'est pas le père : c'est la place qu'il tenait dans les têtes, et que la peur veut garder occupée. Dire la mort telle qu'elle est le défait.","t":"سريرُ مُلكٍ لا يجرؤ أحدٌ على أن يُعلن خلوّه. ليس هو الأب: بل المكان الذي كان يشغله في الأذهان، ويريد الخوف أن يُبقيه مشغولًا. ويُبطله الإخبارُ بالموت على وجهه.","ou":"enemies.ombre_pere.desc","note":"relecture (langue) : « في الرؤوس » calquait « dans les têtes » ; l’arabe dit « في الأذهان »"},

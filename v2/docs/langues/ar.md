@@ -68,7 +68,12 @@ la longueur des phrases, pas par la grammaire.
 - **Tiret** : le tiret long « — » sépare un nom de sa source, comme en français (« أبو بكر — ابن هشام، السيرة النبوية »),
   ce que fait déjà le registre des sources.
 - **Point d'exclamation** : rare. Un cri dans un combat, une chimère qui se croit juste ; jamais dans la bouche d'un
-  Compagnon sans que la source le donne.
+  Compagnon sans que la source le donne. *(Harmonisation du 18 novembre, à valider : appliqué à tous les récits ; un
+  « ! » ne reste dans la bouche d'un Compagnon que dans un texte relevé chez sa source, qui le porte.)*
+- **Point final et guillemets** *(harmonisation du 18 novembre, à valider)* : quand la parole est enchâssée dans la
+  phrase, le point se met **hors** des guillemets : « قال: «…». » ; « ؟ » et « ! » qui appartiennent à la parole restent
+  dedans (« «…؟» »). Une ligne qui n'est qu'une parole entre guillemets garde son point à l'intérieur (« «…». » n'est pas
+  exigé). C'est l'usage du moteur, des veillées et des cinq récits.
 - Les glyphes du jeu (▶ ☰ ✦ × ·) restent tels quels ; le moteur retourne lui-même les flèches (◂ ▸) dans le sens
   droite-gauche.
 
@@ -1083,6 +1088,90 @@ réécrit pas, sauf erreur, qu'il signale. Ceux qui suivent demandaient un choix
 | les cinq idées noires dans les pourparlers | **سوء الظنّ · الحقد · العار · الخوف · اليأس** | coeur et quatre récits | § 2.5, sans voyelles, comme le moteur. |
 | sources des feuillets (six formes communes) | « الطبري، تاريخ الرسل والملوك »… | § 1.12 | |
 
+### 3.8 Ce que l'écriture des récits a fixé (18 novembre, harmonisation de toute la langue)
+
+*Relevé de l'harmonisation, une fois les sept récits écrits et relus deux fois (abubakr, umar, khalid, uthman, ali,
+frame, caid). Chaque terme est **à valider**.* Ce qui suit vaut d'un fichier à l'autre : un rédacteur qui écrit le
+contenu commun (`coeur`) ou une suite le reprend tel quel.
+
+**Les formules qui reviennent d'un récit à l'autre**
+
+| Français | Arabe fixé | Où / pourquoi |
+|---|---|---|
+| « La chaîne vacille. » ; « Ce n'est pas ce qui fut rapporté. » ; « c'est ce qui fut rapporté » | **تهتزّ السلسلة.** ; **ليس هذا ما رُوي.** ; **هذا ما رُوي** | phrase verbale, comme les chroniques (§ 1.1) ; le bandeau du moteur s'aligne sur les récits (« <b>تهتزّ السلسلة…</b> ») |
+| « Qui te l'a dit ? » ; « Et lui, de qui le tenait-il ? » ; « De qui tiens-tu cela ? » ; « d'après » (les anneaux de la Chaîne) ; « Untel m'a rapporté, d'après untel » | **«مَن حدّثك؟»** ; **«وهو، عمّن أخذه؟»** ; **«عمّن أخذتَ هذا؟»** ; **«عن»** ; **«حدّثني فلانٌ، عن فلانٍ»** | « حدّث » est le verbe de la transmission (« حدّثنا ») : la même question dans le récit de ‘Uthmân, le récit-cadre et les veillées |
+| « l'envers (du lieu, de la ville, du camp, du désert…) » ; « la noosphère de X » | **الوجه الآخر لـ…** ; **عالم الأفكار في / عند X** | le terme de D185 gardé entier |
+| « en face » (le camp, la flotte d'en face) | **بإزاء** (« بإزائنا »، « الذين بإزائنا ») | le mot des chroniques ; « الجهة الأخرى / المقابلة » calquait « l'autre côté » |
+| « tout le monde (le sait, le répète) » | **الناس كلّهم** | « الكلّ » avec l'article est un tour d'aujourd'hui : il ne reste que dans la langue de 2084 |
+| « Il n'y a pas de rangs à mener ici » ; « Il n'a pas de rangs à mener » | **لا صفوف تُقاد هنا** ; **لا صفوف يقودها** | l'impersonnel du français garde le passif |
+| « Tu dis vrai. » ; « Allons trouver… » (‘Umar) | **صدقت.** ; **انطلق بنا إلى…** | la voix de ‘Umar et d'Abû ‘Ubayda d'un récit à l'autre (al-Bukhârî n° 6830) |
+| « An N H · 634 · lieu » (sous-titre d'un chapitre) ; « An N de l'Hégire » (carton) | **سنة N هـ · ٦٣٤ م · …** ; **سنة N للهجرة** | « An » se dit « سنة » partout ; la fiche d'une saga (« 13–23 H · 634–644 ») reste sans « سنة » (§ 2.10) |
+| l'ambiance d'un récit (écran de la Chaîne) : orientale · romaine · maritime · désert · citadelle · noosphère · cyberpunk | **شرقيّة · روميّة · بحريّة · صحراء · قلعة · عالم الأفكار · سايبربانك** | « مشرقيّة » et « صحراويّة » écartés : un même mot sur un même écran |
+| « juin 632 » | **يونيو ٦٣٢ م** | les mois de l'ère commune, dans les trois récits qui en donnent |
+| les étiquettes d'un seul mot (Enfant, Récitant, Moine, Poète…) | **طفل · قارئ · راهب · شاعر** | sans tanwîn ; une étiquette de plusieurs mots garde le sien (« رجلٌ من أهل X », § 3.2) |
+| « Ancien du Fort des Oliviers » (l'ancien du bourg, son porte-parole) | **شيخ حصن الزيتون** | distinct du modèle « Ancien de X » = « شيخٌ من أهل X » (un ancien parmi d'autres) |
+| « Vétéran du Shâm » | **رجلٌ ممّن غزا الشام** | le modèle « رجلٌ ممّن شهد X » vaut pour une bataille, non pour une région |
+| « une phrase vraie devenue lame » ; « Parole vraie, visée fausse » (feuillet) | veillées : **جملةٌ صادقة صارت شفرة** ; récit de ‘Alî : **عبارةٌ صارت شفرة** ; feuillet : **كلمةُ حقٍّ، ومرمًى باطل** | deux mots gardés (« جملة » chez le Caïd, « عبارة » chez ‘Alî, qui l'emploie aussi pour « formule ») ; la parole de ‘Alî est toujours « كلمة حق » (§ 4, point 15) |
+| « condamner » | récit de ‘Umar : **قضى على** ; récit de ‘Alî et 2084 : **الإدانة، يُدين، مُدان** | à trancher (§ 4, point 15) |
+
+**Les mots réservés, appliqués à tous les récits**
+
+| Mot | Règle |
+|---|---|
+| **القائد** | le Caïd seul ; le chef d'une armée est son **أمير** (« أميره الشابّ » pour Usâma), les lieutenants de ‘Alî ses **أمراء** ; un officier de la flotte « أحدُ أمراء الأسطول » |
+| **الرقيب** | jamais seul avec l'article (Nom divin) : **رقيبُ الجيش**, **رقيبُ المقدَّمة** ; l'étiquette « Guetteur » : « رقيب » (indéfini) |
+| **الرسول** | jamais seul pour un envoyé : **رسولٌ من X**, **رسول معاوية**, « استقبال رسولٍ قادمٍ من اليمامة » |
+| **أصحاب** | réservé aux Compagnons (§ 2.1) : « les siens » d'un émir : **مَن معه**, **رجاله** ; « أصحاب الحاجات » (les solliciteurs) reste, mot composé sans rapport |
+| **النذير** | dit du Prophète ﷺ (« النذير العريان ») : « Cri d'alarme » **صيحةُ التحذير**, « L'Avertisseur » **المُحذِّر** |
+| **خيرُ الناس** | surnom du Prophète ﷺ : « les meilleurs des hommes » **خيارُ الناس** |
+| **تجسّد** | se dit des chimères qui prennent corps (« يتجسّد في عالم الأفكار ») ; jamais d'un personnage qui « donne un visage » à une idée (c'est aussi le mot chrétien de l'Incarnation) : **ليُرى فيه صنفٌ من الناس**, **لكي تُرى المسائلُ في أشخاصٍ يحملونها** |
+| **الرَّتَل، الأرتال** | mot militaire d'aujourd'hui : « les colonnes » (les onze armées) **الجيوش** ; « la colonne » (une troupe) **الكتيبة** (« رجالُ الكتيبة », rang de la Traversée) |
+| **مرسوم، مخيّم، إجازة، بالفعل، طبعًا، عملية طرح، فضوليّ، يستهدف، الرهانات** | mots d'aujourd'hui ou de chancellerie : « par décret » **بأمرٍ يُمضيه** ; « deux campements » **مضارب قومين** ; « en permission » **أُذن لها في الانصراف** ; « curieux » **النظّارة** ; « مرسوم » ne reste que dans le récit de ‘Umar (les édits de Rûm, et « Décret », compétence du Trône vide) |
+| **المدينة** seule | se lit « Médine » : la Cité-Miroir **مدينة المرايا** ; une autre ville **البلد** ou **هذه المدينة** (Îliyâ') ; « une cité » en général **المدن** |
+| **ما نزل** | se lit « ce qui fut révélé » : « Ce qui est descendu » **ما هبط** |
+
+**La fiction et les sources, dans les feuillets**
+
+- « inventé pour ce récit », « imaginé pour ce récit » : **من صنع اللعبة لهذه الحكاية** ; « ce récit » (celui du jeu) :
+  **هذه الحكاية** ; le récit transmis par les chroniques : **الخبر**, **الرواية** (« في أشهر الروايات ») ;
+- les trois hypocrites de fiction (Thâmir, Hâzim, Ghâlib) : le feuillet dit **النفاق** (la chose), jamais « المنافق » de
+  l'homme ; Hâzim : « اخترعته اللعبة ليُرى فيه صنفٌ من الناس » ;
+- la source d'un feuillet porte le numéro entre parenthèses (« صحيح البخاري (٣٧٠٠) ») ; la source d'une parole, celle du
+  registre (« صحيح البخاري، رقم ٣٧٠٠ ») ;
+- les sécessionnistes de Harûrâ' ne sont pas nommés par le nom du parti, même là où le français l'explique (« on les
+  appellera Harûriyya, puis Khawârij ») : **فنُسبوا بعدُ إلى حروراء، ثم سُمّوا باسمٍ مأخوذٍ من خروجهم** (§ 4, point 15).
+
+**Les termes de chaque récit** (relevés dans les notes des rédacteurs et des relecteurs)
+
+| Récit | Français | Arabe fixé | Source / note |
+|---|---|---|---|
+| Abû Bakr | Les dix consignes (feuillet) | **عشرُ وصايا** | pas « الوصايا العشر » (le Décalogue) |
+| Abû Bakr | face à face ; à l'instant | **مشافهةً** ; **آنفًا** | le mot des chroniques ; « وجهًا لوجه » calquait |
+| Abû Bakr | Un émir parmi nous, et un émir parmi vous | **منّا أميرٌ، ومنكم أمير.** | al-Bukhârî n° 3668 (al-Hubâb), sans exclamation |
+| ‘Umar | Au secours ! Au secours ! (sa lettre) | **«يا غوثاه، يا غوثاه»** | Ibn Sa‘d (« فيا غوثاه، ثلاثا ») |
+| ‘Umar | briser la disette ; Je respire ; être l'égal de | **رفع المجاعة** ; **سكن رَوعي** ; **يُسوّى** | « كفؤ » appelle la كفاءة du mariage |
+| ‘Umar | Pompée ; Titus ; Hadrien | **بومبيوس** ; **تيتوس** ; **هادريان** | « بومبي » se lit Pompéi |
+| ‘Umar | le palais du gouverneur (à Îliyâ') ; nos gouverneurs (Sophrone) ; un édit (de Rûm) | **قصر الحاكم** ; **حُكّامنا** ; **مرسوم** | le gouverneur musulman reste **العامل** (§ 2.10) ; à Îliyâ', le palais est celui de Rûm |
+| Khâlid | s'illustrer ; à voix haute ; les crieurs ; signer un pacte | **أبلى بلاءً حسنًا** ; **جهرًا** ; **الهتّافون** ; **عقد** | |
+| Khâlid | au bivouac ; trois cents et quelques | **حين يحطّون الرحال** ; **ثلاثمئة ونيّف** | « المنزل » se lit « la maison » |
+| Khâlid | la tente (d'Abû ‘Ubayda, des émirs) | **فُسطاط الأمير** | le mot du lieu « Tente du chef » (§ 3.4) |
+| ‘Uthmân | Chuchotis ; Collation ; Un seul tracé ; L'Exemplaire de référence ; Retenue | **الهمهمة** ; **المقابلة** ; **رسمٌ واحد** ; **المصحف الإمام** ; **كفُّ اليد** | « الهمهمة » distinct de « الوشوشة » (le Caïd) et de « الهمس » |
+| ‘Uthmân | « Ma lecture vaut mieux (que la tienne) » ; les sept modes | **«قراءتي خيرٌ (من قراءتك)»** ; **الأحرف السبعة**, « سبعةُ أحرف » | Ibn Abî Dâwûd, *Kitâb al-Maṣâḥif* ; al-Bukhârî n° 4992 |
+| ‘Uthmân | embarquer ; la Méditerranée ; les chantiers (arsenaux) ; le port | **ركوب البحر** ; **بحر الروم** ; **دُور الصناعة** ; **الميناء** | al-Balâdhurî (« بحر الروم ») |
+| ‘Uthmân | Constant II ; cinq cents voiles | **قسطنطين** ; **خمسمئة مركب** | at-Tabarî, an 31 (sans la filiation « بن هرقل ») |
+| ‘Uthmân | les pâturages réservés ; l'armée des jours difficiles ; les mécontents ; la discorde | **الحِمى** ; **جيش العُسرة** ; **مَن نقموا عليه** ; **الفُرقة** | « الفتنة » ne reste que dans les paroles relevées (Ibn Sîrîn, le hadith de Khabbâb) |
+| ‘Uthmân | garant ; « je ne fais que répéter » ; J'ai appris auprès d'un Compagnon | **السند** ; **«إنما أنا ناقل»** ; **قرأتُ على صحابيّ** | le mot des récitants |
+| ‘Uthmân | Laisse-nous faire ; l'heure est venue de frapper ; Comme à Nihâwand | **خلِّ بيننا وبينهم** ; **«طاب أم ضرب»** ; **كما يومَ نَهاوَند** | Ibn Sa‘d, t. 3 p. 70 (l'article ḥimyarite) |
+| ‘Alî | le cri de Harûrâ' ; « En route vers le Paradis ! » ; retarde la prière de midi | **«لا حكم إلا لله»** ; **«الرواح الرواح إلى الجنة!»** ; **أبرِد بالظهر** | § 2.10 ; les mots de la source |
+| ‘Alî | « Interrogez-moi » ; le registre aux deux colonnes ; mot d'ordre (compétence du Slogan) | **«سلوني»** ; **الدفتر ذو العمودين** ; **الهُتاف** | « النَّعرة » reste le mot d'ordre du Clan (récit d'Abû Bakr) |
+| ‘Alî | le Juge (l'idole) | **القاضي بلا رحمة**, toujours entier | « القاضي » seul se lit Shurayh ; dans la liste de l'Agrégor (« …والإشاعةَ، والقاضي »), le contexte suffit |
+| ‘Alî | Dhû l-Fiqâr ; Haydar (compétences) | **ذو الفَقار** ; **حيدرة** | écrits comme le français, en attendant la décision (§ 4, point 5) |
+| récit-cadre | Accordé ; Refusé ; relevé (rapport) ; la Cité | **أُجيز** ; **رُفِض** ; **تقرير**, **إحصاء** ; **مدينة المرايا** | |
+| récit-cadre | Alors ? (l'enfant) | **إذن؟** | « ها؟ » est du parler (§ 1.1) |
+| veillées | les amghars ; la foggara ; une galerie ; la pente douce | **الأماغرة** ; **الفُقّارة** ; **سَرَب** ; **الانحدار الهيّن**, « هيّنُ الانحدار » | « القناة » réservé au nom persan (qanât) ; Idris cite le feuillet mot pour mot |
+| veillées | les recrues ; parler pour l'honneur de quelqu'un ; la dernière prière | **الحرس الجدد** ; **ذبّ عن عِرضه** ; **صلاة العشاء** | |
+| veillées | trois cents | **ثلاثمئة** | « مئة » partout (et non « مائة »), sauf dans un texte relevé |
+
 ---
 
 ## 4. Points à trancher par le décideur
@@ -1162,6 +1251,23 @@ son verset tiré du registre, si un récit le demande un jour.
       « Sentence » **قضاءٌ نافذ** (§ 3.7) ;
     - « traduction du sens » ne se dit pas en arabe ; « Fiction » se dit **من صنع اللعبة**, jamais avec le mot des
       chimères (§ 1.12).
+15. **L'harmonisation de toute la langue** (18 novembre, après l'écriture et les deux relectures des sept récits ;
+    § 1.3, § 3.8 ; proposé par l'agent, à valider). Les choix qui engagent le plus :
+    - les règles d'une relecture étendues à tous les récits : pas de « ! » dans la bouche d'un Compagnon sans la source
+      (cinq répliques corrigées : Abû ‘Ubayda, al-Hubâb, Usâma, Qays, ‘Alî) ; « القائد » réservé au Caïd ; « الرقيب »
+      jamais seul ; « بإزاء » pour « en face » ; « الناس كلّهم » pour « tout le monde » ; le point hors des guillemets
+      d'une parole enchâssée ;
+    - « Qui te l'a dit ? » est partout « مَن حدّثك؟ », jusque dans la bouche d'une chimère des veillées (le Chuchotement)
+      et du vieil homme de la Cité-Miroir ;
+    - **deux choix laissés tels quels, à trancher** : « condamner » se dit « قضى على » dans le récit de ‘Umar (« أدان est
+      le mot du tribunal d'aujourd'hui ») mais « الإدانة / مُدان » dans le récit de ‘Alî (le Juge sans miséricorde : « لا
+      يعرف إلا الإدانة », « الكلُّ مُدان ») — l'un ou l'autre pour les deux ? ; « phrase » se dit « جملة » dans les veillées
+      et « عبارة » dans le récit de ‘Alî, pour la même image (« une phrase vraie devenue lame ») ;
+    - le feuillet « Le débat de Harûrâ' » ne nomme pas en arabe les Harûriyya ni les Khawârij, que le français nomme
+      pour les expliquer (« فنُسبوا بعدُ إلى حروراء، ثم سُمّوا باسمٍ مأخوذٍ من خروجهم ») : § 2.2 l'interdit pour un ennemi
+      et pour qualifier ces hommes ; faut-il le nommer dans ce seul feuillet, comme le français ?
+    - Thâmir, Hâzim et Ghâlib : les feuillets disent « النفاق », jamais « المنافق » d'un homme nommé (exigence 11) ; le
+      feuillet de Thâmir garde « وليس المنافق هو الغريب », une phrase générale que le français dit aussi.
 
 ---
 

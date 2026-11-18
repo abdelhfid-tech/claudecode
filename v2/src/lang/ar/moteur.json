@@ -393,7 +393,7 @@
 {"k":"13tgv7e.n","fr":"La parole n’a pas suffi","t":"لم تكفِ الكلمة","ou":"script.js"},
 {"k":"ep4hdm.33","fr":"Confiance : {conf} / {but}. Ce qui n’a pas été noué par la parole devra l’être autrement, et coûtera davantage.","t":"الثقة: {conf} / {but}. وما لم تعقده الكلمة سيُعقد بغيرها، وبثمنٍ أغلى.","ou":"script.js"},
 {"k":"u4125u.1e","fr":"<b>Chaîne intacte</b> — c’est ce qui fut rapporté.","t":"<b>السلسلة سليمة</b> — هذا ما رُوي.","ou":"script.js"},
-{"k":"1nvsr0g.1n","fr":"<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.","t":"<b>السلسلة تهتزّ…</b> ليس هذا ما رُوي.","ou":"script.js"},
+{"k":"1nvsr0g.1n","fr":"<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.","t":"<b>تهتزّ السلسلة…</b> ليس هذا ما رُوي.","ou":"script.js","note":"harmonisation : « La chaîne vacille » en phrase verbale, comme dans les cinq récits et l’aide (« تهتزّ السلسلة »)"},
 {"k":"8a2yu0.18","fr":"Reçu : <b>{nom}</b>¦Reçu : <b>{nom}</b> ×{n}","t":"تسلّمتَ: {nom}¦تسلّمتَ: <b>{nom}</b>¦تسلّمتَ: <b>{nom}</b> ×{n}","ou":"script.js"},
 {"k":"5789vg.u","fr":"Le groupe reprend son souffle.","t":"استعاد الركب قوّته.","ou":"script.js"},
 {"k":"lak06w.h","fr":"Lumière retrouvée","t":"نورٌ مُستعاد","ou":"script.js"},
