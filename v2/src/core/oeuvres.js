@@ -39,7 +39,7 @@
   };
 
   /* ----- le chapitre : une journée ----- */
-  O.newChapter = function () { Object.keys(S.flags).forEach(k => { if (k.indexOf('_o_') === 0) delete S.flags[k]; }); };
+  O.newChapter = function () { Object.keys(S.flags).forEach(k => { if (k.indexOf('_o_') === 0 || k.indexOf('_noir_') === 0) delete S.flags[k]; }); }; // une idée noire dissipée dans la descente rôde de nouveau au chapitre suivant
   // 2.x : une visite ou un retour en 2084 se rejouent à volonté — on s'y repose, mais aucune œuvre n'y est comptée
   O.sobre = () => !!(W.ch && (W.ch.visite || Number.isInteger(W.ch.retour)));
   O.enigme = function () { const e = W.ch && W.ch.enigme; return e && !st().enigmes[e.id] ? e : null; };
@@ -69,7 +69,7 @@
   // '' si l'œuvre est possible ici et maintenant ; sinon la raison
   O.can = function (k) {
     const T = C0().oeuvres[k]; if (!T || !W.saga) return I.t('indisponible');
-    if (O.sobre()) return I.t('tu es de passage : les œuvres se comptent dans les récits');
+    if (O.sobre()) return I.t('de passage : les œuvres se comptent dans les récits');
     if (S.flags['_o_' + k]) return k === 'hajj' ? I.t('intention formulée') : I.t('déjà accompli aujourd’hui');
     if (k === 'hajj') return !(W.ch && W.ch.hajj) ? I.t('aucune caravane ne part') : O.count('hajj') >= 1 ? I.t('déjà accompli') : '';
     if (O.dayCount() >= MAX_JOUR) return I.t('la journée est pleine');
@@ -116,7 +116,7 @@
         const titre = { html: I.t('Une natte tournée vers La Mecque, au cœur de l’étoile.') + (premiere ? '<small>' + I.t('On y prie, et le groupe s’y repose. On y accomplit aussi les œuvres du jour : chacune nourrit la provision du cœur (♥), que les grandes épreuves consomment.') + '</small>' : '') };
         const songe = ((C0().portes || {}).sommeil || {}).menu || I.t('S’endormir');
         if (O.sobre()) { // de passage : on prie, on se repose, on garde une copie — les œuvres se comptent dans les récits
-          const j = I.debug.auto ? 2 : await S.menuPick({ html: I.t('Une natte tournée vers La Mecque.') + '<small>' + I.t('Tu es de passage : on y prie et l’on s’y repose. Les œuvres se comptent dans les récits.') + '</small>' }, [{ t: I.t('Prier et se reposer : Constance et Souffle à 100 %, le groupe retrouve sa sérénité') }, { t: I.t('Garder une copie de la partie (elle se sauvegarde déjà toute seule)') }, { t: I.t('Plus tard') }]);
+          const j = I.debug.auto ? 2 : await S.menuPick({ html: I.t('Une natte tournée vers La Mecque.') + '<small>' + I.t('De passage, on y prie et l’on s’y repose : les œuvres se comptent dans les récits.') + '</small>' }, [{ t: I.t('Prier et se reposer : Constance et Souffle à 100 %, le groupe retrouve sa sérénité') }, { t: I.t('Garder une copie de la partie (elle se sauvegarde déjà toute seule)') }, { t: I.t('Plus tard') }]);
           if (j === 0) await W.pray(); else if (j === 1) await I.ui.saveMenu();
           return;
         }

@@ -76,7 +76,7 @@
     const L = T('lames')[v] || {}, X = T('valeurs')[v] || {}, A = T('attributs')[v] || {}, E = (C0().enemies || {})[v] || {}, B = T('bien'), a = V.acquise(v), r = V.reconnu(v), o = oeuvreDe(v);
     let h = `<h3 style="color:${L.couleur}">${img(v, a)} ${I.esc(L.name || '')} <small>${I.esc(L.ar || '')}</small></h3>`;
     h += `<p>${I.fmt(X.texte || '')}</p><p class="src">${a ? I.t('Valeur gardée.') : I.t('En face : {nom} ({face}).', { nom: I.esc(E.name || ''), face: I.esc(X.face || '') }) + ' ' + I.esc(B.gagner || '')}</p>`;
-    h += `<p class="src">${r ? I.t('La lame : forgée.') : I.t('La lame : {oeuvre} {n} / {sur}.', { oeuvre: I.esc(o.nom), n: o.n, sur: o.need })} ${a ? '' : I.t('On fait face à ce mal en descendant dans la noosphère : au sortir de la prière, dans le dhikr, en songe.')}</p>`;
+    h += `<p class="src">${r ? I.t('La lame : forgée.') : I.t('La lame : {oeuvre} {n} / {sur}.', { oeuvre: I.esc(o.nom), n: o.n, sur: o.need })} ${a ? '' : I.t('Le râwî peut faire face à ce mal en descendant dans la noosphère : au sortir de la prière, dans le dhikr, en songe.')}</p>`;
     h += '<h3>' + I.t('L’attribut') + '</h3>' + (r ? `<p class="att on"><i class="med">${I.esc(A.nom || '')}</i> <span>${I.t('« {sens} »', { sens: I.esc(A.sens || '') })}</span></p><p>${I.esc(A.verset || '')}</p><p class="src">${I.t('{ref}, traduction du sens', { ref: I.esc(A.ref || '') })}</p><p>${I.esc(A.mot || '')}</p>`
       : `<p class="att"><i class="med">◌</i> <span>${I.esc(B.reconnaitre || '')}</span></p>`);
     return h;

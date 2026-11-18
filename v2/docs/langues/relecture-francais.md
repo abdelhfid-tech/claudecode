@@ -39,6 +39,11 @@ Chaque point dit si le problème est réel, faible ou absent. La fin de la parti
 
 ### 1.1 Les « portes » de la noosphère, et « en songe » : problème réel
 
+> **Écartée par le décideur (D184), et à ne pas reprendre.** Le 18 novembre, il a précisé : « on a dit descendre dans la
+> noosphère », et « gardons un peu de distance avec le joueur ». Les tournures « descendre en soi », « en toi-même »,
+> « regarder en toi », plus bas, sont donc le contraire de ce qu'il veut : la descente est celle du râwî, dite à la
+> troisième personne.
+
 **Aujourd'hui.** `coeur.js:274-297` (les portes) :
 « La prière est dite. Le cœur est calme, et la noosphère est toute proche. » ; « Le sommeil vient. Entre veille et
 songe, la noosphère est toute proche. » ; « S'endormir : un songe peut ouvrir la noosphère » ; « Cette porte s'est déjà

@@ -288,7 +288,7 @@
     if (!R.peutFaireFace(id)) return R.finir('rattrape', def);
     E.combat = true; W.stop(); S.depth++; let res = 'lose';
     try { S.toast(I.esc((P().face || '').replace('%s', def.name || '')), 4200);
-      res = await I.battle.start({ group: [id], bg: 'noos', w: 1, interieur: true, sansReprise: true, heros: E.heros, intro: I.t('{nom} te barre le pont.', { nom: def.name || '' }) }); }
+      res = await I.battle.start({ group: [id], bg: 'noos', w: 1, interieur: true, sansReprise: true, heros: E.heros, intro: I.t('{nom} barre le pont.', { nom: def.name || '' }) }); }
     finally { S.depth--; S.hideDialog(); E.combat = false; }
     if (res !== 'win') return R.finir('rattrape', def);
     f.done = true; if (def.idee) E.flags['_noir_' + id] = true; // une idée noire vaincue est dissipée jusqu'au chapitre suivant ; un mal tranché l'est pour de bon (oeuvres.js)

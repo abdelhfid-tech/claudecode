@@ -127,6 +127,9 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
   await p.screenshot({ path: path.join(out, 'B-6-face.png') }); await aller('issue'); await p.waitForTimeout(500); await remonter();
   const e5 = await etat(), fl = await p.evaluate(id => !!window.ISNAD.script.flags['_noir_' + id], n1.id || '');
   si(e5.saga === 'abubakr' && e5.derniere === 'issue' && fl, 'de retour au récit : l’idée noire dissipée le reste jusqu’au chapitre suivant', `de retour : ${JSON.stringify(e5)} drapeau ${fl}`);
+  // … et pas au-delà : au chapitre suivant, elle rôde de nouveau (le drapeau restait autrefois pour tout le récit)
+  const fl2 = await p.evaluate(id => { const S = window.ISNAD.script, avant = Object.assign({}, S.flags); window.ISNAD.oeuvres.newChapter(); const reste = !!S.flags['_noir_' + id]; Object.assign(S.flags, avant); return reste; }, n1.id || '');
+  si(fl && !fl2, 'au chapitre suivant, l’idée noire dissipée rôde de nouveau', `au chapitre suivant, l’idée noire ${n1.id} resterait dissipée`);
 
   /* ---------- C. frapper ce qui rôde ---------- */
   await p.evaluate(() => { const I = window.ISNAD; I.debug.sansMeutes = false; I.debug.profondeur = 3; });

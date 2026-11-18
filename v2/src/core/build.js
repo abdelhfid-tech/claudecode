@@ -137,7 +137,7 @@
     add('pain', Math.min(2, Math.floor(n.champ / 3)), true); add('grain', Math.min(4, n.champ)); add('dattes', Math.min(3, Math.floor(n.palmier / 2)), true); add('eau', Math.min(6, n.puits * 3));
     if (got.length) S.toast(I.t('Ce que tu as bâti a donné : <b>{dons}</b>', { dons: got.join(I.t(', ')) }), 5200);
     // le dû des troupeaux : ce que la Ridda refusait de verser
-    if (n.enclos + n.bergerie + n.chamelier > 0) { S.toast(I.t('Tu verses le dû de tes troupeaux : la part des pauvres est prélevée avant la tienne.'), 5200); W.pillar('justice', 1); }
+    if (n.enclos + n.bergerie + n.chamelier > 0) { S.toast(I.t('Le dû des troupeaux est versé : la part des pauvres est prélevée la première.'), 5200); W.pillar('justice', 1); }
   };
 
   /* ----- mode Bâtir ----- */

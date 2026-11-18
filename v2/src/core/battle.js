@@ -509,10 +509,10 @@
       if (up) { lines.unshift(`<li>${I.t('<b>{nom}</b> atteint le niveau <b>{n}</b>', { nom: h.def.name, n: h.lvl })}</li>`); const st = I.calc.of(h); e.max = { hp: st.hp, sp: st.sp }; e.hp = st.hp; e.sp = st.sp; }
     });
     let drop = '';
-    if (C.opts.boss || Math.random() < 0.4) { const k = C.opts.boss ? I.pick(['musc', 'lait', 'eau']) : I.pick(['dattes', 'dattes', 'pain', 'eau', 'miel', 'siwak']); sv.items[k] = (sv.items[k] || 0) + 1; drop = `<li>${I.t('Trouvé : <b>{objet}</b>', { objet: D.ITEMS[k].name })}</li>`; }
+    if (!C.opts.interieur && (C.opts.boss || Math.random() < 0.4)) { const k = C.opts.boss ? I.pick(['musc', 'lait', 'eau']) : I.pick(['dattes', 'dattes', 'pain', 'eau', 'miel', 'siwak']); sv.items[k] = (sv.items[k] || 0) + 1; drop = `<li>${I.t('Trouvé : <b>{objet}</b>', { objet: D.ITEMS[k].name })}</li>`; }
     // une victoire rapporte aussi du matériel : quelques dirhams, et parfois une pièce d'équipement (toujours après une idole).
     // Rien de tel après un mal du cœur ou une idée noire : ce combat-là ne se paie pas.
-    const maux = C.all.filter(e => e.side === 'foe' && e.def.vice), materiel = !maux.length && !C.opts.noir;
+    const maux = C.all.filter(e => e.side === 'foe' && e.def.vice), materiel = !maux.length && !C.opts.noir && !C.opts.interieur;
     if (materiel) {
       const piece = I.gear.prise({ boss: !!C.opts.boss, elite: C.all.some(e => e.side === 'foe' && e.def.tier !== 'minion') });
       if (piece) { I.gear.add(piece, 1); C.prise = piece; drop += `<li>${I.t('Trouvé : {img} <b>{objet}</b>', { img: I.gear.img(piece), objet: I.esc(D.GEAR[piece].name) })}</li>`; }
@@ -544,9 +544,10 @@
   }
   async function defeat() {
     I.audio.sfx('dark');
-    if (C.opts.interieur) { const T = ((I.sagas.coeur || {}).portes || {}).remonte || {}; // la noosphère intérieure : on remonte, rien n'est perdu
+    if (C.opts.interieur) { if (I.world.excursion) return; // dans la descente, la carte du râwî rattrapé suit (rodeurs.js) : une seule carte
+      const T = ((I.sagas.coeur || {}).portes || {}).remonte || {}; // la noosphère intérieure : on remonte, rien n'est perdu
       await S.card('defeat', `<p class="small">${I.esc(T.titre || '')}</p><h1>${I.esc(T.h1 || '')}</h1><p>${I.esc(T.texte || '')}</p><div class="hint">▼</div>`); return; }
-    await S.card('defeat', `<p class="small">${I.t('Le groupe est éprouvé')}</p><h1>${I.t('La chaîne ne rompt pas')}</h1><p>${I.t('Ce qui fut transmis ne se perd pas. Reprends, le cœur affermi.')}</p><div class="hint">${I.t('Reprendre')} ▼</div>`);
+    await S.card('defeat', `<p class="small">${I.t('Le groupe est éprouvé')}</p><h1>${I.t('La chaîne ne rompt pas')}</h1><p>${I.t('Ce qui fut transmis ne se perd pas.')}</p><div class="hint">${I.t('Reprendre')} ▼</div>`);
   }
 
   /* ================= présentation ================= */
