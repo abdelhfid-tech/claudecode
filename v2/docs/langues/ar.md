@@ -211,7 +211,7 @@ Adresses lues pour cette section (toutes consultées le 18 novembre 2026) :
 
 | Français | Arabe | Règle |
 |---|---|---|
-| un Compagnon (du Prophète ﷺ) | **صحابيّ**, pl. **الصحابة** ; « صاحب رسول الله ﷺ » | réservé aux Compagnons. **Jamais** pour un membre du groupe, un compagnon de lumière, un ami de 2084. |
+| un Compagnon (du Prophète ﷺ) | **صحابيّ**, pl. **الصحابة** ; « صاحب رسول الله ﷺ » | réservé aux Compagnons. **Jamais** pour un membre du groupe, un compagnon de lumière, un ami de 2084. L'aide du combat dit « le grand acte du Compagnon » de tout héros, Idris et le Caïd compris : l'arabe dit « أتاح لصاحبه فعلَه الأكبر » (« à qui porte la jauge » ; signalé au décideur, D184). |
 | un compagnon (membre du groupe), les compagnons | **رفيق**, pl. **الرفاق** | « relève un compagnon éprouvé » → « يُنهِض رفيقًا مُنهَكًا ». |
 | le groupe (l'équipe du joueur) | **الرَّكْب** | à valider. Le *rakb* est la troupe qui voyage ensemble. Éviter **الجماعة** (« la Communauté », sens religieux et confessionnel) et **الفريق** (sportif). |
 | le Messager d'Allah ﷺ, le Prophète ﷺ | **رسول الله ﷺ**، **النبي ﷺ** | exigence 1. |
@@ -310,7 +310,7 @@ d'effet magique (لا « تمنح »، « تهب قوة »), mais « تُعِد�
 **Les sept maux du cœur et leurs lames** (`D.VICES`, `lames`, `valeurs`) — chaque paire vient d'al-Ghazâlî ou d'Ibn
 Rajab, qui opposent ces mots l'un à l'autre.
 
-| Mal (égrégore) | Arabe | Source du mal | Lame = Valeur | Arabe | Source de la lame |
+| Mal (chimère) | Arabe | Source du mal | Lame = Valeur | Arabe | Source de la lame |
 |---|---|---|---|---|---|
 | L'Avidité | **الحِرص** | [B], « بيان ذم الحرص والطمع » | Le Contentement | **القَناعة** | [B] : « القناعة والحرص، وإحداهما مذمومة والأخرى محمودة » ; « ومدح القناعة واليأس مما في أيدي الناس » |
 | L'Orgueil | **الكِبْر** | *Ihyâ'*, « ذم الكبر والعجب » [A] (texte non lu en ligne) | L'Humilité | **التواضع** | [F] : « قال بعض السلف التواضع أن تقبل الحق من كل من جاء به » |
@@ -327,7 +327,7 @@ Notes :
   [F], mais **النصيحة** se lit aujourd'hui « le conseil » : « la lame du Conseil » tromperait. Retenu : **سلامة الصدر**,
   même page, même auteur. (§ 4)
 - Al-Ghazâlî nomme lui-même le défaut d'*al-himma* : « خِسّة الهمة » [E] ; c'est bien la paire du jeu.
-- Les sept égrégores portent ces noms avec l'article (الحرص، الكبر…) ; leurs répliques sont des répliques, jamais des
+- Les sept chimères portent ces noms avec l'article (الحرص، الكبر…) ; leurs répliques sont des répliques, jamais des
   versets ni des hadiths.
 
 **Les idées noires** (`D.NOIRS`) :
@@ -336,7 +336,7 @@ Notes :
 |---|---|---|---|
 | La Honte (la peur du regard des siens) | **العار** | usage courant, référence non vérifiée | Jamais **الحياء** (la pudeur, une vertu louée) ni **الخِزي** (l'opprobre du Jugement). |
 | La Peur (ce qui n'est pas arrivé, vécu comme fait) | **الخوف** | — | **à valider**. Chez al-Ghazâlî, le *khawf* d'Allah est une station louée (*Ihyâ'*, « الخوف والرجاء » [A]) : le texte doit montrer qu'il s'agit d'une peur de l'avenir. Autre choix : **الهَلَع**. |
-| Le Soupçon | **سوء الظنّ** | [D] : parmi les portes du cœur, « ومن أبوابه سوء الظن بالمسلمين » | Le petit égrégore « Soupçon » du récit d'Alî est **الرِّيبة** (§ 3.6) : deux mots, deux choses. |
+| Le Soupçon | **سوء الظنّ** | [D] : parmi les portes du cœur, « ومن أبوابه سوء الظن بالمسلمين » | La petite chimère « Soupçon » du récit d'Alî est **الرِّيبة** (§ 3.6) : deux mots, deux choses. |
 | La Rancune | **الحِقد** | [C], « القول في معنى الحقد ونتائجه » | |
 | Le Désespoir | **اليأس** | usage courant | Jamais **القنوط** : le Coran l'emploie pour qui désespère de la miséricorde de son Seigneur (15:56 ; 39:53 [K]), ce que le jeu ne dit de personne. Al-Ghazâlî loue « اليأس مما في أيدي الناس » [B] : dans un texte, préciser de quoi l'on désespère. |
 
@@ -356,7 +356,7 @@ Notes :
 | L'Aigle | **النسر الطائر** | l'étoile Altaïr : WP-ar, « النسر الطائر (نجم) » [L] | Regard → **النَّظَر** |
 | Le Phénix | **العنقاء** | WP-ar, « عنقاء » : « طائر خيالي ورد ذكره في الأساطير العربية القديمة » [L] | Renaissance → **النهوض** (jamais البعث, la Résurrection) |
 | Le Lion | **الأسد** | le lion céleste des anciens Arabes, référence non vérifiée | Présence → **الهَيبة** |
-| La Gazelle | **الظَّبي** (« قفزات الظباء », les trois paires d'étoiles) | référence non vérifiée (pas de page WP-ar) | Apaisement → **التهدئة** |
+| La Gazelle | **الظَّبي** (« قفزات الظباء », les trois paires d'étoiles) | référence non vérifiée (pas de page WP-ar) | Apaisement → **التهدئة** (elle rend un peu de Sérénité, **الهدوء**, § 2.3 ; plus de « Sakîna », D184) |
 
 **Valeurs et attributs** (`bien`, `valeurs`, `attributs`) :
 
@@ -385,30 +385,32 @@ Notes :
 | rattrapé | **أُدرِك** | — | |
 | le secours (titre) ; « Le groupe est relevé » | **الفَرَج** ; « نهض الركب » | § 2.3 | |
 
-**L'organigramme du mal** (`mal`) :
+**Les degrés du mal** (`mal` ; « l'organigramme du mal » jusqu'à D183) :
 
 | Français | Arabe retenu | Source |
 |---|---|---|
-| Organigramme du mal | **مراتب الشرّ** | à valider |
+| Les degrés du mal | **مراتب الشرّ** — inchangé (D183 : le français a rejoint le mot arabe) | à valider |
 | Iblîs — l'ennemi déclaré | **إبليس — العدوّ المبين** | Coran 2:168 [K] (référence que donne déjà le jeu) |
 | Les souffleurs — des démons d'entre les djinns, et parfois des hommes | **المُوَسْوِسون — شياطين من الجنّ، ومن الإنس أحيانًا** | Coran 114:4-6 [K] |
 | Le cœur — il entend, et il consent ou refuse | **القلب — يسمع، فيقبل أو يأبى** | [D] |
 | Les idées noires — ce qui pèse sur une personne | **الخواطر السود — ما يُثقِل على المرء** | § 2.3 |
-| Les égrégores — l'idée reprise par beaucoup de cœurs | **الخيالات — فكرةٌ تتناقلها قلوبٌ كثيرة** | § 2.3 |
+| Les chimères — l'idée reprise par beaucoup de cœurs | **الخيالات — فكرةٌ تتناقلها قلوبٌ كثيرة** | § 2.3 |
 | Les idoles — l'idée enracinée : elle commande | **الأصنام — فكرةٌ تجذّرت فصارت تأمر** | § 2.3 |
 | l'enracinement (jauge d'une idole) ; une racine | **التجذّر** ; **جِذر** | à valider. Jamais **الرسوخ** (loué : « والراسخون في العلم », Coran 3:7 [K]). |
 | ce qui est enseigné / les images du jeu (les deux étages) | **ما جاء به النقل / صُوَرٌ من صُوَر اللعبة** | à valider |
 
-### 2.6 Les postures (exigence 24)
+### 2.6 Les figures (exigence 24 ; « les postures » jusqu'à D184)
 
-**Choix proposé : l'arabe nomme la posture par l'acte, non par la personne.** La raison est arabe : « الحكيم » (le sage)
+**Choix proposé : l'arabe nomme la figure par l'acte, non par la personne.** La raison est arabe : « الحكيم » (le sage)
 et « الوليّ » (le saint) sont aussi des Noms divins (§ 2.2), et « وليّ » porte une doctrine (les *awliyâ'* et leurs
 prodiges) que les écoles ne lisent pas de la même façon (exigence 5) ; dire « الوليّ » d'un personnage, c'est dire qu'il
-*est* un saint, ce que l'exigence 24 interdit. Un nom d'acte se *prend*, il ne se possède pas.
+*est* un saint, ce que l'exigence 24 interdit. Un nom d'acte se *prend*, il ne se possède pas. Le décideur a remplacé
+« posture » par « figure » en français (D184) ; l'arabe garde les trois noms d'acte et change le mot qui les désigne.
 
-| Français | Arabe retenu | Source | Devise (fr) |
+| Français | Arabe retenu | Source | Devise (fr) ou note |
 |---|---|---|---|
-| Les postures ; prendre une posture | **الوقفات** (sg. **وقفة**) ; « اتّخذ وقفة » | — | à valider |
+| Les figures ; « Prendre une figure » (l'outil) ; « {nom} · figure : le héros » | **المواقف** (sg. **مَوقِف**) ; « **اتّخاذ موقف** » ; « خالد · الموقف: الإقدام » ; « une autre s'ouvre au niveau 4 » : « ويُتاح غيرُه في المرتبة ٤ » | Ibn Kathîr nomme ainsi la place que chacun tient dans la bataille : « فتراجع الناس إلى مواقفهم » [G, p. 11] ; l'arabe dit « وقف منه موقفًا » (prendre position devant une chose) et « اتّخذ موقفًا » | **à valider (D184)**. On *prend* un موقف, on en change, on n'*est* pas son موقف (exigence 24) ; le mot ne touche pas au visage (exigence 2 : ni وجه, ni صورة, ni هيئة, ni سيماء ; l'aide ne dit plus « على ثلاثة أوجه », mais « يقف المرء أحدَ ثلاثة مواقف ») ; il se lit dans « اتّخاذ موقف » comme dans la ligne d'état. Il remplace **وقفة**, qui se lit d'abord « une pause » (« خذ وقفة ») et désigne aussi, avec l'article, la station de 'Arafa (« يوم الوقفة ») : dans un menu de jeu, « الوقفات » se lisait « les pauses ». Écartés : **مَسلك** (« المسالك » se lirait « les chemins » dans un jeu de labyrinthes, et السلوك est un mot de la voie soufie) ; **أسلوب** (un style : trop léger) ; **سَمْت** (l'allure extérieure ; et « l'azimut » aujourd'hui) ; **دَور** (« le rôle », mais c'est déjà « le tour » au combat : « فاته دوره ») ; **نَهج** (le titre *Nahj al-balâgha*, exigence 5) ; **طريقة**, **مقام**, **حال** (mots du soufisme). |
+| en combat : « en héros », « en sage », « en saint » (`court`) | **بإقدام · ببصيرة · بإيثار** (« المرتبة ٣ · بإقدام ») | « قاتل بإقدام » : la manière, usage courant | **à valider (D184)**. La mention dit la manière du moment, non ce qu'est la personne : c'est le « en » du français. Pas de participe : « مُؤثِرًا » se lirait « مؤثِّرًا » (« émouvant »). |
 | Le héros | **الإقدام** (aller au-devant) | usage courant ; référence non vérifiée (l'éthique arabe range le *iqdâm* sous la *shajâ'a*, entre « التهور » et « الجبن » ; al-Ghazâlî nomme l'excès, « التهور », en [C] et [D]) | Il s'expose : il va au-devant, et prend sur lui. |
 | Le sage | **البصيرة** (le discernement) | [D] : « ولينظر بعين البصيرة » ; « بقوة العلم والبصيرة » | Il discerne : il regarde avant d'agir. |
 | Le saint | **الإيثار** (faire passer les autres avant soi) | [B], « بيان الإيثار وفضله » | Il s'efface : il porte les autres. |
@@ -497,8 +499,8 @@ le yaourt au Levant, et la brique crue, اللَّبِن, plus bas) · Siwâk **
 
 **Bâtir** (`D.MATS`, `D.PIECES`) : Eau **ماء** · Pisé **اللَّبِن** (la brique de terre crue) · Palme **سَعَف** · Pierre **حجر**
 · Grain **حَبّ** · Laine **صوف**. Tranchée **خندق** · Puits **بئر** · Palmier **نخلة** · Champ d'orge **حقل شعير** · Enclos
-de chèvres / de moutons / de chameaux **حظيرة الماعز / الغنم / الإبل** · Mur de pisé **جدار من لَبِن** · Sol à étoiles
-**أرضيّة بنقش النجوم** · Pilier de palmier **جِذع نخلة** · Niche de qibla **المِحراب** · Natte de prière **حصير الصلاة**
+de chèvres / de moutons / de chameaux **حظيرة الماعز / الغنم / الإبل** · Mur de pisé **جدار من لَبِن** · Dallage étoilé
+(« Sol à étoiles » jusqu'à D184, 2.25) **بلاطٌ بنقش النجوم** (comme sa description, « بلاطٌ بنقوش هندسيّة » ; à valider) · Pilier de palmier **جِذع نخلة** · Niche de qibla **المِحراب** · Natte de prière **حصير الصلاة**
 (une natte, pas une سجّادة) · Tapis **بِساط** · Lanterne **قِنديل** · Rosace **نجمة ثُمانيّة**. Groupes : Défendre
 **الدفاع** · Eau et vivres **الماء والزاد** · Troupeaux **المواشي** · Mosquée **المسجد**.
 
@@ -506,7 +508,7 @@ de chèvres / de moutons / de chameaux **حظيرة الماعز / الغنم / 
 عن الطريق** · Frapper la faille **ضرب الثُّلمة** · Les vertus **الخِصال** · La garde et la Niyya **التحصّن والنيّة** · La
 besace **المِزوَد** · La halte **الاستراحة** · Retrouver une source **تتبّع الرواية** · S'équiper **التجهّز** · S'orienter
 aux étoiles **الاهتداء بالنجوم** (Coran 16:16, « وبالنجم هم يهتدون » [K]) · Frapper ce qui rôde **ضرب ما يحوم** ·
-Prendre une posture **اتّخاذ وقفة**.
+Prendre une figure **اتّخاذ موقف** (D184, § 2.6 ; à valider).
 
 **Le recueil** (le codex) : **الكُرّاسة** (le cahier où le râwî note ce qu'il a appris ; à valider ; autre choix :
 السِّجلّ). Catégories (`D.CODEX_CATS`, qui restent des clés françaises sous le capot) :
@@ -539,7 +541,8 @@ du lettré **كُمّة الأديب**.
 | un visage (exigence 2) | **وجه** | Aucun texte ne décrit de traits, pour personne. |
 | écran · notification · le grand écran · ascenseur | **شاشة · إشعار · الشاشة الكبرى · مِصعد** | arabe moderne ; jamais l'anglais translittéré. |
 | le relevé (L'agent du relevé) | **الإحصاء** (« موظّف الإحصاء ») | |
-| An 1508 de l'Hégire | **سنة ١٥٠٨ للهجرة** | § 1.5 |
+| An 1507 de l'Hégire (« 1508 » jusqu'à D184, 2.22) | **سنة ١٥٠٧ للهجرة** ; « الحلقة الأخيرة · ١٥٠٧ هـ · ٢٠٨٤ م » | § 1.5 ; à valider (D184) |
+| des millions de vues · d'abonnés · de comptes (D184, 2.1 et 2.2 ; plus « de regards », « de fenêtres », sauf dans la bouche de l'enfant) | **ملايين المشاهدات · المتابِعين · الحسابات** | les mots courants. « حسابات » se dit au pluriel, dans une phrase : il ne nomme aucune chimère (« Le Compte » est **الرَّصيد**, § 3.6 ; **الحساب** seul se lit « le Jugement », § 2.2). À valider (D184). |
 
 ---
 
@@ -552,7 +555,7 @@ Règles :
   la forme pleine (« أبو بكر الصدّيق »، « خالد بن الوليد »).
 - **Personnages de fiction** : une graphie simple, sans formule de respect, sans kunya inventée qui ferait croire à
   un personnage réel.
-- **Égrégores** : un nom arabe, pas un calque, avec l'article ; une même image garde le même mot d'un récit à
+- **Chimères** : un nom arabe, pas un calque, avec l'article ; une même image garde le même mot d'un récit à
   l'autre : « Murmure » = **همس**, « Écho » = **الصدى**, « Mirage » = **السَّراب**, « Rumeur » = **الإشاعة**.
 - La formule après un Compagnon : § 1.6 (à trancher). Ceux que les sources rangent parmi les Successeurs (تابعي) n'en
   reçoivent pas la même : Aslam, Shurayh, Kumayl, Mâlik al-Ashtar, Farwa ibn Nawfal (voir leurs lignes).
@@ -573,7 +576,7 @@ Règles :
 | Dirâr — Ibn al-Azwar | **ضِرار · ابن الأزور** | ضرار بن الأزور الأسدي | « ضرار بن الأزور ». Le surnom que lui donnèrent les Rûm contient « شيطان » : **jamais** employé (§ 2.2). |
 | Aslam — L'affranchi de 'Umar | **أسلم · مولى عُمَر** | أسلم مولى عمر بن الخطاب، أبو خالد | pas de notice WP-ar ; fiche de transmetteur : `https://hadithtransmitters.hawramani.com/أسلم-مولى-عمر/` (résultat de recherche, non relu en entier) : al-'Ijlî le dit *tâbi'î*. Le jeu lui donne pourtant un voile de lumière (`D.RAYONS`) : c'est le côté prudent (§ 4). |
 | 'Abd ar-Rahmân — Ibn 'Awf | **عبد الرحمن · ابن عوف** | عبد الرحمن بن عوف الزهري القرشي | « عبد الرحمن بن عوف ». |
-| 'Uthmân — Le Généreux | **عثمان · ذو النورين** (proposé) | أبو عبد الله عثمان بن عفان الأموي القرشي، « يلقَّب ذا النورين » | « عثمان بن عفان ». **À trancher (§ 4)** : le seul surnom des sources est ذو النورين ; « Le Généreux » n'en est pas un, et « الكريم » est un Nom divin. Autre choix, descriptif : « صاحبُ بئر رُومة » (le puits qu'il acheta pour tous, voir « بئر رومة »). |
+| 'Uthmân — Le Généreux | **عثمان · ذو النورين** (proposé) | أبو عبد الله عثمان بن عفان الأموي القرشي، « يلقَّب ذا النورين » | « عثمان بن عفان ». **À trancher (§ 4)** : le seul surnom des sources est ذو النورين ; « Le Généreux » n'en est pas un, et « الكريم » est un Nom divin. Autre choix, descriptif : « صاحبُ بئر رُومة » (le puits qu'il acheta pour tous, voir « بئر رومة »). D184 : le français garde « Le Généreux » (« Quatrième maillon · Le Généreux ») et appelle sa Lumière « Miséricorde du Généreux » (2.12) : en arabe, cette compétence se dira **رحمة ذي النورين** (ou du titre retenu), jamais « رحمة الكريم », qui se lirait « la miséricorde du Généreux », c'est-à-dire d'Allah (exigence 8). À valider (D184). |
 | Zayd ibn Thâbit — Le Scribe | **زيد بن ثابت · كاتبُ الوحي** | زيد بن ثابت بن الضحاك الأنصاري | « زيد بن ثابت » : « صحابي وكاتب الوحي ». |
 | Hudhayfa — Le Gardien du secret | **حُذَيفة · صاحبُ السِّرّ** | حذيفة بن اليمان العبسي | « حذيفة بن اليمان ». « صاحب سرّ رسول الله ﷺ » : surnom connu, référence non vérifiée en ligne. |
 | Idris — le Râwî | **إدريس · الراوي** | fiction | `langue.js` le pose déjà (`rawi: 'إدريس'`). C'est aussi le nom d'un prophète : jamais « عليه السلام » après ce personnage, et le joueur peut le renommer (`perso.js`). |
@@ -614,7 +617,7 @@ Règles :
 | Sa'îd ibn al-'Âs | **سعيد بن العاص** | « سعيد بن العاص ». |
 | 'Abdallâh ibn Sa'd | **عبد الله بن سعد بن أبي السَّرح** | « عبد الله بن سعد بن أبي السرح ». Sans visage. |
 | Abû Hurayra | **أبو هُريرة** | « أبو هريرة ». |
-| Kisrâ (les rois sassanides) | **كِسرى** | titre, non un nom ; le dernier roi : « يزدجرد الثالث ». |
+| Kisrâ (les rois sassanides) | **كِسرى** | titre, non un nom ; le dernier roi : « يزدجرد الثالث ». « l'empire de Kisrâ » (D184, 2.8 : le français ne dit plus « des Chosroès ») : **مُلك كسرى**. |
 
 Désignations collectives (exigences 4 et 10 : on dit le groupe sans trait) : un Médinois **رجل من أهل المدينة** · un
 vieil Ansârî **شيخ من الأنصار** (sans visage) · un soldat de l'armée d'Usâma **جنديّ من جيش أسامة** (sans visage) · un
@@ -697,7 +700,7 @@ Yûnus, الخازن).
 Notes : « Esplanade » est, dans le récit d'Umar, le lieu du Temple à Jérusalem : l'étiquette reste neutre, **الساحة** ;
 le récit, lui, suit ses sources. « Halle » est la Saqîfa des Banû Sâ'ida : **السقيفة**, et en toutes lettres dans un
 récit, **سقيفة بني ساعدة** (WP-ar, « سقيفة بني ساعدة »). La « Faille » de la noosphère (un lieu) est **الصَّدع**, la faille
-d'un égrégore (une faiblesse) **الثُّلمة** (§ 2.4). « Nœud » est **المُلتقى**, non « العُقدة » (les nœuds sur lesquels on souffle sont, au Coran 113:4, ceux de la
+d'une chimère (une faiblesse) **الثُّلمة** (§ 2.4). « Nœud » est **المُلتقى**, non « العُقدة » (les nœuds sur lesquels on souffle sont, au Coran 113:4, ceux de la
 sorcellerie). « Trésor » est **الكَنز** : الخِزانة est déjà l'archive de 2084.
 
 ### 3.5 Les lieux nommés dans les récits
@@ -714,7 +717,7 @@ sorcellerie). « Trésor » est **الكَنز** : الخِزانة est déjà l
 | 'Ayn at-Tamr | **عين التمر** | notice « عين تمر ». |
 | le Yarmoûk | **اليَرموك** | « معركة اليرموك ». |
 | Qinnasrîn ; Homs | **قِنَّسرين ; حِمص** | « قنسرين » ; « حمص ». |
-| le Shâm | **الشام** | « بلاد الشام ». |
+| le Shâm | **الشام** | « بلاد الشام ». D184 (2.8) : le français dit « le Shâm » partout, avec l'article, et « la Syrie » seulement dans un feuillet qui explique (« le Shâm, la Syrie d'aujourd'hui et ses voisins ») ; l'arabe dit toujours **الشام** — dans ce feuillet : « بلاد الشام (سورية اليوم وما جاورها) ». |
 | Îliyâ' (Jérusalem) | **إيلياء** (et, dans une explication, **بيت المقدس**) | « العهدة العمرية » : « لأهل إيلياء (القدس) » ; « القدس ». |
 | Tibériade | **طَبَريّة** | « طبرية ». |
 | al-Madâ'in ; l'Îwân de Kisrâ | **المدائن ; إيوان كسرى** | « المدائن » ; « إيوان المدائن ». |
@@ -729,7 +732,7 @@ sorcellerie). « Trésor » est **الكَنز** : الخِزانة est déjà l
 | la Maison assiégée ('Uthmân) | **الدار المحاصَرة** ; « حصار الدار » | **pas** « يوم الدار » seul : la notice « حديث يوم الدار » montre que l'expression désigne aussi un hadith que le discours chiite invoque (exigence 5). |
 | Khaybar (la Porte de Khaybar, compétence d'Alî) | **خيبر** | |
 
-### 3.6 Les égrégores et les idoles
+### 3.6 Les chimères et les idoles
 
 Chaque nom est **un nom qu'un auteur arabe aurait donné** à la chose que le jeu décrit (sa `desc`), dans le registre du
 récit : arabe classique pour les Compagnons et le Caïd, arabe moderne pour 2084. Tous sont des **خيالات** (§ 2.3) ;
@@ -749,7 +752,7 @@ l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du §
 | L'Applaudissement | **التصفيق** | |
 | Le Compte | **الرَّصيد** | le solde d'un compte ; jamais الحساب (§ 2.2). |
 | La Carte sans chemin | **خريطةٌ بلا طريق** | |
-| L'AGRÉGOR (idole finale) | **المُجمِّع** | **à valider** : « l'agrégateur » (مُجمِّع الأخبار en arabe moderne) ; le recueil peut dire « مُجمِّع الخيالات ». Pas de translittération (أغريغور). |
+| L'AGRÉGOR (idole finale) | **المُجمِّع** | **à valider** : « l'agrégateur » (مُجمِّع الأخبار en arabe moderne) ; le recueil peut dire « مُجمِّع الخيالات ». Pas de translittération (أغريغور). D183 : l'Agrégor garde son nom en français, celui du niveau au-dessus des chimères ; l'arabe garde **المُجمِّع**. |
 
 **Le Caïd** (arabe classique)
 
@@ -777,7 +780,7 @@ l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du §
 | Écho flatteur | **الصدى المُتملِّق** | |
 | Fausse rime | **السَّجعُ الكاذب** | la prose rimée qui imite sans rien dire. |
 | Mur du Jardin | **جدارُ الحديقة** | |
-| Al-Kadhdhâb — le Menteur (idole, avidité) | **المُزيِّف** (proposé) | **À trancher (§ 4)** : « الكذّاب » est en arabe le surnom de Musaylima (WP-ar, « مسيلمة الكذاب ») ; l'idole porterait le nom d'un homme (exigence 6). « Égrégore de la contrefaçon » : المُزيِّف, le faussaire. |
+| Al-Kadhdhâb — le Menteur (idole, avidité) | **المُزيِّف** (proposé) | **À trancher (§ 4)** : « الكذّاب » est en arabe le surnom de Musaylima (WP-ar, « مسيلمة الكذاب ») ; l'idole porterait le nom d'un homme (exigence 6). « Chimère de la contrefaçon » : المُزيِّف, le faussaire. |
 
 **'Umar**
 
@@ -788,7 +791,7 @@ l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du §
 | L'Accapareur (idole, peur) | **المُحتكِر** | le mot classique de l'accaparement (الاحتكار). |
 | Mirage de gloire | **سرابُ المجد** | |
 | Le Faste | **الأُبَّهة** | |
-| L'Aigle d'Airain (idole, orgueil) | **نَسرُ النُّحاس** | l'aigle des enseignes de Rûm ; jamais « العُقاب » (§ 2.2). Que *Nasr* soit aussi une idole ancienne (Coran 71:23) convient à une idole. |
+| L'Aigle d'Airain (idole, orgueil) | **نَسرُ النُّحاس** | l'aigle des enseignes de Rûm ; jamais « العُقاب » (§ 2.2). Que *Nasr* soit aussi une idole ancienne (Coran 71:23) convient à une idole. D184 (2.10) : le français ne dit plus « l'Aigle » seul pour l'idole (l'Agrégor : « J'ai été l'Aigle d'Airain et le Trône ») ; l'arabe disait déjà toujours **نسر النحاس**, jamais نسر seul (§ 2.2) : « كنتُ نسرَ النحاس وسريرَ المُلك » (السرير seul se lirait « le lit »). |
 | Reflet d'or | **بريقُ الذهب** | |
 | La Couronne suspendue | **التاجُ المُعلَّق** | la couronne de Kisrâ tenue par une chaîne. |
 | Le Trône vide (idole, orgueil) | **سريرُ المُلكِ الخالي** | **pas** « العرش » (§ 2.2). |
@@ -865,20 +868,21 @@ l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du §
 6. **Les deux lames dont l'arabe s'écarte du champ `ar` du français** (§ 2.5) : Largesse = **السخاء** (al-Ghazâlî) au lieu
    d'*al-Karam* ; Bienveillance = **سلامة الصدر** (Ibn Rajab) au lieu d'*an-Nasîha*, qui se lit aujourd'hui « le
    conseil ». Les autres langues suivent-elles ?
-7. **Les postures** (§ 2.6) : nommées par l'acte (**الإقدام، البصيرة، الإيثار**, proposé) ou par la personne (البطل…),
-   sachant que « الحكيم » et « الوليّ » sont des Noms divins et que « الوليّ » porte une doctrine disputée ?
+7. **Les figures** (§ 2.6 ; « les postures » jusqu'à D184) : nommées par l'acte (**الإقدام، البصيرة، الإيثار**, proposé)
+   ou par la personne (البطل…), sachant que « الحكيم » et « الوليّ » sont des Noms divins et que « الوليّ » porte une
+   doctrine disputée ? Le mot qui les désigne : **موقف** (« اتّخاذ موقف »), à la place de وقفة (D184, proposé).
 **Décidé le 18 novembre (D182)** : le décideur retient la lecture d'al-Ghazâlî (*Iḥyâ'*, « ʿajâ'ib al-qalb ») : les
 idées noires sont des **خواطر** (pensées qui passent : de l'âme, de l'ange ou du Shaytân) — **الخواطر السود** ; le mot
 **وسوسة / الوسواس** reste à l'étage des souffleurs (Coran 114:4), qui n'ont ni figure ni nom et ne se combattent jamais ;
 **طاغوت** et **غول** ne nomment aucun ennemi (exigences 5, 6, 10, 18). « طاغوت » peut s'expliquer dans le recueil, avec
 son verset tiré du registre, si un récit le demande un jour.
 
-8. **Les termes inventés, à valider un par un** : égrégore **خيال** (ou وهم) ; idées noires **الخواطر السود** (*décidé, D182*) ; Constance
+8. **Les termes inventés, à valider un par un** : chimère (« égrégore » jusqu'à D183) **خيال** (ou وهم) ; idées noires **الخواطر السود** (*décidé, D182*) ; Constance
    **الثبات** ; Souffle **النَّفَس** ; éprouvé **مُنهَك** ; voile **حجاب** et dévoilé **انكشف** ; lames **النصال** et le
    verbe **صقل** ; compagnons de lumière **رفاق النور** ; halte **الاستراحة** ; veillée **ليلة / السمر** ; Cité-Miroir **مدينة
    المرايا** ; Archives basses **الخزانة السفلى** ; pourparler **المحاورة** ; bataille déclarée **المصافّة** ; secours
-   **الفرج** ; organigramme **مراتب الشر** ; enracinement **التجذّر** ; faille **الثلمة** ; le groupe **الركب** ; le recueil
-   **الكرّاسة** ; Vertus **الخصال** ; voile de lumière **غلالة من نور** ; l'Agrégor **المجمّع** ; et les noms d'égrégores
+   **الفرج** ; les degrés du mal **مراتب الشر** ; enracinement **التجذّر** ; faille **الثلمة** ; le groupe **الركب** ; le recueil
+   **الكرّاسة** ; Vertus **الخصال** ; voile de lumière **غلالة من نور** ; l'Agrégor **المجمّع** ; et les noms de chimères
    du § 3.6.
 9. **Les mots à ne jamais employer** (§ 2.2) : la liste est un choix de l'agent (فتنة، طاغوت، العرش، العقاب، المدد، الغوث،
    الأطهار، الوصيّ، كبش الفداء، بابل، السماع…) ; le décideur peut l'allonger ou la réduire.
@@ -886,6 +890,12 @@ son verset tiré du registre, si un récit le demande un jour.
     (récit de Sayf) / « عبد المسيح بن عمرو بن بقيلة » (autre récit d'at-Tabarî), déjà au registre ; Aslam, que le jeu
     dessine en Compagnon alors qu'al-'Ijlî le dit Successeur (côté prudent, rien à changer pour l'arabe).
 11. **La « Maison assiégée »** ('Uthmân) se dit **الدار المحاصرة / حصار الدار**, non « يوم الدار » (§ 3.5) : à confirmer.
+12. **Ce que D183 et D184 changent en arabe** (proposé par l'agent, à valider) : la jauge « Sérénité » **الهدوء**, qui
+    remplace aussi « الطمأنينة » des pourparlers (§ 2.3) ; « figure » **موقف**, « Prendre une figure » **اتّخاذ موقف**,
+    et en combat **بإقدام · ببصيرة · بإيثار** (§ 2.6) ; « Expérience » **الخبرة** (§ 2.4) ; « Chaîne fidèle » **سلسلةٌ
+    وفيّة** (§ 2.3) ; « Dallage étoilé » **بلاطٌ بنقش النجوم** (§ 2.8) ; aucun mot de possession ni d'envoûtement
+    (§ 1.11) ; 2084 = **١٥٠٧ هـ** (§ 1.5). Restent tels quels, parce que l'arabe les disait déjà : **خيال** (chimère),
+    **مراتب الشر** (les degrés du mal), **المُجمِّع** (l'Agrégor), **نسر النحاس**, **الشام**.
 
 ---
 

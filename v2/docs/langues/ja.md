@@ -178,9 +178,9 @@ Deux sources savantes reviennent souvent :
 | Constance (points de vie) | **気力** | 三田 3:139 : 「それで気力を失ったり，また絶望してはならない」 (lā tahinū : ne pas faiblir, au lendemain de l'épreuve). | Le mot qui, chez 三田, dit ce qui tient dans l'épreuve. Ni 体力 (corps), ni HP. **À valider.** |
 | Souffle (points de magie) | **息** | Usage courant : 息が続く, 息が長い (« avoir du souffle »). | La phrase du jeu « le souffle plus long » se dit 「息が長くなる」. Jamais 魔力, 霊力, 気 seul (exigences 13, 15 : rien de magique). **À valider.** |
 | éprouvé (hors de combat) | **力尽きる** (état : 「力尽き」) | Usage courant. | Ni 死亡, ni 戦闘不能 (jargon), ni 倒れる seul (sonne comme la mort à l'écran). Exigence 19 : nos rangs se replient, rien ne meurt. **À valider.** |
-| voiles (la garde d'un égrégore) | **覆い** | 三田 50:22 : 「われは今，あなたから覆を取り除く」 (ghiṭāʾ) ; 2:7 「目には覆いをされ」. | Le mot coranique du voile que l'on ôte. Le voile de lumière des Compagnons (dessin, docs) se dit 光の覆い, jamais ヴェール dans le jeu. |
+| voiles (la garde d'une chimère) | **覆い** | 三田 50:22 : 「われは今，あなたから覆を取り除く」 (ghiṭāʾ) ; 2:7 「目には覆いをされ」. | Le mot coranique du voile que l'on ôte. Le voile de lumière des Compagnons (dessin, docs) se dit 光の覆い, jamais ヴェール dans le jeu. |
 | chimère (D183, remplace « égrégore » en français) | **虚像** — inchangé | — | Le décideur a écarté « égrégore », mot de l'ésotérisme ; le mot de cette langue dit déjà l'illusion qu'on dévoile : il reste. |
-| dévoilé (égrégore vaincu : on a montré qu'il est vide) | **暴かれる** (「虚像は暴かれた」) | Collocation 「虚像を暴く」 (démasquer une image fabriquée) : usage courant, référence non vérifiée ; le sens de 虚像 : デジタル大辞泉 (ci-dessous). | Va avec 虚像 (égrégore, ci-dessous). **À valider** avec lui. |
+| dévoilé (chimère vaincue : on a montré qu'elle est vide) | **暴かれる** (「虚像は暴かれた」) | Collocation 「虚像を暴く」 (démasquer une image fabriquée) : usage courant, référence non vérifiée ; le sens de 虚像 : デジタル大辞泉 (ci-dessous). | Va avec 虚像 (chimère, ci-dessous). **À valider** avec lui. |
 | Niyya (l'intention, jauge de combat) | **ニーヤ** | [Wiki-ja] « ニーヤ » ; [東長] : 「意図（nīya）」. | Terme établi ; le sens « 意図 » se donne une fois dans le recueil. |
 | Sérénité (la jauge dorée ; D184 : autrefois « Sakîna ») | **落ち着き** ; « le groupe retrouve sa sérénité » : 「一行は落ち着きを取り戻す」 ; « la Sérénité monte » : 「落ち着きが増す」 ; « Sérénité +{n} au départ » : 「開始時の落ち着き +{n}」 | Mot ordinaire : le calme qu'on garde dans l'épreuve (「落ち着きを失わない」「落ち着きを取り戻す」). Le jeu l'employait déjà pour la même « sérénité » dans les pourparlers (「礼拝の落ち着き：信頼 +1」) et pour le saint qui « garde le calme » (「落ち着きを保つ」) : la jauge, le pourparler et la figure du saint disent désormais un seul mot, comme le français. | Le décideur a écarté le mot du Coran pour une jauge de jeu (D184, 1.3). Or **安らぎ est le mot de 三田 pour la sakīna** : lu le 18 novembre sur alquran.cloud (`ja.japanese`), 48:4 「信者たちの心に安らぎを与え」, 48:18 「かれらに安らぎを下し」, 48:26, 9:26 「かれの安らぎを下し」, 9:40 ; et 13:28, que le recueil cite, 「心の安らぎ」. 安らぎ et 「降りる」 quittent donc la jauge ; サキーナ n'est plus écrit. Écartés aussi : 平安 (三田 2:248 pour la sakīna, et le salām des formules), 平常心 (le 「平常心是道」 du zen), 安心 (lecture bouddhique あんじん), 冷静 (la froideur plus que la paix). Le recueil ne nomme plus la sakīna, en français comme en japonais ; s'il fallait la citer un jour dans un feuillet, ce serait 「安らぎ（サキーナ）」 avec 48:4 tiré du registre (`versets.json`), jamais comme nom de la jauge. **À valider (D184).** |
 | râwî (le transmetteur, le joueur) | **ラーウィー** (sens : 伝承者) | Transcription selon § 1.2 ; 「伝承者」 : [協会訳ムスリム] vol2-174 (「私（伝承者）」). | Dans l'apostrophe : 「ラーウィーよ」. Pas de forme japonaise consacrée de *râwî* lue : la forme suit le système. |
@@ -188,7 +188,7 @@ Deux sources savantes reviennent souvent :
 | la Chaîne (l'écran, la suite des maillons) | **鎖** (titre d'écran : 「伝承の鎖」) | Proposition. | **À valider.** *D184 (2.21) :* le titre d'une partie sans faute n'est plus « Isnâd sahîh » mais « Chaîne fidèle » : 「鎖は忠実に伝えられた」, en écho à 「鎖への忠実さ」 (Fidélité à la Chaîne) et à 「鎖は伝えられた」 (Chaîne transmise) ; jamais 真正 ni 「真正なイスナード」 : *ṣaḥîḥ* est le jugement des savants sur une chaîne réelle, pas un score. **À valider (D184).** |
 | maillon (une saga) | **環**（わ） ; « un maillon de la Chaîne » : 「鎖の一環」 | Proposition : 一環 dit à la fois « un anneau d'une chaîne » et « une part d'un tout ». | **À valider.** *D184 (2.6, 2.7) :* « ce maillon » remplace « ce règne » : 「この環」, et 治世 n'est plus écrit (un califat n'est pas un règne) ; les cinq cartons disent « Premier maillon · As-Siddîq » … : 「第一の環・アッ＝スィッディーク」 (§ 3.1). **À valider (D184).** |
 | chimère (D183 ; autrefois « égrégore » : idée reprise par beaucoup de cœurs ; l'ennemi) | **虚像**（きょぞう） | デジタル大辞泉, sens 2 : 「実際とは異なる、作られたイメージ。『マスコミによって作られた虚像』」 ; 精選版 日本国語大辞典, sens 2 : 「あるものの実態とは異なるイメージ。特に、人物の実体に対する、世評、伝説などによって作り上げられた評価認識をいう」 (lu : <https://kotobank.jp/word/虚像>). | Le japonais a le mot d'une image fabriquée ensemble et vide de réalité ; il va avec 偶像 (idole), et 「虚像を暴く」 dit « dévoiler ». Pour le **recueil**, la pensée japonaise de ce que les gens fabriquent ensemble : 「空気」 (山本七平『「空気」の研究』, 文藝春秋 1977 ; notice <https://ci.nii.ac.jp/ncid/BN02778185>) et 「世間」 (阿部謹也『「世間」とは何か』, 講談社現代新書 1995 ; <https://ci.nii.ac.jp/ncid/BN12885013>). Deux réserves lues : l'éditeur résume la thèse de 山本 par 「『空気』とはまことに大きな絶対権を持った妖怪である」 (<https://books.bunshun.jp/ud/book/num/9784167911997>) — on prend l'idée, **jamais l'image du 妖怪** (exigences 6, 18) ; et 世間 est d'abord un mot bouddhique ([Wiki-ja] « 世間 » : 「インド発祥の宗教における用語」). Alternative : la translittération エグレゴール, aussi rare et ésotérique en japonais que « égrégore » en français — *écartée depuis D183* : le décideur a retiré « égrégore » du français pour cette raison même ; 虚像 dit déjà ce que dit « chimère ». **À valider.** |
-| idole (l'égrégore enraciné d'un chapitre) | **偶像** | 三田 14:35 「偶像崇拝」, 5:90 「偶像」 (34 versets) ; [Wiki-ja] « 偶像崇拝 ». | Jamais アイドル (le sens moderne de 偶像 est connu, mais le contexte le lève). |
+| idole (la chimère enracinée d'un chapitre) | **偶像** | 三田 14:35 「偶像崇拝」, 5:90 「偶像」 (34 versets) ; [Wiki-ja] « 偶像崇拝 ». | Jamais アイドル (le sens moderne de 偶像 est connu, mais le contexte le lève). |
 | noosphère | **精神圏** | [Wiki-ja] « ノウアスフィア » : 「精神圏（せいしんけん）またはノウアスフィア」 (ヴェルナツキー, テイヤール・ド・シャルダン) ; 村田奈生「テイヤール・ド・シャルダン研究史素描」『東京大学宗教学年報』36 : 「物質圏，生命圏，精神圏」 (lu : <https://repository.dl.itc.u-tokyo.ac.jp/record/53424/files/rel036012.pdf>). | La traduction de référence (美田稔訳『現象としての人間』, みすず書房 1964 ; <https://ci.nii.ac.jp/ncid/BN03402753>) n'a pas été lue : son terme exact n'est pas vérifié. Le jeu ne nomme ni テイヤール ni ヴェルナツキー. |
 | idées noires (cinq) | **暗い想い** | Proposition (usage courant de 想い, « pensée qui pèse »). | Ni 心の闇 (manga), ni 邪念 (bouddhique : 念), ni 負の感情 (psychologie de magazine). **À valider.** Le relevé `notions.md` donne pour cinquième « le défilement » : c'est une erreur du relevé ; `coeur.js` dit **le désespoir** (`noir_desespoir`). |
 | maux du cœur (sept) | **心の悪徳** | Proposition. Sources de l'image : 三田 2:10 「かれらの心には病が宿っている」 (maraḍ) ; [東長] : la partie des muhlikāt 「危険［に導く悪行］」. | 「心の病」 est le mot de 三田, mais en japonais moderne il désigne d'abord la maladie mentale : le jeu laisserait entendre que la dépression est une faute. À écarter. **À valider.** |
@@ -265,7 +265,7 @@ bouddhique ; et l'on évite de reproduire la série japonaise des « sept péch�
 | L'Ostentation (ar-riyâ') | **見せびらかし** | 三田 2:264 「人びとに見せびらかすため」 ; 107:6 「（人に）見られるための礼拝」. | [東長] dit 「偽善」, mais 偽善 se confondrait avec les hypocrites du récit (偽信者, 三田 4:142 ; exigence 11). |
 | L'Avarice (al-bukhl) | **物惜しみ** | 三田 57:24 「物惜しみであるから，人びとにも物惜しみを勧め」 ; 4:37 「吝嗇」. | 吝嗇 est le mot savant, rarement lu sans ruby (§ 1.6). [東長] dit 「強欲」 pour bukhl : à ne pas suivre ici (le jeu sépare avidité et avarice). |
 | L'Insouciance (al-ghafla) | **怠り** | Images de 三田 : 7:205 「おろそかな者の仲間となってはならない」 ; 21:1 「無関心に背き去る」. | 「おろそか」 ne se dit pas comme nom ; 怠り garde la négligence sans le 怠惰 des péchés capitaux. **À valider.** |
-| L'Envie (al-hasad) | **妬み** | 三田 4:54 「妬むのか」 ; 113:5 「嫉妬する者の嫉妬」 ; [東長] 「嫉妬（ḥasad）」. | 嫉妬 se dit d'abord, en japonais courant, de la jalousie amoureuse (exigence 4) : le nom de l'égrégore est 妬み. |
+| L'Envie (al-hasad) | **妬み** | 三田 4:54 「妬むのか」 ; 113:5 「嫉妬する者の嫉妬」 ; [東長] 「嫉妬（ḥasad）」. | 嫉妬 se dit d'abord, en japonais courant, de la jalousie amoureuse (exigence 4) : le nom de la chimère est 妬み. |
 | La Colère (al-ghadab) | **怒り** | [東長] 「怒り（ghaḍab）」 ; 三田 3:134 「怒りを押えて」. | Pas 憤怒 (péchés capitaux ; et 憤怒相 des divinités bouddhiques). |
 
 **Les idées noires** (`noir_*`) — des pensées qui pèsent sur une personne de fiction (exigence 16), auxquelles on
@@ -304,7 +304,7 @@ le **nom astronomique international**, jamais le nom d'une fête ou d'un culte d
 | al-Jady (la Polaire, le Chevreau) | アル＝ジャディ | **北極星**（「子山羊」） | 北辰, 妙見 (culte bouddhique et shintô de l'étoile polaire) |
 | les « bonds de la gazelle » (trois couples d'étoiles au nord) | — | **ガゼルの跳躍** (calque : pas de nom japonais) | — |
 
-### 2.5 Postures, portes, voies de la parole
+### 2.5 Figures (autrefois « postures »), portes, voies de la parole
 
 **Les figures** (`D.POSTURES`, exigence 24 ; D184 : « posture » est devenu « figure »). Le mot : **姿勢**（しせい）, au
 lieu de 構え. **À valider (D184).**
@@ -405,7 +405,7 @@ japonais.
 
 | Matériaux | Eau **水** · Pisé **練り土** · Palme **ヤシの葉** · Pierre **石** · Grain **穀物** · Laine **羊毛** |
 |---|---|
-| **Pièces** | Tranchée **堀** · Puits **井戸** · Palmier **ナツメヤシの木** · Champ d'orge **大麦畑** · Enclos de chèvres / de moutons / de chameaux **山羊の囲い／羊の囲い／ラクダの囲い** · Mur de pisé **土塀** · Sol à étoiles **星模様の床** · Pilier de palmier **ヤシの幹の柱** · Niche de qibla **ミフラーブ** (description : 「キブラを示す壁のくぼみ」 ; 「キブラ」 : 三田 2:142–145) · Natte de prière **礼拝用のむしろ** · Tapis **絨毯** · Lanterne **ランタン** · Rosace **花形の飾り** |
+| **Pièces** | Tranchée **堀** · Puits **井戸** · Palmier **ナツメヤシの木** · Champ d'orge **大麦畑** · Enclos de chèvres / de moutons / de chameaux **山羊の囲い／羊の囲い／ラクダの囲い** · Mur de pisé **土塀** · Dallage étoilé **星模様の敷石** (D184, 2.25 : autrefois « Sol à étoiles », 星模様の床 ; la description dit déjà 「幾何学模様の敷石」) · Pilier de palmier **ヤシの幹の柱** · Niche de qibla **ミフラーブ** (description : 「キブラを示す壁のくぼみ」 ; 「キブラ」 : 三田 2:142–145) · Natte de prière **礼拝用のむしろ** · Tapis **絨毯** · Lanterne **ランタン** · Rosace **花形の飾り** |
 
 Notes : la natte n'est pas 座布団 ni ござ (objets domestiques japonais) ; la lanterne n'est jamais 灯籠 ni 提灯 (lanternes de
 temple, de sanctuaire, de fête). 「ミフラーブ」 : transcription selon § 1.2, usage courant, référence non vérifiée.
@@ -419,18 +419,19 @@ temple, de sanctuaire, de fête). 「ミフラーブ」 : transcription selon §
 | Se déplacer | **歩く** | La halte | **休息** |
 | Parler | **話す** | Retrouver une source | **出典をたどる** |
 | Demander son chemin | **道をたずねる** | S'équiper | **装備する** |
-| Frapper la faille | **綻びを突く** (la faille d'un égrégore : **綻び**) | S'orienter aux étoiles | **星で方角を知る** |
+| Frapper la faille | **綻びを突く** (la faille d'une chimère : **綻び**) | S'orienter aux étoiles | **星で方角を知る** |
 | Les vertus | **徳** | Frapper ce qui rôde | **さまようものを打つ** |
-| La garde et la Niyya | **守りとニーヤ** | Prendre une posture | **構えをとる** |
+| La garde et la Niyya | **守りとニーヤ** | Prendre une figure (D184) | **姿勢をとる** (§ 2.5) |
 | La besace | **旅袋** | | |
 
-« Faille » a deux sens dans le jeu : le point faible d'un égrégore (**綻び**, **à valider**) et le lieu de la noosphère
+« Faille » a deux sens dans le jeu : le point faible d'une chimère (**綻び**, **à valider**) et le lieu de la noosphère
 nommé « Faille » (**裂け目**, § 3.4).
 
 **La halte** (`ui.js`) : Reprendre **再開** · Que faire ? **いますべきこと** · Carte **地図** · Le groupe **一行** ·
-Compagnons (les membres du groupe) **仲間** · Équipement **装備** · Postures **構え** · Besace **旅袋** · Piliers **柱** ·
-Le cœur **心** · Œuvres et lames **善行と刃** · Compagnons de lumière **光の道連れ** · Le savoir **知** · Recueil **聞き書き**
-· Organigramme du mal **悪の諸段階** · Valeurs et attributs **美徳と御名** · Aide du jeu **遊び方** · Réglages **設定** ·
+Compagnons (les membres du groupe) **仲間** · Équipement **装備** · Figures **姿勢** (D184 ; autrefois « Postures », 構え) ·
+Besace **旅袋** · Piliers **柱** · Le cœur **心** · Œuvres et lames **善行と刃** · Compagnons de lumière **光の道連れ** ·
+Le savoir **知** · Recueil **聞き書き** · Les degrés du mal **悪の諸段階** (D183) · Valeurs et attributs **美徳と御名** ·
+Aide du jeu **遊び方** · Réglages **設定** ·
 Ton personnage **あなたの人物** · Exporter la partie **記録を書き出す**.
 
 Deux pièges : **« compagnons » en minuscule** (les membres du groupe, le menu) se dit **仲間**, **« Compagnons »** (les
@@ -449,11 +450,13 @@ l'image même de la transmission), **à valider** ; 図鑑 (catalogue de jeu) es
 Le carton de prière reste sobre (exigence 13) : 「彼らは礼拝した。」, comme le français « Ils prièrent. ».
 
 **Combat** (`battle.js`) : Frapper **打つ** · Éclairer **照らす** · Garde **守り** · Vertus **徳** · Objets **持ち物** ·
-Assaut (attaque d'un égrégore) **襲いかかる** · Force **力** · Esprit **精神** · Garde (stat) **守り** · Élan **勢い** ·
-Étourdi **ひるみ** · Doute **迷い** · Waswâs **囁き** (三田 114:4) · Régén. **回復** · En garde **守りの構え** · Cible **標的**
-· Sagesse (l'expérience) **知恵** · Niveau **レベル**. Jamais 魔法, 呪文, MP, 魔力, 霊力.
+Assaut (attaque d'une chimère) **襲いかかる** · Force **力** · Esprit **精神** · Garde (stat) **守り** · Élan **勢い** ·
+Étourdi **ひるみ** · Doute **迷い** · Waswâs **囁き** (三田 114:4) · Régén. **回復** · En garde **守りの構え** (構え ne sert
+plus qu'à la garde : D184, § 2.5) · Cible **標的** · Expérience **経験** (D184, 2.5 : autrefois « Sagesse acquise », 得た
+知恵 ; on ne gagne pas la sagesse en gagnant un combat, et le sage est une figure ; 「経験：+{n}」, comme 「経験を積む」 au
+retour de la descente) · Niveau **レベル** · Sérénité **落ち着き** (§ 2.1). Jamais 魔法, 呪文, MP, 魔力, 霊力.
 
-### 2.9 L'organigramme du mal et le côté du bien
+### 2.9 Les degrés du mal (D183 ; autrefois « l'organigramme ») et le côté du bien
 
 **Les étages** (`coeur.js`, `mal.rangs`) — au-dessus du trait, « ce qui est enseigné » ; au-dessous, « des images ».
 
@@ -463,7 +466,7 @@ Assaut (attaque d'un égrégore) **襲いかかる** · Force **力** · Esprit 
 | Les souffleurs : « des démons d'entre les djinns, et parfois des hommes » | **囁く者たち** : 「ジンの中の悪魔、そして時には人間」 | 三田 114:4–6 ; 6:112 「人間とジンの中の悪魔」. | Dans ce seul texte « enseigné », le mot 悪魔 (celui de 三田 pour shayṭān) est permis ; jamais pour un ennemi. |
 | djinn | **ジン** | 三田 72:1 「一団のジン」 ; 15:27 「幽精〔ジン〕」. | [Wiki-ja] décrit ジン comme 「精霊や妖怪、魔人などの一群」 : le jeu n'emploie **jamais** 精霊, 妖怪, 魔人, ni 幽精 (mot de 三田, mais rare). |
 | Le cœur (il entend, et il consent ou refuse) | **心** | — | — |
-| Les idées noires / Les égrégores / Les idoles | **暗い想い** / **虚像** / **偶像** | § 2.1 | — |
+| Les idées noires / Les chimères (D183 ; autrefois « égrégores ») / Les idoles | **暗い想い** / **虚像** / **偶像** | § 2.1 | — |
 | anges (le secours, la citation de Badr seulement) | **天使** | 三田 8:9 「一千の天使」. | Jamais montrés, nommés, comptés (exigence 20). |
 
 **Les sept attributs** (`attributs`) — le Nom en katakana (§ 1.2, article gardé comme en français) ; le **sens**
@@ -496,11 +499,14 @@ le Nom est du texte, jamais un sprite ni une compétence (exigence 8).
 | 礼拝 lu らいはい | Lecture bouddhique (デジタル大辞泉). | れいはい (le donner une fois si le contexte hésite) |
 | 修行, お勤め, 勤行, 功徳, 供養, 成仏, 往生, 煩悩, 業, 因果, 輪廻, 転生, 悟り | Notions bouddhiques. | Les mots du § 2 |
 | 祓い, 穢れ, 禊, 御利益, 神社, 神棚, 参拝 | Notions shintô. | — |
-| 悪魔, 魔, 鬼, 妖怪, 物の怪, 魔物, 魔人, 魔王, 怨霊, 化け物, 精霊 | Noms de démons, de djinns ou de monstres : interdits pour un ennemi (exigences 6, 18). 悪魔 n'existe que dans les citations de 三田 et la seule ligne de l'organigramme (§ 2.9). | 虚像, 偶像, 悪徳, 暗い想い |
+| 悪魔, 魔, 鬼, 妖怪, 物の怪, 魔物, 魔人, 魔王, 怨霊, 化け物, 精霊 | Noms de démons, de djinns ou de monstres : interdits pour un ennemi (exigences 6, 18). 悪魔 n'existe que dans les citations de 三田 et la seule ligne des degrés du mal (§ 2.9). | 虚像, 偶像, 悪徳, 暗い想い |
 | 魔法, 呪文, 呪い, 魔力, 霊力, 術, 法力, 加護, お守り, 護符 | Rien n'est sortilège ni talisman (exigences 13, 15, 17). | 徳, 息, 善行 |
 | 聖戦 | « Guerre sainte » : un sens que le jeu ne donne à aucun combat. | 戦い |
 | 異教徒, 邪教, 蛮族 | Désigner un groupe comme ennemi par nature (exigence 10). | Le nom du peuple, de la ville, de la tribu |
-| 勇者, 使い魔, 守護霊, 式神, 図鑑 | Vocabulaire de jeu vidéo ou d'occultisme japonais qui déplacerait le sens. | 英雄 (posture), 光の道連れ, 聞き書き |
+| 勇者, 使い魔, 守護霊, 式神, 図鑑 | Vocabulaire de jeu vidéo ou d'occultisme japonais qui déplacerait le sens. | 英雄 (figure), 光の道連れ, 聞き書き |
+| 取り憑く, 憑依, 憑かれる, 乗り移る, 乗っ取る, 魅入られる, 呪縛, 祟り, 「体を借りる」, 「（虚像が）この人をとらえている」, 「語っているのは彼ではない」 | *D184 (1.6) :* une chose qui tient un homme, parle par sa bouche ou prend son corps, c'est l'image de la possession, et un combat livré « pour lui » ressemble à un exorcisme. L'exigence 18 veut que le cœur reste responsable : **l'homme reste le sujet**. | 「この人には、もうそれしか聞こえない」, 「彼は自分の分別よりも、その慣わしに従っている」, 「その座のために語っている」, 「それにしか応えていない」 ; « Ce n'est pas lui qu'on combat : c'est ce qu'il regarde » : 「戦う相手は、この人ではない。この人が見つめているものだ」. **À valider (D184).** |
+| 衰えゆく, 原因不明の衰え, 「熱も傷もないのに弱っていく」 | *D184 (1.8) :* « languir sans fièvre ni blessure », « dépérir sans cause visible » : la langue de l'envoûtement, d'un mal occulte qu'une œuvre viendrait lever. | Ce que l'on voit, simplement : 「病気でもけがでもないのに、気落ちしてしまう」, 「医師にも悪いところが見つからない」, 「食の細った」 ; « un mal caché » nié : 「隠れた病でもない」. Jamais 気力 pour « courage » : c'est la Constance. **À valider (D184).** |
+| 破門, 異端宣告 | *D184 (2.13) :* « excommunier » est un mot de l'Église pour dire le *takfîr* ; 破門 est aussi celui des écoles bouddhiques. | 「人を信仰の外にあると断じる」, 「信仰の外へ追いやる」. |
 | 傲慢・強欲・嫉妬・憤怒・怠惰 en série | La liste japonaise des péchés capitaux. | La liste du § 2.3 |
 | コーラン, マホメット, モハメッド | Formes anciennes ou fautives. | クルアーン, ムハンマド |
 | 回教, 回教徒 | Nom ancien, venu du chinois (usage courant, référence non vérifiée). Le titre du dictionnaire de référence dit 「イスラーム」. | イスラーム, ムスリム |
@@ -520,7 +526,7 @@ le lien de langue de Wikipédia anglaise) ; **[三田]** au verset où 三田 é
 | Le Prophète (« le Messager d'Allah ﷺ ») | **預言者ムハンマド ﷺ** ; 「アッラーの使徒 ﷺ」 | — | [W] « ムハンマド・イブン＝アブドゥッラーフ » ; § 1.3 |
 | Abû Bakr as-Siddîq ('Abdallâh ibn Abî Quhâfa) | **アブー・バクル・アッ＝スィッディーク** (アブドゥッラー・イブン・アビー・クハーファ) | As-Siddîq → **アッ＝スィッディーク** ; « Le Véridique » → **真実の人** (à valider) | [W] « アブー・バクル » : 「アブー・バクル・アッ＝スィッディーク」 |
 | 'Umar ibn al-Khattâb | **ウマル・イブン・アル＝ハッターブ** (court : ウマル) | Al-Fârûq → **アル＝ファールーク** ; sens : 正邪を分かつ者 (à valider) | [W] « ウマル・イブン・ハッターブ » (sans article : on suit § 1.2) |
-| 'Uthmân ibn 'Affân | **ウスマーン・イブン・アッファーン** | Le Généreux → **惜しまぬ人** (à valider) | [W] « ウスマーン・イブン・アッファーン » |
+| 'Uthmân ibn 'Affân | **ウスマーン・イブン・アッファーン** | Le Généreux → **惜しまぬ人** (à valider ; le titre que le français garde, D184 : « Quatrième maillon · Le Généreux » 「第四の環・惜しまぬ人」 ; la compétence d'Idris « Miséricorde du Généreux » 「惜しまぬ人の慈悲」, car sa Lumière est la Miséricorde, 慈悲, et non la Largesse) | [W] « ウスマーン・イブン・アッファーン » |
 | 'Alî ibn Abî Tâlib | **アリー・イブン・アビー・ターリブ** | La Porte du Savoir → **知の門** | [W] « アリー・イブン・アビー・ターリブ » |
 | Khâlid ibn al-Walîd | **ハーリド・イブン・アル＝ワリード** | Le Sabre dégainé → **抜き放たれた剣** | [W] « ハーリド・イブン・アル＝ワリード » (qui dit aussi 「アッラーの剣」) |
 | Abû 'Ubayda ibn al-Jarrâh | **アブー・ウバイダ・イブン・アル＝ジャッラーフ** | Amîn al-Umma → **アミーン・アル＝ウンマ** ; « L'homme de confiance de la communauté » → **ウンマの信頼される人** | [W] « アブー・ウバイダ » |
@@ -541,10 +547,14 @@ le lien de langue de Wikipédia anglaise) ; **[三田]** au verset où 三田 é
 | Sâlim (fiction) | **サーリム** | le Repenti → **悔い改めた者** ([東長] dit 「改悛（tawba）」 pour le repentir) | Fiction. |
 
 **Rôles** (`D.ROLES`, s'ils s'affichent) : guerrier **戦士** · gardien **守り手** · sage **知者** · soigneur **癒し手** ·
-stratège **軍師**. Le rôle « sage » se dit 知者 pour ne pas se confondre avec la posture 賢者 (§ 2.5). **À valider.**
+stratège **軍師**. Le rôle « sage » se dit 知者 pour ne pas se confondre avec la figure 賢者 (§ 2.5). **À valider.**
 
-**En-têtes de saga** : « Saga I · Le Véridique » → 「第一の環・真実の人」 ; « Lumière : Véracité (sidq) » → 「光：誠実」 ;
-« 11–13 H · 632–634 » → 「H11〜13・632〜634年」 (§ 1.4).
+**En-têtes de saga** (D184, 2.7 : cinq cartons, une seule forme, « … maillon · titre ») : « Premier maillon · As-Siddîq »
+→ 「第一の環・アッ＝スィッディーク」 ; « Deuxième maillon · Al-Fârûq » → 「第二の環・アル＝ファールーク」 ; « Troisième maillon · Le
+Sabre dégainé » → 「第三の環・抜き放たれた剣」 ; « Quatrième maillon · Le Généreux » → 「第四の環・惜しまぬ人」 ; « Cinquième maillon ·
+La Porte du Savoir » → 「第五の環・知の門」. Le carton suit le français : le titre arabe en katakana là où il l'écrit en arabe,
+le titre traduit là où il le traduit. « Lumière : Véracité (sidq) » → 「光：誠実」 ; « 11–13 H · 632–634 » → 「H11〜13・632〜634年」
+(§ 1.4). **À valider (D184).**
 
 ### 3.2 Les personnages historiques des chapitres
 
@@ -574,7 +584,7 @@ leur nom ordinaire ; seul le dessin change.
 | umar | Anas ibn Mâlik | **アナス・イブン・マーリク** | § 1.2 |
 | umar | Surâqa ibn Mâlik | **スラーカ・イブン・マーリク** | § 1.2 |
 | umar | Jabala ibn al-Ayham | **ジャバラ・イブン・アル＝アイハム** | § 1.2 |
-| umar | Kisrâ (titre des rois perses) | **キスラー** (le recueil : 「ホスロー」, forme persane, usage courant, référence non vérifiée) | § 1.2 |
+| umar | Kisrâ (titre des rois perses) | **キスラー** (le recueil : 「ホスロー」, forme persane, usage courant, référence non vérifiée). *D184 (2.8) :* un même roi, un seul nom dans le récit — « l'empire de Kisrâ » (autrefois « des Chosroès ») : 「キスラーの帝国」 ; ホスロー n'est plus écrit hors d'un feuillet qui l'explique. | § 1.2 |
 | uthman | 'Abdallâh ibn az-Zubayr | **アブドゥッラー・イブン・アッ＝ズバイル** | [W] 「アブドゥッラー・イブン・アッズバイル」 (sans « ＝ » : on suit § 1.2) |
 | uthman | Sa'îd ibn al-'Âs | **サイード・イブン・アル＝アース** | § 1.2 |
 | uthman | 'Abdallâh ibn Sa'd | **アブドゥッラー・イブン・サアド** | § 1.2 |
@@ -658,7 +668,7 @@ Familles et foules restent collectives (exigence 4) : 「ある一家」「人�
 | Qinnasrîn | **キンナスリーン** | § 1.2 |
 | Tibériade | **ティベリア** | [W] « Tiberias » → 「ティベリア」 |
 | al-Madâ'in (Ctésiphon) | **マダーイン** (le recueil : 「クテシフォン」) | § 1.2 ; [W] « Ctesiphon » → 「クテシフォン」 |
-| le Shâm / l'Irak / l'Égypte | **シャーム** / **イラク** / **エジプト** | § 1.2 / formes consacrées |
+| le Shâm / l'Irak / l'Égypte | **シャーム** / **イラク** / **エジプト** | § 1.2 / formes consacrées. *D184 (2.8) :* le français dit « le Shâm » partout, avec l'article, et non plus « Syrie » : le japonais écrit シャーム partout (シリア n'est plus écrit pour ce pays-là) ; la Syrie n'est nommée que dans le feuillet qui explique : 「シャーム（今日のシリアとその周辺）」. 「シリア語」 (le syriaque, la langue) ne change pas. **À valider (D184).** |
 | Chypre | **キプロス** | Forme consacrée |
 | Dhât as-Sawârî (la bataille des Mâts) | **ザート・アッ＝サワーリー**（「帆柱の戦い」） | § 1.2 |
 | Alexandrie | **アレクサンドリア** | Forme consacrée |
@@ -687,7 +697,7 @@ Tenues du râwî (`D.TENUES`) : Manteau des Archives **文書庫の外套** · C
 **路地の上着** · Écharpe du copiste **写字生の襟巻き** (jamais 写経) · Manteau du veilleur **夜番の外套** · Calotte du lettré
 **学者の帽子**.
 
-### 3.5 Les égrégores et les idoles
+### 3.5 Les chimères (autrefois « égrégores », D183) et les idoles
 
 Principe : un nom japonais qui dit la même chose avec les mots de la langue, pas un calque ; les mêmes familles de noms
 d'un récit à l'autre ; aucun nom de démon, d'esprit ou de monstre ; aucun nom de peuple, de religion, de personne
@@ -716,11 +726,14 @@ Notes :
 - **Le Bouc émissaire → 濡れ衣** (la faute qu'on met sur un autre) : 生贄 et 贖罪の山羊 sont des images de sacrifice
   religieux ; スケープゴート est un calque.
 - **On-dit → 噂** (caid) et **La Rumeur → 流言** (uthman) restent distincts, comme en français ; **Ouï-dire → 又聞き**.
-- **L'Idole du Héros → 英雄の偶像** répond, à dessein, à la posture 英雄 : l'idole est ce que devient la posture quand on
+- **L'Idole du Héros → 英雄の偶像** répond, à dessein, à la figure 英雄 : l'idole est ce que devient la figure quand on
   l'adore.
+- **L'Aigle d'Airain → 青銅の鷲**, toujours entier : quand l'Agrégor dit « J'ai été l'Aigle d'Airain et le Trône » (D184,
+  2.10 : autrefois « l'Aigle »), le japonais écrit 「青銅の鷲であり、玉座だった」 ; 鷲 seul reste au compagnon de lumière (§ 2.4).
 - **L'AGRÉGOR → アグレゴール** : le français mêle « agrégateur » et « égrégore » ; アグレゴール garde l'écho de アグリゲーター
-  (le mot japonais du logiciel qui agrège), et sonne comme un nom propre. Si le décideur retient エグレゴール pour
-  « égrégore » (§ 2.1), le jeu de mots revient entier.
+  (le mot japonais du logiciel qui agrège), et sonne comme un nom propre. *D183 :* le français a quitté « égrégore » pour
+  « chimère », mais garde l'Agrégor, le niveau au-dessus des chimères (« l'agrégateur de chimères » : 「虚像のアグリゲーター」) ;
+  le japonais garde アグレゴール, et l'hypothèse エグレゴール (§ 2.1) tombe.
 - **Les sept maux et les cinq idées noires** prennent les noms du § 2.3.
 
 ## 4. Points à trancher par le décideur
@@ -732,16 +745,19 @@ Notes :
    「（彼にアッラーのご満悦あれ）」.
 3. **Registre** (§ 1.1) : である調 pour le récit, です・ます調 pour les écrans, ni archaïsme ni langage de manga dans la bouche
    des Compagnons, 私 pour tous.
-4. **« Égrégore »** (§ 2.1) : 虚像 (proposé, avec 偶像 pour l'idole et 「暴かれる」 pour « dévoilé ») ou la translittération
-   エグレゴール. Le choix décide aussi du nom de l'idole finale (アグレゴール, § 3.5). 空気 (山本七平) et 世間 (阿部謹也)
-   servent au recueil pour expliquer l'idée, sans l'image du 妖怪 que 山本 emploie.
+4. **« Chimère »** (§ 2.1 ; « égrégore » jusqu'à D183) : 虚像 (proposé, avec 偶像 pour l'idole et 「暴かれる」 pour
+   « dévoilé »). La translittération エグレゴール tombe avec le mot français (D183) ; l'idole finale garde アグレゴール (§ 3.5).
+   空気 (山本七平) et 世間 (阿部謹也) servent au recueil pour expliquer l'idée, sans l'image du 妖怪 que 山本 emploie.
 5. **« Maux du cœur »** (§ 2.1) : 心の悪徳 (proposé) plutôt que 心の病, le mot de 三田 (2:10), qui en japonais moderne dit la
    maladie mentale.
-6. **Les postures** (§ 2.5) : 英雄・賢者・聖人, et le mot 構え. 聖人 plutôt que 聖者 (qui, dans les études islamiques
-   japonaises, dit le walī et son culte, sujet de controverse) ; 賢者 et 英雄 malgré leur emploi dans les jeux de rôle ; 勇者
-   exclu. L'auteur de la typologie n'est nommé nulle part dans le jeu.
+6. **Les figures** (§ 2.5 ; « postures » jusqu'à D184) : 英雄・賢者・聖人, et le mot **姿勢** au lieu de 構え (la garde des
+   arts martiaux, qui reste à « En garde ») ; « Prendre une figure » 「姿勢をとる」 ; en combat 「英雄の姿勢」, jamais le nom seul
+   à côté d'un Compagnon. 聖人 plutôt que 聖者 (qui, dans les études islamiques japonaises, dit le walī et son culte, sujet de
+   controverse) ; 賢者 et 英雄 malgré leur emploi dans les jeux de rôle ; 勇者 exclu. L'auteur de la typologie n'est nommé
+   nulle part dans le jeu.
 7. **Jauges et états** (§ 2.1) : Constance 気力 (mot de 三田, 3:139), Souffle 息, éprouvé 力尽きる, voiles 覆い (三田 50:22),
-   Sakîna 安らぎ (三田 48:4 ; ou la translittération サキーナ en libellé), Niyya ニーヤ.
+   Sérénité **落ち着き** (D184 : la jauge n'est plus la Sakîna ; 安らぎ, le mot de 三田 pour la sakīna, et サキーナ ne sont
+   plus écrits pour elle), Niyya ニーヤ, Expérience 経験.
 8. **Le jeûne** (§ 2.3) : 断食 (proposé, mot courant et de la traduction de *Muslim*) ou 斎戒, mot de 三田 et des études
    savantes, mais aussi du shintô et du bouddhisme.
 9. **Les attributs** (§ 2.9) : 御名 (« les plus beaux Noms », 三田 7:180) plutôt que « attributs » ; et le sens d'アル＝ハリーム
@@ -752,16 +768,16 @@ Notes :
     (qui irait aux hypocrites), 怠り, 妬み plutôt que 嫉妬. Les idées noires : 恥, 不安 (plutôt que 恐れ), 疑い, 恨み, 絶望.
 12. **Les mots du jeu sans équivalent établi** (§ 2.1) : 鎖 / 環 (Chaîne, maillon), 暗い想い (idées noires), 心の糧
     (provision), 光の道連れ (compagnons de lumière), 休息 (halte), 夜語り (veillée), 鏡の街 (Cité-Miroir), 会戦 (bataille
-    déclarée), 助け (secours), 悪の諸段階 (organigramme du mal), 美徳 (Valeurs), 徳 (Vertus), 聞き書き (Recueil), 綻び
+    déclarée), 助け (secours), 悪の諸段階 (les degrés du mal, D183), 美徳 (Valeurs), 徳 (Vertus), 聞き書き (Recueil), 綻び
     (faille), 旅袋 (besace).
 13. **Le Renard des sables** (§ 2.4) : フェネック, pour éviter le renard d'Inari et des contes de 妖怪.
-14. **Le Caïd** (§ 3.1) : カーイド ; et le rôle « sage » 知者, distinct de la posture 賢者.
+14. **Le Caïd** (§ 3.1) : カーイド ; et le rôle « sage » 知者, distinct de la figure 賢者.
 15. **Les six types de 2084** (§ 3.3) : des descriptions neuves (流し見る人, 統べる人, 称えられる人, 数える人, 地図を描く人…) ;
     aucun mot repris des traductions japonaises du conte de l'exigence 14.
 16. **La Mecque et la mosquée** (§ 3.4) : マッカ (forme savante) plutôt que メッカ ; モスク (courant) plutôt que マスジド (三田)
     pour l'étiquette d'un lieu.
-17. **Les noms des égrégores et des idoles** (§ 3.5), tous, et en particulier 濡れ衣 (Bouc émissaire), 掛け声 (Slogan),
-    英雄の偶像 (Idole du Héros, qui répond à la posture 英雄), アグレゴール.
+17. **Les noms des chimères et des idoles** (§ 3.5), tous, et en particulier 濡れ衣 (Bouc émissaire), 掛け声 (Slogan),
+    英雄の偶像 (Idole du Héros, qui répond à la figure 英雄), アグレゴール.
 18. **Relecture des noms par un spécialiste** qui a le 『岩波イスラーム辞典』 en main : l'agent n'a pas pu lire le
     dictionnaire lui-même (§ 5) ; les formes des § 3.1–3.2 appliquent son système tel que d'autres le rapportent.
 
