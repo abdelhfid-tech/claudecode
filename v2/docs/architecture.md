@@ -175,8 +175,9 @@ autre.
 
 ## Le personnage du joueur : `src/core/perso.js`
 
-Le joueur donne un nom et une tenue au **râwî** — le héros de l'histoire-cadre, personnage de fiction. Les Compagnons
-gardent leur nom et leur silhouette. Le choix est dans la partie : `profil: { nom, tenue }`.
+Le joueur donne un nom et une tenue au **râwî** — le héros de l'histoire-cadre, personnage de fiction — et, depuis la
+2.x, compose son apparence pièce par pièce (« Le râwî composé », plus bas). Les Compagnons gardent leur nom et leur
+silhouette. Le choix est dans la partie : `profil: { nom, tenue, compo }` (`compo` est facultatif).
 
 **Les textes ne changent pas.** Ils disent « Idris », en 2.0 comme en 1.32. Quand une saga est posée, `perso.js` relève
 chaque phrase qui nomme le râwî (29 dans le jeu de base) ; quand le profil change, ces phrases-là sont redites à partir
@@ -193,12 +194,15 @@ Tout ce qui lit le contenu — dialogues, cartons, objectifs, Recueil, combat �
 
 | `ISNAD.perso` | Ce qu'elle fait |
 |---|---|
-| `profil()`, `nom()`, `tenue()` | le profil de la partie, ramené au personnage d'origine s'il est absent ou abîmé |
+| `profil()`, `nom()`, `tenue()` | le profil de la partie, ramené au personnage d'origine s'il est absent ou abîmé ; sa composition, contrôlée |
 | `refus(nom)` | la raison pour laquelle un nom ne se prend pas, ou rien |
 | `dire(texte, nom)` | une phrase d'origine, redite avec un nom |
 | `relever(saga)` | relève les phrases qui nomment le râwî (appelée par `registerSaga`) |
 | `appliquer()` | pose le nom dans les phrases relevées, le sceau et la tenue (appelée quand la partie change) |
-| `choisir(nom, tenue)` | contrôle, écrit le profil, applique |
+| `choisir(nom, tenue, compo)` | contrôle, écrit le profil, applique (sans `compo` : celle du profil) |
+| `compo(brut)`, `neutraliser(tenue, brut)` | une composition propre (seules les clés et les valeurs de `D.RAWI`) ; puis sans ce que l'ensemble donne déjà |
+| `base(tenue)`, `permis(clé, valeur, tenue, compo)` | ce que donnent l'ensemble et le visage d'origine ; si une pièce va avec les autres |
+| `composer(tenue, compo)`, `hasard(tenue, compo)` | l'apparence d'un ensemble et de ses pièces ; une tenue au hasard (jamais le visage) |
 
 **Les noms refusés** : vide, plus de seize signes, autre chose que des lettres (avec espace, apostrophe, trait d'union) ;
 le Nom divin employé seul ; Iblîs, démon, djinn ; le nom du Prophète ﷺ ; les noms des héros et des maillons du jeu, pour
@@ -209,12 +213,73 @@ ne pas brouiller les dialogues. Un nom n'étant fait que de lettres, il ne peut 
 même sous chaque tenue — `perso.look(tenue)` garde la marque de la tenue de toujours (`look.visage`). Avec un autre nom,
 le sceau du râwî ne porte plus son nom en arabe : il montre l'étoile à huit branches, seule.
 
-**L'écran « Ton personnage »** s'ouvre à chaque nouvelle partie, avant le prologue, avec « Idris » et sa tenue de
-toujours déjà choisis — un toucher suffit à commencer. Il se rouvre depuis la halte et depuis le pied de la Chaîne.
+### Le râwî composé (2.x)
+
+*Demande du décideur, le 18 novembre : « configurer le personnage d'Idris — couleur de peau, habits, accessoires…
+je veux le permettre à l'utilisateur ». Palettes, coiffes et objets proposés par l'agent, à valider.*
+
+Par-dessus son ensemble (une tenue de `D.TENUES`, qui devient un point de départ), le joueur change des pièces. Tout
+vient de `D.RAWI` (`defs.js`), rien n'est dessiné de neuf :
+
+| Pièce | Valeurs | Ce qu'elle pose sur l'apparence |
+|---|---|---|
+| `teint` | `t1` à `t7` : les cinq teints du moteur, puis deux plus sombres (`t3` : Idris) | `look.teint` |
+| `barbe`, `poil` | glabre, courte (Idris), pleine ; trois poils sombres, ni gris ni blanc (`p2` : Idris) | `look.barbe`, `look.poil` |
+| `coiffe` | la capuche, la calotte | `look.coiffe` |
+| `manteau`, `longue`, `echarpe` | les quatre coupes ; la robe jusqu'aux pieds ; l'écharpe | `look.manteau`, `look.court`, `look.echarpe` |
+| `etoffe` | `e1` à `e6` (les six ensembles), `e7` | `look.robe`, `head`, `cloak`, `legs` |
+| `neon` | `n1` à `n5` : [bande, ceinture] ; sans choix, le néon de l'ensemble | `look.neon`, et le liseré suit la bande |
+| `objet` | les feuillets | `look.porte` |
+
+- **Des identifiants, jamais une couleur.** La partie garde `compo: { teint: 't6', coiffe: 'calotte', … }` ; une teinte
+  retouchée ne casse aucune partie, et un identifiant retiré redevient absent — on n'en retire ni n'en réordonne aucun,
+  on ajoute à la fin. `perso.compo` ne lit que des propriétés propres, que les clés et les valeurs de `D.RAWI` : une
+  composition abîmée (balise, type faux, valeur inconnue, `__proto__`) est oubliée, sans refuser la partie.
+- **Sans rien choisir, rien ne change.** Ce qui vaut déjà l'ensemble ou le visage d'origine n'est pas gardé
+  (`neutraliser`) ; sans pièce, dans la tenue de toujours, le râwî est l'objet d'origine (`===`) : les films, la démo et
+  le livret n'ont rien à refaire. Le format de la partie reste le 2 : `compo` est un champ de plus, facultatif ; une
+  partie d'avant s'ouvre avec Idris tel qu'il était ; un jeu plus ancien ignore `compo` et montre l'ensemble.
+- **Le visage ne tient à aucun habit** (exigence 10). Sa marque est figée (`look.visage`) : changer d'étoffe, de néon,
+  de coupe ou d'objet ne change pas un point du visage. Un ensemble change l'habit, jamais le visage ni l'objet ; le dé
+  tire un habit, jamais un visage ; ↺ rend le râwî de toujours. Aucun mot ne dit un trait (exigence 2) : teint, barbe et
+  poil se choisissent sur des pastilles et des vignettes ; leurs noms ne vivent que pour les lecteurs d'écran (« Choix 3
+  sur 7 »).
+- **Ce qui n'est pas proposé.** Les turbans (ceux des Compagnons des récits), le keffieh, le litham et la tiare (ceux
+  de types de gens), les casques (de l'équipement). La calotte ne se prend pas sans manteau : ce serait la silhouette de
+  Sâlim, qui marche avec le râwî, et de Compagnons — à l'écran, la case qui ne va pas avec ce qui est choisi s'éteint.
+  Aucun objet qui soit une arme, une pièce d'équipement ou la marque d'une figure de 2084 (la bourse du Compteur) ; le
+  néon ne donne pas de lumière au râwî sur la carte (une lumière à soi est la marque d'un Compagnon) ; ni lueur ni
+  rayonnement. Ni or ni jaune : le liseré d'un habit composé n'est jamais le beige doré que le moteur pose à défaut.
+- **Le moteur** (`sprites.js`) : `look.neon` colore la bande et la ceinture ; `look.porte` se dessine comme un objet
+  tenu, que l'équipement ne lit pas (`gear.js` : l'arme de départ reste le couteau, et l'objet se range au combat) ;
+  `look.barbe` et `look.poil` ne valent que pour un adulte ; un teint plus sombre que tous ceux du moteur garde le blanc
+  de l'œil jusque sur le personnage de 32 × 48, sous la même ombre de capuche que les autres — la gamme reste dans
+  l'ordre. `G.traits(look)` dit le visage que le moteur tire d'une apparence ; `G.objet(nom)`, l'icône d'un objet, tirée
+  de son dessin. Un récit ou un paquet n'écrit ni `teint`, ni `barbe`, ni `poil`, ni `visage`, ni `neon`, ni `porte` :
+  `regles.js` le refuse (« réservé au râwî que compose le joueur »).
+
+**L'écran « Ton personnage »** (`U.personnage`, `ui.js`) : le nom, en haut — le clavier du téléphone ne le cache pas ;
+l'aperçu en grand, de face et de profil, et tel que la carte le montre (le petit personnage, sans visage, dans le
+dessin d'origine) — un toucher le rapproche du visage, et il s'en rapproche de lui-même quand on touche un teint, une
+barbe ou un poil ; la rangée des ensembles ; des pastilles et des vignettes sans légende, de 44 points. Il s'ouvre à
+chaque nouvelle partie, avant le prologue, tout déjà choisi — un toucher suffit à commencer (D145) : l'ensemble et le
+visage seulement. Après le prologue, depuis le pied de la Chaîne et la halte, la composition entière en quatre onglets
+(le visage, l'habit, les couleurs, l'objet) : des icônes tirées du râwî lui-même, seul l'onglet ouvert dit son nom.
+Sous le pouce : ↺, le dé, « Commencer » ou « Garder ». Trois mots à l'écran au début (« Ton personnage », « Écrire »,
+« Commencer »), cinquante auparavant. En largeur, l'aperçu à gauche ; en arabe, l'écran se retourne de lui-même
+(propriétés logiques). Au clavier et à la manette, les flèches vont de case en case (`focusList`, option `spatial`) ;
+une souris immobile sous l'écran qui s'ouvre ne prend pas la main (option `survolBouge`) : « Entrée » commence
+toujours. La page « Ton personnage » de la halte montre le râwî lui-même.
 
 `node v2/tools/personnage.js` le prouve : les noms acceptés et refusés ; chaque phrase redite avec six noms ; le profil
-d'origine qui ne change rien ; puis, par les vrais boutons et en quatre tailles d'écran, un prologue entier joué sous
-un autre nom — tout ce qui s'affiche est relevé, « Idris » n'y paraît plus — ; enfin le choix gardé, rechargé, exporté.
+d'origine qui ne change rien ; les règles du râwî composé (composition abîmée oubliée, visage inchangé par l'habit, le
+dé sur mille tirages, les teints dans l'ordre dans les trois dessins, aucune silhouette de Compagnon, l'arme de départ,
+le refus des règles) ; puis, par les vrais boutons et en quatre tailles d'écran, chaque choix touché et vu et un
+prologue entier joué sous un autre nom et un autre visage — tout ce qui s'affiche est relevé, « Idris » n'y paraît plus
+— ; la composition entière, case par case ; enfin le choix gardé, rechargé, changé depuis la halte, exporté, importé ;
+l'écran en arabe ; au clavier. `silhouettes.js` y ajoute le râwî composé (chaque valeur de chaque pièce, et des
+compositions entières) et l'empreinte des grands personnages d'avant (`tools/essais/grands.json`) ; `partie.js`, une
+partie dont le râwî est composé, exportée puis réimportée à l'identique.
 
 ## La définition du dessin : `src/core/gfx.js`
 
@@ -443,8 +508,9 @@ visage » (D165, exigence 2).*
   le visage reste dans l'ombre ; sous un chèche, on ne voit que les yeux. De dos, rien. Les mains prennent le teint.
 - **D'où cela vient.** Du personnage lui-même : `signe(look)` tire un nombre de ses couleurs (type, robe, coiffe,
   manteau), toujours le même pour le même — jamais de son peuple, de sa religion ni de son camp (exigence 10) ; l'âge
-  vient de son type (`ancien`, `enfant`). L'équipement n'y change rien. Un fichier de saga peut fixer `look.teint` ;
-  il n'écrit aucun trait.
+  vient de son type (`ancien`, `enfant`). L'équipement n'y change rien. Un fichier de saga n'écrit ni teint ni trait
+  (`regles.js` le refuse) ; seul le râwî, que compose le joueur, reçoit un teint, une barbe et un poil choisis
+  (« Le râwî composé »).
 - **Où.** Sur le grand personnage, dans les trois dessins. Les petits personnages (16 × 24, le dessin d'origine sur les
   cartes) restent ceux de la 1.32 : personne n'y a de visage.
 

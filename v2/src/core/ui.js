@@ -49,14 +49,27 @@
   };
 
   /* ---------- liste focalisable ---------- */
+  // o.survolBouge : le survol ne sélectionne qu'après un vrai mouvement de la souris — un écran qui s'ouvre sous une souris
+  // immobile ne lui laisse pas prendre la main (« Entrée » reste au bouton choisi d'abord).
+  // o.spatial : les flèches vont à la case la plus proche dans leur direction (une grille de pastilles) ; à défaut, à la suivante.
   function focusList(btns, o) {
-    o = o || {}; let idx = Math.max(0, o.start || 0);
+    o = o || {}; let idx = Math.max(0, o.start || 0), bouge = !o.survolBouge, px = null, py = null, cur = null;
     const live = () => btns.filter(b => !b.disabled && b.isConnected);
-    const sel = i => { const L = live(); if (!L.length) return; idx = (i + L.length) % L.length; btns.forEach(b => b.classList.remove('sel')); L[idx].classList.add('sel'); L[idx].scrollIntoView && L[idx].scrollIntoView({ block: 'nearest' }); if (o.onSel) o.onSel(L[idx], idx); };
+    const sel = i => { const L = live(); if (!L.length) return; idx = (i + L.length) % L.length; cur = L[idx]; btns.forEach(b => b.classList.remove('sel')); L[idx].classList.add('sel'); L[idx].scrollIntoView && L[idx].scrollIntoView({ block: 'nearest' }); if (o.onSel) o.onSel(L[idx], idx); };
+    const mv = e => { if (e.pointerType !== 'mouse') return; if (px !== null && (e.clientX !== px || e.clientY !== py)) bouge = true; px = e.clientX; py = e.clientY; };
+    if (o.survolBouge) window.addEventListener('pointermove', mv, true);
     // à la souris, survoler sélectionne ; au doigt, toucher sélectionne puis agit (un « survol » simulé peut faire perdre le clic sur certains téléphones)
-    btns.forEach(b => { b.addEventListener('pointerenter', e => { if (e.pointerType && e.pointerType !== 'mouse') return; const i = live().indexOf(b); if (i >= 0) sel(i); });
+    btns.forEach(b => { b.addEventListener('pointerenter', e => { if (e.pointerType && e.pointerType !== 'mouse') return; if (!bouge) return; const i = live().indexOf(b); if (i >= 0) sel(i); });
       b.addEventListener('click', () => { const i = live().indexOf(b); if (i >= 0 && i !== idx) sel(i); }, true); });
+    const centre = b => { const r = b.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2, Math.max(8, r.height)]; };
+    const vers = a => { const L = live(), cur = L[idx]; if (!cur) return -1; const [x0, y0, h0] = centre(cur); let best = -1, bd = Infinity;
+      L.forEach((b, i) => { if (i === idx) return; const [x, y] = centre(b), dx = x - x0, dy = y - y0, lat = a === 'left' || a === 'right';
+        if (lat ? !(a === 'left' ? dx < -2 : dx > 2) : !(a === 'up' ? dy < -h0 * 0.45 : dy > h0 * 0.45)) return;
+        const d = lat ? Math.abs(dx) + (Math.abs(dy) < h0 * 0.6 ? 0 : Math.abs(dy) * 2 + 400) : Math.abs(dy) * 2 + Math.abs(dx); if (d < bd) { bd = d; best = i; } });   // à côté : la même rangée d'abord
+      return best; };
     const h = I.input.push(a => {
+      if (o.spatial) { const j0 = live().indexOf(cur); if (j0 >= 0) idx = j0; }   // une case a pu s'éteindre ou s'allumer : on reste sur celle qui est montrée
+      if (o.spatial && (a === 'up' || a === 'down' || a === 'left' || a === 'right')) { const j = vers(a); if (j >= 0) { sel(j); I.audio.sfx('move'); return true; } }
       if (a === 'up' || a === 'left') { sel(idx - 1); I.audio.sfx('move'); }
       else if (a === 'down' || a === 'right') { sel(idx + 1); I.audio.sfx('move'); }
       else if (a === 'ok') { const L = live(); if (L[idx]) { I.audio.sfx('ok'); L[idx].click(); } }
@@ -64,7 +77,7 @@
       return true;
     });
     sel(idx);
-    return { destroy() { I.input.pop(h); }, sel };
+    return { destroy() { I.input.pop(h); if (o.survolBouge) window.removeEventListener('pointermove', mv, true); }, sel };
   }
   // un bouton qui répond au doigt même si le navigateur n'envoie pas le clic attendu : un toucher relâché sur place agit après
   // un court délai, sauf si le clic est arrivé entre-temps (il agit alors lui-même). Jamais deux fois.
@@ -159,36 +172,115 @@
     if (!sv.prologue) { W.roster = {}; W.saga = null; const cp = W.reprise('idris', 0); return W.startChapter('idris', 0, cp || undefined); } // le prologue, quitté en chemin, se reprend là
     return U.showChain(dit || undefined);
   };
-  /* ---------- ton personnage : le nom et la tenue du râwî ----------
-     Au début d'une partie (debut), « Idris » et sa tenue de toujours sont déjà choisis : un toucher suffit à commencer.
-     Le nom est contrôlé à chaque lettre (I.perso.refus) ; une tenue est l'une de celles de D.TENUES, montrée de face et de
-     profil telle que le moteur la dessine. retour(change) : true si le joueur a validé. */
+  /* ---------- ton personnage : le nom du râwî, et ce qu'il porte ----------
+     Un écran de composition, presque sans mots (demande du décideur, 18 novembre : « couleur de peau, habits,
+     accessoires… je veux le permettre à l'utilisateur ») : Idris en grand, de face et de profil, et tel que la carte le
+     montre ; son nom ; ses ensembles (D.TENUES), qui sont des points de départ ; puis des pastilles et des vignettes sans
+     légende, dont chacune change l'aperçu aussitôt. Au début d'une partie, et tant que le prologue n'est pas joué :
+     l'ensemble et le visage seulement — tout est déjà choisi, un toucher suffit à commencer (D145). Ensuite, depuis la
+     Chaîne et la halte, la composition entière, en quatre onglets : le visage, l'habit, les couleurs, l'objet.
+     Aucun mot ne dit un trait (exigence 2) : un choix se voit, et ne se nomme que pour les lecteurs d'écran (« Choix 3
+     sur 7 »). Le teint, la barbe et son poil ne tiennent à aucun habit, ni l'habit à eux (exigence 10). Le dé tire un
+     habit, jamais un visage ; ↺ rend le râwî de toujours. La calotte ne se prend pas sans manteau : la case qui ne va
+     pas avec ce qui est choisi s'éteint. retour(change) : true si le joueur a validé. */
+  const SVG_ZERO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 1 0 2.05-4.95" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M4.2 3.6v4.9h4.9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SVG_DE = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.6"/><circle cx="15.5" cy="15.5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="15.5" cy="8.5" r="1.6"/><circle cx="8.5" cy="15.5" r="1.6"/></svg>';
+  const SVG_RIEN = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.7 17.3 17.3 6.7" stroke="currentColor" stroke-width="2"/></svg>';
+  const mixHex = (a, b, t) => { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)), x = p(a), y = p(b); return '#' + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, '0')).join(''); };
   U.personnage = function (retour, debut) {
-    const P = I.perso, box = $('#perso .corps'), p0 = P.profil(); let tenue = p0.tenue, fl = null;
-    const fermer = () => { if (fl) fl.destroy(); fl = null; screen('#perso', false); U.menuOpen = false; }, quitter = v => { fermer(); retour(v); };
-    const bouton = (label, fn, cls) => { const b = I.el('button', cls || '', label); b.type = 'button'; tapable(b, () => fn(b)); return b; };
-    const figure = (t, dir) => G.charURL(Object.assign({ kind: 'compagnon' }, P.look(t)), dir);
-    $('#perso header p').textContent = debut ? I.t('Avant de descendre aux Archives : comment s’appelle ton râwî, et que porte-t-il ? Tu pourras en changer plus tard.') : I.t('Le nom et la tenue de ton râwî. Les Compagnons, eux, gardent leur nom et leur silhouette.');
-    box.innerHTML = '';
-    const vue = I.el('div', 'vue'), deux = I.el('div', 'deux'), face = new Image(), profil = new Image(), qui = I.el('div', 'qui'), sous = I.el('div', 'sous'), texte = I.el('div');
-    face.alt = ''; profil.alt = ''; deux.appendChild(face); deux.appendChild(profil); texte.appendChild(qui); texte.appendChild(sous); vue.appendChild(deux); vue.appendChild(texte);
-    const choix = I.el('div', 'choix'), ligne = I.el('div', 'saisie'), champ = document.createElement('input'), note = I.el('p', 'note', ''), grille = I.el('div', 'tenues');
-    champ.type = 'text'; champ.maxLength = P.MAX; champ.value = p0.nom; champ.autocomplete = 'off'; champ.spellcheck = false; champ.autocapitalize = 'words'; champ.enterKeyHint = 'done'; champ.id = 'perso-nom'; champ.setAttribute('aria-label', I.t('Nom du râwî'));
-    const lab1 = I.el('label', '', I.t('Son nom')), lab2 = I.el('label', '', I.t('Sa tenue')); lab1.htmlFor = 'perso-nom';
+    const P = I.perso, R = D.RAWI, sec = $('#perso'), box = $('#perso .corps'), p0 = P.profil(), complet = !debut && !!I.save.data.prologue;
+    let tenue = p0.tenue, compo = Object.assign({}, p0.compo), onglet = 'visage', proche = false, fl = null;
+    const T = () => P.tenue(tenue), B = () => P.base(T()), vaut = k => (compo[k] !== undefined ? compo[k] : B()[k]);
+    const avec = (k, v) => { const c = Object.assign({}, compo); c[k] = v; return c; }, garde = ks => { const c = {}; ks.forEach(k => { if (compo[k] !== undefined) c[k] = compo[k]; }); return c; };
+    const look = (c, t) => Object.assign({ kind: 'compagnon' }, P.composer(t || T(), c || compo));
+    const dirP = document.documentElement.dir === 'rtl' ? 2 : 1;   // de profil, il regarde vers sa face (de droite à gauche : l'autre profil)
+    // les images de cet écran, faites une fois chacune ; oubliées à la fermeture
+    const vu = new Map(), url = (k, faire) => { if (!vu.has(k)) { const cv = faire(); vu.set(k, cv ? cv.toDataURL() : ''); } return vu.get(k); };
+    const fig = (L, dir) => url('f' + dir + JSON.stringify(L), () => G.figure(L, dir, 0));
+    const carte = L => url('c' + JSON.stringify(L), () => (G.D < 2 ? G.charPose(L, 0) : G.charGrand(L, 0)));   // tel que la carte le montre (dessin d'origine : le petit personnage, sans visage)
+    const boite = (L, dir) => { const k = 'b' + dir + JSON.stringify(L); if (vu.has(k)) return vu.get(k);   // le visage dans la figure : la boîte des cases de son ouverture
+      const g = G.charGrille(L, dir, 0, null, G.D > 1 ? 2 : 1).lignes; let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
+      g.forEach((l, y) => { for (let x = 0; x < l.length; x++) if (l[x] === 'V' || l[x] === 'v') { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); } });
+      const r = x1 < 0 ? null : { x: (x0 + x1 + 1) / 2, y: (y0 + y1 + 1) / 2, h: y1 - y0 + 1, w: g[0].length, H: g.length }; vu.set(k, r); return r; };
+    const visage = L => url('v' + JSON.stringify(L), () => { const f = G.figure(L, 0, 0), b = boite(L, 0); if (!b) return f; const e = f.width / b.w, s = Math.round(b.h * 2.3 * e);
+      const cv = document.createElement('canvas'); cv.width = s; cv.height = s; const c = cv.getContext('2d'); c.imageSmoothingEnabled = false; c.drawImage(f, Math.round(b.x * e - s / 2), Math.round(b.y * e - s * 0.46), s, s, 0, 0, s, s); return cv; });
+    const image = (b, u) => { if (b._u === u) return; b._u = u; b.innerHTML = u ? `<img alt="" src="${u}">` : ''; };
+    const fermer = () => { if (fl) fl.destroy(); fl = null; vu.clear(); screen('#perso', false); U.menuOpen = false; }, quitter = v => { fermer(); retour(v); };
+    const bouton = (html, fn, cls, dit) => { const b = I.el('button', cls || '', html); b.type = 'button'; if (dit) { b.setAttribute('aria-label', dit); b.title = dit; } tapable(b, () => fn(b)); return b; };
+    sec.classList.toggle('complet', complet); box.innerHTML = '';
+
+    /* l'aperçu : de face et de profil (un toucher les rapproche, ou les éloigne), et tel que la carte le montre ; sous le pouce,
+       avec le bouton qui valide, ↺ et le dé */
+    const pv = I.el('div', 'pv'), voir = bouton('', () => { proche = !proche; peindre(); }, 'pv-voir', I.t('Voir de plus près, ou en entier'));
+    const fFace = I.el('span', 'pv-fig'), fProfil = I.el('span', 'pv-fig'), face = new Image(), profil = new Image(), cimg = new Image();
+    face.alt = ''; profil.alt = ''; cimg.alt = ''; cimg.className = 'pv-carte'; fFace.appendChild(face); fProfil.appendChild(profil); voir.appendChild(fFace); voir.appendChild(fProfil);
+    const bZero = bouton(SVG_ZERO, () => { tenue = D.TENUES[0].id; compo = {}; proche = false; peindre(); I.audio.sfx('move'); }, 'pv-rond pv-zero', I.t('Revenir au râwî de toujours'));
+    const bDe = bouton(SVG_DE, () => { compo = P.hasard(T(), compo); proche = false; peindre(); I.audio.sfx('move'); }, 'pv-rond pv-de', I.t('Une tenue au hasard'));
+    [voir, cimg].forEach(e => pv.appendChild(e));
+
+    /* le nom : en haut, là où le clavier du téléphone ne le cache pas ; la raison d'un refus, seulement s'il y en a un */
+    const saisie = I.el('div', 'pv-saisie'), col = I.el('div', 'pv-col'), ligne = I.el('div', 'pv-nom'), champ = document.createElement('input'), note = I.el('p', 'pv-note', '');
+    champ.type = 'text'; champ.maxLength = P.MAX; champ.value = p0.nom === P.NOM ? I.langue.rawi() : p0.nom; champ.dir = 'auto'; champ.autocomplete = 'off';   // le nom d'origine, tel que la langue le donne (« إدريس ») ; P.choisir le reconnaît champ.spellcheck = false; champ.autocapitalize = 'words'; champ.enterKeyHint = 'done'; champ.id = 'perso-nom'; champ.setAttribute('aria-label', I.t('Nom du râwî'));
     const bNom = bouton(I.t('Écrire'), () => { champ.focus(); champ.select(); });
-    const bt = D.TENUES.map(t => { const b = bouton(`<img alt="" src="${figure(t, 0)}"><span>${I.esc(t.nom)}</span>`, () => { tenue = t.id; peindre(); }, 'tenue'); grille.appendChild(b); return b; });
-    const valider = () => { const r = P.choisir(champ.value, tenue); if (r) { peindre(); I.audio.sfx('dark'); return; } I.audio.sfx('roll'); quitter(true); };
-    const bOk = bouton(debut ? I.t('Commencer') : I.t('Garder'), valider, 'fort ok'), bR = debut ? null : bouton(I.t('◂ Retour'), () => quitter(false));
-    function peindre() { const t = P.tenue(tenue), r = P.refus(champ.value); face.src = figure(t, 0); profil.src = figure(t, 1); qui.textContent = r ? '…' : P.propre(champ.value); sous.textContent = t.nom;
-      bt.forEach((b, i) => b.classList.toggle('choisie', D.TENUES[i].id === tenue)); note.textContent = r; note.className = 'note' + (r ? ' ko' : ''); bOk.disabled = !!r; }
-    champ.addEventListener('input', peindre);
-    champ.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); champ.blur(); } else if (e.key === 'Escape') { champ.blur(); } });
     ligne.appendChild(champ); ligne.appendChild(bNom);
-    const rang = I.el('div', 'rang'); rang.appendChild(bOk); if (bR) rang.appendChild(bR);
-    [lab1, ligne, note, lab2, grille, rang].forEach(e => choix.appendChild(e)); box.appendChild(vue); box.appendChild(choix);
-    const liste = [bOk].concat(bR ? [bR] : [], [bNom], bt);
-    U.menuOpen = true; I.input.clearHeld(); screen('#perso', true); $('#perso').scrollTop = 0; peindre();
-    fl = focusList(liste, { onCancel: bR ? () => quitter(false) : null, start: 0 });
+    champ.addEventListener('input', () => peindre());
+    champ.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); champ.blur(); } else if (e.key === 'Escape') { champ.blur(); } });
+
+    /* les cases : pastilles et vignettes, sans légende ; chacune sait se repeindre (maj) */
+    let casesEns = [], casesPan = [], dans = casesEns;
+    const kase = (cls, choisie, agir, dessin, permis) => { const b = bouton('', () => { if (b.disabled) return; agir(); I.audio.sfx('move'); }, 'pv-c ' + cls); b.setAttribute('role', 'radio');
+      b.maj = () => { const on = choisie(); b.classList.toggle('choisie', on); b.setAttribute('aria-checked', on ? 'true' : 'false'); b.disabled = permis ? !permis() : false; if (dessin) dessin(b); }; dans.push(b); return b; };
+    const groupe = (nom, cells, noms) => { const g = I.el('div', 'pv-groupe'); g.setAttribute('role', 'radiogroup'); g.setAttribute('aria-label', nom);
+      cells.forEach((b, i) => { const dit = noms ? noms[i] : I.t('Choix {n} sur {total}', { n: i + 1, total: cells.length }); b.setAttribute('aria-label', dit); b.title = dit; g.appendChild(b); }); return g; };
+    const rangee = (...gs) => { const r = I.el('div', 'pv-rangee'); gs.forEach((g, i) => { if (i) r.appendChild(I.el('span', 'pv-sep')); r.appendChild(g); }); return r; };
+    const poser = (k, v) => { compo = P.neutraliser(T(), avec(k, v)); proche = P.VISAGE.indexOf(k) >= 0; peindre(); };
+    const pastille = (fond, choisie, agir) => kase('pv-pastille', choisie, agir, b => { b.style.background = fond; });
+    const vignette = (cls, k, v) => kase('pv-vig ' + cls, () => vaut(k) === v, () => poser(k, v), b => image(b, fig(look(avec(k, v)), 0)), () => P.permis(k, v, T(), compo));
+    const PRES = P.VISAGE.concat(['objet']);   // ce qu'un ensemble ne change pas : le visage, l'objet
+    const ens = I.el('div', 'pv-ens');
+    ens.appendChild(rangee(groupe(I.t('Ensemble'), D.TENUES.map(t => kase('pv-vig pv-fig44', () => tenue === t.id, () => { tenue = t.id; compo = P.neutraliser(T(), garde(PRES)); proche = false; peindre(); },
+      b => { b.classList.toggle('retouche', tenue === t.id && P.HABIT.some(k => compo[k] !== undefined)); image(b, fig(look(garde(PRES), t), 0)); })), D.TENUES.map(t => t.nom))));
+    const PANNEAUX = {
+      visage: () => [rangee(groupe(I.t('Teint'), Object.keys(R.teints).map(id => pastille(R.teints[id], () => vaut('teint') === id, () => poser('teint', id))))),
+        rangee(groupe(I.t('Barbe'), R.barbes.map(n => kase('pv-vig pv-tete', () => vaut('barbe') === n, () => poser('barbe', n), b => image(b, visage(look(avec('barbe', n))))))),
+          groupe(I.t('Couleur de la barbe'), Object.keys(R.poils).map(id => pastille(R.poils[id], () => vaut('poil') === id, () => poser('poil', id)))))],
+      habit: () => [rangee(groupe(I.t('Coiffe'), R.coiffes.map(v => vignette('pv-fig44', 'coiffe', v))), groupe(I.t('Longueur'), [false, true].map(v => vignette('pv-fig44', 'longue', v))),
+        groupe(I.t('Écharpe'), [false, true].map(v => vignette('pv-fig44', 'echarpe', v)))), rangee(groupe(I.t('Coupe'), R.manteaux.map(v => vignette('pv-grande', 'manteau', v))))],
+      couleurs: () => [rangee(groupe(I.t('Étoffe'), Object.keys(R.etoffes).map(id => { const e = R.etoffes[id]; return pastille(`conic-gradient(${e.cloak} 0 120deg, ${e.robe} 0 240deg, ${mixHex(e.head, '#6272a4', 0.3)} 0)`, () => vaut('etoffe') === id, () => poser('etoffe', id)); }))),
+        rangee(groupe(I.t('Néon'), [null].concat(Object.keys(R.neons)).map(id => { const n = id ? R.neons[id] : ['#39e6ff', '#ff4fd8']; return pastille(`linear-gradient(135deg, ${n[0]} 0 50%, ${n[1]} 50% 100%)`, () => vaut('neon') === id, () => poser('neon', id)); })))],
+      objet: () => [rangee(groupe(I.t('Objet'), [null].concat(R.objets).map(o => kase('pv-objet', () => vaut('objet') === o, () => poser('objet', o), b => { if (!b._f) { b._f = 1; const u = o ? url('o' + o, () => G.objet(o)) : ''; b.innerHTML = u ? `<img alt="" src="${u}">` : SVG_RIEN; } }))))]
+    };
+    /* les onglets (la composition entière) : des icônes tirées du râwî lui-même ; seul celui qui est ouvert dit son nom */
+    const ONGLETS = [['visage', I.t('Visage')], ['habit', I.t('Habit')], ['couleurs', I.t('Couleurs')], ['objet', I.t('Objet')]];
+    const barre = I.el('div', 'pv-onglets'), panneau = I.el('div', 'pv-panneau'); barre.setAttribute('role', 'tablist');
+    const onglets = complet ? ONGLETS.map(([id, nom]) => { const b = bouton(`<span class="ico"></span><span class="mot">${I.esc(nom)}</span>`, () => { if (onglet === id) return; onglet = id; proche = id === 'visage' && proche; construire(); }, 'pv-onglet', nom);
+      b.setAttribute('role', 'tab'); b.dataset.o = id; barre.appendChild(b); return b; }) : [];
+    const icones = L => { onglets.forEach(b => { const id = b.dataset.o, ico = b.firstChild, on = id === onglet; b.classList.toggle('choisie', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
+      if (id === 'visage') image(ico, visage(L)); else if (id === 'habit') image(ico, fig(L, dirP));
+      else if (id === 'couleurs') { const e = R.etoffes[vaut('etoffe')] || { robe: L.robe, head: L.head, cloak: L.cloak }, n = vaut('neon') ? R.neons[vaut('neon')][0] : '#39e6ff'; ico.style.background = `conic-gradient(${e.cloak} 0 120deg, ${e.robe} 0 240deg, ${mixHex(e.head, '#6272a4', 0.3)} 0)`; ico.style.boxShadow = `0 0 0 2px ${n}`; }
+      else { const o = vaut('objet'), u = o ? url('o' + o, () => G.objet(o)) : ''; if (ico._o !== o) { ico._o = o; ico.innerHTML = u ? `<img alt="" src="${u}">` : SVG_RIEN; } } }); };
+
+    const valider = () => { const r = P.choisir(champ.value, tenue, compo); if (r) { peindre(); I.audio.sfx('dark'); return; } I.audio.sfx('roll'); quitter(true); };
+    const bOk = bouton(debut ? I.t('Commencer') : I.t('Garder'), valider, 'fort ok'), bR = debut ? null : bouton(I.t('◂ Retour'), () => quitter(false));
+    const bas = I.el('div', 'pv-bas'); [bZero, bDe, bOk].concat(bR ? [bR] : []).forEach(e => bas.appendChild(e));
+    saisie.appendChild(ligne); saisie.appendChild(note); [ens].concat(complet ? [barre] : [], [panneau]).forEach(e => col.appendChild(e));
+    [saisie, pv, col, bas].forEach(e => box.appendChild(e));
+
+    function peindre() {
+      const L = look(), r = P.refus(champ.value);
+      face.src = fig(L, 0); profil.src = fig(L, dirP); cimg.src = carte(L);
+      [[face, 0], [profil, dirP]].forEach(([im, d]) => { const b = boite(L, d); im.style.transformOrigin = b ? `${(b.x / b.w * 100).toFixed(1)}% ${(b.y / b.H * 100).toFixed(1)}%` : '50% 25%'; });
+      pv.classList.toggle('proche', proche); voir.setAttribute('aria-pressed', proche ? 'true' : 'false');
+      casesEns.concat(casesPan).forEach(b => b.maj()); icones(L);
+      note.textContent = r; bOk.disabled = !!r;
+    }
+    function construire(debutListe) {
+      casesPan = []; dans = casesPan; panneau.innerHTML = ''; (complet ? PANNEAUX[onglet]() : PANNEAUX.visage()).forEach(r => panneau.appendChild(r)); panneau.dataset.o = complet ? onglet : 'visage';
+      peindre(); if (fl) fl.destroy();
+      const liste = [bOk].concat(bR ? [bR] : [], [bNom, bZero, bDe, voir], casesEns, onglets, casesPan);
+      fl = focusList(liste, { onCancel: bR ? () => quitter(false) : null, start: debutListe ? 0 : Math.max(0, liste.indexOf(onglets[ONGLETS.findIndex(o => o[0] === onglet)])), survolBouge: true, spatial: true });
+    }
+    U.menuOpen = true; I.input.clearHeld(); screen('#perso', true); sec.scrollTop = 0; construire(true);
   };
   /* ---------- ta partie : l'exporter, l'importer ----------
      Exporter : la partie en un texte, à enregistrer en fichier ou à copier. Importer : coller le texte ou choisir le
@@ -446,7 +538,8 @@
         toggle(I.t('Dessin'), dessinNom, dessinSuivant, I.t('Fin : deux fois plus de points, les grands personnages jusque sur les cartes, des lisières irrégulières. Fin, adouci : le même, les contours fondus. D’origine : le dessin de la version légère.')),
         toggle(I.t('Rendu'), () => G.low ? I.t('2D simple') : I.t('rétro-HD'), () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, I.t('Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.')));
       if (I.langue.disponibles().length > 1) items.push({ label: I.t('Langue') + ' : ' + I.langue.LANGUES[I.langue.lang].nom, fn() { close(); U.choisirLangue(); }, show: () => '<h3>' + I.t('Langue') + '</h3><p>Français · العربية · English · 日本語</p><p>' + I.t('Le récit reprend à son dernier point de reprise, dans la langue choisie. Ta partie est la même dans toutes les langues.') + '</p>' });
-      items.push({ label: I.t('Ton personnage'), fn() { close(); U.personnage(() => { if (I.scene === W && W.map) W.hud(); }); }, show: () => { const p = I.perso.profil(); return '<h3>' + I.t('Ton personnage') + '</h3><p>' + I.t('Le râwî porte le nom et la tenue que tu lui donnes : <b>{nom}</b>, {tenue_min}. Les Compagnons, eux, gardent leur nom et leur silhouette.', { nom: I.esc(I.perso.dit()), tenue_min: I.esc(I.perso.tenue().nom.toLowerCase()), tenue: I.esc(I.perso.tenue().nom) }) + '</p>'; } });
+      items.push({ label: I.t('Ton personnage'), fn() { close(); U.personnage(() => { if (I.scene === W && W.map) W.hud(); }); }, show: () => { const h = I.sagas.idris && I.sagas.idris.heroes.idris, L = Object.assign({ kind: 'compagnon' }, h ? h.look : D.TENUES[0].look);   // 2.x : le râwî tel qu'il est, plutôt que le nom d'une tenue
+          return '<h3>' + I.t('Ton personnage') + `</h3><p class="perso-vue"><img alt="" src="${G.charURL(L, 0)}"><img alt="" src="${G.charURL(L, 1)}"></p><p><b>` + I.esc(I.perso.dit()) + '</b></p><p>' + I.t('Le nom et la tenue de ton râwî. Les Compagnons, eux, gardent leur nom et leur silhouette.') + '</p>'; } });
       items.push({ label: I.t('Exporter la partie'), fn() { close(); U.partie('exporter', () => {}); }, show: () => '<h3>' + I.t('Exporter la partie') + '</h3><p>' + I.t('Ta partie tient dans un texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.') + '</p><p class="src">' + I.t('Elle se garde aussi toute seule sur cet appareil, à chaque objectif atteint.') + '</p>' });
       items.push({ label: I.t('Diagnostic'), fn() {}, show: U.diagnostic });
       // 2.x : on peut à tout moment quitter un récit pour revenir en 2084 ; il est rangé là où on le laisse, et les autres aussi

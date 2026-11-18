@@ -139,6 +139,7 @@
   const CASQUES = ['casque', 'casque_turban', 'casque_cuir', 'casque_bandes', 'coiffe_mailles'];
   Gr.look = function (h, eq) {
     const e = eq || Gr.of(h), L = Object.assign({ kind: 'compagnon' }, h.def.look), items = [].concat(L.item || []).filter(x => !TENUS.includes(x));
+    delete L.porte; // 2.x : l'objet que le joueur donne à son râwî se range au combat et sur la page d'équipement (l'arme prend la main)
     const port = id => { const g = D.GEAR[id]; return g ? (g.port || D.GEAR_TYPES[g.t].port) : null; };
     [port(e.md), port(e.mg)].forEach(p => { if (p) items.push(p); });
     if (items.length) L.item = items; else delete L.item;

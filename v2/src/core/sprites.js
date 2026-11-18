@@ -226,6 +226,7 @@
     const p = { T, t, u, R, r, S: R, s: r, C, c, k, A, a, N: mix(head, '#ffffff', 0.3), F: '#7a5433', f: '#46301e',
       L, l, Z: z, M: K.court ? null : r, E: K.court ? null : c, e: K.court ? null : k, B: K.court ? L : C, b: K.court ? l : c, m: K.court ? null : c,
       I: '#c3c8d2', i: '#7f8794', X: '#b33327', W: '#8a6238', w: '#5a3d22', P: '#f3e9cf', Y: '#39e6ff', y: '#ff4fd8' };
+    if (Array.isArray(look.neon)) { p.Y = look.neon[0] || p.Y; p.y = look.neon[1] || p.y; }   // 2.x : le néon que le joueur choisit à son râwî (D.RAWI.neons) ; sans lui, celui de toujours
     if (K.lit) { p.V = '#fffbe8'; p.v = look.aura ? mix(look.aura, '#ffffff', 0.25) : '#ffe9a8'; p.N = '#fff3d6'; }
     else { p.V = mix(mix(head, '#5a4a4a', 0.6), '#2a1c3a', K.sombre ? 0.6 : 0.1); p.v = mix(p.V, '#20143a', 0.35); }
     if (K.cuirasse) { p.R = p.I; p.r = p.i; }
@@ -262,7 +263,7 @@
       pts.forEach(([x, dy]) => { if ('RrSs'.indexOf(g[b0 + dy][x]) >= 0) g[b0 + dy][x] = 'A'; }); }
     // attributs tenus ou portés (un ou plusieurs)
     const hip = b0 + 5;
-    for (const it of [].concat(K.item || [])) {
+    for (const it of [].concat(K.item || [], look.porte || [])) { // look.porte (2.x) : l'objet que le joueur donne à son râwî — dessiné comme les autres, l'équipement ne le lit pas
     if (objets) { couche = []; for (let y = 0; y < H; y++) couche.push(new Array(W).fill('.')); objets.push({ nom: it, g: couche }); }
     // le bouclier se porte du côté libre : à droite de l'image quand la main droite tient une hampe
     const hampe = [].concat(K.item || []).some(q => ['lance', 'baton', 'masse', 'arc', 'durra', 'etendard', 'calame'].indexOf(q) >= 0), ecuX = key === 'd' ? (hampe ? 12 : 0) : key === 'u' ? (hampe ? 0 : 12) : 9;
@@ -788,6 +789,7 @@
      mais qui en est un, ou que certains comptent parmi eux — dans le doute, pas de visage (D.SANS_VISAGE).
      → une fonction (x, y) → couleur pour chaque point du voile, ou null. */
   const TEINTS = ['#ecc49a', '#deab7c', '#cb9566', '#b47d50', '#9a6540'], POILS = ['#2c1e17', '#1f1613', '#402c1e', '#4d3626'];
+  const SOMBRE = Math.min.apply(null, TEINTS.map(lum)) - 0.005;   // sous ce seuil, un teint est plus sombre que tous ceux du moteur (seul le râwî composé en a)
   // ce qui distingue un personnage d'un autre : toujours le même pour le même. look.visage : la marque gardée d'une tenue à l'autre (le râwî change de tenue, pas de visage)
   const signe = look => look.visage !== undefined ? look.visage >>> 0 : I.hash((look.kind || '') + '|' + (look.robe || '') + '|' + (look.head || '') + '|' + (look.cloak || '') + '|' + (look.sel === undefined ? '' : look.sel)) >>> 0;
   G.signe = signe;
@@ -796,9 +798,13 @@
     const h = signe(look);
     const kd = look.kind || 'homme', age = kd === 'enfant' ? 0 : kd === 'ancien' ? 2 : (kd === 'savant' || kd === 'moine') ? ((h >>> 3) % 2 ? 2 : 1.5) : 1; // 0 enfant · 1 adulte · 1,5 grisonnant · 2 âgé
     let peau = look.teint || TEINTS[h % TEINTS.length]; if (K.sombre) peau = mix(peau, '#1c1430', 0.34);            // sous une capuche, le visage est dans l'ombre
+    // 2.x — le râwî composé (D.RAWI) : un teint plus sombre que tous les TEINTS garde le blanc de l'œil jusque sur le
+    // personnage de 32 × 48 (sinon l'œil s'y perd) ; la même ombre pour tous, pour que la gamme reste dans l'ordre
+    const fonce = !!look.teint && lum(look.teint) < SOMBRE;
     const ombre = mix(peau, '#3a1e30', 0.30), nuit = mix(peau, '#221632', 0.5), clair = mix(peau, '#fff1d6', 0.28);
-    const poil = age >= 2 ? '#ece7dc' : age > 1 ? '#aaa296' : POILS[(h >>> 5) % POILS.length], poilO = mix(poil, '#20143a', 0.4);
-    const barbe = age === 0 ? 0 : age >= 2 ? 2 : [2, 1, 2, 0, 1, 2][(h >>> 7) % 6];                                    // 0 : glabre · 1 : courte · 2 : pleine
+    const adulte = age === 1;                                                                                          // la barbe et le poil choisis (look.barbe, look.poil) : pour un adulte seulement — l'âge vient du type
+    const poil = age >= 2 ? '#ece7dc' : age > 1 ? '#aaa296' : (adulte && typeof look.poil === 'string' && look.poil) || POILS[(h >>> 5) % POILS.length], poilO = mix(poil, '#20143a', 0.4);
+    const barbe = age === 0 ? 0 : age >= 2 ? 2 : adulte && [0, 1, 2].indexOf(look.barbe) >= 0 ? look.barbe : [2, 1, 2, 0, 1, 2][(h >>> 7) % 6];  // 0 : glabre · 1 : courte · 2 : pleine
     const oeil = '#1b1420', blanc = mix('#fbf3e2', peau, 0.15), levre = mix(peau, '#6a2420', 0.5), sourcil = mix(peau, age >= 1.5 ? '#8a8378' : poil, 0.7);
     const w = x1 - x0 + 1, hh = y1 - y0 + 1, fente = hh < 5 * s, profil = dir === 1 || dir === 2, clos = pose === 'prie' || pose === 'accable';
     const yo = fente ? y0 + s : y0 + Math.round(hh * 0.40), yb = y0 + Math.round(hh * 0.64), ym = y0 + Math.round(hh * 0.74); // les yeux, le haut de la barbe, la bouche
@@ -807,7 +813,7 @@
       const fx = profil ? (dir === 2 ? x1 - x : x - x0) : x - x0, gx = w - 1 - fx, dy = y - y0;                         // fx : depuis le devant du visage (profil) ou sa gauche (face)
       const dansOeil = profil ? (fx >= s && fx < 2 * s) : ((fx >= ex && fx < ex + s) || (gx >= ex && gx < ex + s));
       if (y >= yo && y < yo + s && dansOeil) { if (clos) return y === yo + s - 1 ? sourcil : peau; return oeil; }
-      if (!clos && s === 2 && y >= yo && y < yo + s && (profil ? fx === 2 * s : (fx === ex - 1 || gx === ex - 1))) return blanc; // en dessin fin : le blanc de l'œil, du côté du dehors
+      if (!clos && (s === 2 || fonce) && y >= yo && y < yo + s && (profil ? fx === 2 * s : (fx === ex - 1 || gx === ex - 1))) return blanc; // en dessin fin (et, pour un teint très sombre, toujours) : le blanc de l'œil, du côté du dehors
       if (!fente && s === 2 && y === yo - 2 && (profil ? (fx >= 1 && fx <= 4) : ((fx >= ex - 1 && fx <= ex + 1) || (gx >= ex - 1 && gx <= ex + 1)))) return sourcil; // les sourcils : en dessin fin seulement (à 32 points de large, ils alourdiraient le regard)
       if (!fente && barbe && y >= yb) {
         if (profil && fx >= w - s - (barbe === 2 ? 0 : s)) return ombre;                                              // vers la nuque : la joue, dans l'ombre de l'étoffe
@@ -826,6 +832,8 @@
   }
   G.teint = look => { const K = kindOf(look); if (K.lit || look.sansVisage) return null; return look.teint || TEINTS[signe(look) % TEINTS.length]; };
   G.aVisage = look => !(kindOf(look).lit || look.sansVisage); // un Compagnon n'en a pas, ni ceux que le jeu laisse sans visage
+  // le visage que le moteur tire d'une apparence d'adulte (sa marque) : le teint, la barbe, le poil — pour le râwî composé (perso.js)
+  G.traits = look => { const h = signe(look); return { teint: TEINTS[h % TEINTS.length], barbe: [2, 1, 2, 0, 1, 2][(h >>> 7) % 6], poil: POILS[(h >>> 5) % POILS.length] }; };
   // fin = 2 : le même personnage tracé en 64 × 96 — même composition, formes arrondies, liseré, arêtes et lumière du voile
   // deux fois plus fins. C'est lui que montrent le combat et les menus en dessin fin (gfx.D = 2).
   function grand(look, dir, frame, pose, fin2) {
@@ -894,6 +902,19 @@
   G.figure = function (look, dir, frame, pose) { if (G.D < 2) return grand(look, dir, frame || 0, pose); const g = grand(look, dir, frame || 0, pose, 2); if (!G.lisse) return g;
     const k = 'F' + (G.natif ? 'n' : 'a') + ck(look, dir, frame || 0, pose); if (scache[k]) return scache[k];
     const cv = mk(g.width, g.height); cv.getContext('2d').drawImage(g, 0, 0); cv.hd = 2; return (scache[k] = G.adoucir(cv)); };
+  // 2.x — l'icône d'un objet tenu, tirée de son dessin même : la couche que grid() rend pour le grand personnage, agrandie
+  // comme sur le personnage fin, recadrée sur l'objet seul (les choix du râwî : D.RAWI.objets). → une toile, ou null
+  G.objet = function (nom) {
+    const k = 'O' + nom; if (scache[k] !== undefined) return scache[k];
+    const look = { kind: 'cyber', robe: '#2a3048', head: '#1c2030', cloak: '#39424f', porte: [nom] }, r = grid(look, 0, 0, null, {}), o = r.objets.find(x => x.nom === nom);
+    if (!o) return (scache[k] = null);
+    const g = scale2x(o.g), pal = palette(look, r.K), f = grilleFine(g, W2, H2); let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
+    f.forEach((row, y) => row.forEach((m, x) => { if (m !== '.' && pal[m]) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); } }));
+    if (x1 < 0) return (scache[k] = null);
+    const w = x1 - x0 + 3, h = y1 - y0 + 3, cv = mk(w, h), c = cv.getContext('2d');
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const col = pal[f[y][x]]; if (col) { c.fillStyle = col; c.fillRect(x - x0 + 1, y - y0 + 1, 1, 1); } }
+    outline(c, w, h); return (scache[k] = cv);
+  };
   const ucache = {}; // image du grand sprite, pour les menus
   G.charURL = (look, dir, pose) => { const k = (G.natif ? 'n' : 'a') + G.D + ck(look, dir || 0, 0, pose); return ucache[k] || (ucache[k] = grand(look, dir || 0, 0, pose, G.D).toDataURL()); }; // en dessin fin : le personnage de 64 × 96
   /* ---------- l'arme en main, le temps d'un geste (2.x) ----------

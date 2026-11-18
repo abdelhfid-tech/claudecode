@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /* ISNAD 2.0 — la partie du joueur : format, export, import.
    Usage : node tools/partie.js
-   1. Une partie jouée (prologue, premier maillon, sa veillée et sa rencontre) s'exporte par les vrais boutons, en texte
-      et en fichier ; effacée — un autre navigateur, vide —, elle se réimporte par les vrais boutons, à l'identique, et
+   1. Une partie jouée (prologue, premier maillon, sa veillée et sa rencontre), dont le râwî a un autre nom et un habit
+      composé pièce par pièce (2.x : profil.compo), s'exporte par les vrais boutons, en texte et en fichier ; effacée — un
+      autre navigateur, vide —, elle se réimporte par les vrais boutons, à l'identique, son râwî avec elle, et
       « Continuer » la retrouve. Même chose au milieu d'un chapitre : on reprend au même objectif, dans le même lieu.
    2. Ce qui n'est pas une partie est refusé avec un message, et rien ne change : texte vide, texte abîmé, autre chose
       qu'une partie, partie d'un format plus récent, partie dont un champ n'a pas la forme attendue.
@@ -37,9 +38,12 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     cache(); W.roster = {}; W.saga = null; W.startChapter('idris', 0); if (!await chaine()) return { ok: false, ou: 'prologue' };
     cache(); W.roster = {}; W.saga = null; I.ui.startSaga(I.sagas.abubakr); if (!await chaine()) return { ok: false, ou: 'premier maillon' };
     I.debug.auto = false; I.speed = 1; const sv = I.save.data;
-    return { ok: true, lumieres: sv.lights.length, savoirs: sv.codex.length, veillees: Object.keys(sv.veillees).length, rencontres: Object.keys(sv.rencontres || {}).length, partie: JSON.parse(JSON.stringify(sv)) }; });
+    // 2.x — le râwî composé : un autre nom, un ensemble, et dix pièces (des identifiants pris dans D.RAWI)
+    const refus = I.perso.choisir('Khalil', 'encre', { teint: 't6', barbe: 2, poil: 'p3', coiffe: 'calotte', manteau: 'epaule', longue: true, echarpe: true, etoffe: 'e7', neon: 'n4', objet: 'feuillets' }); I.save.store();
+    if (refus || !sv.profil.compo || Object.keys(sv.profil.compo).length !== 10) return { ok: false, ou: 'le râwî composé (' + (refus || JSON.stringify(sv.profil)) + ')' };
+    return { ok: true, compo: Object.keys(sv.profil.compo).length, look: JSON.stringify(I.sagas.idris.heroes.idris.look), lumieres: sv.lights.length, savoirs: sv.codex.length, veillees: Object.keys(sv.veillees).length, rencontres: Object.keys(sv.rencontres || {}).length, partie: JSON.parse(JSON.stringify(sv)) }; });
   if (!joue.ok) { ko(`BLOQUÉ la partie de départ ne se joue pas (${joue.ou})`); await browser.close(); process.exit(1); }
-  ok(`une partie est jouée : prologue, premier maillon, sa veillée et sa rencontre — ${joue.lumieres} Lumière, ${joue.savoirs} savoirs`);
+  ok(`une partie est jouée : prologue, premier maillon, sa veillée et sa rencontre — ${joue.lumieres} Lumière, ${joue.savoirs} savoirs ; son râwî s’appelle Khalil et porte un habit composé de ${joue.compo} pièces`);
   // exporter par le bouton de la Chaîne
   await bouton(page, '#chain .chainfoot', 'Exporter la partie').click(); await page.waitForSelector('#partie:not([hidden])'); await page.waitForTimeout(300);
   await page.screenshot({ path: path.join(out, '01-exporter.png') });
@@ -73,13 +77,14 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     const resume = (await p.locator('#partie .resume').textContent().catch(() => '')) || '', boutons = await p.evaluate(() => Array.from(document.querySelectorAll('#partie button')).map(b => b.textContent));
     return { p, resume, boutons }; };
   const reprendre = async (p, attendu, quoi) => { await bouton(p, '#partie', /Reprendre cette partie|Remplacer ma partie/).click(); await p.waitForTimeout(1500);
-    const e = await p.evaluate(() => { const I = window.ISNAD; return { partie: JSON.parse(JSON.stringify(I.save.data)), chaine: !document.querySelector('#chain').hidden, monde: I.scene === I.world, auto: !!I.save.autoGet(), avis: document.querySelector('#chain header p').textContent }; });
-    if (!profond(e.partie, attendu)) ko(`ÉCART ${quoi} : la partie reprise n'est pas la partie exportée`); return e; };
+    const e = await p.evaluate(() => { const I = window.ISNAD; return { partie: JSON.parse(JSON.stringify(I.save.data)), chaine: !document.querySelector('#chain').hidden, monde: I.scene === I.world, auto: !!I.save.autoGet(), avis: document.querySelector('#chain header p').textContent, look: JSON.stringify(I.sagas.idris.heroes.idris.look) }; });
+    if (!profond(e.partie, attendu)) ko(`ÉCART ${quoi} : la partie reprise n'est pas la partie exportée`);
+    else if (e.look !== joue.look) ko(`ÉCART ${quoi} : le râwî repris n'a pas l'habit composé qu'il portait (${e.look})`); return e; };
   let r = await importer(null, null, '02-importer');
   if (!/Lumière/.test(r.resume) || !r.boutons.some(t => /Reprendre cette partie/.test(t))) ko(`ÉCART l'import ne montre pas ce qu'il va reprendre : « ${r.resume} » [${r.boutons.join(' | ')}]`);
   let e = await reprendre(r.p, joue.partie, 'texte collé');
   if (!e.chaine) ko('BLOQUÉ après l’import, on n’arrive pas à la Chaîne'); else if (!e.auto) ko('ÉCART après l’import, la partie n’est pas gardée sur l’appareil');
-  else ok(`effacée puis réimportée en collant le texte : la partie reprise est identique, on arrive à la Chaîne — « ${r.resume.replace(/\s+/g, ' ').slice(0, 110)} »`);
+  else ok(`effacée puis réimportée en collant le texte : la partie reprise est identique — le râwî composé avec elle, pièce par pièce —, on arrive à la Chaîne — « ${r.resume.replace(/\s+/g, ' ').slice(0, 110)} »`);
   // la page rechargée : « Continuer » retrouve la partie
   await r.p.reload(); await r.p.waitForTimeout(1700);
   const titre = await r.p.evaluate(() => Array.from(document.querySelectorAll('#title .vmenu button')).map(b => b.textContent));

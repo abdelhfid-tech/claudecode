@@ -1,11 +1,16 @@
-/* ISNAD 2.0 — le personnage du joueur : le râwî, son nom, sa tenue.
+/* ISNAD 2.0 — le personnage du joueur : le râwî, son nom, sa tenue (2.x : et ce que le joueur compose par-dessus).
    Les textes du jeu disent « Idris » : c'est le nom d'origine, et ils ne changent pas. Le nom que choisit le joueur le
    remplace à l'affichage, élision comprise (« d’Idris » devient « de Khalil », « qu’Idris » devient « que Khalil »). Pour
    cela, chaque phrase qui nomme le râwî est relevée une fois, dans les sagas posées ; quand le nom change, ces phrases-là
    sont récrites à partir de l'original, toujours. Avec le nom d'origine, rien n'est touché.
    La tenue est l'une de celles de D.TENUES : des silhouettes faites des coiffes, des manteaux et des couleurs que le
    moteur dessine déjà. Le râwî a un visage (2.x), le même sous chaque tenue. Les Compagnons gardent leur nom et leur
-   silhouette. */
+   silhouette.
+   2.x — le râwî composé : par-dessus sa tenue (son « ensemble »), le joueur change des pièces — le teint, la barbe et son
+   poil, la coiffe, la coupe, la longueur de la robe, l'écharpe, l'étoffe, le néon, un objet porté. La partie en garde les
+   identifiants (profil.compo, pris dans D.RAWI), jamais une couleur ; ce qui n'est pas reconnu est oublié, sans refuser
+   la partie. Ce qui vaut déjà l'ensemble ou le visage d'origine n'est pas gardé : sans rien choisir, rien ne change, et
+   le râwî reste l'objet d'origine. Le format de la partie ne change pas (un champ de plus, facultatif). */
 (function () {
   'use strict';
   const I = window.ISNAD, D = I.D;
@@ -13,10 +18,61 @@
   const P = I.perso = { NOM, MAX };
 
   /* ---------- le profil : dans la partie (save.data.profil), avec ses valeurs d'origine ---------- */
-  P.profil = function () { const p = (I.save && I.save.data && I.save.data.profil) || {};
-    return { nom: typeof p.nom === 'string' && p.nom && !P.refus(p.nom) ? p.nom : NOM, tenue: D.TENUES.some(t => t.id === p.tenue) ? p.tenue : D.TENUES[0].id }; };
+  P.profil = function () { const p = (I.save && I.save.data && I.save.data.profil) || {}, tenue = D.TENUES.some(t => t.id === p.tenue) ? p.tenue : D.TENUES[0].id;
+    return { nom: typeof p.nom === 'string' && p.nom && !P.refus(p.nom) ? p.nom : NOM, tenue, compo: P.neutraliser(P.tenue(tenue), p.compo) }; };
   P.nom = () => P.profil().nom;
   P.tenue = id => D.TENUES.find(t => t.id === (id || P.profil().tenue)) || D.TENUES[0];
+
+  /* ---------- le râwî composé (2.x) : les pièces, contrôlées ---------- */
+  const R = D.RAWI, own = (o, k) => !!o && Object.prototype.hasOwnProperty.call(o, k), liste = (a, v) => a.indexOf(v) >= 0;
+  const VISAGE = ['teint', 'barbe', 'poil'], HABIT = ['coiffe', 'manteau', 'longue', 'echarpe', 'etoffe', 'neon'], CLES = VISAGE.concat(HABIT, ['objet']);
+  const VALIDE = { teint: v => typeof v === 'string' && own(R.teints, v), barbe: v => liste(R.barbes, v), poil: v => typeof v === 'string' && own(R.poils, v),
+    coiffe: v => liste(R.coiffes, v), manteau: v => liste(R.manteaux, v), longue: v => typeof v === 'boolean', echarpe: v => typeof v === 'boolean',
+    etoffe: v => typeof v === 'string' && own(R.etoffes, v), neon: v => typeof v === 'string' && own(R.neons, v), objet: v => liste(R.objets, v) };
+  P.VISAGE = VISAGE; P.HABIT = HABIT; P.CLES = CLES;
+  // → une composition propre : les seules clés connues, lues en propriété propre, avec les seules valeurs de D.RAWI
+  P.compo = function (brut) { const c = {}; if (!brut || typeof brut !== 'object' || Array.isArray(brut)) return c;
+    CLES.forEach(k => { if (own(brut, k) && VALIDE[k](brut[k])) c[k] = brut[k]; }); return c; };
+  // le visage d'origine du râwî, tel que le moteur le tire de sa tenue de toujours : ses identifiants dans D.RAWI
+  let visage0 = null;
+  const idDe = (table, couleur) => Object.keys(table).find(k => table[k] === couleur) || null;
+  const visageOrigine = () => { if (visage0) return visage0; const G = I.gfx, v = G && G.traits ? G.traits(D.TENUES[0].look) : null;
+    const r = { teint: v ? idDe(R.teints, v.teint) : 't3', barbe: v ? v.barbe : 1, poil: v ? idDe(R.poils, v.poil) : 'p2' }; if (v) visage0 = r; return r; };
+  // l'étoffe d'un ensemble : celle de D.RAWI qui porte ses couleurs
+  const etoffeDe = t => Object.keys(R.etoffes).find(k => { const e = R.etoffes[k], L = t.look; return e.robe === L.robe && e.head === L.head && e.cloak === L.cloak && (e.legs || null) === (L.legs || null); }) || null;
+  // ce que donnent déjà l'ensemble et le visage d'origine, pièce par pièce
+  P.base = function (t) { const L = t.look, v = visageOrigine();
+    return { teint: v.teint, barbe: v.barbe, poil: v.poil, coiffe: L.coiffe || 'capuche', manteau: L.manteau || 'long', longue: L.court === false, echarpe: !!L.echarpe, etoffe: etoffeDe(t), neon: null, objet: null }; };
+  // ce qui diffère de l'ensemble seulement ; la calotte ne va jamais sans manteau (la silhouette de Sâlim, qui marche avec le
+  // râwî, et de Compagnons des récits) : c'est la coupe qui cède
+  P.neutraliser = function (t, brut) { const B = P.base(t), c = P.compo(brut);
+    Object.keys(c).forEach(k => { if (c[k] === B[k]) delete c[k]; });
+    const vaut = k => (c[k] !== undefined ? c[k] : B[k]);
+    if (vaut('coiffe') === 'calotte' && vaut('manteau') === 'aucun') { if (c.manteau === 'aucun') delete c.manteau; if (vaut('manteau') === 'aucun') c.manteau = 'long'; }
+    return c; };
+  P.permis = (k, v, t, brut) => { const c = Object.assign({}, P.compo(brut)), B = P.base(t); c[k] = v; const vaut = q => (c[q] !== undefined ? c[q] : B[q]);
+    return !(vaut('coiffe') === 'calotte' && vaut('manteau') === 'aucun'); };
+  // l'apparence d'un ensemble et de ses pièces : le visage reste celui d'origine (sa marque, figée), le liseré n'est jamais
+  // le beige doré que le moteur pose à défaut (exigence 17 : ni or) — c'est le néon, ou le cyan de l'habit
+  P.composer = function (t, brut) {
+    const c = P.neutraliser(t, brut); if (!Object.keys(c).length) return P.look(t);
+    const L = Object.assign({}, t.look); L.visage = I.gfx.signe(D.TENUES[0].look);
+    if (c.coiffe) L.coiffe = c.coiffe; if (c.manteau) L.manteau = c.manteau; if (c.longue !== undefined) L.court = !c.longue; if (c.echarpe !== undefined) L.echarpe = c.echarpe;
+    if (c.etoffe) { const e = R.etoffes[c.etoffe]; L.robe = e.robe; L.head = e.head; L.cloak = e.cloak; if (e.legs) L.legs = e.legs; else delete L.legs; }
+    if (c.neon) { L.neon = R.neons[c.neon].slice(); L.trim = L.neon[0]; }
+    else if (!L.trim && (L.coiffe === 'calotte' || L.echarpe || L.court === false)) L.trim = '#39e6ff';
+    if (c.objet) L.porte = [c.objet];
+    if (c.teint) L.teint = R.teints[c.teint]; if (c.barbe !== undefined) L.barbe = c.barbe; if (c.poil) L.poil = R.poils[c.poil];
+    return L;
+  };
+  // une tenue au hasard : la coiffe, la coupe, la robe, l'écharpe, l'étoffe, le néon, l'objet — jamais le visage
+  P.hasard = function (t, brut, rnd) { const x = rnd || Math.random, un = a => a[Math.floor(x() * a.length) % a.length], c0 = P.compo(brut), avant = JSON.stringify(P.neutraliser(t, c0));
+    for (let essai = 0; essai < 12; essai++) { const c = {}; VISAGE.forEach(k => { if (c0[k] !== undefined) c[k] = c0[k]; });
+      c.coiffe = un(R.coiffes); c.manteau = un(c.coiffe === 'calotte' ? R.manteaux.filter(m => m !== 'aucun') : R.manteaux);
+      c.longue = x() < 0.3; c.echarpe = x() < 0.3; c.etoffe = un(Object.keys(R.etoffes));
+      const n = un([null].concat(Object.keys(R.neons))), o = un([null].concat(R.objets)); if (n) c.neon = n; if (o) c.objet = o;
+      const r = P.neutraliser(t, c); if (JSON.stringify(r) !== avant) return r; }
+    return P.neutraliser(t, c0); };
 
   /* ---------- les noms que l'on ne prend pas ---------- */
   // sans accents, sans majuscules, apostrophes et traits d'union ramenés à une espace : « 'Abd ar-Rahmân » → « abd ar rahman »
@@ -75,12 +131,14 @@
     const fr = I.sagas.idris, h = fr && fr.heroes && fr.heroes.idris;
     if (h) { if (!origine) origine = { arabic: h.arabic, look: h.look };
       h.arabic = p.nom === NOM ? origine.arabic : '';   // le sceau porte le nom en arabe ; avec un autre nom, il montre l'étoile à huit branches, seule
-      h.look = p.tenue === D.TENUES[0].id ? origine.look : P.look(P.tenue(p.tenue)); }   // la tenue de toujours : l'objet d'origine, intact
+      h.look = p.tenue === D.TENUES[0].id && !Object.keys(p.compo).length ? origine.look : P.composer(P.tenue(p.tenue), p.compo); }   // la tenue de toujours, sans pièce changée : l'objet d'origine, intact
     const W = I.world; if (W && W.saga && W.party && W.party.length && W.refreshSheets) { try { W.refreshSheets(); } catch (e) { /* hors chapitre */ } }
     return p;
   };
-  // choisir : le nom est contrôlé, la tenue est l'une de celles du jeu. → '' ou la raison du refus
-  P.choisir = function (nom, tenue) { if (P.propre(nom) === I.langue.rawi()) nom = NOM;   // le nom que la langue donne au râwî, laissé tel quel : c'est le nom d'origine
+  // choisir : le nom est contrôlé, la tenue est l'une de celles du jeu, la composition est contrôlée et ne garde que ce
+  // qui change (sans composition donnée : celle du profil). → '' ou la raison du refus
+  P.choisir = function (nom, tenue, compo) { if (P.propre(nom) === I.langue.rawi()) nom = NOM;   // le nom que la langue donne au râwî, laissé tel quel : c'est le nom d'origine
     const r = P.refus(nom); if (r) return r; if (!D.TENUES.some(t => t.id === tenue)) return I.t('Cette tenue n’existe pas.');
-    I.save.data.profil = { nom: P.propre(nom), tenue }; P.appliquer(); return ''; };
+    const c = P.neutraliser(P.tenue(tenue), compo === undefined ? P.profil().compo : compo);
+    I.save.data.profil = Object.keys(c).length ? { nom: P.propre(nom), tenue, compo: c } : { nom: P.propre(nom), tenue }; P.appliquer(); return ''; };
 })();

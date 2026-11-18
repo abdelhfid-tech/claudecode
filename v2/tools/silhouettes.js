@@ -2,11 +2,20 @@
 /* ISNAD 2.0 — les silhouettes : ce que le moteur dessine d'un personnage (src/core/sprites.js).
    Usage : node tools/silhouettes.js                    contrôle
            node tools/silhouettes.js relever            écrit les empreintes, une seule fois (refusé si elles existent déjà)
+           node tools/silhouettes.js relever-grands     écrit l'empreinte des grands personnages natifs, une seule fois
+                                                        (tools/essais/grands.json ; refusé si elle existe déjà)
            node tools/silhouettes.js planches [modèles] planches agrandies dans .smoke/silhouettes/ ; [modèles] : une image de
                                                         sept modèles (7 × 2 cases de 32 × 48), pour la planche de comparaison
    1. Les petits sprites (16 × 24, ceux qui marchent sur les cartes) : quatre directions, trois pas, six poses, pour tous
       les personnages du jeu, les tenues du râwî, toutes les coiffes et les variantes d'équipement. Ils sont ceux relevés
-      avant que le grand sprite soit redessiné (tools/essais/silhouettes.json) : sinon « ÉCART ».
+      avant que le grand sprite soit redessiné (tools/essais/silhouettes.json) : sinon « ÉCART ». Le râwî composé par le
+      joueur (D.RAWI) y entre aussi : son visage (teint, barbe, poil) n'est pas dans le petit sprite — sans eux, sa
+      silhouette doit être exactement celle qu'elle serait sans visage choisi.
+   1 bis. Les grands sprites natifs, tels que le jeu les montre dans ses trois dessins : 32 × 48 (la carte en dessin fin ;
+      le combat et les menus dans le dessin d'origine) et 64 × 96 (le combat et les menus en dessin fin, puis fin et
+      adouci), toutes les vues, les pas, les poses, les gestes. Ils sont ceux relevés avant que le joueur puisse composer
+      son râwî (tools/essais/grands.json) : sinon « ÉCART » — un seul point changé sur Idris d'origine, et les films sont
+      à refaire.
    2. L'interrupteur (gfx.natif = false) rend le grand sprite d'avant, à l'identique : sinon « ÉCART ».
    3. Les Compagnons n'ont pas de visage. Dans chaque grand sprite — toutes les vues, les pas, les poses, les gestes de
       frappe — le voile est une seule surface, d'un seul tenant sur chaque ligne et chaque colonne, sans trou ; et, une
@@ -21,7 +30,7 @@
    JEU=../index.html node tools/silhouettes.js : le même contrôle sur la version légère, qui porte le même sprites.js. */
 const fs = require('fs'), path = require('path');
 const { chromium } = require('playwright');
-const V2 = path.join(__dirname, '..'), FICHE = path.join(__dirname, 'essais', 'silhouettes.json'), out = path.join(V2, '.smoke/silhouettes');
+const V2 = path.join(__dirname, '..'), FICHE = path.join(__dirname, 'essais', 'silhouettes.json'), FICHE_G = path.join(__dirname, 'essais', 'grands.json'), out = path.join(V2, '.smoke/silhouettes');
 const url = 'file://' + path.resolve(V2, process.env.JEU || 'index.html'); // JEU=../index.html : le même contrôle sur la version légère
 const mode = process.argv[2] || '';
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); };
@@ -43,6 +52,29 @@ const INVENTAIRE = COIFFES => {
   });
   Object.values(D.RANGS || {}).forEach(T => pose('rangs', T.name, Object.assign({ kind: 'soldat', robe: '#8a7355', head: '#cdbf9f' }, T.look)));
   (D.TENUES || []).forEach(t => pose('tenues', t.id, Object.assign({ kind: 'compagnon' }, t.look)));
+  // 2.x — le râwî tel que le jeu le montre : sous chaque ensemble, son visage gardé (perso.look) ; puis, s'il se compose
+  // (D.RAWI), chaque valeur de chaque pièce posée sur Idris, et des compositions entières, sur plusieurs ensembles
+  const X = I.perso;
+  if (X && X.look) (D.TENUES || []).forEach(t => pose('râwî', 'ensemble ' + t.id, Object.assign({ kind: 'compagnon' }, X.look(t))));
+  if (X && X.composer && X.neutraliser && D.RAWI) {
+    const R = D.RAWI, T = id => D.TENUES.find(t => t.id === id) || D.TENUES[0];
+    const c = (compo, tid) => Object.assign({ kind: 'compagnon' }, X.composer(T(tid), X.neutraliser(T(tid), compo)));
+    Object.keys(R.teints).forEach(k => pose('râwî', 'teint ' + k, c({ teint: k })));
+    R.barbes.forEach(n => pose('râwî', 'barbe ' + n, c({ barbe: n })));
+    Object.keys(R.poils).forEach(k => pose('râwî', 'poil ' + k, c({ poil: k })));
+    R.coiffes.forEach(v => pose('râwî', 'coiffe ' + v, c({ coiffe: v })));
+    R.manteaux.forEach(v => pose('râwî', 'manteau ' + v, c({ manteau: v })));
+    [true, false].forEach(v => { pose('râwî', 'robe longue ' + v, c({ longue: v })); pose('râwî', 'écharpe ' + v, c({ echarpe: v })); });
+    Object.keys(R.etoffes).forEach(k => pose('râwî', 'étoffe ' + k, c({ etoffe: k })));
+    Object.keys(R.neons).forEach(k => pose('râwî', 'néon ' + k, c({ neon: k })));
+    R.objets.forEach(o => pose('râwî', 'objet ' + o, c({ objet: o })));
+    // le teint le plus clair et le plus sombre sous chaque ensemble ; puis des compositions entières
+    D.TENUES.forEach(t => { const ks = Object.keys(R.teints); [ks[0], ks[ks.length - 1]].forEach(k => pose('râwî', t.id + ' · teint ' + k, c({ teint: k }, t.id))); });
+    [[{ teint: 't7', barbe: 2, poil: 'p3', coiffe: 'calotte', manteau: 'ample', longue: true, echarpe: true, etoffe: 'e7', neon: 'n2', objet: 'feuillets' }, 'archives'],
+      [{ teint: 't1', barbe: 0, manteau: 'epaule', etoffe: 'e4', neon: 'n4' }, 'ruelle'],
+      [{ teint: 't5', poil: 'p1', coiffe: 'capuche', longue: true, etoffe: 'e3', neon: 'n5', objet: 'feuillets' }, 'lettre'],
+      [{ teint: 't6', barbe: 2, echarpe: false, manteau: 'long', neon: 'n3' }, 'copiste']].forEach(([k, tid], i) => pose('râwî', 'composition ' + (i + 1) + ' · ' + tid, c(k, tid)));
+  }
   Object.keys(G.KINDS).forEach(k => { pose('types', k, { kind: k, robe: '#8a7355', head: '#e6dcc4' });
     if (k === 'soldat' || k === 'romain') for (let i = 0; i < 7; i++) pose('types', k + ' ' + i, { kind: k, robe: '#6a5a40', head: '#e2d8c2', sel: i }); });
   // toutes les coiffes, sous chaque manteau ; puis les motifs et les étoffes
@@ -72,6 +104,23 @@ const EMPREINTES = ([looks, grands, ancien]) => {
     if (grands) [0, 1, 2, 3].forEach(dir => { [0, 1, 2].forEach(f => g(G.charGrand(L, dir, f))); POSES.forEach(q => g(G.charGrand(L, dir, 0, q))); });
     return [hx(a) + hx(b), grands ? hx(c) + hx(e) : '']; });
 };
+/* ---------- dans la page : l'empreinte des grands sprites natifs, dans le dessin de la page ----------
+   Le dessin se choisit par l'adresse (?def=2 fin, ?def=2l fin et adouci, ?def=1 d'origine) : une page par dessin, pour
+   que rien de ce qu'un dessin a déjà fait ne serve à l'autre. En dessin fin : le personnage de 32 × 48 (celui de la
+   carte : quatre images par direction, souffle compris ; les poses, les gestes) et la figure de 64 × 96 (combat, menus) ;
+   fin et adouci : la figure ; d'origine : la figure, qui y est le personnage de 32 × 48. */
+const GRANDES = looks => {
+  const G = window.ISNAD.gfx, D = window.ISNAD.D, POSES = D.POSES.concat(G.GESTES || []), hx = n => ('0000000' + n.toString(16)).slice(-8);
+  const fnv = (h, d) => { for (let i = 0; i < d.length; i++) { h ^= d[i]; h = Math.imul(h, 16777619); } return h >>> 0; };
+  const octets = cv => cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+  return looks.map(L => { let a = 2166136261, b = 0x9747b28c, c = 2166136261, e = 0x9747b28c;
+    const p = cv => { const d = octets(cv); a = fnv(a, d); b = fnv(b, d); }, q = cv => { const d = octets(cv); c = fnv(c, d); e = fnv(e, d); };
+    if (G.D > 1 && !G.lisse) [0, 1, 2, 3].forEach(dir => { [0, 1, 2, 3].forEach(f => p(G.charGrand(L, dir, f))); POSES.forEach(x => p(G.charGrand(L, dir, 0, x))); });
+    [0, 1, 2, 3].forEach(dir => [null].concat(POSES).forEach(x => q(G.figure(L, dir, 0, x))));
+    return [G.D > 1 && !G.lisse ? hx(a) + hx(b) : '', hx(c) + hx(e)]; });
+};
+const DESSINS = [['fin', '?def=2'], ['doux', '?def=2l'], ['origine', '?def=1']];
+
 /* ---------- dans la page : le voile de chaque grand sprite, et ce que le moteur en dit ---------- */
 const VOILES = looks => {
   const G = window.ISNAD.gfx, POSES = window.ISNAD.D.POSES, faux = []; let vues = 0, natives = 0;
@@ -127,16 +176,20 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
 
 (async () => {
   const browser = await chromium.launch(); let errors = [];
-  const ouvrir = async () => { const page = await (await browser.newContext({ viewport: { width: 960, height: 540 } })).newPage();
+  const ouvrir = async q => { const page = await (await browser.newContext({ viewport: { width: 960, height: 540 } })).newPage();
     page.on('pageerror', e => errors.push('pageerror: ' + e.message)); page.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
-    await page.goto(url); await page.waitForTimeout(1500); return page; };
-  // par paquets, dans une page neuve à chaque fois : le moteur garde chaque image qu'il a dessinée
-  const parPaquets = async (liste, n, fn, arg) => { const res = []; for (let i = 0; i < liste.length; i += n) { const page = await ouvrir(); res.push(await page.evaluate(fn, arg ? arg(liste.slice(i, i + n)) : liste.slice(i, i + n))); await page.context().close(); } return res; };
+    await page.goto(url + (q || '')); await page.waitForTimeout(1500); return page; };
+  // par paquets, dans une page neuve à chaque fois : le moteur garde chaque image qu'il a dessinée (q : le dessin, par l'adresse)
+  const parPaquets = async (liste, n, fn, arg, q) => { const res = []; for (let i = 0; i < liste.length; i += n) { const page = await ouvrir(q); res.push(await page.evaluate(fn, arg ? arg(liste.slice(i, i + n)) : liste.slice(i, i + n))); await page.context().close(); } return res; };
+  // les grands sprites natifs, dans les trois dessins : { clé : [32 × 48 fin, 64 × 96 fin, 64 × 96 adouci, figure d'origine] }
+  const grandes = async looks => { const par = {}; for (const [nom, q] of DESSINS) par[nom] = (await parPaquets(looks, 40, GRANDES, null, q)).flat();
+    return looks.map((L, i) => [par.fin[i][0], par.fin[i][1], par.doux[i][1], par.origine[i][1]]); };
   let page = await ouvrir();
   const inv = await page.evaluate(INVENTAIRE, COIFFES), natif = await page.evaluate(() => typeof window.ISNAD.gfx.charGrille === 'function'); await page.context().close();
   // la couleur du rayonnement (look.rayon) ne touche que le voile du grand personnage, en dessin fin : l'empreinte d'un petit sprite se cherche sans elle
   // (de même look.sansVisage, qui ne touche que le grand personnage)
-  const sansRayon = look => { const L = Object.assign({}, look); delete L.rayon; delete L.sansVisage; delete L.visage; return L; };
+  // (et le visage du râwî — sa marque, son teint, sa barbe, son poil — qui ne se peint que sur le grand personnage)
+  const sansRayon = look => { const L = Object.assign({}, look); ['rayon', 'sansVisage', 'visage', 'teint', 'barbe', 'poil'].forEach(k => { delete L[k]; }); return L; };
   const cles = inv.map(q => JSON.stringify(sansRayon(q.look))), groupes = {}; inv.forEach(q => { groupes[q.groupe] = (groupes[q.groupe] || 0) + 1; });
   const detail = Object.entries(groupes).map(([g, n]) => `${n} ${g}`).join(', ');
 
@@ -147,6 +200,15 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     if (errors.length) { console.log('✗ erreur console : ' + errors[0]); await browser.close(); process.exit(1); }
     fs.writeFileSync(FICHE, JSON.stringify({ note: 'Empreintes des silhouettes telles que le moteur les dessinait avant le grand sprite natif : [petits sprites (4 directions × 3 pas, 6 poses × 4 directions), grands sprites]. Relevé par tools/silhouettes.js relever.', sprites }, null, 0).replace(/"\],"/g, '"],\n"') + '\n');
     console.log(`✓ empreintes relevées : ${cles.length} silhouettes (${detail})`); await browser.close(); process.exit(0);
+  }
+
+  /* ---------- relever les grands : une seule fois, avant que le joueur puisse composer son râwî ---------- */
+  if (mode === 'relever-grands') {
+    if (fs.existsSync(FICHE_G)) { console.log('✗ l’empreinte des grands existe déjà : elle ne se refait pas (tools/essais/grands.json)'); await browser.close(); process.exit(1); }
+    const looks = inv.map(q => q.look), E = await grandes(looks), grands = {}; looks.forEach((L, i) => { grands[JSON.stringify(L)] = E[i]; });
+    if (errors.length) { console.log('✗ erreur console : ' + errors[0]); await browser.close(); process.exit(1); }
+    fs.writeFileSync(FICHE_G, JSON.stringify({ note: 'Empreintes des grands sprites natifs, tels que le jeu les montrait avant que le joueur puisse composer son râwî : [32 × 48 en dessin fin (4 directions × 4 images, poses et gestes), figure 64 × 96 en dessin fin, la même fin et adoucie, figure du dessin d’origine (32 × 48)]. La clé : l’apparence entière (look). Relevé par tools/silhouettes.js relever-grands.', grands }, null, 0).replace(/"\],"/g, '"],\n"') + '\n');
+    console.log(`✓ grands relevés : ${looks.length} silhouettes (${detail}), dans les trois dessins`); await browser.close(); process.exit(0);
   }
 
   /* ---------- planches ---------- */
@@ -200,6 +262,13 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
   const partis = Object.keys(S).filter(k => !cles.includes(k)).length;
   if (ecartsP.length) ko(`ÉCART ${ecartsP.length} petit(s) sprite(s) ne sont plus ceux d'avant : ${ecartsP.slice(0, 8).join(', ')}${ecartsP.length > 8 ? '…' : ''}`);
   else ok(`les petits sprites sont ceux d'avant, au pixel près : ${cles.length - neufs} silhouettes (${detail}) × 12 pas et 24 poses${neufs ? ` ; ${neufs} silhouette(s) nouvelle(s), sans empreinte` : ''}${partis ? ` ; ${partis} empreinte(s) sans silhouette` : ''}`);
+  // 1 bis. les grands sprites natifs, dans les trois dessins : ceux d'avant le râwî composé, au point près
+  if (!fs.existsSync(FICHE_G)) ko('ABSENT tools/essais/grands.json : rien ne dit plus ce qu’étaient les grands personnages (node tools/silhouettes.js relever-grands)');
+  else { const SG = JSON.parse(fs.readFileSync(FICHE_G, 'utf8')).grands, connus = inv.filter(q => SG[JSON.stringify(q.look)]), EG = await grandes(connus.map(q => q.look)), N = ['32 × 48 fin', '64 × 96 fin', 'fin et adouci', 'd’origine'];
+    const ecartsGr = []; connus.forEach((q, i) => { const a = SG[JSON.stringify(q.look)]; a.forEach((h, j) => { if (h !== EG[i][j]) ecartsGr.push(`${q.nom} (${N[j]})`); }); });
+    const nouveaux = inv.length - connus.length, partisG = Object.keys(SG).filter(k => !inv.some(q => JSON.stringify(q.look) === k)).length;
+    if (ecartsGr.length) ko(`ÉCART ${ecartsGr.length} grand(s) sprite(s) ne sont plus ceux d'avant : ${ecartsGr.slice(0, 8).join(', ')}${ecartsGr.length > 8 ? '…' : ''}`);
+    else ok(`les grands sprites sont ceux d'avant, au point près, dans les trois dessins : ${connus.length} silhouettes × 156 images (32 × 48 et 64 × 96 ; fin, fin et adouci, d’origine)${nouveaux ? ` ; ${nouveaux} silhouette(s) nouvelle(s), sans empreinte` : ''}${partisG ? ` ; ${partisG} empreinte(s) sans silhouette` : ''}`); }
   if (!natif) { ko('ABSENT gfx.charGrille : ce moteur ne dessine pas de grand sprite natif'); }
   else {
     // 2. l'interrupteur rend le dessin d'avant

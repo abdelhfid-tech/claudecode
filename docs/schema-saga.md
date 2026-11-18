@@ -84,6 +84,8 @@ umar: {
   //   item    : D.PORTES   — un attribut ou une liste ; seulement s'il est attesté ou propre au rôle
   //             (la durra de 'Umar, le sabre d'un chef de guerre, les feuillets d'un scribe)
   //   trim : couleur du galon et du bandeau · legs : couleur des jambes d'une tenue courte
+  // Jamais dans look (2.x, refusé par les règles) : teint, barbe, poil, visage — le visage vient des couleurs du
+  // personnage lui-même —, ni neon, ni porte : ce sont les pièces du râwî que compose le joueur (D.RAWI, perso.js).
   // Coiffe, manteau et couleurs sont une convention de dessin : ils ne prétendent pas restituer un costume attesté.
   // L'équipement n'est pas décrit ici : le héros commence avec la tenue de son rôle et de son dessin (une épée s'il
   // porte un sabre, un casque s'il en est coiffé), puis le joueur l'habille. Voir « Équipement » plus bas.
