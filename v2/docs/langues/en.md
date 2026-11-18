@@ -60,6 +60,17 @@ Les pages de Wikipedia lues pour un terme sont nommées dans la ligne du terme (
   désire ; « regard » reste là où c'est une image (le Compteur qui en pose un sur le premier passant, « Mille
   regards », « faute de regards »). *D184 (2.23) :* l'écran de la Chaîne ne porte plus d'étiquette de genre
   (« cyberpunk ») : « *The Heart of the Aggregor · 2084* ». **À valider (D184).**
+- **À distance du joueur** (*2.08* ; le décideur : « gardons un peu de distance avec le joueur »). Le jeu ne parle plus
+  au joueur de son propre cœur, de sa prière, de sa descente ni de sa vie : la descente est celle du râwî, dite à la
+  troisième personne, et l'anglais le nomme *the rawi* (minuscule dans le texte courant, § 2.1) : « *The rawi has
+  prayed in this chapter* », « *the rawi’s descent* », « *None will return in the rawi’s lifetime* », « *All {n} Lights
+  are gathered. The last link remains: the rawi’s* », « *The rawi opens his eyes again in the Lower Archives* ». Là où
+  le français dit « on » autour de la prière, des œuvres, du cœur ou du mal, l'anglais dit *one*, ou tourne au passif,
+  jamais *you* : « *Here one prays, and the party rests* », « *On a mosque’s prayer mat, one prays and does the day’s
+  deeds* », « *The provision is {n} short* » (« Il manque {n} »), « *the heart’s provision* » (jamais *your heart’s
+  provision*), « *what has been whispered is answered* ». Les consignes de commande et les règles du jeu gardent
+  *you*, comme le français garde « tu » : « *This story stays where you leave it* », « *How do you answer it?* »,
+  « *Only one goes with you into combat* ». **À valider (2.08).**
 - Une réplique française donne **une** réplique anglaise : on ne coupe pas, on ne fusionne pas (le texte anglais est
   rangé sous la clé du texte français, `v2/src/core/langue.js`). On ne rajoute rien que le français ne dise pas, on n'en
   retranche rien qui porte un fait.
@@ -243,14 +254,16 @@ Elles valent toutes. Celles-ci prennent en anglais une forme propre :
 - **Les énigmes du cœur, sans la langue de l'envoûtement** (*D184, 1.8*). « Languir sans fièvre ni blessure »,
   « dépérir sans cause visible » disaient un mal occulte, qu'un rite viendrait lever. Jamais *languish*, *pine away*,
   *waste away*, *wither*, *a mysterious ailment*, *for no visible cause*, *hex*, *curse*, *evil eye* : on dit ce que
-  l'on voit. « l'un des tiens perd courage, sans être malade ni blessé » → « *one of your own loses heart, though he is
-  neither ill nor wounded* » ; « Zîrî est las depuis des jours, et le médecin ne lui trouve rien » → « *Ziri has been
-  weary for days, and the physician finds nothing wrong with him* » ; « Maître Bahrâm ne mange plus » → « *Master
+  l'on voit. « un homme perd courage, sans être malade ni blessé » (*2.08* ; « l'un des tiens » jusque-là, que l'anglais
+  disait *one of your own*) → « *a man loses heart, though he is neither ill nor wounded* » ; « tant qu'on n'a pas trouvé
+  ce qu'il a cessé de faire » → « *until what he has stopped doing is found* » (non *until you find*, § 1.1) ; « Zîrî
+  est las depuis des jours, et le médecin ne lui trouve rien » → « *Ziri has been weary for days, and the physician
+  finds nothing wrong with him* » ; « Maître Bahrâm ne mange plus » → « *Master
   Bahram No Longer Eats* » (titre) ; « La langueur de Zîrî », titre que le français garde (D184 : « restent ») →
   « *Ziri’s Weariness* », non *languor* ; « ne mange presque plus, et ses mains tremblent » → « *barely eats anymore, and
-  his hands tremble* ». « Un compagnon » du groupe ne s'écrit jamais *a companion* : *one of your own*, *a party
-  member* (*Companion*, avec sa majuscule, est un Compagnon du Prophète ﷺ, à qui aucune œuvre manquée n'est prêtée :
-  exigence 15). **À valider (D184).**
+  his hands tremble* ». « Un compagnon » du groupe ne s'écrit jamais *a companion* : *a party member* (*Companion*,
+  avec sa majuscule, est un Compagnon du Prophète ﷺ, à qui aucune œuvre manquée n'est prêtée : exigence 15) ; *one of
+  your own* ne s'écrit plus pour lui depuis la 2.08 (§ 1.1). **À valider (D184, 2.08).**
 - **Exigence 5 — « excommunier »** (*D184, 2.13*) : jamais *excommunicate*, *excommunication*, mots de l'Église ; « celui
   qui déclare les autres hors de la foi » → *the one who declares others outside the faith* ; « Qui exclut les autres de
   la foi mérite d'en être exclu » → *Whoever excludes others from the faith deserves to be excluded from it*. **À valider
@@ -271,7 +284,7 @@ quand ils comptent.
 | la Chaîne (des transmetteurs ; l'écran de choix des récits) | **the Chain** | WP *Isnad* (« *chain of transmitters* ») | Majuscule : c'est un lieu du jeu. *D184 (2.21) :* « Chaîne fidèle », le titre d'un récit joué sans faute (« Isnâd sahîh » jusque-là), → **Faithful Chain**, à côté de *Chain Passed On* (« Chaîne transmise ») et de *Fidelity to the Chain* ; jamais *Sahih* ni *Isnad Sahih* : c'est le jugement des savants sur une chaîne réelle, pas un score. **À valider (D184).** |
 | maillon | **link** (« *the first link* », « *a link in the Chain* ») | — (image filée de *chain*) | *D184 (2.6) :* « ce maillon » (« ce règne » jusque-là) → *this link* (« *What this link has built* ») ; jamais *reign* : un califat n'est pas un règne. *D184 (2.7) :* les cinq cartons des récits disent « Premier maillon · As-Siddîq »… → « *First Link · Al-Siddiq* »… (§ 3.1). **À valider (D184).** |
 | transmetteur | **transmitter** | WP *Isnad* (« *chain of transmitters* ») | |
-| râwî (le joueur, Idris) | **rawi** ; titre d'Idris : **the Rawi** ; en apostrophe : « *Rawi, …* » | WP *Isnad* (*transmitter*) ; le mot *rāwī* n'a pas d'article propre dans WP (page d'homonymie) | **À valider** : on garde le mot arabe, glosé une fois au recueil (« *rawi, a transmitter* »), comme le français garde « râwî ». |
+| râwî (Idris, le personnage du joueur) | **rawi** ; titre d'Idris : **the Rawi** ; en apostrophe : « *Rawi, …* » | WP *Isnad* (*transmitter*) ; le mot *rāwī* n'a pas d'article propre dans WP (page d'homonymie) | **À valider** : on garde le mot arabe, glosé une fois au recueil (« *rawi, a transmitter* »), comme le français garde « râwî ». *2.08* : « le râwî » du texte courant → *the rawi*, en minuscule, à la troisième personne (« *the rawi’s descent* ») ; jamais *you* pour sa descente, son cœur, sa prière ni sa vie (§ 1.1). |
 | Lumière (une des six) | **Light** (« *the six Lights* ») | — | Majuscule, comme en français. |
 | noosphère | **noosphere** | WP *Noosphere* (« *developed and popularized by … Vladimir Vernadsky and … Pierre Teilhard de Chardin* » ; « *the planetary "sphere of reason"* ») ; Teilhard, *The Phenomenon of Man*, trad. B. Wall (titre et traducteur lus au catalogue d'archive.org, `https://archive.org/details/phenomenonofmanw0000unse` ; texte non lu) | Minuscule, sans tréma. |
 | chimère (anciennement « égrégore ») | **chimera** (pl. *chimeras*) | Le mot courant de l'anglais pour « une créature de l'imagination, une illusion » ; il dit ce que fait le jeu : on approche, on dévoile, il n'y a rien. | **Décidé (D183)** : le décideur a écarté « égrégore » en français, mot de l'ésotérisme ; *egregore* en anglais l'est aussi (WP *Egregore* : « *a concept in Western esotericism…* »). Minuscule ; jamais *Chimera* comme nom propre. *D184 (2.4)* : « des chimères, ce que les cœurs fabriquent ensemble ; la plus enracinée est une idole » → « *chimeras, what hearts make together; the most deeply rooted is an idol* » : la chimère n'est pas l'idole. |
@@ -291,7 +304,7 @@ quand ils comptent.
 | mal du cœur (les sept) | **ailment of the heart** (« *the seven ailments of the heart* ») ; forme courte : *ailment* | Ghazali.org, titre du livre XXII : « *Treating the Ailments of the Heart* » ; Winter (sur la page de l'ITS) : « *sickness of the heart* » | |
 | les maux du cœur, chez al-Ghazâlî (*al-muhlikât*, « ce qui perd ») | **the Quarter of Perils** ; *muhlikat* « *what destroys* » | Ghazali.org : « *The Quarter of Perils (Rubaʿ al-muhlikāt)* » | Pour le texte du recueil sur la liste de sept. |
 | pensée qui passe (*khâṭir*, pl. *khawâṭir*) | **passing notion** ; au recueil : ***khatir***, pl. ***khawatir*** | Winter, dans le texte d'al-Ghazâlî : « *Passing notions may be divided into two categories* », avec la note « *For these wasawis and khawatir* » ; son introduction : « *khawatir, the usually irrelevant thoughts which 'come at random into the mind'* ». Skellie (livre XXI, celui des merveilles du cœur) : « *The most important of these influences which come into the heart are involuntary suggestions (khawatir)* » | Décision D182 (`docs/decisions.md`). **À valider**. Skellie dit *involuntary suggestion* ; on ne le reprend pas : en anglais *suggestion* est le mot de SI pour ce qui vient du Diable (« *if an evil suggestion comes to you from Satan* », SI 7:200), et ce registre-là est réservé aux souffleurs. |
-| idée noire (les cinq) | **dark notion** (« *the five dark notions* » ; « *A dark notion: the fear of how one's own people see you.* ») | même source (Winter, *passing notions*) ; l'arabe du jeu dit **الخواطر السود** (D182) | Décision D182 : une idée noire est une pensée qui passe, *khâṭir*. **À valider**. Jamais *whisper(s)*, *whispering*, *waswas* pour elle (D182) ; ni *dark thought* (proposé avant D182, sans source), ni *intrusive thought* (clinique), ni *suggestion* (voir la ligne précédente). |
+| idée noire (les cinq) | **dark notion** (« *the five dark notions* » ; « *A dark notion: the fear of the gaze of one’s own people.* » — « la peur du regard des siens » ; *2.08* : plus *how one's own people see you*, qui la prêtait au lecteur, alors qu'elle ne s'attache qu'à un interlocuteur de fiction, exigence 16) | même source (Winter, *passing notions*) ; l'arabe du jeu dit **الخواطر السود** (D182) | Décision D182 : une idée noire est une pensée qui passe, *khâṭir*. **À valider**. Jamais *whisper(s)*, *whispering*, *waswas* pour elle (D182) ; ni *dark thought* (proposé avant D182, sans source), ni *intrusive thought* (clinique), ni *suggestion* (voir la ligne précédente). |
 | Valeur (une des sept : ce qui reste quand un mal est tranché) | **Value** | — | Majuscule, comme en français ; badge sans inscription. |
 | attribut divin | **divine attribute** ; un Nom : *Name* | — | On le **reconnaît** (*recognize*), jamais *earn/own/equip* (§ 1.9). |
 | compagnons de lumière (les cinq bêtes du ciel, fiction) | **star companions** | — | **À valider**. On écarte *companions of light* (*Companions*, majuscule, désigne les Compagnons du Prophète ﷺ : WP *Companions of the Prophet*) et tout *light-bearer* (c'est le sens du nom *Lucifer*). |
@@ -305,7 +318,7 @@ quand ils comptent.
 | veillée (du Caïd) | **Evening** (« *the Caid's Evenings* » ; « *Evening of Truthfulness · after Abu Bakr* ») | — | **À valider**. *Vigil* serait plus proche, mais en anglais musulman *night vigil* désigne la prière de la nuit (usage courant, référence non vérifiée) : l'exigence 13 demande qu'on ne confonde pas une veillée de récit avec une prière. |
 | pourparler ; confiance (sa jauge) | **parley** ; **trust** | — (nom et verbe anglais de la négociation avec un adversaire ; dictionnaire non consulté) ; le moteur nomme déjà l'opération `parley` | |
 | bataille déclarée | **pitched battle** | WP *Pitched battle* : « *Where both sides commit to fight at a location* » | **À valider**. Le français insiste sur « déclarée » (« on ne se bat pas sans le dire ») ; *pitched battle* est le terme d'histoire militaire. Repli : *declared battle* (calque). |
-| le secours ; « le groupe est relevé » | **Relief** ; *the party rallies* | SI 8:9 : « *you were asking help of your Lord, and He answered you, "Indeed, I will reinforce you…"* » | **À valider**. Jamais *angelic aid*, *miracle*, *summon* (exigence 20). |
+| le secours ; « le groupe est relevé » | **Relief** ; *the party rallies* | SI 8:9 : « *you were asking help of your Lord, and He answered you, "Indeed, I will reinforce you…"* » | **À valider**. Jamais *angelic aid*, *miracle*, *summon* (exigence 20). « si la prière a été tenue dans le chapitre » → *if prayer has been kept in the chapter* (l'aide « Le secours ») ; *2.08* : « La prière avait été tenue dans ce chapitre, et le secours est venu » (« Tu avais tenu ta prière » jusque-là) → *Prayer had been kept in this chapter, and relief came* ; « ne dit pas qu'ils sont venus ce jour-là » → *does not say that they came on that day* ; jamais *you* ni *your prayer* (§ 1.1). |
 | les degrés du mal (anciennement « organigramme du mal ») ; « Les degrés » (bouton) | **the Degrees of Evil** ; *the Degrees* | — | **D183** : le français dit désormais « les degrés du mal », et l'anglais le suit ; *the Chart of Evil*, proposé avant D183, est abandonné. *Hierarchy*, *order*, *pantheon* sont exclus : ils feraient une démonologie (exigence 18). |
 | Iblîs | **Iblis** | WP *Iblis* ; SI écrit « *Iblees* » (2:34, 18:50) | « *Iblees* » ne vit que dans les versets de SI. |
 | les souffleurs (*waswâs*) | **those who whisper** ; en apposition : *the whisperers*, toujours en minuscule | SI 114:4 : « *the retreating whisperer* », 114:5 : « *who whispers [evil] into the breasts of mankind* » ; Winter : « *waswas ('whispering')* » | Jamais un nom propre, jamais une majuscule : ils n'ont « ni nom, ni figure, ni nombre ». Décision D182 : *whisper*, *whisperer*, *whispering* (et *waswas* au sens de leur souffle) ne servent qu'à eux ; aucun égrégore, aucune idée noire, aucune compétence ne porte ces mots. Al-Ghazâlî ne nomme *waswâs* que la pensée qui vient du Shaytân (Skellie, note 179 : « *Waswas, cf. al-khatir al-shaitani* » ; dans son introduction, « *The suggestion of the demon (al-khatir al-shaitani)* »). |
@@ -466,22 +479,23 @@ Ni Scheler ni son essai ne sont nommés dans le jeu (exigence 24).
 
 | Français | Anglais retenu | Note |
 |---|---|---|
+| Descendre dans la noosphère (l'aide et le feuillet ; « Descendre en soi » jusqu'à la 2.08, et le décideur : « on a dit descendre dans la noosphère ! ») | **Going Down into the Noosphere** | Jamais *into oneself*, *within*, *inner journey* : la noosphère est nommée. **À valider (2.08).** |
 | les portes de la noosphère | **the gates of the noosphere** | *gate* partout (comme « *the Gate of Knowledge* ») ; *door* reste pour une porte de maison. |
 | Au sortir de la prière | **After the Prayer** | |
 | Dans le dhikr | **In Dhikr** | |
 | En songe ; s'endormir | **In a Dream** ; *to fall asleep* | |
-| descendre ; la descente (du râwî) ; « ta descente » | **to go down** ; **the descent** ; *your descent* | |
+| descendre ; la descente ; « la descente du râwî » (« ta descente » jusqu'à la 2.08) | **to go down** ; **the descent** ; *the rawi’s descent* | Toujours celle du râwî, à la troisième personne, jamais *your descent* (§ 1.1) : « La noosphère s'ouvre. Le râwî y descend. » → « *The noosphere opens. The rawi goes down into it.* » ; « Le râwî peut faire face à ce mal en descendant dans la noosphère » → « *The rawi can face this ailment by going down into the noosphere* » ; « les maux du cœur que le râwî n'a pas encore tranchés » → « *the ailments of the heart that the rawi has not yet severed* ». **À valider (2.08).** |
 | labyrinthe | **labyrinth** | Un seul mot partout ; pas *maze* (qui dit le jeu d'enfant). |
 | chrono | **timer** | |
-| l'issue | **the way out** | |
-| un abri ; « Tu as tenu » | **a shelter** ; *You held on* | |
+| l'issue ; « L'issue est trouvée » | **the way out** ; *The way out is found* | « un niveau, une fois par chapitre » → *a level, once per chapter*. |
+| un abri ; « Le râwî a tenu » (« Tu as tenu » jusqu'à la 2.08) | **a shelter** ; *The rawi held on* | **À valider (2.08).** |
 | ce qui rôde ; rôder | **what prowls** ; *to prowl* | « Frapper ce qui rôde » → **Strike What Prowls**. |
 | sonné | **dazed** | |
 | se dissiper | **to dissipate** | Pour une chimère comme pour une idée noire. |
 | rattrapé ; épuisé | **caught** ; **exhausted** | |
 | remonter | **to come back up** | |
 | un sommeil sans songe | **a dreamless sleep** | |
-| les ponts (du labyrinthe) | **the bridges** | |
+| les ponts (du labyrinthe) | **the bridges** | « {nom} barre le pont » (*2.08* ; « te barre » jusque-là) → *{nom} bars the bridge* (comme « *An idol bars the way* »). |
 | le seuil | **the threshold** | |
 | faire face (à un mal, lame en main) | **to face** | |
 | Esprit (+1, pour de bon) | **Mind** | Voir § 2.12. |
@@ -985,7 +999,14 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
     « Compagnon » pour tout membre du groupe, Idris et le Caïd compris, alors qu'ailleurs « compagnon » (du groupe)
     s'écrit en minuscule. L'anglais ne peut pas écrire *the Companion’s great act* (*Companion*, avec sa majuscule, est
     un Compagnon du Prophète ﷺ) : il dit « *each party member’s golden gauge; when it is full, he can perform his
-    great act* ». Signalé au décideur : lui seul corrige le français.
+    great act* ». Signalé au décideur : lui seul corrige le français. *Réglé dans le français (commit 9c6aa6d)* : « pleine, elle
+    ouvre à chacun son grand acte » → « *Composure: the golden gauge; when it is full, it opens the way to each one’s
+    great act* ».
+20. **À distance du joueur** (*2.08*, § 1.1). Proposition : le râwî à la troisième personne (*the rawi*, minuscule) ;
+    pour le « on » du français autour de la prière, des œuvres, du cœur et du mal, *one* ou le passif (« *Here one
+    prays* », « *They are met at the end of each encounter* », « *what has been whispered is answered* »), jamais
+    *you* ; *you* gardé pour les consignes de commande et les règles du jeu, comme le français garde « tu ». *One* est
+    plus soutenu que le *you* générique de l'anglais courant : c'est voulu, pour garder la distance.
 
 ## 5. Ce qui n'a pas pu être vérifié
 

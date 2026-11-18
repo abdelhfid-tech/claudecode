@@ -269,7 +269,7 @@
 {"k":"t6gbxy.e","fr":"Niche de qibla","t":"Qibla Niche","ou":"D.PIECES.mihrab.name"},
 {"k":"13p2wwc.y","fr":"Indique la direction de La Mecque.","t":"Shows the direction of Mecca.","ou":"D.PIECES.mihrab.desc"},
 {"k":"5g6124.f","fr":"Natte de prière","t":"Prayer Mat","ou":"D.PIECES.natte.name"},
-{"k":"1rcff9e.1o","fr":"Dans une mosquée achevée, on y prie et le groupe s’y repose.","t":"In a finished mosque, you pray on it and the party rests.","ou":"D.PIECES.natte.desc"},
+{"k":"1rcff9e.1o","fr":"Dans une mosquée achevée, on y prie et le groupe s’y repose.","t":"In a finished mosque, one prays on it and the party rests.","ou":"D.PIECES.natte.desc","note":"2.08, à distance du joueur : « on y prie » ; « one », comme « Here one prays, and the party rests »"},
 {"k":"13fbkh2.5","fr":"Tapis","t":"Rug","ou":"D.PIECES.tapis.name"},
 {"k":"u20fld.p","fr":"Laine tissée, à losanges.","t":"Woven wool, with a lozenge pattern.","ou":"D.PIECES.tapis.desc"},
 {"k":"14omtum.8","fr":"Lanterne","t":"Lantern","ou":"D.PIECES.lanterne.name"},
