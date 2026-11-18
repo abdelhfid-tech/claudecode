@@ -1493,6 +1493,29 @@ pages privées de son compte.
   agent). Le contenu commun (`coeur`) vient en dernier dans chaque langue, une fois décidés le texte à l'écran et le
   ton de *Citadelle* (D187). Une relecture humaine par langue reste nécessaire avant toute diffusion.
 
+- [x] **D189. Le texte à l'écran : « un texte à la fois » (choix du décideur, 18 novembre ;
+  `v2/docs/propositions-texte.md`).** Une seule chose se lit à la fois : les annonces deviennent une ligne sous
+  l'objectif (« le fil »), qui se tait quand une réplique, un choix ou un carton se lit ; en hauteur, plus aucune phrase
+  posée sur l'image (sauf les bandeaux courts du combat) ; la confiance s'écrit à côté du nom de celui qui répond ; les
+  leçons s'écrivent là où sert l'outil ; aucun texte de récit n'est coupé ni réécrit. En trois lots : le premier ne
+  change aucune scène filmée ; le deuxième touche les shorts 04 et 08, à refaire de toute façon (D184) ; le troisième
+  suit le Journal (D191).
+- [x] **D190. « Éclairer » lève les voiles (choix du décideur, 18 novembre ; `v2/docs/propositions-eclairer-journal.md`).**
+  Frapper ôte de la Constance (la Force, l'arme en main) et n'ôte un voile que si le Fer est la faille ; Éclairer lève
+  les voiles — un par coup sur la faille de la chimère, un pour deux coups ailleurs, à 60 % de l'Esprit au lieu de 90 % ;
+  dévoilée, la chimère perd son tour et tous les coups portent davantage. En visant, la plaque dit si la Lumière porte.
+  À mesurer dans le jeu avant de la garder (seuil fixé d'avance : pas plus de 20 % de tours, aucune défaite ajoutée,
+  combats seuls, chimères insensibles au Fer et descente compris) ; sinon, on ne garde que l'affichage.
+- [x] **D191. Le Recueil devient le « Journal du râwî », qui garde les arguments contre les idées noires (choix du
+  décideur, 18 novembre).** Premier lot : sous chaque idée noire, la manière qui fait tomber chacun de ses voiles ;
+  avec l'argument, on répond d'un toucher ; sans lui, on cherche la manière comme aujourd'hui. Conditions du
+  contradicteur, retenues : aucun argument ni aucune marque « sert dans un pourparler » sur un savoir tiré d'un verset,
+  d'un hadith ou d'une parole de Compagnon ; la fiction se reconnaît pièce par pièce ; l'interlocuteur d'une manche à
+  idée noire est marqué personnage de fiction, et le validateur refuse le reste ; « Frapper ce qui rôde » est réécrit
+  avec D190 ; la clé « Journal » ne se confond pas avec le volet « Reprendre ». Second lot, voulu par le décideur :
+  l'option de regarder une idée noire en face dans la noosphère quand la parole n'a pas porté ; elle attend la
+  réécriture de l'exigence 18, que l'agent propose et que le décideur valide.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
