@@ -22,14 +22,13 @@ Abréviations employées dans les tableaux.
 
 | Abr. | Ouvrage | Lu sur |
 |---|---|---|
-| **SI** | *Saheeh International*, édition servie par quran.com (traduction 20), celle que retient le registre des sources | `https://api.quran.com/api/v4/verses/by_key/S:V?translations=20` (lu le 18 nov. pour 2:34, 2:153, 2:185, 2:197, 2:198, 2:255, 2:263, 3:8, 3:159, 5:110, 6:74, 6:112, 7:179, 8:9, 12:87, 13:9, 17:70, 18:50, 33:40, 34:15, 42:19, 48:4, 49:12, 51:58, 57:25, 67:14, 114:4-6) |
+| **SI** | *Saheeh International*, édition servie par quran.com (traduction 20), celle que retient le registre des sources | `https://api.quran.com/api/v4/verses/by_key/S:V?translations=20` (lu le 18 nov. pour 2:25, 2:34, 2:153, 2:185, 2:197, 2:198, 2:255, 2:263, 3:8, 3:159, 5:110, 6:74, 6:112, 7:179, 8:9, 12:87, 13:9, 17:70, 18:50, 33:40, 34:15, 42:19, 48:4, 49:12, 51:58, 57:25, 67:14, 103:3, 114:4-6) |
 | **IJMES** | *IJMES Translation and Transliteration Guide*, International Journal of Middle East Studies, Cambridge University Press | `https://www.cambridge.org/core/journals/international-journal-of-middle-east-studies/information/author-resources/ijmes-translation-and-transliteration-guide` |
-| **Tabari** | *The History of al-Ṭabarī*, 40 vol., SUNY Press, 1985-2007 (trad. collective, dir. Ehsan Yar-Shater) | texte intégral : `https://archive.org/details/edg-the-history-of-al-tabari` (fichier djvu.txt, cherché par mots) |
-| **Guillaume** | Ibn Isḥāq, *The Life of Muhammad*, trad. A. Guillaume, Oxford University Press, 1955 | texte intégral : `https://archive.org/details/the-life-of-muhammad-ibn-ishaq` (fichier djvu.txt) |
+| **Tabari** | *The History of al-Ṭabarī*, 40 vol., SUNY Press (traduction collective) | texte intégral : `https://archive.org/details/edg-the-history-of-al-tabari` (fichier djvu.txt, cherché par mots) |
+| **Guillaume** | Ibn Isḥāq, *The Life of Muhammad*, trad. A. Guillaume, Oxford University Press | texte intégral : `https://archive.org/details/the-life-of-muhammad-ibn-ishaq` (fichier djvu.txt) |
 | **WP-MOS** | Wikipedia, *Manual of Style/Islam-related articles* | `https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style/Islam-related_articles` |
-| **WP** | Wikipedia en anglais, titre de l'article (forme usuelle d'un nom) | `https://en.wikipedia.org/wiki/<titre>` ; titres vérifiés par l'API (`action=query&redirects=1`) |
+| **WP** | Wikipedia en anglais, titre de l'article (forme usuelle d'un nom) | `https://en.wikipedia.org/wiki/<titre>` ; titre vérifié par le lien canonique de la page (redirections suivies, pages absentes écartées) |
 | **GF** | Google Fonts, feuilles de style des polices du jeu (Alegreya, Cinzel, Share Tech Mono) | `https://fonts.googleapis.com/css2?family=<police>` (plages `unicode-range`) |
-
 | **Winter** | al-Ghazâlî, *On Disciplining the Soul & On Breaking the Two Desires* (livres XXII-XXIII de l'*Iḥyāʾ*), trad. T. J. Winter, Islamic Texts Society | traducteur et titre : `https://its.org.uk/catalogue/al-ghazali-on-disciplining-the-soul-and-on-breaking-the-two-desires/` ; texte : `https://archive.org/details/6-abu-hamid-muhammad-ghazali-on-disciplining-the-soul-and-breaking-the-two-desires` (djvu.txt, cherché par mots) |
 | **Skellie** | al-Ghazâlî, *The Marvels of the Heart* (livre XXI), trad. W. J. Skellie, Fons Vitae, 2010 | `https://fonsvitae.com/product/al-ghazali-the-marvels-of-the-heart-science-of-the-spirit-book-xxi-of-the-revival-of-the-religious-sciences/` ; texte (thèse de 1938) : `https://archive.org/details/GhazaliTheMarvelsOfTheHeartSkellie` |
 | **Rustom** | al-Ghazâlî, *On the Condemnation of Pride and Self-Admiration* (livre XXIX), trad. M. Rustom, Islamic Texts Society, 2018 | `https://its.org.uk/catalogue/al-ghazali-on-the-condemnation-of-pride-and-self-admiration/` |
@@ -80,9 +79,9 @@ Conséquences : on écrit *armor* (même si Wikipedia titre « *Lamellar armour*
 
 **Système : celui de l'IJMES pour les noms propres** — sans signe diacritique, sauf le *ʿayn* et la *hamza*. Le guide
 de l'IJMES dit : « *Diacritics should not be added to personal names, place names* […] *However, ʿayn and hamza should
-be preserved in all these cases (except for initial hamza, which is dropped).* » C'est aussi, à peu de chose près, ce
-que fait le jeu français (« 'Umar », sans les circonflexes en moins), et ce que font *Tabari* et l'*Encyclopaedia
-Britannica* une fois leurs points souscrits ôtés.
+be preserved in all these cases (except for initial hamza, which is dropped).* » Le jeu français marque lui aussi
+le *ʿayn* (« 'Umar »), mais garde les voyelles longues (« Abû ») ; *Tabari* marque tout, points souscrits compris.
+L'IJMES garde le juste milieu : lisible pour un lecteur sans arabe, fidèle pour un lecteur qui le sait.
 
 | Règle | Exemple | Source |
 |---|---|---|
@@ -91,14 +90,14 @@ Britannica* une fois leurs points souscrits ôtés.
 | *ʿayn* : **ʿ** (U+02BF, « modifier letter left half ring ») | 'Umar → **ʿUmar** ; 'Alî → **ʿAli** ; Sa'd → **Saʿd** | IJMES ; SI l'écrit ainsi (« *ʿArafāt* », « *al-Mashʿar* », SI 2:198) |
 | *hamza* au milieu ou en fin de mot : **’** (U+2019) ; à l'initiale : rien | Qur'ân → **Qur’an** ; Îliyâ' → **Iliya’** ; Harûrâ' → **Harura’** | IJMES (initiale omise) ; SI écrit la hamza ’ (« *Qur’ān* » 2:185, « *Saba’* » 34:15) |
 | Article : **al-**, minuscule, sans assimilation | as-Siddîq → **al-Siddiq** ; 'Abd ar-Rahmân → **ʿAbd al-Rahman** ; at-Tamîmî → **al-Tamimi** ; az-Zubayr → **al-Zubayr** | IJMES (« *The definite article (e.g., the Arabic al-) is lowercase everywhere* ») ; *Tabari* « al-Siddiq » ; WP « *Abd al-Rahman ibn Awf* », « *Abd Allah ibn al-Zubayr* » |
-| Article en tête de phrase ou de titre : **Al-** | Al-Qaʿqaʿ arrived… | IJMES (minuscule « *everywhere* » s'entend dans la phrase ; la majuscule d'initiale de phrase reste) |
+| Article en tête de phrase ou de titre : **Al-** | Al-Qaʿqaʿ arrived… | choix de l'agent : l'IJMES dit « *lowercase everywhere* » ; l'anglais courant capitalise l'initiale de phrase |
 | Élision après une préposition : **wa-l-, bi-l-, li-l-** | — | IJMES |
 | *ibn* en minuscule entre deux noms ; **Ibn** en tête | ʿAli ibn Abi Talib ; **Ibn ʿAbbas** | IJMES (« *Connectors in names — such as bin, ben, abu — are lowercase only when preceded by a name* ») |
 | Jamais l'abréviation **b.** dans le jeu (*Tabari* l'emploie) | Khalid ibn al-Walid, non « Khalid b. al-Walid » | choix de lisibilité |
 | Tâ' marbûta : **-a** (en annexion : **-at**) | Saqîfa → **Saqifa** ; Ridda → **Ridda** ; Koufa → **Kufa** ; Dhât as-Sawârî → **Dhat al-Sawari** | IJMES ; WP « *Saqifa* », « *Ridda Wars* », « *Kufa* » (*Tabari* écrit -ah : « *Saqifah*, *Riddah*, *Kufah* » ; on ne le suit pas) |
 | Consonnes doubles gardées | ʿAmmar, al-Qaʿqaʿ | IJMES |
 | Lieux qui ont une forme anglaise reçue : la forme anglaise | Médine → **Medina** ; La Mecque → **Mecca** ; Jérusalem → **Jerusalem** ; Damas → **Damascus** ; Homs → **Homs** ; Tibériade → **Tiberias** ; Alexandrie → **Alexandria** ; Chypre → **Cyprus** | IJMES (« *Place names with accepted English spellings should be spelled in accordance with English norms* ») ; WP |
-| Mots arabes reçus dans *Merriam-Webster* : sans italique ni signe | **hajj**, **imam**, **jinn**, **shaykh**, **caliph**, **sheikh** non | IJMES (« *mufti, jihad, shaykh* ») |
+| Mots arabes reçus dans *Merriam-Webster* : sans italique ni signe | **hajj**, **imam**, **jinn**, **shaykh** (non *sheikh*), **caliph** | IJMES (« *mufti, jihad, shaykh* ») |
 | Termes techniques gardés : en italique dans la prose du recueil, sans signe sauf ʿ et ’ | *ṣidq* → ***sidq*** ; *al-ʿAnqâ’* → ***al-ʿAnqa’*** | IJMES (italique des termes techniques) ; signes omis pour la lisibilité |
 
 Les versets gardent l'écriture de SI, signes compris (« *Allāh* », « *Muḥammad* », « *Qur’ān* ») : on ne les retouche
@@ -116,7 +115,7 @@ confondrait avec un guillemet ouvrant).
 - *Saheeh International* écrit « *Allāh* » (édition de quran.com, retenue par le registre), « *Allah* » dans d'autres
   éditions ; le jeu français écrit « Allah ». Les traductions savantes écrivent « God » : *Tabari* « *Messenger of God* »
   (2 997 occurrences dans le texte intégral), *Guillaume* « *the apostle* » et « *God* » (3 921 et 5 963 occurrences,
-  contre 372 « *Allah* », presque tous dans des noms propres). La traduction de Muhsin Khan d'al-Bukhârî (citée par le
+  contre 372 « *Allah* »). La traduction de Muhsin Khan d'al-Bukhârî (citée par le
   registre) écrit « *Allah's Messenger (ﷺ)* » (6 019 occurrences). WP-MOS demande « *God* », sauf dans une citation.
 - **Choix : « Allah »**, sans macron, comme le jeu français, et comme les versets et les hadiths cités au même écran.
   « God » ne s'emploie que là où le français dit « Dieu » ou « Seigneur » (« *your Lord* », comme SI : « *asking help
@@ -124,8 +123,8 @@ confondrait avec un guillemet ouvrant).
 - Les pronoms qui renvoient à Allah prennent la majuscule : **He, Him, His** (comme SI : « *Allāh is Subtle with His
   servants; He gives provision* », 42:19).
 - « le Messager d'Allah ﷺ » → **the Messenger of Allah ﷺ** (SI : « *the Messenger of Allāh* », 33:40) ; « le Prophète
-  ﷺ » → **the Prophet ﷺ**. Jamais « *the Apostle* » (Guillaume, Muhsin Khan dans ses anciennes éditions) : le mot a
-  vieilli et appartient en anglais au vocabulaire chrétien.
+  ﷺ » → **the Prophet ﷺ**. Jamais « *the Apostle* » (Guillaume ; encore 437 fois dans l'édition de Muhsin Khan du
+  registre, contre 6 019 « *Messenger* ») : le mot a vieilli.
 
 ### 1.5 Les formules
 
@@ -138,7 +137,8 @@ confondrait avec un guillemet ouvrant).
   Si le décideur en veut une, la forme anglaise usuelle est « *(may Allah be pleased with him)* » (usage courant,
   référence non vérifiée), et elle ne vaudrait qu'au recueil, à la première mention. **À trancher par le décideur.**
 - « On rapporte » (exigence 3) → **It is reported** ; « rapporté par » → **reported by** ; « d'après » → **after** dans
-  une source (« *after al-Ghazali* »). Ces tournures sont celles des références que le registre affiche.
+  une source (« *after al-Ghazali* »). Usage courant, référence non vérifiée ; le registre des sources fixe la forme
+  de ses propres références.
 - « traduction du sens » (exigence 7) → **translation of the meaning** (usage courant des traductions musulmanes du
   Coran, référence non vérifiée) ; la référence s'écrit **Qur’an 51:58** (forme de SI et de quran.com).
 
@@ -191,17 +191,16 @@ Elles valent toutes. Celles-ci prennent en anglais une forme propre :
   Belial, Asmodeus, Belphegor, Baal, Legion*. *Mammon* en particulier ne nomme jamais l'Or ni l'Avarice : la
   démonologie chrétienne attache un démon à chacun des péchés capitaux (WP *Binsfeld's classification of demons* cite
   une liste où « *Mammon* » mène « *the avarous* », « *Sathanas* » la colère, « *Belzebub* » l'envie). WP *Ghoul* :
-  « *Jinn-like being* ». Les noms d'ennemis ne disent que ce que
-  l'idée fait (§ 3.7). Le mot *egregore* a lui-même un passé : § 2.1.
-- **Les sept maux ne sont pas les « sept péchés capitaux ».** La liste du jeu vient d'al-Ghazâlî, non de Grégoire le
-  Grand ; on évite donc *Wrath*, *Sloth*, *Gluttony*, *Lust*, *deadly sins*, qui feraient lire une autre tradition
-  (§ 2.5).
+  « *Jinn-like being* ». Les noms d'ennemis ne disent que ce que l'idée fait (§ 3.7). Le mot *egregore* a lui-même un passé : § 2.1.
+- **Les sept maux ne sont pas les « sept péchés capitaux ».** La liste de sept est un choix du jeu, d'après
+  al-Ghazâlî (recueil « Les sept maux du cœur ») ; les péchés capitaux sont une autre liste (WP *Seven deadly sins* :
+  *Lust, Gluttony, Envy, Greed, Sloth, Pride, Wrath*). On évite donc *Wrath*, *Sloth*, *Gluttony*, *Lust*, *deadly
+  sins*, qui feraient lire une autre tradition (§ 2.5).
 - **Exigence 8 — jamais le nom divin dans un nom de compétence, sur un sprite, sur ce que l'on frappe** : ni *Allah*,
   ni *God*, ni *Lord*, ni *Divine*, ni *Holy* dans un nom de compétence ou d'ennemi. Le surnom de Khâlid, *Sayf Allāh*
   (« *the sword of God* », *Tabari*), ne s'écrit pas en titre : le français dit « le Sabre dégainé », l'anglais **the
   Drawn Sword** (§ 3.2).
-- **Exigence 14** : l'auteur de *Citadelle* et du conte (en anglais, *The Wisdom of the Sands*, *The Little Prince*)
-  n'est nommé ni dans le jeu, ni dans le livret, ni dans les shorts. **Exigence 24** : Max Scheler et son essai non plus
+- **Exigence 14** : l'auteur de *Citadelle* et du conte n'est nommé, ni lui ni ses œuvres, sous aucun titre, ni dans le jeu, ni dans le livret, ni dans les shorts. **Exigence 24** : Max Scheler et son essai non plus
   (§ 2.8). Ils ne le sont qu'ici.
 - **Exigence 2** : aucun texte anglais ne décrit de trait physique (*bearded*, *dark-eyed*, *fair*, *handsome*…), pour
   personne.
@@ -225,14 +224,14 @@ quand ils comptent.
 | transmetteur | **transmitter** | WP *Isnad* (« *chain of transmitters* ») | |
 | râwî (le joueur, Idris) | **rawi** ; titre d'Idris : **the Rawi** ; en apostrophe : « *Rawi, …* » | WP *Isnad* (*transmitter*) ; le mot *rāwī* n'a pas d'article propre dans WP (page d'homonymie) | **À valider** : on garde le mot arabe, glosé une fois au recueil (« *rawi, a transmitter* »), comme le français garde « râwî ». |
 | Lumière (une des six) | **Light** (« *the six Lights* ») | — | Majuscule, comme en français. |
-| noosphère | **noosphere** | WP *Noosphere* (« *developed and popularized by … Vladimir Vernadsky and … Pierre Teilhard de Chardin* » ; « *the planetary "sphere of reason"* ») ; Teilhard, *The Phenomenon of Man*, trad. B. Wall, 1959 (titre et traducteur lus au catalogue d'archive.org, `https://archive.org/details/phenomenonofmanw0000unse` ; texte non lu) | Minuscule, sans tréma. |
-| égrégore | **egregore** (pl. *egregores*) | WP *Egregore* : « *a concept in Western esotericism of a non-physical entity or thoughtform that arises from the collective thoughts and emotions of a distinct group* » ; la même page : « *In the apocryphal Book of Enoch, the term had referred to angelic beings known as watchers* » | **À valider**, et point à trancher (§ 4) : en anglais le mot est occultiste, plus rare qu'en français, et il a nommé les « Veilleurs » d'Hénoch, anges déchus. Le jeu le dit « une image, non une doctrine » : le recueil anglais doit le dire dès la première rencontre. Repli possible : *thought-idol* (forgé, sans usage). Jamais *thoughtform* (théosophie), jamais *spirit*. |
+| noosphère | **noosphere** | WP *Noosphere* (« *developed and popularized by … Vladimir Vernadsky and … Pierre Teilhard de Chardin* » ; « *the planetary "sphere of reason"* ») ; Teilhard, *The Phenomenon of Man*, trad. B. Wall (titre et traducteur lus au catalogue d'archive.org, `https://archive.org/details/phenomenonofmanw0000unse` ; texte non lu) | Minuscule, sans tréma. |
+| égrégore | **egregore** (pl. *egregores*) | WP *Egregore* : « *a concept in Western esotericism of a non-physical entity or thoughtform that arises from the collective thoughts and emotions of a distinct group* » ; la même page : « *In the apocryphal Book of Enoch, the term had referred to angelic beings known as watchers* » | **À valider**, et point à trancher (§ 4) : en anglais le mot est occultiste, plus rare qu'en français, et il a nommé les « Veilleurs » du livre d'Hénoch, des êtres angéliques. Le jeu le dit « une image, non une doctrine » : le recueil anglais doit le dire dès la première rencontre. Repli possible : *thought-idol* (forgé, sans usage). Jamais *thoughtform* (le même univers ésotérique, selon la même page), jamais *spirit*. |
 | idole | **idol** | Bacon : « *idols and false notions which are now in possession of the human understanding, and have taken deep root therein* » (aph. XXXVIII) ; les quatre classes : « *Idols of the Tribe* », « *of the Cave* », « *of the Market-place* », « *of the Theatre* » (aph. XXXIX) ; SI 6:74 : « *Do you take idols as deities?* » | Le mot anglais porte les deux sens dont le jeu a besoin : l'idole de pierre et l'idole de l'esprit. |
 | racine (d'une idole, `racine`) ; enracinement (la jauge) ; enracinée, déracinée | **root** ; **Rooting** (la jauge, d'un à cinq) ; *deep-rooted*, *uprooted* ; « *the idea takes root* » | Bacon : « *have taken deep root therein* » | **À valider** pour le nom de la jauge. |
 | voile (la garde d'un égrégore) ; ôter un voile | **veil** ; **to strip a veil** | Winter : « *We have set veils over their hearts* » (verset cité), « *the unveiling of the secrets of the Unseen* » ; l'image du voile entre le cœur et le vrai est celle d'al-Ghazâlî | **À valider** : l'usage soufi existe, l'emploi comme garde d'un ennemi est une image du jeu. |
 | dévoilé (égrégore vaincu : on a montré qu'il est vide) ; dévoiler | **unveiled** ; **to unveil** | Winter (« *unveiling* ») | **À valider**. Jamais *killed*, *slain*, *destroyed* pour un égrégore. |
 | faille (le point faible d'un égrégore) ; « Frapper la faille » | **weak point** ; « *Strike the Weak Point* » | — (usage courant des jeux de rôle, référence non vérifiée) | **À valider**. Le lieu de carte « Faille » est autre chose (§ 3.5). |
-| Constance (points de vie) | **Constancy** | — | **À valider**. Pas *Health*, pas *HP* en toutes lettres (l'abréviation de barre peut rester *C*). Le mot dit la tenue morale, comme le français. |
+| Constance (points de vie) | **Constancy** | — | **À valider**. Pas *Health*, pas *HP*. Le mot dit la tenue morale, comme le français. |
 | Souffle (points de vertu) | **Breath** | — | **À valider**. |
 | éprouvé (hors de combat) | **spent** (« *ʿUmar is spent* ») | — | **À valider**. Jamais *dead*, *fallen*, *killed*, *KO*. Relever un éprouvé : **to rally**, **to raise up** (*revive* est exclu : il dit la résurrection). |
 | Niyya (l'intention ; jauge de combat) | **Niyya** (nom de jauge) ; glose : *intention* | WP *Niyyah* : « *variously transliterated niyyah, niyya … "intention"* » ; Shaker (titre : *Intention, Sincerity and Truthfulness*) | Forme en *-a* (§ 1.3). |
@@ -552,4 +551,367 @@ Biographie **Biography** · Événement **Event** · Noosphère **Noosphere** ·
 Manteau des Archives **Archives Coat** · Capuche d'encre **Ink Hood** · Veste de la ruelle **Alley Jacket** · Écharpe du
 copiste **Copyist's Scarf** · Manteau du veilleur **Watchman's Coat** · Calotte du lettré **Scholar's Cap**.
 
-<!-- §3 -->
+## 3. Les noms propres
+
+Règle générale. Un **personnage historique** prend la forme des ouvrages de référence anglophones (titre de l'article de
+Wikipedia, forme de *Tabari*), réécrite selon § 1.3 : ʿ et ’ gardés, -a pour la tâ' marbûta, *ibn* plutôt que *b.*,
+article non assimilé. Un **personnage de fiction** prend une forme simple, selon § 1.3, sans recherche. Un **égrégore**
+prend un nom anglais qui dit la même chose avec les mots de la langue (*the Feed*, non *the Flux*), le même d'un récit à
+l'autre pour la même image (*Murmur of…*, *Echo…*).
+
+Les noms écrits par le jeu sous la forme `'Abdallâh` deviennent **ʿAbdallah** (en un mot, comme *Tabari* : « *ʿAbdallah
+b. al-Zubayr* », 240 occurrences ; WP écrit « *Abd Allah* » en deux mots).
+
+### 3.1 Les récits (`registerSaga` : `name`, `epithet`, `years`)
+
+| Français | Anglais retenu | Note |
+|---|---|---|
+| Abû Bakr as-Siddîq — As-Siddîq — 11–13 H · 632–634 ; « Saga I · Le Véridique » | **Abu Bakr al-Siddiq** — **al-Siddiq** — **AH 11–13 · 632–634** ; « *Saga I · The Truthful* » | WP *Abu Bakr* ; *Tabari* « al-Siddiq » (132) ; WP *Siddiq* : « *Arabic term for truthful* ». |
+| 'Umar ibn al-Khattâb — Al-Fârûq — 13–23 H · 634–644 | **ʿUmar ibn al-Khattab** — **al-Faruq** — **AH 13–23 · 634–644** | WP *Umar*. |
+| Khâlid ibn al-Walîd — Le Sabre dégainé — 13–21 H · 634–642 | **Khalid ibn al-Walid** — **the Drawn Sword** — **AH 13–21 · 634–642** | WP *Khalid ibn al-Walid*. Jamais « *the Sword of God/Allah* » en titre (exigence 8, § 1.9) ; *Tabari* le donne pour surnom (« *He was nicknamed "the sword of God"* »), le recueil peut le rapporter en citation. |
+| 'Uthmân ibn 'Affân — Le Généreux — 23–35 H · 644–656 | **ʿUthman ibn ʿAffan** — **the Generous** — **AH 23–35 · 644–656** | WP *Uthman*. |
+| 'Alî ibn Abî Tâlib — La Porte du Savoir — 35–40 H · 656–661 | **ʿAli ibn Abi Talib** — **the Gate of Knowledge** — **AH 35–40 · 656–661** | WP *Ali*. Le titre vient d'un hadith rendu en anglais « *I am the city of knowledge and ʿAli is its gate* » (usage courant, référence non vérifiée). |
+| Le Caïd — Seigneur de la Citadelle — un maillon de la Chaîne | **the Caid** — **Lord of the Citadel** — *a link in the Chain* | Fiction. *Caid* : forme reçue en anglais du mot arabe *qa’id* (usage courant, référence non vérifiée). |
+| Idris — Le Râwî — 1508 H · 2084 | **Idris** — **the Rawi** — **AH 1508 · 2084** | Fiction. Le nom par défaut du râwî est **Idris** (`langue.js`, `rawi`) ; le joueur peut le changer. |
+| Le cœur — Œuvres, lames et maux du cœur | **The Heart** — *Deeds, Blades and Ailments of the Heart* | |
+| Les cinq Lumières (`D.LIVRES`, livre I) | **The Five Lights** | |
+
+### 3.2 Le groupe jouable : héros et titres (`heroes`)
+
+| Récit | Français — titre | Anglais retenu — titre | Source de la forme |
+|---|---|---|---|
+| caid | Le Caïd — Seigneur de la Citadelle | **the Caid** — *Lord of the Citadel* | fiction |
+| caid | Maître Bahrâm — le Géomètre | **Master Bahram** — *the Geometer* | fiction |
+| caid | Zîrî — Capitaine des sentinelles | **Ziri** — *Captain of the Sentinels* | fiction |
+| idris | Idris — le Râwî | **Idris** — *the Rawi* | fiction |
+| idris | Maître Yûnus — le Gardien | **Master Yunus** — *the Keeper* | fiction ; *Keeper*, non *Guardian* (§ 2.11) |
+| idris | Sâlim — le Repenti | **Salim** — *the Penitent* | fiction |
+| abubakr | Abû Bakr — As-Siddîq | **Abu Bakr** — *al-Siddiq* | WP |
+| abubakr, umar | 'Umar — Al-Fârûq | **ʿUmar** — *al-Faruq* | WP |
+| abubakr | Abû 'Ubayda — Amîn al-Umma | **Abu ʿUbayda** — *Amin al-Umma* (glose : *the Trustee of the Community*) | WP *Abu Ubayda ibn al-Jarrah* ; *Tabari* « *faithful trustee* » |
+| umar | Abû 'Ubayda — L'homme de confiance de la communauté | **Abu ʿUbayda** — *the Trustee of the Community* | même glose : un seul titre anglais pour les deux récits |
+| ali | 'Alî — La Porte du Savoir | **ʿAli** — *the Gate of Knowledge* | WP |
+| ali | Ibn 'Abbâs — Le Docte de la communauté | **Ibn ʿAbbas** — *the Scholar of the Community* | WP *Ibn Abbas* ; titre : **à valider** |
+| ali | 'Ammâr — Le Vétéran | **ʿAmmar** — *the Veteran* | WP *Ammar ibn Yasir* |
+| ali | Qays — Fils de Sa'd | **Qays** — *Son of Saʿd* | WP *Qays ibn Sa'd* |
+| khalid | Khâlid — Le Sabre dégainé | **Khalid** — *the Drawn Sword* | WP |
+| khalid | Al-Qa'qâ' — Ibn 'Amr at-Tamîmî | **al-Qaʿqaʿ** — *ibn ʿAmr al-Tamimi* | WP *Al-Qa'qa' ibn Amr al-Tamimi* |
+| khalid | Dirâr — Ibn al-Azwar | **Dirar** — *ibn al-Azwar* | WP *Dirar ibn al-Azwar* ; *Tabari* (18) |
+| umar | Aslam — L'affranchi de 'Umar | **Aslam** — *ʿUmar's Freedman* | |
+| umar | 'Abd ar-Rahmân — Ibn 'Awf | **ʿAbd al-Rahman** — *ibn ʿAwf* | WP *Abd al-Rahman ibn Awf* |
+| uthman | 'Uthmân — Le Généreux | **ʿUthman** — *the Generous* | WP |
+| uthman | Zayd ibn Thâbit — Le Scribe | **Zayd ibn Thabit** — *the Scribe* | WP ; *Tabari* (35) |
+| uthman | Hudhayfa — Le Gardien du secret | **Hudhayfa** — *Keeper of the Secret* | WP *Hudhayfah ibn al-Yaman* (on écrit -a, § 1.3) ; titre : **à valider** |
+
+Quand un titre commence la ligne affichée sous le nom, il prend la majuscule (« *Al-Siddiq* », « *The Drawn Sword* »).
+Le sceau arabe (`arabic`) ne se traduit pas.
+
+### 3.3 Les personnages historiques des chapitres
+
+Forme retenue, puis la référence. Les Compagnons et ceux de `D.SANS_VISAGE` gardent leur voile sans trait dans toutes
+les langues : le nom anglais ne change rien au moteur, qui lit le nom français (`langue.js`).
+
+| Français | Anglais retenu | Référence |
+|---|---|---|
+| le Messager d'Allah ﷺ ; le Prophète ﷺ | **the Messenger of Allah ﷺ** ; **the Prophet ﷺ** | § 1.4 ; jamais représenté ni mis en dialogue (exigence 1) |
+| Abû 'Ubayda ibn al-Jarrâh | **Abu ʿUbayda ibn al-Jarrah** | WP |
+| Al-Hubâb ibn al-Mundhir | **al-Hubab ibn al-Mundhir** | WP ; *Tabari* « *Hubab b. al-Mundhir* » |
+| Bashîr ibn Sa'd | **Bashir ibn Saʿd** | WP ; *Tabari* |
+| Usâma ibn Zayd ; « Soldat d'Usâma » | **Usama ibn Zayd** ; *a soldier of Usama's army* | WP (*Tabari* : *Usamah*) |
+| Zayd ibn al-Khattâb | **Zayd ibn al-Khattab** | WP |
+| Zayd ibn Thâbit | **Zayd ibn Thabit** | WP |
+| Musaylima (al-Kadhdhâb) | **Musaylima** ; *the Liar* | WP *Musaylima* : « *Musaylima the Liar* » |
+| 'Alî ibn Abî Tâlib | **ʿAli ibn Abi Talib** | WP |
+| Khâlid ibn al-Walîd | **Khalid ibn al-Walid** | WP |
+| Kumayl ibn Ziyâd | **Kumayl ibn Ziyad** | WP ; *Tabari* |
+| Le juge Shurayh | **Judge Shurayh** | *Tabari* (245) ; WP sans article |
+| Qanbar | **Qanbar** | *Tabari* (7) |
+| Al-Hasan (ibn 'Alî) | **al-Hasan** ; *al-Hasan ibn ʿAli* | WP *Hasan ibn Ali* |
+| Mâlik al-Ashtar | **Malik al-Ashtar** | WP |
+| Abû Ayyûb al-Ansârî | **Abu Ayyub al-Ansari** | WP |
+| Farwa ibn Nawfal | **Farwa ibn Nawfal** | *Tabari* « *Farwah b. Nawfal* » |
+| Ibn an-Nabbâh, le muezzin | **Ibn al-Nabbah**, *the muezzin* | forme selon § 1.3, référence non vérifiée |
+| Ibn al-Kawwâ' | **Ibn al-Kawwa’** | *Tabari* « *Ibn al-Kawwa* » (28) |
+| 'Ammâr ibn Yâsir | **ʿAmmar ibn Yasir** | WP ; *Tabari* (83) |
+| Qays ibn Sa'd | **Qays ibn Saʿd** | WP ; *Tabari* |
+| Râfi' ibn 'Umayra | **Rafiʿ ibn ʿUmayra** | forme selon § 1.3, référence non vérifiée |
+| 'Amr ibn 'Abd al-Masîh | **ʿAmr ibn ʿAbd al-Masih** | *Tabari* « *Abd al-Masih* » (44) |
+| Bilâl ibn Rabâh | **Bilal ibn Rabah** | WP |
+| Al-Qa'qâ' ibn 'Amr | **al-Qaʿqaʿ ibn ʿAmr** | WP |
+| Dirâr ibn al-Azwar | **Dirar ibn al-Azwar** | WP |
+| Sophrone | **Sophronius** | WP *Sophronius of Jerusalem* |
+| Al-Hurmuzân | **al-Hurmuzan** | *Tabari* « *Hurmuzan* » (120) ; WP *Hormuzan* (forme persane) |
+| Anas ibn Mâlik | **Anas ibn Malik** | WP |
+| Surâqa ibn Mâlik | **Suraqa ibn Malik** | WP |
+| Jabala ibn al-Ayham | **Jabala ibn al-Ayham** | WP ; *Tabari* « *Jabalah b. al-Ayham* » |
+| Kisrâ (le titre des rois de Perse) | **Kisra** | WP *Kisra* ; *Tabari* (688) |
+| Hudhayfa ibn al-Yamân | **Hudhayfa ibn al-Yaman** | WP ; *Tabari* « *Hudhayfah b. al-Yaman* » |
+| 'Abdallâh ibn az-Zubayr | **ʿAbdallah ibn al-Zubayr** | *Tabari* (240) ; WP *Abd Allah ibn al-Zubayr* |
+| Sa'îd ibn al-'Âs | **Saʿid ibn al-ʿAs** | WP *Sa'id ibn al-As* |
+| 'Abdallâh ibn Sa'd | **ʿAbdallah ibn Saʿd** | WP *Abd Allah ibn Sa'd* ; *Tabari* |
+| Abû Hurayra | **Abu Hurayra** | WP |
+| Aslam | **Aslam** | |
+| 'Abd ar-Rahmân ibn 'Awf | **ʿAbd al-Rahman ibn ʿAwf** | WP |
+| les Ansâr ; un Ansârî ; « Vieil Ansârî » | **the Ansar** ; *a man of the Ansar* ; *an old man of the Ansar* | WP *Ansar (Islam)* ; *Tabari* (1 064) |
+| les Muhâjirûn | **the Muhajirun** | WP *Muhajirun* |
+| un Médinois | *a man of Medina* | |
+| Vétéran de Badr | *a veteran of Badr* | WP *Battle of Badr* |
+
+Les autres désignations sans nom (« Un fidèle », « Courrier du Yamâma », « Scribe du dîwân »…) se traduisent en anglais
+simple, en gardant les noms de lieu de § 3.6 : *a worshipper*, *a courier from al-Yamama*, *a scribe of the diwan*
+(WP *Diwan* : l'article sur le dîwân de ʿUmar n'existe pas sous ce titre ; *diwan* est un mot de *Merriam-Webster*,
+référence non vérifiée). Un « cheikh » de tribu : **shaykh** (IJMES).
+
+### 3.4 Les personnages de fiction
+
+Forme simple, selon § 1.3. Les fonctions se traduisent ; les noms ne se traduisent pas.
+
+| Récit | Français | Anglais retenu |
+|---|---|---|
+| caid | Maymûn, le chambellan | **Maymun, the Chamberlain** |
+| caid | Amghar Idir ; Amghar Meksa ; le vieil amghar | **Amghar Idir** ; **Amghar Meksa** ; *the old amghar* (*amghar* : le chef de village berbère ; mot gardé) |
+| caid | Le vieil imam | *the old imam* |
+| caid | Anir, la sentinelle ; Vieux garde | **Anir, the Sentinel** ; *an old guard* |
+| caid | Udad, officier du rempart | **Udad, officer of the ramparts** |
+| caid | Izem, le général | **Izem, the General** |
+| caid | Maître Yishaq, caravanier | **Master Yishaq, caravaneer** |
+| caid | Farrokh, géomètre | **Farrokh, geometer** |
+| caid | Frère Cyprien, moine-médecin | **Brother Cyprian, monk and physician** (*Cyprian* : forme anglaise du prénom) |
+| caid | L'ancien Warsen | **Elder Warsen** |
+| caid | Porteur d'eau ; Amezyan, le puisatier | *a water carrier* ; **Amezyan, the well-digger** |
+| caid | Le maître de l'école | *the schoolmaster* |
+| caid | Aderfi, prêcheur des Purs ; Un Pur ; les Purs | **Aderfi, preacher of the Pure** ; *one of the Pure* ; **the Pure** |
+| idris | Passant ; Employé ; Vieil homme ; Enfant ; Un écolier | *Passer-by* ; *Clerk* ; *Old Man* ; *Child* ; *a schoolboy* |
+| idris | L'enfant du parvis | **the Child of the Forecourt** |
+| idris | Celui qui défile | **the Scroller** |
+| idris | Le Régent | **the Regent** |
+| idris | L'Admiré | **the Admired** |
+| idris | Le Compteur | **the Counter** |
+| idris | Le Cartographe | **the Cartographer** |
+| idris | L'agent du relevé | **the Survey Agent** |
+| idris | L'opérateur de garde | **the Duty Operator** |
+| abubakr | Thâmir le courtier | **Thamir the Broker** |
+| abubakr | Dirghâm, cheikh des Banû Rimth ; les Banû Rimth | **Dirgham, shaykh of the Banu Rimth** ; **the Banu Rimth** |
+| ali | Ma'dân, notable des greniers | **Maʿdan, notable of the granaries** |
+| ali | Mâzin, chef des cavaliers de la Butte | **Mazin, chief of the Riders of the Mound** |
+| ali | Le maître du cercle ; le doyen des récitants | *the master of the circle* ; *the eldest of the reciters* |
+| khalid | Ghâlib, l'intendant | **Ghalib, the Steward** |
+| khalid | l'économe du monastère | *the bursar of the monastery* |
+| khalid | Wahb ibn Zurayr ; les Banû Zurayr | **Wahb ibn Zurayr** ; **the Banu Zurayr** |
+| khalid | le Fort des Oliviers | **the Fort of the Olives** |
+| umar | Hâzim ibn Nawfal, commis de la Maison de la farine (puis du Trésor) | **Hazim ibn Nawfal, clerk of the Flour House** (*of the Treasury*) |
+| umar | Abû Ghânim, marchand de grain | **Abu Ghanim, grain merchant** |
+| umar | l'ancien de Tibériade | *the elder of Tiberias* |
+| umar | Thawr ibn Mâlik | **Thawr ibn Malik** |
+| uthman | Abû l-Akhbâr | **Abu al-Akhbar** |
+
+Les fonctions se traduisent dans l'anglais le plus simple : *Elder*, *Steward*, *Broker*, *Clerk*. Un hypocrite de fiction
+garde son nom inventé et sobre (exigence 11).
+
+### 3.5 Les cartes et leurs lieux (`D.MAPS`, `D.GABARITS`, `D.LIEUX`)
+
+| Cartes | Anglais retenu |
+|---|---|
+| Médine ; Koufa ; Désert ; Camp ; Cité romaine ; Palais ; Navire ; Noosphère ; La Citadelle ; Cité-Miroir ; Archives basses | **Medina** ; **Kufa** ; **Desert** ; **Camp** ; **Roman City** ; **Palace** ; **Ship** ; **Noosphere** ; **The Citadel** ; **Mirror City** ; **Lower Archives** |
+| Gabarit « Ville d'Arabie » | **Arabian Town** |
+
+*Roman City* : le jeu nomme « romaine » la ville de Rûm, comme les sources arabes (*al-Rum*, « les Romains », pour
+l'Empire d'Orient) ; l'anglais garde l'image (§ 3.6, *Rum*).
+
+| Lieux (`D.LIEUX`) | Anglais retenu |
+|---|---|
+| Mosquée · Place · Souk · Halle · Maisons · Puits · Palmeraie · Porte du nord · Porte du sud · Enclos · Colline · École | **Mosque** · **Square** · **Souk** · **Market Hall** · **Houses** · **Well** · **Palm Grove** · **North Gate** · **South Gate** · **Pen** · **Hill** · **School** |
+| Départ · Dunes · Rochers · Oasis · Source · Caravane · Crête · Ruines · Arrivée | **Start** · **Dunes** · **Rocks** · **Oasis** · **Spring** · **Caravan** · **Ridge** · **Ruins** · **Arrival** |
+| Entrée · Tente du chef · Feu · Étendard · Lignes · Tertre · Tentes | **Entrance** · **Chief's Tent** · **Fire** · **Standard** · **Lines** · **Mound** · **Tents** |
+| Porte · Grande rue · Forum · Basilique · Esplanade · Palais · Fontaine · Remparts · Jardin · Marché · Quartier | **Gate** · **Main Street** · **Forum** · **Basilica** · **Esplanade** · **Palace** · **Fountain** · **Ramparts** · **Garden** · **Market** · **Quarter** |
+| Nef · Trône · Trésor · Colonnade | **Nave** · **Throne** · **Treasury** · **Colonnade** |
+| Poupe · Pont · Mât · Proue · Passerelle · Entrepont | **Stern** · **Deck** · **Mast** · **Prow** · **Gangway** · **Lower Deck** |
+| Seuil · Nœud · Faille · Miroir · Cœur | **Threshold** · **Node** · **Rift** · **Mirror** · **Heart** |
+| Cour · Tour · Grande salle · Greniers · Poterne | **Courtyard** · **Tower** · **Great Hall** · **Granaries** · **Postern** |
+| Rue · Grand écran · Ruelle · Ascenseur · Parvis | **Street** · **Big Screen** · **Alley** · **Elevator** · **Forecourt** |
+| Rayonnages · Bureau · La Chaîne | **Stacks** · **Office** · **The Chain** |
+
+Notes : *Prow*, non *Bow* (c'est une arme, § 2.12) ; *Rift*, non *Weak Point* (§ 2.1) ; *Pont* du navire : *Deck*,
+mais les ponts du labyrinthe : *bridges* (§ 2.9) ; *Elevator*, *Stacks* : américain (§ 1.2). « Souk » : mot reçu en
+anglais (IJMES dirait *suq* ; *souk* est la forme courante, référence non vérifiée).
+
+### 3.6 Les lieux et les faits de l'histoire (titres et sous-titres des chapitres, recueil)
+
+| Français | Anglais retenu | Référence |
+|---|---|---|
+| la Saqîfa des Banû Sâ'ida | **the Saqifa of the Banu Saʿida** | *Tabari* « *Saqifah of the Banu Sa'idah* » ; WP *Saqifa*, *Banu Sa'ida* |
+| les guerres de la Ridda | **the Ridda Wars** | WP *Ridda Wars* ; *Tabari* « *Riddah* » (152) |
+| le Yamâma ; le Jardin de la Mort | **al-Yamama** ; **the Garden of Death** | WP *Al-Yamama* ; *Tabari* « *the "garden of death"* » |
+| Dhû l-Qassa | **Dhu al-Qassa** | *Tabari* « *Dhu al-Qassah* » |
+| Najrân | **Najran** | WP |
+| Koufa | **Kufa** | WP ; *Tabari* « *Kufah* » |
+| Siffîn | **Siffin** | WP *Battle of Siffin* ; *Tabari* (294) |
+| Harûrâ' | **Harura’** | *Tabari* « *Harura’* » |
+| Nahrawân | **Nahrawan** | WP *Battle of Nahrawan* ; *Tabari* (135) |
+| le désert de la Samâwa | **the Samawa desert** | *Tabari* « *Samawah* » (18) |
+| la vallée du Yarmoûk ; la bataille du Yarmoûk | **the Yarmuk valley** ; **the Battle of the Yarmuk** | WP *Battle of the Yarmuk* ; *Tabari* « *Yarmuk* » |
+| Qinnasrîn ; Homs | **Qinnasrin** ; **Homs** | WP ; *Tabari* écrit *Hims*, la forme anglaise reçue est *Homs* (IJMES) |
+| al-Hîra | **al-Hira** | WP *Al-Hira* |
+| Damas | **Damascus** | WP |
+| Îliyâ' (Jérusalem) ; Aelia | **Iliya’ (Jerusalem)** ; **Aelia** | *Tabari* « *Iliya* » (24), « *Aelia* » (18) ; WP *Aelia Capitolina* |
+| le Shâm | **al-Sham** (la Syrie) | WP *Bilad al-Sham* |
+| Tibériade | **Tiberias** | WP |
+| al-Madâ'in | **al-Mada’in** | WP *Al-Mada'in* |
+| Rûm | **Rum** (*the Romans*) | |
+| les Ghassânides | **the Ghassanids** | WP *Ghassanids* |
+| Kalb ; Fazâra ; Tamîm | **Kalb** ; **Fazara** ; **Tamim** | WP *Banu Kalb*, *Banu Fazara* |
+| al-Khatt (Bahreïn) ; Salûq (Yémen) | **al-Khatt** ; **Saluq** | WP *Khatt* |
+| L'Année des cendres | **the Year of Ashes** | *Tabari* rend *ʿĀm al-Ramāda* par « *Year of the Drought, Year of the Destruction* » ; *ramād* veut dire « cendre » : **à valider** |
+| le puits de Rûma | **the Well of Ruma** | *Tabari* « *Rumah* » (36) |
+| les exemplaires de 'Uthmân ; un mushaf | **ʿUthman's copies of the Qur’an** ; *a mushaf* | WP *Uthmanic codex*, *Mushaf* ; on n'écrit pas *codex* (§ 2.1) |
+| les sept modes de récitation (*ahruf*) | **the seven modes** (*ahruf*) | WP *Ahruf* : « *translated as 'styles', 'ways', 'forms' and 'modes'* » |
+| Dhât as-Sawârî, la bataille des Mâts | **Dhat al-Sawari, the Battle of the Masts** | WP *Battle of the Masts* ; *Tabari* « *Battle of the Masts* » |
+| Alexandrie ; Chypre ; l'Égypte | **Alexandria** ; **Cyprus** ; **Egypt** | WP |
+| le dîwân | **the diwan** | *Tabari* (376) |
+| le calendrier de l'Hégire ; l'Hégire | **the Hijri calendar** ; **the Hijra** | WP *Islamic calendar*, *Hijrah* (forme -a, § 1.3) |
+| Badr ; La Mecque ; Médine | **Badr** ; **Mecca** ; **Medina** | WP |
+| les Rondes de nuit | **the Night Rounds** | |
+| la grotte (de l'Hégire) | **the Cave** | |
+| le voyage nocturne | **the Night Journey** | WP *Isra' and Mi'raj* |
+| le sermon de l'Adieu | **the Farewell Sermon** | WP *Farewell Sermon* |
+| la foggara (veillées) | **the foggara** (glose : *an underground channel*) | WP *Foggara* renvoie à *Qanat* |
+
+### 3.7 Les égrégores et les idoles
+
+Règle : un nom qui dit ce que fait l'idée, en anglais courant, jamais un nom de démon (§ 1.9), jamais un peuple, une
+religion ni une personne (exigence 6). Les familles d'images restent des familles : « Murmure de… » → **Murmur of…** ;
+« Écho… » → **Echo…** ; « Mirage… » → **Mirage…**. *[idole]* : l'égrégore d'un combat d'idole.
+
+| Récit | Français | Anglais retenu | Note |
+|---|---|---|---|
+| caid | Chuchotement | **Hushed Talk** | Pas *Whisper* : le mot appartient aux souffleurs (§ 2.1), qui n'ont pas de figure. |
+| caid | L'Ombre du Père | **The Father's Shadow** | |
+| caid | Dispense vendue | **Exemption for Sale** | |
+| caid | Le Sommeil | **Slumber** | |
+| caid | Le Tambour *[idole]* | **The Drum** | |
+| caid | On-dit | **Gossip** | *Hearsay* est pris par « Ouï-dire » (uthman). |
+| caid | Le Bouc émissaire *[idole]* | **The Scapegoat** | |
+| caid | Le Pur *[idole]* | **The Pure One** | **À valider** ; à distinguer des gens, *the Pure* (§ 3.4). |
+| idris | Notification | **Notification** | |
+| idris | La Tendance | **The Trend** | |
+| idris | La Marque | **The Brand** | |
+| idris | Le Score | **The Score** | |
+| idris | Le Flux | **The Feed** | Le mot anglais du fil des réseaux. |
+| idris | Le Défilement | **The Scroll** | Égrégore de la Cité (et attaque « Défilement » → *Scrolling*) ; ce n'est pas une idée noire. |
+| idris | Le Petit Trône | **The Little Throne** | |
+| idris | L'Applaudissement | **Applause** | |
+| idris | Le Compte | **The Tally** | Pas *The Count* (un titre de noblesse). |
+| idris | La Carte sans chemin | **The Map Without Roads** | |
+| idris | L'AGRÉGOR *[idole]* | **The AGGREGOR** | § 2.1 |
+| abubakr | Murmure de deuil | **Murmur of Mourning** | |
+| abubakr | Le Déni *[idole]* | **Denial** | |
+| abubakr | Mot d'ordre | **The Rallying Cry** | |
+| abubakr | Al-'Asabiyya — le Clan *[idole]* | **al-ʿAsabiyya — the Clan** | WP *Asabiyyah* |
+| abubakr | Nuée du reniement | **Swarm of Recanting** | *Swarm* : le mot des nuées (§ 2.10). |
+| abubakr | L'Avare du dû | **The Withholder of Dues** | |
+| abubakr | Écho flatteur | **Flattering Echo** | |
+| abubakr | Fausse rime | **False Rhyme** | |
+| abubakr | Mur du Jardin | **Wall of the Garden** | |
+| abubakr | Al-Kadhdhâb — le Menteur *[idole]* | **al-Kadhdhab — the Liar** | WP *Musaylima* : « *Musaylima the Liar* ». L'idole porte l'épithète, jamais le nom d'un homme (exigence 6). |
+| ali | Murmure de rang | **Murmur of Rank** | |
+| ali | Soupçon | **Suspicion** | Même mot que l'idée noire (§ 2.6), comme en français. |
+| ali | Le Privilège | **Privilege** | |
+| ali | Écho | **Echo** | |
+| ali | Clameur | **Clamor** | |
+| ali | Le Slogan *[idole]* | **The Slogan** | |
+| ali | Lame pieuse | **Pious Blade** | |
+| ali | Le Scrupule inversé | **The Inverted Scruple** | |
+| ali | Le Juge sans miséricorde *[idole]* | **The Merciless Judge** | |
+| khalid | Murmure de soif | **Murmur of Thirst** | |
+| khalid | Le Mirage | **The Mirage** | |
+| khalid | La Soif | **Thirst** | |
+| khalid | Le Décompte | **The Headcount** | |
+| khalid | Forêt de lances | **Forest of Spears** | |
+| khalid | La Peur du Nombre *[idole]* | **Fear of Numbers** | |
+| khalid | Écho de louange | **Echo of Praise** | |
+| khalid | Le Laurier | **The Laurel** | |
+| khalid | L'Idole du Héros *[idole]* | **The Idol of the Hero** | Tournure de Bacon (*Idols of the Tribe…*). |
+| umar | Murmure de la faim | **Murmur of Hunger** | |
+| umar | Plainte des cendres | **Lament of Ashes** | Fait écho à *the Year of Ashes* (§ 3.6). |
+| umar | L'Accapareur | **The Hoarder** | |
+| umar | Mirage de gloire | **Mirage of Glory** | |
+| umar | Le Faste | **Pomp** | |
+| umar | L'Aigle d'Airain *[idole]* | **The Bronze Eagle** | |
+| umar | Reflet d'or | **Golden Reflection** | |
+| umar | La Couronne suspendue | **The Hanging Crown** | |
+| umar | Le Trône vide *[idole]* | **The Empty Throne** | |
+| uthman | Murmure | **Murmur** | |
+| uthman | Variante querelleuse | **Quarrelsome Variant** | |
+| uthman | Babel | **Babel** | |
+| uthman | Écume d'effroi | **Foam of Dread** | |
+| uthman | L'Abîme *[idole]* | **The Abyss** | Jamais *Abaddon*. |
+| uthman | Ouï-dire | **Hearsay** | |
+| uthman | Écho | **Echo** | |
+| uthman | L'Or | **Gold** | Jamais *Mammon* (§ 1.9). |
+| uthman | La Rumeur *[idole]* | **Rumor** | |
+
+Les idoles nommées au recueil (« le Clan, l'Empire, le Héros, l'Or, la Rumeur, le Juge sans miséricorde ») : *the Clan,
+the Empire, the Hero, Gold, Rumor, the Merciless Judge*. « L'égrégore La Razzia » (`raid`) : **the Raid**.
+
+Les noms de compétences des héros et des ennemis ne sont pas fixés ici : on les écrit d'après les règles de § 1.9 et le
+vocabulaire de § 2 (*Truthful Word*, *Soothing*…), courts (22 signes), sans nom divin, sans nom de démon.
+
+## 4. Points à trancher par le décideur
+
+Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, les agents écrivent la proposition.
+
+1. **La formule après un Compagnon.** Proposition : aucune, comme le jeu français, l'édition de Muhsin Khan et WP-MOS.
+   Autre choix : « *(may Allah be pleased with him)* », au recueil seulement, à la première mention (§ 1.5).
+2. **« Allah » ou « God ».** Proposition : *Allah*, comme le français et les versets de SI ; *Tabari*, *Guillaume* et
+   WP-MOS disent *God* (§ 1.4).
+3. **L'orthographe américaine**, choisie pour s'accorder aux versets de SI (§ 1.2).
+4. **La translittération** : IJMES pour les noms, ʿ (U+02BF) pour le *ʿayn*, ’ pour la *hamza*, article jamais assimilé
+   (*al-Siddiq*, *ʿAbd al-Rahman*, là où le français écrit « as-Siddîq », « 'Abd ar-Rahmân ») ; *ʿAbdallah* en un mot,
+   comme *Tabari* (§ 1.3). À confirmer sur une capture : le rendu de ʿ dans Cinzel et Share Tech Mono.
+5. **« Egregore ».** Le mot anglais est occultiste et a désigné les Veilleurs d'Hénoch (WP *Egregore*). Garder
+   *egregore* (proposition, par fidélité au mot du jeu, dit « une image » au recueil), ou forger un mot sans passé
+   (*thought-idol*) (§ 2.1).
+6. **« The Saint ».** En anglais, *saint* fait d'abord entendre la canonisation chrétienne ; Winter l'emploie pour le
+   *walī*. Garder *the Hero, the Sage, the Saint* (proposition ; Scheler, en anglais, dit *the saint, the genius, the
+   hero*), ou dire *the Selfless* pour le troisième (§ 2.8). Et *stance* pour « posture ».
+7. **Les mots de la jauge et des statistiques** : *Constancy* (Constance), *Breath* (Souffle), *spent* (éprouvé),
+   *Mind* (Esprit), *Momentum* (Élan), *Wisdom* (Sagesse), *Rooting* (enracinement), *weak point* (faille), *veil* /
+   *unveiled* (§ 2.1, § 2.12).
+8. **Les images du cœur** : *dark thoughts* (idées noires), *star companions* (compagnons de lumière), *ailments of
+   the heart* (maux du cœur), *blades* / *sever* (§ 2.1).
+9. **Trois Valeurs** : *Zeal* (l'Ardeur), *Goodwill* (la Bienveillance), et *Miserliness* plutôt qu'*Avarice* pour
+   le mal d'en face de la Largesse (§ 2.5). *Resentment* pour la Rancune (§ 2.6). *Speak Plainly* pour « Dire vrai »
+   (§ 2.6).
+10. **L'interface** : *Halt* (halte), *Compendium* (Recueil ; *Codex* écarté à cause des exemplaires de ʿUthman),
+    *Evening* (veillée ; *Vigil* écarté à cause de la prière de la nuit), *Relief* (le secours), *the Chart of Evil*
+    (l'organigramme du mal) (§ 2.1).
+11. **« Bataille déclarée »** : *pitched battle* (terme d'histoire militaire, proposition) ou *declared battle* (calque,
+    qui garde l'idée qu'on la dit) (§ 2.1). *Local Folk* pour « Gens du lieu » (§ 2.10).
+12. **« Râwî »** gardé en anglais (*rawi*, *the Rawi*), glosé une fois, comme le français le garde (§ 2.1).
+13. **« L'Année des cendres »** : *the Year of Ashes* (le mot arabe) ; *Tabari* dit *Year of the Destruction* (§ 3.6).
+14. **Deux titres de Compagnons** : *the Scholar of the Community* (Ibn ʿAbbas) et *Keeper of the Secret* (Hudhayfa),
+    sans traduction anglaise de référence lue (§ 3.2) ; et la glose *the Trustee of the Community* pour *Amin al-Umma*,
+    gardée identique dans les deux récits.
+15. **L'idole « Le Pur »** : *The Pure One*, à côté des gens, *the Pure* (§ 3.7).
+16. **Les dates** : *AH 11 · 632* (*Tabari* met *A.H.* devant le nombre), sans *CE* sauf ambiguïté (§ 1.6).
+17. **Le libellé « traduction du sens »** : *translation of the meaning* — usage non vérifié dans un ouvrage lu ; le
+    registre des sources peut le fixer en même temps que la référence de SI (§ 1.5).
+
+## 5. Ce qui n'a pas pu être vérifié
+
+Lu dans les ouvrages ou pages nommés : tout ce qui porte une citation entre guillemets dans les tableaux. Non
+vérifié, à confirmer avant publication :
+
+- l'emploi de *noosphere* dans le texte même de la traduction de Teilhard (seul le catalogue a été lu) ;
+- le texte de l'essai de Scheler (seuls les titres de ses sections, dans les notices de libraires) ;
+- le nom arabe *al-Jady* de la Polaire, *the Gate of Knowledge*, *night vigil*, *translation of the meaning*, *caid*,
+  *souk*, *diwan* dans *Merriam-Webster* (dictionnaire non consulté) ;
+- les épithètes des poètes pour l'équipement (*muhannad*, *mashrafi*, *khatti*, *samhari*, *nabʿ*, *lamt*, *saluqi*) :
+  le français lui-même les dit « à faire vérifier » ;
+- les formes de *Rafiʿ ibn ʿUmayra* et d'*Ibn al-Nabbah* (ni WP ni l'OCR de *Tabari* ne les ont rendues) ;
+- le rendu des signes ʿ et ’ dans les polices du jeu (plages déclarées seulement).
+
+Le texte intégral de *Tabari*, de *Guillaume*, de Winter, de Skellie et de Karim a été lu par recherche de mots dans les
+fichiers OCR d'archive.org : les points souscrits y sont souvent perdus, et les comptes donnés sont des ordres de
+grandeur.
+
