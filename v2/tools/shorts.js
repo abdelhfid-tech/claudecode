@@ -53,7 +53,7 @@ body.f-panneau #battle .panel { visibility: hidden !important; }
 body.f-bandeau #battle .banner { visibility: hidden !important; }
 #stage { box-shadow: 0 0 0 1px rgba(233, 200, 119, .22) !important; }
 body.f-boutons #menubtn, body.f-boutons #helpbtn, body.f-boutons #zoombtn, body.f-boutons #buildbtn { visibility: hidden !important; }
-body.f-annonces #toasts { visibility: hidden !important; }
+body.f-annonces #toasts { visibility: hidden !important; } body.f-annonces #dialog .marque { display: none !important; }
 body.f-boussole #compass { visibility: hidden !important; }
 body.f-hud #hud { visibility: hidden !important; }
 body.f-noms #noms { visibility: hidden !important; }

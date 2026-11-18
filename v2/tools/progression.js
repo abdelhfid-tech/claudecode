@@ -62,7 +62,9 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
       for (let i = 0; i < 400 && await p.evaluate(() => window.ISNAD.battle.active); i++) {
         const s = await p.evaluate(() => { const q = x => document.querySelector(x), b = q('#battle .banner'), c = q('#battle .cmd'); return { ban: b && !b.hidden ? b.textContent : '', cible: !!(c && c.querySelector('.mhint')), principal: !!(c && c.querySelector('.mlist.main')), sous: !!(c && c.querySelector('.mback') && !c.querySelector('.mhint') && !c.querySelector('.mlist.main')), carte: !q('#card').hidden }; });
         if (s.ban && /Nouveau/.test(s.ban)) banniere = s.ban;
-        if (s.carte || s.ban) { await p.keyboard.press('Enter'); await p.waitForTimeout(200); continue; }
+        // 2.12 (D189) : la leçon d'une commande nouvelle n'est plus un bandeau qui attend ; le bandeau d'ouverture (qui
+        // n'attend pas) peut encore être là quand les commandes s'ouvrent : on ne valide pas alors à l'aveugle, on touche
+        if (s.carte || (s.ban && !s.principal && !s.cible && !s.sous)) { await p.keyboard.press('Enter'); await p.waitForTimeout(200); continue; }
         if (s.cible) { await p.keyboard.press('Enter'); await p.waitForTimeout(350); continue; }
         if (s.sous) { await p.evaluate(() => { const b = [...document.querySelectorAll('#battle .cmd .mlist .mi')].find(x => !x.classList.contains('off')); if (b) b.click(); else document.querySelector('#battle .cmd .mback').click(); }); await p.waitForTimeout(350); continue; }
         if (s.principal) { if (!vus) vus = await lire(); await p.waitForTimeout(280);
@@ -98,7 +100,9 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     si(aide.n >= 20 && aide.titres.every(Boolean), `l'aide du jeu : ${aide.n} pages, chacune avec son titre et son texte`, `l'aide du jeu : ${aide.titres.filter(t => !t).length} page(s) sans titre ou sans texte sur ${aide.n} — ${JSON.stringify(aide.titres.slice(-4))}`);
     // de combat en combat : les Vertus, puis la Garde et la Niyya, puis la besace — une à la fois, la précédente ayant resservi
     const petit = await p.evaluate(() => { const W = window.ISNAD.world, E = W.saga.enemies; W.foes.forEach(f => { f.done = true; }); /* les égrégores de la carte sont écartés : seuls comptent les combats que l'outil lance */ return Object.keys(E).find(k => E[k].tier === 'minion' && !E[k].racine); });
-    const lance = async groupe => { await p.evaluate(g => { const I = window.ISNAD, S = I.script; I.world.healAll(); window.__fin = false; S.depth++; I.battle.start({ group: g, bg: 'ville' }).then(() => { S.depth--; window.__fin = true; }); }, groupe); for (let i = 0; i < 80 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mlist.main .mi'))); i++) { await T.entree(); await p.waitForTimeout(170); } };
+    // (2.12 : en attendant les commandes, on ne valide que les cartons et les répliques — le bandeau d'ouverture passe de lui-même,
+    // et un « Entrée » tombé au moment où les commandes s'ouvrent choisirait « Frapper » à la place du joueur)
+    const lance = async groupe => { await p.evaluate(g => { const I = window.ISNAD, S = I.script; I.world.healAll(); window.__fin = false; S.depth++; I.battle.start({ group: g, bg: 'ville' }).then(() => { S.depth--; window.__fin = true; }); }, groupe); for (let i = 0; i < 80 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mlist.main .mi'))); i++) { if (await T.visible('#card') || await T.visible('#dialog')) await p.keyboard.press('Enter'); await p.waitForTimeout(170); } };
     const suite = [];
     for (const voulue of ['Vertus', 'Garde', 'Objets', 'Éclairer']) {
       const avant = (await T.etat()).journal.length; await lance([petit, petit]); // deux petits égrégores : le temps de se servir deux fois de la commande nouvelle

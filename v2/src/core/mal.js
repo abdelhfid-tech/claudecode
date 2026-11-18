@@ -82,11 +82,12 @@
       let reste = Object.keys(D.VOIES);
       for (;;) {
         let pips = ''; for (let i = 0; i < X.voies.length; i++) pips += `<i class="pip${i >= k ? ' on' : ''}"></i>`;
-        const tete = `<span class="seal idee" style="background-image:url(${M.url(id)})"></span><span class="pt"><b>${I.esc(N.name)}</b><small>${I.t('une idée noire : on lui répond')}</small></span><span class="trust">${I.t('Voiles')} <span class="pips">${pips}</span></span>`;
-        const opts = reste.map(v => ({ ok: v === X.voies[k], html: `<b>${D.VOIES[v].name}</b> <small class="voie">${D.VOIES[v].de}</small><br>${I.fmt(X.rep[v])}` }));
-        // ce qu'il vient de dire reste sous les yeux pendant que l'on choisit
-        const v = reste[await S.menuPick({ html: I.t('Comment lui réponds-tu ?') + '<small>' + I.t('« {dit} »', { dit: I.fmt(X.dit[k]) }) + '</small>' }, opts, tete)];
-        if (v === X.voies[k]) { I.audio.sfx('light'); S.toast(I.t('<b>Un voile tombe</b>'), 1800); if (X.oui && X.oui[k]) await S.run([['nar', X.oui[k]]]); S.hideDialog(); break; }
+        // 2.x (D189) : l'en-tête resserré (l'image, le nom, « on lui répond », les voiles) ; ce qu'elle vient de dire tient
+        // lieu d'invite et reste sous les yeux pendant que l'on choisit ; les trois réponses restent entières
+        const tete = { cls: 'court', html: `<span class="seal idee" style="background-image:url(${M.url(id)})"></span><span class="pt"><b>${I.esc(N.name)}</b><small>${I.t('une idée noire : on lui répond')}</small></span><span class="trust">${I.t('Voiles')} <span class="pips">${pips}</span></span>` };
+        const opts = reste.map(v => ({ ok: v === X.voies[k], html: `<b>${D.VOIES[v].name}</b> <small class="voie">${D.VOIES[v].de}</small><span class="rep" dir="${I.langue.sens(X.rep[v])}">${I.fmt(X.rep[v])}</span>` })); // la réponse, sur sa ligne, dans le sens de sa langue
+        const v = reste[await S.menuPick({ cls: 'dit', html: I.t('« {dit} »', { dit: I.fmt(X.dit[k]) }) }, opts, tete)];
+        if (v === X.voies[k]) { I.audio.sfx('light'); S.marque(I.t('<b>Un voile tombe</b>')); if (X.oui && X.oui[k]) await S.run([['nar', X.oui[k]]]); S.hideDialog(); break; } // à côté du nom du narrateur, en tête de la narration qui suit
         fautes++; I.audio.sfx('dark'); await S.run([['nar', X.non[v]]]); S.hideDialog(); reste = reste.filter(x => x !== v);
       }
     }

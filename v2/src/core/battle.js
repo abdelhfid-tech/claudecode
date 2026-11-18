@@ -132,7 +132,7 @@
     C.all.forEach(e => { e.ct = 1000 / eff(e, 'spd') * (0.6 + Math.random() * 0.4) * (e.side === 'foe' ? 1.15 : 1) * (e.gear && e.gear.prime ? 0.55 : 1); });
     if (first) { I.audio.sfx('glitch'); G.flash('#fff'); await S.fade('out', 220); }
     I.setScene(B.scene); B.active = true; G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue, n: 0 };
-    document.body.classList.add('in-battle'); $('#hud').hidden = true; $('#toasts').innerHTML = ''; $('#battle').hidden = false; refresh();
+    document.body.classList.add('in-battle'); $('#hud').hidden = true; $('#battle').hidden = false; refresh(); // 2.x (D189) : le fil n'est plus vidé — il se tait pendant le combat, et ce qui y attend passera après
     // la musique à retrouver n'est plus retenue ici : c'est celle du lieu (I.audio.place). Retenue à chaque tentative, elle
     // devenait l'air de deuil après une défaite, et la carte le gardait jusqu'à ce qu'on la quitte.
     I.audio.music(opts.group.some(id => (foeDef(id) || {}).vice) && D.TRACKS.includes('vice') ? 'vice' : opts.boss ? 'boss' : 'combat'); I.audio.beat(opts.boss ? 'malfuf' : (opts.bg === 'romaine' || opts.bg === 'palais') ? 'marche' : (opts.bg === 'cite' || opts.bg === 'noos') ? 'cyber' : 'ayyub');
@@ -152,9 +152,10 @@
     if (first) await I.rangs.declare(C, opts);
     // 2.x — la progression (lecons.js) : dans une partie neuve, le combat donne une commande nouvelle à la fois
     C.neuf = I.lecons && !I.debug.auto ? I.lecons.combat(I.mal.estIdole(opts)) : null; C.neufVu = false;
+    // sa leçon ne passe plus en bandeau sur l'image : elle s'écrit dans le panneau, sous la commande nouvelle, cerclée (D189)
+    C.lecon = C.neuf && C.neuf !== 'frapper' ? I.lecons.banniere(C.neuf) : '';
     if (first && opts.intro) await banner(I.esc(opts.intro), readTime(opts.intro), true, 'speech intro');
     else if (first) await banner(opts.boss ? I.t('{nom} se dresse.', { nom: d0.name }) : I.t('Une emprise se referme…'), 1100);
-    if (C.neuf && C.neuf !== 'frapper') { const t = I.lecons.banniere(C.neuf); if (t) await banner(t, readTime(t), true, 'speech intro'); }
     if (HC.w) {
       await banner(`<small>${C.rac ? I.t('Épreuve de poids {w} · provision du cœur {had} · enracinement {traits}', { w: HC.w, had: HC.had, traits: I.mal.traits(C.rac) }) : I.t('Épreuve de poids {w} · provision du cœur {had}', { w: HC.w, had: HC.had })}</small>${C.lack ? I.t('Le cœur est lourd') : I.t('Le cœur est prêt')}`, 1500, false, C.lack ? 'speech foe' : 'speech intro');
       if (!C.lack) C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 10); });
@@ -283,6 +284,7 @@
     return new Promise(res => {
       box.innerHTML = ''; if (title) box.appendChild(I.el('div', 'mtitle', title));
       const list = I.el('div', 'mlist' + (o.cls ? ' ' + o.cls : '')); box.appendChild(list);
+      if (o.note) { const n = I.el('div', 'mlecon', o.note); n.dir = I.langue.sens(n.textContent); box.appendChild(n); } // 2.x (D189) : la leçon d'une commande nouvelle, sous la liste
       const desc = I.el('div', 'mdesc'); if (o.desc) box.appendChild(desc);
       let idx = o.start || 0; const btns = [];
       const sel = (i, pas) => { idx = (i + items.length) % items.length; for (let k = 0; k < items.length && items[idx].cache; k++) idx = (idx + (pas || 1) + items.length) % items.length; // une commande pas encore reçue (lecons.js) est sautée
@@ -337,7 +339,7 @@
     while (true) {
       const pips = () => { let s = ''; for (let i = 0; i < 5; i++) s += `<i class="pip${i < h.niyya - boost ? ' on' : i < h.niyya ? ' use' : ''}"></i>`; return s; };
       const Lc = I.lecons, voit = k => !Lc || Lc.voit(k), sert = k => { const t = Lc && Lc.outilDe(k); if (!t) return; if (C.neuf === t && !C.neufVu) C.neufVu = true; else Lc.reemploi(t, true); }; // (la première fois, on vient de l'apprendre ; ensuite, c'est sans aide)
-      const title = () => `<b style="color:${h.ray || h.color}">${h.name}</b>` + (voit('niyya') ? `<span class="niyya"><button type="button" class="nb" data-d="-1">−</button>${I.t('Niyya')} ${pips()}<button type="button" class="nb" data-d="1">+</button>${boost ? `<em>${I.t('élan ×{n}', { n: boost })}</em>` : ''}</span>` : '');
+      const title = () => `<span class="qui"><b style="color:${h.ray || h.color}">${h.name}</b><small class="niv">${I.t('Niv. {n}', { n: h.ref.lvl })}${h.posture && I.postures.offertes() ? ' · ' + D.POSTURES[h.posture].court : ''}</small></span>` + (voit('niyya') ? `<span class="niyya"><button type="button" class="nb" data-d="-1">−</button>${I.t('Niyya')} ${pips()}<button type="button" class="nb" data-d="1">+</button>${boost ? `<em>${I.t('élan ×{n}', { n: boost })}</em>` : ''}</span>` : '');
       const setBoost = d => { if (!voit('niyya')) return; const was = boost; boost = I.clamp(boost + d, 0, Math.min(3, h.niyya)); if (boost > was) { G.spawn({ x: h.x, y: h.y - 24, type: 'ring', r0: 6, r1: 24 + boost * 4, life: 0.4, size: 2, color: h.color }); for (let q = 0; q < 8; q++) G.spawn({ x: h.x + (Math.random() - 0.5) * 20, y: h.y, vy: -50 - Math.random() * 40, life: 0.6, size: 0.9, color: h.color, type: 'spark' }); } const t = box.querySelector('.mtitle'); if (t) { t.innerHTML = title(); wire(); } I.audio.sfx('move'); };
       const wire = () => box.querySelectorAll('.nb').forEach(b => b.onclick = ev => { ev.stopPropagation(); setBoost(+b.dataset.d); });
       const lum = lightOf(h);
@@ -350,7 +352,8 @@
       ];
       const iOrd = C.champ ? items.push({ label: '⚑ ' + I.t('Ordonner'), sub: h.def.stratege && C.champ.libre !== C.turn ? I.t('sans perdre son tour') : I.t('les rangs') }) - 1 : -1;
       const iLim = h.sakina >= 100 ? items.push({ label: `❂ ${h.def.limit.name}`, sub: I.t('Sérénité'), cls: 'limit' }) - 1 : -1;
-      const p = listMenu(box, title(), items, { start, onLR: setBoost, cls: 'main' }); wire();
+      const nv = C.lecon && !C.neufVu ? ({ vertus: 2, objets: 3, garde: 4 })[C.neuf] : undefined; if (nv !== undefined && items[nv]) items[nv].cls = 'neuf'; // la commande nouvelle est cerclée, sa leçon dessous, jusqu'au geste
+      const p = listMenu(box, title(), items, { start, onLR: setBoost, cls: 'main', note: nv !== undefined ? C.lecon : '' }); wire();
       const i = await p; start = i;
       if (i === 0 || i === 1) { const sk = i === 0 ? FER : lum; const t = await pickTarget(alive('foe'), I.t(sk.name)); if (!t) continue; sert('attack'); if (boost) sert('niyya'); return { type: 'skill', skill: sk, targets: [t], boost }; }
       if (i === 2) {
@@ -608,7 +611,7 @@
       let pips = ''; if (!I.lecons || I.lecons.voit('niyya')) for (let i = 0; i < 5; i++) pips += `<i class="pip${i < e.niyya ? ' on' : ''}"></i>`; // la Niyya ne se montre qu'une fois reçue (lecons.js)
       const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${I.t(STN[k === 'df' ? 'def' : k])}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="${k === 'regen' || k === 'garde' || k === 'taunt' ? 'up' : 'dn'}">${I.t(STN[k] || k)}</b>`).join('');
       const r = I.el('button', 'hrow' + (e === C.active ? ' act' : '') + (e.alive ? '' : ' ko') + (C.cursor === e ? ' cur' : ''),
-        `<span class="hs" style="background-image:url(${G.sealURL(e.def.arabic, e.ray || e.color)})"></span><span class="hn"><b style="color:${e.ray || e.color}">${I.esc(e.name)}</b><small>${I.t('Niv. {n}', { n: e.ref.lvl })}${e.posture && I.postures.offertes() ? ' · ' + D.POSTURES[e.posture].court : ''} ${sts}</small></span>
+        `<span class="hs" style="background-image:url(${G.sealURL(e.def.arabic, e.ray || e.color)})"></span><span class="hn"><b style="color:${e.ray || e.color}">${I.esc(e.name)}</b><small><span class="nv">${I.t('Niv. {n}', { n: e.ref.lvl })}${e.posture && I.postures.offertes() ? ' · ' + D.POSTURES[e.posture].court : ''}</span> ${sts}</small></span>
          <span class="hbars"><span class="bar hp"><i style="width:${e.hp / e.max.hp * 100}%"></i><em>${e.alive ? Math.ceil(e.hp) : I.t('Éprouvé')}</em></span><span class="bar sp"><i style="width:${e.max.sp ? e.sp / e.max.sp * 100 : 0}%"></i><em>${e.sp}</em></span></span>
          <span class="hx"><span class="pips">${pips}</span><span class="bar sk${e.sakina >= 100 ? ' full' : ''}"><i style="width:${e.sakina}%"></i></span></span>`);
       r.type = 'button'; r.onclick = ev => { ev.stopPropagation(); if (C.pickCb) C.pickCb(e); };

@@ -31,7 +31,7 @@
   Po.veille = function () {
     if (!Po.offertes() || I.save.data.codex.includes('coeur/postures')) return false;
     const T = (I.sagas.coeur && I.sagas.coeur.postures) || {}, h = W.party.map(id => W.hero(id)).find(q => Po.ouvertes(q).length > 1);
-    const dire = () => { I.oeuvres.learn('postures', true); I.script.toast(I.fmt((T.ouverte || '').replace('%s', h.def.name)), 7000); };
+    const dire = () => { I.oeuvres.learn('postures', true); I.script.toast(I.fmt((T.ouverte || '').replace('%s', h.def.name)), { outil: 'postures' }); }; // une leçon : au fil, jusqu'à ce qu'on prenne une figure
     return I.lecons ? I.lecons.proposer('postures', dire) : (dire(), true);
   };
   // la page de la halte

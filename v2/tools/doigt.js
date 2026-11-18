@@ -55,7 +55,9 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
           // l'égrégore lui-même, sur la scène, et non sa plaque : c'est lui que le pouce vise
           if (cible) { const r = q('#cv').getBoundingClientRect(); return on('cible', q('#battle'), [r.left + cible.x / G.PW * r.width, r.top + cible.y / G.PH * r.height], { ou, texte: cible.nom, corps: cible.nom, plaque: pl ? mid(pl) : null }); }
           return pl ? on('cible', pl, null, { ou }) : { quoi: 'attente', ou }; }
-        if (c && c.querySelectorAll('.mi').length && !(b && !b.hidden)) return on('commande', c.querySelectorAll('.mi')[1], null, { ou });
+        // 2.12 (D189) : chaque commande du combat est dans l'écran et se touche (en 360 × 560, Vertus, Objets et Garde tombaient dessous)
+        if (c && c.querySelectorAll('.mi').length && !(b && !b.hidden)) { const m = c.querySelector('.mlist.main'), hors = !m ? [] : [...m.querySelectorAll('.mi')].filter(x => getComputedStyle(x).display !== 'none').filter(x => { const r = x.getBoundingClientRect(), e = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return r.top < 0 || r.bottom > innerHeight || !(e && x.contains(e)); }).map(x => x.textContent.trim().slice(0, 24));
+          return on('commande', c.querySelectorAll('.mi')[1], null, { ou, hors, commandes: m ? m.querySelectorAll('.mi').length : 0 }); }
         if (b && !b.hidden) return on('bandeau', b, null, { ou });
         return { quoi: 'attente', ou }; }
       if (vis(q('#dialog'))) return on('dialogue', q('#dialog'), [innerWidth / 2, Math.min(innerHeight - 6, q('#dialog').getBoundingClientRect().bottom + 30)], { ou }); // on touche sous la boîte, là où tombe le pouce
@@ -84,6 +86,7 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
         await p.waitForTimeout(700); const s2 = await etat(); if (s2.quoi !== s.quoi || s2.texte !== s.texte) continue;
         if (s2.souci) { const m = s.quoi + ' ' + s2.souci + ' : « ' + s.texte + ' » (' + (s.ou || 'avant la partie') + ')'; if (!soucis.includes(m)) { soucis.push(m); await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-' + soucis.length + '.png') }); } } }
       compte[s.quoi] = (compte[s.quoi] || 0) + 1;
+      if (s.quoi === 'commande' && s.commandes) { tours.cmd = (tours.cmd || 0) + 1; if (s.hors && s.hors.length) { const m = 'INACCESSIBLE en combat, ' + w + '×' + h + ' : ' + s.hors.map(x => '« ' + x + ' »').join(', ') + ' hors de l’écran ou sous un autre élément (' + (s.ou || '') + ')'; if (!soucis.includes(m)) { soucis.push(m); await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-commandes.png') }); } } }
       let pt = s.pt;
       // la cible se choisit en la touchant elle-même : si trois touchers sur son corps ne la choisissent pas, c'est un défaut ; on finit par sa plaque
       if (s.quoi === 'cible' && s.corps) { visait = true; if (++rates > 3) { visait = false; const m = 'INACCESSIBLE en combat, toucher « ' + s.corps + ' » sur la scène ne le choisit pas (' + (s.ou || '') + ')'; if (!soucis.includes(m)) soucis.push(m); if (s.plaque) pt = s.plaque; } } else rates = 0;
@@ -97,6 +100,21 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
     else console.log(`OK  au doigt ${w}×${h} — ${quoi} en ${((Date.now() - t0) / 1000).toFixed(0)} s${loin && prologue ? ' (prologue : ' + (prologue / 1000).toFixed(0) + ' s)' : ''} (${resume})`);
     soucis.forEach(m => { echecs++; console.log(/^INACCESSIBLE/.test(m) ? '  ' + m : '  INVISIBLE ' + m); });
     if (fini && corps) console.log(`      en combat, la cible a été choisie ${corps} fois en la touchant elle-même, sur la scène`);
+    if (fini && tours.cmd) console.log(`      en combat, les commandes, vues ${tours.cmd} fois : chacune dans l'écran, sous le doigt`);
+    // 2.12 (D189) : un combat où tout est reçu (une partie d'avant), le groupe de Khâlid — les cinq commandes, chacune dans l'écran et sous le doigt
+    // (en 360 × 560, Vertus, Objets et Garde tombaient sous le bord de l'écran ; en 360 × 640, Garde à moitié)
+    if (fini) { await p.evaluate(() => { const I = window.ISNAD, W = I.world; I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('khalid', 2); }); // un groupe de trois : le panneau est plein
+      const libre = () => p.evaluate(() => { const I = window.ISNAD, W = I.world; return I.scene === W && !!W.map && !I.script.busy && !W.lock; }), lecture = () => p.evaluate(() => ['#card', '#dialog'].some(q => !document.querySelector(q).hidden));
+      for (let i = 0; i < 120 && !(await libre()); i++) { if (await lecture()) await p.keyboard.press('Enter'); await p.waitForTimeout(170); }
+      await p.evaluate(() => { const I = window.ISNAD, E = I.world.saga.enemies; I.battle.start({ group: Object.keys(E).filter(k => E[k].tier === 'minion' && !E[k].racine).slice(0, 2), bg: 'desert' }); });
+      for (let i = 0; i < 120 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mlist.main .mi') && document.querySelector('#battle .banner').hidden)); i++) await p.waitForTimeout(170);
+      await p.waitForTimeout(300);
+      const c5 = await p.evaluate(() => { const I = window.ISNAD, W = I.world;
+        const L = [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(x => getComputedStyle(x).display !== 'none'), r = L.map(x => { const q = x.getBoundingClientRect(), e = document.elementFromPoint(q.left + q.width / 2, q.top + q.height / 2); return { nom: x.querySelector('span').textContent.trim(), ok: q.top >= 0 && q.bottom <= innerHeight && !!e && x.contains(e) }; });
+        try { I.battle.abort(W); I.script.depth = 0; W.lock = false; } catch (e) { /* refermé */ } return r; });
+      const hors = c5.filter(x => !x.ok); if (c5.length < 5) { echecs++; console.log(`  INACCESSIBLE ${w}×${h} : le combat où tout est reçu ne montre que ${c5.length} commande(s)`); }
+      else if (hors.length) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-cinq-commandes.png') }); console.log(`  INACCESSIBLE ${w}×${h} : en combat, ${hors.map(x => '« ' + x.nom + ' »').join(', ')} hors de l'écran ou sous un autre élément`); }
+      else console.log(`      en combat, les ${c5.length} commandes (${c5.map(x => x.nom.replace(/^\S+\s*/, '')).join(', ')}) : chacune dans l'écran, sous le doigt`); }
     if (errors.length) { echecs++; [...new Set(errors)].slice(0, 8).forEach(e => console.log('  ERREUR ' + e)); }
     await p.close();
   }

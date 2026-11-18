@@ -161,6 +161,11 @@
     const versFr = new Map();
     L.fr = t => (L.lang === 'fr' || typeof t !== 'string' ? t : (versFr.get(t) || t));
     L.dir = () => LANGUES[L.lang].dir;
+    // le sens d'une ligne posée dans la scène (2.x, D189) : la scène reste de gauche à droite, mais chaque ligne y prend le
+    // sens de sa langue — de droite à gauche pour un texte arabe, de gauche à droite pour le français de repli d'un texte
+    // encore à écrire. (« dir=auto » se tromperait sur une phrase arabe qui commence par un nom en lettres latines.)
+    // (Les lettres arabes seules comptent : « ﷺ », d'un bloc à part, se lit aussi dans une phrase française.)
+    L.sens = t => (LANGUES[L.lang].dir === 'rtl' && /[\u0621-\u064a\u0671-\u06d3\u0750-\u077f]/.test(String(t || '')) ? 'rtl' : 'ltr');
     L.locale = () => ({ fr: 'fr-FR', ar: 'ar-u-nu-latn', en: 'en-GB', ja: 'ja-JP' })[L.lang];   // pour les dates ; l'arabe garde les chiffres du reste du jeu
     I.T = s => s;
     // un même mot français peut avoir deux sens : « Entrée§saisie » se dit « Entrée » en français, mais a sa propre clé

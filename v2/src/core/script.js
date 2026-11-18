@@ -39,18 +39,30 @@
   }
   S.ajuster = ajuster;
 
+  /* ----- la marque (2.x, D189) : ce qui répond au geste du joueur se lit là où il regarde -----
+     « Confiance +2 », « Un voile tombe » : la réplique ou la narration qui suit l'écrit après le nom de celui qui parle
+     (span.marque). Si aucune boîte ne suit — un choix, un carton, la fin du récit —, la marque passe au fil. */
+  const marques = []; let marqueT = null;
+  const marqueAuFil = () => { clearTimeout(marqueT); if (marques.length) S.toast(marques.splice(0).join(' · ')); };
+  S.marque = function (html) { marques.push(html); clearTimeout(marqueT); marqueT = setTimeout(marqueAuFil, 1500); };
+
   /* ----- boîte de dialogue ----- */
   let typing = null;
-  async function showLine(kind, sp, text) {
+  // o (facultatif) : { nom } le nom qui parle, imposé (le verdict de la Chaîne) ; { html } le texte est déjà du balisage
+  // (une phrase du moteur, jamais un texte de récit) ; { duree } la ligne passe d'elle-même après ce temps, ou d'un toucher
+  async function showLine(kind, sp, text, o) {
+    o = o || {};
     const box = $('#dialog'); box.hidden = false; box.className = kind;
     document.body.classList.add('in-dialog');
     $('#dialog .seal').style.backgroundImage = sp ? `url(${sp.seal})` : 'none';
     $('#dialog .seal').hidden = !sp;
     const fg = $('#dialog .fig'); fg.hidden = !(sp && sp.fig); if (sp && sp.fig) fg.src = sp.fig; box.classList.toggle('avecfig', !!(sp && sp.fig)); // la silhouette de celui qui parle
-    const nm = $('#dialog .name'); nm.textContent = sp ? sp.name : ((I.world.saga && I.world.saga.narrator) || I.t('La Chaîne')); nm.style.color = sp ? sp.color : '#ffe08a';
-    const tx = $('#dialog .text'); const html = I.fmt(text);
+    const nm = $('#dialog .name'); nm.textContent = sp ? sp.name : (o.nom || (I.world.saga && I.world.saga.narrator) || I.t('La Chaîne')); nm.style.color = sp ? sp.color : '#ffe08a';
+    nm.dir = I.langue.sens(nm.textContent); // chaque ligne prend le sens de sa langue (la scène, elle, reste de gauche à droite)
+    if (marques.length) { clearTimeout(marqueT); const m = I.el('span', 'marque', marques.splice(0).join(' · ')); m.dir = I.langue.sens(m.textContent); nm.appendChild(m); }
+    const tx = $('#dialog .text'); const html = o.html ? text : I.fmt(text); tx.dir = I.langue.sens(text);
     // effet machine à écrire sur le texte brut, puis rendu complet
-    const plain = text.replace(/\*/g, ''); let i = 0, done = false;
+    const plain = (o.html ? text.replace(/<[^>]*>/g, '') : text).replace(/\*/g, ''); let i = 0, done = false;
     tx.textContent = '';
     $('#dialog .next').style.visibility = 'hidden';
     const fast = I.speed > 3;
@@ -63,19 +75,29 @@
     });
     $('#dialog .next').style.visibility = 'visible'; lisible(box);
     await I.sleep(60);
-    if (I.debug.auto) await I.sleep(30); else await I.input.wait(['ok', 'cancel']);
+    if (I.debug.auto) await I.sleep(30); else if (o.duree) await I.input.waitTimed(['ok', 'cancel'], o.duree, 0); else await I.input.wait(['ok', 'cancel']);
     I.audio.sfx('blip');
   }
-  S.hideDialog = function () { $('#dialog').hidden = true; document.body.classList.remove('in-dialog'); if (S.depth === 0 && I.world) I.world.focus = null; };
+  S.showLine = showLine;
+  S.hideDialog = function () { marqueAuFil(); $('#dialog').hidden = true; document.body.classList.remove('in-dialog'); if (S.depth === 0 && I.world) I.world.focus = null; };
+  // le temps de lire une ligne du moteur : 1,2 s, plus 45 ms par signe pesé (le japonais dit plus en moins de signes)
+  S.lecture = html => I.clamp(1200 + 45 * I.langue.poids(String(html).replace(/<[^>]*>/g, '')), 1800, 5000);
+  // le verdict de la Chaîne : dit par la Chaîne elle-même, en une ligne, seul, avant la suite du récit — jamais sur la
+  // parole de quelqu'un, ni au-dessus d'une parole citée (exigence 3). Il passe de lui-même, ou d'un toucher.
+  const verdict = html => showLine('nar', null, html, { nom: I.t('La Chaîne'), html: true, duree: S.lecture(html) });
 
   /* ----- cartons ----- */
   async function card(cls, html, auto) {
+    marqueAuFil();
     const c = $('#card'); c.className = cls; c.innerHTML = html; c.hidden = false;
+    document.body.classList.add('en-carton'); // l'en-tête et le fil se masquent le temps du carton (en hauteur, ils transparaissaient dessous)
     void c.offsetWidth; c.classList.add('on'); lisible(c);
-    if (I.debug.auto) await I.sleep(60);
-    else if (auto) await I.input.waitTimed(['ok', 'cancel'], auto, 500);
-    else { await I.sleep(350); await I.input.wait(['ok', 'cancel']); }
-    c.classList.remove('on'); await I.sleep(260); c.hidden = true;
+    try {
+      if (I.debug.auto) await I.sleep(60);
+      else if (auto) await I.input.waitTimed(['ok', 'cancel'], auto, 500);
+      else { await I.sleep(350); await I.input.wait(['ok', 'cancel']); }
+      c.classList.remove('on'); await I.sleep(260); c.hidden = true;
+    } finally { if (c.hidden || !c.classList.contains('on')) document.body.classList.remove('en-carton'); }
   }
   S.card = card;
 
@@ -84,21 +106,37 @@
   function known(id) { return I.save.data.codex.includes(cid(id)); }
   S.known = known;
   function lockLabel(o) { const e = I.ui.codexEntry(cid(o.need)); return `<span class="lock">✧ ${e ? (o.need.indexOf('/') > 0 ? I.t('Savoir requis : {titre} ({saga})', { titre: I.esc(e.title), saga: I.esc(e.saga.name) }) : I.t('Savoir requis : {titre}', { titre: I.esc(e.title) })) : I.t('Savoir requis')}</span>`; }
-  function menuPick(prompt, options, head) {
+  // 2.x (D189) — une liste qui défile encore une fois resserrée le dit : un repère reste au bas de la boîte (« ▾ encore 2
+  // réponses ») tant que la dernière réponse n'est pas entière à l'écran. Il ne prend aucun toucher.
+  function repere(box) {
+    const vieux = box.querySelector('.repere'); if (vieux) vieux.remove(); box.onscroll = null;
+    if (box.scrollHeight <= box.clientHeight + 2) return;
+    const r = I.el('div', 'repere'), btns = [...box.querySelectorAll('.opt')]; r.setAttribute('aria-hidden', 'true'); box.appendChild(r);
+    // une réponse se lit entière quand son texte finit au-dessus du repère (son bord, dessous, peut être caché)
+    const fin = b => { const g = document.createRange(); g.selectNodeContents(b); return g.getBoundingClientRect().bottom; };
+    const maj = () => { const haut = Math.min(r.getBoundingClientRect().top, box.getBoundingClientRect().bottom) + 2, n = btns.filter(b => fin(b) > haut).length;
+      r.classList.toggle('fin', !n); if (n) { r.textContent = I.t('▾ encore {n} réponse¦▾ encore {n} réponses', { n }); r.dir = I.langue.sens(r.textContent); } };
+    box.onscroll = maj; maj();
+  }
+  // la boîte a changé de contenu (« ▸ La suite ») : elle se resserre de nouveau, et son repère se refait
+  S.refaire = box => { ajuster(box); repere(box); };
+  // head : l'en-tête de la liste (du balisage), ou { cls, html } ; extra : { touches: { action: fn } }, des touches de plus
+  function menuPick(prompt, options, head, extra) {
+    extra = extra || {}; marqueAuFil();
     return new Promise(res => {
-      const box = $('#choice'); box.hidden = false; box.innerHTML = '';
+      const box = $('#choice'); box.hidden = false; box.innerHTML = ''; box.onscroll = null;
       document.body.classList.add('in-dialog');
-      if (head) box.appendChild(I.el('div', 'phead', head));
-      box.appendChild(typeof prompt === 'object' ? I.el('div', 'prompt ' + (prompt.cls || ''), prompt.html) : I.el('div', 'prompt', I.fmt(prompt))); box.scrollTop = 0;
+      if (head) { const hd = typeof head === 'object' ? head : { html: head }, e = I.el('div', 'phead' + (hd.cls ? ' ' + hd.cls : ''), hd.html); e.dir = I.langue.sens(e.textContent); box.appendChild(e); }
+      const pr = typeof prompt === 'object' ? I.el('div', 'prompt ' + (prompt.cls || ''), prompt.html) : I.el('div', 'prompt', I.fmt(prompt)); pr.dir = I.langue.sens(pr.textContent); box.appendChild(pr); box.scrollTop = 0;
       let idx = 0; const btns = [];
       const locked = o => o.need !== undefined && !known(o.need);
       const sel = i => { idx = (i + btns.length) % btns.length; btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); };
       const ne = performance.now(); // un menu n'accepte rien pendant un tiers de seconde : le toucher qui vient de faire avancer le texte ne répond pas à la place du joueur
-      const done = i => { if (!I.debug.auto && performance.now() - ne < 350) return; if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; I.audio.sfx('ok'); res(i); };
-      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ ' + I.t('savoir') + '</span>' : '')); b.type = 'button'; b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
-      sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box); ajuster(box);
+      const done = i => { if (!I.debug.auto && performance.now() - ne < 350) return; if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; box.onscroll = null; I.audio.sfx('ok'); res(i); };
+      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ ' + I.t('savoir') + '</span>' : '')); b.type = 'button'; b.dir = I.langue.sens(b.textContent); b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
+      sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box); ajuster(box); repere(box);
       const vue = () => { if (btns[idx].scrollIntoView) btns[idx].scrollIntoView({ block: 'nearest' }); }; // une longue liste suit la sélection
-      const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); vue(); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); vue(); I.audio.sfx('move'); } else if (a === 'ok') done(idx); return true; });
+      const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); vue(); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); vue(); I.audio.sfx('move'); } else if (a === 'ok') done(idx); else if (extra.touches && extra.touches[a]) extra.touches[a](); return true; });
       if (I.debug.auto) setTimeout(() => {
         const open = options.map((o, i) => i).filter(i => !locked(options[i]));
         if (options.some(o => typeof o.v === 'number')) { const pick = open.slice().sort((x, y) => I.debug.pickWrong ? options[x].v - options[y].v : options[y].v - options[x].v)[0]; return done(pick); }
@@ -115,7 +153,9 @@
     S.hideDialog(); I.audio.music('conseil');
     let conf = S.flags._prayed ? 1 : 0;
     const pips = () => { let h = ''; for (let i = 0; i < P.goal; i++) h += `<i class="pip${i < conf ? ' on' : ''}"></i>`; return h; };
-    const head = r => `<span class="seal" style="background-image:url(${sp.seal})"></span><span class="pt"><b>${I.esc(P.title)}</b><small>${I.t('{nom} · manche {manche} / {total}', { nom: I.esc(sp.name), manche: r + 1, total: n })}</small></span><span class="trust">${I.t('Confiance')} <span class="pips">${pips()}</span></span>`;
+    // 2.x (D189, lot 2) : l'en-tête tient en deux lignes — le titre et la manche, puis la confiance ; le nom de
+    // l'interlocuteur n'y est plus, puisqu'il vient de parler, et sa question tient lieu d'invite
+    const head = r => ({ cls: 'court manche', html: `<span class="seal" style="background-image:url(${sp.seal})"></span><span class="pt"><b>${I.esc(P.title)}</b><small>${I.t('manche {manche} / {total}', { manche: r + 1, total: n })}</small></span><span class="trust">${I.t('Confiance')} <span class="pips">${pips()}</span></span>` });
     await card('title parley', `<p class="small">${I.t('Pourparler')}</p><h1>${I.fmt(P.title)}</h1><p>${I.fmt(P.intro)}</p>${S.flags._prayed ? '<p class="small">' + I.t('Sérénité de la prière : +1 de confiance') + '</p>' : ''}<div class="rule"></div><div class="hint">▼</div>`);
     for (let r = 0; r < n; r++) {
       const R = P.rounds[r];
@@ -130,12 +170,12 @@
           await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || I.t('Il parle plus fort que toi. Dissipe-le.') });
           I.mal.note('n', P.title + '|' + N.name, -1);
         }
-        conf += gain; I.audio.music('conseil'); S.toast(I.t('<b>Confiance +{gain}</b> — son regard s’éclaircit', { gain }), 2400);
+        conf += gain; I.audio.music('conseil'); S.marque(I.t('<b>Confiance +{gain}</b> — son regard s’éclaircit', { gain })); // à côté du nom de celui qui répond
         if (N.after) { await showLine('say', sp, N.after); S.hideDialog(); }
       }
-      const i = await menuPick(I.t('Que réponds-tu ?'), R.opts, head(r)); const o = R.opts[i];
+      const i = await menuPick({ cls: 'dit', html: I.t('« {dit} »', { dit: I.fmt(R.say) }) }, R.opts, head(r)); const o = R.opts[i];
       conf = Math.max(0, conf + o.v);
-      S.toast(o.v > 0 ? I.t('<b>Confiance +{v}</b>', { v: o.v }) : o.v < 0 ? I.t('<b>Confiance {v}</b> — il se ferme', { v: o.v }) : I.t('Il ne bouge pas.'), 1800); I.audio.sfx(o.v > 0 ? 'light' : o.v < 0 ? 'dark' : 'blip');
+      S.marque(o.v > 0 ? I.t('<b>Confiance +{v}</b>', { v: o.v }) : o.v < 0 ? I.t('<b>Confiance {v}</b> — il se ferme', { v: o.v }) : I.t('Il ne bouge pas.')); I.audio.sfx(o.v > 0 ? 'light' : o.v < 0 ? 'dark' : 'blip');
       await showLine('say', sp, o.r);
     }
     S.hideDialog(); sv.parley.total++;
@@ -155,11 +195,94 @@
     const env = W.map && W.map.env; if (env && I.scene === W) I.audio.scene(env.music || 'silence'); else I.audio.back();
   }
 
-  S.toast = function (html, ms) {
-    const box = $('#toasts'); while (box.children.length >= 4) box.firstChild.remove();
-    const t = I.el('div', 'toast', html); box.appendChild(t);
-    setTimeout(() => t.classList.add('out'), (ms || 2600)); setTimeout(() => t.remove(), (ms || 2600) + 500);
+  /* ----- le fil (2.x, D189 : « un texte à la fois ») -----
+     Les annonces ne se posent plus sur l'image : elles passent dans le fil, une ligne qui ne parle que lorsque rien
+     d'autre ne se lit (ni réplique, ni choix, ni carton, ni halte, ni combat, ni fondu au noir) et que le joueur a la main.
+     - Chaque annonce entre dans #toasts à sa naissance, masquée, et n'y est jamais réinsérée : les outils de contrôle
+       l'y lisent comme avant. Le fil en montre une à la fois ; celles qui naissent dans la même demi-seconde se joignent
+       par « · », si la ligne tient (mesuré à l'écran). Chacune reste le temps de la lire (S.lecture : de 1,8 à 5 s).
+     - Ce qui naît pendant une lecture attend ; trois annonces au plus attendent leur tour, et les plus anciennes ne se
+       relisent alors qu'à la halte : S.fil garde les douze dernières, en mémoire seulement (jamais dans la partie).
+     - Une leçon (lecons.js) est une ligne marquée de son outil : elle reste jusqu'à ce que l'outil ait resservi, trente
+       secondes de lecture au plus ; une ligne « pas » (la règle d'une descente) reste jusqu'au premier pas.
+     - L'incident et la sauvegarde refusée (« urgent ») passent outre. Ce qui naît dans la halte s'écrit sous son titre.
+     S.toast(html, ms) : ms, d'avant le fil, est ignoré ; S.toast(html, { outil | pas | urgent }). */
+  S.fil = [];
+  const FIL = { file: [], cours: null, libreDepuis: 0, pause: false, haltT: null };
+  const enHalte = () => !!(I.ui && I.ui.menuOpen) && !$('#menu').hidden;
+  const lit = () => !$('#dialog').hidden || !$('#choice').hidden || !$('#card').hidden || !!document.querySelector('.screen:not([hidden])') || !!(I.ui && I.ui.menuOpen) || !!(I.battle && I.battle.active) || +($('#fade').style.opacity || 0) > 0.5;
+  const libre = () => !lit() && !S.busy && !!I.world && I.scene === I.world && !I.world.lock;
+  const lecon = x => !!(x.outil || x.pas);
+  const oter = x => { const k = FIL.file.indexOf(x); if (k >= 0) FIL.file.splice(k, 1); if (FIL.cours && FIL.cours.items.includes(x)) FIL.cours.items = FIL.cours.items.filter(y => y !== x); x.el.remove(); };
+  S.toast = function (html, o) {
+    o = o && typeof o === 'object' ? o : {};
+    const el = I.el('div', 'toast' + (o.outil || o.pas ? ' lecon' : ''), html); el.hidden = true; el.dir = I.langue.sens(el.textContent); if (o.outil) el.dataset.outil = o.outil;
+    $('#toasts').appendChild(el); // à sa naissance, masquée
+    S.fil.unshift({ html, t: Date.now() }); if (S.fil.length > 12) S.fil.length = 12;
+    const x = { el, html, ne: performance.now(), outil: o.outil || null, pas: !!o.pas, urgent: !!o.urgent, vu: 0 };
+    if (enHalte() && !lecon(x)) { el.remove(); S.filHalte(html); return; } // née dans la halte : sous son titre (un incident aussi)
+    FIL.file.push(x);
+    if (x.urgent) { FIL.cours = null; tic(); return; }
+    // au-delà de trois en attente, les plus anciennes ne se relisent qu'à la halte (ce qui naît dans la même demi-seconde
+    // passe ensemble : un même événement ne perd aucune de ses lignes)
+    const attente = FIL.file.filter(y => !lecon(y) && !y.urgent && !(FIL.cours && FIL.cours.items.includes(y))), vieilles = attente.filter(y => x.ne - y.ne > 500);
+    while (attente.length > 3 && vieilles.length) { const y = vieilles.shift(); attente.splice(attente.indexOf(y), 1); oter(y); }
   };
+  // une leçon a resservi (son outil), ou une séquence s'achève (sans outil : les leçons déjà lues) — lecons.js
+  S.filRetire = function (outil) { FIL.file.filter(x => x.outil && (outil ? x.outil === outil : x.vu >= 1500)).forEach(oter); if (FIL.cours && !FIL.cours.items.length) FIL.cours = null; };
+  // la Chaîne s'ouvre : le récit est quitté, ce qui attendait n'est plus à dire (S.fil le garde)
+  S.filVide = function () { FIL.file.slice().forEach(oter); FIL.cours = null; $('#toasts').innerHTML = ''; $('#toasts').className = ''; };
+  // ce qui naît dans la halte s'écrit sous son titre, le temps de le lire
+  S.filHalte = function (html) {
+    const hd = $('#menu header'); if (!hd) return; let p = hd.querySelector('.dit'); if (!p) { p = I.el('p', 'dit'); hd.appendChild(p); }
+    p.innerHTML = html; p.dir = I.langue.sens(p.textContent); p.hidden = false; clearTimeout(FIL.haltT); FIL.haltT = setTimeout(() => { p.hidden = true; }, S.lecture(html) + 600);
+  };
+  // la place du fil, en hauteur : sous l'en-tête (ou la barre de « Bâtir »), dans la bande noire ; il ne réserve aucune place
+  S.filPlace = function () {
+    const st = $('#stage'); if (!st || !document.body.classList.contains('portrait')) return; const b0 = st.getBoundingClientRect().bottom; let bas = 0;
+    [$('#hud'), $('#buildbar')].forEach(e => { if (e && !e.hidden && e.offsetHeight) bas = Math.max(bas, e.getBoundingClientRect().bottom - b0); });
+    const v = Math.round(bas) + 'px'; if (v !== FIL.place) { FIL.place = v; $('#ui').style.setProperty('--fil-haut', v); }
+  };
+  function montrer(g) {
+    const box = $('#toasts'); [...box.children].forEach(e => { e.hidden = true; e.classList.remove('joint'); });
+    g.items.forEach((x, i) => { x.el.hidden = false; x.el.classList.toggle('joint', i > 0); });
+    box.dir = g.items[0].el.dir; box.classList.toggle('lecon', !!g.lecon); box.classList.add('montre');
+  }
+  // le groupe suivant : la règle d'une descente d'abord (elle se retire au premier pas) ; puis la plus ancienne annonce qui
+  // attend, avec celles nées dans la même demi-seconde, si la ligne tient ; puis une leçon, qui reste jusqu'au geste
+  function suivant() {
+    const box = $('#toasts'), ord = FIL.file.filter(x => !lecon(x) && !x.urgent), pas = FIL.file.find(x => x.pas);
+    if (pas) { const g = { items: [pas], lecon: true }; montrer(g); return g; }
+    if (ord.length) {
+      const a = ord[0], g = { items: [a] }; montrer(g); const h1 = box.offsetHeight;
+      for (const b of ord.slice(1)) { if (b.ne - a.ne > 500) break; g.items.push(b); montrer(g); if (box.offsetHeight > h1 + 2) { g.items.pop(); montrer(g); break; } }
+      g.reste = S.lecture(g.items.map(x => x.el.textContent).join(' · ')); return g;
+    }
+    const l = FIL.file.find(lecon); if (!l) return null;
+    const g = { items: [l], lecon: true }; montrer(g); return g;
+  }
+  let dernier = performance.now();
+  function tic() {
+    const now = performance.now(), dt = Math.min(250, now - dernier), box = $('#toasts'); dernier = now; if (!box) return;
+    S.filPlace();
+    if (FIL.file.some(x => !x.el.isConnected)) { FIL.file = FIL.file.filter(x => x.el.isConnected); if (FIL.cours && FIL.cours.items.some(x => !x.el.isConnected)) { FIL.cours = null; box.classList.remove('montre'); } } // vidé d'ailleurs (la démo jouable le fait) : rien n'y reste à dire
+    const urg = FIL.file.find(x => x.urgent);
+    if (urg) { if (!FIL.cours || !FIL.cours.urgent) { FIL.cours = { items: [urg], urgent: true, reste: S.lecture(urg.html) + 1500 }; montrer(FIL.cours); }
+      FIL.cours.reste -= dt; if (FIL.cours.reste <= 0) { oter(urg); FIL.cours = null; box.classList.remove('montre'); } return; }
+    const ok = libre(); FIL.libreDepuis = ok ? (FIL.libreDepuis || now) : 0;
+    if (!ok) { if (box.classList.contains('montre')) { box.classList.remove('montre'); FIL.pause = true; } return; } // ce qui naît pendant qu'on lit attend
+    if (now - FIL.libreDepuis < 250) return; // la main vient de revenir : un temps, avant de parler
+    let g = FIL.cours;
+    if (g && g.lecon && !g.items[0].pas && FIL.file.some(x => x.pas || (!lecon(x) && !x.urgent))) g = FIL.cours = null; // une annonce passe avant la leçon, qui reviendra
+    if (!g) { g = FIL.cours = suivant(); if (!g) { box.classList.remove('montre'); return; } }
+    else if (FIL.pause || !box.classList.contains('montre')) { montrer(g); if (!g.lecon) g.reste = Math.max(g.reste, 1200); }
+    FIL.pause = false;
+    if (g.lecon) { const x = g.items[0]; x.vu += dt;
+      const parti = x.pas && x.vu > 1200 && I.world.player && I.world.player.moving; // la règle d'une descente : jusqu'au premier pas (lue au moins un instant)
+      if (x.vu > 30000 || parti || !FIL.file.includes(x)) { oter(x); FIL.cours = null; box.classList.remove('montre'); } return; }
+    g.reste -= dt; if (g.reste <= 0) { g.items.forEach(oter); FIL.cours = null; box.classList.remove('montre'); }
+  }
+  setInterval(tic, 100);
   S.fade = async function (dir, ms) {
     const f = $('#fade'); ms = (ms || 450) / I.speed; f.style.transition = `opacity ${ms}ms ease`; f.style.opacity = dir === 'out' ? 1 : 0;
     if (dir !== 'out') document.body.classList.remove('noir'); // le jour revient : le texte reprend sa place sous les écrans
@@ -185,13 +308,14 @@
         S.hideDialog();
         let opts = b.slice(), first = true; const sv = I.save.data;
         sv.isnad.total++; const spc = sv.sagas[W.saga.id] || (sv.sagas[W.saga.id] = { ch: 0, done: false, flags: {} }); spc.cTot = (spc.cTot || 0) + 1;
-        if (I.lecons && I.lecons.actif()) I.lecons.proposer('source', () => I.lecons.dit('source', 10000)); // 2.x : au premier acte à retrouver, on apprend où sont les sources
+        // 2.x : au premier acte à retrouver, on apprend où sont les sources — la leçon s'écrit sous la question, tant que le choix est ouvert
+        let lecon = ''; if (I.lecons && I.lecons.actif()) I.lecons.proposer('source', () => { lecon = I.lecons.texte('source'); });
         while (true) {
-          const i = await menuPick(a, opts); const o = opts[i];
-          if (o.ok) { if (first) { if (I.lecons) I.lecons.reemploi('source'); sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; S.toast(I.t('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.')); I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); I.mal.note('c', a, 0); } if (o.r) await S.run(o.r); break; }
+          const i = await menuPick(lecon ? { html: I.fmt(a) + '<small class="lecon" dir="' + I.langue.sens(lecon.replace(/<[^>]*>/g, '')) + '">' + lecon + '</small>' } : a, opts); const o = opts[i]; // la leçon a son propre sens (une leçon encore en français, sous une question arabe)
+          if (o.ok) { if (first) { if (I.lecons) I.lecons.reemploi('source'); sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); I.mal.note('c', a, 0); await verdict(I.t('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.')); } if (o.r) await S.run(o.r); break; }
           if (first) I.mal.note('c', a, 1); // un acte que les transmetteurs n'ont pas rapporté : l'idée s'enracine
           first = false; I.audio.sfx('glitch'); G.shake(260); G.flash('#7a5cff');
-          S.toast(I.t('<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.'));
+          await verdict(I.t('<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.'));
           if (o.r) await S.run(o.r);
           S.hideDialog();
           opts = opts.filter(x => x !== o); if (opts.length === 1 && I.debug.auto) { /* continue */ }
