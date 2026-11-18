@@ -1291,3 +1291,197 @@ Pour qu'un spécialiste reprenne ces points :
   « أمير البحر » pour « l'amiral » ; les noms de compétences du § 3.7 (« البلسم »، « التضميد »، « الجزم »، « النبذ »…),
   qui sont de l'usage courant et n'ont pas été cherchés chez les auteurs ; les pages de WP-ar (l'API refusait les
   lectures ce soir-là).
+
+---
+
+## 6. Hésitations des rédacteurs, pour un relecteur arabe
+
+*Relevé le 18 novembre au soir dans les notes des rédacteurs et des relecteurs des sept récits. Ce que les parties
+précédentes fixent déjà n'est pas repris. Une ligne par hésitation, avec le fichier. Ce qui touche au français est dans
+`propositions-francais.md`, § 11. « Au décideur » : le choix lui revient, et non au seul relecteur.*
+
+**Dans tous les récits**
+
+- Un texte n'a qu'une traduction : la compétence « Tenir » de 'Ammâr affiche l'ordre de bataille « اثبُتوا » (un
+  impératif pluriel, comme un cri) ; « Dire vrai » d'al-Qa'qâ' affiche « المُصارحة » ; « Prière », forme courte de
+  l'œuvre, affiche « الصلاة » quand le glossaire proposait « صلاة ». (lexique)
+- Deux descriptions disent un peu plus que le français : « Régénération pour tout le groupe » → « … شيئًا فشيئًا »
+  (progressif) ; « Rend de la Constance » → « يُعيد … شيئًا من الثبات ». (lexique)
+- Objectifs et options de choix au nom verbal (« اللحاق بأسلم أمام البيت ») ; le moteur met un objectif à l'impératif
+  (« احمل الأنوار… ») : une convention à fixer. (saga_abubakr, saga_umar)
+- ﷺ dans une citation : en toutes lettres là où l'édition l'imprime ainsi (al-Bukhârî n° 3606, comme le registre) ; ﷺ
+  pour le Musnad, qui rend le modèle {{صل}} de Wikisource : à harmoniser. (saga_uthman)
+- Les citations relevées gardent les voyelles de leur édition, ce qui alourdit quelques narrations ; les répliques
+  dramatisées n'en portent pas. Un titre tiré d'une citation garde l'orthographe du registre, sans voyelle ajoutée
+  (« «سلوني» », « «كَلِمَةُ حَقٍّ…» »). (saga_abubakr, saga_ali)
+- Normaliser l'orthographe d'une citation hors registre ? « امتازوا لنعلم بلاء كل حى » garde l'alif maqsûra de
+  l'édition, là où le § 1.10 demande « حيّ ». (saga_abubakr)
+- Pour qui code : le verset 3:144, dans une carte de citation, est écrit entre ﴿ ﴾, et la feuille de style ajoute « »
+  autour de toute citation ; l'écran affichera « ﴿…﴾ ». Ne pas poser « » devant ﴿. (saga_abubakr)
+- Les références arabes du registre ne nomment pas qui parle (« 'Umar ibn al-Khattâb, ce jour-là — Ibn Hishâm » devient
+  « ابن هشام، السيرة النبوية … ص ٦٥٥ ») : au registre d'en décider. (saga_abubakr)
+- Les répliques des Compagnons reprennent les mots d'at-Tabarî quand le français les suit (« قد أتتني من الخليفة
+  عَزمة », « أحسنتَ إذ سكتّ », « نسمع ونطيع لولاتنا »), sans les présenter comme des citations. (saga_khalid)
+
+**saga_abubakr**
+
+- Dans al-Bukhârî n° 6830, « تزويري » veut dire « ce que j'avais préparé », mais se lit aujourd'hui « ma
+  falsification » : une glose au recueil ?
+- Le proverbe « أنا وأخي على ابن عمّي، وأنا وابن عمّي على الغريب » (feuillet de l'esprit de clan) est écrit sous sa
+  forme usuelle, non vérifiée dans un recueil de proverbes.
+- « Rempart », compétence de 'Umar, est « الحِصن » ; « le rempart » de la description du Mur est « السور ».
+- « à main gauche » est « عن يسارك » (§ 2.8), alors que la phrase passe ensuite au « tu » (« ارفع بصرك… طريقك »).
+- ﷺ n'est pas mis dans la bouche de l'envoyé chrétien de Najrân (« نبيّكم »), comme en français.
+- Tournures d'aujourd'hui gardées, faute d'un équivalent classique : « واستعاد الخليفة زمام المبادرة »، « كسبًا
+  للوقت »، « بدوني »، « حسن الهندام ». (langue)
+- « منكبًا إلى منكب » (« épaule contre épaule ») est aussi dans le moteur (`world.js`) : le changer aux deux endroits.
+  (langue)
+- Feuillet de Thâmir : « ليكون للنفاق وجه » garde le « visage » que le feuillet de Hâzim évite (« ليُرى فيه صنفٌ من
+  الناس », § 3.8) : à harmoniser. (vu en rassemblant ces notes)
+
+**saga_umar**
+
+- « Prosternez-vous » (compétence du Trône vide) : « عفّروا الجباه », pour éviter « اسجدوا », le mot de la prière et de
+  l'épisode d'Iblîs.
+- La lettre de l'Année des cendres cite « فيا غوثاه » (Ibn Sa'd), un appel écrit à un gouverneur vivant. Le § 2.2 écarte
+  « الغوث » comme nom du secours du jeu, non dans une lettre citée ; un lecteur pourrait pourtant y voir un débat
+  d'écoles (exigence 5).
+- « Paix sur vous, gens de la lumière » reprend la source, « السلام عليكم يا أصحاب الضوء » : « أصحاب » y a son sens
+  courant, non celui des Compagnons.
+- Feuillet de Jabala : ses deux paroles viennent de l'édition non vocalisée de Wikisource (une seule édition par
+  paragraphe) ; la parole du chapitre garde le texte vocalisé du registre (éd. at-Turkî).
+- Titre du feuillet « Tu as été juste, alors tu as dormi » : « «عدلت… فَنمت» », graphie du registre, la coupure marquée.
+- « Les Rondes de nuit » (chapitre) et « Ronde de nuit » (compétence) ont le même texte, « عَسَسُ الليل ».
+- Gardés par le relecteur de la langue : « وكان لم يؤذّن » ; « قاعدة السوق » (« la loi du marché ») ; « عظيمان » ajouté
+  à la devise (« في خلافته هوى مُلكان عظيمان »), qu'une proposition sur le français touche aussi
+  (`propositions-francais.md`, 11.c4).
+
+**saga_khalid**
+
+- « Élan » : « الوثبة », pour ne pas le confondre avec la statistique « الخِفّة » ni avec la figure « الإقدام ».
+  « La Manœuvre » : « التعبية », le mot de la source, qu'un lecteur d'aujourd'hui peut lire « mobilisation » (autre
+  choix : « المناورة »).
+- « Cavaliers de réserve » : « خيّالةٌ مُدَّخَرة », et non « الرِّدء », nom de la manœuvre d'école (exigence 19) ;
+  « Vagues de renfort » : « الخيل المتلاحقة » (« المدد » est écarté, § 2.2).
+- « Épopée » : « المُطوَّلة » (« الملحمة » écartée, § 2.2) ; « Ombre portée » : « ظلّ التمثال », pour éviter « الظلّ
+  الممدود » (56:30) ; « Piédestal » : « المِنَصّة » ; « le socle » : « القاعدة ».
+- Le Laurier dit « بيتٌ آخر، وتصيرُ خالدًا » : « خالد » veut aussi dire « immortel » ; le jeu de mots est peut-être trop
+  appuyé.
+- « Vainqueur » : « منتصر », jamais « غالب », le nom de Ghâlib ; « rançon » au sens d'extorsion : « إتاوة » ; la rançon
+  des morts : « فداء ».
+- Mu'ta : le registre écrit « مُوتَة » (édition du CDN), la prose « مُؤتة », car sans hamza « موتة » se lirait « une
+  mort » ; les deux graphies se côtoient dans le feuillet « Neuf sabres ». (langue)
+- « التكاثر » (« Se multiplier », compétence de la Peur du nombre) : c'est aussi le titre de la sourate 102, et le mot de
+  la reproduction en biologie ; autre choix, « التضاعف ». (langue)
+- La réplique d'Abû 'Ubayda « Ce n'est pas le pouvoir de ce monde que je cherche… » (`saga_khalid.js:671`) n'a pas été
+  retrouvée chez at-Tabarî : elle est écrite librement, d'après le français (« ما سلطانَ الدنيا أريد… »).
+
+**saga_uthman**
+
+- « Variante querelleuse » : la description fait de la chimère la querelle (« مِراءٌ في حرفٍ انتُزع من تلاوته… »),
+  quand le français dit « une lettre détachée » ; le décideur a gardé ce français (D184, relecture 1.7 écartée).
+- Les chimères au nom féminin (البلبلة، اللجّة، الإشاعة) sont décrites au féminin (« هي… ») ; les autres au masculin
+  (« خيال »).
+- « une rumeur — au sens propre » : le jeu de mots ne passe pas (« إشاعة » ne désigne pas un bruit). Écrit « ترتفع
+  إشاعة — على الحقيقة لا على المجاز » ; le relecteur propose « جَلَبة — هي الإشاعةُ بعينها ».
+- « le Livre ouvert devant lui » : « المصحف منشور », l'exemplaire, comme chez Khalîfa (« وضع المصحف بين يديه ») ;
+  ailleurs, « le Livre » est « كتاب الله ».
+- « des gens sûrs » : « أناسٌ يُوثَق بهم », non « ثقات », terme de la critique du hadith.
+- « Peu s'en faut qu'ils ne se renient » : « كادوا يتبرّأ بعضهم من بعض », sans le vocabulaire du takfîr.
+- « l'épreuve que redoutait Hudhayfa » : « المحنة » (« la discorde » reste « الفُرقة », § 3.8).
+- « Rahma — la Miséricorde » (titre de la Lumière) : « نورُ الرحمة » ; la transcription et sa glose ne font qu'un mot.
+- « Lycie » : « ليكيا », la forme moderne ; forme classique non vérifiée.
+- « Mille bouches » : « ألف لسان » (§ 3.7) vaut aussi pour les trois « mille bouches » du chapitre 3, et Abû l-Akhbâr
+  devient le « لسان » de la Rumeur ; « faite de bouches » garde « من الأفواه ». À noter au § 3.7 ? (langue)
+- Laissés au goût d'un relecteur : « رجالُ السطح » (« السطح » seul se lit aussi « le toit ») ; « دلّال » pour
+  « colporteur » ; « والباقي يتبع » ; « جنبًا إلى جنب » ; « وقعة ذات الصواري » (feuillet) à côté de « معركة ذات
+  الصواري » (chapitre). (langue)
+- **Au décideur.** « Mille lectures » (compétence de Babel, ouverture du combat) est « ألف قراءة ». Or « القراءات » nomme
+  les lectures reçues du Coran, et le § 3.6 l'écarte déjà du nom de la Variante querelleuse. Autres choix : « ألفُ
+  قراءةٍ مُدَّعاة » (« mille lectures prétendues »), « ألفُ دعوى » (« mille prétentions »).
+- **Au décideur.** « la halle » est « السقيفة », comme l'étiquette de la carte de Médine (§ 3.4). Les scribes du récit
+  copient donc le Coran « في السقيفة » (trois textes), et le dîwân du récit de 'Umar y est tenu. À Médine, le mot se lit
+  d'abord la Saqîfa des Banû Sâ'ida, et aucune source n'y place la copie. Garder, ou donner à ce lieu un nom neutre hors
+  du récit d'Abû Bakr ?
+
+**saga_ali**
+
+- « Arrêt sans appel » : « الفَيصَل » ; « Sentence juste » : « قضاءٌ عادل » ; « Je suis le jugement » (l'idole) : « أنا
+  القضاءُ النافذ » ; ni « الحُكم » seul (le mot du cri), ni une tournure coranique.
+- « Le Livre répond au Livre » (Ibn 'Abbâs) : « الكتاب يُفسّر بعضُه بعضًا » ; mot à mot, « الكتاب يردّ على الكتاب » se
+  lirait « le Livre réfute le Livre ».
+- « La Parole détournée » : « الكلمةُ المُختطَفة », un peu moderne, mais « المحرّفة » évoque le tahrîf des Écritures.
+- 'Ammâr à Siffîn : « قُتل », sans « استُشهد », pour ne pas prendre parti (exigence 5) ; pour 'Alî, « استُشهد » dans le
+  feuillet, comme le français (« mourut en martyr »), et « يُتوفّى » dans la fin du récit (« meurt »).
+- La narration à la première personne (« J'ai connu des villes… », `saga_ali.js:440`) reste à la première personne
+  (« عرفتُ مدنًا… », D187) ; « certitude » y devient « ثقة », non « يقين ».
+- « Main du vétéran » : « يدُ المجرِّب », pour ne pas lier la compétence au titre « البدريّ » (§ 4, point 3).
+- « égarés » : « أهل الضلال » dans le choix faux (« on ne discute pas avec des égarés »), pour le mépris voulu ;
+  « التائهين » dans « Le Retour des égarés ».
+- Gardés par le relecteur de la langue : « الكلمةُ المُهدِّئة » (« Parole apaisante » ; « مهدّئ » se dit aussi d'un
+  calmant) ; « وفي عالم الأفكار من البلد » (« dans la noosphère de la ville »), inhabituel, mais le terme de D185 ne se
+  coupe pas.
+- Le glossaire écrit lui-même Harûrâ' de deux façons : « حَرُوراء » (§ 1.2, § 3.5) et « حَروراء » (§ 3.2) ; à aligner.
+  (langue)
+
+**frame**
+
+- « Oublier quoi ? » est un seul texte, dit à l'enfant puis à l'homme de la ruelle : « نسيانُ ماذا؟ » vaut pour les
+  deux scènes.
+- « la charge » (le Régent, 'Umar, « tu as une charge ? ») : « الأمانة », qui rejoint « le dépôt » et « أُودِعتُ
+  شيئًا » ; pour Abû Bakr, « الأمر », comme dans son récit.
+- « une parole vraie peut servir de lame » : « سلاحًا » ; « نصل » reste aux lames du joueur.
+- « Il a honte » : « يخجل » ; « يستحيي » est écarté, « الحياء » étant une vertu.
+- Feuillet « La razzia » : « الغزو », précisé « قبل الإسلام، أي الإغارة على قافلةٍ أو على حيٍّ نازل », pour qu'on ne
+  lise pas les expéditions du Prophète ﷺ ; la chimère garde « النَّهب ». À relire.
+- « l'avis » (l'agent du relevé) : « الإخطار » ; « البلاغ » (trop proche de « التبليغ ») et « الإشعار » (la chimère
+  Notification) sont écartés.
+- « Médine » dans les répliques de 2084 : « المدينة المنوّرة », pour qu'on ne lise pas « la ville » ; dans les feuillets
+  d'histoire, « المدينة ».
+- Titres arabes des ouvrages de Vernadsky et de Teilhard de Chardin (« المحيط الحيوي », « الظاهرة الإنسانية ») et
+  graphie de leurs noms : non vérifiés.
+- « socle » : « القاعدة » (l'Applaudissement, le feuillet de l'Admiré, son pourparler « النزول عن القاعدة »,
+  l'introduction de la rencontre), comme dans les récits de Khâlid et de 'Umar. Dit d'un homme, « النزول عن القاعدة »
+  peut évoquer aujourd'hui le nom d'une organisation armée. « المنصّة » serait sans équivoque, mais il faudrait changer
+  les trois récits d'un bloc. (langue)
+- « كم واحدًا رآه؟ » (cinq textes) est proche du parler ; « كم شخصًا رآه؟ » serait plus soutenu. (langue)
+- « تُعرَف المدينة بطرقها » (le père du Caïd, moteur et feuillet « La route sûre ») garde « المدينة » au sens général ;
+  pour écarter toute lecture « Médine », changer le moteur et le feuillet ensemble. (langue)
+- « rallumer » (« سيُوقدونني غدًا », « غدًا يُوقده آخرون ») ne rend pas le « re- » du français. (langue)
+- « Régner sur personne » : « سلطانٌ على لا أحد » ; « ولايةٌ بلا رعيّة » serait plus classique, mais perdrait le
+  paradoxe. (langue)
+- **Au décideur.** Le feuillet « La noosphère » parle de Vernadsky, de Teilhard de Chardin et du grec *noûs* ; le nom
+  arabe, « عالم الأفكار », vient de Malek Bennabi (D185), que le feuillet ne nomme pas. L'arabe dit seulement que le nom
+  européen de ce monde vient du grec. Nommer Bennabi dans la version arabe ? Donner une fois « نوسفير », entre
+  guillemets ?
+
+**caid**
+
+- « la loi » du père et de la citadelle : « القانون » (référence non vérifiée) ; dans la bouche des Purs (« Sa loi »,
+  « la loi qui préfère la soif ») : « الشرع ».
+- Le slogan des Purs : « «ما القلعةُ إلا لله» », écho du cri « «لا حكم إلا لله» », sans imiter la forme du verset.
+- « «الأنقياء» » est entre guillemets partout, titres compris (« Les Purs », « Le débat des Purs ») ; le § 3.3 ne les met
+  que dans les noms de personnages.
+- « neveu » et « oncle » (Udad et Meksa) : l'arabe doit choisir ; côté paternel (« ابن أخ », « عمّ »).
+- « la révélation parla de victoire éclatante » : « نزلت سورة الفتح », pour ne pas écrire « فتحًا مبينًا » sans ﴿ ﴾ ni
+  registre.
+- « Voilà le nœud » : « هنا بيتُ القصيد » (« العُقدة » est écartée, 113:4).
+- « lame » : pour le Pur, « شفرة / شِفار » ; pour l'arme du meurtrier, « طعنة / الشفرة » ; « نصل » reste aux lames du
+  joueur.
+- « égarés » : « المُغرَّر بهم » pour la foule (chapitre 4), « المخطئين » pour les Purs (chapitre 5) ; jamais
+  « الضالّين ».
+- « seigneur » (au Caïd) : « يا سيّدي », comme « Monsieur » (§ 2.9) ; « Caïd ! » : « أيها القائد ».
+- « Mesurer » (compétence de Bahrâm) : « المِساحة », l'arpentage ancien (référence non vérifiée) ; « القياس », terme du
+  fiqh, est écarté.
+- « Je le tiens de quelqu'un de sûr » : « سمعتُه من رجلٍ لا يكذب » ; « De bonne source » : « مُخبِرٌ صادق » ; « ثقة »
+  et « موثوق », mots de la critique des transmetteurs, sont écartés.
+- À inscrire au glossaire, si le décideur les retient : « أمازيغيّ » pour « berbère » (déjà dans le moteur et le
+  récit-cadre ; non « البربر » des chroniques) ; « أهل القوافل » pour « la guilde des caravaniers » ; « خان /
+  الخانات » pour « taverne(s) », sans idée de vin ; « القائد الشيخ » pour « le vieux Caïd ». (fidélité, langue)
+- Gardés par le relecteur de la langue : « مجلس » pour le siège du père (on peut lire « le conseil » ; autre choix,
+  « المقعد ») ; « وزنُ الرجل » (« Peser l'homme »), qui peut se lire « le poids de l'homme », plutôt que « وزنُ الرجال »
+  ou « سَبْرُ الرجال », qui rappellent la critique des transmetteurs ; « وجده … مُرًّا » (« trouvèrent amer »,
+  Hudaybiyya, trois textes), où la sîra dirait plutôt « شقّ على ».
+- **Au décideur.** « Ni poison ni sortilège » est « لا سمّ ولا كيد » (« ni poison ni machination »), le § 1.11 excluant
+  « سحر ». Mais ici la sorcellerie est niée, attribuée à personne : admettre « لا سمّ ولا سحر » dans une négation ? Le
+  japonais dit « まじない ».
