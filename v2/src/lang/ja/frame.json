@@ -106,7 +106,7 @@
 {"k":"1rhtob6.29","fr":"J’ai été le Héros, l’Or, la Rumeur, le Juge. Je ne suis que ce que vous regardez.","t":"私は英雄であり、黄金であり、流言であり、裁き手だった。私は、おまえたちが見ているものにすぎない。","ou":"enemies.agregor.phases[1].say"},
 {"k":"rshm0b.e","fr":"Rappel du Flux","t":"フィードの再通知","ou":"enemies.agregor.phases[1].addSkills[0].name"},
 {"k":"hzsfnn.1j","fr":"Brise-moi. Ils me rallumeront demain sous un autre nom.","t":"砕くがいい。明日には誰かが、別の名で私をまた立ち上げる。","ou":"enemies.agregor.phases[2].say"},
-{"k":"1xkn27o.c","fr":"La noosphère","t":"精神圏","ou":"codex[0].title"},
+{"k":"1xkn27o.c","fr":"La noosphère","t":"精神圏","ou":"codex[0].title","note":"« La noosphère » : même texte que le moteur (rodeurs.js)"},
 {"k":"f6m3nn.95","fr":"Du grec *noûs*, l’esprit. Le mot vient de Vladimir Vernadsky et de Pierre Teilhard de Chardin : la sphère de la pensée humaine, comme il y a une atmosphère et une biosphère. Dans ISNAD, c’est l’envers invisible de chaque lieu : ce que les hommes y pensent, y craignent et y désirent ensemble. C’est là que se livrent les combats.","t":"ギリシア語の*ヌース*（精神）に由来する。この言葉はウラジーミル・ヴェルナツキーとピエール・テイヤール・ド・シャルダンによるもので、大気圏や生物圏があるように、人間の思考の圏を指す。ISNADでは、あらゆる場所の目に見えない裏側のこと。人々がそこで共に考え、恐れ、欲するものである。戦いは、そこで交わされる。","ou":"codex[0].text"},
 {"k":"vmt9q0.1u","fr":"Vernadsky, La Biosphère ; Teilhard de Chardin, Le Phénomène humain","t":"ヴェルナツキー『生物圏』、テイヤール・ド・シャルダン『現象としての人間』","ou":"codex[0].src"},
 {"k":"akqr14.a","fr":"La chimère","t":"虚像","ou":"codex[1].title"},

@@ -396,7 +396,7 @@
 {"k":"rdeoy.3q","fr":"Dans la noosphère, la peur n'attend pas le matin. Elle monte par les dalots, blanche et froide, et se rassemble près de la passerelle.","t":"","ou":"chapters[1].objectives[2].then[5]<nar>1"},
 {"k":"89w2ux.f","fr":"Un jeune rameur","t":"","ou":"chapters[1].objectives[3].then[0]<say>1"},
 {"k":"zw8242.2g","fr":"Je ne sens plus mes mains. Personne ne m'a forcé à venir. Alors pourquoi ai-je si peur ?","t":"","ou":"chapters[1].objectives[3].then[0]<say>2","qui":"Un jeune rameur"},
-{"k":"1v4zui3.40","fr":"La réponse ne vient d'aucune bouche. Elle est dans l'ordre que tu portes : tu es venu libre. Ta peur t'appartient ; tu peux la regarder en face.","t":"","ou":"chapters[1].objectives[3].then[1]<nar>1"},
+{"k":"11jrdf5.46","fr":"La réponse ne vient d'aucune bouche. Elle est dans l'ordre du calife : le rameur est venu libre. Sa peur lui appartient ; il peut la regarder en face.","t":"","ou":"chapters[1].objectives[3].then[1]<nar>1"},
 {"k":"lhzxj7.p","fr":"L'effroi gagne les ponts.","t":"","ou":"chapters[1].objectives[3].then[2]<battle>1.intro"},
 {"k":"rrbyl9.3q","fr":"L'écume retombe. Le jeune homme reprend sa rame. On jette les chaînes d'un bord à l'autre ; les coques se serrent, flanc contre flanc.","t":"","ou":"chapters[1].objectives[3].then[4]<nar>1"},
 {"k":"vhmmpb.5w","fr":"On rapporte que l'on se battit ce jour-là sur les ponts comme sur la terre ferme, et que la mer changea de couleur. Les marins de l'empereur tinrent longtemps : c'étaient des hommes braves, et la mer était à eux.","t":"","ou":"chapters[1].objectives[4].then[0]<nar>1"},

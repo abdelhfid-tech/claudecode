@@ -131,7 +131,16 @@ parmi six (zéro, un, deux, trois à dix, onze à quatre-vingt-dix-neuf, cent et
   (أنتَ، أنتِ). Le « vous » de politesse français (« Vous êtes le Caïd ») devient un tu, et le respect passe par le
   vocatif et les mots : « يا أمير المؤمنين »، « يا أبا بكر » (la kunya au vocatif est la marque d'égard des sources),
   « أيها الشيخ ».
-- Le narrateur dit « tu » au joueur : « يا راوي » (vocatif, sans article).
+- Le narrateur des récits s'adresse au râwî au vocatif, comme le français (« Râwî, voici le premier maillon ») :
+  « يا راوي » (sans article).
+- **À distance du joueur** (décideur, 18 novembre : « gardons un peu de distance avec le joueur » ; version 2.08). Le
+  jeu ne parle plus au joueur de son propre cœur, de sa prière, de sa vie ni de sa descente. La descente est celle du
+  râwî, dite à la troisième personne (« نزول الراوي »، « صلّى الراوي في هذا الفصل »، « لن يعود منها داءٌ ما عاش
+  الراوي »), ou sans personne (« زاد القلب »، « يُتعرَّف إليه »، « في المرور العابر يُصلّى عليه ويُستراح »). Un choix de
+  menu qui touche à la prière ou à la descente prend le nom verbal, jamais l'impératif : « الصلاة والراحة »، « النزول »،
+  « النوم » (et non « صلِّ واسترح »، « انزل »). Gardent le « tu » : les consignes de commande (« Entrée, ou touche… »),
+  la conduite de la partie (sauvegarde, carte, choix d'un récit) et ce que le français dit encore au joueur (« plus fort
+  que toi », « tu choisis ta manière »).
 - **Le duel** est obligatoire quand on parle de deux : « الرفيقان »، « حجابان »، « قالا ». Les répliques adressées à deux
   personnes sont au duel (أنتما).
 - **Le pluriel** : on parle à un groupe au masculin pluriel (أنتم) ; une femme seule au féminin singulier. Le jeu met
@@ -176,7 +185,8 @@ Une boîte de dialogue tient **trois lignes sur un téléphone** (texte « grand
   un remède qui « rend la santé » (أعاده إلى عافيته). L'homme reste le sujet de sa phrase : « لم يعد يسمع إلا هذا »
   (« Il n'entend plus que cela ») ; « فإذا هو يطيعها أكثر مما يطيع عقله » (« il lui obéit plus qu'à sa raison ») ;
   « لسنا نقاتله هو، بل ما ينظر إليه » (« Ce n'est pas lui qu'on combat : c'est ce qu'il regarde ») ; l'énigme du cœur
-  (لغز القلب) : « أحدُ رفاقك تخور عزيمته، وما به مرضٌ ولا جرح »، et la bonne œuvre « ردّ إليه عزيمته ». L'emprise d'une
+  (لغز القلب) : « رجلٌ تخور عزيمته، وما به مرضٌ ولا جرح » (le français dit « un homme perd courage », et non plus
+  « l'un des tiens » : § 1.8), et la bonne œuvre « ردّ إليه عزيمته ». L'emprise d'une
   idole reste une image de l'exigence 18 (« قبضة »), jamais une présence dans un corps. **À valider (D184).**
 
 ---
@@ -211,7 +221,7 @@ Adresses lues pour cette section (toutes consultées le 18 novembre 2026) :
 
 | Français | Arabe | Règle |
 |---|---|---|
-| un Compagnon (du Prophète ﷺ) | **صحابيّ**, pl. **الصحابة** ; « صاحب رسول الله ﷺ » | réservé aux Compagnons. **Jamais** pour un membre du groupe, un compagnon de lumière, un ami de 2084. L'aide du combat dit « le grand acte du Compagnon » de tout héros, Idris et le Caïd compris : l'arabe dit « أتاح لصاحبه فعلَه الأكبر » (« à qui porte la jauge » ; signalé au décideur, D184). |
+| un Compagnon (du Prophète ﷺ) | **صحابيّ**, pl. **الصحابة** ; « صاحب رسول الله ﷺ » | réservé aux Compagnons. **Jamais** pour un membre du groupe, un compagnon de lumière, un ami de 2084. L'aide du combat disait « le grand acte du Compagnon » de tout héros, Idris et le Caïd compris (signalé au décideur, D184) ; le français dit désormais « pleine, elle ouvre à chacun son grand acte » : « أتاح لكلّ رفيقٍ فعلَه الأكبر ». |
 | un compagnon (membre du groupe), les compagnons | **رفيق**, pl. **الرفاق** | « relève un compagnon éprouvé » → « يُنهِض رفيقًا مُنهَكًا ». |
 | le groupe (l'équipe du joueur) | **الرَّكْب** | à valider. Le *rakb* est la troupe qui voyage ensemble. Éviter **الجماعة** (« la Communauté », sens religieux et confessionnel) et **الفريق** (sportif). |
 | le Messager d'Allah ﷺ, le Prophète ﷺ | **رسول الله ﷺ**، **النبي ﷺ** | exigence 1. |
@@ -250,7 +260,7 @@ compétence, d'objet ni de lieu frappé ne contient** :
 | **dévoilé** (une chimère vaincue : on a montré qu'elle est vide) | **انكشف** ; adj. **مكشوف** ; « انكشف خواؤه » | al-Ghazâlî, [D] : le cœur poli « … حتى يتلألأ فيه جلية الحق وينكشف » | **à valider**. Éviter الكشف seul (dévoilement mystique soufi). |
 | **Niyya** (l'intention, jauge) | **النيّة** | al-Ghazâlî, *Ihyâ'*, livre « النية والإخلاص والصدق » (quart des « المنجيات ») [A] | |
 | **Sérénité** (la jauge ; « Sakîna » jusqu'à D184) | **الهُدوء** ; « +الهدوء » ; « يستعيد الركب هدوءه » (« le groupe retrouve sa sérénité ») | usage courant (« حافظ على هدوئه ») ; « هدوء » et « الهدوء » ne sont pas au Coran [K] | **à valider (D184)**. Le décideur a écarté « Sakîna » en français : le Coran la dit descendue par Allah (48:4, 48:18 ; « سكينته », 9:26, 9:40, 48:26 [K]), et une jauge que la prière remplit à coup sûr en ferait l'effet d'un rite. L'arabe prend le mot ordinaire du calme qu'on garde dans l'épreuve. Écartés : **السَّكينة** (même raison) ; **الطُّمأنينة** : le Coran l'emploie pour les cœurs rassurés par le rappel (13:28) et, à Badr, par le secours (3:126 ; 8:10) [K], et le fiqh nomme ainsi l'immobilité de chaque position de la prière (al-Bukhârî, n° 757 : « ثم اركع حتى تطمئن راكعا » [CDN : `ara-bukhari/757`]) — le mot servait aux pourparlers, il est remplacé là aussi (« هدوء الصلاة: الثقة +١ »), car le français n'a plus qu'un mot ; **رباطة الجأش** : deux mots, et l'image coranique du cœur affermi (18:14, 8:11 [K]). La Gazelle « apaise » (**التهدئة**, § 2.5) : elle donne du الهدوء. Si un feuillet du recueil cite un jour le verset de la *sakîna*, le mot y revient, avec son texte tiré du registre : c'est un autre sujet. |
-| **râwî** (le transmetteur, le joueur) | **الراوي** ; au vocatif **يا راوي** | al-Khatîb al-Baghdâdî, *al-Jâmi' li-akhlâq ar-râwî wa-âdâb as-sâmi'* [L, « الجامع لأخلاق الراوي وآداب السامع »] | Le pluriel, **الرواة**. |
+| **râwî** (le transmetteur, personnage du joueur) | **الراوي** ; au vocatif **يا راوي** | al-Khatîb al-Baghdâdî, *al-Jâmi' li-akhlâq ar-râwî wa-âdâb as-sâmi'* [L, « الجامع لأخلاق الراوي وآداب السامع »] | Le pluriel, **الرواة**. Sa descente : **نزول الراوي** (§ 2.5), jamais « نزولك » (§ 1.8). |
 | **isnad** | **الإسناد** (le titre du jeu : إسناد) | WP-ar, « سند (علم الحديث) » : « السند أو الإسناد … هو سلسلة الرواة الذين نقلوا الحديث واحدا عن الآخر » [L] | |
 | **la Chaîne** (l'écran des maillons) | **السِّلسلة** | même page : « سلسلة الرواة » [L] | « La Chaîne entière » (compétence d'Idris) : « السلسلة كاملةً ». « Chaîne fidèle » (titre d'une saga jouée sans faute ; « Isnâd sahîh » jusqu'à D184, relecture 2.21) : **سلسلةٌ وفيّة**, du même mot que « الوفاء للسلسلة » (« Fidélité à la Chaîne ») ; jamais un mot par lequel les savants du hadith jugent une chaîne (صحيح، متّصل، منقطع، ثقة، محفوظ) : ce serait changer leur jugement en score. **À valider (D184).** |
 | **maillon** (une saga) | **الحَلْقة** (vocalisée à la première occurrence) | usage courant (« حلقة في سلسلة »), référence non vérifiée | La حَلَقة, elle, est un cercle d'étude (WP-ar, « حلقة علم ») : le jeu dit pour ce sens **مجلس العلم** (§ 3.3). « ce maillon » (D184, 2.6 ; « ce règne » jusque-là) : « هذه الحَلْقة » (« ما بُني في هذه الحَلْقة ») ; jamais العهد ni المُلك : un califat n'est pas un règne. |
@@ -365,7 +375,7 @@ Notes :
 | Valeurs et attributs (la page) | **الفضائل والأسماء الحسنى** | « الأسماء الحسنى » : Coran 7:180 [K] ; al-Ghazâlî, *al-Maqsad al-asnâ fî sharh ma'ânî asmâ' Allâh al-husnâ* [L, « المقصد الأسنى »] | Le mot **صفات** (« attributs ») est celui d'une théologie disputée (exigence 5) : on dit « اسمٌ من أسماء الله الحسنى ». |
 | une Valeur | **فضيلة**, pl. **الفضائل** | — | |
 | un badge | **شارة**, pl. **الشارات** | — | Sans inscription (exigence 21). |
-| reconnaître un attribut / ne pas le posséder | « **تعرّفتَ إلى اسم الله …** » ; jamais « نِلتَ », « مَلكتَ », « اكتسبتَ » | — | Exigence 21. |
+| reconnaître un attribut / ne pas le posséder ; « Un attribut divin à reconnaître » ; « attributs reconnus » | « **يُتعرَّف إليه** » (« والاسم لا يُملَك: إنما يُتعرَّف إليه ») ; « اسمٌ من أسماء الله الحسنى يُتعرَّف إليه » ; « الأسماء المُتعرَّف إليها » ; jamais un verbe de possession (نال، ملك، اكتسب) | — | Exigence 21. Sans « tu » (§ 1.8) : le jeu ne dit pas au joueur ce qu'il a reconnu (plus de « تعرّفتَ »، « تتعرّف إليه »). |
 | les sept Noms | **الرَّزَّاق** · **الكَبِيرُ المُتَعَال** · **الخَبِير** · **الوَهَّاب** · **الحَيُّ القَيُّوم** · **اللَّطِيف** · **الحَلِيم** | les versets du jeu (51:58 ; 13:9 ; 67:14 ; 3:8 ; 2:255 ; 42:19 ; 2:263), dont le texte vient du registre | Vocalisés en entier ; jamais sur un sprite (exigence 8). |
 
 **Les portes et la descente** (`portes`) :
@@ -375,7 +385,7 @@ Notes :
 | les portes de la noosphère | **أبواب عالم الأفكار** | l'image du cœur-forteresse et de ses portes, [D] | |
 | Au sortir de la prière · Dans le dhikr · En songe | **عَقِبَ الصلاة · في الذِّكر · في المنام** | — | « En songe » : **المنام**, jamais **الحُلم** ni **الرؤيا** : un hadith attribue la *ru'yâ* droite à Allah et le *hulm* au Diable (al-Bukhârî, n° 3292 [CDN : `ara-bukhari`]). |
 | S'endormir ; un sommeil sans songe | **النوم** ; **نومٌ بلا منام** | — | |
-| descendre ; ta descente | **النزول** ; **نزولُك** | — | |
+| descendre ; la descente du râwî (« ta descente » jusqu'au 18 novembre) ; le choix « Descendre » (à la porte) | **النزول** ; **نزولُ الراوي** ; « **النزول** » | — | À la troisième personne (§ 1.8) : jamais « نزولك », ni l'impératif « انزل ». Jamais non plus « النزول إلى النفس » : le décideur a écarté « descendre en soi » (« on a dit descendre dans la noosphère ») ; on descend **إلى عالم الأفكار**. |
 | le labyrinthe | **المتاهة** | — | |
 | l'issue | **المَخرَج** | Coran 65:2 [K] | |
 | un abri | **مَلجأ** | — | |
@@ -383,7 +393,8 @@ Notes :
 | le chrono | **المُهلة** | — | |
 | le seuil | **العَتَبة** | — | |
 | rattrapé | **أُدرِك** | — | |
-| le secours (titre) ; « Le groupe est relevé » | **الفَرَج** ; « نهض الركب » | § 2.3 | |
+| les cartons de la descente, à la troisième personne (2.08) | « L'issue est trouvée » : **وُجِد المَخرَج** ; « Le râwî a tenu » : **ثبت الراوي** ; « %s a rattrapé le râwî » : **أدرك الراويَ %s** ; « La noosphère s'ouvre. Le râwî y descend. » : **ينفتح عالم الأفكار، فينزل إليه الراوي** | — | Proposés pour `coeur.js` (`portes`), qui reste à écrire. « ثبت » est le verbe de la Constance (الثبات) ; l'objet avant le nom laisse le verbe au masculin, même pour « الغفلة ». |
+| le secours (titre) ; « Le groupe est relevé » | **الفَرَج** ; « نهض الركب » | § 2.3 | La préparation et le carton parlent du chapitre et du râwî, jamais au joueur de sa prière (§ 1.8) : « صلّى الراوي في هذا الفصل » ; « إذا أُقيمت الصلاة في الفصل » ; plus de « Tu avais tenu ta prière ». |
 
 **Les degrés du mal** (`mal` ; « l'organigramme du mal » jusqu'à D183) :
 
@@ -502,7 +513,9 @@ le yaourt au Levant, et la brique crue, اللَّبِن, plus bas) · Siwâk **
 de chèvres / de moutons / de chameaux **حظيرة الماعز / الغنم / الإبل** · Mur de pisé **جدار من لَبِن** · Dallage étoilé
 (« Sol à étoiles » jusqu'à D184, 2.25) **بلاطٌ بنقش النجوم** (comme sa description, « بلاطٌ بنقوش هندسيّة » ; à valider) · Pilier de palmier **جِذع نخلة** · Niche de qibla **المِحراب** · Natte de prière **حصير الصلاة**
 (une natte, pas une سجّادة) · Tapis **بِساط** · Lanterne **قِنديل** · Rosace **نجمة ثُمانيّة**. Groupes : Défendre
-**الدفاع** · Eau et vivres **الماء والزاد** · Troupeaux **المواشي** · Mosquée **المسجد**.
+**الدفاع** · Eau et vivres **الماء والزاد** · Troupeaux **المواشي** · Mosquée **المسجد**. Le dû des troupeaux (ce que la
+Ridda refusait de verser) : **حقّ المواشي** — Muslim : « ما من صاحب إبل لا يؤدي حقها » (éd. du CDN, n° 2291 [M]) ;
+« Le dû des troupeaux est versé » : « أُدّي حقُّ المواشي » (plus de « تؤدّي حقّ مواشيك », § 1.8).
 
 **Outils appris** (`D.OUTILS`, un à la fois) : Se déplacer **التنقّل** · Parler **الكلام** · Demander son chemin **السؤال
 عن الطريق** · Frapper la faille **ضرب الثُّلمة** · Les vertus **الخِصال** · La garde et la Niyya **التحصّن والنيّة** · La
@@ -896,6 +909,12 @@ son verset tiré du registre, si un récit le demande un jour.
     وفيّة** (§ 2.3) ; « Dallage étoilé » **بلاطٌ بنقش النجوم** (§ 2.8) ; aucun mot de possession ni d'envoûtement
     (§ 1.11) ; 2084 = **١٥٠٧ هـ** (§ 1.5). Restent tels quels, parce que l'arabe les disait déjà : **خيال** (chimère),
     **مراتب الشر** (les degrés du mal), **المُجمِّع** (l'Agrégor), **نسر النحاس**, **الشام**.
+13. **À distance du joueur** (18 novembre, version 2.08 ; § 1.8 ; proposé par l'agent, à valider) : la descente, la
+    prière d'un chapitre et la vie sont celles du râwî, à la troisième personne ou sans personne. Choix de l'agent :
+    le nom verbal pour les choix « Prier et se reposer » et « Descendre » (**الصلاة والراحة**، **النزول** ; l'arabe disait
+    « صلِّ واسترح »، « انزل ») ; « de passage » : **مرورٌ عابر** (pas « زيارة », qui est aussi l'œuvre de la visite) ;
+    « se dresse(nt) », au dernier chapitre : **برز للقتال** (l'arabe ajoutait « في وجهكم », que le français ne dit pas) ;
+    les attributs : **يُتعرَّف إليه**، **المُتعرَّف إليها** (l'arabe disait « تتعرّف إليه »، « تعرّفتَ إليها »).
 
 ---
 

@@ -368,7 +368,7 @@
 {"k":"12iqc0r.1q","fr":"Lequel ? Sans sa lame, il ne sera que repoussé : il reviendra.","t":"","ou":"portes.lequel"},
 {"k":"1p9rxgg.14","fr":"La noosphère s’ouvre. Le râwî y descend.","t":"","ou":"portes.seuil"},
 {"k":"1viw6cw.9","fr":"Descendre","t":"","ou":"portes.descendre"},
-{"k":"9rjqh7.j","fr":"la descente du râwî","t":"","ou":"portes.sousTitre"},
+{"k":"9rjqh7.j","fr":"la descente du râwî","t":"the rawi’s descent","ou":"portes.sousTitre","note":"2.08 : « la descente du râwî » (« ta descente » jusque-là) ; moteur (rodeurs.js) et coeur (portes.sousTitre)"},
 {"k":"1cshqq8.4e","fr":"Un labyrinthe, où rôdent les idées noires et les maux du cœur que le râwî n’a pas encore tranchés. Seul, il ne les vainc pas : il cherche l’issue, ou un abri.","t":"","ou":"portes.regle"},
 {"k":"g9rj23.2h","fr":"Frappé, ce qui rôde reste sonné un instant, le temps de passer : un coup ne le vainc pas.","t":"","ou":"portes.sonne"},
 {"k":"1vjqcf5.2d","fr":"%s se dissipe sous la lame du râwî, qui n’était pas seul, jusqu’au prochain chapitre.","t":"","ou":"portes.dissipee"},

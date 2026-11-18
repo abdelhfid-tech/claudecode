@@ -32,6 +32,7 @@ sur une source consultable : le terme reste une proposition. Les abréviations :
 |---|---|---|
 | Narration des récits du VIIe siècle (`nar`, cartons, codex) | **である調**, phrases courtes, passé (〜した／〜であった) ; le présent de narration est permis dans un moment fort, comme en français. | C'est la langue du récit historique et des ouvrages de référence japonais (dictionnaires, 『岩波イスラーム辞典』, histoires de l'islam de 小杉泰 ou 井筒俊彦) : sobre, sans politesse adressée au lecteur. Le です・ます y sonnerait comme un livre pour enfants ou un guide touristique. |
 | Ce que le narrateur dit **au râwî** (« Râwî, voici le premier maillon… ») | である調 aussi, avec l'apostrophe 「ラーウィーよ、」 ; on tutoie par la tournure (命令形 doux : 〜せよ／〜するがよい), jamais par 君／お前. | Le narrateur est un aîné qui transmet : la tournure de l'injonction douce suffit, sans pronom. |
+| **À distance du joueur** (2.08 ; le décideur, 18 novembre : « on a dit descendre dans la noosphère », « gardons un peu de distance avec le joueur » ; D187) : la descente dans la noosphère, les maux du cœur, la prière tenue, le secours, le dernier maillon | **À la troisième personne** : 「ラーウィーはそこへ降りてゆく」, 「ラーウィーは持ちこたえた」, 「出口は見つかった」, 「この章で、礼拝は守られていた」, 「残るは最後の環――ラーウィーの環である」. **Jamais** あなた, おのれ, 自ら（の内）, 君 pour le cœur, la prière, la descente ou la vie du joueur (écartés : 「あなたの降りゆく道」, 「あなたが生きているうちに」, 「自らの内へ降りる」, 「おのれの心」, 「あなたは礼拝を守っていた」). Le récit de la descente (invites, cartes, ce qui arrive à la ラーウィー) est en である調 ; les annonces du jeu (「ラーウィーのレベルが上がりました」) et les consignes de commande en です・ます調, sans pronom : « Entrée, ou touche le râwî » → 「Enterキーか、ラーウィーをタップしてください」. Là où le français garde le « tu » (une consigne, le pourparler : « plus fort que toi » dans l'aide), le japonais le garde aussi. **À valider (2.08).** | La descente est celle d'un personnage de fiction (exigence 22), non une introspection demandée au joueur. Une adresse au cœur du lecteur (「あなたの心」) sonnerait, en japonais, comme un sermon ou un livre de développement personnel. Une phrase sans sujet, en です・ます, se lit comme adressée au joueur : là où le français dit « il », on nomme la ラーウィー (au moins une fois par texte), ou l'on tourne la phrase sans personne (「出口は見つかった」). |
 | Écrans du jeu (menus, boutons, aides, leçons, annonces) | **です・ます調** pour les phrases ; **forme nue** pour les libellés (「休息」「装備」「話す」). Les leçons s'adressent au joueur sans pronom : 「画面をタップすると、その場所へ歩きます。」 | Convention des jeux japonais : l'interface parle poliment au joueur ; un libellé n'a pas de verbe conjugué. Le mélange des deux registres dans une même phrase est interdit. |
 | Répliques des Compagnons | Langue digne et simple : である ou です・ます selon la relation (un Compagnon à la communauté : である／〜だ ; à un aîné, à un hôte : です・ます). Pas de 〜でござる, 〜じゃ, 〜なり, 〜ぞよ (archaïsme de théâtre), pas de 〜だぜ, 〜っす, 〜ちゃん (manga), pas de 拙者／それがし／わし. Le « je » est **私**（わたし） pour tous ; 我々 / 私たち pour « nous ». | Exigence 4 (sobriété) et consigne du décideur. Les pronoms et terminaisons « de personnage » (役割語) du manga ou du jidaigeki colleraient au Compagnon un type japonais qu'il n'a pas. Le respect passe par la tenue de la phrase, non par l'archaïsme. |
 | Paroles citées (`quote`) | Celles du registre des sources (`v2/docs/sources/`) : traduction publiée telle quelle, ou traduite de l'arabe. Ce glossaire n'en fixe aucune. | `v2/docs/sources/LISEZ-MOI.md`. |
@@ -186,7 +187,7 @@ Deux sources savantes reviennent souvent :
 | râwî (le transmetteur, le joueur) | **ラーウィー** (sens : 伝承者) | Transcription selon § 1.2 ; 「伝承者」 : [協会訳ムスリム] vol2-174 (「私（伝承者）」). | Dans l'apostrophe : 「ラーウィーよ」. Pas de forme japonaise consacrée de *râwî* lue : la forme suit le système. |
 | isnad | **イスナード** | Transcription selon § 1.2 ; la chose : 「伝承者経路」, [協会訳ムスリム] vol2-174 (「他の伝承者経路でも伝えられている」). | 「イスナード（伝承者経路）」 à la première occurrence du recueil. |
 | la Chaîne (l'écran, la suite des maillons) | **鎖** (titre d'écran : 「伝承の鎖」) | Proposition. | **À valider.** *D184 (2.21) :* le titre d'une partie sans faute n'est plus « Isnâd sahîh » mais « Chaîne fidèle » : 「鎖は忠実に伝えられた」, en écho à 「鎖への忠実さ」 (Fidélité à la Chaîne) et à 「鎖は伝えられた」 (Chaîne transmise) ; jamais 真正 ni 「真正なイスナード」 : *ṣaḥîḥ* est le jugement des savants sur une chaîne réelle, pas un score. **À valider (D184).** |
-| maillon (une saga) | **環**（わ） ; « un maillon de la Chaîne » : 「鎖の一環」 | Proposition : 一環 dit à la fois « un anneau d'une chaîne » et « une part d'un tout ». | **À valider.** *D184 (2.6, 2.7) :* « ce maillon » remplace « ce règne » : 「この環」, et 治世 n'est plus écrit (un califat n'est pas un règne) ; les cinq cartons disent « Premier maillon · As-Siddîq » … : 「第一の環・アッ＝スィッディーク」 (§ 3.1). **À valider (D184).** |
+| maillon (une saga) | **環**（わ） ; « un maillon de la Chaîne » : 「鎖の一環」 | Proposition : 一環 dit à la fois « un anneau d'une chaîne » et « une part d'un tout ». | **À valider.** *D184 (2.6, 2.7) :* « ce maillon » remplace « ce règne » : 「この環」, et 治世 n'est plus écrit (un califat n'est pas un règne) ; les cinq cartons disent « Premier maillon · As-Siddîq » … : 「第一の環・アッ＝スィッディーク」 (§ 3.1). **À valider (D184).** *2.08 (à distance du joueur) :* « Reste le dernier maillon : celui du râwî » → 「残るは最後の環――ラーウィーの環である」 (autrefois 「あなた自身の環」) ; la Chaîne continue « jusqu'au râwî » → 「――ラーウィーに至るまで」 (outro de 'Alî), jamais 「そして、あなたへ」. |
 | chimère (D183 ; autrefois « égrégore » : idée reprise par beaucoup de cœurs ; l'ennemi) | **虚像**（きょぞう） | デジタル大辞泉, sens 2 : 「実際とは異なる、作られたイメージ。『マスコミによって作られた虚像』」 ; 精選版 日本国語大辞典, sens 2 : 「あるものの実態とは異なるイメージ。特に、人物の実体に対する、世評、伝説などによって作り上げられた評価認識をいう」 (lu : <https://kotobank.jp/word/虚像>). | Le japonais a le mot d'une image fabriquée ensemble et vide de réalité ; il va avec 偶像 (idole), et 「虚像を暴く」 dit « dévoiler ». Pour le **recueil**, la pensée japonaise de ce que les gens fabriquent ensemble : 「空気」 (山本七平『「空気」の研究』, 文藝春秋 1977 ; notice <https://ci.nii.ac.jp/ncid/BN02778185>) et 「世間」 (阿部謹也『「世間」とは何か』, 講談社現代新書 1995 ; <https://ci.nii.ac.jp/ncid/BN12885013>). Deux réserves lues : l'éditeur résume la thèse de 山本 par 「『空気』とはまことに大きな絶対権を持った妖怪である」 (<https://books.bunshun.jp/ud/book/num/9784167911997>) — on prend l'idée, **jamais l'image du 妖怪** (exigences 6, 18) ; et 世間 est d'abord un mot bouddhique ([Wiki-ja] « 世間 » : 「インド発祥の宗教における用語」). Alternative : la translittération エグレゴール, aussi rare et ésotérique en japonais que « égrégore » en français — *écartée depuis D183* : le décideur a retiré « égrégore » du français pour cette raison même ; 虚像 dit déjà ce que dit « chimère ». **À valider.** |
 | idole (la chimère enracinée d'un chapitre) | **偶像** | 三田 14:35 「偶像崇拝」, 5:90 「偶像」 (34 versets) ; [Wiki-ja] « 偶像崇拝 ». | Jamais アイドル (le sens moderne de 偶像 est connu, mais le contexte le lève). |
 | noosphère | **精神圏** | [Wiki-ja] « ノウアスフィア » : 「精神圏（せいしんけん）またはノウアスフィア」 (ヴェルナツキー, テイヤール・ド・シャルダン) ; 村田奈生「テイヤール・ド・シャルダン研究史素描」『東京大学宗教学年報』36 : 「物質圏，生命圏，精神圏」 (lu : <https://repository.dl.itc.u-tokyo.ac.jp/record/53424/files/rel036012.pdf>). | La traduction de référence (美田稔訳『現象としての人間』, みすず書房 1964 ; <https://ci.nii.ac.jp/ncid/BN03402753>) n'a pas été lue : son terme exact n'est pas vérifié. Le jeu ne nomme ni テイヤール ni ヴェルナツキー. |
@@ -200,7 +201,7 @@ Deux sources savantes reviennent souvent :
 | Cité-Miroir (la ville de 2084) | **鏡の街** | Proposition. | 鏡 est aussi un objet sacré du shintô (御神体) ; 街 et le contexte urbain l'en éloignent. Pas ミラーシティ (calque anglais). **À valider.** |
 | pourparler | **交渉** | Usage courant. | Neutre ; 談判 serait plus dur (sommation). |
 | bataille déclarée | **会戦** | デジタル大辞泉 : 「敵味方双方の多数の軍勢が出あって戦うこと。また、大規模な陸上戦」 (lu : <https://kotobank.jp/word/会戦>). | Le « déclaré » (chacun sait ce qui se dresse) se dit dans le recueil. Écarté : 名乗りの戦 (coutume des samouraïs). **À valider.** |
-| le secours | **助け** (bandeau : 「助けが来た」) | Proposition. Le verset de Badr est cité dans la traduction de 三田 (8:9 : 「あなたがたが主に援助を歎願した時」), par le registre. | Ni 援軍 (des troupes : on ne montre ni ne compte les anges, exigence 20), ni 救済／救い (salut, au sens chrétien ou bouddhique). **À valider.** |
+| le secours | **助け** (bandeau : 「助けが来た」) | Proposition. Le verset de Badr est cité dans la traduction de 三田 (8:9 : 「あなたがたが主に援助を歎願した時」), par le registre. | Ni 援軍 (des troupes : on ne montre ni ne compte les anges, exigence 20), ni 救済／救い (salut, au sens chrétien ou bouddhique). **À valider.** *2.08 :* la prière tenue « dans ce chapitre », jamais par le joueur : 「この章で、礼拝は守られていた」 (et non 「あなたは礼拝を守っていた」) ; « il ne vient que si la prière a été tenue dans le chapitre » : 「助けが来るのは、この章で礼拝が守られていたときだけです」 ; « et ne dit pas qu'ils sont venus ce jour-là » : 「その日に天使が来たとも言わない」. « On ne le commande pas » : 「呼べば来るものではない」 (titre de la carte), 「こちらから呼ぶことはできません」 (préparation). |
 | les degrés du mal (D183 ; autrefois « l'organigramme du mal ») | **悪の諸段階** | Proposition. | 諸段階 dit des degrés, une lecture étage par étage, et non une organisation : 「悪の組織図」 sonnerait comme « l'organisation du mal » des feuilletons (悪の組織) ; ni 位階 ni 階級, qui feraient une hiérarchie. Une lecture, pas une démonologie (exigence 18). L'ancien 悪の見取り図 n'est plus écrit. **À valider (D183).** |
 | les souffleurs | **囁く者たち** | 三田 114:4 : 「こっそりと忍び込み，囁く者の悪から」 (al-waswās). | Le mot même du Coran japonais. Ni nom, ni figure, ni nombre. |
 | Lumière (celle que chaque saga transmet) | **光** | Usage courant. | 「アブー・バクルの光」. |
@@ -339,14 +340,23 @@ lieu de 構え. **À valider (D184).**
 Le jeu ne dit de personne qu'il **est** 英雄, 賢者 ou 聖人 : on écrit 「英雄の姿勢をとる」, jamais 「英雄である」 (exigence 24). Ni
 l'auteur de la typologie ni son ouvrage ne sont nommés dans le jeu (même règle qu'en français).
 
-**Les portes de la noosphère** (`portes`)
+**Les portes de la noosphère et la descente du râwî** (`portes` ; le feuillet et l'aide « Descendre dans la noosphère »).
+Tout ce qui suit se dit de la ラーウィー, à la troisième personne (§ 1.1, « À distance du joueur »).
 
 | Français | **Japonais** | Note |
 |---|---|---|
 | Au sortir de la prière | **礼拝を終えて** | — |
-| Dans le dhikr | **ズィクルのうちに** | — |
+| Dans le dhikr | **ズィクルのうちに** ; « Tout s'est tu, sauf le souvenir » : 「すべてが黙し、想起だけが残った」 | 想起 dit le souvenir de son Seigneur ; 唱念, le mot de 三田, reste aux citations (§ 2.3). |
 | En songe | **夢のうちに** ; « un sommeil sans songe » : 「夢を見ない眠り」 | Jamais 夢告, 霊夢 (le songe oraculaire bouddhique ou shintô). |
-| « ses démons intérieurs » (façon de parler, aussitôt expliquée) | **「心の中の悪魔」** entre guillemets, dans la seule phrase où le jeu explique l'expression | Exigence 22 : le jeu dit que ce ne sont pas des démons. Le mot 悪魔 n'apparaît nulle part ailleurs hors citation. |
+| Descendre dans la noosphère (titre du feuillet et de l'aide) | **精神圏へ降りる** | *2.08 :* le décideur a écarté « descendre en soi » (« on a dit descendre dans la noosphère ») : jamais 「自らの内へ降りる」 ni 「おのれの心を見に行く」. On descend dans un lieu de fiction, non en soi-même. |
+| la descente du râwî ; « une descente se fait d'une traite » | **ラーウィーの降りゆく道** ; 「降りゆく道は、ひと息に進むものです」 | 降りゆく道 seul quand le contexte dit déjà de qui il s'agit ; jamais 「あなたの降りゆく道」. Ni 降下 (le parachute, l'avion), ni 下降. **À valider.** |
+| « C'est sa descente, jamais celle d'un Compagnon » | 「それはラーウィー自身の降りゆく道であり、けっして教友のものではない」 | Exigence 22. |
+| l'issue ; un abri ; « L'issue est trouvée » ; « Le râwî a tenu » | **出口** ; **隠れ家** ; 「出口は見つかった」 ; 「ラーウィーは持ちこたえた」 | Sans sujet, 「出口を見つけた」 se lirait « tu as trouvé l'issue » : le titre se tourne sans personne, ou nomme la ラーウィー. |
+| ce qui rôde ; frappé, sonné | **さまようもの** ; **打たれて、ひるむ** | « Frapper ce qui rôde » : 「さまようものを打つ」 (§ 2.8). |
+| se dissiper (une idée noire, une chimère) | **消え去る** ; « jusqu'au prochain chapitre » : 「次の章までは戻らない」 | |
+| rattrapé ; épuisé ; remonter | **追いつかれる** ; **疲れきる** ; **戻る** ; « %s a rattrapé le râwî » : 「%sがラーウィーに追いついた」 | |
+| faire face (lame forgée en main, accompagné) | **向き合う** | Pas 戦う seul : on fait face à un mal du cœur, on ne livre pas bataille à une personne. |
+| « ses démons intérieurs » (façon de parler, aussitôt expliquée) | **「心の中の悪魔」** entre guillemets, dans les seules phrases où le jeu explique l'expression : le feuillet (「「心の中の悪魔」という言い方もあるが、それは悪魔ではない」) et l'aide (「いわゆる「心の中の悪魔」ですが、それはものの言い方にすぎません」) | Exigence 22 : le jeu dit que ce ne sont pas des démons. Le mot 悪魔 n'apparaît nulle part ailleurs hors citation. *2.08 :* la question de la porte ne le dit plus (le français non plus). |
 
 **Les voies de la parole** (`D.VOIES`, la réponse aux idées noires)
 
@@ -448,6 +458,11 @@ l'image même de la transmission), **à valider** ; 図鑑 (catalogue de jeu) es
 | **ファジュル**・夜明け | **ズフル**・正午 | **アスル**・午後 | **マグリブ**・日没 | **イシャー**・夜 |
 
 Le carton de prière reste sobre (exigence 13) : 「彼らは礼拝した。」, comme le français « Ils prièrent. ».
+
+*2.08 (à distance du joueur, § 1.1) :* la natte « de passage » (une visite, un retour en 2084) : 「立ち寄っているだけ」,
+「立ち寄りのあいだは、ここで礼拝し、休むことができます」 ; la préparation d'une bataille : « Le râwî est passé par la
+prière dans ce chapitre » → 「ラーウィーはこの章で礼拝を済ませています」 (済ませる, comme l'aide du pourparler) ; « la provision
+du cœur » → 「心の糧」, jamais 「あなたの心の糧」 ; le dû des troupeaux « est versé » → 「家畜の定めの分が納められました」.
 
 **Combat** (`battle.js`) : Frapper **打つ** · Éclairer **照らす** · Garde **守り** · Vertus **徳** · Objets **持ち物** ·
 Assaut (attaque d'une chimère) **襲いかかる** · Force **力** · Esprit **精神** · Garde (stat) **守り** · Élan **勢い** ·
@@ -780,6 +795,10 @@ Notes :
     英雄の偶像 (Idole du Héros, qui répond à la figure 英雄), アグレゴール.
 18. **Relecture des noms par un spécialiste** qui a le 『岩波イスラーム辞典』 en main : l'agent n'a pas pu lire le
     dictionnaire lui-même (§ 5) ; les formes des § 3.1–3.2 appliquent son système tel que d'autres le rapportent.
+19. **À distance du joueur** (§ 1.1, § 2.5 ; 2.08) : la descente, le secours et le dernier maillon à la troisième
+    personne (「ラーウィーは……」), jamais あなた ni おのれ ; le récit de la descente en である調 (la règle du labyrinthe
+    comprise, qui était une consigne en です・ます), les annonces et les consignes de commande en です・ます調 ; 「精神圏へ降りる」
+    pour « Descendre dans la noosphère » et 「ラーウィーの降りゆく道」 pour « la descente du râwî ».
 
 ## 5. Ce qui n'a pas pu être vérifié
 
