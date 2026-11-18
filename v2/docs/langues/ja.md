@@ -147,7 +147,63 @@ grandit, mais le texte passe sous l'image sur un téléphone en largeur : ne pas
 - Les **noms arabes des Lumières, des lames, des étoiles** que le français donne en italique (« al-Qanâ'a ») passent en
   katakana (アル＝カナーア) **seulement** là où le français les montre ; ailleurs, le mot japonais seul.
 
-<!-- SECTION 2 -->
+## 2. Le vocabulaire du jeu
+
+Colonnes : le terme français ; **le terme japonais retenu** ; d'où il vient (ouvrage, auteur, page lue) ; la note. Un terme
+sans équivalent établi est une proposition de l'agent : **« à valider »**. Les références à 三田 renvoient au verset où le
+mot est employé dans ce sens (texte lu dans l'édition `ja.japanese` d'alquran.cloud, celle que le registre des sources a
+recoupée avec la traduction 35 de quran.com ; le verset n'est pas cité ici).
+
+Deux sources savantes reviennent souvent :
+
+- **[東長]** 東長靖「ガザーリー『宗教諸学の再興』解題・翻訳ならびに訳注」(スーフィズム・アンソロジー・シリーズ 7),
+  『イスラーム世界研究』8 号, 2015 年, 359–364 頁 (lu :
+  <https://repository.kulib.kyoto-u.ac.jp/server/api/core/bitstreams/8133623a-54e6-4c8d-a50f-8439ebdbac7b/content>).
+  Il traduit la table de l'*Iḥyāʾ* : chaque chapitre des « maux » et des « remèdes » avec son terme arabe. C'est la source
+  japonaise directe pour les maux du cœur (le codex du jeu cite le même plan d'al-Ghazâlî).
+- **[牧野]** 『ハディース：イスラーム伝承集成』, ブハーリー著, 牧野信也訳, 中央公論社 1993–94 (rééd. 中公文庫 2001), et
+  **[協会訳ムスリム]** 『日訳サヒーフムスリム』, 磯崎定基・飯森嘉助・小笠原良治訳, 日本ムスリム協会 (notices CiNii
+  <https://ci.nii.ac.jp/ncid/BN09900629>, <https://ci.nii.ac.jp/ncid/BA64435233>). Pages de la seconde lues :
+  `vol2-174`, `vol2-720-2` (§ 1.2).
+
+### 2.1 Les mots propres au jeu (`AGENTS.md`, « Conventions »)
+
+| Français | **Japonais** | Source | Note |
+|---|---|---|---|
+| Constance (points de vie) | **気力** | 三田 3:139 : 「それで気力を失ったり，また絶望してはならない」 (lā tahinū : ne pas faiblir, au lendemain de l'épreuve). | Le mot qui, chez 三田, dit ce qui tient dans l'épreuve. Ni 体力 (corps), ni HP. **À valider.** |
+| Souffle (points de magie) | **息** | Usage courant : 息が続く, 息が長い (« avoir du souffle »). | La phrase du jeu « le souffle plus long » se dit 「息が長くなる」. Jamais 魔力, 霊力, 気 seul (exigences 13, 15 : rien de magique). **À valider.** |
+| éprouvé (hors de combat) | **力尽きる** (état : 「力尽き」) | Usage courant. | Ni 死亡, ni 戦闘不能 (jargon), ni 倒れる seul (sonne comme la mort à l'écran). Exigence 19 : nos rangs se replient, rien ne meurt. **À valider.** |
+| voiles (la garde d'un égrégore) | **覆い** | 三田 50:22 : 「われは今，あなたから覆を取り除く」 (ghiṭāʾ) ; 2:7 「目には覆いをされ」. | Le mot coranique du voile que l'on ôte. Le voile de lumière des Compagnons (dessin, docs) se dit 光の覆い, jamais ヴェール dans le jeu. |
+| dévoilé (égrégore vaincu : on a montré qu'il est vide) | **暴かれる** (「虚像は暴かれた」) | デジタル大辞泉 « 虚像 » et son emploi : on « démasque » une image fabriquée (lu : <https://kotobank.jp/word/虚像>) ; collocation 虚像を暴く, usage courant. | Va avec 虚像 (égrégore, ci-dessous). **À valider** avec lui. |
+| Niyya (l'intention, jauge de combat) | **ニーヤ** | [Wiki-ja] « ニーヤ » ; [東長] : 「意図（nīya）」. | Terme établi ; le sens « 意図 » se donne une fois dans le recueil. |
+| Sakîna (la sérénité, jauge) | **安らぎ** (le recueil ajoute 「サキーナ」 une fois) | 三田 48:4 : 「信者たちの心に安らぎを与え」 (sakīna). | Le mot même de 三田 pour la sakīna. « La Sakîna descend » : 「安らぎが降りる」. Comme 三田 rend aussi d'autres mots par 安らぎ (13:28), le recueil nomme サキーナ. |
+| râwî (le transmetteur, le joueur) | **ラーウィー** (sens : 伝承者) | Transcription selon § 1.2 ; 「伝承者」 : [協会訳ムスリム] vol2-174 (「私（伝承者）」). | Dans l'apostrophe : 「ラーウィーよ」. Pas de forme japonaise consacrée de *râwî* lue : la forme suit le système. |
+| isnad | **イスナード** | Transcription selon § 1.2 ; la chose : 「伝承者経路」, [協会訳ムスリム] vol2-174 (「他の伝承者経路でも伝えられている」). | 「イスナード（伝承者経路）」 à la première occurrence du recueil. |
+| la Chaîne (l'écran, la suite des maillons) | **鎖** (titre d'écran : 「伝承の鎖」) | Proposition. | **À valider.** |
+| maillon (une saga) | **環**（わ） ; « un maillon de la Chaîne » : 「鎖の一環」 | Proposition : 一環 dit à la fois « un anneau d'une chaîne » et « une part d'un tout ». | **À valider.** |
+| égrégore (idée reprise par beaucoup de cœurs ; l'ennemi) | **虚像**（きょぞう） | デジタル大辞泉, sens 2 : 「実体とかけ離れた、作られたイメージ」, ex. 「マスコミによって作られた虚像」 ; 精選版 日本国語大辞典 : image d'une personne façonnée 「世評や伝説によって」 (lu : <https://kotobank.jp/word/虚像>). | Le japonais a le mot d'une image fabriquée ensemble et vide de réalité ; il va avec 偶像 (idole), et 「虚像を暴く」 dit « dévoiler ». Pour le **recueil**, la pensée japonaise de ce que les gens fabriquent ensemble : 「空気」 (山本七平『「空気」の研究』, 文藝春秋 1977 ; notice <https://ci.nii.ac.jp/ncid/BN02778185>) et 「世間」 (阿部謹也『「世間」とは何か』, 講談社現代新書 1995 ; <https://ci.nii.ac.jp/ncid/BN12885013>). Deux réserves lues : l'éditeur résume la thèse de 山本 par 「『空気』とはまことに大きな絶対権を持った妖怪である」 (<https://books.bunshun.jp/ud/book/num/9784167911997>) — on prend l'idée, **jamais l'image du 妖怪** (exigences 6, 18) ; et 世間 est d'abord un mot bouddhique ([Wiki-ja] « 世間 » : 「インド発祥の宗教における用語」). Alternative : la translittération エグレゴール, aussi rare et ésotérique en japonais que « égrégore » en français. **À valider.** |
+| idole (l'égrégore enraciné d'un chapitre) | **偶像** | 三田 14:35 「偶像崇拝」, 5:90 「偶像」 (34 versets) ; [Wiki-ja] « 偶像崇拝 ». | Jamais アイドル (le sens moderne de 偶像 est connu, mais le contexte le lève). |
+| noosphère | **精神圏** | [Wiki-ja] « ノウアスフィア » : 「精神圏（せいしんけん）またはノウアスフィア」 (ヴェルナツキー, テイヤール・ド・シャルダン) ; 村田奈生「テイヤール・ド・シャルダン研究史素描」『東京大学宗教学年報』36 : 「物質圏，生命圏，精神圏」 (lu : <https://repository.dl.itc.u-tokyo.ac.jp/record/53424/files/rel036012.pdf>). | La traduction de référence (美田稔訳『現象としての人間』, みすず書房 1964 ; <https://ci.nii.ac.jp/ncid/BN03402753>) n'a pas été lue : son terme exact n'est pas vérifié. Le jeu ne nomme ni テイヤール ni ヴェルナツキー. |
+| idées noires (cinq) | **暗い想い** | Proposition (usage courant de 想い, « pensée qui pèse »). | Ni 心の闇 (manga), ni 邪念 (bouddhique : 念), ni 負の感情 (psychologie de magazine). **À valider.** Le relevé `notions.md` donne pour cinquième « le défilement » : c'est une erreur du relevé ; `coeur.js` dit **le désespoir** (`noir_desespoir`). |
+| maux du cœur (sept) | **心の悪徳** | Proposition. Sources de l'image : 三田 2:10 「かれらの心には病が宿っている」 (maraḍ) ; [東長] : la partie des muhlikāt 「危険［に導く悪行］」. | 「心の病」 est le mot de 三田, mais en japonais moderne il désigne d'abord la maladie mentale : le jeu laisserait entendre que la dépression est une faute. À écarter. **À valider.** |
+| lames (forgées par les œuvres) | **刃**（やいば） ; « la lame du Contentement » : 「満足の刃」 | Usage courant. | Jamais 刀 (le sabre japonais), jamais 剣 pour une lame-image (剣 est l'arme d'équipement, § 2.6). Exigence 16 : une image, ni relique ni inscription. |
+| provision du cœur (zâd) | **心の糧** | 三田 rend zād par 「準備」 (2:197 : 「最も優れた準備は篤信の念である」) ; 糧 est son mot pour la subsistance (51:58 「糧を授けられる御方」). | 「準備」 ne se dit pas d'une réserve que l'on emporte : 糧 garde l'image du voyageur, et l'écho avec ar-Razzâq. Le recueil cite le verset dans la traduction de 三田 (registre). **À valider.** |
+| compagnons de lumière (animaux de fiction) | **光の道連れ** | Proposition. | Jamais 使い魔 (sorcellerie), 守護霊 (spiritisme), 式神 (陰陽道), 眷属 (bouddhique), 神獣 (shintô/chinois). Et pas 光の仲間 : 仲間 sert déjà aux membres du groupe. **À valider.** |
+| halte (le menu) | **休息** | Usage courant. | Ni 修行 ni 瞑想. **À valider.** |
+| veillée (les veillées du Caïd) | **夜語り** | Proposition (mot simple : « récit du soir »). | Jamais 夜伽 (veillée funèbre ou sens galant), 通夜 (veillée mortuaire), 夜話 (titre de recueils bouddhiques ou d'essais). **À valider.** |
+| Cité-Miroir (la ville de 2084) | **鏡の街** | Proposition. | 鏡 est aussi un objet sacré du shintô (御神体) ; 街 et le contexte urbain l'en éloignent. Pas ミラーシティ (calque anglais). **À valider.** |
+| pourparler | **交渉** | Usage courant. | Neutre ; 談判 serait plus dur (sommation). |
+| bataille déclarée | **会戦** | Terme d'histoire militaire : bataille rangée entre forces principales (usage courant, référence non vérifiée). | Le « déclaré » (chacun sait ce qui se dresse) se dit dans le recueil. Écarté : 名乗りの戦 (coutume des samouraïs). **À valider.** |
+| le secours | **助け** (bandeau : 「助けが来た」) | Proposition. Le verset de Badr est cité dans la traduction de 三田 (8:9 : 「あなたがたが主に援助を歎願した時」), par le registre. | Ni 援軍 (des troupes : on ne montre ni ne compte les anges, exigence 20), ni 救済／救い (salut, au sens chrétien ou bouddhique). **À valider.** |
+| l'organigramme du mal | **悪の見取り図** | Proposition. | 「悪の組織図」 sonnerait comme « l'organisation du mal » des feuilletons (悪の組織) : à écarter. 見取り図 dit « une lecture, pas une démonologie » (exigence 18). **À valider.** |
+| les souffleurs | **囁く者たち** | 三田 114:4 : 「こっそりと忍び込み，囁く者の悪から」 (al-waswās). | Le mot même du Coran japonais. Ni nom, ni figure, ni nombre. |
+| Lumière (celle que chaque saga transmet) | **光** | Usage courant. | 「アブー・バクルの光」. |
+| les œuvres | **善行** | 三田 (117 versets, 「善行」) ; [東長] range ces actes dans 「信仰行為」. | Jamais 勤め／お勤め, 修行, 功徳 (bouddhiques). Le recueil peut préciser 「信仰行為」. |
+| les Valeurs (badges du bien) | **美徳** | Usage courant. | Ne jamais écrire 「七つの美徳」 en titre : c'est le nom japonais d'une liste chrétienne. Dire 「七つの徳」. **À valider.** |
+| les attributs divins | **御名**（みな） ; le côté du bien : 「美徳と御名」 | 三田 7:180 : 「最も美しい凡ての御名はアッラーに属する」 (al-asmāʾ al-ḥusnā). | Le français dit « attributs » ; le japonais musulman dit « les plus beaux Noms ». Un Nom n'est jamais dessiné ni « équipé » (exigence 21) : on écrit 「御名を知る」 (le reconnaître), jamais 「得る」. **À valider.** |
+| Vertus (les compétences, qui coûtent du Souffle) | **徳** (libellé du combat) | Usage courant. | Jamais 魔法, 呪文, 術, 法力 (exigences 13, 15). **À valider.** |
+
+<!-- SECTION 2 SUITE -->
 
 <!-- SECTION 3 -->
 
