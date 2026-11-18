@@ -1463,6 +1463,11 @@ pages privées de son compte.
   - Les shorts 01, 03, 04, 06 et 08 et la démo jouable montrent des mots que D183 et D184 ont changés. Proposition de
     l'agent : les refaire une fois décidé le texte à l'écran (propositions en cours), pour ne les refaire qu'une fois.
 
+- [x] **D185. La noosphère en arabe : عالم الأفكار (décision du décideur, 18 novembre).** Le concept est gardé dans les
+  quatre langues, sous le nom que chaque littérature lui donne : *noosphere* en anglais (Vernadsky, Teilhard de
+  Chardin), 精神圏 en japonais, et en arabe عالم الأفكار, « le monde des idées », le terme de Malek Bennabi, plutôt
+  qu'une transcription du mot grec. Le décideur l'a confirmé : « c'est très bien ».
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
