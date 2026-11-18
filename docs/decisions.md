@@ -1516,6 +1516,16 @@ pages privées de son compte.
   l'option de regarder une idée noire en face dans la noosphère quand la parole n'a pas porté ; elle attend la
   réécriture de l'exigence 18, que l'agent propose et que le décideur valide.
 
+- [ ] **D192. Les animaux sauvés, gardiens d'Idris, clés de la noosphère (direction donnée par le décideur, 18
+  novembre ; le détail est à proposer).** « Les animaux découverts dans les sagas (généralement sauvés d'un danger)
+  accompagnent aussi le personnage principal (Idris) » ; « chaque animal servira à vaincre une chimère dans la
+  noosphère d'Idris, et il faut les cinq pour vaincre l'Agrégor ». Les cinq compagnons de lumière (D67) ne viennent
+  plus d'un exploit : chacun est sauvé dans une saga, dans la fiction (le labyrinthe de la noosphère de la saga), puis
+  il rejoint Idris et veille sur lui. Le jeu ne les appelle jamais des anges (exigence 20) ; aucun sauvetage n'est
+  prêté à un Compagnon comme un fait de l'histoire (exigence 3) ; le renard n'est pas « apprivoisé » (exigence 14,
+  D67). L'exigence 16 (« aucune figure du ciel n'accompagne un Compagnon dans le récit historique ») est à ajuster
+  avec D67, qui fait agir le compagnon de lumière dans tous les combats.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
