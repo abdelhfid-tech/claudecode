@@ -69,6 +69,20 @@ parole, un français fidèle au texte arabe relevé, à valider ensuite par vous
   **Proposition** : « Sur mon honneur », « sans broncher », « Tu sembles las ».
 - Le slogan des Purs écrit « Dieu » (« La citadelle n'appartient qu'à Dieu ») quand tout le jeu écrit « Allah ».
 
+## 7. Relevé en écrivant le japonais (histoire de 2084)
+
+- **Exigence 14, à revoir en priorité.** Quatre répliques de la Cité-Miroir suivent de près des épisodes du conte qui
+  inspire les types de 2084 — ce que l'exigence interdit (« ni phrase, ni image, ni nom, ni épisode ») :
+  - le défileur (« pour oublier » / « oublier quoi ? » / la honte) reprend le dialogue du buveur ;
+  - le Régent (« Sois mon ministre… je te nomme ») reprend le roi qui nomme son visiteur ;
+  - le Cartographe (« Un savant ne se déplace pas ») reprend le géographe ;
+  - « Ne me dérange pas. Je compte » reprend le businessman.
+  **Proposition** : réécrire ces quatre échanges pour que le type reste (celui qui oublie, celui qui règne sur
+  personne, celui qui sait sans aller voir, celui qui compte) sans le tour de phrase ni l'enchaînement du conte.
+- **Trois paroles du recueil sans place dans le registre** : celle d'ʿAbdallâh ibn al-Mubârak (« L'isnâd »), « Ô Bilâl,
+  repose-nous par elle » (Abû Dâwûd ; le français omet « établis la prière »), et la promesse rapportée par Khabbâb (de
+  San'â' au Hadramawt, aussi dans le négoce). **Proposition** : les relever à leur source, comme les autres paroles.
+
 ## Si vous retenez un changement
 
 Le français change d'abord, puis les listes des langues se remettent à jour (`node v2/tools/langues.js releve`) : les
