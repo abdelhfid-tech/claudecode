@@ -108,6 +108,15 @@ parole, un français fidèle au texte arabe relevé, à valider ensuite par vous
   'Amr ibn Buqayla ; le jeu le nomme « 'Amr ibn 'Abd al-Masîh » (le registre le note). **Proposition** : lui rendre son
   nom.
 
+## 10. Relevé en écrivant le japonais (saga de 'Umar)
+
+- **« Ghânim serre ses clés »** (l'idée noire d'un pourparler) : partout ailleurs, le marchand est Abû Ghânim.
+  **Proposition** : « Abû Ghânim serre ses clés ».
+- **Surâqa** : le personnage est dit « fils de Mâlik », sa parole citée (al-Bayhaqî) dit « fils de Ju'shum », dans la même
+  scène (le registre le note). **Proposition** : suivre la source de la parole, ou nommer Surâqa sans filiation.
+- **Les formules après un Compagnon** : le recueil de cette saga écrit « (qu'Allah l'agrée) » et « (qu'Allah lui fasse
+  miséricorde) », les autres non. **Proposition** : une règle unique, que vous fixerez (point 1 des trois glossaires).
+
 ## Si vous retenez un changement
 
 Le français change d'abord, puis les listes des langues se remettent à jour (`node v2/tools/langues.js releve`) : les
