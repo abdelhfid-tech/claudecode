@@ -30,14 +30,17 @@ const poser = f => { const p = JSON.parse(fs.readFileSync(f, 'utf8'));
 // « + » : des sources ont changé depuis ce commit (les fichiers générés ne comptent pas)
 let rev = ''; try { const sh = c => require('child_process').execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); rev = sh('git rev-parse --short HEAD') + (sh('git status --porcelain -- src tools paquets') ? '+' : ''); } catch (e) { /* hors dépôt */ }
 // le numéro de la 2.x : il avance d'un centième à chaque enregistrement qui change le jeu (AGENTS.md ; docs/decisions.md, D181)
-const NUMERO = '2.02';
+const NUMERO = '2.03';
 const version = NUMERO + (vers ? ' · essai' : '') + ' · ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC' + (rev ? ' · ' + rev : '');
 // les langues (src/lang/<langue>/<fichier>.json) : chaque texte est rangé sous la clé de son texte français (src/core/langue.js).
 // Un texte laissé vide n'entre pas : le jeu dira le français à cet endroit, et v2/tools/langues.js le signale.
 const LANGUE = require('../src/core/langue.js'), LANG = path.join(root, 'src/lang');
-const langues = LANGUE.ORDRE.filter(l => l !== 'fr' && fs.existsSync(path.join(LANG, l))).map(l => { const cat = {};
-  fs.readdirSync(path.join(LANG, l)).filter(f => /\.json$/.test(f)).sort().forEach(f => { (JSON.parse(fs.readFileSync(path.join(LANG, l, f), 'utf8')).textes || []).forEach(x => { if (x && typeof x.fr === 'string' && typeof x.t === 'string' && x.t) cat[LANGUE.cle(x.fr)] = x.t; }); });
-  return { l, n: Object.keys(cat).length, js: `/* ==== langue ${l} ==== */\nISNAD.langue.poser(${JSON.stringify(l)}, ${JSON.stringify(cat).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029')});` }; }).filter(x => x.n);
+// Une langue n'est offerte au joueur qu'une fois complète (chaque texte de ses listes écrit) ; inachevée, elle n'entre
+// que pour les essais (?lang=… dans l'adresse).
+const langues = LANGUE.ORDRE.filter(l => l !== 'fr' && fs.existsSync(path.join(LANG, l))).map(l => { const cat = {}; let total = 0, ecrits = 0;
+  fs.readdirSync(path.join(LANG, l)).filter(f => /\.json$/.test(f)).sort().forEach(f => { (JSON.parse(fs.readFileSync(path.join(LANG, l, f), 'utf8')).textes || []).forEach(x => { if (!x || typeof x.fr !== 'string') return; total++; if (typeof x.t === 'string' && x.t) { ecrits++; cat[LANGUE.cle(x.fr)] = x.t; } }); });
+  const complet = total > 0 && ecrits === total;
+  return { l, n: Object.keys(cat).length, complet, js: `/* ==== langue ${l} ==== */\nISNAD.langue.poser(${JSON.stringify(l)}, ${JSON.stringify(cat).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029')}, { complet: ${complet} });` }; }).filter(x => x.n);
 const js = `window.ISNAD_VERSION = ${JSON.stringify(version)};\n` + core.concat(data).map(f => `/* ==== ${f} ==== */\n` + read(f)).concat(langues.map(x => x.js)).concat(paquets.map(poser)).join('\n') +
   '\n(window.claude && window.claude.hot && window.claude.hot.ready) ? window.claude.hot.ready(function () { ISNAD.ui.boot(); }) : ISNAD.ui.boot();\n';
 if (js.includes('</script')) throw new Error('</script> trouvé dans le JS');
@@ -45,7 +48,7 @@ if (js.includes('</script')) throw new Error('</script> trouvé dans le JS');
 const page = read('src/page.html').replace(/<title>[^<]*<\/title>/, `<title>ISNAD ${NUMERO}</title>`).replace('/*CSS*/', () => read('src/style.css')).replace('/*JS*/', () => js);
 const cut = page.indexOf('<div id="app">');
 const full = `<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="description" content="ISNAD — JRPG rétro-HD en cinq sagas : les Compagnons après la mort du Prophète ﷺ.">\n${page.slice(0, cut)}</head>\n<body>\n${page.slice(cut)}\n</body>\n</html>\n`;
-const resume = `${core.length + data.length} modules` + (paquets.length ? ` · ${paquets.length} paquet${paquets.length > 1 ? 's' : ''}` : '') + (langues.length ? ' · ' + langues.map(x => `${x.l} ${x.n}`).join(', ') : '');
+const resume = `${core.length + data.length} modules` + (paquets.length ? ` · ${paquets.length} paquet${paquets.length > 1 ? 's' : ''}` : '') + (langues.length ? ' · ' + langues.map(x => `${x.l} ${x.n}${x.complet ? '' : ' (inachevée)'}`).join(', ') : '');
 if (vers) {
   fs.mkdirSync(vers, { recursive: true }); fs.writeFileSync(path.join(vers, 'index.html'), full);
   console.log(`essai : ${path.relative(process.cwd(), path.join(vers, 'index.html'))} ${(full.length / 1024).toFixed(0)} Ko · ${resume}`);

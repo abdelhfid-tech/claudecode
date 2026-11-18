@@ -103,6 +103,9 @@ function controler(l, F, REG) {
       // un verset : le texte relevé dans le registre doit s'y trouver tel quel
       REG.versets.filter(e => e.fr && fr.indexOf(e.fr) >= 0 && e[l] && e[l].texte).forEach(e => { if (t.indexOf(e[l].texte) < 0) erreurs.push(`${w} : le verset ${e.sourate}:${e.versets} n'est pas cité tel que le registre le relève`); });
     }); });
+  // un même texte français n'a qu'une clé : il ne peut être écrit que d'une façon, dans tous les fichiers où il revient
+  const vu = new Map(); Object.keys(F).forEach(f => (lire(l, f).textes || []).forEach(x => { if (!x.t || !F[f].has(x.fr)) return; const a = vu.get(x.fr);
+    if (a && a.t !== x.t) erreurs.push(`${l} : « ${x.fr.slice(0, 50)} » est écrit « ${a.t.slice(0, 40)} » dans ${a.f} et « ${x.t.slice(0, 40)} » dans ${f} — une seule façon, la même partout`); else if (!a) vu.set(x.fr, { t: x.t, f }); }));
   const r = R.verifierLangue(l, cases); erreurs.push(...r.erreurs); avis.push(...r.avis);
   return { erreurs, avis, faits, n };
 }

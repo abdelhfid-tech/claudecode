@@ -12,7 +12,7 @@
 const fs = require('fs'), path = require('path'), os = require('os');
 const { chromium } = require('playwright');
 const V2 = path.join(__dirname, '..'), out = path.join(V2, '.smoke/partie');
-const url = 'file://' + path.join(V2, 'index.html'), url131 = 'file://' + path.join(V2, '..', 'index.html');
+const url = 'file://' + path.join(V2, 'index.html'), url131 = 'file://' + path.join(V2, '..', 'archive', 'v1.32', 'index.html');   // la 1.32 archivée (D181) : lue seulement
 fs.mkdirSync(out, { recursive: true });
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); };
 

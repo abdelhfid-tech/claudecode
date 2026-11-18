@@ -186,12 +186,15 @@ longueur médiane de 75 signes (90 % sous 146) ; une narration (`nar`) 142 signe
 Elles valent toutes. Celles-ci prennent en anglais une forme propre :
 
 - **Exigences 6 et 18 — aucun ennemi au nom de démon.** On n'emploie jamais, pour un égrégore, une idole, une
-  compétence ou un personnage : *demon, devil, fiend, imp, ghoul* (de l'arabe *ghūl*, une sorte de djinn), *ifrit,
+  compétence ou un personnage : *demon, devil, fiend, imp, ghoul* (de l'arabe *ghūl*, une sorte de djinn), *taghut*
+  (SI garde le mot coranique, « *ṭāghūt* », 2:256), *ifrit,
   afreet, marid, shaitan, Satan, Lucifer, Lightbearer, Morning Star, Beelzebub, Mammon, Moloch, Leviathan, Behemoth,
   Belial, Asmodeus, Belphegor, Baal, Legion*. *Mammon* en particulier ne nomme jamais l'Or ni l'Avarice : la
   démonologie chrétienne attache un démon à chacun des péchés capitaux (WP *Binsfeld's classification of demons* cite
   une liste où « *Mammon* » mène « *the avarous* », « *Sathanas* » la colère, « *Belzebub* » l'envie). WP *Ghoul* :
-  « *Jinn-like being* ». Les noms d'ennemis ne disent que ce que l'idée fait (§ 3.7). Le mot *egregore* a lui-même un passé : § 2.1.
+  « *Jinn-like being* ». Décision D182 : ni *taghut* ni *ghoul* ne nomment l'égrégore, l'Agrégor ni aucun ennemi ;
+  *taghut* peut s'expliquer au recueil, avec son verset tiré du registre. Les noms d'ennemis ne disent que ce que
+  l'idée fait (§ 3.7). Le mot *egregore* a lui-même un passé : § 2.1.
 - **Les sept maux ne sont pas les « sept péchés capitaux ».** La liste de sept est un choix du jeu, d'après
   al-Ghazâlî (recueil « Les sept maux du cœur ») ; les péchés capitaux sont une autre liste (WP *Seven deadly sins* :
   *Lust, Gluttony, Envy, Greed, Sloth, Pride, Wrath*). On évite donc *Wrath*, *Sloth*, *Gluttony*, *Lust*, *deadly
@@ -241,7 +244,8 @@ quand ils comptent.
 | lame (forgée par une œuvre) ; forger ; trancher (un mal) | **blade** ; **to forge** ; **to sever** (« *Greed is severed* ») | — | **À valider** pour *sever*. |
 | mal du cœur (les sept) | **ailment of the heart** (« *the seven ailments of the heart* ») ; forme courte : *ailment* | Ghazali.org, titre du livre XXII : « *Treating the Ailments of the Heart* » ; Winter (sur la page de l'ITS) : « *sickness of the heart* » | |
 | les maux du cœur, chez al-Ghazâlî (*al-muhlikât*, « ce qui perd ») | **the Quarter of Perils** ; *muhlikat* « *what destroys* » | Ghazali.org : « *The Quarter of Perils (Rubaʿ al-muhlikāt)* » | Pour le texte du recueil sur la liste de sept. |
-| idée noire (les cinq) | **dark thought** (« *the five dark thoughts* ») | — (usage courant, référence non vérifiée) | **À valider**. *Black thought* n'est pas idiomatique ; *intrusive thought* est clinique. |
+| pensée qui passe (*khâṭir*, pl. *khawâṭir*) | **passing notion** ; au recueil : ***khatir***, pl. ***khawatir*** | Winter, dans le texte d'al-Ghazâlî : « *Passing notions may be divided into two categories* », avec la note « *For these wasawis and khawatir* » ; son introduction : « *khawatir, the usually irrelevant thoughts which 'come at random into the mind'* ». Skellie (livre XXI, celui des merveilles du cœur) : « *The most important of these influences which come into the heart are involuntary suggestions (khawatir)* » | Décision D182 (`docs/decisions.md`). **À valider**. Skellie dit *involuntary suggestion* ; on ne le reprend pas : en anglais *suggestion* est le mot de SI pour ce qui vient du Diable (« *if an evil suggestion comes to you from Satan* », SI 7:200), et ce registre-là est réservé aux souffleurs. |
+| idée noire (les cinq) | **dark notion** (« *the five dark notions* » ; « *A dark notion: the fear of how one's own people see you.* ») | même source (Winter, *passing notions*) ; l'arabe du jeu dit **الخواطر السود** (D182) | Décision D182 : une idée noire est une pensée qui passe, *khâṭir*. **À valider**. Jamais *whisper(s)*, *whispering*, *waswas* pour elle (D182) ; ni *dark thought* (proposé avant D182, sans source), ni *intrusive thought* (clinique), ni *suggestion* (voir la ligne précédente). |
 | Valeur (une des sept : ce qui reste quand un mal est tranché) | **Value** | — | Majuscule, comme en français ; badge sans inscription. |
 | attribut divin | **divine attribute** ; un Nom : *Name* | — | On le **reconnaît** (*recognize*), jamais *earn/own/equip* (§ 1.9). |
 | compagnons de lumière (les cinq bêtes du ciel, fiction) | **star companions** | — | **À valider**. On écarte *companions of light* (*Companions*, majuscule, désigne les Compagnons du Prophète ﷺ : WP *Companions of the Prophet*) et tout *light-bearer* (c'est le sens du nom *Lucifer*). |
@@ -258,11 +262,11 @@ quand ils comptent.
 | le secours ; « le groupe est relevé » | **Relief** ; *the party rallies* | SI 8:9 : « *you were asking help of your Lord, and He answered you, "Indeed, I will reinforce you…"* » | **À valider**. Jamais *angelic aid*, *miracle*, *summon* (exigence 20). |
 | organigramme du mal | **the Chart of Evil** | — | **À valider**. *Hierarchy*, *order*, *pantheon* sont exclus : ils feraient une démonologie (exigence 18). |
 | Iblîs | **Iblis** | WP *Iblis* ; SI écrit « *Iblees* » (2:34, 18:50) | « *Iblees* » ne vit que dans les versets de SI. |
-| les souffleurs (*waswâs*) | **those who whisper** ; en apposition : *the whisperers*, toujours en minuscule | SI 114:4 : « *the retreating whisperer* », 114:5 : « *who whispers [evil] into the breasts of mankind* » ; Winter : « *waswas ('whispering')* » | Jamais un nom propre, jamais une majuscule : ils n'ont « ni nom, ni figure, ni nombre ». |
+| les souffleurs (*waswâs*) | **those who whisper** ; en apposition : *the whisperers*, toujours en minuscule | SI 114:4 : « *the retreating whisperer* », 114:5 : « *who whispers [evil] into the breasts of mankind* » ; Winter : « *waswas ('whispering')* » | Jamais un nom propre, jamais une majuscule : ils n'ont « ni nom, ni figure, ni nombre ». Décision D182 : *whisper*, *whisperer*, *whispering* (et *waswas* au sens de leur souffle) ne servent qu'à eux ; aucun égrégore, aucune idée noire, aucune compétence ne porte ces mots. Al-Ghazâlî ne nomme *waswâs* que la pensée qui vient du Shaytân (Skellie, note 179 : « *Waswas, cf. al-khatir al-shaitani* » ; dans son introduction, « *The suggestion of the demon (al-khatir al-shaitani)* »). |
 | « des démons d'entre les djinns, et parfois des hommes » | **devils from among the jinn, and sometimes men** | SI 6:112 : « *devils from mankind and jinn* » | |
 | djinn | **jinn** (singulier et pluriel ; « *one of the jinn* ») | SI 114:6, 7:179 | Jamais *genie*, jamais *djinn*. |
 | démons intérieurs (façon de parler, exigence 22) | **inner demons** | — (locution anglaise courante) | Le jeu l'explique aussitôt, comme en français ; jamais un nom d'ennemi. |
-| Waswâs (altération de combat) | **Waswas** | Winter : « *waswas ('whispering')* » | Comme le français, qui garde le mot arabe. |
+| Waswâs (altération de combat) | **Waswas**, jamais traduit | Winter : « *waswas ('whispering')* » | Comme le français, qui garde le mot arabe. Jamais *Whisper(s)* ni *Whispering* à l'écran (D182 : ces mots sont aux souffleurs). Point à trancher (§ 4) : depuis D182, une altération infligée par un égrégore porte le nom que al-Ghazâlî réserve au souffle du Shaytân. |
 | Doute (altération) | **Doubt** | | |
 | Étourdi | **Stunned** | | |
 | Sagesse (l'expérience gagnée) | **Wisdom** (« *Wisdom gained: +12* ») | — | **À valider**. |
@@ -335,6 +339,10 @@ Notes :
   simple, sans nom propre (« *More* », « *Take It All* », « *Looking Down* »).
 
 ### 2.6 Les cinq idées noires (`D.NOIRS`)
+
+En anglais : **the five dark notions** — des pensées qui passent (*khawatir*), selon la lecture d'al-Ghazâlî retenue
+par le décideur (D182, § 2.1). Elles ne rôdent, ne prennent corps et ne se frappent que dans la descente du râwî
+(exigences 18 et 22) ; leur nom ne dit jamais *whisper*.
 
 | Français | Anglais retenu | Où l'anglais l'emploie | Note |
 |---|---|---|---|
@@ -876,7 +884,8 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
 7. **Les mots de la jauge et des statistiques** : *Constancy* (Constance), *Breath* (Souffle), *spent* (éprouvé),
    *Mind* (Esprit), *Momentum* (Élan), *Wisdom* (Sagesse), *Rooting* (enracinement), *weak point* (faille), *veil* /
    *unveiled* (§ 2.1, § 2.12).
-8. **Les images du cœur** : *dark thoughts* (idées noires), *star companions* (compagnons de lumière), *ailments of
+8. **Les images du cœur** : *dark notions* (idées noires) et *passing notion* (*khâṭir*), d'après Winter, selon
+   D182 (*involuntary suggestion*, le mot de Skellie, est écarté : § 2.1), *star companions* (compagnons de lumière), *ailments of
    the heart* (maux du cœur), *blades* / *sever* (§ 2.1).
 9. **Trois Valeurs** : *Zeal* (l'Ardeur), *Goodwill* (la Bienveillance), et *Miserliness* plutôt qu'*Avarice* pour
    le mal d'en face de la Largesse (§ 2.5). *Resentment* pour la Rancune (§ 2.6). *Speak Plainly* pour « Dire vrai »
@@ -895,6 +904,9 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
 16. **Les dates** : *AH 11 · 632* (*Tabari* met *A.H.* devant le nombre), sans *CE* sauf ambiguïté (§ 1.6).
 17. **Le libellé « traduction du sens »** : *translation of the meaning* — usage non vérifié dans un ouvrage lu ; le
     registre des sources peut le fixer en même temps que la référence de SI (§ 1.5).
+18. **L'altération « Waswâs »** (§ 2.1) : depuis D182, *waswâs* ne nomme que le souffle du Shaytân, réservé aux
+    souffleurs, qui ne se combattent pas. L'anglais garde *Waswas* sans le traduire, comme le français ; le décideur
+    dira si l'altération doit changer de nom dans toutes les langues.
 
 ## 5. Ce qui n'a pas pu être vérifié
 

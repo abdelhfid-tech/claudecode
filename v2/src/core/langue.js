@@ -19,6 +19,7 @@
          v2/tools/langues.js. Jamais une phrase assemblée par morceaux : une phrase entière, avec ses {champs}.
          Selon un nombre : 'un voile¦{n} voiles' — les formes sont séparées par « ¦ », choisies d'après le champ n
          (français : une, plusieurs ; anglais : one, other ; japonais : une seule ; arabe : une seule, ou les six).
+         Deux sens pour un même mot : « Entrée§saisie » — le français dit ce qui précède « § », et la clé distingue le sens.
      I.T('Texte français')
          Ne fait rien : marque, dans une table écrite une fois au chargement, un texte que l'on dira plus tard par
          I.t(table.champ). Le relevé le voit.
@@ -138,9 +139,11 @@
   function brancher(I) {
     const D = I.D, cat = { ar: {}, en: {}, ja: {} }, cases = [], sues = new WeakSet();
     const L = I.langue = { LANGUES, ORDRE, lang: 'fr', cle, manques: new Set() };
-    L.poser = (lang, textes) => { Object.assign(cat[lang] || (cat[lang] = {}), textes); };
-    // les langues que l'on propose au joueur : le français, et celles qui ont reçu leurs textes (une langue vide n'est pas offerte)
-    L.disponibles = () => ORDRE.filter(l => l === 'fr' || Object.keys(cat[l] || {}).length > 0);
+    const complets = {};
+    L.poser = (lang, textes, info) => { Object.assign(cat[lang] || (cat[lang] = {}), textes); if (info) complets[lang] = !!info.complet; };
+    // les langues que l'on propose au joueur : le français, et celles dont chaque texte est écrit (une langue inachevée ne
+    // s'ouvre que par ?lang=… dans l'adresse, pour les essais)
+    L.disponibles = () => ORDRE.filter(l => l === 'fr' || complets[l]);
     L.connue = lang => (LANGUES[lang] ? lang : 'fr');
     // le texte d'une langue rangé sous un texte français ; à défaut, le français
     L.de = function (fr) { if (L.lang === 'fr' || typeof fr !== 'string' || !fr) return fr; const t = cat[L.lang][cle(fr)]; if (t == null) { L.manques.add(fr); return fr; } return t; };
@@ -160,8 +163,9 @@
     L.dir = () => LANGUES[L.lang].dir;
     L.locale = () => ({ fr: 'fr-FR', ar: 'ar-u-nu-latn', en: 'en-GB', ja: 'ja-JP' })[L.lang];   // pour les dates ; l'arabe garde les chiffres du reste du jeu
     I.T = s => s;
+    // un même mot français peut avoir deux sens : « Entrée§saisie » se dit « Entrée » en français, mais a sa propre clé
     I.t = function (fr, p) {
-      let s = L.de(fr);
+      let s = L.de(fr); if (s === fr && fr.indexOf('§') > 0) s = fr.slice(0, fr.indexOf('§'));
       if (s.indexOf(SEP) >= 0) s = forme(s === fr ? 'fr' : L.lang, p && p.n, s.split(SEP));
       return p ? s.replace(/\{(\w+)\}/g, (m, c) => (p[c] == null ? m : p[c])) : s;
     };
