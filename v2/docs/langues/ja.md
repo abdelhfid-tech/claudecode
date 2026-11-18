@@ -197,7 +197,7 @@ Deux sources savantes reviennent souvent :
 | pourparler | **交渉** | Usage courant. | Neutre ; 談判 serait plus dur (sommation). |
 | bataille déclarée | **会戦** | デジタル大辞泉 : 「敵味方双方の多数の軍勢が出あって戦うこと。また、大規模な陸上戦」 (lu : <https://kotobank.jp/word/会戦>). | Le « déclaré » (chacun sait ce qui se dresse) se dit dans le recueil. Écarté : 名乗りの戦 (coutume des samouraïs). **À valider.** |
 | le secours | **助け** (bandeau : 「助けが来た」) | Proposition. Le verset de Badr est cité dans la traduction de 三田 (8:9 : 「あなたがたが主に援助を歎願した時」), par le registre. | Ni 援軍 (des troupes : on ne montre ni ne compte les anges, exigence 20), ni 救済／救い (salut, au sens chrétien ou bouddhique). **À valider.** |
-| l'organigramme du mal | **悪の見取り図** | Proposition. | 「悪の組織図」 sonnerait comme « l'organisation du mal » des feuilletons (悪の組織) : à écarter. 見取り図 dit « une lecture, pas une démonologie » (exigence 18). **À valider.** |
+| l'organigramme du mal | **悪の諸段階** | Proposition. | 「悪の組織図」 sonnerait comme « l'organisation du mal » des feuilletons (悪の組織) : à écarter. 見取り図 dit « une lecture, pas une démonologie » (exigence 18). **À valider.** |
 | les souffleurs | **囁く者たち** | 三田 114:4 : 「こっそりと忍び込み，囁く者の悪から」 (al-waswās). | Le mot même du Coran japonais. Ni nom, ni figure, ni nombre. |
 | Lumière (celle que chaque saga transmet) | **光** | Usage courant. | 「アブー・バクルの光」. |
 | les œuvres | **善行** | 三田 (117 versets, 「善行」) ; [東長] range ces actes dans 「信仰行為」. | Jamais 勤め／お勤め, 修行, 功徳 (bouddhiques). Le recueil peut préciser 「信仰行為」. |
@@ -405,7 +405,7 @@ nommé « Faille » (**裂け目**, § 3.4).
 **La halte** (`ui.js`) : Reprendre **再開** · Que faire ? **いますべきこと** · Carte **地図** · Le groupe **一行** ·
 Compagnons (les membres du groupe) **仲間** · Équipement **装備** · Postures **構え** · Besace **旅袋** · Piliers **柱** ·
 Le cœur **心** · Œuvres et lames **善行と刃** · Compagnons de lumière **光の道連れ** · Le savoir **知** · Recueil **聞き書き**
-· Organigramme du mal **悪の見取り図** · Valeurs et attributs **美徳と御名** · Aide du jeu **遊び方** · Réglages **設定** ·
+· Organigramme du mal **悪の諸段階** · Valeurs et attributs **美徳と御名** · Aide du jeu **遊び方** · Réglages **設定** ·
 Ton personnage **あなたの人物** · Exporter la partie **記録を書き出す**.
 
 Deux pièges : **« compagnons » en minuscule** (les membres du groupe, le menu) se dit **仲間**, **« Compagnons »** (les
@@ -727,7 +727,7 @@ Notes :
     (qui irait aux hypocrites), 怠り, 妬み plutôt que 嫉妬. Les idées noires : 恥, 不安 (plutôt que 恐れ), 疑い, 恨み, 絶望.
 12. **Les mots du jeu sans équivalent établi** (§ 2.1) : 鎖 / 環 (Chaîne, maillon), 暗い想い (idées noires), 心の糧
     (provision), 光の道連れ (compagnons de lumière), 休息 (halte), 夜語り (veillée), 鏡の街 (Cité-Miroir), 会戦 (bataille
-    déclarée), 助け (secours), 悪の見取り図 (organigramme du mal), 美徳 (Valeurs), 徳 (Vertus), 聞き書き (Recueil), 綻び
+    déclarée), 助け (secours), 悪の諸段階 (organigramme du mal), 美徳 (Valeurs), 徳 (Vertus), 聞き書き (Recueil), 綻び
     (faille), 旅袋 (besace).
 13. **Le Renard des sables** (§ 2.4) : フェネック, pour éviter le renard d'Inari et des contes de 妖怪.
 14. **Le Caïd** (§ 3.1) : カーイド ; et le rôle « sage » 知者, distinct de la posture 賢者.
