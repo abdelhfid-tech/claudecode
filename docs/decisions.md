@@ -1472,8 +1472,8 @@ pages privées de son compte.
   Généreux » (« Quatrième maillon · Le Généreux »), et la compétence « Miséricorde du Généreux ». Al-Karîm est un Nom
   d'Allah, mais la générosité est une qualité que l'on peut acquérir, comme la véracité d'aṣ-Ṣiddîq : le titre désigne
   'Uthmân, jamais Allah (lecture de l'exigence 8 par le décideur). L'anglais (*the Generous*) et le japonais (惜しまぬ人)
-  suivent. *Proposition de l'agent, à valider :* en arabe, le titre suit le surnom des sources, **ذو النورين**, et la
-  compétence se dit « رحمة ذي النورين » : en arabe, « رحمة الكريم » se lit d'abord comme la miséricorde d'Allah.
+  suivent. En arabe, le titre suit le surnom des sources, **ذو النورين**, et la compétence se dit « رحمة ذي النورين » : en
+  arabe, « رحمة الكريم » se lit d'abord comme la miséricorde d'Allah (proposé par l'agent, validé par le décideur).
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
