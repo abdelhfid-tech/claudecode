@@ -1105,6 +1105,10 @@ contenu commun (`coeur`) ou une suite le reprend tel quel.
 | « tout le monde (le sait, le répète) » | **الناس كلّهم** | « الكلّ » avec l'article est un tour d'aujourd'hui : il ne reste que dans la langue de 2084 |
 | « Il n'y a pas de rangs à mener ici » ; « Il n'a pas de rangs à mener » | **لا صفوف تُقاد هنا** ; **لا صفوف يقودها** | l'impersonnel du français garde le passif |
 | « Tu dis vrai. » ; « Allons trouver… » (‘Umar) | **صدقت.** ; **انطلق بنا إلى…** | la voix de ‘Umar et d'Abû ‘Ubayda d'un récit à l'autre (al-Bukhârî n° 6830) |
+| « au jour le plus sombre » (Yûnus, les veillées, l'introduction d'Abû Bakr) | **أحلك الأيام** | le titre du premier chapitre ; « أظلم الأيام » et « أحلك يوم » écartés |
+| « c'est de lui que je le tiens » (le refrain d'Idris, après Abû Bakr, Khâlid, ‘Uthmân) | **عنه أخذتُ هذا** | une seule forme pour le refrain |
+| la « mesure » de ‘Umar ; « la même balance pour tous » | **ميزان** ; **ميزانٌ واحد للجميع** | jamais « مكيال » ; « ميزانُ الفاروق » (Idris) |
+| ‘Umar, à la première mention dans un feuillet du recueil | **عُمَر** | § 1.2, appliqué aux feuillets des cinq récits (« سيف بن عُمَر », « ابن عُمَر » compris) |
 | « An N H · 634 · lieu » (sous-titre d'un chapitre) ; « An N de l'Hégire » (carton) | **سنة N هـ · ٦٣٤ م · …** ; **سنة N للهجرة** | « An » se dit « سنة » partout ; la fiche d'une saga (« 13–23 H · 634–644 ») reste sans « سنة » (§ 2.10) |
 | l'ambiance d'un récit (écran de la Chaîne) : orientale · romaine · maritime · désert · citadelle · noosphère · cyberpunk | **شرقيّة · روميّة · بحريّة · صحراء · قلعة · عالم الأفكار · سايبربانك** | « مشرقيّة » et « صحراويّة » écartés : un même mot sur un même écran |
 | « juin 632 » | **يونيو ٦٣٢ م** | les mois de l'ère commune, dans les trois récits qui en donnent |
@@ -1160,7 +1164,7 @@ contenu commun (`coeur`) ou une suite le reprend tel quel.
 | ‘Uthmân | embarquer ; la Méditerranée ; les chantiers (arsenaux) ; le port | **ركوب البحر** ; **بحر الروم** ; **دُور الصناعة** ; **الميناء** | al-Balâdhurî (« بحر الروم ») |
 | ‘Uthmân | Constant II ; cinq cents voiles | **قسطنطين** ; **خمسمئة مركب** | at-Tabarî, an 31 (sans la filiation « بن هرقل ») |
 | ‘Uthmân | les pâturages réservés ; l'armée des jours difficiles ; les mécontents ; la discorde | **الحِمى** ; **جيش العُسرة** ; **مَن نقموا عليه** ; **الفُرقة** | « الفتنة » ne reste que dans les paroles relevées (Ibn Sîrîn, le hadith de Khabbâb) |
-| ‘Uthmân | garant ; « je ne fais que répéter » ; J'ai appris auprès d'un Compagnon | **السند** ; **«إنما أنا ناقل»** ; **قرأتُ على صحابيّ** | le mot des récitants |
+| ‘Uthmân | garant ; « je ne fais que répéter » ; J'ai appris auprès d'un Compagnon | **السند** ; **«إنما أنا ناقل»** ; **قرأتُ (بحمص) على صحابيّ** | le mot des récitants |
 | ‘Uthmân | Laisse-nous faire ; l'heure est venue de frapper ; Comme à Nihâwand | **خلِّ بيننا وبينهم** ; **«طاب أم ضرب»** ; **كما يومَ نَهاوَند** | Ibn Sa‘d, t. 3 p. 70 (l'article ḥimyarite) |
 | ‘Alî | le cri de Harûrâ' ; « En route vers le Paradis ! » ; retarde la prière de midi | **«لا حكم إلا لله»** ; **«الرواح الرواح إلى الجنة!»** ; **أبرِد بالظهر** | § 2.10 ; les mots de la source |
 | ‘Alî | « Interrogez-moi » ; le registre aux deux colonnes ; mot d'ordre (compétence du Slogan) | **«سلوني»** ; **الدفتر ذو العمودين** ; **الهُتاف** | « النَّعرة » reste le mot d'ordre du Clan (récit d'Abû Bakr) |
