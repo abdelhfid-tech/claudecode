@@ -1553,6 +1553,14 @@ pages privées de son compte.
   manquée** : avant le combat final, le joueur résout des énigmes pour la délivrer (énigmes de fiction, à valider une
   par une) ; rien ne bloque. L'exigence 16 et D67 sont à réécrire (formulation de l'agent, à valider).
 
+- [x] **D196. Éclairer, l'équivalent de la magie des RPG classiques (précision du décideur, 18 novembre : « Éclairer peut
+  être l'équivalent d'un pouvoir de magie dans les RPG classiques »).** Dans le jeu, Frapper est l'attaque du corps (la
+  Force, l'arme en main, sans coût) ; Éclairer en devient le pendant « magique » : il puise dans le Souffle (comme les
+  points de magie) et dans l'Esprit (comme la caractéristique de magie), et lève les voiles selon D190. Le mot
+  « magie » n'entre jamais dans le jeu, ni aucun équivalent (sortilège, enchantement) : la Lumière d'un héros est une
+  image du jeu, pas un pouvoir (exigences 13, 15, 21 ; en islam, la magie est réprouvée). Le coût en Souffle et les
+  chiffres se règlent par la mesure (D190), comme le reste.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
