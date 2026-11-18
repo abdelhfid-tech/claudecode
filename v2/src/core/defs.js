@@ -409,9 +409,10 @@
   D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole', 'Cœur', 'Objets'];
 
   /* ---------- Le personnage du joueur (2.0) ----------
-     Les tenues du râwî : des silhouettes faites des coiffes, des manteaux et des couleurs que sprites.js dessine déjà.
-     La première est sa tenue de toujours, à l'identique. Personne n'a de visage (exigence 2) : une tenue ne change que
-     l'étoffe, la coupe et la couleur. Le nom, lui, est contrôlé par perso.js. */
+     Les tenues du râwî (ses « ensembles ») : des silhouettes faites des coiffes, des manteaux et des couleurs que
+     sprites.js dessine déjà. La première est sa tenue de toujours, à l'identique. Une tenue ne change que l'étoffe, la
+     coupe et la couleur : le visage du râwî (2.x : il en a un, comme tout personnage de fiction) reste le même sous
+     chacune. Le nom, lui, est contrôlé par perso.js. */
   D.TENUES = [
     { id: 'archives', nom: 'Manteau des Archives', look: { kind: 'cyber', robe: '#2a3048', head: '#1c2030', cloak: '#39424f' } },
     { id: 'encre',    nom: 'Capuche d’encre',      look: { kind: 'cyber', robe: '#1d2b36', head: '#131d26', cloak: '#2b4656', trim: '#39e6ff' } },
@@ -420,6 +421,40 @@
     { id: 'veilleur', nom: 'Manteau du veilleur',  look: { kind: 'cyber', robe: '#3b3027', head: '#2a221b', cloak: '#57473a', manteau: 'ample', trim: '#ffe08a' } },
     { id: 'lettre',   nom: 'Calotte du lettré',    look: { kind: 'cyber', coiffe: 'calotte', robe: '#27344a', head: '#d8d2c4', cloak: '#3f4f66', manteau: 'epaule', trim: '#39e6ff' } }
   ];
+  /* ---------- Le râwî composé (2.x) ----------
+     Ce que le joueur change à son râwî, pièce par pièce, par-dessus l'ensemble qu'il a pris (D.TENUES) : le teint, la
+     barbe et son poil ; la coiffe, la coupe, la longueur de la robe, l'écharpe ; l'étoffe et le néon ; un objet porté.
+     Rien que ce que sprites.js dessine déjà. Des identifiants neutres, des couleurs sans nom : aucun choix ne se dit en
+     mots, aucun ne renvoie à une origine (exigences 2 et 10) ; la partie garde l'identifiant (profil.compo), jamais une
+     couleur. On n'en retire ni n'en réordonne aucun : on ajoute à la fin. (Palettes proposées par l'agent, à valider par
+     le décideur.)
+       teints   une gamme continue, du plus clair au plus sombre : les cinq teints du moteur, puis deux plus sombres
+                (t3 : celui d'Idris). TEINTS, que lisent tous les autres personnages, ne change pas.
+       barbes   celles que le moteur dessine : glabre, courte (Idris), pleine — pour un adulte ; poils : ni gris ni
+                blanc, ce serait l'âge (p2 : Idris)
+       coiffes  la capuche et la calotte : les turbans sont ceux des Compagnons des récits ; keffieh, litham et tiare,
+                ceux de types de gens ; les casques, de l'équipement. La calotte ne se porte pas sans manteau : ce
+                serait la silhouette de Sâlim, qui marche avec le râwî, et de Compagnons (perso.js)
+       etoffes  des étoffes harmonisées — robe, coiffe, manteau, jambes : celles des six ensembles, et une de plus
+       neons    la bande et la ceinture qui éclairent l'habit [bande, ceinture] ; le liseré suit la bande. Ni or ni jaune ;
+                aucune n'est la couleur d'un rayonnement (D.RAYONS). Sans choix : le néon de l'ensemble.
+       objets   un objet ordinaire, sans effet, rangé hors de l'équipement (look.porte) : rien de ce qui est une arme,
+                une pièce d'équipement ou la marque d'une figure de 2084 */
+  D.RAWI = {
+    teints: { t1: '#ecc49a', t2: '#deab7c', t3: '#cb9566', t4: '#b47d50', t5: '#9a6540', t6: '#7e5034', t7: '#5f3a24' },
+    barbes: [0, 1, 2],
+    poils: { p1: '#121014', p2: '#2c1e17', p3: '#6b4a2e' },
+    coiffes: ['capuche', 'calotte'],
+    manteaux: ['long', 'aucun', 'epaule', 'ample'],
+    etoffes: {
+      e1: { robe: '#2a3048', head: '#1c2030', cloak: '#39424f' }, e2: { robe: '#1d2b36', head: '#131d26', cloak: '#2b4656' },
+      e3: { robe: '#3b2c4a', head: '#251a31', cloak: '#4e3b60' }, e4: { robe: '#2d3b34', head: '#1d2722', cloak: '#3f4e45' },
+      e5: { robe: '#3b3027', head: '#2a221b', cloak: '#57473a' }, e6: { robe: '#27344a', head: '#d8d2c4', cloak: '#3f4f66' },
+      e7: { robe: '#7d8492', head: '#5a606c', cloak: '#a9aeb8', legs: '#3a3c44' }
+    },
+    neons: { n1: ['#ff4fd8', '#39e6ff'], n2: ['#7dffb0', '#39e6ff'], n3: ['#b18cff', '#7dffb0'], n4: ['#ff6b6b', '#39e6ff'], n5: ['#e8f4ff', '#ff4fd8'] },
+    objets: ['feuillets']
+  };
 
   /* ---------- Les paquets (2.0) ----------
      Un paquet est un document de données pures (JSON) qui ajoute du contenu au jeu de base :
