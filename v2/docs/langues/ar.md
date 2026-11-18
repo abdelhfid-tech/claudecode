@@ -146,7 +146,7 @@ Une boîte de dialogue tient **trois lignes sur un téléphone** (texte « grand
   court que le français (compter 80 à 85 % de la longueur française), mais la police Naskh est plus haute : ne pas
   remplir jusqu'au bord.
 - Une idée par boîte ; on coupe une longue réplique en deux répliques plutôt que de serrer.
-- Les noms de compétences et d'ennemis : **deux mots**, trois au plus (« الكلمة الصادقة »، « العرش… » : voir § 2.2).
+- Les noms de compétences et d'ennemis : **deux mots**, trois au plus (« الكلمة الصادقة »، « سرير المُلك الخالي »).
 - Les titres d'écran : un à trois mots.
 - Les textes du recueil n'ont pas de limite, mais une entrée se lit d'un tenant : un paragraphe de 60 à 120 mots.
 
@@ -246,7 +246,7 @@ compétence, d'objet ni de lieu frappé ne contient** :
 | **la Chaîne** (l'écran des maillons) | **السِّلسلة** | même page : « سلسلة الرواة » [L] | « La Chaîne entière » (compétence d'Idris) : « السلسلة كاملةً ». |
 | **maillon** (une saga) | **الحَلْقة** (vocalisée à la première occurrence) | usage courant (« حلقة في سلسلة »), référence non vérifiée | La حَلَقة, elle, est un cercle d'étude (WP-ar, « حلقة علم ») : le jeu dit pour ce sens **مجلس العلم** (§ 3.3). |
 | **égrégore** (l'ennemi du jeu) | **خَيال**, pl. **خَيالات** | proposition tirée du théâtre d'ombres arabe, **خيال الظل**, aussi nommé « شخوص الخيال، طيف الخيال » : des figures découpées qui semblent vivre quand beaucoup les regardent ensemble à la lumière d'une lampe, et ne sont qu'une ombre (WP-ar, « خيال الظل » et « ابن دانيال », poète mamelouk de ce théâtre) [L] | **à valider**. Le mot n'évoque ni djinn ni démon, et dit ce que le jeu dit : une forme vide qui prend corps sous le regard. « un égrégore de la tyrannie » : « خيالُ الطغيان ». Autre choix : **وَهْم**, pl. أوهام (« une illusion »), plus abstrait. Écartés : طَيف (le mot sert aussi, chez des commentateurs, pour le toucher du diable en Coran 7:201 — référence non vérifiée), شَبَح (« fantôme » : esprit des morts, hantise), فتنة، طاغوت، هوى (§ 2.2). |
-| **idole** (l'égrégore d'un chapitre) | **الصَّنَم**, pl. **الأصنام** | Malek Bennabi : « عندما تغرب الفكرة يبزغ الصنم » (cité par le blog d'Al Jazeera « أفكارنا أصنامنا », 30 avril 2018, qui la situe dans *Shurût an-nahda* ; source secondaire, non relue dans le livre) | Autre choix : الوثن. Le carton « Bataille déclarée » dit : « صنمٌ يُنازَل ». |
+| **idole** (l'égrégore d'un chapitre) | **الصَّنَم**, pl. **الأصنام** | Malek Bennabi : « عندما تغرب الفكرة يبزغ الصنم » (cité par le blog d'Al Jazeera « أفكارنا أصنامنا », 30 avril 2018, qui la situe dans *Shurût an-nahda* ; source secondaire, non relue dans le livre) | Autre choix : الوثن. |
 | **noosphère** (l'envers de la ville) | **عالم الأفكار** | Malek Bennabi, *Mushkilat al-afkâr fî l-'âlam al-islâmî* : عالم الأشياء، عالم الأشخاص، عالم الأفكار [J] | Chez Bennabi, c'est l'univers des idées d'une société ; le jeu en fait un lieu. Ne pas écrire النوسفير (calque). Carte : **عالم الأفكار** ; « dans la noosphère » : « في عالم الأفكار ». |
 | **idées noires** (cinq) | **الخواطر السُّود** (sg. خاطرٌ أسود) | al-Ghazâlî, [D] : « وأعني بالخواطر ما يحصل فيه من الأفكار والأذكار » ; « السود » rappelle « السوداء », l'humeur noire de la vieille médecine | **à valider**. Autre choix : **الهموم** (« les soucis »), mais la honte n'est pas un *hamm*. Les cinq : § 2.5. |
 | **maux du cœur** (sept) | **أمراض القلوب** ; un mal : **مرضٌ من أمراض القلب** | al-Ghazâlî, [C], « بيان الدواء الذي ينفي مرض الحسد عن القلب » : « الحسد من الأمراض العظيمة للقلوب، ولا تداوى أمراض القلوب إلا بالعلم والعمل » | Pas « مرض القلب » seul dans une interface (« maladie cardiaque ») : « داء القلب » en abrégé. |
@@ -775,7 +775,7 @@ l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du §
 | Français | Arabe | Pourquoi |
 |---|---|---|
 | Murmure de la faim | **همسُ الجوع** | |
-| Plainte des cendres | **أنينُ الرماد** | écho de l'année de la famine, « عام الرَّمادة ». |
+| Plainte des cendres | **أنينُ الرماد** | écho de l'année de la famine, « عام الرَّمادة » (WP-ar, « عام الرمادة » : la terre noircie « فشبّهت بالرماد »). |
 | L'Accapareur (idole, peur) | **المُحتكِر** | le mot classique de l'accaparement (الاحتكار). |
 | Mirage de gloire | **سرابُ المجد** | |
 | Le Faste | **الأُبَّهة** | |
@@ -827,3 +827,60 @@ l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du §
 | Le Juge sans miséricorde (idole, rancune) | **القاضي بلا رحمة** | jamais « الحَكَم » (Nom divin, et mot de l'arbitrage de Siffîn). |
 
 **Le cœur** : les sept maux et les cinq idées noires, § 2.5.
+
+---
+
+## 4. Points à trancher par le décideur
+
+1. **La formule après un Compagnon** (§ 1.6). Proposition : « رضي الله عنه » une fois, à la première mention d'un
+   Compagnon dans un chapitre (narration et recueil), jamais dans une réplique, un bouton, un nom de héros ou une
+   étiquette. Et pour ceux que les sources rangent parmi les Successeurs (Aslam, Shurayh, Kumayl, Mâlik al-Ashtar,
+   Farwa ibn Nawfal) : rien, ou « رحمه الله » ? Les textes classiques lus mettent la formule (Ibn Rajab, [F] :
+   « تميم بن أوس الداري رضي الله عنه »).
+2. **Les chiffres** (§ 1.4) : arabes orientaux ٠-٩ partout (proposé, comme le registre des sources) ou 0-9 (usage du
+   Maghreb et de nombreux jeux) ? Le choix doit être unique.
+3. **Les titres de héros sans équivalent dans les sources** (§ 3.1) :
+   - 'Uthmân, « Le Généreux » → **ذو النورين** (le surnom des sources ; proposé) ou « صاحب بئر رومة » (descriptif) ;
+     pas « الكريم » (Nom divin) ;
+   - 'Alî, « La Porte du Savoir » → **باب العلم** (proposé, d'après un hadith à l'authenticité discutée) ou un titre
+     d'une parole sûre, « أقضى الصحابة » (d'après « وأقضانا علي », al-Bukhârî n° 4481, au registre) ;
+   - 'Ammâr, « Le Vétéran » → **البدريّ** (proposé) ;
+   - Khâlid : **السيف المسلول**, sans « الله » (exigence 8), comme le français.
+4. **Le nom de l'idole d'Abû Bakr**, « Al-Kadhdhâb — le Menteur » (§ 3.6) : en arabe, « الكذّاب » est le surnom de
+   Musaylima ; l'idole porterait le nom d'un homme (exigence 6). Proposé : **المُزيِّف** (le faussaire). Le français
+   garde-t-il « Al-Kadhdhâb » ?
+5. **Deux noms de 'Alî chargés en arabe** (hors de ce glossaire, mais à voir avant d'écrire ses compétences) : la
+   compétence « Dhû l-Fiqâr » porte le nom d'un sabre historique que sunnites et chiites ne racontent pas de la même
+   façon (WP-ar, « ذو الفقار ») — exigences 5, 16 et 17 (une arme d'un personnage de l'histoire) ; la compétence ultime
+   « Haydar » (« حيدرة », surnom d'Alî) est surtout employé aujourd'hui dans le discours chiite. Les garder en arabe ?
+6. **Les deux lames dont l'arabe s'écarte du champ `ar` du français** (§ 2.5) : Largesse = **السخاء** (al-Ghazâlî) au lieu
+   d'*al-Karam* ; Bienveillance = **سلامة الصدر** (Ibn Rajab) au lieu d'*an-Nasîha*, qui se lit aujourd'hui « le
+   conseil ». Les autres langues suivent-elles ?
+7. **Les postures** (§ 2.6) : nommées par l'acte (**الإقدام، البصيرة، الإيثار**, proposé) ou par la personne (البطل…),
+   sachant que « الحكيم » et « الوليّ » sont des Noms divins et que « الوليّ » porte une doctrine disputée ?
+8. **Les termes inventés, à valider un par un** : égrégore **خيال** (ou وهم) ; idées noires **الخواطر السود** ; Constance
+   **الثبات** ; Souffle **النَّفَس** ; éprouvé **مُنهَك** ; voile **حجاب** et dévoilé **انكشف** ; lames **النصال** et le
+   verbe **صقل** ; compagnons de lumière **رفاق النور** ; halte **الاستراحة** ; veillée **ليلة / السمر** ; Cité-Miroir **مدينة
+   المرايا** ; Archives basses **الخزانة السفلى** ; pourparler **المحاورة** ; bataille déclarée **المصافّة** ; secours
+   **الفرج** ; organigramme **مراتب الشر** ; enracinement **التجذّر** ; faille **الثلمة** ; le groupe **الركب** ; le recueil
+   **الكرّاسة** ; Vertus **الخصال** ; voile de lumière **غلالة من نور** ; l'Agrégor **المجمّع** ; et les noms d'égrégores
+   du § 3.6.
+9. **Les mots à ne jamais employer** (§ 2.2) : la liste est un choix de l'agent (فتنة، طاغوت، العرش، العقاب، المدد، الغوث،
+   الأطهار، الوصيّ، كبش الفداء، بابل، السماع…) ; le décideur peut l'allonger ou la réduire.
+10. **Les écarts de noms entre le français et les sources**, à ne pas corriger sans lui : « 'Amr ibn 'Abd al-Masîh »
+    (récit de Sayf) / « عبد المسيح بن عمرو بن بقيلة » (autre récit d'at-Tabarî), déjà au registre ; Aslam, que le jeu
+    dessine en Compagnon alors qu'al-'Ijlî le dit Successeur (côté prudent, rien à changer pour l'arabe).
+11. **La « Maison assiégée »** ('Uthmân) se dit **الدار المحاصرة / حصار الدار**, non « يوم الدار » (§ 3.5) : à confirmer.
+
+---
+
+## 5. Ce qui n'a pas pu être vérifié
+
+Pour qu'un spécialiste reprenne ces points :
+- les termes de la poésie ancienne pour les armes (يماني، مشرفي، خطي، سمهري، نبع، سلوقي، لمط) ;
+- « المصافّة » (la bataille rangée) chez les chroniqueurs ; « الرجّالة » et « الرماة » à Yarmoûk ;
+- le nom de la bannière « العقاب » ; Polaris = « الجدي » ; le lion céleste ; « قفزات الظباء » ;
+- « صاحب السر » pour Hudhayfa ; Ibn an-Nabbâh ; Dhû l-Qassa ;
+- la phrase de Bennabi sur le *sanam* (lue seulement dans des articles qui la citent) et son *Mushkilat al-afkâr* lui-même ;
+- le livre d'al-Ghazâlî « ذم الكبر والعجب » et « النية والإخلاص والصدق » (titres vérifiés, textes non lus en ligne) ;
+- « الإقدام » comme nom d'une vertu de l'éthique classique (Miskawayh n'a pas pu être relu à la lettre).
