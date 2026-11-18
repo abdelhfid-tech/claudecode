@@ -273,30 +273,30 @@ ISNAD.registerSaga({
   // maux du cœur. C'est le combat du râwî, personnage de fiction, seul : jamais celui d'un Compagnon (exigences 15 et 16).
   portes: {
     priere:  { titre: 'Au sortir de la prière', invite: 'La prière est dite. Le cœur est calme, et la noosphère est toute proche.' },
-    dhikr:   { titre: 'Dans le dhikr', invite: 'Le souvenir a fait silence autour de toi. La noosphère est toute proche.' },
+    dhikr:   { titre: 'Dans le dhikr', invite: 'Le souvenir a fait silence autour du râwî. La noosphère est toute proche.' },
     sommeil: { titre: 'En songe', invite: 'Le sommeil vient. Entre veille et songe, la noosphère est toute proche.', menu: 'S’endormir : un songe peut ouvrir la noosphère' },
-    question: 'Veux-tu y descendre, râwî, et faire face à ce qui te pèse ? Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. Ce n’est pas le cœur des Compagnons que tu vas voir : c’est le tien.',
-    plusTard: 'Pas maintenant', rien: 'Rien ne te pèse plus de ce côté-là : les sept maux du cœur sont tranchés.', deja: 'Cette porte s’est déjà ouverte dans ce chapitre.',
+    question: 'Le râwî peut y descendre, pour faire face à ce qui pèse sur lui. Ce que l’on appelle des démons intérieurs ne sont pas des démons : ce sont les maux du cœur — les siens, jamais ceux des Compagnons.',
+    plusTard: 'Pas maintenant', rien: 'Rien ne pèse plus sur le râwî de ce côté-là : les sept maux du cœur sont tranchés.', deja: 'Cette porte s’est déjà ouverte dans ce chapitre.',
     avecLame: 'lame forgée', sansLame: 'il ne sera que repoussé', autres: 'Un mal dont la lame n’est pas forgée', lequel: 'Lequel ? Sans sa lame, il ne sera que repoussé : il reviendra.',
-    seuil: 'La noosphère s’ouvre. Tu y descends.',
+    seuil: 'La noosphère s’ouvre. Le râwî y descend.',
     // 2.x : la descente est un labyrinthe (textes proposés par l'agent, à valider par le décideur)
-    descendre: 'Descendre', sousTitre: 'ta descente',
-    regle: 'C’est un labyrinthe. Tes maux du cœur et les idées noires y rôdent : seul, on ne les vainc pas. Trouve l’issue, ou un abri où attendre que le temps passe.',
+    descendre: 'Descendre', sousTitre: 'la descente du râwî',
+    regle: 'C’est un labyrinthe. Les maux du cœur du râwî et les idées noires y rôdent : seul, on ne les vainc pas. Il faut trouver l’issue, ou un abri où attendre que le temps passe.',
     // 2.x : frapper ce qui rôde (textes proposés par l'agent, à valider par le décideur)
-    sonne: 'Frappé, ce qui rôde reste sonné un instant : passe. Seul, tu ne le vaincs pas.',
-    dissipee: '%s se dissipe sous ta lame : tu n’étais pas seul. Elle ne reviendra pas avant le prochain chapitre.',
+    sonne: 'Frappé, ce qui rôde reste sonné un instant, le temps de passer. Seul, le râwî ne le vainc pas.',
+    dissipee: '%s se dissipe sous la lame du râwî : il n’était pas seul. Elle ne reviendra pas avant le prochain chapitre.',
     rode: 'Quelque chose rôde sur les ponts. Entrée — ou touche-le — pour le frapper : chaque coup lui ôte un voile.',
-    aLAbri: 'Un abri : rien de ce qui rôde n’y entre. Attends-y la fin du chrono — Entrée, ou touche ton personnage, pour laisser passer le temps.',
-    face: '%s te barre le pont. Ta lame est forgée, et tu n’es pas seul : tu fais face.',
+    aLAbri: 'Un abri : rien de ce qui rôde n’y entre. Le râwî peut y attendre la fin du chrono — Entrée, ou toucher son personnage, laisse passer le temps.',
+    face: '%s barre le pont. La lame est forgée, et le râwî n’est pas seul : il fait face.',
     pasDeHalte: 'Pas de halte ici : une descente se fait d’une traite.',
-    sansSonge: 'Tu dors d’un sommeil sans songe. Tes forces reviennent : les portes de la noosphère se rouvriront.',
-    niveau: 'Le râwî gagne un niveau.', acquis: 'Le râwî gagne en expérience.', lucide: 'Esprit +1 · Souffle +2, pour de bon.', connus: 'Ces abris ne t’apprennent plus rien : tu les connais.',
+    sansSonge: 'Le râwî dort d’un sommeil sans songe. Ses forces reviennent : les portes de la noosphère se rouvriront.',
+    niveau: 'Le râwî gagne un niveau.', acquis: 'Le râwî gagne en expérience.', lucide: 'Esprit +1 · Souffle +2, pour de bon.', connus: 'Ces abris n’apprennent plus rien au râwî : il les connaît.',
     issues: {
-      issue: { titre: 'La noosphère se referme', h1: 'Tu as trouvé l’issue', texte: 'On ne traverse pas ce labyrinthe-là sans en sortir un peu grandi.' },
-      abri: { titre: 'La noosphère se referme', h1: 'Tu as tenu', texte: 'À l’abri, tu as laissé passer ce qui rôdait. On en remonte plus lucide, le souffle plus long.' },
-      temps: { titre: 'La noosphère se referme', h1: 'Le temps est écoulé', texte: 'Tu remontes sans avoir trouvé l’issue ni un abri. Rien n’est perdu : la porte se rouvrira.' },
-      rattrape: { titre: 'La noosphère se referme', h1: '%s t’a rattrapé', texte: 'Seul, on ne vainc pas ce qui pèse sur le cœur. Tu remontes épuisé : il te faudra dormir, d’un sommeil sans songe, avant de redescendre.' } },
-    remonte: { titre: 'La noosphère se referme', h1: 'Ce mal pèse encore', texte: 'On ne tranche pas un mal du cœur d’un seul coup. L’œuvre forge la lame : reviens quand elle sera prête.' }
+      issue: { titre: 'La noosphère se referme', h1: 'L’issue est trouvée', texte: 'On ne traverse pas ce labyrinthe-là sans en sortir un peu grandi.' },
+      abri: { titre: 'La noosphère se referme', h1: 'Le râwî a tenu', texte: 'À l’abri, il a laissé passer ce qui rôdait. On en remonte plus lucide, le souffle plus long.' },
+      temps: { titre: 'La noosphère se referme', h1: 'Le temps est écoulé', texte: 'Le râwî remonte sans avoir trouvé l’issue ni un abri. Rien n’est perdu : la porte se rouvrira.' },
+      rattrape: { titre: 'La noosphère se referme', h1: '%s a rattrapé le râwî', texte: 'Seul, on ne vainc pas ce qui pèse sur le cœur. Le râwî remonte épuisé : il lui faudra dormir, d’un sommeil sans songe, avant de redescendre.' } },
+    remonte: { titre: 'La noosphère se referme', h1: 'Ce mal pèse encore', texte: 'On ne tranche pas un mal du cœur d’un seul coup. L’œuvre forge la lame : il faudra revenir quand elle sera prête.' }
   },
 
   // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue.
@@ -306,7 +306,7 @@ ISNAD.registerSaga({
     titre: 'Le secours', bandeau: 'Le groupe est relevé',
     verset: '« Et (rappelez-vous) le moment où vous imploriez le secours de votre Seigneur et qu’Il vous exauça aussitôt : “Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres.” »',
     ref: 'Coran 8:9, traduction du sens · c’était à Badr',
-    mot: 'Tu avais tenu ta prière, et le secours est venu. On ne le commande pas. Le jeu ne montre pas les anges, ne les nomme pas, ne les compte pas.',
+    mot: 'La prière avait été tenue, et le secours est venu. On ne le commande pas. Le jeu ne montre pas les anges, ne les nomme pas, ne les compte pas.',
     pret: 'Si la bataille tourne au pire, le secours peut venir. On ne le commande pas.',
     absent: 'Le secours ne vient qu’à qui a tenu sa prière : une natte, avant l’épreuve, y suffit.'
   },
@@ -355,7 +355,7 @@ ISNAD.registerSaga({
     { id: 'attributs', cat: 'Cœur', title: 'Les attributs divins', text: 'Chaque Valeur s’appuie sur un attribut d’Allah, que le jeu nomme d’après le Coran, avec son verset et sa référence : ar-Razzâq, al-Kabîr, al-Khabîr, al-Wahhâb, al-Hayy al-Qayyûm, al-Latîf, al-Halîm. On ne possède pas un attribut divin : on le reconnaît. Le jeu ne le dessine pas, ne lui prête aucune figure et n’en fait ni une arme ni un pouvoir ; le badge marque seulement que le rappel a été reçu. Les degrés du mal n’ont pas de miroir du côté du bien : rien ne se tient en face du Créateur.', src: 'Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.' },
     { id: 'postures', cat: 'Noosphère', title: 'Les trois figures', text: 'Devant l’épreuve, on peut se tenir de trois manières. Le héros s’expose : il va au-devant, et prend sur lui. Le sage discerne : il regarde avant d’agir. Le saint s’efface : il porte les autres. Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent en chemin, et le même homme les prend tour à tour. Aucune n’est au-dessus d’une autre, et le jeu ne dit de personne qu’il est l’un des trois : on prend une figure, on ne la possède pas. Image du jeu.' },
     { id: 'frappe', cat: 'Noosphère', title: 'Frapper ce qui rôde', text: 'Dans un labyrinthe de la noosphère, de petites chimères vont et viennent sur les ponts, jamais dans les lieux que le récit nomme. On les frappe comme en combat, avec l’arme que porte celui qui mène : Entrée, ou un toucher sur ce qui rôde. Chaque coup ôte un voile et sonne un instant ; sans voile, la chimère se dissipe. Si elle vous rejoint avant, c’est un combat ordinaire. L’allonge, le poids et la vitesse viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, les coups ne font que sonner : seul, on ne vainc pas ce qui pèse sur le cœur. Image du jeu.' },
-    { id: 'noos_interieure', cat: 'Noosphère', title: 'Descendre en soi', text: 'Au sortir de la prière, dans le dhikr, en songe : à ces moments-là, la noosphère est toute proche, et l’on peut y descendre pour faire face à ce qui pèse. Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. C’est le combat du râwî, seul. Ce n’est jamais celui d’un Compagnon : le jeu ne prête à aucun d’eux un mal du cœur. Avec la lame que l’œuvre a forgée, le mal est tranché ; sans elle, il n’est que repoussé. Image du jeu, dite comme telle.' },
+    { id: 'noos_interieure', cat: 'Noosphère', title: 'Descendre dans la noosphère', text: 'Au sortir de la prière, dans le dhikr, en songe : à ces moments-là, la noosphère est toute proche, et le râwî peut y descendre. C’est un labyrinthe, où rôdent les maux du cœur qu’il n’a pas encore tranchés et les idées noires. Ce que l’on appelle des démons intérieurs ne sont pas des démons : ce sont les maux du cœur et les idées noires. Seul, il ne les vainc pas : il cherche l’issue, ou un abri. Accompagné, une lame forgée en main, il peut leur faire face. Ce n’est jamais la descente d’un Compagnon : le jeu ne prête à aucun d’eux un mal du cœur. Image du jeu, dite comme telle.' },
     { id: 'secours', cat: 'Cœur', title: 'Le secours', text: 'À Badr, les croyants étaient en petit nombre. Le Coran rapporte qu’ils implorèrent le secours, et ce qui leur fut répondu : « Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres. » Puis : « Allah ne fit cela que pour (vous) apporter une bonne nouvelle et pour qu’avec cela vos cœurs se tranquillisent. Et il n’y a de victoire que de la part d’Allah. » Dans ISNAD, quand une bataille déclarée est presque perdue, le secours relève le groupe, une fois, si la prière a été tenue dans le chapitre. C’est une image du jeu. Il ne montre pas les anges, ne les nomme pas, ne les compte pas, et il ne dit pas qu’ils sont venus tel jour de l’histoire des Compagnons. On ne commande pas le secours : on tient sa prière, et l’on combat.', src: 'Traduction du sens, Coran 8:9-10. Règle de jeu.' },
     { id: 'enracinement', cat: 'Noosphère', title: 'L’enracinement', text: 'Une idée noire dans un seul cœur se dissipe par la parole. Reprise par beaucoup, elle prend corps : c’est une chimère. Quand on ne la voit plus tant elle est partout, elle commande : c’est une idole. Le jeu mesure cela d’un à cinq, pour chaque idole. La parole qui porte la déracine ; la parole manquée la laisse s’enfoncer. Déracinée, l’idole pèse moins et garde un voile de moins ; enracinée, elle pèse davantage. C’est une image du jeu : la jauge se dit d’une idole, jamais d’une époque ni de ses gens.' },
     { id: 'figures_ciel', cat: 'Cœur', title: 'Les compagnons de lumière (fiction)', text: 'Les Arabes donnaient aux étoiles des noms de bêtes : l’Aigle qui vole, le Lion, les bonds de la Gazelle. Dans la noosphère d’ISNAD, ces noms ont pris corps. Le Renard des sables et le Phénix viennent, eux, des contes. Ce sont des figures de fiction : aucune n’accompagne un Compagnon dans le récit historique.' },

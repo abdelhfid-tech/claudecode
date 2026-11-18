@@ -115,7 +115,7 @@
       if (!I.debug.auto && !I.debug.walk) await S.card('title noos', `<p class="small">${I.esc(Pk.titre || '')}</p><h1>${I.t('La noosphère')}</h1><p>${I.esc(T0.seuil || '')}</p><div class="rule"></div><div class="hint">▼</div>`, 6000);
       await S.fade('out', 300);
       // un récit d'un seul chapitre, sans objectif : le râwî (et, dans l'histoire-cadre, ceux qui l'accompagnent)
-      const ch = { id: 'descente', title: I.t('La noosphère'), sub: (Pk.titre || '') + ' · ' + (T0.sousTitre || I.t('ta descente')), objectives: [], party: heros.map(h => h.id) };
+      const ch = { id: 'descente', title: I.t('La noosphère'), sub: (Pk.titre || '') + ' · ' + (T0.sousTitre || I.t('la descente du râwî')), objectives: [], party: heros.map(h => h.id) };
       W.excursion = E; W.saga = { id: 'idris', name: I.t('La noosphère'), frame: true, heroes: I.sagas.idris.heroes, enemies: C0().enemies || {}, chapters: [ch] }; W.ci = 0; W.ch = ch; W.objIndex = 0; W.minLvl = 1;
       W.roster = {}; heros.forEach(h => { W.roster[h.id] = h; }); W.party = ch.party.slice(); W.refreshSheets(); W.npcs = []; W.chests = []; W.foes = [];
       // ceux qui rôdent : tour à tour un mal du cœur encore debout, une idée noire — posés loin du seuil

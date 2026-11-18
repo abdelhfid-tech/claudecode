@@ -616,7 +616,7 @@
       out.push(d < 44 ? I.t('C’est tout près.') : !st ? I.t('C’est {cap}, à {n} pas.', { cap, n: pas }) : st.way ? I.t('C’est {cap}, à {n} pas : cap sur le {etoile}, l’étoile qui brille au cadran.', { cap, n: pas, etoile: I.esc(I.trade.starText(st)) }) : I.t('C’est {cap}, à {n} pas : cap sur {etoile}, l’étoile qui brille au cadran.', { cap, n: pas, etoile: I.esc(I.trade.starText(st)) }));
     }
     const fo = o.foe && W.foes.find(x => x.id === o.foe), wt = fo ? I.oeuvres.weight({ group: fo.group, boss: fo.boss }) : 0, zd = I.oeuvres.zad();
-    if (wt) out.push(I.t('Cette épreuve pèse <b>{poids}</b> ; ta provision du cœur est de <b>♥ {provision}</b>.', { poids: wt, provision: zd }) + ' ' + (zd >= wt ? I.t('Le cœur est prêt.') : I.t('Il manque {n} : une œuvre sur la natte d’une mosquée (dhikr, étude, jeûne, aumône, visite) allégerait le cœur.', { n: wt - zd })));
+    if (wt) out.push(I.t('Cette épreuve pèse <b>{poids}</b> ; la provision du cœur est de <b>♥ {provision}</b>.', { poids: wt, provision: zd }) + ' ' + (zd >= wt ? I.t('Le cœur est prêt.') : I.t('Il manque {n} : une œuvre sur la natte d’une mosquée (dhikr, étude, jeûne, aumône, visite) allégerait le cœur.', { n: wt - zd })));
     const qv = W.saga && I.oeuvres.viceApres(W.saga.veillees ? W.ch.after : W.saga.id), dq = I.oeuvres.state();
     if (qv && dq.vices[qv] !== 'tranche' && !dq.lames[qv]) out.push(I.t('Au bout de ce maillon, dans la Cité-Miroir, un mal du cœur attend. {quete}. Sans sa lame, il ne sera que repoussé.', { quete: I.oeuvres.quete(qv) }));
     const en = I.oeuvres.enigme();

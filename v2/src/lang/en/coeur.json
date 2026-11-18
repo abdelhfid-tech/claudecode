@@ -392,7 +392,7 @@
 {"k":"mk90o1.3r","fr":"Seul, on ne vainc pas ce qui pèse sur le cœur. Tu remontes épuisé : il te faudra dormir, d’un sommeil sans songe, avant de redescendre.","t":"","ou":"portes.issues.rattrape.texte"},
 {"k":"122sidn.i","fr":"Ce mal pèse encore","t":"","ou":"portes.remonte.h1"},
 {"k":"via36z.2v","fr":"On ne tranche pas un mal du cœur d’un seul coup. L’œuvre forge la lame : reviens quand elle sera prête.","t":"","ou":"portes.remonte.texte"},
-{"k":"1j5aygy.b","fr":"Les figures","t":"","ou":"postures.titre"},
+{"k":"1j5aygy.b","fr":"Les figures","t":"Stances","ou":"postures.titre","note":"D184 : « Les figures » ; l'anglais garde stance (glossaire § 2.8) ; même texte dans moteur (postures.js) et coeur (postures.titre)"},
 {"k":"12ds6md.5d","fr":"Devant l’épreuve, on peut se tenir de trois manières. Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent en chemin. On en prend une ici, ou en préparant une bataille.","t":"","ou":"postures.texte"},
 {"k":"9uq88z.8","fr":"Le héros","t":"","ou":"postures.noms.heros.nom"},
 {"k":"3jq05f.1c","fr":"Il s’expose : il va au-devant, et prend sur lui.","t":"","ou":"postures.noms.heros.devise"},

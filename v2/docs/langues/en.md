@@ -52,8 +52,14 @@ Les pages de Wikipedia lues pour un terme sont nommées dans la ligne du terme (
   Compagnon). Les contractions courantes (*don't*, *it's*) sont admises dans les répliques de personnages de fiction et
   dans la bouche du râwî ; dans la narration et dans la bouche des Compagnons, on les évite.
 - **2084, la Cité-Miroir, les écrans du jeu** : un anglais moderne, sobre, sans argot ni anglicisme de réseau social
-  (*like*, *follow*, *viral* ne s'emploient que pour nommer ce que les égrégores de la Cité vendent, jamais comme
-  ton). Le jeu tutoie en français : l'anglais dit *you*, sans autre marque.
+  (*like*, *follow*, *viral* ne s'emploient que pour nommer ce que les chimères de la Cité vendent, jamais comme
+  ton). Le jeu tutoie en français : l'anglais dit *you*, sans autre marque. *D184 (relecture 2.1, 2.2) :* en 2084, on
+  compte des vues, des abonnés et des comptes, pas des regards : « quarante et un millions de vues » → *forty-one
+  million views* ; « abonnés » → *followers* ; « des millions de comptes » → *millions of accounts* ; « des millions de
+  gens désirent » → *millions of people desire*. Jamais *gazes*, *eyes*, *pairs of eyes* pour un nombre ni pour ce qui
+  désire ; « regard » reste là où c'est une image (le Compteur qui en pose un sur le premier passant, « Mille
+  regards », « faute de regards »). *D184 (2.23) :* l'écran de la Chaîne ne porte plus d'étiquette de genre
+  (« cyberpunk ») : « *The Heart of the Aggregor · 2084* ». **À valider (D184).**
 - Une réplique française donne **une** réplique anglaise : on ne coupe pas, on ne fusionne pas (le texte anglais est
   rangé sous la clé du texte français, `v2/src/core/langue.js`). On ne rajoute rien que le français ne dise pas, on n'en
   retranche rien qui porte un fait.
@@ -103,6 +109,11 @@ L'IJMES garde le juste milieu : lisible pour un lecteur sans arabe, fidèle pour
 Les versets gardent l'écriture de SI, signes compris (« *Allāh* », « *Muḥammad* », « *Qur’ān* ») : on ne les retouche
 jamais, et le texte du jeu, autour, n'imite pas leurs signes.
 
+*D184 (relecture 2.24) :* le français écrit désormais une seule apostrophe droite (') pour le *ʿayn* et pour la *hamza*
+(« 'Asr », « Harûrâ' », « San'â' »), au lieu de ’ ici et ' là. L'anglais n'a pas à le suivre : il garde les deux signes
+de l'IJMES, ʿ et ’ (« *ʿAsr* », « *ʿIsha’* », « *Harura’* » ; *Sanaa*, forme anglaise reçue). Les textes anglais déjà
+écrits ne changent pas. **À valider (D184).**
+
 **Les polices.** Les feuilles de style de Google Fonts déclarent, pour Alegreya (texte) et Cinzel (titres, noms), une
 plage `U+02BD-02C5` (donc ʿ) et `U+1E00-1E9F` (les lettres à point souscrit des versets) ; Share Tech Mono (le texte
 « écran » de 2084) ne déclare que le latin de base et `U+2000-206F` (donc ’, pas ʿ) : un ʿ y sera dessiné par une
@@ -119,7 +130,8 @@ confondrait avec un guillemet ouvrant).
   registre) écrit « *Allah's Messenger (ﷺ)* » (6 019 occurrences). WP-MOS demande « *God* », sauf dans une citation.
 - **Choix : « Allah »**, sans macron, comme le jeu français, et comme les versets et les hadiths cités au même écran.
   « God » ne s'emploie que là où le français dit « Dieu » ou « Seigneur » (« *your Lord* », comme SI : « *asking help
-  of your Lord* », 8:9).
+  of your Lord* », 8:9). *D184 (2.17) :* au choix du nom du râwî, le français dit désormais « Ce Nom n'appartient qu'à
+  Allah » (et non plus « à Dieu ») ; l'anglais aussi : « *This Name belongs to Allah alone* ».
 - Les pronoms qui renvoient à Allah prennent la majuscule : **He, Him, His** (comme SI : « *Allāh is Subtle with His
   servants; He gives provision* », 42:19).
 - « le Messager d'Allah ﷺ » → **the Messenger of Allah ﷺ** (SI : « *the Messenger of Allāh* », 33:40) ; « le Prophète
@@ -141,11 +153,18 @@ confondrait avec un guillemet ouvrant).
   de ses propres références.
 - « traduction du sens » (exigence 7) → **translation of the meaning** (usage courant des traductions musulmanes du
   Coran, référence non vérifiée) ; la référence s'écrit **Qur’an 51:58** (forme de SI et de quran.com).
+- « Image du jeu » (la fin ou la source d'un feuillet de fiction ; *D184, 2.19* : elle remplace « Lecture noosphérique
+  du jeu ») → **the game’s imagery** : « *The game’s imagery.* » ; « C'est une image du jeu » → « *This is the game’s
+  imagery* ». *Image* seul se lirait « une image, une capture » ; *imagery* dit la figure de style. **À valider (D184).**
 
 ### 1.6 Les dates
 
-- Le jeu français écrit « An 11 H · 632 », « 11–13 H · 632–634 », « An 1508 de l’Hégire · 2084 ».
-- **Anglais : AH 11 · 632**, **AH 11–13 · 632–634**, **AH 1508 · 2084**. *Tabari* met l'abréviation devant le nombre
+- Le jeu français écrit « An 11 H · 632 », « 11–13 H · 632–634 », « An 36 de l’Hégire · Koufa », « An 1507 de l’Hégire
+  · 2084 ».
+- *D184 (relecture 2.22) :* l'an 2084 tombe surtout en 1507 de l'Hégire (d'après le calendrier d'Umm al-Qurâ, 1508 ne
+  commence que vers septembre 2084) : le français dit « 1507 H », l'anglais **AH 1507** (« *LAST LINK · AH 1507 · 2084* »).
+  *D184 (2.24) :* « An 36 de l'Hégire » et « An 36 H » s'écrivent de même, **AH 36**. **À valider (D184).**
+- **Anglais : AH 11 · 632**, **AH 11–13 · 632–634**, **AH 36 · Kufa**, **AH 1507 · 2084**. *Tabari* met l'abréviation devant le nombre
   (« *A.H. 132* » 99 fois, contre 20 « *… A.H.* ») ; on l'écrit sans points (**AH**), à l'usage moderne. L'année
   grégorienne reste nue, comme en français ; on n'ajoute **CE** que dans une phrase où une confusion est possible
   (« *in AH 13 (634 CE)* »).
@@ -185,14 +204,14 @@ longueur médiane de 75 signes (90 % sous 146) ; une narration (`nar`) 142 signe
 
 Elles valent toutes. Celles-ci prennent en anglais une forme propre :
 
-- **Exigences 6 et 18 — aucun ennemi au nom de démon.** On n'emploie jamais, pour un égrégore, une idole, une
+- **Exigences 6 et 18 — aucun ennemi au nom de démon.** On n'emploie jamais, pour une chimère, une idole, une
   compétence ou un personnage : *demon, devil, fiend, imp, ghoul* (de l'arabe *ghūl*, une sorte de djinn), *taghut*
   (SI garde le mot coranique, « *ṭāghūt* », 2:256), *ifrit,
   afreet, marid, shaitan, Satan, Lucifer, Lightbearer, Morning Star, Beelzebub, Mammon, Moloch, Leviathan, Behemoth,
   Belial, Asmodeus, Belphegor, Baal, Legion*. *Mammon* en particulier ne nomme jamais l'Or ni l'Avarice : la
   démonologie chrétienne attache un démon à chacun des péchés capitaux (WP *Binsfeld's classification of demons* cite
   une liste où « *Mammon* » mène « *the avarous* », « *Sathanas* » la colère, « *Belzebub* » l'envie). WP *Ghoul* :
-  « *Jinn-like being* ». Décision D182 : ni *taghut* ni *ghoul* ne nomment l'égrégore, l'Agrégor ni aucun ennemi ;
+  « *Jinn-like being* ». Décision D182 : ni *taghut* ni *ghoul* ne nomment la chimère, l'Agrégor ni aucun ennemi ;
   *taghut* peut s'expliquer au recueil, avec son verset tiré du registre. Les noms d'ennemis ne disent que ce que
   l'idée fait (§ 3.7). Le mot *egregore*, occultiste, est écarté : on dit *chimera* (D183).
 - **Les sept maux ne sont pas les « sept péchés capitaux ».** La liste de sept est un choix du jeu, d'après
@@ -209,6 +228,33 @@ Elles valent toutes. Celles-ci prennent en anglais une forme propre :
   personne.
 - **Exigence 21** : un attribut divin se *reconnaît* (*recognize*), il ne se gagne, ne s'équipe ni ne se possède
   (*earn, equip, own, unlock* sont exclus pour lui ; *unlock* reste permis pour une page ou un récit).
+- **Exigence 18 — aucun mot de possession** (*D184, relecture 1.6*). Rien ne *tient* un homme, ne parle par sa bouche ni
+  ne prend son corps : un combat livré « pour lui » contre ce qui le tient se lirait comme un exorcisme, et le cœur reste
+  responsable. **L'homme reste le sujet de la phrase.** Jamais, d'une chose sur une personne : *possessed*,
+  *possession*, *(it) holds him*, *has him in its grip*, *takes hold of him*, *seizes him*, *speaks through him*,
+  *borrows his body*, *commands him*, *in thrall*, *enthralled*, *spellbound*, *under its spell*, *bewitched*,
+  *haunted* ; ni *exorcise*, *cast out*. On écrit : « Il n'entend plus que cela » → « *Now he hears nothing but this* » ;
+  « Ce n'est pas lui qu'on combat : c'est ce qu'il regarde » (2.3) → « *It is not him we fight: it is what he is looking
+  at* » ; « il lui obéit plus qu'à sa raison » → « *he obeys it more than his own reason* » ; « Il ne parle plus pour
+  lui : il parle pour sa place » → « *He no longer speaks for himself: he speaks for his position* ». « L'emprise est
+  brisée », que le français garde, dit l'emprise d'une idée, non une possession : *The hold is broken*. *Possess* garde
+  son sens de propriété, que demandent les exigences 21 et 24 : « *you take a stance; you do not possess it* »,
+  « *One does not possess an attribute* ». **À valider (D184).**
+- **Les énigmes du cœur, sans la langue de l'envoûtement** (*D184, 1.8*). « Languir sans fièvre ni blessure »,
+  « dépérir sans cause visible » disaient un mal occulte, qu'un rite viendrait lever. Jamais *languish*, *pine away*,
+  *waste away*, *wither*, *a mysterious ailment*, *for no visible cause*, *hex*, *curse*, *evil eye* : on dit ce que
+  l'on voit. « l'un des tiens perd courage, sans être malade ni blessé » → « *one of your own loses heart, though he is
+  neither ill nor wounded* » ; « Zîrî est las depuis des jours, et le médecin ne lui trouve rien » → « *Ziri has been
+  weary for days, and the physician finds nothing wrong with him* » ; « Maître Bahrâm ne mange plus » → « *Master
+  Bahram No Longer Eats* » (titre) ; « La langueur de Zîrî », titre que le français garde (D184 : « restent ») →
+  « *Ziri’s Weariness* », non *languor* ; « ne mange presque plus, et ses mains tremblent » → « *barely eats anymore, and
+  his hands tremble* ». « Un compagnon » du groupe ne s'écrit jamais *a companion* : *one of your own*, *a party
+  member* (*Companion*, avec sa majuscule, est un Compagnon du Prophète ﷺ, à qui aucune œuvre manquée n'est prêtée :
+  exigence 15). **À valider (D184).**
+- **Exigence 5 — « excommunier »** (*D184, 2.13*) : jamais *excommunicate*, *excommunication*, mots de l'Église ; « celui
+  qui déclare les autres hors de la foi » → *the one who declares others outside the faith* ; « Qui exclut les autres de
+  la foi mérite d'en être exclu » → *Whoever excludes others from the faith deserves to be excluded from it*. **À valider
+  (D184).**
 
 ## 2. Le vocabulaire du jeu
 
@@ -222,23 +268,23 @@ quand ils comptent.
 | Français | Anglais retenu | Où l'anglais l'emploie | Note |
 |---|---|---|---|
 | isnâd | **isnad** (nom commun) ; le titre du jeu reste **ISNAD** | WP *Isnad* : « *an isnād (chain of transmitters…) is a list of people who passed on a tradition* » | Sans signe (§ 1.3) ; en italique dans la prose du recueil. |
-| la Chaîne (des transmetteurs ; l'écran de choix des récits) | **the Chain** | WP *Isnad* (« *chain of transmitters* ») | Majuscule : c'est un lieu du jeu. |
-| maillon | **link** (« *the first link* », « *a link in the Chain* ») | — (image filée de *chain*) | |
+| la Chaîne (des transmetteurs ; l'écran de choix des récits) | **the Chain** | WP *Isnad* (« *chain of transmitters* ») | Majuscule : c'est un lieu du jeu. *D184 (2.21) :* « Chaîne fidèle », le titre d'un récit joué sans faute (« Isnâd sahîh » jusque-là), → **Faithful Chain**, à côté de *Chain Passed On* (« Chaîne transmise ») et de *Fidelity to the Chain* ; jamais *Sahih* ni *Isnad Sahih* : c'est le jugement des savants sur une chaîne réelle, pas un score. **À valider (D184).** |
+| maillon | **link** (« *the first link* », « *a link in the Chain* ») | — (image filée de *chain*) | *D184 (2.6) :* « ce maillon » (« ce règne » jusque-là) → *this link* (« *What this link has built* ») ; jamais *reign* : un califat n'est pas un règne. *D184 (2.7) :* les cinq cartons des récits disent « Premier maillon · As-Siddîq »… → « *First Link · Al-Siddiq* »… (§ 3.1). **À valider (D184).** |
 | transmetteur | **transmitter** | WP *Isnad* (« *chain of transmitters* ») | |
 | râwî (le joueur, Idris) | **rawi** ; titre d'Idris : **the Rawi** ; en apostrophe : « *Rawi, …* » | WP *Isnad* (*transmitter*) ; le mot *rāwī* n'a pas d'article propre dans WP (page d'homonymie) | **À valider** : on garde le mot arabe, glosé une fois au recueil (« *rawi, a transmitter* »), comme le français garde « râwî ». |
 | Lumière (une des six) | **Light** (« *the six Lights* ») | — | Majuscule, comme en français. |
 | noosphère | **noosphere** | WP *Noosphere* (« *developed and popularized by … Vladimir Vernadsky and … Pierre Teilhard de Chardin* » ; « *the planetary "sphere of reason"* ») ; Teilhard, *The Phenomenon of Man*, trad. B. Wall (titre et traducteur lus au catalogue d'archive.org, `https://archive.org/details/phenomenonofmanw0000unse` ; texte non lu) | Minuscule, sans tréma. |
-| chimère (anciennement « égrégore ») | **chimera** (pl. *chimeras*) | Le mot courant de l'anglais pour « une créature de l'imagination, une illusion » ; il dit ce que fait le jeu : on approche, on dévoile, il n'y a rien. | **Décidé (D183)** : le décideur a écarté « égrégore » en français, mot de l'ésotérisme ; *egregore* en anglais l'est aussi (WP *Egregore* : « *a concept in Western esotericism…* »). Minuscule ; jamais *Chimera* comme nom propre. |
+| chimère (anciennement « égrégore ») | **chimera** (pl. *chimeras*) | Le mot courant de l'anglais pour « une créature de l'imagination, une illusion » ; il dit ce que fait le jeu : on approche, on dévoile, il n'y a rien. | **Décidé (D183)** : le décideur a écarté « égrégore » en français, mot de l'ésotérisme ; *egregore* en anglais l'est aussi (WP *Egregore* : « *a concept in Western esotericism…* »). Minuscule ; jamais *Chimera* comme nom propre. *D184 (2.4)* : « des chimères, ce que les cœurs fabriquent ensemble ; la plus enracinée est une idole » → « *chimeras, what hearts make together; the most deeply rooted is an idol* » : la chimère n'est pas l'idole. |
 | idole | **idol** | Bacon : « *idols and false notions which are now in possession of the human understanding, and have taken deep root therein* » (aph. XXXVIII) ; les quatre classes : « *Idols of the Tribe* », « *of the Cave* », « *of the Market-place* », « *of the Theatre* » (aph. XXXIX) ; SI 6:74 : « *Do you take idols as deities?* » | Le mot anglais porte les deux sens dont le jeu a besoin : l'idole de pierre et l'idole de l'esprit. |
 | racine (d'une idole, `racine`) ; enracinement (la jauge) ; enracinée, déracinée | **root** ; **Rooting** (la jauge, d'un à cinq) ; *deep-rooted*, *uprooted* ; « *the idea takes root* » | Bacon : « *have taken deep root therein* » | **À valider** pour le nom de la jauge. |
-| voile (la garde d'un égrégore) ; ôter un voile | **veil** ; **to strip a veil** | Winter : « *We have set veils over their hearts* » (verset cité), « *the unveiling of the secrets of the Unseen* » ; Skellie (*veil*, 62 occurrences) | **À valider** : l'usage soufi existe, l'emploi comme garde d'un ennemi est une image du jeu. |
-| dévoilé (égrégore vaincu : on a montré qu'il est vide) ; dévoiler | **unveiled** ; **to unveil** | Winter (« *unveiling* ») | **À valider**. Jamais *killed*, *slain*, *destroyed* pour un égrégore. |
-| faille (le point faible d'un égrégore) ; « Frapper la faille » | **weak point** ; « *Strike the Weak Point* » | — (usage courant des jeux de rôle, référence non vérifiée) | **À valider**. Le lieu de carte « Faille » est autre chose (§ 3.5). |
+| voile (la garde d'une chimère) ; ôter un voile | **veil** ; **to strip a veil** | Winter : « *We have set veils over their hearts* » (verset cité), « *the unveiling of the secrets of the Unseen* » ; Skellie (*veil*, 62 occurrences) | **À valider** : l'usage soufi existe, l'emploi comme garde d'un ennemi est une image du jeu. |
+| dévoilé (chimère vaincue : on a montré qu'elle est vide) ; dévoiler | **unveiled** ; **to unveil** | Winter (« *unveiling* ») | **À valider**. Jamais *killed*, *slain*, *destroyed* pour une chimère. |
+| faille (le point faible d'une chimère) ; « Frapper la faille » | **weak point** ; « *Strike the Weak Point* » | — (usage courant des jeux de rôle, référence non vérifiée) | **À valider**. Le lieu de carte « Faille » est autre chose (§ 3.5). |
 | Constance (points de vie) | **Constancy** | — | **À valider**. Pas *Health*, pas *HP*. Le mot dit la tenue morale, comme le français. |
 | Souffle (points de vertu) | **Breath** | — | **À valider**. |
 | éprouvé (hors de combat) | **spent** (« *ʿUmar is spent* ») | — | **À valider**. Jamais *dead*, *fallen*, *killed*, *KO*. Relever un éprouvé : **to rally**, **to raise up** (*revive* est exclu : il dit la résurrection). |
 | Niyya (l'intention ; jauge de combat) | **Niyya** (nom de jauge) ; glose : *intention* | WP *Niyyah* : « *variously transliterated niyyah, niyya … "intention"* » ; Shaker (titre : *Intention, Sincerity and Truthfulness*) | Forme en *-a* (§ 1.3). |
-| Sakîna (la sérénité ; jauge) | **Sakina** ; glose : *tranquility* | SI 48:4 : « *sent down tranquility into the hearts of the believers* » ; WP *Sakina* : « *Quranic term for peace or serenity* » | |
+| Sérénité (la jauge dorée ; « Sakîna » jusqu'à D184) ; « le groupe retrouve sa sérénité » | **Composure** ; « *the party regains its composure* » ; « la Sérénité monte » → *Composure rises* ; « +Sérénité » → *+Composure* ; « Sérénité +{n} au départ » → *Composure +{n} at the start* ; dans les pourparlers, « Sérénité de la prière » → *Composure from prayer* ; le saint « garde le calme » → *keeps his composure* (la même jauge : § 2.8) | Le mot courant du calme qu'on garde dans l'épreuve (*to keep, to lose one’s composure* ; dictionnaire non consulté). Lu le 18 novembre : SI ne l'emploie nulle part (texte intégral, `https://api.alquran.cloud/v1/quran/en.sahih`), ni aucun texte anglais du registre (`v2/docs/sources/`). | **À valider (D184).** Le décideur a écarté le mot du Coran pour une jauge de jeu (relecture 1.3) : le Coran dit la *sakîna* descendue par Allah, et une jauge que la prière remplit à coup sûr en ferait l'effet d'un rite. En anglais, ce mot-là, c'est *Sakina*, et celui de SI pour elle : *tranquility* (SI 48:4 : « *sent down tranquility into the hearts of the believers* » ; de même 9:26, 9:40, 48:18, 48:26 ; lus sur quran.com) ; c'est aussi celui de Yusuf Ali, d'Abdel Haleem, d'Usmani, de Shakir, de Wahiduddin Khan. Tous deux quittent la jauge. Écartés pour la même raison : *serenity* (Itani, 9:26, 48:18, 48:26 ; et la *Serenity Prayer*, prière chrétienne que tout lecteur anglais connaît, qu'une jauge remplie par la prière ferait entendre : référence non vérifiée), *calm* (Abdel Haleem, 9:26 et 9:40 : « *His calm* » ; Yusuf Ali, 9:26 ; la glose de Hilali-Khan, « *calmness* »), *peace* (le *salām* ; Pickthall, « *peace of reassurance* » ; Asad, « *inner peace* »). Sur seize traductions anglaises lues en entier (`api.alquran.cloud`), une seule rend la *sakîna* par *composure* (Qarai, 9:26, 9:40, 48:4, 48:18, 48:26), que le jeu ne cite pas. *Sakina* et *tranquility* ne s'écrivent plus dans le jeu anglais, hors d'un verset cité. Le recueil français ne nomme plus la *sakîna* ; s'il devait la citer un jour, ce serait dans un feuillet, avec 48:4 tiré du registre (le mot de SI), jamais comme nom de la jauge : à décider ailleurs. |
 | provision du cœur (*az-zâd*) | **provision** (« *the heart's provision* ») ; terme arabe au recueil : ***al-zad*** | SI 2:197 : « *take provisions, but indeed, the best provision is fear of Allāh* » | Article non assimilé (§ 1.3) : le français écrit « az-zâd ». |
 | œuvre (prière, dhikr, étude, jeûne, aumône, visite, pèlerinage) | **deed** (« *the deeds* », « *a deed done* ») | SI 2:25, 103:3 : « *believe and do righteous deeds* » | Pas *good works*, pas *rituals*. Une œuvre « ne donne aucun pouvoir » : jamais *spell*, *power-up*, *buff* dans un texte du joueur. |
 | lame (forgée par une œuvre) ; forger ; trancher (un mal) | **blade** ; **to forge** ; **to sever** (« *Greed is severed* ») | — | **À valider** pour *sever*. |
@@ -250,7 +296,7 @@ quand ils comptent.
 | attribut divin | **divine attribute** ; un Nom : *Name* | — | On le **reconnaît** (*recognize*), jamais *earn/own/equip* (§ 1.9). |
 | compagnons de lumière (les cinq bêtes du ciel, fiction) | **star companions** | — | **À valider**. On écarte *companions of light* (*Companions*, majuscule, désigne les Compagnons du Prophète ﷺ : WP *Companions of the Prophet*) et tout *light-bearer* (c'est le sens du nom *Lucifer*). |
 | figure du ciel | **sky figure** | — | **À valider**. |
-| énigme du cœur | **riddle of the heart** | — | **À valider**. |
+| énigme du cœur | **riddle of the heart** | — | **À valider**. Sans la langue de l'envoûtement (*D184, 1.8*) : § 1.9. |
 | halte (le menu) | **Halt** | — (la halte des caravanes) | **À valider**. *Camp* est exclu : c'est une carte (§ 3.5). |
 | besace | **satchel** | — | |
 | Recueil (les entrées apprises) | **Compendium** | — | **À valider**. *Codex* est exclu : en anglais il nomme aussi les exemplaires du Coran de ʿUthman (WP *Uthmanic codex*), au cœur de la saga IV. |
@@ -265,14 +311,14 @@ quand ils comptent.
 | les souffleurs (*waswâs*) | **those who whisper** ; en apposition : *the whisperers*, toujours en minuscule | SI 114:4 : « *the retreating whisperer* », 114:5 : « *who whispers [evil] into the breasts of mankind* » ; Winter : « *waswas ('whispering')* » | Jamais un nom propre, jamais une majuscule : ils n'ont « ni nom, ni figure, ni nombre ». Décision D182 : *whisper*, *whisperer*, *whispering* (et *waswas* au sens de leur souffle) ne servent qu'à eux ; aucun égrégore, aucune idée noire, aucune compétence ne porte ces mots. Al-Ghazâlî ne nomme *waswâs* que la pensée qui vient du Shaytân (Skellie, note 179 : « *Waswas, cf. al-khatir al-shaitani* » ; dans son introduction, « *The suggestion of the demon (al-khatir al-shaitani)* »). |
 | « des démons d'entre les djinns, et parfois des hommes » | **devils from among the jinn, and sometimes men** | SI 6:112 : « *devils from mankind and jinn* » | |
 | djinn | **jinn** (singulier et pluriel ; « *one of the jinn* ») | SI 114:6, 7:179 | Jamais *genie*, jamais *djinn*. |
-| démons intérieurs (façon de parler, exigence 22) | **inner demons** | — (locution anglaise courante) | Le jeu l'explique aussitôt, comme en français ; jamais un nom d'ennemi. |
+| démons intérieurs (façon de parler, exigence 22) | **inner demons** | — (locution anglaise courante) | Le jeu l'explique aussitôt, comme en français ; jamais un nom d'ennemi. L'aide « Descendre dans la noosphère », réécrite avec D184 : « ce que l'on appelle ses démons intérieurs, une façon de parler » → « *what are called his inner demons, a manner of speaking* ». |
 | Waswâs (altération de combat) | **Waswas**, jamais traduit | Winter : « *waswas ('whispering')* » | Comme le français, qui garde le mot arabe. Jamais *Whisper(s)* ni *Whispering* à l'écran (D182 : ces mots sont aux souffleurs). Point à trancher (§ 4) : depuis D182, une altération infligée par un égrégore porte le nom que al-Ghazâlî réserve au souffle du Shaytân. |
 | Doute (altération) | **Doubt** | | |
 | Étourdi | **Stunned** | | |
-| Sagesse (l'expérience gagnée) | **Wisdom** (« *Wisdom gained: +12* ») | — | **À valider**. |
+| Expérience (ce que rapportent combats et pourparlers ; « Sagesse acquise » jusqu'à D184, relecture 2.5) | **Experience** (« *Experience: +12* ») | — | **À valider (D184).** On ne gagne pas la sagesse en gagnant un combat, et le sage est une figure (§ 2.8) : *Wisdom* ne s'écrit plus pour ce gain. |
 | dirhams | **dirhams** | — (mot reçu en anglais, dictionnaire non consulté) | |
 | la Cité-Miroir (2084) | **the Mirror City** | — | Nom de fiction, simple. |
-| l'AGRÉGOR | **the AGGREGOR** | — | Jeu de mots sur *aggregate* (le français jouait sur égrégore / agréger) (« *il agrège* » → « *it aggregates* ») ; capitales comme en français. |
+| l'AGRÉGOR | **the AGGREGOR** | — | Jeu de mots sur *aggregate* (le français jouait sur égrégore / agréger) (« *il agrège* » → « *it aggregates* ») ; capitales comme en français. D183 : il garde son nom, le niveau au-dessus des chimères. |
 
 ### 2.2 Les six Lumières et le Fer (`D.ELEMENTS`)
 
@@ -286,7 +332,9 @@ quand ils comptent.
 | Courage (*shajâʿa*) | **Courage** | Winter : « *Generosity, courage, loyalty, truthfulness and patience receive the greatest emphasis* » | |
 | Savoir (*ʿilm*) | **Knowledge** | Bukhari-Khan, titre du livre 3 : « *Knowledge* » | Le titre de ʿAli, « la Porte du Savoir » : **the Gate of Knowledge** (§ 3.2). |
 
-« Vertu » (le menu des compétences, « Vertus ») → **Virtues**.
+« Vertu » (le menu des compétences, « Vertus ») → **Virtues**. *D184 (2.20) :* à la préparation d'une bataille,
+« Vertus du groupe : … » (« Lumières du groupe » jusque-là : ce sont les vertus des combattants, non les Lumières de la
+Chaîne) → « *The party’s virtues: …* ».
 
 ### 2.3 Les quatre piliers de la Citadelle (`D.PILLARS`)
 
@@ -348,7 +396,7 @@ par le décideur (D182, § 2.1). Elles ne rôdent, ne prennent corps et ne se fr
 |---|---|---|---|
 | La Honte | **Shame** | Winter (*shame*, 16 occurrences) | |
 | La Peur | **Fear** | — | |
-| Le Soupçon | **Suspicion** | — (SI 49:12 dit « *assumption* » pour *zann*) | Le jeu emploie aussi « Soupçon » comme égrégore de la saga V : même mot. |
+| Le Soupçon | **Suspicion** | — (SI 49:12 dit « *assumption* » pour *zann*) | Le jeu emploie aussi « Soupçon » comme chimère de la saga V : même mot. |
 | La Rancune | **Resentment** | — ; Winter et Ghazali.org rendent *hiqd* par « *rancour* » / « *Malice* » | **À valider**. *Rancor* est écarté : c'est aussi le nom d'une créature de *Star Wars* (WP *Rancor* renvoie à « *List of Star Wars creatures* ») ; *Grudge* aussi (WP *The Grudge* : « *a 2004 supernatural horror film* »). |
 | Le Désespoir | **Despair** | SI 12:87 : « *despair not of relief from Allāh* » | |
 
@@ -380,15 +428,37 @@ Les étoiles du cap (`D.STARS`) : le nom arabe selon § 1.3, puis le nom anglais
 | al-'Ayyûq, Capella, la gardienne des Pléiades | **al-ʿAyyuq**, *Capella, the keeper of the Pleiades* | WP *Capella* : « *its Arabic name, العيوق, al-cayyūq* » |
 | al-Jady, la Polaire, le Chevreau | **al-Jady**, *Polaris, the Kid* | — (WP *Polaris* lu sans y trouver le nom arabe : référence non vérifiée) |
 
-### 2.8 Les postures (`D.POSTURES`, exigence 24)
+### 2.8 Les figures (`D.POSTURES`, exigence 24 ; « les postures » jusqu'à D184)
 
 | Français | Anglais retenu | Où l'anglais l'emploie | Note |
 |---|---|---|---|
 | Le héros | **the Hero** | Scheler (essai « *Exemplars of Person and Leaders* » : sections *the saint*, *the genius*, *the hero*) | **À valider**. |
 | Le sage | **the Sage** | — (Scheler dit *the genius*, non *the sage*) | **À valider**. Le rôle « sage » (classe de héros) se dit aussi *Sage* : même mot, comme en français. |
 | Le saint | **the Saint** | Scheler ; Winter emploie *saint* dans un contexte musulman (« *humility, generosity and kindness were regarded as the characteristic traits of a saint* ») | **À valider**, et point à trancher (§ 4) : avis de l'agent, en anglais *saint* fait d'abord entendre la canonisation chrétienne. L'exigence 24 demande qu'aucun texte ne dise de quelqu'un qu'il *est* un saint : on écrit « *takes the Saint's stance* », jamais « *X is a saint* ». |
-| une posture ; prendre une posture | **stance** ; **to take a stance** | — | **À valider**. *Posture* existe, mais *stance* dit mieux une manière de se tenir qu'on prend et qu'on quitte. |
+| une figure (« posture » jusqu'à D184) ; prendre une figure | **stance**, inchangé ; **to take a stance** | — (le mot courant : la manière de se tenir, du corps et de l'esprit ; *to take a stance* ; dictionnaire non consulté) | **À valider (D184)** ; voir ci-dessous. |
+| « Les figures » (la page), « Figures » (le menu de la halte) ; « Prendre une figure » (l'outil) | **Stances** ; **Taking a Stance** (§ 2.16) | — | **À valider (D184).** |
+| « Khâlid · figure : le sage » (halte, préparation d'une bataille) | « *Khalid · stance: The Sage* » | — | **À valider (D184).** Le texte prend le champ `{posture}` (le nom avec sa majuscule), non `{min_posture}`. |
+| en combat, la mention courte « en héros », « en sage », « en saint » | **Hero’s stance**, **Sage’s stance**, **Saint’s stance** (« *Lv. 4 · Saint’s stance* ») | — | **À valider (D184).** Le français a quitté « héros », « saint » tout seuls, qui se lisaient comme des titres (D172) ; l'anglais quitte *hero*, *saint* de même. *As a saint* dirait « en qualité de saint », c'est-à-dire qu'il l'est ; *like a saint* est un compliment ; le possessif dit la manière qu'on prend, non ce qu'est celui qui la prend. |
 | tempérament | **temperament** | — | |
+
+**Pourquoi l'anglais garde *stance* quand le français passe de « posture » à « figure » (D184).** Le décideur a écarté
+« posture », qui veut dire aussi « une pose affichée », et a choisi « figure » : « les trois figures : le héros, le sage,
+le saint ». L'anglais suit l'idée, non le mot :
+- *figure* : en anglais, d'abord la silhouette d'un corps (*her figure*) ou un chiffre (*facts and figures*) ; un menu
+  *Figures* à côté des statistiques se lirait « les chiffres », et la silhouette touche à l'exigence 2 comme « figure »
+  = « visage » en français. Le jeu anglais dit déjà *sky figure* (« figure du ciel », § 2.1), et *Taking a Figure*
+  n'est pas de l'anglais.
+- *posture* : la même pente qu'en français (*posturing*, se donner une pose) : ce que le décideur a écarté.
+- *role* : c'est déjà le nom des rôles (`D.ROLES`, § 2.11), d'où vient le tempérament.
+- *way*, *path* : la voie, la *ṭarîqa*, l'initiation, que le français a écartées avec « voie ».
+- *model*, *exemplar* : les mots de l'auteur que l'exigence 24 ne nomme pas, et de son traducteur (« *Exemplars of
+  Person and Leaders* ») ; « le modèle » (*uswa*, 33:21) est le Prophète ﷺ. *Archetype* est un mot de Jung.
+- *mantle* (un vêtement : l'équipement en a, exigence 17), *bearing* (un cap, dans un jeu qui s'oriente aux étoiles),
+  *aspect*, *guise*, *persona* (l'apparence, le masque) : écartés.
+
+*Stance* dit une manière de se tenir, du corps et de l'esprit, que l'on prend et que l'on quitte, jamais ce que l'on
+est ; il ne dit ni une pose ni un visage. Les trois noms (*the Hero*, *the Sage*, *the Saint*) nomment les figures ;
+*stance* nomme ce qu'on en prend : « *takes the Saint’s stance* ».
 
 Ni Scheler ni son essai ne sont nommés dans le jeu (exigence 24).
 
@@ -407,7 +477,7 @@ Ni Scheler ni son essai ne sont nommés dans le jeu (exigence 24).
 | un abri ; « Tu as tenu » | **a shelter** ; *You held on* | |
 | ce qui rôde ; rôder | **what prowls** ; *to prowl* | « Frapper ce qui rôde » → **Strike What Prowls**. |
 | sonné | **dazed** | |
-| se dissiper | **to dissipate** | Pour un égrégore comme pour une idée noire. |
+| se dissiper | **to dissipate** | Pour une chimère comme pour une idée noire. |
 | rattrapé ; épuisé | **caught** ; **exhausted** | |
 | remonter | **to come back up** | |
 | un sommeil sans songe | **a dreamless sleep** | |
@@ -524,7 +594,7 @@ Les pièces (`D.GEAR`) : noms d'objets ordinaires (exigence 17), 40 signes au pl
 | Eau ; Pisé ; Palme ; Pierre ; Grain ; Laine | **Water** ; **Mudbrick** ; **Palm Fronds** ; **Stone** ; **Grain** ; **Wool** | « Pisé » : la pièce dit « un bloc de terre crue », c'est-à-dire la brique crue (*mudbrick*). Le *pisé* anglais est la terre damée (WP *Rammed earth* : « *also called pisé* »), autre technique : on ne le reprend pas. |
 | Tranchée ; Puits ; Palmier ; Champ d'orge | **Trench** ; **Well** ; **Palm Tree** ; **Barley Field** | |
 | Enclos de chèvres ; Enclos de moutons ; Enclos de chameaux | **Goat Pen** ; **Sheepfold** ; **Camel Pen** | |
-| Mur de pisé ; Sol à étoiles ; Pilier de palmier | **Mudbrick Wall** ; **Star-Patterned Floor** ; **Palm-Trunk Pillar** | |
+| Mur de pisé ; Dallage étoilé ; Pilier de palmier | **Mudbrick Wall** ; **Star-Patterned Paving** ; **Palm-Trunk Pillar** | *D184 (2.25) :* « Sol à étoiles » (*Star-Patterned Floor*) est devenu « Dallage étoilé », comme le dit la description (« Dallage géométrique », *Geometric paving*) : *Star-Patterned Paving*. **À valider (D184).** |
 | Niche de qibla ; Natte de prière ; Tapis ; Lanterne ; Rosace | **Qibla Niche** ; **Prayer Mat** ; **Rug** ; **Lantern** ; **Rosette** | WP *Mihrab*, *Qibla*. On dit *Qibla Niche* comme le français dit « niche de qibla » plutôt que « mihrab ». |
 | groupes : Défendre ; Eau et vivres ; Troupeaux ; Mosquée | **Defend** ; **Water and Food** ; **Herds** ; **Mosque** | |
 | chantier | **building site** | |
@@ -544,7 +614,8 @@ Les pièces (`D.GEAR`) : noms d'objets ordinaires (exigence 17), 40 signes au pl
 Se déplacer **Moving** · Parler **Talking** · Demander son chemin **Asking the Way** · Frapper la faille **Striking the
 Weak Point** · Les vertus **Virtues** · La garde et la Niyya **Guard and Niyya** · La besace **The Satchel** · La halte
 **The Halt** · Retrouver une source **Tracing the Source** · S'équiper **Equipping** · S'orienter aux étoiles **Steering
-by the Stars** · Frapper ce qui rôde **Striking What Prowls** · Prendre une posture **Taking a Stance**.
+by the Stars** · Frapper ce qui rôde **Striking What Prowls** · Prendre une figure **Taking a Stance** (*D184* :
+« Prendre une posture » est devenu « Prendre une figure » ; l'anglais garde *stance*, § 2.8 ; **à valider (D184)**).
 
 Touches et boutons nommés dans les leçons : *Flèches* **Arrow keys**, *ZQSD* → **WASD** (clavier QWERTY), *Entrée*
 **Enter**, *Échap* **Esc**.
@@ -563,7 +634,7 @@ copiste **Copyist's Scarf** · Manteau du veilleur **Watchman's Coat** · Calott
 
 Règle générale. Un **personnage historique** prend la forme des ouvrages de référence anglophones (titre de l'article de
 Wikipedia, forme de *Tabari*), réécrite selon § 1.3 : ʿ et ’ gardés, -a pour la tâ' marbûta, *ibn* plutôt que *b.*,
-article non assimilé. Un **personnage de fiction** prend une forme simple, selon § 1.3, sans recherche. Un **égrégore**
+article non assimilé. Un **personnage de fiction** prend une forme simple, selon § 1.3, sans recherche. Une **chimère**
 prend un nom anglais qui dit la même chose avec les mots de la langue (*the Feed*, non *the Flux*), le même d'un récit à
 l'autre pour la même image (*Murmur of…*, *Echo…*).
 
@@ -574,13 +645,13 @@ b. al-Zubayr* », 240 occurrences ; WP écrit « *Abd Allah* » en deux mots).
 
 | Français | Anglais retenu | Note |
 |---|---|---|
-| Abû Bakr as-Siddîq — As-Siddîq — 11–13 H · 632–634 ; « Saga I · Le Véridique » | **Abu Bakr al-Siddiq** — **al-Siddiq** — **AH 11–13 · 632–634** ; « *Saga I · The Truthful* » | WP *Abu Bakr* ; *Tabari* « al-Siddiq » (132) ; WP *Siddiq* : « *Arabic term for truthful* ». |
+| Abû Bakr as-Siddîq — As-Siddîq — 11–13 H · 632–634 ; « Premier maillon · As-Siddîq » | **Abu Bakr al-Siddiq** — **al-Siddiq** — **AH 11–13 · 632–634** ; « *First Link · Al-Siddiq* » | WP *Abu Bakr* ; *Tabari* « al-Siddiq » (132) ; WP *Siddiq* : « *Arabic term for truthful* ». *D184 (2.7) :* les cinq cartons ont une seule forme (« Saga I · Le Véridique » et « Saga I · The Truthful » ne s'écrivent plus) : *First Link · Al-Siddiq* ; *Second Link · Al-Faruq* ; *Third Link · The Drawn Sword* ; *Fourth Link · The Generous* ; *Fifth Link · The Gate of Knowledge*. **À valider (D184).** |
 | 'Umar ibn al-Khattâb — Al-Fârûq — 13–23 H · 634–644 | **ʿUmar ibn al-Khattab** — **al-Faruq** — **AH 13–23 · 634–644** | WP *Umar*. |
 | Khâlid ibn al-Walîd — Le Sabre dégainé — 13–21 H · 634–642 | **Khalid ibn al-Walid** — **the Drawn Sword** — **AH 13–21 · 634–642** | WP *Khalid ibn al-Walid*. Jamais « *the Sword of God/Allah* » en titre (exigence 8, § 1.9) ; *Tabari* le donne pour surnom (« *He was nicknamed “the sword of God.”* »), le recueil peut le rapporter en citation. |
-| 'Uthmân ibn 'Affân — Le Généreux — 23–35 H · 644–656 | **ʿUthman ibn ʿAffan** — **the Generous** — **AH 23–35 · 644–656** | WP *Uthman*. |
+| 'Uthmân ibn 'Affân — Le Généreux — 23–35 H · 644–656 | **ʿUthman ibn ʿAffan** — **the Generous** — **AH 23–35 · 644–656** | WP *Uthman*. *D184 (2.7, 2.12) :* le français garde « le Généreux », faute d'un autre titre décidé ; la compétence d'Idris « Miséricorde du Généreux » (« Largesse du Généreux » jusque-là : la Lumière de ʿUthman est la Miséricorde, non la lame de la Largesse) → *Mercy of the Generous*. **À valider (D184).** |
 | 'Alî ibn Abî Tâlib — La Porte du Savoir — 35–40 H · 656–661 | **ʿAli ibn Abi Talib** — **the Gate of Knowledge** — **AH 35–40 · 656–661** | WP *Ali*. Le titre vient d'un hadith rendu en anglais « *I am the city of knowledge and ʿAli is its gate* » (usage courant, référence non vérifiée). |
 | Le Caïd — Seigneur de la Citadelle — un maillon de la Chaîne | **the Caid** — **Lord of the Citadel** — *a link in the Chain* | Fiction. *Caid* : forme reçue en anglais du mot arabe *qa’id* (usage courant, référence non vérifiée). |
-| Idris — Le Râwî — 1508 H · 2084 | **Idris** — **the Rawi** — **AH 1508 · 2084** | Fiction. Le nom par défaut du râwî est **Idris** (`langue.js`, `rawi`) ; le joueur peut le changer. |
+| Idris — Le Râwî — 1507 H · 2084 | **Idris** — **the Rawi** — **AH 1507 · 2084** (*D184, 2.22* : 1508 jusque-là ; § 1.6) | Fiction. Le nom par défaut du râwî est **Idris** (`langue.js`, `rawi`) ; le joueur peut le changer. |
 | Le cœur — Œuvres, lames et maux du cœur | **The Heart** — *Deeds, Blades and Ailments of the Heart* | |
 | Les cinq Lumières (`D.LIVRES`, livre I) | **The Five Lights** | |
 
@@ -696,7 +767,7 @@ Forme simple, selon § 1.3. Les fonctions se traduisent ; les noms ne se traduis
 | idris | Le Compteur | **the Counter** |
 | idris | Le Cartographe | **the Cartographer** |
 | idris | L'agent du relevé | **the Survey Agent** |
-| idris | L'opérateur de garde | **the Duty Operator** |
+| idris | L'opérateur de garde | **the Duty Operator** (*D184, 2.9* : un seul nom ; jamais *the night operator*) |
 | abubakr | Thâmir le courtier | **Thamir the Broker** |
 | abubakr | Dirghâm, cheikh des Banû Rimth ; les Banû Rimth | **Dirgham, shaykh of the Banu Rimth** ; **the Banu Rimth** |
 | ali | Ma'dân, notable des greniers | **Maʿdan, notable of the granaries** |
@@ -761,7 +832,7 @@ anglais (IJMES dirait *suq* ; *souk* est la forme courante, référence non vér
 | al-Hîra | **al-Hira** | WP *Al-Hira* |
 | Damas | **Damascus** | WP |
 | Îliyâ' (Jérusalem) ; Aelia | **Iliya’ (Jerusalem)** ; **Aelia** | *Tabari* « *Iliya* » (24), « *Aelia* » (18) ; WP *Aelia Capitolina* |
-| le Shâm | **al-Sham** (la Syrie) | WP *Bilad al-Sham* |
+| le Shâm | **al-Sham** (la Syrie) | WP *Bilad al-Sham* ; *D184 (2.8)* : le français dit partout « le Shâm », avec l'article, là où il disait aussi « de Shâm » ou « la Syrie » ; l'anglais dit partout *al-Sham* (« *the road to al-Sham* », « *governor of al-Sham* »). *Syria* ne s'écrit que dans la glose du feuillet « L'armée d'Usâma » : « *toward the edges of al-Sham (today’s Syria and its neighbors)* ». Le titre *Futuh al-Sham* ne change pas. Un même roi, un seul nom : « l'empire de Kisrâ » (non plus « des Chosroès ») → *the empire of Kisra*, jamais *Chosroes*. **À valider (D184).** |
 | Tibériade | **Tiberias** | WP |
 | al-Madâ'in | **al-Mada’in** | WP *Al-Mada'in* |
 | Rûm | **Rum** (*the Romans*) | |
@@ -783,11 +854,11 @@ anglais (IJMES dirait *suq* ; *souk* est la forme courante, référence non vér
 | le sermon de l'Adieu | **the Farewell Sermon** | WP *Farewell Sermon* |
 | la foggara (veillées) | **the foggara** (glose : *an underground channel*) | WP *Foggara* renvoie à *Qanat* |
 
-### 3.7 Les égrégores et les idoles
+### 3.7 Les chimères et les idoles (« les égrégores » jusqu'à D183)
 
 Règle : un nom qui dit ce que fait l'idée, en anglais courant, jamais un nom de démon (§ 1.9), jamais un peuple, une
 religion ni une personne (exigence 6). Les familles d'images restent des familles : « Murmure de… » → **Murmur of…** ;
-« Écho… » → **Echo…** ; « Mirage… » → **Mirage…**. *[idole]* : l'égrégore d'un combat d'idole.
+« Écho… » → **Echo…** ; « Mirage… » → **Mirage…**. *[idole]* : la chimère d'un combat d'idole.
 
 | Récit | Français | Anglais retenu | Note |
 |---|---|---|---|
@@ -843,7 +914,7 @@ religion ni une personne (exigence 6). Les familles d'images restent des famille
 | umar | L'Accapareur | **The Hoarder** | |
 | umar | Mirage de gloire | **Mirage of Glory** | |
 | umar | Le Faste | **Pomp** | |
-| umar | L'Aigle d'Airain *[idole]* | **The Bronze Eagle** | |
+| umar | L'Aigle d'Airain *[idole]* | **The Bronze Eagle** | *D184 (2.10)* : l'Agrégor dit désormais « J'ai été l'Aigle d'Airain et le Trône » (et non plus « l'Aigle ») → « *I was the Bronze Eagle and the Throne* » ; jamais *the Eagle* seul, qui est un compagnon de lumière (§ 2.7). |
 | umar | Reflet d'or | **Golden Reflection** | |
 | umar | La Couronne suspendue | **The Hanging Crown** | |
 | umar | Le Trône vide *[idole]* | **The Empty Throne** | |
@@ -858,7 +929,7 @@ religion ni une personne (exigence 6). Les familles d'images restent des famille
 | uthman | La Rumeur *[idole]* | **Rumor** | |
 
 Les idoles nommées au recueil (« le Clan, l'Empire, le Héros, l'Or, la Rumeur, le Juge sans miséricorde ») : *the Clan,
-the Empire, the Hero, Gold, Rumor, the Merciless Judge*. « L'égrégore La Razzia » (`raid`) : **the Raid**.
+the Empire, the Hero, Gold, Rumor, the Merciless Judge*. « La chimère La Razzia » (`raid`) : **the Raid**.
 
 Les noms de compétences des héros et des ennemis ne sont pas fixés ici : on les écrit d'après les règles de § 1.9 et le
 vocabulaire de § 2 (*Truthful Word*, *Soothing*…), courts (22 signes), sans nom divin, sans nom de démon.
@@ -879,10 +950,14 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
    garde son nom (*the AGGREGOR*), au-dessus des chimères.
 6. **« The Saint ».** En anglais, *saint* fait d'abord entendre la canonisation chrétienne (avis de l'agent) ; Winter
    l'emploie dans un contexte musulman. Garder *the Hero, the Sage, the Saint* (proposition ; Scheler, en anglais, dit *the saint, the genius, the
-   hero*), ou dire *the Selfless* pour le troisième (§ 2.8). Et *stance* pour « posture ».
+   hero*), ou dire *the Selfless* pour le troisième (§ 2.8). Et *stance* pour « figure » (D184 ; « posture » jusque-là) :
+   l'anglais garde *stance* (§ 2.8 dit pourquoi ni *figure*, ni *role*, ni *way*), et la mention de combat devient
+   *Hero’s stance*, *Sage’s stance*, *Saint’s stance*.
 7. **Les mots de la jauge et des statistiques** : *Constancy* (Constance), *Breath* (Souffle), *spent* (éprouvé),
-   *Mind* (Esprit), *Momentum* (Élan), *Wisdom* (Sagesse), *Rooting* (enracinement), *weak point* (faille), *veil* /
-   *unveiled* (§ 2.1, § 2.12).
+   *Mind* (Esprit), *Momentum* (Élan), *Experience* (Expérience ; *Wisdom* jusqu'à D184), *Rooting* (enracinement),
+   *weak point* (faille), *veil* / *unveiled* (§ 2.1, § 2.12), et *Composure* (Sérénité, D184 ; *Sakina* jusque-là) :
+   un mot courant, ni le mot du Coran ni celui de SI pour la *sakîna* (*tranquility*), ni *serenity* ou *calm*, qu'ont
+   d'autres traductions (§ 2.1).
 8. **Les images du cœur** : *dark notions* (idées noires) et *passing notion* (*khâṭir*), d'après Winter, selon
    D182 (*involuntary suggestion*, le mot de Skellie, est écarté : § 2.1), *star companions* (compagnons de lumière), *ailments of
    the heart* (maux du cœur), *blades* / *sever* (§ 2.1).
@@ -906,6 +981,11 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
 18. **L'altération « Waswâs »** (§ 2.1) : depuis D182, *waswâs* ne nomme que le souffle du Shaytân, réservé aux
     souffleurs, qui ne se combattent pas. L'anglais garde *Waswas* sans le traduire, comme le français ; le décideur
     dira si l'altération doit changer de nom dans toutes les langues.
+19. **« Le grand acte du Compagnon »** (l'aide du combat, réécrite par D184) : le français y met une majuscule à
+    « Compagnon » pour tout membre du groupe, Idris et le Caïd compris, alors qu'ailleurs « compagnon » (du groupe)
+    s'écrit en minuscule. L'anglais ne peut pas écrire *the Companion’s great act* (*Companion*, avec sa majuscule, est
+    un Compagnon du Prophète ﷺ) : il dit « *each party member’s golden gauge; when it is full, it allows his great
+    act* ». Signalé au décideur : lui seul corrige le français.
 
 ## 5. Ce qui n'a pas pu être vérifié
 

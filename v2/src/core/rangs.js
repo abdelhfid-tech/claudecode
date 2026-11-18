@@ -102,7 +102,7 @@
     // le cœur
     { const w = I.oeuvres.weight(opts), z = I.oeuvres.zad(), prie = !!S.flags._prayed;
       li(z >= w && prie, I.t('Le cœur'), I.t('Provision ♥ {z} · l’épreuve en demande {w}.', { z, w }) + ' ' + (z >= w ? I.t('Le cœur est prêt.') : `<em>${I.t('Il en manquera {n} : le cœur sera lourd.', { n: w - z })}</em> <small>${I.t('Les œuvres du jour, sur la natte, nourrissent la provision.')}</small>`) +
-        '<br>' + (prie ? I.t('Tu es passé par la prière dans ce chapitre.') : '<em>' + I.t('Tu n’es pas encore passé par la natte dans ce chapitre.') + '</em>') + R.motSecours(prie)); }
+        '<br>' + (prie ? I.t('Le râwî est passé par la prière dans ce chapitre.') : '<em>' + I.t('Le râwî n’est pas encore passé par la natte dans ce chapitre.') + '</em>') + R.motSecours(prie)); }
     const manque = L.filter(x => x.indexOf('class="manque"') > 0).length;
     return `<h3>${I.esc(E.name)}</h3><p class="src">${I.t('Bataille déclarée · enracinement {traits}', { traits: I.mal.traits(I.mal.niveau()) })}</p><ul class="prepa">${L.join('')}</ul>` +
       `<p class="src">${manque ? I.t('{n} point à regarder, marqué d’un ◇.¦{n} points à regarder, marqués d’un ◇.', { n: manque }) : I.t('Tout est là.')} ${I.t('Rien n’empêche de déclarer la bataille : cette page dit ce que l’on a, et ce qui manque.')}</p>`;

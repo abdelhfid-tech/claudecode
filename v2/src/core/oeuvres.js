@@ -245,7 +245,7 @@
     await S.card('victory', '<p class="small">' + I.t('Les sept maux du cœur') + '</p><h1>' + (n === 7 ? I.t('Les sept sont tranchés') : I.t('{n} tranché sur sept¦{n} tranchés sur sept', { n })) + '</h1><ul>' +
       Object.keys(D.VICES).map(v => { const F = { mal: I.esc(E[v].name), min_lame: I.esc(bas(L[v].name)), lame: I.esc(L[v].name) };
         return '<li>' + (d.vices[v] === 'tranche' ? (e_(v) ? I.t('{mal} : <b>tranchée</b> par {min_lame}', F) : I.t('{mal} : <b>tranché</b> par {min_lame}', F)) : (v === 'orgueil' ? I.t('{mal} : repoussé ; il reviendra', F) : I.t('{mal} : repoussée ; elle reviendra', F))) + '</li>'; }).join('') +
-      '</ul><p class="small">' + (n === 7 ? I.t('Aucun ne reviendra de ton vivant. Les suivants auront les leurs à trancher.') : I.t('Une lame se forge par l’œuvre : ce qui n’est que repoussé revient.')) + '</p><div class="hint">▼</div>');
+      '</ul><p class="small">' + (n === 7 ? I.t('Aucun ne reviendra du vivant du râwî. Ceux qui viendront après lui auront les leurs à trancher.') : I.t('Une lame se forge par l’œuvre : ce qui n’est que repoussé revient.')) + '</p><div class="hint">▼</div>');
     await S.run(n === 7 ? (o.tous || []) : (o.reste || []));
   };
 
