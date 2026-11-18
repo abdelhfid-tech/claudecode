@@ -196,7 +196,7 @@
   W.hud = function () {
     const o = W.cur();
     $('#hud .chap').textContent = W.ch ? W.ch.title : '';
-    const tm = W.map && ({ dawn: I.t('Fajr'), day: I.t('Dhuhr'), dusk: I.t('Maghrib'), night: I.t('’Ishâ') })[W.map.env.time];
+    const tm = W.map && ({ dawn: I.t('Fajr'), day: I.t('Dhuhr'), dusk: I.t('Maghrib'), night: I.t("'Ishâ") })[W.map.env.time];
     $('#hud .sub').textContent = (W.ch ? W.ch.sub : '') + (tm ? '  ·  ◠ ' + tm : '');
     const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="${I.t('Dirhams')}"><i>◎</i>${I.trade.dirhams()}</span>` : '') + `<span title="${I.t('Provision du cœur')}" class="zad"><i>♥</i>${I.oeuvres.zad()}${I.oeuvres.fasting() ? ' <i>☾</i>' + I.t('jeûne') : ''}</span>`;
     const en = I.oeuvres.enigme(); $('#hud .enig').hidden = !en; if (en) $('#hud .enig').textContent = I.t('Énigme : {signe}', { signe: en.signe });

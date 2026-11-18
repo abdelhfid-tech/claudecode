@@ -31,10 +31,10 @@ ISNAD.registerSaga({
         { lvl: 1, id: 'citer', name: 'Citer la source', desc: '« De qui le tiens-tu ? » Révèle les failles d’une chimère.', cost: 2, target: 'foe', el: 'ilm', pow: 0.7, fx: [{ st: 'reveal' }], anim: 'glyph' },
         { lvl: 1, id: 'souffle', name: 'Reprendre souffle', desc: 'Rend de la Constance à un compagnon.', cost: 4, target: 'ally', heal: 1.0, anim: 'heal' },
         { lvl: 9, id: 'l_sidq', name: 'Parole du Véridique', desc: 'La Lumière d’Abû Bakr : dire vrai quand tout vacille.', cost: 6, target: 'foe', el: 'sidq', pow: 1.8, anim: 'pillar' },
-        { lvl: 9, id: 'l_adl', name: 'Mesure du Fârûq', desc: 'La Lumière de ’Umar : la même balance pour tous.', cost: 7, target: 'foes', el: 'adl', pow: 1.15, anim: 'wave' },
+        { lvl: 9, id: 'l_adl', name: 'Mesure du Fârûq', desc: "La Lumière de 'Umar : la même balance pour tous.", cost: 7, target: 'foes', el: 'adl', pow: 1.15, anim: 'wave' },
         { lvl: 9, id: 'l_shajaa', name: 'Le Sabre rengainé', desc: 'La Lumière de Khâlid : le courage de s’effacer.', cost: 6, target: 'foe', el: 'shajaa', pow: 1.8, fx: [{ st: 'dispel' }], anim: 'slash' },
-        { lvl: 9, id: 'l_rahma', name: 'Miséricorde du Généreux', desc: 'La Lumière de ’Uthmân : soigne tout le groupe.', cost: 8, target: 'allies', heal: 0.7, anim: 'heal' },
-        { lvl: 9, id: 'l_ilm', name: 'Porte du Savoir', desc: 'La Lumière de ’Alî : comprendre avant de juger.', cost: 6, target: 'foe', el: 'ilm', pow: 1.7, fx: [{ st: 'reveal' }], anim: 'glyph' }
+        { lvl: 9, id: 'l_rahma', name: 'Miséricorde du Généreux', desc: "La Lumière de 'Uthmân : soigne tout le groupe.", cost: 8, target: 'allies', heal: 0.7, anim: 'heal' },
+        { lvl: 9, id: 'l_ilm', name: 'Porte du Savoir', desc: "La Lumière de 'Alî : comprendre avant de juger.", cost: 6, target: 'foe', el: 'ilm', pow: 1.7, fx: [{ st: 'reveal' }], anim: 'glyph' }
       ],
       limit: { id: 'isnad', name: 'La Chaîne entière', desc: 'De témoin en témoin : toutes les Lumières à la fois.', target: 'foes', el: 'sabr', pow: 2.1, fx: [{ st: 'veil', v: -2 }, { st: 'dispel' }], anim: 'pillar' }
     },
@@ -125,14 +125,14 @@ ISNAD.registerSaga({
     { id: 'egregore', cat: 'Noosphère', title: 'La chimère', text: 'Ce que beaucoup de cœurs fabriquent ensemble, à force de regarder la même chose. De loin, elle semble avoir un corps ; approchée, elle se révèle vide. Faite de peur, d’orgueil ou d’avidité, elle se retourne contre ceux qui la nourrissent. Le jeu emploie ce mot comme une image, non comme une doctrine.' },
     { id: 'idole', cat: 'Noosphère', title: 'L’idole', text: 'Une chose fabriquée par les hommes, et qui finit par les commander. Celles de pierre ont été brisées ; celles de la noosphère reviennent sous d’autres noms : le Clan, l’Empire, le Héros, l’Or, la Rumeur, le Juge sans miséricorde. On ne détruit pas une idole par la haine. On la dévoile : on montre qu’elle est vide.' },
     { id: 'agregor', cat: 'Noosphère', title: 'L’AGRÉGOR', text: 'Le moteur de la Cité-Miroir. Il agrège l’attention de millions de gens et donne un corps à ce qu’ils désirent ensemble : une tendance, une marque, le culte d’une personne. Il ne ment pas et ne commande pas. Il additionne, plus vite que les cœurs ne peuvent juger.' },
-    { id: 'isnad', cat: 'Parole', title: 'L’isnâd', text: 'La chaîne de transmission : « Untel m’a rapporté, d’après untel, qui l’a vu. » Des générations de savants ont vérifié chaque maillon, la mémoire et la probité de chaque transmetteur. On rapporte de ’Abdallâh ibn al-Mubârak : « L’isnâd fait partie de la religion ; sans lui, chacun dirait ce qu’il veut. »', src: 'Muslim, introduction du Sahîh' },
-    { id: 'lumieres', cat: 'Noosphère', title: 'Les six Lumières', text: 'Véracité (*sidq*), Justice (*’adl*), Courage (*shajâ’a*), Miséricorde (*rahma*), Savoir (*’ilm*), Patience (*sabr*). Chaque saga en rend une à Idris ; la sixième est celle de quiconque transmet. En combat, chacune est une vertu qui dévoile certaines chimères.' },
-    { id: 'jour', cat: 'Événement', title: 'Le jour le plus sombre', text: 'Le Messager d’Allah ﷺ meurt à Médine un lundi de Rabî’ al-Awwal de l’an 11 de l’Hégire (juin 632). La communauté, bouleversée, doit décider en quelques heures de ce qu’elle devient. C’est ici que commence la Chaîne.', src: 'Ibn Hishâm, as-Sîra ; al-Bukhârî' },
+    { id: 'isnad', cat: 'Parole', title: 'L’isnâd', text: "La chaîne de transmission : « Untel m’a rapporté, d’après untel, qui l’a vu. » Des générations de savants ont vérifié chaque maillon, la mémoire et la probité de chaque transmetteur. On rapporte de 'Abdallâh ibn al-Mubârak : « L’isnâd fait partie de la religion ; sans lui, chacun dirait ce qu’il veut. »", src: 'Muslim, introduction du Sahîh' },
+    { id: 'lumieres', cat: 'Noosphère', title: 'Les six Lumières', text: "Véracité (*sidq*), Justice (*'adl*), Courage (*shajâ'a*), Miséricorde (*rahma*), Savoir (*'ilm*), Patience (*sabr*). Chaque saga en rend une à Idris ; la sixième est celle de quiconque transmet. En combat, chacune est une vertu qui dévoile certaines chimères." },
+    { id: 'jour', cat: 'Événement', title: 'Le jour le plus sombre', text: "Le Messager d’Allah ﷺ meurt à Médine un lundi de Rabî' al-Awwal de l’an 11 de l’Hégire (juin 632). La communauté, bouleversée, doit décider en quelques heures de ce qu’elle devient. C’est ici que commence la Chaîne.", src: 'Ibn Hishâm, as-Sîra ; al-Bukhârî' },
     { id: 'piliers', cat: 'Noosphère', title: 'Les quatre piliers', text: 'Ce qui tient une cité debout ne se voit pas : la Prière, qui repose les cœurs et les range côte à côte ; le Savoir, qui ouvre ce que la force ne peut ouvrir ; la Justice, la même pour le puissant et pour le pauvre ; le Lien, la parole donnée et les pactes tenus. On rapporte que le Messager d’Allah ﷺ disait de la prière : « Ô Bilâl, repose-nous par elle. »', src: 'Abû Dâwûd, as-Sunan' },
     { id: 'parole', cat: 'Noosphère', title: 'La parole avant le sabre', text: 'Délégations, pactes, arbitrages, alliances : la plupart des crises de ce temps se sont dénouées, ou auraient pu l’être, par la parole. Dans ISNAD, un pourparler se gagne par la justesse des arguments, par le savoir appris en chemin et par la sérénité de qui a prié. Le combat ne vient qu’en dernier recours, et toujours contre une idole, jamais contre des personnes.' },
-    { id: 'etoiles', cat: 'Lieu', title: 'S’orienter aux étoiles', text: 'Les Arabes du désert lisaient leur route au ciel, et le Coran le rappelle : « Et des points de repère ; et au moyen des étoiles ils se guident » (16:16, traduction du sens). *Al-Jady* (الجدي), la Polaire, ne bouge pas : elle donne le nord. *Suhayl* (سهيل), Canopus, marque le sud. Entre eux, on nomme un cap par l’étoile qui s’y lève ou s’y couche : *an-Nasr at-Tâ’ir* (Altaïr), *al-’Ayyûq* (Capella), *al-’Aqrab* (le Scorpion). On connaît aussi *ath-Thurayyâ* (les Pléiades), *ad-Dabarân*, *ash-Shi’râ* (Sirius), *Banât Na’sh* (la Grande Ourse) et *al-Farqadân*. Le cadran du jeu simplifie en huit caps une rose que les pilotes arabes de l’océan Indien décriront plus tard en trente-deux.', src: 'Coran 16:16 et 6:97 ; Ibn Qutayba, Kitâb al-Anwâ’ ; Ibn Mâjid, Kitâb al-Fawâ’id' },
-    { id: 'caravanes', cat: 'Événement', title: 'Les caravanes', text: 'La Mecque vivait de deux voyages : le Coran nomme le voyage d’hiver et celui d’été (sourate 106) ; les commentateurs les situent au Yémen et au Shâm. Abû Bakr était marchand d’étoffes, ’Uthmân et ’Abd ar-Rahmân ibn ’Awf de grands négociants. À Médine, un marché fut établi sans taxe. Dans le jeu, on confie une cargaison à une caravane : elle revient au chapitre suivant, plus sûrement si la justice est rendue, si des pactes sont noués et si des méharistes gardent la route.', src: 'Coran 106 ; Ibn Sa’d, at-Tabaqât' },
-    { id: 'routes_sures', cat: 'Parole', title: 'La route sûre', text: 'On rapporte du Messager d’Allah ﷺ, aux jours où les croyants étaient persécutés, cette promesse : un temps viendrait où le voyageur irait de San’â’ au Hadramawt sans craindre autre chose qu’Allah, et le loup pour ses brebis. La sûreté des routes est restée la mesure d’un gouvernement juste. Dans les veillées, le père du Caïd dit la même chose à sa manière : une cité se juge à ses routes.', src: 'al-Bukhârî, as-Sahîh (récit de Khabbâb ibn al-Aratt)' },
+    { id: 'etoiles', cat: 'Lieu', title: 'S’orienter aux étoiles', text: "Les Arabes du désert lisaient leur route au ciel, et le Coran le rappelle : « Et des points de repère ; et au moyen des étoiles ils se guident » (16:16, traduction du sens). *Al-Jady* (الجدي), la Polaire, ne bouge pas : elle donne le nord. *Suhayl* (سهيل), Canopus, marque le sud. Entre eux, on nomme un cap par l’étoile qui s’y lève ou s’y couche : *an-Nasr at-Tâ'ir* (Altaïr), *al-'Ayyûq* (Capella), *al-'Aqrab* (le Scorpion). On connaît aussi *ath-Thurayyâ* (les Pléiades), *ad-Dabarân*, *ash-Shi'râ* (Sirius), *Banât Na'sh* (la Grande Ourse) et *al-Farqadân*. Le cadran du jeu simplifie en huit caps une rose que les pilotes arabes de l’océan Indien décriront plus tard en trente-deux.", src: "Coran 16:16 et 6:97 ; Ibn Qutayba, Kitâb al-Anwâ' ; Ibn Mâjid, Kitâb al-Fawâ'id" },
+    { id: 'caravanes', cat: 'Événement', title: 'Les caravanes', text: "La Mecque vivait de deux voyages : le Coran nomme le voyage d’hiver et celui d’été (sourate 106) ; les commentateurs les situent au Yémen et au Shâm. Abû Bakr était marchand d’étoffes, 'Uthmân et 'Abd ar-Rahmân ibn 'Awf de grands négociants. À Médine, un marché fut établi sans taxe. Dans le jeu, on confie une cargaison à une caravane : elle revient au chapitre suivant, plus sûrement si la justice est rendue, si des pactes sont noués et si des méharistes gardent la route.", src: "Coran 106 ; Ibn Sa'd, at-Tabaqât" },
+    { id: 'routes_sures', cat: 'Parole', title: 'La route sûre', text: "On rapporte du Messager d’Allah ﷺ, aux jours où les croyants étaient persécutés, cette promesse : un temps viendrait où le voyageur irait de San'â' au Hadramawt sans craindre autre chose qu’Allah, et le loup pour ses brebis. La sûreté des routes est restée la mesure d’un gouvernement juste. Dans les veillées, le père du Caïd dit la même chose à sa manière : une cité se juge à ses routes.", src: 'al-Bukhârî, as-Sahîh (récit de Khabbâb ibn al-Aratt)' },
     { id: 'razzia', cat: 'Noosphère', title: 'La razzia', text: 'Avant l’islam, le coup de main contre une caravane ou un campement (*ghazw*) était une coutume, presque un honneur. Le jeu en fait une chimère : « prendre parce qu’on le peut ». On ne la combat qu’en dernier recours ; on lève d’abord des renforts, parce qu’on écoute mieux celui qui n’est pas venu seul, puis on parle. Ce qui est repris est rendu à ceux qui l’avaient perdu, et les pillards sont remis au juge : ce n’est pas à celui qui poursuit de dire la peine.' },
     { id: 'r_defile', cat: 'Noosphère', title: 'Celui qui défile', text: 'Un homme de la Cité-Miroir, dans une ruelle. Il regarde défiler pour oublier, et ce qu’il veut oublier, c’est le temps qu’il y passe. Le mépris l’y renfonce. On l’en tire en disant ce qui est, comme on l’annonce à quelqu’un qu’on respecte, et en restant à côté de lui. Personnage de fiction.' },
     { id: 'r_regent', cat: 'Noosphère', title: 'Le Régent', text: 'Il tient un tampon au pied d’une tour vide et accorde ce que l’écran a déjà décidé. Il n’a personne à commander, donc personne dont répondre. Il confond le siège et la charge : on peut avoir l’un sans l’autre, et c’est la charge qui fait dormir en paix. Personnage de fiction.' },
@@ -211,7 +211,7 @@ ISNAD.registerSaga({
           ['say', 'Maître Yûnus', 'Elle commence au jour le plus sombre. Le jour où tout aurait pu se défaire.'],
           ['codex', 'lumieres'], ['codex', 'piliers'], ['codex', 'parole'],
           ['fade', 'out', 900], ['flash', '#fff3d0'],
-          ['title', 'Médine', '12 Rabî’ al-Awwal, an 11 de l’Hégire · juin 632'],
+          ['title', 'Médine', "12 Rabî' al-Awwal, an 11 de l’Hégire · juin 632"],
           ['nar', 'Ce lundi-là, la plus grande lumière que la terre ait portée quitta ce monde. Le Messager d’Allah ﷺ venait de rejoindre son Seigneur.'],
           ['nar', 'Médine vacilla. Des hommes qui avaient affronté des armées restèrent sans voix. D’autres refusèrent d’y croire. Dans le désert, les vieilles idoles relevèrent la tête.'],
           ['nar', 'Ceux qui restaient n’étaient pas des prophètes. C’étaient des hommes. Tout ce qu’ils avaient reçu, il leur fallait maintenant le porter, et le transmettre.'],
@@ -290,7 +290,7 @@ ISNAD.registerSaga({
           ['say', 'salim', 'Ça, c’était midi. Il y en a une par heure. J’en ai lancé des milliers.']
         ] },
         { text: 'Renverser le Score (nœud du nord)', foe: 'f2', then: [
-          ['say', 'yunus', 'Une balance qui pèse les hommes au regard des autres. ’Umar pesait autrement : le fort était faible devant lui jusqu’à ce qu’il ait rendu le droit.'],
+          ['say', 'yunus', "Une balance qui pèse les hommes au regard des autres. 'Umar pesait autrement : le fort était faible devant lui jusqu’à ce qu’il ait rendu le droit."],
           ['heal']
         ] },
         { text: 'Atteindre le cœur de l’Agrégor (à l’est)', goto: 'coeur', then: [
@@ -381,16 +381,16 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_umar', after: 'umar', vice: 'orgueil', title: 'Le Régent', sub: 'Cité-Miroir · le soir du maillon de ’Umar', minLvl: 8, last: true,
+      id: 'r_umar', after: 'umar', vice: 'orgueil', title: 'Le Régent', sub: "Cité-Miroir · le soir du maillon de 'Umar", minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'regent', name: 'Le Régent', at: ['ascenseur', -2, 0], look: { kind: 'cyber', coiffe: 'tiare', robe: '#4a3a52', head: '#5a4a2a', cloak: '#2f2638', trim: '#d9b45a' }, talk: [['say', 'regent', 'Accordé.']] }
       ],
       intro: [
-        ['title', 'Le Régent', 'Cité-Miroir · le soir du maillon de ’Umar'],
+        ['title', 'Le Régent', "Cité-Miroir · le soir du maillon de 'Umar"],
         ['mus', 'rencontre'],
-        ['nar', 'La Justice de ’Umar pèse dans la main d’Idris comme une balance vide : elle attend qu’on y pose quelque chose.'],
+        ['nar', "La Justice de 'Umar pèse dans la main d’Idris comme une balance vide : elle attend qu’on y pose quelque chose."],
         ['nar', 'Sous le grand écran, l’enfant a déjà une question.']
       ],
       objectives: [
@@ -418,7 +418,7 @@ ISNAD.registerSaga({
                 opts: [
                 { t: 'Alors c’est l’écran qui commande, et toi qui signes.', el: 'sidq', v: 2, r: 'Je… je contresigne. Ce n’est pas rien, contresigner.' },
                 { t: 'Tu fais un travail utile.', el: 'rahma', v: 0, r: 'N’est-ce pas ? Accordé.' },
-                { t: 'On a trouvé ’Umar endormi dans la mosquée, sans garde ni chambellan, lui sous qui deux empires étaient tombés. Il n’avait pas de siège. Il avait des gens dont il répondait.', el: 'adl', v: 2, need: 'umar/hurmuzan', r: 'Sans garde… et il dormait ? Moi, je ne dors pas. Je surveille mon tampon.' }
+                { t: "On a trouvé 'Umar endormi dans la mosquée, sans garde ni chambellan, lui sous qui deux empires étaient tombés. Il n’avait pas de siège. Il avait des gens dont il répondait.", el: 'adl', v: 2, need: 'umar/hurmuzan', r: 'Sans garde… et il dormait ? Moi, je ne dors pas. Je surveille mon tampon.' }
               ] },
               { say: 'Répondre de quelqu’un… De qui ? Il n’y a plus personne dans le Neuvième.', opts: [
                 { t: 'Il y a un homme, dans la ruelle, à qui personne ne parle. Commence par lui.', el: 'rahma', v: 2, r: 'Un administré. Un vrai. Il faudrait que j’aille le voir… à pied ?' },
@@ -435,7 +435,7 @@ ISNAD.registerSaga({
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Il accordait à qui, alors ?'],
-          ['say', 'idris', 'À personne. Il avait un siège, et pas de charge. ’Umar avait une charge, et pas de siège : c’est de lui que je tiens la différence.'],
+          ['say', 'idris', "À personne. Il avait un siège, et pas de charge. 'Umar avait une charge, et pas de siège : c’est de lui que je tiens la différence."],
           ['say', 'gamin', 'Et toi, tu as une charge ?'],
           ['say', 'idris', 'On m’a confié quelque chose. Je commence à croire que tu en fais partie.'],
           ['codex', 'r_regent'], ['codex', 'enfant']
@@ -505,16 +505,16 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_uthman', after: 'uthman', vice: 'avarice', title: 'Le Compteur', sub: 'Cité-Miroir · le soir du maillon de ’Uthmân', minLvl: 8, last: true,
+      id: 'r_uthman', after: 'uthman', vice: 'avarice', title: 'Le Compteur', sub: "Cité-Miroir · le soir du maillon de 'Uthmân", minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'compteur', name: 'Le Compteur', at: ['rue', 2, -1], look: { kind: 'cyber', robe: '#4a4430', head: '#2a2618', cloak: '#3a3424', trim: '#d9b45a', item: 'bourse' }, talk: [['say', 'compteur', 'Ne me dérange pas. Je compte.']] }
       ],
       intro: [
-        ['title', 'Le Compteur', 'Cité-Miroir · le soir du maillon de ’Uthmân'],
+        ['title', 'Le Compteur', "Cité-Miroir · le soir du maillon de 'Uthmân"],
         ['mus', 'rencontre'],
-        ['nar', 'La Miséricorde de ’Uthmân a la forme d’un puits : on n’y garde rien pour soi, et il ne tarit pas.'],
+        ['nar', "La Miséricorde de 'Uthmân a la forme d’un puits : on n’y garde rien pour soi, et il ne tarit pas."],
         ['nar', 'L’enfant attend sous le grand écran. Il a l’air de quelqu’un qui a fait un calcul et n’y croit pas.']
       ],
       objectives: [
@@ -535,7 +535,7 @@ ISNAD.registerSaga({
               { say: 'Ils sont à moi. Je les ai payés. Qu’y a-t-il à redire ?', opts: [
                 { t: 'Rien. Ils sont à toi. À qui servent-ils ?', el: 'adl', v: 1, r: 'Servir… Ils n’ont pas à servir. Ils ont à être là.' },
                 { t: 'C’est du vol. Rends-les.', el: 'shajaa', v: -1, r: 'J’ai les reçus. Tu veux les voir ? Je les ai comptés aussi.' },
-                { t: 'À Médine, l’eau douce d’un puits se vendait. ’Uthmân l’a acheté de son bien, comme toi, puis il l’a donné à tous : son seau n’y avait pas plus de droit qu’un autre.', el: 'rahma', v: 2, need: 'uthman/ruma', r: 'Payé, puis donné ? Alors il ne lui restait rien… si ce n’est tous ceux qui venaient y boire.' }
+                { t: "À Médine, l’eau douce d’un puits se vendait. 'Uthmân l’a acheté de son bien, comme toi, puis il l’a donné à tous : son seau n’y avait pas plus de droit qu’un autre.", el: 'rahma', v: 2, need: 'uthman/ruma', r: 'Payé, puis donné ? Alors il ne lui restait rien… si ce n’est tous ceux qui venaient y boire.' }
               ] },
               { say: 'Si je les donne, je n’en aurai plus. C’est mathématique.',
                 noir: { name: 'Le Compte', group: ['compte'], bg: 'cite', intro: 'Il a recompté, et le chiffre a pris toute la place. Tant qu’il comptera, il n’y aura personne en face de lui.', say: 'Il pèse et ne nourrit personne. La largesse le renverse.', after: 'J’ai perdu le fil. Tant mieux, peut-être. Tu disais ?' },
@@ -559,7 +559,7 @@ ISNAD.registerSaga({
         ] },
         { text: 'Retourner auprès de l’enfant', talk: 'gamin', then: [
           ['say', 'gamin', 'Il en a donné un ?'],
-          ['say', 'idris', 'Un seul. C’est le plus difficile. Un homme nommé ’Uthmân a donné un puits entier : c’est de lui que je le tiens.'],
+          ['say', 'idris', "Un seul. C’est le plus difficile. Un homme nommé 'Uthmân a donné un puits entier : c’est de lui que je le tiens."],
           ['say', 'gamin', 'Toi, tu me regardes, quand je parle.'],
           ['say', 'idris', 'C’est toi qui me l’as appris, à force de revenir.'],
           ['codex', 'r_compteur'], ['codex', 'enfant']
@@ -567,16 +567,16 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'r_ali', after: 'ali', vice: 'insouciance', title: 'Le Cartographe', sub: 'Cité-Miroir · le soir du maillon de ’Alî', minLvl: 8, last: true,
+      id: 'r_ali', after: 'ali', vice: 'insouciance', title: 'Le Cartographe', sub: "Cité-Miroir · le soir du maillon de 'Alî", minLvl: 8, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'cyber', robe: '#2f4a52', head: '#1c2c30', cloak: '#24383e', trim: '#39e6ff', item: 'feuillets' }, talk: [['say', 'carto', 'Combien l’ont vu ?']] }
       ],
       intro: [
-        ['title', 'Le Cartographe', 'Cité-Miroir · le soir du maillon de ’Alî'],
+        ['title', 'Le Cartographe', "Cité-Miroir · le soir du maillon de 'Alî"],
         ['mus', 'rencontre'],
-        ['nar', 'Le Savoir de ’Alî ne ressemble pas à une réponse. Il ressemble à une question bien posée : de qui le tiens-tu ?'],
+        ['nar', "Le Savoir de 'Alî ne ressemble pas à une réponse. Il ressemble à une question bien posée : de qui le tiens-tu ?"],
         ['nar', 'L’enfant tient un bout de papier, sous le grand écran. Il le retourne dans tous les sens.']
       ],
       objectives: [
@@ -604,7 +604,7 @@ ISNAD.registerSaga({
                 opts: [
                 { t: 'Une seule. Celle de l’enfant. Va voir la porte.', el: 'sabr', v: 2, r: 'Une seule rue… C’est peu, pour une méthode. Mais c’est faisable.' },
                 { t: 'Alors ta carte ne vaut rien.', el: 'shajaa', v: -1, r: 'Elle vaut onze millions de relevés. Bonsoir.' },
-                { t: 'Quand des milliers d’hommes se sont retirés à Harûrâ’, Ibn ’Abbâs n’a pas écrit sur eux : il est allé les trouver à midi. Il a écouté leurs griefs, puis il a répondu. Deux mille sont revenus ce jour-là.', el: 'ilm', v: 3, need: 'ali/harura', r: 'Il y est allé. En personne. Et il a écouté d’abord… Je n’ai jamais écouté un relevé.' }
+                { t: "Quand des milliers d’hommes se sont retirés à Harûrâ', Ibn 'Abbâs n’a pas écrit sur eux : il est allé les trouver à midi. Il a écouté leurs griefs, puis il a répondu. Deux mille sont revenus ce jour-là.", el: 'ilm', v: 3, need: 'ali/harura', r: 'Il y est allé. En personne. Et il a écouté d’abord… Je n’ai jamais écouté un relevé.' }
               ] },
               { say: 'Et si j’y vais, et que je me trompe quand même ?', opts: [
                 { t: 'Alors tu diras de qui tu le tiens, et l’on pourra te corriger. C’est cela, une chaîne.', el: 'ilm', v: 2, r: 'Dire de qui… Mettre des noms sur une carte. On ne m’a jamais appris cela.' },
@@ -623,7 +623,7 @@ ISNAD.registerSaga({
           ['say', 'gamin', 'Il est venu voir ma porte ?'],
           ['say', 'idris', 'Il y est. Il a écrit en marge de sa carte : « d’après l’enfant de la rue ».'],
           ['say', 'gamin', 'Moi, sur une carte !'],
-          ['say', 'idris', 'C’est ainsi qu’une chose vraie se garde : avec le nom de celui qui l’a vue. Chez ’Alî, j’ai appris à poser la question avant de juger.'],
+          ['say', 'idris', "C’est ainsi qu’une chose vraie se garde : avec le nom de celui qui l’a vue. Chez 'Alî, j’ai appris à poser la question avant de juger."],
           ['codex', 'r_cartographe'], ['codex', 'enfant']
         ] }
       ]
@@ -720,12 +720,12 @@ ISNAD.registerSaga({
               { say: 'Deux visiteurs en un mois. Donnez-moi une raison de ne pas écrire zéro.', opts: [
                 { t: 'Deux qui savent de qui ils tiennent ce qu’ils savent. Combien, là-haut, peuvent en dire autant ?', el: 'ilm', v: 2, r: 'Aucun, sans doute. Ce n’est pas une colonne de mon relevé.' },
                 { t: 'Vous n’avez rien à faire ici.', el: 'adl', v: -1, r: 'J’ai un ordre de mission. Vous, vous avez une lampe.' },
-                { t: 'Chez ’Uthmân, j’ai appris une règle qui tient en deux questions : de qui tiens-tu cela ? et lui, de qui le tenait-il ? Ici, chaque feuillet y répond.', el: 'ilm', v: 2, need: 'uthman/tabayyun', r: 'Deux questions… Mon relevé n’en pose qu’une : combien.' }
+                { t: "Chez 'Uthmân, j’ai appris une règle qui tient en deux questions : de qui tiens-tu cela ? et lui, de qui le tenait-il ? Ici, chaque feuillet y répond.", el: 'ilm', v: 2, need: 'uthman/tabayyun', r: 'Deux questions… Mon relevé n’en pose qu’une : combien.' }
               ] },
               { say: 'Admettons. Mais un lieu qui ne rapporte rien, pourquoi le garder ?', opts: [
                 { t: 'Parce que ce qu’on garde ici ne diminue pas quand on le partage.', el: 'rahma', v: 2, r: 'Tout diminue. C’est dans mes barèmes… Presque tout.' },
                 { t: 'Vous ne comprendriez pas.', el: 'ilm', v: -1, r: 'C’est ce qu’on me répond partout où l’on n’a rien à montrer.' },
-                { t: 'À Médine, l’eau douce d’un puits se vendait. ’Uthmân l’acheta de son bien et en fit don à tous. Ce lieu est un puits de cette sorte.', el: 'rahma', v: 2, need: 'uthman/ruma', r: 'Un puits qui ne rapporte rien à celui qui l’a payé… Il n’y a pas de case pour cela.' }
+                { t: "À Médine, l’eau douce d’un puits se vendait. 'Uthmân l’acheta de son bien et en fit don à tous. Ce lieu est un puits de cette sorte.", el: 'rahma', v: 2, need: 'uthman/ruma', r: 'Un puits qui ne rapporte rien à celui qui l’a payé… Il n’y a pas de case pour cela.' }
               ] },
               { say: 'Si j’écris « à conserver », on me demandera pourquoi. Qu’est-ce que je réponds ?', opts: [
                 { t: 'Que vous êtes descendu voir, et que vous dites ce que vous avez vu.', el: 'sidq', v: 2, r: 'Signer de mon nom ce que j’ai vu… On ne nous le demande plus.' },

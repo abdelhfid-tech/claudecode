@@ -29,7 +29,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   let page = await ouvrir();
   const PASSENT = ['Idris', 'Khalil', 'Elyas', '’Imrân', 'Hamza', 'Abd al-Karîm', '’Abd Allah', 'Zayd', 'Nûr ad-Dîn', 'Yacine', 'Jean-Luc', 'Sélim', 'إلياس', 'Ibrâhîm', 'Mûsâ'];
   const REFUSES = [['', 'faut un nom'], ['   ', 'faut un nom'], ['Abdelkader ben Ali', 'Seize'], ['Khalil2', 'lettres'], ['<b>x</b>', 'lettres'], ['Idris*', 'lettres'], ['K@lil', 'lettres'], ['-Khalil', 'lettres'],
-    ['Allah', 'Dieu'], ['allâh', 'Dieu'], ['Ar-Rahmân', 'Dieu'], ['Dieu', 'Dieu'], ['Iblîs', 'ne se porte pas'], ['Le Djinn', 'ne se porte pas'], ['Shaytân', 'ne se porte pas'],
+    ['Allah', 'qu’à Allah'], ['allâh', 'qu’à Allah'], ['Ar-Rahmân', 'qu’à Allah'], ['Dieu', 'qu’à Allah'], ['Iblîs', 'ne se porte pas'], ['Le Djinn', 'ne se porte pas'], ['Shaytân', 'ne se porte pas'],
     ['Muhammad', 'Prophète'], ['Mohamed', 'Prophète'], ['’Umar', 'personnage du jeu'], ['Umar', 'personnage du jeu'], ['Khâlid', 'personnage du jeu'], ['Abû Bakr', 'personnage du jeu'], ['ali', 'personnage du jeu'], ['’Uthmân', 'personnage du jeu'], ['Abd ar-Rahmân', 'personnage du jeu']];
   const noms = await page.evaluate(([P, R]) => { const X = window.ISNAD.perso; return { passent: P.map(n => [n, X.refus(n)]), refuses: R.map(([n, r]) => [n, r, X.refus(n)]), pris: Object.keys(X.prisParLeJeu()).length }; }, [PASSENT, REFUSES]);
   const mauvais = noms.passent.filter(x => x[1]).map(x => `« ${x[0]} » refusé (${x[1]})`).concat(noms.refuses.filter(x => !x[2]).map(x => `« ${x[0]} » accepté`), noms.refuses.filter(x => x[2] && !x[2].includes(x[1])).map(x => `« ${x[0]} » refusé sans la bonne raison (${x[2]})`));
@@ -83,7 +83,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     await p.locator('#perso input').fill('Allah'); await p.waitForTimeout(150);
     const e2 = await p.evaluate(() => ({ note: document.querySelector('#perso .note').textContent, bloque: document.querySelector('#perso .ok').disabled }));
     await p.screenshot({ path: path.join(out, nom + '-2-refus.png') });
-    if (!e2.bloque || !/Dieu/.test(e2.note)) ko(`ÉCART ${nom} : un nom refusé ne bloque pas « Commencer » (${JSON.stringify(e2)})`);
+    if (!e2.bloque || !/qu’à Allah/.test(e2.note)) ko(`ÉCART ${nom} : un nom refusé ne bloque pas « Commencer » (${JSON.stringify(e2)})`);
     await p.locator('#perso input').fill('Khalil'); await p.waitForTimeout(150);
     // chaque tenue se choisit et se voit
     const vues = []; for (let i = 0; i < 6; i++) { await p.waitForTimeout(650); await toucher(p.locator('#perso .tenue').nth(i)); await p.waitForTimeout(350);

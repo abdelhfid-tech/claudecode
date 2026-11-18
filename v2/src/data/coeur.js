@@ -51,8 +51,8 @@ ISNAD.registerSaga({
 
   /* ----- les sept lames : une vertu pratiquée, qui tranche le mal contraire ----- */
   lames: {
-    avidite:     { name: 'Le Contentement', ar: 'al-Qanâ’a',  couleur: '#7fd69a', texte: 'Forgée par le jeûne. Avoir faim et rester debout : il n’en faut pas plus pour savoir ce qui suffit.' },
-    orgueil:     { name: 'L’Humilité',      ar: 'at-Tawâdu’', couleur: '#e6dcc4', texte: 'Forgée par le pèlerinage, où le seigneur et le berger portent la même étoffe.' },
+    avidite:     { name: 'Le Contentement', ar: "al-Qanâ'a",  couleur: '#7fd69a', texte: 'Forgée par le jeûne. Avoir faim et rester debout : il n’en faut pas plus pour savoir ce qui suffit.' },
+    orgueil:     { name: 'L’Humilité',      ar: "at-Tawâdu'", couleur: '#e6dcc4', texte: 'Forgée par le pèlerinage, où le seigneur et le berger portent la même étoffe.' },
     ostentation: { name: 'La Sincérité',    ar: 'al-Ikhlâs',  couleur: '#ffe08a', texte: 'Forgée par la prière tenue quand nul ne regarde.' },
     avarice:     { name: 'La Largesse',     ar: 'al-Karam',   couleur: '#5fe0d0', texte: 'Forgée par l’aumône donnée sans témoin.' },
     insouciance: { name: 'L’Ardeur',        ar: 'al-Himma',   couleur: '#c49bff', texte: 'Forgée par l’étude reprise chaque jour.' },
@@ -88,12 +88,12 @@ ISNAD.registerSaga({
 
   /* ----- les compagnons de lumière : figures du ciel (fiction) ----- */
   animaux: {
-    renard:  { name: 'Le Renard des sables', ar: 'ath-Tha’lab', couleur: '#f2c27a', don: 'Flair', effet: 'Au début du combat, il flaire une faille de chaque chimère.',
+    renard:  { name: 'Le Renard des sables', ar: "ath-Tha'lab", couleur: '#f2c27a', don: 'Flair', effet: 'Au début du combat, il flaire une faille de chaque chimère.',
       vient: 'Il rejoint celui qui a résolu une énigme.', texte: 'Les chameliers disent qu’il naît d’une étoile tombée dans les dunes. Il ne suit personne ; il marche devant, et se retourne pour voir si l’on vient.' },
     aigle:   { name: 'L’Aigle', ar: 'an-Nasr', couleur: '#bfd6ff', don: 'Regard', effet: 'Le groupe agit plus tôt et gagne un point de Niyya.',
-      vient: 'Il rejoint celui qui a forgé une première lame.', texte: 'An-Nasr at-Tâ’ir, « l’Aigle qui vole » : l’étoile qui se lève plein est. Dans la noosphère, le nom a pris des ailes.' },
-    phenix:  { name: 'Le Phénix', ar: 'al-’Anqâ’', couleur: '#ff9a5c', don: 'Renaissance', effet: 'Une fois par combat, il relève le premier compagnon éprouvé.',
-      vient: 'Il rejoint celui qui a tranché un premier mal.', texte: 'Al-’Anqâ’, l’oiseau des vieux contes arabes : personne ne l’a vu, tout le monde en parle. Il n’apparaît qu’où quelque chose a fini de brûler.' },
+      vient: 'Il rejoint celui qui a forgé une première lame.', texte: "An-Nasr at-Tâ'ir, « l’Aigle qui vole » : l’étoile qui se lève plein est. Dans la noosphère, le nom a pris des ailes." },
+    phenix:  { name: 'Le Phénix', ar: "al-'Anqâ'", couleur: '#ff9a5c', don: 'Renaissance', effet: 'Une fois par combat, il relève le premier compagnon éprouvé.',
+      vient: 'Il rejoint celui qui a tranché un premier mal.', texte: "Al-'Anqâ', l’oiseau des vieux contes arabes : personne ne l’a vu, tout le monde en parle. Il n’apparaît qu’où quelque chose a fini de brûler." },
     lion:    { name: 'Le Lion', ar: 'al-Asad', couleur: '#ffd76a', don: 'Présence', effet: 'Pendant trois tours, les chimères frappent moins fort.',
       vient: 'Il rejoint celui qui a remporté trois grandes épreuves le cœur prêt.', texte: 'Al-Asad : les anciens Arabes voyaient au ciel un lion immense, étendu sur plusieurs de nos constellations. Il ne rugit pas. Il est là, et cela suffit.' },
     gazelle: { name: 'La Gazelle', ar: 'az-Zaby', couleur: '#9fe8d0', don: 'Apaisement', effet: 'Le groupe se régénère pendant trois tours et reçoit un peu de Sérénité.',
@@ -129,7 +129,7 @@ ISNAD.registerSaga({
       ],
       phases: [{ at: 0.5, say: 'Regardez-moi bien : c’est pour vous que je brille.', fx: [{ st: 'spd', v: 1 }] }],
       taunts: ['Si personne ne l’a vu, cela a-t-il eu lieu ?'],
-      desc: 'Ar-riyâ’ : faire le bien pour être vu le faisant. Elle ne déteste pas la vertu : elle la porte comme un vêtement. La prière tenue quand nul ne regarde forge la lame de la Sincérité.' },
+      desc: "Ar-riyâ' : faire le bien pour être vu le faisant. Elle ne déteste pas la vertu : elle la porte comme un vêtement. La prière tenue quand nul ne regarde forge la lame de la Sincérité." },
     avarice: { name: 'L’Avarice', vice: 'avarice', art: 'idol', hue: 46, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'rahma'], veils: 4,
       skills: [
         { w: 3, name: 'Retenir', target: 'foe', el: 'fer', pow: 1.2, fx: [{ st: 'spd', v: -1, chance: 0.4 }], anim: 'dark' },
@@ -256,7 +256,7 @@ ISNAD.registerSaga({
   attributs: {
     avidite:     { nom: 'ar-Razzâq', sens: 'le Grand Pourvoyeur', verset: '« En vérité, c’est Allah qui est le Grand Pourvoyeur, Le Détenteur de la force, l’Inébranlable. »', ref: 'Coran 51:58',
                    mot: 'Le contentement s’appuie sur ceci : la subsistance vient de Lui.' },
-    orgueil:     { nom: 'al-Kabîr, al-Muta’âl', sens: 'Le Grand, Le Sublime', verset: '« Le Connaisseur de ce qui est caché et de ce qui est apparent, Le Grand, Le Sublime. »', ref: 'Coran 13:9',
+    orgueil:     { nom: "al-Kabîr, al-Muta'âl", sens: 'Le Grand, Le Sublime', verset: '« Le Connaisseur de ce qui est caché et de ce qui est apparent, Le Grand, Le Sublime. »', ref: 'Coran 13:9',
                    mot: 'L’humilité s’appuie sur ceci : la grandeur est à Lui.' },
     ostentation: { nom: 'al-Khabîr', sens: 'le Parfaitement Connaisseur', verset: '« Ne connaît-Il pas ce qu’Il a créé alors que c’est Lui le Compatissant, le Parfaitement Connaisseur. »', ref: 'Coran 67:14',
                    mot: 'La sincérité s’appuie sur ceci : Il connaît ce que les regards ne voient pas.' },
@@ -344,7 +344,7 @@ ISNAD.registerSaga({
     { id: 'oeuvres', cat: 'Cœur', title: 'Les œuvres', text: 'La prière, le dhikr, l’étude du Coran, le jeûne, l’aumône, la visite, le pèlerinage. Dans ISNAD, elles ne sont pas des sortilèges et ne donnent aucun pouvoir : elles préparent le cœur, et le jeu le traduit par une *provision*. Plus une épreuve est lourde, plus elle en demande. Qui s’y présente sans provision s’y présente le cœur lourd.' },
     { id: 'zad', cat: 'Cœur', title: 'La provision', text: 'Az-zâd : ce que le voyageur emporte. « Et prenez vos provisions ; mais vraiment la meilleure provision est la piété. » Chaque œuvre accomplie ajoute à la provision du groupe ; chaque épreuve en consomme selon son poids.', src: 'Traduction du sens, Coran 2:197' },
     { id: 'dhikr', cat: 'Cœur', title: 'Le dhikr', text: 'Le rappel : redire, à voix basse ou dans le cœur, les mots par lesquels on se souvient de son Seigneur. « N’est-ce point par l’évocation d’Allah que se tranquillisent les cœurs ? »', src: 'Traduction du sens, Coran 13:28' },
-    { id: 'maux', cat: 'Cœur', title: 'Les sept maux du cœur', text: 'L’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. Les traités de morale en décrivent davantage et les rangent autrement ; al-Ghazâlî leur consacre un quart de son *Ihyâ’*, celui qu’il intitule *al-muhlikât*, « ce qui perd ». La liste de sept est un choix du jeu, et les sept chimères qui la portent sont une image : on ne les rencontre nulle part ailleurs que dans le cœur.', src: 'D’après al-Ghazâlî, Ihyâ’ ’ulûm ad-dîn (plan de l’ouvrage) ; la liste de sept est une fiction du jeu' },
+    { id: 'maux', cat: 'Cœur', title: 'Les sept maux du cœur', text: "L’avidité, l’orgueil, l’ostentation, l’avarice, l’insouciance, l’envie, la colère. Les traités de morale en décrivent davantage et les rangent autrement ; al-Ghazâlî leur consacre un quart de son *Ihyâ'*, celui qu’il intitule *al-muhlikât*, « ce qui perd ». La liste de sept est un choix du jeu, et les sept chimères qui la portent sont une image : on ne les rencontre nulle part ailleurs que dans le cœur.", src: "D’après al-Ghazâlî, Ihyâ' 'ulûm ad-dîn (plan de l’ouvrage) ; la liste de sept est une fiction du jeu" },
     { id: 'lames', cat: 'Cœur', title: 'Les sept lames', text: 'Dans la noosphère, une vertu longuement pratiquée prend le fil d’une lame. Le jeûne forge le Contentement, le pèlerinage l’Humilité, la prière la Sincérité, l’aumône la Largesse, l’étude l’Ardeur, la visite la Bienveillance, le dhikr la Longanimité. Sans sa lame, un mal du cœur peut être repoussé ; il revient. Avec elle, il est tranché. Ces lames sont une image du jeu : ce ne sont pas des reliques, et aucune n’a appartenu à personne.' },
     { id: 'idees_noires', cat: 'Cœur', title: 'Les idées noires', text: 'La honte, la peur, le soupçon, la rancune, le désespoir. Il arrive qu’un homme n’entende plus rien parce que l’une d’elles parle plus fort que toi. On ne la combat pas : on lui répond, par la parole, la pédagogie ou la bienveillance, selon ce qui la tient. Chacune a deux voiles, et chaque voile sa manière. Après quoi il écoute.' },
     { id: 'echelle', cat: 'Noosphère', title: 'À chaque mal sa réponse', text: 'À l’idée noire, qui pèse sur une personne : la parole, la pédagogie, la bienveillance. À la chimère, que beaucoup de cœurs nourrissent : le combat. À l’idole, enracinée : une bataille déclarée. Aux souffleurs : rien, on ne les combat pas ; et l’on ne s’en prend à aucun djinn qui ne nuit à personne. Le sabre ne vient qu’après, quand la parole a tout essayé.' },

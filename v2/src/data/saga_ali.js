@@ -553,7 +553,7 @@ ISNAD.registerSaga({
         { map: 'noos', at: 'faille', item: 'musc', n: 1 }
       ],
       intro: [
-        ['title', 'La Parole détournée', 'An 37 de l’Hégire · Harûrâ’'],
+        ['title', 'La Parole détournée', "An 37 de l’Hégire · Harûrâ'"],
         ['nar', "Siffîn, sur l'Euphrate. Deux armées de croyants se font face durant des semaines. Dans chaque rang on prie, et l'on pleure les morts de l'autre. La Chaîne ne s'y attarde pas : elle baisse les yeux."],
         ['nar', "'Ammâr ibn Yâsir y tombe, à plus de quatre-vingt-dix ans. Puis des feuillets du Livre sont levés au bout des lances, et l'on convient de s'en remettre à deux arbitres. Les armes se taisent. Autre chose commence."],
         ['codex', 'siffin'],
