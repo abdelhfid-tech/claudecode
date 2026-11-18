@@ -61,6 +61,14 @@ parole, un français fidèle au texte arabe relevé, à valider ensuite par vous
 - **Compagnon de lumière, l'Aigle** : « l'étoile qui se lève plein est » — Altaïr se lève un peu au nord de l'est.
   **Proposition** : « qui se lève à l'est ».
 
+## 6. Relevé en écrivant le japonais (veillées) : l'exigence 2, « aucun texte ne décrit de traits physiques »
+
+- L'intro des Purs : « des visages maigres » — le cas le plus net. **Proposition** : « des hommes amaigris par le jeûne »
+  ou « des hommes durs », selon ce que la scène veut dire.
+- Meksa : « Par ma barbe » ; et deux tournures plus légères, « sans un pli sur le visage », « Tu as mauvaise mine ».
+  **Proposition** : « Sur mon honneur », « sans broncher », « Tu sembles las ».
+- Le slogan des Purs écrit « Dieu » (« La citadelle n'appartient qu'à Dieu ») quand tout le jeu écrit « Allah ».
+
 ## Si vous retenez un changement
 
 Le français change d'abord, puis les listes des langues se remettent à jour (`node v2/tools/langues.js releve`) : les

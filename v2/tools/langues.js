@@ -111,7 +111,7 @@ function controler(l, F, REG) {
       const p = REG.paroles.get(fr); if (p && p[l]) { if (t !== p[l].texte) erreurs.push(`${w} : la parole n'est pas celle du registre (v2/docs/sources/)`); }
       const s = REG.sources.get(fr); if (s && s.every(e => e[l]) && !s.some(e => t === e[l].reference)) erreurs.push(`${w} : la source n'est pas celle du registre`);
       // un verset : le texte relevé dans le registre doit s'y trouver tel quel
-      REG.versets.filter(e => e.fr && fr.indexOf(e.fr) >= 0 && e[l] && e[l].texte).forEach(e => { if (t.indexOf(e[l].texte) < 0) erreurs.push(`${w} : le verset ${e.sourate}:${e.versets} n'est pas cité tel que le registre le relève`); });
+      REG.versets.filter(e => e.fr && path.basename(String(e.fichier || ''), '.js') === f && fr.indexOf(e.fr) >= 0 && e[l] && e[l].texte).forEach(e => { if (t.indexOf(e[l].texte) < 0) erreurs.push(`${w} : le verset ${e.sourate}:${e.versets} n'est pas cité tel que le registre le relève`); });
     }); });
   // un même texte français n'a qu'une clé : il ne peut être écrit que d'une façon, dans tous les fichiers où il revient
   const vu = new Map(); Object.keys(F).forEach(f => (lire(l, f).textes || []).forEach(x => { if (!x.t || !F[f].has(x.fr)) return; const a = vu.get(x.fr);
