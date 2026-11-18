@@ -11,9 +11,9 @@ ISNAD.registerSaga({
   tagline: "Deux empires tombèrent sous son califat. Lui dormait sur une natte.",
 
   intro: [
-    ['title', "'Umar ibn al-Khattâb", 'Saga II · Al-Fârûq'],
+    ['title', "'Umar ibn al-Khattâb", 'Deuxième maillon · Al-Fârûq'],
     ['nar', "An 13 de l'Hégire. Abû Bakr s'éteint, et son dernier dépôt tient en un nom : 'Umar. Médine retient son souffle. On connaît sa rigueur ; on ignore encore jusqu'où elle ira contre lui-même."],
-    ['nar', "En dix ans, Shâm, l'Irak, la Perse et l'Égypte s'ouvrent. Jamais tant d'or, de trônes et d'aigles n'ont regardé un seul homme. Et cet homme porte un manteau rapiécé."],
+    ['nar', "En dix ans, le Shâm, l'Irak, la Perse et l'Égypte s'ouvrent. Jamais tant d'or, de trônes et d'aigles n'ont regardé un seul homme. Et cet homme porte un manteau rapiécé."],
     ['nar', "Un empire qui s'ouvre n'est d'abord qu'un grenier trop plein. Il faut qu'un homme refuse d'y dormir pour que les autres y trouvent du pain, et non un maître."],
     ['nar', "Dans la noosphère, l'Empire ne meurt pas avec ses armées. Il cherche un nouveau front où poser sa couronne, un nouveau cœur où s'asseoir."],
     ['quote', "« Si une brebis périssait, égarée, au bord de l'Euphrate, je craindrais qu'Allah ne m'en demande compte au Jour de la Résurrection. »", "Abû Nu'aym, Hilyat al-Awliyâ' ; Ibn Sa'd, Tabaqât (variantes)"],
@@ -91,7 +91,7 @@ ISNAD.registerSaga({
           target: 'foe', el: 'sidq', pow: 1.1, fx: [{ st: 'dispel' }], anim: 'glyph' },
         { lvl: 2, id: 'rangs', name: 'Rangs serrés', desc: "Resserre les rangs : défense du groupe accrue.", cost: 5,
           target: 'allies', fx: [{ st: 'def', v: 1 }], anim: 'guard' },
-        { lvl: 4, id: 'marche', name: 'Marche de Shâm', desc: "Presse le pas : élan du groupe accru, +1 Niyya.", cost: 6,
+        { lvl: 4, id: 'marche', name: 'Marche du Shâm', desc: "Presse le pas : élan du groupe accru, +1 Niyya.", cost: 6,
           target: 'allies', fx: [{ st: 'spd', v: 1 }, { st: 'niyya', v: 1 }], anim: 'wave' },
         { lvl: 6, id: 'depouillement', name: 'Dépouillement', desc: "Qui ne possède rien ne craint rien : Patience sur tous, attaque réduite.", cost: 7,
           target: 'foes', el: 'sabr', pow: 0.9, fx: [{ st: 'atk', v: -1, chance: 0.5 }], anim: 'wave' },
@@ -243,28 +243,28 @@ ISNAD.registerSaga({
   /* ───────────────────────────── CODEX ───────────────────────────── */
   codex: [
     { id: 'bio_umar', cat: 'Biographie', title: "'Umar ibn al-Khattâb",
-      text: "'Umar ibn al-Khattâb (qu'Allah l'agrée), des Banû 'Adî de Quraysh, embrasse l'islam à La Mecque et devient l'un des plus proches Compagnons du Prophète ﷺ. On rapporte qu'il reçut le surnom d'al-Fârûq : celui qui distingue le vrai du faux. Deuxième calife (13–23 H), premier à porter le titre de Commandeur des croyants, il institue le calendrier de l'Hégire, le dîwân et les rondes de nuit. Sous son califat s'ouvrent Shâm, l'Irak, la Perse et l'Égypte. Il meurt en martyr à Médine.",
+      text: "'Umar ibn al-Khattâb (qu'Allah l'agrée), des Banû 'Adî de Quraysh, embrasse l'islam à La Mecque et devient l'un des plus proches Compagnons du Prophète ﷺ. On rapporte qu'il reçut le surnom d'al-Fârûq : celui qui distingue le vrai du faux. Deuxième calife (13–23 H), premier à porter le titre de Commandeur des croyants, il institue le calendrier de l'Hégire, le dîwân et les rondes de nuit. Sous son califat s'ouvrent le Shâm, l'Irak, la Perse et l'Égypte. Il meurt en martyr à Médine.",
       src: "Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh ; adh-Dhahabî, Siyar" },
     { id: 'bio_aslam', cat: 'Biographie', title: "Aslam, l'affranchi de 'Umar",
       text: "Aslam (qu'Allah lui fasse miséricorde) entra au service de 'Umar en l'an 11 H et resta son affranchi (mawlâ). Il l'accompagna dans ses rondes nocturnes et transmit de lui de nombreux récits, dont celui de la famille affamée de la harra. Son fils Zayd ibn Aslam devint l'un des savants de Médine. Il mourut à Médine, très âgé, vers 80 H.",
       src: "Ibn Sa'd, Tabaqât ; adh-Dhahabî, Siyar" },
     { id: 'bio_abuubayda', cat: 'Biographie', title: "Abû 'Ubayda ibn al-Jarrâh",
-      text: "Abû 'Ubayda 'Âmir ibn al-Jarrâh (qu'Allah l'agrée) compte parmi les dix à qui le Paradis fut annoncé. Le Prophète ﷺ a dit : « Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda. » Commandant en chef en Shâm sous 'Umar, il y vécut sans faste. En 18 H, lors de la peste d'Emmaüs ('Amwâs), il refusa de quitter son armée et mourut parmi les siens.",
+      text: "Abû 'Ubayda 'Âmir ibn al-Jarrâh (qu'Allah l'agrée) compte parmi les dix à qui le Paradis fut annoncé. Le Prophète ﷺ a dit : « Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda. » Commandant en chef au Shâm sous 'Umar, il y vécut sans faste. En 18 H, lors de la peste d'Emmaüs ('Amwâs), il refusa de quitter son armée et mourut parmi les siens.",
       src: "al-Bukhârî, Sahîh (3744) ; Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh" },
     { id: 'bio_abdarrahman', cat: 'Biographie', title: "'Abd ar-Rahmân ibn 'Awf",
       text: "'Abd ar-Rahmân ibn 'Awf (qu'Allah l'agrée), l'un des dix à qui le Paradis fut annoncé, compte parmi les tout premiers musulmans. Arrivé à Médine sans rien, il déclina l'aide offerte et demanda seulement : « Indique-moi le marché. » Devenu l'un des plus riches marchands, il resta l'un des plus généreux. C'est lui que 'Umar blessé avança pour achever la prière ; membre du conseil des six, il se désista pour départager les autres.",
       src: "al-Bukhârî, Sahîh (2048, 3700) ; Ibn Sa'd, Tabaqât" },
     { id: 'ramada', cat: 'Événement', title: "L'Année des cendres",
-      text: "En 18 H, la sécheresse frappe le Hijâz près de neuf mois ; la terre prend la couleur de la cendre (ramâd). Les bédouins affluent vers Médine. 'Umar jure de ne goûter ni beurre ni viande tant que les gens n'en auront pas, dresse des tables communes et écrit aux provinces : des caravanes de vivres arrivent de Shâm, d'Irak et d'Égypte. Il sort prier pour la pluie avec les gens. Aslam rapporte la nuit où il porta lui-même la farine à une famille affamée : « Porteras-tu mon fardeau au Jour de la Résurrection ? »",
+      text: "En 18 H, la sécheresse frappe le Hijâz près de neuf mois ; la terre prend la couleur de la cendre (ramâd). Les bédouins affluent vers Médine. 'Umar jure de ne goûter ni beurre ni viande tant que les gens n'en auront pas, dresse des tables communes et écrit aux provinces : des caravanes de vivres arrivent du Shâm, d'Irak et d'Égypte. Il sort prier pour la pluie avec les gens. Aslam rapporte la nuit où il porta lui-même la farine à une famille affamée : « Porteras-tu mon fardeau au Jour de la Résurrection ? »",
       src: "Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya" },
     { id: 'jerusalem', cat: 'Événement', title: "La reddition d'Îliyâ' (Jérusalem)",
       text: "Assiégée par l'armée d'Abû 'Ubayda, Îliyâ' se rend à condition que le calife vienne en personne (entre 15 et 17 H selon les sources). 'Umar accorde aux habitants un écrit de sécurité pour leurs personnes, leurs biens, leurs églises et leurs croix ; Khâlid ibn al-Walîd, 'Amr ibn al-'Âs, 'Abd ar-Rahmân ibn 'Awf et Mu'âwiya en sont témoins. Une source chrétienne plus tardive, Eutychius, rapporte qu'il déclina de prier dans l'église de la Résurrection pour qu'elle ne fût pas revendiquée après lui. Il fit dégager l'esplanade de ses décombres et y pria.",
       src: "at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya ; Eutychius, Annales" },
     { id: 'honneur', cat: 'Parole', title: "« Allah nous a honorés par l'islam »",
-      text: "Parvenu à un gué de Shâm, 'Umar descend de sa monture, ôte ses chaussures et traverse à pied, la bride à la main. Abû 'Ubayda redoute le regard des notables du pays. 'Umar répond : « Nous étions le peuple le plus humble, et Allah nous a honorés par l'islam. Si nous cherchons l'honneur ailleurs que dans ce par quoi Allah nous a honorés, Allah nous humiliera. » La dignité, pour lui, ne se revêt pas : elle se reçoit.",
+      text: "Parvenu à un gué du Shâm, 'Umar descend de sa monture, ôte ses chaussures et traverse à pied, la bride à la main. Abû 'Ubayda redoute le regard des notables du pays. 'Umar répond : « Nous étions le peuple le plus humble, et Allah nous a honorés par l'islam. Si nous cherchons l'honneur ailleurs que dans ce par quoi Allah nous a honorés, Allah nous humiliera. » La dignité, pour lui, ne se revêt pas : elle se reçoit.",
       src: "al-Hâkim, al-Mustadrak (jugé authentique par adh-Dhahabî)" },
-    { id: 'bilal', cat: 'Événement', title: "L'appel de Bilâl en Shâm",
-      text: "Bilâl ibn Rabâh (qu'Allah l'agrée) fut le premier muezzin de l'islam. Après la mort du Prophète ﷺ, il cessa de lancer l'appel et partit pour Shâm. On rapporte que, lors de la venue de 'Umar, on le pria d'appeler à la prière une fois encore : à sa voix, ceux qui avaient connu le temps du Prophète ﷺ pleurèrent comme jamais, et 'Umar plus que tous. Il mourut en Shâm vers 20 H.",
+    { id: 'bilal', cat: 'Événement', title: "L'appel de Bilâl au Shâm",
+      text: "Bilâl ibn Rabâh (qu'Allah l'agrée) fut le premier muezzin de l'islam. Après la mort du Prophète ﷺ, il cessa de lancer l'appel et partit pour le Shâm. On rapporte que, lors de la venue de 'Umar, on le pria d'appeler à la prière une fois encore : à sa voix, ceux qui avaient connu le temps du Prophète ﷺ pleurèrent comme jamais, et 'Umar plus que tous. Il mourut au Shâm vers 20 H.",
       src: "Ibn Kathîr, al-Bidâya ; adh-Dhahabî, Siyar ; Ibn Sa'd, Tabaqât" },
     { id: 'hurmuzan', cat: 'Parole', title: "« Tu as été juste, alors tu as dormi »",
       text: "Al-Hurmuzân, prince perse d'al-Ahwâz capturé à Tustar, fut conduit à Médine par Anas ibn Mâlik et al-Ahnaf ibn Qays. Il trouva 'Umar endormi dans la mosquée, sans garde ni chambellan. La tradition a conservé, avec des attributions diverses (un envoyé de César, de Kisrâ, ou al-Hurmuzân lui-même), la formule : « Tu as gouverné avec justice, alors tu as été en sécurité, alors tu as dormi. » Ayant obtenu la vie sauve par une ruse que 'Umar honora, il embrassa l'islam et s'établit à Médine.",
@@ -294,7 +294,7 @@ ISNAD.registerSaga({
       text: "Le texte du pacte transmis par at-Tabarî contient une clause demandée par les gens de la ville : qu'aucun juif n'y habite avec eux, comme sous Byzance. D'autres traditions, plus tardives — un récit judéo-arabe retrouvé dans la Geniza du Caire, des chroniqueurs — rapportent que 'Umar autorisa ensuite soixante-dix familles venues de Tibériade à s'établir au sud de l'esplanade. Les historiens discutent encore ces récits. Le jeu en fait un pourparler : l'ancien de Tibériade est un personnage de fiction, et seule la manière varie, non l'issue rapportée.",
       src: "at-Tabarî, Târîkh (texte du pacte) ; fragment de la Geniza du Caire ; traditions tardives, attributions discutées" },
     { id: 'ghassan', cat: 'Lieu', title: 'Les Ghassânides, gardiens de la marche',
-      text: "Arabes chrétiens établis aux confins de Shâm, les Banû Ghassân gardaient la frontière du désert pour Rome, contre une solde. Le chroniqueur Théophane rapporte que, vers 630, un trésorier d'Héraclius refusa leur solde à des Arabes fédérés de la frontière en les insultant ; plusieurs tribus s'en souvinrent. Jabala ibn al-Ayham fut leur dernier roi : il combattit au Yarmoûk dans le camp romain.",
+      text: "Arabes chrétiens établis aux confins du Shâm, les Banû Ghassân gardaient la frontière du désert pour Rome, contre une solde. Le chroniqueur Théophane rapporte que, vers 630, un trésorier d'Héraclius refusa leur solde à des Arabes fédérés de la frontière en les insultant ; plusieurs tribus s'en souvinrent. Jabala ibn al-Ayham fut leur dernier roi : il combattit au Yarmoûk dans le camp romain.",
       src: "Théophane, Chronographie ; al-Balâdhurî, Futûh al-Buldân" },
     { id: 'jabala', cat: 'Événement', title: "L'affaire de Jabala ibn al-Ayham",
       text: "On rapporte que Jabala, roi ghassânide, embrassa l'islam et vint en grand équipage. Pendant le pèlerinage, un homme des Fazâra marcha sur le pan de son manteau ; Jabala le frappa au visage. 'Umar lui donna le choix : obtenir le pardon de l'homme, ou subir la pareille. « Je suis un roi et lui un homme du commun. — L'islam vous a réunis, toi et lui. » Jabala demanda la nuit et gagna Constantinople avec les siens. Le récit est célèbre, mais sa chaîne est discutée et ses versions divergent (d'autres le placent à Damas, devant Abû 'Ubayda). Le jeu le met en scène à Médine ; Thawr ibn Mâlik est un personnage de fiction.",
@@ -307,13 +307,13 @@ ISNAD.registerSaga({
       src: "at-Tabarî, Târîkh ; al-Hâkim, al-Mustadrak ; Ibn Hajar, Fath al-Bârî" },
     { id: 'ego_accapareur', cat: 'Noosphère', title: "L'Accapareur",
       text: "Chimère de la pénurie organisée. Elle naît lorsque beaucoup ferment ensemble leurs greniers en regardant monter les prix : chaque porte close l'élève d'un étage. Elle se nourrit de la peur de manquer, et la fabrique à son tour. La force seule l'entame peu ; elle cède devant la Miséricorde, qui donne, et la Justice, qui répartit.",
-      src: 'Lecture noosphérique du jeu' },
+      src: 'Image du jeu' },
     { id: 'ego_aigle', cat: 'Noosphère', title: "L'Aigle d'Airain",
       text: "Chimère de l'orgueil d'empire. Les légions meurent, les aigles restent : l'enseigne passe du vaincu au vainqueur et murmure à chaque conquérant d'entrer en César. Elle se nourrit des foules qui attendent un maître à admirer. À Jérusalem, 'Umar lui opposa un manteau rapiécé et un pacte. Elle cède devant la Patience des humbles et la Justice.",
-      src: 'Lecture noosphérique du jeu' },
+      src: 'Image du jeu' },
     { id: 'ego_trone', cat: 'Noosphère', title: 'Le Trône vide',
       text: "Chimère de la tyrannie. Ce n'est pas un roi, mais la place du roi : un vide qui exige d'être occupé et survit à tous ceux qui s'y asseyent. L'or est son appât ; la peur de perdre, sa chaîne. On ne la brise pas en s'y asseyant « pour bien faire ». Elle cède devant la Justice, qui ne s'exempte pas elle-même, et devant la Miséricorde.",
-      src: 'Lecture noosphérique du jeu' }
+      src: 'Image du jeu' }
   ],
 
   /* ──────────────────────────── CHAPITRES ──────────────────────────── */
@@ -333,7 +333,7 @@ ISNAD.registerSaga({
         { id: 'ancien', name: 'Ancien de Médine', at: ['mosquee_porte', 1, 0], look: { kind: 'ancien', robe: '#8c8272', head: '#eee6d6' },
           talk: [['ask', "L'ancien se chauffe les mains au-dessus d'une braise.", [
             { t: "Depuis quand dure la sécheresse ?", r: [['say', 'ancien', "Neuf lunes bientôt. La terre a pris la couleur de la cendre : on appelle déjà cette année l'Année des cendres."]] },
-            { t: "Que fait le calife ?", r: [['say', 'ancien', "Il mange ce que mangent les pauvres : de l'huile et du pain d'orge. Il a écrit à l'Égypte, à Shâm et à l'Irak. Les caravanes viendront."]] },
+            { t: "Que fait le calife ?", r: [['say', 'ancien', "Il mange ce que mangent les pauvres : de l'huile et du pain d'orge. Il a écrit à l'Égypte, au Shâm et à l'Irak. Les caravanes viendront."]] },
             { t: "Et les marchands de grain ?", r: [
               ['say', 'ancien', "Les uns ont vidé leurs greniers dès le premier mois. D'autres attendent la hausse. 'Umar l'a dit au souk : pas d'accaparement sur notre marché. Mais il préfère une porte qu'on ouvre à une porte qu'on enfonce."],
               ['codex', 'accaparement'] ] },
@@ -511,7 +511,7 @@ ISNAD.registerSaga({
       outro: [
         ['map', 'medine', 'place', { time: 'dawn' }],
         ['nar', "'Umar écrit aux gouverneurs : « Au secours ! Au secours ! » D'Égypte, 'Amr répond : « Je t'envoie une caravane dont la tête sera chez toi quand la queue sera encore chez moi. »"],
-        ['nar', "De Shâm, Abû 'Ubayda arrive le premier, avec quatre mille montures chargées de vivres. Mais le ciel reste fermé. Alors 'Umar sort avec les gens, sans apparat, et fait avancer al-'Abbâs, l'oncle du Prophète ﷺ."],
+        ['nar', "Du Shâm, Abû 'Ubayda arrive le premier, avec quatre mille montures chargées de vivres. Mais le ciel reste fermé. Alors 'Umar sort avec les gens, sans apparat, et fait avancer al-'Abbâs, l'oncle du Prophète ﷺ."],
         ['quote', "« Ô Allah, nous Te sollicitions par notre Prophète et Tu nous donnais la pluie ; nous Te sollicitons par l'oncle de notre Prophète : donne-nous la pluie. »", "Invocation de 'Umar — al-Bukhârî, Sahîh (1010), traduction du sens"],
         ['pray'],
         ['codex', 'istisqa'],
@@ -532,12 +532,12 @@ ISNAD.registerSaga({
       party: ['umar', 'aslam'],
       npcs: [
         { id: 'chamelier', name: 'Chamelier', at: ['oasis', 1, -1], look: { kind: 'bedouin', robe: '#7a6648', head: '#d9ccb2' },
-          talk: [['say', 'chamelier', "On dit que le calife des Arabes monte vers Shâm. Je guette son cortège depuis l'aube : je n'ai vu passer que deux hommes et une monture."]] },
+          talk: [['say', 'chamelier', "On dit que le calife des Arabes monte vers le Shâm. Je guette son cortège depuis l'aube : je n'ai vu passer que deux hommes et une monture."]] },
         { id: 'abu_pnj', name: "Abû 'Ubayda", hero: 'abuubayda', at: 'arrivee',
           talk: [['say', 'abuubayda', "Le patriarche t'attend, Commandeur des croyants."]] },
         { id: 'garde', name: 'Garde de la porte', map: 'romaine', at: ['porte', 1, 0], look: { kind: 'romain', robe: '#7a2e2e', head: '#b9a070' },
           talk: [['say', 'garde', "Nous attendions des trompettes et des étendards. Lequel est le roi ? Celui qui marche à pied ?"]] },
-        { id: 'soldat', name: 'Soldat de Shâm', map: 'romaine', at: ['forum', -1, 1], look: { kind: 'soldat', robe: '#6a5a40', head: '#e2d8c2' },
+        { id: 'soldat', name: 'Soldat du Shâm', map: 'romaine', at: ['forum', -1, 1], look: { kind: 'soldat', robe: '#6a5a40', head: '#e2d8c2' },
           talk: [['say', 'soldat', "Khâlid ibn al-Walîd, 'Amr ibn al-'Âs, Mu'âwiya : tous sont venus servir de témoins au pacte. Pas une épée n'a été tirée dans la ville."]] },
         { id: 'marchand', name: "Marchand d'Îliyâ'", map: 'romaine', at: ['marche', 0, 1], look: { kind: 'homme', robe: '#4f5f7a', head: '#d8d0c0' },
           talk: [['say', 'marchand', "Ils promettent de laisser nos églises ouvertes et nos biens entre nos mains. Si c'est vrai, ce sera la première armée à tenir pareille promesse ici."]] },
@@ -573,7 +573,7 @@ ISNAD.registerSaga({
       intro: [
         ['title', 'Les Clés de Jérusalem', "An 16 de l'Hégire"],
         ['nar', "La Chaîne remonte de deux années. Îliyâ' — Jérusalem — est assiégée par l'armée d'Abû 'Ubayda. Le patriarche Sophrone consent à ouvrir les portes, à une condition : ne remettre la ville qu'au calife en personne."],
-        ['nar', "'Umar confie Médine à 'Alî et prend la route de Shâm. Ni escorte de parade, ni litière : un compagnon de route, une monture, un sac de dattes et d'orge."]
+        ['nar', "'Umar confie Médine à 'Alî et prend la route du Shâm. Ni escorte de parade, ni litière : un compagnon de route, une monture, un sac de dattes et d'orge."]
       ],
       objectives: [
         { text: "Marcher jusqu'à l'oasis", goto: 'oasis', then: [
@@ -713,7 +713,7 @@ ISNAD.registerSaga({
       ],
       outro: [
         ['nar', "Jérusalem a changé de mains sans effusion de sang. Ni triomphe, ni cortège : un pacte, une prière, une esplanade balayée."],
-        ['nar', "Deux ans plus tard, la peste d'Emmaüs ravagera Shâm. 'Umar voudra rappeler Abû 'Ubayda à Médine ; celui-ci refusera de quitter son armée, et mourra parmi les siens."],
+        ['nar', "Deux ans plus tard, la peste d'Emmaüs ravagera le Shâm. 'Umar voudra rappeler Abû 'Ubayda à Médine ; celui-ci refusera de quitter son armée, et mourra parmi les siens."],
         ['heal']
       ]
     },
@@ -747,17 +747,17 @@ ISNAD.registerSaga({
               ['say', 'savant', "On proposa la naissance du Prophète ﷺ, puis sa mort. On retint l'Hégire. Un peuple qui date ses jours d'un départ n'oublie pas qu'il est en chemin."],
               ['flag', 'su_hijri'], ['codex', 'hijri'], ['pillar', 'savoir', 1]
             ]]] },
-        { id: 'veteran', name: 'Vétéran de Shâm', at: ['mosquee_porte', 3, 0], look: { kind: 'soldat', robe: '#6a5a40', head: '#e2d8c2' },
+        { id: 'veteran', name: 'Vétéran du Shâm', at: ['mosquee_porte', 3, 0], look: { kind: 'soldat', robe: '#6a5a40', head: '#e2d8c2' },
           talk: [
             ['say', 'veteran', "Les Banû Ghassân ? Je les ai eus en face au Yarmoûk. Ils gardaient la marche du désert pour César, contre une solde. On raconte qu'un jour son trésorier l'a refusée aux Arabes de la frontière, avec une injure. Ces choses-là ne s'oublient pas."],
             ['codex', 'ghassan']
           ] },
         { id: 'jabala', name: 'Jabala ibn al-Ayham', at: ['mosquee_porte', -1, 0], look: { kind: 'homme', robe: '#5a2f6a', head: '#d4af37', cloak: '#7a1f2a' },
-          talk: [['say', 'jabala', "J'ai régné sur les Arabes de Shâm. Je suis venu à vous de moi-même, et nul ne m'y a contraint."]] },
+          talk: [['say', 'jabala', "J'ai régné sur les Arabes du Shâm. Je suis venu à vous de moi-même, et nul ne m'y a contraint."]] },
         { id: 'fazari', name: 'Homme des Fazâra', at: ['mosquee_porte', 1, 0], look: { kind: 'bedouin', robe: '#7a6a52', head: '#cfc3ab', trim: '#5f8a4a' },
           talk: [['say', 'fazari', "Je ne demande que mon droit."]] },
         { id: 'thawr', name: 'Thawr ibn Mâlik', at: ['mosquee_porte', -2, 1], look: { kind: 'soldat', robe: '#3f4f6a', head: '#cfc6b2', cloak: '#2a2f44' },
-          talk: [['say', 'thawr', "Mes cavaliers gardent la marche de Shâm, comme ceux de mon père. Je suis mon roi. Mais j'écoute."]] },
+          talk: [['say', 'thawr', "Mes cavaliers gardent la marche du Shâm, comme ceux de mon père. Je suis mon roi. Mais j'écoute."]] },
         { id: 'plaignant', name: "Voyageur d'Égypte", at: ['puits', 1, 0], look: { kind: 'homme', robe: '#4a6a5a', head: '#d8cdb8' },
           talk: [['say', 'plaignant', "Le fils du gouverneur d'Égypte m'avait frappé. Je suis venu me plaindre ici : 'Umar m'a tendu le fouet, devant le père. Il lui a dit : depuis quand asservissez-vous des gens nés libres ?"]] }
       ],
@@ -774,7 +774,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Le Trône et la Natte', 'Les années perses'],
-        ['nar', "Al-Qâdisiyya. Al-Madâ'in. Nihâwand. En quelques années, l'empire des Chosroès s'effondre, et ses dépouilles prennent la route d'une ville de terre et de palmes."],
+        ['nar', "Al-Qâdisiyya. Al-Madâ'in. Nihâwand. En quelques années, l'empire de Kisrâ s'effondre, et ses dépouilles prennent la route d'une ville de terre et de palmes."],
         ['nar', "On amène à Médine al-Hurmuzân, prince perse capturé à Tustar, en habits de brocart, couronne en tête. Il cherche le palais du roi des Arabes. On le conduit à la mosquée."],
         ['nar', "Un homme y dort, à même le sol, son manteau roulé sous la tête, sa férule à la main."],
         ['say', 'hurmuzan', "Où sont ses gardes ? Où sont ses chambellans ?"],
@@ -808,7 +808,7 @@ ISNAD.registerSaga({
             ] }
           ]],
           ['say', 'aslam', "Commandeur des croyants, un homme des Fazâra attend devant la mosquée, le visage en sang. Il se plaint d'un roi."],
-          ['say', 'abdarrahman', "Jabala, le prince des Ghassân. Un vétéran de Shâm, près de la porte, connaît ces gens mieux que nous : écoute-le si tu veux savoir ce qui les tient."]
+          ['say', 'abdarrahman', "Jabala, le prince des Ghassân. Un vétéran du Shâm, près de la porte, connaît ces gens mieux que nous : écoute-le si tu veux savoir ce qui les tient."]
         ] },
         { text: 'Entendre la plainte portée devant la mosquée', talk: 'fazari', then: [
           ['nar', "On rapporte que la chose advint pendant le pèlerinage : dans la presse, un homme des Fazâra marcha sur le pan du manteau de Jabala, et le roi le frappa au visage."],
@@ -833,7 +833,7 @@ ISNAD.registerSaga({
           ['say', 'umar', "Laisse cela. Contente cet homme."],
           ['say', 'jabala', "Donne-moi jusqu'à demain."],
           ['nar', "'Umar accorde la nuit. Le prince croyait perdre un rang ; il ne perdait que le droit de frapper. Mais c'est de ce droit-là qu'il avait fait sa demeure."],
-          ['nar', "Dans l'ombre du roi, un chef de clan n'a pas quitté 'Umar des yeux : Thawr ibn Mâlik, dont les cavaliers gardent la marche de Shâm. S'il part avec son roi, une frontière part avec lui."],
+          ['nar', "Dans l'ombre du roi, un chef de clan n'a pas quitté 'Umar des yeux : Thawr ibn Mâlik, dont les cavaliers gardent la marche du Shâm. S'il part avec son roi, une frontière part avec lui."],
           ['mus', 'conseil'],
           ['parley', {
             with: 'thawr',
@@ -845,7 +845,7 @@ ISNAD.registerSaga({
                 opts: [
                   { t: "Demain, si un prince frappe l'un de tes cavaliers, c'est ce même droit qui le relèvera. Tu viens de voir ce qu'il vaut.", el: 'adl', v: 2, r: "Mes cavaliers… Chez César, leur nez ne valait pas un procès." },
                   { t: "Ton roi n'est pas abaissé. Il est égal ; c'est autre chose, et c'est plus dur.", el: 'sidq', v: 1, r: "Plus dur, je te l'accorde." },
-                  { t: "Pars si tu le veux. Shâm se gardera sans toi.", el: 'shajaa', v: -1, r: "Alors tu n'as rien à me dire, et moi rien à entendre." }
+                  { t: "Pars si tu le veux. Le Shâm se gardera sans toi.", el: 'shajaa', v: -1, r: "Alors tu n'as rien à me dire, et moi rien à entendre." }
                 ] },
               { say: "J'ai prêté serment à Jabala, et mon père au sien. Un homme qui rompt son serment, que vaut ensuite sa parole pour toi ?",
                 opts: [
@@ -873,7 +873,7 @@ ISNAD.registerSaga({
             ],
             lose: [
               ['say', 'thawr', "Tu es juste, 'Umar. Mais on ne quitte pas son roi la nuit où il tombe. Adieu."],
-              ['nar', "Les cavaliers de Thawr sellent avant l'aube. Une marche de Shâm restera sans garde ; il faudra y envoyer des hommes que l'on n'a pas."],
+              ['nar', "Les cavaliers de Thawr sellent avant l'aube. Une marche du Shâm restera sans garde ; il faudra y envoyer des hommes que l'on n'a pas."],
               ['pillar', 'lien', -1]
             ]
           }],
@@ -962,7 +962,7 @@ ISNAD.registerSaga({
         ['mus', 'silence'],
         ['nar', "Médine, avant l'aube. La natte est à sa place. 'Umar aussi."],
         ['quote', "« Ô Allah, accorde-moi le martyre dans Ton sentier, et fais que ma mort ait lieu dans la ville de Ton Messager. »", "Invocation de 'Umar — al-Bukhârî, Sahîh (1890)"],
-        ['title', "L'aube de Dhû l-Hijja", 'An 23 H · 644 · Médine'],
+        ['title', "L'aube de Dhû l-Hijja", "An 23 de l'Hégire · 644 · Médine"],
         ['nar', "Il aligne les rangs pour la prière de l'aube, comme chaque jour. Un esclave perse, Abû Lu'lu'a, s'est glissé derrière lui. La prière commence. La lame frappe."],
         ['flash', '#ffffff'],
         ['nar', "Blessé, 'Umar saisit la main de 'Abd ar-Rahmân ibn 'Awf et l'avance à sa place : la prière des gens ne doit pas se rompre."],

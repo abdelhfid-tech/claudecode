@@ -56,7 +56,7 @@ ISNAD.registerSaga({
     chuchot: { name: 'Chuchotement', art: 'wisp', hue: 265, scale: 1, lvl: 3, tier: 'minion', weak: ['sidq', 'sabr'], veils: 2,
       skills: [{ w: 2, name: '« On dit que… »', target: 'foe', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'dark' }],
       taunts: ['Il dort seulement.', 'Qui te l’a dit ? Personne. Tout le monde.'],
-      desc: "Ce qui se dit à mi-voix dans une maison où l'on cache une mort. Il n'a pas de corps : il emprunte celui de qui le répète. Une parole dite à voix haute le dissipe." },
+      desc: "Ce qui se dit à mi-voix dans une maison où l'on cache une mort. Il n'a pas de corps : il n'a que la voix de ceux qui le répètent. Une parole dite à voix haute le dissipe." },
     ombre_pere: { racine: 'noir_peur', name: "L'Ombre du Père", art: 'throne', hue: 35, scale: 2, lvl: 4, tier: 'elite', weak: ['sidq', 'sabr'], veils: 4,
       skills: [
         { w: 3, name: '« Il dort seulement »', target: 'foes', el: 'ilm', pow: 0.75, fx: [{ st: 'spd', v: -1, chance: 0.5 }], anim: 'wave' },
@@ -132,7 +132,7 @@ ISNAD.registerSaga({
     { id: 'chambellan', cat: 'Biographie', title: 'Maymûn, le chambellan', text: "Chambellan du vieux Caïd, puis de son fils. Il dit à chacun ce que chacun veut entendre, pleure quand on le regarde et plaint beaucoup le peuple, qui l'aime pour cela. On le reconnaît à ses belles manches. Il ne sert ni le Caïd ni la foule : il sert le besoin qu'ils ont de lui. Personnage de fiction.", src: 'Fiction' },
     { id: 'pere_parole', cat: 'Parole', title: 'La parole du bâtisseur', text: "« Qui partage un édifice n'obtient que des pierres. » Le vieux Caïd le disait des greniers, des puits et des tribus. Maître Bahrâm l'entendait aussi d'une vérité : coupée en morceaux pour être servie plus doucement, elle cesse d'en être une.", src: 'Fiction' },
     { id: 'aube_vraie', cat: 'Événement', title: "L'aube de vérité", text: "Le matin qui suivit le meurtre de son père, le Caïd annonça lui-même la mort au peuple, après la prière de l'aube, avant que nul ne la devine. Il y perdit sept jours d'avance sur ses rivaux et y gagna d'être cru. Les amghars s'en souvinrent au conseil.", src: 'Fiction' },
-    { id: 'sentinelle', cat: 'Parole', title: 'La sentinelle', text: "« Celui qui veille porte le sommeil de tous. Qui lui vole son repos vole la ville entière. » Le vieux Caïd le répétait à chaque relève. La loi de la citadelle punit de mort la sentinelle endormie ; elle ne disait rien de celui qui l'épuise, jusqu'au jour où il fallut le dire.", src: 'Fiction' },
+    { id: 'sentinelle', cat: 'Parole', title: 'La sentinelle', text: "« Celui qui veille porte le sommeil de tous. Qui lui vole son repos vole la ville entière. » Le vieux Caïd le répétait à chaque relève. La loi de la citadelle punissait de mort la sentinelle endormie ; elle ne disait rien de celui qui l'épuisait, jusqu'au jour où il fallut le dire.", src: 'Fiction' },
     { id: 'dispenses', cat: 'Événement', title: 'Les dispenses de garde', text: "Un officier du rempart vendait aux fils de familles aisées le droit de dormir chez eux les nuits de garde : dix pièces la nuit. Les veilles vendues retombaient sur les plus pauvres, qui montaient deux et trois gardes d'affilée. Tout le rempart le savait ; nul ne parlait, car l'officier avait un oncle puissant.", src: 'Fiction' },
     { id: 'geometres', cat: 'Biographie', title: 'Les géomètres', text: "Des savants perses chassés par une guerre de succession, à qui le vieux Caïd donna asile. Ils mesurent les champs, tracent les rigoles et tiennent l'école avec les maîtres du pays. Après la grande crue, ils recomptèrent borne par borne les terres de l'oasis sans rien demander. Maître Bahrâm est le plus âgé d'entre eux.", src: 'Fiction' },
     { id: 'foggara', cat: 'Lieu', title: 'La foggara', text: "Galerie souterraine en pente très douce qui capte l'eau au pied d'une montagne et la mène, par son seul poids, jusqu'aux jardins. On la creuse puits après puits ; les Perses la nomment kârêz ou qanât. Elle donne à tous ceux qui ont creusé, et l'on ne peut la couper à l'un sans la couper à l'autre : c'est un pacte en forme de rivière.", src: 'Technique attestée de la Perse au Maghreb' },
@@ -284,7 +284,7 @@ ISNAD.registerSaga({
       id: 'v_umar', after: 'umar', minLvl: 5, last: true, hajj: true,
       title: 'La Sentinelle', sub: "Veillée de la Justice · après 'Umar",
       enigme: { id: 'langueur_ziri', who: 'capitaine', cure: 'priere', title: 'La langueur de Zîrî',
-        signe: "Zîrî languit, sans fièvre ni blessure.",
+        signe: "Zîrî est las depuis des jours, et le médecin ne lui trouve rien.",
         mot: "Ce qui lui manquait : la prière de l'aube, laissée depuis ses nuits de rempart.",
         intro: [['nar', "Zîrî, mon capitaine, se tient mal depuis des jours. Ni fièvre, ni blessure : le médecin n'a rien trouvé. Il dit seulement qu'il est las, et il l'est."]],
         solved: [
@@ -415,8 +415,8 @@ ISNAD.registerSaga({
       // bataille déclarée, sans rangs : les armes nourrissent le Tambour
       bataille: { rangs: [], mot: 'Les armes le nourrissent : on n’aligne personne contre lui.' },
       title: 'Le Général et la Tour', sub: 'Veillée du Courage · après Khâlid',
-      enigme: { id: 'bahram_deperit', who: 'geometre', cure: 'visite', title: 'Maître Bahrâm dépérit',
-        signe: "Maître Bahrâm dépérit, sans cause visible.",
+      enigme: { id: 'bahram_deperit', who: 'geometre', cure: 'visite', title: 'Maître Bahrâm ne mange plus',
+        signe: "Maître Bahrâm ne mange presque plus, et ses mains tremblent.",
         mot: "Ce qui lui manquait : une porte où il ne frappait plus, celle d'un vieil ami.",
         intro: [['nar', "Maître Bahrâm ne mange presque plus, et ses mains tremblent sur le compas. Le médecin n'a rien trouvé. Lui dit que c'est l'âge."]],
         solved: [

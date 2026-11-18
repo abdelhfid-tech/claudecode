@@ -126,7 +126,7 @@
         // un égrégore le tient (rencontres de la Cité-Miroir), cela se combat.
         if (I.mal.estIdee(N)) await I.mal.dissiper(N, P);
         else {
-          await card('title parley noir', `<p class="small">${I.t('Une chimère le tient')}</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">${I.t('On ne le combat pas contre lui, mais pour lui')}</p><div class="rule"></div><div class="hint">▼</div>`);
+          await card('title parley noir', `<p class="small">${I.t('Il n’entend plus que cela')}</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">${I.t('Ce n’est pas lui qu’on combat : c’est ce qu’il regarde.')}</p><div class="rule"></div><div class="hint">▼</div>`);
           await I.battle.start({ group: N.group, bg: N.bg || 'noos', noir: true, intro: N.say || I.t('Il parle plus fort que toi. Dissipe-le.') });
           I.mal.note('n', P.title + '|' + N.name, -1);
         }
@@ -145,7 +145,7 @@
       sv.parley.won++; I.audio.sfx('roll'); G.flash('#ffe08a');
       const xp = P.xp || Math.round(22 + 12 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
       await I.oeuvres.rally();
-      await card('victory', `<p class="small">${I.t('Pourparler · {titre}', { titre: I.esc(P.title) })}</p><h1>${I.t('La parole a suffi')}</h1><ul><li>${I.t('Confiance : <b>{conf} / {but}</b>', { conf, but: P.goal })}</li><li>${I.t('Sagesse acquise : <b>+{xp}</b>', { xp })}</li>${lines.join('')}</ul><div class="hint">▼</div>`);
+      await card('victory', `<p class="small">${I.t('Pourparler · {titre}', { titre: I.esc(P.title) })}</p><h1>${I.t('La parole a suffi')}</h1><ul><li>${I.t('Confiance : <b>{conf} / {but}</b>', { conf, but: P.goal })}</li><li>${I.t('Expérience : <b>+{xp}</b>', { xp })}</li>${lines.join('')}</ul><div class="hint">▼</div>`);
       await S.run(P.win);
     } else {
       I.audio.sfx('dark'); G.shake(260);

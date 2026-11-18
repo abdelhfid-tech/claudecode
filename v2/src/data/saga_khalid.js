@@ -15,7 +15,7 @@ ISNAD.registerSaga({
   tagline: "Il n'a jamais perdu une bataille. Il lui reste à vaincre sa propre statue.",
 
   intro: [
-    ['title', 'Khâlid ibn al-Walîd', 'Le Sabre dégainé'],
+    ['title', 'Khâlid ibn al-Walîd', 'Troisième maillon · Le Sabre dégainé'],
     ['mus', 'desert'],
     ['nar', "An 13 de l'Hégire. L'Arabie est de nouveau une. Au nord, deux empires se regardent depuis des siècles par-dessus le désert : Rome et la Perse. Entre eux marche un homme que nul n'a encore vu vaincu."],
     ['nar', "Khâlid, fils d'al-Walîd, des Banû Makhzûm. À Uhud, il chargeait contre les musulmans. Depuis l'an 8, il charge avec eux. Le Messager d'Allah ﷺ l'a nommé « un sabre d'entre les sabres d'Allah »."],
@@ -229,25 +229,25 @@ ISNAD.registerSaga({
   /* ───────────────────────────── CODEX ───────────────────────────── */
   codex: [
     { id: 'khalid_bio', cat: 'Biographie', title: 'Khâlid ibn al-Walîd',
-      text: "Khâlid ibn al-Walîd ibn al-Mughîra, des Banû Makhzûm de Quraysh (qu'Allah l'agrée). Cavalier redouté de La Mecque, il embrasse l'islam en l'an 8 H. À Mu'ta, il ramène l'armée en bon ordre ; le Messager d'Allah ﷺ le nomme alors « un sabre d'entre les sabres d'Allah ». Sous Abû Bakr, il commande à la Yamâma, puis en Irak et en Syrie. Écarté du commandement par 'Umar, il meurt à Homs en 21 H (642).",
+      text: "Khâlid ibn al-Walîd ibn al-Mughîra, des Banû Makhzûm de Quraysh (qu'Allah l'agrée). Cavalier redouté de La Mecque, il embrasse l'islam en l'an 8 H. À Mu'ta, il ramène l'armée en bon ordre ; le Messager d'Allah ﷺ le nomme alors « un sabre d'entre les sabres d'Allah ». Sous Abû Bakr, il commande à la Yamâma, puis en Irak et au Shâm. Écarté du commandement par 'Umar, il meurt à Homs en 21 H (642).",
       src: "al-Bukhârî ; Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh" },
     { id: 'qaqa_bio', cat: 'Biographie', title: "Al-Qa'qâ' ibn 'Amr",
-      text: "Al-Qa'qâ' ibn 'Amr at-Tamîmî (qu'Allah l'agrée), cavalier des Banû Tamîm. Abû Bakr l'envoie en renfort à Khâlid en Irak ; on rapporte qu'il dit de lui : « La voix d'al-Qa'qâ' dans l'armée vaut mieux que mille hommes. » Il suit Khâlid en Syrie, puis s'illustre à al-Qâdisiyya. L'essentiel de ce que l'on sait de lui vient des récits de Sayf ibn 'Umar, repris par at-Tabarî.",
+      text: "Al-Qa'qâ' ibn 'Amr at-Tamîmî (qu'Allah l'agrée), cavalier des Banû Tamîm. Abû Bakr l'envoie en renfort à Khâlid en Irak ; on rapporte qu'il dit de lui : « La voix d'al-Qa'qâ' dans l'armée vaut mieux que mille hommes. » Il suit Khâlid au Shâm, puis s'illustre à al-Qâdisiyya. L'essentiel de ce que l'on sait de lui vient des récits de Sayf ibn 'Umar, repris par at-Tabarî.",
       src: "at-Tabarî, Târîkh (d'après Sayf ibn 'Umar) ; Ibn Hajar, al-Isâba" },
     { id: 'dirar_bio', cat: 'Biographie', title: 'Dirâr ibn al-Azwar',
-      text: "Dirâr ibn al-Azwar al-Asadî (qu'Allah l'agrée), Compagnon, cavalier et poète des Banû Asad. Les récits de la conquête de la Syrie en font l'un des plus hardis cavaliers de Khâlid. Beaucoup de ses exploits viennent du Futûh ash-Shâm attribué à al-Wâqidî, dont les historiens discutent la fiabilité ; les sources divergent aussi sur le lieu et la date de sa mort.",
+      text: "Dirâr ibn al-Azwar al-Asadî (qu'Allah l'agrée), Compagnon, cavalier et poète des Banû Asad. Les récits de la conquête du Shâm en font l'un des plus hardis cavaliers de Khâlid. Beaucoup de ses exploits viennent du Futûh ash-Shâm attribué à al-Wâqidî, dont les historiens discutent la fiabilité ; les sources divergent aussi sur le lieu et la date de sa mort.",
       src: "Ibn 'Abd al-Barr, al-Istî'âb ; Ibn Hajar, al-Isâba ; Futûh ash-Shâm (attribué à al-Wâqidî)" },
     { id: 'abu_ubayda_bio', cat: 'Biographie', title: "Abû 'Ubayda ibn al-Jarrâh",
-      text: "'Âmir ibn 'Abdallâh ibn al-Jarrâh (qu'Allah l'agrée), l'un des dix à qui le Paradis fut annoncé. Le Messager d'Allah ﷺ a dit : « Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda ibn al-Jarrâh. » 'Umar lui confie les armées de Syrie. Il meurt de la peste d'Emmaüs ('Amwâs) en 18 H, au milieu de ses hommes.",
+      text: "'Âmir ibn 'Abdallâh ibn al-Jarrâh (qu'Allah l'agrée), l'un des dix à qui le Paradis fut annoncé. Le Messager d'Allah ﷺ a dit : « Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda ibn al-Jarrâh. » 'Umar lui confie les armées du Shâm. Il meurt de la peste d'Emmaüs ('Amwâs) en 18 H, au milieu de ses hommes.",
       src: "al-Bukhârî ; Muslim ; Ibn Sa'd, Tabaqât" },
     { id: 'traversee', cat: 'Événement', title: 'La traversée de la Samâwa',
-      text: "En 13 H, Khâlid reçoit l'ordre de porter secours aux armées de Syrie. Pour déboucher derrière les Romains, il coupe par le désert, de Qurâqir à Suwâ : cinq nuits sans point d'eau. Sur le conseil du guide Râfi' ibn 'Umayra at-Tâ'î, on abreuve des chameaux à satiété pour en faire des réserves vivantes. Au cinquième jour, Râfi', qui souffre des yeux, fait chercher un épineux dont il ne reste que la souche ; on creuse à sa racine, et l'eau paraît.",
+      text: "En 13 H, Khâlid reçoit l'ordre de porter secours aux armées du Shâm. Pour déboucher derrière les Romains, il coupe par le désert, de Qurâqir à Suwâ : cinq nuits sans point d'eau. Sur le conseil du guide Râfi' ibn 'Umayra at-Tâ'î, on abreuve des chameaux à satiété pour en faire des réserves vivantes. Au cinquième jour, Râfi', qui souffre des yeux, fait chercher un épineux dont il ne reste que la souche ; on creuse à sa racine, et l'eau paraît.",
       src: 'at-Tabarî, Târîkh ; al-Balâdhurî, Futûh al-Buldân' },
     { id: 'yarmouk', cat: 'Événement', title: 'La bataille du Yarmoûk',
       text: "Bataille décisive entre les armées musulmanes et l'armée romaine d'Orient, au bord du Yarmoûk. Khâlid y range les troupes en trente-six à quarante escadrons (karâdîs), ordonnance que les Arabes n'avaient jamais employée. Les chroniques parlent de plus de cent mille Romains ; les historiens modernes réduisent ces chiffres, mais la disproportion demeure. At-Tabarî, d'après Sayf, place la bataille en 13 H ; Ibn Ishâq et al-Wâqidî en 15 H (636), date le plus souvent retenue.",
       src: 'at-Tabarî, Târîkh ; al-Balâdhurî, Futûh al-Buldân ; Ibn Kathîr, al-Bidâya' },
     { id: 'destitution', cat: 'Événement', title: 'Les deux destitutions',
-      text: "Khâlid fut écarté deux fois par 'Umar. D'abord du commandement général de Syrie, à l'avènement du Calife (13 H) : selon at-Tabarî, la lettre arrive au Yarmoûk et Khâlid la garde dans son carquois jusqu'à la victoire ; selon d'autres, Abû 'Ubayda la reçoit devant Damas et tarde, par délicatesse, à la montrer. Puis de son gouvernement de Qinnasrîn (17 H), après un don de dix mille dirhams à al-Ash'ath ibn Qays. Interrogé à Homs, il répond que le don vient de son bien, et il obéit.",
+      text: "Khâlid fut écarté deux fois par 'Umar. D'abord du commandement général du Shâm, à l'avènement du Calife (13 H) : selon at-Tabarî, la lettre arrive au Yarmoûk et Khâlid la garde dans son carquois jusqu'à la victoire ; selon d'autres, Abû 'Ubayda la reçoit devant Damas et tarde, par délicatesse, à la montrer. Puis de son gouvernement de Qinnasrîn (17 H), après un don de dix mille dirhams à al-Ash'ath ibn Qays. Interrogé à Homs, il répond que le don vient de son bien, et il obéit.",
       src: 'at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya' },
     { id: 'mort_khalid', cat: 'Événement', title: 'Homs, an 21',
       text: "Khâlid meurt à Homs en 21 H (642), dans son lit, lui qui avait cherché la mort sur tant de champs de bataille. Il ne laisse que son cheval, ses armes et un serviteur, qu'il lègue pour la cause d'Allah en désignant 'Umar comme exécuteur. On rapporte que 'Umar dit : « Qu'Allah fasse miséricorde à Abû Sulaymân ; il était autre que ce que nous pensions. »",
@@ -277,7 +277,7 @@ ISNAD.registerSaga({
     { id: 'routes_desert', cat: 'Lieu', title: "Les signes de l'eau",
       text: "Ce que savent les gens du désert et qu'aucune carte ne dit. On marche de nuit et l'on se tait le jour. On abreuve les chameaux deux fois pour en faire des outres vivantes. L'eau cachée se trahit par un épineux ; mais les caravaniers coupent ces arbres pour leurs feux : c'est la souche qu'il faut chercher, et creuser à sa racine. À Suwâ, c'est ainsi que l'eau fut retrouvée.",
       src: 'at-Tabarî, Târîkh (récit de la traversée) ; le feuillet lui-même est de fiction' },
-    { id: 'arabes_chretiens', cat: 'Événement', title: 'Les Arabes chrétiens de Syrie',
+    { id: 'arabes_chretiens', cat: 'Événement', title: 'Les Arabes chrétiens du Shâm',
       text: "Ghassân, Tanûkh, Lakhm, Judhâm, Bahrâ' : des tribus arabes, chrétiennes pour la plupart, gardaient depuis des générations la frontière de Rome. Au Yarmoûk, beaucoup combattent dans les rangs romains, sous le Ghassanide Jabala ibn al-Ayham. On rapporte, d'après le chroniqueur Théophane, que la solde de certains de ces alliés n'était plus versée. Après la bataille, bien des clans traitèrent : les uns embrassèrent l'islam, d'autres gardèrent leur foi sous pacte. Wahb ibn Zurayr et son clan sont de fiction.",
       src: 'al-Balâdhurî, Futûh al-Buldân ; at-Tabarî, Târîkh ; Théophane, Chronographie' },
     { id: 'pacte_damas', cat: 'Événement', title: 'La lettre de sûreté de Damas',
@@ -309,7 +309,7 @@ ISNAD.registerSaga({
         { id: 'dirar_pnj', name: 'Dirâr', hero: 'dirar', at: ['caravane', -1, 2],
           talk: [['say', 'dirar', "Donne-moi l'avant-garde. Si le désert veut quelqu'un, qu'il commence par moi."]] },
         { id: 'messager', name: 'Courrier de Médine', at: ['caravane', -1, -2], look: { kind: 'homme', robe: '#5d6b58', head: '#d9cfb8' },
-          talk: [['say', 'messager', "Le Calife a écrit : la moitié des hommes reste avec al-Muthannâ ibn Hâritha pour tenir l'Irak. L'autre moitié est attendue en Syrie comme on attend la pluie."]] },
+          talk: [['say', 'messager', "Le Calife a écrit : la moitié des hommes reste avec al-Muthannâ ibn Hâritha pour tenir l'Irak. L'autre moitié est attendue au Shâm comme on attend la pluie."]] },
         { id: 'chamelier', name: 'Chamelier', at: ['caravane', -3, 1], look: { kind: 'bedouin', robe: '#7d6a50', head: '#cfc3a8' },
           talk: [['say', 'chamelier', "On les prive d'eau, puis on les abreuve deux fois, jusqu'à satiété. Ensuite on leur lie le museau. Leur ventre sera notre outre."]] },
         { id: 'bedouin', name: 'Ancien des Kalb', at: ['caravane', 3, 2], look: { kind: 'bedouin', robe: '#4f4a44', head: '#e2d8c4', trim: '#4a6f9a', item: 'baton' },
@@ -317,7 +317,7 @@ ISNAD.registerSaga({
             ['say', 'bedouin', "Qurâqir est la dernière eau de mon peuple. Au-delà, le vent efface les traces avant le matin."],
             ['ask', "Interroger l'ancien", [
               { t: "Qui est Râfi' ?", r: [['say', 'bedouin', "Un homme des Tayy. Il a fait cette route une fois, enfant, avec son père. Une fois suffit à qui sait regarder."]] },
-              { t: "Qu'y a-t-il à Suwâ ?", r: [['say', 'bedouin', "Une eau des Bahrâ'. Et derrière elle, la Syrie, par une porte que les Romains ne gardent pas."]] },
+              { t: "Qu'y a-t-il à Suwâ ?", r: [['say', 'bedouin', "Une eau des Bahrâ'. Et derrière elle, le Shâm, par une porte que les Romains ne gardent pas."]] },
               { t: 'Comment reconnaît-on une eau cachée ?', r: [
                 ['say', 'bedouin', "À l'épineux qui boit dessus. Mais retiens ceci, que les guides oublient : les caravaniers coupent ces arbres pour leurs feux. Ne cherche pas l'arbre. Cherche la souche."],
                 ['codex', 'routes_desert']] }
@@ -400,7 +400,7 @@ ISNAD.registerSaga({
                 ] }
             ],
             win: [
-              ['say', 'econome', "Alors notre porte restera ouverte. Prends ceci : l'itinéraire de nos frères qui vont à pied jusqu'en Syrie. Et trois de nos chameliers ; ils savent où l'eau se cache."],
+              ['say', 'econome', "Alors notre porte restera ouverte. Prends ceci : l'itinéraire de nos frères qui vont à pied jusqu'au Shâm. Et trois de nos chameliers ; ils savent où l'eau se cache."],
               ['codex', 'routes_desert'], ['give', 'eau', 2],
               ['flag', 'hira_amie'], ['pillar', 'lien', 1],
               ['nar', "Un mur de roseaux et de briques crues, gagné sans une échelle. Les chameliers d'al-Hîra marcheront avec l'armée."]
@@ -414,16 +414,16 @@ ISNAD.registerSaga({
           ['map', 'desert', 'caravane', { time: 'dusk' }],
           ['mus', 'desert'],
           ['title', 'Qurâqir', "An 13 de l'Hégire · un an plus tard"],
-          ['nar', "Al-Hîra est en paix, l'Euphrate est tenu. C'est alors qu'arrive une lettre de Médine : en Syrie, les armées musulmanes font face à la plus grande levée que Rome ait rassemblée."],
+          ['nar', "Al-Hîra est en paix, l'Euphrate est tenu. C'est alors qu'arrive une lettre de Médine : au Shâm, les armées musulmanes font face à la plus grande levée que Rome ait rassemblée."],
           ['quote', "Par Allah, je ferai oublier aux Romains les suggestions du diable par Khâlid ibn al-Walîd.", 'On rapporte d\'Abû Bakr as-Siddîq — at-Tabarî, Târîkh'],
-          ['nar', "L'ordre est bref : laisser la moitié de l'armée en Irak, prendre l'autre, et rejoindre la Syrie au plus vite. Au puits de Qurâqir, Khâlid cherche un guide."],
+          ['nar', "L'ordre est bref : laisser la moitié de l'armée en Irak, prendre l'autre, et rejoindre le Shâm au plus vite. Au puits de Qurâqir, Khâlid cherche un guide."],
           ['give', 'eau', 2],
           ['give', 'dattes', 3]
         ] },
         { text: "Consulter Râfi' ibn 'Umayra, le guide", talk: 'rafi', then: [
-          ['say', 'khalid', "On dit que tu connais un chemin vers la Syrie qui passe derrière les garnisons romaines."],
+          ['say', 'khalid', "On dit que tu connais un chemin vers le Shâm qui passe derrière les garnisons romaines."],
           ['say', 'rafi', "Je le connais. Mais tu ne le feras pas avec des chevaux et des bagages. Par Allah, le cavalier seul y craint pour sa vie. Cinq nuits pleines, sans une goutte d'eau."],
-          ['say', 'qaqa', "La route du nord est sûre, mais longue, et les forts romains la surveillent. Chaque jour perdu, nos frères de Syrie le paient."],
+          ['say', 'qaqa', "La route du nord est sûre, mais longue, et les forts romains la surveillent. Chaque jour perdu, nos frères du Shâm le paient."],
           ['choice', 'Quelle route Khâlid ordonne-t-il ?', [
             { t: "La route des caravanes, par le nord : plus longue, mais l'eau y est certaine.", r: [
               ['nar', "La chaîne vacille. Les transmetteurs rapportent que Khâlid voulut déboucher derrière les lignes romaines sans être retenu en chemin. La route sûre l'aurait fait arriver trop tard."]] },
@@ -500,7 +500,7 @@ ISNAD.registerSaga({
       ],
       outro: [
         ['codex', 'traversee'],
-        ['nar', "Au sixième matin, l'armée de Khâlid sort du désert à Suwâ, sur les arrières des Romains, là où aucune sentinelle ne regardait. La Syrie apprend son nom en une seule aube."],
+        ['nar', "Au sixième matin, l'armée de Khâlid sort du désert à Suwâ, sur les arrières des Romains, là où aucune sentinelle ne regardait. Le Shâm apprend son nom en une seule aube."],
         ['nar', "Dans la noosphère, une paillette d'or de plus. Les hommes disent déjà : « Avec lui, même le désert s'ouvre. »"]
       ]
     },
@@ -550,7 +550,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', 'Yarmoûk', 'La veillée des émirs'],
-        ['nar', "Les émirs de Syrie ont réuni leurs armées au bord du Yarmoûk. En face, la plaine est couverte de tentes romaines. Les transmetteurs divergent sur l'année ; la Chaîne suit ici le récit d'at-Tabarî."],
+        ['nar', "Les émirs du Shâm ont réuni leurs armées au bord du Yarmoûk. En face, la plaine est couverte de tentes romaines. Les transmetteurs divergent sur l'année ; la Chaîne suit ici le récit d'at-Tabarî."],
         ['nar', "Depuis des semaines, les deux camps s'observent. Chaque soir, des hommes montent sur le tertre et comptent les feux d'en face. Chaque soir, ils en trouvent davantage."]
       ],
       objectives: [
@@ -622,7 +622,7 @@ ISNAD.registerSaga({
         ] },
         { text: 'Aller au-devant du cavalier venu de Médine', goto: 'entree', then: [
           ['say', 'courrier', "Émir, je porte deux nouvelles et une lettre. Abû Bakr as-Siddîq est retourné à son Seigneur. 'Umar ibn al-Khattâb est le Commandeur des croyants."],
-          ['nar', "Khâlid se tait longtemps. Puis il brise le sceau. La lettre confie à Abû 'Ubayda le commandement des armées de Syrie. Le sien lui est retiré."],
+          ['nar', "Khâlid se tait longtemps. Puis il brise le sceau. La lettre confie à Abû 'Ubayda le commandement des armées du Shâm. Le sien lui est retiré."],
           ['say', 'courrier', "Aux soldats qui m'interrogeaient, j'ai répondu : tout va bien, et des renforts arrivent."],
           ['choice', 'La bataille est pour demain. Que fait Khâlid de la lettre ?', [
             { t: 'La lire aux troupes sur-le-champ : elles ont le droit de savoir.', r: [
@@ -666,7 +666,7 @@ ISNAD.registerSaga({
           ['nar', "On rapporte qu'au soir, on porta de l'eau à un blessé. Il désigna son voisin : « Lui d'abord. » Le voisin désigna un troisième. Quand l'outre revint au premier, tous trois étaient morts sans avoir bu."],
           ['say', 'dirar', "Nous avons traversé cinq nuits pour de l'eau. Eux l'ont tenue dans leurs mains, et ils l'ont donnée."],
           ['nar', "Alors seulement, Khâlid tire la lettre de son carquois et la tend à Abû 'Ubayda."],
-          ['say', 'khalid', "Le Commandeur des croyants t'a confié la Syrie. Je suis sous tes ordres."],
+          ['say', 'khalid', "Le Commandeur des croyants t'a confié le Shâm. Je suis sous tes ordres."],
           ['pillar', 'justice', 1],
           ['say', 'abu_ubayda', "Ce n'est pas le pouvoir de ce monde que je cherche, ni pour ce monde que j'œuvre. Nous sommes frères. Reste près de moi : cette armée a besoin de ton conseil."]
         ] }
@@ -727,7 +727,7 @@ ISNAD.registerSaga({
       ],
       intro: [
         ['title', "L'Épée au fourreau", "An 17 de l'Hégire · Qinnasrîn"],
-        ['nar', "Quatre ans ont passé. La Syrie est ouverte, d'Antioche à Jérusalem. Khâlid gouverne Qinnasrîn sous l'autorité d'Abû 'Ubayda. Il revient d'une expédition heureuse, chargé de butin."],
+        ['nar', "Quatre ans ont passé. Le Shâm est ouvert, d'Antioche à Jérusalem. Khâlid gouverne Qinnasrîn sous l'autorité d'Abû 'Ubayda. Il revient d'une expédition heureuse, chargé de butin."],
         ['nar', "Les gens affluent vers lui de toutes parts : solliciteurs, poètes, curieux. On vient voir l'homme qui ne perd jamais. On repart en racontant qu'on l'a vu."],
         ['nar', "Ce matin, pourtant, un homme l'attend qui ne vient pas l'admirer : l'ancien d'un bourg fortifié du district, le Fort des Oliviers, dont les portes sont closes depuis l'hiver."]
       ],
@@ -763,7 +763,7 @@ ISNAD.registerSaga({
               { say: "Une dernière chose. On dit que le Calife de Médine défait d'un mot ce que font ses capitaines. Et si demain tu n'es plus là ?",
                 opts: [
                   { t: "Alors l'écrit y sera encore. Je ne signe pas en mon nom : je signe pour ceux qui viendront après moi.", el: 'sidq', v: 2, r: "Voilà pourquoi j'ouvrirai. Un homme qui se sait remplaçable ne ment pas pour sa gloire." },
-                  { t: "Abû 'Ubayda scellera après moi : c'est lui, l'émir de la Syrie.", el: 'adl', v: 1, r: "Deux sceaux valent mieux qu'un." },
+                  { t: "Abû 'Ubayda scellera après moi : c'est lui, l'émir du Shâm.", el: 'adl', v: 1, r: "Deux sceaux valent mieux qu'un." },
                   { t: 'Je serai là. On ne remplace pas Khâlid.', el: 'shajaa', v: 0, r: "C'est ce que disent tes poètes. Les murs de Damas, eux, ne disent rien : ils sont debout." }
                 ] }
             ],
@@ -825,7 +825,7 @@ ISNAD.registerSaga({
           ['say', 'bilal', "Le Commandeur des croyants ordonne que Khâlid soit interrogé devant tous, tête nue, les mains liées de son propre turban, jusqu'à ce qu'il ait répondu."],
           ['nar', "Un grondement parcourt les rangs. Des mains vont aux gardes des sabres. Un mot de Khâlid, un seul, et cette armée est à lui."],
           ['choice', "Bilâl s'avance vers lui. Que fait Khâlid ?", [
-            { t: 'Refuser devant ses hommes : « On ne lie pas les mains qui ont ouvert la Syrie. »', r: [
+            { t: 'Refuser devant ses hommes : « On ne lie pas les mains qui ont ouvert le Shâm. »', r: [
               ['nar', "La chaîne vacille. Aucun transmetteur ne rapporte un mot de révolte. Ce jour-là, l'armée attendait un signe ; Khâlid ne le donna pas."]] },
             { t: 'Quitter Homs de nuit et plaider sa cause à Médine, loin des regards.', r: [
               ['nar', "La chaîne vacille. Khâlid ira bien à Médine — mais après avoir répondu ici, devant tous. Il ne déroba rien à l'ordre reçu."]] },

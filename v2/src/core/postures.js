@@ -25,7 +25,7 @@
   const pct = v => (v > 0 ? '+' : '') + Math.round(v * 100) + ' %';
   Po.dit = function (k) { const P = D.POSTURES[k], L = [];
     if (P.atk) L.push(I.t('Force {pct}', { pct: pct(P.atk) })); if (P.mag) L.push(I.t('Esprit {pct}', { pct: pct(P.mag) })); if (P.soin) L.push(I.t('soins {pct}', { pct: pct(P.soin) }));
-    if (P.niyya) L.push(I.t('Niyya +{n} au départ', { n: P.niyya })); if (P.sakina) L.push(I.t('Sakîna +{n} au départ', { n: P.sakina })); if (P.faille) L.push(I.t('une faille de chaque chimère connue d’emblée')); if (P.menace) L.push(I.t('il attire plus souvent les coups'));
+    if (P.niyya) L.push(I.t('Niyya +{n} au départ', { n: P.niyya })); if (P.sakina) L.push(I.t('Sérénité +{n} au départ', { n: P.sakina })); if (P.faille) L.push(I.t('une faille de chaque chimère connue d’emblée')); if (P.menace) L.push(I.t('il attire plus souvent les coups'));
     return L.join(' · '); };
   // quand un choix s'ouvre pour la première fois à quelqu'un du groupe : la leçon, une fois (le besoin d'abord : avant cela, rien à choisir)
   Po.veille = function () {
@@ -37,11 +37,11 @@
   // la page de la halte
   Po.pane = function (h, k) {
     const T = (I.sagas.coeur && I.sagas.coeur.postures) || {}, esc = I.esc;
-    let html = `<h3>${esc(T.titre || I.t('Les postures'))}</h3><p>${esc(T.texte || '')}</p>`;
+    let html = `<h3>${esc(T.titre || I.t('Les figures'))}</h3><p>${esc(T.texte || '')}</p>`;
     D.POSTURE_IDS.forEach(id => { const P = D.POSTURES[id], t = (T.noms || {})[id] || {}; html += `<p><b>${esc(t.nom || P.nom)}</b> — ${esc(t.devise || '')}<br><small>${esc(Po.dit(id))}</small></p>`; });
     if (W.saga && W.party && W.party.length) html += '<p class="src">' + W.party.map(id => { const q = W.hero(id), cur = Po.de(q), O = Po.ouvertes(q), reste = Po.ordre(q).length - O.length, suiv = reste ? D.POSTURE_NIVEAUX[O.length] : 0;
       const F = { nom: esc(q.def.name), min_posture: esc(((T.noms || {})[cur] || {}).nom || D.POSTURES[cur].nom).toLowerCase(), posture: esc(((T.noms || {})[cur] || {}).nom || D.POSTURES[cur].nom), n: suiv };
-      return suiv ? I.t('{nom} : <b>{min_posture}</b> (une autre s’ouvre au niveau {n})', F) : I.t('{nom} : <b>{min_posture}</b>', F); }).join('<br>') + '</p>';
+      return suiv ? I.t('{nom} · figure : <b>{min_posture}</b> (une autre s’ouvre au niveau {n})', F) : I.t('{nom} · figure : <b>{min_posture}</b>', F); }).join('<br>') + '</p>';
     html += `<p class="src">${esc(T.note || '')}</p>`;
     return html;
   };

@@ -170,7 +170,7 @@
             { t: I.t('Il y a des puits à creuser et des champs à ouvrir. Je sais où.'), el: 'ilm', v: 2, r: I.t('De l’eau. Tu promets de l’eau à un homme du désert. C’est beaucoup promettre.') }] }
         ],
         win: [['nar', I.t('Il fait décharger les bêtes une à une, devant ses hommes, sans baisser la tête. Personne ne rit.')], ['flag', '_raid_paix'], ['pillar', 'lien', 1]],
-        lose: [['nar', I.t('Il crache dans le sable. Derrière lui, dans l’envers de la piste, la vieille coutume se dresse : il ne commande plus, c’est elle.')],
+        lose: [['nar', I.t('Il crache dans le sable. Derrière lui, dans l’envers de la piste, la vieille coutume se dresse, et il lui obéit plus qu’à sa raison.')],
           ['battle', { group: ['razzia', 'butin', 'peur_route'], bg: 'desert', boss: false, intro: I.t('La Razzia : prendre parce qu’on le peut. Elle ne négocie pas.'), allies: [{ flag: '_r1', name: who1 }, { flag: '_r2', name: who2 }] }],
           ['nar', I.t('L’idole tombée, il ne reste que des hommes fatigués, et des ballots qu’ils n’osent plus regarder. Ils posent les armes.')]]
       }],

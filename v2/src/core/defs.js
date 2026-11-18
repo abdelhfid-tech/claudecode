@@ -61,7 +61,7 @@
     marcher: { nom: 'Se déplacer' }, parler: { nom: 'Parler', geste: true }, aide: { nom: 'Demander son chemin', geste: true },
     frapper: { nom: 'Frapper la faille' }, vertus: { nom: 'Les vertus' }, garde: { nom: 'La garde et la Niyya' }, objets: { nom: 'La besace' },
     halte: { nom: 'La halte', geste: true }, source: { nom: 'Retrouver une source' }, equipement: { nom: 'S’équiper' }, etoiles: { nom: 'S’orienter aux étoiles', geste: true },
-    frappe: { nom: 'Frapper ce qui rôde' }, postures: { nom: 'Prendre une posture' }
+    frappe: { nom: 'Frapper ce qui rôde' }, postures: { nom: 'Prendre une figure' }
   };
 
   // 2.x — les postures : trois manières de se tenir devant l'épreuve. Des pourcentages, rien d'autre ; aucune n'est au-dessus
@@ -69,9 +69,9 @@
   // (Demandé par le décideur le 16 novembre ; noms, effets et attribution proposés par l'agent, à valider.)
   D.POSTURE_IDS = ['heros', 'sage', 'saint'];
   D.POSTURES = {
-    heros: { nom: 'Le héros', court: 'héros', atk: 0.10, niyya: 1, menace: 0.5 },   // il s'expose : plus de force, l'élan d'emblée, et les coups viennent à lui
-    sage:  { nom: 'Le sage', court: 'sage', mag: 0.10, faille: 1 },                 // il discerne : plus d'esprit, une faille de chaque égrégore connue d'emblée
-    saint: { nom: 'Le saint', court: 'saint', soin: 0.15, sakina: 20 }              // il s'efface : il soigne mieux et garde le calme
+    heros: { nom: 'Le héros', court: 'en héros', atk: 0.10, niyya: 1, menace: 0.5 },   // il s'expose : plus de force, l'élan d'emblée, et les coups viennent à lui
+    sage:  { nom: 'Le sage', court: 'en sage', mag: 0.10, faille: 1 },                 // il discerne : plus d'esprit, une faille de chaque égrégore connue d'emblée
+    saint: { nom: 'Le saint', court: 'en saint', soin: 0.15, sakina: 20 }              // il s'efface : il soigne mieux et garde le calme
   };
   D.TEMPERAMENTS = { guerrier: 'heros', gardien: 'heros', stratege: 'sage', sage: 'sage', soigneur: 'saint' };
   D.POSTURE_NIVEAUX = [1, 4, 7];
@@ -388,7 +388,7 @@
     bergerie:  { name: 'Enclos de moutons', cost: { palme: 3 }, obj: 'pen_sheep', solid: true, group: 'Troupeaux', desc: 'De la laine pour les tapis.' },
     chamelier: { name: 'Enclos de chameaux', cost: { palme: 4, grain: 1 }, obj: 'pen_camel', solid: true, group: 'Troupeaux', desc: 'La caravane rapporte de la pierre à chaque chapitre.' },
     mur:       { name: 'Mur de pisé', cost: { pise: 1 }, tile: 'bwall', solid: true, group: 'Mosquée', desc: 'Un bloc de terre crue. L’enceinte se monte bloc par bloc.' },
-    sol:       { name: 'Sol à étoiles', cost: { pise: 1 }, tile: 'zsand', group: 'Mosquée', desc: 'Dallage géométrique.' },
+    sol:       { name: 'Dallage étoilé', cost: { pise: 1 }, tile: 'zsand', group: 'Mosquée', desc: 'Dallage géométrique.' },
     pilier:    { name: 'Pilier de palmier', cost: { palme: 1 }, obj: 'trunkcol', solid: true, group: 'Mosquée', desc: 'Un tronc dressé, comme à Médine.' },
     mihrab:    { name: 'Niche de qibla', cost: { pise: 2, pierre: 1 }, tile: 'mihrab', solid: true, group: 'Mosquée', desc: 'Indique la direction de La Mecque.' },
     natte:     { name: 'Natte de prière', cost: { palme: 1 }, obj: 'mat', group: 'Mosquée', desc: 'Dans une mosquée achevée, on y prie et le groupe s’y repose.' },

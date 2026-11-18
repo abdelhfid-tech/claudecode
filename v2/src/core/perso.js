@@ -40,7 +40,7 @@
     if (nom.length > MAX) return I.t('Seize signes au plus.');
     if (!LETTRES.test(nom) || !DEBUT.test(nom) || !p) return I.t('Des lettres seulement, avec au besoin une espace, une apostrophe ou un trait d’union.');
     if (nom === NOM) return '';
-    if (DIVIN.includes(p)) return I.t('Ce Nom n’appartient qu’à Dieu. Porté avec « ’Abd », il devient un prénom.');
+    if (DIVIN.includes(p)) return I.t('Ce Nom n’appartient qu’à Allah. Porté avec « ’Abd », il devient un prénom.');
     if (INTERDIT.test(nom) || INTERDIT.test(p)) return I.t('Ce nom ne se porte pas ici.');
     if (RESERVE.includes(p)) return I.t('Dans ce jeu, ce nom ne désigne que le Prophète ﷺ : le râwî en porte un autre.');
     if (P.prisParLeJeu()[p]) return I.t('Un personnage du jeu porte déjà ce nom : les dialogues s’y perdraient.');

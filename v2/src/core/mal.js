@@ -94,7 +94,7 @@
     const cid = 'foe:_:' + id; if (!sv.codex.includes(cid)) sv.codex.push(cid);
     const xp = Math.round(I.calc.xpOf(Object.assign({}, e, { lvl: Math.max(1, W.hero(W.party[0]).lvl) })) * 0.7), lignes = I.battle.grantXP(xp);
     I.audio.sfx('roll'); G.flash('#ffe08a');
-    await S.card('victory', `<p class="small">${fautes ? I.t('Il a fallu s’y reprendre') : I.t('Du premier coup')}</p><h1>${I.t('L’idée noire se dissipe')}</h1><ul><li>${I.t('{nom} : {voies}', { nom: I.esc(e.name), voies: X.voies.map(v => D.VOIES[v].de).join(I.t(', puis ')) })}</li><li>${I.t('Sagesse acquise : <b>+{xp}</b>', { xp })}</li>${lignes.join('')}</ul><div class="hint">▼</div>`);
+    await S.card('victory', `<p class="small">${fautes ? I.t('Il a fallu s’y reprendre') : I.t('Du premier coup')}</p><h1>${I.t('L’idée noire se dissipe')}</h1><ul><li>${I.t('{nom} : {voies}', { nom: I.esc(e.name), voies: X.voies.map(v => D.VOIES[v].de).join(I.t(', puis ')) })}</li><li>${I.t('Expérience : <b>+{xp}</b>', { xp })}</li>${lignes.join('')}</ul><div class="hint">▼</div>`);
     M.note('n', P.title + '|' + N.name, fautes ? 0 : -1);
     return fautes;
   };

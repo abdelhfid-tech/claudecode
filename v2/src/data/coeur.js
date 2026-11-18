@@ -20,9 +20,9 @@ ISNAD.registerSaga({
   /* ----- les œuvres : ce que le joueur lit quand il en accomplit une ----- */
   oeuvres: {
     priere: { name: 'La prière', court: 'Prière', glyph: '◠',
-      desc: 'Sur la natte d’une mosquée. Le groupe se repose, la Sakîna descend. La première prière d’un chapitre nourrit la provision.' },
+      desc: 'Sur la natte d’une mosquée. Le groupe se repose et retrouve sa sérénité. La première prière d’un chapitre nourrit la provision.' },
     dhikr: { name: 'Le dhikr', court: 'Dhikr', glyph: '∴', menu: 'Le dhikr, après la prière',
-      desc: 'Le rappel, à voix basse, après la prière. Apaise : la Sakîna monte.',
+      desc: 'Le rappel, à voix basse, après la prière. Apaise : la Sérénité monte.',
       lignes: ['Ils restèrent assis après la prière. Chacun redisait à voix basse les mots du rappel, sans se presser. Quand ils se levèrent, rien n’avait changé autour d’eux, et tout pesait moins.',
         'Un moment sans rien demander. Seulement se souvenir. La journée pouvait reprendre : elle avait retrouvé son centre.'] },
     etude: { name: 'L’étude du Coran', court: 'Étude', glyph: '✧', menu: 'Apprendre du Coran',
@@ -69,21 +69,21 @@ ISNAD.registerSaga({
     equipement: 'La réserve tient de quoi mieux équiper ce groupe : *Halte*, puis *Équipement*.',
     source: 'Un seul de ces actes est celui que les transmetteurs ont rapporté. Ce que tu as appris est au *Recueil* : la halte le garde.',
     vertus: 'Nouveau — *Vertus*. Chacune coûte du Souffle ; celle qui est la faille d’une chimère lui ôte un voile.',
-    garde: 'Nouveau — *Garde*, et la *Niyya*. Se garder rend un point de Niyya ; ◂ ▸ en dépensent jusqu’à trois pour frapper plus fort.',
+    garde: 'Nouveau — *Garde*, et la *Niyya*. Se garder rend un point de Niyya ; avec ◂ ▸, on en dépense jusqu’à trois pour frapper plus fort.',
     objets: 'Nouveau — *Objets*. La besace sert aussi en combat.'
   },
 
   /* ----- 2.x : les postures — trois manières de se tenir devant l'épreuve (textes proposés par l'agent, à valider) ----- */
   postures: {
-    titre: 'Les postures',
+    titre: 'Les figures',
     texte: 'Devant l’épreuve, on peut se tenir de trois manières. Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent en chemin. On en prend une ici, ou en préparant une bataille.',
     noms: {
       heros: { nom: 'Le héros', devise: 'Il s’expose : il va au-devant, et prend sur lui.' },
       sage:  { nom: 'Le sage', devise: 'Il discerne : il regarde avant d’agir.' },
       saint: { nom: 'Le saint', devise: 'Il s’efface : il porte les autres.' }
     },
-    note: 'Aucune n’est au-dessus d’une autre, et le jeu ne dit de personne qu’il est l’un des trois : on prend une posture, on ne la possède pas. Image du jeu.',
-    ouverte: 'Une autre posture s’ouvre à %s. *Halte*, puis *Postures*.'
+    note: 'Aucune n’est au-dessus d’une autre, et le jeu ne dit de personne qu’il est l’un des trois : on prend une figure, on ne la possède pas. Image du jeu.',
+    ouverte: 'Une autre figure s’ouvre à %s. *Halte*, puis *Figures*.'
   },
 
   /* ----- les compagnons de lumière : figures du ciel (fiction) ----- */
@@ -96,7 +96,7 @@ ISNAD.registerSaga({
       vient: 'Il rejoint celui qui a tranché un premier mal.', texte: 'Al-’Anqâ’, l’oiseau des vieux contes arabes : personne ne l’a vu, tout le monde en parle. Il n’apparaît qu’où quelque chose a fini de brûler.' },
     lion:    { name: 'Le Lion', ar: 'al-Asad', couleur: '#ffd76a', don: 'Présence', effet: 'Pendant trois tours, les chimères frappent moins fort.',
       vient: 'Il rejoint celui qui a remporté trois grandes épreuves le cœur prêt.', texte: 'Al-Asad : les anciens Arabes voyaient au ciel un lion immense, étendu sur plusieurs de nos constellations. Il ne rugit pas. Il est là, et cela suffit.' },
-    gazelle: { name: 'La Gazelle', ar: 'az-Zaby', couleur: '#9fe8d0', don: 'Apaisement', effet: 'Le groupe se régénère pendant trois tours et reçoit un peu de Sakîna.',
+    gazelle: { name: 'La Gazelle', ar: 'az-Zaby', couleur: '#9fe8d0', don: 'Apaisement', effet: 'Le groupe se régénère pendant trois tours et reçoit un peu de Sérénité.',
       vient: 'Elle rejoint celui qui a gagné cinq pourparlers.', texte: 'Trois couples d’étoiles, au nord, portent le nom de « bonds de la gazelle ». Elle ne s’approche que de ceux qui parlent avant de frapper.' }
   },
 
@@ -353,14 +353,14 @@ ISNAD.registerSaga({
     { id: 'bataille', cat: 'Noosphère', title: 'La bataille déclarée', text: 'Contre une idole, on ne se bat plus seul, et l’on ne se bat pas sans le dire. La bataille est déclarée : chacun sait ce qui se dresse, et qui tient les rangs. En face, il n’y a jamais d’hommes : des nuées, que l’idole envoie. Nos rangs ne tombent pas : éprouvés, ils se replient et se reforment. C’est une image du jeu. Il ne dit pas combien d’hommes il y avait tel jour, ni qui fit telle manœuvre : la réserve mobile, l’enveloppement et le repli feint sont des manœuvres d’école.' },
     { id: 'valeurs', cat: 'Cœur', title: 'Les sept Valeurs', text: 'Du côté du bien, on ne dit ni djinn, ni chimère, ni idole : on dit des Valeurs. Il y en a sept, une en face de chaque mal du cœur : le Contentement, l’Humilité, la Sincérité, la Largesse, l’Ardeur, la Bienveillance, la Longanimité. L’œuvre forge la lame ; la lame tranche le mal ; ce qui reste alors, c’est la Valeur. Le jeu la marque d’un badge. C’est une image : une valeur ne se possède pas comme un objet, elle se garde en la pratiquant.' },
     { id: 'attributs', cat: 'Cœur', title: 'Les attributs divins', text: 'Chaque Valeur s’appuie sur un attribut d’Allah, que le jeu nomme d’après le Coran, avec son verset et sa référence : ar-Razzâq, al-Kabîr, al-Khabîr, al-Wahhâb, al-Hayy al-Qayyûm, al-Latîf, al-Halîm. On ne possède pas un attribut divin : on le reconnaît. Le jeu ne le dessine pas, ne lui prête aucune figure et n’en fait ni une arme ni un pouvoir ; le badge marque seulement que le rappel a été reçu. Les degrés du mal n’ont pas de miroir du côté du bien : rien ne se tient en face du Créateur.', src: 'Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.' },
-    { id: 'postures', cat: 'Noosphère', title: 'Les trois postures', text: 'Devant l’épreuve, on peut se tenir de trois manières. Le héros s’expose : il va au-devant, et prend sur lui. Le sage discerne : il regarde avant d’agir. Le saint s’efface : il porte les autres. Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent en chemin, et le même homme les prend tour à tour. Aucune n’est au-dessus d’une autre, et le jeu ne dit de personne qu’il est l’un des trois : on prend une posture, on ne la possède pas. Image du jeu.' },
+    { id: 'postures', cat: 'Noosphère', title: 'Les trois figures', text: 'Devant l’épreuve, on peut se tenir de trois manières. Le héros s’expose : il va au-devant, et prend sur lui. Le sage discerne : il regarde avant d’agir. Le saint s’efface : il porte les autres. Chacun a d’abord la sienne, selon son tempérament ; les deux autres s’ouvrent en chemin, et le même homme les prend tour à tour. Aucune n’est au-dessus d’une autre, et le jeu ne dit de personne qu’il est l’un des trois : on prend une figure, on ne la possède pas. Image du jeu.' },
     { id: 'frappe', cat: 'Noosphère', title: 'Frapper ce qui rôde', text: 'Dans un labyrinthe de la noosphère, de petites chimères vont et viennent sur les ponts, jamais dans les lieux que le récit nomme. On les frappe comme en combat, avec l’arme que porte celui qui mène : Entrée, ou un toucher sur ce qui rôde. Chaque coup ôte un voile et sonne un instant ; sans voile, la chimère se dissipe. Si elle vous rejoint avant, c’est un combat ordinaire. L’allonge, le poids et la vitesse viennent de l’arme : une lance porte loin, une masse sonne longtemps, une dague frappe vite. Dans la descente du râwî, les coups ne font que sonner : seul, on ne vainc pas ce qui pèse sur le cœur. Image du jeu.' },
     { id: 'noos_interieure', cat: 'Noosphère', title: 'Descendre en soi', text: 'Au sortir de la prière, dans le dhikr, en songe : à ces moments-là, la noosphère est toute proche, et l’on peut y descendre pour faire face à ce qui pèse. Ce que l’on appelle ses démons intérieurs ne sont pas des démons : ce sont les maux du cœur. C’est le combat du râwî, seul. Ce n’est jamais celui d’un Compagnon : le jeu ne prête à aucun d’eux un mal du cœur. Avec la lame que l’œuvre a forgée, le mal est tranché ; sans elle, il n’est que repoussé. Image du jeu, dite comme telle.' },
     { id: 'secours', cat: 'Cœur', title: 'Le secours', text: 'À Badr, les croyants étaient en petit nombre. Le Coran rapporte qu’ils implorèrent le secours, et ce qui leur fut répondu : « Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres. » Puis : « Allah ne fit cela que pour (vous) apporter une bonne nouvelle et pour qu’avec cela vos cœurs se tranquillisent. Et il n’y a de victoire que de la part d’Allah. » Dans ISNAD, quand une bataille déclarée est presque perdue, le secours relève le groupe, une fois, si la prière a été tenue dans le chapitre. C’est une image du jeu. Il ne montre pas les anges, ne les nomme pas, ne les compte pas, et il ne dit pas qu’ils sont venus tel jour de l’histoire des Compagnons. On ne commande pas le secours : on tient sa prière, et l’on combat.', src: 'Traduction du sens, Coran 8:9-10. Règle de jeu.' },
     { id: 'enracinement', cat: 'Noosphère', title: 'L’enracinement', text: 'Une idée noire dans un seul cœur se dissipe par la parole. Reprise par beaucoup, elle prend corps : c’est une chimère. Quand on ne la voit plus tant elle est partout, elle commande : c’est une idole. Le jeu mesure cela d’un à cinq, pour chaque idole. La parole qui porte la déracine ; la parole manquée la laisse s’enfoncer. Déracinée, l’idole pèse moins et garde un voile de moins ; enracinée, elle pèse davantage. C’est une image du jeu : la jauge se dit d’une idole, jamais d’une époque ni de ses gens.' },
     { id: 'figures_ciel', cat: 'Cœur', title: 'Les compagnons de lumière (fiction)', text: 'Les Arabes donnaient aux étoiles des noms de bêtes : l’Aigle qui vole, le Lion, les bonds de la Gazelle. Dans la noosphère d’ISNAD, ces noms ont pris corps. Le Renard des sables et le Phénix viennent, eux, des contes. Ce sont des figures de fiction : aucune n’accompagne un Compagnon dans le récit historique.' },
     { id: 'equipement', cat: 'Objets', title: 'Ce que l’on porte', text: 'Épées, lances, arcs, boucliers, casques, cottes, turbans et manteaux : le jeu range sous quatre emplacements ce qu’un groupe pouvait porter en ce temps-là. C’est une *convention de jeu*. Aucune de ces pièces n’est une relique, aucune n’a appartenu à un personnage de l’histoire, aucune ne porte d’inscription, et le jeu ne dit pas qui portait quoi. Leurs noms viennent de la poésie arabe ancienne, où une bonne lame est dite *muhannad* (d’acier de l’Inde), *yamânî* (du Yémen) ou *mashrafî* ; une bonne lance, *khattî* (d’al-Khatt, port du Bahreïn) ou *samharî* ; un bon arc est de bois de *nab\'* ; une bonne cotte est *salûqî*. Le fer aide à tenir ; il ne remplace pas la provision du cœur.', src: 'Convention de jeu. Vocabulaire des poètes anciens, à faire vérifier.' },
-    { id: 'enigmes', cat: 'Cœur', title: 'Les énigmes du cœur', text: 'Il arrive qu’un compagnon languisse sans fièvre ni blessure. Les anciens de la Citadelle disaient : « Cherche d’abord ce qu’il a cessé de faire. » Une prière laissée, une porte où l’on ne frappe plus, une main qu’on a fermée. Ce n’est pas une punition : c’est un poids, et il se pose en reprenant ce qu’on avait laissé.' }
+    { id: 'enigmes', cat: 'Cœur', title: 'Les énigmes du cœur', text: 'Il arrive que l’un des tiens perde courage sans être malade ni blessé. Les anciens de la Citadelle disaient : « Cherche d’abord ce qu’il a cessé de faire. » Une prière laissée, une porte où l’on ne frappe plus, une main qu’on a fermée. Ce n’est pas une punition, ni un mal caché : c’est un poids, et il se pose en reprenant ce qu’on avait laissé. Les énigmes ne touchent que des personnages de fiction.' }
   ],
 
   chapters: []

@@ -12,7 +12,7 @@ ISNAD.registerSaga({
 
   intro: [
     ['mus', 'chaine'],
-    ['title', "Abû Bakr as-Siddîq", "Saga I · Le Véridique"],
+    ['title', "Abû Bakr as-Siddîq", "Premier maillon · As-Siddîq"],
     ['nar', "Râwî, voici le premier maillon. 'Abdallâh ibn Abî Quhâfa, marchand d'étoffes de La Mecque, que tous appelaient Abû Bakr. Un homme doux, prompt aux larmes ; parmi les tout premiers à croire."],
     ['nar', "Il donna sa fortune pour racheter des croyants opprimés. Sur la route de l'Hégire, il fut le compagnon de la Grotte, quand ils n'étaient que deux."],
     ['nar', "Un matin, La Mecque se moqua : le Messager d'Allah ﷺ disait avoir été mené de nuit jusqu'à Jérusalem. On courut chez Abû Bakr, certain de le voir vaciller."],
@@ -24,7 +24,7 @@ ISNAD.registerSaga({
 
   outro: [
     ['mus', 'deuil'],
-    ['nar', "Deux ans, trois mois et quelques jours. En ce peu de temps : l'Arabie rassemblée, le Coran recueilli, les armées en marche vers l'Irak et la Syrie. Puis la fièvre le prend, à l'été de l'an 13."],
+    ['nar', "Deux ans, trois mois et quelques jours. En ce peu de temps : l'Arabie rassemblée, le Coran recueilli, les armées en marche vers l'Irak et le Shâm. Puis la fièvre le prend, à l'été de l'an 13."],
     ['nar', "Il consulte les Compagnons, puis dicte à 'Uthmân son dernier acte : il désigne 'Umar. À ceux qui redoutent la rudesse de 'Umar, il répond qu'elle s'adoucira sous la charge."],
     ['nar', "Il fait rendre au Trésor ce qu'il en a reçu pour vivre. 'Umar pleure : « Qu'Allah fasse miséricorde à Abû Bakr ; il a épuisé ceux qui viendront après lui. »"],
     ['quote', "Lavez ces deux vêtements que je porte, et ensevelissez-moi dedans. Le vivant a plus besoin du neuf que le mort.", "Abû Bakr, sur son lit de mort — al-Bukhârî, as-Sahîh"],
@@ -237,7 +237,7 @@ ISNAD.registerSaga({
       text: "'Umar ibn al-Khattâb, des Banû 'Adî de Quraysh. Sa conversion donna de l'assurance aux croyants de La Mecque. Homme de droiture et de franc-parler, il fut le premier à prêter allégeance à Abû Bakr à la Saqîfa, puis son plus proche conseiller. Abû Bakr le désigna pour lui succéder en l'an 13. Sa saga est le deuxième maillon de la Chaîne. Qu'Allah l'agrée.",
       src: "Ibn Sa'd, at-Tabaqât ; al-Bukhârî" },
     { id: 'abuubayda_bio', cat: 'Biographie', title: "Abû 'Ubayda ibn al-Jarrâh",
-      text: "'Âmir ibn 'Abdallâh ibn al-Jarrâh, de Quraysh, l'un des dix à qui le Paradis fut annoncé. Le Messager d'Allah ﷺ dit de lui : « Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda ibn al-Jarrâh. » Présent à la Saqîfa avec Abû Bakr et 'Umar, il commandera plus tard les armées de Syrie et mourra de la peste d'Emmaüs en l'an 18. Qu'Allah l'agrée.",
+      text: "'Âmir ibn 'Abdallâh ibn al-Jarrâh, de Quraysh, l'un des dix à qui le Paradis fut annoncé. Le Messager d'Allah ﷺ dit de lui : « Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda ibn al-Jarrâh. » Présent à la Saqîfa avec Abû Bakr et 'Umar, il commandera plus tard les armées du Shâm et mourra de la peste d'Emmaüs en l'an 18. Qu'Allah l'agrée.",
       src: "al-Bukhârî ; Muslim ; Ibn Sa'd, at-Tabaqât" },
     { id: 'jour_sombre', cat: 'Événement', title: "La mort du Messager d'Allah ﷺ",
       text: "Le lundi 12 Rabî' al-Awwal de l'an 11 de l'Hégire (juin 632), le Messager d'Allah ﷺ meurt à Médine après quelques jours de fièvre. La ville est frappée de stupeur ; 'Umar lui-même refuse d'abord d'y croire. Abû Bakr, revenu d'as-Sunh, rappelle aux gens qu'ils adorent Allah, le Vivant qui ne meurt pas, et récite le verset 3:144. Pour la première fois, la communauté doit tenir sans lui.",
@@ -253,7 +253,7 @@ ISNAD.registerSaga({
       text: "Au lendemain de la Saqîfa, Abû Bakr s'adresse aux croyants dans la mosquée. Il déclare n'être pas le meilleur d'entre eux, demande à être aidé s'il agit bien et redressé s'il agit mal, pose que le faible est fort auprès de lui jusqu'à ce que son droit lui soit rendu, et borne l'obéissance qu'on lui doit à sa propre obéissance à Allah et à Son Messager. C'est le premier texte politique de l'islam après la Révélation.",
       src: "Ibn Hishâm, as-Sîra (d'après Ibn Ishâq)" },
     { id: 'usama', cat: 'Événement', title: "L'armée d'Usâma",
-      text: "Peu avant sa mort, le Messager d'Allah ﷺ avait confié une armée à Usâma ibn Zayd, âgé d'une vingtaine d'années, pour marcher vers les confins de la Syrie. Malgré le soulèvement des tribus et l'avis de plusieurs Compagnons, Abû Bakr maintient l'expédition et refuse de remplacer son jeune chef. Il l'accompagne à pied jusqu'à al-Jurf. L'armée revient sauve après une quarantaine de jours ; sa seule sortie dissuade bien des tribus.",
+      text: "Peu avant sa mort, le Messager d'Allah ﷺ avait confié une armée à Usâma ibn Zayd, âgé d'une vingtaine d'années, pour marcher vers les confins du Shâm (la Syrie d'aujourd'hui et ses voisins). Malgré le soulèvement des tribus et l'avis de plusieurs Compagnons, Abû Bakr maintient l'expédition et refuse de remplacer son jeune chef. Il l'accompagne à pied jusqu'à al-Jurf. L'armée revient sauve après une quarantaine de jours ; sa seule sortie dissuade bien des tribus.",
       src: "at-Tabarî, Târîkh ; Ibn Sa'd, at-Tabaqât" },
     { id: 'consignes', cat: 'Parole', title: "Les dix consignes",
       text: "En congédiant l'armée d'Usâma, Abû Bakr lui donne dix recommandations : ne pas trahir, ne pas frauder, ne pas mutiler, épargner les êtres sans défense, ne couper ni brûler les palmiers, n'abattre aucun arbre fruitier, ne tuer de bête que pour se nourrir, laisser en paix ceux qui se sont retirés dans les ermitages. C'est l'un des plus anciens énoncés d'un droit de la guerre.",
@@ -569,11 +569,11 @@ ISNAD.registerSaga({
           ['codex', 'chevres'], ['give', 'lait', 1], ['pillar', 'lien', 1]
         ] },
         { text: "Tenir conseil sur la place", goto: 'place', then: [
-          ['nar', "L'armée que le Messager d'Allah ﷺ avait préparée pour les marches de Syrie campe encore à al-Jurf, sous les ordres d'Usâma ibn Zayd, qui n'a pas vingt ans."],
+          ['nar', "L'armée que le Messager d'Allah ﷺ avait préparée pour les marches du Shâm campe encore à al-Jurf, sous les ordres d'Usâma ibn Zayd, qui n'a pas vingt ans."],
           ['say', 'umar', "Les tribus se retournent contre nous, et cette armée est le gros de nos forces. Les gens te demandent de la retenir : Médine est sans défense."],
           ['say', 'abuubayda', "Et certains ajoutent : s'il faut qu'elle parte, donne-lui au moins un chef plus âgé."],
           ['choice', "Faut-il laisser partir l'armée d'Usâma ?", [
-            { t: "Retenir l'armée : Médine d'abord, la Syrie attendra.", r: [
+            { t: "Retenir l'armée : Médine d'abord, le Shâm attendra.", r: [
               ['nar', "Défaire par prudence le dernier ordre laissé en suspens ? La peur aurait alors commandé à la place du Messager ﷺ. Ce n'est pas ce qui fut rapporté."] ] },
             { t: "La laisser partir, mais sous un chef plus âgé et plus aguerri.", r: [
               ['nar', "Il répondit, dit-on : « Le Messager d'Allah ﷺ l'a nommé, et tu voudrais que je le destitue ? » Ce n'est pas ce qui fut rapporté."] ] },

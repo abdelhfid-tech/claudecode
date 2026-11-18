@@ -16,7 +16,7 @@ ISNAD.registerSaga({
     ['nar', "Médine, fin de l'an 35. 'Uthmân vient de tomber, et la communauté cherche un homme vers qui se tourner. On se presse à la porte de 'Alî. Il refuse d'abord. On insiste. Il n'accepte qu'à la mosquée, devant tous : son serment ne sera pas secret."],
     ['nar', "Il a grandi dans la maison du Messager d'Allah ﷺ et fut parmi les tout premiers à croire, enfant encore. La nuit de l'Hégire, il dormit dans le lit du Messager ﷺ pour couvrir son départ. À Khaybar, il porta l'étendard."],
     ['quote', "Le meilleur juge d'entre nous est 'Alî.", "'Umar ibn al-Khattâb — al-Bukhârî"],
-    ['nar', "Son califat sera le plus éprouvé des quatre. L'idole qui l'attend n'est ni une couronne ni un trésor. Elle porte l'habit de la piété : c'est le Juge sans miséricorde — celui qui excommunie, et croit ce faisant servir Allah."],
+    ['nar', "Son califat sera le plus éprouvé des quatre. L'idole qui l'attend n'est ni une couronne ni un trésor. Elle porte l'habit de la piété : c'est le Juge sans miséricorde — celui qui déclare les autres hors de la foi, et croit ce faisant servir Allah."],
     ['say', 'Idris', "Une idole qui cite le Livre… Dans la Cité-Miroir, je crois que je la connais. Elle condamne à la vitesse d'un écran."],
     ['nar', "Ici la parole passe avant le fer : on plaide, on apprend, on prie. Ce que tu auras appris auprès des maîtres et dans les feuillets t'ouvrira des arguments ; ce que tu auras négligé te les fermera."],
     ['codex', 'ali_bio']
@@ -245,7 +245,7 @@ ISNAD.registerSaga({
     { id: 'privilege', cat: 'Noosphère', title: 'Le Privilège',
       text: "Chimère du rang. Elle naît chaque fois qu'une foule attend que le puissant gagne parce qu'il est puissant. Elle n'a pas besoin de corrompre le juge : il lui suffit que chacun trouve normal que la règle plie. Elle se brise quand le premier des hommes se tient devant le juge comme le dernier, et repart débouté sans colère." },
     { id: 'siffin', cat: 'Événement', title: 'Siffîn',
-      text: "En l'an 37, sur la rive de l'Euphrate, l'armée d'Irak et l'armée de Syrie se font face durant des semaines. De grands Compagnons se trouvent dans chaque rang ; d'autres s'abstiennent. Les combats cessent quand on convient de s'en remettre à deux arbitres. Les savants recommandent la retenue sur ces événements : tous étaient des croyants qui cherchaient le vrai, et l'on demande pour tous l'agrément d'Allah.",
+      text: "En l'an 37, sur la rive de l'Euphrate, l'armée d'Irak et l'armée du Shâm se font face durant des semaines. De grands Compagnons se trouvent dans chaque rang ; d'autres s'abstiennent. Les combats cessent quand on convient de s'en remettre à deux arbitres. Les savants recommandent la retenue sur ces événements : tous étaient des croyants qui cherchaient le vrai, et l'on demande pour tous l'agrément d'Allah.",
       src: "at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya wa n-Nihâya" },
     { id: 'harura', cat: 'Événement', title: "Le débat de Harûrâ'",
       text: "Au retour de Siffîn, plusieurs milliers d'hommes refusent l'arbitrage et se retirent à Harûrâ', près de Koufa : on les appellera Harûriyya, puis Khawârij, « ceux qui sont sortis ». Ibn 'Abbâs vient débattre avec eux à l'heure de midi. Il écoute leurs griefs, puis y répond par le Coran (5:95 ; 4:35) et par l'exemple du Messager ﷺ à Hudaybiyya. Deux mille d'entre eux reviennent ce jour-là ; davantage, selon d'autres récits.",
@@ -751,7 +751,7 @@ ISNAD.registerSaga({
         { id: 'eclaireur', name: 'Un éclaireur', at: ['entree', 2, 0], look: { kind: 'soldat', robe: '#6b5a48', head: '#d6ccb8' },
           talk: [['say', 'eclaireur', "Ils sont rangés derrière le canal. Ils n'ont pas reculé d'un pas."]] },
         { id: 'soldat', name: 'Un soldat de Koufa', at: 'feu', look: { kind: 'soldat', robe: '#7a5a44', head: '#dcd2be' },
-          talk: [['say', 'soldat', "Nous marchions vers la Syrie. Mais comment laisser derrière nous, près de nos familles, des gens qui tuent sur un soupçon ?"]] },
+          talk: [['say', 'soldat', "Nous marchions vers le Shâm. Mais comment laisser derrière nous, près de nos familles, des gens qui tuent sur un soupçon ?"]] },
         { id: 'vieux', name: 'Un vieux récitant', at: 'tentes', look: { kind: 'ancien', robe: '#8a7c66', head: '#ece4d2' },
           talk: [
             ['say', 'vieux', "J'ai prié épaule contre épaule avec certains d'entre eux. Ce soir je ne sais plus pour qui invoquer. Alors j'invoque pour tous."],
@@ -863,7 +863,7 @@ ISNAD.registerSaga({
                   { t: "Rappeler le nombre de l'armée rangée derrière soi", el: 'shajaa', v: -1, r: "Je sais compter. Ce n'est pas le nombre qui me fera traverser." }
                 ] },
               { say: "On nous a fait dire que ta bannière est un piège : qui s'y rend sera désarmé, puis jugé.",
-                noir: { name: "Le Désespoir", group: ['noir_desespoir'], intro: "Il ne défend plus sa cause : il ne voit plus de porte. Partir serait tout renier, rester serait tout perdre. C'est cela qui répond, et non lui.", after: "Il y aurait donc une porte… Dis toujours." },
+                noir: { name: "Le Désespoir", group: ['noir_desespoir'], intro: "Il ne défend plus sa cause : il ne voit plus de porte. Partir serait tout renier, rester serait tout perdre. Il ne répond plus qu'à cela.", after: "Il y aurait donc une porte… Dis toujours." },
                 opts: [
                   { t: "Montrer d'où vient ce bruit : un homme qui vend du grain aux deux rives", el: 'sidq', v: 3, need: 'registre_double', r: "Ma'dân… Il nous jurait qu'il risquait sa vie pour nous prévenir." },
                   { t: "Nommer celui qui la tient : Abû Ayyûb, l'hôte du Messager d'Allah ﷺ", el: 'sidq', v: 2, r: "Abû Ayyûb… Non. Pas lui. Il ne prêterait pas son nom à un piège." },
@@ -911,7 +911,7 @@ ISNAD.registerSaga({
           ['map', 'camp', 'tertre', { time: 'dusk' }],
           ['nar', "Il marche parmi les tombés, sans joie. Un homme l'arrête : « Commandeur des croyants, étaient-ils des polythéistes ? »"],
           ['choice', "Ils l'avaient déclaré mécréant. Que répond 'Alî ?", [
-            { t: '« Oui. Qui excommunie mérite de l’être. »', r: [
+            { t: '« Oui. Qui exclut les autres de la foi mérite d’en être exclu. »', r: [
               ['nar', "La chaîne vacille. C'est précisément l'idole qu'il vient de briser : il refusa de leur rendre l'anathème qu'ils lui avaient jeté."]
             ] },
             { t: '« Du polythéisme, ils ont fui. »', ok: true, r: [
@@ -924,7 +924,7 @@ ISNAD.registerSaga({
           ['nar', "Il refuse de leur rendre le mot. L'idole du Juge, pour la première fois, ne trouve rien à quoi se nourrir."],
           ['codex', 'nahrawan'],
           ['codex', 'juge'],
-          ['nar', "Deux années passent. La Syrie, l'Égypte, les routes : rien n'est apaisé. À Koufa, 'Alî dit parfois sa lassitude, et il continue. Ramadan de l'an 40."],
+          ['nar', "Deux années passent. Le Shâm, l'Égypte, les routes : rien n'est apaisé. À Koufa, 'Alî dit parfois sa lassitude, et il continue. Ramadan de l'an 40."],
           ['leave', 'ibnabbas'], ['leave', 'qays'],
           ['map', 'koufa', 'maison', { time: 'dawn' }],
           ['say', 'ibnnabbah', "Commandeur des croyants, c'est l'heure de la prière."]

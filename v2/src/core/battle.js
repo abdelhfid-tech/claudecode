@@ -349,7 +349,7 @@
         { label: '⛨ ' + I.t('Garde'), sub: I.t('+ Niyya'), cache: !voit('guard') }
       ];
       const iOrd = C.champ ? items.push({ label: '⚑ ' + I.t('Ordonner'), sub: h.def.stratege && C.champ.libre !== C.turn ? I.t('sans perdre son tour') : I.t('les rangs') }) - 1 : -1;
-      const iLim = h.sakina >= 100 ? items.push({ label: `❂ ${h.def.limit.name}`, sub: I.t('Sakîna'), cls: 'limit' }) - 1 : -1;
+      const iLim = h.sakina >= 100 ? items.push({ label: `❂ ${h.def.limit.name}`, sub: I.t('Sérénité'), cls: 'limit' }) - 1 : -1;
       const p = listMenu(box, title(), items, { start, onLR: setBoost, cls: 'main' }); wire();
       const i = await p; start = i;
       if (i === 0 || i === 1) { const sk = i === 0 ? FER : lum; const t = await pickTarget(alive('foe'), I.t(sk.name)); if (!t) continue; sert('attack'); if (boost) sert('niyya'); return { type: 'skill', skill: sk, targets: [t], boost }; }
@@ -468,7 +468,7 @@
       case 'dispel': ['atk', 'mag', 'df', 'spd'].forEach(k => { if (t.buffs[k] && t.buffs[k].v > 0) delete t.buffs[k]; }); delete t.st.regen; floater(t, I.t('Dissipé'), 'debuff'); break;
       case 'veil': if (t.side === 'foe' && !t.broken) { t.veils = Math.max(0, t.veils + (f.v || -1)); if (t.veils <= 0) { t.broken = true; t.ct += 400; floater(t, I.t('DÉVOILÉ'), 'break'); I.audio.sfx('break'); G.flash('#fff'); } } break;
       case 'niyya': t.niyya = I.clamp((t.niyya || 0) + (f.v || 1), 0, 5); if (t.side === 'hero') floater(t, I.t('+Niyya'), 'buff'); break;
-      case 'sakina': if (t.side === 'hero') { t.sakina = I.clamp(t.sakina + (f.v || 20), 0, 100); floater(t, I.t('+Sakîna'), 'buff'); } break;
+      case 'sakina': if (t.side === 'hero') { t.sakina = I.clamp(t.sakina + (f.v || 20), 0, 100); floater(t, I.t('+Sérénité'), 'buff'); } break;
       case 'taunt': t.st.taunt = turns; floater(t, I.t('Fait front'), 'buff'); break;
     }
   }
@@ -520,7 +520,7 @@
     }
     W.persistHeroes();
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
-    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? I.t('La lame a tranché') : I.t('Sans sa lame, le mal recule')) : C.opts.noir ? I.t('On ne l’a pas combattu contre lui, mais pour lui') : C.opts.boss ? I.t('L’idole se brise') : I.t('L’emprise est brisée')}</p><h1>${maux.length ? (maux.every(e => e.cut) ? I.t('Tranché') : maux.some(e => e.cut) ? I.t('Tranché et repoussé') : I.t('Repoussé')) : C.opts.noir ? I.t('La chimère lâche prise') : I.t('Dévoilement')}</h1><ul><li>${I.t('Sagesse acquise : <b>+{n}</b>', { n: xp })}</li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
+    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? I.t('La lame a tranché') : I.t('Sans sa lame, le mal recule')) : C.opts.noir ? I.t('Ce n’est pas lui qu’on a combattu : c’est ce qu’il regardait.') : C.opts.boss ? I.t('L’idole se brise') : I.t('L’emprise est brisée')}</p><h1>${maux.length ? (maux.every(e => e.cut) ? I.t('Tranché') : maux.some(e => e.cut) ? I.t('Tranché et repoussé') : I.t('Repoussé')) : C.opts.noir ? I.t('La chimère lâche prise') : I.t('Dévoilement')}</h1><ul><li>${I.t('Expérience : <b>+{n}</b>', { n: xp })}</li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
   }
   // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue dans le
   // chapitre, le groupe est relevé, une fois par tentative. On ne montre que de la lumière : ni figure, ni nom, ni nombre.
@@ -546,7 +546,7 @@
     I.audio.sfx('dark');
     if (C.opts.interieur) { const T = ((I.sagas.coeur || {}).portes || {}).remonte || {}; // la noosphère intérieure : on remonte, rien n'est perdu
       await S.card('defeat', `<p class="small">${I.esc(T.titre || '')}</p><h1>${I.esc(T.h1 || '')}</h1><p>${I.esc(T.texte || '')}</p><div class="hint">▼</div>`); return; }
-    await S.card('defeat', `<p class="small">${I.t('Le groupe est éprouvé')}</p><h1>${I.t('La chaîne ne rompt pas')}</h1><p>${I.t('Ce qui fut transmis ne se perd pas. Reprends, le cœur affermi : la Sakîna descend sur ceux qui persévèrent.')}</p><div class="hint">${I.t('Reprendre')} ▼</div>`);
+    await S.card('defeat', `<p class="small">${I.t('Le groupe est éprouvé')}</p><h1>${I.t('La chaîne ne rompt pas')}</h1><p>${I.t('Ce qui fut transmis ne se perd pas. Reprends, le cœur affermi.')}</p><div class="hint">${I.t('Reprendre')} ▼</div>`);
   }
 
   /* ================= présentation ================= */

@@ -12,7 +12,7 @@
    dresser ceux qui n'ont pas été tranchés (['vices', …]). Textes des maux et des lames : src/data/coeur.js. */
 ISNAD.registerSaga({
   id: 'idris', order: 0, frame: true,
-  name: 'Idris', epithet: 'Le Râwî', arabic: 'إدريس', years: '1508 H · 2084',
+  name: 'Idris', epithet: 'Le Râwî', arabic: 'إدريس', years: '1507 H · 2084',
   light: 'sabr', lightName: 'Patience', ambiance: 'cyberpunk',
   tagline: 'Savoir de qui l’on tient ce que l’on sait.',
   intro: [],
@@ -33,7 +33,7 @@ ISNAD.registerSaga({
         { lvl: 9, id: 'l_sidq', name: 'Parole du Véridique', desc: 'La Lumière d’Abû Bakr : dire vrai quand tout vacille.', cost: 6, target: 'foe', el: 'sidq', pow: 1.8, anim: 'pillar' },
         { lvl: 9, id: 'l_adl', name: 'Mesure du Fârûq', desc: 'La Lumière de ’Umar : la même balance pour tous.', cost: 7, target: 'foes', el: 'adl', pow: 1.15, anim: 'wave' },
         { lvl: 9, id: 'l_shajaa', name: 'Le Sabre rengainé', desc: 'La Lumière de Khâlid : le courage de s’effacer.', cost: 6, target: 'foe', el: 'shajaa', pow: 1.8, fx: [{ st: 'dispel' }], anim: 'slash' },
-        { lvl: 9, id: 'l_rahma', name: 'Largesse du Généreux', desc: 'La Lumière de ’Uthmân : soigne tout le groupe.', cost: 8, target: 'allies', heal: 0.7, anim: 'heal' },
+        { lvl: 9, id: 'l_rahma', name: 'Miséricorde du Généreux', desc: 'La Lumière de ’Uthmân : soigne tout le groupe.', cost: 8, target: 'allies', heal: 0.7, anim: 'heal' },
         { lvl: 9, id: 'l_ilm', name: 'Porte du Savoir', desc: 'La Lumière de ’Alî : comprendre avant de juger.', cost: 6, target: 'foe', el: 'ilm', pow: 1.7, fx: [{ st: 'reveal' }], anim: 'glyph' }
       ],
       limit: { id: 'isnad', name: 'La Chaîne entière', desc: 'De témoin en témoin : toutes les Lumières à la fois.', target: 'foes', el: 'sabr', pow: 2.1, fx: [{ st: 'veil', v: -2 }, { st: 'dispel' }], anim: 'pillar' }
@@ -76,7 +76,7 @@ ISNAD.registerSaga({
     marque: { name: 'La Marque', art: 'lens', hue: 48, scale: 1, lvl: 8, tier: 'minion', weak: ['sidq', 'adl'], veils: 2,
       skills: [{ w: 3, name: 'Désir', target: 'foe', el: 'ilm', pow: 1.1, fx: [{ st: 'doute', turns: 1, chance: 0.3 }], anim: 'dark' }],
       taunts: ['Tu le mérites.'],
-      desc: 'Un signe qui promet d’être quelqu’un à qui l’arbore. Dire vrai sur ce qu’elle vend suffit à la ternir.' },
+      desc: 'Un signe qui promet à qui l’arbore d’être quelqu’un. Dire vrai sur ce qu’elle vend suffit à la ternir.' },
     score: { name: 'Le Score', art: 'scale', hue: 140, scale: 2, lvl: 9, tier: 'elite', weak: ['rahma', 'adl'], veils: 4,
       skills: [{ w: 3, name: 'Notation', target: 'foe', el: 'adl', pow: 1.3, fx: [{ st: 'atk', v: -1, chance: 0.6 }], anim: 'dark' }, { w: 2, name: 'Classement', target: 'foes', el: 'fer', pow: 0.8, anim: 'wave' }],
       phases: [{ at: 0.5, say: 'Vous valez ce que je dis que vous valez.', fx: [{ st: 'atk', v: 1 }] }],
@@ -96,7 +96,7 @@ ISNAD.registerSaga({
     applaudissement: { name: 'L’Applaudissement', art: 'mask', hue: 320, scale: 2, lvl: 7, tier: 'elite', weak: ['shajaa', 'sabr'], veils: 3,
       skills: [{ w: 3, name: 'Ovation', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'doute', turns: 1, chance: 0.3 }], anim: 'burst' }],
       taunts: ['Regarde-moi. Regarde-moi encore.'],
-      desc: 'Le bruit que fait une foule qui n’est pas là. Il ne tient debout que celui qui l’écoute. Il cède devant le courage de descendre du socle.' },
+      desc: 'Le bruit que fait une foule qui n’est pas là. Il ne soutient que celui qui l’écoute. Il cède devant le courage de descendre du socle.' },
     compte: { name: 'Le Compte', art: 'tower', hue: 45, scale: 2, lvl: 7, tier: 'elite', weak: ['rahma', 'sabr'], veils: 3,
       skills: [{ w: 3, name: 'Addition', target: 'foe', el: 'fer', pow: 1.0, anim: 'slash' }, { w: 1, name: 'Mise en réserve', target: 'self', fx: [{ st: 'def', v: 1 }], anim: 'guard' }],
       taunts: ['Un de plus. Un de plus.'],
@@ -112,19 +112,19 @@ ISNAD.registerSaga({
         { w: 1, name: 'Agrégation', target: 'self', fx: [{ st: 'atk', v: 1 }], anim: 'guard' }
       ],
       phases: [
-        { at: 0.7, say: 'J’ai été le Clan. J’ai été l’Aigle et le Trône. On m’a brisé. On m’a refait.', fx: [{ st: 'def', v: 1 }] },
+        { at: 0.7, say: 'J’ai été le Clan. J’ai été l’Aigle d’Airain et le Trône. On m’a brisé. On m’a refait.', fx: [{ st: 'def', v: 1 }] },
         { at: 0.4, say: 'J’ai été le Héros, l’Or, la Rumeur, le Juge. Je ne suis que ce que vous regardez.', fx: [{ st: 'atk', v: 1 }], addSkills: [{ w: 3, name: 'Rappel du Flux', target: 'foes', el: 'fer', pow: 0.9, fx: [{ st: 'waswas', turns: 2, chance: 0.5 }], anim: 'dark' }] },
         { at: 0.15, say: 'Brise-moi. Ils me rallumeront demain sous un autre nom.', fx: [{ st: 'spd', v: 1 }] }
       ],
-      taunts: ['Je ne commande pas. J’additionne.', 'Quarante et un millions de regards. Et le tien ?'],
-      desc: 'L’agrégateur de chimères : une machine qui donne un corps à tout ce que des millions de regards désirent ensemble. Il n’a rien inventé ; il a industrialisé la fabrique des idoles. Chacune des six Lumières est pour lui une faille.' }
+      taunts: ['Je ne commande pas. J’additionne.', 'Quarante et un millions de vues. Il manque la tienne.'],
+      desc: 'L’agrégateur de chimères : une machine qui donne un corps à tout ce que des millions de gens désirent ensemble. Il n’a rien inventé ; il a industrialisé la fabrique des idoles. Les cinq Lumières, et la Patience de qui transmet, sont ses failles.' }
   },
 
   codex: [
     { id: 'noosphere', cat: 'Noosphère', title: 'La noosphère', text: 'Du grec *noûs*, l’esprit. Le mot vient de Vladimir Vernadsky et de Pierre Teilhard de Chardin : la sphère de la pensée humaine, comme il y a une atmosphère et une biosphère. Dans ISNAD, c’est l’envers invisible de chaque lieu : ce que les hommes y pensent, y craignent et y désirent ensemble. C’est là que se livrent les combats.', src: 'Vernadsky, La Biosphère ; Teilhard de Chardin, Le Phénomène humain' },
     { id: 'egregore', cat: 'Noosphère', title: 'La chimère', text: 'Ce que beaucoup de cœurs fabriquent ensemble, à force de regarder la même chose. De loin, elle semble avoir un corps ; approchée, elle se révèle vide. Faite de peur, d’orgueil ou d’avidité, elle se retourne contre ceux qui la nourrissent. Le jeu emploie ce mot comme une image, non comme une doctrine.' },
     { id: 'idole', cat: 'Noosphère', title: 'L’idole', text: 'Une chose fabriquée par les hommes, et qui finit par les commander. Celles de pierre ont été brisées ; celles de la noosphère reviennent sous d’autres noms : le Clan, l’Empire, le Héros, l’Or, la Rumeur, le Juge sans miséricorde. On ne détruit pas une idole par la haine. On la dévoile : on montre qu’elle est vide.' },
-    { id: 'agregor', cat: 'Noosphère', title: 'L’AGRÉGOR', text: 'Le moteur de la Cité-Miroir. Il agrège l’attention de millions de regards et donne un corps à ce qu’ils désirent ensemble : une tendance, une marque, le culte d’une personne. Il ne ment pas et ne commande pas. Il additionne, plus vite que les cœurs ne peuvent juger.' },
+    { id: 'agregor', cat: 'Noosphère', title: 'L’AGRÉGOR', text: 'Le moteur de la Cité-Miroir. Il agrège l’attention de millions de gens et donne un corps à ce qu’ils désirent ensemble : une tendance, une marque, le culte d’une personne. Il ne ment pas et ne commande pas. Il additionne, plus vite que les cœurs ne peuvent juger.' },
     { id: 'isnad', cat: 'Parole', title: 'L’isnâd', text: 'La chaîne de transmission : « Untel m’a rapporté, d’après untel, qui l’a vu. » Des générations de savants ont vérifié chaque maillon, la mémoire et la probité de chaque transmetteur. On rapporte de ’Abdallâh ibn al-Mubârak : « L’isnâd fait partie de la religion ; sans lui, chacun dirait ce qu’il veut. »', src: 'Muslim, introduction du Sahîh' },
     { id: 'lumieres', cat: 'Noosphère', title: 'Les six Lumières', text: 'Véracité (*sidq*), Justice (*’adl*), Courage (*shajâ’a*), Miséricorde (*rahma*), Savoir (*’ilm*), Patience (*sabr*). Chaque saga en rend une à Idris ; la sixième est celle de quiconque transmet. En combat, chacune est une vertu qui dévoile certaines chimères.' },
     { id: 'jour', cat: 'Événement', title: 'Le jour le plus sombre', text: 'Le Messager d’Allah ﷺ meurt à Médine un lundi de Rabî’ al-Awwal de l’an 11 de l’Hégire (juin 632). La communauté, bouleversée, doit décider en quelques heures de ce qu’elle devient. C’est ici que commence la Chaîne.', src: 'Ibn Hishâm, as-Sîra ; al-Bukhârî' },
@@ -136,7 +136,7 @@ ISNAD.registerSaga({
     { id: 'razzia', cat: 'Noosphère', title: 'La razzia', text: 'Avant l’islam, le coup de main contre une caravane ou un campement (*ghazw*) était une coutume, presque un honneur. Le jeu en fait une chimère : « prendre parce qu’on le peut ». On ne la combat qu’en dernier recours ; on lève d’abord des renforts, parce qu’on écoute mieux celui qui n’est pas venu seul, puis on parle. Ce qui est repris est rendu à ceux qui l’avaient perdu, et les pillards sont remis au juge : ce n’est pas à celui qui poursuit de dire la peine.' },
     { id: 'r_defile', cat: 'Noosphère', title: 'Celui qui défile', text: 'Un homme de la Cité-Miroir, dans une ruelle. Il regarde défiler pour oublier, et ce qu’il veut oublier, c’est le temps qu’il y passe. Le mépris l’y renfonce. On l’en tire en disant ce qui est, comme on l’annonce à quelqu’un qu’on respecte, et en restant à côté de lui. Personnage de fiction.' },
     { id: 'r_regent', cat: 'Noosphère', title: 'Le Régent', text: 'Il tient un tampon au pied d’une tour vide et accorde ce que l’écran a déjà décidé. Il n’a personne à commander, donc personne dont répondre. Il confond le siège et la charge : on peut avoir l’un sans l’autre, et c’est la charge qui fait dormir en paix. Personnage de fiction.' },
-    { id: 'r_admire', cat: 'Noosphère', title: 'L’Admiré', text: 'Sous le grand écran, un homme que des millions de fenêtres applaudissent. Derrière les fenêtres, il n’y a personne. Il ne sait plus qui il serait sans ce bruit. Descendre du socle demande plus de courage que d’y monter : nul n’applaudit celui qui descend. Personnage de fiction.' },
+    { id: 'r_admire', cat: 'Noosphère', title: 'L’Admiré', text: 'Sous le grand écran, un homme que des millions de comptes applaudissent. Derrière ces comptes, il n’y a personne. Il ne sait plus qui il serait sans ce bruit. Descendre du socle demande plus de courage que d’y monter : nul n’applaudit celui qui descend. Personnage de fiction.' },
     { id: 'r_compteur', cat: 'Noosphère', title: 'Le Compteur', text: 'Il achète des regards quand personne n’en veut et les garde dans un coffre, sans jamais en poser un sur quelqu’un. Ce qu’on donne, on sait où il est ; ce qu’on amasse, on le perd de vue. Personnage de fiction.' },
     { id: 'r_cartographe', cat: 'Noosphère', title: 'Le Cartographe', text: 'Il dessine la Cité sans y marcher, d’après des millions de relevés. Il demande « combien l’ont vu ? » et jamais « qui ? ». Sa carte porte un mur là où un enfant sait qu’il y a une porte. Un savoir se corrige en allant voir, et se garde avec le nom de celui qui a vu. Personnage de fiction.' },
     { id: 'x_veiller', cat: 'Noosphère', title: 'Veiller les Archives', text: 'Chaque fois qu’Idris remonte la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus, et envoie voir. On peut suivre plusieurs récits à la fois : chacun attend là où on l’a laissé. Mais des archives qu’on ne veille pas, un autre les raconte à votre place. Fiction.' },
@@ -149,7 +149,7 @@ ISNAD.registerSaga({
 
   chapters: [
     {
-      id: 'p1', title: 'La Cité-Miroir', sub: 'An 1508 de l’Hégire · 2084', minLvl: 1, last: true,
+      id: 'p1', title: 'La Cité-Miroir', sub: 'An 1507 de l’Hégire · 2084', minLvl: 1, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'passant1', name: 'Passant', at: ['rue', 0, -1], look: { kind: 'cyber', robe: '#3a3048', head: '#241c30' }, talk: [['say', 'passant1', 'Tu as vu la tendance de midi ? Non ? Alors de quoi veux-tu qu’on parle ?']] },
@@ -160,15 +160,15 @@ ISNAD.registerSaga({
       ],
       chests: [{ map: 'archives', at: ['bureau', 1, 1], gear: 'lampe' }, { map: 'archives', at: ['rayonnages', 2, 1], item: 'dattes', n: 2 }],
       intro: [
-        ['title', 'ISNAD', 'An 1508 de l’Hégire · 2084 · Cité-Miroir'],
+        ['title', 'ISNAD', 'An 1507 de l’Hégire · 2084 · Cité-Miroir'],
         ['nar', 'Dans la Cité-Miroir, on ne lève plus les yeux. Le ciel est un écran, et l’écran regarde en retour.'],
-        ['nar', 'On l’appelle l’AGRÉGOR. Il ne ment pas. Il ne commande pas. Il additionne : tout ce que des millions de regards désirent ensemble, il lui donne un corps.'],
+        ['nar', 'On l’appelle l’AGRÉGOR. Il ne ment pas. Il ne commande pas. Il additionne : tout ce que des millions de gens désirent ensemble, il lui donne un corps.'],
         ['nar', 'Les anciens avaient un mot pour une chose fabriquée par les hommes et qui finit par les commander. Ils disaient : une *idole*.']
       ],
       objectives: [
         { text: 'Traverser la rue jusqu’au grand écran', goto: 'ecran', then: [
           ['sfx', 'glitch'],
-          ['say', 'Le Flux', 'Aujourd’hui, quarante et un millions de regards. Aujourd’hui, vous aimez ceci. Demain, vous l’aurez oublié. Regardez encore.'],
+          ['say', 'Le Flux', 'Aujourd’hui, quarante et un millions de vues. Aujourd’hui, vous aimez ceci. Demain, vous l’aurez oublié. Regardez encore.'],
           ['say', 'idris', 'Chaque matin une idole neuve. Chaque soir on la brise pour en dresser une autre. Et personne ne se souvient de la veille.'],
           ['nar', 'Idris est *râwî* aux Archives basses : un transmetteur. Un métier presque disparu, qui consiste à savoir de qui l’on tient ce que l’on sait.']
         ] },
@@ -221,7 +221,7 @@ ISNAD.registerSaga({
       ]
     },
     {
-      id: 'e1', title: 'Le Cœur de l’Agrégor', sub: 'An 1508 de l’Hégire · Cité-Miroir', minLvl: 9, last: true, fin: true,
+      id: 'e1', title: 'Le Cœur de l’Agrégor', sub: 'An 1507 de l’Hégire · Cité-Miroir', minLvl: 9, last: true, fin: true,
       map: 'cite', start: 'parvis', party: ['idris', 'yunus'],
       npcs: [
         { id: 'salim_n', name: 'Sâlim', hero: 'salim', at: 'rue', talk: [['say', 'salim_n', 'Je sais où est son cœur.']] },
@@ -236,7 +236,7 @@ ISNAD.registerSaga({
       ],
       chests: [{ map: 'noos', at: ['noeud1', 1, 1], gear: 'epee_maitre' }, { map: 'noos', at: 'faille', item: 'musc', n: 2 }, { map: 'noos', at: 'miroir', item: 'lait', n: 2 }, { map: 'noos', at: ['noeud3', 2, 0], item: 'eau', n: 2 }],
       intro: [
-        ['title', 'Le Cœur de l’Agrégor', 'An 1508 de l’Hégire · Cité-Miroir'],
+        ['title', 'Le Cœur de l’Agrégor', 'An 1507 de l’Hégire · Cité-Miroir'],
         ['nar', 'Idris rouvre les yeux. Cinq Lumières brûlent en lui, et aucune n’est la sienne : on les lui a confiées.'],
         ['nar', 'Là-haut, la ville n’a pas changé. Mais sous chaque écran, il distingue maintenant la forme de ce qu’on y adore.'],
         ['give', 'eau', 2], ['give', 'pain', 2]
@@ -250,7 +250,7 @@ ISNAD.registerSaga({
           ['say', 'salim', 'Il y a un opérateur de garde au pied du grand écran. Un ancien collègue. S’il nous ouvre la trappe de service, nous entrons sans que le Flux nous voie. Sinon, il faudra le traverser.'],
           ['say', 'salim', 'Il relance une alerte par heure, depuis des années. On lui a dit de le faire. Personne ne lui a dit pourquoi, et il n’a jamais manqué une heure.'],
           ['parley', {
-            with: 'L’opérateur de nuit', title: 'L’opérateur de garde',
+            with: 'L’opérateur de garde', title: 'L’opérateur de garde',
             intro: 'Il a peur de perdre son score, et il n’a jamais vu personne dire non à l’Agrégor.',
             goal: 5,
             rounds: [
@@ -295,7 +295,7 @@ ISNAD.registerSaga({
         ] },
         { text: 'Atteindre le cœur de l’Agrégor (à l’est)', goto: 'coeur', then: [
           ['say', "L'AGRÉGOR", 'Je ne suis pas un dieu, Idris. Je n’ai jamais prétendu l’être. Je suis seulement ce que vous regardez tous en même temps.'],
-          ['say', "L'AGRÉGOR", 'J’ai été le Clan. J’ai été l’Aigle et le Trône. J’ai été le Héros, l’Or, la Rumeur, le Juge. On m’a brisé chaque fois. On m’a refait chaque fois.'],
+          ['say', "L'AGRÉGOR", 'J’ai été le Clan. J’ai été l’Aigle d’Airain et le Trône. J’ai été le Héros, l’Or, la Rumeur, le Juge. On m’a brisé chaque fois. On m’a refait chaque fois.'],
           ['say', 'idris', 'Je sais. Je les ai vus te briser. Aucun d’eux n’a cru en avoir fini avec toi. Ils ont tenu, chacun son heure, et passé le dépôt au suivant.'],
           ['say', "L'AGRÉGOR", 'Et sous chacun de ces noms, il y avait toujours les mêmes. Tu les connais. Ils ne sont pas à moi : ils sont à vous.'],
           ['vices', { bg: 'cite',
@@ -304,7 +304,7 @@ ISNAD.registerSaga({
             tous: [['say', 'yunus', 'Sept lames, et aucune n’est de fer. Garde-les en t’en servant : elles ne tiennent leur fil que de l’œuvre.']],
             reste: [['say', 'yunus', 'Ceux que tu n’as fait que repousser reviendront. Ce n’est pas une défaite : c’est le travail de demain.']] }],
           ['heal'],
-          ['battle', { group: ['agregor'], bg: 'cite', boss: true, intro: 'Les six Lumières sont ses failles. Dévoile-le, encore et encore.', allies: [{ flag: 'operateur', name: 'L’opérateur coupe une à une les alimentations' },
+          ['battle', { group: ['agregor'], bg: 'cite', boss: true, intro: 'Les cinq Lumières, et la Patience de qui transmet, sont ses failles. Dévoile-le, encore et encore.', allies: [{ flag: 'operateur', name: 'L’opérateur coupe une à une les alimentations' },
             { flag: 'ami_defile', name: 'Celui qui défilait éteint son écran', hp: 0.03, veil: 0 }, { flag: 'ami_regent', name: 'Le Régent a laissé son siège : il veille dans la rue', hp: 0.03, veil: 0 },
             { flag: 'ami_admire', name: 'L’Admiré est descendu, sans public', hp: 0.03, veil: 0 }, { flag: 'ami_compteur', name: 'Le Compteur donne ses regards à ceux qu’on ne voit pas', hp: 0.03, veil: 0 },
             { flag: 'ami_carto', name: 'Le Cartographe écrit des noms en marge de sa carte', hp: 0.03, veil: 0 }] }],
@@ -351,7 +351,7 @@ ISNAD.registerSaga({
                 { t: 'Chez Abû Bakr, j’ai vu ce que devient un chagrin qu’on refuse de nommer : il prend un corps, et il commande.', el: 'sidq', v: 2, need: 'abubakr/deni', r: 'Un chagrin… Oui. Ça a commencé comme ça. Je ne voulais pas que ce soit vrai.' }
               ] },
               { say: 'Si j’arrête, il faudra que je regarde ce que j’ai laissé pendant ce temps-là.',
-                noir: { name: 'Le Défilement', group: ['defilement'], bg: 'cite', intro: 'Il a dit « si j’arrête », et quelque chose, derrière lui, a resserré sa prise. Tant qu’elle parlera plus fort que toi, il n’entendra rien.', say: 'On ne le frappe pas avec colère : on cesse de le suivre.', after: 'C’est… plus calme, d’un coup. Répète ce que tu disais.' },
+                noir: { name: 'Le Défilement', group: ['defilement'], bg: 'cite', intro: 'Il a dit « si j’arrête », et il s’est cramponné à son écran. Tant que cela parlera plus fort que toi, il n’entendra rien.', say: 'On ne le frappe pas avec colère : on cesse de le suivre.', after: 'C’est… plus calme, d’un coup. Répète ce que tu disais.' },
                 opts: [
                 { t: 'Oui. Et ce sera moins lourd que de continuer à ne pas le regarder.', el: 'sidq', v: 2, r: 'Tu ne me promets pas que ce sera léger. C’est déjà ça.' },
                 { t: 'Ce n’est rien. Tout le monde fait comme toi.', el: 'rahma', v: 0, r: 'C’est ce que dit le Flux. Mot pour mot.' },
@@ -414,7 +414,7 @@ ISNAD.registerSaga({
                 { t: 'J’ai vu un siège qui survit à tous ceux qui s’y asseyent. Il ne donne rien : il prend la place de celui qui croit le tenir.', el: 'adl', v: 2, need: 'umar/ego_trone', r: 'Qui t’a parlé de mon fauteuil ? … Il est froid, c’est vrai. Même l’été.' }
               ] },
               { say: 'Sans moi, ce serait le désordre. C’est moi qui valide ce que l’écran décide.',
-                noir: { name: 'Le Petit Trône', group: ['petit_trone'], bg: 'cite', intro: 'Il s’est redressé sur son siège, et le siège a grandi sous lui. Ce n’est plus lui qui parle : c’est la place qu’il occupe.', say: 'La place vide exige qu’on l’occupe. Ne t’y assieds pas.', after: 'Je… je me suis entendu parler. Continue.' },
+                noir: { name: 'Le Petit Trône', group: ['petit_trone'], bg: 'cite', intro: 'Il s’est redressé sur son siège, et le siège a grandi sous lui. Il ne parle plus pour lui : il parle pour sa place.', say: 'La place vide exige qu’on l’occupe. Ne t’y assieds pas.', after: 'Je… je me suis entendu parler. Continue.' },
                 opts: [
                 { t: 'Alors c’est l’écran qui commande, et toi qui signes.', el: 'sidq', v: 2, r: 'Je… je contresigne. Ce n’est pas rien, contresigner.' },
                 { t: 'Tu fais un travail utile.', el: 'rahma', v: 0, r: 'N’est-ce pas ? Accordé.' },
@@ -464,7 +464,7 @@ ISNAD.registerSaga({
         { text: 'Parler à l’homme qu’on applaudit', talk: 'admire', then: [
           ['say', 'admire', 'Ah ! Un regard de plus. Approche. Tu m’as reconnu, bien sûr.'],
           ['say', 'idris', 'Non.'],
-          ['say', 'admire', 'C’est impossible. Onze millions de fenêtres me suivent. Tu dois en être sans le savoir.'],
+          ['say', 'admire', 'C’est impossible. Huit millions d’abonnés me suivent. Tu dois en être sans le savoir.'],
           ['parley', {
             with: 'admire', title: 'Descendre du socle',
             intro: 'Il n’entend que les applaudissements, et il ne sait plus qui il serait sans eux.',
@@ -746,14 +746,14 @@ ISNAD.registerSaga({
     },
     /* ---------- 2.x : la Citadelle, où Idris est né (ouverte depuis la Chaîne dès la première veillée entendue) ---------- */
     {
-      id: 'c_citadelle', visite: 'citadelle', title: 'La Citadelle', sub: 'An 1508 de l’Hégire · au bord du désert', minLvl: 1, last: true,
+      id: 'c_citadelle', visite: 'citadelle', title: 'La Citadelle', sub: 'An 1507 de l’Hégire · au bord du désert', minLvl: 1, last: true,
       map: 'citadelle', opts: { time: 'dusk' }, start: 'porte', party: ['idris'],
       npcs: [
         { id: 'amghar', name: 'Le vieil amghar', at: ['puits', 2, 0], look: { kind: 'ancien', robe: '#5a4a38', head: '#d8cfba' }, talk: [['say', 'amghar', 'Le puits donne encore. Assieds-toi.']] },
         { id: 'ecolier', name: 'Un écolier', at: ['ecole', 1, 1], look: { kind: 'enfant', robe: '#4a5a3a', head: '#2c3424' }, talk: [['say', 'ecolier', 'On apprend les noms dans l’ordre : celui qui a dit, puis celui qui a entendu.']] }
       ],
       intro: [
-        ['title', 'La Citadelle', 'An 1508 de l’Hégire · au bord du désert'],
+        ['title', 'La Citadelle', 'An 1507 de l’Hégire · au bord du désert'],
         ['mus', 'citadelle'],
         ['nar', 'Idris est né ici. Il n’y était pas revenu depuis qu’on l’avait envoyé apprendre aux Archives basses.'],
         ['nar', 'Les murs de pisé ont été refaits bien des fois. Ce sont les mêmes murs : ceux du Caïd dont il entend les veillées.'],

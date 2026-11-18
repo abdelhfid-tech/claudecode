@@ -63,7 +63,7 @@
     try {
       S.hideDialog(); W.emote('groupe', 'prie'); await I.sleep(I.debug.auto ? 10 : 700); await S.fade('out', 600); I.audio.sfx('light');
       const fz = $('#fade'); fz.style.transition = 'none'; fz.style.opacity = 0; // le carton prend le relais du fondu
-      await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>${I.t('La prière')}</h1><p>${I.t(I.pick(PRAY_LINES[m]))}</p><p class="small">${I.t('Le groupe est reposé : Constance et Souffle à 100 % · Sakîna')}</p><div class="hint">▼</div>`, 6500);
+      await S.card('pray', `<div class="orn">◠</div><p class="small">${D.PRAYERS[m]}</p><h1>${I.t('La prière')}</h1><p>${I.t(I.pick(PRAY_LINES[m]))}</p><p class="small">${I.t('Le groupe est reposé : Constance et Souffle à 100 % · Sérénité')}</p><div class="hint">▼</div>`, 6500);
       W.healAll(); W.gainSakina(35); S.flags._prayed = true;
       if (!S.flags._prayPillar && !(I.oeuvres.sobre && I.oeuvres.sobre())) { S.flags._prayPillar = true; W.pillar('priere', 1); await I.oeuvres.gain('priere'); } // la première prière du chapitre nourrit la provision (pas celle d'une visite : elle se rejoue)
       if (W.map && !parLeRecit) W.checkpoint();
@@ -267,7 +267,7 @@
         if (!saga.frame && sp.cTot) {
           const perfect = (sp.cOk || 0) === sp.cTot;
           if (perfect) { sv.items.siwak = (sv.items.siwak || 0) + 2; sv.items.musc = (sv.items.musc || 0) + 1; I.audio.sfx('roll'); }
-          await S.card('victory', `<p class="small">${I.t('Fidélité à la Chaîne · {saga}', { saga: I.esc(saga.name) })}</p><h1>${perfect ? I.t('Isnâd sahîh') : I.t('Chaîne transmise')}</h1><ul><li>${I.t('Actes retrouvés du premier coup : <b>{ok} / {total}</b>', { ok: sp.cOk || 0, total: sp.cTot })}</li>${perfect ? '<li>' + I.t('Chaîne sans faille : chaque acte fut celui que les transmetteurs ont rapporté.') + '</li><li>' + I.t('Reçu : <b>Siwâk ×2</b>, <b>Musc</b>') + '</li>' : '<li>' + I.t('Là où la chaîne a vacillé, relis le Recueil : chaque acte y a sa source.') + '</li>'}</ul><div class="hint">▼</div>`);
+          await S.card('victory', `<p class="small">${I.t('Fidélité à la Chaîne · {saga}', { saga: I.esc(saga.name) })}</p><h1>${perfect ? I.t('Chaîne fidèle') : I.t('Chaîne transmise')}</h1><ul><li>${I.t('Actes retrouvés du premier coup : <b>{ok} / {total}</b>', { ok: sp.cOk || 0, total: sp.cTot })}</li>${perfect ? '<li>' + I.t('Chaîne sans faille : chaque acte fut celui que les transmetteurs ont rapporté.') + '</li><li>' + I.t('Reçu : <b>Siwâk ×2</b>, <b>Musc</b>') + '</li>' : '<li>' + I.t('Là où la chaîne a vacillé, relis le Recueil : chaque acte y a sa source.') + '</li>'}</ul><div class="hint">▼</div>`);
         }
         sp.done = true; sp.ch = saga.frame ? W.ci + 1 : 0;
         if (!saga.frame) I.gear.deposer(saga.id); // ce que ce groupe portait rejoint la réserve : le suivant s'en servira

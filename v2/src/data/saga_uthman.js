@@ -9,7 +9,7 @@ ISNAD.registerSaga({
 
   intro: [
     ['mus', 'chaine'],
-    ['title', "'Uthmân ibn 'Affân", 'Le Généreux · 23–35 H'],
+    ['title', "'Uthmân ibn 'Affân", 'Quatrième maillon · Le Généreux'],
     ['nar', "An 23 de l'Hégire. 'Umar est tombé à la prière de l'aube. Six hommes se concertent trois jours ; au matin, les mains se tendent vers 'Uthmân ibn 'Affân."],
     ['nar', "Il a près de soixante-dix ans. Marchand prospère, il a tant donné qu'on a cessé de compter : un puits racheté pour que tous y boivent, l'armée des jours difficiles équipée de ses deniers."],
     ['nar', "Sous son califat, la communauté s'étend de l'Ifrîqiya au Khorâsân. Les trésors affluent. Les cœurs, eux, ne grandissent pas aussi vite que les frontières."],
