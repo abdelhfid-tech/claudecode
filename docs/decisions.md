@@ -1468,6 +1468,13 @@ pages privées de son compte.
   Chardin), 精神圏 en japonais, et en arabe عالم الأفكار, « le monde des idées », le terme de Malek Bennabi, plutôt
   qu'une transcription du mot grec. Le décideur l'a confirmé : « c'est très bien ».
 
+- [x] **D186. « Le Généreux » est gardé (décision du décideur, 18 novembre).** 'Uthmân garde son titre, « Le
+  Généreux » (« Quatrième maillon · Le Généreux »), et la compétence « Miséricorde du Généreux ». Al-Karîm est un Nom
+  d'Allah, mais la générosité est une qualité que l'on peut acquérir, comme la véracité d'aṣ-Ṣiddîq : le titre désigne
+  'Uthmân, jamais Allah (lecture de l'exigence 8 par le décideur). L'anglais (*the Generous*) et le japonais (惜しまぬ人)
+  suivent. *Proposition de l'agent, à valider :* en arabe, le titre suit le surnom des sources, **ذو النورين**, et la
+  compétence se dit « رحمة ذي النورين » : en arabe, « رحمة الكريم » se lit d'abord comme la miséricorde d'Allah.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
