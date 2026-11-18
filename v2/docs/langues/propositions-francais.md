@@ -53,6 +53,14 @@ Le registre (`v2/docs/sources/*.json`, champ `ecart`) décrit chaque écart. Les
 Pour les 37 autres (mots ajoutés, coupes non marquées, un singulier pour un pluriel…), je peux écrire, parole par
 parole, un français fidèle au texte arabe relevé, à valider ensuite par vous et par un spécialiste.
 
+## 5. Relevé en écrivant le japonais (cœur)
+
+- **Recueil, l'entrée sur Iblîs, et l'organigramme du mal** : le jeu prête à Iblîs les mots de 14:22 et dit que le
+  Coran l'appelle « un ennemi déclaré » (2:168). Ces deux versets disent *ash-shaytân*, pas le nom d'Iblîs (le registre
+  le note). **Proposition** : « le Shaytân » dans ces deux phrases, ou dire que les commentateurs l'identifient à Iblîs.
+- **Compagnon de lumière, l'Aigle** : « l'étoile qui se lève plein est » — Altaïr se lève un peu au nord de l'est.
+  **Proposition** : « qui se lève à l'est ».
+
 ## Si vous retenez un changement
 
 Le français change d'abord, puis les listes des langues se remettent à jour (`node v2/tools/langues.js releve`) : les
