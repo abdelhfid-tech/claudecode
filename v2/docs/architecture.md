@@ -249,7 +249,9 @@ vient de `D.RAWI` (`defs.js`), rien n'est dessiné de neuf :
   Sâlim, qui marche avec le râwî, et de Compagnons — à l'écran, la case qui ne va pas avec ce qui est choisi s'éteint.
   Aucun objet qui soit une arme, une pièce d'équipement ou la marque d'une figure de 2084 (la bourse du Compteur) ; le
   néon ne donne pas de lumière au râwî sur la carte (une lumière à soi est la marque d'un Compagnon) ; ni lueur ni
-  rayonnement. Ni or ni jaune : le liseré d'un habit composé n'est jamais le beige doré que le moteur pose à défaut.
+  rayonnement. Ni or ni jaune : le liseré d'un habit composé n'est jamais le beige doré que le moteur pose à défaut, ni
+  le jaune pâle d'un ensemble (celui du veilleur, `#ffe08a`, D146) qu'une pièce composée mettrait au jour — le bandeau de
+  la calotte, l'écharpe, le bas de la robe longue : c'est alors le néon, ou le cyan de l'habit (`perso.dore`).
 - **Le moteur** (`sprites.js`) : `look.neon` colore la bande et la ceinture ; `look.porte` se dessine comme un objet
   tenu, que l'équipement ne lit pas (`gear.js` : l'arme de départ reste le couteau, et l'objet se range au combat) ;
   `look.barbe` et `look.poil` ne valent que pour un adulte ; un teint plus sombre que tous ceux du moteur garde le blanc
@@ -266,20 +268,25 @@ chaque nouvelle partie, avant le prologue, tout déjà choisi — un toucher suf
 visage seulement. Après le prologue, depuis le pied de la Chaîne et la halte, la composition entière en quatre onglets
 (le visage, l'habit, les couleurs, l'objet) : des icônes tirées du râwî lui-même, seul l'onglet ouvert dit son nom.
 Sous le pouce : ↺, le dé, « Commencer » ou « Garder ». Trois mots à l'écran au début (« Ton personnage », « Écrire »,
-« Commencer »), cinquante auparavant. En largeur, l'aperçu à gauche ; en arabe, l'écran se retourne de lui-même
-(propriétés logiques). Au clavier et à la manette, les flèches vont de case en case (`focusList`, option `spatial`) ;
-une souris immobile sous l'écran qui s'ouvre ne prend pas la main (option `survolBouge`) : « Entrée » commence
-toujours. La page « Ton personnage » de la halte montre le râwî lui-même.
+« Commencer »), cinquante auparavant. En largeur, l'aperçu et les boutons à gauche ; sur un téléphone étroit (640 × 360,
+667 × 375), la colonne de droite s'en tient à sept cases de large, et les boutons du bas vont à la ligne plutôt que de
+se tasser — aucun mot n'est coupé ; sur le plus bas (568 × 320), les vignettes raccourcissent pour que tout tienne sans
+défiler. En arabe, l'écran se retourne de lui-même (propriétés logiques). Au clavier et à la manette, les flèches vont
+de case en case (`focusList`, option `spatial`) ; une souris immobile sous l'écran qui s'ouvre ne prend pas la main
+(option `survolBouge`) : « Entrée » commence toujours. La page « Ton personnage » de la halte montre le râwî lui-même.
 
 `node v2/tools/personnage.js` le prouve : les noms acceptés et refusés ; chaque phrase redite avec six noms ; le profil
 d'origine qui ne change rien ; les règles du râwî composé (composition abîmée oubliée, visage inchangé par l'habit, le
 dé sur mille tirages, les teints dans l'ordre dans les trois dessins, aucune silhouette de Compagnon, l'arme de départ,
 le refus des règles) ; puis, par les vrais boutons et en quatre tailles d'écran, chaque choix touché et vu et un
 prologue entier joué sous un autre nom et un autre visage — tout ce qui s'affiche est relevé, « Idris » n'y paraît plus
-— ; la composition entière, case par case ; enfin le choix gardé, rechargé, changé depuis la halte, exporté, importé ;
-l'écran en arabe ; au clavier. `silhouettes.js` y ajoute le râwî composé (chaque valeur de chaque pièce, et des
-compositions entières) et l'empreinte des grands personnages d'avant (`tools/essais/grands.json`) ; `partie.js`, une
-partie dont le râwî est composé, exportée puis réimportée à l'identique.
+— ; sur les téléphones courants, en largeur et en hauteur (640 × 360, 667 × 375, 568 × 320, 320 × 568), aucun mot coupé
+ni rien hors de l'écran, à l'ouverture et dans chaque onglet ; le champ du nom, son nom pour les lecteurs d'écran et un
+clavier qui ne corrige pas un prénom ; ni néon ni liseré doré ; la composition entière, case par case ; enfin le choix
+gardé, rechargé, changé depuis la halte, exporté, importé ; l'écran en arabe ; au clavier. `silhouettes.js` y ajoute
+le râwî composé (chaque valeur de chaque pièce, et des compositions entières) et l'empreinte des grands personnages
+d'avant (`tools/essais/grands.json`) ; `partie.js`, une partie dont le râwî est composé, exportée puis réimportée à
+l'identique.
 
 ## La définition du dessin : `src/core/gfx.js`
 

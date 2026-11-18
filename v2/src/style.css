@@ -246,11 +246,20 @@ body.fin #perso .pv-fig img, body.fin #perso .pv-vig img, body.fin #perso .pv-on
 @media (max-width: 339px) { #perso .pv-c { width: 38px; height: 38px; } #perso .pv-fig44 { width: 40px; height: 60px; } #perso .pv-grande { width: 46px; height: 69px; } #perso .pv-tete img, #perso .pv-objet img { width: 34px; height: 34px; } }
 /* un écran bas : des vignettes un peu plus courtes, pour que tout tienne sans défiler */
 @media (max-height: 600px) { #perso .pv-fig44 { height: 60px; } #perso .pv-grande { width: 48px; height: 72px; } #perso .corps { gap: 6px; grid-template-rows: auto minmax(110px, 1fr) auto auto; } #perso .pv-col, #perso .pv-panneau { gap: 6px; } }
-/* en largeur : l'aperçu et le bouton à gauche ; le nom, les ensembles, les onglets et les rangées à droite */
-body:not(.portrait) #perso .corps { width: min(100%, 50em); grid-template-columns: minmax(0, 1fr) minmax(0, 22.5em); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "pv saisie" "pv col" "bas col"; column-gap: 14px; row-gap: 6px; }
+/* en largeur : l'aperçu et les boutons à gauche ; le nom, les ensembles, les onglets et les rangées à droite. La colonne
+   de droite n'a besoin que de sept cases de large (340 points) : sur un téléphone étroit (640 × 360, 667 × 375), elle
+   s'y tient, pour laisser leur place à l'aperçu et aux boutons */
+body:not(.portrait) #perso .corps { width: min(100%, 50em); grid-template-columns: minmax(0, 1fr) minmax(0, clamp(340px, 100vw - 330px, 22.5em)); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "pv saisie" "pv col" "bas col"; column-gap: 14px; row-gap: 6px; }
 body:not(.portrait) #perso .pv-col { justify-content: flex-start; }
-body:not(.portrait) #perso .pv-bas { position: static; padding-bottom: max(10px, 2vh); background: none; }
+/* les boutons du bas vont à la ligne plutôt que de se tasser : aucun mot n'est coupé ; si l'écran défile, ils restent sous le pouce */
+body:not(.portrait) #perso .pv-bas { flex-wrap: wrap; padding-bottom: max(10px, 2vh); }
+body:not(.portrait) #perso .pv-bas button:not(.pv-rond) { flex: 1 0 auto; min-width: auto; }
+/* un téléphone en largeur : des boutons plus serrés, pour qu'ils tiennent sur une ligne quand la place le permet */
+@media (orientation: landscape) and (max-height: 500px) { body:not(.portrait) #perso .pv-bas { gap: 6px; } body:not(.portrait) #perso .pv-bas .pv-rond { width: 44px; height: 44px; }
+  body:not(.portrait) #perso .pv-bas button:not(.pv-rond), body:not(.portrait) #perso .pv-nom button { padding: 0 .7em; letter-spacing: .04em; } }
 @media (orientation: landscape) and (max-height: 480px) { #perso header { margin-bottom: .15em; } #perso h2 { font-size: 1.1em; } }
+/* un téléphone très bas, en largeur (568 × 320) : des vignettes plus courtes, pour que l'habit tienne sans défiler */
+@media (orientation: landscape) and (max-height: 340px) { #perso { padding-top: 6px; } #perso .pv-fig44 { height: 52px; } #perso .pv-grande { width: 44px; height: 60px; } }
 #menu .pane .perso-vue { display: flex; gap: .8em; margin: .4em 0; } #menu .pane .perso-vue img { width: 4.6em; height: 6.9em; image-rendering: pixelated; }
 body.fin #menu .pane .perso-vue img { image-rendering: auto; }
 /* « Ta partie » : exporter, importer */

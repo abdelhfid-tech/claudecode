@@ -14,7 +14,10 @@
       choisi ; un nom refusé bloque ; chaque ensemble, chaque teint, chaque barbe et chaque poil se touchent et se voient ;
       un nom, un ensemble et un visage choisis, le prologue se joue en entier — tout ce qui s'affiche est relevé : le nom
       choisi y paraît (dialogue, combat, objectifs, Chaîne), « Idris » n'y paraît plus ; le râwî de la carte est celui
-      que l'on a composé. Peu de mots, aucun texte sous 10,5 points, rien qui déborde, « Commencer » à l'écran.
+      que l'on a composé. Peu de mots, aucun texte sous 10,5 points, rien qui déborde, « Commencer » à l'écran ; le champ
+      du nom a son nom pour les lecteurs d'écran, et le clavier du téléphone n'y corrige pas un prénom.
+   3 bis. Les téléphones courants, en largeur et en hauteur (640 × 360, 667 × 375, 568 × 320, 320 × 568) : à l'ouverture
+      et dans chaque onglet, aucun mot coupé dans un bouton, rien hors de l'écran, aucune case sous la taille d'un doigt.
    4. La composition entière, depuis la Chaîne : quatre onglets, chaque case touchée change l'aperçu ; la calotte et
       « sans manteau » s'excluent, la case qui ne va pas s'éteint ; le dé, ↺ ; la composition gardée (partie gardée,
       rechargée), changée depuis la halte au milieu d'un chapitre, exportée puis importée ailleurs ; un profil abîmé
@@ -25,7 +28,7 @@
    (dont la planche des six tenues). Code 1 à la première anomalie. */
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const { chromium } = require('playwright');
-const V2 = path.join(__dirname, '..'), out = path.join(V2, '.smoke/personnage'), url = 'file://' + path.join(V2, 'index.html');
+const V2 = path.join(__dirname, '..'), out = path.join(V2, '.smoke/personnage'), url = 'file://' + path.resolve(V2, process.env.JEU || 'index.html');   // JEU=… : le même contrôle sur un autre assemblage
 fs.mkdirSync(out, { recursive: true });
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); };
 
@@ -40,6 +43,12 @@ const ETAT = () => { const s = document.querySelector('#perso'), vis = e => { if
     groupes: [...s.querySelectorAll('.pv-panneau .pv-groupe')].map(g => g.querySelectorAll('.pv-c').length), choix: [...s.querySelectorAll('.pv-panneau .pv-groupe')].map(choisi), eteintes: [...s.querySelectorAll('.pv-panneau .pv-groupe')].map(g => [...g.querySelectorAll('.pv-c')].map((b, i) => b.disabled ? i : -1).filter(i => i >= 0)),
     ok: ok && ok.textContent, okVisible: vis(ok), champVisible: vis(champ), retour: [...s.querySelectorAll('button')].some(b => /Retour/.test(b.textContent)), proche: !!s.querySelector('.pv.proche'),
     defile: s.scrollHeight > s.clientHeight + 1, large: s.scrollWidth > s.clientWidth + 1, invisibles: cases.filter(c => !vis(c)).length, petitesCases: cases.filter(c => { const r = c.getBoundingClientRect(); return r.width < 41.5 || r.height < 41.5; }).length,
+    plusPetiteCase: Math.min(...cases.filter(c => c.offsetParent).map(c => { const r = c.getBoundingClientRect(); return Math.min(r.width, r.height); })),
+    // un bouton dont le mot déborde (tassé par la mise en page) : « Commencer », « Garder », « ◂ Retour », « Écrire »
+    coupes: [...s.querySelectorAll('button')].filter(b => b.offsetParent && b.textContent.trim() && b.scrollWidth > b.clientWidth + 1).map(b => b.textContent.trim() + ' ' + b.scrollWidth + '/' + b.clientWidth),
+    horsEcran: [...s.querySelectorAll('button, input')].filter(b => b.offsetParent && !vis(b)).map(b => (b.getAttribute('aria-label') || b.textContent || b.className).trim().slice(0, 24)),
+    // le champ du nom : son nom pour les lecteurs d'écran, et un clavier de téléphone qui ne corrige pas un prénom
+    champ: champ ? { id: champ.id, dit: champ.getAttribute('aria-label') || '', orthographe: champ.spellcheck, majuscules: champ.autocapitalize, touche: champ.enterKeyHint } : null,
     petitTexte: textes.length ? Math.min(...textes) : 99, mots: mots.length, texte: mots.join(' '), face: face ? face.src : '', retouche: !!s.querySelector('.pv-ens .pv-c.retouche'), sel: (s.querySelector('button.sel') || {}).className || '' }; };
 // les points de l'ouverture du visage dans l'image de face de l'aperçu (la coiffe dit où elle est)
 const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = new Image(); await new Promise(r => { im.onload = r; im.onerror = r; im.src = src; });
@@ -123,6 +132,17 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     const atteintes = new Set(); D.TENUES.forEach(t => R.coiffes.forEach(co => R.manteaux.forEach(ma => { const L = X.composer(t, { coiffe: co, manteau: ma }); atteintes.add((L.coiffe || 'capuche') + '/' + (L.manteau || 'long')); })));
     const communes = [...atteintes].filter(p => paires[p]).map(p => p + ' (' + paires[p] + ')');
     if (communes.length) E.push('une composition prend la silhouette d’un Compagnon ou de Sâlim : ' + communes.join(', '));
+    // ni or ni jaune (exigence 17) : aucun néon n'est doré, et une pièce qui met le liseré au jour (le bandeau de la calotte,
+    // l'écharpe, le bas de la robe longue) ne le montre jamais doré — pas même le jaune pâle du manteau du veilleur
+    // (la teinte se juge ici, et sur les images mêmes : de face, de profil, de dos, chaque point jaune ou doré est compté)
+    const teinte = (r, g, b) => { const mx = Math.max(r, g, b), d = mx - Math.min(r, g, b); if (d < 40 || mx < 120) return -1; const a = (mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60; return a < 0 ? a + 360 : a; };
+    const doreHex = h => { const n = parseInt(String(h).slice(1, 7), 16), a = teinte(n >> 16, (n >> 8) & 255, n & 255); return a >= 30 && a <= 70; };
+    const ors = L => { let n = 0; [0, 1, 2, 3].forEach(d => { const cv = G.figure(L, d, 0), px = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; for (let i = 0; i < px.length; i += 4) { const a = px[i + 3] > 200 ? teinte(px[i], px[i + 1], px[i + 2]) : -1; if (a >= 35 && a <= 65) n++; } }); return n; };
+    const dores = []; if (!doreHex('#ffe08a') || doreHex('#39e6ff')) E.push('le contrôle ne reconnaît pas le jaune pâle du veilleur');
+    Object.keys(R.neons).forEach(n => R.neons[n].forEach(c => { if (doreHex(c)) dores.push('néon ' + n + ' ' + c); }));
+    D.TENUES.forEach(t => { const seul = ors(Object.assign({ kind: 'compagnon' }, X.look(t)));
+      [{ coiffe: 'calotte' }, { echarpe: true }, { longue: true }, { coiffe: 'calotte', echarpe: true, longue: true }].forEach(c => { const n = ors(Object.assign({ kind: 'compagnon' }, X.composer(t, c))); if (n > seul) dores.push(`${t.id} ${JSON.stringify(c)} : ${seul} → ${n} points jaunes`); }); });
+    if (dores.length) E.push('du jaune ou de l’or que l’ensemble ne montrait pas : ' + dores.join(', '));
     // l'objet porté : ni l'équipement de départ, ni le combat
     const def = I.sagas.idris.heroes.idris, gear = I.save.data;
     const depart = look => { const k = 'essai:' + Math.random(); const md = I.gear.of({ def: Object.assign({}, def, { look }), key: k }).md; delete gear.equip[k]; delete gear.gearInit[k]; return md; };
@@ -132,7 +152,7 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     if (auCombat.porte) E.push('au combat, l’objet porté reste en main');
     return { E, pareils, marques: marques.size, paires: Object.keys(paires).length, atteintes: atteintes.size, md0, mdItem }; });
   if (regles.E.length) regles.E.forEach(e => ko('ÉCART ' + e));
-  else ok(`le râwî composé : une composition abîmée est oubliée (balise, type faux, valeur inconnue, __proto__) ; changer l’étoffe, le néon, la coupe ou l’objet laisse le visage au point près (${regles.pareils} images, de face et de profil) ; une seule marque de visage sous les six ensembles ; le dé, mille tirages : jamais le visage, jamais la calotte sans manteau, rien hors des listes ; ${regles.atteintes} silhouettes possibles, aucune n’est l’une des ${regles.paires} (coiffe, coupe) des Compagnons des récits ou de Sâlim ; l’objet porté laisse l’arme de départ (${regles.md0} ; rangé dans l’équipement, il donnerait ${regles.mdItem}) et se range au combat`);
+  else ok(`le râwî composé : une composition abîmée est oubliée (balise, type faux, valeur inconnue, __proto__) ; changer l’étoffe, le néon, la coupe ou l’objet laisse le visage au point près (${regles.pareils} images, de face et de profil) ; une seule marque de visage sous les six ensembles ; le dé, mille tirages : jamais le visage, jamais la calotte sans manteau, rien hors des listes ; ${regles.atteintes} silhouettes possibles, aucune n’est l’une des ${regles.paires} (coiffe, coupe) des Compagnons des récits ou de Sâlim ; ni néon doré, ni liseré doré sur une pièce composée (le jaune pâle du veilleur compris) ; l’objet porté laisse l’arme de départ (${regles.md0} ; rangé dans l’équipement, il donnerait ${regles.mdItem}) et se range au combat`);
   // un récit ou un paquet n'écrit ni teint ni trait : les règles le refusent
   { const D = require('../src/core/defs.js'), RG = require('../src/core/regles.js'), base = [];
     for (const f of fs.readdirSync(path.join(V2, 'src/data')).filter(f => /\.js$/.test(f)).sort()) { const ctx = { ISNAD: { registerSaga: s => base.push(s), registerMusic() {} }, console }; ctx.window = ctx; ctx.globalThis = ctx; vm.runInNewContext(fs.readFileSync(path.join(V2, 'src/data', f), 'utf8'), ctx, { filename: f }); }
@@ -173,6 +193,8 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     if (!e1.okVisible) ko(`INVISIBLE ${nom} : « Commencer » n'est pas à l'écran sans défiler`); if (!e1.champVisible) ko(`INVISIBLE ${nom} : le champ du nom n'est pas à l'écran sans défiler`); if (e1.large) ko(`ÉCART ${nom} : l'écran déborde en largeur`);
     if (e1.invisibles) ko(`INVISIBLE ${nom} : ${e1.invisibles} case(s) hors de l'écran`); if (e1.mots > 4) ko(`ÉCART ${nom} : ${e1.mots} mots à l'écran (« ${e1.texte} »)`); if (tactile && e1.petitTexte < 10.5) ko(`ÉCART ${nom} : un texte de ${e1.petitTexte} points sur un écran tactile`);
     if (!/ok/.test(e1.sel)) ko(`ÉCART ${nom} : « Commencer » n'est pas la case choisie à l'ouverture (${e1.sel})`);
+    if (e1.coupes.length) ko(`ÉCART ${nom} : un bouton est tassé, son mot déborde (${e1.coupes.join(' · ')})`);
+    if (!e1.champ || e1.champ.id !== 'perso-nom' || !e1.champ.dit || e1.champ.orthographe !== false || e1.champ.majuscules !== 'words' || e1.champ.touche !== 'done') ko(`ÉCART ${nom} : le champ du nom n'a pas son nom pour les lecteurs d'écran, ou le clavier du téléphone y corrigerait un prénom : ${JSON.stringify(e1.champ)}`);
     // un nom refusé bloque ; un nom accepté débloque
     await p.locator('#perso input').fill('Allah'); await p.waitForTimeout(150);
     const e2 = await p.evaluate(() => ({ note: document.querySelector('#perso .pv-note').textContent, bloque: document.querySelector('#perso .ok').disabled }));
@@ -210,6 +232,29 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     else if (!joue.ou.dialogue || !joue.ou.combat || !joue.ou.chaine || joue.faute) ko(`ÉCART ${nom} : le nom choisi ne paraît pas partout (${JSON.stringify(joue.ou)}, élisions fautives : ${joue.faute})`);
     else ok(`${nom} ${vp.width}×${vp.height}${tactile ? ', au doigt' : ''} : « Ton personnage » s'ouvre sur Idris, tout choisi (${e1.mots} mots : « ${e1.texte} »${tactile ? `, aucun texte sous ${Math.floor(e1.petitTexte * 10) / 10} points` : ''}) ; refuse « Allah » ; six ensembles, sept teints, trois barbes, trois poils touchés, chacun vu ; Khalil, manteau du veilleur, teint et barbe choisis, joue tout le prologue — ${joue.n} textes relevés, « Khalil » ${joue.fois} fois, plus un seul « Idris » ; sur la carte, le râwî composé ; arme de départ : ${joue.md}${e1.defile ? ' · l’écran défile' : ''}`);
     sansErreur(nom); if (nom === 'bureau') pageBureau = p; else await p.close();
+  }
+
+  /* ---------- 3 bis. les téléphones courants, en largeur et en hauteur : rien de tassé, rien hors de l'écran ----------
+     640 × 360 et 667 × 375 (les plus courants en largeur), 568 × 320 (le plus petit), 320 × 568 (le plus étroit) : à
+     l'ouverture, puis la composition entière, onglet par onglet — aucun mot coupé dans un bouton, aucune case hors de
+     l'écran ni sous la taille d'un doigt (38 points sur un écran de 320 de large), aucun texte sous 10,5 points, rien qui
+     déborde. */
+  for (const [nom, vp] of [['paysage 640', { width: 640, height: 360 }], ['paysage 667', { width: 667, height: 375 }], ['petit paysage', { width: 568, height: 320 }], ['étroit', { width: 320, height: 568 }]]) {
+    const p = await ouvrir(vp), taille = vp.width + 'x' + vp.height; await bouton(p, '#title .vmenu', 'Nouvelle partie').tap(); await p.waitForTimeout(700);
+    const vus = [['ouverture', await p.evaluate(ETAT)]]; await p.screenshot({ path: path.join(out, 'etroit-' + taille + '-ouverture.png') });
+    // la composition entière : celle qu'ouvre le pied de la Chaîne, une fois le prologue joué
+    await p.evaluate(() => { const I = window.ISNAD; document.querySelector('#perso').hidden = true; I.ui.menuOpen = false; I.save.data.prologue = true; I.ui.showChain(); });
+    await p.waitForTimeout(600); await bouton(p, '#chain .chainfoot', 'Ton personnage').tap(); await p.waitForTimeout(700);
+    for (const o of ['visage', 'habit', 'couleurs', 'objet']) { await p.locator(`#perso .pv-onglet[data-o="${o}"]`).tap(); await p.waitForTimeout(350); vus.push([o, await p.evaluate(ETAT)]);
+      if (o === 'habit') await p.screenshot({ path: path.join(out, 'etroit-' + taille + '-habit.png') }); }
+    const min = vp.width < 340 ? 37.5 : 41.5, fautes = [];
+    vus.forEach(([quoi, e]) => { if (!e.ouvert) { fautes.push(quoi + ' : l’écran n’est pas ouvert'); return; }
+      if (e.coupes.length) fautes.push(`${quoi} : un mot coupé (${e.coupes.join(' · ')})`); if (e.horsEcran.length) fautes.push(`${quoi} : hors de l'écran (${e.horsEcran.join(' · ')})`);
+      if (e.large) fautes.push(quoi + ' : déborde en largeur'); if (e.plusPetiteCase < min) fautes.push(`${quoi} : une case de ${Math.round(e.plusPetiteCase)} points`);
+      if (e.petitTexte < 10.5) fautes.push(`${quoi} : un texte de ${e.petitTexte} points`); if (!e.okVisible) fautes.push(`${quoi} : « ${e.ok} » hors de l’écran`); });
+    if (fautes.length) ko(`ÉCART ${nom} ${vp.width}×${vp.height} : ${fautes.slice(0, 5).join(' ; ')}`);
+    else ok(`${nom} ${vp.width}×${vp.height}, au doigt : à l'ouverture et dans les quatre onglets, aucun mot coupé, rien hors de l'écran ni qui déborde, aucune case sous ${Math.floor(Math.min(...vus.map(v => v[1].plusPetiteCase)))} points`);
+    sansErreur(nom + ' ' + taille); await p.close();
   }
 
   /* ---------- 4. la composition entière ; le choix tient ; on en change ---------- */

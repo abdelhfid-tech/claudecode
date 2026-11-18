@@ -52,15 +52,21 @@
     return c; };
   P.permis = (k, v, t, brut) => { const c = Object.assign({}, P.compo(brut)), B = P.base(t); c[k] = v; const vaut = q => (c[q] !== undefined ? c[q] : B[q]);
     return !(vaut('coiffe') === 'calotte' && vaut('manteau') === 'aucun'); };
+  // un liseré jaune ou doré (une teinte entre l'orangé et le jaune, franche) : celui du veilleur (#ffe08a) en est un
+  const dore = h => { const n = parseInt(String(h).slice(1, 7), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, mx = Math.max(r, g, b), d = mx - Math.min(r, g, b);
+    if (!(d >= 40)) return false; let a = (mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60; if (a < 0) a += 360; return a >= 30 && a <= 70; };
+  P.dore = dore;
   // l'apparence d'un ensemble et de ses pièces : le visage reste celui d'origine (sa marque, figée), le liseré n'est jamais
-  // le beige doré que le moteur pose à défaut (exigence 17 : ni or) — c'est le néon, ou le cyan de l'habit
+  // le beige doré que le moteur pose à défaut, ni le jaune pâle d'un ensemble (le veilleur, D146) qu'une pièce composée
+  // mettrait au jour — bandeau de la calotte, écharpe, bas de la robe longue (exigence 17 : ni or) : c'est le néon, ou le
+  // cyan de l'habit
   P.composer = function (t, brut) {
     const c = P.neutraliser(t, brut); if (!Object.keys(c).length) return P.look(t);
     const L = Object.assign({}, t.look); L.visage = I.gfx.signe(D.TENUES[0].look);
     if (c.coiffe) L.coiffe = c.coiffe; if (c.manteau) L.manteau = c.manteau; if (c.longue !== undefined) L.court = !c.longue; if (c.echarpe !== undefined) L.echarpe = c.echarpe;
     if (c.etoffe) { const e = R.etoffes[c.etoffe]; L.robe = e.robe; L.head = e.head; L.cloak = e.cloak; if (e.legs) L.legs = e.legs; else delete L.legs; }
     if (c.neon) { L.neon = R.neons[c.neon].slice(); L.trim = L.neon[0]; }
-    else if (!L.trim && (L.coiffe === 'calotte' || L.echarpe || L.court === false)) L.trim = '#39e6ff';
+    else if ((!L.trim || dore(L.trim)) && (L.coiffe === 'calotte' || L.echarpe || L.court === false)) L.trim = '#39e6ff';
     if (c.objet) L.porte = [c.objet];
     if (c.teint) L.teint = R.teints[c.teint]; if (c.barbe !== undefined) L.barbe = c.barbe; if (c.poil) L.poil = R.poils[c.poil];
     return L;

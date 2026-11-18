@@ -250,11 +250,20 @@ body.fin #perso .pv-fig img, body.fin #perso .pv-vig img, body.fin #perso .pv-on
 @media (max-width: 339px) { #perso .pv-c { width: 38px; height: 38px; } #perso .pv-fig44 { width: 40px; height: 60px; } #perso .pv-grande { width: 46px; height: 69px; } #perso .pv-tete img, #perso .pv-objet img { width: 34px; height: 34px; } }
 /* un écran bas : des vignettes un peu plus courtes, pour que tout tienne sans défiler */
 @media (max-height: 600px) { #perso .pv-fig44 { height: 60px; } #perso .pv-grande { width: 48px; height: 72px; } #perso .corps { gap: 6px; grid-template-rows: auto minmax(110px, 1fr) auto auto; } #perso .pv-col, #perso .pv-panneau { gap: 6px; } }
-/* en largeur : l'aperçu et le bouton à gauche ; le nom, les ensembles, les onglets et les rangées à droite */
-body:not(.portrait) #perso .corps { width: min(100%, 50em); grid-template-columns: minmax(0, 1fr) minmax(0, 22.5em); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "pv saisie" "pv col" "bas col"; column-gap: 14px; row-gap: 6px; }
+/* en largeur : l'aperçu et les boutons à gauche ; le nom, les ensembles, les onglets et les rangées à droite. La colonne
+   de droite n'a besoin que de sept cases de large (340 points) : sur un téléphone étroit (640 × 360, 667 × 375), elle
+   s'y tient, pour laisser leur place à l'aperçu et aux boutons */
+body:not(.portrait) #perso .corps { width: min(100%, 50em); grid-template-columns: minmax(0, 1fr) minmax(0, clamp(340px, 100vw - 330px, 22.5em)); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "pv saisie" "pv col" "bas col"; column-gap: 14px; row-gap: 6px; }
 body:not(.portrait) #perso .pv-col { justify-content: flex-start; }
-body:not(.portrait) #perso .pv-bas { position: static; padding-bottom: max(10px, 2vh); background: none; }
+/* les boutons du bas vont à la ligne plutôt que de se tasser : aucun mot n'est coupé ; si l'écran défile, ils restent sous le pouce */
+body:not(.portrait) #perso .pv-bas { flex-wrap: wrap; padding-bottom: max(10px, 2vh); }
+body:not(.portrait) #perso .pv-bas button:not(.pv-rond) { flex: 1 0 auto; min-width: auto; }
+/* un téléphone en largeur : des boutons plus serrés, pour qu'ils tiennent sur une ligne quand la place le permet */
+@media (orientation: landscape) and (max-height: 500px) { body:not(.portrait) #perso .pv-bas { gap: 6px; } body:not(.portrait) #perso .pv-bas .pv-rond { width: 44px; height: 44px; }
+  body:not(.portrait) #perso .pv-bas button:not(.pv-rond), body:not(.portrait) #perso .pv-nom button { padding: 0 .7em; letter-spacing: .04em; } }
 @media (orientation: landscape) and (max-height: 480px) { #perso header { margin-bottom: .15em; } #perso h2 { font-size: 1.1em; } }
+/* un téléphone très bas, en largeur (568 × 320) : des vignettes plus courtes, pour que l'habit tienne sans défiler */
+@media (orientation: landscape) and (max-height: 340px) { #perso { padding-top: 6px; } #perso .pv-fig44 { height: 52px; } #perso .pv-grande { width: 44px; height: 60px; } }
 #menu .pane .perso-vue { display: flex; gap: .8em; margin: .4em 0; } #menu .pane .perso-vue img { width: 4.6em; height: 6.9em; image-rendering: pixelated; }
 body.fin #menu .pane .perso-vue img { image-rendering: auto; }
 /* « Ta partie » : exporter, importer */
@@ -649,7 +658,7 @@ html[data-lang="ar"] #card.quote blockquote::before { content: "« "; } html[dat
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.08 · 2026-11-18 17:04 UTC · 3940344+";
+window.ISNAD_VERSION = "2.08 · 2026-11-18 18:17 UTC · cd3a10f+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -2769,15 +2778,21 @@ window.ISNAD_VERSION = "2.08 · 2026-11-18 17:04 UTC · 3940344+";
     return c; };
   P.permis = (k, v, t, brut) => { const c = Object.assign({}, P.compo(brut)), B = P.base(t); c[k] = v; const vaut = q => (c[q] !== undefined ? c[q] : B[q]);
     return !(vaut('coiffe') === 'calotte' && vaut('manteau') === 'aucun'); };
+  // un liseré jaune ou doré (une teinte entre l'orangé et le jaune, franche) : celui du veilleur (#ffe08a) en est un
+  const dore = h => { const n = parseInt(String(h).slice(1, 7), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, mx = Math.max(r, g, b), d = mx - Math.min(r, g, b);
+    if (!(d >= 40)) return false; let a = (mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60; if (a < 0) a += 360; return a >= 30 && a <= 70; };
+  P.dore = dore;
   // l'apparence d'un ensemble et de ses pièces : le visage reste celui d'origine (sa marque, figée), le liseré n'est jamais
-  // le beige doré que le moteur pose à défaut (exigence 17 : ni or) — c'est le néon, ou le cyan de l'habit
+  // le beige doré que le moteur pose à défaut, ni le jaune pâle d'un ensemble (le veilleur, D146) qu'une pièce composée
+  // mettrait au jour — bandeau de la calotte, écharpe, bas de la robe longue (exigence 17 : ni or) : c'est le néon, ou le
+  // cyan de l'habit
   P.composer = function (t, brut) {
     const c = P.neutraliser(t, brut); if (!Object.keys(c).length) return P.look(t);
     const L = Object.assign({}, t.look); L.visage = I.gfx.signe(D.TENUES[0].look);
     if (c.coiffe) L.coiffe = c.coiffe; if (c.manteau) L.manteau = c.manteau; if (c.longue !== undefined) L.court = !c.longue; if (c.echarpe !== undefined) L.echarpe = c.echarpe;
     if (c.etoffe) { const e = R.etoffes[c.etoffe]; L.robe = e.robe; L.head = e.head; L.cloak = e.cloak; if (e.legs) L.legs = e.legs; else delete L.legs; }
     if (c.neon) { L.neon = R.neons[c.neon].slice(); L.trim = L.neon[0]; }
-    else if (!L.trim && (L.coiffe === 'calotte' || L.echarpe || L.court === false)) L.trim = '#39e6ff';
+    else if ((!L.trim || dore(L.trim)) && (L.coiffe === 'calotte' || L.echarpe || L.court === false)) L.trim = '#39e6ff';
     if (c.objet) L.porte = [c.objet];
     if (c.teint) L.teint = R.teints[c.teint]; if (c.barbe !== undefined) L.barbe = c.barbe; if (c.poil) L.poil = R.poils[c.poil];
     return L;
@@ -8553,7 +8568,8 @@ window.ISNAD_VERSION = "2.08 · 2026-11-18 17:04 UTC · 3940344+";
 
     /* le nom : en haut, là où le clavier du téléphone ne le cache pas ; la raison d'un refus, seulement s'il y en a un */
     const saisie = I.el('div', 'pv-saisie'), col = I.el('div', 'pv-col'), ligne = I.el('div', 'pv-nom'), champ = document.createElement('input'), note = I.el('p', 'pv-note', '');
-    champ.type = 'text'; champ.maxLength = P.MAX; champ.value = p0.nom === P.NOM ? I.langue.rawi() : p0.nom; champ.dir = 'auto'; champ.autocomplete = 'off';   // le nom d'origine, tel que la langue le donne (« إدريس ») ; P.choisir le reconnaît champ.spellcheck = false; champ.autocapitalize = 'words'; champ.enterKeyHint = 'done'; champ.id = 'perso-nom'; champ.setAttribute('aria-label', I.t('Nom du râwî'));
+    champ.type = 'text'; champ.maxLength = P.MAX; champ.dir = 'auto'; champ.autocomplete = 'off'; champ.spellcheck = false; champ.autocapitalize = 'words'; champ.enterKeyHint = 'done'; champ.id = 'perso-nom'; champ.setAttribute('aria-label', I.t('Nom du râwî'));
+    champ.value = p0.nom === P.NOM ? I.langue.rawi() : p0.nom;   // le nom d'origine, tel que la langue le donne (« إدريس ») ; P.choisir le reconnaît
     const bNom = bouton(I.t('Écrire'), () => { champ.focus(); champ.select(); });
     ligne.appendChild(champ); ligne.appendChild(bNom);
     champ.addEventListener('input', () => peindre());

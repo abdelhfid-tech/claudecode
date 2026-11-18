@@ -220,7 +220,8 @@
 
     /* le nom : en haut, là où le clavier du téléphone ne le cache pas ; la raison d'un refus, seulement s'il y en a un */
     const saisie = I.el('div', 'pv-saisie'), col = I.el('div', 'pv-col'), ligne = I.el('div', 'pv-nom'), champ = document.createElement('input'), note = I.el('p', 'pv-note', '');
-    champ.type = 'text'; champ.maxLength = P.MAX; champ.value = p0.nom === P.NOM ? I.langue.rawi() : p0.nom; champ.dir = 'auto'; champ.autocomplete = 'off';   // le nom d'origine, tel que la langue le donne (« إدريس ») ; P.choisir le reconnaît champ.spellcheck = false; champ.autocapitalize = 'words'; champ.enterKeyHint = 'done'; champ.id = 'perso-nom'; champ.setAttribute('aria-label', I.t('Nom du râwî'));
+    champ.type = 'text'; champ.maxLength = P.MAX; champ.dir = 'auto'; champ.autocomplete = 'off'; champ.spellcheck = false; champ.autocapitalize = 'words'; champ.enterKeyHint = 'done'; champ.id = 'perso-nom'; champ.setAttribute('aria-label', I.t('Nom du râwî'));
+    champ.value = p0.nom === P.NOM ? I.langue.rawi() : p0.nom;   // le nom d'origine, tel que la langue le donne (« إدريس ») ; P.choisir le reconnaît
     const bNom = bouton(I.t('Écrire'), () => { champ.focus(); champ.select(); });
     ligne.appendChild(champ); ligne.appendChild(bNom);
     champ.addEventListener('input', () => peindre());
