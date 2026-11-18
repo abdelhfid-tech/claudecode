@@ -7,7 +7,7 @@
   const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script;
   const Gr = I.gear = {};
   const SLOTS = Object.keys(D.SLOTS), STATS = ['atk', 'mag', 'def', 'spd', 'hp', 'sp'];
-  const NOM = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan'), hp: I.T('Constance'), sp: I.T('Souffle') };
+  const NOM = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan§stat'), hp: I.T('Constance'), sp: I.T('Souffle') };
   const TRAITS = ['perce', 'vif', 'choc', 'parade', 'ferme'];
   Gr.SLOTS = SLOTS; Gr.NOM = NOM;
 

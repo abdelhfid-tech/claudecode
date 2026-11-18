@@ -56,11 +56,18 @@ function releve() {
   const F = textes(); let total = 0;
   LANGUES.forEach(l => Object.keys(F).forEach(f => {
     const ancien = lire(l, f), ecrits = new Map((ancien.textes || []).filter(x => x && x.t).map(x => [x.fr, x]));
+    // par emplacement (ou) : si le français d'un emplacement a changé, le texte déjà écrit le suit, marqué « a_revoir »
+    const parOu = new Map(); (ancien.textes || []).filter(x => x && x.t && x.ou && f !== 'moteur').forEach(x => { if (!parOu.has(x.ou)) parOu.set(x.ou, x); else parOu.set(x.ou, null); });
     const doc = { langue: l, fichier: f, textes: [] }; let gardes = 0;
-    F[f].forEach((v, fr) => { const e = ecrits.get(fr), x = { k: L.cle(fr), fr, t: e ? e.t : '', ou: v.ou }; if (v.qui) x.qui = v.qui; if (e && e.note) x.note = e.note; if (e) gardes++; doc.textes.push(x); });
-    const perdus = [...ecrits.keys()].filter(fr => !F[f].has(fr)).length;
+    const repris = new Set();
+    F[f].forEach((v, fr) => { let e = ecrits.get(fr), revoir = false;
+      if (!e) { const o = parOu.get(v.ou); if (o && !F[f].has(o.fr)) { e = o; revoir = true; repris.add(o.fr); } }
+      const x = { k: L.cle(fr), fr, t: e ? e.t : '', ou: v.ou }; if (v.qui) x.qui = v.qui; if (e && e.note) x.note = e.note;
+      if (revoir || (e && e.a_revoir)) { x.a_revoir = true; x.fr_avant = revoir ? e.fr : e.fr_avant; } if (e) gardes++; doc.textes.push(x); });
+    const perdus = [...ecrits.keys()].filter(fr => !F[f].has(fr) && !repris.has(fr)).length, arevoir = doc.textes.filter(x => x.a_revoir).length;
     ecrire(l, f, doc); total += doc.textes.length;
     if (perdus) console.log(`  ${l}/${f} : ${perdus} texte(s) écrit(s) dont le français a disparu du jeu, retiré(s)`);
+    if (arevoir) console.log(`  ${l}/${f} : ${arevoir} texte(s) à revoir (le français a changé à leur place)`);
   }));
   console.log(`✓ relevé : ${Object.keys(F).length} fichiers × ${LANGUES.length} langues, ${total / LANGUES.length} textes par langue`);
 }
@@ -85,14 +92,17 @@ function controler(l, F, REG) {
   const erreurs = [], avis = []; let faits = 0, n = 0; const cases = [];
   Object.keys(F).forEach(f => { const doc = lire(l, f), par = new Map((doc.textes || []).map(x => [x.fr, x]));
     F[f].forEach((v, fr) => { n++; const x = par.get(fr), w = `${l}/${f} ${v.ou}`;
-      if (!x || !x.t) return; faits++; const t = x.t;
+      if (!x || !x.t) return; if (x.a_revoir) { erreurs.push(`${w} : à revoir — le français a changé (avant : « ${String(x.fr_avant).slice(0, 50)} »)`); } faits++; const t = x.t;
       cases.push({ ou: v.ou, fr, t });
       // aucun reste de français : un texte de plus de deux mots recopié tel quel, ou sans un signe de l'écriture de la langue
       const mots = fr.replace(/\{\w+\}|<[^>]+>/g, '').trim().split(/\s+/).filter(m => /[A-Za-zÀ-ÿ]/.test(m)).length;
       if (t === fr && mots > 2) erreurs.push(`${w} : le français est recopié tel quel`);
       else if (l !== 'en' && /[A-Za-zÀ-ÿ]{2}/.test(fr.replace(/\{\w+\}|<[^>]+>/g, '')) && !ECRITURE[l].test(t)) avis.push(`${w} : aucun signe de l'écriture de la langue (« ${t.slice(0, 40)} »)`);
       // les mêmes champs que le français (un champ « tourné à la française » peut manquer), aucun de plus
-      const cf = champs(fr); champs(t).forEach(c => { if (!cf.has(c)) erreurs.push(`${w} : champ ${c} inconnu du français`); });
+      // un champ tourné à la française (de_nom, min_lame, le_voie, voisins_min, nombre…) a son jumeau nu (nom, lame, voie, voisins, n)
+      const cf = champs(fr), nus = new Set([...cf].map(c => c.replace(/^\{(de|du|le|la|les|l|min|au|aux)_/, '{').replace(/_min\}$/, '}')));
+      if (cf.has('{nombre}')) nus.add('{n}');
+      champs(t).forEach(c => { if (!cf.has(c) && !nus.has(c)) erreurs.push(`${w} : champ ${c} inconnu du français`); });
       if (t.split(L.SEP).length > FORMES[l]) erreurs.push(`${w} : ${t.split(L.SEP).length} formes selon le nombre, ${FORMES[l]} au plus`);
       if (fr.indexOf(L.SEP) < 0 && t.indexOf(L.SEP) >= 0 && !cf.has('{n}')) erreurs.push(`${w} : des formes selon le nombre, sans champ {n}`);
       if (balises(fr) !== balises(t)) erreurs.push(`${w} : pas les mêmes balises que le français (${balises(fr) || 'aucune'} / ${balises(t) || 'aucune'})`);
@@ -116,7 +126,7 @@ function poser(l, f, fichier) {
   const doc = lire(l, f), par = new Map((doc.textes || []).map(x => [x.k, x])); if (!par.size) { console.log(`✗ ${l}/${f} : aucune liste (node v2/tools/langues.js releve)`); process.exit(1); }
   let brut = JSON.parse(fs.readFileSync(fichier, 'utf8')); if (!Array.isArray(brut)) brut = Object.keys(brut).map(k => ({ k, t: brut[k] }));
   let n = 0; const inconnues = [];
-  brut.forEach(e => { if (!e || typeof e.t !== 'string' || !e.t.trim()) return; const x = par.get(e.k); if (!x) { inconnues.push(e.k); return; } x.t = e.t; if (e.note) x.note = e.note; n++; });
+  brut.forEach(e => { if (!e || typeof e.t !== 'string' || !e.t.trim()) return; const x = par.get(e.k); if (!x) { inconnues.push(e.k); return; } x.t = e.t; if (e.note) x.note = e.note; delete x.a_revoir; delete x.fr_avant; n++; });
   ecrire(l, f, doc);
   console.log(`${inconnues.length ? '!' : '✓'} ${l}/${f} : ${n} texte(s) posé(s)` + (inconnues.length ? `, ${inconnues.length} clé(s) inconnue(s) : ${inconnues.slice(0, 8).join(' ')}` : ''));
   if (inconnues.length) process.exit(1);

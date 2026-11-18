@@ -21,7 +21,7 @@
   const FER = { id: '_fer', name: I.T('Frapper'), target: 'foe', el: 'fer', pow: 1.0, anim: 'slash', basic: true };
   const lightOf = h => ({ id: '_lum', name: I.T('Éclairer'), target: 'foe', el: h.def.el, pow: 0.9, anim: 'light', basic: true });
   const ASSAUT = { name: I.T('Assaut'), target: 'foe', el: 'fer', pow: 1.0, anim: 'dark', w: 3 };
-  const STN = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan'), stun: I.T('Étourdi'), doute: I.T('Doute'), waswas: I.T('Waswâs'), regen: I.T('Régén.'), garde: I.T('En garde'), taunt: I.T('Cible') };
+  const STN = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan§stat'), stun: I.T('Étourdi'), doute: I.T('Doute'), waswas: I.T('Waswâs'), regen: I.T('Régén.'), garde: I.T('En garde'), taunt: I.T('Cible') };
 
   let C = null; // contexte du combat en cours
 
@@ -385,7 +385,7 @@
     if (cmd.type === 'guard') { e.st.garde = 1; e.niyya = Math.min(5, e.niyya + 1); e.sakina = Math.min(100, e.sakina + 8); fx('guard', e, e.color); floater(e, I.t('Garde'), 'info'); I.audio.sfx('tek'); await I.sleep(420); return; }
     if (cmd.type === 'item') {
       const it = D.ITEMS[cmd.item]; I.save.data.items[cmd.item]--; await banner(it.name, 700);
-      cmd.targets.forEach(t => { if (it.revive && !t.alive) { t.alive = true; t.hp = Math.round(t.max.hp * it.revive); floater(t, I.t('Relevé'), 'heal'); } if (it.hp && t.alive) heal(t, Math.round(t.max.hp * it.hp)); if (it.sp) { t.sp = Math.min(t.max.sp, t.sp + Math.round(t.max.sp * it.sp)); floater(t, I.t('+Souffle'), 'heal'); } if (it.cleanse) cleanse(t); if (it.niyya) { t.niyya = Math.min(5, t.niyya + it.niyya); floater(t, I.t('+Niyya'), 'info'); } fx('heal', t, '#7fd69a'); });
+      cmd.targets.forEach(t => { if (it.revive && !t.alive) { t.alive = true; t.hp = Math.round(t.max.hp * it.revive); floater(t, I.t('Relevé§combat'), 'heal'); } if (it.hp && t.alive) heal(t, Math.round(t.max.hp * it.hp)); if (it.sp) { t.sp = Math.min(t.max.sp, t.sp + Math.round(t.max.sp * it.sp)); floater(t, I.t('+Souffle'), 'heal'); } if (it.cleanse) cleanse(t); if (it.niyya) { t.niyya = Math.min(5, t.niyya + it.niyya); floater(t, I.t('+Niyya'), 'info'); } fx('heal', t, '#7fd69a'); });
       I.audio.sfx('heal'); await I.sleep(520); return;
     }
     const sk = cmd.skill, boost = cmd.boost || 0, hero = e.side === 'hero';
@@ -415,7 +415,7 @@
     } else { fx(sk.anim || (sk.heal ? 'heal' : 'glyph'), sk.target === 'self' ? e : targets[0] || e, col); I.audio.sfx(sk.heal ? 'heal' : hero ? 'light' : 'dark'); }
     if (sk.heal || sk.revive || sk.sp) {
       for (const t of targets) {
-        if (sk.revive && !t.alive) { t.alive = true; t.hp = 1; t.st = {}; floater(t, I.t('Relevé'), 'heal'); }
+        if (sk.revive && !t.alive) { t.alive = true; t.hp = 1; t.st = {}; floater(t, I.t('Relevé§combat'), 'heal'); }
         if (!t.alive) continue;
         if (sk.heal) heal(t, Math.round(eff(e, 'mag') * sk.heal * 2.7 * (1 + 0.4 * boost) * (1 + (e.soin || 0))));
         if (sk.sp) { t.sp = Math.min(t.max.sp, t.sp + Math.round(t.max.sp * sk.sp)); floater(t, I.t('+Souffle'), 'heal'); }
@@ -478,7 +478,7 @@
     if (t.side === 'foe') { I.audio.sfx('break'); for (let i = 0; i < 40; i++) G.spawn({ x: t.x + (Math.random() - 0.5) * t.size * 0.7, y: t.y - Math.random() * t.size, vx: (Math.random() - 0.5) * 40, vy: -20 - Math.random() * 60, life: 1.2 + Math.random(), size: 1 + Math.random(), color: `hsl(${t.def.hue},100%,75%)`, type: 'glyph' }); await tween(t, 'fade', 0, 500); }
     else {
       floater(t, I.t('Éprouvé'), 'debuff'); I.audio.sfx('dark'); await I.sleep(300);
-      if (C.bete === 'phenix' && !C.phenix) { C.phenix = true; await banner('<small>' + I.t('Le Phénix') + '</small>' + I.t('Ce qui a brûlé se relève'), 1200, false, 'speech intro'); t.alive = true; t.hp = Math.round(t.max.hp * 0.4); floater(t, I.t('Relevé'), 'heal'); fx('pillar', t, '#ff9a5c'); refresh(); }
+      if (C.bete === 'phenix' && !C.phenix) { C.phenix = true; await banner('<small>' + I.t('Le Phénix') + '</small>' + I.t('Ce qui a brûlé se relève'), 1200, false, 'speech intro'); t.alive = true; t.hp = Math.round(t.max.hp * 0.4); floater(t, I.t('Relevé§combat'), 'heal'); fx('pillar', t, '#ff9a5c'); refresh(); }
     }
   }
   async function checkPhase(t) {
@@ -532,7 +532,7 @@
     C.all.forEach(e => {
       if (e.side !== 'hero') { if (e.alive) e.ct += 320; return; } // l'idole marque le pas
       e.alive = true; e.hp = Math.max(e.hp, Math.round(e.max.hp * 0.5)); e.sp = Math.max(e.sp, Math.round(e.max.sp * 0.5)); cleanse(e);
-      e.sakina = Math.min(100, e.sakina + 25); e.ct = Math.min(e.ct, 60); e.flash = 1; fx('pillar', e, '#fff6dc'); floater(e, I.t('Relevé'), 'heal');
+      e.sakina = Math.min(100, e.sakina + 25); e.ct = Math.min(e.ct, 60); e.flash = 1; fx('pillar', e, '#fff6dc'); floater(e, I.t('Relevé§combat'), 'heal');
     });
     I.audio.sfx('roll'); refresh(); I.oeuvres.learn('secours');
     const d = I.oeuvres.state();
