@@ -1415,6 +1415,21 @@ pages privées de son compte.
     recueil, avec son verset tiré du registre. **Ghoul** non plus : c'est un être du folklore, une sorte de djinn
     (exigence 18).
 
+- [ ] **D183. Le français revu (décisions du décideur, 18 novembre ; à appliquer d'un bloc, après le japonais).**
+  - **« Chimère » remplace « égrégore »**, un mot de l'ésotérisme (127 emplois ; féminin : les accords sont à reprendre).
+    **L'Agrégor garde son nom** : c'est le niveau au-dessus des chimères (« tu peux garder l'Agrégore en français pour le
+    niveau au-dessus des chimères »).
+  - **« Les degrés du mal »** remplace « l'organigramme du mal » (27 emplois).
+  - **Les quatre paroles les plus sérieuses** sont corrigées d'après leur source (`v2/docs/langues/propositions-francais.md`,
+    § 4) ; les 37 autres écarts restent signalés dans le registre.
+  - **Les postures** : le héros, le sage, le saint restent ; l'agent cherche le bon mot pour les désigner (« ce n'est
+    pas une posture, c'est un titre ? trouve le bon terme »).
+  - **Une relecture de tout le français**, proposée au décideur avant d'être appliquée : les notions qu'on pourrait
+    relier à l'occultisme par imprudence, et les formulations imprécises (« des millions de regards » : le compte des
+    vues).
+  - Quand le français change, les textes déjà écrits dans les autres langues suivent leur emplacement, marqués « à
+    revoir » (`v2/tools/langues.js`).
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
