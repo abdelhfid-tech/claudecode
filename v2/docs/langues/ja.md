@@ -55,7 +55,7 @@ liste de contrôle d'islam.ne.jp, qui suit le même dictionnaire, en donne l'art
 | ibn / bint | イブン / ビント, même au milieu d'une chaîne (pas « ビン », forme dialectale que garde la traduction ancienne de *Muslim* : 「アリー・ビン・アブー・ターリブ」). | ウサーマ・イブン・ザイド, ズバイルの子なら イブン・アッ＝ズバイル (article gardé, voir ligne suivante) |
 | Article al- | **Omis en tête d'un nom de personne** quand le nom est usuel seul (ガザーリー, フバーブ) ; **gardé, rattaché par « ＝ »**, quand il est dans le nom (après ibn, dans une nisba ou un surnom) et assimilé devant les lettres solaires : アル＝ / アッ＝ / アン＝… | ハーリド・イブン・アル＝ワリード ; アブー・バクル・アッ＝スィッディーク ; アブー・アイユーブ・アル＝アンサーリー |
 | ʿAbd + Nom divin | Un seul mot, sans « ・ » ni « ＝ », avec assimilation : c'est la forme « 岩波方式 » rapportée par alarabiyah.sakura.ne.jp (lu : <https://alarabiyah.sakura.ne.jp/words/katakana/al/> : 「岩波書店のイスラーム辞典方式だと『アブドゥルカーディル』『アブドゥッサラーム』」). | アブドゥッラー, アブドゥッラフマーン |
-| ʿayn, hamza | Pas de signe propre. Devant une voyelle, ils prennent la voyelle (ア, イ, ウ) ; après une voyelle et sans voyelle propre, on redouble la voyelle (Saʿd → サアド ; Qaʿqāʿ → カアカーア) ; en finale après voyelle longue, on écrit la voyelle (Ḥarūrāʾ → ハルーラー). | サアド, イスマーイール |
+| ʿayn, hamza | Pas de signe propre. Devant une voyelle, ils prennent la voyelle (ア, イ, ウ) ; après une voyelle et sans voyelle propre, on redouble la voyelle (Saʿd → サアド ; Qaʿqāʿ → カアカーア) ; en finale après voyelle longue, la hamza ne s'écrit pas (Ḥarūrāʾ → ハルーラー, comme ʿIshāʾ → イシャー dans [Wiki-ja] « サラート » ; la traduction de *Muslim* écrit 「ハルーラーウ」). | サアド, イスマーイール |
 | Consonnes « emphatiques » et interdentales | ṣ, s → サ／スィ ; th → サ／スィ ; dh, z → ザ／ズィ ; ḍ → ダ／ディ ; ẓ → ザ／ズィ ; ḥ, h, kh → ハ行 (ḥ/h finales → フ : ジャッラーフ) ; q → カ行 ; gh → ガ行 ; w → ワ／ウィ ; « si » se dit スィ, jamais シ (アッ＝スィッル, et non アッ＝シッル : islam.ne.jp). | スィッフィーン, ズィヤード, ディラール |
 | Noms qui ont une forme japonaise consacrée | La forme consacrée l'emporte (règle du même règlement : 「漢字による表記が慣例になっている場合を除き、原則としてカタカナ」, et l'usage) : メッカ ou マッカ, voir § 3. | アッラー, ムハンマド, エルサレム |
 | Translittération latine | Le jeu n'en montre pas (le français écrit « Abû Bakr ») : on n'ajoute ni lettres latines ni arabe entre parenthèses dans un texte du joueur. Le recueil (codex) peut donner le nom arabe en écriture arabe s'il le fait en français. | — |
@@ -203,7 +203,102 @@ Deux sources savantes reviennent souvent :
 | les attributs divins | **御名**（みな） ; le côté du bien : 「美徳と御名」 | 三田 7:180 : 「最も美しい凡ての御名はアッラーに属する」 (al-asmāʾ al-ḥusnā). | Le français dit « attributs » ; le japonais musulman dit « les plus beaux Noms ». Un Nom n'est jamais dessiné ni « équipé » (exigence 21) : on écrit 「御名を知る」 (le reconnaître), jamais 「得る」. **À valider.** |
 | Vertus (les compétences, qui coûtent du Souffle) | **徳** (libellé du combat) | Usage courant. | Jamais 魔法, 呪文, 術, 法力 (exigences 13, 15). **À valider.** |
 
-<!-- SECTION 2 SUITE -->
+### 2.2 Les Lumières (éléments) et les piliers
+
+| Français (`D.ELEMENTS`) | **Japonais** | Arabe en katakana (là où le français le montre) | Source | Note |
+|---|---|---|---|---|
+| Fer (Hadîd) | **鉄** | ハディード | 三田 57:25 「またわれは鉄を下した」. | L'élan physique, non une Lumière. |
+| Véracité (Sidq) | **誠実** | スィドク | [東長] : 「誠実（ṣidq）」 ; 三田 9:119 「（言行の）誠実な者」 (ṣādiqīn). | Lumière d'アブー・バクル. Distincte de la Sincérité (lame, § 2.3). |
+| Justice ('Adl) | **公正** | アドル | 三田 16:90 「本当にアッラーは公正と善行……を命じ」. | Lumière de ウマル. |
+| Patience (Sabr) | **忍耐** | サブル | 三田 2:45, 2:153 「忍耐と礼拝によって」 ; [東長] 「忍耐（ṣabr）」. | Lumière d'Idris et du Caïd. 忍 a un emploi bouddhique (忍辱) ; 忍耐 est l'usage de 三田. |
+| Miséricorde (Rahma) | **慈悲** | ラフマ | 三田 21:107 「万有への慈悲として」 ; 1:1 「慈悲あまねく慈愛深きアッラー」. | Lumière d'ウスマーン. 慈悲 vient du bouddhisme, mais 三田 l'a fait mot de l'islam japonais : on le garde. |
+| Courage (Shajâ'a) | **勇気** | シャジャーア | Usage courant (三田 n'emploie pas le mot). | Lumière de ハーリド. Jamais 勇者 (le héros des jeux de rôle japonais). |
+| Savoir ('Ilm) | **知** (en composé : 知識) | イルム | [東長] 「知の章（kitāb al-ʻilm）」 ; 三田 20:114 「主よ，わたしの知識を深めて下さい」. | Lumière d'アリー : 「知の門」. |
+
+Piliers de la Citadelle (`['pillar', …]`) : **柱** (pas 五行 : les « cinq piliers de l'islam » sont autre chose, et 五行
+est aussi un mot de la cosmologie chinoise).
+
+| Prière | Savoir | Justice | Lien |
+|---|---|---|---|
+| **礼拝** | **知** | **公正** | **絆** (usage courant : ce qui tient les gens ensemble, pactes, parole donnée) |
+
+### 2.3 Le cœur : œuvres, lames, maux, idées noires
+
+**Les œuvres** (`coeur.js`, `oeuvres`)
+
+| Français | **Japonais** (nom / court) | Source | Note |
+|---|---|---|---|
+| La prière | **礼拝** / 礼拝 ; le recueil ajoute 「サラート」 | 三田 2:3 「礼拝の務めを守り」 ; [Wiki-ja] « サラート » : 「サラート（礼拝、サラー……）」. | Se lit **れいはい**. Le dictionnaire signale que 「らいはい」 est la lecture bouddhique (デジタル大辞泉, « 礼拝 », lu : <https://kotobank.jp/word/礼拝-146783>). Jamais 祈り pour la ṣalāt : 祈り (et 祈願) est la demande, la duʿāʾ. |
+| Le dhikr | **ズィクル** / ズィクル | 三田 33:41 「アッラーをつねに唱念〔ズィクル〕しなさい」 ; [東長] 「ズィクルと祈り（daʻawāt）の章」. | 唱念 est le mot de 三田 ; on ne l'emploie qu'en citation : 念 rappelle le 念仏 bouddhique. Sens donné au recueil : 「アッラーを想起し、その御名を唱えること」. |
+| L'étude du Coran | **クルアーンの学び** / 学び | 「クルアーン」 : 三田 (123 versets) ; [東長] 「クルアーン読誦の作法の章」. | Toujours クルアーン, jamais コーラン (forme ancienne des manuels). Jamais 写経 (copie bouddhique des sûtras). |
+| Le jeûne | **断食** / 断食 | [協会訳ムスリム] vol2-174 「あなた方の断食」. | 三田 (2:183) et [東長] disent 「斎戒」, que [Wiki-ja] reprend (« イスラム教における斎戒 ») ; 斎戒 est aussi le mot du shintô et du bouddhisme (斎戒沐浴). Le jeu dit 断食 ; le recueil peut nommer 斎戒（サウム）. |
+| L'aumône | **施し** / 施し | 三田 9:60 「施し〔サダカ〕は，貧者，困窮者……」. | L'aumône du jeu est volontaire : サダカ. 喜捨 est la zakāt (「定めの喜捨」, 三田 98:5 ; [Wiki-ja] « ザカート ») et vient du vocabulaire bouddhique, comme 布施 : ne pas employer pour l'aumône du jeu. |
+| La visite | **訪問** / 訪問 ; « rendre visite à un malade » : 「病人を見舞う」 | Usage courant. | — |
+| Le pèlerinage | **巡礼** / 巡礼 ; le recueil ajoute 「ハッジ」 | 三田 2:158 「聖殿に巡礼する者」 ; [東長] 「巡礼の極意の章」 ; [Wiki-ja] « ハッジ ». | Jamais 遍路 ni 参詣 (bouddhiques, shintô). |
+
+**Les sept lames** (`lames`) — chacune porte le nom de sa vertu ; le nom arabe en katakana suit § 1.2.
+
+| Français | **Japonais** | Katakana | Source | Note |
+|---|---|---|---|---|
+| Le Contentement (al-Qanâ'a) | **満足** | アル＝カナーア | [東長] : 「満足（riḍāʾ）」 (chapitre des remèdes) ; 三田 (16 versets). | Plus proche serait 知足 ou 「足るを知る」, mais c'est une formule du 老子 et du zen (吾唯足知) : écartée. **À valider.** |
+| L'Humilité (at-Tawâdu') | **謙虚** | アッ＝タワードゥウ | 三田 25:63 「謙虚に地上を歩く」 (25 versets). | — |
+| La Sincérité (al-Ikhlâs) | **真心** | アル＝イフラース | Sources de l'idée : 三田 98:5 「信心の誠を尽し，純正に」 ; [東長] 「誠真（ikhlāṣ）」. | 誠真 n'est pas un mot courant ; 誠 seul est le mot-emblème du bushidô et du shintô ; 純正 sonne « pièce d'origine ». 真心 dit « faire le bien sans chercher qui regarde ». **À valider.** |
+| La Largesse (al-Karam) | **惜しみなさ** | アル＝カラム | Proposition : l'envers exact de 物惜しみ (l'avarice, 三田 57:24). | **À valider.** |
+| L'Ardeur (al-Himma) | **志** | アル＝ヒンマ | Usage courant. | **À valider.** |
+| La Bienveillance (an-Nasîha) | **思いやり** | アン＝ナスィーハ | Usage courant ; l'arabe : 三田 7:21 rend nāṣiḥ par 「心からの忠告者」. | 「忠告」 (conseil) dirait la naṣīḥa savante, pas la bienveillance que le jeu oppose à l'envie. **À valider.** |
+| La Longanimité (al-Hilm) | **寛容** | アル＝ヒルム | Usage courant ; 三田 emploie 寛容 pour un autre Nom (ghafūr : 「寛容にして慈悲深い方」, 2:173). | Rester calme quand on pourrait frapper. **À valider.** |
+
+**Les sept maux du cœur** (`enemies`, `vice`) — ce sont des égrégores, donc des noms d'ennemis : ni démon, ni nom
+bouddhique ; et l'on évite de reproduire la série japonaise des « sept péchés capitaux » (傲慢・強欲・嫉妬・憤怒・色欲・暴食・
+怠惰), très connue par le manga, qui ferait de la liste du jeu une liste chrétienne.
+
+| Français (arabe du codex) | **Japonais** | Source | Note |
+|---|---|---|---|
+| L'Avidité (al-hirs) | **貪欲** | 三田 59:9 「自分の貪欲をよく押えた者たち」 (shuḥḥ). | 貪 est aussi l'un des « trois poisons » bouddhiques (貪瞋痴) ; on garde le mot de 三田, mais jamais 貪瞋痴 ni 煩悩 dans le jeu. |
+| L'Orgueil (al-kibr) | **高慢** | [東長] 「高慢（kibr）」 ; 三田 31:18, 57:23 (63 versets). | Pas 傲慢 (série des péchés capitaux). |
+| L'Ostentation (ar-riyâ') | **見せびらかし** | 三田 2:264 「人びとに見せびらかすため」 ; 107:6 「（人に）見られるための礼拝」. | [東長] dit 「偽善」, mais 偽善 se confondrait avec les hypocrites du récit (偽信者, 三田 4:142 ; exigence 11). |
+| L'Avarice (al-bukhl) | **物惜しみ** | 三田 57:24 「物惜しみであるから，人びとにも物惜しみを勧め」 ; 4:37 「吝嗇」. | 吝嗇 est le mot savant, rarement lu sans ruby (§ 1.6). [東長] dit 「強欲」 pour bukhl : à ne pas suivre ici (le jeu sépare avidité et avarice). |
+| L'Insouciance (al-ghafla) | **怠り** | Images de 三田 : 7:205 「おろそかな者の仲間となってはならない」 ; 21:1 「無関心に背き去る」. | 「おろそか」 ne se dit pas comme nom ; 怠り garde la négligence sans le 怠惰 des péchés capitaux. **À valider.** |
+| L'Envie (al-hasad) | **妬み** | 三田 4:54 「妬むのか」 ; 113:5 「嫉妬する者の嫉妬」 ; [東長] 「嫉妬（ḥasad）」. | 嫉妬 se dit d'abord, en japonais courant, de la jalousie amoureuse (exigence 4) : le nom de l'égrégore est 妬み. |
+| La Colère (al-ghadab) | **怒り** | [東長] 「怒り（ghaḍab）」 ; 三田 3:134 「怒りを押えて」. | Pas 憤怒 (péchés capitaux ; et 憤怒相 des divinités bouddhiques). |
+
+**Les idées noires** (`noir_*`) — des pensées qui pèsent sur une personne de fiction (exigence 16), auxquelles on
+répond.
+
+| Français | **Japonais** | Source | Note |
+|---|---|---|---|
+| La Honte | **恥** | Usage courant ; « Que diront-ils ? » se dit 「世間に何と言われるか」. | La « honte devant les siens » est un thème japonais ancien (le regard du 世間) : la réplique y trouve ses mots. |
+| La Peur | **不安** | Usage courant. Le Coran japonais dit 「恐れ」 pour khawf (三田 2:155). | L'idée noire du jeu est « ce qui n'est pas arrivé, vécu comme si c'était fait » : c'est 不安 (l'angoisse), plus que 恐れ ou 恐怖. **À valider.** |
+| Le Soupçon | **疑い** | 三田 (39 versets) ; 49:12 dit 「邪推」 (ẓann). | 邪推 (soupçon injuste) est l'autre choix, plus précis mais plus dur. L'état de combat « Doute » prend un autre mot (迷い, § 2.7) pour ne pas se confondre. **À valider.** |
+| La Rancune | **恨み** | 三田 5:2 「恨みにもって」. | Jamais 怨念, 怨霊 (fantômes vengeurs). |
+| Le Désespoir | **絶望** | 三田 39:53 「アッラーの慈悲に対して絶望してはならない」 ; 12:87. | — |
+
+### 2.4 Les compagnons de lumière et les étoiles
+
+| Français (arabe) | **Japonais** | Katakana | Source | Note |
+|---|---|---|---|---|
+| Le Renard des sables (ath-Tha'lab) | **フェネック** | アッ＝サアラブ | Nom courant du renard des sables (usage courant, référence non vérifiée). | 狐（きつね） porte au Japon le messager d'Inari (shintô) et le renard qui se change en homme (妖怪) : à écarter. **À valider.** |
+| L'Aigle (an-Nasr) | **鷲** | アン＝ナスル | Usage courant. | — |
+| Le Phénix (al-'Anqâ') | **不死鳥** | アル＝アンカー | Usage courant. | Jamais 鳳凰 (oiseau chinois, emblème de temples bouddhiques), jamais 火の鳥 (titre d'un manga). |
+| Le Lion (al-Asad) | **獅子** | アル＝アサド | 三田 74:50–51 (le lion dont on fuit) ; [Wiki-ja] « アリー・イブン・アビー・ターリブ » : 「アッラーの獅子」. | 獅子 évoque aussi les lions-gardiens des sanctuaires (狛犬) ; le mot reste celui des traductions de l'arabe. |
+| La Gazelle (az-Zaby) | **ガゼル** | アッ＝ザビー | Usage courant. | — |
+
+Dons : Flair **嗅覚** ; Regard **眼力** ; Renaissance **再起** (jamais 転生 ni 輪廻 : réincarnation) ; Présence
+**威風** ; Apaisement **和らぎ** (安らぎ est déjà la Sakîna). **À valider** ensemble.
+
+**Les étoiles** (`D.STARS`) — le français donne le nom arabe et son sens ; le japonais donne le nom arabe en katakana et
+le **nom astronomique international**, jamais le nom d'une fête ou d'un culte de l'Asie de l'Est.
+
+| Arabe (français) | **Katakana** | **Nom japonais de l'étoile** | À éviter |
+|---|---|---|---|
+| an-Nasr at-Tâ'ir (Altaïr, l'Aigle qui vole) | アン＝ナスル・アッ＝ターイル | **アルタイル**（「飛ぶ鷲」） | 彦星, 牽牛 (la fête de Tanabata) |
+| al-'Aqrab (le Scorpion, son cœur rouge) | アル＝アクラブ | **さそり座**, son cœur **アンタレス** | — |
+| Suhayl (Canopus, l'étoile du sud) | スハイル | **カノープス** | 南極老人星, 寿星 (une divinité taoïste du bonheur) |
+| al-'Ayyûq (Capella, la gardienne des Pléiades) | アル＝アイユーク | **カペラ** ; les Pléiades : **すばる** | — |
+| al-Jady (la Polaire, le Chevreau) | アル＝ジャディ | **北極星**（「子山羊」） | 北辰, 妙見 (culte bouddhique et shintô de l'étoile polaire) |
+| les « bonds de la gazelle » (trois couples d'étoiles au nord) | — | **ガゼルの跳躍** (calque : pas de nom japonais) | — |
+
+<!-- SECTION 2 SUITE 2 -->
 
 <!-- SECTION 3 -->
 
