@@ -9,6 +9,8 @@
                                               est retiré (et compté)
            node v2/tools/langues.js etat     ce qui est écrit, fichier par fichier
            node v2/tools/langues.js poser <langue> <fichier> <écrit.json>   pose ce qu'un rédacteur a écrit ([{ k, t }])
+                                              (« partout » au lieu du fichier : dans chaque fichier où la clé revient ;
+                                              un verrou par fichier : plusieurs rédacteurs peuvent poser en même temps)
            node v2/tools/langues.js [ar|en|ja] [fichier]  contrôle : tout est écrit, et tout ce qui est écrit passe les règles
                                               → « LANGUES CONFORMES » ; code de sortie 1 sinon
 
@@ -48,13 +50,32 @@ function textes() {
 /* ---------- les fichiers d'une langue ---------- */
 const fichierDe = (l, f) => path.join(LANG, l, f + '.json');
 function lire(l, f) { const p = fichierDe(l, f); if (!fs.existsSync(p)) return { textes: [] }; return JSON.parse(fs.readFileSync(p, 'utf8')); }
-// une entrée par ligne : le fichier se lit, se compare et se relit ligne à ligne
+// une entrée par ligne : le fichier se lit, se compare et se relit ligne à ligne ; il est écrit à côté puis mis en place
+// d'un coup, pour qu'un contrôle qui le lit au même moment ne tombe jamais sur un fichier à moitié écrit
 function ecrire(l, f, doc) { fs.mkdirSync(path.join(LANG, l), { recursive: true });
-  fs.writeFileSync(fichierDe(l, f), `{ "langue": ${JSON.stringify(l)}, "fichier": ${JSON.stringify(f)}, "textes": [\n` + (doc.textes || []).map(x => JSON.stringify(x)).join(',\n') + '\n] }\n'); }
+  const p = fichierDe(l, f), tmp = `${p}.${process.pid}.tmp`;
+  fs.writeFileSync(tmp, `{ "langue": ${JSON.stringify(l)}, "fichier": ${JSON.stringify(f)}, "textes": [\n` + (doc.textes || []).map(x => JSON.stringify(x)).join(',\n') + '\n] }\n');
+  fs.renameSync(tmp, p); }
+// un verrou par fichier de langue : plusieurs rédacteurs peuvent poser en même temps sans effacer le travail l'un de
+// l'autre (chacun lit, modifie et écrit le fichier sous le verrou) ; un verrou de plus d'une minute est abandonné
+const dormir = ms => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+const tenus = new Set(); process.on('exit', () => tenus.forEach(v => { try { fs.unlinkSync(v); } catch (e) {} })); // même en sortant au milieu
+function verrou(l, f, fn) {
+  fs.mkdirSync(path.join(LANG, l), { recursive: true }); const v = fichierDe(l, f) + '.verrou';
+  for (let i = 0; ; i++) {
+    try { fs.closeSync(fs.openSync(v, 'wx')); tenus.add(v); break; } catch (e) {
+      if (e.code !== 'EEXIST') throw e;
+      try { if (Date.now() - fs.statSync(v).mtimeMs > 60000) { fs.unlinkSync(v); continue; } } catch (e2) { continue; }
+      if (i > 1200) { console.log(`✗ ${l}/${f} : le fichier reste verrouillé (${path.relative(V2, v)})`); process.exit(1); }
+      dormir(100);
+    }
+  }
+  try { return fn(); } finally { try { fs.unlinkSync(v); } catch (e) {} tenus.delete(v); }
+}
 
 function releve() {
   const F = textes(); let total = 0;
-  LANGUES.forEach(l => Object.keys(F).forEach(f => {
+  LANGUES.forEach(l => Object.keys(F).forEach(f => verrou(l, f, () => {
     const ancien = lire(l, f), ecrits = new Map((ancien.textes || []).filter(x => x && x.t).map(x => [x.fr, x]));
     // par emplacement (ou) : si le français d'un emplacement a changé, le texte déjà écrit le suit, marqué « a_revoir »
     const parOu = new Map(); (ancien.textes || []).filter(x => x && x.t && x.ou && f !== 'moteur').forEach(x => { if (!parOu.has(x.ou)) parOu.set(x.ou, x); else parOu.set(x.ou, null); });
@@ -68,7 +89,7 @@ function releve() {
     ecrire(l, f, doc); total += doc.textes.length;
     if (perdus) console.log(`  ${l}/${f} : ${perdus} texte(s) écrit(s) dont le français a disparu du jeu, retiré(s)`);
     if (arevoir) console.log(`  ${l}/${f} : ${arevoir} texte(s) à revoir (le français a changé à leur place)`);
-  }));
+  })));
   console.log(`✓ relevé : ${Object.keys(F).length} fichiers × ${LANGUES.length} langues, ${total / LANGUES.length} textes par langue`);
 }
 
@@ -124,14 +145,26 @@ function controler(l, F, REG) {
 }
 
 // poser : ce qu'un rédacteur a écrit — une liste [{ k, t }] (ou { k: t }), la clé étant celle de l'entrée (« k ») —
-// entre dans src/lang/<langue>/<fichier>.json ; une clé inconnue de ce fichier est refusée, un texte vide ignoré
+// entre dans src/lang/<langue>/<fichier>.json ; une clé inconnue de ce fichier est refusée, un texte vide ignoré.
+// « partout » à la place du fichier : chaque texte entre dans tous les fichiers de la langue où sa clé revient (un texte
+// commun à plusieurs fichiers ne s'écrit que d'une façon) ; une clé qui n'est dans aucun fichier est refusée.
 function poser(l, f, fichier) {
-  const doc = lire(l, f), par = new Map((doc.textes || []).map(x => [x.k, x])); if (!par.size) { console.log(`✗ ${l}/${f} : aucune liste (node v2/tools/langues.js releve)`); process.exit(1); }
+  if (!LANGUES.includes(l)) { console.log(`✗ langue inconnue : ${l} (${LANGUES.join(', ')})`); process.exit(1); }
   let brut = JSON.parse(fs.readFileSync(fichier, 'utf8')); if (!Array.isArray(brut)) brut = Object.keys(brut).map(k => ({ k, t: brut[k] }));
-  let n = 0; const inconnues = [];
-  brut.forEach(e => { if (!e || typeof e.t !== 'string' || !e.t.trim()) return; const x = par.get(e.k); if (!x) { inconnues.push(e.k); return; } x.t = e.t; if (e.note) x.note = e.note; delete x.a_revoir; delete x.fr_avant; n++; });
-  ecrire(l, f, doc);
-  console.log(`${inconnues.length ? '!' : '✓'} ${l}/${f} : ${n} texte(s) posé(s)` + (inconnues.length ? `, ${inconnues.length} clé(s) inconnue(s) : ${inconnues.slice(0, 8).join(' ')}` : ''));
+  brut = brut.filter(e => e && typeof e.t === 'string' && e.t.trim());
+  const partout = f === 'partout', fichiers = partout ? (fs.existsSync(path.join(LANG, l)) ? fs.readdirSync(path.join(LANG, l)).filter(x => /\.json$/.test(x)).map(x => x.replace(/\.json$/, '')).sort() : []) : [f];
+  const poses = new Map(); let total = 0;
+  if (!partout && !lire(l, f).textes.length) { console.log(`✗ ${l}/${f} : aucune liste (node v2/tools/langues.js releve)`); process.exit(1); }
+  fichiers.forEach(g => verrou(l, g, () => {
+    const doc = lire(l, g), par = new Map((doc.textes || []).map(x => [x.k, x]));
+    if (!par.size) return;
+    let n = 0;
+    brut.forEach(e => { const x = par.get(e.k); if (!x) return; x.t = e.t; if (e.note) x.note = e.note; delete x.a_revoir; delete x.fr_avant; n++; poses.set(e.k, (poses.get(e.k) || 0) + 1); });
+    if (n || !partout) ecrire(l, g, doc); total += n;
+    if (partout && n) console.log(`  ${l}/${g} : ${n} texte(s) posé(s)`);
+  }));
+  const inconnues = brut.map(e => e.k).filter(k => !poses.has(k));
+  console.log(`${inconnues.length ? '!' : '✓'} ${l}/${f} : ${partout ? `${poses.size} texte(s) posé(s), ${total} emplacement(s)` : `${total} texte(s) posé(s)`}` + (inconnues.length ? `, ${inconnues.length} clé(s) inconnue(s)${partout ? ' de tous les fichiers' : ''} : ${inconnues.slice(0, 8).join(' ')}` : ''));
   if (inconnues.length) process.exit(1);
 }
 const arg = process.argv[2] || '';

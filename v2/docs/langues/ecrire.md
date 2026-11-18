@@ -52,7 +52,11 @@ La liste à remplir est `v2/src/lang/<langue>/<fichier>.json`, une entrée par l
 
 - On n'édite pas `v2/src/lang/` à la main. On écrit des fichiers de travail, d'au plus 150 entrées chacun,
   `[{"k": "…", "t": "…"}, …]` (on peut ajouter `"note"`), et on les pose :
-  `node v2/tools/langues.js poser <langue> <fichier> <travail.json>`.
+  `node v2/tools/langues.js poser <langue> <fichier> <travail.json>`. Plusieurs rédacteurs peuvent poser en même temps,
+  même dans un seul fichier : chaque fichier a son verrou.
+- Un texte qui revient dans plusieurs fichiers (une même phrase du moteur et d'un récit, un titre d'ouvrage cité
+  partout) ne s'écrit que d'une façon : on le pose une fois pour tous, `node v2/tools/langues.js poser <langue> partout
+  <travail.json>`.
 - On contrôle : `node v2/tools/langues.js <langue> <fichier>` — aucune erreur sur ses propres textes.
 - On ne lance ni l'assemblage ni les tests du jeu, et on n'enregistre rien : l'agent principal le fait.
 
