@@ -1438,6 +1438,30 @@ pages privées de son compte.
   - **Écartées** : 1.1 (les « portes » restent), 1.2 (la noosphère garde son nom), 1.4 (les compagnons de lumière
     restent), 1.5, 1.7 ; les autres propositions de la partie 1 (1.9 à 1.18) ne sont pas retenues.
   - À appliquer d'un bloc, puis les autres langues reprennent les textes touchés (« à revoir »).
+  - **Appliquée le 18 novembre (version 2.07).** Choix de l'agent, à valider :
+    - « Sérénité » prend la majuscule quand c'est la jauge ; ailleurs, « retrouve sa sérénité » (14 passages).
+    - La figure (18 textes) : « Khâlid · figure : le sage » à la halte ; en combat, la mention courte « en héros »,
+      « en sage », « en saint » ; l'outil « Prendre une figure ». En français courant, « figure » se lit aussi
+      « visage » (exigence 2) : le jeu évite « la figure du héros ». Il disait déjà « figures du ciel » (les
+      compagnons de lumière) et « ni figure » (les souffleurs, les attributs).
+    - 1.6 : le carton des rencontres de la Cité-Miroir, « Une chimère le tient », devient « Il n'entend plus que
+      cela » ; « La chimère lâche prise » est gardé (ces cartons sont ceux des chimères que l'on combat, pas ceux des
+      idées noires, qui disent déjà « Une idée noire » et « On ne la combat pas : on lui répond »).
+    - 2.7 et 2.12 : « Quatrième maillon · Le Généreux », « Miséricorde du Généreux » ('Uthmân), faute d'un autre titre
+      décidé. 2.10 : « l'Aigle d'Airain », avec la majuscule du nom de l'idole. 2.22 : « 1507 H ».
+    - 2.8 : une seule glose, dans le feuillet « L'armée d'Usâma » : « vers les confins du Shâm (la Syrie d'aujourd'hui
+      et ses voisins) » ; le titre *Futûh ash-Shâm* ne change pas.
+    - 2.24 : l'apostrophe droite vaut pour le 'ayn et pour la hamza (Harûrâ', Rabî', San'â'), dans tous les fichiers du
+      jeu ; les apostrophes d'élision (l’, d’) ne changent pas.
+    - Restent, que les propositions ne visaient pas : « L'emprise est brisée », « La langueur de Zîrî », et, dans
+      l'aide, « la bonne œuvre […] le remet debout ».
+  - L'aide « Descendre dans la noosphère » décrivait encore le combat d'avant le labyrinthe : elle est réécrite d'après
+    l'exigence 22 (le labyrinthe, l'issue et l'abri, la frappe qui sonne, faire face accompagné et lame en main, les
+    portes closes jusqu'à un sommeil sans songe). Texte de l'agent, à relire.
+  - Deux pages de l'aide, « Agrandir l'image et le texte » et « La Chaîne », avaient disparu depuis le 16 novembre (une
+    virgule oubliée entre elles) ; elles reviennent, et `progression.js` vérifie désormais chaque page de l'aide.
+  - Les shorts 01, 03, 04, 06 et 08 et la démo jouable montrent des mots que D183 et D184 ont changés. Proposition de
+    l'agent : les refaire une fois décidé le texte à l'écran (propositions en cours), pour ne les refaire qu'une fois.
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 

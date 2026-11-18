@@ -32,7 +32,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   halte puis repris à leur place, la partie exportée et réimportée avec eux, les retours en 2084 joués, la Citadelle
   visitée : « RETOURS CONFORMES »), `node v2/tools/progression.js` (une partie neuve par les vrais boutons : une seule
   leçon par séquence, les commandes du combat reçues une à une, les pages de la halte ; une partie d'avant garde tout ;
-  les trois postures et leurs effets : « PROGRESSION CONFORME ») et `node v2/tools/loupe.js` (sur un téléphone, en
+  les trois figures et leurs effets : « PROGRESSION CONFORME ») et `node v2/tools/loupe.js` (sur un téléphone, en
   hauteur et en largeur : l'image s'agrandit — d'office, en écartant deux doigts, par le bouton —, le toucher tombe
   juste, les étiquettes restent sur leurs personnages, le combat garde son cadrage, aucun texte n'est sous dix points :
   « LOUPE CONFORME ») : aucun « REFUS », « BLOQUÉ »,
@@ -60,7 +60,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   l'outil commande ne se montre qu'une fois l'outil reçu. Ajouter un système au jeu, c'est lui donner son outil, son
   besoin et son réemploi — jamais un message de plus au début d'un chapitre. Contrôle : `node v2/tools/progression.js`
   (« PROGRESSION CONFORME »).
-- Dans la 2.x, les postures (exigence 24) : `v2/src/core/postures.js`, `D.POSTURES`, `D.TEMPERAMENTS`.
+- Dans la 2.x, les figures — « postures » dans le code et dans l'exigence 24 : `v2/src/core/postures.js`, `D.POSTURES`,
+  `D.TEMPERAMENTS`.
 - Dans la 2.x, les récits se mènent de front (`v2/docs/architecture.md`, « Mener plusieurs récits ») : la halte offre
   « Revenir en 2084 » à tout moment, le récit quitté est rangé là où on le laisse (`cps`, dans la partie) et se reprend
   là. Au retour, un chapitre de l'histoire-cadre marqué `retour: n` peut se jouer, une fois ; un chapitre marqué
@@ -182,7 +183,7 @@ node v2/tools/silhouettes.js        # 2.0 : les personnages — petits sprites i
 node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] : une planche)
 node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
-node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois postures
+node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
 node v2/tools/loupe.js              # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles
 node v2/tools/shorts.js [NN] [brouillon]  # 2.x : les shorts — le jeu filmé image par image (promo/shorts/NN-nom.js → promo/shorts/films/, non versionnés)
 node v2/tools/shorts.js fin [NN]    # 2.x : un short livré (promo/shorts/films/livres/) reçoit le plan final du soutien, sans être refilmé ni réencodé
@@ -404,7 +405,9 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
 ## Conventions
 
 - Français pour tout texte visible, translittération à circonflexes (Abû Bakr, 'Umar, Khâlid).
-- Vocabulaire du jeu : Constance (PV), Souffle (PM), éprouvé (K.O.), voiles, dévoilé, Niyya, Sakîna.
+- Vocabulaire du jeu : Constance (PV), Souffle (PM), éprouvé (K.O.), voiles, dévoilé, Niyya, Sérénité (la jauge,
+  autrefois « Sakîna », D184) ; chimère (l'ennemi, autrefois « égrégore », D183 ; « Agrégor » au-dessus) ; figure (le
+  héros, le sage, le saint : les « postures » du code et de l'exigence 24, D184).
 - Aucune ressource externe en dehors des polices Google Fonts : la publication en Artifact bloque
   images, médias et requêtes réseau. Tout le reste est généré par le code.
 - Ne pas committer `.smoke/`. Ne pousser que sur la branche de travail désignée.
