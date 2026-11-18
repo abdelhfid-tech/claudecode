@@ -1475,6 +1475,16 @@ pages privées de son compte.
   suivent. En arabe, le titre suit le surnom des sources, **ذو النورين**, et la compétence se dit « رحمة ذي النورين » : en
   arabe, « رحمة الكريم » se lit d'abord comme la miséricorde d'Allah (proposé par l'agent, validé par le décideur).
 
+- [x] **D187. Le style de *Citadelle*, au besoin, au-delà des veillées (décision du décideur, 18 novembre :
+  « le style d'écriture peut être celui de Citadelle (voir pdf) si besoin »).** Le ton de *Citadelle* (D23 : la voix
+  d'un seigneur du désert, la phrase brève et sentencieuse, le rythme) peut inspirer d'autres textes que les veillées,
+  là où il sert : les feuillets du cœur, la descente dans la noosphère, les cartons. Les limites de l'exigence 14 et
+  de D23 restent entières : ni phrase, ni image, ni nom, ni épisode repris ; ni l'auteur ni l'œuvre nommés dans le jeu,
+  le livret, les planches ou le README ; aucune citation (l'œuvre est protégée en France). Le texte de référence est
+  celui que le décideur a fourni (1948). La distance avec le joueur demeure : ce ton se prête à la voix d'un
+  personnage (le Caïd) ou d'un récit à la troisième personne, jamais à une adresse au cœur du joueur. Dans les autres
+  langues, le ton vient de leur propre littérature (exigence 25), non d'une imitation de *Citadelle*.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
