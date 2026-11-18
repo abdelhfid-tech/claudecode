@@ -260,7 +260,7 @@ quand ils comptent.
 | pourparler ; confiance (sa jauge) | **parley** ; **trust** | — (nom et verbe anglais de la négociation avec un adversaire ; dictionnaire non consulté) ; le moteur nomme déjà l'opération `parley` | |
 | bataille déclarée | **pitched battle** | WP *Pitched battle* : « *Where both sides commit to fight at a location* » | **À valider**. Le français insiste sur « déclarée » (« on ne se bat pas sans le dire ») ; *pitched battle* est le terme d'histoire militaire. Repli : *declared battle* (calque). |
 | le secours ; « le groupe est relevé » | **Relief** ; *the party rallies* | SI 8:9 : « *you were asking help of your Lord, and He answered you, "Indeed, I will reinforce you…"* » | **À valider**. Jamais *angelic aid*, *miracle*, *summon* (exigence 20). |
-| organigramme du mal | **the Chart of Evil** | — | **À valider**. *Hierarchy*, *order*, *pantheon* sont exclus : ils feraient une démonologie (exigence 18). |
+| les degrés du mal (anciennement « organigramme du mal ») ; « Les degrés » (bouton) | **the Degrees of Evil** ; *the Degrees* | — | **D183** : le français dit désormais « les degrés du mal », et l'anglais le suit ; *the Chart of Evil*, proposé avant D183, est abandonné. *Hierarchy*, *order*, *pantheon* sont exclus : ils feraient une démonologie (exigence 18). |
 | Iblîs | **Iblis** | WP *Iblis* ; SI écrit « *Iblees* » (2:34, 18:50) | « *Iblees* » ne vit que dans les versets de SI. |
 | les souffleurs (*waswâs*) | **those who whisper** ; en apposition : *the whisperers*, toujours en minuscule | SI 114:4 : « *the retreating whisperer* », 114:5 : « *who whispers [evil] into the breasts of mankind* » ; Winter : « *waswas ('whispering')* » | Jamais un nom propre, jamais une majuscule : ils n'ont « ni nom, ni figure, ni nombre ». Décision D182 : *whisper*, *whisperer*, *whispering* (et *waswas* au sens de leur souffle) ne servent qu'à eux ; aucun égrégore, aucune idée noire, aucune compétence ne porte ces mots. Al-Ghazâlî ne nomme *waswâs* que la pensée qui vient du Shaytân (Skellie, note 179 : « *Waswas, cf. al-khatir al-shaitani* » ; dans son introduction, « *The suggestion of the demon (al-khatir al-shaitani)* »). |
 | « des démons d'entre les djinns, et parfois des hommes » | **devils from among the jinn, and sometimes men** | SI 6:112 : « *devils from mankind and jinn* » | |
@@ -890,8 +890,8 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
    le mal d'en face de la Largesse (§ 2.5). *Resentment* pour la Rancune (§ 2.6). *Speak Plainly* pour « Dire vrai »
    (§ 2.6).
 10. **L'interface** : *Halt* (halte), *Compendium* (Recueil ; *Codex* écarté à cause des exemplaires de ʿUthman),
-    *Evening* (veillée ; *Vigil* écarté à cause de la prière de la nuit), *Relief* (le secours), *the Chart of Evil*
-    (l'organigramme du mal) (§ 2.1).
+    *Evening* (veillée ; *Vigil* écarté à cause de la prière de la nuit), *Relief* (le secours) (§ 2.1). *The Degrees
+    of Evil* (les degrés du mal) suit le français de D183.
 11. **« Bataille déclarée »** : *pitched battle* (terme d'histoire militaire, proposition) ou *declared battle* (calque,
     qui garde l'idée qu'on la dit) (§ 2.1). *Local Folk* pour « Gens du lieu » (§ 2.10).
 12. **« Râwî »** gardé en anglais (*rawi*, *the Rawi*), glosé une fois, comme le français le garde (§ 2.1).

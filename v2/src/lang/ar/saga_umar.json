@@ -280,7 +280,7 @@
 {"k":"1pjn6c.10","fr":"Les garder en réserve pour sa maison","t":"","ou":"chapters[0].objectives[0].then[3]<choice>2[2].t"},
 {"k":"1oov2a8.1y","fr":"Tu as payé cher. Donne-les en aumône : je répugne à manger avec excès.","t":"","ou":"chapters[0].objectives[0].then[3]<choice>2[0].r[0]<say>2","qui":"umar"},
 {"k":"oaaz8e.2f","fr":"« Comment me soucierais-je du sort des gens, si ce qui les atteint ne m'atteint pas ? »","t":"","ou":"chapters[0].objectives[0].then[3]<choice>2[0].r[1]<quote>1"},
-{"k":"1izdtus.h","fr":"at-Tabarî, Târîkh","t":"","ou":"chapters[0].objectives[0].then[3]<choice>2[0].r[1]<quote>2"},
+{"k":"1qkcdal.x","fr":"at-Tabarî, Târîkh§parole de 'Umar","t":"","ou":"chapters[0].objectives[0].then[3]<choice>2[0].r[1]<quote>2"},
 {"k":"yq125k.3m","fr":"Ce n'est pas ce qui fut rapporté. Cette année-là, 'Umar jura de ne goûter ni beurre ni viande tant que les gens n'en auraient pas.","t":"","ou":"chapters[0].objectives[0].then[3]<choice>2[1].r[0]<nar>1"},
 {"k":"1n6qrqh.30","fr":"Ce n'est pas ce qui fut rapporté. Sa maison passait après toutes les autres : il fit donner les deux outres.","t":"","ou":"chapters[0].objectives[0].then[3]<choice>2[2].r[0]<nar>1"},
 {"k":"1lmw240.1z","fr":"On entend des murmures près du puits. Ce ne sont pas des voix d'hommes.","t":"","ou":"chapters[0].objectives[0].then[8]<say>2","qui":"aslam"},

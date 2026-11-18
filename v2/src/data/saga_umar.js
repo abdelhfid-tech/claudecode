@@ -374,7 +374,7 @@ ISNAD.registerSaga({
           ['choice', "Le peuple manque de tout. Que fait 'Umar du beurre et du lait ?", [
             { t: "Les donner en aumône, et s'en tenir à l'huile et au pain d'orge", ok: true, r: [
               ['say', 'umar', "Tu as payé cher. Donne-les en aumône : je répugne à manger avec excès."],
-              ['quote', "« Comment me soucierais-je du sort des gens, si ce qui les atteint ne m'atteint pas ? »", "at-Tabarî, Târîkh"]
+              ['quote', "« Comment me soucierais-je du sort des gens, si ce qui les atteint ne m'atteint pas ? »", "at-Tabarî, Târîkh§parole de 'Umar"]
             ] },
             { t: "Les accepter : un chef affaibli ne sert personne", r: [
               ['nar', "Ce n'est pas ce qui fut rapporté. Cette année-là, 'Umar jura de ne goûter ni beurre ni viande tant que les gens n'en auraient pas."]

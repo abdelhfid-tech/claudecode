@@ -1430,6 +1430,15 @@ pages privées de son compte.
   - Quand le français change, les textes déjà écrits dans les autres langues suivent leur emplacement, marqués « à
     revoir » (`v2/tools/langues.js`).
 
+- [ ] **D184. La relecture du français (décisions du décideur, 18 novembre ; `v2/docs/langues/relecture-francais.md`).**
+  - **Acceptées** : 1.3 (la jauge « Sakîna » devient « Sérénité »), 1.6 (aucune tournure de possession), 1.8 (les
+    énigmes du cœur réécrites, sans la langue de l'envoûtement), et les 25 corrections de formulation (2.1 à 2.25 :
+    « des millions de vues », anachronismes, tournures lourdes, noms incohérents).
+  - **Le mot des postures** : **« figure »** (« les trois figures : le héros, le sage, le saint »).
+  - **Écartées** : 1.1 (les « portes » restent), 1.2 (la noosphère garde son nom), 1.4 (les compagnons de lumière
+    restent), 1.5, 1.7 ; les autres propositions de la partie 1 (1.9 à 1.18) ne sont pas retenues.
+  - À appliquer d'un bloc, puis les autres langues reprennent les textes touchés (« à revoir »).
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
