@@ -97,7 +97,7 @@ L'IJMES garde le juste milieu : lisible pour un lecteur sans arabe, fidèle pour
 | Tâ' marbûta : **-a** (en annexion : **-at**) | Saqîfa → **Saqifa** ; Ridda → **Ridda** ; Koufa → **Kufa** ; Dhât as-Sawârî → **Dhat al-Sawari** | IJMES ; WP « *Saqifa* », « *Ridda Wars* », « *Kufa* » (*Tabari* écrit -ah : « *Saqifah*, *Riddah*, *Kufah* » ; on ne le suit pas) |
 | Consonnes doubles gardées | ʿAmmar, al-Qaʿqaʿ | IJMES |
 | Lieux qui ont une forme anglaise reçue : la forme anglaise | Médine → **Medina** ; La Mecque → **Mecca** ; Jérusalem → **Jerusalem** ; Damas → **Damascus** ; Homs → **Homs** ; Tibériade → **Tiberias** ; Alexandrie → **Alexandria** ; Chypre → **Cyprus** | IJMES (« *Place names with accepted English spellings should be spelled in accordance with English norms* ») ; WP |
-| Mots arabes reçus dans *Merriam-Webster* : sans italique ni signe | **hajj**, **imam**, **jinn**, **shaykh** (non *sheikh*), **caliph** | IJMES (« *mufti, jihad, shaykh* ») |
+| Mots arabes reçus dans *Merriam-Webster* : sans italique ni signe | **hajj**, **imam**, **jinn**, **shaykh** (non *sheikh*), **caliph** | IJMES (« *Words found in Merriam–Webster's should be spelled as they appear there* » ; il cite « *mufti, jihad, shaykh* ») ; pour les autres mots, dictionnaire non consulté |
 | Termes techniques gardés : en italique dans la prose du recueil, sans signe sauf ʿ et ’ | *ṣidq* → ***sidq*** ; *al-ʿAnqâ’* → ***al-ʿAnqa’*** | IJMES (italique des termes techniques) ; signes omis pour la lisibilité |
 
 Les versets gardent l'écriture de SI, signes compris (« *Allāh* », « *Muḥammad* », « *Qur’ān* ») : on ne les retouche
@@ -904,7 +904,8 @@ vérifié, à confirmer avant publication :
 - l'emploi de *noosphere* dans le texte même de la traduction de Teilhard (seul le catalogue a été lu) ;
 - le texte de l'essai de Scheler (seuls les titres de ses sections, dans les notices de libraires) ;
 - le nom arabe *al-Jady* de la Polaire, *the Gate of Knowledge*, *night vigil*, *translation of the meaning*, *caid*,
-  *souk*, *diwan* dans *Merriam-Webster* (dictionnaire non consulté) ;
+  *souk*, *diwan*, *hajj*, *imam*, *jinn*, *caliph*, *dirham*, *parley* dans *Merriam-Webster* (dictionnaire non
+  consulté) ;
 - les épithètes des poètes pour l'équipement (*muhannad*, *mashrafi*, *khatti*, *samhari*, *nabʿ*, *lamt*, *saluqi*) :
   le français lui-même les dit « à faire vérifier » ;
 - les formes de *Rafiʿ ibn ʿUmayra* et d'*Ibn al-Nabbah* (ni WP ni l'OCR de *Tabari* ne les ont rendues) ;

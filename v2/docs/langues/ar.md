@@ -858,7 +858,13 @@ l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du §
    conseil ». Les autres langues suivent-elles ?
 7. **Les postures** (§ 2.6) : nommées par l'acte (**الإقدام، البصيرة، الإيثار**, proposé) ou par la personne (البطل…),
    sachant que « الحكيم » et « الوليّ » sont des Noms divins et que « الوليّ » porte une doctrine disputée ?
-8. **Les termes inventés, à valider un par un** : égrégore **خيال** (ou وهم) ; idées noires **الخواطر السود** ; Constance
+**Décidé le 18 novembre (D182)** : le décideur retient la lecture d'al-Ghazâlî (*Iḥyâ'*, « ʿajâ'ib al-qalb ») : les
+idées noires sont des **خواطر** (pensées qui passent : de l'âme, de l'ange ou du Shaytân) — **الخواطر السود** ; le mot
+**وسوسة / الوسواس** reste à l'étage des souffleurs (Coran 114:4), qui n'ont ni figure ni nom et ne se combattent jamais ;
+**طاغوت** et **غول** ne nomment aucun ennemi (exigences 5, 6, 10, 18). « طاغوت » peut s'expliquer dans le recueil, avec
+son verset tiré du registre, si un récit le demande un jour.
+
+8. **Les termes inventés, à valider un par un** : égrégore **خيال** (ou وهم) ; idées noires **الخواطر السود** (*décidé, D182*) ; Constance
    **الثبات** ; Souffle **النَّفَس** ; éprouvé **مُنهَك** ; voile **حجاب** et dévoilé **انكشف** ; lames **النصال** et le
    verbe **صقل** ; compagnons de lumière **رفاق النور** ; halte **الاستراحة** ; veillée **ليلة / السمر** ; Cité-Miroir **مدينة
    المرايا** ; Archives basses **الخزانة السفلى** ; pourparler **المحاورة** ; bataille déclarée **المصافّة** ; secours

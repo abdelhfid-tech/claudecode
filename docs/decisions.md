@@ -1404,6 +1404,17 @@ pages privées de son compte.
     sur la page privée.
   - `AGENTS.md`, `README.md` et `v2/docs/architecture.md` sont mis à jour : la suite des consignes se lit dans `v2/`.
 
+- [x] **D182. Les idées noires en arabe : la lecture d'al-Ghazâlî.** *Question du décideur (« agrégore ça peut être
+  taghout ? ghoul ? idée noire ça peut être waswas ? »), puis sa décision : « ok pour t'appuyer sur al-Ghazâlî ».*
+  - Une idée noire est une **pensée qui passe** (*khâṭir*, pl. *khawâṭir*) : al-Ghazâlî (*Iḥyâ'*, livre des merveilles
+    du cœur) distingue celles qui viennent de l'âme, de l'ange et du Shaytân, et ne nomme *waswâs* que la dernière. En
+    arabe, les idées noires sont **الخواطر السود** ; **الوسوسة / الوسواس** reste le mot des souffleurs (Coran 114:4),
+    qui n'ont ni figure ni nom et ne se combattent jamais (exigence 18). Les deux autres langues suivent la même lecture.
+  - **Ṭâghût** ne nomme ni l'égrégore ni l'Agrégor : une partie des commentateurs l'identifie au Shaytân, et le mot sert
+    aujourd'hui de slogan contre des gouvernants et des sociétés (exigences 5, 6, 10, 18). Il peut s'expliquer dans le
+    recueil, avec son verset tiré du registre. **Ghoul** non plus : c'est un être du folklore, une sorte de djinn
+    (exigence 18).
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
