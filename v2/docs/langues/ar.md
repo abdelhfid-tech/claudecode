@@ -114,6 +114,16 @@ parmi six (zéro, un, deux, trois à dix, onze à quatre-vingt-dix-neuf, cent et
 | un Compagnon | **proposition : رضي الله عنه** (عنها، عنهما، عنهم) | **à trancher par le décideur** (§ 4). Le français n'en met pas. En arabe, un récit sur un Compagnon sans cette formule surprend le lecteur pieux ; une formule à chaque nom alourdit une réplique de trois lignes. Proposition : une fois, à la **première mention** du Compagnon dans un chapitre (narration et recueil), jamais dans une réplique (personne ne dit « رضي الله عنه » de l'homme à qui il parle), jamais dans un bouton, un nom de héros, une compétence ni une étiquette sur la carte. |
 | un mort de la fiction | rien (pas de رحمه الله dans la bouche du narrateur ; un personnage peut le dire dans une réplique) | |
 
+**Dans les feuillets du recueil (relevé du 18 novembre, lexique commun).** Le français met désormais la formule dans les
+feuillets biographiques des cinq récits, à la première mention du Compagnon : « (qu'Allah l'agrée) » (treize fois),
+« (qu'Allah les agrée) » (Qays et son père), « (qu'Allah l'agrée, ainsi que son père) », « Qu'Allah l'agrée. » en fin de
+feuillet (trois fois, récit d'Abû Bakr) ; et, pour Aslam, que les sources rangent parmi les Successeurs, « (qu'Allah lui
+fasse miséricorde) ». L'arabe met la formule **au même endroit, et là seulement**, sans parenthèses, comme les éditions :
+**رضي الله عنه** · **رضي الله عنهما** · **رضي الله عنه وعن أبيه** · en fin de phrase « رضي الله عنه. » ; pour Aslam,
+**رحمه الله**. Sources : at-Tabarî, *Târîkh*, édition de Wikisource [N] (« فتناول علي رضي الله عنه بابا », vol. 3, *Khaybar*) ;
+al-Bukhârî n° 4986 [P] (« صدر أبي بكر وعمر ـ رضى الله عنهما ـ »). Ailleurs (narration des chapitres, répliques, boutons,
+noms), la ligne « un Compagnon » ci-dessus reste à trancher (§ 4.1). **À valider.**
+
 ### 1.7 « Allah »
 
 - Toujours **الله** ; jamais un autre mot pour le désigner dans la narration (pas de « الإله » seul). Dans les noms
@@ -190,6 +200,73 @@ Une boîte de dialogue tient **trois lignes sur un téléphone** (texte « grand
   « l'un des tiens » : § 1.8), et la bonne œuvre « ردّ إليه عزيمته ». L'emprise d'une
   idole reste une image de l'exigence 18 (« قبضة »), jamais une présence dans un corps. **À valider (D184).**
 
+### 1.12 Les sources des feuillets (`codex[…].src`) et les mentions qui les accompagnent
+
+*Ajout du 18 novembre (lexique commun), à valider.* La source d'une **parole** (`<quote>2`) se recopie du registre, au
+signe près : le contrôle la compare. La source d'un **feuillet** n'est pas au registre ; les sept récits en ont 93, et un
+même livre doit y porter partout le même nom. On prend donc les noms du registre (`v2/docs/sources/*.json`, champ
+`ar.reference`) et du moteur (`moteur.json`, « Sources principales », déjà écrit) :
+
+- **l'auteur, une virgule arabe, le titre**, comme le français qui abrège (« at-Tabarî, Târîkh ») ; plusieurs sources se
+  séparent par « ؛ » : « ابن هشام، السيرة النبوية؛ صحيح البخاري » (posé partout) ;
+- **un recueil de hadiths par son titre usuel**, comme le registre : « صحيح البخاري »، « صحيح مسلم »، « سنن النسائي »،
+  « جامع الترمذي »، « مسند أحمد » ; le numéro entre parenthèses, en chiffres arabes orientaux : « صحيح البخاري (٣٧٤٤) » ;
+  « al-Bukhârî et Muslim » : « البخاري ومسلم » (moteur) ;
+- **les précisions entre parenthèses** suivent le français : (d'après Ibn Ishâq) « (عن ابن إسحاق) » ; (d'après Sayf ibn
+  'Umar) « (من رواية سيف بن عمر) » ; (récit de Zayd ibn Thâbit) « (من حديث زيد بن ثابت) » ; (parole de 'Umar) « (من قول عمر) » ;
+  (an 28 H) « (سنة ٢٨ هـ) » ; (jugé authentique par adh-Dhahabî) « (وصحّحه الذهبي) » ; (Livre des expéditions) « كتاب
+  المغازي » (registre : « صحيح البخاري، كتاب المغازي، رقم ٤٢٦٥ ») ; (livre des ventes) « كتاب البيوع » ; (introduction du
+  Sahîh) « المقدمة » (registre : « صحيح مسلم، المقدمة ») ; (attribué à …) « (المنسوب إلى …) » ; « attributions
+  discutées » : « في نسبته خلاف » (registre : « (في نسبته خلاف) ») ;
+- **« traduction du sens » ne se dit pas en arabe** : l'arabe cite le texte même, et la mention tombe. Le moteur l'a
+  déjà fait : « {ref}, traduction du sens » → « القرآن الكريم، {ref} ». Une référence de verset prend la forme du
+  registre : « سورة الحجرات: ٦ » ; « Coran — traductions du sens » : « القرآن الكريم ». Si un feuillet arabe ne rapporte
+  une parole qu'en substance, il le dit : « بالمعنى » ;
+- **« On rapporte »** (exigence 3) : en tête d'une source, « يُروى — … » (registre) ; dans un récit, « On rapporte que » :
+  « يُروى أنّ » (moteur : « On rapporte cette promesse » → « ويُروى هذا الوعد ») ; « rapporte-t-on » : « فيما يُروى » ;
+  « dit-on » : « فيما يُقال » ; at-Tabarî use de « يقال » et de « زعموا » pour ce qu'il rapporte sans le garantir [N] ;
+- **la fiction** : « Fiction » → « من صنع اللعبة » (moteur : « Fiction : aucun de ces compagnons… » → « من صنع اللعبة: … ») ;
+  « Le personnage est fictif » → « والشخصية من صنع اللعبة » ; « Le feuillet et ses chiffres sont fictifs » → « والورقة
+  وأرقامها من صنع اللعبة » ; « sont une fiction » → « قصصٌ متخيَّلة » (moteur) ; « Image du jeu » → « صورةٌ من صور اللعبة »
+  (§ 2.5). **Jamais « خيال، خياليّ »** pour la fiction : c'est le mot des chimères (§ 2.3). Un feuillet du jeu (une entrée
+  du recueil, une pièce trouvée dans un chapitre) est une **ورقة** (moteur : « Un feuillet. » → « ورقة. ») ; les feuillets
+  du Coran réunis par Zayd sont **الصُّحُف** (§ 2.10).
+
+| Français | Arabe | Où l'arabe est déjà écrit / note |
+|---|---|---|
+| Ibn Hishâm, as-Sîra (Sîra) | ابن هشام، السيرة النبوية | registre ; moteur |
+| at-Tabarî, Târîkh ; at-Tabarî seul | الطبري، تاريخ الرسل والملوك ; الطبري | registre ; moteur |
+| at-Tabarî, Tafsîr | الطبري، جامع البيان | titre de l'ouvrage ; référence non vérifiée |
+| Ibn Sa'd, (at-)Tabaqât (al-Kubrâ) | ابن سعد، الطبقات الكبرى | registre ; moteur |
+| Ibn Kathîr, al-Bidâya (wa-n-Nihâya) | ابن كثير، البداية والنهاية | registre ; moteur ; [G] |
+| al-Balâdhurî, Futûh al-Buldân | البلاذري، فتوح البلدان | registre ; [O] |
+| Ibn 'Asâkir, Târîkh Dimashq | ابن عساكر، تاريخ دمشق | registre ; moteur |
+| Ibn 'Abd al-Barr, al-Istî'âb | ابن عبد البر، الاستيعاب | registre (« الاستيعاب في معرفة الأصحاب ») |
+| Ibn Hajar, al-Isâba ; Fath al-Bârî | ابن حجر، الإصابة ; ابن حجر، فتح الباري | référence non vérifiée |
+| adh-Dhahabî, Siyar | الذهبي، سير أعلام النبلاء | référence non vérifiée |
+| Futûh ash-Shâm (attribué à al-Wâqidî) | فتوح الشام (المنسوب إلى الواقدي) | référence non vérifiée |
+| Abû Dâwûd, as-Sunan | سنن أبي داود | sur le modèle du registre (« سنن النسائي ») |
+| an-Nasâ'î ; an-Nasâ'î, as-Sunan al-Kubrâ | سنن النسائي ; النسائي، السنن الكبرى | registre (« سنن النسائي، رقم ٣٦٠٨ ») |
+| at-Tirmidhî | جامع الترمذي | registre (« جامع الترمذي، رقم ٣٧٠٣ ») |
+| Ahmad, (al-)Musnad | مسند أحمد | registre (« مسند أحمد، رقم ١٧٢٠ ») |
+| Mâlik, al-Muwatta' | مالك، الموطّأ | référence non vérifiée |
+| al-Hâkim, al-Mustadrak | الحاكم، المستدرك على الصحيحين | registre |
+| al-Bayhaqî, Dalâ'il an-Nubuwwa ; as-Sunan al-Kubrâ | البيهقي، دلائل النبوة ; البيهقي، السنن الكبرى | registre (Dalâ'il) |
+| ad-Dâraqutnî, as-Sunan | سنن الدارقطني | référence non vérifiée |
+| Ibn Abî Shayba, al-Musannaf ; 'Abd ar-Razzâq, al-Musannaf | ابن أبي شيبة، المصنَّف ; عبد الرزاق، المصنَّف | registre (Ibn Abî Shayba) |
+| Abû Nu'aym, Hilyat al-Awliyâ' | أبو نعيم، حلية الأولياء | registre |
+| Abû Yûsuf, Kitâb al-Kharâj | أبو يوسف، كتاب الخراج | référence non vérifiée |
+| Ibn 'Abd al-Hakam, Futûh Misr | ابن عبد الحكم، فتوح مصر | référence non vérifiée |
+| Ibn Abî Dâwûd, Kitâb al-Masâhif | ابن أبي داود، كتاب المصاحف | référence non vérifiée |
+| Wakî', Akhbâr al-Qudât | وكيع، أخبار القضاة | référence non vérifiée |
+| al-Isfahânî, Kitâb al-Aghânî | أبو الفرج الأصفهاني، الأغاني | référence non vérifiée |
+| Ibn Qutayba, Kitâb al-Anwâ' ; Ibn Mâjid, Kitâb al-Fawâ'id | ابن قتيبة، كتاب الأنواء ; ابن ماجد، كتاب الفوائد | référence non vérifiée |
+| Nahj al-Balâgha, lettre 53 | نهج البلاغة، الكتاب ٥٣ | registre (« نهج البلاغة، بشرح محمد عبده ») ; le registre dit aussi « في نسبته خلاف » |
+| Eutychius, Annales | سعيد بن البطريق، التاريخ | Eutychius d'Alexandrie a écrit en arabe sous ce nom : on le nomme ainsi, non par une transcription du grec ; référence non vérifiée |
+| Théophane, Chronographie ; chroniqueurs byzantins | ثيوفانيس، الحوليّات ; مؤرّخو الروم | référence non vérifiée |
+| Eusèbe de Césarée, Histoire ecclésiastique | يوسابيوس القيصري، تاريخ الكنيسة | référence non vérifiée |
+| fragment de la Geniza du Caire ; historiographie moderne | قطعةٌ من جنيزة القاهرة ; الدراسات التاريخية الحديثة | référence non vérifiée |
+
 ---
 
 ## 2. Le vocabulaire du jeu
@@ -217,6 +294,16 @@ Adresses lues pour cette section (toutes consultées le 18 novembre 2026) :
 - [K] Occurrences coraniques, recherche sur le texte : `https://api.alquran.cloud/v1/search/<mot>/all/quran-simple-clean`
 - [L] WP-ar, pages citées par leur titre : `https://ar.wikipedia.org/wiki/<titre>`
 - [M] Sahîh Muslim, édition arabe du CDN : `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-muslim.min.json`
+- [N] at-Tabarî, *Târîkh ar-rusul wa-l-mulûk*, édition de Wikisource, texte entier des volumes 3 (années 7 à 15), 4 (16 à
+  36) et 5 (37 à 65), lu le 18 novembre 2026 : `https://ar.wikisource.org/wiki/تاريخ_الطبري/الجزء_الثالث` (puis
+  `…/الجزء_الرابع`, `…/الجزء_الخامس`) ; les occurrences citées sont comptées sur le texte sans voyelles. La division de
+  Wikisource n'est pas celle des volumes imprimés (le registre cite l'édition imprimée, « ج ٣ ص … »).
+- [O] al-Balâdhurî, *Futûh al-buldân*, Shamela, livre 12221 (celui que lit le registre) : `https://shamela.ws/book/12221/<page>`
+  (pages 121, 126 à 140, 150 à 158 lues).
+- [P] al-Bukhârî, n° 4986, édition arabe du CDN : `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari/4986.min.json`
+- [Q] at-Tirmidhî, n° 3747 (numérotation du CDN), édition arabe du CDN : `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-tirmidhi/3747.min.json`
+- Les pages de WP-ar n'ont pas pu être relues pour les ajouts du 18 novembre au soir (l'API de Wikipédia refuse les
+  lectures automatiques : « too many requests ») ; les ajouts s'appuient sur [K] et [N] à [Q], le registre et le moteur.
 
 ### 2.1 Mots réservés
 
@@ -302,6 +389,33 @@ compétence, d'objet ni de lieu frappé ne contient** :
 | dirham (la monnaie du jeu) | **دِرهم**, pl. **دراهم** | — | |
 | rôles : guerrier · gardien · sage · soigneur · stratège | **المُقاتل · الحامي · العالِم · المُداوي · صاحب الرأي** | « صاحب الرأي » : WP-ar, « الحباب بن المنذر » : « وكان ذو رأي ومشورة » [L] | **à valider**. Le rôle « sage » (العالِم) n'est pas la figure « sage » (البصيرة, § 2.6). |
 | tempérament (d'où vient la première figure) | **الطَّبع** | al-Ghazâlî, [D] : « والهم على وفق الطبع » | |
+
+**Les descriptions de compétences** (*ajout du 18 novembre, lexique commun ; à valider*). Les mêmes tournures reviennent
+dans les sept récits (« révèle les failles » dans tous, « sur toutes les chimères » dans cinq, « attire les coups » dans
+cinq…) : elles s'écrivent partout de la même façon, avec les mots que `tables` et `moteur` ont déjà posés. Une Lumière,
+dans une description, se dit « نور X » (moteur : « {lumiere} retrouvée » → « نور {lumiere} مُستعاد ») : « الصدق » seul se
+lirait la vertu.
+
+| Français | Arabe | Déjà écrit dans le jeu |
+|---|---|---|
+| rend de la Constance à un compagnon ; à tout le groupe ; rend 40 % de Constance | يُعيد إلى رفيقٍ شيئًا من الثبات ; يُعيد إلى الركب كلّه شيئًا من الثبات ; يُعيد إلى رفيقٍ ٤٠٪ من الثبات | tables (objets) ; posé partout |
+| soigne un compagnon ; soigne le groupe | يُداوي رفيقًا ; يُداوي الركب | le rôle « soigneur », المُداوي (ci-dessus) |
+| rend du Souffle (au groupe) | يُعيد شيئًا من النَّفَس (إلى الركب) | § 2.3 (toujours vocalisé) |
+| Relève un compagnon éprouvé. | يُنهِض رفيقًا مُنهَكًا. | tables ; posé partout |
+| régénération pendant 3 tours ; le régénère ; Régénération pour tout le groupe. | يتجدّد ثباته ثلاثة أدوار ; يتجدّد ثباته ; يتجدّد ثباتُ الركب كلّه شيئًا فشيئًا. | moteur : « Régén. » → « تجدّد », « Tours » → « الأدوار » ; posé partout |
+| dissipe les altérations | يُزيل العوارض | tables |
+| dégâts de Véracité ; lourds dégâts ; légers dégâts | ضررٌ بنور الصدق ; ضررٌ شديد بنور… ; ضررٌ يسير بنور… | moteur : « dégâts reçus réduits » → « ضررٌ أقلّ مما يُصاب » |
+| frappe de Courage ; Miséricorde sur une chimère ; Justice sur toutes les chimères | ضربةٌ بنور الشجاعة ; نور الرحمة على خيال ; نور العدل على الخيالات كلّها | « خيال » (§ 2.3) |
+| déchire un voile ; deux voiles ; leurs voiles | يهتك حجابًا ; يهتك حجابين ; يهتك حُجُبها | moteur : « {lame} tranche ses voiles » → « انهتكت الحُجُب أمام {lame} » |
+| révèle les failles (d'une chimère) | يكشف ثُلَم الخيال | moteur : « Failles révélées » → « انكشفت الثُّلَم » |
+| dissipe les bonus ; bonus dissipés | يُبدّد ما زِيدَ له ; وتبدّد ما زِيدَ لها | moteur : « Dissipé » → « تبدّد » ; « ما زيد له » est une proposition |
+| attire les coups | تقصده الضربات | moteur (figures) : « والضربات تقصدك » |
+| se met en garde | يتحصّن | ci-dessus ; moteur : « En garde » → « متحصّن » |
+| peut étourdir | قد يُذهِل (après « ضربة » : قد تُذهِل) | moteur : « peut étourdir ({n} %) » → « قد يُذهِل ({n}٪) » ; posé : « ضربةٌ بالدِّرّة. قد تُذهِل. » |
+| +2 Niyya ; accorde 2 points de Niyya | النيّة +٢ ; يزيد النيّة نقطتين | moteur ; tables |
+| Force accrue ; Esprit accru ; défense du groupe accrue | قوّةٌ أكثر ; يزداد الذِّهن ; تزداد مَنَعة الركب | moteur (figures) : « قوّةٌ أكثر » |
+| affaiblit l'attaque de la cible ; affaiblit leur assaut | يُضعف ضربة الخصم ; يُضعف هجومها | — |
+| Donne sans compter | يجود ولا يُحصي | posé partout ; **pas** « بغير حساب » (sept occurrences au Coran, de 2:212 à 40:40, presque toutes dites de ce qu'Allah donne [K]) ni « بلا حساب » (« الحساب » est réservé, § 2.2) |
 
 ### 2.5 Le cœur (`coeur.js`)
 
@@ -560,6 +674,55 @@ du lettré **كُمّة الأديب**.
 | le relevé (L'agent du relevé) | **الإحصاء** (« موظّف الإحصاء ») | |
 | An 1507 de l'Hégire (« 1508 » jusqu'à D184, 2.22) | **سنة ١٥٠٧ للهجرة** ; « الحلقة الأخيرة · ١٥٠٧ هـ · ٢٠٨٤ م » | § 1.5 ; à valider (D184) |
 | des millions de vues · d'abonnés · de comptes (D184, 2.1 et 2.2 ; plus « de regards », « de fenêtres », sauf dans la bouche de l'enfant) | **ملايين المشاهدات · المتابِعين · الحسابات** | les mots courants. « حسابات » se dit au pluriel, dans une phrase : il ne nomme aucune chimère (« Le Compte » est **الرَّصيد**, § 3.6 ; **الحساب** seul se lit « le Jugement », § 2.2). À valider (D184). |
+| « Monsieur » (un enfant ou un passant à Idris) | **يا سيّدي** | jamais « يا عمّو » ni un autre mot de dialecte (§ 1.1). À valider. |
+
+### 2.10 Les mots de l'histoire : titres, fonctions, notions, peuples
+
+*Ajout du 18 novembre (lexique commun), à valider en bloc.* Ces mots reviennent dans plusieurs récits ; chacun est
+celui des chroniques, relevé chez at-Tabarî [N] ou al-Balâdhurî [O] (le nombre d'occurrences est compté sur [N]).
+
+| Français | Arabe retenu | Source | Note |
+|---|---|---|---|
+| successeur du Messager d'Allah (Abû Bakr) ; le premier successeur | **خليفة رسول الله ﷺ** ; « أوّل الخلفاء » | [N], vol. 3 (21 occ.) : « وخليفة رسول الله على الصلاة » | Le titre d'Abû Bakr, au vocatif : « يا خليفة رسول الله ». |
+| calife ; califat | **الخليفة ; الخلافة** | [N] | |
+| le Commandeur des croyants ; « le Commandeur » | **أمير المؤمنين** (toujours entier) | § 2.1 | « le Commandeur » seul ne devient pas « الأمير », qui est un chef d'armée ou de province. |
+| l'émir ; « Émir ! » (vocatif) ; l'émir de l'armée | **الأمير** ; « أيها الأمير » ; « أمير الجيش » | [N] : « أيها الأمير » (21 occ.) ; « أمير الجيش » (vol. 4) | |
+| gouverneur(s) ; le palais du gouverneur | **العامل**, pl. **العمّال** ; **دار الإمارة** | [N] : « عماله » (73 occ.) ; « دار الإمارة » (vol. 5, à Koufa) | **jamais « الوالي »** : c'est le Régent de 2084 (§ 3.3). « gouverneur du Shâm » : « عامل الشام ». |
+| la consultation (shûrâ) ; les six de la consultation | **الشورى** ; « أهل الشورى » | [N], vol. 4 : « اجتمع أهل الشورى على عثمان » | |
+| l'allégeance ; prêter allégeance | **البيعة** ; « بايع » | [N] | |
+| le Trésor ; le dîwân | **بيت المال** ; **الديوان** | [N] : « بيت المال » (47 occ.) ; « ذكر فرض العطاء وعمل الديوان » | déjà : « commis du Trésor », « scribe du dîwân » (§ 3.2, § 3.3). |
+| les Émigrés ; les Ansâr ; un Ansârî | **المهاجرون ; الأنصار ; أنصاريّ** | [N] : « المهاجرين والأنصار » (25 occ.) | |
+| Quraysh ; qurayshite ; les Banû X | **قريش ; قرشيّ ; بنو X** | [N] | « بنو » sujet, « بني » après une préposition ou un nom : « من بني تميم ». |
+| un pacte (avec une ville) ; la ville traite | **الصُّلح** ; « صالحهم على… » | [N] : « صالحهم » (25 occ.) ; [O], 12221/151 (Chypre : « فصالحهم على سبعة آلاف ومائتي دينار ») | la parole donnée, l'engagement : **العهد** (pl. العهود). Le pacte d'Îliyâ' : **العهدة العمرية** (§ 3.5) ; Hudaybiyya : **صلح الحديبية**. |
+| la sûreté (amân) | **الأمان** | [N] (71 occ.) ; [O], 12221/121 (Damas : « أعطاهم أمانا ») | |
+| le tribut, l'impôt (d'une ville sous pacte) | **الجزية** ; mais **suivre la source de l'épisode** | [O], 12221/121 (Damas : « إذا أعطوا الجزية ») ; [N] (87 occ.) | À Homs, « l'impôt rendu » est **الخراج** ([O], 12221/136 : « ردوا على أهل حمص ما كانوا أخذوا منهم من الخراج ») ; Chypre « paie deux kharâj » ([O], 12221/151 : « فهم يؤدون خراجين »). « الجزية على رقابهم والخراج على أرضهم » ([O], 12221/137). |
+| le tribut versé à un homme (ce que des tribus de la Ridda voyaient dans le dû) | **الإتاوة** | [N], vol. 3 : « إن العرب لا تطيب لكم نفسا بالإتاوة » | jamais الجزية ni الزكاة pour ce sens. |
+| la Ridda ; les guerres de la Ridda | **الردّة ; حروب الردّة** | [N] : « أهل الردة » (24 occ.) | le nom de l'événement, jamais celui d'une chimère (§ 3.6) ; dans un récit, on dit ce que font les tribus sans les nommer en bloc (exigences 6, 10). |
+| la Révélation ; scribe de la Révélation | **الوحي ; كاتب الوحي** | § 3.1 (Zayd) | |
+| le Livre (le Coran) ; les Gens du Livre | **كتاب الله** (ou **الكتاب** quand rien ne prête à confusion) ; **أهل الكتاب** | [N] : « أهل الكتاب » (9 occ.) | jamais « الكتاب المقدّس » (la Bible). |
+| les feuillets du Coran (réunis par Zayd) ; le mushaf | **الصُّحُف ; المصحف** | [P] : « فكانت الصحف عند أبي بكر حتى توفاه الله ثم عند عمر » ; [N], vol. 4 : « المصحف » (23 occ.) | **à distinguer** du feuillet du jeu, **ورقة** (§ 1.12). « Les tiges de palmier, les pierres plates, la mémoire des hommes » : « العُسُب واللِّخاف وصدور الرجال » ([P]). |
+| les lectures (du Coran) ; les récitants ; « reçue d'un Compagnon » | **القراءات ; القُرّاء** ; « تلقّاها عن صحابيّ » | [N] : « القراء » (13 occ.) | la chimère « Variante querelleuse » reste **المِراء** (§ 3.6). |
+| l'arbitrage (Siffîn) ; deux arbitres | **التحكيم ; الحَكَمان** | [N], vol. 5 : « لما وقع التحكيم ورجع علي من صفين » ; « فعند ذلك حكموا الحكمين » ; Coran 4:35 (au registre) | Exigence 5 : avec retenue, sans coupable. Le duel « حَكَمان » des sources et du Coran nomme les deux hommes ; « الحَكَم » reste interdit pour une chimère (§ 2.2). [N] dit aussi « الحكومة » : trop moderne aujourd'hui (« le gouvernement »). |
+| les sécessionnistes ; « un sécessionniste » ; faire sécession | **أهل حروراء** (à Nahrawân : **أهل النهر**) ; **رجلٌ من أهل حروراء** ; « باينوا عليًّا » | [N], vol. 5 : « إنكار أهل حروراء على علي التحكيم » ; « رجعوا مباينين له » ; « أهل النهر » (13 occ.) | **jamais** الخوارج، الحرورية، المحكّمة، المارقة (§ 2.2) : des noms de parti ou d'injure ([N], vol. 5 : « هذه المارقة الخاطئة », dans une lettre de guerre). Le lieu les nomme, comme le registre (« أهل النهروان »). |
+| « Le jugement n'appartient qu'à Allah » **crié** par les gens de Harûrâ' (`saga_ali.js`, lignes 256, 512, 591, 694, 695 ; `caid.js`, ligne 141) | **«لا حكم إلا لله»** | Muslim, n° 1066 (CDN : n° 2468, livre 12, hadith 205) [M] : « أن الحرورية لما خرجت … قالوا لا حكم إلا لله. قال علي: كلمة حق أريد بها باطل » ; [N], vol. 5 (7 occ.) | Le registre le dit (`versets.json`, note du verset 6:57) : ce cri est une parole rapportée par les chroniques, **non une citation du verset**. Là où le feuillet cite **le verset** (ligne 275 ; ligne 528, sourate Yûsuf), le texte est celui du registre : ﴿إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ﴾ ; c'est justement ce que le feuillet explique (la même phrase, deux usages). Jamais un nom de compétence. Le registre n'a pas encore d'entrée pour le cri lui-même : à y ajouter. |
+| les polythéistes ; les hypocrites | **المشركون ; المنافقون** | [N] : « المشركين » (68 occ.) | dans un récit ou une parole rapportée seulement ; jamais pour un personnage nommé (exigence 11). |
+| les Rûm, les Romains ; Rome (l'empire) ; César ; l'empereur ; Héraclius | **الروم** ; **الروم** (pas « روما ») ; **قيصر** ; **ملك الروم** ; **هِرَقل** | [N] : « ملك الروم » (11 occ.) ; « هرقل » (52 occ.) ; « قيصر » (9 occ.) | exigence 10. |
+| les Perses ; la Perse | **الفُرس** (vocalisé : « الفَرَس » est le cheval) ; **بلاد فارس** | [N] (« فارس » y désigne aussi le cavalier : 463 occurrences mêlées) | pas « العجم، الأعاجم » (les non-Arabes en bloc, exigence 10). |
+| les Arabes chrétiens ; les chrétiens de Najrân ; un chrétien | **نصارى العرب** ; **نصارى نجران** ; **نصرانيّ**, pl. **النصارى** | [N], vol. 3 : « من فارس ونصارى العرب » ; « أهل نجران » (6 occ.) | le mot des chroniques et du Coran ; jamais pour un ennemi (exigences 6, 10). En 2084, s'il le faut : « مسيحيّ ». |
+| les Ghassânides | **غسّان**, « بنو غسّان » | [N] : « غسان » (33 occ.) | « الغساسنة » est le mot des historiens modernes. |
+| un Bédouin ; les Bédouins | **بدويّ** ; **أهل البادية** | [N] : « أهل البادية » (8 occ.) | **pas « أعرابيّ »** pour une désignation : le Coran porte sur « الأعراب » un jugement (dix occurrences, en 9, 33, 48 et 49 [K]) qu'une étiquette ne doit pas porter (exigence 10). |
+| une délégation ; un envoyé (d'une tribu, d'une ville) | **وفد ; وافد** | [N] : « وفد » (162 occ.) | « Envoyé de Najrân » : « وافدٌ من نجران » ; « Délégué des tribus » : « وافد القبائل ». |
+| lever une flotte ; l'expédition par mer ; l'amiral | **غزو البحر** ; **أمير البحر** | [N], vol. 4 : « ألح معاوية … على عمر … في غزو البحر » ; [O], 12221/150 | « أمير البحر » (d'où vient « amiral ») : référence non vérifiée. Jamais « القائد » (le Caïd). |
+| l'Année des cendres ; la peste d'Emmaüs | **عام الرَّمادة ; طاعون عَمَواس** | [N], vol. 4 : « ذكر القحط وعام الرمادة » ; « وفيها كان عام الرمادة وطاعون عمواس » | |
+| martyr ; mourir en martyr | **شهيد ; استُشهد** | usage courant | |
+| l'un des dix à qui le Paradis fut annoncé | **أحد العشرة المبشَّرين بالجنّة** | [Q] : « أبو بكر في الجنة وعمر في الجنة … وأبو عبيدة بن الجراح في الجنة » | |
+| les années d'une saga (« 13–23 H · 634–644 ») | **١٣–٢٣ هـ · ٦٣٤–٦٤٤ م** | § 1.5 | |
+
+**Les formules qui reviennent dans les répliques** (usage courant ; une parole attestée vient du registre) : « Par
+Allah » **والله** · « Paix sur toi » **السلام عليك** · « Qu'Allah le garde » **حفظه الله** · « Qu'Allah te récompense »
+**جزاك الله خيرًا** · « Qu'Allah te fasse miséricorde » **رحمك الله** · « Qu'Allah fasse miséricorde à X » **رحم الله X** ·
+« Qu'Allah me pardonne » **غفر الله لي** · « si Allah le veut » **إن شاء الله** · « Louange à Allah » **الحمد لله** · « Au nom
+d'Allah » **بسم الله** · « mon frère » **يا أخي** · « On dit que… » **«يُقال إنّ…»** (posé partout).
 
 ---
 
@@ -635,6 +798,19 @@ Règles :
 | 'Abdallâh ibn Sa'd | **عبد الله بن سعد بن أبي السَّرح** | « عبد الله بن سعد بن أبي السرح ». Sans visage. |
 | Abû Hurayra | **أبو هُريرة** | « أبو هريرة ». |
 | Kisrâ (les rois sassanides) | **كِسرى** | titre, non un nom ; le dernier roi : « يزدجرد الثالث ». « l'empire de Kisrâ » (D184, 2.8 : le français ne dit plus « des Chosroès ») : **مُلك كسرى**. |
+| *Ajouts du 18 novembre (lexique commun) : noms qui reviennent dans plusieurs récits ; formes relevées chez at-Tabarî [N] (occurrences) ou al-Balâdhurî [O]* | | |
+| 'Amr ibn al-'Âs (quatre récits) | **عمرو بن العاص** | [N] (157 occ.). Le wâw final, qui ne se prononce pas, le distingue de عُمَر (§ 1.2) : ne jamais l'omettre. |
+| Mu'âwiya (ibn Abî Sufyân) | **معاوية بن أبي سفيان** ; « معاوية » | [N] (46 occ.). Exigence 5 : le nom seul, sans titre ni qualificatif, comme Mâlik al-Ashtar ; « gouverneur du Shâm » : « عامل الشام » (§ 2.10). |
+| Sa'd ibn Abî Waqqâs | **سعد بن أبي وقّاص** | [N] (47 occ.). |
+| Talha ; az-Zubayr | **طلحة** (طلحة بن عبيد الله) ; **الزبير** (الزبير بن العوّام) | [N] (22 et 11 occ.) ; [Q]. Exigence 5 : avec retenue. |
+| Abû Mûsâ al-Ash'arî | **أبو موسى الأشعري** | [N] (8 occ.). |
+| Ibn Mas'ûd | **عبد الله بن مسعود** ; « ابن مسعود » | [N] (13 occ.). |
+| Khabbâb ibn al-Aratt ; son fils 'Abdallâh | **خبّاب بن الأرتّ** ; **عبد الله بن خبّاب** | [N], vol. 5 : « فخرج عبد الله بن خباب صاحب رسول الله ». |
+| Hassân ibn Thâbit (le poète) | **حسّان بن ثابت** | [N] (12 occ.). |
+| Shurahbîl ibn Hasana ; 'Ikrima ibn Abî Jahl ; Yazîd ibn Abî Sufyân ; al-'Alâ' ibn al-Hadramî | **شُرَحبيل بن حَسَنة ; عِكرمة بن أبي جهل ; يزيد بن أبي سفيان ; العلاء بن الحضرمي** | [N] (18, 9, 26 et 13 occ.) ; [O], 12221/130 (Yazîd). |
+| Sayf ibn 'Umar (le transmetteur que suit at-Tabarî) | **سيف بن عمر** | [N] (27 occ.) ; « d'après Sayf ibn 'Umar » : « من رواية سيف بن عمر » (§ 1.12). |
+| Héraclius | **هِرَقل** | [N] (52 occ.) ; « César » (le titre) : **قيصر** (§ 2.10). |
+| Eutychius ; Théophane (chroniqueurs) | **سعيد بن البطريق** ; **ثيوفانيس** | § 1.12 ; référence non vérifiée. |
 
 Désignations collectives (exigences 4 et 10 : on dit le groupe sans trait) : un Médinois **رجل من أهل المدينة** · un
 vieil Ansârî **شيخ من الأنصار** (sans visage) · un soldat de l'armée d'Usâma **جنديّ من جيش أسامة** (sans visage) · un
@@ -643,6 +819,16 @@ récitateur **قارئ** (sans visage, à Yamâma) · un vétéran de Badr **ر�
 **راهب** · un prêtre du port **قسّ الميناء** · l'homme à la cuirasse **صاحب الدرع** (jamais sa religion) · un homme de
 Harûrâ' **رجل من أهل حَروراء** (jamais خارجي, § 2.2) · un affranchi **مولى** · un fidèle **أحد المصلّين** · un récitant
 de Koufa **قارئ من أهل الكوفة** · scribe du dîwân **كاتب الديوان** · courrier **رسول**, **بريد**.
+
+*Ajout du 18 novembre (lexique commun), à valider.* Les étiquettes de PNJ suivent les mêmes modèles d'un récit à l'autre ;
+la première colonne de ces modèles vaut pour tous les lieux : « Courrier de X » **رسولٌ من X** (« Courrier d'Abû 'Ubayda » :
+« رسول أبي عبيدة ») · « Ancien de X » **شيخٌ من أهل X** (« Ancien des Kalb » : « شيخ من بني كلب », ci-dessus) · « Vétéran de
+X » **رجلٌ ممّن شهد X** (« Un vétéran de Siffîn » : « رجلٌ ممّن شهد صفّين » ; Badr garde « رجل من أهل بدر », le mot des
+sources) · « Marchand de X » **تاجرٌ من X** · « Soldat de X » **جنديٌّ من X** · « Envoyé de X », « Délégué de X » **وافدٌ
+من X** (§ 2.10) · « Voyageur » **مسافر** · « Garde de la porte » **حارس الباب**. Déjà posés partout : « Veilleur » **حارس
+الليل** · « Chamelier » **جَمّال** (la chadda est nécessaire : sans elle, « جمال » se lit « la beauté ») · « Moine » **راهب**
+· « Enfant » **طفل** · « Un fidèle » **أحد المصلّين** · « Scribe du dîwân » **كاتب الديوان** · « Un caravanier » **رجلٌ من
+القافلة**.
 
 ### 3.3 Les personnages de fiction
 
@@ -748,6 +934,17 @@ sorcellerie). « Trésor » est **الكَنز** : الخِزانة est déjà l
 | Siffîn | **صِفّين** | « معركة صفين ». Un récit en parle avec retenue, sans coupable (exigence 5). |
 | la Maison assiégée ('Uthmân) | **الدار المحاصَرة** ; « حصار الدار » | **pas** « يوم الدار » seul : la notice « حديث يوم الدار » montre que l'expression désigne aussi un hadith que le discours chiite invoque (exigence 5). |
 | Khaybar (la Porte de Khaybar, compétence d'Alî) | **خيبر** | |
+| *Ajouts du 18 novembre (lexique commun) : lieux nommés dans plusieurs récits, relevés chez at-Tabarî [N] ou al-Balâdhurî [O]* | | |
+| l'Égypte ; l'Irak ; le Hijâz ; le Yémen ; l'Arabie | **مصر ; العراق ; الحجاز ; اليمن ; جزيرة العرب** | [N] (« لا يجتمعن بجزيرة العرب دينان »). |
+| Damas ; Constantinople | **دمشق ; القسطنطينية** | [O], 12221/121 (« أهل دمشق ») ; [N] (7 occ.). |
+| l'Euphrate ; le Tigre | **الفرات ; دِجلة** | [N] (75 et 57 occ.). |
+| Bassora ; Fustât | **البصرة ; الفسطاط** | [N] (597 occ. ; « فسطاط مصر », vol. 4). « الفسطاط » est aussi la tente (§ 3.4, « Tente du chef ») : pour la ville, « فسطاط مصر » à la première mention. |
+| al-Qâdisiyya ; Nihâwand ; Tustar ; al-Anbâr | **القادسية ; نَهاوَند ; تُستَر ; الأنبار** | [N] (156, 73 et 41 occ. ; « ===فتح تستر=== », « حصار تستر », vol. 4). |
+| Uhud ; Hudaybiyya (« à al-Hudaybiyya ») | **أُحُد ; الحُدَيبية** | [N] (« يوم أحد », 7 occ. ; « أهل الحديبية », 11 occ.) ; le pacte : « صلح الحديبية » (§ 2.10). |
+| Emmaüs ('Amwâs) | **عَمَواس** | [N] : « طاعون عمواس » (12 occ.) ; on ne transcrit pas « Emmaüs » en arabe. |
+| Chypre | **قبرص** | [O], 12221/150 : l'éditeur titre « أمر قبرص », le texte écrit « قبرس » ; [N] : « قبرس » (12 occ.). L'arabe d'aujourd'hui écrit قبرص : retenu, **à valider**. |
+| Qurâqir ; Suwâ (la traversée de Khâlid) | **قُراقِر ; سُوى** | [N], vol. 3 : « وسار ففوز من قراقر إلى سوى » ; registre : « عند الخروج من قُراقِر ». « سُوى » se vocalise : sans voyelles, « سوى » se lit « sauf ». |
+| l'Arménie ; l'Azerbaïdjan ; l'Ifrîqiya | **أرمينية ; أذربيجان ; إفريقية** | [N] (15, 36, 26 occ.). |
 
 ### 3.6 Les chimères et les idoles
 
@@ -857,6 +1054,35 @@ l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du §
 
 **Le cœur** : les sept maux et les cinq idées noires, § 2.5.
 
+### 3.7 Le lexique commun, posé « partout » (18 novembre)
+
+Avant l'écriture des récits, les 97 textes français qui reviennent dans plusieurs fichiers ont été posés une fois pour
+toutes (`node v2/tools/langues.js poser ar partout …`, 210 emplacements) : les 40 qui étaient déjà écrits dans `moteur` ou
+`tables` y sont repris tels quels (Lumières, figures, titres du recueil, « Médine », « Koufa », « Archers », « Tenir »,
+« Charge », « Dire vrai »…) ; les 57 autres sont écrits ici. Un rédacteur les trouve déjà dans sa liste : il ne les
+réécrit pas, sauf erreur, qu'il signale. Ceux qui suivent demandaient un choix ; **à valider** :
+
+| Français | Arabe posé | Où il revient | Pourquoi |
+|---|---|---|---|
+| Certitude | **الجزم** | compétence d'Abû Bakr ; deux chimères (le Pur, le Juge sans miséricorde) | « اليقين » est un degré de la foi : une chimère ne peut pas en faire son arme. « الجزم » dit l'assentiment sans hésitation d'Abû Bakr et la certitude fermée des deux chimères. |
+| Anathème | **النَّبذ** | le Pur ; le Juge sans miséricorde | « التكفير » serait exact, mais c'est le mot d'un débat entre écoles et d'un parti (exigence 5) ; « النبذ » : rejeter, mettre au ban. |
+| Sentence | **قضاءٌ نافذ** | compétence de 'Umar ; le Juge sans miséricorde | ni « الحَكَم » (§ 2.2), ni « الحُكم » seul, qui est le mot du cri de Harûrâ' (§ 2.10). |
+| Mille bouches | **ألفُ لسان** | trois chimères de la rumeur | l'image arabe de la rumeur est la langue ; « ألف فم » serait un calque. |
+| « On dit que… » | **«يُقال إنّ…»** | deux chimères | guillemets sans espaces intérieures, comme le moteur. |
+| Thésauriser | **الاكتناز** | trois chimères | le mot du Coran pour l'or qu'on amasse (9:34, « يكنزون » [K]) ; « الكَنز » est déjà le lieu « Trésor » (§ 3.4). |
+| Vertige | **الدُّوار** | deux chimères de la peur | vocalisé : « الدَّوّار » (qui tourne) s'écrit pareil. |
+| Rangs serrés | **صفوفٌ متلاحمة** | une chimère ; Abû 'Ubayda | pas « مرصوصة » : l'image coranique des rangs de ceux qu'Allah aime (61:4 [K]) ne va pas à une chimère. |
+| Tenir la ligne | **لزوم الصفّ** | al-Qa'qâ' ; Hudhayfa | pas « الثبات », la jauge de Constance (§ 2.3). |
+| Serment tenu | **الوفاء بالعهد** | Dirâr ; 'Abd ar-Rahmân | pas « يمين مبرورة » : « مبرور » appelle le pèlerinage (« حجّ مبرور »). |
+| Baume ; Panser ; Relever ; Affranchir | **البلسم ; التضميد ; الإنهاض ; العتق** | soins de cinq héros | « Relever » suit « أنهضَ » (§ 2.4) ; jamais « أحيا ». |
+| Largesse ; Équité ; Firâsa ; La Durra | **السخاء ; الإنصاف ; الفِراسة ; الدِّرّة** | Qays, 'Uthmân ; 'Umar | « Largesse » est la lame d'al-Ghazâlî (§ 2.5) ; « الدِّرّة » vocalisée : « الدُّرّة » est la perle. |
+| Flatterie ; Amplifier ; Écho ; Greniers clos | **التملّق ; التضخيم ; الصدى ; أهراءٌ مُغلَقة** | chimères | « الصدى » (§ 3.6) ; « الأهراء » (§ 3.4). |
+| Frappe nette. | **ضربةٌ مُحكَمة.** | Zîrî ; Sâlim | |
+| Apaisement | **التهدئة** | la Gazelle ; Abû Bakr | § 2.5. |
+| 'Umar ; Abû 'Ubayda ; Amîn al-Umma ; Al-Fârûq | **عُمَر ; أبو عُبيدة ; أمينُ الأمّة ; الفاروق** | héros de deux récits | § 3.1, tels quels. |
+| les cinq idées noires dans les pourparlers | **سوء الظنّ · الحقد · العار · الخوف · اليأس** | coeur et quatre récits | § 2.5, sans voyelles, comme le moteur. |
+| sources des feuillets (six formes communes) | « الطبري، تاريخ الرسل والملوك »… | § 1.12 | |
+
 ---
 
 ## 4. Points à trancher par le décideur
@@ -921,6 +1147,21 @@ son verset tiré du registre, si un récit le demande un jour.
     ويُستراح » était un calque) ; « les œuvres se comptent » : **تُعَدّ**, pas « تُحتسب » (§ 2.5) ;
     « se dresse(nt) », au dernier chapitre : **برز للقتال** (l'arabe ajoutait « في وجهكم », que le français ne dit pas) ;
     les attributs : **يُتعرَّف إليه**، **المُتعرَّف إليها** (l'arabe disait « تتعرّف إليه »، « تعرّفتَ إليها »).
+14. **Le lexique commun du 18 novembre** (§ 1.6, § 1.12, § 2.4, § 2.10, § 3.2, § 3.5, § 3.7 ; proposé par l'agent, à
+    valider). Les choix qui engagent le plus :
+    - la formule dans les feuillets suit désormais le français : **رضي الله عنه** sans parenthèses, **رحمه الله** pour
+      Aslam (§ 1.6) ;
+    - les sécessionnistes de Harûrâ' sont nommés par leur lieu, **أهل حروراء** puis **أهل النهر**, jamais par un nom de
+      parti ; leur cri est **«لا حكم إلا لله»** (Muslim), distinct du verset ﴿إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ﴾ (§ 2.10) ;
+    - les chrétiens sont **النصارى** (le mot des chroniques), les Bédouins **أهل البادية / بدويّ** (pas « أعرابي »),
+      les Perses **الفُرس** (pas « العجم ») (§ 2.10) ;
+    - le tribut suit la source de chaque épisode : **الجزية** (Damas), **الخراج** (Homs, Chypre), **الإتاوة** (la Ridda)
+      (§ 2.10) ;
+    - le gouverneur est **العامل** (« الوالي » est le Régent de 2084) ; Chypre s'écrit **قبرص** (les chroniques : قبرس) ;
+    - les compétences communes : « Certitude » **الجزم** (pas اليقين), « Anathème » **النَّبذ** (pas التكفير),
+      « Sentence » **قضاءٌ نافذ** (§ 3.7) ;
+    - « traduction du sens » ne se dit pas en arabe ; « Fiction » se dit **من صنع اللعبة**, jamais avec le mot des
+      chimères (§ 1.12).
 
 ---
 
@@ -934,3 +1175,8 @@ Pour qu'un spécialiste reprenne ces points :
 - la phrase de Bennabi sur le *sanam* (lue seulement dans des articles qui la citent) et son *Mushkilat al-afkâr* lui-même ;
 - le livre d'al-Ghazâlî « ذم الكبر والعجب » et « النية والإخلاص والصدق » (titres vérifiés, textes non lus en ligne) ;
 - « الإقدام » comme nom d'une vertu de l'éthique classique (Miskawayh n'a pas pu être relu à la lettre).
+- *(18 novembre, lexique commun)* les titres arabes des sources marquées « référence non vérifiée » au § 1.12 (Ibn Hajar,
+  adh-Dhahabî, *Futûh ash-Shâm*, Mâlik, ad-Dâraqutnî, Abû Yûsuf, Ibn 'Abd al-Hakam, Ibn Abî Dâwûd, Wakî', al-Isfahânî,
+  Ibn Qutayba, Ibn Mâjid), et les noms arabes d'Eutychius (سعيد بن البطريق), de Théophane, d'Eusèbe et de la Geniza ;
+  « أمير البحر » pour « l'amiral » ; « مَرهم / بلسم » n'a pas été cherché chez les auteurs ; les pages de WP-ar (l'API
+  refusait les lectures ce soir-là).
