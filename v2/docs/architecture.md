@@ -288,6 +288,20 @@ vient de `D.RAWI` (`defs.js`) ; seuls les deux objets sont dessinés de neuf :
   de son dessin, à la taille du dessin choisi. Un récit ou un paquet n'écrit ni `teint`, ni `barbe`, ni `poil`, ni `visage`, ni `neon`, ni `porte` :
   `regles.js` le refuse (« réservé au râwî que compose le joueur »).
 
+**La marque du râwî** (D193, précision du décideur : « les autres habitants de la Cité-Miroir ne doivent pas ressembler à
+Idris »). La bande et la ceinture de néon (`Y`, `y`) ne sont qu'à lui : elles viennent du type `cyber`, que seul le râwî
+porte ; les autres habitants de 2084 — Sâlim, les passants, l'employé, celui qui défile, le Régent, l'Admiré, le Compteur,
+le Cartographe, l'agent du relevé — sont du type `citadin` (`sprites.js`) : la capuche et l'habit court de la ville, la
+même teinte de 2084 sur la coiffe, sans le néon. `D.DE_2084` dit les deux types de 2084 : ni casque ni tunique de départ,
+la coiffe gardée au combat (`gear.js`), la lueur de 2084 pour le meneur (`world.js`). Sept d'entre eux portaient les étoffes
+mêmes du râwî, sous sa capuche et sa coupe : ils ont reçu des couleurs à eux, loin des sept étoffes ; deux liserés aux
+couleurs de ses néons (l'Admiré, le Cartographe) ont changé ; le Régent garde la tiare. Et la capuche ne prend pas la robe
+longue : ce serait l'habit des moines du jeu (Frère Cyprien, à la Citadelle, et les moines des récits), qu'on ne retouche
+pas. Le râwî d'origine, lui, ne change pas d'un point. `silhouettes.js` le prouve : aucun autre personnage du jeu n'a la
+bande ni la ceinture, en petit, en grand ni dans le tracé fin, et le râwî les a sous chaque ensemble et chaque composition ;
+aucune composition, même sans sa marque, ne ressemble à un habitant de 2084 ou de la Citadelle, ni à un Compagnon (moins
+de 85 % de points d'une couleur presque égale, ΔE < 12, de face, de profil et de dos, en 16 × 24 et en 32 × 48).
+
 **L'écran « Ton personnage »** (`U.personnage`, `ui.js`) : le nom, en haut — le clavier du téléphone ne le cache pas ;
 l'aperçu en grand, de face et de profil, et tel que la carte le montre (le petit personnage, sans visage, dans le
 dessin d'origine) — un toucher le rapproche du visage, et il s'en rapproche de lui-même quand on touche un teint, une

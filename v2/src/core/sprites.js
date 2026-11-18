@@ -185,6 +185,10 @@
     soldat: { coiffe: 'casque', court: true, item: 'lance', troupe: 'soldat' }, romain: { coiffe: 'casque', court: true, item: 'lance', cimier: true, cuirasse: true, troupe: 'romain' },
     perse: { coiffe: 'tiare', trim: '#d9b45a' }, moine: { coiffe: 'capuche', sombre: true, trim: '#c9b99a' }, enfant: { coiffe: 'calotte', petit: true, manteau: 'aucun' },
     marin: { coiffe: 'calotte', court: true, raies: true, manteau: 'aucun' }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' },
+    // 2.x (D193) — cyber : le râwî, et lui seul — la bande et la ceinture de néon sont sa marque. citadin : les autres habitants
+    // de 2084 (la Cité-Miroir) : la capuche et l'habit court de la ville, sans le néon (précision du décideur : « les autres
+    // habitants de la Cité-Miroir ne doivent pas ressembler à Idris »)
+    citadin: { coiffe: 'capuche', court: true, sombre: true, cite: true },
     bedouin: { coiffe: 'keffieh', drape: true, trim: '#3a2a20' } // gens des tribus : la couleur du cordon et du galon (look.trim) dit le clan
   };
 
@@ -221,7 +225,7 @@
   function palette(look, K) {
     const robe = look.robe || '#8a7355', head = look.head || (K.coiffe === 'litham' ? (look.veil || '#1f2f55') : K.coiffe === 'capuche' ? robe : '#e6dcc4');
     const cloak = look.cloak || G.shade(robe, 0.68), trim = look.trim || (look.aura ? vivid(look.aura) : K.trim || mix(cloak, '#d9b45a', 0.5));
-    const [T, t, u] = ramp(K.neon ? mix(head, '#6272a4', 0.3) : head), [R, r] = ramp(robe), q = ramp(robe)[2], [C, c, k] = ramp(cloak), A = mix(trim, '#ffffff', 0.12), a = mix(trim, '#20143a', 0.42);
+    const [T, t, u] = ramp(K.neon || K.cite ? mix(head, '#6272a4', 0.3) : head), [R, r] = ramp(robe), q = ramp(robe)[2], [C, c, k] = ramp(cloak), A = mix(trim, '#ffffff', 0.12), a = mix(trim, '#20143a', 0.42);
     const legs = look.legs || '#4a3d32', [L, l, z] = K.court ? ramp(legs) : [R, r, q];
     const p = { T, t, u, R, r, S: R, s: r, C, c, k, A, a, N: mix(head, '#ffffff', 0.3), F: '#7a5433', f: '#46301e',
       L, l, Z: z, M: K.court ? null : r, E: K.court ? null : c, e: K.court ? null : k, B: K.court ? L : C, b: K.court ? l : c, m: K.court ? null : c,
@@ -1073,6 +1077,10 @@
       pose(g.port, angle(p), 1); };
     if (dir === 3) arme(); c.drawImage(ge.img, x, y); if (dir !== 3) arme(); return true;
   };
+  // 2.x — pour les contrôles (silhouettes.js) : ce que le moteur tire d'une apparence — la coiffe, la coupe, la longueur de la
+  // robe, le néon (la marque du râwî) — et la grille des matières du petit personnage (16 × 24 : une lettre par point)
+  G.allure = look => { const K = kindOf(look); return { coiffe: HEADS[K.coiffe] ? K.coiffe : 'imama', manteau: K.manteau || 'long', court: !!K.court, neon: !!K.neon }; };
+  G.petiteGrille = (look, dir, frame, pose) => grid(look, dir || 0, frame || 0, pose).g.map(l => l.join(''));
   G.KINDS = KINDS; G.COIFFES = Object.keys(HEADS); G.RAWI_OBJETS = RAWI_OBJETS.slice();
   // une coiffe montre-t-elle un liseré, à une taille ou une autre (le bandeau d'un turban, de la calotte ; le chèche, de dos,
   // dans le petit personnage) : le râwî composé ne montre alors jamais le beige doré que le moteur pose à défaut (perso.js) —

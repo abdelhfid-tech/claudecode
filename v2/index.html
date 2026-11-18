@@ -680,7 +680,7 @@ body.touch #title .foot .clavier { display: none; }
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.10 · 2026-11-18 19:53 UTC · 44d1140+";
+window.ISNAD_VERSION = "2.10 · 2026-11-18 20:23 UTC · e11eac1+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -787,7 +787,11 @@ window.ISNAD_VERSION = "2.10 · 2026-11-18 19:53 UTC · 44d1140+";
   D.FX = ['atk', 'mag', 'def', 'spd', 'stun', 'doute', 'waswas', 'regen', 'garde', 'reveal',
           'cleanse', 'dispel', 'veil', 'niyya', 'sakina', 'taunt'];
 
-  D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber', 'savant', 'marchand', 'berbere', 'bedouin'];
+  D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber', 'savant', 'marchand', 'berbere', 'bedouin', 'citadin'];
+  // 2.x (D193) — les gens de 2084 : le râwî (cyber : lui seul porte la bande et la ceinture de néon, sa marque) et les autres
+  // habitants de la Cité-Miroir (citadin : la même ville, sans la marque). Ni casque ni tunique de départ, et la silhouette garde
+  // sa coiffe au combat (gear.js) ; le meneur a la lueur de 2084 (world.js)
+  D.DE_2084 = ['cyber', 'citadin'];
 
   D.BATTLE_BG = ['noos', 'desert', 'ville', 'camp', 'romaine', 'palais', 'mer', 'cite'];
 
@@ -1142,6 +1146,7 @@ window.ISNAD_VERSION = "2.10 · 2026-11-18 19:53 UTC · 44d1140+";
     poils: { p1: '#121014', p2: '#2c1e17', p3: '#6b4a2e' },
     coiffes: ['capuche', 'calotte', 'imama_haute', 'litham'],
     sans: {
+      capuche: { longue: [true] },                           // avec la robe longue, l'habit des moines du jeu (Frère Cyprien, les moines des récits)
       calotte: { manteau: ['aucun'] },                       // Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit
       imama_haute: { manteau: ['long'], etoffe: ['e6'] },    // Ibn 'Abbâs, 'Abd ar-Rahmân ; clair, ce serait un turban de Compagnon
       litham: { etoffe: ['e6'] }                             // clair, de dos, ce serait un turban de Compagnon
@@ -2810,21 +2815,22 @@ window.ISNAD_VERSION = "2.10 · 2026-11-18 19:53 UTC · 44d1140+";
     return { teint: v.teint, barbe: v.barbe, poil: v.poil, coiffe: L.coiffe || 'capuche', manteau: L.manteau || 'long', longue: L.court === false, echarpe: !!L.echarpe, etoffe: etoffeDe(t), neon: null, objet: null }; };
   // ce qu'une coiffe ne prend pas (D.RAWI.sans) : la coupe qu'elle a chez un Compagnon des récits ou chez Sâlim, qui marche
   // avec le râwî — la calotte sans manteau, le turban haut avec le manteau long —, l'étoffe claire qui ferait du turban celui
-  // d'un Compagnon. → vrai si la pièce k (manteau, etoffe) peut valoir v sous cette coiffe
+  // d'un Compagnon ; et la robe longue sous la capuche, qui ferait l'habit des moines du jeu (D193, précision du décideur).
+  // → vrai si la pièce k (manteau, etoffe, longue) peut valoir v sous cette coiffe
   const exclus = (coiffe, k) => ((R.sans || {})[coiffe] || {})[k] || [];
   P.va = (coiffe, k, v) => exclus(coiffe, k).indexOf(v) < 0;
-  // quand une pièce cède : la coupe qui garde un manteau, puis la première étoffe qui va
-  const REPLI = { manteau: () => ['long', 'epaule', 'ample', 'aucun'].filter(m => liste(R.manteaux, m)), etoffe: () => Object.keys(R.etoffes) };
-  // ce qui diffère de l'ensemble seulement ; ce qui ne va pas avec la coiffe cède (la coupe, l'étoffe) : la coiffe, elle, reste
+  // quand une pièce cède : la coupe qui garde un manteau, puis la première étoffe qui va ; la robe redevient courte
+  const REPLI = { manteau: () => ['long', 'epaule', 'ample', 'aucun'].filter(m => liste(R.manteaux, m)), etoffe: () => Object.keys(R.etoffes), longue: () => [false, true] };
+  // ce qui diffère de l'ensemble seulement ; ce qui ne va pas avec la coiffe cède (la coupe, l'étoffe, la longueur) : la coiffe, elle, reste
   P.neutraliser = function (t, brut) { const B = P.base(t), c = P.compo(brut);
     Object.keys(c).forEach(k => { if (c[k] === B[k]) delete c[k]; });
     const vaut = k => (c[k] !== undefined ? c[k] : B[k]), co = vaut('coiffe');
-    ['manteau', 'etoffe'].forEach(k => { if (P.va(co, k, vaut(k))) return; delete c[k];
+    ['manteau', 'etoffe', 'longue'].forEach(k => { if (P.va(co, k, vaut(k))) return; delete c[k];
       if (!P.va(co, k, vaut(k))) { const v = REPLI[k]().find(x => P.va(co, k, x)); if (v !== undefined && v !== B[k]) c[k] = v; } });
     return c; };
-  // une case de l'écran « Ton personnage » : une coiffe se prend toujours (ce qui ne va pas avec elle cède) ; une coupe ou une
-  // étoffe qui n'irait pas avec la coiffe portée s'éteint
-  P.permis = (k, v, t, brut) => { if (k !== 'manteau' && k !== 'etoffe') return true; const c = P.compo(brut), B = P.base(t);
+  // une case de l'écran « Ton personnage » : une coiffe se prend toujours (ce qui ne va pas avec elle cède) ; une coupe, une
+  // étoffe ou une longueur qui n'irait pas avec la coiffe portée s'éteint
+  P.permis = (k, v, t, brut) => { if (['manteau', 'etoffe', 'longue'].indexOf(k) < 0) return true; const c = P.compo(brut), B = P.base(t);
     return P.va(c.coiffe !== undefined ? c.coiffe : B.coiffe, k, v); };
   // un liseré jaune ou doré (une teinte entre l'orangé et le jaune, franche) : celui du veilleur (#ffe08a) en est un
   const dore = h => { const n = parseInt(String(h).slice(1, 7), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, mx = Math.max(r, g, b), d = mx - Math.min(r, g, b);
@@ -3561,6 +3567,10 @@ window.ISNAD_VERSION = "2.10 · 2026-11-18 19:53 UTC · 44d1140+";
     soldat: { coiffe: 'casque', court: true, item: 'lance', troupe: 'soldat' }, romain: { coiffe: 'casque', court: true, item: 'lance', cimier: true, cuirasse: true, troupe: 'romain' },
     perse: { coiffe: 'tiare', trim: '#d9b45a' }, moine: { coiffe: 'capuche', sombre: true, trim: '#c9b99a' }, enfant: { coiffe: 'calotte', petit: true, manteau: 'aucun' },
     marin: { coiffe: 'calotte', court: true, raies: true, manteau: 'aucun' }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' },
+    // 2.x (D193) — cyber : le râwî, et lui seul — la bande et la ceinture de néon sont sa marque. citadin : les autres habitants
+    // de 2084 (la Cité-Miroir) : la capuche et l'habit court de la ville, sans le néon (précision du décideur : « les autres
+    // habitants de la Cité-Miroir ne doivent pas ressembler à Idris »)
+    citadin: { coiffe: 'capuche', court: true, sombre: true, cite: true },
     bedouin: { coiffe: 'keffieh', drape: true, trim: '#3a2a20' } // gens des tribus : la couleur du cordon et du galon (look.trim) dit le clan
   };
 
@@ -3597,7 +3607,7 @@ window.ISNAD_VERSION = "2.10 · 2026-11-18 19:53 UTC · 44d1140+";
   function palette(look, K) {
     const robe = look.robe || '#8a7355', head = look.head || (K.coiffe === 'litham' ? (look.veil || '#1f2f55') : K.coiffe === 'capuche' ? robe : '#e6dcc4');
     const cloak = look.cloak || G.shade(robe, 0.68), trim = look.trim || (look.aura ? vivid(look.aura) : K.trim || mix(cloak, '#d9b45a', 0.5));
-    const [T, t, u] = ramp(K.neon ? mix(head, '#6272a4', 0.3) : head), [R, r] = ramp(robe), q = ramp(robe)[2], [C, c, k] = ramp(cloak), A = mix(trim, '#ffffff', 0.12), a = mix(trim, '#20143a', 0.42);
+    const [T, t, u] = ramp(K.neon || K.cite ? mix(head, '#6272a4', 0.3) : head), [R, r] = ramp(robe), q = ramp(robe)[2], [C, c, k] = ramp(cloak), A = mix(trim, '#ffffff', 0.12), a = mix(trim, '#20143a', 0.42);
     const legs = look.legs || '#4a3d32', [L, l, z] = K.court ? ramp(legs) : [R, r, q];
     const p = { T, t, u, R, r, S: R, s: r, C, c, k, A, a, N: mix(head, '#ffffff', 0.3), F: '#7a5433', f: '#46301e',
       L, l, Z: z, M: K.court ? null : r, E: K.court ? null : c, e: K.court ? null : k, B: K.court ? L : C, b: K.court ? l : c, m: K.court ? null : c,
@@ -4449,6 +4459,10 @@ window.ISNAD_VERSION = "2.10 · 2026-11-18 19:53 UTC · 44d1140+";
       pose(g.port, angle(p), 1); };
     if (dir === 3) arme(); c.drawImage(ge.img, x, y); if (dir !== 3) arme(); return true;
   };
+  // 2.x — pour les contrôles (silhouettes.js) : ce que le moteur tire d'une apparence — la coiffe, la coupe, la longueur de la
+  // robe, le néon (la marque du râwî) — et la grille des matières du petit personnage (16 × 24 : une lettre par point)
+  G.allure = look => { const K = kindOf(look); return { coiffe: HEADS[K.coiffe] ? K.coiffe : 'imama', manteau: K.manteau || 'long', court: !!K.court, neon: !!K.neon }; };
+  G.petiteGrille = (look, dir, frame, pose) => grid(look, dir || 0, frame || 0, pose).g.map(l => l.join(''));
   G.KINDS = KINDS; G.COIFFES = Object.keys(HEADS); G.RAWI_OBJETS = RAWI_OBJETS.slice();
   // une coiffe montre-t-elle un liseré, à une taille ou une autre (le bandeau d'un turban, de la calotte ; le chèche, de dos,
   // dans le petit personnage) : le râwî composé ne montre alors jamais le beige doré que le moteur pose à défaut (perso.js) —
@@ -5682,7 +5696,7 @@ window.ISNAD_VERSION = "2.10 · 2026-11-18 19:53 UTC · 44d1140+";
         if (G.D > 1 && p.moving && !G.low && POUSSIERE[m.g0 ? m.g0(p.x, p.y) : ''] && Math.random() < 0.3) G.spawn({ x: p.x - cx + (Math.random() - 0.5) * 6, y: p.y - cy + 1, vx: (Math.random() - 0.5) * 10, vy: -4 - Math.random() * 5, life: 0.5 + Math.random() * 0.3, size: 0.6 + Math.random() * 0.5, color: POUSSIERE[m.g0(p.x, p.y)], a: 0.3, type: 'mote', blend: 'source-over' }); // la poussière sous les pas
         const rg = I.rodeurs && I.rodeurs.geste, tau = rg ? W.t - rg.t : -1, gt = rg && D.GEAR_TYPES[rg.type];   // celui qui mène frappe : l'élan, le coup, l'arme en main (s'il repart, le geste s'efface après le coup)
         const frappe = rg && tau >= 0 && tau < (p.moving ? G.FRAPPE.elan + G.FRAPPE.balai : G.dureeFrappe) ? { anim: (gt && gt.anim) || 'geste', port: (rg.port !== undefined ? rg.port : gt && gt.port) || null, tau } : null;
-        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe); const lk = W.saga.heroes[W.party[0]].look; if (lk.kind !== 'cyber') lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe); const lk = W.saga.heroes[W.party[0]].look; if (D.DE_2084.indexOf(lk.kind) < 0) lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {
@@ -6564,7 +6578,7 @@ window.ISNAD_VERSION = "2.10 · 2026-11-18 19:53 UTC · 44d1140+";
     e.md = first([it.includes('sabre') && 'epee_fer', it.includes('lance') && 'javelot', it.includes('feuillets') && 'calame', it.includes('baton') && 'baton_marche',
       { guerrier: 'epee_fer', gardien: 'baton_marche', stratege: 'couteau', sage: 'calame', soigneur: 'baton_marche' }[def.role]]);
     if (it.includes('bouclier')) e.mg = first(['bouclier_cuir']);
-    if (L.kind !== 'cyber') {
+    if (D.DE_2084.indexOf(L.kind) < 0) {   // en 2084 (D.DE_2084) : ni casque ni tunique de départ
       e.tete = first([L.coiffe === 'casque_turban' && 'casque_turban', L.coiffe === 'casque' && 'casque_fer', 'turban']);
       e.corps = first([L.cuirasse && 'cotte', 'tunique']);
     }
@@ -6677,7 +6691,7 @@ window.ISNAD_VERSION = "2.10 · 2026-11-18 19:53 UTC · 44d1140+";
     const port = id => { const g = D.GEAR[id]; return g ? (g.port || D.GEAR_TYPES[g.t].port) : null; };
     [port(e.md), port(e.mg)].forEach(p => { if (p) items.push(p); });
     if (items.length) L.item = items; else delete L.item;
-    if (L.kind === 'cyber') return L; // en 2084, la silhouette garde sa capuche : seul ce que l'on tient change
+    if (D.DE_2084.indexOf(L.kind) >= 0) return L; // en 2084, la silhouette garde sa capuche : seul ce que l'on tient change
     const te = D.GEAR[e.tete], co = D.GEAR[e.corps];
     if (te && te.tete) L.coiffe = te.tete; else if (CASQUES.includes(L.coiffe)) L.coiffe = 'imama';
     delete L.cuirasse; if (co && co.corps) L.armure = co.corps; else delete L.armure;
@@ -9526,7 +9540,7 @@ ISNAD.registerSaga({
     },
     salim: {
       name: 'Sâlim', title: 'le Repenti', arabic: 'سالم', role: 'guerrier', el: 'shajaa',
-      look: { kind: 'cyber', robe: '#5a2f3a', head: '#6b2f3a', cloak: '#2b2530', coiffe: 'calotte', manteau: 'aucun' },
+      look: { kind: 'citadin', robe: '#5a2f3a', head: '#6b2f3a', cloak: '#2b2530', coiffe: 'calotte', manteau: 'aucun' },
       skills: [
         { lvl: 1, id: 'couper', name: 'Couper le signal', desc: 'Frappe nette.', cost: 3, target: 'foe', el: 'fer', pow: 1.5, anim: 'slash' },
         { lvl: 1, id: 'debrancher', name: 'Débrancher', desc: 'Oser dire non : frappe de Courage, retire les renforts.', cost: 5, target: 'foe', el: 'shajaa', pow: 1.4, fx: [{ st: 'dispel' }], anim: 'burst' },
@@ -9626,8 +9640,8 @@ ISNAD.registerSaga({
       id: 'p1', title: 'La Cité-Miroir', sub: 'An 1507 de l’Hégire · 2084', minLvl: 1, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
-        { id: 'passant1', name: 'Passant', at: ['rue', 0, -1], look: { kind: 'cyber', robe: '#3a3048', head: '#241c30' }, talk: [['say', 'passant1', 'Tu as vu la tendance de midi ? Non ? Alors de quoi veux-tu qu’on parle ?']] },
-        { id: 'passant2', name: 'Employé', at: ['ecran', -3, 2], look: { kind: 'cyber', robe: '#2f3f48', head: '#1c2a30' }, talk: [['say', 'passant2', 'Mon score a baissé de trois points. Je ne sais pas ce que j’ai fait. Je ne sais jamais.']] },
+        { id: 'passant1', name: 'Passant', at: ['rue', 0, -1], look: { kind: 'citadin', robe: '#a0523c', head: '#7a3a2a', cloak: '#b8664a' }, talk: [['say', 'passant1', 'Tu as vu la tendance de midi ? Non ? Alors de quoi veux-tu qu’on parle ?']] },
+        { id: 'passant2', name: 'Employé', at: ['ecran', -3, 2], look: { kind: 'citadin', robe: '#808a4a', head: '#5a6232', cloak: '#9aa45c' }, talk: [['say', 'passant2', 'Mon score a baissé de trois points. Je ne sais pas ce que j’ai fait. Je ne sais jamais.']] },
         { id: 'vieux', name: 'Vieil homme', at: ['ruelle', 0, -1], look: { kind: 'ancien', robe: '#4a4038', head: '#bdb6a8' }, talk: [['say', 'vieux', 'Autrefois on demandait : « Qui te l’a dit ? » Maintenant on demande : « Combien l’ont vu ? »']] },
         { id: 'gamin', name: 'Enfant', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Monsieur, c’est vrai qu’avant le ciel était noir, la nuit, avec des points dedans ?']] },
         { id: 'yunus_n', name: 'Maître Yûnus', hero: 'yunus', map: 'archives', at: 'bureau', talk: [['say', 'yunus_n', 'La Chaîne t’attend au fond de la salle, Idris.']] }
@@ -9699,8 +9713,8 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris', 'yunus'],
       npcs: [
         { id: 'salim_n', name: 'Sâlim', hero: 'salim', at: 'rue', talk: [['say', 'salim_n', 'Je sais où est son cœur.']] },
-        { id: 'fige1', name: 'Passant', at: ['ecran', -3, 2], look: { kind: 'cyber', robe: '#3a3048', head: '#241c30' }, talk: [['say', 'fige1', '… encore un… encore un…']] },
-        { id: 'fige2', name: 'Passant', at: ['ecran', 2, 3], look: { kind: 'cyber', robe: '#2f3f48', head: '#1c2a30' }, talk: [['nar', 'Il ne t’entend pas. Ses yeux suivent quelque chose qui défile.']] },
+        { id: 'fige1', name: 'Passant', at: ['ecran', -3, 2], look: { kind: 'citadin', robe: '#a0523c', head: '#7a3a2a', cloak: '#b8664a' }, talk: [['say', 'fige1', '… encore un… encore un…']] },
+        { id: 'fige2', name: 'Passant', at: ['ecran', 2, 3], look: { kind: 'citadin', robe: '#808a4a', head: '#5a6232', cloak: '#9aa45c' }, talk: [['nar', 'Il ne t’entend pas. Ses yeux suivent quelque chose qui défile.']] },
         { id: 'gamin2', name: 'Enfant', at: ['ecran', 4, 1], hidden: true, look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' } }
       ],
       foes: [
@@ -9796,7 +9810,7 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'defileur', name: 'Celui qui défile', at: ['ruelle', 0, -1], look: { kind: 'cyber', robe: '#33303f', head: '#201c28', cloak: '#2a2632' }, talk: [['say', 'defileur', '… encore un…']] }
+        { id: 'defileur', name: 'Celui qui défile', at: ['ruelle', 0, -1], look: { kind: 'citadin', robe: '#6a7ad0', head: '#4a58a8', cloak: '#8494e4' }, talk: [['say', 'defileur', '… encore un…']] }
       ],
       intro: [
         ['title', 'Celui qui défile', 'Cité-Miroir · le soir du maillon d’Abû Bakr'],
@@ -9859,7 +9873,7 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'regent', name: 'Le Régent', at: ['ascenseur', -2, 0], look: { kind: 'cyber', coiffe: 'tiare', robe: '#4a3a52', head: '#5a4a2a', cloak: '#2f2638', trim: '#d9b45a' }, talk: [['say', 'regent', 'Accordé.']] }
+        { id: 'regent', name: 'Le Régent', at: ['ascenseur', -2, 0], look: { kind: 'citadin', coiffe: 'tiare', robe: '#4a3a52', head: '#5a4a2a', cloak: '#2f2638', trim: '#d9b45a' }, talk: [['say', 'regent', 'Accordé.']] }
       ],
       intro: [
         ['title', 'Le Régent', "Cité-Miroir · le soir du maillon de 'Umar"],
@@ -9921,7 +9935,7 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'admire', name: 'L’Admiré', at: ['ecran', -3, 1], look: { kind: 'cyber', robe: '#5a2f52', head: '#3a2038', cloak: '#3a2440', trim: '#ff4fd8' }, talk: [['say', 'admire', 'Tu m’as reconnu, bien sûr.']] }
+        { id: 'admire', name: 'L’Admiré', at: ['ecran', -3, 1], look: { kind: 'citadin', robe: '#b8449a', head: '#86306e', cloak: '#cc5aac', trim: '#f0e8f4' }, talk: [['say', 'admire', 'Tu m’as reconnu, bien sûr.']] }
       ],
       intro: [
         ['title', 'L’Admiré', 'Cité-Miroir · le soir du maillon de Khâlid'],
@@ -9983,7 +9997,7 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'compteur', name: 'Le Compteur', at: ['rue', 2, -1], look: { kind: 'cyber', robe: '#4a4430', head: '#2a2618', cloak: '#3a3424', trim: '#d9b45a', item: 'bourse' }, talk: [['say', 'compteur', 'Ne me dérange pas. Je compte.']] }
+        { id: 'compteur', name: 'Le Compteur', at: ['rue', 2, -1], look: { kind: 'citadin', robe: '#9a7838', head: '#6a5024', cloak: '#b28c46', trim: '#d9b45a', item: 'bourse' }, talk: [['say', 'compteur', 'Ne me dérange pas. Je compte.']] }
       ],
       intro: [
         ['title', 'Le Compteur', "Cité-Miroir · le soir du maillon de 'Uthmân"],
@@ -10045,7 +10059,7 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'cyber', robe: '#2f4a52', head: '#1c2c30', cloak: '#24383e', trim: '#39e6ff', item: 'feuillets' }, talk: [['say', 'carto', 'Combien l’ont vu ?']] }
+        { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'citadin', robe: '#3a9a8a', head: '#267264', cloak: '#52b2a0', trim: '#34507a', item: 'feuillets' }, talk: [['say', 'carto', 'Combien l’ont vu ?']] }
       ],
       intro: [
         ['title', 'Le Cartographe', "Cité-Miroir · le soir du maillon de 'Alî"],
@@ -10173,7 +10187,7 @@ ISNAD.registerSaga({
       id: 'x_avis', retour: 5, title: 'L’avis', sub: 'Cité-Miroir · Archives basses', minLvl: 2, last: true,
       map: 'archives', start: 'chaine', party: ['idris'],
       npcs: [
-        { id: 'agent', name: 'L’agent du relevé', at: ['entree', 0, -1], look: { kind: 'cyber', robe: '#4a4c52', head: '#2c2e33', cloak: '#3a3c42' }, talk: [['say', 'agent', 'Je note, et je remonte.']] },
+        { id: 'agent', name: 'L’agent du relevé', at: ['entree', 0, -1], look: { kind: 'citadin', robe: '#5a9a5a', head: '#3e723e', cloak: '#72b272' }, talk: [['say', 'agent', 'Je note, et je remonte.']] },
         { id: 'yunus_x', name: 'Maître Yûnus', hero: 'yunus', at: 'bureau', talk: [['say', 'yunus_x', 'Laisse-le compter. Puis parle-lui.']] }
       ],
       intro: [

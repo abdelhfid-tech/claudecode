@@ -7,6 +7,9 @@
            node tools/silhouettes.js relever-nouveaux   ajoute aux deux fiches les silhouettes venues ensuite (le râwî composé,
                                                         ses coiffes et ses objets : D193), et rien d'autre — refusé si une seule
                                                         empreinte déjà relevée a changé
+           node tools/silhouettes.js elaguer            retire des deux fiches les empreintes qui n'ont plus de silhouette (un
+                                                        personnage retouché : D193, les habitants de 2084) — refusé si une seule
+                                                        empreinte encore utile a changé
            node tools/silhouettes.js planches [modèles] planches agrandies dans .smoke/silhouettes/ ; [modèles] : une image de
                                                         sept modèles (7 × 2 cases de 32 × 48), pour la planche de comparaison
    1. Les petits sprites (16 × 24, ceux qui marchent sur les cartes) : quatre directions, trois pas, six poses, pour tous
@@ -31,6 +34,13 @@
       n'est vide : sinon « ABSENT ».
    5. Les gestes de frappe (2.x) : l'élan et le coup ont leur image et la place de leur main dans les quatre directions,
       sur la carte et en combat ; chaque arme que l'on peut tenir se dessine ; le geste dure, puis cesse : sinon « ABSENT ».
+   6. La marque du râwî (D193 ; le décideur : « les autres habitants de la Cité-Miroir ne doivent pas ressembler à
+      Idris »). La bande et la ceinture de néon (les lettres Y et y) ne sont qu'à lui : aucun autre personnage du jeu n'en a
+      un point, en 16 × 24, en 32 × 48 ni dans le tracé fin de 64 × 96, et lui les porte sous chaque ensemble et chaque
+      composition. Puis aucune composition, même sans sa marque, ne ressemble à un habitant de 2084 ou de la Citadelle
+      (frame.js, caid.js), ni à un Compagnon, qui a la même coiffe et la même longueur de robe : la ressemblance S — la part
+      des points d'une couleur presque égale (ΔE76 < 12) parmi les points que l'un ou l'autre dessine, sans ceux du néon —
+      reste sous 0,85, de face, de profil et de dos, en 16 × 24 et en 32 × 48 : sinon « ÉCART ».
    Sortie : « OK » par preuve, puis « SILHOUETTES CONFORMES ». Code 1 à la première anomalie.
    JEU=../index.html node tools/silhouettes.js : le même contrôle sur la version légère, qui porte le même sprites.js. */
 const fs = require('fs'), path = require('path');
@@ -245,6 +255,27 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     console.log(`✓ ${np} petite(s) et ${neuves.length} grande(s) silhouette(s) ajoutée(s) aux fiches ; les ${cles.length - np} et ${connus.length} déjà relevées sont toujours justes, au point près`); await browser.close(); process.exit(0);
   }
 
+  /* ---------- élaguer : retirer des fiches les empreintes qui n'ont plus de silhouette ----------
+     Un personnage que le décideur fait retoucher (D193 : les habitants de 2084, pour qu'aucun ne ressemble au râwî) n'a plus la
+     silhouette relevée : son empreinte d'avant ne sert plus. On la retire, et rien d'autre — et seulement si tout ce qui est
+     encore relevé et dessiné est juste, au point près (sinon, c'est un écart, pas un personnage retouché). */
+  if (mode === 'elaguer') {
+    if (!fs.existsSync(FICHE) || !fs.existsSync(FICHE_G)) { console.log('✗ les fiches manquent : relever, puis relever-grands'); await browser.close(); process.exit(1); }
+    const S = JSON.parse(fs.readFileSync(FICHE, 'utf8')), SG = JSON.parse(fs.readFileSync(FICHE_G, 'utf8'));
+    const E = (await parPaquets(inv.map(q => q.look), 60, EMPREINTES, l => [l, true, true])).flat(), faux = [];   // le petit sprite, et le grand d'avant (l'interrupteur)
+    cles.forEach((k, i) => { const a = S.sprites[k]; if (a && (a[0] !== E[i][0] || a[1] !== E[i][1])) faux.push(inv[i].nom); });
+    const connus = inv.filter(q => SG.grands[JSON.stringify(q.look)]), EG = await grandes(connus.map(q => q.look));
+    connus.forEach((q, i) => { if (JSON.stringify(SG.grands[JSON.stringify(q.look)]) !== JSON.stringify(EG[i])) faux.push(q.nom + ' (grand)'); });
+    if (faux.length || errors.length) { console.log(`✗ rien n'est retiré : ${faux.length ? faux.length + ' silhouette(s) encore relevée(s) ont changé (' + faux.slice(0, 6).join(', ') + ')' : 'erreur console : ' + errors[0]}`); await browser.close(); process.exit(1); }
+    const vivantes = new Set(cles), vivantesG = new Set(inv.map(q => JSON.stringify(q.look)));
+    const parties = Object.keys(S.sprites).filter(k => !vivantes.has(k)), partiesG = Object.keys(SG.grands).filter(k => !vivantesG.has(k));
+    parties.forEach(k => { delete S.sprites[k]; }); partiesG.forEach(k => { delete SG.grands[k]; });
+    if (parties.length) fs.writeFileSync(FICHE, JSON.stringify({ note: S.note, sprites: S.sprites }, null, 0).replace(/"\],"/g, '"],\n"') + '\n');
+    if (partiesG.length) fs.writeFileSync(FICHE_G, JSON.stringify({ note: SG.note, grands: SG.grands }, null, 0).replace(/"\],"/g, '"],\n"') + '\n');
+    const dit = k => { const L = JSON.parse(k); return [L.kind, L.coiffe, L.robe, L.court === false ? 'robe longue' : ''].filter(Boolean).join(' '); };
+    console.log(`✓ ${parties.length} petite(s) et ${partiesG.length} grande(s) empreinte(s) retirée(s), qui n'avaient plus de silhouette${partiesG.length ? ' : ' + partiesG.map(dit).join(' · ') : ''} ; les ${cles.length} silhouettes du jeu restent relevées, au point près`); await browser.close(); process.exit(0);
+  }
+
   /* ---------- planches ---------- */
   if (mode === 'planches') {
     fs.mkdirSync(out, { recursive: true });
@@ -341,6 +372,54 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
       return { faux, n, ports }; });
     await page.context().close();
     if (Ge) { if (Ge.faux.length) Ge.faux.slice(0, 10).forEach(f => ko('ABSENT ' + f)); else ok(`les gestes de frappe : ${Ge.n} images (l'élan, le coup — quatre directions, sur la carte et en combat), chacune avec la place de sa main ; ${Ge.ports.length} armes dessinées sous huit angles (${Ge.ports.join(', ')}) ; le geste dure, puis cesse`); }
+    // 7. la marque du râwî (D193 ; le décideur : « les autres habitants de la Cité-Miroir ne doivent pas ressembler à Idris »)
+    page = await ouvrir();
+    const Mq = await page.evaluate(liste => {
+      const I = window.ISNAD, G = I.gfx, D = I.D, X = I.perso, R = D.RAWI; if (!G.allure || !G.petiteGrille || !X || !X.composer || !R) return null;
+      const faux = [], rawi = L => L.kind === 'cyber', vues4 = [0, 1, 2, 3];
+      // la marque : des cases Y (la bande) et y (la ceinture) dans les grilles — petit personnage, 32 × 48, tracé fin
+      const grilles = L => vues4.map(d => G.petiteGrille(L, d, 0).join('')).concat(vues4.map(d => G.charGrille(L, d, 0, null, 1).lignes.join('')), [G.charGrille(L, 0, 0, null, 2).lignes.join('')]);
+      let sans = 0, avec = 0;
+      liste.forEach(q => { const L = q.look, A = G.allure(L);
+        if (rawi(L)) { avec++; const g = [G.petiteGrille(L, 0, 0).join(''), G.charGrille(L, 0, 0, null, 1).lignes.join(''), G.charGrille(L, 0, 0, null, 2).lignes.join('')];
+          if (!A.neon || !g.every(s => /Y/.test(s) && /y/.test(s))) faux.push(q.nom + ' : le râwî sans sa bande ou sa ceinture de néon');
+          if ((q.groupe === 'héros' || q.groupe === 'gens') && q.nom !== 'idris/idris') faux.push(q.nom + ' : un autre que le râwî est du type du râwî (cyber)'); }
+        else { sans++; if (A.neon || grilles(L).some(s => /[Yy]/.test(s))) faux.push(q.nom + ' : porte la marque du râwî (la bande ou la ceinture de néon)'); } });
+      // la ressemblance S, sans les points de néon
+      const lab = h => { const n = parseInt(h.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map(v => { v /= 255; return v > 0.04045 ? Math.pow((v + 0.055) / 1.055, 2.4) : v / 12.92; });
+        const x = (c[0] * 0.4124 + c[1] * 0.3576 + c[2] * 0.1805) / 0.95047, y = c[0] * 0.2126 + c[1] * 0.7152 + c[2] * 0.0722, z = (c[0] * 0.0193 + c[1] * 0.1192 + c[2] * 0.9505) / 1.08883;
+        const f = t => t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116; return [116 * f(y) - 16, 500 * (f(x) - f(y)), 200 * (f(y) - f(z))]; };
+      const hex = (d, o) => '#' + [d[o], d[o + 1], d[o + 2]].map(v => v.toString(16).padStart(2, '0')).join('');
+      const NEONS = new Set(['#39e6ff', '#ff4fd8'].concat(...Object.values(R.neons)));
+      const image = (cv, w, h, y0) => { const d = cv.getContext('2d').getImageData(0, y0 || 0, w, h).data, pts = []; for (let i = 0; i < w * h; i++) { const o = i * 4; pts.push(d[o + 3] > 200 ? { l: lab(hex(d, o)), neon: NEONS.has(hex(d, o)) } : null); } return pts; };
+      const VUES = [[0, 1], [1, 1], [3, 1], [0, 2], [1, 2], [3, 2]];   // [direction, taille] : 1 → 16 × 24, 2 → 32 × 48
+      const vue = (L, [d, e]) => e === 1 ? image(G.charSheet(L), 16, 24, d * 24) : (g => image(g, g.width, g.height))(G.charGrand(L, d, 0));
+      const S = (a, b) => { let u = 0, n = 0; for (let i = 0; i < a.length; i++) { const p = a[i], q = b[i], pa = p && !p.neon, qb = q && !q.neon; if (!pa && !qb) continue; u++;
+        if (pa && qb && (p.l[0] - q.l[0]) ** 2 + (p.l[1] - q.l[1]) ** 2 + (p.l[2] - q.l[2]) ** 2 < 144) n++; } return u ? n / u : 0; };
+      // les compositions du râwî : les six ensembles, puis chaque coiffe, coupe, longueur, écharpe et étoffe sur sa tenue de toujours
+      const t0 = D.TENUES[0], comps = [], vc = new Set(), cle = L => { const A = G.allure(L); return A.coiffe + '/' + A.court; };
+      const ajoute = (L, dit) => { const k = JSON.stringify(L); if (vc.has(k)) return; vc.add(k); comps.push({ dit, cle: cle(L), L, im: null }); };
+      D.TENUES.forEach(t => ajoute(Object.assign({ kind: 'compagnon' }, X.look(t)), 'ensemble ' + t.id));
+      R.coiffes.forEach(co => R.manteaux.forEach(ma => [false, true].forEach(lo => [false, true].forEach(ec => Object.keys(R.etoffes).forEach(et => {
+        const c = X.neutraliser(t0, { coiffe: co, manteau: ma, longue: lo, echarpe: ec, etoffe: et }), L = Object.assign({ kind: 'compagnon' }, X.composer(t0, c));
+        ajoute(L, [L.coiffe || 'capuche', L.manteau || 'long', L.court === false ? 'robe longue' : 'robe courte', L.echarpe ? 'écharpe' : '', c.etoffe || 'e1'].filter(Boolean).join(' ')); })))));
+      // les habitants de 2084 et de la Citadelle (frame.js, caid.js), et les Compagnons de tous les récits
+      const habitants = liste.filter(q => (q.groupe === 'héros' || q.groupe === 'gens') && !rawi(q.look) && /^(idris|caid)\//.test(q.nom));
+      const compagnons = liste.filter(q => (q.groupe === 'héros' || q.groupe === 'gens') && !rawi(q.look) && !/^(idris|caid)\//.test(q.nom) && (q.look.kind || 'compagnon') === 'compagnon');
+      let max = { s: 0 }, paires = 0; const trop = [];
+      habitants.concat(compagnons).forEach(q => { const k = cle(q.look), mes = comps.filter(c => c.cle === k); if (!mes.length) return; const im = VUES.map(v => vue(q.look, v));
+        mes.forEach(c => { if (!c.im) c.im = VUES.map(v => vue(c.L, v)); paires++; im.forEach((x, n) => { const s = S(c.im[n], x), ou = ['face', 'profil', '', 'dos'][VUES[n][0]] + ', ' + (VUES[n][1] === 1 ? '16 × 24' : '32 × 48');
+          if (s > max.s) max = { s, qui: q.nom, dit: c.dit, ou }; if (s >= 0.85) trop.push(`${q.nom} et « ${c.dit} » (${ou}) : ${s.toFixed(2)}`); }); }); });
+      return { faux, sans, avec, comps: comps.length, habitants: habitants.length, compagnons: compagnons.length, paires, max: { s: max.s, qui: max.qui, dit: max.dit, ou: max.ou }, trop };
+    }, inv.map(q => ({ groupe: q.groupe, nom: q.nom, look: q.look })));
+    await page.context().close();
+    if (!Mq) ko('ABSENT gfx.allure ou gfx.petiteGrille : ce moteur ne dit pas qui porte la marque du râwî');
+    else {
+      if (Mq.faux.length) { Mq.faux.slice(0, 10).forEach(f => ko('ÉCART ' + f)); if (Mq.faux.length > 10) console.log(`   … et ${Mq.faux.length - 10} autre(s)`); }
+      else ok(`la marque du râwî : la bande et la ceinture de néon ne sont qu'à lui — ${Mq.sans} silhouettes du jeu n'en ont pas un point (16 × 24, 32 × 48 et 64 × 96, dans les quatre vues), et ses ${Mq.avec} silhouettes (ses ensembles, ses compositions, son équipement) les portent, en petit, en grand et dans le tracé fin`);
+      if (Mq.trop.length) { Mq.trop.slice(0, 10).forEach(f => ko('ÉCART il ressemble à un autre : ' + f)); if (Mq.trop.length > 10) console.log(`   … et ${Mq.trop.length - 10} autre(s)`); }
+      else ok(`personne ne ressemble au râwî : ses ${Mq.comps} compositions (les six ensembles, puis chaque coiffe, coupe, longueur, écharpe et étoffe), même sans leur néon, face aux ${Mq.habitants} habitants de 2084 et de la Citadelle et aux ${Mq.compagnons} Compagnons de même coiffe et de même longueur de robe (${Mq.paires} paires, de face, de profil et de dos, en 16 × 24 et en 32 × 48) : au plus ${Mq.max.s.toFixed(2)} — ${Mq.max.qui} et « ${Mq.max.dit} » (${Mq.max.ou}) —, sous le seuil de 0,85`);
+    }
   }
   if (errors.length) ko(`ÉCART erreur console : ${[...new Set(errors)].slice(0, 3).join(' | ').slice(0, 400)}`);
   await browser.close();

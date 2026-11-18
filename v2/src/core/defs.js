@@ -103,7 +103,11 @@
   D.FX = ['atk', 'mag', 'def', 'spd', 'stun', 'doute', 'waswas', 'regen', 'garde', 'reveal',
           'cleanse', 'dispel', 'veil', 'niyya', 'sakina', 'taunt'];
 
-  D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber', 'savant', 'marchand', 'berbere', 'bedouin'];
+  D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber', 'savant', 'marchand', 'berbere', 'bedouin', 'citadin'];
+  // 2.x (D193) — les gens de 2084 : le râwî (cyber : lui seul porte la bande et la ceinture de néon, sa marque) et les autres
+  // habitants de la Cité-Miroir (citadin : la même ville, sans la marque). Ni casque ni tunique de départ, et la silhouette garde
+  // sa coiffe au combat (gear.js) ; le meneur a la lueur de 2084 (world.js)
+  D.DE_2084 = ['cyber', 'citadin'];
 
   D.BATTLE_BG = ['noos', 'desert', 'ville', 'camp', 'romaine', 'palais', 'mer', 'cite'];
 
@@ -458,6 +462,7 @@
     poils: { p1: '#121014', p2: '#2c1e17', p3: '#6b4a2e' },
     coiffes: ['capuche', 'calotte', 'imama_haute', 'litham'],
     sans: {
+      capuche: { longue: [true] },                           // avec la robe longue, l'habit des moines du jeu (Frère Cyprien, les moines des récits)
       calotte: { manteau: ['aucun'] },                       // Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit
       imama_haute: { manteau: ['long'], etoffe: ['e6'] },    // Ibn 'Abbâs, 'Abd ar-Rahmân ; clair, ce serait un turban de Compagnon
       litham: { etoffe: ['e6'] }                             // clair, de dos, ce serait un turban de Compagnon

@@ -45,21 +45,22 @@
     return { teint: v.teint, barbe: v.barbe, poil: v.poil, coiffe: L.coiffe || 'capuche', manteau: L.manteau || 'long', longue: L.court === false, echarpe: !!L.echarpe, etoffe: etoffeDe(t), neon: null, objet: null }; };
   // ce qu'une coiffe ne prend pas (D.RAWI.sans) : la coupe qu'elle a chez un Compagnon des récits ou chez Sâlim, qui marche
   // avec le râwî — la calotte sans manteau, le turban haut avec le manteau long —, l'étoffe claire qui ferait du turban celui
-  // d'un Compagnon. → vrai si la pièce k (manteau, etoffe) peut valoir v sous cette coiffe
+  // d'un Compagnon ; et la robe longue sous la capuche, qui ferait l'habit des moines du jeu (D193, précision du décideur).
+  // → vrai si la pièce k (manteau, etoffe, longue) peut valoir v sous cette coiffe
   const exclus = (coiffe, k) => ((R.sans || {})[coiffe] || {})[k] || [];
   P.va = (coiffe, k, v) => exclus(coiffe, k).indexOf(v) < 0;
-  // quand une pièce cède : la coupe qui garde un manteau, puis la première étoffe qui va
-  const REPLI = { manteau: () => ['long', 'epaule', 'ample', 'aucun'].filter(m => liste(R.manteaux, m)), etoffe: () => Object.keys(R.etoffes) };
-  // ce qui diffère de l'ensemble seulement ; ce qui ne va pas avec la coiffe cède (la coupe, l'étoffe) : la coiffe, elle, reste
+  // quand une pièce cède : la coupe qui garde un manteau, puis la première étoffe qui va ; la robe redevient courte
+  const REPLI = { manteau: () => ['long', 'epaule', 'ample', 'aucun'].filter(m => liste(R.manteaux, m)), etoffe: () => Object.keys(R.etoffes), longue: () => [false, true] };
+  // ce qui diffère de l'ensemble seulement ; ce qui ne va pas avec la coiffe cède (la coupe, l'étoffe, la longueur) : la coiffe, elle, reste
   P.neutraliser = function (t, brut) { const B = P.base(t), c = P.compo(brut);
     Object.keys(c).forEach(k => { if (c[k] === B[k]) delete c[k]; });
     const vaut = k => (c[k] !== undefined ? c[k] : B[k]), co = vaut('coiffe');
-    ['manteau', 'etoffe'].forEach(k => { if (P.va(co, k, vaut(k))) return; delete c[k];
+    ['manteau', 'etoffe', 'longue'].forEach(k => { if (P.va(co, k, vaut(k))) return; delete c[k];
       if (!P.va(co, k, vaut(k))) { const v = REPLI[k]().find(x => P.va(co, k, x)); if (v !== undefined && v !== B[k]) c[k] = v; } });
     return c; };
-  // une case de l'écran « Ton personnage » : une coiffe se prend toujours (ce qui ne va pas avec elle cède) ; une coupe ou une
-  // étoffe qui n'irait pas avec la coiffe portée s'éteint
-  P.permis = (k, v, t, brut) => { if (k !== 'manteau' && k !== 'etoffe') return true; const c = P.compo(brut), B = P.base(t);
+  // une case de l'écran « Ton personnage » : une coiffe se prend toujours (ce qui ne va pas avec elle cède) ; une coupe, une
+  // étoffe ou une longueur qui n'irait pas avec la coiffe portée s'éteint
+  P.permis = (k, v, t, brut) => { if (['manteau', 'etoffe', 'longue'].indexOf(k) < 0) return true; const c = P.compo(brut), B = P.base(t);
     return P.va(c.coiffe !== undefined ? c.coiffe : B.coiffe, k, v); };
   // un liseré jaune ou doré (une teinte entre l'orangé et le jaune, franche) : celui du veilleur (#ffe08a) en est un
   const dore = h => { const n = parseInt(String(h).slice(1, 7), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, mx = Math.max(r, g, b), d = mx - Math.min(r, g, b);

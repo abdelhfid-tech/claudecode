@@ -30,7 +30,7 @@
     e.md = first([it.includes('sabre') && 'epee_fer', it.includes('lance') && 'javelot', it.includes('feuillets') && 'calame', it.includes('baton') && 'baton_marche',
       { guerrier: 'epee_fer', gardien: 'baton_marche', stratege: 'couteau', sage: 'calame', soigneur: 'baton_marche' }[def.role]]);
     if (it.includes('bouclier')) e.mg = first(['bouclier_cuir']);
-    if (L.kind !== 'cyber') {
+    if (D.DE_2084.indexOf(L.kind) < 0) {   // en 2084 (D.DE_2084) : ni casque ni tunique de départ
       e.tete = first([L.coiffe === 'casque_turban' && 'casque_turban', L.coiffe === 'casque' && 'casque_fer', 'turban']);
       e.corps = first([L.cuirasse && 'cotte', 'tunique']);
     }
@@ -143,7 +143,7 @@
     const port = id => { const g = D.GEAR[id]; return g ? (g.port || D.GEAR_TYPES[g.t].port) : null; };
     [port(e.md), port(e.mg)].forEach(p => { if (p) items.push(p); });
     if (items.length) L.item = items; else delete L.item;
-    if (L.kind === 'cyber') return L; // en 2084, la silhouette garde sa capuche : seul ce que l'on tient change
+    if (D.DE_2084.indexOf(L.kind) >= 0) return L; // en 2084, la silhouette garde sa capuche : seul ce que l'on tient change
     const te = D.GEAR[e.tete], co = D.GEAR[e.corps];
     if (te && te.tete) L.coiffe = te.tete; else if (CASQUES.includes(L.coiffe)) L.coiffe = 'imama';
     delete L.cuirasse; if (co && co.corps) L.armure = co.corps; else delete L.armure;
