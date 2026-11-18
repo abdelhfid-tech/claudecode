@@ -1485,6 +1485,14 @@ pages privées de son compte.
   personnage (le Caïd) ou d'un récit à la troisième personne, jamais à une adresse au cœur du joueur. Dans les autres
   langues, le ton vient de leur propre littérature (exigence 25), non d'une imitation de *Citadelle*.
 
+- [x] **D188. Les langues à tour de rôle, avec leurs deux relectures (décision du décideur, 18 novembre :
+  « je n'ai pas la compétence en anglais et en arabe ni en japonais, donc gardons les relectures ; ok pour les faire à
+  tour de rôle mais en les enchaînant »).** Chaque récit est écrit, puis relu deux fois (la fidélité, les sources et
+  les exigences ; puis la langue), et chaque langue est harmonisée d'un seul regard. Une langue à la fois, sans pause
+  entre elles : l'arabe, puis l'anglais, puis la relecture du japonais (écrit, mais pas encore relu par un second
+  agent). Le contenu commun (`coeur`) vient en dernier dans chaque langue, une fois décidés le texte à l'écran et le
+  ton de *Citadelle* (D187). Une relecture humaine par langue reste nécessaire avant toute diffusion.
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
