@@ -67,7 +67,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const importer = async (vp, parFichier, nom) => { const p = await ouvrir(vp);
     const avant = await p.evaluate(() => Array.from(document.querySelectorAll('#title .vmenu button')).map(b => b.textContent));
     if (avant.some(t => /Continuer/.test(t))) ko('ÉCART un navigateur neuf propose déjà « Continuer »');
-    await bouton(p, '#title', 'Importer une partie').click(); await p.waitForSelector('#partie:not([hidden])'); await p.waitForTimeout(300);
+    await bouton(p, '#title', 'Réglages').click(); await bouton(p, '#title', 'Importer une partie').click(); await p.waitForSelector('#partie:not([hidden])'); await p.waitForTimeout(300);
     if (parFichier) await p.locator('#partie input[type=file]').setInputFiles(parFichier); else { await p.locator('#partie textarea').fill(texte); await p.screenshot({ path: path.join(out, nom + '-coller.png') }); await bouton(p, '#partie', 'Lire cette partie').click(); }
     await p.waitForTimeout(500); await p.screenshot({ path: path.join(out, nom + '-confirmer.png') });
     const resume = (await p.locator('#partie .resume').textContent().catch(() => '')) || '', boutons = await p.evaluate(() => Array.from(document.querySelectorAll('#partie button')).map(b => b.textContent));
@@ -97,7 +97,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     return { pret, texte: I.save.exporter(), cp: JSON.parse(JSON.stringify(I.save.data.cp)) }; });
   await page.close(); errors = [];
   if (!milieu.pret) ko('BLOQUÉ pas de point de reprise au milieu du chapitre');
-  else { const p = await ouvrir(); await bouton(p, '#title', 'Importer une partie').click(); await p.waitForSelector('#partie:not([hidden])'); await p.locator('#partie textarea').fill(milieu.texte); await bouton(p, '#partie', 'Lire cette partie').click(); await p.waitForTimeout(400);
+  else { const p = await ouvrir(); await bouton(p, '#title', 'Réglages').click(); await bouton(p, '#title', 'Importer une partie').click(); await p.waitForSelector('#partie:not([hidden])'); await p.locator('#partie textarea').fill(milieu.texte); await bouton(p, '#partie', 'Lire cette partie').click(); await p.waitForTimeout(400);
     await bouton(p, '#partie', /Reprendre cette partie|Remplacer ma partie/).click(); await p.waitForTimeout(2500);
     const ou = await p.evaluate(() => { const I = window.ISNAD, W = I.world; return { monde: I.scene === W, saga: W.saga && W.saga.id, ci: W.ci, obj: W.objIndex, carte: W.map && W.map.id, groupe: W.party.join('+') }; });
     await p.screenshot({ path: path.join(out, '04-reprise-en-chapitre.png') });
@@ -106,7 +106,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     sansErreur('en reprenant au milieu d’un chapitre'); await p.close(); }
 
   /* ---------- 2. ce qui n'est pas une partie est refusé, et rien ne change ---------- */
-  page = await ouvrir(); await bouton(page, '#title', 'Importer une partie').click(); await page.waitForSelector('#partie:not([hidden])');
+  page = await ouvrir(); await bouton(page, '#title', 'Réglages').click(); await bouton(page, '#title', 'Importer une partie').click(); await page.waitForSelector('#partie:not([hidden])');
   const abime = (f) => { const o = JSON.parse(texte); f(o); return JSON.stringify(o); };
   const REFUS = [['un texte vide', '', 'rien à lire'], ['un texte quelconque', 'bonjour', 'abîmé'], ['un texte coupé', texte.slice(0, Math.floor(texte.length / 2)), 'abîmé'], ['autre chose qu’une partie', '{"a":1}', 'pas une partie'],
     ['une partie d’un format plus récent', abime(o => { o.partie.v = 9; }), 'plus récente'], ['des Lumières qui n’existent pas', abime(o => { o.partie.lights = ['lueur']; }), 'abîmée'], ['un point de reprise sans forme', abime(o => { o.partie.cp = 'ici'; }), 'abîmée'],
@@ -128,7 +128,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     return { fin, version: window.ISNAD_VERSION, texte: JSON.stringify(I.save.data), v: I.save.data.v }; });
   await p1.close(); errors = [];
   if (!v1.fin || v1.v !== 1) ko(`BLOQUÉ la 1.32 ne donne pas de partie au format 1 (${JSON.stringify({ fin: v1.fin, v: v1.v })})`);
-  else { const p = await ouvrir(); await bouton(p, '#title', 'Importer une partie').click(); await p.waitForSelector('#partie:not([hidden])'); await p.locator('#partie textarea').fill(v1.texte); await bouton(p, '#partie', 'Lire cette partie').click(); await p.waitForTimeout(400);
+  else { const p = await ouvrir(); await bouton(p, '#title', 'Réglages').click(); await bouton(p, '#title', 'Importer une partie').click(); await p.waitForSelector('#partie:not([hidden])'); await p.locator('#partie textarea').fill(v1.texte); await bouton(p, '#partie', 'Lire cette partie').click(); await p.waitForTimeout(400);
     const resume = (await p.locator('#partie .resume').textContent().catch(() => '')) || ''; await p.screenshot({ path: path.join(out, '06-partie-de-la-1.32.png') });
     if (!/format plus ancien/.test(resume)) ko(`ÉCART une partie de la 1.32 n'est pas reconnue comme un format plus ancien : « ${resume} »`);
     else { await bouton(p, '#partie', /Reprendre cette partie|Remplacer ma partie/).click(); await p.waitForTimeout(1500);

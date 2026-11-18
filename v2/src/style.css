@@ -550,3 +550,17 @@ html[dir="rtl"] #dialog.nar { padding-left: 1.6em; padding-right: 1.6em; }
 html[data-lang="en"] #card.quote blockquote::before { content: "“"; } html[data-lang="en"] #card.quote blockquote::after { content: "”"; }
 html[data-lang="ja"] #card.quote blockquote::before { content: "「"; } html[data-lang="ja"] #card.quote blockquote::after { content: "」"; }
 html[data-lang="ar"] #card.quote blockquote::before { content: "« "; } html[data-lang="ar"] #card.quote blockquote::after { content: " »"; }
+
+/* 2.08 · l'écran-titre allégé (demande du décideur) : l'essentiel dans la colonne — Continuer, Nouvelle partie, la langue,
+   Réglages ; les réglages et « Importer une partie » derrière « Réglages ». La langue n'est plus posée sur le titre. */
+#title .vmenu .langues { position: static; display: flex; flex-wrap: wrap; justify-content: center; gap: .4em; padding: 0; margin: .1em 0; max-width: none; }
+#title .vmenu .langues button { padding: .35em .95em; border-radius: 2em; letter-spacing: .04em; font-size: .8em; text-transform: none; background: rgba(10, 8, 20, .6); border: 1px solid var(--line); color: var(--dim); }
+#title .vmenu .langues button.on, #title .vmenu .langues button.sel { color: #fff; border-color: var(--gold); background: rgba(233, 200, 119, .18); }
+body.touch #title .vmenu .langues button { font-size: max(.8em, 12px); }
+@media (orientation: landscape) and (max-height: 480px) { #title .vmenu .langues { grid-column: 1 / -1; } }
+/* au doigt, les touches du clavier ne servent à rien : le pied de l'écran-titre ne les nomme pas */
+body.touch #title .foot .clavier { display: none; }
+/* l'essentiel tient en une colonne, même en largeur ; les réglages gardent leurs deux colonnes */
+@media (orientation: landscape) and (max-height: 480px) { #title .vmenu.essentiel { display: flex; flex-direction: column; width: min(100%, 22em); } }
+/* si l'écran-titre déborde (téléphone en largeur, texte très grand), il commence en haut : le titre reste entier */
+#title { justify-content: safe center; }

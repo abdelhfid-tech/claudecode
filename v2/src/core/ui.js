@@ -81,38 +81,45 @@
   function screen(id, on) { $(id).hidden = !on; document.body.classList.toggle('in-screen', !!document.querySelector('.screen:not([hidden])')); }
 
   /* ---------- titre ---------- */
-  U.showTitle = function () {
+  U.showTitle = function (vue) {
     I.setScene(U.titleScene); G.clearParts(); G.amb = { kind: 'dust', rate: 5, n: 0 }; I.audio.scene('titre'); I.audio.beat('veille');
     $('#hud').hidden = true; document.body.dataset.theme = 'orient';
-    const box = $('#title .vmenu'); box.innerHTML = ''; const sv = I.save.data, has = I.save.slots().some(Boolean), auto = I.save.autoGet(); let fl;
-    const mk = (label, fn, dis) => { const b = I.el('button', '', label); b.type = 'button'; b.disabled = !!dis; tapable(b, () => { I.audio.unlock(); fn(b); }); box.appendChild(b); return b; };
+    const box = $('#title .vmenu'); box.innerHTML = ''; const sv = I.save.data, has = I.save.slots().some(Boolean), auto = I.save.autoGet(); let fl = null, btns = [];
+    const mk = (label, fn, dis) => { const b = I.el('button', '', label); b.type = 'button'; b.disabled = !!dis; tapable(b, () => { I.audio.unlock(); fn(b); }); box.appendChild(b); btns.push(b); return b; };
     const quand = t => { const m = Math.max(0, Math.round((Date.now() - t) / 60000)); return m < 1 ? I.t('à l’instant') : m < 60 ? I.t('il y a {n} min', { n: m }) : m < 1440 ? I.t('il y a {n} h', { n: Math.round(m / 60) }) : I.t('le {date}', { date: new Date(t).toLocaleDateString(I.langue.locale(), { day: '2-digit', month: '2-digit' }) }); };
-    const close = () => { fl.destroy(); screen('#title', false); I.audio.stopBeat(); };
-    const btns = [];
-    // la partie se garde toute seule : « Continuer » la reprend là où elle en était ; les copies gardées à la mosquée restent disponibles
-    if (auto) btns.push(mk(I.t('Continuer') + '<small>' + I.esc((auto.meta && auto.meta.label) || I.t('Partie en cours')) + ' · ' + quand((auto.meta && auto.meta.when) || 0) + '</small>', () => { close(); I.save.readAuto(); U.resume(); }));
-    if (has) btns.push(mk(auto ? I.t('Reprendre une copie gardée') : I.t('Continuer'), async () => { close(); const ok = await U.loadMenu(); if (ok) U.resume(); else U.showTitle(); }));
-    btns.push(mk(I.t('Nouvelle partie'), async b => {
-      close();
-      if (auto && (auto.prologue || auto.cp || (auto.cps && Object.keys(auto.cps).length))) { I.setScene(U.blank); S.depth++; let k = 1; try { k = await S.menuPick(I.t('Une partie est en cours. En commencer une nouvelle la remplacera ; les copies gardées à la mosquée restent.'), [{ t: I.t('Commencer une nouvelle partie') }, { t: I.t('Garder ma partie') }]); } finally { S.depth--; S.hideDialog(); } if (k !== 0) return U.showTitle(); }
-      I.save.reset(); I.save.data.started = true; if (I.lecons) I.lecons.ouvrir(); W.roster = {}; W.saga = null; U.personnage(() => W.startChapter('idris', 0), true); // 2.x : une partie neuve apprend un outil à la fois (lecons.js)
-    }));
-    btns.push(mk(I.audio.on ? I.t('Son : activé') : I.t('Son : coupé'), b => { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = I.audio.on ? I.t('Son : activé') : I.t('Son : coupé'); }));
-    btns.push(mk(I.audio.musicOn ? I.t('Musique : activée') : I.t('Musique : coupée'), b => { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = I.audio.musicOn ? I.t('Musique : activée') : I.t('Musique : coupée'); }));
-    btns.push(mk(I.t('Dessin : {nom}', { nom: dessinNom() }), b => { dessinSuivant(); b.textContent = I.t('Dessin : {nom}', { nom: dessinNom() }); }));
-    btns.push(mk(G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'); }));
-    btns.push(mk(I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }), b => { U.tzSuivant(); b.textContent = I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }); }));
-    btns.push(mk(I.t('Image : {zoom}', { zoom: zoomNom() }), b => { U.zoomSuivant(); b.textContent = I.t('Image : {zoom}', { zoom: zoomNom() }); }));
-    btns.push(mk(I.t('Plein écran'), () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } }));
+    const close = () => { if (fl) fl.destroy(); screen('#title', false); I.audio.stopBeat(); };
+    // deux vues dans la même colonne : l'essentiel (jouer, la langue), et les réglages, rangés derrière un bouton
+    const montrer = f => { if (fl) fl.destroy(); box.innerHTML = ''; btns = []; box.classList.toggle('essentiel', f === principal); f(); fl = focusList(btns); };
+    const principal = () => {
+      // la partie se garde toute seule : « Continuer » la reprend là où elle en était ; les copies gardées à la mosquée restent disponibles
+      if (auto) mk(I.t('Continuer') + '<small>' + I.esc((auto.meta && auto.meta.label) || I.t('Partie en cours')) + ' · ' + quand((auto.meta && auto.meta.when) || 0) + '</small>', () => { close(); I.save.readAuto(); U.resume(); });
+      if (has) mk(auto ? I.t('Reprendre une copie gardée') : I.t('Continuer'), async () => { close(); const ok = await U.loadMenu(); if (ok) U.resume(); else U.showTitle(); });
+      mk(I.t('Nouvelle partie'), async b => {
+        close();
+        if (auto && (auto.prologue || auto.cp || (auto.cps && Object.keys(auto.cps).length))) { I.setScene(U.blank); S.depth++; let k = 1; try { k = await S.menuPick(I.t('Une partie est en cours. En commencer une nouvelle la remplacera ; les copies gardées à la mosquée restent.'), [{ t: I.t('Commencer une nouvelle partie') }, { t: I.t('Garder ma partie') }]); } finally { S.depth--; S.hideDialog(); } if (k !== 0) return U.showTitle(); }
+        I.save.reset(); I.save.data.started = true; if (I.lecons) I.lecons.ouvrir(); W.roster = {}; W.saga = null; U.personnage(() => W.startChapter('idris', 0), true); // 2.x : une partie neuve apprend un outil à la fois (lecons.js)
+      });
+      // la langue, dans la colonne, sous « Nouvelle partie » : chaque nom écrit dans sa langue — on le retrouve même sans savoir lire celle de l'écran
+      const L = I.langue, dispo = L.disponibles();
+      if (dispo.length > 1) { const lg = I.el('div', 'langues'); dispo.forEach(l => { const b = I.el('button', l === L.lang ? 'on' : '', L.LANGUES[l].nom); b.type = 'button'; b.lang = l; b.dir = L.LANGUES[l].dir; b.setAttribute('aria-pressed', l === L.lang ? 'true' : 'false');
+        tapable(b, () => { I.audio.unlock(); if (l === L.lang) return; U.langue(l); if (fl) fl.destroy(); U.showTitle(); }); lg.appendChild(b); btns.push(b); }); box.appendChild(lg); }
+      mk(I.t('Réglages'), () => montrer(reglages));
+    };
+    const reglages = () => {
+      mk(I.audio.on ? I.t('Son : activé') : I.t('Son : coupé'), b => { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = I.audio.on ? I.t('Son : activé') : I.t('Son : coupé'); });
+      mk(I.audio.musicOn ? I.t('Musique : activée') : I.t('Musique : coupée'), b => { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = I.audio.musicOn ? I.t('Musique : activée') : I.t('Musique : coupée'); });
+      mk(I.t('Dessin : {nom}', { nom: dessinNom() }), b => { dessinSuivant(); b.textContent = I.t('Dessin : {nom}', { nom: dessinNom() }); });
+      mk(G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'); });
+      mk(I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }), b => { U.tzSuivant(); b.textContent = I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }); });
+      mk(I.t('Image : {zoom}', { zoom: zoomNom() }), b => { U.zoomSuivant(); b.textContent = I.t('Image : {zoom}', { zoom: zoomNom() }); });
+      mk(I.t('Plein écran'), () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } });
+      mk(I.t('Importer une partie'), () => { close(); U.partie('importer', () => U.showTitle()); });
+      mk(I.t('◂ Retour'), () => montrer(principal));
+    };
     { const v = $('#title .ver'); if (v) v.textContent = window.ISNAD_VERSION ? I.t('version {v}', { v: window.ISNAD_VERSION }) : I.t('version de travail'); }
-    // importer une partie : dans un coin, hors de la colonne — l'écran-titre garde la hauteur qu'il a toujours eue
-    { let coin = $('#title .coin'); if (!coin) { coin = I.el('div', 'coin'); $('#title').appendChild(coin); } coin.innerHTML = '';
-      const b = I.el('button', '', I.t('Importer une partie')); b.type = 'button'; tapable(b, () => { I.audio.unlock(); close(); U.partie('importer', () => U.showTitle()); }); coin.appendChild(b); btns.push(b); }
-    // la langue : quatre boutons, chacun écrit dans sa langue — on le retrouve même sans savoir lire celle de l'écran
-    { let lg = $('#title .langues'); if (!lg) { lg = I.el('div', 'langues'); $('#title').appendChild(lg); } lg.innerHTML = ''; const L = I.langue; lg.hidden = L.disponibles().length < 2; $('#title').classList.toggle('multilingue', !lg.hidden);   // une seule langue : pas de boutons
-      L.disponibles().forEach(l => { const b = I.el('button', l === L.lang ? 'on' : '', L.LANGUES[l].nom); b.type = 'button'; b.lang = l; b.dir = L.LANGUES[l].dir; b.setAttribute('aria-pressed', l === L.lang ? 'true' : 'false');
-        tapable(b, () => { I.audio.unlock(); if (l === L.lang) return; U.langue(l); fl.destroy(); U.showTitle(); }); lg.appendChild(b); btns.push(b); }); }
-    screen('#title', true); fl = focusList(btns);
+    // ce qui flottait autrefois hors de la colonne (la langue en haut, « Importer une partie » dans un coin) est rangé dedans
+    { const c = $('#title > .coin'); if (c) c.remove(); const lg0 = $('#title > .langues'); if (lg0) lg0.remove(); $('#title').classList.remove('multilingue'); }
+    screen('#title', true); montrer(vue === 'reglages' ? reglages : principal);
   };
   /* ---------- la langue ----------
      Un réglage de l'appareil (opts.lang), comme le son ou le dessin : la partie, elle, est la même dans toutes les langues.

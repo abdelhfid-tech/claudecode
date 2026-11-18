@@ -36,8 +36,14 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { a
       racines.forEach(r => r.querySelectorAll('*').forEach(el => { if (!el.getClientRects().length || el.closest('[hidden]')) return; const st = getComputedStyle(el); if (st.visibility === 'hidden' || +st.opacity < 0.1) return;
         const t = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim(); if (t.length < 2) return; const fs2 = parseFloat(st.fontSize); if (fs2 < seuil) vus.push(`« ${t.slice(0, 28)} » ${fs2.toFixed(1)} (${el.id ? '#' + el.id : el.className ? '.' + String(el.className).split(' ')[0] : el.tagName.toLowerCase()})`); })); return [...new Set(vus)]; }, PLANCHER);
     const lisible = async ou => { const l = await petits(); dit(!l.length, 'INVISIBLE', `${nom} · ${ou} : ${l.length ? 'texte(s) sous ' + PLANCHER + ' points — ' + l.slice(0, 6).join(' · ') : 'aucun texte sous ' + PLANCHER + ' points'}`); };
-    const titre = await p.evaluate(() => [...document.querySelectorAll('#title .vmenu button')].map(b => b.textContent).filter(t => /Image|Texte/.test(t)));
+    // 2.08 : les réglages sont rangés derrière « Réglages » ; on les ouvre, on les lit, puis on revient à l'essentiel
+    const reglages = () => p.evaluate(() => { const r = [...document.querySelectorAll('#title .vmenu button')].find(x => /^Réglages/.test(x.textContent)); if (r) r.click(); return [...document.querySelectorAll('#title .vmenu button')].map(b => b.textContent); });
+    const titre = (await reglages()).filter(t => /Image|Texte/.test(t));
     dit(titre.some(t => /Texte : grand/.test(t)) && titre.some(t => t === 'Image : ' + fr(office)), 'ÉCART', `${nom} · écran-titre : ${titre.join(' · ') || 'ni « Texte » ni « Image »'}`);
+    await lisible('écran-titre, réglages'); await shot('1-titre-reglages');
+    await p.evaluate(() => { const r = [...document.querySelectorAll('#title .vmenu button')].find(x => /Retour/.test(x.textContent)); if (r) r.click(); }); await p.waitForTimeout(200);
+    const essentiel = await p.evaluate(() => [...document.querySelectorAll('#title .vmenu button')].map(b => b.textContent));
+    dit(essentiel.some(t => /^Nouvelle partie/.test(t)) && essentiel.some(t => /^Réglages/.test(t)) && !essentiel.some(t => /^(Son|Musique|Dessin|Rendu|Texte|Image)/.test(t)), 'ÉCART', `${nom} · écran-titre : l'essentiel seulement (${essentiel.join(' · ')})`);
     await lisible('écran-titre'); await shot('1-titre');
     await p.evaluate(() => { const I = window.ISNAD; I.audio.setOn(false); I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => e.hidden = true); document.body.classList.remove('in-screen'); I.input.reset();
       I.debug.auto = true; I.speed = 30; I.world.roster = {}; I.world.saga = null; I.world.startChapter('khalid', 2); setTimeout(() => { I.debug.auto = false; I.speed = 1; }, 250); });
@@ -93,7 +99,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { a
     const e5 = await etat(); dit(e5.Z === 2 && /scale\(2\)/.test(e5.tr), 'ÉCART', `${nom} : après le combat, l'image retrouve son agrandissement (× ${e5.Z})`);
     // la halte, lisible ; puis une page rechargée
     await p.evaluate(() => { window.ISNAD.ui.pause(); }); await p.waitForTimeout(700); await lisible('la halte'); await shot('7-halte');
-    await p.reload(); await p.waitForTimeout(1500); const e6 = await p.evaluate(() => ({ zf: window.ISNAD.ui.zf, t: [...document.querySelectorAll('#title .vmenu button')].map(b => b.textContent).filter(t => /Image/.test(t)) }));
+    await p.reload(); await p.waitForTimeout(1500); const e6 = await p.evaluate(() => { const r = [...document.querySelectorAll('#title .vmenu button')].find(x => /^Réglages/.test(x.textContent)); if (r) r.click(); return { zf: window.ISNAD.ui.zf, t: [...document.querySelectorAll('#title .vmenu button')].map(b => b.textContent).filter(t => /Image/.test(t)) }; });
     dit(e6.zf === 2 && e6.t.some(t => /Image : × 2/.test(t)), 'ÉCART', `${nom} : page rechargée, l'agrandissement est resté (× ${e6.zf} · « ${e6.t.join('')} »)`);
     await ctx.close();
   }
