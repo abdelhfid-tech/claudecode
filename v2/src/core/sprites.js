@@ -185,6 +185,10 @@
     soldat: { coiffe: 'casque', court: true, item: 'lance', troupe: 'soldat' }, romain: { coiffe: 'casque', court: true, item: 'lance', cimier: true, cuirasse: true, troupe: 'romain' },
     perse: { coiffe: 'tiare', trim: '#d9b45a' }, moine: { coiffe: 'capuche', sombre: true, trim: '#c9b99a' }, enfant: { coiffe: 'calotte', petit: true, manteau: 'aucun' },
     marin: { coiffe: 'calotte', court: true, raies: true, manteau: 'aucun' }, cyber: { coiffe: 'capuche', court: true, sombre: true, neon: true }, berbere: { coiffe: 'litham' },
+    // 2.x (D193) — cyber : le râwî, et lui seul — la bande et la ceinture de néon sont sa marque. citadin : les autres habitants
+    // de 2084 (la Cité-Miroir) : la capuche et l'habit court de la ville, sans le néon (précision du décideur : « les autres
+    // habitants de la Cité-Miroir ne doivent pas ressembler à Idris »)
+    citadin: { coiffe: 'capuche', court: true, sombre: true, cite: true },
     bedouin: { coiffe: 'keffieh', drape: true, trim: '#3a2a20' } // gens des tribus : la couleur du cordon et du galon (look.trim) dit le clan
   };
 
@@ -221,16 +225,85 @@
   function palette(look, K) {
     const robe = look.robe || '#8a7355', head = look.head || (K.coiffe === 'litham' ? (look.veil || '#1f2f55') : K.coiffe === 'capuche' ? robe : '#e6dcc4');
     const cloak = look.cloak || G.shade(robe, 0.68), trim = look.trim || (look.aura ? vivid(look.aura) : K.trim || mix(cloak, '#d9b45a', 0.5));
-    const [T, t, u] = ramp(K.neon ? mix(head, '#6272a4', 0.3) : head), [R, r] = ramp(robe), q = ramp(robe)[2], [C, c, k] = ramp(cloak), A = mix(trim, '#ffffff', 0.12), a = mix(trim, '#20143a', 0.42);
+    const [T, t, u] = ramp(K.neon || K.cite ? mix(head, '#6272a4', 0.3) : head), [R, r] = ramp(robe), q = ramp(robe)[2], [C, c, k] = ramp(cloak), A = mix(trim, '#ffffff', 0.12), a = mix(trim, '#20143a', 0.42);
     const legs = look.legs || '#4a3d32', [L, l, z] = K.court ? ramp(legs) : [R, r, q];
     const p = { T, t, u, R, r, S: R, s: r, C, c, k, A, a, N: mix(head, '#ffffff', 0.3), F: '#7a5433', f: '#46301e',
       L, l, Z: z, M: K.court ? null : r, E: K.court ? null : c, e: K.court ? null : k, B: K.court ? L : C, b: K.court ? l : c, m: K.court ? null : c,
-      I: '#c3c8d2', i: '#7f8794', X: '#b33327', W: '#8a6238', w: '#5a3d22', P: '#f3e9cf', Y: '#39e6ff', y: '#ff4fd8' };
+      I: '#c3c8d2', i: '#7f8794', X: '#b33327', W: '#8a6238', w: '#5a3d22', P: '#f3e9cf', Y: '#39e6ff', y: '#ff4fd8',
+      // 2.x — les objets du râwî (D193) : le cuir de la besace (sa lumière, son corps, son ombre, la sangle), le métal et le verre de la lanterne
+      O: '#8e6846', K: '#6f4e32', Q: '#523924', q: '#35261b', U: '#5b626e', n: '#2e323b', G: '#d3e3e5', g: '#93abb2' };
     if (Array.isArray(look.neon)) { p.Y = look.neon[0] || p.Y; p.y = look.neon[1] || p.y; }   // 2.x : le néon que le joueur choisit à son râwî (D.RAWI.neons) ; sans lui, celui de toujours
     if (K.lit) { p.V = '#fffbe8'; p.v = look.aura ? mix(look.aura, '#ffffff', 0.25) : '#ffe9a8'; p.N = '#fff3d6'; }
     else { p.V = mix(mix(head, '#5a4a4a', 0.6), '#2a1c3a', K.sombre ? 0.6 : 0.1); p.v = mix(p.V, '#20143a', 0.35); }
     if (K.cuirasse) { p.R = p.I; p.r = p.i; }
     return p;
+  }
+
+  /* ---------- les objets du râwî (2.x, D193) : la besace, la lanterne ----------
+     Des objets ordinaires de 2084, sans motif ni ornement (exigence 17) : une besace de cuir, portée en bandoulière ; une
+     lanterne — une lampe portative : une boîte de métal sombre autour d'un verre pâle, et son anse ; ni niche, ni arc, ni
+     globe, ni chaîne, ni croisillon, ni or, et elle ne donne aucune lumière. Chacun est dessiné pour chaque taille où le râwî
+     paraît (16 × 24, 32 × 48, 64 × 96), jamais agrandi de la taille d'en dessous. La besace tient au corps : sa sangle part
+     de l'épaule et le sac pend à la hanche (de face, à gauche de l'image ; de dos, à droite). La lanterne pend à la main qui
+     pend, et suit le pas ; quand cette main est prise (une pose, un geste), elle s'accroche à la ceinture ; à genoux, elle
+     est posée à côté de lui. Rien de cela ne passe sur une main. Lettres : O K Q q (le cuir : sa lumière, son corps, son
+     ombre, la sangle et ses bords), U n (le métal), G g (le verre). Les tailles se nomment par leur échelle : 1 (16 × 24),
+     2 (32 × 48), 4 (64 × 96). */
+  const RAWI_OBJETS = ['besace', 'lanterne'];
+  const SAC = {
+    1: ['qOOq', 'KKKQ', 'QQQq'],
+    2: ['qqqqqqq', 'qOOOOOq', 'qOOOOKq', 'qqqqqqq', 'KKKKKKQ', 'KKKKKQQ', '.QQQQQ.'],
+    4: ['.qqqqqqqqqqqq.', 'qOOOOOOOOOOOKq', 'qOOOOOOOOOOOKq', 'qOOOOOOOOOOKKq', 'qKKKKKKKKKKKKq', 'qqqqqqqqqqqqqq', 'qKKKKKKKKKKKQq',
+        'qKKKKKKKKKKKQq', 'qKKKKKKKKKKQQq', 'qKKKKKKKKKKQQq', 'qQKKKKKKKKQQQq', '.qQQQQQQQQQQq.', '..qqqqqqqqqq..']
+  };
+  // la besace, vue par vue : la sangle, de l'épaule [x, y] jusqu'au coin du sac, puis le sac [x, y] (y : depuis le haut du corps)
+  const BESACE = {
+    1: { d: { de: [10, 0], a: [8, 3], sac: [4, 4] }, l: { de: [9, 0], a: [7, 3], sac: [4, 4] }, u: { de: [5, 0], a: [7, 3], sac: [8, 4] } },
+    2: { d: { de: [21, 0], a: [16, 9], sac: [9, 10] }, l: { de: [18, 0], a: [15, 9], sac: [8, 10] }, u: { de: [10, 0], a: [15, 9], sac: [16, 10] } },
+    4: { d: { de: [42, 0], a: [32, 19], sac: [18, 20] }, l: { de: [36, 0], a: [30, 19], sac: [16, 20] }, u: { de: [20, 0], a: [30, 19], sac: [32, 20] } }
+  };
+  // la lanterne : son anse se prend dans la main (a : la colonne de l'anse) ; dans le petit personnage, de dos, elle pend du
+  // côté du dehors
+  const LANTERNE = {
+    1: { a: 0, rows: ['n.', 'nU', 'Gg', 'Gg', 'nn'] }, 1.5: { a: 1, rows: ['.n', 'Un', 'Gg', 'Gg', 'nn'] },
+    2: { a: 2, rows: ['..n..', '.nUn.', 'nUUUn', 'nGGgn', 'nGGgn', 'nGggn', 'nUUUn', '.nnn.'] },
+    4: { a: 4, rows: ['....nn....', '....nn....', '...nUUn...', '.nnUUUUnn.', 'nUUUUUUUUn', 'nnnnnnnnnn', 'nGGGGGGGgn', 'nGGGGGGGgn', 'nGGGGGGggn',
+        'nGGGGGGggn', 'nGGGGGgggn', 'nGGGGGgggn', 'nnnnnnnnnn', 'nUUUUUUUUn', '.nUUUUUUn.', '..nnnnnn..'] }
+  };
+  const CEINTURE = { 1: 4, 2: 10 };   // la ligne de la ceinture, depuis le haut du corps
+  // où va la lanterne, à l'échelle e (1 : 16 × 24 ; 2 : 32 × 48), dans une grille qui ne porte encore ni objet ni tête :
+  // → { x, y, en } — x, y : où se prend l'anse ; en : 'main', 'ceinture' ou 'sol' ; null : on ne la voit pas (de dos, la main prise)
+  function lanterneOu(g, key, b0, e, kneel, glisse) {
+    const Wg = g[0].length, Hg = g.length, mi = Wg / 2, cote = x => key === 'd' ? x >= mi : key === 'u' ? x < mi : true, ceinture = b0 + CEINTURE[e];
+    let yb = -1, xs = []; for (let y = b0; y < Hg; y++) for (let x = 0; x < Wg; x++) if (g[y][x] === 'N' && cote(x)) { if (y > yb) { yb = y; xs = []; } if (y === yb) xs.push(x); }
+    const xm = xs.length ? Math.floor(xs.reduce((s, v) => s + v, 0) / xs.length) : -1, lr = LANTERNE[e].rows.length;
+    if (kneel) { if (xm < 0) return null; let sol = Hg - 1; while (sol > 0 && g[sol].every(m => m === '.')) sol--;   // à genoux : posée à côté de lui
+      return { x: key === 'u' ? xm - 2 * e : xm + 2 * e, y: sol - lr + 1, en: 'sol' }; }
+    if (xm >= 0 && yb >= ceinture) return { x: xm, y: yb + 1, en: 'main' };
+    if (key === 'u') return null;                                                    // de dos, la main prise : elle est devant lui
+    const yc = ceinture + e;                                                          // sinon, accrochée à la ceinture
+    return { x: (key === 'd' ? 10 : 5) * e + (glisse ? glisse(yc - b0) : 0), y: yc, en: 'ceinture' };
+  }
+  // pose un objet du râwî à l'échelle s (1, 2 ou 4) : put(x, y, lettre) écrit dans la grille (un point hors grille est ignoré) ;
+  // o : { b0, key, ou (la lanterne, lanterneOu), glisse (une ligne du corps → son décalage, pendant un geste) }
+  function poserObjet(nom, s, put, o) {
+    const f = s === 4 ? 2 : 1, gl = j => (o.glisse ? o.glisse(Math.floor(j / f)) * f : 0);   // à 64 × 96, une ligne du 32 × 48 en fait deux
+    if (nom === 'besace') { const B = BESACE[s][o.key], sac = SAC[s], ep = s === 4 ? 2 : 1, [x0, y0] = B.de, [x1, y1] = B.a;
+      for (let y = y0; y <= y1; y++) { const x = Math.round(x0 + (x1 - x0) * (y - y0) / Math.max(1, y1 - y0)) + gl(y); for (let k = 0; k < ep; k++) put(x + k, o.b0 + y, ep > 1 && k === 0 ? 'Q' : 'q'); }
+      sac.forEach((r, j) => { for (let i = 0; i < r.length; i++) if (r[i] !== '.') put(B.sac[0] + i + gl(B.sac[1] + j), o.b0 + B.sac[1] + j, r[i]); }); }
+    else if (nom === 'lanterne' && o.ou) { const T = LANTERNE[s === 1 && o.key === 'u' ? 1.5 : s], x0 = o.ou.x * f - T.a, y0 = o.ou.y * f;
+      T.rows.forEach((r, j) => { for (let i = 0; i < r.length; i++) if (r[i] !== '.') put(x0 + i, y0 + j, r[i]); }); }
+  }
+
+  // Le bandeau du râwî sous le turban et le chèche (D193) : ses deux néons, la bande et la ceinture (Y y) — de dos, où l'on
+  // ne voit ni son visage ni le néon de sa poitrine, la marque de 2084 qui le distingue des gens des récits, et d'abord des
+  // Compagnons, dont le bandeau a leur couleur. Par coiffe et par taille (1 : 16 × 24 ; 2 : 32 × 48) : [ligne de la tête,
+  // lettres qui deviennent néon, néon] — sans néon dit (un bandeau d'une seule ligne) : la bande et la ceinture, point par point.
+  const NEON_TETE = { imama_haute: { 1: [[5, 'Aa']], 2: [[8, 'Aa', 'Y'], [9, 'Aa', 'y']] }, litham: { 1: [[5, 'Aau']], 2: [[8, 'u']] } };
+  function neonTete(K, rows, e) {   // → (ligne, colonne, lettre) → la lettre à poser ; null : rien à changer
+    const T = K.neon && NEON_TETE[K.coiffe] && NEON_TETE[K.coiffe][e]; if (!T) return null;
+    const bouts = {}; T.forEach(([j, ls]) => { const r = rows[j] || ''; let a = -1, b = -1; for (let x = 0; x < r.length; x++) if (ls.indexOf(r[x]) >= 0) { if (a < 0) a = x; b = x; } bouts[j] = [a, b]; });
+    return (j, x, m) => { const t = T.find(q => q[0] === j); if (!t || t[1].indexOf(m) < 0) return m; return t[2] || ((x - bouts[j][0]) % 2 ? 'y' : 'Y'); };
   }
 
   /* ---------- composition d'une image : grille de 16 × 24 matières ---------- */
@@ -263,7 +336,7 @@
       pts.forEach(([x, dy]) => { if ('RrSs'.indexOf(g[b0 + dy][x]) >= 0) g[b0 + dy][x] = 'A'; }); }
     // attributs tenus ou portés (un ou plusieurs)
     const hip = b0 + 5;
-    for (const it of [].concat(K.item || [], look.porte || [])) { // look.porte (2.x) : l'objet que le joueur donne à son râwî — dessiné comme les autres, l'équipement ne le lit pas
+    for (const it of [].concat(K.item || [], (look.porte || []).filter(o => RAWI_OBJETS.indexOf(o) < 0))) { // look.porte (2.x) : l'objet que le joueur donne à son râwî — l'équipement ne le lit pas ; les siens (D193) se dessinent plus bas, à chaque taille
     if (objets) { couche = []; for (let y = 0; y < H; y++) couche.push(new Array(W).fill('.')); objets.push({ nom: it, g: couche }); }
     // le bouclier se porte du côté libre : à droite de l'image quand la main droite tient une hampe
     const hampe = [].concat(K.item || []).some(q => ['lance', 'baton', 'masse', 'arc', 'durra', 'etendard', 'calame'].indexOf(q) >= 0), ecuX = key === 'd' ? (hampe ? 12 : 0) : key === 'u' ? (hampe ? 0 : 12) : 9;
@@ -293,10 +366,15 @@
     if (K.drape && !kneel) for (let y = b0; y < b0 + 2; y++) for (let x = 0; x < W; x++) if ((x <= 4 || x >= 11) && 'Cck'.indexOf(g[y][x]) >= 0) g[y][x] = y === b0 ? 't' : 'u'; // l'étoffe de tête retombe sur les épaules
     if (K.raies) for (let y = b0 + 1; y < b0 + 5; y += 2) for (let x = 0; x < W; x++) if ('RrCc'.indexOf(g[y][x]) >= 0) g[y][x] = 'T';
     if (K.neon) { for (let y = b0 + 1; y < b0 + 4; y++) { const x = key === 'd' ? 7 : key === 'l' ? 5 : -1; if (x >= 0 && g[y][x] !== '.') g[y][x] = 'Y'; } for (let x = 0; x < W; x++) if ('Aa'.indexOf(g[b0 + 4][x]) >= 0) g[b0 + 4][x] = 'y'; }
+    // les objets du râwî (D193), dessinés à cette taille : par-dessus l'habit et son néon, sous la tête, jamais sur une main
+    const rawi = (look.porte || []).filter(o => RAWI_OBJETS.indexOf(o) >= 0);
+    if (rawi.length) { const ou = rawi.indexOf('lanterne') >= 0 ? lanterneOu(g, key, b0, 1, kneel) : null;
+      rawi.forEach(o => poserObjet(o, 1, (x, y, m) => { if (x >= 0 && x < W && y >= 0 && y < H && g[y][x] !== 'N') g[y][x] = m; }, { b0, key, ou })); }
     // tête (11 lignes), inclinée ou abaissée selon la pose
     const head = HEADS[K.coiffe] || HEADS.imama, hrows = head[key] || head.d, h0 = (kneel ? b0 - 11 : petit) + hy, hx = hy && key === 'l' ? -1 : 0;
     {
-    for (let j = 0; j < 11; j++) for (let x = 0; x < W; x++) put(x + hx, h0 + j, hrows[j][x]);
+    const nt = neonTete(K, hrows, 1);   // le bandeau du râwî sous le turban et le chèche : ses néons (D193)
+    for (let j = 0; j < 11; j++) for (let x = 0; x < W; x++) put(x + hx, h0 + j, nt ? nt(j, x, hrows[j][x]) : hrows[j][x]);
     if (K.coiffe === 'imama_queue' && !kneel) { // le pan du turban retombe sur l'épaule (de dos : entre les épaules)
       if (key === 'd') { put(13 + hx, h0 + 11, 't'); put(13 + hx, h0 + 12, 'u'); } else if (key === 'l') { put(13 + hx, h0 + 11, 't'); put(12 + hx, h0 + 12, 'u'); }
       else { put(7, h0 + 11, 'T'); put(8, h0 + 11, 't'); put(7, h0 + 12, 't'); put(8, h0 + 12, 'u'); put(7, h0 + 13, 'u'); } }
@@ -369,7 +447,8 @@
        ALLURES[pose]   le corps d'une pose, par vue.
      Mêmes lettres de matière que les petits gabarits, plus H et D (coiffe en pleine lumière, dans l'ombre), J et j (fer).
      Les règles de tenue (manteau, motif, armure, écharpe…) sont celles de grid(), écrites à cette échelle ; les objets
-     tenus viennent de grid() lui-même, agrandis. Ce qui n'a pas encore son gabarit garde le grand sprite d'avant.
+     tenus viennent de grid() lui-même, agrandis — sauf ceux du râwî (la besace, la lanterne : D193), dessinés à chaque taille
+     (poserObjet). Ce qui n'a pas encore son gabarit garde le grand sprite d'avant.
      Le voile (V) d'une tête est une surface d'un seul tenant : le moteur refuse de démarrer sinon — personne n'a de visage. */
   const W2 = W * 2, H2 = H * 2, TETES = {}, CORPS = { d: [], l: [], u: [] }, ALLURES = {};
   const PETIT = [7, 8, 17, 18, 21, 22]; // enfant : six lignes de corps en moins
@@ -565,13 +644,15 @@
     // de face, le bras qui frappe est à gauche de l'image ; de dos, à droite (le même bras)
     const sansBrasD = D0.map((r, j) => j >= 4 && j <= 14 ? '.'.repeat(10) + r.slice(10) : j === 15 ? '......eee.' + r.slice(10) : r);
     const sansBrasU = U0.map((r, j) => j >= 4 && j <= 12 ? r.slice(0, 22) + '.'.repeat(10) : j >= 13 && j <= 14 ? r.slice(0, 23) + '.'.repeat(9) : j === 15 ? r.slice(0, 22) + '.eee......' : r);
-    const geste = (quoi, corps, pts, tete) => { const m = membre(dessus.concat(corps), pts); return { haut: HAUT_GESTE, rows: gabarit(quoi, m.rows, 40), main: m.main, tete: tete || [0, 0] }; };
+    // glisse : ce dont chaque ligne du corps a penché (les objets du râwî la suivent)
+    const geste = (quoi, corps, pts, tete, glisse) => { const m = membre(dessus.concat(corps), pts); return { haut: HAUT_GESTE, rows: gabarit(quoi, m.rows, 40), main: m.main, tete: tete || [0, 0], glisse: glisse || null }; };
+    const penche1 = j => j <= 8 ? 1 : 0, penche2 = j => j <= 6 ? -2 : j <= 12 ? -1 : 0;
     GESTES.elan = {   // le bras armé levé : derrière la tête de profil, sur le côté de face et de dos
-      l: geste('élan de profil', penche(sansBrasL, j => j <= 8 ? 1 : 0), [[19.5, 2.6], [25, 0.2], [26, -5.6]], [1, 0]),
+      l: geste('élan de profil', penche(sansBrasL, penche1), [[19.5, 2.6], [25, 0.2], [26, -5.6]], [1, 0], penche1),
       d: geste('élan de face', sansBrasD, [[7.5, 3], [3.6, 1], [2.9, -4.4]]),
       u: geste('élan de dos', sansBrasU, [[24.5, 3], [28.2, 1], [28.9, -4.4]]) };
     GESTES.coup = {   // le bras tendu vers ce qu'il frappe ; de profil, le corps se fend
-      l: geste('coup de profil', penche(varie('fente', sansBrasL, jambes(true)), j => j <= 6 ? -2 : j <= 12 ? -1 : 0), [[15.5, 4], [10.6, 5.4], [6.2, 6.9]], [-3, 1]),
+      l: geste('coup de profil', penche(varie('fente', sansBrasL, jambes(true)), penche2), [[15.5, 4], [10.6, 5.4], [6.2, 6.9]], [-3, 1], penche2),
       d: geste('coup de face', sansBrasD, [[7.5, 3.4], [7.3, 9], [11.4, 12.4]], [0, 1]),
       u: geste('coup de dos', sansBrasU, [[24.5, 3], [27.6, 0.2], [25.8, -4.4]]) };
     G.GESTES = Object.keys(GESTES);
@@ -766,13 +847,21 @@
     const dyo = kneel ? 0 : (cou + 13 - (K.petit ? 2 : 0)) - (2 * r.b0 + 10);
     r.objets.forEach(o => { if (Ge && EN_MAIN.indexOf(o.nom) >= 0) return; /* l'arme qui frappe : le moteur la pose dans la main */ const o2 = scale2x(o.g), dxo = key === 'd' ? (HAMPES.indexOf(o.nom) >= 0 ? 2 : 0) : key === 'l' && (o.nom === 'durra' || o.nom === 'calame') ? 10 : 0; // la hampe vient contre la main
       for (let y = 0; y < H2; y++) for (let x = 0; x < W2; x++) { const m = o2[y][x], X = x + dxo, Y = y + dyo; if (m !== '.' && X < W2 && Y >= 0 && Y < H2 && L[Y][X] !== 'N') { L[Y][X] = m; am[Y][X] = 0; fin[Y][X] = 1; } } });
+    // les objets du râwî (D193) : leur dessin de 32 × 48, ici ; celui de 64 × 96 se pose sur la grille fine (fine()), au même
+    // endroit — d'où ce qu'on garde : la grille sans eux (sans), et où passe la tête (tm), qui les recouvre
+    const rawi = (look.porte || []).filter(o => RAWI_OBJETS.indexOf(o) >= 0); let sans = null, natifs = null, tm = null;
+    if (rawi.length) { const copie = t => t.map(row => row.slice()), glisse = Ge && Ge.glisse ? Ge.glisse : null, ou = rawi.indexOf('lanterne') >= 0 ? lanterneOu(L, key, cou, 2, kneel, glisse) : null;
+      sans = { L: copie(L), am: copie(am), fin: copie(fin) }; tm = L.map(() => new Array(W2).fill(0)); natifs = { noms: rawi, key, b0: cou, ou, glisse, dir };
+      rawi.forEach(o => poserObjet(o, 2, (x, y, m) => { if (x >= 0 && x < W2 && y >= 0 && y < H2 && L[y][x] !== 'N') { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1; } }, { b0: cou, key, ou, glisse })); }
     // la tête, inclinée ou abaissée selon la pose ; le cimier suit le sommet du casque
-    const y0 = cou - 18 + 2 * hy + (Ge ? Ge.tete[1] : 0), x0 = (hy && key === 'l' ? -2 : 0) + (Ge ? Ge.tete[0] : 0), pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1; } };
-    for (let j = 0; j < (kneel ? 20 : tt.length); j++) for (let x = 0; x < W2; x++) if (tt[j][x] !== '.') pose1(x + x0, y0 + j, tt[j][x]); // à genoux, le pan du turban ne descend pas
+    const y0 = cou - 18 + 2 * hy + (Ge ? Ge.tete[1] : 0), x0 = (hy && key === 'l' ? -2 : 0) + (Ge ? Ge.tete[0] : 0), pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1;
+      if (sans) { sans.L[y][x] = m; sans.am[y][x] = 0; sans.fin[y][x] = 1; tm[y][x] = 1; } } };
+    const nt = neonTete(K, tt, 2);   // le bandeau du râwî sous le turban et le chèche : ses néons (D193)
+    for (let j = 0; j < (kneel ? 20 : tt.length); j++) for (let x = 0; x < W2; x++) if (tt[j][x] !== '.') pose1(x + x0, y0 + j, nt ? nt(j, x, tt[j][x]) : tt[j][x]); // à genoux, le pan du turban ne descend pas
     if (K.cimier) { const xs = key === 'l' ? [10, 21] : [14, 17]; for (let x = xs[0]; x <= xs[1]; x++) { let y = 0; while (y < tt.length && tt[y][x] === '.') y++; if (y < tt.length) for (let dy = 1; dy <= 2; dy++) pose1(x + x0, y0 + Math.max(dy - 1, y - dy), 'X'); } }
-    if (dir === 2) [L, am, fin].forEach(t => t.forEach(row => row.reverse()));
+    if (dir === 2) [L, am, fin].concat(sans ? [sans.L, sans.am, sans.fin, tm] : []).forEach(t => t.forEach(row => row.reverse()));
     const main = Ge ? [dir === 2 ? W2 - Ge.main[0] : Ge.main[0], bT + Ge.main[1]] : null;   // où est la main qui frappe, dans la grille de 32 × 48
-    return { L, K, am, fin, hors, main };
+    return { L, K, am, fin, hors, main, sans, natifs, tm };
   }
   // la même grille de matières, deux fois plus grande, ses escaliers arrondis (la règle d'EPX, sur des lettres)
   function grilleFine(g, w, h) { const o = []; for (let y = 0; y < h * 2; y++) o.push(new Array(w * 2)); const at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? '.' : g[y][x];
@@ -781,6 +870,16 @@
       o[y * 2 + 1][x * 2] = (d === c && d !== b && c !== a) ? c : p; o[y * 2 + 1][x * 2 + 1] = (b === d && b !== a && d !== c) ? d : p; }
     return o; }
   const doubler = t => { const o = []; t.forEach(r => { const q = []; r.forEach(v => q.push(v, v)); o.push(q, q.slice()); }); return o; };
+  // la grille fine (64 × 96) d'un grand personnage natif : celle de 32 × 48, ses escaliers arrondis — sans les objets du râwî,
+  // qui y sont dessinés à cette taille même (D193), sous la tête, jamais sur une main
+  function fine(n) {
+    const b = n.sans || n, L = grilleFine(b.L, W2, H2), am = doubler(b.am), fin = doubler(b.fin), N = n.natifs; if (!N) return { L, am, fin };
+    const W4 = W2 * 2, H4 = H2 * 2, tm = doubler(n.tm), c = []; for (let y = 0; y < H4; y++) c.push(new Array(W4).fill('.'));
+    N.noms.forEach(o => poserObjet(o, 4, (x, y, m) => { if (x >= 0 && x < W4 && y >= 0 && y < H4) c[y][x] = m; }, { b0: 2 * N.b0, key: N.key, ou: N.ou, glisse: N.glisse }));
+    if (N.dir === 2) c.forEach(r => r.reverse());
+    for (let y = 0; y < H4; y++) for (let x = 0; x < W4; x++) if (c[y][x] !== '.' && !tm[y][x] && L[y][x] !== 'N') { L[y][x] = c[y][x]; am[y][x] = 0; fin[y][x] = 1; }
+    return { L, am, fin };
+  }
   /* ---------- le visage (2.x) ----------
      Les Compagnons n'ont pas de visage : leur voile est une lumière. Les autres personnages en ont un (décision du décideur,
      16 novembre) : un teint, des yeux, des sourcils, une barbe selon l'âge — peints dans l'ouverture de leur coiffe, de face
@@ -846,7 +945,7 @@
     if (!G.natif) { if (s === 1) return ancien(look, dir, frame, pose); const ka = 'A' + ck(look, dir, frame, pose); return scache[ka] || (scache[ka] = G.epx(ancien(look, dir, frame, pose))); }
     const k = (s === 2 ? 'N' : 'n') + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
     const n = natifGrille(look, dir, frame, pose); if (!n) return (scache[k] = s === 2 ? G.epx(ancien(look, dir, frame, pose)) : ancien(look, dir, frame, pose));
-    const K = n.K, L = s === 2 ? grilleFine(n.L, W2, H2) : n.L, am = s === 2 ? doubler(n.am) : n.am, fin = s === 2 ? doubler(n.fin) : n.fin, pal = palette(look, K), w = W2 * s, h = H2 * s;
+    const K = n.K, F = s === 2 ? fine(n) : n, L = F.L, am = F.am, fin = F.fin, pal = palette(look, K), w = W2 * s, h = H2 * s;
     const tn = G.teint(look); if (tn) pal.N = mix(K.sombre ? mix(tn, '#1c1430', 0.2) : tn, '#fff1d6', 0.1); // qui a un visage a des mains du même teint (le grand personnage seulement)
     const R = rampes(pal);
     const cv = mk(w, h), c = cv.getContext('2d'), px = (x, y, col) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } }; if (s === 2) cv.hd = 2;
@@ -905,11 +1004,15 @@
   // 2.x — l'icône d'un objet tenu, tirée de son dessin même : la couche que grid() rend pour le grand personnage, agrandie
   // comme sur le personnage fin, recadrée sur l'objet seul (les choix du râwî : D.RAWI.objets). → une toile, ou null
   G.objet = function (nom) {
-    const k = 'O' + nom; if (scache[k] !== undefined) return scache[k];
+    const k = 'O' + (RAWI_OBJETS.indexOf(nom) >= 0 ? G.D : '') + nom; if (scache[k] !== undefined) return scache[k];
     const look = { kind: 'cyber', robe: '#2a3048', head: '#1c2030', cloak: '#39424f', porte: [nom] }, r = grid(look, 0, 0, null, {}), o = r.objets.find(x => x.nom === nom);
-    if (!o) return (scache[k] = null);
-    const g = scale2x(o.g), pal = palette(look, r.K), f = grilleFine(g, W2, H2); let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
-    f.forEach((row, y) => row.forEach((m, x) => { if (m !== '.' && pal[m]) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); } }));
+    let f = null;
+    if (RAWI_OBJETS.indexOf(nom) >= 0) { const s = G.D > 1 ? 4 : 2, w4 = W2 * s / 2, h4 = H2 * s / 2; f = []; for (let y = 0; y < h4; y++) f.push(new Array(w4).fill('.'));   // les objets du râwî : leur dessin même, à la taille du dessin (D193)
+      poserObjet(nom, s, (x, y, m) => { if (x >= 0 && x < w4 && y >= 0 && y < h4) f[y][x] = m; }, { b0: 2, key: 'd', ou: { x: 16, y: 2, en: 'main' } }); }
+    else if (o) f = grilleFine(scale2x(o.g), W2, H2);
+    if (!f) return (scache[k] = null);
+    const pal = palette(look, r.K), haut = nom === 'besace' ? 2 + BESACE[G.D > 1 ? 4 : 2].d.sac[1] - (G.D > 1 ? 10 : 5) : 0; let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;   // la besace : le sac, et le bas de sa sangle
+    f.forEach((row, y) => row.forEach((m, x) => { if (m !== '.' && pal[m] && y >= haut) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); } }));
     if (x1 < 0) return (scache[k] = null);
     const w = x1 - x0 + 3, h = y1 - y0 + 3, cv = mk(w, h), c = cv.getContext('2d');
     for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const col = pal[f[y][x]]; if (col) { c.fillStyle = col; c.fillRect(x - x0 + 1, y - y0 + 1, 1, 1); } }
@@ -974,9 +1077,17 @@
       pose(g.port, angle(p), 1); };
     if (dir === 3) arme(); c.drawImage(ge.img, x, y); if (dir !== 3) arme(); return true;
   };
-  G.KINDS = KINDS; G.COIFFES = Object.keys(HEADS);
+  // 2.x — pour les contrôles (silhouettes.js) : ce que le moteur tire d'une apparence — la coiffe, la coupe, la longueur de la
+  // robe, le néon (la marque du râwî) — et la grille des matières du petit personnage (16 × 24 : une lettre par point)
+  G.allure = look => { const K = kindOf(look); return { coiffe: HEADS[K.coiffe] ? K.coiffe : 'imama', manteau: K.manteau || 'long', court: !!K.court, neon: !!K.neon }; };
+  G.petiteGrille = (look, dir, frame, pose) => grid(look, dir || 0, frame || 0, pose).g.map(l => l.join(''));
+  G.KINDS = KINDS; G.COIFFES = Object.keys(HEADS); G.RAWI_OBJETS = RAWI_OBJETS.slice();
+  // une coiffe montre-t-elle un liseré, à une taille ou une autre (le bandeau d'un turban, de la calotte ; le chèche, de dos,
+  // dans le petit personnage) : le râwî composé ne montre alors jamais le beige doré que le moteur pose à défaut (perso.js) —
+  // ni là, ni sur le reste de l'habit (sous le turban et le chèche, son bandeau est fait de ses néons : NEON_TETE)
+  G.galon = c => !!HEADS[c] && [HEADS[c], TETES[c]].some(v => !!v && ['d', 'l', 'u'].some(k => (v[k] || []).some(r => /[Aa]/.test(r))));
   G.natif = true; // false : le grand sprite d'avant, pour comparer
   // la grille de matières d'un grand sprite, pour le contrôle (tools/silhouettes.js) : 48 lignes de 32 lettres
-  G.charGrille = (look, dir, frame, pose, fin2) => { const r = natifGrille(look, dir || 0, frame || 0, pose); if (r) return { lignes: (fin2 === 2 ? grilleFine(r.L, W2, H2) : r.L).map(l => l.join('')), natif: true, hors: r.hors }; // fin2 = 2 : la grille du personnage fin (64 × 96)
+  G.charGrille = (look, dir, frame, pose, fin2) => { const r = natifGrille(look, dir || 0, frame || 0, pose); if (r) return { lignes: (fin2 === 2 ? fine(r).L : r.L).map(l => l.join('')), natif: true, hors: r.hors }; // fin2 = 2 : la grille du personnage fin (64 × 96)
     return { lignes: scale2x(grid(look, dir || 0, frame || 0, pose).g).map(l => l.join('')), natif: false, hors: 0 }; };
 })();

@@ -52,7 +52,7 @@ ISNAD.registerSaga({
     },
     salim: {
       name: 'Sâlim', title: 'le Repenti', arabic: 'سالم', role: 'guerrier', el: 'shajaa',
-      look: { kind: 'cyber', robe: '#5a2f3a', head: '#6b2f3a', cloak: '#2b2530', coiffe: 'calotte', manteau: 'aucun' },
+      look: { kind: 'citadin', robe: '#5a2f3a', head: '#6b2f3a', cloak: '#2b2530', coiffe: 'calotte', manteau: 'aucun' },
       skills: [
         { lvl: 1, id: 'couper', name: 'Couper le signal', desc: 'Frappe nette.', cost: 3, target: 'foe', el: 'fer', pow: 1.5, anim: 'slash' },
         { lvl: 1, id: 'debrancher', name: 'Débrancher', desc: 'Oser dire non : frappe de Courage, retire les renforts.', cost: 5, target: 'foe', el: 'shajaa', pow: 1.4, fx: [{ st: 'dispel' }], anim: 'burst' },
@@ -152,8 +152,8 @@ ISNAD.registerSaga({
       id: 'p1', title: 'La Cité-Miroir', sub: 'An 1507 de l’Hégire · 2084', minLvl: 1, last: true,
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
-        { id: 'passant1', name: 'Passant', at: ['rue', 0, -1], look: { kind: 'cyber', robe: '#3a3048', head: '#241c30' }, talk: [['say', 'passant1', 'Tu as vu la tendance de midi ? Non ? Alors de quoi veux-tu qu’on parle ?']] },
-        { id: 'passant2', name: 'Employé', at: ['ecran', -3, 2], look: { kind: 'cyber', robe: '#2f3f48', head: '#1c2a30' }, talk: [['say', 'passant2', 'Mon score a baissé de trois points. Je ne sais pas ce que j’ai fait. Je ne sais jamais.']] },
+        { id: 'passant1', name: 'Passant', at: ['rue', 0, -1], look: { kind: 'citadin', robe: '#a0523c', head: '#7a3a2a', cloak: '#b8664a' }, talk: [['say', 'passant1', 'Tu as vu la tendance de midi ? Non ? Alors de quoi veux-tu qu’on parle ?']] },
+        { id: 'passant2', name: 'Employé', at: ['ecran', -3, 2], look: { kind: 'citadin', robe: '#808a4a', head: '#5a6232', cloak: '#9aa45c' }, talk: [['say', 'passant2', 'Mon score a baissé de trois points. Je ne sais pas ce que j’ai fait. Je ne sais jamais.']] },
         { id: 'vieux', name: 'Vieil homme', at: ['ruelle', 0, -1], look: { kind: 'ancien', robe: '#4a4038', head: '#bdb6a8' }, talk: [['say', 'vieux', 'Autrefois on demandait : « Qui te l’a dit ? » Maintenant on demande : « Combien l’ont vu ? »']] },
         { id: 'gamin', name: 'Enfant', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Monsieur, c’est vrai qu’avant le ciel était noir, la nuit, avec des points dedans ?']] },
         { id: 'yunus_n', name: 'Maître Yûnus', hero: 'yunus', map: 'archives', at: 'bureau', talk: [['say', 'yunus_n', 'La Chaîne t’attend au fond de la salle, Idris.']] }
@@ -225,8 +225,8 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris', 'yunus'],
       npcs: [
         { id: 'salim_n', name: 'Sâlim', hero: 'salim', at: 'rue', talk: [['say', 'salim_n', 'Je sais où est son cœur.']] },
-        { id: 'fige1', name: 'Passant', at: ['ecran', -3, 2], look: { kind: 'cyber', robe: '#3a3048', head: '#241c30' }, talk: [['say', 'fige1', '… encore un… encore un…']] },
-        { id: 'fige2', name: 'Passant', at: ['ecran', 2, 3], look: { kind: 'cyber', robe: '#2f3f48', head: '#1c2a30' }, talk: [['nar', 'Il ne t’entend pas. Ses yeux suivent quelque chose qui défile.']] },
+        { id: 'fige1', name: 'Passant', at: ['ecran', -3, 2], look: { kind: 'citadin', robe: '#a0523c', head: '#7a3a2a', cloak: '#b8664a' }, talk: [['say', 'fige1', '… encore un… encore un…']] },
+        { id: 'fige2', name: 'Passant', at: ['ecran', 2, 3], look: { kind: 'citadin', robe: '#808a4a', head: '#5a6232', cloak: '#9aa45c' }, talk: [['nar', 'Il ne t’entend pas. Ses yeux suivent quelque chose qui défile.']] },
         { id: 'gamin2', name: 'Enfant', at: ['ecran', 4, 1], hidden: true, look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' } }
       ],
       foes: [
@@ -322,7 +322,7 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'defileur', name: 'Celui qui défile', at: ['ruelle', 0, -1], look: { kind: 'cyber', robe: '#33303f', head: '#201c28', cloak: '#2a2632' }, talk: [['say', 'defileur', '… encore un…']] }
+        { id: 'defileur', name: 'Celui qui défile', at: ['ruelle', 0, -1], look: { kind: 'citadin', robe: '#6a7ad0', head: '#4a58a8', cloak: '#8494e4' }, talk: [['say', 'defileur', '… encore un…']] }
       ],
       intro: [
         ['title', 'Celui qui défile', 'Cité-Miroir · le soir du maillon d’Abû Bakr'],
@@ -385,7 +385,7 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'regent', name: 'Le Régent', at: ['ascenseur', -2, 0], look: { kind: 'cyber', coiffe: 'tiare', robe: '#4a3a52', head: '#5a4a2a', cloak: '#2f2638', trim: '#d9b45a' }, talk: [['say', 'regent', 'Accordé.']] }
+        { id: 'regent', name: 'Le Régent', at: ['ascenseur', -2, 0], look: { kind: 'citadin', coiffe: 'tiare', robe: '#4a3a52', head: '#5a4a2a', cloak: '#2f2638', trim: '#d9b45a' }, talk: [['say', 'regent', 'Accordé.']] }
       ],
       intro: [
         ['title', 'Le Régent', "Cité-Miroir · le soir du maillon de 'Umar"],
@@ -447,7 +447,7 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'admire', name: 'L’Admiré', at: ['ecran', -3, 1], look: { kind: 'cyber', robe: '#5a2f52', head: '#3a2038', cloak: '#3a2440', trim: '#ff4fd8' }, talk: [['say', 'admire', 'Tu m’as reconnu, bien sûr.']] }
+        { id: 'admire', name: 'L’Admiré', at: ['ecran', -3, 1], look: { kind: 'citadin', robe: '#b8449a', head: '#86306e', cloak: '#cc5aac', trim: '#f0e8f4' }, talk: [['say', 'admire', 'Tu m’as reconnu, bien sûr.']] }
       ],
       intro: [
         ['title', 'L’Admiré', 'Cité-Miroir · le soir du maillon de Khâlid'],
@@ -509,7 +509,7 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'compteur', name: 'Le Compteur', at: ['rue', 2, -1], look: { kind: 'cyber', robe: '#4a4430', head: '#2a2618', cloak: '#3a3424', trim: '#d9b45a', item: 'bourse' }, talk: [['say', 'compteur', 'Ne me dérange pas. Je compte.']] }
+        { id: 'compteur', name: 'Le Compteur', at: ['rue', 2, -1], look: { kind: 'citadin', robe: '#9a7838', head: '#6a5024', cloak: '#b28c46', trim: '#d9b45a', item: 'bourse' }, talk: [['say', 'compteur', 'Ne me dérange pas. Je compte.']] }
       ],
       intro: [
         ['title', 'Le Compteur', "Cité-Miroir · le soir du maillon de 'Uthmân"],
@@ -571,7 +571,7 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'cyber', robe: '#2f4a52', head: '#1c2c30', cloak: '#24383e', trim: '#39e6ff', item: 'feuillets' }, talk: [['say', 'carto', 'Combien l’ont vu ?']] }
+        { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'citadin', robe: '#3a9a8a', head: '#267264', cloak: '#52b2a0', trim: '#34507a', item: 'feuillets' }, talk: [['say', 'carto', 'Combien l’ont vu ?']] }
       ],
       intro: [
         ['title', 'Le Cartographe', "Cité-Miroir · le soir du maillon de 'Alî"],
@@ -699,7 +699,7 @@ ISNAD.registerSaga({
       id: 'x_avis', retour: 5, title: 'L’avis', sub: 'Cité-Miroir · Archives basses', minLvl: 2, last: true,
       map: 'archives', start: 'chaine', party: ['idris'],
       npcs: [
-        { id: 'agent', name: 'L’agent du relevé', at: ['entree', 0, -1], look: { kind: 'cyber', robe: '#4a4c52', head: '#2c2e33', cloak: '#3a3c42' }, talk: [['say', 'agent', 'Je note, et je remonte.']] },
+        { id: 'agent', name: 'L’agent du relevé', at: ['entree', 0, -1], look: { kind: 'citadin', robe: '#5a9a5a', head: '#3e723e', cloak: '#72b272' }, talk: [['say', 'agent', 'Je note, et je remonte.']] },
         { id: 'yunus_x', name: 'Maître Yûnus', hero: 'yunus', at: 'bureau', talk: [['say', 'yunus_x', 'Laisse-le compter. Puis parle-lui.']] }
       ],
       intro: [
