@@ -1,4 +1,4 @@
-<title>ISNAD 2.01</title>
+<title>ISNAD 2.02</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400&family=Amiri&family=Cinzel:wght@500;700&family=Reem+Kufi:wght@500;700&family=Share+Tech+Mono&family=Noto+Naskh+Arabic:wght@400;700&family=Amiri+Quran&family=Noto+Serif+JP:wght@400;700&display=swap">
 <style>
@@ -522,9 +522,10 @@ body.touch .hrow .hbars .bar { height: max(.82em, 11px); } body.touch .hrow .bar
 /* ---------- les langues (src/core/langue.js) ----------
    <html lang dir data-lang> : posés par le moteur. Le français ne reçoit aucune de ces règles. */
 #title .langues { position: absolute; top: max(10px, 2vh); left: 0; right: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .4em; padding: 0 max(12px, 3vw); direction: ltr; }
-#title .langues ~ .coin, #title .coin { top: calc(max(10px, 2vh) + 2.6em); }
+#title .langues[hidden] { display: none; }
+#title.multilingue .coin { top: calc(max(10px, 2vh) + 2.6em); }
 /* en paysage sur un téléphone, il y a de la place en largeur : les langues en haut à gauche, l'import en haut à droite */
-@media (orientation: landscape) and (max-height: 480px) { #title .langues { right: auto; left: max(12px, 3vw); justify-content: flex-start; padding: 0; max-width: 46%; } #title .langues ~ .coin, #title .coin { top: max(10px, 2vh); } }
+@media (orientation: landscape) and (max-height: 480px) { #title .langues { right: auto; left: max(12px, 3vw); justify-content: flex-start; padding: 0; max-width: 46%; } #title.multilingue .coin { top: max(10px, 2vh); } }
 #title .langues button { padding: .35em .9em; font-size: .7em; color: var(--dim); background: rgba(10, 8, 20, .6); border: 1px solid var(--line); border-radius: 2em; font-family: var(--f-body); letter-spacing: 0; }
 #title .langues button[lang="ar"] { font-family: "Noto Naskh Arabic", "Amiri", "Geeza Pro", serif; }
 #title .langues button[lang="ja"] { font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif; }
@@ -610,7 +611,7 @@ html[data-lang="ar"] #card.quote blockquote::before { content: "« "; } html[dat
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.01 · 2026-11-18 11:02 UTC · 765ed36+";
+window.ISNAD_VERSION = "2.02 · 2026-11-18 11:17 UTC · 75a2f26+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -2016,6 +2017,8 @@ window.ISNAD_VERSION = "2.01 · 2026-11-18 11:02 UTC · 765ed36+";
     const D = I.D, cat = { ar: {}, en: {}, ja: {} }, cases = [], sues = new WeakSet();
     const L = I.langue = { LANGUES, ORDRE, lang: 'fr', cle, manques: new Set() };
     L.poser = (lang, textes) => { Object.assign(cat[lang] || (cat[lang] = {}), textes); };
+    // les langues que l'on propose au joueur : le français, et celles qui ont reçu leurs textes (une langue vide n'est pas offerte)
+    L.disponibles = () => ORDRE.filter(l => l === 'fr' || Object.keys(cat[l] || {}).length > 0);
     L.connue = lang => (LANGUES[lang] ? lang : 'fr');
     // le texte d'une langue rangé sous un texte français ; à défaut, le français
     L.de = function (fr) { if (L.lang === 'fr' || typeof fr !== 'string' || !fr) return fr; const t = cat[L.lang][cle(fr)]; if (t == null) { L.manques.add(fr); return fr; } return t; };
@@ -8277,8 +8280,8 @@ window.ISNAD_VERSION = "2.01 · 2026-11-18 11:02 UTC · 765ed36+";
     { let coin = $('#title .coin'); if (!coin) { coin = I.el('div', 'coin'); $('#title').appendChild(coin); } coin.innerHTML = '';
       const b = I.el('button', '', I.t('Importer une partie')); b.type = 'button'; tapable(b, () => { I.audio.unlock(); close(); U.partie('importer', () => U.showTitle()); }); coin.appendChild(b); btns.push(b); }
     // la langue : quatre boutons, chacun écrit dans sa langue — on le retrouve même sans savoir lire celle de l'écran
-    { let lg = $('#title .langues'); if (!lg) { lg = I.el('div', 'langues'); $('#title').appendChild(lg); } lg.innerHTML = ''; const L = I.langue;
-      L.ORDRE.forEach(l => { const b = I.el('button', l === L.lang ? 'on' : '', L.LANGUES[l].nom); b.type = 'button'; b.lang = l; b.dir = L.LANGUES[l].dir; b.setAttribute('aria-pressed', l === L.lang ? 'true' : 'false');
+    { let lg = $('#title .langues'); if (!lg) { lg = I.el('div', 'langues'); $('#title').appendChild(lg); } lg.innerHTML = ''; const L = I.langue; lg.hidden = L.disponibles().length < 2; $('#title').classList.toggle('multilingue', !lg.hidden);   // une seule langue : pas de boutons
+      L.disponibles().forEach(l => { const b = I.el('button', l === L.lang ? 'on' : '', L.LANGUES[l].nom); b.type = 'button'; b.lang = l; b.dir = L.LANGUES[l].dir; b.setAttribute('aria-pressed', l === L.lang ? 'true' : 'false');
         tapable(b, () => { I.audio.unlock(); if (l === L.lang) return; U.langue(l); fl.destroy(); U.showTitle(); }); lg.appendChild(b); btns.push(b); }); }
     screen('#title', true); fl = focusList(btns);
   };
@@ -8288,8 +8291,8 @@ window.ISNAD_VERSION = "2.01 · 2026-11-18 11:02 UTC · 765ed36+";
   U.langue = function (l) { const o = I.save.data.opts; o.lang = I.langue.choisir(l); I.save.store(); U.applyOpts(); return o.lang; };
   U.choisirLangue = async function () {
     const L = I.langue, enJeu = I.scene === W && !!W.map && !!W.saga && !W.excursion; let k = -1;
-    S.depth++; try { k = await S.menuPick(I.t('Dans quelle langue ?'), L.ORDRE.map(l => ({ t: L.LANGUES[l].nom }))); } finally { S.depth--; S.hideDialog(); }
-    const l = L.ORDRE[k]; if (!l || l === L.lang) return;
+    S.depth++; try { k = await S.menuPick(I.t('Dans quelle langue ?'), L.disponibles().map(l => ({ t: L.LANGUES[l].nom }))); } finally { S.depth--; S.hideDialog(); }
+    const l = L.disponibles()[k]; if (!l || l === L.lang) return;
     if (enJeu) W.checkpoint(); U.langue(l);
     if (enJeu) return U.resume();
   };
@@ -8613,7 +8616,7 @@ window.ISNAD_VERSION = "2.01 · 2026-11-18 11:02 UTC · 765ed36+";
         toggle(I.t('Musique'), () => I.audio.musicOn ? I.t('activée') : I.t('coupée'), () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, I.t('Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.')),
         toggle(I.t('Dessin'), dessinNom, dessinSuivant, I.t('Fin : deux fois plus de points, les grands personnages jusque sur les cartes, des lisières irrégulières. Fin, adouci : le même, les contours fondus. D’origine : le dessin de la version légère.')),
         toggle(I.t('Rendu'), () => G.low ? I.t('2D simple') : I.t('rétro-HD'), () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, I.t('Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.')));
-      items.push({ label: I.t('Langue') + ' : ' + I.langue.LANGUES[I.langue.lang].nom, fn() { close(); U.choisirLangue(); }, show: () => '<h3>' + I.t('Langue') + '</h3><p>Français · العربية · English · 日本語</p><p>' + I.t('Le récit reprend à son dernier point de reprise, dans la langue choisie. Ta partie est la même dans toutes les langues.') + '</p>' });
+      if (I.langue.disponibles().length > 1) items.push({ label: I.t('Langue') + ' : ' + I.langue.LANGUES[I.langue.lang].nom, fn() { close(); U.choisirLangue(); }, show: () => '<h3>' + I.t('Langue') + '</h3><p>Français · العربية · English · 日本語</p><p>' + I.t('Le récit reprend à son dernier point de reprise, dans la langue choisie. Ta partie est la même dans toutes les langues.') + '</p>' });
       items.push({ label: I.t('Ton personnage'), fn() { close(); U.personnage(() => { if (I.scene === W && W.map) W.hud(); }); }, show: () => { const p = I.perso.profil(); return '<h3>' + I.t('Ton personnage') + '</h3><p>' + I.t('Le râwî porte le nom et la tenue que tu lui donnes : <b>{nom}</b>, {tenue_min}. Les Compagnons, eux, gardent leur nom et leur silhouette.', { nom: I.esc(I.perso.dit()), tenue_min: I.esc(I.perso.tenue().nom.toLowerCase()), tenue: I.esc(I.perso.tenue().nom) }) + '</p>'; } });
       items.push({ label: I.t('Exporter la partie'), fn() { close(); U.partie('exporter', () => {}); }, show: () => '<h3>' + I.t('Exporter la partie') + '</h3><p>' + I.t('Ta partie tient dans un texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.') + '</p><p class="src">' + I.t('Elle se garde aussi toute seule sur cet appareil, à chaque objectif atteint.') + '</p>' });
       items.push({ label: I.t('Diagnostic'), fn() {}, show: U.diagnostic });

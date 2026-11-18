@@ -109,8 +109,8 @@
     { let coin = $('#title .coin'); if (!coin) { coin = I.el('div', 'coin'); $('#title').appendChild(coin); } coin.innerHTML = '';
       const b = I.el('button', '', I.t('Importer une partie')); b.type = 'button'; tapable(b, () => { I.audio.unlock(); close(); U.partie('importer', () => U.showTitle()); }); coin.appendChild(b); btns.push(b); }
     // la langue : quatre boutons, chacun écrit dans sa langue — on le retrouve même sans savoir lire celle de l'écran
-    { let lg = $('#title .langues'); if (!lg) { lg = I.el('div', 'langues'); $('#title').appendChild(lg); } lg.innerHTML = ''; const L = I.langue;
-      L.ORDRE.forEach(l => { const b = I.el('button', l === L.lang ? 'on' : '', L.LANGUES[l].nom); b.type = 'button'; b.lang = l; b.dir = L.LANGUES[l].dir; b.setAttribute('aria-pressed', l === L.lang ? 'true' : 'false');
+    { let lg = $('#title .langues'); if (!lg) { lg = I.el('div', 'langues'); $('#title').appendChild(lg); } lg.innerHTML = ''; const L = I.langue; lg.hidden = L.disponibles().length < 2; $('#title').classList.toggle('multilingue', !lg.hidden);   // une seule langue : pas de boutons
+      L.disponibles().forEach(l => { const b = I.el('button', l === L.lang ? 'on' : '', L.LANGUES[l].nom); b.type = 'button'; b.lang = l; b.dir = L.LANGUES[l].dir; b.setAttribute('aria-pressed', l === L.lang ? 'true' : 'false');
         tapable(b, () => { I.audio.unlock(); if (l === L.lang) return; U.langue(l); fl.destroy(); U.showTitle(); }); lg.appendChild(b); btns.push(b); }); }
     screen('#title', true); fl = focusList(btns);
   };
@@ -120,8 +120,8 @@
   U.langue = function (l) { const o = I.save.data.opts; o.lang = I.langue.choisir(l); I.save.store(); U.applyOpts(); return o.lang; };
   U.choisirLangue = async function () {
     const L = I.langue, enJeu = I.scene === W && !!W.map && !!W.saga && !W.excursion; let k = -1;
-    S.depth++; try { k = await S.menuPick(I.t('Dans quelle langue ?'), L.ORDRE.map(l => ({ t: L.LANGUES[l].nom }))); } finally { S.depth--; S.hideDialog(); }
-    const l = L.ORDRE[k]; if (!l || l === L.lang) return;
+    S.depth++; try { k = await S.menuPick(I.t('Dans quelle langue ?'), L.disponibles().map(l => ({ t: L.LANGUES[l].nom }))); } finally { S.depth--; S.hideDialog(); }
+    const l = L.disponibles()[k]; if (!l || l === L.lang) return;
     if (enJeu) W.checkpoint(); U.langue(l);
     if (enJeu) return U.resume();
   };
@@ -445,7 +445,7 @@
         toggle(I.t('Musique'), () => I.audio.musicOn ? I.t('activée') : I.t('coupée'), () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, I.t('Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.')),
         toggle(I.t('Dessin'), dessinNom, dessinSuivant, I.t('Fin : deux fois plus de points, les grands personnages jusque sur les cartes, des lisières irrégulières. Fin, adouci : le même, les contours fondus. D’origine : le dessin de la version légère.')),
         toggle(I.t('Rendu'), () => G.low ? I.t('2D simple') : I.t('rétro-HD'), () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, I.t('Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.')));
-      items.push({ label: I.t('Langue') + ' : ' + I.langue.LANGUES[I.langue.lang].nom, fn() { close(); U.choisirLangue(); }, show: () => '<h3>' + I.t('Langue') + '</h3><p>Français · العربية · English · 日本語</p><p>' + I.t('Le récit reprend à son dernier point de reprise, dans la langue choisie. Ta partie est la même dans toutes les langues.') + '</p>' });
+      if (I.langue.disponibles().length > 1) items.push({ label: I.t('Langue') + ' : ' + I.langue.LANGUES[I.langue.lang].nom, fn() { close(); U.choisirLangue(); }, show: () => '<h3>' + I.t('Langue') + '</h3><p>Français · العربية · English · 日本語</p><p>' + I.t('Le récit reprend à son dernier point de reprise, dans la langue choisie. Ta partie est la même dans toutes les langues.') + '</p>' });
       items.push({ label: I.t('Ton personnage'), fn() { close(); U.personnage(() => { if (I.scene === W && W.map) W.hud(); }); }, show: () => { const p = I.perso.profil(); return '<h3>' + I.t('Ton personnage') + '</h3><p>' + I.t('Le râwî porte le nom et la tenue que tu lui donnes : <b>{nom}</b>, {tenue_min}. Les Compagnons, eux, gardent leur nom et leur silhouette.', { nom: I.esc(I.perso.dit()), tenue_min: I.esc(I.perso.tenue().nom.toLowerCase()), tenue: I.esc(I.perso.tenue().nom) }) + '</p>'; } });
       items.push({ label: I.t('Exporter la partie'), fn() { close(); U.partie('exporter', () => {}); }, show: () => '<h3>' + I.t('Exporter la partie') + '</h3><p>' + I.t('Ta partie tient dans un texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.') + '</p><p class="src">' + I.t('Elle se garde aussi toute seule sur cet appareil, à chaque objectif atteint.') + '</p>' });
       items.push({ label: I.t('Diagnostic'), fn() {}, show: U.diagnostic });

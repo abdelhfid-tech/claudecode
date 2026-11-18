@@ -518,9 +518,10 @@ body.touch .hrow .hbars .bar { height: max(.82em, 11px); } body.touch .hrow .bar
 /* ---------- les langues (src/core/langue.js) ----------
    <html lang dir data-lang> : posés par le moteur. Le français ne reçoit aucune de ces règles. */
 #title .langues { position: absolute; top: max(10px, 2vh); left: 0; right: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .4em; padding: 0 max(12px, 3vw); direction: ltr; }
-#title .langues ~ .coin, #title .coin { top: calc(max(10px, 2vh) + 2.6em); }
+#title .langues[hidden] { display: none; }
+#title.multilingue .coin { top: calc(max(10px, 2vh) + 2.6em); }
 /* en paysage sur un téléphone, il y a de la place en largeur : les langues en haut à gauche, l'import en haut à droite */
-@media (orientation: landscape) and (max-height: 480px) { #title .langues { right: auto; left: max(12px, 3vw); justify-content: flex-start; padding: 0; max-width: 46%; } #title .langues ~ .coin, #title .coin { top: max(10px, 2vh); } }
+@media (orientation: landscape) and (max-height: 480px) { #title .langues { right: auto; left: max(12px, 3vw); justify-content: flex-start; padding: 0; max-width: 46%; } #title.multilingue .coin { top: max(10px, 2vh); } }
 #title .langues button { padding: .35em .9em; font-size: .7em; color: var(--dim); background: rgba(10, 8, 20, .6); border: 1px solid var(--line); border-radius: 2em; font-family: var(--f-body); letter-spacing: 0; }
 #title .langues button[lang="ar"] { font-family: "Noto Naskh Arabic", "Amiri", "Geeza Pro", serif; }
 #title .langues button[lang="ja"] { font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif; }

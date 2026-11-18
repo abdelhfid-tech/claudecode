@@ -262,3 +262,175 @@ compétence, d'objet ni de lieu frappé ne contient** :
 | **l'organigramme du mal** | **مراتب الشرّ** | — | **à valider**. Titre de la page : « مراتب الشر ». |
 | **les souffleurs** | **المُوَسْوِسون** | Coran 114:4, « الوسواس » [K] ; al-Ghazâlî, [D], « بيان تسلط الشيطان على القلب بالوساوس » | Jamais dessinés ni combattus. Le texte coranique, s'il est cité, vient du registre. |
 | **« démons intérieurs »** (façon de parler, aussitôt expliquée) | « **شياطين النفس** » (entre guillemets) | usage courant | **à valider**. Le jeu enchaîne : « ليست شياطين: إنها أمراض القلب ». |
+
+### 2.4 Combat et fiche des personnages
+
+| Français | Arabe retenu | Source | Note |
+|---|---|---|---|
+| faille (d'un égrégore) ; « Frapper la faille » | **الثُّلمة** ; « ضرب الثُّلمة » | al-Ghazâlî, [D], « بيان تفصيل مداخل الشيطان إلى القلب » : le cœur est une forteresse, qu'on garde « بحراسة أبواب الحصن ومداخله ومواضع ثلمه » | **à valider**. Autre choix : الثغرة (sens militaire courant). |
+| Vertus (le menu des compétences) | **الخِصال** (sg. خَصلة) | — | **à valider**. Distinct des Valeurs (الفضائل, § 2.5) et des Lumières (الأنوار, § 2.8). |
+| Garde (commande) ; « se garder » | **التحصّن** ; « يتحصّن » | même image de la forteresse [D] | **à valider**. |
+| Objets (menu de combat), la besace | **المِزوَد** (le sac à provisions, de *zâd*) | usage courant, référence non vérifiée | Autre choix : الجِراب. |
+| Force (atk) · Esprit (mag) · Garde (def) · Élan (spd) | **القوّة · الذِّهن · المَنَعة · الخِفّة** | — | **à valider**. « Esprit » n'est pas الروح (sens religieux). |
+| niveau | **المرتبة** (« المرتبة ٣ ») | — | Autre choix : المستوى (plus moderne). |
+| Sagesse (ce que rapportent combats et pourparlers) | **الحِكمة** | — | Nom commun ; jamais الحكيم (Nom divin, § 2.2). |
+| doute (altération) | **التردّد** | — | |
+| murmure intérieur (altération `waswas`) | **الوسوسة** | Coran 114:4 [K] ; [D] « بالوساوس » | |
+| étourdi, sonné | **مذهول** | — | |
+| relever un compagnon éprouvé | **أنهضَ** (« نهض الرفيق ») | — | Jamais « أحيا » (rendre la vie : Allah seul). |
+| ôter les altérations | **يُزيل العوارض** | — | Jamais « يُطهِّر » (pureté rituelle). |
+| dirham (la monnaie du jeu) | **دِرهم**, pl. **دراهم** | — | |
+| rôles : guerrier · gardien · sage · soigneur · stratège | **المُقاتل · الحامي · العالِم · المُداوي · صاحب الرأي** | « صاحب الرأي » : WP-ar, « الحباب بن المنذر » : « وكان ذو رأي ومشورة » [L] | **à valider**. Le rôle « sage » (العالِم) n'est pas la posture « sage » (البصيرة, § 2.6). |
+| tempérament (d'où vient la première posture) | **الطَّبع** | al-Ghazâlî, [D] : « والهم على وفق الطبع » | |
+
+### 2.5 Le cœur (`coeur.js`)
+
+**Les œuvres** (`D.OEUVRES`) — elles ne donnent aucun pouvoir (exigence 15) : on ne les écrit jamais avec un verbe
+d'effet magique (لا « تمنح »، « تهب قوة »), mais « تُعِدّ القلب » (elles préparent le cœur), « تزيد الزاد ».
+
+| Français | Arabe retenu (court · menu) | Source | Note |
+|---|---|---|---|
+| La prière | **الصلاة** · « صلاة » | *Ihyâ'*, « أسرار الصلاة ومهماتها » [A] | |
+| Le dhikr | **الذِّكر** · « الذكر بعد الصلاة » | *Ihyâ'*, « الأذكار والدعوات » [A] | |
+| L'étude du Coran | **مُدارسة القرآن** · « المدارسة » | Muslim : « … يتلون كتاب الله ويتدارسونه بينهم » (n° 2699 de la numérotation d'Abd al-Bâqî ; 6853 dans l'édition du CDN) [M] ; *Ihyâ'*, « آداب تلاوة القرآن » [A] | L'œuvre se fait « devant quelqu'un qui écoute » : c'est la *mudârasa*. |
+| Le jeûne | **الصيام** · « صيام اليوم » | *Ihyâ'*, « أسرار الصوم » [A] | |
+| L'aumône | **الصدقة** · « صدقة السرّ » | usage courant | Jamais الزكاة (l'aumône légale, autre chose). |
+| La visite | **الزيارة** · « زيارة قريب أو عيادة مريض » | usage courant | Jamais « الزيارة » seule là où elle pourrait se lire « visite des tombeaux » (débat entre écoles, exigence 5) : on précise qui l'on visite. |
+| Le pèlerinage | **الحجّ** · « الحج مع القافلة » | *Ihyâ'*, « أسرار الحج » [A] | |
+
+**Les sept maux du cœur et leurs lames** (`D.VICES`, `lames`, `valeurs`) — chaque paire vient d'al-Ghazâlî ou d'Ibn
+Rajab, qui opposent ces mots l'un à l'autre.
+
+| Mal (égrégore) | Arabe | Source du mal | Lame = Valeur | Arabe | Source de la lame |
+|---|---|---|---|---|---|
+| L'Avidité | **الحِرص** | [B], « بيان ذم الحرص والطمع » | Le Contentement | **القَناعة** | [B] : « القناعة والحرص، وإحداهما مذمومة والأخرى محمودة » ; « ومدح القناعة واليأس مما في أيدي الناس » |
+| L'Orgueil | **الكِبْر** | *Ihyâ'*, « ذم الكبر والعجب » [A] (texte non lu en ligne) | L'Humilité | **التواضع** | [F] : « قال بعض السلف التواضع أن تقبل الحق من كل من جاء به » |
+| L'Ostentation | **الرِّياء** | *Ihyâ'*, « ذم الجاه والرياء » [A] | La Sincérité | **الإخلاص** | *Ihyâ'*, « النية والإخلاص والصدق » [A] |
+| L'Avarice | **البُخل** | [B], « بيان ذم البخل » | La Largesse | **السَّخاء** | [B], « بيان فضيلة السخاء » ; « بيان حد السخاء والبخل وحقيقتهما » |
+| L'Insouciance | **الغَفلة** | [E] ; [D] : « لخلوها بالغفلة عن الذكر » | L'Ardeur | **الهِمّة** (« علوّ الهمة ») | [E] : « جميع أمور الدنيا انتظمت بالغفلة وخسة الهمة. ولو عقل الناس وارتفعت هممهم… » |
+| L'Envie | **الحَسَد** | [C], « بيان ذم الحسد » | La Bienveillance | **سلامة الصدر** | [F] : vouloir pour son frère ce qu'on veut pour soi « إنما يأتي من كمال سلامة الصدر من الغش والغل والحسد » |
+| La Colère | **الغَضَب** | [C], « بيان ذم الغضب » | La Longanimité | **الحِلم** | [C], « بيان فضيلة الحلم » |
+
+Notes :
+- **Largesse** : le français donne *al-Karam* ; al-Ghazâlî oppose **السخاء** à البخل [B]. On garde السخاء pour la lame ;
+  الكرم reste possible dans une phrase. (§ 4)
+- **Bienveillance** : le français donne *an-Nasîha*. Ibn Rajab range bien ce souhait « من جملة النصيحة لعامة المسلمين »
+  [F], mais **النصيحة** se lit aujourd'hui « le conseil » : « la lame du Conseil » tromperait. Retenu : **سلامة الصدر**,
+  même page, même auteur. (§ 4)
+- Al-Ghazâlî nomme lui-même le défaut d'*al-himma* : « خِسّة الهمة » [E] ; c'est bien la paire du jeu.
+- Les sept égrégores portent ces noms avec l'article (الحرص، الكبر…) ; leurs répliques sont des répliques, jamais des
+  versets ni des hadiths.
+
+**Les idées noires** (`D.NOIRS`) :
+
+| Français | Arabe retenu | Source | Note |
+|---|---|---|---|
+| La Honte (la peur du regard des siens) | **العار** | usage courant, référence non vérifiée | Jamais **الحياء** (la pudeur, une vertu louée) ni **الخِزي** (l'opprobre du Jugement). |
+| La Peur (ce qui n'est pas arrivé, vécu comme fait) | **الخوف** | — | **à valider**. Chez al-Ghazâlî, le *khawf* d'Allah est une station louée (*Ihyâ'*, « الخوف والرجاء » [A]) : le texte doit montrer qu'il s'agit d'une peur de l'avenir. Autre choix : **الهَلَع**. |
+| Le Soupçon | **سوء الظنّ** | [D] : parmi les portes du cœur, « ومن أبوابه سوء الظن بالمسلمين » | Le petit égrégore « Soupçon » du récit d'Alî est **الرِّيبة** (§ 3.6) : deux mots, deux choses. |
+| La Rancune | **الحِقد** | [C], « القول في معنى الحقد ونتائجه » | |
+| Le Désespoir | **اليأس** | usage courant | Jamais **القنوط** : le Coran l'emploie pour qui désespère de la miséricorde de son Seigneur (15:56 ; 39:53 [K]), ce que le jeu ne dit de personne. Al-Ghazâlî loue « اليأس مما في أيدي الناس » [B] : dans un texte, préciser de quoi l'on désespère. |
+
+**Les trois manières de répondre** (`D.VOIES`) :
+
+| Français | Arabe retenu | Note |
+|---|---|---|
+| Dire vrai (la parole) | **المُصارحة** (« بالكلمة الصادقة ») | **à valider**. Pas الصدق seul : c'est la Lumière d'Abû Bakr. |
+| Expliquer (la pédagogie) | **البيان** (« بالتبيين ») | **à valider**. Le mot classique de l'explication claire. |
+| Rassurer (la bienveillance) | **الرِّفق** | **à valider**. |
+
+**Les compagnons de lumière** (`animaux`) — figures du ciel, fiction dite comme telle (exigence 16) :
+
+| Français | Arabe retenu | Source | Don (fr → ar) |
+|---|---|---|---|
+| Le Renard des sables | **ثعلب الرمال** | conte, fiction | Flair → **الشَّمّ** |
+| L'Aigle | **النسر الطائر** | l'étoile Altaïr : WP-ar, « النسر الطائر (نجم) » [L] | Regard → **النَّظَر** |
+| Le Phénix | **العنقاء** | WP-ar, « عنقاء » : « طائر خيالي ورد ذكره في الأساطير العربية القديمة » [L] | Renaissance → **النهوض** (jamais البعث, la Résurrection) |
+| Le Lion | **الأسد** | le lion céleste des anciens Arabes, référence non vérifiée | Présence → **الهَيبة** |
+| La Gazelle | **الظَّبي** (« قفزات الظباء », les trois paires d'étoiles) | référence non vérifiée (pas de page WP-ar) | Apaisement → **التهدئة** |
+
+**Valeurs et attributs** (`bien`, `valeurs`, `attributs`) :
+
+| Français | Arabe retenu | Source | Note |
+|---|---|---|---|
+| Valeurs et attributs (la page) | **الفضائل والأسماء الحسنى** | « الأسماء الحسنى » : Coran 7:180 [K] ; al-Ghazâlî, *al-Maqsad al-asnâ fî sharh ma'ânî asmâ' Allâh al-husnâ* [L, « المقصد الأسنى »] | Le mot **صفات** (« attributs ») est celui d'une théologie disputée (exigence 5) : on dit « اسمٌ من أسماء الله الحسنى ». |
+| une Valeur | **فضيلة**, pl. **الفضائل** | — | |
+| un badge | **شارة**, pl. **الشارات** | — | Sans inscription (exigence 21). |
+| reconnaître un attribut / ne pas le posséder | « **تعرّفتَ إلى اسم الله …** » ; jamais « نِلتَ », « مَلكتَ », « اكتسبتَ » | — | Exigence 21. |
+| les sept Noms | **الرَّزَّاق** · **الكَبِيرُ المُتَعَال** · **الخَبِير** · **الوَهَّاب** · **الحَيُّ القَيُّوم** · **اللَّطِيف** · **الحَلِيم** | les versets du jeu (51:58 ; 13:9 ; 67:14 ; 3:8 ; 2:255 ; 42:19 ; 2:263), dont le texte vient du registre | Vocalisés en entier ; jamais sur un sprite (exigence 8). |
+
+**Les portes et la descente** (`portes`) :
+
+| Français | Arabe retenu | Source | Note |
+|---|---|---|---|
+| les portes de la noosphère | **أبواب عالم الأفكار** | l'image du cœur-forteresse et de ses portes, [D] | |
+| Au sortir de la prière · Dans le dhikr · En songe | **عَقِبَ الصلاة · في الذِّكر · في المنام** | — | « En songe » : **المنام**, jamais **الحُلم** ni **الرؤيا** : un hadith attribue la *ru'yâ* droite à Allah et le *hulm* au Diable (al-Bukhârî, n° 3292 [CDN : `ara-bukhari`]). |
+| S'endormir ; un sommeil sans songe | **النوم** ; **نومٌ بلا منام** | — | |
+| descendre ; ta descente | **النزول** ; **نزولُك** | — | |
+| le labyrinthe | **المتاهة** | — | |
+| l'issue | **المَخرَج** | Coran 65:2 [K] | |
+| un abri | **مَلجأ** | — | |
+| ce qui rôde | **ما يحوم** | — | |
+| le chrono | **المُهلة** | — | |
+| le seuil | **العَتَبة** | — | |
+| rattrapé | **أُدرِك** | — | |
+| le secours (titre) ; « Le groupe est relevé » | **الفَرَج** ; « نهض الركب » | § 2.3 | |
+
+**L'organigramme du mal** (`mal`) :
+
+| Français | Arabe retenu | Source |
+|---|---|---|
+| Organigramme du mal | **مراتب الشرّ** | à valider |
+| Iblîs — l'ennemi déclaré | **إبليس — العدوّ المبين** | Coran 2:168 [K] (référence que donne déjà le jeu) |
+| Les souffleurs — des démons d'entre les djinns, et parfois des hommes | **المُوَسْوِسون — شياطين من الجنّ، ومن الإنس أحيانًا** | Coran 114:4-6 [K] |
+| Le cœur — il entend, et il consent ou refuse | **القلب — يسمع، فيقبل أو يأبى** | [D] |
+| Les idées noires — ce qui pèse sur une personne | **الخواطر السود — ما يُثقِل على المرء** | § 2.3 |
+| Les égrégores — l'idée reprise par beaucoup de cœurs | **الخيالات — فكرةٌ تتناقلها قلوبٌ كثيرة** | § 2.3 |
+| Les idoles — l'idée enracinée : elle commande | **الأصنام — فكرةٌ تجذّرت فصارت تأمر** | § 2.3 |
+| l'enracinement (jauge d'une idole) ; une racine | **التجذّر** ; **جِذر** | à valider. Jamais **الرسوخ** (loué : « والراسخون في العلم », Coran 3:7 [K]). |
+| ce qui est enseigné / les images du jeu (les deux étages) | **ما جاء به النقل / صُوَرٌ من صُوَر اللعبة** | à valider |
+
+### 2.6 Les postures (exigence 24)
+
+**Choix proposé : l'arabe nomme la posture par l'acte, non par la personne.** La raison est arabe : « الحكيم » (le sage)
+et « الوليّ » (le saint) sont aussi des Noms divins (§ 2.2), et « وليّ » porte une doctrine (les *awliyâ'* et leurs
+prodiges) que les écoles ne lisent pas de la même façon (exigence 5) ; dire « الوليّ » d'un personnage, c'est dire qu'il
+*est* un saint, ce que l'exigence 24 interdit. Un nom d'acte se *prend*, il ne se possède pas.
+
+| Français | Arabe retenu | Source | Devise (fr) |
+|---|---|---|---|
+| Les postures ; prendre une posture | **الوقفات** (sg. **وقفة**) ; « اتّخذ وقفة » | — | à valider |
+| Le héros | **الإقدام** (aller au-devant) | usage courant ; référence non vérifiée (l'éthique arabe range le *iqdâm* sous la *shajâ'a*, entre « التهور » et « الجبن » ; al-Ghazâlî nomme l'excès, « التهور », en [C] et [D]) | Il s'expose : il va au-devant, et prend sur lui. |
+| Le sage | **البصيرة** (le discernement) | [D] : « ولينظر بعين البصيرة » ; « بقوة العلم والبصيرة » | Il discerne : il regarde avant d'agir. |
+| Le saint | **الإيثار** (faire passer les autres avant soi) | [B], « بيان الإيثار وفضله » | Il s'efface : il porte les autres. |
+
+Si le décideur veut des personnes : **البطل** (le héros : WP-ar, « القعقاع بن عمرو التميمي », « أحد فرسان العرب وأبطالهم »),
+**ذو البصيرة**, **ذو الإيثار** — mais pas الحكيم ni الوليّ (§ 4). Ni l'auteur de la distinction ni son œuvre ne sont
+nommés en arabe non plus.
+
+### 2.7 La bataille déclarée (`D.RANGS`, `D.ORDRES`, `D.MANOEUVRES`, exigence 19)
+
+Les rangs portent un nom de fonction, sans nombre ; les ordres sont des impératifs pluriels, comme dans les
+chroniques.
+
+| Français | Arabe retenu | Source | Note |
+|---|---|---|---|
+| Fantassins | **الرَّجّالة** | usage des chroniques, référence non vérifiée | |
+| Cavaliers | **الخيّالة** | [G, p. 12] : « ثم حمل خالد بمن معه من الخيالة » | |
+| Archers | **الرُّماة** | usage courant | |
+| Gens du lieu | **أهل البلد** | — | |
+| Tenir | **اثبُتوا** | [G, p. 11] : « إنكم لا تثبتون » | |
+| Avancer | **تقدّموا** | — | |
+| Charger | **احمِلوا** | [G, p. 11] : « فحمل وحملوا » | |
+| Tirer | **ارمُوا** | — | |
+| Glisser (changer de couloir) | **مِيلوا** | — | |
+| Se replier | **تراجعوا** | — | Jamais انهزموا (la déroute) ni « ولّوا الأدبار » (la fuite que le Coran blâme). |
+| Réserve mobile | **الرِّدء** | [G, p. 11] : Khâlid place des cavaliers derrière les ailes « ليكونوا ردءا لهم من ورائهم » | Exigence 19 : le mot vient de ce récit, mais le jeu ne dit jamais que la manœuvre fut faite tel jour. |
+| Enveloppement | **الإطباق** | usage courant | |
+| Repli feint | **الاستطراد** | [H] : « استطراد الفارس لقرنه، إذا طرد فرسه بين يديه، يوهمه الفرار، ثم يعطف عليه على غرة منه » | Le nom arabe de la feinte du cavalier, passé ensuite à la rhétorique. |
+| les nuées (de l'idole) | **الأسراب** (sg. سِرب) | — | Jamais des hommes. |
+| les trois couloirs : aile nord, centre, aile sud | à l'écran : **الجناح الشمالي · الوسط · الجناح الجنوبي** ; dans un récit : **الميمنة · القلب · الميسرة** | [G, p. 11] : « يقف في القلب » ; « وراء الميمنة … وراء الميسرة » | Droite et gauche se disent de l'armée qui fait face : si l'écran arabe retourne le champ, la *maymana* change de bord ; l'écran dit donc nord et sud. |
+| tenue (d'un rang) | **التماسك** | — | |
+| le camp | **المعسكر** | — | |
+| le stratège (qui ordonne sans perdre son tour) | **صاحب الرأي** | § 2.4 | |
+| la préparation (avant une idole) | **التأهّب** | — | |

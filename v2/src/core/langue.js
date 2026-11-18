@@ -139,6 +139,8 @@
     const D = I.D, cat = { ar: {}, en: {}, ja: {} }, cases = [], sues = new WeakSet();
     const L = I.langue = { LANGUES, ORDRE, lang: 'fr', cle, manques: new Set() };
     L.poser = (lang, textes) => { Object.assign(cat[lang] || (cat[lang] = {}), textes); };
+    // les langues que l'on propose au joueur : le français, et celles qui ont reçu leurs textes (une langue vide n'est pas offerte)
+    L.disponibles = () => ORDRE.filter(l => l === 'fr' || Object.keys(cat[l] || {}).length > 0);
     L.connue = lang => (LANGUES[lang] ? lang : 'fr');
     // le texte d'une langue rangé sous un texte français ; à défaut, le français
     L.de = function (fr) { if (L.lang === 'fr' || typeof fr !== 'string' || !fr) return fr; const t = cat[L.lang][cle(fr)]; if (t == null) { L.manques.add(fr); return fr; } return t; };
