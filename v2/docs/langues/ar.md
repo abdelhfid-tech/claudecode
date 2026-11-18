@@ -6,7 +6,7 @@ qui écrit en arabe le suit ; un terme absent se demande ici avant d'être inven
 **Règle du décideur (18 novembre).** L'arabe ne traduit pas le français : il reprend chaque notion **là où la langue
 arabe l'a déjà dite**, dans ses livres. Un terme retenu porte donc l'ouvrage où il est employé dans ce sens, et l'adresse
 où cela a été lu. Quand rien n'a pu être relu en ligne, le glossaire le dit (« référence non vérifiée ») ; quand la
-notion n'existe pas dans la tradition (égrégore, noosphère, Constance…), le terme est une **proposition**, marquée
+notion n'existe pas dans la tradition (chimère, noosphère, Constance…), le terme est une **proposition**, marquée
 « **à valider** ».
 
 **Ce que ce glossaire ne fait pas.** Il ne cite ni verset ni parole : le texte arabe d'un verset (othmanien, entre
@@ -67,7 +67,7 @@ la longueur des phrases, pas par la grammaire.
 - **Points de suspension** : « … » (un seul caractère U+2026), collés au mot.
 - **Tiret** : le tiret long « — » sépare un nom de sa source, comme en français (« أبو بكر — ابن هشام، السيرة النبوية »),
   ce que fait déjà le registre des sources.
-- **Point d'exclamation** : rare. Un cri dans un combat, un égrégore qui se croit juste ; jamais dans la bouche d'un
+- **Point d'exclamation** : rare. Un cri dans un combat, une chimère qui se croit juste ; jamais dans la bouche d'un
   Compagnon sans que la source le donne.
 - Les glyphes du jeu (▶ ☰ ✦ × ·) restent tels quels ; le moteur retourne lui-même les flèches (◂ ▸) dans le sens
   droite-gauche.
@@ -102,7 +102,8 @@ parmi six (zéro, un, deux, trois à dix, onze à quatre-vingt-dix-neuf, cent et
   années : « ثم دخلت سنة… ») ; dans un sous-titre ou une fiche, en chiffres : « ١١ هـ · ٦٣٢ م ».
 - Les mois : noms hégiriens classiques (المحرّم، صفر، ربيع الأول، ربيع الآخر، جمادى الأولى، جمادى الآخرة، رجب، شعبان،
   رمضان، شوّال، ذو القعدة، ذو الحجة).
-- 2084 : « سنة ١٥٠٨ هـ / ٢٠٨٤ م ».
+- 2084 : « سنة ١٥٠٧ هـ / ٢٠٨٤ م » (D184, relecture 2.22 : d'après le calendrier d'Umm al-Qurâ, 1508 ne commence que vers
+  septembre 2084, et l'année 2084 est surtout 1507 ; le français dit désormais « 1507 H » ; à valider (D184)).
 
 ### 1.6 Formules de respect
 
@@ -136,7 +137,7 @@ parmi six (zéro, un, deux, trois à dix, onze à quatre-vingt-dix-neuf, cent et
 - **Le pluriel** : on parle à un groupe au masculin pluriel (أنتم) ; une femme seule au féminin singulier. Le jeu met
   en scène peu de femmes (exigence 4 : « une famille », « les gens ») : on garde ces désignations collectives (أهل بيت،
   الناس).
-- Pluriel des non-humains (égrégores, rangs, objets) : accord au féminin singulier (« الخيالات تحوم »، « الصفوف تقدّمت »),
+- Pluriel des non-humains (chimères, rangs, objets) : accord au féminin singulier (« الخيالات تحوم »، « الصفوف تقدّمت »),
   comme l'arabe classique.
 
 ### 1.9 Longueur des répliques
@@ -169,6 +170,14 @@ Une boîte de dialogue tient **trois lignes sur un téléphone** (texte « grand
   en substance, sans guillemets, si elle est introuvable.
 - Employer un mot de la théologie spéculative (صفات، ذات، تجسيم…) ou d'un débat entre écoles là où un mot commun suffit
   (exigence 5).
+- **Dire qu'une chose tient un homme** (D184, relecture 1.6 ; exigence 18 : « le cœur reste responsable »). Aucun mot de
+  la possession : ni مَسّ، ممسوس، تلبّس، تقمّص، استحوذ على، سكنه، نطق بلسانه، سيطر عليه ; ni de l'envoûtement : سِحر،
+  مسحور، معمول له، العين (le mauvais œil), رُقية, ni « يذوي بلا حُمّى ولا علّة » (« languir sans fièvre ni cause »), ni
+  un remède qui « rend la santé » (أعاده إلى عافيته). L'homme reste le sujet de sa phrase : « لم يعد يسمع إلا هذا »
+  (« Il n'entend plus que cela ») ; « فإذا هو يطيعها أكثر مما يطيع عقله » (« il lui obéit plus qu'à sa raison ») ;
+  « لسنا نقاتله هو، بل ما ينظر إليه » (« Ce n'est pas lui qu'on combat : c'est ce qu'il regarde ») ; l'énigme du cœur
+  (لغز القلب) : « أحدُ رفاقك تخور عزيمته، وما به مرضٌ ولا جرح »، et la bonne œuvre « ردّ إليه عزيمته ». L'emprise d'une
+  idole reste une image de l'exigence 18 (« قبضة »), jamais une présence dans un corps. **À valider (D184).**
 
 ---
 
@@ -212,13 +221,13 @@ Adresses lues pour cette section (toutes consultées le 18 novembre 2026) :
 ### 2.2 Ce qu'aucun ennemi, aucune compétence, aucun objet ne s'appelle
 
 Le validateur refuse en français les noms d'Iblîs, d'un démon ou d'un djinn. En arabe, la liste est plus longue,
-parce que des mots ordinaires y portent un sens religieux ou confessionnel. **Aucun nom d'égrégore, d'idole, de
+parce que des mots ordinaires y portent un sens religieux ou confessionnel. **Aucun nom de chimère, d'idole, de
 compétence, d'objet ni de lieu frappé ne contient** :
 
 | Mot | Pourquoi |
 |---|---|
 | شيطان، شياطين، إبليس، جنّ، جنّي، جانّ، عفريت، مارد، غول، سِعلاة، قرين، هامة | démons, djinns, êtres du folklore (exigences 6 et 18). « القرين » est le compagnon-djinn de chaque homme. **Attention** : Dirâr ibn al-Azwar reçut des Rûm un surnom contenant « شيطان » (WP-ar, « ضرار بن الأزور ») : le jeu ne l'emploie jamais. |
-| فتنة، الفتنة | désigne en arabe les guerres entre Compagnons (WP-ar, « معركة صفين » : « تاريخ الفتنة الأولى ») : aucun égrégore ne s'appelle ainsi (exigence 5). |
+| فتنة، الفتنة | désigne en arabe les guerres entre Compagnons (WP-ar, « معركة صفين » : « تاريخ الفتنة الأولى ») : aucune chimère ne s'appelle ainsi (exigence 5). |
 | خوارج، حرورية، مُحكِّمة، رافضة، ناصبة، أهل الأهواء، مبتدعة | noms de partis et de sectes : jamais pour un ennemi, jamais pour qualifier les gens de Harûrâ' ou de Nahrawân, qui sont des hommes (exigence 6). Dans un récit, on dit ce qu'ils font, sobrement. |
 | طاغوت | mot coranique qui vise aussi des hommes : trop lourd. |
 | الله, et les Noms divins employés comme noms : الحقّ، الحَكَم، الحكيم، الوليّ، المَلِك، القهّار، الجبّار، الرحمن، الرحيم، الكريم | exigence 8 : « Le Juge sans miséricorde » est **القاضي**, jamais الحَكَم ; « le sage » n'est pas الحكيم (§ 2.6). Les mots communs العدل، الرحمة، الكرم restent permis comme noms de vertus, jamais comme nom propre d'une chose qu'on frappe. |
@@ -237,16 +246,15 @@ compétence, d'objet ni de lieu frappé ne contient** :
 | **Constance** (points de vie) | **الثَّبات** | Ibn Kathîr emploie le verbe dans ce sens à Yarmoûk : « إنكم لا تثبتون » (« vous ne tiendrez pas ») [G, p. 11] | **à valider**. Autre choix : الجَلَد (l'endurance), mais sans voyelles il se lit « la peau ». Abréviation d'interface : ثبات. |
 | **Souffle** (points de magie) | **النَّفَس** (toujours vocalisé) | usage courant (« نَفَس طويل »), référence non vérifiée | **à valider**. Sans la fatha, النفس se lit « l'âme » (al-Ghazâlî, [D], « بيان معنى النفس والروح والقلب والعقل ») : la voyelle est obligatoire partout. |
 | **éprouvé** (hors de combat) | **مُنهَك** (verbe : أُنهِك) | usage courant | **à valider**. Exigence 19 : jamais جريح، قتيل، صريع، سقط (blessé, tué, abattu). |
-| **voile** (la garde d'un égrégore), **voiles** | **حِجاب**, pl. **حُجُب** | al-Ghazâlî, [D] : parmi les cinq causes qui empêchent le miroir du cœur de refléter le vrai, « حجاب مرسل بين المرآة والصورة » | **à valider**. Un voile ôté : « انهتك حجاب » ou « سقط حجاب ». Ne pas confondre avec le « voile de lumière » des Compagnons (§ 2.9). |
-| chimère (D183, remplace « égrégore » en français) | **خيال** — inchangé | — | Le décideur a écarté « égrégore », mot de l'ésotérisme ; le mot de cette langue dit déjà l'illusion qu'on dévoile : il reste. |
-| **dévoilé** (un égrégore vaincu : on a montré qu'il est vide) | **انكشف** ; adj. **مكشوف** ; « انكشف خواؤه » | al-Ghazâlî, [D] : le cœur poli « … حتى يتلألأ فيه جلية الحق وينكشف » | **à valider**. Éviter الكشف seul (dévoilement mystique soufi). |
+| **voile** (la garde d'une chimère), **voiles** | **حِجاب**, pl. **حُجُب** | al-Ghazâlî, [D] : parmi les cinq causes qui empêchent le miroir du cœur de refléter le vrai, « حجاب مرسل بين المرآة والصورة » | **à valider**. Un voile ôté : « انهتك حجاب » ou « سقط حجاب ». Ne pas confondre avec le « voile de lumière » des Compagnons (§ 2.9). |
+| **dévoilé** (une chimère vaincue : on a montré qu'elle est vide) | **انكشف** ; adj. **مكشوف** ; « انكشف خواؤه » | al-Ghazâlî, [D] : le cœur poli « … حتى يتلألأ فيه جلية الحق وينكشف » | **à valider**. Éviter الكشف seul (dévoilement mystique soufi). |
 | **Niyya** (l'intention, jauge) | **النيّة** | al-Ghazâlî, *Ihyâ'*, livre « النية والإخلاص والصدق » (quart des « المنجيات ») [A] | |
-| **Sakîna** (la sérénité, jauge) | **السَّكينة** | Coran 48:4 et 48:18 [K] | |
+| **Sérénité** (la jauge ; « Sakîna » jusqu'à D184) | **الهُدوء** ; « +الهدوء » ; « يستعيد الركب هدوءه » (« le groupe retrouve sa sérénité ») | usage courant (« حافظ على هدوئه ») ; « هدوء » et « الهدوء » ne sont pas au Coran [K] | **à valider (D184)**. Le décideur a écarté « Sakîna » en français : le Coran la dit descendue par Allah (48:4, 48:18 ; « سكينته », 9:26, 9:40, 48:26 [K]), et une jauge que la prière remplit à coup sûr en ferait l'effet d'un rite. L'arabe prend le mot ordinaire du calme qu'on garde dans l'épreuve. Écartés : **السَّكينة** (même raison) ; **الطُّمأنينة** : le Coran l'emploie pour les cœurs rassurés par le rappel (13:28) et, à Badr, par le secours (3:126 ; 8:10) [K], et le fiqh nomme ainsi l'immobilité de chaque position de la prière (al-Bukhârî, n° 757 : « ثم اركع حتى تطمئن راكعا » [CDN : `ara-bukhari/757`]) — le mot servait aux pourparlers, il est remplacé là aussi (« هدوء الصلاة: الثقة +١ »), car le français n'a plus qu'un mot ; **رباطة الجأش** : deux mots, et l'image coranique du cœur affermi (18:14, 8:11 [K]). La Gazelle « apaise » (**التهدئة**, § 2.5) : elle donne du الهدوء. Si un feuillet du recueil cite un jour le verset de la *sakîna*, le mot y revient, avec son texte tiré du registre : c'est un autre sujet. |
 | **râwî** (le transmetteur, le joueur) | **الراوي** ; au vocatif **يا راوي** | al-Khatîb al-Baghdâdî, *al-Jâmi' li-akhlâq ar-râwî wa-âdâb as-sâmi'* [L, « الجامع لأخلاق الراوي وآداب السامع »] | Le pluriel, **الرواة**. |
 | **isnad** | **الإسناد** (le titre du jeu : إسناد) | WP-ar, « سند (علم الحديث) » : « السند أو الإسناد … هو سلسلة الرواة الذين نقلوا الحديث واحدا عن الآخر » [L] | |
-| **la Chaîne** (l'écran des maillons) | **السِّلسلة** | même page : « سلسلة الرواة » [L] | « La Chaîne entière » (compétence d'Idris) : « السلسلة كاملةً ». |
-| **maillon** (une saga) | **الحَلْقة** (vocalisée à la première occurrence) | usage courant (« حلقة في سلسلة »), référence non vérifiée | La حَلَقة, elle, est un cercle d'étude (WP-ar, « حلقة علم ») : le jeu dit pour ce sens **مجلس العلم** (§ 3.3). |
-| **égrégore** (l'ennemi du jeu) | **خَيال**, pl. **خَيالات** | proposition tirée du théâtre d'ombres arabe, **خيال الظل**, aussi nommé « شخوص الخيال، طيف الخيال » : des figures découpées qui semblent vivre quand beaucoup les regardent ensemble à la lumière d'une lampe, et ne sont qu'une ombre (WP-ar, « خيال الظل » et « ابن دانيال », poète mamelouk de ce théâtre) [L] | **à valider**. Le mot n'évoque ni djinn ni démon, et dit ce que le jeu dit : une forme vide qui prend corps sous le regard. « un égrégore de la tyrannie » : « خيالُ الطغيان ». Autre choix : **وَهْم**, pl. أوهام (« une illusion »), plus abstrait. Écartés : طَيف (le mot sert aussi, chez des commentateurs, pour le toucher du diable en Coran 7:201 — référence non vérifiée), شَبَح (« fantôme » : esprit des morts, hantise), فتنة، طاغوت، هوى (§ 2.2). |
+| **la Chaîne** (l'écran des maillons) | **السِّلسلة** | même page : « سلسلة الرواة » [L] | « La Chaîne entière » (compétence d'Idris) : « السلسلة كاملةً ». « Chaîne fidèle » (titre d'une saga jouée sans faute ; « Isnâd sahîh » jusqu'à D184, relecture 2.21) : **سلسلةٌ وفيّة**, du même mot que « الوفاء للسلسلة » (« Fidélité à la Chaîne ») ; jamais un mot par lequel les savants du hadith jugent une chaîne (صحيح، متّصل، منقطع، ثقة، محفوظ) : ce serait changer leur jugement en score. **À valider (D184).** |
+| **maillon** (une saga) | **الحَلْقة** (vocalisée à la première occurrence) | usage courant (« حلقة في سلسلة »), référence non vérifiée | La حَلَقة, elle, est un cercle d'étude (WP-ar, « حلقة علم ») : le jeu dit pour ce sens **مجلس العلم** (§ 3.3). « ce maillon » (D184, 2.6 ; « ce règne » jusque-là) : « هذه الحَلْقة » (« ما بُني في هذه الحَلْقة ») ; jamais العهد ni المُلك : un califat n'est pas un règne. |
+| **chimère** (l'ennemi du jeu ; « égrégore » jusqu'à D183) | **خَيال**, pl. **خَيالات** — inchangé (D183) | proposition tirée du théâtre d'ombres arabe, **خيال الظل**, aussi nommé « شخوص الخيال، طيف الخيال » : des figures découpées qui semblent vivre quand beaucoup les regardent ensemble à la lumière d'une lampe, et ne sont qu'une ombre (WP-ar, « خيال الظل » et « ابن دانيال », poète mamelouk de ce théâtre) [L] | **à valider**. D183 : le décideur a écarté « égrégore », mot de l'ésotérisme ; خيال disait déjà l'illusion qu'on dévoile : il reste. Le mot n'évoque ni djinn ni démon, et dit ce que le jeu dit : une forme vide qui prend corps sous le regard. « une chimère de la tyrannie » : « خيالُ الطغيان ». Autre choix : **وَهْم**, pl. أوهام (« une illusion »), plus abstrait. Écartés : طَيف (le mot sert aussi, chez des commentateurs, pour le toucher du diable en Coran 7:201 — référence non vérifiée), شَبَح (« fantôme » : esprit des morts, hantise), فتنة، طاغوت، هوى (§ 2.2). |
 | **idole** (l'égrégore d'un chapitre) | **الصَّنَم**, pl. **الأصنام** | Malek Bennabi : « عندما تغرب الفكرة يبزغ الصنم » (cité par le blog d'Al Jazeera « أفكارنا أصنامنا », 30 avril 2018, qui la situe dans *Shurût an-nahda* ; source secondaire, non relue dans le livre) | Autre choix : الوثن. |
 | **noosphère** (l'envers de la ville) | **عالم الأفكار** | Malek Bennabi, *Mushkilat al-afkâr fî l-'âlam al-islâmî* : عالم الأشياء، عالم الأشخاص، عالم الأفكار [J] | Chez Bennabi, c'est l'univers des idées d'une société ; le jeu en fait un lieu. Ne pas écrire النوسفير (calque). Carte : **عالم الأفكار** ; « dans la noosphère » : « في عالم الأفكار ». **Validé par le décideur le 18 novembre (D185).** |
 | **idées noires** (cinq) | **الخواطر السُّود** (sg. خاطرٌ أسود) | al-Ghazâlî, [D] : « وأعني بالخواطر ما يحصل فيه من الأفكار والأذكار » ; « السود » rappelle « السوداء », l'humeur noire de la vieille médecine | **à valider**. Autre choix : **الهموم** (« les soucis »), mais la honte n'est pas un *hamm*. Les cinq : § 2.5. |
