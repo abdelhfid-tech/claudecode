@@ -1561,6 +1561,14 @@ pages privées de son compte.
   image du jeu, pas un pouvoir (exigences 13, 15, 21 ; en islam, la magie est réprouvée). Le coût en Souffle et les
   chiffres se règlent par la mesure (D190), comme le reste.
 
+- [x] **D197. Composer Idris, la suite validée (décision du décideur, 18 novembre ; version 2.11).** La lanterne (une
+  boîte de métal sombre au verre pâle, sans lumière ni ornement) et la besace (un sac de cuir à rabat, en bandoulière,
+  sans motif) remplacent les feuillets ; le turban haut et le chèche s'ajoutent, avec un bandeau aux deux néons qui
+  n'appartient qu'à Idris ; sous le chèche, ni l'étoffe claire ni la verte (de dos, c'était 'Alî) ; sous la capuche,
+  pas de robe longue (l'habit des moines du jeu) ; les sept nouvelles couleurs des habitants de 2084 (D194). Écartés :
+  le turban des Compagnons, le turban large, le turban à pan, le keffieh, la tiare, les casques. Un contrôle compare
+  chaque composition à chaque Compagnon et à chaque habitant (au plus 0,82, sous le seuil de 0,85).
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.
