@@ -30,7 +30,7 @@ ISNAD.registerSaga({
     ['nar', "L'idole du Juge sans miséricorde n'est pas morte à Nahrawân. Elle a seulement appris à changer de formule. Mais ce que 'Alî lui a opposé demeure : celui qui sait ne se hâte pas de condamner."],
     ['say', 'Idris', "Le savoir, ce n'est pas d'avoir raison contre quelqu'un. C'est de savoir encore, devant celui qui te frappe, ce qu'il t'est interdit de lui faire."],
     ['mus', 'espoir'],
-    ['nar', "Le cinquième maillon se referme. La Chaîne, elle, continue : des Compagnons à leurs élèves, des élèves aux leurs — jusqu'à toi."],
+    ['nar', "Le cinquième maillon se referme. La Chaîne, elle, continue : des Compagnons à leurs élèves, des élèves aux leurs — jusqu'au râwî."],
     ['sfx', 'light'],
     ['flash', '#c49bff'],
     ['light', 'ilm']

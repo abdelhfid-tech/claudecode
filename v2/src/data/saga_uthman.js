@@ -629,7 +629,7 @@ ISNAD.registerSaga({
         ] },
         { text: "Gagner la passerelle, où l'effroi se rassemble", goto: 'passerelle', then: [
           ['say', 'Un jeune rameur', "Je ne sens plus mes mains. Personne ne m'a forcé à venir. Alors pourquoi ai-je si peur ?"],
-          ['nar', "La réponse ne vient d'aucune bouche. Elle est dans l'ordre que tu portes : tu es venu libre. Ta peur t'appartient ; tu peux la regarder en face."],
+          ['nar', "La réponse ne vient d'aucune bouche. Elle est dans l'ordre du calife : le rameur est venu libre. Sa peur lui appartient ; il peut la regarder en face."],
           ['battle', { group: ['ecume', 'ecume'], bg: 'mer', intro: "L'effroi gagne les ponts." }],
           ['sfx', 'roll'],
           ['nar', "L'écume retombe. Le jeune homme reprend sa rame. On jette les chaînes d'un bord à l'autre ; les coques se serrent, flanc contre flanc."]
