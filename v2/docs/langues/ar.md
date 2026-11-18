@@ -531,3 +531,299 @@ du lettré **كُمّة الأديب**.
 | écran · notification · le grand écran · ascenseur | **شاشة · إشعار · الشاشة الكبرى · مِصعد** | arabe moderne ; jamais l'anglais translittéré. |
 | le relevé (L'agent du relevé) | **الإحصاء** (« موظّف الإحصاء ») | |
 | An 1508 de l'Hégire | **سنة ١٥٠٨ للهجرة** | § 1.5 |
+
+---
+
+## 3. Les noms propres
+
+Règles :
+- **Personnages historiques** : la forme des sources (nom, *kunya*, *laqab*), vérifiée sur la notice de WP-ar qui les
+  donne d'après les chroniques (adresses : `https://ar.wikipedia.org/wiki/<titre de la notice>`, titre indiqué). Dans
+  une réplique ou une étiquette, le nom court (« أبو بكر »، « عُمَر »، « خالد ») ; à la première mention d'un chapitre,
+  la forme pleine (« أبو بكر الصدّيق »، « خالد بن الوليد »).
+- **Personnages de fiction** : une graphie simple, sans formule de respect, sans kunya inventée qui ferait croire à
+  un personnage réel.
+- **Égrégores** : un nom arabe, pas un calque, avec l'article ; une même image garde le même mot d'un récit à
+  l'autre : « Murmure » = **همس**, « Écho » = **الصدى**, « Mirage » = **السَّراب**, « Rumeur » = **الإشاعة**.
+- La formule après un Compagnon : § 1.6 (à trancher). Ceux que les sources rangent parmi les Successeurs (تابعي) n'en
+  reçoivent pas la même : Aslam, Shurayh, Kumayl, Mâlik al-Ashtar, Farwa ibn Nawfal (voir leurs lignes).
+
+### 3.1 Les héros
+
+| Français (titre) | Arabe (nom · titre) | Forme des sources | Notice lue / note |
+|---|---|---|---|
+| Abû Bakr — As-Siddîq | **أبو بكر · الصِّدِّيق** | أبو بكر الصديق عبد الله بن أبي قُحافة التيمي القرشي | « أبو بكر الصديق ». |
+| 'Umar — Al-Fârûq | **عُمَر · الفاروق** | أبو حفص عمر بن الخطاب العدوي القرشي، المُلقَّب بالفاروق | « عمر بن الخطاب ». La notice « الفاروق (لقب) » note que des chiites tiennent ce surnom pour celui d'Alî : le jeu suit ses sources, sans commentaire (exigence 5). |
+| Abû 'Ubayda — Amîn al-Umma / l'homme de confiance de la communauté | **أبو عُبيدة · أمينُ الأمّة** | أبو عبيدة عامر بن عبد الله بن الجراح الفهري القرشي | « أبو عبيدة بن الجراح », qui rapporte le hadith d'où vient le titre. |
+| 'Alî — La Porte du Savoir | **عليّ · باب العلم** (proposé) | أبو الحسن علي بن أبي طالب الهاشمي القرشي | « علي بن أبي طالب ». **À trancher (§ 4)** : « باب العلم » vient d'un hadith dont l'authenticité est discutée ; une parole sûre lui donne un autre titre, « وأقضانا علي » (Umar, al-Bukhârî n° 4481, déjà au registre : `saga_ali.json`). |
+| Ibn 'Abbâs — Le Docte de la communauté | **ابن عبّاس · حَبرُ الأمّة** | أبو العباس عبد الله بن العباس بن عبد المطلب | la notice « حبر الأمة » renvoie à « عبد الله بن عباس ». |
+| 'Ammâr — Le Vétéran | **عمّار · البدريّ** (proposé) | عمار بن ياسر | « عمار بن ياسر » : « من السابقين إلى الإسلام … وشارك مع النبي محمد في غزواته كلها ». **à valider** : « Le Vétéran » n'a pas d'équivalent ancien ; « البدري » (qui fut à Badr) en est un. |
+| Qays — Fils de Sa'd | **قيس · ابن سعد** | قيس بن سعد بن عُبادة | « قيس بن سعد بن عبادة ». |
+| Khâlid — Le Sabre dégainé | **خالد · السيفُ المسلول** | أبو سليمان خالد بن الوليد بن المغيرة المخزومي، لقّبه النبي ﷺ « سيف الله المسلول » | « خالد بن الوليد ». Le titre du jeu omet الله, comme le français omet « d'Allah » (exigence 8 : c'est aussi le nom d'une compétence). Dans un récit ou le recueil, le surnom entier peut se citer, une fois, comme parole rapportée. |
+| Al-Qa'qâ' — Ibn 'Amr at-Tamîmî | **القَعقاع · ابن عمرو التميمي** | القعقاع بن عمرو بن مالك الأُسيدي التميمي | « القعقاع بن عمرو التميمي ». |
+| Dirâr — Ibn al-Azwar | **ضِرار · ابن الأزور** | ضرار بن الأزور الأسدي | « ضرار بن الأزور ». Le surnom que lui donnèrent les Rûm contient « شيطان » : **jamais** employé (§ 2.2). |
+| Aslam — L'affranchi de 'Umar | **أسلم · مولى عُمَر** | أسلم مولى عمر بن الخطاب، أبو خالد | pas de notice WP-ar ; fiche de transmetteur : `https://hadithtransmitters.hawramani.com/أسلم-مولى-عمر/` (résultat de recherche, non relu en entier) : al-'Ijlî le dit *tâbi'î*. Le jeu lui donne pourtant un voile de lumière (`D.RAYONS`) : c'est le côté prudent (§ 4). |
+| 'Abd ar-Rahmân — Ibn 'Awf | **عبد الرحمن · ابن عوف** | عبد الرحمن بن عوف الزهري القرشي | « عبد الرحمن بن عوف ». |
+| 'Uthmân — Le Généreux | **عثمان · ذو النورين** (proposé) | أبو عبد الله عثمان بن عفان الأموي القرشي، « يلقَّب ذا النورين » | « عثمان بن عفان ». **À trancher (§ 4)** : le seul surnom des sources est ذو النورين ; « Le Généreux » n'en est pas un, et « الكريم » est un Nom divin. Autre choix, descriptif : « صاحبُ بئر رُومة » (le puits qu'il acheta pour tous, voir « بئر رومة »). |
+| Zayd ibn Thâbit — Le Scribe | **زيد بن ثابت · كاتبُ الوحي** | زيد بن ثابت بن الضحاك الأنصاري | « زيد بن ثابت » : « صحابي وكاتب الوحي ». |
+| Hudhayfa — Le Gardien du secret | **حُذَيفة · صاحبُ السِّرّ** | حذيفة بن اليمان العبسي | « حذيفة بن اليمان ». « صاحب سرّ رسول الله ﷺ » : surnom connu, référence non vérifiée en ligne. |
+| Idris — le Râwî | **إدريس · الراوي** | fiction | `langue.js` le pose déjà (`rawi: 'إدريس'`). C'est aussi le nom d'un prophète : jamais « عليه السلام » après ce personnage, et le joueur peut le renommer (`perso.js`). |
+| Maître Yûnus — le Gardien | **الشيخ يونس · الخازن** | fiction | **à valider**. « le Gardien » des Archives : الخازن, le garde d'une bibliothèque (خزانة الكتب). |
+| Sâlim — le Repenti | **سالم · التائب** | fiction | |
+| Le Caïd — Seigneur de la Citadelle | **القائد · صاحبُ القلعة** | fiction | Sceau déjà dans le jeu : القائد. |
+| Maître Bahrâm — le Géomètre | **المعلّم بَهرام · المهندس** | fiction | المهندس : le géomètre (la *handasa* est la géométrie). |
+| Zîrî — Capitaine des sentinelles | **زِيري · صاحبُ الحرس** | fiction | pas « قائد الحرس » : القائد est le Caïd. |
+
+### 3.2 Les personnages historiques des chapitres
+
+| Français | Arabe | Notice lue (WP-ar) / note |
+|---|---|---|
+| Al-Hubâb ibn al-Mundhir | **الحُباب بن المنذر** | « الحباب بن المنذر » (« كان من المشاركين بالرأي في يوم السقيفة »). |
+| Bashîr ibn Sa'd | **بَشير بن سعد** | « بشير بن سعد بن ثعلبة ». |
+| Usâma ibn Zayd | **أُسامة بن زيد** | « أسامة بن زيد » (بن حارثة). |
+| Zayd ibn al-Khattâb | **زيد بن الخطاب** | « زيد بن الخطاب ». |
+| Al-Barâ' ibn Mâlik (le Mur du Jardin) | **البَراء بن مالك** | « البراء بن مالك ». |
+| Musaylima (nommé dans le recueil) | **مُسَيلِمة** | « مسيلمة الكذاب » (مسلمة بن حبيب الحنفي). Jamais un ennemi du jeu (exigence 6) : voir l'idole d'Abû Bakr, § 3.6. |
+| Kumayl ibn Ziyâd | **كُمَيل بن زياد النَّخَعي** | « كميل بن زياد » : « أدرك النبي … وقيل إنه لم يره ». Sans visage (`D.SANS_VISAGE`). |
+| le juge Shurayh | **القاضي شُرَيح** | « شريح القاضي » : شريح بن الحارث الكندي, « تابعي، قيل: له صحبة ». Sans visage. |
+| Qanbar | **قَنبَر** | « قنبر » : « خادم علي بن أبي طالب ومولاه ». |
+| Al-Hasan (ibn 'Alî) | **الحسن بن علي** | « الحسن بن علي » (أبو محمد). Sobriété : aucun titre de l'une ou l'autre école (exigence 5). |
+| Mâlik al-Ashtar | **مالك الأشتر** | « مالك بن الحارث الأشتر » : la notice dit qu'il est jugé différemment par les sunnites et les chiites : le nom seul, sans qualificatif (exigence 5). Sans visage. |
+| Abû Ayyûb al-Ansârî | **أبو أيّوب الأنصاري** | « أبو أيوب الأنصاري » (خالد بن زيد). |
+| Farwa ibn Nawfal | **فَروة بن نوفل الأشجعي** | pas de notice WP-ar ; fiche de narrateur `https://shamela.ws/narrator/5082` (résultat de recherche : « لا صحبة له » selon Ibn 'Abd al-Barr). Sans visage. |
+| Ibn al-Kawwâ' | **ابن الكوّاء** | « عبد الله بن الكواء » (عبد الله بن عمرو اليشكري, d'après la fiche de la notice). |
+| Ibn an-Nabbâh, le muezzin | **ابن النَّبّاح، المؤذّن** | référence non vérifiée en ligne. |
+| Râfi' ibn 'Umayra | **رافع بن عُمَيرة الطائي** | « رافع بن عميرة » : le guide de Khâlid à travers le désert. Sans visage. |
+| 'Amr ibn 'Abd al-Masîh (doyen d'al-Hîra) | **عمرو بن عبد المسيح** | le registre (`saga_khalid.json`) a lu at-Tabarî : ce nom est celui du récit de Sayf (ج ٣ ص ٣٦١-٣٦٤) ; un autre récit nomme l'homme « عبد المسيح بن عمرو بن بُقَيلة ». Écart déjà signalé là-bas. |
+| Bilâl ibn Rabâh | **بلال بن رباح** | « بلال بن رباح ». |
+| Sophrone | **صَفرونيوس** | « صفرونيوس » (patriarche de Jérusalem). Dignité gardée (schema-v2) ; dans un récit : « بطريرك إيلياء ». |
+| Al-Hurmuzân | **الهُرمُزان** | notice « هرمزان » ; les chroniques l'écrivent avec l'article. |
+| Anas ibn Mâlik | **أنس بن مالك** | « أنس بن مالك ». |
+| Surâqa ibn Mâlik | **سُراقة بن مالك** | « سراقة بن مالك المدلجي ». |
+| Jabala ibn al-Ayham | **جَبَلة بن الأيهم** | « جبلة بن الأيهم », roi ghassânide ; la notice vocalise جِبْلة : vocalisation à vérifier. |
+| 'Abdallâh ibn az-Zubayr | **عبد الله بن الزبير** | « عبد الله بن الزبير ». |
+| Sa'îd ibn al-'Âs | **سعيد بن العاص** | « سعيد بن العاص ». |
+| 'Abdallâh ibn Sa'd | **عبد الله بن سعد بن أبي السَّرح** | « عبد الله بن سعد بن أبي السرح ». Sans visage. |
+| Abû Hurayra | **أبو هُريرة** | « أبو هريرة ». |
+| Kisrâ (les rois sassanides) | **كِسرى** | titre, non un nom ; le dernier roi : « يزدجرد الثالث ». |
+
+Désignations collectives (exigences 4 et 10 : on dit le groupe sans trait) : un Médinois **رجل من أهل المدينة** · un
+vieil Ansârî **شيخ من الأنصار** (sans visage) · un soldat de l'armée d'Usâma **جنديّ من جيش أسامة** (sans visage) · un
+récitateur **قارئ** (sans visage, à Yamâma) · un vétéran de Badr **رجل من أهل بدر** (sans visage) · un ancien des Kalb
+**شيخ من بني كلب** · un homme des Fazâra **رجل من فَزارة** · un lettré d'al-Hîra **عالِم من أهل الحيرة** · un moine
+**راهب** · un prêtre du port **قسّ الميناء** · l'homme à la cuirasse **صاحب الدرع** (jamais sa religion) · un homme de
+Harûrâ' **رجل من أهل حَروراء** (jamais خارجي, § 2.2) · un affranchi **مولى** · un fidèle **أحد المصلّين** · un récitant
+de Koufa **قارئ من أهل الكوفة** · scribe du dîwân **كاتب الديوان** · courrier **رسول**, **بريد**.
+
+### 3.3 Les personnages de fiction
+
+| Récit | Français | Arabe | Note |
+|---|---|---|---|
+| Abû Bakr | Thâmir le courtier (hypocrite) | **ثامر السِّمسار** | exigence 11 ; jamais « المنافق » écrit. |
+| Abû Bakr | Dirghâm, cheikh des Banû Rimth | **ضِرغام، شيخ بني رِمث** | tribu de fiction. |
+| Umar | Hâzim, commis de la Maison de la farine / du Trésor | **حازم، كاتب دار الدقيق / كاتب بيت المال** | |
+| Umar | Abû Ghânim, marchand de grain | **أبو غانم، تاجر الحَبّ** | |
+| Umar | Thawr ibn Mâlik | **ثَور بن مالك** | |
+| Umar | l'ancien de Tibériade | **شيخ من طبريّة** | |
+| Khâlid | Ghâlib, l'intendant (hypocrite) | **غالب، الوكيل** | |
+| Khâlid | Wahb ibn Zurayr | **وَهب بن زُرَير** | |
+| Khâlid | l'économe du monastère ; l'ermite du ravin | **قيّم الدير ; صاحب الصومعة في الوادي** | |
+| Khâlid | le Fort des Oliviers | **حصن الزيتون** | |
+| Uthmân | Abû l-Akhbâr | **أبو الأخبار** | |
+| Alî | Ma'dân, notable des greniers | **مَعدان، وجيه الأهراء** | |
+| Alî | Mâzin, chef des cavaliers de la Butte | **مازن، صاحب خيل الرابية** | |
+| Alî | le maître du cercle ; le doyen des récitants | **صاحب المجلس ; شيخ القُرّاء** | « cercle d'étude » = **مجلس العلم** (§ 2.3). |
+| Caïd | Maymûn, le chambellan | **ميمون الحاجب** | |
+| Caïd | Amghar Idir ; Amghar Meksa ; le vieil amghar | **أمغار إيدير ; أمغار مكسا ; الأمغار الشيخ** | *amghar* : le chef ou l'ancien, en amazighe ; graphie usuelle au Maghreb, référence non vérifiée. |
+| Caïd | le vieil imam | **إمام المسجد الشيخ** | pas « الإمام » seul (sens confessionnel). |
+| Caïd | Anir, la sentinelle ; Udad, officier du rempart | **أنير الحارس ; أُدّاد، ضابط السور** | |
+| Caïd | Izem, le général | **إيزم، أمير الجند** | pas « القائد » (le Caïd). |
+| Caïd | Maître Yishaq, caravanier | **المعلّم يِسحاق، صاحب القافلة** | à valider (la forme hébraïque du nom, que garde le français). |
+| Caïd | Farrokh, géomètre | **فرّخ المهندس** | |
+| Caïd | Frère Cyprien, moine-médecin | **الأخ كِبريانوس، الراهب الطبيب** | la forme arabe chrétienne du nom ; référence non vérifiée. |
+| Caïd | l'ancien Warsen ; Amezyan, le puisatier ; le porteur d'eau | **الشيخ ورسن ; أمزيان، حافر الآبار ; السقّاء** | |
+| Caïd | Aderfi, prêcheur des Purs ; un Pur | **أدرفي، واعظ «الأنقياء» ; أحد «الأنقياء»** | **jamais** « الأطهار » (« les Purs » se dit en arabe des Imams dans le discours chiite, exigence 5). |
+| 2084 | Celui qui défile | **المُتصفِّح** | le type « celui qui oublie », qui fait défiler. |
+| 2084 | Le Régent | **الوالي** | à valider ; jamais « الوصيّ » (titre d'Alî dans le discours chiite) ni « صاحب الأمر ». |
+| 2084 | L'Admiré | **المُصفَّق له** | « celui qu'on applaudit ». |
+| 2084 | Le Compteur | **العدّاد** | |
+| 2084 | Le Cartographe | **راسمُ الخرائط** | |
+| 2084 | l'enfant du parvis ; un passant ; un employé ; un écolier | **طفل الباحة ; عابر ; موظّف ; تلميذ** | |
+
+### 3.4 Les cartes et les lieux (`D.MAPS`, `D.LIEUX`)
+
+**Cartes** : Médine **المدينة** (WP-ar, « المدينة المنورة » ; dans un récit de l'an 11, « المدينة » suffit) · Koufa
+**الكوفة** (« الكوفة ») · Désert **البادية** · Camp **المعسكر** · Cité romaine **المدينة الروميّة** (les Byzantins sont
+**الروم**) · Palais **القصر** · Navire **السفينة** · Noosphère **عالم الأفكار** · La Citadelle **القلعة** · Cité-Miroir
+**مدينة المرايا** · Archives basses **الخزانة السُّفلى** (à valider : la *khizâna* est la bibliothèque-archive ; d'où
+Yûnus, الخازن).
+
+**Lieux** (étiquettes de la carte de la halte ; un ou deux mots) :
+
+| Français | Arabe | Français | Arabe | Français | Arabe |
+|---|---|---|---|---|---|
+| Mosquée | المسجد | Entrée | المدخل | Trône | سرير المُلك (§ 2.2) |
+| Place | الرَّحَبة | Tente du chef | فُسطاط الأمير | Trésor | الكَنز |
+| Souk | السوق | Feu | المَوقِد | Colonnade | الأروقة |
+| Halle (la Saqîfa, le tribunal) | السقيفة | Étendard | الراية | Poupe | مؤخّر السفينة |
+| Maisons | الدُّور | Lignes | الصفوف | Pont (du navire) | سطح السفينة |
+| Puits | البئر | Tertre | الأكَمة | Mât | الصاري |
+| Palmeraie | النخيل | Tentes | الخيام | Proue | مقدَّم السفينة |
+| Porte du nord / du sud | الباب الشمالي / الجنوبي | Porte | الباب | Passerelle | المَعبَر |
+| Enclos | الحظيرة | Grande rue | الشارع الأعظم | Entrepont | بطن السفينة |
+| Colline | التلّ | Forum | الميدان | Seuil | العتبة |
+| École | الكُتّاب | Basilique | الكنيسة الكبرى | Nœud | المُلتقى |
+| Départ | المُنطلَق | Esplanade | الساحة | Faille | الصَّدع |
+| Dunes | الكثبان | Palais | القصر | Miroir | المرآة |
+| Rochers | الصخور | Fontaine | الفوّارة | Cœur | القلب |
+| Oasis | الواحة | Remparts | الأسوار | Cour | الصحن |
+| Source | العين | Jardin | البستان | Tour | البُرج |
+| Caravane | القافلة | Marché | السوق | Grande salle | الإيوان |
+| Crête | الذِّروة | Quartier | الحيّ | Greniers | الأهراء |
+| Ruines | الأطلال | Nef | البهو | Poterne | الباب الخفيّ |
+| Arrivée | المُنتهى | Rue | الشارع | Grand écran | الشاشة الكبرى |
+| Ruelle | الزقاق | Ascenseur | المِصعد | Parvis | الباحة |
+| Rayonnages | الرفوف | Bureau | المكتب | La Chaîne | السلسلة |
+
+Notes : « Esplanade » est, dans le récit d'Umar, le lieu du Temple à Jérusalem : l'étiquette reste neutre, **الساحة** ;
+le récit, lui, suit ses sources. « Halle » est la Saqîfa des Banû Sâ'ida : **السقيفة**, et en toutes lettres dans un
+récit, **سقيفة بني ساعدة** (WP-ar, « سقيفة بني ساعدة »). La « Faille » de la noosphère (un lieu) est **الصَّدع**, la faille
+d'un égrégore (une faiblesse) **الثُّلمة** (§ 2.4). « Nœud » est **المُلتقى**, non « العُقدة » (les nœuds sur lesquels on souffle sont, au Coran 113:4, ceux de la
+sorcellerie). « Trésor » est **الكَنز** : الخِزانة est déjà l'archive de 2084.
+
+### 3.5 Les lieux nommés dans les récits
+
+| Français | Arabe | Notice lue (WP-ar) / note |
+|---|---|---|
+| Médine ; La Mecque | **المدينة ; مكّة** | « المدينة المنورة ». |
+| la Saqîfa des Banû Sâ'ida | **سقيفة بني ساعدة** | « سقيفة بني ساعدة ». |
+| Yamâma ; la bataille | **اليمامة ; معركة اليمامة** | « معركة اليمامة » (dite aussi « معركة عقرباء »). |
+| Dhû l-Qassa | **ذو القَصّة** | pas de notice ; référence non vérifiée. |
+| Najrân | **نجران** | « نجران ». |
+| al-Hîra | **الحِيرة** | « الحيرة ». |
+| le désert de la Samâwa | **بادية السَّماوة** | « بادية الشام » : « أو صحراء السماوة ». |
+| 'Ayn at-Tamr | **عين التمر** | notice « عين تمر ». |
+| le Yarmoûk | **اليَرموك** | « معركة اليرموك ». |
+| Qinnasrîn ; Homs | **قِنَّسرين ; حِمص** | « قنسرين » ; « حمص ». |
+| le Shâm | **الشام** | « بلاد الشام ». |
+| Îliyâ' (Jérusalem) | **إيلياء** (et, dans une explication, **بيت المقدس**) | « العهدة العمرية » : « لأهل إيلياء (القدس) » ; « القدس ». |
+| Tibériade | **طَبَريّة** | « طبرية ». |
+| al-Madâ'in ; l'Îwân de Kisrâ | **المدائن ; إيوان كسرى** | « المدائن » ; « إيوان المدائن ». |
+| al-Khatt (le port du Bahreïn) | **الخَطّ** | « إقليم البحرين » : « إقليم البحرين أو الخُط » (la notice vocalise الخُط ; la lance « خطّيّة » dit الخَطّ : à vérifier). |
+| Badr | **بدر** | « غزوة بدر ». |
+| le puits de Rûma | **بئر رُومة** | « بئر رومة » (« بئر عثمان »). |
+| la bataille des Mâts | **ذات الصَّواري** | « معركة ذات الصواري ». |
+| Alexandrie | **الإسكندرية** | « الإسكندرية ». |
+| Harûrâ' | **حَرُوراء** | la notice « الحرورية » (qui nomme une secte : on ne l'emploie pas) situe « بلدة حَروراء بقرب الكوفة ». |
+| Nahrawân | **النَّهروان** | « معركة النهروان ». |
+| Siffîn | **صِفّين** | « معركة صفين ». Un récit en parle avec retenue, sans coupable (exigence 5). |
+| la Maison assiégée ('Uthmân) | **الدار المحاصَرة** ; « حصار الدار » | **pas** « يوم الدار » seul : la notice « حديث يوم الدار » montre que l'expression désigne aussi un hadith que le discours chiite invoque (exigence 5). |
+| Khaybar (la Porte de Khaybar, compétence d'Alî) | **خيبر** | |
+
+### 3.6 Les égrégores et les idoles
+
+Chaque nom est **un nom qu'un auteur arabe aurait donné** à la chose que le jeu décrit (sa `desc`), dans le registre du
+récit : arabe classique pour les Compagnons et le Caïd, arabe moderne pour 2084. Tous sont des **خيالات** (§ 2.3) ;
+l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du § 2.2. Les noms sont **à valider** en bloc.
+
+**Idris, 2084** (arabe moderne)
+
+| Français | Arabe | Pourquoi |
+|---|---|---|
+| Notification | **الإشعار** | le mot courant de l'interface. |
+| La Tendance | **الرائج** | « ce qui est en vogue » (le *trend*). |
+| La Marque | **العلامة** | la marque commerciale, « العلامة التجارية » en abrégé. |
+| Le Score | **التقييم** | la note que d'autres attribuent. |
+| Le Flux | **السَّيل** | « mille voix à la fois » : le torrent ; héritier de **الإشاعة** (Uthmân). |
+| Le Défilement | **التمرير** | le geste de faire défiler un écran. |
+| Le Petit Trône | **الكرسيّ الصغير** | en arabe moderne, « الكرسي » est le siège du pouvoir (« التشبّث بالكرسي ») ; permis en 2084 seulement (§ 2.2). |
+| L'Applaudissement | **التصفيق** | |
+| Le Compte | **الرَّصيد** | le solde d'un compte ; jamais الحساب (§ 2.2). |
+| La Carte sans chemin | **خريطةٌ بلا طريق** | |
+| L'AGRÉGOR (idole finale) | **المُجمِّع** | **à valider** : « l'agrégateur » (مُجمِّع الأخبار en arabe moderne) ; le recueil peut dire « مُجمِّع الخيالات ». Pas de translittération (أغريغور). |
+
+**Le Caïd** (arabe classique)
+
+| Français | Arabe | Pourquoi |
+|---|---|---|
+| Chuchotement | **الوَشوَشة** | le chuchotement d'une maison qui cache une mort ; distinct de الهمس (les « Murmures » des Compagnons). |
+| L'Ombre du Père (idole, peur) | **ظلُّ الأب** | |
+| Dispense vendue | **الإعفاء المَبيع** | pas « الرخصة » (sens de droit religieux). |
+| Le Sommeil (racine : insouciance) | **الرُّقاد** | distinct de **النوم** (la porte « En songe », § 2.5). |
+| Le Tambour (idole, ostentation) | **الطَّبل** | |
+| On-dit | **قيلَ وقال** | l'expression classique du bavardage sans auteur. |
+| Le Bouc émissaire (idole, rancune) | **الجاني البديل** | **pas** « كبش الفداء » : en arabe, le « bélier de la rançon » est d'abord celui d'Ibrâhîm ; une idole ne peut porter ce nom. |
+| Le Pur (idole, orgueil) | **النقيّ** | pas « الطاهر » ni « الأطهار » (§ 3.3). |
+
+**Abû Bakr** (arabe des chroniques)
+
+| Français | Arabe | Pourquoi |
+|---|---|---|
+| Murmure de deuil | **همسُ الحزن** | |
+| Le Déni | **الإنكار** | |
+| Mot d'ordre | **النَّعرة** | le cri de ralliement aveugle (« النعرة القبلية ») ; distinct de **الشِّعار** (Alî). |
+| Al-'Asabiyya — le Clan (idole, peur) | **العصبيّة** | Ibn Khaldûn, [I] : « في أن العصبية إنما تكون من الالتحام بالنسب ». Le mot même du jeu français. |
+| Nuée du reniement | **سِربُ النَّكث** | « nos pactes aussi » : la rupture des pactes. **Pas** « الردّة » : ce serait nommer des tribus (exigences 6 et 10). |
+| L'Avare du dû (idole, avarice) | **الشَّحيح** | celui qui retient la part du pauvre. |
+| Écho flatteur | **الصدى المُتملِّق** | |
+| Fausse rime | **السَّجعُ الكاذب** | la prose rimée qui imite sans rien dire. |
+| Mur du Jardin | **جدارُ الحديقة** | |
+| Al-Kadhdhâb — le Menteur (idole, avidité) | **المُزيِّف** (proposé) | **À trancher (§ 4)** : « الكذّاب » est en arabe le surnom de Musaylima (WP-ar, « مسيلمة الكذاب ») ; l'idole porterait le nom d'un homme (exigence 6). « Égrégore de la contrefaçon » : المُزيِّف, le faussaire. |
+
+**'Umar**
+
+| Français | Arabe | Pourquoi |
+|---|---|---|
+| Murmure de la faim | **همسُ الجوع** | |
+| Plainte des cendres | **أنينُ الرماد** | écho de l'année de la famine, « عام الرَّمادة ». |
+| L'Accapareur (idole, peur) | **المُحتكِر** | le mot classique de l'accaparement (الاحتكار). |
+| Mirage de gloire | **سرابُ المجد** | |
+| Le Faste | **الأُبَّهة** | |
+| L'Aigle d'Airain (idole, orgueil) | **نَسرُ النُّحاس** | l'aigle des enseignes de Rûm ; jamais « العُقاب » (§ 2.2). Que *Nasr* soit aussi une idole ancienne (Coran 71:23) convient à une idole. |
+| Reflet d'or | **بريقُ الذهب** | |
+| La Couronne suspendue | **التاجُ المُعلَّق** | la couronne de Kisrâ tenue par une chaîne. |
+| Le Trône vide (idole, orgueil) | **سريرُ المُلكِ الخالي** | **pas** « العرش » (§ 2.2). |
+
+**Khâlid**
+
+| Français | Arabe | Pourquoi |
+|---|---|---|
+| Murmure de soif | **همسُ العطش** | |
+| Le Mirage | **السَّراب** | |
+| La Soif (idole, désespoir) | **الظَّمأ** | |
+| Le Décompte | **العَدّ** | |
+| Forêt de lances | **غابةُ الرماح** | |
+| La Peur du Nombre (idole, peur) | **رَهبةُ العدد** | |
+| Écho de louange | **صدى المديح** | |
+| Le Laurier | **إكليلُ الغار** | |
+| L'Idole du Héros (idole, ostentation) | **صنمُ البطل** | |
+
+**'Uthmân**
+
+| Français | Arabe | Pourquoi |
+|---|---|---|
+| Murmure | **الهمس** | |
+| Variante querelleuse | **المِراء** | le mal est la querelle, non la lecture : jamais « القراءة » ni « الحرف » dans ce nom (les lectures transmises sont elles-mêmes du Coran). |
+| Babel (idole, soupçon) | **البَلبَلة** | la confusion des langues, que l'arabe tire du même nom ; **pas** « بابل » (la ville du Coran 2:102, liée à la magie). |
+| Écume d'effroi | **زَبَدُ الفزع** | l'écume, qui s'en va. |
+| L'Abîme (idole, peur) | **اللُّجّة** | le large, la mer profonde. |
+| Ouï-dire | **زَعَموا** | le mot classique de ce qu'on rapporte sans garant ; **pas** « السَّماع » (en arabe, c'est aussi un mode de transmission du hadith, et l'audition soufie). |
+| Écho | **الصدى** | |
+| L'Or | **الذهب** | |
+| La Rumeur (idole, soupçon) | **الإشاعة** | |
+
+**'Alî**
+
+| Français | Arabe | Pourquoi |
+|---|---|---|
+| Murmure de rang | **همسُ المنزلة** | |
+| Soupçon | **الرِّيبة** | distinct de l'idée noire **سوء الظن** (§ 2.5). |
+| Le Privilège (idole, désespoir) | **المُحاباة** | le mot classique de la faveur faite au puissant. |
+| Écho | **الصدى** | |
+| Clameur | **اللَّغَط** | |
+| Le Slogan (idole, soupçon) | **الشِّعار** | |
+| Lame pieuse | **الشَّفرة الوَرِعة** | pas « نصل » : ce mot est celui des lames du joueur (§ 2.3). |
+| Le Scrupule inversé | **الوَرَعُ المقلوب** | |
+| Le Juge sans miséricorde (idole, rancune) | **القاضي بلا رحمة** | jamais « الحَكَم » (Nom divin, et mot de l'arbitrage de Siffîn). |
+
+**Le cœur** : les sept maux et les cinq idées noires, § 2.5.

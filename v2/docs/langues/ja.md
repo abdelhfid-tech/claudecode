@@ -52,7 +52,7 @@ liste de contrôle d'islam.ne.jp, qui suit le même dictionnaire, en donne l'art
 |---|---|---|
 | Voyelle longue | 長音符 « ー » pour ā, ī, ū : アー, イー, ウー. | アブー・バクル, アリー, ウスマーン |
 | Éléments d'un nom | **« ・ »** (中黒) entre les éléments : ism, ibn, kunya, nisba. | ザイド・イブン・サービト |
-| ibn / bint | イブン / ビント, même au milieu d'une chaîne (pas « ビン », forme dialectale que garde la traduction ancienne de *Muslim* : 「アリー・ビン・アブー・ターリブ」). | ウサーマ・イブン・ザイド, ズバイルの子なら イブン・アッ＝ズバイル (article gardé, voir ligne suivante) |
+| ibn / bint | イブン / ビント, même au milieu d'une chaîne (pas « ビン », forme dialectale que garde la traduction ancienne de *Muslim* : 「アリー・ビン・アブー・ターリブ」). | ウサーマ・イブン・ザイド ; アブドゥッラー・イブン・アッ＝ズバイル (article gardé : ligne suivante) |
 | Article al- | **Omis en tête d'un nom de personne** quand le nom est usuel seul (ガザーリー, フバーブ) ; **gardé, rattaché par « ＝ »**, quand il est dans le nom (après ibn, dans une nisba ou un surnom) et assimilé devant les lettres solaires : アル＝ / アッ＝ / アン＝… | ハーリド・イブン・アル＝ワリード ; アブー・バクル・アッ＝スィッディーク ; アブー・アイユーブ・アル＝アンサーリー |
 | ʿAbd + Nom divin | Un seul mot, sans « ・ » ni « ＝ », avec assimilation : c'est la forme « 岩波方式 » rapportée par alarabiyah.sakura.ne.jp (lu : <https://alarabiyah.sakura.ne.jp/words/katakana/al/> : 「岩波書店のイスラーム辞典方式だと『アブドゥルカーディル』『アブドゥッサラーム』」). | アブドゥッラー, アブドゥッラフマーン |
 | ʿayn, hamza | Pas de signe propre. Devant une voyelle, ils prennent la voyelle (ア, イ, ウ) ; après une voyelle et sans voyelle propre, on redouble la voyelle (Saʿd → サアド ; Qaʿqāʿ → カアカーア) ; en finale après voyelle longue, la hamza ne s'écrit pas (Ḥarūrāʾ → ハルーラー, comme ʿIshāʾ → イシャー dans [Wiki-ja] « サラート » ; la traduction de *Muslim* écrit 「ハルーラーウ」). | サアド, イスマーイール |
@@ -73,7 +73,7 @@ seul** système, celui ci-dessus ; une citation publiée garde sa graphie (c'est
 | Allah | **アッラー** (jamais 神 seul pour le nom ; 神 reste le mot commun : 「アッラーの外に神はなく」). | [三田], partout ; registre des sources (`versets.json`, 2:255 : 「アッラー，かれの外に神はなく」). |
 | Pronom divin | **かれ**, en hiragana, comme 三田 (「かれは幽玄界も現象界も知っておられる方」, 13:9), et le verbe en 尊敬語 (〜される, 〜なさる). | [三田] via `versets.json`. Le français met une majuscule (« Lui ») : le japonais n'en a pas ; c'est la graphie かれ + le 尊敬語 qui distingue. |
 | Le Prophète | **預言者ムハンマド** ; « le Messager d'Allah » = **アッラーの使徒**. | [Wiki-ja] 「ムハンマド・イブン＝アブドゥッラーフ」 (« イスラームの預言者 ») ; 「アッラーの使徒」 dans la traduction de *Muslim* (vol2-720-2). |
-| ﷺ après son nom | **Garder le signe ﷺ**, comme le français, partout où le français l'écrit (à trancher, § 4). | Deux usages japonais lus : (1) la traduction de *Muslim* du 日本ムスリム協会 n'ajoute **aucune formule** (« アッラーのみ使い », « 預言者 » seuls : vol2-174, vol2-720-2) ; (2) les publications de prédication écrivent 「預言者ムハンマド（彼にアッラーの祝福と平安あれ）」 (lu : 『諸々の徳 8』, サイード佐藤訳, <https://cdn.byenah.com/contents/6757/ja_08_Virtues_Of_The_Companions.pdf>) ; (3) la traduction savante de 東長靖 (2015, [東長] au § 2) écrit 「彼［アッラー］の使徒【祝福】」, un mot entre crochets à la place de la formule. La formule entière fait 15 caractères : dans une boîte de dialogue de 36 caractères (§ 1.8), elle en prendrait la moitié. Le signe ﷺ dit la même chose en un caractère, s'affiche déjà dans le jeu, et se lit en japonais comme en arabe. |
+| ﷺ après son nom | **Garder le signe ﷺ**, comme le français, partout où le français l'écrit (à trancher, § 4). | Trois usages japonais lus : (1) la traduction de *Muslim* du 日本ムスリム協会 n'ajoute **aucune formule** (« アッラーのみ使い », « 預言者 » seuls : vol2-174, vol2-720-2) ; (2) les publications de prédication écrivent 「預言者ムハンマド（彼にアッラーの祝福と平安あれ）」 (lu : 『諸々の徳 8』, サイード佐藤訳, <https://cdn.byenah.com/contents/6757/ja_08_Virtues_Of_The_Companions.pdf>) ; (3) la traduction savante de 東長靖 (2015, [東長] au § 2) écrit 「彼［アッラー］の使徒【祝福】」, un mot entre crochets à la place de la formule. La formule entière fait 15 caractères : plus d'une ligne de la boîte de dialogue sur un téléphone tenu en hauteur (12 caractères, § 1.8), à chaque mention du Prophète ﷺ. Le signe ﷺ dit la même chose en un caractère, s'affiche déjà dans le jeu, et se reconnaît dans toutes les langues. |
 | Formule après un Compagnon (raḍiya Llāhu ʿanhu) | **Aucune**, comme le français — **à trancher par le décideur**. | Les publications de prédication écrivent 「（彼にアッラーのご満悦あれ）」 (même document, sur アブー・フライラ) ; la traduction de *Muslim* du 日本ムスリム協会 n'en met pas (「アリー はいった」, vol2-174). Si le décideur en veut une, proposer le signe arabe ﵁ (U+FD41) une fois par écran, plutôt que la formule japonaise. |
 | Les Compagnons | **教友**（サハーバ）. Dans le texte du joueur : 教友 seul ; la première fois dans le recueil : 「教友（サハーバ）」. | [Wiki-ja] « サハーバ » : 「日本語では『教友』と訳される」 ; même mot dans la traduction de サイード佐藤 (『預言者ムハンマド……の教友たちの徳』). La majuscule du français (« un Compagnon ») n'a pas d'équivalent : 教友 suffit. |
 | Les quatre premiers califes | **正統カリフ**. | [Wiki-ja] « 正統カリフ » (al-Khulafāʾ al-Rāshidūn). |
@@ -86,7 +86,7 @@ seul** système, celui ci-dessus ; une citation publiée garde sa graphie (c'est
 - Règle de la revue 『イスラーム世界研究』 : 「西暦以外の暦が関わる場合は、原則として西暦以外の暦と西暦を併記する」, chiffres
   arabes, « 505/1111 » dans les notices (même règlement, § 6‑5). Le jeu suit le principe du double calendrier, mais avec
   ヒジュラ暦／年 en toutes lettres, plus lisible pour un joueur.
-- Mois : noms arabes en katakana, avec le mot 月 (ジュマーダー・アーヒラ月 22日, ズー・ル＝ヒッジャ月). La traduction de *Muslim*
+- Mois : noms arabes en katakana, avec le mot 月 (ジュマーダー・アーヒラ月22日, ズー・アル＝ヒッジャ月). La traduction de *Muslim*
   écrit 「ズール・ヒッジャ月」 (vol2-720-2) : la forme du jeu suit le § 1.2. 「月」 se garde (usage de la même traduction).
 - 2084 : 「2084年」 ; « 1508 H » : 「ヒジュラ暦1508年」.
 
@@ -124,21 +124,22 @@ Le moteur n'a pas de ruby. On s'en passe ainsi :
 
 ### 1.8 Longueur des répliques
 
-Mesure faite sur la feuille de style du jeu (`v2/src/style.css`, lignes 31, 55, 267–271, et `U.TZ` dans
-`v2/src/core/ui.js`) pour un téléphone de 390 px de large tenu en hauteur, texte « grand » (×1,16, réglage d'office sur
-un écran tactile) :
+Mesure faite sur la feuille de style du jeu (`v2/src/style.css` : lignes 31, 55, 267–271, 292 et les règles
+`html[data-lang="ja"]` ; `U.TZ` dans `v2/src/core/ui.js` ; `--u` dans `v2/src/core/gfx.js`), texte « grand » (×1,16,
+réglage d'office sur un écran tactile), caractères pleine chasse :
 
-| Boîte | Largeur utile | Caractères pleine chasse par ligne | **Trois lignes** |
+| Téléphone | Où est la boîte | Réplique (`say`, avec le sceau) | Narration (`nar`) |
 |---|---|---|---|
-| Réplique (`say`, avec le sceau du personnage) | ≈ 252 px pour un corps de ≈ 19,9 px | ≈ 12 | **≈ 36 caractères** |
-| Narration (`nar`, sans sceau) | ≈ 332 px | ≈ 16 | **≈ 48 caractères** |
-| Les mêmes au réglage « normal » | — | 15 / 19 | 45 / 57 |
+| 844 × 390, **en largeur** | **sur l'image**, hauteur fixe (30 % de la scène) : c'est ici que « trois lignes » est une vraie limite | ≈ 37 par ligne → **≈ 110 caractères** en trois lignes | ≈ 42 par ligne → **≈ 125** |
+| 390 × 844, en hauteur | **sous l'image** : la boîte grandit vers le bas | ≈ 12 par ligne (36 en trois lignes) | ≈ 16 par ligne (48) |
 
-Règle d'écriture : **une réplique japonaise vise 36 caractères au plus, une ligne de narration 48**, ponctuation comprise.
-En moyenne une phrase japonaise compte un peu moins de la moitié des caractères de la phrase française qui dit la même
-chose ; une réplique française de trois lignes (≈ 75 caractères) tient donc, bien écrite, dans la boîte. Au-delà, la boîte
-grandit, mais le texte passe sous l'image sur un téléphone en largeur : ne pas compter dessus. Un nom de personnage
-(étiquette) : 8 caractères au plus ; un libellé de bouton : 6.
+Règle d'écriture : **une réplique japonaise vise 110 caractères au plus, une narration 125**, ponctuation comprise —
+c'est ce qui tient en trois lignes sur un téléphone tenu en largeur. Le plafond du contrôle des langues
+(`v2/docs/langues/ecrire.md` : 160 pour une réplique, 175 pour une narration) ne doit être approché qu'exceptionnellement :
+au-delà de 110, la boîte déborde sur l'image en largeur. Tenu en hauteur, le texte se lit douze caractères par ligne :
+préférer des phrases courtes, coupées par 「、」 aux bons endroits. Ordre de grandeur (non mesuré) : une phrase japonaise
+compte à peu près la moitié des caractères de la phrase française qui dit la même chose. Un nom de personnage (étiquette) :
+8 caractères au plus ; un libellé de bouton : 6.
 
 ### 1.9 Ce qui ne se traduit pas
 
@@ -174,19 +175,19 @@ Deux sources savantes reviennent souvent :
 | Souffle (points de magie) | **息** | Usage courant : 息が続く, 息が長い (« avoir du souffle »). | La phrase du jeu « le souffle plus long » se dit 「息が長くなる」. Jamais 魔力, 霊力, 気 seul (exigences 13, 15 : rien de magique). **À valider.** |
 | éprouvé (hors de combat) | **力尽きる** (état : 「力尽き」) | Usage courant. | Ni 死亡, ni 戦闘不能 (jargon), ni 倒れる seul (sonne comme la mort à l'écran). Exigence 19 : nos rangs se replient, rien ne meurt. **À valider.** |
 | voiles (la garde d'un égrégore) | **覆い** | 三田 50:22 : 「われは今，あなたから覆を取り除く」 (ghiṭāʾ) ; 2:7 「目には覆いをされ」. | Le mot coranique du voile que l'on ôte. Le voile de lumière des Compagnons (dessin, docs) se dit 光の覆い, jamais ヴェール dans le jeu. |
-| dévoilé (égrégore vaincu : on a montré qu'il est vide) | **暴かれる** (「虚像は暴かれた」) | デジタル大辞泉 « 虚像 » et son emploi : on « démasque » une image fabriquée (lu : <https://kotobank.jp/word/虚像>) ; collocation 虚像を暴く, usage courant. | Va avec 虚像 (égrégore, ci-dessous). **À valider** avec lui. |
+| dévoilé (égrégore vaincu : on a montré qu'il est vide) | **暴かれる** (「虚像は暴かれた」) | Collocation 「虚像を暴く」 (démasquer une image fabriquée) : usage courant, référence non vérifiée ; le sens de 虚像 : デジタル大辞泉 (ci-dessous). | Va avec 虚像 (égrégore, ci-dessous). **À valider** avec lui. |
 | Niyya (l'intention, jauge de combat) | **ニーヤ** | [Wiki-ja] « ニーヤ » ; [東長] : 「意図（nīya）」. | Terme établi ; le sens « 意図 » se donne une fois dans le recueil. |
 | Sakîna (la sérénité, jauge) | **安らぎ** (le recueil ajoute 「サキーナ」 une fois) | 三田 48:4 : 「信者たちの心に安らぎを与え」 (sakīna). | Le mot même de 三田 pour la sakīna. « La Sakîna descend » : 「安らぎが降りる」. Comme 三田 rend aussi d'autres mots par 安らぎ (13:28), le recueil nomme サキーナ. |
 | râwî (le transmetteur, le joueur) | **ラーウィー** (sens : 伝承者) | Transcription selon § 1.2 ; 「伝承者」 : [協会訳ムスリム] vol2-174 (「私（伝承者）」). | Dans l'apostrophe : 「ラーウィーよ」. Pas de forme japonaise consacrée de *râwî* lue : la forme suit le système. |
 | isnad | **イスナード** | Transcription selon § 1.2 ; la chose : 「伝承者経路」, [協会訳ムスリム] vol2-174 (「他の伝承者経路でも伝えられている」). | 「イスナード（伝承者経路）」 à la première occurrence du recueil. |
 | la Chaîne (l'écran, la suite des maillons) | **鎖** (titre d'écran : 「伝承の鎖」) | Proposition. | **À valider.** |
 | maillon (une saga) | **環**（わ） ; « un maillon de la Chaîne » : 「鎖の一環」 | Proposition : 一環 dit à la fois « un anneau d'une chaîne » et « une part d'un tout ». | **À valider.** |
-| égrégore (idée reprise par beaucoup de cœurs ; l'ennemi) | **虚像**（きょぞう） | デジタル大辞泉, sens 2 : 「実体とかけ離れた、作られたイメージ」, ex. 「マスコミによって作られた虚像」 ; 精選版 日本国語大辞典 : image d'une personne façonnée 「世評や伝説によって」 (lu : <https://kotobank.jp/word/虚像>). | Le japonais a le mot d'une image fabriquée ensemble et vide de réalité ; il va avec 偶像 (idole), et 「虚像を暴く」 dit « dévoiler ». Pour le **recueil**, la pensée japonaise de ce que les gens fabriquent ensemble : 「空気」 (山本七平『「空気」の研究』, 文藝春秋 1977 ; notice <https://ci.nii.ac.jp/ncid/BN02778185>) et 「世間」 (阿部謹也『「世間」とは何か』, 講談社現代新書 1995 ; <https://ci.nii.ac.jp/ncid/BN12885013>). Deux réserves lues : l'éditeur résume la thèse de 山本 par 「『空気』とはまことに大きな絶対権を持った妖怪である」 (<https://books.bunshun.jp/ud/book/num/9784167911997>) — on prend l'idée, **jamais l'image du 妖怪** (exigences 6, 18) ; et 世間 est d'abord un mot bouddhique ([Wiki-ja] « 世間 » : 「インド発祥の宗教における用語」). Alternative : la translittération エグレゴール, aussi rare et ésotérique en japonais que « égrégore » en français. **À valider.** |
+| égrégore (idée reprise par beaucoup de cœurs ; l'ennemi) | **虚像**（きょぞう） | デジタル大辞泉, sens 2 : 「実際とは異なる、作られたイメージ。『マスコミによって作られた虚像』」 ; 精選版 日本国語大辞典, sens 2 : 「あるものの実態とは異なるイメージ。特に、人物の実体に対する、世評、伝説などによって作り上げられた評価認識をいう」 (lu : <https://kotobank.jp/word/虚像>). | Le japonais a le mot d'une image fabriquée ensemble et vide de réalité ; il va avec 偶像 (idole), et 「虚像を暴く」 dit « dévoiler ». Pour le **recueil**, la pensée japonaise de ce que les gens fabriquent ensemble : 「空気」 (山本七平『「空気」の研究』, 文藝春秋 1977 ; notice <https://ci.nii.ac.jp/ncid/BN02778185>) et 「世間」 (阿部謹也『「世間」とは何か』, 講談社現代新書 1995 ; <https://ci.nii.ac.jp/ncid/BN12885013>). Deux réserves lues : l'éditeur résume la thèse de 山本 par 「『空気』とはまことに大きな絶対権を持った妖怪である」 (<https://books.bunshun.jp/ud/book/num/9784167911997>) — on prend l'idée, **jamais l'image du 妖怪** (exigences 6, 18) ; et 世間 est d'abord un mot bouddhique ([Wiki-ja] « 世間 » : 「インド発祥の宗教における用語」). Alternative : la translittération エグレゴール, aussi rare et ésotérique en japonais que « égrégore » en français. **À valider.** |
 | idole (l'égrégore enraciné d'un chapitre) | **偶像** | 三田 14:35 「偶像崇拝」, 5:90 「偶像」 (34 versets) ; [Wiki-ja] « 偶像崇拝 ». | Jamais アイドル (le sens moderne de 偶像 est connu, mais le contexte le lève). |
 | noosphère | **精神圏** | [Wiki-ja] « ノウアスフィア » : 「精神圏（せいしんけん）またはノウアスフィア」 (ヴェルナツキー, テイヤール・ド・シャルダン) ; 村田奈生「テイヤール・ド・シャルダン研究史素描」『東京大学宗教学年報』36 : 「物質圏，生命圏，精神圏」 (lu : <https://repository.dl.itc.u-tokyo.ac.jp/record/53424/files/rel036012.pdf>). | La traduction de référence (美田稔訳『現象としての人間』, みすず書房 1964 ; <https://ci.nii.ac.jp/ncid/BN03402753>) n'a pas été lue : son terme exact n'est pas vérifié. Le jeu ne nomme ni テイヤール ni ヴェルナツキー. |
 | idées noires (cinq) | **暗い想い** | Proposition (usage courant de 想い, « pensée qui pèse »). | Ni 心の闇 (manga), ni 邪念 (bouddhique : 念), ni 負の感情 (psychologie de magazine). **À valider.** Le relevé `notions.md` donne pour cinquième « le défilement » : c'est une erreur du relevé ; `coeur.js` dit **le désespoir** (`noir_desespoir`). |
 | maux du cœur (sept) | **心の悪徳** | Proposition. Sources de l'image : 三田 2:10 「かれらの心には病が宿っている」 (maraḍ) ; [東長] : la partie des muhlikāt 「危険［に導く悪行］」. | 「心の病」 est le mot de 三田, mais en japonais moderne il désigne d'abord la maladie mentale : le jeu laisserait entendre que la dépression est une faute. À écarter. **À valider.** |
-| lames (forgées par les œuvres) | **刃**（やいば） ; « la lame du Contentement » : 「満足の刃」 | Usage courant. | Jamais 刀 (le sabre japonais), jamais 剣 pour une lame-image (剣 est l'arme d'équipement, § 2.6). Exigence 16 : une image, ni relique ni inscription. |
+| lames (forgées par les œuvres) | **刃**（やいば） ; « la lame du Contentement » : 「満足の刃」 | Usage courant. | Jamais 刀 (le sabre japonais), jamais 剣 pour une lame-image (剣 est l'arme d'équipement, § 2.7). Exigence 16 : une image, ni relique ni inscription. |
 | provision du cœur (zâd) | **心の糧** | 三田 rend zād par 「準備」 (2:197 : 「最も優れた準備は篤信の念である」) ; 糧 est son mot pour la subsistance (51:58 「糧を授けられる御方」). | 「準備」 ne se dit pas d'une réserve que l'on emporte : 糧 garde l'image du voyageur, et l'écho avec ar-Razzâq. Le recueil cite le verset dans la traduction de 三田 (registre). **À valider.** |
 | compagnons de lumière (animaux de fiction) | **光の道連れ** | Proposition. | Jamais 使い魔 (sorcellerie), 守護霊 (spiritisme), 式神 (陰陽道), 眷属 (bouddhique), 神獣 (shintô/chinois). Et pas 光の仲間 : 仲間 sert déjà aux membres du groupe. **À valider.** |
 | halte (le menu) | **休息** | Usage courant. | Ni 修行 ni 瞑想. **À valider.** |
@@ -245,7 +246,7 @@ est aussi un mot de la cosmologie chinoise).
 | La Sincérité (al-Ikhlâs) | **真心** | アル＝イフラース | Sources de l'idée : 三田 98:5 「信心の誠を尽し，純正に」 ; [東長] 「誠真（ikhlāṣ）」. | 誠真 n'est pas un mot courant ; 誠 seul est le mot-emblème du bushidô et du shintô ; 純正 sonne « pièce d'origine ». 真心 dit « faire le bien sans chercher qui regarde ». **À valider.** |
 | La Largesse (al-Karam) | **惜しみなさ** | アル＝カラム | Proposition : l'envers exact de 物惜しみ (l'avarice, 三田 57:24). | **À valider.** |
 | L'Ardeur (al-Himma) | **志** | アル＝ヒンマ | Usage courant. | **À valider.** |
-| La Bienveillance (an-Nasîha) | **思いやり** | アン＝ナスィーハ | Usage courant ; l'arabe : 三田 7:21 rend nāṣiḥ par 「心からの忠告者」. | 「忠告」 (conseil) dirait la naṣīḥa savante, pas la bienveillance que le jeu oppose à l'envie. **À valider.** |
+| La Bienveillance (an-Nasîha) | **思いやり** | アン＝ナスィーハ | Usage courant ; l'arabe : 三田 7:21 rend nāṣiḥ par 「心からの忠告者」 (c'est Iblîs qui le dit, en trompant : le mot n'en est pas moins celui de 三田). | 「忠告」 (conseil) dirait la naṣīḥa savante, pas la bienveillance que le jeu oppose à l'envie. **À valider.** |
 | La Longanimité (al-Hilm) | **寛容** | アル＝ヒルム | Usage courant ; 三田 emploie 寛容 pour un autre Nom (ghafūr : 「寛容にして慈悲深い方」, 2:173). | Rester calme quand on pourrait frapper. **À valider.** |
 
 **Les sept maux du cœur** (`enemies`, `vice`) — ce sont des égrégores, donc des noms d'ennemis : ni démon, ni nom
@@ -534,22 +535,20 @@ leur nom ordinaire ; seul le dessin change.
 | ali | Le juge Shurayh | **法官シュライフ** (qâdî : 法官 ; le recueil peut dire 「カーディー（法官）」) | § 1.2 |
 | ali | Qanbar | **カンバル** | § 1.2 |
 | ali | Al-Hasan (ibn 'Alî) | **ハサン** ; en entier **ハサン・イブン・アリー** | [W] « ハサン・イブン・アリー » |
-| ali | Mâlik al-Ashtar | **マーリク・アル＝アシュタル** | § 1.2 ([W] écrit 「マリク・イブン・アシュタル」 : forme fautive, ni voyelle longue ni nisba) |
+| ali | Mâlik al-Ashtar | **マーリク・アル＝アシュタル** | § 1.2 ([W] écrit 「マリク・イブン・アシュタル」 : sans voyelle longue, et avec un « イブン » que l'arabe n'a pas) |
 | ali | Abû Ayyûb al-Ansârî | **アブー・アイユーブ・アル＝アンサーリー** | § 1.2 |
 | ali | Farwa ibn Nawfal | **ファルワ・イブン・ナウファル** | § 1.2 |
 | ali | Ibn an-Nabbâh, le muezzin | **礼拝の呼びかけ役イブン・アン＝ナッバーフ** (muezzin : ムアッズィン) | § 1.2 |
 | ali | Ibn al-Kawwâ' | **イブン・アル＝カウワー** | § 1.2 |
 | khalid | Râfi' ibn 'Umayra | **ラーフィウ・イブン・ウマイラ** | § 1.2 |
 | khalid | 'Amr ibn 'Abd al-Masîh | **アムル・イブン・アブドゥルマスィーフ** | § 1.2 (règle du composé en ʿAbd) |
-| khalid | Wahb ibn Zurayr | **ワフブ・イブン・ズライル** | § 1.2 |
 | khalid, umar | Bilâl (ibn Rabâh) | **ビラール** ; en entier **ビラール・イブン・ラバーフ** | [W] écrit 「ビラール・ビン＝ラバーフ」 ; le jeu suit § 1.2 (イブン) |
 | umar | Sophrone | **ソフロニオス** | [W] « ソフロニオス » (エルサレムのソフロニオス) |
 | umar | Al-Hurmuzân | **フルムザーン** | § 1.2, d'après l'arabe (la forme persane serait ホルモザーン) |
 | umar | Anas ibn Mâlik | **アナス・イブン・マーリク** | § 1.2 |
 | umar | Surâqa ibn Mâlik | **スラーカ・イブン・マーリク** | § 1.2 |
 | umar | Jabala ibn al-Ayham | **ジャバラ・イブン・アル＝アイハム** | § 1.2 |
-| umar | Thawr ibn Mâlik | **サウル・イブン・マーリク** | § 1.2 |
-| umar | Kisrâ (titre des rois perses) | **キスラー** (le recueil : 「ホスロー」, forme des manuels japonais) | § 1.2 |
+| umar | Kisrâ (titre des rois perses) | **キスラー** (le recueil : 「ホスロー」, forme persane, usage courant, référence non vérifiée) | § 1.2 |
 | uthman | 'Abdallâh ibn az-Zubayr | **アブドゥッラー・イブン・アッ＝ズバイル** | [W] 「アブドゥッラー・イブン・アッズバイル」 (sans « ＝ » : on suit § 1.2) |
 | uthman | Sa'îd ibn al-'Âs | **サイード・イブン・アル＝アース** | § 1.2 |
 | uthman | 'Abdallâh ibn Sa'd | **アブドゥッラー・イブン・サアド** | § 1.2 |
@@ -583,7 +582,10 @@ Fiction des sagas : Thâmir le courtier **仲買人サーミル** (hypocrite fic
 **リムス族の長ディルガーム** (clan de fiction ; « cheikh » : **長** dans le récit, 「シャイフ」 au recueil) · Ma'dân, notable des
 greniers **穀物倉の有力者マアダーン** · Mâzin, chef des cavaliers de la Butte **丘の騎兵の長マーズィン** · Ghâlib, l'intendant
 **主計ガーリブ** · Hâzim (commis de la Maison de la farine / du Trésor) **「粉の館」の書記ハーズィム** / **国庫の書記ハーズィム** ·
-Abû Ghânim, marchand de grain **穀物商アブー・ガーニム** · Abû l-Akhbâr **アブー・アル＝アフバール**.
+Abû Ghânim, marchand de grain **穀物商アブー・ガーニム** · Abû l-Akhbâr **アブー・アル＝アフバール** · Thawr ibn Mâlik
+**サウル・イブン・マーリク** · Wahb ibn Zurayr **ワフブ・イブン・ズライル** (et les Banû Zurayr **ズライル族**) · Hâzim ibn Nawfal
+**ハーズィム・イブン・ナウファル**. (Ces trois derniers portent un nom arabe complet : le codex du français les dit de fiction ;
+la forme suit tout de même § 1.2.)
 
 Désignations (toutes sagas) : Un Médinois **マディーナの人** · Vieil Ansârî **年老いたアンサール** · Messager **使者** · Un
 fidèle **信者の一人** · Maître d'école **学び舎の師** · Vieux marchand **年老いた商人** · Garde des passes **峠の番人** ·
@@ -695,6 +697,62 @@ Notes :
   « égrégore » (§ 2.1), le jeu de mots revient entier.
 - **Les sept maux et les cinq idées noires** prennent les noms du § 2.3.
 
-<!-- SECTION 3 FIN -->
+## 4. Points à trancher par le décideur
 
-<!-- SECTION 4 -->
+1. **ﷺ en japonais** (§ 1.3). Proposition : garder le signe ﷺ, comme le français (un caractère, au lieu de quinze). Les trois usages japonais lus : aucune
+   formule (traduction de *Muslim* du 日本ムスリム協会) ; 「（彼にアッラーの祝福と平安あれ）」 (publications de prédication, 15
+   caractères) ; 「【祝福】」 (traduction savante de 東長靖).
+2. **Formule après un Compagnon** (§ 1.3). Proposition : aucune, comme le français. Sinon : le signe ﵁, ou
+   「（彼にアッラーのご満悦あれ）」.
+3. **Registre** (§ 1.1) : である調 pour le récit, です・ます調 pour les écrans, ni archaïsme ni langage de manga dans la bouche
+   des Compagnons, 私 pour tous.
+4. **« Égrégore »** (§ 2.1) : 虚像 (proposé, avec 偶像 pour l'idole et 「暴かれる」 pour « dévoilé ») ou la translittération
+   エグレゴール. Le choix décide aussi du nom de l'idole finale (アグレゴール, § 3.5). 空気 (山本七平) et 世間 (阿部謹也)
+   servent au recueil pour expliquer l'idée, sans l'image du 妖怪 que 山本 emploie.
+5. **« Maux du cœur »** (§ 2.1) : 心の悪徳 (proposé) plutôt que 心の病, le mot de 三田 (2:10), qui en japonais moderne dit la
+   maladie mentale.
+6. **Les postures** (§ 2.5) : 英雄・賢者・聖人, et le mot 構え. 聖人 plutôt que 聖者 (qui, dans les études islamiques
+   japonaises, dit le walī et son culte, sujet de controverse) ; 賢者 et 英雄 malgré leur emploi dans les jeux de rôle ; 勇者
+   exclu. L'auteur de la typologie n'est nommé nulle part dans le jeu.
+7. **Jauges et états** (§ 2.1) : Constance 気力 (mot de 三田, 3:139), Souffle 息, éprouvé 力尽きる, voiles 覆い (三田 50:22),
+   Sakîna 安らぎ (三田 48:4 ; ou la translittération サキーナ en libellé), Niyya ニーヤ.
+8. **Le jeûne** (§ 2.3) : 断食 (proposé, mot courant et de la traduction de *Muslim*) ou 斎戒, mot de 三田 et des études
+   savantes, mais aussi du shintô et du bouddhisme.
+9. **Les attributs** (§ 2.9) : 御名 (« les plus beaux Noms », 三田 7:180) plutôt que « attributs » ; et le sens d'アル＝ハリーム
+   (寛容な方), que 三田 rend par le même mot que raḥīm.
+10. **Les sept lames** (§ 2.3) : 満足, 謙虚, 真心, 惜しみなさ, 志, 思いやり, 寛容 — en particulier 満足 plutôt que 知足 (formule
+    du 老子 et du zen).
+11. **Les sept maux** (§ 2.3) : 貪欲 (mot de 三田, mais l'un des « trois poisons » du bouddhisme), 見せびらかし plutôt que 偽善
+    (qui irait aux hypocrites), 怠り, 妬み plutôt que 嫉妬. Les idées noires : 恥, 不安 (plutôt que 恐れ), 疑い, 恨み, 絶望.
+12. **Les mots du jeu sans équivalent établi** (§ 2.1) : 鎖 / 環 (Chaîne, maillon), 暗い想い (idées noires), 心の糧
+    (provision), 光の道連れ (compagnons de lumière), 休息 (halte), 夜語り (veillée), 鏡の街 (Cité-Miroir), 会戦 (bataille
+    déclarée), 助け (secours), 悪の見取り図 (organigramme du mal), 美徳 (Valeurs), 徳 (Vertus), 聞き書き (Recueil), 綻び
+    (faille), 旅袋 (besace).
+13. **Le Renard des sables** (§ 2.4) : フェネック, pour éviter le renard d'Inari et des contes de 妖怪.
+14. **Le Caïd** (§ 3.1) : カーイド ; et le rôle « sage » 知者, distinct de la posture 賢者.
+15. **Les six types de 2084** (§ 3.3) : des descriptions neuves (流し見る人, 統べる人, 称えられる人, 数える人, 地図を描く人…) ;
+    aucun mot repris des traductions japonaises du conte de l'exigence 14.
+16. **La Mecque et la mosquée** (§ 3.4) : マッカ (forme savante) plutôt que メッカ ; モスク (courant) plutôt que マスジド (三田)
+    pour l'étiquette d'un lieu.
+17. **Les noms des égrégores et des idoles** (§ 3.5), tous, et en particulier 濡れ衣 (Bouc émissaire), 掛け声 (Slogan),
+    英雄の偶像 (Idole du Héros, qui répond à la posture 英雄), アグレゴール.
+18. **Relecture des noms par un spécialiste** qui a le 『岩波イスラーム辞典』 en main : l'agent n'a pas pu lire le
+    dictionnaire lui-même (§ 5) ; les formes des § 3.1–3.2 appliquent son système tel que d'autres le rapportent.
+
+## 5. Ce qui n'a pas pu être vérifié
+
+- **Le 『岩波イスラーム辞典』 lui-même** n'est pas consultable en ligne : le système du § 1.2 vient du règlement de
+  『イスラーム世界研究』 (qui y renvoie et en donne un exemple) et de deux pages qui le suivent (islam.ne.jp,
+  alarabiyah.sakura.ne.jp). Aucune entrée du dictionnaire n'a été lue ; aucune forme n'est dite « selon [岩波] ».
+- **Le 『新イスラム事典』 (平凡社)** n'a pas été lu non plus.
+- **Le terme exact de 美田稔** pour « noosphère » dans 『現象としての人間』 : non lu (精神圏 vient de Wikipédia et de 村田奈生).
+- **山本七平** : le livre n'a pas été lu ; les notions de 「臨在感的把握」 et de 「水を差す」 (le « filet d'eau » qui défait le
+  空気) ne sont connues que par des comptes rendus de lecteurs : le recueil ne les cite pas avant lecture.
+- **La traduction de *Muslim* du 日本ムスリム協会** : l'index (`/hadith/`) refuse les lectures automatiques (403) ; deux pages
+  ont été lues par leur adresse directe.
+- **Wikipédia japonaise** a limité les lectures automatiques en cours de travail : plusieurs titres ont été pris par les
+  liens de langue de Wikipédia anglaise, résumés par l'outil de lecture ; les Compagnons sans article japonais suivent § 1.2.
+- **Usage courant, référence non vérifiée** : 勇気, 訪問, 絆, 鷲, 不死鳥, ガゼル, フェネック, les mots militaires du § 2.6, les
+  objets et pièces du § 2.7, ミフラーブ, 信徒の長, 回教.
+- **Le nom de la sourate 112 chez 三田** n'a pas pu être lu (les services consultés ne donnent pas les titres japonais) :
+  il n'est pas cité.

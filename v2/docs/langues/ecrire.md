@@ -41,8 +41,9 @@ La liste à remplir est `v2/src/lang/<langue>/<fichier>.json`, une entrée par l
 - **Le balisage** reste le même : mêmes balises (`<b>`, `<em>`, `<br>`, `<small>`…), même nombre d'emphases `*…*`.
 - **« Idris »** s'écrit comme la langue le nomme : إدريس, Idris, イドリース — exactement, pour que le nom choisi par le
   joueur puisse le remplacer.
-- **La place** : une réplique tient dans trois lignes sur un téléphone. Au plus 330 signes en arabe et en anglais, 160
-  en japonais ; une narration, 360 et 175.
+- **La place** : une réplique tient dans trois lignes sur un téléphone. Au plus 330 signes en arabe et en anglais, 110
+  en japonais ; une narration, 360 et 125 (en japonais, trois lignes d'un téléphone tenu en largeur font environ 110
+  caractères).
 - Aucun `<` ni `>` hors des balises du français ; aucune description physique de personne (exigence 2) ; aucun nom de
   démon ou de djinn pour un ennemi, aucun Nom divin dans une compétence ou un objet (exigences 6, 8, 18) — `regles.js`
   le vérifie dans chaque langue.
