@@ -223,21 +223,28 @@ d'une besace et d'une lanterne, et demandé plus de coiffes, sans silhouette de 
 coiffes, règles et dessins à valider).*
 
 Par-dessus son ensemble (une tenue de `D.TENUES`, qui devient un point de départ), le joueur change des pièces. Tout
-vient de `D.RAWI` (`defs.js`) ; seuls les deux objets sont dessinés de neuf :
+vient de `D.RAWI` (`defs.js`). Avec le nouveau dessin d'Idris, les choix sont simplifiés (choix validés par le décideur :
+deux coupes, trois coiffes, la besace à la hanche dans l'habit, la lanterne en option) :
 
 | Pièce | Valeurs | Ce qu'elle pose sur l'apparence |
 |---|---|---|
 | `teint` | `t1` à `t7` : les cinq teints du moteur, puis deux plus sombres (`t3` : Idris) | `look.teint` |
-| `barbe`, `poil` | glabre, courte (Idris), pleine ; trois poils sombres, ni gris ni blanc (`p2` : Idris) | `look.barbe`, `look.poil` |
-| `coiffe` | la capuche, la calotte ; le turban haut (`imama_haute`), le chèche (`litham`) | `look.coiffe` |
-| `manteau`, `longue`, `echarpe` | les quatre coupes ; la robe jusqu'aux pieds ; l'écharpe | `look.manteau`, `look.court`, `look.echarpe` |
-| `etoffe` | `e1` à `e6` (les six ensembles), `e7` | `look.robe`, `head`, `cloak`, `legs` |
+| `barbe`, `poil` | glabre (Idris, depuis le pilote du nouveau dessin), courte, pleine ; trois poils sombres, ni gris ni blanc (`p2` : Idris) | `look.barbe`, `look.poil` |
+| `coiffe` | la capuche, la calotte, le chèche (`litham`) | `look.coiffe` |
+| `manteau`, `longue` | le long manteau ou sans manteau ; la robe jusqu'aux pieds | `look.manteau`, `look.court` |
+| `etoffe` | `e1` à `e6` (les six ensembles), `e7` — chacune avec ses couleurs sur le grand personnage (`dessin`) | `look.robe`, `head`, `cloak`, `legs` |
 | `neon` | `n1` à `n5` : [bande, ceinture] ; sans choix, le néon de l'ensemble | `look.neon`, et le liseré suit la bande |
-| `objet` | la besace, la lanterne (les feuillets, retirés : D193) | `look.porte` |
+| `objet` | la lanterne (les feuillets, retirés : D193 ; la besace en bandoulière, retirée : elle est à la hanche, dans l'habit) | `look.porte` |
+
+**Les choix retirés** avec le nouveau dessin : le turban haut (le long manteau, qui est l'habit même, ne pouvait aller avec
+lui), les coupes « sur une épaule » et « ample », l'écharpe (elle fait partie de l'habit), la besace en bandoulière. Une
+partie qui en portait un l'oublie, sans erreur (`perso.compo` ne garde que les valeurs de `D.RAWI`) ; le reste demeure.
+Deux ensembles portent encore une coupe retirée (le veilleur, le lettré) : ils ne changent pas (leur petit personnage
+reste celui d'avant), leur coupe vaut le long manteau (`perso.base`), et le grand personnage les dessine ainsi.
 
 - **Des identifiants, jamais une couleur.** La partie garde `compo: { teint: 't6', coiffe: 'calotte', … }` ; une teinte
-  retouchée ne casse aucune partie, et un identifiant retiré redevient absent — on n'en retire ni n'en réordonne aucun,
-  on ajoute à la fin. `perso.compo` ne lit que des propriétés propres, que les clés et les valeurs de `D.RAWI` : une
+  retouchée ne casse aucune partie, et un identifiant retiré redevient absent — on n'en réordonne aucun, on ajoute à la
+  fin, et l'on n'en retire que sur décision du décideur. `perso.compo` ne lit que des propriétés propres, que les clés et les valeurs de `D.RAWI` : une
   composition abîmée (balise, type faux, valeur inconnue, `__proto__`) est oubliée, sans refuser la partie.
 - **Sans rien choisir, rien ne change.** Ce qui vaut déjà l'ensemble ou le visage d'origine n'est pas gardé
   (`neutraliser`) ; sans pièce, dans la tenue de toujours, le râwî est l'objet d'origine (`===`) : les films, la démo et
@@ -248,18 +255,16 @@ vient de `D.RAWI` (`defs.js`) ; seuls les deux objets sont dessinés de neuf :
   tire un habit, jamais un visage ; ↺ rend le râwî de toujours. Aucun mot ne dit un trait (exigence 2) : teint, barbe et
   poil se choisissent sur des pastilles et des vignettes ; leurs noms ne vivent que pour les lecteurs d'écran (« Choix 3
   sur 7 »).
-- **Les coiffes, et ce qu'elles ne prennent pas** (`D.RAWI.sans`). Des coiffes que le moteur dessine déjà, dans toutes
-  les tailles : la capuche, la calotte, le turban haut et le chèche (sous lequel on ne voit que les yeux : `visage()`).
-  Aucune composition ne donne la silhouette d'un Compagnon des récits, ni de Sâlim ou de Maître Yûnus, qui marchent avec
-  le râwî : la calotte ne se prend pas sans manteau (Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit) ; le turban haut ni
-  avec le manteau long (Ibn 'Abbâs, 'Abd ar-Rahmân), ni dans l'étoffe claire (un turban clair est celui des
-  Compagnons) ; le chèche ni dans l'étoffe claire ni dans la verte (de dos, dans le petit personnage, il a le gabarit
+- **Les coiffes, et ce qu'elles ne prennent pas** (`D.RAWI.sans`). Des coiffes que le moteur dessine dans toutes les
+  tailles : la capuche, la calotte et le chèche (sous lequel on ne voit que les yeux). Aucune composition ne donne la
+  silhouette d'un Compagnon des récits, ni de Sâlim ou de Maître Yûnus, qui marchent avec le râwî : la calotte ne se
+  prend pas sans manteau (Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit) ; le chèche ni dans l'étoffe claire ni dans la verte (de dos, dans le petit personnage, il a le gabarit
   même du turban des Compagnons : clair, ce serait l'un d'eux ; vert, 'Alî, son turban sombre et sa robe verte — la
   relecture de D193 l'a mesuré). Et sous le turban et le chèche, le bandeau du râwî est fait de ses deux néons, la bande et la ceinture (`Y`,
   `y` ; `NEON_TETE`, `sprites.js`) — deux lignes sous le turban du grand personnage, et, là où le bandeau n'a qu'une
   ligne (le petit personnage, le chèche), les deux néons point par point : de dos, où l'on ne voit ni son visage ni le
   néon de sa poitrine, c'est la marque de 2084 — le bandeau d'un Compagnon a sa couleur, d'un seul ton. À l'écran, une coiffe se prend toujours : ce qui
-  n'allait pas avec elle cède sous les yeux (la coupe revient à celle de l'ensemble, sinon à l'épaule ; l'étoffe, à la
+  n'allait pas avec elle cède sous les yeux (la coupe revient à celle de l'ensemble, sinon au long manteau ; l'étoffe, à la
   première qui va) ; tant qu'on la porte, la case qui n'irait pas avec elle s'éteint. Le dé ne tire que ce qui va.
 - **Ce qui n'est pas proposé.** Le turban des Compagnons (`imama`) ; le turban large et bas ('Umar, 'Uthmân, Qays —
   'Umar le porte sombre, comme le serait celui du râwî) ; le turban à pan (trois Compagnons, et Maître Yûnus) ; le keffieh
@@ -268,7 +273,8 @@ vient de `D.RAWI` (`defs.js`) ; seuls les deux objets sont dessinés de neuf :
   une arme, une pièce d'équipement, la marque d'une figure de 2084 (la bourse du Compteur, les feuillets du Cartographe)
   ou l'attribut d'un Compagnon (les feuillets de Zayd ibn Thâbit et d'Ibn 'Abbâs) ; le néon ne donne pas de lumière au
   râwî sur la carte (une lumière à soi est la marque d'un Compagnon) ; ni lueur ni rayonnement.
-- **La besace et la lanterne** (D193), objets ordinaires de 2084, sans motif ni ornement (exigence 17), dessinés pour
+- **La besace et la lanterne** (D193 ; depuis le nouveau dessin, la besace est à la hanche, dans l'habit du grand
+  personnage, et la lanterne seule se choisit), objets ordinaires de 2084, sans motif ni ornement (exigence 17), dessinés pour
   chaque taille où le râwî paraît — 16 × 24 (le petit personnage du dessin d'origine), 32 × 48, 64 × 96 —, jamais
   agrandis de la taille d'en dessous (`SAC`, `BESACE`, `LANTERNE`, `poserObjet`, `sprites.js`) ; le personnage fin
   (`fine()`) les reçoit à sa taille, sous la tête, jamais sur une main. La besace : un sac de cuir à rabat, porté en
@@ -337,6 +343,71 @@ râwî composé (chaque valeur de chaque pièce, chaque coiffe sous chaque coupe
 compositions entières) et l'empreinte des grands personnages d'avant (`tools/essais/grands.json`) ; les silhouettes
 venues ensuite y sont ajoutées à leur création (`silhouettes.js relever-nouveaux`, qui refuse si une seule empreinte
 déjà relevée a changé) ; `partie.js`, une partie dont le râwî est composé, exportée puis réimportée à l'identique.
+
+### Le râwî d'après la maquette (2.x — l'image au repos et le rendu validés par le décideur, le reste à valider)
+
+*Le décideur n'aime pas le dessin d'Idris et a fourni une maquette (19 novembre) : un homme encapuchonné, la capuche et le
+long manteau ouvert bleu sarcelle, la tunique et les chausses crème, une écharpe rouille, la ceinture de cuir et sa besace
+à la hanche, les bottes, la bande et la ceinture de néon ; plus élancé que les autres. L'image n'entre ni dans le jeu ni
+dans le dépôt. Il a validé le pilote v3 (« Idris v3 : je le valide ») et le rendu doux tel quel, puis demandé le reste du
+personnage.*
+
+- **Des gabarits propres au râwî** (`sprites.js`, `RAWI64`) : de face, de profil, de dos, au repos, en 64 × 96 — la
+  finesse de la maquette. Tout le reste en est tiré, à 64 × 96, par des règles écrites une fois (`rawiVariante()`), puis
+  réduit à 32 × 48 (`reduire()`), comme l'image au repos ; chaque image se fait une fois, à la demande. `G.rawi64 = false`
+  rend le 64 × 96 retracé du 32 × 48 par `fine()`, comme les autres personnages : pour comparer. Ce qui reste du moteur :
+  cinq tons par matière (`rampes()`), la lumière en haut à gauche, le rendu doux, le liseré, les cheveux tirés du poil.
+- **L'habit** (`rawiHabit()`). La coupe : le long manteau de la maquette, ou sans manteau (`sansManteau()` : ses manches
+  et son buste deviennent la tunique, ses pans tombent, la tunique descend jusqu'au genou et ce que le manteau cachait des
+  jambes reparaît ; ses plis deviennent une ombre sur l'étoffe claire). « Sur une épaule » et « ample », qui ne se
+  choisissent plus, se dessinent en long manteau. La robe longue (`robeLongue()`) : la tunique jusqu'aux bottes, d'un seul
+  pan. La coiffe (`coiffer()`) : la capuche de la maquette ôtée, une autre posée, tirée de formes simples (le crâne, le
+  rouleau), et le visage de la maquette gardé à sa place, au point près — la calotte et son galon (le liseré de l'habit :
+  le néon, ou le cyan), les cheveux, le visage entier ; le chèche, son rouleau et ses plis, le bandeau aux deux néons (D193,
+  de face, de profil et de dos) et la bande des yeux seule ; l'écharpe remonte au menton. L'écharpe et la besace à la hanche
+  font partie de l'habit.
+- **Les pas** : de face et de dos, `foulee64()` (le bras du côté qui avance descend, l'autre remonte ; la moitié qui
+  avance descend et son pied dépasse — la règle de `foulee()`, à l'échelle de 64 × 96) ; de profil, les jambes s'écartent
+  puis se croisent depuis la hanche (`cisailler()`) et le bras balance depuis l'épaule (`tournerBras()`). Le souffle (la
+  quatrième image) se tire de lui-même de l'image au repos (`grand(…, 3)`), comme pour tous.
+- **Les gestes de frappe et les attitudes** (`RAWI_GESTES`, `RAWI_POSES`) : le bras qui bouge est ôté du gabarit
+  (`sansBras()` ; de profil, le flanc paraît derrière lui, et la ceinture en fait le tour), puis tracé de l'épaule au
+  poignet par le coude (`bras64()` : la manche et ses trois tons, le fil, le revers de la tunique, la main), un point de
+  vide le détachant de ce qu'il recouvre — jamais sur le visage. L'élan et le coup dans les trois vues (de profil, le corps
+  se fend et penche) ; la place de la main qui frappe est celle du trait, et le moteur y pose l'arme (`G.frappe`). Les six
+  attitudes de face et de profil, et de dos celles que les autres personnages y ont (le recueillement, la résolution,
+  l'accablement) : la tête s'incline ou s'abaisse (`bougerTete()`), les yeux se ferment dans le recueillement et
+  l'accablement ; à genoux, le haut du corps descend de vingt points et le bas se replie (`agenouiller()`). Ce qu'un bras
+  ôté laisse seul (une miette du tracé, loin de tout) s'ôte (`nettoyer()`) ; l'image au repos validée reste telle quelle.
+- **La lanterne** (`lanterneRawi()`) : à la main qui pend, de son côté ; la main prise, à la ceinture ; à genoux, posée
+  à côté de lui ; dessinée à 32 × 48 et à 64 × 96 au même endroit, jamais sur une main ni sur le visage.
+- **Qui le reçoit** : le râwî seul. `perso.js` pose sa marque (`look.rawi`) sur ses ensembles et sur le héros de
+  l'histoire-cadre ; un récit ou un paquet ne l'écrit pas (`regles.js`). Les couleurs viennent de l'étoffe
+  (`D.RAWI.etoffes[…].dessin`, trois tons par matière : e1 relevée sur la maquette ; e2 à e7 proposées par l'agent, à
+  valider). Toutes ses coiffes, coupes, longueurs, étoffes et objets ont ce dessin ; une autre coiffe ou une armure (aucune
+  ne se compose) garderait le dessin d'avant. Le petit personnage (16 × 24, dessin d'origine sur les cartes) n'a pas changé.
+- **Son visage** (v3, choix du décideur : « n° 3, grands yeux », sans barbe ni moustache) : `visageGabarit()`, et non
+  `visage()`, qui garde son dessin pour tous les autres. Dessiné point par point (`VISAGE_RAWI`, en 64 × 96 et en
+  32 × 48) : de grands yeux expressifs avec leur blanc, un iris sombre et son point de lumière, des sourcils marqués, une
+  mèche sur le front sous la capuche, le nez d'un point d'ombre, une bouche d'un trait. Une manière de dessiner, aucun
+  visage repris ; les modèles IA qui l'ont fait choisir restent hors du dépôt et du jeu. Sous le chèche, les lignes des
+  yeux seules (`FENTE`) : ni sourcils, ni mèche, ni barbe. Un teint plus sombre que ceux du moteur garde le blanc de l'œil
+  blanc (la gamme des teints reste dans l'ordre, et l'œil se voit jusqu'à 32 × 48). Un gabarit d'une autre taille que le
+  visage du corps rend le visage de la v2 (`visageRawi()`).
+  Idris est **glabre** par défaut (`RAWI_BARBE` ; `G.traits` le rend pour le râwî marqué, et `perso.js` le lit comme
+  visage d'origine) ; la barbe courte (le collier) et la pleine se dessinent sur ce visage. Le corps est équilibré :
+  la tête agrandie d'un quart (jamais plus large que les épaules), le corps un peu plus court et plus large, davantage de
+  profil.
+- **Les empreintes** (`silhouettes.js`). Le râwî marqué se compare à son empreinte (la marque n'est pas dans la clé). Un
+  nouveau dessin validé par le décideur devient la référence des grands personnages par une procédure dite :
+  `node v2/tools/silhouettes.js redessin « la décision »`. Elle passe d'abord le contrôle entier — les petits sprites au
+  pixel près, l'interrupteur, les voiles sans trait, les visages de face et de profil (rien de dos), les coiffes, les
+  gestes, la marque du râwî, les ressemblances — et seul l'écart des grands y est tenu pour voulu ; à la moindre autre
+  anomalie, rien n'est écrit. Puis `grands.json` est relevé de nouveau en entier (la décision y est inscrite, avec la
+  date et le compte des silhouettes redessinées, nouvelles et retirées), et `silhouettes.json` reçoit les petites
+  silhouettes nouvelles et perd celles qui n'existent plus, sans qu'aucune empreinte de petit sprite ne change. Ensuite,
+  le contrôle ordinaire compare à ce relevé, au point près. Relevé ainsi le 19 novembre : Idris v3, sa suite et le rendu
+  doux de tous les grands personnages.
 
 ## Partager sa progression : `src/core/partage.js`
 
@@ -435,6 +506,15 @@ change pas de repère : positions, collisions, cartes, tout reste en points logi
   liseré et lumière du voile deux fois plus fins. `gfx.planche`, `gfx.pose` et `gfx.figure` rendent le personnage à la
   définition courante ; `charSheet`, `charPose` et `charGrand` rendent toujours les dessins bruts, que les outils lisent.
 - **La vue** glisse par demi-points ; plus de lignes de balayage ; un peu de poussière sous les pas, sur le sable.
+
+**Le rendu doux** (choix du décideur, 19 novembre : « applique ce rendu partout » ; `G.doux`, `relief()`, `sprites.js`) :
+en dessin fin (fin, et fin adouci), tous les grands personnages, à 32 × 48 comme à 64 × 96, ont un liseré dans un ton foncé
+de la couleur qu'il borde (`outline(…, 0,5)`, au lieu d'une encre presque noire) et un relief : chaque matière, sa forme
+adoucie, est éclairée d'en haut à gauche vers le chaud et ombrée en bas à droite vers le violet, par degrés — le bord,
+puis le volume entier ; le bas du corps un peu plus sombre ; une étoffe claire s'ombre moins. Le voile n'est jamais touché
+(la lumière d'un Compagnon reste une seule surface, trois tons au plus ; un visage garde son dessin), ni le néon, ni les
+objets. Le dessin d'origine, les petits personnages et le grand sprite d'avant (`gfx.natif = false`) gardent le leur.
+`G.doux = false` rend le rendu d'avant, pour comparer.
 
 **Trois dessins au choix du joueur** (Réglages, « Dessin » ; `gfx.DESSINS`, `gfx.definir`) : *fin* (par défaut), *fin,
 adouci* (le même, l'agrandissement final lissé et les figures adoucies sans perdre leurs contours) et *d'origine*. Le
@@ -742,6 +822,10 @@ tenues du râwî, les quatorze coiffes sous chaque manteau, les variantes d'équ
 5. chaque coiffe a sa tête native de face et de profil, rien ne sort de la grille, aucun sprite n'est vide : sinon
    « ABSENT ».
 
+Les grands sprites, eux, sont comparés à leur dernier relevé (`tools/essais/grands.json`) : un dessin nouveau, validé
+par le décideur, ne devient la référence que par `node v2/tools/silhouettes.js redessin « la décision »`, qui passe le
+contrôle entier d'abord et n'écrit rien à la moindre autre anomalie (« Le râwî d'après la maquette », plus haut).
+
 `node v2/tools/silhouettes.js planches [modèles.png]` écrit des planches agrandies dans `.smoke/silhouettes/` : la
 comparaison avec les modèles, les héros, les coiffes, la marche et les poses, les gestes de frappe, l'équipement, les
 gens. Tout changement de dessin se relit là, puis sur une capture du jeu.
@@ -997,6 +1081,7 @@ node v2/tools/partie.js              # la partie du joueur : exportée, effacée
 node v2/tools/personnage.js          # le nom et la tenue du râwî : choisis, joués, gardés
 node v2/tools/silhouettes.js         # « SILHOUETTES CONFORMES » : petits sprites inchangés, aucun trait dans un voile
 node v2/tools/silhouettes.js planches [modèles.png]   # planches agrandies dans .smoke/silhouettes/
+node v2/tools/silhouettes.js redessin « décision »   # un nouveau dessin validé devient la référence des grands (le contrôle entier d'abord)
 node v2/tools/loupe.js               # « LOUPE CONFORME » : sur un téléphone, l'image agrandie, le toucher juste, les textes lisibles
 node v2/tools/partage.js             # « PARTAGE CONFORME » : partager sa progression — le bouton, l'image, le texte, les replis, quatre langues
 node v2/tools/smoke.js auto          # et walk, tap, wrong, shots — comme en 1.32

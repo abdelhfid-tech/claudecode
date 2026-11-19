@@ -269,9 +269,9 @@
       visage: () => [rangee(groupe(I.t('Teint'), Object.keys(R.teints).map(id => pastille(R.teints[id], () => vaut('teint') === id, () => poser('teint', id))))),
         rangee(groupe(I.t('Barbe'), R.barbes.map(n => kase('pv-vig pv-tete', () => vaut('barbe') === n, () => poser('barbe', n), b => image(b, visage(montre(avec('barbe', n))))))),
           groupe(I.t('Couleur de la barbe'), Object.keys(R.poils).map(id => pastille(R.poils[id], () => vaut('poil') === id, () => poser('poil', id)))))],
-      // deux rangées : la coiffe et la longueur de la robe ; l'écharpe et la coupe (quatre coiffes : une rangée de plus serait trop haute en largeur)
+      // deux rangées : la coiffe et la longueur de la robe ; la coupe (l'écharpe fait partie de l'habit du nouveau dessin d'Idris)
       habit: () => [rangee(groupe(I.t('Coiffe'), R.coiffes.map(v => vignette('pv-fig44', 'coiffe', v))), groupe(I.t('Longueur'), [false, true].map(v => vignette('pv-fig44', 'longue', v)))),
-        rangee(groupe(I.t('Écharpe'), [false, true].map(v => vignette('pv-fig44', 'echarpe', v))), groupe(I.t('Coupe'), R.manteaux.map(v => vignette('pv-grande', 'manteau', v))))],
+        rangee(groupe(I.t('Coupe'), R.manteaux.map(v => vignette('pv-grande', 'manteau', v))))],
       couleurs: () => [rangee(groupe(I.t('Étoffe'), Object.keys(R.etoffes).map(id => { const e = R.etoffes[id]; return pastille(`conic-gradient(${e.cloak} 0 120deg, ${e.robe} 0 240deg, ${mixHex(e.head, '#6272a4', 0.3)} 0)`, () => vaut('etoffe') === id, () => poser('etoffe', id), () => P.permis('etoffe', id, T(), compo)); }))),
         rangee(groupe(I.t('Néon'), [null].concat(Object.keys(R.neons)).map(id => { const n = id ? R.neons[id] : ['#39e6ff', '#ff4fd8']; return pastille(`linear-gradient(135deg, ${n[0]} 0 50%, ${n[1]} 50% 100%)`, () => vaut('neon') === id, () => poser('neon', id)); })))],
       objet: () => [rangee(groupe(I.t('Objet'), [null].concat(R.objets).map(o => kase('pv-objet', () => vaut('objet') === o, () => poser('objet', o), b => { if (!b._f) { b._f = 1; const u = o ? url('o' + o, () => G.objet(o)) : ''; b.innerHTML = u ? `<img alt="" src="${u}">` : SVG_RIEN; } }))))]

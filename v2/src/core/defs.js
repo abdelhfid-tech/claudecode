@@ -427,17 +427,22 @@
   ];
   /* ---------- Le râwî composé (2.x) ----------
      Ce que le joueur change à son râwî, pièce par pièce, par-dessus l'ensemble qu'il a pris (D.TENUES) : le teint, la
-     barbe et son poil ; la coiffe, la coupe, la longueur de la robe, l'écharpe ; l'étoffe et le néon ; un objet porté.
-     Rien que ce que sprites.js dessine déjà. Des identifiants neutres, des couleurs sans nom : aucun choix ne se dit en
-     mots, aucun ne renvoie à une origine (exigences 2 et 10) ; la partie garde l'identifiant (profil.compo), jamais une
-     couleur. On n'en retire ni n'en réordonne aucun : on ajoute à la fin. (Palettes proposées par l'agent, à valider par
-     le décideur.)
+     barbe et son poil ; la coiffe, la coupe, la longueur de la robe ; l'étoffe et le néon ; un objet porté. Rien que ce
+     que sprites.js dessine déjà. Des identifiants neutres, des couleurs sans nom : aucun choix ne se dit en mots, aucun ne
+     renvoie à une origine (exigences 2 et 10) ; la partie garde l'identifiant (profil.compo), jamais une couleur. On n'en
+     réordonne aucun et l'on ajoute à la fin ; on n'en retire que sur décision du décideur — une partie qui portait un choix
+     retiré l'oublie, sans erreur (perso.js). (Palettes proposées par l'agent, à valider par le décideur.)
+     Choix simplifiés avec le nouveau dessin d'Idris (choix validés par le décideur, 19 novembre : deux coupes, trois
+     coiffes, la besace à la hanche dans l'habit, la lanterne en option) : sont retirés le turban haut (imama_haute), les
+     coupes « sur une épaule » et « ample » (deux ensembles les portent encore : le grand personnage les dessine en long
+     manteau), l'écharpe (elle fait partie de l'habit) et la besace en bandoulière (celle de la hanche la remplace).
        teints   une gamme continue, du plus clair au plus sombre : les cinq teints du moteur, puis deux plus sombres
                 (t3 : celui d'Idris). TEINTS, que lisent tous les autres personnages, ne change pas.
-       barbes   celles que le moteur dessine : glabre, courte (Idris), pleine — pour un adulte ; poils : ni gris ni
-                blanc, ce serait l'âge (p2 : Idris)
-       coiffes  la capuche, la calotte ; puis (D193) le turban haut, enroulé serré (imama_haute), et le chèche (litham),
-                sous lequel on ne voit que les yeux — des coiffes que le moteur dessine déjà, dans toutes les tailles.
+       barbes   celles que le moteur dessine : glabre (Idris — décision du décideur, pilote du nouveau dessin ; avant :
+                courte), courte, pleine — pour un adulte ; poils : ni gris ni blanc, ce serait l'âge (p2 : Idris)
+       coiffes  la capuche, la calotte, et (D193) le chèche (litham), sous lequel on ne voit que les yeux — des coiffes
+                que le moteur dessine déjà, dans toutes les tailles (le turban haut, retiré avec le nouveau dessin :
+                le long manteau, qui est l'habit même, ne pouvait aller avec lui).
                 Écartés : le turban des Compagnons (imama), le turban large et bas ('Umar, 'Uthmân, Qays : l'un d'eux le
                 porte sombre, comme le serait celui du râwî), le turban à pan (trois Compagnons, et Maître Yûnus, qui
                 marche avec le râwî) ; le keffieh et la tiare, qui disent dans le jeu les gens des tribus et les Perses
@@ -451,33 +456,46 @@
                 elle cède sous ses yeux ; tant qu'il la porte, la coupe ou l'étoffe qui n'irait pas avec elle
                 s'éteint (perso.js). Et sous le turban et le chèche, le bandeau du râwî est fait de ses deux néons :
                 de dos, où l'on ne voit ni son visage ni le néon de sa poitrine, la marque de 2084 (sprites.js)
-       etoffes  des étoffes harmonisées — robe, coiffe, manteau, jambes : celles des six ensembles, et une de plus
+       etoffes  des étoffes harmonisées — robe, coiffe, manteau, jambes : celles des six ensembles, et une de plus ;
+                dessin : leurs couleurs sur le grand personnage du râwî (e1 : relevées sur la maquette ; les autres,
+                proposées par l'agent, à valider)
        neons    la bande et la ceinture qui éclairent l'habit [bande, ceinture] ; le liseré suit la bande. Ni or ni jaune ;
                 aucune n'est la couleur d'un rayonnement (D.RAYONS). Sans choix : le néon de l'ensemble.
-       objets   un objet ordinaire de 2084, sans effet, rangé hors de l'équipement (look.porte) : une besace portée en
-                bandoulière, une lanterne à la main. Rien de ce qui est une arme, une pièce d'équipement, la marque
+       objets   un objet ordinaire de 2084, sans effet, rangé hors de l'équipement (look.porte) : une lanterne à la main
+                (la besace est à la hanche, dans l'habit : la besace en bandoulière n'est plus proposée). Rien de ce qui est une arme, une pièce d'équipement, la marque
                 d'une figure de 2084 ou l'attribut d'un Compagnon (D193 : les feuillets, ceux de Zayd ibn Thâbit et
                 d'Ibn 'Abbâs, sont retirés — une partie qui les portait revient à « rien ») */
+  const MAQUETTE = { tunique: ['#e8d6b4', '#b59b77'], chausses: ['#dac7a2', '#b09675', '#8c7255'], echarpe: ['#d0865a', '#ad533d', '#7e362e'] };   // relevées sur la maquette
   D.RAWI = {
     teints: { t1: '#ecc49a', t2: '#deab7c', t3: '#cb9566', t4: '#b47d50', t5: '#9a6540', t6: '#7e5034', t7: '#5f3a24' },
     barbes: [0, 1, 2],
     poils: { p1: '#121014', p2: '#2c1e17', p3: '#6b4a2e' },
-    coiffes: ['capuche', 'calotte', 'imama_haute', 'litham'],
+    coiffes: ['capuche', 'calotte', 'litham'],
     sans: {
       capuche: { longue: [true] },                           // avec la robe longue, l'habit des moines du jeu (Frère Cyprien, les moines des récits)
       calotte: { manteau: ['aucun'] },                       // Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit
-      imama_haute: { manteau: ['long'], etoffe: ['e6'] },    // Ibn 'Abbâs, 'Abd ar-Rahmân ; clair, ce serait un turban de Compagnon
       litham: { etoffe: ['e6', 'e4'] }                       // de dos, le turban des Compagnons : clair, l'un d'eux ; vert, 'Alî
     },
-    manteaux: ['long', 'aucun', 'epaule', 'ample'],
+    manteaux: ['long', 'aucun'],
+    // 2.x (le nouveau dessin d'Idris, d'après la maquette du décideur) — dessin : les couleurs de l'étoffe sur les
+    // gabarits propres du râwî (sprites.js, RAWI64) — la capuche (et la calotte, le chèche), le manteau, la tunique, les
+    // chausses, l'écharpe : trois tons (la lumière, le corps, l'ombre), dont le moteur tire ses cinq, ou une couleur seule,
+    // dont il tire les trois. e1 : relevées sur la maquette ; e2 à e7 : proposées par l'agent (la couleur de l'ensemble,
+    // avivée en lumière comme sur la maquette), à valider par le décideur. La tunique, les chausses et l'écharpe rouille
+    // restent celles de la maquette ; l'étoffe grise garde ses jambes sombres. Une étoffe sans dessin garderait le dessin d'avant.
     etoffes: {
-      e1: { robe: '#2a3048', head: '#1c2030', cloak: '#39424f' }, e2: { robe: '#1d2b36', head: '#131d26', cloak: '#2b4656' },
-      e3: { robe: '#3b2c4a', head: '#251a31', cloak: '#4e3b60' }, e4: { robe: '#2d3b34', head: '#1d2722', cloak: '#3f4e45' },
-      e5: { robe: '#3b3027', head: '#2a221b', cloak: '#57473a' }, e6: { robe: '#27344a', head: '#d8d2c4', cloak: '#3f4f66' },
-      e7: { robe: '#7d8492', head: '#5a606c', cloak: '#a9aeb8', legs: '#3a3c44' }
+      e1: { robe: '#2a3048', head: '#1c2030', cloak: '#39424f', dessin: {
+        capuche: ['#3a7b90', '#22536b', '#16314a'], manteau: ['#33758a', '#1e4b63', '#142c44'], tunique: ['#e8d6b4', '#b59b77'],
+        chausses: ['#dac7a2', '#b09675', '#8c7255'], echarpe: ['#d0865a', '#ad533d', '#7e362e'] } },
+      e2: { robe: '#1d2b36', head: '#131d26', cloak: '#2b4656', dessin: Object.assign({ capuche: ['#2a4c7c', '#1b3150', '#122136'], manteau: ['#325a8f', '#203a5c', '#16273f'] }, MAQUETTE) },
+      e3: { robe: '#3b2c4a', head: '#251a31', cloak: '#4e3b60', dessin: Object.assign({ capuche: ['#604788', '#3e2e58', '#2a1f3c'], manteau: ['#73579e', '#4a3866', '#322645'] }, MAQUETTE) },
+      e4: { robe: '#2d3b34', head: '#1d2722', cloak: '#3f4e45', dessin: Object.assign({ capuche: ['#4e735d', '#324a3c', '#223229'], manteau: ['#5a8569', '#3a5644', '#273a2e'] }, MAQUETTE) },
+      e5: { robe: '#3b3027', head: '#2a221b', cloak: '#57473a', dessin: Object.assign({ capuche: ['#7f6249', '#523f2f', '#382b20'], manteau: ['#927357', '#5e4a38', '#403226'] }, MAQUETTE) },
+      e6: { robe: '#27344a', head: '#d8d2c4', cloak: '#3f4f66', dessin: Object.assign({ capuche: ['#d9d3c6', '#cfc8b8', '#a29c8d'], manteau: ['#627ca1', '#3f5068', '#2b3647'] }, MAQUETTE) },
+      e7: { robe: '#7d8492', head: '#5a606c', cloak: '#a9aeb8', legs: '#3a3c44', dessin: Object.assign({ capuche: ['#929bae', '#5e6470', '#40444c'], manteau: ['#b0b6c2', '#8a909c', '#5e626a'] }, MAQUETTE, { chausses: ['#51545f', '#3a3c44', '#2c2d33'] }) }
     },
     neons: { n1: ['#ff4fd8', '#39e6ff'], n2: ['#7dffb0', '#39e6ff'], n3: ['#b18cff', '#7dffb0'], n4: ['#ff6b6b', '#39e6ff'], n5: ['#e8f4ff', '#ff4fd8'] },
-    objets: ['besace', 'lanterne']
+    objets: ['lanterne']
   };
 
   /* ---------- Les paquets (2.0) ----------
