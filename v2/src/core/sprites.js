@@ -1725,7 +1725,7 @@
       rawi.forEach(o => poserObjet(o, 2, (x, y, m) => { if (x >= 0 && x < W2 && y >= 0 && y < H2 && L[y][x] !== 'N') { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1; } }, { b0: cou, key, ou, glisse })); }
     // la tête, inclinée ou abaissée selon la pose ; le cimier suit le sommet du casque
     const y0 = cou - 18 + 2 * hy + (Ge ? Ge.tete[1] : 0), x0 = (hy && key === 'l' ? -2 : 0) + (Ge ? Ge.tete[0] : 0), pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = K.proto && 'VvN'.indexOf(m) < 0 ? 0 : 1;   /* prototype 2.17 : la tête d'Idris prend le modelé du corps */
-      if (sans) { sans.L[y][x] = m; sans.am[y][x] = 0; sans.fin[y][x] = 1; tm[y][x] = 1; } } };
+      if (sans) { sans.L[y][x] = m; sans.am[y][x] = 0; sans.fin[y][x] = estPasseur(look, K) ? fin[y][x] : 1; tm[y][x] = 1; } } };   /* le passeur (essai « regard ») : la lanterne à la main, la tête garde le même modelé */
     const nt = neonTete(K, tt, 2);   // le bandeau du râwî sous le turban et le chèche : ses néons (D193)
     for (let j = 0; j < (kneel ? 20 : tt.length); j++) for (let x = 0; x < W2; x++) if (tt[j][x] !== '.') pose1(x + x0, y0 + j, nt ? nt(j, x, tt[j][x]) : tt[j][x]); // à genoux, le pan du turban ne descend pas
     if (A && A.apres) A.apres.forEach(([x, y, m]) => { const Y = bT + y; if (Y >= 0 && Y < H2 && L[Y][x] !== 'V' && L[Y][x] !== 'v') pose1(x, Y, m); });   // prototype 2.17 : la main devant la tête, jamais sur le voile
@@ -1785,6 +1785,36 @@
     1: { neutre: ['...', '...', '.k.', '...'], idris: ['...', '.k.', '.k.', '...'], sourire: ['...', '...', '.k.', '...'], rire: ['...', '...', '.k.', '...'],
       surprise: ['...', '.k.', '.k.', '...'], colere: ['...', '...', '.k.', '...'], triste: ['...', '...', '...', '.k.'], ferme: ['...', '...', '.k.', '...'], pensif: ['...', '.k.', '...', '...'] }
   };
+  /* prototype 2.17, essai « regard » (le passeur seul, 19 novembre : « un passage de plus » sur le visage) : le regard net
+     d'un héros de JRPG 16 bits (un vocabulaire, jamais un personnage) — l'œil un point plus haut, sous une paupière franche,
+     son blanc et sa pupille lisibles en 64 × 96, et un reflet ; deux points francs en 32 × 48 ; des sourcils marqués et
+     droits ; le nez, une ombre d'un point ; le front dégagé sous la mèche (sans l'ombre des cheveux) ; le visage moins large
+     d'un point de chaque côté (affinerPasseur). Les tampons comme plus haut ; en plus — l : le reflet (en haut de la
+     pupille, du côté du nez ; de profil, aucun) · c : les cils de l'œil clos. */
+  const TAMPONS_P = {
+    2: { neutre: ['.....', 'bbbb.', '.....', 'kkk..', 'wkl..', 'wkk..', '.....'], clos: ['.....', '.....', 'bbbb.', '.....', 'ccc..', '.....', '.....'],
+      sourire: ['.....', 'bbbb.', '.....', 'kkk..', 'wkl..', '.....', '.....'], rire: ['bbbb.', '.....', '.....', '.kk..', 'k..k.', '.....', '.....'],
+      surprise: ['bbbb.', '.....', 'kkkk.', 'wkkw.', 'wkkw.', '.....', '.....'], colere: ['.....', 'b....', '.bb..', 'kkkb.', 'wkl..', '.....', '.....'],
+      triste: ['.....', '...b.', '.bb..', 'b....', 'kkk..', 'wkk..', '.....'], ferme: ['.....', '.....', 'bbbb.', 'kkk..', 'wkl..', 'wkk..', '.....'],
+      pensif: ['.....', 'bbbb.', '.....', 'kkk..', 'wkk..', 'www..', '.....'] },
+    1: { neutre: ['...', '.k.', '.k.', '...'], clos: ['...', '...', '.c.', '...'], sourire: ['...', '...', '.k.', '...'], rire: ['...', '...', '.k.', '...'],
+      surprise: ['...', '.k.', '.k.', '...'], colere: ['...', '...', '.k.', '...'], triste: ['...', '...', '...', '.k.'], ferme: ['...', '.k.', '.k.', '...'], pensif: ['...', '.k.', '...', '...'] }
+  };
+  const estPasseur = (look, K) => !!(look.rawi && K.proto === 'passeur' && K.coiffe === 'capuche');
+  // le visage moins large d'un point de chaque côté, la tête au même gabarit : de face, les deux colonnes du bord de l'ouverture
+  // prennent ce qui la borde — les cheveux (la tempe), une ombre de cheveux devant l'oreille ; sous l'oreille, où rien ne la
+  // borde, la joue rentre d'un point si la ligne du dessus est rentrée (sinon, elle déborderait)
+  function affinerPasseur(L, fin, w, h) {
+    const V = m => m === 'V' || m === 'v'; let a0 = w, b0 = -1;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (V(L[y][x])) { a0 = Math.min(a0, x); b0 = Math.max(b0, x); }
+    if (b0 - a0 < 5) return;
+    [[a0, -1], [b0, 1]].forEach(([x, sens]) => { let avant = false;
+      for (let y = 0; y < h; y++) { if (!V(L[y][x])) { avant = false; continue; } const m = (L[y][x + sens] || '.');
+        if ('123'.indexOf(m) >= 0) { L[y][x] = m === '1' ? '2' : m; fin[y][x] = 0; avant = true; }
+        else if (m === 'N') { L[y][x] = '3'; fin[y][x] = 0; avant = true; }
+        else if (m === '.' && avant) { L[y][x] = '.'; fin[y][x] = 0; }
+        else avant = false; } });
+  }
   function visage(look, K, dir, pose, s, x0, x1, y0, y1) {
     if (K.lit || look.sansVisage || dir === 3 || x1 < x0) return null;
     const h = signe(look);
@@ -1799,34 +1829,42 @@
     const barbe = age === 0 ? 0 : age >= 2 ? 2 : adulte && [0, 1, 2].indexOf(look.barbe) >= 0 ? look.barbe : look.rawi ? RAWI_BARBE : [2, 1, 2, 0, 1, 2][(h >>> 7) % 6];  // 0 : glabre · 1 : courte · 2 : pleine (le râwî : glabre, sauf choix)
     const oeil = '#1b1420', blanc = mix('#fbf3e2', peau, 0.15), levre = mix(peau, '#6a2420', 0.5), sourcil = mix(peau, age >= 1.5 ? '#8a8378' : poil, 0.7);
     const w = x1 - x0 + 1, hh = y1 - y0 + 1, fente = hh < 5 * s, profil = dir === 1 || dir === 2, clos = pose === 'prie' || pose === 'accable';
-    const yo = fente ? y0 + s : y0 + Math.round(hh * 0.40), yb = y0 + Math.round(hh * 0.64), ym = y0 + Math.round(hh * 0.74); // les yeux, le haut de la barbe, la bouche
+    const P = estPasseur(look, K) && !fente;                                                                          // prototype 2.17, essai « regard »
+    // les yeux (le passeur : un point plus haut ; de profil en 32 × 48, ils l'étaient déjà), le haut de la barbe, la bouche
+    const yo = (fente ? y0 + s : y0 + Math.round(hh * 0.40)) - (P && !(profil && s === 1) ? 1 : 0), yb = y0 + Math.round(hh * 0.64), ym = y0 + Math.round(hh * 0.74);
     const ex = Math.round(w * 0.22);                                                                                  // de face : l'écart d'un œil au bord
     // prototype 2.17 : la mimique de l'attitude, et l'œil d'Idris (un point de plus en hauteur)
     const mi = clos || fente ? null : (mimiqueDe(pose) || (look.rawi && K.proto === 'jeune' && !pose ? 'franc' : null));   // le jeune râwî : un sourire franc, d'office
-    const grandOeil = !!(look.rawi && K.proto) && !clos && !fente, tp = (mi || grandOeil) && TAMPONS[s] ? TAMPONS[s][mi && TAMPONS[s][mi] && mi !== 'ferme' && mi !== 'pensif' ? mi : grandOeil ? 'idris' : TAMPONS[s][mi] ? mi : 'neutre'] : null;
+    const grandOeil = !!(look.rawi && K.proto) && !clos && !fente, tp = P ? TAMPONS_P[s][clos ? 'clos' : mi && TAMPONS_P[s][mi] ? mi : 'neutre']
+      : (mi || grandOeil) && TAMPONS[s] ? TAMPONS[s][mi && TAMPONS[s][mi] && mi !== 'ferme' && mi !== 'pensif' ? mi : grandOeil ? 'idris' : TAMPONS[s][mi] ? mi : 'neutre'] : null;
     const bouche = mix(peau, '#3a1018', 0.62);
+    // le passeur : la paupière et la pupille d'un même noir, un reflet clair ; des sourcils plus marqués (presque la couleur du poil)
+    const reflet = P ? mix('#fffaf0', peau, 0.08) : null, cil = P ? mix(oeil, peau, 0.3) : null, sourcilP = P ? mix(peau, poil, 0.9) : sourcil;
     const tampon = (fx, gx, y) => { if (!tp) return undefined; const r = y - yo + (s === 2 ? 4 : 2); if (r < 0 || r >= tp.length) return undefined;
       let c; if (profil) { c = fx >= s && fx < 2 * s ? fx - s : fx === 2 * s ? -1 : fx === s - 1 ? 2 : fx === 2 * s + 1 ? -2 : 9; }
       else { const g = fx < w / 2, d = g ? fx - ex : gx - ex; c = d; }
-      if (c < -1 || c >= tp[0].length - 1) return undefined; const m = tp[r][c + 1];
+      if (c < -1 || c >= tp[0].length - 1) return undefined; let m = tp[r][c + 1];
+      if (profil && m === 'l') m = 'k';   // de profil, la pupille regarde devant : sans reflet
       if (m === '.' && s === 1 && fonce && c === -1 && tp[r][1] === 'k') return blanc;   // un teint très sombre garde le blanc de l'œil, même à 32 × 48
-      return m === 'k' ? oeil : m === 'w' ? blanc : m === 'b' ? sourcil : null; };
+      return m === 'k' ? oeil : m === 'w' ? blanc : m === 'b' ? sourcilP : m === 'l' ? reflet : m === 'c' ? cil : null; };
     const levreDe = (fx, gx, y) => { if (!mi || fente) return undefined; const d = profil ? fx : Math.abs(fx - gx), q = s === 2;
       if (barbe) return (mi === 'rire' || mi === 'surprise') && y >= ym - (q ? 1 : 0) && y <= ym && d <= (mi === 'rire' ? s : (q ? 1 : 0)) ? bouche : undefined;   // dans la barbe : la bouche ouverte seule
       if (mi === 'sourire' || mi === 'franc') return (y === ym && d <= (profil ? 2 * s - 1 : 2 * s - 1)) || (y === ym - 1 && (profil ? d === 2 * s : d >= 2 * s && d <= 2 * s + (q ? 1 : 0))) ? levre : null;
       if (mi === 'rire') return (y >= ym - (q ? 1 : 0) && y <= ym + (q ? 1 : 0) && d <= (profil ? s : s + 1)) ? bouche : (y === ym - (q ? 2 : 1) && !profil && d >= s + 2 && d <= s + 3) ? levre : null;
-      if (mi === 'surprise') return (y >= ym - (q ? 1 : 0) && y <= ym && d <= (q ? 1 : 0)) ? bouche : null;
+      if (mi === 'surprise') return (y >= ym - (q ? 1 : 0) && y <= ym && (P && profil ? d >= s && d < 2 * s : d <= (q || P ? 1 : 0))) ? bouche : null;   // le passeur : la bouche ouverte se voit aussi en 32 × 48 et de profil
       if (mi === 'colere') return (y === ym && d <= 2 * s) || (y === ym + 1 && !profil && d >= 2 * s + 1 && d <= 2 * s + (q ? 2 : 1)) ? bouche : null;
       if (mi === 'triste') return (y === ym && d <= s) || (y === ym + 1 && !profil && d >= s + 1 && d <= s + (q ? 2 : 1)) ? levre : null;
       return (y === ym && d <= s) ? levre : null; };
+    const front = P ? 0 : s;                                                                                         // le passeur : le front dégagé, sans l'ombre des cheveux
     return function (x, y) {
       const fx = profil ? (dir === 2 ? x1 - x : x - x0) : x - x0, gx = w - 1 - fx, dy = y - y0;                         // fx : depuis le devant du visage (profil) ou sa gauche (face)
-      if (tp) { const t = tampon(fx, gx, y); if (t) return t; if (t === null) { const lv = levreDe(fx, gx, y); if (lv) return lv; return dy < s ? nuit : (profil ? fx >= w - s : gx < s) ? ombre : (!profil && fx < s) ? clair : peau; } }
-      { const lv = levreDe(fx, gx, y); if (lv) return lv; if (lv === null && !barbe && y >= ym - 1 && y <= ym + 1) return dy < s ? nuit : (profil ? fx >= w - s : gx < s) ? ombre : (!profil && fx < s) ? clair : peau; }
+      if (tp) { const t = tampon(fx, gx, y); if (t) return t; if (t === null) { const lv = levreDe(fx, gx, y); if (lv) return lv; return dy < front ? nuit : (profil ? fx >= w - s : gx < s) ? ombre : (!profil && fx < s) ? clair : peau; } }
+      { const lv = levreDe(fx, gx, y); if (lv) return lv; if (lv === null && !barbe && y >= ym - 1 && y <= ym + 1) return dy < front ? nuit : (profil ? fx >= w - s : gx < s) ? ombre : (!profil && fx < s) ? clair : peau; }
+      if (P && !profil && s === 2 && fx === (w >> 1) && y === yo + 2 * s) return ombre;                                // le passeur : le nez, une ombre d'un point (en 32 × 48, rien : il y serait une tache)
       const dansOeil = profil ? (fx >= s && fx < 2 * s) : ((fx >= ex && fx < ex + s) || (gx >= ex && gx < ex + s));
       if (y >= yo && y < yo + s && dansOeil) { if (clos) return y === yo + s - 1 ? sourcil : peau; return oeil; }
       if (!clos && (s === 2 || fonce) && y >= yo && y < yo + s && (profil ? fx === 2 * s : (fx === ex - 1 || gx === ex - 1))) return blanc; // en dessin fin (et, pour un teint très sombre, toujours) : le blanc de l'œil, du côté du dehors
-      if (!fente && s === 2 && y === yo - 2 && (profil ? (fx >= 1 && fx <= 4) : ((fx >= ex - 1 && fx <= ex + 1) || (gx >= ex - 1 && gx <= ex + 1)))) return sourcil; // les sourcils : en dessin fin seulement (à 32 points de large, ils alourdiraient le regard)
+      if (!P && !fente && s === 2 && y === yo - 2 && (profil ? (fx >= 1 && fx <= 4) : ((fx >= ex - 1 && fx <= ex + 1) || (gx >= ex - 1 && gx <= ex + 1)))) return sourcil; // les sourcils : en dessin fin seulement (à 32 points de large, ils alourdiraient le regard)
       if (!fente && barbe && y >= yb) {
         if (profil && fx >= w - s - (barbe === 2 ? 0 : s)) return ombre;                                              // vers la nuque : la joue, dans l'ombre de l'étoffe
         if (barbe === 1 && y < ym && !(profil ? fx < 2 * s : Math.abs(fx - gx) <= 2 * s)) return peau;                 // barbe courte : la moustache seule, au-dessus
@@ -1834,8 +1872,8 @@
         return ((x + y) % 3 === 0 && s === 2) ? poilO : poil;
       }
       if (!fente && !barbe && y === ym && (profil ? fx < 2 * s : Math.abs(fx - gx) <= s + (s - 1))) return levre;
-      if (dy < s) return nuit;                                                                                         // l'ombre de la coiffe sur le front
-      if (!fente && !profil && s === 2 && fx === (w >> 1) && y > yo + s && y < yb) return ombre;                       // l'arête du nez
+      if (dy < front) return nuit;                                                                                     // l'ombre de la coiffe sur le front
+      if (!P && !fente && !profil && s === 2 && fx === (w >> 1) && y > yo + s && y < yb) return ombre;                 // l'arête du nez
       if (profil ? fx === 0 && y > yo && y < yb : false) return clair;                                                 // de profil : le nez et la pommette prennent la lumière
       if (profil ? fx >= w - s : gx < s) return ombre;                                                                 // le côté dans l'ombre
       if (!profil && fx < s && dy >= s) return clair;
@@ -1892,6 +1930,7 @@
     const n = natifGrille(look, dir, frame, pose); if (!n) return (scache[k] = s === 2 ? G.epx(ancien(look, dir, frame, pose)) : ancien(look, dir, frame, pose));
     const K = n.K, F = s === 2 ? fine(n) : n, L = F.L, am = F.am, fin = F.fin, pal = n.rawi ? paletteRawi(look, K, n.rawi.dessin) : palette(look, K), w = W2 * s, h = H2 * s;
     if (K.proto) paletteProto(look, K, pal);   // prototype 2.17 : la tenue d'office d'Idris « un des leurs »
+    if (dir === 0 && estPasseur(look, K)) affinerPasseur(L, fin, w, h);   // prototype 2.17, essai « regard » : le visage moins large
     const tn = G.teint(look); if (tn) pal.N = mix(K.sombre && !K.proto ? mix(tn, '#1c1430', 0.2) : tn, '#fff1d6', 0.1); // qui a un visage a des mains du même teint (le grand personnage seulement)
     const R = rampes(pal);
     const cv = mk(w, h), c = cv.getContext('2d'), px = (x, y, col) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } }; if (s === 2) cv.hd = 2;
