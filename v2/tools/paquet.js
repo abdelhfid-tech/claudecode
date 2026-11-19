@@ -6,10 +6,12 @@
    2. Pour le paquet d'essai seulement : des copies fautives sont-elles refusées, chacune pour la bonne raison ?
    3. Un jeu d'essai est assemblé à part (.smoke/essai/index.html) : le jeu livré n'est pas touché.
    4. Dans ce jeu : le paquet est-il posé ? Chaque lieu se bâtit-il à chaque heure, ses lieux nommés se rejoignent-ils, sa
-      piste est-elle la bonne ? Chaque saga se joue-t-elle jusqu'au bout — en sautant, à pied, au doigt ? La Chaîne la
+      piste est-elle la bonne ? Chaque saga se joue-t-elle jusqu'au bout — en sautant, à pied, au doigt, sans que personne
+      ne coupe un passage, ne soit traversé ni ne coince le joueur de test (2.16 : les sondes de tools/sondes.js) ? La Chaîne la
       range-t-elle dans son livre, sous son titre, sans que le dernier maillon du livre I en dépende ? Les objets, les
       pièces et les étals sont-ils là, les pistes sonnent-elles ? Un paquet fautif est-il refusé sans arrêter le jeu ?
-   Sortie : une ligne « OK » par preuve ; « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE » ou « ÉCART » sinon. Code 1 à la première anomalie. */
+   Sortie : une ligne « OK » par preuve ; « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE » ou « ÉCART » sinon — et,
+   relevés dans le journal d'une partie, « COINCÉ », « SUPERPOSÉ », « PNJ EN TRAVERS », « MUSIQUE ». Code 1 à la première anomalie. */
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const { execFileSync } = require('child_process');
 const V2 = path.join(__dirname, '..'), ESSAI = path.join(__dirname, 'essais/paquet_essai.js');
@@ -88,6 +90,7 @@ if (jeuAvant && jeuAvant !== livre('index.html') + livre('dist/isnad.html')) ko(
 
 /* ---------- 4. dans le jeu ---------- */
 const { chromium } = require('playwright');
+const sondes = require('./sondes.js'); // 2.16 : les sondes des corps, communes avec smoke.js
 const url = 'file://' + path.join(out, 'index.html');
 (async () => {
   const browser = await chromium.launch(); let errors = [];
@@ -142,20 +145,21 @@ const url = 'file://' + path.join(out, 'index.html');
     I.battle.start = orig; W.loadMap = ol;
     const sv = I.save.data;
     return { ok, s: (performance.now() - t0) / 1000, log, stats, pistesVues, ou: ok ? '' : `chapitre ${W.ch && W.ch.id}, objectif ${W.objIndex}, carte ${W.map && W.map.id}`,
-      accueil: document.querySelector('#chain header p').textContent, resteAuLivre: I.sagaList.filter(x => !x.frame && (x.livre || 1) === (I.sagas[sid].livre || 1) && x.id !== sid).length, livre: I.romain(I.sagas[sid].livre || 1),
+      corps: I.debug.corps ? Object.keys(I.debug.corps.vus).length : 0, accueil: document.querySelector('#chain header p').textContent, resteAuLivre: I.sagaList.filter(x => !x.frame && (x.livre || 1) === (I.sagas[sid].livre || 1) && x.id !== sid).length, livre: I.romain(I.sagas[sid].livre || 1),
       fait: !!(sv.sagas[sid] && sv.sagas[sid].done), lumieres: sv.lights, objets: sv.items, pieces: JSON.stringify([sv.gear, sv.equip]), savoirs: sv.codex.filter(c => c.indexOf(sid + '/') === 0).length, musique: I.audio.wantTrack };
   }, [sid, marche]);
   const MODES = [['auto', 'en sautant d’objectif en objectif'], ['walk', 'à pied, avec les vraies collisions'], ['tap', 'au doigt, par un chemin tracé']];
   for (const s of (P.sagas || [])) {
     let dernier = null;
     for (const [mode, dit] of MODES) {
-      page = await mkPage(); const j = await jouer(page, s.id, mode); dernier = mode === 'auto' ? j : dernier;
-      const mauvais = j.log.filter(l => /BLOQUÉ|INACCESSIBLE|ABSENT|CACHÉ|INVISIBLE|MUSIQUE|ERR /.test(l));
+      page = await mkPage(); await page.evaluate(sondes.corps, mode); const j = await jouer(page, s.id, mode); dernier = mode === 'auto' ? j : dernier;
+      // les mots d'échec du journal de la partie (2.16 : « COINCÉ », « SUPERPOSÉ », « PNJ EN TRAVERS » aussi) — chacun est imprimé
+      const mauvais = j.log.filter(l => sondes.ECHECS.test(l));
       if (!j.ok) ko(`BLOQUÉ saga ${s.id} (${mode}) — ${j.ou}`);
       else if (mauvais.length) mauvais.slice(0, 6).forEach(l => ko(`${l}   [saga ${s.id}, ${mode}]`));
       else if (!j.fait) ko(`ÉCART saga ${s.id} (${mode}) : revenue à la Chaîne sans être marquée achevée`);
       else if (!(j.resteAuLivre ? /Encore \d+ maillon/.test(j.accueil) : j.accueil.includes(`Le livre ${j.livre} est achevé.`))) ko(`ÉCART saga ${s.id} (${mode}) : au retour, la Chaîne dit « ${j.accueil} »`);
-      else ok(`saga ${s.id} jouée ${dit} : ${j.s.toFixed(1)} s, ${j.stats.length} combat(s), ${j.stats.reduce((a, x) => a + x.defaites, 0)} défaite(s), ${j.savoirs} savoir(s), Lumière ${j.lumieres.join('+') || 'aucune'}${mode === 'auto' ? ` · au retour : « ${j.accueil.replace(/^.*— /, '')} »` : ''}`);
+      else ok(`saga ${s.id} jouée ${dit} : ${j.s.toFixed(1)} s, ${j.stats.length} combat(s), ${j.stats.reduce((a, x) => a + x.defaites, 0)} défaite(s), ${j.savoirs} savoir(s), Lumière ${j.lumieres.join('+') || 'aucune'}, ${j.corps} place(s) de PNJ et de coffres éprouvée(s)${mode === 'auto' ? ` · au retour : « ${j.accueil.replace(/^.*— /, '')} »` : ''}`);
       sansErreur(`saga ${s.id}, ${mode}`);
       if (mode === 'auto') { // ce que la partie a gardé du paquet
         Object.keys(P.objets || {}).forEach(k => { if (JSON.stringify(s).includes('"' + k + '"')) { if (!(j.objets[k] > 0)) ko(`ABSENT objet ${k} : donné par la saga ${s.id}, il n'est pas dans la besace`); else ok(`objet ${k} : dans la besace après la saga (×${j.objets[k]})`); } });
