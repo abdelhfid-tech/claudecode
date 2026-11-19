@@ -532,11 +532,19 @@ changent.
   ne valide plus à l'aveugle pendant le bandeau d'ouverture d'un combat (il n'attend pas : un « Entrée » tombé au moment
   où les commandes s'ouvrent choisissait « Frapper » à la place du joueur, depuis que la leçon n'est plus un bandeau).
 - **Les films.** Les shorts dont une scène filmée change sont à refaire (D189 : le décideur l'a permis) : le 04 (le
-  carton du pourparler en casse ordinaire, sa liste avec la question et l'en-tête en deux lignes) et le 08 (le panneau
-  du combat, une ligne par compagnon en 360 × 640). Le 10, qui montre les noms, ne change pas : son parcours, rejoué,
-  n'a jamais deux étiquettes l'une sur l'autre. Les autres masquent le fil et la marque avec les annonces, et ne filment
-  ni un acte de la Chaîne, ni une leçon, ni « Que faire ? », ni la halte, ni le menu d'une idée noire. La démo jouable et
-  le livret court suivent au prochain assemblage (`jouable.js essai`, `livret.js`).
+  carton du pourparler en casse ordinaire, sa liste avec la question et l'en-tête en deux lignes, « · manche 1 / 3 »
+  d'un seul tenant) et le 08 (le panneau de commandes de la bataille déclarée, plus serré en 360 × 640, le niveau et la
+  figure en tête des commandes ; les rangées des compagnons, elles, ne s'y voient pas : le short les masque). Vérifié à
+  la relecture en filmant chaque short deux fois en brouillon, sur la 2.11 et sur la 2.12, image par image, et une
+  troisième fois sur la 2.11 pour mesurer ce qui change d'une prise à l'autre : le 10, qui montre les noms, ne change
+  pas ; les 07 et 09 sont identiques. Ailleurs, rien que d'infime : dans la 2.11, une annonce qui entrait en glissant
+  faisait déborder l'écran d'un instant, et ce qui apparaissait à ce moment — les légendes du film, au 11 le carton du
+  seuil — se décalait de quatre points pendant son fondu (01, 02, 05, 06, 10 à 14, 16) — la 2.12 ne le fait plus ; au 01, la narration des
+  Archives basses s'écrit un battement plus tard. Les combats joués seuls (03, 06, 12 à 16) et ce qui rôde (05, 11)
+  changent d'une prise à l'autre sur un même jeu : ce n'est pas la 2.12. Les autres masquent le fil et la marque avec
+  les annonces, et ne filment ni un acte de la Chaîne, ni une leçon, ni « Que faire ? », ni la halte, ni le menu d'une
+  idée noire. La démo jouable et le livret court suivent au prochain assemblage (`jouable.js essai`, `livret.js`) : dans
+  la démo, la leçon « frapper ce qui rôde » et les annonces du labyrinthe passent de l'image au fil.
 
 ## Les labyrinthes de la noosphère : `src/core/dedale.js`
 
