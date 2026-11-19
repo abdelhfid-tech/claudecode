@@ -220,7 +220,8 @@ node v2/tools/livret.js [textes]    # 2.x : le livret court (promo/livret-2x/) :
 ```
 
 **Règle.** Toute modification de contenu (`src/data/`) repasse le validateur, puis le build, puis
-`smoke.js auto`. Toute modification du moteur repasse le build, `smoke.js auto`, `smoke.js walk`, `smoke.js tap`, `smoke.js suiveurs` et `doigt.js` ;
+`smoke.js auto`. Toute modification du moteur repasse le build, `smoke.js auto`, `smoke.js walk`, `smoke.js tap`, `smoke.js suiveurs`, `doigt.js`
+et `doigt.js loin 844x390` (le premier chapitre, téléphone en largeur : la manette y est posée sur la scène) ;
 toute modification du son repasse aussi `son.js` ; toute modification de la bataille déclarée (`rangs.js`, un champ
 `bataille`) repasse aussi `bataille.js` et `bataille.js mesures`. Un changement n'est
 terminé que si le validateur affiche ✓, que le test se termine sans « BLOQUÉ », sans « INACCESSIBLE »,

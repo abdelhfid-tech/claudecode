@@ -9,7 +9,9 @@
      sans « loin » : le prologue, de l'écran-titre à la Chaîne, sur trois écrans (deux en hauteur, un en largeur)
      loin          : le prologue puis tout le premier chapitre de la saga I, sur un téléphone en hauteur ;
                      après le premier combat, joué au doigt, les suivants sont menés par l'IA de test
-   Sortie : une ligne par écran ; « INVISIBLE » ou « BLOQUÉ » en cas d'échec ; code de sortie 1. */
+     loin 844x390  : le même, téléphone en largeur — la manette y est posée sur la scène, et le pouce qui marche
+                     doit passer à côté d'elle
+   Sortie : une ligne par écran ; « INVISIBLE », « INACCESSIBLE » ou « BLOQUÉ » en cas d'échec ; code de sortie 1. */
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
@@ -30,6 +32,8 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
     await p.evaluate(loin => { const I = window.ISNAD, oc = I.ui.showChain; I.ui.showChain = function () { window.__chaine = (window.__chaine || 0) + 1; return oc.apply(this, arguments); };
       // chaque menu de choix qui s'ouvre est compté : s'il se referme sans que l'outil l'ait touché, un toucher fantôme a répondu à la place du joueur
       window.__menus = 0; const c = document.querySelector('#choice'); new MutationObserver(() => { if (!c.hidden && !c._vu) { c._vu = true; window.__menus++; } else if (c.hidden) c._vu = false; }).observe(c, { attributes: true, attributeFilter: ['hidden'] });
+      // chaque toucher que reçoit la manette est noté : un pouce qui voulait marcher ne doit jamais y tomber
+      window.__pris = []; window.addEventListener('pointerdown', e => { const g = e.target; if (g && g.closest && g.closest('#pad')) window.__pris.push(String(g.className || g.tagName).trim()); }, true);
       // « loin » : le premier combat se joue au doigt ; les suivants sont menés par l'IA de test, pour aller voir la suite
       if (loin) { const ob = I.battle.start; let n = 0; I.battle.start = async function (x) { if (!n++) return ob(x); I.debug.auto = true; I.speed = 12; try { return await ob(x); } finally { I.debug.auto = false; I.speed = 1; } }; }
     }, loin);
@@ -64,11 +68,22 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
       if (I.scene === W && !I.script.busy && !W.lock && W.map) { const t = W.target && W.target(), c = q('#cv').getBoundingClientRect(), s = q('#stage').getBoundingClientRect();
         if (!t) return { quoi: 'attente', ou };
         const x = (t.gx - Math.round(W.cam.x)) / G.PW * c.width + c.left, y = (t.gy - 6 - Math.round(W.cam.y)) / G.PH * c.height + c.top, bas = s.bottom - s.top > 300 ? 90 : 64;
-        // le pouce ne vise pas un bouton de la manette pour marcher : s'il tombait dessus, il vise juste au-dessus
+        // le pouce vise la cible, ramenée dans la scène
         const pt = [Math.max(s.left + 14, Math.min(s.right - 14, x)), Math.max(s.top + bas, Math.min(s.bottom - 14, y))];
         // ni le plan, dans son coin : le toucher ouvre la carte — il vise juste en dessous
         if (W.miniRect) { const r = W.miniRect, l = c.left + r[0] / G.PW * c.width, t2 = c.top + r[1] / G.PH * c.height, d = l + r[2] / G.PW * c.width, b2 = t2 + r[3] / G.PH * c.height; if (pt[0] > l - 8 && pt[0] < d + 8 && pt[1] > t2 - 8 && pt[1] < b2 + 8) pt[1] = Math.min(s.bottom - 14, b2 + 12); }
-        document.querySelectorAll('#pad button').forEach(b => { const r = b.getBoundingClientRect(); if (r.width > 4 && getComputedStyle(b).visibility !== 'hidden' && pt[0] > r.left - 5 && pt[0] < r.right + 5 && pt[1] > r.top - 5 && pt[1] < r.bottom + 5) pt[1] = r.top - 9; });
+        /* ni la manette (le joystick dans son carré, A, B) : elle prend aussi un toucher posé à côté d'elle, car Chromium,
+           comme un téléphone, l'ajuste vers la commande la plus proche, jusqu'à une dizaine de points de son bord. En
+           844 × 390, le pouce posé « juste au-dessus » de B tombait à 8 points de A, haussé au-dessus de B : A répondait,
+           la marche s'arrêtait, et l'outil retouchait A sans fin (abubakr/ab1). Le pouce recule donc vers le héros, sur
+           la ligne qui mène à la cible (la direction que lit le labyrinthe), jusqu'à seize points de la boîte de chaque
+           commande ; jamais à moins de 32 points du héros, comptés sur la carte (se toucher soi-même, c'est agir devant
+           soi, et le labyrinthe ne conduit vers l'objectif qu'un toucher posé à plus de 24 points). S'il n'y a pas de
+           place, le toucher pris par la manette est relevé plus bas (« INACCESSIBLE »), au lieu d'un « BLOQUÉ » muet */
+        const pads = [...document.querySelectorAll('#pad .dpad, #pad button')].filter(b => getComputedStyle(b).visibility !== 'hidden').map(b => b.getBoundingClientRect()).filter(r => r.width > 4);
+        const libre = q => pads.every(r => q[0] < r.left - 16 || q[0] > r.right + 16 || q[1] < r.top - 16 || q[1] > r.bottom + 16);
+        const hx = (W.player.x - Math.round(W.cam.x)) / G.PW * c.width + c.left, hy = (W.player.y - 6 - Math.round(W.cam.y)) / G.PH * c.height + c.top, p0 = pt.slice();
+        for (let k = 19; k > 0 && !libre(pt); k--) { const q2 = [hx + (p0[0] - hx) * k / 20, hy + (p0[1] - hy) * k / 20]; if (Math.hypot((q2[0] - hx) / c.width * G.PW, (q2[1] - hy) / c.height * G.PH) < 32) break; pt[0] = q2[0]; pt[1] = q2[1]; }
         return { quoi: 'marche', ou, pt, souci: +getComputedStyle(f).opacity > 0.5 ? 'scène sous le noir du fondu' : '', texte: 'objectif ' + W.objIndex, pos: Math.round(W.player.x) + ',' + Math.round(W.player.y) }; }
       return { quoi: 'attente', ou };
     });
@@ -91,7 +106,10 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
       // la cible se choisit en la touchant elle-même : si trois touchers sur son corps ne la choisissent pas, c'est un défaut ; on finit par sa plaque
       if (s.quoi === 'cible' && s.corps) { visait = true; if (++rates > 3) { visait = false; const m = 'INACCESSIBLE en combat, toucher « ' + s.corps + ' » sur la scène ne le choisit pas (' + (s.ou || '') + ')'; if (!soucis.includes(m)) soucis.push(m); if (s.plaque) pt = s.plaque; } } else rates = 0;
       if (s.quoi === 'choix' && s.rects && s.rects.length) { const k = s.prompt + '|' + s.n, i = tours[k] = (tours[k] === undefined ? s.n - 1 : (tours[k] + s.n - 1) % s.n); pt = s.rects[Math.min(i, s.rects.length - 1)]; } // une mauvaise réponse revient : on en essaie une autre
+      if (s.quoi === 'marche') await p.evaluate(() => { if (window.__pris) window.__pris.length = 0; });
       await p.touchscreen.tap(pt[0], pt[1]);
+      // le pouce qui marche, pris par la manette (A, B, le joystick) : la marche s'arrête, et rien ne change jusqu'au « BLOQUÉ » — on le nomme
+      if (s.quoi === 'marche') { const pr = await p.evaluate(() => (window.__pris || []).slice()); if (pr.length) { const m = 'INACCESSIBLE ' + w + '×' + h + ' : le pouce qui marche (' + pt.map(Math.round) + ') est pris par la manette (« ' + pr[0] + ' ») — ' + (s.ou || ''); if (!soucis.includes(m)) { soucis.push(m); await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-manette.png') }); } } }
       await p.waitForTimeout(s.quoi === 'marche' ? 850 : s.quoi === 'chaine' ? 1200 : 430);
     }
     const resume = Object.keys(compte).map(k => k + ' ' + compte[k]).join(', '), menus = await p.evaluate(() => window.__menus), quoi = loin ? 'prologue et premier chapitre de la saga I terminés' : 'prologue terminé';
