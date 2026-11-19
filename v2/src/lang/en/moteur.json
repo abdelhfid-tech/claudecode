@@ -738,7 +738,7 @@
 {"k":"10nw01t.f","fr":"Manette tactile","t":"Touch controls","ou":"ui.js"},
 {"k":"14jw92a.8","fr":"affichée","t":"shown","ou":"ui.js"},
 {"k":"1h2o4pw.7","fr":"masquée","t":"hidden","ou":"ui.js"},
-{"k":"1ougpyg.7e","fr":"Sur un écran tactile, comme sur une console de poche : le joystick sous le pouce gauche (poussé jusqu’au bord, on court) ; A pour parler et agir, B pour frapper, sous le pouce droit. On peut aussi se déplacer en touchant la scène, et courir en la touchant deux fois.","t":"On a touch screen, as on a handheld console: the joystick under your left thumb (pushed all the way to the edge, you run); A to talk and act, B to strike, under your right thumb. You can also move by touching the scene, and run by touching it twice.","ou":"ui.js"},
+{"k":"1c8yhv0.8d","fr":"Sur un écran tactile, comme sur une console de poche : le joystick sous le pouce gauche pour se déplacer (poussé jusqu’au bord, on court) et choisir ; A pour parler, agir et valider ; B pour frapper et revenir en arrière, sous le pouce droit. On peut aussi toucher directement la scène et les boutons.","t":"On a touch screen, as on a handheld console: the joystick under your left thumb to move (push it all the way to the edge to run) and to choose; A to talk, act and confirm; B to strike and to go back, under your right thumb. You can also touch the scene and the buttons directly.","ou":"ui.js"},
 {"k":"iis1sr.3","fr":"Son","t":"Sound","ou":"ui.js"},
 {"k":"pxkkcb.6","fr":"activé","t":"on","ou":"ui.js"},
 {"k":"1hz0vep.5","fr":"coupé","t":"off","ou":"ui.js"},
@@ -991,6 +991,7 @@
 {"k":"1bxfjl.g","fr":"Agrandir l’image","t":"Enlarge the picture","ou":"page.html"},
 {"k":"144vm47.i","fr":"Cadran des étoiles","t":"Star dial","ou":"page.html"},
 {"k":"84fl7f.b","fr":"Se déplacer","t":"Moving","ou":"page.html"},
+{"k":"7sizkg.i","fr":"Frapper ou revenir","t":"Strike or go back","ou":"page.html"},
 {"k":"16wdciy.7","fr":"Valider","t":"Confirm","ou":"page.html"},
 {"k":"vukxpc.2d","fr":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire.","t":"Beta version. The historical and religious review by a specialist is still to be done.","ou":"promotion.js","note":"partager sa progression (partage.js), 19 novembre : proposition de l’agent, à relire"}
 ] }

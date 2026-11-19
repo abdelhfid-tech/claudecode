@@ -318,32 +318,56 @@ body.fin #menu .pane .perso-vue img { image-rendering: auto; }
 kbd { font-family: var(--f-mono); font-size: .86em; padding: .05em .4em; border: 1px solid rgba(255, 255, 255, .3); border-radius: 3px; }
 
 /* ---------- manette tactile ---------- */
-#pad { display: none; position: fixed; left: 0; right: 0; bottom: max(14px, env(safe-area-inset-bottom, 0px)); padding: 0 max(18px, env(safe-area-inset-left, 0px)); justify-content: space-between; align-items: flex-end; z-index: 15; pointer-events: none; }
+/* 2.x — sur un écran tactile, la manette sert partout (ui.js, pad ; demande du décideur, 19 novembre : « que les boutons
+   puissent servir à sélectionner (A) ou faire marche arrière (B) »). Elle passe au-dessus des écrans et des cartons, dans
+   une place qui lui est gardée et que rien ne lui dispute : en hauteur, la bande du bas (--pad-bas) ; en largeur, les deux
+   marges de l'image (--pad-cote). Masquée au choix du joueur (« Manette tactile »), elle n'est plus là du tout, et ne garde
+   aucune place ; effacée (pad-efface : une page qui ne peut pas lui laisser la place), elle garde sa place, invisible. */
+#pad { display: none; position: fixed; left: 0; right: 0; bottom: max(12px, env(safe-area-inset-bottom, 0px)); padding: 0 max(14px, env(safe-area-inset-right, 0px)) 0 max(14px, env(safe-area-inset-left, 0px)); justify-content: space-between; align-items: flex-end; z-index: 46; pointer-events: none; }
 body.touch #pad { display: flex; }
-body.in-dialog #pad, body.in-battle #pad, body.in-screen #pad { display: none; }
-#pad .dpad { position: relative; width: 132px; height: 132px; pointer-events: auto; }
-/* 2.x — le joystick du pouce gauche (ui.js, pad) : un cercle transparent, le bouton au milieu, que le pouce tire ; masqué au
-   choix du joueur (Réglages, « Manette tactile ») */
-body.sansjoy #pad .dpad { visibility: hidden; }
-#pad .dpad .joy { position: absolute; inset: 0; width: 132px; height: 132px; padding: 0; border-radius: 50%; background: rgba(255, 255, 255, .045); border: 1.5px solid rgba(233, 200, 119, .32); touch-action: none; -webkit-tap-highlight-color: transparent; }
+body.sansjoy #pad { display: none; }
+body.pad-efface #pad { visibility: hidden; }
+#pad .dpad { position: relative; width: 124px; height: 124px; pointer-events: auto; }
+/* 2.x — le joystick du pouce gauche (ui.js, pad) : un cercle transparent, le bouton au milieu, que le pouce tire */
+#pad .dpad .joy { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border-radius: 50%; background: rgba(255, 255, 255, .045); border: 1.5px solid rgba(233, 200, 119, .32); touch-action: none; -webkit-tap-highlight-color: transparent; }
 #pad .dpad .joy.down { background: rgba(255, 255, 255, .09); border-color: rgba(233, 200, 119, .5); }
-#pad .dpad .joy i { position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: rgba(233, 200, 119, .16); border: 1px solid rgba(233, 200, 119, .5); box-shadow: 0 0 10px rgba(0, 0, 0, .35); pointer-events: none; transition: transform .05s linear; }
+#pad .dpad .joy i { position: absolute; left: 50%; top: 50%; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%; background: rgba(233, 200, 119, .16); border: 1px solid rgba(233, 200, 119, .5); box-shadow: 0 0 10px rgba(0, 0, 0, .35); pointer-events: none; transition: transform .05s linear; }
 #pad .dpad .joy.down i { background: rgba(233, 200, 119, .3); transition: none; }
 #pad .dpad .joy.court { border-color: rgba(233, 200, 119, .78); }   /* 2.16 : tiré jusqu'au bord, on court — le cercle s'éclaire */
 #pad .dpad .joy.court i { background: rgba(233, 200, 119, .48); }
-#pad .ab { display: flex; gap: 14px; align-items: flex-end; pointer-events: none; } /* seuls les boutons reçoivent le toucher : entre eux, on touche la scène */
-#pad .ab button { pointer-events: auto; width: 62px; height: 62px; border-radius: 50%; background: rgba(20, 16, 36, .55); border: 1px solid rgba(233, 200, 119, .5); color: var(--gold); font-family: var(--f-display); font-size: 13px; touch-action: none; }
-#pad .ab .b { width: 64px; height: 64px; }
+#pad .ab { display: flex; gap: 12px; align-items: flex-end; pointer-events: none; } /* seuls les boutons reçoivent le toucher */
+#pad .ab button { pointer-events: auto; border-radius: 50%; color: var(--gold); touch-action: none; padding: 0; }
 #pad button.down { background: rgba(233, 200, 119, .35); }
-/* 2.x — la manette garde ses places dans toutes les langues : la croix sous le pouce gauche, « Valider » sous le pouce droit
+/* 2.x — la manette garde ses places dans toutes les langues : le joystick sous le pouce gauche, A et B sous le pouce droit
    (en arabe, la page va de droite à gauche, mais les pouces ne changent pas de main) */
 #pad { direction: ltr; }
 /* A et B, comme sur une console de poche : B plus bas, A plus haut et à droite ; deux lettres, aucun mot. Quand quelque chose
    est à portée de coup, B s'éclaire (ui.js, U.frapper) */
-#pad .ab { gap: 12px; }
-#pad .ab .a, #pad .ab .b { width: 64px; height: 64px; font-size: 22px; font-weight: 700; letter-spacing: 0; background: rgba(20, 16, 36, .6); border: 1.5px solid rgba(233, 200, 119, .6); font-family: var(--f-display); }
-#pad .ab .a { margin-bottom: 34px; }
+#pad .ab .a, #pad .ab .b { width: 62px; height: 62px; font-size: 22px; font-weight: 700; letter-spacing: 0; background: rgba(20, 16, 36, .6); border: 1.5px solid rgba(233, 200, 119, .6); font-family: var(--f-display); }
+#pad .ab .a { margin-bottom: 32px; }
+/* un petit écran tenu en hauteur : une manette plus petite, une bande plus basse */
+@media (max-height: 740px) { body.portrait #pad .dpad { width: 104px; height: 104px; } body.portrait #pad .dpad .joy i { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+  body.portrait #pad .ab .a, body.portrait #pad .ab .b { width: 56px; height: 56px; font-size: 20px; } body.portrait #pad .ab .a { margin-bottom: 26px; } }
+@media (max-height: 680px) { body.portrait #pad { bottom: max(8px, env(safe-area-inset-bottom, 0px)); } body.portrait #pad .dpad { width: 96px; height: 96px; }
+  body.portrait #pad .dpad .joy i { width: 40px; height: 40px; margin: -20px 0 0 -20px; } body.portrait #pad .ab .a { margin-bottom: 22px; } }
+/* en largeur : la manette dans les marges de l'image ; A au-dessus de B et un peu à sa droite, pour que la marge reste étroite */
+body:not(.portrait) #pad .dpad { width: 112px; height: 112px; }
+body:not(.portrait) #pad .dpad .joy i { width: 48px; height: 48px; margin: -24px 0 0 -24px; }
+body:not(.portrait) #pad .ab { gap: 0; }
+body:not(.portrait) #pad .ab .a, body:not(.portrait) #pad .ab .b { width: 58px; height: 58px; font-size: 21px; }
+body:not(.portrait) #pad .ab .b { margin-right: -18px; }
+body:not(.portrait) #pad .ab .a { margin-bottom: 62px; }
 body.frapper #pad .ab .b { background: rgba(74, 24, 34, .92); border: 2px solid var(--gold); color: #fff3c8; box-shadow: 0 0 0 3px rgba(8, 7, 18, .6), 0 0 16px rgba(233, 200, 119, .6); }
+/* la place gardée à la manette (ui.js, layout) : les écrans et les cartons s'arrêtent au-dessus de sa bande, ou entre ses deux
+   marges ; le secours se pose au-dessus d'elle */
+body.manette .screen, body.manette #card { bottom: var(--pad-bas, 0px); left: var(--pad-cote, 0px); right: var(--pad-cote, 0px); }
+body.manette:not(.portrait) .screen { padding-left: max(12px, 2vw); padding-right: max(12px, 2vw); }
+body.manette:not(.portrait) #card { padding-left: 16px; padding-right: 16px; }
+body.manette #secours { bottom: calc(var(--pad-bas, 0px) + max(12px, env(safe-area-inset-bottom, 0px))); }
+body.manette:not(.portrait) #battle .panel { grid-template-columns: 1fr 1fr; }   /* en largeur, la scène rognée : les commandes ont la moitié du panneau */
+/* au doigt, la sélection se voit nettement : le joystick la déplace, A la choisit (ui.js, focusList ; battle.js, listMenu ;
+   script.js, menuPick ; la cible d'un combat) */
+body.touch .sel, body.touch .plate.cur, body.touch .hrow.cur { outline: 2px solid #fff3c8; outline-offset: -2px; }
 
 /* ---------- portrait étroit : dialogue et commandes sous la scène ---------- */
 body.portrait { padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
@@ -352,7 +376,7 @@ body.portrait #dialog { top: calc(100% + 10px); bottom: auto; left: 6px; right: 
 body.portrait #dialog .text { font-size: 1.04em; line-height: 1.4; }
 body.portrait #dialog .seal { width: 3.8em; height: 3.8em; margin-top: -1.9em; left: .7em; }
 body.portrait #dialog.nar { padding-left: 1.2em; }
-body.portrait #choice { top: calc(100% + 10px); transform: translateX(-50%); width: calc(100% - 12px); max-height: calc(100vh - 100% - 30px); max-height: calc(100dvh - 100% - 30px); }
+body.portrait #choice { top: calc(100% + 10px); transform: translateX(-50%); width: calc(100% - 12px); max-height: calc(100vh - 100% - 30px - var(--pad-bas, 0px)); max-height: calc(100dvh - 100% - 30px - var(--pad-bas, 0px)); }
 body.portrait #choice .opt { padding: .58em .9em; }
 body.portrait #choice .opt.sel { transform: none; } /* pas de décalage : la liste occupe déjà toute la largeur */
 body.portrait #battle .panel { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; grid-template-columns: 1fr; }
@@ -533,7 +557,7 @@ body.in-build #buildbtn { background: var(--acc); color: #0b0a14; }
 #buildbar .info { color: var(--sand); min-height: 1.3em; } #buildbar .info em { color: var(--dim); }
 #buildbar .keys { color: var(--dim); font-size: .86em; } body.touch #buildbar .keys { display: none; }
 body.portrait #buildbar { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; font-size: 12px; }
-body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; } body.portrait.in-build #pad { bottom: max(6px, env(safe-area-inset-bottom, 0px)); }
+body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; }
 
 /* ---------- cadran des étoiles ---------- */
 #compass { position: absolute; left: 2%; top: 27%; display: flex; align-items: center; gap: .5em; pointer-events: none; z-index: 4; }
@@ -708,25 +732,24 @@ html[dir="rtl"] body.portrait #dialog .fig { left: auto; right: 1.2em; }
   #hud .chap, #hud .sub { display: none; }
   body.in-dialog #hud { visibility: hidden; }
 }
-/* le combat sur un petit écran tenu en hauteur (jusqu'à 700 points de haut, l'écran des shorts compris) : chaque compagnon
+/* le combat sur un petit écran tenu en hauteur (jusqu'à 700 points de haut, l'écran des shorts compris ; 2.x : 700 points sans la
+   bande de la manette, ui.js, body.serre) : chaque compagnon
    tient sur une ligne — son nom, sa Constance, son Souffle ; le niveau et la figure passent en tête des commandes de celui
    dont c'est le tour. Les cinq commandes et la leçon tiennent dans l'écran. */
-@media (max-height: 700px) {
-  body.portrait #battle .panel { gap: .4em; }
-  body.portrait #battle .heroes { gap: .14em; }
-  body.portrait .hrow { grid-template-columns: 1.5em minmax(0, 1fr) minmax(0, 1.55fr) 3.6em; gap: .45em; padding: .22em .5em; }
-  body.portrait .hrow .hs { width: 1.5em; height: 1.5em; }
-  body.portrait .hrow .hn { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .35em; min-width: 0; }
-  body.portrait .hrow .hn b { display: inline; }
-  body.portrait .hrow .hn small .nv { display: none; }
-  body.portrait .hrow .hbars { flex-direction: row; gap: .3em; }
-  body.portrait .hrow .hbars .bar { flex: 1 1 0; min-width: 0; }
-  body.portrait .hrow .hx .pips { justify-content: flex-end; }
-  body.portrait .hrow .bar.sk { margin-top: .2em; }
-  body.portrait #battle .cmd { padding: .3em .45em; gap: .22em; }
-  body.portrait .mi { padding: .42em .55em; }
-  body.portrait .mtitle .niv { display: inline; }
-}
+body.portrait.serre #battle .panel { gap: .4em; }
+body.portrait.serre #battle .heroes { gap: .14em; }
+body.portrait.serre .hrow { grid-template-columns: 1.5em minmax(0, 1fr) minmax(0, 1.55fr) 3.6em; gap: .45em; padding: .22em .5em; }
+body.portrait.serre .hrow .hs { width: 1.5em; height: 1.5em; }
+body.portrait.serre .hrow .hn { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .35em; min-width: 0; }
+body.portrait.serre .hrow .hn b { display: inline; }
+body.portrait.serre .hrow .hn small .nv { display: none; }
+body.portrait.serre .hrow .hbars { flex-direction: row; gap: .3em; }
+body.portrait.serre .hrow .hbars .bar { flex: 1 1 0; min-width: 0; }
+body.portrait.serre .hrow .hx .pips { justify-content: flex-end; }
+body.portrait.serre .hrow .bar.sk { margin-top: .2em; }
+body.portrait.serre #battle .cmd { padding: .3em .45em; gap: .22em; }
+body.portrait.serre .mi { padding: .42em .55em; }
+body.portrait.serre .mtitle .niv { display: inline; }
 .mlist.main .mi.seul { grid-column: 1 / -1; } /* la Sérénité, seule sur sa rangée : sur une ligne (battle.js, tenir), en hauteur comme en largeur */
 /* lot 2 : l'introduction d'un carton de pourparler ou d'idée noire passe en casse ordinaire (mêmes mots) ; les titres de
    lieu (#card.title p) ne changent pas, ni les surtitres de trois mots au plus (« POURPARLER », « UNE IDÉE NOIRE ») */

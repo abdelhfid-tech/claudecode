@@ -301,7 +301,8 @@
     // vertus ou d'objets, elle, peut défiler). En largeur, le panneau est posé sur le bas de l'écran : la liste des
     // commandes s'allonge d'abord vers le haut, tant que le panneau reste dans l'écran ; ensuite seulement, elle se resserre.
     const list = main ? box.querySelector('.mlist') : null, defile = () => !!list && list.scrollHeight > list.clientHeight + 1;
-    const deborde = () => { const r = pan.getBoundingClientRect(); return r.bottom > innerHeight + 1 || r.top < 0 || defile(); };
+    const bas = innerHeight - ((I.ui && I.ui.padBas) || 0);   // 2.x : en hauteur, la bande de la manette tactile reste libre (ui.js, layout)
+    const deborde = () => { const r = pan.getBoundingClientRect(); return r.bottom > bas + 1 || r.top < 0 || defile(); };
     if (list) { list.style.maxHeight = ''; if (defile() && !document.body.classList.contains('portrait')) { list.style.maxHeight = 'none'; if (pan.getBoundingClientRect().top < 0) list.style.maxHeight = ''; } }
     for (const f of [0.94, 0.88, 0.82].filter(v => v > mini + 0.01).concat(mini)) { if (!deborde()) break; box.style.fontSize = (0.86 * f).toFixed(3) + 'em'; }
   }

@@ -255,7 +255,7 @@
     const W = I.world, slot = Gr.slotOf(id), g = D.GEAR[id], gain = h => Gr.score(h.def, id) - (Gr.of(h)[slot] ? Gr.score(h.def, Gr.of(h)[slot]) : 0);
     const who = W.party.map(x => W.hero(x)).filter(h => Gr.can(h.def, id) && gain(h) > 0.01).sort((a, b) => gain(b) - gain(a));
     if (!who.length) return;
-    const opts = who.map(h => ({ html: `<b>${I.esc(h.def.name)}</b> · ${Gr.delta(h, slot, id)}` })).concat([{ t: I.t('Personne pour l’instant : à la réserve') }]);
+    const opts = who.map(h => ({ html: `<b>${I.esc(h.def.name)}</b> · ${Gr.delta(h, slot, id)}` })).concat([{ t: I.t('Personne pour l’instant : à la réserve'), retour: true }]);
     const i = await S.menuPick({ cls: 'gear', html: `${Gr.img(id)} <span><b>${I.esc(g.name)}</b> · ${D.SLOTS[slot].toLowerCase()}<br><small>${Gr.effets(g)}</small></span><em>${I.t('Qui la porte ?')}</em>` }, opts);
     if (i < who.length && Gr.put(who[i], slot, id)) { I.audio.sfx('light'); S.toast(I.t('<b>{nom}</b> porte désormais : {piece}.', { nom: I.esc(who[i].def.name), piece: I.esc(g.name) }), 2400); }
   };

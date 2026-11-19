@@ -738,7 +738,7 @@
 {"k":"10nw01t.f","fr":"Manette tactile","t":"أداة التحكّم باللمس","ou":"ui.js"},
 {"k":"14jw92a.8","fr":"affichée","t":"ظاهرة","ou":"ui.js"},
 {"k":"1h2o4pw.7","fr":"masquée","t":"مخفيّة","ou":"ui.js"},
-{"k":"1ougpyg.7e","fr":"Sur un écran tactile, comme sur une console de poche : le joystick sous le pouce gauche (poussé jusqu’au bord, on court) ; A pour parler et agir, B pour frapper, sous le pouce droit. On peut aussi se déplacer en touchant la scène, et courir en la touchant deux fois.","t":"على شاشة اللمس، كما في جهاز ألعاب محمول: عصا التحكّم تحت الإبهام الأيسر (إذا دفعتها إلى حافّتها ركضت)؛ وتحت الإبهام الأيمن A للكلام والفعل، وB للضرب. ويمكنك أيضًا أن تتنقّل بلمس المشهد، وأن تركض إذا لمسته مرّتين.","ou":"ui.js"},
+{"k":"1c8yhv0.8d","fr":"Sur un écran tactile, comme sur une console de poche : le joystick sous le pouce gauche pour se déplacer (poussé jusqu’au bord, on court) et choisir ; A pour parler, agir et valider ; B pour frapper et revenir en arrière, sous le pouce droit. On peut aussi toucher directement la scène et les boutons.","t":"على شاشة اللمس، كما في جهاز ألعاب محمول: عصا التحكّم تحت الإبهام الأيسر للتنقّل (إذا دفعتها إلى حافّتها ركضت) وللاختيار؛ وتحت الإبهام الأيمن A للكلام والفعل والتأكيد، وB للضرب والرجوع. ويمكنك أيضًا أن تلمس المشهد والأزرار مباشرةً.","ou":"ui.js"},
 {"k":"iis1sr.3","fr":"Son","t":"الصوت","ou":"ui.js"},
 {"k":"pxkkcb.6","fr":"activé","t":"يعمل","ou":"ui.js"},
 {"k":"1hz0vep.5","fr":"coupé","t":"مقطوع","ou":"ui.js"},
@@ -991,6 +991,7 @@
 {"k":"1bxfjl.g","fr":"Agrandir l’image","t":"تكبير الصورة","ou":"page.html"},
 {"k":"144vm47.i","fr":"Cadran des étoiles","t":"قرص النجوم","ou":"page.html"},
 {"k":"84fl7f.b","fr":"Se déplacer","t":"التنقّل","ou":"page.html"},
+{"k":"7sizkg.i","fr":"Frapper ou revenir","t":"اضرب أو ارجع","ou":"page.html"},
 {"k":"16wdciy.7","fr":"Valider","t":"تأكيد","ou":"page.html"},
 {"k":"vukxpc.2d","fr":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire.","t":"الإصدار التجريبي. والمراجعة التاريخية والدينية على يد مختصّ لم تتمّ بعد.","ou":"promotion.js","note":"partager sa progression (partage.js), 19 novembre : proposition de l’agent, à relire"}
 ] }
