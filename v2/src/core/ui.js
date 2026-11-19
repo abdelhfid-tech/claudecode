@@ -602,6 +602,8 @@
       const halo = (x, y, r) => { c.fillStyle = 'rgba(10,8,20,.75)'; c.beginPath(); c.arc(x, y, r, 0, 6.3); c.fill(); };
       W.prayerPts().forEach(sp => { const x = sp[0] * T + 8, y = sp[1] * T + 10; halo(x, y, 9 * k); star(x, y, 7.5 * k, '#7fe6e0', 8); });
       if (m.spots.comptoir) { const x = m.spots.comptoir[0] * T + 8, y = m.spots.comptoir[1] * T + 8; halo(x, y, 8 * k); c.strokeStyle = '#e9c877'; c.lineWidth = 2 * k; c.beginPath(); c.arc(x, y, 5 * k, 0, 6.3); c.stroke(); c.fillStyle = '#e9c877'; c.beginPath(); c.arc(x, y, 1.6 * k, 0, 6.3); c.fill(); }
+      if (I.rodeurs && m.env.dedale && I.rodeurs.porteVue()) { const pi = I.rodeurs.interdite(), h = pi.img.hd || 1, x = pi.porte[0] * T + 8, y = pi.porte[1] * T + 8; // 2.x : la pièce interdite, une fois vue de près
+        c.drawImage(pi.img, pi.ox, pi.oy, pi.img.width / h, pi.img.height / h); halo(x, y, 9 * k); I.rodeurs.signe(c, x, y, 7 * k); }
       if (tg) { halo(tg.gx, tg.gy - 6, 11 * k); star(tg.gx, tg.gy - 6, 9.5 * k, '#ffe08a', 4); }
       const p = W.player; halo(p.x, p.y - 8, 9 * k); c.fillStyle = '#ffffff'; c.beginPath(); c.arc(p.x, p.y - 8, 6 * k, 0, 6.3); c.fill(); c.fillStyle = '#ff7a5c'; c.beginPath(); c.arc(p.x, p.y - 8, 3.2 * k, 0, 6.3); c.fill();
     };

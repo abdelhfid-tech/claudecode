@@ -56,16 +56,19 @@
   // appelé quand un lieu vient d'être chargé : un labyrinthe arme son chrono, tout autre lieu l'éteint
   R.arme = function () {
     const d = W.map && W.map.env && W.map.env.dedale;
+    R._heurt = undefined; R._rearme = true; R._porteVers = null;
     if (W.excursion) return; // la descente du râwî arme le sien
     R.chrono = d && !d.descente ? { total: R.duree(d.n, d.tour), reste: R.duree(d.n, d.tour), n: d.n } : null; affiche();
     poserMeutes();
   };
   // appelé à chaque pas du monde, quand le joueur a la main
   R.tic = function (dt) {
+    porteTic();
     if (W.excursion) return ticDescente(dt);
     const c = R.chrono; if (!c || c.fini) { if (el && !el.hidden && !c) el.hidden = true; return; }
     if (I.debug.compte !== undefined) { c.reste = Math.min(c.reste, I.debug.compte); I.debug.compte = undefined; }
-    c.reste -= dt; if (c.reste <= 0) { c.fini = true; R.remonte(); } else { affiche(); ticMeutes(dt); }
+    if (!R.lit()) c.reste -= dt; // la phrase de la porte se lit : le temps ne court pas (exigence 23)
+    if (c.reste <= 0) { c.fini = true; R.remonte(); } else { affiche(); ticMeutes(dt); }
   };
   R.cache = function () { if (el) el.hidden = true; };
   // le temps est écoulé : on remonte au seuil, le labyrinthe se redessine un cran plus simple, rien n'est perdu
@@ -118,12 +121,14 @@
       const ch = { id: 'descente', title: I.t('La noosphère'), sub: (Pk.titre || '') + ' · ' + (T0.sousTitre || I.t('la descente du râwî')), objectives: [], party: heros.map(h => h.id) };
       W.excursion = E; W.saga = { id: 'idris', name: I.t('La noosphère'), frame: true, heroes: I.sagas.idris.heroes, enemies: C0().enemies || {}, chapters: [ch] }; W.ci = 0; W.ch = ch; W.objIndex = 0; W.minLvl = 1;
       W.roster = {}; heros.forEach(h => { W.roster[h.id] = h; }); W.party = ch.party.slice(); W.refreshSheets(); W.npcs = []; W.chests = []; W.foes = [];
-      // ceux qui rôdent : tour à tour un mal du cœur encore debout, une idée noire — posés loin du seuil
+      // ceux qui rôdent : tour à tour un mal du cœur encore debout, une idée noire. Les maux du cœur sont posés loin du seuil ;
+      // les idées noires sortent de la pièce interdite, l'une après l'autre (2.x ; demande du décideur, 19 novembre)
       const qui = []; for (let i = 0; qui.length < R.NOMBRE[n] && (i < vices.length || i < noirs.length); i++) { if (i < vices.length) qui.push(vices[i]); if (i < noirs.length && qui.length < R.NOMBRE[n]) qui.push(noirs[i]); }
       W.loadMap('noos', { hue: 262, g: neuve(), n, descente: true }, 'seuil');
       W.foes = qui.map((id, i) => ({ id: 'rodeur' + i, group: [id], map: 'noos', rodeur: true, done: false, placed: false, ph: i * 1.7, v: R.MARCHE * R.ALLURE[n] }));
-      const m = W.map, d = m.env.dedale, T = 16, loin = (d.loin || []).slice(); E.duree = R.duree(n, d.tour); R.chrono = { total: E.duree, reste: E.duree, n };
-      W.foes.forEach((f, i) => { let q = loin.find(c => W.foes.every(g => !g.placed || Math.hypot(g.x - (c[0] * T + 16), g.y - (c[1] * T + 16)) > 6 * T)) || loin[i] || loin[0]; if (!q) { f.done = true; return; } f.x = q[0] * T + 16; f.y = q[1] * T + 16; f.placed = true; f.cx = null; });
+      const m = W.map, d = m.env.dedale, T = 16, loin = (d.loin || []).slice(), porte = d.interdite; E.duree = R.duree(n, d.tour); R.chrono = { total: E.duree, reste: E.duree, n }; let rang = 0;
+      W.foes.forEach((f, i) => { if (porte && (D.NOIRS || []).includes(f.group[0])) { f.sortie = R.SORTIE[n] + rang++ * R.SORTIE_PAS[n]; return; } // elle attend derrière la porte
+        let q = loin.find(c => W.foes.every(g => !g.placed || Math.hypot(g.x - (c[0] * T + 16), g.y - (c[1] * T + 16)) > 6 * T)) || loin[i] || loin[0]; if (!q) { f.done = true; return; } f.x = q[0] * T + 16; f.y = q[1] * T + 16; f.placed = true; f.cx = null; });
       W.player.dir = 2; W.hud(); $('#hud').hidden = false; document.body.classList.add('descente');
       await S.fade('in', 500);
       S.toast(I.esc(T0.regle || ''), { pas: true }); // 2.x (D189) : la règle passe au fil, hors de l'image, jusqu'au premier pas (trente secondes au plus)
@@ -156,7 +161,8 @@
   function ticDescente(dt) {
     const E = W.excursion, p = W.player, c = R.chrono; if (!E || E.fin || E.combat) return; E.t += dt;
     if (I.debug.compte !== undefined) { c.reste = Math.min(c.reste, I.debug.compte); I.debug.compte = undefined; }
-    c.reste -= dt; affiche();
+    if (!R.lit()) c.reste -= dt; // la phrase de la porte se lit : le temps ne court pas (exigence 23)
+    affiche(); sortir(E);
     const ici = salleDe(p.x, p.y), s = W.spotPx('issue');
     if (s && Math.hypot(s[0] - p.x, s[1] - p.y) < 30) return R.finir('issue');
     if (ici === 'abri' && !E.abri) { E.abri = true; S.toast(I.esc(P().aLAbri || ''), 6000); I.audio.sfx('light'); } else if (ici !== 'abri') E.abri = false;
@@ -170,6 +176,88 @@
   R.touche = (x, y) => !!(W.excursion && W.excursion.abri && Math.hypot(x - W.player.x, y - 10 - W.player.y) < 16 && R.attendre());
   R.depart = function () { const k = R.attente; R.attente = null; if (k) R.entrer(k); };
   R.texte = k => I.esc(P()[k] || '');
+
+  /* ================= la pièce interdite (2.x ; demande du décideur, 19 novembre) =================
+     Chaque labyrinthe a la sienne : dedale.js la place (après le tirage, sans rien en changer), maps.js la dessine. Sa porte
+     est toujours close : aucune suite du code ne l'ouvre — c'est du vide, que rien ne traverse, ni celui qui mène, ni ceux
+     qui le suivent, ni ceux qui rôdent. Personne ne sait ce qu'il y a derrière : on en parle par ouï-dire, quand celui qui
+     mène s'y heurte ou que le joueur la désigne (A, Entrée, un toucher). C'est une ligne du fil — le plus léger de ce qui se
+     dit en jeu —, et le chrono ne court pas pendant qu'elle s'affiche (exigence 23). Vue de près, elle a son petit signe sur
+     le plan. Ce n'est pas un outil : ni leçon, ni message en début de chapitre ; la partie n'en garde rien.
+     - Dans la descente du râwî, c'est de là que sortent les idées noires : elles filtrent sous la porte, qui reste close,
+       comme une fumée sombre, l'une après l'autre (R.SORTIE, R.SORTIE_PAS), puis rôdent comme les autres. La noosphère est
+       la sienne : elles sortent de lui, aucun dehors ne les envoie. Une idée noire dissipée ne ressort pas.
+     - Dans le labyrinthe d'un récit, rien n'en sort, et la phrase ne parle pas des idées noires (exigences 16, 22 et 23). */
+  // la première sortie (en secondes de descente), puis l'écart entre deux sorties, par profondeur ; la fumée les précède
+  R.SORTIE = [1.5, 1.5, 1.2, 1.2, 1, 1]; R.SORTIE_PAS = [9, 8, 7, 6, 5, 4.5]; R.FUMEE = 1.4;
+  const VERS = { sud: [0, 1], nord: [0, -1], est: [1, 0], ouest: [-1, 0] }, REGARD = { sud: 3, nord: 0, est: 1, ouest: 2 }; // où regarde la porte ; d'où on la regarde
+  const Pi = () => { const d = W.map && W.map.env && W.map.env.dedale; return (d && d.interdite) || null; };
+  R.interdite = Pi;
+  const centre = q => [q.porte[0] * 16 + 8, q.porte[1] * 16 + 8], devantPx = q => [q.devant[0] * 16 + 8, q.devant[1] * 16 + 11];
+  const vues = new Set(), cleVue = () => { const d = W.map.env.dedale; return (d.descente ? 'd' : 'c') + d.graine; }; // en mémoire seulement
+  R.porteVue = () => !!Pi() && vues.has(cleVue());
+  // la phrase de la porte, dans la langue du jeu : celle de la descente du râwî, ou celle d'un récit
+  R.direPorte = function () {
+    const q = Pi(); if (!q) return false; R._rearme = false; vues.add(cleVue());
+    if (R._porteDit && R._porteDit.isConnected) return true; // elle se lit déjà, ou attend son tour
+    R._porteDit = S.toast(W.map.env.dedale.descente ? I.t('Une porte close. Certains disent qu’un trésor dort derrière ; d’autres, un monstre. Ce qui est sûr, c’est que les idées noires en sortent.')
+      : I.t('Une porte close. Certains disent qu’un trésor dort derrière ; d’autres, un monstre. Nul ne sait.'));
+    R.portesDites = (R.portesDites || 0) + 1; return true;
+  };
+  // elle s'affiche : le chrono ne court pas
+  R.lit = () => !!(R._porteDit && R._porteDit.isConnected && !R._porteDit.hidden && $('#toasts').classList.contains('montre'));
+  // celui qui mène est devant la porte et la regarde
+  R.faceAPorte = function () { const q = Pi(); if (!q || I.scene !== W) return false; const p = W.player, d = devantPx(q);
+    return p.dir === REGARD[q.face] && Math.abs(p.x - d[0]) < 12 && Math.abs(p.y - d[1]) < 12; };
+  // world.js : un pas refusé ; s'il bute sur la porte, c'est un heurt
+  R.heurte = function (nx, ny) { const q = Pi(); if (!q) return; const sur = (x, y) => Math.floor(x / 16) === q.porte[0] && Math.floor(y / 16) === q.porte[1];
+    if (sur(nx - 4, ny - 5) || sur(nx + 4, ny - 5) || sur(nx - 4, ny) || sur(nx + 4, ny)) R._heurt = W.t; };
+  // au doigt : toucher la porte (ou la pièce), c'est la désigner — on va devant, on la regarde, on en entend parler
+  R.toucherPorte = function (wx, wy) {
+    const q = Pi(); if (!q) return false; const tx = Math.floor(wx / 16), ty = Math.floor(wy / 16), s = q.salle;
+    if (!((tx === q.porte[0] && ty === q.porte[1]) || (tx >= s[0] && tx < s[0] + s[2] && ty >= s[1] && ty < s[1] + s[3]))) return false;
+    const p = W.player, d = devantPx(q), voir = () => { p.dir = REGARD[q.face]; R.direPorte(); };
+    if (Math.hypot(p.x - d[0], p.y - d[1]) < 14) { W.stop(); voir(); } else W.goTo(d[0], d[1], { then: voir });
+    return true;
+  };
+  // à chaque pas : vue de près (le plan y pose son signe) ; heurtée, elle fait parler d'elle (une fois, jusqu'à ce qu'on s'en éloigne)
+  function porteTic() {
+    const q = Pi(); if (!q) return; const p = W.player, c0 = centre(q), loin = Math.hypot(p.x - c0[0], p.y - 6 - c0[1]);
+    if (loin < 56) vues.add(cleVue()); if (loin > 56) R._rearme = true;
+    if (R._heurt !== undefined && W.t - R._heurt < 0.3 && R._rearme) { R._heurt = undefined; R.direPorte(); }
+  }
+  // la descente : à son heure, une idée noire filtre sous la porte (la fumée la précède), puis paraît devant, et rôde. Elle
+  // attend tant que le râwî se tient devant la porte, ou qu'un autre y est : la fumée continue de filtrer.
+  function sortir(E) {
+    const q = Pi(); if (!q) return; const d = devantPx(q), x = d[0], y = q.devant[1] * 16 + 8, p = W.player;
+    for (const f of W.foes) { if (f.sortie === undefined || f.placed || f.done) continue;
+      if (f.sortie - E.t <= R.FUMEE && f.fumee === undefined) f.fumee = E.t;
+      if (E.t < f.sortie) continue;
+      if (Math.hypot(p.x - x, p.y - y) < 26 || W.foes.some(g => g !== f && g.rodeur && g.placed && !g.done && Math.hypot(g.x - x, g.y - y) < 16)) continue;
+      const v = VERS[q.face]; f.x = x; f.y = y; f.placed = true; f.cx = null; f.dx = v[0]; f.dy = v[1]; f.sorti = E.t; f.premier = [x, y]; R.sorties = (R.sorties || 0) + 1;
+      I.audio.sfx('dark');
+      for (let i = 0; i < 12; i++) { const a = Math.random() * 6.28; I.gfx.spawn({ x: x - W.cam.x + Math.cos(a) * 4, y: y - W.cam.y - 6 + Math.sin(a) * 3, vx: Math.cos(a) * 26 + v[0] * 18, vy: Math.sin(a) * 18 + v[1] * 18 - 6, life: 0.9, size: 2.4 + Math.random() * 1.6, color: '#0d0612', a: 0.75, blend: 'source-over' }); }
+      break; } // une à la fois
+  }
+  R.sortir = sortir;
+  // le dessin : la pièce et sa porte (une image de maps.js), sa lueur ; dans la descente, la fumée qui filtre sous la porte
+  R.dessinerPorte = function (c, cx, cy, t, lights) {
+    const q = Pi(); if (!q || !q.img) return; const G = I.gfx, iw = q.img.width / (q.img.hd || 1), ih = q.img.height / (q.img.hd || 1);
+    if (q.ox - cx > G.PW || q.oy - cy > G.PH || q.ox + iw - cx < 0 || q.oy + ih - cy < 0) return;
+    c.drawImage(q.img, q.ox - cx, q.oy - cy); const c0 = centre(q);
+    lights.push({ x: c0[0] - cx, y: c0[1] - cy, r: 36, color: '#ff6a7e', a: 0.55 + Math.sin(t * 1.7) * 0.08 });
+    const E = W.excursion; if (!E) return; const v = VERS[q.face], bx = c0[0] + v[0] * 7 - cx, by = c0[1] + v[1] * 7 - cy, px = v[1] ? 1 : 0, py = v[0] ? 1 : 0;
+    for (const f of W.foes) { if (f.fumee === undefined || f.done || (f.placed && E.t - f.sorti > 1)) continue;
+      const age = E.t - f.fumee, fort = Math.min(1, age / 0.6) * (f.placed ? Math.max(0, 1 - (E.t - f.sorti)) : 1), hue = ((C0().enemies || {})[f.group[0]] || {}).hue || 270;
+      c.globalAlpha = 0.85 * fort; c.fillStyle = '#07020a'; c.beginPath(); c.ellipse(bx, by, px ? 6 : 2, py ? 6 : 2, 0, 0, 6.3); c.fill(); // le seuil, noirci : c'est par là qu'elle filtre
+      for (let i = 0; i < 12; i++) { const u = (age * 0.7 + i / 12) % 1, l = Math.sin(i * 2.3 + t * 1.3) * (2 + u * 6), X = bx + v[0] * u * 18 + px * l, Y = by + v[1] * u * 18 + py * l - u * 4, r = 1.8 + u * 5.5, a = (1 - u) * 0.9 * fort;
+        c.globalAlpha = a; c.fillStyle = '#0a0310'; c.beginPath(); c.arc(X, Y, r, 0, 6.3); c.fill();
+        c.globalAlpha = a * 0.7; c.strokeStyle = `hsl(${hue},60%,52%)`; c.lineWidth = G.D > 1 ? 0.5 : 1; c.stroke(); }
+      c.globalAlpha = 1; }
+  };
+  // le petit signe d'interdit du plan : un cercle rouge barré
+  R.signe = function (c, x, y, r) { c.fillStyle = '#f1e6e4'; c.beginPath(); c.arc(x, y, r, 0, 6.3); c.fill(); c.strokeStyle = '#d0182a'; c.lineWidth = Math.max(0.5, r * 0.32);
+    c.beginPath(); c.arc(x, y, r * 0.84, 0, 6.3); c.stroke(); c.beginPath(); c.moveTo(x - r * 0.6, y - r * 0.6); c.lineTo(x + r * 0.6, y + r * 0.6); c.stroke(); };
 
   /* ================= frapper ce qui rôde (2.x) =================
      « Valider » — ou toucher ce qui rôde — frappe devant soi, avec l'arme que porte celui qui mène : le geste de

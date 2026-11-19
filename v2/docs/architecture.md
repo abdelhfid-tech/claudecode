@@ -766,8 +766,9 @@ la descente commence dès que le joueur a la main. Elle se joue dans le moteur d
 reprise** : celui d'avant est gardé, le monde reçoit un récit d'un seul chapitre sans objectif (`world.excursion`), et
 l'on revient au récit par ce point de reprise, comme on reprend une partie. Pendant ce temps aucun point de reprise n'est
 écrit, et la halte est fermée. Le lieu est le labyrinthe de genre « descente » : le seuil, l'issue, deux abris. Ceux qui
-rôdent — tour à tour un mal du cœur encore debout, une idée noire — partent des carrefours les plus lointains, errent de
-case en case, prennent en chasse à moins de seize cases, et n'entrent jamais dans un abri ; ils sont de 2 à 5 et vont de
+rôdent — tour à tour un mal du cœur encore debout, une idée noire — errent de case en case, prennent en chasse à moins de
+seize cases, et n'entrent jamais dans un abri : les maux du cœur partent des carrefours les plus lointains, les idées
+noires sortent de la pièce interdite, l'une après l'autre (voir plus bas) ; ils sont de 2 à 5 et vont de
 0,55 à 0,92 fois le pas du râwî. Quatre issues : **l'issue** (un niveau, une fois par chapitre, puis de l'expérience) ;
 **un abri** jusqu'à la fin du chrono (+1 d'Esprit, +2 de Souffle pour de bon, dix fois au plus ; Entrée, ou toucher son
 personnage, laisse passer le temps) ; **le temps écoulé** hors d'un abri (on remonte, rien n'est perdu) ; **rattrapé**
@@ -794,6 +795,69 @@ au chrono. *Dans la descente du râwî*, un coup sonne et repousse, rien de plus
 (`R.peutFaireFace`), chaque coup entame une idée noire (`R.TENUE`, de 3 à 6) jusqu'à la dissiper — un mal du cœur, lui,
 ne s'entame pas. La première fois que quelque chose approche, le jeu donne la leçon (« Frapper ce qui rôde », au
 Recueil). `tools/descente.js`, section C, éprouve tout cela.
+
+**La pièce interdite** (2.x ; demande du décideur, 19 novembre : « dans les labyrinthes je veux toujours une pièce
+secrète interdite 🚫 toujours fermée où nul ne sait ce qui s'y trouve » ; « certains disent c'est un trésor, d'autres
+disent que c'est un monstre, en tout cas c'est de là que sortent les idées noires » ; formulation et choix de l'agent, à
+valider). Chaque labyrinthe en a une, ceux des chapitres comme la descente du râwî, à toute profondeur, plan de repli
+compris.
+- *Sa place* (`dedale.js`, `interdite(plan, genre)`, rangée dans `plan.interdite` : `porte`, `face`, `devant`, `salle`,
+  `repli`, `petite`). Elle se choisit **après** le tirage, d'après le plan seul — un hachage de `g` départage les places
+  également bonnes —, sans rien demander à la suite « hasard » et sans changer une case de `g` : pour une même graine, le
+  labyrinthe est case pour case celui d'avant, et une partie reprise retrouve le même lieu (`tools/essais/dedales.json`
+  garde les empreintes de 1 200 plans relevées avant elle). La porte est une case de vide bordée d'une seule case
+  praticable, « devant », qui est un pont (jamais une salle nommée ni un abri) ; la pièce, un rectangle de vide derrière
+  elle, d'une à quatre cases de profondeur et d'une à six de large, qui ne touche aucune case praticable et reste dans la
+  carte. De préférence, la porte est au fond d'un cul-de-sac, à l'écart du seuil (plus d'un tiers de la plus grande
+  distance), des lieux nommés (trois cases) et du chemin qui les relie : secrète par sa place. Dans une descente, elle est
+  toujours à la moitié au moins de la plus grande distance au seuil, et ni elle ni la pièce ne touchent l'issue ni les
+  abris. Les replis vont du fond d'un cul-de-sac au côté d'un cul-de-sac, puis au pourtour du dédale (la pièce dans la
+  marge du plan, qui a toujours deux cases), puis à n'importe quel pont ; à la profondeur 5, la maille de trois cases ne
+  laisse de place que dans la marge. Le relevé de dedales.js dit combien de fois chaque repli sert.
+- *Son dessin* (`maps.js`, `interdite()`). Une image à part, refaite avec la carte (donc dans les trois dessins), posée
+  sur le sol et sous les personnages (`R.dessinerPorte`, appelé par `world.render`) : la masse fermée de la pièce — un mur,
+  un toit de tuiles et son faîte, sa face sud dans l'ombre, bordés d'une lueur rouge sombre —, et la porte, lourde, dans
+  le mur qui regarde « devant » : montants de pierre, vantail de planches cerclé de fer, un seuil d'ombre ; tournée vers
+  « devant » comme une porte de donjon vue de haut ; dessus, toujours droit, le signe d'interdit — un disque pâle, un cercle
+  rouge, une barre du haut à gauche au bas à droite —, posé au point, sans lettre ni émoji ni symbole religieux. Une lueur
+  rouge, faible, l'éclaire.
+- *Toujours close.* La porte et la pièce sont du vide : rien ne les traverse, ni celui qui mène, ni ceux qui le suivent,
+  ni ceux qui rôdent (`passable` ne connaît que les ponts et les salles), ni un saut de carte ou une marche de récit
+  (`resolve` ne pose jamais personne sur une case pleine). Aucune suite du code ne l'ouvre ; rien n'y est rangé ; la partie
+  n'en garde rien.
+- *Ce qu'on en dit.* Personne ne sait ce qu'il y a derrière : on en parle par ouï-dire, quand celui qui mène s'y heurte
+  (`R.heurte`, appelé par `world.js` quand un pas est refusé ; une fois, jusqu'à ce qu'on s'en éloigne) ou que le joueur la
+  désigne — A ou Entrée devant elle (`R.faceAPorte`), ou un toucher sur la porte ou la pièce (`R.toucherPorte` : on y va,
+  on la regarde). C'est une ligne du fil (`S.toast`, qui rend désormais sa ligne), le plus léger de ce qui se dit en jeu ;
+  le chrono ne court pas pendant qu'elle s'affiche (`R.lit`, exigence 23). Deux phrases, propositions de l'agent à valider :
+  dans la descente, « Une porte close. Certains disent qu'un trésor dort derrière ; d'autres, un monstre. Ce qui est sûr,
+  c'est que les idées noires en sortent. » ; dans un chapitre, là où marchent des Compagnons, « … Nul ne sait. » — aucun
+  texte n'y lie le lieu aux idées noires. Le trésor et le monstre ne sont que des rumeurs : jamais dessinés, nommés,
+  comptés ni mis en scène. Vue de près (à trois cases et demie), la porte a son petit signe d'interdit sur la mini-carte et
+  sur la Carte de la halte (`R.porteVue`, en mémoire seulement) ; la flèche d'objectif n'y mène jamais. Ce n'est pas un
+  outil : ni leçon, ni message en début de chapitre.
+- *D'où sortent les idées noires* (la descente du râwî seulement, `R.SORTIE`, `R.SORTIE_PAS`, `R.FUMEE`). À l'entrée, les
+  idées noires qui ne sont pas dissipées ne sont pas sur les ponts : elles attendent derrière la porte, et sortent l'une
+  après l'autre — la première après une seconde à une seconde et demie, puis une toutes les 9 à 4,5 secondes selon la
+  profondeur. Une fumée sombre filtre d'abord sous la porte, qui reste close (une seconde et demie avant la sortie) ; puis l'idée noire paraît devant elle, avec le bruitage
+  « dark », et rôde comme les autres : même allure, même frappe, mêmes règles. Elle attend tant que le râwî se tient
+  devant la porte, ou qu'un autre rôdeur y est (la fumée continue de filtrer). Une idée noire dissipée l'est jusqu'au
+  chapitre suivant et ne ressort pas. Les maux du cœur gardent leur place, loin du seuil. La noosphère est celle du râwî :
+  les idées noires sortent de lui, aucun dehors ne les envoie (exigence 18) ; rien n'évoque Iblîs, un démon, un djinn ni
+  un souffleur. *La cadence* a été mesurée (vingt-quatre labyrinthes : quatre graines, six profondeurs, deux
+  répétitions ; le râwî marchant du seuil à l'issue, image par image, avec le vrai moteur) : avant, 21 descentes sur 48
+  finissaient par un contact, au bout de 16,9 s en moyenne, et un rôdeur venait à six cases dans 24 sur 48 (16,1 s) ;
+  avec les idées noires qui sortent de la porte, 24 sur 48, au bout de 17,7 s, et 31 sur 48 (17,4 s). Le râwî qui reste
+  au seuil n'est pas plus inquiété qu'avant (aucun contact en une minute, avant comme après).
+- *Dans le labyrinthe d'un récit*, rien ne sort de la pièce, et aucune idée noire n'apparaît (exigences 16, 22 et 23) : les
+  petites chimères qui rôdent gardent leur placement.
+- *Contrôles.* `tools/dedales.js` : sur dix mille tirages par profondeur et par genre, chaque plan a exactement une pièce,
+  bien posée ; avec ou sans elle, le même plan (comparé au plan nu un tirage sur cinq, et aux empreintes d'avant) ;
+  « ABSENT » pour une pièce manquante, « ÉCART » pour un plan changé ou une porte praticable. `tools/descente.js`,
+  section D : dans un vrai chapitre et dans la descente, la porte est dessinée où le plan la met, on ne passe pas au
+  clavier ni au doigt, A dit la phrase de son genre dans la langue du jeu, le chrono s'arrête pendant qu'elle s'affiche ;
+  dans la descente, chaque idée noire paraît d'abord devant la porte, qui reste close ; dans un chapitre, rien n'en sort ;
+  reprise, la porte est à la même place ; rien de ce qui rôde n'est jamais sur sa case ni derrière.
 
 ## Les personnages : `src/core/sprites.js`
 

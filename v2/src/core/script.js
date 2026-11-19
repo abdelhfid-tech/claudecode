@@ -265,7 +265,7 @@
      - Une leçon (lecons.js) est une ligne marquée de son outil : elle reste jusqu'à ce que l'outil ait resservi, trente
        secondes de lecture au plus ; une ligne « pas » (la règle d'une descente) reste jusqu'au premier pas.
      - L'incident et la sauvegarde refusée (« urgent ») passent outre. Ce qui naît dans la halte s'écrit sous son titre.
-     S.toast(html, ms) : ms, d'avant le fil, est ignoré ; S.toast(html, { outil | pas | urgent }). */
+     S.toast(html, ms) : ms, d'avant le fil, est ignoré ; S.toast(html, { outil | pas | urgent }). Rend la ligne (un élément). */
   S.fil = [];
   const FIL = { file: [], cours: null, libreDepuis: 0, pause: false, haltT: null };
   const enHalte = () => !!(I.ui && I.ui.menuOpen) && !$('#menu').hidden;
@@ -282,13 +282,14 @@
     $('#toasts').appendChild(el); // à sa naissance, masquée
     S.fil.unshift({ html, t: Date.now() }); if (S.fil.length > 12) S.fil.length = 12;
     const x = { el, html, ne: performance.now(), outil: o.outil || null, pas: !!o.pas, urgent: !!o.urgent, vu: 0 };
-    if (enHalte() && !lecon(x)) { el.remove(); S.filHalte(html); return; } // née dans la halte : sous son titre (un incident aussi)
+    if (enHalte() && !lecon(x)) { el.remove(); S.filHalte(html); return el; } // née dans la halte : sous son titre (un incident aussi)
     FIL.file.push(x);
-    if (x.urgent) { FIL.cours = null; tic(); return; }
+    if (x.urgent) { FIL.cours = null; tic(); return el; }
     // au-delà de trois en attente, les plus anciennes ne se relisent qu'à la halte (ce qui naît dans la même demi-seconde
     // passe ensemble : un même événement ne perd aucune de ses lignes)
     const attente = FIL.file.filter(y => !lecon(y) && !y.urgent && !(FIL.cours && FIL.cours.items.includes(y))), vieilles = attente.filter(y => x.ne - y.ne > 500);
     while (attente.length > 3 && vieilles.length) { const y = vieilles.shift(); attente.splice(attente.indexOf(y), 1); oter(y); }
+    return el; // la ligne elle-même : qui l'a dite peut savoir quand elle se lit (la porte interdite, rodeurs.js)
   };
   // une leçon a resservi (son outil), ou une séquence s'achève (sans outil : les leçons déjà lues) — lecons.js
   S.filRetire = function (outil) { FIL.file.filter(x => x.outil && (outil ? x.outil === outil : x.vu >= 1500)).forEach(oter); if (FIL.cours && !FIL.cours.items.length) FIL.cours = null; };
