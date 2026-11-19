@@ -224,14 +224,15 @@ coiffes, règles et dessins à valider).*
 
 Par-dessus son ensemble (une tenue de `D.TENUES`, qui devient un point de départ), le joueur change des pièces. Tout
 vient de `D.RAWI` (`defs.js`). Avec le nouveau dessin d'Idris, les choix sont simplifiés (choix validés par le décideur :
-deux coupes, trois coiffes, la besace à la hanche dans l'habit, la lanterne en option) :
+deux coupes — puis une seule, le long manteau, le même jour : « supprime les choix d'Idris sans manteau, c'est une
+catastrophe » —, trois coiffes, la besace à la hanche dans l'habit, la lanterne en option) :
 
 | Pièce | Valeurs | Ce qu'elle pose sur l'apparence |
 |---|---|---|
 | `teint` | `t1` à `t7` : les cinq teints du moteur, puis deux plus sombres (`t3` : Idris) | `look.teint` |
 | `barbe`, `poil` | glabre (Idris, depuis le pilote du nouveau dessin), courte, pleine ; trois poils sombres, ni gris ni blanc (`p2` : Idris) | `look.barbe`, `look.poil` |
 | `coiffe` | la capuche, la calotte, le chèche (`litham`) | `look.coiffe` |
-| `manteau`, `longue` | le long manteau ou sans manteau ; la robe jusqu'aux pieds | `look.manteau`, `look.court` |
+| `manteau`, `longue` | le long manteau, seul (la coupe ne se choisit plus) ; la robe jusqu'aux pieds | `look.manteau`, `look.court` |
 | `etoffe` | `e1` à `e6` (les six ensembles), `e7` — chacune avec ses couleurs sur le grand personnage (`dessin`) | `look.robe`, `head`, `cloak`, `legs` |
 | `neon` | `n1` à `n5` : [bande, ceinture] ; sans choix, le néon de l'ensemble | `look.neon`, et le liseré suit la bande |
 | `objet` | la lanterne (les feuillets, retirés : D193 ; la besace en bandoulière, retirée : elle est à la hanche, dans l'habit) | `look.porte` |
@@ -357,7 +358,9 @@ personnage.*
   réduit à 32 × 48 (`reduire()`), comme l'image au repos ; chaque image se fait une fois, à la demande. `G.rawi64 = false`
   rend le 64 × 96 retracé du 32 × 48 par `fine()`, comme les autres personnages : pour comparer. Ce qui reste du moteur :
   cinq tons par matière (`rampes()`), la lumière en haut à gauche, le rendu doux, le liseré, les cheveux tirés du poil.
-- **L'habit** (`rawiHabit()`). La coupe : le long manteau de la maquette, ou sans manteau (`sansManteau()` : ses manches
+- **L'habit** (`rawiHabit()`). La coupe : le long manteau de la maquette, toujours — la coupe « sans manteau » a été retirée
+  par le décideur le 19 novembre, et un ensemble qui la portait (la veste de la ruelle) se dessine en long manteau. Ce
+  qu'elle faisait, pour mémoire (`sansManteau()`, retiré : ses manches
   et son buste deviennent la tunique, ses pans tombent, la tunique descend jusqu'au genou et ce que le manteau cachait des
   jambes reparaît ; ses plis deviennent une ombre sur l'étoffe claire). « Sur une épaule » et « ample », qui ne se
   choisissent plus, se dessinent en long manteau. La robe longue (`robeLongue()`) : la tunique jusqu'aux bottes, d'un seul
@@ -480,6 +483,27 @@ retour ; au bureau, le PNG enregistré ; au doigt sur un téléphone, le partage
 chaque repli (absent, sans fichier, refusé, en erreur, presse-papiers refusé, dans un Artifact) ; aucun texte sous dix
 points, aucune requête, aucune erreur console : « PARTAGE CONFORME ». Les images dans `.smoke/partage/`, dans les quatre
 langues.
+
+## La manette tactile : `src/core/ui.js` (`pad`, `U.frapper`)
+
+*Demande du décideur, 19 novembre : « un joystick transparent pour le pouce gauche » ; « l'idée est de pouvoir aussi jouer
+sur le téléphone comme si on avait une Game Boy » ; « juste deux boutons A et B » ; « parler avec A, frapper avec B ».*
+
+Sur un écran tactile (`body.touch`), pendant l'exploration :
+
+- **sous le pouce gauche, un joystick** (`#pad .joy`) : un cercle transparent et son bouton, que le pouce tire ; au-delà
+  d'un petit rayon mort, huit directions — celles des flèches du clavier (`I.input.held`), que la marche lit déjà. Lâché,
+  tout s'arrête. Il remplace l'ancienne croix. Il est affiché d'office ; le joueur peut le masquer (Réglages, « Manette
+  tactile », `opts.joy`). On se déplace toujours aussi en touchant la scène ;
+- **sous le pouce droit, A et B**, deux lettres, aucun mot : A, plus haut, valide (`ok` : parler, agir) ; B, plus bas,
+  frappe ce qui rôde (l'action `frappe` ; au clavier, la touche F, et Entrée frappe toujours quand quelque chose est à
+  portée). Quand quelque chose est à portée de coup (`rodeurs.aFrapper`), B s'éclaire (`body.frapper`). En bâtissant, B
+  fait cesser de bâtir. Le menu reste le bouton ☰ de la scène ;
+- **dans toutes les langues**, la manette garde ses places (`#pad { direction: ltr }`) : en arabe, la page va de droite à
+  gauche, mais les pouces ne changent pas de main.
+
+Contrôles : `descente.js` (A et B, B qui s'éclaire, le pouce sur B, téléphone en hauteur et en largeur) et `doigt.js`
+(le joystick fait marcher dans les quatre directions ; lâché, on s'arrête).
 
 ## La définition du dessin : `src/core/gfx.js`
 
