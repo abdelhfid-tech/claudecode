@@ -768,7 +768,7 @@ html[dir="rtl"] body.portrait #dialog .fig { left: auto; right: 1.2em; }
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.13 · 2026-11-19 02:53 UTC · ed9a8f1+";
+window.ISNAD_VERSION = "2.13 · 2026-11-19 03:19 UTC · 9b6e6cd+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -8885,7 +8885,7 @@ window.ISNAD_VERSION = "2.13 · 2026-11-19 02:53 UTC · ed9a8f1+";
       mk(I.t('Importer une partie'), () => { close(); U.partie('importer', () => U.showTitle()); });
       mk(I.t('◂ Retour'), () => montrer(principal));
     };
-    { const v = $('#title .ver'); if (v) v.textContent = window.ISNAD_VERSION ? I.t('version {v}', { v: window.ISNAD_VERSION }) : I.t('version de travail'); }
+    { const v = $('#title .ver'); if (v) v.textContent = window.ISNAD_VERSION ? I.t('version {v}', { v: '\u2066' + window.ISNAD_VERSION + '\u2069' }) : I.t('version de travail'); }
     // ce qui flottait autrefois hors de la colonne (la langue en haut, « Importer une partie » dans un coin) est rangé dedans
     { const c = $('#title > .coin'); if (c) c.remove(); const lg0 = $('#title > .langues'); if (lg0) lg0.remove(); $('#title').classList.remove('multilingue'); }
     screen('#title', true); montrer(vue === 'reglages' ? reglages : principal);
