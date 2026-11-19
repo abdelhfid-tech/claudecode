@@ -344,7 +344,7 @@ compositions entières) et l'empreinte des grands personnages d'avant (`tools/es
 venues ensuite y sont ajoutées à leur création (`silhouettes.js relever-nouveaux`, qui refuse si une seule empreinte
 déjà relevée a changé) ; `partie.js`, une partie dont le râwî est composé, exportée puis réimportée à l'identique.
 
-### Le râwî d'après la maquette (2.x — l'image au repos et le rendu validés par le décideur, le reste à valider)
+### Le râwî d'après la maquette (2.x — validé par le décideur le 19 novembre : l'image au repos, le rendu, puis tout le dessin et les étoffes)
 
 *Le décideur n'aime pas le dessin d'Idris et a fourni une maquette (19 novembre) : un homme encapuchonné, la capuche et le
 long manteau ouvert bleu sarcelle, la tunique et les chausses crème, une écharpe rouille, la ceinture de cuir et sa besace
@@ -383,8 +383,8 @@ personnage.*
   à côté de lui ; dessinée à 32 × 48 et à 64 × 96 au même endroit, jamais sur une main ni sur le visage.
 - **Qui le reçoit** : le râwî seul. `perso.js` pose sa marque (`look.rawi`) sur ses ensembles et sur le héros de
   l'histoire-cadre ; un récit ou un paquet ne l'écrit pas (`regles.js`). Les couleurs viennent de l'étoffe
-  (`D.RAWI.etoffes[…].dessin`, trois tons par matière : e1 relevée sur la maquette ; e2 à e7 proposées par l'agent, à
-  valider). Toutes ses coiffes, coupes, longueurs, étoffes et objets ont ce dessin ; une autre coiffe ou une armure (aucune
+  (`D.RAWI.etoffes[…].dessin`, trois tons par matière : e1 relevée sur la maquette ; e2 à e7 proposées par l'agent,
+  gardées toutes par le décideur le 19 novembre). Toutes ses coiffes, coupes, longueurs, étoffes et objets ont ce dessin ; une autre coiffe ou une armure (aucune
   ne se compose) garderait le dessin d'avant. Le petit personnage (16 × 24, dessin d'origine sur les cartes) n'a pas changé.
 - **Son visage** (v3, choix du décideur : « n° 3, grands yeux », sans barbe ni moustache) : `visageGabarit()`, et non
   `visage()`, qui garde son dessin pour tous les autres. Dessiné point par point (`VISAGE_RAWI`, en 64 × 96 et en
