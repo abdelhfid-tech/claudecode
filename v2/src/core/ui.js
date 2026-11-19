@@ -347,7 +347,7 @@
   /* ---------- la Chaîne (choix de saga) ---------- */
   U.showChain = async function (msg) {
     I.setScene(U.blank); G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue: 40, n: 0 }; I.audio.stopBeat(); I.audio.scene('chaine');
-    $('#hud').hidden = true; document.body.dataset.theme = 'orient'; S.hideDialog(); $('#toasts').innerHTML = '';
+    $('#hud').hidden = true; document.body.dataset.theme = 'orient'; S.hideDialog(); S.filVide(); // le récit est quitté : ce qui attendait dans le fil n'est plus à dire (la halte le relit)
     const sv = I.save.data, box = $('#chain .links'); box.innerHTML = '';
     // Les livres. Le livre I : ses maillons, puis le dernier maillon, qui s'ouvre quand les siens sont achevés. Les autres
     // livres viennent ensuite, chacun sous son titre. Avec un seul livre, aucun titre : c'est l'écran de toujours.
@@ -523,7 +523,9 @@
     const build = (items, o) => { if (fl) fl.destroy(); side.innerHTML = ''; const btns = []; items.forEach(it => { if (it.cat) { side.appendChild(I.el('div', 'cat', it.cat)); return; } const b = mkb(it.label, it.fn); b._show = it.show; b._after = it.after; side.appendChild(b); btns.push(b); }); fl = focusList(btns, Object.assign({ onSel: b => { if (b._show) pane.innerHTML = b._show(); if (b._after) b._after(pane); } }, o)); $('#menu .cols').classList.toggle('large', !!(o && o.large)); };
     const party = () => (W.saga && W.party.length) ? W.party.map(id => { const h = W.hero(id), st = I.calc.of(h), e = D.ELEMENTS[h.def.el], eq = I.gear.of(h); return `<div class="stat"><span class="seal" style="background-image:url(${G.sealURL(h.def.arabic, e.color)})"></span><img class="fig" alt="" src="${G.charURL(Object.assign({ kind: 'compagnon' }, h.def.look))}"><div><b style="color:${e.color}">${I.esc(h.def.name)}</b> ${h.def.title ? '<em>' + I.esc(h.def.title) + '</em>' : ''} <small>· ${I.t('niveau {n}', { n: h.lvl })} · ${e.name}</small><br><small>${I.t('Constance {pv}/{pvmax} · Souffle {souffle}/{souffleMax} · Force {force} · Esprit {esprit} · Garde {garde} · Élan {elan}', { pv: Math.ceil(h.hp), pvmax: st.hp, souffle: h.sp, souffleMax: st.sp, force: Math.round(st.atk), esprit: Math.round(st.mag), garde: Math.round(st.def), elan: Math.round(st.spd) })}</small><div class="sk">${h.def.skills.filter(k => k.lvl <= h.lvl).map(k => I.esc(k.name)).join(' · ')}</div><div class="port">${I.gear.SLOTS.filter(s => eq[s]).map(s => I.gear.img(eq[s]) + ' ' + I.esc(D.GEAR[eq[s]].name)).join(' · ') || I.t('Rien d’équipé')}</div></div></div>`; }).join('') : '<p>' + I.t('Aucun groupe pour l’instant.') + '</p>';
     const bag = () => '<h3>' + I.t('Besace') + '</h3>' + (Object.keys(D.ITEMS).filter(k => (sv.items[k] || 0) > 0).map(k => `<p><b>${D.ITEMS[k].name}</b> ×${sv.items[k]}<br><small>${D.ITEMS[k].desc}</small></p>`).join('') || '<p>' + I.t('La besace est vide.') + '</p>') + '<p class="src">' + I.t('Les objets s’utilisent en combat. Le groupe reprend des forces après chaque victoire.') + '</p>';
-    const journal = () => { const o = W.cur && W.cur(); return `<h3>${W.ch ? I.esc(W.ch.title) : I.t('Journal')}</h3><p class="src">${W.ch ? I.esc(W.ch.sub) : ''}</p><p>${o && o.text ? '◆ ' + I.esc(o.text) : I.t('Aucun objectif en cours.')}</p><p class="src">${I.t('Le bouton <b>?</b> explique l’objectif et peut montrer le chemin.')}</p><p class="src">${I.t('Fidélité à la Chaîne : {ok} / {total}', { ok: sv.isnad.ok, total: sv.isnad.total })} · ${I.t('Lumières : {lumieres}', { lumieres: sv.lights.map(l => D.ELEMENTS[l].name).join(', ') || I.t('aucune') })}</p>`; };
+    // « Reprendre » : où l'on en est, et le fil relu — les douze dernières lignes, la plus récente en tête (2.x, D189)
+    const relu = () => S.fil.length ? `<h3 class="fil-titre">${I.t('Ce qui vient d’être dit')}</h3><ul class="fil-relu">${S.fil.map(x => `<li dir="${I.langue.sens(x.html.replace(/<[^>]*>/g, ''))}">${x.html}</li>`).join('')}</ul>` : '';
+    const journal = () => { const o = W.cur && W.cur(); return `<h3>${W.ch ? I.esc(W.ch.title) : I.t('Journal')}</h3><p class="src">${W.ch ? I.esc(W.ch.sub) : ''}</p><p>${o && o.text ? '◆ ' + I.esc(o.text) : I.t('Aucun objectif en cours.')}</p><p class="src">${I.t('Le bouton <b>?</b> explique l’objectif et peut montrer le chemin.')}</p><p class="src">${I.t('Fidélité à la Chaîne : {ok} / {total}', { ok: sv.isnad.ok, total: sv.isnad.total })} · ${I.t('Lumières : {lumieres}', { lumieres: sv.lights.map(l => D.ELEMENTS[l].name).join(', ') || I.t('aucune') })}</p>${relu()}`; };
     const pillars = () => { const P = W.pillars(); const eff = { priere: I.t('Sérénité au début des combats et dans les pourparlers'), savoir: I.t('failles révélées d’emblée ; arguments ouverts par le savoir'), justice: I.t('dégâts reçus réduits'), lien: I.t('dégâts infligés accrus ; renforts d’alliés') }; return `<h3>${W.saga && W.saga.veillees ? I.t('La Citadelle du Caïd') : I.t('Ce que ce maillon a bâti')}</h3>` + Object.keys(D.PILLARS).map(k => `<p><b>${D.PILLARS[k].glyph} ${D.PILLARS[k].name}</b> ${'◆'.repeat(P[k] || 0)}${'◇'.repeat(5 - (P[k] || 0))}<br><small>${eff[k]}</small></p>`).join('') + '<p class="src">' + I.t('Les piliers montent par la prière tenue, le savoir appris, la justice rendue et les pactes noués ; ils descendent quand la parole échoue.') + '</p>'; };
     const toggle = (name, get, set, txt) => ({ label: I.t('{reglage} : {valeur}', { reglage: name, valeur: get() }), fn(b) { set(); I.save.store(); b.textContent = I.t('{reglage} : {valeur}', { reglage: name, valeur: get() }); }, show: () => `<h3>${name}</h3><p>${txt}</p>` });
     const root = () => {
@@ -538,7 +540,7 @@
       if (page('oeuvres') || page('animaux')) items.push({ cat: I.t('Le cœur') });
       if (page('oeuvres')) items.push({ label: I.t('Œuvres et lames'), fn() {}, show: () => I.oeuvres.paneOeuvres() });
       if (page('animaux')) items.push({ label: I.t('Compagnons de lumière'), fn: betes, show: () => I.oeuvres.paneAnimaux() });
-      items.push({ cat: I.t('Le savoir') }, { label: I.t('Recueil'), fn: codex, show: () => `<h3>${I.t('Le Recueil')}</h3><p>${I.t('Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère.')} ${I.t('{n} entrée pour l’instant.¦{n} entrées pour l’instant.', { n: sv.codex.length })} ${I.t('Chaque savoir peut ouvrir un argument dans un pourparler.')}</p>` },
+      items.push({ cat: I.t('Le savoir') }, { label: I.t('Recueil'), fn: codex, show: () => `<h3>${I.t('Le Recueil')}</h3><p>${I.t('Tout ce que tu as appris en chemin : biographies, événements, paroles avec leur source, et les idoles de la noosphère.')} ${I.t('{n} entrée pour l’instant.¦{n} entrées pour l’instant.', { n: sv.codex.map(U.codexEntry).filter(Boolean).length })} ${I.t('Chaque savoir peut ouvrir un argument dans un pourparler.')}</p>` },
         ...(page('mal') ? [{ label: I.t('Les degrés du mal'), fn: mal, show: () => I.mal.paneVue() }] : []),
         ...(page('valeurs') ? [{ label: I.t('Valeurs et attributs'), fn: valeurs, show: () => I.valeurs.paneVue() }] : []),
         { label: I.t('Aide du jeu'), fn: aide, show: () => '<h3>' + I.t('Aide du jeu') + '</h3><p>' + I.t('Les règles, thème par thème : {themes}.', { themes: U.AIDE.map(a => I.t(a[0]).toLowerCase()).join(', ') }) + '</p>' });
@@ -706,32 +708,40 @@
 
   /* ---------- « Que faire ? » : l'objectif expliqué, sa direction, le chemin ---------- */
   const CAPS = [I.T('à l’est'), I.T('au sud-est'), I.T('au sud'), I.T('au sud-ouest'), I.T('à l’ouest'), I.T('au nord-ouest'), I.T('au nord'), I.T('au nord-est')];
+  // 2.x (D189) : « Que faire ? » tient en trois lignes — l'objectif, le geste (ou l'indice du récit), la direction —, et une
+  // quatrième si elle presse (le groupe est éprouvé, ou l'épreuve pèse plus que la provision du cœur). Le reste attend
+  // sous « ▸ La suite », qui le déplie dans la même boîte : le mal du cœur qui attend, l'énigme, la pièce à porter…
+  // → { lignes, suite }
   U.guideLines = function () {
-    const o = W.cur(), tg = W.target(), p = W.player, touch = document.body.classList.contains('touch'), out = [];
-    if (!o) return [I.t('Le chapitre s’achève : laisse le récit se dérouler.')];
+    const o = W.cur(), tg = W.target(), p = W.player, touch = document.body.classList.contains('touch'), lignes = [], suite = [];
+    if (!o) return { lignes: [I.t('Le chapitre s’achève : laisse le récit se dérouler.')], suite };
     const n = o.talk && W.npcs.find(x => x.id === o.talk);
-    out.push('<b>◆ ' + I.esc(o.text || I.t('Poursuis.')) + (o.build ? I.esc(I.build.objectiveText(o.build)) : '') + '</b>');
-    if (o.hint) out.push(I.fmt(o.hint));
-    if (o.goto) out.push(I.t('Rends-toi à l’endroit marqué d’un <em>anneau doré</em> au sol.'));
-    else if (o.talk) out.push(((n && n.name) ? I.t('Va parler à <em>{nom}</em> : un losange doré flotte au-dessus de lui.', { nom: I.esc(n.name) }) : I.t('Va parler à <em>celui qui t’attend</em> : un losange doré flotte au-dessus de lui.')) + ' ' + (touch ? I.t('Touche-le du doigt.') : I.t('Clique sur lui, ou place-toi devant lui puis <kbd>Entrée</kbd>.')));
-    else if (o.foe) out.push(I.t('Une idole barre le passage : c’est la lueur qui flotte. Marche jusqu’à elle pour l’affronter.'));
-    else if (o.build) out.push(o.build.site ? I.t('Un chantier est ouvert : le rectangle en pointillés. Ouvre le mode Bâtir (▦), choisis une pièce et pose-la à l’intérieur ; le compte est rappelé à côté de l’objectif.') : I.t('Ouvre le mode Bâtir (▦), à ciel ouvert, et pose ce qui est demandé. Les matériaux se récoltent sur les palmiers, les rochers et les puits.'));
+    lignes.push('<b>◆ ' + I.esc(o.text || I.t('Poursuis.')) + (o.build ? I.esc(I.build.objectiveText(o.build)) : '') + '</b>');
+    let geste = '';
+    if (o.goto) geste = I.t('Rends-toi à l’endroit marqué d’un <em>anneau doré</em> au sol.');
+    else if (o.talk) geste = ((n && n.name) ? I.t('Va parler à <em>{nom}</em> : un losange doré flotte au-dessus de lui.', { nom: I.esc(n.name) }) : I.t('Va parler à <em>celui qui t’attend</em> : un losange doré flotte au-dessus de lui.')) + ' ' + (touch ? I.t('Touche-le du doigt.') : I.t('Clique sur lui, ou place-toi devant lui puis <kbd>Entrée</kbd>.'));
+    else if (o.foe) geste = I.t('Une idole barre le passage : c’est la lueur qui flotte. Marche jusqu’à elle pour l’affronter.');
+    else if (o.build) geste = o.build.site ? I.t('Un chantier est ouvert : le rectangle en pointillés. Ouvre le mode Bâtir (▦), choisis une pièce et pose-la à l’intérieur ; le compte est rappelé à côté de l’objectif.') : I.t('Ouvre le mode Bâtir (▦), à ciel ouvert, et pose ce qui est demandé. Les matériaux se récoltent sur les palmiers, les rochers et les puits.');
+    if (o.hint) { lignes.push(I.fmt(o.hint)); if (geste) suite.push(geste); } else if (geste) lignes.push(geste); // l'indice du récit passe avant le geste
     if (tg) {
       const dx = tg.gx - p.x, dy = tg.gy - p.y, d = Math.hypot(dx, dy), st = I.trade && I.trade.bearing();
       const cap = I.t(CAPS[((Math.round(Math.atan2(dy, dx) / (Math.PI / 4)) % 8) + 8) % 8]), pas = Math.round(d / 16);
-      out.push(d < 44 ? I.t('C’est tout près.') : !st ? I.t('C’est {cap}, à {n} pas.', { cap, n: pas }) : st.way ? I.t('C’est {cap}, à {n} pas : cap sur le {etoile}, l’étoile qui brille au cadran.', { cap, n: pas, etoile: I.esc(I.trade.starText(st)) }) : I.t('C’est {cap}, à {n} pas : cap sur {etoile}, l’étoile qui brille au cadran.', { cap, n: pas, etoile: I.esc(I.trade.starText(st)) }));
+      lignes.push(d < 44 ? I.t('C’est tout près.') : !st ? I.t('C’est {cap}, à {n} pas.', { cap, n: pas }) : st.way ? I.t('C’est {cap}, à {n} pas : cap sur le {etoile}, l’étoile qui brille au cadran.', { cap, n: pas, etoile: I.esc(I.trade.starText(st)) }) : I.t('C’est {cap}, à {n} pas : cap sur {etoile}, l’étoile qui brille au cadran.', { cap, n: pas, etoile: I.esc(I.trade.starText(st)) }));
     }
     const fo = o.foe && W.foes.find(x => x.id === o.foe), wt = fo ? I.oeuvres.weight({ group: fo.group, boss: fo.boss }) : 0, zd = I.oeuvres.zad();
-    if (wt) out.push(I.t('Cette épreuve pèse <b>{poids}</b> ; la provision du cœur est de <b>♥ {provision}</b>.', { poids: wt, provision: zd }) + ' ' + (zd >= wt ? I.t('Le cœur est prêt.') : I.t('Il manque {n} : une œuvre sur la natte d’une mosquée (dhikr, étude, jeûne, aumône, visite) allégerait le cœur.', { n: wt - zd })));
-    const qv = W.saga && I.oeuvres.viceApres(W.saga.veillees ? W.ch.after : W.saga.id), dq = I.oeuvres.state();
-    if (qv && dq.vices[qv] !== 'tranche' && !dq.lames[qv]) out.push(I.t('Au bout de ce maillon, dans la Cité-Miroir, un mal du cœur attend. {quete}. Sans sa lame, il ne sera que repoussé.', { quete: I.oeuvres.quete(qv) }));
-    const en = I.oeuvres.enigme();
-    if (en) out.push(I.t('<em>Énigme du cœur.</em> {signe} Cherche ce qu’il a cessé de faire : la bonne œuvre, sur la natte, le remettra debout. Les anciens ont peut-être remarqué quelque chose.', { signe: I.esc(en.signe) }));
     const tired = W.party.some(id => { const h = W.hero(id); return h.hp < I.calc.of(h).hp * 0.5; });
-    if (tired) out.push(I.t('Le groupe est éprouvé : la natte d’une mosquée, au cœur de l’étoile à huit branches, le repose.'));
-    else if (o.foe && !S.flags._prayed && W.prayerPts().length) out.push(I.t('Avant l’épreuve, une prière sur la natte rend au groupe sa sérénité.'));
-    const mieux = I.gear.better(); if (mieux) out.push(I.t('La réserve tient une pièce qui irait mieux à {nom} : <em>{piece}</em>. Halte, puis <b>Équipement</b>.', { nom: I.esc(mieux.h.def.name), piece: I.esc(D.GEAR[mieux.id].name) }));
-    return out;
+    const poids = wt ? I.t('Cette épreuve pèse <b>{poids}</b> ; la provision du cœur est de <b>♥ {provision}</b>.', { poids: wt, provision: zd }) + ' ' + (zd >= wt ? I.t('Le cœur est prêt.') : I.t('Il manque {n} : une œuvre sur la natte d’une mosquée (dhikr, étude, jeûne, aumône, visite) allégerait le cœur.', { n: wt - zd })) : '';
+    // ce qui presse : une quatrième ligne, une seule
+    if (tired) lignes.push(I.t('Le groupe est éprouvé : la natte d’une mosquée, au cœur de l’étoile à huit branches, le repose.'));
+    else if (poids && zd < wt) lignes.push(poids);
+    if (poids && (tired || zd >= wt)) suite.push(poids);
+    if (!tired && o.foe && !S.flags._prayed && W.prayerPts().length) suite.push(I.t('Avant l’épreuve, une prière sur la natte rend au groupe sa sérénité.'));
+    const qv = W.saga && I.oeuvres.viceApres(W.saga.veillees ? W.ch.after : W.saga.id), dq = I.oeuvres.state();
+    if (qv && dq.vices[qv] !== 'tranche' && !dq.lames[qv]) suite.push(I.t('Au bout de ce maillon, dans la Cité-Miroir, un mal du cœur attend. {quete}. Sans sa lame, il ne sera que repoussé.', { quete: I.oeuvres.quete(qv) }));
+    const en = I.oeuvres.enigme();
+    if (en) suite.push(I.t('<em>Énigme du cœur.</em> {signe} Cherche ce qu’il a cessé de faire : la bonne œuvre, sur la natte, le remettra debout. Les anciens ont peut-être remarqué quelque chose.', { signe: I.esc(en.signe) }));
+    const mieux = I.gear.better(); if (mieux) suite.push(I.t('La réserve tient une pièce qui irait mieux à {nom} : <em>{piece}</em>. Halte, puis <b>Équipement</b>.', { nom: I.esc(mieux.h.def.name), piece: I.esc(D.GEAR[mieux.id].name) }));
+    return { lignes, suite };
   };
   U.guide = async function () {
     if (I.scene !== W || S.busy || W.lock || U.menuOpen || !W.ch) return;
@@ -740,9 +750,13 @@
     const tg = W.target(), opts = [];
     if (tg) opts.push({ t: I.t('Montrer le chemin'), k: 'way' }, { t: I.t('M’y conduire'), k: 'go' });
     opts.push({ t: I.t('Toute l’aide du jeu'), k: 'aide' }, { t: I.t('Reprendre'), k: '' });
+    const g = U.guideLines(), gl = x => '<span class="gl" dir="' + I.langue.sens(x) + '">' + x + '</span>';
+    const html = '<span class="gt">' + I.t('Que faire ?') + '</span>' + g.lignes.map(gl).join('') + (g.suite.length ? '<button type="button" class="gsuite">' + I.t('▸ La suite') + '</button><span class="greste" hidden>' + g.suite.map(gl).join('') + '</span>' : '');
+    // « ▸ La suite » déplie le reste dans la même boîte (ce n'est pas une option de plus) ; au clavier, H de nouveau
+    const deplier = () => { const b = $('#choice .gsuite'), r = $('#choice .greste'); if (!b || !r) return; b.remove(); r.hidden = false; I.audio.sfx('move'); S.refaire($('#choice')); };
     let k = '';
     S.depth++;
-    try { const i = await S.menuPick({ cls: 'guide', html: '<span class="gt">' + I.t('Que faire ?') + '</span>' + U.guideLines().map(x => '<span class="gl">' + x + '</span>').join('') }, opts); k = opts[i].k; }
+    try { const pr = S.menuPick({ cls: 'guide', html }, opts, null, { touches: { help: deplier } }); const b = $('#choice .gsuite'); if (b) b.addEventListener('click', e => { e.stopPropagation(); deplier(); }); const i = await pr; k = opts[i].k; }
     finally { S.depth--; S.hideDialog(); }
     if (k === 'way') W.wayT = W.t + 16;
     else if (k === 'go') { W.wayT = W.t + 16; W.lead(); }
@@ -766,7 +780,7 @@
     $('#secours').hidden = true; figeDepuis = 0;
     I.errors.push({ t: Date.now(), msg: 'reprise demandée par le joueur', st: '', n: 1 });
     try { I.battle.abort(W); } catch (e) { /* le combat n'était pas ouvert */ }
-    S.depth = 0; W.lock = false; W._autoBusy = false; U.menuOpen = false; S.hideDialog(); $('#choice').hidden = true; document.body.classList.remove('in-dialog', 'in-screen', 'in-build');
+    S.depth = 0; W.lock = false; W._autoBusy = false; U.menuOpen = false; S.hideDialog(); $('#choice').hidden = true; document.body.classList.remove('in-dialog', 'in-screen', 'in-build', 'en-carton');
     const c = $('#card'); c.classList.remove('on'); c.hidden = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
     I.input.reset(); const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0; document.body.classList.remove('noir');
     I.save.readAuto(); // on repart de la partie écrite au dernier repos : ce que l'objectif interrompu avait déjà compté n'est pas compté deux fois
@@ -795,13 +809,18 @@
     if (!ok) { if (box.childElementCount) box.innerHTML = ''; return; }
     const p = W.player, sc = U.scale || 1, cx = Math.round(W.cam.x) + G.view.x, cy = Math.round(W.cam.y) + G.view.y, tg = W.target(), list = [], m = W.map; // ce que l'on voit de l'image : rogné en hauteur d'écran, agrandi si le joueur l'a voulu
     if (p.moving) still = now;
-    W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y); if (d < 60 || (tg && tg.ent === n && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y, d, c: n.aura || '#f3e7cc' }); });
+    W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y), cible = !!(tg && tg.ent === n); if (d < 60 || (cible && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y, d: cible ? -1 : d, c: n.aura || '#f3e7cc' }); });
     list.sort((a, b) => a.d - b.d); list.length = Math.min(list.length, 5);
     if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.trail[Math.min(W.trail.length - 1, i * 13)] : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
-    const seen = {}, w = $('#stage').clientWidth, hh = $('#stage').clientHeight;
+    const seen = {}, w = $('#stage').clientWidth, hh = $('#stage').clientHeight, poses = [];
+    // 2.x (D189) : les étiquettes se posent par la fenêtre visible (G.view, U.scale), puis dans l'ordre — la cible, les plus
+    // proches, celui qui mène, puis les siens ; une étiquette qui en recouvrirait une autre ne s'affiche pas (au départ d'un
+    // chapitre, les noms du groupe ne s'empilent plus)
     list.forEach(e => { const x = (e.x - cx) * sc, y = (e.y - cy - 25) * sc; if (x < 8 || x > w - 8 || y < 4 || y > hh - 4) return; seen[e.k] = 1;
       let el = box.querySelector('[data-k="' + e.k + '"]'); if (!el) { el = I.el('span', 'nom', I.esc(e.t)); el.dataset.k = e.k; el.style.setProperty('--c', e.c); box.appendChild(el); }
-      el.style.left = x.toFixed(1) + 'px'; el.style.top = y.toFixed(1) + 'px'; });
+      el.style.left = x.toFixed(1) + 'px'; el.style.top = y.toFixed(1) + 'px';
+      const lw = el.offsetWidth, lh = el.offsetHeight, r = [x - lw / 2, y - lh, x + lw / 2, y], dessus = poses.some(q => r[0] < q[2] + 2 && r[2] > q[0] - 2 && r[1] < q[3] + 1 && r[3] > q[1] - 1);
+      el.classList.toggle('cache', dessus); if (!dessus) poses.push(r); });
     [...box.children].forEach(el => { if (!seen[el.dataset.k]) el.remove(); });
   };
 
@@ -944,7 +963,7 @@
     // tout geste déverrouille ou relance le son, y compris un toucher sur un bouton de menu (qui ne passe pas par les commandes du jeu)
     ['pointerup', 'touchend', 'click', 'keydown'].forEach(t => document.addEventListener(t, () => I.audio.unlock(), true));
     $('#secours button').addEventListener('click', ev => { ev.stopPropagation(); U.secours(); });
-    I.onError = msg => { if (!I.debug.auto) S.toast(I.t('Incident technique (le jeu continue) : <b>{message}</b>', { message: I.esc(msg.slice(0, 90)) }), 7000); };
+    I.onError = msg => { if (!I.debug.auto) S.toast(I.t('Incident technique (le jeu continue) : <b>{message}</b>', { message: I.esc(msg.slice(0, 90)) }), { urgent: true }); }; // passe outre le fil
     let last = performance.now();
     (function frame(now) {
       I.audio.pump(); // la musique avance aussi à chaque image

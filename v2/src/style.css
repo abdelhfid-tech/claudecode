@@ -45,11 +45,15 @@ body[data-theme="cyber"] #hud .sub { font-family: var(--f-mono); }
 /* l'agrandissement de l'image : un bouton qui dit où l'on en est (× 1 · × 1,5 · × 2 · × 3) */
 #zoombtn { position: absolute; right: calc(2% + 6.7em); top: 3%; height: 2.77em; min-width: 2.77em; padding: 0 .6em; border-radius: 1.4em; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .78em; z-index: 5; font-family: var(--f-mono); letter-spacing: -.02em; white-space: nowrap; }
 body.batir #zoombtn { right: calc(2% + 10.05em); } body.descente.batir #zoombtn { right: calc(2% + 6.7em); } /* à gauche du bouton « Bâtir », quand il est là */
-#toasts { position: absolute; right: 2%; top: var(--mini, 14%); display: flex; flex-direction: column; gap: .4em; align-items: flex-end; pointer-events: none; z-index: 30; }
-.toast { padding: .32em .8em; background: var(--panel); border-right: 2px solid var(--acc); font-size: .82em; animation: tin .3s ease; transition: opacity .4s, transform .4s; max-width: 22em; }
+/* le fil (2.x, D189 : « un texte à la fois ») : une ligne, qui ne parle que lorsque rien d'autre ne se lit (script.js, S.toast).
+   Chaque annonce y entre à sa naissance, masquée ; il en montre une à la fois, ou celles nées ensemble, jointes par « · ».
+   Il ne prend aucun toucher, et ne réserve aucune place : rien ne bouge quand il parle. */
+#toasts { position: absolute; right: 2%; top: var(--mini, 14%); max-width: min(25em, 46%); padding: .32em .8em; background: var(--panel); border-right: 2px solid var(--acc); font-size: .82em; line-height: 1.32; text-align: start; pointer-events: none; z-index: 30; visibility: hidden; opacity: 0; transition: opacity .25s; }
+#toasts.montre { visibility: visible; opacity: 1; }
+#toasts.lecon { border-right-color: #c49bff; } /* une leçon : un outil, un geste */
+.toast { display: inline; }
+.toast.joint::before { content: " · "; color: var(--dim); }
 .toast b { color: var(--acc); }
-.toast.out { opacity: 0; transform: translateX(1em); }
-@keyframes tin { from { opacity: 0; transform: translateX(1.5em); } }
 
 /* ---------- dialogue ---------- */
 #dialog { position: absolute; left: 4%; right: 4%; bottom: 3.5%; min-height: 26%; padding: .75em 1.2em .8em 6.4em; background: linear-gradient(180deg, var(--panel2), var(--panel)); border: 1px solid var(--line); border-radius: 3px; box-shadow: 0 10px 40px rgba(0, 0, 0, .6), inset 0 0 0 3px rgba(0, 0, 0, .35), inset 0 0 0 4px rgba(233, 200, 119, .12); cursor: pointer; z-index: 20; backdrop-filter: blur(3px); }
@@ -68,11 +72,11 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 
 /* ---------- choix ---------- */
 #choice { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); width: min(86%, 34em); display: flex; flex-direction: column; gap: .45em; z-index: 25; max-height: 90%; overflow-y: auto; scrollbar-width: thin; }
-#choice .prompt.guide { text-align: left; font-family: var(--f-body); letter-spacing: 0; color: var(--sand); display: flex; flex-direction: column; gap: .35em; padding: .7em 1em; border: 1px solid var(--line); background: var(--panel2); }
+#choice .prompt.guide { text-align: start; font-family: var(--f-body); letter-spacing: 0; color: var(--sand); display: flex; flex-direction: column; gap: .35em; padding: .7em 1em; border: 1px solid var(--line); background: var(--panel2); }
 #choice .prompt.guide .gt { font-family: var(--f-display); letter-spacing: .14em; color: var(--acc); font-size: .9em; }
 #choice .prompt.guide .gl b { color: #fff6dc; } #choice .prompt.guide kbd { font-size: .8em; }
 #choice .prompt { text-align: center; font-family: var(--f-display); letter-spacing: .05em; font-size: .95em; color: var(--acc); padding: .5em 1em; background: var(--panel); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: .2em; }
-#choice .opt { text-align: left; padding: .5em .9em; background: var(--panel); border: 1px solid rgba(255, 255, 255, .14); border-left: 3px solid transparent; font-size: .95em; transition: transform .12s, border-color .12s, background .12s; }
+#choice .opt { text-align: start; padding: .5em .9em; background: var(--panel); border: 1px solid rgba(255, 255, 255, .14); border-left: 3px solid transparent; font-size: .95em; transition: transform .12s, border-color .12s, background .12s; }
 #choice .opt.sel { border-left-color: var(--acc); border-color: var(--line); background: var(--panel2); transform: translateX(.5em); color: #fff; }
 
 /* ---------- cartons ---------- */
@@ -329,9 +333,11 @@ body.portrait #hud .obj { display: block; background: var(--panel); border: 1px 
 body.portrait.in-dialog #hud, body.portrait.in-build #hud { visibility: hidden; }
 body.portrait #menubtn, body.portrait #helpbtn, body.portrait #buildbtn { font-size: 1.1em; }
 body.portrait #zoombtn { font-size: .95em; }
-body.portrait #toasts { top: 3.6em; right: 2%; left: 30%; } body.portrait .toast { max-width: none; font-size: .78em; }
+/* le fil, en hauteur : sous l'en-tête (ou la barre de « Bâtir »), dans la bande noire — script.js pose --fil-haut */
+body.portrait #toasts { top: calc(100% + var(--fil-haut, 0px) + 10px); left: 8px; right: 8px; max-width: none; padding: .42em .8em; border-right: 0; border-inline-start: 3px solid var(--acc); font-size: calc(14px * var(--tz, 1)); line-height: 1.38; }
+body.portrait #toasts.lecon { border-inline-start-color: #c49bff; }
 body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
-@media (prefers-reduced-motion: reduce) { .toast, .fl, #card, .link { animation-duration: .01s; transition: none; } }
+@media (prefers-reduced-motion: reduce) { #toasts, .fl, #card, .link { animation-duration: .01s; transition: none; } }
 
 /* un téléphone tenu en largeur : l'écran-titre range ses réglages sur deux colonnes, pour tenir dans la hauteur */
 @media (orientation: landscape) and (max-height: 480px) { #title .vmenu { display: grid; grid-template-columns: 1fr 1fr; width: min(100%, 34em); } #title .vmenu button:first-child { grid-column: 1 / -1; } #title .tag { margin-bottom: .9em; } #title .foot { margin-top: 1em; } }
@@ -522,7 +528,7 @@ i.gi.vide { display: inline-block; border: 1px dashed rgba(255, 255, 255, .22); 
 .gcmp .up { border-left-color: #7fd69a; } .gcmp .up b { color: #9be8b2; } .gcmp .down { border-left-color: #ff7a5c; } .gcmp .down b { color: #ff9c84; }
 .stat .port { font-size: .8em; color: var(--dim); margin-top: .25em; } .stat .port .gi { width: 1.2em; height: 1.2em; vertical-align: -.26em; }
 #menu .side button .gi { margin-right: .15em; } #menu .side button small { color: var(--dim); }
-#choice .prompt.gear { display: grid; grid-template-columns: auto 1fr; gap: .2em .7em; align-items: center; text-align: left; font-family: var(--f-body); letter-spacing: 0; color: var(--sand); }
+#choice .prompt.gear { display: grid; grid-template-columns: auto 1fr; gap: .2em .7em; align-items: center; text-align: start; font-family: var(--f-body); letter-spacing: 0; color: var(--sand); }
 #choice .prompt.gear .gi { width: 2.2em; height: 2.2em; } #choice .prompt.gear em { grid-column: 1 / -1; font-family: var(--f-display); font-style: normal; letter-spacing: .08em; color: var(--acc); }
 #choice .opt .gi { margin-right: .25em; } #choice .opt small { color: var(--dim); }
 #toasts .gi { width: 1.4em; height: 1.4em; }
@@ -611,3 +617,85 @@ body.touch #title .foot .clavier { display: none; }
 @media (orientation: landscape) and (max-height: 480px) { #title .vmenu.essentiel { display: flex; flex-direction: column; width: min(100%, 22em); } }
 /* si l'écran-titre déborde (téléphone en largeur, texte très grand), il commence en haut : le titre reste entier */
 #title { justify-content: safe center; }
+
+/* ---------- 2.12 · un texte à la fois (D189 ; v2/docs/propositions-texte.md) ---------- */
+/* sous un carton : l'en-tête et le fil se masquent (en hauteur, l'en-tête transparaissait sous le texte) */
+body.en-carton #hud, body.en-carton #toasts { visibility: hidden; }
+/* la marque : ce qui répond au geste du joueur, après le nom de celui qui parle (« · Confiance +2 », « · Un voile tombe ») */
+#dialog .name .marque { font-family: var(--f-body); font-weight: 700; letter-spacing: 0; text-transform: none; color: var(--gold); margin-inline-start: .45em; }
+#dialog .name .marque::before { content: "· "; color: var(--dim); font-weight: 400; }
+#dialog.nar .name .marque { font-size: 1.45em; }
+/* le nom d'une narration (« La Chaîne ») ne descend pas sous 10,5 points sur un écran tactile, en largeur non plus */
+body.touch #dialog.nar .name { font-size: max(.66em, 10.5px); }
+/* de droite à gauche, la silhouette de celui qui parle suit son sceau */
+html[dir="rtl"] #dialog .fig { left: auto; right: 1.75em; }
+html[dir="rtl"] body.portrait #dialog .fig { left: auto; right: 1.2em; }
+/* la leçon d'un acte de la Chaîne, sous la question, tant que le choix est ouvert */
+#choice .prompt small.lecon { margin-top: .5em; color: #e3d4ff; font-size: .82em; text-align: start; }
+/* l'invite d'un choix qui reprend ce qui vient d'être dit (une idée noire, un pourparler) : en petit, sans capitales */
+#choice .prompt.dit { font-family: var(--f-body); letter-spacing: 0; font-size: .86em; color: var(--sand); font-style: italic; text-align: start; line-height: 1.35; }
+/* un en-tête resserré : l'image, le nom (ou le titre) et ce qu'il dit, sur une ligne */
+#choice .phead.court { grid-template-columns: 1.7em minmax(0, 1fr) auto; gap: .5em; padding: .3em .7em; }
+#choice .phead.court .seal { width: 1.7em; height: 1.7em; }
+#choice .phead.court .pt b { display: inline; }
+#choice .phead.court .pt small { margin-inline-start: .45em; }
+/* l'en-tête d'un pourparler : le titre et la manche, puis la confiance — deux lignes */
+#choice .phead.manche { grid-template-columns: 1.7em minmax(0, 1fr); row-gap: .1em; }
+#choice .phead.manche .seal { grid-row: span 2; align-self: center; }
+#choice .phead.manche .pt small { white-space: nowrap; } /* « · manche 1 / 3 » ne se coupe pas entre ses nombres */
+#choice .phead.manche .pt small::before { content: "· "; }
+#choice .phead.manche .trust { grid-column: 2; text-align: start; }
+#choice .phead.manche .pips { justify-content: flex-start; }
+/* une réponse d'idée noire : sur sa ligne, sous le nom de sa manière, dans le sens de sa langue */
+#choice .opt .rep { display: block; text-align: start; }
+/* une liste qui défile encore : son repère, au bas de la boîte (il ne prend aucun toucher) */
+#choice { scroll-padding-bottom: 2em; }
+#choice .repere { position: sticky; bottom: 0; flex: none; min-height: 1.6em; margin-top: -.3em; padding: .3em .9em .1em; font-family: var(--f-body); font-size: .8em; letter-spacing: 0; color: var(--acc); text-align: center; background: linear-gradient(180deg, rgba(7, 6, 13, 0), rgba(7, 6, 13, .94) 45%); pointer-events: none; }
+#choice .repere.fin { visibility: hidden; }
+/* « Que faire ? » : trois lignes, puis « ▸ La suite », qui déplie le reste dans la même boîte */
+#choice .prompt.guide .gsuite { align-self: flex-start; margin-top: .15em; padding: .2em .9em; background: transparent; border: 1px solid var(--line); border-radius: 2em; color: var(--acc); font-family: var(--f-body); font-size: .86em; letter-spacing: 0; }
+#choice .prompt.guide .greste { display: flex; flex-direction: column; gap: .35em; }
+/* un nom qui en recouvrirait un autre ne s'affiche pas (ui.js, U.noms) */
+.nom.cache { visibility: hidden; }
+/* la halte : ce qui y naît s'écrit sous son titre ; « Reprendre » relit le fil */
+#menu header .dit { margin: .25em auto 0; max-width: 34em; font-size: .82em; color: var(--sand); text-align: center; }
+#menu header .dit b { color: var(--acc); }
+#menu .pane h3.fil-titre { margin-top: 1em; font-size: .92em; }
+#menu .pane .fil-relu { list-style: none; padding: 0; margin: .3em 0 0; }
+#menu .pane .fil-relu li { padding: .28em 0; border-bottom: 1px solid rgba(255, 255, 255, .07); font-size: .88em; line-height: 1.4; }
+#menu .pane .fil-relu li b { color: var(--acc); } #menu .pane .fil-relu li small { color: var(--dim); }
+/* le combat : la leçon d'une commande nouvelle s'écrit dans le panneau, sous la commande, cerclée */
+#battle .cmd .mlecon { font-size: .84em; line-height: 1.3; color: #e3d4ff; border-top: 1px solid rgba(196, 155, 255, .4); padding-top: .3em; text-align: start; }
+#battle .cmd .mlecon em { color: #fff; }
+#battle .cmd .mi.neuf { border-color: #c49bff; box-shadow: inset 0 0 0 1px #c49bff; }
+.mtitle .qui { display: inline-flex; align-items: baseline; gap: .45em; min-width: 0; }
+.mtitle .niv { display: none; color: var(--dim); font-family: var(--f-body); letter-spacing: 0; font-size: .86em; white-space: nowrap; }
+/* un téléphone en largeur : l'en-tête garde l'objectif et les piliers (le chapitre et la date se lisent à la halte et sur le
+   carton de chaque lieu), et se retire le temps d'une lecture, comme en hauteur */
+@media (orientation: landscape) and (max-height: 480px) {
+  #hud .chap, #hud .sub { display: none; }
+  body.in-dialog #hud { visibility: hidden; }
+}
+/* le combat sur un petit écran tenu en hauteur (jusqu'à 700 points de haut, l'écran des shorts compris) : chaque compagnon
+   tient sur une ligne — son nom, sa Constance, son Souffle ; le niveau et la figure passent en tête des commandes de celui
+   dont c'est le tour. Les cinq commandes et la leçon tiennent dans l'écran. */
+@media (max-height: 700px) {
+  body.portrait #battle .panel { gap: .4em; }
+  body.portrait #battle .heroes { gap: .14em; }
+  body.portrait .hrow { grid-template-columns: 1.5em minmax(0, 1fr) minmax(0, 1.55fr) 3.6em; gap: .45em; padding: .22em .5em; }
+  body.portrait .hrow .hs { width: 1.5em; height: 1.5em; }
+  body.portrait .hrow .hn { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .35em; min-width: 0; }
+  body.portrait .hrow .hn b { display: inline; }
+  body.portrait .hrow .hn small .nv { display: none; }
+  body.portrait .hrow .hbars { flex-direction: row; gap: .3em; }
+  body.portrait .hrow .hbars .bar { flex: 1 1 0; min-width: 0; }
+  body.portrait .hrow .hx .pips { justify-content: flex-end; }
+  body.portrait .hrow .bar.sk { margin-top: .2em; }
+  body.portrait #battle .cmd { padding: .3em .45em; gap: .22em; }
+  body.portrait .mi { padding: .42em .55em; }
+  body.portrait .mtitle .niv { display: inline; }
+  body.portrait .mlist.main .mi.seul { grid-column: 1 / -1; } /* la Sérénité, seule sur sa rangée : sur une ligne (battle.js, tenir) */
+}
+/* lot 2 : l'introduction d'un carton de pourparler ou d'idée noire passe en casse ordinaire (mêmes mots) ; les titres de
+   lieu (#card.title p) ne changent pas, ni les surtitres de trois mots au plus (« POURPARLER », « UNE IDÉE NOIRE ») */
+#card.title.parley p:not(.small) { letter-spacing: .01em; text-transform: none; font-style: italic; font-size: .95em; color: #f7ecd2; line-height: 1.4; text-wrap: pretty; }

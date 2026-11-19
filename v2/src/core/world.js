@@ -202,6 +202,8 @@
     const en = I.oeuvres.enigme(); $('#hud .enig').hidden = !en; if (en) $('#hud .enig').textContent = I.t('Énigme : {signe}', { signe: en.signe });
     $('#hud .obj').textContent = (o && o.text ? o.text : '') + (o && o.build ? I.build.objectiveText(o.build) : '');
     $('#hud .obj').hidden = !(o && o.text);
+    ['.chap', '.sub', '.obj', '.enig'].forEach(k => { const e = $('#hud ' + k); e.dir = I.langue.sens(e.textContent); }); // 2.x : chaque ligne prend le sens de sa langue
+    if (S.filPlace) S.filPlace(); // en hauteur, le fil se pose sous l'en-tête (D189)
   };
   /* Mener plusieurs récits de front (2.x). La partie garde un point de reprise courant (cp) et, rangés à part, ceux des
      récits que l'on a quittés en chemin (cps) : un par saga de la Chaîne, un par chapitre de l'histoire-cadre ou des
@@ -223,7 +225,7 @@
     I.save.data.cp = { saga: W.saga.id, ci: W.ci, obj: W.objIndex, map: W.map.id, opts: W.mapOpts, pos: [Math.round(W.player.x), Math.round(W.player.y)], party: W.party.slice(), npcs, foes: W.foes.filter(f => f.done).map(f => f.id), chests: W.chests.map((c, i) => c.open ? i : -1).filter(i => i >= 0), flags: S.flags };
     W.persistHeroes(); I.save.store();
     { const lead = W.party.length ? W.hero(W.party[0]) : null; const ok = I.save.auto(lead ? I.t('{saga} · {chapitre} · niv. {niv}', { saga: W.saga.name, chapitre: W.ch.title, niv: lead.lvl }) : I.t('{saga} · {chapitre}', { saga: W.saga.name, chapitre: W.ch.title })); W.unsaved = 0;
-      if (!ok && !W._sansStock) { W._sansStock = true; S.toast(I.t('Ce navigateur refuse le stockage : la partie ne pourra pas être reprise après la fermeture de la page.'), 9000); } } // la partie se garde toute seule
+      if (!ok && !W._sansStock) { W._sansStock = true; S.toast(I.t('Ce navigateur refuse le stockage : la partie ne pourra pas être reprise après la fermeture de la page.'), { urgent: true }); } } // la partie se garde toute seule
   };
   // exécute les objectifs automatiques ; termine le chapitre s'il n'en reste plus
   W.advance = async function () {

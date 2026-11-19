@@ -21,7 +21,8 @@
   L.actif = () => !!etat();
   L.ouvrir = function () { I.save.data.lecons = { seq: 0, recus: {}, re: {}, dernier: null, donne: -1 }; L.journal = []; L._t = 0; };
   L.recu = id => { const d = etat(); return !d || d.recus[id] !== undefined; };
-  L.sequence = function () { const d = etat(); if (d) d.seq = (d.seq | 0) + 1; L._t = 0; };
+  // une séquence s'achève : les leçons déjà lues quittent le fil (2.x, D189)
+  L.sequence = function () { const d = etat(); if (d) d.seq = (d.seq | 0) + 1; L._t = 0; if (S.filRetire) S.filRetire(); };
   // peut-on donner un outil maintenant ?
   L.pret = function () {
     const d = etat(); if (!d) return true; if (d.donne === d.seq) return false;
@@ -35,12 +36,16 @@
     if (d.recus[id] !== undefined || !L.pret()) return false;
     L.recevoir(id); if (dire) dire(); return true;
   };
-  // l'outil a resservi sans aide (dans une séquence d'après, sauf `meme` : un autre tour du même combat)
-  L.reemploi = function (id, meme) { const d = etat(); if (!d || d.recus[id] === undefined) return; if (!meme && d.recus[id] === d.seq) return; d.re[id] = (d.re[id] | 0) + 1; };
+  // l'outil a resservi sans aide (dans une séquence d'après, sauf `meme` : un autre tour du même combat). Sa leçon quitte
+  // le fil dès que le geste est fait, même dans la séquence où elle a été dite (2.x, D189 : « elle reste jusqu'au geste »).
+  L.reemploi = function (id, meme) { if (S.filRetire) S.filRetire(id); const d = etat(); if (!d || d.recus[id] === undefined) return; if (!meme && d.recus[id] === d.seq) return; d.re[id] = (d.re[id] | 0) + 1; };
   // un feuillet entre au Recueil : l'annonce-t-on ? Dans une partie neuve, pas avant d'avoir appris à retrouver une source
   // (il y entre quand même) : « retrouver une source » ne s'enseigne pas sur le même écran qu'autre chose.
   L.annonce = () => { const d = etat(); return !d || d.recus.source !== undefined; };
-  const dit = (k, ms) => { const t = T()[k]; if (!t) return; const tactile = document.body.classList.contains('touch'), s = typeof t === 'string' ? t : (tactile ? t.doigt : t.clavier) || ''; if (s) S.toast(I.fmt(s), ms || 8000); };
+  // la leçon d'un outil, telle que coeur.js l'écrit (au doigt ou au clavier) ; 2.x (D189) : elle se dit là où sert l'outil —
+  // dans le fil quand on marche (dit), sous la question d'un choix (texte), dans le panneau du combat (banniere)
+  L.texte = k => { const t = T()[k]; if (!t) return ''; const tactile = document.body.classList.contains('touch'), s = typeof t === 'string' ? t : (tactile ? t.doigt : t.clavier) || ''; return s ? I.fmt(s) : ''; };
+  const dit = k => { const s = L.texte(k); if (s) S.toast(s, { outil: k }); }; // une ligne de fil marquée de son outil : elle reste jusqu'au réemploi (trente secondes au plus)
   L.dit = dit;
 
   /* ----- les premiers pas ----- */

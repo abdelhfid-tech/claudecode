@@ -134,7 +134,8 @@ boutons : « RETOURS CONFORMES ».
 Règle du décideur : *un besoin, un outil, puis sans aide ; une décision nouvelle par séquence.* Un **outil**
 (`D.OUTILS`) est ce que le joueur apprend à faire. Une **séquence** est un objectif du récit ou un combat
 (`I.lecons.sequence()`). Quand le **besoin** d'un outil se présente, le jeu appelle `I.lecons.proposer(id, dire)` :
-l'outil n'est donné — `dire` affiche sa leçon, une ligne de `coeur.js` (`lecons`) — que si aucun autre ne l'a été dans
+l'outil n'est donné — `dire` affiche sa leçon, une ligne de `coeur.js` (`lecons`), là où sert l'outil (le fil, la question
+d'un choix, le panneau du combat : « Un texte à la fois », plus bas) — que si aucun autre ne l'a été dans
 cette séquence et si le dernier reçu a **resservi** sans aide (`I.lecons.reemploi(id)`), ou si c'est un simple geste
 (`geste`), ou si trois séquences ont passé (`PATIENCE`) : le jeu n'attend jamais indéfiniment. Sinon rien n'est dit, et
 le besoin se représentera. La partie garde `lecons` : `{ seq, recus: { outil: séquence }, re: { outil: fois }, dernier,
@@ -418,6 +419,133 @@ bouton, un toucher qui mène à la case touchée à × 2, les étiquettes sur le
 carte, dans un dialogue, en combat et à la halte : « LOUPE CONFORME ». `doigt.js` rejoue ensuite le début du jeu avec
 l'image agrandie.
 
+## Un texte à la fois : le fil, la marque, les leçons à leur place
+
+*Décision du décideur, 18 novembre (D189 ; le cahier des charges est `v2/docs/propositions-texte.md`) : « essaye de ne pas
+surcharger l'écran surtout au téléphone » — « la surcharge de l'écran : je parle du texte ». Lots 1 et 2, version 2.12.*
+
+Une seule chose se lit à la fois : une réplique, un choix, un carton ou une page de la halte, jamais deux. Aucun texte de
+récit n'est coupé ni réécrit — `src/data/` n'a pas changé d'un mot ; seuls la place et le moment des textes du moteur
+changent.
+
+- **Le fil** (`script.js`, `S.toast`). Les annonces ne se posent plus sur l'image : elles passent dans le fil, une ligne
+  qui ne parle que lorsque rien d'autre ne se lit — ni `#dialog`, ni `#choice`, ni `#card`, ni écran (la halte, la
+  Chaîne), ni combat, ni fondu au-dessus de 0,5 — et que le joueur a la main (`S.busy`, `W.lock`).
+  - Chaque annonce entre dans `#toasts` **à sa naissance, masquée**, et n'y est jamais réinsérée : `progression.js` et
+    `personnage.js` la lisent comme avant (le premier y compte les naissances, le second ce qui se voit).
+  - Le fil en montre une à la fois ; celles qui naissent dans la même demi-seconde se montrent sur la même ligne,
+    séparées par « · », si la ligne tient — mesuré à l'écran (`offsetHeight`), pas en comptant les signes. Chacune
+    reste `S.lecture(html)` : 1,2 s plus 45 ms par signe pesé (`I.langue.poids` : en japonais, un signe pèse 2,2), entre
+    1,8 et 5 s. Une ligne interrompue par une lecture reprend ensuite, au moins 1,2 s.
+  - Trois annonces au plus attendent leur tour ; au-delà, les plus anciennes sont retirées (celles nées dans la même
+    demi-seconde passent ensemble). Rien ne se perd : `S.fil` garde les douze dernières lignes, en mémoire seulement —
+    jamais dans la partie, dont le format ne change pas.
+  - L'incident (`I.onError`) et la sauvegarde refusée passent outre (`{ urgent: true }`) : tout de suite, même pendant
+    une lecture. Une annonce née dans la halte s'écrit sous son titre (`S.filHalte`, `#menu header .dit`).
+  - Le combat ne vide plus `#toasts` : le fil s'y tait, et ce qui y attend passe après. La Chaîne, elle, vide la file
+    (`S.filVide`) : le récit est quitté.
+- **Sa place** (`style.css`). En hauteur, sous l'en-tête (ou la barre de « Bâtir »), dans la bande noire : `S.filPlace`
+  pose la hauteur de ce qui est au-dessus dans `--fil-haut` (appelé par `W.hud` et à chaque battement du fil). Il ne
+  réserve aucune place : aucune boîte ne bouge quand il parle. En largeur et au bureau, en haut à droite, sous le plan
+  (`--mini`), sur une ligne (deux au plus pour une annonce longue, que le relevé signale). Il ne prend aucun toucher
+  (`pointer-events: none`). Une leçon s'y reconnaît à son filet violet.
+- **La marque** (`script.js`, `S.marque`, `showLine`). Ce qui répond au geste du joueur se lit là où il regarde :
+  `S.marque(html)` est pris par la réplique ou la narration qui suit, et s'écrit après le nom (`span.marque` :
+  « Ancien du Fort des Oliviers · Confiance +2 », « La Chaîne · Un voile tombe »). Si aucune boîte ne suit — un choix,
+  un carton, la fin du récit (`S.hideDialog`), ou au bout d'une seconde et demie —, la marque passe au fil. `runParley`
+  et `mal.js` (`dissiper`) marquent au lieu d'annoncer, avec les clés d'aujourd'hui. Les shorts la masquent avec les
+  annonces (`shorts.js`, classe `f-annonces`).
+- **Le verdict de la Chaîne** (`exec('choice')`). Le choix fait, la Chaîne dit elle-même son verdict, seule, en une ligne
+  de narration au nom de « La Chaîne » (`showLine('nar', …, { nom, html, duree })`), le temps de la lire (`S.lecture`) ou
+  d'un toucher ; puis la suite du récit (`o.r`) : la réplique, la parole citée ou la narration, sans rien au-dessus.
+  Jamais sur la parole de quelqu'un, ni au-dessus d'une parole citée (exigence 3). Les clés sont celles d'aujourd'hui.
+- **Les leçons à leur place** (`lecons.js`). Une leçon ne se dit toujours que par `I.lecons.proposer`, une par séquence ;
+  seul change l'endroit où elle s'écrit, là où sert l'outil, et elle reste jusqu'au geste.
+  - En marchant : `dit` pose une ligne de fil marquée de son outil (`{ outil }`) ; `reemploi` la retire dès que le geste
+    est fait (même dans la séquence où elle a été dite) ; `sequence` retire celles qui ont déjà été lues ; trente
+    secondes de lecture au plus. La figure qui s'ouvre (`postures.js`) et « frapper ce qui rôde » (`rodeurs.js`) aussi.
+    Les annonces passent avant une leçon, qui revient ensuite.
+  - Dans un choix : `L.texte('source')` donne la leçon, qu'`exec('choice')` écrit sous la question
+    (`small.lecon`), tant que le choix est ouvert. Elle n'entre plus dans `#toasts`.
+  - En combat : `L.banniere` donne le texte, que `battle.js` écrit dans le panneau, sous les commandes (`.mlecon`) ; la
+    commande nouvelle est cerclée (`.mi.neuf`) jusqu'à ce qu'on s'en serve. Plus de bandeau qui attend un toucher.
+- **La règle d'une descente** (`rodeurs.js`, `entrer`) est une ligne de fil (`{ pas: true }`) qui passe la première et
+  reste jusqu'au premier pas (lue au moins 1,2 s), trente secondes au plus. Les textes ne changent pas (exigences 22 et
+  23) ; le chrono reste sur l'image, et plus rien ne le couvre.
+- **Le menu d'une idée noire** (`mal.js`, `dissiper`). L'en-tête est resserré sur une ligne (`.phead.court`, l'image de
+  1,7 em, le nom, « une idée noire : on lui répond », les voiles) ; ce qu'elle vient de dire tient lieu d'invite
+  (`.prompt.dit`, en petit) ; les trois réponses restent entières. Le carton et son rappel ne changent pas.
+- **La liste d'un pourparler** (`runParley`, lot 2). Elle garde la question de l'interlocuteur, qui tient lieu de « Que
+  réponds-tu ? » (`.prompt.dit`) ; l'en-tête tient en deux lignes — le titre et « manche {manche} / {total} », puis la
+  confiance (`.phead.court.manche`) ; le nom de l'interlocuteur n'y est plus, puisqu'il vient de parler.
+- **Une liste qui défile** (`menuPick`, `repere`). Après `S.ajuster`, si la liste déborde encore, une ligne « ▾ encore
+  {n} réponses » reste au bas de la boîte (collée, `position: sticky`) tant que la dernière réponse n'est pas entière à
+  l'écran — une réponse compte quand son texte finit au-dessus du repère. Elle ne prend aucun toucher. `S.refaire(box)`
+  la refait quand la boîte change.
+- **« Que faire ? »** (`ui.js`, `U.guideLines` → `{ lignes, suite }`, `U.guide`). Trois lignes : l'objectif, le geste
+  (ou l'indice du récit), la direction ; une quatrième si elle presse (le groupe est éprouvé, ou l'épreuve pèse plus
+  que la provision du cœur). « ▸ La suite » (un bouton dans la boîte, non une option ; au clavier, H de nouveau) déplie
+  le reste au même endroit : le geste quand l'indice l'a remplacé, le poids de l'épreuve quand le cœur est prêt, la
+  prière avant l'épreuve, le mal du cœur qui attend, l'énigme, la pièce à porter.
+- **L'en-tête.** Sur un téléphone en largeur (`orientation: landscape` et `max-height: 480px`), il ne garde que
+  l'objectif et les piliers — le chapitre et la date se lisent à la halte (« Reprendre ») et sur le carton de chaque
+  lieu — et se retire pendant une lecture (`in-dialog`), comme en hauteur. Au bureau, il reste. Sous un carton, il se
+  masque, avec le fil (`card()` pose `en-carton` sur `body`) : en hauteur, il transparaissait sous le texte.
+- **L'arabe.** La scène (`#stage`, `#cv`) reste de gauche à droite, mais chaque ligne qui s'y pose prend le sens de sa
+  langue : `I.langue.sens(texte)` rend `rtl` pour un texte en lettres arabes (en arabe), `ltr` pour le français de repli
+  d'un texte encore à écrire — `dir="auto"` se tromperait sur une phrase arabe qui commence par le nom latin choisi par
+  le joueur. Concernés : le nom et le texte d'une réplique, l'en-tête et l'invite d'un choix, chaque option, les lignes
+  de l'en-tête (`W.hud`), chaque annonce, le repère. `text-align: start` remplace `left` dans les choix ; la silhouette
+  de celui qui parle suit son sceau, à droite. Les grilles du combat ne se retournent pas.
+- **Le combat sur un petit écran** (`style.css`, `@media (max-height: 700px)` en hauteur — le seuil de 600 points du lot
+  1 est monté à 700 au lot 2 : il couvre l'écran des shorts, 360 × 640). Chaque compagnon tient sur une ligne : son
+  nom, sa Constance et son Souffle côte à côte ; le niveau et la figure passent en tête des commandes de celui dont
+  c'est le tour (`.mtitle .niv`). Les cinq commandes et la leçon tiennent dans l'écran en 360 × 560 ; `doigt.js` le
+  vérifie. Une bataille déclarée, la Sérénité pleine, en a sept (« Ordonner », et la Sérénité) : la Sérénité, seule sur
+  sa rangée, en prend toute la largeur (`.mi.seul`), et si le panneau dépasse encore le bas de l'écran, ses commandes se
+  resserrent cran par cran, jamais sous la taille « normal » (`battle.js`, `tenir`, comme `S.ajuster` pour un choix) :
+  en 2.12 avant ce correctif, la Sérénité tombait sous l'écran en 360 × 560 et à moitié dehors en 360 × 640.
+- **Les noms** (`ui.js`, `U.noms`). Les étiquettes se posent par la fenêtre visible (`G.view`, `U.scale`), puis dans
+  l'ordre — la cible, les plus proches, celui qui mène, puis les siens ; une étiquette qui en recouvrirait une autre
+  ne s'affiche pas (`.nom.cache`). Au départ d'un chapitre, les noms du groupe ne s'empilent plus.
+- **La halte** (`ui.js`, `U.pause`). Le compte du Recueil ne retient que ce qui se lit
+  (`sv.codex.map(U.codexEntry).filter(Boolean)` : les idées noires vaincues dans la descente du râwî n'ont pas de
+  page). « Reprendre » relit le fil, sous « Ce qui vient d'être dit ». L'ordre de la liste ne change pas : « Reprendre »
+  reste en premier, et le Recueil garde son nom (le Journal viendra avec D191).
+- **Les cartons de pourparler et d'idée noire** (lot 2) : leur introduction passe en casse ordinaire, mêmes mots
+  (`#card.title.parley p:not(.small)`) ; les titres de lieu (`#card.title p`) et les surtitres de trois mots au plus
+  (« POURPARLER », « UNE IDÉE NOIRE ») ne changent pas.
+- **Le nom d'une narration** ne descend pas sous 10,5 points sur un écran tactile, en largeur non plus.
+- **Le relevé des longueurs** (`node v2/tools/longueurs.js [langue…]`) : un rapport, jamais un blocage. Il rend chaque
+  texte de l'interface qui passe par le fil (les annonces et les marques lues dans le code, les leçons, les consignes
+  du labyrinthe) dans le fil lui-même, en 390 × 844, texte « grand », dans les quatre langues, et écrit « À REPRENDRE »
+  quand une annonce dépasse une ligne ou une leçon une phrase ; il ouvre les deux menus par le vrai récit, en 390 × 844
+  et en 360 × 560 (le menu d'une idée noire en japonais, qui coupait sa troisième manière, est un cas suivi) ; il liste
+  pour le décideur les répliques et narrations de plus de six lignes. Puis « LONGUEURS RELEVÉES » ; le détail dans
+  `.smoke/longueurs/`. Seul le décideur corrige le français, et chaque langue le suit texte par texte (exigence 25).
+- **Les contrôles.** `doigt.js` touche sous une réplique, dans la bande noire, où le fil, masqué, ne prend aucun toucher ;
+  la ligne du verdict s'y passe comme une réplique ; il vérifie à chaque tour de combat que chaque commande est dans
+  l'écran et sous le doigt, puis, à chaque écran (sauf avec « loin »), un combat où tout est reçu, avec le groupe de
+  trois de Khâlid : les cinq commandes (en 2.11, en 360 × 560, Vertus, Objets et Garde y tombaient hors de l'écran), puis
+  sa bataille déclarée, la Sérénité pleine : les sept. `loupe.js` vérifie qu'une annonce posée quand la main est libre se montre aussitôt dans le
+  fil, ses petits textes à 10,5 points au moins, et le nom d'une narration, en hauteur et en largeur. `progression.js`
+  ne valide plus à l'aveugle pendant le bandeau d'ouverture d'un combat (il n'attend pas : un « Entrée » tombé au moment
+  où les commandes s'ouvrent choisissait « Frapper » à la place du joueur, depuis que la leçon n'est plus un bandeau).
+- **Les films.** Les shorts dont une scène filmée change sont à refaire (D189 : le décideur l'a permis) : le 04 (le
+  carton du pourparler en casse ordinaire, sa liste avec la question et l'en-tête en deux lignes, « · manche 1 / 3 »
+  d'un seul tenant) et le 08 (le panneau de commandes de la bataille déclarée, plus serré en 360 × 640, le niveau et la
+  figure en tête des commandes ; les rangées des compagnons, elles, ne s'y voient pas : le short les masque). Vérifié à
+  la relecture en filmant chaque short deux fois en brouillon, sur la 2.11 et sur la 2.12, image par image, et une
+  troisième fois sur la 2.11 pour mesurer ce qui change d'une prise à l'autre : le 10, qui montre les noms, ne change
+  pas ; les 07 et 09 sont identiques. Ailleurs, rien que d'infime : dans la 2.11, une annonce qui entrait en glissant
+  faisait déborder l'écran d'un instant, et ce qui apparaissait à ce moment — les légendes du film, au 11 le carton du
+  seuil — se décalait de quatre points pendant son fondu (01, 02, 05, 06, 10 à 14, 16) — la 2.12 ne le fait plus ; au 01, la narration des
+  Archives basses s'écrit un battement plus tard. Les combats joués seuls (03, 06, 12 à 16) et ce qui rôde (05, 11)
+  changent d'une prise à l'autre sur un même jeu : ce n'est pas la 2.12. Les autres masquent le fil et la marque avec
+  les annonces, et ne filment ni un acte de la Chaîne, ni une leçon, ni « Que faire ? », ni la halte, ni le menu d'une
+  idée noire. La démo jouable et le livret court suivent au prochain assemblage (`jouable.js essai`, `livret.js`) : dans
+  la démo, la leçon « frapper ce qui rôde » et les annonces du labyrinthe passent de l'image au fil.
+
 ## Les labyrinthes de la noosphère : `src/core/dedale.js`
 
 *Lot N0 (D155). Le module ne dessine rien et ne connaît pas le jeu : il tire un plan et sait dire s'il est bon.*
@@ -688,8 +816,9 @@ littérature de la langue elle-même et non en faisant des traductions du franç
     langue ; les catégories du recueil se comparent en français et se traduisent à l'affichage ; les empreintes que la
     partie garde (`mal.note`) se prennent sur le texte français (`I.langue.fr`).
   - L'écriture : le texte s'écrit deux signes à la fois en français et en anglais, un en japonais, un mot à la fois en
-    arabe (`L.avance`) ; une annonce de combat dure selon le poids du texte (`L.poids` : le japonais dit plus en moins
-    de signes) ; les initiales d'un nom se tirent selon la langue (`L.initiales`).
+    arabe (`L.avance`) ; une annonce de combat, une ligne du fil, durent selon le poids du texte (`L.poids` : le japonais
+    dit plus en moins de signes) ; les initiales d'un nom se tirent selon la langue (`L.initiales`) ; une ligne posée dans
+    la scène prend le sens de sa langue (`L.sens` : « Un texte à la fois »).
 - **Les textes des langues** : `src/lang/<langue>/<fichier>.json`, un fichier par récit, plus `tables` et `moteur`, une
   entrée par ligne `{ k, fr, t, ou }`. L'assemblage les embarque (`ISNAD.langue.poser`) ; un `t` vide n'entre pas.
   `node v2/tools/langues.js releve` met les listes à jour du français ; `node v2/tools/langues.js` contrôle.
@@ -721,6 +850,7 @@ node v2/tools/smoke.js auto          # et walk, tap, wrong, shots — comme en 1
 node v2/tools/doigt.js [loin [844x390]]
 node v2/tools/son.js
 node v2/tools/bataille.js [mesures]
+node v2/tools/longueurs.js [langue…]  # « LONGUEURS RELEVÉES » : le relevé des longueurs, un rapport sans blocage (D189)
 ```
 
 **Règle de la 2.x.** Celle d'`AGENTS.md`, avec neuf contrôles de plus à chaque changement du moteur ou des règles —

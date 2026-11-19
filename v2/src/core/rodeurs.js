@@ -126,7 +126,7 @@
       W.foes.forEach((f, i) => { let q = loin.find(c => W.foes.every(g => !g.placed || Math.hypot(g.x - (c[0] * T + 16), g.y - (c[1] * T + 16)) > 6 * T)) || loin[i] || loin[0]; if (!q) { f.done = true; return; } f.x = q[0] * T + 16; f.y = q[1] * T + 16; f.placed = true; f.cx = null; });
       W.player.dir = 2; W.hud(); $('#hud').hidden = false; document.body.classList.add('descente');
       await S.fade('in', 500);
-      S.toast(I.esc(T0.regle || ''), 9000);
+      S.toast(I.esc(T0.regle || ''), { pas: true }); // 2.x (D189) : la règle passe au fil, hors de l'image, jusqu'au premier pas (trente secondes au plus)
     } finally { S.depth--; S.hideDialog(); }
     if (I.debug.auto || I.debug.walk) return R.finir(I.debug.issue || 'issue'); // le joueur de test ne s'y promène pas : il en éprouve l'entrée, une issue et le retour
   };
@@ -272,7 +272,7 @@
     const p = W.player, surPont = m.g0(p.x, p.y) === 'npont';
     R._champT = (R._champT || 0) - dt; if (R._champT <= 0 || R._champ === undefined) { R._champ = surPont ? champDe(p) : null; R._champT = 0.25; }
     for (const f of L) { if (etourdi(f, dt)) continue; avance(f, dt, R._champ); const dist = Math.hypot(f.x - p.x, f.y - p.y);
-      if (dist < 96 && !R._ditRode && !I.save.data.codex.includes('coeur/frappe')) { const dire = () => { O().learn('frappe', true); S.toast(I.esc(P().rode || ''), 7000); }; if (I.lecons.proposer('frappe', dire)) R._ditRode = true; } // le besoin d'abord : on apprend à frapper quand quelque chose approche
+      if (dist < 96 && !R._ditRode && !I.save.data.codex.includes('coeur/frappe')) { const dire = () => { O().learn('frappe', true); S.toast(I.esc(P().rode || ''), { outil: 'frappe' }); }; if (I.lecons.proposer('frappe', dire)) R._ditRode = true; } // le besoin d'abord : on apprend à frapper quand quelque chose approche
       if (surPont && dist < 14) return R.contactMeute(f); }
     viser();
   }

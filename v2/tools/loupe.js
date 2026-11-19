@@ -51,7 +51,10 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { a
     const etat = () => p.evaluate(() => { const I = window.ISNAD, U = I.ui, W = I.world, G = I.gfx, st = document.getElementById('stage').getBoundingClientRect(); return { zf: U.zf, Z: U.Z, garde: I.save.data.opts.zoom, tz: I.save.data.opts.tz, x: Math.round(W.player.x), y: Math.round(W.player.y), dest: !!W.dest, vue: [G.view.x, G.view.y, +G.view.w.toFixed(1), +G.view.h.toFixed(1)], st: [st.left, st.top, st.width, st.height], bouton: document.getElementById('zoombtn').textContent, tr: document.getElementById('cv').style.transform, scale: U.scale, perso: Math.round(24 * U.scale) }; });
     // 1. sans choix du joueur
     const e0 = await etat(); dit(e0.zf === office && e0.garde === undefined && e0.tz === undefined, 'ÉCART', `${nom} : sans choix du joueur, l'image est agrandie de ${e0.zf} — un personnage fait ${e0.perso} points de haut — et rien n'est écrit dans les réglages · bouton « ${e0.bouton} »`);
-    await p.evaluate(() => window.ISNAD.script.toast('Reçu : <b>Épée de fer</b><br><small>Force +11 %</small>', 5000)); await p.waitForTimeout(350);   // une annonce, avec sa petite ligne
+    await p.evaluate(() => { const S = window.ISNAD.script; S.filVide(); S.toast('Reçu : <b>Épée de fer</b><br><small>Force +11 %</small>', 5000); }); await p.waitForTimeout(350);   // une annonce, avec sa petite ligne (le fil vidé de ce que l'ouverture du chapitre y a laissé)
+    // 2.12 (D189) : l'annonce passe dans le fil — la main est libre, elle s'y montre aussitôt ; ses petits textes ne descendent pas sous 10,5 points
+    const fil = await p.evaluate(() => { const f = document.getElementById('toasts'), t = [...f.querySelectorAll('.toast')].find(e => !e.hidden && /Épée de fer/.test(e.textContent)); return { montre: f.classList.contains('montre') && !!t, petit: t ? Math.min(...[t, ...t.querySelectorAll('*')].filter(e => (e.textContent || '').trim()).map(e => parseFloat(getComputedStyle(e).fontSize))) : 0 }; });
+    dit(fil.montre && fil.petit >= 10.5, fil.montre ? 'INVISIBLE' : 'ÉCART', `${nom} · le fil : l'annonce posée quand la main est libre se montre aussitôt${fil.montre ? `, son plus petit texte à ${fil.petit.toFixed(1)} points` : ' — elle n’est pas à l’écran'}`);
     await lisible('la carte, une annonce'); await shot('2-carte');
     // 2. le pincement
     const cx = e0.st[0] + e0.st[2] / 2, cy = e0.st[1] + e0.st[3] * 0.62;
@@ -89,6 +92,11 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { a
     // 6. un dialogue, lisible
     await p.evaluate(() => { window.ISNAD.script.run([['say', 'khalid', 'Nous tiendrons la passe jusqu’à l’aube. Que chacun garde son rang.']]); }); await p.waitForTimeout(900);
     await lisible('un dialogue'); await shot('5-dialogue'); await p.keyboard.press('Enter'); await p.waitForTimeout(250); await p.keyboard.press('Enter'); await calme(10);
+    // 2.12 (D189) : une narration — son nom (« La Chaîne », en petites capitales) ne descend pas sous 10,5 points, en largeur non plus
+    await p.evaluate(() => { window.ISNAD.script.run([['nar', 'Le jour se lève sur la passe.']]); }); await p.waitForTimeout(900);
+    const nar = await p.evaluate(() => parseFloat(getComputedStyle(document.querySelector('#dialog .name')).fontSize));
+    dit(nar >= 10.5, 'INVISIBLE', `${nom} · une narration : son nom à ${nar.toFixed(1)} points`); await shot('5b-narration');
+    await p.keyboard.press('Enter'); await p.waitForTimeout(250); await p.keyboard.press('Enter'); await calme(10);
     // 5. le combat garde son cadrage
     await p.evaluate(() => { const I = window.ISNAD; I.battle.start({ group: Object.keys(I.world.saga.enemies).slice(0, 1), bg: 'desert' }); });
     for (let i = 0; i < 60 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mi'))); i++) { if (await p.evaluate(() => { const b = document.querySelector('#battle .banner'); return b && !b.hidden; })) await p.keyboard.press('Enter'); await p.waitForTimeout(300); }

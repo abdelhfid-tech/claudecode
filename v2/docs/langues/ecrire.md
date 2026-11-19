@@ -44,6 +44,12 @@ La liste à remplir est `v2/src/lang/<langue>/<fichier>.json`, une entrée par l
 - **La place** : une réplique tient dans trois lignes sur un téléphone. Au plus 330 signes en arabe et en anglais, 110
   en japonais ; une narration, 360 et 125 (en japonais, trois lignes d'un téléphone tenu en largeur font environ 110
   caractères).
+- **Une annonce** (une ligne du fil, 2.12 · D189) dit un fait, en une ligne de téléphone : environ 56 signes en
+  anglais, 60 en arabe, 22 en japonais. Ce sont des repères : c'est la ligne mesurée à l'écran qui compte
+  (`node v2/tools/longueurs.js`, qui écrit « À REPRENDRE » sans rien bloquer). L'explication va à la leçon, à l'aide ou
+  au Recueil. Des annonces nées ensemble se joignent par « · » : chacune reste une phrase entière, jamais faite de
+  morceaux. Une leçon : un outil, un geste, le signe du bouton (☰, ?, ◂ ▸), en une phrase. Les récits ne sont pas
+  soumis à ces longueurs : un texte de récit trop long pour un téléphone est signalé au décideur, jamais raccourci.
 - Aucun `<` ni `>` hors des balises du français ; aucune description physique de personne (exigence 2) ; aucun nom de
   démon ou de djinn pour un ennemi, aucun Nom divin dans une compétence ou un objet (exigences 6, 8, 18) — `regles.js`
   le vérifie dans chaque langue.
