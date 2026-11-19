@@ -9,8 +9,9 @@
       fait marcher personne ; l'agrandissement est gardé ;
    3. le bouton « × » fait le tour des grandeurs ;
    4. à × 2, toucher une case y mène le héros — le toucher tombe juste —, et les étiquettes sont sur leurs personnages ;
-   5. le combat garde son cadrage, et chaque héros y a sa place (aucun corps n'en recouvre un autre de plus de quatre
-      points) ; au retour, l'image retrouve son agrandissement ; une page rechargée aussi ;
+   5. le combat garde son cadrage, et chaque héros y a sa place (aucun point de sa silhouette sur celle d'un autre, vingt-six
+      points au moins d'un centre à l'autre — en hauteur, aussi sur un téléphone plus élancé, où la scène est la plus
+      étroite) ; au retour, l'image retrouve son agrandissement ; une page rechargée aussi ;
    6. sur la carte, dans un dialogue, en combat et à la halte, aucun texte n'est plus petit que dix points.
    Sortie : « OK » par preuve, puis « LOUPE CONFORME ». Sinon « ÉCART » (une grandeur attendue n'y est pas),
    « INACCESSIBLE » (le toucher ne mène pas où il faut), « INVISIBLE » (un texte trop petit pour être lu). Code 1 à la
@@ -102,15 +103,19 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { a
     await p.evaluate(() => { const I = window.ISNAD; I.battle.start({ group: Object.keys(I.world.saga.enemies).slice(0, 1), bg: 'desert' }); });
     for (let i = 0; i < 60 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mi'))); i++) { if (await p.evaluate(() => { const b = document.querySelector('#battle .banner'); return b && !b.hidden; })) await p.keyboard.press('Enter'); await p.waitForTimeout(300); }
     const e4 = await etat(); dit(e4.Z === 1 && e4.vue[1] === 0 && !/scale/.test(e4.tr), 'ÉCART', `${nom} : en combat, l'image garde son cadrage (× ${e4.Z})`);
-    // 2.16 — en combat, chaque héros a sa place : le corps de l'un ne recouvre jamais celui d'un autre de plus de quatre points
-    // (en hauteur, ils se resserraient vers le centre de l'écran, à vingt points l'un de l'autre, et se chevauchaient)
-    const rec = await p.evaluate(() => { const I = window.ISNAD, W = I.world, G = I.gfx, h = I.battle.places().filter(e => e.camp === 'hero');
-      const boite = e => { const im = G.figure(I.gear.look(W.hero(e.id)), 1, 0, null), q = im.hd || 1, d = im.getContext('2d').getImageData(0, 0, im.width, im.height).data; let x0 = 1e9, x1 = -1, y0 = 1e9, y1 = -1;
-        for (let y = 0; y < im.height; y++) for (let x = 0; x < im.width; x++) if (d[(y * im.width + x) * 4 + 3] > 40) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
-        const X = e.x - 16, Y = e.y + 22 - 46; return [X + x0 / q, Y + y0 / q, X + (x1 + 1) / q, Y + (y1 + 1) / q, e.nom]; };
-      const B = h.map(boite), l = []; for (let i = 0; i < B.length; i++) for (let j = i + 1; j < B.length; j++) { const a = B[i], b = B[j], ox = Math.min(a[2], b[2]) - Math.max(a[0], b[0]), oy = Math.min(a[3], b[3]) - Math.max(a[1], b[1]); l.push([a[4], b[4], ox > 0 && oy > 0 ? +ox.toFixed(1) : 0]); }
-      return { n: h.length, l }; });
-    dit(rec.n >= 2 && rec.l.every(q => q[2] <= 4), 'ÉCART', `${nom} : en combat, ${rec.n} héros, chacun à sa place — recouvrements : ${rec.l.map(q => q[0] + ' / ' + q[1] + ' ' + q[2] + ' pt').join(' · ')}`);
+    // 2.16 — en combat, chaque héros a sa place : aucun point de la silhouette de l'un sur celle d'un autre (chaque figure
+    // posée, point de figure par point de figure, là où le combat la pose), et vingt-six points au moins d'un centre au
+    // centre voisin. Mesuré à la taille de l'essai puis, en hauteur, sur un téléphone plus élancé (390 × 844), où la scène
+    // visible est la plus étroite (216 points). La 2.15, que le seuil d'avant (quatre points de recouvrement des boîtes)
+    // laissait passer, y échoue : 22 et 23 points d'écart et 66 points en commun ici, 20 points et 202 en commun là-bas.
+    const places = () => p.evaluate(() => { const I = window.ISNAD, W = I.world, G = I.gfx, h = I.battle.places().filter(e => e.camp === 'hero').sort((a, b) => a.x - b.x);
+      const masque = e => { const im = G.figure(I.gear.look(W.hero(e.id)), 1, 0, null), q = im.hd || 1, d = im.getContext('2d').getImageData(0, 0, im.width, im.height).data, X = Math.round((e.x - 16) * q), Y = Math.round((e.y + 22 - 46) * q), m = new Set();
+        for (let y = 0; y < im.height; y++) for (let x = 0; x < im.width; x++) if (d[(y * im.width + x) * 4 + 3] > 40) m.add((X + x) + ',' + (Y + y)); return m; };
+      const M = h.map(masque), communs = []; for (let i = 0; i < M.length; i++) for (let j = i + 1; j < M.length; j++) { let n = 0; M[i].forEach(k => { if (M[j].has(k)) n++; }); communs.push([h[i].nom, h[j].nom, n]); }
+      return { vue: Math.round(G.view.w), n: h.length, communs, ecarts: h.slice(1).map((e, i) => [h[i].nom, e.nom, Math.round(e.x - h[i].x)]) }; });
+    const sesPlaces = (r, ou) => dit(r.n >= 2 && r.communs.every(q => q[2] === 0) && r.ecarts.every(q => q[2] >= 26), 'ÉCART', `${nom}${ou} : en combat (scène visible de ${r.vue} points), ${r.n} héros, chacun à sa place — écarts ${r.ecarts.map(q => q[0] + ' / ' + q[1] + ' ' + q[2] + ' pt').join(' · ')} ; points de silhouette en commun ${r.communs.map(q => q[0] + ' / ' + q[1] + ' ' + q[2]).join(' · ')}`);
+    sesPlaces(await places(), '');
+    if (cle === 'haut') { await p.setViewportSize({ width: 390, height: 844 }); await p.waitForTimeout(700); sesPlaces(await places(), ' · téléphone élancé, 390 × 844'); await p.setViewportSize(vp); await p.waitForTimeout(700); }
     await lisible('un combat'); await shot('6-combat');
     await p.evaluate(() => { const I = window.ISNAD; I.debug.auto = true; I.speed = 40; }); for (let i = 0; i < 400 && await p.evaluate(() => window.ISNAD.battle.active); i++) { await p.keyboard.press('Enter'); await p.waitForTimeout(120); }
     await p.evaluate(() => { const I = window.ISNAD; I.debug.auto = false; I.speed = 1; }); await p.waitForTimeout(900); await calme(20); await p.waitForTimeout(500);

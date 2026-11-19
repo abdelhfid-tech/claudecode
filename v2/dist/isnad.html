@@ -845,7 +845,7 @@ body.avec2:not(.portrait) #hud { visibility: hidden; }
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.16 · 2026-11-19 13:00 UTC · 1795498";
+window.ISNAD_VERSION = "2.16 · 2026-11-19 15:20 UTC · 1093405+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -8981,10 +8981,12 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   const bx = x => G.view.w < G.PW ? Math.round(G.PW / 2 + (x - G.PW / 2) * I.clamp((G.view.w - 20) / 350, 0.5, 1)) : x;
   // 2.16 — en hauteur, les héros se resserrent autour du centre de leur groupe, et non du centre de l'écran : resserrés comme
   // les autres, ils n'étaient plus qu'à vingt points l'un de l'autre pour des figures de trente-deux, et se recouvraient.
-  // Ils gardent vingt-six points d'écart en largeur et s'étagent davantage en profondeur (dix-huit points au lieu de douze).
+  // Ils gardent vingt-sept points d'écart au moins en largeur — là où la scène visible est la plus étroite (216 points, un
+  // téléphone élancé) ; à vingt-six, deux silhouettes s'y touchaient encore — et s'étagent davantage en profondeur
+  // (dix-huit points au lieu de douze). loupe.js le vérifie : aucun point d'une silhouette sur une autre.
   const HERO_MID = HERO_POS[1];
   const heroPos = (x0, y0) => { if (!(G.view.w < G.PW)) return [x0, y0]; const k = I.clamp((G.view.w - 20) / 350, 0.5, 1); if (k >= 1) return [x0, y0];
-    const c = bx(HERO_MID[0]), f = 1 - (1 - k) * 0.63; return [Math.round(c + (x0 - HERO_MID[0]) * f), Math.round(HERO_MID[1] + (y0 - HERO_MID[1]) * (1 + (1 - k) * 1.14))]; };
+    const c = bx(HERO_MID[0]), f = 1 - (1 - k) * 0.55; return [Math.round(c + (x0 - HERO_MID[0]) * f), Math.round(HERO_MID[1] + (y0 - HERO_MID[1]) * (1 + (1 - k) * 1.14))]; };
   const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
   B.relayout = function () { if (!C) return; C.all.forEach(e => { if (e.side === 'hero' && e.y0 !== undefined) { const q = heroPos(e.x0, e.y0); e.x = q[0]; e.y = q[1]; } else e.x = bx(e.x0); }); refresh(); };
   B.champ = () => (C && C.champ) || null; // le champ de la bataille en cours, pour les outils de test
