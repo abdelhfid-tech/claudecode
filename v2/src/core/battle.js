@@ -24,6 +24,7 @@
   const STN = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan§stat'), stun: I.T('Étourdi'), doute: I.T('Doute'), waswas: I.T('Waswâs'), regen: I.T('Régén.'), garde: I.T('En garde'), taunt: I.T('Cible') };
 
   let C = null; // contexte du combat en cours
+  B.contexte = () => C;   // prototype 2.17 : pour les images de validation (une attitude ou une mimique posée sur un combattant)
 
   /* ================= décor ================= */
   const v15 = G.lum === 215; // 2.17 (prototype) : la lumière de fin de journée ; ?lum=215 rend celle de la 2.15 (gfx.js, G.LUM)

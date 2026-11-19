@@ -158,7 +158,7 @@ const DESSINS = [['fin', '?def=2'], ['doux', '?def=2l'], ['origine', '?def=1']];
 
 /* ---------- dans la page : le voile de chaque grand sprite, et ce que le moteur en dit ---------- */
 const VOILES = looks => {
-  const G = window.ISNAD.gfx, POSES = window.ISNAD.D.POSES, faux = []; let vues = 0, natives = 0;
+  const G = window.ISNAD.gfx, D = window.ISNAD.D, POSES = D.POSES.concat(D.ATTITUDES || [], G.MIMIQUES || []), faux = []; let vues = 0, natives = 0;   // 2.17 (prototype) : les attitudes nouvelles et les mimiques seules y passent aussi
   const voile = rows => { const H = rows.length, W = rows[0].length, V = (x, y) => y >= 0 && y < H && x >= 0 && x < W && (rows[y][x] === 'V' || rows[y][x] === 'v');
     let n = 0, d = null; for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (V(x, y)) { n++; d = d || [x, y]; }
     if (!n) return null;
