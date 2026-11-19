@@ -10,6 +10,18 @@
            node tools/silhouettes.js elaguer            retire des deux fiches les empreintes qui n'ont plus de silhouette (un
                                                         personnage retouché : D193, les habitants de 2084) — refusé si une seule
                                                         empreinte encore utile a changé
+           node tools/silhouettes.js redessin « décision »
+                                                        un nouveau dessin des grands personnages, validé par le décideur (la
+                                                        décision, dite en toutes lettres, est inscrite dans la fiche), devient
+                                                        leur référence : le contrôle entier passe d'abord — les petits sprites
+                                                        au pixel près, l'interrupteur, les voiles sans trait, les visages, les
+                                                        coiffes, les gestes, la marque du râwî, les ressemblances —, et seul
+                                                        l'écart des grands est tenu pour voulu ; si une autre anomalie paraît,
+                                                        rien n'est écrit. Puis grands.json est relevé de nouveau en entier (les
+                                                        silhouettes nouvelles y entrent, celles qui n'existent plus en sortent),
+                                                        et silhouettes.json reçoit les petites silhouettes nouvelles et perd
+                                                        celles qui n'existent plus — aucune empreinte de petit sprite ne change.
+                                                        Ensuite, le contrôle ordinaire compare à ce nouveau relevé, au point près.
            node tools/silhouettes.js planches [modèles] planches agrandies dans .smoke/silhouettes/ ; [modèles] : une image de
                                                         sept modèles (7 × 2 cases de 32 × 48), pour la planche de comparaison
    1. Les petits sprites (16 × 24, ceux qui marchent sur les cartes) : quatre directions, trois pas, six poses, pour tous
@@ -217,6 +229,10 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
   // la clé d'un grand personnage dans sa fiche : son apparence entière, sans la marque du râwî — posée après le relevé, elle
   // ne fait pas de lui une silhouette nouvelle : son dessin se compare à celui d'avant (un écart s'y voit)
   const cleG = look => { const L = Object.assign({}, look); delete L.rawi; return JSON.stringify(L); };
+  // redessin : la décision qui valide le nouveau dessin, en toutes lettres (elle entre dans la fiche)
+  const REDESSIN = mode === 'redessin', raison = process.argv.slice(3).join(' ').replace(/\s+/g, ' ').trim();
+  if (REDESSIN && raison.length < 12) { console.log('✗ redessin : dites quelle décision du décideur valide le nouveau dessin (node tools/silhouettes.js redessin « … ») — rien n’est relevé sans elle'); await browser.close(); process.exit(1); }
+  let redessin = null;   // ce que le contrôle relève, pour l'écrire à la fin s'il n'y a pas d'autre anomalie
   const cles = inv.map(q => JSON.stringify(sansRayon(q.look))), groupes = {}; inv.forEach(q => { groupes[q.groupe] = (groupes[q.groupe] || 0) + 1; });
   const detail = Object.entries(groupes).map(([g, n]) => `${n} ${g}`).join(', ');
 
@@ -336,14 +352,16 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
   else { const SG = JSON.parse(fs.readFileSync(FICHE_G, 'utf8')).grands, connus = inv.filter(q => SG[cleG(q.look)]), EG = await grandes(connus.map(q => q.look)), N = ['32 × 48 fin', '64 × 96 fin', 'fin et adouci', 'd’origine'];
     const ecartsGr = []; connus.forEach((q, i) => { const a = SG[cleG(q.look)]; a.forEach((h, j) => { if (h !== EG[i][j]) ecartsGr.push(`${q.nom} (${N[j]})`); }); });
     const nouveaux = inv.length - connus.length, partisG = Object.keys(SG).filter(k => !inv.some(q => cleG(q.look) === k)).length;
-    if (ecartsGr.length) { const qui = [...new Set(ecartsGr.map(e => e.replace(/ \([^)]*\)$/, '')))];   // chaque silhouette touchée, une fois, et les dessins où elle l'est
+    if (REDESSIN) redessin = { SG, connus, EG, qui: [...new Set(ecartsGr.map(e => e.replace(/ \([^)]*\)$/, '')))], images: ecartsGr.length, nouveaux, partisG };
+    if (ecartsGr.length && REDESSIN) console.log(`··· le nouveau dessin, tenu pour voulu (redessin) : ${ecartsGr.length} grand(s) sprite(s) changé(s), sur ${redessin.qui.length} silhouette(s) — relevés à la fin si rien d'autre ne cloche`);
+    else if (ecartsGr.length) { const qui = [...new Set(ecartsGr.map(e => e.replace(/ \([^)]*\)$/, '')))];   // chaque silhouette touchée, une fois, et les dessins où elle l'est
       ko(`ÉCART ${ecartsGr.length} grand(s) sprite(s) ne sont plus ceux d'avant, sur ${qui.length} silhouette(s) : ${ecartsGr.slice(0, 8).join(', ')}${ecartsGr.length > 8 ? '…' : ''}`);
       console.log('   les silhouettes : ' + qui.map(n => n + ' (' + ecartsGr.filter(e => e.replace(/ \([^)]*\)$/, '') === n).map(e => e.match(/\(([^)]*)\)$/)[1]).join(', ') + ')').join(' · ')); }
     else ok(`les grands sprites sont ceux d'avant, au point près, dans les trois dessins : ${connus.length} silhouettes × 156 images (32 × 48 et 64 × 96 ; fin, fin et adouci, d’origine)${nouveaux ? ` ; ${nouveaux} silhouette(s) nouvelle(s), sans empreinte` : ''}${partisG ? ` ; ${partisG} empreinte(s) sans silhouette` : ''}`); }
   if (!natif) { ko('ABSENT gfx.charGrille : ce moteur ne dessine pas de grand sprite natif'); }
   else {
     // 2. l'interrupteur rend le dessin d'avant
-    const avant = (await parPaquets(inv.map(q => q.look), 60, EMPREINTES, l => [l, true, true])).flat();
+    const avant = (await parPaquets(inv.map(q => q.look), 60, EMPREINTES, l => [l, true, true])).flat(); if (redessin) redessin.avant = avant;
     const ecartsG = []; cles.forEach((k, i) => { if (S[k] && S[k][1] !== avant[i][1]) ecartsG.push(inv[i].nom); });
     if (ecartsG.length) ko(`ÉCART l'interrupteur ne rend pas le grand sprite d'avant pour ${ecartsG.length} silhouette(s) : ${ecartsG.slice(0, 8).join(', ')}${ecartsG.length > 8 ? '…' : ''}`);
     else ok(`l'interrupteur (gfx.natif = false) rend le grand sprite d'avant, à l'identique : ${cles.length - neufs} silhouettes × 36 images`);
@@ -428,6 +446,22 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     }
   }
   if (errors.length) ko(`ÉCART erreur console : ${[...new Set(errors)].slice(0, 3).join(' | ').slice(0, 400)}`);
+  /* ---------- redessin : le nouveau dessin validé devient la référence ---------- */
+  if (REDESSIN) {
+    if (anomalies || !redessin || !redessin.avant) { console.log(`✗ rien n'est relevé : ${anomalies} anomalie(s) autre(s) que l'écart du dessin validé${redessin ? '' : ' (les grands n’ont pas été comparés)'}`); await browser.close(); process.exit(1); }
+    const R = redessin, SP = JSON.parse(fs.readFileSync(FICHE, 'utf8')), SGf = JSON.parse(fs.readFileSync(FICHE_G, 'utf8')), grands = {};
+    R.connus.forEach((q, i) => { grands[cleG(q.look)] = R.EG[i]; });
+    const neuves = inv.filter(q => !grands[cleG(q.look)]), EN = await grandes(neuves.map(q => q.look)); neuves.forEach((q, i) => { grands[cleG(q.look)] = EN[i]; });
+    let np = 0; cles.forEach((k, i) => { if (!SP.sprites[k]) { SP.sprites[k] = R.avant[i]; np++; } });
+    const vivantes = new Set(cles), partis = Object.keys(SP.sprites).filter(k => !vivantes.has(k)); partis.forEach(k => { delete SP.sprites[k]; });
+    if (errors.length) { console.log('✗ rien n’est relevé : erreur console : ' + errors[0]); await browser.close(); process.exit(1); }
+    const jour = new Date().toISOString().slice(0, 10), mot = ` Relevé de nouveau le ${jour} (tools/silhouettes.js redessin), le contrôle entier passant : « ${raison} » — ${R.qui.length} silhouette(s) redessinée(s) (${R.images} images), ${neuves.length} nouvelle(s), ${R.partisG} retirée(s).`;
+    fs.writeFileSync(FICHE_G, JSON.stringify({ note: SGf.note + mot, grands }, null, 0).replace(/"\],"/g, '"],\n"') + '\n');
+    if (np || partis.length) fs.writeFileSync(FICHE, JSON.stringify({ note: SP.note + (np || partis.length ? ` Le ${jour} (redessin) : ${np} petite(s) silhouette(s) nouvelle(s) ajoutée(s), ${partis.length} retirée(s) — aucune empreinte de petit sprite n'a changé.` : ''), sprites: SP.sprites }, null, 0).replace(/"\],"/g, '"],\n"') + '\n');
+    await browser.close();
+    console.log(`✓ REDESSIN RELEVÉ : grands.json — ${Object.keys(grands).length} silhouettes, dont ${R.qui.length} redessinée(s), ${neuves.length} nouvelle(s), ${R.partisG} retirée(s) ; silhouettes.json — ${np} ajoutée(s), ${partis.length} retirée(s), aucune changée. Relancez node tools/silhouettes.js : il compare désormais à ce relevé.`);
+    process.exit(0);
+  }
   await browser.close();
   console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : '✓ SILHOUETTES CONFORMES');
   process.exit(anomalies ? 1 : 0);

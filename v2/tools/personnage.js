@@ -9,10 +9,11 @@
       visage ; le dé (mille tirages) ne touche jamais au visage, ne prend jamais ce qu'une coiffe refuse (D.RAWI.sans), ne
       sort pas des listes ; les teints restent dans l'ordre sous la capuche, aucun ne donne le visage d'un autre, dans les
       trois dessins ; aucune composition n'a la coiffe et la coupe d'un Compagnon des récits, ni celles de Sâlim et de
-      Maître Yûnus, qui marchent avec le râwî ; aucun turban du râwî n'est clair ; les objets (la besace, la lanterne) ne
-      changent ni l'équipement de départ ni le combat, et n'ajoutent pas un point d'or ; les feuillets (D193) ne sont plus
-      proposés, et une composition qui les portait les perd sans erreur ; sous le turban, le visage ; sous le chèche, les
-      yeux seuls ; un récit ou un paquet n'écrit ni teint ni trait. Et aucune composition, sous aucune coiffe, ne ressemble
+      Maître Yûnus, qui marchent avec le râwî ; aucun turban du râwî n'est clair ; l'objet (la lanterne) ne change ni
+      l'équipement de départ ni le combat, et n'ajoute pas un point d'or ; les feuillets (D193) ne sont plus proposés, ni
+      ce que le nouveau dessin d'Idris a retiré (le turban haut, deux coupes, l'écharpe, la besace en bandoulière : choix
+      simplifiés, validés par le décideur), et une composition qui les portait les perd sans erreur ; sous la calotte, le
+      visage ; sous le chèche, les yeux seuls ; un récit ou un paquet n'écrit ni teint ni trait. Et aucune composition, sous aucune coiffe, ne ressemble
       à un Compagnon des récits (moins de 85 % de points d'une couleur presque égale, ΔE < 12, sans le néon ; de face, de
       profil et de dos, en 16 × 24 et en 32 × 48) : le chèche, de dos dans le petit personnage, a le gabarit même du
       turban des Compagnons, on le compare donc à eux aussi.
@@ -25,8 +26,8 @@
    3 bis. Les téléphones courants, en largeur et en hauteur (640 × 360, 667 × 375, 568 × 320, 320 × 568) : à l'ouverture
       et dans chaque onglet, aucun mot coupé dans un bouton, rien hors de l'écran, aucune case sous la taille d'un doigt.
    4. La composition entière, depuis la Chaîne : quatre onglets, chaque case touchée change l'aperçu ; une coiffe se prend
-      toujours et ce qui ne va pas avec elle cède sous les yeux (la calotte rend un manteau, le turban fait céder le
-      manteau long et l'étoffe claire), la case qui n'irait pas avec la coiffe portée s'éteint ; le dé, ↺ ; la composition
+      toujours et ce qui ne va pas avec elle cède sous les yeux (la calotte rend un manteau, le chèche fait céder l'étoffe
+      claire et la verte), la case qui n'irait pas avec la coiffe portée s'éteint ; le dé, ↺ ; la composition
       gardée (partie gardée, rechargée), changée depuis la halte au milieu d'un chapitre, exportée puis importée ailleurs ;
       un profil abîmé ramène Idris ; une partie qui portait les feuillets les perd, sans erreur.
    5. En arabe : l'écran se lit de droite à gauche, sans déborder. 6. Au clavier : une souris immobile ne prend pas la
@@ -60,7 +61,7 @@ const ETAT = () => { const s = document.querySelector('#perso'), vis = e => { if
 // les points de l'ouverture du visage dans l'image de face de l'aperçu (la coiffe dit où elle est)
 const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = new Image(); await new Promise(r => { im.onload = r; im.onerror = r; im.src = src; });
   const cv = document.createElement('canvas'); cv.width = im.width; cv.height = im.height; const c = cv.getContext('2d'); c.drawImage(im, 0, 0); const d = c.getImageData(0, 0, cv.width, cv.height).data;
-  const g = G.charGrille({ kind: 'cyber', robe: '#2a3048', head: '#1c2030', cloak: '#39424f', coiffe }, 0, 0, null, G.D > 1 ? 2 : 1).lignes, k = cv.width / g[0].length; const px = [];
+  const g = G.charGrille({ kind: 'cyber', robe: '#2a3048', head: '#1c2030', cloak: '#39424f', coiffe, rawi: true }, 0, 0, null, G.D > 1 ? 2 : 1).lignes, k = cv.width / g[0].length; const px = [];
   g.forEach((l, y) => { for (let x = 0; x < l.length; x++) if (l[x] === 'V' || l[x] === 'v') { const o = (Math.floor(y * k) * cv.width + Math.floor(x * k)) * 4; px.push(d[o] + ',' + d[o + 1] + ',' + d[o + 2]); } });
   return px.join(' '); };
 
@@ -123,8 +124,8 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     const pts = (L, dir) => { const g = G.charGrille(L, dir, 0, null, 2).lignes, cv = G.figure(L, dir, 0), d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data, k = cv.width / g[0].length, s = [];
       g.forEach((l, y) => { for (let x = 0; x < l.length; x++) if (l[x] === 'V' || l[x] === 'v') { const o = (Math.floor(y * k) * cv.width + Math.floor(x * k)) * 4; s.push(d[o], d[o + 1], d[o + 2]); } }); return s.join(','); };
     const lk = c => Object.assign({ kind: 'compagnon' }, X.composer(t0, c));
-    let pareils = 0; [{ teint: 't5' }, { teint: 't1', barbe: 2, poil: 'p3' }].forEach(v => { const ref = [0, 1].map(d => pts(lk(v), d));
-      [{ etoffe: 'e7' }, { neon: 'n3' }, { manteau: 'ample', longue: true, echarpe: true }, { objet: 'besace' }, { objet: 'lanterne' }, { etoffe: 'e6', neon: 'n5', manteau: 'epaule' }].forEach(h => { [0, 1].forEach(d => { if (pts(lk(Object.assign({}, v, h)), d) === ref[d]) pareils++; else E.push('changer d’habit change le visage : ' + JSON.stringify(Object.assign({}, v, h))); }); }); });
+    let pareils = 0; [{ teint: 't5' }, { teint: 't1', barbe: 2, poil: 'p3' }, { teint: 't6', coiffe: 'calotte' }].forEach(v => { const ref = [0, 1].map(d => pts(lk(v), d));
+      [{ etoffe: 'e7' }, { neon: 'n3' }, { manteau: 'aucun' }, { objet: 'lanterne' }, { etoffe: 'e6', neon: 'n5', manteau: 'aucun' }, { etoffe: 'e3', longue: true }].forEach(h => { [0, 1].forEach(d => { if (pts(lk(Object.assign({}, v, h)), d) === ref[d]) pareils++; else E.push('changer d’habit change le visage : ' + JSON.stringify(Object.assign({}, v, h))); }); }); });
     // sous chaque ensemble, le même visage (sa marque est figée)
     const marques = new Set(D.TENUES.map(t => X.composer(t, { teint: 't4' }).visage)); if (marques.size !== 1 || !marques.has(G.signe(t0.look))) E.push('la marque du visage change d’un ensemble à l’autre');
     // le dé : mille tirages
@@ -149,8 +150,9 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     // sous le turban, le visage ; sous le chèche, les yeux seuls (la barbe n'y paraît pas) — dans le dessin fin
     const voile = (L, dir) => { const g = G.charGrille(L, dir, 0, null, 2).lignes, cv = G.figure(L, dir, 0), d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data, k = cv.width / g[0].length, n = {}; let rangs = 0;
       g.forEach((l, y) => { let r = false; for (let x = 0; x < l.length; x++) if (l[x] === 'V' || l[x] === 'v') { r = true; const o = (Math.floor(y * k) * cv.width + Math.floor(x * k)) * 4, h = d[o] + ',' + d[o + 1] + ',' + d[o + 2]; n[h] = 1; } if (r) rangs++; });
-      return { couleurs: Object.keys(n).length, oeil: !!n['27,20,32'], rangs, empreinte: Object.keys(n).sort().join(' ') }; };
+      return { couleurs: Object.keys(n).length, oeil: !!(n['27,20,32'] || n['33,22,28']), rangs, empreinte: Object.keys(n).sort().join(' ') }; };   // l'iris : celui de visage(), ou celui du visage d'Idris (visageGabarit)
     if (R.coiffes.indexOf('imama_haute') >= 0) { const v = voile(lk({ coiffe: 'imama_haute', manteau: 'ample', barbe: 2 }), 0); if (v.couleurs < 4 || !v.oeil) E.push('sous le turban, le visage ne se voit pas : ' + JSON.stringify(v)); }
+    [0, 1].forEach(d => { const v = voile(lk({ coiffe: 'calotte', barbe: 2 }), d); if (v.couleurs < 4 || !v.oeil || v.rangs < 10) E.push('sous la calotte, le visage ne se voit pas : ' + JSON.stringify(v)); });
     if (R.coiffes.indexOf('litham') >= 0) { const a = voile(lk({ coiffe: 'litham', barbe: 0 }), 0), b = voile(lk({ coiffe: 'litham', barbe: 2, poil: 'p3' }), 0);
       if (!a.oeil || a.rangs >= 10 || a.empreinte !== b.empreinte) E.push('sous le chèche, autre chose que les yeux : ' + JSON.stringify([a.rangs, a.oeil, a.empreinte === b.empreinte])); }
     // sous le turban et le chèche, le bandeau est fait des deux néons du râwî (la bande, la ceinture) : de dos aussi, où l'on ne
@@ -159,20 +161,24 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
       for (let i = 0; i < sh.length; i += 4) if (sh[i + 3] > 200) vus.add(hex(sh[i], sh[i + 1], sh[i + 2])); const n = (L.neon || ['#39e6ff', '#ff4fd8']);
       return { grand: g.indexOf('Y') >= 0 && g.indexOf('y') >= 0, petit: vus.has(n[0]) && vus.has(n[1]) }; };
     const sansNeon = [];
-    [['imama_haute', {}], ['imama_haute', { neon: 'n3' }], ['litham', {}], ['litham', { neon: 'n4', manteau: 'ample' }]].forEach(([co, c]) => [0, 1, 3].forEach(d => { const q = neons(lk(Object.assign({ coiffe: co }, c)), d); if (!q.grand || !q.petit) sansNeon.push(co + ' ' + JSON.stringify(c) + ' ' + ['face', 'profil', '', 'dos'][d] + (q.grand ? '' : ' (grand)') + (q.petit ? '' : ' (petit)')); }));
+    [['litham', {}], ['litham', { neon: 'n3' }], ['litham', { neon: 'n4', manteau: 'aucun' }]].forEach(([co, c]) => [0, 1, 3].forEach(d => { const q = neons(lk(Object.assign({ coiffe: co }, c)), d); if (!q.grand || !q.petit) sansNeon.push(co + ' ' + JSON.stringify(c) + ' ' + ['face', 'profil', '', 'dos'][d] + (q.grand ? '' : ' (grand)') + (q.petit ? '' : ' (petit)')); }));
     [lk({}), lk({ coiffe: 'calotte' })].forEach(L => { const q = neons(L, 3); if (q.grand) sansNeon.push('un néon sur la tête sous ' + (L.coiffe || 'la capuche')); });
     if (sansNeon.length) E.push('le bandeau aux deux néons : ' + sansNeon.join(', '));
     // ni or ni jaune (exigence 17) : aucun néon n'est doré, et une pièce qui met le liseré au jour (le bandeau de la calotte,
     // l'écharpe, le bas de la robe longue) ne le montre jamais doré — pas même le jaune pâle du manteau du veilleur
     // (la teinte se juge ici, et sur les images mêmes : de face, de profil, de dos, chaque point jaune ou doré est compté)
-    const teinte = (r, g, b) => { const mx = Math.max(r, g, b), d = mx - Math.min(r, g, b); if (d < 40 || mx < 120) return -1; const a = (mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60; return a < 0 ? a + 360 : a; };
+    // (une teinte saturée : la crème et le beige de la tunique de la maquette — saturés à 0,34 au plus, éclairés ou non — ne
+    // sont pas un jaune ; le jaune pâle du veilleur (0,46), l'or (0,58) et le liseré doré que le moteur pose à défaut (0,39) en restent)
+    const teinte = (r, g, b) => { const mx = Math.max(r, g, b), d = mx - Math.min(r, g, b); if (d < 40 || mx < 120 || d / mx < 0.36) return -1; const a = (mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60; return a < 0 ? a + 360 : a; };
     const doreHex = h => { const n = parseInt(String(h).slice(1, 7), 16), a = teinte(n >> 16, (n >> 8) & 255, n & 255); return a >= 30 && a <= 70; };
     const ors = L => { let n = 0; const compte = cv => { const px = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; for (let i = 0; i < px.length; i += 4) { const a = px[i + 3] > 200 ? teinte(px[i], px[i + 1], px[i + 2]) : -1; if (a >= 35 && a <= 65) n++; } };
       [0, 1, 2, 3].forEach(d => compte(G.figure(L, d, 0))); compte(G.charSheet(L)); return n; };   // le personnage fin, et le petit (le chèche, de dos, y montre un bandeau)
-    const dores = []; if (!doreHex('#ffe08a') || doreHex('#39e6ff')) E.push('le contrôle ne reconnaît pas le jaune pâle du veilleur');
+    const dores = []; if (!doreHex('#ffe08a') || !doreHex('#d9b45a') || doreHex('#39e6ff')) E.push('le contrôle ne reconnaît pas le jaune pâle du veilleur, ou l’or');
+    if (R.etoffes.e1.dessin.tunique.concat(['#c0a884']).some(doreHex)) E.push('le contrôle prend pour du jaune la crème de la tunique, ou son beige éclairé');
+    if (!doreHex('#897b54')) E.push('le contrôle ne reconnaît pas le liseré doré que le moteur pose à défaut');
     Object.keys(R.neons).forEach(n => R.neons[n].forEach(c => { if (doreHex(c)) dores.push('néon ' + n + ' ' + c); }));
     D.TENUES.forEach(t => { const seul = ors(Object.assign({ kind: 'compagnon' }, X.look(t)));
-      [{ coiffe: 'calotte' }, { coiffe: 'imama_haute' }, { coiffe: 'litham' }, { echarpe: true }, { longue: true }, { objet: 'besace' }, { objet: 'lanterne' }, { coiffe: 'calotte', echarpe: true, longue: true }, { coiffe: 'imama_haute', echarpe: true, longue: true, objet: 'lanterne' }].forEach(c => { const n = ors(Object.assign({ kind: 'compagnon' }, X.composer(t, c))); if (n > seul) dores.push(`${t.id} ${JSON.stringify(c)} : ${seul} → ${n} points jaunes`); }); });
+      [{ coiffe: 'calotte' }, { coiffe: 'litham' }, { longue: true }, { manteau: 'aucun' }, { objet: 'lanterne' }, { coiffe: 'calotte', longue: true }, { coiffe: 'litham', longue: true, objet: 'lanterne' }].forEach(c => { const n = ors(Object.assign({ kind: 'compagnon' }, X.composer(t, c))); if (n > seul) dores.push(`${t.id} ${JSON.stringify(c)} : ${seul} → ${n} points jaunes`); }); });
     if (dores.length) E.push('du jaune ou de l’or que l’ensemble ne montrait pas : ' + dores.join(', '));
     // l'objet porté : ni l'équipement de départ, ni le combat
     const def = I.sagas.idris.heroes.idris, gear = I.save.data;
@@ -184,12 +190,17 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     // les feuillets sont retirés (D193) : rien ne les propose plus au râwî ; une composition qui les portait les perd, sans erreur
     if (R.objets.indexOf('feuillets') >= 0) E.push('les feuillets sont encore proposés au râwî');
     const fe = X.compo({ teint: 't5', coiffe: 'litham', objet: 'feuillets' }); if (fe.objet !== undefined || fe.teint !== 't5' || fe.coiffe !== 'litham') E.push('une composition qui portait les feuillets ne les perd pas, ou perd le reste : ' + JSON.stringify(fe));
+    // les choix retirés avec le nouveau dessin d'Idris (D.RAWI) : ni proposés, ni gardés ; le reste demeure
+    if (R.coiffes.indexOf('imama_haute') >= 0) E.push('le turban haut est encore proposé'); ['epaule', 'ample'].forEach(m => { if (R.manteaux.indexOf(m) >= 0) E.push('la coupe « ' + m + ' » est encore proposée'); });
+    if (R.objets.indexOf('besace') >= 0) E.push('la besace en bandoulière est encore proposée');
+    const re = X.compo({ teint: 't5', coiffe: 'imama_haute', manteau: 'epaule', echarpe: true, objet: 'besace', etoffe: 'e2' }); if (JSON.stringify(re) !== JSON.stringify({ teint: 't5', etoffe: 'e2' })) E.push('une composition qui portait un choix retiré ne le perd pas, ou perd le reste : ' + JSON.stringify(re));
+    if (X.base(D.TENUES[4]).manteau !== 'long' || X.base(D.TENUES[5]).manteau !== 'long') E.push('les ensembles du veilleur et du lettré ne valent pas le long manteau');
     const refusF = X.choisir('Idris', 'encre', { teint: 't5', objet: 'feuillets' }), pf = JSON.stringify(I.save.data.profil), lf = I.sagas.idris.heroes.idris.look;
     if (refusF || pf !== JSON.stringify({ nom: 'Idris', tenue: 'encre', compo: { teint: 't5' } }) || lf.porte) E.push(`choisir une composition qui porte les feuillets : ${refusF || pf} ${JSON.stringify(lf.porte || null)}`);
     I.save.reset(); X.appliquer();
     return { E, pareils, marques: marques.size, paires: Object.keys(paires).length, atteintes: atteintes.size, md0 }; });
   if (regles.E.length) regles.E.forEach(e => ko('ÉCART ' + e));
-  else ok(`le râwî composé : une composition abîmée est oubliée (balise, type faux, valeur inconnue, __proto__) ; changer l’étoffe, le néon, la coupe ou l’objet laisse le visage au point près (${regles.pareils} images, de face et de profil) ; une seule marque de visage sous les six ensembles ; le dé, mille tirages : jamais le visage, jamais ce qu’une coiffe ne prend pas, chaque coiffe et chaque objet, rien hors des listes ; ${regles.atteintes} silhouettes possibles, aucune n’est l’une des ${regles.paires} (coiffe, coupe) des Compagnons des récits, de Sâlim ou de Maître Yûnus ; aucun turban du râwî n’est clair ; sous le turban, le visage ; sous le chèche, les yeux seuls ; sous l’un et l’autre, un bandeau aux deux néons, de face, de profil et de dos, grand et petit ; ni néon doré, ni liseré doré sur une pièce composée (le jaune pâle du veilleur compris), sous aucune coiffe, ni sur la besace ou la lanterne ; ces objets laissent l’arme de départ (${regles.md0}) et se rangent au combat ; les feuillets ne sont plus proposés, et une composition qui les portait les perd sans erreur`);
+  else ok(`le râwî composé : une composition abîmée est oubliée (balise, type faux, valeur inconnue, __proto__) ; changer l’étoffe, le néon, la coupe, la longueur ou l’objet laisse le visage au point près, sous la capuche et sous la calotte (${regles.pareils} images, de face et de profil) ; une seule marque de visage sous les six ensembles ; le dé, mille tirages : jamais le visage, jamais ce qu’une coiffe ne prend pas, chaque coiffe et chaque objet, rien hors des listes ; ${regles.atteintes} silhouettes possibles, aucune n’est l’une des ${regles.paires} (coiffe, coupe) des Compagnons des récits, de Sâlim ou de Maître Yûnus ; aucun turban du râwî n’est clair ; sous la calotte, le visage ; sous le chèche, les yeux seuls et un bandeau aux deux néons, de face, de profil et de dos, grand et petit ; ni néon doré, ni liseré doré sur une pièce composée (le jaune pâle du veilleur compris), sous aucune coiffe, ni sur la lanterne ; elle laisse l’arme de départ (${regles.md0}) et se range au combat ; les feuillets ne sont plus proposés, ni le turban haut, les coupes « sur une épaule » et « ample », l’écharpe, la besace en bandoulière — une composition qui les portait les perd sans erreur, et les ensembles qui les avaient valent le long manteau`);
   // aucune composition, sous aucune coiffe, ne ressemble à un Compagnon des récits (relecture de D193). Le chèche, de dos, a dans
   // le petit personnage le gabarit même du turban des Compagnons : on compare donc chaque composition à chacun, quelle que soit sa
   // coiffe. La ressemblance : la part des points d'une couleur presque égale (ΔE76 < 12) parmi ceux que l'un ou l'autre dessine,
@@ -236,7 +247,8 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
       const lum = (r, g, b) => (r * 0.3 + g * 0.59 + b * 0.11) / 255;
       return Object.keys(R.teints).map(id => { const L = Object.assign({ kind: 'compagnon' }, X.composer(t0, { teint: id })), g = G.charGrille(L, 0, 0, null, G.D > 1 ? 2 : 1).lignes, cv = G.figure(L, 0, 0), k = cv.width / g[0].length, d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data, n = {}; let blanc = 0;
         g.forEach((l, y) => { for (let x = 0; x < l.length; x++) if (l[x] === 'V' || l[x] === 'v') { const o = (Math.floor(y * k) * cv.width + Math.floor(x * k)) * 4, h = d[o] + ',' + d[o + 1] + ',' + d[o + 2]; n[h] = (n[h] || 0) + 1; if (d[o] + d[o + 1] + d[o + 2] > 600) blanc++; } });
-        const top = Object.entries(n).sort((a, b) => b[1] - a[1])[0][0].split(',').map(Number); return { id, peau: lum(...top), empreinte: Object.keys(n).sort().join(' '), blanc }; }); });
+        // le teint : la luminosité moyenne du visage (il est modelé de plusieurs tons : le plus fréquent, une fois adouci, change d'un teint à l'autre)
+        let somme = 0, nb = 0; Object.entries(n).forEach(([h, q]) => { somme += lum(...h.split(',').map(Number)) * q; nb += q; }); return { id, peau: somme / nb, empreinte: Object.keys(n).sort().join(' '), blanc }; }); });
     const ordre = T.every((t, i) => i === 0 || t.peau < T[i - 1].peau - 0.02), distincts = new Set(T.map(t => t.empreinte)).size === T.length, sombres = T.slice(-2).every(t => t.blanc > 0);
     if (!ordre || !distincts || !sombres) ko(`ÉCART les teints, dessin ${nomD} : ${T.map(t => t.id + ' ' + t.peau.toFixed(3) + (t.blanc ? ' (blanc de l’œil)' : '')).join(' · ')}${distincts ? '' : ' — deux teints donnent le même visage'}`);
     else ok(`les ${T.length} teints, dessin ${nomD} : sous la capuche, du plus clair au plus sombre (${T.map(t => t.peau.toFixed(2)).join(' › ')}), aucun ne donne le visage d’un autre ; les deux plus sombres gardent le blanc de l’œil`);
@@ -256,7 +268,7 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     await p.screenshot({ path: path.join(out, nom + '-1-ouverture.png') });
     if (!e1.ouvert) { ko(`BLOQUÉ ${nom} : « Nouvelle partie » n'ouvre pas « Ton personnage »`); await p.close(); continue; }
     // tout est déjà choisi : Idris, son ensemble de toujours, son visage ; ni onglet, ni « Retour » ; « Commencer » sous le doigt
-    if (e1.nom !== 'Idris' || e1.ensembles !== 6 || e1.ensemble !== 0 || e1.ok !== 'Commencer' || e1.retour || e1.onglets !== 0 || JSON.stringify(e1.groupes) !== '[7,3,3]' || JSON.stringify(e1.choix) !== '[2,1,1]') ko(`ÉCART ${nom} : l'écran ne s'ouvre pas sur Idris, tout choisi, l'ensemble et le visage seulement : ${JSON.stringify({ nom: e1.nom, ensembles: e1.ensembles, ensemble: e1.ensemble, ok: e1.ok, retour: e1.retour, onglets: e1.onglets, groupes: e1.groupes, choix: e1.choix })}`);
+    if (e1.nom !== 'Idris' || e1.ensembles !== 6 || e1.ensemble !== 0 || e1.ok !== 'Commencer' || e1.retour || e1.onglets !== 0 || JSON.stringify(e1.groupes) !== '[7,3,3]' || JSON.stringify(e1.choix) !== '[2,0,1]') ko(`ÉCART ${nom} : l'écran ne s'ouvre pas sur Idris, tout choisi, l'ensemble et le visage seulement : ${JSON.stringify({ nom: e1.nom, ensembles: e1.ensembles, ensemble: e1.ensemble, ok: e1.ok, retour: e1.retour, onglets: e1.onglets, groupes: e1.groupes, choix: e1.choix })}`);
     if (!e1.okVisible) ko(`INVISIBLE ${nom} : « Commencer » n'est pas à l'écran sans défiler`); if (!e1.champVisible) ko(`INVISIBLE ${nom} : le champ du nom n'est pas à l'écran sans défiler`); if (e1.large) ko(`ÉCART ${nom} : l'écran déborde en largeur`);
     if (e1.invisibles) ko(`INVISIBLE ${nom} : ${e1.invisibles} case(s) hors de l'écran`); if (e1.mots > 4) ko(`ÉCART ${nom} : ${e1.mots} mots à l'écran (« ${e1.texte} »)`); if (tactile && e1.petitTexte < 10.5) ko(`ÉCART ${nom} : un texte de ${e1.petitTexte} points sur un écran tactile`);
     if (!/ok/.test(e1.sel)) ko(`ÉCART ${nom} : « Commencer » n'est pas la case choisie à l'ouverture (${e1.sel})`);
@@ -338,24 +350,22 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
         if (z.choix[g] !== i) fautes.push(`${o} ${g + 1}.${i + 1} ne se choisit pas`); else if (a.choix[g] !== i) { if (z.face !== a.face) vus++; else fautes.push(`${o} ${g + 1}.${i + 1} ne change pas l’aperçu`); } }
       bilan[o] = n + ' cases'; await p.screenshot({ path: path.join(out, 'bureau-6-onglet-' + o + '.png') }); }
     if (fautes.length) ko(`ÉCART la composition entière : ${fautes.slice(0, 6).join(' ; ')}`); else ok(`depuis la Chaîne : quatre onglets — ${Object.entries(bilan).map(([o, n]) => o + ' ' + n).join(', ')} —, chaque case touchée se choisit, et chacune qui change quelque chose change l’aperçu`);
-    // changer d'habit ne change pas un point du visage : sous la capuche, l'étoffe, le néon, la coupe, la longueur, l'écharpe, l'objet
+    // changer d'habit ne change pas un point du visage : sous la capuche, l'étoffe, le néon, la coupe, l'objet
     await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 0));   // la capuche
     await cliquer(p.locator('#perso .pv-onglet[data-o="visage"]')); await cliquer(cellule(p, 0, 1)); const v0 = await visageVu('capuche'); const face0 = []; let changes = 0;
-    for (const [o, g, i] of [['couleurs', 0, 6], ['couleurs', 1, 2], ['habit', 3, 3], ['habit', 2, 1], ['objet', 0, 1], ['objet', 0, 2], ['couleurs', 0, 2]]) { await cliquer(p.locator(`#perso .pv-onglet[data-o="${o}"]`)); await cliquer(cellule(p, g, i)); face0.push((await visageVu('capuche')) === v0); changes++; }
-    if (face0.some(x => !x) || !v0) ko(`ÉCART changer d'habit change le visage dans l'aperçu (${face0.map(x => x ? '=' : '≠').join(' ')})`); else ok(`dans l’aperçu, sous la capuche, changer l’étoffe, le néon, la coupe, l’écharpe ou l’objet laisse le visage au point près (${changes} changements)`);
+    for (const [o, g, i] of [['couleurs', 0, 6], ['couleurs', 1, 2], ['habit', 2, 1], ['objet', 0, 1], ['couleurs', 0, 2], ['habit', 2, 0], ['objet', 0, 0]]) { await cliquer(p.locator(`#perso .pv-onglet[data-o="${o}"]`)); await cliquer(cellule(p, g, i)); face0.push((await visageVu('capuche')) === v0); changes++; }
+    if (face0.some(x => !x) || !v0) ko(`ÉCART changer d'habit change le visage dans l'aperçu (${face0.map(x => x ? '=' : '≠').join(' ')})`); else ok(`dans l’aperçu, sous la capuche, changer l’étoffe, le néon, la coupe ou l’objet laisse le visage au point près (${changes} changements)`);
     // une coiffe se prend toujours : ce qui ne va pas avec elle (D.RAWI.sans) cède sous les yeux ; tant qu'on la porte, la case
-    // qui n'irait pas avec elle s'éteint — la calotte et « sans manteau », le turban et le manteau long, le turban et l'étoffe claire
-    await cliquer(ensemble(p, 0)); await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 0)); await cliquer(cellule(p, 3, 1)); const k0 = await p.evaluate(ETAT);   // l'ensemble de toujours, la capuche, sans manteau
+    // qui n'irait pas avec elle s'éteint — la capuche et la robe longue, la calotte et « sans manteau », le chèche et les étoffes claire et verte
+    await cliquer(ensemble(p, 0)); await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 0)); await cliquer(cellule(p, 2, 1)); const k0 = await p.evaluate(ETAT);   // l'ensemble de toujours, la capuche, sans manteau
     await cliquer(cellule(p, 0, 1)); const k1 = await p.evaluate(ETAT); await p.screenshot({ path: path.join(out, 'bureau-7-calotte.png') });                        // la calotte : un manteau revient
-    await cliquer(cellule(p, 0, 2)); const k2 = await p.evaluate(ETAT); await p.screenshot({ path: path.join(out, 'bureau-7b-turban.png') });                        // le turban : le manteau long cède
-    await cliquer(p.locator('#perso .pv-onglet[data-o="couleurs"]')); const k3 = await p.evaluate(ETAT);                                                               // sous le turban, l'étoffe claire s'éteint
-    await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 3)); const k4 = await p.evaluate(ETAT); await p.screenshot({ path: path.join(out, 'bureau-7c-cheche.png') });   // le chèche : la coupe se rallume
-    await cliquer(p.locator('#perso .pv-onglet[data-o="couleurs"]')); const k4c = await p.evaluate(ETAT); await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]'));   // sous le chèche, l'étoffe claire reste éteinte, et la verte s'éteint
-    await cliquer(ensemble(p, 5)); await cliquer(cellule(p, 0, 2)); await cliquer(p.locator('#perso .pv-onglet[data-o="couleurs"]')); const k5 = await p.evaluate(ETAT);  // la calotte du lettré, claire : sous le turban, l'étoffe cède
+    await cliquer(cellule(p, 0, 2)); const k2 = await p.evaluate(ETAT); await p.screenshot({ path: path.join(out, 'bureau-7c-cheche.png') });                        // le chèche : la coupe se rallume
+    await cliquer(p.locator('#perso .pv-onglet[data-o="couleurs"]')); const k3 = await p.evaluate(ETAT); await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]'));   // sous le chèche, l'étoffe claire et la verte s'éteignent
+    await cliquer(ensemble(p, 5)); await cliquer(cellule(p, 0, 2)); await cliquer(p.locator('#perso .pv-onglet[data-o="couleurs"]')); const k5 = await p.evaluate(ETAT);  // la calotte du lettré, claire : sous le chèche, l'étoffe cède
     const vide = e => e.eteintes.every(x => !x.length);
-    if (k0.choix[0] !== 0 || k0.choix[3] !== 1 || JSON.stringify(k0.eteintes) !== '[[],[1],[],[]]' || k1.choix[0] !== 1 || k1.choix[3] !== 0 || JSON.stringify(k1.eteintes[3]) !== '[1]' || k2.choix[0] !== 2 || k2.choix[3] !== 2 || JSON.stringify(k2.eteintes[3]) !== '[0]'
-      || JSON.stringify(k3.eteintes[0]) !== '[5]' || k3.choix[0] === 5 || k4.choix[0] !== 3 || !vide(k4) || JSON.stringify(k4c.eteintes[0]) !== '[3,5]' || k5.choix[0] !== 0 || JSON.stringify(k5.eteintes[0]) !== '[5]') ko(`ÉCART les coiffes et ce qu’elles ne prennent pas : ${JSON.stringify([k0, k1, k2, k3, k4, k4c, k5].map(k => [k.choix, k.eteintes]))}`);
-    else ok('une coiffe se prend toujours, et ce qui ne va pas avec elle cède sous les yeux : sous la capuche, la robe longue s’éteint (ce serait l’habit des moines du jeu) ; sans manteau, la calotte rend le manteau long de l’ensemble, et « sans manteau » s’éteint ; le turban fait céder le manteau long (à l’épaule), qui s’éteint, et l’étoffe claire s’éteint ; sous le chèche, la coupe se rallume, l’étoffe claire reste éteinte et la verte s’éteint ; l’ensemble du lettré, clair, sous le turban : l’étoffe cède');
+    if (k0.choix[0] !== 0 || k0.choix[2] !== 1 || JSON.stringify(k0.eteintes) !== '[[],[1],[]]' || k1.choix[0] !== 1 || k1.choix[2] !== 0 || JSON.stringify(k1.eteintes[2]) !== '[1]' || k2.choix[0] !== 2 || k2.choix[2] !== 0 || !vide(k2)
+      || JSON.stringify(k3.eteintes[0]) !== '[3,5]' || k5.choix[0] !== 0 || JSON.stringify(k5.eteintes[0]) !== '[3,5]') ko(`ÉCART les coiffes et ce qu’elles ne prennent pas : ${JSON.stringify([k0, k1, k2, k3, k5].map(k => [k.choix, k.eteintes]))}`);
+    else ok('une coiffe se prend toujours, et ce qui ne va pas avec elle cède sous les yeux : sous la capuche, la robe longue s’éteint (ce serait l’habit des moines du jeu) ; sans manteau, la calotte rend le manteau long de l’ensemble, et « sans manteau » s’éteint ; sous le chèche, la coupe se rallume, l’étoffe claire et la verte s’éteignent ; l’ensemble du lettré, clair, sous le chèche : l’étoffe cède');
     // le dé : une autre tenue à chaque fois, jamais un autre visage ; ↺ : le râwî de toujours
     await cliquer(p.locator('#perso .pv-onglet[data-o="visage"]')); const d0 = await p.evaluate(ETAT), des = [];
     for (let i = 0; i < 3; i++) { await p.waitForTimeout(650); await cliquer(p.locator('#perso .pv-de')); const e = await p.evaluate(ETAT); des.push([e.face !== (des.length ? des[des.length - 1][2] : d0.face), JSON.stringify(e.choix) === JSON.stringify(d0.choix), e.face]); await p.screenshot({ path: path.join(out, 'bureau-8-de-' + (i + 1) + '.png') }); }
@@ -363,17 +373,17 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     if (des.some(d => !d[0] || !d[1])) ko(`ÉCART le dé : ${des.map(d => (d[0] ? 'autre tenue' : 'même tenue') + (d[1] ? '' : ', visage changé')).join(' ; ')}`);
     else if (z0.ensemble !== 0 || JSON.stringify(z0.choix) !== '[2,0,1]' || z0.face !== orig) ko(`ÉCART ↺ ne rend pas le râwî de toujours : ${JSON.stringify({ ensemble: z0.ensemble, choix: z0.choix, meme: z0.face === orig })}`);
     else ok('le dé, trois fois : une autre tenue à chaque fois, le visage choisi gardé ; ↺ : le râwî de toujours, au point près');
-    // la composition finale : capuche d'encre, teint clair, glabre (le visage d'origine : rien n'est gardé), poil sombre ; le turban, robe longue, écharpe, manteau ample ; étoffe claire, néon vert ; la lanterne
+    // la composition finale : capuche d'encre, teint clair, glabre (le visage d'origine : rien n'est gardé), poil sombre ; le chèche, robe longue, sans manteau ; étoffe grise, néon vert ; la lanterne
     await cliquer(ensemble(p, 1)); await cliquer(cellule(p, 0, 1)); await cliquer(cellule(p, 1, 0)); await cliquer(cellule(p, 2, 0));
-    await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 2)); await cliquer(cellule(p, 1, 1)); await cliquer(cellule(p, 2, 1)); await cliquer(cellule(p, 3, 3));
+    await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 2)); await cliquer(cellule(p, 1, 1)); await cliquer(cellule(p, 2, 1));
     await cliquer(p.locator('#perso .pv-onglet[data-o="couleurs"]')); await cliquer(cellule(p, 0, 6)); await cliquer(cellule(p, 1, 2));
-    await cliquer(p.locator('#perso .pv-onglet[data-o="objet"]')); await cliquer(cellule(p, 0, 2)); const f0 = await p.evaluate(ETAT);
+    await cliquer(p.locator('#perso .pv-onglet[data-o="objet"]')); await cliquer(cellule(p, 0, 1)); const f0 = await p.evaluate(ETAT);
     await p.screenshot({ path: path.join(out, 'bureau-9-compose.png') });
     await bouton(p, '#perso', 'Garder').click(); await p.waitForTimeout(700);
-    const COMPO = { teint: 't2', poil: 'p1', coiffe: 'imama_haute', manteau: 'ample', longue: true, echarpe: true, etoffe: 'e7', neon: 'n2', objet: 'lanterne' };
+    const COMPO = { teint: 't2', poil: 'p1', coiffe: 'litham', manteau: 'aucun', longue: true, etoffe: 'e7', neon: 'n2', objet: 'lanterne' };
     const c2 = await p.evaluate(() => { const I = window.ISNAD; return { profil: I.save.data.profil, chaine: !document.querySelector('#chain').hidden, auto: (I.save.autoGet() || {}).profil, look: I.sagas.idris.heroes.idris.look }; });
     const egal = (a, b) => JSON.stringify(Object.keys(a || {}).sort().reduce((o, k) => { o[k] = a[k]; return o; }, {})) === JSON.stringify(Object.keys(b || {}).sort().reduce((o, k) => { o[k] = b[k]; return o; }, {}));
-    if (!c2.chaine || c2.profil.tenue !== 'encre' || !egal(c2.profil.compo, COMPO) || !c2.auto || !egal(c2.auto.compo, COMPO) || c2.look.porte[0] !== 'lanterne' || c2.look.teint !== '#deab7c' || c2.look.coiffe !== 'imama_haute' || c2.look.court !== false || !Array.isArray(c2.look.neon)) ko(`ÉCART la composition n'est pas gardée telle qu'on l'a faite : ${JSON.stringify(c2.profil)} · ${JSON.stringify(c2.look)}`);
+    if (!c2.chaine || c2.profil.tenue !== 'encre' || !egal(c2.profil.compo, COMPO) || !c2.auto || !egal(c2.auto.compo, COMPO) || c2.look.porte[0] !== 'lanterne' || c2.look.teint !== '#deab7c' || c2.look.coiffe !== 'litham' || c2.look.court !== false || !Array.isArray(c2.look.neon)) ko(`ÉCART la composition n'est pas gardée telle qu'on l'a faite : ${JSON.stringify(c2.profil)} · ${JSON.stringify(c2.look)}`);
     else ok(`composée par les vrais boutons, « Garder » : la partie gardée porte ${Object.keys(COMPO).length} pièces sur la capuche d’encre (${Object.keys(COMPO).join(', ')}) — des identifiants, jamais une couleur`);
     texte = await p.evaluate(() => window.ISNAD.save.exporter());
     // rechargée : « Continuer » retrouve le personnage
@@ -407,7 +417,7 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     await bouton(q, '#partie', /Reprendre cette partie|Remplacer ma partie/).click(); await q.waitForTimeout(1500);
     const c6 = await q.evaluate(() => { const I = window.ISNAD; return { nom: I.perso.nom(), profil: I.perso.profil(), heros: I.sagas.idris.heroes.idris.name, look: I.sagas.idris.heroes.idris.look, chaine: (document.querySelector('#chain').innerText || '').includes('Khalil') }; });
     if (c6.nom !== 'Khalil' || c6.profil.tenue !== 'encre' || !egal(c6.profil.compo, COMPO) || c6.heros !== 'Khalil' || !c6.chaine || c6.look.teint !== '#deab7c' || c6.look.porte[0] !== 'lanterne') ko(`ÉCART une partie importée perd son personnage : ${JSON.stringify(c6.profil)}`);
-    else ok('une partie exportée puis importée dans un autre navigateur garde son personnage : Khalil, capuche d’encre, et ses dix pièces (le turban, la lanterne)');
+    else ok(`une partie exportée puis importée dans un autre navigateur garde son personnage : Khalil, capuche d’encre, et ses ${Object.keys(COMPO).length} pièces (le chèche, la lanterne)`);
     // et un profil abîmé dans une partie importée ne passe pas : on retombe sur Idris, sa tenue et son visage d'origine
     const c7 = await q.evaluate(t => { const I = window.ISNAD, o = JSON.parse(t); o.partie.profil = { nom: '<img src=x onerror=alert(1)>', tenue: 'inconnue', compo: { teint: '<b>t1</b>', barbe: 'pleine', coiffe: 'keffieh', etoffe: '__proto__', neon: 'n9', objet: 'sabre', manteau: 'cape' } }; const r = I.save.lireTexte(JSON.stringify(o)); if (!r.ok) return { refuse: r.erreur }; I.save.adopter(r.partie);
       const h = I.sagas.idris.heroes.idris; return { nom: I.perso.nom(), profil: I.perso.profil(), heros: h.name, look: JSON.stringify(h.look) === JSON.stringify(I.D.TENUES[0].look) }; }, texte);
@@ -415,11 +425,12 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     else { const c8 = await q.evaluate(t => { const I = window.ISNAD, o = JSON.parse(t); o.partie.profil.compo = { teint: 'x9', barbe: [1], poil: { a: 1 }, longue: 'oui', echarpe: 0, objet: 'durra' }; const r = I.save.lireTexte(JSON.stringify(o)); if (!r.ok) return { refuse: r.erreur }; I.save.adopter(r.partie); return { profil: I.perso.profil(), look: I.sagas.idris.heroes.idris.look }; }, texte);
       if (c8.refuse || c8.profil.nom !== 'Khalil' || c8.profil.tenue !== 'encre' || Object.keys(c8.profil.compo).length || c8.look.teint) ko(`ÉCART une composition abîmée n'est pas oubliée : ${JSON.stringify(c8)}`);
       else ok('un profil abîmé dans une partie importée (un nom qui n’en est pas un, une tenue inconnue, des pièces faussées) : le râwî redevient Idris, dans sa tenue et avec son visage de toujours ; une composition seule abîmée est oubliée, le nom et l’ensemble restent');
-      // une partie gardée quand le râwî portait encore les feuillets (2.10) : elle s'ouvre, sans erreur, et l'objet revient à « rien » — le reste demeure
-      const c9 = await q.evaluate(t => { const I = window.ISNAD, o = JSON.parse(t); o.partie.profil.compo = { teint: 't4', barbe: 2, coiffe: 'calotte', manteau: 'epaule', objet: 'feuillets' }; const r = I.save.lireTexte(JSON.stringify(o)); if (!r.ok) return { refuse: r.erreur }; I.save.adopter(r.partie);
+      // une partie gardée quand le râwî portait encore les feuillets (2.10), une coupe et l'écharpe retirées depuis (le nouveau dessin d'Idris) : elle s'ouvre, sans erreur, et
+    // ce qui n'est plus proposé s'oublie — le reste demeure
+      const c9 = await q.evaluate(t => { const I = window.ISNAD, o = JSON.parse(t); o.partie.profil.compo = { teint: 't4', barbe: 2, coiffe: 'calotte', manteau: 'epaule', echarpe: true, objet: 'feuillets' }; const r = I.save.lireTexte(JSON.stringify(o)); if (!r.ok) return { refuse: r.erreur }; I.save.adopter(r.partie);
         const L = I.sagas.idris.heroes.idris.look; return { profil: I.perso.profil(), porte: L.porte || null, coiffe: L.coiffe, teint: L.teint }; }, texte);
-      if (c9.refuse || c9.profil.nom !== 'Khalil' || JSON.stringify(c9.profil.compo) !== JSON.stringify({ teint: 't4', barbe: 2, coiffe: 'calotte', manteau: 'epaule' }) || c9.porte || c9.coiffe !== 'calotte' || c9.teint !== '#b47d50') ko(`ÉCART une partie qui portait les feuillets : ${JSON.stringify(c9)}`);
-      else ok('une partie gardée quand le râwî portait les feuillets s’ouvre sans erreur : l’objet revient à « rien », le nom, l’ensemble, le visage et l’habit restent'); }
+      if (c9.refuse || c9.profil.nom !== 'Khalil' || JSON.stringify(c9.profil.compo) !== JSON.stringify({ teint: 't4', barbe: 2, coiffe: 'calotte' }) || c9.porte || c9.coiffe !== 'calotte' || c9.teint !== '#b47d50') ko(`ÉCART une partie qui portait les feuillets : ${JSON.stringify(c9)}`);
+      else ok('une partie gardée quand le râwî portait les feuillets, une coupe « sur une épaule » et l’écharpe (retirées avec le nouveau dessin) s’ouvre sans erreur : l’objet revient à « rien », la coupe et l’écharpe s’oublient, le nom, l’ensemble, le visage et la coiffe restent'); }
     sansErreur('en important un personnage'); await q.close(); }
 
   /* ---------- 5. en arabe : de droite à gauche ---------- */

@@ -822,12 +822,12 @@
      et les menus du dessin d'origine) en est tiré (reduire() ; RAWI_RETOUCHES, s'il le faut, le retouche). G.rawi64 = false
      rend le 64 × 96 retracé du 32 × 48 par fine(), comme pour les autres personnages : pour comparer.
      Qui le reçoit : le râwî seul, que le moteur marque (look.rawi : perso.js la pose ; un récit ne l'écrit jamais,
-     regles.js le refuse), et seulement ce que le pilote dessine : la capuche, la coupe et l'étoffe de toujours (l'étoffe
-     qui a ses couleurs de dessin : D.RAWI.etoffes[…].dessin), sans pièce ni objet choisis — le néon choisi, lui, colore la
-     bande et la ceinture. Son visage a son peintre (visageGabarit() : la v3 ; plus bas), qui prend ses choix (teint, barbe, poil) ; les
-     cheveux prennent son poil. Tout le reste garde le dessin d'avant. Pilote : de face, de profil, de dos, au repos, et la foulée de face (d1,
-     d2 : tirées de l'image au repos, foulee64()) ; les pas de profil et de dos, les poses et les gestes reprennent l'image
-     au repos — le souffle (grand(…, 3)) se tire de lui-même de l'image au repos.
+     regles.js le refuse), sous chacune de ses coiffes, coupes, longueurs, étoffes (celles qui ont leurs couleurs de
+     dessin : D.RAWI.etoffes[…].dessin) et avec sa lanterne ; le néon choisi colore la bande et la ceinture. Son visage a
+     son peintre (visageGabarit() : la v3 ; plus bas), qui prend ses choix (teint, barbe, poil) ; les cheveux prennent son
+     poil. Le décideur a validé l'image au repos (v3) et le rendu doux ; ses autres images — l'habit, les pas, les gestes,
+     les attitudes — en sont tirées plus bas (rawiVariante()) ; le souffle (grand(…, 3)) se tire de lui-même de l'image au
+     repos. Ce qui ne se compose pas (une autre coiffe, une armure) garderait le dessin d'avant.
      Lettres : celles du grand personnage — H T t u D la capuche ; C c k le manteau ; R r la tunique, S s son bas ; L l Z
      les chausses ; F f les bottes ; O K Q q le cuir de la ceinture et de la besace, U sa boucle (un métal sombre) ; N les
      mains ; V le visage ; Y y le néon — et cinq de plus : x z o l'écharpe, h p les cheveux (leur ombre et leur lumière,
@@ -1172,8 +1172,8 @@
     };
   }
   // ce que la réduction perdrait ou brouillerait à 32 × 48, retouché à la main : [colonne, ligne, lettre] (aucune retouche
-  // pour l'instant : la réduction suffit)
-  const RAWI_RETOUCHES = { d: [], l: [], u: [], d1: [], d2: [] };
+  // pour l'instant : la réduction suffit) — pour les trois images au repos de l'habit de toujours
+  const RAWI_RETOUCHES = { d: [], l: [], u: [] };
   // 64 × 96 → 32 × 48 : chaque carré de deux points sur deux donne une lettre — le visage, le néon et les mains d'abord ;
   // le vide s'il en tient trois points ; sinon la matière la plus présente (à égalité, celle du coin en haut à gauche, du
   // côté de la lumière), au ton moyen de ses points
@@ -1195,39 +1195,283 @@
       const n = {}; for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) { const c = g[y + j][x + i]; if (TON[c] && TON[c][0] === f) n[c] = (n[c] || 0) + (i || j ? 1 : 2); }
       let b = m; Object.keys(n).forEach(c => { if (n[c] > n[b]) b = c; }); return b; }).join(''));
   }
-  // une foulée de face, tirée de l'image au repos comme celles des autres personnages (foulee()), à l'échelle de 64 × 96 : le
-  // bras du côté qui avance descend de quatre points, l'autre remonte d'autant (au-dessous, le manteau reparaît) ; des
-  // hanches aux pieds, la moitié qui avance descend de deux points — son pied dépasse —, l'autre remonte de deux : le talon
-  // se lève. cote : 'g', la jambe de gauche (de l'image) avance.
-  const RAWI_PAS = { bras: [40, 61], gauche: 21, droite: 45, hanches: 63, pas: 2, balancier: 4 };
-  function foulee64(V0, cote) {
-    const P = RAWI_PAS, av = cote === 'g' ? 1 : -1, vide = '.'.repeat(64), at = y => (y >= 0 && y < V0.length ? V0[y] : vide);
-    return V0.map((r, y) => {
+
+  /* ---------- le râwî en entier : ses choix, ses pas, ses gestes, ses attitudes (2.x, suite du pilote) ----------
+     Le décideur a validé l'image au repos (v3) et le rendu doux ; le reste en est tiré, à 64 × 96, par des règles écrites
+     une fois — puis réduit à 32 × 48 (reduire()), comme l'image au repos. Rien n'est repris d'un autre jeu.
+       l'habit     (rawiHabit) : la coupe — le long manteau de la maquette, ou sans manteau : la tunique, ses manches, son bas
+                   jusqu'au genou (« sur une épaule » et « ample », qui ne se choisissent plus, se dessinent en long manteau) ;
+                   la robe longue — la tunique jusqu'aux bottes ; la coiffe — la capuche de la maquette, la calotte (son galon,
+                   les cheveux, le visage entier), le chèche (le rouleau, le bandeau aux deux néons — D193 —, les yeux seuls).
+                   L'écharpe et la besace à la hanche font partie de l'habit (choix validés).
+       les pas     de face et de dos, foulee64() (le bras du côté qui avance descend, l'autre remonte ; la moitié qui avance
+                   descend, son pied dépasse) ; de profil, les jambes s'écartent puis se croisent depuis la hanche
+                   (cisailler()) et le bras balance depuis l'épaule (tournerBras()).
+       les gestes  de frappe (GESTES : l'élan, le coup) et les attitudes du récit (D.POSES) : le bras qui bouge est ôté du
+                   gabarit (sansBras() ; de profil, le flanc paraît derrière lui) puis tracé de l'épaule au poignet par le coude
+                   (bras64() : la manche, le fil, le revers de la tunique, la main), sans jamais passer sur le visage ; la tête
+                   s'incline ou s'abaisse (bougerTete()) ; à genoux, le haut du corps descend et le bas se replie
+                   (agenouiller()). Les yeux se ferment dans le recueillement et l'accablement (visageGabarit()).
+     Chaque image se fait une fois (RV), à la demande. Le visage reste celui que le décideur a validé, sous chaque coiffe —
+     sous le chèche, ses yeux seuls ; de dos, aucun. */
+  const est = (m, s) => s.indexOf(m) >= 0;
+  const MANCHE = 'Cckd', CUIR = 'OKQq', ECHARPE = 'xzo', JAMBE = 'LlZMFf';
+  // les trois gabarits au repos : la tête (jusqu'à la ligne tete), la ceinture, les épaules et les bras (64 × 96) ; de face et
+  // de dos, g et d : le bras de gauche et de droite de l'image ; de profil, p : le bras que l'on voit
+  const RAWI_GEO = {
+    d: { tete: 26, ceinture: 45, ourlet: 67, epaule: { g: [19, 34], d: [45, 34] },
+      bras: { g: (x, y, m) => (y >= 28 && y <= 35 && x <= 24 && est(m, MANCHE)) || (y >= 36 && y <= 49 && x <= 21) || (y >= 50 && y <= 60 && (x <= 18 || (x <= 21 && est(m, 'NrR')))) || (y >= 61 && y <= 62 && x <= 16),
+        d: (x, y, m) => (y >= 30 && y <= 36 && x >= 44 && est(m, MANCHE)) || (y >= 37 && y <= 62 && x >= 45) } },
+    l: { tete: 26, ceinture: 45, ourlet: 67, epaule: { p: [35, 34] },
+      bras: { p: (x, y, m) => (y >= 32 && y <= 53 && x >= 28 && x <= 42 && !est(m, ECHARPE + CUIR + 'Yy')) || (y >= 54 && y <= 61 && x >= 26 && m === 'N') } },
+    u: { tete: 26, ceinture: 45, ourlet: 67, epaule: { g: [18, 34], d: [46, 34] },
+      bras: { g: (x, y, m) => y >= 32 && y <= 61 && x <= 19 && !est(m, ECHARPE),
+        d: (x, y, m) => y >= 32 && y <= 61 && x >= 44 && !est(m, ECHARPE + CUIR) } }
+  };
+  const copie = t => t.map(r => (typeof r === 'string' ? r.split('') : r.slice()));
+  const vide64 = () => { const t = []; for (let y = 0; y < 96; y++) t.push(new Array(64).fill('.')); return t; };
+  // une foulée de face ou de dos, tirée de l'image au repos comme celles des autres personnages (foulee()), à l'échelle de
+  // 64 × 96 : le bras du côté qui avance descend de quatre points, l'autre remonte d'autant (au-dessous, le manteau reparaît) ;
+  // des hanches aux pieds, la moitié qui avance descend de deux points — son pied dépasse —, l'autre remonte de deux : le
+  // talon se lève. cote : 'g', la jambe de gauche (de l'image) avance.
+  const RAWI_PAS = { d: { bras: [40, 61], gauche: 21, droite: 45, hanches: 63, pas: 2, balancier: 4 }, u: { bras: [38, 61], gauche: 20, droite: 44, hanches: 63, pas: 2, balancier: 4 } };
+  function foulee64(V0, cote, P) {
+    P = P || RAWI_PAS.d; const av = cote === 'g' ? 1 : -1, vide = '.'.repeat(64), V = V0.map(r => (typeof r === 'string' ? r : r.join(''))), at = y => (y >= 0 && y < V.length ? V[y] : vide);
+    return V.map((r, y) => {
       let row = y >= P.hanches ? at(y - P.pas * av).slice(0, 32) + at(y + P.pas * av).slice(32) : r;
       // le bras qui descend s'allonge depuis le coude (jusque sur le manteau) ; celui qui remonte découvre le manteau
       const bras = descend => descend ? (y >= P.bras[0] && y <= P.bras[1] + P.balancier ? at(Math.max(P.bras[0], y - P.balancier)) : null) : (y >= P.bras[0] && y <= P.bras[1] ? at(y + P.balancier) : null);
       const g = bras(av > 0), d = bras(av < 0);
       if (g) row = g.slice(0, P.gauche) + row.slice(P.gauche); if (d) row = row.slice(0, P.droite) + d.slice(P.droite);
-      return row; });
+      return row.split(''); });
   }
+  // ôte un bras (cotes : 'g', 'd', 'p') ; de profil, le flanc paraît derrière : le manteau (sans manteau, la tunique) et la
+  // ceinture, qui en fait le tour
+  function sansBras(T, key, cotes, coupe) {
+    const G0 = RAWI_GEO[key], ote = new Set();
+    cotes.forEach(c => { const f = G0.bras[c]; for (let y = 0; y < 96; y++) for (let x = 0; x < 64; x++) { const m = T[y][x]; if (m !== '.' && f(x, y, m)) { T[y][x] = '.'; ote.add(y * 64 + x); } } });
+    if (key === 'l') { const flanc = coupe === 'aucun' ? 'r' : 'c', cb = G0.ceinture;
+      for (let y = 30; y <= 62; y++) { let a = -1, b = -1; for (let x = 0; x < 64; x++) if (T[y][x] !== '.') { if (a < 0) a = x; b = x; }
+        for (let x = a + 1; x < b; x++) if (ote.has(y * 64 + x) && T[y][x] === '.') T[y][x] = y === cb ? 'O' : y > cb && y <= cb + 2 ? 'K' : y === cb + 3 ? 'Q' : flanc; } }
+    return T;
+  }
+  // un bras tracé de l'épaule au poignet par le coude (pts, à l'échelle de 64 × 96), d'un trait épais : la manche (ses trois
+  // tons, la lumière en haut à gauche), le fil, le revers de la tunique, la main ; un point de vide le détache de ce qu'il
+  // recouvre (pas à l'épaule). Jamais sur le visage. sous : derrière le corps (seulement là où il n'y a rien). → la main
+  function bras64(T, pts, coupe, o) {
+    o = o || {}; const W4 = 64, H4 = 96, pris = new Map(), cle = (x, y) => y * W4 + x, R = 4.3, nu = coupe === 'aucun';
+    const disque = (cx, cy, r, f) => { for (let y = Math.floor(cy - r); y <= Math.ceil(cy + r); y++) for (let x = Math.floor(cx - r); x <= Math.ceil(cx + r); x++) if (x >= 0 && x < W4 && y >= 0 && y < H4 && Math.hypot(x + 0.5 - cx, y + 0.5 - cy) <= r) f(x, y); };
+    let ux = 0, uy = 0;
+    for (let i = 1; i < pts.length; i++) { const a = pts[i - 1], dx = pts[i][0] - a[0], dy = pts[i][1] - a[1], l = Math.hypot(dx, dy); ux = dx / l; uy = dy / l;
+      let nx = -uy, ny = ux; if (nx + ny > 0) { nx = -nx; ny = -ny; }                      // la normale qui regarde la lumière
+      for (let t = 0; t <= l; t += 0.25) { const cx = a[0] + ux * t, cy = a[1] + uy * t;
+        disque(cx, cy, R, (x, y) => { const s = (x + 0.5 - cx) * nx + (y + 0.5 - cy) * ny; pris.set(cle(x, y), nu ? (s > -0.8 ? 'R' : 'r') : s > 1.3 ? 'C' : s > -2.1 ? 'c' : 'k'); }); } }
+    const fin = pts[pts.length - 1], le = (x, y) => (x + 0.5 - fin[0]) * ux + (y + 0.5 - fin[1]) * uy;   // le long de l'avant-bras, depuis le poignet
+    let main = null;
+    if (o.main !== false) {
+      [...pris.keys()].forEach(k => { const x = k % W4, y = (k - x) / W4, d = le(x, y); if (d > 0.4) pris.delete(k); else if (d > -1.7) pris.set(k, pris.get(k) === 'C' || pris.get(k) === 'R' ? 'R' : 'r'); else if (d > -3.3 && !nu) pris.set(k, 'd'); });
+      main = [fin[0] + ux * 3.4, fin[1] + uy * 3.4];
+      disque(main[0], main[1], 3.3, (x, y) => { if (!pris.has(cle(x, y)) || le(x, y) > 0.4) pris.set(cle(x, y), 'N'); }); }
+    const ecrits = [];
+    pris.forEach((m, k) => { const x = k % W4, y = (k - x) / W4, t = T[y][x]; if (t === 'V' || t === 'v' || (o.sous && t !== '.')) return; T[y][x] = m; ecrits.push(k); });
+    if (!o.sous) ecrits.forEach(k => { const x = k % W4, y = (k - x) / W4; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => { const X = x + dx, Y = y + dy;
+      if (X < 0 || X >= W4 || Y < 0 || Y >= H4 || pris.has(cle(X, Y))) return; const t = T[Y][X]; if (t === '.' || t === 'V' || t === 'v') return;
+      if (Math.hypot(X + 0.5 - pts[0][0], Y + 0.5 - pts[0][1]) < 6.5) return; T[Y][X] = '.'; }); });
+    return main;
+  }
+  // de profil, le bras balance depuis l'épaule : a, en radians (positif : la main vers l'avant, à gauche de l'image)
+  function tournerBras(T, key, cote, a, coupe) {
+    const f = RAWI_GEO[key].bras[cote], [px, py] = RAWI_GEO[key].epaule[cote], src = new Map();
+    for (let y = 0; y < 96; y++) for (let x = 0; x < 64; x++) { const m = T[y][x]; if (m !== '.' && f(x, y, m)) src.set(y * 64 + x, m); }
+    sansBras(T, key, [cote], coupe);
+    const ca = Math.cos(a), sa = Math.sin(a), peints = new Set();
+    for (let y = 0; y < 96; y++) for (let x = 0; x < 64; x++) { const dx = x + 0.5 - px, dy = y + 0.5 - py, sx = Math.floor(px + dx * ca + dy * sa), sy = Math.floor(py - dx * sa + dy * ca);
+      const m = sx >= 0 && sx < 64 && sy >= 0 && sy < 96 ? src.get(sy * 64 + sx) : null; if (m && T[y][x] !== 'V' && T[y][x] !== 'v') { T[y][x] = m; peints.add(y * 64 + x); } }
+    peints.forEach(k => { const x = k % 64, y = (k - x) / 64; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => { const X = x + dx, Y = y + dy;
+      if (X < 0 || X >= 64 || Y < 0 || Y >= 96 || peints.has(Y * 64 + X)) return; const t = T[Y][X]; if (t === '.' || t === 'V' || t === 'v' || Math.hypot(X + 0.5 - px, Y + 0.5 - py) < 7) return; T[Y][X] = '.'; }); });
+  }
+  // de profil, les jambes s'écartent (ou se croisent) depuis la hanche : dx au pied, pour celle de devant et celle de derrière
+  function cisailler(T, avant, arriere) {
+    const coupe = y => y < 81 ? 27 : y <= 85 ? 30 : y <= 90 ? 31 : 25, h0 = 61, h1 = 92, devant = [], derriere = [];
+    for (let y = h0; y <= h1; y++) for (let x = 0; x < 64; x++) { const m = T[y][x]; if (!est(m, JAMBE)) continue; (x <= coupe(y) ? devant : derriere).push([x, y, m]); T[y][x] = '.'; }
+    const poser = (L, s) => L.forEach(([x, y, m]) => { const X = x + Math.round(s * (y - h0) / (h1 - h0)); if (X >= 0 && X < 64 && T[y][X] !== 'N') T[y][X] = m; });
+    poser(derriere, arriere); poser(devant, avant);
+  }
+  // la tête se déplace (dx, dy) : ce qu'elle découvre se vide, ce qu'elle recouvre passe dessous ; off : de combien le corps
+  // est déjà descendu (à genoux)
+  function bougerTete(T, key, dx, dy, off) {
+    const h = RAWI_GEO[key].tete, t = []; off = off || 0; for (let y = off; y <= h + off; y++) for (let x = 0; x < 64; x++) if (T[y][x] !== '.' && !est(T[y][x], ECHARPE)) { t.push([x, y, T[y][x]]); T[y][x] = '.'; }
+    t.forEach(([x, y, m]) => { const X = x + dx, Y = y + dy; if (X >= 0 && X < 64 && Y >= 0 && Y < 96) T[Y][X] = m; });
+  }
+  // ce qui reste seul après un bras ôté (un point, une miette du tracé de la maquette) s'ôte : moins de quatre points d'un
+  // seul tenant, loin de tout (à plus de deux points)
+  function nettoyer(T) {
+    const vu = new Uint8Array(64 * 96);
+    for (let y = 0; y < 96; y++) for (let x = 0; x < 64; x++) { if (T[y][x] === '.' || vu[y * 64 + x]) continue; const pile = [[x, y]], bout = []; vu[y * 64 + x] = 1;
+      while (pile.length) { const [a, b] = pile.pop(); bout.push([a, b]); [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => { const X = a + dx, Y = b + dy; if (X >= 0 && X < 64 && Y >= 0 && Y < 96 && !vu[Y * 64 + X] && T[Y][X] !== '.') { vu[Y * 64 + X] = 1; pile.push([X, Y]); } }); }
+      if (bout.length >= 4) continue;
+      const ici = new Set(bout.map(([a, b]) => b * 64 + a)), voisin = bout.some(([a, b]) => { for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) { const X = a + i, Y = b + j; if (X >= 0 && X < 64 && Y >= 0 && Y < 96 && T[Y][X] !== '.' && !ici.has(Y * 64 + X)) return true; } return false; });
+      if (!voisin) bout.forEach(([a, b]) => { T[b][a] = '.'; }); }   // le tracé de la maquette a ses points isolés par un trait : ceux-là restent
+  }
+  // le haut du corps penche : chaque ligne glisse de f(ligne) points (positif : vers la droite)
+  function pencher(T, f) { for (let y = 0; y < 96; y++) { const n = f(y); if (!n) continue; const o = T[y].slice(); for (let x = 0; x < 64; x++) { const s = x - n; T[y][x] = s >= 0 && s < 64 ? o[s] : '.'; } } }
+  // à genoux : le haut du corps descend de vingt points ; le bas se replie — de face, les genoux au sol, les pans du manteau
+  // posés de part et d'autre ; de profil, la cuisse en avant, la jambe repliée dessous, la botte derrière ; de dos, le manteau
+  // posé, les semelles qui dépassent
+  function agenouiller(T, key, coupe) {
+    const nu = coupe === 'aucun', D4 = 20, garde = key === 'd' ? 67 : 62, o = vide64();
+    for (let y = 0; y <= garde && y + D4 < 96; y++) o[y + D4] = T[y].slice();
+    const met = (y, x0, x1, f) => { for (let x = Math.max(0, x0); x <= Math.min(63, x1); x++) { const m = f(x, y); if (m) o[y][x] = m; } };
+    if (key === 'd') for (let y = garde + D4 + 1; y <= 92; y++) { const j = y - (garde + D4 + 1), sol = y === 92;
+      if (!nu) { met(y, 13 - j, 23, x => x === 23 ? '.' : sol ? 'k' : x < 17 - j ? 'C' : x < 21 ? 'c' : 'k'); met(y, 41, 51 + j, x => x === 41 ? '.' : sol ? 'k' : x < 45 ? 'c' : 'k'); }
+      met(y, 24, 40, x => x === 24 || x === 32 || x === 40 ? '.' : sol ? 'Z' : (x > 29 && x < 32) || x > 37 ? 'l' : 'L'); }
+    else if (key === 'l') for (let y = garde + D4 + 1; y <= 92; y++) { const j = y - (garde + D4 + 1);
+      if (!nu) met(y, 33, 47 + (j >> 1), x => x === 33 ? '.' : x < 37 ? 'C' : x < 44 ? 'c' : 'k');                                                // le manteau, derrière
+      if (j <= 5) met(y, j < 2 ? 18 - j : 16, 34, x => x === 34 || (j === 5 && x > 18) ? '.' : j === 0 ? 'L' : x > 30 ? 'Z' : 'l');                // la cuisse
+      else met(y, 17, 39, x => x === 17 || x === 39 ? '.' : y === 92 ? 'Z' : 'l');                                                                 // la jambe repliée
+      if (!nu) met(y, 21, j >= 6 ? 40 : 34, x => x === 21 ? '.' : y === 92 ? 'k' : x < 24 ? 'C' : x < 31 ? 'c' : 'k');                            // le manteau tombe sur les jambes repliées : le genou seul dépasse
+      if (j >= 3) met(y, 38, 46, x => x === 38 && j < 6 ? '.' : x > 43 ? 'f' : 'F'); }                                                            // la botte, la semelle vers l'arrière
+    else for (let y = garde + D4 + 1; y <= 92; y++) { const j = y - (garde + D4 + 1);
+      if (!nu && j <= 7) met(y, 13 - (j >> 1), 51 + (j >> 1), x => x === 32 && j < 5 ? '.' : j === 7 ? 'k' : x < 22 ? 'C' : x < 44 ? 'c' : 'k');      // le manteau posé, son pli
+      if (nu && j <= 5) met(y, 19, 45, x => x === 19 || x === 32 || x === 45 ? '.' : x > 28 && x < 32 ? 'l' : x > 41 ? 'l' : 'L');
+      if (j >= 6) { met(y, 21, 29, x => x === 21 || x === 29 ? '.' : x > 26 ? 'f' : 'F'); met(y, 35, 43, x => x === 35 || x === 43 ? '.' : x > 40 ? 'f' : 'F'); } }
+    return o;
+  }
+
+  /* ---------- l'habit : la coupe, la robe longue, la coiffe ---------- */
+  // sans manteau : ses manches et son buste deviennent la tunique ; ses pans tombent — la tunique descend jusqu'au genou, et
+  // ce que le manteau cachait des jambes reparaît
+  function sansManteau(T, key) {
+    const G0 = RAWI_GEO[key], bras = (x, y, m) => Object.keys(G0.bras).some(c => G0.bras[c](x, y, m)), ou = G0.ourlet, tunique = m => (m === 'C' ? 'R' : 'r');
+    for (let y = 0; y < 96; y++) for (let x = 0; x < 64; x++) { const m = T[y][x]; if (!est(m, MANCHE)) continue;
+      if (y <= G0.ceinture + 3 || bras(x, y, m)) T[y][x] = tunique(m);
+      else if (key !== 'd' && y <= ou && (key === 'l' ? x <= 40 : x >= 20 && x <= 44)) T[y][x] = m === 'C' ? 'S' : 's';
+      else if (key === 'l' && y <= 80 && x >= 28 && x <= 38) T[y][x] = 'l';
+      else T[y][x] = '.'; }
+    // les plis du manteau, tracés d'un point de vide, deviennent sur la tunique claire une ombre (sinon, des traits sales)
+    for (let y = 1; y < 95; y++) for (let x = 1; x < 63; x++) { if (T[y][x] !== '.') continue; const v = [T[y - 1][x], T[y + 1][x], T[y][x - 1], T[y][x + 1]], n = v.filter(m => est(m, 'RrSs')).length;
+      if (n >= 3 && v.every(m => m !== '.' || n === 3)) T[y][x] = v.filter(m => est(m, 'Ss')).length >= 2 ? 's' : 'r'; }
+    if (key === 'u') for (let y = ou + 1; y <= 80; y++) for (let x = 0; x < 64; x++) if (est(T[y][x], 'Ss')) T[y][x] = '.';   // la fente du dos s'arrête avec la tunique
+    if (key === 'u') for (let y = ou + 1; y <= 80; y++) [[17, 27], [36, 46]].forEach(([a, b]) => { for (let x = a; x <= b; x++) if (T[y][x] === '.') T[y][x] = x === a || x === b ? '.' : x > b - 3 ? 'l' : 'L'; });
+    return T;
+  }
+  // la robe longue : la tunique jusqu'aux bottes, d'un seul pan — les jambes et ce qui passait entre elles
+  function robeLongue(T, key) {
+    const ou = RAWI_GEO[key].ourlet;
+    for (let y = ou + 1; y <= 80; y++) { let a = -1, b = -1; for (let x = 0; x < 64; x++) if (est(T[y][x], 'LlZM')) { if (a < 0) a = x; b = x; }
+      if (a < 0) continue; for (let x = a; x <= b; x++) { if (key === 'u' && est(T[y][x], MANCHE)) continue; T[y][x] = y === 80 ? 's' : x > b - 3 ? 's' : 'S'; } }   // de dos, le manteau reste devant
+    return T;
+  }
+  // les coiffes : la tête de la maquette (la capuche) ôtée, une autre posée — tirée de formes simples (le crâne, le rouleau),
+  // le visage de la maquette gardé tel quel à sa place (sous le chèche, la bande des yeux seule). De face, de profil, de dos.
+  const COIFFE_RAWI = {
+    // le crâne : centre, rayons ; le visage de la capuche (V) va de la ligne 13 à 24 (de face) ; la calotte et son galon au-dessus
+    calotte: { d: { cx: 33.5, cy: 16.5, rx: 9.4, ry: 11.6 }, l: { cx: 28.2, cy: 16.4, rx: 9.6, ry: 11.6 }, u: { cx: 32, cy: 16, rx: 9.6, ry: 11.6 }, bord: 9, galon: [10, 11], nuque: 23 },
+    litham: { d: { cx: 33.5, cy: 10.2, rx: 11, ry: 7.4 }, l: { cx: 28.4, cy: 10.2, rx: 11, ry: 7.4 }, u: { cx: 32, cy: 10, rx: 11, ry: 7.4 }, bande: [14, 15], yeux: [17, 20] }
+  };
+  function coiffer(T, key, coiffe) {
+    const C = COIFFE_RAWI[coiffe], E = C[key], src = copie(T), visage = (x, y) => src[y][x] === 'V' || src[y][x] === 'v';
+    for (let y = 0; y <= 27; y++) for (let x = 0; x < 64; x++) if (!est(T[y][x], ECHARPE) || y < 27) T[y][x] = '.';                     // la capuche ôtée (l'écharpe reste)
+    if (coiffe === 'calotte' && key !== 'u') for (let y = 0; y <= 27; y++) for (let x = 0; x < 64; x++) if (visage(x, y)) T[y][x] = src[y][x];   // le visage, tel quel
+    const dans = (x, y, e, k) => Math.pow((x + 0.5 - e.cx) / (e.rx * (k || 1)), 2) + Math.pow((y + 0.5 - e.cy) / (e.ry * (k || 1)), 2) <= 1;
+    const lumiere = (x, e) => (x + 0.5 - e.cx) / e.rx;   // -1 : le bord éclairé ; 1 : le bord dans l'ombre
+    if (coiffe === 'calotte') {
+      for (let y = 0; y <= 27; y++) for (let x = 0; x < 64; x++) { if (!dans(x, y, E)) continue; const l = lumiere(x, E);
+        if (key !== 'u' && visage(x, y)) { T[y][x] = src[y][x]; continue; }
+        if (y <= C.bord) T[y][x] = l < -0.45 && y <= C.bord - 2 ? 'H' : l < 0.2 ? 'T' : l < 0.65 ? 't' : 'u';                                   // la calotte
+        else if (y <= C.galon[1]) T[y][x] = y === C.galon[0] ? (l < 0.6 ? 'A' : 'a') : 'a';                                                   // son galon
+        else if (y <= (key === 'u' ? C.nuque + 1 : C.nuque - 1)) T[y][x] = l < -0.3 ? 'p' : 'h'; }                                           // les cheveux
+      // un point de vide entre le visage et les cheveux, sur les tempes et la mâchoire (de face) ; de profil, devant le front
+      if (key === 'd') for (let y = 13; y <= 24; y++) { let a = -1, b = -1; for (let x = 0; x < 64; x++) if (visage(x, y)) { if (a < 0) a = x; b = x; } if (a > 0 && y >= 21) { if (T[y][a - 1] === 'h' || T[y][a - 1] === 'p') T[y][a - 1] = '.'; if (T[y][b + 1] === 'h' || T[y][b + 1] === 'p') T[y][b + 1] = '.'; } }
+      if (key === 'l') for (let y = 12; y <= 25; y++) for (let x = 0; x < 64; x++) if (!visage(x, y) && (T[y][x] === 'h' || T[y][x] === 'p') && x < 24) T[y][x] = '.';
+    } else {
+      const [b0, b1] = C.bande, [y0, y1] = C.yeux;
+      for (let y = 0; y <= 27; y++) for (let x = 0; x < 64; x++) { const l = lumiere(x, E);
+        if (key !== 'u' && y >= y0 && y <= y1 && visage(x, y)) { T[y][x] = src[y][x]; continue; }                                               // la bande des yeux
+        const tour = dans(x, y, E), voile = y > b1 && y <= 27 && (key === 'l' ? x >= 17 && x <= 37 - Math.max(0, y - 22) : x >= E.cx - 10.5 + Math.max(0, y - 22) * 0.6 && x <= E.cx + 9.5 - Math.max(0, y - 22) * 0.6);
+        if (tour && y < b0) T[y][x] = (y + Math.round(l * 2)) % 4 === 0 ? 'D' : l < -0.5 && y < b0 - 3 ? 'H' : l < 0.15 ? 'T' : l < 0.6 ? 't' : 'u';   // le rouleau, ses plis
+        else if ((tour || voile) && y >= b0 && y <= b1) T[y][x] = ((x >> 1) & 1) ? 'y' : 'Y';                                                    // le bandeau aux deux néons
+        else if (voile) T[y][x] = (key !== 'u' && y === y0 - 1) ? 'u' : (x + y) % 9 === 0 && y > y1 + 1 ? 'D' : l < -0.4 ? 'T' : l < 0.45 ? 't' : 'u'; } // l'étoffe du voile
+    }
+    // l'écharpe remonte jusqu'au menton (sans la capuche, le cou paraîtrait)
+    const ec = key === 'l' ? [24, 36] : [27, 40];
+    for (let y = 24; y <= 27; y++) for (let x = ec[0]; x <= ec[1]; x++) if (T[y][x] === '.' && !(y === 24 && coiffe === 'calotte' && key !== 'u')) T[y][x] = x === ec[0] || x === ec[1] ? (y > 25 ? 'o' : '.') : (x + y) % 5 === 0 ? 'o' : 'z';
+    return T;
+  }
+  // l'habit du râwî, vue par vue : { coupe : 'long' | 'aucun', coiffe : 'capuche' | 'calotte' | 'litham', longue }
+  const RH = {};
+  function rawiHabit(h, key) {
+    const k = h.coupe + h.coiffe + (h.longue ? 'L' : '') + key; if (RH[k]) return RH[k];
+    let T = copie(RAWI64[key]);
+    if (h.coupe === 'aucun') T = sansManteau(T, key);
+    if (h.longue) T = robeLongue(T, key);
+    if (h.coiffe !== 'capuche') T = coiffer(T, key, h.coiffe);
+    return (RH[k] = T);
+  }
+  // les gestes et les attitudes, à 64 × 96 : le bras (ou les bras) qui bouge(nt), de l'épaule au poignet par le coude ;
+  // la tête (dx, dy) ; le corps qui penche ; de profil, les jambes (avant, arriere) ; le bras de derrière (sous)
+  const RAWI_GESTES = {
+    elan: { d: { bras: { g: [[19, 34], [11, 29], [8, 17]] }, frappe: 'g' }, l: { bras: { p: [[37, 34], [45, 28], [46, 16]] }, frappe: 'p', tete: [2, 0] }, u: { bras: { d: [[46, 34], [54, 29], [57, 17]] }, frappe: 'd' } },
+    coup: { d: { bras: { g: [[19, 34], [19, 46], [27, 52]] }, frappe: 'g', tete: [0, 2] }, l: { bras: { p: [[33, 35], [23, 38], [13, 40]] }, frappe: 'p', tete: [-3, 1], penche: y => (y <= 26 ? -3 : y <= 50 ? -2 : 0), jambes: [-5, 4] },
+      u: { bras: { d: [[46, 34], [52, 26], [49, 14]] }, frappe: 'd' } }
+  };
+  const RAWI_POSES = {
+    prie: { d: { bras: { g: [[19, 34], [19, 45], [28, 42]], d: [[45, 34], [45, 45], [36, 42]] }, tete: [0, 3] }, l: { bras: { p: [[35, 34], [33, 46], [24, 42]] }, tete: [-2, 2] },
+      u: { sansMains: true, tete: [0, 3] } },
+    salut: { d: { bras: { g: [[19, 34], [22, 47], [33, 41]] } }, l: { bras: { p: [[35, 34], [32, 46], [25, 39]] } } },
+    surpris: { d: { bras: { g: [[19, 34], [11, 41], [7, 33]], d: [[45, 34], [53, 41], [57, 33]] } }, l: { bras: { p: [[35, 34], [27, 40], [18, 34]] }, derriere: [[37, 34], [45, 40], [52, 34]] } },
+    garde: { d: { bras: { g: [[19, 34], [18, 46], [30, 49]], d: [[45, 34], [46, 46], [35, 46]] }, ferme: true }, l: { bras: { p: [[35, 34], [32, 46], [22, 46]] }, ferme: true } },
+    resolu: { d: { bras: { g: [[19, 34], [15, 23], [14, 11]] } }, l: { bras: { p: [[37, 34], [44, 26], [45, 13]] } }, u: { bras: { d: [[46, 34], [50, 23], [51, 11]] } } },
+    accable: { d: { genoux: true, tete: [0, 4] }, l: { genoux: true, tete: [-3, 3] }, u: { genoux: true, tete: [0, 4] } }
+  };
+  // une image du râwî : son habit, sa vue, et ce qu'il fait — 'repos', 'pas1', 'pas2', un geste (GESTES) ou une pose
+  // (D.POSES). → { L4 (64 × 96), L32 (32 × 48), main (la main qui frappe, à 32 × 48), kneel }
+  const RV = {};
+  function rawiVariante(h, key, quoi) {
+    const k = h.coupe + h.coiffe + (h.longue ? 'L' : '') + key + quoi; if (RV[k]) return RV[k];
+    let T = copie(rawiHabit(h, key)), main = null, kneel = false;
+    if (quoi === 'pas1' || quoi === 'pas2') {
+      if (key === 'l') { const un = quoi === 'pas1'; cisailler(T, un ? -4 : 3, un ? 4 : -3); tournerBras(T, 'l', 'p', un ? -0.3 : 0.3, h.coupe); }
+      else T = foulee64(T, key === 'd' ? (quoi === 'pas1' ? 'g' : 'd') : (quoi === 'pas1' ? 'd' : 'g'), RAWI_PAS[key]); }
+    else if (quoi !== 'repos') {
+      const S = (RAWI_GESTES[quoi] || RAWI_POSES[quoi])[key];
+      if (S.genoux) { T = agenouiller(T, key, h.coupe); kneel = true; }
+      if (S.sansMains) for (let y = 48; y <= 62; y++) for (let x = 0; x < 64; x++) if ((x < 21 || x > 43) && est(T[y][x], 'NRr')) T[y][x] = '.';   // de dos : les mains devant lui
+      if (S.bras) sansBras(T, key, Object.keys(S.bras), h.coupe);
+      if (S.penche) pencher(T, S.penche);
+      if (S.jambes) cisailler(T, S.jambes[0], S.jambes[1]);
+      if (S.tete) bougerTete(T, key, S.tete[0], S.tete[1], S.genoux ? 20 : 0);
+      if (S.bras) {
+        if (S.ferme) for (let y = 36; y <= 49; y++) for (let x = key === 'l' ? 20 : 27; x <= (key === 'l' ? 27 : 39); x++) if (est(T[y][x], 'Rr')) T[y][x] = h.coupe === 'aucun' ? T[y][x] : (x + y) % 7 ? 'c' : 'C';   // le manteau ramené devant soi
+        if (S.derriere) bras64(T, S.derriere, h.coupe, { sous: true });
+        Object.keys(S.bras).forEach(c => { const m = bras64(T, S.bras[c], h.coupe); if (c === S.frappe) main = m; }); } }
+    if (quoi !== 'repos' || h.coupe !== 'long' || h.coiffe !== 'capuche' || h.longue) nettoyer(T);   // l'image validée reste telle quelle
+    const L4 = T.map(r => r.join(''));
+    let r32 = reduire(L4).map(s => s.split('')); if (quoi === 'repos' && h.coupe === 'long' && h.coiffe === 'capuche' && !h.longue) (RAWI_RETOUCHES[key] || []).forEach(([x, y, m]) => { r32[y][x] = m; });
+    const L32 = r32.map(s => s.join(''));
+    [L4, L32].forEach(g => { const e = voileUni(g); if (e) throw new Error('râwî ' + k + ' : ' + e); });
+    if (key === 'u' && L4.some(r => /[Vv]/.test(r))) throw new Error('râwî ' + k + ' : un visage, de dos');
+    return (RV[k] = { L4, L32, main: main ? [main[0] / 2, main[1] / 2] : null, kneel });
+  }
+  // au démarrage : les trois gabarits ont leur forme, et chaque image de l'habit de toujours se fait sans erreur (les autres,
+  // à la demande, passent les mêmes contrôles)
   const RAWI32 = {};
   function rawiGabarits() {
-    if (RAWI64.d && !RAWI64.d1) { RAWI64.d1 = foulee64(RAWI64.d, 'g'); RAWI64.d2 = foulee64(RAWI64.d, 'd'); }
-    Object.keys(RAWI64).forEach(v => { const t = RAWI64[v];
-      if (t.length !== 96 || t.some(r => r.length !== 64)) throw new Error('gabarit du râwî mal formé : ' + v + ' — ' + t.length + ' lignes de ' + t.map(r => r.length).join(','));
-      const r = reduire(t).map(s => s.split('')); (RAWI_RETOUCHES[v] || []).forEach(([x, y, m]) => { r[y][x] = m; }); RAWI32[v] = r.map(s => s.join(''));
-      [t, RAWI32[v]].forEach(g => { const e = voileUni(g); if (e) throw new Error('râwî ' + v + ' : ' + e); });
-      if (v === 'u' && t.some(r => /[Vv]/.test(r))) throw new Error('râwî ' + v + ' : un visage, de dos'); });
+    Object.keys(RAWI64).forEach(v => { const t = RAWI64[v]; if (t.length !== 96 || t.some(r => r.length !== 64)) throw new Error('gabarit du râwî mal formé : ' + v + ' — ' + t.length + ' lignes de ' + t.map(r => r.length).join(',')); });
+    const h0 = { coupe: 'long', coiffe: 'capuche', longue: false };
+    ['d', 'l', 'u'].forEach(v => { RAWI32[v] = rawiVariante(h0, v, 'repos').L32; ['pas1', 'pas2'].forEach(q => rawiVariante(h0, v, q)); });
+    RAWI64.d1 = rawiVariante(h0, 'd', 'pas1').L4; RAWI64.d2 = rawiVariante(h0, 'd', 'pas2').L4; RAWI32.d1 = rawiVariante(h0, 'd', 'pas1').L32; RAWI32.d2 = rawiVariante(h0, 'd', 'pas2').L32;
   }
   rawiGabarits();
   G.rawi64 = true;   // false : le 64 × 96 du râwî retracé du 32 × 48 par fine(), comme les autres personnages — pour comparer
   // l'étoffe du râwî qui a ses couleurs de dessin (D.RAWI.etoffes[…].dessin), ou null
   const rawiEtoffe = look => { const E = D.RAWI && D.RAWI.etoffes; if (!E) return null;
     const k = Object.keys(E).find(e => E[e].dessin && E[e].robe === look.robe && E[e].head === look.head && E[e].cloak === look.cloak && (E[e].legs || null) === (look.legs || null)); return k ? E[k].dessin : null; };
-  // → les couleurs du dessin du râwî, ou null : ce que le pilote ne dessine pas encore garde le dessin d'avant
+  const RAWI_COIFFES = ['capuche', 'calotte', 'litham'];
+  // → les couleurs du dessin du râwî, ou null : ce qu'il ne dessine pas (une autre coiffe, une armure) garde le dessin d'avant
   function rawiDe(look, K) {
     if (!look.rawi || look.kind !== 'cyber' || !RAWI64.d) return null;
-    if (K.coiffe !== 'capuche' || (K.manteau || 'long') !== 'long' || K.court === false || K.echarpe || K.armure || K.cuirasse || K.motif || (look.porte && look.porte.length)) return null;
+    if (RAWI_COIFFES.indexOf(K.coiffe) < 0 || K.armure || K.cuirasse || K.motif) return null;
     return rawiEtoffe(look);
   }
   // sa palette : celle du moteur (le néon, le cuir, le fer, les bottes), puis les couleurs de l'étoffe — trois tons par
@@ -1238,23 +1482,43 @@
     const poil = (typeof look.poil === 'string' && look.poil) || POILS[(signe(look) >>> 5) % POILS.length];   // les cheveux : le poil du visage (le choix du joueur, ou celui du moteur)
     return Object.assign(p, { T, t, u, C, c, k, R, r, S: R, s: r, L, l, Z: z, M: null, E: null, e: null, B: C, b: c, m: null, x, z: zz, o, h: mix(poil, '#6b4630', 0.2), p: mix(poil, '#a06a44', 0.45), d: mix(C, R, 0.4), U: '#4c4f58' });
   }
+  // où pend la lanterne du râwî (32 × 48) : à la main qui pend, de son côté (de face, à droite de l'image ; de dos, à gauche) ;
+  // la main prise, à la ceinture ; à genoux, posée à côté de lui. → { x, y, en }, ou null (de dos, la main prise)
+  function lanterneRawi(L, key, kneel) {
+    const mi = 16, cote = x => key === 'd' ? x >= mi : key === 'u' ? x < mi : true, ceinture = 23;
+    let yb = -1, xs = []; for (let y = 18; y < 48; y++) for (let x = 0; x < 32; x++) if (L[y][x] === 'N' && cote(x)) { if (y > yb) { yb = y; xs = []; } if (y === yb) xs.push(x); }
+    const xm = xs.length ? Math.floor(xs.reduce((s, v) => s + v, 0) / xs.length) : -1, lr = LANTERNE[2].rows.length;
+    if (kneel) { let sol = 47; while (sol > 0 && L[sol].every(m => m === '.')) sol--; return { x: key === 'u' ? 6 : key === 'd' ? 27 : 8, y: sol - lr + 1, en: 'sol' }; }
+    if (xm >= 0 && yb >= ceinture) return { x: xm, y: yb + 1, en: 'main' };
+    if (key === 'u') return null;
+    return { x: key === 'd' ? 21 : 12, y: ceinture + 2, en: 'ceinture' };
+  }
   // la grille du râwî : 32 × 48 (L), et son gabarit de 64 × 96 (rawi.L4), les objets tenus posés aux mêmes places
   function rawiGrille(look, K0, dessin, dir, frame, pose) {
     const key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l', Ge = !!(pose && GESTES[pose]);
-    const v = key === 'd' && !pose && (frame === 1 || frame === 2) ? 'd' + frame : key;   // pilote : la foulée de face ; ailleurs, l'image au repos
+    const h = { coupe: K0.manteau === 'aucun' ? 'aucun' : 'long', coiffe: K0.coiffe, longue: K0.court === false };
+    const quoi = Ge ? pose : pose && RAWI_POSES[pose] && RAWI_POSES[pose][key] ? pose : frame === 1 || frame === 2 ? 'pas' + frame : 'repos';
+    const Vr = rawiVariante(h, key, quoi);
     const K = Object.assign({}, K0, { sombre: false });   // sous la capuche de la maquette, le visage est dans la lumière
-    const L = RAWI32[v].map(r => r.split('')), am = L.map(r => r.map(() => 0)), fin = L.map(r => r.map(() => 0)), L4 = RAWI64[v].map(r => r.split(''));
+    const L = Vr.L32.map(r => r.split('')), am = L.map(r => r.map(() => 0)), fin = L.map(r => r.map(() => 0)), L4 = Vr.L4.map(r => r.split(''));
     const mains = (t, cote) => { let n = 0, sx = 0, sy = 0; t.forEach((r, y) => r.forEach((m, x) => { if (m === 'N' && (!cote || (cote < 0 ? x < r.length / 2 : x >= r.length / 2))) { n++; sx += x; sy += y; } })); return n ? [sx / n, sy / n] : null; };
     // les objets tenus (au combat : l'arme portée) : ceux de grid(), agrandis comme pour les autres personnages, ramenés aux mains du râwî
     const r = grid(look, dir === 2 ? 1 : dir, 0, null, {});
     if (r.objets.length) { const a = mains(L), b = mains(scale2x(r.g)); const dx = a && b ? Math.round(a[0] - b[0]) : 0, dy = a && b ? Math.round(a[1] - b[1]) : 0;
       r.objets.forEach(o => { if (Ge && EN_MAIN.indexOf(o.nom) >= 0) return; const o2 = scale2x(o.g);   // l'arme qui frappe : le moteur la pose dans la main
-        for (let y = 0; y < H2; y++) for (let x = 0; x < W2; x++) { const m = o2[y][x], X = x + dx, Y = y + dy; if (m === '.' || X < 0 || X >= W2 || Y < 0 || Y >= H2 || L[Y][X] === 'N') continue;
-          L[Y][X] = m; fin[Y][X] = 1; for (let j = 0; j < 2; j++) for (let i = 0; i < 2; i++) if (L4[2 * Y + j][2 * X + i] !== 'N') L4[2 * Y + j][2 * X + i] = m; } }); }
-    // la main qui frappe, le temps d'un geste (pilote : l'image au repos) — de face, celle de gauche ; de dos, celle de droite
-    const mg = Ge ? mains(L, key === 'd' ? -1 : key === 'u' ? 1 : 0) : null, main = mg ? [dir === 2 ? W2 - (mg[0] + 0.5) : mg[0] + 0.5, mg[1] + 0.5] : null;
-    if (dir === 2) [L, am, fin, L4].forEach(t => t.forEach(row => row.reverse()));
-    return { L, K, am, fin, hors: 0, main, sans: null, natifs: null, tm: null, rawi: { dessin, L4 } };
+        for (let y = 0; y < H2; y++) for (let x = 0; x < W2; x++) { const m = o2[y][x], X = x + dx, Y = y + dy; if (m === '.' || X < 0 || X >= W2 || Y < 0 || Y >= H2 || L[Y][X] === 'N' || L[Y][X] === 'V') continue;
+          L[Y][X] = m; fin[Y][X] = 1; for (let j = 0; j < 2; j++) for (let i = 0; i < 2; i++) if (L4[2 * Y + j][2 * X + i] !== 'N' && L4[2 * Y + j][2 * X + i] !== 'V') L4[2 * Y + j][2 * X + i] = m; } }); }
+    // la lanterne (D193) : son dessin de 32 × 48 et celui de 64 × 96, au même endroit ; jamais sur une main ni sur le visage
+    const lant4 = [];
+    if ((look.porte || []).indexOf('lanterne') >= 0) { const ou = lanterneRawi(L, key, Vr.kneel);
+      if (ou) {
+        poserObjet('lanterne', 2, (x, y, m) => { if (x >= 0 && x < W2 && y >= 0 && y < H2 && L[y][x] !== 'N' && L[y][x] !== 'V') { L[y][x] = m; fin[y][x] = 1; } }, { key, ou });
+        poserObjet('lanterne', 4, (x, y, m) => { if (x >= 0 && x < 64 && y >= 0 && y < 96 && L4[y][x] !== 'N' && L4[y][x] !== 'V') { L4[y][x] = m; lant4.push([x, y]); } }, { key, ou }); } }
+    // la main qui frappe, le temps d'un geste : celle que le geste a tracée (à 32 × 48)
+    const main = Ge && Vr.main ? [dir === 2 ? W2 - Vr.main[0] : Vr.main[0], Vr.main[1]] : null;
+    const fin4 = doubler(fin); lant4.forEach(([x, y]) => { fin4[y][x] = 1; });   // dessiné tel quel, sans modelé : les objets
+    if (dir === 2) [L, am, fin, L4, fin4].forEach(t => t.forEach(row => row.reverse()));
+    return { L, K, am, fin, hors: 0, main, sans: null, natifs: null, tm: null, kneel: Vr.kneel, rawi: { dessin, L4, fin4 } };
   }
   /* ---------- son visage, v3 (choix du décideur : « n° 3, grands yeux », sans barbe ni moustache) ----------
      Dessiné point par point sur l'ouverture de la capuche, de face et de profil, en 64 × 96 (2) et en 32 × 48 (1) : de
@@ -1266,24 +1530,29 @@
      m la bouche ; h la mèche (le poil) ; « . » : la peau, modelée ; « _ » : hors du visage. Le teint et le poil viennent
      des choix du joueur ; Idris d'origine est glabre (RAWI_BARBE), et la barbe choisie (courte : le collier ; pleine : le
      bas du visage et la moustache) se dessine sur ce visage ; les yeux se ferment dans le recueillement et
-     l'accablement. Un gabarit qui n'a pas la taille du visage du corps rend le visage de la v2 (visageRawi). */
+     l'accablement. Sous le chèche, la bande des yeux seule (FENTE : sa première ligne dans le gabarit) : ni sourcils, ni
+     mèche, ni barbe. Pour un teint plus sombre que ceux du moteur, le blanc de l'œil reste blanc. Un gabarit qui n'a pas la
+     taille du visage du corps rend le visage de la v2 (visageRawi). */
   const VISAGE_RAWI = {
     2: { d: ['_____hhhhhh___', '___.h.hh....__', '__ssss..ssss._', '_............_', 'h..eee..eee..h', '.wklkw..wklkw.', '.wkkkw..wkkkw.', '..ddd..o.ddd..',
              '..............', '_....mmm....._', '__..........__', '___........___'],
          l: ['___hhhh__', '__h..hh._', '_..sss.h_', '_......h_', '_..ee..hh', '_..lkw..h', '_..kkw...', 'c..dd....', 'co.......', '_mm......', '_.......', '__......_', '___....__'] },
     1: { d: ['___hhh__', '__hh.hh_', '_ss..ss.', '.wk..kw.', '..k..k..', '_..mm.._', '__....__'], l: ['__hh_', '_hhh.', '_.s.h', '_.kw.', 'c.k..', '_m...', '__...'] }
   };
+  const FENTE = { 2: 4, 1: 2 };
   function visageGabarit(look, K, dir, pose, s, x0, x1, y0, y1, L) {
-    const profil = dir === 1 || dir === 2, T = VISAGE_RAWI[s] && VISAGE_RAWI[s][profil ? 'l' : 'd'];
+    const profil = dir === 1 || dir === 2, T0 = VISAGE_RAWI[s] && VISAGE_RAWI[s][profil ? 'l' : 'd'], fente = K.coiffe === 'litham', w = x1 - x0 + 1;
     if (dir === 3 || x1 < x0) return null;
-    if (!T || T.length !== y1 - y0 + 1 || T[0].length !== x1 - x0 + 1) return visageRawi(look, K, dir, pose, s, x0, x1, y0, y1, L);
+    let T = T0, dx0 = 0;   // sous le chèche : les lignes des yeux, alignées sur la nuque (de profil) ou au milieu (de face)
+    if (fente && T0) { T = T0.slice(FENTE[s], FENTE[s] + y1 - y0 + 1).map(r => r.replace(/[hs]/g, '.')); dx0 = profil ? T0[0].length - w : (T0[0].length - w) >> 1; }
+    if (!T || T.length !== y1 - y0 + 1 || dx0 < 0 || (!fente && T[0].length !== w)) return visageRawi(look, K, dir, pose, s, x0, x1, y0, y1, L);
     const h = signe(look), clos = pose === 'prie' || pose === 'accable', V = m => m === 'V' || m === 'v';
     const peau = look.teint || TEINTS[h % TEINTS.length], poil = (typeof look.poil === 'string' && look.poil) || POILS[(h >>> 5) % POILS.length];
-    const barbe = [0, 1, 2].indexOf(look.barbe) >= 0 ? look.barbe : RAWI_BARBE, poilO = mix(poil, '#20143a', 0.4);
-    const C = { p: peau, c: mix(peau, '#fff1d6', 0.28), o: mix(peau, '#3a1e30', 0.30), d: mix(peau, '#3a1e30', 0.15), w: mix('#f8efdc', peau, 0.28), k: '#21161c', l: '#ffffff',
+    const barbe = fente ? 0 : [0, 1, 2].indexOf(look.barbe) >= 0 ? look.barbe : RAWI_BARBE, poilO = mix(poil, '#20143a', 0.4), fonce = !!look.teint && lum(look.teint) < SOMBRE;
+    const C = { p: peau, c: mix(peau, '#fff1d6', 0.28), o: mix(peau, '#3a1e30', 0.30), d: mix(peau, '#3a1e30', 0.15), w: mix('#f8efdc', peau, fonce ? 0.1 : 0.28), k: '#21161c', l: '#ffffff',
       e: mix(peau, '#2a1820', 0.66), s: mix(peau, poil, 0.85), m: mix(peau, '#4a1e24', 0.5), h: mix(poil, '#6b4630', 0.2) };   // d : la demi-ombre (une transition, du côté de l'ombre)
     const bord = {}; for (let y = y0; y <= y1; y++) { let a = -1, b = -1; for (let x = x0; x <= x1; x++) if (V(L[y][x])) { if (a < 0) a = x; b = x; } bord[y] = [a, b]; }
-    const lettre = (x, y) => { const r = T[y - y0]; return r ? r[dir === 2 ? x1 - x : x - x0] : '_'; }, oeil = m => m === 'w' || m === 'k' || m === 'l';
+    const lettre = (x, y) => { const r = T[y - y0]; return r ? r[(dir === 2 ? x1 - x : x - x0) + dx0] || '_' : '_'; }, oeil = m => m === 'w' || m === 'k' || m === 'l';
     const rang = q => { const i = T.findIndex(r => r.indexOf(q) >= 0); return i < 0 ? -1 : y0 + i; };
     const ym = rang('m'), yn = Math.max(y0, (T.findIndex((r, i) => i > 3 && r.indexOf('o') >= 0) + 1 || (ym - y0 - 1)) + y0 - 1), mi = x0 + ((x1 - x0 + 1) >> 1);   // la bouche ; le nez
     return function (x, y) {
@@ -1304,7 +1573,7 @@
       return peau; };
   }
   G.rawi = look => !!rawiDe(look, kindOf(look));   // pour les outils : ce râwî a-t-il le dessin de la maquette ?
-  G.RAWI = { 64: RAWI64, 32: RAWI32 };
+  G.RAWI = { 64: RAWI64, 32: RAWI32, variante: (h, key, quoi) => rawiVariante(h, key, quoi || 'repos') };   // pour les outils (planches, contrôles)
   // la grille de 32 × 48 d'un personnage, ou null si sa tête ou son corps n'ont pas encore de gabarit natif
   function natifGrille(look, dir, frame, pose) {
     const K0 = kindOf(look), key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l', nom = HEADS[K0.coiffe] ? K0.coiffe : 'imama';
@@ -1370,7 +1639,7 @@
   // la grille fine (64 × 96) d'un grand personnage natif : celle de 32 × 48, ses escaliers arrondis — sans les objets du râwî,
   // qui y sont dessinés à cette taille même (D193), sous la tête, jamais sur une main
   function fine(n) {
-    if (n.rawi && G.rawi64) return { L: n.rawi.L4.map(r => r.slice()), am: doubler(n.am), fin: doubler(n.fin) };   // le râwî : son gabarit de 64 × 96, tel quel
+    if (n.rawi && G.rawi64) return { L: n.rawi.L4.map(r => r.slice()), am: doubler(n.am), fin: n.rawi.fin4.map(r => r.slice()) };   // le râwî : son gabarit de 64 × 96, tel quel (la lanterne y est à sa taille)
     const b = n.sans || n, L = grilleFine(b.L, W2, H2), am = doubler(b.am), fin = doubler(b.fin), N = n.natifs; if (!N) return { L, am, fin };
     const W4 = W2 * 2, H4 = H2 * 2, tm = doubler(n.tm), c = []; for (let y = 0; y < H4; y++) c.push(new Array(W4).fill('.'));
     N.noms.forEach(o => poserObjet(o, 4, (x, y, m) => { if (x >= 0 && x < W4 && y >= 0 && y < H4) c[y][x] = m; }, { b0: 2 * N.b0, key: N.key, ou: N.ou, glisse: N.glisse }));
