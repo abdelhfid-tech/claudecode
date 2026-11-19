@@ -1574,6 +1574,28 @@ pages privées de son compte.
   veillées (le Caïd, Amghar Idir, Amghar Meksa, Amezyan) : aucun texte ne le nomme ni ne le rattache à un peuple
   (exigence 10), et aucune composition d'Idris ne leur ressemble (au plus 0,77).
 
+- [ ] **D198. Des corps, et la course (version 2.16 ; plan approuvé par le décideur le 19 novembre — « les personnages se
+  croisent comme des fantômes », « il faut que les personnages puissent courir », choix « joystick au bord » ; réglages
+  de l'agent, à valider par le décideur ; `v2/docs/architecture.md`, « Des corps, et non des fantômes » et « La manette
+  tactile »).** Les suiveurs se tiennent à seize points l'un de l'autre sur le chemin du meneur, mesuré en distance et
+  non plus en images (ils se chevauchaient sur les écrans à 120 images par seconde), et apparaissent déjà en file au
+  chargement d'un lieu ; ils restent sans corps. Les PNJ et les coffres ont un pied de 10 × 5 points contre le joueur :
+  on ne les traverse plus, on peut toujours s'en écarter, un PNJ poussé plus de 0,4 s fait un pas de côté ; le chemin au
+  doigt les contourne ; personne n'est plus posé sur le joueur (Idris sur Maître Yûnus, au bureau). Les deux marches de
+  récit suivent un chemin, au plus trois fois la durée de la ligne droite d'avant. Les chimères de la carte ne se
+  superposent plus entre elles ni aux PNJ, ni les rôdeurs entre eux ; leur contact reste ce qui ouvre le combat ; leur
+  transparence a un plancher de 0,85 (exigence 6) ; la bête du ciel est opaque. En combat, en hauteur, les héros se
+  resserrent autour du centre de leur groupe et ne se recouvrent plus. « 2D simple » coupe aussi l'ambiance, les lueurs,
+  le halo, l'étalonnage et la vignette, comme son texte le promet. **Courir** : le joystick tiré au-delà de 85 % de son
+  rayon, Maj tenue au clavier, ou deux touchers rapprochés sur la scène ; 1,75 fois la marche, la foulée 1,6 fois plus
+  vive, le buste penché d'un point de profil (à l'affichage seulement : aucun gabarit ne change), les pas plus serrés ;
+  ni le chrono des labyrinthes, ni ce qui rôde, ni les combats n'en changent ; aucune leçon : la ligne du réglage
+  « Manette tactile » et l'aide « Se déplacer, agir » le disent (textes nouveaux, écrits en arabe, anglais et japonais
+  par l'agent, à relire). Contrôles nouveaux : « SUPERPOSÉ », « COINCÉ » et « PNJ EN TRAVERS » font échouer la batterie ;
+  `smoke.js suiveurs` (« SUIVEURS CONFORMES ») ; la course dans `doigt.js` et `descente.js` ; les héros du combat dans
+  `loupe.js`. À trancher : la vitesse de course (1,75), le seuil du joystick (85 %), le plancher de transparence des
+  chimères (0,85), le pas de côté (un PNJ s'écarte de lui-même, ou faut-il qu'il reste et que l'on fasse le tour ?).
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

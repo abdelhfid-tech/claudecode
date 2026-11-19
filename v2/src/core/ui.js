@@ -565,7 +565,7 @@
       items.push({ cat: I.t('Réglages') },
         toggle(I.t('Texte'), () => I.t(U.TZ[U.tz()][0]), U.tzSuivant, I.t('Taille des caractères dans les dialogues, les menus et les combats.')),
         toggle(I.t('Image'), zoomNom, U.zoomSuivant, I.t('Agrandit l’image pendant l’exploration : on voit moins loin, mais en plus grand. Sur l’image elle-même : deux doigts qui s’écartent, la molette, ou le bouton « × » en haut de la scène.')),
-        toggle(I.t('Manette tactile'), () => o.joy !== false ? I.t('affichée') : I.t('masquée'), () => { o.joy = o.joy === false; U.applyOpts(); }, I.t('Sur un écran tactile, comme sur une console de poche : le joystick sous le pouce gauche ; A pour parler et agir, B pour frapper, sous le pouce droit. On peut aussi se déplacer en touchant la scène.')),
+        toggle(I.t('Manette tactile'), () => o.joy !== false ? I.t('affichée') : I.t('masquée'), () => { o.joy = o.joy === false; U.applyOpts(); }, I.t('Sur un écran tactile, comme sur une console de poche : le joystick sous le pouce gauche (poussé jusqu’au bord, on court) ; A pour parler et agir, B pour frapper, sous le pouce droit. On peut aussi se déplacer en touchant la scène, et courir en la touchant deux fois.')),
         toggle(I.t('Son'), () => I.audio.on ? I.t('activé') : I.t('coupé'), () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, I.t('Coupe ou rétablit tout le son : musique, percussions et bruitages.')),
         toggle(I.t('Musique'), () => I.audio.musicOn ? I.t('activée') : I.t('coupée'), () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, I.t('Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.')),
         toggle(I.t('Dessin'), dessinNom, dessinSuivant, I.t('Fin : deux fois plus de points, les grands personnages jusque sur les cartes, des lisières irrégulières. Fin, adouci : le même, les contours fondus. D’origine : le dessin de la version légère.')),
@@ -701,7 +701,7 @@
 
   /* ---------- l'aide du jeu, thème par thème ---------- */
   U.AIDE = [
-    [I.T('Se déplacer, agir'), I.T('<p><b>Au doigt ou à la souris.</b> Touche un endroit : le héros s’y rend. Garde le doigt posé : il te suit. Touche un personnage pour lui parler ; touche un coffre, une natte, un palmier, un rocher ou un puits pour t’en servir.</p><p><b>Au clavier.</b> <kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : marcher, naviguer · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : halte, retour · <kbd>H</kbd> : que faire ? · <kbd>B</kbd> : bâtir.</p><p>Le bouton <b>?</b> dit toujours ce qu’il y a à faire, dans quelle direction, et peut montrer le chemin ou t’y conduire.</p><p><b>La carte.</b> La mini-carte, en haut de l’écran, montre le lieu et ta position. Touche-la, ou ouvre <b>Carte</b> dans la halte (touche <kbd>C</kbd>) : le lieu entier, l’objectif, la natte, les lieux nommés.</p><p><b>Qui est qui.</b> Chaque personnage a sa coiffe, son manteau et son attribut. À l’arrêt, le nom de ceux qui t’entourent s’affiche au-dessus d’eux.</p>')],
+    [I.T('Se déplacer, agir'), I.T('<p><b>Au doigt ou à la souris.</b> Touche un endroit : le héros s’y rend ; touche-le deux fois : il y court. Garde le doigt posé : il te suit. Touche un personnage pour lui parler ; touche un coffre, une natte, un palmier, un rocher ou un puits pour t’en servir.</p><p><b>Au clavier.</b> <kbd>Flèches</kbd> ou <kbd>ZQSD</kbd>/<kbd>WASD</kbd> : marcher, naviguer · <kbd>Maj</kbd> tenue : courir · <kbd>Entrée</kbd>/<kbd>Espace</kbd> : parler, valider · <kbd>Échap</kbd>/<kbd>X</kbd> : halte, retour · <kbd>H</kbd> : que faire ? · <kbd>B</kbd> : bâtir.</p><p>Le bouton <b>?</b> dit toujours ce qu’il y a à faire, dans quelle direction, et peut montrer le chemin ou t’y conduire.</p><p><b>La carte.</b> La mini-carte, en haut de l’écran, montre le lieu et ta position. Touche-la, ou ouvre <b>Carte</b> dans la halte (touche <kbd>C</kbd>) : le lieu entier, l’objectif, la natte, les lieux nommés.</p><p><b>Qui est qui.</b> Chaque personnage a sa coiffe, son manteau et son attribut. À l’arrêt, le nom de ceux qui t’entourent s’affiche au-dessus d’eux.</p>')],
     [I.T('Combat'), I.T('<p>On n’affronte jamais des personnes, seulement des <em>chimères</em>, ce que les cœurs fabriquent ensemble ; la plus enracinée est une idole. Chaque chimère est protégée par des <b>voiles</b> (⛊). Frappe-la avec la <b>vertu</b> qui est sa faille pour retirer un voile ; à zéro, elle est <b>dévoilée</b> : elle perd son tour et subit bien plus.</p><p><b>Niyya</b> (l’intention) : un point par tour ; dépense-en jusqu’à trois (◂ ▸) pour multiplier les coups ou renforcer une vertu. <b>Sérénité</b> : la jauge dorée ; pleine, elle ouvre à chacun son grand acte.</p>')],
     [I.T('La parole avant le sabre'), I.T('<p>Un <b>pourparler</b> se gagne manche après manche : chaque argument fait monter ou baisser la confiance. Les meilleurs demandent un <b>savoir</b> (✧) appris d’un savant, d’un feuillet, d’un témoin. Avoir <b>prié</b> dans le chapitre donne la sérénité : +1 de confiance. Si la parole échoue, le récit continue, mais il en coûte.</p>')],
     [I.T('Prier, se reposer, reprendre'), I.T('<p>La natte d’une mosquée, au cœur de l’étoile à huit branches : on y <b>prie</b>, et le groupe s’y <b>repose</b>. Constance et Souffle reviennent à 100 %, le groupe retrouve sa sérénité. On y accomplit aussi les œuvres du jour.</p><p><b>La partie se garde toute seule</b>, à chaque objectif atteint et toutes les quelques secondes en promenade. Tu peux fermer la page : « Continuer », sur l’écran-titre, te ramène là où tu étais. Si le jeu se bloquait, recharge la page et continue.</p><p>Sur la natte, ou depuis l’écran de la Chaîne, on peut en plus <b>garder une copie</b> de la partie dans l’un des trois emplacements : utile avant un choix que l’on voudrait pouvoir rejouer.</p>')],
@@ -831,7 +831,7 @@
     if (p.moving) still = now;
     W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y), cible = !!(tg && tg.ent === n); if (d < 60 || (cible && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y, d: cible ? -1 : d, c: n.aura || '#f3e7cc' }); });
     list.sort((a, b) => a.d - b.d); list.length = Math.min(list.length, 5);
-    if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.trail[Math.min(W.trail.length - 1, i * 13)] : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
+    if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.suiveur(i) : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
     const seen = {}, w = $('#stage').clientWidth, hh = $('#stage').clientHeight, poses = [];
     // 2.x (D189) : les étiquettes se posent par la fenêtre visible (G.view, U.scale), puis dans l'ordre — la cible, les plus
     // proches, celui qui mène, puis les siens ; une étiquette qui en recouvrirait une autre ne s'affiche pas (au départ d'un
@@ -918,10 +918,13 @@
     // « pouvoir jouer sur le téléphone comme si on avait une Game Boy ») : le pouce posé sur le cercle tire le bouton dans sa
     // direction ; au-delà d'un petit rayon mort, huit directions — celles des flèches du clavier, que la marche lit déjà.
     // Lâché, tout s'arrête. Il remplace l'ancienne croix ; on se déplace toujours aussi en touchant la scène.
+    // 2.16 — courir (demande du décideur, 19 novembre : « il faut que les personnages puissent courir ») : le pouce tiré au
+    // bord du cercle, au-delà de 85 % de son rayon, fait courir ; plus près du centre, on marche.
     const joy = $('#pad .joy'), bou = joy && joy.querySelector('i'), DIRS = ['up', 'down', 'left', 'right']; let jid = null;
-    const lacher = () => { jid = null; if (bou) bou.style.transform = ''; joy.classList.remove('down'); DIRS.forEach(d => { I.input.held[d] = false; }); };
+    const lacher = () => { jid = null; if (bou) bou.style.transform = ''; joy.classList.remove('down', 'court'); I.input.course = false; DIRS.forEach(d => { I.input.held[d] = false; }); };
     const viser = e => { const r = joy.getBoundingClientRect(), R = r.width / 2, dx = e.clientX - (r.left + R), dy = e.clientY - (r.top + R), L = Math.hypot(dx, dy), k = L > R * 0.58 ? R * 0.58 / L : 1;
       if (bou) bou.style.transform = `translate(${(dx * k).toFixed(1)}px, ${(dy * k).toFixed(1)}px)`;
+      I.input.course = L > R * 0.85; joy.classList.toggle('court', I.input.course);
       const nv = { up: false, down: false, left: false, right: false };
       if (L > R * 0.22) { const s8 = Math.round(Math.atan2(dy, dx) / (Math.PI / 4)); // de -4 à 4 : 0 à droite, 2 en bas, -2 en haut, ±4 à gauche
         nv.right = s8 >= -1 && s8 <= 1; nv.down = s8 >= 1 && s8 <= 3; nv.left = s8 >= 3 || s8 <= -3; nv.up = s8 >= -3 && s8 <= -1; }
@@ -941,7 +944,7 @@
     const cv = cvEl, st = $('#stage'), bare = e => e.target === cv || e.target === st || e.target.id === 'ui' || e.target.id === 'view', free = () => I.scene === W && !S.busy && !W.lock && !U.menuOpen && !I.debug.auto && !I.debug.walk;
     const where = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * G.PW + G.cale(W.cam.x), (e.clientY - r.top) / r.height * G.PH + G.cale(W.cam.y)]; };
     // deux doigts sur l'image : l'agrandir ou la réduire (2.x). Le premier doigt n'est alors plus un toucher.
-    const doigts = new Map(); let pince = null;
+    const doigts = new Map(); let pince = null, dernier = null; // dernier : le dernier toucher levé sur la scène (2.16 : deux touchers rapprochés font courir)
     const ecart = () => { const a = [...doigts.values()]; return Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]); };
     U.pince = () => !!pince;
     st.addEventListener('pointerdown', e => {
@@ -951,6 +954,7 @@
         if (doigts.size >= 2) { if (ptr) { ptr.world = false; ptr.dead = true; ptr.pince = true; }
           if (doigts.size === 2 && I.scene === W && !U.menuOpen && !I.debug.auto && !I.debug.walk) { pince = { d0: Math.max(24, ecart()), z0: U.zf }; W.stop(); e.preventDefault(); } return; } }
       ptr = { id: e.pointerId, world: free(), x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t0: performance.now(), hold: false, last: 0 };
+      ptr.course = !!(dernier && ptr.t0 - dernier.t < 350 && Math.hypot(e.clientX - dernier.x, e.clientY - dernier.y) < 30); // le second toucher d'un double toucher : on court (et, maintenu, on suit le doigt en courant)
       if (ptr.world) { e.preventDefault(); try { st.setPointerCapture(e.pointerId); } catch (x) { /* sans capture : le relâchement suffit */ } }
     });
     st.addEventListener('pointermove', e => {
@@ -962,7 +966,8 @@
       const q = ptr; ptr = null; if (q.pince) return;
       if (!q.world) { if (q.dead || e.type === 'pointercancel' || !$('#choice').hidden || I.battle.active || U.menuOpen) return; I.input.emit('ok'); return; }
       if (!free()) return;
-      if (q.hold || e.type === 'pointercancel') W.stop(); else { const p = where(e); W.tap(p[0], p[1]); }
+      dernier = { t: performance.now(), x: e.clientX, y: e.clientY };
+      if (q.hold || e.type === 'pointercancel') W.stop(); else { const p = where(e); W.tap(p[0], p[1], q.course); }
     };
     st.addEventListener('pointerup', up); st.addEventListener('pointercancel', up);
     // la molette, sur l'image : agrandir, réduire
@@ -979,7 +984,7 @@
       if (!ptr || !ptr.world) return;
       if (!free()) { ptr.world = false; ptr.dead = true; return; }
       if (!ptr.hold && now - ptr.t0 > 280) ptr.hold = true;
-      if (ptr.hold && now - ptr.last > 110 && !(I.build && I.build.on)) { ptr.last = now; const p = where({ clientX: ptr.x, clientY: ptr.y }); W.goTo(p[0], p[1], { quiet: true }); }
+      if (ptr.hold && now - ptr.last > 110 && !(I.build && I.build.on)) { ptr.last = now; const p = where({ clientX: ptr.x, clientY: ptr.y }); W.goTo(p[0], p[1], { quiet: true, course: ptr.course }); }
     };
   }
   U.boot = function () {

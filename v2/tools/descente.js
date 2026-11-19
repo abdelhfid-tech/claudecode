@@ -55,6 +55,20 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
     await p.mouse.click(but.x, but.y); await p.waitForTimeout(900);
     const x2 = await p.evaluate(() => window.ISNAD.world.player.x); si(Math.abs(x2 - but.px) < 14, 'au doigt : toucher un endroit du labyrinthe y conduit', `au doigt : visé ${Math.round(but.px)}, arrivé à ${Math.round(x2)}`);
   }
+  { // 2.16 — courir au clavier : Maj tenue, on va plus d'une fois et demie plus vite qu'à la marche ; le chrono, lui, ne court
+    // pas plus vite (il compte le temps, pas le chemin) ; Maj lâchée, on marche de nouveau. Mesuré dans le plus long couloir droit.
+    const couloir = await p.evaluate(() => { const W = window.ISNAD.world, m = W.map, T = 16, ok = (x, y) => !(W.solidAt(x - 4, y - 5) || W.solidAt(x + 4, y - 5) || W.solidAt(x - 4, y) || W.solidAt(x + 4, y)); let best = null;
+      for (let ty = 1; ty < m.h - 1; ty++) { let run = 0; for (let tx = 1; tx < m.w - 1; tx++) { const x = tx * T + 8, y = ty * T + 11; if (ok(x, y) && ok(x - 8, y) && ok(x + 8, y)) { run++; if (!best || run > best.n) best = { n: run, x: (tx - run + 1) * T + 8, y }; } else run = 0; } }
+      return best; });
+    const mesure = async maj => { await p.evaluate(c => { const W = window.ISNAD.world; W.player.x = c.x; W.player.y = c.y; W.player.dir = 2; W.dest = null; W.resetTrail(); W.updateCam(true); }, couloir);
+      if (maj) await p.keyboard.down('Shift'); await p.keyboard.down('ArrowRight'); await p.waitForTimeout(80);
+      const lire = () => p.evaluate(() => { const I = window.ISNAD, W = I.world; return [W.player.x, W.t, I.rodeurs.chrono ? I.rodeurs.chrono.reste : 0, !!W.player.court]; }), a = await lire(); await p.waitForTimeout(260); const b = await lire();
+      await p.keyboard.up('ArrowRight'); if (maj) await p.keyboard.up('Shift'); await p.waitForTimeout(150);
+      return { v: +((b[0] - a[0]) / Math.max(0.01, b[1] - a[1])).toFixed(1), chrono: +((a[2] - b[2]) / Math.max(0.01, b[1] - a[1])).toFixed(3), court: b[3] }; };
+    const m0 = await mesure(false), m1 = await mesure(true), m2 = await mesure(false);
+    si(couloir && couloir.n >= 5 && m1.court && !m0.court && !m2.court && m1.v > 1.5 * m0.v && Math.abs(m2.v - m0.v) < 8 && Math.abs(m0.chrono - 1) < 0.05 && Math.abs(m1.chrono - 1) < 0.05,
+      `au clavier, Maj tenue : on court (${m1.v} points par seconde, ${(m1.v / m0.v).toFixed(2)} fois la marche), Maj lâchée on marche ; le chrono court au même pas (${m0.chrono} puis ${m1.chrono} seconde par seconde)`, `Maj : ${JSON.stringify({ couloir, m0, m1, m2 })}`);
+  }
   { // la reprise au milieu d'un labyrinthe
     const e0 = await empreinte(), o0 = await p.evaluate(() => { const W = window.ISNAD.world; W.checkpoint(); return JSON.stringify(window.ISNAD.save.data.cp.opts); });
     await p.evaluate(async () => { const I = window.ISNAD, W = I.world, cp = JSON.parse(JSON.stringify(I.save.data.cp)); W.loadMap('medine', {}, null); await W.startChapter(cp.saga, cp.ci, cp); }); await calme();

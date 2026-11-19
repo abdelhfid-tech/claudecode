@@ -329,6 +329,8 @@ body.sansjoy #pad .dpad { visibility: hidden; }
 #pad .dpad .joy.down { background: rgba(255, 255, 255, .09); border-color: rgba(233, 200, 119, .5); }
 #pad .dpad .joy i { position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: rgba(233, 200, 119, .16); border: 1px solid rgba(233, 200, 119, .5); box-shadow: 0 0 10px rgba(0, 0, 0, .35); pointer-events: none; transition: transform .05s linear; }
 #pad .dpad .joy.down i { background: rgba(233, 200, 119, .3); transition: none; }
+#pad .dpad .joy.court { border-color: rgba(233, 200, 119, .78); }   /* 2.16 : tiré jusqu'au bord, on court — le cercle s'éclaire */
+#pad .dpad .joy.court i { background: rgba(233, 200, 119, .48); }
 #pad .ab { display: flex; gap: 14px; align-items: flex-end; pointer-events: none; } /* seuls les boutons reçoivent le toucher : entre eux, on touche la scène */
 #pad .ab button { pointer-events: auto; width: 62px; height: 62px; border-radius: 50%; background: rgba(20, 16, 36, .55); border: 1px solid rgba(233, 200, 119, .5); color: var(--gold); font-family: var(--f-display); font-size: 13px; touch-action: none; }
 #pad .ab .b { width: 64px; height: 64px; }

@@ -353,7 +353,9 @@
     o = o || {};
     // qualité adaptative : si l'appareil peine, on allège (résolution, flou, nuages, balayage)
     if (!G.low && I.speed === 1) { G._slow = dt > 0.034 ? (G._slow || 0) + 1 : Math.max(0, (G._slow || 0) - 2); if (G._slow > 150) { G.low = true; G.resize(); } }
-    if (G.low) { o.tilt = false; o.clouds = null; o.scan = false; o.rays = null; }
+    // 2.16 — « 2D simple » tient ce que son texte promet : le pixel art seul, sans éclairage (ambiance et lueurs), sans halo,
+    // sans étalonnage ni vignette, comme sans profondeur de champ ni ombres de nuages
+    if (G.low) { o.tilt = false; o.clouds = null; o.scan = false; o.rays = null; o.ambient = null; o.lights = null; o.bloom = 0; o.grade = null; o.vignette = 0; }
     const c = G.out, k = G.k, W = G.cv.width, H = G.cv.height;
     let sx = 0, sy = 0;
     if (G.shakeT > 0) { G.shakeT -= dt; sx = (Math.random() - 0.5) * 6 * k * Math.min(1, G.shakeT * 4); sy = (Math.random() - 0.5) * 6 * k * Math.min(1, G.shakeT * 4); }
@@ -398,7 +400,7 @@
       c.globalAlpha = 1;
     }
     // halo (bloom doux)
-    c.globalCompositeOperation = 'screen'; c.globalAlpha = o.bloom === undefined ? 0.2 : o.bloom; c.drawImage(G.bcv, sx, sy, W, H);
+    if (o.bloom !== 0) { c.globalCompositeOperation = 'screen'; c.globalAlpha = o.bloom === undefined ? 0.2 : o.bloom; c.drawImage(G.bcv, sx, sy, W, H); }
     // lueurs additives des sources
     c.globalCompositeOperation = 'lighter';
     (o.lights || []).forEach(L => {
@@ -441,7 +443,7 @@
     // vignette
     const vcx = (G.view.x + G.view.w / 2) * k, vcy = (G.view.y + G.view.h / 2) * k, vr = Math.hypot(G.view.w / 2, G.view.h / 2) / Math.hypot(G.PW / 2, G.PH / 2); // autour de ce que l'on voit
     const vg = c.createRadialGradient(vcx, vcy, H * 0.35 * vr, vcx, vcy, H * 0.95 * vr); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(4,3,12,${o.vignette === undefined ? 0.55 : o.vignette})`);
-    c.fillStyle = vg; c.fillRect(0, 0, W, H);
+    if (o.vignette !== 0) { c.fillStyle = vg; c.fillRect(0, 0, W, H); }
     if (G.flashA > 0) { c.globalAlpha = G.flashA; c.fillStyle = G.flashC; c.fillRect(0, 0, W, H); c.globalAlpha = 1; G.flashA -= dt * 2.4; }
   };
 })();

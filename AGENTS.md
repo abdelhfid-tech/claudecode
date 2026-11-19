@@ -28,13 +28,13 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   « SILHOUETTES CONFORMES »), `node v2/tools/dedales.js` (les labyrinthes de la noosphère : dix mille tirages par
   profondeur, chaque lieu présent, du bon côté, relié aux autres : « DÉDALES CONFORMES »), `node v2/tools/descente.js`
   (dans le jeu : le labyrinthe d'un chapitre, son chrono, la remontée, la reprise ; la descente du râwî et ses quatre
-  issues ; ce qui rôde et la frappe : « DESCENTE CONFORME ») et `node v2/tools/retours.js` (deux récits quittés par la
+  issues ; ce qui rôde et la frappe ; la course au clavier, qui ne presse pas le chrono : « DESCENTE CONFORME ») et `node v2/tools/retours.js` (deux récits quittés par la
   halte puis repris à leur place, la partie exportée et réimportée avec eux, les retours en 2084 joués, la Citadelle
   visitée : « RETOURS CONFORMES »), `node v2/tools/progression.js` (une partie neuve par les vrais boutons : une seule
   leçon par séquence, les commandes du combat reçues une à une, les pages de la halte ; une partie d'avant garde tout ;
   les trois figures et leurs effets : « PROGRESSION CONFORME »), `node v2/tools/loupe.js` (sur un téléphone, en
   hauteur et en largeur : l'image s'agrandit — d'office, en écartant deux doigts, par le bouton —, le toucher tombe
-  juste, les étiquettes restent sur leurs personnages, le combat garde son cadrage, aucun texte n'est sous dix points :
+  juste, les étiquettes restent sur leurs personnages, le combat garde son cadrage et chaque héros y a sa place, aucun texte n'est sous dix points :
   « LOUPE CONFORME »), `node v2/tools/bilingue.js` (la langue secondaire, pour chacun des douze couples de langues, en
   hauteur et en largeur : choisie par le vrai bouton et gardée ; le prologue au doigt, chaque réplique et chaque carton du
   récit avec sa seconde bulle, dans la bonne langue et le bon sens, lisible, sans débordement ; sans elle, rien ne paraît :
@@ -88,6 +88,15 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   moteur la pose dans la main le temps du geste et la fait tourner (`G.arme`, `G.frappe`) — du bois, du fer, une corde,
   rien d'autre (exigence 17). Le dessin d'origine garde les pas de la 1.32. `v2/docs/architecture.md`, « Le
   mouvement ». Un changement de ces gabarits repasse `silhouettes.js`, puis toute la batterie.
+- Dans la 2.x, les personnages ont un corps, et l'on court (2.16, D198 ; le décideur, 19 novembre : « les personnages se
+  croisent comme des fantômes », « il faut que les personnages puissent courir ») : les suiveurs se tiennent à seize
+  points l'un de l'autre sur le chemin du meneur, mesuré en distance (`W.suiveur`, jamais `W.trail[i]`) ; les PNJ et les
+  coffres ont un pied contre le joueur (`W.corps`), qui peut toujours s'en écarter, et un PNJ poussé fait un pas de
+  côté ; personne n'est posé sur le joueur ; les marches de récit suivent un chemin. Ce qui rôde et les chimères de la
+  carte n'ont pas de corps pour le joueur : leur contact ouvre le combat. On court au joystick tiré au bord, à Maj tenue,
+  ou d'un double toucher ; la course ne presse ni le chrono, ni ce qui rôde, ni les combats. `v2/docs/architecture.md`,
+  « Des corps, et non des fantômes » et « La manette tactile ». Un changement du déplacement repasse `smoke.js
+  suiveurs`, `walk` et `tap`, puis toute la batterie.
 - Dans la 2.x, l'image s'agrandit (demande du décideur, 16 novembre : « les personnages et les textes sont trop petits
   dans mon téléphone, il faut pouvoir zoomer dans l'image ») : pendant l'exploration, de × 1 à × 3 autour de celui qui
   mène — deux doigts qui s'écartent, la molette, le bouton « × » de la scène, le réglage « Image » ; d'office × 1,5 sur
@@ -183,6 +192,7 @@ node v2/tools/smoke.js auto            # prologue, cinq sagas, épilogue joués 
 node v2/tools/smoke.js walk            # idem en marchant réellement (clavier simulé, vraies collisions)
 node v2/tools/smoke.js tap             # idem en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
 node v2/tools/smoke.js wrong           # idem en prenant d'abord chaque mauvaise réponse
+node v2/tools/smoke.js suiveurs        # 2.16 : les siens à seize points à 30, 60, 120 et 144 images par seconde, après chaque chargement ; personne posé sur le joueur ; les marches de récit jouées pour de vrai — « SUIVEURS CONFORMES »
 node v2/tools/doigt.js                 # le prologue au doigt, sans raccourci : ce que le jeu attend se voit-il, se touche-t-il ?
 node v2/tools/doigt.js loin            # idem, puis tout le premier chapitre de la saga I (ajouter 844x390 pour le paysage)
 node v2/tools/son.js                   # la musique pour de vrai : le bus écouté pendant qu'on joue (victoire, défaite puis reprise, minuteries bridées)
@@ -209,13 +219,16 @@ node v2/tools/livret.js [textes]    # 2.x : le livret court (promo/livret-2x/) :
 ```
 
 **Règle.** Toute modification de contenu (`src/data/`) repasse le validateur, puis le build, puis
-`smoke.js auto`. Toute modification du moteur repasse le build, `smoke.js auto`, `smoke.js walk`, `smoke.js tap` et `doigt.js` ;
+`smoke.js auto`. Toute modification du moteur repasse le build, `smoke.js auto`, `smoke.js walk`, `smoke.js tap`, `smoke.js suiveurs` et `doigt.js` ;
 toute modification du son repasse aussi `son.js` ; toute modification de la bataille déclarée (`rangs.js`, un champ
 `bataille`) repasse aussi `bataille.js` et `bataille.js mesures`. Un changement n'est
 terminé que si le validateur affiche ✓, que le test se termine sans « BLOQUÉ », sans « INACCESSIBLE »,
 sans « ABSENT », sans « TEXTE CACHÉ » (un texte affiché sous le noir d'un fondu), sans « INVISIBLE », sans « ÉCART » (une bataille déclarée
 qui allonge le combat de plus de 20 % ou lui ajoute une défaite), sans « MUSIQUE »
-(la piste voulue n'est pas celle du lieu, ou le bus de la musique se tait) et sans erreur console.
+(la piste voulue n'est pas celle du lieu, ou le bus de la musique se tait), sans « SUPERPOSÉ » (le joueur reste plus de trente
+pas dans le pied d'un PNJ ou d'un coffre, ou un lieu se charge avec quelqu'un à moins de 9 points de lui), sans « COINCÉ »
+(le joueur de test, à pied ou au doigt, n'arrive pas à son objectif et y est porté), sans « PNJ EN TRAVERS » (la case d'un PNJ
+ou d'un coffre, rendue pleine, coupe un lieu nommé, et aucun pas de côté ne rouvre le passage) et sans erreur console.
 Un parcours automatique prouve que le récit se déroule, pas qu'il se voit : tout changement d'écran
 ou de mise en page se vérifie aussi sur une capture.
 

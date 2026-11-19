@@ -86,7 +86,7 @@
     W.foes.forEach(f => { if (f.map === id && !f.placed) { const p = W.resolve(f.at, id, f); if (p) { f.x = p[0]; f.y = p[1]; f.placed = true; } } });
     W.chests.forEach(c => { if (c.map === id && !c.placed) { const p = W.resolve(c.at, id, c); if (p) { c.x = p[0]; c.y = p[1]; c.placed = true; } } });
     if (spot) { const p = Array.isArray(spot) && typeof spot[0] === 'number' ? spot : W.resolve(spot, id, W.player); W.player.x = p[0]; W.player.y = p[1]; }
-    W.resetTrail(); W.tint = null; W.pose = []; W.dest = null; W.focus = null; W._way = null; W.updateCam(true);
+    W.degager(); W.resetTrail(); W.tint = null; W.pose = []; W.dest = null; W.focus = null; W._way = null; W.updateCam(true);
     document.body.dataset.theme = (D.gabarit(id) || {}).theme || 'orient'; // le thème de l'interface suit le gabarit du lieu
     $('#ui').style.setProperty('--mini', (W.map.mini ? ((27 + W.map.h + 6) / G.PH * 100).toFixed(1) : '14') + '%'); // les annonces s'empilent sous la mini-carte
     if (I.rodeurs) I.rodeurs.arme(); // un labyrinthe de la noosphère arme son chrono
@@ -111,23 +111,77 @@
       if (Math.max(Math.abs(dx), Math.abs(dy)) !== rad) continue;
       const tx = tx0 + dx, ty = ty0 + dy; if (tx < 1 || ty < 1 || tx >= m.w - 1 || ty >= m.h - 1) continue;
       if (m.solid[ty * m.w + tx]) continue;
-      const x = tx * T + 8, y = ty * T + 13; if (self !== W.player && occupied(x, y, self)) continue;
+      const x = tx * T + 8, y = ty * T + 13; if (occupied(x, y, self)) continue; // 2.16 : le joueur non plus n'est jamais posé sur quelqu'un (Idris sur Maître Yûnus, au bureau)
       return [x, y];
     }
     return [tx0 * T + 8, ty0 * T + 13];
   };
   W.place = function (e) { if (e.map !== W.map.id) return; if (e.placed && e.placedMap === W.map.id) return; const p = W.resolve(e.at, e.map, e); if (p) { e.x = p[0]; e.y = p[1]; e.placed = true; e.placedMap = W.map.id; } };
   W.ent = function (id) { return id === 'hero' ? W.player : W.npcs.find(n => n.id === id); };
-  W.resetTrail = function () { W.trail = []; for (let i = 0; i < 60; i++) W.trail.push([W.player.x, W.player.y, W.player.dir]); };
+  /* 2.16 — le chemin du meneur, mesuré en distance parcourue (et non en images) : un point chaque fois qu'il a avancé
+     d'un point et demi, au moins cent quarante points de chemin gardés. Les suiveurs s'y placent à seize points l'un de
+     l'autre (W.suiveur), quelle que soit la cadence de l'écran : à 120 images par seconde, ils ne se chevauchent plus.
+     Ils restent sans corps : ils ne bloquent personne, comme dans les jeux de rôle d'autrefois. */
+  const PAS_CHEMIN = 1.5, LONG_CHEMIN = 140, ECART = 16, DXD = [0, -1, 1, 0], DYD = [1, 0, 0, -1];
+  const VITESSE = 82, COURSE = 1.75; // points par seconde à la marche ; la course va 1,75 fois plus vite (2.16)
+  W.VITESSE = VITESSE; W.COURSE = COURSE;
+  // au chargement d'un lieu, le chemin est semé derrière le meneur, à l'opposé de son regard : un mur le fait tourner
+  // (jamais revenir sur ses pas), un corps ou un mur sans issue l'arrête — les siens apparaissent déjà en file
+  W.resetTrail = function () {
+    const p = W.player, t = W.trail = []; if (!W.map) return;
+    const L = corps(), libre = (x, y) => boxFree(x, y) && !L.some(e => touche(e, x, y)), course = (x, y, d, max) => { let n = 0; while (n < max && libre(x + DXD[d] * PAS_CHEMIN * (n + 1), y + DYD[d] * PAS_CHEMIN * (n + 1))) n++; return n; };
+    let x = p.x, y = p.y, d = [3, 2, 1, 0][p.dir], fait = 0;
+    while (fait < LONG_CHEMIN) {
+      if (!libre(x + DXD[d] * PAS_CHEMIN, y + DYD[d] * PAS_CHEMIN)) {
+        const a = d === 0 || d === 3 ? [1, 2] : [0, 3], na =course(x, y, a[0], 16), nb = course(x, y, a[1], 16); if (!na && !nb) break;
+        d = na >= nb ? a[0] : a[1]; }
+      x += DXD[d] * PAS_CHEMIN; y += DYD[d] * PAS_CHEMIN; fait += PAS_CHEMIN; t.push([x, y, [3, 2, 1, 0][d]]); // qui suit regarde vers le meneur
+    }
+  };
+  // le point du chemin à « d » points parcourus derrière le meneur (d'office, seize points par rang), interpolé
+  W.suiveur = function (i, d) {
+    const p = W.player, t = W.trail; let reste = d !== undefined ? d : i * ECART, ax = p.x, ay = p.y, adir = p.dir;
+    for (let k = 0; k < t.length; k++) { const b = t[k], L = Math.hypot(b[0] - ax, b[1] - ay);
+      if (L > 0 && L >= reste) { const f = reste / L; return [ax + (b[0] - ax) * f, ay + (b[1] - ay) * f, adir]; }
+      reste -= L; ax = b[0]; ay = b[1]; adir = b[2]; }
+    return [ax, ay, adir];
+  };
+  /* 2.16 — les marches de récit suivent un chemin (W.route), case par case, en segments droits, chacun avec le bon sens du
+     personnage ; elles contournent le joueur et les autres quand c'est possible. Leur durée reste bornée : au plus trois
+     fois celle de la ligne droite d'avant (le pas s'allonge au besoin). Sans chemin, la ligne droite d'avant. */
   W.walkTo = async function (e, x, y) {
     if (e !== W.player && e.map !== W.map.id) { e.x = x; e.y = y; return; }
-    const dx = x - e.x, dy = y - e.y, dist = Math.hypot(dx, dy); if (dist < 2) return;
-    e.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); e.moving = true; e.scripted = true;
-    const dur = dist / 70 * 1000 / I.speed, t0 = performance.now(), x0 = e.x, y0 = e.y;
-    await new Promise(res => { (function step() { const f = Math.min(1, (performance.now() - t0) / dur); e.x = x0 + dx * f; e.y = y0 + dy * f; if (e === W.player) pushTrail(); if (f < 1) requestAnimationFrame(step); else res(); })(); });
-    e.moving = false; e.scripted = false;
+    const dist = Math.hypot(x - e.x, y - e.y); if (dist < 2) return;
+    const pts = W.chemin(e, x, y), seg = []; let total = 0;
+    for (let k = 1; k < pts.length; k++) { const a = pts[k - 1], b = pts[k], L = Math.hypot(b[0] - a[0], b[1] - a[1]); if (L < 0.01) continue; seg.push({ a, b, L, t0: total }); total += L; }
+    if (!seg.length) return;
+    const dirDe = s => { const dx = s.b[0] - s.a[0], dy = s.b[1] - s.a[1]; return Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
+    e.dir = dirDe(seg[0]); e.moving = true; e.scripted = true; e.pas = null;
+    const dur = Math.min(total, dist * 3) / 70 * 1000 / I.speed, t0 = performance.now();
+    await new Promise(res => { (function step() { const f = Math.min(1, (performance.now() - t0) / dur), s0 = f * total; let s = seg[0];
+      for (const q of seg) { if (q.t0 <= s0) s = q; else break; }
+      const g = Math.min(1, (s0 - s.t0) / s.L); e.x = s.a[0] + (s.b[0] - s.a[0]) * g; e.y = s.a[1] + (s.b[1] - s.a[1]) * g; e.dir = dirDe(s);
+      if (e === W.player) pushTrail(); if (f < 1) requestAnimationFrame(step); else res(); })(); });
+    e.x = x; e.y = y; e.moving = false; e.scripted = false;
   };
-  function pushTrail() { W.trail.unshift([W.player.x, W.player.y, W.player.dir]); if (W.trail.length > 64) W.trail.pop(); }
+  // les points par où passe une marche de récit : le chemin des cases, en segments horizontaux et verticaux
+  W.chemin = function (e, x, y) {
+    const path = W.route(x, y, e), dest = path.length ? path[path.length - 1] : null;
+    if (!path.length || Math.floor(dest[0] / T) !== Math.floor(x / T) || Math.floor(dest[1] / T) !== Math.floor((y - 2) / T)) return [[e.x, e.y], [x, y]]; // sans chemin jusqu'à la case : la ligne droite d'avant
+    const pts = [[e.x, e.y]], vers = (a, b) => { // de a à b, d'abord sur un axe puis sur l'autre, par où le décor le permet
+      if (Math.abs(a[0] - b[0]) < 0.5 || Math.abs(a[1] - b[1]) < 0.5) { pts.push(b); return; }
+      const c1 = [b[0], a[1]], c2 = [a[0], b[1]], ok = c => !W.solidAt(c[0], c[1]) && !W.solidAt((a[0] + c[0]) / 2, (a[1] + c[1]) / 2) && !W.solidAt((b[0] + c[0]) / 2, (b[1] + c[1]) / 2);
+      pts.push(ok(c1) || !ok(c2) ? c1 : c2, b); };
+    path.forEach(q => vers(pts[pts.length - 1], [q[0], q[1] + 2]));
+    vers(pts[pts.length - 1], [x, y]);
+    return pts;
+  };
+  function pushTrail() {
+    const p = W.player, t = W.trail, a = t[0];
+    if (a && Math.hypot(p.x - a[0], p.y - a[1]) < PAS_CHEMIN) return;
+    t.unshift([p.x, p.y, p.dir]);
+    let L = 0; for (let k = 1; k < t.length; k++) { L += Math.hypot(t[k][0] - t[k - 1][0], t[k][1] - t[k - 1][1]); if (L > LONG_CHEMIN) { t.length = k + 1; break; } }
+  }
   W.updateCam = function (snap) {
     const m = W.map, mw = m.w * T, mh = m.h * T;
     let cx = mw <= G.PW ? (mw - G.PW) / 2 : I.clamp(W.player.x - G.PW / 2, 0, mw - G.PW);
@@ -175,9 +229,10 @@
     S.depth++;
     try { await S.fade('out', 300); } finally { S.depth--; }
     I.setScene(W);
+    W.player.dir = 0; // avant le chargement : les siens sont semés derrière lui (W.resetTrail)
     W.loadMap(cp ? cp.map : ch.map, cp ? cp.opts : (ch.opts || {}), cp ? cp.pos : ch.start);
-    if (cp) W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s && s.x !== undefined && n.map === W.map.id) { n.x = s.x; n.y = s.y; n.placed = true; n.placedMap = W.map.id; } });
-    W.player.dir = 0; W.hud(); $('#hud').hidden = false;
+    if (cp) { W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s && s.x !== undefined && n.map === W.map.id) { n.x = s.x; n.y = s.y; n.placed = true; n.placedMap = W.map.id; } }); if (W.degager()) W.resetTrail(); }
+    W.hud(); $('#hud').hidden = false;
     S.depth++; W.lock = false; // verrouille le déplacement pendant l'ouverture
     try {
       await S.fade('in', 500);
@@ -341,12 +396,13 @@
       let dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0);
       if (dx || dy) {
         W.dest = null; if (I.build) I.build.aim = null;
-        const sp = 82 * dt * (dx && dy ? 0.7071 : 1) * (crowded() ? 0.55 : 1);
+        const court = !!(I.input.course || I.input.maj), sp = VITESSE * dt * (dx && dy ? 0.7071 : 1) * (court ? COURSE : 1); // 2.16 : le joystick poussé au bord, ou Maj tenue, fait courir
         p.dir = dx < 0 ? 1 : dx > 0 ? 2 : dy < 0 ? 3 : 0;
         const m1 = dx && tryMove(dx * sp, 0), m2 = dy && tryMove(0, dy * sp);
-        p.moving = !!(m1 || m2); if (p.moving) { pushTrail(); if (Math.floor(W.t * 5) !== Math.floor((W.t - dt) * 5)) I.audio.sfx('step'); }
+        p.moving = !!(m1 || m2); p.court = p.moving && court; if (p.moving) { pushTrail(); pas(dt); }
       } else if (W.dest) follow(dt);
-      else p.moving = false;
+      else { p.moving = false; p.court = false; }
+      pousser(dt);
       const o = W.cur();
       if (o && o.goto) { const s = W.spotPx(o.goto), pr = W.map.spots.priere, near = pr && s && Math.hypot(pr[0] * T + 8 - s[0], pr[1] * T + 13 - s[1]) < 70; if (s && Math.hypot(s[0] - p.x, s[1] - p.y) < (near ? 20 : 36)) W.complete(); }
       // en promenade : un point de reprise toutes les douze secondes (jamais au milieu d'un récit : il serait rejoué à moitié fait)
@@ -355,37 +411,74 @@
         if (f.done || f.map !== W.map.id || !f.placed || f.rodeur) continue; // ceux qui rôdent dans la descente ont leur propre allure (rodeurs.js)
         const d = Math.hypot(f.x - p.x, f.y - p.y);
         if (d < 15) { W.fight(f); break; }
-        if (d < 72 && !f.boss) { const vx = (p.x - f.x) / d * 22 * dt, vy = (p.y - f.y) / d * 22 * dt, m2 = W.map, stop = (x, y) => W.solidAt(x, y) || (m2.trench && m2.trench.has(Math.floor(y / T) * m2.w + Math.floor(x / T))); if (!stop(f.x + vx, f.y)) f.x += vx; if (!stop(f.x, f.y + vy)) f.y += vy; }
+        // 2.16 : une chimère ne vient pas à moins de douze points d'un PNJ ni d'une autre chimère (elles ne se superposent plus)
+        if (d < 72 && !f.boss) { const vx = (p.x - f.x) / d * 22 * dt, vy = (p.y - f.y) / d * 22 * dt, m2 = W.map, voisins = W.npcs.filter(n => !n.hidden && n.map === m2.id && n.placed).concat(W.foes.filter(g => g !== f && !g.done && g.map === m2.id && g.placed)),
+          serre = (x, y) => voisins.some(g => { const d1 = Math.hypot(g.x - x, g.y - y); return d1 < 12 && d1 < Math.hypot(g.x - f.x, g.y - f.y); }),
+          stop = (x, y) => W.solidAt(x, y) || (m2.trench && m2.trench.has(Math.floor(y / T) * m2.w + Math.floor(x / T))) || serre(x, y); if (!stop(f.x + vx, f.y)) f.x += vx; if (!stop(f.x, f.y + vy)) f.y += vy; }
       }
-    } else { W.dest = null; if (!p.scripted) p.moving = false; }
+    } else { W.dest = null; if (!p.scripted) p.moving = false; p.court = false; }
+    W.npcs.forEach(n => { if (n.pas) avancerPas(n, dt); }); // le pas de côté va jusqu'au bout, même si un récit commence
     W.updateCam();
   };
 
   /* ----- déplacement au doigt ou à la souris : on touche un endroit, le héros s'y rend ----- */
   const DX = [1, -1, 0, 0], DY = [0, 0, 1, -1];
   const boxFree = (x, y) => !(W.solidAt(x - 4, y - 5) || W.solidAt(x + 4, y - 5) || W.solidAt(x - 4, y) || W.solidAt(x + 4, y));
-  function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) return false; p.x = nx; p.y = ny; return true; }
-  function crowded() { const p = W.player; return W.npcs.some(n => !n.hidden && n.map === W.map.id && n.placed && Math.abs(n.x - p.x) < 8 && Math.abs(n.y - p.y) < 6); }
-  // ligne droite praticable entre deux points : sert à couper les angles d'un chemin
-  function clearLine(x0, y0, x1, y1) { const n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 3); for (let i = 1; i <= n; i++) { const f = i / n; if (!boxFree(x0 + (x1 - x0) * f, y0 + (y1 - y0) * f)) return false; } return true; }
-  // chemin jusqu'à la case praticable la plus proche du point visé (parcours en largeur sur la grille)
-  W.route = function (x1, y1, from) {
+  /* 2.16 — un corps pour les PNJ et les coffres, contre le joueur : un pied de 10 × 5, calé sur l'ombre (x ± 5, de y − 4
+     à y + 1), contre le sien (x ± 4, de y − 5 à y). Un pas n'est refusé que s'il rapproche d'un corps qu'il toucherait :
+     on peut toujours s'en écarter (un joueur repris sur quelqu'un en ressort). Les suiveurs, ce qui rôde et les chimères
+     de la carte n'en ont pas pour lui : le contact d'une chimère reste ce qui ouvre le combat. */
+  function corps() { const id = W.map.id, l = []; W.npcs.forEach(n => { if (!n.hidden && n.map === id && n.placed) l.push(n); }); W.chests.forEach(c => { if (c.map === id && c.placed) l.push(c); }); return l; }
+  const touche = (e, x, y) => Math.abs(x - e.x) < 9 && y - e.y > -4 && y - e.y < 6;
+  W.corps = corps; W.touche = touche; // pour les outils de contrôle (« SUPERPOSÉ », « PNJ EN TRAVERS »)
+  function heurte(x0, y0, x1, y1, L) { for (const e of L || corps()) if (touche(e, x1, y1) && (!touche(e, x0, y0) || Math.hypot(x1 - e.x, y1 - e.y) < Math.hypot(x0 - e.x, y0 - e.y))) return e; return null; }
+  function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) return false; const e = heurte(p.x, p.y, nx, ny); if (e) { W._heurte = e; return false; } p.x = nx; p.y = ny; return true; }
+  // le joueur posé sur quelqu'un (une partie d'avant, un récit) : la case libre la plus proche
+  W.degager = function () { const p = W.player; if (!W.map || !corps().some(e => touche(e, p.x, p.y))) return false; const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; } return true; };
+  // poussé plus de quatre dixièmes de seconde, un PNJ fait un pas de côté : vers une case libre, d'abord sur le côté, puis
+  // devant lui, jamais vers celui qui pousse ni sur le chemin qu'il suit
+  function pasDeCote(n) {
+    const p = W.player, m = W.map, tx = Math.floor(n.x / T), ty = Math.floor((n.y - 2) / T), vx = n.x - p.x, vy = n.y - p.y, axeX = Math.abs(vx) > Math.abs(vy);
+    const fx = axeX ? Math.sign(vx) || 1 : 0, fy = axeX ? 0 : Math.sign(vy) || 1, chemin = W.dest && W.dest.path ? W.dest.path.map(q => Math.floor(q[0] / T) + ',' + Math.floor((q[1] - 2) / T)) : [];
+    const loin = c => Math.hypot(n.x + c[0] * T - p.x, n.y + c[1] * T - p.y), cotes = [[fy, fx], [-fy, -fx]].sort((a, b) => loin(b) - loin(a));
+    for (const [dx, dy] of cotes.concat([[fx, fy], [fx + fy, fy + fx], [fx - fy, fy - fx]])) {
+      const cx = tx + dx, cy = ty + dy; if (cx < 1 || cy < 1 || cx >= m.w - 1 || cy >= m.h - 1 || m.solid[cy * m.w + cx] || chemin.includes(cx + ',' + cy)) continue;
+      const x = cx * T + 8, y = cy * T + 13; if (!boxFree(x, y) || occupied(x, y, n) || touche({ x, y }, p.x, p.y)) continue;
+      n.pas = { x0: n.x, y0: n.y, x1: x, y1: y, t: 0 }; n.moving = true; n.dir = Math.abs(x - n.x) > Math.abs(y - n.y) ? (x < n.x ? 1 : 2) : (y < n.y ? 3 : 0); return true; }
+    return false;
+  }
+  function avancerPas(n, dt) { const q = n.pas, f = Math.min(1, (q.t += dt) / 0.3); n.x = q.x0 + (q.x1 - q.x0) * f; n.y = q.y0 + (q.y1 - q.y0) * f;
+    if (f >= 1) { n.pas = null; n.moving = false; const dx = W.player.x - n.x, dy = W.player.y - n.y; n.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); } }
+  function pousser(dt) {
+    const hz = W._heurte; W._heurte = null;
+    if (hz && !hz.pas && !hz.scripted && W.npcs.includes(hz)) { const q = W._pousse && W._pousse.e === hz ? W._pousse : (W._pousse = { e: hz, t: 0, libre: 0 }); q.t += dt; q.libre = 0; if (q.t > 0.4) { W._pousse = null; if (!pasDeCote(hz)) hz._coince = W.t; } }
+    else if (W._pousse && (W._pousse.libre += dt) > 0.25) W._pousse = null;
+  }
+  // ligne droite praticable entre deux points : sert à couper les angles d'un chemin (un corps la coupe aussi)
+  function clearLine(x0, y0, x1, y1, L) { const n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 3); for (let i = 1; i <= n; i++) { const f = i / n, x = x0 + (x1 - x0) * f, y = y0 + (y1 - y0) * f; if (!boxFree(x, y) || (L && L.some(e => touche(e, x, y) && !touche(e, x0, y0)))) return false; } return true; }
+  // chemin jusqu'à la case praticable la plus proche du point visé (parcours en largeur sur la grille). 2.16 : la case d'un
+  // PNJ ou d'un coffre compte comme pleine (celle du joueur aussi, pour qui marche dans un récit), sauf la case visée ; si
+  // la case visée n'est plus joignable ainsi, le chemin se refait sans eux (celui qu'on pousse fera un pas de côté)
+  W.route = function (x1, y1, from, sansCorps) {
     const m = W.map, p = from || W.player, w = m.w, sx = I.clamp(Math.floor(p.x / T), 0, w - 1), sy = I.clamp(Math.floor((p.y - 2) / T), 0, m.h - 1), ex = I.clamp(Math.floor(x1 / T), 0, w - 1), ey = I.clamp(Math.floor((y1 - 2) / T), 0, m.h - 1);
-    const s = sy * w + sx, prev = new Int32Array(w * m.h).fill(-1), q = new Int32Array(w * m.h); let qh = 0, qt = 0, best = s, bd = 1e9;
+    const s = sy * w + sx, e0 = ey * w + ex, prev = new Int32Array(w * m.h).fill(-1), q = new Int32Array(w * m.h); let qh = 0, qt = 0, best = s, bd = 1e9, plein = null;
+    if (!sansCorps) { plein = new Uint8Array(w * m.h); const met = e => { if (e === p) return; const i = Math.floor((e.y - 2) / T) * w + Math.floor(e.x / T); if (i >= 0 && i < plein.length && i !== s && i !== e0) plein[i] = 1; };
+      corps().forEach(met); if (p !== W.player) met(W.player); }
     prev[s] = s; q[qt++] = s;
     while (qh < qt) {
       const i = q[qh++], x = i % w, y = (i - x) / w, d = (x - ex) * (x - ex) + (y - ey) * (y - ey);
       if (d < bd) { bd = d; best = i; if (!d) break; }
-      for (let k = 0; k < 4; k++) { const nx = x + DX[k], ny = y + DY[k]; if (nx < 0 || ny < 0 || nx >= w || ny >= m.h) continue; const j = ny * w + nx; if (prev[j] >= 0 || m.solid[j]) continue; prev[j] = i; q[qt++] = j; }
+      for (let k = 0; k < 4; k++) { const nx = x + DX[k], ny = y + DY[k]; if (nx < 0 || ny < 0 || nx >= w || ny >= m.h) continue; const j = ny * w + nx; if (prev[j] >= 0 || m.solid[j] || (plein && plein[j])) continue; prev[j] = i; q[qt++] = j; }
     }
     const path = []; for (let i = best; prev[i] !== i; i = prev[i]) path.unshift([(i % w) * T + 8, Math.floor(i / w) * T + 11]);
+    if (bd > 0 && !sansCorps) { const autre = W.route(x1, y1, from, true), fin = autre.length ? autre[autre.length - 1] : [p.x, p.y + 2], dfin = (Math.floor(fin[0] / T) - ex) ** 2 + (Math.floor((fin[1] - 2) / T) - ey) ** 2; if (dfin < bd) return autre; }
     return path;
   };
   // o : { ent (cible mobile), stop (distance d'arrêt), then (à l'arrivée), quiet (pas de repère au sol) }
   W.goTo = function (x, y, o) {
     o = o || {}; const p = W.player, path = W.route(x, y);
     if (!o.ent && !o.then && boxFree(x, y)) { const l = path.length ? path[path.length - 1] : [p.x, p.y]; if (Math.hypot(l[0] - x, l[1] - y) < 14) path.push([x, y]); } // jusqu'au point exact, s'il est libre
-    W.dest = { x, y, path, ent: o.ent || null, stop: o.stop || 0, then: o.then || null, mark: !o.quiet && !o.ent, stall: 0, raw: false };
+    W.dest = { x, y, path, ent: o.ent || null, stop: o.stop || 0, then: o.then || null, mark: !o.quiet && !o.ent, stall: 0, raw: false, course: !!o.course }; // course : choisi d'un double toucher (2.16)
   };
   W.stop = function () { if (W.dest) { W.dest = null; W.player.moving = false; } };
   function follow(dt) {
@@ -394,17 +487,22 @@
     if (d.ent) { if (d.ent.hidden || d.ent.done || d.ent.map !== W.map.id) return W.stop(); if (Math.hypot(d.ent.x - d.x, d.ent.y - d.y) > 12) { d.x = d.ent.x; d.y = d.ent.y; d.path = W.route(d.x, d.y); } }
     const arrive = () => { const th = d.then; W.dest = null; p.moving = false; if (th) th(); };
     if (d.stop && Math.hypot(d.x - p.x, d.y - p.y) <= d.stop) return arrive();
-    if (!d.raw) for (let j = Math.min(d.path.length - 1, 6); j > 0; j--) if (clearLine(p.x, p.y, d.path[j][0], d.path[j][1])) { d.path.splice(0, j); break; }
+    const LC = corps();
+    if (!d.raw) for (let j = Math.min(d.path.length - 1, 6); j > 0; j--) if (clearLine(p.x, p.y, d.path[j][0], d.path[j][1], LC)) { d.path.splice(0, j); break; }
     while (d.path.length && Math.hypot(d.path[0][0] - p.x, d.path[0][1] - p.y) < 1.2) d.path.shift();
     if (!d.path.length) return arrive();
-    const wp = d.path[0], vx = wp[0] - p.x, vy = wp[1] - p.y, L = Math.hypot(vx, vy), sp = Math.min(L, 82 * dt * (crowded() ? 0.55 : 1)), mx = vx / L * sp, my = vy / L * sp, x0 = p.x, y0 = p.y;
-    if (boxFree(p.x + mx, p.y + my)) { p.x += mx; p.y += my; } else { tryMove(mx, 0); tryMove(0, my); }
+    const wp = d.path[0], vx = wp[0] - p.x, vy = wp[1] - p.y, L = Math.hypot(vx, vy), sp = Math.min(L, VITESSE * dt * (d.course ? COURSE : 1)), mx = vx / L * sp, my = vy / L * sp, x0 = p.x, y0 = p.y;
+    if (!tryMove(mx, my)) { tryMove(mx, 0); tryMove(0, my); }
     const moved = Math.hypot(p.x - x0, p.y - y0);
     if (Math.abs(vx) > Math.abs(vy) * 1.25) p.dir = vx < 0 ? 1 : 2; else if (Math.abs(vy) > Math.abs(vx) * 1.25) p.dir = vy < 0 ? 3 : 0;
-    p.moving = moved > 0.01;
-    if (p.moving) { pushTrail(); if (Math.floor(W.t * 5) !== Math.floor((W.t - dt) * 5)) I.audio.sfx('step'); }
-    if (moved < sp * 0.3) { if (++d.stall > 14) { if (d.raw) return arrive(); d.raw = true; d.stall = 0; d.path = W.route(d.x, d.y); } } else d.stall = 0;
+    p.moving = moved > 0.01; p.court = p.moving && !!d.course;
+    if (p.moving) { pushTrail(); pas(dt); }
+    // buter sur quelqu'un qui va faire un pas de côté n'est pas être coincé (sauf s'il n'a pu s'écarter)
+    const pousse = W._heurte && W.npcs.includes(W._heurte) && !(W._heurte._coince > W.t - 1.5);
+    if (moved < sp * 0.3 && !pousse) { if (++d.stall > 14) { if (d.raw) return arrive(); d.raw = true; d.stall = 0; d.path = W.route(d.x, d.y); } } else d.stall = 0;
   }
+  // le bruit des pas : cinq par seconde en marchant, huit en courant (la foulée suit l'allure)
+  function pas(dt) { const r = W.player.court ? 8 : 5; if (Math.floor(W.t * r) !== Math.floor((W.t - dt) * r)) I.audio.sfx('step'); }
   // conduit le héros jusqu'à l'objectif : l'aide « M'y conduire », et le test « au doigt »
   W.lead = function () {
     const tg = W.target(), p = W.player; if (!tg) return false;
@@ -426,8 +524,15 @@
     if (++st.n > 60000 || st.led > 12) { log.push('COINCÉ (au doigt) ' + key + ' à ' + Math.round(Math.hypot(tg.gx - p.x, tg.gy - p.y)) + ' px'); p.x = tg.gx; p.y = tg.gy + (tg.kind === 'goto' ? 0 : 14); W.resetTrail(); W.dest = null; st.key = null; if (tg.kind === 'talk') W.complete(); return; }
     if (!W.dest) { st.led++; W.lead(); }
   };
-  // un toucher sur la scène, en coordonnées de la carte : aller là, parler à celui qu'on touche, agir sur ce qu'on touche
-  W.tap = function (wx, wy) { if (W.excursion && I.rodeurs.touche(arguments[0], arguments[1])) return;
+  // un toucher sur la scène, en coordonnées de la carte : aller là, parler à celui qu'on touche, agir sur ce qu'on touche.
+  // 2.16 : deux touchers rapprochés (moins de 0,35 s, au même endroit) — ou « double », dit par la scène — font courir
+  W.tap = function (wx, wy, double) {
+    const t = performance.now(), t1 = W._toucher1; W._toucher1 = { t, x: wx, y: wy };
+    const course = !!double || !!(t1 && t - t1.t < 350 && Math.hypot(wx - t1.x, wy - t1.y) < 24), r = toucher(wx, wy);
+    if (course && W.dest) W.dest.course = true;
+    return r;
+  };
+  function toucher(wx, wy) { if (W.excursion && I.rodeurs.touche(wx, wy)) return;
     if (I.scene !== W || S.busy || W.lock || I.ui.menuOpen || I.debug.auto || I.debug.walk) return false;
     const p = W.player, m = W.map, here = e => !e.hidden && e.map === m.id && e.placed;
     { const r = W.miniRect, sx = wx - Math.round(W.cam.x), sy = wy - Math.round(W.cam.y); if (r && sx >= r[0] && sx <= r[0] + r[2] && sy >= r[1] && sy <= r[1] + r[3]) { W.stop(); I.ui.pause('carte'); return true; } }
@@ -466,12 +571,15 @@
     return false;
   };
   // tests « à pied » : pilote le héros au clavier simulé le long d'un chemin, avec la vraie physique
-  W.pathTo = function (x0, y0, x1, y1) {
+  // 2.16 : comme un joueur, il passe à côté des PNJ et des coffres (leur case compte comme pleine, sauf celle visée) ; s'il
+  // n'y a pas d'autre passage, il va droit (celui qu'il pousse fera un pas de côté)
+  W.pathTo = function (x0, y0, x1, y1, sansCorps) {
     const m = W.map, sx = Math.floor(x0 / 16), sy = Math.floor((y0 - 2) / 16), ex = Math.floor(x1 / 16), ey = Math.floor((y1 - 2) / 16);
+    const plein = new Uint8Array(m.w * m.h); if (!sansCorps) corps().forEach(e => { const i = Math.floor((e.y - 2) / 16) * m.w + Math.floor(e.x / 16); if (i >= 0 && i < plein.length && i !== sy * m.w + sx && i !== ey * m.w + ex) plein[i] = 1; });
     const prev = new Int32Array(m.w * m.h).fill(-1), q = [sy * m.w + sx]; prev[sy * m.w + sx] = sy * m.w + sx; let end = -1;
     while (q.length) { const i = q.shift(), x = i % m.w, y = (i - x) / m.w; if (Math.abs(x - ex) + Math.abs(y - ey) <= 1) { end = i; break; }
-      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= m.w || ny >= m.h) continue; const j = ny * m.w + nx; if (prev[j] >= 0 || m.solid[j]) continue; prev[j] = i; q.push(j); } }
-    if (end < 0) return null; const path = []; for (let i = end; prev[i] !== i; i = prev[i]) path.unshift([(i % m.w) * 16 + 8, Math.floor(i / m.w) * 16 + 11]); return path;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= m.w || ny >= m.h) continue; const j = ny * m.w + nx; if (prev[j] >= 0 || m.solid[j] || plein[j]) continue; prev[j] = i; q.push(j); } }
+    if (end < 0) return sansCorps ? null : W.pathTo(x0, y0, x1, y1, true); const path = []; for (let i = end; prev[i] !== i; i = prev[i]) path.unshift([(i % m.w) * 16 + 8, Math.floor(i / m.w) * 16 + 11]); return path;
   };
   W.walkStep = function () {
     const o = W.cur(), p = W.player, h = I.input.held, log = I.debug.log || (I.debug.log = []), st = W._walk || (W._walk = {});
@@ -483,12 +591,14 @@
     if (o.goto) { const sp = W.spotPx(o.goto); if (!sp) return; tx = sp[0]; ty = sp[1]; }
     else if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); if (!n || n.hidden || n.map !== W.map.id || !n.placed) { if (st.key !== key) { st.key = key; log.push(`PNJ ABSENT ${key} ${o.talk}`); } W.complete(); return; } tx = n.x; ty = n.y; }
     else { const f = W.foes.find(f => f.id === o.foe); if (!f || f.map !== W.map.id || !f.placed) { if (st.key !== key) { st.key = key; log.push(`FOE ABSENT ${key} ${o.foe}`); } if (f) f.done = true; W.complete(); return; } tx = f.x; ty = f.y; }
-    if (st.key !== key) { st.key = key; st.path = W.pathTo(p.x, p.y, tx, ty); st.t = 0; st.best = 1e9; st.stall = 0; if (!st.path) { log.push(`SANS CHEMIN ${key} ${kind}`); } }
+    if (st.key !== key) { st.key = key; st.path = W.pathTo(p.x, p.y, tx, ty); st.t = 0; st.best = 1e9; st.stall = 0; st.detours = 0; if (!st.path) { log.push(`SANS CHEMIN ${key} ${kind}`); } }
     st.t++;
     const d = Math.hypot(tx - p.x, ty - p.y);
     if (kind === 'talk' && d < 26) { const dx = tx - p.x, dy = ty - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); const before = W.objIndex; W.interact(); if (W.objIndex === before && !S.busy) { if (!st.miss) { st.miss = 1; } } return; }
     const prog = st.path ? st.path.length * 16 + (st.path.length ? Math.hypot(st.path[0][0] - p.x, st.path[0][1] - p.y) : d) : d;
     if (prog < st.best - 0.5) { st.best = prog; st.stall = 0; } else st.stall++;
+    // 2.16 : arrêté plus d'une seconde et demie (quelqu'un s'est mis en travers), il cherche un autre chemin — trois fois au plus
+    if (st.stall === 90 && (st.detours || 0) < 3 && st.path) { st.detours = (st.detours || 0) + 1; st.path = W.pathTo(p.x, p.y, tx, ty) || st.path; st.best = 1e9; st.stall = 0; }
     if (!st.path || st.stall > 300 || st.t > 30000) { log.push(`COINCÉ ${key} ${kind} à ${Math.round(d)} px (${st.path ? 'chemin trouvé' : 'aucun chemin'})`); p.x = tx; p.y = ty + (kind === 'goto' ? 0 : 14); W.resetTrail(); st.key = null; if (kind === 'talk') W.complete(); return; }
     while (st.path.length > 1 && Math.hypot(st.path[0][0] - p.x, st.path[0][1] - p.y) < 3) st.path.shift();
     const wp = st.path.length ? st.path[0] : [tx, ty], wx = st.path.length > 1 || kind !== 'goto' ? wp[0] : tx, wy = st.path.length > 1 || kind !== 'goto' ? wp[1] : ty;
@@ -532,8 +642,9 @@
   /* ----- rendu ----- */
   const POUSSIERE = { sand: '#ecd9aa', dune: '#ecd9aa', path: '#d8be8e' }; // les sols qui lèvent de la poussière, en dessin fin
   // geste : { anim, port, tau } — celui qui frappe (R.geste) ; le dessin fin seul le connaît.
-  function drawChar(c, sheet, x, y, dir, moving, t, aura, pose, geste) {
-    let f = moving ? [1, 0, 2, 0][Math.floor(t * 8) % 4] : 0;
+  // court : il court (2.16) — la foulée va 1,6 fois plus vite et, de profil, le buste se penche d'un point vers l'avant
+  function drawChar(c, sheet, x, y, dir, moving, t, aura, pose, geste, court) {
+    let f = moving ? [1, 0, 2, 0][Math.floor(t * (court ? 12.8 : 8)) % 4] : 0;
     x = G.cale(x); y = G.cale(y);
     c.fillStyle = 'rgba(20,12,30,.32)'; c.beginPath(); c.ellipse(x, y + 1, 6, 2.5, 0, 0, 6.3); c.fill();
     if (geste && sheet.look && G.frappe && G.frappe(c, sheet.look, dir, x - 8, y - 22, geste, geste.tau, 'carte')) return;
@@ -542,6 +653,8 @@
     // en dessin fin : immobile, il respire (une image sur quatre, à son rythme) ; en marche, le corps se hausse d'un point
     // quand les jambes se croisent et se pose quand le pied touche le sol
     if (!moving && Math.sin(t * 2.3) > 0.42) f = 3;
+    if (moving && court && (dir === 1 || dir === 2)) { const y0 = y - 22 - (!f ? 0.5 : 0), taille = 16; // le buste, au-dessus de la taille, avancé d'un point ; les jambes en place
+      c.drawImage(sheet, f * 16, dir * 24 + taille, 16, 24 - taille, x - 8, y0 + taille, 16, 24 - taille); c.drawImage(sheet, f * 16, dir * 24, 16, taille, x - 8 + (dir === 1 ? -0.5 : 0.5), y0, 16, taille); return; }
     c.drawImage(sheet, f * 16, dir * 24, 16, 24, x - 8, y - 22 - (moving && !f ? 0.5 : 0), 16, 24);
   }
   W.drawChar = drawChar;
@@ -572,24 +685,24 @@
     W.npcs.forEach(n => { if (!n.hidden && n.map === m.id && n.placed) list.push({ y: n.y, n }); });
     W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) list.push({ y: f.y, f }); });
     W.chests.forEach(ch => { if (ch.map === m.id && ch.placed) list.push({ y: ch.y, ch }); });
-    for (let i = W.party.length - 1; i >= 1; i--) { const tr = W.trail[Math.min(W.trail.length - 1, i * 13)]; if (tr) list.push({ y: tr[1] - 0.1, fol: i, tr }); }
+    for (let i = W.party.length - 1; i >= 1; i--) { const tr = W.suiveur(i); if (tr) list.push({ y: tr[1] - 0.1, fol: i, tr }); }
     list.push({ y: W.player.y, p: true });
-    const bete = W.saga.frame && I.oeuvres.animal(), btr = bete && W.trail[Math.min(W.trail.length - 1, W.party.length * 13 + 8)];
+    const bete = W.saga.frame && I.oeuvres.animal(), btr = bete && W.suiveur(0, W.party.length * ECART + 8);
     if (btr) list.push({ y: btr[1] - 0.2, bete, tr: btr }); // figure du ciel : seulement dans la fiction (Cité-Miroir, Citadelle)
     list.sort((a, b) => a.y - b.y);
     const lights = [];
     for (const e of list) {
       if (e.o) { const o = e.o; c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2) - cx, o.y - o.h + 1 - cy); if (o.anim) drawFlame(c, o.x - cx, o.y - cy - (o.type === 'brazier' ? 10 : 3), t + o.seed, o.type === 'fire'); if (G.OBJ[o.type].herd) I.build.herd(c, o, o.x - cx, o.y - cy, t); }
       else if (e.n) { const n = e.n; if (n.ph === undefined) n.ph = (I.hash((n.id || n.name || '') + '|' + (n.map || '')) >>> 0) % 628 / 100; /* chacun respire à son rythme */ drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t + n.ph, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
-      else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = f.sonne > 0 ? 0.4 + Math.sin(t * 22) * 0.12 : 0.86 + Math.sin(t * 5 + f.ph) * 0.12; c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; if (f.rodeur && (f.voiles > 0 || f.tenue > 0) && (f.meute || f.tenue !== undefined)) { const nv = Math.ceil(f.meute ? f.voiles : f.tenue); c.fillStyle = f.sonne > 0 ? '#fff3c8' : `hsl(${d.hue},90%,78%)`; for (let i = 0; i < nv; i++) c.fillRect(Math.round(f.x - cx - nv * 2 + i * 4 + 1), Math.round(f.y - cy - s - 7 + bob), 2, 2); } /* ce qui rôde : ses voiles, et le tremblement de qui vient d'être frappé */ lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
+      else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = f.sonne > 0 ? 0.4 + Math.sin(t * 22) * 0.12 : 0.85 + (Math.sin(t * 5 + f.ph) + 1) * 0.06; /* 2.16 : un plancher de 0,85 — encore un peu de transparence : ce n'est pas une personne (exigence 6) */ c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; if (f.rodeur && (f.voiles > 0 || f.tenue > 0) && (f.meute || f.tenue !== undefined)) { const nv = Math.ceil(f.meute ? f.voiles : f.tenue); c.fillStyle = f.sonne > 0 ? '#fff3c8' : `hsl(${d.hue},90%,78%)`; for (let i = 0; i < nv; i++) c.fillRect(Math.round(f.x - cx - nv * 2 + i * 4 + 1), Math.round(f.y - cy - s - 7 + bob), 2, 2); } /* ce qui rôde : ses voiles, et le tremblement de qui vient d'être frappé */ lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
-      else if (e.bete) { const tr = e.tr, im = I.oeuvres.bete(e.bete, true), bx = Math.round(tr[0] - cx), by = Math.round(tr[1] - cy - im.height - 1 + Math.sin(t * 3) * 1.2); c.globalAlpha = 0.92; if (tr[2] === 2) { c.save(); c.translate(bx, 0); c.scale(-1, 1); c.drawImage(im, -Math.round(im.width / 2), by); c.restore(); } else c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 24, color: (I.sagas.coeur.animaux[e.bete] || {}).couleur || '#ffe9a8', a: 0.7 }); }
-      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null)); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (lueur(W.saga.heroes[W.party[e.fol]].look) || '#ffe9a8'), a: 0.4 }); }
+      else if (e.bete) { const tr = e.tr, im = I.oeuvres.bete(e.bete, true), bx = Math.round(tr[0] - cx), by = Math.round(tr[1] - cy - im.height - 1 + Math.sin(t * 3) * 1.2); if (tr[2] === 2) { c.save(); c.translate(bx, 0); c.scale(-1, 1); c.drawImage(im, -Math.round(im.width / 2), by); c.restore(); } else c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 24, color: (I.sagas.coeur.animaux[e.bete] || {}).couleur || '#ffe9a8', a: 0.7 }); }
+      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null), null, W.player.court); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (lueur(W.saga.heroes[W.party[e.fol]].look) || '#ffe9a8'), a: 0.4 }); }
       else if (e.p) { const p = W.player;
         if (G.D > 1 && p.moving && !G.low && POUSSIERE[m.g0 ? m.g0(p.x, p.y) : ''] && Math.random() < 0.3) G.spawn({ x: p.x - cx + (Math.random() - 0.5) * 6, y: p.y - cy + 1, vx: (Math.random() - 0.5) * 10, vy: -4 - Math.random() * 5, life: 0.5 + Math.random() * 0.3, size: 0.6 + Math.random() * 0.5, color: POUSSIERE[m.g0(p.x, p.y)], a: 0.3, type: 'mote', blend: 'source-over' }); // la poussière sous les pas
         const rg = I.rodeurs && I.rodeurs.geste, tau = rg ? W.t - rg.t : -1, gt = rg && D.GEAR_TYPES[rg.type];   // celui qui mène frappe : l'élan, le coup, l'arme en main (s'il repart, le geste s'efface après le coup)
         const frappe = rg && tau >= 0 && tau < (p.moving ? G.FRAPPE.elan + G.FRAPPE.balai : G.dureeFrappe) ? { anim: (gt && gt.anim) || 'geste', port: (rg.port !== undefined ? rg.port : gt && gt.port) || null, tau } : null;
-        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe); const lk = W.saga.heroes[W.party[0]].look; if (D.DE_2084.indexOf(lk.kind) < 0) lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe, p.court); const lk = W.saga.heroes[W.party[0]].look; if (D.DE_2084.indexOf(lk.kind) < 0) lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {

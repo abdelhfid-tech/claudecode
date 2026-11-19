@@ -502,8 +502,20 @@ Sur un écran tactile (`body.touch`), pendant l'exploration :
 - **dans toutes les langues**, la manette garde ses places (`#pad { direction: ltr }`) : en arabe, la page va de droite à
   gauche, mais les pouces ne changent pas de main.
 
-Contrôles : `descente.js` (A et B, B qui s'éclaire, le pouce sur B, téléphone en hauteur et en largeur) et `doigt.js`
-(le joystick fait marcher dans les quatre directions ; lâché, on s'arrête).
+**Courir** (2.16 ; demande du décideur, 19 novembre : « il faut que les personnages puissent courir » ; choix « joystick
+au bord ») : le pouce tiré au-delà de 85 % du rayon du cercle (`viser`, `I.input.course`) fait courir — le cercle
+s'éclaire (`.joy.court`) ; plus près du centre, on marche. Au clavier, Maj tenue (`I.input.maj`, suivie à part dans
+`base.js` : ce n'est l'action d'aucune touche, et Maj + Entrée valide toujours) ; au doigt ou à la souris, deux touchers
+rapprochés sur la scène (moins de 0,35 s, au même endroit : `W.tap(x, y, double)`, `W.dest.course`), et le second,
+maintenu, fait suivre le doigt en courant. La course va 1,75 fois plus vite que la marche (`W.VITESSE` 82 points par
+seconde, `W.COURSE`) ; la foulée suit l'allure (« Le mouvement »). Ce n'est pas une décision mais une allure : aucune
+leçon ne l'apprend (`lecons.js` n'en sait rien) ; la ligne du réglage « Manette tactile » et l'aide « Se déplacer, agir »
+le disent. Le chrono des labyrinthes compte le temps, pas le chemin : la course ne le presse pas ; elle ne change ni ce
+qui rôde ni les combats.
+
+Contrôles : `descente.js` (A et B, B qui s'éclaire, le pouce sur B, téléphone en hauteur et en largeur ; Maj au clavier :
+on court, et le chrono court au même pas) et `doigt.js` (le joystick fait marcher dans les quatre directions ; lâché, on
+s'arrête ; au bord, on court plus d'une fois et demie plus vite qu'à la marche ; au milieu, on marche).
 
 ## La définition du dessin : `src/core/gfx.js`
 
@@ -906,6 +918,59 @@ frappent (comme dans Chrono Trigger), sinon ils sont trop inanimés » (D166).*
 - **Où.** En combat (`battle.js`, `perform`) : quelques pas, le geste à chaque coup de « Frapper » ou d'« Éclairer »,
   le retour. Dans un labyrinthe (`rodeurs.js`, `R.geste` ; `world.js`, `drawChar`) : le geste de celui qui mène, avec
   l'arme qu'il porte. Le dessin d'origine garde les pas de la 1.32 sur les cartes, et lève le bras comme avant.
+- **La course** (2.16, « La manette tactile ») : la foulée va 1,6 fois plus vite (`drawChar(…, court)`) et, de profil, le
+  buste se penche d'un point vers l'avant — à l'affichage seulement : `drawChar` pose le haut de l'image (au-dessus de la
+  taille) un point plus loin que les jambes ; aucun gabarit ne change. Les pas s'entendent huit fois par seconde au lieu
+  de cinq.
+
+### Des corps, et non des fantômes (2.16)
+
+*Le décideur, devant la 2.15 : « les personnages se croisent comme des fantômes » (diagnostic : seul le décor avait un
+corps ; les suiveurs n'étaient que d'anciennes positions du meneur, un point par image ; `W.resolve` pouvait poser le
+joueur sur un PNJ ; en combat, en hauteur, les héros se recouvraient). D198.*
+
+- **Les suiveurs à distance fixe.** Le chemin du meneur (`W.trail`) se mesure en distance parcourue : un point chaque
+  fois qu'il a avancé d'un point et demi, au moins cent quarante points gardés (`pushTrail`). `W.suiveur(i)` rend le
+  point situé à `16 × i` points de chemin derrière lui, interpolé : seize points entre chacun, à 30, 60, 120 ou 144
+  images par seconde (avant, 17,8 points à 60, 8,9 à 120). La bête suit à `16 × n + 8`. Les étiquettes (`U.noms`) et le
+  dessin lisent la même fonction ; les shorts qui écrivent `W.trail` eux-mêmes (un point tous les 1,25 point) gardent le
+  même placement. Au chargement d'un lieu, `W.resetTrail` sème le chemin derrière le meneur, à l'opposé de son regard : un
+  mur le fait tourner, jamais revenir sur ses pas ; un mur sans issue ou un corps l'arrête. Les suiveurs restent sans
+  corps : ils ne bloquent personne.
+- **Un corps pour les PNJ et les coffres, contre le joueur.** Un pied de 10 × 5, calé sur l'ombre (x ± 5, de y − 4 à
+  y + 1), contre celui du joueur (x ± 4, de y − 5 à y) : `W.corps()`, `W.touche()`, testés par `tryMove` (clavier,
+  joystick) et par `follow` (au doigt). Un pas n'est refusé que s'il rapproche d'un corps qu'il toucherait : on peut
+  toujours s'en écarter, et un joueur repris sur quelqu'un en ressort. L'ancien ralentissement (`crowded()`) n'existe
+  plus. `W.resolve` ne pose plus jamais le joueur sur quelqu'un (le bureau de Maître Yûnus, `frame.js`), et
+  `W.degager()` l'écarte d'un corps au chargement (une partie d'avant).
+- **Le chemin au doigt** (`W.route`) : la case d'un PNJ ou d'un coffre compte comme pleine, sauf la case visée ; si la
+  case visée n'est plus joignable ainsi, le chemin se refait sans eux. Les raccourcis (`clearLine`) ne traversent pas un
+  corps.
+- **Le pas de côté.** Un PNJ poussé plus de 0,4 s fait un pas d'une case vers une case libre : sur le côté d'abord (le
+  plus loin du joueur), puis devant lui, jamais vers celui qui pousse ni sur le chemin qu'il suit (`pasDeCote`). Sa
+  place est gardée au point de reprise, comme avant. Buter sur quelqu'un qui va s'écarter n'est pas être coincé
+  (`follow` ne compte pas ces images).
+- **Les marches de récit** (`W.walkTo`, `W.chemin`) suivent `W.route` case par case, en segments horizontaux et
+  verticaux, chacun avec le bon sens du personnage ; elles contournent le joueur et les autres quand c'est possible. Leur
+  durée est bornée à trois fois celle de la ligne droite d'avant (le pas s'allonge au besoin) ; sans chemin jusqu'à la
+  case, la ligne droite d'avant.
+- **Les chimères de la carte** ne s'approchent plus à moins de douze points d'un PNJ ni d'une autre chimère ; dans les
+  labyrinthes, un rôdeur ne choisit jamais la case qu'un autre occupe ou vise (`rodeurs.js`, `avance`). Le contact avec
+  le joueur reste ce qui ouvre le combat : ni l'un ni l'autre n'a de corps pour lui. Leur transparence a un plancher de
+  0,85 (elle allait de 0,74 à 0,98) : elle dit encore qu'elles ne sont pas des personnes (exigence 6). La bête du ciel
+  est opaque.
+- **En combat, en hauteur**, les héros se resserrent autour du centre de leur groupe, et non du centre de l'écran
+  (`battle.js`, `heroPos`) : vingt-six points d'écart en largeur, dix-huit en profondeur, en escalier (avant : vingt
+  points pour des figures de trente-deux). En largeur, rien ne change.
+- **« 2D simple »** (`gfx.js`, `G.low`) tient ce que son texte promet : le pixel art seul, sans ambiance ni lueurs, sans
+  halo, sans étalonnage ni vignette (avant, il gardait l'ambiance, l'étalonnage et la vignette).
+
+Contrôles : `smoke.js walk` et `tap` (« SUPERPOSÉ » : le joueur reste plus de trente pas dans le pied de quelqu'un, ou un
+lieu se charge avec quelqu'un à moins de 9 points de lui ; « COINCÉ ») ; `smoke.js auto` (« PNJ EN TRAVERS » : à chaque
+point de reprise, la case d'un PNJ ou d'un coffre, rendue pleine, ne coupe aucun lieu nommé — sauf si son pas de côté
+rouvre le passage, ce que le journal dit sans alerte) ; `smoke.js suiveurs` (l'écart à quatre cadences, chaque lieu de
+départ, la reprise au bureau, les marches de récit jouées pour de vrai : « SUIVEURS CONFORMES ») ; `loupe.js` (en
+combat, aucun corps de héros n'en recouvre un autre de plus de quatre points).
 
 ### Le rayonnement d'un Compagnon
 
@@ -1108,7 +1173,8 @@ node v2/tools/silhouettes.js planches [modèles.png]   # planches agrandies dans
 node v2/tools/silhouettes.js redessin « décision »   # un nouveau dessin validé devient la référence des grands (le contrôle entier d'abord)
 node v2/tools/loupe.js               # « LOUPE CONFORME » : sur un téléphone, l'image agrandie, le toucher juste, les textes lisibles
 node v2/tools/partage.js             # « PARTAGE CONFORME » : partager sa progression — le bouton, l'image, le texte, les replis, quatre langues
-node v2/tools/smoke.js auto          # et walk, tap, wrong, shots — comme en 1.32
+node v2/tools/smoke.js auto          # et walk, tap, wrong, shots — comme en 1.32 (2.16 : « PNJ EN TRAVERS », « SUPERPOSÉ », « COINCÉ »)
+node v2/tools/smoke.js suiveurs      # « SUIVEURS CONFORMES » (2.16) : seize points entre les siens à toute cadence, personne sur personne, les marches de récit
 node v2/tools/doigt.js [loin [844x390]]
 node v2/tools/son.js
 node v2/tools/bataille.js [mesures]
@@ -1120,4 +1186,4 @@ node v2/tools/bilingue.js [fr-ar …] [390x844 844x390]   # « BILINGUE CONFORME
 `paquet.js`, `partie.js`, `personnage.js`, `silhouettes.js`, `dedales.js`, `descente.js`,
 `retours.js`, `progression.js`, `loupe.js`, `bilingue.js` et `partage.js` ; la liste, et ce que chacun doit afficher, est dans
 `AGENTS.md`. Aucun ne doit finir sur « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT » ni
-« ÉCART ».
+« ÉCART » ; depuis la 2.16, ni sur « SUPERPOSÉ », « COINCÉ » ou « PNJ EN TRAVERS ».

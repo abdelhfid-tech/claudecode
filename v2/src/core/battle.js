@@ -64,8 +64,14 @@
   const HERO_POS = [[270, 120], [306, 132], [342, 144]];
   // écran en hauteur : la fenêtre visible est plus étroite, les deux camps se rapprochent du centre
   const bx = x => G.view.w < G.PW ? Math.round(G.PW / 2 + (x - G.PW / 2) * I.clamp((G.view.w - 20) / 350, 0.5, 1)) : x;
+  // 2.16 — en hauteur, les héros se resserrent autour du centre de leur groupe, et non du centre de l'écran : resserrés comme
+  // les autres, ils n'étaient plus qu'à vingt points l'un de l'autre pour des figures de trente-deux, et se recouvraient.
+  // Ils gardent vingt-six points d'écart en largeur et s'étagent davantage en profondeur (dix-huit points au lieu de douze).
+  const HERO_MID = HERO_POS[1];
+  const heroPos = (x0, y0) => { if (!(G.view.w < G.PW)) return [x0, y0]; const k = I.clamp((G.view.w - 20) / 350, 0.5, 1); if (k >= 1) return [x0, y0];
+    const c = bx(HERO_MID[0]), f = 1 - (1 - k) * 0.63; return [Math.round(c + (x0 - HERO_MID[0]) * f), Math.round(HERO_MID[1] + (y0 - HERO_MID[1]) * (1 + (1 - k) * 1.14))]; };
   const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
-  B.relayout = function () { if (!C) return; C.all.forEach(e => { e.x = bx(e.x0); }); refresh(); };
+  B.relayout = function () { if (!C) return; C.all.forEach(e => { if (e.side === 'hero' && e.y0 !== undefined) { const q = heroPos(e.x0, e.y0); e.x = q[0]; e.y = q[1]; } else e.x = bx(e.x0); }); refresh(); };
   B.champ = () => (C && C.champ) || null; // le champ de la bataille en cours, pour les outils de test
   let chef = null; // celui sur qui se règle le niveau des égrégores communs : le premier du groupe qui combat
   function mkHero(x, i) {
@@ -73,7 +79,7 @@
     const po = I.postures ? I.postures.de(h) : null, Pe = (po && D.POSTURES[po]) || {}; // 2.x : la posture qu'il a prise règle un peu le combat (D.POSTURES)
     return { side: 'hero', id, name: h.def.name, def: h.def, ref: h, lvl: h.lvl, max: { hp: st.hp, sp: st.sp }, hp: Math.min(h.hp, st.hp), sp: Math.min(h.sp, st.sp), atk: Pe.atk ? Math.round(st.atk * (1 + Pe.atk)) : st.atk, mag: Pe.mag ? Math.round(st.mag * (1 + Pe.mag)) : st.mag, df: st.def, spd: st.spd,
       posture: po, soin: Pe.soin || 0, menace: Pe.menace || 0,
-      buffs: {}, st: {}, niyya: 1 + (Pe.niyya || 0), sakina: Math.min(100, (h.sakina || 0) + (Pe.sakina || 0)), x: bx(HERO_POS[i][0]), x0: HERO_POS[i][0], y: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.planche(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, ray: (G.D > 1 && h.def.look && h.def.look.rayon) || D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) }; // ray : la couleur à laquelle on le reconnaît (son rayonnement, en dessin fin) ; color : celle de sa Lumière, pour les effets
+      buffs: {}, st: {}, niyya: 1 + (Pe.niyya || 0), sakina: Math.min(100, (h.sakina || 0) + (Pe.sakina || 0)), x: heroPos(HERO_POS[i][0], HERO_POS[i][1])[0], x0: HERO_POS[i][0], y: heroPos(HERO_POS[i][0], HERO_POS[i][1])[1], y0: HERO_POS[i][1], ox: 0, flash: 0, ct: 0, alive: h.hp > 0, sheet: G.planche(I.gear.look(h)), color: D.ELEMENTS[h.def.el].color, ray: (G.D > 1 && h.def.look && h.def.look.rayon) || D.ELEMENTS[h.def.el].color, gear: I.gear.traits(h) }; // ray : la couleur à laquelle on le reconnaît (son rayonnement, en dessin fin) ; color : celle de sa Lumière, pour les effets
   }
   // égrégore de la saga, ou égrégore commun des routes (niveau calé sur le groupe)
   function foeDef(id) { const W = I.world, d = W.saga.enemies[id] || (I.common && I.common.enemies[id]); return d && !d.lvl ? Object.assign({}, d, { lvl: Math.max(1, (chef || W.hero(W.party[0])).lvl) }) : d; }

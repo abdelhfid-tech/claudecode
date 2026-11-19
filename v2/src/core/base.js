@@ -103,7 +103,8 @@
     push(fn) { stack.push(fn); return fn; },
     pop(fn) { const i = stack.lastIndexOf(fn); if (i >= 0) stack.splice(i, 1); },
     emit,
-    clearHeld() { held.up = held.down = held.left = held.right = false; },
+    clearHeld() { held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; },
+    maj: false, course: false, // 2.16 : Maj tenue ; le joystick poussé au bord (ui.js) — l'un ou l'autre fait courir
     // secours : on ne garde que l'écouteur du monde (le premier posé), les autres appartenaient à une suite interrompue
     mark() { return stack.length; }, trim(n) { if (stack.length > n) stack.length = Math.max(1, n); }, reset() { stack.length = Math.min(stack.length, 1); held.up = held.down = held.left = held.right = false; },
     // attend une action OU un délai ; l'écouteur est toujours retiré (sinon il avalerait les touches suivantes)
@@ -131,6 +132,10 @@
   });
   window.addEventListener('keyup', e => { const a = KEY[e.code]; if (a && a in held) held[a] = false; });
   window.addEventListener('blur', () => I.input.clearHeld());
+  // 2.16 — Maj tenue fait courir. Elle est suivie à part : ce n'est l'action d'aucune touche (Maj + Entrée valide toujours,
+  // Maj + flèche marche… en courant). Toute autre touche dit aussi si Maj est tenue (une Maj lâchée hors de la page).
+  const maj = e => { if (e.key === 'Shift') I.input.maj = e.type === 'keydown'; else if (typeof e.shiftKey === 'boolean') I.input.maj = e.shiftKey; };
+  window.addEventListener('keydown', maj); window.addEventListener('keyup', maj);
 
   /* ---------- sauvegarde ----------
      Format 2 (ISNAD 2.0). Une partie porte son format (v), le profil du joueur et les paquets posés quand elle a été écrite.

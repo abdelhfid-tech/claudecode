@@ -138,7 +138,8 @@
   function passable(f, x, y) { const m = W.map, T = 16; if (x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; const n = m.g0(x * T + 8, y * T + 8); return n === 'npont' || (n === 'nfloor' && !f.meute); }
   // un rôdeur avance de case en case : il erre, et prend en chasse quand le râwî est à portée ; il n'entre jamais dans un abri
   function avance(f, dt, champ) {
-    const m = W.map, T = 16, tx = Math.floor(f.x / T), ty = Math.floor(f.y / T), passe = (x, y) => passable(f, x, y);
+    // 2.16 : jamais sur la case qu'un autre occupe ou vise — deux rôdeurs ne se superposent plus (le râwî, lui, reste à rejoindre)
+    const m = W.map, T = 16, tx = Math.floor(f.x / T), ty = Math.floor(f.y / T), prise = (x, y) => W.foes.some(g => g !== f && g.rodeur && !g.done && g.placed && ((Math.floor(g.x / T) === x && Math.floor(g.y / T) === y) || (g.cx === x && g.cy === y))), passe = (x, y) => passable(f, x, y) && !prise(x, y);
     if (f.cx === null || f.cx === undefined || (Math.abs(f.x - (f.cx * T + 8)) < 1 && Math.abs(f.y - (f.cy * T + 8)) < 1)) { // au milieu d'une case : choisir la suivante
       const ici = champ ? champ[ty * m.w + tx] : -1, voisins = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(q => passe(tx + q[0], ty + q[1]));
       let pick = null;
