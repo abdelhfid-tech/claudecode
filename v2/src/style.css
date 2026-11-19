@@ -119,11 +119,38 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 .sts b, .hn small b { font-weight: 400; font-size: .9em; margin-right: .3em; } .up { color: var(--green); } .dn { color: var(--red); }
 .bar { position: relative; display: block; height: .42em; background: rgba(255, 255, 255, .12); border-radius: 1em; overflow: hidden; }
 .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, #ff7a5c, #ffb347); transition: width .3s; }
-#battle .banner { position: absolute; left: 50%; top: 11%; transform: translateX(-50%); padding: .3em 1.6em; background: linear-gradient(90deg, transparent, rgba(8, 7, 18, .92) 18%, rgba(8, 7, 18, .92) 82%, transparent); font-family: var(--f-display); letter-spacing: .1em; color: var(--gold); white-space: nowrap; max-width: 96%; text-align: center; z-index: 3; }
+/* 2.17 — les messages du combat se posent en bas (demande du décideur, 19 novembre : « Les messages au moment du combat
+   doivent être en bas pas sur les personnages ») : le bandeau est dans le panneau, dans la case des commandes (grid-area
+   « cmd »), par-dessus elles le temps qu'il dure ; en hauteur, sous les rangées du groupe, hors de la scène ; en largeur,
+   au pied de la scène, sous les combattants — s'il y monterait, il prend toute la largeur du panneau (.large, battle.js,
+   placer). Celui qui attend un toucher (.attend) le prend et montre ▼ ; les autres le laissent passer aux commandes. */
+#battle .banner { position: relative; grid-area: cmd; align-self: end; z-index: 3; padding: .4em 1em .45em; background: rgb(10, 9, 22); border: 1px solid var(--line); border-radius: 2px; box-shadow: 0 6px 22px rgba(0, 0, 0, .55); font-family: var(--f-display); letter-spacing: .1em; line-height: 1.3; color: var(--gold); white-space: normal; overflow-wrap: anywhere; overflow-y: auto; text-align: center; }
+#battle .panel > .banner:not(.attend) { pointer-events: none; }
+#battle .banner.attend { cursor: pointer; padding-bottom: .95em; }
+#battle .banner.attend::after { content: "▼"; position: absolute; right: .7em; bottom: .2em; font-size: .62em; font-style: normal; color: var(--acc); animation: bob 1s infinite; }
+#battle .banner.attend[dir="rtl"]::after { right: auto; left: .7em; }
 #battle .banner.foe { color: #d9c8ff; } #battle .banner.limit { color: #fff; font-size: 1.25em; text-shadow: 0 0 18px var(--gold); }
-#battle .banner.speech { white-space: normal; width: 80%; font-family: var(--f-body); font-style: italic; letter-spacing: 0; font-size: 1.05em; padding: .6em 2em; top: 20%; }
-#battle .banner.intro { font-style: normal; color: var(--sand); top: 24%; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(8, 7, 18, .9); }
+#battle .banner.speech { font-family: var(--f-body); font-style: italic; letter-spacing: 0; font-size: 1.05em; padding: .5em 1.2em .55em; line-height: 1.35; }
+#battle .banner.speech.attend { padding-bottom: 1em; }
+#battle .banner.intro { font-style: normal; color: var(--sand); border-top-color: var(--gold); }
 #battle .banner small { display: block; font-family: var(--f-display); font-style: normal; font-size: .62em; letter-spacing: .3em; text-transform: uppercase; color: var(--dim); }
+/* le dévoilement d'une chimère, un mal tranché ou repoussé : le mot, en blanc, avec le nom au-dessus (battle.js, devoile) */
+#battle .banner.break { color: #fff; font-size: 1.2em; letter-spacing: .2em; text-shadow: 0 0 12px #fff, 0 0 22px var(--gold); }
+#battle .banner.break small { letter-spacing: .14em; text-shadow: none; }
+/* la victoire : son titre, puis ce qu'elle rapporte, sur une ou deux lignes, les héros debout au-dessus */
+#battle .banner.fin .titre { display: block; font-family: var(--f-display); font-style: normal; font-weight: 700; font-size: 1.3em; letter-spacing: .12em; color: var(--gold); }
+#battle .banner.fin ul { list-style: none; margin: .25em 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .1em .9em; font-family: var(--f-body); font-style: normal; letter-spacing: 0; font-size: .9em; color: var(--sand); }
+#battle .banner.fin li b { color: var(--gold); } #battle .banner.fin .gi { width: 1.3em; height: 1.3em; }
+/* le panneau : les rangées du groupe et la case des commandes, où passe aussi le bandeau */
+#battle .panel { grid-template-areas: "heroes cmd"; }
+#battle .panel > .heroes { grid-area: heroes; } #battle .panel > .cmd { grid-area: cmd; }
+#battle .panel > .banner.large { grid-area: auto; grid-column: 1 / -1; grid-row: 1; }
+body.portrait #battle .panel { grid-template-areas: "heroes" "cmd"; } body.portrait #battle .banner { align-self: start; }
+body.portrait #battle.ordre .panel, body:not(.portrait) #battle.ordre .panel { grid-template-areas: "cmd"; }   /* pendant un ordre, les rangées du groupe se retirent */
+/* le panneau ne s'élargit pas au-delà de l'écran pour une commande trop longue (en arabe, en 360 × 640, « sans perdre son
+   tour ») : ses colonnes peuvent descendre sous la largeur de leur contenu, et le bandeau reste entier dans l'écran */
+html body:not(.portrait) #battle .panel { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+html body.portrait #battle .panel, html body #battle.ordre .panel { grid-template-columns: minmax(0, 1fr); }
 #battle .panel { position: absolute; left: 1.5%; right: 1.5%; bottom: 2%; display: grid; grid-template-columns: 1.25fr 1fr; gap: .6em; align-items: end; pointer-events: none; }
 #battle .panel > * { pointer-events: auto; }
 #battle .heroes { display: flex; flex-direction: column; gap: .2em; }
@@ -482,9 +509,7 @@ body.portrait .orga .ep { grid-template-columns: 1fr; } body.portrait .orga .epn
 #battle .front { position: absolute; right: 2%; top: 11%; display: grid; grid-template-columns: repeat(5, 1.05em); gap: 0 .1em; padding: .2em .45em; font-size: .72em; line-height: 1.15; background: rgba(8, 7, 18, .66); border: 1px solid var(--line); border-radius: .3em; pointer-events: none; }
 #battle .front i { font-style: normal; text-align: center; color: var(--dim); opacity: .7; } #battle .front i.r { color: var(--gold); opacity: 1; } #battle .front i.r.m { color: #fff6dc; } #battle .front i.n { opacity: 1; } #battle .front i.f { color: var(--gold); opacity: 1; }
 #battle.champ .plates, #battle.champ .order { display: none; }
-/* le champ de bataille : les bandeaux se rangent hors du champ (au-dessus, écran en hauteur ; entre le champ et le panneau sinon) */
-#battle.champ .banner, #battle.champ .banner.speech, #battle.champ .banner.intro { top: 56.5%; }
-body.portrait #battle.champ .banner, body.portrait #battle.champ .banner.speech, body.portrait #battle.champ .banner.intro { top: 4%; }
+/* le champ de bataille : ses bandeaux passent dans le panneau, comme les autres (2.17) — sous le champ, jamais dessus */
 /* Valeurs et attributs : un badge par Valeur (dessiné), un médaillon de texte par attribut (jamais un dessin) */
 .badge { width: 2.6em; height: 2.6em; image-rendering: pixelated; flex: none; vertical-align: -.8em; } .badge.grand { width: 6.5em; height: 6.5em; display: block; margin: 0 auto .6em; filter: drop-shadow(0 0 1.2em rgba(233, 200, 119, .35)); }
 .bien { display: grid; gap: .5em; margin: .7em 0; }
