@@ -17,6 +17,8 @@
          sous cette clé ; à défaut, le français (et la clé est notée dans I.langue.manques).
          Le premier argument est TOUJOURS une chaîne écrite en toutes lettres, d'un seul tenant : c'est elle que relève
          v2/tools/langues.js. Jamais une phrase assemblée par morceaux : une phrase entière, avec ses {champs}.
+         (Une exception : le sous-titre et la réserve de la promotion, dits par partage.js — I.t(P.RESERVE) —, que
+         v2/tools/langues.js relève là où ils s'écrivent, v2/tools/promotion.js.)
          Selon un nombre : 'un voile¦{n} voiles' — les formes sont séparées par « ¦ », choisies d'après le champ n
          (français : une, plusieurs ; anglais : one, other ; japonais : une seule ; arabe : une seule, ou les six).
          Deux sens pour un même mot : « Entrée§saisie » — le français dit ce qui précède « § », et la clé distingue le sens.

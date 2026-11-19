@@ -14,5 +14,11 @@ module.exports = {
   // tel que l'Institut l'a fourni (fond transparent, aucune retouche)
   SOUTIEN: 'Une initiative soutenue par l’Institut Islam Actuel',
   SOUTIEN_NOM: 'l’Institut Islam Actuel',
-  SOUTIEN_LOGO: 'promo/partenaires/islam-actuel.webp'
+  SOUTIEN_LOGO: 'promo/partenaires/islam-actuel.webp',
+  // 2.x — ce que le jeu lui-même reprend, pour qu'un joueur partage sa progression (v2/src/core/partage.js, demande du
+  // décideur, 19 novembre) : v2/tools/build.js le pose dans la page (window.ISNAD_PROMO), sans le recopier dans le moteur.
+  // Le sous-titre et la réserve se disent dans la langue du joueur : v2/tools/langues.js les relève avec les phrases du
+  // moteur. Changer l'une de ces lignes, c'est refaire l'assemblage, et redemander la réserve dans chaque langue.
+  JEU: ['NOM', 'SOUS_TITRE', 'ADRESSE', 'RESERVE'],
+  JEU_DIT: ['SOUS_TITRE', 'RESERVE']
 };

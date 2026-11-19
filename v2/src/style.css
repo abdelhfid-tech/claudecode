@@ -284,6 +284,23 @@ body.fin #menu .pane .perso-vue img { image-rendering: auto; }
 #partie textarea { width: 100%; min-height: 9em; resize: vertical; background: rgba(4, 3, 10, .8); color: var(--sand); border: 1px solid var(--line); padding: .6em; font: .72em/1.4 var(--f-mono); word-break: break-all; }
 #partie textarea:focus { outline: 2px solid var(--acc); outline-offset: 1px; }
 #partie .note { margin: 0; min-height: 1.4em; font-size: .86em; color: var(--dim); } #partie .note.ko { color: #ff9a8a; } #partie .note.ok { color: #9be6b0; }
+/* 2.x — partager sa progression (partage.js) : l'image que le jeu dessine, son texte, les boutons */
+#partage { background: linear-gradient(180deg, rgba(7, 6, 13, .95), rgba(10, 8, 24, .98)); }
+#partage header { text-align: center; margin-bottom: .8em; }
+#partage h2 { font-family: var(--f-display); letter-spacing: .2em; font-size: 1.4em; margin: 0; color: var(--gold); }
+#partage header p { margin: .3em auto 0; color: var(--dim); font-size: .86em; max-width: 40em; }
+#partage .corps { width: min(100%, 40em); display: flex; flex-direction: column; gap: .7em; }
+#partage .apercu { display: flex; justify-content: center; min-height: 6em; }
+#partage .apercu img { display: block; width: auto; height: auto; max-width: 100%; max-height: 52vh; border: 1px solid var(--line); background: var(--ink); -webkit-touch-callout: default; -webkit-user-select: auto; user-select: auto; }
+#partage .apercu img:not([src]) { visibility: hidden; }
+#partage .apercu.grand img { max-height: 88vh; }   /* le repli : l'image en grand, à garder d'un appui long */
+#partage .rang { display: flex; flex-wrap: wrap; gap: .5em; }
+#partage .rang button { flex: 1 1 auto; padding: .55em 1em; background: rgba(10, 8, 20, .72); border: 1px solid rgba(233, 200, 119, .25); font-family: var(--f-display); letter-spacing: .1em; font-size: .84em; }
+#partage .rang button.sel { background: rgba(233, 200, 119, .18); border-color: var(--gold); color: #fff; box-shadow: 0 0 22px rgba(233, 200, 119, .25); }
+#partage .rang button.fort { border-color: var(--gold); color: var(--gold); }
+#partage textarea { width: 100%; min-height: 7.5em; resize: vertical; background: rgba(4, 3, 10, .8); color: var(--sand); border: 1px solid var(--line); padding: .6em; font: .84em/1.45 var(--f-body); -webkit-user-select: text; user-select: text; }
+#partage textarea:focus { outline: 2px solid var(--acc); outline-offset: 1px; }
+#partage .note { margin: 0; min-height: 1.4em; font-size: .86em; color: var(--dim); } #partage .note.ko { color: #ff9a8a; } #partage .note.ok { color: #9be6b0; }
 .lights i { font-style: normal; font-size: 1.2em; margin: 0 .12em; opacity: .25; } .lights i.on { opacity: 1; text-shadow: 0 0 10px currentColor; }
 #menu .cols { display: grid; grid-template-columns: minmax(10em, 15em) 1fr; gap: 1em; width: min(100%, 62em); flex: 1; min-height: 0; }
 #menu .side { display: flex; flex-direction: column; gap: .3em; overflow-y: auto; }

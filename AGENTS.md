@@ -19,7 +19,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
 - **Les chemins.** La suite de ce document se lit dans `v2/` : `src/…`, `tools/…`, `index.html`, `dist/…` y désignent
   `v2/src/…`, `v2/tools/…`, etc. `AGENTS.md`, `README.md`, `docs/`, `promo/` et `archive/` sont à la racine. Ce qui est
   propre à la 2.x est écrit dans `v2/docs/`.
-- La 2.x a neuf contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
+- La 2.x a dix contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
   réimporte à l'identique), `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
   se gardent), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel ; aucun
@@ -35,7 +35,10 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   les trois figures et leurs effets : « PROGRESSION CONFORME ») et `node v2/tools/loupe.js` (sur un téléphone, en
   hauteur et en largeur : l'image s'agrandit — d'office, en écartant deux doigts, par le bouton —, le toucher tombe
   juste, les étiquettes restent sur leurs personnages, le combat garde son cadrage, aucun texte n'est sous dix points :
-  « LOUPE CONFORME ») : aucun « REFUS », « BLOQUÉ »,
+  « LOUPE CONFORME ») et `node v2/tools/partage.js` (partager sa progression : le bouton, absent avant tout maillon puis
+  touché sur la Chaîne et dans la halte ; l'image, carrée et verticale, et son texte, dans les quatre langues — le nom,
+  les maillons, la réserve, l'adresse, et aucun mot des œuvres, du cœur ni des Valeurs ; le partage et ses replis :
+  « PARTAGE CONFORME ») : aucun « REFUS », « BLOQUÉ »,
   « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages ». Les textes de la 2.0
   disent « Idris » : on n'y écrit jamais le nom d'un joueur, c'est `v2/src/core/perso.js` qui le pose à l'affichage. Une partie de la 2.0 a
@@ -151,7 +154,8 @@ toute considération de jeu.
 | `src/data/music.js` | bande-son | `ISNAD.registerMusic(nom, piste)`, validée par `tools/validate-music.js` |
 | `docs/schema-saga.md`, `docs/schema-v2.md` | contrat de données et bible narrative | à relire avant d'écrire du contenu |
 | `archive/v1.32/` | la 1.32 archivée : son jeu, ses outils, son livret et ses planches | on n'y touche plus (`archive/v1.32/LISEZ-MOI.md`) |
-| `v2/tools/promotion.js` | l'adresse, la devise, la réserve et le soutien de la promotion (2.x) | le seul endroit où elles s'écrivent ; lu par `shorts.js`, `galerie.js`, `jouable.js`, `livret.js` |
+| `v2/tools/promotion.js` | l'adresse, la devise, la réserve et le soutien de la promotion (2.x) | le seul endroit où elles s'écrivent ; lu par `shorts.js`, `galerie.js`, `jouable.js`, `livret.js` ; ce que le jeu en reprend pour partager sa progression (`JEU`) est posé dans la page par `build.js` (`window.ISNAD_PROMO`), et relevé pour les langues par `langues.js` (`JEU_DIT`) |
+| `src/core/partage.js` | partager sa progression (2.x) : l'image que le jeu dessine (1080 × 1080 ou 1080 × 1920), son texte, `navigator.share` et son repli | le récit seulement : ni œuvres, ni cœur, ni Valeurs, ni descente, ni combats ; le bouton paraît au premier maillon achevé, sans leçon ; `v2/docs/architecture.md`, « Partager sa progression » |
 | `promo/shorts/NN-nom.js`, `promo/shorts/_saga.js`, `promo/shorts/legendes.md` | les scénarios des shorts (2.x), la base commune des cinq shorts de saga, et leurs textes d'accompagnement | un scénario dit où aller dans le jeu, quoi faire, quelles phrases poser ; un short de saga ne donne que des clés et des fragments (le lieu, la parole, l'idole) ; les films (`films/`), la galerie et les plans d'ambiance (`plans-ia/`) ne sont pas versionnés |
 | `promo/jouable/demarrage.js`, `demarrage.css` | le démarrage de la démo jouable (2.x) | ajouté au jeu assemblé par `v2/tools/jouable.js` ; `jouable.html` est **généré**, non versionné |
 | `promo/partenaires/islam-actuel.webp` | le logo de l'Institut Islam Actuel, tel qu'il l'a fourni | posé, sans retouche, sur le plan final des shorts et la dernière page du livret court ; il n'entre pas dans le jeu |
@@ -186,6 +190,7 @@ node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapi
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
 node v2/tools/loupe.js              # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles
+node v2/tools/partage.js            # 2.x : partager sa progression — le bouton, l'image (1080 × 1080, 1080 × 1920), le texte, les replis, quatre langues (images dans .smoke/partage/)
 node v2/tools/shorts.js [NN] [brouillon]  # 2.x : les shorts — le jeu filmé image par image (promo/shorts/NN-nom.js → promo/shorts/films/, non versionnés)
 node v2/tools/shorts.js fin [NN]    # 2.x : un short livré (promo/shorts/films/livres/) reçoit le plan final du soutien, sans être refilmé ni réencodé
 node v2/tools/galerie.js            # 2.x : la page qui montre les films avec leur texte (promo/shorts/galerie/, non versionnée)
