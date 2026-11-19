@@ -355,11 +355,14 @@ dans le dépôt.*
   étoffe e1), avec les choix du visage et du néon ; une autre pièce, un autre objet ou une autre étoffe gardent le dessin
   d'avant. Les pas de profil et de dos, les poses et les gestes reprennent l'image au repos ; le souffle s'en tire seul.
   Le petit personnage (16 × 24, dessin d'origine sur les cartes) n'a pas changé.
-- **Son visage** (v2, retouches du décideur) : `visageRawi()`, et non `visage()`, qui garde son dessin pour tous les
-  autres. De grands yeux sombres et leur point de lumière, un nez d'un point d'ombre, une bouche d'un trait court ; à
-  32 × 48, les yeux seuls. Une manière de dessiner (celle des héros des jeux d'action-RPG de 16 bits), aucun visage repris.
+- **Son visage** (v3, choix du décideur : « n° 3, grands yeux », sans barbe ni moustache) : `visageGabarit()`, et non
+  `visage()`, qui garde son dessin pour tous les autres. Dessiné point par point (`VISAGE_RAWI`, en 64 × 96 et en
+  32 × 48) : de grands yeux expressifs avec leur blanc, un iris sombre et son point de lumière, des sourcils marqués, une
+  mèche sur le front sous la capuche, le nez d'un point d'ombre, une bouche d'un trait. Une manière de dessiner, aucun
+  visage repris ; les modèles IA qui l'ont fait choisir restent hors du dépôt et du jeu. Un gabarit d'une autre taille que
+  le visage du corps rend le visage de la v2 (`visageRawi()`).
   Idris est **glabre** par défaut (`RAWI_BARBE` ; `G.traits` le rend pour le râwî marqué, et `perso.js` le lit comme
-  visage d'origine) ; la barbe courte (le collier) et la pleine sont redessinées pour ce visage. Le corps est équilibré :
+  visage d'origine) ; la barbe courte (le collier) et la pleine se dessinent sur ce visage. Le corps est équilibré :
   la tête agrandie d'un quart (jamais plus large que les épaules), le corps un peu plus court et plus large, davantage de
   profil.
 - `silhouettes.js` compare le râwî marqué à son empreinte d'avant (la marque n'est pas dans la clé) : l'écart du grand
@@ -391,6 +394,15 @@ change pas de repère : positions, collisions, cartes, tout reste en points logi
   liseré et lumière du voile deux fois plus fins. `gfx.planche`, `gfx.pose` et `gfx.figure` rendent le personnage à la
   définition courante ; `charSheet`, `charPose` et `charGrand` rendent toujours les dessins bruts, que les outils lisent.
 - **La vue** glisse par demi-points ; plus de lignes de balayage ; un peu de poussière sous les pas, sur le sable.
+
+**Le rendu doux** (choix du décideur, 19 novembre : « applique ce rendu partout » ; `G.doux`, `relief()`, `sprites.js`) :
+en dessin fin (fin, et fin adouci), tous les grands personnages, à 32 × 48 comme à 64 × 96, ont un liseré dans un ton foncé
+de la couleur qu'il borde (`outline(…, 0,5)`, au lieu d'une encre presque noire) et un relief : chaque matière, sa forme
+adoucie, est éclairée d'en haut à gauche vers le chaud et ombrée en bas à droite vers le violet, par degrés — le bord,
+puis le volume entier ; le bas du corps un peu plus sombre ; une étoffe claire s'ombre moins. Le voile n'est jamais touché
+(la lumière d'un Compagnon reste une seule surface, trois tons au plus ; un visage garde son dessin), ni le néon, ni les
+objets. Le dessin d'origine, les petits personnages et le grand sprite d'avant (`gfx.natif = false`) gardent le leur.
+`G.doux = false` rend le rendu d'avant, pour comparer.
 
 **Trois dessins au choix du joueur** (Réglages, « Dessin » ; `gfx.DESSINS`, `gfx.definir`) : *fin* (par défaut), *fin,
 adouci* (le même, l'agrandissement final lissé et les figures adoucies sans perdre leurs contours) et *d'origine*. Le

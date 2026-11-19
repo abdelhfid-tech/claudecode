@@ -768,7 +768,7 @@ html[dir="rtl"] body.portrait #dialog .fig { left: auto; right: 1.2em; }
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.12 · 2026-11-19 04:44 UTC · 7be6b06+";
+window.ISNAD_VERSION = "2.12 · 2026-11-19 05:18 UTC · fc80127+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -3884,16 +3884,16 @@ window.ISNAD_VERSION = "2.12 · 2026-11-19 04:44 UTC · 7be6b06+";
 
   /* ---------- rendu ---------- */
   const mk = G.mk;
-  function outline(c, w, h) { // liseré : la teinte voisine, très assombrie ; jamais sous les pieds
-    const id = c.getImageData(0, 0, w, h), d = id.data, k = rgb(INK), add = [];
+  function outline(c, w, h, encre) { // liseré : la teinte voisine, très assombrie (encre : la part de l'encre, 0,78 par défaut) ; jamais sous les pieds
+    const id = c.getImageData(0, 0, w, h), d = id.data, k = rgb(INK), add = [], q = encre === undefined ? 0.78 : encre, p = encre === undefined ? 0.22 : 1 - encre;   // 0,22 et 0,78 tels quels : le calcul d'avant, au point près
     const solid = (x, y) => x >= 0 && y >= 0 && x < w && y < h && d[(y * w + x) * 4 + 3] > 200;
     for (let y = 0; y < h - 1; y++) for (let x = 0; x < w; x++) { if (solid(x, y)) continue;
       const n = solid(x, y + 1) ? [x, y + 1] : solid(x + 1, y) ? [x + 1, y] : solid(x - 1, y) ? [x - 1, y] : solid(x, y - 1) ? [x, y - 1] : null; if (n) add.push(x, y, (n[1] * w + n[0]) * 4); }
-    for (let i = 0; i < add.length; i += 3) { const o = (add[i + 1] * w + add[i]) * 4, s = add[i + 2]; for (let j = 0; j < 3; j++) d[o + j] = Math.round(d[s + j] * 0.22 + k[j] * 0.78); d[o + 3] = 255; }
+    for (let i = 0; i < add.length; i += 3) { const o = (add[i + 1] * w + add[i]) * 4, s = add[i + 2]; for (let j = 0; j < 3; j++) d[o + j] = Math.round(d[s + j] * p + k[j] * q); d[o + 3] = 255; }
     c.putImageData(id, 0, 0);
   }
   function paint(g, pal, w, h) { const cv = mk(w, h), c = cv.getContext('2d'); for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const col = pal[g[y][x]]; if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } } return cv; }
-  const scache = {}, ck = (look, a, b, c) => JSON.stringify(look) + '|' + a + '|' + (b || 0) + '|' + (c || '');
+  const scache = {}, ck = (look, a, b, c) => JSON.stringify(look) + '|' + a + '|' + (b || 0) + '|' + (c || '') + (G.doux && G.D > 1 ? '|d' : '');   // le rendu doux (dessin fin), ou celui d'avant
   function small(look, dir, frame, pose) {
     const k = 's' + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
     const { g, K } = grid(look, dir, frame, pose), cv = paint(g, palette(look, K), W, H);
@@ -4321,7 +4321,7 @@ window.ISNAD_VERSION = "2.12 · 2026-11-19 04:44 UTC · 7be6b06+";
      Qui le reçoit : le râwî seul, que le moteur marque (look.rawi : perso.js la pose ; un récit ne l'écrit jamais,
      regles.js le refuse), et seulement ce que le pilote dessine : la capuche, la coupe et l'étoffe de toujours (l'étoffe
      qui a ses couleurs de dessin : D.RAWI.etoffes[…].dessin), sans pièce ni objet choisis — le néon choisi, lui, colore la
-     bande et la ceinture. Son visage a son peintre (visageRawi(), plus bas), qui prend ses choix (teint, barbe, poil) ; les
+     bande et la ceinture. Son visage a son peintre (visageGabarit() : la v3 ; plus bas), qui prend ses choix (teint, barbe, poil) ; les
      cheveux prennent son poil. Tout le reste garde le dessin d'avant. Pilote : de face, de profil, de dos, au repos, et la foulée de face (d1,
      d2 : tirées de l'image au repos, foulee64()) ; les pas de profil et de dos, les poses et les gestes reprennent l'image
      au repos — le souffle (grand(…, 3)) se tire de lui-même de l'image au repos.
@@ -4753,6 +4753,53 @@ window.ISNAD_VERSION = "2.12 · 2026-11-19 04:44 UTC · 7be6b06+";
     if (dir === 2) [L, am, fin, L4].forEach(t => t.forEach(row => row.reverse()));
     return { L, K, am, fin, hors: 0, main, sans: null, natifs: null, tm: null, rawi: { dessin, L4 } };
   }
+  /* ---------- son visage, v3 (choix du décideur : « n° 3, grands yeux », sans barbe ni moustache) ----------
+     Dessiné point par point sur l'ouverture de la capuche, de face et de profil, en 64 × 96 (2) et en 32 × 48 (1) : de
+     grands yeux expressifs, avec leur blanc, un iris sombre et son point de lumière, une paupière (d : la demi-ombre
+     dessous) ; des sourcils marqués ;
+     une mèche de cheveux sur le front, sous la capuche ; le nez d'un point d'ombre ; une bouche d'un trait — un adulte,
+     pas l'air d'une poupée. Une manière de dessiner : aucun visage d'un personnage existant n'est repris. Lettres : p la
+     peau, c sa lumière, o son ombre ; w le blanc de l'œil, k l'iris, l son point de lumière, e la paupière, s le sourcil ;
+     m la bouche ; h la mèche (le poil) ; « . » : la peau, modelée ; « _ » : hors du visage. Le teint et le poil viennent
+     des choix du joueur ; Idris d'origine est glabre (RAWI_BARBE), et la barbe choisie (courte : le collier ; pleine : le
+     bas du visage et la moustache) se dessine sur ce visage ; les yeux se ferment dans le recueillement et
+     l'accablement. Un gabarit qui n'a pas la taille du visage du corps rend le visage de la v2 (visageRawi). */
+  const VISAGE_RAWI = {
+    2: { d: ['_____hhhhhh___', '___.h.hh....__', '__ssss..ssss._', '_............_', 'h..eee..eee..h', '.wklkw..wklkw.', '.wkkkw..wkkkw.', '..ddd..o.ddd..',
+             '..............', '_....mmm....._', '__..........__', '___........___'],
+         l: ['___hhhh__', '__h..hh._', '_..sss.h_', '_......h_', '_..ee..hh', '_..lkw..h', '_..kkw...', 'c..dd....', 'co.......', '_mm......', '_.......', '__......_', '___....__'] },
+    1: { d: ['___hhh__', '__hh.hh_', '_ss..ss.', '.wk..kw.', '..k..k..', '_..mm.._', '__....__'], l: ['__hh_', '_hhh.', '_.s.h', '_.kw.', 'c.k..', '_m...', '__...'] }
+  };
+  function visageGabarit(look, K, dir, pose, s, x0, x1, y0, y1, L) {
+    const profil = dir === 1 || dir === 2, T = VISAGE_RAWI[s] && VISAGE_RAWI[s][profil ? 'l' : 'd'];
+    if (dir === 3 || x1 < x0) return null;
+    if (!T || T.length !== y1 - y0 + 1 || T[0].length !== x1 - x0 + 1) return visageRawi(look, K, dir, pose, s, x0, x1, y0, y1, L);
+    const h = signe(look), clos = pose === 'prie' || pose === 'accable', V = m => m === 'V' || m === 'v';
+    const peau = look.teint || TEINTS[h % TEINTS.length], poil = (typeof look.poil === 'string' && look.poil) || POILS[(h >>> 5) % POILS.length];
+    const barbe = [0, 1, 2].indexOf(look.barbe) >= 0 ? look.barbe : RAWI_BARBE, poilO = mix(poil, '#20143a', 0.4);
+    const C = { p: peau, c: mix(peau, '#fff1d6', 0.28), o: mix(peau, '#3a1e30', 0.30), d: mix(peau, '#3a1e30', 0.15), w: mix('#f8efdc', peau, 0.28), k: '#21161c', l: '#ffffff',
+      e: mix(peau, '#2a1820', 0.66), s: mix(peau, poil, 0.85), m: mix(peau, '#4a1e24', 0.5), h: mix(poil, '#6b4630', 0.2) };   // d : la demi-ombre (une transition, du côté de l'ombre)
+    const bord = {}; for (let y = y0; y <= y1; y++) { let a = -1, b = -1; for (let x = x0; x <= x1; x++) if (V(L[y][x])) { if (a < 0) a = x; b = x; } bord[y] = [a, b]; }
+    const lettre = (x, y) => { const r = T[y - y0]; return r ? r[dir === 2 ? x1 - x : x - x0] : '_'; }, oeil = m => m === 'w' || m === 'k' || m === 'l';
+    const rang = q => { const i = T.findIndex(r => r.indexOf(q) >= 0); return i < 0 ? -1 : y0 + i; };
+    const ym = rang('m'), yn = Math.max(y0, (T.findIndex((r, i) => i > 3 && r.indexOf('o') >= 0) + 1 || (ym - y0 - 1)) + y0 - 1), mi = x0 + ((x1 - x0 + 1) >> 1);   // la bouche ; le nez
+    return function (x, y) {
+      const m = lettre(x, y);
+      if (clos && (oeil(m) || m === 'e')) return m !== 'e' && !oeil(lettre(x, y + 1)) ? C.e : C.p;                 // les yeux clos : un trait, au bas de l'œil
+      const [a, b] = bord[y], fx = profil ? (dir === 2 ? b - x : x - a) : x - a, gx = profil ? (dir === 2 ? x - a : b - x) : b - x;
+      if (barbe && !oeil(m) && m !== 'e' && m !== 's' && m !== 'h') {                                                // la barbe choisie, sur ce visage
+        const poils = ((x + y) % 3 === 0 && s === 2) ? poilO : poil, centre = profil ? fx <= 1 : Math.abs(x - mi) <= (s === 2 ? 1 : 0), mouche = y === ym && centre;
+        if (s === 1) { if (y === y1 || (barbe === 2 && y === y1 - 1)) return m === 'm' ? poilO : poil; }
+        else if (mouche) return poilO;
+        else if (barbe === 2 && y >= yn && (y >= ym - 1 || fx <= 1 || gx <= 1)) return y === ym - 1 && !profil && Math.abs(x - mi) > 3 ? peau : poils;
+        else if (barbe === 1 && (y > ym || (y >= ym - 1 && (fx <= 1 || gx <= 1)) || (profil && gx <= 1 && y >= yn))) return poils; }
+      if (C[m]) return C[m];
+      if (y === y1 && s === 2) return C.o;                                                                         // « . » : la peau, modelée
+      if (gx < s) return C.o;
+      if (s === 2 && (gx < 2 * s || y === y1 - 1)) return C.d;
+      if (profil ? fx === 0 : fx < s) return C.c;
+      return peau; };
+  }
   G.rawi = look => !!rawiDe(look, kindOf(look));   // pour les outils : ce râwî a-t-il le dessin de la maquette ?
   G.RAWI = { 64: RAWI64, 32: RAWI32 };
   // la grille de 32 × 48 d'un personnage, ou null si sa tête ou son corps n'ont pas encore de gabarit natif
@@ -4881,6 +4928,36 @@ window.ISNAD_VERSION = "2.12 · 2026-11-19 04:44 UTC · 7be6b06+";
   G.aVisage = look => !(kindOf(look).lit || look.sansVisage); // un Compagnon n'en a pas, ni ceux que le jeu laisse sans visage
   // le visage que le moteur tire d'une apparence d'adulte (sa marque) : le teint, la barbe, le poil — pour le râwî composé (perso.js)
   G.traits = look => { const h = signe(look); return { teint: TEINTS[h % TEINTS.length], barbe: look.rawi ? RAWI_BARBE : [2, 1, 2, 0, 1, 2][(h >>> 7) % 6], poil: POILS[(h >>> 5) % POILS.length] }; };   // le râwî : glabre (décision du décideur)
+  /* ---------- le rendu doux (choix du décideur : « applique ce rendu partout ») ----------
+     Celui de tous les grands personnages en dessin fin (fin, et fin adouci), à 32 × 48 comme à 64 × 96 ; le dessin
+     d'origine, les petits personnages et le grand sprite d'avant (gfx.natif = false) gardent le leur. Plus doux et plus
+     riche que le rendu d'avant : chaque matière reçoit un relief — sa forme, adoucie, est
+     éclairée d'en haut à gauche (vers le chaud) et ombrée en bas à droite (vers le violet), par degrés ; le bas du corps
+     s'assombrit un peu ; le néon et les objets restent à plat, et le voile n'est jamais touché — la lumière d'un
+     Compagnon reste une seule surface, de trois tons au plus, et un visage garde son dessin. Puis le liseré prend un ton foncé de la couleur qu'il borde
+     (outline(…, 0,5)) au lieu d'une encre presque noire. Les cinq tons du moteur restent la base : R2 ajoute des
+     transitions. */
+  G.doux = true;   // le rendu doux des grands personnages, en dessin fin (choix du décideur) ; false : le rendu d'avant — pour comparer
+  const FAM2 = m => m === 'V' || m === 'v' ? 'V' : FAM[m] || m;
+  function relief(c, L, fin, w, h, s) {
+    const id = c.getImageData(0, 0, w, h), d = id.data, r = 2 * s, lx = -0.6, ly = -0.8, chaud = [255, 240, 208], froid = [34, 24, 60];
+    const fam = []; for (let y = 0; y < h; y++) { fam.push([]); for (let x = 0; x < w; x++) { const m = L[y][x]; fam[y].push(m === '.' || m === 'Y' || m === 'y' || m === 'V' || m === 'v' || fin[y][x] ? null : FAM2(m)); } }   // ni le voile, ni le néon, ni les objets
+    // pour chaque matière : sa forme, adoucie (une moyenne sur un carré de côté 2r + 1), dont la pente dit où la lumière tombe
+    const S = []; for (let y = 0; y <= h; y++) S.push(new Float32Array(w + 1));
+    const familles = new Set(); fam.forEach(rg => rg.forEach(f => { if (f) familles.add(f); }));
+    const ombre = new Float32Array(w * h);
+    familles.forEach(f => {
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) S[y + 1][x + 1] = (fam[y][x] === f ? 1 : 0) + S[y][x + 1] + S[y + 1][x] - S[y][x];
+      const B = (x, y, r) => { const a = Math.max(0, x - r), b = Math.min(w - 1, x + r), u = Math.max(0, y - r), v = Math.min(h - 1, y + r); return (S[v + 1][b + 1] - S[u][b + 1] - S[v + 1][a] + S[u][a]) / ((2 * r + 1) * (2 * r + 1)); };
+      const pente = (x, y, r) => -((B(x + 1, y, r) - B(x - 1, y, r)) * lx + (B(x, y + 1, r) - B(x, y - 1, r)) * ly);   // la forme, adoucie : où elle tourne vers la lumière
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (fam[y][x] === f) ombre[y * w + x] = pente(x, y, r) * 4 + pente(x, y, 3 * r) * 5; });   // le bord, puis le volume entier
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const f = fam[y][x]; if (!f) continue; const o = (y * w + x) * 4;
+      let t = ombre[y * w + x] - (y / h - 0.45) * 0.18; t = Math.max(-1, Math.min(1, Math.round(t * 8) / 8));   // par degrés, pas en fondu
+      const clair = (d[o] * 0.3 + d[o + 1] * 0.59 + d[o + 2] * 0.11) / 255 > 0.75;   // une étoffe claire s'ombre moins (sinon, des taches)
+      const vers = t > 0 ? chaud : froid, a = t > 0 ? Math.min(0.34, t * 0.4) : Math.min(0.46, -t * 0.52) * (clair ? 0.6 : 1);
+      for (let j = 0; j < 3; j++) d[o + j] = Math.round(d[o + j] + (vers[j] - d[o + j]) * a); }
+    c.putImageData(id, 0, 0);
+  }
   // fin = 2 : le même personnage tracé en 64 × 96 — même composition, formes arrondies, liseré, arêtes et lumière du voile
   // deux fois plus fins. C'est lui que montrent le combat et les menus en dessin fin (gfx.D = 2).
   function grand(look, dir, frame, pose, fin2) {
@@ -4904,7 +4981,7 @@ window.ISNAD_VERSION = "2.12 · 2026-11-19 04:44 UTC · 7be6b06+";
     const ray = K.lit && G.D > 1 && look.rayon ? look.rayon : null, ray1 = ray && mix(ray, '#ffffff', 0.5), ray2 = ray && mix(ray, '#ffffff', 0.08);
     let x0 = 99, x1 = -1, y0 = 99, y1 = -1; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (voile(L[y][x])) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
     const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 - 0.5, rx = (x1 - x0) / 2 + 0.5, ry = (y1 - y0) / 2 + 0.5;
-    const trait = n.rawi ? visageRawi(look, K, dir, pose, s, x0, x1, y0, y1, L) : visage(look, K, dir, pose, s, x0, x1, y0, y1); // null pour un Compagnon : son voile reste une lumière, sans un trait ; le râwî a son peintre
+    const trait = n.rawi ? visageGabarit(look, K, dir, pose, s, x0, x1, y0, y1, L) : visage(look, K, dir, pose, s, x0, x1, y0, y1); // null pour un Compagnon : son voile reste une lumière, sans un trait ; le râwî a son peintre
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const m = L[y][x]; if (m === '.') continue;
       if (voile(m)) { if (trait) { px(x, y, trait(x, y)); continue; } const dd = Math.hypot((x - cx) / rx, (y - cy) / ry); px(x, y, K.lit ? (ray ? (dd < 0.4 ? '#ffffff' : dd < 0.74 ? ray1 : ray2) : (dd < 0.5 ? '#ffffff' : dd < 0.82 ? pal.V : pal.v)) : (y - y0 < 2 * s || dd > 0.86 ? pal.v : pal.V)); continue; }
       const r = R[m]; if (!r) { px(x, y, pal[m]); continue; }                  // main, parchemin, néon, cimier : à plat
@@ -4921,7 +4998,8 @@ window.ISNAD_VERSION = "2.12 · 2026-11-19 04:44 UTC · 7be6b06+";
         const dessous = at(x, y + 1);                                         // le galon : au bas de la robe longue et des pans du manteau
         if (pal.a && y > h * 0.6 && ((m === 'Z' && !K.court && (dessous === '.' || dessous === 'F' || dessous === 'f')) || ((m === 'E' || m === 'e') && !plein(x, y + 1)))) { px(x, y, pal.a); continue; } }
       px(x, y, r.t[Math.max(0, Math.min(r.t.length - 1, i))]); }
-    outline(c, w, h);
+    if (G.doux && G.D > 1) { relief(c, L, fin, w, h, s); outline(c, w, h, 0.5); }   // le rendu doux (dessin fin) : un relief, un liseré du ton qu'il borde
+    else outline(c, w, h);
     return (scache[k] = cv);
   }
 
@@ -4939,7 +5017,7 @@ window.ISNAD_VERSION = "2.12 · 2026-11-19 04:44 UTC · 7be6b06+";
   // personnage — un point de gabarit pour un point réel — et le combat, ce même personnage agrandi, ses escaliers arrondis.
   // charSheet, charPose et charGrand, eux, rendent toujours les dessins bruts : les outils de contrôle les lisent.
   G.planche = function (look) { if (G.D < 2) return G.charSheet(look);
-    const k = 'P' + (G.natif ? 'n' : 'a') + JSON.stringify(look); if (scache[k]) return scache[k];
+    const k = 'P' + (G.natif ? 'n' : 'a') + JSON.stringify(look) + (G.doux ? 'd' : ''); if (scache[k]) return scache[k];
     const cv = mk(128, 192), c = cv.getContext('2d');   // quatre images par direction : repos, pas A, pas B, souffle
     for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 4; f++) c.drawImage(grand(look, dir, f), f * 32, dir * 48);
     cv.look = look; cv.hd = 2; cv.souffle = true; return (scache[k] = cv); };
