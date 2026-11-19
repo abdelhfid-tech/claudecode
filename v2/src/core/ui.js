@@ -129,7 +129,7 @@
       mk(I.t('Importer une partie'), () => { close(); U.partie('importer', () => U.showTitle()); });
       mk(I.t('◂ Retour'), () => montrer(principal));
     };
-    { const v = $('#title .ver'); if (v) v.textContent = window.ISNAD_VERSION ? I.t('version {v}', { v: '\u2066' + window.ISNAD_VERSION + '\u2069' }) : I.t('version de travail'); // le numéro, isolé : en arabe, il ne se mêle pas à la phrase }
+    { const v = $('#title .ver'); if (v) v.textContent = window.ISNAD_VERSION ? I.t('version {v}', { v: '\u2066' + window.ISNAD_VERSION + '\u2069' }) : I.t('version de travail'); }
     // ce qui flottait autrefois hors de la colonne (la langue en haut, « Importer une partie » dans un coin) est rangé dedans
     { const c = $('#title > .coin'); if (c) c.remove(); const lg0 = $('#title > .langues'); if (lg0) lg0.remove(); $('#title').classList.remove('multilingue'); }
     screen('#title', true); montrer(vue === 'reglages' ? reglages : principal);
