@@ -353,19 +353,21 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     // changer d'habit ne change pas un point du visage : sous la capuche, l'étoffe, le néon, la coupe, l'objet
     await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 0));   // la capuche
     await cliquer(p.locator('#perso .pv-onglet[data-o="visage"]')); await cliquer(cellule(p, 0, 1)); const v0 = await visageVu('capuche'); const face0 = []; let changes = 0;
-    for (const [o, g, i] of [['couleurs', 0, 6], ['couleurs', 1, 2], ['habit', 2, 1], ['objet', 0, 1], ['couleurs', 0, 2], ['habit', 2, 0], ['objet', 0, 0]]) { await cliquer(p.locator(`#perso .pv-onglet[data-o="${o}"]`)); await cliquer(cellule(p, g, i)); face0.push((await visageVu('capuche')) === v0); changes++; }
-    if (face0.some(x => !x) || !v0) ko(`ÉCART changer d'habit change le visage dans l'aperçu (${face0.map(x => x ? '=' : '≠').join(' ')})`); else ok(`dans l’aperçu, sous la capuche, changer l’étoffe, le néon, la coupe ou l’objet laisse le visage au point près (${changes} changements)`);
+    for (const [o, g, i] of [['couleurs', 0, 6], ['couleurs', 1, 2], ['objet', 0, 1], ['couleurs', 0, 2], ['objet', 0, 0]]) { await cliquer(p.locator(`#perso .pv-onglet[data-o="${o}"]`)); await cliquer(cellule(p, g, i)); face0.push((await visageVu('capuche')) === v0); changes++; }
+    if (face0.some(x => !x) || !v0) ko(`ÉCART changer d'habit change le visage dans l'aperçu (${face0.map(x => x ? '=' : '≠').join(' ')})`); else ok(`dans l’aperçu, sous la capuche, changer l’étoffe, le néon ou l’objet laisse le visage au point près (${changes} changements)`);
     // une coiffe se prend toujours : ce qui ne va pas avec elle (D.RAWI.sans) cède sous les yeux ; tant qu'on la porte, la case
-    // qui n'irait pas avec elle s'éteint — la capuche et la robe longue, la calotte et « sans manteau », le chèche et les étoffes claire et verte
-    await cliquer(ensemble(p, 0)); await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 0)); await cliquer(cellule(p, 2, 1)); const k0 = await p.evaluate(ETAT);   // l'ensemble de toujours, la capuche, sans manteau
-    await cliquer(cellule(p, 0, 1)); const k1 = await p.evaluate(ETAT); await p.screenshot({ path: path.join(out, 'bureau-7-calotte.png') });                        // la calotte : un manteau revient
-    await cliquer(cellule(p, 0, 2)); const k2 = await p.evaluate(ETAT); await p.screenshot({ path: path.join(out, 'bureau-7c-cheche.png') });                        // le chèche : la coupe se rallume
+    // qui n'irait pas avec elle s'éteint — la capuche et la robe longue, le chèche et les étoffes claire et verte (la coupe ne se
+    // choisit plus : le long manteau seul, décideur, 19 novembre ; la veste de la ruelle, sans manteau, le prend sous la calotte)
+    await cliquer(ensemble(p, 0)); await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 0)); const k0 = await p.evaluate(ETAT);   // l'ensemble de toujours, la capuche
+    await cliquer(cellule(p, 0, 1)); const k1 = await p.evaluate(ETAT); await p.screenshot({ path: path.join(out, 'bureau-7-calotte.png') });                        // la calotte : la robe longue se rallume
+    await cliquer(cellule(p, 0, 2)); const k2 = await p.evaluate(ETAT); await p.screenshot({ path: path.join(out, 'bureau-7c-cheche.png') });                        // le chèche
     await cliquer(p.locator('#perso .pv-onglet[data-o="couleurs"]')); const k3 = await p.evaluate(ETAT); await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]'));   // sous le chèche, l'étoffe claire et la verte s'éteignent
     await cliquer(ensemble(p, 5)); await cliquer(cellule(p, 0, 2)); await cliquer(p.locator('#perso .pv-onglet[data-o="couleurs"]')); const k5 = await p.evaluate(ETAT);  // la calotte du lettré, claire : sous le chèche, l'étoffe cède
     const vide = e => e.eteintes.every(x => !x.length);
-    if (k0.choix[0] !== 0 || k0.choix[2] !== 1 || JSON.stringify(k0.eteintes) !== '[[],[1],[]]' || k1.choix[0] !== 1 || k1.choix[2] !== 0 || JSON.stringify(k1.eteintes[2]) !== '[1]' || k2.choix[0] !== 2 || k2.choix[2] !== 0 || !vide(k2)
+    const ruelle = await p.evaluate(() => { const X = window.ISNAD.perso, t = window.ISNAD.D.TENUES[2]; return { calotte: X.composer(t, { coiffe: 'calotte' }).manteau || 'long', capuche: X.composer(t, { etoffe: 'e2' }).manteau || 'long' }; });
+    if (k0.choix[0] !== 0 || JSON.stringify(k0.eteintes) !== '[[],[1]]' || k1.choix[0] !== 1 || !vide(k1) || k2.choix[0] !== 2 || !vide(k2) || ruelle.calotte !== 'long' || k0.groupes.length !== 2
       || JSON.stringify(k3.eteintes[0]) !== '[3,5]' || k5.choix[0] !== 0 || JSON.stringify(k5.eteintes[0]) !== '[3,5]') ko(`ÉCART les coiffes et ce qu’elles ne prennent pas : ${JSON.stringify([k0, k1, k2, k3, k5].map(k => [k.choix, k.eteintes]))}`);
-    else ok('une coiffe se prend toujours, et ce qui ne va pas avec elle cède sous les yeux : sous la capuche, la robe longue s’éteint (ce serait l’habit des moines du jeu) ; sans manteau, la calotte rend le manteau long de l’ensemble, et « sans manteau » s’éteint ; sous le chèche, la coupe se rallume, l’étoffe claire et la verte s’éteignent ; l’ensemble du lettré, clair, sous le chèche : l’étoffe cède');
+    else ok('une coiffe se prend toujours, et ce qui ne va pas avec elle cède sous les yeux : sous la capuche, la robe longue s’éteint (ce serait l’habit des moines du jeu) ; la coupe ne se choisit plus (deux rangées : la coiffe, la longueur) ; la veste de la ruelle, sans manteau, prend le long manteau sous la calotte ; sous le chèche, l’étoffe claire et la verte s’éteignent ; l’ensemble du lettré, clair, sous le chèche : l’étoffe cède');
     // le dé : une autre tenue à chaque fois, jamais un autre visage ; ↺ : le râwî de toujours
     await cliquer(p.locator('#perso .pv-onglet[data-o="visage"]')); const d0 = await p.evaluate(ETAT), des = [];
     for (let i = 0; i < 3; i++) { await p.waitForTimeout(650); await cliquer(p.locator('#perso .pv-de')); const e = await p.evaluate(ETAT); des.push([e.face !== (des.length ? des[des.length - 1][2] : d0.face), JSON.stringify(e.choix) === JSON.stringify(d0.choix), e.face]); await p.screenshot({ path: path.join(out, 'bureau-8-de-' + (i + 1) + '.png') }); }
@@ -373,14 +375,14 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     if (des.some(d => !d[0] || !d[1])) ko(`ÉCART le dé : ${des.map(d => (d[0] ? 'autre tenue' : 'même tenue') + (d[1] ? '' : ', visage changé')).join(' ; ')}`);
     else if (z0.ensemble !== 0 || JSON.stringify(z0.choix) !== '[2,0,1]' || z0.face !== orig) ko(`ÉCART ↺ ne rend pas le râwî de toujours : ${JSON.stringify({ ensemble: z0.ensemble, choix: z0.choix, meme: z0.face === orig })}`);
     else ok('le dé, trois fois : une autre tenue à chaque fois, le visage choisi gardé ; ↺ : le râwî de toujours, au point près');
-    // la composition finale : capuche d'encre, teint clair, glabre (le visage d'origine : rien n'est gardé), poil sombre ; le chèche, robe longue, sans manteau ; étoffe grise, néon vert ; la lanterne
+    // la composition finale : capuche d'encre, teint clair, glabre (le visage d'origine : rien n'est gardé), poil sombre ; le chèche, robe longue ; étoffe grise, néon vert ; la lanterne
     await cliquer(ensemble(p, 1)); await cliquer(cellule(p, 0, 1)); await cliquer(cellule(p, 1, 0)); await cliquer(cellule(p, 2, 0));
-    await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 2)); await cliquer(cellule(p, 1, 1)); await cliquer(cellule(p, 2, 1));
+    await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 2)); await cliquer(cellule(p, 1, 1));
     await cliquer(p.locator('#perso .pv-onglet[data-o="couleurs"]')); await cliquer(cellule(p, 0, 6)); await cliquer(cellule(p, 1, 2));
     await cliquer(p.locator('#perso .pv-onglet[data-o="objet"]')); await cliquer(cellule(p, 0, 1)); const f0 = await p.evaluate(ETAT);
     await p.screenshot({ path: path.join(out, 'bureau-9-compose.png') });
     await bouton(p, '#perso', 'Garder').click(); await p.waitForTimeout(700);
-    const COMPO = { teint: 't2', poil: 'p1', coiffe: 'litham', manteau: 'aucun', longue: true, etoffe: 'e7', neon: 'n2', objet: 'lanterne' };
+    const COMPO = { teint: 't2', poil: 'p1', coiffe: 'litham', longue: true, etoffe: 'e7', neon: 'n2', objet: 'lanterne' };
     const c2 = await p.evaluate(() => { const I = window.ISNAD; return { profil: I.save.data.profil, chaine: !document.querySelector('#chain').hidden, auto: (I.save.autoGet() || {}).profil, look: I.sagas.idris.heroes.idris.look }; });
     const egal = (a, b) => JSON.stringify(Object.keys(a || {}).sort().reduce((o, k) => { o[k] = a[k]; return o; }, {})) === JSON.stringify(Object.keys(b || {}).sort().reduce((o, k) => { o[k] = b[k]; return o; }, {}));
     if (!c2.chaine || c2.profil.tenue !== 'encre' || !egal(c2.profil.compo, COMPO) || !c2.auto || !egal(c2.auto.compo, COMPO) || c2.look.porte[0] !== 'lanterne' || c2.look.teint !== '#deab7c' || c2.look.coiffe !== 'litham' || c2.look.court !== false || !Array.isArray(c2.look.neon)) ko(`ÉCART la composition n'est pas gardée telle qu'on l'a faite : ${JSON.stringify(c2.profil)} · ${JSON.stringify(c2.look)}`);

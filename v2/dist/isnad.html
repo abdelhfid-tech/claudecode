@@ -843,7 +843,7 @@ body.avec2:not(.portrait) #hud { visibility: hidden; }
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.15 · 2026-11-19 09:21 UTC · 5e5057d";
+window.ISNAD_VERSION = "2.15 · 2026-11-19 10:16 UTC · ff847f4+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -1322,6 +1322,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     coiffes: ['capuche', 'calotte', 'litham'],
     sans: {
       capuche: { longue: [true] },                           // avec la robe longue, l'habit des moines du jeu (Frère Cyprien, les moines des récits)
+      calotte: { manteau: ['aucun'] },                       // Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit — la coupe ne se choisit plus, mais la veste de
+                                                             // la ruelle est sans manteau : sous la calotte, elle prend le long manteau
       litham: { etoffe: ['e6', 'e4'] }                       // de dos, le turban des Compagnons : clair, l'un d'eux ; vert, 'Alî
     },
     manteaux: ['long'],                                      // le long manteau seul : la coupe « sans manteau » est retirée (décideur, 19 novembre)
@@ -3074,9 +3076,11 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   // l'étoffe d'un ensemble : celle de D.RAWI qui porte ses couleurs
   const etoffeDe = t => Object.keys(R.etoffes).find(k => { const e = R.etoffes[k], L = t.look; return e.robe === L.robe && e.head === L.head && e.cloak === L.cloak && (e.legs || null) === (L.legs || null); }) || null;
   // ce que donnent déjà l'ensemble et le visage d'origine, pièce par pièce — la coupe d'un ensemble qui ne se choisit plus
-  // (« sur une épaule », « ample ») vaut le long manteau, que le grand personnage dessine à sa place
+  // (« sur une épaule », « ample ») vaut le long manteau, que le grand personnage dessine à sa place ; « sans manteau » (la veste
+  // de la ruelle) reste ce qu'il est, pour que la calotte le fasse céder (D.RAWI.sans) : la coupe ne se choisit plus
+  // (décideur, 19 novembre), mais le petit personnage de la carte garde l'ensemble tel qu'il est
   P.base = function (t) { const L = t.look, v = visageOrigine();
-    return { teint: v.teint, barbe: v.barbe, poil: v.poil, coiffe: L.coiffe || 'capuche', manteau: liste(R.manteaux, L.manteau || 'long') ? L.manteau || 'long' : 'long', longue: L.court === false, etoffe: etoffeDe(t), neon: null, objet: null }; };
+    return { teint: v.teint, barbe: v.barbe, poil: v.poil, coiffe: L.coiffe || 'capuche', manteau: L.manteau === 'aucun' || liste(R.manteaux, L.manteau || 'long') ? L.manteau || 'long' : 'long', longue: L.court === false, etoffe: etoffeDe(t), neon: null, objet: null }; };
   // ce qu'une coiffe ne prend pas (D.RAWI.sans) : la coupe qu'elle a chez un Compagnon des récits ou chez Sâlim, qui marche
   // avec le râwî — la calotte sans manteau, le turban haut avec le manteau long —, l'étoffe claire qui ferait du turban celui
   // d'un Compagnon ; et la robe longue sous la capuche, qui ferait l'habit des moines du jeu (D193, précision du décideur).

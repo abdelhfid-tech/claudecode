@@ -38,10 +38,10 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     cache(); W.roster = {}; W.saga = null; W.startChapter('idris', 0); if (!await chaine()) return { ok: false, ou: 'prologue' };
     cache(); W.roster = {}; W.saga = null; I.ui.startSaga(I.sagas.abubakr); if (!await chaine()) return { ok: false, ou: 'premier maillon' };
     I.debug.auto = false; I.speed = 1; const sv = I.save.data;
-    // 2.x — le râwî composé : un autre nom, un ensemble, et neuf pièces (des identifiants pris dans D.RAWI ; depuis le nouveau dessin
-    // d'Idris, ni coupe à l'épaule ni écharpe : choix simplifiés)
-    const refus = I.perso.choisir('Khalil', 'encre', { teint: 't6', barbe: 2, poil: 'p3', coiffe: 'litham', manteau: 'aucun', longue: true, etoffe: 'e7', neon: 'n4', objet: 'lanterne' }); I.save.store();
-    if (refus || !sv.profil.compo || Object.keys(sv.profil.compo).length !== 9) return { ok: false, ou: 'le râwî composé (' + (refus || JSON.stringify(sv.profil)) + ')' };
+    // 2.x — le râwî composé : un autre nom, un ensemble, et huit pièces (des identifiants pris dans D.RAWI ; depuis le nouveau dessin
+    // d'Idris, ni coupe à choisir ni écharpe : choix simplifiés)
+    const refus = I.perso.choisir('Khalil', 'encre', { teint: 't6', barbe: 2, poil: 'p3', coiffe: 'litham', longue: true, etoffe: 'e7', neon: 'n4', objet: 'lanterne' }); I.save.store();
+    if (refus || !sv.profil.compo || Object.keys(sv.profil.compo).length !== 8) return { ok: false, ou: 'le râwî composé (' + (refus || JSON.stringify(sv.profil)) + ')' };
     return { ok: true, compo: Object.keys(sv.profil.compo).length, look: JSON.stringify(I.sagas.idris.heroes.idris.look), lumieres: sv.lights.length, savoirs: sv.codex.length, veillees: Object.keys(sv.veillees).length, rencontres: Object.keys(sv.rencontres || {}).length, partie: JSON.parse(JSON.stringify(sv)) }; });
   if (!joue.ok) { ko(`BLOQUÉ la partie de départ ne se joue pas (${joue.ou})`); await browser.close(); process.exit(1); }
   ok(`une partie est jouée : prologue, premier maillon, sa veillée et sa rencontre — ${joue.lumieres} Lumière, ${joue.savoirs} savoirs ; son râwî s’appelle Khalil et porte un habit composé de ${joue.compo} pièces`);

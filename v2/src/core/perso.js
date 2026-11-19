@@ -52,9 +52,11 @@
   // l'étoffe d'un ensemble : celle de D.RAWI qui porte ses couleurs
   const etoffeDe = t => Object.keys(R.etoffes).find(k => { const e = R.etoffes[k], L = t.look; return e.robe === L.robe && e.head === L.head && e.cloak === L.cloak && (e.legs || null) === (L.legs || null); }) || null;
   // ce que donnent déjà l'ensemble et le visage d'origine, pièce par pièce — la coupe d'un ensemble qui ne se choisit plus
-  // (« sur une épaule », « ample ») vaut le long manteau, que le grand personnage dessine à sa place
+  // (« sur une épaule », « ample ») vaut le long manteau, que le grand personnage dessine à sa place ; « sans manteau » (la veste
+  // de la ruelle) reste ce qu'il est, pour que la calotte le fasse céder (D.RAWI.sans) : la coupe ne se choisit plus
+  // (décideur, 19 novembre), mais le petit personnage de la carte garde l'ensemble tel qu'il est
   P.base = function (t) { const L = t.look, v = visageOrigine();
-    return { teint: v.teint, barbe: v.barbe, poil: v.poil, coiffe: L.coiffe || 'capuche', manteau: liste(R.manteaux, L.manteau || 'long') ? L.manteau || 'long' : 'long', longue: L.court === false, etoffe: etoffeDe(t), neon: null, objet: null }; };
+    return { teint: v.teint, barbe: v.barbe, poil: v.poil, coiffe: L.coiffe || 'capuche', manteau: L.manteau === 'aucun' || liste(R.manteaux, L.manteau || 'long') ? L.manteau || 'long' : 'long', longue: L.court === false, etoffe: etoffeDe(t), neon: null, objet: null }; };
   // ce qu'une coiffe ne prend pas (D.RAWI.sans) : la coupe qu'elle a chez un Compagnon des récits ou chez Sâlim, qui marche
   // avec le râwî — la calotte sans manteau, le turban haut avec le manteau long —, l'étoffe claire qui ferait du turban celui
   // d'un Compagnon ; et la robe longue sous la capuche, qui ferait l'habit des moines du jeu (D193, précision du décideur).

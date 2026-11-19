@@ -474,6 +474,8 @@
     coiffes: ['capuche', 'calotte', 'litham'],
     sans: {
       capuche: { longue: [true] },                           // avec la robe longue, l'habit des moines du jeu (Frère Cyprien, les moines des récits)
+      calotte: { manteau: ['aucun'] },                       // Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit — la coupe ne se choisit plus, mais la veste de
+                                                             // la ruelle est sans manteau : sous la calotte, elle prend le long manteau
       litham: { etoffe: ['e6', 'e4'] }                       // de dos, le turban des Compagnons : clair, l'un d'eux ; vert, 'Alî
     },
     manteaux: ['long'],                                      // le long manteau seul : la coupe « sans manteau » est retirée (décideur, 19 novembre)
