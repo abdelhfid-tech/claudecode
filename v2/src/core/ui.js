@@ -129,7 +129,7 @@
       mk(I.t('Importer une partie'), () => { close(); U.partie('importer', () => U.showTitle()); });
       mk(I.t('◂ Retour'), () => montrer(principal));
     };
-    { const v = $('#title .ver'); if (v) v.textContent = window.ISNAD_VERSION ? I.t('version {v}', { v: '\u2066' + window.ISNAD_VERSION + '\u2069' }) : I.t('version de travail'); }
+    { const v = $('#title .ver'); if (v) v.textContent = window.ISNAD_VERSION ? I.t('version bêta {v}', { v: '\u2066' + window.ISNAD_VERSION + '\u2069' }) : I.t('version bêta'); }
     // ce qui flottait autrefois hors de la colonne (la langue en haut, « Importer une partie » dans un coin) est rangé dedans
     { const c = $('#title > .coin'); if (c) c.remove(); const lg0 = $('#title > .langues'); if (lg0) lg0.remove(); $('#title').classList.remove('multilingue'); }
     screen('#title', true); montrer(vue === 'reglages' ? reglages : principal);
@@ -410,7 +410,7 @@
     pied(I.t('Aide'), () => { close(); U.pause('aide', () => U.showChain()); });
     pied(I.t('Les degrés du mal'), () => { close(); U.pause('mal', () => U.showChain()); });
     pied(I.t('Écran-titre'), () => { close(); U.showTitle(); });
-    foot.appendChild(I.el('span', 'ver', window.ISNAD_VERSION ? I.t('version {v}', { v: window.ISNAD_VERSION }) : I.t('version de travail')));
+    foot.appendChild(I.el('span', 'ver', window.ISNAD_VERSION ? I.t('version bêta {v}', { v: window.ISNAD_VERSION }) : I.t('version bêta')));
     screen('#chain', true); $('#chain').scrollTop = 0;
     fl = focusList(btns, { start: 0 });
     if (!sv.cp) I.save.auto('La Chaîne · ' + sv.lights.filter(l => l !== 'sabr').length + ' Lumière(s)'); // entre deux maillons : la partie est gardée ici
