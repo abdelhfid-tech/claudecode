@@ -34,7 +34,7 @@ sur une source consultable : le terme reste une proposition. Les abréviations :
 | Ce que le narrateur dit **au râwî** (« Râwî, voici le premier maillon… ») | である調 aussi, avec l'apostrophe 「ラーウィーよ、」 ; on tutoie par la tournure (命令形 doux : 〜せよ／〜するがよい), jamais par 君／お前. | Le narrateur est un aîné qui transmet : la tournure de l'injonction douce suffit, sans pronom. |
 | **À distance du joueur** (2.08 ; le décideur, 18 novembre : « on a dit descendre dans la noosphère », « gardons un peu de distance avec le joueur » ; D187) : la descente dans la noosphère, les maux du cœur, la prière tenue, le secours, le dernier maillon | **À la troisième personne** : 「ラーウィーはそこへ降りてゆく」, 「ラーウィーは持ちこたえた」, 「出口は見つかった」, 「この章で、礼拝は守られていた」, 「残るは最後の環――ラーウィーの環である」. **Jamais** あなた, おのれ, 自ら（の内）, 君 pour le cœur, la prière, la descente ou la vie du joueur (écartés : 「あなたの降りゆく道」, 「あなたが生きているうちに」, 「自らの内へ降りる」, 「おのれの心」, 「あなたは礼拝を守っていた」). Le récit de la descente (invites, cartes, ce qui arrive à la ラーウィー) est en である調 ; les annonces du jeu (「ラーウィーのレベルが上がりました」) et les consignes de commande en です・ます調, sans pronom : « Entrée, ou touche le râwî » → 「Enterキーか、ラーウィーをタップしてください」. Là où le français garde le « tu » (une consigne, le pourparler : « plus fort que toi » dans l'aide), le japonais le garde aussi. **À valider (2.08).** | La descente est celle d'un personnage de fiction (exigence 22), non une introspection demandée au joueur. Une adresse au cœur du lecteur (「あなたの心」) sonnerait, en japonais, comme un sermon ou un livre de développement personnel. Une phrase sans sujet, en です・ます, se lit comme adressée au joueur : là où le français dit « il », on nomme la ラーウィー (au moins une fois par texte), ou l'on tourne la phrase sans personne (「出口は見つかった」). |
 | Écrans du jeu (menus, boutons, aides, leçons, annonces) | **です・ます調** pour les phrases ; **forme nue** pour les libellés (「休息」「装備」「話す」). Les leçons s'adressent au joueur sans pronom : 「画面をタップすると、その場所へ歩きます。」 | Convention des jeux japonais : l'interface parle poliment au joueur ; un libellé n'a pas de verbe conjugué. Le mélange des deux registres dans une même phrase est interdit. |
-| Répliques des Compagnons | Langue digne et simple : である ou です・ます selon la relation (un Compagnon à la communauté : である／〜だ ; à un aîné, à un hôte : です・ます). Pas de 〜でござる, 〜じゃ, 〜なり, 〜ぞよ (archaïsme de théâtre), pas de 〜だぜ, 〜っす, 〜ちゃん (manga), pas de 拙者／それがし／わし. Le « je » est **私**（わたし） pour tous ; 我々 / 私たち pour « nous ». | Exigence 4 (sobriété) et consigne du décideur. Les pronoms et terminaisons « de personnage » (役割語) du manga ou du jidaigeki colleraient au Compagnon un type japonais qu'il n'a pas. Le respect passe par la tenue de la phrase, non par l'archaïsme. |
+| Répliques des Compagnons | Langue digne et simple : である ou です・ます selon la relation (un Compagnon à la communauté : である／〜だ ; à un aîné, à un hôte : です・ます). Pas de 〜でござる, 〜じゃ, 〜なり, 〜ぞよ (archaïsme de théâtre), pas de 〜だぜ, 〜っす, 〜ちゃん (manga), pas de 拙者／それがし／わし ; *harmonisation (19 novembre) :* pas de 〜ぬ／〜ねばならぬ non plus, ni dans leur bouche ni dans leurs gestes (options de choix, objectifs). Le « je » est **私**（わたし） pour tous ; « nous », « tu », « mon » : § 1.10. | Exigence 4 (sobriété) et consigne du décideur. Les pronoms et terminaisons « de personnage » (役割語) du manga ou du jidaigeki colleraient au Compagnon un type japonais qu'il n'a pas. Le respect passe par la tenue de la phrase, non par l'archaïsme. |
 | Paroles citées (`quote`) | Celles du registre des sources (`v2/docs/sources/`) : traduction publiée telle quelle, ou traduite de l'arabe. Ce glossaire n'en fixe aucune. | `v2/docs/sources/LISEZ-MOI.md`. |
 | 2084, la Cité-Miroir (Idris, Yûnus, Sâlim, les habitants) | Japonais moderne et sobre : です・ます entre inconnus, である／だ entre proches ; ni argot, ni anglicismes gratuits (sauf les objets de 2084 : 通知, スコア, フィード…). *D184 (relecture du français, 2.1 et 2.2) :* on compte des vues, des abonnés et des comptes, pas des regards — « quarante et un millions de vues » 「再生数4100万」, « huit millions d'abonnés » 「フォロワーは800万人」, « des millions de comptes » 「何百万ものアカウント」 ; « des millions de gens désirent » 「何百万もの人々が欲する」, jamais 「視線」 pour un nombre ni pour ce qui désire. **À valider (D184).** | Le futur du jeu est une ville d'aujourd'hui un peu plus serrée : la langue doit sonner juste, sans effet de science-fiction. |
 | Le Caïd et sa Citadelle (veillées) | である調 méditatif pour la voix du Caïd ; ses gens parlent simplement. Jamais une phrase reprise d'un auteur (exigence 14) : le ton se cherche, il ne se copie pas — en japonais non plus on ne reprend aucune traduction japonaise de l'auteur de l'exigence 14. | Exigence 14. |
@@ -74,8 +74,8 @@ seul** système, celui ci-dessus ; une citation publiée garde sa graphie (c'est
 | Allah | **アッラー** (jamais 神 seul pour le nom ; 神 reste le mot commun : 「アッラーの外に神はなく」). | [三田], partout ; registre des sources (`versets.json`, 2:255 : 「アッラー，かれの外に神はなく」). |
 | Pronom divin | **かれ**, en hiragana, comme 三田 (「かれは幽玄界も現象界も知っておられる方」, 13:9), et le verbe en 尊敬語 (〜される, 〜なさる). | [三田] via `versets.json`. Le français met une majuscule (« Lui ») : le japonais n'en a pas ; c'est la graphie かれ + le 尊敬語 qui distingue. |
 | Le Prophète | **預言者ムハンマド** ; « le Messager d'Allah » = **アッラーの使徒**. | [Wiki-ja] 「ムハンマド・イブン＝アブドゥッラーフ」 (« イスラームの預言者 ») ; 「アッラーの使徒」 dans la traduction de *Muslim* (vol2-720-2). |
-| ﷺ après son nom | **Garder le signe ﷺ**, comme le français, partout où le français l'écrit (à trancher, § 4). | Trois usages japonais lus : (1) la traduction de *Muslim* du 日本ムスリム協会 n'ajoute **aucune formule** (« アッラーのみ使い », « 預言者 » seuls : vol2-174, vol2-720-2) ; (2) les publications de prédication écrivent 「預言者ムハンマド（彼にアッラーの祝福と平安あれ）」 (lu : 『諸々の徳 8』, サイード佐藤訳, <https://cdn.byenah.com/contents/6757/ja_08_Virtues_Of_The_Companions.pdf>) ; (3) la traduction savante de 東長靖 (2015, [東長] au § 2) écrit 「彼［アッラー］の使徒【祝福】」, un mot entre crochets à la place de la formule. La formule entière fait 15 caractères : plus d'une ligne de la boîte de dialogue sur un téléphone tenu en hauteur (12 caractères, § 1.8), à chaque mention du Prophète ﷺ. Le signe ﷺ dit la même chose en un caractère, s'affiche déjà dans le jeu, et se reconnaît dans toutes les langues. |
-| Formule après un Compagnon (raḍiya Llāhu ʿanhu) | **Aucune**, comme le français — **à trancher par le décideur**. | Les publications de prédication écrivent 「（彼にアッラーのご満悦あれ）」 (même document, sur アブー・フライラ) ; la traduction de *Muslim* du 日本ムスリム協会 n'en met pas (「アリー はいった」, vol2-174). Si le décideur en veut une, proposer le signe arabe ﵁ (U+FD41) une fois par écran, plutôt que la formule japonaise. |
+| ﷺ après son nom | **Garder le signe ﷺ**, comme le français, partout où le français l'écrit (à trancher, § 4) ; *harmonisation (19 novembre) :* **collé au mot, sans espace ni avant ni après** : 「アッラーの使徒ﷺは」「預言者ムハンマドﷺの」, comme le registre des sources (§ 1.10). | Trois usages japonais lus : (1) la traduction de *Muslim* du 日本ムスリム協会 n'ajoute **aucune formule** (« アッラーのみ使い », « 預言者 » seuls : vol2-174, vol2-720-2) ; (2) les publications de prédication écrivent 「預言者ムハンマド（彼にアッラーの祝福と平安あれ）」 (lu : 『諸々の徳 8』, サイード佐藤訳, <https://cdn.byenah.com/contents/6757/ja_08_Virtues_Of_The_Companions.pdf>) ; (3) la traduction savante de 東長靖 (2015, [東長] au § 2) écrit 「彼［アッラー］の使徒【祝福】」, un mot entre crochets à la place de la formule. La formule entière fait 15 caractères : plus d'une ligne de la boîte de dialogue sur un téléphone tenu en hauteur (12 caractères, § 1.8), à chaque mention du Prophète ﷺ. Le signe ﷺ dit la même chose en un caractère, s'affiche déjà dans le jeu, et se reconnaît dans toutes les langues. |
+| Formule après un Compagnon (raḍiya Llāhu ʿanhu) | **Celle du français, là où il l'écrit** : le recueil dit « (qu'Allah l'agrée) » dans vingt feuillets ; le japonais y écrit **「（彼にアッラーのご満悦あれ）」** (constant dans les sept récits, relevé par les relectures du 19 novembre ; **à valider**). Ailleurs, aucune, comme le français — **à trancher par le décideur**. | Les publications de prédication écrivent 「（彼にアッラーのご満悦あれ）」 (même document, sur アブー・フライラ) ; la traduction de *Muslim* du 日本ムスリム協会 n'en met pas (「アリー はいった」, vol2-174). Si le décideur en veut une, proposer le signe arabe ﵁ (U+FD41) une fois par écran, plutôt que la formule japonaise. |
 | Les Compagnons | **教友**（サハーバ）. Dans le texte du joueur : 教友 seul ; la première fois dans le recueil : 「教友（サハーバ）」. | [Wiki-ja] « サハーバ » : 「日本語では『教友』と訳される」 ; même mot dans la traduction de サイード佐藤 (『預言者ムハンマド……の教友たちの徳』). La majuscule du français (« un Compagnon ») n'a pas d'équivalent : 教友 suffit. |
 | Les quatre premiers califes | **正統カリフ**. | [Wiki-ja] « 正統カリフ » (al-Khulafāʾ al-Rāshidūn). |
 | Commandeur des croyants | 信徒の長 (titre) ; la traduction de *Muslim* dit 「信者達の指導者」. | 「信者達の指導者」 : vol2-174. 信徒の長 : usage courant, référence non vérifiée ; **à valider**. |
@@ -126,6 +126,8 @@ Le moteur n'a pas de ruby. On s'en passe ainsi :
   「一千の天使」). Ne pas écrire « 7つ » dans un texte du récit.
 - Le français écrit certains nombres en lettres par `I.enLettres` ; le japonais reçoit le champ nu (`n`) et choisit
   (consigne `CONSIGNE.md`, règle 5) : kanji dans une phrase de récit, chiffres sur un écran de règles.
+- *Harmonisation (19 novembre) :* **ひとつ** toujours en kana (何ひとつ, もうひとつ, ただひとつ, ひとつひとつ), 二つ, 三つ… en
+  kanji ; **一人** pour compter (誰一人, 一人の男, 一人ひとり), **ひとり** pour « seul » (ひとりで, ひとり残る) : § 1.10.
 
 ### 1.8 Longueur des répliques
 
@@ -152,6 +154,80 @@ compte à peu près la moitié des caractères de la phrase française qui dit l
 - Les **glyphes** (◠ ∴ ✧ ☾ ◎ ∞ ⟁, ▶ ☰ ✦) ne changent pas.
 - Les **noms arabes des Lumières, des lames, des étoiles** que le français donne en italique (« al-Qanâ'a ») passent en
   katakana (アル＝カナーア) **seulement** là où le français les montre ; ailleurs, le mot japonais seul.
+
+### 1.10 Formes fixées à l'harmonisation (19 novembre)
+
+*D188 : « chaque langue est harmonisée d'un seul regard ». Après les deux relectures des sept récits (fidélité, puis
+langue), l'agent a fixé une seule forme pour chaque point que les relecteurs avaient trouvé écrit de plusieurs façons, et
+l'a posée dans tous les fichiers de `v2/src/lang/ja/` (récits, moteur, tables, cœur ; 458 entrées, chacune avec sa note
+« harmonisation : … »). Les textes du registre — paroles citées, leurs sources, versets — ne changent pas : ils gardent
+la graphie du registre, que le contrôle compare au signe près (ce qui en diffère est au § 4). **Tout ce tableau est à
+valider.***
+
+| Point | Forme retenue | Écarté | Pourquoi |
+|---|---|---|---|
+| ﷺ | collé au mot, sans espace : 「アッラーの使徒ﷺは」「預言者ムハンマドﷺの」 | 「使徒 ﷺ は」 | Le registre l'écrit ainsi (「使徒ﷺの」) ; § 1.5 : pas d'espace entre les mots. |
+| La ponctuation d'une citation | le point hors des crochets : 「……である」。 ; aucun point quand la citation est le texte entier (une option, une réponse) ou qu'une autre la suit : 「ホムスで、教友から」「クーファで、教友から」。 ; 「！」「？」 restent dedans | 「……である。」 | L'usage de l'édition japonaise d'aujourd'hui, que suivaient déjà saga_abubakr et caid. Un verset cité garde le point que le registre lui donne. |
+| « la Chaîne » | **伝承の鎖** quand le récit la nomme (sujet, objet, lieu, écran) : 「伝承の鎖は一年さかのぼる」「伝承の鎖をたどれ」 ; **鎖** seul dans les mots composés et les étiquettes (鎖の一環, 鎖への忠実さ, 鎖は伝えられた, 鎖は忠実に伝えられた, 鎖は無傷, 綻びのない鎖, 鎖のすべて) et à la reprise dans un même texte ; « la chaîne vacille » : 「鎖が揺らぐ」 ; une chaîne de transmission quelconque (minuscule) : 鎖 | — | Le § 2.1 disait 鎖 et réservait 伝承の鎖 au titre de l'écran, quand quatre récits sur cinq l'écrivaient en entier : seul en tête de phrase, 鎖 se lit d'abord comme une chaîne de fer. |
+| La description d'une compétence | des phrases en です・ます séparées par 「。」 ; la devise d'abord, en です・ます ou en groupe nominal (「鞭の一打。」「ありのままの誠実。」「誰にも同じ秤で。」) ; jamais une forme nue (「持ちこたえる」), jamais 「――」 | 「憎まずに持ちこたえる――忍耐の一撃。」 | § 1.1 : l'interface parle en です・ます, sans deux registres dans une même description. |
+| Les dégâts d'une compétence | « dégâts de X », « frappe de X », « X » seul : 「Xの打撃を与えます」 ; « sur une chimère » : 「虚像一体にXの打撃を与えます」 ; « sur toutes les chimères », « sur tous » : 「すべての虚像にXの打撃を与えます」 ; « lourds », « forte » : 「Xの重い打撃」 ; « légers » : 「Xの軽い打撃」 ; « grande » : 「Xの大きな打撃」 ; « deux frappes » : 「Xの打撃を二度与えます」 | 「Xの一撃」 | Le moteur dit 「与える打撃」「受ける打撃」. 一撃 reste le coup sans Lumière (« Frappe nette » : 「鋭い一撃」) et les noms (「護衛の一撃」). |
+| Les effets d'une compétence | « révèle les failles » : 「綻びを明かします」 ; « ôte un voile » : 「覆いを一枚はがします」 ; « déchire » : 「裂きます」 ; « arrache » : 「はぎ取ります」 ; « dissipe les bonus » : 「強化を打ち消します」 ; « donne sans compter » : 「惜しみなく与えます」 ; « la même mesure pour tous » : 「誰にも同じ秤で」 | 「綻びをあらわにします」, 「惜しまず与える」 | Une forme par effet. |
+| Une référence du Coran (hors registre) | 「クルアーン 2章197節」 — l'espace du registre entre クルアーン et le chiffre, la seule permise ; une sourate : 「クルアーン 106章」, 「（48章）」 ; dans une source (feuillet, attribut, secours) : 「クルアーン 2章197節（意味の翻訳、日本ムスリム協会訳）」 quand le français dit « traduction du sens » (la page d'un attribut : 「{ref}（意味の翻訳、日本ムスリム協会訳）」) ; dans un texte : 「（12章40節、意味の翻訳）」, ou 「（クルアーン 49章6節、意味の翻訳）」 quand le français y nomme le Coran | 「第106章」, 「クルアーン16章」, 「意味の訳」 | La forme la plus proche de celle du registre (「クルアーン 3章144節(日本ムスリム協会訳)」), qui s'affiche sous chaque verset cité. |
+| « traduction du sens » d'un hadith ou d'une chronique (hors registre) | 「（意味の翻訳）」 | 「――意味の訳」 | — |
+| Les titres des sources (hors registre) | as-Sîra : 『預言者伝』 ; al-Bidâya (wa-n-Nihâya) : 『始まりと終わり』 ; al-Bukhârî, Sahîh, ou « al-Bukhârî » seul dans une source : 『サヒーフ・アル＝ブハーリー』 ; Muslim, Sahîh : 『サヒーフ・ムスリム』 ; « (récit de X) » : 「（Xの語り）」 | 『スィーラ』, ムスリム『サヒーフ』, ブハーリー『サヒーフ』 | Les formes des sagas et des crédits. |
+| « tu » familier | **おまえ** | お前 | La forme de six récits sur sept. Deux paroles du registre écrivent お前 ; le feuillet qui cite celle d'Aslam (saga_umar, codex[4]) la garde. |
+| « nous » | **私たち** d'ordinaire (conversation, です・ます, narration, recueil, 2084) ; **我々** quand on parle au nom d'un camp, d'une troupe, d'une tribu, d'une délégation ou d'une communauté face à d'autres — Compagnon, figure de l'histoire ou personnage de fiction ; **我ら** seulement pour une chimère ou une idole et les mots qui leur donnent corps (「我ら」対「おまえたち」, 「あの人は死んだ。我らの盟約もだ」) | われら, われわれ, 我等 | われら et 我ら donnaient un parler archaïque à des chefs berbères, à des moines et des notables de Hîra (exigence 10), aux sécessionnistes (exigence 5) et à 'Alî. |
+| « mon, ma » | わが | 我が | — |
+| un, une | ひとつ, toujours en kana | 一つ | § 1.7. |
+| une personne | 一人 pour compter (一人の男, 誰一人, 仲間一人, Xの一人, 一人ひとり, 一人でも) ; ひとり pour « seul » (ひとりで, ひとり残る, ひとりきり, ひとりでに) | 誰ひとり, ひとりの男 ; 一人で pour « seul » | La distinction des dictionnaires (一人／独り). |
+| 〜込む | en kanji : 思い込む, 書き込む, 黙り込む, 流れ込む, 持ち込む… | 思いこむ… | — |
+| « amasser, thésauriser » | 貯め込む | 溜めこむ, ためこむ | — |
+| « orientale » (l'ambiance d'une saga) | オリエント | 東方 | 東方 se lit l'Extrême-Orient ou l'Église d'Orient (東方正教会). |
+| « Consulter X » (un objectif) | 「Xに相談する」 | 「Xに諮る」 | 諮る reste au récit de la shûrâ : consulter les Compagnons ou une assemblée avant de décider (「教友たちに諮った」). |
+| réciter (le Coran) | 読誦する | 誦む | 誦む se lit mal sans ruby (§ 1.6). |
+| « mot d'ordre » | 号令 | — | Déjà partout. |
+| un maître, un seigneur humain | **支配者** (un maître), **領主** (le seigneur d'une terre) ; « Seigneur de la Citadelle » : 「城塞の領主」 (§ 3.1) | 主 seul | 主 seul est le Seigneur dans le récit (「主のもとへ帰る」). |
+| un ordre | **命令** quand いのち peut se lire : 「固い命令を受けている」「あなたの命令に従う」 | 命 | — |
+| une lame | **刃** seulement pour la lame forgée du jeu (「満足の刃」, 「刃を鍛える」) et la chimère « Lame pieuse » (敬虔を装う刃) ; une lame réelle : 刃物, 剣 ; « servir de lame » : 「武器になる」, 「武器として使う」 ; le Pur, « une phrase vraie devenue lame » : 「刃物と化した真実の一文」 | 刃 pour une arme ou une image | Le joueur doit reconnaître la lame forgée dès qu'il lit 刃 (§ 2.1). |
+| les archaïsmes | aucun 〜ぬ／〜ねばならぬ dans la bouche d'un Compagnon ni dans ses gestes ; les personnages de fiction, les chimères et les idoles peuvent les garder | — | Exigence 4, § 1.1 ; règle déjà tenue dans saga_khalid. |
+| l'apostrophe au râwî | 「ラーウィーよ、」 | 「ラーウィーよ。」 | § 1.1. |
+| 「！」「？」 au milieu d'une réplique | sans espace après | 「正しい！　いつだって」 | § 1.5 (une espace pleine chasse, usage éditorial, reste à trancher : § 4). |
+
+**Termes proposés par les relecteurs (19 novembre), ajoutés ici tels qu'ils les ont employés. À valider, un par un.**
+
+| Français | **Japonais** | Proposé par | Note |
+|---|---|---|---|
+| « qu'Allah l'agrée », après un Compagnon (là où le français l'écrit) | （彼にアッラーのご満悦あれ） | les sept récits | § 1.3. |
+| la formule de l'isnâd, « Untel m'a rapporté, d'après untel, qui l'a vu » | 「誰それが私に伝えた。それを見た誰それによれば」 | frame (fidélité) | Le feuillet et la réplique de Yûnus disent la même. |
+| la ronde de nuit ('Umar) | 夜回り | saga_umar (langue) | Le titre, la compétence et le feuillet. |
+| les ermitages des moines | 修道の庵 | saga_abubakr (langue) | — |
+| « la véracité à nu » | ありのままの誠実 | saga_abubakr (langue) | — |
+| Sâlim, l'affranchi (d'Abû Hudhayfa) | 解放奴隷サーリム | saga_abubakr (langue) | — |
+| un affranchi (une désignation) | 解放された者 | § 3.3 | — |
+| un maître humain ; « celui que je sers » | 支配者 ; お仕えする方 | saga_khalid, saga_uthman (fidélité) | Jamais 主 ni あるじ (§ 1.10). |
+| « l'adversaire » | 相手, 相手方 | saga_khalid, saga_uthman (fidélité) | Jamais 敵, qui ferait d'un groupe un ennemi par nature (exigence 10) ; 軍勢 plutôt que 敵勢. |
+| « les siens », « ses frères » (un camp) | 同胞, 身内 | saga_uthman (fidélité) | — |
+| un groupe que le récit désigne | 〜たち, 〜の者たち (ハルーラーの者たち, ペルシア人たち) | saga_ali, caid (fidélité) | Jamais 〜ども ni 連中 (mépris : exigences 5 et 10). |
+| un couvre-chef | 被り物 | saga_khalid (fidélité) | 覆い est le voile d'une chimère (§ 2.1). |
+| l'investiture d'un calife | 就任 | saga_khalid (fidélité) | Pas 即位 (l'avènement d'un roi). |
+| une pièce (de monnaie) | 硬貨 | saga_khalid (langue) | Pas 銀貨 (le métal n'est pas dit). |
+| l'infanterie des ailes | 側翼の歩兵 | saga_khalid (langue) | Proposition, au lieu de 「翼の歩兵」. |
+| « regardez » adressé à un supérieur | 「ご覧ください」 | saga_khalid (langue) | 「ご覧なさい」 ne se dit jamais d'un inférieur à un supérieur ; « ne… pas » poli : 「なさることはありません」, pas 「なさいますな」. |
+| le flanc d'un navire | 船腹 | saga_uthman (langue) | — |
+| 糧 | réservé à la provision du cœur (心の糧) et à la subsistance | saga_ali (langue) | Jamais au figuré pour ce dont se nourrit une idole. |
+| 念じる | seulement dans une citation | saga_ali (langue) | Ailleurs, 想起 (§ 2.3). |
+| « La Chaîne te montre / te fait entendre… » | sans あなた : 「伝承の鎖は……見せる」「伝承の鎖に導かれ、その足跡をたどる」 | saga_ali (langue) | Distance avec le joueur (§ 1.1). |
+| une consigne (d'un chef) | 指示 | saga_ali (langue) | Pas 訓示 (le discours solennel). |
+| « En avant, vers… ! » | 「いざ、〜へ！」 | saga_ali (langue) | — |
+| l'enfant de 2084 qui parle à Idris | sans pronom (「ねえ」), jamais あなた | frame (langue) | — |
+| « la cité » ; « la capitale » | 町 ; 都 | frame (langue) | — |
+| la veille ; le veilleur ; la sentinelle | 番 ; 夜番 ; 見張り | caid (langue) | 夜語り reste aux veillées du Caïd elles-mêmes. |
+| « ouvrir grand les portes » | 「扉を開け放って」 | caid (langue) | — |
+| des élèves ; un vieux maître | 教え子 ; 年老いた師 | caid (langue) | Jamais 弟子 ni 老師 (le disciple et le maître des écoles bouddhiques ou des arts). |
+| sans broncher ; « je le jure » ; « vous semblez las » | 「表情ひとつ変えずに」 ; 「誓ってもいい」 ; 「お疲れのご様子」 | caid (langue) | Aucun trait du visage ni du corps décrit (exigence 2) ; pas de serment « sur ma barbe ». |
+| la coudée | 腕尺 | caid (fidélité, langue) | Mot rare : à trancher (§ 4). |
+| le rang de la prière | 礼拝の列 | saga_khalid, saga_ali (fidélité) | Précision acceptée par les relecteurs. |
+| Dhû l-Fiqâr ; Haydar | ズー・アル＝フィカール ; ハイダル | saga_ali (fidélité) | Le nom du sabre reste à trancher (§ 4). |
 
 ## 2. Le vocabulaire du jeu
 
@@ -186,14 +262,14 @@ Deux sources savantes reviennent souvent :
 | Sérénité (la jauge dorée ; D184 : autrefois « Sakîna ») | **落ち着き** ; « le groupe retrouve sa sérénité » : 「一行は落ち着きを取り戻す」 ; « la Sérénité monte » : 「落ち着きが増す」 ; « Sérénité +{n} au départ » : 「開始時の落ち着き +{n}」 | Mot ordinaire : le calme qu'on garde dans l'épreuve (「落ち着きを失わない」「落ち着きを取り戻す」). Le jeu l'employait déjà pour la même « sérénité » dans les pourparlers (「礼拝の落ち着き：信頼 +1」) et pour le saint qui « garde le calme » (「落ち着きを保つ」) : la jauge, le pourparler et la figure du saint disent désormais un seul mot, comme le français. | Le décideur a écarté le mot du Coran pour une jauge de jeu (D184, 1.3). Or **安らぎ est le mot de 三田 pour la sakīna** : lu le 18 novembre sur alquran.cloud (`ja.japanese`), 48:4 「信者たちの心に安らぎを与え」, 48:18 「かれらに安らぎを下し」, 48:26, 9:26 「かれの安らぎを下し」, 9:40 ; et 13:28, que le recueil cite, 「心の安らぎ」. 安らぎ et 「降りる」 quittent donc la jauge ; サキーナ n'est plus écrit. Écartés aussi : 平安 (三田 2:248 pour la sakīna, et le salām des formules), 平常心 (le 「平常心是道」 du zen), 安心 (lecture bouddhique あんじん), 冷静 (la froideur plus que la paix). Le recueil ne nomme plus la sakīna, en français comme en japonais ; s'il fallait la citer un jour dans un feuillet, ce serait 「安らぎ（サキーナ）」 avec 48:4 tiré du registre (`versets.json`), jamais comme nom de la jauge. **À valider (D184).** |
 | râwî (le transmetteur, le joueur) | **ラーウィー** (sens : 伝承者) | Transcription selon § 1.2 ; 「伝承者」 : [協会訳ムスリム] vol2-174 (「私（伝承者）」). | Dans l'apostrophe : 「ラーウィーよ」. Pas de forme japonaise consacrée de *râwî* lue : la forme suit le système. |
 | isnad | **イスナード** | Transcription selon § 1.2 ; la chose : 「伝承者経路」, [協会訳ムスリム] vol2-174 (「他の伝承者経路でも伝えられている」). | 「イスナード（伝承者経路）」 à la première occurrence du recueil. |
-| la Chaîne (l'écran, la suite des maillons) | **鎖** (titre d'écran : 「伝承の鎖」) | Proposition. | **À valider.** *D184 (2.21) :* le titre d'une partie sans faute n'est plus « Isnâd sahîh » mais « Chaîne fidèle » : 「鎖は忠実に伝えられた」, en écho à 「鎖への忠実さ」 (Fidélité à la Chaîne) et à 「鎖は伝えられた」 (Chaîne transmise) ; jamais 真正 ni 「真正なイスナード」 : *ṣaḥîḥ* est le jugement des savants sur une chaîne réelle, pas un score. **À valider (D184).** |
+| la Chaîne (l'écran, la suite des maillons) | **伝承の鎖** quand le récit ou l'écran la nomme ; **鎖** seul dans les mots composés et les étiquettes (鎖の一環, 鎖への忠実さ, 鎖は伝えられた) et à la reprise dans un même texte (harmonisation du 19 novembre, § 1.10 ; ce tableau disait 鎖, et 伝承の鎖 pour le seul titre de l'écran) | Proposition. | **À valider.** *D184 (2.21) :* le titre d'une partie sans faute n'est plus « Isnâd sahîh » mais « Chaîne fidèle » : 「鎖は忠実に伝えられた」, en écho à 「鎖への忠実さ」 (Fidélité à la Chaîne) et à 「鎖は伝えられた」 (Chaîne transmise) ; jamais 真正 ni 「真正なイスナード」 : *ṣaḥîḥ* est le jugement des savants sur une chaîne réelle, pas un score. **À valider (D184).** |
 | maillon (une saga) | **環**（わ） ; « un maillon de la Chaîne » : 「鎖の一環」 | Proposition : 一環 dit à la fois « un anneau d'une chaîne » et « une part d'un tout ». | **À valider.** *D184 (2.6, 2.7) :* « ce maillon » remplace « ce règne » : 「この環」, et 治世 n'est plus écrit (un califat n'est pas un règne) ; les cinq cartons disent « Premier maillon · As-Siddîq » … : 「第一の環・アッ＝スィッディーク」 (§ 3.1). **À valider (D184).** *2.08 (à distance du joueur) :* « Reste le dernier maillon : celui du râwî » → 「残るは最後の環――ラーウィーの環である」 (autrefois 「あなた自身の環」) ; la Chaîne continue « jusqu'au râwî » → 「――ラーウィーに至るまで」 (outro de 'Alî), jamais 「そして、あなたへ」. |
 | chimère (D183 ; autrefois « égrégore » : idée reprise par beaucoup de cœurs ; l'ennemi) | **虚像**（きょぞう） | デジタル大辞泉, sens 2 : 「実際とは異なる、作られたイメージ。『マスコミによって作られた虚像』」 ; 精選版 日本国語大辞典, sens 2 : 「あるものの実態とは異なるイメージ。特に、人物の実体に対する、世評、伝説などによって作り上げられた評価認識をいう」 (lu : <https://kotobank.jp/word/虚像>). | Le japonais a le mot d'une image fabriquée ensemble et vide de réalité ; il va avec 偶像 (idole), et 「虚像を暴く」 dit « dévoiler ». Pour le **recueil**, la pensée japonaise de ce que les gens fabriquent ensemble : 「空気」 (山本七平『「空気」の研究』, 文藝春秋 1977 ; notice <https://ci.nii.ac.jp/ncid/BN02778185>) et 「世間」 (阿部謹也『「世間」とは何か』, 講談社現代新書 1995 ; <https://ci.nii.ac.jp/ncid/BN12885013>). Deux réserves lues : l'éditeur résume la thèse de 山本 par 「『空気』とはまことに大きな絶対権を持った妖怪である」 (<https://books.bunshun.jp/ud/book/num/9784167911997>) — on prend l'idée, **jamais l'image du 妖怪** (exigences 6, 18) ; et 世間 est d'abord un mot bouddhique ([Wiki-ja] « 世間 » : 「インド発祥の宗教における用語」). Alternative : la translittération エグレゴール, aussi rare et ésotérique en japonais que « égrégore » en français — *écartée depuis D183* : le décideur a retiré « égrégore » du français pour cette raison même ; 虚像 dit déjà ce que dit « chimère ». **À valider.** |
 | idole (la chimère enracinée d'un chapitre) | **偶像** | 三田 14:35 「偶像崇拝」, 5:90 「偶像」 (34 versets) ; [Wiki-ja] « 偶像崇拝 ». | Jamais アイドル (le sens moderne de 偶像 est connu, mais le contexte le lève). |
 | noosphère | **精神圏** | [Wiki-ja] « ノウアスフィア » : 「精神圏（せいしんけん）またはノウアスフィア」 (ヴェルナツキー, テイヤール・ド・シャルダン) ; 村田奈生「テイヤール・ド・シャルダン研究史素描」『東京大学宗教学年報』36 : 「物質圏，生命圏，精神圏」 (lu : <https://repository.dl.itc.u-tokyo.ac.jp/record/53424/files/rel036012.pdf>). | La traduction de référence (美田稔訳『現象としての人間』, みすず書房 1964 ; <https://ci.nii.ac.jp/ncid/BN03402753>) n'a pas été lue : son terme exact n'est pas vérifié. Le jeu ne nomme ni テイヤール ni ヴェルナツキー. |
 | idées noires (cinq) | **暗い想い** | Proposition (usage courant de 想い, « pensée qui pèse »). | Ni 心の闇 (manga), ni 邪念 (bouddhique : 念), ni 負の感情 (psychologie de magazine). **À valider.** Le relevé `notions.md` donne pour cinquième « le défilement » : c'est une erreur du relevé ; `coeur.js` dit **le désespoir** (`noir_desespoir`). |
 | maux du cœur (sept) | **心の悪徳** | Proposition. Sources de l'image : 三田 2:10 「かれらの心には病が宿っている」 (maraḍ) ; [東長] : la partie des muhlikāt 「危険［に導く悪行］」. | 「心の病」 est le mot de 三田, mais en japonais moderne il désigne d'abord la maladie mentale : le jeu laisserait entendre que la dépression est une faute. À écarter. **À valider.** |
-| lames (forgées par les œuvres) | **刃**（やいば） ; « la lame du Contentement » : 「満足の刃」 | Usage courant. | Jamais 刀 (le sabre japonais), jamais 剣 pour une lame-image (剣 est l'arme d'équipement, § 2.7). Exigence 16 : une image, ni relique ni inscription. |
+| lames (forgées par les œuvres) | **刃**（やいば） ; « la lame du Contentement » : 「満足の刃」 | Usage courant. | Jamais 刀 (le sabre japonais), jamais 剣 pour une lame-image (剣 est l'arme d'équipement, § 2.7). Exigence 16 : une image, ni relique ni inscription. *Harmonisation (19 novembre) :* **刃 n'est que là** — la lame forgée et la chimère « Lame pieuse » (敬虔を装う刃) ; une lame réelle : 刃物 ou 剣 ; « servir de lame » : 「武器になる」 (§ 1.10). |
 | provision du cœur (zâd) | **心の糧** | 三田 rend zād par 「準備」 (2:197 : 「最も優れた準備は篤信の念である」) ; 糧 est son mot pour la subsistance (51:58 「糧を授けられる御方」). | 「準備」 ne se dit pas d'une réserve que l'on emporte : 糧 garde l'image du voyageur, et l'écho avec ar-Razzâq. Le recueil cite le verset dans la traduction de 三田 (registre). **À valider.** |
 | compagnons de lumière (animaux de fiction) | **光の道連れ** | Proposition. | Jamais 使い魔 (sorcellerie), 守護霊 (spiritisme), 式神 (陰陽道), 眷属 (bouddhique), 神獣 (shintô/chinois). Et pas 光の仲間 : 仲間 sert déjà aux membres du groupe. **À valider.** |
 | halte (le menu) | **休息** | Usage courant. | Ni 修行 ni 瞑想. **À valider.** |
@@ -538,7 +614,7 @@ le lien de langue de Wikipédia anglaise) ; **[三田]** au verset où 三田 é
 
 | Français | **Japonais** | Titre (français → japonais) | Source de la forme |
 |---|---|---|---|
-| Le Prophète (« le Messager d'Allah ﷺ ») | **預言者ムハンマド ﷺ** ; 「アッラーの使徒 ﷺ」 | — | [W] « ムハンマド・イブン＝アブドゥッラーフ » ; § 1.3 |
+| Le Prophète (« le Messager d'Allah ﷺ ») | **預言者ムハンマドﷺ** ; 「アッラーの使徒ﷺ」 (sans espace : § 1.3, § 1.10) | — | [W] « ムハンマド・イブン＝アブドゥッラーフ » ; § 1.3 |
 | Abû Bakr as-Siddîq ('Abdallâh ibn Abî Quhâfa) | **アブー・バクル・アッ＝スィッディーク** (アブドゥッラー・イブン・アビー・クハーファ) | As-Siddîq → **アッ＝スィッディーク** ; « Le Véridique » → **真実の人** (à valider) | [W] « アブー・バクル » : 「アブー・バクル・アッ＝スィッディーク」 |
 | 'Umar ibn al-Khattâb | **ウマル・イブン・アル＝ハッターブ** (court : ウマル) | Al-Fârûq → **アル＝ファールーク** ; sens : 正邪を分かつ者 (à valider) | [W] « ウマル・イブン・ハッターブ » (sans article : on suit § 1.2) |
 | 'Uthmân ibn 'Affân | **ウスマーン・イブン・アッファーン** | Le Généreux → **惜しまぬ人** (à valider ; le titre que le français garde, D184 : « Quatrième maillon · Le Généreux » 「第四の環・惜しまぬ人」 ; la compétence d'Idris « Miséricorde du Généreux » 「惜しまぬ人の慈悲」, car sa Lumière est la Miséricorde, 慈悲, et non la Largesse) | [W] « ウスマーン・イブン・アッファーン » |
@@ -554,7 +630,7 @@ le lien de langue de Wikipédia anglaise) ; **[三田]** au verset où 三田 é
 | 'Abd ar-Rahmân ibn 'Awf | **アブドゥッラフマーン・イブン・アウフ** | Ibn 'Awf → **イブン・アウフ** | § 1.2 (forme « 岩波方式 », alarabiyah.sakura.ne.jp) |
 | Zayd ibn Thâbit | **ザイド・イブン・サービト** | Le Scribe → **書記** | § 1.2 |
 | Hudhayfa ibn al-Yamân | **フザイファ・イブン・アル＝ヤマーン** | Le Gardien du secret → **秘密の守り手** | § 1.2 |
-| Le Caïd (fiction) | **カーイド** | Seigneur de la Citadelle → **城塞の主** | Fiction : forme simple de al-Qāʾid. 将軍 (le général d'Izem) et 殿様 (seigneur japonais) écartés. **À valider.** |
+| Le Caïd (fiction) | **カーイド** | Seigneur de la Citadelle → **城塞の領主** (harmonisation du 19 novembre : 主 seul est le Seigneur, § 1.10 ; autrefois 城塞の主) | Fiction : forme simple de al-Qāʾid. 将軍 (le général d'Izem) et 殿様 (seigneur japonais) écartés ; 城主 aussi (le seigneur d'un château japonais). **À valider.** |
 | Maître Bahrâm (fiction) | **バフラーム師** | le Géomètre → **測量師** | Fiction. « Maître » → suffixe **師**, partout. |
 | Zîrî (fiction) | **ズィーリー** | Capitaine des sentinelles → **見張りの隊長** | Fiction. |
 | Idris (fiction) | **イドリース** | le Râwî → **ラーウィー** | Consigne du décideur (イドリース). Les textes disent « Idris » : le moteur pose le nom choisi par le joueur (`perso.js`). |
@@ -799,6 +875,76 @@ Notes :
     personne (「ラーウィーは……」), jamais あなた ni おのれ ; le récit de la descente en である調 (la règle du labyrinthe
     comprise, qui était une consigne en です・ます), les annonces et les consignes de commande en です・ます調 ; 「精神圏へ降りる」
     pour « Descendre dans la noosphère » et 「ラーウィーの降りゆく道」 pour « la descente du râwî ».
+
+**Après les deux relectures des sept récits et l'harmonisation (19 novembre).** Ce que les quatorze rapports renvoient
+au décideur, sans doublon, avec l'endroit ; l'agent ne l'a pas tranché.
+
+*Le registre des sources* (`v2/docs/sources/` ; le contrôle compare ces textes au signe près, le japonais ne peut donc
+pas les harmoniser tant que le registre ne change pas) :
+
+20. **Sa typographie** : 「=」 demi-chasse dans les noms et les titres (『サヒーフ・アル=ブハーリー』3700番, 「アル=ビダーヤ」,
+    「ハーリド・イブン・アル=ワリード」), parenthèses demi-chasse 「(日本ムスリム協会訳)」「(アラビア語原文より訳出)」, le tiret
+    「 — 」 entre espaces, et 「と伝えられる — 」 qui ne dit pas qui rapporte ; le reste du jeu écrit 「＝」「（）」 (saga_abubakr,
+    saga_umar, saga_khalid, saga_uthman, saga_ali, frame).
+21. **Les références des versets** : 「クルアーン 3章144節(日本ムスリム協会訳)」 ne dit pas « traduction du sens » (exigence 7) ; hors
+    registre, le jeu écrit 「（意味の翻訳、日本ムスリム協会訳）」 (§ 1.10). Touche toutes les références de `versets.json`
+    (saga_abubakr 3:144, saga_uthman 15:9 et 49:6…).
+22. **Deux titres** : 『初めと終わり』 (saga_umar : la parole de Jabala, celle de 'Alî à 'Umar) contre 『始まりと終わり』 partout
+    ailleurs ; ブハーリー『真正集』 (saga_khalid, l. 22) contre 『サヒーフ・アル＝ブハーリー』.
+23. **Trois graphies** que le reste du jeu n'écrit plus : 誦む dans la parole de 'Umar (saga_abubakr,
+    chapters[0].objectives[3].then[7], « dès que j'entendis Abû Bakr le réciter » ; ailleurs 読誦する) ; お前 dans deux paroles
+    (saga_umar, Aslam ; saga_khalid, chapters[0].objectives[6].then[4] ; ailleurs おまえ) ; 「預言者 ﷺ」 entre espaces dans deux
+    paroles (saga_umar, 1890 et 3700).
+24. **Des tours archaïques dans la bouche de Compagnons** : 「そなたは降りてはならぬ」, 「剣を鞘に納めよ。そなたを失う……」
+    (saga_abubakr, 'Alî à Dhû l-Qassa) ; 志（ニーヤ） (saga_khalid, l. 444 : 志 est aussi la lame « L'Ardeur ») ; 「軍勢さえも」
+    (saga_khalid, l. 498).
+25. **Les écarts du français avec sa source**, que le registre suit : saga_abubakr (« S'il l'a dit, il a dit vrai », la compétence
+    « Certitude », sans le serment « Par Allah ») ; saga_umar (la brebis, 「私は思う」 ; Surâqa « fils de Ju'shum » ; 信徒たちの長 dans
+    le pacte d'Îliyâ' ; 「公正であった」 ; ﷺ ajouté aux paroles 1890 et 3700 ; la clé 3700, commune à la parole et à la source du
+    feuillet de la shûrâ, codex[10]) ; saga_khalid (l. 370, l. 559) ; saga_uthman (Zayd, Rûma, Abû Hurayra, Ibn Sîrîn,
+    l'adjuration) ; saga_ali (« Parole de vérité par laquelle on vise le faux » : la traduction publiée ou le mot à mot) ; frame
+    (la source de l'outro dit « al-Bukhârî et Muslim », le registre ne relève que Muslim 1679).
+26. **Des paroles citées dans les feuillets, hors registre** (non relevées) : saga_abubakr, saga_khalid, saga_ali, frame
+    (Ibn al-Mubârak, Bilâl, la route sûre).
+
+*Le français* (signalé, non corrigé) :
+
+27. « Ghânim serre ses clés » : le personnage est Abû Ghânim (saga_umar, chapters[0].objectives[6].then[3], noir.intro).
+28. Khâlid dit « le héros » (saga_khalid, codex[13] : « quand le héros lui-même refuse le socle ») : exigence 24.
+29. Le titre « Le Bouclier et le Juge » (saga_ali, chapters[0].title, 「盾と法官」), quand le récit parle d'une cuirasse.
+30. « Des visages maigres » (caid, chapters[4].intro[4]) : un trait physique (exigence 2) ; le japonais dit 「わずかな食糧と」.
+31. « Dieu » dans la bouche des Purs et dans leur pourparler (caid, chapters[4] : npcs[3], objectives[1].then[1],
+    objectives[2].then[0] rounds[0]) : le japonais écrit アッラー.
+32. L'exigence 14, qu'aucune langue ne peut certifier : le Régent, l'Admiré (frame) ; les veillées (caid).
+33. Le nom de l'idole « Al-Kadhdhâb — le Menteur » (saga_abubakr ; le relecteur propose « le Faussaire »).
+34. Dhû l-Fiqâr, le nom d'un sabre historique, donné à une compétence de 'Alî (saga_ali, 「ズー・アル＝フィカール」 ; exigences 16
+    et 17 ; 11 signes, à voir sur une capture du menu de combat) ; le cri des sécessionnistes (saga_ali).
+
+*Le japonais : termes et choix hésitants* :
+
+35. « Monture » : 乗り物 (saga_umar, huit fois ; en japonais d'aujourd'hui, « un véhicule ») et 乗騎 (saga_abubakr, deux fois ; 騎
+    dit le cheval) ; 乗用の獣 ? 「鞍から降りる」 ?
+36. Une espace pleine chasse après 「！」「？」 au milieu d'une réplique, usage éditorial : le § 1.5 l'interdit, le jeu n'en met
+    plus aucune (saga_umar, langue).
+37. saga_khalid : les ablutions 「礼拝前の洗い」 (ウドゥー, 小浄 ?) ; 説教壇 ou ミンバル ; 「アミールたちの夜」 ; 側翼の歩兵 ; 硬貨 ;
+    「アンファール章」 (le nom de la sourate 8 chez 三田 n'a pas été lu).
+38. saga_uthman : 施しのラクダ pour les chameaux de l'aumône (la zakât : 喜捨, § 2.3 ?) ; 囲い込まれた pour le ḥimā, les pâturages
+    réservés (codex[15], chapters[2].objectives[1]) ; 「誰をもつかんで離さない」 pour l'Agrégor qui « tient tout le monde »
+    (une image de possession ? D184, 1.6) ; les jeux de mots 耳に聞こえる流言, 一文の値打ちもないかけら, 硬貨 pour « pièces ».
+39. Le « tu » du pourparler dans la narration : あなた (saga_ali, saga_uthman), こちら (saga_uthman, vqvcti.26) ; 「あなたの交渉
+    しだいで」 (saga_ali, feuillet « Figures de fiction »).
+40. saga_ali : 指示 ou 心得 ; gardés par le relecteur, à valider : 屋根付きの市 / 法廷 pour « la halle », 出口 pour « la porte »
+    dans l'idée noire du Désespoir (出口 est aussi l'issue de la descente), 「わが従兄よ」, la narration à la première personne
+    (qa99g1.70, « J'ai connu des villes… »).
+41. frame : 視線 pour « Mille regards » (la compétence de l'Agrégor, 「千の視線」 ; D184 a retiré 視線 des comptes) ; gardés : 諭し
+    pour « Rappel », 早く, 杉の木.
+42. caid : 腕尺 (la coudée) ; 杉 pour « cèdre » ; 店 pour « tavernes » ; 「焚書の炎」 pour « Bûcher » ; 「利息のつく借り」 ; les
+    tutoiements tenus par personnage (Meksa おまえ au Caïd ; Idir et Warsen あなた).
+43. saga_abubakr : gardés par le relecteur, à valider : Zayd l'aîné (兄 / 弟) ; 「マディーナ」、つまり「町」 ; アムワース ;
+    戦利品を携えて ; アル＝アラー・イブン・アル＝ハドラミー, exception au § 1.2 (アラー seul se lirait « Allah »).
+44. **Les formes de l'harmonisation** (§ 1.10), en particulier 伝承の鎖 / 鎖, おまえ, 私たち / 我々 / 我ら, 「Xの打撃を与えます」, la
+    forme des références du Coran, 城塞の領主, 支配者 pour un maître humain, 刃 réservé à la lame forgée, et les termes proposés
+    par les relecteurs.
 
 ## 5. Ce qui n'a pas pu être vérifié
 
