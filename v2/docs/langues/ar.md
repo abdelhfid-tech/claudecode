@@ -361,7 +361,7 @@ compétence, d'objet ni de lieu frappé ne contient** :
 | **idole** (la chimère d'un chapitre, la plus enracinée) | **الصَّنَم**, pl. **الأصنام** | Malek Bennabi : « عندما تغرب الفكرة يبزغ الصنم » (cité par le blog d'Al Jazeera « أفكارنا أصنامنا », 30 avril 2018, qui la situe dans *Shurût an-nahda* ; source secondaire, non relue dans le livre) | Autre choix : الوثن. |
 | **noosphère** (l'envers de la ville) | **عالم الأفكار** | Malek Bennabi, *Mushkilat al-afkâr fî l-'âlam al-islâmî* : عالم الأشياء، عالم الأشخاص، عالم الأفكار [J] | Chez Bennabi, c'est l'univers des idées d'une société ; le jeu en fait un lieu. Ne pas écrire النوسفير (calque). Carte : **عالم الأفكار** ; « dans la noosphère » : « في عالم الأفكار ». **Validé par le décideur le 18 novembre (D185).** |
 | **idées noires** (cinq) | **الخواطر السُّود** (sg. خاطرٌ أسود) | al-Ghazâlî, [D] : « وأعني بالخواطر ما يحصل فيه من الأفكار والأذكار » ; « السود » rappelle « السوداء », l'humeur noire de la vieille médecine | **à valider**. Autre choix : **الهموم** (« les soucis »), mais la honte n'est pas un *hamm*. Les cinq : § 2.5. |
-| **maux du cœur** (sept) | **أمراض القلوب** ; un mal : **مرضٌ من أمراض القلب** | al-Ghazâlî, [C], « بيان الدواء الذي ينفي مرض الحسد عن القلب » : « الحسد من الأمراض العظيمة للقلوب، ولا تداوى أمراض القلوب إلا بالعلم والعمل » | Pas « مرض القلب » seul dans une interface (« maladie cardiaque ») : « داء القلب » en abrégé. |
+| **maux du cœur** (sept) | **أمراض القلوب** ; un mal : **مرضٌ من أمراض القلب** | al-Ghazâlî, [C], « بيان الدواء الذي ينفي مرض الحسد عن القلب » : « الحسد من الأمراض العظيمة للقلوب، ولا تداوى أمراض القلوب إلا بالعلم والعمل » | Pas « مرض القلب » seul dans une interface (« maladie cardiaque ») : « داء القلب » en abrégé. *Usage fixé par la relecture de `coeur` (19 novembre, à valider)* : « les (sept) maux du cœur », en toutes lettres, est partout **أمراض القلوب (السبعة)** (titres, sous-titre « Œuvres, lames et maux du cœur », règle de la descente) ; **داء / أدواء** reste la forme courte : « un mal du cœur » **داءٌ من أدواء القلب** (comme l'aide du moteur), « داء القلب », « الأدواء المقطوعة », « sept maux » **سبعة أدواء**. |
 | **lames** (forgées par les œuvres) | **النِّصال** (sg. **نَصْل**) ; « forger » : **صَقَل** (« la prière a poli la lame de la Sincérité ») | l'image du cœur-miroir qu'on polit : al-Ghazâlî, [D] : « تزيد مرآة القلب جلاء وإشراقاً ونوراً » | **à valider** (le nom et le verbe). Éviter « مطبوع » (forgé, au sens ancien : WP-ar, « مهند (اسم) », « السيوف المطبوعة من حديد الهند ») : il se lit aujourd'hui « imprimé ». Exigence 16 : une lame n'a ni nom d'homme ni inscription. |
 | **provision du cœur** (zâd) | **الزاد** ; **زاد القلب** | Coran 2:197 [K] (le recueil du jeu cite ce verset) | |
 | **compagnons de lumière** (animaux de fiction) | **رفاق النور** | — | **à valider**. Jamais صحابة ni أصحاب (§ 2.1). |
@@ -428,7 +428,10 @@ lirait la vertu.
 d'effet magique (لا « تمنح »، « تهب قوة »), mais « تُعِدّ القلب » (elles préparent le cœur), « تزيد الزاد ». Le compte
 qu'en tient le jeu se dit **تُعَدّ** (vocalisé), jamais « تُحتسب » : avec « الأعمال », ce mot se lit comme l'iḥtisâb, la
 récompense qu'on espère d'Allah (« مَن صام رمضان إيمانًا واحتسابًا », al-Bukhârî n° 38, éd. du CDN), ou comme l'œuvre qui
-« compte » en droit ; le jeu ne dit rien de ce qui compte devant Allah (exigences 13 et 15).
+« compte » en droit ; le jeu ne dit rien de ce qui compte devant Allah (exigences 13 et 15). « Elles ne sont pas des
+sortilèges » se dit **ليست طلاسم** : jamais « تعاويذ », de la racine عوذ de l'isti'âdha, que le jeu nomme lui-même comme
+une pratique (« يُستعاذ منه ») — dire que les œuvres n'en sont pas se lirait contre elle —, ni « سحر » (§ 1.11). *(Relectures
+de `coeur`, 19 novembre ; l'aide du moteur alignée. À valider.)*
 
 | Français | Arabe retenu (court · menu) | Source | Note |
 |---|---|---|---|
@@ -500,6 +503,8 @@ Notes :
 | un badge | **شارة**, pl. **الشارات** | — | Sans inscription (exigence 21). |
 | reconnaître un attribut / ne pas le posséder ; « Un attribut divin à reconnaître » ; « attributs reconnus » | « **يُتعرَّف إليه** » (« والاسم لا يُملَك: إنما يُتعرَّف إليه ») ; « اسمٌ من أسماء الله الحسنى يُتعرَّف إليه » ; « الأسماء المُتعرَّف إليها » ; jamais un verbe de possession (نال، ملك، اكتسب) | — | Exigence 21. Sans « tu » (§ 1.8) : le jeu ne dit pas au joueur ce qu'il a reconnu (plus de « تعرّفتَ »، « تتعرّف إليه »). |
 | les sept Noms | **الرَّزَّاق** · **الكَبِيرُ المُتَعَال** · **الخَبِير** · **الوَهَّاب** · **الحَيُّ القَيُّوم** · **اللَّطِيف** · **الحَلِيم** | les versets du jeu (51:58 ; 13:9 ; 67:14 ; 3:8 ; 2:255 ; 42:19 ; 2:263), dont le texte vient du registre | Vocalisés en entier ; jamais sur un sprite (exigence 8). |
+| le sens d'un Nom (`attributs.*.sens`) | une phrase, jamais un autre Nom : « الذي يرزق الخلق » · « الذي كلّ شيءٍ دونه، المستعلي على كلّ شيء » · « العليم بخفايا الأمور » · « كثير العطاء » · « الحيّ، القائم بنفسه » · « الرفيق بعباده » · « الذي لا يعجل بالعقوبة » | al-Kabîr : at-Tabarî, *Jâmi' al-bayân*, sur 13:9 : « الكبير الذي كل شيء دونه، المتعال المستعلي على كل شيء بقدرته » (lu sur `https://api.quran.com/api/v4/tafsirs/15/by_ayah/13:9`, 19 novembre) | **à valider**. La relecture de la langue a remplacé « العظيم، المتعالي » (al-Kabîr glosé par un autre Nom) ; sans ذات ni صفات (exigence 5). Dans une liste du recueil, les Noms gardent les voyelles du mot, sans voyelle de cas (« الحَيّ القَيُّوم »). |
+| « la subsistance vient de Lui » ; « c'est Lui qui l'a donné » | « الرزق من عنده » ; « ما ناله الآخر فمِن عنده » | — | à valider ; « هو الذي أعطاه » laissait hésiter sur « هو ». |
 
 **Les portes et la descente** (`portes`) :
 
@@ -532,6 +537,34 @@ Notes :
 | Les idoles — l'idée enracinée : elle commande | **الأصنام — فكرةٌ تجذّرت فصارت تأمر** | § 2.3 |
 | l'enracinement (jauge d'une idole) ; une racine | **التجذّر** ; **جِذر** | à valider. Jamais **الرسوخ** (loué : « والراسخون في العلم », Coran 3:7 [K]). |
 | ce qui est enseigné / les images du jeu (les deux étages) | **ما جاء به النقل / صُوَرٌ من صُوَر اللعبة** | à valider |
+| la jauge (de l'enracinement) ; « la jauge se dit d'une idole, jamais d'une époque ni de ses gens » | **المقياس** ; **المقياس يوصف به صنم، لا عصرٌ ولا أهله** | à valider ; la même phrase dans le feuillet « L'enracinement » et l'aide du moteur (19 novembre) |
+| « garde un voile de moins » (l'idole déracinée) | **ونقصت حُجُبُه حجابًا** | à valider ; « حجابٌ أقلّ » se lisait « un voile moindre » ; feuillet et aide du moteur alignés (19 novembre) |
+
+**Ce que la relecture de la langue du cœur a fixé** (`coeur`, 19 novembre ; chaque terme **à valider**). Ces choix valent
+pour toute la langue : un texte qui reprend l'une de ces notions la dit de la même façon.
+
+| Français | Arabe fixé | Pourquoi |
+|---|---|---|
+| celui qui mène (le personnage en tête du groupe, qui porte l'arme ; l'image s'agrandit autour de lui) | **مَن يتقدّم الركب** | « القائد » est réservé au Caïd (§ 3.8) ; les deux aides du moteur qui disaient « قائد الركب » sont alignées |
+| la faute (dans les pourparlers des idées noires) ; sa taille, la mesurer | **الخطأ** ; **قدر**, « يُقدِّر الخطأ قدرَه » | « حجم » (le volume) ne se dit pas d'une faute ; « قدر » revient aussi dans « ce qu'on vaut encore » (« ما بقي للمرء من قدر ») |
+| dire le risque, le dire en face | **ذكر الخطر كما هو** ; **صارحه بالخطر**, « يُصارَح بالخطر » | rejoint la manière « المصارحة » (Dire vrai) ; « قول الخطر », « يُقال له الخطر » calquaient |
+| « Admettons » ; « Il te regarde autrement » | **هَبْ أنّ الأمر كذلك** ; **تتغيّر نظرته إليك** | le tour classique de la concession ; « لنفترض » et « نظرةً أخرى » calquaient |
+| « c'est tout » ; « et pas une de plus » | **لا غير**, **لا أكثر** ; **ولا يُزاد عليه** | « هذا كلّ شيء » calque le français |
+| « Tu verras cela plus tard » (l'Insouciance) | **سوف تنظر في هذا فيما بعد** | « سوف » est le mot de l'« تسويف », que la tradition reproche à la غفلة ; « لاحقًا » est de la langue des bureaux |
+| « On ne me corrige pas » (l'Orgueil) ; corriger un récitant (l'étude) | **لا أحدَ يُقوِّمني** ; **ردّ عليه** | « صحّح له » est d'aujourd'hui ; « ردّ عليه » est le mot de la correction d'une lecture |
+| réciter devant quelqu'un qui écoute | **بين يدَي مَن يسمع** ; « قرأ … على آخر » | « أمام » est spatial |
+| garder son calme (la Longanimité) | **أن يملك المرء نفسه** | le mot du حِلم ; « يحفظ هدوءه » se lisait comme la jauge (Sérénité, **الهدوء**, § 2.3) |
+| se tenir à sa place (l'Humilité) | **أن يعرف المرء قدرَ نفسه** | « يلزم مكانه » se lisait « ne pas bouger » |
+| les liens se tiennent en se visitant | **الصِّلات تُحفَظ بالتزاور** | on visite des gens, non des liens |
+| « les mêmes pour le seigneur et pour le berger » ; « qui commande à qui » (le pèlerinage) | **سواءٌ فيهما السيّد والراعي** ; **مَن الآمرُ ومَن المأمور** | « هما نفسهما » et « مَن يأمر مَن » calquaient |
+| les vivres de la besace restent fermés (le jeûne) | **لا يُتناوَل طعامُ المِزوَد في القتال** | on ferme un sac, non un aliment ; sans « يُمسّ » (§ 1.11) ; l'aide dit « ينتظر طعامُ المِزوَد المساء » |
+| il flaire (le Renard) ; le groupe gagne un point de Niyya (l'Aigle) | **يتشمّم** ; **وتزيد نيّتُه نقطة** | « يشمّ » n'est que « sentir » ; la tournure des tables (« يزيد النيّة نقطتين ») |
+| le cœur prêt ; gagner un pourparler | **وقلبُه متأهّب** ; **نجح في محاورة** | comme l'aide du moteur et le § 2.3 |
+| une bataille déclarée presque perdue ; « si la bataille tourne au pire » | **أشرفت مُصافّةٌ مُعلَنة على الخسارة** ; **إن ساء أمرُ المُصافّة** | pas « الهزيمة » (§ 2.7) ; « كادت … أن تُخسَر » et « مالت إلى الأسوأ » calquaient |
+| « on parle de démons intérieurs » (feuillet) | **ويُقال لها «شياطين النفس»، وما هي بشياطين** | l'aide du moteur : « ما يُسمّى «شياطين النفس»، على سبيل المجاز » ; « يُسمّيها بعضهم » en faisait l'usage d'un parti |
+| un tort que l'on garde chaud (la Rancune) | **مظلمةٌ تُبقى جمرتُها متّقدة** | l'image arabe est la braise, que la Rancune perd ensuite (« لم يعد يحفظ جمرتها ») |
+| d'une traite (la descente) | **يُمضى فيه بلا توقّف** | « يُقطَع » se lisait aussi « est interrompu » |
+| relevés de la relecture 1 (fidélité), gardés : « un peu grandi » ; « ce jour-là » (le secours) ; « en face du Créateur » | **وقد نضج قليلًا** ; **يومَ هذه المُصافّة** ; **في مقابل الخالق** | « أكبر » touchait la racine du كِبْر ; « في ذلك اليوم » se lisait « le jour de Badr » ; jamais « في وجه » près du Créateur |
 
 ### 2.6 Les figures (exigence 24 ; « les postures » jusqu'à D184)
 
@@ -1122,7 +1155,7 @@ contenu commun (`coeur`) ou une suite le reprend tel quel.
 
 | Mot | Règle |
 |---|---|
-| **القائد** | le Caïd seul ; le chef d'une armée est son **أمير** (« أميره الشابّ » pour Usâma), les lieutenants de ‘Alî ses **أمراء** ; un officier de la flotte « أحدُ أمراء الأسطول » |
+| **القائد** | le Caïd seul ; le chef d'une armée est son **أمير** (« أميره الشابّ » pour Usâma), les lieutenants de ‘Alî ses **أمراء** ; un officier de la flotte « أحدُ أمراء الأسطول » ; « celui qui mène » (en tête du groupe, à l'exploration) **مَن يتقدّم الركب**, jamais « قائد الركب » (moteur et `coeur` alignés le 19 novembre ; à valider) |
 | **الرقيب** | jamais seul avec l'article (Nom divin) : **رقيبُ الجيش**, **رقيبُ المقدَّمة** ; l'étiquette « Guetteur » : « رقيب » (indéfini) |
 | **الرسول** | jamais seul pour un envoyé : **رسولٌ من X**, **رسول معاوية**, « استقبال رسولٍ قادمٍ من اليمامة » |
 | **أصحاب** | réservé aux Compagnons (§ 2.1) : « les siens » d'un émir : **مَن معه**, **رجاله** ; « أصحاب الحاجات » (les solliciteurs) reste, mot composé sans rapport |
@@ -1272,6 +1305,19 @@ son verset tiré du registre, si un récit le demande un jour.
       et pour qualifier ces hommes ; faut-il le nommer dans ce seul feuillet, comme le français ?
     - Thâmir, Hâzim et Ghâlib : les feuillets disent « النفاق », jamais « المنافق » d'un homme nommé (exigence 11) ; le
       feuillet de Thâmir garde « وليس المنافق هو الغريب », une phrase générale que le français dit aussi.
+16. **Le contenu commun (`coeur`), écrit puis relu deux fois** (19 novembre ; § 2.3, § 2.5, § 3.8 ; proposé par l'agent,
+    à valider). Les choix qui engagent le plus :
+    - « sortilèges » : **طلاسم**, non « تعاويذ » (la racine de l'isti'âdha), dans le feuillet et dans l'aide des œuvres ;
+    - le sens d'**al-Kabîr** suit at-Tabarî (« الذي كلّ شيءٍ دونه، المستعلي على كلّ شيء ») au lieu d'un autre Nom
+      (« العظيم ») ; les six autres sens sont inchangés ;
+    - « celui qui mène » : **مَن يتقدّم الركب**, le Caïd gardant seul « القائد » (deux aides du moteur changées) ;
+    - « les maux du cœur » en toutes lettres : **أمراض القلوب** ; « داء / أدواء » pour la forme courte ;
+    - restent ouverts, comme les relectures les ont signalés : le champ `ar` de trois lames (**السَّخَاء** pour *al-Karam*,
+      **سَلَامَةُ الصَّدْر** pour *an-Nasîha*, **عُلُوُّ الهِمَّة** pour *al-Himma*) ; les menus « صدقة السرّ » (« Donner aux
+      pauvres ») et « مُدارسة القرآن » (« Apprendre du Coran ») ; « Iblîs, l'ennemi déclaré » (le verset 2:168 dit
+      « الشيطان ») ; « un quart » de l'*Ihyâ'* (la ghafla n'a pas son livre dans le quart des *muhlikât*) ; la forme
+      des sources du recueil (« سورة الذاريات: ٥٨ », sans le numéro de la sourate, comme le § 1.12) à côté des
+      références des attributs (« سورة الذاريات (٥١): ٥٨ », que `regles.js` impose).
 
 ---
 
