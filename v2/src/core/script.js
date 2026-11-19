@@ -46,12 +46,68 @@
   const marqueAuFil = () => { clearTimeout(marqueT); if (marques.length) S.toast(marques.splice(0).join(' · ')); };
   S.marque = function (html) { marques.push(html); clearTimeout(marqueT); marqueT = setTimeout(marqueAuFil, 1500); };
 
+  /* ----- 2.x · la langue secondaire (demande du décideur, 19 novembre) -----
+     Le joueur qui l'a choisie (Réglages, « Langue secondaire ») lit, sous la bulle de celui qui parle, une seconde bulle :
+     la même réplique dans une autre langue, écrite à la source dans cette langue (jamais un mot à mot). Elle paraît en
+     entier quand la première a fini de s'écrire : on lit d'abord dans la langue du jeu, puis on compare — un toucher qui
+     presse l'écriture les montre ensemble. En hauteur, elle est sous la boîte, dans la bande noire ; en largeur et au
+     bureau, elle est en haut de la scène, comme la seconde ligne d'un film sous-titré en deux langues, et ne couvre pas
+     celui qui parle, que la vue garde au milieu. Un carton du récit (titre, parole citée et sa source, verset) la porte
+     sous son texte. Ni les menus, ni les choix, ni le combat : l'écran y est déjà plein. Sans langue secondaire, rien ne
+     change : aucune bulle, aucun temps de plus. */
+  const L2 = () => I.langue.l2();
+  // le second texte, avec sa langue et son sens, posé dans un élément (une bulle, un bloc de carton)
+  const marquer2 = (e, t) => { const l = L2(); e.lang = l; e.dir = I.langue.sens2(t); e.classList.toggle('latin', l === 'fr' || l === 'en'); return e; };
+  // un bloc de carton dans la langue secondaire : du balisage déjà fait (html), dans un div.l2
+  const bloc2 = html => { const e = marquer2(I.el('div', 'l2'), html.replace(/<[^>]*>/g, '')); e.innerHTML = html; return e.outerHTML; };
+  S.bloc2 = bloc2;
+  // la seconde bulle tient dans la place qu'elle a : ses caractères se resserrent, cran par cran, jamais sous dix points ;
+  // au-delà, elle défile (aucun texte n'est coupé)
+  function tenir2(e, base) {
+    e.style.setProperty('--k2', 1); e.classList.remove('defile');
+    for (const f of [0.94, 0.88, 0.82, 0.76, 0.7, 0.64]) { if (e.scrollHeight <= e.clientHeight + 2) return;
+      if (base * f < 10) break; e.style.setProperty('--k2', f); }
+    if (e.scrollHeight > e.clientHeight + 2) e.classList.add('defile');
+  }
+  // sa place : en hauteur, sous la boîte de dialogue (dans la bande noire, jusqu'au bas de l'écran) ; ailleurs, en haut de la
+  // scène, au-dessus de la boîte (sans la toucher)
+  // (force : la bulle vient de changer, ou l'écran ; sinon, rien n'est refait si la boîte n'a pas bougé)
+  let place2 = '';
+  S.placer2 = function (force) {
+    const d2 = $('#dialog2'), box = $('#dialog'); if (!d2 || d2.hidden || box.hidden) return;
+    const ui = $('#ui'), r = ui.getBoundingClientRect(), b = box.getBoundingClientRect(), vh = window.innerHeight || document.documentElement.clientHeight;
+    const cle = [document.body.classList.contains('portrait'), b.top, b.bottom, r.top, r.height, vh].map(v => Math.round(+v)).join(); if (!force && cle === place2) return; place2 = cle;
+    if (document.body.classList.contains('portrait')) { const haut = b.bottom - r.top + 8; d2.style.top = haut.toFixed(1) + 'px'; d2.style.bottom = 'auto'; d2.style.maxHeight = Math.max(48, vh - b.bottom - 8 - 10) + 'px'; }
+    else { d2.style.top = ''; d2.style.bottom = 'auto'; d2.style.maxHeight = Math.max(40, b.top - r.top - r.height * 0.03 - 8) + 'px'; }
+    const t = d2.querySelector('.text'); tenir2(d2, parseFloat(getComputedStyle(t).fontSize) / (parseFloat(d2.style.getPropertyValue('--k2')) || 1));
+  };
+  function montrer2(kind, t2, html) {
+    const d2 = $('#dialog2'); if (!d2) return;
+    if (!t2) { d2.hidden = true; return; }
+    d2.className = 'l2 ' + kind; marquer2(d2, t2); const tx = d2.querySelector('.text'); tx.innerHTML = html ? t2 : I.fmt(t2); tx.classList.toggle('latin', d2.classList.contains('latin'));
+    d2.hidden = false; document.body.classList.add('avec2'); S.placer2(true); lisible(d2);
+  }
+  // la boîte de dialogue change de taille (une police qui arrive, le texte agrandi) : la seconde bulle la suit ; une police
+  // qui arrive change aussi la sienne. (Sans langue secondaire, la bulle est cachée : rien n'est fait.)
+  if (window.ResizeObserver) new ResizeObserver(() => { if (!$('#dialog2').hidden) requestAnimationFrame(() => S.placer2()); }).observe($('#dialog'));
+  if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => { if (!$('#dialog2').hidden) S.placer2(true); });
+  // (fin : la lecture s'achève — l'en-tête peut revenir ; entre deux répliques, il reste retiré)
+  const cacher2 = fin => { const d2 = $('#dialog2'); if (d2 && !d2.hidden) d2.hidden = true; if (fin && document.body.classList.contains('avec2')) document.body.classList.remove('avec2'); };
+  // un carton qui porte la langue secondaire tient dans l'écran : ses caractères se resserrent, jamais sous dix points
+  function tenirCarton(c) {
+    c.style.removeProperty('--k2'); if (!c.querySelector('.l2')) return;
+    const mini = () => Math.min(...[...c.querySelectorAll('*')].filter(e => e.childNodes.length && [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())).map(e => parseFloat(getComputedStyle(e).fontSize)));
+    let ok = 1; for (const f of [0.94, 0.88, 0.82, 0.76]) { if (c.scrollHeight <= c.clientHeight + 2) return; c.style.setProperty('--k2', f); if (mini() < 10) { c.style.setProperty('--k2', ok); return; } ok = f; }
+  }
+
   /* ----- boîte de dialogue ----- */
   let typing = null;
   // o (facultatif) : { nom } le nom qui parle, imposé (le verdict de la Chaîne) ; { html } le texte est déjà du balisage
-  // (une phrase du moteur, jamais un texte de récit) ; { duree } la ligne passe d'elle-même après ce temps, ou d'un toucher
+  // (une phrase du moteur, jamais un texte de récit) ; { duree } la ligne passe d'elle-même après ce temps, ou d'un toucher ;
+  // 2.x : { src: [objet, champ] } d'où vient le texte (pour la langue secondaire) ; { l2 } le second texte, déjà dit
   async function showLine(kind, sp, text, o) {
     o = o || {};
+    const t2 = L2() ? (o.l2 !== undefined ? o.l2 : I.langue.second(text, o.src && o.src[0], o.src && o.src[1])) : null; cacher2();
     const box = $('#dialog'); box.hidden = false; box.className = kind;
     document.body.classList.add('in-dialog');
     $('#dialog .seal').style.backgroundImage = sp ? `url(${sp.seal})` : 'none';
@@ -67,7 +123,7 @@
     $('#dialog .next').style.visibility = 'hidden';
     const fast = I.speed > 3;
     await new Promise(res => {
-      const finish = () => { if (done) return; done = true; clearInterval(typing); I.input.pop(h); tx.innerHTML = html; res(); };
+      const finish = () => { if (done) return; done = true; clearInterval(typing); I.input.pop(h); tx.innerHTML = html; if (t2) montrer2(kind, t2, o.html); res(); };   // 2.x : la seconde bulle, en entier, quand la première est écrite
       const h = I.input.push(a => { if (a === 'ok' || a === 'cancel') finish(); return true; });
       if (fast) return finish();
       let tick = 0;
@@ -75,22 +131,25 @@
     });
     $('#dialog .next').style.visibility = 'visible'; lisible(box);
     await I.sleep(60);
-    if (I.debug.auto) await I.sleep(30); else if (o.duree) await I.input.waitTimed(['ok', 'cancel'], o.duree, 0); else await I.input.wait(['ok', 'cancel']);
+    if (I.debug.auto) await I.sleep(30); else if (o.duree) await I.input.waitTimed(['ok', 'cancel'], o.duree + (t2 ? S.lecture2(t2) : 0), 0); else await I.input.wait(['ok', 'cancel']);
     I.audio.sfx('blip');
   }
   S.showLine = showLine;
-  S.hideDialog = function () { marqueAuFil(); $('#dialog').hidden = true; document.body.classList.remove('in-dialog'); if (S.depth === 0 && I.world) I.world.focus = null; };
+  S.hideDialog = function () { marqueAuFil(); $('#dialog').hidden = true; cacher2(true); document.body.classList.remove('in-dialog'); if (S.depth === 0 && I.world) I.world.focus = null; };
   // le temps de lire une ligne du moteur : 1,2 s, plus 45 ms par signe pesé (le japonais dit plus en moins de signes)
   S.lecture = html => I.clamp(1200 + 45 * I.langue.poids(String(html).replace(/<[^>]*>/g, '')), 1800, 5000);
+  S.lecture2 = html => I.clamp(1200 + 45 * I.langue.poids2(String(html).replace(/<[^>]*>/g, '')), 1800, 5000);   // la même, pour la langue secondaire
   // le verdict de la Chaîne : dit par la Chaîne elle-même, en une ligne, seul, avant la suite du récit — jamais sur la
   // parole de quelqu'un, ni au-dessus d'une parole citée (exigence 3). Il passe de lui-même, ou d'un toucher.
-  const verdict = html => showLine('nar', null, html, { nom: I.t('La Chaîne'), html: true, duree: S.lecture(html) });
+  // (fr : la phrase française du moteur ; 2.x, la langue secondaire la dit aussi)
+  const verdict = fr => { const html = I.t(fr); return showLine('nar', null, html, { nom: I.t('La Chaîne'), html: true, duree: S.lecture(html), l2: L2() ? I.langue.tDans(L2(), fr) : null }); };
 
   /* ----- cartons ----- */
   async function card(cls, html, auto) {
     marqueAuFil();
     const c = $('#card'); c.className = cls; c.innerHTML = html; c.hidden = false;
     document.body.classList.add('en-carton'); // l'en-tête et le fil se masquent le temps du carton (en hauteur, ils transparaissaient dessous)
+    if (L2() && c.querySelector('.l2')) { c.classList.add('avec2'); tenirCarton(c); if (auto) auto += S.lecture2(c.querySelector('.l2').textContent); }   // 2.x : la langue secondaire tient dans l'écran, et le carton reste le temps de la lire
     void c.offsetWidth; c.classList.add('on'); lisible(c);
     try {
       if (I.debug.auto) await I.sleep(60);
@@ -159,7 +218,7 @@
     await card('title parley', `<p class="small">${I.t('Pourparler')}</p><h1>${I.fmt(P.title)}</h1><p>${I.fmt(P.intro)}</p>${S.flags._prayed ? '<p class="small">' + I.t('Sérénité de la prière : +1 de confiance') + '</p>' : ''}<div class="rule"></div><div class="hint">▼</div>`);
     for (let r = 0; r < n; r++) {
       const R = P.rounds[r];
-      await showLine('say', sp, R.say); S.hideDialog();
+      await showLine('say', sp, R.say, { src: [R, 'say'] }); S.hideDialog();
       if (R.noir) {
         const N = R.noir, gain = N.v || 1;
         // L'échelle des réponses (décision du décideur) : une idée noire pèse sur une personne, on lui répond par la parole ;
@@ -171,12 +230,12 @@
           I.mal.note('n', P.title + '|' + N.name, -1);
         }
         conf += gain; I.audio.music('conseil'); S.marque(I.t('<b>Confiance +{gain}</b> — son regard s’éclaircit', { gain })); // à côté du nom de celui qui répond
-        if (N.after) { await showLine('say', sp, N.after); S.hideDialog(); }
+        if (N.after) { await showLine('say', sp, N.after, { src: [N, 'after'] }); S.hideDialog(); }
       }
       const i = await menuPick({ cls: 'dit', html: I.t('« {dit} »', { dit: I.fmt(R.say) }) }, R.opts, head(r)); const o = R.opts[i];
       conf = Math.max(0, conf + o.v);
       S.marque(o.v > 0 ? I.t('<b>Confiance +{v}</b>', { v: o.v }) : o.v < 0 ? I.t('<b>Confiance {v}</b> — il se ferme', { v: o.v }) : I.t('Il ne bouge pas.')); I.audio.sfx(o.v > 0 ? 'light' : o.v < 0 ? 'dark' : 'blip');
-      await showLine('say', sp, o.r);
+      await showLine('say', sp, o.r, { src: [o, 'r'] });
     }
     S.hideDialog(); sv.parley.total++;
     const ok = conf >= P.goal;
@@ -217,6 +276,9 @@
   S.toast = function (html, o) {
     o = o && typeof o === 'object' ? o : {};
     const el = I.el('div', 'toast' + (o.outil || o.pas ? ' lecon' : ''), html); el.hidden = true; el.dir = I.langue.sens(el.textContent); if (o.outil) el.dataset.outil = o.outil;
+    // 2.x : la langue secondaire, sur sa ligne, sous l'annonce — o.l2 (du balisage), ou ce que I.t vient de dire tel quel
+    if (L2()) { const d = o.l2 === undefined ? I.langue.retrouver(html) : null, t2 = o.l2 !== undefined ? o.l2 : d ? I.langue.tDans(L2(), d.fr, d.p) : null;
+      if (t2) { const s = marquer2(I.el('span', 'l2'), t2.replace(/<[^>]*>/g, '')); s.innerHTML = t2; el.appendChild(s); el.classList.add('avec2'); } }
     $('#toasts').appendChild(el); // à sa naissance, masquée
     S.fil.unshift({ html, t: Date.now() }); if (S.fil.length > 12) S.fil.length = 12;
     const x = { el, html, ne: performance.now(), outil: o.outil || null, pas: !!o.pas, urgent: !!o.urgent, vu: 0 };
@@ -255,7 +317,7 @@
     if (pas) { const g = { items: [pas], lecon: true }; montrer(g); return g; }
     if (ord.length) {
       const a = ord[0], g = { items: [a] }; montrer(g); const h1 = box.offsetHeight;
-      for (const b of ord.slice(1)) { if (b.ne - a.ne > 500) break; g.items.push(b); montrer(g); if (box.offsetHeight > h1 + 2) { g.items.pop(); montrer(g); break; } }
+      for (const b of ord.slice(1)) { if (b.ne - a.ne > 500 || a.el.classList.contains('avec2') || b.el.classList.contains('avec2')) break; g.items.push(b); montrer(g); if (box.offsetHeight > h1 + 2) { g.items.pop(); montrer(g); break; } } // (une annonce qui porte sa langue secondaire passe seule)
       g.reste = S.lecture(g.items.map(x => x.el.textContent).join(' · ')); return g;
     }
     const l = FIL.file.find(lecon); if (!l) return null;
@@ -300,10 +362,13 @@
   async function exec(op) {
     const W = I.world, a = op[1], b = op[2], c = op[3];
     switch (op[0]) {
-      case 'say': W.focus = (W.npcs && W.map && W.npcs.find(n => n.id === a && !n.hidden && n.map === W.map.id && n.placed)) || null; await showLine('say', speaker(a), b); break;
-      case 'nar': W.focus = null; await showLine('nar', null, a); break;
-      case 'quote': S.hideDialog(); I.audio.sfx('light'); await card('quote', `<div class="orn">❖</div><blockquote>${I.fmt(a.replace(/^«\s*/, '').replace(/\s*»$/, ''))}</blockquote><cite>${I.fmt(b)}</cite><div class="hint">▼</div>`); break;
-      case 'title': S.hideDialog(); I.audio.sfx('roll'); await card('title', `<h1>${I.fmt(a)}</h1>${b ? `<p>${I.fmt(b)}</p>` : ''}<div class="rule"></div>`, 3000); break;
+      case 'say': W.focus = (W.npcs && W.map && W.npcs.find(n => n.id === a && !n.hidden && n.map === W.map.id && n.placed)) || null; await showLine('say', speaker(a), b, { src: [op, 2] }); break;
+      case 'nar': W.focus = null; await showLine('nar', null, a, { src: [op, 1] }); break;
+      // 2.x : un carton du récit porte, sous son texte, la langue secondaire (la parole et sa source ; le titre et sa date)
+      case 'quote': { S.hideDialog(); I.audio.sfx('light'); const sans = q => q.replace(/^«\s*/, '').replace(/\s*»$/, ''), a2 = L2() ? I.langue.second(a, op, 1) : null, b2 = a2 ? I.langue.second(b, op, 2) : null;
+        await card('quote', `<div class="orn">❖</div><blockquote>${I.fmt(sans(a))}</blockquote><cite>${I.fmt(b)}</cite>${a2 ? bloc2(`<blockquote>${I.fmt(sans(a2))}</blockquote>${b2 ? `<cite>${I.fmt(b2)}</cite>` : ''}`) : ''}<div class="hint">▼</div>`); break; }
+      case 'title': { S.hideDialog(); I.audio.sfx('roll'); const a2 = L2() ? I.langue.second(a, op, 1) : null, b2 = a2 && b ? I.langue.second(b, op, 2) : null;
+        await card('title', `<h1>${I.fmt(a)}</h1>${b ? `<p>${I.fmt(b)}</p>` : ''}<div class="rule"></div>${a2 ? bloc2(`<h2>${I.fmt(a2)}</h2>${b2 ? `<p>${I.fmt(b2)}</p>` : ''}`) : ''}`, 3000); break; }
       case 'choice': {
         S.hideDialog();
         let opts = b.slice(), first = true; const sv = I.save.data;
@@ -312,10 +377,10 @@
         let lecon = ''; if (I.lecons && I.lecons.actif()) I.lecons.proposer('source', () => { lecon = I.lecons.texte('source'); });
         while (true) {
           const i = await menuPick(lecon ? { html: I.fmt(a) + '<small class="lecon" dir="' + I.langue.sens(lecon.replace(/<[^>]*>/g, '')) + '">' + lecon + '</small>' } : a, opts); const o = opts[i]; // la leçon a son propre sens (une leçon encore en français, sous une question arabe)
-          if (o.ok) { if (first) { if (I.lecons) I.lecons.reemploi('source'); sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); I.mal.note('c', a, 0); await verdict(I.t('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.')); } if (o.r) await S.run(o.r); break; }
+          if (o.ok) { if (first) { if (I.lecons) I.lecons.reemploi('source'); sv.isnad.ok++; spc.cOk = (spc.cOk || 0) + 1; I.audio.sfx('light'); W.gainSakina && W.gainSakina(20); I.mal.note('c', a, 0); await verdict(I.T('<b>Chaîne intacte</b> — c’est ce qui fut rapporté.')); } if (o.r) await S.run(o.r); break; }
           if (first) I.mal.note('c', a, 1); // un acte que les transmetteurs n'ont pas rapporté : l'idée s'enracine
           first = false; I.audio.sfx('glitch'); G.shake(260); G.flash('#7a5cff');
-          await verdict(I.t('<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.'));
+          await verdict(I.T('<b>La chaîne vacille…</b> ce n’est pas ce qui fut rapporté.'));
           if (o.r) await S.run(o.r);
           S.hideDialog();
           opts = opts.filter(x => x !== o); if (opts.length === 1 && I.debug.auto) { /* continue */ }
