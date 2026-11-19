@@ -42,7 +42,8 @@
   // → une composition propre : les seules clés connues, lues en propriété propre, avec les seules valeurs de D.RAWI
   P.compo = function (brut) { const c = {}; if (!brut || typeof brut !== 'object' || Array.isArray(brut)) return c;
     CLES.forEach(k => { if (own(brut, k) && VALIDE[k](brut[k])) c[k] = brut[k]; }); return c; };
-  // le visage d'origine du râwî, tel que le moteur le tire de sa tenue de toujours : ses identifiants dans D.RAWI
+  // le visage d'origine du râwî, tel que le moteur le tire de sa tenue de toujours : ses identifiants dans D.RAWI — glabre
+  // depuis le pilote du nouveau dessin (décision du décideur : sprites.js, RAWI_BARBE, que G.traits rend pour le râwî marqué)
   let visage0 = null;
   const idDe = (table, couleur) => Object.keys(table).find(k => table[k] === couleur) || null;
   const visageOrigine = () => { if (visage0) return visage0; const G = I.gfx, v = G && G.traits ? G.traits(D.TENUES[0].look) : null;

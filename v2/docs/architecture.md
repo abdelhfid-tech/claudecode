@@ -227,7 +227,7 @@ vient de `D.RAWI` (`defs.js`) ; seuls les deux objets sont dessinés de neuf :
 | Pièce | Valeurs | Ce qu'elle pose sur l'apparence |
 |---|---|---|
 | `teint` | `t1` à `t7` : les cinq teints du moteur, puis deux plus sombres (`t3` : Idris) | `look.teint` |
-| `barbe`, `poil` | glabre, courte (Idris), pleine ; trois poils sombres, ni gris ni blanc (`p2` : Idris) | `look.barbe`, `look.poil` |
+| `barbe`, `poil` | glabre (Idris, depuis le pilote du nouveau dessin), courte, pleine ; trois poils sombres, ni gris ni blanc (`p2` : Idris) | `look.barbe`, `look.poil` |
 | `coiffe` | la capuche, la calotte ; le turban haut (`imama_haute`), le chèche (`litham`) | `look.coiffe` |
 | `manteau`, `longue`, `echarpe` | les quatre coupes ; la robe jusqu'aux pieds ; l'écharpe | `look.manteau`, `look.court`, `look.echarpe` |
 | `etoffe` | `e1` à `e6` (les six ensembles), `e7` | `look.robe`, `head`, `cloak`, `legs` |
@@ -355,6 +355,13 @@ dans le dépôt.*
   étoffe e1), avec les choix du visage et du néon ; une autre pièce, un autre objet ou une autre étoffe gardent le dessin
   d'avant. Les pas de profil et de dos, les poses et les gestes reprennent l'image au repos ; le souffle s'en tire seul.
   Le petit personnage (16 × 24, dessin d'origine sur les cartes) n'a pas changé.
+- **Son visage** (v2, retouches du décideur) : `visageRawi()`, et non `visage()`, qui garde son dessin pour tous les
+  autres. De grands yeux sombres et leur point de lumière, un nez d'un point d'ombre, une bouche d'un trait court ; à
+  32 × 48, les yeux seuls. Une manière de dessiner (celle des héros des jeux d'action-RPG de 16 bits), aucun visage repris.
+  Idris est **glabre** par défaut (`RAWI_BARBE` ; `G.traits` le rend pour le râwî marqué, et `perso.js` le lit comme
+  visage d'origine) ; la barbe courte (le collier) et la pleine sont redessinées pour ce visage. Le corps est équilibré :
+  la tête agrandie d'un quart (jamais plus large que les épaules), le corps un peu plus court et plus large, davantage de
+  profil.
 - `silhouettes.js` compare le râwî marqué à son empreinte d'avant (la marque n'est pas dans la clé) : l'écart du grand
   personnage, attendu sur lui seul, est la preuve que rien d'autre n'a bougé. Les fiches ne se relèvent qu'une fois le
   dessin validé.

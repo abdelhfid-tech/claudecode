@@ -100,7 +100,7 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     X.choisir('Khalil', 'veilleur'); const change = h.name === 'Khalil' && h.arabic === '' && h.look !== look0 && I.sagas.idris.name === 'Khalil';
     X.choisir('Idris', 'archives'); const b = JSON.stringify(I.sagas) === avant && h.look === look0 && h.arabic === 'إدريس';
     // des choix qui valent ceux d'origine (le visage d'Idris, la coupe et l'étoffe de son ensemble) : rien n'est gardé, rien ne change
-    X.choisir('Idris', 'archives', { teint: 't3', barbe: 1, poil: 'p2', coiffe: 'capuche', manteau: 'long', longue: false, echarpe: false, etoffe: 'e1' });
+    X.choisir('Idris', 'archives', { teint: 't3', barbe: 0, poil: 'p2', coiffe: 'capuche', manteau: 'long', longue: false, echarpe: false, etoffe: 'e1' });
     const c = JSON.stringify(I.sagas) === avant && h.look === look0 && !('compo' in I.save.data.profil);
     I.save.reset(); X.appliquer(); return { a, change, b, c, tenue0: JSON.stringify(I.D.TENUES[0].look) === JSON.stringify(look0) }; });
   if (!neutre.a || !neutre.b || !neutre.c || !neutre.tenue0) ko(`ÉCART le profil d'origine ne laisse pas le jeu intact : ${JSON.stringify(neutre)}`); else if (!neutre.change) ko('ÉCART choisir un nom et une tenue ne change pas le râwî');
@@ -129,7 +129,7 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     const marques = new Set(D.TENUES.map(t => X.composer(t, { teint: 't4' }).visage)); if (marques.size !== 1 || !marques.has(G.signe(t0.look))) E.push('la marque du visage change d’un ensemble à l’autre');
     // le dé : mille tirages
     let visage = 0, nue = 0, hors = 0; const vus = {}, coiffesVues = {}, objetsVus = {};
-    for (let i = 0; i < 1000; i++) { const c0 = { teint: 't6', barbe: 0, poil: 'p3' }, c = X.hasard(D.TENUES[i % 6], c0); if (c.teint !== 't6' || c.barbe !== 0 || c.poil !== 'p3') visage++;
+    for (let i = 0; i < 1000; i++) { const c0 = { teint: 't6', barbe: 2, poil: 'p3' }, c = X.hasard(D.TENUES[i % 6], c0); if (c.teint !== 't6' || c.barbe !== 2 || c.poil !== 'p3') visage++;
       const t = D.TENUES[i % 6], L = X.composer(t, c), co = L.coiffe || 'capuche', ma = L.manteau || 'long', et = c.etoffe || X.base(t).etoffe; if (!X.va(co, 'manteau', ma) || !X.va(co, 'etoffe', et) || !X.va(co, 'longue', L.court === false)) nue++; if (JSON.stringify(X.compo(c)) !== JSON.stringify(c)) hors++; vus[co + '/' + ma] = 1; coiffesVues[co] = 1; objetsVus[c.objet || 'rien'] = 1; }
     if (visage || nue || hors) E.push(`le dé : ${visage} visage(s) changé(s), ${nue} coiffe(s) avec ce qu’elle ne prend pas (D.RAWI.sans), ${hors} valeur(s) hors des listes`);
     if (R.coiffes.some(co => !coiffesVues[co]) || R.objets.some(o => !objetsVus[o]) || objetsVus.feuillets) E.push(`le dé ne tire pas chaque coiffe et chaque objet, ou tire les feuillets : ${JSON.stringify([coiffesVues, objetsVus])}`);
@@ -361,16 +361,16 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
     for (let i = 0; i < 3; i++) { await p.waitForTimeout(650); await cliquer(p.locator('#perso .pv-de')); const e = await p.evaluate(ETAT); des.push([e.face !== (des.length ? des[des.length - 1][2] : d0.face), JSON.stringify(e.choix) === JSON.stringify(d0.choix), e.face]); await p.screenshot({ path: path.join(out, 'bureau-8-de-' + (i + 1) + '.png') }); }
     await p.waitForTimeout(650); await cliquer(p.locator('#perso .pv-zero')); const z0 = await p.evaluate(ETAT), orig = await p.evaluate(() => { const G = window.ISNAD.gfx, L = Object.assign({ kind: 'compagnon' }, window.ISNAD.D.TENUES[0].look); return G.figure(L, 0, 0).toDataURL(); });
     if (des.some(d => !d[0] || !d[1])) ko(`ÉCART le dé : ${des.map(d => (d[0] ? 'autre tenue' : 'même tenue') + (d[1] ? '' : ', visage changé')).join(' ; ')}`);
-    else if (z0.ensemble !== 0 || JSON.stringify(z0.choix) !== '[2,1,1]' || z0.face !== orig) ko(`ÉCART ↺ ne rend pas le râwî de toujours : ${JSON.stringify({ ensemble: z0.ensemble, choix: z0.choix, meme: z0.face === orig })}`);
+    else if (z0.ensemble !== 0 || JSON.stringify(z0.choix) !== '[2,0,1]' || z0.face !== orig) ko(`ÉCART ↺ ne rend pas le râwî de toujours : ${JSON.stringify({ ensemble: z0.ensemble, choix: z0.choix, meme: z0.face === orig })}`);
     else ok('le dé, trois fois : une autre tenue à chaque fois, le visage choisi gardé ; ↺ : le râwî de toujours, au point près');
-    // la composition finale : capuche d'encre, teint clair, glabre, poil sombre ; le turban, robe longue, écharpe, manteau ample ; étoffe claire, néon vert ; la lanterne
+    // la composition finale : capuche d'encre, teint clair, glabre (le visage d'origine : rien n'est gardé), poil sombre ; le turban, robe longue, écharpe, manteau ample ; étoffe claire, néon vert ; la lanterne
     await cliquer(ensemble(p, 1)); await cliquer(cellule(p, 0, 1)); await cliquer(cellule(p, 1, 0)); await cliquer(cellule(p, 2, 0));
     await cliquer(p.locator('#perso .pv-onglet[data-o="habit"]')); await cliquer(cellule(p, 0, 2)); await cliquer(cellule(p, 1, 1)); await cliquer(cellule(p, 2, 1)); await cliquer(cellule(p, 3, 3));
     await cliquer(p.locator('#perso .pv-onglet[data-o="couleurs"]')); await cliquer(cellule(p, 0, 6)); await cliquer(cellule(p, 1, 2));
     await cliquer(p.locator('#perso .pv-onglet[data-o="objet"]')); await cliquer(cellule(p, 0, 2)); const f0 = await p.evaluate(ETAT);
     await p.screenshot({ path: path.join(out, 'bureau-9-compose.png') });
     await bouton(p, '#perso', 'Garder').click(); await p.waitForTimeout(700);
-    const COMPO = { teint: 't2', barbe: 0, poil: 'p1', coiffe: 'imama_haute', manteau: 'ample', longue: true, echarpe: true, etoffe: 'e7', neon: 'n2', objet: 'lanterne' };
+    const COMPO = { teint: 't2', poil: 'p1', coiffe: 'imama_haute', manteau: 'ample', longue: true, echarpe: true, etoffe: 'e7', neon: 'n2', objet: 'lanterne' };
     const c2 = await p.evaluate(() => { const I = window.ISNAD; return { profil: I.save.data.profil, chaine: !document.querySelector('#chain').hidden, auto: (I.save.autoGet() || {}).profil, look: I.sagas.idris.heroes.idris.look }; });
     const egal = (a, b) => JSON.stringify(Object.keys(a || {}).sort().reduce((o, k) => { o[k] = a[k]; return o; }, {})) === JSON.stringify(Object.keys(b || {}).sort().reduce((o, k) => { o[k] = b[k]; return o; }, {}));
     if (!c2.chaine || c2.profil.tenue !== 'encre' || !egal(c2.profil.compo, COMPO) || !c2.auto || !egal(c2.auto.compo, COMPO) || c2.look.porte[0] !== 'lanterne' || c2.look.teint !== '#deab7c' || c2.look.coiffe !== 'imama_haute' || c2.look.court !== false || !Array.isArray(c2.look.neon)) ko(`ÉCART la composition n'est pas gardée telle qu'on l'a faite : ${JSON.stringify(c2.profil)} · ${JSON.stringify(c2.look)}`);
@@ -398,7 +398,7 @@ const VISAGE_DE = async ([src, coiffe]) => { const G = window.ISNAD.gfx, im = ne
       else { await p.locator('#perso input').fill('Sélim'); await cliquer(ensemble(p, 5)); await p.screenshot({ path: path.join(out, 'bureau-11-depuis-la-halte.png') }); await bouton(p, '#perso', 'Garder').click(); await p.waitForTimeout(900);
         const c5 = await p.evaluate(() => { const I = window.ISNAD, W = I.world; return { nom: I.perso.nom(), heros: W.hero('idris').def.name, profil: I.perso.profil(), apres: JSON.stringify(W.sheets[0].look), monde: I.scene === W && !I.ui.menuOpen, ferme: document.querySelector('#perso').hidden }; });
         await p.screenshot({ path: path.join(out, 'bureau-12-dans-le-chapitre.png') });
-        const garde = { teint: 't2', barbe: 0, poil: 'p1', objet: 'lanterne' };
+        const garde = { teint: 't2', poil: 'p1', objet: 'lanterne' };
         if (c5.nom !== 'Sélim' || c5.heros !== 'Sélim' || c5.profil.tenue !== 'lettre' || !egal(c5.profil.compo, garde) || c5.apres === c4.avant || !c5.monde || !c5.ferme) ko(`ÉCART depuis la halte, le changement ne prend pas : ${JSON.stringify(c5)}`);
         else ok('depuis la halte, au milieu d’un chapitre : la page montre le râwî lui-même (sa figure, son nom) ; un nouveau nom et un autre ensemble — l’habit repart de l’ensemble, le visage et l’objet restent — et la silhouette du héros change aussitôt'); } }
     sansErreur('en changeant de personnage'); await p.close();

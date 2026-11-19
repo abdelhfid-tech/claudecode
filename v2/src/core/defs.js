@@ -434,8 +434,8 @@
      le décideur.)
        teints   une gamme continue, du plus clair au plus sombre : les cinq teints du moteur, puis deux plus sombres
                 (t3 : celui d'Idris). TEINTS, que lisent tous les autres personnages, ne change pas.
-       barbes   celles que le moteur dessine : glabre, courte (Idris), pleine — pour un adulte ; poils : ni gris ni
-                blanc, ce serait l'âge (p2 : Idris)
+       barbes   celles que le moteur dessine : glabre (Idris — décision du décideur, pilote du nouveau dessin ; avant :
+                courte), courte, pleine — pour un adulte ; poils : ni gris ni blanc, ce serait l'âge (p2 : Idris)
        coiffes  la capuche, la calotte ; puis (D193) le turban haut, enroulé serré (imama_haute), et le chèche (litham),
                 sous lequel on ne voit que les yeux — des coiffes que le moteur dessine déjà, dans toutes les tailles.
                 Écartés : le turban des Compagnons (imama), le turban large et bas ('Umar, 'Uthmân, Qays : l'un d'eux le
