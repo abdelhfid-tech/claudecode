@@ -511,6 +511,33 @@ registre, l'agent a vu que, pour les trois autres paroles corrigées par D183 (`
 mot, « الله » : la nuance voulue par le français disparaît (« ما القلعةُ إلا لله », « la citadelle n'est qu'à Allah »). Vu
 par le rédacteur.
 
+## 12. Relevé en relisant l'anglais et le japonais
+
+Les relectures de l'anglais (fidélité, puis langue) et du japonais (D188) ont repris presque tous les points ci-dessus :
+Dhû l-Fiqâr et Haydar (§ 1), al-Kadhdhâb (§ 1), « Le Bouclier et le Juge » (11.c9), les visages maigres (§ 6), « Ghânim
+serre ses clés » (§ 10), le Régent (§ 7). Quatre points sont nouveaux ; chacun a été relu dans le fichier français.
+Aucun n'est corrigé.
+
+- **12.1. L'Admiré, un cinquième écho du conte (exigence 14).** « Dis-moi que je suis le plus regardé de la Cité.
+  Dis-le. Ça ne coûte rien. » (`frame.js:473`, pourparler « Descendre du socle ») reprend la demande du vaniteux du
+  conte, qui veut qu'on l'admire comme le premier de sa planète. Il rejoint les quatre échanges du § 7. **Proposition** :
+  le réécrire avec eux, pour que le type reste (celui qu'on applaudit) sans la demande ni son enchaînement.
+- **12.2. « La Durra »** (`saga_abubakr.js:67`, `saga_umar.js:46`, compétence de 'Umar). Le fouet de 'Umar est la
+  *dirra* (الدِّرّة) ; *durra* (الدُّرّة) veut dire « la perle ». L'arabe écrit الدِّرّة et l'anglais *The Dirra* ; le
+  japonais a suivi le français (ドゥッラ). **Proposition** : « La Dirra », puis le japonais suit.
+- **12.3. « l'Agrégor, qui ne force personne et tient tout le monde »** (`saga_uthman.js:658`). « Tient tout le monde »
+  approche l'image de la possession que D184 (1.6) écarte, et le japonais l'a d'abord lu « ne lâche personne ». Le
+  relecteur japonais a corrigé une image semblable dans la même saga (« c'est la peur qui parle pour eux »,
+  l'intro de « La Peur »). **Proposition** : « qui ne force personne, et que chacun pourtant sert ».
+- **12.4. « le héros », dit de Khâlid (exigence 24).** « Il se brise quand le héros lui-même refuse le socle »
+  (`saga_khalid.js:225`, l'Idole du Héros) et « Celui qui tient le registre ne croit pas au héros ; il en vit »
+  (`saga_khalid.js:290`). L'exigence 24 veut qu'aucun texte ne dise de quelqu'un qu'il *est* un héros ; en japonais,
+  英雄 est exactement le nom de la figure. **Proposition** : « quand Khâlid lui-même refuse le socle » ; « ne croit pas
+  à l'idole ; il en vit ».
+
+Un point a été vérifié puis écarté : le relecteur japonais croyait que le glossaire interdit de nommer Teilhard et
+Vernadsky, que nomme le feuillet « La noosphère » (`frame.js:124`). Aucun glossaire ni aucune consigne ne le dit.
+
 ## Si vous retenez un changement
 
 Le français change d'abord, puis les listes des langues se remettent à jour (`node v2/tools/langues.js releve`) : les
