@@ -1454,6 +1454,8 @@ précédentes fixent déjà n'est pas repris. Une ligne par hésitation, avec le
   arabe, « عالم الأفكار », vient de Malek Bennabi (D185), que le feuillet ne nomme pas. L'arabe dit seulement que le nom
   européen de ce monde vient du grec. Nommer Bennabi dans la version arabe ? Donner une fois « نوسفير », entre
   guillemets ?
+  *Le décideur, 19 novembre : le jeu ne nomme ni Teilhard ni Vernadsky ; le feuillet et les crédits ne gardent que
+  l'étymologie, dans les quatre langues. La question de Bennabi reste posée.*
 
 **caid**
 

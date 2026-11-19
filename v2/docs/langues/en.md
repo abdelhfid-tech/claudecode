@@ -312,7 +312,7 @@ Tabaqat*. La source d'une **parole citée** (`<quote>2`) n'est pas concernée : 
 | Ibn 'Asâkir, Târîkh Dimashq ; Futûh ash-Shâm (attribué à al-Wâqidî) ; Ibn 'Abd al-Hakam, Futûh Misr | Ibn ʿAsakir, Tarikh Dimashq ; Futuh al-Sham (attributed to al-Waqidi) ; Ibn ʿAbd al-Hakam, Futuh Misr |
 | Nahj al-Balâgha, lettre 53 ; Ibn Qutayba, Kitâb al-Anwâ' ; Ibn Mâjid, Kitâb al-Fawâ'id ; al-Ghazâlî, Ihyâ' 'ulûm ad-dîn | Nahj al-Balagha, letter 53 ; Ibn Qutayba, Kitab al-Anwa’ ; Ibn Majid, Kitab al-Fawa’id ; al-Ghazali, Ihya’ ʿulum al-din |
 | Théophane, Chronographie ; Eutychius, Annales ; Eusèbe de Césarée, Histoire ecclésiastique ; chroniqueurs byzantins ; fragment de la Geniza du Caire | Theophanes, Chronographia ; Eutychius, Annals ; Eusebius of Caesarea, Ecclesiastical History ; Byzantine chroniclers ; a fragment from the Cairo Geniza |
-| Vernadsky, La Biosphère ; Teilhard de Chardin, Le Phénomène humain | Vernadsky, The Biosphere ; Teilhard de Chardin, The Phenomenon of Man (le titre de la traduction de B. Wall, § 2.1) |
+| ~~Vernadsky, La Biosphère ; Teilhard de Chardin, Le Phénomène humain~~ | retiré du jeu (le décideur, 19 novembre : le jeu ne nomme ni Teilhard ni Vernadsky) |
 | Coran 49:6 ; Traduction du sens, Coran 2:197 | Qur’an 49:6 ; Translation of the meaning, Qur’an 2:197 (§ 1.5) |
 
 Les mentions : « (d'après Sayf ibn 'Umar) » → *(after Sayf ibn ʿUmar)* (§ 1.5) ; « (an 28 H) » → *(AH 28)* (§ 1.6) ;

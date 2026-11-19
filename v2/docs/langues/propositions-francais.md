@@ -535,8 +535,9 @@ Aucun n'est corrigé.
   英雄 est exactement le nom de la figure. **Proposition** : « quand Khâlid lui-même refuse le socle » ; « ne croit pas
   à l'idole ; il en vit ».
 
-Un point a été vérifié puis écarté : le relecteur japonais croyait que le glossaire interdit de nommer Teilhard et
-Vernadsky, que nomme le feuillet « La noosphère » (`frame.js:124`). Aucun glossaire ni aucune consigne ne le dit.
+**Décidé (le décideur, 19 novembre : « ne mentionne pas Teilhard et Vernadsky »).** Le feuillet « La noosphère »
+(`frame.js:124`) et les crédits (`ui.js:498`) ne les nomment plus ; ils ne gardent que l'étymologie (« Du grec *noûs*,
+l'esprit »), et le feuillet n'a plus de source. Fait dans les quatre langues (2.12).
 
 ## Si vous retenez un changement
 
