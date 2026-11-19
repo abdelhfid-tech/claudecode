@@ -1585,7 +1585,7 @@ pages privées de son compte.
   récit suivent un chemin, au plus trois fois la durée de la ligne droite d'avant. Les chimères de la carte ne se
   superposent plus entre elles ni aux PNJ, ni les rôdeurs entre eux ; leur contact reste ce qui ouvre le combat ; leur
   transparence a un plancher de 0,85 (exigence 6) ; la bête du ciel est opaque. En combat, en hauteur, les héros se
-  resserrent autour du centre de leur groupe et ne se recouvrent plus. « 2D simple » coupe aussi l'ambiance, les lueurs,
+  resserrent autour du centre de leur groupe et ne se recouvrent plus (vingt-sept points d'un centre à l'autre au moins). « 2D simple » coupe aussi l'ambiance, les lueurs,
   le halo, l'étalonnage et la vignette, comme son texte le promet. **Courir** : le joystick tiré au-delà de 85 % de son
   rayon, Maj tenue au clavier, ou deux touchers rapprochés sur la scène ; 1,75 fois la marche, la foulée 1,6 fois plus
   vive, le buste penché d'un point de profil (à l'affichage seulement : aucun gabarit ne change), les pas plus serrés ;
@@ -1593,7 +1593,8 @@ pages privées de son compte.
   « Manette tactile » et l'aide « Se déplacer, agir » le disent (textes nouveaux, écrits en arabe, anglais et japonais
   par l'agent, à relire). Contrôles nouveaux : « SUPERPOSÉ », « COINCÉ » et « PNJ EN TRAVERS » font échouer la batterie ;
   `smoke.js suiveurs` (« SUIVEURS CONFORMES ») ; la course dans `doigt.js` et `descente.js` ; les héros du combat dans
-  `loupe.js`. À trancher : la vitesse de course (1,75), le seuil du joystick (85 %), le plancher de transparence des
+  `loupe.js` (aucun point d'une silhouette sur une autre, aussi sur un téléphone élancé) ; les PNJ des paquets dans
+  `paquet.js` (les mêmes sondes que `smoke.js`). À trancher : la vitesse de course (1,75), le seuil du joystick (85 %), le plancher de transparence des
   chimères (0,85), le pas de côté (un PNJ s'écarte de lui-même, ou faut-il qu'il reste et que l'on fasse le tour ?).
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur

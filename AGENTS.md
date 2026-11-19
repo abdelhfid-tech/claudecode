@@ -95,8 +95,9 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   côté ; personne n'est posé sur le joueur ; les marches de récit suivent un chemin. Ce qui rôde et les chimères de la
   carte n'ont pas de corps pour le joueur : leur contact ouvre le combat. On court au joystick tiré au bord, à Maj tenue,
   ou d'un double toucher ; la course ne presse ni le chrono, ni ce qui rôde, ni les combats. `v2/docs/architecture.md`,
-  « Des corps, et non des fantômes » et « La manette tactile ». Un changement du déplacement repasse `smoke.js
-  suiveurs`, `walk` et `tap`, puis toute la batterie.
+  « Des corps, et non des fantômes » et « La manette tactile ». Les sondes des corps (« SUPERPOSÉ », « PNJ EN TRAVERS »)
+  sont dans `v2/tools/sondes.js`, que `smoke.js` et `paquet.js` posent sur leurs parties : un PNJ d'un paquet s'éprouve
+  comme ceux du jeu. Un changement du déplacement repasse `smoke.js suiveurs`, `walk` et `tap`, puis toute la batterie.
 - Dans la 2.x, l'image s'agrandit (demande du décideur, 16 novembre : « les personnages et les textes sont trop petits
   dans mon téléphone, il faut pouvoir zoomer dans l'image ») : pendant l'exploration, de × 1 à × 3 autour de celui qui
   mène — deux doigts qui s'écartent, la molette, le bouton « × » de la scène, le réglage « Image » ; d'office × 1,5 sur
@@ -192,7 +193,7 @@ node v2/tools/smoke.js auto            # prologue, cinq sagas, épilogue joués 
 node v2/tools/smoke.js walk            # idem en marchant réellement (clavier simulé, vraies collisions)
 node v2/tools/smoke.js tap             # idem en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
 node v2/tools/smoke.js wrong           # idem en prenant d'abord chaque mauvaise réponse
-node v2/tools/smoke.js suiveurs        # 2.16 : les siens à seize points à 30, 60, 120 et 144 images par seconde, après chaque chargement ; personne posé sur le joueur ; les marches de récit jouées pour de vrai — « SUIVEURS CONFORMES »
+node v2/tools/smoke.js suiveurs        # 2.16 : les siens à seize points à 30, 60, 120 et 144 images par seconde, après chaque chargement ; personne posé sur le joueur ; les marches de récit jouées pour de vrai, puis le joueur en travers de leur ligne droite — « SUIVEURS CONFORMES »
 node v2/tools/doigt.js                 # le prologue au doigt, sans raccourci : ce que le jeu attend se voit-il, se touche-t-il ?
 node v2/tools/doigt.js loin            # idem, puis tout le premier chapitre de la saga I (ajouter 844x390 pour le paysage)
 node v2/tools/son.js                   # la musique pour de vrai : le bus écouté pendant qu'on joue (victoire, défaite puis reprise, minuteries bridées)

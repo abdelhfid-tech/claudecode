@@ -963,17 +963,24 @@ joueur sur un PNJ ; en combat, en hauteur, les héros se recouvraient). D198.*
   0,85 (elle allait de 0,74 à 0,98) : elle dit encore qu'elles ne sont pas des personnes (exigence 6). La bête du ciel
   est opaque.
 - **En combat, en hauteur**, les héros se resserrent autour du centre de leur groupe, et non du centre de l'écran
-  (`battle.js`, `heroPos`) : vingt-six points d'écart en largeur, dix-huit en profondeur, en escalier (avant : vingt
-  points pour des figures de trente-deux). En largeur, rien ne change.
+  (`battle.js`, `heroPos`) : vingt-sept points d'écart au moins en largeur — là où la scène visible est la plus étroite
+  (216 points, un téléphone élancé ; à vingt-six, deux silhouettes s'y touchaient encore) —, dix-huit en profondeur, en
+  escalier (avant : vingt points pour des figures de trente-deux). En largeur, rien ne change.
 - **« 2D simple »** (`gfx.js`, `G.low`) tient ce que son texte promet : le pixel art seul, sans ambiance ni lueurs, sans
   halo, sans étalonnage ni vignette (avant, il gardait l'ambiance, l'étalonnage et la vignette).
 
 Contrôles : `smoke.js walk` et `tap` (« SUPERPOSÉ » : le joueur reste plus de trente pas dans le pied de quelqu'un, ou un
 lieu se charge avec quelqu'un à moins de 9 points de lui ; « COINCÉ ») ; `smoke.js auto` (« PNJ EN TRAVERS » : à chaque
 point de reprise, la case d'un PNJ ou d'un coffre, rendue pleine, ne coupe aucun lieu nommé — sauf si son pas de côté
-rouvre le passage, ce que le journal dit sans alerte) ; `smoke.js suiveurs` (l'écart à quatre cadences, chaque lieu de
-départ, la reprise au bureau, les marches de récit jouées pour de vrai : « SUIVEURS CONFORMES ») ; `loupe.js` (en
-combat, aucun corps de héros n'en recouvre un autre de plus de quatre points).
+rouvre le passage, ce que le journal dit sans alerte) ; ces deux sondes sont dans `tools/sondes.js`, que `smoke.js` et
+`paquet.js` posent sur leurs parties : un PNJ d'un paquet s'éprouve comme ceux du jeu, et `paquet.js` échoue aussi sur
+« COINCÉ », « SUPERPOSÉ » et « PNJ EN TRAVERS » ; `smoke.js suiveurs` (l'écart à quatre cadences, chaque lieu de
+départ, la reprise au bureau ; les marches de récit jouées pour de vrai et comme le jeu les joue — le joueur là où
+l'objectif le laisse, « show » et ce qui précède joués —, puis le joueur posé en travers de la ligne droite, qu'elles
+doivent contourner sans entrer dans son pied, et un témoin : la ligne droite d'avant, rejouée là, est relevée :
+« SUIVEURS CONFORMES ») ; `loupe.js` (en combat, aucun point de la silhouette d'un héros sur celle d'un autre et
+vingt-six points au moins d'un centre à l'autre, en hauteur aussi sur un téléphone élancé, 390 × 844 ; la 2.15 y
+échoue, ce que le seuil d'avant — quatre points de recouvrement des boîtes — ne voyait pas).
 
 ### Le rayonnement d'un Compagnon
 
