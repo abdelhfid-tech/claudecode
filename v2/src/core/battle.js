@@ -291,8 +291,12 @@
     if (main && der && vus.length % 2 && der.classList.contains('limit')) der.classList.add('seul');
     const pan = box.closest('.panel'); if (!pan) return;
     const tz = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tz')) || 1, mini = Math.min(1, 1 / tz);
-    // déborder : le panneau passe sous le bas de l'écran, ou la liste doit défiler pour montrer sa dernière commande
-    const list = box.querySelector('.mlist'), deborde = () => pan.getBoundingClientRect().bottom > innerHeight + 1 || (!!list && list.scrollHeight > list.clientHeight + 1);
+    // déborder : le panneau sort de l'écran, ou la liste des commandes doit défiler pour montrer la dernière (une liste de
+    // vertus ou d'objets, elle, peut défiler). En largeur, le panneau est posé sur le bas de l'écran : la liste des
+    // commandes s'allonge d'abord vers le haut, tant que le panneau reste dans l'écran ; ensuite seulement, elle se resserre.
+    const list = main ? box.querySelector('.mlist') : null, defile = () => !!list && list.scrollHeight > list.clientHeight + 1;
+    const deborde = () => { const r = pan.getBoundingClientRect(); return r.bottom > innerHeight + 1 || r.top < 0 || defile(); };
+    if (list) { list.style.maxHeight = ''; if (defile() && !document.body.classList.contains('portrait')) { list.style.maxHeight = 'none'; if (pan.getBoundingClientRect().top < 0) list.style.maxHeight = ''; } }
     for (const f of [0.94, 0.88, 0.82].filter(v => v > mini + 0.01).concat(mini)) { if (!deborde()) break; box.style.fontSize = (0.86 * f).toFixed(3) + 'em'; }
   }
   function listMenu(box, title, items, o) {
