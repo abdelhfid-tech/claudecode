@@ -32,8 +32,46 @@
     : { desert: ['#3a2e6e', '#c0607a', '#ffc070'], ville: ['#32306e', '#b45c80', '#ffb46c'], camp: ['#2a2a62', '#9a5078', '#f09a64'], romaine: ['#34407e', '#a2709a', '#ffc890'], palais: ['#36265e', '#a2507a', '#ffbe62'], mer: ['#25427e', '#5a8cc0', '#ffc890'], cite: ['#2c1252', '#b02c84', '#ff8a4a'], noos: ['#0a0c3a', '#1c2370', '#5444c8'] };
   // le sol : tiré du lieu (le sable, la pierre, l'eau, l'asphalte mouillé), sombre au pied du ciel et plus sombre au premier plan
   const SOL = { desert: ['#8e5e3a', '#36202e'], ville: ['#845636', '#33202e'], camp: ['#6c4632', '#2a1a2c'], romaine: ['#605450', '#262236'], palais: ['#643a2c', '#2a1830'], mer: ['#1e5474', '#0c2238'], cite: ['#4a1e56', '#160c28'], noos: ['#161a52', '#080a24'] };
+  // La Cité-Miroir (prototype « deux villes ») : au-dessus des tours à vent du vieux quartier, les tours de verre ; le ciel
+  // luit comme un écran, une voûte de carreaux, sans astre ni étoile ; une brume de sable dorée à l'horizon.
+  function citeBg(cv, c, r, hue, H0) {
+    const W = G.PW, rect = (col, x, y, w, h) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+    const grad = (x0, y0, x1, y1, stops) => { const g = c.createLinearGradient(x0, y0, x1, y1); stops.forEach(s => g.addColorStop(s[0], s[1])); return g; };
+    c.fillStyle = grad(0, 0, 0, H0, [[0, '#2c1252'], [0.4, '#8e2c7c'], [0.8, '#ff7a4a'], [1, '#ffc27a']]); c.fillRect(0, 0, W, H0);
+    // la voûte : des méridiens qui montent vers un point au-dessus de l'image, des parallèles de plus en plus serrées
+    const vx = W / 2, vy = -240, mx = (bx, y) => vx + (bx - vx) * (y - vy) / (H0 - vy), PAR = [4, 11, 19, 28, 39, 52, 68, 86];
+    for (let i = 0; i < 26; i++) { const j = Math.floor(r() * 7), k = Math.floor(r() * 24) - 12, b0 = vx + k * 30, b1 = b0 + 30;
+      c.fillStyle = `rgba(255,190,226,${(0.04 + r() * 0.07).toFixed(3)})`; c.beginPath(); c.moveTo(mx(b0, PAR[j]), PAR[j]); c.lineTo(mx(b1, PAR[j]), PAR[j]); c.lineTo(mx(b1, PAR[j + 1]), PAR[j + 1]); c.lineTo(mx(b0, PAR[j + 1]), PAR[j + 1]); c.fill(); }
+    c.strokeStyle = 'rgba(255,226,240,.12)'; c.lineWidth = 0.5; c.beginPath(); for (let k = -14; k <= 14; k++) { c.moveTo(mx(vx + k * 30, 0), 0); c.lineTo(vx + k * 30, H0); } c.stroke();
+    PAR.forEach((y, i) => rect(`rgba(255,226,240,${(0.16 - i * 0.015).toFixed(3)})`, 0, y, W, 0.5));
+    // l'écran luit plus fort vers l'horizon : une lumière sans disque
+    const lg = c.createRadialGradient(W / 2, H0, 4, W / 2, H0, 190); lg.addColorStop(0, 'rgba(255,214,150,.45)'); lg.addColorStop(1, 'rgba(255,214,150,0)'); c.fillStyle = lg; c.fillRect(0, 0, W, H0);
+    // au loin, d'autres tours dans la brume de sable
+    for (let x = -4; x < W;) { const w = 7 + r() * 10, top = 26 + r() * 40; rect('rgba(176,88,124,.55)', x, top, w, H0 - top); if (r() < 0.3) rect('rgba(176,88,124,.55)', x + w / 2 - 0.5, top - 12, 1, 12);
+      for (let k = 0; k < 4; k++) rect('rgba(255,214,160,.5)', x + 1 + Math.floor(r() * (w - 2)), top + 3 + Math.floor(r() * (H0 - top - 6)), 1, 1); x += w + 2 + r() * 7; }
+    c.fillStyle = grad(0, 40, 0, H0, [[0, 'rgba(255,186,120,0)'], [1, 'rgba(255,190,124,.55)']]); c.fillRect(0, 40, W, H0 - 40);
+    // les tours de verre, géantes, qui dominent le vieux quartier
+    [[4, 46, -20, 'rideau'], [62, 26, 12, 'aiguille'], [100, 32, -6, 'torsade'], [146, 16, 34, 'lame'], [214, 18, 30, 'couronne'], [240, 52, -24, 'rideau'], [302, 22, 14, 'lame'], [330, 34, 4, 'torsade']]
+      .forEach(t => I.maps.tourDeVerre(c, r, t[0], t[1], t[2], H0 - 4, t[3]));
+    c.fillStyle = grad(0, 64, 0, H0, [[0, 'rgba(255,196,130,0)'], [1, 'rgba(255,200,136,.42)']]); c.fillRect(0, 64, W, H0 - 64);
+    // devant : le vieux quartier, ses maisons de pierre de corail, ses tours à vent, ses claustras éclairés
+    const tons = ['#d3bf9d', '#cdb692', '#d9c6a4', '#c8b08c'], bar = G.obj('cbarjil', null, 7);
+    for (let x = -6; x < W;) { const w = 26 + Math.floor(r() * 30), top = H0 - 16 - Math.floor(r() * 10);
+      if (r() < 0.4) c.drawImage(bar, x + 3 + Math.floor(r() * Math.max(1, w - 20)), top + 5 - 42, 17.5, 42);
+      rect(tons[Math.floor(r() * 4)], x, top, w, H0 - top); rect('#e8d8b8', x, top, w, 1.5); rect('rgba(90,56,48,.22)', x + w - 1.5, top, 1.5, H0 - top);
+      for (let k = x + 3; k < x + w - 3; k += 5) rect('#6a4a30', k, top + 3, 0.75, 0.75);
+      for (let k = x + 5; k < x + w - 6; k += 11) { const lit = r() < 0.6; rect('#8a7056', k - 0.5, top + 6.5, 5, 6); rect(lit ? '#ffc878' : '#3a2a26', k, top + 7, 4, 5); rect(lit ? '#7a4a28' : '#5a4434', k + 1.75, top + 7, 0.5, 5); rect(lit ? '#7a4a28' : '#5a4434', k, top + 9.25, 4, 0.5); }
+      x += w + (r() < 0.2 ? 6 : 0); }
+    c.fillStyle = grad(0, H0 - 12, 0, H0, [[0, 'rgba(255,200,140,0)'], [1, 'rgba(255,206,150,.35)']]); c.fillRect(0, H0 - 12, W, 12);
+    // le sol : la pierre couleur sable du vieux quartier
+    c.fillStyle = grad(0, H0, 0, G.PH, [[0, '#a07a56'], [0.5, '#6a4a3e'], [1, '#2e1e2c']]); c.fillRect(0, H0, W, G.PH - H0);
+    for (let i = 0; i < 90; i++) { const y = H0 + 2 + Math.pow(r(), 1.6) * (G.PH - H0 - 2); rect('rgba(236,206,160,.12)', r() * W, y, 4 + (y - H0) * 0.2 * r(), 0.5); }
+    rect(`hsla(${hue},100%,70%,.5)`, 0, H0, W, 1);
+    return cv;
+  }
   function paintBg(kind, hue) {
     const cv = G.toile(G.PW, G.PH), c = cv.getContext('2d'), sky = SKY[kind] || SKY.noos, H0 = 100, r = I.rng(I.hash(kind + hue));
+    if (kind === 'cite') return citeBg(cv, c, r, hue, H0);
     const g = c.createLinearGradient(0, 0, 0, H0); g.addColorStop(0, sky[0]); g.addColorStop(0.6, sky[1]); g.addColorStop(1, sky[2]); c.fillStyle = g; c.fillRect(0, 0, G.PW, H0);
     const etoile = v15 || kind === 'noos' ? 1 : 0.35; // au couchant, les étoiles ne font que poindre
     for (let i = 0; i < 70; i++) { c.fillStyle = `rgba(255,255,255,${(0.2 + r() * 0.7) * etoile})`; c.fillRect(Math.floor(r() * G.PW), Math.floor(r() * 62), 1, 1); }
