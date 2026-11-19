@@ -213,7 +213,7 @@
     if (K.troupe && look.sel !== undefined && !look.coiffe && !look.item) { const v = TROUPES[K.troupe][look.sel % TROUPES[K.troupe].length]; K.coiffe = v[0]; K.item = v[1]; if (v[2]) { K.armure = v[2]; K.cuirasse = false; } }
     if (K.varie && !look.coiffe && !look.manteau) { const v = VARIE[I.hash((look.robe || '') + (look.head || '') + (look.cloak || '')) % VARIE.length]; K.coiffe = v[0]; K.manteau = v[1]; }
     ['coiffe', 'item', 'manteau', 'motif', 'echarpe', 'court', 'cuirasse', 'chale', 'armure'].forEach(k => { if (look[k] !== undefined) K[k] = look[k]; });
-    if (G.idris && look.rawi && look.kind === 'cyber') { K.proto = G.idris; K.sombre = false; }   // prototype 2.17 : Idris « un des leurs » (le grand personnage seul)
+    if (G.idris && look.rawi && look.kind === 'cyber') K.proto = G.idris;   // prototype 2.17 : Idris « un des leurs » (le grand personnage seul)
     return K;
   }
 
@@ -860,7 +860,7 @@
   function protoHabit(L, K, key, cou, kneel) {
     const at = (x, y) => (y >= 0 && y < L.length && x >= 0 && x < W2) ? L[y][x] : '.', set = (x, y, m) => { if (y >= 0 && y < L.length && x >= 0 && x < W2) L[y][x] = m; };
     // Y : le revers du manteau, du côté du cœur (de face) ; le devant de la poitrine (de profil)
-    if (key === 'd') { for (let y = cou + 4; y < cou + 9; y++) if (at(11, y) === 'k') set(11, y, 'Y'); }
+    if (key === 'd') { for (let y = cou + 4; y < cou + 9; y++) if ('kr'.indexOf(at(11, y)) >= 0) set(11, y, 'Y'); }
     else if (key === 'l') { for (let y = cou + 4; y < cou + 8; y++) { let x = 0; while (x < W2 && at(x, y) === '.') x++; if ('RrSs'.indexOf(at(x, y)) >= 0 && 'RrSs'.indexOf(at(x + 1, y)) >= 0) set(x + 1, y, 'Y'); } }
     // y : la ceinture, une ligne ; dessous, le cuir
     let ya = -1; for (let y = cou + 6; y < cou + 16 && ya < 0; y++) for (let x = 0; x < W2; x++) if ('Aa'.indexOf(at(x, y)) >= 0) { ya = y; break; }
@@ -1680,6 +1680,7 @@
     const A = Ge || (P ? (ALLURES[pose] && ALLURES[pose][key]) : (CORPS[key] && CORPS[key][frame || 0]));
     if (!tt || !A) return null;
     const r = grid(look, dir, frame, Ge ? null : pose, {}), K = r.K, kneel = r.kneel, hy = P ? (P.hy || 0) : 0, haut = A.haut || 0;
+    if (K.proto && K.manteau !== 'long') K.manteau = 'long';   // prototype 2.17 : la tenue d'office, le long manteau (le petit personnage, lui, ne change pas)
     let rows = A.rows || A; if (K.petit && !kneel) rows = rows.filter((x, j) => PETIT.indexOf(j - haut) < 0); else if (K.proto === 'jeune' && !kneel) rows = rows.filter((x, j) => [8, 18].indexOf(j - haut) < 0);   /* prototype 2.17 : le jeune râwî, plus léger */
     const bT = H2 - rows.length, cou = bT + haut, y1 = kneel ? H2 : H2 - 4, L = [], am = [], fin = []; let hors = 0; // am : l'armure ; fin : dessiné tel quel, sans modelé
     for (let y = 0; y < H2; y++) { L.push(new Array(W2).fill('.')); am.push(new Array(W2).fill(0)); fin.push(new Array(W2).fill(0)); }
@@ -1783,7 +1784,7 @@
     if (K.lit || look.sansVisage || dir === 3 || x1 < x0) return null;
     const h = signe(look);
     const kd = look.kind || 'homme', age = kd === 'enfant' ? 0 : kd === 'ancien' ? 2 : (kd === 'savant' || kd === 'moine') ? ((h >>> 3) % 2 ? 2 : 1.5) : 1; // 0 enfant · 1 adulte · 1,5 grisonnant · 2 âgé
-    let peau = look.teint || TEINTS[h % TEINTS.length]; if (K.sombre) peau = mix(peau, '#1c1430', 0.34);            // sous une capuche, le visage est dans l'ombre
+    let peau = look.teint || TEINTS[h % TEINTS.length]; if (K.sombre && !K.proto) peau = mix(peau, '#1c1430', 0.34);            // sous une capuche, le visage est dans l'ombre
     // 2.x — le râwî composé (D.RAWI) : un teint plus sombre que tous les TEINTS garde le blanc de l'œil jusque sur le
     // personnage de 32 × 48 (sinon l'œil s'y perd) ; la même ombre pour tous, pour que la gamme reste dans l'ordre
     const fonce = !!look.teint && lum(look.teint) < SOMBRE;
@@ -1885,7 +1886,7 @@
     const n = natifGrille(look, dir, frame, pose); if (!n) return (scache[k] = s === 2 ? G.epx(ancien(look, dir, frame, pose)) : ancien(look, dir, frame, pose));
     const K = n.K, F = s === 2 ? fine(n) : n, L = F.L, am = F.am, fin = F.fin, pal = n.rawi ? paletteRawi(look, K, n.rawi.dessin) : palette(look, K), w = W2 * s, h = H2 * s;
     if (K.proto) paletteProto(look, K, pal);   // prototype 2.17 : la tenue d'office d'Idris « un des leurs »
-    const tn = G.teint(look); if (tn) pal.N = mix(K.sombre ? mix(tn, '#1c1430', 0.2) : tn, '#fff1d6', 0.1); // qui a un visage a des mains du même teint (le grand personnage seulement)
+    const tn = G.teint(look); if (tn) pal.N = mix(K.sombre && !K.proto ? mix(tn, '#1c1430', 0.2) : tn, '#fff1d6', 0.1); // qui a un visage a des mains du même teint (le grand personnage seulement)
     const R = rampes(pal);
     const cv = mk(w, h), c = cv.getContext('2d'), px = (x, y, col) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } }; if (s === 2) cv.hd = 2;
     const voile = m => m === 'V' || m === 'v', at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? '.' : L[y][x];
