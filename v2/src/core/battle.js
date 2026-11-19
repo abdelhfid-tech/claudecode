@@ -552,7 +552,9 @@
     I.audio.sfx('roll'); refresh(); I.oeuvres.learn('secours');
     const d = I.oeuvres.state();
     if (!d.vuSecours && !vite && T.verset) { d.vuSecours = true; await I.sleep(500);
-      await S.card('pray secours', `<div class="orn">✧</div><p class="small">${I.esc(T.titre)}</p><h1>${I.t('On ne le commande pas')}</h1><p>${I.esc(T.verset)}</p><p class="small">${I.esc(T.ref)}</p><p class="mot">${I.esc(T.mot)}</p><div class="hint">▼</div>`); }
+      // 2.x : le verset et sa référence, dans la langue secondaire, sous ceux de la langue du jeu
+      const v2 = I.langue.l2() ? I.langue.second(T.verset, T, 'verset') : null, r2 = v2 ? I.langue.second(T.ref, T, 'ref') : null;
+      await S.card('pray secours', `<div class="orn">✧</div><p class="small">${I.esc(T.titre)}</p><h1>${I.t('On ne le commande pas')}</h1><p>${I.esc(T.verset)}</p><p class="small">${I.esc(T.ref)}</p>${v2 ? S.bloc2(`<p>${I.esc(v2)}</p>${r2 ? `<p class="small">${I.esc(r2)}</p>` : ''}`) : ''}<p class="mot">${I.esc(T.mot)}</p><div class="hint">▼</div>`); }
     else await banner(`<small>${I.esc(T.titre)}</small>${I.esc(T.bandeau)}`, 1700, false, 'speech intro');
     if (!vite) await I.sleep(500);
     return true;
