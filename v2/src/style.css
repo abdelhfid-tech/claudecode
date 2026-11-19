@@ -642,6 +642,7 @@ html[dir="rtl"] body.portrait #dialog .fig { left: auto; right: 1.2em; }
 /* l'en-tête d'un pourparler : le titre et la manche, puis la confiance — deux lignes */
 #choice .phead.manche { grid-template-columns: 1.7em minmax(0, 1fr); row-gap: .1em; }
 #choice .phead.manche .seal { grid-row: span 2; align-self: center; }
+#choice .phead.manche .pt small { white-space: nowrap; } /* « · manche 1 / 3 » ne se coupe pas entre ses nombres */
 #choice .phead.manche .pt small::before { content: "· "; }
 #choice .phead.manche .trust { grid-column: 2; text-align: start; }
 #choice .phead.manche .pips { justify-content: flex-start; }
@@ -693,6 +694,7 @@ html[dir="rtl"] body.portrait #dialog .fig { left: auto; right: 1.2em; }
   body.portrait #battle .cmd { padding: .3em .45em; gap: .22em; }
   body.portrait .mi { padding: .42em .55em; }
   body.portrait .mtitle .niv { display: inline; }
+  body.portrait .mlist.main .mi.seul { grid-column: 1 / -1; } /* la Sérénité, seule sur sa rangée : sur une ligne (battle.js, tenir) */
 }
 /* lot 2 : l'introduction d'un carton de pourparler ou d'idée noire passe en casse ordinaire (mêmes mots) ; les titres de
    lieu (#card.title p) ne changent pas, ni les surtitres de trois mots au plus (« POURPARLER », « UNE IDÉE NOIRE ») */

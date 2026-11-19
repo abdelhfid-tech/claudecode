@@ -501,7 +501,10 @@ changent.
   1 est monté à 700 au lot 2 : il couvre l'écran des shorts, 360 × 640). Chaque compagnon tient sur une ligne : son
   nom, sa Constance et son Souffle côte à côte ; le niveau et la figure passent en tête des commandes de celui dont
   c'est le tour (`.mtitle .niv`). Les cinq commandes et la leçon tiennent dans l'écran en 360 × 560 ; `doigt.js` le
-  vérifie.
+  vérifie. Une bataille déclarée, la Sérénité pleine, en a sept (« Ordonner », et la Sérénité) : la Sérénité, seule sur
+  sa rangée, en prend toute la largeur (`.mi.seul`), et si le panneau dépasse encore le bas de l'écran, ses commandes se
+  resserrent cran par cran, jamais sous la taille « normal » (`battle.js`, `tenir`, comme `S.ajuster` pour un choix) :
+  en 2.12 avant ce correctif, la Sérénité tombait sous l'écran en 360 × 560 et à moitié dehors en 360 × 640.
 - **Les noms** (`ui.js`, `U.noms`). Les étiquettes se posent par la fenêtre visible (`G.view`, `U.scale`), puis dans
   l'ordre — la cible, les plus proches, celui qui mène, puis les siens ; une étiquette qui en recouvrirait une autre
   ne s'affiche pas (`.nom.cache`). Au départ d'un chapitre, les noms du groupe ne s'empilent plus.
@@ -523,7 +526,8 @@ changent.
 - **Les contrôles.** `doigt.js` touche sous une réplique, dans la bande noire, où le fil, masqué, ne prend aucun toucher ;
   la ligne du verdict s'y passe comme une réplique ; il vérifie à chaque tour de combat que chaque commande est dans
   l'écran et sous le doigt, puis, à chaque écran (sauf avec « loin »), un combat où tout est reçu, avec le groupe de
-  trois de Khâlid : les cinq commandes (en 2.11, en 360 × 560, Vertus, Objets et Garde y tombaient hors de l'écran). `loupe.js` vérifie qu'une annonce posée quand la main est libre se montre aussitôt dans le
+  trois de Khâlid : les cinq commandes (en 2.11, en 360 × 560, Vertus, Objets et Garde y tombaient hors de l'écran), puis
+  sa bataille déclarée, la Sérénité pleine : les sept. `loupe.js` vérifie qu'une annonce posée quand la main est libre se montre aussitôt dans le
   fil, ses petits textes à 10,5 points au moins, et le nom d'une narration, en hauteur et en largeur. `progression.js`
   ne valide plus à l'aveugle pendant le bandeau d'ouverture d'un combat (il n'attend pas : un « Entrée » tombé au moment
   où les commandes s'ouvrent choisissait « Frapper » à la place du joueur, depuis que la leçon n'est plus un bandeau).

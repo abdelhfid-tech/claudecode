@@ -102,20 +102,28 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
     if (fini && corps) console.log(`      en combat, la cible a été choisie ${corps} fois en la touchant elle-même, sur la scène`);
     if (fini && tours.cmd) console.log(`      en combat, les commandes, vues ${tours.cmd} fois : chacune dans l'écran, sous le doigt`);
     // 2.12 (D189) : un combat où tout est reçu (une partie d'avant), le groupe de Khâlid — les cinq commandes, chacune dans l'écran et sous le doigt
-    // (en 360 × 560, Vertus, Objets et Garde tombaient sous le bord de l'écran ; en 360 × 640, Garde à moitié). Pas avec « loin » :
-    // les combats y sont menés par l'IA de test après le premier.
-    if (fini && !loin) { await p.evaluate(() => { const I = window.ISNAD, W = I.world; I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('khalid', 2); }); // un groupe de trois : le panneau est plein
+    // (en 360 × 560, Vertus, Objets et Garde tombaient sous le bord de l'écran ; en 360 × 640, Garde à moitié) ; puis sa bataille déclarée, la
+    // Sérénité pleine : sept commandes, « Ordonner » et la Sérénité comprises (avant le correctif de la relecture, la Sérénité tombait sous
+    // l'écran en 360 × 560, à moitié en 360 × 640). Pas avec « loin » : les combats y sont menés par l'IA de test après le premier.
+    if (fini && !loin) {
       const libre = () => p.evaluate(() => { const I = window.ISNAD, W = I.world; return I.scene === W && !!W.map && !I.script.busy && !W.lock; }), lecture = () => p.evaluate(() => ['#card', '#dialog'].some(q => !document.querySelector(q).hidden));
-      for (let i = 0; i < 120 && !(await libre()); i++) { if (await lecture()) await p.keyboard.press('Enter'); await p.waitForTimeout(170); }
-      await p.evaluate(() => { const I = window.ISNAD, E = I.world.saga.enemies; I.battle.start({ group: Object.keys(E).filter(k => E[k].tier === 'minion' && !E[k].racine).slice(0, 2), bg: 'desert' }); });
-      for (let i = 0; i < 120 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mlist.main .mi') && document.querySelector('#battle .banner').hidden)); i++) await p.waitForTimeout(170);
-      await p.waitForTimeout(300);
-      const c5 = await p.evaluate(() => { const I = window.ISNAD, W = I.world;
-        const L = [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(x => getComputedStyle(x).display !== 'none'), r = L.map(x => { const q = x.getBoundingClientRect(), e = document.elementFromPoint(q.left + q.width / 2, q.top + q.height / 2); return { nom: x.querySelector('span').textContent.trim(), ok: q.top >= 0 && q.bottom <= innerHeight && !!e && x.contains(e) }; });
-        try { I.battle.abort(W); I.script.depth = 0; W.lock = false; } catch (e) { /* refermé */ } return r; });
-      const hors = c5.filter(x => !x.ok); if (c5.length < 5) { echecs++; console.log(`  INACCESSIBLE ${w}×${h} : le combat où tout est reçu ne montre que ${c5.length} commande(s)`); }
-      else if (hors.length) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-cinq-commandes.png') }); console.log(`  INACCESSIBLE ${w}×${h} : en combat, ${hors.map(x => '« ' + x.nom + ' »').join(', ')} hors de l'écran ou sous un autre élément`); }
-      else console.log(`      en combat, les ${c5.length} commandes (${c5.map(x => x.nom.replace(/^\S+\s*/, '')).join(', ')}) : chacune dans l'écran, sous le doigt`); }
+      const chapitre = async ci => { await p.evaluate(ci => { const I = window.ISNAD, W = I.world; I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('khalid', ci); }, ci); // un groupe de trois : le panneau est plein
+        for (let i = 0; i < 120 && !(await libre()); i++) { if (await lecture()) await p.keyboard.press('Enter'); await p.waitForTimeout(170); } };
+      const commandes = async (quoi, n, nom, lancer) => { await p.evaluate(lancer);
+        for (let i = 0; i < 160; i++) { const e = await p.evaluate(() => document.querySelector('.screen:not([hidden]) button, #choice:not([hidden]) .opt') ? 'prep' : !!document.querySelector('#battle .cmd .mlist.main .mi') && document.querySelector('#battle .banner').hidden ? 'cmd' : ['#card', '#dialog'].some(q => !document.querySelector(q).hidden) ? 'lit' : '');
+          if (e === 'cmd') break; if (e) await p.keyboard.press('Enter'); await p.waitForTimeout(170); } // la page de préparation d'une idole, un carton : on les passe
+        await p.waitForTimeout(300);
+        const c = await p.evaluate(() => [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(x => getComputedStyle(x).display !== 'none').map(x => { const q = x.getBoundingClientRect(), e = document.elementFromPoint(q.left + q.width / 2, q.top + q.height / 2); return { nom: x.querySelector('span').textContent.trim(), ok: q.top >= 0 && q.bottom <= innerHeight && !!e && x.contains(e) }; }));
+        const hors = c.filter(x => !x.ok); if (c.length < n) { echecs++; console.log(`  INACCESSIBLE ${w}×${h} : ${quoi}, on ne voit que ${c.length} commande(s) sur ${n}`); }
+        else if (hors.length) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-' + nom + '.png') }); console.log(`  INACCESSIBLE ${w}×${h} : ${quoi}, ${hors.map(x => '« ' + x.nom + ' »').join(', ')} hors de l'écran ou sous un autre élément`); }
+        else console.log(`      ${quoi}, les ${c.length} commandes (${c.map(x => x.nom.replace(/^\S+\s*/, '')).join(', ')}) : chacune dans l'écran, sous le doigt`);
+        await p.evaluate(() => { const I = window.ISNAD, W = I.world; try { I.battle.abort(W); I.script.depth = 0; W.lock = false; } catch (e) { /* refermé */ } }); await p.waitForTimeout(500); };
+      await chapitre(2);
+      await commandes('en combat', 5, 'cinq-commandes', () => { const I = window.ISNAD, E = I.world.saga.enemies; I.battle.start({ group: Object.keys(E).filter(k => E[k].tier === 'minion' && !E[k].racine).slice(0, 2), bg: 'desert' }); });
+      await chapitre(1);
+      await commandes('dans la bataille déclarée, la Sérénité pleine', 7, 'sept-commandes', () => { const I = window.ISNAD, W = I.world; W.party.forEach(id => { W.hero(id).sakina = 100; });
+        const f = x => { if (!x || typeof x !== 'object') return null; if (Array.isArray(x) && x[0] === 'battle') return x; for (const k in x) { const r = f(x[k]); if (r) return r; } return null; };
+        I.script.run([f(W.ch.objectives[6].then)]); }); }
     if (errors.length) { echecs++; [...new Set(errors)].slice(0, 8).forEach(e => console.log('  ERREUR ' + e)); }
     await p.close();
   }

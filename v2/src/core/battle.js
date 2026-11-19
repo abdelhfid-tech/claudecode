@@ -279,6 +279,18 @@
   }
 
   /* ----- commande du joueur ----- */
+  // 2.12 (D189) — sur un téléphone tenu en hauteur, le panneau tient dans l'écran. Une Sérénité pleine, seule sur sa
+  // rangée, en prend toute la largeur (elle ne passe plus sur deux lignes) ; si le panneau dépasse encore le bas de l'écran
+  // (une bataille déclarée, « Ordonner » et la Sérénité : sept commandes, en 360 × 560 ou 360 × 640), les commandes se
+  // resserrent, cran par cran, sans jamais descendre sous la taille « normal » — comme une liste de choix (S.ajuster).
+  function tenir(box, btns, main) {
+    box.style.fontSize = ''; if (!document.body.classList.contains('portrait')) return;
+    const vus = btns.filter(b => !b.hidden), der = vus[vus.length - 1];
+    if (main && der && vus.length % 2 && der.classList.contains('limit')) der.classList.add('seul');
+    const pan = box.closest('.panel'); if (!pan) return;
+    const tz = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tz')) || 1, mini = Math.min(1, 1 / tz);
+    for (const f of [0.94, 0.88, 0.82].filter(v => v > mini + 0.01).concat(mini)) { if (pan.getBoundingClientRect().bottom <= innerHeight + 1) break; box.style.fontSize = (0.86 * f).toFixed(3) + 'em'; }
+  }
   function listMenu(box, title, items, o) {
     o = o || {};
     return new Promise(res => {
@@ -296,7 +308,7 @@
         b.onmouseenter = () => sel(i); btns.push(b); list.appendChild(b);
       });
       if (o.back) { const bk = I.el('button', 'mback', '◂ ' + I.t('Retour')); bk.type = 'button'; bk.onclick = ev => { ev.stopPropagation(); done(-1); }; box.appendChild(bk); }
-      sel(idx);
+      tenir(box, btns, o.cls === 'main'); sel(idx);
       const h = I.input.push(a => {
         if (a === 'up' || (o.grid && a === 'left')) { sel(idx - 1, -1); I.audio.sfx('move'); }
         else if (a === 'down' || (o.grid && a === 'right')) { sel(idx + 1, 1); I.audio.sfx('move'); }
