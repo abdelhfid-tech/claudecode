@@ -777,3 +777,12 @@ body.avec2:not(.portrait) #hud { visibility: hidden; }
 .toast .l2 { display: block; margin-top: .16em; font-size: .92em; color: var(--l2); }
 /* l'écran-titre : le réglage tient sur toute la largeur de la colonne, avec ce qu'il est */
 @media (orientation: landscape) and (max-height: 480px) { #title .vmenu button.langue2 { grid-column: 1 / -1; } }
+
+/* ---------- 2.17 (prototype) : la lumière de fin de journée (gfx.js, G.LUM) ; ?lum=215 rend l'interface de la 2.15 ---------- */
+/* des panneaux plus clairs, un peu transparents ; la halte laisse voir la scène */
+html:not(.lum215) { --panel: rgba(36, 30, 58, .82); --panel2: rgba(50, 40, 74, .86); }
+html:not(.lum215) #chain, html:not(.lum215) #menu { background: linear-gradient(180deg, rgba(24, 18, 40, .58), rgba(30, 22, 48, .86)); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); } /* la scène se devine, floue : aucun texte ne passe au travers */
+/* en hauteur, le fond sous l'image prend la couleur du lieu : un sable au soir pour les récits, le crépuscule pour 2084 */
+html:not(.lum215) body.portrait { background: linear-gradient(180deg, #3d2c20 0%, #2c2019 45%, #1e1613 100%); }
+html:not(.lum215) body.portrait[data-theme="roman"] { background: linear-gradient(180deg, #3c2832 0%, #2a1c26 45%, #1c131a 100%); }
+html:not(.lum215) body.portrait[data-theme="cyber"] { background: linear-gradient(180deg, #43204f 0%, #321a44 40%, #3c1c34 75%, #2a1522 100%); }

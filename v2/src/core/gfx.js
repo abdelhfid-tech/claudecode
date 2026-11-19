@@ -13,6 +13,23 @@
      logiques, et drawImage y pose une autre toile à sa taille logique. G.lisse adoucit l'agrandissement final. */
   G.D = 2; G.lisse = false;
   try { const q = /[?&]def=([12])([dl]?)/.exec(location.search); if (q) { G.D = +q[1]; G.lisse = q[2] === 'l'; G.defForce = true; } } catch (e) { /* hors navigateur */ } // ?def=1 : les outils qui comparent à la 1.32
+
+  /* ================= LA LUMIÈRE (2.17, prototype) =================
+     « Fin de journée saturée » (décideur, 19 novembre) : une lumière chaude partout, des ombres turquoise au lieu de
+     noires ; 2084 au crépuscule néon ; les récits en lumière dorée ; la nuit seulement où le récit la nomme, éclaircie.
+     Rien n'y touche aux personnages : seulement l'image composée (G.present), les décors et les lieux.
+     G.LUM règle : expo, l'ambiance relevée vers le blanc (le plancher de la lumière) ; vignette, un facteur sur toute
+     vignette ; vig0, où son dégradé commence ; vigC, sa couleur ; nuages, l'ombre des nuages ; lueurs, les lueurs
+     additives des sources ; halo, un facteur sur le halo doux (qui voile l'image dès qu'elle est claire) ; chaud, la
+     teinte des lumières (multipliée) ; froid, celle des ombres (en « écran ») ; sat, la part de saturation ajoutée.
+     ?lum=215 dans l'adresse rend la lumière de la 2.15, pour comparer. */
+  G.lum = 217;
+  try { if (/[?&]lum=215(?:&|$)/.test(location.search)) G.lum = 215; } catch (e) { /* hors navigateur */ }
+  G.LUM = G.lum === 215
+    ? { expo: 0, vignette: 1, vig0: 0.35, vigC: '4,3,12', nuages: 0.55, lueurs: 0.28, halo: 1, chaud: null, froid: null, sat: 0 }
+    : { expo: 0.3, vignette: 0.45, vig0: 0.5, vigC: '12,40,52', nuages: 0.25, lueurs: 0.4, halo: 0.65, chaud: '#ffe6cc', froid: '#041c22', sat: 0.2 };
+  G.expo = G.LUM.expo;
+  try { if (G.lum === 215) document.documentElement.classList.add('lum215'); } catch (e) { /* hors navigateur */ } // l'interface aussi (style.css)
   // Les trois dessins que le joueur peut choisir (Réglages, « Dessin »). Changer en cours de partie : les images déjà faites
   // sont oubliées, et chaque module qui en garde (la carte, les planches de marche, le fond du titre) refait les siennes.
   G.DESSINS = [['fin', I.T('fin'), 2, false], ['doux', I.T('fin, adouci'), 2, true], ['origine', I.T('d’origine'), 1, false]];
@@ -94,6 +111,11 @@
     glaze: ['#2d6e8e', '#3a86a3', '#256080', '#e7d9a8'], asphalt: ['#1f2230', '#262a3a', '#191c28', '#2f3550'],
     metal: ['#2a2f3e', '#323849', '#232735', '#3d4560'], carpet: ['#8e2f2a', '#7a2622', '#a53c33', '#d9b45a']
   };
+  // 2.17 : la Cité au crépuscule — un asphalte mouillé qui prend le ciel, des murs et des toits qu'on distingue (G.LUM)
+  const CITE = G.lum === 215
+    ? { flaque: 'rgba(80,220,255,.10)', mur: ['#191b27', '#141620', '#20232f'], murHaut: '#2d3147', murJoint: '#0d0e16', toit: ['#10121b', '#0c0d15', '#161927'], toitBord: '#272b3d' }
+    : { flaque: 'rgba(255,150,200,.09)', mur: ['#30283e', '#2a2337', '#3a3049'], murHaut: '#584a6e', murJoint: '#1c1626', toit: ['#241d30', '#1e182a', '#2c2439'], toitBord: '#4e4064' };
+  if (G.lum !== 215) Object.assign(P, { asphalt: ['#272044', '#2e2550', '#211b3b', '#45366f'], metal: ['#343a4c', '#3d4458', '#2c3040', '#4a5270'] });
   const TILE = {
     sand(c, r) { speck(c, r, P.sand, 26); },
     dune(c, r) { speck(c, r, P.sand, 14); c.fillStyle = '#c9a567'; for (let i = 0; i < 3; i++) { const y = 3 + i * 5 + Math.floor(r() * 2); for (let x = 0; x < 16; x++) c.fillRect(x, y + Math.round(Math.sin((x + i * 3) / 2.6) * 1.2), 1, 1); } },
@@ -120,11 +142,11 @@
     carpet(c, r) { R(c, P.carpet[0], 0, 0, 16, 16); c.fillStyle = P.carpet[1]; for (let i = 0; i < 16; i += 4) { c.fillRect(i, 0, 1, 16); c.fillRect(0, i, 16, 1); } c.fillStyle = P.carpet[3]; c.fillRect(7, 7, 2, 2); c.fillRect(1, 1, 1, 1); c.fillRect(13, 13, 1, 1); c.fillRect(13, 1, 1, 1); c.fillRect(1, 13, 1, 1); },
     glaze(c, r) { R(c, P.glaze[0], 0, 0, 16, 16); R(c, P.glaze[1], 1, 1, 6, 6); R(c, P.glaze[1], 9, 9, 6, 6); R(c, P.glaze[2], 9, 1, 6, 6); R(c, P.glaze[2], 1, 9, 6, 6); R(c, P.glaze[3], 7, 7, 2, 2); R(c, P.glaze[3], 3, 3, 2, 2); R(c, P.glaze[3], 11, 11, 2, 2); },
     pwall(c, r) { speck(c, r, ['#c9b48a', '#bba378', '#d6c39b'], 14); R(c, '#2d6e8e', 0, 2, 16, 3); c.fillStyle = '#e7d9a8'; for (let x = 1; x < 16; x += 4) c.fillRect(x, 3, 2, 1); R(c, '#96825c', 0, 15, 16, 1); },
-    asphalt(c, r) { speck(c, r, P.asphalt, 18); if (r() < 0.5) { c.fillStyle = 'rgba(80,220,255,.10)'; c.fillRect(Math.floor(r() * 10), Math.floor(r() * 12), 5, 2); } },
+    asphalt(c, r) { speck(c, r, P.asphalt, 18); if (r() < 0.5) { c.fillStyle = CITE.flaque; c.fillRect(Math.floor(r() * 10), Math.floor(r() * 12), 5, 2); } },
     neonline(c, r) { speck(c, r, P.asphalt, 10); R(c, '#ff4fd8', 0, 7, 16, 1); R(c, 'rgba(255,79,216,.35)', 0, 6, 16, 3); },
     metal(c, r) { speck(c, r, P.metal, 10); c.fillStyle = '#1a1d28'; c.fillRect(0, 15, 16, 1); c.fillRect(15, 0, 1, 16); R(c, '#454d68', 0, 0, 15, 1); R(c, '#5ad', 2, 2, 1, 1); },
-    cwall(c, r) { speck(c, r, ['#191b27', '#141620', '#20232f'], 10); R(c, '#2d3147', 0, 0, 16, 1); c.fillStyle = '#0d0e16'; c.fillRect(0, 8, 16, 1); if (r() < 0.6) R(c, r() < 0.5 ? '#39e6ff' : '#ffb347', 3 + Math.floor(r() * 8), 3, 3, 2); },
-    croof(c, r) { speck(c, r, ['#10121b', '#0c0d15', '#161927'], 8); R(c, '#272b3d', 0, 14, 16, 2); },
+    cwall(c, r) { speck(c, r, CITE.mur, 10); R(c, CITE.murHaut, 0, 0, 16, 1); c.fillStyle = CITE.murJoint; c.fillRect(0, 8, 16, 1); if (r() < 0.6) R(c, r() < 0.5 ? '#39e6ff' : '#ffb347', 3 + Math.floor(r() * 8), 3, 3, 2); },
+    croof(c, r) { speck(c, r, CITE.toit, 8); R(c, CITE.toitBord, 0, 14, 16, 2); },
     nfloor(c, r, v, hue) { R(c, '#0c0f2c', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,65%,.55)`; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = `hsla(${hue},90%,70%,.14)`; c.fillRect(1, 1, 15, 15); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.8)`; if (r() < 0.35) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); },
     nabri(c, r, v, hue) { R(c, '#141833', 0, 0, 16, 16); c.fillStyle = 'rgba(255,233,176,.5)'; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = 'rgba(255,233,176,.13)'; c.fillRect(1, 1, 15, 15); c.fillStyle = 'rgba(255,246,220,.8)'; if (r() < 0.3) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); }, // le sol d'un abri : une lumière chaude, là où rien ne rôde
     npont(c, r, v, hue) { R(c, '#0b0f2e', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,72%,.17)`; c.fillRect(0, 0, 16, 16); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.6)`; if (r() < 0.22) c.fillRect(2 + Math.floor(r() * 12), 2 + Math.floor(r() * 12), 1, 1); }, // un pont du labyrinthe : ses arêtes de lumière sont tracées par la carte, selon ses voisins
@@ -376,7 +398,12 @@
     }
     // lumière : carte d'éclairage multipliée
     if (o.ambient) {
-      const l = G.lx; l.globalCompositeOperation = 'source-over'; l.fillStyle = o.ambient; l.fillRect(0, 0, G.lcv.width, G.lcv.height);
+      // 2.17 : l'ambiance est relevée vers le blanc (G.expo) ; une paire de couleurs fait un dégradé en biais, du coin haut
+      // et gauche (la lumière basse d'un couchant) au coin bas et droit (le ciel qui passe au rose), sur ce que l'on voit
+      // (l'image peut être agrandie : G.view)
+      const l = G.lx, lw = G.lcv.width, lh = G.lcv.height, am = a => G.expo ? shade(a, 1 + G.expo) : a; l.globalCompositeOperation = 'source-over';
+      if (Array.isArray(o.ambient)) { const V = G.view, g = l.createLinearGradient(V.x / 2, V.y / 2, (V.x + V.w) / 2, (V.y + V.h) / 2); g.addColorStop(0, am(o.ambient[0])); g.addColorStop(1, am(o.ambient[1])); l.fillStyle = g; } else l.fillStyle = am(o.ambient);
+      l.fillRect(0, 0, lw, lh);
       l.globalCompositeOperation = 'lighter';
       (o.lights || []).forEach(L => {
         const x = L.x / 2, y = L.y / 2, rr = L.r / 2; if (x < -rr || y < -rr || x > G.lcv.width + rr || y > G.lcv.height + rr) return;
@@ -393,19 +420,19 @@
       for (let i = 0; i < 4; i++) {
         const x = ((i * 173 + t * 7 - o.clouds.x * 0.9) % 520 + 520) % 520 * k - 70 * k + sx, y = ((i * 97 + t * 2.2 - o.clouds.y * 0.9) % 340 + 340) % 340 * k - 60 * k + sy, rr = (60 + i * 16) * k;
         const g = c.createRadialGradient(x, y, rr * 0.2, x, y, rr); g.addColorStop(0, 'rgba(96,84,128,.5)'); g.addColorStop(1, 'rgba(255,255,255,0)');
-        c.globalAlpha = 0.55; c.fillStyle = '#fff'; c.save(); c.translate(x, y); c.scale(1.7, 1); c.translate(-x, -y); c.fillStyle = g; c.fillRect(x - rr, y - rr, rr * 2, rr * 2); c.restore();
+        c.globalAlpha = G.LUM.nuages; c.fillStyle = '#fff'; c.save(); c.translate(x, y); c.scale(1.7, 1); c.translate(-x, -y); c.fillStyle = g; c.fillRect(x - rr, y - rr, rr * 2, rr * 2); c.restore();
       }
       c.globalAlpha = 1;
     }
     // halo (bloom doux)
-    c.globalCompositeOperation = 'screen'; c.globalAlpha = o.bloom === undefined ? 0.2 : o.bloom; c.drawImage(G.bcv, sx, sy, W, H);
+    c.globalCompositeOperation = 'screen'; c.globalAlpha = (o.bloom === undefined ? 0.2 : o.bloom) * G.LUM.halo; c.drawImage(G.bcv, sx, sy, W, H);
     // lueurs additives des sources
     c.globalCompositeOperation = 'lighter';
     (o.lights || []).forEach(L => {
       if (L.glow === false) return;
       const x = L.x * k + sx, y = L.y * k + sy, rr = L.r * k * 0.55; if (x < -rr || y < -rr || x > W + rr || y > H + rr) return;
       const g = c.createRadialGradient(x, y, 0, x, y, rr); g.addColorStop(0, L.color); g.addColorStop(1, 'rgba(0,0,0,0)');
-      c.globalAlpha = (L.a === undefined ? 1 : L.a) * 0.28; c.fillStyle = g; c.fillRect(x - rr, y - rr, rr * 2, rr * 2);
+      c.globalAlpha = (L.a === undefined ? 1 : L.a) * G.LUM.lueurs; c.fillStyle = g; c.fillRect(x - rr, y - rr, rr * 2, rr * 2);
     });
     // rayons de lumière
     if (o.rays) {
@@ -435,12 +462,22 @@
     // étalonnage
     if (o.grade) { c.globalCompositeOperation = o.grade[2] || 'soft-light'; c.globalAlpha = o.grade[1]; c.fillStyle = o.grade[0]; c.fillRect(0, 0, W, H); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
     if (o.tint) { c.globalAlpha = 0.28; c.fillStyle = o.tint; c.fillRect(0, 0, W, H); c.globalAlpha = 1; }
+    // 2.17 : l'étalonnage de fin de journée — les lumières tirent vers l'orangé, les ombres vers le turquoise au lieu du
+    // noir, et la couleur gagne un cran de saturation (le gris reste gris). G.LUM.froid nul : la lumière de la 2.15.
+    // Un lieu peut donner son propre étalonnage (o.etalon : [chaud, froid], l'un ou l'autre nul) : la nuit reste bleue.
+    if (G.LUM.froid && o.etalon !== false) { const et = o.etalon || [G.LUM.chaud, G.LUM.froid];
+      if (et[0]) { c.globalCompositeOperation = 'multiply'; c.fillStyle = et[0]; c.fillRect(0, 0, W, H); }
+      if (et[1]) { c.globalCompositeOperation = 'screen'; c.fillStyle = et[1]; c.fillRect(0, 0, W, H); }
+      c.globalCompositeOperation = 'source-over';
+      // la saturation : l'image repeinte sur elle-même à travers un filtre (un navigateur sans filtre de toile l'ignore)
+      if (G.LUM.sat && !G.low && 'filter' in c) { c.filter = `saturate(${1 + G.LUM.sat})`; c.drawImage(G.cv, 0, 0); c.filter = 'none'; }
+    }
     // balayage cyber
     if (o.scan) { if (G.D === 1) { c.globalAlpha = 0.07; c.fillStyle = '#000'; for (let y = 0; y < H; y += k * 2) c.fillRect(0, y, W, k); c.globalAlpha = 1; } // les lignes de balayage : seulement dans le dessin d'origine
       if (Math.random() < 0.02) { const y = Math.random() * H, h = 4 * k; c.drawImage(G.cv, 0, y, W, h, (Math.random() - 0.5) * 20 * k, y, W, h); } }
     // vignette
     const vcx = (G.view.x + G.view.w / 2) * k, vcy = (G.view.y + G.view.h / 2) * k, vr = Math.hypot(G.view.w / 2, G.view.h / 2) / Math.hypot(G.PW / 2, G.PH / 2); // autour de ce que l'on voit
-    const vg = c.createRadialGradient(vcx, vcy, H * 0.35 * vr, vcx, vcy, H * 0.95 * vr); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(4,3,12,${o.vignette === undefined ? 0.55 : o.vignette})`);
+    const vg = c.createRadialGradient(vcx, vcy, H * G.LUM.vig0 * vr, vcx, vcy, H * 0.95 * vr); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(${G.LUM.vigC},${(o.vignette === undefined ? 0.55 : o.vignette) * G.LUM.vignette})`);
     c.fillStyle = vg; c.fillRect(0, 0, W, H);
     if (G.flashA > 0) { c.globalAlpha = G.flashA; c.fillStyle = G.flashC; c.fillRect(0, 0, W, H); c.globalAlpha = 1; G.flashA -= dt * 2.4; }
   };
