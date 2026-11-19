@@ -1,4 +1,4 @@
-{"note":"Empreintes des silhouettes telles que le moteur les dessinait avant le grand sprite natif : [petits sprites (4 directions × 3 pas, 6 poses × 4 directions), grands sprites]. Relevé par tools/silhouettes.js relever. Les silhouettes venues ensuite (le râwî composé, ses coiffes et ses objets : D193) y sont ajoutées à leur création, sans qu’aucune empreinte déjà relevée ne change (tools/silhouettes.js relever-nouveaux). Le 2026-11-19 (redessin) : 6 petite(s) silhouette(s) nouvelle(s) ajoutée(s), 22 retirée(s) — aucune empreinte de petit sprite n'a changé.","sprites":{"{\"kind\":\"cyber\",\"robe\":\"#2a3048\",\"head\":\"#1c2030\",\"cloak\":\"#39424f\"}":["87ea726eda00a0b3","2b7cd210f6adc5b9"],
+{"note":"Empreintes des silhouettes telles que le moteur les dessinait avant le grand sprite natif : [petits sprites (4 directions × 3 pas, 6 poses × 4 directions), grands sprites]. Relevé par tools/silhouettes.js relever. Les silhouettes venues ensuite (le râwî composé, ses coiffes et ses objets : D193) y sont ajoutées à leur création, sans qu’aucune empreinte déjà relevée ne change (tools/silhouettes.js relever-nouveaux). Le 2026-11-19 (redessin) : 6 petite(s) silhouette(s) nouvelle(s) ajoutée(s), 22 retirée(s) — aucune empreinte de petit sprite n'a changé. Le 2026-11-19 (redessin) : 1 petite(s) silhouette(s) nouvelle(s) ajoutée(s), 3 retirée(s) — aucune empreinte de petit sprite n'a changé.","sprites":{"{\"kind\":\"cyber\",\"robe\":\"#2a3048\",\"head\":\"#1c2030\",\"cloak\":\"#39424f\"}":["87ea726eda00a0b3","2b7cd210f6adc5b9"],
 "{\"kind\":\"ancien\",\"robe\":\"#6b5a48\",\"head\":\"#e9e2d0\"}":["1c578c95cbbaceb8","4579bbdc7aef9c39"],
 "{\"kind\":\"ancien\",\"robe\":\"#4a4038\",\"head\":\"#bdb6a8\"}":["0eefb2fe436a3e3b","228cafd4e07524a9"],
 "{\"kind\":\"enfant\",\"robe\":\"#3d5a6a\",\"head\":\"#28343c\"}":["7be67f5e95892d9f","ff62db917e710c4c"],
@@ -391,7 +391,6 @@
 "{\"kind\":\"enfant\",\"robe\":\"#4a5a3a\",\"head\":\"#2c3424\"}":["1445858e41569d57","d396a47ad470274f"],
 "{\"kind\":\"cyber\",\"robe\":\"#2a3048\",\"head\":\"#1c2030\",\"cloak\":\"#39424f\",\"coiffe\":\"calotte\",\"trim\":\"#39e6ff\"}":["1d990f98909036ad","d4cdbffb37ac001e"],
 "{\"kind\":\"cyber\",\"robe\":\"#2a3048\",\"head\":\"#1c2030\",\"cloak\":\"#39424f\",\"coiffe\":\"litham\",\"trim\":\"#39e6ff\"}":["15e662558a6f9168","d9eab99cd1809049"],
-"{\"kind\":\"cyber\",\"robe\":\"#2a3048\",\"head\":\"#1c2030\",\"cloak\":\"#39424f\",\"manteau\":\"aucun\"}":["84cf2acca7ce9c09","2dd009946a184005"],
 "{\"kind\":\"cyber\",\"robe\":\"#1d2b36\",\"head\":\"#131d26\",\"cloak\":\"#2b4656\"}":["8d528d42b952604f","4103ddc26f6483cb"],
 "{\"kind\":\"cyber\",\"robe\":\"#3b2c4a\",\"head\":\"#251a31\",\"cloak\":\"#4e3b60\"}":["c3837d79fff7f794","21740b1ce38227fd"],
 "{\"kind\":\"cyber\",\"robe\":\"#2d3b34\",\"head\":\"#1d2722\",\"cloak\":\"#3f4e45\"}":["ecba2004beda7e55","eb508dbbb62d143e"],
@@ -406,7 +405,6 @@
 "{\"kind\":\"cyber\",\"robe\":\"#2a3048\",\"head\":\"#1c2030\",\"cloak\":\"#39424f\",\"porte\":[\"lanterne\"]}":["eb94e2b203e61feb","b17e0075afe4718c"],
 "{\"kind\":\"cyber\",\"coiffe\":\"capuche\",\"robe\":\"#27344a\",\"head\":\"#d8d2c4\",\"cloak\":\"#3f4f66\",\"manteau\":\"epaule\",\"trim\":\"#39e6ff\"}":["fe0858b60a209583","99a28afb2848a4ce"],
 "{\"kind\":\"cyber\",\"robe\":\"#2a3048\",\"head\":\"#1c2030\",\"cloak\":\"#39424f\",\"coiffe\":\"calotte\",\"trim\":\"#39e6ff\",\"porte\":[\"lanterne\"]}":["8c88c94ce9e05405","40fe1d7ea55a6d5b"],
-"{\"kind\":\"cyber\",\"robe\":\"#2a3048\",\"head\":\"#1c2030\",\"cloak\":\"#39424f\",\"coiffe\":\"litham\",\"manteau\":\"aucun\",\"trim\":\"#39e6ff\"}":["f211c8f1c484b93c","72ad24ca0f51b587"],
 "{\"kind\":\"cyber\",\"robe\":\"#2a3048\",\"head\":\"#1c2030\",\"cloak\":\"#39424f\",\"coiffe\":\"litham\",\"trim\":\"#39e6ff\",\"porte\":[\"lanterne\"]}":["5428f5818407cd90","a46df645085d40b8"],
 "{\"kind\":\"cyber\",\"coiffe\":\"litham\",\"robe\":\"#2a3048\",\"head\":\"#1c2030\",\"cloak\":\"#39424f\",\"manteau\":\"epaule\",\"trim\":\"#39e6ff\"}":["43fe03a6ff9e65a7","7a4c76c4dab3b22d"],
 "{\"kind\":\"cyber\",\"coiffe\":\"litham\",\"robe\":\"#2a3048\",\"head\":\"#1c2030\",\"cloak\":\"#39424f\",\"manteau\":\"epaule\",\"trim\":\"#e8f4ff\",\"court\":false,\"neon\":[\"#e8f4ff\",\"#ff4fd8\"],\"porte\":[\"lanterne\"]}":["9f3116505838f325","2c0ee69f116f0e86"],
@@ -425,5 +423,5 @@
 "{\"kind\":\"cyber\",\"robe\":\"#2d3b34\",\"head\":\"#1d2722\",\"cloak\":\"#3f4e45\",\"manteau\":\"aucun\",\"trim\":\"#ff6b6b\",\"neon\":[\"#ff6b6b\",\"#39e6ff\"]}":["b8d7736307b8dd5a","30ea3d0dd118e514"],
 "{\"kind\":\"cyber\",\"robe\":\"#2d3b34\",\"head\":\"#1d2722\",\"cloak\":\"#3f4e45\",\"echarpe\":true,\"trim\":\"#b18cff\",\"neon\":[\"#b18cff\",\"#7dffb0\"]}":["dcb2312e05dd8783","fff71584d632efe5"],
 "{\"kind\":\"cyber\",\"robe\":\"#1d2b36\",\"head\":\"#131d26\",\"cloak\":\"#2b4656\",\"trim\":\"#ff4fd8\",\"neon\":[\"#ff4fd8\",\"#39e6ff\"],\"porte\":[\"lanterne\"]}":["8214b287b2e72a7a","5cf30e27d6f8767e"],
-"{\"kind\":\"cyber\",\"robe\":\"#3b3027\",\"head\":\"#2a221b\",\"cloak\":\"#57473a\",\"manteau\":\"aucun\",\"trim\":\"#39e6ff\",\"coiffe\":\"litham\"}":["8b5b989c0ba33819","73b1152d45ec117c"],
-"{\"kind\":\"cyber\",\"robe\":\"#7d8492\",\"head\":\"#5a606c\",\"cloak\":\"#a9aeb8\",\"manteau\":\"aucun\",\"trim\":\"#b18cff\",\"legs\":\"#3a3c44\",\"neon\":[\"#b18cff\",\"#7dffb0\"]}":["b87dd68d4ff38d5c","b6282e8881f3663d"]}}
+"{\"kind\":\"cyber\",\"robe\":\"#7d8492\",\"head\":\"#5a606c\",\"cloak\":\"#a9aeb8\",\"manteau\":\"aucun\",\"trim\":\"#b18cff\",\"legs\":\"#3a3c44\",\"neon\":[\"#b18cff\",\"#7dffb0\"]}":["b87dd68d4ff38d5c","b6282e8881f3663d"],
+"{\"kind\":\"cyber\",\"robe\":\"#3b3027\",\"head\":\"#2a221b\",\"cloak\":\"#57473a\",\"manteau\":\"ample\",\"trim\":\"#39e6ff\",\"coiffe\":\"litham\"}":["3fe9b6f92dfb7d08","0d09a79880296e9d"]}}
