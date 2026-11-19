@@ -62,12 +62,17 @@
     // le viaduc du métro (ses rames passent à chaque image, entre lui et le vieux quartier)
     I.maps.viaduc(a, 0, W, VIA, EAU, 56);
     /* --- l'avant : le vieux quartier, ses tours à vent trapues, ses claustras éclairés --- */
-    const tons = ['#d3bf9d', '#cdb692', '#d9c6a4', '#c8b08c'], bar = G.obj('cbarjil', null, 7);
+    const tons = ['#d3bf9d', '#cdb692', '#d9c6a4', '#c8b08c'];
+    // une tour à vent trapue, dessinée à la taille du combat (point par point, sans réduction) : sa tête dépasse du toit de
+    // la moitié de la hauteur de la maison au plus ; trois fentes, un toit plat (sa base se cache derrière la façade)
+    const tourAVent = (x, top, hm) => { const h = Math.min(10, Math.floor(hm / 2)), t = top - h;
+      rect(v, '#d6c29e', x, t + 1, 12, h + 2); rect(v, '#b39b78', x + 12, t + 2, 2, h + 1); rect(v, '#e6d6b6', x - 1, t, 15, 1.5); rect(v, '#c9b28e', x - 1, t + 1.5, 15, 0.5);
+      for (let i = 0; i < 3; i++) rect(v, '#3a2622', x + 1.5 + i * 3.5, t + 2.5, 2, h - 2.5); rect(v, '#2e1e1c', x + 12.5, t + 3, 1, h - 3); };
     for (let x = -6; x < W;) { const w = 24 + Math.floor(r() * 30), top = EAU - 16 - Math.floor(r() * 8);
-      if (w >= 28 && r() < 0.6) v.drawImage(bar, x + 3 + Math.floor(r() * Math.max(1, w - 24)), top + 4 - 24, 20, 24.3);
+      if (w >= 28 && r() < 0.6) tourAVent(x + 3 + Math.floor(r() * Math.max(1, w - 18)), top, EAU - top);
       rect(v, tons[Math.floor(r() * 4)], x, top, w, EAU - top); rect(v, '#e8d8b8', x, top, w, 1.5); rect(v, 'rgba(90,56,48,.22)', x + w - 1.5, top, 1.5, EAU - top);
       for (let k = x + 3; k < x + w - 3; k += 5) rect(v, '#6a4a30', k, top + 3, 0.75, 0.75);
-      for (let k = x + 5; k < x + w - 6; k += 11) { const lit = r() < 0.6; rect(v, '#8a7056', k - 0.5, top + 5.5, 5, 6); rect(v, lit ? '#ffc878' : '#3a2a26', k, top + 6, 4, 5); rect(v, lit ? '#7a4a28' : '#5a4434', k + 1.75, top + 6, 0.5, 5); rect(v, lit ? '#7a4a28' : '#5a4434', k, top + 8.25, 4, 0.5); }
+      for (let k = x + 5; k < x + w - 6; k += 11) { const lit = r() < 0.6; rect(v, '#8a7056', k - 0.5, top + 5.5, 5, 6); rect(v, lit ? '#ffc878' : '#3a2a26', k, top + 6, 4, 5); rect(v, lit ? '#7a4a28' : '#5a4434', k + 1.75, top + 6, 0.5, 5); }
       // une porte de bois, ou une échoppe sous son auvent rayé
       const m = x + Math.floor(w / 2); if (w >= 40 && r() < 0.4) { rect(v, '#5a3a2a', m - 8, EAU - 7, 16, 7); rect(v, '#ffc070', m - 7, EAU - 6, 14, 6); for (let k = 0; k < 4; k++) rect(v, k % 2 ? '#e8dcc0' : '#b8442e', m - 9 + k * 4.5, EAU - 10, 4.5, 3); }
       else if (w >= 30) { rect(v, '#6a4426', m - 2.5, EAU - 8, 5, 8); rect(v, '#4e301a', m - 0.25, EAU - 8, 0.5, 8); }
@@ -101,14 +106,17 @@
     G.rameMetro(c, P - L - ((t * 22 + P * 0.4) % P), VIA_COMBAT - 2, 110, -1, e); G.rameMetro(c, ((t * 22) % P) - L, VIA_COMBAT - 0.5, 110, 1, e); }
   function paintBg(kind, hue) {
     if (kind === 'cite') { const cv = G.toile(G.PW, G.PH); return citeBg(cv, cv.getContext('2d'), I.rng(I.hash(kind + hue)), hue, 100); }
-    if (kind === 'flux') kind = 'cite'; // la cité-grille d'avant : sous terre (les Archives) et dans la noosphère, la ville de verre n'a pas sa place
+    // la cité-grille d'avant : sous terre (les Archives) et dans la noosphère, la ville de verre n'a pas sa place ; et pas un
+    // point dans son ciel, ni astre — en 2084, le ciel n'a de points qu'à la fin, quand la Cité s'éteint (le tirage reste
+    // le même : ses tours ne bougent pas)
+    const flux = kind === 'flux'; if (flux) kind = 'cite';
     const cv = G.toile(G.PW, G.PH), c = cv.getContext('2d'), sky = SKY[kind] || SKY.noos, H0 = 100, r = I.rng(I.hash(kind + hue));
     const g = c.createLinearGradient(0, 0, 0, H0); g.addColorStop(0, sky[0]); g.addColorStop(0.6, sky[1]); g.addColorStop(1, sky[2]); c.fillStyle = g; c.fillRect(0, 0, G.PW, H0);
-    const etoile = v15 || kind === 'noos' ? 1 : 0.35; // au couchant, les étoiles ne font que poindre
-    for (let i = 0; i < 70; i++) { c.fillStyle = `rgba(255,255,255,${(0.2 + r() * 0.7) * etoile})`; c.fillRect(Math.floor(r() * G.PW), Math.floor(r() * 62), 1, 1); }
+    const etoile = flux ? 0 : v15 || kind === 'noos' ? 1 : 0.35; // au couchant, les étoiles ne font que poindre
+    for (let i = 0; i < 70; i++) { const a = (0.2 + r() * 0.7) * etoile, x = Math.floor(r() * G.PW), y = Math.floor(r() * 62); if (a > 0) { c.fillStyle = `rgba(255,255,255,${a})`; c.fillRect(x, y, 1, 1); } }
     // astre
-    const ax = kind === 'cite' ? 300 : 250, ay = kind === 'noos' ? 44 : 64; const ag = c.createRadialGradient(ax, ay, 2, ax, ay, 60); ag.addColorStop(0, 'rgba(255,240,200,.95)'); ag.addColorStop(0.18, `hsla(${hue},90%,75%,.5)`); ag.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = ag; c.fillRect(ax - 60, ay - 60, 120, 120);
-    c.strokeStyle = `hsla(${hue},100%,75%,.35)`; c.lineWidth = 1; for (let i = 1; i < 4; i++) { c.beginPath(); c.ellipse(ax, ay, 18 * i, 6 * i, -0.3, 0, 6.3); c.stroke(); }
+    if (!flux) { const ax = kind === 'cite' ? 300 : 250, ay = kind === 'noos' ? 44 : 64; const ag = c.createRadialGradient(ax, ay, 2, ax, ay, 60); ag.addColorStop(0, 'rgba(255,240,200,.95)'); ag.addColorStop(0.18, `hsla(${hue},90%,75%,.5)`); ag.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = ag; c.fillRect(ax - 60, ay - 60, 120, 120);
+      c.strokeStyle = `hsla(${hue},100%,75%,.35)`; c.lineWidth = 1; for (let i = 1; i < 4; i++) { c.beginPath(); c.ellipse(ax, ay, 18 * i, 6 * i, -0.3, 0, 6.3); c.stroke(); } }
     const sil = v15 ? '#0b0818' : '#21143a', sil2 = v15 ? '#16102c' : '#3a2452';
     c.fillStyle = sil2;
     if (kind === 'desert' || kind === 'camp') { c.beginPath(); c.moveTo(0, H0); for (let x = 0; x <= G.PW; x += 4) c.lineTo(x, H0 - 14 - Math.sin(x / 46) * 9 - Math.sin(x / 17) * 3); c.lineTo(G.PW, H0); c.fill(); }
@@ -186,6 +194,9 @@
       W.healAll(); W.party.forEach(id => { W.hero(id).sakina = 50; });
     }
     try { if (I.lecons && I.debug.auto) I.lecons.COMBAT.forEach(id => I.lecons.reemploi(id, true)); if (I.postures && !opts.heros) I.postures.veille(); } catch (e) { /* une leçon ne doit jamais arrêter le récit */ }
+    // l'idole du dernier chapitre (`fin`) est tombée : la Cité-Miroir s'éteint (maps.js, M.eteinte) — le récit le dit, le
+    // moteur le montre ; aucun fichier de saga ne le pose
+    try { if (W.ch && W.ch.fin && I.mal.estIdole(opts)) I.maps.eteinte = true; } catch (e) { /* le décor ne doit jamais arrêter le récit */ }
     return 'win';
   };
   // sortie de secours : referme le combat où qu'il en soit et rend l'écran

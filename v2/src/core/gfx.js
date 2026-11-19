@@ -88,6 +88,11 @@
     for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue; const k = 1 + (r() - 0.5) * f; d[i] = Math.min(255, d[i] * k); d[i + 1] = Math.min(255, d[i + 1] * k); d[i + 2] = Math.min(255, d[i + 2] * k); }
     c.putImageData(a, 0, 0); return cv; }
   const R = (c, col, x, y, w, h) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+  // la Cité-Miroir : un aplat calé sur les points réels. En dessin fin, tel quel ; au dessin d'origine (un point réel par
+  // point logique), un filet d'un demi-point devient un point entier au lieu d'une demi-teinte floue.
+  const Rc = (c, col, x, y, w, h) => { if ((c.canvas.hd || 1) > 1) return R(c, col, x, y, w, h);
+    const x0 = Math.round(x), y0 = Math.round(y); R(c, col, x0, y0, Math.max(1, Math.round(x + w) - x0), Math.max(1, Math.round(y + h) - y0)); };
+  G.Rc = Rc;
 
   function shade(hex, f) { // f<1 assombrit, >1 éclaircit
     const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255;
@@ -179,10 +184,10 @@
     // la crique bouge : quelques rides de lumière et un reflet doré, posés sur l'eau peinte (un calque sans fond, quatre images)
     cride(c, r, v) { c.fillStyle = 'rgba(196,224,255,.2)'; for (let i = 0; i < 3; i++) c.fillRect((i * 5 + v * 4) % 13, 2 + i * 5 + (v % 2), 2 + ((i + v) % 3), 0.5);
       c.fillStyle = 'rgba(255,214,150,.22)'; c.fillRect((v * 7 + 3) % 12, 13 - (v % 3), 3, 0.5); },
-    // la grille de l'ascenseur : une cabine éclairée derrière une grille pliante dorée
+    // la grille de l'ascenseur : une cabine éclairée derrière une grille pliante de bronze
     cgrille(c) { R(c, '#2a1a22', 0, 0, 16, 16); const g = c.createLinearGradient(0, 2, 0, 16); g.addColorStop(0, '#ffd9a0'); g.addColorStop(1, '#c8783e'); c.fillStyle = g; c.fillRect(2, 2, 12, 14);
-      c.strokeStyle = '#e0b860'; c.lineWidth = 0.5; c.beginPath(); for (let x = 2; x <= 14; x += 3) { c.moveTo(x, 2); c.lineTo(x, 16); } for (let k = 0; k < 4; k++) { c.moveTo(2 + k * 3, 2); c.lineTo(2 + k * 3 + 3, 9); c.lineTo(2 + k * 3, 16); } c.stroke();
-      R(c, '#c9a35a', 0, 0, 16, 2); R(c, '#c9a35a', 0, 0, 2, 16); R(c, '#c9a35a', 14, 0, 2, 16); R(c, '#fff0c0', 7.5, 0.5, 1, 1); },
+      c.strokeStyle = '#b8955a'; c.lineWidth = 0.5; c.beginPath(); for (let x = 2; x <= 14; x += 3) { c.moveTo(x, 2); c.lineTo(x, 16); } for (let k = 0; k < 4; k++) { c.moveTo(2 + k * 3, 2); c.lineTo(2 + k * 3 + 3, 9); c.lineTo(2 + k * 3, 16); } c.stroke();
+      R(c, '#9a7c4c', 0, 0, 16, 2); R(c, '#9a7c4c', 0, 0, 2, 16); R(c, '#9a7c4c', 14, 0, 2, 16); R(c, '#fff0c0', 7.5, 0.5, 1, 1); },
     nfloor(c, r, v, hue) { R(c, '#0c0f2c', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,65%,.55)`; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = `hsla(${hue},90%,70%,.14)`; c.fillRect(1, 1, 15, 15); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.8)`; if (r() < 0.35) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); },
     nabri(c, r, v, hue) { R(c, '#141833', 0, 0, 16, 16); c.fillStyle = 'rgba(255,233,176,.5)'; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = 'rgba(255,233,176,.13)'; c.fillRect(1, 1, 15, 15); c.fillStyle = 'rgba(255,246,220,.8)'; if (r() < 0.3) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); }, // le sol d'un abri : une lumière chaude, là où rien ne rôde
     npont(c, r, v, hue) { R(c, '#0b0f2e', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,72%,.17)`; c.fillRect(0, 0, 16, 16); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.6)`; if (r() < 0.22) c.fillRect(2 + Math.floor(r() * 12), 2 + Math.floor(r() * 12), 1, 1); }, // un pont du labyrinthe : ses arêtes de lumière sont tracées par la carte, selon ses voisins
@@ -263,95 +268,113 @@
     desk: { w: 30, h: 18, fw: 28, fh: 8, draw(c) { R(c, '#3d2c1e', 0, 4, 30, 14); R(c, '#5d4630', 0, 3, 30, 3); R(c, '#e9e2d0', 5, 1, 8, 4); R(c, '#39e6ff', 18, 0, 8, 5); R(c, '#0d2a38', 19, 1, 6, 3); } },
     neon: { w: 26, h: 30, fw: 4, fh: 3, draw(c, r, o) { const col = (o && o.color) || '#ff4fd8'; R(c, '#2a2f3e', 12, 12, 2, 18); R(c, '#11131c', 0, 0, 26, 13); R(c, col, 2, 2, 22, 1); R(c, col, 2, 10, 22, 1); R(c, col, 2, 2, 1, 9); R(c, col, 23, 2, 1, 9); c.fillStyle = '#fff'; for (let i = 0; i < 5; i++) c.fillRect(5 + i * 4, 5 + (i % 2), 2, 3); } },
     screen: { w: 40, h: 34, fw: 6, fh: 3, draw(c, r) { R(c, '#11131c', 0, 0, 40, 26); R(c, '#1b2340', 1, 1, 38, 24); for (let i = 0; i < 40; i++) R(c, ['#39e6ff', '#ff4fd8', '#ffe08a', '#7dffb0'][Math.floor(r() * 4)], 2 + Math.floor(r() * 36), 2 + Math.floor(r() * 22), 1 + Math.floor(r() * 3), 1); R(c, '#2a2f3e', 18, 26, 4, 8); } },
-    // Prototype « deux villes » (la Cité-Miroir seulement) : chaque objet garde l'empreinte de celui qu'il remplace.
+    // Prototype « ville de verre » (la Cité-Miroir seulement) : chaque objet garde l'empreinte de celui qu'il remplace. Les
+    // aplats passent par Rc (au dessin d'origine, ils tombent sur des points entiers). o.eteint : la Cité éteinte de la fin
+    // (maps.js, M.eteinte) — l'écran et les bornes deviennent du verre noir.
     // cposte : là où pendaient les enseignes, un fût de rue coiffé d'un claustra de losanges éclairé de la couleur du néon
     cposte: { w: 20, h: 40, fw: 4, fh: 3, draw(c, r, o) { const col = (o && o.color) || '#ff4fd8';
-      R(c, '#3e2c26', 9, 15, 2, 22); R(c, '#8a6a50', 9, 15, 0.5, 22); R(c, '#cdb48e', 6.5, 36, 7, 4); R(c, '#a88e6c', 6.5, 39, 7, 1);
-      R(c, '#2a1c1a', 1, 1, 18, 14); R(c, col, 2, 2, 16, 12);
-      c.save(); c.beginPath(); c.rect(2, 2, 16, 12); c.clip(); c.strokeStyle = '#2a1c1a'; c.lineWidth = 0.75; c.beginPath();
+      Rc(c, '#3e2c26', 9, 15, 2, 22); Rc(c, '#8a6a50', 9, 15, 0.5, 22); Rc(c, '#cdb48e', 6.5, 36, 7, 4); Rc(c, '#a88e6c', 6.5, 39, 7, 1);
+      Rc(c, '#2a1c1a', 1, 1, 18, 14); Rc(c, col, 2, 2, 16, 12);
+      c.save(); c.beginPath(); c.rect(2, 2, 16, 12); c.clip(); c.strokeStyle = '#2a1c1a'; c.lineWidth = (c.canvas.hd || 1) > 1 ? 0.75 : 1; c.beginPath();
       for (let k = -12; k <= 18; k += 4) { c.moveTo(2 + k, 2); c.lineTo(14 + k, 14); c.moveTo(14 + k, 2); c.lineTo(2 + k, 14); } c.stroke(); c.restore();
-      c.fillStyle = 'rgba(255,250,235,.8)'; for (let y = 4; y < 14; y += 2) for (let x = y % 4 ? 4 : 2; x < 18; x += 4) c.fillRect(x - 0.5, y - 0.5, 1, 1);
-      R(c, '#c9a35a', 0, 0, 20, 1.5); R(c, '#c9a35a', 1, 14.5, 18, 1); R(c, '#e8cc84', 0, 0, 20, 0.5); } },
-    // cborne : une borne-écran au cadre doré ; des aplats qui défilent, sans un mot ni un signe
-    cborne: { w: 16, h: 34, fw: 6, fh: 3, draw(c, r) { R(c, '#c9a35a', 1, 0, 14, 27); R(c, '#1a1424', 2, 1, 12, 25);
-      const g = c.createLinearGradient(0, 2, 0, 25); g.addColorStop(0, '#7a3cff'); g.addColorStop(0.55, '#ff4fa8'); g.addColorStop(1, '#ffb45a'); c.fillStyle = g; c.fillRect(2.5, 1.5, 11, 24);
-      for (let i = 0; i < 4; i++) { R(c, 'rgba(20,10,40,.45)', 4, 3 + i * 5.5, 8, 4.5); R(c, ['#39e6ff', '#ffe08a', '#7dffb0', '#ffffff'][Math.floor(r() * 4)], 4.5, 3.5 + i * 5.5, 3 + Math.floor(r() * 6) / 2, 3.5); }
-      R(c, '#2a2030', 6, 27, 4, 5); R(c, '#cdb48e', 3, 32, 10, 2); R(c, '#e6d2ac', 3, 32, 10, 0.5); } },
-    // cgrandecran : le grand écran, accroché bas sur la façade d'une tour, juste au-dessus des passants (entier sur un
-    // téléphone tenu en hauteur) ; il montre une lumière qui n'est pas le ciel : des vagues de couleur, une gemme, des
-    // vignettes, une barre qui se remplit — aucun mot, aucun signe
-    cgrandecran: { w: 128, h: 52, fw: 6, fh: 3, draw(c) {
-      R(c, '#2a2030', 18, 42, 4, 10); R(c, '#2a2030', 106, 42, 4, 10); R(c, '#c9a35a', 18, 42, 1, 10); R(c, '#c9a35a', 106, 42, 1, 10); R(c, '#cdb48e', 16, 50, 8, 2); R(c, '#cdb48e', 104, 50, 8, 2);
-      R(c, '#120c1c', 2, 1, 124, 42); R(c, '#c9a35a', 3, 2, 122, 40); R(c, '#e8cc84', 3, 2, 122, 0.5); R(c, '#160e24', 4, 3, 120, 38);
-      const g = c.createLinearGradient(5, 4, 88, 40); g.addColorStop(0, '#4a1c8a'); g.addColorStop(0.5, '#e0388e'); g.addColorStop(1, '#ffb050'); c.fillStyle = g; c.fillRect(5, 4, 83, 36);
-      [['rgba(255,214,150,.55)', 18], ['rgba(120,230,255,.4)', 27], ['rgba(255,255,255,.3)', 22]].forEach(([col, y0]) => { c.fillStyle = col; c.beginPath(); c.moveTo(5, y0);
-        c.bezierCurveTo(28, y0 - 13, 52, y0 + 11, 88, y0 - 5); c.lineTo(88, y0 - 1); c.bezierCurveTo(52, y0 + 16, 28, y0 - 7, 5, y0 + 4); c.closePath(); c.fill(); });
-      c.fillStyle = '#7ff0ff'; c.beginPath(); c.moveTo(40, 9); c.lineTo(52, 9); c.lineTo(57, 15); c.lineTo(46, 33); c.lineTo(35, 15); c.closePath(); c.fill();
-      c.fillStyle = '#e4fcff'; c.beginPath(); c.moveTo(40, 9); c.lineTo(46, 15); c.lineTo(35, 15); c.closePath(); c.fill();
-      c.fillStyle = '#2a8ac0'; c.beginPath(); c.moveTo(46, 15); c.lineTo(57, 15); c.lineTo(46, 33); c.closePath(); c.fill();
-      c.fillStyle = '#5cd0f0'; c.beginPath(); c.moveTo(52, 9); c.lineTo(57, 15); c.lineTo(46, 15); c.closePath(); c.fill();
+      for (let y = 4; y < 14; y += 2) for (let x = y % 4 ? 4 : 2; x < 18; x += 4) Rc(c, 'rgba(255,250,235,.8)', x - 0.5, y - 0.5, 1, 1);
+      Rc(c, '#9a7c4c', 0, 0, 20, 1.5); Rc(c, '#9a7c4c', 1, 14.5, 18, 1); Rc(c, '#c8a868', 0, 0, 20, 0.5); } },
+    // cborne : une borne-écran au cadre sombre filé de laiton ; des aplats qui défilent, sans un mot ni un signe. Éteinte : du
+    // verre noir, un reflet
+    cborne: { w: 16, h: 34, fw: 6, fh: 3, draw(c, r, o) { Rc(c, '#2e2634', 1, 0, 14, 27); Rc(c, '#a8874e', 1, 0, 14, 0.5); Rc(c, '#120e1a', 2, 1, 12, 25);
+      const pas = [0, 1, 2, 3].map(() => [Math.floor(r() * 4), Math.floor(r() * 6) / 2]);
+      if (o && o.eteint) { Rc(c, '#06070d', 2.5, 1.5, 11, 24); Rc(c, 'rgba(150,170,220,.14)', 3.5, 2, 1.5, 23); Rc(c, 'rgba(150,170,220,.08)', 6, 2, 1, 23); }
+      else { const g = c.createLinearGradient(0, 2, 0, 25); g.addColorStop(0, '#7a3cff'); g.addColorStop(0.55, '#ff4fa8'); g.addColorStop(1, '#ffb45a'); Rc(c, g, 2.5, 1.5, 11, 24);
+        pas.forEach(([k, l], i) => { Rc(c, 'rgba(20,10,40,.45)', 4, 3 + i * 5.5, 8, 4.5); Rc(c, ['#39e6ff', '#ffe08a', '#7dffb0', '#ffffff'][k], 4.5, 3.5 + i * 5.5, 3 + l, 3.5); }); }
+      Rc(c, '#2a2030', 6, 27, 4, 5); Rc(c, '#cdb48e', 3, 32, 10, 2); Rc(c, '#e6d2ac', 3, 32, 10, 0.5); } },
+    // cgrandecran : le grand écran, posé bas devant le pied d'une tour, juste au-dessus des passants : un cadre sombre de
+    // 120 × 28, filé de laiton, sur deux pieds courts. Sur un téléphone tenu en hauteur, Idris au lieu 'ecran', son haut
+    // (y = 127 sur la carte) passe sous la mini-carte et les boutons, qui s'arrêtent vers y = 130. Il montre une lumière
+    // qui n'est pas le ciel : des vagues de couleur, une lueur sans contour, trois vignettes, une barre qui se remplit —
+    // aucun mot, aucun signe, aucun objet. Éteint (la fin) : du verre noir, deux reflets.
+    cgrandecran: { w: 128, h: 34, fw: 6, fh: 3, draw(c, r, o) {
+      Rc(c, '#241c2c', 20, 29, 4, 4); Rc(c, '#241c2c', 104, 29, 4, 4); Rc(c, '#cdb48e', 18, 32, 8, 2); Rc(c, '#cdb48e', 102, 32, 8, 2);
+      Rc(c, '#120c1c', 4, 1, 120, 28); Rc(c, '#2e2638', 4.5, 1.5, 119, 27); Rc(c, '#a8874e', 4, 1, 120, 0.5); Rc(c, '#0e0a16', 6, 3, 116, 24);
+      if (o && o.eteint) { const g = c.createLinearGradient(0, 3, 0, 27); g.addColorStop(0, '#0b0d18'); g.addColorStop(1, '#040509'); Rc(c, g, 6, 3, 116, 24);
+        [[16, 10, 0.08], [30, 4, 0.05], [74, 14, 0.07], [94, 5, 0.05]].forEach(([x0, l, a]) => { for (let y = 3; y < 27; y++) Rc(c, `rgba(150,170,220,${a})`, x0 + (27 - y) * 0.5, y, l, 1); });
+        return; }
+      const g = c.createLinearGradient(6, 3, 86, 27); g.addColorStop(0, '#4a1c8a'); g.addColorStop(0.5, '#e0388e'); g.addColorStop(1, '#ffb050'); Rc(c, g, 6, 3, 80, 24);
+      // une lueur sans contour, qui ne figure rien
+      const l = c.createRadialGradient(44, 16, 1, 44, 16, 24); l.addColorStop(0, 'rgba(255,236,200,.5)'); l.addColorStop(1, 'rgba(255,236,200,0)'); Rc(c, l, 6, 3, 80, 24);
+      // trois vagues de couleur, en escaliers d'un demi-point
+      [['rgba(255,214,150,.6)', 12, 2.5], ['rgba(120,230,255,.45)', 18, 2], ['rgba(255,255,255,.32)', 15, 1.5]].forEach(([col, y0, e], k) => {
+        for (let x = 6; x < 86; x += 0.5) Rc(c, col, x, Math.round((y0 + Math.sin((x - 6) / 80 * 9.4 + k * 1.3) * 4) * 2) / 2, 0.5, e); });
       const pal = [['#39e6ff', '#7a5cff'], ['#ffe08a', '#ff7a5c'], ['#7dffb0', '#2a8a8a']];
-      for (let i = 0; i < 3; i++) { const y = 5 + i * 11.5, gg = c.createLinearGradient(91, y, 122, y + 10); R(c, '#2a1840', 90, y, 33, 10.5); gg.addColorStop(0, pal[i][0]); gg.addColorStop(1, pal[i][1]); c.fillStyle = gg; c.fillRect(91, y + 1, 31, 8.5); }
-      R(c, 'rgba(255,255,255,.25)', 8, 36, 77, 1.5); R(c, '#ffffff', 8, 36, 50, 1.5);
-      c.fillStyle = 'rgba(0,0,0,.14)'; for (let y = 4; y < 41; y += 2) c.fillRect(5, y, 118, 0.5); } },
-    // cplot : devant le grand écran, une borne basse de pierre au chapeau de laiton (elle tient la case du fût d'avant)
-    cplot: { w: 10, h: 16, fw: 4, fh: 3, draw(c) { R(c, '#c9b08a', 3, 5, 5, 11); R(c, '#e6d2ac', 3, 5, 1, 11); R(c, '#a08866', 7, 5, 1, 11); R(c, '#c9a35a', 2, 3, 7, 2); R(c, '#fff1c4', 3, 1.5, 5, 1.5); } },
+      for (let i = 0; i < 3; i++) { const y = 4 + i * 7.5, gg = c.createLinearGradient(89, y, 121, y + 6); Rc(c, '#2a1840', 88, y, 34, 7); gg.addColorStop(0, pal[i][0]); gg.addColorStop(1, pal[i][1]); Rc(c, gg, 89, y + 1, 32, 5.5); }
+      Rc(c, 'rgba(255,255,255,.25)', 9, 24, 74, 1); Rc(c, '#ffffff', 9, 24, 48, 1);
+      for (let y = 3; y < 27; y += 2) Rc(c, 'rgba(0,0,0,.14)', 6, y, 116, 0.5); } },
+    // cplot : devant le grand écran, un banc de pierre bas et mat, plus large que haut, sur deux pieds (il tient la case du
+    // fût d'avant)
+    cplot: { w: 18, h: 8, fw: 4, fh: 3, draw(c) { Rc(c, '#dcc8a2', 1, 1, 16, 3); Rc(c, '#f0e2c2', 1, 1, 16, 0.5); Rc(c, '#a68e6a', 1, 3.5, 16, 1);
+      Rc(c, '#c4ab84', 2.5, 4, 3, 4); Rc(c, '#c4ab84', 12.5, 4, 3, 4); Rc(c, '#9a8262', 4.5, 4, 1, 4); Rc(c, '#9a8262', 14.5, 4, 1, 4); Rc(c, 'rgba(40,24,30,.35)', 5.5, 4.5, 7, 3.5); } },
     // ccaisse : une caisse de bois cordée, débarquée des barques, un ballot dessus
-    ccaisse: { w: 12, h: 12, fw: 12, fh: 6, draw(c) { R(c, '#7a4e2e', 0, 3, 12, 9); R(c, '#5e3a20', 0, 7, 12, 0.5); R(c, '#9a6a40', 0, 3, 12, 0.5); R(c, '#5e3a20', 0, 11.5, 12, 0.5);
-      R(c, '#d4bc84', 5.5, 3, 1, 9); R(c, '#c9a35a', 0, 3, 1.5, 1.5); R(c, '#c9a35a', 10.5, 3, 1.5, 1.5);
-      c.fillStyle = '#cdb48a'; c.beginPath(); c.ellipse(6, 3, 4.5, 2.6, 0, 0, 6.3); c.fill(); R(c, '#a88e66', 3, 3.5, 6, 0.5); R(c, '#e2d0a8', 4, 1, 3, 0.5); } },
-    // cpalmier : un dattier dans sa vasque de pierre, éclairé par le pied
-    cpalmier: { w: 30, h: 56, fw: 0, fh: 0, draw(c) {
-      for (let y = 18; y < 45; y += 0.5) { const x = 13.5 + Math.sin(y / 10) * 1.2, k = (y - 18) / 27; R(c, (Math.floor(y * 2) % 5) ? '#8a5e38' : '#6a4426', x, y, 3, 0.5); R(c, `rgba(255,214,150,${(0.2 + k * 0.7).toFixed(2)})`, x, y, 1.5, 0.5); R(c, '#4a2e1c', x + 2.5, y, 0.5, 0.5); }
+    ccaisse: { w: 12, h: 12, fw: 12, fh: 6, draw(c) { Rc(c, '#7a4e2e', 0, 3, 12, 9); Rc(c, '#5e3a20', 0, 7, 12, 0.5); Rc(c, '#9a6a40', 0, 3, 12, 0.5); Rc(c, '#5e3a20', 0, 11.5, 12, 0.5);
+      Rc(c, '#d4bc84', 5.5, 3, 1, 9); Rc(c, '#9a7c4c', 0, 3, 1.5, 1.5); Rc(c, '#9a7c4c', 10.5, 3, 1.5, 1.5);
+      Rc(c, '#cdb48a', 2, 1, 8, 4); Rc(c, '#cdb48a', 1.5, 1.5, 9, 3); Rc(c, '#a88e66', 3, 3.5, 6, 0.5); Rc(c, '#e2d0a8', 4, 1, 3, 0.5); } },
+    // cpalmier : un dattier dans sa vasque de pierre, éclairé par le pied ; ses palmes et leurs folioles posées point à point
+    cpalmier: { w: 30, h: 56, fw: 0, fh: 0, draw(c) { const q = c.canvas.hd || 1, u = 1 / q, p = v => Math.round(v * q) / q;
+      for (let y = 18; y < 45; y += 0.5) { const x = p(13.5 + Math.sin(y / 10) * 1.2), k = (y - 18) / 27; Rc(c, (Math.floor(y * 2) % 5) ? '#8a5e38' : '#6a4426', x, y, 3, 0.5); Rc(c, `rgba(255,214,150,${(0.2 + k * 0.7).toFixed(2)})`, x, y, 1.5, 0.5); Rc(c, '#4a2e1c', x + 2.5, y, 0.5, 0.5); }
       const palme = (ang, len, col, dessous) => { const ox = 15, oy = 17, ex = ox + Math.cos(ang) * len, ey = oy + Math.sin(ang) * len + len * len * 0.022, mx = ox + Math.cos(ang) * len * 0.5, my = oy + Math.sin(ang) * len * 0.5 - 2.2;
-        c.fillStyle = col; c.beginPath(); c.moveTo(ox, oy - 1); c.quadraticCurveTo(mx, my - 1.6, ex, ey); c.quadraticCurveTo(mx, my + 1.8, ox, oy + 1); c.fill();
-        c.strokeStyle = dessous; c.lineWidth = 0.5; for (let i = 2; i < len - 1; i += 1.5) { const t = i / len, x = (1 - t) * (1 - t) * ox + 2 * (1 - t) * t * mx + t * t * ex, y = (1 - t) * (1 - t) * oy + 2 * (1 - t) * t * my + t * t * ey; c.beginPath(); c.moveTo(x, y); c.lineTo(x + 0.3, y + 2.4 * (1 - t * 0.5)); c.stroke(); } };
+        const n = Math.ceil(len * 2 * q), pas = Math.max(1, Math.round(1.5 * q));
+        for (let i = 0; i <= n; i++) { const t = i / n, a = (1 - t) * (1 - t), b = 2 * (1 - t) * t, d = t * t, x = p(a * ox + b * mx + d * ex), y = a * oy + b * my + d * ey, e = Math.max(u, p(0.6 + 1.5 * Math.sin(Math.PI * Math.min(1, t * 1.1))));
+          Rc(c, col, x, p(y - e / 2), u, e); if (i % pas === 0 && t > 0.12 && t < 0.96) Rc(c, dessous, x, p(y + e / 2), u, Math.max(u, p(2.4 * (1 - t * 0.5)))); } };
       [[-2.9, 14], [-2.3, 15], [-1.7, 13], [-1.2, 14], [-0.6, 15], [-0.15, 14], [3.5, 12], [-0.9, 11]].forEach(([a, l], i) => palme(a, l, i % 2 ? '#5a8a3c' : '#467634', i % 2 ? 'rgba(232,186,110,.7)' : 'rgba(200,150,84,.7)'));
-      c.fillStyle = '#b5651d'; [[13, 18.5], [16.5, 19], [14.5, 20]].forEach(([x, y]) => { c.beginPath(); c.arc(x, y, 1.2, 0, 6.3); c.fill(); });
-      R(c, '#a88e6c', 8, 44, 15, 5); c.fillStyle = '#dcc49c'; c.beginPath(); c.ellipse(15.5, 44, 7.5, 2.2, 0, 0, 6.3); c.fill(); c.fillStyle = '#4a3428'; c.beginPath(); c.ellipse(15.5, 44, 5.5, 1.4, 0, 0, 6.3); c.fill();
-      R(c, '#fff0c8', 15, 43, 1, 1); } },
+      [[13, 18.5], [16.5, 19], [14.5, 20]].forEach(([x, y]) => { Rc(c, '#b5651d', x - 1, y - 1, 2, 2); Rc(c, '#8a4a14', x, y, 1, 1); });
+      Rc(c, '#a88e6c', 8, 44, 15, 5); Rc(c, '#dcc49c', 8, 42.5, 15, 2); Rc(c, '#4a3428', 10, 43, 11, 1); Rc(c, '#8e7656', 8, 48, 15, 1); Rc(c, '#fff0c8', 15, 43, 1, 1); } },
     // cabra : une barque-taxi de la crique, à quai, son toit de toile sur quatre montants
     cabra: { w: 52, h: 26, fw: 0, fh: 0, draw(c, r, o) { if (o && o.flip) { c.translate(52, 0); c.scale(-1, 1); }
-      c.fillStyle = 'rgba(8,6,20,.35)'; c.fillRect(6, 22, 42, 3); c.fillStyle = 'rgba(232,210,160,.3)'; for (let x = 8; x < 46; x += 5) c.fillRect(x, 23 + (x % 2), 3, 0.5);
+      Rc(c, 'rgba(8,6,20,.35)', 6, 22, 42, 3); for (let x = 8; x < 46; x += 5) Rc(c, 'rgba(232,210,160,.3)', x, 23 + (x % 2), 3, 0.5);
       c.fillStyle = '#6a4326'; c.beginPath(); c.moveTo(1, 14); c.lineTo(7, 22); c.lineTo(45, 22); c.lineTo(51, 15); c.lineTo(48, 14.5); c.closePath(); c.fill();
-      R(c, '#4a2c18', 7, 20, 38, 2); R(c, '#d9c49a', 3, 15, 46, 0.75); R(c, '#8a5c34', 3, 15.75, 46, 0.5);
-      c.fillStyle = '#1e1418'; [14, 26, 38].forEach(x => { c.beginPath(); c.ellipse(x, 18, 1.6, 1.2, 0, 0, 6.3); c.fill(); });
-      R(c, '#8a5e38', 12, 11, 28, 3); R(c, '#5a3a24', 41, 10, 6, 5);
-      [11, 20, 30, 40].forEach(x => R(c, '#3a2618', x, 7, 0.75, 8));
-      R(c, '#efe2c4', 9, 5, 34, 2); R(c, '#fff6e2', 9, 5, 34, 0.5); R(c, '#b4542e', 9, 7, 34, 0.75); } },
+      Rc(c, '#4a2c18', 7, 20, 38, 2); Rc(c, '#d9c49a', 3, 15, 46, 0.75); Rc(c, '#8a5c34', 3, 15.75, 46, 0.5);
+      [14, 26, 38].forEach(x => { Rc(c, '#1e1418', x - 1.5, 17, 3, 2); Rc(c, '#1e1418', x - 1, 16.5, 2, 3); });
+      Rc(c, '#8a5e38', 12, 11, 28, 3); Rc(c, '#5a3a24', 41, 10, 6, 5);
+      [11, 20, 30, 40].forEach(x => Rc(c, '#3a2618', x, 7, 0.75, 8));
+      Rc(c, '#efe2c4', 9, 5, 34, 2); Rc(c, '#fff6e2', 9, 5, 34, 0.5); Rc(c, '#b4542e', 9, 7, 34, 0.75); } },
     // cbarjil : une tour à vent de pierre de corail, trapue, posée sur un toit (sa base se cache derrière la façade) : une
     // tête ouverte sur ses quatre côtés (la face, et le côté plus sombre), des fentes à traverse, un toit plat, deux perches
     // de bois qui dépassent ; ni flèche, ni balcon, ni lanterne
     cbarjil: { w: 28, h: 34, fw: 0, fh: 0, draw(c, r) {
-      R(c, '#d6c29e', 4, 20, 18, 14); R(c, '#b39b78', 22, 21, 4, 13); R(c, '#e6d6b6', 4, 20, 0.75, 14);
-      c.fillStyle = '#a89070'; for (let i = 0; i < 10; i++) c.fillRect(4.5 + Math.floor(r() * 34) / 2, 22 + Math.floor(r() * 22) / 2, 0.5, 0.5);
-      R(c, '#e6d6b6', 1, 18, 26, 2.5); R(c, '#b49c78', 1, 20.5, 26, 0.5);
-      R(c, '#d6c29e', 2, 4, 20, 14); R(c, '#b39b78', 22, 5, 4, 13);
-      for (let i = 0; i < 4; i++) { R(c, '#3a2622', 3.5 + i * 4.6, 6, 2.6, 11); R(c, '#5a4234', 3.5 + i * 4.6, 11, 2.6, 0.75); }
-      R(c, '#2e1e1c', 22.6, 6.5, 1, 10); R(c, '#2e1e1c', 24.4, 6.5, 1, 10); R(c, '#4a3428', 22.6, 11, 2.8, 0.75);
-      R(c, '#e6d6b6', 0, 1.5, 28, 3); R(c, '#f4ead2', 0, 1.5, 28, 0.5); R(c, '#c9b28e', 0, 4, 28, 0.75);
-      R(c, '#5a3c26', 0, 8, 2, 0.75); R(c, '#5a3c26', 26, 8, 2, 0.75); R(c, '#5a3c26', 0, 15, 2, 0.75); R(c, '#5a3c26', 26, 15, 2, 0.75); } },
-    // cboutre : un boutre de bois à quai, son grand mât penché vers l'avant, sa vergue et sa voile serrée ; personne à bord ;
-    // son reflet tremble dessous. Ligne de flottaison : 92 points sous le haut de l'objet.
-    cboutre: { w: 84, h: 100, fw: 0, fh: 0, draw(c) {
-      c.globalAlpha = 0.25; for (let j = 0; j < 4; j++) R(c, j % 2 ? '#a8703e' : '#6a4326', 12 + (j % 2 ? 2 : -1), 93.5 + j * 1.6, 54, 0.75); c.globalAlpha = 1;
-      c.strokeStyle = 'rgba(70,50,40,.75)'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(50.5, 7); c.lineTo(80, 70); c.moveTo(50.5, 7); c.lineTo(8, 73); c.moveTo(46, 30); c.lineTo(46, 82); c.stroke();
-      c.fillStyle = '#6a4326'; c.beginPath(); c.moveTo(6, 72); c.lineTo(10, 86); c.quadraticCurveTo(14, 91, 24, 91.5); c.lineTo(58, 91.5); c.quadraticCurveTo(72, 88, 83, 69); c.lineTo(77, 73); c.quadraticCurveTo(52, 80, 30, 78); c.lineTo(12, 76); c.closePath(); c.fill();
-      c.fillStyle = '#a8703e'; c.beginPath(); c.moveTo(6, 72); c.lineTo(12, 76); c.lineTo(30, 78); c.quadraticCurveTo(52, 80, 77, 73); c.lineTo(78, 76); c.quadraticCurveTo(52, 83, 30, 81); c.lineTo(9, 79); c.closePath(); c.fill();
-      c.strokeStyle = '#d9c49a'; c.lineWidth = 0.75; c.beginPath(); c.moveTo(7, 73.5); c.lineTo(30, 78.5); c.quadraticCurveTo(52, 81, 79, 72.5); c.stroke();
-      R(c, '#4a2c18', 14, 88.5, 50, 1.5); R(c, '#2a1a10', 18, 91, 42, 0.75);
-      R(c, '#8a5a32', 7, 66, 14, 8); R(c, '#c49a62', 7, 66, 14, 0.75); R(c, '#4a2c18', 9, 68, 3, 4); R(c, '#4a2c18', 14, 68, 3, 4); R(c, '#ffe0a0', 18.5, 68.5, 1.5, 1.5);
-      c.strokeStyle = '#5a3820'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(44, 80); c.lineTo(50.5, 6); c.stroke();
-      c.strokeStyle = '#6a4428'; c.lineWidth = 1; c.beginPath(); c.moveTo(24, 46); c.lineTo(72, 2); c.stroke();
-      c.strokeStyle = '#e8dcc0'; c.lineWidth = 2.6; c.beginPath(); c.moveTo(28, 41); c.lineTo(67, 5.5); c.stroke();
-      c.strokeStyle = '#b8a888'; c.lineWidth = 0.75; c.beginPath(); c.moveTo(29, 42.2); c.lineTo(68, 6.7); c.stroke();
-      c.fillStyle = '#7a5a3a'; for (let k = 0; k < 5; k++) { const x = 31 + k * 8, y = 41 - (x - 28) * 0.91; c.fillRect(x - 1.2, y - 0.6, 2.4, 0.75); } } },
-    // cjet : un jet d'eau au ras des dalles ; ils dansent l'un après l'autre (on passe au travers : aucune empreinte)
-    cjet: { w: 8, h: 30, fw: 0, fh: 0, anim: true, draw(c) { c.fillStyle = '#6a5844'; c.beginPath(); c.ellipse(4, 28, 3, 1.3, 0, 0, 6.3); c.fill(); c.fillStyle = '#26404c'; c.beginPath(); c.ellipse(4, 28, 2, 0.8, 0, 0, 6.3); c.fill(); },
-      animer(c, x, y, t, o) { const v = 0.5 + 0.5 * Math.sin(t * 2.2 - o.x / 16 * 0.9), H = 5 + 21 * v * v, y0 = y - 2;
-        c.fillStyle = 'rgba(150,225,255,.45)'; c.fillRect(x - 1.5, y0 - H + 1, 3, H); c.fillStyle = 'rgba(240,252,255,.95)'; c.fillRect(x - 0.5, y0 - H, 1, H);
-        c.fillStyle = 'rgba(220,248,255,.85)'; c.fillRect(x - 2, y0 - H, 1, 1); c.fillRect(x + 1, y0 - H - 1, 1, 1); c.fillRect(x - 0.5, y0 - H - 2, 1, 1);
-        c.fillStyle = 'rgba(200,240,255,.5)'; c.fillRect(x - 3, y0 - 0.5, 6, 1); } },
+      Rc(c, '#d6c29e', 4, 20, 18, 14); Rc(c, '#b39b78', 22, 21, 4, 13); Rc(c, '#e6d6b6', 4, 20, 0.75, 14);
+      for (let i = 0; i < 10; i++) Rc(c, '#a89070', 4.5 + Math.floor(r() * 34) / 2, 22 + Math.floor(r() * 22) / 2, 0.5, 0.5);
+      Rc(c, '#e6d6b6', 1, 18, 26, 2.5); Rc(c, '#b49c78', 1, 20.5, 26, 0.5);
+      Rc(c, '#d6c29e', 2, 4, 20, 14); Rc(c, '#b39b78', 22, 5, 4, 13);
+      for (let i = 0; i < 4; i++) { Rc(c, '#3a2622', 3.5 + i * 4.5, 6, 2.5, 11); Rc(c, '#5a4234', 3.5 + i * 4.5, 11, 2.5, 0.75); }
+      Rc(c, '#2e1e1c', 22.5, 6.5, 1, 10); Rc(c, '#2e1e1c', 24.5, 6.5, 1, 10); Rc(c, '#4a3428', 22.5, 11, 3, 0.75);
+      Rc(c, '#e6d6b6', 0, 1.5, 28, 3); Rc(c, '#f4ead2', 0, 1.5, 28, 0.5); Rc(c, '#c9b28e', 0, 4, 28, 0.75);
+      Rc(c, '#5a3c26', 0, 8, 2, 0.75); Rc(c, '#5a3c26', 26, 8, 2, 0.75); Rc(c, '#5a3c26', 0, 15, 2, 0.75); Rc(c, '#5a3c26', 26, 15, 2, 0.75); } },
+    // cboutre : un boutre de bois au repos le long du quai, personne à bord : un mât court, la vergue abaissée le long du
+    // pont, sa voile serrée dessus ; il reste tout entier sous le bord du quai (posé au rang 20, son haut tombe à y = 276).
+    // Ligne de flottaison : 50 points sous le haut de l'objet ; son reflet tremble dessous. Tout est posé point à point.
+    cboutre: { w: 84, h: 60, fw: 0, fh: 0, draw(c) { const q = c.canvas.hd || 1, u = 1 / q, p = v => Math.round(v * q) / q, F = 50;
+      // le pont se relève vers la poupe (à gauche) et vers l'étrave (à droite) ; la quille remonte en étrave
+      const haut = x => x < 22 ? 30 + (x - 6) * 0.44 : x > 62 ? 37 - (x - 62) * 0.32 : 37, bas = x => x < 14 ? F - (14 - x) * 0.8 : x > 64 ? F - (x - 64) * 0.95 : F;
+      for (let j = 0; j < 4; j++) Rc(c, j % 2 ? 'rgba(168,112,62,.25)' : 'rgba(106,67,38,.25)', 12 + (j % 2 ? 2 : -1), F + 1.5 + j * 1.6, 56, 0.75);
+      for (let x = 6; x < 82; x += u) { const h0 = p(haut(x)), b0 = p(Math.max(bas(x), h0 + 2)); Rc(c, '#6a4326', x, h0, u, b0 - h0); Rc(c, '#a8703e', x, h0, u, 1.5); Rc(c, '#d9c49a', x, h0, u, 0.5); Rc(c, '#4a2c18', x, b0 - 1.5, u, 1.5); }
+      // la dunette de poupe : une cabine basse, une lucarne éclairée
+      Rc(c, '#8a5a32', 8, 24, 14, 7); Rc(c, '#c49a62', 8, 24, 14, 0.75); Rc(c, '#4a2c18', 10, 26, 3, 3); Rc(c, '#ffe0a0', 17, 26.5, 2, 2);
+      // le mât, court, un peu penché vers l'avant ; deux étais
+      for (let y = 6; y < 37; y += u) Rc(c, '#5a3820', p(46 + (37 - y) * 0.08), y, 1.5, u);
+      const etai = (x0, y0, x1, y1) => { const n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) * q); for (let i = 0; i <= n; i++) Rc(c, 'rgba(70,50,40,.7)', p(x0 + (x1 - x0) * i / n), p(y0 + (y1 - y0) * i / n), u, u); };
+      etai(48, 7, 80, 34); etai(47, 7, 12, 24);
+      // la vergue abaissée le long du pont, la voile serrée dessus, ses rabans
+      for (let x = 16; x < 80; x += u) { const y = p(34.5 - (x - 16) * 0.05); Rc(c, '#6a4428', x, y, u, 1); if (x > 20 && x < 74) Rc(c, '#e8dcc0', x, y - 2, u, 2); }
+      for (let x = 24; x < 74; x += 8) Rc(c, '#7a5a3a', x, p(32.5 - (x - 16) * 0.05), 1, 2.5); } },
+    // cjet : un jet du miroir d'eau, qui sort d'une grille ronde au ras des dalles (peinte par la carte) : il monte, s'ouvre
+    // et retombe en deux gerbes de gouttes, puis s'efface tout à fait le temps que l'anneau d'eau s'élargisse. On passe au
+    // travers (aucune empreinte). o.ph : son temps, pour qu'ils dansent l'un après l'autre.
+    cjet: { w: 16, h: 32, fw: 0, fh: 0, anim: true, draw() { /* rien d'immobile : la grille est peinte au sol */ },
+      animer(c, x, y, t, o) { const q = c.canvas.hd || 1, u = 1 / q, p = v => Math.round(v * q) / q, P = (col, a, b, w, h) => { c.fillStyle = col; c.fillRect(p(a), p(b), Math.max(u, p(w)), Math.max(u, p(h))); };
+        const v = Math.max(0, Math.sin(t * 1.7 + (o.ph || 0))), H = 21 * v * v, b = y - 1, rr = 2 + (1 - v) * 2.5, an = 'rgba(150,215,255,.55)';
+        P(an, x - rr + 1, b - 1, rr * 2 - 2, 0.5); P(an, x - rr + 1, b + 0.5, rr * 2 - 2, 0.5); P(an, x - rr, b - 0.5, 0.5, 1); P(an, x + rr - 0.5, b - 0.5, 0.5, 1);
+        if (H < 1) return;
+        P('rgba(70,170,255,.4)', x - 1.5, b - H * 0.4, 3, H * 0.4); P('rgba(80,180,255,.55)', x - 1, b - H, 2, H); P('rgba(200,238,255,.75)', x - 0.5, b - H + 1, 1, H - 1); P('rgba(215,244,255,.8)', x - 1.5, b - H - 1, 3, 1); P('rgba(215,244,255,.6)', x - 2.5, b - H, 1, 1); P('rgba(215,244,255,.6)', x + 1.5, b - H, 1, 1);
+        if (H < 5) return;
+        const ec = 3 + H * 0.2; for (let k = 1; k <= 8; k++) { const f = k / 9, dy = f * f * H * 0.95, dx = f * ec, a = (0.9 - f * 0.4).toFixed(2); P(`rgba(170,224,255,${a})`, x - 0.5 - dx, b - H + dy, 1, 1); P(`rgba(170,224,255,${a})`, x - 0.5 + dx, b - H + dy, 1, 1); } } },
     // crame : les rames du métro sur leur viaduc (peint sur la carte, maps.js). L'objet couvre toute la carte pour n'être
     // jamais écarté ; seules les rames se dessinent, quelques traits par image, derrière les tours à vent et les tours qui
     // descendent à la rue (o.masque : les rectangles qui les cachent). Personne aux vitres.

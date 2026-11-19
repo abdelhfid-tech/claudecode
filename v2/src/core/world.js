@@ -74,7 +74,7 @@
 
   /* ----- cartes ----- */
   W.loadMap = function (id, opts, spot) {
-    opts = opts || {}; const key = id + JSON.stringify(opts);
+    opts = opts || {}; const key = id + JSON.stringify(opts) + (I.maps.cle ? I.maps.cle(id) : ''); // la Cité éteinte de la fin n'est pas la Cité du cache
     W.mapKey = key; const bl = I.build && W.saga ? I.build.peek(id) : null;
     if (bl && bl.length) { W.map = I.maps.build(id, opts); bl.forEach(e => I.build.apply(e, W.map)); } // ce qui a été bâti reste
     else W.map = mapCache[key] || (mapCache[key] = I.maps.build(id, opts));
@@ -157,6 +157,7 @@
     W.lock = true;
     if (W.saga !== saga) W.roster = {};
     W.saga = saga; W.ci = ci; W.ch = ch; W.minLvl = saga.frame ? (ch.minLvl || 1) : (MINLVL[ci] || 6);
+    I.maps.eteinte = false; // la Cité-Miroir se rallume à chaque chapitre (elle ne s'éteint qu'à la fin : battle.js)
     const sp = I.save.data.sagas[sagaId] || (I.save.data.sagas[sagaId] = { ch: 0, done: false, flags: {} });
     S.flags = cp ? (cp.flags || {}) : Object.assign({}, sp.flags || {});
     if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); I.mal.ouvre(); }
