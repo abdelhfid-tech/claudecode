@@ -539,6 +539,24 @@ Aucun n'est corrigé.
 (`frame.js:124`) et les crédits (`ui.js:498`) ne les nomment plus ; ils ne gardent que l'étymologie (« Du grec *noûs*,
 l'esprit »), et le feuillet n'a plus de source. Fait dans les quatre langues (2.12).
 
+**Décidé (le décideur, 19 novembre : « Ne nomme aucune source non islamique »).** Sept passages des feuillets nommaient
+une source qui ne l'est pas. Les faits restent, parce que des répliques et des options de pourparler s'appuient sur eux
+(la solde des tribus, l'église, les familles de Tibériade). Ils sont dits « On rapporte », comme le veut l'exigence 3, et
+la source dit d'où vient le récit sans le nommer. Ces réécritures sont de l'agent, à valider :
+
+| Où | Avant | Après |
+|---|---|---|
+| `saga_khalid.js:247`, Yarmoûk | « les historiens modernes réduisent ces chiffres » | « leurs chiffres varient d'une chronique à l'autre » |
+| `saga_khalid.js:281-282`, Arabes chrétiens | « On rapporte, d'après le chroniqueur Théophane, que la solde… » ; source « … ; Théophane, Chronographie » | « On rapporte que la solde… » ; source « … ; la solde : un récit rapporté hors de ces chroniques » |
+| `saga_umar.js:261-262`, Îliyâ' | « Une source chrétienne plus tardive, Eutychius, rapporte qu'il déclina… » ; source « … ; Eutychius, Annales » | « On rapporte aussi, dans un récit plus tardif, qu'il déclina… » ; source « … ; l'église : un récit plus tardif » |
+| `saga_umar.js:292`, l'interdit d'Aelia | source « Eusèbe de Césarée… ; chroniqueurs byzantins ; historiographie moderne » | source « Histoire de Rome ; la clause du pacte : at-Tabarî, Târîkh » |
+| `saga_umar.js:294-295`, les soixante-dix familles | « — un récit judéo-arabe retrouvé dans la Geniza du Caire, des chroniqueurs — » ; source « … ; fragment de la Geniza du Caire ; … » | « D'autres traditions, plus tardives, rapportent… » ; source « … ; les familles : traditions plus tardives, attributions discutées » |
+| `saga_umar.js:297-298`, les Banû Ghassân | « Le chroniqueur Théophane rapporte que… » ; source « Théophane, Chronographie ; … » | « On rapporte que… » ; source « al-Balâdhurî… ; la solde : un récit rapporté hors de cette chronique » |
+
+Restent à voir : une option de pourparler dit « Ce qu'un César a décrété n'est pas l'Évangile » (`saga_umar.js:657`) —
+une façon de parler, non une source citée ; et le refus de prier dans l'église pourrait avoir aussi une source islamique,
+qui le rendrait sourçable sans détour (à chercher, rien n'est vérifié).
+
 ## Si vous retenez un changement
 
 Le français change d'abord, puis les listes des langues se remettent à jour (`node v2/tools/langues.js releve`) : les

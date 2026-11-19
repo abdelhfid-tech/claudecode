@@ -405,6 +405,10 @@ Le détail est dans `docs/schema-saga.md`. À retenir :
 ## Conventions
 
 - Français pour tout texte visible, translittération à circonflexes (Abû Bakr, 'Umar, Khâlid).
+- Le jeu ne nomme aucune source non islamique (décideur, 19 novembre : « Ne nomme aucune source non islamique » ;
+  ni Teilhard, ni Vernadsky, ni chronique byzantine, chrétienne ou juive, ni historien moderne), dans aucune langue. Un
+  fait qui ne vient que d'une telle source se dit « On rapporte », et sa source dit d'où vient le récit sans le nommer
+  (« un récit plus tardif ») ; les documents de travail (`docs/`, `v2/docs/`) peuvent les nommer.
 - Vocabulaire du jeu : Constance (PV), Souffle (PM), éprouvé (K.O.), voiles, dévoilé, Niyya, Sérénité (la jauge,
   autrefois « Sakîna », D184) ; chimère (l'ennemi, autrefois « égrégore », D183 ; « Agrégor » au-dessus) ; figure (le
   héros, le sage, le saint : les « postures » du code et de l'exigence 24, D184).
