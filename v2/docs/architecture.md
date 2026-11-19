@@ -942,7 +942,10 @@ joueur sur un PNJ ; en combat, en hauteur, les héros se recouvraient). D198.*
   joystick) et par `follow` (au doigt). Un pas n'est refusé que s'il rapproche d'un corps qu'il toucherait : on peut
   toujours s'en écarter, et un joueur repris sur quelqu'un en ressort. L'ancien ralentissement (`crowded()`) n'existe
   plus. `W.resolve` ne pose plus jamais le joueur sur quelqu'un (le bureau de Maître Yûnus, `frame.js`), et
-  `W.degager()` l'écarte d'un corps au chargement (une partie d'avant).
+  `W.degager()` l'écarte d'un corps au chargement (une partie d'avant). Un PNJ qui paraît (« show ») là où se tient
+  le joueur — il y était posé, caché — prend la case libre la plus proche (`W.ecarter` ; Farwa ibn Nawfal, saga de
+  'Alî). Le joueur de test « à pied » (`W.pathTo`, `walkStep`) contourne, comme un joueur, les cases des PNJ et des
+  coffres, et cherche un détour quand quelqu'un se met en travers.
 - **Le chemin au doigt** (`W.route`) : la case d'un PNJ ou d'un coffre compte comme pleine, sauf la case visée ; si la
   case visée n'est plus joignable ainsi, le chemin se refait sans eux. Les raccourcis (`clearLine`) ne traversent pas un
   corps.
