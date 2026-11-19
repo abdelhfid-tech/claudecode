@@ -157,7 +157,7 @@ contribution soulève une question de droits.
 | Avant… | Ce qu'il faut avoir fait |
 |---|---|
 | Toute diffusion publique | Choisir le titulaire des droits (1.1) ; régler les traductions publiées, par autorisation ou par traduction du sens (2.2, 2.3) ; obtenir l'autorisation écrite pour le logo (2.7) ; mettre les crédits et les mentions à jour (4) |
-| L'impression du livret | Réserver l'adresse du site (1.2) ; fixer le contact et le moyen de financement ; préparer l'accord de contribution (3) |
+| L'impression du livret | Réserver l'adresse du site (1.2) ; préparer l'accord de contribution (3) — le contact est fixé : ideatobot@gmail.com, et le livret ne parle pas de dons pour l'instant |
 | Le dépôt d'une marque | Faire la recherche d'antériorité sur « ISNAD » (1.2) |
 | Chaque grande version | Déposer une version datée, par exemple une enveloppe Soleau (1.1) |
 | Un paquet hors ligne | Joindre les licences des polices (2.6) |
