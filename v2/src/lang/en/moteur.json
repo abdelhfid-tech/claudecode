@@ -423,7 +423,7 @@
 {"k":"4g9y8f.12","fr":"La route du sel, vers le fleuve du sud","t":"The Salt Road, toward the southern river","ou":"trade.js"},
 {"k":"4yyoju.10","fr":"La grande traversée, jusqu’à la côte","t":"The Great Crossing, as far as the coast","ou":"trade.js"},
 {"k":"1gmrx1i.u","fr":"Le Yémen, par la route d’hiver","t":"Yemen, by the winter road","ou":"trade.js"},
-{"k":"1cw8m.16","fr":"Le Shâm, par la route d’été, jusqu’à Bosra","t":"al-Sham, by the summer road, as far as Bosra","ou":"trade.js"},
+{"k":"1cw8m.16","fr":"Le Shâm, par la route d’été, jusqu’à Bosra","t":"Al-Sham, by the summer road, as far as Bosra","ou":"trade.js","note":"harmonisation : l'article en tête de ligne prend la majuscule (glossaire § 1.3), comme « Al-Sham » en tête de phrase dans les récits"},
 {"k":"1jnbm4d.z","fr":"Le Bahreïn et les confins de l’Irak","t":"Bahrain and the borderlands of Iraq","ou":"trade.js"},
 {"k":"k6cwf6.1l","fr":"Boutique d’équipement : armes, boucliers, coiffes, tenues","t":"Equipment shop: weapons, shields, headwear, clothing","ou":"trade.js"},
 {"k":"1xu2pgj.v","fr":"Revendre une pièce d’équipement","t":"Sell back a piece of equipment","ou":"trade.js"},

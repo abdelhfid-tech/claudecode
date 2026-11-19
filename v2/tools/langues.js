@@ -120,7 +120,8 @@ function controler(l, F, REG) {
       cases.push({ ou: v.ou, fr, t });
       // aucun reste de français : un texte de plus de deux mots recopié tel quel, ou sans un signe de l'écriture de la langue
       const mots = fr.replace(/\{\w+\}|<[^>]+>/g, '').trim().split(/\s+/).filter(m => /[A-Za-zÀ-ÿ]/.test(m)).length;
-      if (t === fr && mots > 2) erreurs.push(`${w} : le français est recopié tel quel`);
+      // un nom propre (le champ « name » d'un personnage) s'écrit en anglais comme en français quand il n'a aucun signe à retirer
+      if (t === fr && mots > 2 && !(l === 'en' && /\.name$/.test(v.ou))) erreurs.push(`${w} : le français est recopié tel quel`);
       else if (l !== 'en' && /[A-Za-zÀ-ÿ]{2}/.test(fr.replace(/\{\w+\}|<[^>]+>/g, '')) && !ECRITURE[l].test(t)) avis.push(`${w} : aucun signe de l'écriture de la langue (« ${t.slice(0, 40)} »)`);
       // les mêmes champs que le français (un champ « tourné à la française » peut manquer), aucun de plus
       // un champ tourné à la française (de_nom, min_lame, le_voie, voisins_min, nombre…) a son jumeau nu (nom, lame, voie, voisins, n)

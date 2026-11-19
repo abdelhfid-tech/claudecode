@@ -202,6 +202,15 @@ confondrait avec un guillemet ouvrant).
   aussi (« *Barley Bread* », « *North Gate* »).
 - Nombres : en lettres jusqu'à cent dans la narration et les répliques, en chiffres dans l'interface, les dates et les
   références.
+- *Harmonisation (19 novembre), à valider.* **Un verset ou une parole dans une carte de citation** (`['quote', …]`)
+  s'écrit **sans** “ ” : la feuille de style anglaise les pose déjà (`v2/src/style.css`, `html[data-lang="en"]
+  #card.quote blockquote::before/::after`), et le moteur ne retire que les « » du français ; écrits dans le texte, ils
+  s'affichaient deux fois (corrigé dans `saga_abubakr`, 3:144, et `saga_uthman`, 15:9 et 49:6). Dans un feuillet, une
+  réplique ou une narration, le verset garde ses “ ” (§ 2 de `ecrire.md`).
+- *Harmonisation (19 novembre), à valider.* **Un titre de feuillet fait d'une citation** prend lui aussi le *title
+  case*, entre “ ” : « *“Give Us Comfort by It”* », « *“The Statement Is True…”* », « *“O Mushaf, Speak to the
+  People!”* », « *“Who Told You?”* », « *“There Is No Hoarding in Our Market”* ». Il reprend les mots de la parole que
+  le feuillet cite (la traduction publiée quand le feuillet la cite), non une autre traduction.
 
 ### 1.8 Longueur des répliques
 
@@ -314,6 +323,19 @@ disputed* ; « historiographie moderne » → *modern historiography* ; « — t
 meaning* ; « Le personnage est fictif. » → *The character is fictional.* ; « Image du jeu » → *The game’s imagery*
 (§ 1.5) ; « Fiction » → *Fiction*. Titres d'ouvrages européens : la forme reçue de leur traduction anglaise (usage
 courant ; seul le titre de Teilhard a été lu, au catalogue).
+
+*Harmonisation (19 novembre), à valider.* **Quand le texte d'un feuillet cite mot pour mot une traduction anglaise
+publiée**, sa source nomme le traducteur, après l'ouvrage, par « , trans. … » (la forme du registre : « *(trans. Muhsin
+Khan)* ») : « *al-Bukhari, trans. Muhsin Khan; Muslim; Ibn Saʿd, Tabaqat* », « *al-Bukhari, Sahih (3744), trans. Muhsin
+Khan* », « *al-Bukhari, Sahih (Book of Military Expeditions), trans. Muhsin Khan* », « *Muslim, trans. Abdul Hamid
+Siddiqui; …* », « *Muslim, al-Sahih, trans. Abdul Hamid Siddiqui* ». Le nom s'écrit comme l'écrivent le registre et
+l'édition du CDN (*Abdul Hamid Siddiqui*, sans ʿ : un auteur moderne garde sa propre graphie). Le traducteur n'est nommé
+que si l'édition lue le nomme : `eng-abudawud` et `eng-malik` disent « *Unknown* » (`editions.min.json`, lu le 19
+novembre), et leurs sources gardent la forme du français (« *Abu Dawud, al-Sunan* » ; « *Malik, al-Muwatta’ (Book of
+Sales) — translation of the meaning* »). Un feuillet qui ne cite aucune traduction publiée ne nomme personne : « *al-Bukhari,
+Sahih (3700)* » (et non « *Sahih al-Bukhari 3700 (trans. Muhsin Khan)* », forme des seules cartes de citation, qui
+viennent du registre). Une même source française, revenue dans deux récits, a une seule forme : les deux feuillets qui la
+partagent citent alors la même traduction (`saga_khalid` et `saga_uthman` ; `saga_khalid` et `saga_ali`).
 
 ## 2. Le vocabulaire du jeu
 
@@ -749,7 +771,7 @@ novembre).
 | umar | 'Abd ar-Rahmân — Ibn 'Awf | **ʿAbd al-Rahman** — *ibn ʿAwf* | WP *Abd al-Rahman ibn Awf* |
 | uthman | 'Uthmân — Le Généreux | **ʿUthman** — *the Generous* | WP |
 | uthman | Zayd ibn Thâbit — Le Scribe | **Zayd ibn Thabit** — *the Scribe* | WP ; *Tabari* (35) |
-| uthman | Hudhayfa — Le Gardien du secret | **Hudhayfa** — *Keeper of the Secret* | WP *Hudhayfah ibn al-Yaman* (on écrit -a, § 1.3) ; titre : **à valider** |
+| uthman | Hudhayfa — Le Gardien du secret | **Hudhayfa** — *the Keeper of the Secret* | WP *Hudhayfah ibn al-Yaman* (on écrit -a, § 1.3) ; titre : **à valider** ; *harmonisation (19 novembre)* : avec l'article, comme *the Scribe*, *the Veteran*, *the Trustee of the Community* (« *Keeper of the Secret* » jusque-là) |
 
 Quand un titre commence la ligne affichée sous le nom, il prend la majuscule (« *Al-Siddiq* », « *The Drawn Sword* »).
 Le sceau arabe (`arabic`) ne se traduit pas.
@@ -817,6 +839,18 @@ Siffin* ; « Un sécessionniste » → *A seceder* (§ 3.9). **Sans article**, l
 « Enfant » → *Child* ; « Scribe du dîwân » → *Scribe of the Diwan* ; « Courrier du Yamâma » → *Courier from
 al-Yamama* ; « Envoyé de Najrân » → *Envoy from Najran* ; « Bédouin réfugié » → *Bedouin Refugee*. Dans le texte
 courant, la minuscule revient (« *a scribe of the diwan* »). **À valider.**
+
+*Harmonisation (19 novembre), à valider.* Fixés pendant l'écriture des récits, relevés d'un fichier à l'autre (une seule
+forme partout ; translittération selon § 1.3, référence non vérifiée sauf mention) :
+
+| Français | Anglais retenu | Où | Note |
+|---|---|---|---|
+| Messager (étiquette d'un porteur de nouvelles, à la Saqîfa) | **Bearer of News** | `saga_abubakr` | Jamais *Messenger* pour un autre que le Prophète ﷺ : le mot, avec sa majuscule d'étiquette, se lirait comme son titre (exigence 1). |
+| 'Amr ibn al-'Âs ; Abû Mûsâ al-Ash'arî ; Mu'âwiya ; Talha ; Sa'd ibn Abî Waqqâs | **ʿAmr ibn al-ʿAs** ; **Abu Musa al-Ashʿari** ; **Muʿawiya** ; **Talha** ; **Saʿd ibn Abi Waqqas** | quatre, deux, deux, deux et deux récits | WP *Amr ibn al-As*, *Abu Musa al-Ash'ari*, *Mu'awiya I*, *Talha ibn Ubayd Allah*, *Sa'd ibn Abi Waqqas* (titres non relus), réécrits selon § 1.3. |
+| Khabbâb ibn al-Aratt ; les Banû 'Adî ; les Khazraj, al-Khazraj | **Khabbab ibn al-Aratt** ; **the Banu ʿAdi** ; *the Khazraj*, *al-Khazraj* (l'article là où le français l'écrit) | `frame`, `saga_ali` ; `saga_abubakr`, `saga_umar` | |
+| Bassora ; Fustât ; Nihâwand ; l'Irak ; l'Euphrate ; Hudaybiyya, al-Hudaybiyya | **Basra** ; **Fustat** ; **Nihawand** ; **Iraq** ; **the Euphrates** ; *Hudaybiyya*, *al-Hudaybiyya* (comme le français, qui écrit les deux) | quatre, deux, deux, cinq, deux et deux récits | formes anglaises reçues pour Bassora, l'Irak et l'Euphrate (IJMES, § 1.3). |
+| Rabî' al-Awwal ; Dhû l-Hijja ; Ramadan | **Rabiʿ al-Awwal** ; **Dhu al-Hijja** ; **Ramadan** | `frame`, `saga_abubakr` ; `saga_umar`, `saga_uthman` ; `saga_ali` | § 1.6 (les mois). |
+| Mu'ta | **Mu’ta** (la hamza, § 1.3) | `saga_khalid` | La parole de Khâlid citée d'après Muhsin Khan (n° 4265) garde sa graphie, *Mu'tah*. |
 
 ### 3.4 Les personnages de fiction
 
@@ -1009,6 +1043,12 @@ religion ni une personne (exigence 6). Les familles d'images restent des famille
 Les idoles nommées au recueil (« le Clan, l'Empire, le Héros, l'Or, la Rumeur, le Juge sans miséricorde ») : *the Clan,
 the Empire, the Hero, Gold, Rumor, the Merciless Judge*. « La chimère La Razzia » (`raid`) : **the Raid**.
 
+*Harmonisation (19 novembre), à valider.* Fixés pendant l'écriture, pour les compétences et les descriptions des
+chimères : « Chuchotis » (le Murmure) → **Muttering**, jamais *Whisper* (§ 2.1) ; « Schisme » (Babel) → **Sundering** :
+*schism* est d'abord le mot de l'Église (le Grand Schisme), comme *excommunicate* (§ 1.9) ; « faite de bouches » (la
+Rumeur) → **made of tongues**, « une bouche », « la petite bouche » d'Abû l-Akhbâr → *one tongue*, *one of its lesser
+tongues* : l'image anglaise de la rumeur, celle de *A Thousand Tongues* (§ 3.8).
+
 Les noms de compétences des héros et des ennemis ne sont pas fixés ici : on les écrit d'après les règles de § 1.9 et le
 vocabulaire de § 2 (*Truthful Word*, *Soothing*…), courts (22 signes), sans nom divin, sans nom de démon.
 
@@ -1082,6 +1122,13 @@ textes intégraux du tableau de tête (ordres de grandeur, § 5). « Bukhari-Kha
 | la peste d'Emmaüs | **the plague of ʿAmwas** | WP *Plague of Amwas* (« *also spelled plague of Emmaus* ») ; *Tabari* (*Amwas*, 18) | |
 | l'un des dix à qui le Paradis fut annoncé | **one of the ten to whom Paradise was promised** | WP *The ten to whom Paradise was promised* (titre où renvoie *The Ten Promised Paradise*) | |
 | un martyr ; mourir en martyr | **a martyr** ; *to die a martyr* | | |
+| l'émir (46 textes) ; en apostrophe, « émir » ; les émirs | **the emir** ; en apostrophe : « *…, Emir.* » ; **emirs** ; « Un émir de chez nous » (compétence du Clan) → *An Emir of Our Own* ; « La veillée des émirs » (carton, `saga_khalid`) → *The Emirs’ Evening* (*Evening*, § 2.1) | *Harmonisation (19 novembre)* ; IJMES (mot de *Merriam-Webster*, dictionnaire non consulté) | **À valider.** Minuscule dans le texte courant, comme *the caliph* ; la majuscule en apostrophe, comme *Rawi* (§ 2.1). Bukhari-Khan écrit *Amir* : seulement dans une parole citée (« *like a chief police officer to an Amir (chief)* »). |
+| l'homme de confiance (Abû 'Ubayda) | **the trustee** ; le titre : *the Trustee of the Community* (§ 3.2) | *Harmonisation (19 novembre)* | **À valider.** « L'homme de confiance : relève et restaure… » (`saga_abubakr`) → *The trustee: rallies and restores…*. La parole du Prophète ﷺ citée d'après Muhsin Khan garde ses mots (*Amin*, *trustworthy man*, § 3.10). |
+| « On appellera cette année-là l'Année de l'unité » | **the Year of Unity** | *Harmonisation (19 novembre)* ; `saga_ali` | **À valider** ; usage non vérifié. |
+| les chiffres (d'un décompte, d'une nuée) | **numbers**, jamais *figures* | *Harmonisation (19 novembre)* ; `saga_khalid` (le Décompte) | *Figures* se lit d'abord « silhouettes » (§ 2.8) : une nuée de silhouettes autour des feux ferait voir des hommes en face (exigence 19). |
+| l'adversaire ; ses adversaires | **the adversary** ; *his adversaries* | *Harmonisation (19 novembre)* ; `saga_khalid` | Jamais *the enemy* là où le français ne dit pas « l'ennemi » (exigence 10). |
+| veiller (passer la nuit éveillé) ; les veilles (la prière de la nuit) | *to spend the night* ; *night vigils*, *to keep vigil* | *Harmonisation (19 novembre)* ; `saga_uthman` ; `saga_ali` | *Vigil* ne dit que la prière de la nuit (§ 2.1, *Evening*) : il reste aux sécessionnistes de Harûrâ', dont le français dit les veilles et les prosternations ; une flotte qui veille *spends the night*. |
+| Dissiper (un objectif : « Dissiper les murmures du souk ») | **Dissipate** | *Harmonisation (19 novembre)* ; tous les récits | Le verbe de § 2.9 (« se dissiper »), dans tous les objectifs. |
 
 **Les formules des répliques** (une parole relevée au registre garde son texte, même quand il dit autrement : « *We
 belong to Allah, and to Him we return!* », Râfi' ibn 'Umayra)
@@ -1115,6 +1162,29 @@ belong to Allah, and to Him we return!* », Râfi' ibn 'Umayra)
 est fictif. » → *The character is fictional.* ; « (fiction) » → *(fiction)* ; « Pièce de fiction. » → *A piece of
 fiction.* ; « inventé (imaginé) pour ce récit » → *invented for this story* ; « Image du jeu » → *The game’s imagery*
 (§ 1.5).
+
+### 3.10 Les paroles citées hors des cartes de citation : une seule forme d'un récit à l'autre (harmonisation, 19 novembre)
+
+*À valider.* Plusieurs feuillets, narrations et répliques citent un hadith que le registre ne relève pas (il ne relève
+que les cartes `['quote', …]`). Les rédacteurs les ont écrits d'après la traduction anglaise publiée, lue sur le CDN du
+registre, comme le veut `v2/docs/sources/LISEZ-MOI.md` pour un hadith ; l'harmonisation a mis une seule forme là où la
+même parole revient. Relu le 19 novembre sur `cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/<édition>/<n°>.min.json` :
+
+| Parole (français) | Anglais cité, tel quel | Édition, n° | Où |
+|---|---|---|---|
+| « Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda ibn al-Jarrâh. » | “*Every nation has an Amin (i.e. the most honest man), and the Amin of this nation is Abu 'Ubaida bin Al-Jarrah.*” | `eng-bukhari` 4382 (Muhsin Khan) | `saga_abubakr` codex[2] (sa propre traduction jusque-là), `saga_khalid` codex[3] ; l'arabe des deux fichiers cite le même numéro |
+| la même, sans « ibn al-Jarrâh » | “*Every nation has an extremely trustworthy man, and the trustworthy man of this (i.e. Muslim) nation is Abu 'Ubaida bin Al-Jarrah.*” | `eng-bukhari` 3744 (Muhsin Khan) | `saga_umar` codex[2], dont l'arabe cite le n° 3744 : gardé, l'anglais y dit plus que le français (« *bin Al-Jarrah* ») |
+| « Ô Bilâl, appelle à la prière : donne-nous par elle le repos » ; « Ô Bilâl, repose-nous par elle » | “*O Bilal, call iqamah for prayer: give us comfort by it.*” | `eng-abudawud` 4985 (traducteur non nommé) | `frame` codex[7], `saga_abubakr` codex[17] (« *call us to stand for the prayer: give us rest through it* » jusque-là) et son titre, “*Give Us Comfort by It*” |
+| « un sabre d'entre les sabres d'Allah » | “*a Sword amongst the Swords of Allah*” | `eng-bukhari` 4262 (Muhsin Khan) | `saga_khalid` codex[0], intro[3] |
+| « Neuf sabres se sont brisés dans ma main… » | au registre (carte de citation) ; le feuillet le reprend tel quel | `eng-bukhari` 4265 | `saga_khalid` intro[4], codex[8] |
+| « Les gens interrogeaient le Messager d'Allah ﷺ sur le bien… » | “*The people used to ask Allah's Messenger (ﷺ) about good, but I used to ask him about evil for fear that it might overtake me.*” | `eng-bukhari` 3606 (Muhsin Khan) | `saga_uthman` codex[2] |
+| « comme le chef de la garde auprès de l'émir » | “*like a chief police officer to an Amir (chief).*” | `eng-bukhari` 7155 (Muhsin Khan) | `saga_ali` codex[3] |
+| la réponse de 'Alî au cri de Harûrâ' | au registre (Muslim 1066, Siddiqui) | `eng-muslim` 1066 | `saga_ali` codex[10], `caid` codex[12], une option de pourparler (`caid`) |
+| l'invocation de 'Umar pour la pluie | au registre (Muhsin Khan, 1010) | `eng-bukhari` 1010 | `saga_umar` codex[11] et outro |
+
+Ces traductions gardent leur graphie et leurs gloses (*Allah's*, *(ﷺ)*, *(i.e. …)*, *bin*, l'apostrophe droite), comme
+au registre : on ne retouche pas une traduction publiée. Leur source de feuillet nomme le traducteur quand l'édition le
+nomme (§ 1.10). Elles devraient entrer au registre, pour que le contrôle les compare au signe près (§ 4, point 26).
 
 ## 4. Points à trancher par le décideur
 
@@ -1188,6 +1258,26 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
     (« Certitude »), *Condemnation* (« Anathème »), *Verdict* (« Sentence »), *A Thousand Tongues* (« Mille bouches »),
     *the seceders* (« les sécessionnistes »), *the successor of the Messenger of Allah*, *the Commander of the Faithful*,
     et la règle des étiquettes (§ 3.3).
+24. **Nommer le traducteur dans la source d'un feuillet** (*harmonisation, 19 novembre* ; § 1.10). Proposition :
+    « *al-Bukhari, trans. Muhsin Khan; …* » quand le feuillet cite mot pour mot une traduction publiée dont l'édition
+    nomme le traducteur ; rien sinon. La source anglaise dit alors un peu plus que la source française, qui ne nomme
+    aucune traduction : c'est ce que demande l'exigence 25 (dire d'où vient le texte de chaque langue), à confirmer.
+25. **Les traductions publiées dans le texte d'un feuillet** (§ 3.10) gardent leurs gloses et leur graphie (« *(i.e.
+    Muslim)* », « *Abu 'Ubaida bin Al-Jarrah* », « *Allah's Messenger (ﷺ)* », « *call iqamah for prayer* ») à côté du
+    texte du jeu, qui écrit *Abu ʿUbayda ibn al-Jarrah*. Proposition : les garder telles quelles, comme le registre ;
+    autre choix : une traduction du sens faite sur l'arabe, dite comme telle (exigence 25), qui s'accorderait au texte du jeu.
+26. **Faire entrer au registre** les paroles citées hors des cartes de citation (§ 3.10, et celles que les rédacteurs ont
+    rendues d'après l'arabe relevé : la parole d'Ibn al-Mubârak, celles de 'Alî sur les exemplaires et sur le mushaf, de
+    'Umar sur Abû Sulaymân, d'Abû Bakr sur al-Qa'qâ', la question de Khâlid à al-Hîra…). Le contrôle de `langues.js` ne
+    les compare pas au signe près tant qu'elles n'y sont pas.
+27. **Le contrôle « le français est recopié tel quel »** compte comme une erreur trois noms propres qui s'écrivent de même
+    dans les deux langues (*Farwa ibn Nawfal*, *Wahb ibn Zurayr*, *Jabala ibn al-Ayham* : aucun signe à retirer selon
+    § 1.3). Sans une exception dans `v2/tools/langues.js` pour un nom propre (ou une liste de noms identiques),
+    « LANGUES CONFORMES » est impossible en anglais. À l'agent principal.
+28. **L'orthographe d'une parole du registre** : la parole de 'Umar au gué (al-Hâkim, *al-Mustadrak*, n° 208, traduite de
+    l'arabe par le registre) écrit *honoured*, *honour*, à l'anglaise, contre § 1.2. La carte de citation doit la recopier
+    au signe près ; le feuillet `saga_umar` codex[6] et son titre la suivent. Si le registre passe à *honored*, *honor*,
+    ces trois textes suivent.
 
 ## 5. Ce qui n'a pas pu être vérifié
 
@@ -1208,7 +1298,11 @@ vérifié, à confirmer avant publication :
   mémoire pour écarter un mot, non relue : elle n'entre pas dans le jeu) ; les titres anglais reçus de Théophane,
   d'Eutychius, d'Eusèbe et de Vernadsky (§ 1.10) ;
   la vocalisation الدِّرّة du fouet de 'Umar, prise au glossaire arabe (le Wiktionnaire lu, `درة`, ne donne que la
-  perle et le lait).
+  perle et le lait) ;
+- *harmonisation (19 novembre)* : le traducteur de l'édition `eng-abudawud` du CDN (Abû Dâwûd 4985, la parole à Bilâl) ;
+  le CDN dit « *Unknown* », et l'attribution à Ahmad Hasan, notée d'abord dans `frame`, venait de mémoire ; les titres
+  de Wikipedia donnés en § 3.3 pour *ʿAmr ibn al-ʿAs*, *Abu Musa al-Ashʿari*, *Muʿawiya*, *Talha*, *Saʿd ibn Abi
+  Waqqas* (non relus) ; *the Year of Unity* pour ʿĀm al-Jamāʿa.
 
 Le texte intégral de *Tabari*, de *Guillaume*, de Winter, de Skellie et de Karim a été lu par recherche de mots dans les
 fichiers OCR d'archive.org : les points souscrits y sont souvent perdus, et les comptes donnés sont des ordres de
