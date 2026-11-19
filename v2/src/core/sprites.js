@@ -846,8 +846,12 @@
   // désaturé et éclairci pour les fonds sombres ; la tunique claire ; des chausses brunes ; des bottes plus sombres
   const PROTO_TONS = { capuche: ['#5f9ea6', '#3f7883', '#29535e'], manteau: ['#56939c', '#386d78', '#244a55'], tunique: ['#e3d2b0', '#b89d78'],
     chausses: ['#5d4b3e', '#45372d', '#2f251f'], echarpe: ['#dc8c5c', '#b35b3d', '#7f382c'], bottes: ['#6a4a31', '#3f2a1b'] };
+  // l'étoffe que le joueur a choisie (l'écran « Ton personnage » ne change pas) : ses couleurs de dessin ; la tenue d'office (e1),
+  // les tons ci-dessus
   function paletteProto(look, K, p) {
-    const C = PROTO_TONS, poil = (typeof look.poil === 'string' && look.poil) || (D.RAWI && D.RAWI.poils && D.RAWI.poils.p2) || '#2c1e17';
+    const dr = rawiEtoffe(look), e1 = !dr || (D.RAWI && D.RAWI.etoffes.e1 && dr === D.RAWI.etoffes.e1.dessin), tons = v => Array.isArray(v) ? v : ramp(v);
+    const C = e1 ? PROTO_TONS : Object.assign({}, PROTO_TONS, { capuche: tons(dr.capuche || dr.manteau), manteau: tons(dr.manteau), chausses: dr.chausses && dr.chausses[0] !== '#dac7a2' ? tons(dr.chausses) : PROTO_TONS.chausses });
+    const poil = (typeof look.poil === 'string' && look.poil) || (D.RAWI && D.RAWI.poils && D.RAWI.poils.p2) || '#2c1e17';
     Object.assign(p, { T: C.capuche[0], t: C.capuche[1], u: C.capuche[2], C: C.manteau[0], c: C.manteau[1], k: C.manteau[2],
       E: C.manteau[1], e: C.manteau[2], B: C.manteau[0], b: C.manteau[1], m: C.manteau[1],
       R: C.tunique[0], r: C.tunique[1], S: C.tunique[0], s: C.tunique[1], L: C.chausses[0], l: C.chausses[1], Z: C.chausses[2], M: null,
@@ -1804,6 +1808,7 @@
       let c; if (profil) { c = fx >= s && fx < 2 * s ? fx - s : fx === 2 * s ? -1 : fx === s - 1 ? 2 : fx === 2 * s + 1 ? -2 : 9; }
       else { const g = fx < w / 2, d = g ? fx - ex : gx - ex; c = d; }
       if (c < -1 || c >= tp[0].length - 1) return undefined; const m = tp[r][c + 1];
+      if (m === '.' && s === 1 && fonce && c === -1 && tp[r][1] === 'k') return blanc;   // un teint très sombre garde le blanc de l'œil, même à 32 × 48
       return m === 'k' ? oeil : m === 'w' ? blanc : m === 'b' ? sourcil : null; };
     const levreDe = (fx, gx, y) => { if (!mi || fente) return undefined; const d = profil ? fx : Math.abs(fx - gx), q = s === 2;
       if (barbe) return (mi === 'rire' || mi === 'surprise') && y >= ym - (q ? 1 : 0) && y <= ym && d <= (mi === 'rire' ? s : (q ? 1 : 0)) ? bouche : undefined;   // dans la barbe : la bouche ouverte seule
