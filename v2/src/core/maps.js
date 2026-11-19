@@ -348,9 +348,10 @@
     if (!v15) { for (let x = 2; x < 60; x += 6) b.light(x, 12, 44, '#ff4fd8', 0.08); for (let x = 8; x < 58; x += 12) b.light(x, 17, 64, '#ff9a4a', 0.1); } // la ligne de néon du trottoir, et la lumière orangée des devantures d'en face, sur l'asphalte mouillé
     b.spot('parvis', 4, 13); b.spot('rue', 16, 13); b.spot('ecran', 30, 11); b.spot('ruelle', 44, 14); b.spot('ascenseur', 56, 10);
     b.scatter('crate', 5, 2, 9, 56, 8);
-    // 2.17 : la Cité au crépuscule néon — un couchant orangé qui passe au magenta, une pluie légère
+    // 2.17 : la Cité au crépuscule néon — un couchant orangé qui passe au magenta, une pluie légère ; pour les images de
+    // validation, un couchant un ton plus clair et plus chaud que le premier essai (#e8643a → #7c2c9c)
     return b.finish(v15 ? { time: 'cite', ambient: '#5a5ca8', grade: ['#7a2cff', 0.2], particles: 'rain', rate: 70, bg: 'cite', scan: true, bloom: 0.3, lightA: 1, music: 'cite' }
-      : { time: 'cite', ambient: ['#e8643a', '#7c2c9c'], grade: ['#ff3d8f', 0.14], particles: 'rain', rate: 26, bg: 'cite', scan: true, bloom: 0.3, lightA: 1, music: 'cite' });
+      : { time: 'cite', ambient: ['#ff9058', '#b0509c'], grade: ['#ff3d8f', 0.14], particles: 'rain', rate: 26, bg: 'cite', scan: true, bloom: 0.3, lightA: 1, music: 'cite' });
   }
 
   /* ---------- Archives basses ---------- */

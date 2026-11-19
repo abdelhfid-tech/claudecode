@@ -115,7 +115,8 @@
   const CITE = G.lum === 215
     ? { flaque: 'rgba(80,220,255,.10)', mur: ['#191b27', '#141620', '#20232f'], murHaut: '#2d3147', murJoint: '#0d0e16', toit: ['#10121b', '#0c0d15', '#161927'], toitBord: '#272b3d' }
     : { flaque: 'rgba(255,150,200,.09)', mur: ['#30283e', '#2a2337', '#3a3049'], murHaut: '#584a6e', murJoint: '#1c1626', toit: ['#241d30', '#1e182a', '#2c2439'], toitBord: '#4e4064' };
-  if (G.lum !== 215) Object.assign(P, { asphalt: ['#272044', '#2e2550', '#211b3b', '#45366f'], metal: ['#343a4c', '#3d4458', '#2c3040', '#4a5270'] });
+  // (l'asphalte, pour les images de validation : un ton plus clair que le premier essai, #272044 : la rue prend le couchant)
+  if (G.lum !== 215) Object.assign(P, { asphalt: ['#3e3360', '#463a6c', '#352b54', '#5c4a8a'], metal: ['#343a4c', '#3d4458', '#2c3040', '#4a5270'] });
   const TILE = {
     sand(c, r) { speck(c, r, P.sand, 26); },
     dune(c, r) { speck(c, r, P.sand, 14); c.fillStyle = '#c9a567'; for (let i = 0; i < 3; i++) { const y = 3 + i * 5 + Math.floor(r() * 2); for (let x = 0; x < 16; x++) c.fillRect(x, y + Math.round(Math.sin((x + i * 3) / 2.6) * 1.2), 1, 1); } },
@@ -376,8 +377,9 @@
     // qualité adaptative : si l'appareil peine, on allège (résolution, flou, nuages, balayage)
     if (!G.low && I.speed === 1) { G._slow = dt > 0.034 ? (G._slow || 0) + 1 : Math.max(0, (G._slow || 0) - 2); if (G._slow > 150) { G.low = true; G.resize(); } }
     // 2.16 — « 2D simple » tient ce que son texte promet : le pixel art seul, sans éclairage (ambiance et lueurs), sans halo,
-    // sans étalonnage ni vignette, comme sans profondeur de champ ni ombres de nuages
-    if (G.low) { o.tilt = false; o.clouds = null; o.scan = false; o.rays = null; o.ambient = null; o.lights = null; o.bloom = 0; o.grade = null; o.vignette = 0; }
+    // sans étalonnage ni vignette, comme sans profondeur de champ ni ombres de nuages (l'étalonnage de fin de journée de
+    // la 2.17 compris : o.etalon)
+    if (G.low) { o.tilt = false; o.clouds = null; o.scan = false; o.rays = null; o.ambient = null; o.lights = null; o.bloom = 0; o.grade = null; o.etalon = false; o.vignette = 0; }
     const c = G.out, k = G.k, W = G.cv.width, H = G.cv.height;
     let sx = 0, sy = 0;
     if (G.shakeT > 0) { G.shakeT -= dt; sx = (Math.random() - 0.5) * 6 * k * Math.min(1, G.shakeT * 4); sy = (Math.random() - 0.5) * 6 * k * Math.min(1, G.shakeT * 4); }

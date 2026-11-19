@@ -856,7 +856,8 @@
       E: C.manteau[1], e: C.manteau[2], B: C.manteau[0], b: C.manteau[1], m: C.manteau[1],
       R: C.tunique[0], r: C.tunique[1], S: C.tunique[0], s: C.tunique[1], L: C.chausses[0], l: C.chausses[1], Z: C.chausses[2], M: null,
       A: C.echarpe[0], a: C.echarpe[1], x: C.echarpe[0], z: C.echarpe[1], o: C.echarpe[2], F: C.bottes[0], f: C.bottes[1],
-      1: mix(poil, '#c08a5a', 0.32), 2: mix(poil, '#5a3a26', 0.18), 3: mix(poil, '#0c0810', 0.35) });
+      1: mix(poil, '#e0a874', 0.48), 2: mix(poil, '#7a4e32', 0.3), 3: mix(poil, '#0c0810', 0.35) });
+    // (ci-dessus, les cheveux, pour les images de validation : un reflet plus franc, 1 et 2, qui donne leur volume sous la lumière du soir)
     return p;
   }
   // le néon en deux lignes, la ceinture de cuir, la besace ; le manteau mi-long (le voyageur), les épaules larges
