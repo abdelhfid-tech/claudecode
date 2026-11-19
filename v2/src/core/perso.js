@@ -136,10 +136,14 @@
   const voyelle = nom => /^[aeiouy]/.test(plat(nom)) && !/^y[aeiou]/.test(plat(nom)) && !/^[’'ʿʾ]/.test(nom);   // « d’Elyas », mais « de Hamza », « de Yûnus », « de ’Imrân »
   // la phrase d'origine, dite avec un autre nom
   // (dans une autre langue que le français, pas d'élision : le nom que la langue donne au râwî laisse sa place à celui du joueur)
-  P.dire = function (t, nom) { nom = nom || P.nom(); if (nom === NOM || typeof t !== 'string') return t;
-    if (I.langue.lang !== 'fr') { const d = I.langue.rawi(); return t.indexOf(d) < 0 ? t : t.split(d).join(nom); }
+  // (lang : la langue du texte, celle du jeu si elle n'est pas dite — 2.x, la langue secondaire en donne une autre)
+  P.dire = function (t, nom, lang) { nom = nom || P.nom(); lang = lang || I.langue.lang; if (nom === NOM || typeof t !== 'string') return t;
+    if (lang !== 'fr') { const d = I.langue.LANGUES[lang].rawi; return t.indexOf(d) < 0 ? t : t.split(d).join(nom); }
     if (t.indexOf(NOM) < 0) return t;
     const e = voyelle(nom); return t.replace(ELIDE, (m, a, b) => a + (e ? b + '’' : b + 'e ') + nom).replace(SEUL, (m, a) => a + nom); };
+  // 2.x — la langue secondaire : un texte de cette langue, écrit sous un français qui nomme le râwî, reçoit le nom du joueur
+  // (comme les phrases relevées le reçoivent dans la langue du jeu)
+  P.direDans = (t, lang, fr) => (typeof fr === 'string' && fr.indexOf(NOM) >= 0 && CITE.test(fr) ? P.dire(t, P.nom(), lang) : t);
   // le nom du râwî tel qu'on l'affiche : celui du joueur, ou celui que la langue lui donne (« Idris », « إدريس », « イドリース »)
   P.dit = () => { const n = P.nom(); return n === NOM ? I.langue.rawi() : n; };
   // relève, dans un contenu posé, chaque phrase qui nomme le râwî (une seule fois par saga)
@@ -156,7 +160,7 @@
   let origine = null;   // le sceau et la silhouette d'origine du râwî, gardés ici : sa fiche ne reçoit aucun champ de plus
   P.appliquer = function () {
     const p = P.profil();
-    cases.forEach(c => { c.o[c.k] = P.dire(I.langue.de(c.t), p.nom); });   // la phrase dans la langue du joueur, puis son nom
+    cases.forEach(c => { c.o[c.k] = P.dire(I.langue.de(c.t), p.nom); if (I.langue.retenir) I.langue.retenir(c.o[c.k], c.t); });   // la phrase dans la langue du joueur, puis son nom (2.x : retenue, pour la langue secondaire)
     const fr = I.sagas.idris, h = fr && fr.heroes && fr.heroes.idris;
     if (h) { if (!origine) origine = { arabic: h.arabic, look: h.look };
       h.arabic = p.nom === NOM ? origine.arabic : '';   // le sceau porte le nom en arabe ; avec un autre nom, il montre l'étoile à huit branches, seule

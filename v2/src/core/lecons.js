@@ -45,7 +45,10 @@
   // la leçon d'un outil, telle que coeur.js l'écrit (au doigt ou au clavier) ; 2.x (D189) : elle se dit là où sert l'outil —
   // dans le fil quand on marche (dit), sous la question d'un choix (texte), dans le panneau du combat (banniere)
   L.texte = k => { const t = T()[k]; if (!t) return ''; const tactile = document.body.classList.contains('touch'), s = typeof t === 'string' ? t : (tactile ? t.doigt : t.clavier) || ''; return s ? I.fmt(s) : ''; };
-  const dit = k => { const s = L.texte(k); if (s) S.toast(s, { outil: k }); }; // une ligne de fil marquée de son outil : elle reste jusqu'au réemploi (trente secondes au plus)
+  // 2.x — la même leçon dans la langue secondaire (null sans elle)
+  L.texte2 = k => { if (!I.langue.l2()) return null; const t = T()[k]; if (!t) return null; const c = typeof t === 'string' ? null : (document.body.classList.contains('touch') ? 'doigt' : 'clavier'), s = c ? t[c] : t;
+    const s2 = s ? I.langue.second(s, c ? t : T(), c || k) : null; return s2 ? I.fmt(s2) : null; };
+  const dit = k => { const s = L.texte(k); if (s) S.toast(s, I.langue.l2() ? { outil: k, l2: L.texte2(k) } : { outil: k }); }; // une ligne de fil marquée de son outil : elle reste jusqu'au réemploi (trente secondes au plus)
   L.dit = dit;
 
   /* ----- les premiers pas ----- */

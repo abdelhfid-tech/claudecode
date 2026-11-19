@@ -77,21 +77,14 @@ la longueur des phrases, pas par la grammaire.
 - Les glyphes du jeu (▶ ☰ ✦ × ·) restent tels quels ; le moteur retourne lui-même les flèches (◂ ▸) dans le sens
   droite-gauche.
 
-### 1.4 Chiffres — un seul choix : les chiffres arabes orientaux ٠١٢٣٤٥٦٧٨٩
+### 1.4 Chiffres — les chiffres occidentaux 0123456789, partout
 
-**Tout le jeu arabe écrit ses nombres en chiffres arabes orientaux (dits « hindis ») : ٠ ١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩**, dans
-les textes, les références, les dates, l'interface (Constance, Souffle, prix, niveaux, chrono) et les nombres que le
-moteur calcule.
-
-Raisons :
-1. Le registre des sources les emploie déjà pour toutes les références arabes (« صحيح البخاري، رقم ١٣٨٧ »,
-   « السيرة النبوية، ج ١ ص ٣٩٩ », « سورة آل عمران: ١٤٤ ») ; un seul système évite qu'un même écran mêle deux chiffres.
-2. Ce sont ceux des éditions imprimées d'où viennent les textes (Le Caire, Beyrouth, Riyad ; Shamela les reproduit).
-3. Le jeu est écrit en arabe classique, et son public premier lit ces chiffres partout dans les livres religieux.
-
-Conséquence pour le moteur (à faire par qui code l'arabe, hors de ce glossaire) : une seule fonction convertit
-0-9 en ٠-٩ au moment d'afficher, pour l'arabe seulement (par ex. `toLocaleString('ar-EG')` ou une table). Le Maghreb
-emploie plutôt 0-9 : le choix est **à confirmer par le décideur** (§ 4), mais il doit être unique.
+**Décision du décideur, 19 novembre : « Les chiffres occidentaux partout (ce sont des chiffres arabes mais bon) ».** Tout
+le jeu arabe écrit ses nombres en chiffres 0 à 9 : dans les textes, les références (« صحيح البخاري (3744) »,
+« سورة آل عمران: 144 »), les dates (« 13 هـ »), l'interface et les nombres que le moteur calcule. Le registre des
+sources (`v2/docs/sources/`) est écrit de même, pour que les paroles et leurs références restent identiques au signe
+près. Le signe de pourcentage est « % ». Un seul système sur tout l'écran : le moteur n'a rien à convertir
+(`L.locale` : `ar-u-nu-latn`). Les chiffres orientaux (0 1 2 …), choisis d'abord, ont été convertis partout le même jour.
 
 Nombres en lettres : de un à dix, en lettres dans les récits (« ثلاثة أيام ») avec l'accord inversé du nombre et du
 compté (ثلاثة رجال، ثلاث ليال) ; en chiffres dans l'interface. Le moteur choisit la forme d'un texte « selon un nombre »
@@ -101,13 +94,13 @@ parmi six (zéro, un, deux, trois à dix, onze à quatre-vingt-dix-neuf, cent et
 
 ### 1.5 Dates
 
-- **Hégire d'abord, puis l'ère commune**, comme le français du jeu : « سنة ١١ هـ / ٦٣٢ م ». Abréviations : **هـ**
+- **Hégire d'abord, puis l'ère commune**, comme le français du jeu : « سنة 11 هـ / 632 م ». Abréviations : **هـ**
   (هجرية) et **م** (ميلادية), précédées d'une espace, sans point.
 - Dans un récit, l'année s'écrit comme les chroniques : « في سنة إحدى عشرة » (at-Tabarî range son *Târîkh* par
-  années : « ثم دخلت سنة… ») ; dans un sous-titre ou une fiche, en chiffres : « ١١ هـ · ٦٣٢ م ».
+  années : « ثم دخلت سنة… ») ; dans un sous-titre ou une fiche, en chiffres : « 11 هـ · 632 م ».
 - Les mois : noms hégiriens classiques (المحرّم، صفر، ربيع الأول، ربيع الآخر، جمادى الأولى، جمادى الآخرة، رجب، شعبان،
   رمضان، شوّال، ذو القعدة، ذو الحجة).
-- 2084 : « سنة ١٥٠٧ هـ / ٢٠٨٤ م » (D184, relecture 2.22 : d'après le calendrier d'Umm al-Qurâ, 1508 ne commence que vers
+- 2084 : « سنة 1507 هـ / 2084 م » (D184, relecture 2.22 : d'après le calendrier d'Umm al-Qurâ, 1508 ne commence que vers
   septembre 2084, et l'année 2084 est surtout 1507 ; le français dit désormais « 1507 H » ; à valider (D184)).
 
 ### 1.6 Formules de respect
@@ -215,17 +208,17 @@ même livre doit y porter partout le même nom. On prend donc les noms du regist
 - **l'auteur, une virgule arabe, le titre**, comme le français qui abrège (« at-Tabarî, Târîkh ») ; plusieurs sources se
   séparent par « ؛ » : « ابن هشام، السيرة النبوية؛ صحيح البخاري » (posé partout) ;
 - **un recueil de hadiths par son titre usuel**, comme le registre : « صحيح البخاري »، « صحيح مسلم »، « سنن النسائي »،
-  « جامع الترمذي »، « مسند أحمد » ; le numéro entre parenthèses, en chiffres arabes orientaux : « صحيح البخاري (٣٧٤٤) » ;
+  « جامع الترمذي »، « مسند أحمد » ; le numéro entre parenthèses, en chiffres arabes orientaux : « صحيح البخاري (3744) » ;
   « al-Bukhârî et Muslim » : « البخاري ومسلم » (moteur) ;
 - **les précisions entre parenthèses** suivent le français : (d'après Ibn Ishâq) « (عن ابن إسحاق) » ; (d'après Sayf ibn
   'Umar) « (من رواية سيف بن عمر) » ; (récit de Zayd ibn Thâbit) « (من حديث زيد بن ثابت) » ; (parole de 'Umar) « (من قول عمر) » ;
-  (an 28 H) « (سنة ٢٨ هـ) » ; (jugé authentique par adh-Dhahabî) « (وصحّحه الذهبي) » ; (Livre des expéditions) « كتاب
-  المغازي » (registre : « صحيح البخاري، كتاب المغازي، رقم ٤٢٦٥ ») ; (livre des ventes) « كتاب البيوع » ; (introduction du
+  (an 28 H) « (سنة 28 هـ) » ; (jugé authentique par adh-Dhahabî) « (وصحّحه الذهبي) » ; (Livre des expéditions) « كتاب
+  المغازي » (registre : « صحيح البخاري، كتاب المغازي، رقم 4265 ») ; (livre des ventes) « كتاب البيوع » ; (introduction du
   Sahîh) « المقدمة » (registre : « صحيح مسلم، المقدمة ») ; (attribué à …) « (المنسوب إلى …) » ; « attributions
   discutées » : « في نسبته خلاف » (registre : « (في نسبته خلاف) ») ;
 - **« traduction du sens » ne se dit pas en arabe** : l'arabe cite le texte même, et la mention tombe. Le moteur l'a
   déjà fait : « {ref}, traduction du sens » → « القرآن الكريم، {ref} ». Une référence de verset prend la forme du
-  registre : « سورة الحجرات: ٦ » ; « Coran — traductions du sens » : « القرآن الكريم ». Si un feuillet arabe ne rapporte
+  registre : « سورة الحجرات: 6 » ; « Coran — traductions du sens » : « القرآن الكريم ». Si un feuillet arabe ne rapporte
   une parole qu'en substance, il le dit : « بالمعنى » ;
 - **« On rapporte »** (exigence 3) : en tête d'une source, « يُروى — … » (registre) ; dans un récit, « On rapporte que » :
   « يُروى أنّ » (moteur : « On rapporte cette promesse » → « ويُروى هذا الوعد ») ; « rapporte-t-on » : « فيما يُروى » ;
@@ -251,9 +244,9 @@ même livre doit y porter partout le même nom. On prend donc les noms du regist
 | adh-Dhahabî, Siyar | الذهبي، سير أعلام النبلاء | référence non vérifiée |
 | Futûh ash-Shâm (attribué à al-Wâqidî) | فتوح الشام (المنسوب إلى الواقدي) | référence non vérifiée |
 | Abû Dâwûd, as-Sunan | سنن أبي داود | sur le modèle du registre (« سنن النسائي ») |
-| an-Nasâ'î ; an-Nasâ'î, as-Sunan al-Kubrâ | سنن النسائي ; النسائي، السنن الكبرى | registre (« سنن النسائي، رقم ٣٦٠٨ ») |
-| at-Tirmidhî | جامع الترمذي | registre (« جامع الترمذي، رقم ٣٧٠٣ ») |
-| Ahmad, (al-)Musnad | مسند أحمد | registre (« مسند أحمد، رقم ١٧٢٠ ») |
+| an-Nasâ'î ; an-Nasâ'î, as-Sunan al-Kubrâ | سنن النسائي ; النسائي، السنن الكبرى | registre (« سنن النسائي، رقم 3608 ») |
+| at-Tirmidhî | جامع الترمذي | registre (« جامع الترمذي، رقم 3703 ») |
+| Ahmad, (al-)Musnad | مسند أحمد | registre (« مسند أحمد، رقم 1720 ») |
 | Mâlik, al-Muwatta' | مالك، الموطّأ | référence non vérifiée |
 | al-Hâkim, al-Mustadrak | الحاكم، المستدرك على الصحيحين | registre |
 | al-Bayhaqî, Dalâ'il an-Nubuwwa ; as-Sunan al-Kubrâ | البيهقي، دلائل النبوة ; البيهقي، السنن الكبرى | registre (Dalâ'il) |
@@ -266,7 +259,7 @@ même livre doit y porter partout le même nom. On prend donc les noms du regist
 | Wakî', Akhbâr al-Qudât | وكيع، أخبار القضاة | référence non vérifiée |
 | al-Isfahânî, Kitâb al-Aghânî | أبو الفرج الأصفهاني، الأغاني | référence non vérifiée |
 | Ibn Qutayba, Kitâb al-Anwâ' ; Ibn Mâjid, Kitâb al-Fawâ'id | ابن قتيبة، كتاب الأنواء ; ابن ماجد، كتاب الفوائد | référence non vérifiée |
-| Nahj al-Balâgha, lettre 53 | نهج البلاغة، الكتاب ٥٣ | registre (« نهج البلاغة، بشرح محمد عبده ») ; le registre dit aussi « في نسبته خلاف » |
+| Nahj al-Balâgha, lettre 53 | نهج البلاغة، الكتاب 53 | registre (« نهج البلاغة، بشرح محمد عبده ») ; le registre dit aussi « في نسبته خلاف » |
 | Eutychius, Annales | سعيد بن البطريق، التاريخ | Eutychius d'Alexandrie a écrit en arabe sous ce nom : on le nomme ainsi, non par une transcription du grec ; référence non vérifiée |
 | Théophane, Chronographie ; chroniqueurs byzantins | ثيوفانيس، الحوليّات ; مؤرّخو الروم | référence non vérifiée |
 | Eusèbe de Césarée, Histoire ecclésiastique | يوسابيوس القيصري، تاريخ الكنيسة | référence non vérifiée |
@@ -302,7 +295,7 @@ Adresses lues pour cette section (toutes consultées le 18 novembre 2026) :
 - [N] at-Tabarî, *Târîkh ar-rusul wa-l-mulûk*, édition de Wikisource, texte entier des volumes 3 (années 7 à 15), 4 (16 à
   36) et 5 (37 à 65), lu le 18 novembre 2026 : `https://ar.wikisource.org/wiki/تاريخ_الطبري/الجزء_الثالث` (puis
   `…/الجزء_الرابع`, `…/الجزء_الخامس`) ; les occurrences citées sont comptées sur le texte sans voyelles. La division de
-  Wikisource n'est pas celle des volumes imprimés (le registre cite l'édition imprimée, « ج ٣ ص … »).
+  Wikisource n'est pas celle des volumes imprimés (le registre cite l'édition imprimée, « ج 3 ص … »).
 - [O] al-Balâdhurî, *Futûh al-buldân*, Shamela, livre 12221 (celui que lit le registre) : `https://shamela.ws/book/12221/<page>`
   (pages 121, 126 à 140, 150 à 158 lues).
 - [P] al-Bukhârî, n° 4986, édition arabe du CDN : `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari/4986.min.json`
@@ -352,7 +345,7 @@ compétence, d'objet ni de lieu frappé ne contient** :
 | **voile** (la garde d'une chimère), **voiles** | **حِجاب**, pl. **حُجُب** | al-Ghazâlî, [D] : parmi les cinq causes qui empêchent le miroir du cœur de refléter le vrai, « حجاب مرسل بين المرآة والصورة » | **à valider**. Un voile ôté : « انهتك حجاب » ou « سقط حجاب ». Ne pas confondre avec le « voile de lumière » des Compagnons (§ 2.9). |
 | **dévoilé** (une chimère vaincue : on a montré qu'elle est vide) | **انكشف** ; adj. **مكشوف** ; « انكشف خواؤه » | al-Ghazâlî, [D] : le cœur poli « … حتى يتلألأ فيه جلية الحق وينكشف » | **à valider**. Éviter الكشف seul (dévoilement mystique soufi). |
 | **Niyya** (l'intention, jauge) | **النيّة** | al-Ghazâlî, *Ihyâ'*, livre « النية والإخلاص والصدق » (quart des « المنجيات ») [A] | |
-| **Sérénité** (la jauge ; « Sakîna » jusqu'à D184) | **الهُدوء** ; « +الهدوء » ; « يستعيد الركب هدوءه » (« le groupe retrouve sa sérénité ») | usage courant (« حافظ على هدوئه ») ; « هدوء » et « الهدوء » ne sont pas au Coran [K] | **à valider (D184)**. Le décideur a écarté « Sakîna » en français : le Coran la dit descendue par Allah (48:4, 48:18 ; « سكينته », 9:26, 9:40, 48:26 [K]), et une jauge que la prière remplit à coup sûr en ferait l'effet d'un rite. L'arabe prend le mot ordinaire du calme qu'on garde dans l'épreuve. Écartés : **السَّكينة** (même raison) ; **الطُّمأنينة** : le Coran l'emploie pour les cœurs rassurés par le rappel (13:28) et, à Badr, par le secours (3:126 ; 8:10) [K], et le fiqh nomme ainsi l'immobilité de chaque position de la prière (al-Bukhârî, n° 757 : « ثم اركع حتى تطمئن راكعا » [CDN : `ara-bukhari/757`]) — le mot servait aux pourparlers, il est remplacé là aussi (« هدوء الصلاة: الثقة +١ »), car le français n'a plus qu'un mot ; **رباطة الجأش** : deux mots, et l'image coranique du cœur affermi (18:14, 8:11 [K]). La Gazelle « apaise » (**التهدئة**, § 2.5) : elle donne du الهدوء. Si un feuillet du recueil cite un jour le verset de la *sakîna*, le mot y revient, avec son texte tiré du registre : c'est un autre sujet. |
+| **Sérénité** (la jauge ; « Sakîna » jusqu'à D184) | **الهُدوء** ; « +الهدوء » ; « يستعيد الركب هدوءه » (« le groupe retrouve sa sérénité ») | usage courant (« حافظ على هدوئه ») ; « هدوء » et « الهدوء » ne sont pas au Coran [K] | **à valider (D184)**. Le décideur a écarté « Sakîna » en français : le Coran la dit descendue par Allah (48:4, 48:18 ; « سكينته », 9:26, 9:40, 48:26 [K]), et une jauge que la prière remplit à coup sûr en ferait l'effet d'un rite. L'arabe prend le mot ordinaire du calme qu'on garde dans l'épreuve. Écartés : **السَّكينة** (même raison) ; **الطُّمأنينة** : le Coran l'emploie pour les cœurs rassurés par le rappel (13:28) et, à Badr, par le secours (3:126 ; 8:10) [K], et le fiqh nomme ainsi l'immobilité de chaque position de la prière (al-Bukhârî, n° 757 : « ثم اركع حتى تطمئن راكعا » [CDN : `ara-bukhari/757`]) — le mot servait aux pourparlers, il est remplacé là aussi (« هدوء الصلاة: الثقة +1 »), car le français n'a plus qu'un mot ; **رباطة الجأش** : deux mots, et l'image coranique du cœur affermi (18:14, 8:11 [K]). La Gazelle « apaise » (**التهدئة**, § 2.5) : elle donne du الهدوء. Si un feuillet du recueil cite un jour le verset de la *sakîna*, le mot y revient, avec son texte tiré du registre : c'est un autre sujet. |
 | **râwî** (le transmetteur, personnage du joueur) | **الراوي** ; au vocatif **يا راوي** | al-Khatîb al-Baghdâdî, *al-Jâmi' li-akhlâq ar-râwî wa-âdâb as-sâmi'* [L, « الجامع لأخلاق الراوي وآداب السامع »] | Le pluriel, **الرواة**. Sa descente : **نزول الراوي** (§ 2.5), jamais « نزولك » (§ 1.8). |
 | **isnad** | **الإسناد** (le titre du jeu : إسناد) | WP-ar, « سند (علم الحديث) » : « السند أو الإسناد … هو سلسلة الرواة الذين نقلوا الحديث واحدا عن الآخر » [L] | |
 | **la Chaîne** (l'écran des maillons) | **السِّلسلة** | même page : « سلسلة الرواة » [L] | « La Chaîne entière » (compétence d'Idris) : « السلسلة كاملةً ». « Chaîne fidèle » (titre d'une saga jouée sans faute ; « Isnâd sahîh » jusqu'à D184, relecture 2.21) : **سلسلةٌ وفيّة**, du même mot que « الوفاء للسلسلة » (« Fidélité à la Chaîne ») ; jamais un mot par lequel les savants du hadith jugent une chaîne (صحيح، متّصل، منقطع، ثقة، محفوظ) : ce serait changer leur jugement en score. **À valider (D184).** |
@@ -361,7 +354,7 @@ compétence, d'objet ni de lieu frappé ne contient** :
 | **idole** (la chimère d'un chapitre, la plus enracinée) | **الصَّنَم**, pl. **الأصنام** | Malek Bennabi : « عندما تغرب الفكرة يبزغ الصنم » (cité par le blog d'Al Jazeera « أفكارنا أصنامنا », 30 avril 2018, qui la situe dans *Shurût an-nahda* ; source secondaire, non relue dans le livre) | Autre choix : الوثن. |
 | **noosphère** (l'envers de la ville) | **عالم الأفكار** | Malek Bennabi, *Mushkilat al-afkâr fî l-'âlam al-islâmî* : عالم الأشياء، عالم الأشخاص، عالم الأفكار [J] | Chez Bennabi, c'est l'univers des idées d'une société ; le jeu en fait un lieu. Ne pas écrire النوسفير (calque). Carte : **عالم الأفكار** ; « dans la noosphère » : « في عالم الأفكار ». **Validé par le décideur le 18 novembre (D185).** |
 | **idées noires** (cinq) | **الخواطر السُّود** (sg. خاطرٌ أسود) | al-Ghazâlî, [D] : « وأعني بالخواطر ما يحصل فيه من الأفكار والأذكار » ; « السود » rappelle « السوداء », l'humeur noire de la vieille médecine | **à valider**. Autre choix : **الهموم** (« les soucis »), mais la honte n'est pas un *hamm*. Les cinq : § 2.5. |
-| **maux du cœur** (sept) | **أمراض القلوب** ; un mal : **مرضٌ من أمراض القلب** | al-Ghazâlî, [C], « بيان الدواء الذي ينفي مرض الحسد عن القلب » : « الحسد من الأمراض العظيمة للقلوب، ولا تداوى أمراض القلوب إلا بالعلم والعمل » | Pas « مرض القلب » seul dans une interface (« maladie cardiaque ») : « داء القلب » en abrégé. |
+| **maux du cœur** (sept) | **أمراض القلوب** ; un mal : **مرضٌ من أمراض القلب** | al-Ghazâlî, [C], « بيان الدواء الذي ينفي مرض الحسد عن القلب » : « الحسد من الأمراض العظيمة للقلوب، ولا تداوى أمراض القلوب إلا بالعلم والعمل » | Pas « مرض القلب » seul dans une interface (« maladie cardiaque ») : « داء القلب » en abrégé. *Usage fixé par la relecture de `coeur` (19 novembre, à valider)* : « les (sept) maux du cœur », en toutes lettres, est partout **أمراض القلوب (السبعة)** (titres, sous-titre « Œuvres, lames et maux du cœur », règle de la descente) ; **داء / أدواء** reste la forme courte : « un mal du cœur » **داءٌ من أدواء القلب** (comme l'aide du moteur), « داء القلب », « الأدواء المقطوعة », « sept maux » **سبعة أدواء**. |
 | **lames** (forgées par les œuvres) | **النِّصال** (sg. **نَصْل**) ; « forger » : **صَقَل** (« la prière a poli la lame de la Sincérité ») | l'image du cœur-miroir qu'on polit : al-Ghazâlî, [D] : « تزيد مرآة القلب جلاء وإشراقاً ونوراً » | **à valider** (le nom et le verbe). Éviter « مطبوع » (forgé, au sens ancien : WP-ar, « مهند (اسم) », « السيوف المطبوعة من حديد الهند ») : il se lit aujourd'hui « imprimé ». Exigence 16 : une lame n'a ni nom d'homme ni inscription. |
 | **provision du cœur** (zâd) | **الزاد** ; **زاد القلب** | Coran 2:197 [K] (le recueil du jeu cite ce verset) | |
 | **compagnons de lumière** (animaux de fiction) | **رفاق النور** | — | **à valider**. Jamais صحابة ni أصحاب (§ 2.1). |
@@ -384,8 +377,8 @@ compétence, d'objet ni de lieu frappé ne contient** :
 | Garde (commande) ; « se garder » | **التحصّن** ; « يتحصّن » | même image de la forteresse [D] | **à valider**. |
 | Objets (menu de combat), la besace | **المِزوَد** (le sac à provisions, de *zâd*) | usage courant, référence non vérifiée | Autre choix : الجِراب. |
 | Force (atk) · Esprit (mag) · Garde (def) · Élan (spd) | **القوّة · الذِّهن · المَنَعة · الخِفّة** | — | **à valider**. « Esprit » n'est pas الروح (sens religieux). |
-| niveau | **المرتبة** (« المرتبة ٣ ») | — | Autre choix : المستوى (plus moderne). |
-| Expérience (ce que rapportent combats et pourparlers ; « Sagesse acquise » jusqu'à D184, 2.5) | **الخِبرة** (« الخبرة: +٣ ») | usage courant (« نقاط الخبرة ») | **à valider (D184)**. On ne gagne pas la sagesse en gagnant un combat : الحكمة ne sert plus ici. Nom commun ; jamais الخبير, qui est un Nom divin (§ 2.5). |
+| niveau | **المرتبة** (« المرتبة 3 ») | — | Autre choix : المستوى (plus moderne). |
+| Expérience (ce que rapportent combats et pourparlers ; « Sagesse acquise » jusqu'à D184, 2.5) | **الخِبرة** (« الخبرة: +3 ») | usage courant (« نقاط الخبرة ») | **à valider (D184)**. On ne gagne pas la sagesse en gagnant un combat : الحكمة ne sert plus ici. Nom commun ; jamais الخبير, qui est un Nom divin (§ 2.5). |
 | doute (altération) | **التردّد** | — | |
 | murmure intérieur (altération `waswas`) | **الوسوسة** | Coran 114:4 [K] ; [D] « بالوساوس » | |
 | étourdi, sonné | **مذهول** | — | |
@@ -403,7 +396,7 @@ lirait la vertu.
 
 | Français | Arabe | Déjà écrit dans le jeu |
 |---|---|---|
-| rend de la Constance à un compagnon ; à tout le groupe ; rend 40 % de Constance | يُعيد إلى رفيقٍ شيئًا من الثبات ; يُعيد إلى الركب كلّه شيئًا من الثبات ; يُعيد إلى رفيقٍ ٤٠٪ من الثبات | tables (objets) ; posé partout |
+| rend de la Constance à un compagnon ; à tout le groupe ; rend 40 % de Constance | يُعيد إلى رفيقٍ شيئًا من الثبات ; يُعيد إلى الركب كلّه شيئًا من الثبات ; يُعيد إلى رفيقٍ 40% من الثبات | tables (objets) ; posé partout |
 | soigne un compagnon ; soigne le groupe | يُداوي رفيقًا ; يُداوي الركب | le rôle « soigneur », المُداوي (ci-dessus) |
 | rend du Souffle (au groupe) | يُعيد شيئًا من النَّفَس (إلى الركب) | § 2.3 (toujours vocalisé) |
 | Relève un compagnon éprouvé. | يُنهِض رفيقًا مُنهَكًا. | tables ; posé partout |
@@ -416,8 +409,8 @@ lirait la vertu.
 | dissipe les bonus ; bonus dissipés | يُبدّد ما زِيدَ له ; وتبدّد ما زِيدَ لها | moteur : « Dissipé » → « تبدّد » ; « ما زيد له » est une proposition |
 | attire les coups | تقصده الضربات | moteur (figures) : « والضربات تقصدك » |
 | se met en garde | يتحصّن | ci-dessus ; moteur : « En garde » → « متحصّن » |
-| peut étourdir | قد يُذهِل (après « ضربة » : قد تُذهِل) | moteur : « peut étourdir ({n} %) » → « قد يُذهِل ({n}٪) » ; posé : « ضربةٌ بالدِّرّة. قد تُذهِل. » |
-| +2 Niyya ; accorde 2 points de Niyya | النيّة +٢ ; يزيد النيّة نقطتين | moteur ; tables |
+| peut étourdir | قد يُذهِل (après « ضربة » : قد تُذهِل) | moteur : « peut étourdir ({n} %) » → « قد يُذهِل ({n}%) » ; posé : « ضربةٌ بالدِّرّة. قد تُذهِل. » |
+| +2 Niyya ; accorde 2 points de Niyya | النيّة +2 ; يزيد النيّة نقطتين | moteur ; tables |
 | Force accrue ; Esprit accru ; défense du groupe accrue | قوّةٌ أكثر ; يزداد الذِّهن ; تزداد مَنَعة الركب | moteur (figures) : « قوّةٌ أكثر » |
 | affaiblit l'attaque de la cible ; affaiblit leur assaut | يُضعف ضربة الخصم ; يُضعف هجومها | — |
 | Donne sans compter | يجود ولا يُحصي | posé partout ; **pas** « بغير حساب » (sept occurrences au Coran, de 2:212 à 40:40, presque toutes dites de ce qu'Allah donne [K]) ni « بلا حساب » (« الحساب » est réservé, § 2.2) |
@@ -428,7 +421,10 @@ lirait la vertu.
 d'effet magique (لا « تمنح »، « تهب قوة »), mais « تُعِدّ القلب » (elles préparent le cœur), « تزيد الزاد ». Le compte
 qu'en tient le jeu se dit **تُعَدّ** (vocalisé), jamais « تُحتسب » : avec « الأعمال », ce mot se lit comme l'iḥtisâb, la
 récompense qu'on espère d'Allah (« مَن صام رمضان إيمانًا واحتسابًا », al-Bukhârî n° 38, éd. du CDN), ou comme l'œuvre qui
-« compte » en droit ; le jeu ne dit rien de ce qui compte devant Allah (exigences 13 et 15).
+« compte » en droit ; le jeu ne dit rien de ce qui compte devant Allah (exigences 13 et 15). « Elles ne sont pas des
+sortilèges » se dit **ليست طلاسم** : jamais « تعاويذ », de la racine عوذ de l'isti'âdha, que le jeu nomme lui-même comme
+une pratique (« يُستعاذ منه ») — dire que les œuvres n'en sont pas se lirait contre elle —, ni « سحر » (§ 1.11). *(Relectures
+de `coeur`, 19 novembre ; l'aide du moteur alignée. À valider.)*
 
 | Français | Arabe retenu (court · menu) | Source | Note |
 |---|---|---|---|
@@ -500,6 +496,8 @@ Notes :
 | un badge | **شارة**, pl. **الشارات** | — | Sans inscription (exigence 21). |
 | reconnaître un attribut / ne pas le posséder ; « Un attribut divin à reconnaître » ; « attributs reconnus » | « **يُتعرَّف إليه** » (« والاسم لا يُملَك: إنما يُتعرَّف إليه ») ; « اسمٌ من أسماء الله الحسنى يُتعرَّف إليه » ; « الأسماء المُتعرَّف إليها » ; jamais un verbe de possession (نال، ملك، اكتسب) | — | Exigence 21. Sans « tu » (§ 1.8) : le jeu ne dit pas au joueur ce qu'il a reconnu (plus de « تعرّفتَ »، « تتعرّف إليه »). |
 | les sept Noms | **الرَّزَّاق** · **الكَبِيرُ المُتَعَال** · **الخَبِير** · **الوَهَّاب** · **الحَيُّ القَيُّوم** · **اللَّطِيف** · **الحَلِيم** | les versets du jeu (51:58 ; 13:9 ; 67:14 ; 3:8 ; 2:255 ; 42:19 ; 2:263), dont le texte vient du registre | Vocalisés en entier ; jamais sur un sprite (exigence 8). |
+| le sens d'un Nom (`attributs.*.sens`) | une phrase, jamais un autre Nom : « الذي يرزق الخلق » · « الذي كلّ شيءٍ دونه، المستعلي على كلّ شيء » · « العليم بخفايا الأمور » · « كثير العطاء » · « الحيّ، القائم بنفسه » · « الرفيق بعباده » · « الذي لا يعجل بالعقوبة » | al-Kabîr : at-Tabarî, *Jâmi' al-bayân*, sur 13:9 : « الكبير الذي كل شيء دونه، المتعال المستعلي على كل شيء بقدرته » (lu sur `https://api.quran.com/api/v4/tafsirs/15/by_ayah/13:9`, 19 novembre) | **à valider**. La relecture de la langue a remplacé « العظيم، المتعالي » (al-Kabîr glosé par un autre Nom) ; sans ذات ni صفات (exigence 5). Dans une liste du recueil, les Noms gardent les voyelles du mot, sans voyelle de cas (« الحَيّ القَيُّوم »). |
+| « la subsistance vient de Lui » ; « c'est Lui qui l'a donné » | « الرزق من عنده » ; « ما ناله الآخر فمِن عنده » | — | à valider ; « هو الذي أعطاه » laissait hésiter sur « هو ». |
 
 **Les portes et la descente** (`portes`) :
 
@@ -532,6 +530,34 @@ Notes :
 | Les idoles — l'idée enracinée : elle commande | **الأصنام — فكرةٌ تجذّرت فصارت تأمر** | § 2.3 |
 | l'enracinement (jauge d'une idole) ; une racine | **التجذّر** ; **جِذر** | à valider. Jamais **الرسوخ** (loué : « والراسخون في العلم », Coran 3:7 [K]). |
 | ce qui est enseigné / les images du jeu (les deux étages) | **ما جاء به النقل / صُوَرٌ من صُوَر اللعبة** | à valider |
+| la jauge (de l'enracinement) ; « la jauge se dit d'une idole, jamais d'une époque ni de ses gens » | **المقياس** ; **المقياس يوصف به صنم، لا عصرٌ ولا أهله** | à valider ; la même phrase dans le feuillet « L'enracinement » et l'aide du moteur (19 novembre) |
+| « garde un voile de moins » (l'idole déracinée) | **ونقصت حُجُبُه حجابًا** | à valider ; « حجابٌ أقلّ » se lisait « un voile moindre » ; feuillet et aide du moteur alignés (19 novembre) |
+
+**Ce que la relecture de la langue du cœur a fixé** (`coeur`, 19 novembre ; chaque terme **à valider**). Ces choix valent
+pour toute la langue : un texte qui reprend l'une de ces notions la dit de la même façon.
+
+| Français | Arabe fixé | Pourquoi |
+|---|---|---|
+| celui qui mène (le personnage en tête du groupe, qui porte l'arme ; l'image s'agrandit autour de lui) | **مَن يتقدّم الركب** | « القائد » est réservé au Caïd (§ 3.8) ; les deux aides du moteur qui disaient « قائد الركب » sont alignées |
+| la faute (dans les pourparlers des idées noires) ; sa taille, la mesurer | **الخطأ** ; **قدر**, « يُقدِّر الخطأ قدرَه » | « حجم » (le volume) ne se dit pas d'une faute ; « قدر » revient aussi dans « ce qu'on vaut encore » (« ما بقي للمرء من قدر ») |
+| dire le risque, le dire en face | **ذكر الخطر كما هو** ; **صارحه بالخطر**, « يُصارَح بالخطر » | rejoint la manière « المصارحة » (Dire vrai) ; « قول الخطر », « يُقال له الخطر » calquaient |
+| « Admettons » ; « Il te regarde autrement » | **هَبْ أنّ الأمر كذلك** ; **تتغيّر نظرته إليك** | le tour classique de la concession ; « لنفترض » et « نظرةً أخرى » calquaient |
+| « c'est tout » ; « et pas une de plus » | **لا غير**, **لا أكثر** ; **ولا يُزاد عليه** | « هذا كلّ شيء » calque le français |
+| « Tu verras cela plus tard » (l'Insouciance) | **سوف تنظر في هذا فيما بعد** | « سوف » est le mot de l'« تسويف », que la tradition reproche à la غفلة ; « لاحقًا » est de la langue des bureaux |
+| « On ne me corrige pas » (l'Orgueil) ; corriger un récitant (l'étude) | **لا أحدَ يُقوِّمني** ; **ردّ عليه** | « صحّح له » est d'aujourd'hui ; « ردّ عليه » est le mot de la correction d'une lecture |
+| réciter devant quelqu'un qui écoute | **بين يدَي مَن يسمع** ; « قرأ … على آخر » | « أمام » est spatial |
+| garder son calme (la Longanimité) | **أن يملك المرء نفسه** | le mot du حِلم ; « يحفظ هدوءه » se lisait comme la jauge (Sérénité, **الهدوء**, § 2.3) |
+| se tenir à sa place (l'Humilité) | **أن يعرف المرء قدرَ نفسه** | « يلزم مكانه » se lisait « ne pas bouger » |
+| les liens se tiennent en se visitant | **الصِّلات تُحفَظ بالتزاور** | on visite des gens, non des liens |
+| « les mêmes pour le seigneur et pour le berger » ; « qui commande à qui » (le pèlerinage) | **سواءٌ فيهما السيّد والراعي** ; **مَن الآمرُ ومَن المأمور** | « هما نفسهما » et « مَن يأمر مَن » calquaient |
+| les vivres de la besace restent fermés (le jeûne) | **لا يُتناوَل طعامُ المِزوَد في القتال** | on ferme un sac, non un aliment ; sans « يُمسّ » (§ 1.11) ; l'aide dit « ينتظر طعامُ المِزوَد المساء » |
+| il flaire (le Renard) ; le groupe gagne un point de Niyya (l'Aigle) | **يتشمّم** ; **وتزيد نيّتُه نقطة** | « يشمّ » n'est que « sentir » ; la tournure des tables (« يزيد النيّة نقطتين ») |
+| le cœur prêt ; gagner un pourparler | **وقلبُه متأهّب** ; **نجح في محاورة** | comme l'aide du moteur et le § 2.3 |
+| une bataille déclarée presque perdue ; « si la bataille tourne au pire » | **أشرفت مُصافّةٌ مُعلَنة على الخسارة** ; **إن ساء أمرُ المُصافّة** | pas « الهزيمة » (§ 2.7) ; « كادت … أن تُخسَر » et « مالت إلى الأسوأ » calquaient |
+| « on parle de démons intérieurs » (feuillet) | **ويُقال لها «شياطين النفس»، وما هي بشياطين** | l'aide du moteur : « ما يُسمّى «شياطين النفس»، على سبيل المجاز » ; « يُسمّيها بعضهم » en faisait l'usage d'un parti |
+| un tort que l'on garde chaud (la Rancune) | **مظلمةٌ تُبقى جمرتُها متّقدة** | l'image arabe est la braise, que la Rancune perd ensuite (« لم يعد يحفظ جمرتها ») |
+| d'une traite (la descente) | **يُمضى فيه بلا توقّف** | « يُقطَع » se lisait aussi « est interrompu » |
+| relevés de la relecture 1 (fidélité), gardés : « un peu grandi » ; « ce jour-là » (le secours) ; « en face du Créateur » | **وقد نضج قليلًا** ; **يومَ هذه المُصافّة** ; **في مقابل الخالق** | « أكبر » touchait la racine du كِبْر ; « في ذلك اليوم » se lisait « le jour de Badr » ; jamais « في وجه » près du Créateur |
 
 ### 2.6 Les figures (exigence 24 ; « les postures » jusqu'à D184)
 
@@ -543,8 +569,8 @@ prodiges) que les écoles ne lisent pas de la même façon (exigence 5) ; dire �
 
 | Français | Arabe retenu | Source | Devise (fr) ou note |
 |---|---|---|---|
-| Les figures ; « Prendre une figure » (l'outil) ; « {nom} · figure : le héros » | **المواقف** (sg. **مَوقِف**) ; « **اتّخاذ موقف** » ; « خالد · الموقف: الإقدام » ; « une autre s'ouvre au niveau 4 » : « ويُتاح غيرُه في المرتبة ٤ » | Ibn Kathîr nomme ainsi la place que chacun tient dans la bataille : « فتراجع الناس إلى مواقفهم » [G, p. 11] ; l'arabe dit « وقف منه موقفًا » (prendre position devant une chose) et « اتّخذ موقفًا » | **à valider (D184)**. On *prend* un موقف, on en change, on n'*est* pas son موقف (exigence 24) ; le mot ne touche pas au visage (exigence 2 : ni وجه, ni صورة, ni هيئة, ni سيماء ; l'aide ne dit plus « على ثلاثة أوجه », mais « يقف المرء أحدَ ثلاثة مواقف ») ; il se lit dans « اتّخاذ موقف » comme dans la ligne d'état. Il remplace **وقفة**, qui se lit d'abord « une pause » (« خذ وقفة ») et désigne aussi, avec l'article, la station de 'Arafa (« يوم الوقفة ») : dans un menu de jeu, « الوقفات » se lisait « les pauses ». Écartés : **مَسلك** (« المسالك » se lirait « les chemins » dans un jeu de labyrinthes, et السلوك est un mot de la voie soufie) ; **أسلوب** (un style : trop léger) ; **سَمْت** (l'allure extérieure ; et « l'azimut » aujourd'hui) ; **دَور** (« le rôle », mais c'est déjà « le tour » au combat : « فاته دوره ») ; **نَهج** (le titre *Nahj al-balâgha*, exigence 5) ; **طريقة**, **مقام**, **حال** (mots du soufisme). |
-| en combat : « en héros », « en sage », « en saint » (`court`) | **بإقدام · ببصيرة · بإيثار** (« المرتبة ٣ · بإقدام ») | « قاتل بإقدام » : la manière, usage courant | **à valider (D184)**. La mention dit la manière du moment, non ce qu'est la personne : c'est le « en » du français. Pas de participe : « مُؤثِرًا » se lirait « مؤثِّرًا » (« émouvant »). |
+| Les figures ; « Prendre une figure » (l'outil) ; « {nom} · figure : le héros » | **المواقف** (sg. **مَوقِف**) ; « **اتّخاذ موقف** » ; « خالد · الموقف: الإقدام » ; « une autre s'ouvre au niveau 4 » : « ويُتاح غيرُه في المرتبة 4 » | Ibn Kathîr nomme ainsi la place que chacun tient dans la bataille : « فتراجع الناس إلى مواقفهم » [G, p. 11] ; l'arabe dit « وقف منه موقفًا » (prendre position devant une chose) et « اتّخذ موقفًا » | **à valider (D184)**. On *prend* un موقف, on en change, on n'*est* pas son موقف (exigence 24) ; le mot ne touche pas au visage (exigence 2 : ni وجه, ni صورة, ni هيئة, ni سيماء ; l'aide ne dit plus « على ثلاثة أوجه », mais « يقف المرء أحدَ ثلاثة مواقف ») ; il se lit dans « اتّخاذ موقف » comme dans la ligne d'état. Il remplace **وقفة**, qui se lit d'abord « une pause » (« خذ وقفة ») et désigne aussi, avec l'article, la station de 'Arafa (« يوم الوقفة ») : dans un menu de jeu, « الوقفات » se lisait « les pauses ». Écartés : **مَسلك** (« المسالك » se lirait « les chemins » dans un jeu de labyrinthes, et السلوك est un mot de la voie soufie) ; **أسلوب** (un style : trop léger) ; **سَمْت** (l'allure extérieure ; et « l'azimut » aujourd'hui) ; **دَور** (« le rôle », mais c'est déjà « le tour » au combat : « فاته دوره ») ; **نَهج** (le titre *Nahj al-balâgha*, exigence 5) ; **طريقة**, **مقام**, **حال** (mots du soufisme). |
+| en combat : « en héros », « en sage », « en saint » (`court`) | **بإقدام · ببصيرة · بإيثار** (« المرتبة 3 · بإقدام ») | « قاتل بإقدام » : la manière, usage courant | **à valider (D184)**. La mention dit la manière du moment, non ce qu'est la personne : c'est le « en » du français. Pas de participe : « مُؤثِرًا » se lirait « مؤثِّرًا » (« émouvant »). |
 | Le héros | **الإقدام** (aller au-devant) | usage courant ; référence non vérifiée (l'éthique arabe range le *iqdâm* sous la *shajâ'a*, entre « التهور » et « الجبن » ; al-Ghazâlî nomme l'excès, « التهور », en [C] et [D]) | Il s'expose : il va au-devant, et prend sur lui. |
 | Le sage | **البصيرة** (le discernement) | [D] : « ولينظر بعين البصيرة » ; « بقوة العلم والبصيرة » | Il discerne : il regarde avant d'agir. |
 | Le saint | **الإيثار** (faire passer les autres avant soi) | [B], « بيان الإيثار وفضله » | Il s'efface : il porte les autres. |
@@ -677,7 +703,7 @@ du lettré **كُمّة الأديب**.
 | un visage (exigence 2) | **وجه** | Aucun texte ne décrit de traits, pour personne. |
 | écran · notification · le grand écran · ascenseur | **شاشة · إشعار · الشاشة الكبرى · مِصعد** | arabe moderne ; jamais l'anglais translittéré. |
 | le relevé (L'agent du relevé) | **الإحصاء** (« موظّف الإحصاء ») | |
-| An 1507 de l'Hégire (« 1508 » jusqu'à D184, 2.22) | **سنة ١٥٠٧ للهجرة** ; « الحلقة الأخيرة · ١٥٠٧ هـ · ٢٠٨٤ م » | § 1.5 ; à valider (D184) |
+| An 1507 de l'Hégire (« 1508 » jusqu'à D184, 2.22) | **سنة 1507 للهجرة** ; « الحلقة الأخيرة · 1507 هـ · 2084 م » | § 1.5 ; à valider (D184) |
 | des millions de vues · d'abonnés · de comptes (D184, 2.1 et 2.2 ; plus « de regards », « de fenêtres », sauf dans la bouche de l'enfant) | **ملايين المشاهدات · المتابِعين · الحسابات** | les mots courants. « حسابات » se dit au pluriel, dans une phrase : il ne nomme aucune chimère (« Le Compte » est **الرَّصيد**, § 3.6 ; **الحساب** seul se lit « le Jugement », § 2.2). À valider (D184). |
 | « Monsieur » (un enfant ou un passant à Idris) | **يا سيّدي** | jamais « يا عمّو » ni un autre mot de dialecte (§ 1.1). À valider. |
 
@@ -721,7 +747,7 @@ celui des chroniques, relevé chez at-Tabarî [N] ou al-Balâdhurî [O] (le nomb
 | l'Année des cendres ; la peste d'Emmaüs | **عام الرَّمادة ; طاعون عَمَواس** | [N], vol. 4 : « ذكر القحط وعام الرمادة » ; « وفيها كان عام الرمادة وطاعون عمواس » | |
 | martyr ; mourir en martyr | **شهيد ; استُشهد** | usage courant | |
 | l'un des dix à qui le Paradis fut annoncé | **أحد العشرة المبشَّرين بالجنّة** | [Q] : « أبو بكر في الجنة وعمر في الجنة … وأبو عبيدة بن الجراح في الجنة » | |
-| les années d'une saga (« 13–23 H · 634–644 ») | **١٣–٢٣ هـ · ٦٣٤–٦٤٤ م** | § 1.5 | |
+| les années d'une saga (« 13–23 H · 634–644 ») | **13–23 هـ · 634–644 م** | § 1.5 | |
 
 **Les formules qui reviennent dans les répliques** (usage courant ; une parole attestée vient du registre) : « Par
 Allah » **والله** · « Paix sur toi » **السلام عليك** · « Qu'Allah le garde » **حفظه الله** · « Qu'Allah te récompense »
@@ -791,7 +817,7 @@ Règles :
 | Ibn al-Kawwâ' | **ابن الكوّاء** | « عبد الله بن الكواء » (عبد الله بن عمرو اليشكري, d'après la fiche de la notice). |
 | Ibn an-Nabbâh, le muezzin | **ابن النَّبّاح، المؤذّن** | référence non vérifiée en ligne. |
 | Râfi' ibn 'Umayra | **رافع بن عُمَيرة الطائي** | « رافع بن عميرة » : le guide de Khâlid à travers le désert. Sans visage. |
-| 'Amr ibn 'Abd al-Masîh (doyen d'al-Hîra) | **عمرو بن عبد المسيح** | le registre (`saga_khalid.json`) a lu at-Tabarî : ce nom est celui du récit de Sayf (ج ٣ ص ٣٦١-٣٦٤) ; un autre récit nomme l'homme « عبد المسيح بن عمرو بن بُقَيلة ». Écart déjà signalé là-bas. |
+| 'Amr ibn 'Abd al-Masîh (doyen d'al-Hîra) | **عمرو بن عبد المسيح** | le registre (`saga_khalid.json`) a lu at-Tabarî : ce nom est celui du récit de Sayf (ج 3 ص 361-364) ; un autre récit nomme l'homme « عبد المسيح بن عمرو بن بُقَيلة ». Écart déjà signalé là-bas. |
 | Bilâl ibn Rabâh | **بلال بن رباح** | « بلال بن رباح ». |
 | Sophrone | **صَفرونيوس** | « صفرونيوس » (patriarche de Jérusalem). Dignité gardée (schema-v2) ; dans un récit : « بطريرك إيلياء ». |
 | Al-Hurmuzân | **الهُرمُزان** | notice « هرمزان » ; les chroniques l'écrivent avec l'article. |
@@ -1109,9 +1135,9 @@ contenu commun (`coeur`) ou une suite le reprend tel quel.
 | « c'est de lui que je le tiens » (le refrain d'Idris, après Abû Bakr, Khâlid, ‘Uthmân) | **عنه أخذتُ هذا** | une seule forme pour le refrain |
 | la « mesure » de ‘Umar ; « la même balance pour tous » | **ميزان** ; **ميزانٌ واحد للجميع** | jamais « مكيال » ; « ميزانُ الفاروق » (Idris) |
 | ‘Umar, à la première mention dans un feuillet du recueil | **عُمَر** | § 1.2, appliqué aux feuillets des cinq récits (« سيف بن عُمَر », « ابن عُمَر » compris) |
-| « An N H · 634 · lieu » (sous-titre d'un chapitre) ; « An N de l'Hégire » (carton) | **سنة N هـ · ٦٣٤ م · …** ; **سنة N للهجرة** | « An » se dit « سنة » partout ; la fiche d'une saga (« 13–23 H · 634–644 ») reste sans « سنة » (§ 2.10) |
+| « An N H · 634 · lieu » (sous-titre d'un chapitre) ; « An N de l'Hégire » (carton) | **سنة N هـ · 634 م · …** ; **سنة N للهجرة** | « An » se dit « سنة » partout ; la fiche d'une saga (« 13–23 H · 634–644 ») reste sans « سنة » (§ 2.10) |
 | l'ambiance d'un récit (écran de la Chaîne) : orientale · romaine · maritime · désert · citadelle · noosphère · cyberpunk | **شرقيّة · روميّة · بحريّة · صحراء · قلعة · عالم الأفكار · سايبربانك** | « مشرقيّة » et « صحراويّة » écartés : un même mot sur un même écran |
-| « juin 632 » | **يونيو ٦٣٢ م** | les mois de l'ère commune, dans les trois récits qui en donnent |
+| « juin 632 » | **يونيو 632 م** | les mois de l'ère commune, dans les trois récits qui en donnent |
 | les étiquettes d'un seul mot (Enfant, Récitant, Moine, Poète…) | **طفل · قارئ · راهب · شاعر** | sans tanwîn ; une étiquette de plusieurs mots garde le sien (« رجلٌ من أهل X », § 3.2) |
 | « Ancien du Fort des Oliviers » (l'ancien du bourg, son porte-parole) | **شيخ حصن الزيتون** | distinct du modèle « Ancien de X » = « شيخٌ من أهل X » (un ancien parmi d'autres) |
 | « Vétéran du Shâm » | **رجلٌ ممّن غزا الشام** | le modèle « رجلٌ ممّن شهد X » vaut pour une bataille, non pour une région |
@@ -1122,7 +1148,7 @@ contenu commun (`coeur`) ou une suite le reprend tel quel.
 
 | Mot | Règle |
 |---|---|
-| **القائد** | le Caïd seul ; le chef d'une armée est son **أمير** (« أميره الشابّ » pour Usâma), les lieutenants de ‘Alî ses **أمراء** ; un officier de la flotte « أحدُ أمراء الأسطول » |
+| **القائد** | le Caïd seul ; le chef d'une armée est son **أمير** (« أميره الشابّ » pour Usâma), les lieutenants de ‘Alî ses **أمراء** ; un officier de la flotte « أحدُ أمراء الأسطول » ; « celui qui mène » (en tête du groupe, à l'exploration) **مَن يتقدّم الركب**, jamais « قائد الركب » (moteur et `coeur` alignés le 19 novembre ; à valider) |
 | **الرقيب** | jamais seul avec l'article (Nom divin) : **رقيبُ الجيش**, **رقيبُ المقدَّمة** ; l'étiquette « Guetteur » : « رقيب » (indéfini) |
 | **الرسول** | jamais seul pour un envoyé : **رسولٌ من X**, **رسول معاوية**, « استقبال رسولٍ قادمٍ من اليمامة » |
 | **أصحاب** | réservé aux Compagnons (§ 2.1) : « les siens » d'un émir : **مَن معه**, **رجاله** ; « أصحاب الحاجات » (les solliciteurs) reste, mot composé sans rapport |
@@ -1140,8 +1166,8 @@ contenu commun (`coeur`) ou une suite le reprend tel quel.
   **هذه الحكاية** ; le récit transmis par les chroniques : **الخبر**, **الرواية** (« في أشهر الروايات ») ;
 - les trois hypocrites de fiction (Thâmir, Hâzim, Ghâlib) : le feuillet dit **النفاق** (la chose), jamais « المنافق » de
   l'homme ; Hâzim : « اخترعته اللعبة ليُرى فيه صنفٌ من الناس » ;
-- la source d'un feuillet porte le numéro entre parenthèses (« صحيح البخاري (٣٧٠٠) ») ; la source d'une parole, celle du
-  registre (« صحيح البخاري، رقم ٣٧٠٠ ») ;
+- la source d'un feuillet porte le numéro entre parenthèses (« صحيح البخاري (3700) ») ; la source d'une parole, celle du
+  registre (« صحيح البخاري، رقم 3700 ») ;
 - les sécessionnistes de Harûrâ' ne sont pas nommés par le nom du parti, même là où le français l'explique (« on les
   appellera Harûriyya, puis Khawârij ») : **فنُسبوا بعدُ إلى حروراء، ثم سُمّوا باسمٍ مأخوذٍ من خروجهم** (§ 4, point 15).
 
@@ -1185,7 +1211,7 @@ contenu commun (`coeur`) ou une suite le reprend tel quel.
    étiquette. Et pour ceux que les sources rangent parmi les Successeurs (Aslam, Shurayh, Kumayl, Mâlik al-Ashtar,
    Farwa ibn Nawfal) : rien, ou « رحمه الله » ? Les textes classiques lus mettent la formule (Ibn Rajab, [F] :
    « تميم بن أوس الداري رضي الله عنه »).
-2. **Les chiffres** (§ 1.4) : arabes orientaux ٠-٩ partout (proposé, comme le registre des sources) ou 0-9 (usage du
+2. **Les chiffres** (§ 1.4) : arabes orientaux 0-9 partout (proposé, comme le registre des sources) ou 0-9 (usage du
    Maghreb et de nombreux jeux) ? Le choix doit être unique.
 3. **Les titres de héros sans équivalent dans les sources** (§ 3.1) :
    - 'Uthmân, « Le Généreux » → **ذو النورين** (le surnom des sources ; **validé, D186** — le français garde « Le Généreux ») ou « صاحب بئر رومة » (descriptif) ;
@@ -1230,7 +1256,7 @@ son verset tiré du registre, si un récit le demande un jour.
     remplace aussi « الطمأنينة » des pourparlers (§ 2.3) ; « figure » **موقف**, « Prendre une figure » **اتّخاذ موقف**,
     et en combat **بإقدام · ببصيرة · بإيثار** (§ 2.6) ; « Expérience » **الخبرة** (§ 2.4) ; « Chaîne fidèle » **سلسلةٌ
     وفيّة** (§ 2.3) ; « Dallage étoilé » **بلاطٌ بنقش النجوم** (§ 2.8) ; aucun mot de possession ni d'envoûtement
-    (§ 1.11) ; 2084 = **١٥٠٧ هـ** (§ 1.5). Restent tels quels, parce que l'arabe les disait déjà : **خيال** (chimère),
+    (§ 1.11) ; 2084 = **1507 هـ** (§ 1.5). Restent tels quels, parce que l'arabe les disait déjà : **خيال** (chimère),
     **مراتب الشر** (les degrés du mal), **المُجمِّع** (l'Agrégor), **نسر النحاس**, **الشام**.
 13. **À distance du joueur** (18 novembre, version 2.08 ; § 1.8 ; proposé par l'agent, à valider) : la descente, la
     prière d'un chapitre et la vie sont celles du râwî, à la troisième personne ou sans personne. Choix de l'agent :
@@ -1272,6 +1298,19 @@ son verset tiré du registre, si un récit le demande un jour.
       et pour qualifier ces hommes ; faut-il le nommer dans ce seul feuillet, comme le français ?
     - Thâmir, Hâzim et Ghâlib : les feuillets disent « النفاق », jamais « المنافق » d'un homme nommé (exigence 11) ; le
       feuillet de Thâmir garde « وليس المنافق هو الغريب », une phrase générale que le français dit aussi.
+16. **Le contenu commun (`coeur`), écrit puis relu deux fois** (19 novembre ; § 2.3, § 2.5, § 3.8 ; proposé par l'agent,
+    à valider). Les choix qui engagent le plus :
+    - « sortilèges » : **طلاسم**, non « تعاويذ » (la racine de l'isti'âdha), dans le feuillet et dans l'aide des œuvres ;
+    - le sens d'**al-Kabîr** suit at-Tabarî (« الذي كلّ شيءٍ دونه، المستعلي على كلّ شيء ») au lieu d'un autre Nom
+      (« العظيم ») ; les six autres sens sont inchangés ;
+    - « celui qui mène » : **مَن يتقدّم الركب**, le Caïd gardant seul « القائد » (deux aides du moteur changées) ;
+    - « les maux du cœur » en toutes lettres : **أمراض القلوب** ; « داء / أدواء » pour la forme courte ;
+    - restent ouverts, comme les relectures les ont signalés : le champ `ar` de trois lames (**السَّخَاء** pour *al-Karam*,
+      **سَلَامَةُ الصَّدْر** pour *an-Nasîha*, **عُلُوُّ الهِمَّة** pour *al-Himma*) ; les menus « صدقة السرّ » (« Donner aux
+      pauvres ») et « مُدارسة القرآن » (« Apprendre du Coran ») ; « Iblîs, l'ennemi déclaré » (le verset 2:168 dit
+      « الشيطان ») ; « un quart » de l'*Ihyâ'* (la ghafla n'a pas son livre dans le quart des *muhlikât*) ; la forme
+      des sources du recueil (« سورة الذاريات: 58 », sans le numéro de la sourate, comme le § 1.12) à côté des
+      références des attributs (« سورة الذاريات (51): 58 », que `regles.js` impose).
 
 ---
 
@@ -1319,7 +1358,7 @@ précédentes fixent déjà n'est pas repris. Une ligne par hésitation, avec le
 - Pour qui code : le verset 3:144, dans une carte de citation, est écrit entre ﴿ ﴾, et la feuille de style ajoute « »
   autour de toute citation ; l'écran affichera « ﴿…﴾ ». Ne pas poser « » devant ﴿. (saga_abubakr)
 - Les références arabes du registre ne nomment pas qui parle (« 'Umar ibn al-Khattâb, ce jour-là — Ibn Hishâm » devient
-  « ابن هشام، السيرة النبوية … ص ٦٥٥ ») : au registre d'en décider. (saga_abubakr)
+  « ابن هشام، السيرة النبوية … ص 655 ») : au registre d'en décider. (saga_abubakr)
 - Les répliques des Compagnons reprennent les mots d'at-Tabarî quand le français les suit (« قد أتتني من الخليفة
   عَزمة », « أحسنتَ إذ سكتّ », « نسمع ونطيع لولاتنا »), sans les présenter comme des citations. (saga_khalid)
 

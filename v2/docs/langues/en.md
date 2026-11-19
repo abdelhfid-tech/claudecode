@@ -390,7 +390,7 @@ quand ils comptent.
 | le secours ; « le groupe est relevé » | **Relief** ; *the party rallies* | SI 8:9 : « *you were asking help of your Lord, and He answered you, "Indeed, I will reinforce you…"* » | **À valider**. Jamais *angelic aid*, *miracle*, *summon* (exigence 20). « si la prière a été tenue dans le chapitre » → *if prayer has been kept in the chapter* (l'aide « Le secours ») ; *2.08* : « La prière avait été tenue dans ce chapitre, et le secours est venu » (« Tu avais tenu ta prière » jusque-là) → *Prayer had been kept in this chapter, and relief came* ; « ne dit pas qu'ils sont venus ce jour-là » → *does not say that they came on that day* ; jamais *you* ni *your prayer* (§ 1.1). |
 | les degrés du mal (anciennement « organigramme du mal ») ; « Les degrés » (bouton) | **the Degrees of Evil** ; *the Degrees* | — | **D183** : le français dit désormais « les degrés du mal », et l'anglais le suit ; *the Chart of Evil*, proposé avant D183, est abandonné. *Hierarchy*, *order*, *pantheon* sont exclus : ils feraient une démonologie (exigence 18). |
 | Iblîs | **Iblis** | WP *Iblis* ; SI écrit « *Iblees* » (2:34, 18:50) | « *Iblees* » ne vit que dans les versets de SI. |
-| les souffleurs (*waswâs*) | **those who whisper** ; en apposition : *the whisperers*, toujours en minuscule | SI 114:4 : « *the retreating whisperer* », 114:5 : « *who whispers [evil] into the breasts of mankind* » ; Winter : « *waswas ('whispering')* » | Jamais un nom propre, jamais une majuscule : ils n'ont « ni nom, ni figure, ni nombre ». Décision D182 : *whisper*, *whisperer*, *whispering* (et *waswas* au sens de leur souffle) ne servent qu'à eux ; aucun égrégore, aucune idée noire, aucune compétence ne porte ces mots. Al-Ghazâlî ne nomme *waswâs* que la pensée qui vient du Shaytân (Skellie, note 179 : « *Waswas, cf. al-khatir al-shaitani* » ; dans son introduction, « *The suggestion of the demon (al-khatir al-shaitani)* »). |
+| les souffleurs (*waswâs*) | **those who whisper** ; en apposition : *the whisperers*, toujours en minuscule | SI 114:4 : « *the retreating whisperer* », 114:5 : « *who whispers [evil] into the breasts of mankind* » ; Winter : « *waswas ('whispering')* » | Jamais un nom propre, jamais une majuscule : ils n'ont « ni nom, ni figure, ni nombre » (*relecture 2 de `coeur`, à valider :* « *no name, no form, no number* » ; jamais *figure*, qui se lit « chiffre » ou « silhouette », § 2.8). En titre (le feuillet « Ceux qui soufflent », le degré « Les souffleurs »), la seule majuscule de l'initiale : **Those who whisper**, et non *Those Who Whisper* (exception au *title case* de § 1.7 ; *à valider*). Décision D182 : *whisper*, *whisperer*, *whispering* (et *waswas* au sens de leur souffle) ne servent qu'à eux ; aucun égrégore, aucune idée noire, aucune compétence ne porte ces mots. Al-Ghazâlî ne nomme *waswâs* que la pensée qui vient du Shaytân (Skellie, note 179 : « *Waswas, cf. al-khatir al-shaitani* » ; dans son introduction, « *The suggestion of the demon (al-khatir al-shaitani)* »). |
 | « des démons d'entre les djinns, et parfois des hommes » | **devils from among the jinn, and sometimes men** | SI 6:112 : « *devils from mankind and jinn* » | |
 | djinn | **jinn** (singulier et pluriel ; « *one of the jinn* ») | SI 114:6, 7:179 | Jamais *genie*, jamais *djinn*. |
 | démons intérieurs (façon de parler, exigence 22) | **inner demons** | — (locution anglaise courante) | Le jeu l'explique aussitôt, comme en français ; jamais un nom d'ennemi. L'aide « Descendre dans la noosphère », réécrite avec D184 : « ce que l'on appelle ses démons intérieurs, une façon de parler » → « *what are called his inner demons, a manner of speaking* ». |
@@ -466,7 +466,16 @@ Notes :
 - **Goodwill** (*à valider*) : *Sincerity* est déjà la lame de l'Ostentation ; Siddiqui rend *nasiha* tantôt
   *sincerity*, tantôt *well-wishing* : on retient le second sens.
 - Les attaques des maux (*Encore*, *Tout prendre*, *Regard d'en haut*…) sont des répliques : on les écrit en anglais
-  simple, sans nom propre (« *More* », « *Take It All* », « *Looking Down* »).
+  simple, sans nom propre (« *More* », « *Take It All* », « *Looking Down* »). *Relecture 2 de `coeur` (19 novembre),
+  à valider :* les autres, telles qu'elles sont posées — Écraser **Crush**, Se grandir **Puff Up**, Parade **Parade**,
+  Reflet flatteur **Flattering Reflection**, Se montrer **Show Off**, Retenir **Withhold**, Compter **Counting** (l'écho
+  du Compte, § 3.9 ; *Count* seul se lirait « un comte »), Thésauriser **Hoard** (§ 3.8), Demain **Tomorrow**,
+  Engourdir **Numb**, Regard en coin **Sidelong Glance**, Pourquoi lui ? **Why Him?**, Emportement **Outburst**, Tout
+  brûler **Burn It All**, S'échauffer **Heat Up** ; celles des idées noires : Que diront-ils ? **What Will They Say?**,
+  Baisser les yeux **Lowered Eyes**, Et si ? **What If?**, Le pire d'abord **The Worst First**, Il cache quelque chose
+  **He’s Hiding Something**, On m'a déjà trompé **Fooled Once Before**, Je n'oublie pas **I Do Not Forget**, Compter
+  les torts **Count the Wrongs**, Il est trop tard **It Is Too Late**, À quoi bon **What’s the Use** (les contractions
+  sont admises : ce sont des pensées de personnages de fiction, § 1.1).
 
 ### 2.6 Les cinq idées noires (`D.NOIRS`)
 
@@ -1186,6 +1195,26 @@ Ces traductions gardent leur graphie et leurs gloses (*Allah's*, *(ﷺ)*, *(i.e.
 au registre : on ne retouche pas une traduction publiée. Leur source de feuillet nomme le traducteur quand l'édition le
 nomme (§ 1.10). Elles devraient entrer au registre, pour que le contrôle les compare au signe près (§ 4, point 26).
 
+### 3.11 Le contenu commun (`coeur`) : formes fixées à la relecture de la langue (19 novembre)
+
+*À valider.* Relevées en relisant `coeur` pour la langue ; chacune vaut partout où le même français revient.
+
+| Français | Anglais retenu | Note |
+|---|---|---|
+| « À chaque étage sa réponse » (les degrés du mal) | **To each degree its answer** | « étage » d'un degré du mal : *degree*, comme le titre *The Degrees of Evil* ; jamais *level*, qui est le niveau d'un personnage (« *The rawi gains a level* »). |
+| la définition d'un mal du cœur (`valeurs.*.face`, et les cartons du combat : « L'Avidité : vouloir encore, alors qu'on a. ») | **wanting more when one already has** ; **seeing oneself above** ; **doing good in order to be seen doing it** ; **holding back what was meant to circulate** ; **living beside one’s own life** ; **being unable to bear another’s good fortune** ; **striking before having heard** | Une seule forme dans `coeur` et dans le récit-cadre, qui les reprend en carton de combat. « devait circuler » : *was meant to* (non *should have*, qui dit un manquement passé) ; « le bien d'autrui » : *good fortune* (*good* seul se lit « la bonté » ou « les biens »). *Seeing oneself above* reste elliptique, comme le français et le récit-cadre (« *what wants to be above—even above no one* ») ; *above others* serait plus courant (point 29). |
+| « sans témoin » (l'aumône) | **without a witness** | comme le récit-cadre (« *given three times without a witness* ») ; non *with no witness*. |
+| « en face » (sur le champ ; dans les degrés du mal) | **facing them** | *Opposite* seul n'est pas un adverbe naturel ; jamais *the other side* (§ 2.1, l'envers). |
+| « Devant l'épreuve, on peut se tenir de trois manières. » | **Before a trial, there are three ways to stand.** | la phrase de l'aide du moteur (`ui.js`), reprise par la page et le feuillet des figures. |
+| « manœuvres d'école » (exigence 19) | **textbook maneuvers** ; « la réserve mobile, l'enveloppement et le repli feint » → *the mobile reserve, the envelopment and the feigned retreat* | comme l'aide du moteur ; *textbook* dit « classique, d'enseignement », sans viser aucun jour de l'histoire. |
+| « Il arrive qu'un homme… » | **Sometimes a man…** | *It happens that* est un calque. |
+| « Tu as failli » (la réponse à la Honte) | **You did wrong** | une faute, non un échec (*you failed*). |
+| « Qu'est-ce qui me prouve que tu dis vrai ? » ; « Tu jugeras. » | **How do I know you are telling the truth?** ; **You be the judge.** | |
+| les attributs divins, champ `sens` et phrase `mot` | la majuscule des Noms, comme SI au même écran : **Subtle with His servants**, **Forbearing**, « *He is Forbearing, He who is Free of need* » | SI 42:19 (« *Subtle with His servants* »), 2:263 (« *Free of need and Forbearing* ») ; la carte de l'attribut affiche le `sens`, le verset et le `mot` ensemble (`valeurs.js`). |
+| « Ce que l'on porte » (feuillet de l'équipement) | **What One Carries** | *porter* dit porter et vêtir ; *carry* couvre les armes, le texte dit ensuite *who wore what*. |
+| « On ne le commande pas » (le secours) | **No one commands it** ; « On ne commande pas le secours » → *No one commands relief* | jamais *summon* (§ 2.1). |
+| « Si la bataille tourne au pire » | **If the battle takes a turn for the worse** | la locution anglaise (*for the worst* est une faute). |
+
 ## 4. Points à trancher par le décideur
 
 Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, les agents écrivent la proposition.
@@ -1278,6 +1307,15 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
     l'arabe par le registre) écrit *honoured*, *honour*, à l'anglaise, contre § 1.2. La carte de citation doit la recopier
     au signe près ; le feuillet `saga_umar` codex[6] et son titre la suivent. Si le registre passe à *honored*, *honor*,
     ces trois textes suivent.
+29. **Le contenu commun (`coeur`), relu pour la langue** (19 novembre ; § 3.11). Restent à trancher : (a) *it is
+    obeyed* pour « elle commande » (l'idole : `mal.rangs.idoles.sous`, le feuillet « L'enracinement ») — le passif évite
+    *it commands*, que § 1.9 écarte d'une chose sur des hommes ; le texte du même degré (`mal.rangs.idoles.texte`) dit
+    déjà « *which they end up obeying* », l'homme sujet ; (b) **Those who whisper** en titre, avec la seule majuscule de l'initiale (§ 2.1) ;
+    (c) *seeing oneself above* (l'Orgueil), elliptique comme le français, gardé pour suivre le récit-cadre ; *above
+    others* serait plus courant, dans `coeur` et dans `frame` ensemble ; (d) *the clear enemy* pour « l'ennemi déclaré »
+    (Iblîs), le mot de SI en 2:168 (« *Indeed, he is to you a clear enemy* », lu au registre, `versets.json` ; le verset
+    dit « Satan », et 18:50 dit « *enemies to you* » : la relecture de la fidélité l'a signalé) ; (e) *Keen Nose* (Flair) et *Rebirth* (Renaissance),
+    déjà « à valider » (§ 2.7).
 
 ## 5. Ce qui n'a pas pu être vérifié
 

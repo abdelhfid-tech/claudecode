@@ -19,7 +19,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
 - **Les chemins.** La suite de ce document se lit dans `v2/` : `src/…`, `tools/…`, `index.html`, `dist/…` y désignent
   `v2/src/…`, `v2/tools/…`, etc. `AGENTS.md`, `README.md`, `docs/`, `promo/` et `archive/` sont à la racine. Ce qui est
   propre à la 2.x est écrit dans `v2/docs/`.
-- La 2.x a neuf contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
+- La 2.x a dix contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
   réimporte à l'identique), `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
   se gardent), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel ; aucun
@@ -35,7 +35,10 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   les trois figures et leurs effets : « PROGRESSION CONFORME ») et `node v2/tools/loupe.js` (sur un téléphone, en
   hauteur et en largeur : l'image s'agrandit — d'office, en écartant deux doigts, par le bouton —, le toucher tombe
   juste, les étiquettes restent sur leurs personnages, le combat garde son cadrage, aucun texte n'est sous dix points :
-  « LOUPE CONFORME ») : aucun « REFUS », « BLOQUÉ »,
+  « LOUPE CONFORME ») et `node v2/tools/bilingue.js` (la langue secondaire, pour chacun des douze couples de langues, en
+  hauteur et en largeur : choisie par le vrai bouton et gardée ; le prologue au doigt, chaque réplique et chaque carton du
+  récit avec sa seconde bulle, dans la bonne langue et le bon sens, lisible, sans débordement ; sans elle, rien ne paraît :
+  « BILINGUE CONFORME ») : aucun « REFUS », « BLOQUÉ »,
   « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages ». Les textes de la 2.0
   disent « Idris » : on n'y écrit jamais le nom d'un joueur, c'est `v2/src/core/perso.js` qui le pose à l'affichage. Une partie de la 2.0 a
@@ -102,6 +105,12 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   sous le capot (`I.langue.fr`). Changer un texte français, c'est redemander son équivalent dans chaque langue :
   `node v2/tools/langues.js releve` le remet dans les listes, `node v2/tools/langues.js` le signale. Contrôle :
   « LANGUES CONFORMES ». Le français s'ouvre par défaut ; les shorts, la démo et le livret court restent en français.
+  **La langue secondaire** (demande du décideur, 19 novembre : « pour apprendre, même si non vocalisée et non traduction
+  mot à mot ») : au choix du joueur (Réglages, `opts.lang2`, aucune d'office), une seconde bulle pose sous chaque réplique,
+  chaque carton du récit et chaque ligne du fil la même chose dans une autre langue — le texte que cette langue a écrit à
+  la source sous la même clé française, jamais une traduction faite pour cela. Ni menus, ni choix, ni combat. C'est une
+  exception voulue à D189 ; sans elle, rien ne change d'un point. `v2/docs/architecture.md`, « La langue secondaire ».
+  Contrôle : `node v2/tools/bilingue.js` (« BILINGUE CONFORME »).
 - Le livret de la 1.32 est archivé avec elle (`archive/v1.32/promo/`, `archive/v1.32/tools/promo.js`).
 - La promotion de la 2.x (demande du décideur, 17 novembre : dix shorts, une démo jouable, un livret court ; puis six
   shorts de plus — la noosphère, et un par saga ; puis le soutien de l'Institut Islam Actuel) se fait
@@ -110,7 +119,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   livret (`promo/livret-2x/`). Règles : tout ce qu'on montre vient du jeu — une réplique se demande par un fragment
   (`s.dire`), elle n'est jamais retapée ; les phrases ajoutées sont des propositions, à valider par le décideur ; un plan
   d'ambiance généré par IA ne montre jamais une personne, un animal, un texte ni un lieu saint, et n'entre ni dans le jeu
-  ni dans le dépôt ; le son d'un short est fait de percussions seules (exigence 9 ; une musique a été essayée deux fois,
+  ni dans le dépôt ; chaque short dure 30 secondes, plan du soutien compris (décideur, 19 novembre), et l'on ne les
+  refait qu'une fois Idris redessiné (« Tu change le personnage avant de refaire le short et le livret ») ; le son d'un short est fait de percussions seules (exigence 9 ; une musique a été essayée deux fois,
   puis écartée par le décideur) ; aucun support ne nomme les auteurs des exigences 14 et 24 ; la réserve de la décision
   39 reste sur chaque support ; chaque short finit sur le plan du soutien et le livret court sur sa page (« Une
   initiative soutenue par l'Institut Islam Actuel » et le logo, tel que l'Institut l'a fourni, sans retouche :
@@ -185,6 +195,7 @@ node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapi
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
 node v2/tools/loupe.js              # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles
+node v2/tools/bilingue.js [fr-ar …] # 2.x : la langue secondaire — douze couples, en hauteur et en largeur, le prologue au doigt (captures dans .smoke/bilingue)
 node v2/tools/shorts.js [NN] [brouillon]  # 2.x : les shorts — le jeu filmé image par image (promo/shorts/NN-nom.js → promo/shorts/films/, non versionnés)
 node v2/tools/shorts.js fin [NN]    # 2.x : un short livré (promo/shorts/films/livres/) reçoit le plan final du soutien, sans être refilmé ni réencodé
 node v2/tools/galerie.js            # 2.x : la page qui montre les films avec leur texte (promo/shorts/galerie/, non versionnée)

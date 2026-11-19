@@ -10,7 +10,7 @@
     "partiel": false,
     "ar": {
       "texte": "وَمَا مُحَمَّدٌ إِلَّا رَسُولٌۭ قَدْ خَلَتْ مِن قَبْلِهِ ٱلرُّسُلُ ۚ أَفَإِي۟ن مَّاتَ أَوْ قُتِلَ ٱنقَلَبْتُمْ عَلَىٰٓ أَعْقَٰبِكُمْ ۚ وَمَن يَنقَلِبْ عَلَىٰ عَقِبَيْهِ فَلَن يَضُرَّ ٱللَّهَ شَيْـًۭٔا ۗ وَسَيَجْزِى ٱللَّهُ ٱلشَّٰكِرِينَ",
-      "reference": "سورة آل عمران: ١٤٤",
+      "reference": "سورة آل عمران: 144",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/3:144/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -40,7 +40,7 @@
     "partiel": false,
     "ar": {
       "texte": "وَمَا مُحَمَّدٌ إِلَّا رَسُولٌۭ قَدْ خَلَتْ مِن قَبْلِهِ ٱلرُّسُلُ ۚ أَفَإِي۟ن مَّاتَ أَوْ قُتِلَ ٱنقَلَبْتُمْ عَلَىٰٓ أَعْقَٰبِكُمْ ۚ وَمَن يَنقَلِبْ عَلَىٰ عَقِبَيْهِ فَلَن يَضُرَّ ٱللَّهَ شَيْـًۭٔا ۗ وَسَيَجْزِى ٱللَّهُ ٱلشَّٰكِرِينَ",
-      "reference": "سورة آل عمران: ١٤٤",
+      "reference": "سورة آل عمران: 144",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/3:144/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -100,7 +100,7 @@
     "partiel": true,
     "ar": {
       "texte": "إِن جَآءَكُمْ فَاسِقٌۢ بِنَبَإٍۢ فَتَبَيَّنُوٓا۟",
-      "reference": "سورة الحجرات: ٦",
+      "reference": "سورة الحجرات: 6",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/49:6/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -130,7 +130,7 @@
     "partiel": false,
     "ar": {
       "texte": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوٓا۟ إِن جَآءَكُمْ فَاسِقٌۢ بِنَبَإٍۢ فَتَبَيَّنُوٓا۟ أَن تُصِيبُوا۟ قَوْمًۢا بِجَهَٰلَةٍۢ فَتُصْبِحُوا۟ عَلَىٰ مَا فَعَلْتُمْ نَٰدِمِينَ",
-      "reference": "سورة الحجرات: ٦",
+      "reference": "سورة الحجرات: 6",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/49:6/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -160,7 +160,7 @@
     "partiel": false,
     "ar": {
       "texte": "إِنَّا نَحْنُ نَزَّلْنَا ٱلذِّكْرَ وَإِنَّا لَهُۥ لَحَٰفِظُونَ",
-      "reference": "سورة الحجر: ٩",
+      "reference": "سورة الحجر: 9",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/15:9/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -190,7 +190,7 @@
     "partiel": false,
     "ar": {
       "texte": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوٓا۟ إِن جَآءَكُمْ فَاسِقٌۢ بِنَبَإٍۢ فَتَبَيَّنُوٓا۟ أَن تُصِيبُوا۟ قَوْمًۢا بِجَهَٰلَةٍۢ فَتُصْبِحُوا۟ عَلَىٰ مَا فَعَلْتُمْ نَٰدِمِينَ",
-      "reference": "سورة الحجرات: ٦",
+      "reference": "سورة الحجرات: 6",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/49:6/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -220,7 +220,7 @@
     "partiel": false,
     "ar": {
       "texte": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا۟ لَا تَقْتُلُوا۟ ٱلصَّيْدَ وَأَنتُمْ حُرُمٌۭ ۚ وَمَن قَتَلَهُۥ مِنكُم مُّتَعَمِّدًۭا فَجَزَآءٌۭ مِّثْلُ مَا قَتَلَ مِنَ ٱلنَّعَمِ يَحْكُمُ بِهِۦ ذَوَا عَدْلٍۢ مِّنكُمْ هَدْيًۢا بَٰلِغَ ٱلْكَعْبَةِ أَوْ كَفَّٰرَةٌۭ طَعَامُ مَسَٰكِينَ أَوْ عَدْلُ ذَٰلِكَ صِيَامًۭا لِّيَذُوقَ وَبَالَ أَمْرِهِۦ ۗ عَفَا ٱللَّهُ عَمَّا سَلَفَ ۚ وَمَنْ عَادَ فَيَنتَقِمُ ٱللَّهُ مِنْهُ ۗ وَٱللَّهُ عَزِيزٌۭ ذُو ٱنتِقَامٍ",
-      "reference": "سورة المائدة: ٩٥",
+      "reference": "سورة المائدة: 95",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -250,7 +250,7 @@
     "partiel": false,
     "ar": {
       "texte": "وَإِنْ خِفْتُمْ شِقَاقَ بَيْنِهِمَا فَٱبْعَثُوا۟ حَكَمًۭا مِّنْ أَهْلِهِۦ وَحَكَمًۭا مِّنْ أَهْلِهَآ إِن يُرِيدَآ إِصْلَٰحًۭا يُوَفِّقِ ٱللَّهُ بَيْنَهُمَآ ۗ إِنَّ ٱللَّهَ كَانَ عَلِيمًا خَبِيرًۭا",
-      "reference": "سورة النساء: ٣٥",
+      "reference": "سورة النساء: 35",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/4:35/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -280,7 +280,7 @@
     "partiel": true,
     "ar": {
       "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ",
-      "reference": "سورة الأنعام: ٥٧",
+      "reference": "سورة الأنعام: 57",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/6:57/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -310,7 +310,7 @@
     "partiel": true,
     "ar": {
       "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ",
-      "reference": "سورة يوسف: ٤٠",
+      "reference": "سورة يوسف: 40",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -340,7 +340,7 @@
     "partiel": true,
     "ar": {
       "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ",
-      "reference": "سورة يوسف: ٦٧",
+      "reference": "سورة يوسف: 67",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/12:67/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -370,7 +370,7 @@
     "partiel": true,
     "ar": {
       "texte": "أَمَرَ أَلَّا تَعْبُدُوٓا۟ إِلَّآ إِيَّاهُ",
-      "reference": "سورة يوسف: ٤٠",
+      "reference": "سورة يوسف: 40",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -400,7 +400,7 @@
     "partiel": true,
     "ar": {
       "texte": "ذَوَا عَدْلٍۢ مِّنكُمْ",
-      "reference": "سورة المائدة: ٩٥",
+      "reference": "سورة المائدة: 95",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -430,7 +430,7 @@
     "partiel": false,
     "ar": {
       "texte": "وَإِنْ خِفْتُمْ شِقَاقَ بَيْنِهِمَا فَٱبْعَثُوا۟ حَكَمًۭا مِّنْ أَهْلِهِۦ وَحَكَمًۭا مِّنْ أَهْلِهَآ إِن يُرِيدَآ إِصْلَٰحًۭا يُوَفِّقِ ٱللَّهُ بَيْنَهُمَآ ۗ إِنَّ ٱللَّهَ كَانَ عَلِيمًا خَبِيرًۭا",
-      "reference": "سورة النساء: ٣٥",
+      "reference": "سورة النساء: 35",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/4:35/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -460,7 +460,7 @@
     "partiel": true,
     "ar": {
       "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ ۚ أَمَرَ أَلَّا تَعْبُدُوٓا۟ إِلَّآ إِيَّاهُ",
-      "reference": "سورة يوسف: ٤٠",
+      "reference": "سورة يوسف: 40",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -490,7 +490,7 @@
     "partiel": true,
     "ar": {
       "texte": "ذَوَا عَدْلٍۢ",
-      "reference": "سورة المائدة: ٩٥",
+      "reference": "سورة المائدة: 95",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -520,7 +520,7 @@
     "partiel": true,
     "ar": {
       "texte": "يَحْكُمُ بِهِۦ ذَوَا عَدْلٍۢ مِّنكُمْ",
-      "reference": "سورة المائدة: ٩٥",
+      "reference": "سورة المائدة: 95",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -550,7 +550,7 @@
     "partiel": false,
     "ar": {
       "texte": "وَإِنْ خِفْتُمْ شِقَاقَ بَيْنِهِمَا فَٱبْعَثُوا۟ حَكَمًۭا مِّنْ أَهْلِهِۦ وَحَكَمًۭا مِّنْ أَهْلِهَآ إِن يُرِيدَآ إِصْلَٰحًۭا يُوَفِّقِ ٱللَّهُ بَيْنَهُمَآ ۗ إِنَّ ٱللَّهَ كَانَ عَلِيمًا خَبِيرًۭا",
-      "reference": "سورة النساء: ٣٥",
+      "reference": "سورة النساء: 35",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/4:35/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -580,7 +580,7 @@
     "partiel": true,
     "ar": {
       "texte": "أَمَرَ أَلَّا تَعْبُدُوٓا۟ إِلَّآ إِيَّاهُ",
-      "reference": "سورة يوسف: ٤٠",
+      "reference": "سورة يوسف: 40",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -610,7 +610,7 @@
     "partiel": true,
     "ar": {
       "texte": "ذَوَا عَدْلٍۢ",
-      "reference": "سورة المائدة: ٩٥",
+      "reference": "سورة المائدة: 95",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -640,7 +640,7 @@
     "partiel": false,
     "ar": {
       "texte": "وَعَلَٰمَٰتٍۢ ۚ وَبِٱلنَّجْمِ هُمْ يَهْتَدُونَ",
-      "reference": "سورة النحل: ١٦",
+      "reference": "سورة النحل: 16",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/16:16/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -670,7 +670,7 @@
     "partiel": false,
     "ar": {
       "texte": "وَهُوَ ٱلَّذِى جَعَلَ لَكُمُ ٱلنُّجُومَ لِتَهْتَدُوا۟ بِهَا فِى ظُلُمَٰتِ ٱلْبَرِّ وَٱلْبَحْرِ ۗ قَدْ فَصَّلْنَا ٱلْءَايَٰتِ لِقَوْمٍۢ يَعْلَمُونَ",
-      "reference": "سورة الأنعام: ٩٧",
+      "reference": "سورة الأنعام: 97",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/6:97/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -700,7 +700,7 @@
     "partiel": false,
     "ar": {
       "texte": "لِإِيلَٰفِ قُرَيْشٍ إِۦلَٰفِهِمْ رِحْلَةَ ٱلشِّتَآءِ وَٱلصَّيْفِ فَلْيَعْبُدُوا۟ رَبَّ هَٰذَا ٱلْبَيْتِ ٱلَّذِىٓ أَطْعَمَهُم مِّن جُوعٍۢ وَءَامَنَهُم مِّنْ خَوْفٍۭ",
-      "reference": "سورة قريش: ١-٤",
+      "reference": "سورة قريش: 1-4",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/106:1/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/106:2/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/106:3/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/106:4/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -730,7 +730,7 @@
     "partiel": false,
     "ar": {
       "texte": "إِنَّا فَتَحْنَا لَكَ فَتْحًۭا مُّبِينًۭا",
-      "reference": "سورة الفتح: ١",
+      "reference": "سورة الفتح: 1",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/48:1/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -760,7 +760,7 @@
     "partiel": false,
     "ar": {
       "texte": "إِنَّ ٱللَّهَ هُوَ ٱلرَّزَّاقُ ذُو ٱلْقُوَّةِ ٱلْمَتِينُ",
-      "reference": "سورة الذاريات: ٥٨",
+      "reference": "سورة الذاريات: 58",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/51:58/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -790,7 +790,7 @@
     "partiel": false,
     "ar": {
       "texte": "عَٰلِمُ ٱلْغَيْبِ وَٱلشَّهَٰدَةِ ٱلْكَبِيرُ ٱلْمُتَعَالِ",
-      "reference": "سورة الرعد: ٩",
+      "reference": "سورة الرعد: 9",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/13:9/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -820,7 +820,7 @@
     "partiel": false,
     "ar": {
       "texte": "أَلَا يَعْلَمُ مَنْ خَلَقَ وَهُوَ ٱللَّطِيفُ ٱلْخَبِيرُ",
-      "reference": "سورة الملك: ١٤",
+      "reference": "سورة الملك: 14",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/67:14/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -850,7 +850,7 @@
     "partiel": true,
     "ar": {
       "texte": "إِنَّكَ أَنتَ ٱلْوَهَّابُ",
-      "reference": "سورة آل عمران: ٨",
+      "reference": "سورة آل عمران: 8",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/3:8/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -880,7 +880,7 @@
     "partiel": true,
     "ar": {
       "texte": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌۭ وَلَا نَوْمٌۭ",
-      "reference": "سورة البقرة: ٢٥٥",
+      "reference": "سورة البقرة: 255",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/2:255/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -910,7 +910,7 @@
     "partiel": false,
     "ar": {
       "texte": "ٱللَّهُ لَطِيفٌۢ بِعِبَادِهِۦ يَرْزُقُ مَن يَشَآءُ ۖ وَهُوَ ٱلْقَوِىُّ ٱلْعَزِيزُ",
-      "reference": "سورة الشورى: ١٩",
+      "reference": "سورة الشورى: 19",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/42:19/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -940,7 +940,7 @@
     "partiel": false,
     "ar": {
       "texte": "قَوْلٌۭ مَّعْرُوفٌۭ وَمَغْفِرَةٌ خَيْرٌۭ مِّن صَدَقَةٍۢ يَتْبَعُهَآ أَذًۭى ۗ وَٱللَّهُ غَنِىٌّ حَلِيمٌۭ",
-      "reference": "سورة البقرة: ٢٦٣",
+      "reference": "سورة البقرة: 263",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/2:263/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -970,7 +970,7 @@
     "partiel": false,
     "ar": {
       "texte": "إِذْ تَسْتَغِيثُونَ رَبَّكُمْ فَٱسْتَجَابَ لَكُمْ أَنِّى مُمِدُّكُم بِأَلْفٍۢ مِّنَ ٱلْمَلَٰٓئِكَةِ مُرْدِفِينَ",
-      "reference": "سورة الأنفال: ٩",
+      "reference": "سورة الأنفال: 9",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/8:9/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1000,7 +1000,7 @@
     "partiel": false,
     "ar": {
       "texte": "وَإِذْ قُلْنَا لِلْمَلَٰٓئِكَةِ ٱسْجُدُوا۟ لِءَادَمَ فَسَجَدُوٓا۟ إِلَّآ إِبْلِيسَ كَانَ مِنَ ٱلْجِنِّ فَفَسَقَ عَنْ أَمْرِ رَبِّهِۦٓ ۗ أَفَتَتَّخِذُونَهُۥ وَذُرِّيَّتَهُۥٓ أَوْلِيَآءَ مِن دُونِى وَهُمْ لَكُمْ عَدُوٌّۢ ۚ بِئْسَ لِلظَّٰلِمِينَ بَدَلًۭا",
-      "reference": "سورة الكهف: ٥٠",
+      "reference": "سورة الكهف: 50",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/18:50/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1030,7 +1030,7 @@
     "partiel": false,
     "ar": {
       "texte": "يَٰٓأَيُّهَا ٱلنَّاسُ كُلُوا۟ مِمَّا فِى ٱلْأَرْضِ حَلَٰلًۭا طَيِّبًۭا وَلَا تَتَّبِعُوا۟ خُطُوَٰتِ ٱلشَّيْطَٰنِ ۚ إِنَّهُۥ لَكُمْ عَدُوٌّۭ مُّبِينٌ",
-      "reference": "سورة البقرة: ١٦٨",
+      "reference": "سورة البقرة: 168",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/2:168/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1060,7 +1060,7 @@
     "partiel": false,
     "ar": {
       "texte": "وَقَالَ ٱلشَّيْطَٰنُ لَمَّا قُضِىَ ٱلْأَمْرُ إِنَّ ٱللَّهَ وَعَدَكُمْ وَعْدَ ٱلْحَقِّ وَوَعَدتُّكُمْ فَأَخْلَفْتُكُمْ ۖ وَمَا كَانَ لِىَ عَلَيْكُم مِّن سُلْطَٰنٍ إِلَّآ أَن دَعَوْتُكُمْ فَٱسْتَجَبْتُمْ لِى ۖ فَلَا تَلُومُونِى وَلُومُوٓا۟ أَنفُسَكُم ۖ مَّآ أَنَا۠ بِمُصْرِخِكُمْ وَمَآ أَنتُم بِمُصْرِخِىَّ ۖ إِنِّى كَفَرْتُ بِمَآ أَشْرَكْتُمُونِ مِن قَبْلُ ۗ إِنَّ ٱلظَّٰلِمِينَ لَهُمْ عَذَابٌ أَلِيمٌۭ",
-      "reference": "سورة إبراهيم: ٢٢",
+      "reference": "سورة إبراهيم: 22",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/14:22/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1090,7 +1090,7 @@
     "partiel": false,
     "ar": {
       "texte": "ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ",
-      "reference": "سورة الناس: ٥-٦",
+      "reference": "سورة الناس: 5-6",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/114:5/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/114:6/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1120,7 +1120,7 @@
     "partiel": false,
     "ar": {
       "texte": "وَأَنَّا مِنَّا ٱلصَّٰلِحُونَ وَمِنَّا دُونَ ذَٰلِكَ ۖ كُنَّا طَرَآئِقَ قِدَدًۭا",
-      "reference": "سورة الجن: ١١",
+      "reference": "سورة الجن: 11",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/72:11/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1150,7 +1150,7 @@
     "partiel": true,
     "ar": {
       "texte": "وَتَزَوَّدُوا۟ فَإِنَّ خَيْرَ ٱلزَّادِ ٱلتَّقْوَىٰ",
-      "reference": "سورة البقرة: ١٩٧",
+      "reference": "سورة البقرة: 197",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/2:197/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1180,7 +1180,7 @@
     "partiel": true,
     "ar": {
       "texte": "أَلَا بِذِكْرِ ٱللَّهِ تَطْمَئِنُّ ٱلْقُلُوبُ",
-      "reference": "سورة الرعد: ٢٨",
+      "reference": "سورة الرعد: 28",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/13:28/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1210,7 +1210,7 @@
     "partiel": false,
     "ar": {
       "texte": "مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ",
-      "reference": "سورة الناس: ٤-٦",
+      "reference": "سورة الناس: 4-6",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/114:4/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/114:5/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/114:6/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1240,7 +1240,7 @@
     "partiel": true,
     "ar": {
       "texte": "وَمَا كَانَ لِىَ عَلَيْكُم مِّن سُلْطَٰنٍ إِلَّآ أَن دَعَوْتُكُمْ فَٱسْتَجَبْتُمْ لِى ۖ فَلَا تَلُومُونِى وَلُومُوٓا۟ أَنفُسَكُم",
-      "reference": "سورة إبراهيم: ٢٢",
+      "reference": "سورة إبراهيم: 22",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/14:22/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1270,7 +1270,7 @@
     "partiel": false,
     "ar": {
       "texte": "إِنَّ ٱللَّهَ هُوَ ٱلرَّزَّاقُ ذُو ٱلْقُوَّةِ ٱلْمَتِينُ",
-      "reference": "سورة الذاريات: ٥٨",
+      "reference": "سورة الذاريات: 58",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/51:58/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1300,7 +1300,7 @@
     "partiel": false,
     "ar": {
       "texte": "عَٰلِمُ ٱلْغَيْبِ وَٱلشَّهَٰدَةِ ٱلْكَبِيرُ ٱلْمُتَعَالِ",
-      "reference": "سورة الرعد: ٩",
+      "reference": "سورة الرعد: 9",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/13:9/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1330,7 +1330,7 @@
     "partiel": false,
     "ar": {
       "texte": "أَلَا يَعْلَمُ مَنْ خَلَقَ وَهُوَ ٱللَّطِيفُ ٱلْخَبِيرُ",
-      "reference": "سورة الملك: ١٤",
+      "reference": "سورة الملك: 14",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/67:14/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1360,7 +1360,7 @@
     "partiel": true,
     "ar": {
       "texte": "إِنَّكَ أَنتَ ٱلْوَهَّابُ",
-      "reference": "سورة آل عمران: ٨",
+      "reference": "سورة آل عمران: 8",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/3:8/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1390,7 +1390,7 @@
     "partiel": true,
     "ar": {
       "texte": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌۭ وَلَا نَوْمٌۭ",
-      "reference": "سورة البقرة: ٢٥٥",
+      "reference": "سورة البقرة: 255",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/2:255/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1420,7 +1420,7 @@
     "partiel": false,
     "ar": {
       "texte": "ٱللَّهُ لَطِيفٌۢ بِعِبَادِهِۦ يَرْزُقُ مَن يَشَآءُ ۖ وَهُوَ ٱلْقَوِىُّ ٱلْعَزِيزُ",
-      "reference": "سورة الشورى: ١٩",
+      "reference": "سورة الشورى: 19",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/42:19/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1450,7 +1450,7 @@
     "partiel": false,
     "ar": {
       "texte": "قَوْلٌۭ مَّعْرُوفٌۭ وَمَغْفِرَةٌ خَيْرٌۭ مِّن صَدَقَةٍۢ يَتْبَعُهَآ أَذًۭى ۗ وَٱللَّهُ غَنِىٌّ حَلِيمٌۭ",
-      "reference": "سورة البقرة: ٢٦٣",
+      "reference": "سورة البقرة: 263",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/2:263/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1480,7 +1480,7 @@
     "partiel": true,
     "ar": {
       "texte": "أَنِّى مُمِدُّكُم بِأَلْفٍۢ مِّنَ ٱلْمَلَٰٓئِكَةِ مُرْدِفِينَ",
-      "reference": "سورة الأنفال: ٩",
+      "reference": "سورة الأنفال: 9",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/8:9/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },
@@ -1510,7 +1510,7 @@
     "partiel": true,
     "ar": {
       "texte": "وَمَا جَعَلَهُ ٱللَّهُ إِلَّا بُشْرَىٰ وَلِتَطْمَئِنَّ بِهِۦ قُلُوبُكُمْ ۚ وَمَا ٱلنَّصْرُ إِلَّا مِنْ عِندِ ٱللَّهِ",
-      "reference": "سورة الأنفال: ١٠",
+      "reference": "سورة الأنفال: 10",
       "lu_sur": "https://api.alquran.cloud/v1/ayah/8:10/editions/quran-uthmani,en.sahih,ja.japanese",
       "etat": "trouvé"
     },

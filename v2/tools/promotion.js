@@ -7,9 +7,11 @@ module.exports = {
   NOM: 'ISNAD',
   SOUS_TITRE: 'Chroniques des Compagnons',
   DEVISE: 'Savoir de qui l’on tient ce que l’on sait.',
-  ETAT: 'Version de travail',
-  // la mention qui reste sur tout support tant qu'un spécialiste n'a pas relu (décision 39)
-  RESERVE: 'Version de travail. La relecture historique et religieuse par un spécialiste reste à faire.',
+  ETAT: 'Version bêta',
+  // pour nous écrire (décideur, 19 novembre) : la page « Contribuer » du livret (promo/livret-2x/contribuer.md)
+  CONTACT: 'ideatobot@gmail.com',
+  // la mention qui reste sur tout support tant qu'un spécialiste n'a pas relu (décision 39) ; « bêta » plutôt que « de travail » (décideur, 19 novembre)
+  RESERVE: 'Version bêta. La relecture historique et religieuse par un spécialiste reste à faire.',
   // le soutien (demande du décideur, 17 novembre) : la phrase du plan final des shorts, la part posée en or, et le logo,
   // tel que l'Institut l'a fourni (fond transparent, aucune retouche)
   SOUTIEN: 'Une initiative soutenue par l’Institut Islam Actuel',

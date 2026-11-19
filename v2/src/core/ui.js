@@ -126,10 +126,14 @@
       mk(I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }), b => { U.tzSuivant(); b.textContent = I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }); });
       mk(I.t('Image : {zoom}', { zoom: zoomNom() }), b => { U.zoomSuivant(); b.textContent = I.t('Image : {zoom}', { zoom: zoomNom() }); });
       mk(I.t('Plein écran'), () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } });
+      // 2.x : la langue secondaire (sous chaque réplique, la même chose dans une autre langue), avec ce qu'elle est
+      // (en largeur, sur toute la largeur de la colonne : après « Plein écran », elle ne laisse pas de case vide)
+      if (I.langue.secondes().length) { const lab = () => I.t('Langue secondaire : {langue}', { langue: U.langue2Nom() }) + '<small>' + I.t('La même chose, dite avec les mots de l’autre langue : pas mot à mot.') + '</small>';
+        mk(lab(), b => { U.langue2Suivante(); b.innerHTML = lab(); }).classList.add('langue2'); }
       mk(I.t('Importer une partie'), () => { close(); U.partie('importer', () => U.showTitle()); });
       mk(I.t('◂ Retour'), () => montrer(principal));
     };
-    { const v = $('#title .ver'); if (v) v.textContent = window.ISNAD_VERSION ? I.t('version {v}', { v: window.ISNAD_VERSION }) : I.t('version de travail'); }
+    { const v = $('#title .ver'); if (v) v.textContent = window.ISNAD_VERSION ? I.t('version bêta {v}', { v: '\u2066' + window.ISNAD_VERSION + '\u2069' }) : I.t('version bêta'); }
     // ce qui flottait autrefois hors de la colonne (la langue en haut, « Importer une partie » dans un coin) est rangé dedans
     { const c = $('#title > .coin'); if (c) c.remove(); const lg0 = $('#title > .langues'); if (lg0) lg0.remove(); $('#title').classList.remove('multilingue'); }
     screen('#title', true); montrer(vue === 'reglages' ? reglages : principal);
@@ -137,7 +141,14 @@
   /* ---------- la langue ----------
      Un réglage de l'appareil (opts.lang), comme le son ou le dessin : la partie, elle, est la même dans toutes les langues.
      En cours de récit, les personnages du lieu portent déjà leur nom : on reprend au point de reprise, dans la langue choisie. */
-  U.langue = function (l) { const o = I.save.data.opts; o.lang = I.langue.choisir(l); I.save.store(); U.applyOpts(); return o.lang; };
+  U.langue = function (l) { const o = I.save.data.opts, avant = I.langue.lang; o.lang = I.langue.choisir(l);
+    if (o.lang2 && o.lang2 === o.lang) o.lang2 = I.langue.choisir2(avant);   // 2.x : la langue secondaire devient celle du jeu — les deux échangent leur place
+    I.save.store(); U.applyOpts(); return o.lang; };
+  /* 2.x — la langue secondaire (demande du décideur, 19 novembre) : aucune, d'office ; sinon l'une des langues offertes,
+     autre que celle du jeu. Un réglage de l'appareil (opts.lang2), comme la langue : la partie n'en sait rien. */
+  U.langue2Nom = () => { const l = I.langue.l2(); return l ? I.langue.LANGUES[l].nom : I.t('aucune§langue'); };
+  U.langue2 = function (l) { const o = I.save.data.opts; o.lang2 = I.langue.choisir2(l); if (!o.lang2) delete o.lang2; I.save.store(); return o.lang2 || ''; };
+  U.langue2Suivante = () => { const s = I.langue.secondes(), i = s.indexOf(I.langue.l2()); return U.langue2(i < 0 ? s[0] : s[i + 1] || ''); };
   U.choisirLangue = async function () {
     const L = I.langue, enJeu = I.scene === W && !!W.map && !!W.saga && !W.excursion; let k = -1;
     S.depth++; try { k = await S.menuPick(I.t('Dans quelle langue ?'), L.disponibles().map(l => ({ t: L.LANGUES[l].nom }))); } finally { S.depth--; S.hideDialog(); }
@@ -410,7 +421,7 @@
     pied(I.t('Aide'), () => { close(); U.pause('aide', () => U.showChain()); });
     pied(I.t('Les degrés du mal'), () => { close(); U.pause('mal', () => U.showChain()); });
     pied(I.t('Écran-titre'), () => { close(); U.showTitle(); });
-    foot.appendChild(I.el('span', 'ver', window.ISNAD_VERSION ? I.t('version {v}', { v: window.ISNAD_VERSION }) : I.t('version de travail')));
+    foot.appendChild(I.el('span', 'ver', window.ISNAD_VERSION ? I.t('version bêta {v}', { v: window.ISNAD_VERSION }) : I.t('version bêta')));
     screen('#chain', true); $('#chain').scrollTop = 0;
     fl = focusList(btns, { start: 0 });
     if (!sv.cp) I.save.auto('La Chaîne · ' + sv.lights.filter(l => l !== 'sabr').length + ' Lumière(s)'); // entre deux maillons : la partie est gardée ici
@@ -552,7 +563,9 @@
         toggle(I.t('Musique'), () => I.audio.musicOn ? I.t('activée') : I.t('coupée'), () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, I.t('Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.')),
         toggle(I.t('Dessin'), dessinNom, dessinSuivant, I.t('Fin : deux fois plus de points, les grands personnages jusque sur les cartes, des lisières irrégulières. Fin, adouci : le même, les contours fondus. D’origine : le dessin de la version légère.')),
         toggle(I.t('Rendu'), () => G.low ? I.t('2D simple') : I.t('rétro-HD'), () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, I.t('Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.')));
-      if (I.langue.disponibles().length > 1) items.push({ label: I.t('Langue') + ' : ' + I.langue.LANGUES[I.langue.lang].nom, fn() { close(); U.choisirLangue(); }, show: () => '<h3>' + I.t('Langue') + '</h3><p>Français · العربية · English · 日本語</p><p>' + I.t('Le récit reprend à son dernier point de reprise, dans la langue choisie. Ta partie est la même dans toutes les langues.') + '</p>' });
+      if (I.langue.disponibles().length > 1) items.push({ label: I.t('Langue') + ' : ' + I.langue.LANGUES[I.langue.lang].nom, fn() { close(); U.choisirLangue(); }, show: () => '<h3>' + I.t('Langue') + '</h3><p>Français · العربية · English · 日本語</p><p>' + I.t('Le récit reprend à son dernier point de reprise, dans la langue choisie. Ta partie est la même dans toutes les langues.') + '</p>' },
+        // 2.x : la langue secondaire, et ce qu'elle est — la même chose, avec les mots de l'autre langue
+        toggle(I.t('Langue secondaire'), U.langue2Nom, U.langue2Suivante, I.t('Sous chaque réplique, chaque narration, chaque carton du récit et chaque annonce, la même chose dans une seconde langue, pour l’apprendre en jouant. Chaque langue est écrite à la source, avec ses propres mots : ce n’est pas une traduction mot à mot, et l’arabe n’est pas entièrement vocalisé. Les menus, les choix et le combat restent dans la langue du jeu.')));
       items.push({ label: I.t('Ton personnage'), fn() { close(); U.personnage(() => { if (I.scene === W && W.map) W.hud(); }); }, show: () => { const h = I.sagas.idris && I.sagas.idris.heroes.idris, L = Object.assign({ kind: 'compagnon' }, h ? h.look : D.TENUES[0].look);   // 2.x : le râwî tel qu'il est, plutôt que le nom d'une tenue
           return '<h3>' + I.t('Ton personnage') + `</h3><p class="perso-vue"><img alt="" src="${G.charURL(L, 0)}"><img alt="" src="${G.charURL(L, 1)}"></p><p><b>` + I.esc(I.perso.dit()) + '</b></p><p>' + I.t('Le nom et la tenue de ton râwî. Les Compagnons, eux, gardent leur nom et leur silhouette.') + '</p>'; } });
       items.push({ label: I.t('Exporter la partie'), fn() { close(); U.partie('exporter', () => {}); }, show: () => '<h3>' + I.t('Exporter la partie') + '</h3><p>' + I.t('Ta partie tient dans un texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.') + '</p><p class="src">' + I.t('Elle se garde aussi toute seule sur cet appareil, à chaque objectif atteint.') + '</p>' });
@@ -884,6 +897,7 @@
     document.body.classList.toggle('zoom', w / U.base < G.PW - 0.5);   // « zoom » : l'image rognée d'un écran en hauteur (pas l'agrandissement voulu)
     document.body.classList.toggle('agrandi', U.Z > 1.01);
     G.resize();
+    if (S.placer2) S.placer2(true);   // 2.x : la seconde bulle suit la boîte de dialogue (elle ne paraît qu'avec une langue secondaire)
   }
   function pad() {
     const hold = (sel, dir) => { const b = $(sel); const dn = e => { e.preventDefault(); b.classList.add('down'); I.input.held[dir] = true; I.input.emit(dir); }; const up = e => { e.preventDefault(); b.classList.remove('down'); I.input.held[dir] = false; }; b.addEventListener('pointerdown', dn); ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => b.addEventListener(n, up)); };
@@ -945,10 +959,12 @@
     if (window.ResizeObserver) new ResizeObserver(layout).observe($('#app'));
     I.save.load(); I.audio.on = I.save.data.opts.sound !== false; I.audio.musicOn = I.save.data.opts.music !== false; if (I.save.data.opts.low) { G.low = true; G.resize(); }
     { let l = I.save.data.opts.lang; try { const q = /[?&]lang=([a-z]+)/.exec(location.search); if (q) l = q[1]; } catch (e) { /* hors navigateur */ } I.langue.choisir(l); }   // ?lang= : pour les contrôles
+    { let l2 = I.save.data.opts.lang2, f = false; try { const q = /[?&]lang2=([a-z]+)/.exec(location.search); if (q) { l2 = q[1]; f = true; } } catch (e) { /* hors navigateur */ } if (l2) I.langue.choisir2(l2, f); }   // 2.x : la langue secondaire ; ?lang2= pour les contrôles
     U.applyOpts();
     I.input.push(a => W.onInput(a));
     document.addEventListener('visibilitychange', () => { if (document.hidden && I.scene === W && W.map && W.saga && !S.busy && !W.lock && !I.debug.auto) W.checkpoint(); });
     $('#dialog').addEventListener('click', () => I.input.emit('ok'));
+    $('#dialog2').addEventListener('click', () => I.input.emit('ok'));   // 2.x : toucher la seconde bulle fait avancer, comme la première
     $('#card').addEventListener('click', () => I.input.emit('ok'));
     $('#battle .banner').addEventListener('click', () => I.input.emit('ok'));
     // en combat, on choisit une cible en la touchant elle-même, pas seulement sa plaque

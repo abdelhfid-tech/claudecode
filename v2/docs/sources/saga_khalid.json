@@ -7,7 +7,7 @@
     "nature": "hadith",
     "ar": {
       "texte": "لَقَدِ انْقَطَعَتْ فِي يَدِي يَوْمَ مُوتَةَ تِسْعَةُ أَسْيَافٍ، فَمَا بَقِيَ فِي يَدِي إِلاَّ صَفِيحَةٌ يَمَانِيَةٌ",
-      "reference": "خالد بن الوليد — صحيح البخاري، كتاب المغازي، رقم ٤٢٦٥",
+      "reference": "خالد بن الوليد — صحيح البخاري، كتاب المغازي، رقم 4265",
       "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
       "etat": "trouvé"
     },
@@ -34,7 +34,7 @@
     "nature": "chronique",
     "ar": {
       "texte": "لقد حضرت كذا وكذا زحفا، وما في جسدي شبرا إلا وفيه ضربة سيف، أو طعنة برمح، أو رمية بسهم، وها أنا أموت على فراشي … فلا نامت أعين الجبناء",
-      "reference": "خالد بن الوليد، عند وفاته — ابن كثير، البداية والنهاية، ج ٧ ص ١٢٩ (عن الواقدي)؛ وبنحوه ابن عساكر، تاريخ دمشق، ج ١٦ ص ٢٧٣",
+      "reference": "خالد بن الوليد، عند وفاته — ابن كثير، البداية والنهاية، ج 7 ص 129 (عن الواقدي)؛ وبنحوه ابن عساكر، تاريخ دمشق، ج 16 ص 273",
       "lu_sur": "https://shamela.ws/book/8376/2560",
       "etat": "trouvé"
     },
@@ -51,7 +51,7 @@
       "lu_sur": ""
     },
     "ecart": "Les points de suspension du français sont placés avant « et voici que je meurs sur ma couche », où l'arabe n'omet rien ; ce que le français laisse de côté vient juste après ces mots : « حتف أنفي كما يموت البعير » (« de ma belle mort, comme meurt le chameau »). L'arabe, l'anglais et le japonais placent la coupe à cet endroit-là. « tant de combats » rend « كذا وكذا زحفا » (« tant et tant de batailles » : le rapporteur tait le nombre).",
-    "note": "Texte relevé dans Ibn Kathîr (éd. 'Alî Shîrî, Dâr Ihyâ' at-Turâth al-'Arabî, 1988), qui le rapporte d'après al-Wâqidî ; l'arabe y porte « شبرا », gardé tel qu'imprimé. Ibn 'Asâkir (éd. Dâr al-Fikr, 1995, ج ١٦ ص ٢٧٣, lu sur https://shamela.ws/book/71/7161) donne la même parole par la même chaîne, avec « لقيت » au lieu de « لقد حضرت », l'ordre « sabre, flèche, lance », et, dans le texte lu, « تحف أنفي » (coquille pour « حتف أنفي » ; une note y signale la variante « العير » pour « البعير »). L'ordre du français (sabre, lance, flèche) est celui d'Ibn Kathîr."
+    "note": "Texte relevé dans Ibn Kathîr (éd. 'Alî Shîrî, Dâr Ihyâ' at-Turâth al-'Arabî, 1988), qui le rapporte d'après al-Wâqidî ; l'arabe y porte « شبرا », gardé tel qu'imprimé. Ibn 'Asâkir (éd. Dâr al-Fikr, 1995, ج 16 ص 273, lu sur https://shamela.ws/book/71/7161) donne la même parole par la même chaîne, avec « لقيت » au lieu de « لقد حضرت », l'ordre « sabre, flèche, lance », et, dans le texte lu, « تحف أنفي » (coquille pour « حتف أنفي » ; une note y signale la variante « العير » pour « البعير »). L'ordre du français (sabre, lance, flèche) est celui d'Ibn Kathîr."
   },
   {
     "fichier": "v2/src/data/saga_khalid.js",
@@ -61,7 +61,7 @@
     "nature": "chronique",
     "ar": {
       "texte": "بَنَيْنَاهَا لِلسَّفِيهِ نَحْبِسُهُ حَتَّى يَجِيءَ الْحَلِيمُ فَيَنْهَاهُ",
-      "reference": "يُروى — عبد المسيح بن عمرو بن بُقيلة لخالد، الطبري، تاريخ الرسل والملوك، سنة ١٢، ج ٣ ص ٣٤٥",
+      "reference": "يُروى — عبد المسيح بن عمرو بن بُقيلة لخالد، الطبري، تاريخ الرسل والملوك، سنة 12، ج 3 ص 345",
       "lu_sur": "https://shamela.ws/book/9783/1618",
       "etat": "trouvé"
     },
@@ -77,7 +77,7 @@
       "reference": "と伝えられる — アブドゥルマスィーフ・イブン・アムル・イブン・ブカイラがハーリドに答えた言葉、タバリー『諸使徒と諸王の歴史』ヒジュラ暦12年、第3巻345頁(アラビア語原文より訳出)",
       "lu_sur": ""
     },
-    "ecart": "Dans at-Tabarî, cette réponse se lit dans le récit de Hishâm ibn al-Kalbî (d'après Abû Mikhnaf), où celui qui parle à Khâlid est nommé « عبد المسيح بن عمرو بن بقيلة » ('Abd al-Masîh ibn 'Amr ibn Buqayla). Le nom que donne le français, « 'Amr ibn 'Abd al-Masîh », est celui du récit de Sayf (ج ٣ ص ٣٦١-٣٦٤), où cette réplique ne figure pas. Les références arabe, anglaise et japonaise portent le nom du passage lu.",
+    "ecart": "Dans at-Tabarî, cette réponse se lit dans le récit de Hishâm ibn al-Kalbî (d'après Abû Mikhnaf), où celui qui parle à Khâlid est nommé « عبد المسيح بن عمرو بن بقيلة » ('Abd al-Masîh ibn 'Amr ibn Buqayla). Le nom que donne le français, « 'Amr ibn 'Abd al-Masîh », est celui du récit de Sayf (ج 3 ص 361-364), où cette réplique ne figure pas. Les références arabe, anglaise et japonaise portent le nom du passage lu.",
     "note": "Édition lue pour at-Tabarî : Muhammad Abû l-Fadl Ibrâhîm, Dâr al-Ma'ârif, 2e éd. 1967 (pagination de l'imprimé). La question de Khâlid qui précède : « فما هذه الحصون التي أرى؟ »."
   },
   {
@@ -88,7 +88,7 @@
     "nature": "chronique",
     "ar": {
       "texte": "وَاللَّهِ لأُنْسِيَنَّ الرُّومَ وَسَاوِسَ الشَّيْطَانِ بِخَالِدِ بْنِ الْوَلِيدِ",
-      "reference": "يُروى عن أبي بكر الصدّيق — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٤٠٨",
+      "reference": "يُروى عن أبي بكر الصدّيق — الطبري، تاريخ الرسل والملوك، سنة 13، ج 3 ص 408",
       "lu_sur": "https://shamela.ws/book/9783/1681",
       "etat": "trouvé"
     },
@@ -115,7 +115,7 @@
     "nature": "chronique",
     "ar": {
       "texte": "لا يَخْتَلِفَنَّ هَدْيُكُمْ، وَلا يَضْعُفَنَّ يَقِينُكُمْ، وَاعْلَمُوا أَنَّ الْمَعُونَةَ تَأْتِي على قدر النية، والأجر على قدر الحسبة",
-      "reference": "خالد بن الوليد، عند الخروج من قُراقِر — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٤٠٩",
+      "reference": "خالد بن الوليد، عند الخروج من قُراقِر — الطبري، تاريخ الرسل والملوك، سنة 13، ج 3 ص 409",
       "lu_sur": "https://shamela.ws/book/9783/1682",
       "etat": "trouvé"
     },
@@ -142,7 +142,7 @@
     "nature": "chronique",
     "ar": {
       "texte": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ راجِعُونَ! هَلَكْتُمْ وَاللَّهِ إِذًا وهلكت، لا ابالكم! انْظُرُوا",
-      "reference": "رافع بن عُميرة — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٤١٦",
+      "reference": "رافع بن عُميرة — الطبري، تاريخ الرسل والملوك، سنة 13، ج 3 ص 416",
       "lu_sur": "https://shamela.ws/book/9783/1689",
       "etat": "trouvé"
     },
@@ -169,7 +169,7 @@
     "nature": "chronique",
     "ar": {
       "texte": "لله عينا رَافِعٍ أَنَّى اهْتَدَى ... فَوْز مِنْ قُرَاقِرَ إِلَى سَوَى!\nخَمْسًا إِذَا مَا سَارَهَا الْجَيْشُ بَكَى",
-      "reference": "شاعر من المسلمين — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٤١٦",
+      "reference": "شاعر من المسلمين — الطبري، تاريخ الرسل والملوك، سنة 13، ج 3 ص 416",
       "lu_sur": "https://shamela.ws/book/9783/1689",
       "etat": "approchant"
     },
@@ -186,7 +186,7 @@
       "lu_sur": ""
     },
     "ecart": "Le texte d'at-Tabarî lu porte « الجيش » (« l'armée » : « cinq jours où l'armée, si elle s'y engage, pleure ») là où le français dit « le lâche », ce qui traduit une autre leçon du même vers, « الجِبْس », transmise hors d'at-Tabarî. « cinq nuits » rend « خمسًا » (« cinq », sans le mot « nuits »). Le français s'arrête avant le dernier hémistiche (« ما سارها قبلك إنسي يرى »), sans le marquer. L'anglais et le japonais suivent le texte d'at-Tabarî (« l'armée »).",
-    "note": "La leçon « الجبس » (« خمسا إذا ما سارها الجبس بكى ») a été lue chez ad-Dâraqutnî, al-Mu'talif wa-l-mukhtalif, ج ٣ ص ١٧٠٥ (https://shamela.ws/book/12581/1522), et chez al-Khatîb al-Baghdâdî, al-Kifâya, ص ١٦٣ (https://shamela.ws/book/13055/570), qui rapporte que lire « الجيش » y est une faute de copie ; tous deux ont « لله درّ رافع » au lieu de « لله عينا رافع ». Dans l'arabe relevé, « ... » est le séparateur d'hémistiches de l'édition, non une coupe. At-Tabarî dit : « فقال شاعر من المسلمين » (un poète d'entre les musulmans)."
+    "note": "La leçon « الجبس » (« خمسا إذا ما سارها الجبس بكى ») a été lue chez ad-Dâraqutnî, al-Mu'talif wa-l-mukhtalif, ج 3 ص 1705 (https://shamela.ws/book/12581/1522), et chez al-Khatîb al-Baghdâdî, al-Kifâya, ص 163 (https://shamela.ws/book/13055/570), qui rapporte que lire « الجيش » y est une faute de copie ; tous deux ont « لله درّ رافع » au lieu de « لله عينا رافع ». Dans l'arabe relevé, « ... » est le séparateur d'hémistiches de l'édition, non une coupe. At-Tabarî dit : « فقال شاعر من المسلمين » (un poète d'entre les musulmans)."
   },
   {
     "fichier": "v2/src/data/saga_khalid.js",
@@ -196,7 +196,7 @@
     "nature": "chronique",
     "ar": {
       "texte": "مَا أَقَلَّ الرُّومَ وَأَكْثَرَ الْمُسْلِمِينَ! إِنَّمَا تَكْثُرُ الْجُنُودُ بِالنَّصْرِ وَتَقِلُّ بِالْخِذْلانِ، لا بِعَدَدِ الرِّجَالِ",
-      "reference": "خالد بن الوليد، يوم اليرموك — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٣٩٨",
+      "reference": "خالد بن الوليد، يوم اليرموك — الطبري، تاريخ الرسل والملوك، سنة 13، ج 3 ص 398",
       "lu_sur": "https://shamela.ws/book/9783/1671",
       "etat": "trouvé"
     },
@@ -213,7 +213,7 @@
       "lu_sur": ""
     },
     "ecart": "« défaite » rend « الخِذلان », mot à mot « l'abandon » (être délaissé, privé de secours) : l'arabe oppose le secours reçu (« النصر ») au secours retiré, non la victoire à la défaite.",
-    "note": "Réponse de Khâlid à un homme qui lui disait (ج ٣ ص ٣٩٧, https://shamela.ws/book/9783/1670) : « ما أكثر الروم وأقل المسلمين! ». La phrase continue dans l'arabe (« والله لوددت أن الأشقر براء … ») : le français ne la cite pas."
+    "note": "Réponse de Khâlid à un homme qui lui disait (ج 3 ص 397, https://shamela.ws/book/9783/1670) : « ما أكثر الروم وأقل المسلمين! ». La phrase continue dans l'arabe (« والله لوددت أن الأشقر براء … ») : le français ne la cite pas."
   },
   {
     "fichier": "v2/src/data/saga_khalid.js",
@@ -223,7 +223,7 @@
     "nature": "chronique",
     "ar": {
       "texte": "إِنَّ هَذَا يَوْمٌ مِنْ أَيَّامِ اللَّهِ، لا يَنْبَغِي فِيهِ الْفَخْرُ وَلا الْبَغْيُ أَخْلِصُوا جِهَادَكُمْ، وَأَرِيدُوا اللَّهَ بِعَمَلِكُمْ",
-      "reference": "خالد بن الوليد، يخاطب الأمراء — الطبري، تاريخ الرسل والملوك، سنة ١٣، ج ٣ ص ٣٩٥",
+      "reference": "خالد بن الوليد، يخاطب الأمراء — الطبري، تاريخ الرسل والملوك، سنة 13، ج 3 ص 395",
       "lu_sur": "https://shamela.ws/book/9783/1668",
       "etat": "trouvé"
     },
@@ -250,7 +250,7 @@
     "nature": "chronique",
     "ar": {
       "texte": "هَذَا ما أعطى خَالِد بْن الوليد أهل دمشق إذا دخلها أعطاهم أمانا عَلَى أنفسهم وأموالهم وكنائسهم وسور مدينتهم لا يهدم ولا يسكن شيء من دورهم […] لا يعرض لهم إلا بخير إذا أعطوا الجزية",
-      "reference": "البلاذري، فتوح البلدان، فتح مدينة دمشق وأرضها، ص ١٢٤ — مختصرًا",
+      "reference": "البلاذري، فتوح البلدان، فتح مدينة دمشق وأرضها، ص 124 — مختصرًا",
       "lu_sur": "https://shamela.ws/book/12221/121",
       "etat": "trouvé"
     },
@@ -277,7 +277,7 @@
     "nature": "chronique",
     "ar": {
       "texte": "إِنِّي لَمْ أَعْزِلْ خَالِدًا عَنْ سَخْطَةٍ وَلا خِيَانَةٍ، وَلَكِنَّ النَّاسَ فُتِنُوا بِهِ، فَخِفْتُ أَنْ يوكلوا إِلَيْهِ وَيُبْتُلُوا بِهِ، فَأَحْبَبْتُ أَنْ يَعْلَمُوا أَنَّ اللَّهَ هُوَ الصَّانِعُ",
-      "reference": "عمر بن الخطاب، كتابه إلى الأمصار — الطبري، تاريخ الرسل والملوك، سنة ١٧، ج ٤ ص ٦٨",
+      "reference": "عمر بن الخطاب، كتابه إلى الأمصار — الطبري، تاريخ الرسل والملوك، سنة 17، ج 4 ص 68",
       "lu_sur": "https://shamela.ws/book/9783/1959",
       "etat": "trouvé"
     },

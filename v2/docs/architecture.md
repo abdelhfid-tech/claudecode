@@ -467,7 +467,8 @@ surcharger l'écran surtout au téléphone » — « la surcharge de l'écran : 
 
 Une seule chose se lit à la fois : une réplique, un choix, un carton ou une page de la halte, jamais deux. Aucun texte de
 récit n'est coupé ni réécrit — `src/data/` n'a pas changé d'un mot ; seuls la place et le moment des textes du moteur
-changent.
+changent. *Une exception, au choix du joueur seulement : la langue secondaire (19 novembre), qui pose sous une réplique,
+un carton du récit ou une ligne du fil la même chose dans une autre langue — « La langue secondaire », plus bas.*
 
 - **Le fil** (`script.js`, `S.toast`). Les annonces ne se posent plus sur l'image : elles passent dans le fil, une ligne
   qui ne parle que lorsque rien d'autre ne se lit — ni `#dialog`, ni `#choice`, ni `#card`, ni écran (la halte, la
@@ -871,6 +872,84 @@ littérature de la langue elle-même et non en faisant des traductions du franç
   droite à gauche ; une parole citée prend les guillemets de sa langue ; la scène, elle, ne se retourne pas.
 - **Les règles** : `regles.js`, `verifierLangue(langue, emplacements)` — les exigences 6, 7, 8, 14, 15, 17, 18, 19 et 24
   dans les mots de chaque langue, selon le genre de l'emplacement (`genreDe`).
+- **La langue secondaire** (19 novembre) : la même réplique dans une autre langue, sous la première — section suivante.
+
+## La langue secondaire
+
+*Demande du décideur, 19 novembre : « la possibilité d'ajouter une langue secondaire pour apprendre même si non vocalisée
+et non traduction mot à mot ».*
+
+Le joueur qui le veut lit, sous la bulle de celui qui parle, une seconde bulle : la même réplique dans une autre langue.
+Rien n'est traduit pour cela : chaque langue est écrite à la source (« Les langues », exigence 25), et le moteur va
+chercher, sous la clé du texte français d'origine, ce que l'autre langue a écrit. Ce n'est donc pas du mot à mot, et
+l'arabe n'est pas entièrement vocalisé (`v2/docs/langues/ar.md`, § 1.2) : le décideur l'accepte. C'est une **exception
+voulue à D189** (« Un texte à la fois »), active seulement si le joueur la choisit. **Sans langue secondaire, rien ne
+change d'un point** : ni bulle, ni bloc, ni temps de plus. Vérifié en comparant, élément par élément (place, taille,
+police, couleur, visibilité), la page de l'assemblage d'avant et de celui-ci sur l'écran-titre, un carton de titre, une
+narration, une réplique, une ligne du fil et une parole citée, en 390 × 844, 844 × 390 et 1280 × 720 : identiques,
+l'estampille de version mise à part. Seules les pages de réglages gagnent leur bouton.
+
+- **Le réglage.** « Langue secondaire » dans les Réglages de l'écran-titre — un bouton qui fait le tour (aucune, puis
+  chaque langue offerte autre que celle du jeu), avec sous lui une ligne : « La même chose, dite avec les mots de l’autre
+  langue : pas mot à mot. » ; en largeur, il prend toute la largeur de la colonne, après « Plein écran » — et dans
+  celles de la halte, où sa page dit ce qu'elle est, et ce qui reste dans la langue du jeu. Aucune, d'office. C'est un
+  réglage de l'appareil (`opts.lang2`, à côté de `opts.lang`) : la partie exportée n'en sait rien, son format ne change
+  pas. Si le joueur prend pour langue du jeu sa langue secondaire, les deux échangent leur place (`U.langue`).
+  `?lang2=ar` dans l'adresse la force, pour les contrôles (comme `?lang=`).
+- **Où elle paraît.** Les répliques et les narrations (la boîte de dialogue), le verdict de la Chaîne compris ; les
+  cartons du récit — un titre et sa date, une parole citée et sa source, un verset et sa référence (la page d'un attribut
+  divin, le secours) ; les lignes du fil (annonces et leçons), sous l'annonce. **Pas** dans les menus, les choix (ni la
+  liste d'un pourparler, ni celle d'une idée noire), le combat, la halte, ni les cartons du moteur (victoire, prière,
+  œuvre, lame…) : l'écran y est déjà plein, et ce ne sont pas des textes de récit.
+- **Quand.** La seconde bulle paraît en entier quand la première a fini de s'écrire : on lit d'abord dans la langue du
+  jeu, puis l'on compare ; un toucher qui presse l'écriture les montre ensemble. Tout de suite, elle se lirait avant la
+  première, que la machine à écrire n'a pas encore posée, et l'œil irait de l'une à l'autre pendant l'écriture. Un carton
+  la porte dès qu'il paraît : il se lit d'un coup. Une ligne qui passe d'elle-même (le verdict de la Chaîne, un carton de
+  titre) reste le temps de lire les deux (`S.lecture2`).
+- **Où, sur l'écran.** En hauteur (390 × 844), sous la boîte, dans la bande noire (`S.placer2` : du bas de la boîte au
+  bas de l'écran) : elle ne touche jamais l'image. En largeur (844 × 390, où la boîte occupe déjà le bas de la scène) et
+  au bureau, elle est **en haut de la scène**, comme la seconde ligne d'un film sous-titré en deux langues. La vue garde
+  au milieu celui qui parle : une bulle posée juste au-dessus de la boîte l'aurait caché ; en haut, pendant une lecture,
+  il n'y a que le décor (l'en-tête s'y retire déjà en largeur ; au bureau, il se retire le temps de la lecture,
+  `body.avec2`). Les plus longs textes y tiennent en trois ou quatre lignes. Une ligne qui défile ou qu'il faudrait
+  toucher pour la lire a été écartée : on ne relit pas un texte qui défile, et un toucher de plus à chaque réplique
+  doublerait les gestes. Dans les deux sens, si la place manque, ses caractères se resserrent cran par cran, jamais sous
+  dix points ; au-delà, elle défile (`tenir2`) — le contrôle le signalerait. Un carton qui porte sa langue secondaire
+  commence en haut s'il déborde, et se resserre de même sans qu'aucun texte passe sous dix points (`tenirCarton`) ; en
+  largeur, son ornement et son titre se font plus discrets.
+- **Son dessin.** Plus petite (0,86 em, 0,9 em en hauteur), d'une autre teinte — un vert d'eau (`--l2`), ni l'or du jeu,
+  ni le violet des leçons —, avec un filet du côté où commence sa langue. Elle porte sa langue et son sens (`lang`,
+  `dir`) : de droite à gauche en arabe, en naskh ; le japonais dans sa police ; le français et l'anglais dans l'Alegreya,
+  quelle que soit la langue du jeu (`.l2[lang=…]`, `style.css`). Ni capitales, ni lettres espacées, ni italique en arabe
+  et en japonais. Une parole citée prend les guillemets de sa langue. Toucher la seconde bulle fait avancer, comme la
+  première.
+- **Retrouver le texte** (`langue.js`). Le français d'origine se retrouve d'abord par l'**emplacement** du texte : au
+  relevé d'un récit, chaque objet garde le français d'origine de ses champs (`L.origine(objet, champ)`, une table
+  faible) ; le moteur passe à la boîte l'opération qu'il joue (`showLine(…, { src: [op, 2] })`, la manche d'un
+  pourparler, la réponse choisie, la réplique qui suit une idée noire). À défaut — un titre de chapitre posé par le moteur
+  (`[['title', ch.title, ch.sub]]`) — par le **texte affiché** lui-même (`L.source`) : ce que la langue du jeu et le nom
+  du joueur y ont posé (`perso.js` le retient). Puis `L.dans(lang, fr)` donne le texte de l'autre langue (null s'il n'y
+  est pas écrit : pas de bulle, plutôt que le français deux fois), et `perso.direDans` y pose le nom du joueur à la place
+  de celui que cette langue donne au râwî (« إدريس », « イドリース »), seulement dans un texte dont le français nomme le
+  râwî. Une phrase du moteur se dit dans l'autre langue par `L.tDans(lang, fr, champs)` : ses champs qui sont des textes
+  du jeu (le nom d'un objet, d'une pièce) y prennent le leur, le nom du râwî aussi. Pour le fil, `I.t` retient, seulement
+  quand une langue secondaire est choisie, ce qu'il vient de dire (les trois cents dernières phrases, `L.retrouver`) ; une
+  annonce faite de plusieurs phrases n'a pas de seconde ligne, et une annonce qui en porte une passe seule (elle ne se
+  joint pas aux autres par « · »). `L.fr` (ce que la partie garde) ne change pas.
+- **Les textes nouveaux** (cinq, dans `moteur` : le réglage, sa ligne, « aucune », la page de la halte) sont écrits en
+  arabe, en anglais et en japonais par l'agent, selon les glossaires, et posés par `langues.js poser` : à relire.
+- **Le contrôle** : `node v2/tools/bilingue.js [fr-ar …] [390x844 844x390] [par=4]` (une douzaine de minutes pour tout).
+  Pour chacun des douze couples (langue du jeu, langue secondaire), en hauteur et en largeur : la langue secondaire
+  choisie par le vrai bouton des Réglages, et gardée d'une page rechargée à l'autre ; le prologue joué au doigt ; chaque
+  réplique et chaque narration regardée à l'instant où elle a fini de s'écrire (dans la page, sans dépendre du toucher),
+  chaque carton du récit une fois montré : la seconde bulle est là, non vide, dans la bonne langue (son texte est l'un de
+  ceux que cette langue a écrits, `src/lang/`), dans le bon sens, aucun texte sous dix points, sans débordement, ni hors de
+  l'écran, ni sur la première bulle, ni — en hauteur — sur l'image ; une ligne du fil, s'il parle, dans sa langue ; puis
+  une parole citée, le verset d'un attribut divin, et une réplique où le nom choisi (« Khalil ») est posé dans les deux
+  bulles. Une fois, en français et sans langue secondaire : rien ne paraît ; puis on la choisit à la halte, et la
+  réplique suivante porte la sienne ; puis la langue du jeu prise pour langue secondaire les échange. « BILINGUE
+  CONFORME » ; sinon « ABSENT », « ÉCART », « INVISIBLE », « BLOQUÉ », « TEXTE CACHÉ ». Captures, et un relevé ligne à
+  ligne (chaque réplique, son texte dans la langue secondaire ; chaque carton ; le fil), dans `.smoke/bilingue/`.
 
 ## Commandes
 
@@ -892,9 +971,11 @@ node v2/tools/doigt.js [loin [844x390]]
 node v2/tools/son.js
 node v2/tools/bataille.js [mesures]
 node v2/tools/longueurs.js [langue…]  # « LONGUEURS RELEVÉES » : le relevé des longueurs, un rapport sans blocage (D189)
+node v2/tools/bilingue.js [fr-ar …] [390x844 844x390]   # « BILINGUE CONFORME » : la langue secondaire, sous chaque réplique et chaque carton, au doigt
 ```
 
-**Règle de la 2.x.** Celle d'`AGENTS.md`, avec neuf contrôles de plus à chaque changement du moteur ou des règles —
+**Règle de la 2.x.** Celle d'`AGENTS.md`, avec dix contrôles de plus à chaque changement du moteur ou des règles —
 `paquet.js`, `partie.js`, `personnage.js`, `silhouettes.js`, `dedales.js`, `descente.js`,
-`retours.js`, `progression.js` et `loupe.js` ; la liste, et ce que chacun doit afficher, est dans `AGENTS.md`. Aucun ne
-doit finir sur « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT » ni « ÉCART ».
+`retours.js`, `progression.js`, `loupe.js` et `bilingue.js` ; la liste, et ce que chacun doit afficher, est dans
+`AGENTS.md`. Aucun ne doit finir sur « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT » ni
+« ÉCART ».

@@ -28,7 +28,19 @@
      I.langue.choisir('ar')     change de langue : les récits et les tables reçoivent leurs textes, la page aussi.
 
    Ce qui sert de clé reste en français sous le capot : le rayon et le voile d'un Compagnon (posés d'après son nom avant
-   toute langue), les catégories du recueil (D.CODEX_CATS), les identifiants. */
+   toute langue), les catégories du recueil (D.CODEX_CATS), les identifiants.
+
+   2.x — la langue secondaire (demande du décideur, 19 novembre : « ajouter une langue secondaire pour apprendre, même si
+   non vocalisée et non traduction mot à mot ») : sous une réplique, une narration ou un carton, la même chose dans une
+   autre langue. Rien n'est traduit ici : on va chercher, sous la clé du texte français d'origine, ce que l'autre langue a
+   écrit à la source.
+     I.langue.choisir2('ar')    la langue secondaire ('' : aucune) ; L.l2() la donne, si elle est offerte et n'est pas
+                                celle du jeu
+     L.second(texte, o, k)      le texte affiché (o[k], si l'on sait d'où il vient), dans la langue secondaire, nom du
+                                joueur compris ; null s'il n'y en a pas
+     L.tDans(lang, fr, champs)  une phrase du code, dite dans une autre langue que celle du jeu (comme I.t)
+   Le français d'origine se retrouve d'abord par l'emplacement du texte (L.origine : l'objet du récit et son champ, relevés
+   une fois), puis par le texte affiché lui-même (L.source : ce que la langue du jeu et le nom du joueur y ont posé). */
 (function (racine) {
   'use strict';
   const LANGUES = {
@@ -168,22 +180,70 @@
     L.sens = t => (LANGUES[L.lang].dir === 'rtl' && /[\u0621-\u064a\u0671-\u06d3\u0750-\u077f]/.test(String(t || '')) ? 'rtl' : 'ltr');
     L.locale = () => ({ fr: 'fr-FR', ar: 'ar-u-nu-latn', en: 'en-GB', ja: 'ja-JP' })[L.lang];   // pour les dates ; l'arabe garde les chiffres du reste du jeu
     I.T = s => s;
+    // 2.x — la langue secondaire : ce que I.t vient de dire, et d'où (la phrase française et ses champs) — seulement quand
+    // une langue secondaire est choisie, les trois cents dernières phrases : le fil y retrouve ce qu'une annonce dit
+    const dits = new Map();
     // un même mot français peut avoir deux sens : « Entrée§saisie » se dit « Entrée » en français, mais a sa propre clé
     I.t = function (fr, p) {
       let s = L.de(fr); if (s === fr && fr.indexOf('§') > 0) s = fr.slice(0, fr.indexOf('§'));
       if (s.indexOf(SEP) >= 0) s = forme(s === fr ? 'fr' : L.lang, p && p.n, s.split(SEP));
-      return p ? s.replace(/\{(\w+)\}/g, (m, c) => (p[c] == null ? m : p[c])) : s;
+      s = p ? s.replace(/\{(\w+)\}/g, (m, c) => (p[c] == null ? m : p[c])) : s;
+      if (L.lang2) { dits.delete(s); dits.set(s, { fr, p }); if (dits.size > 300) dits.delete(dits.keys().next().value); }
+      return s;
     };
-    // relève, une fois, les emplacements de texte d'un récit posé (en français à ce moment-là)
+    // relève, une fois, les emplacements de texte d'un récit posé (en français à ce moment-là) ; chaque objet garde, pour
+    // la langue secondaire, le français d'origine de ses champs (L.origine)
     const sans = s => (typeof s === 'string' && s.indexOf('§') > 0 ? s.slice(0, s.indexOf('§')) : s);   // « Texte§sens » se dit « Texte »
-    L.relever = function (saga) { if (!saga || sues.has(saga)) return; sues.add(saga); casesSaga(saga, (o, k) => { cases.push({ o, k, fr: o[k] }); o[k] = sans(o[k]); }); };
-    casesDefs(D, (o, k) => cases.push({ o, k, fr: o[k] }));
+    const origines = new WeakMap(), affiches = new Map();
+    const noter = (o, k, fr) => { let m = origines.get(o); if (!m) origines.set(o, m = {}); if (m[k] === undefined) m[k] = fr; };
+    L.retenir = (affiche, fr) => { if (typeof affiche === 'string' && affiche && typeof fr === 'string' && !affiches.has(affiche)) affiches.set(affiche, fr); };
+    L.relever = function (saga) { if (!saga || sues.has(saga)) return; sues.add(saga); casesSaga(saga, (o, k) => { cases.push({ o, k, fr: o[k] }); noter(o, k, o[k]); o[k] = sans(o[k]); if (L.lang === 'fr') L.retenir(o[k], cases[cases.length - 1].fr); }); };
+    casesDefs(D, (o, k) => { cases.push({ o, k, fr: o[k] }); noter(o, k, o[k]); });
     // pose la langue courante partout : les récits, les tables, puis le nom du râwî (perso.js) et la page
     L.appliquer = function () {
-      versFr.clear(); cases.forEach(c => { const t = L.de(c.fr), v = t === c.fr ? sans(t) : t; c.o[c.k] = v; if (v !== sans(c.fr) && !versFr.has(v)) versFr.set(v, sans(c.fr)); });
+      versFr.clear(); affiches.clear();
+      cases.forEach(c => { const t = L.de(c.fr), v = t === c.fr ? sans(t) : t; c.o[c.k] = v; if (v !== sans(c.fr) && !versFr.has(v)) versFr.set(v, sans(c.fr)); L.retenir(v, c.fr); });
       if (I.perso) I.perso.appliquer();
       L.page();
     };
+
+    /* ---------- 2.x · la langue secondaire ---------- */
+    L.lang2 = '';
+    // les langues que l'on peut lire en second : celles qu'on propose au joueur, sauf celle du jeu
+    L.secondes = () => L.disponibles().filter(l => l !== L.lang);
+    // la langue secondaire en vigueur : offerte, et autre que celle du jeu ('' sinon) ; ?lang2=… l'ouvre aussi inachevée
+    L.l2 = () => (L.lang2 && L.lang2 !== L.lang && LANGUES[L.lang2] ? L.lang2 : '');
+    L.choisir2 = function (lang, force) { L.lang2 = lang && LANGUES[lang] && lang !== L.lang && (force || L.disponibles().includes(lang)) ? lang : ''; if (!L.lang2) dits.clear(); return L.lang2; };
+    // le français d'origine d'un emplacement (l'objet d'un récit ou d'une table, et son champ), tel que relevé ; ou null
+    L.origine = (o, k) => { const m = o && typeof o === 'object' ? origines.get(o) : null; return m && typeof m[k] === 'string' ? m[k] : null; };
+    // le français d'origine d'un texte affiché dans la langue du jeu (nom du joueur compris) ; ou null
+    L.source = t => (typeof t === 'string' ? affiches.get(t) || null : null);
+    // le texte qu'une langue a écrit sous un texte français (le français lui-même pour le français) ; null s'il n'est pas écrit
+    L.dans = function (lang, fr) { if (typeof fr !== 'string' || !fr) return null; if (lang === 'fr') return sans(fr); const c = cat[lang], t = c ? c[cle(fr)] : null; return typeof t === 'string' && t ? t : null; };
+    // un champ d'une phrase, dans une autre langue : un texte du jeu y prend le sien, le nom du râwî aussi ; un nombre, le
+    // nom choisi par le joueur restent ce qu'ils sont
+    const champDans = (lang, v) => { if (typeof v !== 'string' || !v) return v; if (v === LANGUES[L.lang].rawi) return LANGUES[lang].rawi; const f = L.source(v), t = f ? L.dans(lang, f) : null; return t == null ? v : t; };
+    // une phrase du code dite dans une autre langue (comme I.t) ; null si cette langue ne l'a pas écrite
+    // (deja : les champs sont déjà dans cette langue)
+    L.tDans = function (lang, fr, p, deja) {
+      if (typeof fr !== 'string') return null; let s = L.dans(lang, fr); if (s == null) return null;
+      if (s.indexOf(SEP) >= 0) s = forme(lang, p && p.n, s.split(SEP));
+      if (!p) return s; const q = {}; Object.keys(p).forEach(c => { q[c] = deja ? p[c] : champDans(lang, p[c]); });
+      return s.replace(/\{(\w+)\}/g, (m, c) => (q[c] == null ? m : q[c]));
+    };
+    // ce que I.t a dit (un texte affiché tel quel) : sa phrase et ses champs ; ou null
+    L.retrouver = s => dits.get(s) || null;
+    // le texte affiché dans la langue secondaire : d'après son emplacement (o, k) s'il est connu, sinon d'après le texte
+    // lui-même ; le nom du joueur y est posé. null si aucune langue secondaire, ou rien d'écrit.
+    L.second = function (texte, o, k) {
+      const l2 = L.l2(); if (!l2 || typeof texte !== 'string' || !texte) return null;
+      const fr = (o && L.origine(o, k)) || L.source(texte); if (!fr) return null;
+      const t = L.dans(l2, fr); if (t == null) return null;
+      return I.perso && I.perso.direDans ? I.perso.direDans(t, l2, fr) : t;
+    };
+    // le sens d'un texte de la langue secondaire (comme L.sens pour la langue du jeu)
+    L.sens2 = t => (LANGUES[L.l2()] && LANGUES[L.l2()].dir === 'rtl' && /[ء-يٱ-ۓݐ-ݿ]/.test(String(t || '')) ? 'rtl' : 'ltr');
+    L.poids2 = txt => String(txt).length * (L.l2() === 'ja' ? 2.2 : 1);
     /* la page : un élément marqué data-t porte un texte français, sans balise ; data-t-title, data-t-aria et
        data-t-placeholder portent celui d'un attribut */
     const ATTR = { 'data-t-title': 'title', 'data-t-aria': 'aria-label', 'data-t-placeholder': 'placeholder' };
