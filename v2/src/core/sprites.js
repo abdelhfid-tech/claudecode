@@ -456,9 +456,9 @@
   const EN_MAIN = ['sabre', 'lance', 'baton', 'masse', 'dague', 'arc', 'calame', 'durra']; // ce avec quoi l'on frappe : pendant un geste, le moteur le pose dans la main
   const VIDE = '................................';
   function voileUni(rows) { // → null si le voile est d'un seul tenant, sur chaque ligne et chaque colonne ; sinon ce qui cloche
-    const V = (x, y) => y >= 0 && y < rows.length && (rows[y][x] === 'V' || rows[y][x] === 'v'), lignes = [];
-    for (let y = 0; y < rows.length; y++) { let runs = 0, a = -1, b = -1; for (let x = 0; x < W2; x++) if (V(x, y)) { if (!V(x - 1, y)) { runs++; a = x; } b = x; } if (runs > 1) return 'voile coupé, ligne ' + y; if (runs) lignes.push([y, a, b]); }
-    for (let x = 0; x < W2; x++) { let runs = 0; for (let y = 0; y < rows.length; y++) if (V(x, y) && !V(x, y - 1)) runs++; if (runs > 1) return 'voile coupé, colonne ' + x; }
+    const V = (x, y) => y >= 0 && y < rows.length && (rows[y][x] === 'V' || rows[y][x] === 'v'), lignes = [], Wl = rows[0].length;   // Wl : 32, ou 64 (le râwî)
+    for (let y = 0; y < rows.length; y++) { let runs = 0, a = -1, b = -1; for (let x = 0; x < Wl; x++) if (V(x, y)) { if (!V(x - 1, y)) { runs++; a = x; } b = x; } if (runs > 1) return 'voile coupé, ligne ' + y; if (runs) lignes.push([y, a, b]); }
+    for (let x = 0; x < Wl; x++) { let runs = 0; for (let y = 0; y < rows.length; y++) if (V(x, y) && !V(x, y - 1)) runs++; if (runs > 1) return 'voile coupé, colonne ' + x; }
     for (let i = 1; i < lignes.length; i++) { const p = lignes[i - 1], q = lignes[i]; if (q[0] !== p[0] + 1 || q[1] > p[2] || q[2] < p[1]) return 'voile en plusieurs morceaux, ligne ' + q[0]; }
     return null;
   }
@@ -798,7 +798,8 @@
 
   // familles de tons : les lettres d'une même matière, de la plus claire à la plus sombre
   const FAM = { H: 'Ttu', T: 'Ttu', t: 'Ttu', u: 'Ttu', D: 'Ttu', C: 'Cck', c: 'Cck', k: 'Cck', E: 'Cck', e: 'Cck', B: 'Cck', b: 'Cck', m: 'Cck', R: 'Rr', r: 'Rr', S: 'Ss', s: 'Ss', M: 'LlZ',
-    L: 'LlZ', l: 'LlZ', Z: 'LlZ', J: 'Ii', I: 'Ii', i: 'Ii', j: 'Ii', W: 'Ww', w: 'Ww', F: 'Ff', f: 'Ff', A: 'Aa', a: 'Aa' };
+    L: 'LlZ', l: 'LlZ', Z: 'LlZ', J: 'Ii', I: 'Ii', i: 'Ii', j: 'Ii', W: 'Ww', w: 'Ww', F: 'Ff', f: 'Ff', A: 'Aa', a: 'Aa',
+    x: 'xzo', z: 'xzo', o: 'xzo' };   // x z o : l'écharpe du râwî (ses gabarits propres, plus bas)
   function rampes(pal) { // par lettre : ses cinq tons et sa place parmi eux
     const R = {}, faites = {};
     const cinq = base => [mix(base[0], '#ffffff', lum(base[0]) > 0.8 ? 0.62 : 0.34)].concat(base.length > 2 ? base : [base[0], base[base.length - 1], mix(base[base.length - 1], '#20143a', 0.32)], [mix(base[base.length - 1], '#150f1d', base.length > 2 ? 0.42 : 0.56)]);
@@ -809,9 +810,417 @@
       if (i < 0) R[m] = { t: cinq([col]), i: 1 }; else R[m] = { t: faites[base.join()] || (faites[base.join()] = cinq(base)), i: i + 1 }; });
     return R;
   }
+  /* ---------- le râwî, d'après la maquette du décideur (2.x, pilote du nouveau dessin) ----------
+     Idris a ses gabarits propres, retranscrits de la maquette que le décideur a fournie : un homme encapuchonné, plus
+     élancé que les autres personnages (la tête plus petite, jamais plus large que les épaules : D151), la capuche et le
+     long manteau ouvert, la tunique et les chausses amples, l'écharpe autour du cou qui retombe sur l'épaule et dans le
+     dos, la ceinture de cuir et sa besace à la hanche, les bottes ; la bande et la ceinture de néon, sa marque de 2084,
+     qui n'éclairent pas. Écarts voulus : le liseré doré des manches est un fil d'étoffe sourd (d : ni or, exigence 17) ;
+     ni lumière ni aura ; aucune arme sur lui (au combat, l'arme portée vient de grid(), comme pour les autres).
+     Le gabarit source a la finesse de la maquette : 64 × 96 (RAWI64) ; celui de 32 × 48 (la carte en dessin fin, le combat
+     et les menus du dessin d'origine) en est tiré (reduire() ; RAWI_RETOUCHES, s'il le faut, le retouche). G.rawi64 = false
+     rend le 64 × 96 retracé du 32 × 48 par fine(), comme pour les autres personnages : pour comparer.
+     Qui le reçoit : le râwî seul, que le moteur marque (look.rawi : perso.js la pose ; un récit ne l'écrit jamais,
+     regles.js le refuse), et seulement ce que le pilote dessine : la capuche, la coupe et l'étoffe de toujours (l'étoffe
+     qui a ses couleurs de dessin : D.RAWI.etoffes[…].dessin), sans pièce ni objet choisis — le néon choisi, lui, colore la
+     bande et la ceinture. Ses choix de visage (teint, barbe, poil) y sont peints par visage() ; les cheveux prennent son
+     poil. Tout le reste garde le dessin d'avant. Pilote : de face, de profil, de dos, au repos, et la foulée de face (d1,
+     d2 : tirées de l'image au repos, foulee64()) ; les pas de profil et de dos, les poses et les gestes reprennent l'image
+     au repos — le souffle (grand(…, 3)) se tire de lui-même de l'image au repos.
+     Lettres : celles du grand personnage — H T t u D la capuche ; C c k le manteau ; R r la tunique, S s son bas ; L l Z
+     les chausses ; F f les bottes ; O K Q q le cuir de la ceinture et de la besace, U sa boucle (un métal sombre) ; N les
+     mains ; V le visage ; Y y le néon — et cinq de plus : x z o l'écharpe, h p les cheveux (leur ombre et leur lumière,
+     tirées du poil du visage), d le fil des manches. */
+  /*RAWI64*/const RAWI64 = {
+    // de face, au repos
+    d: [
+      '................................................................',
+      '................................................................',
+      '................................................................',
+      '..............................HHTTD.............................',
+      '..............................HTTTTD............................',
+      '.............................HTTHHHuD...........................',
+      '............................HttH...TtD..........................',
+      '..........................HHT........uu.........................',
+      '..........................HT...pphh..TuD........................',
+      '.........................HT..hhph.....TD........................',
+      '.........................T..pphh..pp...T........................',
+      '........................T..pph.hpppphh.TD.......................',
+      '........................T..h..VVVVVVVV..D.......................',
+      '........................T...VVVVVVVVVVV.u.......................',
+      '.......................TT.pVVVVVVVVVVVV.t.......................',
+      '.......................TT.pVVVVVVVVVVVV.........................',
+      '.......................TT.pVVVVVVVVVVVV.uu......................',
+      '.......................TT..VVVVVVVVVVVV..u......................',
+      '.......................T...VVVVVVVVVVVV.uu......................',
+      '........................uD..VVVVVVVVVV.Tt.......................',
+      '.........................TT..VVVVVVVV.TTT.......................',
+      '.........................TT...VVVVVV..TT........................',
+      '......................zzzo.uD........tD..o......................',
+      '.....................zzzzzooo.zzzzzock.o.ooo....................',
+      '....................zzzzzzzooo....ook.oo.ooo....................',
+      '..................k.zzzzoozzzzzooo..zooo.oooo...................',
+      '.................CC.zzzzooozzzzzzzzzzoooooooo...................',
+      '.................CCc.zzzzoooozzzzzoo.oozzoookkk.................',
+      '.................CCCk.zzzzoooooooooozzzzooo.kkcc................',
+      '................CCCCkcC.zzzzzooooozzzzzooo.kkCC.................',
+      '...............CCCCCcCCCkkz.zzzozzzzzzooo.ccc...................',
+      '.................cc....CCkkkozozzzzzooo..cccccccc...............',
+      '.................cccc..CCk...oo.zzzooo.CCccc.cccc...............',
+      '................Ccc.ckk.kkkkrrrkYY...ccCCCC..cccc...............',
+      '................CCCk.kk.ckkkrrrkYYrrr...CCC.kccck...............',
+      '...............CCCCkkkk.cckkrrRkYYRRrkkk....kccckk..............',
+      '...............CCCckkkc.ccCkrrRkYYRRrkkkkk.kk.cCkk..............',
+      '...............CCcckk.c.ccCkrr.kYYRRrkkkkk.kkkCCkk..............',
+      '..............CCCCcck.k.cccCkr.kYYRRrkCckk.kk.CCkkk.............',
+      '.............CCCCCcck...cccCkrRkYYRrrkCcck.kk.CCkkk.............',
+      '.............CCCCccck...cccCkrRkYYRrrCcckk.kkkCCkkk.............',
+      '.............CCCCccck.........r......Ccck...kkCCkkkk............',
+      '............CCCCCcckk...OOOOOOOOOOOOOO......kCCCCkkk............',
+      '............dCCCccckk...KUUKKKKKKKKKKQQqq....CCCCkkk............',
+      '............Ccddccckk...KUUKKKyyyyyyKQQqq....cCCCdkk............',
+      '............Ccccdcck....QQQQQQyyyyyyQqQq.....cdCcckk............',
+      '............Ccccccdk...OOOOO.QKKQQQqQkkkk....rCCcck.............',
+      '................cccc.rOOOO...k.ssssskkkkk....cCCC.r.............',
+      '.............rrr..cc.rKKKOO..k.sssss.Ccckk...cC.rrr.............',
+      '.............Rrrrr...rKKKO.k.k.ssssSCCcckk...c.rrrr.............',
+      '..............Rrr....rO.KO..kC.ssssS.Cccck.....rRRr.............',
+      '.............RRRr....rOKKO..kC.SSSSS.Cccckk.....RRrr............',
+      '.............N.NN....QKOO.q.cCSSSSSSsCCcckk........N............',
+      '..............NNN....K....q.c.SSSSSSsCCcckkk...NNNN.............',
+      '..............NNNN...KKKQ.q.COSSSSSss.Cccckk...NNNN.............',
+      '..............NN.N..NKKKQ.Q.COSSSSSSssCccckkk..NNNN.............',
+      '.............NNN.N..NqqqO.qC.OSSSSSSss.Ccckk...N.NN.............',
+      '..............NN.....QQQK..C.OSssSSSss.Cccckk....NN.............',
+      '..............NNN.......k.kC.OSssSSSsssCCcckk...NN..............',
+      '....................Ckkkccc.ssSssSSSsssCCccckk..................',
+      '....................CkkCccc.sSSssSSSsss.Cccckk..................',
+      '...................CCcCCccC.sSSssSSSsss.Cccckkk.................',
+      '...................CCCCCcCC.sSSssSSSssss.Cccckk.................',
+      '..................CCCCCccC.sSSSSsSSSSsss.Cccckk.................',
+      '..................CCCCCccCssSSSSssSSSSsssCccckk.................',
+      '..................CCCCCcc.ZZZ.LLLLLLZZZZZCcccckk................',
+      '.................CCCCCccc.ZllZZ.kk.ZZZZZZ.Cccckk................',
+      '.................CccCCccCZZllZZ.kk.ZZZZZZ.Cccckkk...............',
+      '.................CcCCCccCZlllZ.kkk.llZZZZ..cccckk...............',
+      '................CCCCCccC.lllLZZ.kc.llZZZZZ.cccckk...............',
+      '................CCCCCccClllLLZ.kcc.lLLZLZZ.cccckkk..............',
+      '................CCCCccCCllLLLZZ.cC.LLLLLLZZ.ccckkk..............',
+      '...............CCCCCccC.lLLLZZZ.CC.LLLLLLZZ.ccccCCk.............',
+      '.................CCcccC.lLLZZ.......LLLLLZZZcccCC...............',
+      '................k.CccC.lllZZZZ......LLLLLLZZCccC................',
+      '...................CCC.llZZZZ........LLLLLZZCCC.................',
+      '....................CC.llLLZZ........lLLLLLZCCC.................',
+      '...................l.C.LLLLZZ.......lllLLLLLCC..................',
+      '...................lL..LLZZZZ.......lllllLLL.lZ.................',
+      '...................ZlLLLZZ............lllllllZZ.................',
+      '....................Zll...Z.............llllZ...................',
+      '...................FF..ffff............FFF....f.................',
+      '...................FFFffffff..........FffFFffff.................',
+      '...................FFFffffff..........FffFFffff.................',
+      '....................FFffff.f...........fFFF.ff..................',
+      '.....................ffff................fff....................',
+      '......................fff...............ffff....................',
+      '....................Fffff...............ffffff..................',
+      '....................fffff...............fffffff.................',
+      '..................FFffffff.............fffffffff................',
+      '.................FFFffffff.............fffffFFFff...............',
+      '................FFFFfff.ff.............fff.fFFF..f..............',
+      '................FFFFFff....................FFFFFff..............',
+      '................................................................',
+      '................................................................',
+      '................................................................'],
+    // de profil (tourné vers la gauche), au repos
+    l: [
+      '................................................................',
+      '................................................................',
+      '................................................................',
+      '..............................TTTTD.............................',
+      '.............................HTTTuuD............................',
+      '..........................HHHTTTuuuuD...........................',
+      '........................HHHTTTTuuuuuuD..........................',
+      '......................HHHHTTTTTuuuuuuuD.........................',
+      '.....................ph..TTTTTTuuuuuuuu.........................',
+      '....................h.hp..TTTTTTuuuuuuuu........................',
+      '...................phhhhph.TTTTTTuuuuuu.........................',
+      '...................h..ppVVVVTTTTTTuuuDD.........................',
+      '......................pVVVVVVTuuTTTuuuDD........................',
+      '......................VVVVVVVHuuuuTuuuDD........................',
+      '.....................pVVVVVVVHuuuuuTuuuD.p......................',
+      '.....................VVVVVVVVuuuuuuTTuuD........................',
+      '....................VVVVVVVVV.uuuuuuTuuD........................',
+      '.....................VVVVVVVV.uuuuuuDDDDD.......................',
+      '.....................VVVVVVVV.uuuuuuDDDD........................',
+      '.....................VVVVVVVV.uuuuuDDDD.........................',
+      '......................VVVVVVp.TuuuDDD...........................',
+      '......................hVVVVpp.TuuD..............................',
+      '......................oo..zz.Ck.zzzzzooo........................',
+      '........................ooz.c.xxzzzzzooooo......................',
+      '......................ooo...zzzzzzzzzzooooo.....................',
+      '......................ooo.xxxzzzzzzzzzzzooo.....................',
+      '.....................zo.xxxxozzzzzzzzzzzooo.....................',
+      '.....................zzxxzzoozz.cckk..oooooo....................',
+      '.....................zzzzzzozz.CCCcckk.ooooo....................',
+      '.....................ozzzzzzzCCCCCCcckk.ooooo...................',
+      '.....................ozzzzz.CCCCC.....kk.oooo...................',
+      '.....................zzzzz.....cccckkk.k.oooo...................',
+      '.....................zzzz.kk..ccccckkk.kk.ooo...................',
+      '......................RYcck.k.cccccckk..c.oooo..................',
+      '.....................rRYCCkkk.cccccckk....oooo..................',
+      '.....................rRYCCkkk.kCCccckk.k..oooo..................',
+      '......................RYCCckk.kCCccckkk...oozz..................',
+      '......................RYCcckkk.CCccckkk...oozz..................',
+      '......................RYccckkk.Cccckkkk...oooz..................',
+      '.....................RRYccccc..Cccckkkk...oooo..................',
+      '......................RYcccck..CCCcckkk....ooo..................',
+      '......................RYcc.ckk.CCCccckk....ooo..................',
+      '.....................OOOOOOOO.CCCCcccckk.....oz.................',
+      '.....................KKKKKKKQ.CCCCrrcckk.....oz.................',
+      '.....................KyyyyyyQ.Crrccczckk......z.................',
+      '.....................QyyyyyyQ.rCCccccczo......z.................',
+      '.....................OQ.......CC.dd.cc.k........................',
+      '.....................k.OOOOQq.C.rrrr...k........................',
+      '.....................CKOOOQqq..rrrrr.kk.........................',
+      '......................O.OOqqq.rRRRRr............................',
+      '......................O.Oqqqqq.RRRRRrk..........................',
+      '......................O.QQqqq..RRRRr.kk.........................',
+      '......................OQQQQQN.....NN.kk.........................',
+      '.....................OOQQQKKN.NNN..Nkkk.........................',
+      '....................k.OQQ..K.NNNNN.kkkkk........................',
+      '....................k.OQQ.K.NNNNNN.kcckkS.......................',
+      '.....................OOqQQQ.NNNNNN.kcckk........................',
+      '....................OO.KqQQ.NNNNNN.kcckk........................',
+      '.....................OO......NNNNNkkccckk.......................',
+      '...................c.llLcckkk.NN.kkcccckk.......................',
+      '...................c.llLCckkkk..kkkccccck.......................',
+      '...................c.LLLCkcckkkkkkcccccckk......................',
+      '...................c.LLL.Ccccckkkkkccccckk......................',
+      '...................c.LLL.Cccccckkkkccccckkk.....................',
+      '...................k.LLL.CccCccck..Cccccckk.....................',
+      '...................k.LLL.CCCCCccc.Z.Ccccckk.....................',
+      '...................k.LLL..CCCCccc.Z.Cccccck.....................',
+      '...................k.L..Z.CCCCccc.ZZCCcccckk....................',
+      '..................kk..ZZZ.CCCCccc.ZZCCccccck....................',
+      '..................kkk.ZZZ.CCCCccc.ZZ.Cccccckk...................',
+      '..................ckk.ZZZZCCCCccc.lZ.CCccccck...................',
+      '..................c...ZZZZCCCCccc.llZ.Cccccckk..................',
+      '..................c...LLZ.CCCCCCC.lZZZ.CCcccck..................',
+      '..................c...LLZl.CCCCC.llZZZ...CCccc..................',
+      '..................c....Lll.CCCC.llllZZ.....Ccc..................',
+      '.......................lll.CCC.lllLLZZZ.........................',
+      '.......................lll.CC..llLLLZZZ.........................',
+      '.......................Lll.C.Z.llLLLLZZZ........................',
+      '......................LLLLl.ZZ.LLLLLLZZZ........................',
+      '......................llLlZZZZ.LLLLLLZZZ........................',
+      '........................lZZ....LLLLLZZZZ........................',
+      '.......................FFFfffffFFFF.............................',
+      '.......................FFffffff.....ffff........................',
+      '.......................FFffffff.FFffff.f........................',
+      '.......................FFffffff.FFffff.f........................',
+      '........................ffff.....FFf............................',
+      '...........................ff.......ff..........................',
+      '......................FFfffff........ff.........................',
+      '.....................FFFffffff...FFFffff........................',
+      '....................FFFfffffff..FFFfffff........................',
+      '.................FFFFFff..ff.FFFFFFfffff........................',
+      '.................fffffff....FFFFFFffffff........................',
+      '..................f....f....FFFFFff..fff........................',
+      '................................................................',
+      '................................................................',
+      '................................................................'],
+    // de dos, au repos
+    u: [
+      '................................................................',
+      '................................................................',
+      '................................................................',
+      '..............................Ht................................',
+      '.............................HHtu...............................',
+      '.............................HHuuuD.............................',
+      '............................HHTuuuuD............................',
+      '...........................HHTTuuuuuD...........................',
+      '..........................TTTTTuuuuuuDD.........................',
+      '.........................TuuTTTuuuuuuDD.........................',
+      '........................TTuuTTTuuuuuuDD.........................',
+      '........................TuuuTTTuuuuuuuu.........................',
+      '........................TuuuTTTuuuuuuuu.........................',
+      '.......................TTuuuTTTuuuuuuuuu........................',
+      '.......................TTuuuuTTuuuuuuuuu........................',
+      '.......................TTuuuuuuuuuuuuuDD........................',
+      '.......................TTTuuuuuuuuuuuDDD........................',
+      '.......................TTTTuuuuuuuuuuDDD........................',
+      '.......................uuTTTuuuuuuuuDDDDD.......................',
+      '.......................uuuTTTuuuuuuDDDDDD.......................',
+      '......................uuuuuuTTTuuuDDDDDD........................',
+      '.......................uuuuuuTTTuDDDDDD.........................',
+      '.......................ozzz.cckkkkkkk..oo.......................',
+      '......................oozzzz..kkkkk..zoooo......................',
+      '....................oooozzzzzz....zzzooooooo....................',
+      '..................xxx.ozzz.zzzzzzzzzooooooooo...................',
+      '.................zxxzzz.zzzzoozzzzooooooooooz...................',
+      '................Ck.xzzz..zzzzoooooooozzzoooz..C.................',
+      '................Ckkxxzzo.ozzzzooooozzzzooooz.cCC................',
+      '.................Cc.xzzooozzzzzoooozzzoooooz.cCC................',
+      '...............C.CCcxzzzoo.oozzzzoooooooozz.ccC.................',
+      '...............C..C.xzzzzzz.oozzzzoooooozz.ccc.c................',
+      '..............C.c.CC.zzzzzzk.oozzzzoozzzz.....cc................',
+      '..............C.cc.C.zzzzzz.k.ooozzzzzz..kkkk.ccc...............',
+      '...............Cccc..zzzzzz.kk..oozzz..k.k.kk.ccc...............',
+      '...............CCcc..zzzzzz.kckk.......kkkkk.cCCcc..............',
+      '..............CCCCcc.xzzzzzz.ccc.kccccckk..k.cCCcc..............',
+      '..............CCCCc..xzzzzzz.ccc.cccccckk...ccCCCc..............',
+      '.............CCCCCcc.xzzzzzz.ccc.cccccckk...ccCCCcc.............',
+      '.............CCCCccc.xzzzzzz.ccc.ccccckk....ccCCCcc.............',
+      '.............CCCCccc..zzzzzz.kcc.ccccckkk..kccCCCcc.............',
+      '............CCCCccccc...zzzz.kkc.cccck.kk...kcCCCccc............',
+      '............CCCccckk...ozzzz.OOOOOOOO.......kccCCccc............',
+      '............CCCccckk.....zzz.KKKKKKKQqqq....kccCCccc............',
+      '............CCCccckk....ozzz.KyyyyKKQ.qq.....ccCCccc............',
+      '............CCrrrkkk....o.zz.QyyyyQQqqqq.....ccrrrcc............',
+      '............CCCcrrr........z.QQQQQQQqq.KQQ...crCCccc............',
+      '.............CCcckk....CCccz...........O.QQ..CCCCc..............',
+      '...............cckk...CCCCc..kkc.ccckksO.Qq..CCCc.r.............',
+      '.............RR...k...CCCCCkkkcc.cccck.O.Kq..k..rrr.............',
+      '..............RRrr....ccCCCkkkcc.ccccc..Q.K....rrrrr............',
+      '............RRRrrr....ccCCCkkccc.ccccc..OQQQ...rRRrr............',
+      '............RRRrr....CccCCcccccc.ccccc..OOQQ....................',
+      '.............NNNN....CCCCCcccccc.Ccccc..OOQQ...NNNN.............',
+      '.............NNNNN...ccCCCcccccc.Ccccc..OOOQ...NNNN.............',
+      '.............NNNNN..CccCCccccccc.Ccccc.qqqOq..NNNNN.............',
+      '.............NN..N..CcCCCcccccc.s.cccc.qqq....N..NN.............',
+      '.............NN....CCcCCCcccccc.s.ccccc.q......N.NN.............',
+      '..............NNN..CccCCCcccccC.s.ccccck.......NNN..............',
+      '..............N....ccCCCccccccC.s.ccccckkkk.....................',
+      '...................cccCCccccccC.s.ccccckkkk.....................',
+      '...................ccCCccccccc.ss.cccccckkkk....................',
+      '..................CccCCccccccc.ss.Ccccccckkk....................',
+      '..................CccCcccccccc.sssCccccccckkk...................',
+      '.................CccCCcccccccCssssCCcccccckkk...................',
+      '.................CccCccccccccCssSSCCccccccckk...................',
+      '................CCccCccccccccCssSSCCcccccckkkk..................',
+      '................CcccccccccccC.ssSS.Cccccccckkk..................',
+      '...............CCcccccccccccC.sSSs.Ccccckkkkkk..................',
+      '...............CCcccccccccccC....s.kCccckkkkkkk.................',
+      '...............CCccccccccccCC....s.kCccckkkkkkk.................',
+      '...............CCCCCcccccccC......s.Ccccckkkkkk.................',
+      '..............C...ZC.ccccccC......Z.CcccckkkCk.k................',
+      '..............kk.ZlZZ.cccccC......Z.cccccccC..k.................',
+      '...............k.LLllZ.Cccc.......Z.ccccccC..kk.................',
+      '.................LLLLll.CCc.......ZZ.ccCCC.ZZ...................',
+      '.................LLLLlll..C.......ZZ.cCC.ZZZZ...................',
+      '..................LLLLlll.C........l.CC.ZZZZZ...................',
+      '................LLLLLLlllZZ............ZZLLZZZ..................',
+      '.................LLLLLlllZ...........ZZZZLLZZ...................',
+      '...................LLLL.Z..............ZZZZ.....................',
+      '.................FFFFfffff..........FFFF.ffff...................',
+      '.................FFFffffff..........FFfffffff...................',
+      '.................FFFffffff..........FFfffffff...................',
+      '.................FFFFfff...........FFFFfffff....................',
+      '................................................................',
+      '...................Ffff................fff......................',
+      '..................Ffffff...............Fffff....................',
+      '.................Fffffff..............FFfffff...................',
+      '................FFffffff..............Ffffffff..................',
+      '...............FFFffffff..............fffff.fff.................',
+      '...............fffffffff..............fff.f.f.f.................',
+      '...................Fffff..............FFFff.f.f.................',
+      '................................................................',
+      '................................................................',
+      '................................................................']
+  };/*/RAWI64*/
+  // les proportions de son visage (visage()) : les yeux au tiers, la barbe et la bouche plus bas, pas d'ombre sur le front
+  // (ses cheveux la font) ; de profil, l'œil en retrait du nez
+  const RAWI_VISAGE = { yeux: 0.3, barbe: 0.6, bouche: 0.7, nuit: false, oeilProfil: 2 };
+  // ce que la réduction perdrait ou brouillerait à 32 × 48, retouché à la main : [colonne, ligne, lettre] (aucune retouche
+  // pour l'instant : la réduction suffit)
+  const RAWI_RETOUCHES = { d: [], l: [], u: [], d1: [], d2: [] };
+  // 64 × 96 → 32 × 48 : chaque carré de deux points sur deux donne une lettre — le visage, le néon et les mains d'abord ;
+  // le vide s'il en tient trois points ; sinon la matière la plus présente (à égalité, celle du coin en haut à gauche, du
+  // côté de la lumière), au ton moyen de ses points
+  const TONS = ['HTtuD', 'Cck', 'Rr', 'Ss', 'LlZ', 'xzo', 'Ff', 'OKQq'], TON = {}; TONS.forEach(f => f.split('').forEach((c, i) => { TON[c] = [f, i]; }));
+  function reduire(rows) {
+    const o = [], fam = c => TON[c] ? TON[c][0] : c;
+    for (let y = 0; y < rows.length / 2; y++) { let s = '';
+      for (let x = 0; x < rows[0].length / 2; x++) {
+        const q = [rows[2 * y][2 * x], rows[2 * y][2 * x + 1], rows[2 * y + 1][2 * x], rows[2 * y + 1][2 * x + 1]], n = {}, nf = {}; q.forEach(m => { n[m] = (n[m] || 0) + 1; nf[fam(m)] = (nf[fam(m)] || 0) + 1; });
+        let m = (n.V || 0) >= 2 ? 'V' : (n.Y || 0) >= 2 ? 'Y' : (n.y || 0) >= 2 ? 'y' : (n.N || 0) >= 2 ? 'N' : (n['.'] || 0) >= 3 ? '.' : null;
+        if (!m) { let b = -1, f = null; q.forEach(c => { if (c !== '.' && nf[fam(c)] > b) { b = nf[fam(c)]; f = fam(c); } });
+          if (TON[f[0]] && f.length > 1) { const ts = q.filter(c => fam(c) === f).map(c => TON[c][1]); m = f[Math.round(ts.reduce((a, v) => a + v, 0) / ts.length)]; } else m = f; }
+        s += m; }
+      o.push(s); }
+    // puis, dans une même matière, chaque point prend le ton le plus présent autour de lui : à cette taille, le grain des
+    // plis devient du bruit
+    const g = o.map(r => r.split('')), Hn = g.length, Wn = g[0].length;
+    return o.map((r, y) => r.split('').map((m, x) => { const f = TON[m] && TON[m][0]; if (!f || y === 0 || x === 0 || y === Hn - 1 || x === Wn - 1) return m;
+      const n = {}; for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) { const c = g[y + j][x + i]; if (TON[c] && TON[c][0] === f) n[c] = (n[c] || 0) + (i || j ? 1 : 2); }
+      let b = m; Object.keys(n).forEach(c => { if (n[c] > n[b]) b = c; }); return b; }).join(''));
+  }
+  // une foulée de face, tirée de l'image au repos comme celles des autres personnages (foulee()), à l'échelle de 64 × 96 : le
+  // bras du côté qui avance descend de quatre points, l'autre remonte d'autant (au-dessous, le manteau reparaît) ; des
+  // hanches aux pieds, la moitié qui avance descend de deux points — son pied dépasse —, l'autre remonte de deux : le talon
+  // se lève. cote : 'g', la jambe de gauche (de l'image) avance.
+  const RAWI_PAS = { bras: [36, 59], gauche: 22, droite: 42, hanches: 60, pas: 2, balancier: 4 };
+  function foulee64(V0, cote) {
+    const P = RAWI_PAS, av = cote === 'g' ? 1 : -1, vide = '.'.repeat(64), at = y => (y >= 0 && y < V0.length ? V0[y] : vide);
+    return V0.map((r, y) => {
+      let row = y >= P.hanches ? at(y - P.pas * av).slice(0, 32) + at(y + P.pas * av).slice(32) : r;
+      // le bras qui descend s'allonge depuis le coude (jusque sur le manteau) ; celui qui remonte découvre le manteau
+      const bras = descend => descend ? (y >= P.bras[0] && y <= P.bras[1] + P.balancier ? at(Math.max(P.bras[0], y - P.balancier)) : null) : (y >= P.bras[0] && y <= P.bras[1] ? at(y + P.balancier) : null);
+      const g = bras(av > 0), d = bras(av < 0);
+      if (g) row = g.slice(0, P.gauche) + row.slice(P.gauche); if (d) row = row.slice(0, P.droite) + d.slice(P.droite);
+      return row; });
+  }
+  const RAWI32 = {};
+  function rawiGabarits() {
+    if (RAWI64.d && !RAWI64.d1) { RAWI64.d1 = foulee64(RAWI64.d, 'g'); RAWI64.d2 = foulee64(RAWI64.d, 'd'); }
+    Object.keys(RAWI64).forEach(v => { const t = RAWI64[v];
+      if (t.length !== 96 || t.some(r => r.length !== 64)) throw new Error('gabarit du râwî mal formé : ' + v + ' — ' + t.length + ' lignes de ' + t.map(r => r.length).join(','));
+      const r = reduire(t).map(s => s.split('')); (RAWI_RETOUCHES[v] || []).forEach(([x, y, m]) => { r[y][x] = m; }); RAWI32[v] = r.map(s => s.join(''));
+      [t, RAWI32[v]].forEach(g => { const e = voileUni(g); if (e) throw new Error('râwî ' + v + ' : ' + e); });
+      if (v === 'u' && t.some(r => /[Vv]/.test(r))) throw new Error('râwî ' + v + ' : un visage, de dos'); });
+  }
+  rawiGabarits();
+  G.rawi64 = true;   // false : le 64 × 96 du râwî retracé du 32 × 48 par fine(), comme les autres personnages — pour comparer
+  // l'étoffe du râwî qui a ses couleurs de dessin (D.RAWI.etoffes[…].dessin), ou null
+  const rawiEtoffe = look => { const E = D.RAWI && D.RAWI.etoffes; if (!E) return null;
+    const k = Object.keys(E).find(e => E[e].dessin && E[e].robe === look.robe && E[e].head === look.head && E[e].cloak === look.cloak && (E[e].legs || null) === (look.legs || null)); return k ? E[k].dessin : null; };
+  // → les couleurs du dessin du râwî, ou null : ce que le pilote ne dessine pas encore garde le dessin d'avant
+  function rawiDe(look, K) {
+    if (!look.rawi || look.kind !== 'cyber' || !RAWI64.d) return null;
+    if (K.coiffe !== 'capuche' || (K.manteau || 'long') !== 'long' || K.court === false || K.echarpe || K.armure || K.cuirasse || K.motif || (look.porte && look.porte.length)) return null;
+    return rawiEtoffe(look);
+  }
+  // sa palette : celle du moteur (le néon, le cuir, le fer, les bottes), puis les couleurs de l'étoffe — trois tons par
+  // matière, dont rampes() tire les cinq ; une couleur seule en donne trois (ramp)
+  function paletteRawi(look, K, dr) {
+    const tons = v => Array.isArray(v) ? v : ramp(v);   // trois tons donnés (la maquette), ou tirés d'une couleur
+    const p = palette(look, K), [T, t, u] = tons(dr.capuche || dr.manteau), [C, c, k] = tons(dr.manteau), [R, r] = tons(dr.tunique), [L, l, z] = tons(dr.chausses || dr.tunique), [x, zz, o] = tons(dr.echarpe);
+    const poil = (typeof look.poil === 'string' && look.poil) || POILS[(signe(look) >>> 5) % POILS.length];   // les cheveux : le poil du visage (le choix du joueur, ou celui du moteur)
+    return Object.assign(p, { T, t, u, C, c, k, R, r, S: R, s: r, L, l, Z: z, M: null, E: null, e: null, B: C, b: c, m: null, x, z: zz, o, h: mix(poil, '#6b4630', 0.2), p: mix(poil, '#a06a44', 0.45), d: mix(C, R, 0.4), U: '#4c4f58' });
+  }
+  // la grille du râwî : 32 × 48 (L), et son gabarit de 64 × 96 (rawi.L4), les objets tenus posés aux mêmes places
+  function rawiGrille(look, K0, dessin, dir, frame, pose) {
+    const key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l', Ge = !!(pose && GESTES[pose]);
+    const v = key === 'd' && !pose && (frame === 1 || frame === 2) ? 'd' + frame : key;   // pilote : la foulée de face ; ailleurs, l'image au repos
+    const K = Object.assign({}, K0, { sombre: false, visageP: RAWI_VISAGE });   // sous la capuche de la maquette, le visage est dans la lumière ; ses proportions
+    const L = RAWI32[v].map(r => r.split('')), am = L.map(r => r.map(() => 0)), fin = L.map(r => r.map(() => 0)), L4 = RAWI64[v].map(r => r.split(''));
+    const mains = (t, cote) => { let n = 0, sx = 0, sy = 0; t.forEach((r, y) => r.forEach((m, x) => { if (m === 'N' && (!cote || (cote < 0 ? x < r.length / 2 : x >= r.length / 2))) { n++; sx += x; sy += y; } })); return n ? [sx / n, sy / n] : null; };
+    // les objets tenus (au combat : l'arme portée) : ceux de grid(), agrandis comme pour les autres personnages, ramenés aux mains du râwî
+    const r = grid(look, dir === 2 ? 1 : dir, 0, null, {});
+    if (r.objets.length) { const a = mains(L), b = mains(scale2x(r.g)); const dx = a && b ? Math.round(a[0] - b[0]) : 0, dy = a && b ? Math.round(a[1] - b[1]) : 0;
+      r.objets.forEach(o => { if (Ge && EN_MAIN.indexOf(o.nom) >= 0) return; const o2 = scale2x(o.g);   // l'arme qui frappe : le moteur la pose dans la main
+        for (let y = 0; y < H2; y++) for (let x = 0; x < W2; x++) { const m = o2[y][x], X = x + dx, Y = y + dy; if (m === '.' || X < 0 || X >= W2 || Y < 0 || Y >= H2 || L[Y][X] === 'N') continue;
+          L[Y][X] = m; fin[Y][X] = 1; for (let j = 0; j < 2; j++) for (let i = 0; i < 2; i++) if (L4[2 * Y + j][2 * X + i] !== 'N') L4[2 * Y + j][2 * X + i] = m; } }); }
+    // la main qui frappe, le temps d'un geste (pilote : l'image au repos) — de face, celle de gauche ; de dos, celle de droite
+    const mg = Ge ? mains(L, key === 'd' ? -1 : key === 'u' ? 1 : 0) : null, main = mg ? [dir === 2 ? W2 - (mg[0] + 0.5) : mg[0] + 0.5, mg[1] + 0.5] : null;
+    if (dir === 2) [L, am, fin, L4].forEach(t => t.forEach(row => row.reverse()));
+    return { L, K, am, fin, hors: 0, main, sans: null, natifs: null, tm: null, rawi: { dessin, L4 } };
+  }
+  G.rawi = look => !!rawiDe(look, kindOf(look));   // pour les outils : ce râwî a-t-il le dessin de la maquette ?
+  G.RAWI = { 64: RAWI64, 32: RAWI32 };
   // la grille de 32 × 48 d'un personnage, ou null si sa tête ou son corps n'ont pas encore de gabarit natif
   function natifGrille(look, dir, frame, pose) {
     const K0 = kindOf(look), key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l', nom = HEADS[K0.coiffe] ? K0.coiffe : 'imama';
+    { const dr = rawiDe(look, K0); if (dr) return rawiGrille(look, K0, dr, dir, frame, pose); }   // le râwî d'après la maquette (pilote)
     const Ge = pose && GESTES[pose] ? GESTES[pose][key] : null; if (Ge) frame = 0;   // un geste de frappe : son propre gabarit, pas une pose du récit
     const tt = TETES[nom] && TETES[nom][key], P = !Ge && pose && POSES[pose] && POSES[pose][key] ? POSES[pose] : null;
     const A = Ge || (P ? (ALLURES[pose] && ALLURES[pose][key]) : (CORPS[key] && CORPS[key][frame || 0]));
@@ -873,6 +1282,7 @@
   // la grille fine (64 × 96) d'un grand personnage natif : celle de 32 × 48, ses escaliers arrondis — sans les objets du râwî,
   // qui y sont dessinés à cette taille même (D193), sous la tête, jamais sur une main
   function fine(n) {
+    if (n.rawi && G.rawi64) return { L: n.rawi.L4.map(r => r.slice()), am: doubler(n.am), fin: doubler(n.fin) };   // le râwî : son gabarit de 64 × 96, tel quel
     const b = n.sans || n, L = grilleFine(b.L, W2, H2), am = doubler(b.am), fin = doubler(b.fin), N = n.natifs; if (!N) return { L, am, fin };
     const W4 = W2 * 2, H4 = H2 * 2, tm = doubler(n.tm), c = []; for (let y = 0; y < H4; y++) c.push(new Array(W4).fill('.'));
     N.noms.forEach(o => poserObjet(o, 4, (x, y, m) => { if (x >= 0 && x < W4 && y >= 0 && y < H4) c[y][x] = m; }, { b0: 2 * N.b0, key: N.key, ou: N.ou, glisse: N.glisse }));
@@ -906,14 +1316,17 @@
     const barbe = age === 0 ? 0 : age >= 2 ? 2 : adulte && [0, 1, 2].indexOf(look.barbe) >= 0 ? look.barbe : [2, 1, 2, 0, 1, 2][(h >>> 7) % 6];  // 0 : glabre · 1 : courte · 2 : pleine
     const oeil = '#1b1420', blanc = mix('#fbf3e2', peau, 0.15), levre = mix(peau, '#6a2420', 0.5), sourcil = mix(peau, age >= 1.5 ? '#8a8378' : poil, 0.7);
     const w = x1 - x0 + 1, hh = y1 - y0 + 1, fente = hh < 5 * s, profil = dir === 1 || dir === 2, clos = pose === 'prie' || pose === 'accable';
-    const yo = fente ? y0 + s : y0 + Math.round(hh * 0.40), yb = y0 + Math.round(hh * 0.64), ym = y0 + Math.round(hh * 0.74); // les yeux, le haut de la barbe, la bouche
+    // les proportions du visage : celles du moteur, ou celles d'un gabarit qui dit les siennes (K.visageP : le râwî d'après
+    // la maquette — un front court sous les cheveux, l'œil de profil en retrait du nez)
+    const Pv = K.visageP || {}, po = Pv.oeilProfil || 1;
+    const yo = fente ? y0 + s : y0 + Math.round(hh * (Pv.yeux || 0.40)), yb = y0 + Math.round(hh * (Pv.barbe || 0.64)), ym = y0 + Math.round(hh * (Pv.bouche || 0.74)); // les yeux, le haut de la barbe, la bouche
     const ex = Math.round(w * 0.22);                                                                                  // de face : l'écart d'un œil au bord
     return function (x, y) {
       const fx = profil ? (dir === 2 ? x1 - x : x - x0) : x - x0, gx = w - 1 - fx, dy = y - y0;                         // fx : depuis le devant du visage (profil) ou sa gauche (face)
-      const dansOeil = profil ? (fx >= s && fx < 2 * s) : ((fx >= ex && fx < ex + s) || (gx >= ex && gx < ex + s));
+      const dansOeil = profil ? (fx >= po * s && fx < (po + 1) * s) : ((fx >= ex && fx < ex + s) || (gx >= ex && gx < ex + s));
       if (y >= yo && y < yo + s && dansOeil) { if (clos) return y === yo + s - 1 ? sourcil : peau; return oeil; }
-      if (!clos && (s === 2 || fonce) && y >= yo && y < yo + s && (profil ? fx === 2 * s : (fx === ex - 1 || gx === ex - 1))) return blanc; // en dessin fin (et, pour un teint très sombre, toujours) : le blanc de l'œil, du côté du dehors
-      if (!fente && s === 2 && y === yo - 2 && (profil ? (fx >= 1 && fx <= 4) : ((fx >= ex - 1 && fx <= ex + 1) || (gx >= ex - 1 && gx <= ex + 1)))) return sourcil; // les sourcils : en dessin fin seulement (à 32 points de large, ils alourdiraient le regard)
+      if (!clos && (s === 2 || fonce) && y >= yo && y < yo + s && (profil ? fx === (po + 1) * s : (fx === ex - 1 || gx === ex - 1))) return blanc; // en dessin fin (et, pour un teint très sombre, toujours) : le blanc de l'œil, du côté du dehors
+      if (!fente && s === 2 && y === yo - 2 && (profil ? (fx >= 1 + (po - 1) * s && fx <= 4 + (po - 1) * s) : ((fx >= ex - 1 && fx <= ex + 1) || (gx >= ex - 1 && gx <= ex + 1)))) return sourcil; // les sourcils : en dessin fin seulement (à 32 points de large, ils alourdiraient le regard)
       if (!fente && barbe && y >= yb) {
         if (profil && fx >= w - s - (barbe === 2 ? 0 : s)) return ombre;                                              // vers la nuque : la joue, dans l'ombre de l'étoffe
         if (barbe === 1 && y < ym && !(profil ? fx < 2 * s : Math.abs(fx - gx) <= 2 * s)) return peau;                 // barbe courte : la moustache seule, au-dessus
@@ -921,7 +1334,7 @@
         return ((x + y) % 3 === 0 && s === 2) ? poilO : poil;
       }
       if (!fente && !barbe && y === ym && (profil ? fx < 2 * s : Math.abs(fx - gx) <= s + (s - 1))) return levre;
-      if (dy < s) return nuit;                                                                                         // l'ombre de la coiffe sur le front
+      if (dy < s && Pv.nuit !== false) return nuit;                                                                    // l'ombre de la coiffe sur le front (sous les cheveux du râwî, il n'y en a pas)
       if (!fente && !profil && s === 2 && fx === (w >> 1) && y > yo + s && y < yb) return ombre;                       // l'arête du nez
       if (profil ? fx === 0 && y > yo && y < yb : false) return clair;                                                 // de profil : le nez et la pommette prennent la lumière
       if (profil ? fx >= w - s : gx < s) return ombre;                                                                 // le côté dans l'ombre
@@ -943,9 +1356,9 @@
       c3.drawImage(g0, 0, taille, g0.width, g0.height - taille, 0, taille, g0.width, g0.height - taille); c3.drawImage(g0, 0, 1, g0.width, taille - 1, 0, 0, g0.width, taille - 1); c3.drawImage(g0, 0, taille, g0.width, 1, 0, taille - 1, g0.width, 1);
       if (g0.hd) cv3.hd = g0.hd; return (scache[k3] = cv3); }
     if (!G.natif) { if (s === 1) return ancien(look, dir, frame, pose); const ka = 'A' + ck(look, dir, frame, pose); return scache[ka] || (scache[ka] = G.epx(ancien(look, dir, frame, pose))); }
-    const k = (s === 2 ? 'N' : 'n') + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
+    const k = (s === 2 ? 'N' : 'n') + (G.rawi64 ? '' : 'r') + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
     const n = natifGrille(look, dir, frame, pose); if (!n) return (scache[k] = s === 2 ? G.epx(ancien(look, dir, frame, pose)) : ancien(look, dir, frame, pose));
-    const K = n.K, F = s === 2 ? fine(n) : n, L = F.L, am = F.am, fin = F.fin, pal = palette(look, K), w = W2 * s, h = H2 * s;
+    const K = n.K, F = s === 2 ? fine(n) : n, L = F.L, am = F.am, fin = F.fin, pal = n.rawi ? paletteRawi(look, K, n.rawi.dessin) : palette(look, K), w = W2 * s, h = H2 * s;
     const tn = G.teint(look); if (tn) pal.N = mix(K.sombre ? mix(tn, '#1c1430', 0.2) : tn, '#fff1d6', 0.1); // qui a un visage a des mains du même teint (le grand personnage seulement)
     const R = rampes(pal);
     const cv = mk(w, h), c = cv.getContext('2d'), px = (x, y, col) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } }; if (s === 2) cv.hd = 2;

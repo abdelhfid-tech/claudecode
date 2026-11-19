@@ -17,6 +17,15 @@
   const NOM = 'Idris', MAX = 16;
   const P = I.perso = { NOM, MAX };
 
+  /* ---------- la marque du râwî (2.x, pilote du nouveau dessin) ----------
+     Le râwî a ses gabarits propres, retranscrits de la maquette du décideur (sprites.js, RAWI64). Ce n'est pas un récit
+     qui les demande : le moteur pose la marque (look.rawi) sur ce qui habille le râwî — ses ensembles (D.TENUES) et le
+     héros de l'histoire-cadre, dès qu'elle est posée — et tout ce qui en est tiré (P.look, P.composer) la garde. Un récit
+     ou un paquet ne l'écrit jamais (regles.js). */
+  const marquer = L => { if (L && typeof L === 'object' && L.kind === 'cyber') L.rawi = true; return L; };
+  D.TENUES.forEach(t => marquer(t.look));
+  P.marquer = marquer;
+
   /* ---------- le profil : dans la partie (save.data.profil), avec ses valeurs d'origine ---------- */
   P.profil = function () { const p = (I.save && I.save.data && I.save.data.profil) || {}, tenue = D.TENUES.some(t => t.id === p.tenue) ? p.tenue : D.TENUES[0].id;
     return { nom: typeof p.nom === 'string' && p.nom && !P.refus(p.nom) ? p.nom : NOM, tenue, compo: P.neutraliser(P.tenue(tenue), p.compo) }; };
@@ -134,7 +143,9 @@
   P.dit = () => { const n = P.nom(); return n === NOM ? I.langue.rawi() : n; };
   // relève, dans un contenu posé, chaque phrase qui nomme le râwî (une seule fois par saga)
   const cases = [], vues = new Set();
-  P.relever = function (racine) { if (!racine || vues.has(racine)) return; (function va(v) { if (!v || typeof v !== 'object' || vues.has(v)) return; vues.add(v);
+  P.relever = function (racine) { if (!racine || vues.has(racine)) return;
+    if (racine.frame && !racine.veillees && racine.heroes && racine.heroes.idris) marquer(racine.heroes.idris.look);   // le râwî, héros de l'histoire-cadre : sa marque
+    (function va(v) { if (!v || typeof v !== 'object' || vues.has(v)) return; vues.add(v);
     Object.keys(v).forEach(k => { const x = v[k]; if (typeof x === 'string') { if (x.indexOf(NOM) >= 0 && CITE.test(x)) cases.push({ o: v, k, t: x }); } else va(x); }); })(racine); };
   P.phrases = () => cases.map(c => c.t);
 

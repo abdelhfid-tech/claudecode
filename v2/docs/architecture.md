@@ -337,6 +337,28 @@ compositions entières) et l'empreinte des grands personnages d'avant (`tools/es
 venues ensuite y sont ajoutées à leur création (`silhouettes.js relever-nouveaux`, qui refuse si une seule empreinte
 déjà relevée a changé) ; `partie.js`, une partie dont le râwî est composé, exportée puis réimportée à l'identique.
 
+### Le râwî d'après la maquette (2.x, pilote — à valider par le décideur)
+
+*Le décideur n'aime pas le dessin d'Idris et a fourni une maquette (19 novembre) : un homme encapuchonné, la capuche et le
+long manteau ouvert bleu sarcelle, la tunique et les chausses crème, une écharpe rouille, la ceinture de cuir et sa besace
+à la hanche, les bottes, la bande et la ceinture de néon ; plus élancé que les autres. L'image n'entre ni dans le jeu ni
+dans le dépôt.*
+
+- **Des gabarits propres au râwî** (`sprites.js`, `RAWI64`) : de face, de profil, de dos, en 64 × 96 — la finesse de la
+  maquette. Le 32 × 48 (la carte) en est tiré au chargement (`reduire()`), la foulée de face aussi (`foulee64()`, la règle
+  de `foulee()` à cette échelle). `G.rawi64 = false` rend le 64 × 96 retracé du 32 × 48 par `fine()`, comme les autres
+  personnages : pour comparer. Ce qui reste du moteur : cinq tons par matière (`rampes()`), la lumière en haut à gauche,
+  le liseré, le visage peint par `visage()` (aux proportions du gabarit : `K.visageP`), les cheveux tirés du poil.
+- **Qui le reçoit** : le râwî seul. `perso.js` pose sa marque (`look.rawi`) sur ses ensembles et sur le héros de
+  l'histoire-cadre ; un récit ou un paquet ne l'écrit pas (`regles.js`). Les couleurs viennent de l'étoffe
+  (`D.RAWI.etoffes[…].dessin`, trois tons par matière). Pilote : la tenue de toujours seulement (capuche, manteau long,
+  étoffe e1), avec les choix du visage et du néon ; une autre pièce, un autre objet ou une autre étoffe gardent le dessin
+  d'avant. Les pas de profil et de dos, les poses et les gestes reprennent l'image au repos ; le souffle s'en tire seul.
+  Le petit personnage (16 × 24, dessin d'origine sur les cartes) n'a pas changé.
+- `silhouettes.js` compare le râwî marqué à son empreinte d'avant (la marque n'est pas dans la clé) : l'écart du grand
+  personnage, attendu sur lui seul, est la preuve que rien d'autre n'a bougé. Les fiches ne se relèvent qu'une fois le
+  dessin validé.
+
 ## La définition du dessin : `src/core/gfx.js`
 
 *Depuis le 16 novembre (D154). Le décideur : « je n'aime pas le rendu pixelisé ».*

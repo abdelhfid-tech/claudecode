@@ -212,7 +212,11 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
   // la couleur du rayonnement (look.rayon) ne touche que le voile du grand personnage, en dessin fin : l'empreinte d'un petit sprite se cherche sans elle
   // (de même look.sansVisage, qui ne touche que le grand personnage)
   // (et le visage du râwî — sa marque, son teint, sa barbe, son poil — qui ne se peint que sur le grand personnage)
-  const sansRayon = look => { const L = Object.assign({}, look); ['rayon', 'sansVisage', 'visage', 'teint', 'barbe', 'poil'].forEach(k => { delete L[k]; }); return L; };
+  // (et la marque du râwî, look.rawi, que le moteur pose sur lui pour lui donner ses gabarits propres : elle ne touche que le grand personnage)
+  const sansRayon = look => { const L = Object.assign({}, look); ['rayon', 'sansVisage', 'visage', 'teint', 'barbe', 'poil', 'rawi'].forEach(k => { delete L[k]; }); return L; };
+  // la clé d'un grand personnage dans sa fiche : son apparence entière, sans la marque du râwî — posée après le relevé, elle
+  // ne fait pas de lui une silhouette nouvelle : son dessin se compare à celui d'avant (un écart s'y voit)
+  const cleG = look => { const L = Object.assign({}, look); delete L.rawi; return JSON.stringify(L); };
   const cles = inv.map(q => JSON.stringify(sansRayon(q.look))), groupes = {}; inv.forEach(q => { groupes[q.groupe] = (groupes[q.groupe] || 0) + 1; });
   const detail = Object.entries(groupes).map(([g, n]) => `${n} ${g}`).join(', ');
 
@@ -228,7 +232,7 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
   /* ---------- relever les grands : une seule fois, avant que le joueur puisse composer son râwî ---------- */
   if (mode === 'relever-grands') {
     if (fs.existsSync(FICHE_G)) { console.log('✗ l’empreinte des grands existe déjà : elle ne se refait pas (tools/essais/grands.json)'); await browser.close(); process.exit(1); }
-    const looks = inv.map(q => q.look), E = await grandes(looks), grands = {}; looks.forEach((L, i) => { grands[JSON.stringify(L)] = E[i]; });
+    const looks = inv.map(q => q.look), E = await grandes(looks), grands = {}; looks.forEach((L, i) => { grands[cleG(L)] = E[i]; });
     if (errors.length) { console.log('✗ erreur console : ' + errors[0]); await browser.close(); process.exit(1); }
     fs.writeFileSync(FICHE_G, JSON.stringify({ note: 'Empreintes des grands sprites natifs, tels que le jeu les montrait avant que le joueur puisse composer son râwî : [32 × 48 en dessin fin (4 directions × 4 images, poses et gestes), figure 64 × 96 en dessin fin, la même fin et adoucie, figure du dessin d’origine (32 × 48)]. La clé : l’apparence entière (look). Relevé par tools/silhouettes.js relever-grands.', grands }, null, 0).replace(/"\],"/g, '"],\n"') + '\n');
     console.log(`✓ grands relevés : ${looks.length} silhouettes (${detail}), dans les trois dessins`); await browser.close(); process.exit(0);
@@ -242,11 +246,11 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     const S = JSON.parse(fs.readFileSync(FICHE, 'utf8')), SG = JSON.parse(fs.readFileSync(FICHE_G, 'utf8'));
     const E = (await parPaquets(inv.map(q => q.look), 60, EMPREINTES, l => [l, true, true])).flat(), faux = [];   // le petit sprite, et le grand d'avant (l'interrupteur)
     cles.forEach((k, i) => { const a = S.sprites[k]; if (a && (a[0] !== E[i][0] || a[1] !== E[i][1])) faux.push(inv[i].nom); });
-    const connus = inv.filter(q => SG.grands[JSON.stringify(q.look)]), EG = await grandes(connus.map(q => q.look));
-    connus.forEach((q, i) => { if (JSON.stringify(SG.grands[JSON.stringify(q.look)]) !== JSON.stringify(EG[i])) faux.push(q.nom + ' (grand)'); });
+    const connus = inv.filter(q => SG.grands[cleG(q.look)]), EG = await grandes(connus.map(q => q.look));
+    connus.forEach((q, i) => { if (JSON.stringify(SG.grands[cleG(q.look)]) !== JSON.stringify(EG[i])) faux.push(q.nom + ' (grand)'); });
     if (faux.length || errors.length) { console.log(`✗ rien n'est ajouté : ${faux.length ? faux.length + ' silhouette(s) déjà relevée(s) ont changé (' + faux.slice(0, 6).join(', ') + ')' : 'erreur console : ' + errors[0]}`); await browser.close(); process.exit(1); }
     let np = 0; cles.forEach((k, i) => { if (!S.sprites[k]) { S.sprites[k] = E[i]; np++; } });
-    const neuves = inv.filter(q => !SG.grands[JSON.stringify(q.look)]), EN = await grandes(neuves.map(q => q.look)); neuves.forEach((q, i) => { SG.grands[JSON.stringify(q.look)] = EN[i]; });
+    const neuves = inv.filter(q => !SG.grands[cleG(q.look)]), EN = await grandes(neuves.map(q => q.look)); neuves.forEach((q, i) => { SG.grands[cleG(q.look)] = EN[i]; });
     if (errors.length) { console.log('✗ erreur console : ' + errors[0]); await browser.close(); process.exit(1); }
     const AJOUT = ' Les silhouettes venues ensuite (le râwî composé, ses coiffes et ses objets : D193) y sont ajoutées à leur création, sans qu’aucune empreinte déjà relevée ne change (tools/silhouettes.js relever-nouveaux).';
     if (S.note.indexOf(AJOUT) < 0) S.note += AJOUT; if (SG.note.indexOf(AJOUT) < 0) SG.note += AJOUT;
@@ -264,10 +268,10 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     const S = JSON.parse(fs.readFileSync(FICHE, 'utf8')), SG = JSON.parse(fs.readFileSync(FICHE_G, 'utf8'));
     const E = (await parPaquets(inv.map(q => q.look), 60, EMPREINTES, l => [l, true, true])).flat(), faux = [];   // le petit sprite, et le grand d'avant (l'interrupteur)
     cles.forEach((k, i) => { const a = S.sprites[k]; if (a && (a[0] !== E[i][0] || a[1] !== E[i][1])) faux.push(inv[i].nom); });
-    const connus = inv.filter(q => SG.grands[JSON.stringify(q.look)]), EG = await grandes(connus.map(q => q.look));
-    connus.forEach((q, i) => { if (JSON.stringify(SG.grands[JSON.stringify(q.look)]) !== JSON.stringify(EG[i])) faux.push(q.nom + ' (grand)'); });
+    const connus = inv.filter(q => SG.grands[cleG(q.look)]), EG = await grandes(connus.map(q => q.look));
+    connus.forEach((q, i) => { if (JSON.stringify(SG.grands[cleG(q.look)]) !== JSON.stringify(EG[i])) faux.push(q.nom + ' (grand)'); });
     if (faux.length || errors.length) { console.log(`✗ rien n'est retiré : ${faux.length ? faux.length + ' silhouette(s) encore relevée(s) ont changé (' + faux.slice(0, 6).join(', ') + ')' : 'erreur console : ' + errors[0]}`); await browser.close(); process.exit(1); }
-    const vivantes = new Set(cles), vivantesG = new Set(inv.map(q => JSON.stringify(q.look)));
+    const vivantes = new Set(cles), vivantesG = new Set(inv.map(q => cleG(q.look)));
     const parties = Object.keys(S.sprites).filter(k => !vivantes.has(k)), partiesG = Object.keys(SG.grands).filter(k => !vivantesG.has(k));
     parties.forEach(k => { delete S.sprites[k]; }); partiesG.forEach(k => { delete SG.grands[k]; });
     if (parties.length) fs.writeFileSync(FICHE, JSON.stringify({ note: S.note, sprites: S.sprites }, null, 0).replace(/"\],"/g, '"],\n"') + '\n');
@@ -329,10 +333,12 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
   else ok(`les petits sprites sont ceux d'avant, au pixel près : ${cles.length - neufs} silhouettes (${detail}) × 12 pas et 24 poses${neufs ? ` ; ${neufs} silhouette(s) nouvelle(s), sans empreinte` : ''}${partis ? ` ; ${partis} empreinte(s) sans silhouette` : ''}`);
   // 1 bis. les grands sprites natifs, dans les trois dessins : ceux d'avant le râwî composé, au point près
   if (!fs.existsSync(FICHE_G)) ko('ABSENT tools/essais/grands.json : rien ne dit plus ce qu’étaient les grands personnages (node tools/silhouettes.js relever-grands)');
-  else { const SG = JSON.parse(fs.readFileSync(FICHE_G, 'utf8')).grands, connus = inv.filter(q => SG[JSON.stringify(q.look)]), EG = await grandes(connus.map(q => q.look)), N = ['32 × 48 fin', '64 × 96 fin', 'fin et adouci', 'd’origine'];
-    const ecartsGr = []; connus.forEach((q, i) => { const a = SG[JSON.stringify(q.look)]; a.forEach((h, j) => { if (h !== EG[i][j]) ecartsGr.push(`${q.nom} (${N[j]})`); }); });
-    const nouveaux = inv.length - connus.length, partisG = Object.keys(SG).filter(k => !inv.some(q => JSON.stringify(q.look) === k)).length;
-    if (ecartsGr.length) ko(`ÉCART ${ecartsGr.length} grand(s) sprite(s) ne sont plus ceux d'avant : ${ecartsGr.slice(0, 8).join(', ')}${ecartsGr.length > 8 ? '…' : ''}`);
+  else { const SG = JSON.parse(fs.readFileSync(FICHE_G, 'utf8')).grands, connus = inv.filter(q => SG[cleG(q.look)]), EG = await grandes(connus.map(q => q.look)), N = ['32 × 48 fin', '64 × 96 fin', 'fin et adouci', 'd’origine'];
+    const ecartsGr = []; connus.forEach((q, i) => { const a = SG[cleG(q.look)]; a.forEach((h, j) => { if (h !== EG[i][j]) ecartsGr.push(`${q.nom} (${N[j]})`); }); });
+    const nouveaux = inv.length - connus.length, partisG = Object.keys(SG).filter(k => !inv.some(q => cleG(q.look) === k)).length;
+    if (ecartsGr.length) { const qui = [...new Set(ecartsGr.map(e => e.replace(/ \([^)]*\)$/, '')))];   // chaque silhouette touchée, une fois, et les dessins où elle l'est
+      ko(`ÉCART ${ecartsGr.length} grand(s) sprite(s) ne sont plus ceux d'avant, sur ${qui.length} silhouette(s) : ${ecartsGr.slice(0, 8).join(', ')}${ecartsGr.length > 8 ? '…' : ''}`);
+      console.log('   les silhouettes : ' + qui.map(n => n + ' (' + ecartsGr.filter(e => e.replace(/ \([^)]*\)$/, '') === n).map(e => e.match(/\(([^)]*)\)$/)[1]).join(', ') + ')').join(' · ')); }
     else ok(`les grands sprites sont ceux d'avant, au point près, dans les trois dessins : ${connus.length} silhouettes × 156 images (32 × 48 et 64 × 96 ; fin, fin et adouci, d’origine)${nouveaux ? ` ; ${nouveaux} silhouette(s) nouvelle(s), sans empreinte` : ''}${partisG ? ` ; ${partisG} empreinte(s) sans silhouette` : ''}`); }
   if (!natif) { ko('ABSENT gfx.charGrille : ce moteur ne dessine pas de grand sprite natif'); }
   else {

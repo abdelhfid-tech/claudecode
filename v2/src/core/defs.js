@@ -470,8 +470,16 @@
       litham: { etoffe: ['e6', 'e4'] }                       // de dos, le turban des Compagnons : clair, l'un d'eux ; vert, 'Alî
     },
     manteaux: ['long', 'aucun', 'epaule', 'ample'],
+    // 2.x (pilote du nouveau dessin d'Idris, d'après la maquette du décideur) — dessin : les couleurs de l'étoffe sur les
+    // gabarits propres du râwî (sprites.js, RAWI64) — la capuche, le manteau, la tunique, les chausses, l'écharpe : trois tons
+    // (la lumière, le corps, l'ombre), dont le moteur tire ses cinq, ou une couleur seule, dont il tire les trois. Pilote :
+    // seule l'étoffe de toujours (e1) les a ; une étoffe sans elles garde le dessin d'avant. (Couleurs relevées sur la
+    // maquette, à valider par le décideur.)
     etoffes: {
-      e1: { robe: '#2a3048', head: '#1c2030', cloak: '#39424f' }, e2: { robe: '#1d2b36', head: '#131d26', cloak: '#2b4656' },
+      e1: { robe: '#2a3048', head: '#1c2030', cloak: '#39424f', dessin: {
+        capuche: ['#3a7b90', '#22536b', '#16314a'], manteau: ['#33758a', '#1e4b63', '#142c44'], tunique: ['#e8d6b4', '#b59b77'],
+        chausses: ['#dac7a2', '#b09675', '#8c7255'], echarpe: ['#d0865a', '#ad533d', '#7e362e'] } },
+      e2: { robe: '#1d2b36', head: '#131d26', cloak: '#2b4656' },
       e3: { robe: '#3b2c4a', head: '#251a31', cloak: '#4e3b60' }, e4: { robe: '#2d3b34', head: '#1d2722', cloak: '#3f4e45' },
       e5: { robe: '#3b3027', head: '#2a221b', cloak: '#57473a' }, e6: { robe: '#27344a', head: '#d8d2c4', cloak: '#3f4f66' },
       e7: { robe: '#7d8492', head: '#5a606c', cloak: '#a9aeb8', legs: '#3a3c44' }
