@@ -29,7 +29,7 @@
   W.leave = function (id) { const i = W.party.indexOf(id); if (i < 0 || W.party.length <= 1) return; W.party.splice(i, 1); W.refreshSheets(); };
   function lookOf(def) { return Object.assign({ kind: 'compagnon' }, def.look); }
   const lueur = look => (G.D > 1 && look.rayon) || look.aura || null; // en dessin fin, un Compagnon rayonne de sa couleur propre (D.RAYONS)
-  W.refreshSheets = function () { W.sheets = W.party.map(id => G.planche(lookOf(W.saga.heroes[id]))); };
+  W.refreshSheets = function () { W.sheets = W.party.map(id => G.planche(lookOf(W.saga.heroes[id]))); W.sheets.forEach(s => { if (s.courir) s.courir(); }); };   // ceux qui courent : leur course est prête avant le premier pas
 
   /* ----- piliers de la Citadelle, prière ----- */
   W.pillars = function () {
@@ -123,7 +123,7 @@
      l'autre (W.suiveur), quelle que soit la cadence de l'écran : à 120 images par seconde, ils ne se chevauchent plus.
      Ils restent sans corps : ils ne bloquent personne, comme dans les jeux de rôle d'autrefois. */
   const PAS_CHEMIN = 1.5, LONG_CHEMIN = 140, ECART = 16, DXD = [0, -1, 1, 0], DYD = [1, 0, 0, -1];
-  const VITESSE = 82, COURSE = 1.75; // points par seconde à la marche ; la course va 1,75 fois plus vite (2.16)
+  const VITESSE = 82, COURSE = 1.225; // points par seconde à la marche ; la course va 1,225 fois plus vite (2.16 : 1,75 ; le décideur, 19 novembre : « il va trop vite, diminue de 30 % »)
   W.VITESSE = VITESSE; W.COURSE = COURSE;
   // au chargement d'un lieu, le chemin est semé derrière le meneur, à l'opposé de son regard : un mur le fait tourner
   // (jamais revenir sur ses pas), un corps ou un mur sans issue l'arrête — les siens apparaissent déjà en file
@@ -396,10 +396,10 @@
       let dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0);
       if (dx || dy) {
         W.dest = null; if (I.build) I.build.aim = null;
-        const court = !!(I.input.course || I.input.maj), sp = VITESSE * dt * (dx && dy ? 0.7071 : 1) * (court ? COURSE : 1); // 2.16 : le joystick poussé au bord, ou Maj tenue, fait courir
+        const court = !!(I.input.course || I.input.maj), sp = VITESSE * dt * (dx && dy ? 0.7071 : 1) * (court ? COURSE : 1), x0 = p.x, y0 = p.y; // 2.16 : le joystick poussé au bord, ou Maj tenue, fait courir
         p.dir = dx < 0 ? 1 : dx > 0 ? 2 : dy < 0 ? 3 : 0;
         const m1 = dx && tryMove(dx * sp, 0), m2 = dy && tryMove(0, dy * sp);
-        p.moving = !!(m1 || m2); p.court = p.moving && court; if (p.moving) { pushTrail(); pas(dt); }
+        p.moving = !!(m1 || m2); p.court = p.moving && court; p.parcours = (p.parcours || 0) + Math.hypot(p.x - x0, p.y - y0); if (p.moving) { pushTrail(); pas(dt); }
       } else if (W.dest) follow(dt);
       else { p.moving = false; p.court = false; }
       pousser(dt);
@@ -498,14 +498,16 @@
     if (!tryMove(mx, my)) { tryMove(mx, 0); tryMove(0, my); }
     const moved = Math.hypot(p.x - x0, p.y - y0);
     if (Math.abs(vx) > Math.abs(vy) * 1.25) p.dir = vx < 0 ? 1 : 2; else if (Math.abs(vy) > Math.abs(vx) * 1.25) p.dir = vy < 0 ? 3 : 0;
-    p.moving = moved > 0.01; p.court = p.moving && !!d.course;
+    p.moving = moved > 0.01; p.court = p.moving && !!d.course; p.parcours = (p.parcours || 0) + moved;
     if (p.moving) { pushTrail(); pas(dt); }
     // buter sur quelqu'un qui va faire un pas de côté n'est pas être coincé (sauf s'il n'a pu s'écarter)
     const pousse = W._heurte && W.npcs.includes(W._heurte) && !(W._heurte._coince > W.t - 1.5);
     if (moved < sp * 0.3 && !pousse) { if (++d.stall > 14) { if (d.raw) return arrive(); d.raw = true; d.stall = 0; d.path = W.route(d.x, d.y); } } else d.stall = 0;
   }
-  // le bruit des pas : cinq par seconde en marchant, huit en courant (la foulée suit l'allure)
-  function pas(dt) { const r = W.player.court ? 8 : 5; if (Math.floor(W.t * r) !== Math.floor((W.t - dt) * r)) I.audio.sfx('step'); }
+  // le bruit des pas : cinq par seconde en marchant ; en courant, un à chaque appui (la foulée : G.FOULEE × 4 points de chemin)
+  function pas(dt) { const p = W.player;
+    if (p.court && G.FOULEE) { const n = Math.floor((p.parcours || 0) / (G.FOULEE * 4)); if (n !== p._appui) { p._appui = n; I.audio.sfx('step'); } return; }
+    const r = 5; if (Math.floor(W.t * r) !== Math.floor((W.t - dt) * r)) I.audio.sfx('step'); }
   // conduit le héros jusqu'à l'objectif : l'aide « M'y conduire », et le test « au doigt »
   W.lead = function () {
     const tg = W.target(), p = W.player; if (!tg) return false;
@@ -644,20 +646,38 @@
 
   /* ----- rendu ----- */
   const POUSSIERE = { sand: '#ecd9aa', dune: '#ecd9aa', path: '#d8be8e' }; // les sols qui lèvent de la poussière, en dessin fin
+  // en courant, une petite poussière à chaque appui — sur la terre et le sable seulement : jamais sur une natte, un tapis, un
+  // pavé ni un sol de maison ; posée au sol (dans le repère de la carte), elle reste où le pied l'a levée
+  const POUDRE = [];
+  function poudre(e, sheet, x, y, dir, parcours) {
+    if (G.D < 2 || G.low || !sheet.course || !G.FOULEE) return;
+    const n = Math.floor(parcours / G.FOULEE), avant = e._img; if (avant === n) return; e._img = n; if (avant === undefined || ((n % 4) + 4) % 4) return;
+    const sol = W.map && W.map.g0 && POUSSIERE[W.map.g0(x, y)]; if (!sol) return;
+    const g = ((n % 8) + 8) % 8 ? 1 : -1, fx = x + (dir === 1 ? -4.5 : dir === 2 ? 4.5 : g * 2.5), fy = y + (dir === 0 ? 1.5 : 0.5);
+    for (let i = 0; i < 3; i++) POUDRE.push({ x: fx + (Math.random() - 0.5) * 3, y: fy, vx: (dir === 1 ? 5 : dir === 2 ? -5 : 0) + (Math.random() - 0.5) * 8, vy: -2 - Math.random() * 3, t: 0, vie: 0.3 + Math.random() * 0.15, r: 0.8 + Math.random() * 0.6, c: sol });
+  }
+  function dessinePoudre(c, cx, cy, dt) {
+    for (let i = POUDRE.length - 1; i >= 0; i--) { const q = POUDRE[i]; q.t += dt || 0; if (q.t >= q.vie) { POUDRE.splice(i, 1); continue; }
+      q.x += q.vx * (dt || 0); q.y += q.vy * (dt || 0); const k = q.t / q.vie, r = q.r * (1 + k); c.globalAlpha = 0.5 * (1 - k); c.fillStyle = q.c; c.fillRect(q.x - cx - r / 2, q.y - cy - r / 2, r, r); }
+    c.globalAlpha = 1; }
   // geste : { anim, port, tau } — celui qui frappe (R.geste) ; le dessin fin seul le connaît.
-  // court : il court (2.16) — la foulée va 1,6 fois plus vite et, de profil, le buste se penche d'un point vers l'avant
-  function drawChar(c, sheet, x, y, dir, moving, t, aura, pose, geste, court) {
-    let f = moving ? [1, 0, 2, 0][Math.floor(t * (court ? 12.8 : 8)) % 4] : 0;
+  // court : il court — en dessin fin, les huit images de sa foulée (sprites.js, « la course »), choisies d'après le chemin
+  // parcouru (parcours, en points) : une image tous les G.FOULEE points, de sorte que le pied d'appui ne glisse pas ; dans le
+  // dessin d'origine, les pas de la 1.32, à la cadence de la marche réglée sur la vitesse (une image tous les VITESSE / 8 points)
+  const imageCourse = (sheet, parcours) => sheet.course ? 4 + ((Math.floor(parcours / G.FOULEE) % sheet.course) + sheet.course) % sheet.course : [1, 0, 2, 0][((Math.floor(parcours / (VITESSE / 8)) % 4) + 4) % 4];
+  W.imageCourse = imageCourse;
+  function drawChar(c, sheet, x, y, dir, moving, t, aura, pose, geste, court, parcours) {
+    let f = moving ? (court ? imageCourse(sheet, parcours || 0) : [1, 0, 2, 0][Math.floor(t * 8) % 4]) : 0;
     x = G.cale(x); y = G.cale(y);
     c.fillStyle = 'rgba(20,12,30,.32)'; c.beginPath(); c.ellipse(x, y + 1, 6, 2.5, 0, 0, 6.3); c.fill();
     if (geste && sheet.look && G.frappe && G.frappe(c, sheet.look, dir, x - 8, y - 22, geste, geste.tau, 'carte')) return;
     if (pose && !moving && sheet.look) { c.drawImage(G.pose(sheet.look, dir, pose), x - 8, y - 22 - (pose === 'surpris' ? 2 : 0)); return; }
+    if (W.trace) W.trace.push({ sheet, x, y, dir, f, court: !!(moving && court) });   // pour les outils (la mesure du pied d'appui)
     if (!sheet.souffle) { c.drawImage(sheet, f * 16, dir * 24, 16, 24, x - 8, y - 22 - (moving && f ? 1 : 0), 16, 24); return; } // le dessin d'origine : comme dans la 1.32
     // en dessin fin : immobile, il respire (une image sur quatre, à son rythme) ; en marche, le corps se hausse d'un point
     // quand les jambes se croisent et se pose quand le pied touche le sol
     if (!moving && Math.sin(t * 2.3) > 0.42) f = 3;
-    if (moving && court && (dir === 1 || dir === 2)) { const y0 = y - 22 - (!f ? 0.5 : 0), taille = 16; // le buste, au-dessus de la taille, avancé d'un point ; les jambes en place
-      c.drawImage(sheet, f * 16, dir * 24 + taille, 16, 24 - taille, x - 8, y0 + taille, 16, 24 - taille); c.drawImage(sheet, f * 16, dir * 24, 16, taille, x - 8 + (dir === 1 ? -0.5 : 0.5), y0, 16, taille); return; }
+    if (f >= 4) { c.drawImage(sheet.courir(), (f - 4) * 16, dir * 24, 16, 24, x - 8, y - 22, 16, 24); return; }   // la course (sa planche à part) : le corps monte et descend dans l'image même
     c.drawImage(sheet, f * 16, dir * 24, 16, 24, x - 8, y - 22 - (moving && !f ? 0.5 : 0), 16, 24);
   }
   W.drawChar = drawChar;
@@ -682,6 +702,7 @@
     } else W._way = null;
     // repère de l'endroit touché
     if (W.dest && W.dest.mark) { const d = W.dest, rr = 4.5 + Math.sin(t * 9) * 1.2; c.strokeStyle = 'rgba(255,246,220,.9)'; c.lineWidth = 1; c.beginPath(); c.ellipse(d.x - cx, d.y - cy, rr, rr * 0.5, 0, 0, 6.3); c.stroke(); }
+    dessinePoudre(c, cx, cy, dt);
     // éléments triés par profondeur
     const list = [];
     for (const o of m.objs) { if (o.x + o.w < cx || o.x - o.w > cx + G.PW || o.y < cy - 4 || o.y - o.h > cy + G.PH) continue; list.push({ y: o.y, o }); }
@@ -700,12 +721,13 @@
       else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = f.sonne > 0 ? 0.4 + Math.sin(t * 22) * 0.12 : 0.85 + (Math.sin(t * 5 + f.ph) + 1) * 0.06; /* 2.16 : un plancher de 0,85 — encore un peu de transparence : ce n'est pas une personne (exigence 6) */ c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; if (f.rodeur && (f.voiles > 0 || f.tenue > 0) && (f.meute || f.tenue !== undefined)) { const nv = Math.ceil(f.meute ? f.voiles : f.tenue); c.fillStyle = f.sonne > 0 ? '#fff3c8' : `hsl(${d.hue},90%,78%)`; for (let i = 0; i < nv; i++) c.fillRect(Math.round(f.x - cx - nv * 2 + i * 4 + 1), Math.round(f.y - cy - s - 7 + bob), 2, 2); } /* ce qui rôde : ses voiles, et le tremblement de qui vient d'être frappé */ lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
       else if (e.bete) { const tr = e.tr, im = I.oeuvres.bete(e.bete, true), bx = Math.round(tr[0] - cx), by = Math.round(tr[1] - cy - im.height - 1 + Math.sin(t * 3) * 1.2); if (tr[2] === 2) { c.save(); c.translate(bx, 0); c.scale(-1, 1); c.drawImage(im, -Math.round(im.width / 2), by); c.restore(); } else c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 24, color: (I.sagas.coeur.animaux[e.bete] || {}).couleur || '#ffe9a8', a: 0.7 }); }
-      else if (e.fol) { const tr = e.tr, mv = W.player.moving; drawChar(c, W.sheets[e.fol], tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null), null, W.player.court); lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (lueur(W.saga.heroes[W.party[e.fol]].look) || '#ffe9a8'), a: 0.4 }); }
+      else if (e.fol) { const tr = e.tr, mv = W.player.moving, pf = (W.player.parcours || 0) - e.fol * ECART, sh = W.sheets[e.fol]; if (mv && W.player.court) { const su = W._suit || (W._suit = {}); poudre(su[e.fol] || (su[e.fol] = {}), sh, tr[0], tr[1], tr[2], pf); } drawChar(c, sh, tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null), null, W.player.court, pf); /* les suiveurs courent quand le meneur court : la même foulée, à leur place sur son chemin */ lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (lueur(W.saga.heroes[W.party[e.fol]].look) || '#ffe9a8'), a: 0.4 }); }
       else if (e.p) { const p = W.player;
         if (G.D > 1 && p.moving && !G.low && POUSSIERE[m.g0 ? m.g0(p.x, p.y) : ''] && Math.random() < 0.3) G.spawn({ x: p.x - cx + (Math.random() - 0.5) * 6, y: p.y - cy + 1, vx: (Math.random() - 0.5) * 10, vy: -4 - Math.random() * 5, life: 0.5 + Math.random() * 0.3, size: 0.6 + Math.random() * 0.5, color: POUSSIERE[m.g0(p.x, p.y)], a: 0.3, type: 'mote', blend: 'source-over' }); // la poussière sous les pas
         const rg = I.rodeurs && I.rodeurs.geste, tau = rg ? W.t - rg.t : -1, gt = rg && D.GEAR_TYPES[rg.type];   // celui qui mène frappe : l'élan, le coup, l'arme en main (s'il repart, le geste s'efface après le coup)
         const frappe = rg && tau >= 0 && tau < (p.moving ? G.FRAPPE.elan + G.FRAPPE.balai : G.dureeFrappe) ? { anim: (gt && gt.anim) || 'geste', port: (rg.port !== undefined ? rg.port : gt && gt.port) || null, tau } : null;
-        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe, p.court); const lk = W.saga.heroes[W.party[0]].look; if (D.DE_2084.indexOf(lk.kind) < 0) lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+        if (p.moving && p.court) poudre(p, W.sheets[0], p.x, p.y, p.dir, p.parcours || 0);
+        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe, p.court, p.parcours || 0); const lk = W.saga.heroes[W.party[0]].look; if (D.DE_2084.indexOf(lk.kind) < 0) lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {

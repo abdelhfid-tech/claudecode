@@ -658,6 +658,145 @@
     G.GESTES = Object.keys(GESTES);
   }
 
+  /* ---------- la course (2.x) ----------
+     Le décideur, le 19 novembre, devant la 2.16 : « on dirait pas que le personnage court, on dirait qu'il vole ou qu'il
+     plane ». Une foulée dessinée — rien n'est repris d'un autre jeu —, huit images par cycle, quatre par pas : l'appui (le
+     pied posé devant, le corps au plus bas), la poussée (la jambe d'appui tendue derrière, le genou de l'autre levé haut),
+     l'envol et la retombée (les deux pieds en l'air) ; puis l'autre jambe. Le buste penché, la tête en avant, les bras pliés
+     qui balancent à l'opposé des jambes ; le corps descend d'un point à l'appui ; le manteau et la robe flottent derrière,
+     une robe longue se soulève et les pieds paraissent. Aucun objet tenu, aucune arme. Le squelette d'une jambe est écrit
+     de profil, une fois (SQUELETTE) ; de face et de dos, le même pas se lit au genou qui monte, au pied qui paraît ou se
+     cache, au buste qui passe au-dessus du pied d'appui, aux bras pliés. Chaque image se fait une fois (course(), COURSE_C). Le pied d'appui ne glisse pas : d'une image d'appui à la suivante, il recule
+     d'autant que le corps avance — G.FOULEE (le chemin parcouru par image, en points de la carte), que world.js lit pour
+     choisir l'image d'après la distance parcourue, et non d'après le temps. */
+  const COURSE_N = 8, HAUT_C = 10;
+  const JAMBES_C = ['appui', 'poussee', 'envol', 'retombee', 'repli', 'genou', 'tendue', 'pose'];   // une jambe, image par image ; l'autre a quatre images d'écart
+  // de profil, tourné vers la gauche (x croît vers l'arrière), en points de 32 × 48 : le genou et la cheville depuis la hanche,
+  // le talon et la pointe du pied depuis la cheville — la cuisse fait six points et demi, la jambe six
+  const SQUELETTE = {
+    appui: { g: [-2.6, 6.0], c: [-5.0, 11.5], t: [1.4, 0.8], p: [-3.6, 1.0] },          // posé devant, à plat
+    poussee: { g: [2.8, 5.9], c: [6.6, 10.7], t: [1.0, -0.3], p: [-0.8, 2.9] },         // tendu derrière, sur la pointe
+    envol: { g: [3.9, 5.0], c: [8.8, 8.2], t: [-0.4, -0.8], p: [1.8, 2.0] },            // emporté derrière, en l'air
+    retombee: { g: [2.0, 6.2], c: [7.6, 4.8], t: [-0.4, -0.8], p: [1.0, 2.4] },         // le talon remonte
+    repli: { g: [-1.6, 6.2], c: [4.0, 5.4], t: [-0.4, -0.8], p: [0.6, 2.6] },           // replié sous le corps, le talon haut
+    genou: { g: [-4.6, 4.4], c: [-2.4, 10.0], t: [0.6, -0.6], p: [-2.2, 1.8] },         // le genou levé haut
+    tendue: { g: [-5.0, 4.6], c: [-7.4, 10.2], t: [1.2, 0.8], p: [-2.6, 0.4] },         // la jambe qui s'allonge
+    pose: { g: [-3.6, 5.7], c: [-5.6, 11.4], t: [1.3, 1.0], p: [-3.4, 1.2] } };         // le pied qui va se poser
+  const BAS_C = [1, 0, 0, 0, 1, 0, 0, 0], HANCHE_C = [13, 14.5];   // le corps descend d'un point à l'appui
+  const AVANCE_C = { appui: 0.6, poussee: -1, envol: -1, retombee: -0.6, repli: 0.1, genou: 0.9, tendue: 1, pose: 0.8 };   // la jambe est-elle devant (1) ou derrière (−1)
+  // le bras proche, de profil, depuis l'épaule : [coude, poignet] quand il est devant (1), qu'il pend (0), qu'il est derrière (−1)
+  const BRAS_C = { 1: [[-2.2, 4.4], [-5.8, 2.0]], 0: [[0.4, 5.0], [-3.0, 7.0]], '-1': [[4.6, 3.2], [5.6, 7.4]] };
+  const brasAt = sw => { const a = sw >= 0 ? BRAS_C[0] : BRAS_C['-1'], b = sw >= 0 ? BRAS_C[1] : BRAS_C[0], t = sw >= 0 ? sw : sw + 1, m = (p, q) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t]; return [m(a[0], b[0]), m(a[1], b[1])]; };
+  // un trait épais dans une grille de lettres (une jambe, un bras) : pts, en points de la grille ; r, son rayon (ou un par
+  // point) ; mat(s, i, t), la lettre d'un point (s > 0 : du côté de la lumière, en haut à gauche ; i : le segment ; t : où, le
+  // long du segment, de 0 à 1 ; null : rien).
+  // o.sous : seulement là où il n'y a rien ; o.lisere : un point de vide le détache de ce qu'il recouvre, sauf à moins de
+  // o.lisere de o.attache, où il tient ; o.rien : ne rien écrire. → les cases tracées
+  function tracer(L, pts, r, mat, o) {
+    o = o || {}; const Hn = L.length, Wn = L[0].length, pris = new Map();
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 0.01, ux = dx / l, uy = dy / l;
+      let nx = -uy, ny = ux; if (nx + ny > 0) { nx = -nx; ny = -ny; }
+      const ra = Array.isArray(r) ? r[i - 1] : r, rb = Array.isArray(r) ? r[i] : r;
+      for (let t = 0; t <= l + 0.001; t += 0.2) { const cx = a[0] + ux * t, cy = a[1] + uy * t, R = ra + (rb - ra) * Math.min(1, t / l);
+        for (let y = Math.floor(cy - R); y <= Math.ceil(cy + R); y++) for (let x = Math.floor(cx - R); x <= Math.ceil(cx + R); x++) {
+          if (x < 0 || x >= Wn || y < 0 || y >= Hn || Math.hypot(x + 0.5 - cx, y + 0.5 - cy) > R) continue;
+          const m = mat((x + 0.5 - cx) * nx + (y + 0.5 - cy) * ny, i - 1, t / l); if (m) pris.set(y * Wn + x, m); } } }
+    if (o.rien) return pris;
+    const ecrits = [];
+    pris.forEach((m, k) => { const x = k % Wn, y = (k - x) / Wn; if (o.sous && L[y][x] !== '.') return; L[y][x] = m; ecrits.push(k); });
+    if (o.lisere) ecrits.forEach(k => { const x = k % Wn, y = (k - x) / Wn; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([ex, ey]) => { const X = x + ex, Y = y + ey;
+      if (X < 0 || X >= Wn || Y < 0 || Y >= Hn || pris.has(Y * Wn + X) || L[Y][X] === '.') return;
+      if (o.attache && Math.hypot(X + 0.5 - o.attache[0], Y + 0.5 - o.attache[1]) < o.lisere) return; L[Y][X] = '.'; }); });
+    return pris;
+  }
+  // un bras de coureur : de l'épaule au coude, puis l'avant-bras plié vers l'avant ; phi, l'angle du bras (0 : il pend ; > 0 :
+  // en arrière) ; v : la direction de l'avant-bras ; la manche (deux tons), son revers, la main
+  function brasCourse(L, ep, coude, poignet, o) {
+    o = o || {}; const v = [poignet[0] - coude[0], poignet[1] - coude[1]], l = Math.hypot(v[0], v[1]) || 1, u = [v[0] / l, v[1] / l];
+    const clair = o.loin ? 'c' : 'C', sombre = o.loin ? 'k' : 'c';
+    tracer(L, [ep, coude, poignet], o.r || [1.9, 1.7, 1.5], s => s > -0.35 ? clair : sombre, o.loin ? { sous: true } : { lisere: 3.2, attache: ep });
+    const le = (x, y) => (x + 0.5 - poignet[0]) * u[0] + (y + 0.5 - poignet[1]) * u[1];
+    for (let y = 0; y < L.length; y++) for (let x = 0; x < W2; x++) if ((L[y][x] === clair || L[y][x] === sombre) && Math.hypot(x + 0.5 - poignet[0], y + 0.5 - poignet[1]) < 2.2 && le(x, y) > -1.0) L[y][x] = 'k';   // le revers
+    const main = [poignet[0] + u[0] * 1.5, poignet[1] + u[1] * 1.5];
+    tracer(L, [main, main], o.rm || 1.5, () => 'N', o.loin ? { sous: true } : { lisere: 2, attache: poignet });
+    return main;
+  }
+  const SANS_BRAS_L = varie('profil sans bras (course)', CORPS.l[0], { 3: '.........RRRRRrcccccccck........', 4: '.........RRRRRrcccccccck........', 5: '.........RRRRrrcccccccck........', 6: '.........RRRRrrcccccccck........',
+    7: '.........RRRRrrccccccckk........', 8: '.........RRRRrrccccccckk........', 9: '.........RRRrrrccccccckk........', 10: '.........AAAAAaccccccckk........', 11: '.........aAAAaaccccccckk........',
+    12: '.........SSSSSssskkkkeee........', 13: '.........SSSSSssskkkeeee........', 14: '.........SSSSSssskkeeeee........', 15: '.........SSSSSssskeeeeeE........' });
+  const grille40 = () => { const L = []; for (let y = 0; y < 40; y++) L.push(VIDE.split('')); return L; };
+  // de profil
+  function courseProfil(n, court) {
+    const L0 = CORPS.l[0], L = grille40(), dy = BAS_C[n], H0 = HAUT_C + dy, pen = j => j <= 4 ? -3 : j <= 8 ? -2 : j <= 11 ? -1 : 0;
+    const A = SQUELETTE[JAMBES_C[n]], B = SQUELETTE[JAMBES_C[(n + 4) % 8]], vague = Math.sin(n / COURSE_N * 2 * Math.PI);
+    // 1. le pan du manteau, derrière : celui du repos, emporté vers l'arrière et soulevé, qui ondule
+    for (let j = 12; j <= 25; j++) for (let x = 16; x < W2; x++) { const m = SANS_BRAS_L[j][x]; if ('Eek'.indexOf(m) < 0) continue;
+      const f = (j - 12) / 13, X = x + Math.round(f * (4 + vague)), Y = j - Math.round(f * f * (4 + vague)) + H0; if (X < W2 && Y < 40) L[Y][X] = m; }
+    // 2. le buste, penché : trois points en avant aux épaules, un à la taille
+    for (let j = 0; j <= 11; j++) for (let x = 0; x < W2; x++) { const m = SANS_BRAS_L[j][x], X = x + pen(j); if (m !== '.' && X >= 0) L[j + H0][X] = m; }
+    // 3. les jambes : celle de derrière, puis la proche ; le pied au bout
+    const hip = [HANCHE_C[0], HANCHE_C[1] + dy + HAUT_C], cuisses = [];
+    const jambe = (S, proche) => { const g = [hip[0] + S.g[0], hip[1] + S.g[1]], c = [hip[0] + S.c[0], hip[1] + S.c[1]];
+      const clair = court ? (proche ? 'L' : 'l') : 'Z', sombre = court ? (proche ? 'l' : 'Z') : 'Z';   // sous une robe longue, la jambe dans son ombre
+      cuisses.push(tracer(L, [hip, g], [2.4, 2.0], () => 'S', { rien: true }));   // la place de la cuisse : la robe la couvre
+      tracer(L, [hip, g, c], [2.4, 2.0, 1.5], s => s > -0.3 ? clair : sombre, proche ? { lisere: 3.6, attache: hip } : {});
+      tracer(L, [[c[0] + S.t[0], c[1] + S.t[1]], [c[0] + S.p[0], c[1] + S.p[1]]], 1.05, s => proche && s > -0.2 ? 'F' : 'f', proche ? { lisere: 2.2, attache: c } : {}); };
+    jambe(B, false); jambe(A, true);
+    // 4. la robe, de la taille à l'ourlet : elle suit les cuisses ; longue, elle se soulève (l'ourlet remonte de trois points)
+    const ourlet = (court ? 18 : 22) + dy + HAUT_C, bord = j => { const r = L0[Math.min(25, Math.max(12, j))]; let a = -1, b = -1; for (let x = 0; x < W2; x++) if ('SsLlMZ'.indexOf(r[x]) >= 0) { if (a < 0) a = x; b = x; } return [a, b]; };
+    const ext = {}; cuisses.forEach(P => P.forEach((m, k) => { const x = k % W2, y = (k - x) / W2; const e = ext[y] || (ext[y] = [99, -1]); e[0] = Math.min(e[0], x); e[1] = Math.max(e[1], x); }));
+    let der = null;
+    for (let y = 12 + dy + HAUT_C; y <= ourlet; y++) { const b0 = bord(y - H0), e = ext[y] || der || [b0[0] + 1, b0[1] - 1]; if (ext[y]) der = ext[y];
+      const a = Math.min(b0[0] + (y - H0 <= 13 ? -1 : 0), e[0] - (court ? 0 : 1)), b = Math.max(b0[1], e[1] + (court ? 0 : 1));
+      for (let x = Math.max(0, a); x <= Math.min(W2 - 1, b); x++) L[y][x] = y === ourlet && !court ? 'Z' : (y - H0 <= 19 ? (x >= b - 1 ? 's' : 'S') : (x >= b - 1 ? 'l' : 'L')); }
+    if (!court) for (let y = 0; y < 40; y++) for (let x = 0; x < W2; x++) if (L[y][x] === 'Z' && y > ourlet && (y === 39 || 'Ff.'.indexOf(L[y + 1][x]) >= 0)) L[y][x] = 'M';   // le galon ne court qu'au bas de la robe, pas au bas des jambes
+    // 5. les bras, pliés, à l'opposé des jambes : celui de derrière d'abord (seulement là où il n'y a rien), puis le proche
+    const sw = -AVANCE_C[JAMBES_C[n]], ep = [14.5, 2.6 + H0], ep2 = [12.6, 2.9 + H0];
+    const bras = (e, v, o) => { const q = brasAt(v); return brasCourse(L, e, [e[0] + q[0][0], e[1] + q[0][1]], [e[0] + q[1][0], e[1] + q[1][1]], o); };
+    bras(ep2, -sw, { loin: true }); bras(ep, sw);
+    return { haut: HAUT_C, rows: gabarit('course de profil', L.map(r => r.join('')), 40), tete: [-3, dy], glisse: j => pen(j - dy), main: null };
+  }
+  // de face (dos : de dos) : le même pas, vu de devant ou de derrière ; A est la moitié gauche de l'image
+  const LEVE_C = { appui: -1, poussee: 0, envol: 2, retombee: 3, repli: 2, genou: 4, tendue: 3, pose: 1 };
+  function courseFace(n, court, dos) {
+    const B0 = dos ? CORPS.u[0] : CORPS.d[0], L = grille40(), dy = BAS_C[n], H0 = HAUT_C + dy, sA = JAMBES_C[n], sB = JAMBES_C[(n + 4) % 8];
+    const appuie = s => s === 'appui' || s === 'poussee', sx = appuie(sA) ? -1 : appuie(sB) ? 1 : 0;   // le buste passe au-dessus du pied d'appui
+    // 1. le bas du corps, moitié par moitié : celle dont le genou monte remonte, son pied paraît (de face) ou se cache ; de
+    // dos, le pied lancé en arrière montre sa semelle
+    for (let j = 12; j <= 29; j++) for (let x = 0; x < W2; x++) { let m = B0[j][x]; if (m === '.') continue;
+      if (j <= 15 && (x < 10 || x > 21)) m = m === 'N' ? 'E' : m;   // les mains ôtées (les bras se retracent plus bas)
+      if (j <= 14 && (x < 10 || x > 21)) continue;
+      const s = x < 16 ? sA : sB, robe = x >= 9 && x <= 22, h = j >= 17 ? (robe ? LEVE_C[s] : j >= 22 ? 2 : 1) : 0, pied = m === 'F' || m === 'f';   // hors de la robe : les pans du manteau, soulevés
+      if (pied && (dos ? (s === 'genou' || s === 'tendue' || s === 'repli') : (s === 'envol' || s === 'retombee' || s === 'repli'))) continue;
+      if (pied && !dos && s === 'poussee' && j < 28) continue;   // de face, le pied d'appui resté derrière : la pointe seule
+      const Y = j - h + H0 - (j >= 17 ? dy : 0) + (j >= 26 ? 0 : 0), X = x + (j < 17 ? sx : 0); if (Y >= 0 && Y < 40 && X >= 0 && X < W2) L[Y][X] = m; }
+    // de dos, la semelle du pied lancé en arrière, sous l'ourlet relevé
+    if (dos) [[sA, 0], [sB, 1]].forEach(([s, c]) => { if (s !== 'envol' && s !== 'retombee') return; const x0 = c ? 18 : 9, y0 = 26 - LEVE_C[s] + HAUT_C;
+      ['.ZZZZ.', 'fFFFFf', '.ffff.'].forEach((r, i) => { for (let k = 0; k < r.length; k++) if (r[k] !== '.') L[y0 + i][x0 + k] = r[k]; }); });
+    // 2. le buste, au-dessus du pied d'appui
+    for (let j = 0; j <= 11; j++) for (let x = 0; x < W2; x++) { const m = B0[j][x]; if (m === '.' || ((x < 10 || x > 21) && j >= 4)) continue; const X = x + sx; if (X >= 0 && X < W2) L[j + H0][X] = m; }
+    // 3. les bras, pliés : le bras qui va devant (à l'opposé de la jambe de sa moitié) ramène la main devant la poitrine ;
+    // celui qui va derrière la laisse à la hanche. De dos, celui qui va devant passe derrière le corps.
+    [[sA, 1], [sB, -1]].forEach(([s, c]) => { const t = (1 - AVANCE_C[s]) / 2, X = x => c > 0 ? x + sx : W2 - x + sx, ep = [X(7.5), 3.4 + H0], mix2 = (a, b) => a + (b - a) * t;
+      // t : 1, le bras devant ; 0, derrière
+      const coude = dos ? [X(mix2(5.6, 7.0)), mix2(6.6, 8.0) + H0] : [X(mix2(6.6, 6.4)), mix2(8.4, 7.4) + H0], poignet = dos ? [X(mix2(6.6, 9.0)), mix2(10.2, 9.0) + H0] : [X(mix2(7.2, 10.6)), mix2(11.6, 7.4) + H0];
+      brasCourse(L, ep, coude, poignet, dos ? (t > 0.5 ? { loin: true } : {}) : (t < 0.35 ? { loin: true } : {})); });
+    return { haut: HAUT_C, rows: gabarit(dos ? 'course de dos' : 'course de face', L.map(r => r.join('')), 40), tete: [sx, dy + 1], glisse: null, main: null };
+  }
+  const COURSE_C = {};   // court / long : les deux bas du corps
+  function course(key, n, court) {
+    const k = key + n + (court ? 'c' : 'l'); if (COURSE_C[k]) return COURSE_C[k];
+    return (COURSE_C[k] = key === 'l' ? courseProfil(n, court) : courseFace(n, court, key === 'u'));
+  }
+  G.COURSE = COURSE_N;
+  // la foulée : d'une image d'appui à la suivante (la poussée), le pied posé recule dans l'image d'autant que le corps avance —
+  // mesuré sur le dessin même (le milieu des points du pied, sur la ligne du sol), en points de 32 × 48 ; la carte en compte
+  // deux fois moins. G.FOULEE : le chemin parcouru par image, en points de la carte (world.js)
+  { const pied = q => { const r = q.rows; let y = r.length - 1; while (y > 0 && !/[Ff]/.test(r[y])) y--; let n = 0, sx = 0; for (let x = 0; x < W2; x++) if (r[y][x] === 'F' || r[y][x] === 'f') { n++; sx += x; } return sx / n; };
+    G.FOULEE = (pied(course('l', 1, true)) - pied(course('l', 0, true))) / 2; }
+  const marcheDe = f => f >= 4 ? [0, 1, 1, 0, 0, 2, 2, 0][(f - 4) % COURSE_N] : f;   // une image de la course, là où il n'y a que les pas d'avant
+
   /* ---------- têtes natives ----------
      Une tête = un haut (8 lignes : le sommet de la coiffe), un bandeau (2 lignes) et un tour de visage (10 lignes, dont
      les 2 dernières recouvrent le col). Les turbans partagent bandeau et tour de visage ; les casques, le camail. */
@@ -1408,13 +1547,68 @@
     resolu: { d: { bras: { g: [[19, 34], [15, 23], [14, 11]] } }, l: { bras: { p: [[37, 34], [44, 26], [45, 13]] } }, u: { bras: { d: [[46, 34], [50, 23], [51, 11]] } } },
     accable: { d: { genoux: true, tete: [0, 4] }, l: { genoux: true, tete: [-3, 3] }, u: { genoux: true, tete: [0, 4] } }
   };
-  // une image du râwî : son habit, sa vue, et ce qu'il fait — 'repos', 'pas1', 'pas2', un geste (GESTES) ou une pose
+  // la course du râwî, à 64 × 96 : le même squelette que les autres personnages (SQUELETTE, deux fois plus grand), sur son
+  // habit. De profil, le haut du corps penché, le manteau emporté derrière et soulevé, les chausses et les bottes retracées
+  // de la hanche au pied, les bras pliés ; de face et de dos, la moitié dont le genou monte remonte, le pied paraît ou se
+  // cache (de dos, la semelle du pied lancé en arrière), les bras pliés. Rien en main.
+  function rawiCourse(T, key, n, h) {
+    const dy = BAS_C[n], sA = JAMBES_C[n], sB = JAMBES_C[(n + 4) % 8], K2 = 2, vague = Math.sin(n / COURSE_N * 2 * Math.PI);
+    const descendre = (k, y1) => { if (!k) return; for (let y = y1; y >= 0; y--) T[y] = y - k >= 0 ? T[y - k].slice() : new Array(64).fill('.'); };   // le haut du corps descend de k points
+    if (key === 'l') {
+      sansBras(T, 'l', ['p'], h.coupe);
+      // sous la taille : le manteau, emporté derrière et soulevé ; les chausses, les bottes et le bas de la tunique ôtés
+      const pan = [];
+      for (let y = 61; y < 96; y++) for (let x = 0; x < 64; x++) { const m = T[y][x]; if (m === '.') continue; if (est(m, 'Cckd')) pan.push([x, y, m]); if (est(m, 'CckdSs' + JAMBE)) T[y][x] = '.'; }
+      pan.forEach(([x, y, m]) => { const f = (y - 60) / 20, X = x + Math.round(f * (9 + 2 * vague)), Y = y - Math.round(f * f * (7 + 2 * vague)); if (X < 64) T[Y][X] = m; });
+      pencher(T, y => y <= 36 ? -6 : y <= 44 ? -4 : y <= 52 ? -2 : y <= 60 ? -1 : 0);
+      descendre(2 * dy, 60);
+      // les jambes : celle de derrière, puis la proche — la cuisse et la jambe dans les chausses, la botte jusqu'à mi-jambe
+      const hip = [27, 64 + 2 * dy], cuisses = [];
+      const jambe = (S, proche) => { const g = [hip[0] + K2 * S.g[0], hip[1] + K2 * S.g[1]], c = [hip[0] + K2 * S.c[0], hip[1] + K2 * S.c[1]];
+        cuisses.push(tracer(T, [hip, g], [4.8, 4.0], () => 'S', { rien: true }));
+        tracer(T, [hip, g, c], [4.8, 4.0, 3.0], (s, i, t) => i === 1 && t > 0.55 ? (proche && s > -0.6 ? 'F' : 'f') : proche ? (s > 0.8 ? 'L' : s > -1.6 ? 'l' : 'Z') : (s > 0.4 ? 'l' : 'Z'), proche ? { lisere: 7.5, attache: hip } : {});
+        tracer(T, [[c[0] + K2 * S.t[0], c[1] + K2 * S.t[1]], [c[0] + K2 * S.p[0], c[1] + K2 * S.p[1]]], 2.2, s => proche && s > -0.4 ? 'F' : 'f', proche ? { lisere: 4.6, attache: c } : {}); };
+      jambe(SQUELETTE[sB], false); jambe(SQUELETTE[sA], true);
+      // la robe longue : la tunique couvre les cuisses et se soulève, l'ourlet au-dessus des bottes
+      if (h.longue) { const ext = {}; cuisses.forEach(P => P.forEach((m, k) => { const x = k % 64, y = (k - x) / 64, e = ext[y] || (ext[y] = [99, -1]); e[0] = Math.min(e[0], x); e[1] = Math.max(e[1], x); }));
+        let der = [20, 34]; const ourlet = 76 + 2 * dy;
+        for (let y = 60 + 2 * dy; y <= ourlet; y++) { const e = ext[y] || der; if (ext[y]) der = e; const a = Math.min(20, e[0] - 1), b = Math.max(33, e[1] + 1);
+          for (let x = a; x <= b; x++) T[y][x] = y === ourlet ? 's' : x > b - 3 ? 's' : 'S'; } }
+      // les bras, pliés, à l'opposé des jambes : celui de derrière seulement là où il n'y a rien
+      const sw = -AVANCE_C[sA], ep = [29, 34 + 2 * dy], ep2 = [25, 35 + 2 * dy];
+      const bras = (e, v, o) => { const q = brasAt(v); bras64(T, [e, [e[0] + K2 * q[0][0], e[1] + K2 * q[0][1]], [e[0] + K2 * q[1][0], e[1] + K2 * q[1][1]]], h.coupe, o); };
+      bras(ep2, -sw, { sous: true }); bras(ep, sw);
+      return T; }
+    // de face, de dos
+    const dos = key === 'u', G0 = RAWI_GEO[key], appuie = s => s === 'appui' || s === 'poussee', sx = appuie(sA) ? -2 : appuie(sB) ? 2 : 0;
+    sansBras(T, key, ['g', 'd'], h.coupe);
+    const src = copie(T), jambe = m => est(m, JAMBE + 'Ss');
+    for (let y = 61; y < 96; y++) for (let x = 0; x < 64; x++) T[y][x] = '.';
+    // les pans du manteau, soulevés ; puis les jambes, moitié par moitié
+    for (let y = 61; y < 96; y++) for (let x = 0; x < 64; x++) { const m = src[y][x]; if (m === '.' || jambe(m)) continue; const Y = y - Math.round(2 + vague * (x < 32 ? 1 : -1)); if (Y >= 61) T[Y][x] = m; }
+    for (let y = 61; y < 96; y++) for (let x = 0; x < 64; x++) { const m = src[y][x]; if (!jambe(m)) continue;
+      const s = x < 32 ? sA : sB, hh = y >= 70 ? K2 * LEVE_C[s] : 0, pied = m === 'F' || m === 'f';
+      if (pied && (dos ? (s === 'genou' || s === 'tendue' || s === 'repli') : (s === 'envol' || s === 'retombee' || s === 'repli'))) continue;
+      const Y = y - hh; if (Y >= 61 && Y < 96) T[Y][x] = m; }
+    if (dos) [[sA, 0], [sB, 1]].forEach(([s, c]) => { if (s !== 'envol' && s !== 'retombee') return; const x0 = c ? 35 : 18, y0 = 84 - K2 * LEVE_C[s];
+      ['..ZZZZZZZ..', '.ZZZZZZZZZ.', 'fFFFFFFFFFf', 'fFFFFFFFFff', '.fffffffff.', '..fffffff..'].forEach((r, i) => { for (let k = 0; k < r.length; k++) if (r[k] !== '.') T[y0 + i][x0 + k] = r[k]; }); });
+    pencher(T, y => y <= 60 ? sx : 0);
+    descendre(2 * dy, 60);
+    bougerTete(T, key, 0, 2, 2 * dy);
+    [[sA, 'g'], [sB, 'd']].forEach(([s, c]) => { const t = (1 - AVANCE_C[s]) / 2, e0 = G0.epaule[c], sg = c === 'g' ? 1 : -1, ep = [e0[0] + sx, e0[1] + 2 * dy], mix2 = (a, b) => a + (b - a) * t;
+      const rel = (x, y) => [ep[0] + sg * K2 * (x - 7.5), ep[1] + K2 * (y - 3.4)];
+      const coude = dos ? rel(mix2(5.6, 7.0), mix2(6.6, 8.0)) : rel(mix2(6.6, 6.4), mix2(8.4, 7.4)), poignet = dos ? rel(mix2(6.6, 9.0), mix2(10.2, 9.0)) : rel(mix2(7.2, 10.6), mix2(11.6, 7.4));
+      bras64(T, [ep, coude, poignet], h.coupe, dos ? (t > 0.5 ? { sous: true } : {}) : (t < 0.35 ? { sous: true } : {})); });
+    return T;
+  }
+  // une image du râwî : son habit, sa vue, et ce qu'il fait — 'repos', 'pas1', 'pas2', 'course0' à 'course7', un geste (GESTES) ou une pose
   // (D.POSES). → { L4 (64 × 96), L32 (32 × 48), main (la main qui frappe, à 32 × 48), kneel }
   const RV = {};
   function rawiVariante(h, key, quoi) {
     const k = h.coupe + h.coiffe + (h.longue ? 'L' : '') + key + quoi; if (RV[k]) return RV[k];
     let T = copie(rawiHabit(h, key)), main = null, kneel = false;
-    if (quoi === 'pas1' || quoi === 'pas2') {
+    if (/^course\d$/.test(quoi)) T = rawiCourse(T, key, +quoi.slice(6), h);
+    else if (quoi === 'pas1' || quoi === 'pas2') {
       if (key === 'l') { const un = quoi === 'pas1'; cisailler(T, un ? -4 : 3, un ? 4 : -3); tournerBras(T, 'l', 'p', un ? -0.3 : 0.3, h.coupe); }
       else T = foulee64(T, key === 'd' ? (quoi === 'pas1' ? 'g' : 'd') : (quoi === 'pas1' ? 'd' : 'g'), RAWI_PAS[key]); }
     else if (quoi !== 'repos') {
@@ -1468,14 +1662,14 @@
   }
   // où pend la lanterne du râwî (32 × 48) : à la main qui pend, de son côté (de face, à droite de l'image ; de dos, à gauche) ;
   // la main prise, à la ceinture ; à genoux, posée à côté de lui. → { x, y, en }, ou null (de dos, la main prise)
-  function lanterneRawi(L, key, kneel) {
+  function lanterneRawi(L, key, kneel, court) {
     const mi = 16, cote = x => key === 'd' ? x >= mi : key === 'u' ? x < mi : true, ceinture = 23;
     let yb = -1, xs = []; for (let y = 18; y < 48; y++) for (let x = 0; x < 32; x++) if (L[y][x] === 'N' && cote(x)) { if (y > yb) { yb = y; xs = []; } if (y === yb) xs.push(x); }
     const xm = xs.length ? Math.floor(xs.reduce((s, v) => s + v, 0) / xs.length) : -1, lr = LANTERNE[2].rows.length;
     if (kneel) { let sol = 47; while (sol > 0 && L[sol].every(m => m === '.')) sol--; return { x: key === 'u' ? 6 : key === 'd' ? 27 : 8, y: sol - lr + 1, en: 'sol' }; }
-    if (xm >= 0 && yb >= ceinture) return { x: xm, y: yb + 1, en: 'main' };
+    if (xm >= 0 && yb >= ceinture && !court) return { x: xm, y: yb + 1, en: 'main' };
     if (key === 'u') return null;
-    return { x: key === 'd' ? 21 : 12, y: ceinture + 2, en: 'ceinture' };
+    return { x: key === 'd' ? 21 : court ? 10 : 12, y: ceinture + 2, en: 'ceinture' };   // en courant, elle reste à la ceinture
   }
   // la grille du râwî : 32 × 48 (L), et son gabarit de 64 × 96 (rawi.L4), les objets tenus posés aux mêmes places
   function rawiGrille(look, K0, dessin, dir, frame, pose) {
@@ -1483,7 +1677,8 @@
     // le râwî porte toujours le long manteau (décideur, 19 novembre : « supprime les choix d'Idris sans manteau ») : un
     // ensemble qui disait « sans manteau » (la veste de la ruelle) le porte aussi, comme ceux qui disaient « épaule » ou « ample »
     const h = { coupe: 'long', coiffe: K0.coiffe, longue: K0.court === false };
-    const quoi = Ge ? pose : pose && RAWI_POSES[pose] && RAWI_POSES[pose][key] ? pose : frame === 1 || frame === 2 ? 'pas' + frame : 'repos';
+    const Co = !Ge && !pose && frame >= 4;   // la course : rien en main, la lanterne à la ceinture
+    const quoi = Ge ? pose : pose && RAWI_POSES[pose] && RAWI_POSES[pose][key] ? pose : Co ? 'course' + ((frame - 4) % COURSE_N) : frame === 1 || frame === 2 ? 'pas' + frame : 'repos';
     const Vr = rawiVariante(h, key, quoi);
     const K = Object.assign({}, K0, { sombre: false });   // sous la capuche de la maquette, le visage est dans la lumière
     const L = Vr.L32.map(r => r.split('')), am = L.map(r => r.map(() => 0)), fin = L.map(r => r.map(() => 0)), L4 = Vr.L4.map(r => r.split(''));
@@ -1491,12 +1686,12 @@
     // les objets tenus (au combat : l'arme portée) : ceux de grid(), agrandis comme pour les autres personnages, ramenés aux mains du râwî
     const r = grid(look, dir === 2 ? 1 : dir, 0, null, {});
     if (r.objets.length) { const a = mains(L), b = mains(scale2x(r.g)); const dx = a && b ? Math.round(a[0] - b[0]) : 0, dy = a && b ? Math.round(a[1] - b[1]) : 0;
-      r.objets.forEach(o => { if (Ge && EN_MAIN.indexOf(o.nom) >= 0) return; const o2 = scale2x(o.g);   // l'arme qui frappe : le moteur la pose dans la main
+      r.objets.forEach(o => { if ((Ge && EN_MAIN.indexOf(o.nom) >= 0) || Co) return; const o2 = scale2x(o.g);   // l'arme qui frappe : le moteur la pose dans la main
         for (let y = 0; y < H2; y++) for (let x = 0; x < W2; x++) { const m = o2[y][x], X = x + dx, Y = y + dy; if (m === '.' || X < 0 || X >= W2 || Y < 0 || Y >= H2 || L[Y][X] === 'N' || L[Y][X] === 'V') continue;
           L[Y][X] = m; fin[Y][X] = 1; for (let j = 0; j < 2; j++) for (let i = 0; i < 2; i++) if (L4[2 * Y + j][2 * X + i] !== 'N' && L4[2 * Y + j][2 * X + i] !== 'V') L4[2 * Y + j][2 * X + i] = m; } }); }
     // la lanterne (D193) : son dessin de 32 × 48 et celui de 64 × 96, au même endroit ; jamais sur une main ni sur le visage
     const lant4 = [];
-    if ((look.porte || []).indexOf('lanterne') >= 0) { const ou = lanterneRawi(L, key, Vr.kneel);
+    if ((look.porte || []).indexOf('lanterne') >= 0) { const ou = lanterneRawi(L, key, Vr.kneel, Co);
       if (ou) {
         poserObjet('lanterne', 2, (x, y, m) => { if (x >= 0 && x < W2 && y >= 0 && y < H2 && L[y][x] !== 'N' && L[y][x] !== 'V') { L[y][x] = m; fin[y][x] = 1; } }, { key, ou });
         poserObjet('lanterne', 4, (x, y, m) => { if (x >= 0 && x < 64 && y >= 0 && y < 96 && L4[y][x] !== 'N' && L4[y][x] !== 'V') { L4[y][x] = m; lant4.push([x, y]); } }, { key, ou }); } }
@@ -1565,10 +1760,11 @@
     const K0 = kindOf(look), key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l', nom = HEADS[K0.coiffe] ? K0.coiffe : 'imama';
     { const dr = rawiDe(look, K0); if (dr) return rawiGrille(look, K0, dr, dir, frame, pose); }   // le râwî d'après la maquette (pilote)
     const Ge = pose && GESTES[pose] ? GESTES[pose][key] : null; if (Ge) frame = 0;   // un geste de frappe : son propre gabarit, pas une pose du récit
+    const Co = !Ge && !pose && frame >= 4 ? course(key, (frame - 4) % COURSE_N, !!K0.court) : null, Gt = Ge || Co;   // la course : ses huit images
     const tt = TETES[nom] && TETES[nom][key], P = !Ge && pose && POSES[pose] && POSES[pose][key] ? POSES[pose] : null;
-    const A = Ge || (P ? (ALLURES[pose] && ALLURES[pose][key]) : (CORPS[key] && CORPS[key][frame || 0]));
+    const A = Gt || (P ? (ALLURES[pose] && ALLURES[pose][key]) : (CORPS[key] && CORPS[key][frame || 0]));
     if (!tt || !A) return null;
-    const r = grid(look, dir, frame, Ge ? null : pose, {}), K = r.K, kneel = r.kneel, hy = P ? (P.hy || 0) : 0, haut = A.haut || 0;
+    const r = grid(look, dir, Co ? 0 : frame, Ge ? null : pose, {}), K = r.K, kneel = r.kneel, hy = P ? (P.hy || 0) : 0, haut = A.haut || 0;
     let rows = A.rows || A; if (K.petit && !kneel) rows = rows.filter((x, j) => PETIT.indexOf(j - haut) < 0);
     const bT = H2 - rows.length, cou = bT + haut, y1 = kneel ? H2 : H2 - 4, L = [], am = [], fin = []; let hors = 0; // am : l'armure ; fin : dessiné tel quel, sans modelé
     for (let y = 0; y < H2; y++) { L.push(new Array(W2).fill('.')); am.push(new Array(W2).fill(0)); fin.push(new Array(W2).fill(0)); }
@@ -1597,16 +1793,16 @@
       for (let y = cou + 10; y < cou + 12; y++) for (let x2 = 0; x2 < W2; x2++) if ('Aa'.indexOf(L[y][x2]) >= 0) L[y][x2] = 'y'; }
     // les objets tenus : ceux de grid(), agrandis, ramenés à la hauteur de la main
     const dyo = kneel ? 0 : (cou + 13 - (K.petit ? 2 : 0)) - (2 * r.b0 + 10);
-    r.objets.forEach(o => { if (Ge && EN_MAIN.indexOf(o.nom) >= 0) return; /* l'arme qui frappe : le moteur la pose dans la main */ const o2 = scale2x(o.g), dxo = key === 'd' ? (HAMPES.indexOf(o.nom) >= 0 ? 2 : 0) : key === 'l' && (o.nom === 'durra' || o.nom === 'calame') ? 10 : 0; // la hampe vient contre la main
+    r.objets.forEach(o => { if ((Ge && EN_MAIN.indexOf(o.nom) >= 0) || Co) return; /* l'arme qui frappe : le moteur la pose dans la main ; en courant, rien en main */ const o2 = scale2x(o.g), dxo = key === 'd' ? (HAMPES.indexOf(o.nom) >= 0 ? 2 : 0) : key === 'l' && (o.nom === 'durra' || o.nom === 'calame') ? 10 : 0; // la hampe vient contre la main
       for (let y = 0; y < H2; y++) for (let x = 0; x < W2; x++) { const m = o2[y][x], X = x + dxo, Y = y + dyo; if (m !== '.' && X < W2 && Y >= 0 && Y < H2 && L[Y][X] !== 'N') { L[Y][X] = m; am[Y][X] = 0; fin[Y][X] = 1; } } });
     // les objets du râwî (D193) : leur dessin de 32 × 48, ici ; celui de 64 × 96 se pose sur la grille fine (fine()), au même
     // endroit — d'où ce qu'on garde : la grille sans eux (sans), et où passe la tête (tm), qui les recouvre
     const rawi = (look.porte || []).filter(o => RAWI_OBJETS.indexOf(o) >= 0); let sans = null, natifs = null, tm = null;
-    if (rawi.length) { const copie = t => t.map(row => row.slice()), glisse = Ge && Ge.glisse ? Ge.glisse : null, ou = rawi.indexOf('lanterne') >= 0 ? lanterneOu(L, key, cou, 2, kneel, glisse) : null;
+    if (rawi.length) { const copie = t => t.map(row => row.slice()), glisse = Gt && Gt.glisse ? Gt.glisse : null, ou = rawi.indexOf('lanterne') >= 0 ? lanterneOu(L, key, cou, 2, kneel, glisse) : null;
       sans = { L: copie(L), am: copie(am), fin: copie(fin) }; tm = L.map(() => new Array(W2).fill(0)); natifs = { noms: rawi, key, b0: cou, ou, glisse, dir };
       rawi.forEach(o => poserObjet(o, 2, (x, y, m) => { if (x >= 0 && x < W2 && y >= 0 && y < H2 && L[y][x] !== 'N') { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1; } }, { b0: cou, key, ou, glisse })); }
     // la tête, inclinée ou abaissée selon la pose ; le cimier suit le sommet du casque
-    const y0 = cou - 18 + 2 * hy + (Ge ? Ge.tete[1] : 0), x0 = (hy && key === 'l' ? -2 : 0) + (Ge ? Ge.tete[0] : 0), pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1;
+    const y0 = cou - 18 + 2 * hy + (Gt ? Gt.tete[1] : 0), x0 = (hy && key === 'l' ? -2 : 0) + (Gt ? Gt.tete[0] : 0), pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1;
       if (sans) { sans.L[y][x] = m; sans.am[y][x] = 0; sans.fin[y][x] = 1; tm[y][x] = 1; } } };
     const nt = neonTete(K, tt, 2);   // le bandeau du râwî sous le turban et le chèche : ses néons (D193)
     for (let j = 0; j < (kneel ? 20 : tt.length); j++) for (let x = 0; x < W2; x++) if (tt[j][x] !== '.') pose1(x + x0, y0 + j, nt ? nt(j, x, tt[j][x]) : tt[j][x]); // à genoux, le pan du turban ne descend pas
@@ -1725,6 +1921,7 @@
       const g0 = grand(look, dir, 0, pose, fin2), cv3 = mk(g0.width, g0.height), c3 = cv3.getContext('2d'), taille = Math.round(g0.height * 0.66);
       c3.drawImage(g0, 0, taille, g0.width, g0.height - taille, 0, taille, g0.width, g0.height - taille); c3.drawImage(g0, 0, 1, g0.width, taille - 1, 0, 0, g0.width, taille - 1); c3.drawImage(g0, 0, taille, g0.width, 1, 0, taille - 1, g0.width, 1);
       if (g0.hd) cv3.hd = g0.hd; return (scache[k3] = cv3); }
+    if (frame >= 4 && (!G.natif || !natifGrille(look, dir, 0, pose))) frame = marcheDe(frame);   // sans grand dessin natif : la course se dessine avec les pas d'avant
     if (!G.natif) { if (s === 1) return ancien(look, dir, frame, pose); const ka = 'A' + ck(look, dir, frame, pose); return scache[ka] || (scache[ka] = G.epx(ancien(look, dir, frame, pose))); }
     const k = (s === 2 ? 'N' : 'n') + (G.rawi64 ? '' : 'r') + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
     const n = natifGrille(look, dir, frame, pose); if (!n) return (scache[k] = s === 2 ? G.epx(ancien(look, dir, frame, pose)) : ancien(look, dir, frame, pose));
@@ -1778,7 +1975,13 @@
     const k = 'P' + (G.natif ? 'n' : 'a') + JSON.stringify(look) + (G.doux ? 'd' : ''); if (scache[k]) return scache[k];
     const cv = mk(128, 192), c = cv.getContext('2d');   // quatre images par direction : repos, pas A, pas B, souffle
     for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 4; f++) c.drawImage(grand(look, dir, f), f * 32, dir * 48);
-    cv.look = look; cv.hd = 2; cv.souffle = true; return (scache[k] = cv); };
+    // la course : ses huit images par direction, sur une planche à part, faite à la première demande (seuls courent le
+    // meneur et ses suiveurs : world.js la demande pour eux en ouvrant le lieu)
+    cv.look = look; cv.hd = 2; cv.souffle = true; cv.course = COURSE_N;
+    cv.courir = () => { if (cv._course) return cv._course; const q = mk(32 * COURSE_N, 192), cq = q.getContext('2d');
+      for (let dir = 0; dir < 4; dir++) for (let n = 0; n < COURSE_N; n++) cq.drawImage(grand(look, dir, 4 + n), n * 32, dir * 48);
+      q.hd = 2; return (cv._course = q); };
+    return (scache[k] = cv); };
   G.pose = function (look, dir, pose) { if (G.D < 2) return small(look, dir, 0, pose);
     const k = 'Q' + (G.natif ? 'n' : 'a') + ck(look, dir, 0, pose); if (scache[k]) return scache[k];
     const g = grand(look, dir, 0, pose), cv = mk(g.width, g.height); cv.getContext('2d').drawImage(g, 0, 0); cv.hd = 2; return (scache[k] = cv); };
@@ -1873,5 +2076,5 @@
   G.natif = true; // false : le grand sprite d'avant, pour comparer
   // la grille de matières d'un grand sprite, pour le contrôle (tools/silhouettes.js) : 48 lignes de 32 lettres
   G.charGrille = (look, dir, frame, pose, fin2) => { const r = natifGrille(look, dir || 0, frame || 0, pose); if (r) return { lignes: (fin2 === 2 ? fine(r).L : r.L).map(l => l.join('')), natif: true, hors: r.hors }; // fin2 = 2 : la grille du personnage fin (64 × 96)
-    return { lignes: scale2x(grid(look, dir || 0, frame || 0, pose).g).map(l => l.join('')), natif: false, hors: 0 }; };
+    return { lignes: scale2x(grid(look, dir || 0, marcheDe(frame || 0), pose).g).map(l => l.join('')), natif: false, hors: 0 }; };
 })();
