@@ -432,7 +432,8 @@
      renvoie à une origine (exigences 2 et 10) ; la partie garde l'identifiant (profil.compo), jamais une couleur. On n'en
      réordonne aucun et l'on ajoute à la fin ; on n'en retire que sur décision du décideur — une partie qui portait un choix
      retiré l'oublie, sans erreur (perso.js). (Palettes proposées par l'agent, à valider par le décideur.)
-     Choix simplifiés avec le nouveau dessin d'Idris (choix validés par le décideur, 19 novembre : deux coupes, trois
+     Choix simplifiés avec le nouveau dessin d'Idris (choix validés par le décideur, 19 novembre : deux coupes — puis une
+     seule, le long manteau : « supprime les choix d'Idris sans manteau, c'est une catastrophe », le même jour —, trois
      coiffes, la besace à la hanche dans l'habit, la lanterne en option) : sont retirés le turban haut (imama_haute), les
      coupes « sur une épaule » et « ample » (deux ensembles les portent encore : le grand personnage les dessine en long
      manteau), l'écharpe (elle fait partie de l'habit) et la besace en bandoulière (celle de la hanche la remplace).
@@ -473,10 +474,9 @@
     coiffes: ['capuche', 'calotte', 'litham'],
     sans: {
       capuche: { longue: [true] },                           // avec la robe longue, l'habit des moines du jeu (Frère Cyprien, les moines des récits)
-      calotte: { manteau: ['aucun'] },                       // Sâlim, Abû 'Ubayda, Aslam, Zayd ibn Thâbit
       litham: { etoffe: ['e6', 'e4'] }                       // de dos, le turban des Compagnons : clair, l'un d'eux ; vert, 'Alî
     },
-    manteaux: ['long', 'aucun'],
+    manteaux: ['long'],                                      // le long manteau seul : la coupe « sans manteau » est retirée (décideur, 19 novembre)
     // 2.x (le nouveau dessin d'Idris, d'après la maquette du décideur) — dessin : les couleurs de l'étoffe sur les
     // gabarits propres du râwî (sprites.js, RAWI64) — la capuche (et la calotte, le chèche), le manteau, la tunique, les
     // chausses, l'écharpe : trois tons (la lumière, le corps, l'ombre), dont le moteur tire ses cinq, ou une couleur seule,

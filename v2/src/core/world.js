@@ -318,10 +318,11 @@
   /* ----- mise à jour ----- */
   W.onInput = function (a) {
     if (I.scene !== W || S.busy || W.lock) return false;
-    if (W.excursion) { if (a === 'ok') { if (!I.rodeurs.attendre()) I.rodeurs.frappe(); } else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
+    if (W.excursion) { if (a === 'ok') { if (!I.rodeurs.attendre()) I.rodeurs.frappe(); } else if (a === 'frappe') I.rodeurs.frappe(); else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
     if (a === 'build') { I.build.set(!I.build.on); return true; }
-    if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel') { I.build.set(false); return true; } if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
+    if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel' || a === 'frappe') { I.build.set(false); return true; } /* B, en bâtissant : on cesse de bâtir */ if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
     if (a === 'ok') { W.stop(); if (I.rodeurs && I.rodeurs.aFrapper()) I.rodeurs.frappe(); else W.interact(); return true; } // 2.x : dans un labyrinthe, quand quelque chose rôde à portée, « Valider » frappe
+    if (a === 'frappe') { W.stop(); if (I.rodeurs && I.rodeurs.aFrapper()) I.rodeurs.frappe(); return true; } // 2.x : B frappe ce qui rôde ; ailleurs, rien
     if (a === 'help') { W.stop(); I.ui.guide(); return true; }
     if (a === 'prev') { W.stop(); I.ui.pause('carte'); return true; }
     if (a === 'menu' || a === 'cancel') { W.stop(); I.ui.pause(); return true; }
@@ -333,6 +334,7 @@
     if (can && I.rodeurs && I.rodeurs.attente && !W.excursion && !W._autoBusy) { I.rodeurs.depart(); return; } // la descente demandée commence dès que le joueur a la main
     if (can && I.debug.auto && !W._autoBusy && !I.debug.walk) { if (!W.excursion) W.autoStep(); W.updateCam(); return; }
     if (I.rodeurs) { if (can) I.rodeurs.tic(dt); else I.rodeurs.cache(); }
+    if (I.ui.frapper) I.ui.frapper(can && !!I.rodeurs && I.rodeurs.aFrapper() && !(W.excursion && (W.excursion.abri || W.excursion.fin))); // le bouton du pouce droit dit « Frapper »
     if (can && I.lecons && !I.debug.auto) I.lecons.temps(dt); // le chrono ne court que lorsque le joueur a la main
     if (can && (W.solidAt(p.x - 4, p.y - 5) || W.solidAt(p.x + 4, p.y) || W.solidAt(p.x - 4, p.y) || W.solidAt(p.x + 4, p.y - 5))) { const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; W.resetTrail(); } }
     if (can) {

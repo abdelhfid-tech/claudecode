@@ -1339,22 +1339,7 @@
   }
 
   /* ---------- l'habit : la coupe, la robe longue, la coiffe ---------- */
-  // sans manteau : ses manches et son buste deviennent la tunique ; ses pans tombent — la tunique descend jusqu'au genou, et
-  // ce que le manteau cachait des jambes reparaît
-  function sansManteau(T, key) {
-    const G0 = RAWI_GEO[key], bras = (x, y, m) => Object.keys(G0.bras).some(c => G0.bras[c](x, y, m)), ou = G0.ourlet, tunique = m => (m === 'C' ? 'R' : 'r');
-    for (let y = 0; y < 96; y++) for (let x = 0; x < 64; x++) { const m = T[y][x]; if (!est(m, MANCHE)) continue;
-      if (y <= G0.ceinture + 3 || bras(x, y, m)) T[y][x] = tunique(m);
-      else if (key !== 'd' && y <= ou && (key === 'l' ? x <= 40 : x >= 20 && x <= 44)) T[y][x] = m === 'C' ? 'S' : 's';
-      else if (key === 'l' && y <= 80 && x >= 28 && x <= 38) T[y][x] = 'l';
-      else T[y][x] = '.'; }
-    // les plis du manteau, tracés d'un point de vide, deviennent sur la tunique claire une ombre (sinon, des traits sales)
-    for (let y = 1; y < 95; y++) for (let x = 1; x < 63; x++) { if (T[y][x] !== '.') continue; const v = [T[y - 1][x], T[y + 1][x], T[y][x - 1], T[y][x + 1]], n = v.filter(m => est(m, 'RrSs')).length;
-      if (n >= 3 && v.every(m => m !== '.' || n === 3)) T[y][x] = v.filter(m => est(m, 'Ss')).length >= 2 ? 's' : 'r'; }
-    if (key === 'u') for (let y = ou + 1; y <= 80; y++) for (let x = 0; x < 64; x++) if (est(T[y][x], 'Ss')) T[y][x] = '.';   // la fente du dos s'arrête avec la tunique
-    if (key === 'u') for (let y = ou + 1; y <= 80; y++) [[17, 27], [36, 46]].forEach(([a, b]) => { for (let x = a; x <= b; x++) if (T[y][x] === '.') T[y][x] = x === a || x === b ? '.' : x > b - 3 ? 'l' : 'L'; });
-    return T;
-  }
+
   // la robe longue : la tunique jusqu'aux bottes, d'un seul pan — les jambes et ce qui passait entre elles
   function robeLongue(T, key) {
     const ou = RAWI_GEO[key].ourlet;
@@ -1398,12 +1383,11 @@
     for (let y = 24; y <= 27; y++) for (let x = ec[0]; x <= ec[1]; x++) if (T[y][x] === '.' && !(y === 24 && coiffe === 'calotte' && key !== 'u')) T[y][x] = x === ec[0] || x === ec[1] ? (y > 25 ? 'o' : '.') : (x + y) % 5 === 0 ? 'o' : 'z';
     return T;
   }
-  // l'habit du râwî, vue par vue : { coupe : 'long' | 'aucun', coiffe : 'capuche' | 'calotte' | 'litham', longue }
+  // l'habit du râwî, vue par vue : { coupe : 'long' (le seul, depuis le 19 novembre), coiffe : 'capuche' | 'calotte' | 'litham', longue }
   const RH = {};
   function rawiHabit(h, key) {
     const k = h.coupe + h.coiffe + (h.longue ? 'L' : '') + key; if (RH[k]) return RH[k];
     let T = copie(RAWI64[key]);
-    if (h.coupe === 'aucun') T = sansManteau(T, key);
     if (h.longue) T = robeLongue(T, key);
     if (h.coiffe !== 'capuche') T = coiffer(T, key, h.coiffe);
     return (RH[k] = T);
@@ -1496,7 +1480,9 @@
   // la grille du râwî : 32 × 48 (L), et son gabarit de 64 × 96 (rawi.L4), les objets tenus posés aux mêmes places
   function rawiGrille(look, K0, dessin, dir, frame, pose) {
     const key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l', Ge = !!(pose && GESTES[pose]);
-    const h = { coupe: K0.manteau === 'aucun' ? 'aucun' : 'long', coiffe: K0.coiffe, longue: K0.court === false };
+    // le râwî porte toujours le long manteau (décideur, 19 novembre : « supprime les choix d'Idris sans manteau ») : un
+    // ensemble qui disait « sans manteau » (la veste de la ruelle) le porte aussi, comme ceux qui disaient « épaule » ou « ample »
+    const h = { coupe: 'long', coiffe: K0.coiffe, longue: K0.court === false };
     const quoi = Ge ? pose : pose && RAWI_POSES[pose] && RAWI_POSES[pose][key] ? pose : frame === 1 || frame === 2 ? 'pas' + frame : 'repos';
     const Vr = rawiVariante(h, key, quoi);
     const K = Object.assign({}, K0, { sombre: false });   // sous la capuche de la maquette, le visage est dans la lumière

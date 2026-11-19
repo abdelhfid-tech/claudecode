@@ -269,9 +269,10 @@
       visage: () => [rangee(groupe(I.t('Teint'), Object.keys(R.teints).map(id => pastille(R.teints[id], () => vaut('teint') === id, () => poser('teint', id))))),
         rangee(groupe(I.t('Barbe'), R.barbes.map(n => kase('pv-vig pv-tete', () => vaut('barbe') === n, () => poser('barbe', n), b => image(b, visage(montre(avec('barbe', n))))))),
           groupe(I.t('Couleur de la barbe'), Object.keys(R.poils).map(id => pastille(R.poils[id], () => vaut('poil') === id, () => poser('poil', id)))))],
-      // deux rangées : la coiffe et la longueur de la robe ; la coupe (l'écharpe fait partie de l'habit du nouveau dessin d'Idris)
-      habit: () => [rangee(groupe(I.t('Coiffe'), R.coiffes.map(v => vignette('pv-fig44', 'coiffe', v))), groupe(I.t('Longueur'), [false, true].map(v => vignette('pv-fig44', 'longue', v)))),
-        rangee(groupe(I.t('Coupe'), R.manteaux.map(v => vignette('pv-grande', 'manteau', v))))],
+      // une rangée : la coiffe et la longueur de la robe (l'écharpe fait partie de l'habit du nouveau dessin d'Idris ; la
+      // coupe ne se choisit plus : le long manteau seul, décideur, 19 novembre) ; s'il y avait de nouveau plusieurs coupes, leur rangée revient
+      habit: () => [rangee(groupe(I.t('Coiffe'), R.coiffes.map(v => vignette('pv-fig44', 'coiffe', v))), groupe(I.t('Longueur'), [false, true].map(v => vignette('pv-fig44', 'longue', v))))]
+        .concat(R.manteaux.length > 1 ? [rangee(groupe(I.t('Coupe'), R.manteaux.map(v => vignette('pv-grande', 'manteau', v))))] : []),
       couleurs: () => [rangee(groupe(I.t('Étoffe'), Object.keys(R.etoffes).map(id => { const e = R.etoffes[id]; return pastille(`conic-gradient(${e.cloak} 0 120deg, ${e.robe} 0 240deg, ${mixHex(e.head, '#6272a4', 0.3)} 0)`, () => vaut('etoffe') === id, () => poser('etoffe', id), () => P.permis('etoffe', id, T(), compo)); }))),
         rangee(groupe(I.t('Néon'), [null].concat(Object.keys(R.neons)).map(id => { const n = id ? R.neons[id] : ['#39e6ff', '#ff4fd8']; return pastille(`linear-gradient(135deg, ${n[0]} 0 50%, ${n[1]} 50% 100%)`, () => vaut('neon') === id, () => poser('neon', id)); })))],
       objet: () => [rangee(groupe(I.t('Objet'), [null].concat(R.objets).map(o => kase('pv-objet', () => vaut('objet') === o, () => poser('objet', o), b => { if (!b._f) { b._f = 1; const u = o ? url('o' + o, () => G.objet(o)) : ''; b.innerHTML = u ? `<img alt="" src="${u}">` : SVG_RIEN; } }))))]
@@ -564,7 +565,7 @@
       items.push({ cat: I.t('Réglages') },
         toggle(I.t('Texte'), () => I.t(U.TZ[U.tz()][0]), U.tzSuivant, I.t('Taille des caractères dans les dialogues, les menus et les combats.')),
         toggle(I.t('Image'), zoomNom, U.zoomSuivant, I.t('Agrandit l’image pendant l’exploration : on voit moins loin, mais en plus grand. Sur l’image elle-même : deux doigts qui s’écartent, la molette, ou le bouton « × » en haut de la scène.')),
-        toggle(I.t('Croix tactile'), () => o.pad ? I.t('affichée') : I.t('masquée'), () => { o.pad = !o.pad; U.applyOpts(); }, I.t('Sur un écran tactile, on se déplace en touchant la scène. La croix directionnelle reste disponible pour qui la préfère.')),
+        toggle(I.t('Manette tactile'), () => o.joy !== false ? I.t('affichée') : I.t('masquée'), () => { o.joy = o.joy === false; U.applyOpts(); }, I.t('Sur un écran tactile, comme sur une console de poche : le joystick sous le pouce gauche ; A pour parler et agir, B pour frapper, sous le pouce droit. On peut aussi se déplacer en touchant la scène.')),
         toggle(I.t('Son'), () => I.audio.on ? I.t('activé') : I.t('coupé'), () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, I.t('Coupe ou rétablit tout le son : musique, percussions et bruitages.')),
         toggle(I.t('Musique'), () => I.audio.musicOn ? I.t('activée') : I.t('coupée'), () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, I.t('Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.')),
         toggle(I.t('Dessin'), dessinNom, dessinSuivant, I.t('Fin : deux fois plus de points, les grands personnages jusque sur les cartes, des lisières irrégulières. Fin, adouci : le même, les contours fondus. D’origine : le dessin de la version légère.')),
@@ -875,7 +876,7 @@
     const o = I.save.data.opts;
     if (o.dessin && !G.defForce) G.definir(o.dessin); document.body.classList.toggle('fin', G.D > 1); document.body.classList.toggle('doux', !!G.lisse);
     document.documentElement.style.setProperty('--tz', U.TZ[U.tz()][1]);
-    document.body.classList.toggle('padon', !!o.pad);
+    document.body.classList.toggle('sansjoy', o.joy === false);   // le joystick : affiché d'office sur un écran tactile
     if (typeof o.zoom === 'number') U.zf = I.clamp(o.zoom, 1, 3);   // sinon : la grandeur d'office, que la mise en page règle sur l'écran
     layout(); zoomBouton();
   };
@@ -905,11 +906,32 @@
     G.resize();
     if (S.placer2) S.placer2(true);   // 2.x : la seconde bulle suit la boîte de dialogue (elle ne paraît qu'avec une langue secondaire)
   }
+  // 2.x — la manette tactile, comme sur une console de poche (demande du décideur, 19 novembre : « jouer sur le téléphone
+  // comme si on avait une Game Boy » ; « juste deux boutons A et B » ; « parler avec A, frapper avec B ») : le joystick sous
+  // le pouce gauche ; sous le pouce droit, A (valider : parler, agir) et B (frapper ce qui rôde). Aucun mot sur les boutons.
+  // Quand quelque chose est à portée de coup (rodeurs.js, aFrapper), B s'éclaire. Le menu reste le bouton ☰ de la scène.
+  let frapperVu = null;
+  U.frapper = function (on) { on = !!on; if (on === frapperVu) return; frapperVu = on; document.body.classList.toggle('frapper', on); };
   function pad() {
-    const hold = (sel, dir) => { const b = $(sel); const dn = e => { e.preventDefault(); b.classList.add('down'); I.input.held[dir] = true; I.input.emit(dir); }; const up = e => { e.preventDefault(); b.classList.remove('down'); I.input.held[dir] = false; }; b.addEventListener('pointerdown', dn); ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => b.addEventListener(n, up)); };
-    hold('#pad .u', 'up'); hold('#pad .d', 'down'); hold('#pad .l', 'left'); hold('#pad .r', 'right');
+    const hold =(sel, dir) => { const b = $(sel); const dn = e => { e.preventDefault(); b.classList.add('down'); I.input.held[dir] = true; I.input.emit(dir); }; const up = e => { e.preventDefault(); b.classList.remove('down'); I.input.held[dir] = false; }; b.addEventListener('pointerdown', dn); ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => b.addEventListener(n, up)); };
+    // 2.x — le joystick du pouce gauche (demande du décideur, 19 novembre : « un joystick transparent pour le pouce gauche » ;
+    // « pouvoir jouer sur le téléphone comme si on avait une Game Boy ») : le pouce posé sur le cercle tire le bouton dans sa
+    // direction ; au-delà d'un petit rayon mort, huit directions — celles des flèches du clavier, que la marche lit déjà.
+    // Lâché, tout s'arrête. Il remplace l'ancienne croix ; on se déplace toujours aussi en touchant la scène.
+    const joy = $('#pad .joy'), bou = joy && joy.querySelector('i'), DIRS = ['up', 'down', 'left', 'right']; let jid = null;
+    const lacher = () => { jid = null; if (bou) bou.style.transform = ''; joy.classList.remove('down'); DIRS.forEach(d => { I.input.held[d] = false; }); };
+    const viser = e => { const r = joy.getBoundingClientRect(), R = r.width / 2, dx = e.clientX - (r.left + R), dy = e.clientY - (r.top + R), L = Math.hypot(dx, dy), k = L > R * 0.58 ? R * 0.58 / L : 1;
+      if (bou) bou.style.transform = `translate(${(dx * k).toFixed(1)}px, ${(dy * k).toFixed(1)}px)`;
+      const nv = { up: false, down: false, left: false, right: false };
+      if (L > R * 0.22) { const s8 = Math.round(Math.atan2(dy, dx) / (Math.PI / 4)); // de -4 à 4 : 0 à droite, 2 en bas, -2 en haut, ±4 à gauche
+        nv.right = s8 >= -1 && s8 <= 1; nv.down = s8 >= 1 && s8 <= 3; nv.left = s8 >= 3 || s8 <= -3; nv.up = s8 >= -3 && s8 <= -1; }
+      DIRS.forEach(d => { if (nv[d] && !I.input.held[d]) I.input.emit(d); I.input.held[d] = nv[d]; }); };
+    if (joy) { joy.addEventListener('pointerdown', e => { e.preventDefault(); jid = e.pointerId; try { joy.setPointerCapture(jid); } catch (x) { /* rien */ } joy.classList.add('down'); viser(e); });
+      joy.addEventListener('pointermove', e => { if (e.pointerId === jid) { e.preventDefault(); viser(e); } });
+      ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(n => joy.addEventListener(n, e => { if (e.pointerId === jid) lacher(); })); }
     const tap = (sel, a) => { const b = $(sel); b.addEventListener('pointerdown', e => { e.preventDefault(); b.classList.add('down'); I.input.emit(a); }); ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => b.addEventListener(n, () => b.classList.remove('down'))); };
-    tap('#pad .a', 'ok'); tap('#pad .b', 'cancel');
+    tap('#pad .a', 'ok'); tap('#pad .b', 'frappe');
+    U.frapper(false);
     if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) document.body.classList.add('touch');
     window.addEventListener('touchstart', () => document.body.classList.add('touch'), { once: true, passive: true });
   }

@@ -123,7 +123,18 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
       await chapitre(1);
       await commandes('dans la bataille déclarée, la Sérénité pleine', 7, 'sept-commandes', () => { const I = window.ISNAD, W = I.world; W.party.forEach(id => { W.hero(id).sakina = 100; });
         const f = x => { if (!x || typeof x !== 'object') return null; if (Array.isArray(x) && x[0] === 'battle') return x; for (const k in x) { const r = f(x[k]); if (r) return r; } return null; };
-        I.script.run([f(W.ch.objectives[6].then)]); }); }
+        I.script.run([f(W.ch.objectives[6].then)]); });
+      // 2.x — le joystick du pouce gauche (décideur, 19 novembre : « jouer sur le téléphone comme sur une Game Boy ») : le pouce
+      // tiré dans une direction fait marcher ; lâché, on s'arrête. Quatre directions essayées : un mur peut en barrer une.
+      await chapitre(2);
+      const joy = await p.evaluate(() => { const e = document.querySelector('#pad .joy'), b = e.getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + b.height / 2, r: b.width / 2, vu: b.width > 0 && getComputedStyle(e).visibility !== 'hidden' }; });
+      const pos = () => p.evaluate(() => [window.ISNAD.world.player.x, window.ISNAD.world.player.y]);
+      let marche = 0, arret = true;
+      for (const [vx, vy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const a = await pos(); await p.mouse.move(joy.x, joy.y); await p.mouse.down(); await p.mouse.move(joy.x + vx * joy.r * 0.8, joy.y + vy * joy.r * 0.8, { steps: 4 }); await p.waitForTimeout(600);
+        const b = await pos(); await p.mouse.up(); await p.waitForTimeout(250); const c = await pos(); await p.waitForTimeout(400); const d = await pos();
+        if ((b[0] - a[0]) * vx + (b[1] - a[1]) * vy > 6) marche++; if (Math.hypot(d[0] - c[0], d[1] - c[1]) > 1) arret = false; }
+      if (!joy.vu || !marche || !arret) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-joystick.png') }); console.log(`  INACCESSIBLE ${w}×${h} : le joystick ${!joy.vu ? 'ne se voit pas' : !marche ? 'ne fait pas marcher' : 'lâché, ne s’arrête pas'}`); }
+      else console.log(`      le joystick, sous le pouce gauche : ${marche} direction(s) sur 4 font marcher, lâché, on s'arrête`); }
     if (errors.length) { echecs++; [...new Set(errors)].slice(0, 8).forEach(e => console.log('  ERREUR ' + e)); }
     await p.close();
   }

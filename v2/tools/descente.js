@@ -148,8 +148,30 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
       const bouge = R.rodent().filter(f => { const d = window.__depart.find(q => q[0] === f.id); return d && Math.hypot(f.x - d[1], f.y - d[2]) > 16; }).length; return { hors, bouge, n: R.rodent().length, combat: I.battle.active }; });
     si(!v.hors && v.bouge >= 1 && v.n === c.n && !v.combat, `trente secondes de va-et-vient : ${v.bouge} sur ${v.n} ont bougé, aucun n'a quitté les ponts ni rejoint le groupe au seuil`, `va-et-vient : ${JSON.stringify(v)}`);
     await calme(8);
+    // 2.x — la manette tactile, comme sur une console de poche (décideur, 19 novembre) : A et B sous le pouce droit ; B frappe,
+    // et s'éclaire quand quelque chose est à portée (ui.js, U.frapper)
+    const bouton = () => p.evaluate(() => ({ frapper: document.body.classList.contains('frapper'), a: document.querySelector('#pad .a').textContent, b: document.querySelector('#pad .b').textContent }));
+    const bLoin = await bouton();
     // « Entrée » frappe : un voile de moins, sonné ; sonné, il laisse passer
-    const a0 = await pres('meute0', 1, true); await p.waitForTimeout(250); await p.keyboard.press('Enter'); await p.waitForTimeout(200);
+    let a0 = await pres('meute0', 1, true); await p.waitForTimeout(250);
+    const bPres = await bouton();
+    si(!bLoin.frapper && bPres.frapper && bPres.a === 'A' && bPres.b === 'B', `les boutons A et B : B s'éclaire à portée de ce qui rôde, et pas loin de lui`, `les boutons A et B : loin ${JSON.stringify(bLoin)}, à portée ${JSON.stringify(bPres)}`);
+    { // la même chose sur un téléphone, en hauteur puis en largeur : le joystick sous le pouce gauche, A et B sous le pouce droit
+      await p.evaluate(() => document.body.classList.add('touch'));
+      for (const [w, h] of [[390, 844], [844, 390]]) { await p.setViewportSize({ width: w, height: h }); await p.waitForTimeout(400); await pres('meute0', 1, true); await p.waitForTimeout(250);
+        const t = await p.evaluate(() => { const r = q => { const e = document.querySelector(q), b = e.getBoundingClientRect(); return { x: Math.round(b.left + b.width / 2), y: Math.round(b.top + b.height / 2), l: Math.round(b.width), vu: b.width > 0 && getComputedStyle(e).visibility !== 'hidden' }; };
+          return { a: r('#pad .a'), b: r('#pad .b'), joy: r('#pad .joy'), frapper: document.body.classList.contains('frapper') }; });
+        await p.screenshot({ path: path.join(out, `C-0-pouces-${w}x${h}.png`) });
+        si(t.frapper && t.a.vu && t.b.vu && t.joy.vu && t.a.x > w * 0.6 && t.b.x > w * 0.55 && t.a.x > t.b.x && t.a.y < t.b.y && t.joy.x < w * 0.4 && t.a.l >= 56 && t.b.l >= 56, `sur un téléphone en ${w} × ${h} : le joystick sous le pouce gauche, A et B sous le pouce droit (A plus haut, B plus bas)`, `sur un téléphone en ${w} × ${h} : ${JSON.stringify(t)}`); }
+      // le pouce appuie sur B : le coup part (puis on remet ce qui rôde comme il était, pour l'épreuve au clavier qui suit)
+      await pres('meute0', 1, true); await p.waitForTimeout(250);
+      const avB = await p.evaluate(() => ({ coups: window.ISNAD.rodeurs.coups | 0, voiles: window.ISNAD.world.foes.find(q => q.id === 'meute0').voiles }));
+      const cb = await p.evaluate(() => { const b = document.querySelector('#pad .b').getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height / 2]; });
+      await p.mouse.click(cb[0], cb[1]); await p.waitForTimeout(250);
+      const apB = await p.evaluate(v => { const I = window.ISNAD, f = I.world.foes.find(q => q.id === 'meute0'), r = { coups: I.rodeurs.coups | 0, voiles: f.voiles }; f.voiles = v; f.sonne = 0; f.pousse = null; return r; }, avB.voiles);
+      si(apB.coups === avB.coups + 1 && apB.voiles === avB.voiles - 1, `le pouce sur B : le coup part (un voile de moins)`, `le pouce sur B : ${JSON.stringify(avB)} → ${JSON.stringify(apB)}`);
+      await p.evaluate(() => document.body.classList.remove('touch')); await p.setViewportSize({ width: 1280, height: 720 }); await p.waitForTimeout(400); a0 = await pres('meute0', 1, true); await p.waitForTimeout(250); }
+    await p.keyboard.press('Enter'); await p.waitForTimeout(200);
     const a1 = await p.evaluate(() => { const I = window.ISNAD, R = I.rodeurs, f = I.world.foes.find(q => q.id === 'meute0'); return { coups: R.coups | 0, touches: R.touches | 0, voiles: f.voiles, sonne: f.sonne > 0, dialogue: !document.querySelector('#dialog').hidden, lecon: I.save.data.codex.includes('coeur/frappe') }; });
     await p.screenshot({ path: path.join(out, 'C-1-frappe.png') });
     si(a0 && a1.coups === a0.coups + 1 && a1.touches === a0.touches + 1 && a1.voiles === a0.voiles - 1 && a1.sonne && !a1.dialogue, `« Entrée », face à ce qui rôde, le frappe (arme en main : ${c.arme}) : un voile de moins, il est sonné`, `la frappe au clavier : ${JSON.stringify(a0)} → ${JSON.stringify(a1)}`);

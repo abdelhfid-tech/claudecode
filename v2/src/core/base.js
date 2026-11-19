@@ -91,7 +91,8 @@
   const KEY = {
     ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right',
     Enter: 'ok', Space: 'ok', KeyZ: 'ok', KeyE: 'ok', NumpadEnter: 'ok',
-    Escape: 'cancel', KeyX: 'cancel', Backspace: 'cancel', KeyM: 'menu', Tab: 'menu', KeyB: 'build', KeyC: 'prev', KeyV: 'next', KeyH: 'help', F1: 'help'
+    Escape: 'cancel', KeyX: 'cancel', Backspace: 'cancel', KeyM: 'menu', Tab: 'menu', KeyB: 'build', KeyC: 'prev', KeyV: 'next', KeyH: 'help', F1: 'help',
+    KeyF: 'frappe'   // 2.x : le bouton B de la manette tactile (frapper ce qui rôde) ; Entrée frappe aussi quand quelque chose est à portée
   };
   function emit(a) {
     I.audio.unlock();
