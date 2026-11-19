@@ -174,13 +174,19 @@ const url = 'file://' + path.join(__dirname, '../index.html') + (process.env.LAN
       for (const s of Object.values(I.sagas)) (s.chapters || []).forEach((ch, ci) => { const fin = Math.max(0, (ch.objectives || []).length - 1);
         fouille(ch.intro, { s: s.id, ci, obj: 0, o: null }); (ch.objectives || []).forEach((o, oi) => fouille(o, { s: s.id, ci, obj: oi, o })); fouille(ch.outro, { s: s.id, ci, obj: fin, o: null }); });
       const T = 16, caseDe = q => [Math.floor(q.x / T), Math.floor((q.y - 2) / T)];
-      const regarder = e => { const P = W.player, m = W.map, autres = W.corps().filter(q => q !== e), r = { n: 0, pleines: 0, vu: '', pied: 0, corps: 0, qui: '', min: 1e9, long: 0 }; let x0 = e.x, y0 = e.y, va = true;
-        (function image() { if (!va) return; r.n++; const c = caseDe(e); if (m.solid[c[1] * m.w + c[0]]) { r.pleines++; r.vu = c.join(','); }
-          if (W.touche(e, P.x, P.y)) r.pied++; const o = autres.find(q => W.touche(q, e.x, e.y)); if (o) { r.corps++; r.qui = o.name || 'un coffre'; }
-          r.min = Math.min(r.min, Math.hypot(e.x - P.x, e.y - P.y)); r.long += Math.hypot(e.x - x0, e.y - y0); x0 = e.x; y0 = e.y; requestAnimationFrame(image); })();
-        return () => { va = false; r.long += Math.hypot(e.x - x0, e.y - y0); return r; }; };
-      const marcher = async (mc, e) => { const fin = regarder(e), t0 = performance.now(); await S.run([mc.op]); const r = fin(); r.duree = (performance.now() - t0) / 1000; return r; };
-      const pied = r => `${r.pied ? r.pied + ' image(s) dans le pied du joueur' : 'jamais dans le pied du joueur'} (au plus près à ${r.min.toFixed(1)} points), ${r.corps ? r.corps + ' dans le pied de ' + r.qui : 'ni dans celui d’un autre'}, ${r.pleines ? r.pleines + ' sur une case pleine (' + r.vu + ')' : 'aucune sur une case pleine'}`;
+      // le trajet est suivi image par image, et entre deux images point par point (au plus un point d'écart) : sur une
+      // machine chargée, une image peut sauter dix points — un pied fait dix-huit points de large. La marche se joue à
+      // demi-vitesse (I.speed = 0,5 : deux fois plus d'images) ; sa durée est rapportée à la vitesse du jeu.
+      const LENT = 0.5;
+      const regarder = e => { const P = W.player, m = W.map, autres = W.corps().filter(q => q !== e), r = { n: 0, pts: 0, pleines: 0, vu: '', pied: 0, corps: 0, qui: '', min: 1e9, long: 0 }; let x0 = e.x, y0 = e.y, va = true;
+        const voir = (x, y) => { r.pts++; const tx = Math.floor(x / T), ty = Math.floor((y - 2) / T); if (m.solid[ty * m.w + tx]) { r.pleines++; r.vu = tx + ',' + ty; }
+          if (W.touche({ x, y }, P.x, P.y)) r.pied++; const o = autres.find(q => W.touche(q, x, y)); if (o) { r.corps++; r.qui = o.name || 'un coffre'; } r.min = Math.min(r.min, Math.hypot(x - P.x, y - P.y)); };
+        const jusque = (x, y) => { const L = Math.hypot(x - x0, y - y0), n = Math.max(1, Math.ceil(L)); for (let k = 1; k <= n; k++) voir(x0 + (x - x0) * k / n, y0 + (y - y0) * k / n); r.long += L; x0 = x; y0 = y; };
+        voir(x0, y0); (function image() { if (!va) return; r.n++; if (e.x !== x0 || e.y !== y0) jusque(e.x, e.y); requestAnimationFrame(image); })();
+        return () => { va = false; if (e.x !== x0 || e.y !== y0) jusque(e.x, e.y); return r; }; };
+      // plan : la longueur du chemin que la marche va suivre (W.chemin, comme W.walkTo l'appelle), qui ne dépend pas des images
+      const marcher = async (mc, e, b) => { const c = W.chemin(e, b[0], b[1]); let plan = 0; for (let k = 1; k < c.length; k++) plan += Math.hypot(c[k][0] - c[k - 1][0], c[k][1] - c[k - 1][1]); const fin = regarder(e), t0 = performance.now(); I.speed = LENT; try { await S.run([mc.op]); } finally { I.speed = 1; } const r = fin(); r.duree = (performance.now() - t0) / 1000 * LENT; r.plan = plan; return r; };
+      const pied = r => `${r.pied ? r.pied + ' point(s) du trajet dans le pied du joueur' : 'jamais dans le pied du joueur'} (au plus près à ${r.min.toFixed(1)} points), ${r.corps ? r.corps + ' dans le pied de ' + r.qui : 'ni dans celui d’un autre'}, ${r.pleines ? r.pleines + ' sur une case pleine (' + r.vu + ')' : 'aucun point sur une case pleine'}`;
       for (const mc of marches) { const s = I.sagas[mc.s], ch = s.chapters[mc.ci], def = (ch.npcs || []).find(q => q.id === mc.op[1]), o = mc.o || {}, nom = `${mc.s}/${ch.id}`;
         if (!def) { out.push(`ÉCART marche de récit ${nom} : « ${mc.op[1]} » n'est pas dans le chapitre`); continue; }
         // a. comme dans le jeu
@@ -192,8 +198,8 @@ const url = 'file://' + path.join(__dirname, '../index.html') + (process.env.LAN
         I.debug.auto = true; I.speed = 40; await S.run(mc.avant); I.debug.auto = false; I.speed = 1; S.hideDialog();
         const e = W.ent(mc.op[1]), a = [e.x, e.y], b = W.resolve(mc.op[2], e.map, e), droit = dist(a, b), borne = droit * 3 / 70 + 0.4, bout = () => dist([e.x, e.y], b) <= 1;
         if (objectif !== mc.obj) out.push(`ÉCART marche de récit ${nom} : le point de reprise n'a pas gardé l'objectif ${mc.obj} (${objectif})`);
-        let r = await marcher(mc, e);
-        out.push(`${r.pied || r.corps ? 'SUPERPOSÉ' : r.pleines || r.duree > borne || !bout() ? 'ÉCART' : 'OK '} marche de récit ${nom}, comme dans le jeu : le joueur ${ou} (${ici.map(Math.round)}), « ${e.name} » ${mc.avant.some(q => q[0] === 'show' && q[1] === mc.op[1]) ? 'paraît à ' + dist(a, ici).toFixed(0) + ' points de lui et ' : ''}va de ${a.map(Math.round)} à ${b.map(Math.round)} (${droit.toFixed(0)} points en ligne droite, ${r.long.toFixed(0)} parcourus) en ${r.duree.toFixed(2)} s (au plus ${borne.toFixed(2)} s), ${r.n} images : ${pied(r)}`);
+        let r = await marcher(mc, e, b);
+        out.push(`${r.pied || r.corps ? 'SUPERPOSÉ' : r.pleines || r.duree > borne || !bout() ? 'ÉCART' : 'OK '} marche de récit ${nom}, comme dans le jeu : le joueur ${ou} (${ici.map(Math.round)}), « ${e.name} » ${mc.avant.some(q => q[0] === 'show' && q[1] === mc.op[1]) ? 'paraît à ' + dist(a, ici).toFixed(0) + ' points de lui et ' : ''}va de ${a.map(Math.round)} à ${b.map(Math.round)} (${droit.toFixed(0)} points en ligne droite, ${r.long.toFixed(0)} parcourus) en ${r.duree.toFixed(2)} s (au plus ${borne.toFixed(2)} s), ${r.n} images, ${r.pts} points suivis : ${pied(r)}`);
         // b. le joueur en travers de la ligne droite : la case libre, loin des deux bouts, où la ligne droite passe le plus
         // longtemps dans son pied (le témoin en a d'autant plus d'images)
         const m = W.map, L = k => [a[0] + (b[0] - a[0]) * k / 100, a[1] + (b[1] - a[1]) * k / 100]; let poste = null;
@@ -202,12 +208,12 @@ const url = 'file://' + path.join(__dirname, '../index.html') + (process.env.LAN
           let n = 0; for (let j = 0; j <= 100; j++) { const q2 = L(j); if (W.touche({ x: q2[0], y: q2[1] }, x, y)) n++; } if (n && (!poste || n > poste[2])) poste = [x, y, n]; }
         if (!poste) { out.push(`NOTE marche de récit ${nom} : aucune case libre sur la ligne droite pour y poser le joueur en travers`); continue; }
         e.x = a[0]; e.y = a[1]; P.x = poste[0]; P.y = poste[1]; W.resetTrail(); W.updateCam(true);
-        r = await marcher(mc, e);
-        out.push(`${r.pied || r.corps ? 'SUPERPOSÉ' : r.long <= droit + 1 || r.pleines || r.duree > borne || !bout() ? 'ÉCART' : 'OK '} marche de récit ${nom}, le joueur en travers (${poste[0]},${poste[1]} : la ligne droite passe ${poste[2]} fois sur 101 dans son pied) : « ${e.name} » le contourne par ${r.long.toFixed(0)} points au lieu de ${droit.toFixed(0)}, en ${r.duree.toFixed(2)} s, ${r.n} images : ${pied(r)}`);
+        r = await marcher(mc, e, b);
+        out.push(`${r.pied || r.corps ? 'SUPERPOSÉ' : r.plan <= droit + 1 || r.pleines || r.duree > borne || !bout() ? 'ÉCART' : 'OK '} marche de récit ${nom}, le joueur en travers (${poste[0]},${poste[1]} : la ligne droite passe ${poste[2]} fois sur 101 dans son pied) : « ${e.name} » le contourne par un chemin de ${r.plan.toFixed(0)} points (${r.long.toFixed(0)} suivis) au lieu de ${droit.toFixed(0)}, en ${r.duree.toFixed(2)} s, ${r.n} images, ${r.pts} points suivis : ${pied(r)}`);
         // c. témoin : la ligne droite d'avant, rejouée le joueur en travers, doit être relevée
         e.x = a[0]; e.y = a[1]; const chemin = W.chemin; W.chemin = (q, x, y) => [[q.x, q.y], [x, y]];
-        try { r = await marcher(mc, e); } finally { W.chemin = chemin; }
-        out.push(`${r.pied ? 'OK ' : 'ÉCART'} témoin ${nom} : la ligne droite d'avant, rejouée le joueur en travers, ${r.pied ? 'entre ' + r.pied + ' image(s) sur ' + r.n + ' dans son pied — le contrôle la relève' : 'n’entre jamais dans son pied : le contrôle ne prouverait rien'}`);
+        try { r = await marcher(mc, e, b); } finally { W.chemin = chemin; }
+        out.push(`${r.pied ? 'OK ' : 'ÉCART'} témoin ${nom} : la ligne droite d'avant, rejouée le joueur en travers, ${r.pied ? 'passe ' + r.pied + ' point(s) de son trajet sur ' + r.pts + ' dans son pied (' + r.n + ' images) — le contrôle la relève' : 'n’entre jamais dans son pied : le contrôle ne prouverait rien'}`);
       }
       W.lock = false;
       if (!marches.length) out.push('ÉCART aucune marche de récit trouvée dans les récits');
