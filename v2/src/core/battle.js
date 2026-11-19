@@ -283,13 +283,17 @@
   // rangée, en prend toute la largeur (elle ne passe plus sur deux lignes) ; si le panneau dépasse encore le bas de l'écran
   // (une bataille déclarée, « Ordonner » et la Sérénité : sept commandes, en 360 × 560 ou 360 × 640), les commandes se
   // resserrent, cran par cran, sans jamais descendre sous la taille « normal » — comme une liste de choix (S.ajuster).
+  // 2.14 : de même sur un téléphone tenu en largeur (en 844 × 390, le groupe de Khâlid, « Le Sabre dégainé » sur deux
+  // lignes, passait sous le bas de l'écran). Au bureau, le panneau tient : rien ne change.
   function tenir(box, btns, main) {
-    box.style.fontSize = ''; if (!document.body.classList.contains('portrait')) return;
+    box.style.fontSize = '';
     const vus = btns.filter(b => !b.hidden), der = vus[vus.length - 1];
     if (main && der && vus.length % 2 && der.classList.contains('limit')) der.classList.add('seul');
     const pan = box.closest('.panel'); if (!pan) return;
     const tz = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tz')) || 1, mini = Math.min(1, 1 / tz);
-    for (const f of [0.94, 0.88, 0.82].filter(v => v > mini + 0.01).concat(mini)) { if (pan.getBoundingClientRect().bottom <= innerHeight + 1) break; box.style.fontSize = (0.86 * f).toFixed(3) + 'em'; }
+    // déborder : le panneau passe sous le bas de l'écran, ou la liste doit défiler pour montrer sa dernière commande
+    const list = box.querySelector('.mlist'), deborde = () => pan.getBoundingClientRect().bottom > innerHeight + 1 || (!!list && list.scrollHeight > list.clientHeight + 1);
+    for (const f of [0.94, 0.88, 0.82].filter(v => v > mini + 0.01).concat(mini)) { if (!deborde()) break; box.style.fontSize = (0.86 * f).toFixed(3) + 'em'; }
   }
   function listMenu(box, title, items, o) {
     o = o || {};

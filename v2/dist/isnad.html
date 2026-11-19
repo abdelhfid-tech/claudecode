@@ -698,8 +698,8 @@ html[dir="rtl"] body.portrait #dialog .fig { left: auto; right: 1.2em; }
   body.portrait #battle .cmd { padding: .3em .45em; gap: .22em; }
   body.portrait .mi { padding: .42em .55em; }
   body.portrait .mtitle .niv { display: inline; }
-  body.portrait .mlist.main .mi.seul { grid-column: 1 / -1; } /* la Sérénité, seule sur sa rangée : sur une ligne (battle.js, tenir) */
 }
+.mlist.main .mi.seul { grid-column: 1 / -1; } /* la Sérénité, seule sur sa rangée : sur une ligne (battle.js, tenir), en hauteur comme en largeur */
 /* lot 2 : l'introduction d'un carton de pourparler ou d'idée noire passe en casse ordinaire (mêmes mots) ; les titres de
    lieu (#card.title p) ne changent pas, ni les surtitres de trois mots au plus (« POURPARLER », « UNE IDÉE NOIRE ») */
 #card.title.parley p:not(.small) { letter-spacing: .01em; text-transform: none; font-style: italic; font-size: .95em; color: #f7ecd2; line-height: 1.4; text-wrap: pretty; }
@@ -809,7 +809,7 @@ body.avec2:not(.portrait) #hud { visibility: hidden; }
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.14 · 2026-11-19 05:09 UTC · 85707ee";
+window.ISNAD_VERSION = "2.14 · 2026-11-19 05:59 UTC · 36221d4+";
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
 (function (root) {
@@ -8213,13 +8213,17 @@ window.ISNAD_VERSION = "2.14 · 2026-11-19 05:09 UTC · 85707ee";
   // rangée, en prend toute la largeur (elle ne passe plus sur deux lignes) ; si le panneau dépasse encore le bas de l'écran
   // (une bataille déclarée, « Ordonner » et la Sérénité : sept commandes, en 360 × 560 ou 360 × 640), les commandes se
   // resserrent, cran par cran, sans jamais descendre sous la taille « normal » — comme une liste de choix (S.ajuster).
+  // 2.14 : de même sur un téléphone tenu en largeur (en 844 × 390, le groupe de Khâlid, « Le Sabre dégainé » sur deux
+  // lignes, passait sous le bas de l'écran). Au bureau, le panneau tient : rien ne change.
   function tenir(box, btns, main) {
-    box.style.fontSize = ''; if (!document.body.classList.contains('portrait')) return;
+    box.style.fontSize = '';
     const vus = btns.filter(b => !b.hidden), der = vus[vus.length - 1];
     if (main && der && vus.length % 2 && der.classList.contains('limit')) der.classList.add('seul');
     const pan = box.closest('.panel'); if (!pan) return;
     const tz = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tz')) || 1, mini = Math.min(1, 1 / tz);
-    for (const f of [0.94, 0.88, 0.82].filter(v => v > mini + 0.01).concat(mini)) { if (pan.getBoundingClientRect().bottom <= innerHeight + 1) break; box.style.fontSize = (0.86 * f).toFixed(3) + 'em'; }
+    // déborder : le panneau passe sous le bas de l'écran, ou la liste doit défiler pour montrer sa dernière commande
+    const list = box.querySelector('.mlist'), deborde = () => pan.getBoundingClientRect().bottom > innerHeight + 1 || (!!list && list.scrollHeight > list.clientHeight + 1);
+    for (const f of [0.94, 0.88, 0.82].filter(v => v > mini + 0.01).concat(mini)) { if (!deborde()) break; box.style.fontSize = (0.86 * f).toFixed(3) + 'em'; }
   }
   function listMenu(box, title, items, o) {
     o = o || {};

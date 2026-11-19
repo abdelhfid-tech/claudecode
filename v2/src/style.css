@@ -694,8 +694,8 @@ html[dir="rtl"] body.portrait #dialog .fig { left: auto; right: 1.2em; }
   body.portrait #battle .cmd { padding: .3em .45em; gap: .22em; }
   body.portrait .mi { padding: .42em .55em; }
   body.portrait .mtitle .niv { display: inline; }
-  body.portrait .mlist.main .mi.seul { grid-column: 1 / -1; } /* la Sérénité, seule sur sa rangée : sur une ligne (battle.js, tenir) */
 }
+.mlist.main .mi.seul { grid-column: 1 / -1; } /* la Sérénité, seule sur sa rangée : sur une ligne (battle.js, tenir), en hauteur comme en largeur */
 /* lot 2 : l'introduction d'un carton de pourparler ou d'idée noire passe en casse ordinaire (mêmes mots) ; les titres de
    lieu (#card.title p) ne changent pas, ni les surtitres de trois mots au plus (« POURPARLER », « UNE IDÉE NOIRE ») */
 #card.title.parley p:not(.small) { letter-spacing: .01em; text-transform: none; font-style: italic; font-size: .95em; color: #f7ecd2; line-height: 1.4; text-wrap: pretty; }
