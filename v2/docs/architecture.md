@@ -28,6 +28,7 @@ et écran de la Chaîne compris. Ses parties (`isnad2.auto`, `isnad2.slot.N`, `i
 | `v2/tools/paquet.js`, `v2/tools/essais/` | éprouver un paquet ; le paquet d'essai (pure fiction, jamais livré) |
 | `v2/tools/partie.js` | la partie du joueur : format, export, import |
 | `v2/tools/personnage.js` | le personnage du joueur : nom, tenue |
+| `v2/src/core/partage.js`, `v2/tools/partage.js` | partager sa progression : l'image, le texte, le partage ; son contrôle |
 | `v2/docs/` | feuille de route, architecture, contrat d'un paquet |
 
 ## Le jeu de base et les paquets
@@ -336,6 +337,78 @@ râwî composé (chaque valeur de chaque pièce, chaque coiffe sous chaque coupe
 compositions entières) et l'empreinte des grands personnages d'avant (`tools/essais/grands.json`) ; les silhouettes
 venues ensuite y sont ajoutées à leur création (`silhouettes.js relever-nouveaux`, qui refuse si une seule empreinte
 déjà relevée a changé) ; `partie.js`, une partie dont le râwî est composé, exportée puis réimportée à l'identique.
+
+## Partager sa progression : `src/core/partage.js`
+
+*Demande du décideur, 19 novembre : « la possibilité de partager sa progression sur les réseaux sociaux ». Textes, image
+et format proposés par l'agent, à valider.*
+
+**Où.** « Partager ma progression » est au pied de la Chaîne, à côté des Lumières et de la fidélité, et dans la halte, à la
+fin du premier bloc, sous « Reprendre » (Reprendre, Que faire ?, Carte, Partager ma progression) : c'est la page
+« Reprendre » qui dit où en est le récit (le chapitre, la fidélité, les Lumières), et le partage ne dit rien d'autre. La
+page du groupe n'a pas été choisie : ses niveaux, sa Constance et son équipement sont des nombres de combat, qu'on ne
+partage pas. Le bouton n'apparaît qu'une fois un maillon achevé (`I.save.maillons()`), et seulement si l'assemblage a
+posé l'adresse et la réserve. Ce n'est pas un outil du jeu : aucune leçon ne l'annonce (`lecons.js`), aucun message de
+plus. Depuis la halte, « ◂ Retour » rend la halte ; depuis la Chaîne, la Chaîne ; Échap aussi.
+
+**L'aperçu** (`#partage`, `I.partage.ouvrir`) : l'image, deux réglages (« Format : carré » / « vertical » ; « Ton
+personnage : montré » / « caché », gardés avec les options de l'appareil, `opts.partage`, jamais dans la partie),
+« Partager », « Copier le texte », « Enregistrer l'image » (sauf dans un Artifact), « ◂ Retour », une ligne d'état, et le
+texte qui partira (une zone en lecture seule, qu'on peut sélectionner).
+
+**L'image** (`I.partage.dessiner`), dessinée par le jeu sur un canevas, dans la langue de jeu : **carrée, 1080 × 1080**
+(les fils des réseaux), ou **verticale, 1080 × 1920** (les « stories » : le titre et la réserve restent hors des 220
+points du haut et des 260 du bas, que les applications recouvrent). Le ciel de l'écran-titre (`U.fondTitre`), إسناد,
+ISNAD, le sous-titre ; puis, dans un panneau : le râwî de face tel que le joueur l'a composé (`G.figure`, agrandi au
+pixel : un personnage de fiction, avec son visage, sans lueur ni rayonnement — D193), son nom et « le Râwî · 1507 H ·
+2084 », les cinq sceaux du livre I (achevés en couleur, les autres éteints ; les sceaux de la Chaîne, sans visage), sous
+chacun le signe de sa Lumière et, retrouvée, son nom ; « 2 maillons achevés sur 5 », « Lumières retrouvées : 2 / 5 »,
+« Fidélité à la Chaîne : 14 / 16 », le chapitre en cours ; au pied, l'adresse et la réserve. En arabe, tout se lit de
+droite à gauche (le personnage à droite, le premier sceau à droite), en Reem Kufi et Noto Naskh Arabic ; en japonais, en
+Noto Serif JP, sans couper un nom en katakana ; ni capitales ni lettres espacées hors du français et de l'anglais. Les
+polices sont chargées pour les textes mêmes que l'image porte (2,5 s au plus ; sinon, celles du système).
+
+**Le texte** (`I.partage.lignes`), une phrase par ligne : « ISNAD · Chroniques des Compagnons » (إسناد en arabe),
+« Khalil suit la Chaîne : 2 maillons achevés sur 5. », « Lumières retrouvées : 2 / 5 · Fidélité à la Chaîne : 14 / 16 »,
+« En cours : Khâlid ibn al-Walîd · La Traversée » (le chapitre que l'on joue ; sinon le récit quitté en dernier ; sinon
+« Prochain maillon : … » ; après le dernier maillon, « La Chaîne est transmise »), l'adresse, la réserve.
+
+**Ce qu'ils ne disent jamais** : les œuvres et leurs nombres, la provision du cœur, les maux du cœur, les lames, les
+idées noires, les Valeurs et attributs, la descente dans la noosphère — la vie intérieure ne se partage pas (D187 ; la
+distance avec le joueur ; exigences 13 et 15) ; ni les piliers de la Citadelle, ni les pourparlers, ni les combats
+(exigence 6) ; aucune figure (exigence 24) ; aucun Compagnon dessiné (exigence 2) ; aucun Nom divin ; aucune source.
+
+**Une seule source pour l'adresse et la réserve.** `v2/tools/promotion.js` dit ce que le jeu en reprend (`JEU` : le nom,
+le sous-titre, l'adresse, la réserve) ; `v2/tools/build.js` le pose dans la page (`window.ISNAD_PROMO`), sans le recopier
+dans le moteur ; `v2/tools/langues.js` relève ce que le jeu en dit dans la langue du joueur (`JEU_DIT` : le sous-titre et
+la réserve, dans le fichier `moteur`). C'est la seule exception à la règle de `langue.js` (« le premier argument de
+`I.t` est une chaîne écrite en toutes lettres ») : `I.t(P.RESERVE)`. Changer la réserve, c'est la redemander dans
+chaque langue. La réserve suit le décideur (19 novembre) : « Version bêta. La relecture historique et religieuse par un
+spécialiste reste à faire. »
+
+**Le partage.** « Partager » appelle `navigator.share({ files: [l'image], title, text })` quand le navigateur sait partager
+un fichier (`navigator.canShare({ files })`) : c'est la feuille de partage du téléphone, qui mène à tous les réseaux ; le
+jeu n'en nomme aucun et ne fait aucune requête. Le fichier est prêt avant le geste (`isnad-progression.png`), pour que
+Safari, qui demande un geste récent, ne le refuse pas. Annulé (`AbortError`) : « Partage annulé. », rien de plus. Sinon
+— pas de `navigator.share`, pas de partage de fichier, un refus (`NotAllowedError`), une erreur — **le repli** : le
+texte est copié (`navigator.clipboard`, sinon la vieille commande ; s'il ne peut l'être, il reste sélectionné, et c'est
+dit), l'image est montrée en grand, à garder d'un appui long (une image `data:`, que le menu du téléphone sait
+enregistrer) ; au bureau, « Enregistrer l'image » la remet au navigateur. **Le partage complet suppose le jeu publié à son
+adresse** : dans la page privée où il l'est pour l'instant (un Artifact, un cadre isolé), le navigateur peut refuser le
+partage et ne laisse pas remettre de fichier — le bouton d'enregistrement n'y est pas proposé, comme pour « Exporter la
+partie » —, et le repli s'offre alors, sans erreur.
+
+`node v2/tools/partage.js` le prouve : avant tout maillon, ni la Chaîne ni la halte n'offrent le bouton ; une partie
+avancée (le prologue et deux maillons joués par le joueur automatique, le râwî nommé et composé) l'offre ; touché, il
+ouvre l'aperçu ; l'image se dessine aux deux formats, avec et sans le personnage, et n'est pas vide ; le seul
+personnage dessiné est le râwî ; aucune leçon n'est proposée ; dans les quatre langues, le texte et ce que l'image porte
+disent le nom, les maillons, la réserve dans la langue et l'adresse de `promotion.js`, et aucun mot des œuvres, du cœur,
+des Valeurs, de la descente, des figures, du Nom divin ni des combats (une liste par langue, et les noms que le jeu
+donne lui-même à tout cela) ; dans la halte, le bouton sous « Reprendre », l'aperçu qui dit le chapitre en cours, le
+retour ; au bureau, le PNG enregistré ; au doigt sur un téléphone, le partage accepté (le PNG et le texte partent), et
+chaque repli (absent, sans fichier, refusé, en erreur, presse-papiers refusé, dans un Artifact) ; aucun texte sous dix
+points, aucune requête, aucune erreur console : « PARTAGE CONFORME ». Les images dans `.smoke/partage/`, dans les quatre
+langues.
 
 ## La définition du dessin : `src/core/gfx.js`
 
@@ -925,6 +998,7 @@ node v2/tools/personnage.js          # le nom et la tenue du râwî : choisis, j
 node v2/tools/silhouettes.js         # « SILHOUETTES CONFORMES » : petits sprites inchangés, aucun trait dans un voile
 node v2/tools/silhouettes.js planches [modèles.png]   # planches agrandies dans .smoke/silhouettes/
 node v2/tools/loupe.js               # « LOUPE CONFORME » : sur un téléphone, l'image agrandie, le toucher juste, les textes lisibles
+node v2/tools/partage.js             # « PARTAGE CONFORME » : partager sa progression — le bouton, l'image, le texte, les replis, quatre langues
 node v2/tools/smoke.js auto          # et walk, tap, wrong, shots — comme en 1.32
 node v2/tools/doigt.js [loin [844x390]]
 node v2/tools/son.js
@@ -933,8 +1007,8 @@ node v2/tools/longueurs.js [langue…]  # « LONGUEURS RELEVÉES » : le relevé
 node v2/tools/bilingue.js [fr-ar …] [390x844 844x390]   # « BILINGUE CONFORME » : la langue secondaire, sous chaque réplique et chaque carton, au doigt
 ```
 
-**Règle de la 2.x.** Celle d'`AGENTS.md`, avec dix contrôles de plus à chaque changement du moteur ou des règles —
+**Règle de la 2.x.** Celle d'`AGENTS.md`, avec onze contrôles de plus à chaque changement du moteur ou des règles —
 `paquet.js`, `partie.js`, `personnage.js`, `silhouettes.js`, `dedales.js`, `descente.js`,
-`retours.js`, `progression.js`, `loupe.js` et `bilingue.js` ; la liste, et ce que chacun doit afficher, est dans
+`retours.js`, `progression.js`, `loupe.js`, `bilingue.js` et `partage.js` ; la liste, et ce que chacun doit afficher, est dans
 `AGENTS.md`. Aucun ne doit finir sur « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT » ni
 « ÉCART ».

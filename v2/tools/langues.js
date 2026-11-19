@@ -15,8 +15,8 @@
                                               → « LANGUES CONFORMES » ; code de sortie 1 sinon
 
    Les fichiers : un par fichier de récit (saga_abubakr, …, frame, caid, coeur), « tables » (les tables de
-   src/core/defs.js) et « moteur » (les phrases du code, dites par I.t('…') ou marquées I.T('…'), et les textes de
-   src/page.html marqués data-t). */
+   src/core/defs.js) et « moteur » (les phrases du code, dites par I.t('…') ou marquées I.T('…'), les textes de
+   src/page.html marqués data-t, et ce que le jeu dit de la promotion : tools/promotion.js, JEU_DIT). */
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const V2 = path.join(__dirname, '..'), SRC = path.join(V2, 'src'), LANG = path.join(SRC, 'lang'), SOURCES = path.join(V2, 'docs', 'sources');
 const D = require(path.join(SRC, 'core/defs.js')), L = require(path.join(SRC, 'core/langue.js')), R = require(path.join(SRC, 'core/regles.js'));
@@ -44,6 +44,10 @@ function textes() {
   while ((m = T.exec(page))) met('moteur', (m[1] || m[2]).replace(/\s+/g, ' ').trim(), 'page.html');
   const A = /\sdata-t-(?:title|aria|placeholder)=["']([^"']*)["']/g;
   while ((m = A.exec(page))) met('moteur', m[1], 'page.html');
+  // 2.x : la promotion — le sous-titre et la réserve, que le jeu dit dans la langue du joueur quand il partage sa progression
+  // (src/core/partage.js) ; ils ne s'écrivent qu'à un endroit, tools/promotion.js
+  const PROMO = require(path.join(V2, 'tools', 'promotion.js'));
+  (PROMO.JEU_DIT || []).forEach(k => met('moteur', PROMO[k], 'promotion.js'));
   return F;
 }
 

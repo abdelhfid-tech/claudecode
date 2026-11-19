@@ -92,6 +92,8 @@
   }
   U.tapable = tapable;
   function screen(id, on) { $(id).hidden = !on; document.body.classList.toggle('in-screen', !!document.querySelector('.screen:not([hidden])')); }
+  U.screen = screen; U.focusList = focusList;   // 2.x : pour les écrans des autres modules (partage.js)
+  U.fondTitre = () => titleBg || (titleBg = paintTitle());   // le ciel de l'écran-titre, à la définition du dessin (l'image de partage, partage.js)
 
   /* ---------- titre ---------- */
   U.showTitle = function (vue) {
@@ -412,6 +414,8 @@
     if (I.sagas.caid && Object.keys(sv.veillees || {}).length) foot.appendChild(I.el('span', 'pill', I.t('Citadelle du Caïd : {piliers}', { piliers: Object.keys(D.PILLARS).map(k => `${D.PILLARS[k].glyph} <b>${sv.citadel[k]}</b>`).join(' · ') })));
     { const d = I.oeuvres.state(), nl = Object.keys(d.lames).length, nv = Object.keys(d.vices).filter(v => d.vices[v] === 'tranche').length; if (nl || nv || d.zad) foot.appendChild(I.el('span', 'pill', I.t('Lames : <b>{lames}</b> / 7 · maux tranchés : <b>{maux}</b> / 7 · ♥ {zad}', { lames: nl, maux: nv, zad: d.zad }))); }
     const pied = (label, fn) => { const b = I.el('button', '', label); b.type = 'button'; tapable(b, fn); foot.appendChild(b); btns.push(b); };
+    // 2.x : partager sa progression (partage.js) — à côté des Lumières et de la fidélité, dès qu'un maillon est achevé ; sans leçon
+    if (I.partage && I.partage.offert()) pied(I.t('Partager ma progression'), () => { close(); I.partage.ouvrir(() => U.showChain()); });
     { const fr2 = I.sagas.idris, vi = fr2 ? fr2.chapters.findIndex(c => c.visite === 'citadelle') : -1; // 2.x : la Citadelle, en 2084
       if (vi >= 0 && I.sagas.caid && Object.keys(sv.veillees || {}).some(k => sv.veillees[k])) pied(I.t('La Citadelle'), () => { close(); W.roster = {}; W.saga = null; const cp = W.reprise('idris', vi); W.startChapter('idris', vi, cp || undefined); }); }
     pied(I.t('Garder une copie'), async () => { close(); await U.saveMenu(); U.showChain(); });
@@ -544,6 +548,8 @@
       const items = [{ label: I.t('Reprendre'), fn: close, show: journal }];
       if (inWorld) items.push({ label: I.t('Que faire ?'), fn() { close(); U.guide(); }, show: () => '<h3>' + I.t('Que faire ?') + '</h3><p>' + I.t('L’objectif expliqué, sa direction, et le chemin montré au sol si tu le demandes. Le même bouton <b>?</b> est toujours en haut de l’écran.') + '</p>' });
       if (inWorld && W.map) items.push({ label: I.t('Carte'), fn: carte, show: () => '<h3>' + I.t('Carte') + '</h3><p>' + I.t('Le lieu entier, avec ta position, l’objectif, la natte et les lieux nommés. On l’ouvre aussi en touchant la mini-carte, ou par la touche <kbd>C</kbd>.') + '</p>' });
+      // 2.x : partager sa progression (partage.js), sous « Reprendre » qui dit où en est le récit — dès qu'un maillon est achevé, sans leçon
+      if (I.partage && I.partage.offert()) items.push({ label: I.t('Partager ma progression'), fn() { close(); I.partage.ouvrir(() => U.pause()); }, show: () => I.partage.pane() });
       items.push({ cat: I.t('Le groupe') }, { label: I.t('Compagnons'), fn() {}, show: () => '<h3>' + I.t('Le groupe') + '</h3>' + party() });
       if (page('equipement')) items.push({ label: I.t('Équipement'), fn() { equip(); }, show: () => I.gear.paneGroupe() });
       if (I.postures && I.postures.offertes()) items.push({ label: I.t('Figures'), fn() { postures(); }, show: () => I.postures.pane() }); // 2.x : la page paraît quand un choix s'offre à quelqu'un du groupe

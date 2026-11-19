@@ -17,7 +17,7 @@ for (let i = 0; i < args.length; i++) {
 }
 if (avec.length && !vers) { console.error('--avec demande --vers : un assemblage d’essai ne remplace jamais le jeu livré'); process.exit(2); }
 
-const core = ['defs', 'regles', 'dedale', 'langue', 'base', 'perso', 'gfx', 'sprites', 'maps', 'script', 'world', 'build', 'trade', 'oeuvres', 'lecons', 'gear', 'mal', 'valeurs', 'postures', 'rangs', 'battle', 'rodeurs', 'ui'].map(n => `src/core/${n}.js`);
+const core = ['defs', 'regles', 'dedale', 'langue', 'base', 'perso', 'gfx', 'sprites', 'maps', 'script', 'world', 'build', 'trade', 'oeuvres', 'lecons', 'gear', 'mal', 'valeurs', 'postures', 'rangs', 'battle', 'rodeurs', 'ui', 'partage'].map(n => `src/core/${n}.js`);
 const data = ['src/data/frame.js', 'src/data/music.js', 'src/data/caid.js', 'src/data/coeur.js'].filter(f => fs.existsSync(path.join(root, f))).concat(fs.readdirSync(path.join(root, 'src/data')).filter(f => /^saga_.*\.js$/.test(f)).sort().map(f => 'src/data/' + f));
 // les paquets : ceux du dépôt, dans l'ordre de leurs noms, puis ceux de l'essai. Un paquet est de la donnée : il entre tel quel.
 const DOSSIER = path.join(root, 'paquets');
@@ -41,7 +41,10 @@ const langues = LANGUE.ORDRE.filter(l => l !== 'fr' && fs.existsSync(path.join(L
   fs.readdirSync(path.join(LANG, l)).filter(f => /\.json$/.test(f)).sort().forEach(f => { (JSON.parse(fs.readFileSync(path.join(LANG, l, f), 'utf8')).textes || []).forEach(x => { if (!x || typeof x.fr !== 'string') return; total++; if (typeof x.t === 'string' && x.t) { ecrits++; cat[LANGUE.cle(x.fr)] = x.t; } }); });
   const complet = total > 0 && ecrits === total;
   return { l, n: Object.keys(cat).length, complet, js: `/* ==== langue ${l} ==== */\nISNAD.langue.poser(${JSON.stringify(l)}, ${JSON.stringify(cat).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029')}, { complet: ${complet} });` }; }).filter(x => x.n);
-const js = `window.ISNAD_VERSION = ${JSON.stringify(version)};\n` + core.concat(data).map(f => `/* ==== ${f} ==== */\n` + read(f)).concat(langues.map(x => x.js)).concat(paquets.map(poser)).join('\n') +
+// ce que le jeu reprend de la promotion (partager sa progression : src/core/partage.js) : lu dans v2/tools/promotion.js, le seul
+// endroit où s'écrivent l'adresse et la réserve, et posé dans la page — jamais recopié dans le moteur
+const PROMO = require('./promotion.js'), promo = {}; PROMO.JEU.forEach(k => { promo[k] = PROMO[k]; });
+const js = `window.ISNAD_VERSION = ${JSON.stringify(version)};\nwindow.ISNAD_PROMO = ${JSON.stringify(promo).replace(/</g, '\\u003c')};\n` + core.concat(data).map(f => `/* ==== ${f} ==== */\n` + read(f)).concat(langues.map(x => x.js)).concat(paquets.map(poser)).join('\n') +
   '\n(window.claude && window.claude.hot && window.claude.hot.ready) ? window.claude.hot.ready(function () { ISNAD.ui.boot(); }) : ISNAD.ui.boot();\n';
 if (js.includes('</script')) throw new Error('</script> trouvé dans le JS');
 
