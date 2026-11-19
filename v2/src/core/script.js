@@ -404,7 +404,7 @@
       case 'tp': { const e = W.ent(a); if (e) { const p = W.resolve(b, e === W.player ? W.map.id : e.map, e); if (p) { e.x = p[0]; e.y = p[1]; e.placed = true; e.placedMap = W.map.id; if (e === W.player) W.resetTrail(); } else { e.at = b; e.placed = false; } } break; }
       case 'walk': { const e = W.ent(a); if (e) { const p = W.resolve(b, e === W.player ? W.map.id : e.map, e); if (p) { if (e.hidden || I.debug.auto) { e.x = p[0]; e.y = p[1]; } else await W.walkTo(e, p[0], p[1]); if (e !== W.player) { e.placed = true; e.placedMap = W.map.id; } } else { e.at = b; e.placed = false; } } break; }
       case 'face': { const e = W.ent(a); if (e) e.dir = G.DIRS[b]; break; }
-      case 'show': { const e = W.ent(a); if (e) { e.hidden = false; W.place(e); } break; }
+      case 'show': { const e = W.ent(a); if (e) { e.hidden = false; W.place(e); W.ecarter(e); } break; } // 2.16 : qui paraît sur le joueur s'en écarte
       case 'hide': { const e = W.ent(a); if (e) e.hidden = true; break; }
       case 'fade': S.hideDialog(); await S.fade(a, b); break;
       case 'wait': await I.sleep(I.debug.auto ? 10 : a); break;

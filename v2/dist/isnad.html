@@ -845,7 +845,7 @@ body.avec2:not(.portrait) #hud { visibility: hidden; }
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.16 · 2026-11-19 12:19 UTC · df9754d+";
+window.ISNAD_VERSION = "2.16 · 2026-11-19 12:55 UTC · 03fa54b+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -6338,7 +6338,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       case 'tp': { const e = W.ent(a); if (e) { const p = W.resolve(b, e === W.player ? W.map.id : e.map, e); if (p) { e.x = p[0]; e.y = p[1]; e.placed = true; e.placedMap = W.map.id; if (e === W.player) W.resetTrail(); } else { e.at = b; e.placed = false; } } break; }
       case 'walk': { const e = W.ent(a); if (e) { const p = W.resolve(b, e === W.player ? W.map.id : e.map, e); if (p) { if (e.hidden || I.debug.auto) { e.x = p[0]; e.y = p[1]; } else await W.walkTo(e, p[0], p[1]); if (e !== W.player) { e.placed = true; e.placedMap = W.map.id; } } else { e.at = b; e.placed = false; } } break; }
       case 'face': { const e = W.ent(a); if (e) e.dir = G.DIRS[b]; break; }
-      case 'show': { const e = W.ent(a); if (e) { e.hidden = false; W.place(e); } break; }
+      case 'show': { const e = W.ent(a); if (e) { e.hidden = false; W.place(e); W.ecarter(e); } break; } // 2.16 : qui paraît sur le joueur s'en écarte
       case 'hide': { const e = W.ent(a); if (e) e.hidden = true; break; }
       case 'fade': S.hideDialog(); await S.fade(a, b); break;
       case 'wait': await I.sleep(I.debug.auto ? 10 : a); break;
@@ -6802,6 +6802,9 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) return false; const e = heurte(p.x, p.y, nx, ny); if (e) { W._heurte = e; return false; } p.x = nx; p.y = ny; return true; }
   // le joueur posé sur quelqu'un (une partie d'avant, un récit) : la case libre la plus proche
   W.degager = function () { const p = W.player; if (!W.map || !corps().some(e => touche(e, p.x, p.y))) return false; const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; } return true; };
+  // un PNJ qui paraît (« show ») là où se tient le joueur — il y était posé, caché — prend la case libre la plus proche
+  W.ecarter = function (e) { const p = W.player; if (!W.map || e.hidden || e.map !== W.map.id || !e.placed || !(Math.abs(e.x - p.x) < 12 && Math.abs(e.y - p.y) < 10)) return false;
+    const q = W.resolve([null, 0, 0], e.map, e, [Math.floor(e.x / T), Math.floor((e.y - 2) / T)]); if (q) { e.x = q[0]; e.y = q[1]; } return true; };
   // poussé plus de quatre dixièmes de seconde, un PNJ fait un pas de côté : vers une case libre, d'abord sur le côté, puis
   // devant lui, jamais vers celui qui pousse ni sur le chemin qu'il suit
   function pasDeCote(n) {

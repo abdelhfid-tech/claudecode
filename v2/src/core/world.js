@@ -435,6 +435,9 @@
   function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) return false; const e = heurte(p.x, p.y, nx, ny); if (e) { W._heurte = e; return false; } p.x = nx; p.y = ny; return true; }
   // le joueur posé sur quelqu'un (une partie d'avant, un récit) : la case libre la plus proche
   W.degager = function () { const p = W.player; if (!W.map || !corps().some(e => touche(e, p.x, p.y))) return false; const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; } return true; };
+  // un PNJ qui paraît (« show ») là où se tient le joueur — il y était posé, caché — prend la case libre la plus proche
+  W.ecarter = function (e) { const p = W.player; if (!W.map || e.hidden || e.map !== W.map.id || !e.placed || !(Math.abs(e.x - p.x) < 12 && Math.abs(e.y - p.y) < 10)) return false;
+    const q = W.resolve([null, 0, 0], e.map, e, [Math.floor(e.x / T), Math.floor((e.y - 2) / T)]); if (q) { e.x = q[0]; e.y = q[1]; } return true; };
   // poussé plus de quatre dixièmes de seconde, un PNJ fait un pas de côté : vers une case libre, d'abord sur le côté, puis
   // devant lui, jamais vers celui qui pousse ni sur le chemin qu'il suit
   function pasDeCote(n) {
