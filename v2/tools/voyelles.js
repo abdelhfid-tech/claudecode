@@ -50,7 +50,7 @@ function registre() {
 const MARQUE = /[\u064B-\u0652\u0670]/, LETTRE = /[\u0621-\u063F\u0641-\u064A]/;   // (le tatwîl, U+0640, n’est pas une lettre)
 const DAMMA = /[\u064C\u064F]/, KASRA = /[\u064D\u0650]/, CHADDA = '\u0651';
 // (les abréviations des dates, هـ et م, une lettre seule, ne se vocalisent pas)
-const NUS = new Set(['إدريس', 'ه', 'م']);
+const NUS = new Set(['إدريس', 'ه', 'م', 'د', 'س', 'ث']);   // (et د, س, ث : minute, heure, seconde, abrégées)
 const NOM = /^(?:[وفبل]?)(?:ال|ل)له$/;   // الله, والله, بالله, فالله, لله, ولله…
 // les mots arabes d'un texte, chacun avec ses lettres et leurs signes
 function mots(s) {
