@@ -1705,7 +1705,7 @@ pages privées de son compte.
   dedans ? ») — réécrite à la source en arabe, anglais et japonais, à relire ; aucun short ni outil ne la citait. À corriger par le décideur seul (l'agent n'y touche pas) : le feuillet « S'orienter aux
   étoiles » cite 16:16 sous une forme qui n'est d'aucune des deux éditions de Hamidullah (« ainsi que des points de
   repère. Et au moyen des étoiles [les gens] se guident. »).
-- [ ] **D208. Les commandes du combat : le double toucher, « Retour » partout, l'Esquive, Fuir, Éclairer dans les Vertus
+- [x] **D208. Les commandes du combat : le double toucher, « Retour » partout, l'Esquive, Fuir, Éclairer dans les Vertus
   (version 2.19 ; le décideur, 20 novembre : « Rajoute une parade "esquive" et vérifie qu'on a toujours possibilité de cliquer
   sur retour. Par défaut quand on combat si on appuie sur frapper et encore sur frapper (ou sur les boutons) ça frappe ou ça
   active l'action sur l'adversaire ou l'ennemi identifié par défaut. » ; « Rajoute aussi une parade "fuire" pour quitter le
@@ -1744,7 +1744,8 @@ pages privées de son compte.
   {élément}. ». Tous écrits à la source en arabe, anglais et japonais par l'agent, à relire. À trancher : les nombres ; les
   deux choix de l'agent ci-dessus ; les signes ↷ et ⇢ ; le short 8 (« Tenir les rangs »), qui filme le panneau du combat,
   serait à refaire.
-- [ ] **D209. L'arabe vocalisé (le décideur, 20 novembre : « Aussi ajoute l'option voyelles pour l'arabe », puis « Ou bien
+  *Validée par le décideur le 20 novembre (« Ok pour tes propositions ») : les nombres, les textes, les trois choix de l'agent et les signes ↷ et ⇢ ; le short 8 sera refait avec les autres.*
+- [x] **D209. L'arabe vocalisé (le décideur, 20 novembre : « Aussi ajoute l'option voyelles pour l'arabe », puis « Ou bien
   arabe / arabe vocalisé », et pour son nom : « Non tu peux mettre al arabiya avec les voyelles sur le mot ») — à valider
   par le décideur.** Partout où l'on choisit une langue (l'écran-titre, « Langue » dans la halte, la langue secondaire),
   l'arabe paraît deux fois : « العربية », le texte d'aujourd'hui, sans voyelles (§ 1.2 du glossaire arabe : il reste la
@@ -1766,6 +1767,7 @@ pages privées de son compte.
   relecture de la vocalisation par un arabisant, en commençant par les lectures douteuses que l'agent a signalées (une
   désinence, une voyelle de mot rare) ; l'interligne un peu plus haut du texte vocalisé dans la boîte de dialogue tenue en
   hauteur et dans la seconde bulle.
+  *Validée par le décideur le 20 novembre (« Ok pour tes propositions ») : les phrases des Réglages, l'interligne ; les morceaux de paroles cités dans un texte gardent leurs voyelles ; la relecture d'un arabisant reste à faire, sur la liste des lectures douteuses.*
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et
