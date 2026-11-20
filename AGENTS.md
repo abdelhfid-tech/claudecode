@@ -44,9 +44,11 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   touché sur la Chaîne et dans la halte ; l'image, carrée et verticale, et son texte, dans les quatre langues — le nom,
   les maillons, la réserve, l'adresse, et aucun mot des œuvres, du cœur ni des Valeurs ; le partage et ses replis :
   « PARTAGE CONFORME ») et `node v2/tools/manette.js` (la manette tactile partout, au doigt et avec ses seuls boutons, en
-  hauteur, en largeur et sur un petit téléphone : l'écran-titre, la halte menée au joystick, A qui entre, B qui revient
-  et la referme, un dialogue, une liste de choix, un carton, le combat et sa cible, B qui n'ouvre pas la halte et frappe
-  ce qui rôde ; à chaque état, la manette ne recouvre rien et la sélection se voit : « MANETTE CONFORME ») : aucun
+  hauteur, en largeur, sur un petit téléphone et sur une tablette en largeur : l'écran-titre, la halte menée au joystick,
+  A qui entre, B qui revient et la referme, un dialogue, une liste de choix, un carton, le combat et sa cible, B qui
+  n'ouvre pas la halte et frappe ce qui rôde ; à chaque état, la manette ne recouvre ni un texte ni un bouton (ni, en
+  hauteur, l'image) et la sélection se voit ; en largeur, le grand écran, la manette translucide sur l'image, le plein
+  écran là où il sert et rien de cassé là où il est refusé : « MANETTE CONFORME ») : aucun
   « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART », « RECOUVERT ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages ». Les textes de la 2.0
   disent « Idris » : on n'y écrit jamais le nom d'un joueur, c'est `v2/src/core/perso.js` qui le pose à l'affichage. Une partie de la 2.0 a
@@ -123,15 +125,24 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   frappe ce qui rôde et n'ouvre jamais la halte ; ailleurs, il revient d'un cran ; devant un choix à faire, il ne fait rien,
   sauf si une réponse de la liste est marquée `retour: true` (« Retour », « Plus tard »…). Hors de l'exploration, le
   joystick déplace la sélection, qui se voit au doigt (`body.touch .sel`). La manette ne recouvre jamais un texte, un
-  bouton, une cible ni l'image : en hauteur, elle a la bande du bas (`--pad-bas`) ; en largeur, les deux marges de l'image
-  (`--pad-cote` : la scène garde sa hauteur et se rogne en largeur) ; une page qui ne peut pas lui laisser la place la
-  voit s'effacer (`body.pad-efface`). Masquée au choix du joueur, elle ne prend plus aucune place. Ce n'est pas un outil de
-  la progression ; rien n'est gardé dans la partie. `v2/docs/architecture.md`, « La manette tactile ». Contrôle :
-  `node v2/tools/manette.js` (« MANETTE CONFORME »).
+  bouton ni une cible : en hauteur, elle a la bande du bas (`--pad-bas`), sous l'image ; en largeur (2.18, le décideur,
+  20 novembre : « le grand écran immersif lorsque le téléphone est en paysage, le joystick et les boutons A/B doivent être
+  translucides sur l'image au lieu d'être figés et rétrécir l'image et l'immersion »), l'image prend tout l'écran
+  (`body.immersif`) et la manette est posée dessus, translucide — 40 % au repos, un contour fin, nette sous le pouce, B
+  éclairé net : la boîte de dialogue, le panneau du combat, la barre de « Bâtir » et une liste de choix s'arrêtent entre
+  ses deux zones (`--pad-g`, `--pad-d`, `U.padZone`), un écran ou un carton garde son fond sur tout l'écran et pose son
+  contenu entre elles (`--pad-cote`), une étiquette de nom ne passe pas sous elle ; là où le navigateur le permet, le jeu
+  passe en plein écran au premier toucher en largeur et l'écran y reste en largeur (`U.pleinEcran`, le bouton de la
+  scène, le réglage « Plein écran ») — dans un cadre qui le refuse ou sur un iPhone, rien ne paraît. Une page qui ne peut
+  pas lui laisser la place la voit s'effacer (`body.pad-efface`). Masquée au choix du joueur, elle ne prend plus aucune
+  place. Ce n'est pas un outil de la progression ; rien n'est gardé dans la partie. `v2/docs/architecture.md`, « La
+  manette tactile ». Contrôle : `node v2/tools/manette.js` (« MANETTE CONFORME »).
 - Dans la 2.x, l'image s'agrandit (demande du décideur, 16 novembre : « les personnages et les textes sont trop petits
   dans mon téléphone, il faut pouvoir zoomer dans l'image ») : pendant l'exploration, de × 1 à × 3 autour de celui qui
   mène — deux doigts qui s'écartent, la molette, le bouton « × » de la scène, le réglage « Image » ; d'office × 1,5 sur
-  un téléphone tenu en hauteur, × 1,25 en largeur. Le combat garde son cadrage. La fenêtre visible a deux dimensions
+  un téléphone tenu en hauteur ; en largeur, l'image remplit l'écran (2.18) — sur un téléphone plus large que 16:9, elle
+  y montre toute sa largeur et une part de sa hauteur, déjà agrandie : × 1 d'office ; × 1,25 là où elle reste petite (un
+  écran 16:9 de téléphone). Le combat garde son cadrage. La fenêtre visible a deux dimensions
   (`G.view` : `x`, `y`, `w`, `h`) : tout ce qui se pose sur la scène — étiquettes, plan, flèche d'objectif, toucher — passe
   par elle et par `U.scale`, jamais par la taille de la scène seule. Sur un écran tactile, le texte est « grand »
   d'office et aucun n'est sous dix points (`src/style.css`, « écran tactile ») ; une liste de choix qui déborderait se
@@ -142,7 +153,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   commandes — en hauteur sous les rangées du groupe, en largeur au pied de la scène, toute la largeur du panneau s'il
   montait jusqu'à une figure (`battle.js`, `placer`, `B.boites`) ; le dévoilement et la victoire y passent aussi. Les
   chiffres et les petits mots d'état restent sur leur cible, qu'ils désignent. Aucun message n'est posé sous le panneau ni
-  dans les marges : la place de la manette. `v2/docs/architecture.md`, « Les messages du combat, en bas ». Contrôle :
+  dans les zones de la manette (en largeur, le panneau s'arrête entre elles). `v2/docs/architecture.md`, « Les messages du combat, en bas ». Contrôle :
   `loupe.js` (« RECOUVERT » : un message sur une figure, une plaque, la frise des tours ou le champ).
 - **Les langues** (demande du décideur, 18 novembre ; exigence 25). La 2.x existe en français, en arabe, en anglais et
   en japonais. Le français reste la langue des récits, des tables et du code ; les autres langues sont écrites à la
@@ -271,7 +282,8 @@ pas dans le pied d'un PNJ ou d'un coffre, ou un lieu se charge avec quelqu'un à
 (le joueur de test, à pied ou au doigt, n'arrive pas à son objectif et y est porté), sans « PNJ EN TRAVERS » (la case d'un PNJ
 ou d'un coffre, rendue pleine, coupe un lieu nommé, et aucun pas de côté ne rouvre le passage), sans « RECOUVERT » (un message
 du combat posé sur un personnage, une chimère, son nom, sa jauge de voiles, la frise des tours ou le champ ; ou la manette
-tactile sur un texte, un élément touchable ou l'image : toute modification des entrées ou de la mise en page repasse
+tactile sur un texte ou un élément touchable — et, en hauteur, sur l'image ; en largeur, depuis la 2.18, elle est posée
+sur l'image, qui peut passer dessous : toute modification des entrées ou de la mise en page repasse
 `manette.js`) et sans erreur console.
 Un parcours automatique prouve que le récit se déroule, pas qu'il se voit : tout changement d'écran
 ou de mise en page se vérifie aussi sur une capture.

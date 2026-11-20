@@ -3,8 +3,8 @@
    l'image » ; src/style.css, « écran tactile »).
    Usage : node tools/loupe.js
    Sur un écran tactile de téléphone, tenu en hauteur puis en largeur, par les vrais gestes :
-   1. sans choix du joueur, l'image est agrandie — une fois et demie en hauteur, une fois et quart en largeur — et le
-      texte est « grand » ; rien n'est écrit dans les réglages ;
+   1. sans choix du joueur, l'image est agrandie — une fois et demie en hauteur ; en largeur (2.18), elle remplit l'écran,
+      où elle est déjà agrandie d'un cinquième : × 1 — et le texte est « grand » ; rien n'est écrit dans les réglages ;
    2. deux doigts qui s'écartent agrandissent l'image, deux doigts qui se rapprochent la rendent entière ; le pincement ne
       fait marcher personne ; l'agrandissement est gardé ;
    3. le bouton « × » fait le tour des grandeurs ;
@@ -34,7 +34,8 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { a
     const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 2, hasTouch: true, isMobile: true, userAgent: devices['iPhone 13'].userAgent }), p = await ctx.newPage(), cdp = await ctx.newCDPSession(p);
     p.on('pageerror', e => errors.push('pageerror: ' + e.message)); p.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
     await p.goto(url); await p.waitForTimeout(1600);
-    const shot = n => p.screenshot({ path: path.join(out, `${cle}-${n}.png`) }), office = cle === 'haut' ? 1.5 : 1.25, fr = z => '× ' + String(z).replace('.', ',');
+    // (2.18 : en largeur, l'image remplit l'écran — en 844 × 390, elle y est déjà agrandie d'un cinquième : × 1 d'office)
+    const shot = n => p.screenshot({ path: path.join(out, `${cle}-${n}.png`) }), office = cle === 'haut' ? 1.5 : 1, fr = z => '× ' + String(z).replace('.', ',');
     // un carton ou un dialogue : valider ; un choix : sa dernière option (« pas maintenant »)
     const entree = async () => { if (await p.evaluate(() => { const c = document.querySelector('#choice'); if (c && !c.hidden) { const o = c.querySelectorAll('.opt'); if (o.length) { o[o.length - 1].click(); return false; } } return ['#card', '#dialog'].some(q => { const e = document.querySelector(q); return e && !e.hidden; }); })) await p.keyboard.press('Enter'); };
     const calme = async (n = 80) => { for (let i = 0; i < n && await p.evaluate(() => window.ISNAD.script.busy || window.ISNAD.world.lock); i++) { await entree(); await p.waitForTimeout(160); } await p.waitForTimeout(250); };
@@ -76,7 +77,8 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { a
     dit(e1.x === e0.x && e1.y === e0.y && !e1.dest, 'ÉCART', `${nom} : le pincement n'a fait marcher personne`);
     await shot('3-pince');
     await pincer(160, 50); const e2 = await etat();
-    dit(e2.zf === 1 && !/scale/.test(e2.tr) && e2.vue[1] === 0 && e2.vue[3] === 216, 'ÉCART', `${nom} : deux doigts qui se rapprochent : × ${e2.zf}, l'image entière`);
+    // (2.18 : en largeur, l'image qui remplit l'écran montre toute sa largeur, et sa hauteur autant que l'écran le permet)
+    dit(e2.zf === 1 && !/scale/.test(e2.tr) && (cle === 'haut' ? e2.vue[1] === 0 && e2.vue[3] === 216 : e2.vue[2] === 384 && Math.abs(e2.vue[3] - Math.min(216, e2.st[3] / e2.scale)) < 0.2), 'ÉCART', `${nom} : deux doigts qui se rapprochent : × ${e2.zf}, l'image entière${cle === 'haut' ? '' : ` en largeur (${e2.vue[2]} × ${e2.vue[3]} points)`}`);
     // 3. le bouton
     const suite = []; for (let i = 0; i < 4; i++) { await p.locator('#zoombtn').tap(); await p.waitForTimeout(250); suite.push((await etat()).zf); }
     dit(suite.join(' ') === '1.5 2 3 1', 'ÉCART', `${nom} : le bouton « × » fait le tour des grandeurs : ${suite.join(' → ')}`);

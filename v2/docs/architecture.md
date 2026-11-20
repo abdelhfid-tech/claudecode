@@ -539,24 +539,22 @@ et dans chacune de ses pages, sur les écrans (titre, Chaîne, « Ton personnage
 | le combat : la cible | frapper (ou soigner) celle qui est montrée | revenir aux commandes | changer de cible |
 | le combat : un bandeau | passer | passer | — |
 
-**Sa place** (`layout`, `padPlace`) : la manette ne recouvre jamais un texte, un bouton, une cible ni l'image du combat. Ses
-mesures viennent d'elle-même (la marge du système, une encoche, est comprise), et elle passe au-dessus des écrans et des
-cartons (`z-index` 46), dans une place que rien ne lui dispute :
+**Sa place** (`layout`, `padPlace`) : la manette ne recouvre jamais un texte, un bouton ni une cible. Ses mesures viennent
+d'elle-même (la marge du système, une encoche, est comprise), et elle passe au-dessus des écrans et des cartons
+(`z-index` 46) :
 
-- **en hauteur**, la bande du bas (`--pad-bas`, `U.padBas`) : les écrans (`.screen`) et les cartons s'arrêtent au-dessus ;
-  une liste de choix aussi (elle se resserre : `S.ajuster`) ; le panneau du combat se resserre (`tenir`), prend la mise en
-  page serrée des petits écrans dès qu'il reste moins de 700 points sans la bande (`body.serre`), et la scène du combat se
-  raccourcit pour lui laisser 300 points (`PANNEAU`) ; la seconde bulle de la langue secondaire s'arrête au-dessus de la
-  bande. Sur un écran de moins de 740 points de haut, la manette est plus petite ;
-- **en largeur**, les deux marges (`--pad-cote`, `U.padCote`) : la scène garde sa hauteur et ne montre qu'une partie de la
-  largeur de l'image (`U.rogne`, comme en hauteur ; le combat rapproche les deux camps, `bx()`) ; les cartons tiennent
-  entre les deux marges, les écrans aussi s'il leur reste 560 points (`body.pad-marges`) — sur un téléphone plus petit
-  (640 × 360, 667 × 375), un écran prend toute la largeur et la manette s'y efface ; elle revient sur la scène. A est
-  au-dessus de B, un peu à sa droite, pour que la marge reste étroite ;
+- **en hauteur**, la bande du bas (`--pad-bas`, `U.padBas`), sous l'image, qu'elle ne recouvre pas : les écrans
+  (`.screen`) et les cartons s'arrêtent au-dessus ; une liste de choix aussi (elle se resserre : `S.ajuster`) ; le panneau
+  du combat se resserre (`tenir`), prend la mise en page serrée des petits écrans dès qu'il reste moins de 700 points sans
+  la bande (`body.serre`), et la scène du combat se raccourcit pour lui laisser 300 points (`PANNEAU`) ; la seconde bulle
+  de la langue secondaire s'arrête au-dessus de la bande. Sur un écran de moins de 740 points de haut, la manette est plus
+  petite ;
+- **en largeur** (2.18), sur l'image, qui prend tout l'écran : « Le grand écran immersif », ci-dessous ;
 - **partout**, si une page ne peut pas lui laisser la place (une seconde bulle sans trois lignes au-dessus de la bande, un
   texte qui déborde sur un tout petit écran), la manette s'y efface (`body.pad-efface`, regardé six fois par seconde :
-  `U.padRecouvre`) plutôt que de recouvrir quoi que ce soit, et revient dès que la place est libre. Masquée au choix du
-  joueur (Réglages, « Manette tactile », `opts.joy`), elle n'est plus là du tout et ne garde aucune place.
+  `U.padRecouvre` — pour un écran ou un carton, c'est son contenu, entre ses marges intérieures, qui compte) plutôt que de
+  recouvrir quoi que ce soit, et revient dès que la place est libre. Masquée au choix du joueur (Réglages, « Manette
+  tactile », `opts.joy`), elle n'est plus là du tout et ne garde aucune place.
 
 **Courir** (2.16 ; demande du décideur, 19 novembre : « il faut que les personnages puissent courir » ; 2.17 : « pour
 éviter tout mismatch, réserver le joystick + B pour courir ») : B tenu pendant que le joystick est poussé fait courir
@@ -571,16 +569,70 @@ leçon ne l'apprend (`lecons.js` n'en sait rien) ; la ligne du réglage « Manet
 le disent. Le chrono des labyrinthes compte le temps, pas le chemin : la course ne le presse pas ; elle ne change ni ce
 qui rôde ni les combats.
 
-Contrôles : `manette.js` (au doigt, avec les vrais boutons de la manette seulement, en hauteur, en largeur et sur un petit
-téléphone : l'écran-titre et ses réglages, B qui n'ouvre pas la halte en exploration, la halte ouverte par ☰ puis menée
-au joystick, A et B, un dialogue passé par A puis par B, une liste de choix — B qui ne fait rien, puis qui prend le
-« retour » —, un carton, le combat — A sur « Frapper », B qui revient du choix de la cible, le joystick qui change de
-cible, A qui frappe —, B qui frappe ce qui rôde dans un labyrinthe ; à chaque état, la manette ne recouvre rien
-— rectangles comparés — et la sélection se voit — contraste mesuré sur la capture : « MANETTE CONFORME », sinon
+Contrôles : `manette.js` (au doigt, avec les vrais boutons de la manette seulement, en hauteur, en largeur, sur un petit
+téléphone et sur une tablette en largeur : l'écran-titre et ses réglages, B qui n'ouvre pas la halte en exploration, la
+halte ouverte par ☰ puis menée au joystick, A et B, un dialogue passé par A puis par B, une liste de choix — B qui ne fait
+rien, puis qui prend le « retour » —, un carton, le combat — A sur « Frapper », B qui revient du choix de la cible, le
+joystick qui change de cible, A qui frappe —, B qui frappe ce qui rôde dans un labyrinthe ; à chaque état, la manette ne
+recouvre ni un texte ni un élément touchable (en hauteur, ni l'image) — rectangles comparés — et la sélection se voit
+— contraste mesuré sur la capture ; en largeur, « Le grand écran immersif », ci-dessous : « MANETTE CONFORME », sinon
 « INACCESSIBLE », « RECOUVERT », « INVISIBLE », « ÉCART »), `descente.js` (A et B, B qui s'éclaire, le pouce sur B,
 téléphone en hauteur et en largeur ; Maj au clavier : on court, et le chrono court au même pas) et `doigt.js` (le joystick
 fait marcher dans les quatre directions ; lâché, on s'arrête ; seul, même tiré au bord, il fait marcher ; avec B tenu, on
 court, entre 1,15 et 1,33 fois la marche). `manette.js` (« 2 bis ») le vérifie aussi avec deux vrais touchers.
+
+### Le grand écran immersif, en largeur (2.18)
+
+*Demande du décideur, 20 novembre, capture à l'appui (un téléphone en largeur, dans l'application Claude : l'image du jeu
+rognée et rétrécie au centre, le joystick dans la marge de gauche, A et B dans celle de droite) : « le grand écran
+immersif lorsque le téléphone est en paysage, le joystick et les boutons A/B doivent être translucides sur l'image au lieu
+d'être figés et rétrécir l'image et l'immersion ».*
+
+Dans la 2.17, en largeur, la manette prenait les deux marges de l'image (`--pad-cote`) : la scène gardait sa hauteur et
+ne montrait qu'une part de sa largeur (576 points sur 844, `U.rogne`), et le combat rapprochait ses deux camps. Dans la
+2.18, sur un écran tactile tenu en largeur — téléphone ou tablette —, `body.immersif` :
+
+- **L'image prend tout l'écran** (`layout`). La page perd ses marges (sauf celles du système : une encoche) et la scène
+  toute la largeur de l'écran. En exploration, et partout hors du combat, sur un écran plus large que 16:9 (844 × 390,
+  932 × 430), l'image la remplit : elle montre toute sa largeur (384 points) et une part de sa hauteur (177 points sur
+  216), la vue la suit de haut en bas comme quand elle est agrandie (`U.coupe` : le canevas est plus haut que la scène,
+  `G.view.h` < 216, `updateCam`) — plus de bandes noires ; sur un écran moins large que 16:9 (une tablette, 1024 × 768),
+  elle a toute la largeur et toute sa hauteur, entre deux bandes en haut et en bas. **Le combat garde son cadrage** : toute
+  l'image, aussi grande que l'écran le permet (693 × 390 en 844 × 390) ; ses deux camps ne sont plus rapprochés (`bx()`).
+  Les textes gardent leur taille : l'unité de l'interface (`--u`) vient de la hauteur de la scène, qui ne change pas.
+- **La grandeur d'office** (`zoomAuto`) : l'image qui remplit un téléphone plus large que 16:9 y est déjà agrandie d'un
+  cinquième — × 1 y donne aux personnages la taille qu'avait × 1,25 entre les marges, et toute la largeur de l'image au
+  lieu des deux tiers. Là où elle reste petite (moins de deux points d'écran par point d'image : un téléphone 16:9 de
+  667 × 375), × 1,25 comme avant. Le bouton « × », le pincement et le réglage « Image » n'ont pas changé.
+- **La manette est posée sur l'image**, translucide : A et B à 40 % au repos, un contour fin ; nets sous le pouce
+  (`.down`, 92 %) ; B éclairé (`body.frapper`) reste net. Le joystick garde sa transparence, son contour éclairci pour se
+  lire sur une image claire. L'image peut passer sous elle ; un texte ou un bouton, jamais :
+  - ce qui s'écrit au pied de la scène s'arrête entre ses deux zones — la boîte de dialogue et sa seconde bulle, le panneau
+    du combat (et le bandeau qui y passe), la barre de « Bâtir » (`--pad-g`, `--pad-d` : la largeur de chaque zone, vue de
+    la scène, posée par `layout` sur `#stage` ; `U.padZone` : les zones en points de l'écran) ; une liste de choix ne
+    s'étend pas jusqu'à elles (`max-width`) ;
+  - un écran (`.screen` : titre, Chaîne, halte, « Ton personnage »…) ou un carton garde son fond sur tout l'écran et pose
+    son contenu entre les deux zones (`--pad-cote`, s'il lui reste 560 points : `body.pad-marges`) ; sur un téléphone plus
+    petit (640 × 360), un écran prend toute la largeur et la manette s'y efface, comme dans la 2.17 ;
+  - une étiquette de nom ne passe pas sous elle (`U.noms`) ; l'en-tête, le fil, les boutons de la scène, le cadran sont en
+    haut, loin d'elle.
+- **Le plein écran** (`U.pleinEcran`, `pleinPossible`, `pleinAuto`). Là où le navigateur le permet (Android, la page
+  ouverte seule), le jeu passe en plein écran au premier toucher d'un téléphone ou d'une tablette tenus en largeur (le doigt
+  y est le pointeur premier ; pas un ordinateur à écran tactile) — une fois par page —, et
+  l'écran y reste en largeur tant qu'il dure (`screen.orientation.lock('landscape')`, libéré à la sortie) ; si on le quitte,
+  le bouton de la scène (`#pleinbtn`, quatre coins, à gauche de « × ») l'y remet. Dans un cadre qui ne le permet pas (une
+  application qui montre le jeu dans sa page, comme celle du décideur) et sur un iPhone, l'API est refusée : le bouton ne
+  paraît pas, et rien d'autre ne change. Réglage de la halte « Plein écran » (`opts.plein`, sur un écran tactile, là où il
+  peut servir) : coupé, ni plein écran de lui-même ni bouton. Le « Plein écran » des réglages de l'écran-titre entre ou sort,
+  comme avant. Rien n'est gardé dans la partie.
+- **En hauteur, rien ne change.** Au bureau non plus.
+
+Contrôle : `manette.js` — en largeur (844 × 390) et sur une tablette en largeur (1024 × 768), en plus de tout ce qu'il
+éprouvait : la scène prend toute la largeur de l'écran et montre toute la largeur de l'image ; A et B translucides au
+repos, B net sous le pouce et éclairé ; le bouton du plein écran là seulement où il peut servir ; dans un cadre qui refuse
+le plein écran, aucun bouton, la manette sur l'image, rien de cassé. « RECOUVERT » n'y compte plus l'image : un texte et un
+élément touchable seulement (en hauteur, l'image aussi). `loupe.js` attend × 1 d'office en 844 × 390, et l'image entière
+en largeur (toute sa largeur, la hauteur que l'écran permet).
 
 ## La définition du dessin : `src/core/gfx.js`
 
@@ -652,15 +704,19 @@ occupait que 26 × 40 points d'écran. Deux réponses, dans `ui.js` et `style.cs
   personne ne marche) ; la molette ; le bouton « × » en haut de la scène, qui fait le tour de `U.ZOOMS` ; le réglage
   « Image », à l'écran-titre et à la halte. `U.zoomer(z, garder)` est le seul point d'entrée : il borne, arrondit, garde
   (`opts.zoom`) et remet en page. **Sans choix du joueur**, la grandeur est d'office : × 1,5 sur un écran tactile tenu
-  en hauteur, × 1,25 en largeur, × 1 ailleurs — et elle suit le téléphone que l'on tourne.
+  en hauteur ; en largeur (2.18), × 1 là où l'image qui remplit l'écran y est déjà agrandie (un téléphone plus large que
+  16:9, une tablette), × 1,25 là où elle reste petite (moins de deux points d'écran par point d'image) ; × 1 au bureau —
+  et elle suit le téléphone que l'on tourne.
 - **Ce qui se pose sur la scène** passe par la fenêtre et par `U.scale` : les étiquettes de noms (`U.noms`), le plan (dans
   le coin de ce que l'on voit ; il ne grossit que d'un quart en hauteur, pas du tout en largeur, où le pouce passe à côté
   pour marcher), la flèche d'objectif (au bord de ce que l'on voit), la vignette. Le toucher n'a rien à savoir : il lit
   la boîte du canevas, transformation comprise (`getBoundingClientRect`).
 - **Le combat garde son cadrage** (`U.Z = 1` hors de l'exploration) : son tableau est fixe, les deux camps déjà
   rapprochés sur un écran étroit (`bx()`).
-- **En largeur, sur un écran tactile**, la manette prend les deux marges de l'image : la scène garde sa hauteur et ne
-  montre qu'une partie de la largeur (`U.rogne`), comme en hauteur ; l'agrandissement s'y ajoute (« La manette tactile »).
+- **En largeur, sur un écran tactile** (2.18), l'image prend tout l'écran : sur un écran plus large que 16:9, elle en
+  remplit la largeur et ne montre qu'une part de sa hauteur (`U.coupe`), que la vue suit ; l'agrandissement s'y ajoute. La
+  manette est posée dessus (« Le grand écran immersif »). Dans la 2.17, elle prenait les deux marges de l'image, que la
+  scène rognait en largeur (`U.rogne`, retiré).
 - **Les textes.** « Texte » a quatre crans (`U.TZ` : normal, grand, très grand, géant) ; sans choix du joueur, « grand »
   sur un écran tactile. Un téléphone tenu en largeur suit lui aussi ce réglage (il l'ignorait). Sur un écran tactile
   (`body.touch`), les plus petits textes ont un plancher : noms, sous-titres, plaques et ordre des tours du combat,
@@ -701,7 +757,8 @@ combattants. Le panneau garde sa place : rien ne bouge quand un message paraît.
 - **La largeur.** Les colonnes du panneau peuvent descendre sous la largeur de leur contenu (`minmax(0, …)`) : une
   commande trop longue (en arabe, en 360 × 640, « sans perdre son tour » du stratège) n'élargit plus le panneau au-delà de
   l'écran, et le bandeau qui partage sa case reste entier.
-- **La manette.** Rien n'est posé sous le panneau ni dans les marges : la manette A/B pourra y rester en combat.
+- **La manette.** Rien n'est posé sous le panneau ni dans les zones de la manette : elle reste en combat. (2.18 : en
+  largeur, le panneau, et donc le bandeau, s'arrêtent entre ses deux zones.)
 
 Inventaire de ce qui s'écrit pendant un combat, où c'était en 2.16 et où c'est maintenant :
 
@@ -1436,4 +1493,5 @@ node v2/tools/bilingue.js [fr-ar …] [390x844 844x390]   # « BILINGUE CONFORME
 `retours.js`, `progression.js`, `loupe.js`, `bilingue.js`, `partage.js` et `manette.js` ; la liste, et ce que chacun doit
 afficher, est dans `AGENTS.md`. Aucun ne doit finir sur « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE »,
 « TRAIT » ni « ÉCART » ; depuis la 2.16, ni sur « SUPERPOSÉ », « COINCÉ » ou « PNJ EN TRAVERS » ; depuis la manette partout,
-ni sur « RECOUVERT » (la manette tactile sur un texte, un élément touchable ou l'image).
+ni sur « RECOUVERT » (la manette tactile sur un texte ou un élément touchable — en hauteur, aussi sur l'image ; en largeur,
+depuis la 2.18, elle est posée sur l'image).
