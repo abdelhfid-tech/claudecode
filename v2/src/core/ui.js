@@ -999,6 +999,10 @@
       if (pads.some(p => r.left < p.right - 1 && r.right > p.left + 1 && r.top < p.bottom - 1 && r.bottom > p.top + 1)) l.push(e.id ? '#' + e.id : '.' + String(e.className).split(' ')[0]); });
     return l;
   };
+  /* 2.17 — le décideur : « on perd le joystick ». body.in-dialog cache la manette et, en hauteur, le bandeau de l'objectif ;
+     une liste de choix fermée (menuPick) ne l'ôte pas, et une marche de récit, plus longue depuis la 2.16, laissait alors
+     l'écran du bas vide. Ni réplique ni choix à l'écran : la classe tombe, la manette et l'objectif reviennent. */
+  const gardeDialogue = () => { const B = document.body; if (B.classList.contains('in-dialog') && $('#dialog').hidden && $('#choice').hidden) B.classList.remove('in-dialog'); };
   const padVeille = () => { const B = document.body; if (!B.classList.contains('manette')) { if (B.classList.contains('pad-efface')) B.classList.remove('pad-efface'); U.padSous = []; return; }
     const sous = U.padRecouvre(); B.classList.toggle('pad-efface', sous.length > 0); U.padSous = sous; };
   /* ----- toucher la scène : aller là, suivre le doigt ; pendant un dialogue, valider ----- */
@@ -1085,7 +1089,7 @@
         G.present(dt, sc.render(dt) || {});
       } catch (e) { if (!U._err) U._err = e; I.report(e, 'affichage'); } }
       if ((U._vf = (U._vf || 0) + 1) % 30 === 0) U.veille(now);
-      if (U._vf % 10 === 0) { padVeille(); if (U.padCourir) U.padCourir(); }   // la manette ne recouvre rien (2.x) ; la course suit l'exploration (2.17)
+      if (U._vf % 10 === 0) { gardeDialogue(); padVeille(); if (U.padCourir) U.padCourir(); }   // la manette ne recouvre rien (2.x) ; la course suit l'exploration (2.17)
       if ((U._nf = (U._nf || 0) + 1) % 3 === 0) U.noms(now);
       { const Zc = U.Z || 1, tx = U.zoom || U.rogne || Zc > 1 ? -G.view.x * U.scale : 0, ty = Zc > 1 ? -G.view.y * U.scale : 0, tr = Zc > 1 ? 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + Zc + ')' : tx ? 'translateX(' + tx + 'px)' : '';
         if (tr !== U._tr) { U._tr = tr; cvEl.style.transform = tr; } }   // l'image glisse sous la scène, et grandit si le joueur l'a voulu
