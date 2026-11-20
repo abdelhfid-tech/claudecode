@@ -24,13 +24,14 @@
   const STN = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan§stat'), stun: I.T('Étourdi'), doute: I.T('Doute'), waswas: I.T('Waswâs'), regen: I.T('Régén.'), garde: I.T('En garde'), taunt: I.T('Cible') };
 
   let C = null; // contexte du combat en cours
-  B.contexte = () => C;   // prototype 2.17 : pour les images de validation (une attitude ou une mimique posée sur un combattant)
+  B.contexte = () => C;   // pour les outils (une attitude ou une mimique posée sur un combattant, pour une image)
 
   /* ================= décor ================= */
-  const v15 = G.lum === 215; // 2.17 (prototype) : la lumière de fin de journée ; ?lum=215 rend celle de la 2.15 (gfx.js, G.LUM)
-  const SKY = v15 ? { desert: ['#150c30', '#5c2756', '#e08a4a'], ville: ['#0c0e2c', '#35285c', '#c8785a'], camp: ['#080a20', '#281e4c', '#9a4a48'], romaine: ['#0e1232', '#383876', '#d8a070'], palais: ['#120a26', '#48205c', '#c89040'], mer: ['#051028', '#123c66', '#5fb4cc'], cite: ['#04030d', '#180e3c', '#7a2cff'], noos: ['#02021a', '#0a0d36', '#30209a'] }
+  // la lumière de fin de journée (2.18) ; au cran « sombre » de la luminosité, celle de la 2.15 (gfx.js, G.lum)
+  let v15 = G.lum === 215;
+  const SKY_215 = { desert: ['#150c30', '#5c2756', '#e08a4a'], ville: ['#0c0e2c', '#35285c', '#c8785a'], camp: ['#080a20', '#281e4c', '#9a4a48'], romaine: ['#0e1232', '#383876', '#d8a070'], palais: ['#120a26', '#48205c', '#c89040'], mer: ['#051028', '#123c66', '#5fb4cc'], cite: ['#04030d', '#180e3c', '#7a2cff'], noos: ['#02021a', '#0a0d36', '#30209a'] };
     // un ciel de fin de journée : bleu-violet en haut, rose au milieu, or ou orangé à l'horizon ; 2084 au crépuscule néon
-    : { desert: ['#3a2e6e', '#c0607a', '#ffc070'], ville: ['#32306e', '#b45c80', '#ffb46c'], camp: ['#2a2a62', '#9a5078', '#f09a64'], romaine: ['#34407e', '#a2709a', '#ffc890'], palais: ['#36265e', '#a2507a', '#ffbe62'], mer: ['#25427e', '#5a8cc0', '#ffc890'], cite: ['#2c1252', '#b02c84', '#ff8a4a'], noos: ['#0a0c3a', '#1c2370', '#5444c8'] };
+  const SKY_217 = { desert: ['#3a2e6e', '#c0607a', '#ffc070'], ville: ['#32306e', '#b45c80', '#ffb46c'], camp: ['#2a2a62', '#9a5078', '#f09a64'], romaine: ['#34407e', '#a2709a', '#ffc890'], palais: ['#36265e', '#a2507a', '#ffbe62'], mer: ['#25427e', '#5a8cc0', '#ffc890'], cite: ['#2c1252', '#b02c84', '#ff8a4a'], noos: ['#0a0c3a', '#1c2370', '#5444c8'] };
   // le sol : tiré du lieu (le sable, la pierre, l'eau, l'asphalte mouillé), sombre au pied du ciel et plus sombre au premier plan
   const SOL = { desert: ['#8e5e3a', '#36202e'], ville: ['#845636', '#33202e'], camp: ['#6c4632', '#2a1a2c'], romaine: ['#605450', '#262236'], palais: ['#643a2c', '#2a1830'], mer: ['#1e5474', '#0c2238'], cite: ['#4a1e56', '#160c28'], noos: ['#161a52', '#080a24'] };
   // La Cité-Miroir (prototype « ville de verre ») : sous une voûte qui luit comme un écran (ni astre ni étoile), une brume
@@ -106,11 +107,13 @@
   function rames(c, t) { const W = G.PW, e = 0.55, L = 110 * e, P = W + L * 2;
     G.rameMetro(c, P - L - ((t * 22 + P * 0.4) % P), VIA_COMBAT - 2, 110, -1, e); G.rameMetro(c, ((t * 22) % P) - L, VIA_COMBAT - 0.5, 110, 1, e); }
   function paintBg(kind, hue) {
+    v15 = G.lum === 215;   // la luminosité du moment (Réglages)
     if (kind === 'cite') { const cv = G.toile(G.PW, G.PH); return citeBg(cv, cv.getContext('2d'), I.rng(I.hash(kind + hue)), hue, 100); }
     // la cité-grille d'avant : sous terre (les Archives) et dans la noosphère, la ville de verre n'a pas sa place ; et pas un
     // point dans son ciel, ni astre — en 2084, le ciel n'a de points qu'à la fin, quand la Cité s'éteint (le tirage reste
     // le même : ses tours ne bougent pas)
     const flux = kind === 'flux'; if (flux) kind = 'cite';
+    const SKY = v15 ? SKY_215 : SKY_217;
     const cv = G.toile(G.PW, G.PH), c = cv.getContext('2d'), sky = SKY[kind] || SKY.noos, H0 = 100, r = I.rng(I.hash(kind + hue));
     const g = c.createLinearGradient(0, 0, 0, H0); g.addColorStop(0, sky[0]); g.addColorStop(0.6, sky[1]); g.addColorStop(1, sky[2]); c.fillStyle = g; c.fillRect(0, 0, G.PW, H0);
     const etoile = flux ? 0 : v15 || kind === 'noos' ? 1 : 0.35; // au couchant, les étoiles ne font que poindre

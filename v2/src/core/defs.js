@@ -407,12 +407,14 @@
   D.TRACKS = ['titre', 'chaine', 'medine', 'nuit', 'desert', 'camp', 'rome', 'palais', 'mer', 'noos', 'cite', 'citadelle', 'combat', 'boss', 'vice', 'victoire', 'deuil', 'espoir', 'conseil', 'lame', 'rencontre', 'silence'];
   D.WAVES = ['pulse', 'square', 'triangle', 'saw', 'sine', 'pluck', 'harp', 'flute', 'strings', 'pad', 'brass', 'bass', 'contra', 'bell', 'timp', 'drums'];
 
-  // poses des personnages : l'émotion se lit dans le corps, jamais sur un visage (dessin : sprites.js)
-  D.POSES = ['prie', 'resolu', 'accable', 'salut', 'surpris', 'garde'];
-  // prototype 2.17 (images de validation, non livré) : les attitudes nouvelles, pour tous — Compagnons compris, par le
-  // corps seul ; une attitude choisit sa mimique pour qui a un visage (sprites.js, MIMIQUE_DE). Elles rejoindront D.POSES
-  // une fois validées (l'opération de script « emote » et le validateur ne les connaissent pas encore).
+  // poses des personnages : l'émotion se lit dans le corps — et, pour qui a un visage (pas un Compagnon), aussi sur son
+  // visage (dessin : sprites.js). Les six d'avant, puis les attitudes de la 2.18 (D.ATTITUDES ; décision du décideur, 19
+  // novembre : « toutes, avec retenue ») : la joie, le rire, l'acquiescement, le refus, la réflexion, la colère, la
+  // tristesse, s'asseoir, montrer du doigt. Un Compagnon les prend toutes, par le corps seul et avec retenue (la joie ne
+  // lève pas les bras au-dessus de la tête, le rire se limite aux épaules, la colère reste un corps tendu) ; une attitude
+  // choisit sa mimique pour qui a un visage (sprites.js, MIMIQUE_DE). L'opération de script « emote » les accepte toutes.
   D.ATTITUDES = ['joie', 'rire', 'acquiesce', 'refus', 'reflexion', 'colere', 'triste', 'assis', 'montre'];
+  D.POSES = ['prie', 'resolu', 'accable', 'salut', 'surpris', 'garde'].concat(D.ATTITUDES);
 
   D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole', 'Cœur', 'Objets'];
 

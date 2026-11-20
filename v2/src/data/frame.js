@@ -310,10 +310,11 @@ ISNAD.registerSaga({
             { flag: 'ami_carto', name: 'Le Cartographe écrit des noms en marge de sa carte', hp: 0.03, veil: 0 }] }],
           ['nar', 'L’Agrégor ne s’effondre pas. Il se tait. Pour la première fois depuis des années, les écrans de la Cité-Miroir n’ont rien à montrer.'],
           ['map', 'cite', 'ecran'], ['show', 'gamin2'],
-          ['nar', 'Dans la rue, des milliers de têtes se relèvent. Derrière le verre éteint, le ciel est noir. Avec des points dedans.'],
+          ['nar', 'Dans la rue, des milliers de têtes se relèvent. Derrière le verre éteint, le ciel est noir, semé d’astres brillants.'],
           ['say', 'gamin2', 'Monsieur… c’est quoi, ces lumières, là-haut ?'],
           ['say', 'idris', 'Assieds-toi. Je vais te raconter. Mais d’abord, retiens de qui je le tiens.'],
-          ['nar', 'Idris n’a pas détruit l’Agrégor. Demain, d’autres le rallumeront sous un autre nom. Il a fait ce qu’on lui avait appris : il a transmis.']
+          ['nar', 'Idris n’a pas détruit l’Agrégor. Demain, d’autres le rallumeront sous un autre nom. Il a fait ce qu’on lui avait appris : il a transmis.'],
+          ['quote', '« Et c’est Lui qui vous a assigné les étoiles, pour que, par elles, vous vous guidiez dans les ténèbres de la terre et de la mer. Certes, Nous avons exposé les preuves pour des gens qui savent. »', 'Coran 6:97 — traduction du sens']
         ] }
       ]
     },

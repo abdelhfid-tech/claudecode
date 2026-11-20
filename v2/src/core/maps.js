@@ -104,18 +104,19 @@
     c.fillStyle = pal[0]; for (let i = 0; i < n; i++) { const a = i * 2 * Math.PI / n; c.fillRect(Math.round(x + Math.cos(a) * R * 0.9) - 1, Math.round(y + Math.sin(a) * R * 0.9 * 0.86) - 1, 2, 2); }
   }
 
-  const TIME = G.lum === 215 ? {
+  // les heures : au cran « sombre » de la luminosité, celles de la 2.15 (gfx.js, G.lum) ; sinon celles de la 2.18
+  const TIME_215 = {
     day: { ambient: null, grade: ['#ffb866', 0.1], rays: { a: 0.03, color: '#fff2c8' }, lightA: 0, bloom: 0.12 },
     dusk: { ambient: '#d99676', grade: ['#ff6a3c', 0.2], lightA: 0.75, bloom: 0.2 },
     night: { ambient: '#4456a6', grade: ['#2a3a9a', 0.2], lightA: 1, bloom: 0.22 },
     dawn: { ambient: '#cfa9bd', grade: ['#ff9aa0', 0.18], rays: { a: 0.05, color: '#ffd9c8' }, lightA: 0.5, bloom: 0.18 }
-  } : { // 2.17 : le jour doré, un couchant orangé qui passe au rose, une nuit éclaircie aux ombres turquoise (gfx.js, G.LUM)
+  }, TIME_217 = { // le jour doré, un couchant orangé qui passe au rose, une nuit éclaircie aux ombres turquoise (gfx.js, G.LUM)
     day: { ambient: '#fff1d6', grade: ['#ffb052', 0.16], rays: { a: 0.05, color: '#fff0c0' }, lightA: 0, bloom: 0.14 },
     dusk: { ambient: ['#e48c60', '#c27896'], grade: ['#ff6a3c', 0.18], lightA: 0.8, bloom: 0.22 },
     night: { ambient: '#3046b4', grade: ['#1a48b8', 0.22], etalon: [null, '#04122a'], lightA: 1, bloom: 0.24 },
     dawn: { ambient: ['#dca2a8', '#bca2cc'], grade: ['#ff9aa0', 0.16], rays: { a: 0.06, color: '#ffd9c8' }, lightA: 0.5, bloom: 0.2 }
   };
-  function envFor(time, extra) { return Object.assign({ time: time || 'day', clouds: time !== 'night' }, TIME[time || 'day'], extra || {}); }
+  function envFor(time, extra) { return Object.assign({ time: time || 'day', clouds: time !== 'night' }, (G.lum === 215 ? TIME_215 : TIME_217)[time || 'day'], extra || {}); }
 
   /* ---------- Ville arabe : Médine, et sa variante « fleuve » (Koufa) ---------- */
   function ville(id, o, L, graine) {

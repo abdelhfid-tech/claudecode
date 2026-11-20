@@ -14,22 +14,28 @@
   G.D = 2; G.lisse = false;
   try { const q = /[?&]def=([12])([dl]?)/.exec(location.search); if (q) { G.D = +q[1]; G.lisse = q[2] === 'l'; G.defForce = true; } } catch (e) { /* hors navigateur */ } // ?def=1 : les outils qui comparent à la 1.32
 
-  /* ================= LA LUMIÈRE (2.17, prototype) =================
-     « Fin de journée saturée » (décideur, 19 novembre) : une lumière chaude partout, des ombres turquoise au lieu de
-     noires ; 2084 au crépuscule néon ; les récits en lumière dorée ; la nuit seulement où le récit la nomme, éclaircie.
-     Rien n'y touche aux personnages : seulement l'image composée (G.present), les décors et les lieux.
+  /* ================= LA LUMIÈRE (2.18 ; D203) =================
+     « Fin de journée saturée » (décideur, 19 novembre : « telle quelle ») : une lumière chaude partout, des ombres turquoise
+     au lieu de noires ; 2084 au crépuscule ; les récits en lumière dorée ; la nuit seulement où le récit la nomme,
+     éclaircie. Rien n'y touche aux personnages : seulement l'image composée (G.present), les décors et les lieux.
      G.LUM règle : expo, l'ambiance relevée vers le blanc (le plancher de la lumière) ; vignette, un facteur sur toute
      vignette ; vig0, où son dégradé commence ; vigC, sa couleur ; nuages, l'ombre des nuages ; lueurs, les lueurs
      additives des sources ; halo, un facteur sur le halo doux (qui voile l'image dès qu'elle est claire) ; chaud, la
      teinte des lumières (multipliée) ; froid, celle des ombres (en « écran ») ; sat, la part de saturation ajoutée.
-     ?lum=215 dans l'adresse rend la lumière de la 2.15, pour comparer. */
-  G.lum = 217;
-  try { if (/[?&]lum=215(?:&|$)/.test(location.search)) G.lum = 215; } catch (e) { /* hors navigateur */ }
-  G.LUM = G.lum === 215
-    ? { expo: 0, vignette: 1, vig0: 0.35, vigC: '4,3,12', nuages: 0.55, lueurs: 0.28, halo: 1, chaud: null, froid: null, sat: 0 }
-    : { expo: 0.3, vignette: 0.45, vig0: 0.5, vigC: '12,40,52', nuages: 0.25, lueurs: 0.4, halo: 0.65, chaud: '#ffe6cc', froid: '#041c22', sat: 0.2 };
-  G.expo = G.LUM.expo;
-  try { if (G.lum === 215) document.documentElement.classList.add('lum215'); } catch (e) { /* hors navigateur */ } // l'interface aussi (style.css)
+     Le réglage « Luminosité » (opts.lum) a trois crans : « clair » (d'office : la lumière validée), « moyen » (la même,
+     moins relevée, la vignette plus marquée), « sombre » (la lumière de la 2.15 : ses tables de couleurs aussi). G.lum dit
+     laquelle des tables de couleurs sert : 215 (sombre) ou 217 (clair et moyen). ?lum=clair|moyen|sombre (ou 215) dans
+     l'adresse impose un cran (les outils qui comparent). */
+  G.LUMS = {
+    clair: { expo: 0.3, vignette: 0.45, vig0: 0.5, vigC: '12,40,52', nuages: 0.25, lueurs: 0.4, halo: 0.65, chaud: '#ffe6cc', froid: '#041c22', sat: 0.2 },
+    moyen: { expo: 0.16, vignette: 0.7, vig0: 0.44, vigC: '10,30,40', nuages: 0.36, lueurs: 0.34, halo: 0.8, chaud: '#ffe9d4', froid: '#03161c', sat: 0.12 },
+    sombre: { expo: 0, vignette: 1, vig0: 0.35, vigC: '4,3,12', nuages: 0.55, lueurs: 0.28, halo: 1, chaud: null, froid: null, sat: 0 } };
+  G.LUMINOSITES = [['clair', I.T('clair')], ['moyen', I.T('moyen')], ['sombre', I.T('sombre')]];
+  G.lumNom = 'clair'; G.lum = 217; G.LUM = G.LUMS.clair; G.expo = G.LUM.expo; G.surLumiere = [];
+  try { const q = /[?&]lum=(clair|moyen|sombre|215|217)(?:&|$)/.exec(location.search); if (q) { G.lumNom = q[1] === '215' ? 'sombre' : q[1] === '217' ? 'clair' : q[1]; G.lumForce = true; } } catch (e) { /* hors navigateur */ }
+  const lumTables = () => { G.lum = G.lumNom === 'sombre' ? 215 : 217; G.LUM = G.LUMS[G.lumNom]; G.expo = G.LUM.expo;
+    try { document.documentElement.classList.toggle('lum215', G.lum === 215); } catch (e) { /* hors navigateur */ } };   // l'interface aussi (style.css)
+  lumTables();
   // Les trois dessins que le joueur peut choisir (Réglages, « Dessin »). Changer en cours de partie : les images déjà faites
   // sont oubliées, et chaque module qui en garde (la carte, les planches de marche, le fond du titre) refait les siennes.
   G.DESSINS = [['fin', I.T('fin'), 2, false], ['doux', I.T('fin, adouci'), 2, true], ['origine', I.T('d’origine'), 1, false]];
@@ -39,6 +45,11 @@
     G.D = d[2]; G.lisse = d[3]; [tcache, ocache, ecache].forEach(c => { Object.keys(c).forEach(k => { delete c[k]; }); });
     if (G.cv) { G.pcv = G.toile(G.PW, G.PH); G.px = G.pcv.getContext('2d'); G.resize(); }
     G.surDefinition.forEach(f => { try { f(); } catch (e) { console.error(e); } }); return true; };
+  // la luminosité (Réglages, « Luminosité ») : en cours de partie, les tuiles, les objets et les lieux déjà faits sont
+  // oubliés et refaits (G.surDefinition, comme pour le dessin) — un cran imposé par l'adresse ne change pas
+  G.luminosite = function (nom) { if (!G.LUMS[nom] || nom === G.lumNom || G.lumForce) return false; G.lumNom = nom; lumTables(); lumCouleurs();
+    [tcache, ocache, ecache].forEach(c => { Object.keys(c).forEach(k => { delete c[k]; }); });
+    G.surLumiere.concat(G.surDefinition).forEach(f => { try { f(); } catch (e) { console.error(e); } }); return true; };
   function fin(c) { // un contexte qui connaît la définition des images qu'on lui donne
     if (c._fin) return c; c._fin = true; const di = c.drawImage;
     c.drawImage = function (img, a, b, w, h, x, y, W, H) { const q = img.hd || 1, n = arguments.length;
@@ -116,18 +127,20 @@
     glaze: ['#2d6e8e', '#3a86a3', '#256080', '#e7d9a8'], asphalt: ['#1f2230', '#262a3a', '#191c28', '#2f3550'],
     metal: ['#2a2f3e', '#323849', '#232735', '#3d4560'], carpet: ['#8e2f2a', '#7a2622', '#a53c33', '#d9b45a']
   };
-  // 2.17 : la Cité au crépuscule — un asphalte mouillé qui prend le ciel, des murs et des toits qu'on distingue (G.LUM)
-  const CITE = G.lum === 215
-    ? { flaque: 'rgba(80,220,255,.10)', mur: ['#191b27', '#141620', '#20232f'], murHaut: '#2d3147', murJoint: '#0d0e16', toit: ['#10121b', '#0c0d15', '#161927'], toitBord: '#272b3d' }
-    : { flaque: 'rgba(255,150,200,.09)', mur: ['#30283e', '#2a2337', '#3a3049'], murHaut: '#584a6e', murJoint: '#1c1626', toit: ['#241d30', '#1e182a', '#2c2439'], toitBord: '#4e4064' };
+  // la Cité au crépuscule — un asphalte mouillé qui prend le ciel, des murs et des toits qu'on distingue ; au cran « sombre »,
+  // ceux de la 2.15 (lumCouleurs, à chaque changement de la luminosité)
+  const CITE = {}, CITE_215 = { flaque: 'rgba(80,220,255,.10)', mur: ['#191b27', '#141620', '#20232f'], murHaut: '#2d3147', murJoint: '#0d0e16', toit: ['#10121b', '#0c0d15', '#161927'], toitBord: '#272b3d' },
+    CITE_217 = { flaque: 'rgba(255,150,200,.09)', mur: ['#30283e', '#2a2337', '#3a3049'], murHaut: '#584a6e', murJoint: '#1c1626', toit: ['#241d30', '#1e182a', '#2c2439'], toitBord: '#4e4064' };
   // prototype « deux villes » : la pierre de sable et de corail, ses joints, l'eau de la crique
   // (prototype « ville de verre ») : des dalles plus jaunes, presque sans bleu — sous le couchant magenta du prototype de
   // lumière, elles restent couleur de sable au lieu de tourner au saumon
   const CITE2 = { dalle: ['#8e784a', '#877245', '#968050', '#806c42'], joint: 'rgba(104,80,44,.55)', arete: 'rgba(240,224,168,.35)', pique: '#8e7444', sable: 'rgba(238,218,158,.24)', use: 'rgba(116,94,56,.09)',
     paves: ['#b29a68', '#a89060', '#bba370', '#a08858'], paveJoint: '#7e6a48',
     corail: ['#d3bf9d', '#c7b18e', '#ddcdae', '#b9a27f'], eau: ['#22284a', '#262f56', '#1d2240', '#2f3a66'] };
-  // (l'asphalte, pour les images de validation : un ton plus clair que le premier essai, #272044 : la rue prend le couchant)
-  if (G.lum !== 215) Object.assign(P, { asphalt: ['#3e3360', '#463a6c', '#352b54', '#5c4a8a'], metal: ['#343a4c', '#3d4458', '#2c3040', '#4a5270'] });
+  // l'asphalte et le métal de 2084 : la rue prend le couchant (#3e3360) ; au cran « sombre », ceux de la 2.15
+  const P_215 = { asphalt: P.asphalt, metal: P.metal }, P_217 = { asphalt: ['#3e3360', '#463a6c', '#352b54', '#5c4a8a'], metal: ['#343a4c', '#3d4458', '#2c3040', '#4a5270'] };
+  const lumCouleurs = () => { Object.assign(CITE, G.lum === 215 ? CITE_215 : CITE_217); Object.assign(P, G.lum === 215 ? P_215 : P_217); };
+  lumCouleurs();
   const TILE = {
     sand(c, r) { speck(c, r, P.sand, 26); },
     dune(c, r) { speck(c, r, P.sand, 14); c.fillStyle = '#c9a567'; for (let i = 0; i < 3; i++) { const y = 3 + i * 5 + Math.floor(r() * 2); for (let x = 0; x < 16; x++) c.fillRect(x, y + Math.round(Math.sin((x + i * 3) / 2.6) * 1.2), 1, 1); } },

@@ -125,6 +125,7 @@
       mk(I.audio.on ? I.t('Son : activé') : I.t('Son : coupé'), b => { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = I.audio.on ? I.t('Son : activé') : I.t('Son : coupé'); });
       mk(I.audio.musicOn ? I.t('Musique : activée') : I.t('Musique : coupée'), b => { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = I.audio.musicOn ? I.t('Musique : activée') : I.t('Musique : coupée'); });
       mk(I.t('Dessin : {nom}', { nom: dessinNom() }), b => { dessinSuivant(); b.textContent = I.t('Dessin : {nom}', { nom: dessinNom() }); });
+      mk(I.t('Luminosité : {nom}', { nom: lumNom() }), b => { lumSuivante(); b.textContent = I.t('Luminosité : {nom}', { nom: lumNom() }); });
       mk(G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'); });
       mk(I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }), b => { U.tzSuivant(); b.textContent = I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }); });
       mk(I.t('Image : {zoom}', { zoom: zoomNom() }), b => { U.zoomSuivant(); b.textContent = I.t('Image : {zoom}', { zoom: zoomNom() }); });
@@ -570,6 +571,7 @@
         toggle(I.t('Son'), () => I.audio.on ? I.t('activé') : I.t('coupé'), () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, I.t('Coupe ou rétablit tout le son : musique, percussions et bruitages.')),
         toggle(I.t('Musique'), () => I.audio.musicOn ? I.t('activée') : I.t('coupée'), () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, I.t('Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.')),
         toggle(I.t('Dessin'), dessinNom, dessinSuivant, I.t('Fin : deux fois plus de points, les grands personnages jusque sur les cartes, des lisières irrégulières. Fin, adouci : le même, les contours fondus. D’origine : le dessin de la version légère.')),
+        toggle(I.t('Luminosité'), lumNom, lumSuivante, I.t('Clair : une lumière de fin de journée, chaude, aux ombres turquoise. Moyen : la même, plus retenue. Sombre : la lumière des versions d’avant, plus contrastée.')),
         toggle(I.t('Rendu'), () => G.low ? I.t('2D simple') : I.t('rétro-HD'), () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, I.t('Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.')));
       if (I.langue.disponibles().length > 1) items.push({ label: I.t('Langue') + ' : ' + I.langue.LANGUES[I.langue.lang].nom, fn() { close(); U.choisirLangue(); }, show: () => '<h3>' + I.t('Langue') + '</h3><p>Français · العربية · English · 日本語</p><p>' + I.t('Le récit reprend à son dernier point de reprise, dans la langue choisie. Ta partie est la même dans toutes les langues.') + '</p>' },
         // 2.x : la langue secondaire, et ce qu'elle est — la même chose, avec les mots de l'autre langue
@@ -852,6 +854,9 @@
   const dessinNom = () => I.t((G.DESSINS.find(d => d[0] === G.dessin()) || G.DESSINS[0])[1]);
   const dessinSuivant = () => { const i = G.DESSINS.findIndex(d => d[0] === G.dessin()), n = G.DESSINS[(i + 1) % G.DESSINS.length][0]; G.definir(n); I.save.data.opts.dessin = n; I.save.store(); };
   G.surDefinition.push(() => { titleBg = null; document.body.classList.toggle('fin', G.D > 1); document.body.classList.toggle('doux', !!G.lisse); });
+  // la luminosité (2.18) : clair (d'office), moyen, sombre (la lumière de la 2.15) — gardée avec les autres réglages
+  const lumNom = () => I.t((G.LUMINOSITES.find(d => d[0] === G.lumNom) || G.LUMINOSITES[0])[1]);
+  const lumSuivante = () => { const i = G.LUMINOSITES.findIndex(d => d[0] === G.lumNom), n = G.LUMINOSITES[(i + 1) % G.LUMINOSITES.length][0]; G.luminosite(n); I.save.data.opts.lum = n; I.save.store(); };
   /* ----- l'agrandissement de l'image (2.x) -----
      Demande du décideur : sur un téléphone, les personnages sont trop petits — « il faut pouvoir zoomer dans l'image ».
      Pendant l'exploration, l'image s'agrandit de U.zf (1 à 3) autour de celui qui mène : on en voit moins, en plus grand.
@@ -878,6 +883,7 @@
   U.applyOpts = function () {
     const o = I.save.data.opts;
     if (o.dessin && !G.defForce) G.definir(o.dessin); document.body.classList.toggle('fin', G.D > 1); document.body.classList.toggle('doux', !!G.lisse);
+    if (o.lum) G.luminosite(o.lum);   // la luminosité choisie (sans choix : « clair ») ; un cran imposé par l'adresse reste
     document.documentElement.style.setProperty('--tz', U.TZ[U.tz()][1]);
     document.body.classList.toggle('sansjoy', o.joy === false);   // le joystick : affiché d'office sur un écran tactile
     if (typeof o.zoom === 'number') U.zf = I.clamp(o.zoom, 1, 3);   // sinon : la grandeur d'office, que la mise en page règle sur l'écran

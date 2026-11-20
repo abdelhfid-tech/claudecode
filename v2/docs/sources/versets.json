@@ -1,1532 +1,1562 @@
 [
-  {
-    "fichier": "v2/src/data/saga_abubakr.js",
-    "ligne": 243,
-    "fr": "",
-    "source_fr": "verset 3:144",
-    "nature": "verset",
-    "sourate": 3,
-    "versets": "144",
-    "partiel": false,
-    "ar": {
-      "texte": "وَمَا مُحَمَّدٌ إِلَّا رَسُولٌۭ قَدْ خَلَتْ مِن قَبْلِهِ ٱلرُّسُلُ ۚ أَفَإِي۟ن مَّاتَ أَوْ قُتِلَ ٱنقَلَبْتُمْ عَلَىٰٓ أَعْقَٰبِكُمْ ۚ وَمَن يَنقَلِبْ عَلَىٰ عَقِبَيْهِ فَلَن يَضُرَّ ٱللَّهَ شَيْـًۭٔا ۗ وَسَيَجْزِى ٱللَّهُ ٱلشَّٰكِرِينَ",
-      "reference": "سورة آل عمران: 144",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/3:144/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Muḥammad is not but a messenger. [Other] messengers have passed on before him. So if he was to die or be killed, would you turn back on your heels [to unbelief]? And he who turns back on his heels will never harm Allāh at all; but Allāh will reward the grateful.",
-      "origine": "publiee",
-      "reference": "Qur'an 3:144 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:144?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "ムハンマドは，一人の使徒に過ぎない。使徒たちはかれの前に逝った。もしかれが死ぬか，または殺されたら，あなたがたは踵を返すのか。誰が踵を返そうとも，少しもアッラーを損うことは出来ない。だがアッラーは，感謝（してかれに仕える）者に報われる。",
-      "origine": "publiee",
-      "reference": "クルアーン 3章144節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/3:144/editions/quran-uthmani,en.sahih,ja.japanese"
-    },
-    "ecart": "",
-    "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (« Abû Bakr […] récite le verset 3:144 ») ; le verset est cité à la ligne 393 ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Muḥammad » ; api.alquran.cloud sans : « Muhammad ») ; japonais (3:144) : api.quran.com porte une espace parasite (« 死ぬか， または殺 ») ; texte retenu : api.alquran.cloud, identique par ailleurs."
+ {
+  "fichier": "v2/src/data/saga_abubakr.js",
+  "ligne": 243,
+  "fr": "",
+  "source_fr": "verset 3:144",
+  "nature": "verset",
+  "sourate": 3,
+  "versets": "144",
+  "partiel": false,
+  "ar": {
+   "texte": "وَمَا مُحَمَّدٌ إِلَّا رَسُولٌۭ قَدْ خَلَتْ مِن قَبْلِهِ ٱلرُّسُلُ ۚ أَفَإِي۟ن مَّاتَ أَوْ قُتِلَ ٱنقَلَبْتُمْ عَلَىٰٓ أَعْقَٰبِكُمْ ۚ وَمَن يَنقَلِبْ عَلَىٰ عَقِبَيْهِ فَلَن يَضُرَّ ٱللَّهَ شَيْـًۭٔا ۗ وَسَيَجْزِى ٱللَّهُ ٱلشَّٰكِرِينَ",
+   "reference": "سورة آل عمران: 144",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/3:144/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/saga_abubakr.js",
-    "ligne": 393,
-    "fr": "Muhammad n'est qu'un messager ; des messagers avant lui sont passés. S'il mourait donc, ou s'il était tué, retourneriez-vous sur vos talons ? Quiconque retourne sur ses talons ne nuira en rien à Allah ; et Allah récompensera bientôt les reconnaissants.",
-    "source_fr": "Coran 3:144 — traduction du sens",
-    "nature": "verset",
-    "sourate": 3,
-    "versets": "144",
-    "partiel": false,
-    "ar": {
-      "texte": "وَمَا مُحَمَّدٌ إِلَّا رَسُولٌۭ قَدْ خَلَتْ مِن قَبْلِهِ ٱلرُّسُلُ ۚ أَفَإِي۟ن مَّاتَ أَوْ قُتِلَ ٱنقَلَبْتُمْ عَلَىٰٓ أَعْقَٰبِكُمْ ۚ وَمَن يَنقَلِبْ عَلَىٰ عَقِبَيْهِ فَلَن يَضُرَّ ٱللَّهَ شَيْـًۭٔا ۗ وَسَيَجْزِى ٱللَّهُ ٱلشَّٰكِرِينَ",
-      "reference": "سورة آل عمران: 144",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/3:144/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Muḥammad is not but a messenger. [Other] messengers have passed on before him. So if he was to die or be killed, would you turn back on your heels [to unbelief]? And he who turns back on his heels will never harm Allāh at all; but Allāh will reward the grateful.",
-      "origine": "publiee",
-      "reference": "Qur'an 3:144 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:144?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "ムハンマドは，一人の使徒に過ぎない。使徒たちはかれの前に逝った。もしかれが死ぬか，または殺されたら，あなたがたは踵を返すのか。誰が踵を返そうとも，少しもアッラーを損うことは出来ない。だがアッラーは，感謝（してかれに仕える）者に報われる。",
-      "origine": "publiee",
-      "reference": "クルアーン 3章144節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/3:144/editions/quran-uthmani,en.sahih,ja.japanese"
-    },
-    "ecart": "",
-    "note": "Verset entier ; le jeu le pose sans guillemets ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Muḥammad » ; api.alquran.cloud sans : « Muhammad ») ; japonais (3:144) : api.quran.com porte une espace parasite (« 死ぬか， または殺 ») ; texte retenu : api.alquran.cloud, identique par ailleurs."
+  "en": {
+   "texte": "Muḥammad is not but a messenger. [Other] messengers have passed on before him. So if he was to die or be killed, would you turn back on your heels [to unbelief]? And he who turns back on his heels will never harm Allāh at all; but Allāh will reward the grateful.",
+   "origine": "publiee",
+   "reference": "Qur'an 3:144 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:144?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/saga_khalid.js",
-    "ligne": 537,
-    "fr": "",
-    "source_fr": "sourate al-Anfâl",
-    "nature": "verset",
-    "sourate": 8,
-    "versets": "1-75",
-    "partiel": false,
-    "ar": {
-      "texte": "",
-      "reference": "سورة الأنفال",
-      "lu_sur": "https://api.quran.com/api/v4/chapters/8",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "",
-      "origine": "publiee",
-      "reference": "Qur'an, surah 8 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/chapters/8"
-    },
-    "ja": {
-      "texte": "",
-      "origine": "publiee",
-      "reference": "クルアーン 8章(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/chapters/8"
-    },
-    "ecart": "",
-    "note": "Le jeu nomme la sourate 8 sans en citer un verset (« on récite la sourate al-Anfâl ») : aucun texte à poser, seulement le nom de la sourate. Nom arabe lu sur api.quran.com (chapters/8) : « الأنفال » ; translittération du même service : « Al-Anfal ». Le titre que Saheeh International et la traduction japonaise donnent à la sourate n’a été lu sur aucun des deux services : il reste à relever sur l’ouvrage. Au verset 8:1, lu des deux côtés, le mot est rendu par « the bounties [of war] » (Saheeh International) et par 「戦利品」 (三田)."
+  "ja": {
+   "texte": "ムハンマドは，一人の使徒に過ぎない。使徒たちはかれの前に逝った。もしかれが死ぬか，または殺されたら，あなたがたは踵を返すのか。誰が踵を返そうとも，少しもアッラーを損うことは出来ない。だがアッラーは，感謝（してかれに仕える）者に報われる。",
+   "origine": "publiee",
+   "reference": "クルアーン 3章144節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/3:144/editions/quran-uthmani,en.sahih,ja.japanese"
   },
-  {
-    "fichier": "v2/src/data/saga_uthman.js",
-    "ligne": 250,
-    "fr": "« Si un pervers vous apporte une nouvelle, voyez bien clair… »",
-    "source_fr": "Coran 49:6, traduction du sens",
-    "nature": "verset",
-    "sourate": 49,
-    "versets": "6",
-    "partiel": true,
-    "ar": {
-      "texte": "إِن جَآءَكُمْ فَاسِقٌۢ بِنَبَإٍۢ فَتَبَيَّنُوٓا۟",
-      "reference": "سورة الحجرات: 6",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/49:6/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "if there comes to you a disobedient one with information, investigate",
-      "origine": "publiee",
-      "reference": "Qur'an 49:6 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "もし邪な者が情報をあなたがたに齎したならば，慎重に検討しなさい。",
-      "origine": "publiee",
-      "reference": "クルアーン 49章6節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Milieu du verset : la condition et l’ordre (« si un pervers vous apporte une nouvelle, voyez bien clair »), sans l’apostrophe « Ô vous qui avez cru » ni la suite. Le français marque la coupure par « … » : les trois textes s’arrêtent au même endroit, et la marque de coupure est à poser à l’affichage (elle n’est pas dans les textes relevés). L’anglais commence par une minuscule, comme dans la traduction. La référence est répétée dans le champ src de la même entrée du codex (ligne 251) ; japonais (49:6) : api.alquran.cloud remplace un caractère rare par un signe d’attente (« に(湾?) ») ; texte retenu : api.quran.com (« に齎 »), identique par ailleurs."
+  "ecart": "",
+  "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (« Abû Bakr […] récite le verset 3:144 ») ; le verset est cité à la ligne 393 ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Muḥammad » ; api.alquran.cloud sans : « Muhammad ») ; japonais (3:144) : api.quran.com porte une espace parasite (« 死ぬか， または殺 ») ; texte retenu : api.alquran.cloud, identique par ailleurs."
+ },
+ {
+  "fichier": "v2/src/data/saga_abubakr.js",
+  "ligne": 393,
+  "fr": "Muhammad n'est qu'un messager ; des messagers avant lui sont passés. S'il mourait donc, ou s'il était tué, retourneriez-vous sur vos talons ? Quiconque retourne sur ses talons ne nuira en rien à Allah ; et Allah récompensera bientôt les reconnaissants.",
+  "source_fr": "Coran 3:144 — traduction du sens",
+  "nature": "verset",
+  "sourate": 3,
+  "versets": "144",
+  "partiel": false,
+  "ar": {
+   "texte": "وَمَا مُحَمَّدٌ إِلَّا رَسُولٌۭ قَدْ خَلَتْ مِن قَبْلِهِ ٱلرُّسُلُ ۚ أَفَإِي۟ن مَّاتَ أَوْ قُتِلَ ٱنقَلَبْتُمْ عَلَىٰٓ أَعْقَٰبِكُمْ ۚ وَمَن يَنقَلِبْ عَلَىٰ عَقِبَيْهِ فَلَن يَضُرَّ ٱللَّهَ شَيْـًۭٔا ۗ وَسَيَجْزِى ٱللَّهُ ٱلشَّٰكِرِينَ",
+   "reference": "سورة آل عمران: 144",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/3:144/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/saga_uthman.js",
-    "ligne": 253,
-    "fr": "",
-    "source_fr": "49:6, traduction du sens",
-    "nature": "verset",
-    "sourate": 49,
-    "versets": "6",
-    "partiel": false,
-    "ar": {
-      "texte": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوٓا۟ إِن جَآءَكُمْ فَاسِقٌۢ بِنَبَإٍۢ فَتَبَيَّنُوٓا۟ أَن تُصِيبُوا۟ قَوْمًۢا بِجَهَٰلَةٍۢ فَتُصْبِحُوا۟ عَلَىٰ مَا فَعَلْتُمْ نَٰدِمِينَ",
-      "reference": "سورة الحجرات: 6",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/49:6/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "O you who have believed, if there comes to you a disobedient one with information, investigate, lest you harm a people out of ignorance and become, over what you have done, regretful.",
-      "origine": "publiee",
-      "reference": "Qur'an 49:6 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "信仰する者よ，もし邪な者が情報をあなたがたに齎したならば，慎重に検討しなさい。これはあなたがたが，気付かない中に人びとに危害を及ぼし，その行ったことを後悔することにならないためである。",
-      "origine": "publiee",
-      "reference": "クルアーン 49章6節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (« Le Coran commande de voir clair avant d’agir sur une nouvelle ») ; référence répétée dans le champ src (ligne 254) ; japonais (49:6) : api.alquran.cloud remplace un caractère rare par un signe d’attente (« に(湾?) ») ; texte retenu : api.quran.com (« に齎 »), identique par ailleurs."
+  "en": {
+   "texte": "Muḥammad is not but a messenger. [Other] messengers have passed on before him. So if he was to die or be killed, would you turn back on your heels [to unbelief]? And he who turns back on his heels will never harm Allāh at all; but Allāh will reward the grateful.",
+   "origine": "publiee",
+   "reference": "Qur'an 3:144 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:144?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/saga_uthman.js",
-    "ligne": 452,
-    "fr": "« En vérité, c'est Nous qui avons fait descendre le Rappel, et c'est Nous qui en sommes gardien. »",
-    "source_fr": "Coran 15:9 — traduction du sens",
-    "nature": "verset",
-    "sourate": 15,
-    "versets": "9",
-    "partiel": false,
-    "ar": {
-      "texte": "إِنَّا نَحْنُ نَزَّلْنَا ٱلذِّكْرَ وَإِنَّا لَهُۥ لَحَٰفِظُونَ",
-      "reference": "سورة الحجر: 9",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/15:9/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Indeed, it is We who sent down the message [i.e., the Qur’ān], and indeed, We will be its guardian.",
-      "origine": "publiee",
-      "reference": "Qur'an 15:9 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/15:9?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "本当にわれこそは，その訓戒を下し，必ずそれを守護するのである。",
-      "origine": "publiee",
-      "reference": "クルアーン 15章9節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/15:9?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Verset entier. Le français dit « le Rappel » (adh-dhikr), l’anglais retenu « the message [i.e., the Qur’ān] », le japonais 「その訓戒」 ; anglais : les deux services diffèrent dans les mots — « the message [i.e., the Qur’ān], and » (api.quran.com) / « the Qur'an and » (api.alquran.cloud) ; texte retenu : api.quran.com."
+  "ja": {
+   "texte": "ムハンマドは，一人の使徒に過ぎない。使徒たちはかれの前に逝った。もしかれが死ぬか，または殺されたら，あなたがたは踵を返すのか。誰が踵を返そうとも，少しもアッラーを損うことは出来ない。だがアッラーは，感謝（してかれに仕える）者に報われる。",
+   "origine": "publiee",
+   "reference": "クルアーン 3章144節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/3:144/editions/quran-uthmani,en.sahih,ja.japanese"
   },
-  {
-    "fichier": "v2/src/data/saga_uthman.js",
-    "ligne": 719,
-    "fr": "« Ô vous qui avez cru ! Si un pervers vous apporte une nouvelle, voyez bien clair, de crainte que par inadvertance vous ne portiez atteinte à des gens et que vous ne regrettiez ensuite ce que vous avez fait. »",
-    "source_fr": "Coran 49:6 — traduction du sens",
-    "nature": "verset",
-    "sourate": 49,
-    "versets": "6",
-    "partiel": false,
-    "ar": {
-      "texte": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوٓا۟ إِن جَآءَكُمْ فَاسِقٌۢ بِنَبَإٍۢ فَتَبَيَّنُوٓا۟ أَن تُصِيبُوا۟ قَوْمًۢا بِجَهَٰلَةٍۢ فَتُصْبِحُوا۟ عَلَىٰ مَا فَعَلْتُمْ نَٰدِمِينَ",
-      "reference": "سورة الحجرات: 6",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/49:6/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "O you who have believed, if there comes to you a disobedient one with information, investigate, lest you harm a people out of ignorance and become, over what you have done, regretful.",
-      "origine": "publiee",
-      "reference": "Qur'an 49:6 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "信仰する者よ，もし邪な者が情報をあなたがたに齎したならば，慎重に検討しなさい。これはあなたがたが，気付かない中に人びとに危害を及ぼし，その行ったことを後悔することにならないためである。",
-      "origine": "publiee",
-      "reference": "クルアーン 49章6節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Verset entier ; japonais (49:6) : api.alquran.cloud remplace un caractère rare par un signe d’attente (« に(湾?) ») ; texte retenu : api.quran.com (« に齎 »), identique par ailleurs."
+  "ecart": "",
+  "note": "Verset entier ; le jeu le pose sans guillemets ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Muḥammad » ; api.alquran.cloud sans : « Muhammad ») ; japonais (3:144) : api.quran.com porte une espace parasite (« 死ぬか， または殺 ») ; texte retenu : api.alquran.cloud, identique par ailleurs."
+ },
+ {
+  "fichier": "v2/src/data/saga_khalid.js",
+  "ligne": 537,
+  "fr": "",
+  "source_fr": "sourate al-Anfâl",
+  "nature": "verset",
+  "sourate": 8,
+  "versets": "1-75",
+  "partiel": false,
+  "ar": {
+   "texte": "",
+   "reference": "سورة الأنفال",
+   "lu_sur": "https://api.quran.com/api/v4/chapters/8",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 251,
-    "fr": "",
-    "source_fr": "5:95 ; 4:35",
-    "nature": "verset",
-    "sourate": 5,
-    "versets": "95",
-    "partiel": false,
-    "ar": {
-      "texte": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا۟ لَا تَقْتُلُوا۟ ٱلصَّيْدَ وَأَنتُمْ حُرُمٌۭ ۚ وَمَن قَتَلَهُۥ مِنكُم مُّتَعَمِّدًۭا فَجَزَآءٌۭ مِّثْلُ مَا قَتَلَ مِنَ ٱلنَّعَمِ يَحْكُمُ بِهِۦ ذَوَا عَدْلٍۢ مِّنكُمْ هَدْيًۢا بَٰلِغَ ٱلْكَعْبَةِ أَوْ كَفَّٰرَةٌۭ طَعَامُ مَسَٰكِينَ أَوْ عَدْلُ ذَٰلِكَ صِيَامًۭا لِّيَذُوقَ وَبَالَ أَمْرِهِۦ ۗ عَفَا ٱللَّهُ عَمَّا سَلَفَ ۚ وَمَنْ عَادَ فَيَنتَقِمُ ٱللَّهُ مِنْهُ ۗ وَٱللَّهُ عَزِيزٌۭ ذُو ٱنتِقَامٍ",
-      "reference": "سورة المائدة: 95",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "O you who have believed, do not kill game while you are in the state of iḥrām. And whoever of you kills it intentionally - the penalty is an equivalent from sacrificial animals to what he killed, as judged by two just men among you as an offering [to Allāh] delivered to the Kaʿbah, or an expiation: the feeding of needy people or the equivalent of that in fasting, that he may taste the consequence of his matter [i.e., deed]. Allāh has pardoned what is past; but whoever returns [to violation], then Allāh will take retribution from him. And Allāh is Exalted in Might and Owner of Retribution.",
-      "origine": "publiee",
-      "reference": "Qur'an 5:95 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "信仰する者よ，あなたがたが巡礼者の間は，狩猟して鳥獣を殺してはならない。もし，あなたがたの中，知りながらそれを殺した者の償いは，あなたがたの中公正な2名の者の判定により，その殺したものと等しい（価の）家畜を，カアバに運んで捧げるか，またはその贖罪のために貧者に食を供するか，またはそれに相当する斎戒を行うことである。これらはかれがその行いの結果を味わうためである。アッラーは，過ぎ去ったことは御許しなされる。だがあなたがたがもし繰り返すならば，アッラーは応報を重くされる。アッラーは偉力ならびなき応報の主であられる。",
-      "origine": "publiee",
-      "reference": "クルアーン 5章95節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese"
-    },
-    "ecart": "",
-    "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (Ibn ’Abbâs « y répond par le Coran (5:95 ; 4:35) ») ; le passage visé est « deux hommes justes parmi vous en jugeront », cité à la ligne 594 ; anglais : les deux services diffèrent dans les mots — « his matter [i.e., deed]. Allāh » (api.quran.com) / « his deed. Allah » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « iḥrām » / « ihram ») ; japonais (5:95) : api.quran.com porte une espace parasite (« であられ る。 ») ; texte retenu : api.alquran.cloud, identique par ailleurs."
+  "en": {
+   "texte": "",
+   "origine": "publiee",
+   "reference": "Qur'an, surah 8 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/chapters/8"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 251,
-    "fr": "",
-    "source_fr": "5:95 ; 4:35",
-    "nature": "verset",
-    "sourate": 4,
-    "versets": "35",
-    "partiel": false,
-    "ar": {
-      "texte": "وَإِنْ خِفْتُمْ شِقَاقَ بَيْنِهِمَا فَٱبْعَثُوا۟ حَكَمًۭا مِّنْ أَهْلِهِۦ وَحَكَمًۭا مِّنْ أَهْلِهَآ إِن يُرِيدَآ إِصْلَٰحًۭا يُوَفِّقِ ٱللَّهُ بَيْنَهُمَآ ۗ إِنَّ ٱللَّهَ كَانَ عَلِيمًا خَبِيرًۭا",
-      "reference": "سورة النساء: 35",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/4:35/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "And if you fear dissension between the two, send an arbitrator from his people and an arbitrator from her people. If they both desire reconciliation, Allāh will cause it between them. Indeed, Allāh is ever Knowing and Aware.",
-      "origine": "publiee",
-      "reference": "Qur'an 4:35 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "もしあなたがたが，両人の破局を恐れるならば，男の一族から一人の調停者を，また女の一族からも一人の調停者をあげなさい。両人がもし和解を望むならば，アッラーは両人の間を融和されよう。本当にアッラーは，全知にして何ごとにも通暁しておられる。",
-      "origine": "publiee",
-      "reference": "クルアーン 4章35節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (les deux arbitres envoyés pour réconcilier un foyer) ; anglais : les deux services diffèrent dans les mots — « and Aware. » (api.quran.com) / « and Acquainted [with all things]. » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+  "ja": {
+   "texte": "",
+   "origine": "publiee",
+   "reference": "クルアーン 8章(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/chapters/8"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 275,
-    "fr": "« Le jugement n'appartient qu'à Allah »",
-    "source_fr": "6:57 ; 12:40 ; 12:67",
-    "nature": "verset",
-    "sourate": 6,
-    "versets": "57",
-    "partiel": true,
-    "ar": {
-      "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ",
-      "reference": "سورة الأنعام: 57",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/6:57/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "The decision is only for Allāh.",
-      "origine": "publiee",
-      "reference": "Qur'an 6:57 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/6:57?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "裁決はアッラーにだけ属する。",
-      "origine": "publiee",
-      "reference": "クルアーン 6章57節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/6:57/editions/quran-uthmani,en.sahih,ja.japanese"
-    },
-    "ecart": "",
-    "note": "Une seule proposition, au milieu du verset. Même proposition arabe dans les trois versets que le jeu donne (6:57, 12:40, 12:67) : « إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ ». Les traductions publiées, elles, ne la rendent pas par les mêmes mots d’un verset à l’autre : Saheeh International écrit « The decision is only for Allāh » (6:57 et 12:67) et « Legislation is not but for Allāh » (12:40) ; 三田 écrit 「裁決はアッラーにだけ属する」 (6:57), 「大権はアッラーにだけ属し」 (12:40) et 「裁定は，只アッラーに属する」 (12:67). Une entrée par référence. La même phrase est aussi le mot d’ordre que crient les sécessionnistes (lignes 256, 512, 591, 694, 695 ; caid.js, ligne 141) : ce cri est une parole rapportée par les chroniques, à relever dans le registre de la saga, et non une citation du verset ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah ») ; japonais (6:57) : api.quran.com porte une espace parasite (« 裁決は アッラー ») ; texte retenu : api.alquran.cloud, identique par ailleurs."
+  "ecart": "",
+  "note": "Le jeu nomme la sourate 8 sans en citer un verset (« on récite la sourate al-Anfâl ») : aucun texte à poser, seulement le nom de la sourate. Nom arabe lu sur api.quran.com (chapters/8) : « الأنفال » ; translittération du même service : « Al-Anfal ». Le titre que Saheeh International et la traduction japonaise donnent à la sourate n’a été lu sur aucun des deux services : il reste à relever sur l’ouvrage. Au verset 8:1, lu des deux côtés, le mot est rendu par « the bounties [of war] » (Saheeh International) et par 「戦利品」 (三田)."
+ },
+ {
+  "fichier": "v2/src/data/saga_uthman.js",
+  "ligne": 250,
+  "fr": "« Si un pervers vous apporte une nouvelle, voyez bien clair… »",
+  "source_fr": "Coran 49:6, traduction du sens",
+  "nature": "verset",
+  "sourate": 49,
+  "versets": "6",
+  "partiel": true,
+  "ar": {
+   "texte": "إِن جَآءَكُمْ فَاسِقٌۢ بِنَبَإٍۢ فَتَبَيَّنُوٓا۟",
+   "reference": "سورة الحجرات: 6",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/49:6/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 275,
-    "fr": "« Le jugement n'appartient qu'à Allah »",
-    "source_fr": "6:57 ; 12:40 ; 12:67",
-    "nature": "verset",
-    "sourate": 12,
-    "versets": "40",
-    "partiel": true,
-    "ar": {
-      "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ",
-      "reference": "سورة يوسف: 40",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Legislation is not but for Allāh.",
-      "origine": "publiee",
-      "reference": "Qur'an 12:40 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "大権はアッラーにだけ属し",
-      "origine": "publiee",
-      "reference": "クルアーン 12章40節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Une seule proposition, au milieu du verset. Le japonais lie cette proposition à la suivante dans une seule phrase : l’extrait s’arrête à la virgule, sur une forme suspensive (「属し」). Même proposition arabe dans les trois versets que le jeu donne (6:57, 12:40, 12:67) : « إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ ». Les traductions publiées, elles, ne la rendent pas par les mêmes mots d’un verset à l’autre : Saheeh International écrit « The decision is only for Allāh » (6:57 et 12:67) et « Legislation is not but for Allāh » (12:40) ; 三田 écrit 「裁決はアッラーにだけ属する」 (6:57), 「大権はアッラーにだけ属し」 (12:40) et 「裁定は，只アッラーに属する」 (12:67). Une entrée par référence ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+  "en": {
+   "texte": "if there comes to you a disobedient one with information, investigate",
+   "origine": "publiee",
+   "reference": "Qur'an 49:6 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 275,
-    "fr": "« Le jugement n'appartient qu'à Allah »",
-    "source_fr": "6:57 ; 12:40 ; 12:67",
-    "nature": "verset",
-    "sourate": 12,
-    "versets": "67",
-    "partiel": true,
-    "ar": {
-      "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ",
-      "reference": "سورة يوسف: 67",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/12:67/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "The decision is only for Allāh",
-      "origine": "publiee",
-      "reference": "Qur'an 12:67 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:67?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "裁定は，只アッラーに属する。",
-      "origine": "publiee",
-      "reference": "クルアーン 12章67節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:67?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Une seule proposition, au milieu du verset ; en anglais elle est suivie d’un point-virgule, qui n’est pas repris. Même proposition arabe dans les trois versets que le jeu donne (6:57, 12:40, 12:67) : « إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ ». Les traductions publiées, elles, ne la rendent pas par les mêmes mots d’un verset à l’autre : Saheeh International écrit « The decision is only for Allāh » (6:57 et 12:67) et « Legislation is not but for Allāh » (12:40) ; 三田 écrit 「裁決はアッラーにだけ属する」 (6:57), 「大権はアッラーにだけ属し」 (12:40) et 「裁定は，只アッラーに属する」 (12:67). Une entrée par référence ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+  "ja": {
+   "texte": "もし邪な者が情報をあなたがたに齎したならば，慎重に検討しなさい。",
+   "origine": "publiee",
+   "reference": "クルアーン 49章6節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 275,
-    "fr": "« Il vous a commandé de n'adorer que Lui »",
-    "source_fr": "12:40, traduction du sens",
-    "nature": "verset",
-    "sourate": 12,
-    "versets": "40",
-    "partiel": true,
-    "ar": {
-      "texte": "أَمَرَ أَلَّا تَعْبُدُوٓا۟ إِلَّآ إِيَّاهُ",
-      "reference": "سورة يوسف: 40",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "He has commanded that you worship not except Him.",
-      "origine": "publiee",
-      "reference": "Qur'an 12:40 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "あなたがたはかれ以外の何ものにも仕えてはならないと（アッラーは）命じている。",
-      "origine": "publiee",
-      "reference": "クルアーン 12章40節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Une seule proposition, au milieu du verset : celle qui suit « Le jugement n’appartient qu’à Allah »."
+  "ecart": "",
+  "note": "Milieu du verset : la condition et l’ordre (« si un pervers vous apporte une nouvelle, voyez bien clair »), sans l’apostrophe « Ô vous qui avez cru » ni la suite. Le français marque la coupure par « … » : les trois textes s’arrêtent au même endroit, et la marque de coupure est à poser à l’affichage (elle n’est pas dans les textes relevés). L’anglais commence par une minuscule, comme dans la traduction. La référence est répétée dans le champ src de la même entrée du codex (ligne 251) ; japonais (49:6) : api.alquran.cloud remplace un caractère rare par un signe d’attente (« に(湾?) ») ; texte retenu : api.quran.com (« に齎 »), identique par ailleurs."
+ },
+ {
+  "fichier": "v2/src/data/saga_uthman.js",
+  "ligne": 253,
+  "fr": "",
+  "source_fr": "49:6, traduction du sens",
+  "nature": "verset",
+  "sourate": 49,
+  "versets": "6",
+  "partiel": false,
+  "ar": {
+   "texte": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوٓا۟ إِن جَآءَكُمْ فَاسِقٌۢ بِنَبَإٍۢ فَتَبَيَّنُوٓا۟ أَن تُصِيبُوا۟ قَوْمًۢا بِجَهَٰلَةٍۢ فَتُصْبِحُوا۟ عَلَىٰ مَا فَعَلْتُمْ نَٰدِمِينَ",
+   "reference": "سورة الحجرات: 6",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/49:6/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 275,
-    "fr": "« deux hommes justes parmi vous »",
-    "source_fr": "5:95",
-    "nature": "verset",
-    "sourate": 5,
-    "versets": "95",
-    "partiel": true,
-    "ar": {
-      "texte": "ذَوَا عَدْلٍۢ مِّنكُمْ",
-      "reference": "سورة المائدة: 95",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "two just men among you",
-      "origine": "publiee",
-      "reference": "Qur'an 5:95 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "あなたがたの中公正な2名の者",
-      "origine": "publiee",
-      "reference": "クルアーン 5章95節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Trois mots du milieu du verset (un groupe nominal, sans son verbe) ; le texte arabe garde la marque de tanwîn du mushaf."
+  "en": {
+   "texte": "O you who have believed, if there comes to you a disobedient one with information, investigate, lest you harm a people out of ignorance and become, over what you have done, regretful.",
+   "origine": "publiee",
+   "reference": "Qur'an 49:6 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 275,
-    "fr": "",
-    "source_fr": "4:35",
-    "nature": "verset",
-    "sourate": 4,
-    "versets": "35",
-    "partiel": false,
-    "ar": {
-      "texte": "وَإِنْ خِفْتُمْ شِقَاقَ بَيْنِهِمَا فَٱبْعَثُوا۟ حَكَمًۭا مِّنْ أَهْلِهِۦ وَحَكَمًۭا مِّنْ أَهْلِهَآ إِن يُرِيدَآ إِصْلَٰحًۭا يُوَفِّقِ ٱللَّهُ بَيْنَهُمَآ ۗ إِنَّ ٱللَّهَ كَانَ عَلِيمًا خَبِيرًۭا",
-      "reference": "سورة النساء: 35",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/4:35/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "And if you fear dissension between the two, send an arbitrator from his people and an arbitrator from her people. If they both desire reconciliation, Allāh will cause it between them. Indeed, Allāh is ever Knowing and Aware.",
-      "origine": "publiee",
-      "reference": "Qur'an 4:35 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "もしあなたがたが，両人の破局を恐れるならば，男の一族から一人の調停者を，また女の一族からも一人の調停者をあげなさい。両人がもし和解を望むならば，アッラーは両人の間を融和されよう。本当にアッラーは，全知にして何ごとにも通暁しておられる。",
-      "origine": "publiee",
-      "reference": "クルアーン 4章35節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (« deux arbitres pour réconcilier un foyer (4:35) ») ; anglais : les deux services diffèrent dans les mots — « and Aware. » (api.quran.com) / « and Acquainted [with all things]. » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+  "ja": {
+   "texte": "信仰する者よ，もし邪な者が情報をあなたがたに齎したならば，慎重に検討しなさい。これはあなたがたが，気付かない中に人びとに危害を及ぼし，その行ったことを後悔することにならないためである。",
+   "origine": "publiee",
+   "reference": "クルアーン 49章6節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 528,
-    "fr": "« Le jugement n'appartient qu'à Allah. Il vous a commandé de n'adorer que Lui. »",
-    "source_fr": "Sourate Yûsuf",
-    "nature": "verset",
-    "sourate": 12,
-    "versets": "40",
-    "partiel": true,
-    "ar": {
-      "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ ۚ أَمَرَ أَلَّا تَعْبُدُوٓا۟ إِلَّآ إِيَّاهُ",
-      "reference": "سورة يوسف: 40",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Legislation is not but for Allāh. He has commanded that you worship not except Him.",
-      "origine": "publiee",
-      "reference": "Qur'an 12:40 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "大権はアッラーにだけ属し，あなたがたはかれ以外の何ものにも仕えてはならないと（アッラーは）命じている。",
-      "origine": "publiee",
-      "reference": "クルアーン 12章40節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Deux propositions qui se suivent, au milieu du verset 12:40 ; le jeu nomme la sourate sans donner le numéro du verset (il le donne aux lignes 275 et 627). Le japonais les rend en une seule phrase ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+  "ecart": "",
+  "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (« Le Coran commande de voir clair avant d’agir sur une nouvelle ») ; référence répétée dans le champ src (ligne 254) ; japonais (49:6) : api.alquran.cloud remplace un caractère rare par un signe d’attente (« に(湾?) ») ; texte retenu : api.quran.com (« に齎 »), identique par ailleurs."
+ },
+ {
+  "fichier": "v2/src/data/saga_uthman.js",
+  "ligne": 452,
+  "fr": "« En vérité, c'est Nous qui avons fait descendre le Rappel, et c'est Nous qui en sommes gardien. »",
+  "source_fr": "Coran 15:9 — traduction du sens",
+  "nature": "verset",
+  "sourate": 15,
+  "versets": "9",
+  "partiel": false,
+  "ar": {
+   "texte": "إِنَّا نَحْنُ نَزَّلْنَا ٱلذِّكْرَ وَإِنَّا لَهُۥ لَحَٰفِظُونَ",
+   "reference": "سورة الحجر: 9",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/15:9/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 593,
-    "fr": "« deux hommes justes »",
-    "source_fr": "",
-    "nature": "verset",
-    "sourate": 5,
-    "versets": "95",
-    "partiel": true,
-    "ar": {
-      "texte": "ذَوَا عَدْلٍۢ",
-      "reference": "سورة المائدة: 95",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "two just men",
-      "origine": "publiee",
-      "reference": "Qur'an 5:95 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "公正な2名の者",
-      "origine": "publiee",
-      "reference": "クルアーン 5章95節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Deux mots du verset 5:95, repris dans une réponse proposée au joueur, sans référence sur cette ligne (elle est à la ligne 594). Groupe nominal seul ; le texte arabe garde la marque de tanwîn du mushaf."
+  "en": {
+   "texte": "Indeed, it is We who sent down the message [i.e., the Qur’ān], and indeed, We will be its guardian.",
+   "origine": "publiee",
+   "reference": "Qur'an 15:9 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/15:9?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 594,
-    "fr": "« deux hommes justes parmi vous en jugeront »",
-    "source_fr": "5:95",
-    "nature": "verset",
-    "sourate": 5,
-    "versets": "95",
-    "partiel": true,
-    "ar": {
-      "texte": "يَحْكُمُ بِهِۦ ذَوَا عَدْلٍۢ مِّنكُمْ",
-      "reference": "سورة المائدة: 95",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "as judged by two just men among you",
-      "origine": "publiee",
-      "reference": "Qur'an 5:95 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "あなたがたの中公正な2名の者の判定により",
-      "origine": "publiee",
-      "reference": "クルアーン 5章95節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Une proposition du milieu du verset (« en jugeront deux hommes justes parmi vous »). L’anglais et le japonais la rendent par un complément (« as judged by… », 「…の判定により」), non par une phrase."
+  "ja": {
+   "texte": "本当にわれこそは，その訓戒を下し，必ずそれを守護するのである。",
+   "origine": "publiee",
+   "reference": "クルアーン 15章9節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/15:9?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 594,
-    "fr": "",
-    "source_fr": "4:35",
-    "nature": "verset",
-    "sourate": 4,
-    "versets": "35",
-    "partiel": false,
-    "ar": {
-      "texte": "وَإِنْ خِفْتُمْ شِقَاقَ بَيْنِهِمَا فَٱبْعَثُوا۟ حَكَمًۭا مِّنْ أَهْلِهِۦ وَحَكَمًۭا مِّنْ أَهْلِهَآ إِن يُرِيدَآ إِصْلَٰحًۭا يُوَفِّقِ ٱللَّهُ بَيْنَهُمَآ ۗ إِنَّ ٱللَّهَ كَانَ عَلِيمًا خَبِيرًۭا",
-      "reference": "سورة النساء: 35",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/4:35/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "And if you fear dissension between the two, send an arbitrator from his people and an arbitrator from her people. If they both desire reconciliation, Allāh will cause it between them. Indeed, Allāh is ever Knowing and Aware.",
-      "origine": "publiee",
-      "reference": "Qur'an 4:35 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "もしあなたがたが，両人の破局を恐れるならば，男の一族から一人の調停者を，また女の一族からも一人の調停者をあげなさい。両人がもし和解を望むならば，アッラーは両人の間を融和されよう。本当にアッラーは，全知にして何ごとにも通暁しておられる。",
-      "origine": "publiee",
-      "reference": "クルアーン 4章35節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (« Il envoie deux arbitres pour réconcilier un foyer (4:35) ») ; anglais : les deux services diffèrent dans les mots — « and Aware. » (api.quran.com) / « and Acquainted [with all things]. » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+  "ecart": "",
+  "note": "Verset entier. Le français dit « le Rappel » (adh-dhikr), l’anglais retenu « the message [i.e., the Qur’ān] », le japonais 「その訓戒」 ; anglais : les deux services diffèrent dans les mots — « the message [i.e., the Qur’ān], and » (api.quran.com) / « the Qur'an and » (api.alquran.cloud) ; texte retenu : api.quran.com."
+ },
+ {
+  "fichier": "v2/src/data/saga_uthman.js",
+  "ligne": 719,
+  "fr": "« Ô vous qui avez cru ! Si un pervers vous apporte une nouvelle, voyez bien clair, de crainte que par inadvertance vous ne portiez atteinte à des gens et que vous ne regrettiez ensuite ce que vous avez fait. »",
+  "source_fr": "Coran 49:6 — traduction du sens",
+  "nature": "verset",
+  "sourate": 49,
+  "versets": "6",
+  "partiel": false,
+  "ar": {
+   "texte": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوٓا۟ إِن جَآءَكُمْ فَاسِقٌۢ بِنَبَإٍۢ فَتَبَيَّنُوٓا۟ أَن تُصِيبُوا۟ قَوْمًۢا بِجَهَٰلَةٍۢ فَتُصْبِحُوا۟ عَلَىٰ مَا فَعَلْتُمْ نَٰدِمِينَ",
+   "reference": "سورة الحجرات: 6",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/49:6/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 627,
-    "fr": "« Il vous a commandé de n'adorer que Lui »",
-    "source_fr": "12:40",
-    "nature": "verset",
-    "sourate": 12,
-    "versets": "40",
-    "partiel": true,
-    "ar": {
-      "texte": "أَمَرَ أَلَّا تَعْبُدُوٓا۟ إِلَّآ إِيَّاهُ",
-      "reference": "سورة يوسف: 40",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "He has commanded that you worship not except Him.",
-      "origine": "publiee",
-      "reference": "Qur'an 12:40 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "あなたがたはかれ以外の何ものにも仕えてはならないと（アッラーは）命じている。",
-      "origine": "publiee",
-      "reference": "クルアーン 12章40節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Une seule proposition, au milieu du verset (réponse proposée au joueur)."
+  "en": {
+   "texte": "O you who have believed, if there comes to you a disobedient one with information, investigate, lest you harm a people out of ignorance and become, over what you have done, regretful.",
+   "origine": "publiee",
+   "reference": "Qur'an 49:6 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/saga_ali.js",
-    "ligne": 634,
-    "fr": "« deux hommes justes »",
-    "source_fr": "",
-    "nature": "verset",
-    "sourate": 5,
-    "versets": "95",
-    "partiel": true,
-    "ar": {
-      "texte": "ذَوَا عَدْلٍۢ",
-      "reference": "سورة المائدة: 95",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "two just men",
-      "origine": "publiee",
-      "reference": "Qur'an 5:95 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "公正な2名の者",
-      "origine": "publiee",
-      "reference": "クルアーン 5章95節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Deux mots du verset 5:95, repris dans une réponse proposée au joueur, sans référence sur cette ligne (elle est à la ligne 594). Groupe nominal seul ; le texte arabe garde la marque de tanwîn du mushaf."
+  "ja": {
+   "texte": "信仰する者よ，もし邪な者が情報をあなたがたに齎したならば，慎重に検討しなさい。これはあなたがたが，気付かない中に人びとに危害を及ぼし，その行ったことを後悔することにならないためである。",
+   "origine": "publiee",
+   "reference": "クルアーン 49章6節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/49:6?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/frame.js",
-    "ligne": 133,
-    "fr": "« Et des points de repère ; et au moyen des étoiles ils se guident »",
-    "source_fr": "16:16, traduction du sens",
-    "nature": "verset",
-    "sourate": 16,
-    "versets": "16",
-    "partiel": false,
-    "ar": {
-      "texte": "وَعَلَٰمَٰتٍۢ ۚ وَبِٱلنَّجْمِ هُمْ يَهْتَدُونَ",
-      "reference": "سورة النحل: 16",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/16:16/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "And landmarks. And by the stars they are [also] guided.",
-      "origine": "publiee",
-      "reference": "Qur'an 16:16 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/16:16?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "また色々な標識，星を頼りにかれら（人びと）は導かれる。",
-      "origine": "publiee",
-      "reference": "クルアーン 16章16節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/16:16?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Verset entier. La référence est répétée dans le champ src de la même ligne (« Coran 16:16 et 6:97 »)."
+  "ecart": "",
+  "note": "Verset entier ; japonais (49:6) : api.alquran.cloud remplace un caractère rare par un signe d’attente (« に(湾?) ») ; texte retenu : api.quran.com (« に齎 »), identique par ailleurs."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 251,
+  "fr": "",
+  "source_fr": "5:95 ; 4:35",
+  "nature": "verset",
+  "sourate": 5,
+  "versets": "95",
+  "partiel": false,
+  "ar": {
+   "texte": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا۟ لَا تَقْتُلُوا۟ ٱلصَّيْدَ وَأَنتُمْ حُرُمٌۭ ۚ وَمَن قَتَلَهُۥ مِنكُم مُّتَعَمِّدًۭا فَجَزَآءٌۭ مِّثْلُ مَا قَتَلَ مِنَ ٱلنَّعَمِ يَحْكُمُ بِهِۦ ذَوَا عَدْلٍۢ مِّنكُمْ هَدْيًۢا بَٰلِغَ ٱلْكَعْبَةِ أَوْ كَفَّٰرَةٌۭ طَعَامُ مَسَٰكِينَ أَوْ عَدْلُ ذَٰلِكَ صِيَامًۭا لِّيَذُوقَ وَبَالَ أَمْرِهِۦ ۗ عَفَا ٱللَّهُ عَمَّا سَلَفَ ۚ وَمَنْ عَادَ فَيَنتَقِمُ ٱللَّهُ مِنْهُ ۗ وَٱللَّهُ عَزِيزٌۭ ذُو ٱنتِقَامٍ",
+   "reference": "سورة المائدة: 95",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/frame.js",
-    "ligne": 133,
-    "fr": "",
-    "source_fr": "Coran 16:16 et 6:97",
-    "nature": "verset",
-    "sourate": 6,
-    "versets": "97",
-    "partiel": false,
-    "ar": {
-      "texte": "وَهُوَ ٱلَّذِى جَعَلَ لَكُمُ ٱلنُّجُومَ لِتَهْتَدُوا۟ بِهَا فِى ظُلُمَٰتِ ٱلْبَرِّ وَٱلْبَحْرِ ۗ قَدْ فَصَّلْنَا ٱلْءَايَٰتِ لِقَوْمٍۢ يَعْلَمُونَ",
-      "reference": "سورة الأنعام: 97",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/6:97/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "And it is He who placed for you the stars that you may be guided by them through the darknesses of the land and sea. We have detailed the signs for a people who know.",
-      "origine": "publiee",
-      "reference": "Qur'an 6:97 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/6:97?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "かれこそは，あなたがたのため群星を置かれた方で，あなたがたはそれによって，暗黒の陸でも海でも（正しい道に）導かれる。われは知識ある人びとに印の特恵を与えている。",
-      "origine": "publiee",
-      "reference": "クルアーン 6章97節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/6:97?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (champ src : les étoiles données pour se guider)."
+  "en": {
+   "texte": "O you who have believed, do not kill game while you are in the state of iḥrām. And whoever of you kills it intentionally - the penalty is an equivalent from sacrificial animals to what he killed, as judged by two just men among you as an offering [to Allāh] delivered to the Kaʿbah, or an expiation: the feeding of needy people or the equivalent of that in fasting, that he may taste the consequence of his matter [i.e., deed]. Allāh has pardoned what is past; but whoever returns [to violation], then Allāh will take retribution from him. And Allāh is Exalted in Might and Owner of Retribution.",
+   "origine": "publiee",
+   "reference": "Qur'an 5:95 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/frame.js",
-    "ligne": 134,
-    "fr": "",
-    "source_fr": "sourate 106",
-    "nature": "verset",
-    "sourate": 106,
-    "versets": "1-4",
-    "partiel": false,
-    "ar": {
-      "texte": "لِإِيلَٰفِ قُرَيْشٍ إِۦلَٰفِهِمْ رِحْلَةَ ٱلشِّتَآءِ وَٱلصَّيْفِ فَلْيَعْبُدُوا۟ رَبَّ هَٰذَا ٱلْبَيْتِ ٱلَّذِىٓ أَطْعَمَهُم مِّن جُوعٍۢ وَءَامَنَهُم مِّنْ خَوْفٍۭ",
-      "reference": "سورة قريش: 1-4",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/106:1/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/106:2/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/106:3/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/106:4/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "For the accustomed security of the Quraysh - Their accustomed security [in] the caravan of winter and summer - Let them worship the Lord of this House, Who has fed them, [saving them] from hunger and made them safe, [saving them] from fear.",
-      "origine": "publiee",
-      "reference": "Qur'an 106:1-4 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/106:1?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:2?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:3?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:4?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "クライシュ族の保護のため，冬と夏のかれらの隊商の保護のため，（そのアッラーの御恵みのために）かれらに，この聖殿の主に仕えさせよ。飢えに際しては，かれらに食物を与え，また恐れに際しては，それを除き心を安らかにして下さる御方に。",
-      "origine": "publiee",
-      "reference": "クルアーン 106章1-4節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/106:1?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:2?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:3?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:4?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "Le jeu écrit que le Coran « nomme » deux voyages, « celui de l’hiver, vers le Yémen, et celui de l’été, vers le Shâm ». La sourate nomme le voyage de l’hiver et celui de l’été (106:2) ; elle ne dit pas leurs destinations, qui viennent des commentaires.",
-    "note": "Le jeu renvoie à la sourate entière sans la citer (« sourate 106 » dans le texte, « Coran 106 » dans le champ src) : ses quatre versets sont relevés à la suite, séparés par une espace, sans marque de fin de verset ; arabe : api.alquran.cloud fait précéder le verset 1 de la basmala, qui n’en fait pas partie ; elle n’est pas reprise."
+  "ja": {
+   "texte": "信仰する者よ，あなたがたが巡礼者の間は，狩猟して鳥獣を殺してはならない。もし，あなたがたの中，知りながらそれを殺した者の償いは，あなたがたの中公正な2名の者の判定により，その殺したものと等しい（価の）家畜を，カアバに運んで捧げるか，またはその贖罪のために貧者に食を供するか，またはそれに相当する斎戒を行うことである。これらはかれがその行いの結果を味わうためである。アッラーは，過ぎ去ったことは御許しなされる。だがあなたがたがもし繰り返すならば，アッラーは応報を重くされる。アッラーは偉力ならびなき応報の主であられる。",
+   "origine": "publiee",
+   "reference": "クルアーン 5章95節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese"
   },
-  {
-    "fichier": "v2/src/data/caid.js",
-    "ligne": 140,
-    "fr": "",
-    "source_fr": "sourate « La Victoire éclatante » (48)",
-    "nature": "verset",
-    "sourate": 48,
-    "versets": "1",
-    "partiel": false,
-    "ar": {
-      "texte": "إِنَّا فَتَحْنَا لَكَ فَتْحًۭا مُّبِينًۭا",
-      "reference": "سورة الفتح: 1",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/48:1/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Indeed, We have given you, [O Muḥammad], a clear conquest",
-      "origine": "publiee",
-      "reference": "Qur'an 48:1 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/48:1?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "本当にわれは，明らかな勝利をあなたに授けた。",
-      "origine": "publiee",
-      "reference": "クルアーン 48章1節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/48:1?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Le jeu ne cite pas de verset : il nomme la sourate 48 par un titre français, « La Victoire éclatante », qui reprend les mots de son premier verset. Ce verset est relevé pour que chaque langue nomme la sourate d’après sa propre source : Saheeh International y dit « a clear conquest », 三田 「明らかな勝利」. Nom arabe de la sourate, lu sur api.quran.com (chapters/48) : « الفتح ». Le titre que chaque traduction publiée donne à la sourate n’a pas été lu : il reste à relever sur l’ouvrage ; arabe : api.alquran.cloud fait précéder le verset 1 de la basmala, qui n’en fait pas partie ; elle n’est pas reprise ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Muḥammad » ; api.alquran.cloud sans : « Muhammad »)."
+  "ecart": "",
+  "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (Ibn ’Abbâs « y répond par le Coran (5:95 ; 4:35) ») ; le passage visé est « deux hommes justes parmi vous en jugeront », cité à la ligne 594 ; anglais : les deux services diffèrent dans les mots — « his matter [i.e., deed]. Allāh » (api.quran.com) / « his deed. Allah » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « iḥrām » / « ihram ») ; japonais (5:95) : api.quran.com porte une espace parasite (« であられ る。 ») ; texte retenu : api.alquran.cloud, identique par ailleurs."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 251,
+  "fr": "",
+  "source_fr": "5:95 ; 4:35",
+  "nature": "verset",
+  "sourate": 4,
+  "versets": "35",
+  "partiel": false,
+  "ar": {
+   "texte": "وَإِنْ خِفْتُمْ شِقَاقَ بَيْنِهِمَا فَٱبْعَثُوا۟ حَكَمًۭا مِّنْ أَهْلِهِۦ وَحَكَمًۭا مِّنْ أَهْلِهَآ إِن يُرِيدَآ إِصْلَٰحًۭا يُوَفِّقِ ٱللَّهُ بَيْنَهُمَآ ۗ إِنَّ ٱللَّهَ كَانَ عَلِيمًا خَبِيرًۭا",
+   "reference": "سورة النساء: 35",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/4:35/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 257,
-    "fr": "« En vérité, c’est Allah qui est le Grand Pourvoyeur, Le Détenteur de la force, l’Inébranlable. »",
-    "source_fr": "Coran 51:58",
-    "nature": "verset",
-    "sourate": 51,
-    "versets": "58",
-    "partiel": false,
-    "ar": {
-      "texte": "إِنَّ ٱللَّهَ هُوَ ٱلرَّزَّاقُ ذُو ٱلْقُوَّةِ ٱلْمَتِينُ",
-      "reference": "سورة الذاريات: 58",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/51:58/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Indeed, it is Allāh who is the [continual] Provider, the firm possessor of strength.",
-      "origine": "publiee",
-      "reference": "Qur'an 51:58 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/51:58?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "本当にアッラーこそは，糧を授けられる御方，堅固なる偉力の主であられる。",
-      "origine": "publiee",
-      "reference": "クルアーン 51章58節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/51:58?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Verset entier ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+  "en": {
+   "texte": "And if you fear dissension between the two, send an arbitrator from his people and an arbitrator from her people. If they both desire reconciliation, Allāh will cause it between them. Indeed, Allāh is ever Knowing and Aware.",
+   "origine": "publiee",
+   "reference": "Qur'an 4:35 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 259,
-    "fr": "« Le Connaisseur de ce qui est caché et de ce qui est apparent, Le Grand, Le Sublime. »",
-    "source_fr": "Coran 13:9",
-    "nature": "verset",
-    "sourate": 13,
-    "versets": "9",
-    "partiel": false,
-    "ar": {
-      "texte": "عَٰلِمُ ٱلْغَيْبِ وَٱلشَّهَٰدَةِ ٱلْكَبِيرُ ٱلْمُتَعَالِ",
-      "reference": "سورة الرعد: 9",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/13:9/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "[He is] Knower of the unseen and the witnessed, the Grand, the Exalted.",
-      "origine": "publiee",
-      "reference": "Qur'an 13:9 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:9?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "かれは幽玄界も現象界も知っておられる方，偉大にして至高の方であられる。",
-      "origine": "publiee",
-      "reference": "クルアーン 13章9節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:9?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Verset entier."
+  "ja": {
+   "texte": "もしあなたがたが，両人の破局を恐れるならば，男の一族から一人の調停者を，また女の一族からも一人の調停者をあげなさい。両人がもし和解を望むならば，アッラーは両人の間を融和されよう。本当にアッラーは，全知にして何ごとにも通暁しておられる。",
+   "origine": "publiee",
+   "reference": "クルアーン 4章35節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 261,
-    "fr": "« Ne connaît-Il pas ce qu’Il a créé alors que c’est Lui le Compatissant, le Parfaitement Connaisseur. »",
-    "source_fr": "Coran 67:14",
-    "nature": "verset",
-    "sourate": 67,
-    "versets": "14",
-    "partiel": false,
-    "ar": {
-      "texte": "أَلَا يَعْلَمُ مَنْ خَلَقَ وَهُوَ ٱللَّطِيفُ ٱلْخَبِيرُ",
-      "reference": "سورة الملك: 14",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/67:14/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Does He who created not know, while He is the Subtle, the Aware?",
-      "origine": "publiee",
-      "reference": "Qur'an 67:14 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/67:14?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "かれが創造されたものを，知らないであろうか。かれは，深奥を理解し通暁なされる。",
-      "origine": "publiee",
-      "reference": "クルアーン 67章14節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/67:14?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Verset entier. Le Nom al-Latîf y est rendu en français par « le Compatissant », et par « doux » à la ligne 267 (42:19) ; Saheeh International dit « the Subtle » ici et « Subtle » là, 三田 「深奥を理解し」 ici et 「やさしくあられ」 là ; anglais : les deux services diffèrent dans les mots — « the Aware? » (api.quran.com) / « the Acquainted? » (api.alquran.cloud) ; texte retenu : api.quran.com."
+  "ecart": "",
+  "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (les deux arbitres envoyés pour réconcilier un foyer) ; anglais : les deux services diffèrent dans les mots — « and Aware. » (api.quran.com) / « and Acquainted [with all things]. » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 275,
+  "fr": "« Le jugement n'appartient qu'à Allah »",
+  "source_fr": "6:57 ; 12:40 ; 12:67",
+  "nature": "verset",
+  "sourate": 6,
+  "versets": "57",
+  "partiel": true,
+  "ar": {
+   "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ",
+   "reference": "سورة الأنعام: 57",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/6:57/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 263,
-    "fr": "« C’est Toi, certes, le Grand Donateur ! »",
-    "source_fr": "Coran 3:8 (fin du verset)",
-    "nature": "verset",
-    "sourate": 3,
-    "versets": "8",
-    "partiel": true,
-    "ar": {
-      "texte": "إِنَّكَ أَنتَ ٱلْوَهَّابُ",
-      "reference": "سورة آل عمران: 8",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/3:8/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Indeed, You are the Bestower.",
-      "origine": "publiee",
-      "reference": "Qur'an 3:8 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:8?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "本当にあなたこそ，限りなく与えられる御方であられます。",
-      "origine": "publiee",
-      "reference": "クルアーン 3章8節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:8?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Fin du verset : la dernière phrase seule (le jeu le dit : « fin du verset »). Le verset est une invocation rapportée entre guillemets : en japonais, le 」 final, qui ferme cette citation ouverte au début du verset, n’est pas repris."
+  "en": {
+   "texte": "The decision is only for Allāh.",
+   "origine": "publiee",
+   "reference": "Qur'an 6:57 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/6:57?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 265,
-    "fr": "« Allah! Point de divinité à part Lui, le Vivant, Celui qui subsiste par Lui-même (Al Qayyum). Ni somnolence ni sommeil ne Le saisissent. »",
-    "source_fr": "Coran 2:255 (début du verset)",
-    "nature": "verset",
-    "sourate": 2,
-    "versets": "255",
-    "partiel": true,
-    "ar": {
-      "texte": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌۭ وَلَا نَوْمٌۭ",
-      "reference": "سورة البقرة: 255",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/2:255/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Allāh - there is no deity except Him, the Ever-Living, the Self-Sustaining. Neither drowsiness overtakes Him nor sleep.",
-      "origine": "publiee",
-      "reference": "Qur'an 2:255 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:255?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "アッラー，かれの外に神はなく，永生に自存される御方。仮眠も熟睡も，かれをとらえることは出来ない。",
-      "origine": "publiee",
-      "reference": "クルアーン 2章255節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:255?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Début du verset : les deux premières phrases (le jeu le dit : « début du verset ») ; anglais : les deux services diffèrent dans les mots — « the Self-Sustaining. Neither » (api.quran.com) / « the Sustainer of [all] existence. Neither » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+  "ja": {
+   "texte": "裁決はアッラーにだけ属する。",
+   "origine": "publiee",
+   "reference": "クルアーン 6章57節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/6:57/editions/quran-uthmani,en.sahih,ja.japanese"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 267,
-    "fr": "« Allah est doux envers Ses serviteurs. Il attribue [Ses biens] à qui Il veut. Et c’est Lui le Fort, le Puissant. »",
-    "source_fr": "Coran 42:19",
-    "nature": "verset",
-    "sourate": 42,
-    "versets": "19",
-    "partiel": false,
-    "ar": {
-      "texte": "ٱللَّهُ لَطِيفٌۢ بِعِبَادِهِۦ يَرْزُقُ مَن يَشَآءُ ۖ وَهُوَ ٱلْقَوِىُّ ٱلْعَزِيزُ",
-      "reference": "سورة الشورى: 19",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/42:19/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Allāh is Subtle with His servants; He gives provision to whom He wills. And He is the Powerful, the Exalted in Might.",
-      "origine": "publiee",
-      "reference": "Qur'an 42:19 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/42:19?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "アッラーはそのしもべに対して，やさしくあられ，御心に適う者に恵みを与えられる。かれは強大にして偉力ならびなき方である。",
-      "origine": "publiee",
-      "reference": "クルアーン 42章19節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/42:19?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Verset entier ; anglais : les deux services diffèrent dans les mots — « gives provision to » (api.quran.com) / « gives provisions to » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+  "ecart": "",
+  "note": "Une seule proposition, au milieu du verset. Même proposition arabe dans les trois versets que le jeu donne (6:57, 12:40, 12:67) : « إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ ». Les traductions publiées, elles, ne la rendent pas par les mêmes mots d’un verset à l’autre : Saheeh International écrit « The decision is only for Allāh » (6:57 et 12:67) et « Legislation is not but for Allāh » (12:40) ; 三田 écrit 「裁決はアッラーにだけ属する」 (6:57), 「大権はアッラーにだけ属し」 (12:40) et 「裁定は，只アッラーに属する」 (12:67). Une entrée par référence. La même phrase est aussi le mot d’ordre que crient les sécessionnistes (lignes 256, 512, 591, 694, 695 ; caid.js, ligne 141) : ce cri est une parole rapportée par les chroniques, à relever dans le registre de la saga, et non une citation du verset ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah ») ; japonais (6:57) : api.quran.com porte une espace parasite (« 裁決は アッラー ») ; texte retenu : api.alquran.cloud, identique par ailleurs."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 275,
+  "fr": "« Le jugement n'appartient qu'à Allah »",
+  "source_fr": "6:57 ; 12:40 ; 12:67",
+  "nature": "verset",
+  "sourate": 12,
+  "versets": "40",
+  "partiel": true,
+  "ar": {
+   "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ",
+   "reference": "سورة يوسف: 40",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 269,
-    "fr": "« Une parole agréable et un pardon valent mieux qu’une aumône suivie d’un tort. Allah n’a besoin de rien, et Il est indulgent. »",
-    "source_fr": "Coran 2:263",
-    "nature": "verset",
-    "sourate": 2,
-    "versets": "263",
-    "partiel": false,
-    "ar": {
-      "texte": "قَوْلٌۭ مَّعْرُوفٌۭ وَمَغْفِرَةٌ خَيْرٌۭ مِّن صَدَقَةٍۢ يَتْبَعُهَآ أَذًۭى ۗ وَٱللَّهُ غَنِىٌّ حَلِيمٌۭ",
-      "reference": "سورة البقرة: 263",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/2:263/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Kind speech and forgiveness are better than charity followed by injury. And Allāh is Free of need and Forbearing.",
-      "origine": "publiee",
-      "reference": "Qur'an 2:263 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:263?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "親切な言葉と寛容とは，侮辱を伴う施しものに優る。アッラーは富有にして慈悲深くあられる。",
-      "origine": "publiee",
-      "reference": "クルアーン 2章263節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:263?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Verset entier ; arabe : le signe de quart de hizb « ۞ », que les deux services placent en tête du verset, est une marque de division du mushaf et non un mot du verset ; il n’est pas repris ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+  "en": {
+   "texte": "Legislation is not but for Allāh.",
+   "origine": "publiee",
+   "reference": "Qur'an 12:40 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 307,
-    "fr": "« Et (rappelez-vous) le moment où vous imploriez le secours de votre Seigneur et qu’Il vous exauça aussitôt : “Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres.” »",
-    "source_fr": "Coran 8:9, traduction du sens · c’était à Badr",
-    "nature": "verset",
-    "sourate": 8,
-    "versets": "9",
-    "partiel": false,
-    "ar": {
-      "texte": "إِذْ تَسْتَغِيثُونَ رَبَّكُمْ فَٱسْتَجَابَ لَكُمْ أَنِّى مُمِدُّكُم بِأَلْفٍۢ مِّنَ ٱلْمَلَٰٓئِكَةِ مُرْدِفِينَ",
-      "reference": "سورة الأنفال: 9",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/8:9/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "[Remember] when you were asking help of your Lord, and He answered you, \"Indeed, I will reinforce you with a thousand from the angels, following one another.\"",
-      "origine": "publiee",
-      "reference": "Qur'an 8:9 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:9?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "あなたがたが主に援助を歎願した時を思いなさい。その時あなたがたに答えられた。「われは，次ぎ次ぎに来る一千の天使であなたがたを助けるであろう。」",
-      "origine": "publiee",
-      "reference": "クルアーン 8章9節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:9?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Verset entier (la référence est à la ligne 308). La parole rapportée est entre guillemets dans les trois traductions ; anglais : les deux services diffèrent dans les mots — « you were asking help » (api.quran.com) / « you asked help » (api.alquran.cloud) ; texte retenu : api.quran.com."
+  "ja": {
+   "texte": "大権はアッラーにだけ属し",
+   "origine": "publiee",
+   "reference": "クルアーン 12章40節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 321,
-    "fr": "",
-    "source_fr": "Coran 18:50 ; 2:168 ; 14:22",
-    "nature": "verset",
-    "sourate": 18,
-    "versets": "50",
-    "partiel": false,
-    "ar": {
-      "texte": "وَإِذْ قُلْنَا لِلْمَلَٰٓئِكَةِ ٱسْجُدُوا۟ لِءَادَمَ فَسَجَدُوٓا۟ إِلَّآ إِبْلِيسَ كَانَ مِنَ ٱلْجِنِّ فَفَسَقَ عَنْ أَمْرِ رَبِّهِۦٓ ۗ أَفَتَتَّخِذُونَهُۥ وَذُرِّيَّتَهُۥٓ أَوْلِيَآءَ مِن دُونِى وَهُمْ لَكُمْ عَدُوٌّۢ ۚ بِئْسَ لِلظَّٰلِمِينَ بَدَلًۭا",
-      "reference": "سورة الكهف: 50",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/18:50/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "And [mention] when We said to the angels, \"Prostrate to Adam,\" and they prostrated, except for Iblees. He was of the jinn and departed from [i.e., disobeyed] the command of his Lord. Then will you take him and his descendants as allies other than Me while they are enemies to you? Wretched it is for the wrongdoers as an exchange.",
-      "origine": "publiee",
-      "reference": "Qur'an 18:50 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/18:50?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "われが天使たちに向かって，「アーダムにサジダしなさい」と言った時を思え。かれらはイブリースを除いてサジダした。かれはジンの仲間で，主の命令に背いた。それなのにあなたがたはわれを差し置いて，かれとその子孫を保護者とするのか。かれらはあなたがたにとり敵ではないか。不義の徒は何と忌まわしい交換をするものか。",
-      "origine": "publiee",
-      "reference": "クルアーン 18章50節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/18:50?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (ligne 319 : « Le Coran le dit du nombre des djinns ») ; anglais : les deux services diffèrent dans les mots — « from [i.e., disobeyed] the » (api.quran.com) / « from the » (api.alquran.cloud) ; texte retenu : api.quran.com."
+  "ecart": "",
+  "note": "Une seule proposition, au milieu du verset. Le japonais lie cette proposition à la suivante dans une seule phrase : l’extrait s’arrête à la virgule, sur une forme suspensive (「属し」). Même proposition arabe dans les trois versets que le jeu donne (6:57, 12:40, 12:67) : « إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ ». Les traductions publiées, elles, ne la rendent pas par les mêmes mots d’un verset à l’autre : Saheeh International écrit « The decision is only for Allāh » (6:57 et 12:67) et « Legislation is not but for Allāh » (12:40) ; 三田 écrit 「裁決はアッラーにだけ属する」 (6:57), 「大権はアッラーにだけ属し」 (12:40) et 「裁定は，只アッラーに属する」 (12:67). Une entrée par référence ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 275,
+  "fr": "« Le jugement n'appartient qu'à Allah »",
+  "source_fr": "6:57 ; 12:40 ; 12:67",
+  "nature": "verset",
+  "sourate": 12,
+  "versets": "67",
+  "partiel": true,
+  "ar": {
+   "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ",
+   "reference": "سورة يوسف: 67",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/12:67/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 321,
-    "fr": "",
-    "source_fr": "Coran 18:50 ; 2:168 ; 14:22",
-    "nature": "verset",
-    "sourate": 2,
-    "versets": "168",
-    "partiel": false,
-    "ar": {
-      "texte": "يَٰٓأَيُّهَا ٱلنَّاسُ كُلُوا۟ مِمَّا فِى ٱلْأَرْضِ حَلَٰلًۭا طَيِّبًۭا وَلَا تَتَّبِعُوا۟ خُطُوَٰتِ ٱلشَّيْطَٰنِ ۚ إِنَّهُۥ لَكُمْ عَدُوٌّۭ مُّبِينٌ",
-      "reference": "سورة البقرة: 168",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/2:168/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "O mankind, eat from whatever is on earth [that is] lawful and good and do not follow the footsteps of Satan. Indeed, he is to you a clear enemy.",
-      "origine": "publiee",
-      "reference": "Qur'an 2:168 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:168?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "人びとよ，地上にあるものの中良い合法なものを食べて，悪魔の歩みに従ってはならない。本当にかれは，あなたがたにとって公然の敵である。",
-      "origine": "publiee",
-      "reference": "クルアーン 2章168節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:168?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (ligne 319 : « et l’appelle un ennemi déclaré »). Le verset dit « ash-shaytân » (le Diable ; « Satan », 「悪魔」 dans les traductions), non le nom d’Iblîs."
+  "en": {
+   "texte": "The decision is only for Allāh",
+   "origine": "publiee",
+   "reference": "Qur'an 12:67 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:67?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 321,
-    "fr": "",
-    "source_fr": "Coran 18:50 ; 2:168 ; 14:22",
-    "nature": "verset",
-    "sourate": 14,
-    "versets": "22",
-    "partiel": false,
-    "ar": {
-      "texte": "وَقَالَ ٱلشَّيْطَٰنُ لَمَّا قُضِىَ ٱلْأَمْرُ إِنَّ ٱللَّهَ وَعَدَكُمْ وَعْدَ ٱلْحَقِّ وَوَعَدتُّكُمْ فَأَخْلَفْتُكُمْ ۖ وَمَا كَانَ لِىَ عَلَيْكُم مِّن سُلْطَٰنٍ إِلَّآ أَن دَعَوْتُكُمْ فَٱسْتَجَبْتُمْ لِى ۖ فَلَا تَلُومُونِى وَلُومُوٓا۟ أَنفُسَكُم ۖ مَّآ أَنَا۠ بِمُصْرِخِكُمْ وَمَآ أَنتُم بِمُصْرِخِىَّ ۖ إِنِّى كَفَرْتُ بِمَآ أَشْرَكْتُمُونِ مِن قَبْلُ ۗ إِنَّ ٱلظَّٰلِمِينَ لَهُمْ عَذَابٌ أَلِيمٌۭ",
-      "reference": "سورة إبراهيم: 22",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/14:22/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "And Satan will say when the matter has been concluded, \"Indeed, Allāh had promised you the promise of truth. And I promised you, but I betrayed you. But I had no authority over you except that I invited you, and you responded to me. So do not blame me; but blame yourselves. I cannot be called to your aid, nor can you be called to my aid. Indeed, I deny your association of me [with Allāh] before. Indeed, for the wrongdoers is a painful punishment.\"",
-      "origine": "publiee",
-      "reference": "Qur'an 14:22 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/14:22?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "凡ての事が，決定された時，悪魔は言った。「真実の約束を，あなたがたに約束されたのはアッラーでした。わたしも約束したのですが，あなたがたの役には立たなかったのです。もともとわたしは，あなたがたに対し権威はないのです。只あなたがたに呼びかけ，あなたがたがわたしに従っただけです。それでわたしを非難してはならないのです。寧ろ自分自身を責めなさい。わたしはあなたがたを助けることは出来ないのです。あなたがたもわたしを助けられないのです。実はあなたがたが，先にわたしを（アッラーと）同位に置いたが，わたしはそれを拒否していたのです。本当に不義の徒には痛ましい懲罰があるのです。」",
-      "origine": "publiee",
-      "reference": "クルアーン 14章22節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/14:22/editions/quran-uthmani,en.sahih,ja.japanese"
-    },
-    "ecart": "",
-    "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (ligne 319 : « Il n’a reçu aucun pouvoir sur les hommes : il appelle, et c’est tout ») ; une partie du verset est citée à la ligne 352. Le verset dit « ash-shaytân », non le nom d’Iblîs ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah ») ; japonais (14:22) : api.quran.com porte une espace parasite (« いのです 。実はあ ») ; texte retenu : api.alquran.cloud, identique par ailleurs ; nom de la sourate : forme de api.alquran.cloud, écrite sans ses voyelles (« إبراهيم ») ; api.quran.com l’écrit « ابراهيم »."
+  "ja": {
+   "texte": "裁定は，只アッラーに属する。",
+   "origine": "publiee",
+   "reference": "クルアーン 12章67節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:67?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 323,
-    "fr": "« qui souffle le mal dans les poitrines des hommes, qu’il (le conseiller) soit un djinn, ou un être humain »",
-    "source_fr": "Traduction du sens, Coran 114:5-6 ; voir aussi 72:11",
-    "nature": "verset",
-    "sourate": 114,
-    "versets": "5-6",
-    "partiel": false,
-    "ar": {
-      "texte": "ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ",
-      "reference": "سورة الناس: 5-6",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/114:5/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/114:6/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Who whispers [evil] into the breasts of mankind - From among the jinn and mankind",
-      "origine": "publiee",
-      "reference": "Qur'an 114:5-6 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/114:5?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:6?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "それが人間の胸に囁きかける，ジン（幽精）であろうと，人間であろうと。",
-      "origine": "publiee",
-      "reference": "クルアーン 114章5-6節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/114:5?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:6?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Versets 5 et 6 entiers (la référence est à la ligne 325), relevés à la suite, sans marque de fin de verset. La sourate est une parole rapportée (« Dis : … ») : le guillemet qui la ferme à la fin du verset 6 n’est pas repris, ni, en anglais, la ponctuation finale, que les deux services n’écrivent pas de même (api.quran.com écrit « mankind\". », api.alquran.cloud « mankind.\" »)."
+  "ecart": "",
+  "note": "Une seule proposition, au milieu du verset ; en anglais elle est suivie d’un point-virgule, qui n’est pas repris. Même proposition arabe dans les trois versets que le jeu donne (6:57, 12:40, 12:67) : « إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ ». Les traductions publiées, elles, ne la rendent pas par les mêmes mots d’un verset à l’autre : Saheeh International écrit « The decision is only for Allāh » (6:57 et 12:67) et « Legislation is not but for Allāh » (12:40) ; 三田 écrit 「裁決はアッラーにだけ属する」 (6:57), 「大権はアッラーにだけ属し」 (12:40) et 「裁定は，只アッラーに属する」 (12:67). Une entrée par référence ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 275,
+  "fr": "« Il vous a commandé de n'adorer que Lui »",
+  "source_fr": "12:40, traduction du sens",
+  "nature": "verset",
+  "sourate": 12,
+  "versets": "40",
+  "partiel": true,
+  "ar": {
+   "texte": "أَمَرَ أَلَّا تَعْبُدُوٓا۟ إِلَّآ إِيَّاهُ",
+   "reference": "سورة يوسف: 40",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 325,
-    "fr": "",
-    "source_fr": "Traduction du sens, Coran 114:5-6 ; voir aussi 72:11",
-    "nature": "verset",
-    "sourate": 72,
-    "versets": "11",
-    "partiel": false,
-    "ar": {
-      "texte": "وَأَنَّا مِنَّا ٱلصَّٰلِحُونَ وَمِنَّا دُونَ ذَٰلِكَ ۖ كُنَّا طَرَآئِقَ قِدَدًۭا",
-      "reference": "سورة الجن: 11",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/72:11/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "And among us are the righteous, and among us are [others] not so; we were [of] divided ways.",
-      "origine": "publiee",
-      "reference": "Qur'an 72:11 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/72:11?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "わたしたちの中には，正しい者もいるが，そうではない者もいて，様々な道に従っている。",
-      "origine": "publiee",
-      "reference": "クルアーン 72章11節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/72:11?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (« voir aussi 72:11 » ; ligne 323 : « Tous les djinns ne soufflent pas : il en est de vertueux »)."
+  "en": {
+   "texte": "He has commanded that you worship not except Him.",
+   "origine": "publiee",
+   "reference": "Qur'an 12:40 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 345,
-    "fr": "« Et prenez vos provisions ; mais vraiment la meilleure provision est la piété. »",
-    "source_fr": "Traduction du sens, Coran 2:197",
-    "nature": "verset",
-    "sourate": 2,
-    "versets": "197",
-    "partiel": true,
-    "ar": {
-      "texte": "وَتَزَوَّدُوا۟ فَإِنَّ خَيْرَ ٱلزَّادِ ٱلتَّقْوَىٰ",
-      "reference": "سورة البقرة: 197",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/2:197/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "And take provisions, but indeed, the best provision is fear of Allāh.",
-      "origine": "publiee",
-      "reference": "Qur'an 2:197 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:197?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "旅の準備をしなさい。だが最も優れた準備は篤信の念である。",
-      "origine": "publiee",
-      "reference": "クルアーン 2章197節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:197?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Une phrase, vers la fin du verset (qui traite du pèlerinage) : « Et prenez vos provisions ; mais vraiment la meilleure provision est la piété » ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+  "ja": {
+   "texte": "あなたがたはかれ以外の何ものにも仕えてはならないと（アッラーは）命じている。",
+   "origine": "publiee",
+   "reference": "クルアーン 12章40節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 346,
-    "fr": "« N’est-ce point par l’évocation d’Allah que se tranquillisent les cœurs ? »",
-    "source_fr": "Traduction du sens, Coran 13:28",
-    "nature": "verset",
-    "sourate": 13,
-    "versets": "28",
-    "partiel": true,
-    "ar": {
-      "texte": "أَلَا بِذِكْرِ ٱللَّهِ تَطْمَئِنُّ ٱلْقُلُوبُ",
-      "reference": "سورة الرعد: 28",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/13:28/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Unquestionably, by the remembrance of Allāh hearts are assured.",
-      "origine": "publiee",
-      "reference": "Qur'an 13:28 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:28?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "アッラーを唱念することにより，心の安らぎが得られないはずがないのである。",
-      "origine": "publiee",
-      "reference": "クルアーン 13章28節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:28?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Seconde moitié du verset. Dans les deux traductions, le verset termine une parole rapportée ouverte au verset 27 : le guillemet final (« \" », 」) n’est pas repris ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+  "ecart": "",
+  "note": "Une seule proposition, au milieu du verset : celle qui suit « Le jugement n’appartient qu’à Allah »."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 275,
+  "fr": "« deux hommes justes parmi vous »",
+  "source_fr": "5:95",
+  "nature": "verset",
+  "sourate": 5,
+  "versets": "95",
+  "partiel": true,
+  "ar": {
+   "texte": "ذَوَا عَدْلٍۢ مِّنكُمْ",
+   "reference": "سورة المائدة: 95",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 351,
-    "fr": "« contre le mal du mauvais conseiller, furtif, qui souffle le mal dans les poitrines des hommes, qu’il (le conseiller) soit un djinn, ou un être humain »",
-    "source_fr": "Traduction du sens, Coran 114:4-6",
-    "nature": "verset",
-    "sourate": 114,
-    "versets": "4-6",
-    "partiel": false,
-    "ar": {
-      "texte": "مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ",
-      "reference": "سورة الناس: 4-6",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/114:4/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/114:5/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/114:6/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "From the evil of the retreating whisperer - Who whispers [evil] into the breasts of mankind - From among the jinn and mankind",
-      "origine": "publiee",
-      "reference": "Qur'an 114:4-6 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/114:4?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:5?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:6?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "こっそりと忍び込み，囁く者の悪から。それが人間の胸に囁きかける，ジン（幽精）であろうと，人間であろうと。",
-      "origine": "publiee",
-      "reference": "クルアーン 114章4-6節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/114:4?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:5?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:6?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Versets 4 à 6 entiers, relevés à la suite, sans marque de fin de verset. La sourate est une parole rapportée (« Dis : … ») : le guillemet qui la ferme à la fin du verset 6 n’est pas repris, ni, en anglais, la ponctuation finale, que les deux services n’écrivent pas de même (api.quran.com écrit « mankind\". », api.alquran.cloud « mankind.\" »)."
+  "en": {
+   "texte": "two just men among you",
+   "origine": "publiee",
+   "reference": "Qur'an 5:95 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 352,
-    "fr": "« Je n’avais aucune autorité sur vous si ce n’est que je vous ai appelés, et que vous m’avez répondu. Ne me faites donc pas de reproches ; mais faites-en à vous-mêmes. »",
-    "source_fr": "Traduction du sens, Coran 14:22",
-    "nature": "verset",
-    "sourate": 14,
-    "versets": "22",
-    "partiel": true,
-    "ar": {
-      "texte": "وَمَا كَانَ لِىَ عَلَيْكُم مِّن سُلْطَٰنٍ إِلَّآ أَن دَعَوْتُكُمْ فَٱسْتَجَبْتُمْ لِى ۖ فَلَا تَلُومُونِى وَلُومُوٓا۟ أَنفُسَكُم",
-      "reference": "سورة إبراهيم: 22",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/14:22/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "But I had no authority over you except that I invited you, and you responded to me. So do not blame me; but blame yourselves.",
-      "origine": "publiee",
-      "reference": "Qur'an 14:22 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/14:22?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "もともとわたしは，あなたがたに対し権威はないのです。只あなたがたに呼びかけ，あなたがたがわたしに従っただけです。それでわたしを非難してはならないのです。寧ろ自分自身を責めなさい。",
-      "origine": "publiee",
-      "reference": "クルアーン 14章22節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/14:22?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Milieu du verset : deux phrases de la parole que le verset rapporte (« Je n’avais aucune autorité sur vous… faites-en à vous-mêmes »), sans son début ni sa fin. L’arabe et l’anglais gardent la conjonction qui ouvre la proposition (« وَ », « But »), que le français ne rend pas ; nom de la sourate : forme de api.alquran.cloud, écrite sans ses voyelles (« إبراهيم ») ; api.quran.com l’écrit « ابراهيم »."
+  "ja": {
+   "texte": "あなたがたの中公正な2名の者",
+   "origine": "publiee",
+   "reference": "クルアーン 5章95節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 355,
-    "fr": "",
-    "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
-    "nature": "verset",
-    "sourate": 51,
-    "versets": "58",
-    "partiel": false,
-    "ar": {
-      "texte": "إِنَّ ٱللَّهَ هُوَ ٱلرَّزَّاقُ ذُو ٱلْقُوَّةِ ٱلْمَتِينُ",
-      "reference": "سورة الذاريات: 58",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/51:58/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Indeed, it is Allāh who is the [continual] Provider, the firm possessor of strength.",
-      "origine": "publiee",
-      "reference": "Qur'an 51:58 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/51:58?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "本当にアッラーこそは，糧を授けられる御方，堅固なる偉力の主であられる。",
-      "origine": "publiee",
-      "reference": "クルアーン 51章58節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/51:58?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 257 : même extrait que là ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+  "ecart": "",
+  "note": "Trois mots du milieu du verset (un groupe nominal, sans son verbe) ; le texte arabe garde la marque de tanwîn du mushaf."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 275,
+  "fr": "",
+  "source_fr": "4:35",
+  "nature": "verset",
+  "sourate": 4,
+  "versets": "35",
+  "partiel": false,
+  "ar": {
+   "texte": "وَإِنْ خِفْتُمْ شِقَاقَ بَيْنِهِمَا فَٱبْعَثُوا۟ حَكَمًۭا مِّنْ أَهْلِهِۦ وَحَكَمًۭا مِّنْ أَهْلِهَآ إِن يُرِيدَآ إِصْلَٰحًۭا يُوَفِّقِ ٱللَّهُ بَيْنَهُمَآ ۗ إِنَّ ٱللَّهَ كَانَ عَلِيمًا خَبِيرًۭا",
+   "reference": "سورة النساء: 35",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/4:35/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 355,
-    "fr": "",
-    "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
-    "nature": "verset",
-    "sourate": 13,
-    "versets": "9",
-    "partiel": false,
-    "ar": {
-      "texte": "عَٰلِمُ ٱلْغَيْبِ وَٱلشَّهَٰدَةِ ٱلْكَبِيرُ ٱلْمُتَعَالِ",
-      "reference": "سورة الرعد: 9",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/13:9/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "[He is] Knower of the unseen and the witnessed, the Grand, the Exalted.",
-      "origine": "publiee",
-      "reference": "Qur'an 13:9 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:9?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "かれは幽玄界も現象界も知っておられる方，偉大にして至高の方であられる。",
-      "origine": "publiee",
-      "reference": "クルアーン 13章9節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:9?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 259 : même extrait que là."
+  "en": {
+   "texte": "And if you fear dissension between the two, send an arbitrator from his people and an arbitrator from her people. If they both desire reconciliation, Allāh will cause it between them. Indeed, Allāh is ever Knowing and Aware.",
+   "origine": "publiee",
+   "reference": "Qur'an 4:35 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 355,
-    "fr": "",
-    "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
-    "nature": "verset",
-    "sourate": 67,
-    "versets": "14",
-    "partiel": false,
-    "ar": {
-      "texte": "أَلَا يَعْلَمُ مَنْ خَلَقَ وَهُوَ ٱللَّطِيفُ ٱلْخَبِيرُ",
-      "reference": "سورة الملك: 14",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/67:14/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Does He who created not know, while He is the Subtle, the Aware?",
-      "origine": "publiee",
-      "reference": "Qur'an 67:14 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/67:14?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "かれが創造されたものを，知らないであろうか。かれは，深奥を理解し通暁なされる。",
-      "origine": "publiee",
-      "reference": "クルアーン 67章14節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/67:14?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 261 : même extrait que là ; anglais : les deux services diffèrent dans les mots — « the Aware? » (api.quran.com) / « the Acquainted? » (api.alquran.cloud) ; texte retenu : api.quran.com."
+  "ja": {
+   "texte": "もしあなたがたが，両人の破局を恐れるならば，男の一族から一人の調停者を，また女の一族からも一人の調停者をあげなさい。両人がもし和解を望むならば，アッラーは両人の間を融和されよう。本当にアッラーは，全知にして何ごとにも通暁しておられる。",
+   "origine": "publiee",
+   "reference": "クルアーン 4章35節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 355,
-    "fr": "",
-    "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
-    "nature": "verset",
-    "sourate": 3,
-    "versets": "8",
-    "partiel": true,
-    "ar": {
-      "texte": "إِنَّكَ أَنتَ ٱلْوَهَّابُ",
-      "reference": "سورة آل عمران: 8",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/3:8/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Indeed, You are the Bestower.",
-      "origine": "publiee",
-      "reference": "Qur'an 3:8 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:8?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "本当にあなたこそ，限りなく与えられる御方であられます。",
-      "origine": "publiee",
-      "reference": "クルアーン 3章8節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:8?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 263 : même extrait que là (une partie du verset)."
+  "ecart": "",
+  "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (« deux arbitres pour réconcilier un foyer (4:35) ») ; anglais : les deux services diffèrent dans les mots — « and Aware. » (api.quran.com) / « and Acquainted [with all things]. » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 528,
+  "fr": "« Le jugement n'appartient qu'à Allah. Il vous a commandé de n'adorer que Lui. »",
+  "source_fr": "Sourate Yûsuf",
+  "nature": "verset",
+  "sourate": 12,
+  "versets": "40",
+  "partiel": true,
+  "ar": {
+   "texte": "إِنِ ٱلْحُكْمُ إِلَّا لِلَّهِ ۚ أَمَرَ أَلَّا تَعْبُدُوٓا۟ إِلَّآ إِيَّاهُ",
+   "reference": "سورة يوسف: 40",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 355,
-    "fr": "",
-    "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
-    "nature": "verset",
-    "sourate": 2,
-    "versets": "255",
-    "partiel": true,
-    "ar": {
-      "texte": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌۭ وَلَا نَوْمٌۭ",
-      "reference": "سورة البقرة: 255",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/2:255/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Allāh - there is no deity except Him, the Ever-Living, the Self-Sustaining. Neither drowsiness overtakes Him nor sleep.",
-      "origine": "publiee",
-      "reference": "Qur'an 2:255 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:255?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "アッラー，かれの外に神はなく，永生に自存される御方。仮眠も熟睡も，かれをとらえることは出来ない。",
-      "origine": "publiee",
-      "reference": "クルアーン 2章255節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:255?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 265 : même extrait que là (une partie du verset) ; anglais : les deux services diffèrent dans les mots — « the Self-Sustaining. Neither » (api.quran.com) / « the Sustainer of [all] existence. Neither » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+  "en": {
+   "texte": "Legislation is not but for Allāh. He has commanded that you worship not except Him.",
+   "origine": "publiee",
+   "reference": "Qur'an 12:40 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 355,
-    "fr": "",
-    "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
-    "nature": "verset",
-    "sourate": 42,
-    "versets": "19",
-    "partiel": false,
-    "ar": {
-      "texte": "ٱللَّهُ لَطِيفٌۢ بِعِبَادِهِۦ يَرْزُقُ مَن يَشَآءُ ۖ وَهُوَ ٱلْقَوِىُّ ٱلْعَزِيزُ",
-      "reference": "سورة الشورى: 19",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/42:19/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Allāh is Subtle with His servants; He gives provision to whom He wills. And He is the Powerful, the Exalted in Might.",
-      "origine": "publiee",
-      "reference": "Qur'an 42:19 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/42:19?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "アッラーはそのしもべに対して，やさしくあられ，御心に適う者に恵みを与えられる。かれは強大にして偉力ならびなき方である。",
-      "origine": "publiee",
-      "reference": "クルアーン 42章19節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/42:19?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 267 : même extrait que là ; anglais : les deux services diffèrent dans les mots — « gives provision to » (api.quran.com) / « gives provisions to » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+  "ja": {
+   "texte": "大権はアッラーにだけ属し，あなたがたはかれ以外の何ものにも仕えてはならないと（アッラーは）命じている。",
+   "origine": "publiee",
+   "reference": "クルアーン 12章40節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 355,
-    "fr": "",
-    "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
-    "nature": "verset",
-    "sourate": 2,
-    "versets": "263",
-    "partiel": false,
-    "ar": {
-      "texte": "قَوْلٌۭ مَّعْرُوفٌۭ وَمَغْفِرَةٌ خَيْرٌۭ مِّن صَدَقَةٍۢ يَتْبَعُهَآ أَذًۭى ۗ وَٱللَّهُ غَنِىٌّ حَلِيمٌۭ",
-      "reference": "سورة البقرة: 263",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/2:263/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Kind speech and forgiveness are better than charity followed by injury. And Allāh is Free of need and Forbearing.",
-      "origine": "publiee",
-      "reference": "Qur'an 2:263 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:263?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "親切な言葉と寛容とは，侮辱を伴う施しものに優る。アッラーは富有にして慈悲深くあられる。",
-      "origine": "publiee",
-      "reference": "クルアーン 2章263節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:263?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 269 : même extrait que là ; arabe : le signe de quart de hizb « ۞ », que les deux services placent en tête du verset, est une marque de division du mushaf et non un mot du verset ; il n’est pas repris ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+  "ecart": "",
+  "note": "Deux propositions qui se suivent, au milieu du verset 12:40 ; le jeu nomme la sourate sans donner le numéro du verset (il le donne aux lignes 275 et 627). Le japonais les rend en une seule phrase ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 593,
+  "fr": "« deux hommes justes »",
+  "source_fr": "",
+  "nature": "verset",
+  "sourate": 5,
+  "versets": "95",
+  "partiel": true,
+  "ar": {
+   "texte": "ذَوَا عَدْلٍۢ",
+   "reference": "سورة المائدة: 95",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 359,
-    "fr": "« Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres. »",
-    "source_fr": "Traduction du sens, Coran 8:9-10. Règle de jeu.",
-    "nature": "verset",
-    "sourate": 8,
-    "versets": "9",
-    "partiel": true,
-    "ar": {
-      "texte": "أَنِّى مُمِدُّكُم بِأَلْفٍۢ مِّنَ ٱلْمَلَٰٓئِكَةِ مُرْدِفِينَ",
-      "reference": "سورة الأنفال: 9",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/8:9/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "Indeed, I will reinforce you with a thousand from the angels, following one another.",
-      "origine": "publiee",
-      "reference": "Qur'an 8:9 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:9?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "われは，次ぎ次ぎに来る一千の天使であなたがたを助けるであろう。",
-      "origine": "publiee",
-      "reference": "クルアーン 8章9節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:9?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Fin du verset 8:9 : la réponse seule (« Je vais vous renforcer… »), sans la proposition qui l’introduit ; les guillemets intérieurs des traductions ne sont pas repris. Le verset est cité en entier à la ligne 307."
+  "en": {
+   "texte": "two just men",
+   "origine": "publiee",
+   "reference": "Qur'an 5:95 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
   },
-  {
-    "fichier": "v2/src/data/coeur.js",
-    "ligne": 359,
-    "fr": "« Allah ne fit cela que pour (vous) apporter une bonne nouvelle et pour qu’avec cela vos cœurs se tranquillisent. Et il n’y a de victoire que de la part d’Allah. »",
-    "source_fr": "Traduction du sens, Coran 8:9-10. Règle de jeu.",
-    "nature": "verset",
-    "sourate": 8,
-    "versets": "10",
-    "partiel": true,
-    "ar": {
-      "texte": "وَمَا جَعَلَهُ ٱللَّهُ إِلَّا بُشْرَىٰ وَلِتَطْمَئِنَّ بِهِۦ قُلُوبُكُمْ ۚ وَمَا ٱلنَّصْرُ إِلَّا مِنْ عِندِ ٱللَّهِ",
-      "reference": "سورة الأنفال: 10",
-      "lu_sur": "https://api.alquran.cloud/v1/ayah/8:10/editions/quran-uthmani,en.sahih,ja.japanese",
-      "etat": "trouvé"
-    },
-    "en": {
-      "texte": "And Allāh made it not but good tidings and so that your hearts would be assured thereby. And victory is not but from Allāh.",
-      "origine": "publiee",
-      "reference": "Qur'an 8:10 (Saheeh International)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:10?translations=20,35&fields=text_uthmani"
-    },
-    "ja": {
-      "texte": "アッラーは，只これをあなたがたへの吉報となされ，あなたがたの心をそれで安らげられる。勝利はアッラーからだけ（来る）。",
-      "origine": "publiee",
-      "reference": "クルアーン 8章10節(日本ムスリム協会訳)",
-      "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:10?translations=20,35&fields=text_uthmani"
-    },
-    "ecart": "",
-    "note": "Les deux premières phrases du verset 8:10, sans la dernière (« إِنَّ ٱللَّهَ عَزِيزٌ حَكِيمٌ » ; « Indeed, Allāh is Exalted in Might and Wise. »). L’arabe et l’anglais gardent la conjonction initiale (« وَ », « And »), que le français ne rend pas ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
-  }
+  "ja": {
+   "texte": "公正な2名の者",
+   "origine": "publiee",
+   "reference": "クルアーン 5章95節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Deux mots du verset 5:95, repris dans une réponse proposée au joueur, sans référence sur cette ligne (elle est à la ligne 594). Groupe nominal seul ; le texte arabe garde la marque de tanwîn du mushaf."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 594,
+  "fr": "« deux hommes justes parmi vous en jugeront »",
+  "source_fr": "5:95",
+  "nature": "verset",
+  "sourate": 5,
+  "versets": "95",
+  "partiel": true,
+  "ar": {
+   "texte": "يَحْكُمُ بِهِۦ ذَوَا عَدْلٍۢ مِّنكُمْ",
+   "reference": "سورة المائدة: 95",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "as judged by two just men among you",
+   "origine": "publiee",
+   "reference": "Qur'an 5:95 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "あなたがたの中公正な2名の者の判定により",
+   "origine": "publiee",
+   "reference": "クルアーン 5章95節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Une proposition du milieu du verset (« en jugeront deux hommes justes parmi vous »). L’anglais et le japonais la rendent par un complément (« as judged by… », 「…の判定により」), non par une phrase."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 594,
+  "fr": "",
+  "source_fr": "4:35",
+  "nature": "verset",
+  "sourate": 4,
+  "versets": "35",
+  "partiel": false,
+  "ar": {
+   "texte": "وَإِنْ خِفْتُمْ شِقَاقَ بَيْنِهِمَا فَٱبْعَثُوا۟ حَكَمًۭا مِّنْ أَهْلِهِۦ وَحَكَمًۭا مِّنْ أَهْلِهَآ إِن يُرِيدَآ إِصْلَٰحًۭا يُوَفِّقِ ٱللَّهُ بَيْنَهُمَآ ۗ إِنَّ ٱللَّهَ كَانَ عَلِيمًا خَبِيرًۭا",
+   "reference": "سورة النساء: 35",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/4:35/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "And if you fear dissension between the two, send an arbitrator from his people and an arbitrator from her people. If they both desire reconciliation, Allāh will cause it between them. Indeed, Allāh is ever Knowing and Aware.",
+   "origine": "publiee",
+   "reference": "Qur'an 4:35 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "もしあなたがたが，両人の破局を恐れるならば，男の一族から一人の調停者を，また女の一族からも一人の調停者をあげなさい。両人がもし和解を望むならば，アッラーは両人の間を融和されよう。本当にアッラーは，全知にして何ごとにも通暁しておられる。",
+   "origine": "publiee",
+   "reference": "クルアーン 4章35節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/4:35?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (« Il envoie deux arbitres pour réconcilier un foyer (4:35) ») ; anglais : les deux services diffèrent dans les mots — « and Aware. » (api.quran.com) / « and Acquainted [with all things]. » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 627,
+  "fr": "« Il vous a commandé de n'adorer que Lui »",
+  "source_fr": "12:40",
+  "nature": "verset",
+  "sourate": 12,
+  "versets": "40",
+  "partiel": true,
+  "ar": {
+   "texte": "أَمَرَ أَلَّا تَعْبُدُوٓا۟ إِلَّآ إِيَّاهُ",
+   "reference": "سورة يوسف: 40",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/12:40/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "He has commanded that you worship not except Him.",
+   "origine": "publiee",
+   "reference": "Qur'an 12:40 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "あなたがたはかれ以外の何ものにも仕えてはならないと（アッラーは）命じている。",
+   "origine": "publiee",
+   "reference": "クルアーン 12章40節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/12:40?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Une seule proposition, au milieu du verset (réponse proposée au joueur)."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 634,
+  "fr": "« deux hommes justes »",
+  "source_fr": "",
+  "nature": "verset",
+  "sourate": 5,
+  "versets": "95",
+  "partiel": true,
+  "ar": {
+   "texte": "ذَوَا عَدْلٍۢ",
+   "reference": "سورة المائدة: 95",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/5:95/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "two just men",
+   "origine": "publiee",
+   "reference": "Qur'an 5:95 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "公正な2名の者",
+   "origine": "publiee",
+   "reference": "クルアーン 5章95節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/5:95?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Deux mots du verset 5:95, repris dans une réponse proposée au joueur, sans référence sur cette ligne (elle est à la ligne 594). Groupe nominal seul ; le texte arabe garde la marque de tanwîn du mushaf."
+ },
+ {
+  "fichier": "v2/src/data/frame.js",
+  "ligne": 133,
+  "fr": "« Et des points de repère ; et au moyen des étoiles ils se guident »",
+  "source_fr": "16:16, traduction du sens",
+  "nature": "verset",
+  "sourate": 16,
+  "versets": "16",
+  "partiel": false,
+  "ar": {
+   "texte": "وَعَلَٰمَٰتٍۢ ۚ وَبِٱلنَّجْمِ هُمْ يَهْتَدُونَ",
+   "reference": "سورة النحل: 16",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/16:16/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "And landmarks. And by the stars they are [also] guided.",
+   "origine": "publiee",
+   "reference": "Qur'an 16:16 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/16:16?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "また色々な標識，星を頼りにかれら（人びと）は導かれる。",
+   "origine": "publiee",
+   "reference": "クルアーン 16章16節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/16:16?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Verset entier. La référence est répétée dans le champ src de la même ligne (« Coran 16:16 et 6:97 »)."
+ },
+ {
+  "fichier": "v2/src/data/frame.js",
+  "ligne": 133,
+  "fr": "",
+  "source_fr": "Coran 16:16 et 6:97",
+  "nature": "verset",
+  "sourate": 6,
+  "versets": "97",
+  "partiel": false,
+  "ar": {
+   "texte": "وَهُوَ ٱلَّذِى جَعَلَ لَكُمُ ٱلنُّجُومَ لِتَهْتَدُوا۟ بِهَا فِى ظُلُمَٰتِ ٱلْبَرِّ وَٱلْبَحْرِ ۗ قَدْ فَصَّلْنَا ٱلْءَايَٰتِ لِقَوْمٍۢ يَعْلَمُونَ",
+   "reference": "سورة الأنعام: 97",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/6:97/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "And it is He who placed for you the stars that you may be guided by them through the darknesses of the land and sea. We have detailed the signs for a people who know.",
+   "origine": "publiee",
+   "reference": "Qur'an 6:97 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/6:97?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "かれこそは，あなたがたのため群星を置かれた方で，あなたがたはそれによって，暗黒の陸でも海でも（正しい道に）導かれる。われは知識ある人びとに印の特恵を与えている。",
+   "origine": "publiee",
+   "reference": "クルアーン 6章97節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/6:97?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (champ src : les étoiles données pour se guider)."
+ },
+ {
+  "fichier": "v2/src/data/frame.js",
+  "ligne": 317,
+  "fr": "« Et c’est Lui qui vous a assigné les étoiles, pour que, par elles, vous vous guidiez dans les ténèbres de la terre et de la mer. Certes, Nous avons exposé les preuves pour des gens qui savent. »",
+  "source_fr": "Coran 6:97 — traduction du sens",
+  "nature": "verset",
+  "sourate": 6,
+  "versets": "97",
+  "partiel": false,
+  "ar": {
+   "texte": "وَهُوَ ٱلَّذِى جَعَلَ لَكُمُ ٱلنُّجُومَ لِتَهْتَدُوا۟ بِهَا فِى ظُلُمَٰتِ ٱلْبَرِّ وَٱلْبَحْرِ ۗ قَدْ فَصَّلْنَا ٱلْءَايَٰتِ لِقَوْمٍۢ يَعْلَمُونَ",
+   "reference": "سورة الأنعام: 97",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/6:97/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "And it is He who placed for you the stars that you may be guided by them through the darknesses of the land and sea. We have detailed the signs for a people who know.",
+   "origine": "publiee",
+   "reference": "Qur'an 6:97 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/6:97?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "かれこそは，あなたがたのため群星を置かれた方で，あなたがたはそれによって，暗黒の陸でも海でも（正しい道に）導かれる。われは知識ある人びとに印の特恵を与えている。",
+   "origine": "publiee",
+   "reference": "クルアーン 6章97節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/6:97?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Verset entier, le dernier carton du jeu (chapitre e1, après « Il a fait ce qu’on lui avait appris : il a transmis. ») : décision du décideur, 20 novembre, sur trois propositions lues à la source (6:97 recommandé). Le français est celui de Hamidullah, lu sur api.quran.com (traduction 31) et sur api.alquran.cloud (fr.hamidullah) : les deux lectures donnent le même texte. L’arabe, l’anglais et le japonais sont ceux de l’entrée de 6:97 que le registre avait déjà (le feuillet « S’orienter aux étoiles »), relus le 19 novembre sur les deux services : identiques."
+ },
+ {
+  "fichier": "v2/src/data/frame.js",
+  "ligne": 134,
+  "fr": "",
+  "source_fr": "sourate 106",
+  "nature": "verset",
+  "sourate": 106,
+  "versets": "1-4",
+  "partiel": false,
+  "ar": {
+   "texte": "لِإِيلَٰفِ قُرَيْشٍ إِۦلَٰفِهِمْ رِحْلَةَ ٱلشِّتَآءِ وَٱلصَّيْفِ فَلْيَعْبُدُوا۟ رَبَّ هَٰذَا ٱلْبَيْتِ ٱلَّذِىٓ أَطْعَمَهُم مِّن جُوعٍۢ وَءَامَنَهُم مِّنْ خَوْفٍۭ",
+   "reference": "سورة قريش: 1-4",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/106:1/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/106:2/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/106:3/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/106:4/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "For the accustomed security of the Quraysh - Their accustomed security [in] the caravan of winter and summer - Let them worship the Lord of this House, Who has fed them, [saving them] from hunger and made them safe, [saving them] from fear.",
+   "origine": "publiee",
+   "reference": "Qur'an 106:1-4 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/106:1?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:2?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:3?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:4?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "クライシュ族の保護のため，冬と夏のかれらの隊商の保護のため，（そのアッラーの御恵みのために）かれらに，この聖殿の主に仕えさせよ。飢えに際しては，かれらに食物を与え，また恐れに際しては，それを除き心を安らかにして下さる御方に。",
+   "origine": "publiee",
+   "reference": "クルアーン 106章1-4節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/106:1?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:2?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:3?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/106:4?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "Le jeu écrit que le Coran « nomme » deux voyages, « celui de l’hiver, vers le Yémen, et celui de l’été, vers le Shâm ». La sourate nomme le voyage de l’hiver et celui de l’été (106:2) ; elle ne dit pas leurs destinations, qui viennent des commentaires.",
+  "note": "Le jeu renvoie à la sourate entière sans la citer (« sourate 106 » dans le texte, « Coran 106 » dans le champ src) : ses quatre versets sont relevés à la suite, séparés par une espace, sans marque de fin de verset ; arabe : api.alquran.cloud fait précéder le verset 1 de la basmala, qui n’en fait pas partie ; elle n’est pas reprise."
+ },
+ {
+  "fichier": "v2/src/data/caid.js",
+  "ligne": 140,
+  "fr": "",
+  "source_fr": "sourate « La Victoire éclatante » (48)",
+  "nature": "verset",
+  "sourate": 48,
+  "versets": "1",
+  "partiel": false,
+  "ar": {
+   "texte": "إِنَّا فَتَحْنَا لَكَ فَتْحًۭا مُّبِينًۭا",
+   "reference": "سورة الفتح: 1",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/48:1/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Indeed, We have given you, [O Muḥammad], a clear conquest",
+   "origine": "publiee",
+   "reference": "Qur'an 48:1 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/48:1?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "本当にわれは，明らかな勝利をあなたに授けた。",
+   "origine": "publiee",
+   "reference": "クルアーン 48章1節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/48:1?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Le jeu ne cite pas de verset : il nomme la sourate 48 par un titre français, « La Victoire éclatante », qui reprend les mots de son premier verset. Ce verset est relevé pour que chaque langue nomme la sourate d’après sa propre source : Saheeh International y dit « a clear conquest », 三田 「明らかな勝利」. Nom arabe de la sourate, lu sur api.quran.com (chapters/48) : « الفتح ». Le titre que chaque traduction publiée donne à la sourate n’a pas été lu : il reste à relever sur l’ouvrage ; arabe : api.alquran.cloud fait précéder le verset 1 de la basmala, qui n’en fait pas partie ; elle n’est pas reprise ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Muḥammad » ; api.alquran.cloud sans : « Muhammad »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 257,
+  "fr": "« En vérité, c’est Allah qui est le Grand Pourvoyeur, Le Détenteur de la force, l’Inébranlable. »",
+  "source_fr": "Coran 51:58",
+  "nature": "verset",
+  "sourate": 51,
+  "versets": "58",
+  "partiel": false,
+  "ar": {
+   "texte": "إِنَّ ٱللَّهَ هُوَ ٱلرَّزَّاقُ ذُو ٱلْقُوَّةِ ٱلْمَتِينُ",
+   "reference": "سورة الذاريات: 58",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/51:58/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Indeed, it is Allāh who is the [continual] Provider, the firm possessor of strength.",
+   "origine": "publiee",
+   "reference": "Qur'an 51:58 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/51:58?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "本当にアッラーこそは，糧を授けられる御方，堅固なる偉力の主であられる。",
+   "origine": "publiee",
+   "reference": "クルアーン 51章58節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/51:58?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Verset entier ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 259,
+  "fr": "« Le Connaisseur de ce qui est caché et de ce qui est apparent, Le Grand, Le Sublime. »",
+  "source_fr": "Coran 13:9",
+  "nature": "verset",
+  "sourate": 13,
+  "versets": "9",
+  "partiel": false,
+  "ar": {
+   "texte": "عَٰلِمُ ٱلْغَيْبِ وَٱلشَّهَٰدَةِ ٱلْكَبِيرُ ٱلْمُتَعَالِ",
+   "reference": "سورة الرعد: 9",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/13:9/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "[He is] Knower of the unseen and the witnessed, the Grand, the Exalted.",
+   "origine": "publiee",
+   "reference": "Qur'an 13:9 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:9?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "かれは幽玄界も現象界も知っておられる方，偉大にして至高の方であられる。",
+   "origine": "publiee",
+   "reference": "クルアーン 13章9節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:9?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Verset entier."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 261,
+  "fr": "« Ne connaît-Il pas ce qu’Il a créé alors que c’est Lui le Compatissant, le Parfaitement Connaisseur. »",
+  "source_fr": "Coran 67:14",
+  "nature": "verset",
+  "sourate": 67,
+  "versets": "14",
+  "partiel": false,
+  "ar": {
+   "texte": "أَلَا يَعْلَمُ مَنْ خَلَقَ وَهُوَ ٱللَّطِيفُ ٱلْخَبِيرُ",
+   "reference": "سورة الملك: 14",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/67:14/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Does He who created not know, while He is the Subtle, the Aware?",
+   "origine": "publiee",
+   "reference": "Qur'an 67:14 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/67:14?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "かれが創造されたものを，知らないであろうか。かれは，深奥を理解し通暁なされる。",
+   "origine": "publiee",
+   "reference": "クルアーン 67章14節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/67:14?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Verset entier. Le Nom al-Latîf y est rendu en français par « le Compatissant », et par « doux » à la ligne 267 (42:19) ; Saheeh International dit « the Subtle » ici et « Subtle » là, 三田 「深奥を理解し」 ici et 「やさしくあられ」 là ; anglais : les deux services diffèrent dans les mots — « the Aware? » (api.quran.com) / « the Acquainted? » (api.alquran.cloud) ; texte retenu : api.quran.com."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 263,
+  "fr": "« C’est Toi, certes, le Grand Donateur ! »",
+  "source_fr": "Coran 3:8 (fin du verset)",
+  "nature": "verset",
+  "sourate": 3,
+  "versets": "8",
+  "partiel": true,
+  "ar": {
+   "texte": "إِنَّكَ أَنتَ ٱلْوَهَّابُ",
+   "reference": "سورة آل عمران: 8",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/3:8/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Indeed, You are the Bestower.",
+   "origine": "publiee",
+   "reference": "Qur'an 3:8 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:8?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "本当にあなたこそ，限りなく与えられる御方であられます。",
+   "origine": "publiee",
+   "reference": "クルアーン 3章8節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:8?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Fin du verset : la dernière phrase seule (le jeu le dit : « fin du verset »). Le verset est une invocation rapportée entre guillemets : en japonais, le 」 final, qui ferme cette citation ouverte au début du verset, n’est pas repris."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 265,
+  "fr": "« Allah! Point de divinité à part Lui, le Vivant, Celui qui subsiste par Lui-même (Al Qayyum). Ni somnolence ni sommeil ne Le saisissent. »",
+  "source_fr": "Coran 2:255 (début du verset)",
+  "nature": "verset",
+  "sourate": 2,
+  "versets": "255",
+  "partiel": true,
+  "ar": {
+   "texte": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌۭ وَلَا نَوْمٌۭ",
+   "reference": "سورة البقرة: 255",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/2:255/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Allāh - there is no deity except Him, the Ever-Living, the Self-Sustaining. Neither drowsiness overtakes Him nor sleep.",
+   "origine": "publiee",
+   "reference": "Qur'an 2:255 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:255?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "アッラー，かれの外に神はなく，永生に自存される御方。仮眠も熟睡も，かれをとらえることは出来ない。",
+   "origine": "publiee",
+   "reference": "クルアーン 2章255節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:255?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Début du verset : les deux premières phrases (le jeu le dit : « début du verset ») ; anglais : les deux services diffèrent dans les mots — « the Self-Sustaining. Neither » (api.quran.com) / « the Sustainer of [all] existence. Neither » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 267,
+  "fr": "« Allah est doux envers Ses serviteurs. Il attribue [Ses biens] à qui Il veut. Et c’est Lui le Fort, le Puissant. »",
+  "source_fr": "Coran 42:19",
+  "nature": "verset",
+  "sourate": 42,
+  "versets": "19",
+  "partiel": false,
+  "ar": {
+   "texte": "ٱللَّهُ لَطِيفٌۢ بِعِبَادِهِۦ يَرْزُقُ مَن يَشَآءُ ۖ وَهُوَ ٱلْقَوِىُّ ٱلْعَزِيزُ",
+   "reference": "سورة الشورى: 19",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/42:19/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Allāh is Subtle with His servants; He gives provision to whom He wills. And He is the Powerful, the Exalted in Might.",
+   "origine": "publiee",
+   "reference": "Qur'an 42:19 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/42:19?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "アッラーはそのしもべに対して，やさしくあられ，御心に適う者に恵みを与えられる。かれは強大にして偉力ならびなき方である。",
+   "origine": "publiee",
+   "reference": "クルアーン 42章19節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/42:19?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Verset entier ; anglais : les deux services diffèrent dans les mots — « gives provision to » (api.quran.com) / « gives provisions to » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 269,
+  "fr": "« Une parole agréable et un pardon valent mieux qu’une aumône suivie d’un tort. Allah n’a besoin de rien, et Il est indulgent. »",
+  "source_fr": "Coran 2:263",
+  "nature": "verset",
+  "sourate": 2,
+  "versets": "263",
+  "partiel": false,
+  "ar": {
+   "texte": "قَوْلٌۭ مَّعْرُوفٌۭ وَمَغْفِرَةٌ خَيْرٌۭ مِّن صَدَقَةٍۢ يَتْبَعُهَآ أَذًۭى ۗ وَٱللَّهُ غَنِىٌّ حَلِيمٌۭ",
+   "reference": "سورة البقرة: 263",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/2:263/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Kind speech and forgiveness are better than charity followed by injury. And Allāh is Free of need and Forbearing.",
+   "origine": "publiee",
+   "reference": "Qur'an 2:263 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:263?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "親切な言葉と寛容とは，侮辱を伴う施しものに優る。アッラーは富有にして慈悲深くあられる。",
+   "origine": "publiee",
+   "reference": "クルアーン 2章263節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:263?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Verset entier ; arabe : le signe de quart de hizb « ۞ », que les deux services placent en tête du verset, est une marque de division du mushaf et non un mot du verset ; il n’est pas repris ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 307,
+  "fr": "« Et (rappelez-vous) le moment où vous imploriez le secours de votre Seigneur et qu’Il vous exauça aussitôt : “Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres.” »",
+  "source_fr": "Coran 8:9, traduction du sens · c’était à Badr",
+  "nature": "verset",
+  "sourate": 8,
+  "versets": "9",
+  "partiel": false,
+  "ar": {
+   "texte": "إِذْ تَسْتَغِيثُونَ رَبَّكُمْ فَٱسْتَجَابَ لَكُمْ أَنِّى مُمِدُّكُم بِأَلْفٍۢ مِّنَ ٱلْمَلَٰٓئِكَةِ مُرْدِفِينَ",
+   "reference": "سورة الأنفال: 9",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/8:9/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "[Remember] when you were asking help of your Lord, and He answered you, \"Indeed, I will reinforce you with a thousand from the angels, following one another.\"",
+   "origine": "publiee",
+   "reference": "Qur'an 8:9 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:9?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "あなたがたが主に援助を歎願した時を思いなさい。その時あなたがたに答えられた。「われは，次ぎ次ぎに来る一千の天使であなたがたを助けるであろう。」",
+   "origine": "publiee",
+   "reference": "クルアーン 8章9節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:9?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Verset entier (la référence est à la ligne 308). La parole rapportée est entre guillemets dans les trois traductions ; anglais : les deux services diffèrent dans les mots — « you were asking help » (api.quran.com) / « you asked help » (api.alquran.cloud) ; texte retenu : api.quran.com."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 321,
+  "fr": "",
+  "source_fr": "Coran 18:50 ; 2:168 ; 14:22",
+  "nature": "verset",
+  "sourate": 18,
+  "versets": "50",
+  "partiel": false,
+  "ar": {
+   "texte": "وَإِذْ قُلْنَا لِلْمَلَٰٓئِكَةِ ٱسْجُدُوا۟ لِءَادَمَ فَسَجَدُوٓا۟ إِلَّآ إِبْلِيسَ كَانَ مِنَ ٱلْجِنِّ فَفَسَقَ عَنْ أَمْرِ رَبِّهِۦٓ ۗ أَفَتَتَّخِذُونَهُۥ وَذُرِّيَّتَهُۥٓ أَوْلِيَآءَ مِن دُونِى وَهُمْ لَكُمْ عَدُوٌّۢ ۚ بِئْسَ لِلظَّٰلِمِينَ بَدَلًۭا",
+   "reference": "سورة الكهف: 50",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/18:50/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "And [mention] when We said to the angels, \"Prostrate to Adam,\" and they prostrated, except for Iblees. He was of the jinn and departed from [i.e., disobeyed] the command of his Lord. Then will you take him and his descendants as allies other than Me while they are enemies to you? Wretched it is for the wrongdoers as an exchange.",
+   "origine": "publiee",
+   "reference": "Qur'an 18:50 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/18:50?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "われが天使たちに向かって，「アーダムにサジダしなさい」と言った時を思え。かれらはイブリースを除いてサジダした。かれはジンの仲間で，主の命令に背いた。それなのにあなたがたはわれを差し置いて，かれとその子孫を保護者とするのか。かれらはあなたがたにとり敵ではないか。不義の徒は何と忌まわしい交換をするものか。",
+   "origine": "publiee",
+   "reference": "クルアーン 18章50節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/18:50?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (ligne 319 : « Le Coran le dit du nombre des djinns ») ; anglais : les deux services diffèrent dans les mots — « from [i.e., disobeyed] the » (api.quran.com) / « from the » (api.alquran.cloud) ; texte retenu : api.quran.com."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 321,
+  "fr": "",
+  "source_fr": "Coran 18:50 ; 2:168 ; 14:22",
+  "nature": "verset",
+  "sourate": 2,
+  "versets": "168",
+  "partiel": false,
+  "ar": {
+   "texte": "يَٰٓأَيُّهَا ٱلنَّاسُ كُلُوا۟ مِمَّا فِى ٱلْأَرْضِ حَلَٰلًۭا طَيِّبًۭا وَلَا تَتَّبِعُوا۟ خُطُوَٰتِ ٱلشَّيْطَٰنِ ۚ إِنَّهُۥ لَكُمْ عَدُوٌّۭ مُّبِينٌ",
+   "reference": "سورة البقرة: 168",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/2:168/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "O mankind, eat from whatever is on earth [that is] lawful and good and do not follow the footsteps of Satan. Indeed, he is to you a clear enemy.",
+   "origine": "publiee",
+   "reference": "Qur'an 2:168 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:168?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "人びとよ，地上にあるものの中良い合法なものを食べて，悪魔の歩みに従ってはならない。本当にかれは，あなたがたにとって公然の敵である。",
+   "origine": "publiee",
+   "reference": "クルアーン 2章168節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:168?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (ligne 319 : « et l’appelle un ennemi déclaré »). Le verset dit « ash-shaytân » (le Diable ; « Satan », 「悪魔」 dans les traductions), non le nom d’Iblîs."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 321,
+  "fr": "",
+  "source_fr": "Coran 18:50 ; 2:168 ; 14:22",
+  "nature": "verset",
+  "sourate": 14,
+  "versets": "22",
+  "partiel": false,
+  "ar": {
+   "texte": "وَقَالَ ٱلشَّيْطَٰنُ لَمَّا قُضِىَ ٱلْأَمْرُ إِنَّ ٱللَّهَ وَعَدَكُمْ وَعْدَ ٱلْحَقِّ وَوَعَدتُّكُمْ فَأَخْلَفْتُكُمْ ۖ وَمَا كَانَ لِىَ عَلَيْكُم مِّن سُلْطَٰنٍ إِلَّآ أَن دَعَوْتُكُمْ فَٱسْتَجَبْتُمْ لِى ۖ فَلَا تَلُومُونِى وَلُومُوٓا۟ أَنفُسَكُم ۖ مَّآ أَنَا۠ بِمُصْرِخِكُمْ وَمَآ أَنتُم بِمُصْرِخِىَّ ۖ إِنِّى كَفَرْتُ بِمَآ أَشْرَكْتُمُونِ مِن قَبْلُ ۗ إِنَّ ٱلظَّٰلِمِينَ لَهُمْ عَذَابٌ أَلِيمٌۭ",
+   "reference": "سورة إبراهيم: 22",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/14:22/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "And Satan will say when the matter has been concluded, \"Indeed, Allāh had promised you the promise of truth. And I promised you, but I betrayed you. But I had no authority over you except that I invited you, and you responded to me. So do not blame me; but blame yourselves. I cannot be called to your aid, nor can you be called to my aid. Indeed, I deny your association of me [with Allāh] before. Indeed, for the wrongdoers is a painful punishment.\"",
+   "origine": "publiee",
+   "reference": "Qur'an 14:22 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/14:22?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "凡ての事が，決定された時，悪魔は言った。「真実の約束を，あなたがたに約束されたのはアッラーでした。わたしも約束したのですが，あなたがたの役には立たなかったのです。もともとわたしは，あなたがたに対し権威はないのです。只あなたがたに呼びかけ，あなたがたがわたしに従っただけです。それでわたしを非難してはならないのです。寧ろ自分自身を責めなさい。わたしはあなたがたを助けることは出来ないのです。あなたがたもわたしを助けられないのです。実はあなたがたが，先にわたしを（アッラーと）同位に置いたが，わたしはそれを拒否していたのです。本当に不義の徒には痛ましい懲罰があるのです。」",
+   "origine": "publiee",
+   "reference": "クルアーン 14章22節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/14:22/editions/quran-uthmani,en.sahih,ja.japanese"
+  },
+  "ecart": "",
+  "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (ligne 319 : « Il n’a reçu aucun pouvoir sur les hommes : il appelle, et c’est tout ») ; une partie du verset est citée à la ligne 352. Le verset dit « ash-shaytân », non le nom d’Iblîs ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah ») ; japonais (14:22) : api.quran.com porte une espace parasite (« いのです 。実はあ ») ; texte retenu : api.alquran.cloud, identique par ailleurs ; nom de la sourate : forme de api.alquran.cloud, écrite sans ses voyelles (« إبراهيم ») ; api.quran.com l’écrit « ابراهيم »."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 323,
+  "fr": "« qui souffle le mal dans les poitrines des hommes, qu’il (le conseiller) soit un djinn, ou un être humain »",
+  "source_fr": "Traduction du sens, Coran 114:5-6 ; voir aussi 72:11",
+  "nature": "verset",
+  "sourate": 114,
+  "versets": "5-6",
+  "partiel": false,
+  "ar": {
+   "texte": "ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ",
+   "reference": "سورة الناس: 5-6",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/114:5/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/114:6/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Who whispers [evil] into the breasts of mankind - From among the jinn and mankind",
+   "origine": "publiee",
+   "reference": "Qur'an 114:5-6 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/114:5?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:6?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "それが人間の胸に囁きかける，ジン（幽精）であろうと，人間であろうと。",
+   "origine": "publiee",
+   "reference": "クルアーン 114章5-6節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/114:5?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:6?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Versets 5 et 6 entiers (la référence est à la ligne 325), relevés à la suite, sans marque de fin de verset. La sourate est une parole rapportée (« Dis : … ») : le guillemet qui la ferme à la fin du verset 6 n’est pas repris, ni, en anglais, la ponctuation finale, que les deux services n’écrivent pas de même (api.quran.com écrit « mankind\". », api.alquran.cloud « mankind.\" »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 325,
+  "fr": "",
+  "source_fr": "Traduction du sens, Coran 114:5-6 ; voir aussi 72:11",
+  "nature": "verset",
+  "sourate": 72,
+  "versets": "11",
+  "partiel": false,
+  "ar": {
+   "texte": "وَأَنَّا مِنَّا ٱلصَّٰلِحُونَ وَمِنَّا دُونَ ذَٰلِكَ ۖ كُنَّا طَرَآئِقَ قِدَدًۭا",
+   "reference": "سورة الجن: 11",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/72:11/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "And among us are the righteous, and among us are [others] not so; we were [of] divided ways.",
+   "origine": "publiee",
+   "reference": "Qur'an 72:11 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/72:11?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "わたしたちの中には，正しい者もいるが，そうではない者もいて，様々な道に従っている。",
+   "origine": "publiee",
+   "reference": "クルアーン 72章11節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/72:11?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Le jeu donne la référence sans citer le verset : il est relevé en entier, pour contrôler ce que le jeu en dit (« voir aussi 72:11 » ; ligne 323 : « Tous les djinns ne soufflent pas : il en est de vertueux »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 345,
+  "fr": "« Et prenez vos provisions ; mais vraiment la meilleure provision est la piété. »",
+  "source_fr": "Traduction du sens, Coran 2:197",
+  "nature": "verset",
+  "sourate": 2,
+  "versets": "197",
+  "partiel": true,
+  "ar": {
+   "texte": "وَتَزَوَّدُوا۟ فَإِنَّ خَيْرَ ٱلزَّادِ ٱلتَّقْوَىٰ",
+   "reference": "سورة البقرة: 197",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/2:197/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "And take provisions, but indeed, the best provision is fear of Allāh.",
+   "origine": "publiee",
+   "reference": "Qur'an 2:197 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:197?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "旅の準備をしなさい。だが最も優れた準備は篤信の念である。",
+   "origine": "publiee",
+   "reference": "クルアーン 2章197節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:197?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Une phrase, vers la fin du verset (qui traite du pèlerinage) : « Et prenez vos provisions ; mais vraiment la meilleure provision est la piété » ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 346,
+  "fr": "« N’est-ce point par l’évocation d’Allah que se tranquillisent les cœurs ? »",
+  "source_fr": "Traduction du sens, Coran 13:28",
+  "nature": "verset",
+  "sourate": 13,
+  "versets": "28",
+  "partiel": true,
+  "ar": {
+   "texte": "أَلَا بِذِكْرِ ٱللَّهِ تَطْمَئِنُّ ٱلْقُلُوبُ",
+   "reference": "سورة الرعد: 28",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/13:28/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Unquestionably, by the remembrance of Allāh hearts are assured.",
+   "origine": "publiee",
+   "reference": "Qur'an 13:28 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:28?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "アッラーを唱念することにより，心の安らぎが得られないはずがないのである。",
+   "origine": "publiee",
+   "reference": "クルアーン 13章28節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:28?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Seconde moitié du verset. Dans les deux traductions, le verset termine une parole rapportée ouverte au verset 27 : le guillemet final (« \" », 」) n’est pas repris ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 351,
+  "fr": "« contre le mal du mauvais conseiller, furtif, qui souffle le mal dans les poitrines des hommes, qu’il (le conseiller) soit un djinn, ou un être humain »",
+  "source_fr": "Traduction du sens, Coran 114:4-6",
+  "nature": "verset",
+  "sourate": 114,
+  "versets": "4-6",
+  "partiel": false,
+  "ar": {
+   "texte": "مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ",
+   "reference": "سورة الناس: 4-6",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/114:4/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/114:5/editions/quran-uthmani,en.sahih,ja.japanese https://api.alquran.cloud/v1/ayah/114:6/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "From the evil of the retreating whisperer - Who whispers [evil] into the breasts of mankind - From among the jinn and mankind",
+   "origine": "publiee",
+   "reference": "Qur'an 114:4-6 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/114:4?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:5?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:6?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "こっそりと忍び込み，囁く者の悪から。それが人間の胸に囁きかける，ジン（幽精）であろうと，人間であろうと。",
+   "origine": "publiee",
+   "reference": "クルアーン 114章4-6節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/114:4?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:5?translations=20,35&fields=text_uthmani https://api.quran.com/api/v4/verses/by_key/114:6?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Versets 4 à 6 entiers, relevés à la suite, sans marque de fin de verset. La sourate est une parole rapportée (« Dis : … ») : le guillemet qui la ferme à la fin du verset 6 n’est pas repris, ni, en anglais, la ponctuation finale, que les deux services n’écrivent pas de même (api.quran.com écrit « mankind\". », api.alquran.cloud « mankind.\" »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 352,
+  "fr": "« Je n’avais aucune autorité sur vous si ce n’est que je vous ai appelés, et que vous m’avez répondu. Ne me faites donc pas de reproches ; mais faites-en à vous-mêmes. »",
+  "source_fr": "Traduction du sens, Coran 14:22",
+  "nature": "verset",
+  "sourate": 14,
+  "versets": "22",
+  "partiel": true,
+  "ar": {
+   "texte": "وَمَا كَانَ لِىَ عَلَيْكُم مِّن سُلْطَٰنٍ إِلَّآ أَن دَعَوْتُكُمْ فَٱسْتَجَبْتُمْ لِى ۖ فَلَا تَلُومُونِى وَلُومُوٓا۟ أَنفُسَكُم",
+   "reference": "سورة إبراهيم: 22",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/14:22/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "But I had no authority over you except that I invited you, and you responded to me. So do not blame me; but blame yourselves.",
+   "origine": "publiee",
+   "reference": "Qur'an 14:22 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/14:22?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "もともとわたしは，あなたがたに対し権威はないのです。只あなたがたに呼びかけ，あなたがたがわたしに従っただけです。それでわたしを非難してはならないのです。寧ろ自分自身を責めなさい。",
+   "origine": "publiee",
+   "reference": "クルアーン 14章22節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/14:22?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Milieu du verset : deux phrases de la parole que le verset rapporte (« Je n’avais aucune autorité sur vous… faites-en à vous-mêmes »), sans son début ni sa fin. L’arabe et l’anglais gardent la conjonction qui ouvre la proposition (« وَ », « But »), que le français ne rend pas ; nom de la sourate : forme de api.alquran.cloud, écrite sans ses voyelles (« إبراهيم ») ; api.quran.com l’écrit « ابراهيم »."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 355,
+  "fr": "",
+  "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
+  "nature": "verset",
+  "sourate": 51,
+  "versets": "58",
+  "partiel": false,
+  "ar": {
+   "texte": "إِنَّ ٱللَّهَ هُوَ ٱلرَّزَّاقُ ذُو ٱلْقُوَّةِ ٱلْمَتِينُ",
+   "reference": "سورة الذاريات: 58",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/51:58/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Indeed, it is Allāh who is the [continual] Provider, the firm possessor of strength.",
+   "origine": "publiee",
+   "reference": "Qur'an 51:58 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/51:58?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "本当にアッラーこそは，糧を授けられる御方，堅固なる偉力の主であられる。",
+   "origine": "publiee",
+   "reference": "クルアーン 51章58節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/51:58?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 257 : même extrait que là ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 355,
+  "fr": "",
+  "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
+  "nature": "verset",
+  "sourate": 13,
+  "versets": "9",
+  "partiel": false,
+  "ar": {
+   "texte": "عَٰلِمُ ٱلْغَيْبِ وَٱلشَّهَٰدَةِ ٱلْكَبِيرُ ٱلْمُتَعَالِ",
+   "reference": "سورة الرعد: 9",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/13:9/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "[He is] Knower of the unseen and the witnessed, the Grand, the Exalted.",
+   "origine": "publiee",
+   "reference": "Qur'an 13:9 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:9?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "かれは幽玄界も現象界も知っておられる方，偉大にして至高の方であられる。",
+   "origine": "publiee",
+   "reference": "クルアーン 13章9節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/13:9?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 259 : même extrait que là."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 355,
+  "fr": "",
+  "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
+  "nature": "verset",
+  "sourate": 67,
+  "versets": "14",
+  "partiel": false,
+  "ar": {
+   "texte": "أَلَا يَعْلَمُ مَنْ خَلَقَ وَهُوَ ٱللَّطِيفُ ٱلْخَبِيرُ",
+   "reference": "سورة الملك: 14",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/67:14/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Does He who created not know, while He is the Subtle, the Aware?",
+   "origine": "publiee",
+   "reference": "Qur'an 67:14 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/67:14?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "かれが創造されたものを，知らないであろうか。かれは，深奥を理解し通暁なされる。",
+   "origine": "publiee",
+   "reference": "クルアーン 67章14節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/67:14?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 261 : même extrait que là ; anglais : les deux services diffèrent dans les mots — « the Aware? » (api.quran.com) / « the Acquainted? » (api.alquran.cloud) ; texte retenu : api.quran.com."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 355,
+  "fr": "",
+  "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
+  "nature": "verset",
+  "sourate": 3,
+  "versets": "8",
+  "partiel": true,
+  "ar": {
+   "texte": "إِنَّكَ أَنتَ ٱلْوَهَّابُ",
+   "reference": "سورة آل عمران: 8",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/3:8/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Indeed, You are the Bestower.",
+   "origine": "publiee",
+   "reference": "Qur'an 3:8 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:8?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "本当にあなたこそ，限りなく与えられる御方であられます。",
+   "origine": "publiee",
+   "reference": "クルアーン 3章8節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/3:8?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 263 : même extrait que là (une partie du verset)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 355,
+  "fr": "",
+  "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
+  "nature": "verset",
+  "sourate": 2,
+  "versets": "255",
+  "partiel": true,
+  "ar": {
+   "texte": "ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌۭ وَلَا نَوْمٌۭ",
+   "reference": "سورة البقرة: 255",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/2:255/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Allāh - there is no deity except Him, the Ever-Living, the Self-Sustaining. Neither drowsiness overtakes Him nor sleep.",
+   "origine": "publiee",
+   "reference": "Qur'an 2:255 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:255?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "アッラー，かれの外に神はなく，永生に自存される御方。仮眠も熟睡も，かれをとらえることは出来ない。",
+   "origine": "publiee",
+   "reference": "クルアーン 2章255節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:255?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 265 : même extrait que là (une partie du verset) ; anglais : les deux services diffèrent dans les mots — « the Self-Sustaining. Neither » (api.quran.com) / « the Sustainer of [all] existence. Neither » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 355,
+  "fr": "",
+  "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
+  "nature": "verset",
+  "sourate": 42,
+  "versets": "19",
+  "partiel": false,
+  "ar": {
+   "texte": "ٱللَّهُ لَطِيفٌۢ بِعِبَادِهِۦ يَرْزُقُ مَن يَشَآءُ ۖ وَهُوَ ٱلْقَوِىُّ ٱلْعَزِيزُ",
+   "reference": "سورة الشورى: 19",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/42:19/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Allāh is Subtle with His servants; He gives provision to whom He wills. And He is the Powerful, the Exalted in Might.",
+   "origine": "publiee",
+   "reference": "Qur'an 42:19 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/42:19?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "アッラーはそのしもべに対して，やさしくあられ，御心に適う者に恵みを与えられる。かれは強大にして偉力ならびなき方である。",
+   "origine": "publiee",
+   "reference": "クルアーン 42章19節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/42:19?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 267 : même extrait que là ; anglais : les deux services diffèrent dans les mots — « gives provision to » (api.quran.com) / « gives provisions to » (api.alquran.cloud) ; texte retenu : api.quran.com (qui écrit aussi avec les signes de translittération, là où api.alquran.cloud écrit sans : « Allāh » / « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 355,
+  "fr": "",
+  "source_fr": "Traduction du sens : Coran 51:58, 13:9, 67:14, 3:8, 2:255, 42:19, 2:263.",
+  "nature": "verset",
+  "sourate": 2,
+  "versets": "263",
+  "partiel": false,
+  "ar": {
+   "texte": "قَوْلٌۭ مَّعْرُوفٌۭ وَمَغْفِرَةٌ خَيْرٌۭ مِّن صَدَقَةٍۢ يَتْبَعُهَآ أَذًۭى ۗ وَٱللَّهُ غَنِىٌّ حَلِيمٌۭ",
+   "reference": "سورة البقرة: 263",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/2:263/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Kind speech and forgiveness are better than charity followed by injury. And Allāh is Free of need and Forbearing.",
+   "origine": "publiee",
+   "reference": "Qur'an 2:263 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:263?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "親切な言葉と寛容とは，侮辱を伴う施しものに優る。アッラーは富有にして慈悲深くあられる。",
+   "origine": "publiee",
+   "reference": "クルアーン 2章263節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/2:263?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Renvoi du codex (« Les attributs divins ») au verset de la table des attributs, ligne 269 : même extrait que là ; arabe : le signe de quart de hizb « ۞ », que les deux services placent en tête du verset, est une marque de division du mushaf et non un mot du verset ; il n’est pas repris ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 359,
+  "fr": "« Je vais vous renforcer d’un millier d’Anges déferlant les uns à la suite des autres. »",
+  "source_fr": "Traduction du sens, Coran 8:9-10. Règle de jeu.",
+  "nature": "verset",
+  "sourate": 8,
+  "versets": "9",
+  "partiel": true,
+  "ar": {
+   "texte": "أَنِّى مُمِدُّكُم بِأَلْفٍۢ مِّنَ ٱلْمَلَٰٓئِكَةِ مُرْدِفِينَ",
+   "reference": "سورة الأنفال: 9",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/8:9/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Indeed, I will reinforce you with a thousand from the angels, following one another.",
+   "origine": "publiee",
+   "reference": "Qur'an 8:9 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:9?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "われは，次ぎ次ぎに来る一千の天使であなたがたを助けるであろう。",
+   "origine": "publiee",
+   "reference": "クルアーン 8章9節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:9?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Fin du verset 8:9 : la réponse seule (« Je vais vous renforcer… »), sans la proposition qui l’introduit ; les guillemets intérieurs des traductions ne sont pas repris. Le verset est cité en entier à la ligne 307."
+ },
+ {
+  "fichier": "v2/src/data/coeur.js",
+  "ligne": 359,
+  "fr": "« Allah ne fit cela que pour (vous) apporter une bonne nouvelle et pour qu’avec cela vos cœurs se tranquillisent. Et il n’y a de victoire que de la part d’Allah. »",
+  "source_fr": "Traduction du sens, Coran 8:9-10. Règle de jeu.",
+  "nature": "verset",
+  "sourate": 8,
+  "versets": "10",
+  "partiel": true,
+  "ar": {
+   "texte": "وَمَا جَعَلَهُ ٱللَّهُ إِلَّا بُشْرَىٰ وَلِتَطْمَئِنَّ بِهِۦ قُلُوبُكُمْ ۚ وَمَا ٱلنَّصْرُ إِلَّا مِنْ عِندِ ٱللَّهِ",
+   "reference": "سورة الأنفال: 10",
+   "lu_sur": "https://api.alquran.cloud/v1/ayah/8:10/editions/quran-uthmani,en.sahih,ja.japanese",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "And Allāh made it not but good tidings and so that your hearts would be assured thereby. And victory is not but from Allāh.",
+   "origine": "publiee",
+   "reference": "Qur'an 8:10 (Saheeh International)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:10?translations=20,35&fields=text_uthmani"
+  },
+  "ja": {
+   "texte": "アッラーは，只これをあなたがたへの吉報となされ，あなたがたの心をそれで安らげられる。勝利はアッラーからだけ（来る）。",
+   "origine": "publiee",
+   "reference": "クルアーン 8章10節(日本ムスリム協会訳)",
+   "lu_sur": "https://api.quran.com/api/v4/verses/by_key/8:10?translations=20,35&fields=text_uthmani"
+  },
+  "ecart": "",
+  "note": "Les deux premières phrases du verset 8:10, sans la dernière (« إِنَّ ٱللَّهَ عَزِيزٌ حَكِيمٌ » ; « Indeed, Allāh is Exalted in Might and Wise. »). L’arabe et l’anglais gardent la conjonction initiale (« وَ », « And »), que le français ne rend pas ; anglais : les deux services ne diffèrent que par la translittération (api.quran.com, texte retenu, écrit avec les signes diacritiques : « Allāh » ; api.alquran.cloud sans : « Allah »)."
+ }
 ]

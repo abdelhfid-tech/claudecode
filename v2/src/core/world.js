@@ -52,7 +52,7 @@
   };
   W.pose = [];
   W.emote = function (who, pose) {
-    const p = pose && (D.POSES.includes(pose) || ((G.idris || G.rendu) && (D.ATTITUDES || []).includes(pose))) ? pose : null;   // prototype 2.17 : les attitudes nouvelles, derrière ses interrupteurs
+    const p = pose && D.POSES.includes(pose) ? pose : null;   // les poses et les attitudes (2.18) : un Compagnon les prend avec retenue (sprites.js)
     if (who === 'groupe') W.pose = W.party.map(() => p); else if (who === 'hero') W.pose[0] = p; else { const n = W.npcs.find(x => x.id === who); if (n) n.pose = p; }
   };
   // `parLeRecit` : la prière est une étape d'un objectif en cours. Elle repose le groupe, mais ne prend pas de point de
@@ -671,7 +671,7 @@
     c.fillStyle = 'rgba(20,12,30,.32)'; c.beginPath(); c.ellipse(x, y + 1, 6, 2.5, 0, 0, 6.3); c.fill();
     if (geste && sheet.look && G.frappe && G.frappe(c, sheet.look, dir, x - 8, y - 22, geste, geste.tau, 'carte')) return;
     if (pose && !moving && sheet.look) { c.drawImage(G.pose(sheet.look, dir, pose), x - 8, y - 22 - (pose === 'surpris' ? 2 : 0));
-      const bu = (G.idris || G.rendu) && G.BULLE_DE && G.BULLE_DE[pose]; if (bu) { const im = G.bulle(bu); if (im) c.drawImage(im, x - 4.5, y - 36 - (pose === 'surpris' ? 2 : 0), 9, 10); }   // prototype 2.17 : la bulle de l'attitude
+      const bu = G.BULLE_DE && G.BULLE_DE[pose]; if (bu) { const im = G.bulle(bu); if (im) c.drawImage(im, x - 4.5, y - 36 - (pose === 'surpris' ? 2 : 0), 9, 10); }   // la bulle de l'attitude (« ! », « ? », « … »), pour tous
       return; }
     if (W.trace) W.trace.push({ sheet, x, y, dir, f, court: !!(moving && court) });   // pour les outils (la mesure du pied d'appui)
     if (!sheet.souffle) { c.drawImage(sheet, f * 16, dir * 24, 16, 24, x - 8, y - 22 - (moving && f ? 1 : 0), 16, 24); return; } // le dessin d'origine : comme dans la 1.32
