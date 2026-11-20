@@ -92,6 +92,10 @@ async function contraste([b64, sel]) {
       dit(m.choisi >= 3 && (m.voisin === null || m.choisi >= m.voisin * 1.5), 'INVISIBLE', `${nom} · ${ou} : la sélection se voit — « ${m.texte} », anneau ${m.choisi} : 1 contre son fond${m.voisin !== null ? `, un voisin non choisi ${m.voisin} : 1` : ''}`); };
     const choisi = sel => p.evaluate(sel => { const e = document.querySelector(sel); return e ? e.textContent.trim() : ''; }, sel);
     const entree = async () => { if (await p.evaluate(() => { const c = document.querySelector('#choice'); if (c && !c.hidden) { const o = c.querySelectorAll('.opt'); if (o.length) { o[o.length - 1].click(); return false; } } return ['#card', '#dialog'].some(q => { const e = document.querySelector(q); return e && !e.hidden; }); })) await p.keyboard.press('Enter'); };
+    // (2.19) le combat : attendre les commandes d'un compagnon (A passe un bandeau qui attend) ; toucher une commande
+    const tour = async () => { for (let i = 0; i < 100; i++) { const r = await p.evaluate(() => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); if (!window.ISNAD.battle.active) return 'fini';
+      return c.querySelector('.mlist.main .mi.sel') && !c.querySelector('.mhint') && b.hidden ? 'cmd' : b && !b.hidden && b.classList.contains('attend') ? 'attend' : ''; }); if (r === 'cmd') { await p.waitForTimeout(350); return true; } if (r === 'fini') return false; if (r === 'attend') await A('le combat, un bandeau'); await p.waitForTimeout(200); } return false; };
+    const toucherMi = async txt => { const q = await p.evaluate(t => { const b = [...document.querySelectorAll('#battle .cmd .mi')].find(x => !x.hidden && x.textContent.includes(t)); if (!b) return null; const r = b.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }, txt); if (!q) return false; await p.touchscreen.tap(q[0], q[1]); await p.waitForTimeout(400); return true; };
     const calme = async (k = 80) => { for (let i = 0; i < k && await p.evaluate(() => window.ISNAD.script.busy || window.ISNAD.world.lock); i++) { await entree(); await p.waitForTimeout(160); } await p.waitForTimeout(250); };
 
     /* 1. l'écran-titre */
@@ -226,7 +230,40 @@ async function contraste([b64, sel]) {
       dit(k1.n < 2 || (nom1 && nom1 !== nom0), 'ÉCART', `${nom} · le combat : le joystick change de cible (« ${nom0} » → « ${nom1} »)`);
       await A('le combat, la cible'); await p.waitForTimeout(2600); const pv1 = await pv(nom1);
       dit(pv0 !== null && (pv1 === null || pv1 < pv0), 'ÉCART', `${nom} · le combat : A frappe la cible montrée (« ${nom1} » : ${pv0} % → ${pv1 === null ? 'dissipée' : pv1 + ' %'})`);
+      /* 7 bis. (2.19 ; le décideur, 20 novembre : « si on appuie sur frapper et encore sur frapper (ou sur les boutons) ça frappe
+         ou ça active l'action sur l'adversaire ou l'ennemi identifié par défaut ») — « Frapper » touché, puis touché encore :
+         le coup part sur la cible désignée d'emblée, celle que le groupe a visée en dernier tant qu'elle tient ; de même A,
+         puis A. La commande armée le dit, sa barre a son « ◂ Retour », dans l'écran, sous le doigt, et la manette n'y est pas. */
+      const visee = () => p.evaluate(() => { const C = window.ISNAD.battle.contexte(); return C && C.vise && C.vise.alive ? C.vise.name : null; });
+      const arme = () => p.evaluate(() => { const a = document.querySelector('#battle .cmd .mi.arme'), bk = document.querySelector('#battle .cmd .mvise .mback'), r = bk ? bk.getBoundingClientRect() : null, e = r ? document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2) : null;
+        return { arme: a ? a.textContent.trim() : '', cible: (document.querySelector('.plate.cur .nm') || {}).textContent || '', indication: !!document.querySelector('#battle .cmd .mhint'), retour: !!r && r.top >= 0 && r.bottom <= innerHeight && r.left >= 0 && r.right <= innerWidth && !!e && bk.contains(e) }; });
+      if (await tour()) { const x0 = await visee(); await toucherMi('Frapper'); const a1 = await arme();
+        dit(/Frapper/.test(a1.arme) && a1.indication && a1.retour && (!x0 || a1.cible === x0), 'ÉCART', `${nom} · le combat : « Frapper » touché s'arme (« ${a1.arme} ») et désigne d'emblée « ${a1.cible} »${x0 ? ', celle que le groupe a visée en dernier' : ''} ; sa barre a son « ◂ Retour », sous le doigt`);
+        await rien('le combat, « Frapper » armé'); await shot('combat-frapper-arme');
+        const v0 = await pv(a1.cible); await toucherMi('Frapper'); await p.waitForTimeout(2600); const v1 = await pv(a1.cible);
+        dit(v0 !== null && (v1 === null || v1 < v0), 'ÉCART', `${nom} · le combat : « Frapper », puis « Frapper » encore — le coup part sur « ${a1.cible} » (${v0} % → ${v1 === null ? 'dissipée' : v1 + ' %'})`); }
+      if (await tour()) { const x1 = await visee(); await A('le combat'); const a2 = await arme(); const v0 = await pv(a2.cible); await A('le combat, la cible'); await p.waitForTimeout(2600); const v1 = await pv(a2.cible);
+        dit(/Frapper/.test(a2.arme) && (!x1 || a2.cible === x1) && v0 !== null && (v1 === null || v1 < v0), 'ÉCART', `${nom} · le combat : A, puis A — le coup part sur la cible désignée d'emblée, « ${a2.cible} »${x1 ? ' (la dernière visée)' : ''} (${v0} % → ${v1 === null ? 'dissipée' : v1 + ' %'})`); }
       await p.evaluate(() => { const I = window.ISNAD; I.battle.abort(I.world); }); await p.waitForTimeout(700); await calme(10);
+      /* 7 ter. (2.19) l'esquive, le hasard tenu (Math.random) : un compagnon seul face à une chimère qui ne fait qu'assaillir.
+         Le tirage réussi, le coup passe à côté (« Esquivé », ni Constance perdue) ; manqué, il porte ; l'esquive tombe au tour
+         suivant du compagnon ; une chimère n'esquive jamais. En hauteur et en largeur. */
+      if (cle === 'haut' || cle === 'large') {
+        await p.evaluate(() => { const I = window.ISNAD, W = I.world, E = W.saga.enemies, id = Object.keys(E).find(k => E[k].tier === 'minion' && !E[k].racine); window.__fl = []; window.__rnd = Math.random; window.__foeEsq = 0;
+          new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1) window.__fl.push(n.textContent); }))).observe(document.querySelector('#floaters'), { childList: true });
+          I.battle.start({ group: [id], bg: 'desert', heros: [W.hero(W.party[0])] }); const C = I.battle.contexte(); C.all.forEach(e => { if (e.side === 'foe') { e.skills = []; e.max.hp *= 8; e.hp = e.max.hp; } });
+          window.__veille = setInterval(() => { const c = I.battle.contexte(); if (c && c.all.some(e => e.side === 'foe' && e.st.esquive)) window.__foeEsq++; }, 50); });
+        const hero = () => p.evaluate(() => { const C = window.ISNAD.battle.contexte(), h = C && C.all.find(e => e.side === 'hero'); return h ? { hp: Math.round(h.hp), esquive: !!h.st.esquive, esquives: C.esquives | 0 } : null; });
+        const essai = async (tirage, n) => { const L = []; for (let k = 0; k < n; k++) { if (!(await tour())) break; const h0 = await hero(); await p.evaluate(t => { Math.random = () => t; }, tirage); await toucherMi('Esquive'); const pose = await hero(); L.push({ h0, pose }); if (!(await tour())) break; L[L.length - 1].h1 = await hero(); await p.evaluate(() => { Math.random = window.__rnd; }); if (L[L.length - 1].h1.esquives > h0.esquives || L[L.length - 1].h1.hp < h0.hp) break; } await p.evaluate(() => { Math.random = window.__rnd; }); return L; };
+        const ok1 = await essai(0.01, 3), d1 = ok1[ok1.length - 1] || {}, vu = await p.evaluate(() => window.__fl.slice());
+        await p.waitForTimeout(100);
+        dit(d1.h1 && d1.h1.esquives > d1.h0.esquives && d1.h1.hp === d1.h0.hp && !d1.h1.esquive && vu.some(t => /Esquivé/.test(t)), 'ÉCART', `${nom} · l'esquive, le tirage réussi : le coup passe à côté (« Esquivé », Constance ${d1.h0 && d1.h0.hp} → ${d1.h1 && d1.h1.hp}), et l'esquive tombe à son tour suivant`);
+        const ok2 = await essai(0.9, 3), d2 = ok2[ok2.length - 1] || {};
+        dit(d2.h1 && d2.h1.esquives === d2.h0.esquives && d2.h1.hp < d2.h0.hp && !d2.h1.esquive, 'ÉCART', `${nom} · l'esquive, le tirage manqué : le coup porte (Constance ${d2.h0 && d2.h0.hp} → ${d2.h1 && d2.h1.hp})`);
+        const fe = await p.evaluate(() => { clearInterval(window.__veille); return window.__foeEsq; });
+        dit(!fe, 'ÉCART', `${nom} · l'esquive : une chimère n'esquive jamais (${fe} relevé(s))`);
+        await p.evaluate(() => { const I = window.ISNAD; Math.random = window.__rnd; I.battle.abort(I.world); }); await p.waitForTimeout(700); await calme(10);
+      }
     }
 
     /* 8. dans un labyrinthe : B frappe ce qui rôde */
@@ -251,7 +288,33 @@ async function contraste([b64, sel]) {
       const f1 = await p.evaluate(id => { const I = window.ISNAD, f = I.world.foes.find(q => q.id === id); return { voiles: f ? f.voiles : -1, coups: I.rodeurs.coups | 0, halte: I.ui.menuOpen || !document.getElementById('menu').hidden, combat: I.battle.active }; }, pres.id);
       const juste = lit && f1.coups === p2.coups + 1 && typeof f1.voiles === 'number' && f1.voiles < p2.voiles && !f1.halte;   // (un voile de moins ; le dernier : il se dissipe)
       dit(juste, 'ÉCART', `${nom} · un labyrinthe : B s'éclaire à portée, frappe ce qui rôde (un voile de moins), et n'ouvre pas la halte${juste ? '' : ` — éclairé : ${lit}, avant ${JSON.stringify(p2)}, après ${JSON.stringify(f1)}`}`);
-      if (f1.combat) await p.evaluate(() => { const I = window.ISNAD; I.battle.abort(I.world); }); }
+      if (f1.combat) await p.evaluate(() => { const I = window.ISNAD; I.battle.abort(I.world); });
+      /* 8 bis. (2.19 ; le décideur, 20 novembre : « une parade "fuire" pour quitter le combat même si on sera poursuivi il
+         faudra courir pour échapper au monstre ») — ce qui rôde rejoint le groupe : « Fuir » touché rend la carte, la chimère
+         poursuit ; B tenu par le pouce droit pendant que le gauche pousse le joystick, on court, plus vite qu'elle */
+      await calme(10); await p.waitForTimeout(300);
+      const fu = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = I.rodeurs.rodent().find(q => q.voiles === undefined || q.voiles > 1) || I.rodeurs.rodent()[0]; if (!f) return null; f.sonne = 0; f.pousse = null; f.v = 30; W.player.x = f.x + 3; W.player.y = f.y; W.dest = null; return f.id; });
+      if (!fu) ko('INACCESSIBLE', `${nom} · fuir : rien ne rôde`);
+      else if (!(await tour())) ko('INACCESSIBLE', `${nom} · fuir : le combat de ce qui rôde ne s'ouvre pas`);
+      else { const n8 = await p.evaluate(() => [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(b => !b.hidden).map(b => b.querySelector('span').textContent.replace(/^\S+\s*/, '').trim()));
+        await rien('le combat de ce qui rôde'); await shot('combat-fuir'); await toucherMi('Fuir');
+        for (let i = 0; i < 60 && await p.evaluate(() => window.ISNAD.battle.active || window.ISNAD.script.busy); i++) await p.waitForTimeout(150);
+        const g = await p.evaluate(id => { const I = window.ISNAD, R = I.rodeurs; return { combat: I.battle.active, poursuit: !!R.fuite && R.fuite.f.id === id, grace: R.intouchable() }; }, fu);
+        // B tenu, puis le joystick poussé dans le couloir, à l'opposé de la chimère
+        const dg = await p.evaluate(() => { const I = window.ISNAD, W = I.world, P = W.player, f = I.rodeurs.fuite && I.rodeurs.fuite.f, ok = (x, y) => !(W.solidAt(x - 4, y - 5) || W.solidAt(x + 4, y - 5) || W.solidAt(x - 4, y) || W.solidAt(x + 4, y));
+          return [[1, 0], [-1, 0], [0, 1], [0, -1]].map(v => { let k = 0; while (k < 140 && ok(P.x + v[0] * k, P.y + v[1] * k)) k += 2; return { v, n: k, loin: f ? v[0] * (P.x - f.x) + v[1] * (P.y - f.y) >= 0 : true }; }).sort((a, b) => (b.loin - a.loin) || (b.n - a.n))[0]; });
+        const c = await centre('#pad .joy'), bb = await centre('#pad .b'); let v = null;
+        if (c && bb) { const doigtB = [{ x: bb.x, y: bb.y, id: 8 }], pouce = k => ({ x: c.x + dg.v[0] * c.r * k, y: c.y + dg.v[1] * c.r * k, id: 7 });
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: doigtB }); await p.waitForTimeout(40);
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [...doigtB, pouce(0)] }); await p.waitForTimeout(30);
+          for (let i = 1; i <= 3; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [...doigtB, pouce(0.95 * i / 3)] }); await p.waitForTimeout(20); }
+          await p.waitForTimeout(80); const lire = () => p.evaluate(() => { const W = window.ISNAD.world; return [W.player.x, W.player.y, W.t, !!W.player.court]; }), a = await lire(); await p.waitForTimeout(260); const z = await lire();
+          await shot('poursuite'); await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await p.waitForTimeout(200);
+          v = { v: Math.hypot(z[0] - a[0], z[1] - a[1]) / Math.max(0.01, z[2] - a[2]), court: a[3] || z[3] }; }
+        const vit = await p.evaluate(() => window.ISNAD.D.FUITE.vitesse);
+        dit(n8.includes('Fuir') && !g.combat && g.poursuit && v && v.court && v.v > vit, 'ÉCART', `${nom} · fuir ce qui rôde : « Fuir » touché rend la carte, la chimère poursuit ; B tenu avec le joystick, on court (${v ? v.v.toFixed(0) : '?'} points par seconde, elle ${vit})${g.poursuit ? '' : ' — ' + JSON.stringify({ n8, g, v })}`);
+        await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.finFuite(); if (I.battle.active) I.battle.abort(I.world); }); }
+    }
     await ctx.close();
   }
   /* 9. (2.18) dans un cadre qui refuse le plein écran (une application qui montre le jeu dans sa page) : le jeu reste en

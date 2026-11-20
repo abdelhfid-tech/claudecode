@@ -57,13 +57,14 @@
   R.arme = function () {
     const d = W.map && W.map.env && W.map.env.dedale;
     R._heurt = undefined; R._rearme = true; R._porteVers = null;
+    R.finFuite(); // 2.19 : un lieu neuf — ce qui poursuivait reste où il était, et revient à sa place
     if (W.excursion) return; // la descente du râwî arme le sien
     R.chrono = d && !d.descente ? { total: R.duree(d.n, d.tour), reste: R.duree(d.n, d.tour), n: d.n } : null; affiche();
     poserMeutes();
   };
   // appelé à chaque pas du monde, quand le joueur a la main
   R.tic = function (dt) {
-    porteTic();
+    porteTic(); ticFuite(dt);
     if (W.excursion) return ticDescente(dt);
     const c = R.chrono; if (!c || c.fini) { if (el && !el.hidden && !c) el.hidden = true; return; }
     if (I.debug.compte !== undefined) { c.reste = Math.min(c.reste, I.debug.compte); I.debug.compte = undefined; }
@@ -168,7 +169,8 @@
     if (ici === 'abri' && !E.abri) { E.abri = true; S.toast(I.esc(P().aLAbri || ''), 6000); I.audio.sfx('light'); } else if (ici !== 'abri') E.abri = false;
     if (c.reste <= 0) return R.finir(E.abri ? 'abri' : 'temps');
     E.champT = (E.champT || 0) - dt; if (E.champT <= 0 || !E.champ) { E.champ = champDe(p); E.champT = 0.25; }
-    for (const f of W.foes) { if (f.done || !f.rodeur || !f.placed) continue; if (etourdi(f, dt)) continue; avance(f, dt, E.champ); if (Math.hypot(f.x - p.x, f.y - p.y) < 14 && ici !== 'abri') return R.contact(f); }
+    for (const f of W.foes) { if (f.done || !f.rodeur || !f.placed) continue; if (R.poursuit(f)) { if (f.sonne > 0) continue; } else { if (etourdi(f, dt)) continue; avance(f, dt, E.champ); } // celle que l'on a fuie : ticFuite la mène
+      if (Math.hypot(f.x - p.x, f.y - p.y) < 14 && ici !== 'abri' && !R.intouchable()) return R.contact(f); }
     viser();
   }
   // dans un abri, on peut laisser passer le temps d'un coup : Entrée, ou toucher son personnage
@@ -360,25 +362,107 @@
     const L = W.foes.filter(f => f.meute && !f.done && f.placed && f.map === m.id); if (!L.length) { R._vise = null; return; }
     const p = W.player, surPont = m.g0(p.x, p.y) === 'npont';
     R._champT = (R._champT || 0) - dt; if (R._champT <= 0 || R._champ === undefined) { R._champ = surPont ? champDe(p) : null; R._champT = 0.25; }
-    for (const f of L) { if (etourdi(f, dt)) continue; avance(f, dt, R._champ); const dist = Math.hypot(f.x - p.x, f.y - p.y);
+    for (const f of L) { if (R.poursuit(f)) { if (f.sonne > 0) continue; } else { if (etourdi(f, dt)) continue; avance(f, dt, R._champ); } const dist = Math.hypot(f.x - p.x, f.y - p.y); // celle que l'on a fuie : ticFuite la mène
       if (dist < 96 && !R._ditRode && !I.save.data.codex.includes('coeur/frappe')) { const dire = () => { O().learn('frappe', true); S.toast(I.esc(P().rode || ''), { outil: 'frappe' }); }; if (I.lecons.proposer('frappe', dire)) R._ditRode = true; } // le besoin d'abord : on apprend à frapper quand quelque chose approche
-      if (surPont && dist < 14) return R.contactMeute(f); }
+      if (surPont && dist < 14 && !R.intouchable()) return R.contactMeute(f); }
     viser();
   }
   // un petit égrégore a rejoint le groupe : un combat ordinaire
+  // (2.19 : on peut le fuir — il poursuit alors celui qui mène)
   R.contactMeute = async function (f) {
-    if (f.enCombat || S.busy || W.lock) return; f.enCombat = true; W.stop(); R._vise = null; S.depth++;
-    try { await I.battle.start({ group: f.group, bg: W.map.env.bg, intro: I.t('{nom} vous a rejoints sur le pont.', { nom: (W.saga.enemies[f.group[0]] || {}).name || '' }) }); f.done = true; if (f.cle) S.flags[f.cle] = true; W.checkpoint(); }
+    if (f.enCombat || S.busy || W.lock) return; f.enCombat = true; W.stop(); R._vise = null; S.depth++; let res = 'win';
+    try { res = await I.battle.start({ group: f.group, bg: W.map.env.bg, fuite: true, intro: I.t('{nom} vous a rejoints sur le pont.', { nom: (W.saga.enemies[f.group[0]] || {}).name || '' }) }); if (res !== 'fuite') { f.done = true; if (f.cle) S.flags[f.cle] = true; W.checkpoint(); } }
     finally { S.depth--; f.enCombat = false; }
+    if (res === 'fuite') R.fuir(f);
   };
+
+  /* ================= la fuite (2.19) =================
+     Demande du décideur, 20 novembre : « Rajoute aussi une parade "fuire" pour quitter le combat même si on sera poursuivi il
+     faudra courir pour échapper au monstre. » D'un combat de rencontre — une chimère qui erre sur la carte (world.js,
+     W.fuyable), un petit égrégore des ponts, ce qui rôde dans la descente du râwî —, « Fuir » rend la carte sur-le-champ
+     (battle.js, partir). Alors, pendant un temps de grâce, rien ne touche le groupe ; puis la chimère que l'on a fuie, elle
+     seule, se reprend un instant, puis poursuit celui qui mène : plus vite que la marche, moins vite que la course
+     (D.FUITE) — à pied, elle rattrape toujours, et le combat reprend (un combat ordinaire, la chimère comme neuve : elle
+     s'est reprise en courant) ; en courant (B tenu avec le joystick, ou Maj), on la distance, et elle s'essouffle à suivre.
+     Elle va tout droit quand rien ne l'en sépare, sinon par le plus court chemin, de case en case, jamais à travers un mur —
+     et, dans un labyrinthe, par où elle passe d'ordinaire (les ponts ; jamais un abri). Elle renonce quand celui qui mène a
+     couru assez longtemps sans être rejoint, quand il est loin, ou quand il est hors d'atteinte un moment ; puis elle erre
+     comme avant (une chimère de la carte revient à sa place). On peut la frapper en route, comme tout ce qui rôde. Le
+     chrono d'un labyrinthe court comme toujours, et la course ne le presse pas. Rien n'est gardé dans la partie. */
+  R.fuite = null;
+  R.intouchable = () => !!(R.fuite && R.fuite.t < D.FUITE.grace);
+  R.poursuit = f => !!(R.fuite && R.fuite.f === f);
+  R.fuir = function (f) {
+    if (!f || f.done || !W.map) return;
+    R.finFuite();
+    R.fuite = { f, t: 0, hors: 0, maison: f.rodeur ? null : [f.x0 !== undefined ? f.x0 : f.x, f.y0 !== undefined ? f.y0 : f.y] };
+    f.chasse = true; f.retour = null; f.cx = null; f.sonne = 0; f.pousse = null; f._champ = null; R.fuites = (R.fuites || 0) + 1;
+    // celui qui n'a jamais couru apprend comment : au doigt, ou au clavier
+    if (!W.aCouru && !I.debug.auto) S.toast(document.body.classList.contains('touch') ? I.t('La chimère vous poursuit : pour courir, tiens B en poussant le joystick.') : I.t('La chimère vous poursuit : pour courir, tiens Maj en marchant.'), 6000);
+  };
+  // elle renonce : une chimère de la carte revient à sa place, ce qui rôde reprend sa ronde
+  R.lacher = function () {
+    const F = R.fuite; if (!F) return; R.fuite = null; const f = F.f;
+    f.chasse = false; f.cx = null; f._champ = null; R.lachees = (R.lachees || 0) + 1;
+    if (F.maison && !f.done) f.retour = F.maison;
+  };
+  // un lieu neuf : plus de poursuite ; ce qui revenait est à sa place
+  R.finFuite = function () {
+    const F = R.fuite; R.fuite = null; if (F) { F.f.chasse = false; F.f.cx = null; if (F.maison) { F.f.retour = F.maison; } }
+    (W.foes || []).forEach(f => { if (f.retour) { f.x = f.retour[0]; f.y = f.retour[1]; f.retour = null; f.cx = null; f._champ = null; } });
+  };
+  // par où elle peut passer : ce qui rôde, là où il passe d'ordinaire ; une chimère de la carte, partout où l'on marche (ni
+  // mur, ni tranchée)
+  const okDe = f => { const m = W.map; return f.rodeur ? (x, y) => passable(f, x, y) : (x, y) => x >= 0 && y >= 0 && x < m.w && y < m.h && !m.solid[y * m.w + x] && !(m.trench && m.trench.has(y * m.w + x)); };
+  // rien ne la sépare de la cible : la ligne droite, de la largeur d'un corps (± 5 points), ne passe que par des cases où
+  // elle peut aller — à un coude, elle ne coupe pas l'angle plus que celui qu'elle poursuit
+  function ligne(x0, y0, x1, y1, ok) { const L = Math.hypot(x1 - x0, y1 - y0), n = Math.max(1, Math.ceil(L / 4)), nx = L ? -(y1 - y0) / L * 5 : 0, ny = L ? (x1 - x0) / L * 5 : 0;
+    for (let i = 0; i <= n; i++) { const x = x0 + (x1 - x0) * i / n, y = y0 + (y1 - y0) * i / n; for (const k of [0, 1, -1]) if (!ok(Math.floor((x + k * nx) / 16), Math.floor((y + k * ny) / 16))) return false; } return true; }
+  // les distances à la cible, de case en case (au plus `R` cases), par où elle peut passer
+  function champVers(c, ok, R0) { const m = W.map, d = new Int16Array(m.w * m.h).fill(-1), sx = Math.floor(c.x / 16), sy = Math.floor(c.y / 16); if (!ok(sx, sy)) return d; const q = [sy * m.w + sx]; d[q[0]] = 0;
+    for (let k = 0; k < q.length; k++) { const i = q[k], x = i % m.w, y = (i - x) / m.w; if (d[i] >= R0) continue; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(o => { const X = x + o[0], Y = y + o[1]; if (X < 0 || Y < 0 || X >= m.w || Y >= m.h) return; const j = Y * m.w + X; if (d[j] >= 0 || !ok(X, Y)) return; d[j] = d[i] + 1; q.push(j); }); }
+    return d; }
+  // aller vers c à la vitesse v, en s'arrêtant à `arret` points d'elle ; false : c est hors d'atteinte
+  function allerVers(f, dt, c, v, ok, arret) {
+    const m = W.map, T = 16, tx = Math.floor(f.x / T), ty = Math.floor(f.y / T); let gx, gy;
+    if (!ok(Math.floor(c.x / T), Math.floor(c.y / T))) return false;
+    if (ligne(f.x, f.y, c.x, c.y, ok)) { gx = c.x; gy = c.y; f.cx = null; }
+    else {
+      const k = Math.floor(c.x / T) + ',' + Math.floor(c.y / T); f._champT = (f._champT || 0) - dt;
+      if (!f._champ || f._champK !== k || f._champT <= 0) { f._champ = champVers(c, ok, D.FUITE.lache + 8); f._champK = k; f._champT = 0.25; }
+      const ch = f._champ, ici = ch[ty * m.w + tx]; if (ici < 0) return false;
+      const arrive = f.cx === null || f.cx === undefined || (Math.abs(f.x - (f.cx * T + 8)) < 1 && Math.abs(f.y - (f.cy * T + 8)) < 1);
+      if (arrive) { const q = [[1, 0], [-1, 0], [0, 1], [0, -1]].find(o => { const X = tx + o[0], Y = ty + o[1]; return X >= 0 && Y >= 0 && X < m.w && Y < m.h && ch[Y * m.w + X] === ici - 1; });
+        if (q) { f.cx = tx + q[0]; f.cy = ty + q[1]; f.dx = q[0]; f.dy = q[1]; } else f.cx = null; }
+      if (f.cx === null || f.cx === undefined) { gx = c.x; gy = c.y; } else { gx = f.cx * T + 8; gy = f.cy * T + 8; }
+    }
+    const L = Math.hypot(gx - f.x, gy - f.y), fin = f.cx === null || f.cx === undefined ? Math.max(0, L - (arret || 0)) : L, pas = Math.min(fin, v * dt);
+    if (L > 0 && pas > 0) { f.x += (gx - f.x) / L * pas; f.y += (gy - f.y) / L * pas; }
+    return true;
+  }
+  function ticFuite(dt) {
+    const U = D.FUITE, p = W.player;
+    // celles qui reviennent à leur place, au pas
+    (W.foes || []).forEach(f => { if (!f.retour || f.done || !f.placed || !W.map || f.map !== W.map.id) return; const c = { x: f.retour[0], y: f.retour[1] };
+      if (Math.hypot(f.x - c.x, f.y - c.y) < 1.5 || !allerVers(f, dt, c, R.MARCHE * 0.5, okDe(f), 0)) { f.x = c.x; f.y = c.y; f.retour = null; f.cx = null; f._champ = null; } });
+    const F = R.fuite; if (!F) return; const f = F.f;
+    if (f.done || !f.placed || !W.map || f.map !== W.map.id) { R.lacher(); return; }
+    F.t += dt; if (p.court && p.moving) F.couru = (F.couru || 0) + dt; // celui qui mène court : elle s'essouffle à le suivre
+    if (F.t > U.grace && (Math.hypot(f.x - p.x, f.y - p.y) > U.lache * 16 || F.couru >= U.souffle || F.hors > U.hors)) { R.lacher(); return; }
+    if (F.t < U.reprise || etourdi(f, dt)) return; // elle se reprend ; frappée en route, sonnée, elle reste un instant
+    const va = allerVers(f, dt, p, U.vitesse, okDe(f), 9);
+    F.hors = va ? 0 : F.hors + dt;
+  }
+  R.ticFuite = ticFuite;
 
   R.contact = async function (f) {
     const E = W.excursion, id = f.group[0], def = (C0().enemies || {})[id] || {}; if (!E || E.fin || E.combat) return;
     if (!R.peutFaireFace(id)) return R.finir('rattrape', def);
     E.combat = true; W.stop(); S.depth++; let res = 'lose';
     try { S.toast(I.esc((P().face || '').replace('%s', def.name || '')), 4200);
-      res = await I.battle.start({ group: [id], bg: 'noos', w: 1, interieur: true, sansReprise: true, heros: E.heros, intro: I.t('{nom} barre le pont.', { nom: def.name || '' }) }); }
+      res = await I.battle.start({ group: [id], bg: 'noos', w: 1, interieur: true, sansReprise: true, fuite: true, heros: E.heros, intro: I.t('{nom} barre le pont.', { nom: def.name || '' }) }); }
     finally { S.depth--; S.hideDialog(); E.combat = false; }
+    if (res === 'fuite') { document.body.classList.add('descente'); R.fuir(f); return; } // 2.19 : il a fui — ce qu'il fuyait le poursuit
     if (res !== 'win') return R.finir('rattrape', def);
     f.done = true; if (def.idee) E.flags['_noir_' + id] = true; // une idée noire vaincue est dissipée jusqu'au chapitre suivant ; un mal tranché l'est pour de bon (oeuvres.js)
     document.body.classList.add('descente');

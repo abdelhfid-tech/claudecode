@@ -170,6 +170,16 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   chiffres et les petits mots d'état restent sur leur cible, qu'ils désignent. Aucun message n'est posé sous le panneau ni
   dans les zones de la manette (en largeur, le panneau s'arrête entre elles). `v2/docs/architecture.md`, « Les messages du combat, en bas ». Contrôle :
   `loupe.js` (« RECOUVERT » : un message sur une figure, une plaque, la frise des tours ou le champ).
+- Dans la 2.x (2.19), les commandes du combat (le décideur, 20 novembre : « Rajoute une parade "esquive" et vérifie qu'on a
+  toujours possibilité de cliquer sur retour. Par défaut quand on combat si on appuie sur frapper et encore sur frapper (ou
+  sur les boutons) ça frappe ou ça active l'action sur l'adversaire ou l'ennemi identifié par défaut » ; « Rajoute aussi une
+  parade "fuire" pour quitter le combat même si on sera poursuivi il faudra courir pour échapper au monstre. Éclairer devient
+  une vertu pour éviter la surcharge ») : une commande qui vise s'arme dans la liste, et touchée de nouveau (ou A) agit sur
+  la cible désignée d'emblée — la dernière visée par le groupe ; chaque pas du combat a son « ◂ Retour », et B revient d'un
+  cran ; l'Esquive (`D.ESQUIVE`) et Fuir rejoignent la Garde (l'outil « Se protéger ») ; Fuir, d'un combat de rencontre
+  seulement (`opts.fuite`), rend la carte, et la chimère poursuit : à pied elle rattrape, en courant on la distance
+  (`D.FUITE`, `rodeurs.js`) ; Éclairer est la première des Vertus. Nombres et textes de l'agent, à valider (D208).
+  `v2/docs/architecture.md`, « Les commandes du combat ». Contrôles : `manette.js`, `doigt.js`, `descente.js`, `progression.js`.
 - **Les langues** (demande du décideur, 18 novembre ; exigence 25). La 2.x existe en français, en arabe, en anglais et
   en japonais. Le français reste la langue des récits, des tables et du code ; les autres langues sont écrites à la
   source (`v2/docs/langues/ecrire.md`) et rangées, texte par texte, sous la clé de leur texte français, dans

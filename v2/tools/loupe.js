@@ -222,8 +222,11 @@ async function messages(browser, errors) {
     await emit('ok');
     if (!await attendre(() => !!document.querySelector('#battle .cmd .mlist.main .mi'))) ko('ABSENT', `messages · ${T} : les commandes`);
     await p.waitForTimeout(400); juger(await releve('la leçon de « Vertus »', '2-lecon'), 'la leçon');
-    // « Vertus », puis « Reprendre souffle » sur Idris : une vertu annoncée, et la chimère encore debout pour la suite
-    await emit('down'); await emit('down'); await p.waitForTimeout(200); await emit('ok'); await p.waitForTimeout(350); await emit('down'); await emit('down'); await p.waitForTimeout(150); await emit('ok'); await p.waitForTimeout(350); await emit('ok');
+    // « Vertus », puis « Reprendre souffle » sur Idris : une vertu annoncée, et la chimère encore debout pour la suite (2.19 :
+    // « Vertus » est la deuxième commande, et sa liste s'ouvre sur Éclairer — la vertu cherchée y est donc la quatrième)
+    await emit('down'); await p.waitForTimeout(200); await emit('ok'); await p.waitForTimeout(350);
+    const kv = await p.evaluate(() => [...document.querySelectorAll('#battle .cmd .mlist .mi')].findIndex(b => /Reprendre souffle/.test(b.textContent)));
+    for (let k = 0; k < kv; k++) await emit('down'); await p.waitForTimeout(150); await emit('ok'); await p.waitForTimeout(350); await emit('ok');
     if (await attendre(() => { const b = document.querySelector('#battle .banner'); return !!b && !b.hidden; }, null, 5000)) { await p.waitForTimeout(60); juger(await releve('l’annonce d’une vertu', '3-competence'), 'l’annonce'); } else ko('ABSENT', `messages · ${T} : l'annonce d'une vertu`);
     // les autres bandeaux, avec leurs vrais textes, quand le joueur a de nouveau la main
     if (await p.evaluate(() => !!window.ISNAD.battle.dire)) {
@@ -240,13 +243,15 @@ async function messages(browser, errors) {
         juger(await releve(genre, n), genre); if (wait) { await p.waitForTimeout(500); await emit('ok'); } await p.waitForTimeout(150); }
       await p.evaluate(() => { document.querySelector('#battle .banner').hidden = true; });
     } else console.log(`--  messages · ${T} : parole, Sérénité, épreuve du cœur, secours, besace — non éprouvés (ce jeu n'a pas battle.dire)`);
-    // jusqu'au dévoilement (Éclairer porte la faille), puis Frapper, jusqu'à la victoire
+    // jusqu'au dévoilement (Éclairer, dans les Vertus, porte la faille), puis Frapper, jusqu'à la victoire
     let vuDev = false; for (let n = 0; n < 500 && !(await p.evaluate(() => window.__fin)); n++) {
-      const s = await p.evaluate(() => ({ dev: !!window.__dev, main: !!document.querySelector('#battle .cmd .mlist.main .mi'), cible: !!document.querySelector('#battle .cmd .mhint'), fin: !!document.querySelector('#battle .banner.fin:not([hidden])') || !!document.querySelector('#card.on') }));
+      const s = await p.evaluate(() => ({ dev: !!window.__dev, main: !!document.querySelector('#battle .cmd .mlist.main .mi'), sous: !!document.querySelector('#battle .cmd .mlist:not(.main) .mi'), cible: !!document.querySelector('#battle .cmd .mhint'), fin: !!document.querySelector('#battle .banner.fin:not([hidden])') || !!document.querySelector('#card.on') }));
       if (s.dev && !vuDev) { vuDev = true; await p.waitForTimeout(220); await shot('5-devoile'); } // (après l'éclair blanc du dévoilement)
       if (s.fin) { await p.waitForTimeout(500); await shot('6-victoire'); await p.waitForTimeout(300); await emit('ok'); await p.waitForTimeout(600); continue; }
-      if (s.main) { await p.waitForTimeout(300); await p.evaluate(i => { const b = document.querySelectorAll('#battle .cmd .mlist.main .mi')[i]; if (b) b.click(); }, s.dev ? 0 : 1); await p.waitForTimeout(250); }
-      else if (s.cible) { await emit('ok'); const t0 = Date.now(); while (Date.now() - t0 < 2500 && !(await p.evaluate(() => !!window.__dev))) await p.waitForTimeout(25); }
+      // (2.19 : le choix de la cible garde la liste à l'écran — on le reconnaît d'abord ; Éclairer est dans les Vertus)
+      if (s.cible) { await emit('ok'); const t0 = Date.now(); while (Date.now() - t0 < 2500 && !(await p.evaluate(() => !!window.__dev))) await p.waitForTimeout(25); }
+      else if (s.main) { await p.waitForTimeout(300); await p.evaluate(i => { const b = document.querySelectorAll('#battle .cmd .mlist.main .mi')[i]; if (b) b.click(); }, s.dev ? 0 : 1); await p.waitForTimeout(250); }
+      else if (s.sous) { await p.waitForTimeout(300); await p.evaluate(() => { const b = [...document.querySelectorAll('#battle .cmd .mlist .mi')].find(x => /Éclairer/.test(x.textContent)); if (b) b.click(); }); await p.waitForTimeout(250); }
       else await p.waitForTimeout(80);
     }
     if (await p.evaluate(() => window.ISNAD.battle.active)) await p.evaluate(() => window.ISNAD.battle.abort());

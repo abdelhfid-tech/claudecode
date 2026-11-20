@@ -68,8 +68,8 @@ ISNAD.registerSaga({
     halte: { clavier: '*Échap*, ou le bouton *☰* : la halte. Le groupe, la besace, ce que tu as appris.', doigt: 'Le bouton *☰* : la halte. Le groupe, la besace, ce que tu as appris.' },
     equipement: 'La réserve tient de quoi mieux équiper ce groupe : *Halte*, puis *Équipement*.',
     source: 'Un seul de ces actes est celui que les transmetteurs ont rapporté. Ce que tu as appris est au *Recueil* : la halte le garde.',
-    vertus: 'Nouveau — *Vertus*. Chacune coûte du Souffle ; celle qui est la faille d’une chimère lui ôte un voile.',
-    garde: 'Nouveau — *Garde*, et la *Niyya*. Se garder rend un point de Niyya ; avec ◂ ▸, on en dépense jusqu’à trois pour frapper plus fort.',
+    vertus: 'Nouveau — les *Vertus* de chacun rejoignent *Éclairer*. Chacune coûte du Souffle ; celle qui est la faille d’une chimère lui ôte un voile.',
+    garde: 'Nouveau — se protéger : *Garde* amortit un coup et rend un point de *Niyya*, *Esquive* tente de l’éviter, *Fuir* quitte une rencontre. Avec ◂ ▸, on dépense jusqu’à trois points de Niyya pour frapper plus fort.',
     objets: 'Nouveau — *Objets*. La besace sert aussi en combat.'
   },
 

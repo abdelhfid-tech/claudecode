@@ -11,6 +11,9 @@
                      après le premier combat, joué au doigt, les suivants sont menés par l'IA de test
      loin 844x390  : le même, téléphone en largeur — la manette y est posée sur la scène, et le pouce qui marche
                      doit passer à côté d'elle
+   Dans les deux combats éprouvés à part (le groupe de Khâlid ; sa bataille déclarée, la Sérénité pleine), « Retour » à chaque
+   pas — la cible, les Vertus, les Objets, la Sérénité, Ordonner et ses listes —, dans l'écran, hors de la manette, sous le
+   doigt, et B qui revient d'un cran (2.19) ; « Fuir » n'y est pas.
    Sortie : une ligne par écran ; « INVISIBLE », « INACCESSIBLE » ou « BLOQUÉ » en cas d'échec ; code de sortie 1. */
 const { chromium } = require('playwright');
 const path = require('path');
@@ -61,7 +64,9 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
           return pl ? on('cible', pl, null, { ou }) : { quoi: 'attente', ou }; }
         // 2.12 (D189) : chaque commande du combat est dans l'écran et se touche (en 360 × 560, Vertus, Objets et Garde tombaient dessous)
         if (c && c.querySelectorAll('.mi').length && !(b && !b.hidden)) { const m = c.querySelector('.mlist.main'), hors = !m ? [] : [...m.querySelectorAll('.mi')].filter(x => getComputedStyle(x).display !== 'none').filter(x => { const r = x.getBoundingClientRect(), e = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return r.top < 0 || r.bottom > innerHeight || !(e && x.contains(e)); }).map(x => x.textContent.trim().slice(0, 24));
-          return on('commande', c.querySelectorAll('.mi')[1], null, { ou, hors, commandes: m ? m.querySelectorAll('.mi').length : 0 }); }
+          // (2.19 : la deuxième commande de la liste principale — les Vertus ; dans la liste des Vertus, la première qui se prend : Éclairer)
+          const vise = m ? c.querySelectorAll('.mlist.main .mi')[1] : [...c.querySelectorAll('.mi')].find(x => !x.hidden && !x.classList.contains('off')) || c.querySelector('.mi');
+          return on('commande', vise, null, { ou, hors, commandes: m ? m.querySelectorAll('.mi').length : 0 }); }
         if (b && !b.hidden) return on('bandeau', b, null, { ou });
         return { quoi: 'attente', ou }; }
       if (vis(q('#dialog'))) return on('dialogue', q('#dialog'), [innerWidth / 2, Math.min(innerHeight - 6, q('#dialog').getBoundingClientRect().bottom + 30)], { ou }); // on touche sous la boîte, là où tombe le pouce
@@ -127,7 +132,7 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
       const libre = () => p.evaluate(() => { const I = window.ISNAD, W = I.world; return I.scene === W && !!W.map && !I.script.busy && !W.lock; }), lecture = () => p.evaluate(() => ['#card', '#dialog'].some(q => !document.querySelector(q).hidden));
       const chapitre = async ci => { await p.evaluate(ci => { const I = window.ISNAD, W = I.world; I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('khalid', ci); }, ci); // un groupe de trois : le panneau est plein
         for (let i = 0; i < 120 && !(await libre()); i++) { if (await lecture()) await p.keyboard.press('Enter'); await p.waitForTimeout(170); } };
-      const commandes = async (quoi, n, nom, lancer) => { await p.evaluate(lancer);
+      const commandes = async (quoi, n, nom, lancer) => { await p.evaluate(() => { const v = window.ISNAD.save.data.items; v.musc = Math.max(2, v.musc | 0); }); await p.evaluate(lancer); // (du musc dans la besace : les Objets et leur cible ont leur « Retour »)
         for (let i = 0; i < 160; i++) { const e = await p.evaluate(() => document.querySelector('.screen:not([hidden]) button, #choice:not([hidden]) .opt') ? 'prep' : !!document.querySelector('#battle .cmd .mlist.main .mi') && document.querySelector('#battle .banner').hidden ? 'cmd' : ['#card', '#dialog'].some(q => !document.querySelector(q).hidden) ? 'lit' : '');
           if (e === 'cmd') break; if (e) await p.keyboard.press('Enter'); await p.waitForTimeout(170); } // la page de préparation d'une idole, un carton : on les passe
         await p.waitForTimeout(300);
@@ -135,7 +140,39 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
         const hors = c.filter(x => !x.ok); if (c.length < n) { echecs++; console.log(`  INACCESSIBLE ${w}×${h} : ${quoi}, on ne voit que ${c.length} commande(s) sur ${n}`); }
         else if (hors.length) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-' + nom + '.png') }); console.log(`  INACCESSIBLE ${w}×${h} : ${quoi}, ${hors.map(x => '« ' + x.nom + ' »').join(', ')} hors de l'écran ou sous un autre élément`); }
         else console.log(`      ${quoi}, les ${c.length} commandes (${c.map(x => x.nom.replace(/^\S+\s*/, '')).join(', ')}) : chacune dans l'écran, sous le doigt`);
+        if (c.some(x => /Fuir/.test(x.nom))) { echecs++; console.log(`  INACCESSIBLE ${w}×${h} : ${quoi}, « Fuir » est offert là où l'on ne fuit pas`); }
+        await retours(quoi, nom);
         await p.evaluate(() => { const I = window.ISNAD, W = I.world; try { I.battle.abort(W); I.script.depth = 0; W.lock = false; } catch (e) { /* refermé */ } }); await p.waitForTimeout(500); };
+      /* 2.19 — « Retour », toujours (le décideur, 20 novembre : « vérifie qu'on a toujours possibilité de cliquer sur retour ») :
+         à chaque pas du combat — la cible de « Frapper », les Vertus et la cible d'Éclairer, les Objets et la cible d'un objet,
+         la Sérénité, Ordonner, les ordres d'un rang, la réserve mobile —, un « ◂ Retour » se voit, dans l'écran, hors de la
+         manette, sous le doigt ; et B (le vrai bouton de la manette) revient d'un cran. Rien n'est dépensé : le tour reste. */
+      const etape = () => p.evaluate(() => { const c = document.querySelector('#battle .cmd'); if (!c || !c.querySelector('.mi')) return ''; const t = ((c.querySelector('.mtitle') || {}).textContent || '').trim().replace(/\s+/g, ' ').slice(0, 24); return (c.querySelector('.mhint') ? 'cible · ' : '') + (c.querySelector('.mlist.main') ? 'commandes' : t); });
+      const unRetour = () => p.evaluate(() => { const L = [...document.querySelectorAll('#battle .cmd .mback')].filter(b => !b.hidden && b.getClientRects().length); if (!L.length) return { absent: true };
+        const b = L[L.length - 1], r = b.getBoundingClientRect(), e = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2), efface = document.body.classList.contains('pad-efface');
+        const pads = efface ? [] : ['#pad .joy', '#pad .a', '#pad .b'].map(q => document.querySelector(q)).filter(q => q && q.getClientRects().length && getComputedStyle(q).visibility !== 'hidden').map(q => q.getBoundingClientRect());
+        return { n: L.length, dedans: r.top >= 0 && r.bottom <= innerHeight && r.left >= 0 && r.right <= innerWidth, touche: !!e && b.contains(e), sous: pads.some(q => r.left < q.right - 1 && r.right > q.left + 1 && r.top < q.bottom - 1 && r.bottom > q.top + 1), r: [r.left, r.top, r.width, r.height].map(Math.round) }; });
+      const toucherMi = async txt => { const q = await p.evaluate(t => { const b = [...document.querySelectorAll('#battle .cmd .mi')].find(x => !x.hidden && x.textContent.includes(t)); if (!b) return null; b.scrollIntoView({ block: 'nearest' }); const r = b.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }, txt);
+        if (!q) return false; await p.waitForTimeout(300); await p.touchscreen.tap(q[0], q[1]); await p.waitForTimeout(450); return true; };
+      const toucherB = async () => { const q = await p.evaluate(() => { const b = document.querySelector('#pad .b'); if (!b || document.body.classList.contains('pad-efface') || getComputedStyle(b).visibility === 'hidden' || !b.getClientRects().length) return null; const r = b.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; });
+        if (q) await p.touchscreen.tap(q[0], q[1]); else await p.evaluate(() => window.ISNAD.input.emit('retour')); await p.waitForTimeout(450); return q ? 'B' : 'B (la manette s’efface sur cette page : son geste)'; };
+      const retours = async (quoi, nom) => { const vus = [], rate = [];
+        const pas = async (ou, versOu) => { const r = await unRetour(), avant = await etape();
+          if (r.absent || !r.dedans || !r.touche || r.sous) { rate.push(`${ou} : ${r.absent ? 'aucun « Retour »' : !r.dedans ? 'le « Retour » sort de l’écran ' + r.r : r.sous ? 'le « Retour » est sous la manette ' + r.r : 'le « Retour » est recouvert ' + r.r}`); await p.screenshot({ path: path.join(out, `doigt-${w}x${h}-${nom}-retour-${rate.length}.png`) }); }
+          const geste = await toucherB(), apres = await etape(); if (apres !== versOu) rate.push(`${ou} : ${geste} mène à « ${apres} » au lieu de « ${versOu} »`); else vus.push(ou); return apres === versOu; };
+        const lim = await p.evaluate(() => { const C = window.ISNAD.battle.contexte(), h = C && C.active; return h && h.sakina >= 100 ? { nom: h.def.limit.name, vise: ['foe', 'ally'].includes(h.def.limit.target) } : null; });
+        if (await toucherMi('Frapper')) await pas('la cible de « Frapper »', 'commandes');
+        if (await toucherMi('Vertus')) { const t = await etape(); await pas('les Vertus', 'commandes');
+          if (await toucherMi('Vertus') && await toucherMi('Éclairer')) { await pas('la cible d’Éclairer', t); await toucherB(); } }
+        if (await toucherMi('Objets')) { const t = await etape(); await pas('les Objets', 'commandes');
+          if (await toucherMi('Objets') && await toucherMi('Musc')) { await pas('la cible d’un objet', t); await toucherB(); } }
+        if (lim && lim.vise && await toucherMi(lim.nom)) await pas('la cible de la Sérénité', 'commandes');
+        if (await toucherMi('Ordonner')) { const t = await etape(); await pas('Ordonner', 'commandes');
+          if (await toucherMi('Ordonner')) { const rg = await p.evaluate(() => { const b = document.querySelector('#battle .cmd .mlist .mi'); return b ? b.textContent.trim().slice(0, 6) : ''; }); if (rg && await toucherMi(rg)) { await pas('les ordres d’un rang', t); } await toucherB(); }
+          const rm = await p.evaluate(() => window.ISNAD.D.MANOEUVRES.garde.name); if (await toucherMi('Ordonner') && await toucherMi(rm)) { await pas('la réserve mobile', t); await toucherB(); } else if (await etape() !== 'commandes') await toucherB(); }
+        const fin = await etape(); if (fin !== 'commandes') rate.push(`à la fin, on est sur « ${fin} » et non sur les commandes`);
+        if (rate.length) { echecs++; console.log(`  INACCESSIBLE ${w}×${h} : ${quoi}, « Retour » — ${rate.join(' ; ')}`); }
+        else console.log(`      ${quoi}, « Retour » à chaque pas (${vus.join(', ')}) : dans l'écran, hors de la manette, sous le doigt ; B revient d'un cran`); };
       await chapitre(2);
       await commandes('en combat', 5, 'cinq-commandes', () => { const I = window.ISNAD, E = I.world.saga.enemies; I.battle.start({ group: Object.keys(E).filter(k => E[k].tier === 'minion' && !E[k].racine).slice(0, 2), bg: 'desert' }); });
       await chapitre(1);

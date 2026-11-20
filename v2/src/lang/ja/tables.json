@@ -307,7 +307,7 @@
 {"k":"1rk4lj5.j","fr":"Demander son chemin","t":"道をたずねる","ou":"D.OUTILS.aide.nom"},
 {"k":"1147lc5.h","fr":"Frapper la faille","t":"綻びを突く","ou":"D.OUTILS.frapper.nom"},
 {"k":"1bq6hmm.a","fr":"Les vertus","t":"徳","ou":"D.OUTILS.vertus.nom"},
-{"k":"2pcop9.k","fr":"La garde et la Niyya","t":"守りとニーヤ","ou":"D.OUTILS.garde.nom"},
+{"k":"13f3bq2.1j","fr":"Se protéger : la garde, l’esquive, la fuite et la Niyya","t":"身を守る：守り・かわす・逃げる・ニーヤ","ou":"D.OUTILS.garde.nom","note":"2.19 (combat) : écrit par l’agent, à relire"},
 {"k":"i7fxqz.9","fr":"La besace","t":"旅袋","ou":"D.OUTILS.objets.nom"},
 {"k":"1yv7co8.8","fr":"La halte","t":"休息","ou":"D.OUTILS.halte.nom"},
 {"k":"h9nft6.k","fr":"Retrouver une source","t":"出典をたどる","ou":"D.OUTILS.source.nom"},

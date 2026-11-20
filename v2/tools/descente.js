@@ -20,6 +20,10 @@
         porte, qui reste close ; une idée noire dissipée n'en ressort pas. Dans un chapitre, rien n'en sort et aucune idée
         noire n'existe. Quitté puis repris, le labyrinthe a sa porte à la même place. Rien de ce qui rôde n'est jamais sur
         sa case ni derrière.
+     E. Fuir (2.19, demande du décideur du 20 novembre) : « Fuir » est là dans un combat de rencontre — ce qui rôde sur les
+        ponts, une chimère qui erre sur la carte —, absent d'un combat que le récit attend et d'une idole ; fui, on revient
+        sur la carte sans rien perdre ; la chimère poursuit : à pied, elle rattrape et le combat reprend ; en courant (Maj
+        tenue), elle renonce — une chimère de la carte revient alors à sa place.
    « DESCENTE CONFORME », sinon « ÉCART ». Captures dans .smoke/descente. */
 const { chromium } = require('playwright'); const fs = require('fs'), path = require('path');
 const V2 = path.join(__dirname, '..'), out = path.join(V2, '.smoke/descente'), url = 'file://' + path.join(V2, 'index.html');
@@ -389,8 +393,83 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
     await p.evaluate(() => { window.ISNAD.rodeurs.finir('temps'); }); await remonter();
     await p.evaluate(id => { delete window.ISNAD.script.flags['_noir_' + id]; }, ecartee);
   }
+  /* ---------- E. fuir (2.19 ; le décideur, 20 novembre : « Rajoute aussi une parade "fuire" pour quitter le combat même si on
+     sera poursuivi il faudra courir pour échapper au monstre ») ----------
+     « Fuir » est là dans un combat de rencontre (ce qui rôde sur les ponts, une chimère qui erre sur la carte), et nulle part
+     ailleurs (un combat que le récit attend, une idole). Fui, on revient sur la carte, rien de perdu ; la chimère poursuit
+     celui qui mène : à pied, elle le rattrape et le combat reprend ; en courant (Maj tenue, les flèches — un pilote les tient
+     comme un joueur, tools/pilote.js), elle renonce ; une chimère de la carte revient alors à sa place. */
+  {
+    await p.evaluate(require('./pilote.js'));
+    const nouveau = async () => { await p.evaluate(() => { const I = window.ISNAD; if (I.battle.active) I.battle.abort(I.world); I.rodeurs.finFuite(); I.script.depth = 0; I.world.lock = false; I.save.reset(); I.save.data.started = true; I.debug.sansMeutes = false; I.debug.graine = 20261116; I.debug.profondeur = 3; I.input.reset();
+      I.debug.auto = true; I.speed = 30; I.world.roster = {}; I.world.saga = null; I.world.startChapter('abubakr', 0); setTimeout(() => { I.debug.auto = false; I.speed = 1; }, 250); }); await p.waitForTimeout(1800); await calme(); };
+    // les commandes d'un compagnon (le bandeau qui attend se passe), et leurs noms
+    const commandes = async () => { for (let i = 0; i < 120; i++) { const r = await p.evaluate(() => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); if (b && !b.hidden && b.classList.contains('attend')) return 'attend'; return c && c.querySelector('.mlist.main .mi') && !c.querySelector('.mhint') && b.hidden ? 'cmd' : ''; });
+      if (r === 'cmd') { await p.waitForTimeout(350); return true; } if (r === 'attend') await p.keyboard.press('Enter'); await p.waitForTimeout(150); } return false; };
+    const noms = () => p.evaluate(() => [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(b => !b.hidden).map(b => b.querySelector('span').textContent.replace(/^\S+\s*/, '').trim()));
+    const fuir = async () => { const hp = await p.evaluate(() => window.ISNAD.battle.contexte().all.filter(e => e.side === 'hero').map(e => Math.max(1, Math.round(e.hp))).join(','));
+      const vu = await p.evaluate(() => { const b = [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].find(x => /Fuir/.test(x.textContent)); if (b) b.click(); return !!b; });
+      for (let i = 0; i < 60 && await p.evaluate(() => window.ISNAD.battle.active || window.ISNAD.script.busy); i++) await p.waitForTimeout(150); return { vu, hp }; };
+    const apres = id => p.evaluate(id => { const I = window.ISNAD, W = I.world, R = I.rodeurs, f = W.foes.find(q => q.id === id); return { combat: I.battle.active, poursuit: !!R.fuite && R.fuite.f === f, fini: f.done, grace: R.intouchable(), resultat: I.battle.last && I.battle.last.result, hp: W.party.map(h => W.hero(h).hp).join(',') }; }, id);
+    // à pied, puis en courant ; → { combat, fuite, t (secondes de poursuite) }
+    const filer = async (courir, ms) => { await p.evaluate(c => { window.__st = window.__pilote(c); window.__l0 = window.ISNAD.rodeurs.lachees | 0; }, courir); const t0 = Date.now();
+      while (Date.now() - t0 < ms && !(await p.evaluate(() => window.ISNAD.battle.active || !window.ISNAD.rodeurs.fuite))) await p.waitForTimeout(80);
+      return p.evaluate(t => { const I = window.ISNAD, st = window.__st, r = { combat: I.battle.active, poursuit: !!I.rodeurs.fuite, lachee: (I.rodeurs.lachees | 0) > window.__l0, couru: !!I.world.aCouru, t, buts: st.buts }; st.stop(); return r; }, (Date.now() - t0) / 1000); };
+    const vaincre = async () => { await p.evaluate(() => { const I = window.ISNAD; I.debug.auto = true; I.speed = 30; }); for (let i = 0; i < 240 && await p.evaluate(() => window.ISNAD.battle.active || window.ISNAD.script.busy); i++) { await entree(); await p.waitForTimeout(150); } await p.evaluate(() => { const I = window.ISNAD; I.debug.auto = false; I.speed = 1; }); await calme(); };
+
+    // E1. ce qui rôde sur les ponts d'un labyrinthe
+    await nouveau(); await p.evaluate(async () => { await window.ISNAD.script.run([['map', 'noos', 'seuil', { hue: 210 }]]); }); await calme();
+    const m0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = I.rodeurs.rodent()[0]; if (!f) return null; W.player.x = f.x + 3; W.player.y = f.y; W.dest = null; return f.id; });
+    if (!m0) ko('la fuite : rien ne rôde dans le labyrinthe');
+    else {
+      const c1 = await commandes(), n1 = await noms(), r1 = await fuir(), a1 = await apres(m0);
+      await p.waitForTimeout(500); await p.screenshot({ path: path.join(out, 'E-1-poursuite.png') });
+      si(c1 && n1.includes('Fuir') && r1.vu && !a1.combat && a1.poursuit && !a1.fini && a1.resultat === 'fuite' && a1.hp === r1.hp,
+        `ce qui rôde sur les ponts : « Fuir » est là (${n1.join(', ')}) ; fui, on revient sur la carte, rien de perdu (Constance ${a1.hp}), la chimère poursuit — un temps de grâce d'abord (${a1.grace})`,
+        `la fuite d'un pont : commandes ${c1} ${JSON.stringify(n1)}, ${JSON.stringify(r1)} → ${JSON.stringify(a1)}`);
+      const pied = await filer(false, 9000);
+      si(pied.combat && !pied.couru, `à pied, elle rattrape celui qui mène en ${pied.t.toFixed(1)} s : le combat reprend`, `à pied : ${JSON.stringify(pied)}`);
+      const c2 = await commandes(), n2 = await noms(), r2 = await fuir();
+      const court = await filer(true, 9000), a2 = await apres(m0);
+      await p.screenshot({ path: path.join(out, 'E-2-distancee.png') });
+      si(c2 && n2.includes('Fuir') && r2.vu && court.couru && !court.combat && !court.poursuit && court.lachee && !a2.fini,
+        `en courant (Maj tenue), on la distance : elle renonce au bout de ${court.t.toFixed(1)} s, sans combat, et rôde de nouveau`, `en courant : ${JSON.stringify({ c2, n2, r2, court, a2 })}`);
+      // celle que le récit attend (le Déni, au cœur de cette noosphère) : un combat sans « Fuir »
+      const d0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world; if (I.battle.active) return 'combat'; const f = W.foes.find(q => q.id === 'f_deni'); if (!f || f.map !== W.map.id || !f.placed || f.done) return 'absent'; const r = W.fuyable(f); W.fight(f); return r ? 'fuyable' : true; });
+      if (d0 !== true) ko(`un combat que le récit attend : ${d0}`);
+      else { await commandes(); const n3 = await noms(); si(n3.length && !n3.includes('Fuir') && n3.includes('Esquive'), `un combat que le récit attend (le Déni) : pas de « Fuir » (${n3.join(', ')})`, `un combat du récit : ${JSON.stringify(n3)}`); await vaincre(); }
+    }
+
+    // E2. une chimère qui erre sur la carte (à la palmeraie de Médine)
+    await nouveau();
+    const k0 = await p.evaluate(() => { const W = window.ISNAD.world, f = W.foes.find(q => q.id === 'f_palm'), d = W.foes.find(q => q.id === 'f_deni');
+      if (!f || f.map !== W.map.id || !f.placed) return { absente: true, ici: W.map.id, la: f && f.map };
+      const r = { libre: W.fuyable(f), recit: W.fuyable(d), x0: f.x0, y0: f.y0 }; W.player.x = f.x + 3; W.player.y = f.y; W.dest = null; return r; });
+    if (k0.absente) ko(`la fuite : la chimère de la palmeraie n'est pas sur la carte (${JSON.stringify(k0)})`);
+    else {
+      const c1 = await commandes(), n1 = await noms(), r1 = await fuir(), a1 = await apres('f_palm');
+      si(k0.libre && !k0.recit && c1 && n1.includes('Fuir') && r1.vu && !a1.combat && a1.poursuit && !a1.fini && a1.hp === r1.hp,
+        `une chimère qui erre sur la carte : « Fuir » est là ; fuie, elle poursuit (celle que le récit attend ne se fuit pas)`, `la fuite sur la carte : ${JSON.stringify({ k0, c1, n1, r1, a1 })}`);
+      const pied = await filer(false, 9000);
+      si(pied.combat, `à pied, elle rattrape celui qui mène en ${pied.t.toFixed(1)} s : le combat reprend`, `à pied, sur la carte : ${JSON.stringify(pied)}`);
+      await commandes(); await fuir();
+      const court = await filer(true, 9000);
+      // (le groupe attend au plus loin de sa place, pour qu'elle y revienne sans le croiser)
+      const retour = await p.evaluate(async x0 => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.id === 'f_palm'), t0 = performance.now();
+        const loin = Object.keys(W.map.spots).map(k => W.spotPx(k)).filter(Boolean).sort((a, b) => Math.hypot(b[0] - x0[0], b[1] - x0[1]) - Math.hypot(a[0] - x0[0], a[1] - x0[1]))[0]; if (loin) { W.player.x = loin[0]; W.player.y = loin[1]; W.dest = null; }
+        while (f.retour && performance.now() - t0 < 15000) await new Promise(r => setTimeout(r, 100)); return { chez: Math.round(Math.hypot(f.x - x0[0], f.y - x0[1])), revient: !!f.retour, combat: I.battle.active }; }, [k0.x0, k0.y0]);
+      await p.screenshot({ path: path.join(out, 'E-3-carte.png') });
+      si(court.couru && !court.combat && court.lachee && !retour.revient && retour.chez <= 2 && !retour.combat, `en courant, on la distance : elle renonce au bout de ${court.t.toFixed(1)} s et revient à sa place`, `en courant, sur la carte : ${JSON.stringify({ court, retour })}`);
+    }
+    // E3. une idole, même si on le demandait : pas de « Fuir »
+    await nouveau();
+    await p.evaluate(() => { const I = window.ISNAD, S = I.world.saga, id = Object.keys(S.enemies).find(k => S.enemies[k].tier === 'boss' || S.enemies[k].racine); I.battle.start({ group: [id], bg: 'ville', boss: true, fuite: true }); });
+    for (let i = 0; i < 400 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mlist.main .mi'))); i++) { await p.evaluate(() => { const b = [...document.querySelectorAll('#menu .side button')].find(x => /Déclarer/.test(x.textContent)); if (b && !document.querySelector('#menu').hidden) b.click(); }); await entree(); await p.waitForTimeout(170); }
+    { const n4 = await noms(); si(n4.length && !n4.includes('Fuir'), `une idole : pas de « Fuir », même demandé (${n4.join(', ')})`, `une idole : ${JSON.stringify(n4)}`); }
+    await vaincre();
+  }
   await b.close();
   if (errors.length) { [...new Set(errors)].slice(0, 6).forEach(e => ko('erreur console : ' + e)); } else ok('aucune erreur console');
-  console.log(ecarts ? `✗ ${ecarts} ÉCART(S)` : '✓ DESCENTE CONFORME — le labyrinthe d’un chapitre, la descente du râwî, ce qui rôde et la frappe (captures dans .smoke/descente)');
+  console.log(ecarts ? `✗ ${ecarts} ÉCART(S)` : '✓ DESCENTE CONFORME — le labyrinthe d’un chapitre, la descente du râwî, ce qui rôde et la frappe, la fuite et la poursuite (captures dans .smoke/descente)');
   process.exit(ecarts ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });
