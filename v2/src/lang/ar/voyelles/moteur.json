@@ -53,7 +53,7 @@
 {"k":"1itsoei.6","fr":"aucune","t":"لا شيء","tv":"لَا شَيْءَ"},
 {"k":"eyk4dv.9","fr":"La Chaîne","t":"السلسلة","tv":"السِّلْسِلَةُ"},
 {"k":"8a2yu0.18","fr":"Reçu : <b>{nom}</b>¦Reçu : <b>{nom}</b> ×{n}","t":"تسلّمتَ: {nom}¦تسلّمتَ: <b>{nom}</b>¦تسلّمتَ: <b>{nom}</b> ×{n}","tv":"تَسَلَّمْتَ: {nom}¦تَسَلَّمْتَ: <b>{nom}</b>¦تَسَلَّمْتَ: <b>{nom}</b> ×{n}"},
-{"k":"bmgd8o.g","fr":"lever d’{etoile}","t":"مطلع {etoile}","tv":"مَطْلِعُ {etoile}"},
+{"k":"bmgd8o.g","fr":"lever d’{etoile}","t":"مطلع {etoile}","tv":"مَطْلَعُ {etoile}"},
 {"k":"1tzo5c7.i","fr":"coucher d’{etoile}","t":"مغيب {etoile}","tv":"مَغِيبُ {etoile}"},
 {"k":"xgn9nr.3","fr":"est","t":"الشرق","tv":"الشَّرْقُ"},
 {"k":"1yptavf.5","fr":"ouest","t":"الغرب","tv":"الْغَرْبُ"},

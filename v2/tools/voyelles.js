@@ -11,6 +11,7 @@
                                                 l'emplacement « ou » filtré par le motif, une expression régulière)
            node v2/tools/voyelles.js poser <fichier> <travail.json>   pose ce qu'un rédacteur a vocalisé ([{ k, tv }]) ;
                                                 le t est relu dans la liste du jour, et la forme refusée si elle ne le suit pas
+                                                (un verrou par fichier : plusieurs rédacteurs peuvent poser en même temps)
 
    Le contrôle, pour chaque forme vocalisée :
    - « PÉRIMÉ » : le texte arabe a changé depuis (ou a disparu) ; le jeu montre alors le texte tel qu'il est écrit ;
@@ -129,12 +130,28 @@ if (arg === 'a-faire') {
   console.log(JSON.stringify(lire(f).filter(x => x.t && !frais.has(x.k) && (!motif || motif.test(x.ou || ''))).map(x => ({ k: x.k, fr: x.fr, t: x.t, ou: x.ou })), null, 1));
   process.exit(0);
 }
+// un verrou par fichier (comme langues.js) : plusieurs rédacteurs peuvent poser en même temps sans effacer le travail
+// l'un de l'autre ; un verrou de plus d'une minute est abandonné
+const dormir = ms => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+function verrou(f, fn) {
+  fs.mkdirSync(DV, { recursive: true }); const v = path.join(DV, f + '.json.verrou');
+  for (let i = 0; ; i++) {
+    try { fs.closeSync(fs.openSync(v, 'wx')); break; } catch (e) {
+      if (e.code !== 'EEXIST') throw e;
+      try { if (Date.now() - fs.statSync(v).mtimeMs > 60000) { fs.unlinkSync(v); continue; } } catch (e2) { continue; }
+      if (i > 1200) { console.log(`✗ voyelles/${f} : le fichier reste verrouillé`); process.exit(1); }
+      dormir(100);
+    }
+  }
+  try { return fn(); } finally { try { fs.unlinkSync(v); } catch (e) { /* déjà retiré */ } }
+}
 if (arg === 'poser') {
   const f = process.argv[3], fichier = process.argv[4];
   if (!f || !listes().includes(f) || !fichier) { console.log('✗ usage : node v2/tools/voyelles.js poser <fichier> <travail.json>'); process.exit(1); }
   let brut = JSON.parse(fs.readFileSync(fichier, 'utf8')); if (!Array.isArray(brut)) brut = Object.keys(brut).map(k => ({ k, tv: brut[k] }));
-  const par = new Map(lire(f).filter(x => x.t).map(x => [x.k, x])), garde = new Map(lireV(f).map(x => [x.k, x]));
   const refus = [];
+  verrou(f, () => {
+  const par = new Map(lire(f).filter(x => x.t).map(x => [x.k, x])), garde = new Map(lireV(f).map(x => [x.k, x]));
   brut.filter(e => e && typeof e.tv === 'string' && e.tv.trim()).forEach(e => { const x = par.get(e.k);
     if (!x) { refus.push(`${e.k} : clé inconnue de ${f}`); return; }
     const fid = L.fidele(x.t, e.tv); if (fid) { refus.push(`${e.k} « ${x.fr.slice(0, 30)} » : ${fid === 'lettres' ? 'une lettre a changé' : 'un signe du texte manque'}`); return; }
@@ -143,6 +160,7 @@ if (arg === 'poser') {
   const ordre = lire(f).map(x => x.k), rang = new Map(ordre.map((k, i) => [k, i]));
   ecrireV(f, [...garde.values()].sort((a, b) => (rang.has(a.k) ? rang.get(a.k) : 1e9) - (rang.has(b.k) ? rang.get(b.k) : 1e9)));
   console.log(`${refus.length ? '!' : '✓'} voyelles/${f} : ${brut.length - refus.length} forme(s) posée(s), ${garde.size} en tout` + (refus.length ? `, ${refus.length} refusée(s) :\n  - ` + refus.join('\n  - ') : ''));
+  });
   process.exit(refus.length ? 1 : 0);
 }
 const { erreurs, avis, n, frais } = controler();
