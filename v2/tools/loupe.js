@@ -14,17 +14,24 @@
       étroite) ; au retour, l'image retrouve son agrandissement ; une page rechargée aussi ;
    6. sur la carte, dans un dialogue, en combat et à la halte, aucun texte n'est plus petit que dix points ;
    7. (2.17) les messages du combat se posent en bas, sur personne — en 390 × 844, 390 × 760, 360 × 640 et 844 × 390, en
-      français et en arabe : chacun relevé au moment où il paraît (voir « messages », à la fin du fichier).
-   Usage : node tools/loupe.js [messages] — « messages » : le 7 seulement (JEU=… pour l'éprouver sur un autre jeu assemblé).
+      français et en arabe : chacun relevé au moment où il paraît (voir « messages », à la fin du fichier) ;
+   8. (2.18) la lumière ne retombe pas dans le sombre : au premier écran du prologue (la Cité-Miroir) et dans Médine de jour,
+      en 390 × 844 et en 844 × 390, à la luminosité d'office, la luminance moyenne de la scène visible et le contraste de
+      celui qui mène avec l'anneau qui l'entoure restent au-dessus de 85 % de ce qu'ils valaient quand la lumière a été
+      validée (voir « sombre », à la fin du fichier).
+   Usage : node tools/loupe.js [messages|sombre] — « messages » : le 7 seulement ; « sombre » : le 8 seulement (JEU=… pour
+   l'éprouver sur un autre jeu assemblé).
    Sortie : « OK » par preuve, puis « LOUPE CONFORME ». Sinon « ÉCART » (une grandeur attendue n'y est pas),
    « INACCESSIBLE » (le toucher ne mène pas où il faut), « INVISIBLE » (un texte trop petit pour être lu, coupé, hors de
    l'écran ou sans fond), « RECOUVERT » (un message du combat sur une figure, une plaque, la frise des tours ou le champ),
-   « ABSENT » (un message attendu ne paraît pas). Code 1 à la première anomalie. Captures dans .smoke/loupe. */
+   « ABSENT » (un message attendu ne paraît pas), « SOMBRE » (la scène, ou celui qui mène sur elle, est plus sombre que la
+   lumière validée ne le permet). Code 1 à la première anomalie. Captures dans .smoke/loupe. */
 const fs = require('fs'), path = require('path');
 const { chromium, devices } = require('playwright');
 const V2 = path.join(__dirname, '..'), out = path.join(V2, '.smoke/loupe'), url = 'file://' + path.resolve(V2, process.env.JEU || 'index.html');
 const PLANCHER = 10; // points : en dessous, un texte ne se lit plus sur un téléphone
-const SEUL = process.argv.includes('messages'); // « node tools/loupe.js messages » : les messages du combat seulement (7.)
+const SEUL = process.argv.includes('messages') || process.argv.includes('sombre'); // « messages » : le 7 seulement ; « sombre » : le 8 seulement
+const QUOI = q => !SEUL || process.argv.includes(q);
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { anomalies++; console.log(mot + ' ' + m); }, dit = (v, mot, m) => (v ? ok(m) : ko(mot, m));
 
 (async () => {
@@ -133,7 +140,8 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { a
     dit(e6.zf === 2 && e6.t.some(t => /Image : × 2/.test(t)), 'ÉCART', `${nom} : page rechargée, l'agrandissement est resté (× ${e6.zf} · « ${e6.t.join('')} »)`);
     await ctx.close();
   }
-  await messages(browser, errors);
+  if (QUOI('messages')) await messages(browser, errors);
+  if (QUOI('sombre')) await sombre(browser, errors);
   if (errors.length) ko('ÉCART', `erreur console : ${[...new Set(errors)].slice(0, 3).join(' | ').slice(0, 400)}`);
   await browser.close();
   console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : '✓ LOUPE CONFORME — l’image s’agrandit, le toucher tombe juste, le texte se lit (captures dans .smoke/loupe)');
@@ -266,5 +274,53 @@ async function messages(browser, errors) {
       await p.evaluate(() => { const I = window.ISNAD, ch = I.battle.champ(); if (ch) { ch.vue = false; I.battle.relayout(); } I.battle.abort(); });
     }
     await ctx.close();
+  }
+}
+
+/* 8. (2.18) La lumière ne retombe pas dans le sombre — décision du décideur, 19 novembre : la lumière « fin de journée
+   saturée », telle quelle, et un réglage « Luminosité » dont le cran « sombre » rend la lumière de la 2.15. À la luminosité
+   d'office (« clair »), sur un téléphone tenu en hauteur (390 × 844, × 1,5) puis en largeur (844 × 390, × 1,25), dans une
+   partie neuve : le premier écran du prologue (la Cité-Miroir, quand la main est rendue) et Médine de jour (le premier
+   chapitre d'Abû Bakr). On y mesure, sur la capture de la scène (luma Rec. 709, de 0 à 100) :
+   - la luminance moyenne de la scène visible ;
+   - le contraste de celui qui mène avec l'anneau qui l'entoure : l'écart quadratique de la luma des points de sa case (16 ×
+     24 points de la carte, ses pieds en bas) à la luma moyenne d'un anneau de douze points autour d'elle.
+   Chacune doit rester au-dessus de 85 % de ce qu'elle valait quand la lumière et la Cité ont été validées (REF, relevé le 20
+   novembre sur la 2.18) : sinon « SOMBRE ». Pour mémoire, la même mesure au cran « sombre » (?lum=sombre) est donnée, sans
+   seuil. Captures : .smoke/loupe/sombre-<lieu>-<taille>.png. */
+const REF = { 'cite-haut': [29.3, 17.8], 'cite-large': [30.2, 18.1], 'medine-haut': [58.0, 18.5], 'medine-large': [60.8, 18.6] };   // [luminance, contraste], relevés le 20 novembre (2.18)
+async function sombre(browser, errors) {
+  const mesure = async (vp, lieu, req) => {
+    const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 2, hasTouch: true, isMobile: true, userAgent: devices['iPhone 13'].userAgent }), p = await ctx.newPage();
+    p.on('pageerror', e => errors.push('pageerror: ' + e.message)); p.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
+    await p.goto(url + (req || '')); await p.waitForTimeout(1500);
+    await p.evaluate(l => { const I = window.ISNAD; I.audio.setOn(false); I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => e.hidden = true); document.body.classList.remove('in-screen'); I.input.reset();
+      I.world.roster = {}; I.world.saga = null; if (l === 'cite') I.world.startChapter('idris', 0); else I.world.startChapter('abubakr', 0); }, lieu);
+    for (let i = 0; i < 120 && await p.evaluate(() => window.ISNAD.script.busy || window.ISNAD.world.lock); i++) { await p.evaluate(() => { const c = document.querySelector('#choice'); if (c && !c.hidden) { const o = c.querySelectorAll('.opt'); if (o.length) o[o.length - 1].click(); } }); await p.keyboard.press('Enter'); await p.waitForTimeout(150); }
+    await p.evaluate(() => { const S = window.ISNAD.script; if (S.filVide) S.filVide(); }); await p.waitForTimeout(1500);   // la vue se pose ; le fil se vide
+    await p.evaluate(() => { const G = window.ISNAD.gfx; G.low = false; G._slow = 0; }); await p.waitForTimeout(300);   // une machine qui peine passe d'elle-même en « 2D simple » : on mesure la lumière, pas la machine
+    const g = await p.evaluate(() => { const I = window.ISNAD, U = I.ui, W = I.world, G = I.gfx, st = document.getElementById('stage').getBoundingClientRect(), P = W.player;
+      const ex = x => st.left + (x - G.cale(W.cam.x) - G.view.x) * U.scale, ey = y => st.top + (y - G.cale(W.cam.y) - G.view.y) * U.scale;
+      const nomDe = id => !!document.querySelector('#noms [data-k="h' + id + '"]');   // 2.18 : l'étiquette d'un héros du groupe
+      return { st: [st.left, st.top, st.width, st.height], box: [ex(P.x - 8), ey(P.y - 22), ex(P.x + 8), ey(P.y + 2)], anneau: 12 * U.scale, chef: W.party[0], chefNom: nomDe(W.party[0]), rawi: nomDe('idris') }; });
+    const f = path.join(out, `sombre-${lieu}-${vp.width}x${vp.height}${req ? '-' + req.replace(/\W/g, '') : ''}.png`);
+    await p.screenshot({ path: f, clip: { x: g.st[0], y: g.st[1], width: g.st[2], height: g.st[3] } });
+    const r = await p.evaluate(async ([png, g]) => { const im = new Image(); im.src = 'data:image/png;base64,' + png; await im.decode(); const cv = document.createElement('canvas'); cv.width = im.width; cv.height = im.height; const c = cv.getContext('2d'); c.drawImage(im, 0, 0);
+      const d = c.getImageData(0, 0, cv.width, cv.height).data, k = cv.width / g.st[2], L = i => (0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]) / 2.55;
+      let s = 0; for (let i = 0; i < d.length; i += 4) s += L(i); const moy = s / (d.length / 4);
+      const b = g.box.map((v, j) => Math.round((v - g.st[j % 2]) * k)), a = Math.round(g.anneau * k), dans = (x, y, q) => x >= q[0] && x < q[2] && y >= q[1] && y < q[3];
+      const ext = [b[0] - a, b[1] - a, b[2] + a, b[3] + a]; let sr = 0, nr = 0; const pts = [];
+      for (let y = Math.max(0, ext[1]); y < Math.min(cv.height, ext[3]); y++) for (let x = Math.max(0, ext[0]); x < Math.min(cv.width, ext[2]); x++) { const v = L((y * cv.width + x) * 4); if (dans(x, y, b)) pts.push(v); else { sr += v; nr++; } }
+      const fond = nr ? sr / nr : 0, ec = pts.length ? Math.sqrt(pts.reduce((q, v) => q + (v - fond) * (v - fond), 0) / pts.length) : 0;
+      return [+moy.toFixed(1), +ec.toFixed(1)]; }, [fs.readFileSync(f).toString('base64'), g]);
+    await ctx.close(); return r.concat([g]);
+  };
+  for (const [cle, vp] of [['haut', { width: 390, height: 844 }], ['large', { width: 844, height: 390 }]]) for (const lieu of ['cite', 'medine']) {
+    const k = lieu + '-' + cle, ref = REF[k], m = await mesure(vp, lieu), s15 = await mesure(vp, lieu, '?lum=sombre'), nom = (lieu === 'cite' ? 'la Cité-Miroir, premier écran' : 'Médine de jour') + ` · ${vp.width} × ${vp.height}`;
+    // 2.18 — le décideur, 20 novembre : « garde les noms de tout le monde sauf Idris » : dans la Cité, Idris mène et n'a pas
+    // d'étiquette ; à Médine, celui qui mène garde la sienne (le joueur s'est arrêté depuis plus d'une seconde)
+    if (lieu === 'cite') dit(m[2].chef === 'idris' && !m[2].rawi, 'ÉCART', `${nom} : Idris mène, arrêté, et aucun nom n'est posé au-dessus de lui`);
+    else dit(m[2].chefNom && !m[2].rawi, 'ÉCART', `${nom} : celui qui mène (${m[2].chef}), arrêté, garde son nom au-dessus de lui`);
+    dit(m[0] >= ref[0] * 0.85 && m[1] >= ref[1] * 0.85, 'SOMBRE', `${nom} : luminance de la scène ${m[0]} (seuil ${(ref[0] * 0.85).toFixed(1)}), contraste de celui qui mène ${m[1]} (seuil ${(ref[1] * 0.85).toFixed(1)}) — au cran « sombre », pour mémoire : ${s15[0]} et ${s15[1]}`);
   }
 }

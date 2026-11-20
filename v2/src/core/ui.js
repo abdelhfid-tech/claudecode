@@ -125,6 +125,7 @@
       mk(I.audio.on ? I.t('Son : activé') : I.t('Son : coupé'), b => { I.audio.setOn(!I.audio.on); sv.opts.sound = I.audio.on; I.save.store(); b.textContent = I.audio.on ? I.t('Son : activé') : I.t('Son : coupé'); });
       mk(I.audio.musicOn ? I.t('Musique : activée') : I.t('Musique : coupée'), b => { I.audio.setMusic(!I.audio.musicOn); sv.opts.music = I.audio.musicOn; I.save.store(); b.textContent = I.audio.musicOn ? I.t('Musique : activée') : I.t('Musique : coupée'); });
       mk(I.t('Dessin : {nom}', { nom: dessinNom() }), b => { dessinSuivant(); b.textContent = I.t('Dessin : {nom}', { nom: dessinNom() }); });
+      mk(I.t('Luminosité : {nom}', { nom: lumNom() }), b => { lumSuivante(); b.textContent = I.t('Luminosité : {nom}', { nom: lumNom() }); });
       mk(G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'); });
       mk(I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }), b => { U.tzSuivant(); b.textContent = I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }); });
       mk(I.t('Image : {zoom}', { zoom: zoomNom() }), b => { U.zoomSuivant(); b.textContent = I.t('Image : {zoom}', { zoom: zoomNom() }); });
@@ -572,6 +573,7 @@
         toggle(I.t('Son'), () => I.audio.on ? I.t('activé') : I.t('coupé'), () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, I.t('Coupe ou rétablit tout le son : musique, percussions et bruitages.')),
         toggle(I.t('Musique'), () => I.audio.musicOn ? I.t('activée') : I.t('coupée'), () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, I.t('Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.')),
         toggle(I.t('Dessin'), dessinNom, dessinSuivant, I.t('Fin : deux fois plus de points, les grands personnages jusque sur les cartes, des lisières irrégulières. Fin, adouci : le même, les contours fondus. D’origine : le dessin de la version légère.')),
+        toggle(I.t('Luminosité'), lumNom, lumSuivante, I.t('Clair : une lumière de fin de journée, chaude, aux ombres turquoise. Moyen : la même, plus retenue. Sombre : la lumière des versions d’avant, plus contrastée.')),
         toggle(I.t('Rendu'), () => G.low ? I.t('2D simple') : I.t('rétro-HD'), () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, I.t('Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.')));
       if (I.langue.disponibles().length > 1) items.push({ label: I.t('Langue') + ' : ' + I.langue.LANGUES[I.langue.lang].nom, fn() { close(); U.choisirLangue(); }, show: () => '<h3>' + I.t('Langue') + '</h3><p>Français · العربية · English · 日本語</p><p>' + I.t('Le récit reprend à son dernier point de reprise, dans la langue choisie. Ta partie est la même dans toutes les langues.') + '</p>' },
         // 2.x : la langue secondaire, et ce qu'elle est — la même chose, avec les mots de l'autre langue
@@ -829,14 +831,18 @@
 
   /* ---------- noms au-dessus des personnages ---------- */
   let still = 0;
+  const bulle = q => (q && G.BULLE_DE && G.BULLE_DE[q] ? 12 : 0);   // 2.18 : une attitude a sa bulle (« ! », « ? », « … ») ; le nom se pose au-dessus
+  const RAWI = 'idris';   // le héros du râwî, dans l'histoire-cadre (frame.js) : celui que le joueur nomme et habille
   U.noms = function (now) {
     const box = $('#noms'), ok = I.scene === W && W.map && W.saga && !S.busy && !W.lock && !U.menuOpen && !(I.build && I.build.on) && !$('#hud').hidden;
     if (!ok) { if (box.childElementCount) box.innerHTML = ''; return; }
     const p = W.player, sc = U.scale || 1, cx = Math.round(W.cam.x) + G.view.x, cy = Math.round(W.cam.y) + G.view.y, tg = W.target(), list = [], m = W.map; // ce que l'on voit de l'image : rogné en hauteur d'écran, agrandi si le joueur l'a voulu
     if (p.moving) still = now;
-    W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y), cible = !!(tg && tg.ent === n); if (d < 60 || (cible && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y, d: cible ? -1 : d, c: n.aura || '#f3e7cc' }); });
+    W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y), cible = !!(tg && tg.ent === n); if (d < 60 || (cible && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y - bulle(n.pose), d: cible ? -1 : d, c: n.aura || '#f3e7cc' }); });
     list.sort((a, b) => a.d - b.d); list.length = Math.min(list.length, 5);
-    if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.suiveur(i) : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
+    // 2.18 — le décideur, 20 novembre : « garde les noms de tout le monde sauf Idris » : le râwî, que mène le joueur, n'a pas
+    // d'étiquette ; les siens et les gens du lieu gardent la leur
+    if (now - still > 900) W.party.forEach((id, i) => { if (id === RAWI) return; const tr = i ? W.suiveur(i) : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1] - bulle(W.pose[i]), d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
     const stg = $('#stage'), seen = {}, w = stg.clientWidth, hh = stg.clientHeight, poses = [];
     // 2.18 : en largeur, la manette est posée sur l'image — une étiquette ne passe pas sous elle (elle ne s'y affiche pas)
     if (document.body.classList.contains('immersif') && document.body.classList.contains('manette')) { const s = stg.getBoundingClientRect();
@@ -857,6 +863,9 @@
   const dessinNom = () => I.t((G.DESSINS.find(d => d[0] === G.dessin()) || G.DESSINS[0])[1]);
   const dessinSuivant = () => { const i = G.DESSINS.findIndex(d => d[0] === G.dessin()), n = G.DESSINS[(i + 1) % G.DESSINS.length][0]; G.definir(n); I.save.data.opts.dessin = n; I.save.store(); };
   G.surDefinition.push(() => { titleBg = null; document.body.classList.toggle('fin', G.D > 1); document.body.classList.toggle('doux', !!G.lisse); });
+  // la luminosité (2.18) : clair (d'office), moyen, sombre (la lumière de la 2.15) — gardée avec les autres réglages
+  const lumNom = () => I.t((G.LUMINOSITES.find(d => d[0] === G.lumNom) || G.LUMINOSITES[0])[1]);
+  const lumSuivante = () => { const i = G.LUMINOSITES.findIndex(d => d[0] === G.lumNom), n = G.LUMINOSITES[(i + 1) % G.LUMINOSITES.length][0]; G.luminosite(n); I.save.data.opts.lum = n; I.save.store(); };
   /* ----- l'agrandissement de l'image (2.x) -----
      Demande du décideur : sur un téléphone, les personnages sont trop petits — « il faut pouvoir zoomer dans l'image ».
      Pendant l'exploration, l'image s'agrandit de U.zf (1 à 3) autour de celui qui mène : on en voit moins, en plus grand.
@@ -886,6 +895,7 @@
   U.applyOpts = function () {
     const o = I.save.data.opts;
     if (o.dessin && !G.defForce) G.definir(o.dessin); document.body.classList.toggle('fin', G.D > 1); document.body.classList.toggle('doux', !!G.lisse);
+    if (o.lum) G.luminosite(o.lum);   // la luminosité choisie (sans choix : « clair ») ; un cran imposé par l'adresse reste
     document.documentElement.style.setProperty('--tz', U.TZ[U.tz()][1]);
     document.body.classList.toggle('sansjoy', o.joy === false);   // le joystick : affiché d'office sur un écran tactile
     if (typeof o.zoom === 'number') U.zf = I.clamp(o.zoom, 1, 3);   // sinon : la grandeur d'office, que la mise en page règle sur l'écran

@@ -52,7 +52,7 @@
   };
   W.pose = [];
   W.emote = function (who, pose) {
-    const p = pose && D.POSES.includes(pose) ? pose : null;
+    const p = pose && D.POSES.includes(pose) ? pose : null;   // les poses et les attitudes (2.18) : un Compagnon les prend avec retenue (sprites.js)
     if (who === 'groupe') W.pose = W.party.map(() => p); else if (who === 'hero') W.pose[0] = p; else { const n = W.npcs.find(x => x.id === who); if (n) n.pose = p; }
   };
   // `parLeRecit` : la prière est une étape d'un objectif en cours. Elle repose le groupe, mais ne prend pas de point de
@@ -74,7 +74,7 @@
 
   /* ----- cartes ----- */
   W.loadMap = function (id, opts, spot) {
-    opts = opts || {}; const key = id + JSON.stringify(opts);
+    opts = opts || {}; const key = id + JSON.stringify(opts) + (I.maps.cle ? I.maps.cle(id) : ''); // la Cité éteinte de la fin n'est pas la Cité du cache
     W.mapKey = key; const bl = I.build && W.saga ? I.build.peek(id) : null;
     if (bl && bl.length) { W.map = I.maps.build(id, opts); bl.forEach(e => I.build.apply(e, W.map)); } // ce qui a été bâti reste
     else W.map = mapCache[key] || (mapCache[key] = I.maps.build(id, opts));
@@ -182,10 +182,24 @@
     t.unshift([p.x, p.y, p.dir]);
     let L = 0; for (let k = 1; k < t.length; k++) { L += Math.hypot(t[k][0] - t[k - 1][0], t[k][1] - t[k - 1][1]); if (L > LONG_CHEMIN) { t.length = k + 1; break; } }
   }
+  /* 2.18 — un lieu peut regarder plus haut que celui qui mène (env.regard : [la ligne de la carte qu'il veut montrer, la part
+     de la vue où descendent au plus les pieds de celui qui mène — en hauteur, puis ailleurs]) : la Cité-Miroir (le décideur,
+     19 novembre : sur un téléphone en hauteur, le premier écran du prologue doit laisser voir les façades du vieux quartier
+     et le pied des tours). En hauteur, ses pieds restent au-dessus de la boussole ; ailleurs, au-dessus de la boîte de
+     dialogue. Pendant l'ouverture d'un chapitre (W.leve), et quand la Cité s'est éteinte et que le récit parle, la vue lève
+     les yeux plus haut encore (env.leve : [ligne, part]) : la ville entière, celui qui mène au bas de l'image. Aucun lieu,
+     aucune case ne bouge. → de combien de points la vue monte (0 sans regard). */
+  W.leve = false;
+  W.regard = function () {
+    const e = W.map && W.map.env, rg = e && e.regard, V = G.view; if (!rg) return 0;
+    const lv = e.leve && (W.leve || (I.maps.eteinte && e.time === 'cite' && S.busy)), enHaut = document.body.classList.contains('portrait');
+    const y = W.player.y, haut0 = y - V.h / 2 - 10, voulu = lv ? Math.max(e.leve[0], y - e.leve[1] * V.h) : Math.max(rg[0], y - (enHaut ? rg[1] : rg[2]) * V.h);
+    return Math.max(0, haut0 - voulu);
+  };
   W.updateCam = function (snap) {
-    const m = W.map, mw = m.w * T, mh = m.h * T;
+    const m = W.map, mw = m.w * T, mh = m.h * T, haut = W.regard();
     let cx = mw <= G.PW ? (mw - G.PW) / 2 : I.clamp(W.player.x - G.PW / 2, 0, mw - G.PW);
-    let cy = mh <= G.PH ? (mh - G.PH) / 2 : I.clamp(W.player.y - G.PH / 2 - 8, 0, mh - G.PH);
+    let cy = mh <= G.PH ? (mh - G.PH) / 2 : I.clamp(W.player.y - G.PH / 2 - 8 - haut, 0, mh - G.PH);
     if (snap) { W.cam.x = cx; W.cam.y = cy; } else { W.cam.x += (cx - W.cam.x) * 0.14; W.cam.y += (cy - W.cam.y) * 0.14; }
     // fenêtre visible (écran en hauteur) : elle suit le héros, se tourne vers celui qui parle et s'arrête aux bords de la carte
     const V = G.view;
@@ -199,7 +213,7 @@
     if (V.h < G.PH) {
       const f = W.focus, half = V.h / 2 - 26, off = f && f.map === m.id && !f.hidden && f.placed ? I.clamp((f.y - W.player.y) / 2, -half, half) : 0;
       W.foffY = snap ? off : (W.foffY || 0) + (off - (W.foffY || 0)) * 0.1;
-      const lo = Math.max(0, -cy), hi = Math.min(G.PH, mh - cy) - V.h, want = hi < lo ? (lo + hi) / 2 : I.clamp(W.player.y - 10 + W.foffY - cy - V.h / 2, lo, hi);
+      const lo = Math.max(0, -cy), hi = Math.min(G.PH, mh - cy) - V.h, want = hi < lo ? (lo + hi) / 2 : I.clamp(W.player.y - 10 - haut + W.foffY - cy - V.h / 2, lo, hi);
       V.ty = snap ? want : V.ty + (want - V.ty) * 0.14; V.y = G.cale(V.ty);
     } else { V.y = 0; V.ty = 0; }
   };
@@ -211,6 +225,7 @@
     W.lock = true;
     if (W.saga !== saga) W.roster = {};
     W.saga = saga; W.ci = ci; W.ch = ch; W.minLvl = saga.frame ? (ch.minLvl || 1) : (MINLVL[ci] || 6);
+    I.maps.eteinte = false; // la Cité-Miroir se rallume à chaque chapitre (elle ne s'éteint qu'à la fin : battle.js)
     const sp = I.save.data.sagas[sagaId] || (I.save.data.sagas[sagaId] = { ch: 0, done: false, flags: {} });
     S.flags = cp ? (cp.flags || {}) : Object.assign({}, sp.flags || {});
     if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); I.mal.ouvre(); }
@@ -230,13 +245,14 @@
     try { await S.fade('out', 300); } finally { S.depth--; }
     I.setScene(W);
     W.player.dir = 0; // avant le chargement : les siens sont semés derrière lui (W.resetTrail)
+    W.leve = !cp;   // 2.18 : pendant l'ouverture, la vue lève les yeux (W.regard : la Cité-Miroir)
     W.loadMap(cp ? cp.map : ch.map, cp ? cp.opts : (ch.opts || {}), cp ? cp.pos : ch.start);
     if (cp) { W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s && s.x !== undefined && n.map === W.map.id) { n.x = s.x; n.y = s.y; n.placed = true; n.placedMap = W.map.id; } }); if (W.degager()) W.resetTrail(); }
     W.hud(); $('#hud').hidden = false;
     S.depth++; W.lock = false; // verrouille le déplacement pendant l'ouverture
     try {
       await S.fade('in', 500);
-      if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); await I.oeuvres.openChapter(); }
+      if (!cp) { W.checkpoint(); try { await S.run(ch.intro || [['title', ch.title, ch.sub]]); } finally { W.leve = false; } await I.oeuvres.openChapter(); }
       if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) { I.build.yields(); await I.trade.resolve(); } }
       // 2.x — la progression (lecons.js) : dans une partie neuve, un seul outil à la fois. Au début du prologue, se déplacer, et rien d'autre.
       const appr = I.lecons && I.lecons.actif();
@@ -669,7 +685,9 @@
     x = G.cale(x); y = G.cale(y);
     c.fillStyle = 'rgba(20,12,30,.32)'; c.beginPath(); c.ellipse(x, y + 1, 6, 2.5, 0, 0, 6.3); c.fill();
     if (geste && sheet.look && G.frappe && G.frappe(c, sheet.look, dir, x - 8, y - 22, geste, geste.tau, 'carte')) return;
-    if (pose && !moving && sheet.look) { c.drawImage(G.pose(sheet.look, dir, pose), x - 8, y - 22 - (pose === 'surpris' ? 2 : 0)); return; }
+    if (pose && !moving && sheet.look) { c.drawImage(G.pose(sheet.look, dir, pose), x - 8, y - 22 - (pose === 'surpris' ? 2 : 0));
+      const bu = G.BULLE_DE && G.BULLE_DE[pose]; if (bu) { const im = G.bulle(bu); if (im) c.drawImage(im, x - 4.5, y - 36 - (pose === 'surpris' ? 2 : 0), 9, 10); }   // la bulle de l'attitude (« ! », « ? », « … »), pour tous
+      return; }
     if (W.trace) W.trace.push({ sheet, x, y, dir, f, court: !!(moving && court) });   // pour les outils (la mesure du pied d'appui)
     if (!sheet.souffle) { c.drawImage(sheet, f * 16, dir * 24, 16, 24, x - 8, y - 22 - (moving && f ? 1 : 0), 16, 24); return; } // le dessin d'origine : comme dans la 1.32
     // en dessin fin : immobile, il respire (une image sur quatre, à son rythme) ; en marche, le corps se hausse d'un point
@@ -715,7 +733,7 @@
     const lights = [];
     if (I.rodeurs && m.env.dedale) I.rodeurs.dessinerPorte(c, cx, cy, t, lights); // 2.x : la pièce interdite et sa porte, sur le sol, sous les personnages
     for (const e of list) {
-      if (e.o) { const o = e.o; c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2) - cx, o.y - o.h + 1 - cy); if (o.anim) drawFlame(c, o.x - cx, o.y - cy - (o.type === 'brazier' ? 10 : 3), t + o.seed, o.type === 'fire'); if (G.OBJ[o.type].herd) I.build.herd(c, o, o.x - cx, o.y - cy, t); }
+      if (e.o) { const o = e.o; c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2) - cx, o.y - o.h + 1 - cy); if (o.anim) { const an = G.OBJ[o.type].animer; if (an) an(c, o.x - cx, o.y - cy, t, o); else drawFlame(c, o.x - cx, o.y - cy - (o.type === 'brazier' ? 10 : 3), t + o.seed, o.type === 'fire'); } if (G.OBJ[o.type].herd) I.build.herd(c, o, o.x - cx, o.y - cy, t); }
       else if (e.n) { const n = e.n; if (n.ph === undefined) n.ph = (I.hash((n.id || n.name || '') + '|' + (n.map || '')) >>> 0) % 628 / 100; /* chacun respire à son rythme */ drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t + n.ph, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
       else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = f.sonne > 0 ? 0.4 + Math.sin(t * 22) * 0.12 : 0.85 + (Math.sin(t * 5 + f.ph) + 1) * 0.06; /* 2.16 : un plancher de 0,85 — encore un peu de transparence : ce n'est pas une personne (exigence 6) */ c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; if (f.rodeur && (f.voiles > 0 || f.tenue > 0) && (f.meute || f.tenue !== undefined)) { const nv = Math.ceil(f.meute ? f.voiles : f.tenue); c.fillStyle = f.sonne > 0 ? '#fff3c8' : `hsl(${d.hue},90%,78%)`; for (let i = 0; i < nv; i++) c.fillRect(Math.round(f.x - cx - nv * 2 + i * 4 + 1), Math.round(f.y - cy - s - 7 + bob), 2, 2); } /* ce qui rôde : ses voiles, et le tremblement de qui vient d'être frappé */ lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
@@ -726,7 +744,7 @@
         const rg = I.rodeurs && I.rodeurs.geste, tau = rg ? W.t - rg.t : -1, gt = rg && D.GEAR_TYPES[rg.type];   // celui qui mène frappe : l'élan, le coup, l'arme en main (s'il repart, le geste s'efface après le coup)
         const frappe = rg && tau >= 0 && tau < (p.moving ? G.FRAPPE.elan + G.FRAPPE.balai : G.dureeFrappe) ? { anim: (gt && gt.anim) || 'geste', port: (rg.port !== undefined ? rg.port : gt && gt.port) || null, tau } : null;
         if (p.moving && p.court) poudre(p, W.sheets[0], p.x, p.y, p.dir, p.parcours || 0);
-        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe, p.court, p.parcours || 0); const lk = W.saga.heroes[W.party[0]].look; if (D.DE_2084.indexOf(lk.kind) < 0) lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe, p.court, p.parcours || 0); const lk = W.saga.heroes[W.party[0]].look; if (D.DE_2084.indexOf(lk.kind) < 0) lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push(G.lum === 215 ? { x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 } : { x: p.x - cx, y: p.y - cy - 12, r: 34, color: '#ffe2c4', a: 0.55 }); } /* 2.17 : en 2084, un halo plus large et chaud, qui ne bleuit plus ses couleurs */
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {
@@ -767,6 +785,6 @@
       if (I.rodeurs && m.env.dedale && I.rodeurs.porteVue()) { const pi = I.rodeurs.interdite(); I.rodeurs.signe(c, mx + (pi.porte[0] + 0.5) * q, my + (pi.porte[1] + 0.5) * q, 2.2 * q); } // 2.x : la porte interdite, vue de près
       c.fillStyle = Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a'; c.fillRect(mx + (Math.floor(W.player.x / T) - 1) * q, my + (Math.floor(W.player.y / T) - 1) * q, 3 * q, 3 * q);
     } else W.miniRect = null;
-    return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint, clouds: env.clouds ? { x: cx, y: cy } : null };
+    return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint, clouds: env.clouds ? { x: cx, y: cy } : null, etalon: env.etalon };
   };
 })();

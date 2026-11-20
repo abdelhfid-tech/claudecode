@@ -131,7 +131,7 @@ const INVENTAIRE = COIFFES => {
 /* ---------- dans la page : l'empreinte des images d'une liste de silhouettes ---------- */
 const EMPREINTES = ([looks, grands, ancien]) => {
   const G = window.ISNAD.gfx; if (ancien) G.natif = false; // l'interrupteur : le grand sprite d'avant
-  const POSES = window.ISNAD.D.POSES, hx = n => ('0000000' + n.toString(16)).slice(-8);
+  const D = window.ISNAD.D, POSES = D.POSES.filter(q => (D.ATTITUDES || []).indexOf(q) < 0), hx = n => ('0000000' + n.toString(16)).slice(-8);   // les six poses d'avant : le petit personnage d'une attitude (2.18) est celui de l'attitude d'avant la plus proche (contrôlé à part)
   const fnv = (h, d) => { for (let i = 0; i < d.length; i++) { h ^= d[i]; h = Math.imul(h, 16777619); } return h >>> 0; };
   const octets = cv => cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
   return looks.map(L => { let a = 2166136261, b = 0x9747b28c, c = 2166136261, e = 0x9747b28c;
@@ -162,7 +162,7 @@ const DESSINS = [['fin', '?def=2'], ['doux', '?def=2l'], ['origine', '?def=1']];
 
 /* ---------- dans la page : le voile de chaque grand sprite, et ce que le moteur en dit ---------- */
 const VOILES = looks => {
-  const G = window.ISNAD.gfx, POSES = window.ISNAD.D.POSES, faux = []; let vues = 0, natives = 0;
+  const G = window.ISNAD.gfx, D = window.ISNAD.D, POSES = D.POSES.concat((D.ATTITUDES || []).filter(q => D.POSES.indexOf(q) < 0), G.MIMIQUES || []), faux = []; let vues = 0, natives = 0;   // les attitudes (2.18, dans D.POSES) et les mimiques seules y passent aussi
   const voile = rows => { const H = rows.length, W = rows[0].length, V = (x, y) => y >= 0 && y < H && x >= 0 && x < W && (rows[y][x] === 'V' || rows[y][x] === 'v');
     let n = 0, d = null; for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (V(x, y)) { n++; d = d || [x, y]; }
     if (!n) return null;
@@ -401,6 +401,21 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
       return { faux, n, ports }; });
     await page.context().close();
     if (Ge) { if (Ge.faux.length) Ge.faux.slice(0, 10).forEach(f => ko('ABSENT ' + f)); else ok(`les gestes de frappe : ${Ge.n} images (l'élan, le coup — quatre directions, sur la carte et en combat), chacune avec la place de sa main ; ${Ge.ports.length} armes dessinées sous huit angles (${Ge.ports.join(', ')}) ; le geste dure, puis cesse`); }
+    // 6 bis. la retenue (2.18 ; le décideur, 19 novembre : les attitudes « toutes, avec retenue ») : un Compagnon, et qui le jeu
+    // laisse sans visage, prend la joie, le rire et la colère dans leur forme retenue ; qui a un visage, dans leur forme
+    // entière. Dans la forme retenue, rien du corps ne monte au-dessus de la tête (la joie ne lève pas les bras) : au-dessus
+    // de la première ligne du voile, pas une case de plus qu'au repos, de face et de profil.
+    page = await ouvrir();
+    const Rt = await page.evaluate(liste => { const G = window.ISNAD.gfx; if (!G.retenue) return null; const faux = []; let n = 0, r = 0;
+      // ce qui, du corps, monte plus haut que le haut du voile (les cases d'autres lettres que la coiffe, au-dessus de sa première ligne)
+      const haut = (L, d, p) => { const g = G.charGrille(L, d, 0, p).lignes; let y0 = g.findIndex(l => /[Vv]/.test(l)), k = 0; if (y0 < 0) return 0;
+        for (let y = 0; y < y0; y++) for (let x = 0; x < 32; x++) if (g[y][x] !== '.' && 'VvTtuHDXIiJj'.indexOf(g[y][x]) < 0) k++; return k; };
+      liste.forEach(q => { const sans = !G.aVisage(q.look); ['joie', 'rire', 'colere'].forEach(p => { n++; const v = G.retenue(q.look, p);
+        if (sans && v === p) faux.push(q.nom + ' · ' + p + ' : sans retenue'); if (!sans && v !== p) faux.push(q.nom + ' · ' + p + ' : retenue pour qui a un visage');
+        if (sans) { r++; [0, 1].forEach(d => { if (haut(q.look, d, p) > haut(q.look, d, null)) faux.push(q.nom + ' · ' + p + ' · ' + ['face', 'profil'][d] + ' : le corps monte au-dessus de la tête'); }); } }); });
+      return { faux, n, r }; }, inv.filter(q => q.groupe === 'héros' || q.groupe === 'gens').map(q => ({ nom: q.nom, look: q.look })));
+    await page.context().close();
+    if (Rt) { if (Rt.faux.length) Rt.faux.slice(0, 10).forEach(f => ko('ÉCART ' + f)); else ok(`la retenue : ${Rt.r} attitudes de Compagnons (et de qui n'a pas de visage) prises avec retenue — rien du corps ne monte plus haut qu'au repos au-dessus du voile, de face ni de profil ; les ${Rt.n - Rt.r} autres, entières`); }
     // 7. la marque du râwî (D193 ; le décideur : « les autres habitants de la Cité-Miroir ne doivent pas ressembler à Idris »)
     page = await ouvrir();
     const Mq = await page.evaluate(liste => {

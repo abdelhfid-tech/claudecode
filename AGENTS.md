@@ -37,7 +37,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   les trois figures et leurs effets : « PROGRESSION CONFORME »), `node v2/tools/loupe.js` (sur un téléphone, en
   hauteur et en largeur : l'image s'agrandit — d'office, en écartant deux doigts, par le bouton —, le toucher tombe
   juste, les étiquettes restent sur leurs personnages, le combat garde son cadrage et chaque héros y a sa place, aucun texte n'est sous dix points ;
-  les messages du combat se posent en bas, sur personne, en français et en arabe : « LOUPE CONFORME »), `node v2/tools/bilingue.js` (la langue secondaire, pour chacun des douze couples de langues, en
+  les messages du combat se posent en bas, sur personne, en français et en arabe ; la scène et celui qui mène ne
+  retombent pas dans le sombre : « LOUPE CONFORME »), `node v2/tools/bilingue.js` (la langue secondaire, pour chacun des douze couples de langues, en
   hauteur et en largeur : choisie par le vrai bouton et gardée ; le prologue au doigt, chaque réplique et chaque carton du
   récit avec sa seconde bulle, dans la bonne langue et le bon sens, lisible, sans débordement ; sans elle, rien ne paraît :
   « BILINGUE CONFORME »), `node v2/tools/partage.js` (partager sa progression : le bouton, absent avant tout maillon puis
@@ -58,7 +59,11 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
 - La 2.x se dessine deux fois plus fin que la 1.32 (`gfx.D = 2` : 768 × 432 points, les grands personnages jusque sur
   les cartes) ; le joueur choisit son dessin dans les réglages (fin, fin et adouci, d'origine). Le dessin d'origine est
   celui de la 1.32 (`?def=1` le force) ; il ne lui est plus comparé et peut s'en écarter. Tout est décrit dans
-  `v2/docs/architecture.md`, « La définition du dessin ». Un dessin ne se juge que sur une capture, dans les trois réglages.
+  `v2/docs/architecture.md`, « La définition du dessin ». Un dessin ne se juge que sur une capture, dans les trois réglages,
+  et sur un téléphone, à taille réelle, à côté des autres personnages (390 × 844 et 844 × 390) — jamais agrandi seul.
+  Depuis la 2.18, Idris est « le passeur », dessiné comme les autres (D204), tous les grands personnages ont le rendu net,
+  et la lumière est celle de « fin de journée saturée », avec un réglage « Luminosité » dont le cran « sombre » rend celle
+  de la 2.15 (D203 ; contrôle « SOMBRE » dans `loupe.js`).
 - Dans la 2.x, le voile de chaque Compagnon rayonne d'une couleur qui lui est propre (`D.RAYONS`, dans `v2/src/core/defs.js` ;
   couleurs proposées par l'agent, à valider par le décideur). Le moteur la pose (`look.rayon`) : un fichier de saga ne
   l'écrit jamais, un personnage de fiction n'en a pas, et le voile reste une seule surface. La couleur ne dit rien de
@@ -95,6 +100,16 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   jamais (type `compagnon`), ni ceux de `D.SANS_VISAGE` (`defs.js`, par récit, sous le nom exact que le récit leur
   donne). Ajouter un personnage d'histoire à un récit, c'est se demander s'il y entre. `v2/docs/architecture.md`,
   « Les visages ». Contrôle : `silhouettes.js`.
+- Dans la 2.x, la Cité-Miroir est une « ville de verre » (D206, décision du décideur du 19 novembre) : le vieux quartier de
+  pierre, ses tours à vent trapues et ses claustras au pied de tours de verre, un viaduc, une crique ; au crépuscule (sa
+  scène vers 29 à 30 de luminance), la vue y regarde plus haut que celui qui mène (`env.regard`, `W.regard`). La ville qui
+  l'a inspirée n'est nommée nulle part dans le jeu ni dans ses langues ; aucune réplique de monument, aucune inscription,
+  aucun symbole ni édifice religieux ; une tour à vent n'est jamais lisible comme un minaret ; personne n'est ajouté au
+  décor. Un changement de la Cité garde son masque (cases, lieux, caisses) et repasse `loupe.js`, puis toute la batterie.
+- Dans la 2.x, le corps a ses attitudes (D205 : `D.ATTITUDES`, dans `D.POSES`) ; un Compagnon les prend avec retenue — la
+  joie ne lève pas les bras au-dessus de la tête, le rire se limite aux épaules, la colère reste un corps tendu — et c'est
+  le moteur qui choisit (`retenue()`) : un récit écrit l'attitude, jamais sa forme. Les mimiques seulement pour qui a un
+  visage ; les bulles « ! », « ? », « … » pour tous.
 - Dans la 2.x, les personnages bougent (demande du décideur, 16 novembre : « qu'on voie les pas et les gestes des bras
   quand ils marchent ou quand ils frappent ») : des foulées franches dans les quatre directions, un souffle au repos
   (une quatrième image par direction), et deux gestes de frappe — l'élan, le coup — que le moteur seul prend
@@ -279,7 +294,8 @@ sans « ABSENT », sans « TEXTE CACHÉ » (un texte affiché sous le noir d'un 
 qui allonge le combat de plus de 20 % ou lui ajoute une défaite), sans « MUSIQUE »
 (la piste voulue n'est pas celle du lieu, ou le bus de la musique se tait), sans « SUPERPOSÉ » (le joueur reste plus de trente
 pas dans le pied d'un PNJ ou d'un coffre, ou un lieu se charge avec quelqu'un à moins de 9 points de lui), sans « COINCÉ »
-(le joueur de test, à pied ou au doigt, n'arrive pas à son objectif et y est porté), sans « PNJ EN TRAVERS » (la case d'un PNJ
+(le joueur de test, à pied ou au doigt, n'arrive pas à son objectif et y est porté), sans « SOMBRE » (la scène ou celui
+qui mène, plus sombres que la lumière validée ne le permet), sans « PNJ EN TRAVERS » (la case d'un PNJ
 ou d'un coffre, rendue pleine, coupe un lieu nommé, et aucun pas de côté ne rouvre le passage), sans « RECOUVERT » (un message
 du combat posé sur un personnage, une chimère, son nom, sa jauge de voiles, la frise des tours ou le champ ; ou la manette
 tactile sur un texte ou un élément touchable — et, en hauteur, sur l'image ; en largeur, depuis la 2.18, elle est posée
