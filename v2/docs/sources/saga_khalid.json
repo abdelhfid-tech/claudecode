@@ -168,7 +168,7 @@
     "source_fr": "Râfi' ibn 'Umayra — at-Tabarî, Târîkh",
     "nature": "chronique",
     "ar": {
-      "texte": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ راجِعُونَ! هَلَكْتُمْ وَاللَّهِ إِذًا وهلكت، لا ابالكم! انْظُرُوا",
+      "texte": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ راجِعُونَ! هَلَكْتُمْ وَاللَّهِ إِذًا وهلكت، لا أبالكم! انْظُرُوا",
       "reference": "رافع بن عُميرة — الطبري، تاريخ الرسل والملوك، سنة 13، ج 3 ص 416",
       "lu_sur": "https://shamela.ws/book/9783/1689",
       "etat": "trouvé"
@@ -186,7 +186,7 @@
       "lu_sur": ""
     },
     "ecart": "Le français omet « إذًا » (« alors ») et l'exclamation « لا أبا لكم ! », et il ajoute « encore » : l'arabe dit seulement « انظروا » (« Regardez ! »).",
-    "note": "« لا أبا لكم » (mot à mot « puissiez-vous n'avoir point de père ») est une formule de vive exhortation, sans valeur d'injure ; l'édition lue l'imprime « لا ابالكم », gardé tel quel. L'anglais la rend mot à mot, le japonais par une interjection. La première phrase est la formule de Coran 2:156, dite ici par Râfi' : elle est traduite avec le reste, de l'arabe."
+    "note": "« لا أبا لكم » (mot à mot « puissiez-vous n'avoir point de père ») est une formule de vive exhortation, sans valeur d'injure ; le texte numérique lu écrit « لا ابالكم » ; l'édition imprimée (fac-similé : https://archive.org/download/trm08_202112/trm03.pdf, p. 416) écrit « لاأبالكم », l'alif portant sa hamza : corrigé en « لا أبالكم » (20 novembre). Le texte numérique ne suit pas toujours l'édition imprimée (voir le LISEZ-MOI). L'anglais la rend mot à mot, le japonais par une interjection. La première phrase est la formule de Coran 2:156, dite ici par Râfi' : elle est traduite avec le reste, de l'arabe."
   },
   {
     "fichier": "v2/src/data/saga_khalid.js",
@@ -195,7 +195,7 @@
     "source_fr": "Vers d'un homme de l'armée — at-Tabarî, Târîkh",
     "nature": "chronique",
     "ar": {
-      "texte": "لله عينا رَافِعٍ أَنَّى اهْتَدَى ... فَوْز مِنْ قُرَاقِرَ إِلَى سَوَى!\nخَمْسًا إِذَا مَا سَارَهَا الْجَيْشُ بَكَى",
+      "texte": "لله عينا رَافِعٍ أَنَّى اهْتَدَى ... فَوَّزَ مِنْ قُرَاقِرِ إِلَى سُوَى!\nخِمْسًا إِذَا مَا سَارَهَا الْجَيْشُ بَكَى",
       "reference": "شاعر من المسلمين — الطبري، تاريخ الرسل والملوك، سنة 13، ج 3 ص 416",
       "lu_sur": "https://shamela.ws/book/9783/1689",
       "etat": "approchant"
@@ -212,8 +212,8 @@
       "reference": "ムスリムのある詩人の詩 — タバリー『諸使徒と諸王の歴史』ヒジュラ暦13年、第3巻416頁(アラビア語原文より訳出)",
       "lu_sur": ""
     },
-    "ecart": "Le texte d'at-Tabarî lu porte « الجيش » (« l'armée » : « cinq jours où l'armée, si elle s'y engage, pleure ») là où le français dit « le lâche », ce qui traduit une autre leçon du même vers, « الجِبْس », transmise hors d'at-Tabarî. « cinq nuits » rend « خمسًا » (« cinq », sans le mot « nuits »). Le français s'arrête avant le dernier hémistiche (« ما سارها قبلك إنسي يرى »), sans le marquer. L'anglais et le japonais suivent le texte d'at-Tabarî (« l'armée »).",
-    "note": "La leçon « الجبس » (« خمسا إذا ما سارها الجبس بكى ») a été lue chez ad-Dâraqutnî, al-Mu'talif wa-l-mukhtalif, ج 3 ص 1705 (https://shamela.ws/book/12581/1522), et chez al-Khatîb al-Baghdâdî, al-Kifâya, ص 163 (https://shamela.ws/book/13055/570), qui rapporte que lire « الجيش » y est une faute de copie ; tous deux ont « لله درّ رافع » au lieu de « لله عينا رافع ». Dans l'arabe relevé, « ... » est le séparateur d'hémistiches de l'édition, non une coupe. At-Tabarî dit : « فقال شاعر من المسلمين » (un poète d'entre les musulmans)."
+    "ecart": "Le texte d'at-Tabarî lu porte « الجيش » (« l'armée » : « cinq jours où l'armée, si elle s'y engage, pleure ») là où le français dit « le lâche », ce qui traduit une autre leçon du même vers, « الجِبْس », transmise hors d'at-Tabarî. « cinq nuits » rend « خِمْسًا » : l'édition imprimée vocalise « خِمْس », l'intervalle de cinq jours entre deux abreuvements, sans le mot « nuits ». Le français s'arrête avant le dernier hémistiche (« ما سارها قبلك إنسي يرى »), sans le marquer. L'anglais et le japonais suivent le texte d'at-Tabarî (« l'armée »).",
+    "note": "La leçon « الجبس » (« خمسا إذا ما سارها الجبس بكى ») a été lue chez ad-Dâraqutnî, al-Mu'talif wa-l-mukhtalif, ج 3 ص 1705 (https://shamela.ws/book/12581/1522), et chez al-Khatîb al-Baghdâdî, al-Kifâya, ص 163 (https://shamela.ws/book/13055/570), qui rapporte que lire « الجيش » y est une faute de copie ; tous deux ont « لله درّ رافع » au lieu de « لله عينا رافع ». Dans l'arabe relevé, « ... » est le séparateur d'hémistiches de l'édition, non une coupe. At-Tabarî dit : « فقال شاعر من المسلمين » (un poète d'entre les musulmans). Vérifié le 20 novembre sur l'édition imprimée (fac-similé : https://archive.org/download/trm08_202112/trm03.pdf, p. 416) : elle vocalise « فَوَّزَ » (« il a traversé le désert ») là où le texte numérique lu écrivait « فَوْز », « قُراقرِ » (kasra, et non fatha), « سُوَى » (et non « سَوَى ») et « خِمْساً » (et non « خَمْسًا ») : ces quatre mots sont corrigés d'après elle ; le reste suit le texte numérique. Ses notes renvoient à Yâqût (5:157), qui lit « لله در رافع », « سارها الجبس » et « من قبلها إنس يرى »."
   },
   {
     "fichier": "v2/src/data/saga_khalid.js",
@@ -303,7 +303,7 @@
     "source_fr": "'Umar ibn al-Khattâb, lettre aux provinces — at-Tabarî, Târîkh",
     "nature": "chronique",
     "ar": {
-      "texte": "إِنِّي لَمْ أَعْزِلْ خَالِدًا عَنْ سَخْطَةٍ وَلا خِيَانَةٍ، وَلَكِنَّ النَّاسَ فُتِنُوا بِهِ، فَخِفْتُ أَنْ يوكلوا إِلَيْهِ وَيُبْتُلُوا بِهِ، فَأَحْبَبْتُ أَنْ يَعْلَمُوا أَنَّ اللَّهَ هُوَ الصَّانِعُ",
+      "texte": "إِنِّي لَمْ أَعْزِلْ خَالِدًا عَنْ سُخْطَةٍ وَلا خِيَانَةٍ، وَلَكِنَّ النَّاسَ فُتِنُوا بِهِ، فَخِفْتُ أَنْ يُوكّلوا إِلَيْهِ ويبتَلوا بِهِ، فَأَحْبَبْتُ أَنْ يَعْلَمُوا أَنَّ اللَّهَ هُوَ الصَّانِعُ",
       "reference": "عمر بن الخطاب، كتابه إلى الأمصار — الطبري، تاريخ الرسل والملوك، سنة 17، ج 4 ص 68",
       "lu_sur": "https://shamela.ws/book/9783/1959",
       "etat": "trouvé"
@@ -320,7 +320,7 @@
       "reference": "ウマル・イブン・アル=ハッターブ、諸地方への書簡 — タバリー『諸使徒と諸王の歴史』ヒジュラ暦17年、第4巻68頁(アラビア語原文より訳出)",
       "lu_sur": ""
     },
-    "ecart": "Le français omet « ويبتلوا به » (« et qu'ils ne soient éprouvés par lui ») et s'arrête avant la fin de la phrase : « وألا يكونوا بعرض فتنة » (« et qu'ils ne soient pas exposés à une épreuve »), non relevée ici. « éblouis » rend « فُتِنوا به » (« ont été séduits, mis à l'épreuve par lui »).",
-    "note": "Récit de Sayf, d'après 'Adî ibn Suhayl : « كتب عمر إلى الأمصار »."
+    "ecart": "Le français omet « ويبتَلوا به » (« et qu'ils ne soient éprouvés par lui ») et s'arrête avant la fin de la phrase : « وألا يكونوا بعرض فتنة » (« et qu'ils ne soient pas exposés à une épreuve »), non relevée ici. « éblouis » rend « فُتِنوا به » (« ont été séduits, mis à l'épreuve par lui »).",
+    "note": "Récit de Sayf, d'après 'Adî ibn Suhayl : « كتب عمر إلى الأمصار ». Vérifié le 20 novembre sur l'édition imprimée (fac-similé : https://archive.org/download/trm08_202112/trm04.pdf, p. 68) : le texte numérique lu écrivait « يوكلوا » sans voyelles, « وَيُبْتُلُوا » (damma sur le tâ') et « سَخْطَةٍ » ; l'édition imprimée écrit « يُوكّلوا », « ويبتَلوا » (fatha sur le tâ') et « سُخْطة ». Les deux premiers mots sont recopiés tels qu'elle les imprime, avec ses seules voyelles ; dans le troisième, la voyelle du sîn est corrigée."
   }
 ]

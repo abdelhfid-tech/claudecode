@@ -438,7 +438,7 @@
   "source_fr": "Abû Bakr à Usâma — at-Tabarî, Târîkh",
   "nature": "chronique",
   "ar": {
-   "texte": "وَاللَّهِ لا تنزل وو الله لا أَرْكَبُ! وَمَا عَلَيَّ أَنْ أُغَبِّرَ قَدَمَيَّ فِي سَبِيلِ اللَّهِ سَاعَةً",
+   "texte": "وَاللَّهِ لا تنزل ووالله لا أَرْكَبُ! وَمَا عَلَيَّ أَنْ أُغَبِّرَ قَدَمَيَّ فِي سَبِيلِ اللَّهِ سَاعَةً",
    "reference": "الطبري، تاريخ الرسل والملوك، ج 3 ص 226",
    "lu_sur": "https://shamela.ws/book/9783/1500",
    "etat": "trouvé"
@@ -456,7 +456,7 @@
    "lu_sur": ""
   },
   "ecart": "Le français n'a qu'un serment ; l'arabe en a deux (« Par Allah, tu ne descendras pas, et par Allah, je ne monterai pas ! »).",
-  "note": "Récit d'al-Hasan al-Basrî. Le texte numérique lu écrit « وو الله » en deux mots (pour « وَوَاللَّهِ ») et n'est vocalisé qu'en partie : recopié tel quel, à faire relire. La phrase se poursuit en arabe (les mérites du combattant), que le français ne cite pas."
+  "note": "Récit d'al-Hasan al-Basrî. Le texte numérique lu écrit « وو الله » ; l'édition imprimée (fac-similé : https://archive.org/download/trm08_202112/trm03.pdf, p. 226) écrit « ووالله » (« والله » d'un seul tenant, précédé de la conjonction) : corrigé d'après elle (20 novembre). Le texte n'est vocalisé qu'en partie : recopié tel quel pour le reste. La phrase se poursuit en arabe (les mérites du combattant), que le français ne cite pas."
  },
  {
   "fichier": "v2/src/data/saga_abubakr.js",
