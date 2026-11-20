@@ -291,9 +291,53 @@
       b.spot(nom, l[0], l[1]); b.light(l[0], l[1], 60 + s[2] * 7, abri ? '#ffe9b0' : `hsl(${nom === 'coeur' || nom === 'issue' ? (hue + 150) % 360 : hue},90%,60%)`, 0.1);
       if (s[2] >= 7 && s[3] >= 5) [[s[0], s[1]], [s[0] + s[2] - 1, s[1]], [s[0], s[1] + s[3] - 1], [s[0] + s[2] - 1, s[1] + s[3] - 1]].forEach(q => {
         if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(d => sol(q[0] + d[0], q[1] + d[1]) === 1)) return; if (b.free(q[0], q[1])) b.obj('pylon', q[0], q[1], { hue }); }); });
-    env.dedale = { n: o.n | 0, tour: p.tour, graine: o.g, descente: !!o.descente, loin: p.loin, pas: p.pas };
-    return b.finish(env);
+    env.dedale = { n: o.n | 0, tour: p.tour, graine: o.g, descente: !!o.descente, loin: p.loin, pas: p.pas, interdite: p.interdite ? Object.assign({ hue }, p.interdite) : null };
+    const m = b.finish(env); if (env.dedale.interdite) Object.assign(env.dedale.interdite, interdite(env.dedale.interdite)); // l'image se refait avec la carte (et donc avec le dessin choisi)
+    return m;
   }
+  /* 2.x — la pièce interdite (demande du décideur, 19 novembre ; dedale.js la place, rodeurs.js la fait parler). Une image à
+     part, posée sur la carte au-dessus du sol et sous les personnages : elle ne change rien à ce qui se marche — la porte et
+     la pièce sont du vide, que rien ne traverse. Derrière la porte, la masse fermée de la pièce : un mur, un toit, sa face
+     sud dans l'ombre, bordée d'une lueur rouge sombre. La porte, lourde, dans le mur qui regarde « devant » : des montants de
+     pierre, un vantail de planches cerclé de fer, un seuil d'ombre (c'est par là que filtre la fumée) ; dessus, droit quel que
+     soit le mur, le signe d'interdit : un cercle rouge barré, posé au point (ni lettre, ni émoji, ni symbole religieux).
+     Rend { img, ox, oy } : l'image et la place de son coin, en points de la carte. */
+  const ANGLE = { sud: 0, ouest: Math.PI / 2, nord: Math.PI, est: -Math.PI / 2 };
+  const SIGNE = ['..RRRRR..', '.RwwwwwR.', 'RwRwwwwwR', 'RwwRwwwwR', 'RwwwRwwwR', 'RwwwwRwwR', 'RwwwwwRwR', '.RwwwwwR.', '..RRRRR..'];
+  function interdite(q) {
+    const s = q.salle, P = q.porte, x0 = Math.min(s[0], P[0]), y0 = Math.min(s[1], P[1]), x1 = Math.max(s[0] + s[2] - 1, P[0]), y1 = Math.max(s[1] + s[3] - 1, P[1]);
+    const ox = x0 * T - 2, oy = y0 * T - 2, cv = G.toile((x1 - x0 + 1) * T + 4, (y1 - y0 + 1) * T + 4), c = cv.getContext('2d'), f = G.D > 1 ? 0.5 : 1;
+    const g2 = v => Math.round(v * G.D) / G.D, R = (x, y, w, h, col) => { const a = g2(x), b = g2(y); c.fillStyle = col; c.fillRect(a, b, g2(x + w) - a, g2(y + h) - b); }; // au point réel près : net dans les trois dessins
+    c.translate(-ox, -oy);
+    // la pièce : le haut du mur tout autour, le toit au milieu (des rangs de tuiles, un faîte), la face sud dans l'ombre
+    const X = s[0] * T, Y = s[1] * T, L = s[2] * T, H = s[3] * T, face = Math.min(6, Math.round(H * 0.35)), toitH = H - face - 6;
+    R(X, Y, L, H, '#5e3350'); R(X, Y, L, f, '#8a5272'); R(X, Y, f, H - face, '#74435f');
+    if (toitH > 0) { R(X + 3, Y + 3, L - 6, toitH, '#3a1b30');
+      for (let k = 0, ty = Y + 5; ty < Y + 3 + toitH; k++, ty += 3) for (let tx = X + 4 + (k % 2) * 2; tx < X + L - 5; tx += 4) R(tx, ty, 2.5, f, '#55294a');
+      if (L >= H) R(X + 3, Y + 3 + Math.floor(toitH / 2), L - 6, f, '#7a4468'); else R(X + Math.floor(L / 2), Y + 3, f, toitH, '#7a4468'); }
+    R(X, Y + H - face, L, face, '#2a1222'); R(X, Y + H - face, L, f, '#9a5878');
+    for (let jx = X + 3; jx < X + L - 1; jx += 4) R(jx, Y + H - face + 1.5, f, face - 2, '#160810');
+    c.fillStyle = 'rgba(255,96,124,.85)'; c.fillRect(X, Y, L, f); c.fillRect(X, Y + H - f, L, f); c.fillRect(X, Y, f, H); c.fillRect(X + L - f, Y, f, H);
+    // la porte : dessinée « devant en bas », puis tournée vers devant
+    const cx = P[0] * T + 8, cy = P[1] * T + 8;
+    c.save(); c.translate(cx, cy); c.rotate(ANGLE[q.face] || 0); c.translate(-8, -8);
+    R(0, 0, 16, 16, '#4a2640'); R(0, 0, 16, f, '#8a5272');
+    R(0, 0, 3.5, 16, '#7d4c66'); R(12.5, 0, 3.5, 16, '#7d4c66'); R(0, 0, 16, 3, '#7d4c66'); R(0.5, 0.5, 2, 15.5, '#a36d8a'); R(13, 0.5, 2, 15.5, '#5a3048'); R(0.5, 0.5, 15, 1.5, '#a36d8a');
+    R(3.5, 3, 9, 13, '#74462a');
+    for (const px of [5.5, 8, 10.5]) R(px, 3, f, 13, '#3e2212');
+    for (const by of [5.5, 11.5]) { R(3.5, by, 9, 1.5, '#77727f'); R(3.5, by, 9, f, '#aaa4b6'); for (const rx of [4.5, 8, 11]) R(rx, by + 0.25, 1, 1, '#d2ccdc'); }
+    R(3.5, 15, 9, 1, '#050205');
+    c.fillStyle = 'rgba(255,96,124,.85)'; c.fillRect(0, 0, f, 16); c.fillRect(16 - f, 0, f, 16); c.fillRect(0, 0, 16, f);
+    c.restore();
+    // le signe d'interdit, droit : un disque pâle, un cercle rouge, une barre du haut à gauche au bas à droite — au point ;
+    // dans le dessin d'origine, neuf points sur neuf, posés un à un (SIGNE)
+    if (G.D > 1) { const n = 18, pt = 0.5, r0 = n / 2;
+      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const dx = i + 0.5 - r0, dy = j + 0.5 - r0, r = Math.hypot(dx, dy) / r0, barre = Math.abs(dx - dy) / Math.SQRT2 / r0;
+        const col = r > 1 ? null : r > 0.68 ? '#d0182a' : barre < 0.17 ? '#d0182a' : '#f1e6e4'; if (col) R(cx - 4.5 + i * pt, cy - 4.5 + j * pt, pt, pt, col); } }
+    else SIGNE.forEach((l, j) => [...l].forEach((ch, i) => { if (ch !== '.') R(cx - 4 + i, cy - 4 + j, 1, 1, ch === 'R' ? '#d0182a' : '#f1e6e4'); }));
+    return { img: cv, ox, oy };
+  }
+  M.interdite = interdite;
 
   /* ---------- La Citadelle du Caïd (ksar au bord du désert) ---------- */
   function citadelle(id, o, L, graine) {

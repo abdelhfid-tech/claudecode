@@ -26,9 +26,11 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   Compagnon ne porte un trait dans son voile, de face, de profil, de dos, dans ses pas, ses poses, ses gestes de
   frappe ni dans son tracé fin ; les autres personnages ont un visage de face et de profil, rien de dos :
   « SILHOUETTES CONFORMES »), `node v2/tools/dedales.js` (les labyrinthes de la noosphère : dix mille tirages par
-  profondeur, chaque lieu présent, du bon côté, relié aux autres : « DÉDALES CONFORMES »), `node v2/tools/descente.js`
+  profondeur, chaque lieu présent, du bon côté, relié aux autres ; chaque plan a sa pièce interdite, bien posée, et reste
+  case pour case celui d'avant elle : « DÉDALES CONFORMES »), `node v2/tools/descente.js`
   (dans le jeu : le labyrinthe d'un chapitre, son chrono, la remontée, la reprise ; la descente du râwî et ses quatre
-  issues ; ce qui rôde et la frappe ; la course au clavier, qui ne presse pas le chrono : « DESCENTE CONFORME ») et `node v2/tools/retours.js` (deux récits quittés par la
+  issues ; ce qui rôde et la frappe ; la course au clavier, qui ne presse pas le chrono ; la pièce interdite — on ne
+  passe pas, sa phrase, les idées noires qui en sortent dans la descente et rien dans un chapitre : « DESCENTE CONFORME ») et `node v2/tools/retours.js` (deux récits quittés par la
   halte puis repris à leur place, la partie exportée et réimportée avec eux, les retours en 2084 joués, la Citadelle
   visitée : « RETOURS CONFORMES »), `node v2/tools/progression.js` (une partie neuve par les vrais boutons : une seule
   leçon par séquence, les commandes du combat reçues une à une, les pages de la halte ; une partie d'avant garde tout ;
@@ -62,6 +64,13 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
 - La noosphère de la 2.x est un labyrinthe (exigences 22 et 23) : `v2/src/core/dedale.js` le tire, `v2/src/core/rodeurs.js`
   y pose la graine, le chrono, ce qui rôde, la frappe et la descente du râwî ; `v2/docs/architecture.md`, « Les
   labyrinthes de la noosphère ». Un changement de l'un ou de l'autre repasse `dedales.js`, puis toute la batterie.
+  *(Demande du décideur, 19 novembre ; formulation de l'agent, à valider.)* Chaque labyrinthe a sa pièce interdite : une
+  porte toujours close, marquée d'un cercle rouge barré, et derrière elle une pièce où nul ne sait ce qui se trouve —
+  certains disent un trésor, d'autres un monstre, ce ne sont que des rumeurs, jamais dessinées ni mises en scène.
+  `dedale.js` la choisit après le tirage, d'après le plan seul : elle ne change pas une case du labyrinthe, et rien ne la
+  traverse. Dans la descente du râwî, c'est de là que sortent les idées noires, l'une après l'autre ; dans le labyrinthe
+  d'un récit, rien n'en sort et la phrase de la porte ne parle pas des idées noires. Ce n'est pas un outil (ni leçon, ni
+  message), et la partie n'en garde rien.
 - Dans la 2.x, une partie neuve apprend **un outil à la fois** (règle du décideur, 16 novembre : « le joueur découvre
   un besoin, apprend un outil, puis le réutilise sans aide avant d'en recevoir un autre ; une nouvelle décision
   importante par séquence ») : `v2/src/core/lecons.js`, `D.OUTILS`, `v2/docs/architecture.md`, « La progression ». Une
@@ -233,8 +242,8 @@ node v2/tools/partie.js             # 2.0 : la partie du joueur, exportée par l
 node v2/tools/personnage.js         # 2.0 : le nom et la tenue du râwî, choisis par les vrais boutons, joués sur tout le prologue, gardés
 node v2/tools/silhouettes.js        # 2.0 : les personnages — petits sprites inchangés, voiles sans trait, une tête native par coiffe (planches : … planches [modèles.png])
 node v2/tools/course.js             # 2.x : la course — vitesse, pied d'appui qui ne glisse pas (60 et 120 Hz), suiveurs, rien en main (… images <dossier> : planche et films)
-node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] : une planche)
-node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe
+node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère et leur pièce interdite, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] [0,3,5] : une planche)
+node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe, la pièce interdite
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
 node v2/tools/loupe.js [messages]   # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles, les messages du combat en bas (« messages » : eux seuls)

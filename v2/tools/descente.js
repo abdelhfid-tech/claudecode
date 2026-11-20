@@ -13,6 +13,13 @@
         voile ils se dissipent et ne reviennent pas ; s'ils rejoignent le groupe, c'est un combat ; après une remontée, plus
         rien ne rôde. Dans la descente du râwî : un coup sonne et ne vainc pas ; lame forgée et accompagné, les coups
         entament une idée noire jusqu'à la dissiper.
+     D. La pièce interdite (2.x, demande du décideur du 19 novembre) : dans un vrai chapitre et dans la descente du râwî,
+        la porte est dessinée là où le plan la met ; poussé dessus au clavier puis au doigt, celui qui mène ne passe pas ;
+        A devant elle affiche la phrase de son genre, dans la langue du jeu ; le chrono ne court pas pendant qu'elle
+        s'affiche ; vue de près, elle a son signe sur le plan. Dans la descente, chaque idée noire paraît d'abord devant la
+        porte, qui reste close ; une idée noire dissipée n'en ressort pas. Dans un chapitre, rien n'en sort et aucune idée
+        noire n'existe. Quitté puis repris, le labyrinthe a sa porte à la même place. Rien de ce qui rôde n'est jamais sur
+        sa case ni derrière.
    « DESCENTE CONFORME », sinon « ÉCART ». Captures dans .smoke/descente. */
 const { chromium } = require('playwright'); const fs = require('fs'), path = require('path');
 const V2 = path.join(__dirname, '..'), out = path.join(V2, '.smoke/descente'), url = 'file://' + path.join(V2, 'index.html');
@@ -87,14 +94,21 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
     for (let i = 0; i < 40 && !(await p.evaluate(() => !!window.ISNAD.world.excursion && !window.ISNAD.script.busy && !window.ISNAD.world.lock)); i++) { await entree(); await p.waitForTimeout(250); } await p.waitForTimeout(350); };
   const remonter = async () => { for (let i = 0; i < 60 && await p.evaluate(() => !!window.ISNAD.world.excursion || window.ISNAD.script.busy || window.ISNAD.world.lock); i++) { await entree(); await p.waitForTimeout(250); } await p.waitForTimeout(350); };
   const aller = lieu => p.evaluate(l => { const W = window.ISNAD.world, s = W.spotPx(l); W.player.x = s[0]; W.player.y = s[1]; W.dest = null; }, lieu);
+  // les idées noires qui attendent derrière la porte interdite sortent toutes, tout de suite (chacune est ensuite posée plus
+  // loin, là où une autre aurait rôdé : les épreuves qui suivent les cherchent sur les ponts)
+  const sortirToutes = () => p.evaluate(() => { const I = window.ISNAD, W = I.world, E = W.excursion, R = I.rodeurs, s0 = W.spotPx('seuil'), loin = W.map.env.dedale.loin; if (!E) return 0; let n = 0;
+    const x0 = W.player.x, y0 = W.player.y; W.player.x = s0[0]; W.player.y = s0[1];
+    W.foes.filter(f => f.sortie !== undefined && !f.placed && !f.done).forEach((f, i) => { E.t = Math.max(E.t, f.sortie); R.sortir(E); if (f.placed) { n++; const c = loin[(i * 3 + 1) % loin.length]; f.x = c[0] * 16 + 16; f.y = c[1] * 16 + 16; f.cx = null; } });
+    W.player.x = x0; W.player.y = y0; return n; });
   const e0 = await etat();
   // l'entrée, puis l'issue
   await descendre('sommeil');
-  const d1 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, m = W.map, s0 = W.spotPx('seuil'); return { carte: m.id, descente: !!(m.env.dedale && m.env.dedale.descente), lieux: Object.keys(m.spots).sort().join(','), relies: Object.keys(m.spots).every(k => { const q = W.spotPx(k); return W.reach(s0[0], s0[1], q[0], q[1]); }),
-    rodeurs: W.foes.filter(f => f.rodeur && f.placed).length, loin: W.foes.filter(f => f.rodeur && f.placed).every(f => Math.hypot(f.x - s0[0], f.y - s0[1]) > 120), chrono: I.rodeurs.chrono ? Math.round(I.rodeurs.chrono.reste) : 0, groupe: W.party.join(','), cible: !!W.target(), repriseGardee: (I.save.data.cp || {}).saga }; });
+  const d1 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, m = W.map, s0 = W.spotPx('seuil'), R = W.foes.filter(f => f.rodeur), noir = f => I.D.NOIRS.includes(f.group[0]); return { carte: m.id, descente: !!(m.env.dedale && m.env.dedale.descente), lieux: Object.keys(m.spots).sort().join(','), relies: Object.keys(m.spots).every(k => { const q = W.spotPx(k); return W.reach(s0[0], s0[1], q[0], q[1]); }),
+    rodeurs: R.length, maux: R.filter(f => !noir(f) && f.placed).length, attendent: R.filter(f => noir(f) && !f.placed && f.sortie !== undefined).length, noirs: R.filter(noir).length, loin: R.filter(f => f.placed).every(f => Math.hypot(f.x - s0[0], f.y - s0[1]) > 120), chrono: I.rodeurs.chrono ? Math.round(I.rodeurs.chrono.reste) : 0, groupe: W.party.join(','), cible: !!W.target(), repriseGardee: (I.save.data.cp || {}).saga }; });
   await p.waitForTimeout(700); await p.screenshot({ path: path.join(out, 'B-1-descente.png') });
-  si(d1.descente && d1.lieux === 'abri,issue,refuge,seuil' && d1.relies && d1.rodeurs === 3 && d1.loin && d1.chrono > 40 && d1.groupe === 'idris' && d1.cible && d1.repriseGardee === 'abubakr',
-    `la descente : un labyrinthe (seuil, issue, deux abris), ${d1.rodeurs} rôdeurs posés loin du seuil, un chrono de ${d1.chrono} s, l'issue montrée ; le point de reprise reste celui du récit`, `la descente : ${JSON.stringify(d1)}`);
+  // 2.x (pièce interdite, 19 novembre) : les maux du cœur sont posés loin du seuil ; les idées noires attendent derrière la porte
+  si(d1.descente && d1.lieux === 'abri,issue,refuge,seuil' && d1.relies && d1.rodeurs === 3 && d1.maux + d1.attendent === 3 && d1.attendent === d1.noirs && d1.noirs >= 1 && d1.loin && d1.chrono > 40 && d1.groupe === 'idris' && d1.cible && d1.repriseGardee === 'abubakr',
+    `la descente : un labyrinthe (seuil, issue, deux abris), ${d1.rodeurs} rôdeurs — ${d1.maux} maux du cœur posés loin du seuil, ${d1.attendent} idée(s) noire(s) derrière la porte interdite —, un chrono de ${d1.chrono} s, l'issue montrée ; le point de reprise reste celui du récit`, `la descente : ${JSON.stringify(d1)}`);
   { const x0 = await p.evaluate(() => window.ISNAD.world.player.x); await p.keyboard.down('ArrowRight'); await p.waitForTimeout(450); await p.keyboard.up('ArrowRight'); const x1 = await p.evaluate(() => window.ISNAD.world.player.x); si(x1 > x0 + 8, 'la descente : on y marche au clavier', `la descente : resté sur place (${x0} → ${x1})`); }
   { // ceux qui rôdent prennent en chasse, et n'entrent pas dans un abri
     const c = await p.evaluate(() => new Promise(res => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.rodeur && q.placed), T = 16, m = W.map;
@@ -127,7 +141,7 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
   si(f1.rendu === null && !f1.attente && f2.rendu === null && !f2.clos && !f2.attente, 'épuisé : la porte reste close ; un sommeil sans songe la rouvre', `épuisé : ${JSON.stringify(f1)} ${JSON.stringify(f2)}`);
   // lame forgée et accompagné : on fait face — une idée noire, puis un mal du cœur
   await p.evaluate(() => { const I = window.ISNAD, d = I.save.data, v = Object.keys(I.D.VICES)[0], a = I.D.ANIMAUX[0]; d.lames = d.lames || {}; d.lames[v] = true; d.animaux = d.animaux || {}; d.animaux[a] = true; d.animal = a; window.__v = v; });
-  await descendre('sommeil');
+  await descendre('sommeil'); await sortirToutes();
   const face = async quoi => { const r = await p.evaluate(q => { const I = window.ISNAD, W = I.world, f = W.foes.find(x => x.rodeur && x.placed && !x.done && (q === 'noir' ? I.D.NOIRS.includes(x.group[0]) : x.group[0] === window.__v)); if (!f) return { absent: true };
       const peut = I.rodeurs.peutFaireFace(f.group[0]); W.player.x = f.x + 4; W.player.y = f.y; return { id: f.group[0], peut }; }, quoi);
     if (r.absent) return r; for (let i = 0; i < 40 && !(await p.evaluate(() => window.ISNAD.battle.active)); i++) await p.waitForTimeout(150);
@@ -247,7 +261,7 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
     const s3 = await etat(); si(s3.derniere === 'rattrape' && s3.clos, 'le coup passé, il rattrape : seul, on ne vainc pas', `après le coup : ${JSON.stringify(s3)}`);
     await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.repos(); I.save.data.animal = window.__bete; });
     // lame forgée et accompagné : les coups entament une idée noire, jusqu'à la dissiper
-    await descendre('sommeil');
+    await descendre('sommeil'); await sortirToutes();
     const n0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.rodeur && q.placed && !q.done && I.D.NOIRS.includes(q.group[0])); if (!f) return null; window.__r = f.id; return { id: f.group[0], peut: I.rodeurs.peutFaireFace(f.group[0]), accompagne: W.excursion.accompagne }; });
     if (!n0) ko('aucune idée noire ne rôde dans cette descente');
     else { const nid = await p.evaluate(() => window.__r); let k = 0; await isoler(nid);
@@ -263,6 +277,117 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
       await aller('issue'); await p.waitForTimeout(500); await remonter();
       const fin = await p.evaluate(id => ({ drapeau: !!window.ISNAD.script.flags['_noir_' + id], saga: window.ISNAD.world.saga.id }), n0.id);
       si(fin.drapeau && fin.saga === 'abubakr', 'de retour au récit : l’idée noire dissipée à coups de lame le reste jusqu’au chapitre suivant', `de retour : ${JSON.stringify(fin)}`); }
+  }
+  /* ---------- D. la pièce interdite (2.x ; demande du décideur, 19 novembre) ---------- */
+  {
+    const FR_C = 'Une porte close. Certains disent qu’un trésor dort derrière ; d’autres, un monstre. Nul ne sait.', FR_D = 'Une porte close. Certains disent qu’un trésor dort derrière ; d’autres, un monstre. Ce qui est sûr, c’est que les idées noires en sortent.';
+    const TOUCHE = { sud: 'ArrowUp', nord: 'ArrowDown', est: 'ArrowLeft', ouest: 'ArrowRight' };
+    // celui qui mène : devant la porte, tourné vers elle ; ou à n cases de marche de là
+    const devant = () => p.evaluate(() => { const I = window.ISNAD, W = I.world, q = I.rodeurs.interdite(), REG = { sud: 3, nord: 0, est: 1, ouest: 2 }; W.player.x = q.devant[0] * 16 + 8; W.player.y = q.devant[1] * 16 + 11; W.player.dir = REG[q.face]; W.dest = null; W.resetTrail(); W.updateCam(true); I.rodeurs._rearme = true; });
+    const aDistance = n => p.evaluate(n => { const I = window.ISNAD, W = I.world, m = W.map, q = I.rodeurs.interdite(), d = new Int16Array(m.w * m.h).fill(-1), Q = [q.devant[1] * m.w + q.devant[0]]; d[Q[0]] = 0; let ou = Q[0];
+      for (let k = 0; k < Q.length; k++) { const i = Q[k], x = i % m.w, y = (i - x) / m.w; if (d[i] === n) { ou = i; break; } [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(o => { const X = x + o[0], Y = y + o[1], j = Y * m.w + X; if (X < 0 || Y < 0 || X >= m.w || Y >= m.h || d[j] >= 0 || m.solid[j]) return; d[j] = d[i] + 1; Q.push(j); }); }
+      W.player.x = (ou % m.w) * 16 + 8; W.player.y = Math.floor(ou / m.w) * 16 + 11; W.dest = null; W.resetTrail(); W.updateCam(true); return d[ou]; }, n);
+    // la phrase, quand le fil la montre ; l'oublier (pour la redemander)
+    const phrase = () => p.evaluate(() => { const el = window.ISNAD.rodeurs._porteDit; return el && el.isConnected && !el.hidden && document.getElementById('toasts').classList.contains('montre') ? el.firstChild.textContent : null; });
+    const attendrePhrase = async () => { for (let i = 0; i < 80; i++) { const t = await phrase(); if (t) return t; await p.waitForTimeout(100); } return null; };
+    // (ce qui attendait au fil — les annonces du chapitre — est dit d'abord : on le vide, pour n'éprouver que la porte)
+    const oublier = () => p.evaluate(() => { const I = window.ISNAD, R = I.rodeurs; I.script.filVide(); R._porteDit = null; R._heurt = undefined; });
+    // le joueur est-il entré dans la case de la porte ?
+    const dedans = () => p.evaluate(() => { const I = window.ISNAD, W = I.world, q = I.rodeurs.interdite(), j = W.player, sur = (x, y) => Math.floor(x / 16) === q.porte[0] && Math.floor(y / 16) === q.porte[1]; return sur(j.x - 4, j.y - 5) || sur(j.x + 4, j.y - 5) || sur(j.x - 4, j.y) || sur(j.x + 4, j.y); });
+    // la scène, sur la toile du monde (avant la lumière) : les points rouges et pâles du signe, avec l'image puis sans elle
+    const signe = () => p.evaluate(() => new Promise(res => { const I = window.ISNAD, W = I.world, G = I.gfx, q = I.rodeurs.interdite();
+      const lire = () => { const c = G.pcv.getContext('2d'), D = G.D, x0 = Math.round((q.porte[0] * 16 + 2 - G.cale(W.cam.x)) * D), y0 = Math.round((q.porte[1] * 16 + 2 - G.cale(W.cam.y)) * D), n = 12 * D, d = c.getImageData(x0, y0, n, n).data; let rouge = 0, pale = 0;
+        for (let i = 0; i < d.length; i += 4) { if (d[i] > 150 && d[i] > 2 * d[i + 1] && d[i] > 1.6 * d[i + 2]) rouge++; if (d[i] > 205 && d[i + 1] > 195 && d[i + 2] > 185) pale++; } return { rouge, pale }; };
+      setTimeout(() => { const a = lire(), img = q.img; q.img = null; setTimeout(() => { const b = lire(); q.img = img; res({ a, b }); }, 200); }, 300); }));
+    // ceux qui rôdent, figés sur le carrefour le plus éloigné de la porte (les épreuves de la porte ne sont pas des rencontres)
+    const loinTous = () => p.evaluate(() => { const I = window.ISNAD, W = I.world, q = I.rodeurs.interdite(), l = W.map.env.dedale.loin.slice().sort((a, b) => Math.hypot(b[0] - q.devant[0], b[1] - q.devant[1]) - Math.hypot(a[0] - q.devant[0], a[1] - q.devant[1]))[0];
+      W.foes.forEach(f => { if (f.rodeur) { f.v = 0; f.cx = null; if (f.placed) { f.x = l[0] * 16 + 8; f.y = l[1] * 16 + 8; } } }); });
+    // ceux qui rôdent : jamais sur la case de la porte, ni dans la pièce (une fonction posée dans la page)
+    const garde = () => p.evaluate(() => { const I = window.ISNAD; window.__derriere = f => { const q = I.rodeurs.interdite(), s = q.salle, x = Math.floor(f.x / 16), y = Math.floor(f.y / 16); return (x === q.porte[0] && y === q.porte[1]) || (x >= s[0] && x < s[0] + s[2] && y >= s[1] && y < s[1] + s[3]); }; });
+    // les épreuves de la porte, dans un labyrinthe : dessinée, poussée au clavier puis au doigt, désignée par A, le chrono arrêté
+    const epreuves = async (nom, cle, attendue) => {
+      const q = await p.evaluate(() => { const q = window.ISNAD.rodeurs.interdite(); return { porte: q.porte, face: q.face, devant: q.devant, salle: q.salle }; });
+      await oublier(); await aDistance(3); const vu = await signe();
+      si(vu.a.rouge >= 10 && vu.a.pale >= 6 && vu.b.rouge < 3, `${nom} : la porte est dessinée là où le plan la met (en ${q.porte}, regardant ${q.face}) — son signe d'interdit, ${vu.a.rouge} points rouges et ${vu.a.pale} pâles, qui s'en vont avec l'image`, `${nom} : le signe de la porte n'est pas où le plan la met : ${JSON.stringify(vu)}`);
+      await p.screenshot({ path: path.join(out, `D-${cle}-porte.png`) });
+      // au clavier : poussé contre elle
+      await oublier(); await devant(); let entre = false; await p.keyboard.down(TOUCHE[q.face]); for (let i = 0; i < 8; i++) { await p.waitForTimeout(90); if (await dedans()) entre = true; } await p.keyboard.up(TOUCHE[q.face]);
+      const t0 = await attendrePhrase(); await p.screenshot({ path: path.join(out, `D-${cle}-phrase.png`) });
+      si(!entre && t0 === attendue, `${nom} : au clavier, poussé contre la porte, celui qui mène ne passe pas ; le fil dit « ${t0} »`, `${nom} : au clavier — entré : ${entre}, la phrase : « ${t0} »`);
+      // le chrono ne court pas pendant qu'elle s'affiche ; il reprend après
+      const ch = await p.evaluate(() => new Promise(res => { const R = window.ISNAD.rodeurs, a = R.chrono.reste, lu = R.lit(); setTimeout(() => res({ lu, lu2: R.lit(), a: +a.toFixed(2), b: +R.chrono.reste.toFixed(2) }), 900); }));
+      si(ch.lu && ch.lu2 && Math.abs(ch.a - ch.b) < 0.05, `${nom} : pendant que la phrase s'affiche, le chrono ne court pas (${ch.a} s, puis ${ch.b} s presque une seconde plus tard)`, `${nom} : le chrono pendant la phrase : ${JSON.stringify(ch)}`);
+      for (let i = 0; i < 80 && await p.evaluate(() => window.ISNAD.rodeurs.lit()); i++) await p.waitForTimeout(100);
+      const ch2 = await p.evaluate(() => new Promise(res => { const R = window.ISNAD.rodeurs, a = R.chrono.reste; setTimeout(() => res({ a, b: R.chrono.reste, lu: R.lit() }), 600); }));
+      si(!ch2.lu && ch2.a - ch2.b > 0.3, `${nom} : la phrase lue, le chrono reprend`, `${nom} : le chrono après la phrase : ${JSON.stringify(ch2)}`);
+      // au doigt : toucher la porte, de trois cases
+      await oublier(); await aDistance(3); await p.waitForTimeout(250);
+      const pt = await p.evaluate(() => { const I = window.ISNAD, W = I.world, G = I.gfx, q = I.rodeurs.interdite(), r = document.getElementById('cv').getBoundingClientRect(); return { x: r.left + (q.porte[0] * 16 + 8 - G.cale(W.cam.x)) / G.PW * r.width, y: r.top + (q.porte[1] * 16 + 8 - G.cale(W.cam.y)) / G.PH * r.height }; });
+      await p.mouse.click(pt.x, pt.y); let entre2 = false; for (let i = 0; i < 25; i++) { await p.waitForTimeout(100); if (await dedans()) entre2 = true; }
+      const t1 = await attendrePhrase(), pos = await p.evaluate(() => { const I = window.ISNAD, W = I.world, q = I.rodeurs.interdite(); return { d: Math.round(Math.hypot(W.player.x - (q.devant[0] * 16 + 8), W.player.y - (q.devant[1] * 16 + 11))), regarde: I.rodeurs.faceAPorte() }; });
+      si(!entre2 && t1 === attendue && pos.d < 14 && pos.regarde, `${nom} : au doigt, toucher la porte y conduit, devant elle et tourné vers elle — on ne passe pas, et le fil en parle`, `${nom} : au doigt — entré : ${entre2}, ${JSON.stringify(pos)}, la phrase : « ${t1} »`);
+      // A (Entrée), devant elle
+      await oublier(); await devant(); await p.keyboard.press('Enter'); const t2 = await attendrePhrase();
+      si(t2 === attendue, `${nom} : A devant la porte — « ${t2} »`, `${nom} : A devant la porte : « ${t2} »`);
+      await oublier();
+      return q;
+    };
+
+    // 1. un vrai chapitre (Abû Bakr, I) : le récit descend dans la noosphère
+    await p.evaluate(async () => { const I = window.ISNAD; I.debug.profondeur = 3; I.debug.sansMeutes = false; delete I.script.flags._meutes_off; await I.script.run([['map', 'noos', 'seuil', { hue: 210 }]]); }); await calme(); await garde();
+    const c0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, m = W.map, q = I.rodeurs.interdite(); if (!q) return null; const s = q.salle, plein = (x, y) => !!m.solid[y * m.w + x]; let piece = true; for (let j = s[1]; j < s[1] + s[3]; j++) for (let i = s[0]; i < s[0] + s[2]; i++) if (!plein(i, j)) piece = false;
+      return { porte: q.porte, face: q.face, salle: s, ferme: plein(q.porte[0], q.porte[1]) && m.g0(q.porte[0] * 16 + 8, q.porte[1] * 16 + 8) === 'void', piece, devant: m.g0(q.devant[0] * 16 + 8, q.devant[1] * 16 + 8), noirs: W.foes.filter(f => I.D.NOIRS.includes(f.group[0])).length, attente: W.foes.filter(f => f.sortie !== undefined).length, vue: I.rodeurs.porteVue(), meutes: I.rodeurs.rodent().length }; });
+    si(c0 && c0.ferme && c0.piece && c0.devant === 'npont' && !c0.noirs && !c0.attente && !c0.vue, `un chapitre : sa pièce interdite (porte en ${c0 && c0.porte}, regardant ${c0 && c0.face}, pièce de ${c0 && c0.salle[2]} × ${c0 && c0.salle[3]} cases) — du vide que rien ne traverse ; devant, un pont ; aucune idée noire, rien n'attend derrière ; pas encore vue`, `la pièce d'un chapitre : ${JSON.stringify(c0)}`);
+    if (c0) {
+      const vc = await p.evaluate(() => { const I = window.ISNAD, W = I.world, R = I.rodeurs, c = R.chrono.reste, s0 = W.spotPx('seuil'); W.player.x = s0[0]; W.player.y = s0[1]; R.chrono.reste = 999; const n0 = R.rodent().length; let dans = 0, noirs = 0, fumee = 0;
+        for (let i = 0; i < 1200; i++) { R.tic(1 / 30); W.foes.forEach(f => { if (f.placed && !f.done && window.__derriere(f)) dans++; if (I.D.NOIRS.includes(f.group[0]) || f.sortie !== undefined) noirs++; if (f.fumee !== undefined) fumee++; }); }
+        R.chrono.reste = c; return { n0, n1: R.rodent().length, dans, noirs, fumee, combat: I.battle.active }; });
+      si(vc.n0 >= 1 && vc.n1 === vc.n0 && !vc.dans && !vc.noirs && !vc.fumee && !vc.combat, `un chapitre : quarante secondes de va-et-vient — ${vc.n0} petites chimères sur les ponts, jamais sur la porte ni derrière ; rien ne sort de la pièce, aucune idée noire`, `un chapitre, quarante secondes : ${JSON.stringify(vc)}`);
+      await loinTous();
+      await epreuves('un chapitre', 'chapitre', FR_C);
+      const vue = await p.evaluate(() => window.ISNAD.rodeurs.porteVue());
+      si(vue, 'un chapitre : vue de près, la porte a son petit signe sur le plan', 'un chapitre : la porte vue de près n’est pas marquée sur le plan');
+      await p.evaluate(() => window.ISNAD.ui.pause('carte')); await p.waitForTimeout(600); await p.screenshot({ path: path.join(out, 'D-chapitre-plan.png') }); await p.keyboard.press('Escape'); await p.waitForTimeout(400); await calme();
+      // dans la langue du jeu : en anglais, la phrase de l'anglais
+      const en = await p.evaluate(fr => { const I = window.ISNAD; I.langue.choisir('en'); return I.t(fr); }, FR_C); await devant(); await p.keyboard.press('Enter'); const ten = await attendrePhrase(); await oublier(); await p.evaluate(() => window.ISNAD.langue.choisir('fr'));
+      si(ten && ten === en && ten !== FR_C, `un chapitre, le jeu en anglais : « ${ten} »`, `un chapitre, en anglais : « ${ten} » (attendu « ${en} »)`);
+      // la partie reprise au milieu du labyrinthe : la porte est à la même place
+      const r0 = await p.evaluate(() => { const q = window.ISNAD.rodeurs.interdite(); return JSON.stringify([q.porte, q.face, q.devant, q.salle]); });
+      await p.evaluate(async () => { const I = window.ISNAD, W = I.world, s0 = W.spotPx('seuil'); W.player.x = s0[0]; W.player.y = s0[1]; W.checkpoint(); const cp = JSON.parse(JSON.stringify(I.save.data.cp)); W.loadMap('medine', {}, null); await W.startChapter(cp.saga, cp.ci, cp); }); await calme();
+      const r1 = await p.evaluate(() => { const q = window.ISNAD.rodeurs.interdite(); return q ? JSON.stringify([q.porte, q.face, q.devant, q.salle]) : null; });
+      si(r0 === r1, `un chapitre : quitté puis repris, le labyrinthe a sa porte à la même place (${r1})`, `un chapitre, repris : ${r0} → ${r1}`);
+      await p.evaluate(async () => { const I = window.ISNAD, W = I.world; I.debug.sansMeutes = true; W.checkpoint(); const cp = JSON.parse(JSON.stringify(I.save.data.cp)); cp.map = 'medine'; cp.opts = { time: 'day' }; cp.pos = [488, 701]; I.save.data.cp = cp; await W.startChapter(cp.saga, cp.ci, cp); }); await calme();
+    }
+
+    // 2. la descente du râwî : c'est de la pièce interdite que sortent les idées noires
+    // (une idée noire déjà dissipée dans ce chapitre n'y est pas : elle ne sortira pas)
+    const ecartee = await p.evaluate(() => { const I = window.ISNAD, S = I.script, id = I.D.NOIRS.find(k => !S.flags['_noir_' + k]); S.flags['_noir_' + id] = true; I.debug.profondeur = 5; I.rodeurs.repos(); return id; });
+    await descendre('sommeil'); await garde();
+    const sd = await p.evaluate(ecartee => { const I = window.ISNAD, W = I.world, R = I.rodeurs, E = W.excursion, m = W.map, q = R.interdite(), dv = [q.devant[0] * 16 + 8, q.devant[1] * 16 + 8], a = W.spotPx('abri'), noir = f => I.D.NOIRS.includes(f.group[0]);
+      const attend = W.foes.filter(f => noir(f) && !f.placed && f.sortie !== undefined).map(f => f.group[0]), dissipee = W.foes.some(f => f.group[0] === ecartee);
+      W.player.x = a[0]; W.player.y = a[1]; W.dest = null; R.chrono.reste = 999; const ordre = []; let dans = 0, fumee = 0, ouverte = 0;
+      for (let i = 0; i < 60 * 30 && !E.fin; i++) { R.tic(1 / 30);
+        W.foes.forEach(f => { if (f.placed && !f.done && window.__derriere(f)) dans++; if (noir(f) && f.placed && !ordre.includes(f.id)) ordre.push(f.id); });
+        if (W.foes.some(f => f.fumee !== undefined && !f.placed)) fumee++; if (!m.solid[q.porte[1] * m.w + q.porte[0]] || m.g0(q.porte[0] * 16 + 8, q.porte[1] * 16 + 8) !== 'void') ouverte++; }
+      const sorties = W.foes.filter(f => noir(f) && f.premier), devantOk = sorties.every(f => Math.hypot(f.premier[0] - dv[0], f.premier[1] - dv[1]) < 1), heures = sorties.map(f => +f.sorti.toFixed(1));
+      // l'une dissipée (comme à coups de lame) : elle ne ressort pas
+      const f0 = sorties[0]; let ressort = 0; if (f0) { f0.done = true; E.flags['_noir_' + f0.group[0]] = true; for (let i = 0; i < 20 * 30 && !E.fin; i++) { R.tic(1 / 30); if (W.foes.some(f => f.group[0] === f0.group[0] && !f.done)) ressort++; } }
+      return { attend, dissipee, ecartee, sorties: sorties.length, devantOk, heures, ordre: ordre.length, dans, fumee, ouverte, fin: E.fin, ressort, porte: q.porte, face: q.face }; }, ecartee);
+    si(sd.attend.length >= 2 && !sd.dissipee && sd.sorties === sd.attend.length && sd.devantOk && sd.ordre === sd.attend.length && sd.fumee > 10 && !sd.ouverte && !sd.dans && !sd.fin,
+      `la descente : ${sd.attend.length} idées noires attendent derrière la porte (en ${sd.porte}) ; chacune paraît d'abord devant elle, l'une après l'autre (à ${sd.heures.join(' s, ')} s), précédée de sa fumée ; la porte reste close ; rien de ce qui rôde n'est jamais sur elle ni derrière ; celle déjà dissipée (${sd.ecartee}) n'en sort pas`, `la descente, les sorties : ${JSON.stringify(sd)}`);
+    si(!sd.ressort, 'la descente : une idée noire dissipée ne ressort pas', `la descente : une idée noire dissipée ressort (${sd.ressort} images)`);
+    // une sortie, vue : la fumée sous la porte, puis l'idée noire devant elle
+    await loinTous();
+    await p.evaluate(() => { const I = window.ISNAD, W = I.world, E = W.excursion, f = W.foes.find(g => I.D.NOIRS.includes(g.group[0]) && !g.done); if (!f) return; f.placed = false; f.premier = undefined; f.sorti = undefined; f.fumee = undefined; f.sortie = E.t + 1; f.v = 0; });
+    await aDistance(4); await p.waitForTimeout(600); await p.screenshot({ path: path.join(out, 'D-descente-fumee.png') }); await p.waitForTimeout(900); await p.screenshot({ path: path.join(out, 'D-descente-sortie.png') });
+    await loinTous();
+    // la règle de la descente reste au fil jusqu'au premier pas (D189) : un vrai pas, au clavier, avant d'en demander une autre
+    for (const k of ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp']) { const a = await p.evaluate(() => window.ISNAD.world.player.x + window.ISNAD.world.player.y); await p.keyboard.down(k); await p.waitForTimeout(350); await p.keyboard.up(k); if (Math.abs(await p.evaluate(() => window.ISNAD.world.player.x + window.ISNAD.world.player.y) - a) > 4) break; }
+    for (let i = 0; i < 40 && await p.evaluate(() => !!document.querySelector('#toasts .toast.lecon')); i++) await p.waitForTimeout(100);
+    await loinTous();
+    await epreuves('la descente du râwî', 'descente', FR_D);
+    await p.evaluate(() => { window.ISNAD.rodeurs.finir('temps'); }); await remonter();
+    await p.evaluate(id => { delete window.ISNAD.script.flags['_noir_' + id]; }, ecartee);
   }
   await b.close();
   if (errors.length) { [...new Set(errors)].slice(0, 6).forEach(e => ko('erreur console : ' + e)); } else ok('aucune erreur console');

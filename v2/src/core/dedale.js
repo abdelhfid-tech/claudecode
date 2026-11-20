@@ -11,7 +11,9 @@
      pas, cellules, impasses, boucles     ce qui mesure sa complexité
      tour           le nombre de cases d'un tour de tous les lieux, en partant du seuil
      loin           des carrefours, du plus loin du seuil au plus proche (là où poser ceux qui rôdent)
-     essais         le nombre de tirages qu'il a fallu ; secours : vrai si l'on a dû prendre le plan de repli }
+     essais         le nombre de tirages qu'il a fallu ; secours : vrai si l'on a dû prendre le plan de repli
+     interdite      la pièce interdite (2.x) : { porte, face, devant, salle, repli, petite } — voir interdite(), plus bas.
+                    Elle se choisit après le tirage, d'après le plan seul : g, lieux et salles sont ceux d'un plan sans elle }
    hasard : une fonction qui rend un nombre de [0, 1[ — la même suite donne le même plan.
    profondeur : 0 (le plus simple) à 5. genre : 'chapitre' (seuil, trois nœuds, faille, miroir, cœur) ou 'descente'
    (seuil, issue, deux abris).
@@ -111,13 +113,96 @@
     return E;
   }
 
+  /* ---------- la pièce interdite (2.x ; demande du décideur, 19 novembre) ----------
+     Chaque labyrinthe a la sienne : une porte toujours close, posée dans le mur d'un pont, et derrière elle la masse fermée
+     de la pièce, dans le vide du plan. Elle se choisit APRÈS le tirage, d'après le plan seul (un hachage de g départage) :
+     elle ne consomme rien de la suite « hasard » et ne change pas une case de g — la porte et la pièce restent du vide, que
+     rien ne traverse. La porte est une case vide bordée d'une seule case praticable, « devant », qui est un pont ; la pièce,
+     un rectangle de vide derrière elle, qui ne touche aucune case praticable. De préférence, la porte est au fond d'un
+     cul-de-sac, à l'écart du seuil, des lieux nommés et du chemin qui les relie (secrète par sa place). Dans une descente, elle
+     est toujours loin du seuil (la moitié au moins de la plus grande distance) et ne touche ni l'issue ni les abris.
+     Les replis, du meilleur au dernier (repli) — « à l'écart » : hors du chemin des objectifs, à plus d'un tiers de la plus
+     grande distance au seuil (la moitié dans une descente), à deux cases au moins de toute salle nommée (trois pour 0 à 2) :
+       0  au fond d'un cul-de-sac, à l'écart, une pièce d'au moins quatre cases
+       1  au fond d'un cul-de-sac, à l'écart, une pièce plus petite (deux ou trois cases)
+       2  sur le côté d'un cul-de-sac, à l'écart, au moins quatre cases
+       3  sur le pourtour du dédale, la pièce dans la marge du plan, à l'écart, au moins quatre cases
+       4  dans un cul-de-sac, à l'écart, quelle que soit la pièce
+       5  sur un autre pont, à l'écart, au moins quatre cases
+       6  n'importe où sur un pont, sans autre exigence que celles de la descente
+       7  (une descente qui n'offrirait rien d'assez loin : posée comme dans un chapitre — jamais vu)
+     Le pourtour en offre toujours : la marge (deux cases au moins) reçoit une porte et une pièce d'une case.
+     interdite(plan, genre) → { porte: [x, y], face, devant: [x, y], salle: [x, y, l, h], repli, petite }
+       face : où regarde la porte, c'est-à-dire de quel côté est « devant » ('nord', 'sud', 'est', 'ouest') ;
+       petite : la pièce a moins de quatre cases. */
+  const FACES = [['est', 1, 0], ['ouest', -1, 0], ['sud', 0, 1], ['nord', 0, -1]], OPPOSE = { est: 'ouest', ouest: 'est', sud: 'nord', nord: 'sud' };
+  function interdite(p, genre) {
+    const L0 = p.w, H0 = p.h, g = p.g, descente = genre === 'descente', dans = (x, y) => x >= 0 && y >= 0 && x < L0 && y < H0, marche = (x, y) => dans(x, y) && g[y * L0 + x] > 0;
+    // les cases où la pièce peut s'étendre : du vide, dans la carte, sans voisin praticable
+    const libre = new Uint8Array(L0 * H0);
+    for (let y = 0; y < H0; y++) for (let x = 0; x < L0; x++) if (!g[y * L0 + x] && !marche(x - 1, y) && !marche(x + 1, y) && !marche(x, y - 1) && !marche(x, y + 1)) libre[y * L0 + x] = 1;
+    const vide = (x, y) => dans(x, y) && libre[y * L0 + x] === 1;
+    // le hachage du plan : il départage les places également bonnes, sans rien tirer
+    let hg = 2166136261; for (let k = 0; k < g.length; k++) { hg ^= g[k]; hg = Math.imul(hg, 16777619); }
+    const brin = k => { let h = (hg ^ Math.imul(k + 1, 2654435761)) >>> 0; h = Math.imul(h ^ (h >>> 16), 2246822519); h = Math.imul(h ^ (h >>> 13), 3266489917); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+    // le seuil : les distances, et la plus grande
+    const d0 = distances(p, p.lieux.seuil); let dmax = 1; for (let k = 0; k < d0.length; k++) if (d0[k] > dmax) dmax = d0[k];
+    // le chemin des objectifs : les cases d'un plus court chemin entre deux lieux qui se suivent dans le tour (le même tour que tirage)
+    const chemin = new Uint8Array(L0 * H0), D0 = { seuil: d0 }, dist = n => D0[n] || (D0[n] = distances(p, p.lieux[n]));
+    { let ici = 'seuil'; const reste = Object.keys(p.lieux).filter(n => n !== 'seuil');
+      while (reste.length) { const da = dist(ici), at = n => da[p.lieux[n][1] * L0 + p.lieux[n][0]]; let m = 0; for (let k = 1; k < reste.length; k++) if (at(reste[k]) < at(reste[m])) m = k;
+        const b = reste[m], db = dist(b), tot = at(b); if (tot > 0) for (let k = 0; k < chemin.length; k++) if (da[k] >= 0 && db[k] >= 0 && da[k] + db[k] === tot) chemin[k] = 1;
+        ici = b; reste.splice(m, 1); } }
+    // la maille : un carrefour est un pont de 2 × 2 ; un cul-de-sac, un carrefour qui n'a qu'une ouverture
+    const pas = p.pas, mm = maille(pas), bx1 = MARGE + (mm.nc - 1) * pas + LARGE - 1, by1 = MARGE + (mm.nr - 1) * pas + LARGE - 1;
+    const bloc = (x, y) => { const i = Math.floor((x - MARGE) / pas), j = Math.floor((y - MARGE) / pas), bx = MARGE + i * pas, by = MARGE + j * pas;
+      if (i < 0 || j < 0 || i >= mm.nc || j >= mm.nr || x - bx >= LARGE || y - by >= LARGE || g[by * L0 + bx] !== 1) return null;
+      const ouv = []; if (marche(bx + LARGE, by)) ouv.push('est'); if (marche(bx - 1, by)) ouv.push('ouest'); if (marche(bx, by + LARGE)) ouv.push('sud'); if (marche(bx, by - 1)) ouv.push('nord');
+      return ouv; };
+    // l'écart (en cases, d'un coin à l'autre) entre deux rectangles : 0, ils se chevauchent ; 1, ils se touchent
+    const ecart = (x0, y0, x1, y1, s) => Math.max(0, s[0] - x1, x0 - (s[0] + s[2] - 1), s[1] - y1, y0 - (s[1] + s[3] - 1));
+    const salles = Object.keys(p.salles).map(n => p.salles[n]), refuges = ['issue', 'abri', 'refuge'].filter(n => p.salles[n]).map(n => p.salles[n]);
+    let meilleur = null, nb = 0;
+    for (let y = 0; y < H0; y++) for (let x = 0; x < L0; x++) { if (g[y * L0 + x] !== 1) continue;
+      for (let f = 0; f < 4; f++) { const dir = FACES[f][0], dx = FACES[f][1], dy = FACES[f][2];
+        const qx = x + dx, qy = y + dy, px = dy ? 1 : 0, py = dx ? 1 : 0; // la porte, à côté de ce pont ; (px, py) : le long du mur
+        if (!dans(qx, qy) || g[qy * L0 + qx] || marche(qx + px, qy + py) || marche(qx - px, qy - py) || marche(qx + dx, qy + dy)) continue; // une seule case praticable la borde
+        // la pièce : derrière la porte, d'une à quatre cases de profondeur et d'une à six de large, la porte au plus près du milieu
+        let ga = 3, dr = 3, fk = 0, fa = 0, fb = 0, fq = -1e9;
+        for (let k = 1; k <= 4; k++) { const rx = qx + dx * k, ry = qy + dy * k; if (!vide(rx, ry)) break;
+          let a = 0, b = 0; while (a < ga && vide(rx - px * (a + 1), ry - py * (a + 1))) a++; while (b < dr && vide(rx + px * (b + 1), ry + py * (b + 1))) b++; ga = a; dr = b;
+          while (a + b + 1 > 6) { if (a >= b) a--; else b--; }
+          const l = a + b + 1, q = Math.min(k * l, 12) - 0.5 * Math.max(0, Math.max(k, l) / Math.min(k, l) - 2) - 0.25 * Math.abs(a - b);
+          if (q > fq) { fq = q; fk = k; fa = a; fb = b; } }
+        if (!fk) continue;
+        const xa = dx ? Math.min(qx + dx, qx + dx * fk) : qx - fa, xb = dx ? Math.max(qx + dx, qx + dx * fk) : qx + fb;
+        const ya = dy ? Math.min(qy + dy, qy + dy * fk) : qy - fa, yb = dy ? Math.max(qy + dy, qy + dy * fk) : qy + fb, aire = (xb - xa + 1) * (yb - ya + 1);
+        const pres = s => Math.min(ecart(xa, ya, xb, yb, s), ecart(qx, qy, qx, qy, s)), part = d0[y * L0 + x] / dmax;
+        let loinRefuges = 99, loinLieux = 99; for (const s of refuges) loinRefuges = Math.min(loinRefuges, pres(s)); for (const s of salles) loinLieux = Math.min(loinLieux, pres(s));
+        if (descente && (part < 0.5 || loinRefuges < 2)) continue; // la descente : toujours loin du seuil, à l'écart de l'issue et des abris
+        const ouv = bloc(x, y), impasse = !!(ouv && ouv.length === 1), fond = impasse && ouv[0] === OPPOSE[dir], marge = xb < MARGE || xa > bx1 || yb < MARGE || ya > by1;
+        const ecarte = !chemin[y * L0 + x] && part >= (descente ? 0.5 : 0.35);
+        const repli = fond && aire >= 4 && ecarte && loinLieux >= 3 ? 0 : fond && aire >= 2 && ecarte && loinLieux >= 3 ? 1 : impasse && aire >= 4 && ecarte && loinLieux >= 3 ? 2
+          : marge && aire >= 4 && ecarte && loinLieux >= 2 ? 3 : impasse && ecarte && loinLieux >= 2 ? 4 : aire >= 4 && ecarte && loinLieux >= 2 ? 5 : 6;
+        const k0 = nb++; if (meilleur && repli > meilleur.repli) continue;
+        let clair = 1; for (let j = ya - 1; j <= yb + 1 && clair; j++) for (let i = xa - 1; i <= xb + 1; i++) if (marche(i, j)) { clair = 0; break; }
+        const note = -1000 * repli + fq + part * 6 + Math.min(loinLieux, 8) * 0.4 + clair * 1.5 + brin(k0) * 2.5;
+        if (!meilleur || note > meilleur.note) meilleur = { note, porte: [qx, qy], face: OPPOSE[dir], devant: [x, y], salle: [xa, ya, xb - xa + 1, yb - ya + 1], repli, petite: aire < 4 }; } }
+    if (meilleur) delete meilleur.note;
+    // jamais un plan sans pièce : si la descente n'offrait aucune place assez loin (cela n'arrive sur aucun des cent vingt mille
+    // plans que tools/dedales.js éprouve, qui le signalerait), la pièce se pose comme dans un chapitre
+    if (!meilleur && descente) { meilleur = interdite(p, 'chapitre'); if (meilleur) meilleur.repli = 7; }
+    return meilleur;
+  }
+
   // Tire jusqu'à obtenir un plan bon ; au pire, le plan de repli (les salles au milieu de leurs zones), qui l'est toujours.
-  function plan(hasard, n, genre) {
-    for (let k = 1; k <= 40; k++) { const p = tirage(hasard, n, genre, false); if (p && !verifie(p, genre).length) { p.essais = k; return p; } }
-    for (let k = 1; k <= 40; k++) { const p = tirage(hasard, n, genre, true); if (p && !verifie(p, genre).length) { p.essais = 40 + k; p.secours = true; return p; } }
+  // Le plan choisi reçoit ensuite sa pièce interdite, qui ne change rien au tirage (nu : sans elle — tools/dedales.js compare).
+  function plan(hasard, n, genre, nu) {
+    for (let k = 1; k <= 40; k++) { const p = tirage(hasard, n, genre, false); if (p && !verifie(p, genre).length) { p.essais = k; if (!nu) p.interdite = interdite(p, genre); return p; } }
+    for (let k = 1; k <= 40; k++) { const p = tirage(hasard, n, genre, true); if (p && !verifie(p, genre).length) { p.essais = 40 + k; p.secours = true; if (!nu) p.interdite = interdite(p, genre); return p; } }
     return null;
   }
 
-  const api = { plan, verifie, distances, PROFONDEURS, LIEUX, maille, W, H };
+  const api = { plan, verifie, distances, interdite, PROFONDEURS, LIEUX, maille, W, H, MARGE, LARGE };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else racine.ISNAD_DEDALE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

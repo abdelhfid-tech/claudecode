@@ -356,6 +356,7 @@
     }
     const c = who && W.chests.includes(who) && !who.open && Math.hypot(who.x - p.x, who.y - p.y) < 30 ? who : W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast(I.t('Un feuillet. Tu le lis lentement.')); await S.run([['codex', c.codex]]); } else await S.run([['give', c.gear || c.item, c.n || 1]]); W.checkpoint(); return; }
+    if (I.rodeurs && I.rodeurs.faceAPorte()) { I.rodeurs.direPorte(); return; } // 2.x : la porte interdite — elle ne s'ouvre pas, on en parle
     if (W.nearPrayer()) {
       await I.oeuvres.natte();
     } else if (I.trade && I.trade.near()) await I.trade.open();
@@ -373,10 +374,10 @@
   /* ----- mise à jour ----- */
   W.onInput = function (a) {
     if (I.scene !== W || S.busy || W.lock) return false;
-    if (W.excursion) { if (a === 'ok') { if (!I.rodeurs.attendre()) I.rodeurs.frappe(); } else if (a === 'frappe') I.rodeurs.frappe(); else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
+    if (W.excursion) { if (a === 'ok') { if (I.rodeurs.faceAPorte()) I.rodeurs.direPorte(); else if (!I.rodeurs.attendre()) I.rodeurs.frappe(); } else if (a === 'frappe') I.rodeurs.frappe(); else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
     if (a === 'build') { I.build.set(!I.build.on); return true; }
     if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel' || a === 'frappe') { I.build.set(false); return true; } /* B, en bâtissant : on cesse de bâtir */ if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
-    if (a === 'ok') { W.stop(); if (I.rodeurs && I.rodeurs.aFrapper()) I.rodeurs.frappe(); else W.interact(); return true; } // 2.x : dans un labyrinthe, quand quelque chose rôde à portée, « Valider » frappe
+    if (a === 'ok') { W.stop(); if (I.rodeurs && I.rodeurs.faceAPorte()) I.rodeurs.direPorte(); else if (I.rodeurs && I.rodeurs.aFrapper()) I.rodeurs.frappe(); else W.interact(); return true; } // 2.x : dans un labyrinthe, quand quelque chose rôde à portée, « Valider » frappe ; devant la porte interdite, il la désigne
     if (a === 'frappe') { W.stop(); if (I.rodeurs && I.rodeurs.aFrapper()) I.rodeurs.frappe(); return true; } // 2.x : B frappe ce qui rôde ; ailleurs, rien
     if (a === 'help') { W.stop(); I.ui.guide(); return true; }
     if (a === 'prev') { W.stop(); I.ui.pause('carte'); return true; }
@@ -432,7 +433,7 @@
   const touche = (e, x, y) => Math.abs(x - e.x) < 9 && y - e.y > -4 && y - e.y < 6;
   W.corps = corps; W.touche = touche; // pour les outils de contrôle (« SUPERPOSÉ », « PNJ EN TRAVERS »)
   function heurte(x0, y0, x1, y1, L) { for (const e of L || corps()) if (touche(e, x1, y1) && (!touche(e, x0, y0) || Math.hypot(x1 - e.x, y1 - e.y) < Math.hypot(x0 - e.x, y0 - e.y))) return e; return null; }
-  function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) return false; const e = heurte(p.x, p.y, nx, ny); if (e) { W._heurte = e; return false; } p.x = nx; p.y = ny; return true; }
+  function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) { if (I.rodeurs && W.map.env.dedale) I.rodeurs.heurte(nx, ny); return false; } const e = heurte(p.x, p.y, nx, ny); if (e) { W._heurte = e; return false; } p.x = nx; p.y = ny; return true; } // 2.x : buter sur la porte interdite la fait parler d'elle (rodeurs.js)
   // le joueur posé sur quelqu'un (une partie d'avant, un récit) : la case libre la plus proche
   W.degager = function () { const p = W.player; if (!W.map || !corps().some(e => touche(e, p.x, p.y))) return false; const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; } return true; };
   // un PNJ qui paraît (« show ») là où se tient le joueur — il y était posé, caché — prend la case libre la plus proche
@@ -541,6 +542,7 @@
     if (I.scene !== W || S.busy || W.lock || I.ui.menuOpen || I.debug.auto || I.debug.walk) return false;
     const p = W.player, m = W.map, here = e => !e.hidden && e.map === m.id && e.placed;
     { const r = W.miniRect, sx = wx - Math.round(W.cam.x), sy = wy - Math.round(W.cam.y); if (r && sx >= r[0] && sx <= r[0] + r[2] && sy >= r[1] && sy <= r[1] + r[3]) { W.stop(); I.ui.pause('carte'); return true; } }
+    if (I.rodeurs && I.rodeurs.toucherPorte(wx, wy)) return true; // 2.x : toucher la porte interdite (ou sa pièce), c'est la désigner
     const face = (x, y) => { const dx = x - p.x, dy = y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
     if (I.build && I.build.on) {
       const tx = Math.floor(wx / T), ty = Math.floor(wy / T), put = () => { face(tx * T + 8, ty * T + 11); I.build.aim = [tx, ty]; I.build.place(); };
@@ -715,6 +717,7 @@
     if (btr) list.push({ y: btr[1] - 0.2, bete, tr: btr }); // figure du ciel : seulement dans la fiction (Cité-Miroir, Citadelle)
     list.sort((a, b) => a.y - b.y);
     const lights = [];
+    if (I.rodeurs && m.env.dedale) I.rodeurs.dessinerPorte(c, cx, cy, t, lights); // 2.x : la pièce interdite et sa porte, sur le sol, sous les personnages
     for (const e of list) {
       if (e.o) { const o = e.o; c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2) - cx, o.y - o.h + 1 - cy); if (o.anim) drawFlame(c, o.x - cx, o.y - cy - (o.type === 'brazier' ? 10 : 3), t + o.seed, o.type === 'fire'); if (G.OBJ[o.type].herd) I.build.herd(c, o, o.x - cx, o.y - cy, t); }
       else if (e.n) { const n = e.n; if (n.ph === undefined) n.ph = (I.hash((n.id || n.name || '') + '|' + (n.map || '')) >>> 0) % 628 / 100; /* chacun respire à son rythme */ drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t + n.ph, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
@@ -745,6 +748,7 @@
       W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - px, n.y - py); if (d < bd) { bd = d; best = n; } });
       if (!best) { const ch = W.chests.find(ch => !ch.open && ch.map === m.id && ch.placed && Math.hypot(ch.x - px, ch.y - py) < 18); if (ch) best = { x: ch.x, y: ch.y + 12 }; }
       if (!best && (W.nearPrayer() || (I.trade && I.trade.near()))) best = { x: p.x, y: p.y + 6 };
+      if (!best && I.rodeurs && m.env.dedale && I.rodeurs.faceAPorte()) best = { x: p.x, y: p.y + 6 }; // la porte interdite : on peut la désigner (la bulle au-dessus de celui qui mène, comme sur la natte)
       if (best && !(tg && tg.kind === 'talk' && Math.abs(tg.x - best.x) < 2)) { const bx = Math.round(best.x - cx), by = Math.round(best.y - cy - 34 + Math.sin(t * 5) * 1.5); c.fillStyle = '#1a1420'; c.fillRect(bx - 7, by - 1, 14, 9); c.fillStyle = '#fff6dc'; c.fillRect(bx - 6, by, 12, 7); c.fillRect(bx - 1, by + 7, 2, 2); c.fillStyle = '#1a1420'; c.fillRect(bx - 4, by + 3, 2, 2); c.fillRect(bx - 1, by + 3, 2, 2); c.fillRect(bx + 2, by + 3, 2, 2); }
     }
     for (const pp of W.prayerPts()) { const px2 = pp[0] * T + 8 - cx, py2 = pp[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) {
@@ -764,6 +768,7 @@
       c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = q; c.strokeRect(mx - 1.5 * q, my - 1.5 * q, mw + 3 * q, mh + 3 * q);
       if (tg && Math.floor(t * 3) % 2) { c.fillStyle = '#ffe08a'; c.fillRect(mx + (Math.floor(tg.x / T) - 1) * q, my + (Math.floor((tg.kind === 'goto' ? tg.y : tg.y + 28) / T) - 1) * q, 3 * q, 3 * q); }
       W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) { c.fillStyle = '#ff6a8a'; c.fillRect(mx + Math.floor(f.x / T) * q, my + Math.floor(f.y / T) * q, q, q); } });
+      if (I.rodeurs && m.env.dedale && I.rodeurs.porteVue()) { const pi = I.rodeurs.interdite(); I.rodeurs.signe(c, mx + (pi.porte[0] + 0.5) * q, my + (pi.porte[1] + 0.5) * q, 2.2 * q); } // 2.x : la porte interdite, vue de près
       c.fillStyle = Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a'; c.fillRect(mx + (Math.floor(W.player.x / T) - 1) * q, my + (Math.floor(W.player.y / T) - 1) * q, 3 * q, 3 * q);
     } else W.miniRect = null;
     return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint, clouds: env.clouds ? { x: cx, y: cy } : null };
