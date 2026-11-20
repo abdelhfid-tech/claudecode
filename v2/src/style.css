@@ -109,6 +109,7 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 #battle .order i.foe { border-radius: 3px; transform: rotate(45deg) scale(.82); } #battle .order i.foe { font-size: .7em; }
 #battle .order i.now { background: var(--c); color: #0b0a14; box-shadow: 0 0 10px var(--c); }
 #battle .order i.brk { opacity: .4; }
+#battle .order i.rec { border-style: dashed; outline: 1px dashed #ff9a8a; outline-offset: 1px; } /* 2.20 : un tour qui a reculé (D.TEMPS), jusqu'à ce qu'il arrive */
 .plate { position: absolute; transform: translate(-50%, -100%); min-width: 7.4em; padding: .2em .45em .28em; background: rgba(8, 7, 18, .78); border: 1px solid rgba(255, 255, 255, .16); border-radius: 3px; font-size: .66em; text-align: left; display: flex; flex-direction: column; gap: .16em; }
 .plate.cur { border-color: var(--gold); box-shadow: 0 0 14px rgba(233, 200, 119, .5); }
 .plate.brk { border-color: #fff; }

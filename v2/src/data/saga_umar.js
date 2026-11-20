@@ -130,7 +130,8 @@ ISNAD.registerSaga({
       name: 'Murmure de la faim', art: 'wisp', hue: 28, scale: 1,
       lvl: 1, tier: 'minion', weak: ['rahma', 'adl'], veils: 1,
       skills: [
-        { w: 2, name: 'Creux', target: 'foe', el: 'fer', pow: 0.9, fx: [{ st: 'atk', v: -1, chance: 0.3 }], anim: 'dark' }
+        { w: 2, name: 'Creux', target: 'foe', el: 'fer', pow: 0.9, fx: [{ st: 'atk', v: -1, chance: 0.3 }], anim: 'dark' },
+        { w: 1, name: 'Ressasser', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }   // 2.20 : le temps volé (D.TEMPS, D210)
       ],
       taunts: ['Il n\'y en aura pas pour tous…'],
       desc: "Menue chimère née des ventres vides qui regardent ensemble vers les mêmes portes closes. Elle ne veut rien : elle répète seulement qu'il n'y en aura pas pour tous. Un geste de Miséricorde la dissipe."
@@ -164,7 +165,8 @@ ISNAD.registerSaga({
       lvl: 3, tier: 'minion', weak: ['adl', 'sabr'], veils: 2,
       skills: [
         { w: 2, name: 'Arc de triomphe', target: 'foe', el: 'fer', pow: 1.1, anim: 'burst' },
-        { w: 1, name: 'Éblouir', target: 'foe', fx: [{ st: 'doute', turns: 2, chance: 0.5 }], anim: 'dark' }
+        { w: 1, name: 'Éblouir', target: 'foe', fx: [{ st: 'doute', turns: 2, chance: 0.5 }], anim: 'dark' },
+        { w: 1, name: 'Lauriers d’avance', target: 'foe', fx: [{ st: 'baisse' }], anim: 'glyph' }
       ],
       taunts: ['Ils t\'acclameront. Avance.'],
       desc: "Masque vide que le désert tend aux vainqueurs en marche : arcs, cortèges, acclamations. Il n'a de force que celle qu'on lui prête. La Justice le traverse ; la Patience le laisse se dissiper."
@@ -174,7 +176,8 @@ ISNAD.registerSaga({
       lvl: 4, tier: 'minion', weak: ['sabr', 'rahma'], veils: 2,
       skills: [
         { w: 2, name: 'Cortège', target: 'foes', el: 'fer', pow: 0.7, anim: 'wave' },
-        { w: 1, name: 'Pourpre', target: 'allies', fx: [{ st: 'atk', v: 1 }], anim: 'guard' }
+        { w: 1, name: 'Pourpre', target: 'allies', fx: [{ st: 'atk', v: 1 }], anim: 'guard' },
+        { w: 1, name: 'Cortège sans fin', target: 'foes', fx: [{ st: 'recul' }], anim: 'wave' }
       ],
       taunts: ['Un maître se reconnaît à sa suite.'],
       desc: "Petite couronne de pourpre, née de la pompe des cours. Elle persuade que l'autorité se mesure au cortège. La simplicité patiente la fait tomber en poussière."
@@ -201,7 +204,8 @@ ISNAD.registerSaga({
       lvl: 5, tier: 'minion', weak: ['rahma', 'sidq'], veils: 2,
       skills: [
         { w: 2, name: "Poids de l'or", target: 'foe', el: 'fer', pow: 1.2, fx: [{ st: 'spd', v: -1, chance: 0.4 }], anim: 'burst' },
-        { w: 1, name: 'Scintiller', target: 'foe', fx: [{ st: 'mag', v: -1 }, { st: 'waswas', turns: 2, chance: 0.5 }], anim: 'dark' }
+        { w: 1, name: 'Scintiller', target: 'foe', fx: [{ st: 'mag', v: -1 }, { st: 'waswas', turns: 2, chance: 0.5 }], anim: 'dark' },
+        { w: 1, name: 'Compter et recompter', target: 'foe', fx: [{ st: 'baisse' }], anim: 'glyph' }
       ],
       taunts: ['Et ta part ? As-tu compté ta part ?'],
       desc: "Éclat détaché des trésors de Kisrâ. Il montre à chacun ce qu'il pourrait posséder, et sème la rivalité. La Véracité le ternit ; la Miséricorde, qui donne, l'éteint."

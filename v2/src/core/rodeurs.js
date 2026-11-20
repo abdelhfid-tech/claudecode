@@ -301,7 +301,7 @@
     return true;
   };
   function coup(f, F, fx, fy) {
-    const T = 16, G = I.gfx, id = f.group[0], def = (W.saga.enemies || {})[id] || {}, E = W.excursion;
+    const T = 16, G = I.gfx, id = f.group[0], def = defDe(id) || {}, E = W.excursion;
     // repoussé de case en case dans le sens du coup, tant que le passage est libre ; puis sonné
     let tx = Math.floor(f.x / T), ty = Math.floor(f.y / T), k = 0; while (k < F.recul && passable(f, tx + fx, ty + fy)) { tx += fx; ty += fy; k++; }
     f.pousse = k ? [tx * T + 8, ty * T + 8] : null; f.sonne = F.sonne; f.dx = fx; f.dy = fy; f.touche = W.t; R.touches = (R.touches || 0) + 1; if (I.lecons) I.lecons.reemploi('frappe');
@@ -318,11 +318,15 @@
     dissiper(f);
   }
   // un petit égrégore du chapitre, sans voile, se dissipe : ce que le groupe y gagne est ce qu'un combat lui aurait donné, en moins
+  // 2.20 — une chimère de ce qui rôde : celle du récit, ou l'une des chimères communes de la ghafla (coeur.js), dont le niveau
+  // se cale sur celui qui mène, comme au combat (battle.js, foeDef)
+  const defDe = id => (W.saga && W.saga.enemies || {})[id] || (I.common && I.common.enemies[id]) || null;
+  const cidDe = id => 'foe:' + (W.saga && (W.saga.enemies || {})[id] ? W.saga.id : '_') + ':' + id;
   function dissiper(f) {
-    const sv = I.save.data, E0 = W.saga.enemies || {}; let xp = 0;
-    f.group.forEach(id => { const def = E0[id]; if (!def) return; xp += I.calc.xpOf(def); const cid = 'foe:' + W.saga.id + ':' + id; if (!sv.codex.includes(cid)) sv.codex.push(cid); });
+    const sv = I.save.data; let xp = 0;
+    f.group.forEach(id => { const d0 = defDe(id); if (!d0) return; const def = d0.lvl ? d0 : Object.assign({}, d0, { lvl: Math.max(1, W.hero(W.party[0]).lvl) }); xp += I.calc.xpOf(def); const cid = cidDe(id); if (!sv.codex.includes(cid)) sv.codex.push(cid); });
     f.done = true; if (f.cle) S.flags[f.cle] = true; R.dissipes = (R.dissipes || 0) + 1;
-    const lignes = I.battle.grantXP(Math.round(xp * 0.6)), nom = (E0[f.group[0]] || {}).name || '';
+    const lignes = I.battle.grantXP(Math.round(xp * 0.6)), nom = (defDe(f.group[0]) || {}).name || '';
     I.audio.sfx('light'); I.gfx.flash('#fff3d0');
     S.toast(I.t('<b>{nom}</b> se dissipe.', { nom: I.esc(nom) }) + (lignes.length ? ' ' + lignes.map(l => l.replace(/<\/?li>/g, '')).join(' · ') : ''), lignes.length ? 6000 : 2600);
     if (W.saga && !I.debug.auto) W.checkpoint();
@@ -342,8 +346,15 @@
     W.foes = (W.foes || []).filter(f => !f.meute); R._champ = null; R._vise = null;
     const m = W.map, d = m && m.env && m.env.dedale, T = 16; if (!d || d.descente || W.excursion || !W.saga) return;
     if (S.flags._meutes_off || I.debug.sansMeutes) return;
-    const E0 = W.saga.enemies || {}, petits = Object.keys(E0).filter(k => E0[k].tier === 'minion' && !E0[k].idee && !E0[k].vice && !E0[k].racine);
+    // les petites chimères du récit — ni idée noire, ni mal du cœur, ni idole d'un de ses chapitres (2.20 : une chimère
+    // « rattachée » à un mal par sa racine, comme la famille de la ghafla, rôde comme les autres) ; et, dans un récit des
+    // Compagnons, les chimères communes de la ghafla (D.TEMPS.rodent : Sawfa, le Vain Divertissement, et plus rarement le
+    // Long Espoir, de palier moyen). Chacune a son poids ; une petite chimère du récit pèse 1.
+    const E0 = W.saga.enemies || {}, idoles = new Set(); (W.saga.chapters || []).forEach(ch => I.mal.lignee(W.saga, ch).idoles.forEach(id => idoles.add(id)));
+    const petits = Object.keys(E0).filter(k => E0[k].tier === 'minion' && !E0[k].idee && !E0[k].vice && !idoles.has(k)).map(k => [k, 1]);
+    const RC = (D.TEMPS && D.TEMPS.rodent) || {}; if (!W.saga.frame) Object.keys(RC).forEach(k => { if (I.common && I.common.enemies[k] && !E0[k]) petits.push([k, RC[k]]); });
     if (!petits.length) return;
+    const poids = petits.reduce((s, q) => s + q[1], 0), tirer = x => { let v = x * poids; for (const q of petits) { v -= q[1]; if (v < 0) return q[0]; } return petits[petits.length - 1][0]; };
     const g = W.mapOpts && W.mapOpts.g, r = I.rng(I.hash('meutes/' + g)), n = R.MEUTES[d.n] | 0;
     // des carrefours, sur les ponts, à l'écart du seuil et à l'écart les uns des autres
     const seuil = W.spotPx('seuil') || [0, 0], libres = (d.loin || []).filter(c => m.g0(c[0] * T + 8, c[1] * T + 8) === 'npont' && Math.hypot(c[0] * T + 8 - seuil[0], c[1] * T + 8 - seuil[1]) > 9 * T);
@@ -351,7 +362,7 @@
     for (let i = 0; i < n && libres.length; i++) {
       let c = null; for (let essai = 0; essai < 24 && !c; essai++) { const q = libres[Math.floor(r() * libres.length)]; if (pris.every(o => Math.hypot(o[0] - q[0], o[1] - q[1]) > 7)) c = q; }
       if (!c) break; pris.push(c);
-      const id = petits[Math.floor(r() * petits.length)], cle = '_meute_' + g + '_' + i;
+      const id = tirer(r()), cle = '_meute_' + g + '_' + i;
       if (S.flags[cle]) continue; // déjà dissipé, ou vaincu : il ne revient pas
       W.foes.push({ id: 'meute' + i, group: [id], map: m.id, rodeur: true, meute: true, cle, done: false, placed: true, x: c[0] * T + 8, y: c[1] * T + 8, cx: null, ph: i * 1.9, v: R.MARCHE * R.PAS_MEUTE, vue: R.VUE, voiles: R.VOILES[d.n] });
     }
@@ -371,7 +382,7 @@
   // (2.19 : on peut le fuir — il poursuit alors celui qui mène)
   R.contactMeute = async function (f) {
     if (f.enCombat || S.busy || W.lock) return; f.enCombat = true; W.stop(); R._vise = null; S.depth++; let res = 'win';
-    try { res = await I.battle.start({ group: f.group, bg: W.map.env.bg, fuite: true, intro: I.t('{nom} vous a rejoints sur le pont.', { nom: (W.saga.enemies[f.group[0]] || {}).name || '' }) }); if (res !== 'fuite') { f.done = true; if (f.cle) S.flags[f.cle] = true; W.checkpoint(); } }
+    try { res = await I.battle.start({ group: f.group, bg: W.map.env.bg, fuite: true, intro: I.t('{nom} vous a rejoints sur le pont.', { nom: (defDe(f.group[0]) || {}).name || '' }) }); if (res !== 'fuite') { f.done = true; if (f.cle) S.flags[f.cle] = true; W.checkpoint(); } }
     finally { S.depth--; f.enCombat = false; }
     if (res === 'fuite') R.fuir(f);
   };

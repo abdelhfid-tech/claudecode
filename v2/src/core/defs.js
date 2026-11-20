@@ -112,9 +112,20 @@
 
   D.TARGETS = ['foe', 'foes', 'ally', 'allies', 'self'];
 
-  // Effets (fx.st)
+  // Effets (fx.st). 2.20 : « recul », « baisse » et « perdu », les trois effets du temps volé (D.TEMPS), réservés aux chimères.
   D.FX = ['atk', 'mag', 'def', 'spd', 'stun', 'doute', 'waswas', 'regen', 'garde', 'reveal',
-          'cleanse', 'dispel', 'veil', 'niyya', 'sakina', 'taunt'];
+          'cleanse', 'dispel', 'veil', 'niyya', 'sakina', 'taunt', 'recul', 'baisse', 'perdu'];
+  // 2.20 — les attaques qui volent le temps et l'attention (proposition validée par le décideur le 20 novembre, D210) : elles
+  // prennent du temps plutôt que de la Constance. Un fichier de récit écrit l'effet ({ st: 'recul' }), jamais son nombre :
+  // les nombres sont ici. « recul » : le prochain tour de la cible arrive plus tard, de `recul` d'une attente pleine (0,3 :
+  // 30 %) · « baisse » : la cible perd `niyya` point de Niyya ; sans Niyya (ou tant qu'elle ne la voit pas encore,
+  // lecons.js), `serenite` points de Sérénité · « perdu » : l'étourdissement (« Étourdi », le tour perdu), une chance sur
+  // quatre. La Garde les reçoit comme un coup, à moitié (`garde`) : le recul est de moitié, et la Niyya qui baisse ou le tour
+  // perdu n'ont qu'une chance sur deux de porter ; une attaque esquivée (D.ESQUIVE) n'a aucun effet. `rodent` : ce que pèsent,
+  // parmi ce qui rôde sur les ponts du labyrinthe d'un récit des Compagnons (rodeurs.js), les chimères communes de la ghafla
+  // (coeur.js), à côté des petites chimères du récit (1 chacune). Nombres proposés par l'agent, à valider.
+  D.TEMPS = { recul: 0.3, niyya: 1, serenite: 10, perdu: 0.25, garde: 0.5, rodent: { sawfa: 1, lahw: 1, long_espoir: 0.35 } };
+  D.FX_TEMPS = ['recul', 'baisse', 'perdu'];
 
   D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber', 'savant', 'marchand', 'berbere', 'bedouin', 'citadin'];
   // 2.x (D193) — les gens de 2084 : le râwî (cyber : lui seul porte la bande et la ceinture de néon, sa marque) et les autres

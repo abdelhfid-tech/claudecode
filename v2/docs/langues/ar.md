@@ -498,6 +498,22 @@ Notes :
 - Les sept chimères portent ces noms avec l'article (الحرص، الكبر…) ; leurs répliques sont des répliques, jamais des
   versets ni des hadiths.
 
+**La famille de la ghafla** (2.20, D210 : « des attaques ennemies qui volent le temps et l'attention, et une famille de
+chimères de la ghafla », validé par le décideur le 20 novembre). Les quatre termes ont été **lus** le 20 novembre 2026 dans
+le texte entier de l'*Ihyâ'* (édition de Shamela, livre 9472, en 4 volumes ; texte du corpus OpenITI,
+`OpenITI/0525AH`, `data/0505Ghazali/0505Ghazali.IhyaCulumDin/0505Ghazali.IhyaCulumDin.Shamela0009472-ara1.completed` —
+les pages citées sont celles que ce texte marque, « PageV04P451 » = t. 4 p. 451), et, en second témoin, dans l'abrégé
+qu'en fit Ibn Qudâma al-Maqdisî (m. 689), *Mukhtasar Minhâj al-Qâsidîn* (Shamela 98087, même corpus,
+`0700AH/data/0689AhmadIbnCabdRahmanIbnQudama/…MukhtasarMinhajQasidin.Shamela0098087-ara1`). Aucun verset n'entre ; une
+parole rapportée (« ورد في الخبر… ») n'est pas citée. Noms **à valider**.
+
+| Français | Arabe retenu | Lu dans | Note |
+|---|---|---|---|
+| la ghafla, le mal du cœur et sa famille | **الغَفلة** (inchangé) ; « de la famille de l'Insouciance » : **من فصيلة الغفلة** | *Ihyâ'*, t. 4 p. 288 (كتاب التوحيد والتوكل) : « فتعاوده **الغفلة** والبطر والطغيان أو **طول الأمل والتسويف** في تدارك الفائت وتأخير الخيرات » — les trois mots ensemble, dans cet ordre de parenté ; t. 3 p. 36 : « لخلوها بالغفلة عن الذكر » ([D]) | « فصيلة » : la parenté proche ; « آل » se dit de personnes. |
+| at-taswîf (Sawfa, Plus tard) | **التسويف** ; la chimère : **سَوْفَ** ; en 2084 « Plus tard » : **لاحقًا** | *Ihyâ'*, t. 4 p. 11 (كتاب التوبة) : « ومن ترك المبادرة إلى التوبة **بالتسويف** كان بين خطرين عظيمين » ; livre « رياضة النفس » (Wikisource, `…/كتاب_رياضة_النفس_وتهذيب_الأخلاق_ومعالجة_أمراض_القلب`) : « يسوف نفسه يوماً فيوماً » ; Ibn Qudâma, *Mukhtasar*, p. 310 : « وإياك **والتسويف** بالاستعداد، فإن العمر قصير » | « لاحقًا » est de la langue des bureaux (§ 2.5, « Tu verras cela plus tard ») : c'est pourquoi il nomme la chimère de 2084, et non celle des Compagnons. |
+| tûl al-amal (Le Long Espoir) | **طولُ الأمل** | *Ihyâ'*, t. 4 p. 451 (كتاب ذكر الموت وما بعده) : « الباب الثاني في **طول الأمل** وفضيلة قصر الأمل وسبب طوله وكيفية معالجته » ; p. 455 : « اعلم أن طول الأمل له سببان أحدهما الجهل والآخر حب الدنيا » ; Ibn Qudâma, *Mukhtasar*, p. 385 : « فصل في تفاوت الناس في طول الأمل » | Le jeu n'en tire que l'image (se croire des années devant soi) ; ni la mort ni l'au-delà ne sont dits. |
+| al-lahw (Le Vain Divertissement) | **اللهو** | *Ihyâ'*, t. 4 p. 416 (كتاب المراقبة والمحاسبة) : « فما لك تفرحين وتضحكين وتشتغلين **باللهو** » ; t. 2 p. 282 (كتاب آداب السماع) : « ومهما كان الغرض اللعب والتلذذ **باللهو** فذلك إنما يباح لما فيه من **ترويح القلب** » ; Ibn Qudâma, *Mukhtasar*, p. 143 : « مباح من اللهو فنستريح إليه » | Al-Ghazâlî ne condamne pas le délassement : il le permet, pour reposer le cœur, et blâme l'assiduité (« المواظبة عليه مكروهة », même page). La description du jeu le dit (« Se délasser n'est pas lui céder ») : **وليس ترويحُ القلب استسلامًا له**, avec le mot même de l'*Ihyâ'*. Pas « لهو الحديث » (Coran 31:6, dont les commentaires discutent). |
+
 **Les idées noires** (`D.NOIRS`) :
 
 | Français | Arabe retenu | Source | Note |
@@ -1036,6 +1052,8 @@ l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du §
 | L'Applaudissement | **التصفيق** | |
 | Le Compte | **الرَّصيد** | le solde d'un compte ; jamais الحساب (§ 2.2). |
 | La Carte sans chemin | **خريطةٌ بلا طريق** | |
+| Plus tard (2.20, famille de la ghafla) | **لاحقًا** | le mot de l'interface (« ذكّرني لاحقًا ») ; au temps des Compagnons, la même chimère est **سوف** (§ 2.5, « La famille de la ghafla »). |
+| Le Bruit de fond (2.20, famille de la ghafla) | **الضجيجُ الخلفيّ** | le « bruit de fond » de l'arabe moderne. |
 | L'AGRÉGOR (idole finale) | **المُجمِّع** | **à valider** : « l'agrégateur » (مُجمِّع الأخبار en arabe moderne) ; le recueil peut dire « مُجمِّع الخيالات ». Pas de translittération (أغريغور). D183 : l'Agrégor garde son nom en français, celui du niveau au-dessus des chimères ; l'arabe garde **المُجمِّع**. |
 
 **Le Caïd** (arabe classique)
@@ -1122,7 +1140,22 @@ l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du §
 | Le Scrupule inversé | **الوَرَعُ المقلوب** | |
 | Le Juge sans miséricorde (idole, rancune) | **القاضي بلا رحمة** | jamais « الحَكَم » (Nom divin, et mot de l'arbitrage de Siffîn). |
 
-**Le cœur** : les sept maux et les cinq idées noires, § 2.5.
+**Le cœur** : les sept maux et les cinq idées noires, § 2.5 ; la famille de la ghafla (2.20) — **سوف** (Sawfa), **طولُ
+الأمل** (Le Long Espoir), **اللهو** (Le Vain Divertissement) —, § 2.5, « La famille de la ghafla ».
+
+**Les attaques du temps volé** (2.20, D210 ; noms **à valider**). En 2084, l'arabe moderne de l'interface : **مكالمةٌ واردة**
+(Appel entrant), **بريدٌ لم يُقرأ** (Mail non lu), **رسالةٌ نصّيّة** (SMS), **«جولةٌ واحدة؟»** (« Une partie ? »),
+**المقطع التالي** (Vidéo suivante), **سحبةُ إصبع** (Swipe : un mot arabe existe, § 1.1), **عرضٌ محدود**, **«اشترِ!»**,
+**شراءٌ بنقرة**, **سلسلةٌ لا تُكسَر** (la série), **تحديث**, **تمريرة** (Scroll ; « التمرير » est le Défilement),
+**شريطٌ بلا قاع** (Fil sans fond), **قاعةُ الانتظار** (Antichambre), **قلوبٌ تتصاعد** (les cœurs des réseaux),
+**عدّادُ الدقائق** (Minutes comptées : ni « الحساب », § 2.2, ni « معدودة », mot de versets), **تحويلُ المسار**,
+**التنبيهاتُ كلُّها معًا**, **تنبيهٌ مُؤجَّل**, **«خمسُ دقائق أخرى»**, **خلفيّةٌ صوتيّة**. Chez le Caïd et les Compagnons,
+l'arabe littéraire : **سَمَرُ الأقاويل** (Veillée de commérages, « سمر », § 2.3), **نقلُ الكلام** (Colporter), **تقليبُ
+الهمّ** (Ressasser), **إعادةٌ بعد إعادة** (Redire encore), **لازمةٌ مكرّرة** (Rengaine), **أكاليلُ قبل الأوان**, **موكبٌ
+لا ينقضي**, **عَدٌّ بعد عَدّ**, **أبعدَ فأبعد**, **«ما زال لك وقت»**, **جدالٌ لا ينقضي**, **الجَلَبة** (Brouhaha ; la
+Clameur est اللَّغَط), **الإرجاء** (Remettre), **«بعد السوق»** (« Après le marché »), **«ما زالت أمامك سنون»**,
+**خُطَطٌ لا تنقضي**, **تزجيةُ الوقت** (Passe-temps), **سَمَرٌ لا طائل منه** (Veillée futile). Les mots d'état : **مُؤخَّر**
+(Retardé), **النيّة −1**, **الهدوء −10**.
 
 ### 3.7 Le lexique commun, posé « partout » (18 novembre)
 

@@ -120,12 +120,14 @@ ISNAD.registerSaga({
       taunts: ['Combien de gorgées reste-t-il ?'],
       desc: "Petite voix qui compte l'eau à la place des hommes. Un seul élan de courage suffit à la faire taire."
     },
-    mirage: {
+    mirage: { racine: 'insouciance',   // 2.20 : l'aîné de la famille de la ghafla (D210) — rattaché à l'Insouciance, faible aussi devant le Savoir
       name: 'Le Mirage', art: 'wave', hue: 190, scale: 1, lvl: 2, tier: 'minion',
-      weak: ['sabr', 'shajaa'], veils: 2,
+      weak: ['sabr', 'shajaa', 'ilm'], veils: 2,
       skills: [
         { w: 3, name: 'Eau trompeuse', target: 'foe', el: 'fer', pow: 0.9, fx: [{ st: 'doute', turns: 2, chance: 0.3 }], anim: 'wave' },
-        { w: 1, name: 'Reculer', target: 'self', fx: [{ st: 'spd', v: 1 }], anim: 'guard' }
+        { w: 1, name: 'Reculer', target: 'self', fx: [{ st: 'spd', v: 1 }], anim: 'guard' },
+        { w: 1, name: 'Toujours plus loin', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' },
+        { w: 1, name: '« Il te reste du temps »', target: 'foe', fx: [{ st: 'baisse' }], anim: 'glyph' }
       ],
       taunts: ['Viens. Encore dix pas.'],
       desc: "Né de ce que toute une armée regarde la même eau qui n'existe pas. Il recule quand on avance et détourne de la piste. La patience le dissipe."
@@ -186,7 +188,8 @@ ISNAD.registerSaga({
       skills: [
         { w: 3, name: 'Répéter le nom', target: 'foe', el: 'fer', pow: 1.0, anim: 'burst' },
         { w: 1, name: 'Enfler', target: 'self', fx: [{ st: 'atk', v: 1 }], anim: 'guard' },
-        { w: 1, name: 'Flatterie', target: 'foe', fx: [{ st: 'doute', turns: 2, chance: 0.5 }], anim: 'glyph' }
+        { w: 1, name: 'Flatterie', target: 'foe', fx: [{ st: 'doute', turns: 2, chance: 0.5 }], anim: 'glyph' },
+        { w: 1, name: 'Redire encore', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }   // 2.20 : le temps volé (D.TEMPS, D210)
       ],
       taunts: ['Khâlid ! Khâlid !'],
       desc: "Masque creux qui répète un nom d'homme. Dispersé, il se reforme un peu plus loin : seule la vérité, dite calmement, le fait taire."

@@ -109,7 +109,8 @@ ISNAD.registerSaga({
       name: 'Murmure de deuil', art: 'wisp', hue: 215, scale: 1,
       lvl: 1, tier: 'minion', weak: ['sidq', 'sabr'], veils: 1,
       skills: [
-        { w: 2, name: '« Tout est fini »', target: 'foe', el: 'fer', pow: 0.9, fx: [{ st: 'atk', v: -1, chance: 0.4 }], anim: 'dark' }
+        { w: 2, name: '« Tout est fini »', target: 'foe', el: 'fer', pow: 0.9, fx: [{ st: 'atk', v: -1, chance: 0.4 }], anim: 'dark' },
+        { w: 1, name: 'Ressasser', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }   // 2.20 : le temps volé (D.TEMPS, D210)
       ],
       taunts: ['Il reviendra…', 'Tout est fini…'],
       desc: "Un chagrin qui a perdu son maître et rampe de cœur en cœur. Seul, il n'est rien ; nombreux, ils font une foule. La véracité et la patience les dissipent."
@@ -182,7 +183,8 @@ ISNAD.registerSaga({
       lvl: 5, tier: 'minion', weak: ['sidq', 'ilm'], veils: 2,
       skills: [
         { w: 3, name: 'Louange creuse', target: 'allies', fx: [{ st: 'atk', v: 1, turns: 2 }], anim: 'glyph' },
-        { w: 1, name: 'Flatterie', target: 'foe', el: 'fer', pow: 0.8, fx: [{ st: 'def', v: -1, chance: 0.4 }], anim: 'dark' }
+        { w: 1, name: 'Flatterie', target: 'foe', el: 'fer', pow: 0.8, fx: [{ st: 'def', v: -1, chance: 0.4 }], anim: 'dark' },
+        { w: 1, name: 'Redire encore', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }
       ],
       taunts: ['Comme tu parles bien, ô prophète de ta tribu…'],
       desc: "Il répète ce que le Menteur dit, plus fort et plus beau. Sans écho, le mensonge retombe ; c'est donc l'écho qu'il faut faire taire d'abord."
@@ -192,7 +194,8 @@ ISNAD.registerSaga({
       lvl: 5, tier: 'minion', weak: ['sidq', 'sabr'], veils: 2,
       skills: [
         { w: 3, name: 'Contrefaçon', target: 'foe', el: 'fer', pow: 1.1, fx: [{ st: 'doute', turns: 2, chance: 0.3 }], anim: 'dark' },
-        { w: 2, name: 'Cadence vide', target: 'foes', el: 'fer', pow: 0.6, anim: 'wave' }
+        { w: 2, name: 'Cadence vide', target: 'foes', el: 'fer', pow: 0.6, anim: 'wave' },
+        { w: 1, name: 'Rengaine', target: 'foe', fx: [{ st: 'baisse' }], anim: 'glyph' }
       ],
       desc: "Musaylima imitait la cadence de la Révélation sans rien avoir à dire. Ces rimes sonnent comme le vrai, et n'en ont que le bruit."
     },

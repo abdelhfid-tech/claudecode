@@ -180,6 +180,17 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   seulement (`opts.fuite`), rend la carte, et la chimère poursuit : à pied elle rattrape, en courant on la distance
   (`D.FUITE`, `rodeurs.js`) ; Éclairer est la première des Vertus. Nombres et textes de l'agent, à valider (D208).
   `v2/docs/architecture.md`, « Les commandes du combat ». Contrôles : `manette.js`, `doigt.js`, `descente.js`, `progression.js`.
+- Dans la 2.x (2.20), le temps volé et la famille de la ghafla (proposition validée par le décideur le 20 novembre, « Oui » ;
+  D210) : des attaques de chimères qui prennent du temps plutôt que de la Constance — le tour recule, la Niyya baisse, le
+  tour perdu (`D.FX` : `recul`, `baisse`, `perdu`). Leurs nombres sont dans `D.TEMPS` (`defs.js`), jamais dans un récit : le
+  validateur refuse un nombre sur ces effets, et ces effets sur une vertu de héros. La Garde les reçoit à moitié, une attaque
+  esquivée ne porte rien. Ce qui se voit : un mot d'état sur la cible (« Retardé », « Niyya − 1 », « Sérénité − 10 »), la
+  frise (le tour repoussé en pointillé), le nom de l'attaque dans le bandeau du bas. La famille de la ghafla est rattachée
+  à l'Insouciance (`racine: 'insouciance'`) et faible devant la Patience et le Savoir ; ses chimères communes (`coeur.js` :
+  Sawfa, Le Long Espoir, Le Vain Divertissement) rôdent sur les ponts des labyrinthes des récits des Compagnons
+  (`D.TEMPS.rodent`). Ce n'est pas un outil de la progression : aucune leçon. Les termes arabes viennent de l'*Ihyâ'*
+  (`v2/docs/langues/ar.md`, § 2.5). `v2/docs/architecture.md`, « Le temps volé ». Un changement de ces effets repasse le
+  validateur, `smoke.js auto`, `loupe.js`, `descente.js` et `progression.js`.
 - **Les langues** (demande du décideur, 18 novembre ; exigence 25). La 2.x existe en français, en arabe, en anglais et
   en japonais. Le français reste la langue des récits, des tables et du code ; les autres langues sont écrites à la
   source (`v2/docs/langues/ecrire.md`) et rangées, texte par texte, sous la clé de leur texte français, dans

@@ -805,6 +805,14 @@ Trône… » → **玉座**. Tous **à valider** ; les noms marqués ◆ sont le
 | khalid | Murmure de soif · Le Mirage · La Soif · Le Décompte · Forêt de lances · ◆ La Peur du Nombre · Écho de louange · Le Laurier · ◆ L'Idole du Héros | 渇きのつぶやき · 蜃気楼 · 渇き · 数え上げ · 槍の林 · ◆ 多勢への怖れ · 称賛の反響 · 栄冠 · ◆ 英雄の偶像 |
 | umar | Murmure de la faim · Plainte des cendres · L'Accapareur · Mirage de gloire · Le Faste · ◆ L'Aigle d'Airain · Reflet d'or · La Couronne suspendue · ◆ Le Trône vide | 飢えのつぶやき · 灰の嘆き · 買い占め · 栄光の蜃気楼 · 奢り · ◆ 青銅の鷲 · 金の照り返し · 吊るされた冠 · ◆ 空の玉座 |
 | uthman | Murmure · Variante querelleuse · Babel · Écume d'effroi · ◆ L'Abîme · Ouï-dire · Écho · L'Or · ◆ La Rumeur | つぶやき · 諍いの異文 · バベル · 怯えの泡 · ◆ 深淵 · 又聞き · 反響 · 黄金 · ◆ 流言 |
+| idris (2.20) | Plus tard · Le Bruit de fond | あとで · 雑音 |
+| coeur (2.20) | Sawfa · Le Long Espoir · Le Vain Divertissement | サウファ · 長き望み · むなしい遊び |
+
+*Le temps volé* (2.20, D210 ; **à valider**). La famille de la ghafla : 「怠りの一族で、忍耐と知の前に退く。」 ; les termes
+arabes en katakana avec ＝ comme アル＝ガフラ : アッ＝タスウィーフ, トゥール・アル＝アマル, アル＝ラフウ (sources : ar.md, § 2.5).
+Les attaques de 2084 prennent les mots des écrans (着信, 未読メール, ショートメール, スワイプ, スクロール, 再読み込み, ルート再検索,
+一斉通知…) ; celles des Compagnons, un japonais simple (蒸し返し « Ressasser », くり返し « Redire encore », 言いふらす
+« Colporter », ざわめき « Brouhaha », distinct de どよめき, la Clameur). Les mots d'état : **遅延**, **ニーヤ − 1**, **落ち着き − 10**.
 
 Notes :
 

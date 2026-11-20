@@ -1048,6 +1048,18 @@ religion ni une personne (exigence 6). Les familles d'images restent des famille
 | uthman | Écho | **Echo** | |
 | uthman | L'Or | **Gold** | Jamais *Mammon* (§ 1.9). |
 | uthman | La Rumeur *[idole]* | **Rumor** | |
+| idris | Plus tard (2.20) | **Later** | Famille de la ghafla (D210) : le bouton des rappels qu'on repousse. |
+| idris | Le Bruit de fond (2.20) | **Background Noise** | Famille de la ghafla. |
+| coeur | Sawfa (2.20) | **Sawfa** | « later » ; *al-taswif* (putting off), al-Ghazâlî, *Ihyâ'*, livre de la Repentance (ar.md, § 2.5). |
+| coeur | Le Long Espoir (2.20) | **Long Hope** | *tul al-amal*, rendu mot à mot ; aucune traduction anglaise publiée n'a été relue en ligne pour ce terme (à vérifier). |
+| coeur | Le Vain Divertissement (2.20) | **Idle Pastime** | *al-lahw* ; pas *Vanity* (sens de l'Ecclésiaste, § 1.9). |
+
+*Le temps volé* (2.20, D210 ; noms **à valider**). Les attaques de 2084 gardent les mots des écrans (*Incoming Call*,
+*Unread Mail*, *Text Message*, *Swipe*, *Scroll*, *Refresh*, *Rerouting*, *Snoozed Reminder*, *Five More Minutes*…) ; celles
+des Compagnons et des veillées, un anglais simple (*Brooding* pour « Ressasser », *Say It Again* pour « Redire encore »,
+*Spread the Word* pour « Colporter », *Put Off*, *Pastime*). Les mots d'état : **Delayed**, **Niyya − 1**, **Composure − 10**.
+La famille : « De la famille de l'Insouciance, il cède à la patience et au savoir » → *Of the family of Heedlessness, it
+yields to patience and knowledge.*
 
 Les idoles nommées au recueil (« le Clan, l'Empire, le Héros, l'Or, la Rumeur, le Juge sans miséricorde ») : *the Clan,
 the Empire, the Hero, Gold, Rumor, the Merciless Judge*. « La chimère La Razzia » (`raid`) : **the Raid**.
