@@ -1805,7 +1805,8 @@ pages privées de son compte.
   autres (avant, une racine écartait une petite chimère de ce qui rôde ; ce sont les idoles des chapitres qui en sont
   écartées). Un mot d'état au bord de l'image glisse vers l'intérieur pour rester entier.
   *Les mesures* (le joueur automatique du jeu ; avant : l'assemblage de la 2.19, après : celui-ci). Le jeu entier
-  (`smoke.js auto`, une partie) : 56 combats, **349 → 352 tours (+0,9 %)**, **0 → 0 défaite**, aucun éprouvé. Les combats
+  (`smoke.js auto`, deux parties après) : 56 combats, **349 → 352 et 354 tours (+0,9 % et +1,4 %)**, **0 → 0 défaite**,
+  aucun éprouvé. Les combats
   où paraît une chimère touchée, rejoués sans reprise, aux niveaux de cette partie (61 combats, ×16 avant, ×12 après) :
   **5,81 → 5,91 tours par combat (+2 %)**, défaites **0,002 → 0,007** — la seule, la veillée d'Abû Bakr (l'Ombre du Père
   et le Chuchotement, le Caïd seul au niveau 3, sans équipement) : rejouée ×30, **0,53 → 0,13**, c'est le hasard ; les
