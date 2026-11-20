@@ -206,14 +206,14 @@ async function contraste([b64, sel]) {
       for (const f of R.rodent().filter(q => !id || q.id === id).sort((a, b) => b.voiles - a.voiles)) { let ou = null; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(q => { if (ou) return; const x = Math.floor(f.x / T) + q[0], y = Math.floor(f.y / T) + q[1]; if (x >= 0 && y >= 0 && x < m.w && y < m.h && !m.solid[y * m.w + x] && ['npont', 'nfloor'].includes(m.g0(x * T + 8, y * T + 8))) ou = [x, y]; });
         if (!ou) continue; f.v = 0; f.sonne = 0; f.pousse = null; f.x = Math.floor(f.x / T) * T + 8; f.y = Math.floor(f.y / T) * T + 8; f.cx = null;
         W.player.x = ou[0] * T + 8; W.player.y = ou[1] * T + 8; W.dest = null; const dx = f.x - W.player.x, dy = f.y - W.player.y; W.player.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); W.updateCam(true); R._pret = 0;
-        return { id: f.id, voiles: f.voiles, coups: R.coups | 0 }; } return null; }, id);
+        return { id: f.id, voiles: f.voiles === undefined ? R.VOILES[m.env.dedale.n] : f.voiles, coups: R.coups | 0 }; } return null; }, id);   // (ses voiles ne sont comptés qu'au premier coup : rodeurs.js)
     const pres = await placer(null);
     if (!pres) ko('INACCESSIBLE', `${nom} · un labyrinthe : rien ne rôde à portée`);
     else { await p.waitForTimeout(300); await rien('un labyrinthe'); await shot('labyrinthe');
       const p2 = (await placer(pres.id)) || pres; await p.waitForTimeout(250); const lit = await p.evaluate(() => document.body.classList.contains('frapper'));
       await B('un labyrinthe'); await p.waitForTimeout(200);
       const f1 = await p.evaluate(id => { const I = window.ISNAD, f = I.world.foes.find(q => q.id === id); return { voiles: f ? f.voiles : -1, coups: I.rodeurs.coups | 0, halte: I.ui.menuOpen || !document.getElementById('menu').hidden, combat: I.battle.active }; }, pres.id);
-      const juste = lit && f1.coups === p2.coups + 1 && (f1.voiles === p2.voiles - 1 || (p2.voiles === 1 && f1.voiles <= 0)) && !f1.halte;   // (un dernier voile : il se dissipe)
+      const juste = lit && f1.coups === p2.coups + 1 && typeof f1.voiles === 'number' && f1.voiles < p2.voiles && !f1.halte;   // (un voile de moins ; le dernier : il se dissipe)
       dit(juste, 'ÉCART', `${nom} · un labyrinthe : B s'éclaire à portée, frappe ce qui rôde (un voile de moins), et n'ouvre pas la halte${juste ? '' : ` — éclairé : ${lit}, avant ${JSON.stringify(p2)}, après ${JSON.stringify(f1)}`}`);
       if (f1.combat) await p.evaluate(() => { const I = window.ISNAD; I.battle.abort(I.world); }); }
     await ctx.close();
