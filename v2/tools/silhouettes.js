@@ -33,12 +33,13 @@
       les fiches y sont ajoutées à leur création (relever-nouveaux) : ensuite, elles aussi ne changent plus d'un point.
    1 bis. Les grands sprites natifs, tels que le jeu les montre dans ses trois dessins : 32 × 48 (la carte en dessin fin ;
       le combat et les menus dans le dessin d'origine) et 64 × 96 (le combat et les menus en dessin fin, puis fin et
-      adouci), toutes les vues, les pas, les poses, les gestes. Ils sont ceux relevés avant que le joueur puisse composer
+      adouci), toutes les vues, les pas, les poses, les gestes ; puis, dans une empreinte à part (la cinquième de la
+      fiche), les huit images de la course (2.x, 19 novembre), en 32 × 48 et en 64 × 96. Ils sont ceux relevés avant que le joueur puisse composer
       son râwî (tools/essais/grands.json) : sinon « ÉCART » — un seul point changé sur Idris d'origine, et les films sont
       à refaire.
    2. L'interrupteur (gfx.natif = false) rend le grand sprite d'avant, à l'identique : sinon « ÉCART ».
-   3. Les Compagnons n'ont pas de visage. Dans chaque grand sprite — toutes les vues, les pas, les poses, les gestes de
-      frappe — le voile est une seule surface, d'un seul tenant sur chaque ligne et chaque colonne, sans trou ; et, une
+   3. Les Compagnons n'ont pas de visage. Dans chaque grand sprite — toutes les vues, les pas, la course, les poses, les
+      gestes de frappe — le voile est une seule surface, d'un seul tenant sur chaque ligne et chaque colonne, sans trou ; et, une
       fois peint, celui d'un Compagnon (ou de qui le jeu laisse sans visage, D.SANS_VISAGE) ne porte que sa lumière ou
       son étoffe, pas un trait : sinon « TRAIT ». Les autres personnages ont un visage (2.x, décision du décideur) : de
       face et de profil, il se voit ; de dos, rien : sinon « ABSENT ».
@@ -148,11 +149,14 @@ const GRANDES = looks => {
   const G = window.ISNAD.gfx, D = window.ISNAD.D, POSES = D.POSES.concat(G.GESTES || []), hx = n => ('0000000' + n.toString(16)).slice(-8);
   const fnv = (h, d) => { for (let i = 0; i < d.length; i++) { h ^= d[i]; h = Math.imul(h, 16777619); } return h >>> 0; };
   const octets = cv => cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
-  return looks.map(L => { let a = 2166136261, b = 0x9747b28c, c = 2166136261, e = 0x9747b28c;
-    const p = cv => { const d = octets(cv); a = fnv(a, d); b = fnv(b, d); }, q = cv => { const d = octets(cv); c = fnv(c, d); e = fnv(e, d); };
+  const COURSE = G.COURSE || 0;   // 2.x (19 novembre) : les images de la course, après les quatre de la marche
+  return looks.map(L => { let a = 2166136261, b = 0x9747b28c, c = 2166136261, e = 0x9747b28c, u = 2166136261, v = 0x9747b28c;
+    const p = cv => { const d = octets(cv); a = fnv(a, d); b = fnv(b, d); }, q = cv => { const d = octets(cv); c = fnv(c, d); e = fnv(e, d); }, r = cv => { const d = octets(cv); u = fnv(u, d); v = fnv(v, d); };
     if (G.D > 1 && !G.lisse) [0, 1, 2, 3].forEach(dir => { [0, 1, 2, 3].forEach(f => p(G.charGrand(L, dir, f))); POSES.forEach(x => p(G.charGrand(L, dir, 0, x))); });
     [0, 1, 2, 3].forEach(dir => [null].concat(POSES).forEach(x => q(G.figure(L, dir, 0, x))));
-    return [G.D > 1 && !G.lisse ? hx(a) + hx(b) : '', hx(c) + hx(e)]; });
+    // la course : chaque image, en 32 × 48 (la carte) et tracée fin (64 × 96) — une empreinte à part, qui ne touche pas aux autres
+    if (G.D > 1 && !G.lisse && COURSE) [0, 1, 2, 3].forEach(dir => { for (let f = 4; f < 4 + COURSE; f++) { r(G.charGrand(L, dir, f)); r(G.figure(L, dir, f)); } });
+    return [G.D > 1 && !G.lisse ? hx(a) + hx(b) : '', hx(c) + hx(e), G.D > 1 && !G.lisse && COURSE ? hx(u) + hx(v) : '']; });
 };
 const DESSINS = [['fin', '?def=2'], ['doux', '?def=2l'], ['origine', '?def=1']];
 
@@ -181,8 +185,9 @@ const VOILES = looks => {
   const regard = (cv, lignes, look, dir, ou) => { const q = peint(cv, lignes); if (!q.n) return;
     if (!aVisage(look) || dir === 3) { lumieres++; if (q.couleurs > 3 || q.oeil) faux.push(['TRAIT', ou + ` : ${q.couleurs} couleurs dans le voile${q.oeil ? ', dont celle d’un œil' : ''}`]); }
     else { visages++; if (q.couleurs < 4) faux.push(['ABSENT', ou + ` : pas de visage (${q.couleurs} couleur(s) dans l’ouverture de la coiffe)`]); } };
-  looks.forEach(({ nom, look }) => [0, 1, 2, 3].forEach(dir => [[0, null], [1, null], [2, null]].concat(POSES.map(p => [0, p]), GESTES.map(g => [0, g])).forEach(([f, p]) => {
-    const r = G.charGrille(look, dir, f, p), ou = `${nom} · ${['face', 'profil gauche', 'profil droit', 'dos'][dir]}${p ? ' · ' + p : f ? ' · pas ' + f : ''}`; vues++;
+  const COURSE = []; for (let f = 4; f < 4 + (G.COURSE || 0); f++) COURSE.push([f, null]);   // 2.x : les images de la course
+  looks.forEach(({ nom, look }) => [0, 1, 2, 3].forEach(dir => [[0, null], [1, null], [2, null]].concat(COURSE, POSES.map(p => [0, p]), GESTES.map(g => [0, g])).forEach(([f, p]) => {
+    const r = G.charGrille(look, dir, f, p), ou = `${nom} · ${['face', 'profil gauche', 'profil droit', 'dos'][dir]}${p ? ' · ' + p : f >= 4 ? ' · course ' + (f - 3) : f ? ' · pas ' + f : ''}`; vues++;
     if (r.natif) natives++;
     const pleines = r.lignes.reduce((s, l) => s + l.replace(/\./g, '').length, 0);
     if (r.lignes.length !== 48 || r.lignes.some(l => l.length !== 32)) faux.push(['ABSENT', ou + ' : la grille n’a pas 32 × 48']);
@@ -218,7 +223,7 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
   const parPaquets = async (liste, n, fn, arg, q) => { const res = []; for (let i = 0; i < liste.length; i += n) { const page = await ouvrir(q); res.push(await page.evaluate(fn, arg ? arg(liste.slice(i, i + n)) : liste.slice(i, i + n))); await page.context().close(); } return res; };
   // les grands sprites natifs, dans les trois dessins : { clé : [32 × 48 fin, 64 × 96 fin, 64 × 96 adouci, figure d'origine] }
   const grandes = async looks => { const par = {}; for (const [nom, q] of DESSINS) par[nom] = (await parPaquets(looks, 40, GRANDES, null, q)).flat();
-    return looks.map((L, i) => [par.fin[i][0], par.fin[i][1], par.doux[i][1], par.origine[i][1]]); };
+    return looks.map((L, i) => [par.fin[i][0], par.fin[i][1], par.doux[i][1], par.origine[i][1]].concat(par.fin[i][2] ? [par.fin[i][2]] : [])); };
   let page = await ouvrir();
   const inv = await page.evaluate(INVENTAIRE, COIFFES), natif = await page.evaluate(() => typeof window.ISNAD.gfx.charGrille === 'function'); await page.context().close();
   // la couleur du rayonnement (look.rayon) ne touche que le voile du grand personnage, en dessin fin : l'empreinte d'un petit sprite se cherche sans elle
@@ -349,7 +354,7 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
   else ok(`les petits sprites sont ceux d'avant, au pixel près : ${cles.length - neufs} silhouettes (${detail}) × 12 pas et 24 poses${neufs ? ` ; ${neufs} silhouette(s) nouvelle(s), sans empreinte` : ''}${partis ? ` ; ${partis} empreinte(s) sans silhouette` : ''}`);
   // 1 bis. les grands sprites natifs, dans les trois dessins : ceux d'avant le râwî composé, au point près
   if (!fs.existsSync(FICHE_G)) ko('ABSENT tools/essais/grands.json : rien ne dit plus ce qu’étaient les grands personnages (node tools/silhouettes.js relever-grands)');
-  else { const SG = JSON.parse(fs.readFileSync(FICHE_G, 'utf8')).grands, connus = inv.filter(q => SG[cleG(q.look)]), EG = await grandes(connus.map(q => q.look)), N = ['32 × 48 fin', '64 × 96 fin', 'fin et adouci', 'd’origine'];
+  else { const SG = JSON.parse(fs.readFileSync(FICHE_G, 'utf8')).grands, connus = inv.filter(q => SG[cleG(q.look)]), EG = await grandes(connus.map(q => q.look)), N = ['32 × 48 fin', '64 × 96 fin', 'fin et adouci', 'd’origine', 'la course'];
     const ecartsGr = []; connus.forEach((q, i) => { const a = SG[cleG(q.look)]; a.forEach((h, j) => { if (h !== EG[i][j]) ecartsGr.push(`${q.nom} (${N[j]})`); }); });
     const nouveaux = inv.length - connus.length, partisG = Object.keys(SG).filter(k => !inv.some(q => cleG(q.look) === k)).length;
     if (REDESSIN) redessin = { SG, connus, EG, qui: [...new Set(ecartsGr.map(e => e.replace(/ \([^)]*\)$/, '')))], images: ecartsGr.length, nouveaux, partisG };
@@ -357,7 +362,7 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     else if (ecartsGr.length) { const qui = [...new Set(ecartsGr.map(e => e.replace(/ \([^)]*\)$/, '')))];   // chaque silhouette touchée, une fois, et les dessins où elle l'est
       ko(`ÉCART ${ecartsGr.length} grand(s) sprite(s) ne sont plus ceux d'avant, sur ${qui.length} silhouette(s) : ${ecartsGr.slice(0, 8).join(', ')}${ecartsGr.length > 8 ? '…' : ''}`);
       console.log('   les silhouettes : ' + qui.map(n => n + ' (' + ecartsGr.filter(e => e.replace(/ \([^)]*\)$/, '') === n).map(e => e.match(/\(([^)]*)\)$/)[1]).join(', ') + ')').join(' · ')); }
-    else ok(`les grands sprites sont ceux d'avant, au point près, dans les trois dessins : ${connus.length} silhouettes × 156 images (32 × 48 et 64 × 96 ; fin, fin et adouci, d’origine)${nouveaux ? ` ; ${nouveaux} silhouette(s) nouvelle(s), sans empreinte` : ''}${partisG ? ` ; ${partisG} empreinte(s) sans silhouette` : ''}`); }
+    else ok(`les grands sprites sont ceux d'avant, au point près, dans les trois dessins : ${connus.length} silhouettes × 156 images (32 × 48 et 64 × 96 ; fin, fin et adouci, d’origine)${(() => { const n = connus.filter(q => SG[cleG(q.look)].length > 4).length; return n ? `, et la course de ${n} d'entre elles × 64 images` : ' — la course n’a pas encore d’empreinte (redessin)'; })()}${nouveaux ? ` ; ${nouveaux} silhouette(s) nouvelle(s), sans empreinte` : ''}${partisG ? ` ; ${partisG} empreinte(s) sans silhouette` : ''}`); }
   if (!natif) { ko('ABSENT gfx.charGrille : ce moteur ne dessine pas de grand sprite natif'); }
   else {
     // 2. l'interrupteur rend le dessin d'avant
@@ -371,7 +376,7 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     const traits = faux.filter(f => f[0] === 'TRAIT'), absents = faux.filter(f => f[0] === 'ABSENT');
     if (traits.length) { traits.slice(0, 10).forEach(f => ko('TRAIT ' + f[1])); if (traits.length > 10) console.log(`   … et ${traits.length - 10} autre(s)`); }
     else if (!visages && !lumieres) ok(`personne n'a de visage : ${vues} grands sprites (toutes les vues, les pas, les poses)${fines ? ` et leurs ${fines} tracés fins de 64 × 96` : ''} — le voile y est une seule surface, sans trou ni marque`);
-    else ok(`les Compagnons n'ont pas de visage : ${vues} grands sprites (toutes les vues, les pas, les poses, les gestes)${fines ? ` et leurs ${fines} tracés fins de 64 × 96` : ''} — le voile y est une seule surface, sans trou ni marque ; peint, il ne porte que sa lumière ou son étoffe dans ${lumieres} images (Compagnons, ceux que le jeu laisse sans visage, tous de dos)`);
+    else ok(`les Compagnons n'ont pas de visage : ${vues} grands sprites (toutes les vues, les pas, la course, les poses, les gestes)${fines ? ` et leurs ${fines} tracés fins de 64 × 96` : ''} — le voile y est une seule surface, sans trou ni marque ; peint, il ne porte que sa lumière ou son étoffe dans ${lumieres} images (Compagnons, ceux que le jeu laisse sans visage, tous de dos)`);
     if (visages && !absents.some(f => /pas de visage/.test(f[1]))) ok(`les autres personnages ont un visage, de face et de profil : ${visages} images`);
     if (absents.length) { absents.slice(0, 10).forEach(f => ko('ABSENT ' + f[1])); if (absents.length > 10) console.log(`   … et ${absents.length - 10} autre(s)`); }
     page = await ouvrir();

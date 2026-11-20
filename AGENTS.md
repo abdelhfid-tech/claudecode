@@ -94,8 +94,13 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   coffres ont un pied contre le joueur (`W.corps`), qui peut toujours s'en écarter, et un PNJ poussé fait un pas de
   côté ; personne n'est posé sur le joueur ; les marches de récit suivent un chemin. Ce qui rôde et les chimères de la
   carte n'ont pas de corps pour le joueur : leur contact ouvre le combat. On court au joystick tiré au bord, à Maj tenue,
-  ou d'un double toucher ; la course ne presse ni le chrono, ni ce qui rôde, ni les combats. `v2/docs/architecture.md`,
-  « Des corps, et non des fantômes » et « La manette tactile ». Les sondes des corps (« SUPERPOSÉ », « PNJ EN TRAVERS »)
+  ou d'un double toucher, à 1,225 fois la marche (le décideur, 19 novembre : « il va trop vite, diminue de 30 % » ; 1,75
+  auparavant) ; la course ne presse ni le chrono, ni ce qui rôde, ni les combats. Elle a sa foulée, dessinée et non
+  reprise d'un autre jeu (le décideur : « on dirait qu'il vole ou qu'il plane ») : huit images par cycle, l'appui, la
+  poussée, l'envol, la retombée, pour tous les grands personnages, dans les quatre directions, rien en main ; l'image se
+  choisit d'après le chemin parcouru (`G.FOULEE`), pour que le pied d'appui ne glisse pas, et les suiveurs courent avec le
+  meneur ; le dessin d'origine garde les pas de la 1.32. Contrôle : `node v2/tools/course.js` (« COURSE CONFORME »).
+  `v2/docs/architecture.md`, « Le mouvement », « Des corps, et non des fantômes » et « La manette tactile ». Les sondes des corps (« SUPERPOSÉ », « PNJ EN TRAVERS »)
   sont dans `v2/tools/sondes.js`, que `smoke.js` et `paquet.js` posent sur leurs parties : un PNJ d'un paquet s'éprouve
   comme ceux du jeu. Un changement du déplacement repasse `smoke.js suiveurs`, `walk` et `tap`, puis toute la batterie.
 - Dans la 2.x, l'image s'agrandit (demande du décideur, 16 novembre : « les personnages et les textes sont trop petits
@@ -205,6 +210,7 @@ node v2/tools/paquet.js [fichier]   # 2.0 : éprouve un paquet (par défaut le p
 node v2/tools/partie.js             # 2.0 : la partie du joueur, exportée par les vrais boutons, effacée, réimportée à l'identique
 node v2/tools/personnage.js         # 2.0 : le nom et la tenue du râwî, choisis par les vrais boutons, joués sur tout le prologue, gardés
 node v2/tools/silhouettes.js        # 2.0 : les personnages — petits sprites inchangés, voiles sans trait, une tête native par coiffe (planches : … planches [modèles.png])
+node v2/tools/course.js             # 2.x : la course — vitesse, pied d'appui qui ne glisse pas (60 et 120 Hz), suiveurs, rien en main (… images <dossier> : planche et films)
 node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] : une planche)
 node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons

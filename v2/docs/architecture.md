@@ -507,8 +507,9 @@ au bord ») : le pouce tiré au-delà de 85 % du rayon du cercle (`viser`, `I.in
 s'éclaire (`.joy.court`) ; plus près du centre, on marche. Au clavier, Maj tenue (`I.input.maj`, suivie à part dans
 `base.js` : ce n'est l'action d'aucune touche, et Maj + Entrée valide toujours) ; au doigt ou à la souris, deux touchers
 rapprochés sur la scène (moins de 0,35 s, au même endroit : `W.tap(x, y, double)`, `W.dest.course`), et le second,
-maintenu, fait suivre le doigt en courant. La course va 1,75 fois plus vite que la marche (`W.VITESSE` 82 points par
-seconde, `W.COURSE`) ; la foulée suit l'allure (« Le mouvement »). Ce n'est pas une décision mais une allure : aucune
+maintenu, fait suivre le doigt en courant. La course va 1,225 fois plus vite que la marche (`W.VITESSE` 82 points par
+seconde, `W.COURSE` ; 1,75 dans la 2.16 — le décideur, 19 novembre : « il va trop vite, diminue de 30 % ») ; elle a sa
+propre foulée, dessinée (« Le mouvement »). Ce n'est pas une décision mais une allure : aucune
 leçon ne l'apprend (`lecons.js` n'en sait rien) ; la ligne du réglage « Manette tactile » et l'aide « Se déplacer, agir »
 le disent. Le chrono des labyrinthes compte le temps, pas le chemin : la course ne le presse pas ; elle ne change ni ce
 qui rôde ni les combats.
@@ -804,7 +805,7 @@ couleurs, objets ; l'équipement s'y ajoute par `gear.js`). Aucune image n'entre
 |---|---|---|
 | Taille | 16 × 24 | 32 × 48 |
 | Où il se voit | sur les cartes, dans le dessin d'origine | partout dans le dessin fin ; en combat, en dialogue, à la page d'équipement, à l'écran « Ton personnage » dans tous les dessins |
-| Gabarits | `HEADS`, `BODIES`, `POSES` | `TETES`, `CORPS`, `ALLURES`, `GESTES` |
+| Gabarits | `HEADS`, `BODIES`, `POSES` | `TETES`, `CORPS`, `ALLURES`, `GESTES` ; la course, tirée d'un squelette (`SQUELETTE`, `course()`) |
 | État | celui de la 1.32, au pixel près | redessiné d'après les modèles du décideur |
 
 **Le grand sprite a ses propres gabarits**, aux proportions des modèles : une tête de dix-sept lignes environ, un corps
@@ -918,10 +919,46 @@ frappent (comme dans Chrono Trigger), sinon ils sont trop inanimés » (D166).*
 - **Où.** En combat (`battle.js`, `perform`) : quelques pas, le geste à chaque coup de « Frapper » ou d'« Éclairer »,
   le retour. Dans un labyrinthe (`rodeurs.js`, `R.geste` ; `world.js`, `drawChar`) : le geste de celui qui mène, avec
   l'arme qu'il porte. Le dessin d'origine garde les pas de la 1.32 sur les cartes, et lève le bras comme avant.
-- **La course** (2.16, « La manette tactile ») : la foulée va 1,6 fois plus vite (`drawChar(…, court)`) et, de profil, le
-  buste se penche d'un point vers l'avant — à l'affichage seulement : `drawChar` pose le haut de l'image (au-dessus de la
-  taille) un point plus loin que les jambes ; aucun gabarit ne change. Les pas s'entendent huit fois par seconde au lieu
-  de cinq.
+- **La course** (« La manette tactile » ; le décideur, 19 novembre, devant la 2.16 : « on dirait pas que le personnage
+  court, on dirait qu'il vole ou qu'il plane […] il va trop vite, diminue de 30 % »). Dans la 2.16, la course n'était que la
+  marche plus rapide, le buste avancé d'un point à l'affichage : les pieds glissaient, le corps ne montait ni ne
+  descendait. Elle a désormais sa foulée, dessinée — rien n'est repris d'un autre jeu, ni image, ni décalque, ni gabarit :
+  huit images par cycle (`course()`, dans `sprites.js`), quatre par pas — l'appui (le pied posé devant, à plat, le corps descendu
+  d'un point), la poussée (la jambe d'appui tendue derrière, sur la pointe ; le genou de l'autre levé haut), l'envol et la
+  retombée (les deux pieds en l'air : la jambe de derrière emportée puis le talon qui remonte, celle de devant qui
+  s'allonge puis le pied qui va se poser) ; puis l'autre jambe. Huit plutôt que six : l'envol dure deux images, et la
+  cadence reste celle d'une course (quatre pas par seconde) au lieu de cinq et demi.
+  - De profil, le squelette d'une jambe est écrit une fois (`SQUELETTE` : le genou, la cheville, le talon, la pointe, en
+    points de 32 × 48) et tracé d'un trait épais (`tracer()`) : la jambe de derrière, puis la proche, qu'un point de vide
+    détache. Le buste penché (trois points aux épaules, un à la taille), la tête en avant ; les bras pliés balancent à
+    l'opposé des jambes (`BRAS_C`), celui de derrière seulement là où il n'y a rien ; le pan du manteau, emporté derrière
+    et soulevé, ondule. La tunique suit les cuisses ; une robe longue se soulève (l'ourlet trois points plus haut), les
+    jambes dans son ombre, les pieds paraissent — le galon ne court qu'au bas de la robe.
+  - De face et de dos, le même pas : la moitié dont le genou monte remonte (`LEVE_C`), son pied paraît (de face) ou se
+    cache ; de dos, la semelle du pied lancé en arrière ; le buste passe au-dessus du pied d'appui ; les bras pliés
+    ramènent la main devant la poitrine, ou la laissent à la hanche.
+  - Le râwî a la même course, tracée sur son habit à 64 × 96 (`rawiCourse()`, le même squelette deux fois plus grand),
+    puis réduite comme ses autres images : les chausses et les bottes retracées de la hanche au pied, le long manteau
+    emporté derrière, la lanterne à la ceinture.
+  - Rien en main : ni arme, ni objet tenu (`natifGrille`, `rawiGrille`). Un Compagnon garde son voile d'une seule surface,
+    sans un trait, dans chaque image ; les autres, leur visage de face et de profil.
+  - **Le pied d'appui ne glisse pas.** `world.js` choisit l'image d'après le chemin parcouru (`W.player.parcours`), non
+    d'après le temps : une image tous les `G.FOULEE` points (6,25) — ce dont le pied posé recule dans l'image, de l'appui
+    à la poussée, mesuré sur le dessin même (`sprites.js`). D'une image d'appui à l'autre, sa place au sol ne dérive pas
+    (moins d'un point, à 60 comme à 120 images par seconde) ; dans une même image, il avance avec le corps du chemin d'une
+    image, comme dans tout jeu dessiné image par image. Les suiveurs courent avec le meneur, chacun à sa place sur son
+    chemin (`parcours − 16 × i`). À chaque appui, une petite poussière se lève, sur la terre et le sable seulement
+    (`poudre()` : jamais sur une natte, un tapis, un pavé, un sol de maison), posée dans le repère de la carte ; et le
+    bruit d'un pas. De face, le pied posé reste au bas de l'image : il ne recule pas avec le sol, comme dans tous les jeux
+    de rôle vus de haut.
+  - Le dessin d'origine garde les pas de la 1.32 ; en courant, leur cadence est celle de la marche réglée sur la vitesse
+    (une image tous les 82 / 8 points de chemin : dix pas par seconde).
+  - La planche d'un personnage (`G.planche`) a douze colonnes par direction : repos, pas A, pas B, souffle, puis les
+    huit images de la course (`sheet.course`). Sans grand dessin natif, la course se dessine avec les pas d'avant.
+  Contrôles : `node v2/tools/course.js` (la vitesse ; le pied d'appui suivi point par point, à 60 et 120 images par
+  seconde ; les suiveurs ; rien en main ; le dessin d'origine : « COURSE CONFORME ») ; `node v2/tools/course.js images
+  <dossier>` en fait la planche et les films, pris du vrai jeu ; `silhouettes.js` couvre les images de la course (voiles,
+  visages, une empreinte à part).
 
 ### Des corps, et non des fantômes (2.16)
 
@@ -946,6 +983,9 @@ joueur sur un PNJ ; en combat, en hauteur, les héros se recouvraient). D198.*
   le joueur — il y était posé, caché — prend la case libre la plus proche (`W.ecarter` ; Farwa ibn Nawfal, saga de
   'Alî). Le joueur de test « à pied » (`W.pathTo`, `walkStep`) contourne, comme un joueur, les cases des PNJ et des
   coffres, et cherche un détour quand quelqu'un se met en travers.
+- **Les suiveurs courent** quand le meneur court (19 novembre) : la même foulée, l'image choisie d'après le chemin du
+  meneur moins leur écart (`parcours − 16 × i`) — chacun pose le pied à sa place, aucun ne glisse ; la bête, qui n'a pas
+  de pas, garde son allure.
 - **Le chemin au doigt** (`W.route`) : la case d'un PNJ ou d'un coffre compte comme pleine, sauf la case visée ; si la
   case visée n'est plus joignable ainsi, le chemin se refait sans eux. Les raccourcis (`clearLine`) ne traversent pas un
   corps.
@@ -1180,6 +1220,8 @@ node v2/tools/partie.js              # la partie du joueur : exportée, effacée
 node v2/tools/personnage.js          # le nom et la tenue du râwî : choisis, joués, gardés
 node v2/tools/silhouettes.js         # « SILHOUETTES CONFORMES » : petits sprites inchangés, aucun trait dans un voile
 node v2/tools/silhouettes.js planches [modèles.png]   # planches agrandies dans .smoke/silhouettes/
+node v2/tools/course.js              # la course : vitesse, pied d'appui suivi à 60 et 120 Hz, suiveurs, rien en main — « COURSE CONFORME »
+node v2/tools/course.js images <dossier>   # sa planche et ses films (téléphone en hauteur et en largeur, ralenti, marche puis course)
 node v2/tools/silhouettes.js redessin « décision »   # un nouveau dessin validé devient la référence des grands (le contrôle entier d'abord)
 node v2/tools/loupe.js               # « LOUPE CONFORME » : sur un téléphone, l'image agrandie, le toucher juste, les textes lisibles
 node v2/tools/partage.js             # « PARTAGE CONFORME » : partager sa progression — le bouton, l'image, le texte, les replis, quatre langues
