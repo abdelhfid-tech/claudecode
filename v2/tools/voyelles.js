@@ -77,9 +77,10 @@ function nues(m) {
     if (/[اىآ]/.test(x.c)) return;   // l'alif (waṣla, de prolongement, après un tanwîn), l'alif maqṣûra, l'alif madda
     const av = i > 0 ? m[i - 1].s : '';
     if (x.c === 'و' && i > 0 && DAMMA.test(av)) return;   // prolongement : ـُو (et le wâw muet de عَمْرٌو)
-    if (x.c === 'و' && i === m.length - 1 && /عمرو$/.test(nu) && /[ٌٍ]/.test(av)) return;   // le wâw muet de عَمْرٍو, au génitif
+    if (x.c === 'و' && i === m.length - 1 && /عمرو$/.test(nu) && /[ً-ِ]/.test(av)) return;   // le wâw muet de عمرو : عَمْرٍو, et devant بْن, عَمْرِو / عَمْرَو
     if (x.c === 'ي' && i > 0 && KASRA.test(av)) return;   // prolongement : ـِي
     if (x.c === 'ل' && i + 1 < m.length && m[i + 1].s.indexOf(CHADDA) >= 0) return;   // le lâm solaire : الشَّمْس, لِلنَّاس
+    if (x.c === 'ل' && i + 1 < m.length && m[i + 1].c === 'ا' && m[i + 1].s) return;   // la ligature lâm-alif dont la voyelle est tapée après l'alif : لاَ, إِلاَّ
     out.push(x.c);
   });
   return out;
