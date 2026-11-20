@@ -17,8 +17,9 @@
    - « PÉRIMÉ » : le texte arabe a changé depuis (ou a disparu) ; le jeu montre alors le texte tel qu'il est écrit ;
    - « ÉCART » : ôtés ses signes, elle ne redonne pas exactement ses lettres ; ou un signe que le texte porte déjà manque ;
      ou une même clé est vocalisée de deux façons ; ou une parole attestée, un verset, n'est pas recopié du registre
-     (v2/docs/sources/) tel qu'il est — on ne revocalise jamais un texte du registre ;
-   - « INCOMPLET » : une lettre arabe sans signe, hors de ce qui n'en porte pas dans une édition scolaire entièrement
+     (v2/docs/sources/) tel qu'il est, seul ou cité au milieu d'un texte — on ne revocalise jamais un texte du registre ;
+   - « INCOMPLET » : une lettre arabe sans signe — hors d'une parole citée, de sa source et de ce que le registre donne,
+     recopiés tels quels — et hors de ce qui n'en porte pas dans une édition scolaire entièrement
      vocalisée : l'alif (ا ى آ, y compris l'alif waṣla et celui qui suit un tanwîn), la lettre de prolongement (و après
      une damma, ي après une kasra), le lâm « solaire » (devant une lettre à chadda), et ces mots :
        إدريس   le nom que l'arabe donne au râwî : le jeu y pose le nom choisi par le joueur (perso.js), il reste nu ;
@@ -85,7 +86,9 @@ function nues(m) {
 // le Nom ne porte, écrit à la main, que le signe de sa dernière lettre (ar.md, § 1.7 : jamais de chadda ajoutée)
 const nomCharge = m => { const coeur = coeurDuNom(m.map(x => x.c).join('')); return coeur > 0 && m.slice(m.length - coeur, -1).some(x => x.s); };
 // les morceaux d'un texte que l'on contrôle : tout, sauf ce que le registre donne tel quel
-function horsRegistre(t, REG) { let s = String(t); REG.versets.forEach(v => { if (s.indexOf(v) >= 0) s = s.split(v).join(' '); }); return s; }
+// (un verset, ou une parole attestée citée au milieu d'une narration ou d'un feuillet : recopiés, ils ne se contrôlent pas)
+const cites = REG => REG.versets.concat([...REG.paroles.values()]).filter(v => v.length >= 8);
+function horsRegistre(t, REG) { let s = String(t); cites(REG).forEach(v => { if (s.indexOf(v) >= 0) s = s.split(v).join(' '); }); return s; }
 
 /* ---------- le contrôle ---------- */
 function controler() {
@@ -109,9 +112,13 @@ function controler() {
       const p = REG.paroles.get(c.fr); if (p && x.tv !== x.t) { erreurs.push(`ÉCART ${w} : une parole attestée se recopie du registre, sans signe ajouté`); return; }
       if (/<quote>[12]$/.test(c.ou || '') && x.tv !== x.t) { erreurs.push(`ÉCART ${w} : une parole citée ou sa source se recopie telle qu’elle est`); return; }
       const v = REG.versets.find(s => x.t.indexOf(s) >= 0 && x.tv.indexOf(s) < 0); if (v) { erreurs.push(`ÉCART ${w} : un verset n’est pas recopié tel que le registre le donne`); return; }
-      if (x.tv === x.t) avis.push(`${w} : la forme vocalisée n’ajoute aucun signe`);
+      const pc = [...REG.paroles.values()].find(s => s.length >= 8 && x.t.indexOf(s) >= 0 && x.tv.indexOf(s) < 0);
+      if (pc) { erreurs.push(`ÉCART ${w} : une parole attestée, citée dans le texte, n’est pas recopiée telle que le registre la donne`); return; }
       formes.set(x.k, x.tv); frais.add(x.k);
-      if (mots(x.tv).some(nomCharge)) { erreurs.push(`ÉCART ${w} : le Nom porte un signe écrit à la main ailleurs que sur sa dernière lettre`); return; }
+      // une parole citée, sa source, une parole du registre : recopiées telles quelles (vérifié ci-dessus), elles ne se complètent pas
+      if (p || /<quote>[12]$/.test(c.ou || '')) return;
+      if (x.tv === x.t) avis.push(`${w} : la forme vocalisée n’ajoute aucun signe`);
+      if (mots(horsRegistre(x.tv, REG)).some(nomCharge)) { erreurs.push(`ÉCART ${w} : le Nom porte un signe écrit à la main ailleurs que sur sa dernière lettre`); return; }
       const manque = mots(horsRegistre(x.tv, REG)).map(m => ({ m, nu: nues(m) })).filter(o => o.nu.length);
       if (manque.length) { incomplets++; erreurs.push(`INCOMPLET ${w} : ${manque.slice(0, 4).map(o => o.m.map(y => y.c + y.s).join('') + ' (' + o.nu.join('') + ')').join(' · ')}${manque.length > 4 ? ' …' : ''}`); }
     });
