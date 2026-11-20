@@ -424,8 +424,13 @@
     const list = main ? box.querySelector('.mlist') : null, defile = () => !!list && list.scrollHeight > list.clientHeight + 1;
     const bas = innerHeight - ((I.ui && I.ui.padBas) || 0);   // 2.x : en hauteur, la bande de la manette tactile reste libre (ui.js, layout)
     const deborde = () => { const r = pan.getBoundingClientRect(); return r.bottom > bas + 1 || r.top < 0 || defile(); };
+    const sous = main ? null : box.querySelector('.mlist'); if (sous) sous.style.maxHeight = '';
     if (list) { list.style.maxHeight = ''; if (defile() && !document.body.classList.contains('portrait')) { list.style.maxHeight = 'none'; if (pan.getBoundingClientRect().top < 0) list.style.maxHeight = ''; } }
     for (const f of [0.94, 0.88, 0.82].filter(v => v > mini + 0.01).concat(mini)) { if (!deborde()) break; box.style.fontSize = (0.86 * f).toFixed(3) + 'em'; }
+    // 2.19 — une liste qui défile (les vertus, les objets, les ordres) : si le panneau sort encore de l'écran (un très petit
+    // téléphone), elle raccourcit et défile, pour que « ◂ Retour », sous elle, reste dans l'écran et sous le doigt
+    if (sous && deborde()) { const r = pan.getBoundingClientRect(), trop = Math.max(r.bottom - bas, -r.top) + 4, ligne = (sous.querySelector('.mi:not([hidden])') || {}).offsetHeight || 24;
+      sous.style.maxHeight = Math.max(ligne * 1.6, sous.clientHeight - trop) + 'px'; }
   }
   /* 2.19 — le choix d'une cible se fait dans la liste même (demande du décideur, 20 novembre : « Par défaut quand on combat
      si on appuie sur frapper et encore sur frapper (ou sur les boutons) ça frappe ou ça active l'action sur l'adversaire ou
