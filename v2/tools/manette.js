@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 /* ISNAD 2.x — la manette tactile, partout (src/core/ui.js, pad, layout ; src/core/base.js, « retour »).
    Demande du décideur, 19 novembre : « aussi il faut que les boutons puissent servir à sélectionner (A) ou faire marche
-   arrière (B) ». Usage : node tools/manette.js
-   Sur un téléphone tenu en hauteur (390 × 844), en largeur (844 × 390), puis sur un petit téléphone (360 × 640), au doigt,
-   avec les vrais boutons de la manette seulement (A, B, le joystick ; le bouton ☰ de la scène pour ouvrir la halte) :
+   arrière (B) » ; 20 novembre (2.18) : « le grand écran immersif lorsque le téléphone est en paysage, le joystick et les
+   boutons A/B doivent être translucides sur l'image au lieu d'être figés et rétrécir l'image et l'immersion ».
+   Usage : node tools/manette.js
+   Sur un téléphone tenu en hauteur (390 × 844), en largeur (844 × 390), sur un petit téléphone (360 × 640), puis sur une
+   tablette en largeur (1024 × 768), au doigt, avec les vrais boutons de la manette seulement (A, B, le joystick ; le bouton
+   ☰ de la scène pour ouvrir la halte) :
    1. l'écran-titre : le joystick descend jusqu'à « Réglages », A y entre, B revient à l'essentiel ;
    2. en exploration : B n'ouvre pas la halte (tout au plus, il arrête la marche) ;
    3. la halte : ouverte par ☰, on y descend au joystick jusqu'à « Carte », A y entre, B revient, B la referme ;
@@ -14,21 +17,27 @@
    7. le combat : A choisit « Frapper », B revient du choix de la cible, A de nouveau, le joystick change de cible, A frappe
       celle qu'il montre ;
    8. dans un labyrinthe : B frappe ce qui rôde à portée.
-   À chaque état : la manette est là (« INACCESSIBLE » sinon) ; aucun de ses boutons ne recouvre un texte, un élément
-   touchable ni l'image de la scène (rectangles comparés : « RECOUVERT ») ; ce qui est sélectionné se voit (sur la capture,
-   le contraste de son anneau avec son fond, et avec celui d'un voisin non choisi : « INVISIBLE ») ; chaque touche fait ce
-   qu'elle doit (« ÉCART » sinon).
+   À chaque état : la manette est là (« INACCESSIBLE » sinon) ; aucun de ses boutons ne recouvre un texte ni un élément
+   touchable — ni, en hauteur, l'image de la scène ; en largeur (2.18), elle est posée sur l'image, qui peut passer dessous
+   (rectangles comparés : « RECOUVERT ») ; ce qui est sélectionné se voit (sur la capture, le contraste de son anneau avec
+   son fond, et avec celui d'un voisin non choisi : « INVISIBLE ») ; chaque touche fait ce qu'elle doit (« ÉCART » sinon).
+   En largeur (2.18), en exploration : la scène prend toute la largeur de l'écran et montre toute la largeur de l'image (ou,
+   sur une tablette, toute l'image) ; A et B sont translucides au repos (de 25 à 45 % d'opacité), nets sous le pouce, B
+   éclairé net ; le plein écran — le jeu y entre au premier toucher ; quitté, le bouton de la scène paraît et y remet ; le
+   réglage de la halte le coupe puis le rétablit ; dans un cadre qui le refuse, rien ne paraît et rien ne casse (« ÉCART »
+   sinon).
    Sortie : « OK » par preuve, puis « MANETTE CONFORME ». Code 1 à la moindre anomalie. Captures dans .smoke/manette. */
 const fs = require('fs'), path = require('path');
 const { chromium, devices } = require('playwright');
 const V2 = path.join(__dirname, '..'), out = path.join(V2, '.smoke/manette'), url = 'file://' + path.resolve(V2, process.env.JEU || 'index.html');
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { anomalies++; console.log(mot + ' ' + m); }, dit = (v, mot, m) => (v ? ok(m) : ko(mot, m));
-const TELEPHONES = [['en hauteur', 'haut', 390, 844], ['en largeur', 'large', 844, 390], ['petit téléphone', 'petit', 360, 640]];
+const TELEPHONES = [['en hauteur', 'haut', 390, 844], ['en largeur', 'large', 844, 390], ['petit téléphone', 'petit', 360, 640], ['tablette en largeur', 'tablette', 1024, 768]];
 
 /* dans la page : ce que la manette recouvre — tout élément visible qui porte du texte ou qui se touche, et l'image de la
-   scène ; rogné par ce qui le fait défiler, et seulement s'il est bien dessus (ce qu'un écran couvre ne compte pas) */
+   scène ; rogné par ce qui le fait défiler, et seulement s'il est bien dessus (ce qu'un écran couvre ne compte pas).
+   2.18 : en largeur (body.immersif), la manette est posée sur l'image — l'image (le canevas) ne compte plus */
 function recouvre() {
-  const pad = document.getElementById('pad'), vus = [], R = q => q.getBoundingClientRect();
+  const pad = document.getElementById('pad'), vus = [], R = q => q.getBoundingClientRect(), immersif = document.body.classList.contains('immersif');
   const montre = e => { if (e.closest('[hidden]')) return false; for (let x = e; x && x !== document.body; x = x.parentElement) { const s = getComputedStyle(x); if (s.display === 'none' || s.visibility === 'hidden' || +s.opacity < 0.05) return false; } return true; };
   const pads = ['#pad .joy', '#pad .a', '#pad .b'].map(q => document.querySelector(q)).filter(e => e && montre(e)).map(R);
   if (!pads.length) return { pads: 0, l: [] };
@@ -37,9 +46,9 @@ function recouvre() {
   const dessus = (e, q, p) => { const x = (Math.max(q[0], p.left) + Math.min(q[2], p.right)) / 2, y = (Math.max(q[1], p.top) + Math.min(q[3], p.bottom)) / 2, v = pad.style.visibility; pad.style.visibility = 'hidden'; const h = document.elementFromPoint(x, y); pad.style.visibility = v; return !!h && (h === e || e.contains(h) || h.contains(e)); };
   const voir = (e, rects, quoi) => { for (const r of rects) { const q = coupe(e, r); if (!q) continue; const p = pads.find(p => touche(q, p)); if (p && dessus(e, q, p)) { vus.push(quoi + ' ' + (e.id ? '#' + e.id : (e.tagName.toLowerCase() + (e.className && typeof e.className === 'string' ? '.' + e.className.trim().split(/\s+/).join('.') : ''))) + ' « ' + (e.textContent || '').trim().slice(0, 24) + ' »'); return; } } };
   document.querySelectorAll('body *').forEach(e => { if (pad.contains(e) || !montre(e)) return;
-    if (e.matches('button, a, input, textarea, select, .opt, .mi, .plate, .hrow, .link, canvas#cv')) voir(e, [R(e)], 'touchable');
+    if (e.matches(immersif ? 'button, a, input, textarea, select, .opt, .mi, .plate, .hrow, .link' : 'button, a, input, textarea, select, .opt, .mi, .plate, .hrow, .link, canvas#cv')) voir(e, [R(e)], 'touchable');
     [...e.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim()).forEach(n => { const g = document.createRange(); g.selectNodeContents(n); voir(e, [...g.getClientRects()], 'texte'); }); });
-  const st = document.getElementById('stage'), cs = R(st); if (!document.querySelector('.screen:not([hidden])') && document.getElementById('card').hidden) { const q = coupe(st, cs); if (q && pads.some(p => touche(q, p))) vus.push('l’image de la scène'); }
+  const st = document.getElementById('stage'), cs = R(st); if (!immersif && !document.querySelector('.screen:not([hidden])') && document.getElementById('card').hidden) { const q = coupe(st, cs); if (q && pads.some(p => touche(q, p))) vus.push('l’image de la scène'); }
   return { pads: pads.length, l: [...new Set(vus)] };
 }
 
@@ -86,8 +95,8 @@ async function contraste([b64, sel]) {
     const calme = async (k = 80) => { for (let i = 0; i < k && await p.evaluate(() => window.ISNAD.script.busy || window.ISNAD.world.lock); i++) { await entree(); await p.waitForTimeout(160); } await p.waitForTimeout(250); };
 
     /* 1. l'écran-titre */
-    { const pl = await p.evaluate(() => { const U = window.ISNAD.ui, j = document.querySelector('#pad .joy').getBoundingClientRect(), a = document.querySelector('#pad .a').getBoundingClientRect(); return { bas: U.padBas, cote: U.padCote, joy: Math.round(j.width), a: Math.round(a.width) }; });
-      dit(pl.bas > 0 !== pl.cote > 0, 'ÉCART', `${nom} : la place de la manette — ${pl.bas ? `la bande du bas, ${pl.bas} points` : `les deux marges, ${pl.cote} points chacune`} ; joystick de ${pl.joy} points, A et B de ${pl.a}`); }
+    { const pl = await p.evaluate(() => { const U = window.ISNAD.ui, j = document.querySelector('#pad .joy').getBoundingClientRect(), a = document.querySelector('#pad .a').getBoundingClientRect(); return { bas: U.padBas, cote: U.padCote, zone: U.padZone, immersif: document.body.classList.contains('immersif'), joy: Math.round(j.width), a: Math.round(a.width) }; });
+      dit(pl.bas > 0 !== pl.cote > 0 && (pl.bas > 0) !== pl.immersif && (!pl.immersif || !!pl.zone), 'ÉCART', `${nom} : la place de la manette — ${pl.bas ? `la bande du bas, ${pl.bas} points` : `posée sur l'image (2.18), ses deux zones de ${pl.zone ? pl.zone.g + ' et ' + pl.zone.d : '?'} points de large et ${pl.zone ? pl.zone.h : '?'} de haut`} ; joystick de ${pl.joy} points, A et B de ${pl.a}`); }
     await rien('écran-titre'); await vue('#title .vmenu button.sel', 'écran-titre');
     for (let i = 0; i < 9 && !/^Réglages/.test(await choisi('#title .vmenu button.sel')); i++) await joy('down', 'écran-titre');
     const t1 = await choisi('#title .vmenu button.sel'); dit(/^Réglages/.test(t1), 'INACCESSIBLE', `${nom} · écran-titre : le joystick descend jusqu'à « Réglages » (« ${t1} »)`);
@@ -102,6 +111,23 @@ async function contraste([b64, sel]) {
       I.debug.auto = true; I.speed = 30; I.world.roster = {}; I.world.saga = null; I.world.startChapter('khalid', 2); setTimeout(() => { I.debug.auto = false; I.speed = 1; }, 250); });
     await p.waitForTimeout(1800); await calme(); await p.waitForTimeout(400); await calme(); await p.waitForTimeout(600);
     await rien('exploration'); await shot('exploration');
+    /* 2 ter. (2.18) en largeur : le grand écran immersif — la scène prend toute la largeur de l'écran et montre toute la
+       largeur de l'image ; la manette posée dessus, translucide au repos, nette sous le pouce ; le plein écran là où il sert */
+    if (await p.evaluate(() => document.body.classList.contains('immersif'))) {
+      const g = await p.evaluate(() => { const I = window.ISNAD, U = I.ui, G = I.gfx, st = document.getElementById('stage').getBoundingClientRect(), op = q => +getComputedStyle(document.querySelector(q)).opacity;
+        return { st: [Math.round(st.left), Math.round(st.top), Math.round(st.width), Math.round(st.height)], vw: innerWidth, vh: innerHeight, image: Math.round(G.view.w * U.Z), vue: [Math.round(G.view.w), Math.round(G.view.h)], Z: U.Z, a: op('#pad .a'), b: op('#pad .b'), possible: U.pleinPossible(), plein: U.enPlein(), bouton: !document.getElementById('pleinbtn').hidden }; });
+      dit(g.st[2] >= g.vw - 1 && g.image >= 383 && (g.st[3] >= g.vh - 1 || Math.abs(g.st[3] - g.vw * 9 / 16) <= 1), 'ÉCART', `${nom} · le grand écran : la scène fait ${g.st[2]} × ${g.st[3]} points sur ${g.vw} × ${g.vh} et montre ${g.vue[0]} × ${g.vue[1]} points de l'image (× ${g.Z})`);
+      const b0 = await centre('#pad .b'); let sous = 0;
+      if (b0) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: b0.x, y: b0.y, id: 9 }] }); await p.waitForTimeout(90); sous = await p.evaluate(() => +getComputedStyle(document.querySelector('#pad .b')).opacity); await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await p.waitForTimeout(250); }
+      dit(g.a >= 0.25 && g.a <= 0.45 && g.b >= 0.25 && g.b <= 0.45 && sous >= 0.8, 'ÉCART', `${nom} · la manette sur l'image : A et B translucides au repos (${g.a}, ${g.b}), B net sous le pouce (${sous})`);
+      dit(g.possible ? g.plein && !g.bouton : !g.bouton, 'ÉCART', `${nom} · le plein écran : ${g.possible ? (g.plein ? 'pris au premier toucher, le bouton de la scène s’est retiré' : 'possible, mais pas pris au premier toucher') : 'refusé par le navigateur, aucun bouton'}${(g.possible ? !g.bouton : !g.bouton) ? '' : ' — le bouton est là'}`);
+      // on le quitte (comme d'un geste du système) : le bouton de la scène paraît ; touché, il y remet
+      if (g.possible && g.plein) { await p.evaluate(() => document.exitFullscreen().catch(() => {})); await p.waitForTimeout(500);
+        const v = await p.evaluate(() => ({ plein: window.ISNAD.ui.enPlein(), bouton: !document.getElementById('pleinbtn').hidden })), pb = await centre('#pleinbtn');
+        if (pb) { await p.touchscreen.tap(pb.x, pb.y); await p.waitForTimeout(600); }
+        const v2 = await p.evaluate(() => ({ plein: window.ISNAD.ui.enPlein(), bouton: !document.getElementById('pleinbtn').hidden, halte: window.ISNAD.ui.menuOpen }));
+        dit(!v.plein && v.bouton && !!pb && v2.plein && !v2.bouton && !v2.halte, 'ÉCART', `${nom} · le plein écran quitté : le bouton de la scène paraît (${v.bouton}) ; touché, il y remet (${v2.plein}), et se retire`); }
+    }
     const marche = await p.evaluate(() => { const W = window.ISNAD.world, T = 16, m = W.map, px = W.player.x, py = W.player.y; for (const [dx, dy] of [[4, 0], [-4, 0], [0, 4], [0, -4], [3, 2], [-3, 2]]) { const x = px + dx * T, y = py + dy * T; if (x > 8 && y > 8 && x < m.w * T - 8 && y < m.h * T - 8 && !W.solidAt(x, y)) { W.tap(x, y); return !!W.dest; } } return false; });
     await p.waitForTimeout(150); await B('exploration');
     const e2 = await p.evaluate(() => { const I = window.ISNAD; return { halte: I.ui.menuOpen || !document.getElementById('menu').hidden, dest: !!I.world.dest, ecran: !!document.querySelector('.screen:not([hidden])') }; });
@@ -144,6 +170,14 @@ async function contraste([b64, sel]) {
     const rg = await p.evaluate(() => ({ b: (document.querySelector('#menu .side button.sel') || {}).textContent || '', pane: document.querySelector('#menu .pane').textContent }));
     dit(/^Manette tactile : affichée/.test(rg.b) && /A pour parler, agir et valider ; B pour frapper et revenir en arrière/.test(rg.pane), 'ÉCART', `${nom} · la halte : le réglage « ${rg.b} » dit ce que font A et B`);
     await rien('la halte, la manette'); await vue('#menu .side button.sel', 'la halte, la manette'); await shot('halte-reglage-manette');
+    // (2.18) en largeur, le réglage « Plein écran », juste après, là où il peut servir : A le coupe — le jeu sort du plein
+    // écran —, A le rétablit
+    if (await p.evaluate(() => document.body.classList.contains('immersif') && window.ISNAD.ui.pleinPossible())) {
+      await joy('down', 'la halte, les réglages'); const r0 = await choisi('#menu .side button.sel');
+      await A('la halte, le plein écran'); await p.waitForTimeout(400); const r1 = await p.evaluate(() => ({ b: document.querySelector('#menu .side button.sel').textContent, plein: window.ISNAD.ui.enPlein(), o: window.ISNAD.save.data.opts.plein }));
+      await A('la halte, le plein écran'); const r2 = await p.evaluate(() => ({ b: document.querySelector('#menu .side button.sel').textContent, o: window.ISNAD.save.data.opts.plein }));
+      dit(/^Plein écran : activé/.test(r0) && /^Plein écran : coupé/.test(r1.b) && r1.o === false && !r1.plein && /^Plein écran : activé/.test(r2.b) && r2.o === true, 'ÉCART', `${nom} · la halte : le réglage « Plein écran » se coupe — le jeu sort du plein écran — puis se rétablit (« ${r0} » → « ${r1.b} » → « ${r2.b} »)`);
+      await rien('la halte, le plein écran'); }
     await B('la halte'); const h3 = await p.evaluate(() => ({ ouverte: !document.getElementById('menu').hidden || window.ISNAD.ui.menuOpen }));
     dit(!h3.ouverte, 'ÉCART', `${nom} · la halte : B la referme, on revient au jeu`);
     await p.waitForTimeout(300);
@@ -210,14 +244,32 @@ async function contraste([b64, sel]) {
     const pres = await placer(null);
     if (!pres) ko('INACCESSIBLE', `${nom} · un labyrinthe : rien ne rôde à portée`);
     else { await p.waitForTimeout(300); await rien('un labyrinthe'); await shot('labyrinthe');
-      const p2 = (await placer(pres.id)) || pres; await p.waitForTimeout(250); const lit = await p.evaluate(() => document.body.classList.contains('frapper'));
+      // (2.18 : en largeur, la manette est translucide au repos ; B éclairé, lui, reste net — relevé d'un même coup, sans retarder B)
+      const p2 = (await placer(pres.id)) || pres; await p.waitForTimeout(250); const e18 = await p.evaluate(() => ({ lit: document.body.classList.contains('frapper'), imm: document.body.classList.contains('immersif'), op: +getComputedStyle(document.querySelector('#pad .b')).opacity })), lit = e18.lit;
       await B('un labyrinthe'); await p.waitForTimeout(200);
+      if (e18.imm) dit(lit && e18.op >= 0.95, 'ÉCART', `${nom} · un labyrinthe : B éclairé reste net sur l'image (opacité ${e18.op})`);
       const f1 = await p.evaluate(id => { const I = window.ISNAD, f = I.world.foes.find(q => q.id === id); return { voiles: f ? f.voiles : -1, coups: I.rodeurs.coups | 0, halte: I.ui.menuOpen || !document.getElementById('menu').hidden, combat: I.battle.active }; }, pres.id);
       const juste = lit && f1.coups === p2.coups + 1 && typeof f1.voiles === 'number' && f1.voiles < p2.voiles && !f1.halte;   // (un voile de moins ; le dernier : il se dissipe)
       dit(juste, 'ÉCART', `${nom} · un labyrinthe : B s'éclaire à portée, frappe ce qui rôde (un voile de moins), et n'ouvre pas la halte${juste ? '' : ` — éclairé : ${lit}, avant ${JSON.stringify(p2)}, après ${JSON.stringify(f1)}`}`);
       if (f1.combat) await p.evaluate(() => { const I = window.ISNAD; I.battle.abort(I.world); }); }
     await ctx.close();
   }
+  /* 9. (2.18) dans un cadre qui refuse le plein écran (une application qui montre le jeu dans sa page) : le jeu reste en
+     largeur sur tout le cadre, la manette sur l'image ; le bouton du plein écran ne paraît pas, un toucher ne casse rien */
+  { const cadre = path.join(out, 'cadre.html'); fs.writeFileSync(cadre, `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>html,body{margin:0;height:100%;background:#000}iframe{border:0;width:100%;height:100%;display:block}</style><iframe src="${url}" allow="fullscreen 'none'"></iframe>`);
+    const ctx = await browser.newContext({ viewport: { width: 844, height: 390 }, deviceScaleFactor: 2, hasTouch: true, isMobile: true, userAgent: devices['iPhone 13'].userAgent }), p = await ctx.newPage();
+    p.on('pageerror', e => errors.push('cadre · pageerror: ' + e.message)); p.on('console', m => { if (m.type() === 'error') errors.push('cadre · console: ' + m.text()); });
+    await p.goto('file://' + cadre); await p.waitForTimeout(2000); const f = p.frames().find(x => x !== p.mainFrame());
+    if (!f) ko('INACCESSIBLE', 'dans un cadre : le jeu ne s’est pas ouvert');
+    else { await p.touchscreen.tap(422, 40); await p.waitForTimeout(500);
+      await f.evaluate(() => { const I = window.ISNAD; I.audio.setOn(false); I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => e.hidden = true); document.body.classList.remove('in-screen'); I.input.reset();
+        I.debug.auto = true; I.speed = 30; I.world.roster = {}; I.world.saga = null; I.world.startChapter('khalid', 2); setTimeout(() => { I.debug.auto = false; I.speed = 1; }, 250); });
+      await p.waitForTimeout(1800); for (let i = 0; i < 80 && await f.evaluate(() => window.ISNAD.script.busy || window.ISNAD.world.lock); i++) { await f.evaluate(() => { const c = document.querySelector('#choice'); if (c && !c.hidden) { const o = c.querySelectorAll('.opt'); if (o.length) o[o.length - 1].click(); } else window.ISNAD.input.emit('ok'); }); await p.waitForTimeout(160); }
+      await p.waitForTimeout(600); await p.touchscreen.tap(600, 120); await p.waitForTimeout(600);
+      const c = await f.evaluate(() => ({ possible: window.ISNAD.ui.pleinPossible(), plein: !!document.fullscreenElement, bouton: !document.getElementById('pleinbtn').hidden, menu: !document.getElementById('menubtn').hidden, immersif: document.body.classList.contains('immersif'), st: Math.round(document.getElementById('stage').getBoundingClientRect().width), vw: innerWidth, pad: !!document.querySelector('#pad .joy').getBoundingClientRect().width }));
+      await p.screenshot({ path: path.join(out, 'cadre-exploration.png') });
+      dit(!c.possible && !c.plein && !c.bouton && c.menu && c.immersif && c.st >= c.vw - 1 && c.pad, 'ÉCART', `dans un cadre qui refuse le plein écran : aucun bouton du plein écran, rien ne change — la scène fait ${c.st} points sur ${c.vw}, la manette sur l'image${c.possible ? ' (le cadre dit pourtant le plein écran possible)' : ''}`); }
+    await ctx.close(); }
   if (errors.length) ko('ÉCART', `erreur console : ${[...new Set(errors)].slice(0, 3).join(' | ').slice(0, 400)}`);
   await browser.close();
   console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : '✓ MANETTE CONFORME — A choisit, B revient en arrière, le joystick choisit ; la manette ne recouvre rien et la sélection se voit (captures dans .smoke/manette)');

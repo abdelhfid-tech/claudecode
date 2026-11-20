@@ -128,7 +128,7 @@
       mk(G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'); });
       mk(I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }), b => { U.tzSuivant(); b.textContent = I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }); });
       mk(I.t('Image : {zoom}', { zoom: zoomNom() }), b => { U.zoomSuivant(); b.textContent = I.t('Image : {zoom}', { zoom: zoomNom() }); });
-      mk(I.t('Plein écran'), () => { const e = document.documentElement; try { (document.fullscreenElement ? document.exitFullscreen() : e.requestFullscreen()).catch(() => {}); } catch (e2) { /* indisponible */ } });
+      mk(I.t('Plein écran'), () => U.pleinEcran()).dataset.plein = '';   // (2.18 : entrer, ou sortir ; en largeur, l'écran y reste en largeur)
       // 2.x : la langue secondaire (sous chaque réplique, la même chose dans une autre langue), avec ce qu'elle est
       // (en largeur, sur toute la largeur de la colonne : après « Plein écran », elle ne laisse pas de case vide)
       if (I.langue.secondes().length) { const lab = () => I.t('Langue secondaire : {langue}', { langue: U.langue2Nom() }) + '<small>' + I.t('La même chose, dite avec les mots de l’autre langue : pas mot à mot.') + '</small>';
@@ -567,6 +567,8 @@
         toggle(I.t('Texte'), () => I.t(U.TZ[U.tz()][0]), U.tzSuivant, I.t('Taille des caractères dans les dialogues, les menus et les combats.')),
         toggle(I.t('Image'), zoomNom, U.zoomSuivant, I.t('Agrandit l’image pendant l’exploration : on voit moins loin, mais en plus grand. Sur l’image elle-même : deux doigts qui s’écartent, la molette, ou le bouton « × » en haut de la scène.')),
         toggle(I.t('Manette tactile'), () => o.joy !== false ? I.t('affichée') : I.t('masquée'), () => { o.joy = o.joy === false; U.applyOpts(); }, I.t('Sur un écran tactile, comme sur une console de poche : le joystick sous le pouce gauche pour se déplacer et choisir ; A pour parler, agir et valider ; B pour frapper et revenir en arrière, sous le pouce droit — tenu avec le joystick, B fait courir. On peut aussi toucher directement la scène et les boutons.')),
+        // 2.18 : le plein écran d'un écran tactile tenu en largeur — seulement là où le navigateur le permet
+        ...(pleinPossible() && document.body.classList.contains('touch') ? [toggle(I.t('Plein écran'), () => o.plein !== false ? I.t('activé') : I.t('coupé'), () => { o.plein = o.plein === false; if (o.plein === false) U.pleinEcran(false); }, I.t('Sur un téléphone ou une tablette tenus en largeur, le jeu passe en plein écran au premier toucher, et l’écran y reste en largeur ; si on le quitte, son bouton, en haut de la scène, l’y remet. Coupé, le jeu reste dans la page.'))] : []),
         toggle(I.t('Son'), () => I.audio.on ? I.t('activé') : I.t('coupé'), () => { I.audio.setOn(!I.audio.on); o.sound = I.audio.on; }, I.t('Coupe ou rétablit tout le son : musique, percussions et bruitages.')),
         toggle(I.t('Musique'), () => I.audio.musicOn ? I.t('activée') : I.t('coupée'), () => { I.audio.setMusic(!I.audio.musicOn); o.music = I.audio.musicOn; }, I.t('Bande-son originale synthétisée, une piste par lieu. Coupée, il reste les percussions de duff et les bruitages.')),
         toggle(I.t('Dessin'), dessinNom, dessinSuivant, I.t('Fin : deux fois plus de points, les grands personnages jusque sur les cartes, des lisières irrégulières. Fin, adouci : le même, les contours fondus. D’origine : le dessin de la version légère.')),
@@ -835,7 +837,10 @@
     W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y), cible = !!(tg && tg.ent === n); if (d < 60 || (cible && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y, d: cible ? -1 : d, c: n.aura || '#f3e7cc' }); });
     list.sort((a, b) => a.d - b.d); list.length = Math.min(list.length, 5);
     if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.suiveur(i) : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
-    const seen = {}, w = $('#stage').clientWidth, hh = $('#stage').clientHeight, poses = [];
+    const stg = $('#stage'), seen = {}, w = stg.clientWidth, hh = stg.clientHeight, poses = [];
+    // 2.18 : en largeur, la manette est posée sur l'image — une étiquette ne passe pas sous elle (elle ne s'y affiche pas)
+    if (document.body.classList.contains('immersif') && document.body.classList.contains('manette')) { const s = stg.getBoundingClientRect();
+      document.querySelectorAll('#pad .joy, #pad .a, #pad .b').forEach(e => { const q = e.getBoundingClientRect(); if (q.width) poses.push([q.left - s.left - 2, q.top - s.top - 2, q.right - s.left + 2, q.bottom - s.top + 2]); }); }
     // 2.x (D189) : les étiquettes se posent par la fenêtre visible (G.view, U.scale), puis dans l'ordre — la cible, les plus
     // proches, celui qui mène, puis les siens ; une étiquette qui en recouvrirait une autre ne s'affiche pas (au départ d'un
     // chapitre, les noms du groupe ne s'empilent plus)
@@ -860,7 +865,10 @@
      champ au-dessus du héros) ; × 1 ailleurs. Le combat garde son cadrage. */
   U.ZOOMS = [1, 1.5, 2, 3]; U.zf = 1;
   const tactile = () => !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
-  const zoomAuto = (base, haut) => tactile() && base < 2.3 ? (haut ? 1.5 : 1.25) : 1;
+  // (2.18 : en largeur, l'image remplit l'écran ; sur un téléphone plus large que 16:9, elle y est déjà agrandie d'un
+  // cinquième — × 1 y montre toute la largeur de l'image à la taille qu'avait × 1,25 entre les marges de la manette ; sur
+  // un écran où elle reste petite, × 1,25 comme avant)
+  const zoomAuto = (base, haut) => !tactile() ? 1 : haut ? (base < 2.3 ? 1.5 : 1) : (base < 2 ? 1.25 : 1);
   const zoomNom = () => '× ' + String(Math.round(U.zf * 100) / 100).replace('.', ',');
   const zoomBouton = () => { const b = $('#zoombtn'); if (b) { b.textContent = zoomNom(); b.setAttribute('aria-label', I.t('Agrandir l’image : {zoom}', { zoom: zoomNom() })); } };
   // garder = false : pendant que les doigts bougent (rien n'est écrit) ; sinon l'agrandissement est arrondi et gardé avec les réglages
@@ -887,45 +895,61 @@
   /* ---------- mise en page et démarrage ---------- */
   let cvEl = null;
   /* 2.x — la place de la manette (demande du décideur, 19 novembre : A choisit, B revient en arrière, partout). Sur un écran
-     tactile, la manette sert partout ; elle ne recouvre jamais un texte, un bouton, une cible ni l'image du combat :
+     tactile, la manette sert partout ; elle ne recouvre jamais un texte ni un bouton :
      - en hauteur, elle a la bande du bas (--pad-bas) : les écrans et les cartons s'arrêtent au-dessus, une liste de choix
-       et le panneau du combat aussi (ils se resserrent) ;
-     - en largeur, elle a les deux marges (--pad-cote) : la scène garde sa hauteur et ne montre qu'une partie de la largeur
-       (U.rogne), les écrans et les cartons tiennent entre les deux.
+       et le panneau du combat aussi (ils se resserrent) ; elle ne recouvre pas non plus l'image ;
+     - en largeur (2.18, le grand écran immersif — le décideur, 20 novembre : « le joystick et les boutons A/B doivent être
+       translucides sur l'image au lieu d'être figés et rétrécir l'image et l'immersion »), elle est posée sur l'image, qui
+       prend tout l'écran : ses deux zones, en bas à gauche et en bas à droite (U.padZone, en points de l'écran), sont
+       laissées libres par ce qui s'écrit au pied de la scène — la boîte de dialogue, le panneau du combat, la barre de
+       « Bâtir » s'arrêtent entre les deux (--pad-g, --pad-d, posés sur la scène), une liste de choix aussi ; les écrans et
+       les cartons gardent leur fond sur tout l'écran et posent leur contenu entre les deux (--pad-cote).
      Masquée au choix du joueur (« Manette tactile »), elle ne prend plus aucune place. Ses mesures viennent de la manette
      elle-même (sa place ne dépend pas de la scène) : la marge du système (encoche) est comprise. */
   const PANNEAU = 276;   // en hauteur, la place que le panneau du combat demande sous la scène, serré, marges comprises (points)
   function padPlace(portrait) {
-    const B = document.body, on = B.classList.contains('touch') && !B.classList.contains('sansjoy'); let bas = 0, cote = 0;
+    const B = document.body, on = B.classList.contains('touch') && !B.classList.contains('sansjoy'); let bas = 0, cote = 0, zone = null;
     if (on) { const r = q => $(q).getBoundingClientRect(), j = r('#pad .joy'), a = r('#pad .a'), b = r('#pad .b'), vw = window.innerWidth, vh = window.innerHeight;
-      if (j.width && a.width) { if (portrait) bas = Math.ceil(vh - Math.min(j.top, a.top, b.top) + 8); else cote = Math.ceil(Math.max(j.right, vw - Math.min(a.left, b.left)) + 8); } }
+      if (j.width && a.width) { if (portrait) bas = Math.ceil(vh - Math.min(j.top, a.top, b.top) + 8);
+        else { zone = { g: Math.ceil(j.right + 8), d: Math.ceil(vw - Math.min(a.left, b.left) + 8), h: Math.ceil(vh - Math.min(j.top, a.top, b.top) + 8) }; cote = Math.max(zone.g, zone.d); } } }
     B.classList.toggle('manette', on);
-    // en largeur, un écran (halte, Chaîne, « Ton personnage »…) ne tient entre les deux marges que s'il lui reste 560 points ;
+    // en largeur, un écran (halte, Chaîne, « Ton personnage »…) ne tient entre les deux zones que s'il lui reste 560 points ;
     // sur un téléphone plus petit, il prend toute la largeur, et la manette s'y efface (padVeille) : elle revient sur la scène
     B.classList.toggle('pad-marges', cote > 0 && window.innerWidth - 2 * cote >= 560);
     const de = document.documentElement; de.style.setProperty('--pad-bas', bas + 'px'); de.style.setProperty('--pad-cote', cote + 'px');
-    U.padBas = bas; U.padCote = cote; return { bas, cote };
+    U.padBas = bas; U.padCote = cote; U.padZone = zone; return { bas, cote, zone };
   }
   function layout() {
-    const app = $('#app'), st = $('#stage'), aw = app.clientWidth, ah = app.clientHeight, portrait = ah > aw * 1.12;
-    document.body.classList.toggle('portrait', portrait);
+    const app = $('#app'), st = $('#stage'), B = document.body; let aw = app.clientWidth, ah = app.clientHeight; const portrait = ah > aw * 1.12;
+    B.classList.toggle('portrait', portrait);
+    // 2.18 — le grand écran immersif : en largeur, sur un écran tactile (un téléphone ou une tablette tenus en paysage)
+    const immersif = !portrait && B.classList.contains('touch');
+    if (immersif !== B.classList.contains('immersif')) { B.classList.toggle('immersif', immersif); aw = app.clientWidth; ah = app.clientHeight; }   // (les marges de la page tombent)
     const P = padPlace(portrait);
-    document.body.classList.toggle('serre', portrait && ah - P.bas <= 700);   // le combat d'un petit écran en hauteur, ou d'un écran que la manette raccourcit
+    B.classList.toggle('serre', portrait && ah - P.bas <= 700);   // le combat d'un petit écran en hauteur, ou d'un écran que la manette raccourcit
     // en hauteur, pendant l'exploration : la scène s'élargit en hauteur et ne montre qu'une partie de la largeur, agrandie
-    // (en combat, elle laisse au panneau sa place au-dessus de la manette) ; 2.x : en largeur, quand la manette prend les
-    // marges, la scène garde sa hauteur et ne montre qu'une partie de la largeur (U.rogne)
+    // (en combat, elle laisse au panneau sa place au-dessus de la manette). 2.18 — en largeur, sur un écran tactile, la
+    // scène prend toute la largeur de l'écran ; sur un écran plus large que 16:9, l'image la remplit et ne montre qu'une
+    // partie de sa hauteur (U.coupe ; la vue suit le héros de haut en bas) — toute sa largeur, et pas de bandes noires.
+    // Le combat garde son cadrage : toute l'image, aussi grande que l'écran le permet.
     const zoom = portrait && (I.scene === W || I.battle.active);
-    let w, h, rogne = false;
+    let w, h, ch = 0;
     if (zoom) { w = aw; h = Math.round(Math.max(Math.min(aw, ah * 0.47, I.battle.active && P.bas ? ah - P.bas - PANNEAU : 1e9), aw * 9 / 16)); }
-    else { w = Math.max(240, Math.floor(Math.min(aw, (portrait ? ah * 0.46 : ah) * 16 / 9))); h = Math.round(w * 9 / 16);
-      if (!portrait && P.cote) { const wl = Math.floor(window.innerWidth - 2 * P.cote); if (w > wl) { w = Math.max(200, wl); rogne = true; } } }
-    U.rogne = rogne;
+    else if (immersif && !I.battle.active) { w = aw; const hp = Math.round(aw * 9 / 16); h = Math.min(ah, hp); if (hp > h + 1) ch = hp; }
+    else { w = Math.max(240, Math.floor(Math.min(aw, (portrait ? ah * 0.46 : ah) * 16 / 9))); h = Math.round(w * 9 / 16); }
+    U.coupe = !!ch; U._combat = I.battle.active;
     st.style.width = w + 'px'; st.style.height = h + 'px';
-    if (cvEl) cvEl.style.width = Math.max(w, Math.round(h * 16 / 9)) + 'px';
+    const cw = Math.max(w, Math.round(h * 16 / 9));
+    if (cvEl) { cvEl.style.width = cw + 'px'; cvEl.style.height = ch ? ch + 'px' : ''; }
+    // 2.18 — les deux zones de la manette, vues de la scène : ce qui s'écrit au pied de la scène s'arrête entre elles
+    { const z = P.zone; let g = 0, d = 0, hz = 0;
+      if (z) { const r = st.getBoundingClientRect(); hz = Math.max(0, Math.ceil(z.h - (window.innerHeight - r.bottom))); if (hz) { g = Math.max(0, Math.ceil(z.g - r.left)); d = Math.max(0, Math.ceil(z.d - (window.innerWidth - r.right))); } }
+      st.style.setProperty('--pad-g', g + 'px'); st.style.setProperty('--pad-d', d + 'px'); st.style.setProperty('--pad-h', hz + 'px'); }
     // U.base : points d'écran par point logique ; U.Z : l'agrandissement voulu par le joueur, pendant l'exploration seulement ;
     // U.scale : les deux ensemble — c'est l'échelle de ce que l'on voit
-    U.zoom = zoom; U.base = h / G.PH;
-    if (typeof I.save.data.opts.zoom !== 'number' && !U._zVif) { const za = zoomAuto(U.base, portrait); if (za !== U.zf) { U.zf = za; zoomBouton(); } }   // sans choix du joueur : selon l'écran, et il suit le téléphone que l'on tourne
+    U.zoom = zoom; U.base = ch ? cw / G.PW : h / G.PH;
+    // (2.18 : en largeur, la grandeur d'office se règle sur l'image de l'exploration, pas sur celle du combat)
+    if (typeof I.save.data.opts.zoom !== 'number' && !U._zVif && !(immersif && I.battle.active)) { const za = zoomAuto(U.base, portrait); if (za !== U.zf) { U.zf = za; zoomBouton(); } }   // sans choix du joueur : selon l'écran, et il suit le téléphone que l'on tourne
     U.Z = I.scene === W ? U.zf : 1; U.scale = U.base * U.Z; U._sceneW = I.scene === W;
     const vw = Math.min(G.PW, w / U.scale), vh = Math.min(G.PH, h / U.scale);
     const changed = Math.abs(G.view.w - vw) > 0.01 || Math.abs(G.view.h - vh) > 0.01; G.view.w = vw; G.view.h = vh;
@@ -943,6 +967,31 @@
   // portée de coup (rodeurs.js, aFrapper), B s'éclaire. La manette sert partout : menus, halte, écrans, combat, dialogues.
   let frapperVu = null;
   U.frapper = function (on) { on = !!on; if (on === frapperVu) return; frapperVu = on; document.body.classList.toggle('frapper', on); };
+  /* 2.18 — le grand écran immersif (le décideur, 20 novembre : « le grand écran immersif lorsque le téléphone est en
+     paysage »). Là où le navigateur le permet, le jeu passe en plein écran au premier toucher d'un écran tactile tenu en
+     largeur, et l'écran y reste en largeur (screen.orientation.lock) ; le bouton de la scène (#pleinbtn) l'y remet si on l'a quitté.
+     Dans un cadre qui ne le permet pas (une application qui montre le jeu dans sa page) ou sur un iPhone, l'API est refusée :
+     rien ne change, et le bouton ne paraît pas. Réglage « Plein écran » (opts.plein) : coupé, rien de cela. */
+  const pleinPossible = () => { try { const e = document.documentElement; return !!((document.fullscreenEnabled && e.requestFullscreen) || (document.webkitFullscreenEnabled && e.webkitRequestFullscreen)); } catch (x) { return false; } };
+  const enPlein = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+  U.pleinPossible = pleinPossible; U.enPlein = enPlein;
+  U.pleinEcran = function (on) {
+    const d = document, e = d.documentElement, sans = p => { if (p && p.catch) p.catch(() => {}); return p; };
+    try {
+      if (on === false || (on === undefined && enPlein())) { if (enPlein()) sans((d.exitFullscreen || d.webkitExitFullscreen).call(d)); return; }
+      if (enPlein() || !pleinPossible()) return;
+      // l'écran reste en largeur le temps du plein écran, si l'on y est entré en largeur
+      const garder = () => { try { const o = screen.orientation; if (o && o.lock && document.body.classList.contains('immersif')) sans(o.lock('landscape')); } catch (x) { /* refusé */ } };
+      const p = e.requestFullscreen ? e.requestFullscreen({ navigationUI: 'hide' }) : e.webkitRequestFullscreen();
+      if (p && p.then) p.then(garder, () => {}); else garder();
+    } catch (x) { /* refusé : rien ne change */ }
+  };
+  // au premier toucher en largeur (une fois par page) ; un toucher sur un bouton du plein écran fait lui-même ce qu'il dit
+  let pleinTente = false;
+  // (un téléphone ou une tablette : un écran dont le pointeur premier est le doigt — pas un ordinateur à écran tactile)
+  const pleinAuto = e => { if (pleinTente || e.pointerType === 'mouse' || !tactile() || !document.body.classList.contains('immersif') || I.save.data.opts.plein === false || !pleinPossible() || enPlein()) return;
+    if (e.target && e.target.closest && e.target.closest('[data-plein]')) return; pleinTente = true; U.pleinEcran(true); };
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(n => document.addEventListener(n, () => { if (!enPlein()) { try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (x) { /* rien */ } } }));
   // en exploration, le joystick fait marcher (l'écouteur du dessus est celui du monde) ; ailleurs, il choisit
   const marche = () => I.input.auMonde() && I.scene === W && !U.menuOpen && !I.battle.active;
   U.padMarche = marche;
@@ -984,7 +1033,7 @@
     { const b = $('#pad .b'); b.addEventListener('pointerdown', e => { e.preventDefault(); b.classList.add('down'); bTenu = true; I.input.emit('retour'); courir(); });
       ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => b.addEventListener(n, () => { b.classList.remove('down'); bTenu = false; courir(); })); }
     U.frapper(false);
-    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) document.body.classList.add('touch');
+    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) { document.body.classList.add('touch'); layout(); }   // (2.18 : en largeur, la scène prend aussitôt tout l'écran)
     window.addEventListener('touchstart', () => { if (document.body.classList.contains('touch')) return; document.body.classList.add('touch'); layout(); }, { once: true, passive: true });
   }
   /* 2.x — la manette ne recouvre jamais rien : si une page ne peut pas lui laisser la place (un texte qui déborde de sa
@@ -995,7 +1044,9 @@
     const pads = [...document.querySelectorAll('#pad .joy, #pad .a, #pad .b')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0), l = [];
     if (!pads.length) return l;
     document.querySelectorAll(SOUS_PAD).forEach(e => { if (e.hidden || e.closest('[hidden]')) return; const st = getComputedStyle(e); if (st.display === 'none' || st.visibility === 'hidden' || +st.opacity < 0.05) return;
-      const r = e.getBoundingClientRect(); if (r.width < 1 || r.height < 1) return;
+      let r = e.getBoundingClientRect(); if (r.width < 1 || r.height < 1) return;
+      // (2.18 : un écran ou un carton garde son fond sur tout l'écran ; c'est son contenu, entre ses marges, qui compte)
+      if (e.id === 'card' || e.classList.contains('screen')) { const n = k => parseFloat(st[k]) || 0; r = { left: r.left + n('paddingLeft'), right: r.right - n('paddingRight'), top: r.top + n('paddingTop'), bottom: r.bottom - n('paddingBottom') }; }
       if (pads.some(p => r.left < p.right - 1 && r.right > p.left + 1 && r.top < p.bottom - 1 && r.bottom > p.top + 1)) l.push(e.id ? '#' + e.id : '.' + String(e.className).split(' ')[0]); });
     return l;
   };
@@ -1073,6 +1124,8 @@
     $('#buildbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); I.build.set(!I.build.on); });
     $('#helpbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.guide(); });
     $('#zoombtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.zoomSuivant(); });
+    $('#pleinbtn').addEventListener('click', e => { e.stopPropagation(); W.stop(); U.pleinEcran(true); });   // 2.18
+    document.addEventListener('pointerup', pleinAuto, true);
     pad(); pointer();
     // tout geste déverrouille ou relance le son, y compris un toucher sur un bouton de menu (qui ne passe pas par les commandes du jeu)
     ['pointerup', 'touchend', 'click', 'keydown'].forEach(t => document.addEventListener(t, () => I.audio.unlock(), true));
@@ -1083,7 +1136,7 @@
       I.audio.pump(); // la musique avance aussi à chaque image
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
       if (sc) { try {
-        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW) || (sc === W) !== !!U._sceneW) { U.zoomW = sc === W; layout(); }
+        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW) || (sc === W) !== !!U._sceneW || (document.body.classList.contains('immersif') && I.battle.active !== !!U._combat)) { U.zoomW = sc === W; layout(); }
         if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) { if (I.debug.walk === 'tap') W.tapStep(); else W.walkStep(); } W.update(1 / 60); } I.input.clearHeld(); }
         else { U.pointerTick(now); if (sc.update) sc.update(dt); }
         G.present(dt, sc.render(dt) || {});
@@ -1091,9 +1144,10 @@
       if ((U._vf = (U._vf || 0) + 1) % 30 === 0) U.veille(now);
       if (U._vf % 10 === 0) { gardeDialogue(); padVeille(); if (U.padCourir) U.padCourir(); }   // la manette ne recouvre rien (2.x) ; la course suit l'exploration (2.17)
       if ((U._nf = (U._nf || 0) + 1) % 3 === 0) U.noms(now);
-      { const Zc = U.Z || 1, tx = U.zoom || U.rogne || Zc > 1 ? -G.view.x * U.scale : 0, ty = Zc > 1 ? -G.view.y * U.scale : 0, tr = Zc > 1 ? 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + Zc + ')' : tx ? 'translateX(' + tx + 'px)' : '';
-        if (tr !== U._tr) { U._tr = tr; cvEl.style.transform = tr; } }   // l'image glisse sous la scène, et grandit si le joueur l'a voulu
+      { const Zc = U.Z || 1, tx = U.zoom || Zc > 1 ? -G.view.x * U.scale : 0, ty = Zc > 1 || U.coupe ? -G.view.y * U.scale : 0, tr = Zc > 1 ? 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + Zc + ')' : ty ? 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px)' : tx ? 'translateX(' + tx + 'px)' : '';
+        if (tr !== U._tr) { U._tr = tr; cvEl.style.transform = tr; } }   // l'image glisse sous la scène (2.18 : aussi de haut en bas, quand elle remplit un écran en largeur), et grandit si le joueur l'a voulu
       $('#menubtn').hidden = !(I.scene === W && !S.busy && !$('#hud').hidden); $('#helpbtn').hidden = $('#menubtn').hidden; $('#zoombtn').hidden = $('#menubtn').hidden;
+      { const pb = $('#pleinbtn'), v = !$('#menubtn').hidden && document.body.classList.contains('immersif') && I.save.data.opts.plein !== false && pleinPossible() && !enPlein(); if (pb.hidden === v) pb.hidden = !v; }   // 2.18 : le plein écran, là où il peut servir
       $('#buildbtn').hidden = $('#menubtn').hidden || !W.saga || (W.saga.frame && !W.saga.veillees) || !I.build.outdoor(W.map.id);
       { const bt = !$('#buildbtn').hidden; if (bt !== U._bt) { U._bt = bt; document.body.classList.toggle('batir', bt); } }
       if (I.build.on) $('#buildbar').hidden = S.busy || I.scene !== W;

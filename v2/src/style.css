@@ -398,6 +398,39 @@ body.manette:not(.portrait) #battle .panel { grid-template-columns: minmax(0, 1f
    script.js, menuPick ; la cible d'un combat) */
 body.touch .sel, body.touch .plate.cur, body.touch .hrow.cur { outline: 2px solid #fff3c8; outline-offset: -2px; }
 
+/* ---------- 2.18 · le grand écran immersif : en largeur, sur un écran tactile ----------
+   Le décideur, 20 novembre : « le grand écran immersif lorsque le téléphone est en paysage, le joystick et les boutons A/B
+   doivent être translucides sur l'image au lieu d'être figés et rétrécir l'image et l'immersion ». La page perd ses marges
+   (sauf celles du système, une encoche) et la scène prend toute la largeur de l'écran (ui.js, layout). La manette est posée
+   sur l'image : discrète au repos, un contour fin ; nette sous le pouce ; B éclairé reste net. Ce qui s'écrit au pied de la
+   scène s'arrête entre ses deux zones (--pad-g, --pad-d : posés sur la scène par ui.js) ; un écran ou un carton garde son
+   fond sur tout l'écran et pose son contenu entre elles (--pad-cote). L'image, elle, peut passer sous la manette. */
+body.immersif { padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+body.immersif #stage { box-shadow: none; }
+body.immersif #pad .dpad .joy { border-width: 1px; border-color: rgba(255, 243, 210, .4); background: rgba(255, 255, 255, .035); box-shadow: 0 0 0 1px rgba(8, 7, 18, .16); }
+body.immersif #pad .dpad .joy i { background: rgba(233, 200, 119, .18); border-color: rgba(255, 243, 210, .45); box-shadow: 0 0 6px rgba(0, 0, 0, .25); }
+body.immersif #pad .dpad .joy.down { border-color: rgba(255, 243, 210, .75); background: rgba(255, 255, 255, .08); }
+body.immersif #pad .dpad .joy.down i { background: rgba(233, 200, 119, .5); border-color: rgba(255, 246, 220, .85); }
+body.immersif #pad .dpad .joy.court { border-color: rgba(255, 243, 210, .9); }
+body.immersif #pad .ab .a, body.immersif #pad .ab .b { opacity: .4; border-width: 1px; transition: opacity .18s; }
+body.immersif #pad .ab button.down { opacity: .92; transition: none; }
+body.immersif.frapper #pad .ab .b { opacity: 1; border-width: 2px; }   /* quelque chose est à portée de coup : B s'éclaire, et reste net */
+/* au pied de la scène : la boîte de dialogue (et sa seconde bulle), le panneau du combat, la barre de « Bâtir » entre les deux
+   zones de la manette ; une liste de choix ne s'étend pas jusqu'à elles */
+body.immersif.manette #dialog, body.immersif.manette #dialog2 { left: max(4%, var(--pad-g, 0px)); right: max(4%, var(--pad-d, 0px)); }
+body.immersif.manette #battle .panel { left: max(1.5%, var(--pad-g, 0px)); right: max(1.5%, var(--pad-d, 0px)); }
+body.immersif.manette #buildbar { left: max(2%, var(--pad-g, 0px)); right: max(2%, var(--pad-d, 0px)); }
+body.immersif.manette #choice { max-width: calc(100% - 2 * max(var(--pad-g, 0px), var(--pad-d, 0px))); }
+/* un écran, un carton : le fond sur tout l'écran, le contenu entre les deux zones */
+body.immersif.manette #card, body.immersif.manette.pad-marges .screen { left: 0; right: 0; }
+body.immersif.manette #card { padding-left: calc(var(--pad-cote, 0px) + 16px); padding-right: calc(var(--pad-cote, 0px) + 16px); }
+body.immersif.manette.pad-marges .screen { padding-left: calc(var(--pad-cote, 0px) + max(12px, 2vw)); padding-right: calc(var(--pad-cote, 0px) + max(12px, 2vw)); }
+body.immersif.manette #secours { width: min(92vw, 26em, calc(100vw - 2 * var(--pad-cote, 0px) - 16px)); }
+/* le plein écran (ui.js, U.pleinEcran) : à gauche de « × », là où le navigateur le permet */
+#pleinbtn { position: absolute; right: calc(2% + 9.6em); top: 3%; width: 2.4em; height: 2.4em; border-radius: 50%; border: 1px solid var(--line); background: rgba(10, 8, 20, .6); color: var(--acc); font-size: .9em; z-index: 5; padding: 0; display: grid; place-items: center; }
+#pleinbtn svg { width: 1.25em; height: 1.25em; }
+body.batir #pleinbtn { right: calc(2% + 13em); } body.descente.batir #pleinbtn { right: calc(2% + 9.6em); }
+
 /* ---------- portrait étroit : dialogue et commandes sous la scène ---------- */
 body.portrait { padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
 body.portrait #ui { font-size: calc(16.5px * var(--tz, 1)); }
