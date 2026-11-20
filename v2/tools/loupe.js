@@ -225,7 +225,7 @@ async function messages(browser, errors) {
     // « Vertus », puis « Reprendre souffle » sur Idris : une vertu annoncée, et la chimère encore debout pour la suite (2.19 :
     // « Vertus » est la deuxième commande, et sa liste s'ouvre sur Éclairer — la vertu cherchée y est donc la quatrième)
     await emit('down'); await p.waitForTimeout(200); await emit('ok'); await p.waitForTimeout(350);
-    const kv = await p.evaluate(() => [...document.querySelectorAll('#battle .cmd .mlist .mi')].findIndex(b => /Reprendre souffle/.test(b.textContent)));
+    const kv = await p.evaluate(() => { const C = window.ISNAD.battle.contexte(), h = C && C.active; if (!h || !h.def) return 0; const L = h.def.skills.filter(k => k.lvl <= h.lvl), j = L.findIndex(k => k.id === 'souffle'); return j < 0 ? 0 : j + 1; }); // (par son identifiant : son nom change avec la langue)
     for (let k = 0; k < kv; k++) await emit('down'); await p.waitForTimeout(150); await emit('ok'); await p.waitForTimeout(350); await emit('ok');
     if (await attendre(() => { const b = document.querySelector('#battle .banner'); return !!b && !b.hidden; }, null, 5000)) { await p.waitForTimeout(60); juger(await releve('l’annonce d’une vertu', '3-competence'), 'l’annonce'); } else ko('ABSENT', `messages · ${T} : l'annonce d'une vertu`);
     // les autres bandeaux, avec leurs vrais textes, quand le joueur a de nouveau la main
@@ -251,7 +251,7 @@ async function messages(browser, errors) {
       // (2.19 : le choix de la cible garde la liste à l'écran — on le reconnaît d'abord ; Éclairer est dans les Vertus)
       if (s.cible) { await emit('ok'); const t0 = Date.now(); while (Date.now() - t0 < 2500 && !(await p.evaluate(() => !!window.__dev))) await p.waitForTimeout(25); }
       else if (s.main) { await p.waitForTimeout(300); await p.evaluate(i => { const b = document.querySelectorAll('#battle .cmd .mlist.main .mi')[i]; if (b) b.click(); }, s.dev ? 0 : 1); await p.waitForTimeout(250); }
-      else if (s.sous) { await p.waitForTimeout(300); await p.evaluate(() => { const b = [...document.querySelectorAll('#battle .cmd .mlist .mi')].find(x => /Éclairer/.test(x.textContent)); if (b) b.click(); }); await p.waitForTimeout(250); }
+      else if (s.sous) { await p.waitForTimeout(300); await p.evaluate(() => { const b = document.querySelector('#battle .cmd .mlist:not(.main) .mi'); if (b) b.click(); }); await p.waitForTimeout(250); } // (Éclairer, en tête des Vertus, dans toutes les langues)
       else await p.waitForTimeout(80);
     }
     if (await p.evaluate(() => window.ISNAD.battle.active)) await p.evaluate(() => window.ISNAD.battle.abort());
