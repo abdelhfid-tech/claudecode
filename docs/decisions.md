@@ -1644,6 +1644,72 @@ pages privées de son compte.
   instant sur leur cible, comme les chiffres de dégâts ; la défaite (« La chaîne ne rompt pas ») et le verset du secours
   restent en plein écran — faut-il les passer en bas eux aussi ?
 
+- [ ] **D203. La lumière « fin de journée saturée », et le réglage « Luminosité » (version 2.18 ; le décideur, 19 novembre,
+  devant le prototype : « telle quelle » ; réglage et contrôle proposés par l'agent, à valider ; `v2/docs/architecture.md`,
+  « La lumière et la luminosité »).** Une lumière chaude partout, des ombres turquoise au lieu de noires ; 2084 au
+  crépuscule ; les récits en lumière dorée ; la nuit seulement où le récit la nomme, éclaircie ; l'asphalte de 2084 prend le
+  couchant (#3e3360). Rien n'y touche aux personnages. Le réglage « Luminosité » (Réglages, sur l'écran-titre et à la
+  halte) a trois crans : *clair* d'office, *moyen* (la même lumière, moins relevée), *sombre* (la lumière de la 2.15) ; il
+  se change en cours de partie. Textes du réglage écrits en arabe, anglais et japonais par l'agent, à relire. Contrôle
+  nouveau dans `loupe.js` : « SOMBRE » (la luminance de la scène et le contraste de celui qui mène, au premier écran du
+  prologue et dans Médine de jour, en hauteur et en largeur, au-dessus de 85 % des valeurs de la validation). À trancher :
+  le cran « moyen » (ses réglages sont de l'agent) ; faut-il un cran plus clair encore ?
+- [ ] **D204. Idris « le passeur », et le rendu net de tous les grands personnages (version 2.18 ; le décideur, 19
+  novembre : « le passeur », avec « un passage de plus » sur le visage, puis « Validé » ; « Yeux ouverts » pour le
+  sourire ; « Oui, avec la carrure » ; `v2/docs/architecture.md`, « Le râwî : Idris “le passeur” », « La définition du
+  dessin »).** Idris est dessiné comme les autres personnages (une tête, le corps commun et ses règles de tenue), « un des
+  leurs », à la manière des JRPG 16 bits sans rien reprendre d'un autre jeu : le long manteau ouvert sarcelle, la tunique
+  claire, l'écharpe rouille, la besace, le néon en deux lignes ; la carrure (les épaules d'un point plus larges ; au repos,
+  les jambes campées) ; le regard, la mâchoire et le cou du passeur, le sourire aux yeux ouverts. Le râwî d'après la
+  maquette (D193 et suivantes), l'interrupteur `?idris=` et les trois autres propositions sont retirés. Le rendu net (trois
+  tons francs, une lumière chaude, une ombre turquoise, un liseré encré) devient celui de tous les grands personnages ; le
+  réglage « fin, adouci » reste au choix. La palette d'office du prototype (#56939c, la tunique courte, le néon en deux
+  lignes) est gardée. Ce qui ne change pas : le petit personnage, l'écran « Ton personnage » et ses compositions, les
+  voiles des Compagnons. Empreintes relevées une fois (`silhouettes.js redessin`) ; la ressemblance d'Idris à tout
+  Compagnon reste sous 0,85.
+- [ ] **D205. Les attitudes, les mimiques et les bulles, avec retenue pour les Compagnons (version 2.18 ; le décideur, 19
+  novembre : « Toutes, avec retenue » ; formes retenues dessinées par l'agent, à valider ; `v2/docs/architecture.md`, « Les
+  attitudes, les mimiques et les bulles »).** Neuf attitudes nouvelles pour tous les grands personnages (la joie, le rire,
+  l'acquiescement, le refus, la réflexion, la colère, la tristesse, s'asseoir, montrer du doigt), avec la surprise d'avant ;
+  elles entrent dans `D.POSES` (l'opération « emote », le validateur). Pour un Compagnon, et pour qui le jeu laisse sans
+  visage, le moteur choisit la forme retenue : le rire se limite aux épaules (haussées d'un point), la joie ne lève pas les
+  bras au-dessus de la tête (les mains ouvertes devant la poitrine), la colère reste un corps tendu sans geste brusque (les
+  bras le long du corps, les poings fermés) ; un fichier de saga écrit l'attitude, jamais sa forme. Les mimiques seulement
+  pour qui a un visage ; les bulles « ! », « ? », « … » pour tous, ni cœur ni code comique. Le petit personnage prend
+  l'attitude d'avant la plus proche (l'acquiescement et la tristesse : le corps au repos, la tête inclinée) : ses
+  empreintes ne changent pas. Aucun récit ne pose encore ces attitudes : c'est au décideur de dire où.
+- [ ] **D206. La Cité-Miroir « ville de verre » (version 2.18 ; le décideur, 19 novembre : « il faut que le décor de 2084
+  ressemble à Dubaï », puis, devant le prototype : « Validée, deux retouches » ; « Ok pour la cité qui s'éteint » ;
+  `v2/docs/architecture.md`, « La Cité-Miroir, ville de verre »).** Le vieux quartier de pierre de corail, ses tours à vent
+  trapues et ses claustras, au pied de tours de verre géantes et d'un viaduc de métro, au bord d'une crique (barques, un
+  boutre au repos) ; un miroir d'eau et ses jets devant le grand écran ; la Cité qui s'éteint à la fin, et les étoiles.
+  Garde-fous : la ville d'inspiration n'est nommée nulle part, dans aucune langue ; aucune réplique d'un monument ; les
+  tours à vent jamais lisibles comme des minarets ; aucune inscription, aucun symbole ni édifice religieux ; personne
+  d'ajouté. Les deux retouches : le crépuscule validé (la scène visible vers 29 à 30 de luminance au lieu de 38 à 40 : la
+  pierre plus sombre, le couchant derrière les tours ; les lampes, les vitrines, les néons et le grand écran portent la
+  rue) ; et le regard de la vue (sur un téléphone en hauteur, la vue regarde plus haut que celui qui mène ; à l'ouverture
+  d'un chapitre, elle lève les yeux sur le vieux quartier, ses tours à vent, le viaduc et le pied des tours de verre), sans
+  qu'aucun lieu ni aucune case ne bouge (masque identique). À trancher : l'ouverture qui lève les yeux (une manière de
+  l'agent) ; la hauteur où se tient la vue pendant le jeu.
+- [ ] **D207. Le verset des étoiles, et la nuit de la fin (version 2.18 ; le décideur, 19 novembre : « on finit par un beau
+  verset du Coran qui parle des étoiles » ; 20 novembre : Coran 6:97, retenu sur trois propositions lues à la source ; « il
+  faut que ce soit plus poétique, “astres brillants” par exemple » ; « La parole d'enfant : étoiles ? »).** Le jeu finit sur un carton de citation, tout à la
+  fin du chapitre e1, après « Il a fait ce qu'on lui avait appris : il a transmis. » : « Et c'est Lui qui vous a assigné
+  les étoiles, pour que, par elles, vous vous guidiez dans les ténèbres de la terre et de la mer. Certes, Nous avons exposé
+  les preuves pour des gens qui savent. » (Coran 6:97 — traduction du sens, Hamidullah) ; l'arabe, l'anglais (Saheeh
+  International) et le japonais (Mita) viennent du registre (`v2/docs/sources/versets.json`), lus sur deux services. La
+  ligne de la nuit devient : « Dans la rue, des milliers de têtes se relèvent. Derrière le verre éteint, le ciel est noir,
+  semé d'astres brillants. » (proposition de l'agent, à valider ; réécrite à la source en arabe, anglais et japonais, à
+  relire). La question de l'enfant du prologue change aussi (le décideur, 20 novembre : « La parole d'enfant : étoiles ? ») :
+  « Monsieur, c'est vrai qu'avant le ciel était noir, la nuit, avec des étoiles ? » (au lieu de « … avec des points
+  dedans ? ») — réécrite à la source en arabe, anglais et japonais, à relire ; aucun short ni outil ne la citait. À corriger par le décideur seul (l'agent n'y touche pas) : le feuillet « S'orienter aux
+  étoiles » cite 16:16 sous une forme qui n'est d'aucune des deux éditions de Hamidullah (« ainsi que des points de
+  repère. Et au moyen des étoiles [les gens] se guident. »).
+- [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
+  réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
+  et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et
+  l'émotion passent toujours par le costume, l'attribut et l'attitude du corps (`D.POSES`). »)
+
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 
 Rien de ce qui suit n'a été fait. Chaque point attend un accord explicite.

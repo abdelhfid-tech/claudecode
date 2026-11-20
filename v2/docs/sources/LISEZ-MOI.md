@@ -84,7 +84,7 @@ Un fichier JSON par fichier du jeu (`saga_abubakr.json`, …, `versets.json`), u
 - Les textes arabes sont **extraits par script** des pages lues, jamais retapés ; leurs coquilles d'impression sont
   gardées et signalées dans `note`.
 
-## État au 18 novembre
+## État au 18 novembre (et le verset de la fin, Coran 6:97, ajouté le 20 novembre)
 
 | Fichier | Paroles | Trouvées | Approchantes | Introuvables | Écarts avec le français |
 |---|---|---|---|---|---|
@@ -94,7 +94,7 @@ Un fichier JSON par fichier du jeu (`saga_abubakr.json`, …, `versets.json`), u
 | `saga_uthman.json` | 9 | 8 | 1 | 0 | 7 |
 | `saga_ali.json` | 13 | 12 | 1 | 0 | 6 |
 | `frame.json` | 1 | 1 | 0 | 0 | 0 |
-| `versets.json` | 51 versets cités (33 distincts) | 51 | 0 | 0 | 1 |
+| `versets.json` | 52 versets cités (33 distincts) | 52 | 0 | 0 | 1 |
 
 Quand le français omet des mots au milieu d'une phrase, l'arabe est gardé entier (on ne coupe pas l'intérieur d'une
 phrase arabe) et l'anglais et le japonais le suivent : ces langues disent alors un peu plus que le français, tant que

@@ -345,72 +345,50 @@ compositions entières) et l'empreinte des grands personnages d'avant (`tools/es
 venues ensuite y sont ajoutées à leur création (`silhouettes.js relever-nouveaux`, qui refuse si une seule empreinte
 déjà relevée a changé) ; `partie.js`, une partie dont le râwî est composé, exportée puis réimportée à l'identique.
 
-### Le râwî d'après la maquette (2.x — validé par le décideur le 19 novembre : l'image au repos, le rendu, puis tout le dessin et les étoffes)
+### Le râwî : Idris « le passeur » (2.18 — décision du décideur du 19 novembre, D204)
 
-*Le décideur n'aime pas le dessin d'Idris et a fourni une maquette (19 novembre) : un homme encapuchonné, la capuche et le
-long manteau ouvert bleu sarcelle, la tunique et les chausses crème, une écharpe rouille, la ceinture de cuir et sa besace
-à la hanche, les bottes, la bande et la ceinture de néon ; plus élancé que les autres. L'image n'entre ni dans le jeu ni
-dans le dépôt. Il a validé le pilote v3 (« Idris v3 : je le valide ») et le rendu doux tel quel, puis demandé le reste du
-personnage.*
+*Le 19 novembre, le décideur a d'abord validé un râwî d'après sa maquette (des gabarits propres de 64 × 96), puis lui a
+préféré un Idris « un des leurs » : le grain et les proportions des autres personnages, à la manière des JRPG 16 bits
+(inspiration de vocabulaire seulement : rien n'est repris d'un autre jeu). Sur quatre propositions, il a retenu « le
+passeur », avec « un passage de plus » sur le visage, le sourire aux yeux ouverts et l'option « carrure ». Les gabarits
+de la maquette, leur peintre de visage et les trois autres propositions sont retirés du code ; la maquette n'est ni dans
+le jeu ni dans le dépôt.*
 
-- **Des gabarits propres au râwî** (`sprites.js`, `RAWI64`) : de face, de profil, de dos, au repos, en 64 × 96 — la
-  finesse de la maquette. Tout le reste en est tiré, à 64 × 96, par des règles écrites une fois (`rawiVariante()`), puis
-  réduit à 32 × 48 (`reduire()`), comme l'image au repos ; chaque image se fait une fois, à la demande. `G.rawi64 = false`
-  rend le 64 × 96 retracé du 32 × 48 par `fine()`, comme les autres personnages : pour comparer. Ce qui reste du moteur :
-  cinq tons par matière (`rampes()`), la lumière en haut à gauche, le rendu doux, le liseré, les cheveux tirés du poil.
-- **L'habit** (`rawiHabit()`). La coupe : le long manteau de la maquette, toujours — la coupe « sans manteau » a été retirée
-  par le décideur le 19 novembre, et un ensemble qui la portait (la veste de la ruelle) se dessine en long manteau. Ce
-  qu'elle faisait, pour mémoire (`sansManteau()`, retiré : ses manches
-  et son buste deviennent la tunique, ses pans tombent, la tunique descend jusqu'au genou et ce que le manteau cachait des
-  jambes reparaît ; ses plis deviennent une ombre sur l'étoffe claire). « Sur une épaule » et « ample », qui ne se
-  choisissent plus, se dessinent en long manteau. La robe longue (`robeLongue()`) : la tunique jusqu'aux bottes, d'un seul
-  pan. La coiffe (`coiffer()`) : la capuche de la maquette ôtée, une autre posée, tirée de formes simples (le crâne, le
-  rouleau), et le visage de la maquette gardé à sa place, au point près — la calotte et son galon (le liseré de l'habit :
-  le néon, ou le cyan), les cheveux, le visage entier ; le chèche, son rouleau et ses plis, le bandeau aux deux néons (D193,
-  de face, de profil et de dos) et la bande des yeux seule ; l'écharpe remonte au menton. L'écharpe et la besace à la hanche
-  font partie de l'habit.
-- **Les pas** : de face et de dos, `foulee64()` (le bras du côté qui avance descend, l'autre remonte ; la moitié qui
-  avance descend et son pied dépasse — la règle de `foulee()`, à l'échelle de 64 × 96) ; de profil, les jambes s'écartent
-  puis se croisent depuis la hanche (`cisailler()`) et le bras balance depuis l'épaule (`tournerBras()`). Le souffle (la
-  quatrième image) se tire de lui-même de l'image au repos (`grand(…, 3)`), comme pour tous.
-- **Les gestes de frappe et les attitudes** (`RAWI_GESTES`, `RAWI_POSES`) : le bras qui bouge est ôté du gabarit
-  (`sansBras()` ; de profil, le flanc paraît derrière lui, et la ceinture en fait le tour), puis tracé de l'épaule au
-  poignet par le coude (`bras64()` : la manche et ses trois tons, le fil, le revers de la tunique, la main), un point de
-  vide le détachant de ce qu'il recouvre — jamais sur le visage. L'élan et le coup dans les trois vues (de profil, le corps
-  se fend et penche) ; la place de la main qui frappe est celle du trait, et le moteur y pose l'arme (`G.frappe`). Les six
-  attitudes de face et de profil, et de dos celles que les autres personnages y ont (le recueillement, la résolution,
-  l'accablement) : la tête s'incline ou s'abaisse (`bougerTete()`), les yeux se ferment dans le recueillement et
-  l'accablement ; à genoux, le haut du corps descend de vingt points et le bas se replie (`agenouiller()`). Ce qu'un bras
-  ôté laisse seul (une miette du tracé, loin de tout) s'ôte (`nettoyer()`) ; l'image au repos validée reste telle quelle.
-- **La lanterne** (`lanterneRawi()`) : à la main qui pend, de son côté ; la main prise, à la ceinture ; à genoux, posée
-  à côté de lui ; dessinée à 32 × 48 et à 64 × 96 au même endroit, jamais sur une main ni sur le visage.
-- **Qui le reçoit** : le râwî seul. `perso.js` pose sa marque (`look.rawi`) sur ses ensembles et sur le héros de
-  l'histoire-cadre ; un récit ou un paquet ne l'écrit pas (`regles.js`). Les couleurs viennent de l'étoffe
-  (`D.RAWI.etoffes[…].dessin`, trois tons par matière : e1 relevée sur la maquette ; e2 à e7 proposées par l'agent,
-  gardées toutes par le décideur le 19 novembre). Toutes ses coiffes, coupes, longueurs, étoffes et objets ont ce dessin ; une autre coiffe ou une armure (aucune
-  ne se compose) garderait le dessin d'avant. Le petit personnage (16 × 24, dessin d'origine sur les cartes) n'a pas changé.
-- **Son visage** (v3, choix du décideur : « n° 3, grands yeux », sans barbe ni moustache) : `visageGabarit()`, et non
-  `visage()`, qui garde son dessin pour tous les autres. Dessiné point par point (`VISAGE_RAWI`, en 64 × 96 et en
-  32 × 48) : de grands yeux expressifs avec leur blanc, un iris sombre et son point de lumière, des sourcils marqués, une
-  mèche sur le front sous la capuche, le nez d'un point d'ombre, une bouche d'un trait. Une manière de dessiner, aucun
-  visage repris ; les modèles IA qui l'ont fait choisir restent hors du dépôt et du jeu. Sous le chèche, les lignes des
-  yeux seules (`FENTE`) : ni sourcils, ni mèche, ni barbe. Un teint plus sombre que ceux du moteur garde le blanc de l'œil
-  blanc (la gamme des teints reste dans l'ordre, et l'œil se voit jusqu'à 32 × 48). Un gabarit d'une autre taille que le
-  visage du corps rend le visage de la v2 (`visageRawi()`).
-  Idris est **glabre** par défaut (`RAWI_BARBE` ; `G.traits` le rend pour le râwî marqué, et `perso.js` le lit comme
-  visage d'origine) ; la barbe courte (le collier) et la pleine se dessinent sur ce visage. Le corps est équilibré :
-  la tête agrandie d'un quart (jamais plus large que les épaules), le corps un peu plus court et plus large, davantage de
-  profil.
+- **Dessiné comme les autres** (`sprites.js`, « Idris le passeur ») : une tête dans `TETES` (`idris_passeur`, sous la
+  capuche ; de face, de profil, de dos), le corps commun et ses règles de tenue, puis `fine()` pour le 64 × 96. `kindOf()`
+  pose `K.passeur` sur le râwî marqué (`look.rawi`, que `perso.js` pose ; un récit ou un paquet ne l'écrit pas). Sous une
+  autre coiffe (la calotte, le chèche, le turban, un casque), la tête de cette coiffe, sur le même corps.
+- **La tenue d'office** (`TONS_IDRIS`, `paletteIdris()`) : le long manteau ouvert sarcelle (#56939c), la tunique claire qui
+  s'arrête sous la ceinture, les chausses brunes, l'écharpe rouille, la ceinture de cuir et la besace à la hanche ; il
+  porte toujours le long manteau. L'étoffe choisie (« Ton personnage ») donne ses couleurs de dessin
+  (`D.RAWI.etoffes[…].dessin`) à la capuche et au manteau ; e1 garde les tons d'office. Le néon tient en deux lignes
+  (`habitIdris()`) : Y au revers du manteau, du côté du cœur, y au milieu de la ceinture — la marque du râwî.
+- **La carrure** (`habitIdris()`) : les épaules d'un point plus larges de chaque côté, de face et de dos, debout comme à
+  genoux ; au repos (l'allure `CORPS[…][0]`, et le souffle qui en est tiré), les jambes campées, écartées d'un point sous le
+  genou. La marche, la course (sa foulée de la 2.17), les attitudes et les gestes gardent leurs jambes ; de profil, rien ne
+  change.
+- **Le visage** (`visage()`, celui de tous, et ce qui n'est qu'au passeur sous sa capuche, `estPasseur()`) : le regard net
+  — l'œil un point plus haut, sous une paupière franche, son blanc, sa pupille et son reflet en 64 × 96, deux points francs
+  en 32 × 48 ; des sourcils marqués et droits ; le nez, une demi-ombre d'un point ; le front dégagé ; en 64 × 96, le visage
+  moins large d'un point de chaque côté (`affinerPasseur()`) ; la mâchoire et le menton taillés dans la grille fine
+  (`machoirePasseur()`, `MACHOIRE`), dessinés par l'ombre, et le cou (la lettre 4, le teint dans l'ombre ; 5, l'ombre chaude
+  sous le menton). Ses mimiques (`TAMPONS_P`) ont les yeux ouverts, le sourire compris (choix du décideur). Le teint, la
+  barbe et le poil viennent des choix du joueur (`D.RAWI`) ; glabre d'office (`RAWI_BARBE`) ; les cheveux (1 2 3) sont le
+  poil choisi, avec un reflet franc. Aucun texte ne décrit de traits.
+- **Ce qui ne change pas** : le petit personnage (16 × 24), l'écran « Ton personnage » et ses compositions (teints,
+  barbes, coiffes, étoffes, objets, la garde de la calotte comprise), la lanterne à la main (la tête garde le même modelé),
+  et la ressemblance : aucune composition ne ressemble à un Compagnon ni à un habitant de 2084 (au plus 0,85,
+  `silhouettes.js` et `personnage.js`).
 - **Les empreintes** (`silhouettes.js`). Le râwî marqué se compare à son empreinte (la marque n'est pas dans la clé). Un
   nouveau dessin validé par le décideur devient la référence des grands personnages par une procédure dite :
   `node v2/tools/silhouettes.js redessin « la décision »`. Elle passe d'abord le contrôle entier — les petits sprites au
   pixel près, l'interrupteur, les voiles sans trait, les visages de face et de profil (rien de dos), les coiffes, les
-  gestes, la marque du râwî, les ressemblances — et seul l'écart des grands y est tenu pour voulu ; à la moindre autre
-  anomalie, rien n'est écrit. Puis `grands.json` est relevé de nouveau en entier (la décision y est inscrite, avec la
-  date et le compte des silhouettes redessinées, nouvelles et retirées), et `silhouettes.json` reçoit les petites
-  silhouettes nouvelles et perd celles qui n'existent plus, sans qu'aucune empreinte de petit sprite ne change. Ensuite,
-  le contrôle ordinaire compare à ce relevé, au point près. Relevé ainsi le 19 novembre : Idris v3, sa suite et le rendu
-  doux de tous les grands personnages.
+  gestes, la retenue, la marque du râwî, les ressemblances — et seul l'écart des grands y est tenu pour voulu ; à la
+  moindre autre anomalie, rien n'est écrit. Puis `grands.json` est relevé de nouveau en entier (la décision y est
+  inscrite, avec la date et le compte des silhouettes redessinées, nouvelles et retirées), et `silhouettes.json` reçoit les
+  petites silhouettes nouvelles et perd celles qui n'existent plus, sans qu'aucune empreinte de petit sprite ne change.
+  Ensuite, le contrôle ordinaire compare à ce relevé, au point près. Relevé ainsi le 19 novembre (Idris v3 et le rendu
+  doux), puis le 20 novembre : « décision du décideur du 19 novembre : Idris le passeur, le rendu net, les attitudes ».
 
 ## Partager sa progression : `src/core/partage.js`
 
@@ -608,14 +586,67 @@ change pas de repère : positions, collisions, cartes, tout reste en points logi
   définition courante ; `charSheet`, `charPose` et `charGrand` rendent toujours les dessins bruts, que les outils lisent.
 - **La vue** glisse par demi-points ; plus de lignes de balayage ; un peu de poussière sous les pas, sur le sable.
 
-**Le rendu doux** (choix du décideur, 19 novembre : « applique ce rendu partout » ; `G.doux`, `relief()`, `sprites.js`) :
-en dessin fin (fin, et fin adouci), tous les grands personnages, à 32 × 48 comme à 64 × 96, ont un liseré dans un ton foncé
-de la couleur qu'il borde (`outline(…, 0,5)`, au lieu d'une encre presque noire) et un relief : chaque matière, sa forme
-adoucie, est éclairée d'en haut à gauche vers le chaud et ombrée en bas à droite vers le violet, par degrés — le bord,
-puis le volume entier ; le bas du corps un peu plus sombre ; une étoffe claire s'ombre moins. Le voile n'est jamais touché
+**Le rendu net** (2.18, D204 ; avant lui, le rendu doux du 19 novembre, « applique ce rendu partout » ; `G.doux`,
+`relief()`, `sprites.js`) : en dessin fin (fin, et fin adouci), tous les grands personnages, à 32 × 48 comme à 64 × 96, ont
+un relief à trois tons francs — chaque matière, sa forme adoucie, est éclairée d'en haut à gauche vers une lumière chaude
+(#ffecc4, à 0,2) et ombrée en bas à droite vers le turquoise (#0e3e48, à 0,3 au plus ; une étoffe claire s'ombre moins), le
+bas du corps à peine assombri — puis un liseré encré du ton qu'il borde (`outline(…, 0,8)`). Le voile n'est jamais touché
 (la lumière d'un Compagnon reste une seule surface, trois tons au plus ; un visage garde son dessin), ni le néon, ni les
-objets. Le dessin d'origine, les petits personnages et le grand sprite d'avant (`gfx.natif = false`) gardent le leur.
-`G.doux = false` rend le rendu d'avant, pour comparer.
+objets. Le réglage « fin, adouci » reste au choix du joueur, par-dessus. Le dessin d'origine, les petits personnages et
+le grand sprite d'avant (`gfx.natif = false`) gardent le leur. `G.doux = false` rend le rendu d'avant le rendu doux, pour
+comparer.
+
+### La lumière et la luminosité (2.18, D203)
+
+*Le décideur, 19 novembre, devant le prototype « fin de journée saturée » : « telle quelle » ; un réglage de luminosité,
+dont le cran sombre rend la lumière de la 2.15.*
+
+- **La lumière** (`gfx.js`, `G.LUMS`, `G.LUM`) : une lumière chaude partout, des ombres turquoise au lieu de noires.
+  L'ambiance est relevée vers le blanc (`expo`, 0,3) et peut être un dégradé de deux couleurs ; l'image composée est
+  étalonnée (les lumières multipliées par #ffe6cc, les ombres « en écran » vers #041c22, la saturation relevée de 0,2) ; la
+  vignette, les nuages, le halo sont adoucis, les lueurs des sources un peu plus fortes. Les heures (`maps.js`,
+  `TIME_217`) : le jour doré, un couchant orangé qui passe au rose, une nuit éclaircie ; un lieu peut donner son propre
+  étalonnage (`env.etalon`). En combat (`battle.js`), des ciels de fin de journée et un sol tiré du lieu. En 2084, le halo
+  d'Idris est large et chaud. L'interface suit (`style.css`) : des panneaux plus clairs et un peu transparents, la halte
+  translucide, le fond sous l'image en hauteur teinté selon le lieu. « 2D simple » coupe l'éclairage, l'étalonnage et la
+  vignette, comme il le promet.
+- **Le réglage « Luminosité »** (Réglages, sur l'écran-titre et à la halte ; `opts.lum`, `G.luminosite`) : *clair*
+  (d'office : la lumière validée), *moyen* (la même, moins relevée, la vignette plus marquée), *sombre* (la lumière de la
+  2.15, ses tables de couleurs comprises : `G.lum === 215`, `TIME_215`, `SKY_215`, l'asphalte et les murs de 2084 d'avant,
+  l'interface d'avant par `html.lum215`). Il se change en cours de partie : les cases, les objets et les lieux déjà faits
+  sont oubliés et refaits (`G.surDefinition`), comme pour le dessin. `?lum=clair|moyen|sombre` (ou `215`) dans l'adresse
+  impose un cran, pour les outils qui comparent.
+- **Le contrôle** (`loupe.js`, 8) : au premier écran du prologue et dans Médine de jour, en hauteur et en largeur, la
+  luminance de la scène visible et le contraste de celui qui mène avec l'anneau qui l'entoure restent au-dessus de 85 %
+  de ce qu'ils valaient à la validation : sinon « SOMBRE ».
+
+### La Cité-Miroir, ville de verre (2.18, D206)
+
+*Le décideur, 19 novembre : « il faut que le décor de 2084 ressemble à Dubaï » ; puis, devant le prototype « ville de
+verre » : « validée, deux retouches » — la ramener au crépuscule validé, et laisser voir, sur un téléphone en hauteur, les
+façades du vieux quartier et le pied des tours dès le premier écran.*
+
+- **Le décor** (`maps.js`, `cite()`, `peindreCite()` ; `battle.js`, `citeBg()`) : au nord, le vieux quartier de pierre de
+  corail, ses tours à vent trapues (jamais lisibles comme des minarets : trois fentes, la tête à la moitié de la maison au
+  plus), ses claustras, ses portes de bois, ses échoppes ; derrière, le viaduc d'un métro, dont les rames passent, vides ;
+  puis des tours de verre géantes, à contre-jour ; deux descendent jusqu'à la rue (celle du grand écran, celle de
+  l'ascenseur). Le ciel luit comme un écran : une voûte de carreaux, sans astre ni étoile. La pierre polie de la rue renvoie
+  les tours ; devant le grand écran, un miroir d'eau et ses jets. Au sud, le quai, la crique, ses barques, un boutre au
+  repos et l'embarcadère. Aucune réplique d'un monument, aucune lettre, aucun signe, aucun édifice religieux ; personne
+  n'est ajouté au décor. Le jeu ne nomme pas la ville qui l'a inspiré, dans aucune langue.
+- **Le crépuscule** (retouche du 20 novembre) : le couchant est passé derrière les tours ; la pierre est moins claire, et ce
+  sont les lampes (leur flaque de lumière sur les dalles), les vitrines, les néons et le grand écran qui portent la rue :
+  la scène visible est vers 29 à 30 de luminance (au lieu de 38 à 40), sans retomber dans le violet sombre de la 2.15.
+- **Le regard** (`env.regard`, `env.leve`, `W.regard`, `world.js`) : dans la Cité, la vue regarde plus haut que celui qui
+  mène — elle cherche les toits du vieux quartier, ses pieds au plus bas aux quatre cinquièmes de l'image sur un
+  téléphone tenu en hauteur (au-dessus de la boussole), aux deux tiers ailleurs (au-dessus de la boîte de dialogue). À
+  l'ouverture d'un chapitre (`W.leve`), et quand la Cité éteinte se tait pendant que le récit parle, elle lève les yeux
+  plus haut encore : les tours à vent, le viaduc, le pied des tours de verre — éteinte, le verre noir et le ciel. Aucun
+  lieu, aucune case ne bouge (le masque de la carte est identique à celui d'avant).
+- **La Cité éteinte** (`I.maps.eteinte`) : quand l'idole du chapitre `fin` tombe, le moteur l'éteint (`battle.js`) ; elle
+  se rallume au début de tout chapitre (`world.js`). Les écrans et les bornes sont du verre noir, les tours sans lumière ;
+  derrière la voûte éteinte, le ciel de nuit et ses étoiles. Le jeu finit sur un verset (Coran 6:97, traduction du sens,
+  D207).
 
 **Trois dessins au choix du joueur** (Réglages, « Dessin » ; `gfx.DESSINS`, `gfx.definir`) : *fin* (par défaut), *fin,
 adouci* (le même, l'agrandissement final lissé et les figures adoucies sans perdre leurs contours) et *d'origine*. Le
@@ -1057,11 +1088,39 @@ tenues du râwî, les quatorze coiffes sous chaque manteau, les variantes d'équ
 
 Les grands sprites, eux, sont comparés à leur dernier relevé (`tools/essais/grands.json`) : un dessin nouveau, validé
 par le décideur, ne devient la référence que par `node v2/tools/silhouettes.js redessin « la décision »`, qui passe le
-contrôle entier d'abord et n'écrit rien à la moindre autre anomalie (« Le râwî d'après la maquette », plus haut).
+contrôle entier d'abord et n'écrit rien à la moindre autre anomalie (« Le râwî : Idris “le passeur” », plus haut).
 
 `node v2/tools/silhouettes.js planches [modèles.png]` écrit des planches agrandies dans `.smoke/silhouettes/` : la
 comparaison avec les modèles, les héros, les coiffes, la marche et les poses, les gestes de frappe, l'équipement, les
 gens. Tout changement de dessin se relit là, puis sur une capture du jeu.
+
+### Les attitudes, les mimiques et les bulles (2.18, D205)
+
+*Le décideur, 19 novembre : « positions, émotions, mimiques », à la manière des JRPG 16 bits ; « toutes, avec retenue ».*
+
+- **Les attitudes** (`D.ATTITUDES`, qui font partie de `D.POSES` ; `sprites.js`, `ALLURES`) : la joie (les bras levés), le
+  rire (les mains sur le ventre), l'acquiescement (la tête inclinée), le refus (la main levée, la paume en avant), la
+  réflexion (la main au menton), la colère (les poings serrés, les bras écartés), la tristesse (la tête basse), s'asseoir
+  (sur les talons), montrer du doigt ; avec les six d'avant (le recueillement, la résolution, l'accablement, le salut, la
+  surprise, la garde). Les bras sont tracés comme ceux des gestes (`membre()`) ; une main qui passe devant la tête se pose
+  après elle, jamais sur le voile. De dos, l'attitude ne se lit guère : le corps au repos (la joie lève un bras ; assis,
+  à genoux). L'opération de script `['emote', qui, attitude]` et le validateur les acceptent toutes ; `null` la quitte.
+- **La retenue** (`RETENUE`, `retenue()`, `G.retenue`) : un Compagnon, et qui le jeu laisse sans visage (`D.SANS_VISAGE`),
+  prend toutes les attitudes, mais trois dans leur forme retenue — la joie, les avant-bras levés devant soi, les mains
+  ouvertes devant la poitrine (jamais au-dessus de la tête) ; le rire, les épaules haussées d'un point (la ligne du haut du
+  corps redoublée, la tête ne bouge pas) ; la colère, les bras tendus le long du corps, les poings fermés, sans geste
+  brusque. Le moteur choisit : un fichier de saga écrit l'attitude, jamais sa forme. Contrôle : `silhouettes.js`, « la
+  retenue ».
+- **Les mimiques** (`MIMIQUE_DE`, `TAMPONS`, `TAMPONS_P`) : une attitude choisit la sienne (le sourire, le rire, la surprise,
+  la colère, la tristesse, la résolution, la réflexion), pour qui a un visage seulement — `visage()` rend null pour un
+  Compagnon et pour `D.SANS_VISAGE` avant d'en arriver là. Dans la barbe, la bouche ouverte seule.
+- **Les bulles** (`G.bulle`, `G.BULLE_DE`) : « ! » (la surprise), « ? » (la réflexion), « … » (la tristesse), au-dessus de
+  la tête, pour tous — Compagnons compris : un signe, pas un visage. Sobres : ni cœur (exigence 4), ni goutte, ni veine, ni
+  « Zzz » (aucun code comique, choix du décideur).
+- **Le petit personnage** (16 × 24) prend l'attitude d'avant la plus proche (la joie, la résolution ; le rire, le refus et
+  la réflexion, le salut ; montrer, la résolution ; s'asseoir, l'accablement ; l'acquiescement et la tristesse, le corps au
+  repos, la tête inclinée ; la colère, le corps au repos) : aucune de ses empreintes ne change (`silhouettes.js` relève
+  les six poses d'avant).
 
 ### Les visages
 

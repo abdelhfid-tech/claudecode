@@ -64,22 +64,22 @@
     // le viaduc du métro (ses rames passent à chaque image, entre lui et le vieux quartier)
     I.maps.viaduc(a, 0, W, VIA, EAU, 56);
     /* --- l'avant : le vieux quartier, ses tours à vent trapues, ses claustras éclairés --- */
-    const tons = ['#d3bf9d', '#cdb692', '#d9c6a4', '#c8b08c'];
+    const tons = ['#8e7a66', '#887360', '#94806b', '#836e5b']; // à contre-jour : le couchant est derrière les tours
     // une tour à vent trapue, dessinée à la taille du combat (point par point, sans réduction) : sa tête dépasse du toit de
     // la moitié de la hauteur de la maison au plus ; trois fentes, un toit plat (sa base se cache derrière la façade)
     const tourAVent = (x, top, hm) => { const h = Math.min(10, Math.floor(hm / 2)), t = top - h;
-      rect(v, '#d6c29e', x, t + 1, 12, h + 2); rect(v, '#b39b78', x + 12, t + 2, 2, h + 1); rect(v, '#e6d6b6', x - 1, t, 15, 1.5); rect(v, '#c9b28e', x - 1, t + 1.5, 15, 0.5);
+      rect(v, '#94806a', x, t + 1, 12, h + 2); rect(v, '#6e5c4a', x + 12, t + 2, 2, h + 1); rect(v, '#b29c80', x - 1, t, 15, 1.5); rect(v, '#86725c', x - 1, t + 1.5, 15, 0.5);
       for (let i = 0; i < 3; i++) rect(v, '#3a2622', x + 1.5 + i * 3.5, t + 2.5, 2, h - 2.5); rect(v, '#2e1e1c', x + 12.5, t + 3, 1, h - 3); };
     for (let x = -6; x < W;) { const w = 24 + Math.floor(r() * 30), top = EAU - 16 - Math.floor(r() * 8);
       if (w >= 28 && r() < 0.6) tourAVent(x + 3 + Math.floor(r() * Math.max(1, w - 18)), top, EAU - top);
-      rect(v, tons[Math.floor(r() * 4)], x, top, w, EAU - top); rect(v, '#e8d8b8', x, top, w, 1.5); rect(v, 'rgba(90,56,48,.22)', x + w - 1.5, top, 1.5, EAU - top);
+      rect(v, tons[Math.floor(r() * 4)], x, top, w, EAU - top); rect(v, '#ae987c', x, top, w, 1.5); rect(v, 'rgba(90,56,48,.22)', x + w - 1.5, top, 1.5, EAU - top);
       for (let k = x + 3; k < x + w - 3; k += 5) rect(v, '#6a4a30', k, top + 3, 0.75, 0.75);
       for (let k = x + 5; k < x + w - 6; k += 11) { const lit = r() < 0.6; rect(v, '#8a7056', k - 0.5, top + 5.5, 5, 6); rect(v, lit ? '#ffc878' : '#3a2a26', k, top + 6, 4, 5); rect(v, lit ? '#7a4a28' : '#5a4434', k + 1.75, top + 6, 0.5, 5); }
       // une porte de bois, ou une échoppe sous son auvent rayé
       const m = x + Math.floor(w / 2); if (w >= 40 && r() < 0.4) { rect(v, '#5a3a2a', m - 8, EAU - 7, 16, 7); rect(v, '#ffc070', m - 7, EAU - 6, 14, 6); for (let k = 0; k < 4; k++) rect(v, k % 2 ? '#e8dcc0' : '#b8442e', m - 9 + k * 4.5, EAU - 10, 4.5, 3); }
       else if (w >= 30) { rect(v, '#6a4426', m - 2.5, EAU - 8, 5, 8); rect(v, '#4e301a', m - 0.25, EAU - 8, 0.5, 8); }
       x += w + (r() < 0.2 ? 6 : 0); }
-    v.fillStyle = grad(v, EAU - 8, EAU, [[0, 'rgba(255,200,140,0)'], [1, 'rgba(255,206,150,.3)']]); v.fillRect(0, EAU - 8, W, 8);
+    v.fillStyle = grad(v, EAU - 8, EAU, [[0, 'rgba(255,200,140,0)'], [1, 'rgba(255,206,150,.18)']]); v.fillRect(0, EAU - 8, W, 8);
     // la crique : les tours et les maisons s'y renversent, rompues par les rides ; le chemin de lumière ; des barques amarrées
     const tmp = G.toile(W, EAU), t = tmp.getContext('2d'); t.drawImage(arr, 0, 0, W, EAU, 0, 0, W, EAU); t.drawImage(av, 0, 0, W, EAU, 0, 0, W, EAU);
     v.fillStyle = grad(v, EAU, H0 - 2, [[0, '#3a3e6a'], [1, '#1a2444']]); v.fillRect(0, EAU, W, H0 - 2 - EAU);
@@ -91,8 +91,8 @@
     [[36, 87, abra], [262, 88, abra2], [318, 86.5, abra]].forEach(([x, y, im]) => v.drawImage(im, x, y, 31, 15.6));
     rect(v, '#cdb08a', 0, H0 - 2, W, 2); rect(v, '#f0dcb4', 0, H0 - 2, W, 0.5);
     /* --- la pierre couleur de sable, ses joints immobiles en perspective, le ciel qu'elle renvoie à peine --- */
-    v.fillStyle = grad(v, H0, PH, [[0, '#a88c62'], [0.45, '#7a5e4a'], [1, '#34242e']]); v.fillRect(0, H0, W, PH - H0);
-    v.fillStyle = grad(v, H0, H0 + 30, [[0, 'rgba(255,200,150,.28)'], [1, 'rgba(255,200,150,0)']]); v.fillRect(0, H0, W, 30);
+    v.fillStyle = grad(v, H0, PH, [[0, '#604c3c'], [0.4, '#3e302e'], [1, '#150e19']]); v.fillRect(0, H0, W, PH - H0);
+    v.fillStyle = grad(v, H0, H0 + 30, [[0, 'rgba(255,200,150,.14)'], [1, 'rgba(255,200,150,0)']]); v.fillRect(0, H0, W, 30);
     for (let i = 0; i < 70; i++) { const y = H0 + 2 + Math.pow(r(), 1.6) * (PH - H0 - 2); rect(v, 'rgba(240,214,160,.1)', r() * W, y, 4 + (y - H0) * 0.2 * r(), 0.5); }
     v.fillStyle = 'rgba(90,60,40,.2)'; for (let i = 1; i < 10; i++) { const f = i / 10, y = H0 + (PH - H0) * f * f; v.fillRect(0, y, W, 0.5); }
     v.strokeStyle = 'rgba(90,60,40,.16)'; v.lineWidth = 0.5; v.beginPath(); for (let i = -10; i <= 10; i++) { v.moveTo(W / 2 + i * 12, H0); v.lineTo(W / 2 + i * 84, PH); } v.stroke();

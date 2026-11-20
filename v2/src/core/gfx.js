@@ -134,9 +134,11 @@
   // prototype « deux villes » : la pierre de sable et de corail, ses joints, l'eau de la crique
   // (prototype « ville de verre ») : des dalles plus jaunes, presque sans bleu — sous le couchant magenta du prototype de
   // lumière, elles restent couleur de sable au lieu de tourner au saumon
-  const CITE2 = { dalle: ['#8e784a', '#877245', '#968050', '#806c42'], joint: 'rgba(104,80,44,.55)', arete: 'rgba(240,224,168,.35)', pique: '#8e7444', sable: 'rgba(238,218,158,.24)', use: 'rgba(116,94,56,.09)',
-    paves: ['#b29a68', '#a89060', '#bba370', '#a08858'], paveJoint: '#7e6a48',
-    corail: ['#d3bf9d', '#c7b18e', '#ddcdae', '#b9a27f'], eau: ['#22284a', '#262f56', '#1d2240', '#2f3a66'] };
+  // (retouche du crépuscule, 2.18) : le couchant est passé derrière les tours ; la pierre de la rue, moins claire, n'a plus
+  // que les lampes, les vitrines et l'écran pour la relever
+  const CITE2 = { dalle: ['#56452f', '#51412c', '#5c4a33', '#4d3e2a'], joint: 'rgba(70,52,30,.6)', arete: 'rgba(230,206,150,.26)', pique: '#6e5a38', sable: 'rgba(220,196,140,.16)', use: 'rgba(80,62,40,.12)',
+    paves: ['#8e7b53', '#86734d', '#95825a', '#806d46'], paveJoint: '#62523a',
+    corail: ['#ad9d81', '#a39176', '#b5a68b', '#988567'], eau: ['#22284a', '#262f56', '#1d2240', '#2f3a66'] };
   // l'asphalte et le métal de 2084 : la rue prend le couchant (#3e3360) ; au cran « sombre », ceux de la 2.15
   const P_215 = { asphalt: P.asphalt, metal: P.metal }, P_217 = { asphalt: ['#3e3360', '#463a6c', '#352b54', '#5c4a8a'], metal: ['#343a4c', '#3d4458', '#2c3040', '#4a5270'] };
   const lumCouleurs = () => { Object.assign(CITE, G.lum === 215 ? CITE_215 : CITE_217); Object.assign(P, G.lum === 215 ? P_215 : P_217); };
@@ -303,7 +305,8 @@
       Rc(c, '#2a2030', 6, 27, 4, 5); Rc(c, '#cdb48e', 3, 32, 10, 2); Rc(c, '#e6d2ac', 3, 32, 10, 0.5); } },
     // cgrandecran : le grand écran, posé bas devant le pied d'une tour, juste au-dessus des passants : un cadre sombre de
     // 120 × 28, filé de laiton, sur deux pieds courts. Sur un téléphone tenu en hauteur, Idris au lieu 'ecran', son haut
-    // (y = 127 sur la carte) passe sous la mini-carte et les boutons, qui s'arrêtent vers y = 130. Il montre une lumière
+    // (y = 127 sur la carte) passe sous la mini-carte et les boutons, qui s'arrêtent vers y = 125 (la vue y regarde plus
+    // haut que celui qui mène : world.js, W.regard). Il montre une lumière
     // qui n'est pas le ciel : des vagues de couleur, une lueur sans contour, trois vignettes, une barre qui se remplit —
     // aucun mot, aucun signe, aucun objet. Éteint (la fin) : du verre noir, deux reflets.
     cgrandecran: { w: 128, h: 34, fw: 6, fh: 3, draw(c, r, o) {
@@ -569,7 +572,7 @@
     if (!G.low && I.speed === 1) { G._slow = dt > 0.034 ? (G._slow || 0) + 1 : Math.max(0, (G._slow || 0) - 2); if (G._slow > 150) { G.low = true; G.resize(); } }
     // 2.16 — « 2D simple » tient ce que son texte promet : le pixel art seul, sans éclairage (ambiance et lueurs), sans halo,
     // sans étalonnage ni vignette, comme sans profondeur de champ ni ombres de nuages (l'étalonnage de fin de journée de
-    // la 2.17 compris : o.etalon)
+    // la lumière de la 2.18 comprise : o.etalon)
     if (G.low) { o.tilt = false; o.clouds = null; o.scan = false; o.rays = null; o.ambient = null; o.lights = null; o.bloom = 0; o.grade = null; o.etalon = false; o.vignette = 0; }
     const c = G.out, k = G.k, W = G.cv.width, H = G.cv.height;
     let sx = 0, sy = 0;
@@ -593,7 +596,7 @@
     }
     // lumière : carte d'éclairage multipliée
     if (o.ambient) {
-      // 2.17 : l'ambiance est relevée vers le blanc (G.expo) ; une paire de couleurs fait un dégradé en biais, du coin haut
+      // 2.18 : l'ambiance est relevée vers le blanc (G.expo) ; une paire de couleurs fait un dégradé en biais, du coin haut
       // et gauche (la lumière basse d'un couchant) au coin bas et droit (le ciel qui passe au rose), sur ce que l'on voit
       // (l'image peut être agrandie : G.view)
       const l = G.lx, lw = G.lcv.width, lh = G.lcv.height, am = a => G.expo ? shade(a, 1 + G.expo) : a; l.globalCompositeOperation = 'source-over';
@@ -657,7 +660,7 @@
     // étalonnage
     if (o.grade) { c.globalCompositeOperation = o.grade[2] || 'soft-light'; c.globalAlpha = o.grade[1]; c.fillStyle = o.grade[0]; c.fillRect(0, 0, W, H); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
     if (o.tint) { c.globalAlpha = 0.28; c.fillStyle = o.tint; c.fillRect(0, 0, W, H); c.globalAlpha = 1; }
-    // 2.17 : l'étalonnage de fin de journée — les lumières tirent vers l'orangé, les ombres vers le turquoise au lieu du
+    // 2.18 : l'étalonnage de fin de journée — les lumières tirent vers l'orangé, les ombres vers le turquoise au lieu du
     // noir, et la couleur gagne un cran de saturation (le gris reste gris). G.LUM.froid nul : la lumière de la 2.15.
     // Un lieu peut donner son propre étalonnage (o.etalon : [chaud, froid], l'un ou l'autre nul) : la nuit reste bleue.
     if (G.LUM.froid && o.etalon !== false) { const et = o.etalon || [G.LUM.chaud, G.LUM.froid];

@@ -208,7 +208,7 @@
 {"k":"1azd04g.20","fr":"Tu as vu la tendance de midi ? Non ? Alors de quoi veux-tu qu’on parle ?","t":"昼の流行り、見た？見てない？じゃあ何の話をすればいいんだよ。","ou":"chapters[0].npcs[0].talk[0]<say>2","qui":"passant1"},
 {"k":"1cqphv5.2f","fr":"Mon score a baissé de trois points. Je ne sais pas ce que j’ai fait. Je ne sais jamais.","t":"スコアが3ポイント下がった。何をしたのかわからない。いつだって、わからないんだ。","ou":"chapters[0].npcs[1].talk[0]<say>2","qui":"passant2"},
 {"k":"1ivqk0q.2k","fr":"Autrefois on demandait : « Qui te l’a dit ? » Maintenant on demande : « Combien l’ont vu ? »","t":"昔は「誰から聞いた？」と尋ねたものだ。今は「何人が見た？」と尋ねる。","ou":"chapters[0].npcs[2].talk[0]<say>2","qui":"vieux","note":"relecture 3 (langue) : guillemets : dans une réplique, la parole rapportée est au premier niveau (la boîte de dialogue ne pose pas de 「」) → 「」, comme ailleurs dans le fichier ; 『』 est réservé aux titres et aux citations dans une citation (glossaire § 1.5)"},
-{"k":"aoa450.2b","fr":"Monsieur, c’est vrai qu’avant le ciel était noir, la nuit, avec des points dedans ?","t":"ねえ、ほんとう？昔は夜になると空が真っ黒で、その中に点がいくつもあったって。","ou":"chapters[0].npcs[3].talk[0]<say>2","qui":"gamin"},
+{"k":"1chm2op.25","fr":"Monsieur, c’est vrai qu’avant le ciel était noir, la nuit, avec des étoiles ?","t":"ねえ、ほんとう？昔は夜になると空が真っ黒で、星がいくつも出ていたって。","ou":"chapters[0].npcs[3].talk[0]<say>2","qui":"gamin"},
 {"k":"1ph3tfl.1a","fr":"La Chaîne t’attend au fond de la salle, Idris.","t":"伝承の鎖が、部屋の奥で待っているぞ、イドリース。","ou":"chapters[0].npcs[4].talk[0]<say>2","qui":"yunus_n"},
 {"k":"4asgi4.5","fr":"ISNAD","t":"ISNAD","ou":"chapters[0].intro[0]<title>1"},
 {"k":"11zne4b.14","fr":"An 1507 de l’Hégire · 2084 · Cité-Miroir","t":"ヒジュラ暦1507年・2084年・鏡の街","ou":"chapters[0].intro[0]<title>2"},

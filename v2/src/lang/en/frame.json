@@ -208,7 +208,7 @@
 {"k":"1azd04g.20","fr":"Tu as vu la tendance de midi ? Non ? Alors de quoi veux-tu qu’on parle ?","t":"Did you see the noon trend? No? Then what do you want to talk about?","ou":"chapters[0].npcs[0].talk[0]<say>2","qui":"passant1"},
 {"k":"1cqphv5.2f","fr":"Mon score a baissé de trois points. Je ne sais pas ce que j’ai fait. Je ne sais jamais.","t":"My score dropped three points. I don’t know what I did. I never know.","ou":"chapters[0].npcs[1].talk[0]<say>2","qui":"passant2"},
 {"k":"1ivqk0q.2k","fr":"Autrefois on demandait : « Qui te l’a dit ? » Maintenant on demande : « Combien l’ont vu ? »","t":"People used to ask: “Who told you?” Now they ask: “How many saw it?”","ou":"chapters[0].npcs[2].talk[0]<say>2","qui":"vieux"},
-{"k":"aoa450.2b","fr":"Monsieur, c’est vrai qu’avant le ciel était noir, la nuit, avec des points dedans ?","t":"Mister, is it true the sky used to be black at night, with dots in it?","ou":"chapters[0].npcs[3].talk[0]<say>2","qui":"gamin"},
+{"k":"1chm2op.25","fr":"Monsieur, c’est vrai qu’avant le ciel était noir, la nuit, avec des étoiles ?","t":"Mister, is it true the sky used to be black at night, with stars in it?","ou":"chapters[0].npcs[3].talk[0]<say>2","qui":"gamin"},
 {"k":"1ph3tfl.1a","fr":"La Chaîne t’attend au fond de la salle, Idris.","t":"The Chain is waiting for you at the back of the hall, Idris.","ou":"chapters[0].npcs[4].talk[0]<say>2","qui":"yunus_n"},
 {"k":"4asgi4.5","fr":"ISNAD","t":"ISNAD","ou":"chapters[0].intro[0]<title>1"},
 {"k":"11zne4b.14","fr":"An 1507 de l’Hégire · 2084 · Cité-Miroir","t":"AH 1507 · 2084 · Mirror City","ou":"chapters[0].intro[0]<title>2"},

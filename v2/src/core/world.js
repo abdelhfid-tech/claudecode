@@ -182,10 +182,24 @@
     t.unshift([p.x, p.y, p.dir]);
     let L = 0; for (let k = 1; k < t.length; k++) { L += Math.hypot(t[k][0] - t[k - 1][0], t[k][1] - t[k - 1][1]); if (L > LONG_CHEMIN) { t.length = k + 1; break; } }
   }
+  /* 2.18 — un lieu peut regarder plus haut que celui qui mène (env.regard : [la ligne de la carte qu'il veut montrer, la part
+     de la vue où descendent au plus les pieds de celui qui mène — en hauteur, puis ailleurs]) : la Cité-Miroir (le décideur,
+     19 novembre : sur un téléphone en hauteur, le premier écran du prologue doit laisser voir les façades du vieux quartier
+     et le pied des tours). En hauteur, ses pieds restent au-dessus de la boussole ; ailleurs, au-dessus de la boîte de
+     dialogue. Pendant l'ouverture d'un chapitre (W.leve), et quand la Cité s'est éteinte et que le récit parle, la vue lève
+     les yeux plus haut encore (env.leve : [ligne, part]) : la ville entière, celui qui mène au bas de l'image. Aucun lieu,
+     aucune case ne bouge. → de combien de points la vue monte (0 sans regard). */
+  W.leve = false;
+  W.regard = function () {
+    const e = W.map && W.map.env, rg = e && e.regard, V = G.view; if (!rg) return 0;
+    const lv = e.leve && (W.leve || (I.maps.eteinte && e.time === 'cite' && S.busy)), enHaut = document.body.classList.contains('portrait');
+    const y = W.player.y, haut0 = y - V.h / 2 - 10, voulu = lv ? Math.max(e.leve[0], y - e.leve[1] * V.h) : Math.max(rg[0], y - (enHaut ? rg[1] : rg[2]) * V.h);
+    return Math.max(0, haut0 - voulu);
+  };
   W.updateCam = function (snap) {
-    const m = W.map, mw = m.w * T, mh = m.h * T;
+    const m = W.map, mw = m.w * T, mh = m.h * T, haut = W.regard();
     let cx = mw <= G.PW ? (mw - G.PW) / 2 : I.clamp(W.player.x - G.PW / 2, 0, mw - G.PW);
-    let cy = mh <= G.PH ? (mh - G.PH) / 2 : I.clamp(W.player.y - G.PH / 2 - 8, 0, mh - G.PH);
+    let cy = mh <= G.PH ? (mh - G.PH) / 2 : I.clamp(W.player.y - G.PH / 2 - 8 - haut, 0, mh - G.PH);
     if (snap) { W.cam.x = cx; W.cam.y = cy; } else { W.cam.x += (cx - W.cam.x) * 0.14; W.cam.y += (cy - W.cam.y) * 0.14; }
     // fenêtre visible (écran en hauteur) : elle suit le héros, se tourne vers celui qui parle et s'arrête aux bords de la carte
     const V = G.view;
@@ -199,7 +213,7 @@
     if (V.h < G.PH) {
       const f = W.focus, half = V.h / 2 - 26, off = f && f.map === m.id && !f.hidden && f.placed ? I.clamp((f.y - W.player.y) / 2, -half, half) : 0;
       W.foffY = snap ? off : (W.foffY || 0) + (off - (W.foffY || 0)) * 0.1;
-      const lo = Math.max(0, -cy), hi = Math.min(G.PH, mh - cy) - V.h, want = hi < lo ? (lo + hi) / 2 : I.clamp(W.player.y - 10 + W.foffY - cy - V.h / 2, lo, hi);
+      const lo = Math.max(0, -cy), hi = Math.min(G.PH, mh - cy) - V.h, want = hi < lo ? (lo + hi) / 2 : I.clamp(W.player.y - 10 - haut + W.foffY - cy - V.h / 2, lo, hi);
       V.ty = snap ? want : V.ty + (want - V.ty) * 0.14; V.y = G.cale(V.ty);
     } else { V.y = 0; V.ty = 0; }
   };
@@ -231,13 +245,14 @@
     try { await S.fade('out', 300); } finally { S.depth--; }
     I.setScene(W);
     W.player.dir = 0; // avant le chargement : les siens sont semés derrière lui (W.resetTrail)
+    W.leve = !cp;   // 2.18 : pendant l'ouverture, la vue lève les yeux (W.regard : la Cité-Miroir)
     W.loadMap(cp ? cp.map : ch.map, cp ? cp.opts : (ch.opts || {}), cp ? cp.pos : ch.start);
     if (cp) { W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s && s.x !== undefined && n.map === W.map.id) { n.x = s.x; n.y = s.y; n.placed = true; n.placedMap = W.map.id; } }); if (W.degager()) W.resetTrail(); }
     W.hud(); $('#hud').hidden = false;
     S.depth++; W.lock = false; // verrouille le déplacement pendant l'ouverture
     try {
       await S.fade('in', 500);
-      if (!cp) { W.checkpoint(); await S.run(ch.intro || [['title', ch.title, ch.sub]]); await I.oeuvres.openChapter(); }
+      if (!cp) { W.checkpoint(); try { await S.run(ch.intro || [['title', ch.title, ch.sub]]); } finally { W.leve = false; } await I.oeuvres.openChapter(); }
       if (I.build) { I.build.set(false); if (!cp && (!saga.frame || saga.veillees)) { I.build.yields(); await I.trade.resolve(); } }
       // 2.x — la progression (lecons.js) : dans une partie neuve, un seul outil à la fois. Au début du prologue, se déplacer, et rien d'autre.
       const appr = I.lecons && I.lecons.actif();
