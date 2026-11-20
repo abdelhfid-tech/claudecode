@@ -125,7 +125,7 @@
     if (I.debug.auto || I.debug.walk) return I.debug.noOeuvres ? null : R.demande(k); // le joueur de test descend, et remonte par l'issue
     S.depth++;
     let oui = false;
-    try { const i = await S.menuPick({ html: I.esc(Pk.invite) + '<small>' + I.esc(P.question || '') + '</small><small>' + I.esc(P.regle || '') + '</small>' }, [{ t: P.descendre || I.t('Descendre') }, { t: P.plusTard || I.t('Pas maintenant') }]); oui = i === 0; }
+    try { const i = await S.menuPick({ html: I.esc(Pk.invite) + '<small>' + I.esc(P.question || '') + '</small><small>' + I.esc(P.regle || '') + '</small>' }, [{ t: P.descendre || I.t('Descendre') }, { t: P.plusTard || I.t('Pas maintenant'), retour: true }]); oui = i === 0; }
     finally { S.depth--; S.hideDialog(); }
     return oui ? R.demande(k) : null;
   };

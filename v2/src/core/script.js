@@ -33,9 +33,15 @@
   // 2.x — une liste de choix tient à l'écran. Quand le joueur a agrandi le texte (ou sur un téléphone, où il est « grand »
   // d'emblée), une longue liste déborderait sous l'écran : ses caractères se resserrent alors, cran par cran, sans jamais
   // descendre sous la taille « normal ». Au-delà, la liste défile, comme avant.
+  // 2.x : en hauteur, une liste de choix qui déborde encore remonte sur le bas de l'image (au plus de 60 % de sa hauteur),
+  // plutôt que de défiler : la bande de la manette tactile, sous elle, reste libre (ui.js, layout)
   function ajuster(box) {
-    box.style.fontSize = ''; const tz = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tz')) || 1, mini = Math.min(1, 1 / tz);
+    box.style.fontSize = ''; box.style.top = ''; box.style.maxHeight = ''; const tz = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tz')) || 1, mini = Math.min(1, 1 / tz);
     for (const f of [0.94, 0.88, 0.82, 0.76, 0.7].filter(v => v > mini + 0.01).concat(mini)) { if (box.scrollHeight <= box.clientHeight + 2) break; box.style.fontSize = f.toFixed(3) + 'em'; }
+    if (box.id === 'choice' && document.body.classList.contains('portrait') && box.scrollHeight > box.clientHeight + 2) {
+      const h = box.clientHeight, x = Math.round(Math.min(box.scrollHeight - h + 4, $('#stage').clientHeight * 0.6));
+      box.style.top = `calc(100% + 10px - ${x}px)`; box.style.maxHeight = (h + x) + 'px';
+    }
   }
   S.ajuster = ajuster;
 
@@ -77,7 +83,9 @@
     const d2 = $('#dialog2'), box = $('#dialog'); if (!d2 || d2.hidden || box.hidden) return;
     const ui = $('#ui'), r = ui.getBoundingClientRect(), b = box.getBoundingClientRect(), vh = window.innerHeight || document.documentElement.clientHeight;
     const cle = [document.body.classList.contains('portrait'), b.top, b.bottom, r.top, r.height, vh].map(v => Math.round(+v)).join(); if (!force && cle === place2) return; place2 = cle;
-    if (document.body.classList.contains('portrait')) { const haut = b.bottom - r.top + 8; d2.style.top = haut.toFixed(1) + 'px'; d2.style.bottom = 'auto'; d2.style.maxHeight = Math.max(48, vh - b.bottom - 8 - 10) + 'px'; }
+    // (2.x : au-dessus de la bande de la manette tactile ; s'il n'y reste pas trois lignes, la bulle descend jusqu'au bas de
+    // l'écran, et la manette s'efface le temps de la lire — ui.js, padVeille)
+    if (document.body.classList.contains('portrait')) { const haut = b.bottom - r.top + 8, pb = (I.ui && I.ui.padBas) || 0, place = vh - pb - b.bottom - 8 - 10; d2.style.top = haut.toFixed(1) + 'px'; d2.style.bottom = 'auto'; d2.style.maxHeight = Math.max(48, place >= 72 ? place : vh - b.bottom - 8 - 10) + 'px'; }
     else { d2.style.top = ''; d2.style.bottom = 'auto'; d2.style.maxHeight = Math.max(40, b.top - r.top - r.height * 0.03 - 8) + 'px'; }
     const t = d2.querySelector('.text'); tenir2(d2, parseFloat(getComputedStyle(t).fontSize) / (parseFloat(d2.style.getPropertyValue('--k2')) || 1));
   };
@@ -195,7 +203,10 @@
       options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ ' + I.t('savoir') + '</span>' : '')); b.type = 'button'; b.dir = I.langue.sens(b.textContent); b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
       sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box); ajuster(box); repere(box);
       const vue = () => { if (btns[idx].scrollIntoView) btns[idx].scrollIntoView({ block: 'nearest' }); }; // une longue liste suit la sélection
-      const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); vue(); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); vue(); I.audio.sfx('move'); } else if (a === 'ok') done(idx); else if (extra.touches && extra.touches[a]) extra.touches[a](); return true; });
+      // 2.x — B (ou Échap) : la réponse marquée « retour » (« Retour », « Plus tard », « Annuler »…), s'il y en a une ; devant un
+      // choix qui doit être fait (un pourparler, une question du récit), rien
+      const retour = options.findIndex(o => o.retour);
+      const h = I.input.push(a => { if (a === 'up') { sel(idx - 1); vue(); I.audio.sfx('move'); } else if (a === 'down') { sel(idx + 1); vue(); I.audio.sfx('move'); } else if (a === 'ok') done(idx); else if (extra.touches && extra.touches[a]) extra.touches[a](); else if (a === 'cancel' && retour >= 0) { sel(retour); done(retour); } return true; });
       if (I.debug.auto) setTimeout(() => {
         const open = options.map((o, i) => i).filter(i => !locked(options[i]));
         if (options.some(o => typeof o.v === 'number')) { const pick = open.slice().sort((x, y) => I.debug.pickWrong ? options[x].v - options[y].v : options[y].v - options[x].v)[0]; return done(pick); }

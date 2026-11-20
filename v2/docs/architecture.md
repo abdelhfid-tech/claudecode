@@ -484,23 +484,79 @@ chaque repli (absent, sans fichier, refusé, en erreur, presse-papiers refusé, 
 points, aucune requête, aucune erreur console : « PARTAGE CONFORME ». Les images dans `.smoke/partage/`, dans les quatre
 langues.
 
-## La manette tactile : `src/core/ui.js` (`pad`, `U.frapper`)
+## La manette tactile : `src/core/ui.js` (`pad`, `layout`, `U.frapper`) et `src/core/base.js` (« retour »)
 
-*Demande du décideur, 19 novembre : « un joystick transparent pour le pouce gauche » ; « l'idée est de pouvoir aussi jouer
-sur le téléphone comme si on avait une Game Boy » ; « juste deux boutons A et B » ; « parler avec A, frapper avec B ».*
+*Demandes du décideur, 19 novembre : « un joystick transparent pour le pouce gauche » ; « l'idée est de pouvoir aussi jouer
+sur le téléphone comme si on avait une Game Boy » ; « juste deux boutons A et B » ; « parler avec A, frapper avec B » ;
+« aussi il faut que les boutons puissent servir à sélectionner (A) ou faire marche arrière (B) ».*
 
-Sur un écran tactile (`body.touch`), pendant l'exploration :
+Sur un écran tactile (`body.touch`), la manette sert **partout**, comme une console de poche : en exploration, dans les
+labyrinthes et la descente du râwî, en bâtissant, dans un dialogue, sur un carton, devant une liste de choix, à la halte
+et dans chacune de ses pages, sur les écrans (titre, Chaîne, « Ton personnage », « Ta partie », le partage) et en combat.
 
-- **sous le pouce gauche, un joystick** (`#pad .joy`) : un cercle transparent et son bouton, que le pouce tire ; au-delà
-  d'un petit rayon mort, huit directions — celles des flèches du clavier (`I.input.held`), que la marche lit déjà. Lâché,
-  tout s'arrête. Il remplace l'ancienne croix. Il est affiché d'office ; le joueur peut le masquer (Réglages, « Manette
-  tactile », `opts.joy`). On se déplace toujours aussi en touchant la scène ;
-- **sous le pouce droit, A et B**, deux lettres, aucun mot : A, plus haut, valide (`ok` : parler, agir) ; B, plus bas,
-  frappe ce qui rôde (l'action `frappe` ; au clavier, la touche F, et Entrée frappe toujours quand quelque chose est à
-  portée). Quand quelque chose est à portée de coup (`rodeurs.aFrapper`), B s'éclaire (`body.frapper`). En bâtissant, B
-  fait cesser de bâtir. Le menu reste le bouton ☰ de la scène ;
+- **sous le pouce gauche, un joystick** (`#pad .joy`) : un cercle transparent et son bouton, que le pouce tire. En
+  exploration (l'écouteur du dessus est celui du monde : `I.input.auMonde()`, `U.padMarche`), au-delà d'un petit rayon
+  mort, huit directions — celles des flèches du clavier (`I.input.held`), que la marche lit ; lâché, tout s'arrête.
+  Ailleurs, il **choisit** : quatre directions (l'axe le plus marqué, qui garde la main jusqu'à 55°), un cran par poussée,
+  puis, tenu, un cran de plus après 0,42 s et tous les 0,16 s ; il passe par les mêmes actions que les flèches (`up`,
+  `down`, `left`, `right`), donc par les mêmes listes (`focusList`, `listMenu`, `menuPick`, le choix d'une cible) ;
+- **sous le pouce droit, A et B**, deux lettres, aucun mot. **A** (plus haut) envoie `ok` : parler, agir, choisir ce qui
+  est sélectionné, passer à la suite. **B** (plus bas) envoie `retour` (`base.js`, `emit`) : chaque écouteur le reçoit
+  comme Échap (`cancel` : revenir d'un cran, passer une réplique), sauf l'écouteur du monde (marqué `monde`, posé par
+  `U.boot`), qui le reçoit comme `frappe`. En exploration, B frappe donc ce qui rôde, et n'ouvre jamais la halte ; quand
+  quelque chose est à portée de coup (`rodeurs.aFrapper`), B s'éclaire (`body.frapper`). Le menu reste le bouton ☰ de la
+  scène ; le clavier ne change pas (Échap ouvre la halte en exploration, F frappe) ;
+- **une liste de choix qui a son « retour »** marque cette réponse (`{ t, retour: true }` : « Retour », « Plus tard »,
+  « Annuler », « Partir », « Garder ma partie », « Pas maintenant », « Reprendre », « Personne pour l'instant ») ; B (ou
+  Échap) la prend (`S.menuPick`). Devant un choix qui doit être fait — un pourparler, une question du récit, une idée
+  noire —, B ne fait rien ;
+- **la sélection se voit** : au doigt, ce qui est sélectionné porte un anneau clair (`body.touch .sel`, et la cible d'un
+  combat : `.plate.cur`, `.hrow.cur`) ; toucher directement un bouton, une cible ou un endroit de la scène marche
+  toujours, partout ;
 - **dans toutes les langues**, la manette garde ses places (`#pad { direction: ltr }`) : en arabe, la page va de droite à
-  gauche, mais les pouces ne changent pas de main.
+  gauche, mais les pouces ne changent pas de main ;
+- ce n'est pas un outil de la progression : aucune leçon ne l'apprend ; la ligne du réglage « Manette tactile » le dit. Rien
+  n'est gardé dans la partie : son format ne change pas.
+
+| Où l'on est | A | B | le joystick |
+|---|---|---|---|
+| exploration (un récit, un labyrinthe) | parler, agir ; à portée de ce qui rôde, frapper | frapper ce qui rôde à portée (B s'éclaire) ; sinon, arrêter la marche — jamais la halte | marcher (huit directions) ; au bord, courir |
+| la descente du râwî | frapper (à l'abri : attendre) | frapper | marcher, courir |
+| bâtir | poser la pièce | cesser de bâtir | marcher |
+| un dialogue, une narration | finir la ligne, puis passer à la suivante | de même (comme Échap) | — |
+| un carton (titre, parole citée, secours, victoire, défaite, la fin) | passer | passer | — |
+| une liste de choix (pourparler, question du récit, idée noire) | choisir la réponse sélectionnée | rien | monter, descendre |
+| une liste qui a son « retour » (natte, comptoir, eau, copie, « Que faire ? », descente proposée…) | choisir | prendre la réponse « retour » | monter, descendre |
+| la halte | entrer dans la page sélectionnée | la refermer : retour au jeu | la case voisine (en hauteur, deux colonnes) |
+| une page de la halte (Carte, Équipement, une pièce, Figures, Recueil, Aide, Valeurs, Les degrés du mal…) | choisir | revenir d'un cran | la case voisine |
+| la préparation d'une bataille | choisir | rien : on ne recule pas, la seule sortie est « Déclarer la bataille » | la case voisine |
+| l'écran-titre | choisir | dans les réglages : revenir à l'essentiel ; sinon, rien | monter, descendre |
+| « Ton personnage » | choisir | revenir (au début d'une partie : rien) | la case voisine |
+| la Chaîne | ouvrir ce qui est sélectionné | rien | monter, descendre |
+| « Ta partie », « Partager ma progression » | choisir | revenir | monter, descendre |
+| le combat : les commandes | choisir la commande | rien | monter, descendre ; ◂ ▸ : la Niyya |
+| le combat : vertus, objets, ordres, manœuvres | choisir | revenir aux commandes | monter, descendre |
+| le combat : la cible | frapper (ou soigner) celle qui est montrée | revenir aux commandes | changer de cible |
+| le combat : un bandeau | passer | passer | — |
+
+**Sa place** (`layout`, `padPlace`) : la manette ne recouvre jamais un texte, un bouton, une cible ni l'image du combat. Ses
+mesures viennent d'elle-même (la marge du système, une encoche, est comprise), et elle passe au-dessus des écrans et des
+cartons (`z-index` 46), dans une place que rien ne lui dispute :
+
+- **en hauteur**, la bande du bas (`--pad-bas`, `U.padBas`) : les écrans (`.screen`) et les cartons s'arrêtent au-dessus ;
+  une liste de choix aussi (elle se resserre : `S.ajuster`) ; le panneau du combat se resserre (`tenir`), prend la mise en
+  page serrée des petits écrans dès qu'il reste moins de 700 points sans la bande (`body.serre`), et la scène du combat se
+  raccourcit pour lui laisser 300 points (`PANNEAU`) ; la seconde bulle de la langue secondaire s'arrête au-dessus de la
+  bande. Sur un écran de moins de 740 points de haut, la manette est plus petite ;
+- **en largeur**, les deux marges (`--pad-cote`, `U.padCote`) : la scène garde sa hauteur et ne montre qu'une partie de la
+  largeur de l'image (`U.rogne`, comme en hauteur ; le combat rapproche les deux camps, `bx()`) ; les cartons tiennent
+  entre les deux marges, les écrans aussi s'il leur reste 560 points (`body.pad-marges`) — sur un téléphone plus petit
+  (640 × 360, 667 × 375), un écran prend toute la largeur et la manette s'y efface ; elle revient sur la scène. A est
+  au-dessus de B, un peu à sa droite, pour que la marge reste étroite ;
+- **partout**, si une page ne peut pas lui laisser la place (une seconde bulle sans trois lignes au-dessus de la bande, un
+  texte qui déborde sur un tout petit écran), la manette s'y efface (`body.pad-efface`, regardé six fois par seconde :
+  `U.padRecouvre`) plutôt que de recouvrir quoi que ce soit, et revient dès que la place est libre. Masquée au choix du
+  joueur (Réglages, « Manette tactile », `opts.joy`), elle n'est plus là du tout et ne garde aucune place.
 
 **Courir** (2.16 ; demande du décideur, 19 novembre : « il faut que les personnages puissent courir » ; choix « joystick
 au bord ») : le pouce tiré au-delà de 85 % du rayon du cercle (`viser`, `I.input.course`) fait courir — le cercle
@@ -514,9 +570,16 @@ leçon ne l'apprend (`lecons.js` n'en sait rien) ; la ligne du réglage « Manet
 le disent. Le chrono des labyrinthes compte le temps, pas le chemin : la course ne le presse pas ; elle ne change ni ce
 qui rôde ni les combats.
 
-Contrôles : `descente.js` (A et B, B qui s'éclaire, le pouce sur B, téléphone en hauteur et en largeur ; Maj au clavier :
-on court, et le chrono court au même pas) et `doigt.js` (le joystick fait marcher dans les quatre directions ; lâché, on
-s'arrête ; au bord, on court plus d'une fois et demie plus vite qu'à la marche ; au milieu, on marche).
+Contrôles : `manette.js` (au doigt, avec les vrais boutons de la manette seulement, en hauteur, en largeur et sur un petit
+téléphone : l'écran-titre et ses réglages, B qui n'ouvre pas la halte en exploration, la halte ouverte par ☰ puis menée
+au joystick, A et B, un dialogue passé par A puis par B, une liste de choix — B qui ne fait rien, puis qui prend le
+« retour » —, un carton, le combat — A sur « Frapper », B qui revient du choix de la cible, le joystick qui change de
+cible, A qui frappe —, B qui frappe ce qui rôde dans un labyrinthe ; à chaque état, la manette ne recouvre rien
+— rectangles comparés — et la sélection se voit — contraste mesuré sur la capture : « MANETTE CONFORME », sinon
+« INACCESSIBLE », « RECOUVERT », « INVISIBLE », « ÉCART »), `descente.js` (A et B, B qui s'éclaire, le pouce sur B,
+téléphone en hauteur et en largeur ; Maj au clavier : on court, et le chrono court au même pas) et `doigt.js` (le joystick
+fait marcher dans les quatre directions ; lâché, on s'arrête ; au bord, on court plus d'une fois et demie plus vite qu'à
+la marche ; au milieu, on marche).
 
 ## La définition du dessin : `src/core/gfx.js`
 
@@ -595,6 +658,8 @@ occupait que 26 × 40 points d'écran. Deux réponses, dans `ui.js` et `style.cs
   la boîte du canevas, transformation comprise (`getBoundingClientRect`).
 - **Le combat garde son cadrage** (`U.Z = 1` hors de l'exploration) : son tableau est fixe, les deux camps déjà
   rapprochés sur un écran étroit (`bx()`).
+- **En largeur, sur un écran tactile**, la manette prend les deux marges de l'image : la scène garde sa hauteur et ne
+  montre qu'une partie de la largeur (`U.rogne`), comme en hauteur ; l'agrandissement s'y ajoute (« La manette tactile »).
 - **Les textes.** « Texte » a quatre crans (`U.TZ` : normal, grand, très grand, géant) ; sans choix du joueur, « grand »
   sur un écran tactile. Un téléphone tenu en largeur suit lui aussi ce réglage (il l'ignorait). Sur un écran tactile
   (`body.touch`), les plus petits textes ont un plancher : noms, sous-titres, plaques et ordre des tours du combat,
@@ -1290,6 +1355,7 @@ node v2/tools/course.js              # la course : vitesse, pied d'appui suivi �
 node v2/tools/course.js images <dossier>   # sa planche et ses films (téléphone en hauteur et en largeur, ralenti, marche puis course)
 node v2/tools/silhouettes.js redessin « décision »   # un nouveau dessin validé devient la référence des grands (le contrôle entier d'abord)
 node v2/tools/loupe.js               # « LOUPE CONFORME » : sur un téléphone, l'image agrandie, le toucher juste, les textes lisibles
+node v2/tools/manette.js             # « MANETTE CONFORME » : la manette tactile partout — A choisit, B revient en arrière ; elle ne recouvre rien
 node v2/tools/partage.js             # « PARTAGE CONFORME » : partager sa progression — le bouton, l'image, le texte, les replis, quatre langues
 node v2/tools/smoke.js auto          # et walk, tap, wrong, shots — comme en 1.32 (2.16 : « PNJ EN TRAVERS », « SUPERPOSÉ », « COINCÉ »)
 node v2/tools/smoke.js suiveurs      # « SUIVEURS CONFORMES » (2.16) : seize points entre les siens à toute cadence, personne sur personne, les marches de récit
@@ -1300,8 +1366,9 @@ node v2/tools/longueurs.js [langue…]  # « LONGUEURS RELEVÉES » : le relevé
 node v2/tools/bilingue.js [fr-ar …] [390x844 844x390]   # « BILINGUE CONFORME » : la langue secondaire, sous chaque réplique et chaque carton, au doigt
 ```
 
-**Règle de la 2.x.** Celle d'`AGENTS.md`, avec onze contrôles de plus à chaque changement du moteur ou des règles —
+**Règle de la 2.x.** Celle d'`AGENTS.md`, avec douze contrôles de plus à chaque changement du moteur ou des règles —
 `paquet.js`, `partie.js`, `personnage.js`, `silhouettes.js`, `dedales.js`, `descente.js`,
-`retours.js`, `progression.js`, `loupe.js`, `bilingue.js` et `partage.js` ; la liste, et ce que chacun doit afficher, est dans
-`AGENTS.md`. Aucun ne doit finir sur « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT » ni
-« ÉCART » ; depuis la 2.16, ni sur « SUPERPOSÉ », « COINCÉ » ou « PNJ EN TRAVERS ».
+`retours.js`, `progression.js`, `loupe.js`, `bilingue.js`, `partage.js` et `manette.js` ; la liste, et ce que chacun doit
+afficher, est dans `AGENTS.md`. Aucun ne doit finir sur « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE »,
+« TRAIT » ni « ÉCART » ; depuis la 2.16, ni sur « SUPERPOSÉ », « COINCÉ » ou « PNJ EN TRAVERS » ; depuis la manette partout,
+ni sur « RECOUVERT » (la manette tactile sur un texte, un élément touchable ou l'image).

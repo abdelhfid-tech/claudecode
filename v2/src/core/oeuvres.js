@@ -116,7 +116,7 @@
         const titre = { html: I.t('Une natte tournée vers La Mecque, au cœur de l’étoile.') + (premiere ? '<small>' + I.t('On y prie, et le groupe s’y repose. On y accomplit aussi les œuvres du jour : chacune nourrit la provision du cœur (♥), que les grandes épreuves consomment.') + '</small>' : '') };
         const songe = ((C0().portes || {}).sommeil || {}).menu || I.t('S’endormir');
         if (O.sobre()) { // de passage : on prie, on se repose, on garde une copie — les œuvres se comptent dans les récits
-          const j = I.debug.auto ? 2 : await S.menuPick({ html: I.t('Une natte tournée vers La Mecque.') + '<small>' + I.t('De passage, on y prie et l’on s’y repose : les œuvres se comptent dans les récits.') + '</small>' }, [{ t: I.t('Prier et se reposer : Constance et Souffle à 100 %, le groupe retrouve sa sérénité') }, { t: I.t('Garder une copie de la partie (elle se sauvegarde déjà toute seule)') }, { t: I.t('Plus tard') }]);
+          const j = I.debug.auto ? 2 : await S.menuPick({ html: I.t('Une natte tournée vers La Mecque.') + '<small>' + I.t('De passage, on y prie et l’on s’y repose : les œuvres se comptent dans les récits.') + '</small>' }, [{ t: I.t('Prier et se reposer : Constance et Souffle à 100 %, le groupe retrouve sa sérénité') }, { t: I.t('Garder une copie de la partie (elle se sauvegarde déjà toute seule)') }, { t: I.t('Plus tard'), retour: true }]);
           if (j === 0) await W.pray(); else if (j === 1) await I.ui.saveMenu();
           return;
         }
@@ -124,7 +124,7 @@
           { t: I.t('Prier et se reposer : Constance et Souffle à 100 %, le groupe retrouve sa sérénité') },
           { t: left > 0 ? I.t('Les œuvres du jour (encore {n}) · provision ♥ {zad} / {max}', { n: left, zad: d.zad, max: MAX_ZAD }) : I.t('Les œuvres du jour (journée pleine) · provision ♥ {zad} / {max}', { zad: d.zad, max: MAX_ZAD }) },
           { t: songe },
-          { t: I.t('Garder une copie de la partie (elle se sauvegarde déjà toute seule)') }, { t: I.t('Plus tard') }]);
+          { t: I.t('Garder une copie de la partie (elle se sauvegarde déjà toute seule)') }, { t: I.t('Plus tard'), retour: true }]);
         // la prière, le dhikr, le sommeil : à ces moments-là, la noosphère est proche, et l'on peut y descendre (valeurs.js)
         if (i === 0) { await W.pray(); await I.valeurs.porte('priere'); return; }
         if (i === 2) { await I.valeurs.porte('sommeil'); return; }
@@ -140,7 +140,7 @@
       const ks = JOUR.concat(W.ch && W.ch.hajj ? ['hajj'] : []);
       const opts = ks.map(k => { const why = O.can(k), v = O.viceOf(k), n = O.count(k), need = v ? D.VICES[v].need : 0;
         return { k, t: k === 'aumone' ? I.t('{oeuvre} ({prix} dirhams)', { oeuvre: T[k].menu, prix: T[k].prix }) : T[k].menu, note: why ? why : (v && !O.hasBlade(v) ? C0().lames[v].name + ' ' + Math.min(n, need) + ' / ' + need : v ? I.t('lame forgée') : '') }; });
-      const i = await S.menuPick(I.t('Les œuvres du jour · {n} encore possibles', { n: MAX_JOUR - O.dayCount() }), opts.map(o => ({ t: o.t + (o.note ? ' · *' + o.note + '*' : '') })).concat([{ t: I.t('Retour') }]));
+      const i = await S.menuPick(I.t('Les œuvres du jour · {n} encore possibles', { n: MAX_JOUR - O.dayCount() }), opts.map(o => ({ t: o.t + (o.note ? ' · *' + o.note + '*' : '') })).concat([{ t: I.t('Retour'), retour: true }]));
       if (i >= opts.length) return;
       if ((await O.perform(opts[i].k)) && opts[i].k === 'dhikr') { await I.valeurs.porte('dhikr'); return; }
     }

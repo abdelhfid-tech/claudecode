@@ -19,7 +19,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
 - **Les chemins.** La suite de ce document se lit dans `v2/` : `src/…`, `tools/…`, `index.html`, `dist/…` y désignent
   `v2/src/…`, `v2/tools/…`, etc. `AGENTS.md`, `README.md`, `docs/`, `promo/` et `archive/` sont à la racine. Ce qui est
   propre à la 2.x est écrit dans `v2/docs/`.
-- La 2.x a onze contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
+- La 2.x a douze contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
   réimporte à l'identique), `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
   se gardent), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel ; aucun
@@ -38,11 +38,14 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   les messages du combat se posent en bas, sur personne, en français et en arabe : « LOUPE CONFORME »), `node v2/tools/bilingue.js` (la langue secondaire, pour chacun des douze couples de langues, en
   hauteur et en largeur : choisie par le vrai bouton et gardée ; le prologue au doigt, chaque réplique et chaque carton du
   récit avec sa seconde bulle, dans la bonne langue et le bon sens, lisible, sans débordement ; sans elle, rien ne paraît :
-  « BILINGUE CONFORME ») et `node v2/tools/partage.js` (partager sa progression : le bouton, absent avant tout maillon puis
+  « BILINGUE CONFORME »), `node v2/tools/partage.js` (partager sa progression : le bouton, absent avant tout maillon puis
   touché sur la Chaîne et dans la halte ; l'image, carrée et verticale, et son texte, dans les quatre langues — le nom,
   les maillons, la réserve, l'adresse, et aucun mot des œuvres, du cœur ni des Valeurs ; le partage et ses replis :
-  « PARTAGE CONFORME ») : aucun « REFUS », « BLOQUÉ »,
-  « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART », « RECOUVERT ». Le grand personnage (32 × 48) a ses propres
+  « PARTAGE CONFORME ») et `node v2/tools/manette.js` (la manette tactile partout, au doigt et avec ses seuls boutons, en
+  hauteur, en largeur et sur un petit téléphone : l'écran-titre, la halte menée au joystick, A qui entre, B qui revient
+  et la referme, un dialogue, une liste de choix, un carton, le combat et sa cible, B qui n'ouvre pas la halte et frappe
+  ce qui rôde ; à chaque état, la manette ne recouvre rien et la sélection se voit : « MANETTE CONFORME ») : aucun
+  « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART », « RECOUVERT ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages ». Les textes de la 2.0
   disent « Idris » : on n'y écrit jamais le nom d'un joueur, c'est `v2/src/core/perso.js` qui le pose à l'affichage. Une partie de la 2.0 a
   un format (2) et une fonction de mise à jour (`migrer`, dans `v2/src/core/base.js`) : on ne change jamais ce format
@@ -103,6 +106,18 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   `v2/docs/architecture.md`, « Le mouvement », « Des corps, et non des fantômes » et « La manette tactile ». Les sondes des corps (« SUPERPOSÉ », « PNJ EN TRAVERS »)
   sont dans `v2/tools/sondes.js`, que `smoke.js` et `paquet.js` posent sur leurs parties : un PNJ d'un paquet s'éprouve
   comme ceux du jeu. Un changement du déplacement repasse `smoke.js suiveurs`, `walk` et `tap`, puis toute la batterie.
+- Dans la 2.x, sur un écran tactile, la manette sert partout, comme une console de poche (demandes du décideur, 19
+  novembre : « juste deux boutons A et B », « parler avec A, frapper avec B », « que les boutons puissent servir à
+  sélectionner (A) ou faire marche arrière (B) ») : A envoie `ok` (parler, agir, choisir, passer à la suite) ; B envoie
+  `retour`, que chaque écouteur reçoit comme Échap, sauf celui du monde, qui le reçoit comme `frappe` — en exploration, B
+  frappe ce qui rôde et n'ouvre jamais la halte ; ailleurs, il revient d'un cran ; devant un choix à faire, il ne fait rien,
+  sauf si une réponse de la liste est marquée `retour: true` (« Retour », « Plus tard »…). Hors de l'exploration, le
+  joystick déplace la sélection, qui se voit au doigt (`body.touch .sel`). La manette ne recouvre jamais un texte, un
+  bouton, une cible ni l'image : en hauteur, elle a la bande du bas (`--pad-bas`) ; en largeur, les deux marges de l'image
+  (`--pad-cote` : la scène garde sa hauteur et se rogne en largeur) ; une page qui ne peut pas lui laisser la place la
+  voit s'effacer (`body.pad-efface`). Masquée au choix du joueur, elle ne prend plus aucune place. Ce n'est pas un outil de
+  la progression ; rien n'est gardé dans la partie. `v2/docs/architecture.md`, « La manette tactile ». Contrôle :
+  `node v2/tools/manette.js` (« MANETTE CONFORME »).
 - Dans la 2.x, l'image s'agrandit (demande du décideur, 16 novembre : « les personnages et les textes sont trop petits
   dans mon téléphone, il faut pouvoir zoomer dans l'image ») : pendant l'exploration, de × 1 à × 3 autour de celui qui
   mène — deux doigts qui s'écartent, la molette, le bouton « × » de la scène, le réglage « Image » ; d'office × 1,5 sur
@@ -111,7 +126,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   par elle et par `U.scale`, jamais par la taille de la scène seule. Sur un écran tactile, le texte est « grand »
   d'office et aucun n'est sous dix points (`src/style.css`, « écran tactile ») ; une liste de choix qui déborderait se
   resserre (`S.ajuster`). `v2/docs/architecture.md`, « L'image agrandie ». Tout changement de mise en page se relit sur
-  un téléphone, en hauteur et en largeur : `loupe.js`, puis `doigt.js`.
+  un téléphone, en hauteur et en largeur : `loupe.js`, `manette.js`, puis `doigt.js`.
 - Dans la 2.x, les messages du combat se posent en bas (le décideur, 19 novembre : « Les messages au moment du combat
   doivent être en bas pas sur les personnages ») : le bandeau (`#battle .banner`) est dans le panneau, dans la case des
   commandes — en hauteur sous les rangées du groupe, en largeur au pied de la scène, toute la largeur du panneau s'il
@@ -223,6 +238,7 @@ node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapi
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
 node v2/tools/loupe.js [messages]   # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles, les messages du combat en bas (« messages » : eux seuls)
+node v2/tools/manette.js            # 2.x : la manette tactile partout — A choisit, B revient en arrière, le joystick choisit ; elle ne recouvre rien, la sélection se voit
 node v2/tools/bilingue.js [fr-ar …] # 2.x : la langue secondaire — douze couples, en hauteur et en largeur, le prologue au doigt (captures dans .smoke/bilingue)
 node v2/tools/partage.js            # 2.x : partager sa progression — le bouton, l'image (1080 × 1080, 1080 × 1920), le texte, les replis, quatre langues (images dans .smoke/partage/)
 node v2/tools/shorts.js [NN] [brouillon]  # 2.x : les shorts — le jeu filmé image par image (promo/shorts/NN-nom.js → promo/shorts/films/, non versionnés)
@@ -244,7 +260,9 @@ qui allonge le combat de plus de 20 % ou lui ajoute une défaite), sans « MUSIQ
 pas dans le pied d'un PNJ ou d'un coffre, ou un lieu se charge avec quelqu'un à moins de 9 points de lui), sans « COINCÉ »
 (le joueur de test, à pied ou au doigt, n'arrive pas à son objectif et y est porté), sans « PNJ EN TRAVERS » (la case d'un PNJ
 ou d'un coffre, rendue pleine, coupe un lieu nommé, et aucun pas de côté ne rouvre le passage), sans « RECOUVERT » (un message
-du combat posé sur un personnage, une chimère, son nom, sa jauge de voiles, la frise des tours ou le champ) et sans erreur console.
+du combat posé sur un personnage, une chimère, son nom, sa jauge de voiles, la frise des tours ou le champ ; ou la manette
+tactile sur un texte, un élément touchable ou l'image : toute modification des entrées ou de la mise en page repasse
+`manette.js`) et sans erreur console.
 Un parcours automatique prouve que le récit se déroule, pas qu'il se voit : tout changement d'écran
 ou de mise en page se vérifie aussi sur une capture.
 

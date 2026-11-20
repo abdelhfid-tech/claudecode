@@ -111,7 +111,7 @@
   Bd.water = async function () {
     S.depth++;
     try {
-      const i = await _ask(I.t('De l’eau.'), [{ t: I.t('Puiser (+2 eau)') }, { t: I.t('Pétrir des briques de terre (2 eau → 3 pisé)') }, { t: I.t('Plus tard') }]);
+      const i = await _ask(I.t('De l’eau.'), [{ t: I.t('Puiser (+2 eau)') }, { t: I.t('Pétrir des briques de terre (2 eau → 3 pisé)') }, { t: I.t('Plus tard'), retour: true }]);
       if (i === 0) { I.audio.sfx('blip'); Bd.give('eau', 2); }
       else if (i === 1) { if (Bd.mats().eau < 2) S.toast(I.t('Il faut deux mesures d’eau.'), 1800); else { Bd.give('eau', -2, true); I.audio.sfx('door'); Bd.give('pise', 3); } }
     } finally { S.depth--; S.hideDialog(); }

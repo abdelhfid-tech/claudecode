@@ -738,7 +738,7 @@
 {"k":"10nw01t.f","fr":"Manette tactile","t":"タッチ操作","ou":"ui.js"},
 {"k":"14jw92a.8","fr":"affichée","t":"表示","ou":"ui.js"},
 {"k":"1h2o4pw.7","fr":"masquée","t":"非表示","ou":"ui.js"},
-{"k":"1ougpyg.7e","fr":"Sur un écran tactile, comme sur une console de poche : le joystick sous le pouce gauche (poussé jusqu’au bord, on court) ; A pour parler et agir, B pour frapper, sous le pouce droit. On peut aussi se déplacer en touchant la scène, et courir en la touchant deux fois.","t":"タッチ画面では、携帯ゲーム機のように操作できます。左の親指でスティック（端まで倒すと走ります）、右の親指でA（話す・調べる）とB（打つ）。画面に触れて移動することもでき、二度触れると走ります。","ou":"ui.js"},
+{"k":"1c8yhv0.8d","fr":"Sur un écran tactile, comme sur une console de poche : le joystick sous le pouce gauche pour se déplacer (poussé jusqu’au bord, on court) et choisir ; A pour parler, agir et valider ; B pour frapper et revenir en arrière, sous le pouce droit. On peut aussi toucher directement la scène et les boutons.","t":"タッチ画面では、携帯ゲーム機のように操作できます。左の親指でスティック（移動と選択。端まで倒すと走ります）、右の親指でA（話す・調べる・決定）とB（打つ・戻る）。画面やボタンに直接触れることもできます。","ou":"ui.js"},
 {"k":"iis1sr.3","fr":"Son","t":"音","ou":"ui.js"},
 {"k":"pxkkcb.6","fr":"activé","t":"オン","ou":"ui.js"},
 {"k":"1hz0vep.5","fr":"coupé","t":"オフ","ou":"ui.js"},
@@ -991,6 +991,7 @@
 {"k":"1bxfjl.g","fr":"Agrandir l’image","t":"画面を拡大","ou":"page.html"},
 {"k":"144vm47.i","fr":"Cadran des étoiles","t":"星の文字盤","ou":"page.html"},
 {"k":"84fl7f.b","fr":"Se déplacer","t":"歩く","ou":"page.html"},
+{"k":"7sizkg.i","fr":"Frapper ou revenir","t":"打つ・戻る","ou":"page.html"},
 {"k":"16wdciy.7","fr":"Valider","t":"決定","ou":"page.html"},
 {"k":"vukxpc.2d","fr":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire.","t":"ベータ版。専門家による歴史・宗教面の校閲は、まだ行われていません。","ou":"promotion.js","note":"partager sa progression (partage.js), 19 novembre : proposition de l’agent, à relire"}
 ] }

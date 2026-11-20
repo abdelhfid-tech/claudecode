@@ -94,15 +94,21 @@
     Escape: 'cancel', KeyX: 'cancel', Backspace: 'cancel', KeyM: 'menu', Tab: 'menu', KeyB: 'build', KeyC: 'prev', KeyV: 'next', KeyH: 'help', F1: 'help',
     KeyF: 'frappe'   // 2.x : le bouton B de la manette tactile (frapper ce qui rôde) ; Entrée frappe aussi quand quelque chose est à portée
   };
+  // 2.x — « retour » : le bouton B de la manette tactile (demande du décideur, 19 novembre : « que les boutons puissent servir
+  // à sélectionner (A) ou faire marche arrière (B) »). Chaque écouteur le reçoit comme Échap (« cancel » : revenir d'un cran,
+  // passer une réplique), sauf l'écouteur du monde (marqué « monde », ui.js), qui le reçoit comme « frappe » : en
+  // exploration, B frappe ce qui rôde, et n'ouvre jamais la halte.
   function emit(a) {
     I.audio.unlock();
-    for (let i = stack.length - 1; i >= 0; i--) { if (stack[i](a) !== false) return; }
+    for (let i = stack.length - 1; i >= 0; i--) { const f = stack[i], b = a === 'retour' ? (f.monde ? 'frappe' : 'cancel') : a; if (f(b) !== false) return; }
   }
   I.input = {
     held,
     push(fn) { stack.push(fn); return fn; },
     pop(fn) { const i = stack.lastIndexOf(fn); if (i >= 0) stack.splice(i, 1); },
     emit,
+    // l'écouteur du dessus est-il celui du monde ? (la manette : en exploration, le joystick fait marcher ; ailleurs, il choisit)
+    auMonde() { const f = stack[stack.length - 1]; return !!(f && f.monde); },
     clearHeld() { held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; },
     maj: false, course: false, // 2.16 : Maj tenue ; le joystick poussé au bord (ui.js) — l'un ou l'autre fait courir
     // secours : on ne garde que l'écouteur du monde (le premier posé), les autres appartenaient à une suite interrompue

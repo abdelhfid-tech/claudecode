@@ -80,25 +80,25 @@
       Tr.lore('caravanes'); I.audio.sfx('ok');
       const pick = (q, o) => I.debug.auto ? Promise.resolve(o._auto || 0) : S.menuPick(q, o);
       for (;;) {
-        const car = sp().caravan, art = (D.GEAR_SHOPS[W.map.id] || []).length, top = [{ t: art ? I.t('Boutique d’équipement : armes, boucliers, coiffes, tenues') : I.t('Revendre une pièce d’équipement') }, { t: I.t('Vendre des vivres ou des matériaux') }, { t: I.t('Acheter des vivres ou des matériaux') }, { t: car ? I.t('Caravane en route : {route}', { route: I.t(car.name) }) : I.t('Confier une cargaison à une caravane') }, { t: I.t('Partir') }];
+        const car = sp().caravan, art = (D.GEAR_SHOPS[W.map.id] || []).length, top = [{ t: art ? I.t('Boutique d’équipement : armes, boucliers, coiffes, tenues') : I.t('Revendre une pièce d’équipement') }, { t: I.t('Vendre des vivres ou des matériaux') }, { t: I.t('Acheter des vivres ou des matériaux') }, { t: car ? I.t('Caravane en route : {route}', { route: I.t(car.name) }) : I.t('Confier une cargaison à une caravane') }, { t: I.t('Partir'), retour: true }];
         // l'ordre affiché : boutique, vendre, acheter, caravane, partir ; la suite du code garde ses anciens numéros (0 vendre, 1 acheter, 2 caravane, 3 boutique, 4 partir)
         const i = I.debug.auto ? (Tr._autoStep = (Tr._autoStep || 0) + 1, [0, 1, 2, 3, 4][Math.min(4, Tr._autoStep - 1)]) : [3, 0, 1, 2, 4][await S.menuPick(I.t('Le comptoir : boutique et caravanes · {n} dirhams', { n: Tr.dirhams() }), top)];
         if (i === 4) break;
         if (i === 3) { await Tr.artisans(); continue; }
         if (i === 0) for (;;) {
-          const L = SELL.filter(e => stock(e[0], e[1]) > 0), o = L.map(e => ({ t: I.t('{nom} · tu en as {n} · {prix} dirhams pièce', { nom: nameOf(e[0], e[1]), n: stock(e[0], e[1]), prix: e[2] }) })).concat([{ t: I.t('Retour') }]);
+          const L = SELL.filter(e => stock(e[0], e[1]) > 0), o = L.map(e => ({ t: I.t('{nom} · tu en as {n} · {prix} dirhams pièce', { nom: nameOf(e[0], e[1]), n: stock(e[0], e[1]), prix: e[2] }) })).concat([{ t: I.t('Retour'), retour: true }]);
           const j = I.debug.auto ? (L.length && !Tr._sold ? (Tr._sold = 1, 0) : L.length) : await S.menuPick(I.t('Vendre · {n} dirhams', { n: Tr.dirhams() }), o);
           if (j >= L.length) break; add(L[j][0], L[j][1], -1); Tr.dirhams(L[j][2]); I.audio.sfx('blip');
         }
         if (i === 1) for (;;) {
-          const o = BUY.map(e => ({ t: Tr.dirhams() < e[2] ? I.t('{nom} · {prix} dirhams (trop cher)', { nom: nameOf(e[0], e[1]), prix: e[2] }) : I.t('{nom} · {prix} dirhams', { nom: nameOf(e[0], e[1]), prix: e[2] }) })).concat([{ t: I.t('Retour') }]);
+          const o = BUY.map(e => ({ t: Tr.dirhams() < e[2] ? I.t('{nom} · {prix} dirhams (trop cher)', { nom: nameOf(e[0], e[1]), prix: e[2] }) : I.t('{nom} · {prix} dirhams', { nom: nameOf(e[0], e[1]), prix: e[2] }) })).concat([{ t: I.t('Retour'), retour: true }]);
           const j = I.debug.auto ? (!Tr._bought && Tr.dirhams() >= 3 ? (Tr._bought = 1, 0) : BUY.length) : await S.menuPick(I.t('Acheter · {n} dirhams', { n: Tr.dirhams() }), o);
           if (j >= BUY.length) break; if (Tr.dirhams() < BUY[j][2]) { S.toast(I.t('Il te manque des dirhams.'), 1500); I.audio.sfx('dark'); continue; }
           Tr.dirhams(-BUY[j][2]); add(BUY[j][0], BUY[j][1], 1); I.audio.sfx('blip');
         }
         if (i === 2) {
           if (car) { S.toast(I.t('La caravane pour {route} reviendra au prochain chapitre.', { route: I.esc(I.t(car.name)) }), 3000); if (I.debug.auto) continue; else continue; }
-          const R = Tr.routes(), gd = Tr.guard(), o = R.map(r => ({ t: Tr.dirhams() < r.cost ? I.t('{route} · mise {mise} dirhams, retour espéré {gain} · péril {peril} % (mise trop haute)', { route: I.t(r.name), mise: r.cost, gain: r.gain, peril: Math.round(Math.max(0.06, r.risk - gd.risk) * 100) }) : I.t('{route} · mise {mise} dirhams, retour espéré {gain} · péril {peril} %', { route: I.t(r.name), mise: r.cost, gain: r.gain, peril: Math.round(Math.max(0.06, r.risk - gd.risk) * 100) }) })).concat([{ t: I.t('Retour') }]);
+          const R = Tr.routes(), gd = Tr.guard(), o = R.map(r => ({ t: Tr.dirhams() < r.cost ? I.t('{route} · mise {mise} dirhams, retour espéré {gain} · péril {peril} % (mise trop haute)', { route: I.t(r.name), mise: r.cost, gain: r.gain, peril: Math.round(Math.max(0.06, r.risk - gd.risk) * 100) }) : I.t('{route} · mise {mise} dirhams, retour espéré {gain} · péril {peril} %', { route: I.t(r.name), mise: r.cost, gain: r.gain, peril: Math.round(Math.max(0.06, r.risk - gd.risk) * 100) }) })).concat([{ t: I.t('Retour'), retour: true }]);
           const j = I.debug.auto ? (Tr.dirhams() >= R[0].cost ? 0 : R.length) : await S.menuPick(I.t('Quelle route ? Une route gardée par la justice, les pactes et les méharistes est moins périlleuse.'), o);
           if (j >= R.length) continue; const r = R[j]; if (Tr.dirhams() < r.cost) { S.toast(I.t('Ta mise ne suffit pas.'), 1500); continue; }
           Tr.dirhams(-r.cost); sp().caravan = { id: r.id, name: r.name, cost: r.cost, gain: r.gain, risk: Math.max(0.06, r.risk - gd.risk) }; I.audio.sfx('roll');
@@ -114,17 +114,17 @@
     if (I.debug.auto) { // le joueur de test achète la pièce utile la moins chère, s'il lui reste de quoi faire l'aumône
       const pick = shop.filter(id => Tr.dirhams() >= Gr.prix(id) + 12 && !Gr.stock(id) && heroes.some(h => mieux(h, id))).sort((a, b) => Gr.prix(a) - Gr.prix(b))[0];
       if (pick && !Tr._forge) { Tr._forge = 1; Tr.dirhams(-Gr.prix(pick)); await Gr.receive(pick); } return; }
-    const vendre = async () => { for (;;) { const L = Gr.reserve(), o = L.map(id => ({ html: `${Gr.img(id)} ${I.t('{nom} · {prix} dirhams¦{nom} ×{n} · {prix} dirhams', { nom: I.esc(D.GEAR[id].name), n: Gr.stock(id), prix: Gr.revente(id) })}` })).concat([{ t: I.t('Retour') }]);
+    const vendre = async () => { for (;;) { const L = Gr.reserve(), o = L.map(id => ({ html: `${Gr.img(id)} ${I.t('{nom} · {prix} dirhams¦{nom} ×{n} · {prix} dirhams', { nom: I.esc(D.GEAR[id].name), n: Gr.stock(id), prix: Gr.revente(id) })}` })).concat([{ t: I.t('Retour'), retour: true }]);
       const j = await S.menuPick(L.length ? I.t('Revendre · {n} dirhams', { n: Tr.dirhams() }) : I.t('La réserve est vide.'), o); if (j >= L.length) return; Gr.add(L[j], -1); Tr.dirhams(Gr.revente(L[j])); I.audio.sfx('blip'); } };
     if (!shop.length) return vendre();
     for (;;) {
       const cats = Gr.SLOTS.filter(s => shop.some(id => Gr.slotOf(id) === s));
-      const o = cats.map(s => ({ t: I.t('{emplacement} · {n} pièces', { emplacement: D.SLOTS[s], n: shop.filter(id => Gr.slotOf(id) === s).length }) })).concat([{ t: I.t('Revendre une pièce de la réserve') }, { t: I.t('Retour') }]);
+      const o = cats.map(s => ({ t: I.t('{emplacement} · {n} pièces', { emplacement: D.SLOTS[s], n: shop.filter(id => Gr.slotOf(id) === s).length }) })).concat([{ t: I.t('Revendre une pièce de la réserve') }, { t: I.t('Retour'), retour: true }]);
       const i = await S.menuPick(I.t('Boutique d’équipement · {lieu} · {n} dirhams', { lieu: D.MAPS[W.map.id].label, n: Tr.dirhams() }), o);
       if (i > cats.length) return; if (i === cats.length) { await vendre(); continue; }
       for (;;) {
         const L = shop.filter(id => Gr.slotOf(id) === cats[i]), bo = L.map(id => { const g = D.GEAR[id], who = heroes.filter(h => Gr.can(h.def, id));
-          return { html: `${Gr.img(id)} ${Tr.dirhams() < Gr.prix(id) ? I.t('<b>{nom}</b> · {prix} dirhams (trop cher)', { nom: I.esc(g.name), prix: Gr.prix(id) }) : I.t('<b>{nom}</b> · {prix} dirhams', { nom: I.esc(g.name), prix: Gr.prix(id) })}<br><small>${Gr.effets(g)}${who.length ? (who.some(h => mieux(h, id)) ? ' · ' + I.t('mieux pour {noms}', { noms: who.filter(h => mieux(h, id)).map(h => I.esc(h.def.name)).join(', ') }) : '') : ' · ' + I.t('personne ici ne peut la porter')}</small>` }; }).concat([{ t: I.t('Retour') }]);
+          return { html: `${Gr.img(id)} ${Tr.dirhams() < Gr.prix(id) ? I.t('<b>{nom}</b> · {prix} dirhams (trop cher)', { nom: I.esc(g.name), prix: Gr.prix(id) }) : I.t('<b>{nom}</b> · {prix} dirhams', { nom: I.esc(g.name), prix: Gr.prix(id) })}<br><small>${Gr.effets(g)}${who.length ? (who.some(h => mieux(h, id)) ? ' · ' + I.t('mieux pour {noms}', { noms: who.filter(h => mieux(h, id)).map(h => I.esc(h.def.name)).join(', ') }) : '') : ' · ' + I.t('personne ici ne peut la porter')}</small>` }; }).concat([{ t: I.t('Retour'), retour: true }]);
         const j = await S.menuPick(I.t('{emplacement} · {n} dirhams', { emplacement: D.SLOTS[cats[i]], n: Tr.dirhams() }), bo); if (j >= L.length) break;
         if (Tr.dirhams() < Gr.prix(L[j])) { S.toast(I.t('Il te manque des dirhams.'), 1500); I.audio.sfx('dark'); continue; }
         Tr.dirhams(-Gr.prix(L[j])); await Gr.receive(L[j]);
