@@ -1425,6 +1425,49 @@ même si on sera poursuivi il faudra courir pour échapper au monstre. Éclairer
   Fuir pour le récit ni pour une idole), `manette.js` (Fuir touché, puis B tenu avec le joystick pendant la poursuite),
   `doigt.js` et `progression.js` (pas de Fuir dans une bataille déclarée ni devant une idole).
 
+### Le temps volé, et la famille de la ghafla (2.20, D210)
+
+Proposition validée par le décideur le 20 novembre (« Oui ») : des attaques ennemies qui prennent du temps — de
+l'attention — plutôt que de la Constance ; en 2084 des appels, des mails, des messages, des jeux ; au temps des Compagnons,
+sans écran. Trois effets (`D.FX` : `recul`, `baisse`, `perdu` ; `D.FX_TEMPS`), et leurs nombres dans `D.TEMPS`
+(`defs.js`) — jamais dans un récit : un fichier de récit écrit `{ st: 'recul' }`, et le validateur refuse `v`, `chance`,
+`turns` ou `self` sur ces trois effets, comme sur la compétence d'un héros (`regles.js`, `checkSkill`).
+
+- **Le tour recule** (`recul`). Le prochain tour de la cible arrive plus tard : son attente (`ct`) s'allonge de 30 % d'une
+  attente pleine (`D.TEMPS.recul`, `1000 / Élan`). Elle porte `st.recul` jusqu'à ce tour : sa rangée dit « Retardé »
+  (`STN.recul`), et la frise marque son tour en pointillé (`.order i.rec`) ; la frise est redessinée sur-le-champ.
+- **La Niyya baisse** (`baisse`). −1 Niyya (`D.TEMPS.niyya`) ; sans Niyya — ou tant que le joueur ne la voit pas encore,
+  dans une partie neuve (`lecons.voit('niyya')`) —, −10 Sérénité (`D.TEMPS.serenite`). « Niyya − 1 », « Sérénité − 10 ».
+- **Le tour perdu** (`perdu`). L'étourdissement qui existe (« Étourdi », un tour passé), une chance sur quatre
+  (`D.TEMPS.perdu`) ; contre une idole, la moitié, comme tout étourdissement.
+- **Ce qui y répond.** La Patience et le Savoir (les failles de toute la famille de la ghafla) ; l'Esquive, comme d'un coup
+  ordinaire : une attaque esquivée ne porte rien (l'esquivé n'est plus parmi les cibles) ; la Garde, comme d'un coup, à
+  moitié (`D.TEMPS.garde`) : le recul de moitié, la Niyya qui baisse et le tour perdu une chance sur deux de porter (« Tient
+  bon » sinon).
+- **Les données.** Les attaques du cahier validé sont ajoutées aux chimères existantes, sans en retirer une ; la plupart
+  ne portent pas de coup (`pow` absent), deux portent « un coup léger » (`pow` 0,5 : « SMS », « Achat en un clic »). Leur
+  poids (`w`) : voir D210.
+- **La famille de la ghafla** est rattachée à l'Insouciance par sa racine (`racine: 'insouciance'`, le champ qui rattache
+  déjà le Sommeil et le Flux) et faible devant la Patience et le Savoir (`sabr`, `ilm` ajoutés à ses failles) :
+  l'Insouciance (inchangée), le Mirage (Khâlid, l'aîné), le Sommeil (les veillées), le Défilement (2084) ; et cinq
+  nouvelles — Plus tard et Le Bruit de fond en 2084 (`frame.js`, dans la noosphère du dernier maillon : `f1`, `f2`),
+  Sawfa, Le Long Espoir et Le Vain Divertissement au temps des Compagnons (`coeur.js`, niveau calé sur le groupe). Des
+  formes déjà déclarées, abstraites : une tour d'anneaux (Plus tard), une vague (Le Bruit de fond), une lueur (Sawfa), des lentilles (Le Long Espoir), une nuée (Le Vain Divertissement).
+- **Ce qui rôde** (`rodeurs.js`, `poserMeutes`). Les petites chimères d'un récit — ni idée noire, ni mal du cœur, ni idole
+  d'un de ses chapitres (une racine ne les écarte plus : une chimère « rattachée » rôde comme les autres) — et, dans un
+  récit des Compagnons, les trois chimères communes de la ghafla, chacune avec son poids (`D.TEMPS.rodent` : 1 pour Sawfa et
+  le Vain Divertissement, 0,35 pour le Long Espoir, de palier moyen ; 1 pour chaque petite chimère du récit). Le tirage
+  reste celui de la graine ; une chimère commune se dissipe et entre au Recueil comme les autres (`foe:_:…`).
+- **La progression.** Ce sont des attaques ennemies, pas un outil : aucune leçon, aucun message au début d'un chapitre. Le
+  mot d'état sur la cible, la frise et le nom de l'attaque dans le bandeau du bas suffisent ; la description de chaque
+  chimère, au Recueil, dit sa famille.
+- **Un mot d'état au bord de l'image** (`floater`) glisse vers l'intérieur pour rester entier (le dernier du groupe, en
+  hauteur, coupait « Retardé »).
+
+Termes arabes (ghafla, taswîf, tûl al-amal, lahw) lus dans l'*Ihyâ'* : `v2/docs/langues/ar.md`, § 2.5. Contrôles : le
+validateur ; `smoke.js auto` et la mesure des combats (D210) ; `loupe.js` (les mots d'état ne recouvrent rien) ;
+`descente.js` (ce qui rôde) ; `progression.js`.
+
 ## Les règles du contenu : `src/core/regles.js`
 
 En 1.32, les règles vivent dans deux scripts (`tools/validate.js`, `tools/validate-music.js`) qui lisent le disque et

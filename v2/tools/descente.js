@@ -8,8 +8,8 @@
      B. La descente du râwî : l'entrée, ceux qui rôdent, la cible ; l'issue (un niveau) ; l'abri (Esprit et Souffle),
         où rien n'entre ; le temps écoulé ; rattrapé (épuisé : la porte reste close, un sommeil sans songe la rouvre) ;
         lame forgée et accompagné, on fait face à une idée noire puis à un mal du cœur.
-     C. Frapper ce qui rôde : dans le labyrinthe d'un chapitre, de petits égrégores vont et viennent sur les ponts, jamais
-        dans les lieux nommés ; « Entrée » ou un toucher les frappe (un voile de moins, sonnés, ils laissent passer), sans
+     C. Frapper ce qui rôde : dans le labyrinthe d'un chapitre, de petits égrégores vont et viennent sur les ponts (ceux du
+        récit, ou, 2.20, les chimères communes de la ghafla : D.TEMPS.rodent), jamais dans les lieux nommés ; « Entrée » ou un toucher les frappe (un voile de moins, sonnés, ils laissent passer), sans
         voile ils se dissipent et ne reviennent pas ; s'ils rejoignent le groupe, c'est un combat ; après une remontée, plus
         rien ne rôde. Dans la descente du râwî : un coup sonne et ne vainc pas ; lame forgée et accompagné, les coups
         entament une idée noire jusqu'à la dissiper.
@@ -173,9 +173,11 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
     W.player.x = ou[0] * T + 8; W.player.y = ou[1] * T + 8; W.dest = null; const dx = f.x - W.player.x, dy = f.y - W.player.y; W.player.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); W.updateCam(true); R._pret = 0;
     return { d: Math.round(Math.hypot(dx, dy)), voiles: f.voiles, coups: R.coups | 0, touches: R.touches | 0 }; }, [id, cases, gele]);
   { const c = await p.evaluate(async () => { const I = window.ISNAD, W = I.world, R = I.rodeurs; await I.script.run([['map', 'noos', 'seuil', { hue: 210 }]]);
-      const L = R.rodent(), m = W.map, s0 = W.spotPx('seuil'), E = W.saga.enemies; window.__depart = L.map(f => [f.id, f.x, f.y]);
-      return { n: L.length, attendu: R.MEUTES[3], ponts: L.every(f => m.g0(f.x, f.y) === 'npont'), loin: L.every(f => Math.hypot(f.x - s0[0], f.y - s0[1]) > 9 * 16), petits: L.every(f => E[f.group[0]] && E[f.group[0]].tier === 'minion' && !I.D.NOIRS.includes(f.group[0])), voiles: L.map(f => f.voiles).join(','), arme: R.enMain().type }; });
-    si(c.n === c.attendu && c.n > 0 && c.ponts && c.loin && c.petits, `le labyrinthe d'un chapitre : ${c.n} petits égrégores du récit rôdent, posés sur des ponts, à l'écart du seuil (voiles : ${c.voiles}) ; aucune idée noire`, `ce qui rôde : ${JSON.stringify(c)}`);
+      const L = R.rodent(), m = W.map, s0 = W.spotPx('seuil'), E = W.saga.enemies, RC = (I.D.TEMPS || {}).rodent || {}; window.__depart = L.map(f => [f.id, f.x, f.y]);
+      // 2.20 : les petites chimères du récit, ou l'une des chimères communes de la ghafla (D.TEMPS.rodent) — jamais une idée noire
+      const admis = id => !I.D.NOIRS.includes(id) && ((E[id] && E[id].tier === 'minion') || (!E[id] && RC[id] !== undefined && !!I.common.enemies[id]));
+      return { n: L.length, attendu: R.MEUTES[3], ponts: L.every(f => m.g0(f.x, f.y) === 'npont'), loin: L.every(f => Math.hypot(f.x - s0[0], f.y - s0[1]) > 9 * 16), petits: L.every(f => admis(f.group[0])), qui: L.map(f => f.group[0]).join(','), voiles: L.map(f => f.voiles).join(','), arme: R.enMain().type }; });
+    si(c.n === c.attendu && c.n > 0 && c.ponts && c.loin && c.petits, `le labyrinthe d'un chapitre : ${c.n} petits égrégores rôdent (${c.qui} : du récit, ou de la famille commune de la ghafla), posés sur des ponts, à l'écart du seuil (voiles : ${c.voiles}) ; aucune idée noire`, `ce qui rôde : ${JSON.stringify(c)}`);
     // trente secondes de va-et-vient, le groupe restant au seuil : toujours sur les ponts, jamais dans un lieu nommé
     const v = await p.evaluate(() => { const I = window.ISNAD, W = I.world, R = I.rodeurs, m = W.map; let hors = 0; const c0 = R.chrono.reste; for (let i = 0; i < 900; i++) { R.tic(1 / 30); R.rodent().forEach(f => { if (m.g0(f.x, f.y) !== 'npont') hors++; }); } R.chrono.reste = c0;
       const bouge = R.rodent().filter(f => { const d = window.__depart.find(q => q[0] === f.id); return d && Math.hypot(f.x - d[1], f.y - d[2]) > 16; }).length; return { hors, bouge, n: R.rodent().length, combat: I.battle.active }; });
@@ -213,7 +215,7 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
     // frappé jusqu'au bout, il se dissipe ; le groupe y gagne, le Recueil le connaît, il ne revient pas
     const x0 = await p.evaluate(() => { const W = window.ISNAD.world, h = W.hero(W.party[0]); return h.lvl * 1000 + h.xp; });
     for (let i = 0; i < 8 && await p.evaluate(() => !window.ISNAD.world.foes.find(q => q.id === 'meute0').done); i++) { await pres('meute0', 1, true); await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.frappe(I.world.foes.find(q => q.id === 'meute0')); }); await p.waitForTimeout(120); }
-    const a3 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, R = I.rodeurs, f = W.foes.find(q => q.id === 'meute0'), h = W.hero(W.party[0]); return { fini: f.done, drapeau: !!I.script.flags[f.cle], gain: h.lvl * 1000 + h.xp, recueil: I.save.data.codex.includes('foe:' + W.saga.id + ':' + f.group[0]), dissipes: R.dissipes | 0, restent: R.rodent().length }; });
+    const a3 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, R = I.rodeurs, f = W.foes.find(q => q.id === 'meute0'), h = W.hero(W.party[0]); return { fini: f.done, drapeau: !!I.script.flags[f.cle], gain: h.lvl * 1000 + h.xp, recueil: I.save.data.codex.includes('foe:' + (W.saga.enemies[f.group[0]] ? W.saga.id : '_') + ':' + f.group[0]), dissipes: R.dissipes | 0, restent: R.rodent().length }; });
     await p.waitForTimeout(300); await p.screenshot({ path: path.join(out, 'C-2-dissipe.png') });
     si(a3.fini && a3.drapeau && a3.gain > x0 && a3.recueil && a3.restent === c.n - 1, 'sans voile, il se dissipe : le groupe y gagne de l’expérience, le Recueil le connaît, il en reste un de moins', `dissipé : ${JSON.stringify(a3)} (avant ${x0})`);
     // au doigt : toucher ce qui rôde, à trois cases, c'est s'en approcher puis le frapper

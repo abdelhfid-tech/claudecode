@@ -709,12 +709,12 @@
       // (perform : l'esquivé n'est plus parmi les cibles). « recul » : le prochain tour arrive plus tard — la frise le montre,
       // et la rangée dit « Retardé » jusqu'à ce tour. « baisse » : la Niyya baisse ; sans Niyya, ou tant que le joueur ne la
       // voit pas encore (lecons.js), c'est la Sérénité. « perdu » : l'étourdissement, une chance sur quatre.
-      case 'recul': { const T = D.TEMPS, k = T.recul * (t.st.garde ? T.garde : 1); t.ct += k * 1000 / eff(t, 'spd'); t.st.recul = 1; C.vole = (C.vole || 0) + 1; floater(t, I.t('Retardé'), 'debuff'); break; }
+      case 'recul': { const T = D.TEMPS, k = T.recul * (t.st.garde ? T.garde : 1); t.ct += k * 1000 / eff(t, 'spd'); t.st.recul = 1; C.vole = (C.vole || 0) + 1; floater(t, I.t('Retardé'), 'debuff'); refresh(); break; } // la frise le montre aussitôt
       case 'baisse': { const T = D.TEMPS; if (t.st.garde && Math.random() >= T.garde) { floater(t, I.t('Tient bon'), 'buff'); break; }
         const vue = t.side !== 'hero' || !I.lecons || I.lecons.voit('niyya'); C.vole = (C.vole || 0) + 1;
         if (vue && t.niyya > 0) { t.niyya = Math.max(0, t.niyya - T.niyya); floater(t, I.t('Niyya − {n}', { n: T.niyya }), 'debuff'); }
         else if (t.side === 'hero') { t.sakina = Math.max(0, t.sakina - T.serenite); floater(t, I.t('Sérénité − {n}', { n: T.serenite }), 'debuff'); }
-        break; }
+        refresh(); break; }
       case 'perdu': { const T = D.TEMPS, avant = !!t.st.stun; applyFx(a, t, { st: 'stun', chance: T.perdu * (t.st.garde ? T.garde : 1) }, 0); if (t.st.stun && !avant) C.vole = (C.vole || 0) + 1; break; }
     }
   }
@@ -828,6 +828,10 @@
     const p = pos(e), f = I.el('div', 'fl ' + (cls || ''), String(text));
     f.style.left = pctX(p.x + (Math.random() - 0.5) * 14); f.style.top = ((p.y - 6 - (e._fl = ((e._fl || 0) + 1) % 3) * 9) / G.PH * 100) + '%';
     $('#floaters').appendChild(f); setTimeout(() => f.remove(), 1100);
+    // 2.20 — un mot posé sur celui qui est au bord de l'image (le dernier du groupe, en hauteur) reste entier : il glisse vers
+    // l'intérieur, sans quitter sa cible (sa largeur, à sa plus grande taille dans l'animation « fl » : × 1,15)
+    const L = f.parentNode.clientWidth, x = parseFloat(f.style.left) / 100 * L, demi = f.offsetWidth * 0.58, m = 4;
+    if (L && x - demi < m) f.style.marginLeft = (m - (x - demi)) + 'px'; else if (L && x + demi > L - m) f.style.marginLeft = ((L - m) - (x + demi)) + 'px';
   }
   const readTime = txt => I.clamp(1800 + I.langue.poids(txt) * 48, 2400, 7500);   // le poids d'un texte dépend de son écriture (langue.js)
   // 2.17 — les messages du combat se posent en bas (demande du décideur, 19 novembre : « Les messages au moment du combat
