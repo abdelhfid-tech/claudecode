@@ -91,7 +91,8 @@ function nues(m) {
 const nomCharge = m => { const coeur = coeurDuNom(m.map(x => x.c).join('')); return coeur > 0 && m.slice(m.length - coeur, -1).some(x => x.s); };
 // les morceaux d'un texte que l'on contrôle : tout, sauf ce que le registre donne tel quel
 // (un verset, ou une parole attestée citée au milieu d'une narration ou d'un feuillet : recopiés, ils ne se contrôlent pas)
-const cites = REG => REG.versets.concat([...REG.paroles.values()]).filter(v => v.length >= 8);
+// (le plus long d'abord : un verset qui en contient un autre s'ôte en entier)
+const cites = REG => REG.versets.concat([...REG.paroles.values()]).filter(v => v.length >= 8).sort((a, b) => b.length - a.length);
 function horsRegistre(t, REG) { let s = String(t); cites(REG).forEach(v => { if (s.indexOf(v) >= 0) s = s.split(v).join(' '); }); return s; }
 
 /* ---------- le contrôle ---------- */
