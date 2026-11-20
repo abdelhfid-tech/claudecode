@@ -726,7 +726,7 @@
       W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - px, n.y - py); if (d < bd) { bd = d; best = n; } });
       if (!best) { const ch = W.chests.find(ch => !ch.open && ch.map === m.id && ch.placed && Math.hypot(ch.x - px, ch.y - py) < 18); if (ch) best = { x: ch.x, y: ch.y + 12 }; }
       if (!best && (W.nearPrayer() || (I.trade && I.trade.near()))) best = { x: p.x, y: p.y + 6 };
-      if (!best && I.rodeurs && m.env.dedale && I.rodeurs.faceAPorte()) { const q = I.rodeurs.interdite(); best = { x: q.porte[0] * T + 8, y: q.porte[1] * T + 20 }; } // la porte interdite : on peut la désigner
+      if (!best && I.rodeurs && m.env.dedale && I.rodeurs.faceAPorte()) best = { x: p.x, y: p.y + 6 }; // la porte interdite : on peut la désigner (la bulle au-dessus de celui qui mène, comme sur la natte)
       if (best && !(tg && tg.kind === 'talk' && Math.abs(tg.x - best.x) < 2)) { const bx = Math.round(best.x - cx), by = Math.round(best.y - cy - 34 + Math.sin(t * 5) * 1.5); c.fillStyle = '#1a1420'; c.fillRect(bx - 7, by - 1, 14, 9); c.fillStyle = '#fff6dc'; c.fillRect(bx - 6, by, 12, 7); c.fillRect(bx - 1, by + 7, 2, 2); c.fillStyle = '#1a1420'; c.fillRect(bx - 4, by + 3, 2, 2); c.fillRect(bx - 1, by + 3, 2, 2); c.fillRect(bx + 2, by + 3, 2, 2); }
     }
     for (const pp of W.prayerPts()) { const px2 = pp[0] * T + 8 - cx, py2 = pp[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) {
