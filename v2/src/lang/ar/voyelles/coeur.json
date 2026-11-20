@@ -1,0 +1,10 @@
+{ "langue": "ar", "fichier": "coeur", "textes": [
+{"k":"1040a9b.1r","fr":"*Flèches* ou *ZQSD* — ou un clic là où tu veux aller : marcher.","t":"*الأسهم* أو *WASD* — أو نقرةٌ حيث تريد الذهاب: المشي.","tv":"*الْأَسْهُمُ* أَوْ *WASD* — أَوْ نَقْرَةٌ حَيْثُ تُرِيدُ الذَّهَابَ: الْمَشْيُ."},
+{"k":"zuv79r.y","fr":"Touche un endroit pour t’y rendre.","t":"المس مكانًا لتمضي إليه.","tv":"الْمِسْ مَكَانًا لِتَمْضِيَ إِلَيْهِ."},
+{"k":"1r3nr7f.15","fr":"Près de quelqu’un, *Entrée* : lui parler.","t":"قرب أحدٍ، *Enter*: الكلام معه.","tv":"قُرْبَ أَحَدٍ، *Enter*: الْكَلَامُ مَعَهُ."},
+{"k":"4vabey.11","fr":"Touche un personnage pour lui parler.","t":"المس شخصًا لتكلّمه.","tv":"الْمِسْ شَخْصًا لِتُكَلِّمَهُ."},
+{"k":"uph9b3.2t","fr":"Tu cherches ton chemin ? *H*, ou le bouton *?* : l’objectif expliqué, et le chemin si tu le demandes.","t":"تبحث عن طريقك؟ *H*، أو الزرّ *?*: الهدف مشروحًا، والطريق إن طلبته.","tv":"تَبْحَثُ عَنْ طَرِيقِكَ؟ *H*، أَوِ الزِّرُّ *?*: الْهَدَفُ مَشْرُوحًا، وَالطَّرِيقُ إِنْ طَلَبْتَهُ."},
+{"k":"uy4gm3.2l","fr":"Tu cherches ton chemin ? Le bouton *?* : l’objectif expliqué, et le chemin si tu le demandes.","t":"تبحث عن طريقك؟ الزرّ *?*: الهدف مشروحًا، والطريق إن طلبته.","tv":"تَبْحَثُ عَنْ طَرِيقِكَ؟ الزِّرُّ *?*: الْهَدَفُ مَشْرُوحًا، وَالطَّرِيقُ إِنْ طَلَبْتَهُ."},
+{"k":"ks333x.28","fr":"*Échap*, ou le bouton *☰* : la halte. Le groupe, la besace, ce que tu as appris.","t":"*Esc*، أو الزرّ *☰*: الاستراحة. الركب، والمِزوَد، وما تعلّمتَه.","tv":"*Esc*، أَوِ الزِّرُّ *☰*: الِاسْتِرَاحَةُ. الرَّكْبُ، وَالْمِزْوَدُ، وَمَا تَعَلَّمْتَهُ."},
+{"k":"1kn9bus.1w","fr":"Le bouton *☰* : la halte. Le groupe, la besace, ce que tu as appris.","t":"الزرّ *☰*: الاستراحة. الركب، والمِزوَد، وما تعلّمتَه.","tv":"الزِّرُّ *☰*: الِاسْتِرَاحَةُ. الرَّكْبُ، وَالْمِزْوَدُ، وَمَا تَعَلَّمْتَهُ."}
+] }
