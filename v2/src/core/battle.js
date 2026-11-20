@@ -438,7 +438,7 @@
   function listMenu(box, title, items, o) {
     o = o || {}; o.cible = null;
     return new Promise(res => {
-      box.innerHTML = ''; box.classList.remove('vise'); if (title) box.appendChild(I.el('div', 'mtitle', title));
+      box.innerHTML = ''; box.classList.remove('vise', 'replie'); if (title) box.appendChild(I.el('div', 'mtitle', title));
       const list = I.el('div', 'mlist' + (o.cls ? ' ' + o.cls : '')); box.appendChild(list);
       if (o.note) { const n = I.el('div', 'mlecon', o.note); n.dir = I.langue.sens(n.textContent); box.appendChild(n); } // 2.x (D189) : la leçon d'une commande nouvelle, sous la liste
       const desc = I.el('div', 'mdesc'); if (o.desc) box.appendChild(desc);
@@ -447,7 +447,11 @@
         btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); if (o.desc) desc.innerHTML = items[idx].desc || ''; if (o.onSel) o.onSel(idx); btns[idx].scrollIntoView && btns[idx].scrollIntoView({ block: 'nearest' }); };
       const done = v => { if (fini) return; fini = true; desarmer(true); I.input.pop(h); res(v); }, ne = performance.now();
       // la commande armée : son bouton, la barre, le curseur ; `montre` suit la cible du moment
-      const montre = () => { const v = vise, e = v.pool[v.k]; C.cursor = e; v.sm.textContent = I.t('→ {nom}', { nom: e.name }); refresh(); tenir(box, btns, main); };
+      // si la liste et sa barre ne tiennent plus (un petit téléphone : la manette garderait sa bande), la liste se replie sur la
+      // commande armée — comme le choix d'une cible d'avant la 2.19 ; « Retour » ou B la rouvrent
+      const replier = () => { box.classList.remove('replie'); tenir(box, btns, main); const pan = box.closest('.panel'); if (!pan) return; const r = pan.getBoundingClientRect(), bas = innerHeight - ((I.ui && I.ui.padBas) || 0);
+        if (r.bottom > bas + 1 || r.top < 0) { box.classList.add('replie'); tenir(box, btns, main); } };
+      const montre = () => { const v = vise, e = v.pool[v.k]; C.cursor = e; v.sm.textContent = I.t('→ {nom}', { nom: e.name }); refresh(); replier(); };
       const armer = (i, pool) => {
         const b = btns[i]; let sm = b.querySelector('small'); const avant = sm ? sm.innerHTML : null; if (!sm) { sm = I.el('small'); b.appendChild(sm); }
         const barre = I.el('div', 'mvise'), tactile = document.body.classList.contains('touch');
@@ -463,7 +467,7 @@
       // désarmer : la barre s'en va, le bouton reprend ce qu'il disait ; rien n'est dépensé (fin : la liste se referme)
       function desarmer(fin) {
         if (!vise) return; const v = vise; vise = null;
-        v.barre.remove(); v.b.classList.remove('arme'); box.classList.remove('vise'); if (v.avant === null) v.sm.remove(); else v.sm.innerHTML = v.avant;
+        v.barre.remove(); v.b.classList.remove('arme'); box.classList.remove('vise', 'replie'); if (v.avant === null) v.sm.remove(); else v.sm.innerHTML = v.avant;
         if (bk) bk.hidden = false; if (C) { C.cursor = null; C.pickCb = null; C.pickSel = null; C.pool = null; refresh(); }
         if (!fin) tenir(box, btns, main);
       }

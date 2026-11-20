@@ -213,7 +213,7 @@ async function contraste([b64, sel]) {
     await calme(10);
 
     /* 7. le combat */
-    await p.evaluate(() => { const I = window.ISNAD; I.battle.start({ group: Object.keys(I.world.saga.enemies).filter(k => I.world.saga.enemies[k].tier !== 'boss').slice(0, 2), bg: 'desert' }); });
+    await p.evaluate(() => { const I = window.ISNAD; window.__fini = false; I.battle.start({ group: Object.keys(I.world.saga.enemies).filter(k => I.world.saga.enemies[k].tier !== 'boss').slice(0, 2), bg: 'desert' }).then(() => { window.__fini = true; }); });
     let pret = false; for (let i = 0; i < 80 && !(pret = await p.evaluate(() => !!document.querySelector('#battle .cmd .mi.sel'))); i++) { if (await p.evaluate(() => { const b = document.querySelector('#battle .banner'); return b && !b.hidden; })) await A('le combat, un bandeau'); await p.waitForTimeout(300); }
     dit(pret, 'INACCESSIBLE', `${nom} · le combat : les commandes d'un compagnon`);
     if (pret) {
@@ -244,15 +244,22 @@ async function contraste([b64, sel]) {
         dit(v0 !== null && (v1 === null || v1 < v0), 'ÉCART', `${nom} · le combat : « Frapper », puis « Frapper » encore — le coup part sur « ${a1.cible} » (${v0} % → ${v1 === null ? 'dissipée' : v1 + ' %'})`); }
       if (await tour()) { const x1 = await visee(); await A('le combat'); const a2 = await arme(); const v0 = await pv(a2.cible); await A('le combat, la cible'); await p.waitForTimeout(2600); const v1 = await pv(a2.cible);
         dit(/Frapper/.test(a2.arme) && (!x1 || a2.cible === x1) && v0 !== null && (v1 === null || v1 < v0), 'ÉCART', `${nom} · le combat : A, puis A — le coup part sur la cible désignée d'emblée, « ${a2.cible} »${x1 ? ' (la dernière visée)' : ''} (${v0} % → ${v1 === null ? 'dissipée' : v1 + ' %'})`); }
-      await p.evaluate(() => { const I = window.ISNAD; I.battle.abort(I.world); }); await p.waitForTimeout(700); await calme(10);
+      // (on referme le combat quand il attend un compagnon, et ses écouteurs avec lui : sa suite ne reprend plus — sans quoi,
+      // refermé au milieu d'un tour, ou réveillé par un A destiné au suivant, il finirait son tour sur le combat d'après)
+      // (gagné, il finit tout à fait — sa victoire, ses fondus — avant le combat d'après)
+      const fermer = async () => { if (await tour()) await p.evaluate(() => { const I = window.ISNAD; I.battle.abort(I.world); I.input.reset(); });
+        else for (let i = 0; i < 100 && !(await p.evaluate(() => window.__fini)); i++) { await p.evaluate(() => window.ISNAD.input.emit('ok')); await p.waitForTimeout(200); }
+        await p.waitForTimeout(700); await calme(10); };
+      await fermer();
       /* 7 ter. (2.19) l'esquive, le hasard tenu (Math.random) : un compagnon seul face à une chimère qui ne fait qu'assaillir.
          Le tirage réussi, le coup passe à côté (« Esquivé », ni Constance perdue) ; manqué, il porte ; l'esquive tombe au tour
          suivant du compagnon ; une chimère n'esquive jamais. En hauteur et en largeur. */
       if (cle === 'haut' || cle === 'large') {
         await p.evaluate(() => { const I = window.ISNAD, W = I.world, E = W.saga.enemies, id = Object.keys(E).find(k => E[k].tier === 'minion' && !E[k].racine); window.__fl = []; window.__rnd = Math.random; window.__foeEsq = 0;
           new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1) window.__fl.push(n.textContent); }))).observe(document.querySelector('#floaters'), { childList: true });
-          I.battle.start({ group: [id], bg: 'desert', heros: [W.hero(W.party[0])] }); const C = I.battle.contexte(); C.all.forEach(e => { if (e.side === 'foe') { e.skills = []; e.max.hp *= 8; e.hp = e.max.hp; } });
+          window.__fini = false; I.battle.start({ group: [id], bg: 'desert', heros: [W.hero(W.party[0])] }).then(() => { window.__fini = true; }); const C = I.battle.contexte(); C.all.forEach(e => { if (e.side === 'foe') { e.skills = []; e.max.hp *= 8; e.hp = e.max.hp; } });
           window.__veille = setInterval(() => { const c = I.battle.contexte(); if (c && c.all.some(e => e.side === 'foe' && e.st.esquive)) window.__foeEsq++; }, 50); });
+        for (let i = 0; i < 40 && !(await p.evaluate(() => window.ISNAD.battle.active)); i++) await p.waitForTimeout(150); // (le combat s'ouvre après son fondu)
         const hero = () => p.evaluate(() => { const C = window.ISNAD.battle.contexte(), h = C && C.all.find(e => e.side === 'hero'); return h ? { hp: Math.round(h.hp), esquive: !!h.st.esquive, esquives: C.esquives | 0 } : null; });
         const essai = async (tirage, n) => { const L = []; for (let k = 0; k < n; k++) { if (!(await tour())) break; const h0 = await hero(); await p.evaluate(t => { Math.random = () => t; }, tirage); await toucherMi('Esquive'); const pose = await hero(); L.push({ h0, pose }); if (!(await tour())) break; L[L.length - 1].h1 = await hero(); await p.evaluate(() => { Math.random = window.__rnd; }); if (L[L.length - 1].h1.esquives > h0.esquives || L[L.length - 1].h1.hp < h0.hp) break; } await p.evaluate(() => { Math.random = window.__rnd; }); return L; };
         const ok1 = await essai(0.01, 3), d1 = ok1[ok1.length - 1] || {}, vu = await p.evaluate(() => window.__fl.slice());
@@ -262,7 +269,7 @@ async function contraste([b64, sel]) {
         dit(d2.h1 && d2.h1.esquives === d2.h0.esquives && d2.h1.hp < d2.h0.hp && !d2.h1.esquive, 'ÉCART', `${nom} · l'esquive, le tirage manqué : le coup porte (Constance ${d2.h0 && d2.h0.hp} → ${d2.h1 && d2.h1.hp})`);
         const fe = await p.evaluate(() => { clearInterval(window.__veille); return window.__foeEsq; });
         dit(!fe, 'ÉCART', `${nom} · l'esquive : une chimère n'esquive jamais (${fe} relevé(s))`);
-        await p.evaluate(() => { const I = window.ISNAD; Math.random = window.__rnd; I.battle.abort(I.world); }); await p.waitForTimeout(700); await calme(10);
+        await p.evaluate(() => { Math.random = window.__rnd; }); await fermer();
       }
     }
 
@@ -294,6 +301,7 @@ async function contraste([b64, sel]) {
          poursuit ; B tenu par le pouce droit pendant que le gauche pousse le joystick, on court, plus vite qu'elle */
       await calme(10); await p.waitForTimeout(300);
       const fu = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = I.rodeurs.rodent().find(q => q.voiles === undefined || q.voiles > 1) || I.rodeurs.rodent()[0]; if (!f) return null; f.sonne = 0; f.pousse = null; f.v = 30; W.player.x = f.x + 3; W.player.y = f.y; W.dest = null; return f.id; });
+      for (let i = 0; i < 40 && fu && !(await p.evaluate(() => window.ISNAD.battle.active)); i++) await p.waitForTimeout(150);
       if (!fu) ko('INACCESSIBLE', `${nom} · fuir : rien ne rôde`);
       else if (!(await tour())) ko('INACCESSIBLE', `${nom} · fuir : le combat de ce qui rôde ne s'ouvre pas`);
       else { const n8 = await p.evaluate(() => [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(b => !b.hidden).map(b => b.querySelector('span').textContent.replace(/^\S+\s*/, '').trim()));

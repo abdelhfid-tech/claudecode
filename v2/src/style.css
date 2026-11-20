@@ -188,6 +188,7 @@ html body.portrait #battle .panel, html body #battle.ordre .panel { grid-templat
 #battle .cmd .mi.arme > span { flex: 0 0 auto; white-space: nowrap; }
 #battle .cmd .mi.arme small { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; text-align: end; color: var(--gold); font-family: var(--f-body); }
 #battle .cmd.vise .mi:not(.arme) { opacity: .72; }
+#battle .cmd.replie .mlist .mi:not(.arme) { display: none; } #battle .cmd.replie .mlist.main .mi.arme { grid-column: 1 / -1; }   /* la place manque : la liste se replie sur la commande armée */
 #battle .cmd .mvise { display: flex; align-items: center; justify-content: space-between; gap: .6em; }
 #battle .cmd .mvise .mhint { flex: 1 1 auto; min-width: 0; }
 #battle .cmd .mvise .mback { flex: 0 0 auto; align-self: center; color: #fff; border-color: rgba(233, 200, 119, .55); }

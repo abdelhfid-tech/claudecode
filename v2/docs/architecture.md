@@ -1387,6 +1387,9 @@ même si on sera poursuivi il faudra courir pour échapper au monstre. Éclairer
   autre commande désarme et la prend à sa place (un toucher de moins que de passer par « Retour » — l'agent l'a préféré à
   « une autre commande ne fait que désarmer », à valider). Le choix revient à l'appelant par `o.cible` ; `pickTarget` et
   `chooseTargets` n'existent plus. Les boutons de la liste ne changent pas de main : un seul écouteur, une seule promesse.
+  Là où la liste et sa barre ne tiennent pas (un petit téléphone en hauteur, 360 × 640 : la manette garde sa bande), la
+  liste se replie sur la commande armée (`.cmd.replie`), comme le choix d'une cible d'avant ; « Retour » ou B la rouvrent.
+  Une commande garde son nom sur une ligne : c'est sa petite ligne qui cède, jusqu'aux points de suspension.
 - **Celui qui est visé d'emblée** (`defaut`) : parmi les chimères, celle que le groupe a visée en dernier (`C.vise`), si
   elle tient encore ; sinon une chimère dévoilée ; sinon la première. Parmi les nôtres : un éprouvé (pour le relever), sinon
   le plus éprouvé des debout.
