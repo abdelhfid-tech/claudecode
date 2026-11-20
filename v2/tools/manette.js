@@ -107,6 +107,24 @@ async function contraste([b64, sel]) {
     const e2 = await p.evaluate(() => { const I = window.ISNAD; return { halte: I.ui.menuOpen || !document.getElementById('menu').hidden, dest: !!I.world.dest, ecran: !!document.querySelector('.screen:not([hidden])') }; });
     dit(!e2.halte && !e2.ecran && !e2.dest, 'ÉCART', `${nom} · exploration : B n'ouvre pas la halte${marche ? ', et arrête la marche en cours' : ''}`);
 
+    /* 2 bis. courir (2.17 : « réserver le joystick + B pour courir ») : le joystick seul, même tiré au bord, fait marcher ;
+       B tenu par le pouce droit pendant que le gauche pousse le joystick fait courir — deux doigts, deux vrais touchers */
+    { const dg = await p.evaluate(() => { const W = window.ISNAD.world, P = W.player, ok = (x, y) => !(W.solidAt(x - 4, y - 5) || W.solidAt(x + 4, y - 5) || W.solidAt(x - 4, y) || W.solidAt(x + 4, y));
+        return [[1, 0], [-1, 0], [0, 1], [0, -1]].map(v => { let k = 0; while (k < 140 && ok(P.x + v[0] * k, P.y + v[1] * k)) k += 2; return { v, n: k, x: P.x, y: P.y }; }).sort((a, b) => b.n - a.n)[0]; });
+      const vit = async avecB => { const c = await centre('#pad .joy'), b = await centre('#pad .b'); if (!c || !b) return null;
+        await p.evaluate(q => { const W = window.ISNAD.world; W.player.x = q.x; W.player.y = q.y; W.dest = null; W.resetTrail(); }, dg);
+        const doigtB = avecB ? [{ x: b.x, y: b.y, id: 8 }] : [], pouce = k => ({ x: c.x + dg.v[0] * c.r * k, y: c.y + dg.v[1] * c.r * k, id: 7 });
+        if (avecB) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: doigtB }); await p.waitForTimeout(40); }
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [...doigtB, pouce(0)] }); await p.waitForTimeout(30);
+        for (let i = 1; i <= 3; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [...doigtB, pouce(0.95 * i / 3)] }); await p.waitForTimeout(20); }
+        await p.waitForTimeout(120); const lire = () => p.evaluate(() => { const W = window.ISNAD.world; return [W.player.x, W.player.y, W.t, !!W.player.court]; }), a = await lire(); await p.waitForTimeout(300); const z = await lire();
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await p.waitForTimeout(250);
+        return { v: Math.hypot(z[0] - a[0], z[1] - a[1]) / Math.max(0.01, z[2] - a[2]), court: a[3] || z[3] }; };
+      const seul = await vit(false), avec = await vit(true);
+      if (!seul || !avec) ko('INACCESSIBLE', `${nom} · courir : la manette n'est pas là`);
+      else dit(seul.v > 60 && seul.v < 94 && !seul.court && avec.court && avec.v > 1.15 * seul.v && avec.v < 1.33 * seul.v, 'ÉCART',
+        `${nom} · courir : le joystick seul au bord marche (${seul.v.toFixed(0)} points par seconde) ; avec B tenu, on court (${avec.v.toFixed(0)}, ${(avec.v / Math.max(1, seul.v)).toFixed(2)} fois)`); }
+
     /* 3. la halte */
     const mb = await p.evaluate(() => { const b = document.getElementById('menubtn'), r = b.getBoundingClientRect(); return b.hidden ? null : { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
     if (!mb) ko('INACCESSIBLE', `${nom} · le bouton ☰ de la halte n'est pas là`); else { await p.touchscreen.tap(mb.x, mb.y); await p.waitForTimeout(700); }

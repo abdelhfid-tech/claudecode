@@ -153,19 +153,22 @@ const tailles = dims.length ? dims : loin ? [[390, 844]] : [[390, 844], [360, 56
         if ((b[0] - a[0]) * vx + (b[1] - a[1]) * vy > 6) marche++; if (Math.hypot(d[0] - c[0], d[1] - c[1]) > 1) arret = false; }
       if (!joy.vu || !marche || !arret) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-joystick.png') }); console.log(`  INACCESSIBLE ${w}×${h} : le joystick ${!joy.vu ? 'ne se voit pas' : !marche ? 'ne fait pas marcher' : 'lâché, ne s’arrête pas'}`); }
       else console.log(`      le joystick, sous le pouce gauche : ${marche} direction(s) sur 4 font marcher, lâché, on s'arrête`);
-      // 2.16 — courir (décideur, 19 novembre : « il faut que les personnages puissent courir ») : le pouce tiré au bord du
-      // cercle, au-delà de 85 % de son rayon, fait courir — 1,225 fois plus vite qu'à la marche (le décideur, devant la 2.16 :
-      // « il va trop vite, diminue de 30 % » ; elle allait 1,75 fois plus vite) ; plus près du centre, on marche. Mesuré dans la
+      // 2.16 — courir (décideur, 19 novembre : « il faut que les personnages puissent courir ») ; 2.17 — « réserver le joystick
+      // + B pour courir » : le joystick seul, même tiré au bord, fait marcher ; B tenu en même temps fait courir — 1,225 fois
+      // plus vite qu'à la marche (« il va trop vite, diminue de 30 % » ; elle allait 1,75 fois plus vite). Mesuré dans la
       // direction la plus dégagée, le temps du jeu faisant foi : plus vite que la marche, mais pas plus d'une fois et un tiers.
+      // B est tenu par un second pointeur (le premier, la souris, tient le joystick).
       const degage = await p.evaluate(() => { const W = window.ISNAD.world, P = W.player, ok = (x, y) => !(W.solidAt(x - 4, y - 5) || W.solidAt(x + 4, y - 5) || W.solidAt(x - 4, y) || W.solidAt(x + 4, y));
         return [[1, 0], [-1, 0], [0, 1], [0, -1]].map(v => { let n = 0; while (n < 140 && ok(P.x + v[0] * n, P.y + v[1] * n)) n += 2; return { v, n, x: P.x, y: P.y }; }).sort((a, b) => b.n - a.n)[0]; });
-      const vitesse = async f => { await p.evaluate(q => { const W = window.ISNAD.world; W.player.x = q.x; W.player.y = q.y; W.dest = null; W.resetTrail(); }, degage);
+      const tenirB = on => p.evaluate(on => { const b = document.querySelector('#pad .b'); b.dispatchEvent(new PointerEvent(on ? 'pointerdown' : 'pointerup', { bubbles: true, cancelable: true, pointerId: 99, pointerType: 'touch', isPrimary: false })); }, on);
+      const vitesse = async (f, avecB) => { await p.evaluate(q => { const W = window.ISNAD.world; W.player.x = q.x; W.player.y = q.y; W.dest = null; W.resetTrail(); }, degage);
+        if (avecB) { await tenirB(true); await p.waitForTimeout(60); }
         await p.mouse.move(joy.x, joy.y); await p.mouse.down(); await p.mouse.move(joy.x + degage.v[0] * joy.r * f, joy.y + degage.v[1] * joy.r * f, { steps: 4 }); await p.waitForTimeout(120);
         const lire = () => p.evaluate(() => { const W = window.ISNAD.world; return [W.player.x, W.player.y, W.t]; }), a = await lire(); await p.waitForTimeout(300); const b = await lire();
-        await p.mouse.up(); await p.waitForTimeout(250); return Math.hypot(b[0] - a[0], b[1] - a[1]) / Math.max(0.01, b[2] - a[2]); };
-      const vm = await vitesse(0.6), vc = await vitesse(0.97);
-      if (!(vm > 70 && vm < 94 && vc > 1.15 * vm && vc < 1.33 * vm)) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-course.png') }); console.log(`  INACCESSIBLE ${w}×${h} : courir — au milieu du joystick ${vm.toFixed(0)} points par seconde, au bord ${vc.toFixed(0)} (dégagé sur ${degage.n} points)`); }
-      else console.log(`      courir : le pouce au bord du joystick, ${vc.toFixed(0)} points par seconde, ${(vc / vm).toFixed(2)} fois la marche ; plus près du centre, la marche (${vm.toFixed(0)})`); }
+        await p.mouse.up(); if (avecB) await tenirB(false); await p.waitForTimeout(250); return Math.hypot(b[0] - a[0], b[1] - a[1]) / Math.max(0.01, b[2] - a[2]); };
+      const vm = await vitesse(0.6, false), vb = await vitesse(0.97, false), vc = await vitesse(0.97, true);
+      if (!(vm > 70 && vm < 94 && Math.abs(vb - vm) < 0.08 * vm && vc > 1.15 * vm && vc < 1.33 * vm)) { echecs++; await p.screenshot({ path: path.join(out, 'doigt-' + w + 'x' + h + '-course.png') }); console.log(`  INACCESSIBLE ${w}×${h} : courir — joystick au milieu ${vm.toFixed(0)} points par seconde, au bord sans B ${vb.toFixed(0)}, au bord avec B tenu ${vc.toFixed(0)} (dégagé sur ${degage.n} points)`); }
+      else console.log(`      courir : le joystick avec B tenu, ${vc.toFixed(0)} points par seconde, ${(vc / vm).toFixed(2)} fois la marche ; le joystick seul, même au bord, la marche (${vm.toFixed(0)}, ${vb.toFixed(0)})`); }
     if (errors.length) { echecs++; [...new Set(errors)].slice(0, 8).forEach(e => console.log('  ERREUR ' + e)); }
     await p.close();
   }

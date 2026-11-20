@@ -397,7 +397,7 @@
       let dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0);
       if (dx || dy) {
         W.dest = null; if (I.build) I.build.aim = null;
-        const court = !!(I.input.course || I.input.maj), sp = VITESSE * dt * (dx && dy ? 0.7071 : 1) * (court ? COURSE : 1), x0 = p.x, y0 = p.y; // 2.16 : le joystick poussé au bord, ou Maj tenue, fait courir
+        const court = !!(I.input.course || I.input.maj), sp = VITESSE * dt * (dx && dy ? 0.7071 : 1) * (court ? COURSE : 1), x0 = p.x, y0 = p.y; // on court : le joystick avec B tenu (2.17), ou Maj tenue
         p.dir = dx < 0 ? 1 : dx > 0 ? 2 : dy < 0 ? 3 : 0;
         const m1 = dx && tryMove(dx * sp, 0), m2 = dy && tryMove(0, dy * sp);
         p.moving = !!(m1 || m2); p.court = p.moving && court; p.parcours = (p.parcours || 0) + Math.hypot(p.x - x0, p.y - y0); if (p.moving) { pushTrail(); pas(dt); }
@@ -531,13 +531,8 @@
     if (!W.dest) { st.led++; W.lead(); }
   };
   // un toucher sur la scène, en coordonnées de la carte : aller là, parler à celui qu'on touche, agir sur ce qu'on touche.
-  // 2.16 : deux touchers rapprochés (moins de 0,35 s, au même endroit) — ou « double », dit par la scène — font courir
-  W.tap = function (wx, wy, double) {
-    const t = performance.now(), t1 = W._toucher1; W._toucher1 = { t, x: wx, y: wy };
-    const course = !!double || !!(t1 && t - t1.t < 350 && Math.hypot(wx - t1.x, wy - t1.y) < 24), r = toucher(wx, wy);
-    if (course && W.dest) W.dest.course = true;
-    return r;
-  };
+  // (2.17 : le double toucher ne fait plus courir — le décideur, 19 novembre : « réserver le joystick + B pour courir »)
+  W.tap = function (wx, wy) { return toucher(wx, wy); };
   function toucher(wx, wy) { if (W.excursion && I.rodeurs.touche(wx, wy)) return;
     if (I.scene !== W || S.busy || W.lock || I.ui.menuOpen || I.debug.auto || I.debug.walk) return false;
     const p = W.player, m = W.map, here = e => !e.hidden && e.map === m.id && e.placed;

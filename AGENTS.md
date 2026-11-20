@@ -105,8 +105,9 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   points l'un de l'autre sur le chemin du meneur, mesuré en distance (`W.suiveur`, jamais `W.trail[i]`) ; les PNJ et les
   coffres ont un pied contre le joueur (`W.corps`), qui peut toujours s'en écarter, et un PNJ poussé fait un pas de
   côté ; personne n'est posé sur le joueur ; les marches de récit suivent un chemin. Ce qui rôde et les chimères de la
-  carte n'ont pas de corps pour le joueur : leur contact ouvre le combat. On court au joystick tiré au bord, à Maj tenue,
-  ou d'un double toucher, à 1,225 fois la marche (le décideur, 19 novembre : « il va trop vite, diminue de 30 % » ; 1,75
+  carte n'ont pas de corps pour le joueur : leur contact ouvre le combat. On court en tenant B pendant que le joystick est
+  poussé, ou à Maj tenue (2.17, le décideur : « réserver le joystick + B pour courir » — le joystick seul, même tiré au
+  bord, fait marcher, et le double toucher ne fait plus courir), à 1,225 fois la marche (le décideur, 19 novembre : « il va trop vite, diminue de 30 % » ; 1,75
   auparavant) ; la course ne presse ni le chrono, ni ce qui rôde, ni les combats. Elle a sa foulée, dessinée et non
   reprise d'un autre jeu (le décideur : « on dirait qu'il vole ou qu'il plane ») : huit images par cycle, l'appui, la
   poussée, l'envol, la retombée, pour tous les grands personnages, dans les quatre directions, rien en main ; l'image se

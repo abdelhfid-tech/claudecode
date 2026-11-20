@@ -1596,6 +1596,50 @@ pages privées de son compte.
   `loupe.js` (aucun point d'une silhouette sur une autre, aussi sur un téléphone élancé) ; les PNJ des paquets dans
   `paquet.js` (les mêmes sondes que `smoke.js`). À trancher : la vitesse de course (1,75), le seuil du joystick (85 %), le plancher de transparence des
   chimères (0,85), le pas de côté (un PNJ s'écarte de lui-même, ou faut-il qu'il reste et que l'on fasse le tour ?).
+- [ ] **D199. La manette tactile partout : A choisit, B revient en arrière (version 2.17 ; demandes du décideur, 19
+  novembre : « juste deux boutons A et B », « parler avec A, frapper avec B », « que les boutons puissent servir à
+  sélectionner (A) ou faire marche arrière (B) » ; réglages de l'agent, à valider ; `v2/docs/architecture.md`, « La
+  manette tactile »).** Sur un écran tactile, la manette reste là dans les menus, la halte, les écrans, le combat et les
+  dialogues. A choisit ou passe à la suite ; B revient d'un cran (comme Échap), referme la halte à sa racine, frappe ce qui
+  rôde en exploration et n'y ouvre jamais la halte ; devant un choix que le récit demande, B ne fait rien (sauf une
+  réponse marquée « retour »). Hors de l'exploration, le joystick déplace la sélection, qui se voit au doigt. La manette ne
+  recouvre jamais un texte ni un bouton : en hauteur, la bande du bas ; en largeur, les deux marges de l'image ; sur une
+  page qui ne peut pas lui laisser la place, elle s'efface. Contrôle nouveau : `manette.js` (« MANETTE CONFORME »), et
+  le mot d'échec « RECOUVERT ». À trancher : B sans effet devant un choix obligatoire ; la manette effacée sur les écrans
+  trop étroits en largeur.
+- [ ] **D200. La pièce interdite des labyrinthes (version 2.17 ; demandes du décideur, 19 novembre : « dans les
+  labyrinthes je veux toujours une pièce secrète interdite 🚫 toujours fermée où nul ne sait ce qui s'y trouve »,
+  « Certains disent c'est un trésor d'autres disent que c'est un monstre en tout cas c'est de là que sortent les idées
+  noires » ; formulation et textes de l'agent, à valider ; `v2/docs/architecture.md`, « Les labyrinthes de la
+  noosphère »).** Chaque labyrinthe a une porte toujours close, marquée d'un cercle rouge barré, au fond d'un cul-de-sac
+  écarté ; rien ne la franchit ; la pièce est choisie après le tirage, d'après le plan seul : aucun labyrinthe ne change
+  d'une case (les parties en cours retrouvent les leurs). Dans la descente du râwî, les idées noires en sortent l'une
+  après l'autre, comme une fumée sous la porte ; dans le labyrinthe d'un récit, où marchent des Compagnons, rien n'en sort
+  (exigences 16, 22 et 23). Le trésor et le monstre restent des rumeurs : jamais dessinés, ni promis, ni combattus ;
+  aucune démonologie (exigence 18). Devant la porte : « Une porte close. Certains disent qu'un trésor dort derrière ;
+  d'autres, un monstre. Ce qui est sûr, c'est que les idées noires en sortent. » (descente) ; « Une porte close. Certains
+  disent qu'un trésor dort derrière ; d'autres, un monstre. Nul ne sait. » (récit) — écrits en arabe, anglais et japonais
+  par l'agent, à relire. À trancher : les deux phrases ; le rythme de sortie des idées noires.
+- [ ] **D201. La course : une foulée dessinée, 30 % moins vite, et seulement joystick + B (version 2.17 ; le décideur,
+  devant la 2.16 : « on dirait qu'il vole ou qu'il plane […] trouve une solution », « il va trop vite, diminue de 30 % »,
+  puis « pour éviter tout mismatch réservé le joystick + b pour courir » ; `v2/docs/architecture.md`, « Le mouvement »,
+  « La manette tactile »).** La course a sa propre foulée, dessinée par l'agent et reprise d'aucun jeu : huit images
+  (l'appui, la poussée, l'envol, la retombée), le buste penché, les bras pliés, le corps qui monte et descend, le manteau
+  qui flotte, pour tous les grands personnages et dans les quatre directions ; l'image suit le chemin parcouru, pour que le
+  pied d'appui ne glisse pas ; les suiveurs courent avec le meneur ; un peu de poussière sur le sable ; rien en main ;
+  les voiles des Compagnons restent sans trait. Vitesse : 1,225 fois la marche (1,75 avant). On court en tenant B pendant
+  que le joystick est poussé (au clavier, Maj) ; le joystick seul, même au bord, fait marcher ; le double toucher ne fait
+  plus courir. Contrôle nouveau : `course.js` (« COURSE CONFORME ») ; `doigt.js` et `manette.js` vérifient joystick seul
+  et joystick + B. Textes changés (réglage « Manette tactile », aide « Se déplacer, agir »), écrits en arabe, anglais et
+  japonais par l'agent, à relire.
+- [ ] **D202. Les messages du combat en bas (version 2.17 ; le décideur, 19 novembre : « Les messages au moment du combat
+  doivent être en bas pas sur les personnages » ; `v2/docs/architecture.md`, « Les messages du combat, en bas »).** Le
+  bandeau du combat (introduction, parole d'une chimère, annonces), le dévoilement et la victoire se posent dans le
+  panneau, à la place des commandes le temps qu'ils durent : sous les personnages, jamais sur une figure, une plaque, la
+  frise des tours ni le champ d'une bataille déclarée ; les héros restent visibles à la victoire. Contrôle : `loupe.js`
+  (« RECOUVERT »). À trancher par le décideur : les petits mots d'état (« Garde », « Étourdi », « +Niyya ») restent un
+  instant sur leur cible, comme les chiffres de dégâts ; la défaite (« La chaîne ne rompt pas ») et le verset du secours
+  restent en plein écran — faut-il les passer en bas eux aussi ?
 
 ## Autorisations et accès mis de côté jusqu'au retour du décideur
 

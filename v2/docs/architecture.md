@@ -558,12 +558,13 @@ cartons (`z-index` 46), dans une place que rien ne lui dispute :
   `U.padRecouvre`) plutôt que de recouvrir quoi que ce soit, et revient dès que la place est libre. Masquée au choix du
   joueur (Réglages, « Manette tactile », `opts.joy`), elle n'est plus là du tout et ne garde aucune place.
 
-**Courir** (2.16 ; demande du décideur, 19 novembre : « il faut que les personnages puissent courir » ; choix « joystick
-au bord ») : le pouce tiré au-delà de 85 % du rayon du cercle (`viser`, `I.input.course`) fait courir — le cercle
-s'éclaire (`.joy.court`) ; plus près du centre, on marche. Au clavier, Maj tenue (`I.input.maj`, suivie à part dans
-`base.js` : ce n'est l'action d'aucune touche, et Maj + Entrée valide toujours) ; au doigt ou à la souris, deux touchers
-rapprochés sur la scène (moins de 0,35 s, au même endroit : `W.tap(x, y, double)`, `W.dest.course`), et le second,
-maintenu, fait suivre le doigt en courant. La course va 1,225 fois plus vite que la marche (`W.VITESSE` 82 points par
+**Courir** (2.16 ; demande du décideur, 19 novembre : « il faut que les personnages puissent courir » ; 2.17 : « pour
+éviter tout mismatch, réserver le joystick + B pour courir ») : B tenu pendant que le joystick est poussé fait courir
+(`pad`, `courir` : `I.input.course` vaut vrai tant que les deux sont tenus, en exploration seulement) — le cercle
+s'éclaire (`.joy.court`) ; le joystick seul, même tiré au bord, fait marcher. Le premier appui sur B reste un appui :
+il frappe ce qui est à portée, ou revient d'un cran hors de l'exploration. Au clavier, Maj tenue (`I.input.maj`, suivie à
+part dans `base.js` : ce n'est l'action d'aucune touche, et Maj + Entrée valide toujours). Le double toucher sur la
+scène ne fait plus courir (2.16 : il le faisait). La course va 1,225 fois plus vite que la marche (`W.VITESSE` 82 points par
 seconde, `W.COURSE` ; 1,75 dans la 2.16 — le décideur, 19 novembre : « il va trop vite, diminue de 30 % ») ; elle a sa
 propre foulée, dessinée (« Le mouvement »). Ce n'est pas une décision mais une allure : aucune
 leçon ne l'apprend (`lecons.js` n'en sait rien) ; la ligne du réglage « Manette tactile » et l'aide « Se déplacer, agir »
