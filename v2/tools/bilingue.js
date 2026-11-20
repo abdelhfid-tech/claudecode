@@ -12,7 +12,14 @@
    3. puis un carton de parole citée (la clôture de l'histoire-cadre) et le carton d'un attribut divin (son verset).
    Une fois, en français et sans langue secondaire : rien ne paraît (ni bulle, ni bloc, ni rien dans les réglages gardés) ;
    puis on la choisit à la halte, et la réplique suivante porte sa seconde bulle.
-   Usage : node v2/tools/bilingue.js [fr-ar en-ja …] [390x844 844x390] [par=4]
+   2.x — l'arabe vocalisé (« arv », décideur, 20 novembre : « Ou bien arabe / arabe vocalisé » ; src/core/langue.js,
+   VARIANTES) : aux douze couples s'ajoutent fr-arv (la seconde bulle vocalisée) et arv-fr (le jeu vocalisé), et tout autre
+   couple demandé (en-arv…). Une réplique, une bulle ou un carton dont le texte arabe a sa forme vocalisée
+   (src/lang/ar/voyelles/) la montre en arabe vocalisé, et ne la montre jamais en arabe : « ÉCART » sinon. Une fois, le
+   témoin : en arabe, chaque texte qui a une forme vocalisée est dit, par le jeu comme dans la seconde bulle, tel que la
+   liste arabe l'écrit aujourd'hui (au signe près), et rien de vocalisé n'est posé dans les récits ; en arabe vocalisé, la
+   forme vocalisée.
+   Usage : node v2/tools/bilingue.js [fr-ar en-ja fr-arv …] [390x844 844x390] [par=4]
    Sortie : une ligne par partie jouée, puis « BILINGUE CONFORME ». Sinon « ABSENT » (une bulle ou un bloc manque), « ÉCART »
    (pas la bonne langue, pas le bon sens, un réglage non gardé), « INVISIBLE » (un texte sous dix points, ou qui déborde),
    « BLOQUÉ » (le prologue ne s'achève pas), « TEXTE CACHÉ ». Code 1 à la moindre anomalie. Captures dans .smoke/bilingue/. */
@@ -24,7 +31,8 @@ const PLANCHER = 10;
 const args = process.argv.slice(2);
 const TOUTES = L.ORDRE, PAIRES = [];
 TOUTES.forEach(a => TOUTES.forEach(b => { if (a !== b) PAIRES.push([a, b]); }));
-const voulues = args.filter(a => /^[a-z]{2}-[a-z]{2}$/.test(a)).map(a => a.split('-'));
+PAIRES.push(['fr', 'arv'], ['arv', 'fr']);   // 2.x : l'arabe vocalisé, en seconde bulle et pour le jeu
+const voulues = args.filter(a => /^[a-z]{2,3}-[a-z]{2,3}$/.test(a)).map(a => a.split('-'));
 const paires = voulues.length ? voulues : PAIRES;
 const dims = args.filter(a => /^\d+x\d+$/.test(a)).map(t => t.split('x').map(Number));
 const tailles = dims.length ? dims : [[390, 844], [844, 390]];
@@ -36,8 +44,20 @@ const ECRITS = { fr: new Set() };
 TOUTES.filter(l => l !== 'fr').forEach(l => { ECRITS[l] = new Set();
   fs.readdirSync(path.join(V2, 'src/lang', l)).filter(f => /\.json$/.test(f)).forEach(f => (JSON.parse(fs.readFileSync(path.join(V2, 'src/lang', l, f), 'utf8')).textes || []).forEach(x => {
     if (x.t) ECRITS[l].add(net(x.t)); if (x.fr) ECRITS.fr.add(net(x.fr.indexOf('§') > 0 ? x.fr.slice(0, x.fr.indexOf('§')) : x.fr)); })); });
+// 2.x — l'arabe vocalisé : ce qu'il a écrit (le texte, ou sa forme vocalisée, fraîche) ; les textes qui ont une forme
+// vocalisée (VOC : le texte → sa forme) et ces formes elles-mêmes (VOCS)
+const VOC = new Map(), VOCS = new Set(), TEMOIN = [];
+{ const plain = new Map(); fs.readdirSync(path.join(V2, 'src/lang/ar')).filter(f => /\.json$/.test(f)).forEach(f => (JSON.parse(fs.readFileSync(path.join(V2, 'src/lang/ar', f), 'utf8')).textes || []).forEach(x => { if (x.t) plain.set(x.k, x.t); }));
+  const DV = path.join(V2, 'src/lang/ar/voyelles');
+  if (fs.existsSync(DV)) fs.readdirSync(DV).filter(f => /\.json$/.test(f)).forEach(f => (JSON.parse(fs.readFileSync(path.join(DV, f), 'utf8')).textes || []).forEach(x => {
+    if (!x.tv || plain.get(x.k) !== x.t || L.fidele(x.t, x.tv) || x.tv === x.t) return;
+    TEMOIN.push({ fr: x.fr, t: x.t, tv: x.tv, ailleurs: [...plain.values()].some(t => t.indexOf(x.tv) >= 0) }); x.t.split('¦').forEach((t, i) => { const v = x.tv.split('¦')[i]; if (v && net(t) !== net(v)) { VOC.set(net(t), net(v)); VOCS.add(net(v)); } }); })); }
+ECRITS.arv = new Set([...ECRITS.ar, ...VOCS]);
+const B = l => L.base(l);
 const ECRITURE = { ar: /[ء-ي]/, ja: /[぀-ヿ一-鿿]/, fr: /[A-Za-zÀ-ÿ]/, en: /[A-Za-z]/ };
-const SENS = l => (l === 'ar' ? 'rtl' : 'ltr');
+const SENS = l => (B(l) === 'ar' ? 'rtl' : 'ltr');
+// un texte arabe affiché a-t-il la forme qu'il doit avoir ? (arv : vocalisé là où sa forme existe ; ar : jamais vocalisé)
+const voyelles = (l, t) => { const n = net(t); if (l === 'arv' && VOC.has(n)) return 'montré sans ses voyelles, en arabe vocalisé'; if (l === 'ar' && VOCS.has(n)) return 'vocalisé alors que l’arabe vocalisé n’est pas choisi'; return ''; };
 
 let anomalies = 0; const lignes = [];
 const ko = (mot, m) => { anomalies++; lignes.push(mot + ' ' + m); };
@@ -108,15 +128,16 @@ function filVu() { const f = document.querySelector('#toasts'); if (!f || !f.cla
 // la seconde bulle (ou le bloc) dit-elle un texte de la langue secondaire, dans son sens et sa langue ?
 function juger(l2, o, quoi, ou) {
   const m = [];
-  if (o.lang !== l2) m.push(['ÉCART', `lang="${o.lang}" au lieu de « ${l2} »`]);
+  if (o.lang !== B(l2)) m.push(['ÉCART', `lang="${o.lang}" au lieu de « ${B(l2)} »`]);
   if (o.dir !== SENS(l2)) m.push(['ÉCART', `sens ${o.dir} au lieu de ${SENS(l2)}`]);
   // le texte principal (la réplique, le titre, la parole, le verset) est l'un de ceux que la langue a écrits ; une ligne
   // faite par le moteur (la référence d'un verset dite « {ref}, traduction du sens ») est au moins dans son écriture
   const textes = o.parts || [o.texte];
   textes.forEach((t, i) => { const n = net(t); if (!n) { m.push(['ABSENT', 'texte vide']); return; }
+    const v = voyelles(l2, t); if (v) m.push(['ÉCART', `« ${n.slice(0, 50)} » : ${v}`]);
     if (ECRITS[l2].has(n)) return;
     if (i === 0) m.push(['ÉCART', `« ${n.slice(0, 50)} » n’est pas un texte que la langue ${l2} a écrit`]);
-    else if (!ECRITURE[l2].test(n)) m.push(['ÉCART', `« ${n.slice(0, 40)} » n’est pas écrit dans l’écriture de la langue ${l2}`]); });
+    else if (!ECRITURE[B(l2)].test(n)) m.push(['ÉCART', `« ${n.slice(0, 40)} » n’est pas écrit dans l’écriture de la langue ${l2}`]); });
   (o.soucis || []).forEach(s => m.push(['INVISIBLE', s]));
   return m.map(([mot, s]) => [mot, `${quoi} (${ou}) : ${s}`]);
 }
@@ -129,7 +150,7 @@ async function partie(browser, lang, l2, w, h) {
   const note = (mot, m) => { const k = mot + ' ' + m; if (!soucis.includes(k)) soucis.push(k); };
   // 1. la langue secondaire se choisit dans les Réglages de l'écran-titre, et se garde
   await p.goto(url + '?lang=' + lang); await p.waitForTimeout(1500);
-  const NOM2 = L.LANGUES[l2].nom;
+  const NOM2 = L.nomDe(l2);
   // « Réglages » : le dernier bouton de la colonne (les langues de jeu sont rangées à part, dans .langues)
   await p.evaluate(() => { const b = document.querySelectorAll('#title .vmenu > button'); b[b.length - 1].click(); }); await p.waitForTimeout(300);
   let lab = '';
@@ -140,7 +161,7 @@ async function partie(browser, lang, l2, w, h) {
   else if (lab.indexOf(NOM2) < 0 || garde !== l2) note('ÉCART', `${cle} : le réglage dit « ${lab.slice(0, 60)} », gardé : « ${garde} »`);
   await shot('0-reglages');
   await p.reload(); await p.waitForTimeout(1300);
-  const relu = await p.evaluate(() => window.ISNAD.langue.l2()); if (relu !== l2) note('ÉCART', `${cle} : page rechargée, la langue secondaire est « ${relu} »`);
+  const relu = await p.evaluate(() => window.ISNAD.langue.code2()); if (relu !== l2) note('ÉCART', `${cle} : page rechargée, la langue secondaire est « ${relu} »`);
   await p.evaluate(() => { const I = window.ISNAD; I.debug.log = []; I.audio.setOn(false); const ob = I.ui.showChain; I.ui.showChain = function () { window.__chaine = 1; return ob.apply(this, arguments); }; });
   // chaque réplique est regardée dans la page, à l'instant où elle a fini de s'écrire (son ▼ paraît) ; chaque carton, une
   // fois montré : aucun toucher, si vif soit-il, ne fait passer une ligne sans qu'elle ait été vue
@@ -166,7 +187,7 @@ async function partie(browser, lang, l2, w, h) {
     }
     if (s.quoi === 'carton') { await p.waitForTimeout(420); const c = await p.evaluate(() => document.querySelector('#card').className);
       if (/\b(title|quote)\b/.test(c) && !/parley|noos/.test(c)) await shot(/quote/.test(c) ? '7-parole' : shots.has('4-carton') ? '5-carton' : '4-carton'); }
-    if (s.quoi === 'marche') { const f = await p.evaluate(filVu); if (f && !fils.some(x => x.texte === f.texte)) { compte.fil++; fils.push(f); if (f.lang !== l2 || f.dir !== SENS(l2) || !net(f.texte) || !ECRITURE[l2].test(f.texte) || f.taille < PLANCHER) note('ÉCART', `${cle} · le fil : « ${net(f.texte).slice(0, 40)} » (lang ${f.lang}, ${f.dir}, ${f.taille.toFixed(1)} points)`); await shot('6-fil'); } }
+    if (s.quoi === 'marche') { const f = await p.evaluate(filVu); if (f && !fils.some(x => x.texte === f.texte)) { compte.fil++; fils.push(f); if (f.lang !== B(l2) || f.dir !== SENS(l2) || !net(f.texte) || !ECRITURE[B(l2)].test(f.texte) || voyelles(l2, f.texte) || f.taille < PLANCHER) note('ÉCART', `${cle} · le fil : « ${net(f.texte).slice(0, 40)} » (lang ${f.lang}, ${f.dir}, ${f.taille.toFixed(1)} points)`); await shot('6-fil'); } }
     let pt = s.pt;
     if (s.quoi === 'choix' && s.rects && s.rects.length) { const kk = s.prompt + '|' + s.n, i = tours[kk] = (tours[kk] === undefined ? s.n - 1 : (tours[kk] + s.n - 1) % s.n); pt = s.rects[Math.min(i, s.rects.length - 1)]; }
     await p.touchscreen.tap(pt[0], pt[1]);
@@ -186,7 +207,7 @@ async function partie(browser, lang, l2, w, h) {
       I.perso.choisir('Khalil', I.D.TENUES[0].id); I.script.run([op]); return window.__l2.length; });
     for (let i = 0; i < 40 && (await p.evaluate(() => window.__l2.length)) === n; i++) { await p.keyboard.press('Enter'); await p.waitForTimeout(200); }
     const nom = await p.evaluate(() => window.__l2.pop() || null);   // retirée du relevé : son texte porte le nom choisi
-    const RAWI2 = L.LANGUES[l2].rawi;
+    const RAWI2 = L.LANGUES[B(l2)].rawi;
     if (!nom || !nom.vue) note('ABSENT', `${cle} : avec un nom choisi, la réplique n’a pas de seconde bulle`);
     else if (nom.texte.indexOf('Khalil') < 0 || nom.texte.indexOf(RAWI2) >= 0 || nom.premier.indexOf('Khalil') < 0) note('ÉCART', `${cle} : le nom choisi n’est pas posé dans les deux bulles (« ${nom.premier.slice(0, 40)} » / « ${nom.texte.slice(0, 40)} »)`);
     else { await shot('9-nom'); fils.push({ nom: true, texte: nom.premier + ' / ' + nom.texte }); }
@@ -205,6 +226,11 @@ async function partie(browser, lang, l2, w, h) {
     compte.cartons++; mini = Math.min(mini, c.mini); juger(l2, c, 'carton « ' + c.titre.slice(0, 30) + ' »', c.ou).forEach(([mot, m]) => note(mot, `${cle} · ${m}`)); });
   if (!vues.cartons.some(c => /quote/.test(c.cls) && c.vu)) note('ABSENT', `${cle} : le carton d’une parole citée n’a pas été vu avec sa langue secondaire`);
   if (!vues.cartons.some(c => /attribut/.test(c.cls) && c.vu)) note('ABSENT', `${cle} : le carton d’un verset n’a pas été vu avec sa langue secondaire`);
+  // 2.x — l'arabe vocalisé : la boîte de dialogue elle-même, quand le jeu est en arabe ou en arabe vocalisé ; et ce qu'on a
+  // vu de vocalisé (en arabe vocalisé, au moins une ligne doit l'être)
+  if (B(lang) === 'ar') vues.l2.forEach(b => { const v = b.premier && voyelles(lang, b.premier); if (v) note('ÉCART', `${cle} · réplique « ${net(b.premier).slice(0, 40)} » (${b.ou}) : ${v}`); });
+  compte.voc = vues.l2.filter(b => VOCS.has(net(b.premier || '')) || (b.vue && VOCS.has(net(b.texte)))).length + vues.cartons.filter(c => c.vu && c.parts.some(t => VOCS.has(net(t)))).length;
+  if ((lang === 'arv' || l2 === 'arv') && !compte.voc) note('ABSENT', `${cle} : aucune ligne vocalisée n’a été vue en arabe vocalisé`);
   const log = await p.evaluate(() => (window.ISNAD.debug.log || []).filter(x => /TEXTE CACHÉ/.test(x)));
   log.forEach(x => note('TEXTE CACHÉ', `${cle} : ${x}`));
   const dansPartie = await p.evaluate(() => JSON.stringify(JSON.parse(window.ISNAD.save.exporter()).partie).indexOf('lang2') >= 0);   // un réglage de l'appareil : la partie exportée n'en sait rien
@@ -253,16 +279,44 @@ async function sansElle(browser) {
   return { vus, soucis };
 }
 
+// 2.x — le témoin de l'arabe vocalisé : en arabe (jeu ou seconde bulle), chaque texte qui a une forme vocalisée est dit tel
+// que la liste arabe l'écrit aujourd'hui, au signe près, et les récits posés n'en portent aucune ; en arabe vocalisé, la
+// forme vocalisée. L'arabe et l'arabe vocalisé ne se lisent jamais l'un sous l'autre.
+async function temoin(browser) {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } }), p = await ctx.newPage(), soucis = [], errors = []; p.on('pageerror', e => errors.push(e.message));
+  for (const [q, voc] of [['?lang=ar', false], ['?lang=fr&lang2=ar', false], ['?lang=en&lang2=ar', false], ['?lang=arv', true], ['?lang=fr&lang2=arv', true]]) {
+    await p.goto(url + q); await p.waitForTimeout(1100);
+    const r = await p.evaluate(({ T, voc }) => { const I = window.ISNAD, L = I.langue, ko = []; let poses = 0;
+      const recits = JSON.stringify(Object.keys(I.sagas).map(k => I.sagas[k])) + JSON.stringify(I.D);
+      T.forEach(x => { const attendu = voc ? x.tv : x.t, d = L.dans('ar', x.fr); if (d !== attendu) ko.push('« ' + x.fr.slice(0, 40) + ' » dit « ' + String(d).slice(0, 40) + ' »');
+        if (L.lang === 'ar') { const e = L.de(x.fr); if (e !== attendu) ko.push('« ' + x.fr.slice(0, 40) + ' » posé « ' + String(e).slice(0, 40) + ' »'); }
+        if (!x.ailleurs && recits.indexOf(JSON.stringify(x.tv).slice(1, -1)) >= 0) poses++; });   // (ailleurs : un texte arabe l'écrit déjà ainsi)
+      return { ko, poses, code: L.code(), code2: L.code2(), secondes: L.secondes() }; }, { T: TEMOIN, voc });
+    r.ko.slice(0, 5).forEach(m => soucis.push(`ÉCART témoin ${q} : ${m}`)); if (r.ko.length > 5) soucis.push(`ÉCART témoin ${q} : … et ${r.ko.length - 5} autres`);
+    if (!voc && r.poses) soucis.push(`ÉCART témoin ${q} : ${r.poses} forme(s) vocalisée(s) posée(s) dans les récits sans que l’arabe vocalisé soit choisi`);
+    if (voc && /lang=arv/.test(q) && !r.poses) soucis.push(`ABSENT témoin ${q} : aucune forme vocalisée posée dans les récits`);
+    if (r.secondes.some(c => L.base(c) === L.base(r.code))) soucis.push(`ÉCART témoin ${q} : la langue du jeu est offerte en seconde (${r.secondes.join(', ')})`);
+  }
+  // l'arabe sous l'arabe vocalisé (ou l'inverse) : refusé ; prendre l'arabe pour le jeu quand l'arabe vocalisé est en seconde : les deux s'échangent
+  const c = await p.evaluate(() => { const U = window.ISNAD.ui, L = window.ISNAD.langue; U.langue('arv'); const a = U.langue2('ar'); U.langue('ar'); const b = U.langue2('arv'); U.langue('fr'); U.langue2('arv'); U.langue('ar'); const s = [L.code(), L.code2()]; U.langue('fr'); U.langue2(''); return { a, b, s }; });
+  if (c.a || c.b || c.s.join() !== 'ar,fr') soucis.push('ÉCART témoin : l’arabe et l’arabe vocalisé se lisent l’un sous l’autre, ou ne s’échangent pas (' + JSON.stringify(c) + ')');
+  errors.slice(0, 3).forEach(e => soucis.push('ÉCART témoin, erreur console : ' + e.slice(0, 200)));
+  await ctx.close();
+  return soucis;
+}
+
 (async () => {
   fs.mkdirSync(out, { recursive: true });
   const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
   const s0 = await sansElle(browser);
   console.log(s0.soucis.length ? s0.soucis.map(x => (anomalies++, x)).join('\n') : `OK  sans langue secondaire (fr, 390×844) : ${s0.vus} répliques, aucune seconde bulle, aucun bloc ; choisie à la halte (« العربية »), la réplique suivante porte la sienne ; prise pour langue du jeu, les deux langues échangent leur place`);
+  const tm = await temoin(browser);
+  console.log(tm.length ? tm.map(x => (anomalies++, x)).join('\n') : `OK  le témoin de l’arabe vocalisé : ${TEMOIN.length} textes ont une forme vocalisée ; en arabe (jeu, seconde bulle) chacun est dit tel que la liste arabe l’écrit, au signe près, et rien de vocalisé n’est posé ; en arabe vocalisé, sa forme vocalisée ; l’arabe et l’arabe vocalisé ne se lisent pas l’un sous l’autre`);
   const travaux = []; paires.forEach(([a, b]) => tailles.forEach(([w, h]) => travaux.push([a, b, w, h])));
   const res = []; let k = 0;
   await Promise.all(Array.from({ length: Math.min(PAR, travaux.length) }, async () => { while (k < travaux.length) { const t = travaux[k++]; const r = await partie(browser, ...t); res.push(r);
     const ok = r.fini && !r.soucis.length;
-    console.log(`${ok ? 'OK ' : '✗  '} ${t[0]} + ${t[1]} · ${t[2]}×${t[3]} — prologue ${r.fini ? 'joué' : 'NON ACHEVÉ'} en ${r.duree} s : ${r.compte.bulles} répliques et narrations, ${r.compte.cartons} cartons, chacun avec sa langue secondaire${r.compte.fil ? `, ${r.compte.fil} ligne(s) de fil` : ''} ; plus petit texte ${r.mini.toFixed(1)} points`);
+    console.log(`${ok ? 'OK ' : '✗  '} ${t[0]} + ${t[1]} · ${t[2]}×${t[3]} — prologue ${r.fini ? 'joué' : 'NON ACHEVÉ'} en ${r.duree} s : ${r.compte.bulles} répliques et narrations, ${r.compte.cartons} cartons, chacun avec sa langue secondaire${r.compte.fil ? `, ${r.compte.fil} ligne(s) de fil` : ''}${r.compte.voc ? `, ${r.compte.voc} vocalisé(s)` : ''} ; plus petit texte ${r.mini.toFixed(1)} points`);
     r.soucis.forEach(m => { anomalies++; console.log('   ' + m); }); } }));
   await browser.close();
   console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ BILINGUE CONFORME — ${res.length} prologues joués au doigt (${paires.length} couples × ${tailles.length} écrans), chaque réplique et chaque carton avec sa langue secondaire (captures dans .smoke/bilingue)`);

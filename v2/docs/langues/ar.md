@@ -55,6 +55,45 @@ la longueur des phrases, pas par la grammaire.
 - Les **noms divins** de la page « Valeurs et attributs » sont vocalisés en entier (الرَّزَّاق، الكَبِيرُ المُتَعَال…) :
   ils sont peu nombreux, et on ne doit pas les lire de travers.
 
+**L'arabe vocalisé** *(décideur, 20 novembre : « Aussi ajoute l'option voyelles pour l'arabe », puis « Ou bien arabe /
+arabe vocalisé », et pour son nom « al arabiya avec les voyelles sur le mot » ; D209, à valider).* Là où l'on choisit une
+langue (l'écran-titre, la halte, la langue secondaire), l'arabe paraît deux fois : **العربية**, le texte d'aujourd'hui,
+réglé par les points ci-dessus et qui reste **la référence** ; et **العَرَبِيَّة**, les mêmes textes **entièrement
+vocalisés**, pour qui apprend à lire. Le nom du second choix est le mot lui-même, avec ses voyelles, dans toutes les
+langues de l'écran ; là où il faut des mots (une aide, un lecteur d'écran), l'interface dit « arabe vocalisé »
+(« العربية بالتشكيل », « fully vowelled Arabic », « 母音記号付きのアラビア語 »).
+
+- **La forme vocalisée suit le texte.** Elle est rangée à part, sous la même clé : `v2/src/lang/ar/voyelles/<fichier>.json`,
+  une entrée par ligne `{ k, fr, t, tv }` — `t`, le texte arabe d'où elle a été faite ; `tv`, le même avec ses signes.
+  On n'y écrit **que des signes** (fatha, damma, kasra, sukûn, chadda, tanwîn, l'alif suscrit ٰ) : ôtés, ils redonnent
+  le texte lettre pour lettre, et chaque signe que le texte porte déjà reste à sa place. Si le texte arabe change, sa
+  forme vocalisée est « périmée » : le jeu montre le texte tel qu'il est écrit, et `node v2/tools/voyelles.js` le dit,
+  jusqu'à ce qu'elle soit refaite. On ne corrige jamais le texte par sa forme vocalisée.
+- **Ce qu'on écrit.** Une vocalisation d'édition scolaire, entière : chaque lettre porte son signe, désinences (إعراب)
+  comprises, y compris en fin de phrase ; le sukûn partout où il est (le lâm de l'article devant une lettre « lunaire » :
+  الْقَلْبُ ; une consonne sans voyelle : يَعْرِفُ، لَمْ يَعُدْ) ; la chadda et sa voyelle (السَّمَاءُ) ; le tanwîn de l'accusatif sur la
+  lettre qui précède l'alif (شَيْئًا). Restent sans signe : l'alif (de prolongement, waṣla — écrit ا, jamais ٱ —, après
+  un tanwîn), l'alif maqṣûra, la lettre de prolongement (ـُو, ـِي), le lâm « solaire » (الشَّمْسُ) ; un titre ou un bouton
+  isolé prend le nominatif (الْإِعْدَادَاتُ), un impératif son sukûn (اضْرِبْ). Le nom d'un Compagnon se vocalise comme
+  dans les éditions (عُمَرُ بْنُ الْخَطَّابِ، عُثْمَانُ بْنُ عَفَّانَ) ; un nom diptote garde sa fatha au génitif (إِلَى الشَّيْخِ
+  يُونُسَ، نَحْوَ مَكَّةَ).
+- **Ce qu'on ne vocalise pas.** **إدريس**, le nom que l'arabe donne au râwî : le jeu y pose le nom choisi par le joueur
+  (`perso.js`), il reste nu. **الله** : seule sa dernière lettre porte la voyelle (اللهِ) ; la ligature et sa chadda
+  viennent de la police (§ 1.7). Les abréviations des dates (هـ، م). Un **verset** et une **parole attestée** se
+  recopient du registre tels qu'ils sont (déjà vocalisés, ou selon l'édition lue) : on n'y ajoute rien.
+- **Le contrôle** : `node v2/tools/voyelles.js` → « VOYELLES CONFORMES » (« ÉCART » : une lettre a changé, un signe du
+  texte manque, une clé vocalisée de deux façons, un texte du registre revocalisé ; « PÉRIMÉ » ; « INCOMPLET » : une lettre
+  sans signe hors des cas ci-dessus) ; il dit la couverture, fichier par fichier. `… a-faire <fichier> [motif]` donne les
+  textes encore sans forme vocalisée, `… poser <fichier> <travail.json>` pose ce qu'un rédacteur a vocalisé
+  (`[{ k, tv }]`).
+- **Les lots** (20 novembre) : un premier lot de 287 formes (le prologue, l'écran-titre et la Chaîne qui le suit, les
+  commandes du combat, les Réglages), puis tout le reste, en cinq lots — 5 970 formes, tout le texte du jeu. Un texte
+  ajouté ou changé depuis se lit tel qu'il est écrit jusqu'à ce que sa forme soit faite (`voyelles.js a-faire`).
+- **Ce que le contrôle laisse nu**, outre ce qui est dit plus haut : une parole citée et sa source (`<quote>`), recopiées ;
+  une parole du registre citée au milieu d'un texte, recopiée telle quelle (l'ordre des signes sur une lettre ne compte
+  pas) ; le wâw muet de عمرو (عَمْرٍو، عَمْرِو بْنِ) ; le lâm d'une ligature dont la voyelle est tapée après l'alif (لاَ،
+  إِلاَّ) ; إدريس après une particule (وَإدريس) ; les abréviations د، س، ث (minute, heure, seconde).
+
 ### 1.3 Ponctuation
 
 - **Guillemets** : « » (guillemets en chevrons), pour toute parole citée et toute réplique rapportée dans une narration,
