@@ -360,8 +360,10 @@ body:not(.portrait) #pad .ab .a { margin-bottom: 62px; }
 body.frapper #pad .ab .b { background: rgba(74, 24, 34, .92); border: 2px solid var(--gold); color: #fff3c8; box-shadow: 0 0 0 3px rgba(8, 7, 18, .6), 0 0 16px rgba(233, 200, 119, .6); }
 /* la place gardée à la manette (ui.js, layout) : les écrans et les cartons s'arrêtent au-dessus de sa bande, ou entre ses deux
    marges ; le secours se pose au-dessus d'elle */
-body.manette .screen, body.manette #card { bottom: var(--pad-bas, 0px); left: var(--pad-cote, 0px); right: var(--pad-cote, 0px); }
-body.manette:not(.portrait) .screen { padding-left: max(12px, 2vw); padding-right: max(12px, 2vw); }
+body.manette .screen, body.manette #card { bottom: var(--pad-bas, 0px); }
+body.manette #card, body.manette.pad-marges .screen { left: var(--pad-cote, 0px); right: var(--pad-cote, 0px); }
+body.manette.pad-marges:not(.portrait) .screen { padding-left: max(12px, 2vw); padding-right: max(12px, 2vw); }
+/* (un téléphone trop petit en largeur : l'écran prend toute la largeur, et la manette s'y efface — ui.js, pad-marges) */
 body.manette:not(.portrait) #card { padding-left: 16px; padding-right: 16px; }
 body.manette #secours { bottom: calc(var(--pad-bas, 0px) + max(12px, env(safe-area-inset-bottom, 0px))); }
 body.manette:not(.portrait) #battle .panel { grid-template-columns: 1fr 1fr; }   /* en largeur, la scène rognée : les commandes ont la moitié du panneau */

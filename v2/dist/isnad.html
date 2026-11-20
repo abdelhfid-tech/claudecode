@@ -364,8 +364,10 @@ body:not(.portrait) #pad .ab .a { margin-bottom: 62px; }
 body.frapper #pad .ab .b { background: rgba(74, 24, 34, .92); border: 2px solid var(--gold); color: #fff3c8; box-shadow: 0 0 0 3px rgba(8, 7, 18, .6), 0 0 16px rgba(233, 200, 119, .6); }
 /* la place gardée à la manette (ui.js, layout) : les écrans et les cartons s'arrêtent au-dessus de sa bande, ou entre ses deux
    marges ; le secours se pose au-dessus d'elle */
-body.manette .screen, body.manette #card { bottom: var(--pad-bas, 0px); left: var(--pad-cote, 0px); right: var(--pad-cote, 0px); }
-body.manette:not(.portrait) .screen { padding-left: max(12px, 2vw); padding-right: max(12px, 2vw); }
+body.manette .screen, body.manette #card { bottom: var(--pad-bas, 0px); }
+body.manette #card, body.manette.pad-marges .screen { left: var(--pad-cote, 0px); right: var(--pad-cote, 0px); }
+body.manette.pad-marges:not(.portrait) .screen { padding-left: max(12px, 2vw); padding-right: max(12px, 2vw); }
+/* (un téléphone trop petit en largeur : l'écran prend toute la largeur, et la manette s'y efface — ui.js, pad-marges) */
 body.manette:not(.portrait) #card { padding-left: 16px; padding-right: 16px; }
 body.manette #secours { bottom: calc(var(--pad-bas, 0px) + max(12px, env(safe-area-inset-bottom, 0px))); }
 body.manette:not(.portrait) #battle .panel { grid-template-columns: 1fr 1fr; }   /* en largeur, la scène rognée : les commandes ont la moitié du panneau */
@@ -868,7 +870,7 @@ body.avec2:not(.portrait) #hud { visibility: hidden; }
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.16 · 2026-11-19 17:38 UTC · 1093405+";
+window.ISNAD_VERSION = "2.16 · 2026-11-20 07:44 UTC · 0bc3e34+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -10066,7 +10068,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     return b;
   }
   U.tapable = tapable;
-  function screen(id, on) { $(id).hidden = !on; document.body.classList.toggle('in-screen', !!document.querySelector('.screen:not([hidden])')); }
+  function screen(id, on) { $(id).hidden = !on; document.body.classList.toggle('in-screen', !!document.querySelector('.screen:not([hidden])')); padVeille(); }   // (2.x : la manette s'efface aussitôt sur un écran qui ne peut pas lui laisser la place)
   U.screen = screen; U.focusList = focusList;   // 2.x : pour les écrans des autres modules (partage.js)
   U.fondTitre = () => titleBg || (titleBg = paintTitle());   // le ciel de l'écran-titre, à la définition du dessin (l'image de partage, partage.js)
 
@@ -10873,6 +10875,9 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     if (on) { const r = q => $(q).getBoundingClientRect(), j = r('#pad .joy'), a = r('#pad .a'), b = r('#pad .b'), vw = window.innerWidth, vh = window.innerHeight;
       if (j.width && a.width) { if (portrait) bas = Math.ceil(vh - Math.min(j.top, a.top, b.top) + 8); else cote = Math.ceil(Math.max(j.right, vw - Math.min(a.left, b.left)) + 8); } }
     B.classList.toggle('manette', on);
+    // en largeur, un écran (halte, Chaîne, « Ton personnage »…) ne tient entre les deux marges que s'il lui reste 560 points ;
+    // sur un téléphone plus petit, il prend toute la largeur, et la manette s'y efface (padVeille) : elle revient sur la scène
+    B.classList.toggle('pad-marges', cote > 0 && window.innerWidth - 2 * cote >= 560);
     const de = document.documentElement; de.style.setProperty('--pad-bas', bas + 'px'); de.style.setProperty('--pad-cote', cote + 'px');
     U.padBas = bas; U.padCote = cote; return { bas, cote };
   }

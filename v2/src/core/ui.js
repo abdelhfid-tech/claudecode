@@ -91,7 +91,7 @@
     return b;
   }
   U.tapable = tapable;
-  function screen(id, on) { $(id).hidden = !on; document.body.classList.toggle('in-screen', !!document.querySelector('.screen:not([hidden])')); }
+  function screen(id, on) { $(id).hidden = !on; document.body.classList.toggle('in-screen', !!document.querySelector('.screen:not([hidden])')); padVeille(); }   // (2.x : la manette s'efface aussitôt sur un écran qui ne peut pas lui laisser la place)
   U.screen = screen; U.focusList = focusList;   // 2.x : pour les écrans des autres modules (partage.js)
   U.fondTitre = () => titleBg || (titleBg = paintTitle());   // le ciel de l'écran-titre, à la définition du dessin (l'image de partage, partage.js)
 
@@ -898,6 +898,9 @@
     if (on) { const r = q => $(q).getBoundingClientRect(), j = r('#pad .joy'), a = r('#pad .a'), b = r('#pad .b'), vw = window.innerWidth, vh = window.innerHeight;
       if (j.width && a.width) { if (portrait) bas = Math.ceil(vh - Math.min(j.top, a.top, b.top) + 8); else cote = Math.ceil(Math.max(j.right, vw - Math.min(a.left, b.left)) + 8); } }
     B.classList.toggle('manette', on);
+    // en largeur, un écran (halte, Chaîne, « Ton personnage »…) ne tient entre les deux marges que s'il lui reste 560 points ;
+    // sur un téléphone plus petit, il prend toute la largeur, et la manette s'y efface (padVeille) : elle revient sur la scène
+    B.classList.toggle('pad-marges', cote > 0 && window.innerWidth - 2 * cote >= 560);
     const de = document.documentElement; de.style.setProperty('--pad-bas', bas + 'px'); de.style.setProperty('--pad-cote', cote + 'px');
     U.padBas = bas; U.padCote = cote; return { bas, cote };
   }

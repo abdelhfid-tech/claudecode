@@ -549,8 +549,10 @@ cartons (`z-index` 46), dans une place que rien ne lui dispute :
   raccourcit pour lui laisser 300 points (`PANNEAU`) ; la seconde bulle de la langue secondaire s'arrête au-dessus de la
   bande. Sur un écran de moins de 740 points de haut, la manette est plus petite ;
 - **en largeur**, les deux marges (`--pad-cote`, `U.padCote`) : la scène garde sa hauteur et ne montre qu'une partie de la
-  largeur de l'image (`U.rogne`, comme en hauteur ; le combat rapproche les deux camps, `bx()`) ; les écrans et les
-  cartons tiennent entre les deux marges. A est au-dessus de B, un peu à sa droite, pour que la marge reste étroite ;
+  largeur de l'image (`U.rogne`, comme en hauteur ; le combat rapproche les deux camps, `bx()`) ; les cartons tiennent
+  entre les deux marges, les écrans aussi s'il leur reste 560 points (`body.pad-marges`) — sur un téléphone plus petit
+  (640 × 360, 667 × 375), un écran prend toute la largeur et la manette s'y efface ; elle revient sur la scène. A est
+  au-dessus de B, un peu à sa droite, pour que la marge reste étroite ;
 - **partout**, si une page ne peut pas lui laisser la place (une seconde bulle sans trois lignes au-dessus de la bande, un
   texte qui déborde sur un tout petit écran), la manette s'y efface (`body.pad-efface`, regardé six fois par seconde :
   `U.padRecouvre`) plutôt que de recouvrir quoi que ce soit, et revient dès que la place est libre. Masquée au choix du
