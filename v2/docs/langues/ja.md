@@ -905,7 +905,10 @@ pas les harmoniser tant que le registre ne change pas) :
     l'adjuration) ; saga_ali (« Parole de vérité par laquelle on vise le faux » : la traduction publiée ou le mot à mot) ; frame
     (la source de l'outro dit « al-Bukhârî et Muslim », le registre ne relève que Muslim 1679).
 26. **Des paroles citées dans les feuillets, hors registre** (non relevées) : saga_abubakr, saga_khalid, saga_ali, frame
-    (Ibn al-Mubârak, Bilâl, la route sûre).
+    (Ibn al-Mubârak, Bilâl, la route sûre). *20 novembre : Ibn al-Mubârak, Bilâl, Abû 'Ubayda, Qays, Hudhayfa, Ibn
+    'Abbâs, les appels de Yamâma et la compétence « Fermeté » sont au registre ; le japonais de six d'entre eux
+    (Ibn al-Mubârak, Bilâl, Abû 'Ubayda dans saga_umar, Ibn 'Abbâs, les appels de Yamâma, « Fermeté »), qui suivait le
+    français, est retraduit de l'arabe relevé.*
 
 *Le français* (signalé, non corrigé) :
 

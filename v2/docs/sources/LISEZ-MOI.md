@@ -83,18 +83,35 @@ Un fichier JSON par fichier du jeu (`saga_abubakr.json`, …, `versets.json`), u
   quelles, même quand elles écrivent « Allah's Apostle » sans ﷺ ou s'écartent de l'arabe ; `note` le signale.
 - Les textes arabes sont **extraits par script** des pages lues, jamais retapés ; leurs coquilles d'impression sont
   gardées et signalées dans `note`.
+- **At-Tabarî sur Shamela** (livre 9783, éd. Abû l-Fadl Ibrâhîm, Dâr al-Ma'ârif) : la pagination suit l'imprimé, mais
+  le texte numérique ne suit pas toujours l'édition imprimée. Il porte des voyelles que l'imprimé n'a pas, et d'autres
+  que l'imprimé contredit ; il abrège en « ص » la formule de bénédiction que l'imprimé écrit en toutes lettres (t. 3
+  p. 226, 293) ; il perd des hamzas (« ابالكم » pour « أبالكم ») et coupe des mots (« وو الله » pour « ووالله »). Le
+  fac-similé de l'imprimé est lisible : `https://archive.org/download/trm08_202112/trm03.pdf` (t. 3 ; `trm04.pdf` pour
+  le t. 4…), la page du PDF étant celle de l'édition. Le 20 novembre, les coquilles signalées ont été vérifiées sur lui,
+  et corrigées d'après lui (`note` de chaque entrée) ; les autres paroles tirées d'at-Tabarî n'ont pas été recomparées
+  à l'imprimé (la formule « ص » y reste, là où les pages vues de l'imprimé l'écrivent en toutes lettres : à revoir).
+- **Une parole dite hors d'un carton** (dans un feuillet, une narration, la description d'une compétence) a son entrée
+  comme les autres : `fr` est la phrase entre guillemets, recopiée du jeu ; `source_fr` est vide quand le jeu n'en
+  donne pas (narration, compétence) ; le texte du jeu cite exactement `ar.texte` entre « », et sa forme vocalisée le
+  recopie tel quel (`voyelles.js` le vérifie).
 
-## État au 18 novembre (et le verset de la fin, Coran 6:97, ajouté le 20 novembre)
+## État au 20 novembre
 
 | Fichier | Paroles | Trouvées | Approchantes | Introuvables | Écarts avec le français |
 |---|---|---|---|---|---|
-| `saga_abubakr.json` | 20 | 17 | 3 | 0 | 13 |
-| `saga_umar.json` | 14 | 11 | 3 | 0 | 7 |
-| `saga_khalid.json` | 11 | 10 | 1 | 0 | 8 |
-| `saga_uthman.json` | 9 | 8 | 1 | 0 | 7 |
-| `saga_ali.json` | 13 | 12 | 1 | 0 | 6 |
-| `frame.json` | 1 | 1 | 0 | 0 | 0 |
+| `saga_abubakr.json` | 25 | 22 | 3 | 0 | 17 |
+| `saga_umar.json` | 15 | 11 | 4 | 0 | 8 |
+| `saga_khalid.json` | 12 | 11 | 1 | 0 | 8 |
+| `saga_uthman.json` | 10 | 9 | 1 | 0 | 7 |
+| `saga_ali.json` | 14 | 13 | 1 | 0 | 6 |
+| `frame.json` | 3 | 3 | 0 | 0 | 1 |
 | `versets.json` | 52 versets cités (33 distincts) | 52 | 0 | 0 | 1 |
+
+Le 20 novembre, onze paroles citées hors des cartons (feuillets, narrations, une compétence) sont entrées au registre :
+Ibn al-Mubârak et la parole à Bilâl (`frame`), Abû 'Ubayda « homme de confiance » (`saga_umar`, `saga_khalid`,
+`saga_abubakr`), Anas sur Qays (`saga_ali`), Hudhayfa (`saga_uthman`), Ibn 'Abbâs, les appels de Khâlid et d'Abû
+Hudhayfa à al-Yamâma, et « Je ne dénouerai pas un étendard qu'il a noué » (`saga_abubakr`).
 
 Quand le français omet des mots au milieu d'une phrase, l'arabe est gardé entier (on ne coupe pas l'intérieur d'une
 phrase arabe) et l'anglais et le japonais le suivent : ces langues disent alors un peu plus que le français, tant que

@@ -1298,7 +1298,9 @@ Chaque point donne la proposition de l'agent ; tant qu'il n'est pas tranché, le
 26. **Faire entrer au registre** les paroles citées hors des cartes de citation (§ 3.10, et celles que les rédacteurs ont
     rendues d'après l'arabe relevé : la parole d'Ibn al-Mubârak, celles de 'Alî sur les exemplaires et sur le mushaf, de
     'Umar sur Abû Sulaymân, d'Abû Bakr sur al-Qa'qâ', la question de Khâlid à al-Hîra…). Le contrôle de `langues.js` ne
-    les compare pas au signe près tant qu'elles n'y sont pas.
+    les compare pas au signe près tant qu'elles n'y sont pas. *20 novembre : onze y sont entrées (Ibn al-Mubârak, Bilâl,
+    Abû 'Ubayda, Qays, Hudhayfa, Ibn 'Abbâs, Yamâma, « Fermeté ») ; l'anglais d'Ibn 'Abbâs suit désormais la traduction
+    publiée de Muhsin Khan (n° 4454), ceux de Yamâma et de « Fermeté » sont traduits de l'arabe relevé.*
 27. **Le contrôle « le français est recopié tel quel »** compte comme une erreur trois noms propres qui s'écrivent de même
     dans les deux langues (*Farwa ibn Nawfal*, *Wahb ibn Zurayr*, *Jabala ibn al-Ayham* : aucun signe à retirer selon
     § 1.3). Sans une exception dans `v2/tools/langues.js` pour un nom propre (ou une liste de noms identiques),

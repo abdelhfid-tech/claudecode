@@ -1393,7 +1393,8 @@ précédentes fixent déjà n'est pas repris. Une ligne par hésitation, avec le
   dramatisées n'en portent pas. Un titre tiré d'une citation garde l'orthographe du registre, sans voyelle ajoutée
   (« «سلوني» », « «كَلِمَةُ حَقٍّ…» »). (saga_abubakr, saga_ali)
 - Normaliser l'orthographe d'une citation hors registre ? « امتازوا لنعلم بلاء كل حى » garde l'alif maqsûra de
-  l'édition, là où le § 1.10 demande « حيّ ». (saga_abubakr)
+  l'édition, là où le § 1.10 demande « حيّ ». (saga_abubakr) *Réglé le 20 novembre : la parole est au registre, recopiée
+  d'at-Tabarî (t. 3 p. 293) tel que le texte lu l'écrit : « امْتَازُوا لِنَعْلَمَ بَلاءَ كُلِّ حَيٍّ… ».*
 - Pour qui code : le verset 3:144, dans une carte de citation, est écrit entre ﴿ ﴾, et la feuille de style ajoute « »
   autour de toute citation ; l'écran affichera « ﴿…﴾ ». Ne pas poser « » devant ﴿. (saga_abubakr)
 - Les références arabes du registre ne nomment pas qui parle (« 'Umar ibn al-Khattâb, ce jour-là — Ibn Hishâm » devient

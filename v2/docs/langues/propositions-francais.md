@@ -85,6 +85,7 @@ parole, un français fidèle au texte arabe relevé, à valider ensuite par vous
 - **Trois paroles du recueil sans place dans le registre** : celle d'ʿAbdallâh ibn al-Mubârak (« L'isnâd »), « Ô Bilâl,
   repose-nous par elle » (Abû Dâwûd ; le français omet « établis la prière »), et la promesse rapportée par Khabbâb (de
   San'â' au Hadramawt, aussi dans le négoce). **Proposition** : les relever à leur source, comme les autres paroles.
+  *Fait le 20 novembre pour les deux premières (registre, `frame.json`) ; la promesse de Khabbâb reste hors registre.*
 
 ## 8. Relevé en écrivant le japonais (saga d'Abû Bakr)
 
@@ -100,6 +101,8 @@ parole, un français fidèle au texte arabe relevé, à valider ensuite par vous
   registre : Abû 'Ubayda « homme de confiance », « Ô Bilâl… », « prise à leurs riches… », « Nous cherchons refuge… »,
   la remarque d'Ibn 'Abbâs, « Il ne laissa pas un mot… », les paroles de Yamâma, « Le Messager ﷺ l'a nommé… », les
   consignes, « Je ne dénouerai pas un étendard qu'il a noué ». **Proposition** : les relever à leur source.
+  *Fait le 20 novembre pour Abû 'Ubayda, « Ô Bilâl… » (feuillet de `frame`), Ibn 'Abbâs, les paroles de Yamâma et
+  « Je ne dénouerai pas un étendard… » (Ibn Kathîr, al-Bidâya, t. 9 p. 424) : `v2/docs/sources/`, avec leurs écarts.*
 
 ## 9. Relevé en écrivant le japonais (saga de Khâlid)
 
@@ -164,7 +167,7 @@ exigence, et chaque point le dit. Si vous gardez le français, l'arabe s'y align
   vois las »). Le japonais les garde (« やせた顔 », « 眉ひとつ動かさず », « お顔の色が優れませんね ») : tant que le
   français ne change pas, les langues ne disent pas la même chose. Vu par le rédacteur et les deux relecteurs.
 - « Par ma barbe, tu le ferais » (`caid.js:361`, § 6). Le rédacteur et les deux relecteurs ajoutent une raison : c'est
-  aussi un serment par autre chose qu'Allah, qui choquerait un lecteur musulman. L'arabe a écrit « إنك لفاعل. أي والله،
+  aussi un serment par autre chose qu'Allah, qui choquerait un lecteur musulman. L'arabe a écrit « إنك لفاعل. إي والله،
   إنك لفاعل » (« Tu le ferais. Oui, par Allah, tu le ferais ») : il met le nom d'Allah là où le français n'en met pas. Le
   relecteur de la fidélité propose aussi « أُقسم إنك لفاعل » (« je le jure : tu le ferais »). Le japonais garde la
   barbe (« このひげにかけて »). « Sur mon honneur » (§ 6) réglerait les trois langues. Un autre serment est en h1.
