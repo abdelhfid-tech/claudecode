@@ -165,6 +165,29 @@ ISNAD.registerSaga({
       taunts: ['Ce n’est pas de la colère. C’est de la justice.'],
       desc: 'Al-ghadab : un feu qui se croit juste. Elle a toujours une bonne raison, et c’est toujours la même. Le dhikr, qui rend le cœur à son calme, forge la lame de la Longanimité.' },
 
+    /* ----- 2.20 : la famille de la ghafla, au temps des Compagnons (D210, validée par le décideur le 20 novembre). Rattachée à
+       l'Insouciance (racine), faible devant la Patience et le Savoir ; ses attaques volent le temps (D.TEMPS). Elle rôde sur
+       les ponts des labyrinthes de chaque récit des Compagnons (rodeurs.js, D.TEMPS.rodent) ; elle attaque le groupe et ne
+       dit rien de personne. Des images : aucun visage, aucun symbole. Termes arabes : v2/docs/langues/ar.md, § 2.5. ----- */
+    sawfa: { racine: 'insouciance', name: 'Sawfa', art: 'wisp', hue: 222, scale: 1, lvl: 0, tier: 'minion', weak: ['sabr', 'ilm'], veils: 2,
+      skills: [
+        { w: 1, name: 'Remettre', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' },
+        { w: 1, name: '« Après le marché »', target: 'foe', fx: [{ st: 'baisse' }], anim: 'glyph' }
+      ],
+      desc: 'Sawfa : « plus tard ». At-taswîf, remettre à demain : elle ne refuse rien, elle remet, et ce qu’on remet chaque jour ne se fait jamais. De la famille de l’Insouciance, elle cède à la patience et au savoir.' },
+    long_espoir: { racine: 'insouciance', name: 'Le Long Espoir', art: 'lens', hue: 250, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'ilm'], veils: 3,
+      skills: [
+        { w: 1, name: '« Il reste des années »', target: 'foes', fx: [{ st: 'baisse' }], anim: 'glyph' },
+        { w: 1, name: 'Projets sans fin', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }
+      ],
+      desc: 'Tûl al-amal : se croire des années devant soi, et leur confier ce que l’on pourrait faire aujourd’hui. Il ne ment pas : il fait seulement oublier de compter. De la famille de l’Insouciance, il cède à la patience et au savoir.' },
+    lahw: { racine: 'insouciance', name: 'Le Vain Divertissement', art: 'swarm', hue: 195, scale: 1, lvl: 0, tier: 'minion', weak: ['sabr', 'ilm'], veils: 2,
+      skills: [
+        { w: 1, name: 'Passe-temps', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' },
+        { w: 1, name: 'Veillée futile', target: 'foe', fx: [{ st: 'perdu' }], anim: 'dark' }
+      ],
+      desc: 'Al-lahw : le passe-temps qui finit par prendre tout le temps. Se délasser n’est pas lui céder ; il commence quand la distraction tient lieu de tout le reste. De la famille de l’Insouciance, il cède à la patience et au savoir.' },
+
     noir_honte: { name: 'La Honte', art: 'mirror', hue: 300, scale: 2, lvl: 0, tier: 'elite', weak: ['rahma', 'sidq'], veils: 2,
       skills: [{ w: 3, name: 'Que diront-ils ?', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'atk', v: -1, chance: 0.3 }], anim: 'dark' }, { w: 1, name: 'Baisser les yeux', target: 'foes', el: 'ilm', pow: 0.55, anim: 'wave' }],
       idee: true,

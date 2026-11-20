@@ -21,7 +21,7 @@
   const FER = { id: '_fer', name: I.T('Frapper'), target: 'foe', el: 'fer', pow: 1.0, anim: 'slash', basic: true };
   const lightOf = h => ({ id: '_lum', name: I.T('Éclairer'), target: 'foe', el: h.def.el, pow: 0.9, anim: 'light', basic: true });
   const ASSAUT = { name: I.T('Assaut'), target: 'foe', el: 'fer', pow: 1.0, anim: 'dark', w: 3 };
-  const STN = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan§stat'), stun: I.T('Étourdi'), doute: I.T('Doute'), waswas: I.T('Waswâs'), regen: I.T('Régén.'), garde: I.T('En garde'), esquive: I.T('Esquive'), taunt: I.T('Cible') };
+  const STN = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan§stat'), stun: I.T('Étourdi'), doute: I.T('Doute'), waswas: I.T('Waswâs'), regen: I.T('Régén.'), garde: I.T('En garde'), esquive: I.T('Esquive'), taunt: I.T('Cible'), recul: I.T('Retardé') };
   const BIEN = ['regen', 'garde', 'esquive', 'taunt'];   // les états qui servent celui qui les porte (sur sa rangée, en vert)
 
   let C = null; // contexte du combat en cours
@@ -309,7 +309,7 @@
       C.active = null;
       if (!alive('foe').length) result = 'win'; else if (!alive('hero').length && !(await leSecours(opts))) result = 'lose';
     }
-    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result, secours: !!C.secouru, esquives: C.esquives || 0, champ: C.champ ? Object.assign({ rangs: C.champ.rangs.length, pas: C.champ.pas, flancs: C.champ.flancs.filter(Boolean).length }, C.champ.stats) : null };
+    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result, secours: !!C.secouru, esquives: C.esquives || 0, vole: C.vole || 0, champ: C.champ ? Object.assign({ rangs: C.champ.rangs.length, pas: C.champ.pas, flancs: C.champ.flancs.filter(Boolean).length }, C.champ.stats) : null };
     I.audio.stopBeat(); $('#battle .cmd').innerHTML = ''; C.cursor = null;
     if (result === 'fuite') return partir(prev);
     if (result === 'win') { I.audio.afterJingle = I.audio.place || null; I.audio.music('victoire'); } else I.audio.music('deuil');
@@ -351,6 +351,7 @@
     // effets de début de tour
     if (e.st.garde) delete e.st.garde;
     if (e.st.esquive) delete e.st.esquive; // 2.19 : l'esquive tient jusqu'à son prochain tour, comme la garde
+    if (e.st.recul) delete e.st.recul;     // 2.20 : le tour qui avait reculé est arrivé
     if (e.st.regen) { const v = Math.round(e.max.hp * 0.08); heal(e, v); tick(e, 'regen'); }
     if (e.st.waswas) { const v = Math.max(1, Math.round(e.max.hp * (e.side === 'foe' ? 0.04 : 0.06))); e.hp = Math.max(e.side === 'hero' ? 1 : 0, e.hp - v); floater(e, v, 'dmg dot'); tick(e, 'waswas'); if (e.hp <= 0) { await kill(e); return; } }
     for (const k of ['atk', 'mag', 'df', 'spd']) if (e.buffs[k] && --e.buffs[k].t <= 0) delete e.buffs[k];
@@ -703,6 +704,18 @@
       case 'niyya': t.niyya = I.clamp((t.niyya || 0) + (f.v || 1), 0, 5); if (t.side === 'hero') floater(t, I.t('+Niyya'), 'buff'); break;
       case 'sakina': if (t.side === 'hero') { t.sakina = I.clamp(t.sakina + (f.v || 20), 0, 100); floater(t, I.t('+Sérénité'), 'buff'); } break;
       case 'taunt': t.st.taunt = turns; floater(t, I.t('Fait front'), 'buff'); break;
+      // 2.20 — le temps volé (D.TEMPS ; proposition validée par le décideur le 20 novembre, D210). Ces attaques prennent du
+      // temps plutôt que de la Constance. La Garde les reçoit comme un coup, à moitié ; une attaque esquivée ne porte rien
+      // (perform : l'esquivé n'est plus parmi les cibles). « recul » : le prochain tour arrive plus tard — la frise le montre,
+      // et la rangée dit « Retardé » jusqu'à ce tour. « baisse » : la Niyya baisse ; sans Niyya, ou tant que le joueur ne la
+      // voit pas encore (lecons.js), c'est la Sérénité. « perdu » : l'étourdissement, une chance sur quatre.
+      case 'recul': { const T = D.TEMPS, k = T.recul * (t.st.garde ? T.garde : 1); t.ct += k * 1000 / eff(t, 'spd'); t.st.recul = 1; C.vole = (C.vole || 0) + 1; floater(t, I.t('Retardé'), 'debuff'); break; }
+      case 'baisse': { const T = D.TEMPS; if (t.st.garde && Math.random() >= T.garde) { floater(t, I.t('Tient bon'), 'buff'); break; }
+        const vue = t.side !== 'hero' || !I.lecons || I.lecons.voit('niyya'); C.vole = (C.vole || 0) + 1;
+        if (vue && t.niyya > 0) { t.niyya = Math.max(0, t.niyya - T.niyya); floater(t, I.t('Niyya − {n}', { n: T.niyya }), 'debuff'); }
+        else if (t.side === 'hero') { t.sakina = Math.max(0, t.sakina - T.serenite); floater(t, I.t('Sérénité − {n}', { n: T.serenite }), 'debuff'); }
+        break; }
+      case 'perdu': { const T = D.TEMPS, avant = !!t.st.stun; applyFx(a, t, { st: 'stun', chance: T.perdu * (t.st.garde ? T.garde : 1) }, 0); if (t.st.stun && !avant) C.vole = (C.vole || 0) + 1; break; }
     }
   }
   async function kill(t) {
@@ -868,10 +881,10 @@
   function refresh() {
     if (!C) return;
     { const fr = $('#battle .front'), ch = C.champ, bt = $('#battle'); bt.classList.toggle('champ', !!(ch && ch.vue)); bt.classList.toggle('ordre', !!(ch && ch.vue && ch.menu)); if (fr) { fr.hidden = !ch || ch.vue; if (ch && !ch.vue) fr.innerHTML = I.rangs.bande(C); } }
-    // ordre des tours (simulation)
+    // ordre des tours (simulation) ; 2.20 : un tour qui a reculé (D.TEMPS) est marqué jusqu'à ce qu'il arrive (.rec)
     const sim = C.all.filter(e => e.alive).map(e => ({ e, ct: e === C.active ? -1 : e.ct })); const ord = [];
     for (let i = 0; i < 8 && sim.length; i++) { sim.sort((a, b) => a.ct - b.ct); const s = sim[0]; ord.push(s.e); const d = Math.max(0, s.ct); sim.forEach(x => x.ct -= d); s.ct = 1000 / eff(s.e, 'spd'); }
-    $('#battle .order').innerHTML = '<span class="olab">' + I.t('Tours') + '</span>' + ord.map((e, i) => `<i class="${e.side}${i === 0 ? ' now' : ''}${e.broken ? ' brk' : ''}" style="--c:${e.side === 'hero' ? e.ray || e.color : `hsl(${e.def.hue},80%,62%)`}">${I.esc(I.langue.initiales(e.name))}</i>`).join('');
+    $('#battle .order').innerHTML = '<span class="olab">' + I.t('Tours') + '</span>' + ord.map((e, i) => `<i class="${e.side}${i === 0 ? ' now' : ''}${e.broken ? ' brk' : ''}${e.st.recul ? ' rec' : ''}" style="--c:${e.side === 'hero' ? e.ray || e.color : `hsl(${e.def.hue},80%,62%)`}">${I.esc(I.langue.initiales(e.name))}</i>`).join('');
     // plaques ennemies
     const pl = $('#battle .plates'); pl.innerHTML = '';
     C.all.filter(e => e.side === 'foe' && e.alive).forEach(e => {

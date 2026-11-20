@@ -54,7 +54,8 @@ ISNAD.registerSaga({
 
   enemies: {
     chuchot: { name: 'Chuchotement', art: 'wisp', hue: 265, scale: 1, lvl: 3, tier: 'minion', weak: ['sidq', 'sabr'], veils: 2,
-      skills: [{ w: 2, name: '« On dit que… »', target: 'foe', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'dark' }],
+      skills: [{ w: 2, name: '« On dit que… »', target: 'foe', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'dark' },
+        { w: 1, name: 'Veillée de commérages', target: 'foes', fx: [{ st: 'recul' }], anim: 'wave' }],   // 2.20 : le temps volé (D.TEMPS, D210)
       taunts: ['Il dort seulement.', 'Qui te l’a dit ? Personne. Tout le monde.'],
       desc: "Ce qui se dit à mi-voix dans une maison où l'on cache une mort. Il n'a pas de corps : il n'a que la voix de ceux qui le répètent. Une parole dite à voix haute le dissipe." },
     ombre_pere: { racine: 'noir_peur', name: "L'Ombre du Père", art: 'throne', hue: 35, scale: 2, lvl: 4, tier: 'elite', weak: ['sidq', 'sabr'], veils: 4,
@@ -71,7 +72,7 @@ ISNAD.registerSaga({
       skills: [{ w: 2, name: 'Prix du repos', target: 'foe', el: 'fer', pow: 1.0, fx: [{ st: 'def', v: -1, chance: 0.4 }], anim: 'dark' }],
       taunts: ['Dix pièces la nuit. Qui s’en plaindrait ?'],
       desc: "Une petite pile de pièces contre une nuit de sommeil. Chacune pèse peu ; ensemble, elles retirent un homme du rempart et en écrasent un autre. La même loi pour tous les fait tomber." },
-    sommeil: { racine: 'insouciance', name: 'Le Sommeil', art: 'wave', hue: 230, scale: 2, lvl: 6, tier: 'elite', weak: ['adl', 'shajaa'], veils: 4,
+    sommeil: { racine: 'insouciance', name: 'Le Sommeil', art: 'wave', hue: 230, scale: 2, lvl: 6, tier: 'elite', weak: ['adl', 'shajaa', 'sabr', 'ilm'], veils: 4,   // 2.20 : de la famille de la ghafla (D210), faible aussi devant la Patience et le Savoir
       skills: [
         { w: 3, name: 'Torpeur', target: 'foes', el: 'ilm', pow: 0.7, fx: [{ st: 'spd', v: -1, chance: 0.6 }], anim: 'wave' },
         { w: 2, name: 'Paupières lourdes', target: 'foe', el: 'fer', pow: 1.0, fx: [{ st: 'stun', chance: 0.35 }], anim: 'dark' },
@@ -94,7 +95,8 @@ ISNAD.registerSaga({
       taunts: ['Avec lui, on ne perd jamais.', 'Encore une ville. Encore une.'],
       desc: "La gloire qui marche toute seule. Né des acclamations d'une armée victorieuse, il lui faut chaque saison une conquête de plus. Les armes le nourrissent ; la Patience et la Miséricorde le font taire." },
     on_dit: { name: 'On-dit', art: 'wisp', hue: 330, scale: 1, lvl: 7, tier: 'minion', weak: ['sidq', 'ilm'], veils: 2,
-      skills: [{ w: 3, name: 'De bonne source', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'waswas', turns: 2, chance: 0.4 }], anim: 'dark' }],
+      skills: [{ w: 3, name: 'De bonne source', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'waswas', turns: 2, chance: 0.4 }], anim: 'dark' },
+        { w: 1, name: 'Colporter', target: 'foe', fx: [{ st: 'baisse' }], anim: 'glyph' }],
       taunts: ['Je le tiens de quelqu’un de sûr.', 'Il n’y a pas de fumée sans feu.'],
       desc: "Une phrase sans auteur. Chacun la tient d'un autre, qui la tient d'un autre. Demander « qui l'a dit ? » suffit le plus souvent à la défaire." },
     bouc: { racine: 'noir_rancune', name: 'Le Bouc émissaire', art: 'mask', hue: 0, scale: 3, lvl: 7, tier: 'boss', weak: ['rahma', 'ilm', 'sidq'], veils: 5,

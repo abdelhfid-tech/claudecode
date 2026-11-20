@@ -108,7 +108,8 @@ ISNAD.registerSaga({
       name: 'Murmure', art: 'wisp', hue: 280, scale: 1, lvl: 1, tier: 'minion',
       weak: ['sidq', 'rahma'], veils: 1,
       skills: [
-        { w: 2, name: 'Chuchotis', target: 'foe', el: 'fer', pow: 0.8, fx: [{ st: 'waswas', turns: 2, chance: 0.3 }], anim: 'dark' }
+        { w: 2, name: 'Chuchotis', target: 'foe', el: 'fer', pow: 0.8, fx: [{ st: 'waswas', turns: 2, chance: 0.3 }], anim: 'dark' },
+        { w: 1, name: 'Ressasser', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }   // 2.20 : le temps volé (D.TEMPS, D210)
       ],
       desc: "La plus petite des idoles : une phrase dite à mi-voix, que l'on n'ose ni affirmer ni retenir. Seul, un murmure n'est rien. Il attend d'être deux."
     },
@@ -116,7 +117,8 @@ ISNAD.registerSaga({
       name: 'Variante querelleuse', art: 'swarm', hue: 265, scale: 1, lvl: 2, tier: 'minion',
       weak: ['ilm', 'sidq'], veils: 2,
       skills: [
-        { w: 2, name: '« Ma lecture vaut mieux »', target: 'foe', el: 'fer', pow: 1.0, fx: [{ st: 'doute', turns: 2, chance: 0.25 }], anim: 'glyph' }
+        { w: 2, name: '« Ma lecture vaut mieux »', target: 'foe', el: 'fer', pow: 1.0, fx: [{ st: 'doute', turns: 2, chance: 0.25 }], anim: 'glyph' },
+        { w: 1, name: 'Dispute sans fin', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }
       ],
       taunts: ['La mienne. Pas la tienne.'],
       desc: "Une lettre détachée de sa récitation, qui ne sert plus à lire mais à l'emporter sur l'autre. Le Savoir la remet à sa place dans la ligne."
@@ -166,7 +168,8 @@ ISNAD.registerSaga({
       name: 'Ouï-dire', art: 'mask', hue: 330, scale: 1, lvl: 5, tier: 'minion',
       weak: ['sidq', 'ilm'], veils: 2,
       skills: [
-        { w: 2, name: '« On dit que… »', target: 'foe', el: 'fer', pow: 1.0, fx: [{ st: 'waswas', turns: 3, chance: 0.4 }], anim: 'dark' }
+        { w: 2, name: '« On dit que… »', target: 'foe', el: 'fer', pow: 1.0, fx: [{ st: 'waswas', turns: 3, chance: 0.4 }], anim: 'dark' },
+        { w: 1, name: 'Colporter', target: 'foe', fx: [{ st: 'baisse' }], anim: 'glyph' }
       ],
       taunts: ['On dit que…', "Je le tiens de quelqu'un qui le tenait de quelqu'un."],
       desc: "Un masque vide qui cherche une bouche. Il ne sait rien : il a entendu. Demande-lui de qui, et il se défait."
@@ -176,7 +179,8 @@ ISNAD.registerSaga({
       weak: ['sidq', 'rahma'], veils: 2,
       skills: [
         { w: 2, name: 'Redire', target: 'ally', fx: [{ st: 'atk', v: 1 }], anim: 'glyph' },
-        { w: 2, name: 'Amplifier', target: 'foes', el: 'fer', pow: 0.7, anim: 'burst' }
+        { w: 2, name: 'Amplifier', target: 'foes', el: 'fer', pow: 0.7, anim: 'burst' },
+        { w: 1, name: 'Redire encore', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }
       ],
       desc: "Il n'invente rien. Il renvoie, plus fort, ce qu'on lui a confié. C'est par lui qu'une phrase devient une foule."
     },

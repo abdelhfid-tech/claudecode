@@ -141,6 +141,11 @@
         (k.fx || []).forEach(f => {
           if (!D.FX.includes(f.st)) E.push(`${where}/${k.name}: fx.st « ${f.st} » invalide (${D.FX.join('|')})`);
           if (['atk', 'mag', 'def', 'spd'].includes(f.st) && f.v !== 1 && f.v !== -1) E.push(`${where}/${k.name}: fx ${f.st} exige v:1 ou v:-1`);
+          // 2.20 — le temps volé (D.TEMPS) : réservé aux chimères, et ses nombres sont dans defs.js, jamais dans un récit
+          if ((D.FX_TEMPS || []).includes(f.st)) {
+            if (isHero) E.push(`${where}/${k.name}: fx ${f.st} — le temps volé est une attaque de chimère, jamais une vertu`);
+            ['v', 'chance', 'turns', 'self'].forEach(x => { if (f[x] !== undefined) E.push(`${where}/${k.name}: fx ${f.st} ne porte pas « ${x} » : ses nombres sont dans D.TEMPS (defs.js)`); });
+          }
         });
       };
 

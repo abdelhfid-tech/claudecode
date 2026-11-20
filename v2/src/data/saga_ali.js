@@ -127,7 +127,8 @@ ISNAD.registerSaga({
     murmure: {
       name: 'Murmure de rang', art: 'wisp', hue: 48, scale: 1, lvl: 1, tier: 'minion',
       weak: ['fer', 'sidq'], veils: 1,
-      skills: [{ w: 2, name: '« Sais-tu qui il est ? »', target: 'foe', el: 'fer', pow: 0.9, fx: [{ st: 'def', v: -1, chance: 0.3 }], anim: 'dark' }],
+      skills: [{ w: 2, name: '« Sais-tu qui il est ? »', target: 'foe', el: 'fer', pow: 0.9, fx: [{ st: 'def', v: -1, chance: 0.3 }], anim: 'dark' },
+        { w: 1, name: 'Ressasser', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }],   // 2.20 : le temps volé (D.TEMPS, D210)
       taunts: ['C’est le calife… qu’il la prenne…'],
       desc: 'Un chuchotement de foule : « on ne fait pas attendre un homme pareil ». Seul, il n’est rien ; à mille, il fait plier une règle. Un coup franc ou une parole vraie le dissipent.'
     },
@@ -155,7 +156,8 @@ ISNAD.registerSaga({
       weak: ['ilm', 'shajaa'], veils: 1,
       skills: [
         { w: 2, name: 'Redite', target: 'foe', el: 'fer', pow: 0.9, anim: 'dark' },
-        { w: 1, name: 'Amplifier', target: 'ally', fx: [{ st: 'atk', v: 1 }], anim: 'glyph' }
+        { w: 1, name: 'Amplifier', target: 'ally', fx: [{ st: 'atk', v: 1 }], anim: 'glyph' },
+        { w: 1, name: 'Redire encore', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }
       ],
       desc: 'Une voix qui répète ce que dit la voix d’à côté. Elle n’a jamais lu la phrase qu’elle crie. Il suffit de lui demander ce qu’elle veut dire.'
     },
@@ -164,7 +166,8 @@ ISNAD.registerSaga({
       weak: ['sidq', 'fer'], veils: 2,
       skills: [
         { w: 3, name: 'Mille bouches', target: 'foes', el: 'fer', pow: 0.65, anim: 'wave' },
-        { w: 1, name: 'Couvrir la voix', target: 'foe', fx: [{ st: 'doute', turns: 2, chance: 0.6 }], anim: 'dark' }
+        { w: 1, name: 'Couvrir la voix', target: 'foe', fx: [{ st: 'doute', turns: 2, chance: 0.6 }], anim: 'dark' },
+        { w: 1, name: 'Brouhaha', target: 'foes', fx: [{ st: 'baisse' }], anim: 'glyph' }
       ],
       desc: 'Une nuée de mots criés pour ne pas entendre la réponse. Elle couvre les voix : celui qu’elle atteint doute et se tait.'
     },
