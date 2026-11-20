@@ -21,7 +21,8 @@
   const FER = { id: '_fer', name: I.T('Frapper'), target: 'foe', el: 'fer', pow: 1.0, anim: 'slash', basic: true };
   const lightOf = h => ({ id: '_lum', name: I.T('Éclairer'), target: 'foe', el: h.def.el, pow: 0.9, anim: 'light', basic: true });
   const ASSAUT = { name: I.T('Assaut'), target: 'foe', el: 'fer', pow: 1.0, anim: 'dark', w: 3 };
-  const STN = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan§stat'), stun: I.T('Étourdi'), doute: I.T('Doute'), waswas: I.T('Waswâs'), regen: I.T('Régén.'), garde: I.T('En garde'), taunt: I.T('Cible') };
+  const STN = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan§stat'), stun: I.T('Étourdi'), doute: I.T('Doute'), waswas: I.T('Waswâs'), regen: I.T('Régén.'), garde: I.T('En garde'), esquive: I.T('Esquive'), taunt: I.T('Cible') };
+  const BIEN = ['regen', 'garde', 'esquive', 'taunt'];   // les états qui servent celui qui les porte (sur sa rangée, en vert)
 
   let C = null; // contexte du combat en cours
   B.contexte = () => C;   // pour les outils (une attitude ou une mimique posée sur un combattant, pour une image)
@@ -202,6 +203,7 @@
       catch (e) { I.report(e, 'combat'); B.abort(prev, mark); res = 'win'; } // un incident ne doit pas arrêter le récit : on rend la main, le combat compte pour gagné
       first = false;
       if (res === 'win') break;
+      if (res === 'fuite') return 'fuite'; // 2.19 : le groupe a quitté le combat — rien de gagné, rien de perdu ; qui l'a lancé décide de la suite (la poursuite)
       if (opts.sansReprise) return 'lose'; // un combat que l'on a choisi : on peut en revenir sans l'avoir gagné
       W.healAll(); W.party.forEach(id => { W.hero(id).sakina = 50; });
     }
@@ -227,7 +229,7 @@
     // un combat marqué 'cite' montre la ville de verre dans la Cité-Miroir seulement ; ailleurs (les Archives, la noosphère),
     // il garde la cité-grille d'avant ('flux')
     const fond = opts.bg === 'cite' && !(W.map && W.map.env && W.map.env.time === 'cite') ? 'flux' : (opts.bg || 'noos');
-    C = { opts, hue, bg: paintBg(fond, hue), all: [], t: 0, cursor: null, log: [], turn: 0 };
+    C = { opts, hue, bg: paintBg(fond, hue), all: [], t: 0, cursor: null, log: [], turn: 0, vise: null, nom0: d0.name };
     chef = opts.heros ? opts.heros[0] : null; // `heros` : un groupe prêté pour ce combat-là (le râwî seul, dans la noosphère intérieure)
     (opts.heros || W.party).forEach((x, i) => C.all.push(mkHero(x, i)));
     const nH = C.all.length; opts.group.forEach((id, i) => C.all.push(mkFoe(id, i, opts.group.length, nH)));
@@ -244,11 +246,15 @@
     const discerne = C.all.some(e => e.side === 'hero' && e.alive && e.posture && (D.POSTURES[e.posture] || {}).faille) ? 1 : 0; // un sage dans le groupe : une faille de chaque égrégore est connue d'emblée
     C.all.forEach(e => { if (e.side === 'hero') e.sakina = Math.min(100, e.sakina + 6 * (P.priere || 0)); else { e.def.weak.slice(0, Math.floor((P.savoir || 0) / 2) + discerne).forEach(w => { e.known[w] = true; }); } });
     // le cœur : l'épreuve consomme la provision ; ce qui manque pèse. Celui qui languit tient moins.
+    C.zad0 = first ? I.oeuvres.state().zad : null;   // 2.19 : la provision du cœur avant l'épreuve — une fuite la rend (rien de perdu)
     const HC = I.oeuvres.enter(opts, first); C.lack = HC.lack || 0;
     // l'enracinement de l'idole : il a déjà pesé sur l'épreuve (O.weight) ; ici, sur ses voiles
     C.rac = I.mal.entree(opts, first, C.all.filter(e => e.side === 'foe'));
     // la bataille déclarée : nos rangs sur le champ, et en face les nuées de l'idole
     C.champ = I.rangs.ouvre(C, opts, champApi);
+    // 2.19 — « Fuir » : seulement d'un combat de rencontre (celui qui le lance le dit : `fuite`), jamais d'une idole, d'une
+    // bataille déclarée, d'une parole, ni d'un combat que le récit attend
+    C.peutFuir = !!opts.fuite && !opts.boss && !C.champ && !opts.noir && !I.mal.estIdole(opts);
     C.all.forEach(e => { if (e.side === 'hero' && I.oeuvres.afflicted(e.id)) { e.max.hp = Math.round(e.max.hp * 0.75); e.hp = Math.min(e.hp, e.max.hp); } });
     refresh();
     if (first) await I.rangs.declare(C, opts);
@@ -296,14 +302,16 @@
       const act = C.all.filter(e => e.alive).sort((a, b) => a.ct - b.ct)[0]; const dt = act.ct; C.all.forEach(e => { if (e.alive) e.ct -= dt; });
       C.active = act; C.turn++; refresh();
       await takeTurn(act);
+      if (C.fuite) { result = 'fuite'; break; } // 2.19 : le groupe a fui
       // après chaque tour de l'idole, et au plus tard tous les trois tours : nos rangs exécutent leur ordre, puis ses nuées avancent
       if (C.champ && I.rangs.du(C, act) && alive('foe').length && alive('hero').length) await I.rangs.pas(C);
       act.ct = 1000 / eff(act, 'spd');
       C.active = null;
       if (!alive('foe').length) result = 'win'; else if (!alive('hero').length && !(await leSecours(opts))) result = 'lose';
     }
-    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result, secours: !!C.secouru, champ: C.champ ? Object.assign({ rangs: C.champ.rangs.length, pas: C.champ.pas, flancs: C.champ.flancs.filter(Boolean).length }, C.champ.stats) : null };
+    B.last = { turns: C.turn, kos: C.kos || 0, minHp: C.minHp === undefined ? 1 : C.minHp, result, secours: !!C.secouru, esquives: C.esquives || 0, champ: C.champ ? Object.assign({ rangs: C.champ.rangs.length, pas: C.champ.pas, flancs: C.champ.flancs.filter(Boolean).length }, C.champ.stats) : null };
     I.audio.stopBeat(); $('#battle .cmd').innerHTML = ''; C.cursor = null;
+    if (result === 'fuite') return partir(prev);
     if (result === 'win') { I.audio.afterJingle = I.audio.place || null; I.audio.music('victoire'); } else I.audio.music('deuil');
     if (result === 'win') await victory(); else await defeat();
     // retour
@@ -321,11 +329,28 @@
     if (result === 'win' && prise) { I.gear.learn(); if (I.debug.auto) I.gear.bestAll(); else await I.gear.offer(prise); if (prev === W) W.hud(); }
     return result;
   }
+  // 2.19 — la fuite : on quitte le combat sur-le-champ. Rien de gagné (ni expérience, ni trouvaille), rien de perdu : chacun
+  // garde la Constance, le Souffle et la Sérénité qu'il avait (sans le répit d'après une victoire), la provision du cœur prise
+  // à l'entrée est rendue. Ce qui suit — la chimère qui poursuit — est l'affaire de celui qui a lancé le combat (rodeurs.js).
+  async function partir(prev) {
+    const W = I.world;
+    C.all.filter(e => e.side === 'hero').forEach(e => { const h = e.ref, st = I.calc.of(h); h.hp = Math.min(st.hp, Math.max(1, Math.round(e.hp))); h.sp = Math.min(st.sp, e.sp); h.sakina = e.sakina; });
+    if (C.zad0 !== null && C.zad0 !== undefined) { const d = I.oeuvres.state(); d.zad = Math.max(d.zad, C.zad0); }
+    await S.fade('out', 260);
+    $('#battle').hidden = true; $('#battle').classList.remove('champ', 'ordre'); document.body.classList.remove('in-battle'); B.active = false; $('#floaters').innerHTML = ''; $('#battle .banner').hidden = true;
+    I.setScene(prev); G.clearParts();
+    if (prev === W && W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; W.hud(); }
+    I.audio.back();
+    C = null;
+    await S.fade('in', 260);
+    return 'fuite';
+  }
 
   /* ================= tour ================= */
   async function takeTurn(e) {
     // effets de début de tour
     if (e.st.garde) delete e.st.garde;
+    if (e.st.esquive) delete e.st.esquive; // 2.19 : l'esquive tient jusqu'à son prochain tour, comme la garde
     if (e.st.regen) { const v = Math.round(e.max.hp * 0.08); heal(e, v); tick(e, 'regen'); }
     if (e.st.waswas) { const v = Math.max(1, Math.round(e.max.hp * (e.side === 'foe' ? 0.04 : 0.06))); e.hp = Math.max(e.side === 'hero' ? 1 : 0, e.hp - v); floater(e, v, 'dmg dot'); tick(e, 'waswas'); if (e.hp <= 0) { await kill(e); return; } }
     for (const k of ['atk', 'mag', 'df', 'spd']) if (e.buffs[k] && --e.buffs[k].t <= 0) delete e.buffs[k];
@@ -399,36 +424,98 @@
     const list = main ? box.querySelector('.mlist') : null, defile = () => !!list && list.scrollHeight > list.clientHeight + 1;
     const bas = innerHeight - ((I.ui && I.ui.padBas) || 0);   // 2.x : en hauteur, la bande de la manette tactile reste libre (ui.js, layout)
     const deborde = () => { const r = pan.getBoundingClientRect(); return r.bottom > bas + 1 || r.top < 0 || defile(); };
+    const sous = main ? null : box.querySelector('.mlist'); if (sous) sous.style.maxHeight = '';
     if (list) { list.style.maxHeight = ''; if (defile() && !document.body.classList.contains('portrait')) { list.style.maxHeight = 'none'; if (pan.getBoundingClientRect().top < 0) list.style.maxHeight = ''; } }
     for (const f of [0.94, 0.88, 0.82].filter(v => v > mini + 0.01).concat(mini)) { if (!deborde()) break; box.style.fontSize = (0.86 * f).toFixed(3) + 'em'; }
+    // 2.19 — une liste qui défile (les vertus, les objets, les ordres) : si le panneau sort encore de l'écran (un très petit
+    // téléphone), elle raccourcit et défile, pour que « ◂ Retour », sous elle, reste dans l'écran et sous le doigt
+    if (sous && deborde()) { const r = pan.getBoundingClientRect(), trop = Math.max(r.bottom - bas, -r.top) + 4, ligne = (sous.querySelector('.mi:not([hidden])') || {}).offsetHeight || 24;
+      sous.style.maxHeight = Math.max(ligne * 1.6, sous.clientHeight - trop) + 'px'; }
   }
+  /* 2.19 — le choix d'une cible se fait dans la liste même (demande du décideur, 20 novembre : « Par défaut quand on combat
+     si on appuie sur frapper et encore sur frapper (ou sur les boutons) ça frappe ou ça active l'action sur l'adversaire ou
+     l'ennemi identifié par défaut »). Une commande qui vise quelqu'un (`o.viser(i)` rend ceux qu'elle peut viser) ne quitte
+     pas la liste : elle s'arme — son bouton dit sur qui elle porte (« → nom »), le curseur le montre sur la scène et sa
+     plaque s'éclaire — et une barre se pose sous la liste, l'indication et « ◂ Retour ». Alors : la même commande touchée
+     de nouveau, ou Valider (A), agit sur celui que montre le curseur ; toucher une figure ou sa plaque agit sur elle ; ◂ ▸
+     (le joystick) change de cible ; Échap, B ou « Retour » désarment, sans rien dépenser ; toucher une autre commande
+     désarme et la prend à sa place. Celui qui est visé d'emblée : `defaut`. Le choix revient par `o.cible`. */
   function listMenu(box, title, items, o) {
-    o = o || {};
+    o = o || {}; o.cible = null;
     return new Promise(res => {
-      box.innerHTML = ''; if (title) box.appendChild(I.el('div', 'mtitle', title));
+      box.innerHTML = ''; box.classList.remove('vise', 'replie'); if (title) box.appendChild(I.el('div', 'mtitle', title));
       const list = I.el('div', 'mlist' + (o.cls ? ' ' + o.cls : '')); box.appendChild(list);
       if (o.note) { const n = I.el('div', 'mlecon', o.note); n.dir = I.langue.sens(n.textContent); box.appendChild(n); } // 2.x (D189) : la leçon d'une commande nouvelle, sous la liste
       const desc = I.el('div', 'mdesc'); if (o.desc) box.appendChild(desc);
-      let idx = o.start || 0; const btns = [];
+      let idx = o.start || 0, fini = false, vise = null, bk = null; const btns = [], main = o.cls === 'main';
       const sel = (i, pas) => { idx = (i + items.length) % items.length; for (let k = 0; k < items.length && items[idx].cache; k++) idx = (idx + (pas || 1) + items.length) % items.length; // une commande pas encore reçue (lecons.js) est sautée
         btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); if (o.desc) desc.innerHTML = items[idx].desc || ''; if (o.onSel) o.onSel(idx); btns[idx].scrollIntoView && btns[idx].scrollIntoView({ block: 'nearest' }); };
-      const done = v => { I.input.pop(h); res(v); }, ne = performance.now();
+      const done = v => { if (fini) return; fini = true; desarmer(true); I.input.pop(h); res(v); }, ne = performance.now();
+      // la commande armée : son bouton, la barre, le curseur ; `montre` suit la cible du moment
+      // si la liste et sa barre ne tiennent plus (un petit téléphone : la manette garderait sa bande), la liste se replie sur la
+      // commande armée — comme le choix d'une cible d'avant la 2.19 ; « Retour » ou B la rouvrent
+      const replier = () => { box.classList.remove('replie'); tenir(box, btns, main); const pan = box.closest('.panel'); if (!pan) return; const r = pan.getBoundingClientRect(), bas = innerHeight - ((I.ui && I.ui.padBas) || 0);
+        if (r.bottom > bas + 1 || r.top < 0) { box.classList.add('replie'); tenir(box, btns, main); } };
+      const montre = () => { const v = vise, e = v.pool[v.k]; C.cursor = e; v.sm.textContent = I.t('→ {nom}', { nom: e.name }); refresh(); replier(); };
+      const armer = (i, pool) => {
+        const b = btns[i]; let sm = b.querySelector('small'); const avant = sm ? sm.innerHTML : null; if (!sm) { sm = I.el('small'); b.appendChild(sm); }
+        const barre = I.el('div', 'mvise'), tactile = document.body.classList.contains('touch');
+        barre.appendChild(I.el('div', 'mhint', tactile ? I.t('Choisis une cible · touche-la, ou touche encore la commande') : I.t('Choisis une cible · touche-la, ou ◂ ▸ puis Valider')));
+        const rb = I.el('button', 'mback', '◂ ' + I.t('Retour')); rb.type = 'button'; rb.onclick = ev => { ev.stopPropagation(); if (fini) return; I.audio.sfx('move'); desarmer(); }; barre.appendChild(rb);
+        list.after(barre); if (bk) bk.hidden = true;
+        vise = { i, pool, k: defaut(pool), b, sm, avant, barre }; b.classList.add('arme'); box.classList.add('vise');
+        C.pool = pool;
+        C.pickCb = e => { if (fini || !vise || !pool.includes(e)) return; I.audio.sfx('ok'); o.cible = e; done(vise.i); };
+        C.pickSel = e => { if (!vise) return; const j = pool.indexOf(e); if (j >= 0 && j !== vise.k) { vise.k = j; montre(); } };
+        montre();
+      };
+      // désarmer : la barre s'en va, le bouton reprend ce qu'il disait ; rien n'est dépensé (fin : la liste se referme)
+      function desarmer(fin) {
+        if (!vise) return; const v = vise; vise = null;
+        v.barre.remove(); v.b.classList.remove('arme'); box.classList.remove('vise', 'replie'); if (v.avant === null) v.sm.remove(); else v.sm.innerHTML = v.avant;
+        if (bk) bk.hidden = false; if (C) { C.cursor = null; C.pickCb = null; C.pickSel = null; C.pool = null; refresh(); }
+        if (!fin) tenir(box, btns, main);
+      }
+      // choisir la commande i (un toucher, ou Valider) : elle agit, ou elle s'arme si elle vise quelqu'un
+      const choisir = i => {
+        if (items[i].disabled) { I.audio.sfx('dark'); return; }
+        const pool = o.viser ? o.viser(i) : null;
+        if (pool && !pool.length) { I.audio.sfx('dark'); if (o.vide) o.vide(i); return; }
+        I.audio.sfx('ok'); if (pool) armer(i, pool); else done(i);
+      };
       items.forEach((it, i) => {
         const b = I.el('button', 'mi' + (it.disabled ? ' off' : '') + (it.cache ? ' cache' : '') + (it.cls ? ' ' + it.cls : ''), `<span>${it.label}</span>${it.sub ? `<small>${it.sub}</small>` : ''}`); b.type = 'button'; if (it.cache) b.hidden = true;
-        b.onclick = ev => { ev.stopPropagation(); if (performance.now() - ne < 250) return; sel(i); if (!it.disabled) { I.audio.sfx('ok'); done(i); } else I.audio.sfx('dark'); }; // pas de toucher fantôme
-        b.onmouseenter = () => sel(i); btns.push(b); list.appendChild(b);
+        b.onclick = ev => { ev.stopPropagation(); if (fini || performance.now() - ne < 250) return; // pas de toucher fantôme
+          if (vise) { if (vise.i === i) { I.audio.sfx('ok'); o.cible = vise.pool[vise.k]; done(i); return; } desarmer(); } // la même commande, de nouveau : elle agit sur celui qui est montré
+          sel(i); choisir(i); };
+        b.onmouseenter = () => { if (!vise) sel(i); }; btns.push(b); list.appendChild(b);
       });
-      if (o.back) { const bk = I.el('button', 'mback', '◂ ' + I.t('Retour')); bk.type = 'button'; bk.onclick = ev => { ev.stopPropagation(); done(-1); }; box.appendChild(bk); }
-      tenir(box, btns, o.cls === 'main'); sel(idx);
+      if (o.back) { bk = I.el('button', 'mback', '◂ ' + I.t('Retour')); bk.type = 'button'; bk.onclick = ev => { ev.stopPropagation(); done(-1); }; box.appendChild(bk); }
+      tenir(box, btns, main); sel(idx);
       const h = I.input.push(a => {
+        if (fini) return true;
+        if (vise) { const n = vise.pool.length;
+          if (a === 'up' || a === 'left') { vise.k = (vise.k - 1 + n) % n; montre(); I.audio.sfx('move'); }
+          else if (a === 'down' || a === 'right') { vise.k = (vise.k + 1) % n; montre(); I.audio.sfx('move'); }
+          else if (a === 'ok') { I.audio.sfx('ok'); o.cible = vise.pool[vise.k]; done(vise.i); }
+          else if (a === 'cancel') { I.audio.sfx('move'); desarmer(); }
+          return true; }
         if (a === 'up' || (o.grid && a === 'left')) { sel(idx - 1, -1); I.audio.sfx('move'); }
         else if (a === 'down' || (o.grid && a === 'right')) { sel(idx + 1, 1); I.audio.sfx('move'); }
         else if ((a === 'left' || a === 'right') && o.onLR) o.onLR(a === 'left' ? -1 : 1);
-        else if (a === 'ok') { if (!items[idx].disabled) { I.audio.sfx('ok'); done(idx); } else I.audio.sfx('dark'); }
+        else if (a === 'ok') choisir(idx);
         else if (a === 'cancel' && o.back) done(-1);
         return true;
       });
     });
+  }
+  // qui est visé d'emblée : parmi les chimères, celle que le groupe a visée en dernier, si elle tient encore ; sinon une
+  // chimère dévoilée ; sinon la première. Parmi les nôtres : un éprouvé (pour le relever), sinon le plus éprouvé des debout.
+  function defaut(pool) {
+    if (!pool.length || !C) return 0;
+    if (pool[0].side === 'foe') { let j = C.vise ? pool.indexOf(C.vise) : -1; if (j < 0 || !pool[j].alive) j = pool.findIndex(e => e.broken); return Math.max(0, j); }
+    const ko = pool.findIndex(e => !e.alive); if (ko >= 0) return ko;
+    let j = 0; pool.forEach((e, k) => { if (e.hp / e.max.hp < pool[j].hp / pool[j].max.hp) j = k; }); return j;
   }
   B.listMenu = listMenu;
 
@@ -443,18 +530,10 @@
   // où se tient chacun sur la scène, en points logiques, et qui peut être choisi en ce moment : pour les outils de contrôle (doigt.js)
   B.places = function () { return !C ? [] : C.all.filter(e => e.alive && (e.side !== 'foe' || e.fade > 0)).map(e => Object.assign({ nom: e.name, camp: e.side, x: e.x + e.ox, y: e.side === 'foe' ? e.y - 6 - e.size / 2 : e.y - 22, choix: !!(C.pool && C.pool.includes(e)) },
     e.side === 'hero' ? { id: e.id, posture: e.posture || null, atk: e.atk, mag: e.mag, niyya: e.niyya, sakina: e.sakina, soin: e.soin || 0, menace: e.menace || 0 } : { connues: Object.keys(e.known).filter(k => e.known[k] === true).length })); };
-  function pickTarget(pool, label) {
-    return new Promise(res => {
-      const box = $('#battle .cmd'); box.innerHTML = `<div class="mtitle">${label}</div><div class="mhint">${I.t('Choisis une cible · touche-la, ou ◂ ▸ puis Valider')}</div>`;
-      const bk = I.el('button', 'mback', '◂ ' + I.t('Retour')); bk.type = 'button'; box.appendChild(bk);
-      let idx = 0; const sel = i => { idx = (i + pool.length) % pool.length; C.cursor = pool[idx]; refresh(); bind(); };
-      const done = v => { I.input.pop(h); C.cursor = null; C.pickCb = null; C.pickSel = null; C.pool = null; refresh(); res(v); };
-      bk.onclick = ev => { ev.stopPropagation(); done(null); };
-      const bind = () => { C.pickCb = e => { if (pool.includes(e)) { I.audio.sfx('ok'); done(e); } }; C.pickSel = e => { const i = pool.indexOf(e); if (i >= 0 && i !== idx) sel(i); }; };
-      C.pool = pool; sel(0);
-      const h = I.input.push(a => { if (a === 'up' || a === 'left') { sel(idx - 1); I.audio.sfx('move'); } else if (a === 'down' || a === 'right') { sel(idx + 1); I.audio.sfx('move'); } else if (a === 'ok') { I.audio.sfx('ok'); done(pool[idx]); } else if (a === 'cancel') done(null); return true; });
-    });
-  }
+  // ceux qu'une vertu ou la Sérénité peut viser : une chimère, ou l'un des nôtres ; null : elle ne vise personne en
+  // particulier (tous, ou soi-même)
+  const poolDe = sk => sk.target === 'foe' ? alive('foe') : sk.target === 'ally' ? C.all.filter(e => e.side === 'hero' && (sk.revive ? true : e.alive)) : null;
+  const viseFoe = t => { if (t && t.side === 'foe') C.vise = t; }; // le groupe s'en souvient : c'est elle que l'on visera d'emblée
 
   async function playerCmd(h) {
     const box = $('#battle .cmd'); let boost = 0, start = 0;
@@ -466,42 +545,53 @@
       const setBoost = d => { if (!voit('niyya')) return; const was = boost; boost = I.clamp(boost + d, 0, Math.min(3, h.niyya)); if (boost > was) { G.spawn({ x: h.x, y: h.y - 24, type: 'ring', r0: 6, r1: 24 + boost * 4, life: 0.4, size: 2, color: h.color }); for (let q = 0; q < 8; q++) G.spawn({ x: h.x + (Math.random() - 0.5) * 20, y: h.y, vy: -50 - Math.random() * 40, life: 0.6, size: 0.9, color: h.color, type: 'spark' }); } const t = box.querySelector('.mtitle'); if (t) { t.innerHTML = title(); wire(); } I.audio.sfx('move'); };
       const wire = () => box.querySelectorAll('.nb').forEach(b => b.onclick = ev => { ev.stopPropagation(); setBoost(+b.dataset.d); });
       const lum = lightOf(h);
+      // 2.19 — les commandes : Frapper ; les Vertus (Éclairer en tête : « Éclairer devient une vertu pour éviter la
+      // surcharge ») ; les Objets ; les parades — la Garde, l'Esquive, et Fuir là où l'on peut fuir ; puis, s'il y a lieu,
+      // Ordonner et la Sérénité
       const items = [
-        { label: `${elc('fer')} ${I.t('Frapper')}`, sub: boost ? I.t('{n} coups', { n: 1 + boost }) : (h.gear.arme ? D.GEAR_TYPES[h.gear.arme.t].name : I.t('Force')) },
-        { label: `${elc(lum.el)} ${I.t('Éclairer')}`, sub: D.ELEMENTS[lum.el].name },
-        { label: '✦ ' + I.t('Vertus'), sub: I.t('Souffle {sp}', { sp: h.sp }), disabled: !!h.st.doute, cache: !voit('skills') },
-        { label: '◍ ' + I.t('Objets'), cache: !voit('items') },
-        { label: '⛨ ' + I.t('Garde'), sub: I.t('+ Niyya'), cache: !voit('guard') }
+        { id: 'frapper', label: `${elc('fer')} ${I.t('Frapper')}`, sub: boost ? I.t('{n} coups', { n: 1 + boost }) : (h.gear.arme ? D.GEAR_TYPES[h.gear.arme.t].name : I.t('Force')) },
+        { id: 'vertus', label: '✦ ' + I.t('Vertus'), sub: I.t('Souffle {sp}', { sp: h.sp }), cache: !voit('light') },
+        { id: 'objets', label: '◍ ' + I.t('Objets'), cache: !voit('items') },
+        { id: 'garde', label: '⛨ ' + I.t('Garde'), sub: I.t('+ Niyya'), cache: !voit('guard') },
+        { id: 'esquive', label: '↷ ' + I.t('Esquive'), sub: I.t('éviter'), cache: !voit('dodge') }
       ];
-      const iOrd = C.champ ? items.push({ label: '⚑ ' + I.t('Ordonner'), sub: h.def.stratege && C.champ.libre !== C.turn ? I.t('sans perdre son tour') : I.t('les rangs') }) - 1 : -1;
-      const iLim = h.sakina >= 100 ? items.push({ label: `❂ ${h.def.limit.name}`, sub: I.t('Sérénité'), cls: 'limit' }) - 1 : -1;
-      const nv = C.lecon && !C.neufVu ? ({ vertus: 2, objets: 3, garde: 4 })[C.neuf] : undefined; if (nv !== undefined && items[nv]) items[nv].cls = 'neuf'; // la commande nouvelle est cerclée, sa leçon dessous, jusqu'au geste
-      const p = listMenu(box, title(), items, { start, onLR: setBoost, cls: 'main', note: nv !== undefined ? C.lecon : '' }); wire();
-      const i = await p; start = i;
-      if (i === 0 || i === 1) { const sk = i === 0 ? FER : lum; const t = await pickTarget(alive('foe'), I.t(sk.name)); if (!t) continue; sert('attack'); if (boost) sert('niyya'); return { type: 'skill', skill: sk, targets: [t], boost }; }
-      if (i === 2) {
-        const sks = h.def.skills.filter(k => k.lvl <= h.lvl);
-        const j = await listMenu(box, `<b>${I.t('Vertus')}</b> <span class="niyya">${I.t('Souffle {sp}/{max}', { sp: h.sp, max: h.max.sp })}${boost ? ` · <em>${I.t('élan ×{n}', { n: boost })}</em>` : ''}</span>`, sks.map(k => ({ label: `${k.pow ? elc(k.el) : k.heal ? '<i class="el" style="color:#7fd69a">✚</i>' : '<i class="el">◇</i>'} ${k.name}`, sub: `${k.cost}`, disabled: k.cost > h.sp, desc: I.esc(k.desc) })), { back: true, desc: true });
-        if (j < 0) continue; const sk = sks[j]; const tg = await chooseTargets(h, sk); if (!tg) continue; sert('skills'); if (boost) sert('niyya'); return { type: 'skill', skill: sk, targets: tg, boost };
+      if (C.peutFuir) items.push({ id: 'fuir', label: '⇢ ' + I.t('Fuir'), sub: I.t('s’en aller'), cache: !voit('flee') }); // absente là où l'on ne fuit pas
+      if (C.champ) items.push({ id: 'ordonner', label: '⚑ ' + I.t('Ordonner'), sub: h.def.stratege && C.champ.libre !== C.turn ? I.t('sans perdre son tour') : I.t('les rangs') });
+      if (h.sakina >= 100) items.push({ id: 'limite', label: `❂ ${h.def.limit.name}`, sub: I.t('Sérénité'), cls: 'limit' });
+      // la commande nouvelle est cerclée, sa leçon dessous, jusqu'au geste — pour « Se protéger », les trois parades
+      const neufs = C.lecon && !C.neufVu ? ({ vertus: ['vertus'], objets: ['objets'], garde: ['garde', 'esquive', 'fuir'] })[C.neuf] || [] : [];
+      items.forEach(it => { if (neufs.includes(it.id)) it.cls = 'neuf'; });
+      const o = { start, onLR: setBoost, cls: 'main', note: items.some(it => it.cls === 'neuf') ? C.lecon : '',
+        viser: j => items[j].id === 'frapper' ? alive('foe') : items[j].id === 'limite' ? poolDe(h.def.limit) : null };
+      const p = listMenu(box, title(), items, o); wire();
+      const i = await p, it = items[i]; start = i;
+      if (it.id === 'frapper') { viseFoe(o.cible); sert('attack'); if (boost) sert('niyya'); return { type: 'skill', skill: FER, targets: [o.cible], boost }; }
+      if (it.id === 'vertus') {
+        // Éclairer, puis les vertus de chacun (une fois l'outil « vertus » reçu) ; le doute retient les vertus, pas Éclairer
+        const sks = voit('skills') ? h.def.skills.filter(k => k.lvl <= h.lvl) : [], L = [lum].concat(sks);
+        const ov = { back: true, desc: true, viser: j => poolDe(L[j]) };
+        const j = await listMenu(box, `<b>${I.t('Vertus')}</b> <span class="niyya">${I.t('Souffle {sp}/{max}', { sp: h.sp, max: h.max.sp })}${boost ? ` · <em>${I.t('élan ×{n}', { n: boost })}</em>` : ''}</span>`,
+          L.map((k, n) => n === 0 ? { label: `${elc(lum.el)} ${I.t('Éclairer')}`, sub: D.ELEMENTS[lum.el].name, desc: I.t('Sans Souffle : une frappe de {element}.', { element: D.ELEMENTS[lum.el].name }) }
+            : { label: `${k.pow ? elc(k.el) : k.heal ? '<i class="el" style="color:#7fd69a">✚</i>' : '<i class="el">◇</i>'} ${k.name}`, sub: `${k.cost}`, disabled: k.cost > h.sp || !!h.st.doute, desc: I.esc(k.desc) }), ov);
+        if (j < 0) continue;
+        const sk = L[j], tg = ov.cible ? [ov.cible] : targetsFor(h, sk); viseFoe(ov.cible);
+        sert(j === 0 ? 'attack' : 'skills'); if (boost) sert('niyya'); return { type: 'skill', skill: sk, targets: tg, boost };
       }
-      if (i === 3) {
+      if (it.id === 'objets') {
         const inv = I.save.data.items, ids = Object.keys(D.ITEMS).filter(k => (inv[k] || 0) > 0);
         if (!ids.length) { banner(I.t('La besace est vide.'), 900); continue; }
         const fast = I.oeuvres.fasting();
-        const j = await listMenu(box, '<b>' + I.t('Objets') + '</b>' + (fast ? ' <span class="niyya">' + I.t('jour de jeûne') + '</span>' : ''), ids.map(k => ({ label: D.ITEMS[k].name, sub: fast && D.ITEMS[k].vivre ? I.t('jeûne') : '×' + inv[k], disabled: fast && D.ITEMS[k].vivre, desc: fast && D.ITEMS[k].vivre ? I.t('Jour de jeûne : les vivres attendent le coucher du soleil.') : D.ITEMS[k].desc })), { back: true, desc: true });
-        if (j < 0) continue; const it = D.ITEMS[ids[j]];
-        let tg; if (it.target === 'allies') tg = alive('hero'); else { const pool = C.all.filter(e => e.side === 'hero' && (it.revive ? !e.alive : e.alive)); if (!pool.length) { banner(I.t('Personne n’en a besoin.'), 900); continue; } const t = await pickTarget(pool, it.name); if (!t) continue; tg = [t]; }
-        sert('items'); return { type: 'item', item: ids[j], targets: tg };
+        const ov = { back: true, desc: true, viser: j => { const x = D.ITEMS[ids[j]]; return x.target === 'allies' ? null : C.all.filter(e => e.side === 'hero' && (x.revive ? !e.alive : e.alive)); }, vide: () => banner(I.t('Personne n’en a besoin.'), 900) };
+        const j = await listMenu(box, '<b>' + I.t('Objets') + '</b>' + (fast ? ' <span class="niyya">' + I.t('jour de jeûne') + '</span>' : ''), ids.map(k => ({ label: D.ITEMS[k].name, sub: fast && D.ITEMS[k].vivre ? I.t('jeûne') : '×' + inv[k], disabled: fast && D.ITEMS[k].vivre, desc: fast && D.ITEMS[k].vivre ? I.t('Jour de jeûne : les vivres attendent le coucher du soleil.') : D.ITEMS[k].desc })), ov);
+        if (j < 0) continue;
+        sert('items'); return { type: 'item', item: ids[j], targets: D.ITEMS[ids[j]].target === 'allies' ? alive('hero') : [ov.cible] };
       }
-      if (i === 4) { sert('guard'); return { type: 'guard' }; }
-      if (i === iOrd) { const fait = await I.rangs.ordonner(C, h); if (fait === true) return { type: 'ordre' }; continue; } // 'libre' : le stratège garde son tour
-      if (i === iLim) { const sk = h.def.limit; const tg = await chooseTargets(h, sk); if (!tg) continue; return { type: 'skill', skill: sk, targets: tg, boost: 0, limit: true }; }
+      if (it.id === 'garde') { sert('guard'); return { type: 'guard' }; }
+      if (it.id === 'esquive') { sert('dodge'); return { type: 'esquive' }; }
+      if (it.id === 'fuir') { sert('flee'); return { type: 'fuite' }; }
+      if (it.id === 'ordonner') { const fait = await I.rangs.ordonner(C, h); if (fait === true) return { type: 'ordre' }; continue; } // 'libre' : le stratège garde son tour
+      if (it.id === 'limite') { const sk = h.def.limit, tg = o.cible ? [o.cible] : targetsFor(h, sk); viseFoe(o.cible); return { type: 'skill', skill: sk, targets: tg, boost: 0, limit: true }; }
     }
-  }
-  async function chooseTargets(h, sk) {
-    if (sk.target === 'foe') { const t = await pickTarget(alive('foe'), sk.name); return t ? [t] : null; }
-    if (sk.target === 'ally') { const pool = C.all.filter(e => e.side === 'hero' && (sk.revive ? true : e.alive)); const t = await pickTarget(pool, sk.name); return t ? [t] : null; }
-    return targetsFor(h, sk);
   }
 
   /* ================= résolution ================= */
@@ -509,6 +599,15 @@
     $('#battle .cmd').innerHTML = '';
     if (cmd.type === 'ordre') { floater(e, I.t('Ordonne'), 'info'); await I.sleep(260); return; } // son tour est allé à l'ordre donné aux rangs
     if (cmd.type === 'guard') { e.st.garde = 1; e.niyya = Math.min(5, e.niyya + 1); e.sakina = Math.min(100, e.sakina + 8); fx('guard', e, e.color); floater(e, I.t('Garde'), 'info'); I.audio.sfx('tek'); await I.sleep(420); return; }
+    // 2.19 — l'esquive : un mouvement du corps, rien d'autre (exigence 17) ; jusqu'à son prochain tour, un coup peut passer à
+    // côté de lui (D.ESQUIVE). Un pari, quand la garde est une certitude : ni Niyya, un peu de Sérénité.
+    if (cmd.type === 'esquive') { e.st.esquive = 1; e.sakina = Math.min(100, e.sakina + 4); floater(e, I.t('Esquive'), 'info'); I.audio.sfx('move'); await tween(e, 'ox', 6, 90); await tween(e, 'ox', 0, 160); await I.sleep(200); return; }
+    // 2.19 — la fuite : le mot en bas (2.17), les nôtres s'éloignent, et le combat se referme (run, partir)
+    if (cmd.type === 'fuite') {
+      banner(I.t('Vous fuyez. {nom} vous poursuit : courez !', { nom: I.esc(C.nom0 || '') }), 1700, false, 'speech foe'); I.audio.sfx('roll');
+      const H = alive('hero'); H.forEach(x => { x.marche = 1; tween(x, 'ox', 70, 700); }); await I.sleep(1100); H.forEach(x => { x.marche = 0; });
+      C.fuite = true; return;
+    }
     if (cmd.type === 'item') {
       const it = D.ITEMS[cmd.item]; I.save.data.items[cmd.item]--; await banner(it.name, 700);
       cmd.targets.forEach(t => { if (it.revive && !t.alive) { t.alive = true; t.hp = Math.round(t.max.hp * it.revive); floater(t, I.t('Relevé§combat'), 'heal'); } if (it.hp && t.alive) heal(t, Math.round(t.max.hp * it.hp)); if (it.sp) { t.sp = Math.min(t.max.sp, t.sp + Math.round(t.max.sp * it.sp)); floater(t, I.t('+Souffle'), 'heal'); } if (it.cleanse) cleanse(t); if (it.niyya) { t.niyya = Math.min(5, t.niyya + it.niyya); floater(t, I.t('+Niyya'), 'info'); } fx('heal', t, '#7fd69a'); });
@@ -527,10 +626,18 @@
     const fer = hero && sk.basic && sk.el === 'fer', vif = fer && e.gear.vif && Math.random() < e.gear.vif; if (vif) floater(e, I.t('Coup double'), 'info');
     const hits = (sk.hits || 1) + (sk.basic && hero ? boost : 0) + (vif ? 1 : 0), mult = sk.basic ? 1 : 1 + 0.5 * boost;
     let targets = cmd.targets.filter(t => t.alive || sk.revive);
+    // 2.19 — l'esquive : un coup d'une chimère sur l'un des nôtres qui s'est mis à l'esquive peut passer à côté de lui — un
+    // tirage par coup porté (D.ESQUIVE : seul visé, ou tout le groupe) ; il n'en prend ni dégâts ni effets. Il se dit et se
+    // voit quand le coup arrive : « Esquivé », un pas de côté, loin des chimères.
+    const evites = !hero && (sk.target === 'foe' || sk.target === 'foes') ? targets.filter(t => t.side === 'hero' && t.st.esquive && Math.random() < ((D.ESQUIVE || {})[sk.target === 'foe' && targets.length === 1 ? 'seul' : 'groupe'] || 0)) : [];
+    if (evites.length) targets = targets.filter(t => !evites.includes(t));
+    const esquiver = () => { evites.splice(0).forEach(t => { floater(t, I.t('Esquivé'), 'buff'); C.esquives = (C.esquives || 0) + 1; tween(t, 'ox', 14, 110).then(() => tween(t, 'ox', 0, 300)); }); };
     if (sk.pow) {
       for (let hI = 0; hI < hits; hI++) {
-        targets = targets.filter(t => t.alive); if (!targets.length) break;
+        targets = targets.filter(t => t.alive); if (!targets.length && !evites.length) break;
         if (geste) { e.geste = Object.assign({ t0: performance.now() }, geste); await I.sleep((G.FRAPPE.elan + G.FRAPPE.balai * 0.5) * 1000); } // le coup porte au milieu du balai
+        if (evites.length) { esquiver(); I.audio.sfx('move'); if (!targets.length) { await I.sleep(300); break; } }
+        if (!targets.length) break;
         for (const t of targets) strike(e, t, sk, mult, col);
         I.audio.sfx(sk.el === 'fer' ? (hero ? 'slash' : 'hit') : hero ? 'light' : 'dark');
         await I.sleep(hits > 1 ? 190 : 300);
@@ -538,7 +645,7 @@
       if (fer && e.gear.choc) for (const t of cmd.targets) if (t.alive && t.hp > 0) applyFx(e, t, { st: 'stun', chance: e.gear.choc }, 0);
       for (const t of cmd.targets) if (t.alive && t.hp <= 0) await kill(t);
       for (const t of cmd.targets) if (t.side === 'foe' && t.alive) await checkPhase(t);
-    } else { fx(sk.anim || (sk.heal ? 'heal' : 'glyph'), sk.target === 'self' ? e : targets[0] || e, col); I.audio.sfx(sk.heal ? 'heal' : hero ? 'light' : 'dark'); }
+    } else { fx(sk.anim || (sk.heal ? 'heal' : 'glyph'), sk.target === 'self' ? e : targets[0] || cmd.targets[0] || e, col); I.audio.sfx(sk.heal ? 'heal' : hero ? 'light' : 'dark'); esquiver(); }
     if (sk.heal || sk.revive || sk.sp) {
       for (const t of targets) {
         if (sk.revive && !t.alive) { t.alive = true; t.hp = 1; t.st = {}; floater(t, I.t('Relevé§combat'), 'heal'); }
@@ -779,7 +886,7 @@
     const hb = $('#battle .heroes'); hb.innerHTML = '';
     C.all.filter(e => e.side === 'hero').forEach(e => {
       let pips = ''; if (!I.lecons || I.lecons.voit('niyya')) for (let i = 0; i < 5; i++) pips += `<i class="pip${i < e.niyya ? ' on' : ''}"></i>`; // la Niyya ne se montre qu'une fois reçue (lecons.js)
-      const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${I.t(STN[k === 'df' ? 'def' : k])}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="${k === 'regen' || k === 'garde' || k === 'taunt' ? 'up' : 'dn'}">${I.t(STN[k] || k)}</b>`).join('');
+      const sts = Object.keys(e.buffs).map(k => `<b class="${e.buffs[k].v > 0 ? 'up' : 'dn'}">${I.t(STN[k === 'df' ? 'def' : k])}${e.buffs[k].v > 0 ? '▲' : '▼'}</b>`).join('') + Object.keys(e.st).map(k => `<b class="${BIEN.includes(k) ? 'up' : 'dn'}">${I.t(STN[k] || k)}</b>`).join('');
       const r = I.el('button', 'hrow' + (e === C.active ? ' act' : '') + (e.alive ? '' : ' ko') + (C.cursor === e ? ' cur' : ''),
         `<span class="hs" style="background-image:url(${G.sealURL(e.def.arabic, e.ray || e.color)})"></span><span class="hn"><b style="color:${e.ray || e.color}">${I.esc(e.name)}</b><small><span class="nv">${I.t('Niv. {n}', { n: e.ref.lvl })}${e.posture && I.postures.offertes() ? ' · ' + D.POSTURES[e.posture].court : ''}</span> ${sts}</small></span>
          <span class="hbars"><span class="bar hp"><i style="width:${e.hp / e.max.hp * 100}%"></i><em>${e.alive ? Math.ceil(e.hp) : I.t('Éprouvé')}</em></span><span class="bar sp"><i style="width:${e.max.sp ? e.sp / e.max.sp * 100 : 0}%"></i><em>${e.sp}</em></span></span>
@@ -825,6 +932,7 @@
             c.drawImage(img, x - 16, y - 46 + bob);
             if (e.flash > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, e.flash) * 0.8; c.drawImage(img, x - 16, y - 46 + bob); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
             if (e.st.garde) { c.strokeStyle = e.color; c.lineWidth = 1; c.beginPath(); c.ellipse(x - 14, y - 24, 4, 20, 0, 0, 6.3); c.stroke(); }
+            if (e.st.esquive) { const o2 = Math.sin(t * 6 + e.x) > 0 ? 1 : 0; c.fillStyle = 'rgba(207,214,255,.6)'; [[-31, 4], [-24, 6], [-17, 4]].forEach(q => c.fillRect(x + 12 + o2, y + q[0], q[1], 1)); } // 2.19 : à l'esquive, le corps prêt à s'écarter
             lights.push({ x, y: y - 26, r: act ? 46 : 32, color: e.color, a: act ? 0.9 : 0.5 });
             if (G.D > 1 && look.rayon && e.alive) lights.push({ x: x - 3, y: y - 38, r: 15, color: look.rayon, a: 0.55 }); // son visage rayonne de la couleur qui lui est propre
             if (e.sakina >= 100 && Math.random() < 0.3) G.spawn({ x: x + (Math.random() - 0.5) * 18, y: y - 4, vy: -30, life: 0.9, size: 0.8, color: e.color, type: 'mote' });

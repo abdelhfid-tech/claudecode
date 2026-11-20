@@ -1705,6 +1705,45 @@ pages privées de son compte.
   dedans ? ») — réécrite à la source en arabe, anglais et japonais, à relire ; aucun short ni outil ne la citait. À corriger par le décideur seul (l'agent n'y touche pas) : le feuillet « S'orienter aux
   étoiles » cite 16:16 sous une forme qui n'est d'aucune des deux éditions de Hamidullah (« ainsi que des points de
   repère. Et au moyen des étoiles [les gens] se guident. »).
+- [ ] **D208. Les commandes du combat : le double toucher, « Retour » partout, l'Esquive, Fuir, Éclairer dans les Vertus
+  (version 2.19 ; le décideur, 20 novembre : « Rajoute une parade "esquive" et vérifie qu'on a toujours possibilité de cliquer
+  sur retour. Par défaut quand on combat si on appuie sur frapper et encore sur frapper (ou sur les boutons) ça frappe ou ça
+  active l'action sur l'adversaire ou l'ennemi identifié par défaut. » ; « Rajoute aussi une parade "fuire" pour quitter le
+  combat même si on sera poursuivi il faudra courir pour échapper au monstre. Éclairer devient une vertu pour éviter la
+  surcharge. » ; `v2/docs/architecture.md`, « Les commandes du combat » ; à valider par le décideur).** *Le double toucher :*
+  une commande qui vise quelqu'un s'arme dans la liste (son bouton dit « → nom », la cible est montrée sur la scène, une barre
+  porte l'indication et « ◂ Retour ») ; touchée de nouveau, ou A, elle agit sur la cible désignée d'emblée. Cette cible :
+  parmi les chimères, celle que le groupe a visée en dernier, tant qu'elle tient ; sinon une chimère dévoilée ; sinon la
+  première ; parmi les nôtres, un éprouvé, sinon le plus éprouvé. Toucher une autre commande désarme et la prend à sa place
+  (choix de l'agent : la demande de l'intégrateur disait « désarme seulement ») ; toucher une figure la vise. *« Retour »
+  partout :* chaque pas qui n'est pas la liste principale a son « ◂ Retour », dans l'écran, hors de la manette, et B revient
+  d'un cran. *L'Esquive* (« ↷ Esquive », petite ligne « éviter », juste après la Garde) : jusqu'à son prochain tour, un coup d'une
+  chimère sur lui seul passe à côté **une fois sur deux** (0,5), un coup sur tout le groupe **une fois sur quatre** (0,25) —
+  ni dégâts ni effets de ce coup-là ; « Esquivé » et un pas de côté ; **ni Niyya, +4 de Sérénité** (la Garde reste : dégâts
+  divisés par deux, +1 Niyya, +8 Sérénité). Une chimère n'esquive jamais. *Fuir* (« ⇢ Fuir », petite ligne « s’en aller », après
+  l'Esquive) : seulement d'un combat de rencontre — une chimère qui erre sur la carte et qu'aucun objectif ne vise, ce qui
+  rôde sur les ponts d'un labyrinthe, ce qui rôde dans la descente du râwî quand il lui fait face — ; jamais d'un combat
+  lancé par un récit, d'une idole, d'une bataille déclarée, d'une parole ni du combat intérieur. Rien de gagné, rien de
+  perdu (Constance, Souffle et Sérénité gardés tels quels, provision du cœur rendue). Puis : **1,5 s de grâce** où rien ne
+  touche le groupe ; la chimère fuie **se reprend 0,6 s**, puis poursuit celui qui mène à **92 points par seconde** (la
+  marche : 82 ; la course : 100,45) — à pied, elle rattrape et le combat reprend, la chimère comme neuve (choix de l'agent :
+  « comme neuve » plutôt que « telle qu'on l'a laissée ») ; elle renonce quand celui qui mène a **couru 2,5 s** sans être
+  rejoint, quand il est à **8 cases**, ou **hors d'atteinte 2 s** (une salle où elle n'entre pas, un abri) ; une chimère de
+  la carte revient alors à sa place, au pas. Au premier fuir, une ligne du fil dit comment courir (« La chimère vous
+  poursuit : pour courir, tiens B en poussant le joystick. » ; au clavier, « … tiens Maj en marchant. »). *Éclairer* devient
+  la première des Vertus : la commande « Vertus » paraît dès le premier combat (outil « Frapper la faille ») et ne tient
+  qu'Éclairer ; les vertus de chacun s'y ajoutent avec l'outil « Les vertus » ; Éclairer ne coûte toujours rien et reste
+  possible dans le doute. *La progression :* l'outil « La garde et la Niyya » devient « Se protéger : la garde, l'esquive, la
+  fuite et la Niyya » (les trois parades viennent ensemble ; en choisir une vaut réemploi). Textes proposés (à valider) : la
+  leçon « Nouveau — se protéger : *Garde* amortit un coup et rend un point de *Niyya*, *Esquive* tente de l'éviter, *Fuir*
+  quitte une rencontre. Avec ◂ ▸, on dépense jusqu'à trois points de Niyya pour frapper plus fort. » ; celle des vertus
+  « Nouveau — les *Vertus* de chacun rejoignent *Éclairer*. Chacune coûte du Souffle ; celle qui est la faille d'une chimère
+  lui ôte un voile. » ; l'introduction du premier combat « Frappe la faille pour retirer ses voiles ⛊. « Éclairer », dans les
+  Vertus, porte la Patience d'Idris. » ; en combat, « Vous fuyez. {nom} vous poursuit : courez ! », « Esquivé »,
+  « Choisis une cible · touche-la, ou touche encore la commande », et pour Éclairer « Sans Souffle : une frappe de
+  {élément}. ». Tous écrits à la source en arabe, anglais et japonais par l'agent, à relire. À trancher : les nombres ; les
+  deux choix de l'agent ci-dessus ; les signes ↷ et ⇢ ; le short 8 (« Tenir les rangs »), qui filme le panneau du combat,
+  serait à refaire.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

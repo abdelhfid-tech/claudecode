@@ -59,10 +59,23 @@
   // n'a pas besoin d'avoir resservi pour que l'outil suivant soit donné.
   D.OUTILS = {
     marcher: { nom: 'Se déplacer' }, parler: { nom: 'Parler', geste: true }, aide: { nom: 'Demander son chemin', geste: true },
-    frapper: { nom: 'Frapper la faille' }, vertus: { nom: 'Les vertus' }, garde: { nom: 'La garde et la Niyya' }, objets: { nom: 'La besace' },
+    frapper: { nom: 'Frapper la faille' }, vertus: { nom: 'Les vertus' }, garde: { nom: 'Se protéger : la garde, l’esquive, la fuite et la Niyya' }, objets: { nom: 'La besace' },
     halte: { nom: 'La halte', geste: true }, source: { nom: 'Retrouver une source' }, equipement: { nom: 'S’équiper' }, etoiles: { nom: 'S’orienter aux étoiles', geste: true },
     frappe: { nom: 'Frapper ce qui rôde' }, postures: { nom: 'Prendre une figure' }
   };
+
+  // 2.19 — les parades du combat (demande du décideur, 20 novembre : « Rajoute une parade "esquive" » ; « Rajoute aussi une
+  // parade "fuire" pour quitter le combat même si on sera poursuivi il faudra courir pour échapper au monstre »). Nombres
+  // proposés par l'agent, à valider par le décideur ; un fichier de saga n'en fixe aucun, et une chimère n'esquive jamais.
+  // L'esquive : jusqu'à son prochain tour, un coup d'une chimère porté sur lui seul passe à côté une fois sur deux, un coup
+  // porté sur tout le groupe une fois sur quatre (ni dégâts, ni effets de ce coup-là pour lui).
+  D.ESQUIVE = { seul: 0.5, groupe: 0.25 };
+  // La fuite, d'un combat de rencontre seulement (une chimère qui erre sur la carte, ou qui rôde sur les ponts) : un temps de
+  // grâce (`grace`, en secondes) où rien ne touche le groupe ; la chimère se reprend (`reprise`), puis poursuit celui qui mène
+  // à `vitesse` points par seconde — entre la marche (82) et la course (100,45) : à pied, elle rattrape, toujours ; en courant,
+  // on la distance. Elle renonce quand celui qui mène a couru `souffle` secondes sans être rejoint, quand il est à `lache`
+  // cases, ou hors d'atteinte `hors` secondes durant (dans une salle où elle n'entre pas, dans un abri).
+  D.FUITE = { grace: 1.5, reprise: 0.6, vitesse: 92, lache: 8, souffle: 2.5, hors: 2 };
 
   // 2.x — les postures : trois manières de se tenir devant l'épreuve. Des pourcentages, rien d'autre ; aucune n'est au-dessus
   // d'une autre. Le tempérament vient du rôle ; les deux autres postures s'ouvrent aux niveaux de D.POSTURE_NIVEAUX.

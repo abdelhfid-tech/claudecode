@@ -2,9 +2,11 @@
 /* ISNAD 2.x — la progression : un besoin, un outil, puis sans aide ; et les trois figures (les « postures » du code).
    A. Une partie neuve, par les vrais boutons (« Nouvelle partie ») : au premier écran, une seule leçon, et elle ne parle
       que de marcher ; « parler » ne vient qu'au moment de parler ; jamais deux leçons dans la même séquence ; le premier
-      combat ne montre que Frapper et Éclairer ; les Vertus, la Garde et la Niyya, puis la besace viennent une à une, de
-      combat en combat, une fois la précédente réemployée ; devant une idole, rien ne manque ; la halte ne montre une
-      page que lorsque son système a été rencontré ; la partie exportée garde ce qui a été appris.
+      combat ne montre que Frapper et les Vertus, où n'est qu'Éclairer (2.19) ; les vertus de chacun, puis « se protéger »
+      (la Garde, l'Esquive, et Fuir là où l'on peut fuir) et la Niyya, puis la besace viennent une à une, de combat en
+      combat, une fois la précédente réemployée ; « Fuir » ne paraît qu'avec son outil, et seulement d'un combat de
+      rencontre ; devant une idole, rien ne manque (sauf Fuir, qui n'y est jamais) ; la halte ne montre une page que
+      lorsque son système a été rencontré ; la partie exportée garde ce qui a été appris.
    B. Une partie d'avant (sans `lecons`) : tout est là d'emblée, comme toujours.
    C. Les postures : chacun a d'abord celle de son tempérament ; une autre s'ouvre au niveau 4 (la leçon se dit ce
       jour-là, la page paraît) ; on en change par les boutons de la halte ; leurs effets se lisent dans le combat ; la
@@ -55,10 +57,14 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     await p.evaluate(() => { const I = window.ISNAD, W = I.world, n = W.npcs.find(q => q.id === W.cur().talk); W.player.x = n.x - 16; W.player.y = n.y; W.player.dir = 2; W.dest = null; }); await p.waitForTimeout(250); await p.keyboard.press('Enter');
     for (let i = 0; i < 120 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mlist.main .mi'))); i++) { await T.entree(); await p.waitForTimeout(170); }
     const lire = () => p.evaluate(() => ({ commandes: [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(b => !b.hidden && getComputedStyle(b).display !== 'none').map(b => b.querySelector('span').textContent.replace(/^[^A-Za-zÀ-ÿ]+/, '').trim()), niyya: document.querySelectorAll('#battle .cmd .nb').length, recus: Object.keys((window.ISNAD.save.data.lecons || {}).recus || {}) }));
-    const c1 = await lire(); await cap('A-2-premier-combat');
-    si(c1.commandes.join(',') === 'Frapper,Éclairer' && c1.niyya === 0, 'le premier combat : deux commandes, Frapper et Éclairer ; ni Vertus, ni Garde, ni besace, ni Niyya', `le premier combat : ${JSON.stringify(c1)}`);
-    // mener un combat par ses boutons : la commande voulue si elle est offerte, sinon Éclairer
-    const combat = async (voulue, tours) => { let n = 0, vus = null, banniere = '';
+    // 2.19 : la liste des Vertus, ouverte puis refermée par « Retour » (rien n'est dépensé)
+    const vertus = async () => { await p.waitForTimeout(300); const L = await p.evaluate(async () => { const b = [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].find(x => !x.hidden && /Vertus/.test(x.textContent)); if (!b) return null; b.click(); await new Promise(r => setTimeout(r, 300));
+      const L = [...document.querySelectorAll('#battle .cmd .mlist .mi')].map(x => x.querySelector('span').textContent.replace(/^[^A-Za-zÀ-ÿ]+/, '').trim()); const bk = document.querySelector('#battle .cmd .mback'); if (bk) bk.click(); await new Promise(r => setTimeout(r, 300)); return L; }); await p.waitForTimeout(300); return L; };
+    const c1 = await lire(); await cap('A-2-premier-combat'); const v1 = await vertus();
+    si(c1.commandes.join(',') === 'Frapper,Vertus' && c1.niyya === 0 && v1 && v1.join(',') === 'Éclairer', 'le premier combat : deux commandes, Frapper et les Vertus, où n’est qu’Éclairer ; ni vertu d’un compagnon, ni Garde, ni Esquive, ni besace, ni Niyya', `le premier combat : ${JSON.stringify(c1)} · Vertus ${JSON.stringify(v1)}`);
+    // mener un combat par ses boutons : la commande voulue si elle est offerte, sinon Éclairer (2.19 : dans les Vertus ; « Vertus »
+    // voulue : une vertu d'un compagnon, non Éclairer)
+    const combat = async (voulue, tours) => { let n = 0, vus = null, banniere = ''; await p.evaluate(() => { window.__veut = null; });
       for (let i = 0; i < 400 && await p.evaluate(() => window.ISNAD.battle.active); i++) {
         const s = await p.evaluate(() => { const q = x => document.querySelector(x), b = q('#battle .banner'), c = q('#battle .cmd'); return { ban: b && !b.hidden ? b.textContent : '', cible: !!(c && c.querySelector('.mhint')), principal: !!(c && c.querySelector('.mlist.main')), sous: !!(c && c.querySelector('.mback') && !c.querySelector('.mhint') && !c.querySelector('.mlist.main')), carte: !q('#card').hidden }; });
         if (s.ban && /Nouveau/.test(s.ban)) banniere = s.ban;
@@ -66,9 +72,10 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
         // n'attend pas) peut encore être là quand les commandes s'ouvrent : on ne valide pas alors à l'aveugle, on touche
         if (s.carte || (s.ban && !s.principal && !s.cible && !s.sous)) { await p.keyboard.press('Enter'); await p.waitForTimeout(200); continue; }
         if (s.cible) { await p.keyboard.press('Enter'); await p.waitForTimeout(350); continue; }
-        if (s.sous) { await p.evaluate(() => { const b = [...document.querySelectorAll('#battle .cmd .mlist .mi')].find(x => !x.classList.contains('off')); if (b) b.click(); else document.querySelector('#battle .cmd .mback').click(); }); await p.waitForTimeout(350); continue; }
+        if (s.sous) { await p.evaluate(() => { const L = [...document.querySelectorAll('#battle .cmd .mlist .mi')].filter(x => !x.classList.contains('off')), ecl = x => /Éclairer/.test(x.textContent);
+          const b = window.__veut === 'Vertus' ? L.find(x => !ecl(x)) || L[0] : L.find(ecl) || L[0]; if (b) b.click(); else document.querySelector('#battle .cmd .mback').click(); }); await p.waitForTimeout(350); continue; }
         if (s.principal) { if (!vus) vus = await lire(); await p.waitForTimeout(280);
-          await p.evaluate(([v, n, t]) => { const L = [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(b => !b.hidden && getComputedStyle(b).display !== 'none'), nom = b => b.querySelector('span').textContent; const b = (n < t && L.find(x => nom(x).indexOf(v) >= 0)) || L.find(x => nom(x).indexOf('Éclairer') >= 0); b.click(); }, [voulue, n, tours || 2]); n++; await p.waitForTimeout(350); continue; }
+          await p.evaluate(([v, n, t]) => { const L = [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(b => !b.hidden && getComputedStyle(b).display !== 'none'), nom = b => b.querySelector('span').textContent; const b0 = n < t && L.find(x => nom(x).indexOf(v) >= 0), b = b0 || L.find(x => nom(x).indexOf('Vertus') >= 0); window.__veut = b0 ? v : 'Éclairer'; b.click(); }, [voulue, n, tours || 2]); n++; await p.waitForTimeout(350); continue; }
         await p.waitForTimeout(200);
       }
       // la suite d'une victoire : un carton, parfois une pièce trouvée que l'on propose de porter — jusqu'à ce que le combat ait tout à fait rendu la main
@@ -102,16 +109,21 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     const petit = await p.evaluate(() => { const W = window.ISNAD.world, E = W.saga.enemies; W.foes.forEach(f => { f.done = true; }); /* les égrégores de la carte sont écartés : seuls comptent les combats que l'outil lance */ return Object.keys(E).find(k => E[k].tier === 'minion' && !E[k].racine); });
     // (2.12 : en attendant les commandes, on ne valide que les cartons et les répliques — le bandeau d'ouverture passe de lui-même,
     // et un « Entrée » tombé au moment où les commandes s'ouvrent choisirait « Frapper » à la place du joueur)
-    const lance = async groupe => { await p.evaluate(g => { const I = window.ISNAD, S = I.script; I.world.healAll(); window.__fin = false; S.depth++; I.battle.start({ group: g, bg: 'ville' }).then(() => { S.depth--; window.__fin = true; }); }, groupe); for (let i = 0; i < 80 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mlist.main .mi'))); i++) { if (await T.visible('#card') || await T.visible('#dialog')) await p.keyboard.press('Enter'); await p.waitForTimeout(170); } };
+    // (lancé comme un combat de rencontre : « Fuir » y est permis, une fois son outil reçu)
+    const lance = async groupe => { await p.evaluate(g => { const I = window.ISNAD, S = I.script; I.world.healAll(); window.__fin = false; S.depth++; I.battle.start({ group: g, bg: 'ville', fuite: true }).then(() => { S.depth--; window.__fin = true; }); }, groupe); for (let i = 0; i < 80 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mlist.main .mi'))); i++) { if (await T.visible('#card') || await T.visible('#dialog')) await p.keyboard.press('Enter'); await p.waitForTimeout(170); } };
     const suite = [];
     for (const voulue of ['Vertus', 'Garde', 'Objets', 'Éclairer']) {
       const avant = (await T.etat()).journal.length; await lance([petit, petit]); // deux petits égrégores : le temps de se servir deux fois de la commande nouvelle
-      const vus = await lire(), r = await combat(voulue, 2), apres = await T.etat();
-      suite.push({ voulue, vus: vus.commandes.join(','), niyya: vus.niyya, recu: apres.journal.slice(avant).map(j => j.id).join(','), re: Object.assign({}, apres.lecons.re) });
+      const vus = await lire(), vv = await vertus(), r = await combat(voulue, 2), apres = await T.etat();
+      suite.push({ voulue, vus: vus.commandes.join(','), vertus: (vv || []).join(','), niyya: vus.niyya, recu: apres.journal.slice(avant).map(j => j.id).join(','), re: Object.assign({}, apres.lecons.re) });
       if (voulue === 'Vertus') await cap('A-4-vertus');
     }
-    const s = suite, bon = /Vertus/.test(s[0].vus) && !/Garde|Objets/.test(s[0].vus) && s[0].niyya === 0 && /Garde/.test(s[1].vus) && s[1].niyya === 2 && !/Objets/.test(s[1].vus) && /Objets/.test(s[2].vus) && ['Frapper', 'Éclairer', 'Vertus', 'Objets', 'Garde'].every(k => s[3].vus.split(',').includes(k)) && s.map(x => x.recu).join() === 'vertus,garde,objets,';
-    si(bon, `de combat en combat, une commande à la fois : ${s.map(x => '[' + x.vus + ']').join(' → ')}`, `les commandes reçues : ${JSON.stringify(s)}`);
+    // (2.19) : la commande « Vertus » est là dès le premier combat ; ce qui vient avec l'outil « vertus », ce sont les vertus de
+    // chacun, à côté d'Éclairer ; « se protéger » donne ensemble la Garde, l'Esquive et — dans un combat de rencontre — Fuir
+    const s = suite, bon = s[0].vertus.split(',').length > 1 && /^Éclairer,/.test(s[0].vertus) && !/Garde|Esquive|Fuir|Objets/.test(s[0].vus) && s[0].niyya === 0
+      && ['Garde', 'Esquive', 'Fuir'].every(k => s[1].vus.split(',').includes(k)) && s[1].niyya === 2 && !/Objets/.test(s[1].vus) && /Objets/.test(s[2].vus)
+      && ['Frapper', 'Vertus', 'Objets', 'Garde', 'Esquive', 'Fuir'].every(k => s[3].vus.split(',').includes(k)) && !s.some(x => /Éclairer/.test(x.vus)) && s.map(x => x.recu).join() === 'vertus,garde,objets,';
+    si(bon, `de combat en combat, une commande à la fois : ${s.map(x => '[' + x.vus + ' · Vertus : ' + x.vertus + ']').join(' → ')}`, `les commandes reçues : ${JSON.stringify(s)}`);
     const e3 = await T.etat(), seq3 = e3.journal.map(j => j.seq);
     si(new Set(seq3).size === seq3.length && ['frapper', 'vertus', 'garde', 'objets'].every(k => (e3.lecons.re[k] | 0) >= 1), `chaque commande a resservi sans aide avant la suivante (${['frapper', 'vertus', 'garde', 'objets'].map(k => k + ' ×' + (e3.lecons.re[k] | 0)).join(', ')}) ; ${e3.journal.length} leçons, toutes dans des séquences différentes`, `réemplois : ${JSON.stringify(e3.lecons)} ${JSON.stringify(e3.journal)}`);
     // la partie voyage avec ce qui a été appris
@@ -130,7 +142,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     for (let i = 0; i < 400 && !(await p.evaluate(() => !!document.querySelector('#battle .cmd .mlist.main .mi'))); i++) { await p.evaluate(() => { const b = [...document.querySelectorAll('#menu .side button')].find(x => /Déclarer/.test(x.textContent)); if (b && !document.querySelector('#menu').hidden) b.click(); }); await T.entree(); await p.waitForTimeout(170); }
     if (!(await p.evaluate(() => !!document.querySelector('#battle .cmd .mlist.main .mi')))) await p.screenshot({ path: path.join(out, 'A-idole-bloque.png') });
     const c = await p.evaluate(() => ({ commandes: [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(b => !b.hidden && getComputedStyle(b).display !== 'none').map(b => b.querySelector('span').textContent.replace(/^[^A-Za-zÀ-ÿ]+/, '').trim()), niyya: document.querySelectorAll('#battle .cmd .nb').length, idole: window.__idole }));
-    si(['Frapper', 'Éclairer', 'Vertus', 'Objets', 'Garde'].every(k => c.commandes.includes(k)) && c.niyya === 2, `devant une idole (${c.idole}), rien ne manque au groupe, même en tout début de partie : ${c.commandes.join(', ')}`, `devant une idole : ${JSON.stringify(c)}`);
+    si(['Frapper', 'Vertus', 'Objets', 'Garde', 'Esquive'].every(k => c.commandes.includes(k)) && !c.commandes.includes('Fuir') && c.niyya === 2, `devant une idole (${c.idole}), rien ne manque au groupe, même en tout début de partie : ${c.commandes.join(', ')} (et l'on ne fuit pas une idole)`, `devant une idole : ${JSON.stringify(c)}`);
     await p.context().close();
   }
 

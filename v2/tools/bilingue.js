@@ -59,7 +59,8 @@ function etat() {
     if (c && c.querySelector('.mhint')) { const cible = (I.battle.places ? I.battle.places() : []).find(e => e.choix && e.camp === 'foe'), pl = q('.plate');
       if (cible) { const r = q('#cv').getBoundingClientRect(); return on('cible', q('#battle'), [r.left + cible.x / G.PW * r.width, r.top + cible.y / G.PH * r.height], { ou, texte: cible.nom }); }
       return pl ? on('cible', pl, null, { ou }) : { quoi: 'attente', ou }; }
-    if (c && c.querySelectorAll('.mi').length && !(b && !b.hidden)) return on('commande', c.querySelectorAll('.mi')[1] || c.querySelector('.mi'), null, { ou });
+    // (2.19 : la deuxième commande de la liste principale — les Vertus ; dans leur liste, la première qui se prend : Éclairer)
+    if (c && c.querySelectorAll('.mi').length && !(b && !b.hidden)) return on('commande', c.querySelector('.mlist.main') ? c.querySelectorAll('.mlist.main .mi')[1] || c.querySelector('.mi') : [...c.querySelectorAll('.mi')].find(x => !x.hidden && !x.classList.contains('off')) || c.querySelector('.mi'), null, { ou });
     if (b && !b.hidden) return on('bandeau', b, null, { ou });
     return { quoi: 'attente', ou }; }
   if (vis(q('#dialog'))) return on('dialogue', q('#dialog'), [innerWidth / 2, Math.min(innerHeight - 6, q('#dialog').getBoundingClientRect().bottom + 30)], { ou, ecrit: q('#dialog .next').style.visibility !== 'hidden', kind: q('#dialog').className });

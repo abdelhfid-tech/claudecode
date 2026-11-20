@@ -58,7 +58,7 @@ async function essai() {
     await p.waitForFunction(() => ['combat', 'fin'].includes(window.ISNAD_DEMO.etape), null, { timeout: 25000 }).catch(() => {});
     let vuCombat = false;
     for (let i = 0; i < 90 && await etape() === 'combat'; i++) {
-      const quoi = await p.evaluate(() => { const c = document.querySelector('#card'), bn = document.querySelector('#battle .banner'); if (c && !c.hidden) return 'carton'; if (bn && !bn.hidden && !document.querySelector('#battle .cmd .mi')) return 'bandeau'; const L = [...document.querySelectorAll('#battle .cmd .mi')]; if (!L.length) return 'attente'; return /Frapper/.test(L[0].textContent) ? 'commandes' : 'cible'; });
+      const quoi = await p.evaluate(() => { const c = document.querySelector('#card'), bn = document.querySelector('#battle .banner'); if (c && !c.hidden) return 'carton'; if (bn && !bn.hidden && !document.querySelector('#battle .cmd .mi')) return 'bandeau'; const L = [...document.querySelectorAll('#battle .cmd .mi')]; if (!L.length) return 'attente'; return document.querySelector('#battle .cmd .mhint') ? 'cible' : /Frapper/.test(L[0].textContent) ? 'commandes' : 'cible'; });
       if (quoi === 'commandes') { if (!vuCombat) { vuCombat = true; await shot('3-combat'); dit(await visible('#battle .cmd .mi'), 'INVISIBLE', `${nom} · le combat : « Frapper » se voit`); } await p.locator('#battle .cmd .mi').first().tap(); }
       else if (quoi === 'cible') await p.locator('#battle .plates .plate').first().tap().catch(() => {});
       else if (quoi === 'carton') await p.locator('#card').tap().catch(() => {});

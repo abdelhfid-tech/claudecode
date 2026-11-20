@@ -83,7 +83,7 @@
     const env = W.map.env; G.clearParts(); G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 };
     I.audio.scene(env.music || 'silence');
     W.npcs.forEach(n => { if (n.map === id) W.place(n); });
-    W.foes.forEach(f => { if (f.map === id && !f.placed) { const p = W.resolve(f.at, id, f); if (p) { f.x = p[0]; f.y = p[1]; f.placed = true; } } });
+    W.foes.forEach(f => { if (f.map === id && !f.placed) { const p = W.resolve(f.at, id, f); if (p) { f.x = f.x0 = p[0]; f.y = f.y0 = p[1]; f.placed = true; } } }); // (x0, y0 : sa place, où revient une chimère qui a renoncé à poursuivre — 2.19)
     W.chests.forEach(c => { if (c.map === id && !c.placed) { const p = W.resolve(c.at, id, c); if (p) { c.x = p[0]; c.y = p[1]; c.placed = true; } } });
     if (spot) { const p = Array.isArray(spot) && typeof spot[0] === 'number' ? spot : W.resolve(spot, id, W.player); W.player.x = p[0]; W.player.y = p[1]; }
     W.degager(); W.resetTrail(); W.tint = null; W.pose = []; W.dest = null; W.focus = null; W._way = null; W.updateCam(true);
@@ -378,12 +378,16 @@
     } else if (I.trade && I.trade.near()) await I.trade.open();
     else if (I.build) await I.build.gather();
   };
+  // 2.19 — une chimère qui erre sur la carte, que le récit n'attend pas (aucun objectif ne la vise) et qui n'est pas une
+  // idole : on peut la fuir (« Fuir ») ; elle poursuit alors celui qui mène (rodeurs.js, R.fuir)
+  W.fuyable = f => !!f && !f.boss && !f.rodeur && !(W.ch && (W.ch.objectives || []).some(o => o && o.foe === f.id));
   W.fight = async function (f) {
-    S.depth++;
+    S.depth++; let res = 'win';
     try {
-      await I.battle.start({ group: f.group, bg: f.bg || W.map.env.bg, boss: f.boss, intro: f.intro });
-      f.done = true; W.checkpoint();
+      res = await I.battle.start({ group: f.group, bg: f.bg || W.map.env.bg, boss: f.boss, intro: f.intro, fuite: W.fuyable(f) });
+      if (res !== 'fuite') { f.done = true; W.checkpoint(); }
     } finally { S.depth--; }
+    if (res === 'fuite') { if (I.rodeurs) I.rodeurs.fuir(f); return; }
     const o = W.cur(); if (o && o.foe === f.id) await W.complete();
   };
 
@@ -416,7 +420,7 @@
         const court = !!(I.input.course || I.input.maj), sp = VITESSE * dt * (dx && dy ? 0.7071 : 1) * (court ? COURSE : 1), x0 = p.x, y0 = p.y; // on court : le joystick avec B tenu (2.17), ou Maj tenue
         p.dir = dx < 0 ? 1 : dx > 0 ? 2 : dy < 0 ? 3 : 0;
         const m1 = dx && tryMove(dx * sp, 0), m2 = dy && tryMove(0, dy * sp);
-        p.moving = !!(m1 || m2); p.court = p.moving && court; p.parcours = (p.parcours || 0) + Math.hypot(p.x - x0, p.y - y0); if (p.moving) { pushTrail(); pas(dt); }
+        p.moving = !!(m1 || m2); p.court = p.moving && court; if (p.court) W.aCouru = true; p.parcours = (p.parcours || 0) + Math.hypot(p.x - x0, p.y - y0); if (p.moving) { pushTrail(); pas(dt); }
       } else if (W.dest) follow(dt);
       else { p.moving = false; p.court = false; }
       pousser(dt);
@@ -427,7 +431,8 @@
       for (const f of W.foes) {
         if (f.done || f.map !== W.map.id || !f.placed || f.rodeur) continue; // ceux qui rôdent dans la descente ont leur propre allure (rodeurs.js)
         const d = Math.hypot(f.x - p.x, f.y - p.y);
-        if (d < 15) { W.fight(f); break; }
+        if (d < 15) { if (I.rodeurs && I.rodeurs.intouchable()) continue; W.fight(f); break; } // 2.19 : après une fuite, un temps de grâce où rien ne touche le groupe
+        if (f.chasse || f.retour) continue; // 2.19 : celle que l'on a fuie poursuit, puis revient à sa place (rodeurs.js)
         // 2.16 : une chimère ne vient pas à moins de douze points d'un PNJ ni d'une autre chimère (elles ne se superposent plus)
         if (d < 72 && !f.boss) { const vx = (p.x - f.x) / d * 22 * dt, vy = (p.y - f.y) / d * 22 * dt, m2 = W.map, voisins = W.npcs.filter(n => !n.hidden && n.map === m2.id && n.placed).concat(W.foes.filter(g => g !== f && !g.done && g.map === m2.id && g.placed)),
           serre = (x, y) => voisins.some(g => { const d1 = Math.hypot(g.x - x, g.y - y); return d1 < 12 && d1 < Math.hypot(g.x - f.x, g.y - f.y); }),

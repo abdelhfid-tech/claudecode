@@ -147,8 +147,10 @@ donne }` ; `I.lecons.journal` (non gardé) sert au contrôle.
 | `marcher` | le premier objectif du prologue | atteindre un lieu sans y avoir été conduit (`W._mene`) |
 | `parler` (geste) | le premier objectif « parler à » | parler de nouveau |
 | `aide` (geste) | vingt-cinq secondes sans avancer | rouvrir « ? » |
-| `frapper` | le premier combat : Frapper, Éclairer | les choisir de nouveau, à un autre tour |
-| `vertus`, `garde`, `objets` | les combats suivants, un par combat | les choisir de nouveau |
+| `frapper` | le premier combat : Frapper, et la commande « Vertus », où n'est qu'Éclairer (2.19) | les choisir de nouveau, à un autre tour |
+| `vertus` | un combat suivant : les vertus de chacun rejoignent Éclairer, dans « Vertus » | en choisir une de nouveau |
+| `garde` (« Se protéger ») | un combat suivant : la Garde, l'Esquive et — d'un combat de rencontre — Fuir, avec la Niyya (2.19) | choisir l'une des trois de nouveau |
+| `objets` | un combat suivant | les choisir de nouveau |
 | `halte` (geste) | l'ouverture du premier récit | ouvrir la halte |
 | `equipement` | la réserve tient mieux que ce que l'on porte | ouvrir la page |
 | `source` | le premier acte à retrouver (`choice`) | retrouver le suivant du premier coup, ou ouvrir le Recueil |
@@ -156,7 +158,13 @@ donne }` ; `I.lecons.journal` (non gardé) sert au contrôle.
 | `postures` | une deuxième posture s'ouvre à quelqu'un | en changer |
 
 **Ce qui ne se montre pas avant d'être reçu.** En combat, `listMenu` saute les commandes marquées `cache`
-(`I.lecons.voit`) ; devant une idole, `I.lecons.combat(true)` donne tout. À la halte, `I.lecons.page(nom)` : une page
+(`I.lecons.voit`) ; devant une idole, `I.lecons.combat(true)` donne tout. *2.19 :* « Éclairer » est la première des
+Vertus (le décideur, 20 novembre : « Éclairer devient une vertu pour éviter la surcharge ») — la commande « Vertus » se
+montre avec l'outil `frapper` (`voit('light')`) et ne tient alors qu'Éclairer ; les vertus de chacun s'y ajoutent avec
+l'outil `vertus` (`voit('skills')`). L'Esquive et Fuir sont de l'outil `garde`, renommé « Se protéger : la garde,
+l'esquive, la fuite et la Niyya » (`voit('dodge')`, `voit('flee')`, `sert('dodge')`, `sert('flee')` : choisir l'une des
+trois parades vaut réemploi) ; sa leçon les nomme toutes trois, en une phrase (proposition de l'agent, à valider), et le
+panneau les cercle ensemble. À la halte, `I.lecons.page(nom)` : une page
 paraît quand son système a été rencontré (son feuillet est au Recueil, ou son outil est reçu). **Le mode n'existe que si
 la partie porte `lecons`**, ce que fait « Nouvelle partie » (`I.lecons.ouvrir()`) : une partie d'avant, une partie
 importée d'avant, ou un état posé par un outil de contrôle, a tout d'emblée — aucun autre contrôle n'en dépend.
@@ -1357,6 +1365,65 @@ décideur, comme les autres (D159).
 l'égrégore, ou les 32 × 48 de l'un des nôtres). Pendant le choix d'une cible, `I.battle.touche(x, y)` le choisit et
 `I.battle.survol(x, y)` le montre ; `ui.js` leur passe les clics et le survol de la scène. `I.battle.places()` dit aux
 outils où se tient chacun et qui peut être choisi : `tools/doigt.js` s'en sert pour toucher l'égrégore lui-même (D158).
+
+### Les commandes du combat (2.19)
+
+Demandes du décideur, 20 novembre : « Rajoute une parade "esquive" et vérifie qu'on a toujours possibilité de cliquer sur
+retour. Par défaut quand on combat si on appuie sur frapper et encore sur frapper (ou sur les boutons) ça frappe ou ça active
+l'action sur l'adversaire ou l'ennemi identifié par défaut. » ; puis « Rajoute aussi une parade "fuire" pour quitter le combat
+même si on sera poursuivi il faudra courir pour échapper au monstre. Éclairer devient une vertu pour éviter la surcharge. »
+
+- **La liste.** Frapper ; Vertus (Éclairer en tête, puis les vertus de chacun) ; Objets ; Garde ; Esquive ; Fuir, là où l'on
+  peut fuir ; puis Ordonner (une bataille déclarée) et la Sérénité pleine. Elle reste de sept commandes au plus (Fuir n'est
+  jamais dans une bataille déclarée), et tient dans l'écran comme avant (`tenir`). Chaque commande a un `id`
+  (`playerCmd`) : plus rien ne dépend de sa place dans la liste.
+- **Le choix d'une cible, dans la liste même** (`listMenu`, `o.viser`). Une commande qui vise quelqu'un — Frapper,
+  Éclairer, une vertu sur une chimère ou sur l'un des nôtres, un objet pour l'un des nôtres, la Sérénité — ne quitte pas
+  la liste : elle s'**arme**. Son bouton dit sur qui elle porte (« → nom », `.mi.arme`), le curseur le montre sur la scène
+  et sa plaque s'éclaire (`C.cursor`, `.plate.cur`, `.hrow.cur`) ; sous la liste, une barre (`.mvise`) porte l'indication
+  (`.mhint` — les outils y reconnaissent le choix d'une cible) et « ◂ Retour » (`.mback`). Alors : **la même commande
+  touchée de nouveau**, ou A (Valider), agit sur celui que montre le curseur ; toucher une figure ou sa plaque agit sur elle
+  (`C.pickCb`) ; ◂ ▸ ou le joystick changent de cible ; B, Échap ou « Retour » désarment sans rien dépenser ; toucher une
+  autre commande désarme et la prend à sa place (un toucher de moins que de passer par « Retour » — l'agent l'a préféré à
+  « une autre commande ne fait que désarmer », à valider). Le choix revient à l'appelant par `o.cible` ; `pickTarget` et
+  `chooseTargets` n'existent plus. Les boutons de la liste ne changent pas de main : un seul écouteur, une seule promesse.
+  Là où la liste et sa barre ne tiennent pas (un petit téléphone en hauteur, 360 × 640 : la manette garde sa bande), la
+  liste se replie sur la commande armée (`.cmd.replie`), comme le choix d'une cible d'avant ; « Retour » ou B la rouvrent.
+  Une commande garde son nom sur une ligne : c'est sa petite ligne qui cède, jusqu'aux points de suspension.
+- **Celui qui est visé d'emblée** (`defaut`) : parmi les chimères, celle que le groupe a visée en dernier (`C.vise`), si
+  elle tient encore ; sinon une chimère dévoilée ; sinon la première. Parmi les nôtres : un éprouvé (pour le relever), sinon
+  le plus éprouvé des debout.
+- **« Retour », toujours.** Chaque pas du combat qui n'est pas la liste principale a son « ◂ Retour » visible et touchable,
+  et B (ou Échap) fait de même : la cible (toutes), les Vertus et leur cible, les Objets et leur cible, la Sérénité,
+  Ordonner, les ordres d'un rang, la réserve mobile et le repli feint (`rangs.js`, `back: true`). Sous la liste, la barre
+  de la cible remplace le « Retour » de la liste (un seul à la fois). Sur un écran tactile, il ne descend pas sous dix
+  points et demi et se touche au pouce. `doigt.js` le vérifie à chaque pas, en hauteur et en largeur : dans l'écran, hors
+  de la manette, sous le doigt, et B qui revient d'un cran.
+- **L'Esquive** (`D.ESQUIVE`, `e.st.esquive`, `STN.esquive`). Jusqu'à son prochain tour, un coup d'une chimère porté sur
+  lui seul passe à côté une fois sur deux, un coup porté sur tout le groupe une fois sur quatre (nombres de l'agent, à
+  valider) : ni dégâts, ni les effets (`fx`) de ce coup-là pour lui ; « Esquivé », et un pas de côté, loin des chimères.
+  Un pari, quand la Garde est une certitude (elle divise les dégâts par deux, rend un point de Niyya et 8 de Sérénité) :
+  l'Esquive ne rend pas de Niyya, et 4 de Sérénité. Un mouvement du corps, rien d'autre (exigence 17). Une chimère
+  n'esquive jamais ; le joueur de test (`autoCmd`) ne s'en sert pas, pour que `bataille.js mesures` reste comparable.
+- **Fuir** (`opts.fuite`, `C.peutFuir`, `partir` ; `rodeurs.js`, « la fuite »). Seulement d'un combat de rencontre, et
+  c'est celui qui le lance qui le dit : une chimère qui erre sur la carte, que le récit n'attend pas (`W.fuyable` : ni
+  idole, ni visée par un objectif), ce qui rôde sur les ponts d'un labyrinthe (`R.contactMeute`), ce qui rôde dans la
+  descente du râwî quand il lui fait face (`R.contact`). Jamais d'un combat qu'un récit lance (`battle`), d'une idole,
+  d'une bataille déclarée, d'une parole (`noir`), ni du combat intérieur (`valeurs.js`) : la commande n'y paraît pas. Fui,
+  le combat se referme sur-le-champ — rien de gagné, rien de perdu : chacun garde sa Constance, son Souffle et sa Sérénité
+  (sans le répit d'une victoire), la provision du cœur prise à l'entrée est rendue. Puis (`D.FUITE`) : un temps de grâce
+  où rien ne touche le groupe ; la chimère fuie, elle seule, se reprend un instant puis poursuit celui qui mène, plus vite
+  que la marche, moins vite que la course — à pied, elle rattrape toujours, et le combat reprend (un combat ordinaire, la
+  chimère comme neuve) ; en courant (B tenu avec le joystick, ou Maj), on la distance, et elle renonce quand celui qui mène
+  a couru assez longtemps sans être rejoint, quand il est loin, ou hors d'atteinte (une salle où elle n'entre pas, un abri).
+  Elle va tout droit quand rien ne l'en sépare (une ligne de la largeur d'un corps), sinon de case en case par le plus
+  court chemin, jamais à travers un mur, et dans un labyrinthe par où elle passe d'ordinaire ; on peut la frapper en route.
+  Une chimère de la carte revient ensuite à sa place (`x0`, `y0`), ce qui rôde reprend sa ronde ; un lieu neuf met fin à
+  tout (`R.finFuite`). La première fois, une ligne du fil dit comment courir. Le chrono d'un labyrinthe court comme
+  toujours ; la course ne le presse pas. Rien n'est gardé dans la partie. Contrôles : `descente.js` (E : la fuite sur un
+  pont et sur la carte, à pied et en courant, au clavier — un pilote tient les flèches et Maj, `tools/pilote.js` — ; pas de
+  Fuir pour le récit ni pour une idole), `manette.js` (Fuir touché, puis B tenu avec le joystick pendant la poursuite),
+  `doigt.js` et `progression.js` (pas de Fuir dans une bataille déclarée ni devant une idole).
 
 ## Les règles du contenu : `src/core/regles.js`
 

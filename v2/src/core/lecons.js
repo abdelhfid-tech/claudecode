@@ -2,8 +2,9 @@
    La règle, donnée par le décideur le 16 novembre : « le joueur découvre un besoin, apprend un outil, puis le réutilise
    sans aide avant d'en recevoir un autre. […] une nouvelle décision importante par séquence. Se déplacer, retrouver une
    source et choisir une tactique ne doivent pas être enseignés dans le même écran. »
-   - Un OUTIL (D.OUTILS) est ce que le joueur apprend à faire : se déplacer, parler, frapper la faille, les vertus, la
-     garde, la besace, la halte, retrouver une source, s'équiper, frapper ce qui rôde, prendre une posture.
+   - Un OUTIL (D.OUTILS) est ce que le joueur apprend à faire : se déplacer, parler, frapper la faille, les vertus, se
+     protéger (la garde, l'esquive, la fuite), la besace, la halte, retrouver une source, s'équiper, frapper ce qui rôde,
+     prendre une posture.
    - Une SÉQUENCE est un objectif du récit, ou un combat : I.lecons.sequence() à chacun.
    - Quand le BESOIN d'un outil se présente, le jeu appelle I.lecons.proposer(id, dire). L'outil n'est donné (dire : la
      leçon, une ligne) que si aucun autre ne l'a été dans cette séquence, et si le dernier reçu a déjà RESSERVI sans aide
@@ -80,7 +81,9 @@
     const id = L.COMBAT.find(k => d.recus[k] === undefined); if (!id) return null;
     return L.proposer(id) ? id : null;
   };
-  const DE = { attack: 'frapper', light: 'frapper', skills: 'vertus', items: 'objets', guard: 'garde', niyya: 'garde' };
+  // 2.19 : « Éclairer » est la première des Vertus — la commande « Vertus » paraît avec « frapper », les vertus de chacun
+  // la rejoignent avec « vertus » ; l'esquive et la fuite sont de l'outil de la garde (« Se protéger »)
+  const DE = { attack: 'frapper', light: 'frapper', skills: 'vertus', items: 'objets', guard: 'garde', dodge: 'garde', flee: 'garde', niyya: 'garde' };
   L.outilDe = cmd => DE[cmd] || null;
   L.voit = cmd => { const d = etat(); if (!d) return true; const id = DE[cmd]; return !id || d.recus[id] !== undefined; };
   L.banniere = id => { const t = T()[id]; return t && typeof t === 'string' ? I.fmt(t) : ''; };
