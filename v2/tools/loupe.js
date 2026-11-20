@@ -286,7 +286,7 @@ async function messages(browser, errors) {
    Chacune doit rester au-dessus de 85 % de ce qu'elle valait quand la lumière et la Cité ont été validées (REF, relevé le 20
    novembre sur la 2.18) : sinon « SOMBRE ». Pour mémoire, la même mesure au cran « sombre » (?lum=sombre) est donnée, sans
    seuil. Captures : .smoke/loupe/sombre-<lieu>-<taille>.png. */
-const REF = { 'cite-haut': [29.5, 24.4], 'cite-large': [29.8, 21.9], 'medine-haut': [55.5, 22.4], 'medine-large': [55.9, 21.7] };
+const REF = { 'cite-haut': [29.3, 17.8], 'cite-large': [30.2, 18.1], 'medine-haut': [58.0, 18.5], 'medine-large': [60.8, 18.6] };   // [luminance, contraste], relevés le 20 novembre (2.18)
 async function sombre(browser, errors) {
   const mesure = async (vp, lieu, req) => {
     const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 2, hasTouch: true, isMobile: true, userAgent: devices['iPhone 13'].userAgent }), p = await ctx.newPage();

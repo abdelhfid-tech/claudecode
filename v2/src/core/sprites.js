@@ -678,7 +678,7 @@
        comme ceux des gestes (membre()) ; ce qui passe devant la tête (la main au menton) se pose après elle (apres), jamais
        sur le voile. De dos, l'attitude ne se lit guère : le corps au repos (la joie lève un bras ; assis, à genoux). Le petit
        personnage (16 × 24) prend l'attitude d'avant la plus proche : il ne change pas d'un point. Un Compagnon les prend
-       aussi, avec retenue (RETENUE, retenue()) : la joie, les mains ouvertes à hauteur de poitrine ; le rire, les épaules
+       aussi, avec retenue (RETENUE, retenue()) : la joie, les mains ouvertes devant la poitrine ; le rire, les épaules
        haussées d'un point ; la colère, les bras serrés le long du corps, les poings fermés. Son voile reste une seule
        surface, sans un trait (silhouettes.js). */
     const sansBrasDd = D0.map((r, j) => j >= 4 && j <= 14 ? r.slice(0, 22) + '.'.repeat(10) : j === 15 ? r.slice(0, 22) + '.eee......' : r);

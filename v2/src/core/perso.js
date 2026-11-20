@@ -19,8 +19,8 @@
   const P = I.perso = { NOM, MAX };
 
   /* ---------- la marque du râwî (2.x, pilote du nouveau dessin) ----------
-     Le râwî a ses gabarits propres, retranscrits de la maquette du décideur (sprites.js, RAWI64). Ce n'est pas un récit
-     qui les demande : le moteur pose la marque (look.rawi) sur ce qui habille le râwî — ses ensembles (D.TENUES) et le
+     Le râwî est dessiné en « passeur » (2.18, D204 : sprites.js, K.passeur — sa tête, sa tenue, sa carrure). Ce n'est pas un récit
+     qui le demande : le moteur pose la marque (look.rawi) sur ce qui habille le râwî — ses ensembles (D.TENUES) et le
      héros de l'histoire-cadre, dès qu'elle est posée — et tout ce qui en est tiré (P.look, P.composer) la garde. Un récit
      ou un paquet ne l'écrit jamais (regles.js). */
   const marquer = L => { if (L && typeof L === 'object' && L.kind === 'cyber') L.rawi = true; return L; };

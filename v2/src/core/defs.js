@@ -485,8 +485,8 @@
       litham: { etoffe: ['e6', 'e4'] }                       // de dos, le turban des Compagnons : clair, l'un d'eux ; vert, 'Alî
     },
     manteaux: ['long'],                                      // le long manteau seul : la coupe « sans manteau » est retirée (décideur, 19 novembre)
-    // 2.x (le nouveau dessin d'Idris, d'après la maquette du décideur) — dessin : les couleurs de l'étoffe sur les
-    // gabarits propres du râwî (sprites.js, RAWI64) — la capuche (et la calotte, le chèche), le manteau, la tunique, les
+    // 2.x (le nouveau dessin d'Idris, d'après la maquette du décideur ; depuis la 2.18, le passeur) — dessin : les couleurs de
+    // l'étoffe sur le grand personnage du râwî (sprites.js, paletteIdris : la capuche et le manteau ; e1 garde les tons d'office) — la capuche (et la calotte, le chèche), le manteau, la tunique, les
     // chausses, l'écharpe : trois tons (la lumière, le corps, l'ombre), dont le moteur tire ses cinq, ou une couleur seule,
     // dont il tire les trois. e1 : relevées sur la maquette ; e2 à e7 : proposées par l'agent (la couleur de l'ensemble,
     // avivée en lumière comme sur la maquette), à valider par le décideur. La tunique, les chausses et l'écharpe rouille
