@@ -42,7 +42,7 @@ function registre() {
   const paroles = new Map(), versets = [];
   if (!fs.existsSync(SOURCES)) return { paroles, versets };
   fs.readdirSync(SOURCES).filter(f => /\.json$/.test(f)).forEach(f => JSON.parse(fs.readFileSync(path.join(SOURCES, f), 'utf8')).forEach(x => {
-    if (!x.ar || !x.ar.texte) return; if (f === 'versets.json') versets.push(x.ar.texte); else if (x.fr) paroles.set(x.fr, x.ar.texte); }));
+    if (!x.ar || !x.ar.texte) return; const tx = x.ar.texte.normalize('NFC'); if (f === 'versets.json') versets.push(tx); else if (x.fr) paroles.set(x.fr, tx); }));
   return { paroles, versets };
 }
 
@@ -93,7 +93,7 @@ const nomCharge = m => { const coeur = coeurDuNom(m.map(x => x.c).join('')); ret
 // (un verset, ou une parole attestée citée au milieu d'une narration ou d'un feuillet : recopiés, ils ne se contrôlent pas)
 // (le plus long d'abord : un verset qui en contient un autre s'ôte en entier)
 const cites = REG => REG.versets.concat([...REG.paroles.values()]).filter(v => v.length >= 8).sort((a, b) => b.length - a.length);
-function horsRegistre(t, REG) { let s = String(t); cites(REG).forEach(v => { if (s.indexOf(v) >= 0) s = s.split(v).join(' '); }); return s; }
+function horsRegistre(t, REG) { let s = String(t).normalize('NFC'); cites(REG).forEach(v => { if (s.indexOf(v) >= 0) s = s.split(v).join(' '); }); return s; }
 
 /* ---------- le contrôle ---------- */
 function controler() {
@@ -116,8 +116,9 @@ function controler() {
       // ce que le registre donne : recopié, jamais revocalisé
       const p = REG.paroles.get(c.fr); if (p && x.tv !== x.t) { erreurs.push(`ÉCART ${w} : une parole attestée se recopie du registre, sans signe ajouté`); return; }
       if (/<quote>[12]$/.test(c.ou || '') && x.tv !== x.t) { erreurs.push(`ÉCART ${w} : une parole citée ou sa source se recopie telle qu’elle est`); return; }
-      const v = REG.versets.find(s => x.t.indexOf(s) >= 0 && x.tv.indexOf(s) < 0); if (v) { erreurs.push(`ÉCART ${w} : un verset n’est pas recopié tel que le registre le donne`); return; }
-      const pc = [...REG.paroles.values()].find(s => s.length >= 8 && x.t.indexOf(s) >= 0 && x.tv.indexOf(s) < 0);
+      const nt = x.t.normalize('NFC'), ntv = x.tv.normalize('NFC');   // (l'ordre des signes d'une lettre ne compte pas : fatha et chadda, chadda et fatha)
+      const v = REG.versets.find(s => nt.indexOf(s) >= 0 && ntv.indexOf(s) < 0); if (v) { erreurs.push(`ÉCART ${w} : un verset n’est pas recopié tel que le registre le donne`); return; }
+      const pc = [...REG.paroles.values()].find(s => s.length >= 8 && nt.indexOf(s) >= 0 && ntv.indexOf(s) < 0);
       if (pc) { erreurs.push(`ÉCART ${w} : une parole attestée, citée dans le texte, n’est pas recopiée telle que le registre la donne`); return; }
       formes.set(x.k, x.tv); frais.add(x.k);
       // une parole citée, sa source, une parole du registre : recopiées telles quelles (vérifié ci-dessus), elles ne se complètent pas
