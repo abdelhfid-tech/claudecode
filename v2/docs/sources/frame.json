@@ -25,5 +25,59 @@
     },
     "ecart": "",
     "note": "Les trois langues citent le même hadith : Muslim, n° 1679, d'après Abû Bakra, dans sa seconde version (n° 4384 dans la numérotation continue de l'édition lue, « 1679.02 » dans sa numérotation arabe) : le sermon du jour du Sacrifice, pendant le pèlerinage de l'Adieu. L'arabe y porte la particule initiale « فَ » (« فَلْيُبَلِّغِ »), que la traduction japonaise rend (「ですから」). Al-Bukhârî, n° 67 (même récit), dit « لِيُبَلِّغِ الشَّاهِدُ الْغَائِبَ », sans cette particule (lu sur https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json) ; sa traduction publiée (Muhsin Khan) : « It is incumbent upon those who are present to inform those who are absent » ; voir aussi al-Bukhârî n° 105, 1739, 1741 et 7078. Muslim a été retenu parce que ses deux traductions publiées, anglaise et japonaise, ont pu être lues ; aucune traduction japonaise publiée d'al-Bukhârî n'a pu être lue en ligne. Le site japonais ne nomme pas les traducteurs : ils ne sont pas nommés ici."
+  },
+  {
+    "fichier": "v2/src/data/frame.js",
+    "ligne": 128,
+    "fr": "L’isnâd fait partie de la religion ; sans lui, chacun dirait ce qu’il veut.",
+    "source_fr": "Muslim, introduction du Sahîh",
+    "nature": "autre",
+    "ar": {
+      "texte": "الإِسْنَادُ مِنَ الدِّينِ. وَلَوْلَا الإِسْنَادُ لَقَالَ مَنْ شَاءَ مَا شَاءَ",
+      "reference": "عبد الله بن المبارك — صحيح مسلم، المقدمة، باب بيان أن الإسناد من الدين (ت. محمد فؤاد عبد الباقي)، ج 1 ص 15",
+      "lu_sur": "https://shamela.ws/book/1727/28",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "The isnad is part of the religion; were it not for the isnad, whoever wished would say whatever he wished.",
+      "origine": "de_l_arabe",
+      "reference": "ʿAbdallah ibn al-Mubarak — Sahih Muslim, Introduction, vol. 1, p. 15 (translated from the Arabic)",
+      "lu_sur": ""
+    },
+    "ja": {
+      "texte": "イスナードは宗教の一部である。イスナードがなければ、誰であれ望む者が、望むことを言ったであろう",
+      "origine": "de_l_arabe",
+      "reference": "アブドゥッラー・イブン・アル=ムバーラク — 『サヒーフ・ムスリム』序文、第1巻15頁（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Introduction (مقدمة) du Sahîh, chapitre « باب بيان أن الإسناد من الدين » : Muslim le tient de Muhammad ibn 'Abdallâh ibn Quhzâdh, d'après 'Abdân ibn 'Uthmân, qui l'a entendu de 'Abdallâh ibn al-Mubârak. L'arabe a deux phrases (« الإِسْنَادُ مِنَ الدِّينِ. وَلَوْلَا الإِسْنَادُ… ») ; le français les joint par un point-virgule et dit « sans lui » là où l'arabe répète « الإسناد » : même sens, rien d'omis. Graphie de l'édition lue (« الإِسْنَادُ », hamza sous l'alif, sans sukûn sur le lâm de l'article), recopiée telle quelle. L'introduction n'est pas dans l'édition arabe du CDN (ara-muslim) ; aucune traduction anglaise ni japonaise publiée de l'introduction n'a pu être lue : l'anglais (déjà dans le jeu) et le japonais sont traduits de l'arabe."
+  },
+  {
+    "fichier": "v2/src/data/frame.js",
+    "ligne": 131,
+    "fr": "Ô Bilâl, repose-nous par elle.",
+    "source_fr": "Abû Dâwûd, as-Sunan",
+    "nature": "hadith",
+    "ar": {
+      "texte": "يَا بِلاَلُ أَقِمِ الصَّلاَةَ أَرِحْنَا بِهَا",
+      "reference": "من قول رسول الله ﷺ — سنن أبي داود، رقم 4985",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-abudawud.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "O Bilal, call iqamah for prayer: give us comfort by it",
+      "origine": "publiee",
+      "reference": "Saying of the Messenger of Allah ﷺ — Sunan Abi Dawud 4985 (published English translation; the edition read does not name its translator)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-abudawud.min.json"
+    },
+    "ja": {
+      "texte": "ビラールよ、礼拝の呼びかけをしなさい。それによって、私たちを休ませなさい",
+      "origine": "de_l_arabe",
+      "reference": "アッラーの使徒ﷺの言葉 — 『スナン・アビー・ダーウード』4985番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "Le français omet, au milieu de la parole, « أَقِمِ الصَّلاَةَ » (« fais l'appel à la prière », l'iqâma) : l'arabe dit « Ô Bilâl, fais l'appel à la prière : repose-nous par elle ». L'arabe est gardé entier, l'anglais et le japonais le suivent. saga_abubakr (codex[17]) cite la même parole, entière en français (« Ô Bilâl, appelle à la prière : donne-nous par elle le repos »).",
+    "note": "Récit de Sâlim ibn Abî l-Ja'd : un homme (des Khuzâ'a, pense Mis'ar) dit l'avoir entendu du Messager d'Allah ﷺ. Graphie de l'édition lue (« بِلاَلُ », « الصَّلاَةَ » : la voyelle de la ligature lâm-alif tapée après l'alif), recopiée telle quelle ; saga_abubakr (codex[17]) la cite dans la même graphie. La traduction anglaise est celle du CDN (eng-abudawud), qui ne nomme pas son traducteur. Aucune traduction japonaise publiée de Sunan Abî Dâwûd n'a pu être lue : le japonais est traduit de l'arabe, dans les mots que le jeu emploie déjà pour cette parole (saga_abubakr, codex[17])."
   }
 ]

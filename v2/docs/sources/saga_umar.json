@@ -109,6 +109,33 @@
  },
  {
   "fichier": "v2/src/data/saga_umar.js",
+  "ligne": 252,
+  "fr": "Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda.",
+  "source_fr": "al-Bukhârî, Sahîh (3744) ; Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh",
+  "nature": "hadith",
+  "ar": {
+   "texte": "إِنَّ لِكُلِّ أُمَّةٍ أَمِينًا، وَإِنَّ أَمِينَنَا أَيَّتُهَا الأُمَّةُ أَبُو عُبَيْدَةَ بْنُ الْجَرَّاحِ",
+   "reference": "من قول النبي ﷺ — صحيح البخاري، رقم 3744",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+   "etat": "approchant"
+  },
+  "en": {
+   "texte": "Every nation has an extremely trustworthy man, and the trustworthy man of this (i.e. Muslim) nation is Abu 'Ubaida bin Al-Jarrah",
+   "origine": "publiee",
+   "reference": "Saying of the Prophet ﷺ — Sahih al-Bukhari 3744 (trans. Muhsin Khan)",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+  },
+  "ja": {
+   "texte": "まことに、どの共同体にも信頼される人がいる。そして共同体よ、われらの信頼される人は、アブー・ウバイダ・イブン・アル＝ジャッラーフである",
+   "origine": "de_l_arabe",
+   "reference": "預言者ﷺの言葉 — 『サヒーフ・アル=ブハーリー』3744番（アラビア語原文より訳出）",
+   "lu_sur": ""
+  },
+  "ecart": "Le français ne suit pas le n° 3744 qu'il nomme. L'arabe de ce numéro dit : « Chaque communauté a un homme de confiance, et notre homme de confiance, ô communauté, est Abû 'Ubayda ibn al-Jarrâh » (« وَإِنَّ أَمِينَنَا أَيَّتُهَا الأُمَّةُ أَبُو عُبَيْدَةَ بْنُ الْجَرَّاحِ ») ; le français (« l'homme de confiance de cette communauté est Abû 'Ubayda ») est mot pour mot le n° 7255 (« لِكُلِّ أُمَّةٍ أَمِينٌ، وَأَمِينُ هَذِهِ الأُمَّةِ أَبُو عُبَيْدَةَ »), même récit d'Anas. L'arabe, l'anglais et le japonais suivent le n° 3744, que la source nomme.",
+  "note": "Muslim, n° 2419, a la même formulation que le n° 3744 (« إِنَّ لِكُلِّ أُمَّةٍ أَمِينًا وَإِنَّ أَمِينَنَا أَيَّتُهَا الأُمَّةُ… », édition ara-muslim du CDN). La traduction de Muhsin Khan rend le n° 3744 sans « إنّ » ni l'apostrophe « أيتها الأمة » (« the trustworthy man of this (i.e. Muslim) nation ») : recopiée telle quelle. Le japonais, traduit de l'arabe, les rend (le japonais d'avant suivait le français). saga_khalid (codex[3]) et saga_abubakr (codex[2]) citent le n° 4382, dont le français a « ibn al-Jarrâh »."
+ },
+ {
+  "fichier": "v2/src/data/saga_umar.js",
   "ligne": 377,
   "fr": "« Comment me soucierais-je du sort des gens, si ce qui les atteint ne m'atteint pas ? »",
   "source_fr": "at-Tabarî, Târîkh§parole de 'Umar",

@@ -55,6 +55,33 @@
   },
   {
     "fichier": "v2/src/data/saga_khalid.js",
+    "ligne": 241,
+    "fr": "Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda ibn al-Jarrâh.",
+    "source_fr": "al-Bukhârî ; Muslim ; Ibn Sa'd, Tabaqât",
+    "nature": "hadith",
+    "ar": {
+      "texte": "لِكُلِّ أُمَّةٍ أَمِينٌ، وَأَمِينُ هَذِهِ الأُمَّةِ أَبُو عُبَيْدَةَ بْنُ الْجَرَّاحِ",
+      "reference": "من قول رسول الله ﷺ — صحيح البخاري، رقم 4382",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+      "etat": "trouvé"
+    },
+    "en": {
+      "texte": "Every nation has an Amin (i.e. the most honest man), and the Amin of this nation is Abu 'Ubaida bin Al-Jarrah",
+      "origine": "publiee",
+      "reference": "Saying of the Messenger of Allah ﷺ — Sahih al-Bukhari 4382 (trans. Muhsin Khan)",
+      "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+    },
+    "ja": {
+      "texte": "どの共同体にも信頼される人がいる。この共同体の信頼される人は、アブー・ウバイダ・イブン・アル＝ジャッラーフである",
+      "origine": "de_l_arabe",
+      "reference": "アッラーの使徒ﷺの言葉 — 『サヒーフ・アル=ブハーリー』4382番（アラビア語原文より訳出）",
+      "lu_sur": ""
+    },
+    "ecart": "",
+    "note": "Récit d'Anas. La source du feuillet nomme al-Bukhârî et Muslim sans numéro : le français est mot pour mot le n° 4382 d'al-Bukhârî ; Muslim (n° 2419) et al-Bukhârî n° 3744 disent « إِنَّ لِكُلِّ أُمَّةٍ أَمِينًا، وَإِنَّ أَمِينَنَا أَيَّتُهَا الأُمَّةُ… » (« notre homme de confiance, ô communauté ») ; voir saga_umar. Graphie de l'édition lue (« الأُمَّةِ », sans sukûn sur le lâm de l'article), recopiée telle quelle. Même parole, même texte, dans saga_abubakr (codex[2])."
+  },
+  {
+    "fichier": "v2/src/data/saga_khalid.js",
     "ligne": 370,
     "fr": "Nous les avons bâties pour l'insensé, afin de le retenir jusqu'à ce que vienne le sage qui l'en empêche.",
     "source_fr": "On rapporte — 'Amr ibn 'Abd al-Masîh à Khâlid, at-Tabarî, Târîkh",

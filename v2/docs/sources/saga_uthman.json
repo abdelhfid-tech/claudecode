@@ -28,6 +28,33 @@
  },
  {
   "fichier": "v2/src/data/saga_uthman.js",
+  "ligne": 229,
+  "fr": "Les gens interrogeaient le Messager d'Allah ﷺ sur le bien ; moi, je l'interrogeais sur le mal, de peur qu'il ne m'atteigne.",
+  "source_fr": "al-Bukhârî ; Muslim ; Ibn Sa'd, Tabaqât",
+  "nature": "hadith",
+  "ar": {
+   "texte": "كَانَ النَّاسُ يَسْأَلُونَ رَسُولَ اللَّهِ صلى الله عليه وسلم عَنِ الْخَيْرِ، وَكُنْتُ أَسْأَلُهُ عَنِ الشَّرِّ مَخَافَةَ أَنْ يُدْرِكَنِي",
+   "reference": "حذيفة بن اليمان — صحيح البخاري، رقم 3606",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "The people used to ask Allah's Messenger (ﷺ) about good, but I used to ask him about evil for fear that it might overtake me.",
+   "origine": "publiee",
+   "reference": "Hudhayfa ibn al-Yaman — Sahih al-Bukhari 3606 (trans. Muhsin Khan)",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+  },
+  "ja": {
+   "texte": "人々はアッラーの使徒ﷺに善について尋ねたが、私は、悪が自分に及ぶことを恐れて、悪について尋ねた",
+   "origine": "de_l_arabe",
+   "reference": "フザイファ・イブン・アル=ヤマーン — 『サヒーフ・アル=ブハーリー』3606番（アラビア語原文より訳出）",
+   "lu_sur": ""
+  },
+  "ecart": "",
+  "note": "Même parole au n° 7084 (« … عَنِ الشَّرِّ، مَخَافَةَ أَنْ يُدْرِكَنِي »). La source du feuillet nomme al-Bukhârî et Muslim sans numéro. Graphie de l'édition lue (formule de bénédiction écrite en toutes lettres : « صلى الله عليه وسلم »), recopiée telle quelle ; l'anglais publié écrit « Allah's Messenger (ﷺ) », le japonais porte ﷺ."
+ },
+ {
+  "fichier": "v2/src/data/saga_uthman.js",
   "ligne": 337,
   "fr": "« Ô Commandeur des croyants ! Rattrape cette communauté avant qu'elle ne diverge au sujet du Livre… »",
   "source_fr": "Hudhayfa ibn al-Yamân à 'Uthmân — al-Bukhârî, Sahîh",

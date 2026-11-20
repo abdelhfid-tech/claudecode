@@ -55,6 +55,33 @@
  },
  {
   "fichier": "v2/src/data/saga_ali.js",
+  "ligne": 237,
+  "fr": "comme le chef de la garde auprès de l'émir",
+  "source_fr": "al-Bukhârî ; Ibn Sa'd, Tabaqât ; at-Tabarî, Târîkh",
+  "nature": "hadith",
+  "ar": {
+   "texte": "بِمَنْزِلَةِ صَاحِبِ الشُّرَطِ مِنَ الأَمِيرِ",
+   "reference": "أنس بن مالك — صحيح البخاري، رقم 7155",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "like a chief police officer to an Amir (chief)",
+   "origine": "publiee",
+   "reference": "Anas ibn Malik — Sahih al-Bukhari 7155 (trans. Muhsin Khan)",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+  },
+  "ja": {
+   "texte": "アミールのそばの護衛の長のように",
+   "origine": "de_l_arabe",
+   "reference": "アナス・イブン・マーリク — 『サヒーフ・アル=ブハーリー』7155番（アラビア語原文より訳出）",
+   "lu_sur": ""
+  },
+  "ecart": "",
+  "note": "Le feuillet ne cite que la comparaison, et l'arabe aussi : « أَنَّ قَيْسَ بْنَ سَعْدٍ، كَانَ يَكُونُ بَيْنَ يَدَىِ النَّبِيِّ ﷺ بِمَنْزِلَةِ صَاحِبِ الشُّرَطِ مِنَ الأَمِيرِ ». « le chef de la garde » rend « صَاحِبِ الشُّرَطِ » (le chef de la shurta) ; « comme » rend « بِمَنْزِلَةِ » (« au rang de »). Graphie de l'édition lue (« الأَمِيرِ », sans sukûn sur le lâm de l'article), recopiée telle quelle. La source du feuillet nomme al-Bukhârî sans numéro."
+ },
+ {
+  "fichier": "v2/src/data/saga_ali.js",
   "ligne": 303,
   "fr": "Le savoir vaut mieux que la richesse : le savoir te garde, alors que toi, tu gardes la richesse.",
   "source_fr": "'Alî ibn Abî Tâlib à Kumayl — on rapporte, Abû Nu'aym, Hilyat al-Awliyâ'",

@@ -55,6 +55,60 @@
  },
  {
   "fichier": "v2/src/data/saga_abubakr.js",
+  "ligne": 52,
+  "fr": "Je ne dénouerai pas un étendard qu'il a noué.",
+  "source_fr": "",
+  "nature": "chronique",
+  "ar": {
+   "texte": "لَا حَلَلْتُ لِوَاءً عَقَدَهُ رَسُولُ اللَّهِ ﷺ",
+   "reference": "أبو بكر في بعث أسامة — ابن كثير، البداية والنهاية (ت. التركي)، ج 9 ص 424 (من رواية البيهقي عن أبي هريرة)",
+   "lu_sur": "https://shamela.ws/book/4445/5297",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "I would not untie a banner that the Messenger of Allah ﷺ tied.",
+   "origine": "de_l_arabe",
+   "reference": "Abu Bakr, on the army of Usama — Ibn Kathir, al-Bidaya wa-l-Nihaya, vol. 9, p. 424 (report of al-Bayhaqi from Abu Hurayra; translated from the Arabic)",
+   "lu_sur": ""
+  },
+  "ja": {
+   "texte": "アッラーの使徒ﷺが結ばれた旗を、私が解くことはない",
+   "origine": "de_l_arabe",
+   "reference": "ウサーマの軍についてのアブー・バクル — イブン・カスィール『始まりと終わり（アル=ビダーヤ・ワン=ニハーヤ）』第9巻424頁（バイハキーがアブー・フライラから伝える。アラビア語原文より訳出）",
+   "lu_sur": ""
+  },
+  "ecart": "« qu'il a noué » : l'arabe nomme le Messager d'Allah ﷺ (« عَقَدَهُ رَسُولُ اللَّهِ ﷺ »). La parole est le second membre d'un serment (« وَالَّذِي لَا إِلَهَ غَيْرُهُ لَوْ … مَا رَدَدْتُ جَيْشًا وَجَّهَهُ رَسُولُ اللَّهِ ﷺ، وَلَا حَلَلْتُ لِوَاءً عَقَدَهُ رَسُولُ اللَّهِ ﷺ » : « … je ne ferais pas revenir une armée que le Messager d'Allah ﷺ a envoyée, ni ne dénouerais un étendard qu'il a noué ») ; le français n'en garde que la fin, au futur. L'arabe cité commence à « لَا حَلَلْتُ », sans la conjonction « وَ » qui le lie au premier membre. Dans le jeu, la parole est citée dans la description d'une compétence (« Fermeté »), sans source.",
+  "note": "Ibn Kathîr cite al-Bayhaqî (al-Firyâbî, d'après 'Abbâd ibn Kathîr, d'après Abû z-Zinâd, d'après al-A'raj, d'après Abû Hurayra), et dit de 'Abbâd ibn Kathîr : « أَظُنُّهُ الرَّمْلِيَّ … وَهُوَ مُتَقَارِبُ الْحَدِيثِ، فَأَمَّا الْبَصْرِيُّ الثَّقَفِيُّ فَمَتْرُوكُ الْحَدِيثِ ». Dans son propre récit (t. 9 p. 421, https://shamela.ws/book/4445/5294), Ibn Kathîr prête à Abû Bakr : « وَاللَّهِ لَا أَحُلُّ عُقْدَةً عَقَدَهَا رَسُولُ اللَّهِ ﷺ » (« Par Allah, je ne dénouerai pas un nœud que le Messager d'Allah ﷺ a noué ») : au futur comme le français, mais « un nœud » et non « un étendard » ; la version qui dit « لِوَاء », que le français rend par « étendard », a été retenue. Aucune parole semblable dans le récit de l'armée d'Usâma chez at-Tabarî (pages lues : https://shamela.ws/book/9783/1490 à 1570). L'arabe du jeu disait « لا يحُلّ لواءً عقده رسول الله ﷺ », à la troisième personne et sans source : remplacé par la parole relevée, à la première personne comme le français."
+ },
+ {
+  "fichier": "v2/src/data/saga_abubakr.js",
+  "ligne": 240,
+  "fr": "Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda ibn al-Jarrâh.",
+  "source_fr": "al-Bukhârî ; Muslim ; Ibn Sa'd, at-Tabaqât",
+  "nature": "hadith",
+  "ar": {
+   "texte": "لِكُلِّ أُمَّةٍ أَمِينٌ، وَأَمِينُ هَذِهِ الأُمَّةِ أَبُو عُبَيْدَةَ بْنُ الْجَرَّاحِ",
+   "reference": "من قول رسول الله ﷺ — صحيح البخاري، رقم 4382",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Every nation has an Amin (i.e. the most honest man), and the Amin of this nation is Abu 'Ubaida bin Al-Jarrah",
+   "origine": "publiee",
+   "reference": "Saying of the Messenger of Allah ﷺ — Sahih al-Bukhari 4382 (trans. Muhsin Khan)",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+  },
+  "ja": {
+   "texte": "どの共同体にも信頼される人がいる。この共同体の信頼される人は、アブー・ウバイダ・イブン・アル＝ジャッラーフである",
+   "origine": "de_l_arabe",
+   "reference": "アッラーの使徒ﷺの言葉 — 『サヒーフ・アル=ブハーリー』4382番（アラビア語原文より訳出）",
+   "lu_sur": ""
+  },
+  "ecart": "",
+  "note": "Même parole, même français et même texte que saga_khalid (codex[3]) : voir la note de cette entrée. La source du feuillet nomme al-Bukhârî et Muslim sans numéro ; le français est mot pour mot le n° 4382."
+ },
+ {
+  "fichier": "v2/src/data/saga_abubakr.js",
   "ligne": 370,
   "fr": "Le Messager d'Allah ﷺ n'est pas mort ! Il est allé vers son Seigneur, comme y alla Mûsâ fils de 'Imrân, qui s'absenta quarante nuits puis revint aux siens.",
   "source_fr": "'Umar ibn al-Khattâb, ce jour-là — Ibn Hishâm, as-Sîra",
@@ -133,6 +187,33 @@
   },
   "ecart": "« Ô gens ! » n'est pas chez al-Bukhârî : le n° 3667 ouvre par « أَلاَ » (particule d'appel à l'attention), les n° 1242 et 4454 par « أَمَّا بَعْدُ ». L'apostrophe « أَيُّهَا النَّاسُ » est celle du récit d'Ibn Hishâm (as-Sîra, t. 2 p. 656 : « أَيُّهَا النَّاسُ، إنَّهُ مَنْ كَانَ يَعْبُدُ مُحَمَّدًا فَإِنَّ مُحَمَّدًا قَدْ مَاتَ، وَمَنْ كَانَ يَعْبُدُ اللَّهَ فَإِنَّ اللَّهَ حَيٌّ لَا يَمُوتُ », lu sur https://shamela.ws/book/23833/1393), que le français suit mot pour mot en nommant al-Bukhârî. Le français met le second verbe au présent (« adore ») ; l'arabe a le même passé dans les deux membres (« كان يعبد »).",
   "note": "L'édition lue donne le même texte sous les numéros 3667 et 3668. L'arabe, l'anglais et le japonais suivent al-Bukhârî, source nommée, donc sans « Ô gens ! ». Graphie de l'édition lue (« ى » final pour « ي », formule de bénédiction écrite en toutes lettres), recopiée telle quelle."
+ },
+ {
+  "fichier": "v2/src/data/saga_abubakr.js",
+  "ligne": 394,
+  "fr": "Ce fut comme si les gens n'avaient jamais su que ce verset avait été révélé, avant qu'Abû Bakr ne le récite.",
+  "source_fr": "",
+  "nature": "hadith",
+  "ar": {
+   "texte": "وَاللَّهِ لَكَأَنَّ النَّاسَ لَمْ يَعْلَمُوا أَنَّ اللَّهَ أَنْزَلَ هَذِهِ الآيَةَ حَتَّى تَلاَهَا أَبُو بَكْرٍ",
+   "reference": "ابن عباس — صحيح البخاري، رقم 4454",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "By Allah, it was as if the people never knew that Allah had revealed this Verse before till Abu Bakr recited it",
+   "origine": "publiee",
+   "reference": "Ibn ʿAbbas — Sahih al-Bukhari 4454 (trans. Muhsin Khan)",
+   "lu_sur": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json"
+  },
+  "ja": {
+   "texte": "アッラーにかけて、アブー・バクルが読誦するまで、人々はアッラーがこの節を下されていたことを知らなかったかのようであった",
+   "origine": "de_l_arabe",
+   "reference": "イブン・アッバース — 『サヒーフ・アル=ブハーリー』4454番（アラビア語原文より訳出）",
+   "lu_sur": ""
+  },
+  "ecart": "Le français omet le serment qui ouvre la phrase (« وَاللَّهِ », « Par Allah ») et dit « que ce verset avait été révélé » là où l'arabe dit « qu'Allah avait fait descendre ce verset » (« أَنَّ اللَّهَ أَنْزَلَ هَذِهِ الآيَةَ »). La phrase arabe continue (« فَتَلَقَّاهَا مِنْهُ النَّاسُ كُلُّهُمْ… ») : le jeu le dit hors de la parole, dans la narration (« Ce jour-là, toute la ville le répétait »). Dans le n° 4454, la phrase suit « وَقَالَ », dans le récit que rapporte Ibn 'Abbâs (« عَنْ عَبْدِ اللَّهِ بْنِ عَبَّاسٍ ») ; au n° 1241, la traduction de Muhsin Khan l'introduit par « The narrator added ». Dans le jeu, la parole est dite dans une narration, sans source.",
+  "note": "L'édition lue donne le même texte sous les numéros 4452, 4453 et 4454 (comme pour la parole de 'Umar qui suit, ligne 395) ; les n° 1241 et 1242 disent « لَمْ يَكُونُوا يَعْلَمُونَ أَنَّ اللَّهَ أَنْزَلَ الآيَةَ ». Graphie de l'édition lue (« الآيَةَ », « تَلاَهَا »), recopiée telle quelle. La traduction de Muhsin Khan est coupée au même endroit que l'arabe (« … till Abu Bakr recited it »)."
  },
  {
   "fichier": "v2/src/data/saga_abubakr.js",
@@ -457,6 +538,60 @@
   },
   "ecart": "Le français retire une proposition : entre « Où vas-tu… ? » et « Rengaine ton sabre », l'arabe porte « أَقُولُ لَكَ مَا قَالَ رَسُولُ اللَّهِ ﷺ يَوْمَ أُحُدٍ » (« Je te dis ce qu'a dit le Messager d'Allah ﷺ le jour d'Uhud »). Dans la source, « Rengaine ton sabre, et ne nous afflige pas de ta perte » est donc une parole du Prophète ﷺ que 'Alî cite, et non une parole de 'Alî : à trancher par le décideur (exigences 1 et 3). « n'aurait plus d'ordre » : l'arabe ajoute « أَبَدًا » (« jamais »). Ibn Kathîr tient ce récit d'ad-Dâraqutnî (d'après Ibn 'Umar) et le dit « غريب » (isolé) par la voie de Mâlik.",
   "note": "Chapitre « خروج أبي بكر إلى ذي القصة ». L'arabe, l'anglais et le japonais donnent le passage entier, tel que la source le porte. Le texte numérique lu écrit « سَيَفَكَ » (pour « سَيْفَكَ ») : recopié tel quel. Une seconde version, d'après 'Â'isha, suit dans la même page (« لَئِنْ أُصِبْنَا بِكَ »). D183 (18 novembre) : le décideur a fait corriger la source française, qui dit maintenant que 'Alî rappelle une parole du Prophète ﷺ au jour d'Uhud et que le récit est dit gharîb ; les références des trois langues le disent aussi."
+ },
+ {
+  "fichier": "v2/src/data/saga_abubakr.js",
+  "ligne": 833,
+  "fr": "Distinguez-vous, que l'on voie d'où vient la brèche !",
+  "source_fr": "",
+  "nature": "chronique",
+  "ar": {
+   "texte": "امْتَازُوا لِنَعْلَمَ بَلاءَ كُلِّ حَيٍّ، وَلِنَعْلَمَ مِنْ أَيْنَ نُؤْتَى!",
+   "reference": "خالد بن الوليد يوم اليمامة — الطبري، تاريخ الرسل والملوك، سنة 11، ج 3 ص 293",
+   "lu_sur": "https://shamela.ws/book/9783/1566",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "Separate out, so that we may know the valour of every clan, and know from where the enemy comes at us!",
+   "origine": "de_l_arabe",
+   "reference": "Khalid ibn al-Walid at al-Yamama — al-Tabari, History, year 11, vol. 3, p. 293 (translated from the Arabic)",
+   "lu_sur": ""
+  },
+  "ja": {
+   "texte": "分かれよ。各部族の働きぶりを知り、我らがどこから攻め込まれているのかを知るために！",
+   "origine": "de_l_arabe",
+   "reference": "ヤマーマの日のハーリド・イブン・アル=ワリード — タバリー『諸使徒と諸王の歴史』ヒジュラ暦11年、第3巻293頁（アラビア語原文より訳出）",
+   "lu_sur": ""
+  },
+  "ecart": "Le français ne garde de l'appel que son début et sa fin : il omet l'apostrophe qui le précède (« أَيُّهَا النَّاسُ », « Ô gens ») et, au milieu, « لِنَعْلَمَ بَلاءَ كُلِّ حَيٍّ » (« que nous sachions la vaillance de chaque clan ») ; l'arabe est gardé entier à partir de « امْتَازُوا », l'anglais et le japonais le suivent. « d'où vient la brèche » rend « مِنْ أَيْنَ نُؤْتَى » (« par où l'on nous atteint »). Dans le jeu, la parole est dite dans une narration, sans source.",
+  "note": "Récit de Sayf, d'après ad-Dahhâk ibn Yarbû', d'après son père, d'après un homme des Banû Suhaym qui y assista avec Khâlid. Une note de l'éditeur glose « امتازوا » : « أي تفرقوا وانفصلوا » (« séparez-vous »). L'édition imprimée (fac-similé : https://archive.org/download/trm08_202112/trm03.pdf, p. 293) écrit « حىّ », le yâ' final sans points comme tous ses yâ' finaux (« فى », « بنى ») ; le texte numérique lu écrit « حَيٍّ » : recopié tel quel. L'arabe du jeu disait « حى », sans voyelles. À la page précédente (p. 292, récit de 'Ubayd ibn 'Umayr), ce sont les gens qui se disent entre eux « امتازوا كي نستحيا من الفرار اليوم، ونعرف اليوم من أين نؤتى »."
+ },
+ {
+  "fichier": "v2/src/data/saga_abubakr.js",
+  "ligne": 833,
+  "fr": "Gens du Coran, parez le Coran de vos actes !",
+  "source_fr": "",
+  "nature": "chronique",
+  "ar": {
+   "texte": "يَا أَهْلَ الْقُرْآنِ، زَيِّنُوا الْقُرْآنَ بِالْفِعَالِ",
+   "reference": "أبو حذيفة يوم اليمامة — ابن كثير، البداية والنهاية (ت. التركي)، ج 9 ص 468",
+   "lu_sur": "https://shamela.ws/book/4445/5341",
+   "etat": "trouvé"
+  },
+  "en": {
+   "texte": "O people of the Qur’an, adorn the Qur’an with deeds.",
+   "origine": "de_l_arabe",
+   "reference": "Abu Hudhayfa at al-Yamama — Ibn Kathir, al-Bidaya wa-l-Nihaya, vol. 9, p. 468 (translated from the Arabic)",
+   "lu_sur": ""
+  },
+  "ja": {
+   "texte": "クルアーンの民よ、行いによってクルアーンを飾れ",
+   "origine": "de_l_arabe",
+   "reference": "ヤマーマの日のアブー・フザイファ — イブン・カスィール『始まりと終わり（アル=ビダーヤ・ワン=ニハーヤ）』第9巻468頁（アラビア語原文より訳出）",
+   "lu_sur": ""
+  },
+  "ecart": "« de vos actes » : l'arabe dit « بِالْفِعَالِ » (« par les actes », sans possessif). Le français met un point d'exclamation que l'arabe n'a pas. Dans le jeu, la parole est dite dans une narration, sans source.",
+  "note": "Même parole chez at-Tabarî, Târîkh, année 11, t. 3 p. 291 (récit de Sayf, https://shamela.ws/book/9783/1564), d'où vient aussi l'appel de Khâlid : le texte numérique y écrit « يَا أَهْلَ الْقُرْآِن » (la kasra posée sur l'alif, non sur le nûn), et l'édition imprimée (fac-similé : https://archive.org/download/trm08_202112/trm03.pdf, p. 291) vocalise « بالفَعال » (« les nobles actions »). Ibn Kathîr, au texte entièrement vocalisé et sans coquille, a été retenu ; il lit « بِالْفِعَالِ » (« les actes »). L'arabe du jeu (« يا أهل القرآن، زينوا القرآن بالفعال ») avait déjà les mêmes lettres."
  },
  {
   "fichier": "v2/src/data/saga_abubakr.js",
