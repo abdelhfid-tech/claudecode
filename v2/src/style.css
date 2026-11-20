@@ -393,7 +393,7 @@ body.manette.pad-marges:not(.portrait) .screen { padding-left: max(12px, 2vw); p
 /* (un téléphone trop petit en largeur : l'écran prend toute la largeur, et la manette s'y efface — ui.js, pad-marges) */
 body.manette:not(.portrait) #card { padding-left: 16px; padding-right: 16px; }
 body.manette #secours { bottom: calc(var(--pad-bas, 0px) + max(12px, env(safe-area-inset-bottom, 0px))); }
-body.manette:not(.portrait) #battle .panel { grid-template-columns: 1fr 1fr; }   /* en largeur, la scène rognée : les commandes ont la moitié du panneau */
+body.manette:not(.portrait) #battle .panel { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }   /* en largeur, la scène rognée : les commandes ont la moitié du panneau */
 /* au doigt, la sélection se voit nettement : le joystick la déplace, A la choisit (ui.js, focusList ; battle.js, listMenu ;
    script.js, menuPick ; la cible d'un combat) */
 body.touch .sel, body.touch .plate.cur, body.touch .hrow.cur { outline: 2px solid #fff3c8; outline-offset: -2px; }

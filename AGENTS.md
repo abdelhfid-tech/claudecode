@@ -115,7 +115,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   meneur ; le dessin d'origine garde les pas de la 1.32. Contrôle : `node v2/tools/course.js` (« COURSE CONFORME »).
   `v2/docs/architecture.md`, « Le mouvement », « Des corps, et non des fantômes » et « La manette tactile ». Les sondes des corps (« SUPERPOSÉ », « PNJ EN TRAVERS »)
   sont dans `v2/tools/sondes.js`, que `smoke.js` et `paquet.js` posent sur leurs parties : un PNJ d'un paquet s'éprouve
-  comme ceux du jeu. Un changement du déplacement repasse `smoke.js suiveurs`, `walk` et `tap`, puis toute la batterie.
+  comme ceux du jeu. Un changement du déplacement repasse `smoke.js suiveurs`, `walk`, `tap` et `course.js` (« GLISSE » : un pied d'appui qui glisse, y fait échouer), puis toute la batterie.
 - Dans la 2.x, sur un écran tactile, la manette sert partout, comme une console de poche (demandes du décideur, 19
   novembre : « juste deux boutons A et B », « parler avec A, frapper avec B », « que les boutons puissent servir à
   sélectionner (A) ou faire marche arrière (B) ») : A envoie `ok` (parler, agir, choisir, passer à la suite) ; B envoie

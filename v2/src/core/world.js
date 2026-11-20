@@ -374,10 +374,10 @@
   /* ----- mise à jour ----- */
   W.onInput = function (a) {
     if (I.scene !== W || S.busy || W.lock) return false;
-    if (W.excursion) { if (a === 'ok') { if (I.rodeurs.faceAPorte()) I.rodeurs.direPorte(); else if (!I.rodeurs.attendre()) I.rodeurs.frappe(); } else if (a === 'frappe') I.rodeurs.frappe(); else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
+    if (W.excursion) { if (a === 'ok') { if (I.rodeurs.aFrapper() || !I.rodeurs.faceAPorte()) { if (!I.rodeurs.attendre()) I.rodeurs.frappe(); } else I.rodeurs.direPorte(); } else if (a === 'frappe') I.rodeurs.frappe(); else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
     if (a === 'build') { I.build.set(!I.build.on); return true; }
     if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel' || a === 'frappe') { I.build.set(false); return true; } /* B, en bâtissant : on cesse de bâtir */ if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
-    if (a === 'ok') { W.stop(); if (I.rodeurs && I.rodeurs.faceAPorte()) I.rodeurs.direPorte(); else if (I.rodeurs && I.rodeurs.aFrapper()) I.rodeurs.frappe(); else W.interact(); return true; } // 2.x : dans un labyrinthe, quand quelque chose rôde à portée, « Valider » frappe ; devant la porte interdite, il la désigne
+    if (a === 'ok') { W.stop(); if (I.rodeurs && I.rodeurs.aFrapper()) I.rodeurs.frappe(); else if (I.rodeurs && I.rodeurs.faceAPorte()) I.rodeurs.direPorte(); else W.interact(); return true; } // 2.x : dans un labyrinthe, quand quelque chose rôde à portée, « Valider » frappe ; devant la porte interdite, il la désigne
     if (a === 'frappe') { W.stop(); if (I.rodeurs && I.rodeurs.aFrapper()) I.rodeurs.frappe(); return true; } // 2.x : B frappe ce qui rôde ; ailleurs, rien
     if (a === 'help') { W.stop(); I.ui.guide(); return true; }
     if (a === 'prev') { W.stop(); I.ui.pause('carte'); return true; }
@@ -482,7 +482,7 @@
   W.goTo = function (x, y, o) {
     o = o || {}; const p = W.player, path = W.route(x, y);
     if (!o.ent && !o.then && boxFree(x, y)) { const l = path.length ? path[path.length - 1] : [p.x, p.y]; if (Math.hypot(l[0] - x, l[1] - y) < 14) path.push([x, y]); } // jusqu'au point exact, s'il est libre
-    W.dest = { x, y, path, ent: o.ent || null, stop: o.stop || 0, then: o.then || null, mark: !o.quiet && !o.ent, stall: 0, raw: false, course: !!o.course }; // course : choisi d'un double toucher (2.16)
+    W.dest = { x, y, path, ent: o.ent || null, stop: o.stop || 0, then: o.then || null, mark: !o.quiet && !o.ent, stall: 0, raw: false, course: !!o.course }; // course : plus personne ne la pose depuis la 2.17 (le double toucher ne court plus) ; gardée pour les outils
   };
   W.stop = function () { if (W.dest) { W.dest = null; W.player.moving = false; } };
   function follow(dt) {
@@ -537,6 +537,8 @@
     if (I.scene !== W || S.busy || W.lock || I.ui.menuOpen || I.debug.auto || I.debug.walk) return false;
     const p = W.player, m = W.map, here = e => !e.hidden && e.map === m.id && e.placed;
     { const r = W.miniRect, sx = wx - Math.round(W.cam.x), sy = wy - Math.round(W.cam.y); if (r && sx >= r[0] && sx <= r[0] + r[2] && sy >= r[1] && sy <= r[1] + r[3]) { W.stop(); I.ui.pause('carte'); return true; } }
+    // 2.x : toucher ce qui rôde, c'est le frapper (rodeurs.js) — avant la porte interdite, qu'une figure peut recouvrir
+    if (I.rodeurs && !(I.build && I.build.on) && I.rodeurs.viseDu(wx, wy)) return true;
     if (I.rodeurs && I.rodeurs.toucherPorte(wx, wy)) return true; // 2.x : toucher la porte interdite (ou sa pièce), c'est la désigner
     const face = (x, y) => { const dx = x - p.x, dy = y - p.y; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
     if (I.build && I.build.on) {
@@ -544,7 +546,6 @@
       if (Math.max(Math.abs(tx - Math.floor(p.x / T)), Math.abs(ty - Math.floor((p.y - 3) / T))) <= 2) put(); else W.goTo(tx * T + 8, ty * T + 11, { stop: 27, then: put });
       return true;
     }
-    if (I.rodeurs && I.rodeurs.viseDu(wx, wy)) return true; // 2.x : toucher ce qui rôde, c'est le frapper (rodeurs.js)
     const n = W.npcs.find(n => here(n) && Math.abs(n.x - wx) < 10 && wy > n.y - 27 && wy < n.y + 6);
     if (n) { W.goTo(n.x, n.y, { ent: n, stop: 21, then() { face(n.x, n.y); W.interact(n); } }); return true; }
     const f = W.foes.find(f => !f.done && f.map === m.id && f.placed && Math.abs(f.x - wx) < 15 && wy > f.y - 36 && wy < f.y + 6);

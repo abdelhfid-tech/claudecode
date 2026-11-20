@@ -520,8 +520,8 @@ et dans chacune de ses pages, sur les écrans (titre, Chaîne, « Ton personnage
 
 | Où l'on est | A | B | le joystick |
 |---|---|---|---|
-| exploration (un récit, un labyrinthe) | parler, agir ; à portée de ce qui rôde, frapper | frapper ce qui rôde à portée (B s'éclaire) ; sinon, arrêter la marche — jamais la halte | marcher (huit directions) ; au bord, courir |
-| la descente du râwî | frapper (à l'abri : attendre) | frapper | marcher, courir |
+| exploration (un récit, un labyrinthe) | parler, agir ; à portée de ce qui rôde, frapper | frapper ce qui rôde à portée (B s'éclaire) ; sinon, arrêter la marche — jamais la halte ; tenu avec le joystick, courir | marcher (huit directions), même tiré au bord ; avec B tenu, courir |
+| la descente du râwî | frapper (à l'abri : attendre) ; devant la porte interdite, rien à portée : la désigner | frapper ; tenu avec le joystick, courir | marcher ; avec B tenu, courir |
 | bâtir | poser la pièce | cesser de bâtir | marcher |
 | un dialogue, une narration | finir la ligne, puis passer à la suivante | de même (comme Échap) | — |
 | un carton (titre, parole citée, secours, victoire, défaite, la fin) | passer | passer | — |
@@ -579,8 +579,8 @@ cible, A qui frappe —, B qui frappe ce qui rôde dans un labyrinthe ; à chaqu
 — rectangles comparés — et la sélection se voit — contraste mesuré sur la capture : « MANETTE CONFORME », sinon
 « INACCESSIBLE », « RECOUVERT », « INVISIBLE », « ÉCART »), `descente.js` (A et B, B qui s'éclaire, le pouce sur B,
 téléphone en hauteur et en largeur ; Maj au clavier : on court, et le chrono court au même pas) et `doigt.js` (le joystick
-fait marcher dans les quatre directions ; lâché, on s'arrête ; au bord, on court plus d'une fois et demie plus vite qu'à
-la marche ; au milieu, on marche).
+fait marcher dans les quatre directions ; lâché, on s'arrête ; seul, même tiré au bord, il fait marcher ; avec B tenu, on
+court, entre 1,15 et 1,33 fois la marche). `manette.js` (« 2 bis ») le vérifie aussi avec deux vrais touchers.
 
 ## La définition du dessin : `src/core/gfx.js`
 

@@ -110,9 +110,9 @@
     // l'écouteur du dessus est-il celui du monde ? (la manette : en exploration, le joystick fait marcher ; ailleurs, il choisit)
     auMonde() { const f = stack[stack.length - 1]; return !!(f && f.monde); },
     clearHeld() { held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; },
-    maj: false, course: false, // 2.16 : Maj tenue ; le joystick poussé au bord (ui.js) — l'un ou l'autre fait courir
+    maj: false, course: false, // Maj tenue ; le joystick avec B tenu (ui.js, courir — 2.17) : l'un ou l'autre fait courir
     // secours : on ne garde que l'écouteur du monde (le premier posé), les autres appartenaient à une suite interrompue
-    mark() { return stack.length; }, trim(n) { if (stack.length > n) stack.length = Math.max(1, n); }, reset() { stack.length = Math.min(stack.length, 1); held.up = held.down = held.left = held.right = false; },
+    mark() { return stack.length; }, trim(n) { if (stack.length > n) stack.length = Math.max(1, n); }, reset() { stack.length = Math.min(stack.length, 1); held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; },
     // attend une action OU un délai ; l'écouteur est toujours retiré (sinon il avalerait les touches suivantes)
     waitTimed(actions, ms, delay) {
       return new Promise(res => {

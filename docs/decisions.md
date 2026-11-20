@@ -1619,7 +1619,9 @@ pages privées de son compte.
   aucune démonologie (exigence 18). Devant la porte : « Une porte close. Certains disent qu'un trésor dort derrière ;
   d'autres, un monstre. Ce qui est sûr, c'est que les idées noires en sortent. » (descente) ; « Une porte close. Certains
   disent qu'un trésor dort derrière ; d'autres, un monstre. Nul ne sait. » (récit) — écrits en arabe, anglais et japonais
-  par l'agent, à relire. À trancher : les deux phrases ; le rythme de sortie des idées noires.
+  par l'agent, à relire (l'arabe et l'anglais disent « de derrière cette porte », pour qu'on ne lise pas qu'elles sortent
+  du monstre ; en français, « en sortent » pourrait se lire ainsi : « … c'est que les idées noires sortent de derrière
+  cette porte » serait plus sûr). À trancher : les deux phrases ; le rythme de sortie des idées noires.
 - [ ] **D201. La course : une foulée dessinée, 30 % moins vite, et seulement joystick + B (version 2.17 ; le décideur,
   devant la 2.16 : « on dirait qu'il vole ou qu'il plane […] trouve une solution », « il va trop vite, diminue de 30 % »,
   puis « pour éviter tout mismatch réservé le joystick + b pour courir » ; `v2/docs/architecture.md`, « Le mouvement »,
@@ -1631,7 +1633,8 @@ pages privées de son compte.
   que le joystick est poussé (au clavier, Maj) ; le joystick seul, même au bord, fait marcher ; le double toucher ne fait
   plus courir. Contrôle nouveau : `course.js` (« COURSE CONFORME ») ; `doigt.js` et `manette.js` vérifient joystick seul
   et joystick + B. Textes changés (réglage « Manette tactile », aide « Se déplacer, agir »), écrits en arabe, anglais et
-  japonais par l'agent, à relire.
+  japonais par l'agent, à relire. Remplace, dans D198, la vitesse de course (1,75) et le seuil du joystick (85 %), qui n'ont
+  plus d'objet.
 - [ ] **D202. Les messages du combat en bas (version 2.17 ; le décideur, 19 novembre : « Les messages au moment du combat
   doivent être en bas pas sur les personnages » ; `v2/docs/architecture.md`, « Les messages du combat, en bas »).** Le
   bandeau du combat (introduction, parole d'une chimère, annonces), le dévoilement et la victoire se posent dans le

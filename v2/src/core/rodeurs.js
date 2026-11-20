@@ -233,7 +233,7 @@
     for (const f of W.foes) { if (f.sortie === undefined || f.placed || f.done) continue;
       if (f.sortie - E.t <= R.FUMEE && f.fumee === undefined) f.fumee = E.t;
       if (E.t < f.sortie) continue;
-      if (Math.hypot(p.x - x, p.y - y) < 26 || W.foes.some(g => g !== f && g.rodeur && g.placed && !g.done && Math.hypot(g.x - x, g.y - y) < 16)) continue;
+      if (Math.hypot(p.x - x, p.y - y) < 64 || W.foes.some(g => g !== f && g.rodeur && g.placed && !g.done && Math.hypot(g.x - x, g.y - y) < 16)) continue;
       const v = VERS[q.face]; f.x = x; f.y = y; f.placed = true; f.cx = null; f.dx = v[0]; f.dy = v[1]; f.sorti = E.t; f.premier = [x, y]; R.sorties = (R.sorties || 0) + 1;
       I.audio.sfx('dark');
       for (let i = 0; i < 12; i++) { const a = Math.random() * 6.28; I.gfx.spawn({ x: x - W.cam.x + Math.cos(a) * 4, y: y - W.cam.y - 6 + Math.sin(a) * 3, vx: Math.cos(a) * 26 + v[0] * 18, vy: Math.sin(a) * 18 + v[1] * 18 - 6, life: 0.9, size: 2.4 + Math.random() * 1.6, color: '#0d0612', a: 0.75, blend: 'source-over' }); }

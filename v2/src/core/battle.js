@@ -636,12 +636,13 @@
     b.classList.remove('large'); b.style.fontSize = ''; b.style.maxHeight = '';
     const haut = document.body.classList.contains('portrait'), cv = $('#cv').getBoundingClientRect(), k = cv.width / G.PW;
     const corps = haut ? [] : boites().map(q => [cv.left + q.x * k, cv.top + q.y * k, cv.left + (q.x + q.w) * k, cv.top + (q.y + q.h) * k]);
-    const gene = () => { const r = b.getBoundingClientRect(); return r.bottom > innerHeight - 2 || corps.some(q => r.left < q[2] && r.right > q[0] && r.top < q[3] && r.bottom > q[1]); };
+    const bas = innerHeight - ((I.ui && I.ui.padBas) || 0);   // 2.17 : en hauteur, la bande du bas est à la manette
+    const gene = () => { const r = b.getBoundingClientRect(); return r.bottom > bas - 2 || corps.some(q => r.left < q[2] && r.right > q[0] && r.top < q[3] && r.bottom > q[1]); };
     if (!gene()) return;
     if (!haut) { b.classList.add('large'); if (!gene()) return; }
     const f0 = parseFloat(getComputedStyle(b).fontSize);
     for (const f of [0.92, 0.85, 0.78, 0.72]) { if (f0 * f < 10.5) break; b.style.fontSize = (f0 * f).toFixed(2) + 'px'; if (!gene()) return; }
-    if (haut) b.style.maxHeight = Math.max(48, innerHeight - b.getBoundingClientRect().top - 6) + 'px';
+    if (haut) b.style.maxHeight = Math.max(48, bas - b.getBoundingClientRect().top - 6) + 'px';
   }
   // le rectangle de chaque figure sur la scène, en points du canevas : une chimère avec son souffle (trois points), un héros
   // debout ou éprouvé, le compagnon de lumière ; le temps d'un ordre ou d'un pas d'une bataille déclarée, le champ, qui
