@@ -77,6 +77,7 @@ function nues(m) {
     if (/[اىآ]/.test(x.c)) return;   // l'alif (waṣla, de prolongement, après un tanwîn), l'alif maqṣûra, l'alif madda
     const av = i > 0 ? m[i - 1].s : '';
     if (x.c === 'و' && i > 0 && DAMMA.test(av)) return;   // prolongement : ـُو (et le wâw muet de عَمْرٌو)
+    if (x.c === 'و' && i === m.length - 1 && /عمرو$/.test(nu) && /[ٌٍ]/.test(av)) return;   // le wâw muet de عَمْرٍو, au génitif
     if (x.c === 'ي' && i > 0 && KASRA.test(av)) return;   // prolongement : ـِي
     if (x.c === 'ل' && i + 1 < m.length && m[i + 1].s.indexOf(CHADDA) >= 0) return;   // le lâm solaire : الشَّمْس, لِلنَّاس
     out.push(x.c);
@@ -118,7 +119,9 @@ function controler() {
       // une parole citée, sa source, une parole du registre : recopiées telles quelles (vérifié ci-dessus), elles ne se complètent pas
       if (p || /<quote>[12]$/.test(c.ou || '')) return;
       if (x.tv === x.t) avis.push(`${w} : la forme vocalisée n’ajoute aucun signe`);
-      if (mots(horsRegistre(x.tv, REG)).some(nomCharge)) { erreurs.push(`ÉCART ${w} : le Nom porte un signe écrit à la main ailleurs que sur sa dernière lettre`); return; }
+      // (un signe que le texte arabe porte déjà sur le Nom y reste : seul un signe ajouté est refusé)
+      const charges = s => mots(horsRegistre(s, REG)).filter(nomCharge).length;
+      if (charges(x.tv) > charges(x.t)) { erreurs.push(`ÉCART ${w} : le Nom porte un signe écrit à la main ailleurs que sur sa dernière lettre`); return; }
       const manque = mots(horsRegistre(x.tv, REG)).map(m => ({ m, nu: nues(m) })).filter(o => o.nu.length);
       if (manque.length) { incomplets++; erreurs.push(`INCOMPLET ${w} : ${manque.slice(0, 4).map(o => o.m.map(y => y.c + y.s).join('') + ' (' + o.nu.join('') + ')').join(' · ')}${manque.length > 4 ? ' …' : ''}`); }
     });
