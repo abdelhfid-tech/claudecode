@@ -325,7 +325,7 @@
 {"k":"129gcgb.1b","fr":"Bien. …Tu cèdes vite, pour un fils de ton père.","t":"حسنًا. …تلين سريعًا، وأنت ابنُ أبيك.","ou":"chapters[1].objectives[3].then[2]<parley>1.rounds[1].opts[2].r"},
 {"k":"ezmnko.21","fr":"Et si je reprends mes lances ? Ta porte du sud sera nue avant la moisson.","t":"وإن سحبتُ رماحي؟ سيعرى بابك الجنوبي قبل الحصاد.","ou":"chapters[1].objectives[3].then[2]<parley>1.rounds[2].say"},
 {"k":"188lfho.30","fr":"Alors je la garderai moi-même, une nuit sur trois, comme Anir. Mais je ne vendrai pas la loi pour une porte.","t":"فأحرسه بنفسي، ليلةً من كلّ ثلاث، كما حرس أنير. لكنّي لن أبيع القانون ببابٍ.","ou":"chapters[1].objectives[3].then[2]<parley>1.rounds[2].opts[0].t"},
-{"k":"1qsredm.15","fr":"Tu le ferais. Par ma barbe, tu le ferais.","t":"إنك لفاعل. أي والله، إنك لفاعل.","ou":"chapters[1].objectives[3].then[2]<parley>1.rounds[2].opts[0].r"},
+{"k":"1qsredm.15","fr":"Tu le ferais. Par ma barbe, tu le ferais.","t":"إنك لفاعل. إي والله، إنك لفاعل.","ou":"chapters[1].objectives[3].then[2]<parley>1.rounds[2].opts[0].r","note":"langue : la particule de réponse affirmative avant un serment est « إي » (« إي والله »), et non « أي »"},
 {"k":"1tytgn4.1h","fr":"Tu ne les reprendras pas : tu as besoin de mon puits.","t":"لن تسحبها: فأنت تحتاج إلى بئري.","ou":"chapters[1].objectives[3].then[2]<parley>1.rounds[2].opts[1].t"},
 {"k":"1p5cxei.1e","fr":"C'est vrai. Et je n'aime pas qu'on me le rappelle.","t":"صدقت. ولا أحبّ أن يُذكّرني بذلك أحد.","ou":"chapters[1].objectives[3].then[2]<parley>1.rounds[2].opts[1].r"},
 {"k":"1goi5ux.1h","fr":"Reprends-les, et je me souviendrai de qui m'a quitté.","t":"اسحبها، وسأذكر مَن تخلّى عنّي.","ou":"chapters[1].objectives[3].then[2]<parley>1.rounds[2].opts[2].t"},
