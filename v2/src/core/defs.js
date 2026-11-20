@@ -409,6 +409,10 @@
 
   // poses des personnages : l'émotion se lit dans le corps, jamais sur un visage (dessin : sprites.js)
   D.POSES = ['prie', 'resolu', 'accable', 'salut', 'surpris', 'garde'];
+  // prototype 2.17 (images de validation, non livré) : les attitudes nouvelles, pour tous — Compagnons compris, par le
+  // corps seul ; une attitude choisit sa mimique pour qui a un visage (sprites.js, MIMIQUE_DE). Elles rejoindront D.POSES
+  // une fois validées (l'opération de script « emote » et le validateur ne les connaissent pas encore).
+  D.ATTITUDES = ['joie', 'rire', 'acquiesce', 'refus', 'reflexion', 'colere', 'triste', 'assis', 'montre'];
 
   D.CODEX_CATS = ['Biographie', 'Événement', 'Noosphère', 'Lieu', 'Parole', 'Cœur', 'Objets'];
 

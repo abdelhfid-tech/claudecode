@@ -24,17 +24,24 @@
   const STN = { atk: I.T('Force'), mag: I.T('Esprit'), def: I.T('Garde'), spd: I.T('Élan§stat'), stun: I.T('Étourdi'), doute: I.T('Doute'), waswas: I.T('Waswâs'), regen: I.T('Régén.'), garde: I.T('En garde'), taunt: I.T('Cible') };
 
   let C = null; // contexte du combat en cours
+  B.contexte = () => C;   // prototype 2.17 : pour les images de validation (une attitude ou une mimique posée sur un combattant)
 
   /* ================= décor ================= */
-  const SKY = { desert: ['#150c30', '#5c2756', '#e08a4a'], ville: ['#0c0e2c', '#35285c', '#c8785a'], camp: ['#080a20', '#281e4c', '#9a4a48'], romaine: ['#0e1232', '#383876', '#d8a070'], palais: ['#120a26', '#48205c', '#c89040'], mer: ['#051028', '#123c66', '#5fb4cc'], cite: ['#04030d', '#180e3c', '#7a2cff'], noos: ['#02021a', '#0a0d36', '#30209a'] };
+  const v15 = G.lum === 215; // 2.17 (prototype) : la lumière de fin de journée ; ?lum=215 rend celle de la 2.15 (gfx.js, G.LUM)
+  const SKY = v15 ? { desert: ['#150c30', '#5c2756', '#e08a4a'], ville: ['#0c0e2c', '#35285c', '#c8785a'], camp: ['#080a20', '#281e4c', '#9a4a48'], romaine: ['#0e1232', '#383876', '#d8a070'], palais: ['#120a26', '#48205c', '#c89040'], mer: ['#051028', '#123c66', '#5fb4cc'], cite: ['#04030d', '#180e3c', '#7a2cff'], noos: ['#02021a', '#0a0d36', '#30209a'] }
+    // un ciel de fin de journée : bleu-violet en haut, rose au milieu, or ou orangé à l'horizon ; 2084 au crépuscule néon
+    : { desert: ['#3a2e6e', '#c0607a', '#ffc070'], ville: ['#32306e', '#b45c80', '#ffb46c'], camp: ['#2a2a62', '#9a5078', '#f09a64'], romaine: ['#34407e', '#a2709a', '#ffc890'], palais: ['#36265e', '#a2507a', '#ffbe62'], mer: ['#25427e', '#5a8cc0', '#ffc890'], cite: ['#2c1252', '#b02c84', '#ff8a4a'], noos: ['#0a0c3a', '#1c2370', '#5444c8'] };
+  // le sol : tiré du lieu (le sable, la pierre, l'eau, l'asphalte mouillé), sombre au pied du ciel et plus sombre au premier plan
+  const SOL = { desert: ['#8e5e3a', '#36202e'], ville: ['#845636', '#33202e'], camp: ['#6c4632', '#2a1a2c'], romaine: ['#605450', '#262236'], palais: ['#643a2c', '#2a1830'], mer: ['#1e5474', '#0c2238'], cite: ['#4a1e56', '#160c28'], noos: ['#161a52', '#080a24'] };
   function paintBg(kind, hue) {
     const cv = G.toile(G.PW, G.PH), c = cv.getContext('2d'), sky = SKY[kind] || SKY.noos, H0 = 100, r = I.rng(I.hash(kind + hue));
     const g = c.createLinearGradient(0, 0, 0, H0); g.addColorStop(0, sky[0]); g.addColorStop(0.6, sky[1]); g.addColorStop(1, sky[2]); c.fillStyle = g; c.fillRect(0, 0, G.PW, H0);
-    for (let i = 0; i < 70; i++) { c.fillStyle = `rgba(255,255,255,${0.2 + r() * 0.7})`; c.fillRect(Math.floor(r() * G.PW), Math.floor(r() * 62), 1, 1); }
+    const etoile = v15 || kind === 'noos' ? 1 : 0.35; // au couchant, les étoiles ne font que poindre
+    for (let i = 0; i < 70; i++) { c.fillStyle = `rgba(255,255,255,${(0.2 + r() * 0.7) * etoile})`; c.fillRect(Math.floor(r() * G.PW), Math.floor(r() * 62), 1, 1); }
     // astre
     const ax = kind === 'cite' ? 300 : 250, ay = kind === 'noos' ? 44 : 64; const ag = c.createRadialGradient(ax, ay, 2, ax, ay, 60); ag.addColorStop(0, 'rgba(255,240,200,.95)'); ag.addColorStop(0.18, `hsla(${hue},90%,75%,.5)`); ag.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = ag; c.fillRect(ax - 60, ay - 60, 120, 120);
     c.strokeStyle = `hsla(${hue},100%,75%,.35)`; c.lineWidth = 1; for (let i = 1; i < 4; i++) { c.beginPath(); c.ellipse(ax, ay, 18 * i, 6 * i, -0.3, 0, 6.3); c.stroke(); }
-    const sil = '#0b0818', sil2 = '#16102c';
+    const sil = v15 ? '#0b0818' : '#21143a', sil2 = v15 ? '#16102c' : '#3a2452';
     c.fillStyle = sil2;
     if (kind === 'desert' || kind === 'camp') { c.beginPath(); c.moveTo(0, H0); for (let x = 0; x <= G.PW; x += 4) c.lineTo(x, H0 - 14 - Math.sin(x / 46) * 9 - Math.sin(x / 17) * 3); c.lineTo(G.PW, H0); c.fill(); }
     c.fillStyle = sil;
@@ -47,7 +54,8 @@
     else if (kind === 'cite') { for (let x = 0; x < G.PW;) { const w = 14 + r() * 22, h = 30 + r() * 70; c.fillStyle = sil; c.fillRect(x, H0 - h, w, h); for (let k = 0; k < h / 5; k++) if (r() < 0.5) { c.fillStyle = ['#39e6ff', '#ff4fd8', '#ffe08a'][Math.floor(r() * 3)]; c.fillRect(x + 2 + Math.floor(r() * (w - 4)), H0 - h + 3 + k * 5, 2, 1); } x += w + 2; } }
     else { c.strokeStyle = `hsla(${hue},100%,70%,.5)`; for (let i = 0; i < 9; i++) { const x = r() * G.PW, y = 20 + r() * 80, s = 4 + r() * 10; c.strokeRect(x, y, s, s * 0.6); } }
     // sol
-    const gg = c.createLinearGradient(0, H0, 0, G.PH); gg.addColorStop(0, '#0b0820'); gg.addColorStop(1, '#05040f'); c.fillStyle = gg; c.fillRect(0, H0, G.PW, G.PH - H0);
+    const sol = v15 ? ['#0b0820', '#05040f'] : SOL[kind] || SOL.noos;
+    const gg = c.createLinearGradient(0, H0, 0, G.PH); gg.addColorStop(0, sol[0]); gg.addColorStop(1, sol[1]); c.fillStyle = gg; c.fillRect(0, H0, G.PW, G.PH - H0);
     c.fillStyle = `hsla(${hue},100%,70%,.5)`; c.fillRect(0, H0, G.PW, 1);
     return cv;
   }
@@ -740,7 +748,7 @@
         }
       }
       if (C.bete) { const im = I.oeuvres.bete(C.bete), h0 = C.all.find(e => e.side === 'hero'), bx = Math.round(h0.x + 26), by = Math.round(h0.y - 58 + Math.sin(t * 2.2) * 2); c.globalAlpha = 0.9; c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 30, color: I.sagas.coeur.animaux[C.bete].couleur, a: 0.8 }); if (Math.random() < 0.12) G.spawn({ x: bx + (Math.random() - 0.5) * 20, y: by + 8, vy: -8, life: 1.2, size: 0.6, color: '#fff', type: 'mote' }); }
-      return { ambient: '#9a94e0', lights, bloom: 0.34, scan: true, grade: [`hsl(${C.hue},80%,50%)`, 0.14], vignette: 0.62, tilt: false };
+      return { ambient: v15 ? '#9a94e0' : ['#e4a888', '#b098c8'], lights, bloom: 0.34, scan: true, grade: [`hsl(${C.hue},80%,50%)`, v15 ? 0.14 : 0.08], vignette: 0.62, tilt: false };
     }
   };
   function cursor(c, x, y, t) { const b = Math.sin(t * 8) * 2; c.fillStyle = '#1a1420'; c.beginPath(); c.moveTo(x - 6, y - 9 + b); c.lineTo(x + 6, y - 9 + b); c.lineTo(x, y + 1 + b); c.fill(); c.fillStyle = '#ffe08a'; c.beginPath(); c.moveTo(x - 4, y - 8 + b); c.lineTo(x + 4, y - 8 + b); c.lineTo(x, y - 1 + b); c.fill(); }

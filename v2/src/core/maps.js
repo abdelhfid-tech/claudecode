@@ -101,11 +101,16 @@
     c.fillStyle = pal[0]; for (let i = 0; i < n; i++) { const a = i * 2 * Math.PI / n; c.fillRect(Math.round(x + Math.cos(a) * R * 0.9) - 1, Math.round(y + Math.sin(a) * R * 0.9 * 0.86) - 1, 2, 2); }
   }
 
-  const TIME = {
+  const TIME = G.lum === 215 ? {
     day: { ambient: null, grade: ['#ffb866', 0.1], rays: { a: 0.03, color: '#fff2c8' }, lightA: 0, bloom: 0.12 },
     dusk: { ambient: '#d99676', grade: ['#ff6a3c', 0.2], lightA: 0.75, bloom: 0.2 },
     night: { ambient: '#4456a6', grade: ['#2a3a9a', 0.2], lightA: 1, bloom: 0.22 },
     dawn: { ambient: '#cfa9bd', grade: ['#ff9aa0', 0.18], rays: { a: 0.05, color: '#ffd9c8' }, lightA: 0.5, bloom: 0.18 }
+  } : { // 2.17 : le jour doré, un couchant orangé qui passe au rose, une nuit éclaircie aux ombres turquoise (gfx.js, G.LUM)
+    day: { ambient: '#fff1d6', grade: ['#ffb052', 0.16], rays: { a: 0.05, color: '#fff0c0' }, lightA: 0, bloom: 0.14 },
+    dusk: { ambient: ['#e48c60', '#c27896'], grade: ['#ff6a3c', 0.18], lightA: 0.8, bloom: 0.22 },
+    night: { ambient: '#3046b4', grade: ['#1a48b8', 0.22], etalon: [null, '#04122a'], lightA: 1, bloom: 0.24 },
+    dawn: { ambient: ['#dca2a8', '#bca2cc'], grade: ['#ff9aa0', 0.16], rays: { a: 0.06, color: '#ffd9c8' }, lightA: 0.5, bloom: 0.2 }
   };
   function envFor(time, extra) { return Object.assign({ time: time || 'day', clouds: time !== 'night' }, TIME[time || 'day'], extra || {}); }
 
@@ -378,13 +383,19 @@
   function cite(id, o, L, graine) {
     const b = new MB(id, 60, 22, 'asphalt', o, graine);
     b.fill(0, 0, 60, 7, 'croof', true); b.fill(0, 7, 60, 2, 'cwall', true); b.fill(0, 17, 60, 5, 'croof', true); b.fill(0, 12, 60, 1, 'neonline', false);
-    const cols = ['#ff4fd8', '#39e6ff', '#ffe08a', '#7dffb0', '#ff7a5c'];
-    for (let x = 4; x < 58; x += 7) { const c = cols[(x >> 1) % cols.length]; b.obj('neon', x, 9, { color: c }); b.light(x, 8, 70, c, 0.3); }
-    b.obj('screen', 30, 9); b.light(30, 8, 120, '#7a5cff', 0.3); b.obj('screen', 14, 16); b.obj('screen', 46, 16); b.light(14, 15, 80, '#39e6ff', 0.3); b.light(46, 15, 80, '#ff4fd8', 0.3);
+    const cols = ['#ff4fd8', '#39e6ff', '#ffe08a', '#7dffb0', '#ff7a5c'], v15 = G.lum === 215;
+    // 2.17 : des néons plus larges et plus francs (le 5e nombre d'une lumière est son vacillement, non sa force)
+    const nr = v15 ? 70 : 92, nf = v15 ? 0.3 : 0.12;
+    for (let x = 4; x < 58; x += 7) { const c = cols[(x >> 1) % cols.length]; b.obj('neon', x, 9, { color: c }); b.light(x, 8, nr, c, nf); }
+    b.obj('screen', 30, 9); b.light(30, 8, v15 ? 120 : 140, '#7a5cff', nf); b.obj('screen', 14, 16); b.obj('screen', 46, 16); b.light(14, 15, v15 ? 80 : 100, '#39e6ff', nf); b.light(46, 15, v15 ? 80 : 100, '#ff4fd8', nf);
     b.set(56, 8, 'arch', true); b.light(56, 9, 60, '#ffe08a', 0.1);
+    if (!v15) { for (let x = 2; x < 60; x += 6) b.light(x, 12, 44, '#ff4fd8', 0.08); for (let x = 8; x < 58; x += 12) b.light(x, 17, 64, '#ff9a4a', 0.1); } // la ligne de néon du trottoir, et la lumière orangée des devantures d'en face, sur l'asphalte mouillé
     b.spot('parvis', 4, 13); b.spot('rue', 16, 13); b.spot('ecran', 30, 11); b.spot('ruelle', 44, 14); b.spot('ascenseur', 56, 10);
     b.scatter('crate', 5, 2, 9, 56, 8);
-    return b.finish({ time: 'cite', ambient: '#5a5ca8', grade: ['#7a2cff', 0.2], particles: 'rain', rate: 70, bg: 'cite', scan: true, bloom: 0.3, lightA: 1, music: 'cite' });
+    // 2.17 : la Cité au crépuscule néon — un couchant orangé qui passe au magenta, une pluie légère ; pour les images de
+    // validation, un couchant un ton plus clair et plus chaud que le premier essai (#e8643a → #7c2c9c)
+    return b.finish(v15 ? { time: 'cite', ambient: '#5a5ca8', grade: ['#7a2cff', 0.2], particles: 'rain', rate: 70, bg: 'cite', scan: true, bloom: 0.3, lightA: 1, music: 'cite' }
+      : { time: 'cite', ambient: ['#ff9058', '#b0509c'], grade: ['#ff3d8f', 0.14], particles: 'rain', rate: 26, bg: 'cite', scan: true, bloom: 0.3, lightA: 1, music: 'cite' });
   }
 
   /* ---------- Archives basses ---------- */

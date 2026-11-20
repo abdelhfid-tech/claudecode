@@ -9,6 +9,15 @@
   'use strict';
   const I = window.ISNAD, G = I.gfx, D = window.ISNAD_DEFS;
   const W = 16, H = 24;
+  /* ---------- prototype 2.17 (images de validation, non livré) ----------
+     ?idris=passeur|archiviste|voyageur|jeune : Idris « un des leurs » — dessiné comme les autres personnages (une tête
+     dans TETES, le corps commun et les règles de tenue, puis fine()), au lieu de son gabarit de 64 × 96 ; quatre
+     propositions, dans la même tenue. ?rendu=ct : le rendu « net » des grands personnages (un contour plus encré, des
+     ombres franches à trois tons, la lumière chaude et l'ombre turquoise). Sans eux, rien ne change d'un point. */
+  const PROTOS = ['passeur', 'archiviste', 'voyageur', 'jeune'];
+  G.PROTOS = PROTOS; G.idris = null; G.rendu = null;
+  try { const q = /[?&]idris=([a-z]+)/.exec(location.search); if (q && PROTOS.indexOf(q[1]) >= 0) G.idris = q[1]; if (/[?&]rendu=ct(?:&|$)/.test(location.search)) G.rendu = 'ct'; } catch (e) { /* hors navigateur */ }
+  const etat217 = () => (G.idris ? '|i' + G.idris : '') + (G.rendu ? '|' + G.rendu : '');   // dans les clés des caches
 
   /* ---------- gabarits : têtes ----------
      T t u coiffe (clair, moyen, sombre) · A a bandeau · V v voile ou face unie · I i fer · X cimier */
@@ -204,6 +213,7 @@
     if (K.troupe && look.sel !== undefined && !look.coiffe && !look.item) { const v = TROUPES[K.troupe][look.sel % TROUPES[K.troupe].length]; K.coiffe = v[0]; K.item = v[1]; if (v[2]) { K.armure = v[2]; K.cuirasse = false; } }
     if (K.varie && !look.coiffe && !look.manteau) { const v = VARIE[I.hash((look.robe || '') + (look.head || '') + (look.cloak || '')) % VARIE.length]; K.coiffe = v[0]; K.manteau = v[1]; }
     ['coiffe', 'item', 'manteau', 'motif', 'echarpe', 'court', 'cuirasse', 'chale', 'armure'].forEach(k => { if (look[k] !== undefined) K[k] = look[k]; });
+    if (G.idris && look.rawi && look.kind === 'cyber') K.proto = G.idris;   // prototype 2.17 : Idris « un des leurs » (le grand personnage seul)
     return K;
   }
 
@@ -396,7 +406,7 @@
     c.putImageData(id, 0, 0);
   }
   function paint(g, pal, w, h) { const cv = mk(w, h), c = cv.getContext('2d'); for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const col = pal[g[y][x]]; if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } } return cv; }
-  const scache = {}, ck = (look, a, b, c) => JSON.stringify(look) + '|' + a + '|' + (b || 0) + '|' + (c || '') + (G.doux && G.D > 1 ? '|d' : '');   // le rendu doux (dessin fin), ou celui d'avant
+  const scache = {}, ck = (look, a, b, c) => JSON.stringify(look) + '|' + a + '|' + (b || 0) + '|' + (c || '') + (G.doux && G.D > 1 ? '|d' : '') + etat217();   // le rendu doux (dessin fin), ou celui d'avant
   function small(look, dir, frame, pose) {
     const k = 's' + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
     const { g, K } = grid(look, dir, frame, pose), cv = paint(g, palette(look, K), W, H);
@@ -656,6 +666,34 @@
       d: geste('coup de face', sansBrasD, [[7.5, 3.4], [7.3, 9], [11.4, 12.4]], [0, 1]),
       u: geste('coup de dos', sansBrasU, [[24.5, 3], [27.6, 0.2], [25.8, -4.4]]) };
     G.GESTES = Object.keys(GESTES);
+
+    /* ---------- prototype 2.17 : les attitudes nouvelles (D.ATTITUDES), pour tous ----------
+       Le corps parle (le décideur, 19 novembre : « positions, émotions, mimiques », à la manière des JRPG 16 bits) : la joie
+       (les bras levés), le rire (les mains sur le ventre), l'acquiescement (la tête inclinée), le refus (la main levée, la
+       paume en avant), la réflexion (la main au menton), la colère (les poings serrés, les bras écartés du corps), la
+       tristesse (la tête basse), s'asseoir (sur les talons), montrer du doigt. Les bras sont tracés comme ceux des gestes
+       (membre()) ; ce qui passe devant la tête (la main au menton) se pose après elle (apres), jamais sur le voile. Le
+       petit personnage (16 × 24) prend, pour l'instant, l'attitude d'avant la plus proche (à dessiner si elles sont
+       retenues). Un Compagnon les prend aussi : son voile reste une seule surface, sans un trait (silhouettes.js). */
+    const sansBrasDd = D0.map((r, j) => j >= 4 && j <= 14 ? r.slice(0, 22) + '.'.repeat(10) : j === 15 ? r.slice(0, 22) + '.eee......' : r);
+    const sansDeux = sansBrasD.map((r, j) => j >= 4 && j <= 14 ? r.slice(0, 22) + '.'.repeat(10) : j === 15 ? r.slice(0, 22) + '.eee......' : r);
+    const bras = (quoi, corps, ...membres) => { let rows = dessus.concat(corps); membres.forEach(pts => { rows = membre(rows, pts).rows; }); return { haut: HAUT_GESTE, rows: gabarit(quoi, rows, 40) }; };
+    // la main qui passe devant la tête : ses points au-dessus du col sont reposés après elle
+    const devant = A => { const ap = []; A.rows.forEach((r, y) => { if (y >= A.haut + 2) return; for (let x = 0; x < W2; x++) if (r[x] === 'N' || ((r[x] === 'C' || r[x] === 'c' || r[x] === 'k') && y >= A.haut - 1)) ap.push([x, y, r[x]]); }); A.apres = ap; return A; };
+    ALLURES.joie = { d: bras('joie de face', sansDeux, [[7.5, 3], [4.2, -1], [4.6, -6.5]], [[24.5, 3], [27.8, -1], [27.4, -6.5]]), l: bras('joie de profil', sansBrasL, [[19.5, 2.6], [18.2, -2.5], [16.5, -7.5]]) };
+    ALLURES.rire = { d: bras('rire de face', sansDeux, [[7.5, 3], [6.2, 9], [11.8, 11]], [[24.5, 3], [25.8, 9], [20.2, 11]]), l: bras('rire de profil', sansBrasL, [[19.5, 2.6], [19.6, 9], [13.6, 10.6]]) };
+    ALLURES.refus = { d: bras('refus de face', sansBrasD, [[7.5, 3], [4.4, 8.5], [5.2, 2.2]]), l: bras('refus de profil', sansBrasL, [[19.5, 2.6], [13.6, 5.6], [8.4, 2.4]]) };
+    ALLURES.reflexion = { d: devant(bras('réflexion de face', sansBrasDd, [[24.5, 3], [25.6, 9.5], [19.8, 1.6]])), l: devant(bras('réflexion de profil', sansBrasL, [[19.5, 2.6], [17.4, 9], [12.6, 0.6]])) };
+    ALLURES.colere = { d: bras('colère de face', sansDeux, [[7.5, 3], [4.6, 8.2], [5.0, 12.4]], [[24.5, 3], [27.4, 8.2], [27.0, 12.4]]), l: bras('colère de profil', sansBrasL, [[19.5, 2.6], [20.8, 8], [17.6, 12.2]]) };
+    ALLURES.montre = { d: bras('montrer de face', sansBrasDd, [[24.5, 3], [27.6, 5.2], [29.6, 6.6]]), l: bras('montrer de profil', sansBrasL, [[19.5, 2.6], [13.2, 3.4], [6.8, 3.2]]) };
+    ALLURES.acquiesce = { d: D0, l: L0 };
+    ALLURES.triste = { d: D0, l: L0 };
+    ALLURES.assis = { d: ALLURES.accable.d, l: ALLURES.accable.l };
+    // le petit personnage : l'attitude d'avant la plus proche (hy : la tête qui s'incline ; kneel : posé au sol)
+    const PR = (base, o) => Object.assign({}, POSES[base] || { d: BODIES.d[0], l: BODIES.l[0], u: BODIES.u[0] }, o || {});
+    Object.assign(POSES, { joie: PR('resolu'), rire: PR('salut'), acquiesce: PR(null, { hy: 1 }), refus: PR('salut'), reflexion: PR('salut'), colere: PR(null), triste: PR(null, { hy: 1 }),
+      assis: PR('accable', { hy: 0 }), montre: PR('resolu') });
+    (D.ATTITUDES || []).forEach(p => { if (!POSES[p] || !ALLURES[p] || !ALLURES[p].d || !ALLURES[p].l) throw new Error('attitude sans dessin : ' + p); });
   }
 
   /* ---------- la course (2.x) ----------
@@ -935,10 +973,92 @@
       '.............tTtTtu.............', '...............tu...............'])); }
   Object.keys(HEADS).forEach(c => { if (!TETES[c] || !TETES[c].d || !TETES[c].l || !TETES[c].u) throw new Error('coiffe sans tête native : ' + c); });
 
+  /* PROTO-217-DEBUT */
+  /* ---------- prototype 2.17 : Idris « un des leurs » (?idris=…, images de validation ; non livré) ----------
+     Le décideur (19 novembre) : « un des leurs » — le grain et les proportions des autres personnages, à la manière des
+     JRPG 16 bits (inspiration de vocabulaire seulement : rien n'est repris d'un autre jeu). Quatre propositions, dans la
+     même tenue d'office : le long manteau ouvert sarcelle, la tunique claire, l'écharpe rouille, la besace ; ce qui change :
+     la tête (la coiffure, la capuche, l'écharpe), le port. Le corps est le corps commun et ses règles de tenue ; le néon
+     est réduit à deux lignes (Y : le revers du manteau ; y : la ceinture), qu'exige silhouettes.js. Le visage est celui de
+     tous (visage()). Lettres propres : 1 2 3 (les cheveux) ; la tête prend le modelé du corps (natifGrille). */
+  // la tenue d'office : trois tons par matière (la lumière, le corps, l'ombre) — le sarcelle de la maquette, un peu
+  // désaturé et éclairci pour les fonds sombres ; la tunique claire ; des chausses brunes ; des bottes plus sombres
+  const PROTO_TONS = { capuche: ['#5f9ea6', '#3f7883', '#29535e'], manteau: ['#56939c', '#386d78', '#244a55'], tunique: ['#e3d2b0', '#b89d78'],
+    chausses: ['#5d4b3e', '#45372d', '#2f251f'], echarpe: ['#dc8c5c', '#b35b3d', '#7f382c'], bottes: ['#6a4a31', '#3f2a1b'] };
+  // l'étoffe que le joueur a choisie (l'écran « Ton personnage » ne change pas) : ses couleurs de dessin ; la tenue d'office (e1),
+  // les tons ci-dessus
+  function paletteProto(look, K, p) {
+    const dr = rawiEtoffe(look), e1 = !dr || (D.RAWI && D.RAWI.etoffes.e1 && dr === D.RAWI.etoffes.e1.dessin), tons = v => Array.isArray(v) ? v : ramp(v);
+    const C = e1 ? PROTO_TONS : Object.assign({}, PROTO_TONS, { capuche: tons(dr.capuche || dr.manteau), manteau: tons(dr.manteau), chausses: dr.chausses && dr.chausses[0] !== '#dac7a2' ? tons(dr.chausses) : PROTO_TONS.chausses });
+    const poil = (typeof look.poil === 'string' && look.poil) || (D.RAWI && D.RAWI.poils && D.RAWI.poils.p2) || '#2c1e17';
+    Object.assign(p, { T: C.capuche[0], t: C.capuche[1], u: C.capuche[2], C: C.manteau[0], c: C.manteau[1], k: C.manteau[2],
+      E: C.manteau[1], e: C.manteau[2], B: C.manteau[0], b: C.manteau[1], m: C.manteau[1],
+      R: C.tunique[0], r: C.tunique[1], S: C.tunique[0], s: C.tunique[1], L: C.chausses[0], l: C.chausses[1], Z: C.chausses[2], M: null,
+      A: C.echarpe[0], a: C.echarpe[1], x: C.echarpe[0], z: C.echarpe[1], o: C.echarpe[2], F: C.bottes[0], f: C.bottes[1],
+      1: mix(poil, '#e0a874', 0.48), 2: mix(poil, '#7a4e32', 0.3), 3: mix(poil, '#0c0810', 0.35) });
+    // (ci-dessus, les cheveux, pour les images de validation : un reflet plus franc, 1 et 2, qui donne leur volume sous la lumière du soir)
+    // le passeur : le cou (4), le teint choisi dans l'ombre du menton, et l'ombre chaude sous le menton (5) — tirés du teint, à
+    // plat comme les mains (natifGrille, machoirePasseur)
+    if (K.proto === 'passeur') { const tn = G.teint(look); if (tn) { p[4] = mix(tn, '#3a1e30', 0.32); p[5] = mix(tn, '#3a1e30', 0.5); } }
+    return p;
+  }
+  // le néon en deux lignes, la ceinture de cuir, la besace ; le manteau mi-long (le voyageur), les épaules larges
+  // (l'archiviste) — sur la grille de 32 × 48 (ligne cou : le haut du corps)
+  function protoHabit(L, K, key, cou, kneel) {
+    const at = (x, y) => (y >= 0 && y < L.length && x >= 0 && x < W2) ? L[y][x] : '.', set = (x, y, m) => { if (y >= 0 && y < L.length && x >= 0 && x < W2) L[y][x] = m; };
+    // Y : le revers du manteau, du côté du cœur (de face) ; le devant de la poitrine (de profil)
+    if (key === 'd') { for (let y = cou + 4; y < cou + 9; y++) if ('kr'.indexOf(at(11, y)) >= 0) set(11, y, 'Y'); }
+    else if (key === 'l') { for (let y = cou + 4; y < cou + 8; y++) { let x = 0; while (x < W2 && at(x, y) === '.') x++; if ('RrSs'.indexOf(at(x, y)) >= 0 && 'RrSs'.indexOf(at(x + 1, y)) >= 0) set(x + 1, y, 'Y'); } }
+    // y : la ceinture, une ligne ; dessous, le cuir
+    let ya = -1; for (let y = cou + 6; y < cou + 16 && ya < 0; y++) for (let x = 0; x < W2; x++) if ('Aa'.indexOf(at(x, y)) >= 0) { ya = y; break; }
+    if (ya >= 0) { const xs = []; for (let x = 0; x < W2; x++) if ('Aa'.indexOf(at(x, ya)) >= 0) xs.push(x); const mi = (xs[0] + xs[xs.length - 1]) / 2;   // le néon : le milieu de la ceinture
+      for (let y = ya; y < ya + 2; y++) for (let x = 0; x < W2; x++) if ('Aa'.indexOf(at(x, y)) >= 0) set(x, y, y === ya && Math.abs(x - mi) <= 2.5 ? 'y' : y === ya ? 'Q' : 'K'); }
+    if (kneel) return;
+    // la tunique s'arrête sous la ceinture ; dessous, les chausses et le jour entre les jambes (de face)
+    if (ya >= 0) for (let y = ya + 4; y < L.length; y++) for (let x = 0; x < W2; x++) { const m = at(x, y);
+      if (m === 'S') set(x, y, 'L'); else if (m === 's') set(x, y, 'l'); if (key === 'd' && y >= ya + 6 && (x === 16 || x === 17) && 'Ll'.indexOf(at(x, y)) >= 0) set(x, y, 'M'); }
+    // le manteau mi-long : il s'arrête au genou
+    if (K.proto === 'voyageur') for (let y = cou + 20; y < L.length; y++) for (let x = 0; x < W2; x++) { const m = at(x, y);
+      if ('Eek'.indexOf(m) >= 0) set(x, y, '.'); else if (m === 'B') set(x, y, 'L'); else if (m === 'b') set(x, y, 'l'); else if (m === 'm') set(x, y, 'M'); }
+    // les épaules larges : un point de plus de chaque côté, de face et de dos
+    if (K.proto === 'archiviste' && key !== 'l') for (let y = cou + 1; y < cou + 6; y++) { let a = 0; while (a < W2 && at(a, y) === '.') a++; let b = W2 - 1; while (b >= 0 && at(b, y) === '.') b--;
+      if (a > 0 && a < W2 && 'CckEe'.indexOf(at(a, y)) >= 0) set(a - 1, y, at(a, y)); if (b < W2 - 1 && b >= 0 && 'CckEe'.indexOf(at(b, y)) >= 0) set(b + 1, y, at(b, y)); }
+    // la besace : une tache de cuir à la hanche, au bord du manteau (rien sur une main)
+    const SACP = ['qQQQq', 'OOOOK', 'KKKKQ', 'KKKQQ', '.QQQ.'], x0 = key === 'd' ? 20 : key === 'l' ? 13 : 7;
+    const yb = ya >= 0 ? ya + 2 : cou + 12;
+    SACP.forEach((r, j) => { for (let i = 0; i < r.length; i++) if (r[i] !== '.' && at(x0 + i, yb + j) !== 'N' && at(x0 + i, yb + j) !== '.') set(x0 + i, yb + j, r[i]); });
+  }
+  // le passeur (19 novembre) : sous le menton, le cou (4) ; sur la carte (32 × 48), la mâchoire s'affine vers le menton —
+  // de face, de 8 points à 6, puis 4 ; de profil, le cou monte derrière le menton. En 64 × 96 : machoirePasseur.
+  { const T = {
+      passeur: {
+        d: ['................................', '................................', '................................', '.............2222.......2.......', '...........22222222....22.......', '..........2221112222.2222.......', '.........22211222222222222......', '.........2212222232222223.......', '.........22222223322222.........', '.........2222223VVVV322.........', '.........2223VVVVVVV322.........', '.........223VVVVVVVV322.........', '..........2NVVVVVVVVN2..........', '..........2NVVVVVVVVN2..........', '...........2VVVVVVVV2...........', '.............VVVVVV.............', '..............VVVV..............', '............xx4444xz............', '........tTTxxxxxxxxxzxx.........', '.......tTTHTzxxxxxxxzoxxzz......', '......tTTTTTTozzzzzzoTTTxxzzo...', '......uttttuuuxzz.....uuttu.zzo.', '..............xzo...............', '...............o................'],
+        l: ['................................', '................................', '................................', '............2222........2.......', '..........22222222.....22.......', '.........2211122222..2222.......', '........2211222222222222........', '........221222222232222.........', '.......2222222233322223.........', '.......22VVVV222222223..........', '........VVVVVV22223322..........', '........VVVVVVN22222232.........', '.......VVVVVVVN2222232..........', '........VVVVVVN222232...........', '........VVVVVV222232............', '........VVVVVV22232.............', '.........VVV442223TTt...........', '..........xxx44xxTTTTt..........', '.........xxxxxxxzxxTTTt.........', '.........zxxxxzzozxxxTTt........', '..........ozzzzo.uozxxxzz.......', '................uttuozzxzzo.....', '.......................ozzo.....', '.........................o......'],
+        u: ['................................', '................................', '................................', '.............2222.......2.......', '...........22222222....22.......', '..........2221122222.2222.......', '.........22112222222222222......', '.........2122222322222223.......', '.........22222232222222.........', '.........22222322222222.........', '.........22223222232222.........', '.........22232222223222.........', '.........22322222222322.........', '..........232222222232..........', '...........2222222222...........', '............22NNNN22............', '.........tTTxxxxxxxxTTt.........', '........tTTHzxxxxxxzTTTt........', '.......tTTTTTTTTTTTTTxxzz.......', '......tTTTTTTTtTTTTTTTTxxzz.....', '......TTTTTTTTtTTTTTTTTTuzxzo...', '.......uttttttuttttttttu..zzo...', '........uuuuuuuuuuuuuuuu....o...'],
+      },
+      archiviste: {
+        d: ['................................', '................................', '..............TTTT..............', '............TTTTTTTT............', '...........TTHTTTTTTt...........', '..........TTHTTTTTTTTt..........', '.........TTHTTTTTTTTTTt.........', '.........THTTTTTTTTTTTt.........', '.........TTt22222222tTu.........', '.........TTt2222VVVVtTu.........', '.........Ttu23VVVVVVutu.........', '.........TtuVVVVVVVVutu.........', '.........TtuVVVVVVVVutu.........', '.........TtuVVVVVVVVutu.........', '.........TtuVVVVVVVVutu.........', '.........tTuVVVVVVVVuTt.........', '.........tTtuVVVVVVutTt.........', '.........tTxxzVVVVzxxTt.........', '........tTxxxxxxxxxxxxTt........', '.......tTTzxxxxxxxxxxzTTt.......', '......tTTxxzozzzzzzzoTTTTt......', '......uttxzouttttttttttttu......', '.........xzo..uuuuuuuuuu........', '.........zo.....................', '.........o......................'],
+        l: ['................................', '................................', '.............TTTT...............', '...........TTTTTTTt.............', '..........TTHTTTTTTTt...........', '.........THTTTTTTTTTTt..........', '........tHTTTTTTTTTTTTt.........', '........TTTttTTTTTTTTTtu........', '.......tTt222tTTTTTTTTtu........', '.......Tt2VVVVutTTTTTTtu........', '........VVVVVVutTTTTTttu........', '........VVVVVVutTTTTTttu........', '.......VVVVVVVutTTTTtttu........', '........VVVVVVutTTTTttu.........', '........VVVVVVuttTTttuu.........', '........VVVVVVuttTttu...........', '.........VVVVVuutttuu...........', '.........xxxVVxxtttu............', '........xxxxxxxxzttTu...........', '........zxxxxxxzozTTTu..........', '.......xxzoozzzzoTTTTTu.........', '.......xzo.uuttTTTTTTtu.........', '.......zo.....uuuuuuuu..........', '.......o........................'],
+        u: ['................................', '................................', '..............TTTT..............', '............TTTTTTTT............', '...........TTHTTTTTTt...........', '..........TTHTTTTTTTTt..........', '.........TTHTTTTTTTTTTt.........', '.........THTTTTTTTTTTTt.........', '.........TTTTTTTtTTTTTt.........', '.........TTTTTTTtTTTTTt.........', '.........TTTTTTTtTTTTTu.........', '.........TTTTTTTtTTTTTu.........', '.........TTTTTTTtTTTTtu.........', '.........TTTTTTTtTTTTtu.........', '.........TTTTTTTtTTTttu.........', '.........tTTTTTTtTTTttu.........', '.........tTTTTTTtTTTttu.........', '..........tTTTTTtTTttu..........', '........tTTttttttttttTTu........', '.......tTTTTTtttttttTTTTu.......', '......tTTTTTTTTTTTTTTTTTTu......', '......TTTTTTTTTTTTTTTTTTtu......', '.......tTTTTTTTTTTTTTTTtu.......', '.........uttttttttttttu.........'],
+      },
+      voyageur: {
+        d: ['................................', '................................', '................................', '...........2...22...2...........', '..........22.22222.222..........', '.........2222222222222222.......', '........222112222222222..2......', '.........21122222232222222......', '........2222222232232222........', '.........2222223VVVV3222........', '.........2223VVVVVVVV32.........', '..........23VVVVVVVVV2..........', '..........2NVVVVVVVVN2..........', '...........NVVVVVVVVN...........', '............VVVVVVVV............', '............VVVVVVVV............', '.............VVVVVV.............', '...........xxxVVVVzxx...........', '..........xxxxxzzxxxxzx.........', '.........zxxxxxxxxxxxxzx........', '.........ozzxxxxxxxxzzzo........', '..........oozzzzzzzzzoo.........', '.............xzzo...............', '.............xzo................', '..............o.................'],
+        l: ['................................', '................................', '................................', '..........2..22..2..............', '.........22.22222222............', '........2222222222222...........', '.......22112222222222222........', '........21122222222222..2.......', '.......222222222223322222.......', '.......22VVVV22222232222........', '........VVVVVV2222322...........', '........VVVVVVN222223...........', '.......VVVVVVVN222232...........', '........VVVVVVN22223............', '........VVVVVV22223.............', '........VVVVVV2223..............', '.........VVVVVNN................', '.........xxxxVNNxxx.............', '........xxxxxxxzxxxx............', '.......zxxxxxxxxzxxxz...........', '.......ozzxxxxxxzzzzo...........', '........oozzzzzzzzoo............', '.........xzzo...................', '.........xzo....................', '..........o.....................'],
+        u: ['................................', '................................', '................................', '...........2...22...2...........', '..........22.22222.222..........', '.........2222222222222222.......', '........222112222222222..2......', '.........21122222232222222......', '........2222222232232222........', '.........22222322222232.........', '.........22223222223222.........', '.........22232222222322.........', '..........232222222232..........', '...........2222222222...........', '............22222222............', '............NNNNNNNN............', '.............NNNNNN.............', '...........xxxxxxxxxx...........', '..........xxxxxzzxxxxzx.........', '.........zxxxxxxxxxxxxzx........', '.........ozzxxxxxxxxzzzo........', '..........oozzzzzzzzzoo.........', '................................'],
+      },
+      jeune: {
+        d: ['................................', '................................', '................................', '................................', '...........2...22...2...........', '...........22.2222.22...........', '..........TT22222222TT..........', '.........TT2221122222TT.........', '........22T2211222222T22........', '........2222222VVV22222.........', '.........222VVVVVVVV222.........', '.........Tt2VVVVVVVV2tu.........', '.........TtNVVVVVVVVNtu.........', '.........TtNVVVVVVVVNtu.........', '.........tTtVVVVVVVVtTu.........', '.........tTtuVVVVVVutTt.........', '..........ttuuVVVVuuttu.........', '........tTTtxxxxxxxxtTTu........', '.......tTTTTxxxxxxxzTTTTu.......', '......tTTTTTzxxxxxxzTTTTTu......', '......TTTTTTozzzzzzoTTTTtu......', '.......tTTTTtxzzttttTTTtu.......', '.........uttuxzouuttttu.........', '.............xo.................'],
+        l: ['................................', '................................', '................................', '...........2..22..2.............', '..........22.2222.22TT..........', '.........2222222222TTTTt........', '........22112222222TTTTTt.......', '.......22221122222TTTTTtu.......', '......2222222222222TTTTtu.......', '......2222VVV2222TTTTTtu........', '.......22VVVVV222TTTTttu........', '........VVVVVVN2tTTTTttu........', '.......VVVVVVVNutTTTtttu........', '........VVVVVVNutTTTttu.........', '........VVVVVVuttTTttuu.........', '........VVVVVVuttTttu...........', '.........VVVVNNuttuu............', '.........xxxxxxxxtTTu...........', '........xxxxxxxxzTTTTu..........', '........zxxxxxxzoTTTTTu.........', '.........ozzzzzoTTTTTTu.........', '..........xzouuttTTTTtu.........', '..........xo.....uuuuu..........', '................................'],
+        u: ['................................', '................................', '................................', '...........2...22...2...........', '...........22.2222.22...........', '..........TT22222222TT..........', '.........TTHTTTTTTTTTTt.........', '.........TTHTTTTTTTTTTt.........', '.........THTTTTTTtTTTTt.........', '.........TTTTTTTTtTTTTu.........', '.........TTTTTTTTtTTTtu.........', '.........TTTTTTTTtTTTtu.........', '.........TTTTTTTTtTTTtu.........', '.........tTTTTTTTtTTttu.........', '.........tTTTTTTTtTTttu.........', '..........tTTTTTTtTttu..........', '..........ttTTTTTtTttu..........', '........tTTttttttttttTTu........', '.......tTTTTTtttttttTTTTu.......', '......tTTTTTTTTTTTTTTTTTTu......', '......TTTTTTTTTTTTTTTTTTtu......', '.......tTTTTTTTTTTTTTTTtu.......', '.........uttttttttttttu.........'],
+      },
+    };
+    Object.keys(T).forEach(n => { tete('idris_' + n, { d: T[n].d, l: T[n].l }); TETES['idris_' + n].u = gabarit('tête idris_' + n + '.u', T[n].u, 20); }); }
+  /* PROTO-217-FIN */
+
   // familles de tons : les lettres d'une même matière, de la plus claire à la plus sombre
   const FAM = { H: 'Ttu', T: 'Ttu', t: 'Ttu', u: 'Ttu', D: 'Ttu', C: 'Cck', c: 'Cck', k: 'Cck', E: 'Cck', e: 'Cck', B: 'Cck', b: 'Cck', m: 'Cck', R: 'Rr', r: 'Rr', S: 'Ss', s: 'Ss', M: 'LlZ',
     L: 'LlZ', l: 'LlZ', Z: 'LlZ', J: 'Ii', I: 'Ii', i: 'Ii', j: 'Ii', W: 'Ww', w: 'Ww', F: 'Ff', f: 'Ff', A: 'Aa', a: 'Aa',
-    x: 'xzo', z: 'xzo', o: 'xzo' };   // x z o : l'écharpe du râwî (ses gabarits propres, plus bas)
+    x: 'xzo', z: 'xzo', o: 'xzo', 1: '123', 2: '123', 3: '123' };   // 1 2 3 : les cheveux (prototype 2.17)   // x z o : l'écharpe du râwî (ses gabarits propres, plus bas)
   function rampes(pal) { // par lettre : ses cinq tons et sa place parmi eux
     const R = {}, faites = {};
     const cinq = base => [mix(base[0], '#ffffff', lum(base[0]) > 0.8 ? 0.62 : 0.34)].concat(base.length > 2 ? base : [base[0], base[base.length - 1], mix(base[base.length - 1], '#20143a', 0.32)], [mix(base[base.length - 1], '#150f1d', base.length > 2 ? 0.42 : 0.56)]);
@@ -1648,6 +1768,7 @@
   const RAWI_COIFFES = ['capuche', 'calotte', 'litham'];
   // → les couleurs du dessin du râwî, ou null : ce qu'il ne dessine pas (une autre coiffe, une armure) garde le dessin d'avant
   function rawiDe(look, K) {
+    if (K.proto) return null;   // prototype 2.17 : dessiné comme les autres
     if (!look.rawi || look.kind !== 'cyber' || !RAWI64.d) return null;
     if (RAWI_COIFFES.indexOf(K.coiffe) < 0 || K.armure || K.cuirasse || K.motif) return null;
     return rawiEtoffe(look);
@@ -1757,7 +1878,7 @@
   G.RAWI = { 64: RAWI64, 32: RAWI32, variante: (h, key, quoi) => rawiVariante(h, key, quoi || 'repos') };   // pour les outils (planches, contrôles)
   // la grille de 32 × 48 d'un personnage, ou null si sa tête ou son corps n'ont pas encore de gabarit natif
   function natifGrille(look, dir, frame, pose) {
-    const K0 = kindOf(look), key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l', nom = HEADS[K0.coiffe] ? K0.coiffe : 'imama';
+    const K0 = kindOf(look), key = dir === 0 ? 'd' : dir === 3 ? 'u' : 'l', nom = K0.proto && K0.coiffe === 'capuche' && TETES['idris_' + K0.proto] ? 'idris_' + K0.proto : HEADS[K0.coiffe] ? K0.coiffe : 'imama';
     { const dr = rawiDe(look, K0); if (dr) return rawiGrille(look, K0, dr, dir, frame, pose); }   // le râwî d'après la maquette (pilote)
     const Ge = pose && GESTES[pose] ? GESTES[pose][key] : null; if (Ge) frame = 0;   // un geste de frappe : son propre gabarit, pas une pose du récit
     const Co = !Ge && !pose && frame >= 4 ? course(key, (frame - 4) % COURSE_N, !!K0.court) : null, Gt = Ge || Co;   // la course : ses huit images
@@ -1765,7 +1886,8 @@
     const A = Gt || (P ? (ALLURES[pose] && ALLURES[pose][key]) : (CORPS[key] && CORPS[key][frame || 0]));
     if (!tt || !A) return null;
     const r = grid(look, dir, Co ? 0 : frame, Ge ? null : pose, {}), K = r.K, kneel = r.kneel, hy = P ? (P.hy || 0) : 0, haut = A.haut || 0;
-    let rows = A.rows || A; if (K.petit && !kneel) rows = rows.filter((x, j) => PETIT.indexOf(j - haut) < 0);
+    if (K.proto && K.manteau !== 'long') K.manteau = 'long';   // prototype 2.17 : la tenue d'office, le long manteau (le petit personnage, lui, ne change pas)
+    let rows = A.rows || A; if (K.petit && !kneel) rows = rows.filter((x, j) => PETIT.indexOf(j - haut) < 0); else if (K.proto === 'jeune' && !kneel) rows = rows.filter((x, j) => [8, 18].indexOf(j - haut) < 0);   /* prototype 2.17 : le jeune râwî, plus léger */
     const bT = H2 - rows.length, cou = bT + haut, y1 = kneel ? H2 : H2 - 4, L = [], am = [], fin = []; let hors = 0; // am : l'armure ; fin : dessiné tel quel, sans modelé
     for (let y = 0; y < H2; y++) { L.push(new Array(W2).fill('.')); am.push(new Array(W2).fill(0)); fin.push(new Array(W2).fill(0)); }
     rows.forEach((row, j) => { for (let x = 0; x < W2; x++) if (row[x] !== '.') L[bT + j][x] = row[x]; });
@@ -1789,7 +1911,8 @@
     if (K.chale && !kneel) for (let y = cou; y < cou + 4; y++) for (let x = 0; x < W2; x++) if ('Cck'.indexOf(L[y][x]) >= 0) L[y][x] = (x + y) % 3 ? 'T' : 't';
     if (K.drape && !kneel) for (let y = cou; y < cou + 4; y++) for (let x = 0; x < W2; x++) if ((x <= 10 || x >= 21) && 'Cck'.indexOf(L[y][x]) >= 0) L[y][x] = y < cou + 2 ? 't' : 'u'; // l'étoffe de tête retombe sur les épaules
     if (K.raies) [3, 6, 9].forEach(dy => { for (let x = 0; x < W2; x++) if ('RrCc'.indexOf(L[cou + dy][x]) >= 0) L[cou + dy][x] = 'T'; });
-    if (K.neon) { const x = key === 'd' ? 15 : key === 'l' ? 11 : -1; if (x >= 0) for (let y = cou + 3; y < cou + 10; y++) if ('RrSsIiWw'.indexOf(L[y][x]) >= 0) L[y][x] = 'Y'; /* sur le buste seulement : une manche qui passe devant le cache */
+    if (K.neon && K.proto) protoHabit(L, K, key, cou, kneel, A);   // prototype 2.17 : le néon en deux lignes, la ceinture, la besace
+    else if (K.neon) { const x = key === 'd' ? 15 : key === 'l' ? 11 : -1; if (x >= 0) for (let y = cou + 3; y < cou + 10; y++) if ('RrSsIiWw'.indexOf(L[y][x]) >= 0) L[y][x] = 'Y'; /* sur le buste seulement : une manche qui passe devant le cache */
       for (let y = cou + 10; y < cou + 12; y++) for (let x2 = 0; x2 < W2; x2++) if ('Aa'.indexOf(L[y][x2]) >= 0) L[y][x2] = 'y'; }
     // les objets tenus : ceux de grid(), agrandis, ramenés à la hauteur de la main
     const dyo = kneel ? 0 : (cou + 13 - (K.petit ? 2 : 0)) - (2 * r.b0 + 10);
@@ -1802,14 +1925,15 @@
       sans = { L: copie(L), am: copie(am), fin: copie(fin) }; tm = L.map(() => new Array(W2).fill(0)); natifs = { noms: rawi, key, b0: cou, ou, glisse, dir };
       rawi.forEach(o => poserObjet(o, 2, (x, y, m) => { if (x >= 0 && x < W2 && y >= 0 && y < H2 && L[y][x] !== 'N') { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1; } }, { b0: cou, key, ou, glisse })); }
     // la tête, inclinée ou abaissée selon la pose ; le cimier suit le sommet du casque
-    const y0 = cou - 18 + 2 * hy + (Gt ? Gt.tete[1] : 0), x0 = (hy && key === 'l' ? -2 : 0) + (Gt ? Gt.tete[0] : 0), pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = 1;
-      if (sans) { sans.L[y][x] = m; sans.am[y][x] = 0; sans.fin[y][x] = 1; tm[y][x] = 1; } } };
+    const y0 = cou - 18 + 2 * hy + (Gt ? Gt.tete[1] : 0), x0 = (hy && key === 'l' ? -2 : 0) + (Gt ? Gt.tete[0] : 0), pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = K.proto && 'VvN4'.indexOf(m) < 0 ? 0 : 1;   /* prototype 2.17 : la tête d'Idris prend le modelé du corps (le cou du passeur, 4, à plat) */
+      if (sans) { sans.L[y][x] = m; sans.am[y][x] = 0; sans.fin[y][x] = estPasseur(look, K) ? fin[y][x] : 1; tm[y][x] = 1; } } };   /* le passeur : la lanterne à la main, la tête garde le même modelé */
     const nt = neonTete(K, tt, 2);   // le bandeau du râwî sous le turban et le chèche : ses néons (D193)
     for (let j = 0; j < (kneel ? 20 : tt.length); j++) for (let x = 0; x < W2; x++) if (tt[j][x] !== '.') pose1(x + x0, y0 + j, nt ? nt(j, x, tt[j][x]) : tt[j][x]); // à genoux, le pan du turban ne descend pas
+    if (A && A.apres) A.apres.forEach(([x, y, m]) => { const Y = bT + y; if (Y >= 0 && Y < H2 && L[Y][x] !== 'V' && L[Y][x] !== 'v') pose1(x, Y, m); });   // prototype 2.17 : la main devant la tête, jamais sur le voile
     if (K.cimier) { const xs = key === 'l' ? [10, 21] : [14, 17]; for (let x = xs[0]; x <= xs[1]; x++) { let y = 0; while (y < tt.length && tt[y][x] === '.') y++; if (y < tt.length) for (let dy = 1; dy <= 2; dy++) pose1(x + x0, y0 + Math.max(dy - 1, y - dy), 'X'); } }
     if (dir === 2) [L, am, fin].concat(sans ? [sans.L, sans.am, sans.fin, tm] : []).forEach(t => t.forEach(row => row.reverse()));
     const main = Ge ? [dir === 2 ? W2 - Ge.main[0] : Ge.main[0], bT + Ge.main[1]] : null;   // où est la main qui frappe, dans la grille de 32 × 48
-    return { L, K, am, fin, hors, main, sans, natifs, tm };
+    return { L, K, am, fin, hors, main, sans, natifs, tm, vue: key, dir };
   }
   // la même grille de matières, deux fois plus grande, ses escaliers arrondis (la règle d'EPX, sur des lettres)
   function grilleFine(g, w, h) { const o = []; for (let y = 0; y < h * 2; y++) o.push(new Array(w * 2)); const at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? '.' : g[y][x];
@@ -1818,11 +1942,30 @@
       o[y * 2 + 1][x * 2] = (d === c && d !== b && c !== a) ? c : p; o[y * 2 + 1][x * 2 + 1] = (b === d && b !== a && d !== c) ? d : p; }
     return o; }
   const doubler = t => { const o = []; t.forEach(r => { const q = []; r.forEach(v => q.push(v, v)); o.push(q, q.slice()); }); return o; };
+  /* prototype 2.17 — le passeur (19 novembre, « un passage de plus » sur le visage) : la mâchoire et le cou, taillés dans la
+     grille fine (64 × 96), sous la bouche. De face, le visage va de 14 points (affinerPasseur l'a rendu moins large d'un point
+     de chaque côté) à 6 au menton ; dessous, une ligne d'ombre chaude (5), puis le cou (4 : le teint choisi dans l'ombre, à
+     plat, comme les mains). De profil, la silhouette ne change pas : sous la ligne de la mâchoire, le cou. Une ligne par rang,
+     depuis le haut du visage + dy ; une colonne par point, depuis le bord gauche du visage (de profil : depuis son devant).
+     V : le visage · 4 : le cou · 5 : l'ombre sous le menton · . : hors du visage (le liseré y trace la mâchoire) · - : tel
+     quel. Seuls le visage et le cou se taillent : l'écharpe et les cheveux ne bougent pas. */
+  const MACHOIRE = {
+    d: { w: 16, h: 16, dy: 12, r: ['.VVVVVVVVVVVVVV.', '..VVVVVVVVVVVV..', '...VVVVVVVVVV...', '.....VVVVVV.....', '----.555555.----', '-----444444-----'] },
+    l: { w: 14, h: 16, dy: 12, r: ['--VVVVVVVVVVV5--', '---VVVVVVVVV54--', '---VVVVVVVV544--', '-----VVVV54444--', '------------4444', '-------------44-'] } };
+  function machoirePasseur(L, n) {
+    if (!n.K || n.K.proto !== 'passeur' || n.K.coiffe !== 'capuche' || !MACHOIRE[n.vue]) return L;
+    const M = MACHOIRE[n.vue], tete = m => m === 'V' || m === 'v' || m === '4' || m === '5'; let x0 = 99, x1 = -1, y0 = 99, y1 = -1;
+    for (let y = 0; y < L.length; y++) for (let x = 0; x < L[y].length; x++) if (L[y][x] === 'V' || L[y][x] === 'v') { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    if (x1 - x0 + 1 !== M.w || y1 - y0 + 1 !== M.h) return L;   // une autre tête (une pose qui la cache) : rien
+    M.r.forEach((r, j) => { const Y = y0 + M.dy + j; if (Y < 0 || Y >= L.length) return;
+      for (let i = 0; i < r.length; i++) { const X = n.dir === 2 ? x1 - i : x0 + i, m = r[i]; if (m !== '-' && X >= 0 && X < L[Y].length && (tete(L[Y][X]) || L[Y][X] === '.')) L[Y][X] = m; } });
+    return L;
+  }
   // la grille fine (64 × 96) d'un grand personnage natif : celle de 32 × 48, ses escaliers arrondis — sans les objets du râwî,
   // qui y sont dessinés à cette taille même (D193), sous la tête, jamais sur une main
   function fine(n) {
     if (n.rawi && G.rawi64) return { L: n.rawi.L4.map(r => r.slice()), am: doubler(n.am), fin: n.rawi.fin4.map(r => r.slice()) };   // le râwî : son gabarit de 64 × 96, tel quel (la lanterne y est à sa taille)
-    const b = n.sans || n, L = grilleFine(b.L, W2, H2), am = doubler(b.am), fin = doubler(b.fin), N = n.natifs; if (!N) return { L, am, fin };
+    const b = n.sans || n, L = machoirePasseur(grilleFine(b.L, W2, H2), n), am = doubler(b.am), fin = doubler(b.fin), N = n.natifs; if (!N) return { L, am, fin };
     const W4 = W2 * 2, H4 = H2 * 2, tm = doubler(n.tm), c = []; for (let y = 0; y < H4; y++) c.push(new Array(W4).fill('.'));
     N.noms.forEach(o => poserObjet(o, 4, (x, y, m) => { if (x >= 0 && x < W4 && y >= 0 && y < H4) c[y][x] = m; }, { b0: 2 * N.b0, key: N.key, ou: N.ou, glisse: N.glisse }));
     if (N.dir === 2) c.forEach(r => r.reverse());
@@ -1841,11 +1984,64 @@
   // ce qui distingue un personnage d'un autre : toujours le même pour le même. look.visage : la marque gardée d'une tenue à l'autre (le râwî change de tenue, pas de visage)
   const signe = look => look.visage !== undefined ? look.visage >>> 0 : I.hash((look.kind || '') + '|' + (look.robe || '') + '|' + (look.head || '') + '|' + (look.cloak || '') + '|' + (look.sel === undefined ? '' : look.sel)) >>> 0;
   G.signe = signe;
-  function visage(look, K, dir, pose, s, x0, x1, y0, y1) {
+  /* prototype 2.17 — les mimiques (le décideur, 19 novembre : « visage hors Compagnons ») : une attitude choisit la sienne ;
+     seulement pour qui a un visage (visage() rend null pour un Compagnon et pour D.SANS_VISAGE, avant d'en arriver là).
+     Un fichier de saga n'écrit jamais de trait. Les attitudes d'avant (la surprise, la résolution, le salut) ne prennent
+     leur mimique que derrière les interrupteurs du prototype : leur empreinte (silhouettes.js) ne bouge pas. */
+  const MIMIQUE_DE = { joie: 'sourire', rire: 'rire', acquiesce: 'sourire', surpris: 'surprise', colere: 'colere', triste: 'triste', refus: 'ferme', reflexion: 'pensif',
+    resolu: 'ferme', montre: 'ferme', assis: null, sourire: 'sourire', surprise: 'surprise', tristesse: 'triste', fache: 'colere' };
+  const MIM_ANCIENNES = ['surpris', 'resolu', 'salut'];
+  const mimiqueDe = pose => { const m = MIMIQUE_DE[pose]; if (!m) return null; return MIM_ANCIENNES.indexOf(pose) >= 0 && !G.idris && !G.rendu ? null : m; };
+  G.mimique = mimiqueDe; G.MIMIQUES = ['sourire', 'surprise', 'tristesse', 'fache'];   // les mimiques seules (le corps au repos), pour les planches et les contrôles
+  // l'œil et le sourcil, par mimique : des tampons de 5 colonnes (c = −1 : le dehors ; 0, 1 : l'œil ; 2, 3 : vers le nez) sur
+  // 7 lignes (r = −4 … 2, depuis la ligne des yeux) en dessin fin ; de 3 × 4 (c = −1 … 1, r = −2 … 1) sur le personnage de 32 × 48.
+  // k : l'œil · w : son blanc · b : le sourcil · . : la peau
+  const TAMPONS = {
+    2: { neutre: ['.....', '.....', 'bbb..', '.....', 'wkk..', 'wkk..', '.....'], idris: ['.....', 'bbbb.', '.....', '.kk..', 'wkk..', 'wkk..', '.....'],
+      sourire: ['.....', 'bbb..', '.....', '.kk..', 'k..k.', '.....', '.....'], rire: ['.....', 'bbb..', '.....', '.kk..', 'k..k.', '.....', '.....'],
+      surprise: ['bbb..', '.....', '.....', 'wkkw.', 'wkkw.', '.kk..', '.....'], colere: ['.....', 'b....', '.bb..', '...b.', 'wkk..', '.....', '.....'],
+      triste: ['.....', '...b.', '.bb..', 'b....', '.....', '.kk..', '.....'], ferme: ['.....', '.....', 'bbbb.', '.....', 'wkk..', 'wkk..', '.....'],
+      pensif: ['.....', 'bbb..', '.....', 'wkk..', 'wkk..', '.....', '.....'] },
+    1: { neutre: ['...', '...', '.k.', '...'], idris: ['...', '.k.', '.k.', '...'], sourire: ['...', '...', '.k.', '...'], rire: ['...', '...', '.k.', '...'],
+      surprise: ['...', '.k.', '.k.', '...'], colere: ['...', '...', '.k.', '...'], triste: ['...', '...', '...', '.k.'], ferme: ['...', '...', '.k.', '...'], pensif: ['...', '.k.', '...', '...'] }
+  };
+  /* prototype 2.17 — le passeur retenu (le décideur, 19 novembre : « un passage de plus » sur le visage ; l'essai « regard »,
+     où l'on a greffé la mâchoire et le cou) : le regard net d'un héros de JRPG 16 bits (un vocabulaire, jamais un personnage)
+     — l'œil un point plus haut, sous une paupière franche, son blanc et sa pupille lisibles en 64 × 96, et un reflet ; deux
+     points francs en 32 × 48 ; des sourcils marqués et droits ; le nez, une demi-ombre d'un point ; le front dégagé sous la
+     mèche (sans l'ombre des cheveux) ; en 64 × 96, le visage moins large d'un point de chaque côté (affinerPasseur) ; la
+     mâchoire et le menton taillés, dessinés par l'ombre, le cou dégagé (machoirePasseur, et le gabarit de 32 × 48). Les
+     tampons comme plus haut ; en plus — l : le reflet (en haut de la pupille, du côté du nez ; de profil, aucun) · c : les
+     cils de l'œil clos. */
+  const TAMPONS_P = {
+    2: { neutre: ['.....', 'bbbb.', '.....', 'kkk..', 'wkl..', 'wkk..', '.....'], clos: ['.....', '.....', 'bbbb.', '.....', 'ccc..', '.....', '.....'],
+      sourire: ['.....', 'bbbb.', '.....', 'kkk..', 'wkl..', '.....', '.....'], rire: ['bbbb.', '.....', '.....', '.kk..', 'k..k.', '.....', '.....'],
+      surprise: ['bbbb.', '.....', 'kkkk.', 'wkkw.', 'wkkw.', '.....', '.....'], colere: ['.....', 'b....', '.bb..', 'kkkb.', 'wkl..', '.....', '.....'],
+      triste: ['.....', '...b.', '.bb..', 'b....', 'kkk..', 'wkk..', '.....'], ferme: ['.....', '.....', 'bbbb.', 'kkk..', 'wkl..', 'wkk..', '.....'],
+      pensif: ['.....', 'bbbb.', '.....', 'kkk..', 'wkk..', 'www..', '.....'] },
+    1: { neutre: ['...', '.k.', '.k.', '...'], clos: ['...', '...', '.c.', '...'], sourire: ['...', '...', '.k.', '...'], rire: ['...', '...', '.k.', '...'],
+      surprise: ['...', '.k.', '.k.', '...'], colere: ['...', '...', '.k.', '...'], triste: ['...', '...', '...', '.k.'], ferme: ['...', '.k.', '.k.', '...'], pensif: ['...', '.k.', '...', '...'] }
+  };
+  const estPasseur = (look, K) => !!(look.rawi && K.proto === 'passeur' && K.coiffe === 'capuche');
+  // le visage moins large d'un point de chaque côté (en 64 × 96), la tête au même gabarit : de face, les deux colonnes du bord de l'ouverture
+  // prennent ce qui la borde — les cheveux (la tempe), une ombre de cheveux devant l'oreille ; sous l'oreille, où rien ne la
+  // borde, la joue rentre d'un point si la ligne du dessus est rentrée (sinon, elle déborderait)
+  function affinerPasseur(L, fin, w, h) {
+    const V = m => m === 'V' || m === 'v'; let a0 = w, b0 = -1;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (V(L[y][x])) { a0 = Math.min(a0, x); b0 = Math.max(b0, x); }
+    if (b0 - a0 < 5) return;
+    [[a0, -1], [b0, 1]].forEach(([x, sens]) => { let avant = false;
+      for (let y = 0; y < h; y++) { if (!V(L[y][x])) { avant = false; continue; } const m = (L[y][x + sens] || '.');
+        if ('123'.indexOf(m) >= 0) { L[y][x] = m === '1' ? '2' : m; fin[y][x] = 0; avant = true; }
+        else if (m === 'N') { L[y][x] = '3'; fin[y][x] = 0; avant = true; }
+        else if (m === '.' && avant) { L[y][x] = '.'; fin[y][x] = 0; }
+        else avant = false; } });
+  }
+  function visage(look, K, dir, pose, s, x0, x1, y0, y1, L) {
     if (K.lit || look.sansVisage || dir === 3 || x1 < x0) return null;
     const h = signe(look);
     const kd = look.kind || 'homme', age = kd === 'enfant' ? 0 : kd === 'ancien' ? 2 : (kd === 'savant' || kd === 'moine') ? ((h >>> 3) % 2 ? 2 : 1.5) : 1; // 0 enfant · 1 adulte · 1,5 grisonnant · 2 âgé
-    let peau = look.teint || TEINTS[h % TEINTS.length]; if (K.sombre) peau = mix(peau, '#1c1430', 0.34);            // sous une capuche, le visage est dans l'ombre
+    let peau = look.teint || TEINTS[h % TEINTS.length]; if (K.sombre && !K.proto) peau = mix(peau, '#1c1430', 0.34);            // sous une capuche, le visage est dans l'ombre
     // 2.x — le râwî composé (D.RAWI) : un teint plus sombre que tous les TEINTS garde le blanc de l'œil jusque sur le
     // personnage de 32 × 48 (sinon l'œil s'y perd) ; la même ombre pour tous, pour que la gamme reste dans l'ordre
     const fonce = !!look.teint && lum(look.teint) < SOMBRE;
@@ -1855,14 +2051,49 @@
     const barbe = age === 0 ? 0 : age >= 2 ? 2 : adulte && [0, 1, 2].indexOf(look.barbe) >= 0 ? look.barbe : look.rawi ? RAWI_BARBE : [2, 1, 2, 0, 1, 2][(h >>> 7) % 6];  // 0 : glabre · 1 : courte · 2 : pleine (le râwî : glabre, sauf choix)
     const oeil = '#1b1420', blanc = mix('#fbf3e2', peau, 0.15), levre = mix(peau, '#6a2420', 0.5), sourcil = mix(peau, age >= 1.5 ? '#8a8378' : poil, 0.7);
     const w = x1 - x0 + 1, hh = y1 - y0 + 1, fente = hh < 5 * s, profil = dir === 1 || dir === 2, clos = pose === 'prie' || pose === 'accable';
-    const yo = fente ? y0 + s : y0 + Math.round(hh * 0.40), yb = y0 + Math.round(hh * 0.64), ym = y0 + Math.round(hh * 0.74); // les yeux, le haut de la barbe, la bouche
+    const P = estPasseur(look, K) && !fente;                                                                          // prototype 2.17, le passeur
+    // les yeux (le passeur : un point plus haut ; de profil en 32 × 48, ils l'étaient déjà), le haut de la barbe, la bouche ;
+    // le passeur, de face : ses lignes se comptent comme si le cou (4, 5 : natifGrille, machoirePasseur) était encore au visage
+    const hp = P && !profil ? hh + s : hh;
+    const yo = (fente ? y0 + s : y0 + Math.round(hp * 0.40)) - (P && !(profil && s === 1) ? 1 : 0), yb = y0 + Math.round(hp * 0.64), ym = y0 + Math.round(hp * 0.74) - (P && s === 1 && !profil ? 1 : 0);
     const ex = Math.round(w * 0.22);                                                                                  // de face : l'écart d'un œil au bord
+    // prototype 2.17 : la mimique de l'attitude, et l'œil d'Idris (un point de plus en hauteur)
+    const mi = clos || fente ? null : (mimiqueDe(pose) || (look.rawi && K.proto === 'jeune' && !pose ? 'franc' : null));   // le jeune râwî : un sourire franc, d'office
+    const grandOeil = !!(look.rawi && K.proto) && !clos && !fente, tp = P ? TAMPONS_P[s][clos ? 'clos' : mi && TAMPONS_P[s][mi] ? mi : 'neutre']
+      : (mi || grandOeil) && TAMPONS[s] ? TAMPONS[s][mi && TAMPONS[s][mi] && mi !== 'ferme' && mi !== 'pensif' ? mi : grandOeil ? 'idris' : TAMPONS[s][mi] ? mi : 'neutre'] : null;
+    const bouche = mix(peau, '#3a1018', 0.62);
+    // le passeur : la paupière et la pupille d'un même noir, un reflet clair ; des sourcils plus marqués (presque la couleur du poil)
+    const reflet = P ? mix('#fffaf0', peau, 0.08) : null, cil = P ? mix(oeil, peau, 0.3) : null, sourcilP = P ? mix(peau, poil, 0.9) : sourcil, nez = mix(peau, ombre, 0.5);
+    const tampon = (fx, gx, y) => { if (!tp) return undefined; const r = y - yo + (s === 2 ? 4 : 2); if (r < 0 || r >= tp.length) return undefined;
+      let c; if (profil) { c = fx >= s && fx < 2 * s ? fx - s : fx === 2 * s ? -1 : fx === s - 1 ? 2 : fx === 2 * s + 1 ? -2 : 9; }
+      else { const g = fx < w / 2, d = g ? fx - ex : gx - ex; c = d; }
+      if (c < -1 || c >= tp[0].length - 1) return undefined; let m = tp[r][c + 1];
+      if (profil && m === 'l') m = 'k';   // de profil, la pupille regarde devant : sans reflet
+      if (m === '.' && s === 1 && fonce && c === -1 && tp[r][1] === 'k') return blanc;   // un teint très sombre garde le blanc de l'œil, même à 32 × 48
+      return m === 'k' ? oeil : m === 'w' ? blanc : m === 'b' ? sourcilP : m === 'l' ? reflet : m === 'c' ? cil : null; };
+    const levreDe = (fx, gx, y) => { if (!mi || fente) return undefined; const d = profil ? fx : Math.abs(fx - gx), q = s === 2;
+      if (barbe) return (mi === 'rire' || mi === 'surprise') && y >= ym - (q ? 1 : 0) && y <= ym && d <= (mi === 'rire' ? s : (q ? 1 : 0)) ? bouche : undefined;   // dans la barbe : la bouche ouverte seule
+      if (mi === 'sourire' || mi === 'franc') return (y === ym && d <= (profil ? 2 * s - 1 : 2 * s - 1)) || (y === ym - 1 && (profil ? d === 2 * s : d >= 2 * s && d <= 2 * s + (q ? 1 : 0))) ? levre : null;
+      if (mi === 'rire') return (y >= ym - (q ? 1 : 0) && y <= ym + (q ? 1 : 0) && d <= (profil ? s : s + 1)) ? bouche : (y === ym - (q ? 2 : 1) && !profil && d >= s + 2 && d <= s + 3) ? levre : null;
+      if (mi === 'surprise') return (y >= ym - (q ? 1 : 0) && y <= ym && (P && profil ? d >= s && d < 2 * s : d <= (q || P ? 1 : 0))) ? bouche : null;   // le passeur : la bouche ouverte se voit aussi en 32 × 48 et de profil
+      if (mi === 'colere') return (y === ym && d <= 2 * s) || (y === ym + 1 && !profil && d >= 2 * s + 1 && d <= 2 * s + (q ? 2 : 1)) ? bouche : null;
+      if (mi === 'triste') return (y === ym && d <= s) || (y === ym + 1 && !profil && d >= s + 1 && d <= s + (q ? 2 : 1)) ? levre : null;
+      return (y === ym && d <= s) ? levre : null; };
+    const front = P ? 0 : s;                                                                                         // le passeur : le front dégagé, sans l'ombre des cheveux
+    // le côté dans l'ombre, le côté dans la lumière : le passeur, de face et sous les yeux, suit le bord du visage — la
+    // mâchoire taillée (machoirePasseur) se dessine par l'ombre, du côté droit, et prend le jour du côté gauche
+    const Vv = (X, Y) => !!(L && L[Y] && (L[Y][X] === 'V' || L[Y][X] === 'v')), bord = P && !profil && !!L;
+    const sombre = (fx, gx, x, y) => bord && y > yo ? !Vv(x + 1, y) || (s === 2 && !Vv(x + 2, y)) : profil ? fx >= w - s : gx < s;
+    const jour = (fx, x, y) => bord && y > yo ? !Vv(x - 1, y) || (s === 2 && !Vv(x - 2, y)) : !profil && fx < s;
     return function (x, y) {
       const fx = profil ? (dir === 2 ? x1 - x : x - x0) : x - x0, gx = w - 1 - fx, dy = y - y0;                         // fx : depuis le devant du visage (profil) ou sa gauche (face)
+      if (tp) { const t = tampon(fx, gx, y); if (t) return t; if (t === null) { const lv = levreDe(fx, gx, y); if (lv) return lv; return dy < front ? nuit : sombre(fx, gx, x, y) ? ombre : jour(fx, x, y) ? clair : peau; } }
+      { const lv = levreDe(fx, gx, y); if (lv) return lv; if (lv === null && !barbe && y >= ym - 1 && y <= ym + 1) return dy < front ? nuit : sombre(fx, gx, x, y) ? ombre : jour(fx, x, y) ? clair : peau; }
+      if (P && !profil && s === 2 && fx === (w >> 1) && y === yo + 2 * s) return nez;                                  // le passeur : le nez, une demi-ombre d'un point (en 32 × 48, rien : il y serait une tache)
       const dansOeil = profil ? (fx >= s && fx < 2 * s) : ((fx >= ex && fx < ex + s) || (gx >= ex && gx < ex + s));
       if (y >= yo && y < yo + s && dansOeil) { if (clos) return y === yo + s - 1 ? sourcil : peau; return oeil; }
       if (!clos && (s === 2 || fonce) && y >= yo && y < yo + s && (profil ? fx === 2 * s : (fx === ex - 1 || gx === ex - 1))) return blanc; // en dessin fin (et, pour un teint très sombre, toujours) : le blanc de l'œil, du côté du dehors
-      if (!fente && s === 2 && y === yo - 2 && (profil ? (fx >= 1 && fx <= 4) : ((fx >= ex - 1 && fx <= ex + 1) || (gx >= ex - 1 && gx <= ex + 1)))) return sourcil; // les sourcils : en dessin fin seulement (à 32 points de large, ils alourdiraient le regard)
+      if (!P && !fente && s === 2 && y === yo - 2 && (profil ? (fx >= 1 && fx <= 4) : ((fx >= ex - 1 && fx <= ex + 1) || (gx >= ex - 1 && gx <= ex + 1)))) return sourcil; // les sourcils : en dessin fin seulement (à 32 points de large, ils alourdiraient le regard)
       if (!fente && barbe && y >= yb) {
         if (profil && fx >= w - s - (barbe === 2 ? 0 : s)) return ombre;                                              // vers la nuque : la joue, dans l'ombre de l'étoffe
         if (barbe === 1 && y < ym && !(profil ? fx < 2 * s : Math.abs(fx - gx) <= 2 * s)) return peau;                 // barbe courte : la moustache seule, au-dessus
@@ -1870,11 +2101,11 @@
         return ((x + y) % 3 === 0 && s === 2) ? poilO : poil;
       }
       if (!fente && !barbe && y === ym && (profil ? fx < 2 * s : Math.abs(fx - gx) <= s + (s - 1))) return levre;
-      if (dy < s) return nuit;                                                                                         // l'ombre de la coiffe sur le front
-      if (!fente && !profil && s === 2 && fx === (w >> 1) && y > yo + s && y < yb) return ombre;                       // l'arête du nez
+      if (dy < front) return nuit;                                                                                     // l'ombre de la coiffe sur le front
+      if (!P && !fente && !profil && s === 2 && fx === (w >> 1) && y > yo + s && y < yb) return ombre;                 // l'arête du nez
       if (profil ? fx === 0 && y > yo && y < yb : false) return clair;                                                 // de profil : le nez et la pommette prennent la lumière
-      if (profil ? fx >= w - s : gx < s) return ombre;                                                                 // le côté dans l'ombre
-      if (!profil && fx < s && dy >= s) return clair;
+      if (sombre(fx, gx, x, y)) return ombre;                                                                          // le côté dans l'ombre
+      if (jour(fx, x, y) && (bord || dy >= s)) return clair;
       return peau;
     };
   }
@@ -1893,8 +2124,10 @@
      transitions. */
   G.doux = true;   // le rendu doux des grands personnages, en dessin fin (choix du décideur) ; false : le rendu d'avant — pour comparer
   const FAM2 = m => m === 'V' || m === 'v' ? 'V' : FAM[m] || m;
+  // prototype 2.17 (?rendu=ct) : le rendu « net » — trois tons francs (la lumière chaude, le ton, l'ombre turquoise), une
+  // ombre plus légère (0,3 au plus), le bas du corps à peine assombri ; puis un liseré plus encré (outline(…, 0,8))
   function relief(c, L, fin, w, h, s) {
-    const id = c.getImageData(0, 0, w, h), d = id.data, r = 2 * s, lx = -0.6, ly = -0.8, chaud = [255, 240, 208], froid = [34, 24, 60];
+    const ct = G.rendu === 'ct', id = c.getImageData(0, 0, w, h), d = id.data, r = 2 * s, lx = -0.6, ly = -0.8, chaud = ct ? [255, 236, 196] : [255, 240, 208], froid = ct ? [14, 62, 72] : [34, 24, 60];
     const fam = []; for (let y = 0; y < h; y++) { fam.push([]); for (let x = 0; x < w; x++) { const m = L[y][x]; fam[y].push(m === '.' || m === 'Y' || m === 'y' || m === 'V' || m === 'v' || fin[y][x] ? null : FAM2(m)); } }   // ni le voile, ni le néon, ni les objets
     // pour chaque matière : sa forme, adoucie (une moyenne sur un carré de côté 2r + 1), dont la pente dit où la lumière tombe
     const S = []; for (let y = 0; y <= h; y++) S.push(new Float32Array(w + 1));
@@ -1906,9 +2139,9 @@
       const pente = (x, y, r) => -((B(x + 1, y, r) - B(x - 1, y, r)) * lx + (B(x, y + 1, r) - B(x, y - 1, r)) * ly);   // la forme, adoucie : où elle tourne vers la lumière
       for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (fam[y][x] === f) ombre[y * w + x] = pente(x, y, r) * 4 + pente(x, y, 3 * r) * 5; });   // le bord, puis le volume entier
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const f = fam[y][x]; if (!f) continue; const o = (y * w + x) * 4;
-      let t = ombre[y * w + x] - (y / h - 0.45) * 0.18; t = Math.max(-1, Math.min(1, Math.round(t * 8) / 8));   // par degrés, pas en fondu
+      let t = ombre[y * w + x] - (y / h - 0.45) * (ct ? 0.08 : 0.18); t = ct ? (t > 0.22 ? 1 : t < -0.22 ? -1 : 0) : Math.max(-1, Math.min(1, Math.round(t * 8) / 8));   // par degrés, pas en fondu (ct : trois tons francs)
       const clair = (d[o] * 0.3 + d[o + 1] * 0.59 + d[o + 2] * 0.11) / 255 > 0.75;   // une étoffe claire s'ombre moins (sinon, des taches)
-      const vers = t > 0 ? chaud : froid, a = t > 0 ? Math.min(0.34, t * 0.4) : Math.min(0.46, -t * 0.52) * (clair ? 0.6 : 1);
+      const vers = t > 0 ? chaud : froid, a = ct ? (t > 0 ? 0.2 : t < 0 ? 0.3 * (clair ? 0.7 : 1) : 0) : t > 0 ? Math.min(0.34, t * 0.4) : Math.min(0.46, -t * 0.52) * (clair ? 0.6 : 1);
       for (let j = 0; j < 3; j++) d[o + j] = Math.round(d[o + j] + (vers[j] - d[o + j]) * a); }
     c.putImageData(id, 0, 0);
   }
@@ -1926,7 +2159,9 @@
     const k = (s === 2 ? 'N' : 'n') + (G.rawi64 ? '' : 'r') + ck(look, dir, frame, pose); if (scache[k]) return scache[k];
     const n = natifGrille(look, dir, frame, pose); if (!n) return (scache[k] = s === 2 ? G.epx(ancien(look, dir, frame, pose)) : ancien(look, dir, frame, pose));
     const K = n.K, F = s === 2 ? fine(n) : n, L = F.L, am = F.am, fin = F.fin, pal = n.rawi ? paletteRawi(look, K, n.rawi.dessin) : palette(look, K), w = W2 * s, h = H2 * s;
-    const tn = G.teint(look); if (tn) pal.N = mix(K.sombre ? mix(tn, '#1c1430', 0.2) : tn, '#fff1d6', 0.1); // qui a un visage a des mains du même teint (le grand personnage seulement)
+    if (K.proto) paletteProto(look, K, pal);   // prototype 2.17 : la tenue d'office d'Idris « un des leurs »
+    if (dir === 0 && s === 2 && estPasseur(look, K)) affinerPasseur(L, fin, w, h);   // prototype 2.17, le passeur : le visage moins large (en 64 × 96 ; sur la carte, il garde ses 8 points)
+    const tn = G.teint(look); if (tn) pal.N = mix(K.sombre && !K.proto ? mix(tn, '#1c1430', 0.2) : tn, '#fff1d6', 0.1); // qui a un visage a des mains du même teint (le grand personnage seulement)
     const R = rampes(pal);
     const cv = mk(w, h), c = cv.getContext('2d'), px = (x, y, col) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } }; if (s === 2) cv.hd = 2;
     const voile = m => m === 'V' || m === 'v', at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? '.' : L[y][x];
@@ -1936,7 +2171,7 @@
     const ray = K.lit && G.D > 1 && look.rayon ? look.rayon : null, ray1 = ray && mix(ray, '#ffffff', 0.5), ray2 = ray && mix(ray, '#ffffff', 0.08);
     let x0 = 99, x1 = -1, y0 = 99, y1 = -1; for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (voile(L[y][x])) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
     const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 - 0.5, rx = (x1 - x0) / 2 + 0.5, ry = (y1 - y0) / 2 + 0.5;
-    const trait = n.rawi ? visageGabarit(look, K, dir, pose, s, x0, x1, y0, y1, L) : visage(look, K, dir, pose, s, x0, x1, y0, y1); // null pour un Compagnon : son voile reste une lumière, sans un trait ; le râwî a son peintre
+    const trait = n.rawi ? visageGabarit(look, K, dir, pose, s, x0, x1, y0, y1, L) : visage(look, K, dir, pose, s, x0, x1, y0, y1, L); // null pour un Compagnon : son voile reste une lumière, sans un trait ; le râwî a son peintre
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const m = L[y][x]; if (m === '.') continue;
       if (voile(m)) { if (trait) { px(x, y, trait(x, y)); continue; } const dd = Math.hypot((x - cx) / rx, (y - cy) / ry); px(x, y, K.lit ? (ray ? (dd < 0.4 ? '#ffffff' : dd < 0.74 ? ray1 : ray2) : (dd < 0.5 ? '#ffffff' : dd < 0.82 ? pal.V : pal.v)) : (y - y0 < 2 * s || dd > 0.86 ? pal.v : pal.V)); continue; }
       const r = R[m]; if (!r) { px(x, y, pal[m]); continue; }                  // main, parchemin, néon, cimier : à plat
@@ -1953,7 +2188,7 @@
         const dessous = at(x, y + 1);                                         // le galon : au bas de la robe longue et des pans du manteau
         if (pal.a && y > h * 0.6 && ((m === 'Z' && !K.court && (dessous === '.' || dessous === 'F' || dessous === 'f')) || ((m === 'E' || m === 'e') && !plein(x, y + 1)))) { px(x, y, pal.a); continue; } }
       px(x, y, r.t[Math.max(0, Math.min(r.t.length - 1, i))]); }
-    if (G.doux && G.D > 1) { relief(c, L, fin, w, h, s); outline(c, w, h, 0.5); }   // le rendu doux (dessin fin) : un relief, un liseré du ton qu'il borde
+    if (G.doux && G.D > 1) { relief(c, L, fin, w, h, s); outline(c, w, h, G.rendu === 'ct' ? 0.8 : 0.5); }   // le rendu doux (dessin fin) : un relief, un liseré du ton qu'il borde
     else outline(c, w, h);
     return (scache[k] = cv);
   }
@@ -1972,7 +2207,7 @@
   // personnage — un point de gabarit pour un point réel — et le combat, ce même personnage agrandi, ses escaliers arrondis.
   // charSheet, charPose et charGrand, eux, rendent toujours les dessins bruts : les outils de contrôle les lisent.
   G.planche = function (look) { if (G.D < 2) return G.charSheet(look);
-    const k = 'P' + (G.natif ? 'n' : 'a') + JSON.stringify(look) + (G.doux ? 'd' : ''); if (scache[k]) return scache[k];
+    const k = 'P' + (G.natif ? 'n' : 'a') + JSON.stringify(look) + (G.doux ? 'd' : '') + etat217(); if (scache[k]) return scache[k];
     const cv = mk(128, 192), c = cv.getContext('2d');   // quatre images par direction : repos, pas A, pas B, souffle
     for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 4; f++) c.drawImage(grand(look, dir, f), f * 32, dir * 48);
     // la course : ses huit images par direction, sur une planche à part, faite à la première demande (seuls courent le
@@ -2005,6 +2240,19 @@
     for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const col = pal[f[y][x]]; if (col) { c.fillStyle = col; c.fillRect(x - x0 + 1, y - y0 + 1, 1, 1); } }
     outline(c, w, h); return (scache[k] = cv);
   };
+  /* ---------- prototype 2.17 : les bulles d'émotion ----------
+     « ! », « ? », « … » au-dessus de la tête, pour tous (Compagnons compris : un signe, pas un visage). Sobres : ni cœur
+     (exigence 4), ni goutte, ni veine, ni « Zzz » (aucun code comique, choix du décideur). Une attitude peut appeler la
+     sienne (BULLE_DE). → une toile de 9 × 10 points logiques (18 × 20, hd = 2), la pointe en bas, au milieu. */
+  const BULLES = { '!': ['.XXXXXXX.', 'XWWWWWWWX', 'XWWWkWWWX', 'XWWWkWWWX', 'XWWWkWWWX', 'XWWWWWWWX', 'XWWWkWWWX', '.XXXXXXX.', '...XWX...', '....X....'],
+    '?': ['.XXXXXXX.', 'XWWWWWWWX', 'XWWkkkWWX', 'XWWWWkWWX', 'XWWWkWWWX', 'XWWWWWWWX', 'XWWWkWWWX', '.XXXXXXX.', '...XWX...', '....X....'],
+    '…': ['.XXXXXXX.', 'XWWWWWWWX', 'XWWWWWWWX', 'XWWWWWWWX', 'XWkWkWkWX', 'XWWWWWWWX', 'XWWWWWWWX', '.XXXXXXX.', '...XWX...', '....X....'] }, bcache = {};
+  G.BULLE_DE = { surpris: '!', reflexion: '?', triste: '…', refus: null };
+  G.bulle = function (signe) { const g = BULLES[signe]; if (!g) return null; if (bcache[signe]) return bcache[signe];
+    const cv = mk(18, 20), c = cv.getContext('2d'), col = { X: '#2b1d2b', W: '#fbf4e4', k: '#2b1d2b' };
+    g.forEach((r, y) => { for (let x = 0; x < r.length; x++) if (col[r[x]]) { c.fillStyle = col[r[x]]; c.fillRect(x * 2, y * 2, 2, 2); } });
+    c.fillStyle = '#d9cdb6'; for (let x = 1; x < 8; x++) if (g[6][x] === 'W') c.fillRect(x * 2, 13, 2, 1);   // l'ombre du bas de la bulle
+    cv.hd = 2; return (bcache[signe] = cv); };
   const ucache = {}; // image du grand sprite, pour les menus
   G.charURL = (look, dir, pose) => { const k = (G.natif ? 'n' : 'a') + G.D + ck(look, dir || 0, 0, pose); return ucache[k] || (ucache[k] = grand(look, dir || 0, 0, pose, G.D).toDataURL()); }; // en dessin fin : le personnage de 64 × 96
   /* ---------- l'arme en main, le temps d'un geste (2.x) ----------

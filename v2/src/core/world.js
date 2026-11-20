@@ -52,7 +52,7 @@
   };
   W.pose = [];
   W.emote = function (who, pose) {
-    const p = pose && D.POSES.includes(pose) ? pose : null;
+    const p = pose && (D.POSES.includes(pose) || ((G.idris || G.rendu) && (D.ATTITUDES || []).includes(pose))) ? pose : null;   // prototype 2.17 : les attitudes nouvelles, derrière ses interrupteurs
     if (who === 'groupe') W.pose = W.party.map(() => p); else if (who === 'hero') W.pose[0] = p; else { const n = W.npcs.find(x => x.id === who); if (n) n.pose = p; }
   };
   // `parLeRecit` : la prière est une étape d'un objectif en cours. Elle repose le groupe, mais ne prend pas de point de
@@ -669,7 +669,9 @@
     x = G.cale(x); y = G.cale(y);
     c.fillStyle = 'rgba(20,12,30,.32)'; c.beginPath(); c.ellipse(x, y + 1, 6, 2.5, 0, 0, 6.3); c.fill();
     if (geste && sheet.look && G.frappe && G.frappe(c, sheet.look, dir, x - 8, y - 22, geste, geste.tau, 'carte')) return;
-    if (pose && !moving && sheet.look) { c.drawImage(G.pose(sheet.look, dir, pose), x - 8, y - 22 - (pose === 'surpris' ? 2 : 0)); return; }
+    if (pose && !moving && sheet.look) { c.drawImage(G.pose(sheet.look, dir, pose), x - 8, y - 22 - (pose === 'surpris' ? 2 : 0));
+      const bu = (G.idris || G.rendu) && G.BULLE_DE && G.BULLE_DE[pose]; if (bu) { const im = G.bulle(bu); if (im) c.drawImage(im, x - 4.5, y - 36 - (pose === 'surpris' ? 2 : 0), 9, 10); }   // prototype 2.17 : la bulle de l'attitude
+      return; }
     if (W.trace) W.trace.push({ sheet, x, y, dir, f, court: !!(moving && court) });   // pour les outils (la mesure du pied d'appui)
     if (!sheet.souffle) { c.drawImage(sheet, f * 16, dir * 24, 16, 24, x - 8, y - 22 - (moving && f ? 1 : 0), 16, 24); return; } // le dessin d'origine : comme dans la 1.32
     // en dessin fin : immobile, il respire (une image sur quatre, à son rythme) ; en marche, le corps se hausse d'un point
@@ -726,7 +728,7 @@
         const rg = I.rodeurs && I.rodeurs.geste, tau = rg ? W.t - rg.t : -1, gt = rg && D.GEAR_TYPES[rg.type];   // celui qui mène frappe : l'élan, le coup, l'arme en main (s'il repart, le geste s'efface après le coup)
         const frappe = rg && tau >= 0 && tau < (p.moving ? G.FRAPPE.elan + G.FRAPPE.balai : G.dureeFrappe) ? { anim: (gt && gt.anim) || 'geste', port: (rg.port !== undefined ? rg.port : gt && gt.port) || null, tau } : null;
         if (p.moving && p.court) poudre(p, W.sheets[0], p.x, p.y, p.dir, p.parcours || 0);
-        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe, p.court, p.parcours || 0); const lk = W.saga.heroes[W.party[0]].look; if (D.DE_2084.indexOf(lk.kind) < 0) lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push({ x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 }); }
+        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe, p.court, p.parcours || 0); const lk = W.saga.heroes[W.party[0]].look; if (D.DE_2084.indexOf(lk.kind) < 0) lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push(G.lum === 215 ? { x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 } : { x: p.x - cx, y: p.y - cy - 12, r: 34, color: '#ffe2c4', a: 0.55 }); } /* 2.17 : en 2084, un halo plus large et chaud, qui ne bleuit plus ses couleurs */
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {
@@ -767,6 +769,6 @@
       if (I.rodeurs && m.env.dedale && I.rodeurs.porteVue()) { const pi = I.rodeurs.interdite(); I.rodeurs.signe(c, mx + (pi.porte[0] + 0.5) * q, my + (pi.porte[1] + 0.5) * q, 2.2 * q); } // 2.x : la porte interdite, vue de près
       c.fillStyle = Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a'; c.fillRect(mx + (Math.floor(W.player.x / T) - 1) * q, my + (Math.floor(W.player.y / T) - 1) * q, 3 * q, 3 * q);
     } else W.miniRect = null;
-    return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint, clouds: env.clouds ? { x: cx, y: cy } : null };
+    return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint, clouds: env.clouds ? { x: cx, y: cy } : null, etalon: env.etalon };
   };
 })();
