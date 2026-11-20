@@ -42,7 +42,17 @@
                                 joueur compris ; null s'il n'y en a pas
      L.tDans(lang, fr, champs)  une phrase du code, dite dans une autre langue que celle du jeu (comme I.t)
    Le français d'origine se retrouve d'abord par l'emplacement du texte (L.origine : l'objet du récit et son champ, relevés
-   une fois), puis par le texte affiché lui-même (L.source : ce que la langue du jeu et le nom du joueur y ont posé). */
+   une fois), puis par le texte affiché lui-même (L.source : ce que la langue du jeu et le nom du joueur y ont posé).
+
+   2.x — l'arabe vocalisé (demande du décideur, 20 novembre : « Ou bien arabe / arabe vocalisé ») : là où l'on choisit une
+   langue, l'arabe paraît deux fois, « العربية » (le texte d'aujourd'hui, inchangé) et l'arabe vocalisé (les mêmes textes,
+   avec toutes leurs voyelles). Ce n'est pas une langue de plus : une VARIANTE de l'arabe, qui en partage tout (le sens,
+   les polices, les formes selon le nombre, chaque texte et chaque règle). L.lang et L.lang2 restent 'ar' ; L.voy et
+   L.voy2 disent si la variante est choisie, pour le jeu ou pour la seconde bulle. Ce que le joueur choisit, et ce que
+   garde l'appareil (opts.lang, opts.lang2, ?lang=…), c'est un CHOIX : 'fr', 'ar', 'arv', 'en', 'ja' (L.code(), L.code2()).
+   Les formes vocalisées sont rangées à part, sous la même clé (src/lang/ar/voyelles/, v2/tools/voyelles.js) : une forme
+   n'est montrée que si elle suit encore son texte — mêmes lettres, et chaque signe qu'il porte déjà (fidele) ; sinon, le
+   texte tel qu'il est écrit. Sans la variante, rien ne change d'un signe. */
 (function (racine) {
   'use strict';
   const LANGUES = {
@@ -53,6 +63,31 @@
   };
   const ORDRE = ['fr', 'ar', 'en', 'ja'];
   const SEP = '¦';
+  // les variantes : un choix offert au joueur, qui prend tout d'une langue sauf la forme de certains textes
+  // (son nom, le même dans toutes les langues de l'écran comme « العربية » : le mot lui-même, avec ses voyelles — décideur,
+  // 20 novembre : « al arabiya avec les voyelles sur le mot » ; là où il faut des mots, une aide ou un lecteur d'écran,
+  // l'interface dit « arabe vocalisé » dans sa langue)
+  const VARIANTES = { arv: { base: 'ar', nom: 'العَرَبِيَّة', voyelles: true } };
+  const CHOIX = ['fr', 'ar', 'arv', 'en', 'ja'];
+  const base = c => (VARIANTES[c] ? VARIANTES[c].base : c);
+  const nomDe = c => (VARIANTES[c] ? VARIANTES[c].nom : LANGUES[c] ? LANGUES[c].nom : String(c || ''));
+  /* ---------- la vocalisation ----------
+     Les signes : les tanwîn, fatha, damma, kasra, la chadda et le soukoun (U+064B à U+0652), l'alif suscrit (U+0670). La
+     hamza, le madda et l'alif waṣla ne sont pas des signes ici : ce sont des lettres (أ إ ؤ ئ ء آ), qu'une forme vocalisée
+     ne change jamais. */
+  const MARQUES = /[\u064B-\u0652\u0670]/g, MARQUE = /[\u064B-\u0652\u0670]/;
+  const sansMarques = s => String(s).replace(MARQUES, '');
+  // un texte, lettre par lettre, chaque lettre avec l'ensemble des signes qu'elle porte (la case 0 : ceux d'avant toute lettre)
+  const lettres = s => { const r = [{ c: '', m: new Set() }]; for (const ch of String(s)) { if (MARQUE.test(ch)) r[r.length - 1].m.add(ch); else r.push({ c: ch, m: new Set() }); } return r; };
+  // une forme vocalisée suit-elle son texte ? '' si oui ; 'lettres' si une lettre a changé ; 'signes' si un signe que le
+  // texte porte déjà manque à sa place
+  function fidele(t, tv) {
+    if (typeof t !== 'string' || typeof tv !== 'string') return 'lettres';
+    if (sansMarques(t) !== sansMarques(tv)) return 'lettres';
+    const a = lettres(t), b = lettres(tv);
+    for (let i = 0; i < a.length; i++) for (const m of a[i].m) if (!b[i].m.has(m)) return 'signes';
+    return '';
+  }
 
   // la même empreinte que I.hash (FNV-1a), suivie de la longueur : deux textes français ne partagent pas une clé
   // (v2/tools/langues.js le vérifie sur tout le jeu)
@@ -152,21 +187,33 @@
   /* ---------- dans le navigateur : le moteur parle la langue choisie ---------- */
   function brancher(I) {
     const D = I.D, cat = { ar: {}, en: {}, ja: {} }, cases = [], sues = new WeakSet();
-    const L = I.langue = { LANGUES, ORDRE, lang: 'fr', cle, manques: new Set() };
-    const complets = {};
-    L.poser = (lang, textes, info) => { Object.assign(cat[lang] || (cat[lang] = {}), textes); if (info) complets[lang] = !!info.complet; };
+    const L = I.langue = { LANGUES, ORDRE, VARIANTES, CHOIX, lang: 'fr', cle, manques: new Set(), base, nom: nomDe, fidele, sansMarques };
+    const complets = {}, voy = {}, suit = new Map();   // (voy, suit : l'arabe vocalisé, plus bas)
+    L.poser = (lang, textes, info) => { Object.assign(cat[lang] || (cat[lang] = {}), textes); if (info) complets[lang] = !!info.complet; suit.clear(); };
     // les langues que l'on propose au joueur : le français, et celles dont chaque texte est écrit (une langue inachevée ne
     // s'ouvre que par ?lang=… dans l'adresse, pour les essais)
     L.disponibles = () => ORDRE.filter(l => l === 'fr' || complets[l]);
     L.connue = lang => (LANGUES[lang] ? lang : 'fr');
+    // 2.x — l'arabe vocalisé : les formes vocalisées (langue → clé → texte), posées par l'assemblage ; L.voy (le jeu) et
+    // L.voy2 (la seconde bulle) disent si la variante est choisie
+    L.voy = false; L.voy2 = false;
+    L.poserVoyelles = (lang, textes) => { Object.assign(voy[lang] || (voy[lang] = {}), textes); suit.clear(); };
+    // le texte qu'une langue a écrit sous une clé, tel qu'il se montre : vocalisé si la variante est choisie pour cette
+    // langue (celle du jeu, ou celle de la seconde bulle — elles ne sont jamais la même) et que sa forme vocalisée suit
+    // encore le texte ; sinon, tel qu'il est écrit
+    const ecrit = (lang, k) => { const c = cat[lang], t = c ? c[k] : null;
+      if (t == null || !(lang === L.lang ? L.voy : lang === L.lang2 && L.voy2)) return t;
+      const v = voy[lang] && voy[lang][k]; if (typeof v !== 'string') return t;
+      const id = lang + ' ' + k; if (!suit.has(id)) suit.set(id, fidele(t, v) === ''); return suit.get(id) ? v : t; };
     // le texte d'une langue rangé sous un texte français ; à défaut, le français
-    L.de = function (fr) { if (L.lang === 'fr' || typeof fr !== 'string' || !fr) return fr; const t = cat[L.lang][cle(fr)]; if (t == null) { L.manques.add(fr); return fr; } return t; };
+    L.de = function (fr) { if (L.lang === 'fr' || typeof fr !== 'string' || !fr) return fr; const t = ecrit(L.lang, cle(fr)); if (t == null) { L.manques.add(fr); return fr; } return t; };
     L.rawi = () => LANGUES[L.lang].rawi;
     // l'écriture : combien de signes avance le texte qui s'écrit, quel poids a un texte à lire, quelles initiales a un nom
     // (le japonais dit plus en moins de signes ; l'arabe se lie, il s'écrit mot à mot pour ne pas casser ses lettres)
     L.avance = (txt, i) => { if (L.lang === 'ar') { const j = txt.indexOf(' ', i + 1); return j < 0 ? txt.length : j; } return Math.min(txt.length, i + (L.lang === 'ja' ? 1 : 2)); };
-    L.poids = txt => String(txt).length * (L.lang === 'ja' ? 2.2 : 1);
-    L.initiales = nom => { nom = String(nom || '');
+    // (vocalisé, un texte se lit dans le même temps : ses signes ne comptent pas)
+    L.poids = txt => (L.voy ? sansMarques(txt) : String(txt)).length * (L.lang === 'ja' ? 2.2 : 1);
+    L.initiales = nom => { nom = L.voy ? sansMarques(nom || '') : String(nom || '');
       if (L.lang === 'ar') return nom.replace(/^(ال|أبو |أبي |ابن |بن )/, '').slice(0, 2);
       if (L.lang === 'ja') return nom.replace(/^[「『]/, '').slice(0, 2);
       if (L.lang === 'en') return nom.replace(/^(The |Al-|al-|Abu |Ibn |')/, '').slice(0, 2);
@@ -211,17 +258,28 @@
 
     /* ---------- 2.x · la langue secondaire ---------- */
     L.lang2 = '';
-    // les langues que l'on peut lire en second : celles qu'on propose au joueur, sauf celle du jeu
-    L.secondes = () => L.disponibles().filter(l => l !== L.lang);
+    // 2.x — ce que le joueur choisit : une langue offerte, ou une variante d'une langue offerte qui a des textes à montrer
+    // (l'arabe vocalisé) — dans l'ordre de CHOIX ; et le choix en vigueur, pour le jeu et pour la seconde bulle
+    L.choix = () => CHOIX.filter(c => L.disponibles().includes(base(c)) && (!VARIANTES[c] || (voy[base(c)] && Object.keys(voy[base(c)]).length > 0)));
+    const codeDe = (lang, v) => (v ? Object.keys(VARIANTES).find(c => VARIANTES[c].base === lang) || lang : lang);
+    L.code = () => codeDe(L.lang, L.voy);
+    L.code2 = () => (L.l2() ? codeDe(L.l2(), L.voy2) : '');
+    // ce qu'on peut lire en second : les choix offerts, sauf ceux de la langue du jeu (l'arabe et l'arabe vocalisé sont
+    // une seule langue : on ne les lit pas l'un sous l'autre)
+    L.secondes = () => L.choix().filter(c => base(c) !== L.lang);
     // la langue secondaire en vigueur : offerte, et autre que celle du jeu ('' sinon) ; ?lang2=… l'ouvre aussi inachevée
     L.l2 = () => (L.lang2 && L.lang2 !== L.lang && LANGUES[L.lang2] ? L.lang2 : '');
-    L.choisir2 = function (lang, force) { L.lang2 = lang && LANGUES[lang] && lang !== L.lang && (force || L.disponibles().includes(lang)) ? lang : ''; if (!L.lang2) dits.clear(); return L.lang2; };
+    // (un choix : 'arv' prend l'arabe, vocalisé) ; rend le choix retenu, ou ''
+    L.choisir2 = function (c, force) { const lang = base(c); L.lang2 = lang && LANGUES[lang] && lang !== L.lang && (force || L.disponibles().includes(lang)) ? lang : ''; L.voy2 = !!L.lang2 && !!(VARIANTES[c] && VARIANTES[c].voyelles); if (!L.lang2) dits.clear();
+      const h = racine.document && racine.document.documentElement; if (h) { if (L.voy2) h.dataset.voyelles2 = ''; else h.removeAttribute('data-voyelles2'); }   // (style.css : la hauteur de ses signes)
+      return L.code2(); };
     // le français d'origine d'un emplacement (l'objet d'un récit ou d'une table, et son champ), tel que relevé ; ou null
     L.origine = (o, k) => { const m = o && typeof o === 'object' ? origines.get(o) : null; return m && typeof m[k] === 'string' ? m[k] : null; };
     // le français d'origine d'un texte affiché dans la langue du jeu (nom du joueur compris) ; ou null
     L.source = t => (typeof t === 'string' ? affiches.get(t) || null : null);
     // le texte qu'une langue a écrit sous un texte français (le français lui-même pour le français) ; null s'il n'est pas écrit
-    L.dans = function (lang, fr) { if (typeof fr !== 'string' || !fr) return null; if (lang === 'fr') return sans(fr); const c = cat[lang], t = c ? c[cle(fr)] : null; return typeof t === 'string' && t ? t : null; };
+    // (2.x : vocalisé si c'est la langue de la seconde bulle et que l'arabe vocalisé y est choisi)
+    L.dans = function (lang, fr) { if (typeof fr !== 'string' || !fr) return null; if (lang === 'fr') return sans(fr); const t = ecrit(lang, cle(fr)); return typeof t === 'string' && t ? t : null; };
     // un champ d'une phrase, dans une autre langue : un texte du jeu y prend le sien, le nom du râwî aussi ; un nombre, le
     // nom choisi par le joueur restent ce qu'ils sont
     const champDans = (lang, v) => { if (typeof v !== 'string' || !v) return v; if (v === LANGUES[L.lang].rawi) return LANGUES[lang].rawi; const f = L.source(v), t = f ? L.dans(lang, f) : null; return t == null ? v : t; };
@@ -245,20 +303,22 @@
     };
     // le sens d'un texte de la langue secondaire (comme L.sens pour la langue du jeu)
     L.sens2 = t => (LANGUES[L.l2()] && LANGUES[L.l2()].dir === 'rtl' && /[ء-يٱ-ۓݐ-ݿ]/.test(String(t || '')) ? 'rtl' : 'ltr');
-    L.poids2 = txt => String(txt).length * (L.l2() === 'ja' ? 2.2 : 1);
+    L.poids2 = txt => (L.voy2 ? sansMarques(txt) : String(txt)).length * (L.l2() === 'ja' ? 2.2 : 1);
     /* la page : un élément marqué data-t porte un texte français, sans balise ; data-t-title, data-t-aria et
        data-t-placeholder portent celui d'un attribut */
     const ATTR = { 'data-t-title': 'title', 'data-t-aria': 'aria-label', 'data-t-placeholder': 'placeholder' };
     L.page = function () {
       const doc = racine.document; if (!doc || !doc.documentElement) return;
       const h = doc.documentElement; h.lang = L.lang; h.dir = L.dir(); h.dataset.lang = L.lang;
+      if (L.voy) h.dataset.voyelles = ''; else h.removeAttribute('data-voyelles');   // 2.x : l'arabe vocalisé (style.css lui donne la hauteur de ses signes)
       doc.querySelectorAll('[data-t]').forEach(e => { let fr = e.getAttribute('data-t'); if (!fr) { fr = e.textContent.replace(/\s+/g, ' ').trim(); e.setAttribute('data-t', fr); } e.textContent = I.t(fr); });
       Object.keys(ATTR).forEach(a => doc.querySelectorAll('[' + a + ']').forEach(e => { e.setAttribute(ATTR[a], I.t(e.getAttribute(a))); }));
     };
-    L.choisir = function (lang) { L.lang = L.connue(lang); L.appliquer(); return L.lang; };
+    // (un choix : 'arv' prend l'arabe, vocalisé) ; rend le choix retenu
+    L.choisir = function (c) { L.lang = L.connue(base(c)); L.voy = L.lang === base(c) && !!(VARIANTES[c] && VARIANTES[c].voyelles); L.appliquer(); return L.code(); };
     return L;
   }
 
-  const api = { LANGUES, ORDRE, SEP, cle, forme, casesSaga, casesDefs, brancher };
+  const api = { LANGUES, ORDRE, SEP, VARIANTES, CHOIX, base, nomDe, sansMarques, fidele, cle, forme, casesSaga, casesDefs, brancher };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else racine.ISNAD_LANGUE = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

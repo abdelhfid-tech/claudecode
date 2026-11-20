@@ -40,7 +40,14 @@ const LANGUE = require('../src/core/langue.js'), LANG = path.join(root, 'src/lan
 const langues = LANGUE.ORDRE.filter(l => l !== 'fr' && fs.existsSync(path.join(LANG, l))).map(l => { const cat = {}; let total = 0, ecrits = 0;
   fs.readdirSync(path.join(LANG, l)).filter(f => /\.json$/.test(f)).sort().forEach(f => { (JSON.parse(fs.readFileSync(path.join(LANG, l, f), 'utf8')).textes || []).forEach(x => { if (!x || typeof x.fr !== 'string') return; total++; if (typeof x.t === 'string' && x.t) { ecrits++; cat[LANGUE.cle(x.fr)] = x.t; } }); });
   const complet = total > 0 && ecrits === total;
-  return { l, n: Object.keys(cat).length, complet, js: `/* ==== langue ${l} ==== */\nISNAD.langue.poser(${JSON.stringify(l)}, ${JSON.stringify(cat).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029')}, { complet: ${complet} });` }; }).filter(x => x.n);
+  // 2.x \u2014 l'arabe vocalis\u00e9 (src/lang/<langue>/voyelles/<fichier>.json : { k, fr, t, tv }) : la forme vocalis\u00e9e d'un texte,
+  // sous la m\u00eame cl\u00e9. Elle n'entre que si elle suit le texte d'aujourd'hui (t identique, m\u00eames lettres, ses signes gard\u00e9s :
+  // LANGUE.fidele) ; sinon le jeu montre le texte tel qu'il est \u00e9crit, et v2/tools/voyelles.js dit \u00ab P\u00c9RIM\u00c9 \u00bb ou \u00ab \u00c9CART \u00bb.
+  const DV = path.join(LANG, l, 'voyelles'), voy = {};
+  if (fs.existsSync(DV)) fs.readdirSync(DV).filter(f => /\.json$/.test(f)).sort().forEach(f => { (JSON.parse(fs.readFileSync(path.join(DV, f), 'utf8')).textes || []).forEach(x => {
+    if (!x || typeof x.tv !== 'string' || !x.tv || typeof x.k !== 'string') return; if (cat[x.k] === x.t && !LANGUE.fidele(x.t, x.tv) && x.tv !== x.t) voy[x.k] = x.tv; }); });
+  const nv = Object.keys(voy).length, sur = s => JSON.stringify(s).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+  return { l, n: Object.keys(cat).length, nv, complet, js: `/* ==== langue ${l} ==== */\nISNAD.langue.poser(${JSON.stringify(l)}, ${sur(cat)}, { complet: ${complet} });` + (nv ? `\nISNAD.langue.poserVoyelles(${JSON.stringify(l)}, ${sur(voy)});` : '') }; }).filter(x => x.n);
 // ce que le jeu reprend de la promotion (partager sa progression : src/core/partage.js) : lu dans v2/tools/promotion.js, le seul
 // endroit où s'écrivent l'adresse et la réserve, et posé dans la page — jamais recopié dans le moteur
 const PROMO = require('./promotion.js'), promo = {}; PROMO.JEU.forEach(k => { promo[k] = PROMO[k]; });
@@ -51,7 +58,7 @@ if (js.includes('</script')) throw new Error('</script> trouvé dans le JS');
 const page = read('src/page.html').replace(/<title>[^<]*<\/title>/, `<title>ISNAD ${NUMERO}</title>`).replace('/*CSS*/', () => read('src/style.css')).replace('/*JS*/', () => js);
 const cut = page.indexOf('<div id="app">');
 const full = `<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="description" content="ISNAD — JRPG rétro-HD en cinq sagas : les Compagnons après la mort du Prophète ﷺ.">\n${page.slice(0, cut)}</head>\n<body>\n${page.slice(cut)}\n</body>\n</html>\n`;
-const resume = `${core.length + data.length} modules` + (paquets.length ? ` · ${paquets.length} paquet${paquets.length > 1 ? 's' : ''}` : '') + (langues.length ? ' · ' + langues.map(x => `${x.l} ${x.n}${x.complet ? '' : ' (inachevée)'}`).join(', ') : '');
+const resume = `${core.length + data.length} modules` + (paquets.length ? ` · ${paquets.length} paquet${paquets.length > 1 ? 's' : ''}` : '') + (langues.length ? ' · ' + langues.map(x => `${x.l} ${x.n}${x.nv ? ` (${x.nv} vocalisés)` : ''}${x.complet ? '' : ' (inachevée)'}`).join(', ') : '');
 if (vers) {
   fs.mkdirSync(vers, { recursive: true }); fs.writeFileSync(path.join(vers, 'index.html'), full);
   console.log(`essai : ${path.relative(process.cwd(), path.join(vers, 'index.html'))} ${(full.length / 1024).toFixed(0)} Ko · ${resume}`);

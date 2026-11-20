@@ -1705,6 +1705,24 @@ pages privées de son compte.
   dedans ? ») — réécrite à la source en arabe, anglais et japonais, à relire ; aucun short ni outil ne la citait. À corriger par le décideur seul (l'agent n'y touche pas) : le feuillet « S'orienter aux
   étoiles » cite 16:16 sous une forme qui n'est d'aucune des deux éditions de Hamidullah (« ainsi que des points de
   repère. Et au moyen des étoiles [les gens] se guident. »).
+- [ ] **D208. L'arabe vocalisé (le décideur, 20 novembre : « Aussi ajoute l'option voyelles pour l'arabe », puis « Ou bien
+  arabe / arabe vocalisé », et pour son nom : « Non tu peux mettre al arabiya avec les voyelles sur le mot ») — à valider
+  par le décideur.** Partout où l'on choisit une langue (l'écran-titre, « Langue » dans la halte, la langue secondaire),
+  l'arabe paraît deux fois : « العربية », le texte d'aujourd'hui, sans voyelles (§ 1.2 du glossaire arabe : il reste la
+  référence et le choix d'office), et « العَرَبِيَّة », les mêmes textes entièrement vocalisés, pour qui apprend à lire —
+  son aide et son nom pour un lecteur d'écran disent « arabe vocalisé ». Une variante de l'arabe, pas une langue : elle
+  en prend tout, sauf la forme des textes vocalisés ; on ne la lit pas sous l'arabe, ni l'arabe sous elle. Les formes
+  vocalisées sont rangées à part (`v2/src/lang/ar/voyelles/`) et suivent leur texte lettre pour lettre ; un texte arabe
+  changé laisse sa forme « périmée », et le jeu montre le texte tel qu'il est écrit. Sans ce choix, rien ne change d'un
+  signe. Premier lot, vocalisé par l'agent (287 formes) : le prologue, l'écran-titre et la Chaîne qui le suit, les
+  commandes du combat, les Réglages ; le reste se lit sans voyelles en attendant les lots suivants (environ 5 700 textes).
+  Proposé par l'agent, à trancher : les phrases ajoutées aux Réglages (« L’arabe se lit sans voyelles, comme dans un livre,
+  ou vocalisé : les mêmes textes, avec toutes leurs voyelles, là où elles sont écrites. » ; la page de la langue
+  secondaire dit désormais « L’arabe s’y lit sans voyelles, ou vocalisé là où ses voyelles sont écrites. » au lieu de
+  « et l’arabe n’est pas entièrement vocalisé »), réécrites à la source en arabe, anglais et japonais, à relire ; une
+  relecture de la vocalisation par un arabisant, en commençant par les lectures douteuses que l'agent a signalées (une
+  désinence, une voyelle de mot rare) ; l'interligne un peu plus haut du texte vocalisé dans la boîte de dialogue tenue en
+  hauteur et dans la seconde bulle.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

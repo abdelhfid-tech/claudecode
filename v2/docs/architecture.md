@@ -1434,7 +1434,8 @@ littérature de la langue elle-même et non en faisant des traductions du franç
 - **Les textes des langues** : `src/lang/<langue>/<fichier>.json`, un fichier par récit, plus `tables` et `moteur`, une
   entrée par ligne `{ k, fr, t, ou }`. L'assemblage les embarque (`ISNAD.langue.poser`) ; un `t` vide n'entre pas.
   `node v2/tools/langues.js releve` met les listes à jour du français ; `node v2/tools/langues.js` contrôle.
-- **Le choix** : quatre boutons sur l'écran-titre (chacun écrit dans sa langue), et « Langue » dans la halte (le récit
+- **Le choix** : quatre boutons sur l'écran-titre (chacun écrit dans sa langue ; cinq depuis l'arabe vocalisé, « L'arabe
+  vocalisé »), et « Langue » dans la halte (le récit
   reprend à son dernier point de reprise). C'est un réglage de l'appareil (`opts.lang`) : la partie est la même dans
   toutes les langues. `?lang=ar` dans l'adresse force une langue, pour les contrôles.
 - **L'affichage** : polices Noto Naskh Arabic et Amiri Quran pour l'arabe, Noto Serif JP pour le japonais (Google
@@ -1443,6 +1444,7 @@ littérature de la langue elle-même et non en faisant des traductions du franç
 - **Les règles** : `regles.js`, `verifierLangue(langue, emplacements)` — les exigences 6, 7, 8, 14, 15, 17, 18, 19 et 24
   dans les mots de chaque langue, selon le genre de l'emplacement (`genreDe`).
 - **La langue secondaire** (19 novembre) : la même réplique dans une autre langue, sous la première — section suivante.
+- **L'arabe vocalisé** (20 novembre) : l'arabe, au choix, avec toutes ses voyelles — « L'arabe vocalisé ».
 
 ## La langue secondaire
 
@@ -1452,7 +1454,8 @@ et non traduction mot à mot ».*
 Le joueur qui le veut lit, sous la bulle de celui qui parle, une seconde bulle : la même réplique dans une autre langue.
 Rien n'est traduit pour cela : chaque langue est écrite à la source (« Les langues », exigence 25), et le moteur va
 chercher, sous la clé du texte français d'origine, ce que l'autre langue a écrit. Ce n'est donc pas du mot à mot, et
-l'arabe n'est pas entièrement vocalisé (`v2/docs/langues/ar.md`, § 1.2) : le décideur l'accepte. C'est une **exception
+l'arabe n'est pas entièrement vocalisé (`v2/docs/langues/ar.md`, § 1.2) : le décideur l'accepte — et, depuis le 20
+novembre, l'arabe vocalisé peut aussi se choisir pour la seconde bulle (« L'arabe vocalisé »). C'est une **exception
 voulue à D189** (« Un texte à la fois »), active seulement si le joueur la choisit. **Sans langue secondaire, rien ne
 change d'un point** : ni bulle, ni bloc, ni temps de plus. Vérifié en comparant, élément par élément (place, taille,
 police, couleur, visibilité), la page de l'assemblage d'avant et de celui-ci sur l'écran-titre, un carton de titre, une
@@ -1520,6 +1523,66 @@ l'estampille de version mise à part. Seules les pages de réglages gagnent leur
   réplique suivante porte la sienne ; puis la langue du jeu prise pour langue secondaire les échange. « BILINGUE
   CONFORME » ; sinon « ABSENT », « ÉCART », « INVISIBLE », « BLOQUÉ », « TEXTE CACHÉ ». Captures, et un relevé ligne à
   ligne (chaque réplique, son texte dans la langue secondaire ; chaque carton ; le fil), dans `.smoke/bilingue/`.
+  Depuis l'arabe vocalisé (section suivante), deux couples de plus, fr-arv et arv-fr, et un témoin.
+
+## L'arabe vocalisé
+
+*Demandes du décideur, 20 novembre : « Aussi ajoute l'option voyelles pour l'arabe », puis « Ou bien arabe / arabe
+vocalisé », et pour son nom : « al arabiya avec les voyelles sur le mot ». D208, à valider.*
+
+Pour qui apprend l'arabe (avec la langue secondaire, ou en jouant en arabe), un texte entièrement vocalisé se lit bien
+mieux. Mais le texte courant reste sans voyelles (`v2/docs/langues/ar.md`, § 1.2) : la vocalisation entière est un
+**choix du joueur**, jamais l'arabe d'office.
+
+- **Un choix, pas une langue.** Partout où l'on choisit une langue — les boutons de l'écran-titre, « Langue » dans la
+  halte, la langue secondaire —, l'arabe paraît deux fois : « العربية » (le texte d'aujourd'hui, inchangé) et
+  « العَرَبِيَّة » (le même mot, avec ses voyelles : le nom du choix, le même dans toutes les langues de l'écran ; son aide et
+  son nom pour un lecteur d'écran disent « arabe vocalisé » dans la langue de l'écran, `title`, `aria-label`). C'est une
+  **variante** de l'arabe (`langue.js`, `VARIANTES.arv`) : elle en prend tout — le sens de l'écriture, les polices, les
+  formes selon le nombre, chaque texte et chaque règle (`regles.js` lit les mots de l'arabe, et une forme vocalisée a
+  les mêmes lettres) —, sauf qu'un texte qui a sa forme vocalisée s'y montre vocalisé. `I.langue.lang` et la langue de
+  la seconde bulle restent `'ar'` : tout ce qui teste l'arabe dans le moteur et les outils (le sens, `?lang=ar`,
+  `LANGUE=ar`, les contrôles) vaut pour les deux. Deux drapeaux disent la variante, `L.voy` (le jeu) et `L.voy2` (la
+  seconde bulle) ; ce que le joueur choisit et ce que l'appareil garde, c'est le **choix** — `'fr'`, `'ar'`, `'arv'`,
+  `'en'`, `'ja'` (`L.choix()`, `L.code()`, `L.code2()`, `opts.lang`, `opts.lang2`, `?lang=arv`, `?lang2=arv`,
+  `LANGUE=arv`). L'arabe et l'arabe vocalisé ne se lisent jamais l'un sous l'autre (`L.secondes()` les écarte tous deux
+  quand le jeu est en arabe) ; prendre l'arabe pour le jeu quand l'arabe vocalisé est en seconde les échange
+  (`U.langue`). Une partie gardée avant ne change pas : un choix absent ou inconnu redonne l'arabe d'aujourd'hui, et la
+  partie elle-même n'en sait rien (son format ne change pas). Le choix n'est offert qu'une fois des formes écrites.
+- **Les formes vocalisées** : `src/lang/ar/voyelles/<fichier>.json`, une entrée par ligne `{ k, fr, t, tv }`, sous la clé
+  du texte français ; `t` est le texte arabe d'où la forme a été faite. Ni `build.js` ni `langues.js` ne les prennent
+  pour une liste de textes (ils ne lisent que les `*.json` du dossier de la langue). L'assemblage n'embarque qu'une forme
+  **fraîche** — `t` égal au texte d'aujourd'hui, mêmes lettres, chaque signe du texte gardé (`fidele`) — par
+  `ISNAD.langue.poserVoyelles('ar', { clé: forme })` ; le moteur le revérifie avant de la montrer. Une forme périmée
+  laisse le texte tel qu'il est écrit.
+- **Le moteur** (`langue.js`). Un seul endroit choisit la forme d'un texte, `ecrit(lang, clé)` : la forme vocalisée si la
+  variante est choisie pour cette langue (celle du jeu, ou celle de la seconde bulle — jamais la même) et qu'elle suit
+  encore le texte ; sinon le texte. `L.de` (le jeu, `I.t`, les récits posés) et `L.dans` (la seconde bulle, `L.tDans`) y
+  passent tous deux. Un texte vocalisé se lit dans le même temps que sans ses signes (`L.poids`, `L.poids2` les ôtent) ;
+  les initiales d'un nom aussi (`L.initiales`). **Sans la variante, rien ne change d'un signe** : `ecrit` rend le texte
+  tel qu'il est, la page ne porte aucun attribut de plus, et `bilingue.js` le vérifie (le témoin, ci-dessous).
+- **L'affichage.** Les signes au-dessus et au-dessous de la ligne demandent un peu d'interligne là où le texte est serré :
+  la boîte de dialogue tenue en hauteur et la seconde bulle passent de 1,4 à 1,62 (`html[data-voyelles]`,
+  `html[data-voyelles2]`, `style.css`). Ailleurs, l'arabe a déjà son interligne de 1,7. La seconde bulle se resserre
+  comme avant si la place manque, jamais sous dix points.
+- **Ce qu'on vocalise, et comment** : `v2/docs/langues/ar.md`, § 1.2 (« L'arabe vocalisé »). Les versets et les paroles
+  attestées se recopient du registre ; إدريس reste nu (le jeu y pose le nom du joueur) ; الله ne porte que la voyelle de
+  sa dernière lettre.
+- **Le contrôle des formes** : `node v2/tools/voyelles.js` → « VOYELLES CONFORMES ». Pour chaque forme : ôtés ses signes,
+  elle redonne exactement son texte, et garde chacun de ses signes (« ÉCART » sinon) ; son texte est encore celui
+  d'aujourd'hui (« PÉRIMÉ » sinon) ; chaque lettre porte son signe, hors des lettres qui n'en portent pas dans une édition
+  scolaire (« INCOMPLET » sinon) ; une clé ne se vocalise que d'une façon ; un verset, une parole attestée, sont ceux du
+  registre. Il dit la couverture fichier par fichier : `… etat` ; `… a-faire <fichier> [motif]` liste ce qui reste ;
+  `… poser <fichier> <travail.json>` pose un lot (`[{ k, tv }]`), en refusant une forme qui ne suit pas son texte.
+- **Le contrôle dans le jeu** : `bilingue.js` joue aussi fr-arv (la seconde bulle vocalisée) et arv-fr (le jeu vocalisé),
+  en hauteur et en largeur, avec toutes ses vérifications ; une ligne, une bulle ou un carton dont le texte a une forme
+  vocalisée doit la montrer en arabe vocalisé et ne jamais la montrer en arabe (« ÉCART »). Le **témoin**, une fois : en
+  arabe (jeu, seconde bulle sous le français ou l'anglais), chaque texte qui a une forme vocalisée est dit tel que la
+  liste arabe l'écrit aujourd'hui, au signe près, et aucune forme vocalisée n'est posée dans les récits ni les tables ;
+  en arabe vocalisé, la forme vocalisée ; l'arabe et l'arabe vocalisé ne se lisent pas l'un sous l'autre, et s'échangent.
+- **Le premier lot** (20 novembre) : le prologue, l'écran-titre, la Chaîne qui suit le prologue, les commandes du combat
+  et les Réglages — 287 formes, vocalisées par l'agent, à relire par un arabisant (les hésitations sont dans le rapport
+  de l'agent et dans D208).
 
 ## Commandes
 
@@ -1530,6 +1593,7 @@ node v2/tools/validate-music.js
 node v2/tools/build.js               # v2/index.html et v2/dist/isnad.html (avec les paquets de v2/paquets/)
 node v2/tools/langues.js releve      # les listes de textes de chaque langue, à jour du français
 node v2/tools/langues.js [langue] [fichier]   # « LANGUES CONFORMES » : tout est écrit, et passe les règles
+node v2/tools/voyelles.js            # « VOYELLES CONFORMES » : l'arabe vocalisé suit son texte, lettre pour lettre, entièrement vocalisé (… etat, a-faire, poser)
 node v2/tools/paquet.js [fichier]    # éprouve un paquet, hors du jeu puis dans un jeu d'essai assemblé à part
 node v2/tools/partie.js              # la partie du joueur : exportée, effacée, réimportée à l'identique
 node v2/tools/personnage.js          # le nom et la tenue du râwî : choisis, joués, gardés

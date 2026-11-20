@@ -46,7 +46,7 @@
     });
     if (st) { const i = D.STARS.indexOf(st), a = i * Math.PI / 4; c.strokeStyle = 'rgba(255,233,168,.9)'; c.lineWidth = 2; c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.cos(a) * 38, Math.sin(a) * 38); c.stroke(); }
     c.fillStyle = '#fff6dc'; c.beginPath(); c.arc(0, 0, 3, 0, 6.3); c.fill(); c.restore();
-    const key = (st ? D.STARS.indexOf(st) + st.name : '-') + I.langue.lang;   // l'étiquette se refait aussi quand la langue change
+    const key = (st ? D.STARS.indexOf(st) + st.name : '-') + I.langue.code();   // l'étiquette se refait aussi quand la langue change (2.x : ou l'arabe, vocalisé)
     if (key !== lastKey) { lastKey = key; el.querySelector('.lab').innerHTML = st ? `<span lang="ar" dir="rtl">${st.ar}</span><b>${Tr.starText(st)}</b><small>${VENTS[st.dir] ? I.t(VENTS[st.dir]) : st.dir}</small>` : '<small>' + I.t('al-Jady au nord, Suhayl au sud') + '</small>';
       if (st && !I.save.data._lore_etoiles && (!I.lecons || I.lecons.proposer('etoiles'))) { I.save.data._lore_etoiles = 1; Tr.lore('etoiles'); } } // 2.x : dans une partie neuve, pas au premier écran — un outil à la fois (lecons.js)
   };

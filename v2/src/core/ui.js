@@ -116,9 +116,12 @@
         I.save.reset(); I.save.data.started = true; if (I.lecons) I.lecons.ouvrir(); W.roster = {}; W.saga = null; U.personnage(() => W.startChapter('idris', 0), true); // 2.x : une partie neuve apprend un outil à la fois (lecons.js)
       });
       // la langue, dans la colonne, sous « Nouvelle partie » : chaque nom écrit dans sa langue — on le retrouve même sans savoir lire celle de l'écran
-      const L = I.langue, dispo = L.disponibles();
-      if (dispo.length > 1) { const lg = I.el('div', 'langues'); dispo.forEach(l => { const b = I.el('button', l === L.lang ? 'on' : '', L.LANGUES[l].nom); b.type = 'button'; b.lang = l; b.dir = L.LANGUES[l].dir; b.setAttribute('aria-pressed', l === L.lang ? 'true' : 'false');
-        tapable(b, () => { I.audio.unlock(); if (l === L.lang) return; U.langue(l); if (fl) fl.destroy(); U.showTitle(); }); lg.appendChild(b); btns.push(b); }); box.appendChild(lg); }
+      // (2.x : l'arabe y paraît deux fois, « العربية » et « العَرَبِيَّة », tel qu'il s'écrit et vocalisé — un choix, L.choix() ;
+      // la variante dit ce qu'elle est, dans la langue de l'écran, à qui la survole ou la fait lire)
+      const L = I.langue, dispo = L.choix();
+      if (dispo.length > 1) { const lg = I.el('div', 'langues'); dispo.forEach(c => { const l = L.base(c), b = I.el('button', c === L.code() ? 'on' : '', L.nom(c)); b.type = 'button'; b.lang = l; b.dir = L.LANGUES[l].dir; b.dataset.choix = c; b.setAttribute('aria-pressed', c === L.code() ? 'true' : 'false');
+        if (L.VARIANTES[c]) { b.title = I.t('arabe vocalisé'); b.setAttribute('aria-label', I.t('arabe vocalisé')); }
+        tapable(b, () => { I.audio.unlock(); if (c === L.code()) return; U.langue(c); if (fl) fl.destroy(); U.showTitle(); }); lg.appendChild(b); btns.push(b); }); box.appendChild(lg); }
       mk(I.t('Réglages'), () => montrer(reglages));
     };
     const reglages = () => {
@@ -145,18 +148,19 @@
   /* ---------- la langue ----------
      Un réglage de l'appareil (opts.lang), comme le son ou le dessin : la partie, elle, est la même dans toutes les langues.
      En cours de récit, les personnages du lieu portent déjà leur nom : on reprend au point de reprise, dans la langue choisie. */
-  U.langue = function (l) { const o = I.save.data.opts, avant = I.langue.lang; o.lang = I.langue.choisir(l);
-    if (o.lang2 && o.lang2 === o.lang) o.lang2 = I.langue.choisir2(avant);   // 2.x : la langue secondaire devient celle du jeu — les deux échangent leur place
+  // (2.x : l = un choix — 'arv', l'arabe vocalisé, est l'arabe ; ce que l'appareil garde, c'est le choix)
+  U.langue = function (l) { const L = I.langue, o = I.save.data.opts, avant = L.code(); o.lang = L.choisir(l);
+    if (o.lang2 && L.base(o.lang2) === L.lang) o.lang2 = L.choisir2(avant);   // 2.x : la langue secondaire devient celle du jeu — les deux échangent leur place
     I.save.store(); U.applyOpts(); return o.lang; };
   /* 2.x — la langue secondaire (demande du décideur, 19 novembre) : aucune, d'office ; sinon l'une des langues offertes,
      autre que celle du jeu. Un réglage de l'appareil (opts.lang2), comme la langue : la partie n'en sait rien. */
-  U.langue2Nom = () => { const l = I.langue.l2(); return l ? I.langue.LANGUES[l].nom : I.t('aucune§langue'); };
+  U.langue2Nom = () => { const c = I.langue.code2(); return c ? I.langue.nom(c) : I.t('aucune§langue'); };
   U.langue2 = function (l) { const o = I.save.data.opts; o.lang2 = I.langue.choisir2(l); if (!o.lang2) delete o.lang2; I.save.store(); return o.lang2 || ''; };
-  U.langue2Suivante = () => { const s = I.langue.secondes(), i = s.indexOf(I.langue.l2()); return U.langue2(i < 0 ? s[0] : s[i + 1] || ''); };
+  U.langue2Suivante = () => { const s = I.langue.secondes(), i = s.indexOf(I.langue.code2()); return U.langue2(i < 0 ? s[0] : s[i + 1] || ''); };
   U.choisirLangue = async function () {
     const L = I.langue, enJeu = I.scene === W && !!W.map && !!W.saga && !W.excursion; let k = -1;
-    S.depth++; try { k = await S.menuPick(I.t('Dans quelle langue ?'), L.disponibles().map(l => ({ t: L.LANGUES[l].nom }))); } finally { S.depth--; S.hideDialog(); }
-    const l = L.disponibles()[k]; if (!l || l === L.lang) return;
+    S.depth++; try { k = await S.menuPick(I.t('Dans quelle langue ?'), L.choix().map(c => ({ t: L.nom(c) }))); } finally { S.depth--; S.hideDialog(); }
+    const l = L.choix()[k]; if (!l || l === L.code()) return;
     if (enJeu) W.checkpoint(); U.langue(l);
     if (enJeu) return U.resume();
   };
@@ -575,9 +579,10 @@
         toggle(I.t('Dessin'), dessinNom, dessinSuivant, I.t('Fin : deux fois plus de points, les grands personnages jusque sur les cartes, des lisières irrégulières. Fin, adouci : le même, les contours fondus. D’origine : le dessin de la version légère.')),
         toggle(I.t('Luminosité'), lumNom, lumSuivante, I.t('Clair : une lumière de fin de journée, chaude, aux ombres turquoise. Moyen : la même, plus retenue. Sombre : la lumière des versions d’avant, plus contrastée.')),
         toggle(I.t('Rendu'), () => G.low ? I.t('2D simple') : I.t('rétro-HD'), () => { G.low = !G.low; G._slow = 0; o.low = G.low; G.resize(); }, I.t('Rétro-HD : éclairage, halo, profondeur de champ, ombres de nuages. 2D simple : pixel art seul, pour les appareils modestes. Le jeu bascule de lui-même s’il peine.')));
-      if (I.langue.disponibles().length > 1) items.push({ label: I.t('Langue') + ' : ' + I.langue.LANGUES[I.langue.lang].nom, fn() { close(); U.choisirLangue(); }, show: () => '<h3>' + I.t('Langue') + '</h3><p>Français · العربية · English · 日本語</p><p>' + I.t('Le récit reprend à son dernier point de reprise, dans la langue choisie. Ta partie est la même dans toutes les langues.') + '</p>' },
+      // (2.x : chaque choix, nommé dans sa langue ; l'arabe vocalisé, dit aussi dans celle de l'écran)
+      if (I.langue.choix().length > 1) items.push({ label: I.t('Langue') + ' : ' + I.langue.nom(I.langue.code()), fn() { close(); U.choisirLangue(); }, show: () => '<h3>' + I.t('Langue') + '</h3><p>' + I.langue.choix().map(I.langue.nom).join(' · ') + '</p>' + (I.langue.choix().some(c => I.langue.VARIANTES[c]) ? '<p>' + I.t('L’arabe se lit sans voyelles, comme dans un livre, ou vocalisé : les mêmes textes, avec toutes leurs voyelles, là où elles sont écrites.') + '</p>' : '') + '<p>' + I.t('Le récit reprend à son dernier point de reprise, dans la langue choisie. Ta partie est la même dans toutes les langues.') + '</p>' },
         // 2.x : la langue secondaire, et ce qu'elle est — la même chose, avec les mots de l'autre langue
-        toggle(I.t('Langue secondaire'), U.langue2Nom, U.langue2Suivante, I.t('Sous chaque réplique, chaque narration, chaque carton du récit et chaque annonce, la même chose dans une seconde langue, pour l’apprendre en jouant. Chaque langue est écrite à la source, avec ses propres mots : ce n’est pas une traduction mot à mot, et l’arabe n’est pas entièrement vocalisé. Les menus, les choix et le combat restent dans la langue du jeu.')));
+        toggle(I.t('Langue secondaire'), U.langue2Nom, U.langue2Suivante, I.t('Sous chaque réplique, chaque narration, chaque carton du récit et chaque annonce, la même chose dans une seconde langue, pour l’apprendre en jouant. Chaque langue est écrite à la source, avec ses propres mots : ce n’est pas une traduction mot à mot. L’arabe s’y lit sans voyelles, ou vocalisé là où ses voyelles sont écrites. Les menus, les choix et le combat restent dans la langue du jeu.')));
       items.push({ label: I.t('Ton personnage'), fn() { close(); U.personnage(() => { if (I.scene === W && W.map) W.hud(); }); }, show: () => { const h = I.sagas.idris && I.sagas.idris.heroes.idris, L = Object.assign({ kind: 'compagnon' }, h ? h.look : D.TENUES[0].look);   // 2.x : le râwî tel qu'il est, plutôt que le nom d'une tenue
           return '<h3>' + I.t('Ton personnage') + `</h3><p class="perso-vue"><img alt="" src="${G.charURL(L, 0)}"><img alt="" src="${G.charURL(L, 1)}"></p><p><b>` + I.esc(I.perso.dit()) + '</b></p><p>' + I.t('Le nom et la tenue de ton râwî. Les Compagnons, eux, gardent leur nom et leur silhouette.') + '</p>'; } });
       items.push({ label: I.t('Exporter la partie'), fn() { close(); U.partie('exporter', () => {}); }, show: () => '<h3>' + I.t('Exporter la partie') + '</h3><p>' + I.t('Ta partie tient dans un texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.') + '</p><p class="src">' + I.t('Elle se garde aussi toute seule sur cet appareil, à chaque objectif atteint.') + '</p>' });

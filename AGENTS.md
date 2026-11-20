@@ -187,6 +187,13 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   la source sous la même clé française, jamais une traduction faite pour cela. Ni menus, ni choix, ni combat. C'est une
   exception voulue à D189 ; sans elle, rien ne change d'un point. `v2/docs/architecture.md`, « La langue secondaire ».
   Contrôle : `node v2/tools/bilingue.js` (« BILINGUE CONFORME »).
+- **L'arabe vocalisé** (décideur, 20 novembre : « Ou bien arabe / arabe vocalisé » ; D208, à valider) : là où l'on choisit
+  une langue, « العربية » (le texte d'aujourd'hui, la référence) et « العَرَبِيَّة » (les mêmes textes, entièrement
+  vocalisés) — une variante de l'arabe (`'arv'`, `langue.js`), qui n'en change que la forme des textes. Les formes
+  vocalisées sont à part, sous la même clé (`v2/src/lang/ar/voyelles/`) : on n'y écrit que des signes, jamais une lettre ;
+  un texte arabe changé laisse sa forme périmée, à refaire. Ni un verset ni une parole attestée ne se revocalisent ;
+  إدريس reste nu. `v2/docs/langues/ar.md`, § 1.2. Contrôle : `node v2/tools/voyelles.js` (« VOYELLES CONFORMES »), puis
+  `bilingue.js` (fr-arv, arv-fr, le témoin).
 - Le livret de la 1.32 est archivé avec elle (`archive/v1.32/promo/`, `archive/v1.32/tools/promo.js`).
 - La promotion de la 2.x (demande du décideur, 17 novembre : dix shorts, une démo jouable, un livret court ; puis six
   shorts de plus — la noosphère, et un par saga ; puis le soutien de l'Institut Islam Actuel) se fait
@@ -252,6 +259,7 @@ node v2/tools/validate-music.js         # chaque voix d'une piste dure exactemen
 node v2/tools/build.js
 node v2/tools/langues.js releve        # les listes de textes de chaque langue, à jour du français (src/lang/<langue>/)
 node v2/tools/langues.js [langue] [fichier]   # tout est écrit, et passe les règles : « LANGUES CONFORMES »
+node v2/tools/voyelles.js [etat]       # l'arabe vocalisé suit son texte, entièrement vocalisé : « VOYELLES CONFORMES » (… a-faire, poser)
 node v2/tools/smoke.js auto            # prologue, cinq sagas, épilogue joués automatiquement
 node v2/tools/smoke.js walk            # idem en marchant réellement (clavier simulé, vraies collisions)
 node v2/tools/smoke.js tap             # idem en marchant comme au doigt (chemin tracé jusqu'à l'objectif)
