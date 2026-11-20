@@ -400,6 +400,9 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
      celui qui mène : à pied, elle le rattrape et le combat reprend ; en courant (Maj tenue, les flèches — un pilote les tient
      comme un joueur, tools/pilote.js), elle renonce ; une chimère de la carte revient alors à sa place. */
   {
+    // une page neuve : ce qui précède (des dizaines de labyrinthes, des descentes) ne pèse pas sur la fuite
+    await p.goto(url); await p.waitForTimeout(1500);
+    await p.evaluate(() => { document.querySelectorAll('.screen').forEach(e => e.hidden = true); document.body.classList.remove('in-screen'); window.ISNAD.input.reset(); });
     await p.evaluate(require('./pilote.js'));
     const nouveau = async () => { await p.evaluate(() => { const I = window.ISNAD; if (I.battle.active) I.battle.abort(I.world); I.rodeurs.finFuite(); I.script.depth = 0; I.world.lock = false; I.save.reset(); I.save.data.started = true; I.debug.sansMeutes = false; I.debug.graine = 20261116; I.debug.profondeur = 3; I.input.reset();
       I.debug.auto = true; I.speed = 30; I.world.roster = {}; I.world.saga = null; I.world.startChapter('abubakr', 0); setTimeout(() => { I.debug.auto = false; I.speed = 1; }, 250); }); await p.waitForTimeout(1800); await calme(); };
@@ -407,7 +410,7 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
     const commandes = async () => { for (let i = 0; i < 120; i++) { const r = await p.evaluate(() => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); if (b && !b.hidden && b.classList.contains('attend')) return 'attend'; return c && c.querySelector('.mlist.main .mi') && !c.querySelector('.mhint') && b.hidden ? 'cmd' : ''; });
       if (r === 'cmd') { await p.waitForTimeout(350); return true; } if (r === 'attend') await p.keyboard.press('Enter'); await p.waitForTimeout(150); } return false; };
     const noms = () => p.evaluate(() => [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].filter(b => !b.hidden).map(b => b.querySelector('span').textContent.replace(/^\S+\s*/, '').trim()));
-    const fuir = async () => { const hp = await p.evaluate(() => window.ISNAD.battle.contexte().all.filter(e => e.side === 'hero').map(e => Math.max(1, Math.round(e.hp))).join(','));
+    const fuir = async () => { const hp = await p.evaluate(() => { const C = window.ISNAD.battle.contexte(); return C ? C.all.filter(e => e.side === 'hero').map(e => Math.max(1, Math.round(e.hp))).join(',') : 'aucun combat'; });
       const vu = await p.evaluate(() => { const b = [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].find(x => /Fuir/.test(x.textContent)); if (b) b.click(); return !!b; });
       for (let i = 0; i < 60 && await p.evaluate(() => window.ISNAD.battle.active || window.ISNAD.script.busy); i++) await p.waitForTimeout(150); return { vu, hp }; };
     const apres = id => p.evaluate(id => { const I = window.ISNAD, W = I.world, R = I.rodeurs, f = W.foes.find(q => q.id === id); return { combat: I.battle.active, poursuit: !!R.fuite && R.fuite.f === f, fini: f.done, grace: R.intouchable(), resultat: I.battle.last && I.battle.last.result, hp: W.party.map(h => W.hero(h).hp).join(',') }; }, id);
