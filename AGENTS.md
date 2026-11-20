@@ -34,15 +34,15 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   leçon par séquence, les commandes du combat reçues une à une, les pages de la halte ; une partie d'avant garde tout ;
   les trois figures et leurs effets : « PROGRESSION CONFORME »), `node v2/tools/loupe.js` (sur un téléphone, en
   hauteur et en largeur : l'image s'agrandit — d'office, en écartant deux doigts, par le bouton —, le toucher tombe
-  juste, les étiquettes restent sur leurs personnages, le combat garde son cadrage et chaque héros y a sa place, aucun texte n'est sous dix points :
-  « LOUPE CONFORME »), `node v2/tools/bilingue.js` (la langue secondaire, pour chacun des douze couples de langues, en
+  juste, les étiquettes restent sur leurs personnages, le combat garde son cadrage et chaque héros y a sa place, aucun texte n'est sous dix points ;
+  les messages du combat se posent en bas, sur personne, en français et en arabe : « LOUPE CONFORME »), `node v2/tools/bilingue.js` (la langue secondaire, pour chacun des douze couples de langues, en
   hauteur et en largeur : choisie par le vrai bouton et gardée ; le prologue au doigt, chaque réplique et chaque carton du
   récit avec sa seconde bulle, dans la bonne langue et le bon sens, lisible, sans débordement ; sans elle, rien ne paraît :
   « BILINGUE CONFORME ») et `node v2/tools/partage.js` (partager sa progression : le bouton, absent avant tout maillon puis
   touché sur la Chaîne et dans la halte ; l'image, carrée et verticale, et son texte, dans les quatre langues — le nom,
   les maillons, la réserve, l'adresse, et aucun mot des œuvres, du cœur ni des Valeurs ; le partage et ses replis :
   « PARTAGE CONFORME ») : aucun « REFUS », « BLOQUÉ »,
-  « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART ». Le grand personnage (32 × 48) a ses propres
+  « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART », « RECOUVERT ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages ». Les textes de la 2.0
   disent « Idris » : on n'y écrit jamais le nom d'un joueur, c'est `v2/src/core/perso.js` qui le pose à l'affichage. Une partie de la 2.0 a
   un format (2) et une fonction de mise à jour (`migrer`, dans `v2/src/core/base.js`) : on ne change jamais ce format
@@ -112,6 +112,13 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   d'office et aucun n'est sous dix points (`src/style.css`, « écran tactile ») ; une liste de choix qui déborderait se
   resserre (`S.ajuster`). `v2/docs/architecture.md`, « L'image agrandie ». Tout changement de mise en page se relit sur
   un téléphone, en hauteur et en largeur : `loupe.js`, puis `doigt.js`.
+- Dans la 2.x, les messages du combat se posent en bas (le décideur, 19 novembre : « Les messages au moment du combat
+  doivent être en bas pas sur les personnages ») : le bandeau (`#battle .banner`) est dans le panneau, dans la case des
+  commandes — en hauteur sous les rangées du groupe, en largeur au pied de la scène, toute la largeur du panneau s'il
+  montait jusqu'à une figure (`battle.js`, `placer`, `B.boites`) ; le dévoilement et la victoire y passent aussi. Les
+  chiffres et les petits mots d'état restent sur leur cible, qu'ils désignent. Aucun message n'est posé sous le panneau ni
+  dans les marges : la place de la manette. `v2/docs/architecture.md`, « Les messages du combat, en bas ». Contrôle :
+  `loupe.js` (« RECOUVERT » : un message sur une figure, une plaque, la frise des tours ou le champ).
 - **Les langues** (demande du décideur, 18 novembre ; exigence 25). La 2.x existe en français, en arabe, en anglais et
   en japonais. Le français reste la langue des récits, des tables et du code ; les autres langues sont écrites à la
   source (`v2/docs/langues/ecrire.md`) et rangées, texte par texte, sous la clé de leur texte français, dans
@@ -215,7 +222,7 @@ node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère, ti
 node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
-node v2/tools/loupe.js              # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles
+node v2/tools/loupe.js [messages]   # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles, les messages du combat en bas (« messages » : eux seuls)
 node v2/tools/bilingue.js [fr-ar …] # 2.x : la langue secondaire — douze couples, en hauteur et en largeur, le prologue au doigt (captures dans .smoke/bilingue)
 node v2/tools/partage.js            # 2.x : partager sa progression — le bouton, l'image (1080 × 1080, 1080 × 1920), le texte, les replis, quatre langues (images dans .smoke/partage/)
 node v2/tools/shorts.js [NN] [brouillon]  # 2.x : les shorts — le jeu filmé image par image (promo/shorts/NN-nom.js → promo/shorts/films/, non versionnés)
@@ -236,7 +243,8 @@ qui allonge le combat de plus de 20 % ou lui ajoute une défaite), sans « MUSIQ
 (la piste voulue n'est pas celle du lieu, ou le bus de la musique se tait), sans « SUPERPOSÉ » (le joueur reste plus de trente
 pas dans le pied d'un PNJ ou d'un coffre, ou un lieu se charge avec quelqu'un à moins de 9 points de lui), sans « COINCÉ »
 (le joueur de test, à pied ou au doigt, n'arrive pas à son objectif et y est porté), sans « PNJ EN TRAVERS » (la case d'un PNJ
-ou d'un coffre, rendue pleine, coupe un lieu nommé, et aucun pas de côté ne rouvre le passage) et sans erreur console.
+ou d'un coffre, rendue pleine, coupe un lieu nommé, et aucun pas de côté ne rouvre le passage), sans « RECOUVERT » (un message
+du combat posé sur un personnage, une chimère, son nom, sa jauge de voiles, la frise des tours ou le champ) et sans erreur console.
 Un parcours automatique prouve que le récit se déroule, pas qu'il se voit : tout changement d'écran
 ou de mise en page se vérifie aussi sur une capture.
 

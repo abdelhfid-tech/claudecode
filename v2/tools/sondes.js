@@ -33,5 +33,5 @@ function corps(mode) {
     return r; }; }
 }
 // les mots d'un journal qui font échouer une partie jouée (smoke.js les écrit tels quels ; paquet.js les relève)
-const ECHECS = /BLOQUÉ|INACCESSIBLE|ABSENT|CACHÉ|INVISIBLE|MUSIQUE|COINCÉ|SUPERPOSÉ|PNJ EN TRAVERS|ERR /;
+const ECHECS = /BLOQUÉ|INACCESSIBLE|ABSENT|CACHÉ|INVISIBLE|MUSIQUE|COINCÉ|SUPERPOSÉ|PNJ EN TRAVERS|RECOUVERT|ERR /; // 2.17 : « RECOUVERT », un message du combat posé sur une figure (loupe.js)
 module.exports = { corps, ECHECS };

@@ -12,20 +12,25 @@
    5. le combat garde son cadrage, et chaque héros y a sa place (aucun point de sa silhouette sur celle d'un autre, vingt-six
       points au moins d'un centre à l'autre — en hauteur, aussi sur un téléphone plus élancé, où la scène est la plus
       étroite) ; au retour, l'image retrouve son agrandissement ; une page rechargée aussi ;
-   6. sur la carte, dans un dialogue, en combat et à la halte, aucun texte n'est plus petit que dix points.
+   6. sur la carte, dans un dialogue, en combat et à la halte, aucun texte n'est plus petit que dix points ;
+   7. (2.17) les messages du combat se posent en bas, sur personne — en 390 × 844, 390 × 760, 360 × 640 et 844 × 390, en
+      français et en arabe : chacun relevé au moment où il paraît (voir « messages », à la fin du fichier).
+   Usage : node tools/loupe.js [messages] — « messages » : le 7 seulement (JEU=… pour l'éprouver sur un autre jeu assemblé).
    Sortie : « OK » par preuve, puis « LOUPE CONFORME ». Sinon « ÉCART » (une grandeur attendue n'y est pas),
-   « INACCESSIBLE » (le toucher ne mène pas où il faut), « INVISIBLE » (un texte trop petit pour être lu). Code 1 à la
-   première anomalie. Captures dans .smoke/loupe. */
+   « INACCESSIBLE » (le toucher ne mène pas où il faut), « INVISIBLE » (un texte trop petit pour être lu, coupé, hors de
+   l'écran ou sans fond), « RECOUVERT » (un message du combat sur une figure, une plaque, la frise des tours ou le champ),
+   « ABSENT » (un message attendu ne paraît pas). Code 1 à la première anomalie. Captures dans .smoke/loupe. */
 const fs = require('fs'), path = require('path');
 const { chromium, devices } = require('playwright');
 const V2 = path.join(__dirname, '..'), out = path.join(V2, '.smoke/loupe'), url = 'file://' + path.resolve(V2, process.env.JEU || 'index.html');
 const PLANCHER = 10; // points : en dessous, un texte ne se lit plus sur un téléphone
+const SEUL = process.argv.includes('messages'); // « node tools/loupe.js messages » : les messages du combat seulement (7.)
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { anomalies++; console.log(mot + ' ' + m); }, dit = (v, mot, m) => (v ? ok(m) : ko(mot, m));
 
 (async () => {
   fs.mkdirSync(out, { recursive: true });
   const browser = await chromium.launch(), errors = [];
-  for (const [nom, cle, vp] of [['en hauteur', 'haut', { width: 390, height: 760 }], ['en largeur', 'large', { width: 844, height: 390 }]]) {
+  for (const [nom, cle, vp] of SEUL ? [] : [['en hauteur', 'haut', { width: 390, height: 760 }], ['en largeur', 'large', { width: 844, height: 390 }]]) {
     const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 2, hasTouch: true, isMobile: true, userAgent: devices['iPhone 13'].userAgent }), p = await ctx.newPage(), cdp = await ctx.newCDPSession(p);
     p.on('pageerror', e => errors.push('pageerror: ' + e.message)); p.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
     await p.goto(url); await p.waitForTimeout(1600);
@@ -126,8 +131,138 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { a
     dit(e6.zf === 2 && e6.t.some(t => /Image : × 2/.test(t)), 'ÉCART', `${nom} : page rechargée, l'agrandissement est resté (× ${e6.zf} · « ${e6.t.join('')} »)`);
     await ctx.close();
   }
+  await messages(browser, errors);
   if (errors.length) ko('ÉCART', `erreur console : ${[...new Set(errors)].slice(0, 3).join(' | ').slice(0, 400)}`);
   await browser.close();
   console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : '✓ LOUPE CONFORME — l’image s’agrandit, le toucher tombe juste, le texte se lit (captures dans .smoke/loupe)');
   process.exit(anomalies ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });
+
+/* 7. (2.17) Les messages du combat se posent en bas — demande du décideur, 19 novembre : « Les messages au moment du combat
+   doivent être en bas pas sur les personnages. » Sur un téléphone tenu en hauteur (390 × 844, 390 × 760, 360 × 640) et en
+   largeur (844 × 390), en français puis en arabe (l'autre sens d'écriture), un vrai combat de la Cité, joué par ses boutons
+   dans une partie neuve : son introduction (celle de la capture du décideur), la leçon d'une commande nouvelle (« Vertus »),
+   l'annonce d'une vertu, le dévoilement de la chimère, la victoire ; puis, posés comme le jeu les pose (battle.dire), les
+   autres bandeaux avec leurs vrais textes — la plus longue parole d'une chimère de toutes les sagas, la Sérénité, une
+   chimère qui agit, l'épreuve du cœur, le secours, la besace vide ; enfin un vrai combat d'idole de bataille déclarée
+   (Yarmoûk), son champ à l'écran et le bandeau d'un flanc découvert. Pour chaque message, au moment où il est là : son
+   rectangle ne coupe celui d'aucune figure (héros, chimère, compagnon de lumière : battle.boites), d'aucune plaque (le nom
+   et la jauge de voiles), ni la frise des tours, ni le champ d'une bataille déclarée — sinon « RECOUVERT » ; il est dans
+   l'écran, entier, sur un fond qui le porte, et aucun de ses textes n'est sous dix points — sinon « INVISIBLE ». Les
+   chiffres qui sautent au-dessus d'une cible (dégâts, soins) et les petits mots d'état (« Garde », « Étourdi »…) ne sont pas
+   des messages : ils désignent leur cible, et y restent. Sur un jeu d'avant la 2.17 (JEU=… node tools/loupe.js messages),
+   les figures sont relevées par battle.places, et ce qui ne se pose pas sans battle.dire n'est pas éprouvé.
+   Captures : .smoke/loupe/messages-<langue>-<taille>-<n>.png (CAPTURES=dossier : ailleurs). */
+async function messages(browser, errors) {
+  const TAILLES = [[390, 844], [390, 760], [360, 640], [844, 390]], dossier = process.env.CAPTURES ? path.resolve(process.env.CAPTURES) : out;
+  fs.mkdirSync(dossier, { recursive: true });
+  for (const lang of ['fr', 'ar']) for (const [w, h] of TAILLES) {
+    const sens = h > w ? 'en hauteur' : 'en largeur', T = `${lang} ${w} × ${h} ${sens}`, cle = `${lang}-${w}x${h}`;
+    const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 2, hasTouch: true, isMobile: true, userAgent: devices['iPhone 13'].userAgent }), p = await ctx.newPage();
+    p.on('pageerror', e => errors.push('pageerror: ' + e.message)); p.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
+    // le relevé, dans la page, au moment même : chaque message à l'écran, et ce qu'il ne doit pas couvrir
+    await p.addInitScript(() => { window.__releve = function (genre) {
+      const I = window.ISNAD, B = I.battle, G = I.gfx, cv = document.querySelector('#cv').getBoundingClientRect(), k = cv.width / G.PW, E = q => [cv.left + q.x * k, cv.top + q.y * k, cv.left + (q.x + q.w) * k, cv.top + (q.y + q.h) * k];
+      const vis = e => !!e && !e.hidden && !e.closest('[hidden]') && e.getClientRects().length > 0 && getComputedStyle(e).visibility !== 'hidden' && +getComputedStyle(e).opacity > 0.1, R = e => { const r = e.getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom]; };
+      let figures = B.boites ? B.boites().map(q => ({ quoi: q.qui === 'champ' ? 'le champ de la bataille' : q.qui === 'bete' ? 'le compagnon de lumière' : q.qui, r: E(q) })) : null;
+      if (!figures) { const ch = B.champ && B.champ(); // un jeu d'avant la 2.17 : les figures d'après battle.places, le champ d'après rangs.cadre
+        if (ch && ch.vue) { const c = I.rangs.cadre(ch); figures = [{ quoi: 'le champ de la bataille', r: E({ x: c.x, y: c.y, w: c.w, h: c.h }) }]; }
+        else figures = B.places().map(e => { if (e.camp === 'hero') return { quoi: e.nom, r: E({ x: e.x - 16, y: e.y - 24, w: 32, h: 50 }) }; const d = Object.values(I.world.saga.enemies).concat(Object.values((I.common || {}).enemies || {})).find(q => q.name === e.nom) || {}, sc = d.scale || (d.tier === 'boss' ? 3 : d.tier === 'elite' ? 2 : 1), s = sc >= 3 ? 112 : sc === 2 ? 80 : 52; return { quoi: e.nom, r: E({ x: e.x - s / 2, y: e.y - s / 2 - 3, w: s, h: s + 6 }) }; }); }
+      const obst = figures.concat([...document.querySelectorAll('#battle .plate')].filter(vis).map(e => ({ quoi: 'la plaque « ' + e.querySelector('.nm').textContent + ' »', r: R(e) })), vis(document.querySelector('#battle .order')) ? [{ quoi: 'la frise des tours', r: R(document.querySelector('#battle .order')) }] : []);
+      const msgs = [], b = document.querySelector('#battle .banner'), l = document.querySelector('#battle .cmd .mlecon'), c = document.querySelector('#card');
+      if (vis(b)) msgs.push({ quoi: 'le bandeau', el: b }); if (vis(l)) msgs.push({ quoi: 'la leçon', el: l }); if (vis(c) && c.classList.contains('on')) msgs.push({ quoi: 'le carton', el: c });
+      document.querySelectorAll('#floaters .fl.break').forEach(f => { if (vis(f)) msgs.push({ quoi: 'le mot « ' + f.textContent + ' »', el: f }); });
+      const croise = (a, q) => Math.max(0, Math.min(a[2], q[2]) - Math.max(a[0], q[0])) * Math.max(0, Math.min(a[3], q[3]) - Math.max(a[1], q[1]));
+      const fond = e => { for (let x = e; x && x !== document.body; x = x.parentElement) { const st = getComputedStyle(x), m = /rgba?\(([^)]+)\)/.exec(st.backgroundColor), a = m ? m[1].split(',').map(Number) : null; if (a && (a.length < 4 || a[3] >= 0.85)) return a.length < 4 ? 1 : a[3]; if (/gradient/.test(st.backgroundImage)) return 0.9; } return 0; };
+      return { genre, msgs: msgs.map(m => { const r = R(m.el), tailles = [m.el, ...m.el.querySelectorAll('*')].filter(x => [...x.childNodes].some(n => n.nodeType === 3 && n.textContent.trim().length > 0) && vis(x)).map(x => parseFloat(getComputedStyle(x).fontSize));
+        return { quoi: m.quoi, texte: m.el.textContent.replace(/\s+/g, ' ').trim().slice(0, 64), r: r.map(Math.round), couvre: obst.filter(o => croise(r, o.r) > 1).map(o => o.quoi), petit: Math.min(...tailles, 99), dehors: r[0] < -1 || r[1] < -1 || r[2] > innerWidth + 1 || r[3] > innerHeight + 1, coupe: m.el.scrollWidth > m.el.clientWidth + 1 || (m.quoi !== 'le carton' && m.el.scrollHeight > m.el.clientHeight + 2), fond: fond(m.el) }; }) };
+    }; });
+    await p.goto(url + (lang === 'fr' ? '' : '?lang=' + lang)); await p.waitForTimeout(1600);
+    const shot = n => p.screenshot({ path: path.join(dossier, `messages-${cle}-${n}.png`) }), emit = a => p.evaluate(a => window.ISNAD.input.emit(a), a);
+    const attendre = async (f, arg, ms = 20000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { const r = await p.evaluate(f, arg); if (r) return r; await p.waitForTimeout(40); } return null; };
+    const calme = async () => { for (let i = 0; i < 80 && await p.evaluate(() => window.ISNAD.script.busy || window.ISNAD.world.lock); i++) { await p.evaluate(() => { const c = document.querySelector('#choice'); if (c && !c.hidden) { const o = c.querySelectorAll('.opt'); if (o.length) o[o.length - 1].click(); } else window.ISNAD.input.emit('ok'); }); await p.waitForTimeout(160); } await p.waitForTimeout(250); };
+    const ouvrir = (saga, ci) => p.evaluate(([saga, ci]) => { const I = window.ISNAD; I.audio.setOn(false); I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => e.hidden = true); document.body.classList.remove('in-screen'); I.input.reset();
+      I.debug.auto = true; I.speed = 30; I.world.roster = {}; I.world.saga = null; I.world.startChapter(saga, ci); setTimeout(() => { I.debug.auto = false; I.speed = 1; }, 250); }, [saga, ci]);
+    const juger = (rel, attendu) => { if (!rel || !rel.msgs.length) { ko('ABSENT', `messages · ${T} · ${attendu} : aucun message à l'écran`); return; }
+      rel.msgs.forEach(m => { const nom = `messages · ${T} · ${rel.genre} — ${m.quoi} « ${m.texte} »`;
+        if (m.couvre.length) ko('RECOUVERT', `${nom} couvre ${m.couvre.join(', ')} (${m.r.join(',')})`); else ok(`${nom} : sur personne (${m.r.join(',')})`);
+        if (m.dehors || m.coupe || m.petit < PLANCHER || m.fond < 0.85) ko('INVISIBLE', `${nom} : ${[m.dehors && `hors de l’écran (${m.r.join(',')} dans ${w} × ${h})`, m.coupe && 'coupé', m.petit < PLANCHER && `texte à ${m.petit.toFixed(1)} points`, m.fond < 0.85 && 'sans fond qui le porte'].filter(Boolean).join(', ')}`); }); };
+    // un défaut se relève deux fois, à quatre dixièmes de seconde : la page qui finit de se mettre en place (une liste de
+    // commandes qui défile jusqu'à la commande choisie) ne compte pas — un message qui reste sur quelqu'un, si
+    const releve = async (genre, n) => { let r = await p.evaluate(g => window.__releve(g), genre);
+      if (r.msgs.some(m => m.couvre.length || m.dehors || m.coupe)) { await p.waitForTimeout(400); const r2 = await p.evaluate(g => window.__releve(g), genre); if (r2.msgs.length) r = r2; }
+      if (n) await shot(n); return r; };
+    // A. un vrai combat de la Cité, dans une partie neuve où « frapper » est reçu et « Vertus » sera la commande nouvelle
+    await ouvrir('idris', 0); await p.waitForTimeout(1800); await calme(); await p.waitForTimeout(400); await calme(); await p.waitForTimeout(500);
+    const pret = await p.evaluate(() => { const I = window.ISNAD, cherche = l => { for (const x of l || []) { if (Array.isArray(x) && x[0] === 'battle') return x[1]; if (Array.isArray(x)) { const y = cherche(x); if (y) return y; } } return null; };
+      const op = I.sagas.idris.chapters[0].objectives.map(o => cherche(o.then)).find(Boolean); if (!op) return false;
+      I.sagas.idris.enemies.notif.lvl = 4; // pour cette page seulement : la chimère tient assez pour que tout passe — l'annonce, les bandeaux, le dévoilement
+      I.save.data.lecons = { seq: 5, recus: { marcher: 0, parler: 1, frapper: 2 }, re: { marcher: 1, parler: 1, frapper: 1 }, dernier: 'frapper', donne: 2 };
+      window.__fin = false; window.__dev = null; window.__vic = null;
+      // le dévoilement et la victoire se relèvent au moment même où ils paraissent
+      // (un sixième de seconde après : le grand mot de la 2.16 entre en fondu, le carton aussi)
+      const vu = () => { if (!window.__devT && (document.querySelector('#floaters .fl.break') || document.querySelector('#battle .banner.break:not([hidden])'))) window.__devT = setTimeout(() => { window.__dev = window.__releve('le dévoilement'); }, 160);
+        if (!window.__vicT && (document.querySelector('#battle .banner.fin:not([hidden])') || document.querySelector('#card.victory.on'))) window.__vicT = setTimeout(() => { window.__vic = window.__releve('la victoire'); }, 160); };
+      new MutationObserver(vu).observe(document.querySelector('#battle'), { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden', 'class'] });
+      new MutationObserver(vu).observe(document.querySelector('#floaters'), { childList: true }); new MutationObserver(vu).observe(document.querySelector('#card'), { attributes: true, attributeFilter: ['class'] });
+      I.battle.start(op).then(() => { window.__fin = true; }); return true; });
+    if (!pret) { ko('ABSENT', `messages · ${T} : le combat de la Cité n'a pas été trouvé`); await ctx.close(); continue; }
+    if (!await attendre(() => { const b = document.querySelector('#battle .banner'); return !!b && !b.hidden && b.textContent.length > 20; })) ko('ABSENT', `messages · ${T} : l'introduction du combat`);
+    await p.waitForTimeout(450); juger(await releve('l’introduction', '1-intro'), 'l’introduction');
+    await emit('ok');
+    if (!await attendre(() => !!document.querySelector('#battle .cmd .mlist.main .mi'))) ko('ABSENT', `messages · ${T} : les commandes`);
+    await p.waitForTimeout(400); juger(await releve('la leçon de « Vertus »', '2-lecon'), 'la leçon');
+    // « Vertus », puis « Reprendre souffle » sur Idris : une vertu annoncée, et la chimère encore debout pour la suite
+    await emit('down'); await emit('down'); await p.waitForTimeout(200); await emit('ok'); await p.waitForTimeout(350); await emit('down'); await emit('down'); await p.waitForTimeout(150); await emit('ok'); await p.waitForTimeout(350); await emit('ok');
+    if (await attendre(() => { const b = document.querySelector('#battle .banner'); return !!b && !b.hidden; }, null, 5000)) { await p.waitForTimeout(60); juger(await releve('l’annonce d’une vertu', '3-competence'), 'l’annonce'); } else ko('ABSENT', `messages · ${T} : l'annonce d'une vertu`);
+    // les autres bandeaux, avec leurs vrais textes, quand le joueur a de nouveau la main
+    if (await p.evaluate(() => !!window.ISNAD.battle.dire)) {
+      await attendre(() => !!document.querySelector('#battle .cmd .mlist.main .mi'));
+      const L = await p.evaluate(() => { const I = window.ISNAD, T = (I.sagas.coeur || {}).secours || {}; let say = null, qui = '';
+        Object.values(I.sagas).forEach(s => Object.values(s.enemies || {}).forEach(d => (d.phases || []).forEach(f => { if (f.say && (!say || I.langue.poids(f.say) > I.langue.poids(say))) { say = f.say; qui = d.name; } })));
+        const h = I.world.hero(I.world.party[0]), esc = I.esc;
+        return [['la plus longue parole d’une chimère', `<small>${esc(qui)}</small>${I.t('« {parole} »', { parole: esc(say) })}`, 4000, true, 'foe speech', '4-parole'],
+          ['la Sérénité', esc(h.def.limit.name), 900, false, 'limit'], ['une chimère agit', I.t('Assaut'), 900, false, 'foe'],
+          ['l’épreuve du cœur', `<small>${I.t('Épreuve de poids {w} · provision du cœur {had} · enracinement {traits}', { w: 3, had: 1, traits: '▮▮▮▮' })}</small>${I.t('Le cœur est lourd')}`, 1500, false, 'speech foe'],
+          ['le secours', `<small>${esc(T.titre || '')}</small>${esc(T.bandeau || '')}`, 1700, false, 'speech intro'],
+          ['la besace vide', I.t('La besace est vide.'), 900, false, '']]; });
+      for (const [genre, html, ms, wait, cls, n] of L) { await p.evaluate(([html, ms, wait, cls]) => { window.ISNAD.battle.dire(html, wait ? 60000 : ms * 30, wait, cls); }, [html, ms, wait, cls]); await p.waitForTimeout(120);
+        juger(await releve(genre, n), genre); if (wait) { await p.waitForTimeout(500); await emit('ok'); } await p.waitForTimeout(150); }
+      await p.evaluate(() => { document.querySelector('#battle .banner').hidden = true; });
+    } else console.log(`--  messages · ${T} : parole, Sérénité, épreuve du cœur, secours, besace — non éprouvés (ce jeu n'a pas battle.dire)`);
+    // jusqu'au dévoilement (Éclairer porte la faille), puis Frapper, jusqu'à la victoire
+    let vuDev = false; for (let n = 0; n < 500 && !(await p.evaluate(() => window.__fin)); n++) {
+      const s = await p.evaluate(() => ({ dev: !!window.__dev, main: !!document.querySelector('#battle .cmd .mlist.main .mi'), cible: !!document.querySelector('#battle .cmd .mhint'), fin: !!document.querySelector('#battle .banner.fin:not([hidden])') || !!document.querySelector('#card.on') }));
+      if (s.dev && !vuDev) { vuDev = true; await p.waitForTimeout(220); await shot('5-devoile'); } // (après l'éclair blanc du dévoilement)
+      if (s.fin) { await p.waitForTimeout(500); await shot('6-victoire'); await p.waitForTimeout(300); await emit('ok'); await p.waitForTimeout(600); continue; }
+      if (s.main) { await p.waitForTimeout(300); await p.evaluate(i => { const b = document.querySelectorAll('#battle .cmd .mlist.main .mi')[i]; if (b) b.click(); }, s.dev ? 0 : 1); await p.waitForTimeout(250); }
+      else if (s.cible) { await emit('ok'); const t0 = Date.now(); while (Date.now() - t0 < 2500 && !(await p.evaluate(() => !!window.__dev))) await p.waitForTimeout(25); }
+      else await p.waitForTimeout(80);
+    }
+    if (await p.evaluate(() => window.ISNAD.battle.active)) await p.evaluate(() => window.ISNAD.battle.abort());
+    await p.waitForTimeout(400); const dv = await p.evaluate(() => window.__dev), vc = await p.evaluate(() => window.__vic);
+    if (dv) juger(dv, 'le dévoilement'); else ko('ABSENT', `messages · ${T} : le dévoilement n'a pas été vu`);
+    if (vc) juger(vc, 'la victoire'); else ko('ABSENT', `messages · ${T} : la victoire n'a pas été vue`);
+    // B. un combat d'idole de bataille déclarée (Khâlid, Yarmoûk) : son champ, et le bandeau d'un flanc découvert
+    await ouvrir('khalid', 1); await p.waitForTimeout(1800); await calme(); await p.waitForTimeout(400);
+    // le chapitre ouvert et calme (son ouverture lue), on y cherche le combat de l'idole, où qu'il soit dans ses scripts
+    // (s'il n'a pas pris — la page sortait d'un combat —, on le rouvre)
+    for (let i = 0; i < 18 && !(await p.evaluate(() => { const I = window.ISNAD, W = I.world; return W.saga && W.saga.id === 'khalid' && W.ch && W.ch.id === I.sagas.khalid.chapters[1].id && !I.script.busy && !I.battle.active; })); i++) {
+      if (i === 6 || i === 12) { await ouvrir('khalid', 1); await p.waitForTimeout(1800); } await calme(); await p.waitForTimeout(500); }
+    const idole = await p.evaluate(() => { const I = window.ISNAD, W = I.world, cherche = x => { if (Array.isArray(x)) { if (x[0] === 'battle' && x[1] && x[1].boss) return x[1]; for (const y of x) { const z = cherche(y); if (z) return z; } } else if (x && typeof x === 'object') for (const y of Object.values(x)) { const z = cherche(y); if (z) return z; } return null; };
+      const ici = `${W.saga ? W.saga.id : '—'}/${W.ch ? W.ch.id : '—'}${I.battle.active ? ', un combat en cours' : ''}${I.script.busy ? ', un récit en cours' : ''}`;
+      if (!W.ch || W.ch.id !== I.sagas.khalid.chapters[1].id || I.battle.active) return 'la page est sur ' + ici; const op = cherche(W.ch.objectives); if (!op) return 'aucun combat d’idole dans ' + ici;
+      I.debug.auto = true; I.battle.start(op); I.debug.auto = false; return true; }); // sans la page de préparation (comme le joueur de test), puis à la main
+    if (idole !== true) ko('ABSENT', `messages · ${T} : le combat d'idole de Yarmoûk — ${idole}`);
+    else if (!await attendre(() => !!document.querySelector('#battle .cmd .mlist.main .mi'), null, 30000)) ko('ABSENT', `messages · ${T} : les commandes de la bataille déclarée`);
+    else {
+      await p.waitForTimeout(300);
+      const vu = await p.evaluate(() => { const I = window.ISNAD, ch = I.battle.champ(); if (!ch || !ch.rangs.length) return false; const r = ch.rangs[0]; ch.vue = true; I.battle.relayout();
+        ch.api.banner(`<small>${I.esc(r.name)} · ${I.t('aile nord')}</small>${I.t('Flanc découvert : un voile tombe')}`, 60000, false, 'speech intro'); return true; });
+      if (!vu) ko('ABSENT', `messages · ${T} : le champ de la bataille déclarée`);
+      else { await p.waitForTimeout(250); juger(await releve('le bandeau du champ (bataille déclarée)', '7-bataille'), 'le bandeau du champ'); }
+      await p.evaluate(() => { const I = window.ISNAD, ch = I.battle.champ(); if (ch) { ch.vue = false; I.battle.relayout(); } I.battle.abort(); });
+    }
+    await ctx.close();
+  }
+}

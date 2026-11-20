@@ -609,6 +609,72 @@ bouton, un toucher qui mène à la case touchée à × 2, les étiquettes sur le
 carte, dans un dialogue, en combat et à la halte : « LOUPE CONFORME ». `doigt.js` rejoue ensuite le début du jeu avec
 l'image agrandie.
 
+### Les messages du combat, en bas (2.17)
+
+*Demande du décideur, le 19 novembre, devant la 2.16, capture à l'appui (en combat dans la Cité, au téléphone, le bandeau
+« Frappe la faille pour retirer ses voiles ⛊. « Éclairer » porte la Patience d'Idris. » posé au milieu de la scène, sur
+le nom de la chimère et sur Idris) : « Les messages au moment du combat doivent être en bas pas sur les personnages. »*
+
+Le bandeau du combat (`#battle .banner`, `battle.js`, `banner`) n'est plus posé sur la scène : il est **dans le panneau**
+(`page.html`), dans la case des commandes (`grid-area: cmd`), par-dessus elles le temps qu'il dure. En hauteur, cette case
+est sous les rangées du groupe, hors de la scène ; en largeur et au bureau, au pied de la scène, à droite, sous les
+combattants. Le panneau garde sa place : rien ne bouge quand un message paraît. Ce qui en découle :
+
+- **`placer(b)`**, à chaque message (et quand l'écran tourne, `B.relayout`). En largeur, si le bandeau montait jusqu'à
+  une figure — ou jusqu'au champ d'une bataille déclarée, le temps d'un ordre ou d'un pas —, il prend toute la largeur
+  du panneau (`.large`, par-dessus les rangées du groupe), puis resserre ses caractères, cran par cran, jamais sous 10,5
+  points. En hauteur, il tient dans l'écran, et défile au-delà. Les figures sont celles de `B.boites()` : le rectangle de
+  chaque héros (debout ou éprouvé), de chaque chimère avec son souffle, du compagnon de lumière ; le champ quand il
+  remplace la scène.
+- **Le toucher.** Un message qui attend (`wait` : l'introduction, la parole d'une chimère, la victoire) prend le toucher
+  et montre ▼ (`.attend`) ; les autres le laissent passer aux commandes qu'ils couvrent un instant (`pointer-events`).
+  Un message qui passe ne recouvre pas un message qui attend.
+- **Le sens d'écriture.** Le bandeau prend celui de son texte (`I.langue.sens`), et ▼ passe à gauche en arabe ; la scène
+  et le panneau, eux, ne se retournent pas. Un guillemet ne reste pas seul au bout d'une ligne (l'espace qui le touche
+  devient insécable, à l'affichage seulement).
+- **La largeur.** Les colonnes du panneau peuvent descendre sous la largeur de leur contenu (`minmax(0, …)`) : une
+  commande trop longue (en arabe, en 360 × 640, « sans perdre son tour » du stratège) n'élargit plus le panneau au-delà de
+  l'écran, et le bandeau qui partage sa case reste entier.
+- **La manette.** Rien n'est posé sous le panneau ni dans les marges : la manette A/B pourra y rester en combat.
+
+Inventaire de ce qui s'écrit pendant un combat, où c'était en 2.16 et où c'est maintenant :
+
+| Ce qui s'écrit | Où c'était (2.16) | Où c'est (2.17) |
+|---|---|---|
+| L'introduction d'un combat (`intro` du récit), « {nom} se dresse. », « Une emprise se referme… » | bandeau au milieu de la scène (24 % et 11 % de sa hauteur) | en bas ; l'introduction attend un toucher, ▼ |
+| L'épreuve du cœur, la lame (« Sans sa lame », « … tranche ses voiles »), le compagnon de lumière, un renfort, le Phénix | bandeau à 20–24 % | en bas |
+| L'annonce d'une vertu, de la Sérénité, d'un objet ; l'action d'une chimère (« Assaut »…), son défi (`taunts`) | bandeau à 11 %, sur la frise et les plaques | en bas |
+| La parole d'une chimère à un seuil (`phases.say`, la plus longue : 157 signes) | bandeau à 20 %, attend | en bas, attend |
+| « La besace est vide. », « Personne n'en a besoin. » | bandeau à 11 % | en bas, sur la case des commandes, sans en prendre le toucher |
+| Le dévoilement (« DÉVOILÉ »), un mal tranché ou repoussé (« TRANCHÉ », « Repoussé ») | un grand mot qui montait du corps de la chimère | un message du bas, le nom au-dessus (`devoile` ; ceux qui tombent ensemble sur la même ligne) ; la plaque dit toujours « DÉVOILÉ » |
+| La victoire (« Dévoilement », « Tranché », « Repoussé », « La chimère lâche prise ») et ce qu'elle rapporte | carton plein écran, sur toute la scène | message du bas, les héros debout à la vue (`.fin`) ; il attend un toucher, ou cinq secondes au moins |
+| La défaite (« La chaîne ne rompt pas »), la remontée de la noosphère intérieure | carton plein écran | **inchangé** : la tentative s'arrête, le combat reprend ensuite ; les outils comptent les défaites par ce carton (`S.card('defeat')`) |
+| Le secours : la première fois, le carton du verset ; ensuite, un bandeau | carton plein écran ; bandeau à 24 % | carton **inchangé** (un verset et sa référence, exigence 20) ; le bandeau en bas |
+| La bataille déclarée : « Une nuée a percé… », « Flanc découvert… », « Aucun rang à ordonner… », « Aucune case libre… », un renfort sur le champ (`rangs.js`, `api.banner`) | bandeau à 56,5 % (largeur), 4 % (hauteur) | en bas, sous le champ |
+| La leçon d'une commande nouvelle (`L.banniere`, `.mlecon`), « Choisis une cible… », titre et description des commandes | dans le panneau (depuis la 2.12) | inchangé |
+| Les chiffres (dégâts, soins, « +Souffle ») et les petits mots d'état sur une cible (« Garde », « Étourdi », « Paré », « Sans effet », « Coup double », « +Niyya », « Force ▼ », « Voile ôté », « Se revoile », « Relevé », « Éprouvé », « Faille flairée »…) | sur la cible | **inchangé** : ils désignent leur cible. *Doute, à trancher par le décideur : ce sont des mots, posés un instant sur la figure.* |
+| Les mots du champ (« En tenaille », « De flanc », « Charge », « Dissipée », l'ordre donné ; « DÉVOILÉ » et « Voile ôté » sur l'idole) | sur l'unité du champ | inchangé : ils désignent l'unité |
+| La préparation d'une bataille | une page de la halte, avant le combat | inchangé |
+| Le fil (`S.toast`) | se tait en combat (D189) ; seul un incident technique passe outre | inchangé |
+| La langue secondaire | aucune en combat (ni menus, ni choix, ni combat) | inchangé |
+
+**Le contrôle** (`node v2/tools/loupe.js`, le 7 ; `node v2/tools/loupe.js messages` pour lui seul). En 390 × 844,
+390 × 760, 360 × 640 et 844 × 390, en français puis en arabe : un vrai combat de la Cité dans une partie neuve, par ses
+boutons (l'introduction de la capture du décideur, la leçon de « Vertus », l'annonce d'une vertu, le dévoilement, la
+victoire) ; puis, posés comme le jeu les pose (`B.dire`), les autres bandeaux avec leurs vrais textes (la plus longue
+parole d'une chimère, la Sérénité, une chimère qui agit, l'épreuve du cœur, le secours, la besace vide) ; enfin un vrai
+combat d'idole de Yarmoûk, son champ à l'écran et le bandeau d'un flanc découvert. Chaque message est relevé au moment
+où il paraît : son rectangle ne coupe ni une figure, ni une plaque (le nom, la jauge de voiles), ni la frise des tours, ni
+le champ — sinon « RECOUVERT » ; il est dans l'écran, entier, sur un fond qui le porte, sans texte sous dix points —
+sinon « INVISIBLE ». Sur la 2.16 (`JEU=… node v2/tools/loupe.js messages`), il échoue vingt-sept fois : dans les huit
+écrans, l'introduction couvre la plaque de « Notification » (en hauteur, aussi la chimère et Idris), « DÉVOILÉ » la
+chimère, le carton de la victoire Idris et la frise des tours ; en 360 × 640, l'annonce d'une vertu couvre la frise, et
+le bandeau d'un flanc découvert le champ (ce que la 2.16 ne pouvait poser sans `B.dire` n'y est pas éprouvé). Sur la
+2.17, les quatre-vingt-seize relevés passent.
+
+**Les films.** Les shorts qui filment un combat (son introduction, une annonce, le dévoilement, la victoire) et la démo
+jouable changent : à refaire avec les autres, une seule fois.
+
 ## Un texte à la fois : le fil, la marque, les leçons à leur place
 
 *Décision du décideur, 18 novembre (D189 ; le cahier des charges est `v2/docs/propositions-texte.md`) : « essaye de ne pas

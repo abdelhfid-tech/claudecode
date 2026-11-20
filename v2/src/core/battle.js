@@ -73,7 +73,7 @@
   const heroPos = (x0, y0) => { if (!(G.view.w < G.PW)) return [x0, y0]; const k = I.clamp((G.view.w - 20) / 350, 0.5, 1); if (k >= 1) return [x0, y0];
     const c = bx(HERO_MID[0]), f = 1 - (1 - k) * 0.55; return [Math.round(c + (x0 - HERO_MID[0]) * f), Math.round(HERO_MID[1] + (y0 - HERO_MID[1]) * (1 + (1 - k) * 1.14))]; };
   const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
-  B.relayout = function () { if (!C) return; C.all.forEach(e => { if (e.side === 'hero' && e.y0 !== undefined) { const q = heroPos(e.x0, e.y0); e.x = q[0]; e.y = q[1]; } else e.x = bx(e.x0); }); refresh(); };
+  B.relayout = function () { if (!C) return; C.all.forEach(e => { if (e.side === 'hero' && e.y0 !== undefined) { const q = heroPos(e.x0, e.y0); e.x = q[0]; e.y = q[1]; } else e.x = bx(e.x0); }); refresh(); const b = $('#battle .banner'); if (b && !b.hidden) placer(b); };
   B.champ = () => (C && C.champ) || null; // le champ de la bataille en cours, pour les outils de test
   let chef = null; // celui sur qui se règle le niveau des égrégores communs : le premier du groupe qui combat
   function mkHero(x, i) {
@@ -189,7 +189,7 @@
       if (!S.flags[al.flag]) continue;
       if (C.champ && C.champ.rangs.some(r => r.allie && r.name === al.name)) continue; // bataille déclarée : le renfort est un rang, sur le champ
       await banner(`<small>${I.t('Renfort')}</small>${I.esc(al.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(500);
-      alive('foe').forEach(e => { if (!e.broken && al.veil !== 0) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; floater(e, I.t('DÉVOILÉ'), 'break'); } else floater(e, I.t('Voile ôté'), 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * (al.hp === undefined ? 0.08 : al.hp))); e.flash = 1; fx('light', e, '#ffe08a'); });
+      alive('foe').forEach(e => { if (!e.broken && al.veil !== 0) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; devoile(e, I.t('DÉVOILÉ')); } else floater(e, I.t('Voile ôté'), 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * (al.hp === undefined ? 0.08 : al.hp))); e.flash = 1; fx('light', e, '#ffe08a'); });
       refresh(); await I.sleep(700);
     }
     // le champ, d'un coup d'œil, avant le premier tour ; le renfort gagné par la parole y prend place
@@ -479,7 +479,7 @@
     if (t.side === 'hero') { t.sakina = Math.min(100, t.sakina + d / t.max.hp * 70); G.shake(160); C.minHp = Math.min(C.minHp === undefined ? 1 : C.minHp, t.hp / t.max.hp); if (t.hp <= 0) C.kos = (C.kos || 0) + 1; }
     if (weak) {
       t.known[el] = true; if (a.side === 'hero') a.sakina = Math.min(100, a.sakina + 7);
-      if (!t.broken) { t.veils--; if (t.veils <= 0) { t.broken = true; t.veils = 0; t.ct += 400; floater(t, I.t('DÉVOILÉ'), 'break'); I.audio.sfx('break'); G.flash('#fff'); G.shake(380); if (a.side === 'hero') a.sakina = Math.min(100, a.sakina + 12); for (let i = 0; i < 26; i++) G.spawn({ x: t.x, y: t.y - t.size / 2, vx: (Math.random() - 0.5) * 240, vy: (Math.random() - 0.7) * 200, grav: 300, life: 0.9, size: 1.2, color: '#fff', type: 'spark' }); } }
+      if (!t.broken) { t.veils--; if (t.veils <= 0) { t.broken = true; t.veils = 0; t.ct += 400; devoile(t, I.t('DÉVOILÉ')); I.audio.sfx('break'); G.flash('#fff'); G.shake(380); if (a.side === 'hero') a.sakina = Math.min(100, a.sakina + 12); for (let i = 0; i < 26; i++) G.spawn({ x: t.x, y: t.y - t.size / 2, vx: (Math.random() - 0.5) * 240, vy: (Math.random() - 0.7) * 200, grav: 300, life: 0.9, size: 1.2, color: '#fff', type: 'spark' }); } }
     }
   }
   function heal(t, v) { if (!t.alive) return; t.hp = Math.min(t.max.hp, t.hp + v); floater(t, '+' + v, 'heal'); }
@@ -497,7 +497,7 @@
       case 'reveal': if (t.side === 'foe') { t.def.weak.forEach(w => t.known[w] = true); (t.def.immune || []).forEach(w => t.known[w] = 'x'); floater(t, I.t('Failles révélées'), 'info'); } break;
       case 'cleanse': cleanse(t); floater(t, I.t('Purifié'), 'buff'); break;
       case 'dispel': ['atk', 'mag', 'df', 'spd'].forEach(k => { if (t.buffs[k] && t.buffs[k].v > 0) delete t.buffs[k]; }); delete t.st.regen; floater(t, I.t('Dissipé'), 'debuff'); break;
-      case 'veil': if (t.side === 'foe' && !t.broken) { t.veils = Math.max(0, t.veils + (f.v || -1)); if (t.veils <= 0) { t.broken = true; t.ct += 400; floater(t, I.t('DÉVOILÉ'), 'break'); I.audio.sfx('break'); G.flash('#fff'); } } break;
+      case 'veil': if (t.side === 'foe' && !t.broken) { t.veils = Math.max(0, t.veils + (f.v || -1)); if (t.veils <= 0) { t.broken = true; t.ct += 400; devoile(t, I.t('DÉVOILÉ')); I.audio.sfx('break'); G.flash('#fff'); } } break;
       case 'niyya': t.niyya = I.clamp((t.niyya || 0) + (f.v || 1), 0, 5); if (t.side === 'hero') floater(t, I.t('+Niyya'), 'buff'); break;
       case 'sakina': if (t.side === 'hero') { t.sakina = I.clamp(t.sakina + (f.v || 20), 0, 100); floater(t, I.t('+Sérénité'), 'buff'); } break;
       case 'taunt': t.st.taunt = turns; floater(t, I.t('Fait front'), 'buff'); break;
@@ -505,7 +505,7 @@
   }
   async function kill(t) {
     if (!t.alive) return; t.alive = false; t.hp = 0; t.st = {}; t.buffs = {};
-    if (t.side === 'foe' && t.def.vice) floater(t, t.cut ? I.t('TRANCHÉ') : I.t('Repoussé'), 'break');
+    if (t.side === 'foe' && t.def.vice) devoile(t, t.cut ? I.t('TRANCHÉ') : I.t('Repoussé'));
     if (t.side === 'foe') { I.audio.sfx('break'); for (let i = 0; i < 40; i++) G.spawn({ x: t.x + (Math.random() - 0.5) * t.size * 0.7, y: t.y - Math.random() * t.size, vx: (Math.random() - 0.5) * 40, vy: -20 - Math.random() * 60, life: 1.2 + Math.random(), size: 1 + Math.random(), color: `hsl(${t.def.hue},100%,75%)`, type: 'glyph' }); await tween(t, 'fade', 0, 500); }
     else {
       floater(t, I.t('Éprouvé'), 'debuff'); I.audio.sfx('dark'); await I.sleep(300);
@@ -551,7 +551,12 @@
     }
     W.persistHeroes();
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
-    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? I.t('La lame a tranché') : I.t('Sans sa lame, le mal recule')) : C.opts.noir ? I.t('Ce n’est pas lui qu’on a combattu : c’est ce qu’il regardait.') : C.opts.boss ? I.t('L’idole se brise') : I.t('L’emprise est brisée')}</p><h1>${maux.length ? (maux.every(e => e.cut) ? I.t('Tranché') : maux.some(e => e.cut) ? I.t('Tranché et repoussé') : I.t('Repoussé')) : C.opts.noir ? I.t('La chimère lâche prise') : I.t('Dévoilement')}</h1><ul><li>${I.t('Expérience : <b>+{n}</b>', { n: xp })}</li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
+    // 2.17 — la victoire se dit en bas, comme tout message du combat (elle était un carton plein écran) : les héros, debout,
+    // restent à la vue. Elle attend un toucher, ou le temps de la lire (cinq secondes au moins).
+    const sous = maux.length ? (maux.every(e => e.cut) ? I.t('La lame a tranché') : I.t('Sans sa lame, le mal recule')) : C.opts.noir ? I.t('Ce n’est pas lui qu’on a combattu : c’est ce qu’il regardait.') : C.opts.boss ? I.t('L’idole se brise') : I.t('L’emprise est brisée');
+    const titre = maux.length ? (maux.every(e => e.cut) ? I.t('Tranché') : maux.some(e => e.cut) ? I.t('Tranché et repoussé') : I.t('Repoussé')) : C.opts.noir ? I.t('La chimère lâche prise') : I.t('Dévoilement');
+    const gains = `<li>${I.t('Expérience : <b>+{n}</b>', { n: xp })}</li>${lines.join('')}${drop}`;
+    await banner(`<small>${sous}</small><b class="titre">${titre}</b><ul>${gains}</ul>`, Math.max(5000, readTime(`${sous} ${titre} ${gains}`.replace(/<[^>]*>/g, ' '))), true, 'fin');
   }
   // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue dans le
   // chapitre, le groupe est relevé, une fois par tentative. On ne montre que de la lumière : ni figure, ni nom, ni nombre.
@@ -610,12 +615,51 @@
     $('#floaters').appendChild(f); setTimeout(() => f.remove(), 1100);
   }
   const readTime = txt => I.clamp(1800 + I.langue.poids(txt) * 48, 2400, 7500);   // le poids d'un texte dépend de son écriture (langue.js)
-  let bannerT = null;
+  // 2.17 — les messages du combat se posent en bas (demande du décideur, 19 novembre : « Les messages au moment du combat
+  // doivent être en bas pas sur les personnages »). Le bandeau est dans le panneau, dans la case des commandes (style.css) :
+  // en hauteur, sous les rangées du groupe, hors de la scène ; en largeur, au pied de la scène, sous les combattants. Un
+  // bandeau qui attend un toucher (`wait`, .attend) n'est pas recouvert par un bandeau de passage. Un guillemet ne reste pas
+  // seul au bout d'une ligne : l'espace qui le suit (ou le précède) devient insécable.
+  let bannerT = null, attend = false;
   function banner(html, ms, wait, cls) {
-    const b = $('#battle .banner'); b.className = 'banner ' + (cls || ''); b.innerHTML = html; b.hidden = false; clearTimeout(bannerT);
-    const hide = () => { b.hidden = true; };
+    const b = $('#battle .banner'); if (attend && !wait && !b.hidden) return Promise.resolve();
+    b.className = 'banner ' + (cls || '') + (wait ? ' attend' : ''); b.innerHTML = String(html).replace(/« /g, '«\u00a0').replace(/ »/g, '\u00a0»'); b.dir = I.langue.sens(b.textContent); b.hidden = false; clearTimeout(bannerT); attend = !!wait; placer(b);
+    const hide = () => { b.hidden = true; attend = false; };
     if (!wait) { bannerT = setTimeout(hide, ms / Math.min(I.speed, 3)); return Promise.resolve(); }
     return I.input.waitTimed(['ok', 'cancel'], ms, 450).then(hide);
+  }
+  // En largeur et au bureau, le panneau est posé sur le bas de la scène : si le bandeau y montait jusqu'à une figure (ou
+  // jusqu'au champ d'une bataille déclarée), il prend toute la largeur du panneau (.large), puis resserre ses caractères,
+  // cran par cran, jamais sous dix points et demi. En hauteur, il est sous la scène : il tient dans l'écran, et défile au-delà.
+  function placer(b) {
+    b.classList.remove('large'); b.style.fontSize = ''; b.style.maxHeight = '';
+    const haut = document.body.classList.contains('portrait'), cv = $('#cv').getBoundingClientRect(), k = cv.width / G.PW;
+    const corps = haut ? [] : boites().map(q => [cv.left + q.x * k, cv.top + q.y * k, cv.left + (q.x + q.w) * k, cv.top + (q.y + q.h) * k]);
+    const gene = () => { const r = b.getBoundingClientRect(); return r.bottom > innerHeight - 2 || corps.some(q => r.left < q[2] && r.right > q[0] && r.top < q[3] && r.bottom > q[1]); };
+    if (!gene()) return;
+    if (!haut) { b.classList.add('large'); if (!gene()) return; }
+    const f0 = parseFloat(getComputedStyle(b).fontSize);
+    for (const f of [0.92, 0.85, 0.78, 0.72]) { if (f0 * f < 10.5) break; b.style.fontSize = (f0 * f).toFixed(2) + 'px'; if (!gene()) return; }
+    if (haut) b.style.maxHeight = Math.max(48, innerHeight - b.getBoundingClientRect().top - 6) + 'px';
+  }
+  // le rectangle de chaque figure sur la scène, en points du canevas : une chimère avec son souffle (trois points), un héros
+  // debout ou éprouvé, le compagnon de lumière ; le temps d'un ordre ou d'un pas d'une bataille déclarée, le champ, qui
+  // remplace alors la scène. Le bandeau s'en écarte (placer) ; loupe.js les relève.
+  function boites() {
+    if (!C) return [];
+    if (C.champ && C.champ.vue) { const k = I.rangs.cadre(C.champ); return [{ qui: 'champ', x: k.x, y: k.y, w: k.w, h: k.h }]; }
+    const L = C.all.filter(e => e.side === 'hero' || (e.alive && e.fade > 0)).map(e => e.side === 'foe' ? { qui: e.name, camp: 'foe', x: e.x + e.ox - e.size / 2, y: e.y - e.size - 9, w: e.size, h: e.size + 6 } : { qui: e.name, camp: 'hero', x: e.x + e.ox - 16, y: e.y - 46, w: 32, h: 50 });
+    if (C.bete) { const h0 = C.all.find(e => e.side === 'hero'), im = I.oeuvres.bete(C.bete); if (h0 && im) L.push({ qui: 'bete', x: h0.x + 26 - im.width / 2, y: h0.y - 60, w: im.width, h: im.height + 4 }); }
+    return L;
+  }
+  B.boites = boites;
+  B.dire = (html, ms, wait, cls) => C ? banner(html, ms, wait, cls) : Promise.resolve(); // un message du combat, posé comme le jeu le pose : pour les outils de contrôle (loupe.js)
+  // 2.17 — une chimère dévoilée, un mal tranché ou repoussé : le mot passe en bas, avec le nom (sa plaque le dit aussi) ; ceux
+  // qui tombent ensemble — un coup qui porte sur tous — se disent sur la même ligne
+  let devT = 0, devM = '', devN = [];
+  function devoile(e, mot) {
+    const t = performance.now(); if (t - devT > 400 || mot !== devM) devN = []; devT = t; devM = mot; if (!devN.includes(e.name)) devN.push(e.name);
+    banner(`<small>${devN.map(n => I.esc(n)).join(' · ')}</small>${mot}`, 1300, false, 'break');
   }
 
   function refresh() {

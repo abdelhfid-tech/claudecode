@@ -129,11 +129,38 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 .sts b, .hn small b { font-weight: 400; font-size: .9em; margin-right: .3em; } .up { color: var(--green); } .dn { color: var(--red); }
 .bar { position: relative; display: block; height: .42em; background: rgba(255, 255, 255, .12); border-radius: 1em; overflow: hidden; }
 .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, #ff7a5c, #ffb347); transition: width .3s; }
-#battle .banner { position: absolute; left: 50%; top: 11%; transform: translateX(-50%); padding: .3em 1.6em; background: linear-gradient(90deg, transparent, rgba(8, 7, 18, .92) 18%, rgba(8, 7, 18, .92) 82%, transparent); font-family: var(--f-display); letter-spacing: .1em; color: var(--gold); white-space: nowrap; max-width: 96%; text-align: center; z-index: 3; }
+/* 2.17 — les messages du combat se posent en bas (demande du décideur, 19 novembre : « Les messages au moment du combat
+   doivent être en bas pas sur les personnages ») : le bandeau est dans le panneau, dans la case des commandes (grid-area
+   « cmd »), par-dessus elles le temps qu'il dure ; en hauteur, sous les rangées du groupe, hors de la scène ; en largeur,
+   au pied de la scène, sous les combattants — s'il y monterait, il prend toute la largeur du panneau (.large, battle.js,
+   placer). Celui qui attend un toucher (.attend) le prend et montre ▼ ; les autres le laissent passer aux commandes. */
+#battle .banner { position: relative; grid-area: cmd; align-self: end; z-index: 3; padding: .4em 1em .45em; background: rgb(10, 9, 22); border: 1px solid var(--line); border-radius: 2px; box-shadow: 0 6px 22px rgba(0, 0, 0, .55); font-family: var(--f-display); letter-spacing: .1em; line-height: 1.3; color: var(--gold); white-space: normal; overflow-wrap: anywhere; overflow-y: auto; text-align: center; }
+#battle .panel > .banner:not(.attend) { pointer-events: none; }
+#battle .banner.attend { cursor: pointer; padding-bottom: .95em; }
+#battle .banner.attend::after { content: "▼"; position: absolute; right: .7em; bottom: .2em; font-size: .62em; font-style: normal; color: var(--acc); animation: bob 1s infinite; }
+#battle .banner.attend[dir="rtl"]::after { right: auto; left: .7em; }
 #battle .banner.foe { color: #d9c8ff; } #battle .banner.limit { color: #fff; font-size: 1.25em; text-shadow: 0 0 18px var(--gold); }
-#battle .banner.speech { white-space: normal; width: 80%; font-family: var(--f-body); font-style: italic; letter-spacing: 0; font-size: 1.05em; padding: .6em 2em; top: 20%; }
-#battle .banner.intro { font-style: normal; color: var(--sand); top: 24%; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(8, 7, 18, .9); }
+#battle .banner.speech { font-family: var(--f-body); font-style: italic; letter-spacing: 0; font-size: 1.05em; padding: .5em 1.2em .55em; line-height: 1.35; }
+#battle .banner.speech.attend { padding-bottom: 1em; }
+#battle .banner.intro { font-style: normal; color: var(--sand); border-top-color: var(--gold); }
 #battle .banner small { display: block; font-family: var(--f-display); font-style: normal; font-size: .62em; letter-spacing: .3em; text-transform: uppercase; color: var(--dim); }
+/* le dévoilement d'une chimère, un mal tranché ou repoussé : le mot, en blanc, avec le nom au-dessus (battle.js, devoile) */
+#battle .banner.break { color: #fff; font-size: 1.2em; letter-spacing: .2em; text-shadow: 0 0 12px #fff, 0 0 22px var(--gold); }
+#battle .banner.break small { letter-spacing: .14em; text-shadow: none; }
+/* la victoire : son titre, puis ce qu'elle rapporte, sur une ou deux lignes, les héros debout au-dessus */
+#battle .banner.fin .titre { display: block; font-family: var(--f-display); font-style: normal; font-weight: 700; font-size: 1.3em; letter-spacing: .12em; color: var(--gold); }
+#battle .banner.fin ul { list-style: none; margin: .25em 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .1em .9em; font-family: var(--f-body); font-style: normal; letter-spacing: 0; font-size: .9em; color: var(--sand); }
+#battle .banner.fin li b { color: var(--gold); } #battle .banner.fin .gi { width: 1.3em; height: 1.3em; }
+/* le panneau : les rangées du groupe et la case des commandes, où passe aussi le bandeau */
+#battle .panel { grid-template-areas: "heroes cmd"; }
+#battle .panel > .heroes { grid-area: heroes; } #battle .panel > .cmd { grid-area: cmd; }
+#battle .panel > .banner.large { grid-area: auto; grid-column: 1 / -1; grid-row: 1; }
+body.portrait #battle .panel { grid-template-areas: "heroes" "cmd"; } body.portrait #battle .banner { align-self: start; }
+body.portrait #battle.ordre .panel, body:not(.portrait) #battle.ordre .panel { grid-template-areas: "cmd"; }   /* pendant un ordre, les rangées du groupe se retirent */
+/* le panneau ne s'élargit pas au-delà de l'écran pour une commande trop longue (en arabe, en 360 × 640, « sans perdre son
+   tour ») : ses colonnes peuvent descendre sous la largeur de leur contenu, et le bandeau reste entier dans l'écran */
+html body:not(.portrait) #battle .panel { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+html body.portrait #battle .panel, html body #battle.ordre .panel { grid-template-columns: minmax(0, 1fr); }
 #battle .panel { position: absolute; left: 1.5%; right: 1.5%; bottom: 2%; display: grid; grid-template-columns: 1.25fr 1fr; gap: .6em; align-items: end; pointer-events: none; }
 #battle .panel > * { pointer-events: auto; }
 #battle .heroes { display: flex; flex-direction: column; gap: .2em; }
@@ -492,9 +519,7 @@ body.portrait .orga .ep { grid-template-columns: 1fr; } body.portrait .orga .epn
 #battle .front { position: absolute; right: 2%; top: 11%; display: grid; grid-template-columns: repeat(5, 1.05em); gap: 0 .1em; padding: .2em .45em; font-size: .72em; line-height: 1.15; background: rgba(8, 7, 18, .66); border: 1px solid var(--line); border-radius: .3em; pointer-events: none; }
 #battle .front i { font-style: normal; text-align: center; color: var(--dim); opacity: .7; } #battle .front i.r { color: var(--gold); opacity: 1; } #battle .front i.r.m { color: #fff6dc; } #battle .front i.n { opacity: 1; } #battle .front i.f { color: var(--gold); opacity: 1; }
 #battle.champ .plates, #battle.champ .order { display: none; }
-/* le champ de bataille : les bandeaux se rangent hors du champ (au-dessus, écran en hauteur ; entre le champ et le panneau sinon) */
-#battle.champ .banner, #battle.champ .banner.speech, #battle.champ .banner.intro { top: 56.5%; }
-body.portrait #battle.champ .banner, body.portrait #battle.champ .banner.speech, body.portrait #battle.champ .banner.intro { top: 4%; }
+/* le champ de bataille : ses bandeaux passent dans le panneau, comme les autres (2.17) — sous le champ, jamais dessus */
 /* Valeurs et attributs : un badge par Valeur (dessiné), un médaillon de texte par attribut (jamais un dessin) */
 .badge { width: 2.6em; height: 2.6em; image-rendering: pixelated; flex: none; vertical-align: -.8em; } .badge.grand { width: 6.5em; height: 6.5em; display: block; margin: 0 auto .6em; filter: drop-shadow(0 0 1.2em rgba(233, 200, 119, .35)); }
 .bien { display: grid; gap: .5em; margin: .7em 0; }
@@ -805,8 +830,8 @@ body.avec2:not(.portrait) #hud { visibility: hidden; }
       <div id="compass" hidden><canvas aria-label="Cadran des étoiles" data-t-aria="Cadran des étoiles"></canvas><div class="lab"></div></div>
       <div id="toasts"></div>
       <div id="battle" hidden>
-        <div class="order"></div><div class="plates"></div><div class="front" hidden></div><div class="banner" hidden></div>
-        <div class="panel"><div class="heroes"></div><div class="cmd"></div></div>
+        <div class="order"></div><div class="plates"></div><div class="front" hidden></div>
+        <div class="panel"><div class="heroes"></div><div class="cmd"></div><div class="banner" hidden></div></div>
       </div>
       <div id="floaters"></div>
       <div id="noms"></div>
@@ -853,7 +878,7 @@ body.avec2:not(.portrait) #hud { visibility: hidden; }
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.16 · 2026-11-20 07:44 UTC · d3b91a2+";
+window.ISNAD_VERSION = "2.16 · 2026-11-20 07:44 UTC · 1f867f5+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -9221,7 +9246,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   const heroPos = (x0, y0) => { if (!(G.view.w < G.PW)) return [x0, y0]; const k = I.clamp((G.view.w - 20) / 350, 0.5, 1); if (k >= 1) return [x0, y0];
     const c = bx(HERO_MID[0]), f = 1 - (1 - k) * 0.55; return [Math.round(c + (x0 - HERO_MID[0]) * f), Math.round(HERO_MID[1] + (y0 - HERO_MID[1]) * (1 + (1 - k) * 1.14))]; };
   const pctX = x => ((x - G.view.x) / G.view.w * 100) + '%';
-  B.relayout = function () { if (!C) return; C.all.forEach(e => { if (e.side === 'hero' && e.y0 !== undefined) { const q = heroPos(e.x0, e.y0); e.x = q[0]; e.y = q[1]; } else e.x = bx(e.x0); }); refresh(); };
+  B.relayout = function () { if (!C) return; C.all.forEach(e => { if (e.side === 'hero' && e.y0 !== undefined) { const q = heroPos(e.x0, e.y0); e.x = q[0]; e.y = q[1]; } else e.x = bx(e.x0); }); refresh(); const b = $('#battle .banner'); if (b && !b.hidden) placer(b); };
   B.champ = () => (C && C.champ) || null; // le champ de la bataille en cours, pour les outils de test
   let chef = null; // celui sur qui se règle le niveau des égrégores communs : le premier du groupe qui combat
   function mkHero(x, i) {
@@ -9337,7 +9362,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       if (!S.flags[al.flag]) continue;
       if (C.champ && C.champ.rangs.some(r => r.allie && r.name === al.name)) continue; // bataille déclarée : le renfort est un rang, sur le champ
       await banner(`<small>${I.t('Renfort')}</small>${I.esc(al.name)}`, 1700, false, 'speech intro'); I.audio.sfx('roll'); await I.sleep(500);
-      alive('foe').forEach(e => { if (!e.broken && al.veil !== 0) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; floater(e, I.t('DÉVOILÉ'), 'break'); } else floater(e, I.t('Voile ôté'), 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * (al.hp === undefined ? 0.08 : al.hp))); e.flash = 1; fx('light', e, '#ffe08a'); });
+      alive('foe').forEach(e => { if (!e.broken && al.veil !== 0) { e.veils = Math.max(0, e.veils - 1); if (e.veils <= 0) { e.broken = true; e.ct += 400; devoile(e, I.t('DÉVOILÉ')); } else floater(e, I.t('Voile ôté'), 'info'); } e.hp = Math.max(1, Math.round(e.hp - e.max.hp * (al.hp === undefined ? 0.08 : al.hp))); e.flash = 1; fx('light', e, '#ffe08a'); });
       refresh(); await I.sleep(700);
     }
     // le champ, d'un coup d'œil, avant le premier tour ; le renfort gagné par la parole y prend place
@@ -9627,7 +9652,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     if (t.side === 'hero') { t.sakina = Math.min(100, t.sakina + d / t.max.hp * 70); G.shake(160); C.minHp = Math.min(C.minHp === undefined ? 1 : C.minHp, t.hp / t.max.hp); if (t.hp <= 0) C.kos = (C.kos || 0) + 1; }
     if (weak) {
       t.known[el] = true; if (a.side === 'hero') a.sakina = Math.min(100, a.sakina + 7);
-      if (!t.broken) { t.veils--; if (t.veils <= 0) { t.broken = true; t.veils = 0; t.ct += 400; floater(t, I.t('DÉVOILÉ'), 'break'); I.audio.sfx('break'); G.flash('#fff'); G.shake(380); if (a.side === 'hero') a.sakina = Math.min(100, a.sakina + 12); for (let i = 0; i < 26; i++) G.spawn({ x: t.x, y: t.y - t.size / 2, vx: (Math.random() - 0.5) * 240, vy: (Math.random() - 0.7) * 200, grav: 300, life: 0.9, size: 1.2, color: '#fff', type: 'spark' }); } }
+      if (!t.broken) { t.veils--; if (t.veils <= 0) { t.broken = true; t.veils = 0; t.ct += 400; devoile(t, I.t('DÉVOILÉ')); I.audio.sfx('break'); G.flash('#fff'); G.shake(380); if (a.side === 'hero') a.sakina = Math.min(100, a.sakina + 12); for (let i = 0; i < 26; i++) G.spawn({ x: t.x, y: t.y - t.size / 2, vx: (Math.random() - 0.5) * 240, vy: (Math.random() - 0.7) * 200, grav: 300, life: 0.9, size: 1.2, color: '#fff', type: 'spark' }); } }
     }
   }
   function heal(t, v) { if (!t.alive) return; t.hp = Math.min(t.max.hp, t.hp + v); floater(t, '+' + v, 'heal'); }
@@ -9645,7 +9670,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       case 'reveal': if (t.side === 'foe') { t.def.weak.forEach(w => t.known[w] = true); (t.def.immune || []).forEach(w => t.known[w] = 'x'); floater(t, I.t('Failles révélées'), 'info'); } break;
       case 'cleanse': cleanse(t); floater(t, I.t('Purifié'), 'buff'); break;
       case 'dispel': ['atk', 'mag', 'df', 'spd'].forEach(k => { if (t.buffs[k] && t.buffs[k].v > 0) delete t.buffs[k]; }); delete t.st.regen; floater(t, I.t('Dissipé'), 'debuff'); break;
-      case 'veil': if (t.side === 'foe' && !t.broken) { t.veils = Math.max(0, t.veils + (f.v || -1)); if (t.veils <= 0) { t.broken = true; t.ct += 400; floater(t, I.t('DÉVOILÉ'), 'break'); I.audio.sfx('break'); G.flash('#fff'); } } break;
+      case 'veil': if (t.side === 'foe' && !t.broken) { t.veils = Math.max(0, t.veils + (f.v || -1)); if (t.veils <= 0) { t.broken = true; t.ct += 400; devoile(t, I.t('DÉVOILÉ')); I.audio.sfx('break'); G.flash('#fff'); } } break;
       case 'niyya': t.niyya = I.clamp((t.niyya || 0) + (f.v || 1), 0, 5); if (t.side === 'hero') floater(t, I.t('+Niyya'), 'buff'); break;
       case 'sakina': if (t.side === 'hero') { t.sakina = I.clamp(t.sakina + (f.v || 20), 0, 100); floater(t, I.t('+Sérénité'), 'buff'); } break;
       case 'taunt': t.st.taunt = turns; floater(t, I.t('Fait front'), 'buff'); break;
@@ -9653,7 +9678,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   }
   async function kill(t) {
     if (!t.alive) return; t.alive = false; t.hp = 0; t.st = {}; t.buffs = {};
-    if (t.side === 'foe' && t.def.vice) floater(t, t.cut ? I.t('TRANCHÉ') : I.t('Repoussé'), 'break');
+    if (t.side === 'foe' && t.def.vice) devoile(t, t.cut ? I.t('TRANCHÉ') : I.t('Repoussé'));
     if (t.side === 'foe') { I.audio.sfx('break'); for (let i = 0; i < 40; i++) G.spawn({ x: t.x + (Math.random() - 0.5) * t.size * 0.7, y: t.y - Math.random() * t.size, vx: (Math.random() - 0.5) * 40, vy: -20 - Math.random() * 60, life: 1.2 + Math.random(), size: 1 + Math.random(), color: `hsl(${t.def.hue},100%,75%)`, type: 'glyph' }); await tween(t, 'fade', 0, 500); }
     else {
       floater(t, I.t('Éprouvé'), 'debuff'); I.audio.sfx('dark'); await I.sleep(300);
@@ -9699,7 +9724,12 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     }
     W.persistHeroes();
     C.all.forEach(e => { if (e.side === 'hero' && e.alive) e.pose = 'salut'; });
-    await S.card('victory', `<p class="small">${maux.length ? (maux.every(e => e.cut) ? I.t('La lame a tranché') : I.t('Sans sa lame, le mal recule')) : C.opts.noir ? I.t('Ce n’est pas lui qu’on a combattu : c’est ce qu’il regardait.') : C.opts.boss ? I.t('L’idole se brise') : I.t('L’emprise est brisée')}</p><h1>${maux.length ? (maux.every(e => e.cut) ? I.t('Tranché') : maux.some(e => e.cut) ? I.t('Tranché et repoussé') : I.t('Repoussé')) : C.opts.noir ? I.t('La chimère lâche prise') : I.t('Dévoilement')}</h1><ul><li>${I.t('Expérience : <b>+{n}</b>', { n: xp })}</li>${lines.join('')}${drop}</ul><div class="hint">▼</div>`);
+    // 2.17 — la victoire se dit en bas, comme tout message du combat (elle était un carton plein écran) : les héros, debout,
+    // restent à la vue. Elle attend un toucher, ou le temps de la lire (cinq secondes au moins).
+    const sous = maux.length ? (maux.every(e => e.cut) ? I.t('La lame a tranché') : I.t('Sans sa lame, le mal recule')) : C.opts.noir ? I.t('Ce n’est pas lui qu’on a combattu : c’est ce qu’il regardait.') : C.opts.boss ? I.t('L’idole se brise') : I.t('L’emprise est brisée');
+    const titre = maux.length ? (maux.every(e => e.cut) ? I.t('Tranché') : maux.some(e => e.cut) ? I.t('Tranché et repoussé') : I.t('Repoussé')) : C.opts.noir ? I.t('La chimère lâche prise') : I.t('Dévoilement');
+    const gains = `<li>${I.t('Expérience : <b>+{n}</b>', { n: xp })}</li>${lines.join('')}${drop}`;
+    await banner(`<small>${sous}</small><b class="titre">${titre}</b><ul>${gains}</ul>`, Math.max(5000, readTime(`${sous} ${titre} ${gains}`.replace(/<[^>]*>/g, ' '))), true, 'fin');
   }
   // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue dans le
   // chapitre, le groupe est relevé, une fois par tentative. On ne montre que de la lumière : ni figure, ni nom, ni nombre.
@@ -9758,12 +9788,51 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     $('#floaters').appendChild(f); setTimeout(() => f.remove(), 1100);
   }
   const readTime = txt => I.clamp(1800 + I.langue.poids(txt) * 48, 2400, 7500);   // le poids d'un texte dépend de son écriture (langue.js)
-  let bannerT = null;
+  // 2.17 — les messages du combat se posent en bas (demande du décideur, 19 novembre : « Les messages au moment du combat
+  // doivent être en bas pas sur les personnages »). Le bandeau est dans le panneau, dans la case des commandes (style.css) :
+  // en hauteur, sous les rangées du groupe, hors de la scène ; en largeur, au pied de la scène, sous les combattants. Un
+  // bandeau qui attend un toucher (`wait`, .attend) n'est pas recouvert par un bandeau de passage. Un guillemet ne reste pas
+  // seul au bout d'une ligne : l'espace qui le suit (ou le précède) devient insécable.
+  let bannerT = null, attend = false;
   function banner(html, ms, wait, cls) {
-    const b = $('#battle .banner'); b.className = 'banner ' + (cls || ''); b.innerHTML = html; b.hidden = false; clearTimeout(bannerT);
-    const hide = () => { b.hidden = true; };
+    const b = $('#battle .banner'); if (attend && !wait && !b.hidden) return Promise.resolve();
+    b.className = 'banner ' + (cls || '') + (wait ? ' attend' : ''); b.innerHTML = String(html).replace(/« /g, '«\u00a0').replace(/ »/g, '\u00a0»'); b.dir = I.langue.sens(b.textContent); b.hidden = false; clearTimeout(bannerT); attend = !!wait; placer(b);
+    const hide = () => { b.hidden = true; attend = false; };
     if (!wait) { bannerT = setTimeout(hide, ms / Math.min(I.speed, 3)); return Promise.resolve(); }
     return I.input.waitTimed(['ok', 'cancel'], ms, 450).then(hide);
+  }
+  // En largeur et au bureau, le panneau est posé sur le bas de la scène : si le bandeau y montait jusqu'à une figure (ou
+  // jusqu'au champ d'une bataille déclarée), il prend toute la largeur du panneau (.large), puis resserre ses caractères,
+  // cran par cran, jamais sous dix points et demi. En hauteur, il est sous la scène : il tient dans l'écran, et défile au-delà.
+  function placer(b) {
+    b.classList.remove('large'); b.style.fontSize = ''; b.style.maxHeight = '';
+    const haut = document.body.classList.contains('portrait'), cv = $('#cv').getBoundingClientRect(), k = cv.width / G.PW;
+    const corps = haut ? [] : boites().map(q => [cv.left + q.x * k, cv.top + q.y * k, cv.left + (q.x + q.w) * k, cv.top + (q.y + q.h) * k]);
+    const gene = () => { const r = b.getBoundingClientRect(); return r.bottom > innerHeight - 2 || corps.some(q => r.left < q[2] && r.right > q[0] && r.top < q[3] && r.bottom > q[1]); };
+    if (!gene()) return;
+    if (!haut) { b.classList.add('large'); if (!gene()) return; }
+    const f0 = parseFloat(getComputedStyle(b).fontSize);
+    for (const f of [0.92, 0.85, 0.78, 0.72]) { if (f0 * f < 10.5) break; b.style.fontSize = (f0 * f).toFixed(2) + 'px'; if (!gene()) return; }
+    if (haut) b.style.maxHeight = Math.max(48, innerHeight - b.getBoundingClientRect().top - 6) + 'px';
+  }
+  // le rectangle de chaque figure sur la scène, en points du canevas : une chimère avec son souffle (trois points), un héros
+  // debout ou éprouvé, le compagnon de lumière ; le temps d'un ordre ou d'un pas d'une bataille déclarée, le champ, qui
+  // remplace alors la scène. Le bandeau s'en écarte (placer) ; loupe.js les relève.
+  function boites() {
+    if (!C) return [];
+    if (C.champ && C.champ.vue) { const k = I.rangs.cadre(C.champ); return [{ qui: 'champ', x: k.x, y: k.y, w: k.w, h: k.h }]; }
+    const L = C.all.filter(e => e.side === 'hero' || (e.alive && e.fade > 0)).map(e => e.side === 'foe' ? { qui: e.name, camp: 'foe', x: e.x + e.ox - e.size / 2, y: e.y - e.size - 9, w: e.size, h: e.size + 6 } : { qui: e.name, camp: 'hero', x: e.x + e.ox - 16, y: e.y - 46, w: 32, h: 50 });
+    if (C.bete) { const h0 = C.all.find(e => e.side === 'hero'), im = I.oeuvres.bete(C.bete); if (h0 && im) L.push({ qui: 'bete', x: h0.x + 26 - im.width / 2, y: h0.y - 60, w: im.width, h: im.height + 4 }); }
+    return L;
+  }
+  B.boites = boites;
+  B.dire = (html, ms, wait, cls) => C ? banner(html, ms, wait, cls) : Promise.resolve(); // un message du combat, posé comme le jeu le pose : pour les outils de contrôle (loupe.js)
+  // 2.17 — une chimère dévoilée, un mal tranché ou repoussé : le mot passe en bas, avec le nom (sa plaque le dit aussi) ; ceux
+  // qui tombent ensemble — un coup qui porte sur tous — se disent sur la même ligne
+  let devT = 0, devM = '', devN = [];
+  function devoile(e, mot) {
+    const t = performance.now(); if (t - devT > 400 || mot !== devM) devN = []; devT = t; devM = mot; if (!devN.includes(e.name)) devN.push(e.name);
+    banner(`<small>${devN.map(n => I.esc(n)).join(' · ')}</small>${mot}`, 1300, false, 'break');
   }
 
   function refresh() {
