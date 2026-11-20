@@ -88,6 +88,11 @@
     for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue; const k = 1 + (r() - 0.5) * f; d[i] = Math.min(255, d[i] * k); d[i + 1] = Math.min(255, d[i + 1] * k); d[i + 2] = Math.min(255, d[i + 2] * k); }
     c.putImageData(a, 0, 0); return cv; }
   const R = (c, col, x, y, w, h) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+  // la Cité-Miroir : un aplat calé sur les points réels. En dessin fin, tel quel ; au dessin d'origine (un point réel par
+  // point logique), un filet d'un demi-point devient un point entier au lieu d'une demi-teinte floue.
+  const Rc = (c, col, x, y, w, h) => { if ((c.canvas.hd || 1) > 1) return R(c, col, x, y, w, h);
+    const x0 = Math.round(x), y0 = Math.round(y); R(c, col, x0, y0, Math.max(1, Math.round(x + w) - x0), Math.max(1, Math.round(y + h) - y0)); };
+  G.Rc = Rc;
 
   function shade(hex, f) { // f<1 assombrit, >1 éclaircit
     const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255;
@@ -115,6 +120,12 @@
   const CITE = G.lum === 215
     ? { flaque: 'rgba(80,220,255,.10)', mur: ['#191b27', '#141620', '#20232f'], murHaut: '#2d3147', murJoint: '#0d0e16', toit: ['#10121b', '#0c0d15', '#161927'], toitBord: '#272b3d' }
     : { flaque: 'rgba(255,150,200,.09)', mur: ['#30283e', '#2a2337', '#3a3049'], murHaut: '#584a6e', murJoint: '#1c1626', toit: ['#241d30', '#1e182a', '#2c2439'], toitBord: '#4e4064' };
+  // prototype « deux villes » : la pierre de sable et de corail, ses joints, l'eau de la crique
+  // (prototype « ville de verre ») : des dalles plus jaunes, presque sans bleu — sous le couchant magenta du prototype de
+  // lumière, elles restent couleur de sable au lieu de tourner au saumon
+  const CITE2 = { dalle: ['#8e784a', '#877245', '#968050', '#806c42'], joint: 'rgba(104,80,44,.55)', arete: 'rgba(240,224,168,.35)', pique: '#8e7444', sable: 'rgba(238,218,158,.24)', use: 'rgba(116,94,56,.09)',
+    paves: ['#b29a68', '#a89060', '#bba370', '#a08858'], paveJoint: '#7e6a48',
+    corail: ['#d3bf9d', '#c7b18e', '#ddcdae', '#b9a27f'], eau: ['#22284a', '#262f56', '#1d2240', '#2f3a66'] };
   // (l'asphalte, pour les images de validation : un ton plus clair que le premier essai, #272044 : la rue prend le couchant)
   if (G.lum !== 215) Object.assign(P, { asphalt: ['#3e3360', '#463a6c', '#352b54', '#5c4a8a'], metal: ['#343a4c', '#3d4458', '#2c3040', '#4a5270'] });
   const TILE = {
@@ -148,6 +159,36 @@
     metal(c, r) { speck(c, r, P.metal, 10); c.fillStyle = '#1a1d28'; c.fillRect(0, 15, 16, 1); c.fillRect(15, 0, 1, 16); R(c, '#454d68', 0, 0, 15, 1); R(c, '#5ad', 2, 2, 1, 1); },
     cwall(c, r) { speck(c, r, CITE.mur, 10); R(c, CITE.murHaut, 0, 0, 16, 1); c.fillStyle = CITE.murJoint; c.fillRect(0, 8, 16, 1); if (r() < 0.6) R(c, r() < 0.5 ? '#39e6ff' : '#ffb347', 3 + Math.floor(r() * 8), 3, 3, 2); },
     croof(c, r) { speck(c, r, CITE.toit, 8); R(c, CITE.toitBord, 0, 14, 16, 2); },
+    // Prototype « deux villes » : la Cité-Miroir est un vieux quartier de pierre au pied de tours de verre. Ces cases ne
+    // servent qu'à elle ; le gros du décor (façades, tours, quai) est peint d'un tenant par la carte (maps.js, peindreCite).
+    // cdalle : de grandes dalles couleur sable, carrées ou fendues en deux, aux joints doux, piquées comme la pierre de corail
+    cdalle(c, r, v) { const base = CITE2.dalle[v % 4]; speck(c, r, [base, shade(base, 0.95), shade(base, 1.05), shade(base, 0.91)], 12);
+      R(c, CITE2.joint, 0, 0, 16, 0.5); R(c, CITE2.joint, 0, 0, 0.5, 16); R(c, CITE2.arete, 0.5, 0.5, 15.5, 0.5);
+      if (v % 4 === 1) { R(c, CITE2.joint, 8, 0.5, 0.5, 15.5); R(c, CITE2.arete, 8.5, 0.5, 0.5, 15.5); }
+      if (v % 4 === 3) { R(c, CITE2.joint, 0.5, 8, 15.5, 0.5); R(c, CITE2.arete, 0.5, 8.5, 15.5, 0.5); }
+      c.fillStyle = CITE2.pique; for (let i = 0; i < 6; i++) c.fillRect(Math.floor(r() * 32) / 2, Math.floor(r() * 32) / 2, 0.5, 0.5);
+      if (r() < 0.3) { c.fillStyle = CITE2.use; c.beginPath(); c.ellipse(3 + r() * 10, 3 + r() * 10, 2 + r() * 3, 1.2 + r() * 1.5, r() * 3, 0, 6.3); c.fill(); }
+      if (r() < 0.25) { c.fillStyle = CITE2.sable; c.beginPath(); c.ellipse(2 + r() * 12, 2 + r() * 12, 2.5 + r() * 2, 0.8 + r(), 0, 0, 6.3); c.fill(); } },
+    // crigole : une rigole d'eau entre deux bordures de pierre, qui prend les lumières ; un filet de laiton court au fond (là où
+    // passait la ligne de néon de la 2.15)
+    crigole(c, r) { TILE.cdalle(c, r, 1); R(c, '#8a6a46', 0, 5, 16, 1.5); R(c, '#1c2234', 0, 6.5, 16, 3.5); R(c, 'rgba(120,230,255,.18)', 0, 8.5, 16, 1.5); R(c, '#e8c070', 0, 9.5, 16, 0.5);
+      R(c, '#d8bc86', 0, 10, 16, 1); R(c, '#ecd49c', 0, 5, 16, 0.5);
+      [['#ffcf6a', 0.6], ['#39e6ff', 0.45], ['#ffb45a', 0.5]].forEach(([col, a]) => { c.globalAlpha = a; c.fillStyle = col; const x = Math.floor(r() * 24) / 2; c.fillRect(x, 7 + Math.floor(r() * 3) / 2, 1.5 + r() * 2, 0.5); }); c.globalAlpha = 1; },
+    // le fond (tours), la façade et la crique : de simples aplats, repeints par la carte
+    ctour(c) { R(c, '#3a2458', 0, 0, 16, 16); },
+    cfacade(c, r) { speck(c, r, CITE2.corail, 10); },
+    ccrique(c, r, v) { speck(c, r, CITE2.eau, 8); c.fillStyle = 'rgba(150,190,230,.35)'; for (let i = 0; i < 2; i++) c.fillRect((i * 7 + v * 5) % 12, 4 + i * 7, 3 + (v % 2), 0.5); },
+    ceau(c, r, v) { TILE.ccrique(c, r, v); },
+    cquai(c, r) { speck(c, r, ['#cdb08a', '#c2a47e', '#d8bc94', '#b89a74'], 8); },
+    // au seuil de la ruelle, de vieux pavés : de petites pierres usées, à joints creux
+    cpave(c, r) { R(c, CITE2.paveJoint, 0, 0, 16, 16); for (let y = 0; y < 16; y += 4) for (let x = (y % 8 ? -2 : 0); x < 16; x += 4) { R(c, CITE2.paves[Math.floor(r() * CITE2.paves.length)], x + 0.5, y + 0.5, 3, 3); R(c, 'rgba(255,240,210,.3)', x + 0.5, y + 0.5, 2, 0.5); } },
+    // la crique bouge : quelques rides de lumière et un reflet doré, posés sur l'eau peinte (un calque sans fond, quatre images)
+    cride(c, r, v) { c.fillStyle = 'rgba(196,224,255,.2)'; for (let i = 0; i < 3; i++) c.fillRect((i * 5 + v * 4) % 13, 2 + i * 5 + (v % 2), 2 + ((i + v) % 3), 0.5);
+      c.fillStyle = 'rgba(255,214,150,.22)'; c.fillRect((v * 7 + 3) % 12, 13 - (v % 3), 3, 0.5); },
+    // la grille de l'ascenseur : une cabine éclairée derrière une grille pliante de bronze
+    cgrille(c) { R(c, '#2a1a22', 0, 0, 16, 16); const g = c.createLinearGradient(0, 2, 0, 16); g.addColorStop(0, '#ffd9a0'); g.addColorStop(1, '#c8783e'); c.fillStyle = g; c.fillRect(2, 2, 12, 14);
+      c.strokeStyle = '#b8955a'; c.lineWidth = 0.5; c.beginPath(); for (let x = 2; x <= 14; x += 3) { c.moveTo(x, 2); c.lineTo(x, 16); } for (let k = 0; k < 4; k++) { c.moveTo(2 + k * 3, 2); c.lineTo(2 + k * 3 + 3, 9); c.lineTo(2 + k * 3, 16); } c.stroke();
+      R(c, '#9a7c4c', 0, 0, 16, 2); R(c, '#9a7c4c', 0, 0, 2, 16); R(c, '#9a7c4c', 14, 0, 2, 16); R(c, '#fff0c0', 7.5, 0.5, 1, 1); },
     nfloor(c, r, v, hue) { R(c, '#0c0f2c', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,65%,.55)`; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = `hsla(${hue},90%,70%,.14)`; c.fillRect(1, 1, 15, 15); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.8)`; if (r() < 0.35) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); },
     nabri(c, r, v, hue) { R(c, '#141833', 0, 0, 16, 16); c.fillStyle = 'rgba(255,233,176,.5)'; c.fillRect(0, 0, 16, 1); c.fillRect(0, 0, 1, 16); c.fillStyle = 'rgba(255,233,176,.13)'; c.fillRect(1, 1, 15, 15); c.fillStyle = 'rgba(255,246,220,.8)'; if (r() < 0.3) c.fillRect(3 + Math.floor(r() * 10), 3 + Math.floor(r() * 10), 1, 1); }, // le sol d'un abri : une lumière chaude, là où rien ne rôde
     npont(c, r, v, hue) { R(c, '#0b0f2e', 0, 0, 16, 16); c.fillStyle = `hsla(${hue},90%,72%,.17)`; c.fillRect(0, 0, 16, 16); c.fillStyle = `hsla(${(hue + 40) % 360},100%,80%,.6)`; if (r() < 0.22) c.fillRect(2 + Math.floor(r() * 12), 2 + Math.floor(r() * 12), 1, 1); }, // un pont du labyrinthe : ses arêtes de lumière sont tracées par la carte, selon ses voisins
@@ -164,8 +205,10 @@
     bwall(c, r) { R(c, '#d9b37f', 0, 0, 16, 9); R(c, '#e8c896', 0, 0, 16, 2); R(c, '#b98f5c', 0, 9, 16, 7); R(c, '#a07a4c', 0, 15, 16, 1); c.fillStyle = '#a98252'; c.fillRect(0, 12, 16, 1); c.fillRect(5, 9, 1, 3); c.fillRect(11, 12, 1, 3); c.fillStyle = '#c9a56e'; for (let i = 0; i < 6; i++) c.fillRect(Math.floor(r() * 15), 2 + Math.floor(r() * 6), 1, 1); },
     dark(c) { R(c, '#07060c', 0, 0, 16, 16); }
   };
-  const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nabri', 'npont', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet']); // lumière, vide et carreaux vernis restent nets
-  const SOLID = new Set(['bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull']);
+  const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nabri', 'npont', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet', 'cgrille', 'ctour', 'cride']); // lumière, vide et carreaux vernis restent nets
+  const SOLID = new Set(['bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull', 'ctour', 'cfacade', 'ccrique', 'cgrille', 'cquai', 'ceau']);
+  // une eau peinte qui bouge : la case qu'on pose par-dessus, image après image (maps.js, finish)
+  G.ANIME = { ccrique: 'cride' };
   G.isSolidTile = n => SOLID.has(n);
   G.tile = function (name, variant, hue) {
     const key = name + '|' + (variant || 0) + '|' + (hue || 0);
@@ -226,6 +269,120 @@
     desk: { w: 30, h: 18, fw: 28, fh: 8, draw(c) { R(c, '#3d2c1e', 0, 4, 30, 14); R(c, '#5d4630', 0, 3, 30, 3); R(c, '#e9e2d0', 5, 1, 8, 4); R(c, '#39e6ff', 18, 0, 8, 5); R(c, '#0d2a38', 19, 1, 6, 3); } },
     neon: { w: 26, h: 30, fw: 4, fh: 3, draw(c, r, o) { const col = (o && o.color) || '#ff4fd8'; R(c, '#2a2f3e', 12, 12, 2, 18); R(c, '#11131c', 0, 0, 26, 13); R(c, col, 2, 2, 22, 1); R(c, col, 2, 10, 22, 1); R(c, col, 2, 2, 1, 9); R(c, col, 23, 2, 1, 9); c.fillStyle = '#fff'; for (let i = 0; i < 5; i++) c.fillRect(5 + i * 4, 5 + (i % 2), 2, 3); } },
     screen: { w: 40, h: 34, fw: 6, fh: 3, draw(c, r) { R(c, '#11131c', 0, 0, 40, 26); R(c, '#1b2340', 1, 1, 38, 24); for (let i = 0; i < 40; i++) R(c, ['#39e6ff', '#ff4fd8', '#ffe08a', '#7dffb0'][Math.floor(r() * 4)], 2 + Math.floor(r() * 36), 2 + Math.floor(r() * 22), 1 + Math.floor(r() * 3), 1); R(c, '#2a2f3e', 18, 26, 4, 8); } },
+    // Prototype « ville de verre » (la Cité-Miroir seulement) : chaque objet garde l'empreinte de celui qu'il remplace. Les
+    // aplats passent par Rc (au dessin d'origine, ils tombent sur des points entiers). o.eteint : la Cité éteinte de la fin
+    // (maps.js, M.eteinte) — l'écran et les bornes deviennent du verre noir.
+    // cposte : là où pendaient les enseignes, un fût de rue coiffé d'un claustra de losanges éclairé de la couleur du néon
+    cposte: { w: 20, h: 40, fw: 4, fh: 3, draw(c, r, o) { const col = (o && o.color) || '#ff4fd8';
+      Rc(c, '#3e2c26', 9, 15, 2, 22); Rc(c, '#8a6a50', 9, 15, 0.5, 22); Rc(c, '#cdb48e', 6.5, 36, 7, 4); Rc(c, '#a88e6c', 6.5, 39, 7, 1);
+      Rc(c, '#2a1c1a', 1, 1, 18, 14); Rc(c, col, 2, 2, 16, 12);
+      c.save(); c.beginPath(); c.rect(2, 2, 16, 12); c.clip(); c.strokeStyle = '#2a1c1a'; c.lineWidth = (c.canvas.hd || 1) > 1 ? 0.75 : 1; c.beginPath();
+      for (let k = -12; k <= 18; k += 4) { c.moveTo(2 + k, 2); c.lineTo(14 + k, 14); c.moveTo(14 + k, 2); c.lineTo(2 + k, 14); } c.stroke(); c.restore();
+      for (let y = 4; y < 14; y += 2) for (let x = y % 4 ? 4 : 2; x < 18; x += 4) Rc(c, 'rgba(255,250,235,.8)', x - 0.5, y - 0.5, 1, 1);
+      Rc(c, '#9a7c4c', 0, 0, 20, 1.5); Rc(c, '#9a7c4c', 1, 14.5, 18, 1); Rc(c, '#c8a868', 0, 0, 20, 0.5); } },
+    // cborne : une borne-écran au cadre sombre filé de laiton ; des aplats qui défilent, sans un mot ni un signe. Éteinte : du
+    // verre noir, un reflet
+    cborne: { w: 16, h: 34, fw: 6, fh: 3, draw(c, r, o) { Rc(c, '#2e2634', 1, 0, 14, 27); Rc(c, '#a8874e', 1, 0, 14, 0.5); Rc(c, '#120e1a', 2, 1, 12, 25);
+      const pas = [0, 1, 2, 3].map(() => [Math.floor(r() * 4), Math.floor(r() * 6) / 2]);
+      if (o && o.eteint) { Rc(c, '#06070d', 2.5, 1.5, 11, 24); Rc(c, 'rgba(150,170,220,.14)', 3.5, 2, 1.5, 23); Rc(c, 'rgba(150,170,220,.08)', 6, 2, 1, 23); }
+      else { const g = c.createLinearGradient(0, 2, 0, 25); g.addColorStop(0, '#7a3cff'); g.addColorStop(0.55, '#ff4fa8'); g.addColorStop(1, '#ffb45a'); Rc(c, g, 2.5, 1.5, 11, 24);
+        pas.forEach(([k, l], i) => { Rc(c, 'rgba(20,10,40,.45)', 4, 3 + i * 5.5, 8, 4.5); Rc(c, ['#39e6ff', '#ffe08a', '#7dffb0', '#ffffff'][k], 4.5, 3.5 + i * 5.5, 3 + l, 3.5); }); }
+      Rc(c, '#2a2030', 6, 27, 4, 5); Rc(c, '#cdb48e', 3, 32, 10, 2); Rc(c, '#e6d2ac', 3, 32, 10, 0.5); } },
+    // cgrandecran : le grand écran, posé bas devant le pied d'une tour, juste au-dessus des passants : un cadre sombre de
+    // 120 × 28, filé de laiton, sur deux pieds courts. Sur un téléphone tenu en hauteur, Idris au lieu 'ecran', son haut
+    // (y = 127 sur la carte) passe sous la mini-carte et les boutons, qui s'arrêtent vers y = 130. Il montre une lumière
+    // qui n'est pas le ciel : des vagues de couleur, une lueur sans contour, trois vignettes, une barre qui se remplit —
+    // aucun mot, aucun signe, aucun objet. Éteint (la fin) : du verre noir, deux reflets.
+    cgrandecran: { w: 128, h: 34, fw: 6, fh: 3, draw(c, r, o) {
+      Rc(c, '#241c2c', 20, 29, 4, 4); Rc(c, '#241c2c', 104, 29, 4, 4); Rc(c, '#cdb48e', 18, 32, 8, 2); Rc(c, '#cdb48e', 102, 32, 8, 2);
+      Rc(c, '#120c1c', 4, 1, 120, 28); Rc(c, '#2e2638', 4.5, 1.5, 119, 27); Rc(c, '#a8874e', 4, 1, 120, 0.5); Rc(c, '#0e0a16', 6, 3, 116, 24);
+      if (o && o.eteint) { const g = c.createLinearGradient(0, 3, 0, 27); g.addColorStop(0, '#0b0d18'); g.addColorStop(1, '#040509'); Rc(c, g, 6, 3, 116, 24);
+        [[16, 10, 0.08], [30, 4, 0.05], [74, 14, 0.07], [94, 5, 0.05]].forEach(([x0, l, a]) => { for (let y = 3; y < 27; y++) Rc(c, `rgba(150,170,220,${a})`, x0 + (27 - y) * 0.5, y, l, 1); });
+        return; }
+      const g = c.createLinearGradient(6, 3, 86, 27); g.addColorStop(0, '#4a1c8a'); g.addColorStop(0.5, '#e0388e'); g.addColorStop(1, '#ffb050'); Rc(c, g, 6, 3, 80, 24);
+      // une lueur sans contour, qui ne figure rien
+      const l = c.createRadialGradient(44, 16, 1, 44, 16, 24); l.addColorStop(0, 'rgba(255,236,200,.5)'); l.addColorStop(1, 'rgba(255,236,200,0)'); Rc(c, l, 6, 3, 80, 24);
+      // trois vagues de couleur, en escaliers d'un demi-point
+      [['rgba(255,214,150,.6)', 12, 2.5], ['rgba(120,230,255,.45)', 18, 2], ['rgba(255,255,255,.32)', 15, 1.5]].forEach(([col, y0, e], k) => {
+        for (let x = 6; x < 86; x += 0.5) Rc(c, col, x, Math.round((y0 + Math.sin((x - 6) / 80 * 9.4 + k * 1.3) * 4) * 2) / 2, 0.5, e); });
+      const pal = [['#39e6ff', '#7a5cff'], ['#ffe08a', '#ff7a5c'], ['#7dffb0', '#2a8a8a']];
+      for (let i = 0; i < 3; i++) { const y = 4 + i * 7.5, gg = c.createLinearGradient(89, y, 121, y + 6); Rc(c, '#2a1840', 88, y, 34, 7); gg.addColorStop(0, pal[i][0]); gg.addColorStop(1, pal[i][1]); Rc(c, gg, 89, y + 1, 32, 5.5); }
+      Rc(c, 'rgba(255,255,255,.25)', 9, 24, 74, 1); Rc(c, '#ffffff', 9, 24, 48, 1);
+      for (let y = 3; y < 27; y += 2) Rc(c, 'rgba(0,0,0,.14)', 6, y, 116, 0.5); } },
+    // cplot : devant le grand écran, un banc de pierre bas et mat, plus large que haut, sur deux pieds (il tient la case du
+    // fût d'avant)
+    cplot: { w: 18, h: 8, fw: 4, fh: 3, draw(c) { Rc(c, '#dcc8a2', 1, 1, 16, 3); Rc(c, '#f0e2c2', 1, 1, 16, 0.5); Rc(c, '#a68e6a', 1, 3.5, 16, 1);
+      Rc(c, '#c4ab84', 2.5, 4, 3, 4); Rc(c, '#c4ab84', 12.5, 4, 3, 4); Rc(c, '#9a8262', 4.5, 4, 1, 4); Rc(c, '#9a8262', 14.5, 4, 1, 4); Rc(c, 'rgba(40,24,30,.35)', 5.5, 4.5, 7, 3.5); } },
+    // ccaisse : une caisse de bois cordée, débarquée des barques, un ballot dessus
+    ccaisse: { w: 12, h: 12, fw: 12, fh: 6, draw(c) { Rc(c, '#7a4e2e', 0, 3, 12, 9); Rc(c, '#5e3a20', 0, 7, 12, 0.5); Rc(c, '#9a6a40', 0, 3, 12, 0.5); Rc(c, '#5e3a20', 0, 11.5, 12, 0.5);
+      Rc(c, '#d4bc84', 5.5, 3, 1, 9); Rc(c, '#9a7c4c', 0, 3, 1.5, 1.5); Rc(c, '#9a7c4c', 10.5, 3, 1.5, 1.5);
+      Rc(c, '#cdb48a', 2, 1, 8, 4); Rc(c, '#cdb48a', 1.5, 1.5, 9, 3); Rc(c, '#a88e66', 3, 3.5, 6, 0.5); Rc(c, '#e2d0a8', 4, 1, 3, 0.5); } },
+    // cpalmier : un dattier dans sa vasque de pierre, éclairé par le pied ; ses palmes et leurs folioles posées point à point
+    cpalmier: { w: 30, h: 56, fw: 0, fh: 0, draw(c) { const q = c.canvas.hd || 1, u = 1 / q, p = v => Math.round(v * q) / q;
+      for (let y = 18; y < 45; y += 0.5) { const x = p(13.5 + Math.sin(y / 10) * 1.2), k = (y - 18) / 27; Rc(c, (Math.floor(y * 2) % 5) ? '#8a5e38' : '#6a4426', x, y, 3, 0.5); Rc(c, `rgba(255,214,150,${(0.2 + k * 0.7).toFixed(2)})`, x, y, 1.5, 0.5); Rc(c, '#4a2e1c', x + 2.5, y, 0.5, 0.5); }
+      const palme = (ang, len, col, dessous) => { const ox = 15, oy = 17, ex = ox + Math.cos(ang) * len, ey = oy + Math.sin(ang) * len + len * len * 0.022, mx = ox + Math.cos(ang) * len * 0.5, my = oy + Math.sin(ang) * len * 0.5 - 2.2;
+        const n = Math.ceil(len * 2 * q), pas = Math.max(1, Math.round(1.5 * q));
+        for (let i = 0; i <= n; i++) { const t = i / n, a = (1 - t) * (1 - t), b = 2 * (1 - t) * t, d = t * t, x = p(a * ox + b * mx + d * ex), y = a * oy + b * my + d * ey, e = Math.max(u, p(0.6 + 1.5 * Math.sin(Math.PI * Math.min(1, t * 1.1))));
+          Rc(c, col, x, p(y - e / 2), u, e); if (i % pas === 0 && t > 0.12 && t < 0.96) Rc(c, dessous, x, p(y + e / 2), u, Math.max(u, p(2.4 * (1 - t * 0.5)))); } };
+      [[-2.9, 14], [-2.3, 15], [-1.7, 13], [-1.2, 14], [-0.6, 15], [-0.15, 14], [3.5, 12], [-0.9, 11]].forEach(([a, l], i) => palme(a, l, i % 2 ? '#5a8a3c' : '#467634', i % 2 ? 'rgba(232,186,110,.7)' : 'rgba(200,150,84,.7)'));
+      [[13, 18.5], [16.5, 19], [14.5, 20]].forEach(([x, y]) => { Rc(c, '#b5651d', x - 1, y - 1, 2, 2); Rc(c, '#8a4a14', x, y, 1, 1); });
+      Rc(c, '#a88e6c', 8, 44, 15, 5); Rc(c, '#dcc49c', 8, 42.5, 15, 2); Rc(c, '#4a3428', 10, 43, 11, 1); Rc(c, '#8e7656', 8, 48, 15, 1); Rc(c, '#fff0c8', 15, 43, 1, 1); } },
+    // cabra : une barque-taxi de la crique, à quai, son toit de toile sur quatre montants
+    cabra: { w: 52, h: 26, fw: 0, fh: 0, draw(c, r, o) { if (o && o.flip) { c.translate(52, 0); c.scale(-1, 1); }
+      Rc(c, 'rgba(8,6,20,.35)', 6, 22, 42, 3); for (let x = 8; x < 46; x += 5) Rc(c, 'rgba(232,210,160,.3)', x, 23 + (x % 2), 3, 0.5);
+      c.fillStyle = '#6a4326'; c.beginPath(); c.moveTo(1, 14); c.lineTo(7, 22); c.lineTo(45, 22); c.lineTo(51, 15); c.lineTo(48, 14.5); c.closePath(); c.fill();
+      Rc(c, '#4a2c18', 7, 20, 38, 2); Rc(c, '#d9c49a', 3, 15, 46, 0.75); Rc(c, '#8a5c34', 3, 15.75, 46, 0.5);
+      [14, 26, 38].forEach(x => { Rc(c, '#1e1418', x - 1.5, 17, 3, 2); Rc(c, '#1e1418', x - 1, 16.5, 2, 3); });
+      Rc(c, '#8a5e38', 12, 11, 28, 3); Rc(c, '#5a3a24', 41, 10, 6, 5);
+      [11, 20, 30, 40].forEach(x => Rc(c, '#3a2618', x, 7, 0.75, 8));
+      Rc(c, '#efe2c4', 9, 5, 34, 2); Rc(c, '#fff6e2', 9, 5, 34, 0.5); Rc(c, '#b4542e', 9, 7, 34, 0.75); } },
+    // cbarjil : une tour à vent de pierre de corail, trapue, posée sur un toit (sa base se cache derrière la façade) : une
+    // tête ouverte sur ses quatre côtés (la face, et le côté plus sombre), des fentes à traverse, un toit plat, deux perches
+    // de bois qui dépassent ; ni flèche, ni balcon, ni lanterne
+    cbarjil: { w: 28, h: 34, fw: 0, fh: 0, draw(c, r) {
+      Rc(c, '#d6c29e', 4, 20, 18, 14); Rc(c, '#b39b78', 22, 21, 4, 13); Rc(c, '#e6d6b6', 4, 20, 0.75, 14);
+      for (let i = 0; i < 10; i++) Rc(c, '#a89070', 4.5 + Math.floor(r() * 34) / 2, 22 + Math.floor(r() * 22) / 2, 0.5, 0.5);
+      Rc(c, '#e6d6b6', 1, 18, 26, 2.5); Rc(c, '#b49c78', 1, 20.5, 26, 0.5);
+      Rc(c, '#d6c29e', 2, 4, 20, 14); Rc(c, '#b39b78', 22, 5, 4, 13);
+      for (let i = 0; i < 4; i++) { Rc(c, '#3a2622', 3.5 + i * 4.5, 6, 2.5, 11); Rc(c, '#5a4234', 3.5 + i * 4.5, 11, 2.5, 0.75); }
+      Rc(c, '#2e1e1c', 22.5, 6.5, 1, 10); Rc(c, '#2e1e1c', 24.5, 6.5, 1, 10); Rc(c, '#4a3428', 22.5, 11, 3, 0.75);
+      Rc(c, '#e6d6b6', 0, 1.5, 28, 3); Rc(c, '#f4ead2', 0, 1.5, 28, 0.5); Rc(c, '#c9b28e', 0, 4, 28, 0.75);
+      Rc(c, '#5a3c26', 0, 8, 2, 0.75); Rc(c, '#5a3c26', 26, 8, 2, 0.75); Rc(c, '#5a3c26', 0, 15, 2, 0.75); Rc(c, '#5a3c26', 26, 15, 2, 0.75); } },
+    // cboutre : un boutre de bois au repos le long du quai, personne à bord : un mât court, la vergue abaissée le long du
+    // pont, sa voile serrée dessus ; il reste tout entier sous le bord du quai (posé au rang 20, son haut tombe à y = 276).
+    // Ligne de flottaison : 50 points sous le haut de l'objet ; son reflet tremble dessous. Tout est posé point à point.
+    cboutre: { w: 84, h: 60, fw: 0, fh: 0, draw(c) { const q = c.canvas.hd || 1, u = 1 / q, p = v => Math.round(v * q) / q, F = 50;
+      // le pont se relève vers la poupe (à gauche) et vers l'étrave (à droite) ; la quille remonte en étrave
+      const haut = x => x < 22 ? 30 + (x - 6) * 0.44 : x > 62 ? 37 - (x - 62) * 0.32 : 37, bas = x => x < 14 ? F - (14 - x) * 0.8 : x > 64 ? F - (x - 64) * 0.95 : F;
+      for (let j = 0; j < 4; j++) Rc(c, j % 2 ? 'rgba(168,112,62,.25)' : 'rgba(106,67,38,.25)', 12 + (j % 2 ? 2 : -1), F + 1.5 + j * 1.6, 56, 0.75);
+      for (let x = 6; x < 82; x += u) { const h0 = p(haut(x)), b0 = p(Math.max(bas(x), h0 + 2)); Rc(c, '#6a4326', x, h0, u, b0 - h0); Rc(c, '#a8703e', x, h0, u, 1.5); Rc(c, '#d9c49a', x, h0, u, 0.5); Rc(c, '#4a2c18', x, b0 - 1.5, u, 1.5); }
+      // la dunette de poupe : une cabine basse, une lucarne éclairée
+      Rc(c, '#8a5a32', 8, 24, 14, 7); Rc(c, '#c49a62', 8, 24, 14, 0.75); Rc(c, '#4a2c18', 10, 26, 3, 3); Rc(c, '#ffe0a0', 17, 26.5, 2, 2);
+      // le mât, court, un peu penché vers l'avant ; deux étais
+      for (let y = 6; y < 37; y += u) Rc(c, '#5a3820', p(46 + (37 - y) * 0.08), y, 1.5, u);
+      const etai = (x0, y0, x1, y1) => { const n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) * q); for (let i = 0; i <= n; i++) Rc(c, 'rgba(70,50,40,.7)', p(x0 + (x1 - x0) * i / n), p(y0 + (y1 - y0) * i / n), u, u); };
+      etai(48, 7, 80, 34); etai(47, 7, 12, 24);
+      // la vergue abaissée le long du pont, la voile serrée dessus, ses rabans
+      for (let x = 16; x < 80; x += u) { const y = p(34.5 - (x - 16) * 0.05); Rc(c, '#6a4428', x, y, u, 1); if (x > 20 && x < 74) Rc(c, '#e8dcc0', x, y - 2, u, 2); }
+      for (let x = 24; x < 74; x += 8) Rc(c, '#7a5a3a', x, p(32.5 - (x - 16) * 0.05), 1, 2.5); } },
+    // cjet : un jet du miroir d'eau, qui sort d'une grille ronde au ras des dalles (peinte par la carte) : il monte, s'ouvre
+    // et retombe en deux gerbes de gouttes, puis s'efface tout à fait le temps que l'anneau d'eau s'élargisse. On passe au
+    // travers (aucune empreinte). o.ph : son temps, pour qu'ils dansent l'un après l'autre.
+    cjet: { w: 16, h: 32, fw: 0, fh: 0, anim: true, draw() { /* rien d'immobile : la grille est peinte au sol */ },
+      animer(c, x, y, t, o) { const q = c.canvas.hd || 1, u = 1 / q, p = v => Math.round(v * q) / q, P = (col, a, b, w, h) => { c.fillStyle = col; c.fillRect(p(a), p(b), Math.max(u, p(w)), Math.max(u, p(h))); };
+        const v = Math.max(0, Math.sin(t * 1.7 + (o.ph || 0))), H = 21 * v * v, b = y - 1, rr = 2 + (1 - v) * 2.5, an = 'rgba(150,215,255,.55)';
+        P(an, x - rr + 1, b - 1, rr * 2 - 2, 0.5); P(an, x - rr + 1, b + 0.5, rr * 2 - 2, 0.5); P(an, x - rr, b - 0.5, 0.5, 1); P(an, x + rr - 0.5, b - 0.5, 0.5, 1);
+        if (H < 1) return;
+        P('rgba(70,170,255,.4)', x - 1.5, b - H * 0.4, 3, H * 0.4); P('rgba(80,180,255,.55)', x - 1, b - H, 2, H); P('rgba(200,238,255,.75)', x - 0.5, b - H + 1, 1, H - 1); P('rgba(215,244,255,.8)', x - 1.5, b - H - 1, 3, 1); P('rgba(215,244,255,.6)', x - 2.5, b - H, 1, 1); P('rgba(215,244,255,.6)', x + 1.5, b - H, 1, 1);
+        if (H < 5) return;
+        const ec = 3 + H * 0.2; for (let k = 1; k <= 8; k++) { const f = k / 9, dy = f * f * H * 0.95, dx = f * ec, a = (0.9 - f * 0.4).toFixed(2); P(`rgba(170,224,255,${a})`, x - 0.5 - dx, b - H + dy, 1, 1); P(`rgba(170,224,255,${a})`, x - 0.5 + dx, b - H + dy, 1, 1); } } },
+    // crame : les rames du métro sur leur viaduc (peint sur la carte, maps.js). L'objet couvre toute la carte pour n'être
+    // jamais écarté ; seules les rames se dessinent, quelques traits par image, derrière les tours à vent et les tours qui
+    // descendent à la rue (o.masque : les rectangles qui les cachent). Personne aux vitres.
+    crame: { w: 960, h: 2, fw: 0, fh: 0, anim: true, draw() { /* rien d'immobile */ },
+      animer(c, x, y, t, o) { const L = 120, P = 960 + L * 2, x0 = x - o.x, ry = v => y + v - o.y;
+        c.save(); if (o.masque) { c.beginPath(); c.rect(x0 - 20, ry(60), 1000, 50); o.masque.forEach(m => c.rect(x0 + m[0], ry(m[1]), m[2], m[3])); c.clip('evenodd'); }
+        G.rameMetro(c, x0 + P - L - ((t * 38 + P * 0.55) % P), ry(91), L, -1); G.rameMetro(c, x0 + ((t * 38) % P) - L, ry(93.5), L, 1); c.restore(); } },
     isnad: { w: 36, h: 44, fw: 28, fh: 8, draw(c) { R(c, '#2a2f3e', 4, 36, 28, 8); R(c, '#454d68', 4, 36, 28, 1); c.strokeStyle = '#c9a13f'; c.lineWidth = 2; for (let i = 0; i < 4; i++) { c.beginPath(); c.ellipse(18, 30 - i * 8, 6, 4.5, i % 2 ? 0.5 : -0.5, 0, 6.3); c.stroke(); } R(c, '#fff3c0', 17, 2, 2, 2); } },
     pylon: { w: 12, h: 34, fw: 6, fh: 4, hue: true, draw(c, r, o) { const h = (o && o.hue) || 200; R(c, '#0d1030', 3, 6, 6, 26); R(c, `hsl(${h},90%,65%)`, 5, 6, 2, 26); R(c, `hsl(${h},100%,85%)`, 4, 2, 4, 4); R(c, '#1a1f55', 1, 30, 10, 4); for (let i = 0; i < 4; i++) R(c, `hsl(${(h + 60) % 360},100%,75%)`, 3 + (i % 2) * 5, 10 + i * 5, 1, 2); } },
     glyph: { w: 14, h: 14, fw: 0, fh: 0, hue: true, draw(c, r, o) { const h = (o && o.hue) || 200; c.fillStyle = `hsla(${h},100%,75%,.9)`; for (let i = 0; i < 7; i++) c.fillRect(2 + Math.floor(r() * 9), 2 + Math.floor(r() * 9), 1 + Math.floor(r() * 4), 1 + Math.floor(r() * 2)); } },
@@ -240,6 +397,24 @@
     pen_camel: { w: 34, h: 26, fw: 30, fh: 8, herd: ['#b08a55', '#8e6d40', 2, 1], draw(c) { OBJ.pen_goat.fence(c); } },
     bales: { w: 22, h: 18, fw: 16, fh: 6, draw(c) { R(c, '#a8845a', 1, 8, 9, 9); R(c, '#8b6a45', 1, 8, 9, 2); R(c, '#c8b48a', 11, 6, 10, 11); R(c, '#a8946c', 11, 6, 10, 2); R(c, '#8e2f2a', 4, 1, 10, 8); R(c, '#a53c33', 4, 1, 10, 2); c.fillStyle = '#5d4630'; c.fillRect(5, 8, 1, 9); c.fillRect(15, 6, 1, 11); c.fillRect(8, 1, 1, 8); R(c, '#d9b45a', 6, 4, 2, 2); R(c, '#d9b45a', 11, 4, 2, 2); } },
     spring: { w: 20, h: 12, fw: 0, fh: 0, flat: true, draw(c) { c.fillStyle = '#3a95b6'; c.beginPath(); c.ellipse(10, 6, 9, 5, 0, 0, 6.3); c.fill(); c.fillStyle = '#8fd3e4'; c.fillRect(6, 4, 4, 1); c.fillRect(11, 7, 3, 1); } }
+  };
+  // une rame du métro, vue de côté et d'un peu au-dessus : un long fuselage clair, effilé aux deux bouts, un bandeau de vitres
+  // fumées où passe le couchant ; vide. sens 1 vers l'est, -1 vers l'ouest ; (x, y) : la queue, au ras des rails ; e :
+  // l'échelle (une rame plus lointaine est plus petite).
+  G.rameMetro = function (c, x, y, L, sens, e) { e = e || 1; if (x > G.PW + 4 || x + L * e < -4) return;
+    const nez = 12, av = sens > 0 ? L : 0, nz = sens > 0 ? -1 : 1, ar = sens > 0 ? 0 : L;
+    c.save(); c.translate(x, y); if (e !== 1) c.scale(e, e);
+    c.fillStyle = '#d9dee4'; c.fillRect(nez, -10, L - nez * 2, 9);
+    c.beginPath(); c.moveTo(av, -1); c.lineTo(av + nz * nez, -1); c.lineTo(av + nz * nez, -10); c.quadraticCurveTo(av + nz * 2, -9, av, -3); c.closePath(); c.fill();
+    c.beginPath(); c.moveTo(ar, -1); c.lineTo(ar - nz * nez, -1); c.lineTo(ar - nz * nez, -10); c.quadraticCurveTo(ar - nz * 4, -9, ar, -4); c.closePath(); c.fill();
+    c.fillStyle = '#f6f8fa'; c.fillRect(nez, -10, L - nez * 2, 1.5);
+    c.fillStyle = '#26324a'; c.fillRect(6, -7.5, L - 12, 3.5);
+    c.fillStyle = 'rgba(255,170,110,.55)'; c.fillRect(6, -7.5, L - 12, 1);
+    c.fillStyle = '#ffe0a0'; for (let i = 10; i < L - 10; i += 7) c.fillRect(i, -6, 3, 1.5);
+    c.fillStyle = '#d9ae55'; c.fillRect(4, -3.5, L - 8, 1);
+    c.fillStyle = '#6a7480'; for (let k = 1; k < 3; k++) c.fillRect(Math.round(L * k / 3), -10, 1, 9);
+    c.fillStyle = '#3a3440'; c.fillRect(8, -1.5, L - 16, 1.5);
+    c.restore();
   };
   G.OBJ = OBJ;
   const ocache = {}, ecache = {};
@@ -362,6 +537,9 @@
       if (a.kind === 'dust') G.spawn({ x, y, vx: 3 + Math.random() * 6, vy: -1 + Math.random() * 2, life: 4 + Math.random() * 3, size: 0.5 + Math.random() * 0.8, color: '#fff3d0', a: 0.5, type: 'mote' });
       else if (a.kind === 'sand') G.spawn({ x: -10, y, vx: 90 + Math.random() * 80, vy: 4 + Math.random() * 8, life: 3, size: 0.6, color: '#f1d9a8', a: 0.5, type: 'streak' });
       else if (a.kind === 'embers') G.spawn({ x, y: G.PH + 4, vx: -4 + Math.random() * 8, vy: -14 - Math.random() * 16, life: 5, size: 0.7, color: '#ffb060', a: 0.9, type: 'mote' });
+      // la brume de sable du soir : des grains dorés qui dérivent lentement, dans le bas de l'image seulement (au-dessus de la
+      // rue, jamais dans le ciel, où un point clair passerait pour une étoile)
+      else if (a.kind === 'brume') G.spawn({ x: -8 + Math.random() * (G.PW + 16), y: G.PH * (0.45 + Math.random() * 0.55), vx: 5 + Math.random() * 9, vy: -1.5 + Math.random() * 2, life: 5 + Math.random() * 3, size: 0.35 + Math.random() * 0.5, color: Math.random() < 0.7 ? '#ffd9a0' : '#ffc4a0', a: 0.38, type: 'mote' });
       else if (a.kind === 'rain') G.spawn({ x: Math.random() * (G.PW + 60), y: -10, vx: -50, vy: 330, life: 0.8, size: 0.5, color: '#8fdcff', a: 0.55, type: 'streak' });
       else if (a.kind === 'noos') G.spawn({ x, y: G.PH + 4, vx: 0, vy: -8 - Math.random() * 14, life: 7, size: 1 + Math.random() * 1.6, color: `hsl(${(a.hue || 200) + Math.random() * 80},100%,75%)`, a: 0.7, type: 'glyph' });
       else if (a.kind === 'fireflies') G.spawn({ x, y, vx: -3 + Math.random() * 6, vy: -3 + Math.random() * 6, life: 4, size: 0.8, color: '#ffe9a0', a: 0.8, type: 'mote' });
