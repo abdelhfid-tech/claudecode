@@ -829,14 +829,15 @@
 
   /* ---------- noms au-dessus des personnages ---------- */
   let still = 0;
+  const bulle = q => (q && G.BULLE_DE && G.BULLE_DE[q] ? 12 : 0);   // 2.18 : une attitude a sa bulle (« ! », « ? », « … ») ; le nom se pose au-dessus
   U.noms = function (now) {
     const box = $('#noms'), ok = I.scene === W && W.map && W.saga && !S.busy && !W.lock && !U.menuOpen && !(I.build && I.build.on) && !$('#hud').hidden;
     if (!ok) { if (box.childElementCount) box.innerHTML = ''; return; }
     const p = W.player, sc = U.scale || 1, cx = Math.round(W.cam.x) + G.view.x, cy = Math.round(W.cam.y) + G.view.y, tg = W.target(), list = [], m = W.map; // ce que l'on voit de l'image : rogné en hauteur d'écran, agrandi si le joueur l'a voulu
     if (p.moving) still = now;
-    W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y), cible = !!(tg && tg.ent === n); if (d < 60 || (cible && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y, d: cible ? -1 : d, c: n.aura || '#f3e7cc' }); });
+    W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y), cible = !!(tg && tg.ent === n); if (d < 60 || (cible && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y - bulle(n.pose), d: cible ? -1 : d, c: n.aura || '#f3e7cc' }); });
     list.sort((a, b) => a.d - b.d); list.length = Math.min(list.length, 5);
-    if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.suiveur(i) : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1], d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
+    if (now - still > 900) W.party.forEach((id, i) => { const tr = i ? W.suiveur(i) : [p.x, p.y], h = W.saga.heroes[id]; if (tr) list.push({ k: 'h' + id, t: h.name, x: tr[0], y: tr[1] - bulle(W.pose[i]), d: 0, c: (G.D > 1 && h.look && h.look.rayon) || D.ELEMENTS[h.el].color }); });
     const seen = {}, w = $('#stage').clientWidth, hh = $('#stage').clientHeight, poses = [];
     // 2.x (D189) : les étiquettes se posent par la fenêtre visible (G.view, U.scale), puis dans l'ordre — la cible, les plus
     // proches, celui qui mène, puis les siens ; une étiquette qui en recouvrirait une autre ne s'affiche pas (au départ d'un
