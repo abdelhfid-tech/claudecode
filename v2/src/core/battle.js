@@ -548,9 +548,9 @@
         { id: 'vertus', label: '✦ ' + I.t('Vertus'), sub: I.t('Souffle {sp}', { sp: h.sp }), cache: !voit('light') },
         { id: 'objets', label: '◍ ' + I.t('Objets'), cache: !voit('items') },
         { id: 'garde', label: '⛨ ' + I.t('Garde'), sub: I.t('+ Niyya'), cache: !voit('guard') },
-        { id: 'esquive', label: '↷ ' + I.t('Esquive'), sub: I.t('éviter le coup'), cache: !voit('dodge') }
+        { id: 'esquive', label: '↷ ' + I.t('Esquive'), sub: I.t('éviter'), cache: !voit('dodge') }
       ];
-      if (C.peutFuir) items.push({ id: 'fuir', label: '⇢ ' + I.t('Fuir'), sub: I.t('quitter le combat'), cache: !voit('flee') }); // absente là où l'on ne fuit pas
+      if (C.peutFuir) items.push({ id: 'fuir', label: '⇢ ' + I.t('Fuir'), sub: I.t('s’en aller'), cache: !voit('flee') }); // absente là où l'on ne fuit pas
       if (C.champ) items.push({ id: 'ordonner', label: '⚑ ' + I.t('Ordonner'), sub: h.def.stratege && C.champ.libre !== C.turn ? I.t('sans perdre son tour') : I.t('les rangs') });
       if (h.sakina >= 100) items.push({ id: 'limite', label: `❂ ${h.def.limit.name}`, sub: I.t('Sérénité'), cls: 'limit' });
       // la commande nouvelle est cerclée, sa leçon dessous, jusqu'au geste — pour « Se protéger », les trois parades

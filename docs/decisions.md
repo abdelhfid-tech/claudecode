@@ -1717,10 +1717,10 @@ pages privées de son compte.
   première ; parmi les nôtres, un éprouvé, sinon le plus éprouvé. Toucher une autre commande désarme et la prend à sa place
   (choix de l'agent : la demande de l'intégrateur disait « désarme seulement ») ; toucher une figure la vise. *« Retour »
   partout :* chaque pas qui n'est pas la liste principale a son « ◂ Retour », dans l'écran, hors de la manette, et B revient
-  d'un cran. *L'Esquive* (« ↷ Esquive », « éviter le coup », juste après la Garde) : jusqu'à son prochain tour, un coup d'une
+  d'un cran. *L'Esquive* (« ↷ Esquive », petite ligne « éviter », juste après la Garde) : jusqu'à son prochain tour, un coup d'une
   chimère sur lui seul passe à côté **une fois sur deux** (0,5), un coup sur tout le groupe **une fois sur quatre** (0,25) —
   ni dégâts ni effets de ce coup-là ; « Esquivé » et un pas de côté ; **ni Niyya, +4 de Sérénité** (la Garde reste : dégâts
-  divisés par deux, +1 Niyya, +8 Sérénité). Une chimère n'esquive jamais. *Fuir* (« ⇢ Fuir », « quitter le combat », après
+  divisés par deux, +1 Niyya, +8 Sérénité). Une chimère n'esquive jamais. *Fuir* (« ⇢ Fuir », petite ligne « s’en aller », après
   l'Esquive) : seulement d'un combat de rencontre — une chimère qui erre sur la carte et qu'aucun objectif ne vise, ce qui
   rôde sur les ponts d'un labyrinthe, ce qui rôde dans la descente du râwî quand il lui fait face — ; jamais d'un combat
   lancé par un récit, d'une idole, d'une bataille déclarée, d'une parole ni du combat intérieur. Rien de gagné, rien de
