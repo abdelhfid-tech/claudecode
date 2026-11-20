@@ -1768,6 +1768,67 @@ pages privées de son compte.
   désinence, une voyelle de mot rare) ; l'interligne un peu plus haut du texte vocalisé dans la boîte de dialogue tenue en
   hauteur et dans la seconde bulle.
   *Validée par le décideur le 20 novembre (« Ok pour tes propositions ») : les phrases des Réglages, l'interligne ; les morceaux de paroles cités dans un texte gardent leurs voyelles ; la relecture d'un arabisant reste à faire, sur la liste des lectures douteuses.*
+- [x] **D210. Le temps volé, et la famille de la ghafla (version 2.20 ; proposition « Les attaques qui volent le temps, et la
+  famille de la ghafla », validée par le décideur le 20 novembre (« Oui ») ; `v2/docs/architecture.md`, « Le temps volé »).**
+  *Ce qui est entré.* Trois effets d'attaque de chimère, qui prennent du temps plutôt que de la Constance (`D.FX` :
+  `recul`, `baisse`, `perdu` ; leurs nombres dans `D.TEMPS`, `defs.js`, jamais dans un récit — le validateur refuse un
+  nombre sur ces effets, et ces effets sur une vertu de héros) : **le tour recule** — le prochain tour de la cible arrive
+  plus tard de **30 %** d'une attente pleine ; **la Niyya baisse** — **−1 Niyya**, et sans Niyya **−10 Sérénité** ; **le
+  tour perdu** — l'étourdissement (« Étourdi »), **une chance sur quatre** (la moitié contre une idole, comme tout
+  étourdissement). Toutes les attaques du cahier, sur les chimères qu'il nomme, dans leurs fichiers (`frame.js`, `caid.js`,
+  les cinq `saga_*.js`), sans retirer une attaque existante ; « SMS » et « Achat en un clic » sont « un coup léger »
+  (puissance 0,5), les autres ne portent pas de coup. La famille de la ghafla, rattachée à l'Insouciance par sa racine
+  (`racine: 'insouciance'` : le champ qui rattachait déjà le Sommeil et le Flux ; rien de nouveau à inventer) et faible
+  devant la Patience et le Savoir (ajoutés à ses failles, celles qu'elle avait gardées) : le Mirage (Khâlid), le Sommeil, le
+  Défilement, et cinq nouvelles — en 2084, **Plus tard** et **Le Bruit de fond** (`frame.js`, petites, niveau 8, dans la
+  noosphère du dernier maillon : la seconde Tendance de `f1` devient Plus tard, la Marque de `f2` devient le Bruit de fond,
+  le nombre de chimères ne change pas ; elles rôdent aussi, comme les autres petites chimères de 2084) ; au temps des
+  Compagnons, **Sawfa**, **Le Long Espoir** (palier moyen) et **Le Vain Divertissement** (`coeur.js`, niveau calé sur le
+  groupe), qui rôdent sur les ponts des labyrinthes des cinq récits (`rodeurs.js`). Les termes arabes ont été lus dans
+  l'*Ihyâ'* d'al-Ghazâlî (texte entier, Shamela 9472 par le corpus OpenITI) et l'abrégé d'Ibn Qudâma :
+  « الغفلة … أو طول الأمل والتسويف في تدارك الفائت وتأخير الخيرات » (t. 4 p. 288), « ومن ترك المبادرة إلى التوبة بالتسويف »
+  (t. 4 p. 11), « الباب الثاني في طول الأمل » (t. 4 p. 451), « وتشتغلين باللهو » (t. 4 p. 416) et le délassement permis
+  « لما فيه من ترويح القلب » (t. 2 p. 282) — `v2/docs/langues/ar.md`, § 2.5 ; aucun verset. Tous les textes nouveaux écrits
+  à la source en arabe (et vocalisés), en anglais et en japonais (52 textes, 59 emplacements par langue).
+  *Ce que l'agent a choisi.* Les mots d'état : « **Retardé** » (sur la cible, et sur sa rangée jusqu'à son tour), « **Niyya −
+  1** », « **Sérénité − 10** » ; la frise marque en pointillé le tour qui a reculé, et se redessine aussitôt ; le nom de
+  l'attaque passe dans le bandeau du bas, comme toute attaque. La Garde « comme d'un coup », c'est-à-dire **à moitié**
+  (`D.TEMPS.garde` 0,5) : le recul de moitié, la Niyya qui baisse et le tour perdu une chance sur deux de porter (« Tient
+  bon » sinon) ; l'Esquive : une attaque esquivée ne porte rien. Tant que le joueur d'une partie neuve ne voit pas encore la
+  Niyya (outil « Se protéger »), « la Niyya baisse » prend la Sérénité. **Aucune leçon** : ce sont des attaques, pas un
+  outil ; le mot d'état, la frise et le bandeau suffisent, et la description de chaque chimère dit sa famille. Les formes
+  (déjà déclarées, abstraites) : une tour d'anneaux (Plus tard), une vague (Le Bruit de fond), une lueur (Sawfa), des
+  lentilles (Le Long Espoir), une nuée (Le Vain Divertissement). Les poids : **chaque attaque nouvelle `w: 1`** (les
+  attaques d'une chimère pèsent de 1 à 3, et l'assaut ordinaire 3 : une attaque nouvelle est choisie une fois sur 6 à 11 ;
+  la Notification, qui en reçoit quatre, les prend ensemble 4 fois sur 9) ; parmi ce qui rôde, **Sawfa 1, le Vain
+  Divertissement 1, le Long Espoir 0,35** (chaque petite chimère du récit : 1). Une chimère « rattachée » rôde comme les
+  autres (avant, une racine écartait une petite chimère de ce qui rôde ; ce sont les idoles des chapitres qui en sont
+  écartées). Un mot d'état au bord de l'image glisse vers l'intérieur pour rester entier.
+  *Les mesures* (le joueur automatique du jeu ; avant : l'assemblage de la 2.19, après : celui-ci). Le jeu entier
+  (`smoke.js auto`, une partie) : 56 combats, **349 → 352 tours (+0,9 %)**, **0 → 0 défaite**, aucun éprouvé. Les combats
+  où paraît une chimère touchée, rejoués sans reprise, aux niveaux de cette partie (61 combats, ×16 avant, ×12 après) :
+  **5,81 → 5,91 tours par combat (+2 %)**, défaites **0,002 → 0,007** — la seule, la veillée d'Abû Bakr (l'Ombre du Père
+  et le Chuchotement, le Caïd seul au niveau 3, sans équipement) : rejouée ×30, **0,53 → 0,13**, c'est le hasard ; les
+  écarts d'un combat à l'autre (−38 % à +35 %) sont du même ordre pour des combats que rien n'a touchés. Le dernier
+  maillon : Tendance + Marque + Plus tard 6,4 tours (Tendance + Marque + Tendance : 5,4) ; Score + Bruit de fond 8,5 (Score +
+  Marque : 8,0). Le Sommeil, faible désormais devant la Patience et le Savoir : 22,7 → 19,0 tours. Ce qui rôde (10
+  combats chacun) : Sawfa 2,0 tours, le Vain Divertissement 2,1, les petites chimères des récits 1,9 ; le Long Espoir 6,5
+  tours, Constance au plus bas 85 %, aucune défaite. Effets portés : de 0 à 1,8 par combat. Les poids restent à 1.
+  *Textes proposés, à valider* : les noms et descriptions des cinq chimères (« Plus tard », « Le Bruit de fond », « Sawfa »,
+  « Le Long Espoir », « Le Vain Divertissement » ; « Sawfa : « plus tard ». At-taswîf, remettre à demain : elle ne refuse
+  rien, elle remet, et ce qu'on remet chaque jour ne se fait jamais. De la famille de l'Insouciance, elle cède à la
+  patience et au savoir. » ; « Tûl al-amal : se croire des années devant soi, et leur confier ce que l'on pourrait faire
+  aujourd'hui. Il ne ment pas : il fait seulement oublier de compter. … » ; « Al-lahw : le passe-temps qui finit par prendre
+  tout le temps. Se délasser n'est pas lui céder ; il commence quand la distraction tient lieu de tout le reste. … » ; « Le
+  rappel qu'on repousse de cinq minutes, puis de cinq encore. Il n'empêche rien : il reporte. … » ; « Un son qu'on n'écoute
+  pas et qui ne s'arrête jamais. Il ne dit rien ; il empêche seulement d'entendre le reste. … ») ; les trois mots d'état ;
+  les noms des attaques sont ceux du cahier. En arabe : « لاحقًا » pour Plus tard (le mot de l'interface ; « سوف » au temps
+  des Compagnons), « من فصيلة الغفلة » pour « de la famille de l'Insouciance ».
+  *Reste à voir* : la description du Sommeil nomme encore ses deux failles d'avant (la Justice, le Courage ; le Recueil les
+  liste toutes) ; le Flux porte la racine de l'Insouciance sans être dans le tableau de la famille (laissé tel quel) ; les
+  formes et les couleurs ; une relecture des textes arabes, anglais et japonais ; les shorts 5 et 11 (des labyrinthes : ce
+  qui y rôde a changé de tirage) seraient à refaire avec les autres ; la démo jouable, qui commence par le prologue, montre
+  une Notification qui a désormais quatre attaques de plus.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et
