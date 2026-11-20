@@ -69,6 +69,8 @@ const coeurDuNom = nu => (!NOM.test(nu) ? 0 : /الله$/.test(nu) ? 4 : 2);
 function nues(m) {
   const nu = m.map(x => x.c).join('');
   if (NUS.has(nu)) return [];
+  // إدريس après une particule collée (وَإدريس, لِإدريس) : seule la particule porte sa voyelle, le nom reste nu (perso.js)
+  if (/^[وفبلك]إدريس$/.test(nu)) return m[0].s ? [] : [m[0].c];
   const coeur = coeurDuNom(nu);
   if (coeur) { const out = m.slice(0, m.length - coeur).filter(x => !x.s).map(x => x.c); if (!m[m.length - 1].s) out.push(m[m.length - 1].c); return out; }
   const out = [];
