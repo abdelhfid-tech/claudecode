@@ -79,7 +79,15 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   if (!/^▶ Reprendre : Abû Bakr/.test(c1.bouton) || !mA || !/en route/.test(mA.etat) || !/Reprendre/.test(mA.ouvrir)) ko('INVISIBLE la Chaîne ne dit pas qu’un récit est en route : ' + JSON.stringify({ bouton: c1.bouton, maillon: mA }));
   else ok(`la Chaîne le dit : « ${c1.bouton} », maillon « ${mA.etat} »`);
 
-  if (!(await ouvrir("'Umar", 1))) ko('BLOQUÉ la saga de ’Umar n’atteint pas son premier objectif');
+  // 2.22 : les maillons se suivent — tant qu'Abû Bakr n'est pas achevé, 'Umar est scellé, et le toucher n'ouvre rien
+  { const sc = await ev(async () => { const T = window.__t, b = T.maillon("'Umar"); if (!b) return null; const etat = (b.querySelector('.stt') || {}).textContent || '';
+      T.toucher(b); await new Promise(r => setTimeout(r, 700)); return { scelle: b.disabled && b.classList.contains('locked'), etat, chaine: T.visible('#chain'), saga: window.ISNAD.world.saga && window.ISNAD.world.saga.id }; });
+    if (!sc || !sc.scelle || !/Scellé tant que le maillon I /.test(sc.etat + ' ') || !sc.chaine || sc.saga === 'umar') ko('ÉCART ’Umar s’ouvre alors qu’Abû Bakr n’est pas achevé : ' + JSON.stringify(sc));
+    else ok(`les maillons se suivent : ’Umar est scellé (« ${sc.etat} ») et le toucher n’ouvre rien`); }
+  // une partie d'avant, où l'on menait deux récits de front : le scellé ne s'appliquait pas (I.debug.all le lève ici)
+  await ev(() => { window.ISNAD.debug.all = true; window.ISNAD.ui.showChain(); }); await page.waitForTimeout(300);
+  const ouvU = await ouvrir("'Umar", 1); await ev(() => { window.ISNAD.debug.all = false; });
+  if (!ouvU) ko('BLOQUÉ la saga de ’Umar n’atteint pas son premier objectif');
   const B = await ev(() => window.__t.etat());
   const mid = await ev(() => { const sv = window.ISNAD.save.data; return { cp: sv.cp && sv.cp.saga, cps: Object.keys(sv.cps || {}) }; });
   if (mid.cp !== 'umar' || !mid.cps.includes('abubakr')) ko('ÉCART en jouant ’Umar, le récit d’Abû Bakr n’est plus rangé : ' + JSON.stringify(mid)); else ok('en jouant ’Umar, le point de reprise d’Abû Bakr reste rangé à part');
@@ -88,6 +96,8 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const c2 = await ev(() => window.__t.chaine()); await cap('3-chaine-deux-recits-en-route');
   const enRoute = c2.maillons.filter(m => /en route/.test(m.etat || '')).map(m => m.nom);
   if (enRoute.length !== 2 || !/’Umar|'Umar/.test(c2.bouton)) ko('ÉCART deux récits devraient être en route, le dernier quitté en tête : ' + JSON.stringify({ enRoute, bouton: c2.bouton })); else ok(`deux récits en route (${enRoute.join(', ')}) ; le dernier quitté passe devant : « ${c2.bouton} »`);
+  { const lu = await ev(() => { const b = window.__t.maillon("'Umar"); return b ? { scelle: b.disabled || b.classList.contains('locked') } : null; });
+    if (!lu || lu.scelle) ko('ÉCART un récit déjà entamé (une partie d’avant) est scellé : ' + JSON.stringify(lu)); else ok('un récit déjà entamé reste ouvert, même si celui d’avant n’est pas achevé (une partie d’avant)'); }
 
   // ---------- 2. la partie voyage avec ses récits rangés ----------
   const voyage = await ev(() => { const I = window.ISNAD, avant = JSON.stringify(I.save.data.cps), t = I.save.exporter(); I.save.reset(); const r = I.save.lireTexte(t); if (!r.ok) return { ok: false, erreur: r.erreur };
@@ -148,7 +158,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   if (!suite || s8.ch !== 1 || s8.cps.join() !== 'umar' || !s8.cp || s8.cp[0] !== 'abubakr') ko('ÉCART le chapitre repris ne mène pas au suivant : ' + JSON.stringify({ suite, s8 })); else ok('le chapitre repris se termine et ouvre le suivant ; ’Umar attend toujours, rangé');
   // une partie d'avant (un seul point de reprise, resté courant devant la Chaîne) : ouvrir un autre récit ne l'écrase plus
   const ancien = await ev(async () => { const I = window.ISNAD, W = I.world, T = window.__t, sv = I.save.data; W.checkpoint(); const garde = JSON.stringify([sv.cp.saga, sv.cp.ci, sv.cp.obj]); document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); delete sv.cps.umar; sv.sagas.umar = { ch: 0, done: false, flags: {} };
-    await I.ui.showChain(); I.debug.auto = true; T.toucher(T.maillon("'Umar")); const okk = await T.jusqua(1); const a = sv.cps && sv.cps.abubakr; return { okk, garde, range: a ? JSON.stringify([a.saga, a.ci, a.obj]) : null, cp: sv.cp && sv.cp.saga }; });
+    I.debug.all = true; await I.ui.showChain(); I.debug.auto = true; T.toucher(T.maillon("'Umar")); I.debug.all = false; const okk = await T.jusqua(1); const a = sv.cps && sv.cps.abubakr; return { okk, garde, range: a ? JSON.stringify([a.saga, a.ci, a.obj]) : null, cp: sv.cp && sv.cp.saga }; });
   if (!ancien.okk || ancien.range !== ancien.garde || ancien.cp !== 'umar') ko('ÉCART un point de reprise resté courant est écrasé par un autre récit : ' + JSON.stringify(ancien)); else ok('une partie d’avant (un point de reprise resté courant) : ouvrir un autre récit le range au lieu de l’écraser');
 
   // ---------- 6. une veillée quittée en chemin attend elle aussi : la Chaîne la reprend ----------
@@ -162,7 +172,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
       else ok(`une veillée quittée en chemin attend elle aussi (« ${cv.bouton} ») et reprend à son objectif ${v1.obj}, à sa place`); } }
 
   if (errors.length) { anomalies++; console.log('--- ERREURS ---'); [...new Set(errors)].slice(0, 10).forEach(e => console.log(e)); }
-  console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ RETOURS CONFORMES — récits menés de front, retours en 2084, Citadelle (captures dans ${path.relative(path.join(__dirname, '..'), out)})`);
+  console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ RETOURS CONFORMES — maillons dans l’ordre, récits quittés et repris, retours en 2084, Citadelle (captures dans ${path.relative(path.join(__dirname, '..'), out)})`);
   await browser.close();
   process.exit(anomalies ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

@@ -112,6 +112,15 @@ une partie prise dans la 1.32 gelée, acceptée et remise à jour ; les clés de
 
 ### Mener plusieurs récits : un point de reprise par récit
 
+**Les maillons se suivent (2.22, D211).** Le décideur, 21 novembre : « on ne passe pas à la saga suivante tant qu'on n'a
+pas fini la saga précédente » ; « Ordre fixe, du I au V ». Sur la Chaîne (`U.showChain`, `maillon`), un maillon est
+**scellé** tant que celui d'avant, dans son livre, n'est pas achevé : classe `locked`, bouton désactivé, et « Scellé tant
+que le maillon {rang} n'est pas achevé ». Un maillon achevé se rejoue ; un maillon déjà entamé (`ch > 0` ou rangé dans
+`cps` : une partie d'avant, où l'on menait des récits de front) reste ouvert ; `I.debug.all` lève le scellé. « Revenir en
+2084 » range toujours le récit, qui se reprend là ; mais un seul récit des Compagnons est désormais en route à la fois.
+Rien ne change dans la partie (le format reste le 2). `retours.js` le vérifie (le maillon II scellé tant que le I est en
+route, puis un récit déjà entamé resté ouvert).
+
 La partie garde un point de reprise courant (`cp`) et, **rangés à part, ceux des récits quittés en chemin** (`cps`) : un
 par saga de la Chaîne (clé : l'identifiant de la saga), un par chapitre de l'histoire-cadre ou des veillées (clé :
 `saga:chapitre`). `world.js` : `W.ranger()` range le point courant, `W.reprise(saga, chapitre)` rend celui d'un récit —

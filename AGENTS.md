@@ -87,9 +87,11 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   (« PROGRESSION CONFORME »).
 - Dans la 2.x, les figures — « postures » dans le code et dans l'exigence 24 : `v2/src/core/postures.js`, `D.POSTURES`,
   `D.TEMPERAMENTS`.
-- Dans la 2.x, les récits se mènent de front (`v2/docs/architecture.md`, « Mener plusieurs récits ») : la halte offre
-  « Revenir en 2084 » à tout moment, le récit quitté est rangé là où on le laisse (`cps`, dans la partie) et se reprend
-  là. Au retour, un chapitre de l'histoire-cadre marqué `retour: n` peut se jouer, une fois ; un chapitre marqué
+- Dans la 2.x, les maillons se suivent (2.22, D211 ; le décideur, 21 novembre : « on ne passe pas à la saga suivante tant
+  qu'on n'a pas fini la saga précédente », « Ordre fixe, du I au V ») : sur la Chaîne, un maillon est scellé tant que celui
+  d'avant n'est pas achevé ; un maillon achevé se rejoue, un maillon déjà entamé (une partie d'avant) reste ouvert
+  (`v2/docs/architecture.md`, « Mener plusieurs récits »). La halte offre « Revenir en 2084 » à tout moment, le récit
+  quitté est rangé là où on le laisse (`cps`, dans la partie) et se reprend là. Au retour, un chapitre de l'histoire-cadre marqué `retour: n` peut se jouer, une fois ; un chapitre marqué
   `visite` s'ouvre depuis la Chaîne (la Citadelle, où Idris est né — une fiction, proposée par le décideur). Dans ces
   chapitres-là, qui se rejouent, aucune œuvre n'est comptée et l'on ne descend pas dans la noosphère. Un changement de
   ce mécanisme repasse `retours.js`.

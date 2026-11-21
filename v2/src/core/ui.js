@@ -373,7 +373,7 @@
     // livres viennent ensuite, chacun sous son titre. Avec un seul livre, aucun titre : c'est l'écran de toujours.
     const livres = I.livres(), fait = s => !!(sv.sagas[s.id] && sv.sagas[s.id].done), un = livres.find(L => L.n === 1) || { n: 1, titre: '', sagas: [] }, autres = livres.filter(L => L.n !== 1);
     const allDone = un.sagas.every(fait), nb = I.enLettres(un.sagas.length);
-    $('#chain header p').innerHTML = msg || (allDone ? I.t('Les {nombre} Lumières sont réunies. Reste le dernier maillon : celui du râwî.', { nombre: nb, n: un.sagas.length }) : I.t('Chaque maillon est un témoin. Choisis celui dont tu veux suivre la trace ; l’ordre est libre, mais la Chaîne se lit du premier au dernier.'));
+    $('#chain header p').innerHTML = msg || (allDone ? I.t('Les {nombre} Lumières sont réunies. Reste le dernier maillon : celui du râwî.', { nombre: nb, n: un.sagas.length }) : I.t('Chaque maillon est un témoin. La Chaîne se lit du premier au dernier : chacun s’ouvre quand celui d’avant est achevé.'));
     const btns = []; let fl;
     const close = () => { fl.destroy(); screen('#chain', false); };
     const tactile = document.body.classList.contains('touch');
@@ -393,13 +393,18 @@
       if (s || (allDone && !suivant)) { const b = I.el('button', 'cta', s ? ((sp.ch > 0 || enRoute(s.id)) ? I.t('▶ Reprendre : {recit} · chapitre {n}', { recit: I.esc(s.name), n: sp.ch + 1 }) : rang(s)) : (sv.epilogue ? I.t('▶ Rejouer le dernier maillon') : I.t('▶ Ouvrir le dernier maillon : {nom}', { nom: I.esc(I.perso.dit()) }))); b.type = 'button';
         if (s) b.style.setProperty('--c', D.ELEMENTS[s.light].color); tapable(b, () => (s ? ouvrir(s) : dernier())); go.appendChild(b); btns.push(b); }
       go.appendChild(I.el('p', 'comment', (tactile ? I.t('Ou touche le maillon de ton choix, plus bas.') : I.t('Ou clique sur le maillon de ton choix. Au clavier : flèches, puis Entrée.')) + ' ' + I.t('La partie se garde toute seule.'))); }
-    const maillon = (s, i) => {
+    const maillon = (s, i, liste) => {
       const sp = sv.sagas[s.id] || { ch: 0, done: false }, e = D.ELEMENTS[s.light];
       const vl = (sv.veillees && sv.veillees[s.id] ? ' · ' + I.t('veillée du Caïd') + ' ✓' : '') + (sv.rencontres && sv.rencontres[s.id] ? ' · ' + I.t('rencontre') + ' ✓' : '');
       const qv = I.oeuvres.viceApres(s.id), qt = qv ? `<span class="qt">⚔ ${I.oeuvres.quete(qv)}</span>` : '';
       const er = !sp.done && enRoute(s.id), route = er ? ' · ' + I.t('en route') : '';
-      const st = sp.done ? `<span class="stt done">${e.glyph} ${I.t('{lumiere} retrouvée', { lumiere: s.lightName })}${vl}</span>` : (sp.ch > 0 || er) ? `<span class="stt">${I.t('Chapitre {n} / {total}', { n: sp.ch + 1, total: s.chapters.length })}${route}</span>` : '<span class="stt">' + I.t('Maillon à ouvrir') + '</span>';
-      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">${I.t('MAILLON {rang}', { rang: I.romain(i + 1) })} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}<span class="ouvrir">${sp.done ? I.t('Rejouer') : (sp.ch > 0 || er) ? I.t('Reprendre') : I.t('Ouvrir')} ▸</span></span>`);
+      // 2.22 : les maillons se suivent (le décideur, 21 novembre : « on ne passe pas à la saga suivante tant qu'on n'a pas
+      // fini la saga précédente »). Scellé tant que celui d'avant, dans son livre, n'est pas achevé ; un maillon déjà
+      // entamé (une partie d'avant) reste ouvert, et un maillon achevé se rejoue.
+      const avant = i > 0 ? liste[i - 1] : null, scelle = !!avant && !fait(avant) && !sp.done && !(sp.ch > 0) && !er && !I.debug.all;
+      const st = scelle ? '<span class="stt">' + I.t('Scellé tant que le maillon {rang} n’est pas achevé', { rang: I.romain(i) }) + '</span>' : sp.done ? `<span class="stt done">${e.glyph} ${I.t('{lumiere} retrouvée', { lumiere: s.lightName })}${vl}</span>` : (sp.ch > 0 || er) ? `<span class="stt">${I.t('Chapitre {n} / {total}', { n: sp.ch + 1, total: s.chapters.length })}${route}</span>` : '<span class="stt">' + I.t('Maillon à ouvrir') + '</span>';
+      const b = I.el('button', 'link', `<span class="seal" style="background-image:url(${G.sealURL(s.arabic, e.color)})"></span><span class="lt"><span class="ord">${I.t('MAILLON {rang}', { rang: I.romain(i + 1) })} · ${I.esc(s.years)}</span><h3>${I.esc(s.name)}</h3><span class="ep">${I.esc(s.epithet)} <small>· ${I.esc(s.ambiance || '')}</small></span><span class="tl">${I.esc(s.tagline)}</span>${st}${qt}${scelle ? '' : `<span class="ouvrir">${sp.done ? I.t('Rejouer') : (sp.ch > 0 || er) ? I.t('Reprendre') : I.t('Ouvrir')} ▸</span>`}</span>`);
+      if (scelle) { b.classList.add('locked'); b.disabled = true; }
       b.type = 'button'; b.style.setProperty('--c', e.color);
       tapable(b, () => ouvrir(s));
       box.appendChild(b); btns.push(b);

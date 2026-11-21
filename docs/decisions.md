@@ -1835,6 +1835,14 @@ pages privées de son compte.
   Suites (2.21) : la description du Sommeil nomme ses quatre failles ; le Flux, qui portait déjà la racine de
   l'Insouciance et les failles de la famille, est compté dans son tableau. Les shorts 5, 8 et 11 et la démo seront refaits
   une seule fois, plus tard, quand ces scènes auront fini de changer (le décideur : « Plus tard »).
+- [x] **D211. Les maillons se suivent (version 2.22 ; décision du décideur, 21 novembre).** « Également on ne passe pas à
+  la saga suivante tant qu'on n'a pas fini la saga précédente » ; à la question de l'ordre : « Ordre fixe, du I au V ». Sur
+  la Chaîne, un maillon est scellé tant que celui d'avant, dans son livre, n'est pas achevé (« Scellé tant que le maillon
+  {rang} n'est pas achevé ») ; un maillon achevé se rejoue ; un maillon déjà entamé dans une partie d'avant reste ouvert ;
+  « Revenir en 2084 » range toujours le récit, qui se reprend là. Revient sur une part de D-C4 (« sagas en parallèle ») :
+  on ne mène plus deux récits des Compagnons de front. La phrase d'en-tête de la Chaîne change : « Chaque maillon est un
+  témoin. La Chaîne se lit du premier au dernier : chacun s'ouvre quand celui d'avant est achevé. » (texte de l'agent,
+  à valider). `v2/docs/architecture.md`, « Mener plusieurs récits » ; contrôle : `retours.js`.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et
