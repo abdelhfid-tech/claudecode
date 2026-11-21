@@ -1932,6 +1932,58 @@ pages privées de son compte.
   raccourcir certains textes ? La liste française (fichier, chapitre, clé, pages, début) est écrite par le contrôle dans
   `v2/.smoke/longueurs/pages-fr-360x640.txt` (et `pages-fr-390x844.txt`, vide aujourd'hui) ; l'agent n'en raccourcit aucun.
   Les shorts qui filment une réplique s'écriront plus lentement : à refaire avec les autres, plus tard.
+- [ ] **D214. La découverte de l'Agrégor, avec Maître Yûnus (version 2.25 ; demande du décideur, 21 novembre) — textes à
+  valider par le décideur.** « On ne parle plus de l'agregore des le début de l'histoire il faut qu'il le découvre au fur et
+  à mesure avec maître Yunus ». Le plan lui a été proposé (le prologue sans l'Agrégor, une étape par maillon achevé, les
+  retouches) ; il n'y a rien changé. *Ce qui a changé.* **Le prologue** ne le nomme plus : la narration d'ouverture « On
+  l'appelle l'AGRÉGOR… », la question d'Idris « Et l'Agrégor ? », la réponse de Maître Yûnus et la fiche du Recueil sont
+  retirées ; à la place, Idris : « Et derrière les écrans, qu'y a-t-il ? » — Yûnus : « Quelque chose, oui. Je ne te le
+  nommerai pas ce soir : un nom qu'on reçoit sans avoir vu, c'est une rumeur. Tu le verras toi-même, à mesure que tu
+  marcheras. » ; sa dernière réplique : « Il existe une chaîne que rien, là-haut, n'a jamais pu additionner. Elle remonte,
+  de témoin en témoin, jusqu'à ceux qui ont vu. Elle est au fond de la salle. Va. » **Cinq étapes** : à la fin de chaque
+  rencontre du soir de la Cité-Miroir, après ce qui s'y passait déjà, « Maître Yûnus est monté des Archives basses. Il
+  attend Idris un peu à l'écart. » ; un objectif, « Rejoindre Maître Yûnus, un peu à l'écart » ; puis :
+  — I (Abû Bakr) : Yûnus « Tu as tiré un homme de son écran, ce soir. Qu'as-tu vu, autour de lui ? » — Idris « Il n'était pas
+  seul à regarder. Toute la rue regardait la même chose, au même instant. » — Yûnus « C'est un commencement. Quelque chose
+  rassemble les regards. Ce n'est pas encore un nom : c'est une trace. » — Idris « Et ce qui les rassemble, qu'est-ce que
+  c'est ? » — Yûnus « Garde ce que tu as vu. Le reste viendra, maillon après maillon. »
+  — II ('Umar) : Yûnus « Cet homme validait ce que l'écran avait déjà décidé. Qui commande, alors ? » — Idris « Personne.
+  L'écran ne fait que compter ce que tous regardent. Ça ne commande pas, ça additionne. » — Yûnus « Tu l'as dit avant moi.
+  C'est ainsi qu'il faut l'apprendre. » — Yûnus « Ce qu'on répète sans l'avoir vu reste une rumeur. Ce qu'on a vu soi-même,
+  on peut le transmettre. »
+  — III (Khâlid) : Idris « Des fenêtres qui applaudissent, et personne derrière. Ce qui les rassemble a-t-il un nom ? » —
+  Yûnus « Tu l'as vu rassembler, puis additionner. Maintenant, tu peux entendre son nom. » — Yûnus « Ceux qui le servent
+  l'appellent l'Agrégor. » (la fiche « L'AGRÉGOR » entre au Recueil) — Idris « L'Agrégor… Je l'ai vu avant de savoir son
+  nom. » — Yûnus « C'est le bon ordre : d'abord voir, ensuite nommer. Un nom reçu ainsi n'est plus une rumeur. »
+  — IV ('Uthmân) : Yûnus « Le Compteur a posé un regard sur un passant. Un seul. L'Agrégor ne l'a pas compté. » — Idris « Il
+  compte tout ce qu'on regarde. Que craint-il, alors ? » — Yûnus « Une seule chose : ce qui passe de main en main sans passer
+  par lui. » — Idris « La Chaîne. D'un homme à un autre, avec le nom de celui qui l'a porté. » — Yûnus « Oui. Il additionne
+  tout ce qu'on lui montre. Ce qu'on se transmet de main en main, il ne le voit pas passer. »
+  — V ('Alî) : Idris « Le Cartographe additionnait des relevés sans aller voir. L'Agrégor fait de même : il additionne, et ne
+  voit rien. » — Yûnus « Alors va voir à sa place. Il a un cœur, Idris, sous le grand écran. » — Idris « Comment le
+  trouverai-je ? » — Yûnus « Pas seul. Quelqu'un qui l'a servi viendra te le montrer. Ceux qui en reviennent savent le
+  chemin. » (Sâlim n'est pas nommé ; le dernier maillon le fait paraître.)
+  **Les retouches** : le premier retour en 2084 (`x_descendu`), qui peut venir avant la fin du maillon I : « Pour ce qui
+  règne là-haut, c'est déjà une faute » ; et, devenu faux depuis D211, « Tu peux suivre plusieurs traces à la fois… » devient
+  « Les maillons se suivent, l'un après l'autre. Mais tu peux laisser une trace en chemin : elle t'attendra là où tu l'as
+  quittée. » ; la fiche « Veiller les Archives » : « Les maillons se suivent ; on peut quitter un récit en chemin, il attend
+  là où on l'a laissé. » ; la saga de Khâlid, qui précède l'étape III : sa fin, « Partout dans la Cité-Miroir, les écrans
+  dressent leurs colosses du jour » (« Sur tous les écrans… les écrans » se serait répété), et le feuillet « La Peur du
+  Nombre », « les écrans lui donnent d'autres noms : audience, score, majorité » ; sur la Chaîne, le dernier maillon
+  s'appelle « Ce qui se cache derrière les écrans » tant que la fiche de l'Agrégor n'est pas reçue, « Le Cœur de l'Agrégor »
+  ensuite. Les sagas IV et V, qui le nomment après l'étape III, et le dernier maillon ne changent pas.
+  *Ce que l'agent a choisi* : Maître Yûnus paraît par `show` (un PNJ caché, que le moteur écarte du joueur s'il paraissait
+  sur lui) puis un objectif « parler », plutôt que `join`/`leave` ; aucune opération nouvelle ; la même narration et le même
+  objectif aux cinq étapes. Deux répliques du prologue passent les 140 signes (157 et 160) : ce sont les mots proposés au
+  décideur ; elles tiennent sur un téléphone (captures, `longueurs.js`). Les textes sont écrits à la source en arabe (et
+  vocalisés), en anglais et en japonais (34 par langue) ; l'Agrégor y garde sa forme (المُجمِّع, *the Aggregor*,
+  アグレゴール) ; en arabe, « rassembler » se dit يحشد et « additionner » يجمع (le verbe d'où vient المُجمِّع). Une chimère,
+  une image du jeu : aucun pouvoir réel, aucun lien avec un peuple, une religion, Iblîs ni un djinn ; aucun verset, aucune
+  parole attestée. `v2/docs/architecture.md`, « La découverte de l'Agrégor » ; `AGENTS.md`.
+  *Reste à voir* : le short 9 (« Trois époques », qui fait défiler la Chaîne d'une partie neuve) et, peut-être, la capture
+  « 03-chaine » du livret (la Chaîne d'une partie neuve, défilée de 262 points) montrent le titre du dernier maillon, qui a
+  changé ; aucun fragment de réplique (`s.dire`) des shorts, de la démo
+  ou du livret ne touche un texte changé. À refaire avec les autres, plus tard.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

@@ -249,6 +249,22 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   (`.smoke/longueurs/`). `v2/docs/architecture.md`, « La vitesse du texte et les pages d'une réplique ». Contrôle :
   `node v2/tools/longueurs.js` (« LONGUEURS CONFORMES » ; « DÉBORDE »). Tout changement de la boîte de dialogue, des
   cartons, de la mise en page ou d'un texte long repasse `longueurs.js`, puis `bilingue.js`, `manette.js` et `loupe.js`.
+- Dans la 2.x (2.25, D214 ; le décideur, 21 novembre : « On ne parle plus de l'agregore des le début de l'histoire il faut
+  qu'il le découvre au fur et à mesure avec maître Yunus »), **l'Agrégor se découvre**. Le prologue ne le nomme plus (Idris
+  demande ce qu'il y a derrière les écrans ; Maître Yûnus ne le lui nommera pas : « un nom qu'on reçoit sans avoir vu, c'est
+  une rumeur »). À la fin de chacune des cinq rencontres de la Cité-Miroir (`r_*`, `frame.js`), Maître Yûnus monte des
+  Archives (`yunus_r`, un PNJ caché que `show` fait paraître et écarte du joueur) et Idris découvre une chose de plus, dans
+  l'ordre des maillons (D211) : I, quelque chose rassemble les regards ; II, ça ne commande pas, ça additionne (Idris le dit
+  le premier) ; III, son nom — « Ceux qui le servent l'appellent l'Agrégor » — et la fiche `agregor` du Recueil ; IV, il ne
+  craint que ce qui passe de main en main sans passer par lui, la Chaîne ; V, il a un cœur, sous le grand écran, et
+  quelqu'un qui l'a servi viendra le montrer. **Avant l'étape III, aucun texte ne le nomme** : on dit « ce qui règne
+  là-haut », « les écrans » (le premier retour, la fin et un feuillet de la saga de Khâlid) ; sur la Chaîne, le dernier
+  maillon s'appelle « Ce qui se cache derrière les écrans » tant que la fiche `idris/agregor` n'est pas reçue (`ui.js`),
+  « Le Cœur de l'Agrégor » ensuite (une partie d'avant, qui l'a reçue au prologue, garde ce titre). Un texte qui nomme
+  l'Agrégor ne paraît qu'après l'étape III (sagas IV et V, dernier maillon). Une chimère, une image du jeu : aucun pouvoir
+  réel, aucun lien avec un peuple, une religion, Iblîs ni un djinn (exigences 6, 10, 16, 18). Textes de l'agent, à valider.
+  `v2/docs/architecture.md`, « La découverte de l'Agrégor ». Un changement de ces étapes repasse le validateur,
+  `smoke.js auto`, `retours.js`, `progression.js` et `longueurs.js`.
 - **Les langues** (demande du décideur, 18 novembre ; exigence 25). La 2.x existe en français, en arabe, en anglais et
   en japonais. Le français reste la langue des récits, des tables et du code ; les autres langues sont écrites à la
   source (`v2/docs/langues/ecrire.md`) et rangées, texte par texte, sous la clé de leur texte français, dans

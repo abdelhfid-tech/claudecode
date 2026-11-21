@@ -139,6 +139,49 @@ Champs nouveaux de la partie, tous facultatifs : `cps`, `retours`, `rebonds` —
 vérifie, `assainir` écarte un récit rangé dont le contenu manque. `node v2/tools/retours.js` joue le tout par les vrais
 boutons : « RETOURS CONFORMES ».
 
+### La découverte de l'Agrégor (2.25, D214)
+
+Le décideur, 21 novembre : « On ne parle plus de l'agregore des le début de l'histoire il faut qu'il le découvre au fur et
+à mesure avec maître Yunus ». L'Agrégor n'est plus nommé au prologue : Idris demande « Et derrière les écrans, qu'y
+a-t-il ? », et Maître Yûnus ne le lui nomme pas (« un nom qu'on reçoit sans avoir vu, c'est une rumeur ») ; la chaîne du
+fond de la salle est celle « que rien, là-haut, n'a jamais pu additionner ». La fiche `agregor` du Recueil n'est plus
+donnée au prologue.
+
+**Cinq étapes, une par maillon achevé.** Les maillons se suivent (D211) : les cinq rencontres de la Cité-Miroir (`r_abubakr`
+… `r_ali`, chapitres `after` de `frame.js`) viennent dans cet ordre. Chacune garde ce qu'elle avait, puis, à la fin de
+l'objectif de l'enfant, Maître Yûnus paraît : un PNJ `yunus_r` (`hero: 'yunus'`, `hidden: true`, posé à `['ecran', -2, 3]`),
+que `['show', 'yunus_r']` fait paraître — `show` le place et, s'il paraissait sur le joueur, l'en écarte (`W.ecarter`, 2.16 :
+personne n'est posé sur le joueur) —, une narration (« Maître Yûnus est monté des Archives basses. Il attend Idris un peu à
+l'écart. »), puis un objectif de plus, `talk: 'yunus_r'` (« Rejoindre Maître Yûnus, un peu à l'écart »), où ils se parlent,
+quatre à six répliques. Aucune opération de script nouvelle : `show` et `talk` existaient (le dernier maillon fait paraître
+l'enfant de la même façon). Ce qu'Idris découvre :
+
+| Après le maillon | Étape |
+|---|---|
+| I, Abû Bakr | Celui qui défile n'était pas seul à regarder : quelque chose rassemble les regards. |
+| II, 'Umar | Ça ne commande pas, ça additionne — c'est Idris qui le dit ; Yûnus : « Tu l'as dit avant moi. C'est ainsi qu'il faut l'apprendre. » |
+| III, Khâlid | Son nom : « Ceux qui le servent l'appellent l'Agrégor. » `['codex', 'agregor']` : la fiche entre au Recueil. |
+| IV, 'Uthmân | Il ne craint que ce qui passe de main en main sans passer par lui : la Chaîne. |
+| V, 'Alî | Il a un cœur, sous le grand écran ; quelqu'un qui l'a servi viendra le montrer (le dernier maillon le fait paraître : il n'est pas nommé ici). |
+
+**Rien ne le nomme avant l'étape III.** Relevé des mentions qu'un joueur peut voir avant la fin de la rencontre III : le
+prologue (retirées, ci-dessus) ; le premier retour, `x_descendu` (`retour: 1`, qui peut venir pendant le maillon I : « Pour
+ce qui règne là-haut, c'est déjà une faute ») ; la fin de la saga de Khâlid et son feuillet `idole_nombre` (« les écrans ») ;
+le titre du dernier maillon sur la Chaîne (`ui.js`, `U.showChain`) : « Ce qui se cache derrière les écrans » tant que la
+partie n'a pas `idris/agregor` dans `codex` (ni l'épilogue), « Le Cœur de l'Agrégor » ensuite — une partie d'avant, qui a
+reçu la fiche au prologue, garde ce titre. Les veillées I et II, les rencontres I et II, la Citadelle, les quartiers
+(`c_quartiers`, `cite`), `coeur.js`, `caid.js`, l'aide, la halte, les leçons, le partage et `page.html` ne le nommaient pas.
+Ce qui le nomme vient après : les sagas IV et V (`saga_uthman.js`, `saga_ali.js`), le dernier maillon `e1` (son titre, ses
+répliques, le combat), la fiche de l'ennemi (au combat de `e1`). Le même jour, deux phrases devenues fausses avec D211 ont
+changé : « Tu peux suivre plusieurs traces à la fois » (`x_descendu`) et « On peut suivre plusieurs récits à la fois » (la
+fiche `x_veiller`).
+
+Une chimère, une image du jeu : les étapes ne lui prêtent aucun pouvoir réel, ni lien avec un peuple, une religion, Iblîs ou
+un djinn (exigences 6, 10, 16, 18) ; aucun verset, aucune parole attestée, rien sur le Prophète ﷺ ni sur un Compagnon : des
+scènes de fiction de 2084. Textes de l'agent, à valider. La partie n'a rien de nouveau (le format reste le 2) : une partie
+d'avant qui a déjà joué une rencontre ne la rejoue pas, et n'entend donc pas l'étape qui la suit. Contrôles : le validateur,
+`smoke.js auto` (qui joue les cinq rencontres, donc les cinq étapes), `retours.js`, `progression.js`, `longueurs.js`.
+
 ### La progression : un outil à la fois (`src/core/lecons.js`)
 
 Règle du décideur : *un besoin, un outil, puis sans aide ; une décision nouvelle par séquence.* Un **outil**
