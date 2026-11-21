@@ -806,7 +806,10 @@ Trône… » → **玉座**. Tous **à valider** ; les noms marqués ◆ sont le
 | umar | Murmure de la faim · Plainte des cendres · L'Accapareur · Mirage de gloire · Le Faste · ◆ L'Aigle d'Airain · Reflet d'or · La Couronne suspendue · ◆ Le Trône vide | 飢えのつぶやき · 灰の嘆き · 買い占め · 栄光の蜃気楼 · 奢り · ◆ 青銅の鷲 · 金の照り返し · 吊るされた冠 · ◆ 空の玉座 |
 | uthman | Murmure · Variante querelleuse · Babel · Écume d'effroi · ◆ L'Abîme · Ouï-dire · Écho · L'Or · ◆ La Rumeur | つぶやき · 諍いの異文 · バベル · 怯えの泡 · ◆ 深淵 · 又聞き · 反響 · 黄金 · ◆ 流言 |
 | idris (2.20) | Plus tard · Le Bruit de fond | あとで · 雑音 |
+| idris (2.23, D212) | L'Égoïsme · Le Matérialisme · Le Plaisir immédiat · L'Indifférence | 利己心 · 物質主義 · 目先の快楽 · 無関心 |
 | coeur (2.20) | Sawfa · Le Long Espoir · Le Vain Divertissement | サウファ · 長き望み · むなしい遊び |
+
+*Les quartiers de la Cité* (2.23, D212 ; **à valider**). Les quartiers : 「鏡の街の繁華街」 (le lieu), 「繁華街」 (son gabarit) — 繁華街, le quartier animé, plutôt que 街区 (technique) ; galerie marchande 「ショッピングアーケード」, salle de jeux 「ゲームセンター」 (le mot japonais courant), circuit 「サーキット」, tribune 「観客席」, grande roue 「観覧車」, parc 「公園」. Les chimères : 「利己心」 (自分の利益だけを考える心), 「物質主義」, 「目先の快楽」 (« tout, tout de suite » : le plaisir qu'on a sous les yeux), 「無関心」 ; « idées noires modernes », dans le feuillet, 「現代の暗い想い」 (le terme du § 2.3). Maître Yûnus parle comme ailleurs (〜だ、〜ぞ) ; les passants, en japonais parlé et sobre ; les écrans, です・ます (« 物語は、離れたところからそのまま再開します。 »).
 
 *Le temps volé* (2.20, D210 ; **à valider**). La famille de la ghafla : 「怠りの一族で、忍耐と知の前に退く。」 ; les termes
 arabes en katakana avec ＝ comme アル＝ガフラ : アッ＝タスウィーフ, トゥール・アル＝アマル, アル＝ラフウ (sources : ar.md, § 2.5).

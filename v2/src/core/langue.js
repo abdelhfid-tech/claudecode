@@ -143,7 +143,8 @@
     valeurs: { '*': { face: 1, texte: 1 } },
     attributs: { '*': { nom: 1, sens: 1, verset: 1, ref: 1, mot: 1 } },
     mal: { titre: 1, chapeau: 1, couture: 1, jauge: { note: 1 }, rangs: { '*': { name: 1, sous: 1, texte: 1, reponse: 1, src: 1 } } },
-    bien: '**', lecons: '**', portes: '**', postures: '**', secours: '**'
+    bien: '**', lecons: '**', portes: '**', postures: '**', secours: '**',
+    cite: '**'   // 2.23 : ce qu'on dit dans les quartiers de la Cité (frame.js)
   };
   const DEFS = {
     ELEMENTS: { '*': { name: 1, ar: 1 } }, PILLARS: { '*': { name: 1 } }, PRAYERS: { '*': 1 }, LIEUX: { '*': 1 }, SLOTS: { '*': 1 },

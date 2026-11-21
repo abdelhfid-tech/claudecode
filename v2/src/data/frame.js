@@ -7,6 +7,10 @@
    récit, joué une fois quand il revient en 2084 pour la n-ième fois (ou plus tard). Et une visite (« visite: 'citadelle' ») :
    la Citadelle du Caïd, où Idris est né, ouverte depuis la Chaîne dès la première veillée entendue. Le moteur pose
    l'état de 2084 en drapeaux (_2084_*) : un récit les lit, il ne les écrit pas. Textes proposés par l'agent, à relire. */
+/* 2.23 (D212) — les quartiers de la Cité (« visite: 'quartiers' ») : le refuge d'Idris en 2084, où il remonte à tout moment,
+   à côté de Maître Yûnus (src/core/cite.js) ; ses passants, chacun seul ; et quatre chimères qu'Idris est seul à voir, qui
+   rôdent dans les rues (egoisme, materialisme, plaisir, indifference ; D.CITE.rodent). Ce qu'on y dit est dans `cite`.
+   Demande du décideur du 21 novembre ; textes proposés par l'agent, à valider. */
 /* Depuis la version du cœur : chaque rencontre porte, à sa deuxième manche, l'idée noire de celui à qui l'on
    parle (« noir »), et s'achève devant le mal du cœur qui se tenait derrière lui. Le dernier chapitre fait se
    dresser ceux qui n'ont pas été tranchés (['vices', …]). Textes des maux et des lames : src/data/coeur.js. */
@@ -126,6 +130,30 @@ ISNAD.registerSaga({
         { w: 1, name: 'Itinéraire recalculé', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }],
       taunts: ['Combien l’ont vu ?'],
       desc: 'Un savoir fait d’additions, que personne n’est allé vérifier. Il sait tout et n’a rien vu. Il cède quand on lui demande de qui il le tient.' },
+    // 2.23 (D212) — les « idées noires modernes » des quartiers (le décideur, 21 novembre : « égoïsme, matérialisme, plaisir
+    // immédiat ») : des chimères qu'Idris est seul à voir, qui rôdent dans les rues (rodeurs.js, D.CITE.rodent) et se
+    // combattent ; ce ne sont pas des idées noires de D.NOIRS. Leur niveau se cale sur celui qui mène (lvl 0). Textes de
+    // l'agent, à valider.
+    egoisme: { racine: 'orgueil', name: 'L’Égoïsme', art: 'mirror', hue: 28, scale: 1, lvl: 0, tier: 'minion', weak: ['rahma', 'adl'], veils: 2,
+      skills: [{ w: 3, name: 'Moi d’abord', target: 'foe', el: 'fer', pow: 0.9, anim: 'dark' }, { w: 1, name: 'Chacun pour soi', target: 'foes', fx: [{ st: 'baisse' }], anim: 'glyph' },
+        { w: 1, name: 'Pas le temps pour les autres', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }],
+      taunts: ['Et toi, qu’est-ce que tu y gagnes ?'],
+      desc: 'Ce qui fait de chacun le centre du monde, et des autres un décor. Il ne pousse personne : il détourne seulement le regard. Rattaché à l’Orgueil, il cède à la miséricorde et à la justice.' },
+    materialisme: { racine: 'avidite', name: 'Le Matérialisme', art: 'tower', hue: 48, scale: 1, lvl: 0, tier: 'minion', weak: ['sabr', 'rahma'], veils: 2,
+      skills: [{ w: 3, name: 'Encore plus', target: 'foe', el: 'fer', pow: 0.9, anim: 'dark' }, { w: 1, name: 'Le dernier modèle', target: 'foe', fx: [{ st: 'baisse' }], anim: 'glyph' },
+        { w: 1, name: 'Livré demain', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }],
+      taunts: ['Tu seras quelqu’un quand tu l’auras.'],
+      desc: 'Croire qu’on sera quelqu’un quand on aura ce qu’il faut. Il ne ment pas sur les choses ; il ment sur ce qu’elles donnent. Rattaché à l’Avidité, il cède à la patience et à la miséricorde.' },
+    plaisir: { racine: 'insouciance', name: 'Le Plaisir immédiat', art: 'swarm', hue: 12, scale: 1, lvl: 0, tier: 'minion', weak: ['sabr', 'ilm'], veils: 2,
+      skills: [{ w: 3, name: 'Tout, tout de suite', target: 'foe', el: 'fer', pow: 0.85, anim: 'burst' }, { w: 1, name: 'Juste un instant', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' },
+        { w: 1, name: 'Sans attendre', target: 'foe', fx: [{ st: 'perdu' }], anim: 'dark' }],
+      taunts: ['Pourquoi attendre ?'],
+      desc: 'Ce qui veut tout, tout de suite, et oublie aussitôt ce qu’il a eu. Il ne prend pas le plaisir : il prend l’attente qui le rendait bon. De la famille de l’Insouciance, il cède à la patience et au savoir.' },
+    indifference: { racine: 'insouciance', name: 'L’Indifférence', art: 'mask', hue: 214, scale: 1, lvl: 0, tier: 'minion', weak: ['rahma', 'shajaa'], veils: 2,
+      skills: [{ w: 3, name: 'Ce n’est pas mon affaire', target: 'foe', el: 'fer', pow: 0.85, anim: 'dark' }, { w: 1, name: 'Regard qui passe', target: 'foes', fx: [{ st: 'baisse' }], anim: 'glyph' },
+        { w: 1, name: 'Plus tard, peut-être', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }],
+      taunts: ['Ça ne te regarde pas.'],
+      desc: 'Passer à côté de quelqu’un comme à côté d’un mur. Elle ne blesse personne : elle laisse chacun seul. Rattachée à l’Insouciance, elle cède à la miséricorde et au courage.' },
     agregor: { racine: ['avidite', 'orgueil', 'ostentation', 'avarice', 'insouciance', 'envie', 'colere'], name: "L'AGRÉGOR", art: 'idol', hue: 285, scale: 3, lvl: 11, tier: 'boss', weak: ['sidq', 'adl', 'shajaa', 'rahma', 'ilm', 'sabr'], veils: 7,
       skills: [
         { w: 3, name: 'Mille regards', target: 'foes', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'wave' },
@@ -166,8 +194,37 @@ ISNAD.registerSaga({
     { id: 'x_avis', cat: 'Noosphère', title: 'L’agent du relevé', text: 'Il mesure un lieu au nombre de ceux qui le regardent. Il n’est pas un ennemi : il fait son relevé, et voudrait rentrer chez lui. Mais il est descendu voir, ce que ne font pas ceux qui décident d’en haut. On ne garde pas des archives en les cachant : on y amène quelqu’un. Personnage de fiction.' },
     { id: 'citadelle_2084', cat: 'Lieu', title: 'La Citadelle, où Idris est né', text: 'Idris est né à la Citadelle, au bord du désert, des siècles après le Caïd dont il entend les veillées. C’est de là qu’on l’envoya apprendre aux Archives basses. Ce que le Caïd décide dans les veillées s’y lit encore : la prière, le savoir, la justice et le lien y tiennent, ou y manquent. Le lieu, le Caïd et Idris sont de fiction.' },
     { id: 'enfant', cat: 'Noosphère', title: 'L’enfant du parvis', text: 'Il est là chaque soir, sous le grand écran, avec une question. Il ne lâche jamais la deuxième. Idris a commencé par lui répondre ; il a fini par l’attendre. On répond de ceux à qui l’on a commencé de répondre : c’est aussi cela, transmettre. Personnage de fiction.' },
+    { id: 'quartiers', cat: 'Lieu', title: 'Les quartiers de la Cité', text: 'Au-dessus des Archives basses, la Cité-Miroir ne dort jamais : des voitures qui brillent, des salles de jeux, des vitrines, un circuit, une grande roue, un écran grand comme une façade. On y trouve tout, sauf quelqu’un à qui parler. Idris y remonte quand il veut ; Maître Yûnus l’y attend, sur le parvis. Un lieu de fiction, comme toute la Cité-Miroir.' },
+    { id: 'nul_ne_voit', cat: 'Noosphère', title: 'Ce que nul ne voit', text: 'Dans les quartiers, Idris est seul à voir certaines chimères : l’Égoïsme, le Matérialisme, le Plaisir immédiat, l’Indifférence. On les dit parfois « idées noires modernes » ; ce sont des chimères, faites de ce que beaucoup désirent ensemble, et elles se combattent. Les idées noires, elles, pèsent sur une seule personne : on leur répond par la parole. Images du jeu, comme toutes les chimères.' },
     { id: 'avertissement', cat: 'Parole', title: 'Avertissement', text: 'ISNAD est une fiction inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun Compagnon n’a de visage : un voile de lumière en tient lieu. Toute erreur est celle des auteurs : vérifiez auprès des sources et des savants.' }
   ],
+
+  /* 2.23 (D212) — ce qu'on dit dans les quartiers de la Cité (src/core/cite.js) : la ligne de la première chimère vue ; la pensée
+     d'Idris après chaque combat avec l'une d'elles, qui rappelle la prière (l'une après l'autre ; ni formule, ni promesse, ni
+     pouvoir : exigences 13 et 15) ; la question ; ce que Maître Yûnus rappelle du rôle de râwî (l'une après l'autre). Textes de
+     fiction, sans verset ni parole attestée, proposés par l'agent, à valider. */
+  cite: {
+    seul: 'Personne d’autre ne la voit.',
+    rappels: [
+      'Idris reprend son souffle. Au milieu de tout ce bruit, il pense à la prière, qui range les cœurs côte à côte.',
+      'Ils sont si nombreux, et chacun si seul. Idris se souvient qu’il y a une heure pour s’arrêter, et prier.',
+      'Ce qui reste, après la chimère, c’est le besoin de se poser : une natte, un moment, la prière.',
+      'Idris pense à la natte du coin calme. La prière ne chasse rien ; elle remet chaque chose à sa place.',
+      'Le vacarme reprend. Idris se dit que la prière a ses heures, et que l’une d’elles est peut-être venue.',
+      'Il a été seul à la voir. Il n’est pas seul pour autant : il y a la prière, et il y a la Chaîne.'
+    ],
+    question: 'Revoir Maître Yûnus ?',
+    yunus: [
+      'Tu es râwî, Idris : tu ne parles pas en ton nom. Tu dis de qui tu tiens ce que tu sais, et tu le transmets.',
+      'Un témoin ne force personne à voir. Il dit ce qu’il a vu, et il laisse à chacun le temps de lever les yeux.',
+      'La Chaîne ne t’a pas été remise pour que tu la gardes. On la porte pour la passer à quelqu’un.',
+      'Tu es seul à voir ces chimères. Ce n’est pas un honneur, c’est une charge : dis ce que tu vois, avec douceur.',
+      'Ces gens ne sont pas tes ennemis. Ils sont seuls. Un râwî commence par s’asseoir à côté de quelqu’un.',
+      'Ne réponds pas au bruit par plus de bruit. Prie, reprends souffle, et reviens transmettre.',
+      'Chaque maillon de la Chaîne a d’abord écouté. Qui transmet sans avoir écouté ne transmet que sa propre voix.',
+      'On ne convainc pas une ville entière. On transmet à un seul, qui transmettra à un autre. C’est cela, une chaîne.'
+    ]
+  },
 
   chapters: [
     {
@@ -806,6 +863,40 @@ ISNAD.registerSaga({
           ['say', 'idris', 'Je tiens d’ici plus que je ne croyais.'],
           ['nar', 'Idris reprend la route de la Cité-Miroir. Il pourra revenir : la Citadelle ne ferme pas sa porte à ceux qui y sont nés.']
         ] }
+      ]
+    },
+    /* ---------- 2.23 (D212) : les quartiers de la Cité, où Idris remonte à tout moment, à côté de Maître Yûnus ---------- */
+    {
+      id: 'c_quartiers', visite: 'quartiers', title: 'Les quartiers de la Cité', sub: 'An 1507 de l’Hégire · Cité-Miroir', minLvl: 1, last: true,
+      map: 'quartiers', start: 'parvis', party: ['idris'],
+      npcs: [
+        { id: 'yunus_c', name: 'Maître Yûnus', hero: 'yunus', at: ['parvis', 2, 0], face: 'left', talk: [['say', 'yunus_c', 'Je suis là, Idris.']] },
+        // les passants : chacun seul, au milieu de ce qu'on fait ici (aucun ne voit les chimères)
+        { id: 'q_joueur', name: 'Un joueur', at: ['jeux', -3, 0], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#3a5a8a', head: '#24385a', cloak: '#4a6a9a' }, talk: [['say', 'q_joueur', 'J’ai battu mon record. Il n’y avait personne pour le voir.']] },
+        { id: 'q_joueuse', name: 'Une joueuse', at: ['jeux', 3, 0], face: 'up', pose: 'accable', look: { kind: 'citadin', robe: '#8a3a6a', head: '#5a2446', cloak: '#9a4a7a', coiffe: 'capuche' }, talk: [['say', 'q_joueuse', 'Je joue avec des milliers de gens, tous les soirs. Je ne connais le nom d’aucun.']] },
+        { id: 'q_cliente', name: 'Une cliente', at: ['galerie', -5, 0], pose: 'triste', look: { kind: 'citadin', robe: '#c8a060', head: '#7a5a30', cloak: '#d8b070', manteau: 'long' }, talk: [['say', 'q_cliente', 'J’ai acheté ce que l’écran m’a montré ce matin.'], ['say', 'q_cliente', 'Ce soir, il m’en montre un autre.']] },
+        { id: 'q_vitrine', name: 'Un passant', at: ['galerie', 5, 1], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#7a5a3a', head: '#4a3420', cloak: '#8a6a4a' }, talk: [['say', 'q_vitrine', 'Les vitrines restent allumées toute la nuit. On dirait qu’elles attendent quelqu’un.']] },
+        { id: 'q_ancien', name: 'Un vieil homme', at: ['ecran', -5, 4], face: 'up', pose: 'assis', look: { kind: 'ancien', robe: '#4a4038', head: '#bdb6a8' }, talk: [['say', 'q_ancien', 'Autrefois, sur cette place, on se saluait.'], ['say', 'q_ancien', 'Maintenant, on regarde tous l’écran, et personne ne se voit.']] },
+        { id: 'q_passante', name: 'Une passante', at: ['ecran', 4, 5], pose: 'triste', look: { kind: 'citadin', robe: '#6a5a8a', head: '#3e3458', cloak: '#7a6a9a', coiffe: 'capuche' }, talk: [['say', 'q_passante', 'Il y a tant de monde ici, chaque soir. Je ne sais pas à qui parler.']] },
+        { id: 'q_employe', name: 'Un employé', at: ['ecran', 7, 3], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#7a7a6a', head: '#4a4a3e', cloak: '#8a8a7a' }, talk: [['say', 'q_employe', 'Je viens m’asseoir ici après le travail. L’écran parle, au moins.']] },
+        { id: 'q_enfant', name: 'Un enfant', at: ['parc', 5, 4], face: 'up', pose: 'triste', look: { kind: 'enfant', robe: '#3d6a5a', head: '#28403a' }, talk: [['say', 'q_enfant', 'Le manège tourne tout seul. Je n’ai personne à qui faire signe.']] },
+        { id: 'q_promeneuse', name: 'Une promeneuse', at: ['parc', -2, -2], pose: 'triste', look: { kind: 'citadin', robe: '#8a6a4a', head: '#5a4230', cloak: '#9a7a5a', manteau: 'long' }, talk: [['say', 'q_promeneuse', 'Je viens ici tous les soirs. Personne ne m’a jamais demandé pourquoi.']] },
+        { id: 'q_roue', name: 'Un passant', at: ['roue', 3, 0], face: 'up', pose: 'triste', look: { kind: 'citadin', robe: '#8a7a2a', head: '#5a4e18', cloak: '#9a8a3a' }, talk: [['say', 'q_roue', 'La grande roue tourne à vide depuis des mois.'], ['say', 'q_roue', 'Monter seul, à quoi bon ?']] },
+        { id: 'q_spectateur', name: 'Un spectateur', at: ['tribune', -5, 0], pose: 'assis', look: { kind: 'citadin', robe: '#9a4a3a', head: '#6a3024', cloak: '#aa5a4a' }, talk: [['say', 'q_spectateur', 'Ils vont très vite. Je ne sais même pas qui gagne.'], ['say', 'q_spectateur', 'Je viens pour le bruit.']] },
+        { id: 'q_spectatrice', name: 'Une spectatrice', at: ['tribune', 5, 1], pose: 'assis', look: { kind: 'citadin', robe: '#3a7a7a', head: '#245050', cloak: '#4a8a8a', coiffe: 'capuche' }, talk: [['say', 'q_spectatrice', 'Tout le monde regarde la même course. Chacun la regarde seul.']] },
+        { id: 'q_mecano', name: 'Un mécanicien', at: ['circuit', 0, -1], pose: 'accable', look: { kind: 'citadin', robe: '#3a5a3a', head: '#243a24', manteau: 'aucun' }, talk: [['say', 'q_mecano', 'Je prépare des voitures toute la journée. Personne ne me demande comment je vais.']] },
+        { id: 'q_voisine', name: 'Une passante', at: ['parvis', -6, 6], pose: 'triste', look: { kind: 'citadin', robe: '#7a4a5a', head: '#4e2e3a', cloak: '#8a5a6a', manteau: 'long' }, talk: [['say', 'q_voisine', 'Mon téléphone sait tout de moi. Mes voisins ne savent pas mon nom.']] },
+        { id: 'q_livreur', name: 'Un livreur', at: ['parvis', 6, 4], pose: 'accable', look: { kind: 'citadin', robe: '#c86a2a', head: '#7a3e18', cloak: '#d87a3a', coiffe: 'calotte' }, talk: [['say', 'q_livreur', 'Je livre des paquets à des portes qui ne s’ouvrent pas.'], ['say', 'q_livreur', 'On me laisse un pourboire, jamais un mot.']] }
+      ],
+      intro: [
+        ['title', 'Les quartiers de la Cité', 'An 1507 de l’Hégire · Cité-Miroir'],
+        ['if', '_2084_cite', [['nar', 'L’ascenseur remonte des Archives basses. Maître Yûnus attend sur le parvis.']],
+          [['nar', 'L’ascenseur remonte des Archives basses jusqu’aux quartiers de la Cité-Miroir. Maître Yûnus est monté avec Idris.'],
+            ['nar', 'Des voitures qui brillent, des jeux partout, des vitrines, un écran grand comme une façade. Et, au milieu de tout cela, chacun seul.'],
+            ['codex', 'quartiers']]]
+      ],
+      objectives: [
+        { text: 'Te promener dans les quartiers · Maître Yûnus attend au parvis', talk: 'yunus_c', then: [['say', 'yunus_c', 'Va, Idris. La Chaîne t’attend.']] }
       ]
     }
   ]

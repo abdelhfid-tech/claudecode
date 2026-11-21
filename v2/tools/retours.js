@@ -6,6 +6,9 @@
    Chaîne dès la première veillée entendue (chapitre « visite »).
    Cet outil le joue par les vrais boutons : deux sagas entamées et quittées, la partie exportée puis réimportée, chaque
    récit repris à son objectif et à sa place, les trois retours joués jusqu'au bout, la Citadelle visitée deux fois.
+   2.23 (D212) : « Revenir en 2084 » mène, une fois joués les retours dus, aux quartiers de la Cité, à côté de Maître Yûnus ;
+   on regagne la Chaîne par lui (« La Chaîne, aux Archives basses »), par les vrais boutons. Le contrôle des quartiers
+   eux-mêmes est cite.js.
    Usage : node tools/retours.js [dossier de captures]      code de sortie 1 au premier « ÉCART » ou « BLOQUÉ » */
 const path = require('path'), fs = require('fs');
 const { chromium } = require('playwright');
@@ -26,7 +29,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     const I = window.ISNAD, W = I.world, S = I.script, q = s => document.querySelector(s);
     I.audio.setOn(false); I.speed = 40; I.debug.noOeuvres = true; // ni œuvre ni descente : on éprouve les retours, pas le cœur
     const T = window.__t = {};
-    T.journal = []; { const os = W.startChapter; W.startChapter = function (sid, ci) { T.journal.push(I.sagas[sid].chapters[ci].id); return os.apply(this, arguments); }; } // les chapitres ouverts, dans l'ordre
+    T.journal = []; { const os = W.startChapter; W.startChapter = function (sid, ci) { const ch = I.sagas[sid].chapters[ci]; T.journal.push(ch.id); if (I.cite && I.cite.refuge(ch)) I.debug.auto = false; return os.apply(this, arguments); }; } // les chapitres ouverts, dans l'ordre (2.23 : dans les quartiers de la Cité, la main revient au joueur)
     T.visible = id => { const e = q(id); return !!e && !e.hidden; };
     T.attendre = (cond, ms) => new Promise(res => { const t0 = Date.now(), iv = setInterval(() => { let v = false; try { v = cond(); } catch (e) { v = false; } if (v) { clearInterval(iv); res(true); } else if (Date.now() - t0 > (ms || 120000)) { clearInterval(iv); res(false); } }, 60); });
     T.calme = () => I.scene === W && !!W.map && !S.busy && !W.lock && !I.battle.active && !W._autoBusy;
@@ -47,19 +50,37 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const cap = n => page.screenshot({ path: path.join(out, n + '.png') });
 
   // ---------- 1. une partie neuve, le prologue derrière soi ; deux sagas entamées, quittées par la halte ----------
-  await ev(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.ui.showChain(); });
+  await ev(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); I.ui.showChain(); });
   await page.waitForTimeout(400);
   const c0 = await ev(() => window.__t.chaine());
   if (c0.pied.includes('La Citadelle')) ko('ÉCART « La Citadelle » est offerte avant toute veillée'); else ok('avant toute veillée, la Chaîne n’offre pas la Citadelle (' + c0.pied.length + ' boutons au pied)');
 
   const ouvrir = async (nom, n) => { await ev(nom => { window.ISNAD.debug.auto = true; window.__t.toucher(window.__t.maillon(nom)); }, nom); return ev(n => window.__t.jusqua(n), n); };
+  // faire avancer ce qui se dit (dialogues, cartons), une ligne écrite tout entière à la fois, jusqu'à la main ou un choix
+  const avancer = async () => { for (let i = 0; i < 120; i++) {
+      const e = await ev(() => { const T = window.__t, q = s => document.querySelector(s); return T.calme() ? 'calme' : T.visible('#choice') ? 'choix' : T.visible('#dialog') ? (getComputedStyle(q('#dialog .next')).visibility === 'visible' ? 'lire' : 'ecrit') : (T.visible('#card') && q('#card').classList.contains('on')) ? 'lire' : ''; });
+      if (e === 'calme' || e === 'choix') return e; if (e === 'lire') { await page.waitForTimeout(200); await page.keyboard.press('Enter'); } await page.waitForTimeout(170); }
+    return 'bloque'; };
   const revenir = async () => {
     const n0 = await ev(() => window.__t.journal.length);
     const r = await ev(() => window.__t.halte('Revenir en 2084'));
     if (r !== true) { ko('INACCESSIBLE la halte n’offre pas « Revenir en 2084 » : ' + JSON.stringify(r)); return null; }
-    const fini = await ev(() => window.__t.jusquaLaChaine()); // ce qui s'est passé en 2084 se joue (tout seul), puis la Chaîne s'ouvre
-    const ici = await ev(n0 => window.__t.journal[n0] || '', n0);
-    if (!fini) { const e = await ev(() => window.__t.etat()); ko(`BLOQUÉ le retour « ${ici} » ne revient pas à la Chaîne — objectif ${e.obj}, carte ${e.carte}`); }
+    // ce qui s'est passé en 2084 se joue (tout seul) ; puis les quartiers de la Cité, à côté de Maître Yûnus (2.23, D212)
+    const la = await ev(() => window.__t.attendre(() => window.ISNAD.world.ch && window.ISNAD.world.ch.id === 'c_quartiers', 240000));
+    const ici = await ev(n0 => window.__t.journal.slice(n0).find(id => id !== 'c_quartiers') || '', n0);
+    if (!la) { const e = await ev(() => window.__t.etat()); ko(`BLOQUÉ le retour « ${ici} » ne mène pas aux quartiers de la Cité — objectif ${e.obj}, carte ${e.carte}`); await ev(() => { window.ISNAD.debug.auto = false; }); return ici; }
+    await avancer(); await ev(() => { window.ISNAD.world.foes.forEach(f => { if (f.rue) f.done = true; }); }); // (ce qui rôde dans les rues n'est pas l'objet de cet outil : cite.js)
+    const pres = await ev(() => { const W = window.ISNAD.world, y = W.npcs.find(n => n.id === 'yunus_c'); return y ? Math.round(Math.hypot(y.x - W.player.x, y.y - W.player.y)) : -1; });
+    if (!(pres > 0 && pres < 40)) ko(`ÉCART au retour, Idris n’est pas à côté de Maître Yûnus (${pres} points)`);
+    // la Chaîne, par Maître Yûnus : lui parler, puis « La Chaîne, aux Archives basses »
+    await ev(() => { const W = window.ISNAD.world, y = W.npcs.find(n => n.id === 'yunus_c'); W.player.x = y.x + 18; W.player.y = y.y; W.player.dir = 1; W.stop(); W.resetTrail(); });
+    await page.waitForTimeout(250); await page.keyboard.press('Enter'); await page.waitForTimeout(300);
+    const c = await avancer(), opts = await ev(() => [...document.querySelectorAll('#choice .opt')].map(b => b.textContent.trim()));
+    const i = opts.findIndex(o => /^La Chaîne/.test(o));
+    if (c !== 'choix' || i < 0) { ko('INACCESSIBLE Maître Yûnus n’offre pas « La Chaîne » : ' + JSON.stringify({ c, opts })); return ici; }
+    await page.waitForTimeout(400); for (let k = 0; k < i; k++) { await page.keyboard.press('ArrowDown'); await page.waitForTimeout(120); } await page.keyboard.press('Enter');
+    const fini = await ev(() => window.__t.attendre(() => window.__t.visible('#chain'), 30000));
+    if (!fini) { const e = await ev(() => window.__t.etat()); ko(`BLOQUÉ le retour « ${ici} » ne revient pas à la Chaîne par Maître Yûnus — objectif ${e.obj}, carte ${e.carte}`); }
     await ev(() => { window.ISNAD.debug.auto = false; }); await page.waitForTimeout(350);
     return ici || '';
   };
@@ -71,7 +92,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const s1 = await ev(() => { const sv = window.ISNAD.save.data; return { cp: sv.cp, cps: Object.keys(sv.cps || {}), a: sv.cps && sv.cps.abubakr, retours: sv.retours, rebonds: Object.keys(sv.rebonds || {}) }; });
   if (r1 !== 'x_descendu') ko('ÉCART au premier retour en 2084, rien ne s’est passé (attendu : « Ce qui est descendu ») — joué : ' + JSON.stringify(r1));
   else if (!s1.rebonds.includes('x_descendu')) ko('ÉCART le premier retour s’est joué sans être noté dans la partie');
-  else ok('premier retour en 2084 : « Ce qui est descendu » se joue jusqu’au bout (un combat), puis la Chaîne');
+  else ok('premier retour en 2084 : « Ce qui est descendu » se joue jusqu’au bout (un combat), puis les quartiers, à côté de Maître Yûnus, et la Chaîne par lui');
   if (s1.cp || !s1.a || s1.a.obj !== A.obj || s1.a.map !== A.carte) ko('ÉCART le récit quitté n’est pas rangé tel qu’on l’a laissé : ' + JSON.stringify({ cp: !!s1.cp, range: s1.a && [s1.a.obj, s1.a.map], attendu: [A.obj, A.carte] }));
   else ok(`Abû Bakr est rangé à l’objectif ${A.obj}, sur « ${A.carte} » ; la partie ne garde plus de point courant`);
   const c1 = await ev(() => window.__t.chaine()); await cap('2-chaine-un-recit-en-route');
@@ -85,14 +106,14 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     if (!sc || !sc.scelle || !/Scellé tant que le maillon I /.test(sc.etat + ' ') || !sc.chaine || sc.saga === 'umar') ko('ÉCART ’Umar s’ouvre alors qu’Abû Bakr n’est pas achevé : ' + JSON.stringify(sc));
     else ok(`les maillons se suivent : ’Umar est scellé (« ${sc.etat} ») et le toucher n’ouvre rien`); }
   // une partie d'avant, où l'on menait deux récits de front : le scellé ne s'appliquait pas (I.debug.all le lève ici)
-  await ev(() => { window.ISNAD.debug.all = true; window.ISNAD.ui.showChain(); }); await page.waitForTimeout(300);
+  await ev(() => { window.ISNAD.debug.all = true; window.ISNAD.input.reset(); window.ISNAD.ui.showChain(); }); await page.waitForTimeout(300); // (la Chaîne redessinée par l'outil : son ancien écouteur ne reste pas dessous)
   const ouvU = await ouvrir("'Umar", 1); await ev(() => { window.ISNAD.debug.all = false; });
   if (!ouvU) ko('BLOQUÉ la saga de ’Umar n’atteint pas son premier objectif');
   const B = await ev(() => window.__t.etat());
   const mid = await ev(() => { const sv = window.ISNAD.save.data; return { cp: sv.cp && sv.cp.saga, cps: Object.keys(sv.cps || {}) }; });
   if (mid.cp !== 'umar' || !mid.cps.includes('abubakr')) ko('ÉCART en jouant ’Umar, le récit d’Abû Bakr n’est plus rangé : ' + JSON.stringify(mid)); else ok('en jouant ’Umar, le point de reprise d’Abû Bakr reste rangé à part');
   const r2 = await revenir();
-  if (r2) ko('ÉCART un retour s’est joué au deuxième retour (« ' + r2 + ' ») : le suivant n’est attendu qu’au troisième'); else ok('deuxième retour : rien ne se passe, la Chaîne s’ouvre');
+  if (r2) ko('ÉCART un retour s’est joué au deuxième retour (« ' + r2 + ' ») : le suivant n’est attendu qu’au troisième'); else ok('deuxième retour : rien ne se passe aux Archives ; les quartiers, puis la Chaîne par Maître Yûnus');
   const c2 = await ev(() => window.__t.chaine()); await cap('3-chaine-deux-recits-en-route');
   const enRoute = c2.maillons.filter(m => /en route/.test(m.etat || '')).map(m => m.nom);
   if (enRoute.length !== 2 || !/’Umar|'Umar/.test(c2.bouton)) ko('ÉCART deux récits devraient être en route, le dernier quitté en tête : ' + JSON.stringify({ enRoute, bouton: c2.bouton })); else ok(`deux récits en route (${enRoute.join(', ')}) ; le dernier quitté passe devant : « ${c2.bouton} »`);
@@ -109,7 +130,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const abime = await ev(() => { const I = window.ISNAD, o = JSON.parse(I.save.exporter()); o.partie.cps.abubakr = { saga: 3 }; return I.save.lireTexte(JSON.stringify(o)); });
   if (abime.ok) ko('ÉCART une partie dont un récit rangé est abîmé est acceptée'); else ok('une partie dont un récit rangé est abîmé est refusée (« ' + abime.erreur + ' »)');
   // « Continuer », depuis l'écran-titre, quand on est en 2084 : la Chaîne, pas un chapitre
-  await ev(() => { const I = window.ISNAD; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.save.readAuto(); I.ui.resume(); }); await page.waitForTimeout(500);
+  await ev(() => { const I = window.ISNAD; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); I.save.readAuto(); I.ui.resume(); }); await page.waitForTimeout(500);
   if (!(await ev(() => window.__t.visible('#chain')))) ko('ÉCART « Continuer », en 2084, ne rouvre pas la Chaîne'); else ok('« Continuer », quand on est en 2084, rouvre la Chaîne');
 
   // ---------- 3. chaque récit se reprend là où on l'a laissé ----------
@@ -136,7 +157,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   if (s6.rebonds.join() !== 'x_avis,x_descendu,x_enfant' || s6.cps.join() !== 'abubakr,umar') ko('ÉCART état de la partie après six retours : ' + JSON.stringify(s6)); else ok(`après six retours : trois événements notés, deux récits toujours rangés, ${s6.codex.length} feuillets au Recueil`);
 
   // ---------- 4. la Citadelle, où Idris est né : ouverte dès la première veillée entendue ----------
-  await ev(() => { const I = window.ISNAD; I.save.data.veillees.abubakr = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.ui.showChain(); }); await page.waitForTimeout(300);
+  await ev(() => { const I = window.ISNAD; I.save.data.veillees.abubakr = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); I.ui.showChain(); }); await page.waitForTimeout(300);
   for (let k = 1; k <= 2; k++) {
     const la = await ev(() => { const b = window.__t.pied('La Citadelle'); if (!b) return false; window.ISNAD.debug.auto = true; b.click(); return true; });
     if (!la) { ko('INACCESSIBLE après une veillée, la Chaîne n’offre pas « La Citadelle »'); break; }
@@ -157,12 +178,12 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const s8 = await ev(() => { const sv = window.ISNAD.save.data; return { ch: sv.sagas.abubakr.ch, cps: Object.keys(sv.cps || {}).sort(), cp: sv.cp && [sv.cp.saga, sv.cp.ci] }; });
   if (!suite || s8.ch !== 1 || s8.cps.join() !== 'umar' || !s8.cp || s8.cp[0] !== 'abubakr') ko('ÉCART le chapitre repris ne mène pas au suivant : ' + JSON.stringify({ suite, s8 })); else ok('le chapitre repris se termine et ouvre le suivant ; ’Umar attend toujours, rangé');
   // une partie d'avant (un seul point de reprise, resté courant devant la Chaîne) : ouvrir un autre récit ne l'écrase plus
-  const ancien = await ev(async () => { const I = window.ISNAD, W = I.world, T = window.__t, sv = I.save.data; W.checkpoint(); const garde = JSON.stringify([sv.cp.saga, sv.cp.ci, sv.cp.obj]); document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); delete sv.cps.umar; sv.sagas.umar = { ch: 0, done: false, flags: {} };
+  const ancien = await ev(async () => { const I = window.ISNAD, W = I.world, T = window.__t, sv = I.save.data; W.checkpoint(); const garde = JSON.stringify([sv.cp.saga, sv.cp.ci, sv.cp.obj]); document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); delete sv.cps.umar; sv.sagas.umar = { ch: 0, done: false, flags: {} };
     I.debug.all = true; await I.ui.showChain(); I.debug.auto = true; T.toucher(T.maillon("'Umar")); I.debug.all = false; const okk = await T.jusqua(1); const a = sv.cps && sv.cps.abubakr; return { okk, garde, range: a ? JSON.stringify([a.saga, a.ci, a.obj]) : null, cp: sv.cp && sv.cp.saga }; });
   if (!ancien.okk || ancien.range !== ancien.garde || ancien.cp !== 'umar') ko('ÉCART un point de reprise resté courant est écrasé par un autre récit : ' + JSON.stringify(ancien)); else ok('une partie d’avant (un point de reprise resté courant) : ouvrir un autre récit le range au lieu de l’écraser');
 
   // ---------- 6. une veillée quittée en chemin attend elle aussi : la Chaîne la reprend ----------
-  { const v0 = await ev(async () => { const I = window.ISNAD, W = I.world, T = window.__t; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); W.roster = {}; W.saga = null; I.debug.auto = true; W.startChapter('caid', 0); const okk = await T.jusqua(1); return Object.assign({ okk }, T.etat()); });
+  { const v0 = await ev(async () => { const I = window.ISNAD, W = I.world, T = window.__t; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); W.roster = {}; W.saga = null; I.debug.auto = true; W.startChapter('caid', 0); const okk = await T.jusqua(1); return Object.assign({ okk }, T.etat()); });
     const rv = await revenir();
     const cv = await ev(() => ({ bouton: window.__t.chaine().bouton, cps: Object.keys(window.ISNAD.save.data.cps || {}).sort() }));
     if (!v0.okk || rv === null || !cv.cps.includes('caid:0') || !/^▶ Reprendre : la veillée/.test(cv.bouton)) ko('ÉCART une veillée quittée en chemin n’est pas rangée ou pas offerte : ' + JSON.stringify({ v0: [v0.okk, v0.saga, v0.obj], rv, cv }));

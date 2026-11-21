@@ -82,7 +82,7 @@
       (this.shadows || []).forEach(sh => { const g = c.createLinearGradient(0, sh[1] * T, 0, sh[1] * T + 9); g.addColorStop(0, 'rgba(30,18,44,.42)'); g.addColorStop(1, 'rgba(30,18,44,0)'); c.fillStyle = g; c.fillRect(sh[0] * T + 3, sh[1] * T, sh[2] * T, 9); });
       // mini-carte : 1 pixel par case
       const mini = G.mk(this.w, this.h), mc = mini.getContext('2d');
-      for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) { const n = this.g[y * this.w + x], so = this.solid[y * this.w + x]; mc.fillStyle = (n === 'water' || n === 'sea' || n === 'ccrique' || n === 'ceau') ? 'rgba(70,150,200,.75)' : n === 'void' ? 'rgba(8,8,30,.5)' : so ? 'rgba(20,14,30,.8)' : (n === 'path' || n === 'stone' || n === 'nbridge' || n === 'wood' || n === 'marble' || n === 'mosaic' || n === 'carpet') ? 'rgba(240,225,190,.75)' : n === 'npont' ? 'rgba(150,190,255,.7)' : n === 'nabri' ? 'rgba(255,230,170,.85)' : 'rgba(200,180,140,.5)'; mc.fillRect(x, y, 1, 1); }
+      for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) { const n = this.g[y * this.w + x], so = this.solid[y * this.w + x]; mc.fillStyle = (n === 'water' || n === 'sea' || n === 'ccrique' || n === 'ceau') ? 'rgba(70,150,200,.75)' : n === 'void' ? 'rgba(8,8,30,.5)' : so ? 'rgba(20,14,30,.8)' : (n === 'path' || n === 'stone' || n === 'nbridge' || n === 'wood' || n === 'marble' || n === 'mosaic' || n === 'carpet') ? 'rgba(240,225,190,.75)' : n === 'npont' ? 'rgba(150,190,255,.7)' : n === 'nabri' ? 'rgba(255,230,170,.85)' : n === 'qroute' ? 'rgba(120,110,150,.7)' : (n === 'qgazon' || n === 'qallee') ? 'rgba(90,140,80,.7)' : n === 'qjardin' ? 'rgba(255,230,170,.7)' : 'rgba(200,180,140,.5)'; mc.fillRect(x, y, 1, 1); }
       // objets plats (nattes, sources) cuits dans le sol
       this.objs.filter(o => o.flat).forEach(o => c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2), o.y - o.h + 1));
       // ombres portées douces sous les objets
@@ -656,6 +656,175 @@
     if (b.rame) b.rame.masque = masque;
   }
 
+  /* ---------- 2.23 (D212) : les quartiers de la Cité-Miroir ----------
+     Demande du décideur, 21 novembre : « améliore la cité miroir avec des belles voitures, des jeux en tous genres, des
+     activités, des courses de voitures […] il y trouve beaucoup d'activités mais tout le monde est triste et seul ». La même
+     ville de verre que la rue de la Cité (cite(), plus haut, qui ne change pas d'une case), au même crépuscule, vue d'un peu
+     plus haut : au nord, la galerie marchande et ses vitrines, la salle de jeux ouverte sur la rue, des tours de verre ; une
+     boucle d'avenues à sens unique, où roulent les voitures (trafic.js) ; au milieu, le parvis et l'ascenseur qui remonte des
+     Archives basses, la place du grand écran, et, derrière une haie basse, un coin calme où une natte est posée au sol ; au
+     sud, le parc, sa grande roue et ses manèges qui tournent à vide, et le circuit, sa tribune et ses voitures de course.
+     Aucune ville réelle, aucun monument copié, aucune lettre, aucune marque, aucun logo, aucun édifice ni symbole religieux :
+     les vitrines montrent des formes, l'écran des couleurs qui coulent, les néons des courbes. Les voitures garées tiennent
+     leurs deux cases ; celles qui roulent ont leur corps à part (trafic.js). Les rues (dalles, places, avenues) sont là où
+     rôde ce que seul Idris voit (rodeurs.js, env.rues) ; le parc, le coin calme, la tribune et les salles n'en sont pas. */
+  const Q = { // la boucle des avenues (le milieu des voies, en points) et le circuit (le milieu de sa piste)
+    boucle: [[976, 200], [48, 200], [48, 504], [976, 504]],
+    circuit: { x0: 568, x1: 936, y0: 604, y1: 700, r: 48 } };
+  M.QUARTIERS = Q;
+  function quartiers(id, o, L, graine) {
+    const b = new MB(id, 64, 46, 'cdalle', o, graine), v15 = G.lum === 215, T2 = 16;
+    // le bâti du nord (tours, façades) et les bords de la carte
+    b.fill(0, 0, 64, 8, 'qbat', true); b.fill(0, 0, 1, 46, 'qbat', true); b.fill(63, 0, 1, 46, 'qbat', true); b.fill(0, 45, 64, 1, 'qhaie', true);
+    // la galerie marchande : un passage couvert, ses vitrines au fond ; la salle de jeux, ouverte sur la rue
+    b.fill(8, 6, 20, 2, 'qparvis', false); b.fill(38, 5, 12, 3, 'qsalle', false);
+    // les avenues : une boucle à sens unique (vers l'ouest au nord, vers l'est au sud)
+    b.fill(2, 11, 60, 2, 'qroute', false); b.fill(2, 30, 60, 2, 'qroute', false); b.fill(2, 11, 2, 21, 'qroute', false); b.fill(60, 11, 2, 21, 'qroute', false);
+    // le parvis, la place du grand écran ; le pavillon de l'écran, l'immeuble de l'est
+    b.fill(5, 14, 16, 15, 'qparvis', false); b.fill(22, 20, 20, 9, 'qparvis', false);
+    b.fill(24, 14, 16, 6, 'qbat', true); b.fill(43, 14, 16, 5, 'qbat', true);
+    // le coin calme : une haie basse, du gravier, une ouverture à l'ouest
+    b.ring(45, 20, 13, 9, 'qhaie', true); b.fill(46, 21, 11, 7, 'qjardin', false); b.fill(45, 23, 1, 2, 'qjardin', false);
+    // le parc, ses allées ; le circuit, sa tribune et l'entrée des stands ; le passage entre les deux
+    b.fill(1, 34, 28, 11, 'qgazon', false); b.fill(2, 36, 26, 1, 'qallee', false); b.fill(15, 34, 1, 11, 'qallee', false); b.fill(16, 41, 12, 1, 'qallee', false);
+    b.fill(31, 34, 32, 11, 'qpiste', true); b.fill(35, 34, 20, 2, 'qgradin', false); b.fill(32, 34, 3, 2, 'cdalle', false); b.fill(29, 34, 2, 11, 'cdalle', false);
+    // les lieux nommés
+    b.spot('parvis', 12, 19); b.spot('galerie', 17, 7); b.spot('jeux', 44, 7); b.spot('ecran', 32, 21); b.spot('priere', 51, 24);
+    b.spot('parc', 15, 37); b.spot('roue', 8, 43); b.spot('circuit', 33, 35); b.spot('tribune', 45, 34);
+    // les lampadaires (la lumière tombe à leur pied)
+    const lampe = (x, y, col) => { b.obj('qlampe', x, y); b.light(x, y - 1, v15 ? 64 : 54, col, 0.08); (b.lampes || (b.lampes = [])).push([x * T2 + 11, y * T2 + 15, col]); };
+    [6, 13, 20, 27, 34, 41, 48, 55].forEach((x, i) => lampe(x, 10, i % 3 ? '#ffd9a0' : '#ffc0e0'));
+    [6, 13, 20, 27, 36, 43, 50, 57].forEach((x, i) => lampe(x, 32, i % 2 ? '#ffd9a0' : '#a8e8ff'));
+    [8, 17].forEach(x => lampe(x, 13, '#ffd9a0')); [22, 41].forEach(x => lampe(x, 29, '#ffd9a0'));
+    // la galerie : un banc ; les vitrines s'éclairent (peindreQuartiers)
+    b.obj('qbanc', 24, 7); for (let x = 9; x < 28; x += 4) b.light(x, 5, 40, '#ffd4a0', 0.05);
+    // la salle de jeux : une rangée de bornes contre le mur du fond, chacune sa lueur
+    [['#ff4fd8', '#39e6ff'], ['#ffd84a', '#ff5a3a'], ['#39e6ff', '#7dffb0'], ['#c49bff', '#ff4fd8'], ['#7dffb0', '#ffd84a'], ['#ff5a3a', '#39e6ff']].forEach(([col, alt], i) => { const x = 39 + i * 2; b.obj('qborne', x, 5, { color: col, alt }); b.light(x, 5, 30, col, 0.15); });
+    b.light(44, 6, 90, '#7a5cff', 0.1);
+    // le parvis : l'ascenseur qui remonte des Archives basses, des dattiers dans leurs vasques, deux bancs
+    b.obj('qkiosque', 12, 16).x = 13 * T2; b.light(12, 15, 60, '#ffd8a0', 0.08);
+    [[6, 15], [19, 15], [6, 27], [19, 27]].forEach(([x, y]) => { b.obj('cpalmier', x, y); b.light(x, y, 40, '#ffb46a', 0.08); });
+    b.obj('qbanc', 9, 24); b.obj('qbanc', 16, 24);
+    // la place du grand écran : l'écran sur la façade du pavillon, ses bancs
+    b.obj('qecran', 31, 19).x = 32 * T2; b.light(32, 17, v15 ? 130 : 120, '#d05cff', 0.1); b.light(26, 18, 60, '#ff7ab0', 0.08); b.light(38, 18, 60, '#5ad8ff', 0.08);
+    [25, 29, 35, 39].forEach(x => b.obj('qbanc', x, 26));
+    // le coin calme : une natte posée au sol, deux dattiers, un banc — ni édifice, ni symbole
+    b.obj('mat', 51, 24); b.light(51, 24, 46, '#fff0c8', 0.04); [[47, 21], [55, 21]].forEach(([x, y]) => { b.obj('cpalmier', x, y); b.light(x, y, 36, '#ffb46a', 0.06); }); b.obj('qbanc', 54, 27);
+    // le parc : la grande roue, les chaises volantes, les tasses ; des arbres
+    b.obj('qroue', 8, 42); b.light(8, 37, 70, '#ffd8a0', 0.12); b.obj('qmanege', 21, 40); b.light(21, 38, 54, '#ff8ac8', 0.12); b.obj('qtasses', 24, 44); b.light(24, 43, 40, '#8ad8ff', 0.1);
+    [[3, 35], [27, 35], [11, 39], [4, 39], [27, 38], [17, 44], [12, 44]].forEach(([x, y]) => b.obj('qarbre', x, y));
+    // la tribune : la lumière des projecteurs sur la piste
+    [40, 48].forEach(x => b.light(x, 37, 80, '#fff4dc', 0.05));
+    // des voitures garées le long des trottoirs : chacune tient ses deux cases (des modèles du jeu, sans marque)
+    const garee = (x, y, m, c, d) => { const v = b.obj('qvoiture', x, y, { m, c, d }); v.x = (x + 1) * T2; };
+    [[6, 29, 'berline', 1, 'd'], [9, 29, 'coupe', 2, 'd'], [13, 29, 'citadine', 8, 'd'], [24, 29, 'tout', 5, 'g'], [28, 29, 'coupe', 0, 'g'], [35, 29, 'berline', 6, 'g'], [39, 29, 'citadine', 7, 'g'],
+      [15, 10, 'coupe', 3, 'g'], [22, 10, 'berline', 4, 'd']].forEach(a => garee(a[0], a[1], a[2], a[3], a[4]));
+    b.peint = c => peindreQuartiers(c, b);
+    // la même lumière que la rue de la Cité (le crépuscule validé) ; le moment de la prière, au coin calme : le couchant
+    const env = v15 ? { time: 'cite', ambient: '#5a5ca8', grade: ['#7a2cff', 0.2], particles: 'brume', rate: 6, bg: 'cite', scan: true, bloom: 0.3, lightA: 1, music: 'cite' }
+      : { time: 'cite', ambient: ['#a04a34', '#58247a'], grade: ['#ff3d8f', 0.14], particles: 'brume', rate: 6, bg: 'cite', scan: true, bloom: 0.18, lightA: 1, music: 'cite' };
+    return b.finish(Object.assign(env, { moment: 'maghrib', rues: { cases: ['cdalle', 'qparvis', 'qroute'] }, trafic: Q }));
+  }
+  function peindreQuartiers(c, b) {
+    const r = I.rng(I.hash('quartiers|decor')), W = b.w * T, rect = aplat(c), hd1 = (c.canvas.hd || 1) === 1;
+    const grad = (x0, y0, x1, y1, stops) => { const g = c.createLinearGradient(x0, y0, x1, y1); stops.forEach(s => g.addColorStop(s[0], s[1])); return g; };
+    const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+    /* --- le ciel : la même voûte qui luit, sans astre ni étoile --- */
+    c.fillStyle = grad(0, 0, 0, 96, [[0, '#3a1c66'], [0.45, '#a8367e'], [0.8, '#ff7f52'], [1, '#ffc27c']]); c.fillRect(0, 0, W, 96);
+    for (let y = 5; y < 80; y += 11) rect(`rgba(255,226,240,${(0.18 - y / 600).toFixed(3)})`, 0, y, W, 0.5);
+    for (let x = 0; x < W; x += 18) rect('rgba(255,226,240,.08)', x, 0, 0.5, 80);
+    for (let x = -6; x < W;) { const w = 10 + r() * 14, top = 18 + r() * 40; rect('rgba(184,92,124,.55)', x, top, w, 100 - top); rect('rgba(255,206,170,.22)', x + w - 1, top, 0.5, 100 - top); x += w + 2 + r() * 10; }
+    /* --- les tours de verre, à contre-jour --- */
+    [[0, 40, -20, 'rideau'], [44, 30, 4, 'gradins'], [92, 36, -24, 'torsade'], [452, 44, -30, 'rideau'], [500, 30, 10, 'lame'], [540, 52, -16, 'couronne'], [808, 40, -26, 'torsade'], [852, 34, 2, 'gradins'], [892, 52, -34, 'rideau'], [950, 30, 12, 'lame'], [986, 38, -10, 'rideau']]
+      .forEach(t => tourDeVerre(c, r, t[0], t[1], t[2], 128, t[3], false));
+    c.fillStyle = grad(0, 70, 0, 128, [[0, 'rgba(255,190,124,0)'], [1, 'rgba(255,196,130,.32)']]); c.fillRect(0, 70, W, 58);
+    // le pied des tours : des halls vitrés, éclairés
+    const hall = (x0, x1) => { rect('#2a1c30', x0, 92, x1 - x0, 36); c.fillStyle = grad(0, 98, 0, 128, [[0, '#ffd8a0'], [1, '#c8703c']]); c.fillRect(x0 + 3, 98, x1 - x0 - 6, 28);
+      for (let x = x0 + 3; x < x1 - 3; x += 8) rect('#6a4a3a', x, 98, 0.75, 28); rect('#a8874e', x0, 92, x1 - x0, 1); rect('rgba(60,30,40,.3)', x0 + 3, 112, x1 - x0 - 6, 0.5); };
+    hall(16, 120); hall(456, 600); hall(808, 1000);
+    /* --- la galerie marchande : deux étages de verre, un auvent qui luit, et ses vitrines --- */
+    const G0 = 128, G1 = 448;
+    rect('#2c2236', G0, 10, G1 - G0, 54); c.fillStyle = grad(0, 10, 0, 64, [[0, 'rgba(120,140,210,.35)'], [1, 'rgba(255,170,130,.45)']]); c.fillRect(G0 + 2, 12, G1 - G0 - 4, 50);
+    for (let y = 22; y < 62; y += 12) rect('rgba(30,14,44,.5)', G0 + 2, y, G1 - G0 - 4, 0.75);
+    for (let x = G0 + 2; x < G1; x += 16) rect('rgba(236,192,112,.3)', x, 12, 0.5, 50);
+    for (let i = 0; i < 40; i++) { const x = G0 + 4 + Math.floor(r() * (G1 - G0 - 12) / 4) * 4, y = 13 + Math.floor(r() * 4) * 12; rect('rgba(255,214,160,.5)', x, y + 2, 3, 7); }
+    // l'auvent, une lame de verre et un filet de lumière
+    c.fillStyle = grad(0, 60, 0, 68, [[0, '#4a3a5a'], [1, '#8a6a7a']]); c.fillRect(G0 - 4, 60, G1 - G0 + 8, 7); rect('#ffe0b0', G0 - 4, 66.5, G1 - G0 + 8, 1); rect('#a8874e', G0 - 4, 60, G1 - G0 + 8, 0.75);
+    // les vitrines : des formes posées sur des socles, qui ne nomment rien (ni lettre, ni marque, ni logo, ni mannequin)
+    for (let x = G0 + 2, k = 0; x < G1 - 4; x += 32, k++) {
+      rect('#3a2a34', x, 68, 30, 28); c.fillStyle = grad(0, 69, 0, 95, [[0, '#ffe8c4'], [1, '#e8a070']]); c.fillRect(x + 1.5, 69, 27, 26);
+      rect('rgba(255,255,255,.35)', x + 3, 70, 1.5, 24); rect('#c8a878', x + 1.5, 89, 27, 1.5); rect('#8a6a50', x + 1.5, 90.5, 27, 4.5);
+      const rk = I.rng(I.hash('vitrine|' + k)), cols = ['#3a6a8a', '#a83a4a', '#2a8a6a', '#d8b450', '#6a4a8a', '#e8e0d0', '#2a2a36'];
+      const sorte = k % 4;
+      if (sorte === 0) for (let j = 0; j < 3; j++) { const sx = x + 5 + j * 8, col = cols[Math.floor(rk() * cols.length)]; rect('#8a7060', sx + 2.5, 74, 0.5, 2); rect(col, sx, 76, 6, 10); rect(G.shade(col, 1.25), sx, 76, 6, 1); rect('#5a4a44', sx + 1, 72.5, 4, 0.75); }   // des vêtements sur leurs cintres
+      else if (sorte === 1) for (let j = 0; j < 4; j++) { const sx = x + 4 + j * 6, col = cols[Math.floor(rk() * cols.length)], h = 4 + Math.floor(rk() * 6); rect(col, sx, 89 - h, 4.5, h); rect(G.shade(col, 1.3), sx, 89 - h, 4.5, 0.75); }   // des boîtes
+      else if (sorte === 2) for (let j = 0; j < 3; j++) { const sx = x + 6 + j * 8, col = cols[Math.floor(rk() * cols.length)]; c.fillStyle = col; c.beginPath(); c.ellipse(sx + 2, 87, 3.5, 1.8, 0, 0, 6.3); c.fill(); rect(col, sx - 1.5, 84.5, 5, 2.5); rect('#f4ecd8', sx - 1, 85, 2, 0.5); }   // des chaussures
+      else { rect('#2a2a36', x + 6, 76, 18, 11); rect('#5ad8ff', x + 7, 77, 16, 9); rect('rgba(255,255,255,.4)', x + 7, 77, 16, 1.5); rect('#2a2a36', x + 13, 87, 4, 2); }   // un écran éteint
+    }
+    /* --- la salle de jeux : un mur du fond où courent des néons sans un mot ; au-dessus, un bâtiment sombre --- */
+    const S0 = 608, S1 = 800;
+    rect('#1c1626', S0, 6, S1 - S0, 74); rect('#2a2236', S0 + 2, 8, S1 - S0 - 4, 48);
+    for (let y = 14; y < 56; y += 10) for (let x = S0 + 6; x < S1 - 6; x += 9) if (r() < 0.4) rect('rgba(160,140,255,.25)', x, y, 5, 5);
+    c.lineWidth = hd1 ? 1 : 1; [['#ff4fd8', 642, 30, 16], ['#39e6ff', 704, 28, 22], ['#ffd84a', 766, 32, 14]].forEach(([col, x, y, rr]) => { c.strokeStyle = col; c.globalAlpha = 0.85; c.beginPath(); c.arc(x, y, rr, 0, 6.3); c.stroke(); c.globalAlpha = 0.25; c.lineWidth = 3; c.stroke(); c.lineWidth = 1; c.globalAlpha = 1; });
+    c.strokeStyle = '#7dffb0'; c.beginPath(); for (let x = S0 + 8; x < S1 - 8; x += 2) { const y = 50 + Math.sin(x / 9) * 3; if (x === S0 + 8) c.moveTo(x, y); else c.lineTo(x, y); } c.stroke();
+    // l'ouverture : un linteau, le mur du fond, des reflets au sol
+    rect('#0e0a16', S0, 56, S1 - S0, 24); rect('#a8874e', S0, 56, S1 - S0, 1); for (let x = S0 + 4; x < S1 - 4; x += 12) rect(['rgba(255,79,216,.35)', 'rgba(57,230,255,.35)'][(x / 12 | 0) % 2], x, 60, 8, 1);
+    rect('#3a2a44', S0 - 4, 54, 6, 74); rect('#3a2a44', S1 - 2, 54, 6, 74); rect('#ff4fd8', S0 - 1, 60, 0.75, 66); rect('#39e6ff', S1 + 0.25, 60, 0.75, 66);
+    /* --- les avenues : un liseré de bordure, des passages piétons (des bandes, aucun signe) --- */
+    const bord = (x, y, w, h) => { rect('#a89480', x, y, w, h); rect('rgba(255,236,210,.35)', x, y, w, Math.min(h, 0.5)); };
+    bord(32, 175, 960, 1.5); bord(64, 208, 896, 1.5); bord(64, 479, 896, 1.5); bord(32, 512, 960, 1.5); bord(31, 176, 1.5, 337); bord(64, 209, 1.5, 271); bord(959, 209, 1.5, 271); bord(991.5, 176, 1.5, 337);
+    // (les bandes sont dans le sens de la circulation : une avenue est-ouest a des bandes est-ouest, empilées)
+    const zebre = (x, y, w, h, vert) => { for (let k = 0; vert ? k < w : k < h; k += 4) rect('rgba(236,226,210,.55)', vert ? x + k : x, vert ? y : y + k, vert ? 2 : w, vert ? h : 2); };
+    zebre(160, 180, 32, 26); zebre(656, 180, 32, 26); zebre(240, 484, 32, 26); zebre(528, 484, 32, 26); zebre(880, 484, 32, 26); zebre(34, 336, 28, 32, true); zebre(962, 336, 28, 32, true);
+    // le sens de la boucle : des flèches au sol, simples traits
+    const fleche = (x, y, dx, dy) => { c.fillStyle = 'rgba(236,226,210,.3)'; c.beginPath(); c.moveTo(x + dx * 6, y + dy * 6); c.lineTo(x - dy * 4 - dx * 2, y + dx * 4 - dy * 2); c.lineTo(x + dy * 4 - dx * 2, y - dx * 4 - dy * 2); c.closePath(); c.fill(); };
+    [[400, 192, -1, 0], [800, 192, -1, 0], [300, 496, 1, 0], [720, 496, 1, 0], [48, 260, 0, 1], [976, 420, 0, -1]].forEach(a => fleche(...a));
+    /* --- le parvis : un cercle de laiton incrusté autour de l'ascenseur --- */
+    c.save(); c.strokeStyle = 'rgba(236,200,130,.28)'; c.lineWidth = hd1 ? 1 : 0.5; [40, 64, 88].forEach(rr => { c.beginPath(); c.ellipse(208, 290, rr, rr * 0.62, 0, 0, 6.3); c.stroke(); }); c.restore();
+    rect('rgba(110,80,60,.3)', 80, 222, 256, 1.5);
+    /* --- le pavillon du grand écran : du verre, des étages éclairés, deux portes au pied --- */
+    const P0 = 384, P1 = 640;
+    rect('#241a30', P0, 224, P1 - P0, 96); c.fillStyle = grad(0, 224, 0, 320, [[0, 'rgba(120,140,210,.3)'], [1, 'rgba(255,160,140,.35)']]); c.fillRect(P0 + 2, 226, P1 - P0 - 4, 92);
+    for (let x = P0 + 4; x < P1; x += 12) rect('rgba(236,192,112,.25)', x, 226, 0.5, 26); rect('#a8874e', P0, 224, P1 - P0, 1); rect('#a8874e', P0, 252, P1 - P0, 0.75);
+    for (let i = 0; i < 18; i++) rect('rgba(255,214,160,.5)', P0 + 6 + Math.floor(r() * 20) * 12, 229 + Math.floor(r() * 2) * 11, 6, 6);
+    [[P0 + 6, 30], [P1 - 36, 30]].forEach(([x, w]) => { rect('#2a1a30', x, 292, w, 28); c.fillStyle = grad(0, 294, 0, 320, [[0, '#ffdca0'], [1, '#d07a44']]); c.fillRect(x + 2, 294, w - 4, 26); rect('#8a6a40', x + w / 2, 294, 0.75, 26); });
+    /* --- l'immeuble de l'est : des balcons, des fenêtres éclairées ou non --- */
+    const E0 = 688, E1 = 944;
+    rect('#4a3a46', E0, 224, E1 - E0, 80); rect('#5e4c58', E0, 224, E1 - E0, 2); rect('#a8874e', E0, 224, E1 - E0, 0.75);
+    for (let y = 232; y < 300; y += 18) { rect('#3a2c38', E0 + 2, y + 12, E1 - E0 - 4, 1.5); for (let x = E0 + 8; x < E1 - 12; x += 20) { const allume = r() < 0.55; rect('#2a2030', x, y, 12, 11); rect(allume ? '#ffcf8a' : '#3a3450', x + 1, y + 1, 10, 9); if (allume) rect('rgba(255,255,255,.25)', x + 1, y + 1, 10, 1); rect('#2a2030', x + 5.75, y + 1, 0.5, 9); } }
+    rect('#2a1a30', 800, 284, 32, 20); c.fillStyle = grad(0, 286, 0, 304, [[0, '#ffdca0'], [1, '#d07a44']]); c.fillRect(802, 286, 28, 18);
+    /* --- le coin calme : une bordure de pierre au pied de la haie, des pas japonais vers la natte --- */
+    rect('rgba(40,30,24,.3)', 736, 336, 176, 1.5);
+    [[740, 376], [756, 382], [772, 380], [788, 386], [804, 388]].forEach(([x, y]) => { c.fillStyle = 'rgba(200,184,160,.5)'; c.beginPath(); c.ellipse(x, y, 5, 2.6, 0, 0, 6.3); c.fill(); });
+    /* --- le parc : des massifs de fleurs, des bordures --- */
+    for (let i = 0; i < 70; i++) { const x = 20 + r() * 420, y = 548 + r() * 160, tx = Math.floor(x / 16), ty = Math.floor(y / 16); if (b.g[ty * b.w + tx] !== 'qgazon') continue; rect(['#ff8aa8', '#ffd84a', '#c49bff', '#8ad8ff', '#fff0d0'][Math.floor(r() * 5)], x, y, 1, 1); }
+    rect('rgba(30,40,24,.4)', 16, 544, 448, 1);
+    /* --- le circuit : la piste, ses vibreurs, la ligne de départ en damier, la barrière au pied de la tribune --- */
+    const K = M.QUARTIERS.circuit, stade = (dr) => { c.beginPath(); c.moveTo(K.x0, K.y0 - dr); c.lineTo(K.x1, K.y0 - dr); c.arc(K.x1, (K.y0 + K.y1) / 2, K.r + dr, -Math.PI / 2, Math.PI / 2); c.lineTo(K.x0, K.y1 + dr); c.arc(K.x0, (K.y0 + K.y1) / 2, K.r + dr, Math.PI / 2, Math.PI * 1.5); c.closePath(); };
+    rect('#2c4428', 496, 576, 512, 144); for (let i = 0; i < 300; i++) rect('#36522f', 496 + r() * 512, 576 + r() * 144, 1, 0.5);
+    c.fillStyle = '#e8e0d0'; stade(16); c.fill(); c.fillStyle = '#34303c'; stade(14); c.fill();
+    c.save(); stade(14); c.clip(); for (let i = 0; i < 320; i++) rect('#3c3846', 506 + r() * 492, 588 + r() * 130, 1, 0.5); c.restore();
+    c.fillStyle = '#e8e0d0'; stade(-12); c.fill(); c.fillStyle = '#2c4428'; stade(-14); c.fill();
+    // les vibreurs, rouge et blanc, au bord extérieur des virages
+    const my = (K.y0 + K.y1) / 2;
+    [[K.x0, Math.PI / 2], [K.x1, -Math.PI / 2]].forEach(([cx0, a0]) => { for (let k = 0; k < 18; k++) { const a = a0 + k * Math.PI / 17; rect(k % 2 ? '#e8e0d0' : '#c8283c', cx0 + Math.cos(a) * (K.r + 14.5) - 1.5, my + Math.sin(a) * (K.r + 14.5) - 1, 3, 2); } });
+    for (let y = K.y1 - 14; y < K.y1 + 14; y += 2) for (let x = 0; x < 2; x++) rect(((y - K.y1) / 2 + x) % 2 ? '#e8e0d0' : '#16141c', 752 + x * 2, y, 2, 2);
+    // la barrière et le grillage, le muret de la tribune
+    rect('#6a6070', 496, 576, 512, 3); rect('#c8c0d0', 496, 576, 512, 0.75); for (let x = 500; x < 1006; x += 10) rect('#8a8296', x, 571, 0.75, 6);
+    rect('rgba(200,200,220,.18)', 496, 568, 512, 0.5);
+    rect('#3a2e36', 560, 542, 320, 2); rect('#a8874e', 560, 542, 320, 0.75);
+    // à droite de la tribune, les stands : des portes roulantes, closes ; à gauche, un muret
+    rect('#4a3c48', 880, 544, 128, 32); rect('#a8874e', 880, 544, 128, 0.75); for (let x = 884; x < 1004; x += 20) { rect('#2a2230', x, 552, 16, 22); for (let y = 554; y < 574; y += 2.5) rect('#3a3040', x + 1, y, 14, 0.75); rect('rgba(255,220,170,.25)', x, 551, 16, 0.75); }
+    rect('#4a3c48', 496, 544, 16, 32); rect('#a8874e', 496, 544, 16, 0.75);
+    // les bords de la carte : des murs de verre sombre
+    [[0, 16], [1008, 16]].forEach(([x, w]) => { c.fillStyle = grad(0, 128, 0, 736, [[0, '#2a2038'], [1, '#1a1428']]); c.fillRect(x, 128, w, 592); rect('rgba(236,192,112,.25)', x + (x ? 0 : 15.5), 128, 0.5, 592); });
+    /* --- la flaque de lumière au pied des lampadaires --- */
+    (b.lampes || []).forEach(([px, py, col]) => { c.save(); c.translate(px, py); c.scale(1, 0.4); const g = c.createRadialGradient(0, 0, 2, 0, 0, 26); g.addColorStop(0, rgba(col, 0.26)); g.addColorStop(0.5, rgba(col, 0.1)); g.addColorStop(1, rgba(col, 0)); c.fillStyle = g; c.fillRect(-26, -26, 52, 52); c.restore(); });
+    // l'ombre franche au pied des façades du nord
+    c.fillStyle = grad(0, 128, 0, 146, [[0, 'rgba(40,16,36,.55)'], [1, 'rgba(40,16,36,0)']]); c.fillRect(0, 128, W, 18);
+    c.fillStyle = grad(0, 320, 0, 334, [[0, 'rgba(40,16,36,.45)'], [1, 'rgba(40,16,36,0)']]); c.fillRect(384, 320, 256, 14); c.fillRect(688, 304, 256, 14);
+  }
+
   /* ---------- Archives basses ---------- */
   function archives(id, o, L, graine) {
     const b = new MB(id, 34, 24, 'metal', o, graine);
@@ -670,7 +839,7 @@
   }
 
   M.drawRosette = drawRosette;
-  const GEN = { ville, desert, camp, romaine, palais, navire, noos, citadelle, cite, archives };
+  const GEN = { ville, desert, camp, romaine, palais, navire, noos, citadelle, cite, quartiers, archives };
   // Tous les lieux nommés d'une carte se rejoignent-ils à pied ? Même parcours que les tests (cases libres voisines).
   function libre(m, s) {
     for (let rad = 0; rad < 9; rad++) for (let dy = -rad; dy <= rad; dy++) for (let dx = -rad; dx <= rad; dx++) {

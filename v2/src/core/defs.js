@@ -61,8 +61,22 @@
     marcher: { nom: 'Se déplacer' }, parler: { nom: 'Parler', geste: true }, aide: { nom: 'Demander son chemin', geste: true },
     frapper: { nom: 'Frapper la faille' }, vertus: { nom: 'Les vertus' }, garde: { nom: 'Se protéger : la garde, l’esquive, la fuite et la Niyya' }, objets: { nom: 'La besace' },
     halte: { nom: 'La halte', geste: true }, source: { nom: 'Retrouver une source' }, equipement: { nom: 'S’équiper' }, etoiles: { nom: 'S’orienter aux étoiles', geste: true },
-    frappe: { nom: 'Frapper ce qui rôde' }, postures: { nom: 'Prendre une figure' }
+    frappe: { nom: 'Frapper ce qui rôde' }, postures: { nom: 'Prendre une figure' },
+    // 2.23 (D212) : les quartiers de la Cité, où l'on remonte à tout moment — un simple geste, dit par Maître Yûnus à la première arrivée
+    cite: { nom: 'Revenir dans la Cité', geste: true }
   };
+
+  /* 2.23 (D212) — les quartiers de la Cité-Miroir. Demande du décideur, 21 novembre : « il y trouve beaucoup d'activités mais
+     tout le monde est triste et seul, personne ne voit les idées noires modernes : égoïsme, matérialisme, plaisir immédiat ».
+     Ces « idées noires modernes » sont des chimères que l'on combat (frame.js : egoisme, materialisme, plaisir, indifference) ;
+     les cinq idées noires de D.NOIRS restent des voix qu'on apaise par la parole, et n'y rôdent jamais (regles.js le vérifie).
+     `rodent` : ce que pèse chacune parmi ce qui rôde dans les rues (rodeurs.js) ; `nombre` : combien rôdent à chaque arrivée ;
+     `vue` : à combien de cases elles prennent en chasse ; `pas` : leur allure, en part de la marche ; `loin` : à combien de cases
+     du parvis elles se posent. Le trafic (trafic.js) : `voitures`, sur la boucle des avenues ; `course`, sur le circuit ; `vitesse`
+     et `circuit`, en points par seconde ; `arret`, la distance (en points) à laquelle une voiture s'arrête devant quelqu'un.
+     Nombres proposés par l'agent, à valider. */
+  D.CITE = { rodent: { egoisme: 1, materialisme: 1, plaisir: 1, indifference: 1 }, nombre: 3, vue: 6, pas: 0.45, loin: 12,
+    voitures: 6, course: 3, vitesse: 58, circuit: 120, arret: 20 };
 
   // 2.19 — les parades du combat (demande du décideur, 20 novembre : « Rajoute une parade "esquive" » ; « Rajoute aussi une
   // parade "fuire" pour quitter le combat même si on sera poursuivi il faudra courir pour échapper au monstre »). Nombres
@@ -155,6 +169,9 @@
     noos:      { nom: 'Noosphère',       theme: 'cyber',  dehors: false, piste: 'noos',      spots: ['seuil', 'noeud1', 'noeud2', 'noeud3', 'faille', 'miroir', 'coeur'] },
     citadelle: { nom: 'Citadelle',       theme: 'orient', dehors: true,  piste: 'citadelle', spots: ['porte', 'cour', 'puits', 'remparts', 'tour', 'salle', 'mosquee', 'priere', 'ecole', 'souk', 'jardin', 'greniers', 'palmeraie', 'poterne', 'comptoir'] },
     cite:      { nom: 'Cité-Miroir',     theme: 'cyber',  dehors: false, piste: 'cite',      spots: ['rue', 'ecran', 'ruelle', 'ascenseur', 'parvis'] },
+    // 2.23 (D212) — les quartiers de la Cité-Miroir : la même ville de verre, ses voitures, ses activités, et ceux qui s'y
+    // promènent seuls ; le refuge d'Idris en 2084 (frame.js, visite « quartiers »), à côté de Maître Yûnus
+    quartiers: { nom: 'Quartiers de la Cité', theme: 'cyber', dehors: false, piste: 'cite',   spots: ['parvis', 'priere', 'galerie', 'jeux', 'ecran', 'circuit', 'tribune', 'parc', 'roue'] },
     archives:  { nom: 'Archives basses', theme: 'cyber',  dehors: false, piste: 'chaine',    spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] }
   };
   // un lieu : son nom, son gabarit, les lieux nommés de ce gabarit, et ce qui lui est propre (variante, piste, noms)
@@ -172,6 +189,7 @@
     noos:      D.lieu('Noosphère', 'noos'),
     citadelle: D.lieu('La Citadelle', 'citadelle'),
     cite:      D.lieu('Cité-Miroir', 'cite'),
+    quartiers: D.lieu('Les quartiers de la Cité', 'quartiers'),
     archives:  D.lieu('Archives basses', 'archives')
   };
 
@@ -186,7 +204,8 @@
     poupe: 'Poupe', pont: 'Pont', mat: 'Mât', proue: 'Proue', passerelle: 'Passerelle', pont2: 'Entrepont',
     seuil: 'Seuil', noeud1: 'Nœud', noeud2: 'Nœud', noeud3: 'Nœud', faille: 'Faille', miroir: 'Miroir', coeur: 'Cœur',
     cour: 'Cour', tour: 'Tour', salle: 'Grande salle', mosquee: 'Mosquée', greniers: 'Greniers', poterne: 'Poterne',
-    rue: 'Rue', ecran: 'Grand écran', ruelle: 'Ruelle', ascenseur: 'Ascenseur', parvis: 'Parvis', rayonnages: 'Rayonnages', bureau: 'Bureau', chaine: 'La Chaîne'
+    rue: 'Rue', ecran: 'Grand écran', ruelle: 'Ruelle', ascenseur: 'Ascenseur', parvis: 'Parvis', rayonnages: 'Rayonnages', bureau: 'Bureau', chaine: 'La Chaîne',
+    galerie: 'Galerie marchande', jeux: 'Salle de jeux', circuit: 'Circuit', tribune: 'Tribune', parc: 'Parc', roue: 'Grande roue'
   };
 
   // tenue d'un personnage (look) : coiffes, manteaux, motifs, attributs portés — dessin dans sprites.js

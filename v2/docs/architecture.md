@@ -128,7 +128,7 @@ il redevient courant, et celui d'un autre récit est rangé —, `W.rangees()` l
 `W.checkpoint()` n'écrase jamais le point d'un autre récit : il le range d'abord. La halte offre **« Revenir en 2084 »**
 dans un récit des Compagnons ou une veillée (« Retour à la Chaîne » dans l'histoire-cadre) : `U.partir()` range le récit,
 compte le retour (`retours`), puis ouvre la Chaîne — ou, s'il s'est passé quelque chose en 2084, le chapitre de
-l'histoire-cadre marqué `retour: n` dont le tour est venu (`rebonds` note ceux qui ont été joués). La Chaîne lit
+l'histoire-cadre marqué `retour: n` dont le tour est venu (`rebonds` note ceux qui ont été joués). *2.23 (D212) :* s'il n'y a pas de retour dû, et au sortir d'un retour, Idris arrive dans les quartiers de la Cité, à côté de Maître Yûnus (« Les quartiers de la Cité-Miroir », plus bas) ; c'est par lui, ou par la halte du refuge, qu'on regagne la Chaîne ou le récit quitté. La Chaîne lit
 `W.rangees()` : chaque maillon dit s'il est « en route », et le grand bouton reprend le récit quitté en dernier.
 `U.startSaga()` reprend le point rangé de la saga qu'on ouvre. Un chapitre marqué `visite` s'ouvre depuis le pied de la
 Chaîne (la Citadelle, dès qu'une veillée a été entendue) et se rejoue. À l'ouverture d'un retour ou d'une visite, le
@@ -732,6 +732,91 @@ simulation, le jeu y tient 60 images par seconde, comme le dessin d'origine.
 **Ce qui n'est pas fait** : les objets et les cases restent ceux d'avant, affinés par le calcul — seul le palmier a été
 redessiné ; les compagnons de lumière, les lames et les icônes gardent leur dessin. Aucune image générée n'entre dans le
 jeu (D153).
+
+### Les quartiers de la Cité-Miroir, et le refuge de 2084 (2.23, D212)
+
+*Le décideur, 21 novembre : « Je veux que tu améliores la cité miroir avec des belles voitures, des jeux en tous genres, des
+activités, des courses de voitures, la possibilité de remonter à la cité miroir à chaque moment à côté de Maître Yunus, il y
+trouve beaucoup d'activités mais tout le monde est triste et seul, personne ne voit les idées noires modernes : égoïsme,
+matérialisme, plaisir immédiat, etc. Chaque rencontre ou combat avec une idée noire qu'il est seul à voir lui rappelle la
+prière et lui propose de revoir maître Yunus qui lui rappelle son rôle de rawi. » Ses réponses : les « idées noires
+modernes » sont des chimères à combattre ; une course jouable avec une prime et aucune mise (lot suivant) ; quatre
+activités (salle de jeux, galerie marchande, écran géant, parc et manèges). Choix, nombres et textes de l'agent, à valider.*
+
+- **La carte** (`D.GABARITS.quartiers`, `D.MAPS.quartiers` ; `maps.js`, `quartiers()`, `peindreQuartiers()`, `M.QUARTIERS`) :
+  64 × 46 cases, la même ville de verre au même crépuscule que la rue de la Cité (la même ambiance, le même ciel-écran sans
+  astre, les mêmes tours à contre-jour). Au nord, la galerie marchande (un passage couvert ; ses vitrines montrent des
+  formes — vêtements sur leurs cintres, boîtes, chaussures, un écran éteint —, ni lettre, ni marque, ni mannequin) et la
+  salle de jeux, ouverte sur la rue (des bornes d'arcade, `qborne`, dont les écrans ne montrent que des formes ; des néons
+  en cercles et en vagues). Une boucle d'avenues à sens unique. Au milieu, le parvis et l'ascenseur qui remonte des Archives
+  basses (`qkiosque`), la place du grand écran (`qecran` : des nappes de couleur qui coulent, aucun mot, aucun signe,
+  aucune marque, aucun visage), l'immeuble de l'est, et derrière une haie basse le coin calme : du gravier, deux dattiers,
+  un banc, une natte posée au sol (`mat`, le lieu `priere`) — ni édifice, ni symbole. Au sud, le parc (la grande roue,
+  `qroue`, et deux manèges, `qmanege` et `qtasses`, qui tournent à vide) et le circuit (sa piste en ovale derrière une
+  barrière, ses vibreurs, la ligne de départ en damier, la tribune, `qgradin`, et les stands, portes closes). Lieux nommés :
+  `parvis`, `priere`, `galerie`, `jeux`, `ecran`, `circuit`, `tribune`, `parc`, `roue` (`D.LIEUX`). La carte `cite` et son
+  masque n'ont pas changé d'une case. Les règles de D206 y valent toutes.
+- **Les voitures** (`gfx.js`, `G.MODELES`, `G.TEINTES`, l'objet `qvoiture`) : cinq modèles inventés (coupé, berline,
+  citadine, tout-terrain, voiture de course), neuf teintes, vues de côté, de face et de dos ; vitres fumées (personne ne s'y
+  voit) ; ni marque, ni logo, ni plaque, ni chiffre (la voiture de course n'a qu'une bande). Au dessin d'origine, leurs bords
+  restent nets (un point plein ou rien : `G.voitureNet`). *Garées*, ce sont des objets de la carte qui tiennent leurs deux
+  cases. *Celles qui roulent* (`trafic.js`) suivent la boucle des avenues (`M.QUARTIERS.boucle`) : chacune regarde devant
+  elle, le long de son chemin, sur `D.CITE.arret` points, et s'arrête si quelqu'un s'y tient (le joueur, ceux qui le
+  suivent, un passant) ; elle garde ses distances avec celle qui la précède ; elle n'avance jamais là où quelqu'un se tient.
+  Le joueur ne peut pas entrer dans une voiture (`TR.bloque`, appelé par `tryMove`) ; un chemin (au doigt, à pied)
+  contourne les cases qu'elles tiennent (`TR.cases`, dans `W.route` et `W.pathTo`), pour ne pas pousser contre une voiture
+  arrêtée qui l'attendrait. Elles ne voient pas les chimères. *Sur le circuit*, des voitures de course tournent chacune dans
+  son couloir, derrière la barrière. Ce n'est pas un corps de `W.corps` : une voiture tient deux cases et bouge ; la règle
+  est la même (on peut toujours s'en écarter, personne n'est posé dans une voiture). Rien n'en est gardé dans la partie.
+- **Le refuge** : le chapitre de l'histoire-cadre `c_quartiers` (`visite: 'quartiers'` — le validateur veut que `visite`
+  nomme la carte du chapitre —, donc sobre : `O.sobre()`, aucune œuvre comptée, aucune descente ; la natte du coin calme
+  sert à prier et se reposer). On y arrive (`I.cite.arriver`) par « Revenir en 2084 » (`U.partir` : une fois joués les
+  retours dus, et aussi au sortir d'un retour, `U.afterSaga`) et par le bouton « La Cité-Miroir » du pied de la Chaîne
+  (dès le prologue joué) ; chaque arrivée est neuve, au parvis, à côté de Maître Yûnus. Parler à Maître Yûnus
+  (`I.cite.parle`, depuis `W.interact`) : une réplique (`cite.yunus`, l'une après l'autre), puis « Reprendre le récit » (le
+  dernier récit quitté, `W.rangees()`, repris par `U.reprendre` exactement là où on l'a laissé), « La Chaîne, aux Archives
+  basses » et « Rester dans la Cité » (B). La halte du refuge offre « Reprendre le récit » et « La Chaîne ». Le point de
+  reprise du refuge n'est jamais rangé parmi les récits quittés (`W.ranger`, `W.rangees`) : on le quitte sans le ranger
+  (`I.cite.quitter`). Le joueur de test du moteur (auto, à pied, au doigt) accomplit l'objectif comme celui de la
+  Citadelle : la visite s'achève et la Chaîne s'ouvre.
+- **Les passants** : quinze personnes de fiction (un joueur, une joueuse, une cliente, un passant devant les vitrines, un
+  vieil homme, une passante, un employé, un enfant, une promeneuse, un passant au pied de la grande roue, un spectateur,
+  une spectatrice, un mécanicien, une passante du parvis, un livreur), chacune seule, avec une ou deux répliques ; leur
+  attitude (`pose` : `triste`, `assis`, `accable`) et leur regard (`face`) sont posés par le chapitre (le validateur les
+  contrôle). Ni couple, ni scène sentimentale ; un enfant, seul ; aucun des types du conte (exigence 14).
+- **Les chimères modernes** (`frame.js` : `egoisme`, racine l'Orgueil ; `materialisme`, l'Avidité ; `plaisir`, l'Insouciance
+  et la famille de la ghafla ; `indifference`, l'Insouciance ; niveau calé sur celui qui mène, `lvl: 0`, ce que le validateur
+  admet désormais pour l'histoire-cadre ; des attaques du temps volé, `D.TEMPS`). Idris est seul à les voir. Elles rôdent
+  dans les rues (`rodeurs.js`, `env.rues` : trottoirs, places, avenues — jamais le parc, le coin calme, la tribune ni la
+  salle de jeux), `D.CITE.nombre` à chaque arrivée, tirées parmi `D.CITE.rodent`, à au moins `D.CITE.loin` cases du parvis ;
+  elles passent au travers des passants, qui ne bougent pas ; à `D.CITE.vue` cases, elles prennent en chasse ; leur contact
+  ouvre un combat de rencontre (`R.contactRue`, fond de la ville de verre), d'où l'on peut fuir. À la première vue :
+  « Personne d'autre ne la voit. » On ne les frappe pas en marchant (ce n'est pas un labyrinthe). Elles ne rôdent pas dans
+  les labyrinthes de 2084. Aucune des cinq idées noires n'y rôde : `regles.js` le vérifie (`D.CITE.rodent`), et le moteur
+  les écarte encore en posant ce qui rôde.
+- **Le rappel** (`I.cite.apres`) : après chaque combat avec l'une d'elles, une ligne, la pensée d'Idris, qui rappelle la
+  prière (`cite.rappels`, l'une après l'autre ; ni formule, ni promesse, ni pouvoir) ; puis « Revoir Maître Yûnus ? » —
+  « Revoir Maître Yûnus » / « Plus tard » (`retour: true` : B y répond). Oui : Idris est mené à côté de lui (`I.cite.revoir`),
+  qui lui rappelle son rôle de râwî. Textes de fiction (`frame.js`, `cite`) : le validateur y refuse guillemets et références.
+- **La progression** : l'outil `cite` (« Revenir dans la Cité », un geste), dit par Maître Yûnus à la première arrivée, si
+  l'on peut le recevoir (`I.lecons.proposer`) ; il resservira à l'arrivée suivante (`I.lecons.reemploi`).
+- **La partie** garde `cite` : `{ arrivees, rappels, yunus, vue, lecon }` (des comptes et deux marques). Valeur de départ
+  dans `migrer` (et dans une partie neuve) ; `controler` refuse un compte abîmé ; le format reste le 2.
+- **Les nombres** (`D.CITE`, à valider) : trois chimères par arrivée, à douze cases du parvis au moins, qui prennent en
+  chasse à six cases, à 45 % de la marche ; six voitures à 58 points par seconde (± 15 %), qui s'arrêtent à vingt points
+  devant quelqu'un ; trois voitures de course à 120 points par seconde.
+- **Le contrôle** : `node v2/tools/cite.js` (« CITÉ CONFORME »), par les vrais boutons, en 390 × 844 et 844 × 390 : l'arrivée
+  après un retour dû, la leçon, Maître Yûnus et ses trois réponses, B, chaque lieu à pied et au doigt, les voitures (elles
+  roulent, s'arrêtent devant le joueur, repartent, ne le traversent pas, on n'y entre pas), quarante tirages de ce qui rôde
+  sans une idée noire, une chimère au travers d'un passant, deux combats, le rappel, « Plus tard » (B) et « Revoir Maître
+  Yûnus », « Reprendre le récit » à l'identique, la halte et la Chaîne, la partie ; puis le dessin des voitures dans les trois
+  réglages. `retours.js` traverse désormais les quartiers à chaque retour et regagne la Chaîne par Maître Yûnus.
+- **Quel que soit l'avancement** (le décideur, 21 novembre : « Les activités de la cité miroir sont omniprésents dès le début et
+  peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga ») : les quartiers s'ouvrent dès le prologue joué,
+  sans autre condition — « La Cité-Miroir » au pied de la Chaîne, « Revenir en 2084 » depuis la halte de tout récit et de toute
+  veillée (`I.cite.offert` ne lit que le prologue). Les chimères des rues sont du palier `minion` et prennent le niveau de celui qui
+  mène (`lvl: 0`) : au niveau 1, Idris seul les vainc en trois tours à la seule touche A, sans défaite, et peut en fuir dès qu'il a
+  l'outil « Se protéger ». `cite.js` l'éprouve (parties 13 et 14 ; `node v2/tools/cite.js <dossier> avancement` : elles seules).
 
 ### L'image agrandie, les textes sur un téléphone
 

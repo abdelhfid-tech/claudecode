@@ -108,6 +108,37 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   l'a inspirée n'est nommée nulle part dans le jeu ni dans ses langues ; aucune réplique de monument, aucune inscription,
   aucun symbole ni édifice religieux ; une tour à vent n'est jamais lisible comme un minaret ; personne n'est ajouté au
   décor. Un changement de la Cité garde son masque (cases, lieux, caisses) et repasse `loupe.js`, puis toute la batterie.
+- Dans la 2.x (2.23), la Cité-Miroir et le refuge de 2084 (D212 ; le décideur, 21 novembre : « améliore la cité miroir avec
+  des belles voitures, des jeux en tous genres, des activités, des courses de voitures, la possibilité de remonter à la cité
+  miroir à chaque moment à côté de Maître Yunus, il y trouve beaucoup d'activités mais tout le monde est triste et seul,
+  personne ne voit les idées noires modernes […] Chaque rencontre ou combat avec une idée noire qu'il est seul à voir lui
+  rappelle la prière et lui propose de revoir maître Yunus qui lui rappelle son rôle de rawi » ; choix, nombres et textes de
+  l'agent, à valider). **Les quartiers de la Cité** (`quartiers`, `maps.js`, `quartiers()`, `peindreQuartiers()`) : la même
+  ville de verre au même crépuscule, une boucle d'avenues, la galerie marchande, la salle de jeux, la place du grand écran,
+  le parc et sa grande roue, le circuit et sa tribune, et derrière une haie un coin calme où une natte est posée au sol ; la
+  carte `cite` et son masque n'ont pas changé d'une case. Les règles de D206 y valent toutes (aucune ville réelle, aucun
+  monument copié, aucune lettre, aucune marque ni logo, aucun édifice ni symbole religieux). **Les voitures** sont dessinées
+  par le jeu (`gfx.js`, `G.MODELES`, `G.TEINTES` : des modèles inventés, sans marque, sans logo, sans plaque, vitres
+  fumées) ; garées, elles tiennent leurs deux cases ; celles qui roulent (`trafic.js`) s'arrêtent devant qui se tient sur
+  leur voie, ne traversent personne, et l'on n'entre pas dans une voiture (`TR.bloque`) ; sur le circuit, des voitures de
+  course tournent derrière leur barrière (la course jouable est pour le lot suivant ; aucun pari, aucune mise). **Le
+  refuge** est le chapitre de l'histoire-cadre `c_quartiers` (`visite: 'quartiers'`, donc sobre : aucune œuvre comptée,
+  aucune descente) : « Revenir en 2084 » y mène, une fois joués les retours dus, au parvis, à côté de Maître Yûnus ; « La
+  Cité-Miroir », au pied de la Chaîne, aussi, dès le prologue joué. Maître Yûnus (`cite.js`) dit une réplique du rôle de
+  râwî, puis offre « Reprendre le récit » (le dernier récit quitté, repris exactement à sa place), « La Chaîne » et
+  « Rester » ; la halte du refuge offre les deux sorties ; le point de reprise du refuge n'est jamais rangé parmi les récits
+  quittés. **Les passants**, de fiction, ont chacun leur solitude (attitudes `triste`, `assis`, `accable`), sans couple ni
+  scène sentimentale, un enfant seul, aucun type emprunté (exigence 14). **Les chimères modernes** (`frame.js` : l'Égoïsme,
+  le Matérialisme, le Plaisir immédiat, l'Indifférence ; `D.CITE`) sont des chimères qu'Idris est seul à voir : elles rôdent
+  dans les rues (`rodeurs.js`, `env.rues`), passent au travers des passants, et leur contact ouvre un combat d'où l'on peut
+  fuir ; aucune des cinq idées noires (`D.NOIRS`) n'y rôde — `regles.js` le vérifie —, et celles-ci restent des voix qu'on
+  apaise par la parole (exigences 16, 18 et 22 inchangées). Après chaque combat avec l'une d'elles, une ligne, la pensée
+  d'Idris, rappelle la prière (sans formule, ni promesse, ni pouvoir : exigences 13 et 15), puis « Revoir Maître Yûnus » /
+  « Plus tard » (B) ; oui mène Idris à côté de lui, qui lui rappelle son rôle de râwî — témoin, porteur de la Chaîne, qui
+  transmet sans forcer personne (`cite`, dans `frame.js` : textes de fiction, aucun verset, aucune parole citée). L'outil
+  « cite » (« Revenir dans la Cité ») se dit par Maître Yûnus à la première arrivée (`I.lecons.proposer`). La partie garde
+  `cite` (des comptes ; valeur de départ dans `migrer`, le format reste le 2). `v2/docs/architecture.md`, « Les quartiers
+  de la Cité-Miroir ». Contrôle : `node v2/tools/cite.js` (« CITÉ CONFORME ») ; un changement du refuge repasse aussi `retours.js`.
 - Dans la 2.x, le corps a ses attitudes (D205 : `D.ATTITUDES`, dans `D.POSES`) ; un Compagnon les prend avec retenue — la
   joie ne lève pas les bras au-dessus de la tête, le rire se limite aux épaules, la colère reste un corps tendu — et c'est
   le moteur qui choisit (`retenue()`) : un récit écrit l'attitude, jamais sa forme. Les mimiques seulement pour qui a un
@@ -267,6 +298,7 @@ toute considération de jeu.
 | `docs/schema-saga.md`, `docs/schema-v2.md` | contrat de données et bible narrative | à relire avant d'écrire du contenu |
 | `archive/v1.32/` | la 1.32 archivée : son jeu, ses outils, son livret et ses planches | on n'y touche plus (`archive/v1.32/LISEZ-MOI.md`) |
 | `v2/tools/promotion.js` | l'adresse, la devise, la réserve et le soutien de la promotion (2.x) | le seul endroit où elles s'écrivent ; lu par `shorts.js`, `galerie.js`, `jouable.js`, `livret.js` ; ce que le jeu en reprend pour partager sa progression (`JEU`) est posé dans la page par `build.js` (`window.ISNAD_PROMO`), et relevé pour les langues par `langues.js` (`JEU_DIT`) |
+| `src/core/cite.js`, `src/core/trafic.js` | les quartiers de la Cité (2.23, D212) : le refuge de 2084 à côté de Maître Yûnus, ses sorties, le rappel après une chimère moderne ; les voitures qui roulent et s'arrêtent, celles du circuit | la carte est dans `maps.js` (`quartiers()`), les voitures dessinées dans `gfx.js`, ce qui rôde dans `rodeurs.js` (`env.rues`), les textes dans `frame.js` (`cite`) |
 | `src/core/partage.js` | partager sa progression (2.x) : l'image que le jeu dessine (1080 × 1080 ou 1080 × 1920), son texte, `navigator.share` et son repli | le récit seulement : ni œuvres, ni cœur, ni Valeurs, ni descente, ni combats ; le bouton paraît au premier maillon achevé, sans leçon ; `v2/docs/architecture.md`, « Partager sa progression » |
 | `promo/shorts/NN-nom.js`, `promo/shorts/_saga.js`, `promo/shorts/legendes.md` | les scénarios des shorts (2.x), la base commune des cinq shorts de saga, et leurs textes d'accompagnement | un scénario dit où aller dans le jeu, quoi faire, quelles phrases poser ; un short de saga ne donne que des clés et des fragments (le lieu, la parole, l'idole) ; les films (`films/`), la galerie et les plans d'ambiance (`plans-ia/`) ne sont pas versionnés |
 | `promo/jouable/demarrage.js`, `demarrage.css` | le démarrage de la démo jouable (2.x) | ajouté au jeu assemblé par `v2/tools/jouable.js` ; `jouable.html` est **généré**, non versionné |
@@ -303,6 +335,7 @@ node v2/tools/course.js             # 2.x : la course — vitesse, pied d'appui 
 node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère et leur pièce interdite, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] [0,3,5] : une planche)
 node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe, la pièce interdite
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
+node v2/tools/cite.js [dossier]     # 2.23 : les quartiers de la Cité — l'arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel ; captures — « CITÉ CONFORME »
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
 node v2/tools/loupe.js [messages]   # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles, les messages du combat en bas (« messages » : eux seuls)
 node v2/tools/manette.js            # 2.x : la manette tactile partout — A choisit, B revient en arrière, le joystick choisit ; elle ne recouvre rien, la sélection se voit

@@ -384,7 +384,7 @@
     // un grand bouton dit quoi faire : ouvrir le maillon suivant (ou reprendre celui qui est entamé)
     // 2.x : les récits quittés en chemin (points de reprise rangés). Le plus récent passe devant : on le reprend d'un toucher.
     const rangees = W.rangees(), enRoute = id => rangees.find(c => c.saga === id) || null;
-    const reprendre = c => { close(); const sg = I.sagas[c.saga]; if (!sg.frame) return U.startSaga(sg); W.roster = {}; W.saga = null; const cp = W.reprise(c.saga, c.ci); return W.startChapter(c.saga, c.ci, cp || undefined); };
+    const reprendre = c => { close(); return U.reprendre(c); };
     { const hd = $('#chain header'); let go = hd.querySelector('.go'); if (!go) { go = I.el('div', 'go'); hd.appendChild(go); } go.innerHTML = '';
       if (rangees.length) { const c = rangees[0], sg = I.sagas[c.saga], chp = sg.chapters[c.ci];
         const b = I.el('button', 'cta', sg.veillees ? I.t('▶ Reprendre : la veillée · {chapitre}', { chapitre: I.esc(chp.title) }) : I.t('▶ Reprendre : {recit} · {chapitre}', { recit: I.esc(sg.frame ? I.perso.dit() : sg.name), chapitre: I.esc(chp.title) })); b.type = 'button';
@@ -430,6 +430,8 @@
     if (I.partage && I.partage.offert()) pied(I.t('Partager ma progression'), () => { close(); I.partage.ouvrir(() => U.showChain()); });
     { const fr2 = I.sagas.idris, vi = fr2 ? fr2.chapters.findIndex(c => c.visite === 'citadelle') : -1; // 2.x : la Citadelle, en 2084
       if (vi >= 0 && I.sagas.caid && Object.keys(sv.veillees || {}).some(k => sv.veillees[k])) pied(I.t('La Citadelle'), () => { close(); W.roster = {}; W.saga = null; const cp = W.reprise('idris', vi); W.startChapter('idris', vi, cp || undefined); }); }
+    // 2.23 (D212) : les quartiers de la Cité-Miroir, à côté de Maître Yûnus — dès le prologue joué (cite.js)
+    if (I.cite && I.cite.offert()) pied(I.t('La Cité-Miroir'), () => { close(); I.cite.arriver(); });
     pied(I.t('Garder une copie'), async () => { close(); await U.saveMenu(); U.showChain(); });
     pied(I.t('Exporter la partie'), () => { close(); U.partie('exporter', () => U.showChain()); });
     pied(I.t('Ton personnage'), () => { close(); U.personnage(() => U.showChain()); });
@@ -442,6 +444,8 @@
     fl = focusList(btns, { start: 0 });
     if (!sv.cp) I.save.auto('La Chaîne · ' + sv.lights.filter(l => l !== 'sabr').length + ' Lumière(s)'); // entre deux maillons : la partie est gardée ici
   };
+  // reprendre un récit quitté en chemin, là où on l'a laissé (la Chaîne ; Maître Yûnus et la halte, dans les quartiers de la Cité)
+  U.reprendre = function (c) { const sg = I.sagas[c.saga]; if (!sg.frame) return U.startSaga(sg); W.roster = {}; W.saga = null; const cp = W.reprise(c.saga, c.ci); return W.startChapter(c.saga, c.ci, cp || undefined); };
   U.startSaga = async function (s) {
     const sv = I.save.data, sp = sv.sagas[s.id] || (sv.sagas[s.id] = { ch: 0, done: false, flags: {} });
     W.roster = {}; W.saga = s; S.flags = {};
@@ -468,6 +472,7 @@
     $('#hud').hidden = true; S.depth++; try { await S.fade('out', 300); } finally { S.depth--; }
     const ri = ailleurs ? rebond() : -1;
     if (ri >= 0) { W.roster = {}; W.saga = null; return W.startChapter('idris', ri); }
+    if (ailleurs && I.cite && I.cite.offert()) return I.cite.arriver(); // 2.23 (D212) : Idris remonte dans les quartiers de la Cité, à côté de Maître Yûnus
     U.showChain(ailleurs ? I.perso.dire(I.t('Idris rouvre les yeux. Les Archives basses, la lampe, la Chaîne. Chaque récit attend là où tu l’as laissé.')) : undefined); return S.fade('in', 300);
   };
   // l'état de 2084, en drapeaux, pour les chapitres de l'histoire-cadre qui se jouent au retour ou en visite : veillées
@@ -479,6 +484,7 @@
     if (tot >= 12) F._2084_debout = true; else if (tot >= 7) F._2084_tient = true; else F._2084_lezarde = true;
     Object.keys(D.PILLARS).forEach(k => { if ((c[k] || 0) >= 3) F['_2084_pilier_' + k] = true; });
     if (W.rangees().some(x => !I.sagas[x.saga].frame)) F._2084_en_route = true;
+    if (sv.cite && (sv.cite.arrivees | 0) > 1) F._2084_cite = true; // 2.23 : Idris est déjà venu dans les quartiers de la Cité
     return F; };
   // la rencontre de la Cité-Miroir qui suit une saga : chapitre de l'histoire-cadre marqué « after »
   const rencontre = id => { const sv = I.save.data; sv.rencontres = sv.rencontres || {}; const fr = I.sagas.idris; if (!fr || !sv.prologue || sv.rencontres[id]) return -1; return fr.chapters.findIndex(c => c.after === id); };
@@ -509,6 +515,7 @@
     }
     if (saga.frame && !saga.veillees && (Number.isInteger(ch.retour) || ch.visite)) { // 2.x : ce qui s'est passé au retour en 2084, ou une visite : on revient à la Chaîne
       if (Number.isInteger(ch.retour)) { sv.rebonds = sv.rebonds || {}; sv.rebonds[ch.id] = true; } I.save.store();
+      if (Number.isInteger(ch.retour) && I.cite && I.cite.offert()) return I.cite.arriver(); // 2.23 : puis Idris remonte dans les quartiers, à côté de Maître Yûnus
       return U.showChain(I.perso.dire(ch.visite ? I.t('Idris est revenu aux Archives basses. La Chaîne tourne dans la pénombre.') : I.t('Les Archives basses retrouvent leur silence. La Chaîne attend.')));
     }
     if (saga.frame) {
@@ -593,9 +600,13 @@
       items.push({ label: I.t('Exporter la partie'), fn() { close(); U.partie('exporter', () => {}); }, show: () => '<h3>' + I.t('Exporter la partie') + '</h3><p>' + I.t('Ta partie tient dans un texte. Garde-le en lieu sûr, ou porte-le sur un autre appareil : l’écran-titre propose <b>Importer une partie</b>.') + '</p><p class="src">' + I.t('Elle se garde aussi toute seule sur cet appareil, à chaque objectif atteint.') + '</p>' });
       items.push({ label: I.t('Diagnostic'), fn() {}, show: U.diagnostic });
       // 2.x : on peut à tout moment quitter un récit pour revenir en 2084 ; il est rangé là où on le laisse, et les autres aussi
-      if (inWorld && !W.excursion) { const ailleurs = !!(W.saga && (!W.saga.frame || W.saga.veillees)), nom = ailleurs ? I.t('Revenir en 2084') : I.t('Retour à la Chaîne');
+      // 2.23 (D212) : dans les quartiers de la Cité, la halte offre ce qu'offre Maître Yûnus — reprendre le récit quitté, ou la Chaîne
+      if (inWorld && !W.excursion && I.cite && I.cite.ici()) { const c = I.cite.recit(); items.push({ cat: I.t('Partir') });
+        if (c) items.push({ label: I.t('Reprendre le récit'), fn() { close(); I.cite.versRecit(); }, show: () => `<h3>${I.t('Reprendre le récit')}</h3><p>${I.cite.reprendreDit(c)}</p><p>${I.t('Le récit reprend exactement là où tu l’as laissé.')}</p>` });
+        items.push({ label: I.t('La Chaîne'), fn() { close(); I.cite.versChaine(); }, show: () => `<h3>${I.t('La Chaîne')}</h3><p>${I.t('Idris redescend aux Archives basses, devant la Chaîne. Les quartiers restent là : tu y reviens quand tu veux.')}</p>` }); }
+      else if (inWorld && !W.excursion) { const ailleurs = !!(W.saga && (!W.saga.frame || W.saga.veillees)), nom = ailleurs ? I.t('Revenir en 2084') : I.t('Retour à la Chaîne'), cite = ailleurs && I.cite && I.cite.offert();
         items.push({ cat: I.t('Partir') }, { label: nom, fn() { W.checkpoint(); close(); U.partir(ailleurs); },
-          show: () => `<h3>${nom}</h3><p>${ailleurs ? I.t('Le râwî rouvre les yeux aux Archives basses, devant la Chaîne. Ce récit reste où tu le laisses : tu le reprendras là, même après en avoir suivi un autre.') : I.t('Tu reprendras ce chapitre là où tu l’as laissé.')} ${I.t('La partie se garde toute seule, même si tu fermes la page.')}</p>${ailleurs ? '<p class="src">' + I.t('La Cité-Miroir ne t’attend pas : il peut s’y être passé quelque chose.') + '</p>' : ''}` }); }
+          show: () => `<h3>${nom}</h3><p>${cite ? I.t('Le râwî remonte dans les quartiers de la Cité-Miroir, à côté de Maître Yûnus. Ce récit reste où tu le laisses : tu le reprendras là, même après en avoir suivi un autre.') : ailleurs ? I.t('Le râwî rouvre les yeux aux Archives basses, devant la Chaîne. Ce récit reste où tu le laisses : tu le reprendras là, même après en avoir suivi un autre.') : I.t('Tu reprendras ce chapitre là où tu l’as laissé.')} ${I.t('La partie se garde toute seule, même si tu fermes la page.')}</p>${ailleurs ? '<p class="src">' + I.t('La Cité-Miroir ne t’attend pas : il peut s’y être passé quelque chose.') + '</p>' : ''}` }); }
       $('#menu h2').textContent = I.t('Halte');
       build(items, { onCancel: close });
     };

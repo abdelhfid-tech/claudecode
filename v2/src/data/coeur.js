@@ -70,7 +70,9 @@ ISNAD.registerSaga({
     source: 'Un seul de ces actes est celui que les transmetteurs ont rapporté. Ce que tu as appris est au *Recueil* : la halte le garde.',
     vertus: 'Nouveau — les *Vertus* de chacun rejoignent *Éclairer*. Chacune coûte du Souffle ; celle qui est la faille d’une chimère lui ôte un voile.',
     garde: 'Nouveau — se protéger : *Garde* amortit un coup et rend un point de *Niyya*, *Esquive* tente de l’éviter, *Fuir* quitte une rencontre. Avec ◂ ▸, on dépense jusqu’à trois points de Niyya pour frapper plus fort.',
-    objets: 'Nouveau — *Objets*. La besace sert aussi en combat.'
+    objets: 'Nouveau — *Objets*. La besace sert aussi en combat.',
+    // 2.23 (D212) : dite par Maître Yûnus, à la première arrivée dans les quartiers de la Cité (cite.js)
+    cite: 'Ici, tu peux revenir quand tu veux, Idris : *Revenir en 2084*, à la halte, ou *La Cité-Miroir*, au pied de la Chaîne. Je t’attendrai sur le parvis.'
   },
 
   /* ----- 2.x : les postures — trois manières de se tenir devant l'épreuve (textes proposés par l'agent, à valider) ----- */

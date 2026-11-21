@@ -220,8 +220,26 @@
     bwall(c, r) { R(c, '#d9b37f', 0, 0, 16, 9); R(c, '#e8c896', 0, 0, 16, 2); R(c, '#b98f5c', 0, 9, 16, 7); R(c, '#a07a4c', 0, 15, 16, 1); c.fillStyle = '#a98252'; c.fillRect(0, 12, 16, 1); c.fillRect(5, 9, 1, 3); c.fillRect(11, 12, 1, 3); c.fillStyle = '#c9a56e'; for (let i = 0; i < 6; i++) c.fillRect(Math.floor(r() * 15), 2 + Math.floor(r() * 6), 1, 1); },
     dark(c) { R(c, '#07060c', 0, 0, 16, 16); }
   };
-  const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nabri', 'npont', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet', 'cgrille', 'ctour', 'cride']); // lumière, vide et carreaux vernis restent nets
-  const SOLID = new Set(['bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull', 'ctour', 'cfacade', 'ccrique', 'cgrille', 'cquai', 'ceau']);
+  /* 2.23 (D212) — les quartiers de la Cité-Miroir : l'asphalte des avenues, où passe le couchant ; la pierre polie des places ;
+     la pelouse et les allées du parc ; les gradins de la tribune ; le gravier du coin calme ; une haie basse. Le bâti et la
+     piste sont des aplats, repeints d'un tenant par la carte (maps.js, peindreQuartiers). Aucun signe, aucune lettre. */
+  Object.assign(TILE, {
+    qroute(c, r) { speck(c, r, ['#2e2b3e', '#332f45', '#29263a', '#3a364e'], 14); if (r() < 0.22) R(c, 'rgba(255,160,150,.07)', Math.floor(r() * 10), Math.floor(r() * 12), 6, 1.5); },
+    qparvis(c, r, v) { const b = ['#6a5844', '#655440', '#705e48', '#61503d'][v % 4]; speck(c, r, [b, shade(b, 0.95), shade(b, 1.05)], 8);
+      R(c, 'rgba(50,36,26,.5)', 0, 0, 16, 0.5); R(c, 'rgba(50,36,26,.5)', 0, 0, 0.5, 16); R(c, 'rgba(255,232,196,.16)', 0.5, 0.5, 15.5, 0.5);
+      if (v % 4 === 2) { R(c, 'rgba(50,36,26,.32)', 8, 0.5, 0.5, 15.5); } if (r() < 0.3) R(c, 'rgba(255,214,170,.07)', 2 + Math.floor(r() * 8), 2 + Math.floor(r() * 8), 5, 3); },
+    qgazon(c, r) { speck(c, r, ['#3f5a37', '#38522f', '#466340', '#334a2c'], 30); for (let i = 0; i < 5; i++) R(c, '#55744a', Math.floor(r() * 30) / 2, Math.floor(r() * 28) / 2, 0.5, 1.5); },
+    qallee(c, r) { speck(c, r, ['#7c6a54', '#76644f', '#836f59', '#6d5c48'], 22); if (r() < 0.4) R(c, 'rgba(240,220,190,.12)', Math.floor(r() * 12), Math.floor(r() * 12), 3, 1); },
+    qgradin(c, r) { R(c, '#584a52', 0, 0, 16, 16); R(c, '#6c5c64', 0, 0, 16, 2); R(c, '#43363e', 0, 7.5, 16, 0.5); R(c, '#6c5c64', 0, 8, 16, 2); R(c, '#43363e', 0, 15.5, 16, 0.5);
+      [[1, '#b83a4e'], [5, '#2a8a9a'], [9, '#b83a4e'], [13, '#2a8a9a']].forEach(([x, col]) => { R(c, col, x, 2.5, 2.5, 2.5); R(c, col, x, 10.5, 2.5, 2.5); }); },
+    qjardin(c, r) { speck(c, r, ['#6e604e', '#685a49', '#756754', '#615343'], 30); },
+    qhaie(c, r) { R(c, '#26381f', 0, 0, 16, 16); speck(c, r, ['#2e4426', '#3a5430', '#24361e', '#466438'], 26); R(c, 'rgba(255,220,170,.1)', 0, 0, 16, 1); R(c, '#1a2616', 0, 14.5, 16, 1.5); },
+    qsalle(c, r, v) { R(c, '#1c1828', 0, 0, 16, 16); R(c, v % 2 ? 'rgba(255,79,216,.14)' : 'rgba(57,230,255,.12)', 0, 0, 16, 0.5); R(c, 'rgba(255,255,255,.05)', 0, 0, 0.5, 16); if (r() < 0.4) R(c, 'rgba(120,200,255,.08)', 3 + Math.floor(r() * 8), 3 + Math.floor(r() * 8), 4, 4); },
+    qbat(c) { R(c, '#2a2038', 0, 0, 16, 16); },
+    qpiste(c) { R(c, '#2a2834', 0, 0, 16, 16); }
+  });
+  const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nabri', 'npont', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet', 'cgrille', 'ctour', 'cride', 'qbat', 'qpiste', 'qsalle', 'qgradin']); // lumière, vide et carreaux vernis restent nets
+  const SOLID = new Set(['bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull', 'ctour', 'cfacade', 'ccrique', 'cgrille', 'cquai', 'ceau', 'qbat', 'qpiste', 'qhaie']);
   // une eau peinte qui bouge : la case qu'on pose par-dessus, image après image (maps.js, finish)
   G.ANIME = { ccrique: 'cride' };
   G.isSolidTile = n => SOLID.has(n);
@@ -432,6 +450,187 @@
     c.fillStyle = '#3a3440'; c.fillRect(8, -1.5, L - 16, 1.5);
     c.restore();
   };
+  /* ================= 2.23 (D212) : LES QUARTIERS DE LA CITÉ =================
+     Les voitures — des modèles inventés par le jeu, sans marque, sans logo, sans plaque : un coupé, une berline, une
+     citadine, un tout-terrain, une voiture de course (le circuit) ; neuf teintes. Vues de côté (vers la droite ou la gauche),
+     de face (elle descend vers nous) et de dos (elle monte). Vitres fumées : personne ne s'y voit. Le point d'appui est le
+     milieu du sol, à (22, 28) sur une toile de 44 × 30. Au dessin d'origine, les bords restent nets (un point plein ou rien).
+     Puis les objets des quartiers : bornes d'arcade, grand écran (des formes qui coulent, sans texte ni marque), grande roue,
+     chaises volantes et tasses qui tournent à vide, bancs, lampadaires, arbres, l'ascenseur du parvis. */
+  G.TEINTES = [
+    { b: '#e6e2da', o: '#9c988f', l: '#ffffff' },   // nacre
+    { b: '#283462', o: '#121a36', l: '#7486c8' },   // bleu de nuit
+    { b: '#b81e3a', o: '#661024', l: '#ff7a90' },   // carmin
+    { b: '#1e7a62', o: '#0e4034', l: '#62d6ae' },   // émeraude
+    { b: '#c49a52', o: '#73562a', l: '#f4dca2' },   // sable
+    { b: '#1e1c26', o: '#0a090e', l: '#64627a' },   // ébène
+    { b: '#9aa2b0', o: '#566070', l: '#eef2f8' },   // argent
+    { b: '#e66a38', o: '#8a3818', l: '#ffb48c' },   // corail
+    { b: '#26a4b8', o: '#125866', l: '#8eeaf6' }    // turquoise
+  ];
+  // L : longueur ; bas : le bas de caisse ; nez : le haut du pare-chocs ; capot : le capot à l'avant ; ceinture : la ligne de
+  // caisse au pied du pare-brise ; pare : le pied du pare-brise (x) ; toitAv, toitAr : le toit (x) ; toit : sa hauteur ;
+  // lunette : le pied de la lunette arrière (x) ; coffre : le coffre au-dessus de la ceinture ; arriere : la poupe ; rw, wx :
+  // le rayon des roues et leur écart ; lw : la largeur, vue de face
+  G.MODELES = {
+    coupe:    { L: 38, bas: 2.5, nez: 5, capot: 7, ceinture: 8.5, pare: 3, toitAv: -2, toitAr: -9, toit: 13, lunette: -15, coffre: 0.5, arriere: 8.5, rw: 3.6, wx: 12.5, lw: 24 },
+    berline:  { L: 38, bas: 3, nez: 6, capot: 8, ceinture: 9.5, pare: 5, toitAv: 0, toitAr: -8.5, toit: 15, lunette: -13, coffre: 0.5, arriere: 9.5, rw: 3.5, wx: 12, lw: 24 },
+    citadine: { L: 30, bas: 3, nez: 6.5, capot: 9, ceinture: 10, pare: 7, toitAv: 3, toitAr: -9, toit: 16.5, lunette: -13, coffre: 1.5, arriere: 11.5, rw: 3.4, wx: 9.5, lw: 22 },
+    tout:     { L: 36, bas: 4.5, nez: 8, capot: 11, ceinture: 12, pare: 7, toitAv: 3, toitAr: -13, toit: 19, lunette: -16, coffre: 2, arriere: 14, rw: 4.4, wx: 11.5, lw: 26 },
+    course:   { L: 40, bas: 2, nez: 4, capot: 5.5, ceinture: 7, pare: 2, toitAv: -3, toitAr: -8, toit: 11.5, lunette: -14, coffre: 0.5, arriere: 7.5, rw: 3.6, wx: 13.5, lw: 25, aileron: true }
+  };
+  G.MODELES_RUE = ['coupe', 'berline', 'citadine', 'tout'];
+  const vitre = (c, y0, y1) => { const g = c.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, '#d48cb8'); g.addColorStop(0.35, '#5a3c6c'); g.addColorStop(1, '#141a2c'); return g; };
+  function roue(c, x, y, rw) {
+    c.fillStyle = '#121218'; c.beginPath(); c.arc(x, y, rw, 0, 6.3); c.fill();
+    c.fillStyle = '#8a909c'; c.beginPath(); c.arc(x, y, rw * 0.58, 0, 6.3); c.fill();
+    c.fillStyle = '#c8ccd6'; c.beginPath(); c.arc(x - rw * 0.12, y - rw * 0.12, rw * 0.42, 0, 6.3); c.fill();
+    c.fillStyle = '#3a3e48'; for (let k = 0; k < 5; k++) { const a = k * 1.2566; c.fillRect(x + Math.cos(a) * rw * 0.3 - 0.25, y + Math.sin(a) * rw * 0.3 - 0.25, 0.6, 0.6); }
+    c.fillStyle = '#5a5e68'; c.beginPath(); c.arc(x, y, rw * 0.14, 0, 6.3); c.fill();
+  }
+  // de côté, vers la droite (le miroir la tourne vers la gauche)
+  function profil(c, M, T) {
+    const X = x => 22 + x, Y = y => 28 - y, L2 = M.L / 2;
+    // l'ombre des passages de roue
+    c.fillStyle = '#0c0a12'; [M.wx, -M.wx].forEach(w => { c.beginPath(); c.arc(X(w), Y(M.rw), M.rw + 1.1, Math.PI, 0); c.fill(); });
+    // la caisse : un dégradé, la lumière en haut
+    const g = c.createLinearGradient(0, Y(M.toit), 0, Y(M.bas)); g.addColorStop(0, T.l); g.addColorStop(0.42, T.b); g.addColorStop(1, T.o);
+    c.fillStyle = g; c.beginPath();
+    c.moveTo(X(-L2 + 1.5), Y(M.bas)); c.lineTo(X(L2 - 2), Y(M.bas));
+    c.quadraticCurveTo(X(L2 + 0.6), Y(M.bas), X(L2), Y(M.nez));
+    c.quadraticCurveTo(X(L2 - 0.4), Y(M.capot + 0.4), X(L2 - 4), Y(M.capot));
+    c.lineTo(X(M.pare), Y(M.ceinture));
+    c.lineTo(X(M.toitAv), Y(M.toit));
+    c.quadraticCurveTo(X((M.toitAv + M.toitAr) / 2), Y(M.toit + 0.7), X(M.toitAr), Y(M.toit));
+    c.lineTo(X(M.lunette), Y(M.ceinture + M.coffre));
+    c.lineTo(X(-L2 + 1), Y(M.arriere));
+    c.quadraticCurveTo(X(-L2 - 0.6), Y(M.arriere - 1), X(-L2), Y(M.bas + 1.5));
+    c.closePath(); c.fill();
+    // le bas de caisse, plus sombre ; la ligne de caisse, un filet de lumière
+    c.fillStyle = T.o; c.fillRect(X(-L2 + 2), Y(M.bas + 1.6), M.L - 4, 1.6);
+    c.fillStyle = 'rgba(255,255,255,.45)'; c.fillRect(X(-L2 + 2.5), Y(M.ceinture - 1.6), M.L - 6.5, 0.5);
+    // les vitres, fumées : personne ne s'y voit
+    c.fillStyle = vitre(c, Y(M.toit), Y(M.ceinture)); c.beginPath();
+    c.moveTo(X(M.pare - 1.4), Y(M.ceinture + 0.7)); c.lineTo(X(M.toitAv - 0.7), Y(M.toit - 1.1)); c.lineTo(X(M.toitAr + 0.6), Y(M.toit - 1.1)); c.lineTo(X(M.lunette + 1.6), Y(M.ceinture + M.coffre + 0.7)); c.closePath(); c.fill();
+    // le montant du milieu, un reflet en biais
+    const mx = (M.toitAv + M.toitAr) / 2 + 0.5; c.fillStyle = T.o; c.fillRect(X(mx), Y(M.toit - 0.8), 1.1, M.toit - M.ceinture - 1.2);
+    c.fillStyle = 'rgba(255,240,250,.28)'; c.beginPath(); c.moveTo(X(M.toitAv - 2.6), Y(M.toit - 1.2)); c.lineTo(X(M.toitAv - 4.2), Y(M.toit - 1.2)); c.lineTo(X(M.pare - 5.5), Y(M.ceinture + 0.8)); c.lineTo(X(M.pare - 3.9), Y(M.ceinture + 0.8)); c.closePath(); c.fill();
+    // les portières, le rétroviseur
+    c.fillStyle = 'rgba(0,0,0,.35)'; c.fillRect(X(M.pare - 1.6), Y(M.ceinture), 0.5, M.ceinture - M.bas - 1.8); c.fillRect(X(mx + 0.3), Y(M.ceinture), 0.5, M.ceinture - M.bas - 1.8);
+    c.fillStyle = T.o; c.fillRect(X(M.pare - 1.2), Y(M.ceinture + 1.6), 1.6, 1.2);
+    // les feux : à l'avant, un trait de lumière ; à l'arrière, le rouge
+    c.fillStyle = '#fff6dc'; c.fillRect(X(L2 - 3), Y(M.nez + 1.6), 2.6, 1.1); c.fillStyle = 'rgba(255,246,220,.55)'; c.fillRect(X(L2 - 0.6), Y(M.nez + 1.4), 0.6, 0.8);
+    c.fillStyle = '#ff2e50'; c.fillRect(X(-L2 + 0.3), Y(M.arriere - 0.6), 1.4, 2); c.fillStyle = '#ff8a9c'; c.fillRect(X(-L2 + 0.3), Y(M.arriere - 0.6), 0.5, 2);
+    if (M.aileron) { c.fillStyle = T.o; c.fillRect(X(-L2 + 2), Y(M.arriere + 3.5), 1, 3.5); c.fillStyle = T.b; c.fillRect(X(-L2 - 0.5), Y(M.arriere + 4.2), 6, 1.2); c.fillStyle = 'rgba(255,255,255,.4)'; c.fillRect(X(-L2 - 0.5), Y(M.arriere + 4.2), 6, 0.4);
+      c.fillStyle = 'rgba(255,255,255,.75)'; c.fillRect(X(-L2 + 3), Y(M.ceinture - 3.4), M.L - 7, 1); }   // une bande de couleur, sans chiffre ni signe
+    roue(c, X(M.wx), Y(M.rw), M.rw); roue(c, X(-M.wx), Y(M.rw), M.rw);
+  }
+  // de face (sens : 'b', elle descend vers nous) ou de dos ('h', elle monte)
+  function face(c, M, T, dos) {
+    const W2 = M.lw / 2, X = x => 22 + x, Y = y => 28 - y, haut = M.toit + 1.5, capot = M.capot + 3;
+    c.fillStyle = '#121218'; [-1, 1].forEach(s => { c.fillRect(X(s * (W2 - 2.2) - 2), Y(5.6), 4, 5.6); });
+    // la caisse, le capot (ou le coffre) vu d'un peu au-dessus
+    const g = c.createLinearGradient(0, Y(capot), 0, Y(M.bas)); g.addColorStop(0, T.l); g.addColorStop(0.5, T.b); g.addColorStop(1, T.o);
+    c.fillStyle = g; c.beginPath(); c.moveTo(X(-W2 + 1), Y(M.bas)); c.lineTo(X(W2 - 1), Y(M.bas)); c.quadraticCurveTo(X(W2 + 0.4), Y(M.bas + 0.5), X(W2), Y(M.nez + 1));
+    c.lineTo(X(W2 - 2.6), Y(capot)); c.lineTo(X(-W2 + 2.6), Y(capot)); c.lineTo(X(-W2), Y(M.nez + 1)); c.quadraticCurveTo(X(-W2 - 0.4), Y(M.bas + 0.5), X(-W2 + 1), Y(M.bas)); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(X(-W2 + 3), Y(capot - 0.4), M.lw - 6, 0.5);
+    // l'habitacle : le pare-brise (ou la lunette), fumé, et le toit
+    c.fillStyle = T.b; c.beginPath(); c.moveTo(X(-W2 + 2.6), Y(capot)); c.lineTo(X(W2 - 2.6), Y(capot)); c.lineTo(X(W2 - 5), Y(haut)); c.lineTo(X(-W2 + 5), Y(haut)); c.closePath(); c.fill();
+    c.fillStyle = vitre(c, Y(haut - 1), Y(capot)); c.beginPath(); c.moveTo(X(-W2 + 3.6), Y(capot + (dos ? 1.2 : 0.4))); c.lineTo(X(W2 - 3.6), Y(capot + (dos ? 1.2 : 0.4))); c.lineTo(X(W2 - 5.6), Y(haut - 1.3)); c.lineTo(X(-W2 + 5.6), Y(haut - 1.3)); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(255,240,250,.25)'; c.beginPath(); c.moveTo(X(-W2 + 7), Y(haut - 1.4)); c.lineTo(X(-W2 + 9.5), Y(haut - 1.4)); c.lineTo(X(-W2 + 7), Y(capot + 0.6)); c.lineTo(X(-W2 + 4.5), Y(capot + 0.6)); c.closePath(); c.fill();
+    c.fillStyle = T.l; c.fillRect(X(-W2 + 5), Y(haut), M.lw - 10, 0.6);
+    c.fillStyle = T.o; [-1, 1].forEach(s => c.fillRect(X(s * (W2 + 0.3) - (s > 0 ? 0 : 1.4)), Y(capot + 1.6), 1.4, 1.2));   // les rétroviseurs
+    if (dos) { // les feux arrière, une barre de lumière rouge ; le coffre
+      c.fillStyle = '#ff2e50'; [-1, 1].forEach(s => c.fillRect(X(s * (W2 - 3) - 1.8), Y(M.nez + 1.4), 3.6, 1.2)); c.fillStyle = 'rgba(255,60,90,.55)'; c.fillRect(X(-W2 + 4.5), Y(M.nez + 1), M.lw - 9, 0.5);
+      c.fillStyle = 'rgba(0,0,0,.4)'; c.fillRect(X(-3), Y(M.nez - 0.5), 6, 0.5);
+      if (M.aileron) { c.fillStyle = T.o; c.fillRect(X(-W2 + 1), Y(capot + 2.6), M.lw - 2, 1.2); c.fillStyle = 'rgba(255,255,255,.4)'; c.fillRect(X(-W2 + 1), Y(capot + 2.6), M.lw - 2, 0.4); }
+    } else { // les phares, la calandre sombre (ni logo ni signe)
+      c.fillStyle = '#fff6dc'; [-1, 1].forEach(s => c.fillRect(X(s * (W2 - 3.4) - 2), Y(M.nez + 1.5), 4, 1.1));
+      c.fillStyle = '#1a1820'; c.fillRect(X(-M.lw * 0.2), Y(M.nez + 0.9), M.lw * 0.4, 2.2); c.fillStyle = 'rgba(255,255,255,.16)'; c.fillRect(X(-M.lw * 0.2), Y(M.nez + 0.1), M.lw * 0.4, 0.4);
+    }
+    if (M.aileron) { c.fillStyle = 'rgba(255,255,255,.75)'; c.fillRect(X(-1.2), Y(haut - 0.2), 2.4, haut - M.bas - 1); }
+  }
+  // au dessin d'origine, un point est plein ou vide : les bords restent nets
+  function net(cv) { if ((cv.hd || 1) > 1) return; const c = cv.getContext('2d'), a = c.getImageData(0, 0, cv.width, cv.height), d = a.data;
+    for (let i = 3; i < d.length; i += 4) d[i] = d[i] < 110 ? 0 : 255; c.putImageData(a, 0, 0); }
+  G.voitureNet = net;
+
+  Object.assign(OBJ, {
+    // une voiture (garée sur la carte, ou qui roule : trafic.js) ; o.m : le modèle, o.c : la teinte, o.d : 'd', 'g', 'b', 'h'
+    qvoiture: { w: 44, h: 30, fw: 32, fh: 8, draw(c, r, o) { o = o || {}; const M = G.MODELES[o.m] || G.MODELES.berline, T = G.TEINTES[(o.c | 0) % G.TEINTES.length];
+      if (o.d === 'b' || o.d === 'h') face(c, M, T, o.d === 'h');
+      else { if (o.d === 'g') { c.save(); c.translate(44, 0); c.scale(-1, 1); profil(c, M, T); c.restore(); } else profil(c, M, T); }
+      net(c.canvas); } },
+    // une borne d'arcade : un caisson sombre, un bandeau qui luit sans un mot, un écran aux formes abstraites, deux boutons
+    qborne: { w: 16, h: 32, fw: 6, fh: 3, draw(c, r, o) { const col = (o && o.color) || '#ff4fd8', alt = (o && o.alt) || '#39e6ff';
+      Rc(c, '#16121f', 2, 1, 12, 30); Rc(c, '#2a2338', 2.5, 1.5, 11, 29); Rc(c, 'rgba(255,255,255,.12)', 2.5, 1.5, 0.5, 29);
+      const m = c.createLinearGradient(2, 0, 14, 0); m.addColorStop(0, col); m.addColorStop(1, alt); Rc(c, m, 3, 2, 10, 3.5); Rc(c, 'rgba(255,255,255,.4)', 3, 2, 10, 0.5);
+      Rc(c, '#07060c', 3, 6.5, 10, 8.5); const e = c.createLinearGradient(0, 7, 0, 15); e.addColorStop(0, '#1a2a5a'); e.addColorStop(1, '#3a1a4a'); Rc(c, e, 3.5, 7, 9, 7.5);
+      for (let i = 0; i < 5; i++) Rc(c, [col, alt, '#ffe08a', '#7dffb0', '#ffffff'][Math.floor(r() * 5)], 4 + Math.floor(r() * 14) / 2, 7.5 + Math.floor(r() * 12) / 2, 1 + Math.floor(r() * 4) / 2, 1);
+      Rc(c, '#4a4058', 2, 15.5, 12, 3); Rc(c, '#6a5e7c', 2, 15.5, 12, 0.5); Rc(c, '#ff3a5a', 9, 16.5, 1.5, 1); Rc(c, '#ffd84a', 11, 16.5, 1.5, 1); Rc(c, '#1a1620', 5, 16, 0.75, 1.8); Rc(c, '#c8c8d8', 4.75, 15.6, 1.25, 0.8);
+      for (let k = 0; k < 3; k++) Rc(c, k % 2 ? alt : col, 3, 20 + k * 3.4, 10, 1.2);
+      Rc(c, '#0e0c14', 6, 27, 4, 2); Rc(c, '#0a0810', 2, 30.5, 12, 1.5); } },
+    // le grand écran de la place : un cadre sombre filé de laiton ; dedans, des formes qui coulent — aucun mot, aucun signe,
+    // aucune marque, aucun visage
+    qecran: { w: 184, h: 70, fw: 0, fh: 0, anim: true, draw(c) { Rc(c, '#120c1c', 2, 2, 180, 56); Rc(c, '#a8874e', 2, 2, 180, 0.75); Rc(c, '#a8874e', 2, 57.25, 180, 0.75); Rc(c, '#0a0712', 5, 5, 174, 50);
+      Rc(c, '#241c2c', 40, 58, 6, 12); Rc(c, '#241c2c', 138, 58, 6, 12); Rc(c, '#8a7050', 40, 58, 6, 0.75); Rc(c, '#8a7050', 138, 58, 6, 0.75); },
+      animer(c, x, y, t) { const x0 = x - 87, y0 = y - 65, w = 174, h = 50;
+        c.save(); c.beginPath(); c.rect(x0, y0, w, h); c.clip();
+        const g = c.createLinearGradient(x0, y0, x0 + w, y0 + h), p = (Math.sin(t * 0.21) + 1) / 2; g.addColorStop(0, '#3a1a7a'); g.addColorStop(0.5 + p * 0.2 - 0.1, '#c0307e'); g.addColorStop(1, '#ff9a4a'); c.fillStyle = g; c.fillRect(x0, y0, w, h);
+        // des nappes de couleur qui coulent, l'une dans l'autre
+        [['255,230,170', 0.5, 0.31, 1.9, 34], ['110,230,255', 0.42, 0.23, 2.7, 30], ['255,120,200', 0.4, 0.17, 4.1, 38], ['180,255,200', 0.3, 0.27, 5.3, 24]].forEach(([rgb, a, v, ph, R0]) => {
+          const bx = x0 + w * (0.5 + 0.42 * Math.sin(t * v + ph)), by = y0 + h * (0.5 + 0.38 * Math.sin(t * v * 1.37 + ph * 2)), rr = R0 + 8 * Math.sin(t * 0.5 + ph);
+          const q = c.createRadialGradient(bx, by, 1, bx, by, rr); q.addColorStop(0, `rgba(${rgb},${a})`); q.addColorStop(1, `rgba(${rgb},0)`); c.fillStyle = q; c.fillRect(x0, y0, w, h); });
+        c.fillStyle = 'rgba(255,255,255,.18)'; for (let k = 0; k < 3; k++) { c.beginPath(); for (let i = 0; i <= 58; i++) { const X = x0 + i * 3, Y = y0 + h * (0.3 + k * 0.2) + Math.sin(i * 0.22 + t * (0.8 + k * 0.3) + k) * 5; if (i) c.lineTo(X, Y); else c.moveTo(X, Y); } c.lineTo(x0 + w, y0 + h * (0.3 + k * 0.2) + 1.2); c.lineTo(x0, y0 + h * (0.3 + k * 0.2) + 1.2); c.closePath(); c.fill(); }
+        c.fillStyle = 'rgba(0,0,0,.12)'; for (let yy = y0; yy < y0 + h; yy += 2) c.fillRect(x0, yy, w, 0.5);
+        c.restore(); } },
+    // la grande roue : deux pieds en A, un moyeu ; la roue tourne lentement, ses nacelles pendent, vides
+    qroue: { w: 108, h: 124, fw: 48, fh: 6, anim: true, draw(c) { const hx = 54, hy = 58;
+      c.strokeStyle = '#d8c8b0'; c.lineWidth = 2; c.beginPath(); c.moveTo(hx - 26, 122); c.lineTo(hx, hy); c.lineTo(hx + 26, 122); c.stroke();
+      c.strokeStyle = '#8a7a68'; c.lineWidth = 1; c.beginPath(); c.moveTo(hx - 17, 100); c.lineTo(hx + 17, 100); c.stroke();
+      Rc(c, '#5a4a52', hx - 30, 119, 60, 4); Rc(c, '#8a7a80', hx - 30, 119, 60, 0.75); Rc(c, '#3a2e36', hx - 6, 112, 12, 8); Rc(c, '#ffd27a', hx - 3, 114, 6, 4); },
+      animer(c, x, y, t) { const hx = x, hy = y - 66, R0 = 44, n = 12, a0 = t * 0.12;
+        c.strokeStyle = 'rgba(240,220,200,.8)'; c.lineWidth = 1; c.beginPath(); c.arc(hx, hy, R0, 0, 6.3); c.stroke(); c.strokeStyle = 'rgba(240,220,200,.45)'; c.beginPath(); c.arc(hx, hy, R0 - 5, 0, 6.3); c.stroke();
+        c.strokeStyle = 'rgba(230,210,190,.5)'; c.lineWidth = 0.5; c.beginPath(); for (let k = 0; k < n; k++) { const a = a0 + k * 6.2832 / n; c.moveTo(hx, hy); c.lineTo(hx + Math.cos(a) * R0, hy + Math.sin(a) * R0); } c.stroke();
+        for (let k = 0; k < n; k++) { const a = a0 + k * 6.2832 / n, gx = hx + Math.cos(a) * R0, gy = hy + Math.sin(a) * R0, col = ['#ff6a8a', '#39c6ff', '#ffd84a', '#7dffb0'][k % 4];
+          c.fillStyle = '#e8dcc8'; c.fillRect(gx - 0.25, gy, 0.5, 2.5); c.fillStyle = col; c.beginPath(); c.ellipse(gx, gy + 5.5, 3.6, 3.2, 0, 0, 6.3); c.fill();
+          c.fillStyle = 'rgba(20,24,44,.75)'; c.fillRect(gx - 2.4, gy + 3.8, 4.8, 2.2); c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(gx - 2.4, gy + 3.8, 1.2, 0.5);
+          c.fillStyle = (Math.floor(t * 2) + k) % 3 ? 'rgba(255,240,200,.9)' : 'rgba(255,240,200,.35)'; c.fillRect(gx - 0.6, gy - 0.6, 1.2, 1.2); }
+        c.fillStyle = '#e8dcc8'; c.beginPath(); c.arc(hx, hy, 3, 0, 6.3); c.fill(); c.fillStyle = '#8a7a68'; c.beginPath(); c.arc(hx, hy, 1.4, 0, 6.3); c.fill(); } },
+    // les chaises volantes : un mât, une couronne qui tourne, des chaises vides au bout de leurs chaînes
+    qmanege: { w: 70, h: 66, fw: 40, fh: 6, anim: true, draw(c) { c.fillStyle = '#5a4a5a'; c.beginPath(); c.ellipse(35, 61, 30, 5, 0, 0, 6.3); c.fill(); c.fillStyle = '#8a7a86'; c.beginPath(); c.ellipse(35, 60, 28, 4.2, 0, 0, 6.3); c.fill();
+      c.fillStyle = '#c8a868'; c.beginPath(); c.ellipse(35, 59.5, 6, 1.6, 0, 0, 6.3); c.fill(); },
+      animer(c, x, y, t) { const top = y - 56, a0 = t * 0.9, n = 10, R0 = 25, chaise = (a, devant) => { const sx = Math.cos(a), sy = Math.sin(a); if ((sy > 0) !== devant) return;
+          const ax = x + sx * 13, ay = top + 4 + sy * 3, cx2 = x + sx * R0, cy2 = top + 26 + sy * 7.5;
+          c.strokeStyle = 'rgba(220,210,200,.7)'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(ax, ay); c.lineTo(cx2, cy2 - 3); c.stroke();
+          c.fillStyle = ['#ff6a8a', '#39c6ff', '#ffd84a', '#7dffb0', '#c49bff'][Math.floor(((a % 6.2832) + 6.2832) % 6.2832 / 6.2832 * n) % 5]; c.fillRect(cx2 - 2, cy2 - 3, 4, 1.4); c.fillRect(cx2 - 2, cy2 - 3, 1, 3.6); };
+        for (let k = 0; k < n; k++) chaise(a0 + k * 6.2832 / n, false);
+        c.fillStyle = '#d8c8b0'; c.fillRect(x - 1.5, top + 4, 3, 50); c.fillStyle = 'rgba(255,255,255,.4)'; c.fillRect(x - 1.5, top + 4, 0.75, 50);
+        for (let k = 0; k < 8; k++) { const a = a0 + k * 0.7854, s = Math.cos(a); c.fillStyle = k % 2 ? '#e84a6a' : '#f4e8d8'; c.beginPath(); c.moveTo(x, top - 6); c.lineTo(x + Math.cos(a) * 16, top + 4 + Math.sin(a) * 3.5); c.lineTo(x + Math.cos(a + 0.7854) * 16, top + 4 + Math.sin(a + 0.7854) * 3.5); c.closePath(); if (s > -2) c.fill(); }
+        c.fillStyle = '#ffd27a'; c.beginPath(); c.arc(x, top - 6, 1.6, 0, 6.3); c.fill();
+        for (let k = 0; k < n; k++) chaise(a0 + k * 6.2832 / n, true); } },
+    // les tasses : un plateau qui tourne, quatre tasses vides qui tournent sur elles-mêmes
+    qtasses: { w: 60, h: 30, fw: 40, fh: 6, anim: true, draw(c) { c.fillStyle = '#4a3e4e'; c.beginPath(); c.ellipse(30, 24, 28, 5.5, 0, 0, 6.3); c.fill(); c.fillStyle = '#7a6a80'; c.beginPath(); c.ellipse(30, 23, 26, 4.6, 0, 0, 6.3); c.fill(); },
+      animer(c, x, y, t) { const L = [0, 1, 2, 3].map(k => { const a = t * 0.6 + k * 1.5708; return { a, sx: x + Math.cos(a) * 15, sy: y - 7 + Math.sin(a) * 3.2, k }; }).sort((p, q) => p.sy - q.sy);
+        L.forEach(q => { const col = ['#ff6a8a', '#39c6ff', '#ffd84a', '#7dffb0'][q.k], w = 6 + Math.abs(Math.sin(t * 2.2 + q.k)) * 1.2;
+          c.fillStyle = shade(col, 0.6); c.beginPath(); c.ellipse(q.sx, q.sy, w, 2, 0, 0, 6.3); c.fill(); c.fillStyle = col; c.beginPath(); c.moveTo(q.sx - w, q.sy - 5); c.lineTo(q.sx + w, q.sy - 5); c.lineTo(q.sx + w * 0.75, q.sy); c.lineTo(q.sx - w * 0.75, q.sy); c.closePath(); c.fill();
+          c.fillStyle = shade(col, 0.45); c.beginPath(); c.ellipse(q.sx, q.sy - 5, w, 1.6, 0, 0, 6.3); c.fill(); c.fillStyle = 'rgba(255,255,255,.45)'; c.fillRect(q.sx - w + 1, q.sy - 4, 1, 3); }); } },
+    // un banc de rue : deux pieds de métal, des lattes de bois
+    qbanc: { w: 24, h: 13, fw: 16, fh: 4, draw(c) { Rc(c, '#2e2a34', 3, 7, 1.5, 5); Rc(c, '#2e2a34', 19.5, 7, 1.5, 5); Rc(c, '#8a6040', 1, 1, 22, 2); Rc(c, '#a87a52', 1, 1, 22, 0.5); Rc(c, '#7a5236', 1, 5, 22, 2.5); Rc(c, '#9a6a46', 1, 5, 22, 0.5); Rc(c, '#3a3440', 2, 3, 1, 2); Rc(c, '#3a3440', 21, 3, 1, 2); } },
+    // un lampadaire : un fût mince, un bras courbe, une tête qui éclaire vers le sol
+    qlampe: { w: 14, h: 46, fw: 4, fh: 3, draw(c) { Rc(c, '#2a2632', 6, 6, 1.5, 38); Rc(c, '#6a6278', 6, 6, 0.5, 38); Rc(c, '#3a3444', 4.5, 43, 4.5, 3);
+      c.strokeStyle = '#2a2632'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(6.75, 7); c.quadraticCurveTo(7, 2, 11, 2.5); c.stroke(); Rc(c, '#2a2632', 9, 2, 5, 2); Rc(c, '#fff0c8', 9.5, 3.6, 4, 1); } },
+    // un arbre du parc : un tronc, une couronne ronde, sombre au crépuscule, prise de lumière en haut à gauche
+    qarbre: { w: 30, h: 46, fw: 8, fh: 4, draw(c, r) { Rc(c, '#4a3426', 14, 26, 3, 18); Rc(c, '#6a4c36', 14, 26, 0.75, 18);
+      [[15, 19, 12, '#2c4428'], [9, 22, 7, '#2a4026'], [21, 22, 7.5, '#2a4026'], [15, 13, 9, '#355230'], [11, 16, 6, '#3c5a34'], [19, 15, 6.5, '#3c5a34']].forEach(([x, y, rr, col]) => { c.fillStyle = col; c.beginPath(); c.arc(x, y, rr, 0, 6.3); c.fill(); });
+      c.fillStyle = 'rgba(255,200,150,.18)'; for (let i = 0; i < 14; i++) { const a = r() * 3.2 + 3.4, d = r() * 9; c.fillRect(13 + Math.cos(a) * d, 12 + Math.sin(a) * d, 1.5, 1); } } },
+    // l'ascenseur du parvis, qui remonte des Archives basses : une cage de verre au cadre de laiton, une cabine éclairée
+    qkiosque: { w: 44, h: 58, fw: 32, fh: 8, draw(c) { Rc(c, '#3a2e38', 3, 54, 38, 4); Rc(c, '#8a7056', 3, 54, 38, 0.75);
+      const g = c.createLinearGradient(0, 8, 0, 54); g.addColorStop(0, 'rgba(120,150,200,.55)'); g.addColorStop(1, 'rgba(255,200,140,.6)'); Rc(c, g, 6, 8, 32, 46);
+      Rc(c, 'rgba(255,224,170,.7)', 14, 22, 16, 32); Rc(c, '#9a7c4c', 21.75, 22, 0.5, 32); Rc(c, 'rgba(255,255,255,.25)', 8, 10, 2, 42); Rc(c, 'rgba(255,255,255,.15)', 32, 10, 1, 42);
+      [6, 14, 30, 37.5].forEach(x => Rc(c, '#9a7c4c', x, 8, 0.75, 46)); Rc(c, '#9a7c4c', 6, 30, 32, 0.5);
+      Rc(c, '#2a2030', 2, 3, 40, 6); Rc(c, '#b89a64', 2, 3, 40, 0.75); Rc(c, '#ffd890', 18, 6, 8, 1.5); } }
+  });
   G.OBJ = OBJ;
   const ocache = {}, ecache = {};
   G.obj = function (type, opt, seed) {
