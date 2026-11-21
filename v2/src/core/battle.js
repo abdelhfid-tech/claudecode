@@ -776,6 +776,12 @@
   // Le secours (décision du décideur) : avant la fin d'une bataille déclarée presque perdue, si la prière a été tenue dans le
   // chapitre, le groupe est relevé, une fois par tentative. On ne montre que de la lumière : ni figure, ni nom, ni nombre.
   // On ne le commande pas : aucune action du combat ne le déclenche, et il ne vient pas dans un combat ordinaire.
+  // Son carton : le verset et sa référence (2.x : dans la langue secondaire aussi, sous ceux de la langue du jeu) — à part
+  // depuis la 2.24, pour que v2/tools/longueurs.js l'éprouve tel qu'il se montre
+  B.cartonSecours = function (T) {
+    const v2 = I.langue.l2() ? I.langue.second(T.verset, T, 'verset') : null, r2 = v2 ? I.langue.second(T.ref, T, 'ref') : null;
+    return `<div class="orn">✧</div><p class="small">${I.esc(T.titre)}</p><h1>${I.t('On ne le commande pas')}</h1><p>${I.esc(T.verset)}</p><p class="small">${I.esc(T.ref)}</p>${v2 ? S.bloc2(`<p>${I.esc(v2)}</p>${r2 ? `<p class="small">${I.esc(r2)}</p>` : ''}`) : ''}<p class="mot">${I.esc(T.mot)}</p><div class="hint">▼</div>`;
+  };
   async function leSecours(opts) {
     if (C.secouru || !I.mal.estIdole(opts) || !S.flags._prayed) return false;
     C.secouru = true; const T = (I.sagas.coeur && I.sagas.coeur.secours) || { titre: I.t('Le secours'), bandeau: I.t('Le groupe est relevé') }, vite = I.debug.auto;
@@ -787,10 +793,7 @@
     });
     I.audio.sfx('roll'); refresh(); I.oeuvres.learn('secours');
     const d = I.oeuvres.state();
-    if (!d.vuSecours && !vite && T.verset) { d.vuSecours = true; await I.sleep(500);
-      // 2.x : le verset et sa référence, dans la langue secondaire, sous ceux de la langue du jeu
-      const v2 = I.langue.l2() ? I.langue.second(T.verset, T, 'verset') : null, r2 = v2 ? I.langue.second(T.ref, T, 'ref') : null;
-      await S.card('pray secours', `<div class="orn">✧</div><p class="small">${I.esc(T.titre)}</p><h1>${I.t('On ne le commande pas')}</h1><p>${I.esc(T.verset)}</p><p class="small">${I.esc(T.ref)}</p>${v2 ? S.bloc2(`<p>${I.esc(v2)}</p>${r2 ? `<p class="small">${I.esc(r2)}</p>` : ''}`) : ''}<p class="mot">${I.esc(T.mot)}</p><div class="hint">▼</div>`); }
+    if (!d.vuSecours && !vite && T.verset) { d.vuSecours = true; await I.sleep(500); await S.card('pray secours', B.cartonSecours(T)); }
     else await banner(`<small>${I.esc(T.titre)}</small>${I.esc(T.bandeau)}`, 1700, false, 'speech intro');
     if (!vite) await I.sleep(500);
     return true;

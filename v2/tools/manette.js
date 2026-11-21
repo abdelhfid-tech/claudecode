@@ -91,6 +91,13 @@ async function contraste([b64, sel]) {
       if (m.absent) return ko('INVISIBLE', `${nom} · ${ou} : rien n'est sélectionné (${sel})`);
       dit(m.choisi >= 3 && (m.voisin === null || m.choisi >= m.voisin * 1.5), 'INVISIBLE', `${nom} · ${ou} : la sélection se voit — « ${m.texte} », anneau ${m.choisi} : 1 contre son fond${m.voisin !== null ? `, un voisin non choisi ${m.voisin} : 1` : ''}`); };
     const choisi = sel => p.evaluate(sel => { const e = document.querySelector(sel); return e ? e.textContent.trim() : ''; }, sel);
+    // (2.24) une réplique qui s'écrit encore s'achève d'abord, comme le fait le joueur : un appui l'écrit d'un coup (la vitesse
+    // « posée » d'office écrit une réplique de soixante-dix signes en près de trois secondes)
+    const achever = async (bouton, ou) => { if (await p.evaluate(() => !document.getElementById('dialog').hidden && document.querySelector('#dialog .next').style.visibility !== 'visible')) { await bouton(ou + ', l’écriture achevée'); await p.waitForTimeout(300); } };
+    // (2.24) aller, au joystick, jusqu'à la case de la halte qui porte ce nom : en hauteur, la liste est sur deux colonnes
+    const allerA = async (re, ou) => { for (let i = 0; i < 40; i++) { const d = await p.evaluate(src => { const re = new RegExp(src), b = [...document.querySelectorAll('#menu .side button')], s = document.querySelector('#menu .side button.sel'), c = b.find(x => re.test(x.textContent.trim()));
+        if (!s || !c) return null; if (c === s) return 'ici'; const a = s.getBoundingClientRect(), z = c.getBoundingClientRect(); return Math.abs(z.top - a.top) > 4 ? (z.top > a.top ? 'down' : 'up') : (z.left > a.left ? 'right' : 'left'); }, re.source);
+      if (!d || d === 'ici') return; await joy(d, ou); } };
     const entree = async () => { if (await p.evaluate(() => { const c = document.querySelector('#choice'); if (c && !c.hidden) { const o = c.querySelectorAll('.opt'); if (o.length) { o[o.length - 1].click(); return false; } } return ['#card', '#dialog'].some(q => { const e = document.querySelector(q); return e && !e.hidden; }); })) await p.keyboard.press('Enter'); };
     // (2.19) le combat : attendre les commandes d'un compagnon (A passe un bandeau qui attend) ; toucher une commande
     const tour = async () => { for (let i = 0; i < 100; i++) { const r = await p.evaluate(() => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); if (!window.ISNAD.battle.active) return 'fini';
@@ -170,7 +177,7 @@ async function contraste([b64, sel]) {
     await B('la halte, la carte'); const h2 = await p.evaluate(() => ({ titre: document.querySelector('#menu h2').textContent, ouverte: !document.getElementById('menu').hidden }));
     dit(h2.ouverte && h2.titre === 'Halte', 'ÉCART', `${nom} · la halte : B revient d'un cran (« ${h2.titre} »)`);
     // le réglage « Manette tactile », et ce qu'il dit
-    for (let i = 0; i < 40 && !/^Manette tactile/.test(await choisi('#menu .side button.sel')); i++) await joy('down', 'la halte, les réglages');
+    await allerA(/^Manette tactile/, 'la halte, les réglages');
     const rg = await p.evaluate(() => ({ b: (document.querySelector('#menu .side button.sel') || {}).textContent || '', pane: document.querySelector('#menu .pane').textContent }));
     dit(/^Manette tactile : affichée/.test(rg.b) && /A pour parler, agir et valider ; B pour frapper et revenir en arrière/.test(rg.pane), 'ÉCART', `${nom} · la halte : le réglage « ${rg.b} » dit ce que font A et B`);
     await rien('la halte, la manette'); await vue('#menu .side button.sel', 'la halte, la manette'); await shot('halte-reglage-manette');
@@ -189,7 +196,7 @@ async function contraste([b64, sel]) {
     /* 4. un dialogue : A, puis B */
     await p.evaluate(() => { const S = window.ISNAD.script; S.depth++; window.__fin = false; S.run([['say', 'khalid', 'Nous tiendrons la passe jusqu’à l’aube. Que chacun garde son rang.'], ['say', 'khalid', 'Et que personne ne quitte la crête avant le signal.']]).then(() => { S.depth--; S.hideDialog(); window.__fin = true; }); });
     await p.waitForTimeout(1600); await rien('un dialogue'); await shot('dialogue');
-    const d0 = await choisi('#dialog .text'); await A('un dialogue'); await p.waitForTimeout(1500); const d1 = await choisi('#dialog .text');
+    await achever(A, 'un dialogue'); const d0 = await choisi('#dialog .text'); await A('un dialogue'); await p.waitForTimeout(1500); await achever(A, 'un dialogue'); const d1 = await choisi('#dialog .text');
     dit(/garde son rang/.test(d0) && /quitte la crête/.test(d1), 'ÉCART', `${nom} · un dialogue : A passe à la réplique suivante`);
     await B('un dialogue'); await p.waitForTimeout(400); const d2 = await p.evaluate(() => ({ fini: window.__fin, cache: document.getElementById('dialog').hidden }));
     dit(d2.fini && d2.cache, 'ÉCART', `${nom} · un dialogue : B passe la dernière réplique`);
