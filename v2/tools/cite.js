@@ -21,7 +21,7 @@
    « COINCÉ », « ABSENT » ; code de sortie 1. */
 const path = require('path'), fs = require('fs');
 const { chromium, devices } = require('playwright');
-const out = process.argv[2] || path.join(__dirname, '../.smoke/cite'), SEUL = process.argv[3] === 'avancement'; // « avancement » : les seules parties 13 et 14
+const out = process.argv[2] || path.join(__dirname, '../.smoke/cite'), SEUL = process.argv[3] === 'avancement' || process.argv[3] === 'niveau1', NIV1 = process.argv[3] === 'niveau1'; // « avancement » : les seules parties 13 et 14 ; « niveau1 » : la seule partie 14
 fs.mkdirSync(out, { recursive: true });
 const url = 'file://' + path.join(__dirname, '../index.html');
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); }, si = (c, bien, mal, mot) => c ? ok(bien) : ko((mot || 'ÉCART') + ' ' + (mal || bien));
@@ -331,7 +331,7 @@ async function avancer(p, n = 120) {
   //               récits et d'une veillée, aucun maillon achevé, mène aux quartiers, à côté de Maître Yûnus ----------
   // (les maillons se suivent sur la Chaîne, D211 : l'outil ouvre lui-même chaque récit à son premier chapitre ; ce qu'il éprouve,
   // c'est la halte de ce récit, par son vrai bouton)
-  {
+  if (!NIV1) {
     const T = await telephone(browser, 390, 844), P = T.p, E = (fn, a) => P.evaluate(fn, a);
     await E(() => { const I = window.ISNAD; I.speed = 40; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true }; });
     const vus = [];
@@ -368,14 +368,30 @@ async function avancer(p, n = 120) {
     const rejoindre = id => E(id => { const I = window.ISNAD, W = I.world, f0 = W.foes.find(f => f.rue), T = window.__t; W.healAll(); T.res = null; T.defaites = 0;
       W.foes.push(Object.assign({}, f0, { id: 'essai_' + id + '_' + W.foes.length, group: [id], cle: null, done: false, enCombat: false, placed: true, x: W.player.x + 8, y: W.player.y }));
       return T.attendre(() => I.battle.active, 8000); }, id);
+    // (quand elle n'ouvre pas de combat : où en est le monde, et où est-elle passée)
+    const etatRue = () => E(() => { const I = window.ISNAD, W = I.world, S = I.script, R = I.rodeurs, p = W.player, T = window.__t, f = W.foes.filter(g => /^essai_/.test(g.id)).pop();
+      return { calme: T.calme(), scene: I.scene === W, busy: !!S.busy, depth: S.depth, lock: !!W.lock, bataille: !!I.battle.active, menu: !!I.ui.menuOpen, choix: T.choix(), dialogue: T.dialogue().slice(0, 60), carte: W.map && W.map.id, auto: !!I.debug.auto,
+        fuite: !!R.fuite, intouchable: R.intouchable(), journal: I.cite.journal.slice(-4), joueur: [Math.round(p.x), Math.round(p.y)],
+        chimere: f ? { id: f.id, d: Math.round(Math.hypot(f.x - p.x, f.y - p.y)), done: f.done, enCombat: f.enCombat, placed: f.placed, map: f.map, sonne: f.sonne, chasse: f.chasse } : null }; });
+    // après un combat des rues, le rappel de la prière, puis « Plus tard » (B). On attend que le jeu les ait notés (cite.journal),
+    // et non le seul calme : le monde peut sembler calme un instant avant que le rappel ne paraisse, surtout sur une machine chargée
+    // (la ligne restait alors à l'écran, et plus rien ne pouvait ouvrir de combat)
+    const journal = () => E(() => window.ISNAD.cite.journal.length);
+    const apresCombat = async (n0, calme) => { const t0 = Date.now();
+      while (Date.now() - t0 < 60000) {
+        const r = await avancer(P, 30); if (r === 'choix') { await P.waitForTimeout(400); await P.keyboard.press('Escape'); await P.waitForTimeout(300); continue; }
+        if (await E(([n0, calme]) => window.ISNAD.cite.journal.slice(n0).some(j => j.quoi === 'plus-tard' || j.quoi === 'revoir') && (!calme || window.__t.calme()), [n0, calme])) return true;
+        await P.waitForTimeout(200); }
+      return false; };
     const bilan = [];
     for (const id of await E(() => Object.keys(window.ISNAD.D.CITE.rodent))) {
-      if (!(await rejoindre(id))) { ko(`BLOQUÉ au niveau 1 : la chimère « ${id} » n’ouvre pas de combat`); continue; }
+      const n0 = await journal();
+      if (!(await rejoindre(id))) { ko(`BLOQUÉ au niveau 1 : la chimère « ${id} » n’ouvre pas de combat : ${JSON.stringify(await etatRue())}`); continue; }
       await P.waitForTimeout(600);
       const niv = await E(() => { const C = window.ISNAD.battle.contexte(); return C ? C.all.filter(e => e.side === 'foe').map(e => e.lvl) : []; });
       const t0 = Date.now();   // A, encore et encore : la commande du dessus (Frapper) s'arme, puis agit sur la cible désignée
       while (Date.now() - t0 < 180000 && await E(() => window.ISNAD.battle.active)) { await P.keyboard.press('Enter'); await P.waitForTimeout(260); }
-      const r = await avancer(P); if (r === 'choix') { await P.waitForTimeout(400); await P.keyboard.press('Escape'); await P.waitForTimeout(300); }   // le rappel ; « Plus tard » (B)
+      if (!(await apresCombat(n0, true))) ko(`BLOQUÉ au niveau 1 : après le combat contre « ${id} », le rappel de la prière ne passe pas : ${JSON.stringify(await etatRue())}`);   // le rappel ; « Plus tard » (B)
       const b = await E(() => { const I = window.ISNAD, L = I.battle.last || {}, T = window.__t; return { res: T.res, defaites: T.defaites, tours: L.turns, pv: Math.round((L.minHp === undefined ? 1 : L.minHp) * 100), lvl: I.world.hero('idris').lvl, groupe: I.world.party.join('+') }; });
       b.id = id; b.niv = niv; bilan.push(b);
       si(b.res === 'win' && b.defaites === 0 && niv.length && niv.every(n => n === 1) && b.groupe === 'idris',
@@ -385,17 +401,18 @@ async function avancer(p, n = 120) {
     }
     // la fuite, au niveau 1 : « Fuir » (l'outil « Se protéger » reçu), par son vrai bouton ; la chimère poursuit
     await E(() => { window.ISNAD.lecons.recevoir('garde'); window.ISNAD.lecons.sequence(); });
+    const n0 = await journal();
     if (await rejoindre('egoisme')) {
       // les commandes du premier tour (un mot qui attend, en bas — la leçon de l'outil — se passe d'un A, comme le ferait le joueur)
       let vu = false; for (let i = 0; i < 120 && !vu; i++) { const r = await E(() => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); if (b && !b.hidden && b.classList.contains('attend')) return 'attend'; return c && c.querySelector('.mlist.main .mi') && !c.querySelector('.mhint') && b.hidden ? 'cmd' : ''; });
         if (r === 'cmd') { await P.waitForTimeout(350); vu = true; } else { if (r === 'attend') await P.keyboard.press('Enter'); await P.waitForTimeout(150); } }
       const clic = vu && await E(() => { const b = [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].find(x => !x.hidden && /Fuir/.test(x.textContent)); if (b) b.click(); return !!b; });
       const fini = clic && await E(() => window.__t.attendre(() => !window.ISNAD.battle.active, 20000));
-      const r = await avancer(P); if (r === 'choix') { await P.waitForTimeout(400); await P.keyboard.press('Escape'); await P.waitForTimeout(300); }
+      const passe = fini && await apresCombat(n0, false);   // (la chimère fuie poursuit : le calme ne dure pas)
       const f = await E(() => ({ res: window.__t.res, carte: window.ISNAD.world.map && window.ISNAD.world.map.id, poursuit: window.ISNAD.world.foes.some(f => f.rue && !f.done && window.ISNAD.rodeurs.poursuit(f)) }));
-      si(fini && f.res === 'fuite' && f.carte === 'quartiers', `au niveau 1, « Fuir » quitte le combat : Idris est rendu aux quartiers${f.poursuit ? ', la chimère à ses trousses' : ''}`, `au niveau 1, la fuite : ${JSON.stringify({ vu, clic, fini, f })}`, 'INACCESSIBLE');
+      si(fini && passe && f.res === 'fuite' && f.carte === 'quartiers', `au niveau 1, « Fuir » quitte le combat : Idris est rendu aux quartiers${f.poursuit ? ', la chimère à ses trousses' : ''}`, `au niveau 1, la fuite : ${JSON.stringify({ vu, clic, fini, passe, f })}`, 'INACCESSIBLE');
       await E(() => window.__t.endormir());
-    } else ko('BLOQUÉ au niveau 1 : la chimère de la fuite n’ouvre pas de combat');
+    } else ko(`BLOQUÉ au niveau 1 : la chimère de la fuite n’ouvre pas de combat : ${JSON.stringify(await etatRue())}`);
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'niveau 1 · ' + e)); await T.ctx.close();
   }
   if (toutesErreurs.length) { anomalies++; console.log('--- ERREURS ---'); [...new Set(toutesErreurs)].slice(0, 12).forEach(e => console.log(e)); }
