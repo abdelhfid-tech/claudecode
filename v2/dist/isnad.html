@@ -1,4 +1,4 @@
-<title>ISNAD 2.26</title>
+<title>ISNAD 2.27</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400&family=Amiri&family=Cinzel:wght@500;700&family=Reem+Kufi:wght@500;700&family=Share+Tech+Mono&family=Noto+Naskh+Arabic:wght@400;700&family=Amiri+Quran&family=Noto+Serif+JP:wght@400;700&display=swap">
 <style>
@@ -904,6 +904,34 @@ html:not(.lum215) body.portrait { background: linear-gradient(180deg, #3d2c20 0%
 html:not(.lum215) body.portrait[data-theme="roman"] { background: linear-gradient(180deg, #3c2832 0%, #2a1c26 45%, #1c131a 100%); }
 html:not(.lum215) body.portrait[data-theme="cyber"] { background: linear-gradient(180deg, #43204f 0%, #321a44 40%, #3c1c34 75%, #2a1522 100%); }
 
+/* ---------- 2.27 (D216) : la course (circuit.js) — le chrono et le tour, le classement, le signe, le compte à rebours, le bilan ----------
+   En largeur, en haut et à gauche de l'image (la manette tient les deux coins du bas ; le plan est dans le coin du haut à droite,
+   peint sur l'image) ; le signe et le bilan au pied de l'image, entre les deux zones de la manette. En hauteur, sous l'image,
+   au-dessus de la bande de la manette. Rien ne s'y touche : on joue au joystick, à A et à B. */
+#course { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+#course .tableau { position: absolute; left: 2%; top: 3%; padding: .25em .7em .3em; background: rgba(8, 7, 18, .62); border: 1px solid var(--line); border-radius: .4em; font-family: var(--f-mono); color: var(--sand); text-shadow: 0 1px 2px #000; max-width: 46%; }
+#course .chrono b { font-size: 1.3em; color: var(--gold); letter-spacing: .04em; } #course .chrono b.titre { font-size: 1em; letter-spacing: 0; }
+#course .tour { font-size: .78em; color: var(--sand); }
+#course .rangs { position: absolute; left: 2%; top: calc(3% + 3.9em); margin: 0; padding: .25em .6em; list-style: none; background: rgba(8, 7, 18, .55); border-radius: .4em; font-size: .78em; color: var(--sand); }
+#course .rangs:empty { display: none; }
+#course .rangs li { white-space: nowrap; } #course .rangs li.moi { color: var(--gold); font-weight: 700; }
+#course .rangs i { display: inline-block; width: .8em; height: .8em; border-radius: 50%; margin-right: .4em; vertical-align: -.05em; border: 1px solid rgba(255, 255, 255, .6); }
+#course .signe { position: absolute; left: 10%; right: 10%; bottom: 4%; text-align: center; font-size: .86em; color: var(--sand); text-shadow: 0 1px 3px #000, 0 0 10px rgba(0, 0, 0, .9); }
+#course .signe:empty { display: none; }
+#course .signe .mal { color: #ffe08a; font-weight: 700; } #course .signe .bien { color: #7dffb0; font-weight: 700; }
+#course .compte { position: absolute; left: 0; right: 0; top: 34%; text-align: center; font-family: var(--f-display); font-size: 3.2em; color: var(--gold); text-shadow: 0 2px 6px #000, 0 0 24px rgba(255, 200, 120, .6); }
+#course .bilan { position: absolute; left: 12%; right: 12%; bottom: 4%; max-height: 62%; overflow-y: auto; padding: .5em 1em .6em; background: rgba(10, 9, 22, .9); border: 1px solid var(--line); border-radius: 3px; text-align: center; color: var(--sand); pointer-events: auto; }
+#course .bilan h3 { margin: 0 0 .25em; font-family: var(--f-display); color: var(--gold); letter-spacing: .08em; font-size: 1.05em; }
+#course .bilan p { margin: .2em 0; } #course .bilan .prime { color: #7dffb0; font-weight: 700; } #course .bilan .suite { margin-top: .3em; color: var(--gold); font-family: var(--f-mono); }
+#course.fini .tableau, #course.fini .rangs, #course.fini .signe { display: none; }
+body.immersif.manette #course .signe, body.immersif.manette #course .bilan { left: max(10%, var(--pad-g, 0px)); right: max(10%, var(--pad-d, 0px)); }
+body.portrait #course .tableau { top: calc(100% + 10px); left: 10px; max-width: 58%; }
+body.portrait #course .rangs { top: calc(100% + 10px); left: auto; right: 10px; }
+body.portrait #course .signe { top: calc(100% + 10px + 4.4em); bottom: auto; left: 10px; right: 10px; }
+body.portrait #course .bilan { top: calc(100% + 10px); bottom: auto; left: 8px; right: 8px; max-height: calc(100dvh - 100% - var(--pad-bas, 0px) - 24px); }
+body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px); }
+.opt .gagne { color: #7dffb0; }
+
 </style>
 <div id="app">
   <div id="stage">
@@ -921,6 +949,7 @@ html:not(.lum215) body.portrait[data-theme="cyber"] { background: linear-gradien
         <div class="order"></div><div class="plates"></div><div class="front" hidden></div>
         <div class="panel"><div class="heroes"></div><div class="cmd"></div><div class="banner" hidden></div></div>
       </div>
+      <div id="course" hidden><div class="tableau"><div class="chrono"></div><div class="tour"></div></div><ol class="rangs"></ol><div class="signe"></div><div class="compte"></div><div class="bilan" hidden></div></div>
       <div id="floaters"></div>
       <div id="noms"></div>
       <div id="dialog" hidden><div class="seal"></div><img class="fig" alt="" hidden><div class="name"></div><div class="text"></div><div class="next">▼</div></div>
@@ -966,7 +995,7 @@ html:not(.lum215) body.portrait[data-theme="cyber"] { background: linear-gradien
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.26 · 2026-11-21 18:32 UTC · 4fda44d";
+window.ISNAD_VERSION = "2.27 · 2026-11-21 23:00 UTC · 43b9dce+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -1034,7 +1063,9 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     halte: { nom: 'La halte', geste: true }, source: { nom: 'Retrouver une source' }, equipement: { nom: 'S’équiper' }, etoiles: { nom: 'S’orienter aux étoiles', geste: true },
     frappe: { nom: 'Frapper ce qui rôde' }, postures: { nom: 'Prendre une figure' },
     // 2.23 (D212) : les quartiers de la Cité, où l'on remonte à tout moment — un simple geste, dit par Maître Yûnus à la première arrivée
-    cite: { nom: 'Revenir dans la Cité', geste: true }
+    cite: { nom: 'Revenir dans la Cité', geste: true },
+    // 2.27 (D216) : derrière Sâlim, sur sa moto, au premier passage au circuit ; il resert à la première course (circuit.js)
+    virages: { nom: 'Prendre les virages' }
   };
 
   /* 2.23 (D212) — les quartiers de la Cité-Miroir. Demande du décideur, 21 novembre : « il y trouve beaucoup d'activités mais
@@ -1046,8 +1077,52 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
      du parvis elles se posent. Le trafic (trafic.js) : `voitures`, sur la boucle des avenues ; `course`, sur le circuit ; `vitesse`
      et `circuit`, en points par seconde ; `arret`, la distance (en points) à laquelle une voiture s'arrête devant quelqu'un.
      Nombres proposés par l'agent, à valider. */
-  D.CITE = { rodent: { egoisme: 1, materialisme: 1, plaisir: 1, indifference: 1 }, nombre: 3, vue: 6, pas: 0.45, loin: 12,
-    voitures: 6, course: 3, vitesse: 58, circuit: 120, arret: 20 };
+  D.CITE = { rodent: { egoisme: 1, materialisme: 1, plaisir: 1, indifference: 1, pari: 1 }, nombre: 3, vue: 6, pas: 0.45, loin: 12,
+    voitures: 6, course: 3, vitesse: 58, circuit: 120, arret: 20,
+    // 2.27 (D216) : une chimère qui rôde ailleurs que dans les rues — « Le Pari », parmi les parieurs de la tribune (rodeurs.js :
+    // elle y est posée à chaque arrivée, et n'en sort pas)
+    zones: { pari: ['qgradin'] } };
+
+  /* 2.27 (D216) — « Sâlim et la course ». Demandes du décideur, 21 novembre : « des courses de voitures » ; « Les activités de
+     la cité miroir sont omniprésents des le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la
+     saga » ; « Les courses de voitures sont de plus en plus difficiles avec des circuits » ; « Un ami vient en moto et demande à
+     Idriss de monter derrière lui pour sa première course ». Aucun nombre dans un récit : tout est ici (circuit.js les lit).
+     Un tracé est un polygone fermé, en points d'une toile de 1100 × 740 : chaque sommet [x, y, r] est un virage, arrondi au
+     rayon r (un congé entre les deux droites) ; on court dans l'ordre des sommets. `large` : la demi-largeur de la chaussée ;
+     `tours` ; `temps` : le temps à battre, en secondes (0 : aucun) ; `depart` : l'arête au milieu de laquelle se tire la ligne
+     de départ ; `nuit` ; `viaduc` : l'arête qui passe en hauteur, de `de` à `a` (parts de sa droite) ; `prime` : ce que verse
+     l'organisateur au premier ; `adversaires` : la part de la vitesse de pointe (`vitesse`) et de l'adhérence (`adresse`) que
+     chacun prend, et son avance sur la grille (`avance`, en points). Un circuit est gagné à la première place — et, s'il a un
+     temps à battre, sous ce temps ; il s'ouvre quand le précédent est gagné ; un circuit gagné se rejoue.
+     D.COURSE : la voiture (pointe, accélération, lâcher, frottement, freinage, braquage, adhérence, hors de la chaussée, barrière, rebond), la moto de
+     Sâlim et son tracé, la part de la prime aux deuxième et troisième places, le plafond des primes par visite.
+     Aucune mise, nulle part : on ne paie pas pour courir, on ne gagne que la prime de l'organisateur (regles.js le vérifie).
+     Nombres proposés par l'agent, réglés par des courses jouées par le jeu lui-même (le circuit 1 se gagne au premier essai,
+     le 5 demande de l'adresse), à valider. */
+  D.CIRCUITS = [
+    { id: 'avenues', trace: [[140, 140, 90], [960, 140, 90], [960, 580, 90], [140, 580, 90]], large: 38, tours: 2, temps: 52, depart: 3, prime: 6,
+      adversaires: [] },
+    { id: 'places', trace: [[140, 140, 60], [620, 140, 60], [620, 330, 50], [960, 330, 60], [960, 600, 60], [420, 600, 60], [420, 450, 50], [140, 450, 60]], large: 32, tours: 3, temps: 0, depart: 7, prime: 10,
+      adversaires: [{ vitesse: 0.8, adresse: 0.7, avance: 60 }, { vitesse: 0.83, adresse: 0.72, avance: 36 }, { vitesse: 0.86, adresse: 0.7, avance: 12 }] },
+    { id: 'chicane', trace: [[140, 140, 42], [500, 140, 22], [540, 200, 22], [620, 200, 22], [660, 140, 22], [980, 140, 40], [980, 600, 40], [700, 600, 35], [700, 440, 35], [480, 440, 35], [480, 600, 35], [140, 600, 42]], large: 27, tours: 3, temps: 0, depart: 11, prime: 15,
+      adversaires: [{ vitesse: 0.88, adresse: 0.82, avance: 60 }, { vitesse: 0.9, adresse: 0.84, avance: 36 }, { vitesse: 0.92, adresse: 0.85, avance: 12 }] },
+    { id: 'viaduc', trace: [[300, 140, 60], [120, 260, 60], [120, 460, 60], [300, 580, 60], [760, 140, 60], [940, 260, 60], [940, 460, 60], [760, 580, 60]], large: 26, tours: 3, temps: 57, depart: 5, prime: 22,
+      viaduc: { arete: 7, de: 0.28, a: 0.72 }, adversaires: [{ vitesse: 0.91, adresse: 0.86, avance: 140 }] },
+    { id: 'tours', trace: [[140, 120, 34], [560, 120, 30], [560, 260, 26], [720, 260, 26], [720, 120, 30], [980, 120, 34], [980, 360, 30], [820, 360, 26], [820, 500, 28], [980, 500, 32],
+      [980, 620, 32], [560, 620, 30], [560, 460, 28], [380, 460, 28], [380, 620, 30], [140, 620, 34], [140, 400, 30], [260, 400, 28], [260, 260, 28], [140, 260, 30]], large: 22, tours: 2, temps: 0, depart: 0, prime: 30, nuit: true,
+      adversaires: [{ vitesse: 0.93, adresse: 0.88, avance: 60 }, { vitesse: 0.94, adresse: 0.89, avance: 36 }, { vitesse: 0.95, adresse: 0.9, avance: 12 }] }
+  ];
+  D.COURSE = {
+    // `frotte` : ce que perd une voiture qu'on fait tourner plus vite que son adhérence ne le permet ; `frein` : le freinage des
+    // adversaires (le joueur n'a que le lâcher et le frottement)
+    voiture: { vmax: 150, accel: 85, lache: 90, frotte: 120, frein: 220, braquage: 3.4, adherence: 300, horsPiste: 0.5, barriere: 6, rebond: 0.6 },
+    // la moto de Sâlim : il pilote ; Idris se penche. Bien penché (le joystick, ou les flèches, vers l'intérieur du virage, à
+    // `angle` degrés près), elle garde sa vitesse de virage ; mal penché, elle ralentit (`mal`), sans chute ni blessure.
+    // `annonce` : à combien de points avant un virage le signe paraît ; `bien` : la part du virage qu'il faut tenir penché.
+    moto: { trace: [[160, 160, 60], [600, 160, 55], [600, 330, 50], [880, 330, 60], [880, 580, 60], [460, 580, 55], [460, 440, 45], [160, 440, 60]], large: 30, depart: 7,
+      vmax: 118, adherence: 230, accel: 70, frein: 150, mal: 0.6, angle: 65, annonce: 46, bien: 0.5 },
+    podium: [1, 0.4, 0.2], plafond: 60
+  };
 
   // 2.19 — les parades du combat (demande du décideur, 20 novembre : « Rajoute une parade "esquive" » ; « Rajoute aussi une
   // parade "fuire" pour quitter le combat même si on sera poursuivi il faudra courir pour échapper au monstre »). Nombres
@@ -1643,6 +1718,13 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     const C = contexte || {}, savoirConnu = C.savoirConnu || (() => false), ennemisCommuns = C.ennemisCommuns || (() => ({}));
     // (la garde des noms : définie ici parce que les lieux et les objets d'un paquet y passent aussi)
     const NOM_INTERDIT = /(^|[^a-zà-ÿ])(ibl[iî]s|satan|sh?a[iy]t[aâ]ne?s?|chayt[aâ]ne?s?|diables?|d[ée]mons?|d?jinns?)(?![a-zà-ÿ])/i;
+    /* 2.27 (D216) — aucun pari ni jeu de hasard ne se joue ; le pari n'est qu'une chimère. La règle, simple : aucune réponse offerte
+       au joueur (un choix, une question, un pourparler, un menu de la course : cite.course), aucun nom de héros, de vertu, d'objet
+       ou de pièce ne porte les mots du pari (PARI, et LANG.*.pari dans chaque langue) ; les tables de la course (D.CIRCUITS,
+       D.COURSE) n'ont que leurs champs déclarés — ni mise, ni enjeu, ni cote, ni droit d'entrée — et une prime positive ou nulle.
+       Le pari, une chimère (« Le Pari »), un parieur (un passant de fiction), un texte qui le dit : rien de cela n'est offert. */
+    const PARI = /(^|[^a-zà-ÿ])(pari|paris|parier|parie|paries|parions|pariez|parient|parié|mise|mises|miser|misons|misez|misé|enjeux?|loteries?|casino|tirage au sort|jeux? de hasard|double ou rien|cotes?|gager|gageure)(?![a-zà-ÿ])/i;
+    const pari = (t, where, E) => { if (typeof t === 'string' && PARI.test(t)) E.push(`${where}: « ${t.slice(0, 60)} » — aucun pari ni jeu de hasard ne se joue : rien de ce qu'on offre au joueur ne propose de parier ni de miser (le pari n'est qu'une chimère)`); };
 
     // l'équipement (D.GEAR) : chaque pièce a un type, un rang, un nom, une description sobre ; aucun mot qui en ferait une relique
     function verifierEquipement() { const E = [], STATS = ['atk', 'mag', 'def', 'spd', 'hp', 'sp'], TRAITS = ['perce', 'vif', 'choc', 'parade', 'ferme'], INTERDIT = /allah|dieu|proph|bén[ie]|sacr|saint|relique|talisman|amulette|miracl|\bor\b|doré|soie/i;
@@ -1652,6 +1734,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
         if (!(Number.isInteger(g.r) && g.r >= 0 && g.r < D.GEAR_PRIX.length)) E.push(`${id}: rang invalide`);
         if (typeof g.name !== 'string' || typeof g.desc !== 'string') E.push(`${id}: nom ou description manquant`);
         else if (INTERDIT.test(g.name + ' ' + g.desc)) E.push(`${id}: un objet ne reçoit ni nom divin, ni vertu, ni or, ni soie (exigences 8, 15, 16)`);
+        pari(g.name, id, E);   // 2.27 : aucune pièce n'est un enjeu
         if (D.ITEMS[id]) E.push(`${id}: même identifiant qu'un objet de la besace`);
         STATS.forEach(k => { if (g[k] !== undefined && !(typeof g[k] === 'number' && Math.abs(g[k]) <= 25)) E.push(`${id}: ${k} hors bornes (±25 %)`); });
         TRAITS.forEach(k => { if (g[k] !== undefined && !(g[k] > 0 && g[k] <= 0.6)) E.push(`${id}: ${k} hors bornes (0 à 0,6)`); });
@@ -1688,6 +1771,38 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
         }
       }
       return `${ch} chapitres, ${ops} opérations, ${bat} combats, ${cho} choix, ${par} pourparlers, ${pry} prières`;
+    }
+
+    /* 2.27 (D216) — Sâlim et la course : ce que dit le circuit (cite.course), les tables (D.CIRCUITS, D.COURSE) et la zone du Pari.
+       Le circuit s'ouvre dès le prologue joué, avant l'étape III de la découverte de l'Agrégor (2.25) : aucun de ses textes ne le
+       nomme. Aucun nombre dans un récit : ils sont tous dans les tables. */
+    function verifierCourse(C, E) {
+      const txt = (v, w) => { if (typeof v !== 'string' || !v.trim()) { E.push(`cite.course.${w}: texte manquant`); return; } if (/agr[ée]gor/i.test(v)) E.push(`cite.course.${w}: le circuit s'ouvre avant que l'Agrégor soit nommé (2.25) : aucun de ses textes ne le nomme`); if (/\d/.test(v)) E.push(`cite.course.${w}: aucun nombre dans un récit (D.CIRCUITS, D.COURSE)`); if (NOM_INTERDIT.test(v)) E.push(`cite.course.${w}: ni Iblîs, ni démon, ni djinn`); };
+      const liste = (v, w, a, b) => { if (!Array.isArray(v) || v.length < a || v.length > b) { E.push(`cite.course.${w}: de ${a} à ${b} textes`); return; } v.forEach((t, i) => txt(t, `${w}[${i}]`)); };
+      if (!C || typeof C !== 'object') { E.push('cite.course: manquant (Sâlim et la course, D216)'); return; }
+      const A = C.arrivee || {}; liste(A.salim, 'arrivee.salim', 2, 2); txt(A.idris, 'arrivee.idris');
+      ['offre', 'monter', 'pasMaintenant', 'refus', 'revoir', 'plusTard', 'depart', 'descendu', 'encoreQ', 'encore', 'uneAutreFois'].forEach(k => txt(C[k], k));
+      liste(C.fins, 'fins', 3, 3); liste(C.apres, 'apres', 1, 4); liste(C.salim, 'salim', 3, 8);
+      const O = C.organisateur || {}; txt(O.avant, 'organisateur.avant'); liste(O.accueil, 'organisateur.accueil', 1, 5); txt(O.choix, 'organisateur.choix');
+      if (!Array.isArray(C.circuits) || C.circuits.length !== (D.CIRCUITS || []).length) E.push(`cite.course.circuits: un nom et un mot par circuit de D.CIRCUITS (${(D.CIRCUITS || []).length})`);
+      else C.circuits.forEach((c, i) => { txt(c && c.nom, `circuits[${i}].nom`); txt(c && c.dit, `circuits[${i}].dit`); pari(c && c.nom, `cite.course.circuits[${i}].nom`, E); pari(c && c.dit, `cite.course.circuits[${i}].dit`, E); });
+      liste(C.couleurs, 'couleurs', 9, 9);
+      const P = C.podium || {}; ['gagne', 'podium', 'perdu', 'plafond'].forEach(k => txt(P[k], 'podium.' + k));
+      // ce qu'on offre au joueur au circuit : rien n'y propose de parier ni de miser
+      ['offre', 'monter', 'pasMaintenant', 'encoreQ', 'encore', 'uneAutreFois'].forEach(k => pari(C[k], `cite.course.${k}`, E)); pari(O.choix, 'cite.course.organisateur.choix', E);
+      // les tables : leurs champs déclarés, et rien d'autre (ni mise, ni enjeu, ni cote, ni droit d'entrée)
+      const CL = ['id', 'trace', 'large', 'tours', 'temps', 'depart', 'prime', 'adversaires', 'nuit', 'viaduc'], AL = ['vitesse', 'adresse', 'avance'], num = (v, a, b) => typeof v === 'number' && isFinite(v) && v >= a && v <= b;
+      (D.CIRCUITS || []).forEach((c, i) => { const w = `D.CIRCUITS[${i}]`;
+        Object.keys(c).forEach(k => { if (!CL.includes(k)) E.push(`${w}: champ « ${k} » inconnu (${CL.join(', ')}) — aucune mise, aucun enjeu`); });
+        if (!Array.isArray(c.trace) || c.trace.length < 3 || c.trace.some(p => !Array.isArray(p) || p.length !== 3 || !num(p[0], 0, 1100) || !num(p[1], 0, 740) || !num(p[2], 8, 200))) E.push(`${w}: trace attend au moins trois sommets [x, y, r] dans la toile (1100 × 740)`);
+        if (!num(c.large, 12, 60)) E.push(`${w}: large de 12 à 60`); if (!(Number.isInteger(c.tours) && c.tours >= 1 && c.tours <= 6)) E.push(`${w}: tours de 1 à 6`);
+        if (!num(c.temps, 0, 600)) E.push(`${w}: temps de 0 à 600 secondes`); if (!(Number.isInteger(c.prime) && c.prime >= 0 && c.prime <= 100)) E.push(`${w}: prime entière, de 0 à 100 dirhams (on ne paie jamais pour courir)`);
+        if (!Array.isArray(c.adversaires) || c.adversaires.length > 4) E.push(`${w}: de 0 à 4 adversaires`);
+        (c.adversaires || []).forEach((a, j) => { Object.keys(a || {}).forEach(k => { if (!AL.includes(k)) E.push(`${w}.adversaires[${j}]: champ « ${k} » inconnu`); }); if (!num(a.vitesse, 0.3, 1) || !num(a.adresse, 0.3, 1) || !num(a.avance, 0, 400)) E.push(`${w}.adversaires[${j}]: vitesse et adresse de 0,3 à 1, avance de 0 à 400`); });
+        if (Array.isArray(c.adversaires) && !c.adversaires.length && !c.temps) E.push(`${w}: seul sur la piste, un temps à battre`); });
+      const CO = D.COURSE || {}; Object.keys(CO).forEach(k => { if (!['voiture', 'moto', 'podium', 'plafond'].includes(k)) E.push(`D.COURSE: champ « ${k} » inconnu — aucune mise, aucun enjeu`); });
+      if (!Array.isArray(CO.podium) || CO.podium.some(v => !num(v, 0, 1))) E.push('D.COURSE.podium: des parts de la prime, de 0 à 1'); if (!(Number.isInteger(CO.plafond) && CO.plafond >= 0)) E.push('D.COURSE.plafond: un entier positif ou nul');
+      Object.keys((D.CITE && D.CITE.zones) || {}).forEach(k => { const z = D.CITE.zones[k]; if (!(D.CITE.rodent || {})[k]) E.push(`D.CITE.zones ${k}: une zone pour une chimère de D.CITE.rodent`); if (!Array.isArray(z) || !z.length || z.some(n => typeof n !== 'string')) E.push(`D.CITE.zones ${k}: une liste de cases`); });
     }
 
     function checkSaga(s, E, W) {
@@ -1771,6 +1886,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
         const w = `héros ${id}`;
         if (h.stratege !== undefined && h.stratege !== true) E.push(`${w}: « stratege » vaut true ou s'omet`);
         req(h, 'name', 'string', w); req(h, 'arabic', 'string', w); garde(h.name, w); (h.skills || []).concat(h.limit || []).forEach(k => garde(k && k.name, w));
+        pari(h.name, w, E); (h.skills || []).concat(h.limit || []).forEach(k => pari(k && k.name, w, E));   // 2.27 : ni un héros ni ce qu'il fait
         if (!D.ROLES[h.role]) E.push(`${w}: role « ${h.role} » invalide (${Object.keys(D.ROLES).join('|')})`);
         if (!D.ELEMENTS[h.el]) E.push(`${w}: el « ${h.el} » invalide`);
         if (req(h, 'look', 'object', w)) { ['robe', 'head'].forEach(k => req(h.look, k, 'string', w + '.look')); checkLook(h.look, w); }
@@ -1830,6 +1946,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
         ['seul', 'question'].forEach(k => { if (typeof Q[k] !== 'string' || !Q[k].trim()) E.push(`cite.${k}: texte manquant`); });
         liste('rappels', 3, 10); liste('yunus', 6, 8);
         ['rappels', 'yunus'].forEach(k => (Q[k] || []).forEach((t, i) => { if (/[«»]|Coran|\d+:\d+/.test(String(t))) E.push(`cite.${k}[${i}]: ni verset ni parole citée (un texte de fiction)`); garde(t, `cite.${k}`); }));
+        verifierCourse(Q.course, E);
       }
 
       (s.codex || []).forEach(c => {
@@ -1954,7 +2071,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
                 if (typeof o[1] !== 'string' || !Array.isArray(o[2]) || o[2].length < 2 || o[2].length > 4) { E.push(`${wo}: ${o[0]}(prompt, [2–4 options])`); break; }
                 if (o[0] === 'choice' && o[2].filter(c => c.ok === true).length !== 1) E.push(`${wo}: choice exige exactement une option ok:true`);
                 o[2].forEach((c, j) => {
-                  if (typeof c.t !== 'string') E.push(`${wo}: option ${j} sans texte « t »`);
+                  if (typeof c.t !== 'string') E.push(`${wo}: option ${j} sans texte « t »`); else pari(c.t, `${wo}: option ${j}`, E);
                   if (o[0] === 'choice' && !c.ok && (!Array.isArray(c.r) || !c.r.length)) E.push(`${wo}: option fausse ${j} doit avoir une réponse r:[...] qui explique`);
                   if (c.need !== undefined && (o[0] !== 'ask' || !codexIds.has(c.need))) E.push(`${wo}: option ${j} : need « ${c.need} » invalide (réservé à ask, id de codex)`);
                   if (c.r) checkOps(c.r, `${wo}.opt${j}`);
@@ -2029,7 +2146,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
                   if (!Array.isArray(r.opts) || r.opts.length < 2 || r.opts.length > 4) { E.push(`${wo}: manche ${ri} : 2 à 4 options`); return; }
                   let m = -9, mf = -9, mn = 9;
                   r.opts.forEach((x, xi) => {
-                    if (typeof x.t !== 'string' || typeof x.r !== 'string') E.push(`${wo}: manche ${ri} option ${xi} : « t » et « r » (réplique) requis`);
+                    if (typeof x.t !== 'string' || typeof x.r !== 'string') E.push(`${wo}: manche ${ri} option ${xi} : « t » et « r » (réplique) requis`); else pari(x.t, `${wo}: manche ${ri} option ${xi}`, E);
                     if (typeof x.v !== 'number' || x.v < -2 || x.v > 3) E.push(`${wo}: manche ${ri} option ${xi} : v entre -2 et 3`);
                     if (!D.ELEMENTS[x.el] || x.el === 'fer') E.push(`${wo}: manche ${ri} option ${xi} : el doit être une Lumière`);
                     if (x.need !== undefined && !(String(x.need).indexOf('/') > 0 ? savoirConnu(x.need) : codexIds.has(x.need))) E.push(`${wo}: manche ${ri} option ${xi} : need « ${x.need} » absent du codex`);
@@ -2132,7 +2249,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     function verifierObjets(objets, pieces) {
       const E = [], PARTS = ['hp', 'sp', 'revive'], CLES = ['name', 'desc', 'hp', 'sp', 'revive', 'cleanse', 'niyya', 'target', 'vivre', 'paquet'];
       const SACRE = /allah|dieu|proph|bén[ie]|sacr|saint|relique|talisman|amulette|miracl|\bor\b|doré|soie|zamzam|coran|mushaf|verset|sourate|baraka|ruqya|\banges?\b/i;
-      const mots = (id, o) => { const txt = (o.name || '') + ' ' + (o.desc || ''); if (SACRE.test(txt)) E.push(`${id}: un objet ne reçoit ni nom divin, ni vertu, ni rien de sacré changé en pouvoir (exigences 8, 15 et 17)`); if (NOM_INTERDIT.test(txt)) E.push(`${id}: ni Iblîs, ni démon, ni djinn dans le nom ou la description d'un objet (exigence 18)`); };
+      const mots = (id, o) => { const txt = (o.name || '') + ' ' + (o.desc || ''); pari(o.name, id, E); if (SACRE.test(txt)) E.push(`${id}: un objet ne reçoit ni nom divin, ni vertu, ni rien de sacré changé en pouvoir (exigences 8, 15 et 17)`); if (NOM_INTERDIT.test(txt)) E.push(`${id}: ni Iblîs, ni démon, ni djinn dans le nom ou la description d'un objet (exigence 18)`); };
       Object.keys(objets || {}).forEach(id => { const o = objets[id];
         Object.keys(o).forEach(k => { if (!CLES.includes(k)) E.push(`${id}: clé « ${k} » inconnue (name, desc, hp, sp, revive, cleanse, niyya, target, vivre)`); });
         mots(id, o);
@@ -2219,19 +2336,22 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       demon: new RegExp(`إبليس|شيطان|شياط[يى]ن|${SANS_AR}${PROCLITIQUES}(?:جن|جان|جنّ|جني|جنية|عفريت|عفاريت|مارد|مردة|غول|غيلان)${APRES_AR}`),
       divin: new RegExp(`${SANS_AR}(?:و|ف|ب)?(?:الله|لله|إله|الإله|الرب|الرحمن|الرحيم)${APRES_AR}`),
       sacre: /الله|إله|مقدّ?س|مبار[كك]|برك[ةه]|معجز|كرام[ةه]|تميم|حرز|تعويذ|رقي[ةه]|ذهب|حرير|قرآن|مصحف|سورة|زمزم|ملا[ئك]|نبيّ?|رسول/,
-      verset: ['﴿', '﴾'], say: 330, nar: 360
+      verset: ['﴿', '﴾'], say: 330, nar: 360,
+      pari: /رهان|مراهن|[تأنيو]راهن|راهن\s*على|قمار|يقامر|مقامر|الميسر|يانصيب|كازينو/   // (« الراهن », le présent, et « ميسّر », facile, passent)
     },
     en: {
       demon: /\b(iblis|satan|shaitans?|shaytans?|shayatin|devils?|demons?|djinns?|jinns?|jinni|genies?|ifrits?|ghouls?|fiends?)\b/i,
       divin: /\b(allah|god|gods|lord)\b/i,
       sacre: /\b(allah|god|lord|prophet|blessed|sacred|holy|saint(ly)?|relics?|talismans?|amulets?|miracles?|miraculous|gold|golden|gilded|silk|silken|zamzam|qur'?an|koran|mushaf|verses?|surah?|baraka|ruqya|angels?)\b/i,
-      verset: ['“', '”'], say: 330, nar: 360
+      verset: ['“', '”'], say: 330, nar: 360,
+      pari: /\b(bet|bets|betting|wager|wagers|wagering|gamble|gambles|gambling|stake|stakes|odds|lottery|lotteries|casino|jackpot)\b/i
     },
     ja: {
       demon: /イブリース|サタン|シャイターン|悪魔|魔王|魔神|悪霊|鬼|妖怪|ジン(?![ァ-ヴー])|ジャーン|イフリート/,
       divin: /アッラー|(?<!精)神(?!経)|主よ|創造主/,
       sacre: /アッラー|(?<!精)神(?!経)|預言者|祝福|聖|遺物|護符|お守り|魔除け|奇跡|黄金|金色|金箔|金糸|金銀|絹|ザムザム|クルアーン|コーラン|啓典|章句|天使/,
-      verset: ['「', '」'], say: 110, nar: 125
+      verset: ['「', '」'], say: 110, nar: 125,
+      pari: /賭|ギャンブル|宝くじ|カジノ|博打/
     }
   };
   const EFFECTIF = /[0-9٠-٩۰-۹０-９]|百|千|万|億|مئة|مائة|ألف|آلاف|\b(hundreds?|thousands?|dozens?)\b/i;
@@ -2240,6 +2360,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   const NUMEROS = s => (CHIFFRES(s).match(/\d+/g) || []).join(' ');
   // le genre d'un emplacement, d'après son chemin (langue.js : casesSaga, casesDefs)
   function genreDe(ou) {
+    // 2.27 (D216) : une réponse offerte au joueur — un choix, une question, un pourparler, un menu de la course (cite.course), une phrase du code de la course
+    if (/<(choice|ask)>2\[\d+\]\.t$|opts\[\d+\]\.t$|^cite\.course\.(offre|monter|pasMaintenant|encoreQ|encore|uneAutreFois|organisateur\.choix|circuits\[\d+\]\.(nom|dit))$|^circuit\.js$/.test(ou)) return 'option';
     if (/attributs\.[^.]+\.verset$|secours\.verset$/.test(ou)) return 'verset';
     if (/attributs\.[^.]+\.ref$|secours\.ref$/.test(ou)) return 'ref';
     if (/bataille\.rangs\[\d+\]\.name$|^D\.RANGS\.[^.]+\.name$/.test(ou)) return 'rang';
@@ -2263,6 +2385,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       if (g === 'rang' && EFFECTIF.test(t)) erreurs.push(`${w}: « ${t} » — aucun effectif dans le nom d'un rang (exigence 19)`);
       if (g === 'verset') { const v = t.trim(); if (!(v.startsWith(R.verset[0]) && v.endsWith(R.verset[1]))) erreurs.push(`${w}: un verset se cite entre ${R.verset[0]} ${R.verset[1]} (exigence 7)`); }
       if (g === 'ref' && NUMEROS(t).indexOf(NUMEROS(c.fr).split(' ').slice(0, 2).join(' ')) !== 0 && NUMEROS(t) !== NUMEROS(c.fr)) erreurs.push(`${w}: la référence ne porte pas les numéros de la française (${NUMEROS(c.fr)})`);
+      if (g === 'option' && R.pari.test(t)) erreurs.push(`${w}: « ${t.slice(0, 60)} » — aucun pari ni jeu de hasard ne se joue : rien de ce qu'on offre au joueur ne propose de parier (le pari n'est qu'une chimère)`);
       if ((g === 'say' || g === 'nar') && t.length > R[g]) avis.push(`${w}: ${g === 'say' ? 'réplique' : 'narration'} longue (${t.length} signes, ${R[g]} au plus)`); });
     return { erreurs, avis };
   }
@@ -2919,10 +3042,12 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     emit,
     // l'écouteur du dessus est-il celui du monde ? (la manette : en exploration, le joystick fait marcher ; ailleurs, il choisit)
     auMonde() { const f = stack[stack.length - 1]; return !!(f && f.monde); },
-    clearHeld() { held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; },
+    clearHeld() { held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; I.input.aTenu = false; I.input.joyAngle = null; },
     maj: false, course: false, // Maj tenue ; le joystick avec B tenu (ui.js, courir — 2.17) : l'un ou l'autre fait courir
+    // 2.27 (D216) : A tenu (le bouton A, ou Entrée, Espace, Z, E) accélère la voiture d'une course ; le joystick y donne aussi son cap (circuit.js)
+    aTenu: false, joyAngle: null,
     // secours : on ne garde que l'écouteur du monde (le premier posé), les autres appartenaient à une suite interrompue
-    mark() { return stack.length; }, trim(n) { if (stack.length > n) stack.length = Math.max(1, n); }, reset() { stack.length = Math.min(stack.length, 1); held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; },
+    mark() { return stack.length; }, trim(n) { if (stack.length > n) stack.length = Math.max(1, n); }, reset() { stack.length = Math.min(stack.length, 1); held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; I.input.aTenu = false; I.input.joyAngle = null; },
     // attend une action OU un délai ; l'écouteur est toujours retiré (sinon il avalerait les touches suivantes)
     waitTimed(actions, ms, delay) {
       return new Promise(res => {
@@ -2942,11 +3067,12 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     const a = KEY[e.code]; if (!a) return;
     if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
     e.preventDefault();
+    if (a === 'ok') I.input.aTenu = true;   // 2.27 : A tenu (circuit.js)
     if (a in held) { held[a] = true; if (e.repeat) { emit(a); return; } }
     else if (e.repeat) return;
     emit(a);
   });
-  window.addEventListener('keyup', e => { const a = KEY[e.code]; if (a && a in held) held[a] = false; });
+  window.addEventListener('keyup', e => { const a = KEY[e.code]; if (a && a in held) held[a] = false; if (a === 'ok') I.input.aTenu = false; });
   window.addEventListener('blur', () => I.input.clearHeld());
   // 2.16 — Maj tenue fait courir. Elle est suivie à part : ce n'est l'action d'aucune touche (Maj + Entrée valide toujours,
   // Maj + flèche marche… en courant). Toute autre touche dit aussi si Maj est tenue (une Maj lâchée hors de la page).
@@ -2961,7 +3087,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   function fresh() {
     return { v: FORMAT, profil: {}, paquets: {}, started: false, prologue: false, epilogue: false, lights: [], sagas: {}, heroes: {},
       items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, gear: {}, equip: {}, gearInit: {}, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
-      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 }, cite: {} };
+      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 }, cite: { course: { salim: 0, gagnes: [], temps: [], primes: 0 } } };
   }
   // La partie se garde toute seule, à chaque point de reprise (AKEY) : fermer la page ne fait rien perdre. Les trois
   // emplacements de la mosquée restent, pour qui veut garder une copie. Les options, elles, se gardent à part.
@@ -2976,6 +3102,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     if (p.v !== FORMAT) return null;
     if (!estObjet(p.profil)) p.profil = {}; if (!estObjet(p.paquets)) p.paquets = {};
     if (p.cite === undefined) p.cite = {}; // 2.23 (D212) : les quartiers de la Cité (cite.js) — absent des parties d'avant ; le format reste le 2
+    // 2.27 (D216) : Sâlim et la course (circuit.js) — ce qu'a fait Sâlim, les circuits gagnés, le meilleur temps de chacun ; le format reste le 2
+    if (estObjet(p.cite) && p.cite.course === undefined) p.cite = Object.assign({}, p.cite, { course: { salim: 0, gagnes: [], temps: [], primes: 0 } });
     return p;
   }
   // Ce qui, dans une partie venue d'ailleurs, n'a pas la forme attendue. Un champ absent prendra sa valeur de départ ; un
@@ -2999,7 +3127,13 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     if (d.retours !== undefined && !naturel(d.retours)) E.push('retours');
     objet('rebonds'); objet('lecons'); // 2.x : `lecons` — les outils reçus (lecons.js), dans une partie commencée par « Nouvelle partie »
     // 2.23 (D212) : les quartiers de la Cité — des comptes (arrivées, rappels, répliques de Maître Yûnus) et deux marques
-    if (objet('cite')) { const q = d.cite; ['arrivees', 'rappels', 'yunus'].forEach(k => { if (q[k] !== undefined && !naturel(q[k])) E.push('cite.' + k); }); ['vue', 'lecon'].forEach(k => { if (q[k] !== undefined && typeof q[k] !== 'boolean') E.push('cite.' + k); }); }
+    if (objet('cite')) { const q = d.cite; ['arrivees', 'rappels', 'yunus'].forEach(k => { if (q[k] !== undefined && !naturel(q[k])) E.push('cite.' + k); }); ['vue', 'lecon'].forEach(k => { if (q[k] !== undefined && typeof q[k] !== 'boolean') E.push('cite.' + k); });
+      // 2.27 (D216) : la course — salim (0 : jamais venu, 1 : venu, 2 : Idris est monté derrière lui), les circuits gagnés, les meilleurs temps (en millièmes), des comptes
+      if (q.course !== undefined) { const c = q.course, n = (D.CIRCUITS || []).length; if (!estObjet(c)) E.push('cite.course'); else {
+        if (c.salim !== undefined && !(Number.isInteger(c.salim) && c.salim >= 0 && c.salim <= 2)) E.push('cite.course.salim');
+        if (c.gagnes !== undefined && (!Array.isArray(c.gagnes) || c.gagnes.length > n || c.gagnes.some(g => g !== null && typeof g !== 'boolean'))) E.push('cite.course.gagnes');
+        if (c.temps !== undefined && (!Array.isArray(c.temps) || c.temps.length > n || c.temps.some(t => t !== null && !naturel(t)))) E.push('cite.course.temps');
+        ['primes', 'parle', 'courses'].forEach(k => { if (c[k] !== undefined && !naturel(c[k])) E.push('cite.course.' + k); }); } } }
     if (objet('postures')) Object.keys(d.postures).forEach(k => { if (!D.POSTURES || !D.POSTURES[d.postures[k]]) E.push('postures.' + k); }); // 2.x : la posture prise par chacun (absente : celle de son tempérament)
     return E;
   }
@@ -3369,11 +3503,34 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
 
   A.stopBeat = function () { A.pendingRhythm = null; if (A.rhythm) { clearInterval(A.rhythm.timer); A.rhythm = null; } };
 
+  /* 2.27 (D216) — le bruit des moteurs (circuit.js : la moto de Sâlim, les voitures d'une course). Synthétisé, sans voix ni
+     musique : deux oscillateurs en dents de scie et en carré, une octave l'un sous l'autre, un souffle filtré, un filtre qui
+     s'ouvre avec le régime ; une seconde voix, plus basse et plus douce, pour ceux qui roulent tout près. Sur le bus des
+     bruitages (coupé avec le son), jamais sur celui de la musique. A.regime(k, autres) : le régime (0 à 1) de celui qui mène,
+     et la présence des autres (0 à 1). */
+  A.moteur = function (on) {
+    if (!A.ctx) return; const c = A.ctx, t = c.currentTime;
+    if (!on) { const m = A._moteur; A._moteur = null; if (m) { m.g.gain.cancelScheduledValues(t); m.g.gain.setTargetAtTime(0, t, 0.08); setTimeout(() => { try { m.stop(); } catch (e) { /* déjà arrêté */ } }, 600); } return; }
+    if (A._moteur) return;
+    const g = c.createGain(), lp = c.createBiquadFilter(); g.gain.value = 0; lp.type = 'lowpass'; lp.frequency.value = 400; lp.Q.value = 2; lp.connect(g); g.connect(A.master);
+    const o1 = c.createOscillator(), o2 = c.createOscillator(); o1.type = 'sawtooth'; o2.type = 'square'; o1.frequency.value = 46; o2.frequency.value = 23; const g2 = c.createGain(); g2.gain.value = 0.5; o1.connect(lp); o2.connect(g2); g2.connect(lp);
+    const n = noiseSrc(true), bp = c.createBiquadFilter(), gn = c.createGain(); bp.type = 'bandpass'; bp.frequency.value = 700; bp.Q.value = 0.8; gn.gain.value = 0.25; n.connect(bp); bp.connect(gn); gn.connect(lp);
+    const ga = c.createGain(), la = c.createBiquadFilter(), o3 = c.createOscillator(); ga.gain.value = 0; la.type = 'lowpass'; la.frequency.value = 300; o3.type = 'sawtooth'; o3.frequency.value = 38; o3.connect(la); la.connect(ga); ga.connect(A.master);
+    [o1, o2, o3].forEach(o => o.start(t)); n.start(t, Math.random());
+    A._moteur = { g, lp, o1, o2, o3, ga, la, bp, stop() { [o1, o2, o3].forEach(o => o.stop()); n.stop(); [g, ga].forEach(x => x.disconnect()); } };
+  };
+  A.regime = function (k, autres) {
+    const m = A._moteur; if (!m || !A.ctx) return; const t = A.ctx.currentTime, r = Math.max(0, Math.min(1, k || 0)), o = Math.max(0, Math.min(1, autres || 0));
+    m.o1.frequency.setTargetAtTime(44 + 96 * r, t, 0.06); m.o2.frequency.setTargetAtTime(22 + 48 * r, t, 0.06); m.lp.frequency.setTargetAtTime(320 + 1700 * r, t, 0.08); m.bp.frequency.setTargetAtTime(600 + 1400 * r, t, 0.1);
+    m.g.gain.setTargetAtTime(A.on ? 0.05 + 0.09 * r : 0, t, 0.08);
+    m.o3.frequency.setTargetAtTime(40 + 80 * o, t, 0.1); m.la.frequency.setTargetAtTime(260 + 900 * o, t, 0.1); m.ga.gain.setTargetAtTime(A.on ? 0.07 * o : 0, t, 0.12);
+  };
+
   // Le son ne doit jamais arrêter le jeu. Sur un appareil qui refuse une opération sonore, l'appel devient sans effet,
   // l'incident est retenu une fois (page Diagnostic). Une piste qui ne démarre pas se tait un moment, puis la veille la
   // relance : rien ne coupe plus la musique pour toute la séance, et un bruitage en échec ne la regarde pas.
   A.fails = 0;
-  ['unlock', 'setOn', 'sfx', 'beat', 'stopBeat', 'music', 'setMusic', 'scene', 'back', 'pump', 'dum', 'tek'].forEach(k => {
+  ['unlock', 'setOn', 'sfx', 'beat', 'stopBeat', 'music', 'setMusic', 'scene', 'back', 'pump', 'dum', 'tek', 'moteur', 'regime'].forEach(k => {
     const fn = A[k]; if (typeof fn !== 'function') return;
     A[k] = function () {
       try { return fn.apply(A, arguments); }
@@ -4126,12 +4283,88 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   function net(cv) { if ((cv.hd || 1) > 1) return; const c = cv.getContext('2d'), a = c.getImageData(0, 0, cv.width, cv.height), d = a.data;
     for (let i = 3; i < d.length; i += 4) d[i] = d[i] < 110 ? 0 : 255; c.putImageData(a, 0, 0); }
   G.voitureNet = net;
+  /* 2.27 (D216) — la moto de Sâlim, vue de côté (vers la droite) : deux roues, un cadre sombre, un réservoir de sa teinte, une
+     selle, une fourche ; un phare, un feu. Ni marque, ni logo, ni plaque, ni chiffre. */
+  function motoProfil(c, T) {
+    const X = x => 22 + x, Y = y => 28 - y, rw = 4.4;
+    c.fillStyle = '#3a3e48'; c.fillRect(X(-13), Y(6.4), 11, 1.4); c.fillStyle = '#8a909c'; c.fillRect(X(-13), Y(6.4), 11, 0.5);   // l'échappement
+    c.strokeStyle = '#1c1a22'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(X(-12), Y(rw)); c.lineTo(X(-3), Y(7.5)); c.lineTo(X(4), Y(9)); c.stroke();   // le bras oscillant, le cadre
+    c.fillStyle = '#2a2830'; c.fillRect(X(-4), Y(9.5), 8, 5); c.fillStyle = '#5a5e68'; c.fillRect(X(-3.5), Y(9), 7, 0.75); c.fillRect(X(-3.5), Y(6.5), 7, 0.5);   // le moteur
+    const g = c.createLinearGradient(0, Y(14), 0, Y(9)); g.addColorStop(0, T.l); g.addColorStop(0.5, T.b); g.addColorStop(1, T.o);
+    c.fillStyle = g; c.beginPath(); c.moveTo(X(-1), Y(9.5)); c.lineTo(X(8.5), Y(10)); c.quadraticCurveTo(X(9), Y(13.6), X(5), Y(14)); c.lineTo(X(0), Y(13.2)); c.closePath(); c.fill();   // le réservoir
+    c.fillStyle = 'rgba(255,255,255,.4)'; c.fillRect(X(1), Y(13.3), 5, 0.5);
+    c.fillStyle = '#1e1c26'; c.beginPath(); c.moveTo(X(-11), Y(11.2)); c.lineTo(X(-0.5), Y(12.4)); c.lineTo(X(-0.5), Y(10.6)); c.lineTo(X(-10.5), Y(10)); c.closePath(); c.fill();   // la selle
+    c.fillStyle = T.b; c.beginPath(); c.moveTo(X(-14.5), Y(12)); c.lineTo(X(-10.5), Y(11.4)); c.lineTo(X(-10), Y(9.6)); c.lineTo(X(-14), Y(10.4)); c.closePath(); c.fill();   // la poupe
+    c.fillStyle = '#ff2e50'; c.fillRect(X(-15), Y(11.6), 1.2, 1.3);
+    c.strokeStyle = '#b8bec8'; c.lineWidth = 1.1; c.beginPath(); c.moveTo(X(12.5), Y(rw)); c.lineTo(X(8.5), Y(15.2)); c.stroke();   // la fourche
+    c.strokeStyle = '#2a2830'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(X(8.5), Y(15.2)); c.lineTo(X(5.5), Y(16.4)); c.stroke(); c.fillStyle = '#2a2830'; c.fillRect(X(6.5), Y(18), 0.6, 2.2); c.fillRect(X(5.8), Y(18.6), 2, 0.9);   // le guidon, le rétroviseur
+    c.fillStyle = '#fff6dc'; c.beginPath(); c.arc(X(10.6), Y(13.2), 1.4, 0, 6.3); c.fill(); c.fillStyle = 'rgba(255,246,220,.5)'; c.fillRect(X(11.8), Y(13.6), 0.8, 0.8);   // le phare
+    c.fillStyle = T.o; c.beginPath(); c.moveTo(X(10), Y(9)); c.quadraticCurveTo(X(13.5), Y(9.6), X(15.5), Y(7.2)); c.lineTo(X(14.5), Y(6.8)); c.quadraticCurveTo(X(12.5), Y(8.4), X(9.8), Y(8)); c.closePath(); c.fill();   // le garde-boue
+    roue(c, X(-12), Y(rw), rw); roue(c, X(12.5), Y(rw), rw);
+  }
+  // de face (elle vient vers nous) ou de dos
+  function motoFace(c, T, dos) {
+    const X = x => 22 + x, Y = y => 28 - y;
+    c.fillStyle = '#121218'; c.beginPath(); c.ellipse(X(0), Y(4.4), 1.9, 4.4, 0, 0, 6.3); c.fill();
+    const g = c.createLinearGradient(0, Y(15), 0, Y(9)); g.addColorStop(0, T.l); g.addColorStop(1, T.o); c.fillStyle = g; c.beginPath(); c.ellipse(X(0), Y(11.5), 3.6, 3.2, 0, 0, 6.3); c.fill();
+    c.fillStyle = '#2a2830'; c.fillRect(X(-3), Y(9), 6, 3);
+    if (dos) { c.fillStyle = '#1e1c26'; c.fillRect(X(-2.4), Y(14.4), 4.8, 2); c.fillStyle = '#ff2e50'; c.fillRect(X(-1.6), Y(10.6), 3.2, 1.2); }
+    else { c.fillStyle = '#b8bec8'; c.fillRect(X(-2.2), Y(12), 0.8, 6); c.fillRect(X(1.4), Y(12), 0.8, 6); c.fillStyle = '#fff6dc'; c.beginPath(); c.arc(X(0), Y(12.2), 1.6, 0, 6.3); c.fill(); }
+    c.fillStyle = '#2a2830'; c.fillRect(X(-7), Y(16.2), 14, 0.9); c.fillRect(X(-7.5), Y(18.4), 1.4, 2.6); c.fillRect(X(6.1), Y(18.4), 1.4, 2.6);   // le guidon, les rétroviseurs
+  }
+  /* 2.27 (D216) — vus de dessus, pour la course (circuit.js) : une voiture de course et la moto de Sâlim, ses deux passagers,
+     le nez à droite, dans une toile de 28 × 28 (le centre à 14, 14). Vitres fumées ; une bande de couleur, sans chiffre ni
+     signe ; ni marque, ni logo, ni plaque. Vus de dessus, Sâlim et Idris ne montrent que le haut de leur tête et leurs
+     épaules. Le moteur les tourne (G.dessus : trente-deux caps, gardés). */
+  function voitureDessus(c, T, m) {
+    const rr = (x, y, w, h, rad) => { c.beginPath(); c.moveTo(x + rad, y); c.lineTo(x + w - rad, y); c.quadraticCurveTo(x + w, y, x + w, y + rad); c.lineTo(x + w, y + h - rad); c.quadraticCurveTo(x + w, y + h, x + w - rad, y + h); c.lineTo(x + rad, y + h); c.quadraticCurveTo(x, y + h, x, y + h - rad); c.lineTo(x, y + rad); c.quadraticCurveTo(x, y, x + rad, y); c.closePath(); };
+    c.fillStyle = '#121218'; [[6, 7.6], [18, 7.6], [6, 18.6], [18, 18.6]].forEach(([x, y]) => { rr(x, y, 4.6, 1.8, 0.7); c.fill(); });   // les roues
+    const g = c.createLinearGradient(0, 9, 0, 19); g.addColorStop(0, T.o); g.addColorStop(0.3, T.b); g.addColorStop(0.5, T.l); g.addColorStop(0.7, T.b); g.addColorStop(1, T.o);
+    c.fillStyle = g; rr(3.5, 9, 21, 10, 3.2); c.fill();
+    c.fillStyle = vitre(c, 9.5, 18.5); c.beginPath(); c.moveTo(13, 10.4); c.lineTo(16.6, 11); c.lineTo(16.6, 17); c.lineTo(13, 17.6); c.closePath(); c.fill();   // le pare-brise
+    c.fillStyle = T.o; rr(8.5, 10.4, 4.6, 7.2, 1.2); c.fill(); c.fillStyle = 'rgba(255,255,255,.18)'; c.fillRect(9, 10.8, 3.6, 0.5);   // le toit
+    c.fillStyle = vitre(c, 10.4, 17.6); c.fillRect(6.6, 10.9, 1.9, 6.2);   // la lunette
+    c.fillStyle = T.o; c.fillRect(15, 8.2, 1.4, 1); c.fillRect(15, 18.8, 1.4, 1);   // les rétroviseurs
+    c.fillStyle = '#fff6dc'; c.fillRect(23.4, 10.2, 1.2, 1.6); c.fillRect(23.4, 16.2, 1.2, 1.6);
+    c.fillStyle = '#ff2e50'; c.fillRect(3.4, 10.2, 1, 1.6); c.fillRect(3.4, 16.2, 1, 1.6);
+    if (m === 'course') { c.fillStyle = 'rgba(255,255,255,.8)'; c.fillRect(17, 13.5, 6.5, 1); c.fillRect(4.5, 13.5, 2, 1);   // une bande de couleur, sans chiffre ni signe
+      c.fillStyle = T.o; c.fillRect(2.2, 8.4, 1.6, 11.2); c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(2.2, 8.4, 0.5, 11.2); }   // l'aileron
+  }
+  function motoDessus(c, T, salim, idris, penche) {
+    const dy = (penche || 0) * 1.1;
+    c.fillStyle = '#121218'; c.beginPath(); c.ellipse(22.2, 14, 2.6, 0.95, 0, 0, 6.3); c.fill(); c.beginPath(); c.ellipse(6.4, 14, 2.6, 1, 0, 0, 6.3); c.fill();   // les roues
+    const g = c.createLinearGradient(0, 12, 0, 16); g.addColorStop(0, T.o); g.addColorStop(0.5, T.l); g.addColorStop(1, T.o); c.fillStyle = g; c.beginPath(); c.ellipse(15, 14, 4.6, 1.9, 0, 0, 6.3); c.fill();   // le réservoir
+    c.fillStyle = '#1e1c26'; c.fillRect(7, 12.9, 6, 2.2); c.fillStyle = T.b; c.fillRect(4.6, 13.1, 2.6, 1.8);
+    c.strokeStyle = '#3a3e48'; c.lineWidth = 0.8; c.beginPath(); c.moveTo(19.4, 10.2); c.lineTo(19.4, 17.8); c.stroke(); c.fillStyle = '#1c1a22'; c.fillRect(19, 9.4, 0.9, 1.4); c.fillRect(19, 17.2, 0.9, 1.4);   // le guidon
+    c.fillStyle = '#fff6dc'; c.fillRect(23.6, 13.4, 0.9, 1.2); c.fillStyle = '#ff2e50'; c.fillRect(4, 13.5, 0.7, 1);
+    // Idris derrière, Sâlim devant : leurs épaules, le haut de leur tête (rien d'autre ne se voit d'en haut)
+    const corps = (x, L) => { c.fillStyle = L.cloak || L.robe || '#3a3a48'; c.beginPath(); c.ellipse(x, 14 + dy, 2.3, 3.8, 0, 0, 6.3); c.fill(); c.fillStyle = L.robe || '#3a3a48'; c.beginPath(); c.ellipse(x + 0.6, 14 + dy, 1.6, 3, 0, 0, 6.3); c.fill();
+      c.fillStyle = L.head || '#2a2030'; c.beginPath(); c.arc(x + 0.4, 14 + dy, 1.9, 0, 6.3); c.fill(); c.fillStyle = 'rgba(255,255,255,.16)'; c.beginPath(); c.arc(x, 13.3 + dy, 0.8, 0, 6.3); c.fill(); };
+    if (idris) corps(10.6, idris);
+    if (salim) { c.fillStyle = salim.robe || '#5a2f3a'; c.fillRect(15.4, 11.3 + dy, 3.6, 0.9); c.fillRect(15.4, 15.8 + dy, 3.6, 0.9); corps(14.4, salim); }   // ses bras vers le guidon
+  }
+  const dcache = {};
+  // une image vue de dessus, tournée : genre 'voiture' (o : { m, c }) ou 'moto' (o : { c, salim, idris, penche }) ; k : le cap, de 0 à 31
+  G.dessus = function (genre, o, k) {
+    const key = genre + JSON.stringify(o) + '|' + k + '|' + G.D + (G.lisse ? 'l' : ''); if (dcache[key]) return dcache[key];
+    const base = dcache[genre + JSON.stringify(o)] || (dcache[genre + JSON.stringify(o)] = (() => { const cv = G.toile(28, 28), c = cv.getContext('2d'), T = G.TEINTES[(o.c | 0) % G.TEINTES.length];
+      if (genre === 'moto') motoDessus(c, T, o.salim, o.idris, o.penche); else voitureDessus(c, T, o.m); return cv; })());
+    const cv = G.toile(28, 28), c = cv.getContext('2d'); c.imageSmoothingEnabled = true; c.translate(14, 14); c.rotate(k * Math.PI / 16); c.drawImage(base, -14, -14); net(cv);
+    return (dcache[key] = cv);
+  };
+  G.surDefinition.push(() => { Object.keys(dcache).forEach(k => { delete dcache[k]; }); });
 
   Object.assign(OBJ, {
     // une voiture (garée sur la carte, ou qui roule : trafic.js) ; o.m : le modèle, o.c : la teinte, o.d : 'd', 'g', 'b', 'h'
     qvoiture: { w: 44, h: 30, fw: 32, fh: 8, draw(c, r, o) { o = o || {}; const M = G.MODELES[o.m] || G.MODELES.berline, T = G.TEINTES[(o.c | 0) % G.TEINTES.length];
       if (o.d === 'b' || o.d === 'h') face(c, M, T, o.d === 'h');
       else { if (o.d === 'g') { c.save(); c.translate(44, 0); c.scale(-1, 1); profil(c, M, T); c.restore(); } else profil(c, M, T); }
+      net(c.canvas); } },
+    // 2.27 (D216) — la moto de Sâlim : une moto inventée par le jeu, sans marque, sans logo, sans plaque ; o.c : la teinte, o.d :
+    // 'd', 'g', 'b', 'h' (comme une voiture). Le point d'appui est le milieu du sol, à (22, 28).
+    qmoto: { w: 44, h: 30, fw: 30, fh: 6, draw(c, r, o) { o = o || {}; const T = G.TEINTES[(o.c | 0) % G.TEINTES.length];
+      if (o.d === 'b' || o.d === 'h') motoFace(c, T, o.d === 'h');
+      else { if (o.d === 'g') { c.save(); c.translate(44, 0); c.scale(-1, 1); motoProfil(c, T); c.restore(); } else motoProfil(c, T); }
       net(c.canvas); } },
     // une borne d'arcade : un caisson sombre, un bandeau qui luit sans un mot, un écran aux formes abstraites, deux boutons
     qborne: { w: 16, h: 32, fw: 6, fh: 3, draw(c, r, o) { const col = (o && o.color) || '#ff4fd8', alt = (o && o.alt) || '#39e6ff';
@@ -7258,11 +7491,11 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       if (head) { const hd = typeof head === 'object' ? head : { html: head }, e = I.el('div', 'phead' + (hd.cls ? ' ' + hd.cls : ''), hd.html); e.dir = I.langue.sens(e.textContent); box.appendChild(e); }
       const pr = typeof prompt === 'object' ? I.el('div', 'prompt ' + (prompt.cls || ''), prompt.html) : I.el('div', 'prompt', I.fmt(prompt)); pr.dir = I.langue.sens(pr.textContent); box.appendChild(pr); box.scrollTop = 0;
       let idx = 0; const btns = [];
-      const locked = o => o.need !== undefined && !known(o.need);
+      const locked = o => (o.need !== undefined && !known(o.need)) || !!o.ferme;   // 2.27 : `ferme` — une réponse qui se montre, scellée (un circuit, circuit.js)
       const sel = i => { idx = (i + btns.length) % btns.length; btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); };
       const ne = performance.now(); // un menu n'accepte rien pendant un tiers de seconde : le toucher qui vient de faire avancer le texte ne répond pas à la place du joueur
       const done = i => { if (!I.debug.auto && performance.now() - ne < 350) return; if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; box.onscroll = null; I.audio.sfx('ok'); res(i); };
-      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ ' + I.t('savoir') + '</span>' : '')); b.type = 'button'; b.dir = I.langue.sens(b.textContent); b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
+      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? (o.ferme ? (o.html || I.fmt(o.t)) : lockLabel(o)) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ ' + I.t('savoir') + '</span>' : '')); b.type = 'button'; b.dir = I.langue.sens(b.textContent); b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
       sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box); ajuster(box); repere(box);
       const vue = () => { if (btns[idx].scrollIntoView) btns[idx].scrollIntoView({ block: 'nearest' }); }; // une longue liste suit la sélection
       // 2.x — B (ou Échap) : la réponse marquée « retour » (« Retour », « Plus tard », « Annuler »…), s'il y en a une ; devant un
@@ -7737,6 +7970,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); I.mal.ouvre(); }
     if (!cp && I.cite && I.cite.refuge(ch)) I.cite.neuf(S.flags); // 2.23 : chaque arrivée dans les quartiers est neuve (cite.js)
     if (saga.frame && !saga.veillees && (Number.isInteger(ch.retour) || ch.visite) && I.ui.drapeaux2084) I.ui.drapeaux2084(S.flags); // 2.x : l'état de 2084, pour un retour ou une visite
+    if (saga.frame && !saga.veillees && I.circuit) I.circuit.drapeaux(S.flags); // 2.27 : Idris a-t-il couru avec Sâlim ? (le dernier maillon le lit : _2084_salim)
     I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
     W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: n.face !== undefined && G.DIRS[n.face] !== undefined ? G.DIRS[n.face] : 0, sheet: G.planche(look), aura: def ? (lueur(def.look) || '#ffe9a8') : (look.kind === 'compagnon' ? (lueur(look) || '#ffe9a8') : null) }); });
@@ -7876,6 +8110,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       const dx = p.x - best.x, dy = p.y - best.y; best.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0);
       const o = W.cur();
       if (o && o.talk === best.id) { if (I.cite && I.cite.parle(best)) return; return W.complete(); } // 2.23 : Maître Yûnus, dans les quartiers, demande où aller (cite.js)
+      if (I.circuit && I.circuit.parle(best)) return; // 2.27 : Sâlim et l'organisateur, au circuit des quartiers (circuit.js)
       if (best.talk) { I.audio.sfx('blip'); await S.run(best.talk); }
       return;
     }
@@ -7950,6 +8185,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     } else { W.dest = null; if (!p.scripted) p.moving = false; p.court = false; }
     W.npcs.forEach(n => { if (n.pas) avancerPas(n, dt); }); // le pas de côté va jusqu'au bout, même si un récit commence
     if (I.trafic) I.trafic.tic(dt); // 2.23 : les voitures des quartiers roulent, et s'arrêtent devant qui se tient sur leur voie
+    if (can && I.circuit) I.circuit.tic(dt); // 2.27 : au premier passage au circuit, Sâlim arrive en moto (circuit.js)
     W.updateCam();
   };
 
@@ -9047,10 +9283,11 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   // une séquence s'achève : les leçons déjà lues quittent le fil (2.x, D189)
   L.sequence = function () { const d = etat(); if (d) d.seq = (d.seq | 0) + 1; L._t = 0; if (S.filRetire) S.filRetire(); };
   // peut-on donner un outil maintenant ?
-  L.pret = function () {
-    const d = etat(); if (!d) return true; if (d.donne === d.seq) return false;
+  // (plus : la séquence d'après — 2.27, circuit.js : Sâlim ne vient que si l'outil des virages pourra être donné en montant)
+  L.pret = function (plus) {
+    const d = etat(); if (!d) return true; const seq = d.seq + (plus | 0); if (d.donne === seq) return false;
     const der = d.dernier; if (!der) return true; const o = D.OUTILS[der] || {};
-    return !!o.geste || (d.re[der] | 0) > 0 || d.seq - (d.recus[der] | 0) >= L.PATIENCE;
+    return !!o.geste || (d.re[der] | 0) > 0 || seq - (d.recus[der] | 0) >= L.PATIENCE;
   };
   L.recevoir = function (id) { const d = etat(); if (!d || d.recus[id] !== undefined) return false; d.recus[id] = d.seq; d.dernier = id; d.donne = d.seq; L.journal.push({ id, seq: d.seq }); return true; };
   // le besoin se présente : l'outil est-il donné ? (hors de ce mode : la leçon se dit, comme avant)
@@ -11231,10 +11468,11 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   R.cible = function () { const s = W.spotPx('issue'); return s ? { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto' } : null; };
   const salleDe = (px, py) => { const n = W.map.g0 ? W.map.g0(px, py) : ''; return n === 'nabri' ? 'abri' : n; };
   // par où passe ce qui rôde : les ponts et les salles, jamais un abri ; dans le labyrinthe d'un récit, les ponts seulement
-  function passable(f, x, y) { if (f.rue) return rueOk(x, y); const m = W.map, T = 16; if (x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; const n = m.g0(x * T + 8, y * T + 8); return n === 'npont' || (n === 'nfloor' && !f.meute); }
+  function passable(f, x, y) { if (f.rue) return rueOk(x, y, f); const m = W.map, T = 16; if (x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; const n = m.g0(x * T + 8, y * T + 8); return n === 'npont' || (n === 'nfloor' && !f.meute); }
   // 2.23 (D212) : dans les quartiers de la Cité, ce qui rôde va par les rues — les trottoirs, les places, les avenues (env.rues) ;
   // jamais dans le parc, le coin calme, la tribune ni la salle de jeux
-  function rueOk(x, y) { const m = W.map, E = m && m.env && m.env.rues; if (!E || x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; return E.cases.indexOf(m.g0(x * 16 + 8, y * 16 + 8)) >= 0; }
+  // (2.27 : une chimère qui a sa zone — « Le Pari », dans la tribune, D.CITE.zones — ne va que par les cases de sa zone)
+  function rueOk(x, y, f) { const m = W.map, E = m && m.env && m.env.rues; if (!E || x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; return ((f && f.zone) || E.cases).indexOf(m.g0(x * 16 + 8, y * 16 + 8)) >= 0; }
   R.rueOk = rueOk;
   // un rôdeur avance de case en case : il erre, et prend en chasse quand le râwî est à portée ; il n'entre jamais dans un abri
   function avance(f, dt, champ) {
@@ -11493,10 +11731,16 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   function poserRues() {
     W.foes = (W.foes || []).filter(f => !f.rue);
     const m = W.map, E = m && m.env && m.env.rues, T = 16, C = D.CITE || {}; if (!E || W.excursion || !W.saga || I.debug.sansMeutes) return;
-    const RC = C.rodent || {}, E0 = W.saga.enemies || {}, ids = Object.keys(RC).filter(k => E0[k] && !E0[k].idee && !E0[k].vice && D.NOIRS.indexOf(k) < 0 && E0[k].tier === 'minion');
-    if (!ids.length) return;
+    const RC = C.rodent || {}, Z = C.zones || {}, E0 = W.saga.enemies || {}, bons = Object.keys(RC).filter(k => E0[k] && !E0[k].idee && !E0[k].vice && D.NOIRS.indexOf(k) < 0 && E0[k].tier === 'minion'), ids = bons.filter(k => !Z[k]);
+    if (!bons.length) return;
     if (!S.flags._rues) S.flags._rues = 1 + Math.floor(Math.random() * 1e9);
     const g = S.flags._rues, r = I.rng(I.hash('rues/' + g)), poids = ids.reduce((a, k) => a + RC[k], 0), tirer = x => { let v = x * poids; for (const k of ids) { v -= RC[k]; if (v < 0) return k; } return ids[ids.length - 1]; };
+    // 2.27 (D216) : celles qui ont leur zone (« Le Pari », parmi les parieurs de la tribune) y sont posées, une chacune, et n'en sortent pas
+    bons.filter(k => Z[k]).forEach((k, j) => { const cle = '_rue_' + g + '_z' + j; if (S.flags[cle]) return; const L = [];
+      for (let y = 1; y < m.h - 1; y++) for (let x = 1; x < m.w - 1; x++) if (!m.solid[y * m.w + x] && Z[k].indexOf(m.g0(x * T + 8, y * T + 8)) >= 0 && !W.npcs.some(n => !n.hidden && n.placed && Math.floor(n.x / T) === x && Math.floor(n.y / T) === y)) L.push([x, y]);
+      if (!L.length) return; const c = L[Math.floor(r() * L.length)];
+      W.foes.push({ id: 'ruez' + j, group: [k], map: m.id, rodeur: true, rue: true, zone: Z[k], cle, done: false, placed: true, x: c[0] * T + 8, y: c[1] * T + 8, cx: null, ph: 5 + j, v: R.MARCHE * (C.pas || 0.45), vue: C.vue || 6 }); });
+    if (!ids.length) return;
     const depart = W.spotPx('parvis') || [W.player.x, W.player.y], libres = [], spots = Object.keys(m.spots).map(k => m.spots[k]);
     for (let y = 1; y < m.h - 1; y++) for (let x = 1; x < m.w - 1; x++) if (rueOk(x, y) && Math.hypot(x * T + 8 - depart[0], y * T + 8 - depart[1]) > (C.loin || 12) * T && spots.every(q => Math.hypot(q[0] - x, q[1] - y) > 3)) libres.push([x, y]);
     const pris = [];
@@ -11509,15 +11753,16 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   }
   R.poserRues = poserRues;
   // les distances à celui qui mène, de case en case, par les rues (au plus seize)
-  function champRue(p) { const m = W.map, T = 16, d = new Int16Array(m.w * m.h).fill(-1), sx = Math.floor(p.x / T), sy = Math.floor(p.y / T); if (!rueOk(sx, sy)) return d; const q = [sy * m.w + sx]; d[q[0]] = 0;
-    for (let k = 0; k < q.length; k++) { const c = q[k], x = c % m.w, y = (c - x) / m.w; if (d[c] >= 16) continue; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(o => { const X = x + o[0], Y = y + o[1]; if (X < 0 || Y < 0 || X >= m.w || Y >= m.h) return; const j = Y * m.w + X; if (d[j] >= 0 || !rueOk(X, Y)) return; d[j] = d[c] + 1; q.push(j); }); }
+  function champRue(p, f) { const m = W.map, T = 16, d = new Int16Array(m.w * m.h).fill(-1), sx = Math.floor(p.x / T), sy = Math.floor(p.y / T); if (!rueOk(sx, sy, f)) return d; const q = [sy * m.w + sx]; d[q[0]] = 0;
+    for (let k = 0; k < q.length; k++) { const c = q[k], x = c % m.w, y = (c - x) / m.w; if (d[c] >= 16) continue; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(o => { const X = x + o[0], Y = y + o[1]; if (X < 0 || Y < 0 || X >= m.w || Y >= m.h) return; const j = Y * m.w + X; if (d[j] >= 0 || !rueOk(X, Y, f)) return; d[j] = d[c] + 1; q.push(j); }); }
     return d; }
   function ticRues(dt) {
     const m = W.map, L = W.foes.filter(f => f.rue && !f.done && f.placed && f.map === m.id); if (!L.length) return;
     const p = W.player, T = 16;
-    R._champT = (R._champT || 0) - dt; if (R._champT <= 0 || !R._champR) { R._champR = champRue(p); R._champT = 0.25; }
+    R._champT = (R._champT || 0) - dt; if (R._champT <= 0 || !R._champR) { R._champR = champRue(p); R._champZ = {}; R._champT = 0.25; }
     for (const f of L) {
-      if (R.poursuit(f)) { if (f.sonne > 0) continue; } else avance(f, dt, R._champR); // celle que l'on a fuie : ticFuite la mène
+      const ch = f.zone ? (R._champZ[f.id] || (R._champZ[f.id] = champRue(p, f))) : R._champR;   // (2.27 : celle qui a sa zone chasse par sa zone)
+      if (R.poursuit(f)) { if (f.sonne > 0) continue; } else avance(f, dt, ch); // celle que l'on a fuie : ticFuite la mène
       const dist = Math.hypot(f.x - p.x, f.y - p.y);
       if (dist < (f.vue || 6) * T && I.cite) I.cite.vue(f);
       if (dist < 14 && !R.intouchable()) return R.contactRue(f);
@@ -12468,7 +12713,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   U.veille = function (now) {
     const box = $('#secours'), fade = +($('#fade').style.opacity || 0);
     const attend = !$('#dialog').hidden || !$('#choice').hidden || !$('#card').hidden || !!document.querySelector('.screen:not([hidden])') ||
-      (I.battle.active && ($('#battle .cmd').childElementCount > 0 || !$('#battle .banner').hidden || $('#floaters').childElementCount > 0));
+      (I.battle.active && ($('#battle .cmd').childElementCount > 0 || !$('#battle .banner').hidden || $('#floaters').childElementCount > 0)) ||
+      enCourse();   // 2.27 : une course se joue (circuit.js)
     const libre = I.scene === W && !S.busy && !W.lock && fade < 0.5;
     if (libre || attend || I.debug.auto || !I.save.data.started) { figeDepuis = 0; if (!box.hidden) box.hidden = true; return; }
     if (!figeDepuis) figeDepuis = now;
@@ -12479,6 +12725,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     $('#secours').hidden = true; figeDepuis = 0;
     I.errors.push({ t: Date.now(), msg: 'reprise demandée par le joueur', st: '', n: 1 });
     try { I.battle.abort(W); } catch (e) { /* le combat n'était pas ouvert */ }
+    try { if (I.circuit) I.circuit.abandon(); } catch (e) { /* aucune course n'était ouverte */ }
     S.depth = 0; W.lock = false; W._autoBusy = false; U.menuOpen = false; S.hideDialog(); $('#choice').hidden = true; document.body.classList.remove('in-dialog', 'in-screen', 'in-build', 'en-carton');
     const c = $('#card'); c.classList.remove('on'); c.hidden = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
     I.input.reset(); const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0; document.body.classList.remove('noir');
@@ -12591,7 +12838,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
        les cartons gardent leur fond sur tout l'écran et posent leur contenu entre les deux (--pad-cote).
      Masquée au choix du joueur (« Manette tactile »), elle ne prend plus aucune place. Ses mesures viennent de la manette
      elle-même (sa place ne dépend pas de la scène) : la marge du système (encoche) est comprise. */
-  const PANNEAU = 276;   // en hauteur, la place que le panneau du combat demande sous la scène, serré, marges comprises (points)
+  const PANNEAU = 276;
+  const enCourse = () => !!(I.circuit && I.circuit.scene && I.scene === I.circuit.scene);   // 2.27 (D216) : une course, ou le tour de moto   // en hauteur, la place que le panneau du combat demande sous la scène, serré, marges comprises (points)
   function padPlace(portrait) {
     const B = document.body, on = B.classList.contains('touch') && !B.classList.contains('sansjoy'); let bas = 0, cote = 0, zone = null;
     if (on) { const r = q => $(q).getBoundingClientRect(), j = r('#pad .joy'), a = r('#pad .a'), b = r('#pad .b'), vw = window.innerWidth, vh = window.innerHeight;
@@ -12617,7 +12865,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     // scène prend toute la largeur de l'écran ; sur un écran plus large que 16:9, l'image la remplit et ne montre qu'une
     // partie de sa hauteur (U.coupe ; la vue suit le héros de haut en bas) — toute sa largeur, et pas de bandes noires.
     // Le combat garde son cadrage : toute l'image, aussi grande que l'écran le permet.
-    const zoom = portrait && (I.scene === W || I.battle.active);
+    const zoom = portrait && (I.scene === W || I.battle.active || enCourse());   // 2.27 : la course aussi (circuit.js)
     let w, h, ch = 0;
     if (zoom) { w = aw; h = Math.round(Math.max(Math.min(aw, ah * 0.47, I.battle.active && P.bas ? ah - P.bas - PANNEAU : 1e9), aw * 9 / 16)); }
     else if (immersif && !I.battle.active) { w = aw; const hp = Math.round(aw * 9 / 16); h = Math.min(ah, hp); if (hp > h + 1) ch = hp; }
@@ -12679,7 +12927,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     if (e.target && e.target.closest && e.target.closest('[data-plein]')) return; pleinTente = true; U.pleinEcran(true); };
   ['fullscreenchange', 'webkitfullscreenchange'].forEach(n => document.addEventListener(n, () => { if (!enPlein()) { try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (x) { /* rien */ } } }));
   // en exploration, le joystick fait marcher (l'écouteur du dessus est celui du monde) ; ailleurs, il choisit
-  const marche = () => I.input.auMonde() && I.scene === W && !U.menuOpen && !I.battle.active;
+  const marche = () => (I.input.auMonde() && I.scene === W && !U.menuOpen && !I.battle.active) || !!(I.circuit && I.circuit.mene && I.circuit.mene());   // 2.27 : pendant une course, il mène (circuit.js)
   U.padMarche = marche;
   function pad() {
     // 2.x — le joystick du pouce gauche (demande du décideur, 19 novembre : « un joystick transparent pour le pouce gauche » ;
@@ -12698,11 +12946,12 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     U.padCourir = courir;
     const stopRep = () => { clearTimeout(rep); rep = 0; repD = null; };
     const repeter = d => { stopRep(); repD = d; const t = ms => { rep = setTimeout(() => { if (repD !== d || !I.input.held[d] || marche()) return stopRep(); I.input.emit(d); t(160); }, ms); }; t(420); };
-    const lacher = () => { jid = null; stopRep(); if (bou) bou.style.transform = ''; joy.classList.remove('down', 'court'); I.input.course = false; DIRS.forEach(d => { I.input.held[d] = false; }); };
+    const lacher = () => { jid = null; stopRep(); if (bou) bou.style.transform = ''; joy.classList.remove('down', 'court'); I.input.course = false; I.input.joyAngle = null; DIRS.forEach(d => { I.input.held[d] = false; }); };
     const viser = e => { const r = joy.getBoundingClientRect(), R = r.width / 2, dx = e.clientX - (r.left + R), dy = e.clientY - (r.top + R), L = Math.hypot(dx, dy), k = L > R * 0.58 ? R * 0.58 / L : 1;
       if (bou) bou.style.transform = `translate(${(dx * k).toFixed(1)}px, ${(dy * k).toFixed(1)}px)`;
       courir();
       const nv ={ up: false, down: false, left: false, right: false }, va = marche();
+      I.input.joyAngle = va && L > R * 0.22 && I.circuit && I.circuit.mene && I.circuit.mene() ? Math.atan2(dy, dx) : null;   // 2.27 : le cap que l'on donne à la voiture (circuit.js)
       if (L > R * 0.22) { const ang = Math.atan2(dy, dx) * 180 / Math.PI;
         if (va) { const s8 = Math.round(ang / 45); // de -4 à 4 : 0 à droite, 2 en bas, -2 en haut, ±4 à gauche
           nv.right = s8 >= -1 && s8 <= 1; nv.down = s8 >= 1 && s8 <= 3; nv.left = s8 >= 3 || s8 <= -3; nv.up = s8 >= -3 && s8 <= -1; }
@@ -12715,6 +12964,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(n => joy.addEventListener(n, e => { if (e.pointerId === jid) lacher(); })); }
     const tap = (sel, a) => { const b = $(sel); b.addEventListener('pointerdown', e => { e.preventDefault(); b.classList.add('down'); I.input.emit(a); }); ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => b.addEventListener(n, () => b.classList.remove('down'))); };
     tap('#pad .a', 'ok');
+    { const a = $('#pad .a'); a.addEventListener('pointerdown', () => { I.input.aTenu = true; }); ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => a.addEventListener(n, () => { I.input.aTenu = false; })); }   // 2.27 : A tenu accélère (circuit.js)
     // B : « retour » au premier appui (frapper, ou revenir d'un cran) ; tenu, il fait courir tant que le joystick est poussé
     { const b = $('#pad .b'); b.addEventListener('pointerdown', e => { e.preventDefault(); b.classList.add('down'); bTenu = true; I.input.emit('retour'); courir(); });
       ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => b.addEventListener(n, () => { b.classList.remove('down'); bTenu = false; courir(); })); }
@@ -12725,7 +12975,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   /* 2.x — la manette ne recouvre jamais rien : si une page ne peut pas lui laisser la place (un texte qui déborde de sa
      place, sur un tout petit écran), elle s'y efface (body.pad-efface, sans rien changer à la mise en page) plutôt que de
      recouvrir quoi que ce soit, et revient dès que la place est libre. Regardé six fois par seconde. */
-  const SOUS_PAD = '#dialog, #dialog2, #choice, #battle .panel, #buildbar, #hud .obj, #hud .enig, #toasts.montre, #card, .screen, #secours';
+  const SOUS_PAD = '#dialog, #dialog2, #choice, #battle .panel, #buildbar, #hud .obj, #hud .enig, #toasts.montre, #card, .screen, #secours, #course .tableau, #course .rangs, #course .signe, #course .bilan';
   U.padRecouvre = function () {
     const pads = [...document.querySelectorAll('#pad .joy, #pad .a, #pad .b')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0), l = [];
     if (!pads.length) return l;
@@ -12822,7 +13072,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       I.audio.pump(); // la musique avance aussi à chaque image
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
       if (sc) { try {
-        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW) || (sc === W) !== !!U._sceneW || (document.body.classList.contains('immersif') && I.battle.active !== !!U._combat)) { U.zoomW = sc === W; layout(); }
+        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active || enCourse())) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW) || (sc === W) !== !!U._sceneW || (document.body.classList.contains('immersif') && I.battle.active !== !!U._combat)) { U.zoomW = sc === W; layout(); }
         if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) { if (I.debug.walk === 'tap') W.tapStep(); else W.walkStep(); } W.update(1 / 60); } I.input.clearHeld(); }
         else { U.pointerTick(now); if (sc.update) sc.update(dt); }
         G.present(dt, sc.render(dt) || {});
@@ -12859,11 +13109,14 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
      couloir ; on ne peut pas y entrer. La course jouable viendra au lot 3 : rien ici ne compte, rien n'est gardé.
    - Les voitures garées sont des objets de la carte, qui tiennent leurs deux cases (maps.js, quartiers()).
    Rien de tout cela n'est gardé dans la partie. Les outils lisent TR.voitures, TR.pied(v), TR.traverses (une voiture et le
-   joueur l'un dans l'autre : jamais) et TR.arrets (les arrêts devant quelqu'un). */
+   joueur l'un dans l'autre : jamais) et TR.arrets (les arrêts devant quelqu'un).
+   2.27 (D216) — TR.garees : ce qui se gare là le temps d'une visite (la moto de Sâlim, circuit.js) — un corps comme celui d'une
+   voiture (on n'y entre pas, un chemin le contourne), dessiné à son rang ; la voiture qui la verrait sur sa voie s'arrête.
+   TR.gele : les voitures attendent (le temps que la moto de Sâlim arrive). */
 (function () {
   'use strict';
   const I = window.ISNAD, D = I.D, G = I.gfx, W = I.world;
-  const TR = I.trafic = { voitures: [], course: [], actif: false, traverses: 0, arrets: 0, journal: [] };
+  const TR = I.trafic = { voitures: [], course: [], garees: [], gele: false, actif: false, traverses: 0, arrets: 0, journal: [] };
 
   // un chemin fermé fait de segments droits : sa longueur, et le point à une distance donnée
   function chemin(pts) { const seg = []; let L = 0; pts.forEach((a, i) => { const b = pts[(i + 1) % pts.length], l = Math.hypot(b[0] - a[0], b[1] - a[1]); seg.push({ a, b, l, s: L }); L += l; }); return { seg, L }; }
@@ -12880,14 +13133,15 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   }
   const sens = p => p.dx < 0 ? 'g' : p.dx > 0 ? 'd' : p.dy > 0 ? 'b' : 'h';
   // le corps d'une voiture au sol (en points de la carte) : de côté, 36 × 11 ; de face ou de dos, 22 × 28
-  const pied = (x, y, d) => d === 'g' || d === 'd' ? [x - 18, y - 9, x + 18, y + 2] : [x - 11, y - 26, x + 11, y + 2];
-  TR.pied = v => pied(v.x, v.y, v.d);
+  const pied = (x, y, d, m) => m === 'moto' ? (d === 'g' || d === 'd' ? [x - 15, y - 6, x + 15, y + 2] : [x - 5, y - 14, x + 5, y + 2])   // 2.27 : la moto de Sâlim, plus étroite
+    : d === 'g' || d === 'd' ? [x - 18, y - 9, x + 18, y + 2] : [x - 11, y - 26, x + 11, y + 2];
+  TR.pied = v => pied(v.x, v.y, v.d, v.m);
   const croise = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
   const boite = (x, y, m) => [x - 4 - m, y - 5 - m, x + 4 + m, y + m];   // le pied du joueur (world.js : x ± 4, de y − 5 à y), élargi de m
 
   // un lieu vient d'être chargé : ses voitures, s'il en a
   TR.arme = function () {
-    TR.voitures = []; TR.course = []; TR.actif = false;
+    TR.voitures = []; TR.course = []; TR.garees = []; TR.gele = false; TR.actif = false;
     const m = W.map, Q = m && m.env && m.env.trafic; if (!Q) return;
     TR.actif = true; TR.boucle = chemin(Q.boucle); TR.K = Q.circuit;
     const C = D.CITE || {}, n = C.voitures | 0, r = I.rng(I.hash('trafic|' + m.id)), modeles = G.MODELES_RUE;
@@ -12906,13 +13160,15 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     const L = [boite(W.player.x, W.player.y, 2)];
     for (let i = 1; i < W.party.length; i++) { const q = W.suiveur(i); L.push(boite(q[0], q[1], 2)); }
     W.npcs.forEach(n => { if (!n.hidden && n.placed && n.map === W.map.id) L.push(boite(n.x, n.y, 2)); });
+    TR.garees.forEach(v => { if (!v.roule) L.push(TR.pied(v)); });   // 2.27 : la moto garée
     return L;
   }
   // la voie devant elle est-elle libre ? (son corps, avancé pas à pas le long du chemin, ne touche personne)
   function libre(v, L, loin) { for (let k = 2; k <= loin; k += 3) { const p = point(TR.boucle, v.s + k), f = pied(p.x, p.y, sens(p)); if (L.some(b => croise(f, b))) return false; } return true; }
   TR.tic = function (dt) {
     if (!TR.actif || !W.map || !W.map.env.trafic) return;
-    dt = Math.min(dt, 0.05); const C = D.CITE || {}, arret = C.arret || 20, L = gens(), BL = TR.boucle.L;
+    dt = Math.min(dt, 0.05); if (TR.gele) { TR.voitures.forEach(v => { v.v = 0; }); return; }
+    const C = D.CITE || {}, arret = C.arret || 20, L = gens(), BL = TR.boucle.L;
     // de la première à la dernière : chacune garde ses distances avec celle qui la précède
     TR.voitures.forEach(v => {
       let devant = Infinity; TR.voitures.forEach(u => { if (u === v) return; const d = ((u.s - v.s) % BL + BL) % BL; if (d < devant) devant = d; });
@@ -12928,20 +13184,21 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   // les cases que tiennent les voitures en ce moment : un chemin les contourne (world.js, W.route et W.pathTo) — sans quoi celui qui
   // veut passer pousserait contre une voiture arrêtée devant lui, qui l'attendrait
   TR.cases = function () { const out = []; if (!TR.actif || !W.map) return out; const w = W.map.w;
-    TR.voitures.forEach(v => { const f = TR.pied(v); for (let y = Math.floor(f[1] / 16); y <= Math.floor((f[3] - 1) / 16); y++) for (let x = Math.floor(f[0] / 16); x <= Math.floor((f[2] - 1) / 16); x++) out.push(y * w + x); });
+    TR.voitures.concat(TR.garees).forEach(v => { const f = TR.pied(v); for (let y = Math.floor(f[1] / 16); y <= Math.floor((f[3] - 1) / 16); y++) for (let x = Math.floor(f[0] / 16); x <= Math.floor((f[2] - 1) / 16); x++) out.push(y * w + x); });
     return out; };
   // un pas du joueur : refusé s'il entre dans une voiture (on peut toujours s'en écarter)
   TR.bloque = function (x0, y0, x1, y1) {
     if (!TR.actif) return false; const a = boite(x0, y0, 0), b = boite(x1, y1, 0);
-    return TR.voitures.some(v => { const f = TR.pied(v); if (!croise(f, b)) return false; if (!croise(f, a)) return true;
+    return TR.voitures.concat(TR.garees).some(v => { const f = TR.pied(v); if (!croise(f, b)) return false; if (!croise(f, a)) return true;
       const cx = (f[0] + f[2]) / 2, cy = (f[1] + f[3]) / 2; return Math.hypot(x1 - cx, y1 - cy) < Math.hypot(x0 - cx, y0 - cy); });
   };
   // dans la liste triée par profondeur du rendu (world.js)
   TR.lister = function (list, cx, cy) {
     if (!TR.actif) return; const vue = v => v.x > cx - 40 && v.x < cx + G.PW + 40 && v.y > cy - 10 && v.y < cy + G.PH + 40;
-    TR.voitures.concat(TR.course).forEach(v => { if (vue(v)) list.push({ y: v.y, car: v }); });
+    TR.voitures.concat(TR.course, TR.garees).forEach(v => { if (vue(v)) list.push({ y: v.y, car: v }); });
   };
   TR.dessiner = function (c, v, cx, cy, t, lights) {
+    if (v.m === 'moto' && I.circuit) return I.circuit.dessinerMoto(c, v, cx, cy, t, lights);   // 2.27 : la moto de Sâlim (circuit.js)
     const x = Math.round(v.x - cx), y = Math.round(v.y - cy), cote = v.d === 'g' || v.d === 'd';
     c.fillStyle = 'rgba(20,12,30,.38)'; c.beginPath(); c.ellipse(x, y + 0.5, cote ? 19 : 12, cote ? 3.5 : 4, 0, 0, 6.3); c.fill();
     c.drawImage(G.obj('qvoiture', { m: v.m, c: v.c, d: v.d }), x - 22, y - 28);
@@ -12999,9 +13256,10 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     W.roster = {}; W.saga = null; await W.startChapter('idris', ri); return true;
   };
   // au début d'une visite (world.js, startChapter) : ce qui rôde se tire de nouveau ; rien de la visite d'avant
-  C.neuf = function (F) { Object.keys(F).forEach(k => { if (k === '_rues' || k.indexOf('_rue_') === 0) delete F[k]; }); };
+  C.neuf = function (F) { Object.keys(F).forEach(k => { if (k === '_rues' || k.indexOf('_rue_') === 0 || k === '_primes') delete F[k]; }); };   // (2.27 : et les primes de la visite d'avant — circuit.js)
   // l'ouverture faite : la première fois, Maître Yûnus dit qu'on peut revenir ici (la leçon de l'outil « cite »)
   C.ouvre = async function (cp) {
+    if (I.circuit) I.circuit.ouvre(cp); // 2.27 : Sâlim est au circuit s'il est déjà venu, sa moto garée (circuit.js)
     const e = C.etat(); if (cp || e.lecon) return;
     const t = ((I.sagas.coeur || {}).lecons || {}).cite, y = yunus(); if (!t || !y) return;
     let dire = false; const donne = I.lecons ? I.lecons.proposer('cite', () => { dire = true; }) : (dire = true);
@@ -13043,7 +13301,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     await I.ui.showChain(I.perso.dire(I.t('Idris est revenu aux Archives basses. La Chaîne tourne dans la pénombre.'))); return S.fade('in', 300);
   };
   // la première fois qu'une chimère des rues approche : personne d'autre ne la voit (rodeurs.js)
-  C.vue = function () { const e = C.etat(); if (e.vue) return; e.vue = true; I.save.store(); const t = textes().seul; if (t) S.toast(I.fmt(I.esc(t)), 6000); C.journal.push({ quoi: 'seul' });
+  C.vue = function (f) { if (f && f.group && f.group[0] === 'pari' && W.saga && W.saga.id === 'idris') I.ui.unlockCodex('le_pari');   // 2.27 : la fiche « Le Pari », la première fois qu'on le voit
+    const e = C.etat(); if (e.vue) return; e.vue = true; I.save.store(); const t = textes().seul; if (t) S.toast(I.fmt(I.esc(t)), 6000); C.journal.push({ quoi: 'seul' });
     if (W.saga && W.saga.id === 'idris') I.ui.unlockCodex('nul_ne_voit'); };   // (le feuillet « Ce que nul ne voit » : des chimères, et non des idées noires)
   // après un combat avec une chimère des rues (rodeurs.js, R.contactRue) : la prière rappelée, puis revoir Maître Yûnus, ou plus tard
   C.apres = async function (f, res) {
@@ -13070,6 +13329,610 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     } finally { S.depth--; S.hideDialog(); }
     W.checkpoint();
   };
+})();
+
+/* ==== src/core/circuit.js ==== */
+/* ISNAD 2.27 (D216) — « Sâlim et la course » : le tour de moto derrière Sâlim, les cinq circuits, la prime de l'organisateur.
+   Demandes du décideur, 21 novembre : « améliore la cité miroir avec des belles voitures, des jeux en tous genres, des
+   activités, des courses de voitures » ; « Les activités de la cité miroir sont omniprésents des le début et peuvent faire
+   l'objet de jeux légers quelque soit l'avancement dans la saga » ; « Les courses de voitures sont de plus en plus
+   difficiles avec des circuits » ; « Un ami vient en moto et demande à Idriss de monter derrière lui pour sa première
+   course » (Sâlim, « l'ami des courses ») ; une vraie course, une prime de l'organisateur, aucune mise.
+   - Au premier passage au circuit des quartiers (cite.js, le refuge), quel que soit le maillon en cours, dès le prologue
+     joué : Sâlim arrive en moto et propose à Idris de monter derrière lui. Sâlim pilote ; Idris se penche dans chaque virage,
+     au joystick ou aux flèches, vers l'intérieur du virage. Bien penché, la moto garde sa vitesse ; mal penché, elle ralentit
+     — sans chute ni blessure. C'est la leçon de l'outil « virages » (D.OUTILS, lecons.js : dite par Sâlim, au moment de
+     monter, jamais au début d'un chapitre) ; elle resert à la première course. Sâlim n'est pas un Compagnon : il a son
+     visage. Avant l'étape III de la découverte de l'Agrégor (2.25), aucun texte ne le nomme : Sâlim dit « les écrans ».
+   - Les cinq circuits (D.CIRCUITS) : on les court seul, en voiture, vue de dessus, sur des tracés faits des rues du quartier.
+     Chacun s'ouvre quand le précédent est gagné ; un circuit gagné se rejoue. On oriente la voiture au joystick ou aux flèches
+     (elle tourne vers où on la pointe, d'autant moins vite qu'elle va vite : l'adhérence) ; A tenu accélère ; B met en pause,
+     puis offre « Quitter la course » (B revient d'un cran). La barrière retient : on y glisse, plus lentement ; aucun
+     accident. Les adversaires suivent la piste, chacun à sa vitesse et à son adresse.
+   - La prime : des dirhams (ceux de l'équipement), versés par l'organisateur au podium, croissants avec le circuit, plafonnés
+     par visite (D.COURSE.plafond ; S.flags._primes, que cite.js remet à zéro à chaque arrivée). On ne paie jamais pour courir :
+     aucune mise, aucun pari, nulle part (regles.js) ; le pari n'est qu'une chimère (« Le Pari », dans la tribune : rodeurs.js).
+   - La partie garde, dans `cite.course` (base.js) : { salim : 0 (jamais venu), 1 (venu), 2 (Idris est monté derrière lui),
+     gagnes : [vrai…], temps : [millièmes…], primes, parle } — des comptes. Le dernier maillon lit `_2084_salim` (posé ici).
+   La géométrie et la conduite ne touchent pas à la page : un outil les fait tourner hors du jeu (v2/tools/cite.js). */
+(function () {
+  'use strict';
+  const I = window.ISNAD, D = I.D;
+  const CI = I.circuit = { journal: [], K: null };
+  const TAU = Math.PI * 2, PAS = 3;
+  const borne = (v, a, b) => v < a ? a : v > b ? b : v;
+  const ecart = (a, b) => { let d = (a - b) % TAU; if (d > Math.PI) d -= TAU; else if (d < -Math.PI) d += TAU; return d; };
+  const mod = (v, m) => ((v % m) + m) % m;
+  CI.LARGE = 1100; CI.HAUT = 740;   // la toile des tracés, en points
+  // les teintes (G.TEINTES) : celle d'Idris, celles des adversaires, celle de la moto de Sâlim
+  CI.TEINTE = 8; CI.TEINTES_IA = [2, 3, 7, 4]; CI.TEINTE_MOTO = 2;
+
+  /* ================= la géométrie d'un tracé =================
+     Un polygone fermé, chaque sommet arrondi par un arc de son rayon (un congé tangent aux deux droites). Échantillonné tous les
+     trois points environ : position, cap (la tangente), courbure signée (> 0 : on tourne dans le sens des aiguilles d'une
+     montre, l'écran ayant son y vers le bas), abscisse curviligne. L'origine est au milieu de l'arête `depart`. */
+  const geos = new Map();
+  function geometrie(def) {
+    if (geos.has(def)) return geos.get(def);
+    const P = def.trace, n = P.length;
+    const coins = P.map((p, i) => {
+      const A = P[(i - 1 + n) % n], B = P[(i + 1) % n], r = p[2];
+      let ux = A[0] - p[0], uy = A[1] - p[1]; const ul = Math.hypot(ux, uy); ux /= ul; uy /= ul;
+      let wx = B[0] - p[0], wy = B[1] - p[1]; const wl = Math.hypot(wx, wy); wx /= wl; wy /= wl;
+      const ang = Math.acos(borne(ux * wx + uy * wy, -1, 1)), t = r / Math.tan(ang / 2);
+      let bx = ux + wx, by = uy + wy; const bl = Math.hypot(bx, by) || 1; bx /= bl; by /= bl;
+      const dc = r / Math.sin(ang / 2);
+      return { t1: [p[0] + ux * t, p[1] + uy * t], t2: [p[0] + wx * t, p[1] + wy * t], c: [p[0] + bx * dc, p[1] + by * dc], r, sens: Math.sign(-ux * wy + uy * wx) || 1, tour: Math.PI - ang };
+    });
+    const X = [], Y = [], A = [], K = [], E = [], F = [];
+    for (let i = 0; i < n; i++) {
+      const C = coins[i], f1 = Math.atan2(C.t1[1] - C.c[1], C.t1[0] - C.c[0]), la = C.r * C.tour, m = Math.max(2, Math.ceil(la / PAS));
+      for (let j = 0; j < m; j++) { const f = f1 + C.sens * C.tour * j / m; X.push(C.c[0] + C.r * Math.cos(f)); Y.push(C.c[1] + C.r * Math.sin(f)); A.push(f + C.sens * Math.PI / 2); K.push(C.sens / C.r); E.push(-1 - i); F.push(j / m); }
+      const N = coins[(i + 1) % n], dx = N.t1[0] - C.t2[0], dy = N.t1[1] - C.t2[1], l = Math.hypot(dx, dy), m2 = Math.max(1, Math.ceil(l / PAS)), a = Math.atan2(dy, dx);
+      for (let j = 0; j < m2; j++) { X.push(C.t2[0] + dx * j / m2); Y.push(C.t2[1] + dy * j / m2); A.push(a); K.push(0); E.push(i); F.push(j / m2); }
+    }
+    const d0 = def.depart | 0, ids = []; E.forEach((e, k) => { if (e === d0) ids.push(k); }); const o = ids.length ? ids[Math.floor(ids.length / 2)] : 0;
+    const N = X.length, tr = { def, n: N, x: new Float64Array(N), y: new Float64Array(N), a: new Float64Array(N), k: new Float64Array(N), s: new Float64Array(N), h: new Float32Array(N), arete: new Int16Array(N), part: new Float32Array(N), hw: def.large };
+    for (let q = 0; q < N; q++) { const k = (q + o) % N; tr.x[q] = X[k]; tr.y[q] = Y[k]; tr.a[q] = A[k]; tr.k[q] = K[k]; tr.arete[q] = E[k]; tr.part[q] = F[k]; }
+    let s = 0; for (let q = 0; q < N; q++) { tr.s[q] = s; const j = (q + 1) % N; s += Math.hypot(tr.x[j] - tr.x[q], tr.y[j] - tr.y[q]); } tr.L = s;
+    // le viaduc : une part d'une arête passe en hauteur (une rampe douce de chaque côté)
+    if (def.viaduc) { const V = def.viaduc, R = 0.16, lisse = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+      for (let q = 0; q < N; q++) if (tr.arete[q] === V.arete) { const p = tr.part[q]; tr.h[q] = Math.min(lisse((p - V.de + R) / R), lisse((V.a + R - p) / R)); } }
+    tr.haut = !!def.viaduc;
+    // les virages : un arc par sommet
+    tr.virages = [];
+    for (let i = 0; i < n; i++) { let q0 = -1, q1 = -1; for (let q = 0; q < N; q++) if (tr.arete[q] === -1 - i) { if (q0 < 0) q0 = q; q1 = q; }
+      if (q0 >= 0) tr.virages.push({ s0: tr.s[q0], s1: tr.s[q1] + PAS, sens: coins[i].sens, r: coins[i].r, c: coins[i].c, q0, q1 }); }
+    tr.virages.sort((a, b) => a.s0 - b.s0);
+    geos.set(def, tr); return tr;
+  }
+  CI.geometrie = geometrie;
+  // le point du tracé à l'abscisse s (interpolé)
+  function point(tr, s) {
+    s = mod(s, tr.L); let lo = 0, hi = tr.n - 1;
+    while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (tr.s[mid] <= s) lo = mid; else hi = mid - 1; }
+    const i = lo, j = (i + 1) % tr.n, sj = j ? tr.s[j] : tr.L, f = (s - tr.s[i]) / Math.max(1e-6, sj - tr.s[i]);
+    return { i, x: tr.x[i] + (tr.x[j] - tr.x[i]) * f, y: tr.y[i] + (tr.y[j] - tr.y[i]) * f, a: tr.a[i] + ecart(tr.a[j], tr.a[i]) * f };
+  }
+  CI.point = point;
+  // le plus proche échantillon, autour du dernier connu (au croisement du viaduc, on reste sur sa propre branche)
+  function projeter(tr, x, y, i0, w) {
+    let b = i0, bd = Infinity;
+    for (let k = -w; k <= w; k++) { const i = mod(i0 + k, tr.n), dx = x - tr.x[i], dy = y - tr.y[i], d = dx * dx + dy * dy; if (d < bd) { bd = d; b = i; } }
+    const a = tr.a[b], dx = x - tr.x[b], dy = y - tr.y[b];
+    return { i: b, lat: -dx * Math.sin(a) + dy * Math.cos(a), lon: dx * Math.cos(a) + dy * Math.sin(a) };
+  }
+  CI.projeter = projeter;
+
+  /* ================= la course ================= */
+  function placer(tr, c, prog, lat) { c.prog = prog; c.tour = Math.floor(prog / tr.L); const p = point(tr, prog); c.i = p.i; c.a = p.a; c.lat = lat; c.x = p.x - Math.sin(p.a) * lat; c.y = p.y + Math.cos(p.a) * lat; }
+  // n : l'indice du circuit
+  CI.nouvelle = function (n) {
+    const def = D.CIRCUITS[n], tr = geometrie(def), K = { n, def, tr, t: 0, tours: def.tours, voitures: [], arrives: [], chocs: 0, contacts: 0 };
+    const J = { joueur: true, v: 0, teinte: CI.TEINTE, m: 'course' }; placer(tr, J, -24, 0); K.joueur = J; K.voitures.push(J);
+    def.adversaires.forEach((a, k) => { const voie = k % 2 ? 0.46 : -0.46, c = { ia: a, v: 0, teinte: CI.TEINTES_IA[k % CI.TEINTES_IA.length], m: 'course', voie, voieCible: voie, k };
+      placer(tr, c, -24 + a.avance, voie * tr.hw); K.voitures.push(c); });
+    return K;
+  };
+  const niveau = (K, c) => (K.tr.haut && K.tr.h[c.i] > 0.5 ? 1 : 0);
+  CI.niveau = niveau;
+  function suivre(K, c) { const tr = K.tr, q = projeter(tr, c.x, c.y, c.i, 14), d = q.i - c.i; if (d < -tr.n / 2) c.tour++; else if (d > tr.n / 2) c.tour--; c.i = q.i; c.lat = q.lat; c.prog = c.tour * tr.L + tr.s[q.i] + q.lon; }
+  // le joueur conduit : e = { cap (le cap voulu, ou null), gaz (A tenu) }
+  function conduire(K, c, e, dt) {
+    const V = D.COURSE.voiture, tr = K.tr; let frotte = 0;
+    if (e && typeof e.cap === 'number') { const lim = Math.min(V.braquage, V.adherence / Math.max(30, c.v)) * dt, d = ecart(e.cap, c.a); frotte = Math.max(0, Math.min(1, (Math.abs(d) - 0.45) / 0.6)); c.a += borne(d, -lim, lim); }
+    if (e && e.gaz) c.v = Math.min(V.vmax, c.v + V.accel * dt * (1 - 0.3 * c.v / V.vmax)); else c.v = Math.max(0, c.v - V.lache * dt);
+    if (frotte && c.v > 60) c.v = Math.max(60, c.v - V.frotte * frotte * dt);   // le pneu frotte : vouloir tourner bien plus que la voiture ne peut la ralentit
+    if (Math.abs(c.lat) > tr.hw) { const lim = V.vmax * V.horsPiste; if (c.v > lim) c.v = Math.max(lim, c.v - V.lache * 3 * dt); }   // hors de la chaussée
+    c.x += Math.cos(c.a) * c.v * dt; c.y += Math.sin(c.a) * c.v * dt;
+    suivre(K, c);
+    // la barrière : on ne la passe pas ; on y glisse, plus lentement — jamais d'accident
+    const B = tr.hw + V.barriere;
+    if (Math.abs(c.lat) > B) { const sg = Math.sign(c.lat), a = tr.a[c.i], nx = -Math.sin(a), ny = Math.cos(a), dl = c.lat - sg * B; c.x -= nx * dl; c.y -= ny * dl; c.lat = sg * B;
+      if (!c.contre) { c.v *= V.rebond; K.chocs++; } c.contre = true;
+      const long = Math.abs(ecart(a, c.a)) < Math.PI / 2 ? a : a + Math.PI; c.a += ecart(long, c.a) * Math.min(1, 5 * dt); }
+    else c.contre = false;
+  }
+  // les adversaires (et le joueur, une fois la ligne passée) suivent le tracé, dans leur voie
+  function rails(K, c, dt) {
+    const V = D.COURSE.voiture, tr = K.tr, A = c.ia || { vitesse: 0.3, adresse: 0.9 }, F = V.frein, vp = c.fin ? 34 : V.vmax * A.vitesse, s0 = mod(c.prog, tr.L);
+    let cible = vp;
+    for (let j = 0; j < 64; j++) { const i = (c.i + j) % tr.n, k = Math.abs(tr.k[i]); if (!k) continue; const d = j ? mod(tr.s[i] - s0, tr.L) : 0, vl = Math.sqrt(V.adherence * A.adresse / k); cible = Math.min(cible, Math.sqrt(vl * vl + 2 * F * d)); }
+    // celui qui est devant, dans la même voie et au même niveau : on reste derrière, puis l'on passe de l'autre côté
+    let gene = null, gd = 26;
+    K.voitures.forEach(o => { if (o === c) return; const dp = o.prog - c.prog; if (dp > 0 && dp < gd && Math.abs(o.lat - c.lat) < 12 && niveau(K, o) === niveau(K, c)) { gene = o; gd = dp; } });
+    // (la voie libre un moment, chacun reprend le milieu de la chaussée : en file, on peut les dépasser par le côté)
+    if (gene) { cible = Math.min(cible, gene.v * 0.97); c.bloque = (c.bloque || 0) + dt; c.libre = 0; if (c.bloque > 0.6) { c.voieCible = gene.lat > c.lat ? -0.5 : 0.5; c.bloque = 0; } }
+    else { c.bloque = 0; c.libre = (c.libre || 0) + dt; if (c.libre > 1.6 && c.ia) c.voieCible = 0; }
+    c.v = c.v < cible ? Math.min(cible, c.v + V.accel * dt) : Math.max(cible, c.v - F * dt);
+    c.prog += c.v * dt;
+    const vise = (c.voieCible === undefined ? 0 : c.voieCible) * tr.hw, dl = borne(vise - c.lat, -tr.hw * 0.8 * dt, tr.hw * 0.8 * dt); c.lat += dl;
+    const p = point(tr, c.prog); c.tour = Math.floor(c.prog / tr.L); c.i = p.i; c.a = p.a + borne(dl / Math.max(1e-3, c.v * dt) * 0.5, -0.3, 0.3); c.x = p.x - Math.sin(p.a) * c.lat; c.y = p.y + Math.cos(p.a) * c.lat;
+  }
+  // les corps : le joueur s'écarte, une voiture sur ses rails ne bouge pas ; celui qui rattrape l'autre ralentit
+  function contacts(K) {
+    const L = K.voitures, R = 13;
+    for (let a = 0; a < L.length; a++) for (let b = a + 1; b < L.length; b++) {
+      const p = L[a], q = L[b], J = p.joueur && !p.fin ? p : q.joueur && !q.fin ? q : null;
+      if (!J) { if (niveau(K, p) !== niveau(K, q)) continue; const d = Math.hypot(p.x - q.x, p.y - q.y); if (d >= R + 6) continue;   // deux voitures sur leurs rails : celle de derrière reste derrière
+        const der = p.prog < q.prog ? p : q, dev = der === p ? q : p; der.prog -= Math.min(4, R + 6 - d); der.v = Math.min(der.v, dev.v); continue; }
+      const O = J === p ? q : p; if (niveau(K, J) !== niveau(K, O)) continue;
+      const dx = J.x - O.x, dy = J.y - O.y, d = Math.hypot(dx, dy); if (d >= R || d < 1e-3) continue;
+      J.x += dx / d * (R - d); J.y += dy / d * (R - d); suivre(K, J);
+      const devant = Math.cos(J.a) * (O.x - J.x) + Math.sin(J.a) * (O.y - J.y) > 0; if (devant) J.v = Math.min(J.v, O.v * 0.92); else O.v = Math.min(O.v, J.v * 0.9);
+      K.contacts++;
+    }
+  }
+  CI.avancer = function (K, dt, e) {
+    const tr = K.tr; K.t += dt;
+    K.voitures.forEach(c => { if (c.ia || c.fin) rails(K, c, dt); else conduire(K, c, e, dt); });
+    contacts(K);
+    K.voitures.forEach(c => { if (!c.fin && c.prog >= K.tours * tr.L) { c.fin = K.t; K.arrives.push(c); if (c.joueur) { c.voie = c.voieCible = borne(c.lat / tr.hw, -0.6, 0.6); } } });
+  };
+  // l'ordre d'arrivée, puis l'avance de chacun
+  CI.classement = K => K.voitures.slice().sort((p, q) => (p.fin && q.fin) ? p.fin - q.fin : p.fin ? -1 : q.fin ? 1 : q.prog - p.prog);
+  // la vitesse que permet ce qui vient (à `adresse` de l'adhérence, en ralentissant de `dec`)
+  function permise(tr, c, adresse, dec, loin) { const V = D.COURSE.voiture, s0 = mod(c.prog, tr.L); let v = V.vmax;
+    for (let j = 0; j < loin; j++) { const i = (c.i + j) % tr.n, k = Math.abs(tr.k[i]); if (!k) continue; const d = j ? mod(tr.s[i] - s0, tr.L) : 0, vl = Math.sqrt(V.adherence * adresse / k); v = Math.min(v, Math.sqrt(vl * vl + 2 * dec * d)); }
+    return v; }
+  // un pilote, pour les essais : il vise un point du tracé devant lui et lâche A avant les virages.
+  // o : { adresse (la part de l'adhérence qu'il ose), regard, bruit (en radians), hasard (une fonction), retard (en secondes) }
+  CI.pilote = function (K, o) {
+    o = o || {}; const P = K.joueur, tr = K.tr, V = D.COURSE.voiture, ad = o.adresse === undefined ? 0.95 : o.adresse;
+    // celui qui est juste devant, dans sa voie : on vise à côté de lui, du côté où il y a de la place
+    let lat = 0; K.voitures.forEach(c => { if (c === P) return; const dp = c.prog - P.prog; if (dp > -4 && dp < 46 && Math.abs(c.lat - P.lat) < 16 && niveau(K, c) === niveau(K, P)) lat = c.lat > 0 ? c.lat - 17 : c.lat + 17; });
+    lat = borne(lat, -tr.hw + 7, tr.hw - 7);
+    const p = point(tr, P.prog + 10 + P.v * (o.regard || 0.2)), px = p.x - Math.sin(p.a) * lat, py = p.y + Math.cos(p.a) * lat;
+    let cap = Math.atan2(py - P.y, px - P.x);
+    if (o.bruit) { if (!(o._tb > K.t)) { o._tb = K.t + 0.35; o._b1 = ((o.hasard || Math.random)() - 0.5) * o.bruit; } o._b = (o._b || 0) + ((o._b1 || 0) - (o._b || 0)) * 0.08; cap += o._b; }   // une main qui hésite : un écart lent, non un tremblement
+    const gaz = P.v < permise(tr, P, ad, V.lache + V.frotte * 0.4, 70);
+    if (o.retard) { const q = o._file || (o._file = []); q.push({ t: K.t, cap, gaz }); while (q.length > 1 && q[1].t <= K.t - o.retard) q.shift(); return { cap: q[0].cap, gaz: q[0].gaz }; }
+    return { cap, gaz };
+  };
+
+  /* ================= la moto de Sâlim =================
+     Sâlim pilote, sur ses rails ; Idris se penche. Le signe d'un virage paraît `annonce` points avant lui. Dans l'arc, s'il se
+     penche vers l'intérieur (le joystick ou les flèches, à `angle` degrés près), la moto garde sa vitesse de virage ; sinon,
+     elle ralentit (`mal`). Un virage est « bien pris » si Idris s'est penché `bien` de son arc. */
+  CI.nouvelleBalade = function () {
+    const def = D.COURSE.moto, tr = geometrie(def), K = { moto: true, def, tr, t: 0, prog: -12, v: 0, lat: 0, penche: 0, virages: tr.virages.map(v => Object.assign({ tenu: 0, duree: 0, fait: false, bien: false }, v)) };
+    const p = point(tr, K.prog); K.i = p.i; K.x = p.x; K.y = p.y; K.a = p.a; return K;
+  };
+  CI.avancerBalade = function (K, dt, e) {
+    const M = D.COURSE.moto, tr = K.tr; K.t += dt;
+    const tour = Math.floor(K.prog / tr.L), s = mod(K.prog, tr.L), p0 = point(tr, K.prog);
+    let vir = null; if (tour === 0) for (const v of K.virages) { if (!v.fait && s >= v.s0 - M.annonce && s <= v.s1) { vir = v; break; } }
+    let penche = false; if (vir && e && typeof e.cap === 'number') { const dedans = p0.a + vir.sens * Math.PI / 2; penche = Math.abs(ecart(e.cap, dedans)) < M.angle * Math.PI / 180; }
+    const arc = !!vir && s >= vir.s0; if (arc) { vir.duree += dt; if (penche) vir.tenu += dt; }
+    let cible = M.vmax;
+    if (tour === 0) K.virages.forEach(v => { if (v.fait) return; const vl = Math.sqrt(M.adherence * v.r), d = v.s0 - s; if (d > 0) cible = Math.min(cible, Math.sqrt(vl * vl + 2 * M.frein * d)); else if (s <= v.s1) cible = Math.min(cible, vl * (penche ? 1 : M.mal)); });
+    if (tour > 0) cible = 30;
+    K.v = K.v < cible ? Math.min(cible, K.v + M.accel * dt) : Math.max(cible, K.v - M.frein * dt);
+    K.prog += K.v * dt;
+    const s2 = mod(K.prog, tr.L), t2 = Math.floor(K.prog / tr.L);
+    K.virages.forEach(v => { if (!v.fait && ((t2 === 0 && s2 > v.s1) || t2 > 0)) { v.fait = true; v.bien = v.duree > 0 && v.tenu / v.duree >= M.bien; } });
+    K.signe = vir; K.penche = penche && vir ? vir.sens : 0; K.malPenche = arc && !penche; K.bienPenche = arc && penche;
+    const p = point(tr, K.prog); K.i = p.i; K.x = p.x; K.y = p.y; K.a = p.a;
+    if (K.prog >= tr.L && !K.fini) K.fini = K.t;
+  };
+  // pour les essais : un passager qui se penche (ou non) à chaque virage
+  CI.piloteMoto = function (K, o) { o = o || {}; const v = K.signe; if (!v || o.jamais) return { cap: null }; const p = point(K.tr, K.prog); return { cap: p.a + v.sens * Math.PI / 2 }; };
+
+  /* ================= ce qui suit ne vit que dans la page ================= */
+  if (typeof document === 'undefined') return;
+  const G = I.gfx, W = I.world, S = I.script, $ = I.$;
+  const textes = () => (((I.sagas.idris || {}).cite || {}).course) || {};
+  CI.textes = textes;
+  const tactile = () => document.body.classList.contains('touch');
+
+  /* ----- la partie : cite.course ----- */
+  CI.etat = function () { const e = I.cite.etat(); let c = e.course; if (!c || typeof c !== 'object' || Array.isArray(c)) c = e.course = { salim: 0, gagnes: [], temps: [], primes: 0 };
+    if (!Array.isArray(c.gagnes)) c.gagnes = []; if (!Array.isArray(c.temps)) c.temps = []; if (!Number.isInteger(c.salim)) c.salim = 0; return c; };
+  const lu = () => { const c = I.save.data.cite && I.save.data.cite.course; return c && typeof c === 'object' ? c : {}; };
+  CI.ouvert = n => n === 0 ? (lu().salim | 0) >= 2 : !!(lu().gagnes || [])[n - 1];
+  // le dernier maillon lit `_2084_salim` : Idris a couru avec Sâlim (frame.js, e1)
+  CI.drapeaux = function (F) { if ((lu().salim | 0) >= 2) F._2084_salim = true; else delete F._2084_salim; };
+
+  /* ----- les gens du circuit : Sâlim et sa moto, l'organisateur ----- */
+  const pnj = id => W.npcs.find(n => n.id === id && W.map && n.map === W.map.id) || null;
+  CI.salim = () => pnj('salim_q'); CI.organisateur = () => pnj('q_organisateur');
+  // la place de la moto : sur le trottoir, devant l'entrée des stands
+  CI.parking = () => { const s = W.spotPx('circuit'); return s ? { x: s[0] - 44, y: s[1] - 32 } : null; };
+  function garer() { const TR = I.trafic, P = CI.parking(); if (!TR || !P) return; TR.garees = TR.garees.filter(v => v.m !== 'moto'); TR.garees.push({ m: 'moto', c: CI.TEINTE_MOTO, d: 'd', x: P.x, y: P.y }); }
+  // à chaque arrivée dans les quartiers (cite.js, C.ouvre) : Sâlim est là s'il est déjà venu, sa moto garée
+  CI.ouvre = function () { if (!I.cite.ici()) return; const s = CI.salim(); if (!s) return; const e = CI.etat();
+    if (e.salim >= 1) { s.hidden = false; W.place(s); W.ecarter(s); garer(); } else s.hidden = true; };
+  // la moto, dans la ville : garée, ou qui arrive, Sâlim dessus
+  CI.dessinerMoto = function (c, v, cx, cy, t, lights) {
+    const x = Math.round(v.x - cx), y = Math.round(v.y - cy), cote = v.d === 'g' || v.d === 'd';
+    c.fillStyle = 'rgba(20,12,30,.36)'; c.beginPath(); c.ellipse(x, y + 0.5, cote ? 15 : 6, cote ? 3 : 3.5, 0, 0, 6.3); c.fill();
+    if (v.pilote) { const s = CI.salim(); if (s && s.sheet) c.drawImage(s.sheet, 0, (v.d === 'g' ? 1 : 2) * 24, 16, 24, v.d === 'g' ? x - 2 : x - 14, y - 30, 16, 24); }   // Sâlim en selle : la moto le cache jusqu'aux hanches
+    c.drawImage(G.obj('qmoto', { c: v.c, d: v.d }), x - 22, y - 28);
+    if (cote) { const sg = v.d === 'd' ? 1 : -1; lights.push({ x: x + sg * 11, y: y - 15, r: v.roule ? 22 : 10, color: '#fff2d0', a: v.roule ? 0.6 : 0.3 }); }
+  };
+  // Sâlim arrive : la moto vient par l'avenue du sud et se gare sur le trottoir ; les voitures l'attendent
+  function arrivee() {
+    return new Promise(res => {
+      const TR = I.trafic, P = CI.parking(); if (!TR || !P) { res(); return; }
+      const x0 = Math.max(40, P.x - 250), pts = [[x0, 493], [P.x - 18, 493], [P.x, P.y]], L = [0];
+      for (let i = 1; i < pts.length; i++) L.push(L[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+      TR.garees = TR.garees.filter(v => v.m !== 'moto'); const v = { m: 'moto', c: CI.TEINTE_MOTO, d: 'd', x: x0, y: 493, roule: true, pilote: true }; TR.garees.push(v); TR.gele = true;
+      { const f = TR.pied({ m: 'moto', d: 'd', x: P.x, y: P.y }), p = W.player; if (p.x + 6 > f[0] && p.x - 6 < f[2] && p.y + 2 > f[1] && p.y - 7 < f[3]) { const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor((P.x + 40) / 16), Math.floor(P.y / 16)]); if (q) { p.x = q[0]; p.y = q[1]; W.resetTrail(); } } }   // (personne n'est garé sur Idris)
+      const s = CI.salim(); if (s) s.hidden = true;
+      let d = 0, last = performance.now(); I.audio.moteur(true); I.audio.regime(0.5, 0);
+      const fin = () => { v.x = P.x; v.y = P.y; v.roule = false; v.pilote = false; TR.gele = false; I.audio.moteur(false); if (s) { s.hidden = false; W.place(s); W.ecarter(s); } res(); };
+      const pas = now => { const dt = Math.min(0.05, (now - last) / 1000); last = now; d += (d < L[1] ? 150 : 60) * dt * I.speed;
+        if (d >= L[L.length - 1] || I.scene !== W) return fin();
+        let k = 1; while (k < L.length - 1 && d > L[k]) k++; const f = (d - L[k - 1]) / (L[k] - L[k - 1]); v.x = pts[k - 1][0] + (pts[k][0] - pts[k - 1][0]) * f; v.y = pts[k - 1][1] + (pts[k][1] - pts[k - 1][1]) * f;
+        I.audio.regime(d < L[1] ? 0.55 : 0.2, 0); requestAnimationFrame(pas); };
+      requestAnimationFrame(pas);
+    });
+  }
+  const tourner = (n, vers) => { if (!n) return; const p = vers || W.player, dx = p.x - n.x, dy = p.y - n.y; n.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0); };
+  const dire = (qui, t) => (t ? S.run([['say', qui, t]]) : Promise.resolve());
+  // peut-on recevoir l'outil « virages » maintenant (ou l'a-t-on déjà) ? Sinon Sâlim ne vient pas encore : le besoin se représentera
+  const peutApprendre = () => !I.lecons || !I.lecons.actif() || I.lecons.recu('virages') || I.lecons.pret(1);
+  CI.occupe = false;
+  // le joueur s'approche du circuit pour la première fois (world.js, à chaque pas où il a la main)
+  CI.tic = function () {
+    if (CI.occupe || !I.cite || !I.cite.ici() || I.debug.auto || I.debug.walk || S.busy || W.lock || I.ui.menuOpen || I.battle.active) return;
+    const e = lu(); if ((e.salim | 0) !== 0 || !CI.salim()) return;
+    const sp = W.spotPx('circuit'); if (!sp || Math.hypot(W.player.x - sp[0], W.player.y - (sp[1] - 6)) > 46) return;
+    if (!peutApprendre()) return;
+    CI.salimVient();
+  };
+  CI.salimVient = async function () {
+    if (CI.occupe) return; CI.occupe = true; const T = textes(), A = T.arrivee || {}; let oui = false;
+    S.depth++; W.stop(); I.input.clearHeld();
+    try {
+      CI.journal.push({ quoi: 'arrivee' });
+      await arrivee(); const s = CI.salim(); if (!s) return;
+      CI.etat().salim = 1; I.save.store(); tourner(s); W.player.dir = W.player.x > s.x ? 1 : 2;
+      await dire(s.id, (A.salim || [])[0]); await dire('idris', A.idris); await dire(s.id, (A.salim || [])[1]);
+      S.hideDialog(); oui = (await S.menuPick(T.offre || '', [{ t: T.monter }, { t: T.pasMaintenant, retour: true }])) === 0;
+      CI.journal.push({ quoi: oui ? 'monte' : 'pas-maintenant' });
+      if (!oui) await dire(s.id, T.refus);
+    } finally { S.depth--; S.hideDialog(); CI.occupe = false; }
+    if (oui) await CI.balade(true); else W.checkpoint();
+  };
+  // parler à Sâlim ou à l'organisateur (world.js, W.interact) ; le joueur de test du moteur les ignore
+  CI.parle = function (n) {
+    if (!n || !I.cite || !I.cite.ici() || I.debug.auto || I.debug.walk || CI.occupe) return false;
+    if (n.id === 'salim_q') { CI.menuSalim(); return true; } if (n.id === 'q_organisateur') { CI.menuCourses(); return true; } return false;
+  };
+  CI.menuSalim = async function () {
+    if (CI.occupe) return; CI.occupe = true; const T = textes(), e = CI.etat(), s = CI.salim(); let k = -1, premiere = e.salim < 2;
+    S.depth++;
+    try {
+      tourner(s);
+      if (premiere) { await dire(s.id, T.revoir); S.hideDialog(); if (!peutApprendre()) { await dire(s.id, T.plusTard); return; } k = await S.menuPick(T.offre || '', [{ t: T.monter }, { t: T.pasMaintenant, retour: true }]); if (k !== 0) await dire(s.id, T.refus); }
+      else { const L = T.salim || [], i = (e.parle | 0) % Math.max(1, L.length); e.parle = (e.parle | 0) + 1; I.save.store(); await dire(s.id, L[i]); S.hideDialog();
+        k = await S.menuPick(T.encoreQ || '', [{ t: T.encore }, { t: T.uneAutreFois, retour: true }]); }
+      CI.journal.push({ quoi: 'salim', k });
+    } finally { S.depth--; S.hideDialog(); CI.occupe = false; }
+    if (k === 0) await CI.balade(premiere);
+  };
+  // le tour derrière Sâlim
+  CI.balade = async function (premiere) {
+    const T = textes(), s = CI.salim(); if (!s) return null; let r = null;
+    CI.occupe = true; S.depth++;
+    try {
+      if (I.lecons) I.lecons.sequence();   // un tour de moto est une séquence, comme un combat
+      const deja = I.lecons && I.lecons.actif() && I.lecons.recu('virages');
+      if (!deja && (premiere || (I.lecons && I.lecons.actif()))) { let dit = false; const donne = I.lecons ? I.lecons.proposer('virages', () => { dit = true; }) : (dit = true);
+        if (donne && dit) { const t = ((I.sagas.coeur || {}).lecons || {}).virages, txt = typeof t === 'string' ? t : t && (tactile() ? t.doigt : t.clavier); CI.journal.push({ quoi: 'lecon' }); await dire(s.id, txt); } }
+      if (I.lecons && I.lecons.actif() && !I.lecons.recu('virages')) { await dire(s.id, T.plusTard); return null; }
+      await dire(s.id, T.depart); S.hideDialog();
+      r = await rouler(CI.nouvelleBalade());
+      if (r && !r.quitte) { CI.etat().salim = 2; I.save.store();
+        if (!premiere && I.lecons) I.lecons.reemploi('virages');
+        const F = T.fins || [], b = r.bien, n = r.total; await dire(s.id, b === n ? F[0] : b * 2 >= n ? F[1] : F[2]);
+        if (premiere) for (const l of (T.apres || [])) await dire(s.id, l); }
+      else if (r) { CI.etat().salim = Math.max(1, CI.etat().salim); await dire(s.id, T.descendu); }
+    } finally { S.depth--; S.hideDialog(); CI.occupe = false; }
+    W.checkpoint(); return r;
+  };
+  // l'organisateur : les cinq circuits, chacun scellé tant que le précédent n'est pas gagné
+  CI.libelle = function (i) {
+    const T = textes(), C = (T.circuits || [])[i] || {}, def = D.CIRCUITS[i], e = lu(), rec = (e.temps || [])[i], f = s => chrono(s / 1000);
+    if (!CI.ouvert(i)) { const avant = ((T.circuits || [])[i - 1] || {}).nom || ''; return { html: `<b>${I.esc(C.nom || '')}</b><br><small>${I.t('Scellé : gagne d’abord « {avant} ».', { avant: I.esc(avant) })}</small>`, ferme: true, i }; }
+    const bits = [I.esc(C.dit || ''), I.t('{n} tour¦{n} tours', { n: def.tours })];
+    if (def.temps) bits.push(I.t('à battre : {temps}', { temps: chrono(def.temps) }));
+    if (rec) bits.push(I.t('ton record : {temps}', { temps: f(rec) }));
+    return { html: `<b>${I.esc(C.nom || '')}</b>${(e.gagnes || [])[i] ? ' <span class="gagne">✓</span>' : ''}<br><small>${bits.join(' · ')}</small>`, i };
+  };
+  CI.menuCourses = async function () {
+    if (CI.occupe) return; CI.occupe = true; const T = textes(), O = T.organisateur || {}, o = CI.organisateur(), e = CI.etat(); let n = -1;
+    S.depth++;
+    try {
+      tourner(o);
+      if (e.salim < 2 || (I.lecons && I.lecons.actif() && !I.lecons.recu('virages'))) { await dire(o.id, O.avant); CI.journal.push({ quoi: 'organisateur', avant: true }); return; }
+      await dire(o.id, (O.accueil || [])[(e.courses | 0) % Math.max(1, (O.accueil || []).length)]); S.hideDialog();
+      const opts = D.CIRCUITS.map((d, i) => CI.libelle(i)).concat([{ t: I.t('Retour'), retour: true }]);
+      const k = await S.menuPick(O.choix || '', opts); n = k < D.CIRCUITS.length ? k : -1;
+      CI.journal.push({ quoi: 'organisateur', n });
+    } finally { S.depth--; S.hideDialog(); CI.occupe = false; }
+    if (n >= 0) await CI.courir(n);
+  };
+  CI.courir = async function (n) {
+    if (!CI.ouvert(n)) return null; CI.occupe = true; let r = null; S.depth++;
+    try { if (I.lecons) I.lecons.sequence(); r = await rouler(CI.nouvelle(n)); }
+    finally { S.depth--; S.hideDialog(); CI.occupe = false; }
+    W.checkpoint(); return r;
+  };
+
+  /* ================= la peinture d'un tracé =================
+     Les rues du quartier, vues de dessus, au même crépuscule : les dalles, les îlots (des toits de verre, des jardins, des
+     places), les trottoirs et leurs lampadaires, une barrière claire, la chaussée, ses lignes, ses vibreurs, la ligne de
+     départ en damier ; à côté du départ, des gradins vides. Ni lettre, ni chiffre, ni marque, ni logo, ni édifice religieux,
+     ni monument ; personne n'est ajouté au décor. De nuit (le cinquième), les fenêtres et les lampadaires. Le viaduc : sa
+     part haute est peinte à part, posée sur ceux qui passent dessous. */
+  const fonds = {};
+  G.surDefinition.push(() => { Object.keys(fonds).forEach(k => { delete fonds[k]; }); }); if (G.surLumiere) G.surLumiere.push(() => { Object.keys(fonds).forEach(k => { delete fonds[k]; }); });
+  function ligne(c, tr, decal, de, a) { c.beginPath(); let premier = true;
+    for (let q = de; q <= a; q++) { const i = mod(q, tr.n), nx = -Math.sin(tr.a[i]), ny = Math.cos(tr.a[i]), x = tr.x[i] + nx * decal, y = tr.y[i] + ny * decal; if (premier) { c.moveTo(x, y); premier = false; } else c.lineTo(x, y); } }
+  function tout(c, tr, decal) { ligne(c, tr, decal, 0, tr.n); c.closePath(); }
+  function peindre(def) {
+    const tr = geometrie(def), key = (def.id || 'moto') + '|' + G.D + (G.lisse ? 'l' : '') + '|' + G.lumNom;
+    if (fonds[key]) return fonds[key];
+    const Wd = CI.LARGE, Hd = CI.HAUT, cv = G.toile(Wd, Hd), c = cv.getContext('2d'), r = I.rng(I.hash('circuit|' + (def.id || 'moto'))), nuit = !!def.nuit, hw = tr.hw, hd1 = G.D === 1;
+    const lampes = [];
+    // le sol : les dalles du quartier
+    for (let y = 0; y < Hd; y += 16) for (let x = 0; x < Wd; x += 16) c.drawImage(G.tile('cdalle', (x / 16 + (y / 16) * 3) % 4), x, y);
+    // ce que la chaussée et ses trottoirs prennent : un masque à un quart
+    const mq = G.mk(Wd / 4, Hd / 4), mc = mq.getContext('2d'); mc.scale(0.25, 0.25); mc.strokeStyle = '#000'; mc.lineJoin = 'round'; mc.lineWidth = 2 * (hw + 26); tout(mc, tr, 0); mc.stroke();
+    const md = mc.getImageData(0, 0, mq.width, mq.height).data, libre = (x0, y0, w, h) => { for (let y = Math.max(0, Math.floor(y0 / 4)); y < Math.min(mq.height, Math.ceil((y0 + h) / 4)); y++) for (let x = Math.max(0, Math.floor(x0 / 4)); x < Math.min(mq.width, Math.ceil((x0 + w) / 4)); x++) if (md[(y * mq.width + x) * 4 + 3] > 20) return false; return true; };
+    // les îlots : des toits de verre, des jardins, des places
+    const TOITS = ['#3a2c56', '#2e3a5e', '#4a3048', '#28304a', '#3e2a4a'], C0 = 44;
+    for (let y = 8; y + C0 <= Hd - 8; y += C0) for (let x = 8; x + C0 <= Wd - 8; x += C0) {
+      if (!libre(x, y, C0, C0)) continue; const kind = r();
+      if (kind < 0.62) { const col = TOITS[Math.floor(r() * TOITS.length)], m = 3 + Math.floor(r() * 3), w = C0 - 2 * m, h = C0 - 2 * m;
+        c.fillStyle = 'rgba(20,10,30,.45)'; c.fillRect(x + m + 3, y + m + 4, w, h);   // l'ombre au sol, vers le bas et la droite (le couchant)
+        const g = c.createLinearGradient(x, y, x + w, y + h); g.addColorStop(0, G.shade(col, 1.35)); g.addColorStop(0.5, col); g.addColorStop(1, G.shade(col, 0.75)); c.fillStyle = g; c.fillRect(x + m, y + m, w, h);
+        c.fillStyle = 'rgba(255,190,140,.35)'; c.fillRect(x + m, y + m, w, 0.75); c.fillRect(x + m, y + m, 0.75, h);   // le rebord, pris par la lumière
+        c.fillStyle = 'rgba(255,160,200,.12)'; c.beginPath(); c.moveTo(x + m, y + m + h * 0.6); c.lineTo(x + m + w * 0.6, y + m); c.lineTo(x + m + w * 0.85, y + m); c.lineTo(x + m, y + m + h * 0.85); c.closePath(); c.fill();   // un reflet de verre, en biais
+        for (let k = 0; k < 3; k++) { const bx = x + m + 4 + r() * (w - 14), by = y + m + 4 + r() * (h - 14), bw = 4 + r() * 6, bh = 3 + r() * 5; c.fillStyle = G.shade(col, 0.6); c.fillRect(bx, by, bw, bh); c.fillStyle = G.shade(col, 1.5); c.fillRect(bx, by, bw, 0.5); }   // ce qui se pose sur un toit : des caissons, sans un signe
+        const nf = nuit ? 9 : 3; for (let k = 0; k < nf; k++) { c.fillStyle = nuit ? 'rgba(255,214,150,.75)' : 'rgba(255,230,190,.35)'; c.fillRect(x + m + 2 + Math.floor(r() * (w - 6)), y + m + 2 + Math.floor(r() * (h - 6)), 1.5, 1.5); } }
+      else if (kind < 0.8) { for (let yy = y + 2; yy < y + C0 - 2; yy += 16) for (let xx = x + 2; xx < x + C0 - 2; xx += 16) c.drawImage(G.tile('qgazon', 0), xx, yy, Math.min(16, x + C0 - 2 - xx), Math.min(16, y + C0 - 2 - yy));
+        for (let k = 0; k < 3; k++) { const tx = x + 8 + r() * (C0 - 16), ty = y + 8 + r() * (C0 - 16); c.fillStyle = 'rgba(10,20,10,.35)'; c.beginPath(); c.arc(tx + 2, ty + 2.5, 5.5, 0, TAU); c.fill(); c.fillStyle = '#2c4428'; c.beginPath(); c.arc(tx, ty, 5.5, 0, TAU); c.fill(); c.fillStyle = '#3c5a34'; c.beginPath(); c.arc(tx - 1.2, ty - 1.4, 3.4, 0, TAU); c.fill(); } }
+      else { for (let yy = y + 2; yy < y + C0 - 2; yy += 16) for (let xx = x + 2; xx < x + C0 - 2; xx += 16) c.drawImage(G.tile('qparvis', (xx + yy) % 4), xx, yy, Math.min(16, x + C0 - 2 - xx), Math.min(16, y + C0 - 2 - yy));
+        const px = x + C0 / 2, py = y + C0 / 2; c.fillStyle = 'rgba(10,20,10,.3)'; c.beginPath(); c.arc(px + 2, py + 2, 6, 0, TAU); c.fill(); c.fillStyle = '#3a5a30'; for (let k = 0; k < 7; k++) { const a = k * TAU / 7; c.beginPath(); c.ellipse(px + Math.cos(a) * 3.5, py + Math.sin(a) * 3.5, 3.6, 1.3, a, 0, TAU); c.fill(); } c.fillStyle = '#6a5038'; c.beginPath(); c.arc(px, py, 1.2, 0, TAU); c.fill(); }   // un dattier, vu d'en haut
+    }
+    c.lineJoin = 'round'; c.lineCap = 'butt';
+    // les trottoirs, la barrière, la chaussée
+    c.strokeStyle = '#8a7660'; c.lineWidth = 2 * (hw + 15); tout(c, tr, 0); c.stroke();
+    c.strokeStyle = 'rgba(60,40,30,.35)'; c.lineWidth = 0.75; tout(c, tr, hw + 15); c.stroke(); tout(c, tr, -hw - 15); c.stroke();
+    for (let q = 0; q < tr.n; q += 3) { const i = q, nx = -Math.sin(tr.a[i]), ny = Math.cos(tr.a[i]); [1, -1].forEach(sg => { c.fillStyle = 'rgba(60,40,30,.28)'; c.fillRect(tr.x[i] + nx * sg * (hw + 5 + 10 * r()), tr.y[i] + ny * sg * (hw + 5 + 10 * r()), 0.75, 0.75); }); }   // les joints des dalles du trottoir
+    c.strokeStyle = '#d8d0c8'; c.lineWidth = 2 * (hw + 3.2); tout(c, tr, 0); c.stroke();
+    c.strokeStyle = '#34303c'; c.lineWidth = 2 * hw; tout(c, tr, 0); c.stroke();
+    c.strokeStyle = 'rgba(40,30,40,.6)'; c.lineWidth = 0.75; tout(c, tr, hw + 3.2); c.stroke(); tout(c, tr, -hw - 3.2); c.stroke();
+    // le grain de l'asphalte
+    for (let i = 0; i < tr.n; i++) { const nx = -Math.sin(tr.a[i]), ny = Math.cos(tr.a[i]); for (let k = 0; k < 4; k++) { const l = (r() * 2 - 1) * (hw - 1); c.fillStyle = ['#3c3846', '#2e2a36', '#423c4c', '#3a3644'][k]; c.fillRect(tr.x[i] + nx * l, tr.y[i] + ny * l, hd1 ? 1 : 0.5, hd1 ? 1 : 0.5); } }
+    // les lignes : le bord, l'axe en tirets
+    c.strokeStyle = 'rgba(236,226,210,.7)'; c.lineWidth = hd1 ? 1 : 0.75; tout(c, tr, hw - 2.5); c.stroke(); tout(c, tr, -hw + 2.5); c.stroke();
+    c.setLineDash([7, 9]); c.strokeStyle = 'rgba(236,226,210,.4)'; tout(c, tr, 0); c.stroke(); c.setLineDash([]);
+    // les vibreurs, rouge et blanc, au bord extérieur et à la corde des virages serrés
+    tr.virages.forEach(v => { if (v.r > 70) return; [[-v.sens * (hw - 1.6), 1], [v.sens * (hw - 1.6), 0.6]].forEach(([decal, part]) => { const q0 = v.q0, q1 = v.q1, mil = (q0 + q1) / 2, dem = (q1 - q0) / 2 * part;
+      for (let q = Math.round(mil - dem), k = 0; q < Math.round(mil + dem); q += 2, k++) { c.strokeStyle = k % 2 ? '#e8e0d0' : '#c8283c'; c.lineWidth = 2.6; ligne(c, tr, decal, q, q + 2); c.stroke(); } }); });
+    // la ligne de départ, en damier ; sur la grille, deux traits par place
+    { const a = tr.a[0], nx = -Math.sin(a), ny = Math.cos(a), tx = Math.cos(a), ty = Math.sin(a);
+      for (let l = -hw + 1, k = 0; l < hw - 1; l += 3, k++) for (let u = 0; u < 2; u++) { c.fillStyle = (k + u) % 2 ? '#e8e0d0' : '#16141c'; c.beginPath(); const x = tr.x[0] + nx * l + tx * (u * 3 - 3), y = tr.y[0] + ny * l + ty * (u * 3 - 3); c.moveTo(x, y); c.lineTo(x + nx * 3, y + ny * 3); c.lineTo(x + nx * 3 + tx * 3, y + ny * 3 + ty * 3); c.lineTo(x + tx * 3, y + ty * 3); c.closePath(); c.fill(); } }
+    // à côté du départ, des gradins vides (de l'autre côté du trottoir)
+    { const a = tr.a[0], nx = -Math.sin(a), ny = Math.cos(a), sg = (tr.y[0] + ny * 60 < Hd - 20 && tr.y[0] + ny * 60 > 20 && tr.x[0] + nx * 60 > 20 && tr.x[0] + nx * 60 < Wd - 20) ? 1 : -1;
+      c.save(); c.translate(tr.x[0] + nx * sg * (hw + 17), tr.y[0] + ny * sg * (hw + 17)); c.rotate(a + (sg > 0 ? 0 : Math.PI));
+      c.fillStyle = 'rgba(20,10,30,.4)'; c.fillRect(-56, 3, 116, 26); for (let k = 0; k < 4; k++) { c.fillStyle = k % 2 ? '#584a52' : '#6c5c64'; c.fillRect(-58, k * 6, 116, 6); for (let x = -56; x < 56; x += 5) { c.fillStyle = (x / 5 + k) % 2 ? '#b83a4e' : '#2a8a9a'; c.fillRect(x, k * 6 + 1.5, 2.5, 2.5); } }
+      c.restore(); }
+    // les lampadaires, sur les trottoirs (un de chaque côté, en quinconce)
+    for (let s = 40, k = 0; s < tr.L; s += 96, k++) { const p = point(tr, s), sg = k % 2 ? 1 : -1, nx = -Math.sin(p.a), ny = Math.cos(p.a), x = p.x + nx * sg * (hw + 9), y = p.y + ny * sg * (hw + 9), col = k % 3 ? '#ffd9a0' : '#ffc0e0';
+      const g = c.createRadialGradient(x, y, 1, x, y, 26); g.addColorStop(0, nuit ? 'rgba(255,220,160,.42)' : 'rgba(255,220,160,.22)'); g.addColorStop(1, 'rgba(255,220,160,0)'); c.fillStyle = g; c.fillRect(x - 26, y - 26, 52, 52);
+      c.fillStyle = '#2a2632'; c.beginPath(); c.arc(x, y, 1.8, 0, TAU); c.fill(); c.fillStyle = '#fff0c8'; c.beginPath(); c.arc(x, y, 0.9, 0, TAU); c.fill(); lampes.push([x, y, col]); }
+    // de nuit : tout s'assombrit, sauf les fenêtres et les lampes
+    if (nuit) { c.fillStyle = 'rgba(10,12,40,.42)'; c.fillRect(0, 0, Wd, Hd); lampes.forEach(([x, y]) => { const g = c.createRadialGradient(x, y, 1, x, y, 30); g.addColorStop(0, 'rgba(255,214,150,.4)'); g.addColorStop(1, 'rgba(255,214,150,0)'); c.fillStyle = g; c.fillRect(x - 30, y - 30, 60, 60); }); }
+    // le viaduc : l'ombre de sa part haute tombe au sol ; son tablier est peint à part (posé sur ceux qui passent dessous)
+    let haut = null;
+    if (tr.haut) { const seg = []; for (let q = 0; q < tr.n; q++) if (tr.h[q] > 0.01) seg.push(q); const q0 = seg[0], q1 = seg[seg.length - 1];
+      c.save(); c.strokeStyle = 'rgba(20,10,30,.42)'; c.lineWidth = 2 * hw + 10; for (let q = q0; q < q1; q++) { const h = tr.h[q]; c.save(); c.translate(7 * h, 9 * h); ligne(c, tr, 0, q, q + 1); c.stroke(); c.restore(); } c.restore();
+      for (let q = q0; q < q1; q += 14) { if (tr.h[q] < 0.7) continue; [hw - 3, -hw + 3].forEach(l => { const nx = -Math.sin(tr.a[q]), ny = Math.cos(tr.a[q]); c.fillStyle = '#4a3e48'; c.fillRect(tr.x[q] + nx * l + 4, tr.y[q] + ny * l + 6, 4, 4); }); }   // les piles
+      haut = G.toile(Wd, Hd); const h2 = haut.getContext('2d'); h2.lineJoin = 'round';
+      h2.strokeStyle = '#b8aeb8'; h2.lineWidth = 2 * hw + 8; ligne(h2, tr, 0, q0, q1); h2.stroke();
+      h2.strokeStyle = '#7a6e7a'; h2.lineWidth = 2 * hw + 4; ligne(h2, tr, 0, q0, q1); h2.stroke();
+      h2.strokeStyle = '#38343f'; h2.lineWidth = 2 * hw; ligne(h2, tr, 0, q0, q1); h2.stroke();
+      h2.strokeStyle = 'rgba(236,226,210,.7)'; h2.lineWidth = hd1 ? 1 : 0.75; ligne(h2, tr, hw - 2.5, q0, q1); h2.stroke(); ligne(h2, tr, -hw + 2.5, q0, q1); h2.stroke();
+      h2.setLineDash([7, 9]); h2.strokeStyle = 'rgba(236,226,210,.4)'; ligne(h2, tr, 0, q0, q1); h2.stroke(); h2.setLineDash([]);
+      if (nuit) { h2.fillStyle = 'rgba(10,12,40,.42)'; h2.globalCompositeOperation = 'source-atop'; h2.fillRect(0, 0, Wd, Hd); h2.globalCompositeOperation = 'source-over'; } }
+    // le plan, pour le coin de l'image
+    const plan = G.toile(92, 62), pc = plan.getContext('2d'); pc.scale(92 / Wd, 62 / Hd); pc.strokeStyle = 'rgba(255,236,200,.85)'; pc.lineWidth = 2 * hw; pc.lineJoin = 'round'; tout(pc, tr, 0); pc.stroke();
+    return (fonds[key] = { fond: cv, haut, plan, lampes, tr });
+  }
+  CI.peindre = peindre;
+
+  /* ================= la scène ================= */
+  const chrono = s => { s = Math.max(0, s); const m = Math.floor(s / 60), r = s - m * 60; return m + ':' + (r < 10 ? '0' : '') + r.toFixed(1); };
+  CI.chrono = chrono;
+  // ce que veut le joueur : le cap (le joystick, ou les flèches) et A tenu
+  function entree() {
+    const h = I.input.held; let cap = null;
+    if (typeof I.input.joyAngle === 'number') cap = I.input.joyAngle;
+    else { const dx = (h.right ? 1 : 0) - (h.left ? 1 : 0), dy = (h.down ? 1 : 0) - (h.up ? 1 : 0); if (dx || dy) cap = Math.atan2(dy, dx); }
+    return { cap, gaz: !!I.input.aTenu };
+  }
+  CI.entree = entree;
+  // pendant la course (et le compte à rebours), le joystick mène, comme en exploration (ui.js : il donne huit directions et un cap)
+  CI.mene = () => { const K = CI.K; return !!K && I.scene === CI.scene && !K.pause && (K.mode === 'course' || K.mode === 'compte'); };
+  function pas(K, dt) {
+    if (K.mode === 'compte') { const avant = Math.ceil(K.compte); K.compte -= dt; const apres = Math.ceil(K.compte); if (apres < avant) { if (apres > 0) I.audio.sfx('blip'); else I.audio.sfx('ok'); } if (K.compte <= 0) { K.mode = 'course'; CI.journal.push({ quoi: 'partez', moto: !!K.moto }); } return; }
+    if (K.mode !== 'course' && K.mode !== 'arrivee') return;
+    const pil = I.debug.pilote, e = K.mode === 'course' ? (pil ? (K.moto ? CI.piloteMoto(K, pil) : CI.pilote(K, pil)) : entree()) : null;
+    if (K.moto) { CI.avancerBalade(K, dt, e); if (K.mode === 'course' && K.fini) { K.mode = 'arrivee'; K.tA = 0; } }
+    else { CI.avancer(K, dt, e || {}); if (K.mode === 'course' && K.joueur.fin) { K.mode = 'arrivee'; K.tA = 0; } }
+    if (K.mode === 'arrivee') { K.tA += dt; if (K.tA > 1.4 && K.resoudre) { const f = K.resoudre; K.resoudre = null; f({ fini: true }); } }
+  }
+  CI.scene = {
+    update(dt) { const K = CI.K; if (!K) return; K.vu = (K.vu || 0) + dt; if (!K.pause) { const n = Math.max(1, I.debug.accelCourse | 0); for (let k = 0; k < n; k++) pas(K, Math.min(dt, 0.05)); }
+      hud(K); bruit(K); },
+    render() { return dessiner(CI.K); }
+  };
+  function bruit(K) {
+    if (!K || K.pause || K.mode === 'podium') { I.audio.regime(0, 0); return; }
+    const V = K.moto ? D.COURSE.moto.vmax : D.COURSE.voiture.vmax, v = K.moto ? K.v : K.joueur.v;
+    let autres = 0; if (!K.moto) K.voitures.forEach(c => { if (c.joueur) return; const d = Math.hypot(c.x - K.joueur.x, c.y - K.joueur.y); autres = Math.max(autres, borne(1 - d / 160, 0, 1) * (c.v / V)); });
+    I.audio.regime(borne(v / V + (K.mode === 'compte' && I.input.aTenu ? 0.35 : 0), 0, 1), autres);
+  }
+  // la caméra suit celui qui mène, un peu en avant de lui, au milieu de ce qu'on voit (l'image peut être rognée : G.view)
+  function camera(K, x, y, a, v) {
+    const V = G.view, ax = Math.cos(a) * Math.min(46, v * 0.3), ay = Math.sin(a) * Math.min(34, v * 0.22);
+    const cx = x + ax - (V.x + V.w / 2), cy = y + ay - (V.y + V.h / 2);
+    if (!K.cam) K.cam = { x: cx, y: cy }; else { K.cam.x += (cx - K.cam.x) * 0.12; K.cam.y += (cy - K.cam.y) * 0.12; }
+    K.cam.x = borne(K.cam.x, -V.x - 40, CI.LARGE - V.x - V.w + 40); K.cam.y = borne(K.cam.y, -V.y - 40, CI.HAUT - V.y - V.h + 40);
+    return [G.cale(K.cam.x), G.cale(K.cam.y)];
+  }
+  const kDe = a => mod(Math.round(a / (Math.PI / 16)), 32);
+  function voiture(c, v, cx, cy, lights, nuit) {
+    const x = v.x - cx, y = v.y - cy; if (x < -30 || y < -30 || x > G.PW + 30 || y > G.PH + 30) return;
+    c.fillStyle = 'rgba(16,8,24,.4)'; c.beginPath(); c.ellipse(x + 1.5, y + 2.2, 11.5, 6.5, v.a, 0, TAU); c.fill();
+    c.drawImage(G.dessus('voiture', { m: v.m, c: v.teinte }, kDe(v.a)), Math.round(x - 14), Math.round(y - 14));
+    const fx = Math.cos(v.a), fy = Math.sin(v.a); lights.push({ x: x + fx * 16, y: y + fy * 16, r: nuit ? 30 : 16, color: '#fff2d0', a: nuit ? 0.7 : 0.35 }); lights.push({ x: x - fx * 11, y: y - fy * 11, r: 9, color: '#ff3a5a', a: 0.4 });
+    if (v.joueur) lights.push({ x, y, r: 22, color: '#8eeaf6', a: 0.25 });
+  }
+  function dessiner(K) {
+    const c = G.px; c.fillStyle = '#0a0810'; c.fillRect(0, 0, G.PW, G.PH); if (!K) return {};
+    const P = peindre(K.def), lights = [], nuit = !!K.def.nuit, t = K.vu || 0;
+    const J = K.moto ? K : K.joueur, cam = camera(K, J.x, J.y, J.a, J.v || 0), cx = cam[0], cy = cam[1];
+    c.drawImage(P.fond, -cx, -cy);
+    P.lampes.forEach(([x, y, col]) => { const X = x - cx, Y = y - cy; if (X > -40 && Y > -40 && X < G.PW + 40 && Y < G.PH + 40) lights.push({ x: X, y: Y, r: 34, color: col, a: nuit ? 0.8 : 0.45 }); });
+    if (K.moto) {
+      const T = G.TEINTES, L = (I.sagas.idris && I.sagas.idris.heroes.idris.look) || {}, sl = (I.sagas.idris && I.sagas.idris.heroes.salim.look) || {};
+      const x = K.x - cx, y = K.y - cy; c.fillStyle = 'rgba(16,8,24,.4)'; c.beginPath(); c.ellipse(x + 1.5 - K.penche * 1.5, y + 2, 10, 4.5, K.a, 0, TAU); c.fill();
+      c.drawImage(G.dessus('moto', { c: CI.TEINTE_MOTO, salim: { robe: sl.robe, head: sl.head, cloak: sl.cloak }, idris: { robe: L.robe, head: L.head, cloak: L.cloak }, penche: K.penche }, kDe(K.a)), Math.round(x - 14), Math.round(y - 14));
+      lights.push({ x: x + Math.cos(K.a) * 14, y: y + Math.sin(K.a) * 14, r: 22, color: '#fff2d0', a: 0.5 });
+      // le signe du virage : des chevrons, du côté où l'on se penche (vers l'intérieur), qui brillent quand on y est
+      const v = K.signe; if (v && K.mode === 'course' && T) { const dedans = K.a + v.sens * Math.PI / 2, ok = K.bienPenche, col = ok ? '#7dffb0' : '#ffe08a', pul = 1 + Math.sin(t * 9) * 0.15;
+        for (let k = 0; k < 3; k++) { const d = 16 + k * 6, X = x + Math.cos(dedans) * d, Y = y + Math.sin(dedans) * d; c.save(); c.translate(X, Y); c.rotate(dedans); c.scale(pul, pul); c.globalAlpha = 0.9 - k * 0.22; c.strokeStyle = '#1a1420'; c.lineWidth = 2.6; c.beginPath(); c.moveTo(-2.5, -4); c.lineTo(1.5, 0); c.lineTo(-2.5, 4); c.stroke(); c.strokeStyle = col; c.lineWidth = 1.4; c.stroke(); c.restore(); }
+        c.globalAlpha = 1; lights.push({ x: x + Math.cos(dedans) * 22, y: y + Math.sin(dedans) * 22, r: 20, color: col, a: 0.5 }); }
+    } else {
+      const bas = [], hauts = []; K.voitures.forEach(v => (niveau(K, v) ? hauts : bas).push(v));
+      bas.forEach(v => voiture(c, v, cx, cy, lights, nuit));
+      if (P.haut) c.drawImage(P.haut, -cx, -cy);
+      hauts.forEach(v => voiture(c, v, cx, cy, lights, nuit));
+    }
+    // le plan, dans le coin de ce que l'on voit
+    { const V = G.view, pw = 92 * 0.62, ph = 62 * 0.62, mx = V.x + V.w - pw - 6, my = V.y + 6; c.globalAlpha = 0.82; c.fillStyle = 'rgba(8,6,16,.55)'; c.fillRect(mx - 2, my - 2, pw + 4, ph + 4); c.drawImage(P.plan, mx, my, pw, ph); c.globalAlpha = 1;
+      const pt = (x, y, col, rr) => { c.fillStyle = col; c.fillRect(mx + x / CI.LARGE * pw - rr / 2, my + y / CI.HAUT * ph - rr / 2, rr, rr); };
+      if (K.moto) pt(K.x, K.y, Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a', 2.5); else { K.voitures.forEach(v => { if (!v.joueur) pt(v.x, v.y, G.TEINTES[v.teinte].l, 2); }); pt(K.joueur.x, K.joueur.y, Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a', 2.5); }
+      K.planRect = [mx - 2, my - 2, pw + 4, ph + 4]; }
+    if (K.mode === 'podium') podium(c, K, lights);
+    const amb = nuit ? ['#6a6aa8', '#3a3a78'] : ['#e0a888', '#a888c0'];
+    return { ambient: amb, lights, bloom: nuit ? 0.34 : 0.22, scan: true, grade: nuit ? ['#3a4aff', 0.08] : ['#ff3d8f', 0.08], vignette: 0.55, tilt: false };
+  }
+  // le podium : trois marches, les voitures dessus ; Idris devant la sienne, l'organisateur à côté
+  function podium(c, K, lights) {
+    const V = G.view, cx = V.x + V.w / 2, sol = V.y + V.h * (document.body.classList.contains('portrait') ? 0.62 : 0.42), R = K.resultat || {}, cl = (R.cl || []).slice(0, 3);   // (en largeur, le bilan tient le pied de l'image)
+    c.fillStyle = 'rgba(8,6,20,.55)'; c.fillRect(V.x, V.y, V.w, V.h);
+    const marches = [[0, 22, 1], [-50, 14, 2], [50, 8, 3]], J = W.sheets && W.sheets[0], rang = R.rang | 0, o = CI.organisateur();
+    const petit = (sh, x, y, pose) => { if (!sh) return; c.fillStyle = 'rgba(20,12,30,.35)'; c.beginPath(); c.ellipse(x, y + 1, 6, 2.5, 0, 0, TAU); c.fill(); if (pose && sh.look && G.pose) c.drawImage(G.pose(sh.look, 0, pose), x - 8, y - 22); else c.drawImage(sh, 0, 0, 16, 24, x - 8, y - 22, 16, 24); };
+    marches.forEach(([dx, h, n]) => { const x = cx + dx, v = cl[n - 1]; c.fillStyle = n === 1 ? '#c8a868' : '#9a8a90'; c.fillRect(x - 24, sol - h, 48, h); c.fillStyle = 'rgba(255,255,255,.3)'; c.fillRect(x - 24, sol - h, 48, 1); c.fillStyle = 'rgba(0,0,0,.3)'; c.fillRect(x - 24, sol - 2, 48, 2);
+      if (v) { c.drawImage(G.obj('qvoiture', { m: 'course', c: v.teinte, d: 'd' }), x - 26, sol - h - 28); lights.push({ x: x - 4, y: sol - h - 12, r: 34, color: G.TEINTES[v.teinte].l, a: 0.45 }); if (v.joueur) petit(J, x + 18, sol - h, R.gagne ? 'joie' : null); } });
+    if (rang > 3) petit(J, cx - 90, sol, null);   // hors du podium : Idris au pied des marches
+    if (o && o.sheet) petit(o.sheet, cx + 92, sol, null);
+    lights.push({ x: cx, y: sol - 30, r: 110, color: '#fff4dc', a: 0.35 });
+  }
+  /* ----- ce qui s'écrit sur la course : le chrono, le tour, le classement, le signe, le compte à rebours (#course) -----
+     Sur un téléphone en hauteur, sous l'image (la manette a la bande du bas) ; en largeur, en haut et à gauche de l'image (la
+     manette tient les deux coins du bas) ; le bilan, au pied de l'image, entre les deux zones de la manette (style.css). */
+  function hud(K) {
+    const box = $('#course'); if (!K || !box) return; const set = (sel, html) => { const e = box.querySelector(sel); if (e && e._h !== html) { e._h = html; e.innerHTML = html; e.dir = I.langue.sens(e.textContent); } };
+    const T = textes();
+    if (K.moto) { set('.chrono', `<b class="titre">${I.esc(I.t('Derrière Sâlim'))}</b>`); const bien = K.virages.filter(v => v.fait && v.bien).length;
+      set('.tour', I.esc(I.t('Virages bien pris : {n} sur {total}', { n: bien, total: K.virages.length }))); set('.rangs', '');
+      set('.signe', K.mode === 'compte' ? I.esc(tactile() ? I.t('Sâlim pilote · le joystick vers l’intérieur du virage : se pencher · B : pause') : I.t('Sâlim pilote · la flèche vers l’intérieur du virage : se pencher · Échap : pause'))
+        : K.malPenche ? `<span class="mal">${I.esc(I.t('Penche-toi vers l’intérieur du virage'))}</span>` : K.bienPenche ? `<span class="bien">${I.esc(I.t('Bien penché'))}</span>` : ''); }
+    else { const tps = K.joueur.fin || K.t, nom = ((T.circuits || [])[K.n] || {}).nom || '', tour = I.t('tour {n} sur {total}', { n: borne(K.joueur.tour + 1, 1, K.tours), total: K.tours });
+      set('.chrono', `<b>${chrono(tps)}</b>`);
+      set('.tour', I.esc(K.def.temps ? tour + ' · ' + I.t('à battre : {temps}', { temps: chrono(K.def.temps) }) : tour));
+      const cl = CI.classement(K); set('.rangs', cl.length > 1 ? cl.map((v, i) => `<li${v.joueur ? ' class="moi"' : ''}><i style="background:${G.TEINTES[v.teinte].b}"></i>${i + 1} · ${I.esc(v.joueur ? I.perso.dit() : ((T.couleurs || [])[v.teinte] || ''))}</li>`).join('') : '');
+      set('.signe', K.mode === 'compte' ? `<b>${I.esc(nom)}</b><br>` + I.esc(tactile() ? I.t('Joystick : orienter · A tenu : accélérer · B : pause') : I.t('Flèches : orienter · Entrée ou Espace tenue : accélérer · Échap : pause')) : ''); }
+    set('.compte', K.mode === 'compte' ? (Math.ceil(K.compte) > 0 ? String(Math.ceil(K.compte)) : I.esc(I.t('Partez !'))) : K.mode === 'course' && K.t < 0.8 ? I.esc(I.t('Partez !')) : '');
+  }
+
+  // le garde-fou (ui.js, U.secours) : la course en cours s'arrête, rien n'est compté
+  CI.abandon = function () { const K = CI.K; if (!K) return; if (K.resoudre) { const f = K.resoudre; K.resoudre = null; f({ quitte: true }); } if (K.attente) K.attente(true); };
+  /* ----- mener une course (ou le tour de moto) : la scène, la pause, l'arrivée, le podium ----- */
+  async function rouler(K) {
+    const prev = I.scene, mark = I.input.mark(), box = $('#course'), T = textes(); let res = null;
+    K.mode = 'compte'; K.compte = K.moto ? 1.9 : 3.2; K.pause = false; CI.K = K;
+    const arrive = new Promise(r => { K.resoudre = r; });
+    const pause = async () => { if (K.pause) return; K.pause = true; I.input.clearHeld(); CI.journal.push({ quoi: 'pause' });
+      const i = await S.menuPick(I.t('La course est en pause.'), [{ t: I.t('Reprendre'), retour: true }, { t: K.moto ? I.t('Descendre de la moto') : I.t('Quitter la course') }]);
+      K.pause = false; if (i === 1 && K.resoudre) { CI.journal.push({ quoi: 'quitte' }); const f = K.resoudre; K.resoudre = null; f({ quitte: true }); } };
+    K.enPause = pause;
+    const h = I.input.push(a => { if ((a === 'cancel' || a === 'menu' || a === 'frappe') && (K.mode === 'course' || K.mode === 'compte')) pause(); else if (a === 'ok' && K.attente) K.attente(); return true; });
+    try {
+      await S.fade('out', 260);
+      I.setScene(CI.scene); $('#hud').hidden = true; document.body.classList.add('en-course'); box.querySelector('.bilan').hidden = true; box.hidden = false; K.cam = null; hud(K);
+      G.clearParts(); G.amb = { kind: K.def.nuit ? 'dust' : 'brume', rate: 3, n: 0 }; I.audio.moteur(true);
+      await S.fade('in', 260);
+      const fin = await arrive;
+      if (fin.quitte) res = { quitte: true };
+      else if (K.moto) { res = { fini: true, bien: K.virages.filter(v => v.bien).length, total: K.virages.length }; CI.journal.push({ quoi: 'balade', bien: res.bien, total: res.total }); }
+      else { res = arrivee2(K); CI.journal.push({ quoi: 'arrivee', n: K.n, rang: res.rang, temps: res.temps, gagne: res.gagne, prime: res.verse });
+        K.resultat = res; K.mode = 'podium'; I.audio.regime(0, 0); I.audio.sfx(res.gagne ? 'roll' : 'blip');
+        const b = box.querySelector('.bilan'); b.innerHTML = bilan(K, res); b.dir = I.langue.sens(b.textContent); b.hidden = false; box.classList.add('fini');
+        await new Promise(r => { const t0 = performance.now(); K.attente = force => { if (force || performance.now() - t0 > 500) { K.attente = null; r(); } }; if (I.debug.auto) setTimeout(() => { K.attente = null; r(); }, 80); }); }
+    } finally {
+      I.input.pop(h); I.input.trim(mark); I.audio.moteur(false);
+      try { await S.fade('out', 220); } catch (e) { /* le fondu ne doit pas retenir la sortie */ }
+      box.hidden = true; box.classList.remove('fini'); box.querySelector('.bilan').hidden = true; document.body.classList.remove('en-course'); CI.K = null; I.input.clearHeld(); I.input.aTenu = false; I.input.joyAngle = null;
+      I.setScene(prev === CI.scene ? W : prev); G.clearParts();
+      if (W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; W.hud(); W.stop(); W.updateCam(true); }
+      I.audio.back();
+      try { await S.fade('in', 260); } catch (e) { /* idem */ }
+    }
+    return res;
+  }
+  // à l'arrivée : la place, le temps, ce qui s'ouvre, la prime (plafonnée par visite) ; la partie le garde
+  function arrivee2(K) {
+    const def = K.def, e = CI.etat(), cl = CI.classement(K), rang = cl.indexOf(K.joueur) + 1, temps = K.joueur.fin, sous = !def.temps || temps <= def.temps, gagne = rang === 1 && sous;
+    const avant = !!e.gagnes[K.n], ms = Math.round(temps * 1000), record = !e.temps[K.n] || ms < e.temps[K.n]; if (record) e.temps[K.n] = ms;
+    if (gagne) e.gagnes[K.n] = true;
+    const part = (D.COURSE.podium || [])[rang - 1] || 0, prime = gagne ? def.prime : (def.adversaires.length && rang > 1 && sous ? Math.round(def.prime * part) : 0);
+    const deja = S.flags._primes | 0, verse = Math.max(0, Math.min(prime, (D.COURSE.plafond | 0) - deja)); if (verse) { S.flags._primes = deja + verse; I.trade.dirhams(verse); e.primes = (e.primes | 0) + verse; }
+    e.courses = (e.courses | 0) + 1; I.save.store();
+    if (I.lecons) I.lecons.reemploi('virages');
+    return { rang, temps, sous, gagne, record, ouvre: gagne && !avant && K.n + 1 < D.CIRCUITS.length ? K.n + 1 : -1, prime, verse, plafond: prime > verse, cl };
+  }
+  const PLACES = () => [I.t('Première place'), I.t('Deuxième place'), I.t('Troisième place'), I.t('Quatrième place')];
+  function bilan(K, R) {
+    const T = textes(), C = T.circuits || [], P = T.podium || {}, nom = (C[K.n] || {}).nom || '', l = [];
+    l.push(`<h3>${I.esc(I.t('Arrivée · {nom}', { nom }))}</h3>`);
+    l.push(`<p><b>${I.esc(K.def.adversaires.length ? PLACES()[R.rang - 1] || '' : (R.sous ? I.t('Sous le temps à battre') : I.t('Au-dessus du temps à battre')))}</b> · ${chrono(R.temps)}${R.record ? ' · ' + I.esc(I.t('ton meilleur temps')) : ''}${K.def.temps ? ' · ' + I.esc(I.t('à battre : {temps}', { temps: chrono(K.def.temps) })) : ''}</p>`);
+    l.push(`<p>${I.fmt(R.gagne ? (P.gagne || '') : R.rang <= 3 && R.sous && K.def.adversaires.length ? (P.podium || '') : (P.perdu || ''))}</p>`);
+    if (R.verse) l.push(`<p class="prime">${I.esc(I.t('L’organisateur te remet la prime : {n} dirham.¦L’organisateur te remet la prime : {n} dirhams.', { n: R.verse }))}</p>`);
+    if (R.plafond) l.push(`<p><small>${I.fmt(P.plafond || '')}</small></p>`);
+    if (R.ouvre >= 0) l.push(`<p>${I.esc(I.t('« {nom} » s’ouvre.', { nom: (C[R.ouvre] || {}).nom || '' }))}</p>`);
+    else if (!R.gagne && K.n + 1 < D.CIRCUITS.length && !CI.ouvert(K.n + 1)) l.push(`<p><small>${I.esc(I.t('Le circuit suivant reste scellé : il faut d’abord gagner celui-ci.'))}</small></p>`);
+    l.push(`<div class="suite">${tactile() ? 'A ▸' : I.esc(I.t('Entrée ▸'))}</div>`);
+    return l.join('');
+  }
 })();
 
 /* ==== src/core/partage.js ==== */
@@ -13499,6 +14362,13 @@ ISNAD.registerSaga({
         { w: 1, name: 'Plus tard, peut-être', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }],
       taunts: ['Ça ne te regarde pas.'],
       desc: 'Passer à côté de quelqu’un comme à côté d’un mur. Elle ne blesse personne : elle laisse chacun seul. Rattachée à l’Insouciance, elle cède à la miséricorde et au courage.' },
+    // 2.27 (D216) — dans la tribune du circuit, parmi les parieurs (D.CITE.zones) : le pari n'est qu'une chimère ; aucun pari ne
+    // se joue dans le jeu. Rattaché à l'Avidité. Texte de l'agent, à valider.
+    pari: { racine: 'avidite', name: 'Le Pari', art: 'wisp', hue: 95, scale: 1, lvl: 0, tier: 'minion', weak: ['sabr', 'adl'], veils: 2,
+      skills: [{ w: 3, name: 'La prochaine sera la bonne', target: 'foe', el: 'fer', pow: 0.9, anim: 'dark' }, { w: 1, name: 'Presque gagné', target: 'foe', fx: [{ st: 'baisse' }], anim: 'glyph' },
+        { w: 1, name: 'Se refaire', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }],
+      taunts: ['Encore une fois, et tu rattrapes tout.'],
+      desc: 'Croire que le hasard rendra ce que le travail n’a pas donné, et revenir pour reprendre ce qu’on a perdu. Il ne promet jamais que la fois suivante. Rattaché à l’Avidité, il cède à la patience et à la justice.' },
     agregor: { racine: ['avidite', 'orgueil', 'ostentation', 'avarice', 'insouciance', 'envie', 'colere'], name: "L'AGRÉGOR", art: 'idol', hue: 285, scale: 3, lvl: 11, tier: 'boss', weak: ['sidq', 'adl', 'shajaa', 'rahma', 'ilm', 'sabr'], veils: 7,
       skills: [
         { w: 3, name: 'Mille regards', target: 'foes', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'wave' },
@@ -13541,6 +14411,7 @@ ISNAD.registerSaga({
     { id: 'enfant', cat: 'Noosphère', title: 'L’enfant du parvis', text: 'Il est là chaque soir, sous le grand écran, avec une question. Il ne lâche jamais la deuxième. Idris a commencé par lui répondre ; il a fini par l’attendre. On répond de ceux à qui l’on a commencé de répondre : c’est aussi cela, transmettre. Personnage de fiction.' },
     { id: 'quartiers', cat: 'Lieu', title: 'Les quartiers de la Cité', text: 'Au-dessus des Archives basses, la Cité-Miroir ne dort jamais : des voitures qui brillent, des salles de jeux, des vitrines, un circuit, une grande roue, un écran grand comme une façade. On y trouve tout, sauf quelqu’un à qui parler. Idris y remonte quand il veut ; Maître Yûnus l’y attend, sur le parvis. Un lieu de fiction, comme toute la Cité-Miroir.' },
     { id: 'nul_ne_voit', cat: 'Noosphère', title: 'Ce que nul ne voit', text: 'Dans les quartiers, Idris est seul à voir certaines chimères : l’Égoïsme, le Matérialisme, le Plaisir immédiat, l’Indifférence. On les dit parfois « idées noires modernes » ; ce sont des chimères, faites de ce que beaucoup désirent ensemble, et elles se combattent. Les idées noires, elles, pèsent sur une seule personne : on leur répond par la parole. Images du jeu, comme toutes les chimères.' },
+    { id: 'le_pari', cat: 'Noosphère', title: 'Le Pari', text: 'Dans la tribune du circuit, certains ne regardent pas la course : ils regardent ce qu’ils y ont engagé. Idris y voit une chimère que personne d’autre ne voit, Le Pari, faite de l’attente de gagner sans rien faire. Dans le jeu, aucun pari ne se joue : on court pour la course, l’organisateur verse une prime à qui gagne, et rien de ce qu’on a ne se met en jeu. Une image du jeu, comme toutes les chimères.' },
     { id: 'avertissement', cat: 'Parole', title: 'Avertissement', text: 'ISNAD est une fiction inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun Compagnon n’a de visage : un voile de lumière en tient lieu. Toute erreur est celle des auteurs : vérifiez auprès des sources et des savants.' }
   ],
 
@@ -13568,7 +14439,57 @@ ISNAD.registerSaga({
       'Ne réponds pas au bruit par plus de bruit. Prie, reprends souffle, et reviens transmettre.',
       'Chaque maillon de la Chaîne a d’abord écouté. Qui transmet sans avoir écouté ne transmet que sa propre voix.',
       'On ne convainc pas une ville entière. On transmet à un seul, qui transmettra à un autre. C’est cela, une chaîne.'
-    ]
+    ],
+    /* 2.27 (D216) — Sâlim et la course (src/core/circuit.js) : son arrivée au circuit, le tour de moto, ce qu'il dit ensuite ;
+       l'organisateur et ses cinq circuits ; le podium ; les teintes des adversaires. Sâlim n'est pas un Compagnon. Avant
+       l'étape III de la découverte de l'Agrégor (2.25), aucun texte ne le nomme : au circuit, Sâlim dit « les écrans », et ne le
+       nomme jamais. Aucune mise, aucun pari : la prime est celle de l'organisateur. Rien de sentimental. Textes de l'agent, à
+       valider. */
+    course: {
+      arrivee: {
+        salim: ['Tu regardes la piste comme quelqu’un qui voudrait y monter. Je me trompe ?',
+          'Je m’appelle Sâlim. Le jour, je fabrique ce qu’on regarde sur les écrans ; le soir, je viens ici regarder la route. Monte derrière moi : ta première course, c’est moi qui la pilote.'],
+        idris: 'Je ne fais que passer. Je n’ai jamais couru.'
+      },
+      offre: 'Monter derrière Sâlim ?', monter: 'Monter derrière Sâlim', pasMaintenant: 'Pas maintenant',
+      refus: 'Comme tu veux. Je passe souvent par ici, le soir. La moto reste garée là.',
+      revoir: 'Alors, ce tour ? La moto n’attend que toi.',
+      plusTard: 'Pas ce soir : tu as la tête ailleurs. Repasse, je serai là.',
+      depart: 'Accroche-toi. Je tiens le guidon ; toi, tu te penches.',
+      descendu: 'On s’arrête là. On refera un tour quand tu voudras.',
+      fins: ['Tu as pris chaque virage comme il faut. On dirait que tu as fait ça toute ta vie.',
+        'Pas mal, pour une première fois. Les virages, ça s’apprend en les prenant.',
+        'On est arrivés, c’est l’essentiel. La prochaine fois, penche-toi avec moi : la moto te suivra.'],
+      apres: ['L’organisateur, là, devant les stands, fait courir cinq circuits, du plus simple au plus serré. Chacun s’ouvre quand on a gagné le précédent.',
+        'Il verse une prime à qui gagne. Personne ne mise rien pour courir : on court, c’est tout.'],
+      salim: ['Ici, personne ne me demande ce que je fabrique. On regarde la route, c’est tout.',
+        'Un virage, ça ne se force pas. On le prend à sa vitesse, ou il te prend la tienne.',
+        'Les gens de la tribune ne regardent pas la course. Ils regardent leurs écrans, et ce qu’ils y ont engagé.',
+        'Le jour, je fais défiler des choses que personne ne se rappelle le soir. Ici, au moins, je me rappelle chaque virage.',
+        'Un conseil pour les circuits : lâche l’accélérateur avant le virage, pas dedans.'],
+      encoreQ: 'Un tour derrière Sâlim ?', encore: 'Refaire un tour derrière Sâlim', uneAutreFois: 'Une autre fois',
+      organisateur: {
+        avant: 'Tu veux courir ? Fais d’abord un tour avec Sâlim : il t’apprendra à prendre un virage.',
+        accueil: ['Cinq circuits, du plus simple au plus serré. Le premier se court seul, contre la montre.',
+          'La piste est libre. La prime est pour qui gagne : elle vient de moi, et personne ne mise rien.',
+          'Tu reviens courir ? Un circuit gagné se rejoue.'],
+        choix: 'Quel circuit ?'
+      },
+      circuits: [
+        { nom: 'La boucle des avenues', dit: 'large, une boucle simple, seul contre la montre' },
+        { nom: 'Les places', dit: 'plus de virages, trois voitures' },
+        { nom: 'La chicane', dit: 'des virages serrés, une chicane, des adversaires plus vifs' },
+        { nom: 'Le viaduc', dit: 'des voies qui se croisent, un temps à battre, un adversaire en tête' },
+        { nom: 'La nuit des tours', dit: 'le plus long et le plus serré, de nuit' }
+      ],
+      couleurs: ['Nacre', 'Bleu de nuit', 'Carmin', 'Émeraude', 'Sable', 'Ébène', 'Argent', 'Corail', 'Turquoise'],
+      podium: {
+        gagne: 'Tu montes sur la plus haute marche. L’organisateur te serre la main.',
+        podium: 'Une marche du podium. L’organisateur salue ta course.',
+        perdu: 'Pas cette fois. La piste reste là : on peut la recourir.',
+        plafond: 'Ce soir, l’organisateur a versé tout ce qu’il verse en une soirée : la prime reviendra à ta prochaine visite.'
+      }
+    }
   },
 
   chapters: [
@@ -13667,7 +14588,14 @@ ISNAD.registerSaga({
       ],
       objectives: [
         { text: 'Un homme attend dans la rue : lui parler', talk: 'salim_n', then: [
-          ['say', 'salim_n', 'Tu es l’archiviste ? Je m’appelle Sâlim. J’ai passé dix ans à nourrir l’Agrégor. Je sais où est son cœur, et je ne veux plus le servir.'],
+          // 2.27 (D216) : si Idris a couru avec Sâlim (le moteur pose _2084_salim), des retrouvailles ; sinon, la rencontre de toujours
+          ['if', '_2084_salim', [
+            ['say', 'salim_n', 'Idris ! Mon passager des virages. Alors l’archiviste, c’était toi.'],
+            ['say', 'idris', 'Sâlim. Tu disais fabriquer ce qu’on regarde sur les écrans.'],
+            ['say', 'salim_n', 'Je ne disais pas tout. J’ai passé dix ans à nourrir l’Agrégor. Je sais où est son cœur, et je ne veux plus le servir.']
+          ], [
+            ['say', 'salim_n', 'Tu es l’archiviste ? Je m’appelle Sâlim. J’ai passé dix ans à nourrir l’Agrégor. Je sais où est son cœur, et je ne veux plus le servir.']
+          ]],
           ['say', 'idris', 'Pourquoi maintenant ?'],
           ['say', 'salim_n', 'Mon fils m’a demandé ce que je fabriquais. Je n’ai pas su répondre sans mentir.'],
           ['hide', 'salim_n'], ['join', 'salim'],
@@ -14295,7 +15223,14 @@ ISNAD.registerSaga({
         { id: 'q_spectatrice', name: 'Une spectatrice', at: ['tribune', 5, 1], pose: 'assis', look: { kind: 'femme', robe: '#3a7a7a', head: '#245050', cloak: '#4a8a8a' }, talk: [['say', 'q_spectatrice', 'Tout le monde regarde la même course. Chacun la regarde seul.']] },
         { id: 'q_mecano', name: 'Un mécanicien', at: ['circuit', 0, -1], pose: 'accable', look: { kind: 'citadin', robe: '#3a5a3a', head: '#243a24', manteau: 'aucun' }, talk: [['say', 'q_mecano', 'Je prépare des voitures toute la journée. Personne ne me demande comment je vais.']] },
         { id: 'q_voisine', name: 'Une passante', at: ['parvis', -6, 6], pose: 'triste', look: { kind: 'femme', robe: '#7a4a5a', head: '#4e2e3a', cloak: '#8a5a6a' }, talk: [['say', 'q_voisine', 'Mon téléphone sait tout de moi. Mes voisins ne savent pas mon nom.']] },
-        { id: 'q_livreur', name: 'Un livreur', at: ['parvis', 6, 4], pose: 'accable', look: { kind: 'citadin', robe: '#c86a2a', head: '#7a3e18', cloak: '#d87a3a', coiffe: 'calotte' }, talk: [['say', 'q_livreur', 'Je livre des paquets à des portes qui ne s’ouvrent pas.'], ['say', 'q_livreur', 'On me laisse un pourboire, jamais un mot.']] }
+        { id: 'q_livreur', name: 'Un livreur', at: ['parvis', 6, 4], pose: 'accable', look: { kind: 'citadin', robe: '#c86a2a', head: '#7a3e18', cloak: '#d87a3a', coiffe: 'calotte' }, talk: [['say', 'q_livreur', 'Je livre des paquets à des portes qui ne s’ouvrent pas.'], ['say', 'q_livreur', 'On me laisse un pourboire, jamais un mot.']] },
+        // 2.27 (D216) — le circuit : Sâlim (il paraît quand il arrive en moto, circuit.js), l'organisateur et ses cinq circuits ;
+        // dans la tribune, des parieurs, chacun seul devant son écran (aucun ne propose rien à Idris ; Le Pari rôde parmi eux)
+        { id: 'salim_q', name: 'Sâlim', hero: 'salim', at: ['circuit', -1, -2], hidden: true, talk: [['say', 'salim_q', 'La moto est là.']] },
+        { id: 'q_organisateur', name: 'L’organisateur', at: ['circuit', 1, 0], face: 'left', look: { kind: 'citadin', robe: '#2a4a6a', head: '#1a2a3a', cloak: '#3a5a7a' }, talk: [['say', 'q_organisateur', 'La piste est libre.']] },
+        { id: 'q_parieur', name: 'Un parieur', at: ['tribune', -3, 1], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#5a4a3a', head: '#3a2e22', cloak: '#6a5a4a' }, talk: [['say', 'q_parieur', 'Je ne regarde pas la course. Je regarde les chiffres sur mon écran.'], ['say', 'q_parieur', 'Ils montent, ils descendent. Moi aussi.']] },
+        { id: 'q_parieuse', name: 'Une parieuse', at: ['tribune', 2, 0], face: 'up', pose: 'triste', look: { kind: 'femme', robe: '#5a6a4a', head: '#3a4630', cloak: '#6a7a5a' }, talk: [['say', 'q_parieuse', 'Je me dis que la prochaine fois, je rattraperai tout. Je me le dis chaque soir.']] },
+        { id: 'q_parieur2', name: 'Un parieur', at: ['tribune', 7, 1], face: 'up', pose: 'accable', look: { kind: 'citadin', robe: '#4a3a5a', head: '#2e2438', cloak: '#5a4a6a' }, talk: [['say', 'q_parieur2', 'Ce que j’ai perdu, je n’ose le dire à personne. Alors je reviens, seul.']] }
       ],
       intro: [
         ['title', 'Les quartiers de la Cité', 'An 1507 de l’Hégire · Cité-Miroir'],
@@ -15691,7 +16626,9 @@ ISNAD.registerSaga({
     garde: 'Nouveau — se protéger : *Garde* amortit un coup et rend un point de *Niyya*, *Esquive* tente de l’éviter, *Fuir* quitte une rencontre. Avec ◂ ▸, on dépense jusqu’à trois points de Niyya pour frapper plus fort.',
     objets: 'Nouveau — *Objets*. La besace sert aussi en combat.',
     // 2.23 (D212) : dite par Maître Yûnus, à la première arrivée dans les quartiers de la Cité (cite.js)
-    cite: 'Ici, tu peux revenir quand tu veux, Idris : *Revenir en 2084*, à la halte, ou *La Cité-Miroir*, au pied de la Chaîne. Je t’attendrai sur le parvis.'
+    cite: 'Ici, tu peux revenir quand tu veux, Idris : *Revenir en 2084*, à la halte, ou *La Cité-Miroir*, au pied de la Chaîne. Je t’attendrai sur le parvis.',
+    // 2.27 (D216) : dite par Sâlim, au moment de monter derrière lui (circuit.js)
+    virages: { clavier: 'Dans chaque virage, la *flèche* vers l’intérieur du virage : tu te penches avec moi. Bien penché, on garde la vitesse.', doigt: 'Dans chaque virage, le *joystick* vers l’intérieur du virage : tu te penches avec moi. Bien penché, on garde la vitesse.' }
   },
 
   /* ----- 2.x : les postures — trois manières de se tenir devant l'épreuve (textes proposés par l'agent, à valider) ----- */

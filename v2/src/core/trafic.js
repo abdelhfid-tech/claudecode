@@ -11,11 +11,14 @@
      couloir ; on ne peut pas y entrer. La course jouable viendra au lot 3 : rien ici ne compte, rien n'est gardé.
    - Les voitures garées sont des objets de la carte, qui tiennent leurs deux cases (maps.js, quartiers()).
    Rien de tout cela n'est gardé dans la partie. Les outils lisent TR.voitures, TR.pied(v), TR.traverses (une voiture et le
-   joueur l'un dans l'autre : jamais) et TR.arrets (les arrêts devant quelqu'un). */
+   joueur l'un dans l'autre : jamais) et TR.arrets (les arrêts devant quelqu'un).
+   2.27 (D216) — TR.garees : ce qui se gare là le temps d'une visite (la moto de Sâlim, circuit.js) — un corps comme celui d'une
+   voiture (on n'y entre pas, un chemin le contourne), dessiné à son rang ; la voiture qui la verrait sur sa voie s'arrête.
+   TR.gele : les voitures attendent (le temps que la moto de Sâlim arrive). */
 (function () {
   'use strict';
   const I = window.ISNAD, D = I.D, G = I.gfx, W = I.world;
-  const TR = I.trafic = { voitures: [], course: [], actif: false, traverses: 0, arrets: 0, journal: [] };
+  const TR = I.trafic = { voitures: [], course: [], garees: [], gele: false, actif: false, traverses: 0, arrets: 0, journal: [] };
 
   // un chemin fermé fait de segments droits : sa longueur, et le point à une distance donnée
   function chemin(pts) { const seg = []; let L = 0; pts.forEach((a, i) => { const b = pts[(i + 1) % pts.length], l = Math.hypot(b[0] - a[0], b[1] - a[1]); seg.push({ a, b, l, s: L }); L += l; }); return { seg, L }; }
@@ -32,14 +35,15 @@
   }
   const sens = p => p.dx < 0 ? 'g' : p.dx > 0 ? 'd' : p.dy > 0 ? 'b' : 'h';
   // le corps d'une voiture au sol (en points de la carte) : de côté, 36 × 11 ; de face ou de dos, 22 × 28
-  const pied = (x, y, d) => d === 'g' || d === 'd' ? [x - 18, y - 9, x + 18, y + 2] : [x - 11, y - 26, x + 11, y + 2];
-  TR.pied = v => pied(v.x, v.y, v.d);
+  const pied = (x, y, d, m) => m === 'moto' ? (d === 'g' || d === 'd' ? [x - 15, y - 6, x + 15, y + 2] : [x - 5, y - 14, x + 5, y + 2])   // 2.27 : la moto de Sâlim, plus étroite
+    : d === 'g' || d === 'd' ? [x - 18, y - 9, x + 18, y + 2] : [x - 11, y - 26, x + 11, y + 2];
+  TR.pied = v => pied(v.x, v.y, v.d, v.m);
   const croise = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
   const boite = (x, y, m) => [x - 4 - m, y - 5 - m, x + 4 + m, y + m];   // le pied du joueur (world.js : x ± 4, de y − 5 à y), élargi de m
 
   // un lieu vient d'être chargé : ses voitures, s'il en a
   TR.arme = function () {
-    TR.voitures = []; TR.course = []; TR.actif = false;
+    TR.voitures = []; TR.course = []; TR.garees = []; TR.gele = false; TR.actif = false;
     const m = W.map, Q = m && m.env && m.env.trafic; if (!Q) return;
     TR.actif = true; TR.boucle = chemin(Q.boucle); TR.K = Q.circuit;
     const C = D.CITE || {}, n = C.voitures | 0, r = I.rng(I.hash('trafic|' + m.id)), modeles = G.MODELES_RUE;
@@ -58,13 +62,15 @@
     const L = [boite(W.player.x, W.player.y, 2)];
     for (let i = 1; i < W.party.length; i++) { const q = W.suiveur(i); L.push(boite(q[0], q[1], 2)); }
     W.npcs.forEach(n => { if (!n.hidden && n.placed && n.map === W.map.id) L.push(boite(n.x, n.y, 2)); });
+    TR.garees.forEach(v => { if (!v.roule) L.push(TR.pied(v)); });   // 2.27 : la moto garée
     return L;
   }
   // la voie devant elle est-elle libre ? (son corps, avancé pas à pas le long du chemin, ne touche personne)
   function libre(v, L, loin) { for (let k = 2; k <= loin; k += 3) { const p = point(TR.boucle, v.s + k), f = pied(p.x, p.y, sens(p)); if (L.some(b => croise(f, b))) return false; } return true; }
   TR.tic = function (dt) {
     if (!TR.actif || !W.map || !W.map.env.trafic) return;
-    dt = Math.min(dt, 0.05); const C = D.CITE || {}, arret = C.arret || 20, L = gens(), BL = TR.boucle.L;
+    dt = Math.min(dt, 0.05); if (TR.gele) { TR.voitures.forEach(v => { v.v = 0; }); return; }
+    const C = D.CITE || {}, arret = C.arret || 20, L = gens(), BL = TR.boucle.L;
     // de la première à la dernière : chacune garde ses distances avec celle qui la précède
     TR.voitures.forEach(v => {
       let devant = Infinity; TR.voitures.forEach(u => { if (u === v) return; const d = ((u.s - v.s) % BL + BL) % BL; if (d < devant) devant = d; });
@@ -80,20 +86,21 @@
   // les cases que tiennent les voitures en ce moment : un chemin les contourne (world.js, W.route et W.pathTo) — sans quoi celui qui
   // veut passer pousserait contre une voiture arrêtée devant lui, qui l'attendrait
   TR.cases = function () { const out = []; if (!TR.actif || !W.map) return out; const w = W.map.w;
-    TR.voitures.forEach(v => { const f = TR.pied(v); for (let y = Math.floor(f[1] / 16); y <= Math.floor((f[3] - 1) / 16); y++) for (let x = Math.floor(f[0] / 16); x <= Math.floor((f[2] - 1) / 16); x++) out.push(y * w + x); });
+    TR.voitures.concat(TR.garees).forEach(v => { const f = TR.pied(v); for (let y = Math.floor(f[1] / 16); y <= Math.floor((f[3] - 1) / 16); y++) for (let x = Math.floor(f[0] / 16); x <= Math.floor((f[2] - 1) / 16); x++) out.push(y * w + x); });
     return out; };
   // un pas du joueur : refusé s'il entre dans une voiture (on peut toujours s'en écarter)
   TR.bloque = function (x0, y0, x1, y1) {
     if (!TR.actif) return false; const a = boite(x0, y0, 0), b = boite(x1, y1, 0);
-    return TR.voitures.some(v => { const f = TR.pied(v); if (!croise(f, b)) return false; if (!croise(f, a)) return true;
+    return TR.voitures.concat(TR.garees).some(v => { const f = TR.pied(v); if (!croise(f, b)) return false; if (!croise(f, a)) return true;
       const cx = (f[0] + f[2]) / 2, cy = (f[1] + f[3]) / 2; return Math.hypot(x1 - cx, y1 - cy) < Math.hypot(x0 - cx, y0 - cy); });
   };
   // dans la liste triée par profondeur du rendu (world.js)
   TR.lister = function (list, cx, cy) {
     if (!TR.actif) return; const vue = v => v.x > cx - 40 && v.x < cx + G.PW + 40 && v.y > cy - 10 && v.y < cy + G.PH + 40;
-    TR.voitures.concat(TR.course).forEach(v => { if (vue(v)) list.push({ y: v.y, car: v }); });
+    TR.voitures.concat(TR.course, TR.garees).forEach(v => { if (vue(v)) list.push({ y: v.y, car: v }); });
   };
   TR.dessiner = function (c, v, cx, cy, t, lights) {
+    if (v.m === 'moto' && I.circuit) return I.circuit.dessinerMoto(c, v, cx, cy, t, lights);   // 2.27 : la moto de Sâlim (circuit.js)
     const x = Math.round(v.x - cx), y = Math.round(v.y - cy), cote = v.d === 'g' || v.d === 'd';
     c.fillStyle = 'rgba(20,12,30,.38)'; c.beginPath(); c.ellipse(x, y + 0.5, cote ? 19 : 12, cote ? 3.5 : 4, 0, 0, 6.3); c.fill();
     c.drawImage(G.obj('qvoiture', { m: v.m, c: v.c, d: v.d }), x - 22, y - 28);

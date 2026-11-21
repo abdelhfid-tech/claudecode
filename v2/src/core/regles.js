@@ -27,6 +27,13 @@
     const C = contexte || {}, savoirConnu = C.savoirConnu || (() => false), ennemisCommuns = C.ennemisCommuns || (() => ({}));
     // (la garde des noms : définie ici parce que les lieux et les objets d'un paquet y passent aussi)
     const NOM_INTERDIT = /(^|[^a-zà-ÿ])(ibl[iî]s|satan|sh?a[iy]t[aâ]ne?s?|chayt[aâ]ne?s?|diables?|d[ée]mons?|d?jinns?)(?![a-zà-ÿ])/i;
+    /* 2.27 (D216) — aucun pari ni jeu de hasard ne se joue ; le pari n'est qu'une chimère. La règle, simple : aucune réponse offerte
+       au joueur (un choix, une question, un pourparler, un menu de la course : cite.course), aucun nom de héros, de vertu, d'objet
+       ou de pièce ne porte les mots du pari (PARI, et LANG.*.pari dans chaque langue) ; les tables de la course (D.CIRCUITS,
+       D.COURSE) n'ont que leurs champs déclarés — ni mise, ni enjeu, ni cote, ni droit d'entrée — et une prime positive ou nulle.
+       Le pari, une chimère (« Le Pari »), un parieur (un passant de fiction), un texte qui le dit : rien de cela n'est offert. */
+    const PARI = /(^|[^a-zà-ÿ])(pari|paris|parier|parie|paries|parions|pariez|parient|parié|mise|mises|miser|misons|misez|misé|enjeux?|loteries?|casino|tirage au sort|jeux? de hasard|double ou rien|cotes?|gager|gageure)(?![a-zà-ÿ])/i;
+    const pari = (t, where, E) => { if (typeof t === 'string' && PARI.test(t)) E.push(`${where}: « ${t.slice(0, 60)} » — aucun pari ni jeu de hasard ne se joue : rien de ce qu'on offre au joueur ne propose de parier ni de miser (le pari n'est qu'une chimère)`); };
 
     // l'équipement (D.GEAR) : chaque pièce a un type, un rang, un nom, une description sobre ; aucun mot qui en ferait une relique
     function verifierEquipement() { const E = [], STATS = ['atk', 'mag', 'def', 'spd', 'hp', 'sp'], TRAITS = ['perce', 'vif', 'choc', 'parade', 'ferme'], INTERDIT = /allah|dieu|proph|bén[ie]|sacr|saint|relique|talisman|amulette|miracl|\bor\b|doré|soie/i;
@@ -36,6 +43,7 @@
         if (!(Number.isInteger(g.r) && g.r >= 0 && g.r < D.GEAR_PRIX.length)) E.push(`${id}: rang invalide`);
         if (typeof g.name !== 'string' || typeof g.desc !== 'string') E.push(`${id}: nom ou description manquant`);
         else if (INTERDIT.test(g.name + ' ' + g.desc)) E.push(`${id}: un objet ne reçoit ni nom divin, ni vertu, ni or, ni soie (exigences 8, 15, 16)`);
+        pari(g.name, id, E);   // 2.27 : aucune pièce n'est un enjeu
         if (D.ITEMS[id]) E.push(`${id}: même identifiant qu'un objet de la besace`);
         STATS.forEach(k => { if (g[k] !== undefined && !(typeof g[k] === 'number' && Math.abs(g[k]) <= 25)) E.push(`${id}: ${k} hors bornes (±25 %)`); });
         TRAITS.forEach(k => { if (g[k] !== undefined && !(g[k] > 0 && g[k] <= 0.6)) E.push(`${id}: ${k} hors bornes (0 à 0,6)`); });
@@ -72,6 +80,38 @@
         }
       }
       return `${ch} chapitres, ${ops} opérations, ${bat} combats, ${cho} choix, ${par} pourparlers, ${pry} prières`;
+    }
+
+    /* 2.27 (D216) — Sâlim et la course : ce que dit le circuit (cite.course), les tables (D.CIRCUITS, D.COURSE) et la zone du Pari.
+       Le circuit s'ouvre dès le prologue joué, avant l'étape III de la découverte de l'Agrégor (2.25) : aucun de ses textes ne le
+       nomme. Aucun nombre dans un récit : ils sont tous dans les tables. */
+    function verifierCourse(C, E) {
+      const txt = (v, w) => { if (typeof v !== 'string' || !v.trim()) { E.push(`cite.course.${w}: texte manquant`); return; } if (/agr[ée]gor/i.test(v)) E.push(`cite.course.${w}: le circuit s'ouvre avant que l'Agrégor soit nommé (2.25) : aucun de ses textes ne le nomme`); if (/\d/.test(v)) E.push(`cite.course.${w}: aucun nombre dans un récit (D.CIRCUITS, D.COURSE)`); if (NOM_INTERDIT.test(v)) E.push(`cite.course.${w}: ni Iblîs, ni démon, ni djinn`); };
+      const liste = (v, w, a, b) => { if (!Array.isArray(v) || v.length < a || v.length > b) { E.push(`cite.course.${w}: de ${a} à ${b} textes`); return; } v.forEach((t, i) => txt(t, `${w}[${i}]`)); };
+      if (!C || typeof C !== 'object') { E.push('cite.course: manquant (Sâlim et la course, D216)'); return; }
+      const A = C.arrivee || {}; liste(A.salim, 'arrivee.salim', 2, 2); txt(A.idris, 'arrivee.idris');
+      ['offre', 'monter', 'pasMaintenant', 'refus', 'revoir', 'plusTard', 'depart', 'descendu', 'encoreQ', 'encore', 'uneAutreFois'].forEach(k => txt(C[k], k));
+      liste(C.fins, 'fins', 3, 3); liste(C.apres, 'apres', 1, 4); liste(C.salim, 'salim', 3, 8);
+      const O = C.organisateur || {}; txt(O.avant, 'organisateur.avant'); liste(O.accueil, 'organisateur.accueil', 1, 5); txt(O.choix, 'organisateur.choix');
+      if (!Array.isArray(C.circuits) || C.circuits.length !== (D.CIRCUITS || []).length) E.push(`cite.course.circuits: un nom et un mot par circuit de D.CIRCUITS (${(D.CIRCUITS || []).length})`);
+      else C.circuits.forEach((c, i) => { txt(c && c.nom, `circuits[${i}].nom`); txt(c && c.dit, `circuits[${i}].dit`); pari(c && c.nom, `cite.course.circuits[${i}].nom`, E); pari(c && c.dit, `cite.course.circuits[${i}].dit`, E); });
+      liste(C.couleurs, 'couleurs', 9, 9);
+      const P = C.podium || {}; ['gagne', 'podium', 'perdu', 'plafond'].forEach(k => txt(P[k], 'podium.' + k));
+      // ce qu'on offre au joueur au circuit : rien n'y propose de parier ni de miser
+      ['offre', 'monter', 'pasMaintenant', 'encoreQ', 'encore', 'uneAutreFois'].forEach(k => pari(C[k], `cite.course.${k}`, E)); pari(O.choix, 'cite.course.organisateur.choix', E);
+      // les tables : leurs champs déclarés, et rien d'autre (ni mise, ni enjeu, ni cote, ni droit d'entrée)
+      const CL = ['id', 'trace', 'large', 'tours', 'temps', 'depart', 'prime', 'adversaires', 'nuit', 'viaduc'], AL = ['vitesse', 'adresse', 'avance'], num = (v, a, b) => typeof v === 'number' && isFinite(v) && v >= a && v <= b;
+      (D.CIRCUITS || []).forEach((c, i) => { const w = `D.CIRCUITS[${i}]`;
+        Object.keys(c).forEach(k => { if (!CL.includes(k)) E.push(`${w}: champ « ${k} » inconnu (${CL.join(', ')}) — aucune mise, aucun enjeu`); });
+        if (!Array.isArray(c.trace) || c.trace.length < 3 || c.trace.some(p => !Array.isArray(p) || p.length !== 3 || !num(p[0], 0, 1100) || !num(p[1], 0, 740) || !num(p[2], 8, 200))) E.push(`${w}: trace attend au moins trois sommets [x, y, r] dans la toile (1100 × 740)`);
+        if (!num(c.large, 12, 60)) E.push(`${w}: large de 12 à 60`); if (!(Number.isInteger(c.tours) && c.tours >= 1 && c.tours <= 6)) E.push(`${w}: tours de 1 à 6`);
+        if (!num(c.temps, 0, 600)) E.push(`${w}: temps de 0 à 600 secondes`); if (!(Number.isInteger(c.prime) && c.prime >= 0 && c.prime <= 100)) E.push(`${w}: prime entière, de 0 à 100 dirhams (on ne paie jamais pour courir)`);
+        if (!Array.isArray(c.adversaires) || c.adversaires.length > 4) E.push(`${w}: de 0 à 4 adversaires`);
+        (c.adversaires || []).forEach((a, j) => { Object.keys(a || {}).forEach(k => { if (!AL.includes(k)) E.push(`${w}.adversaires[${j}]: champ « ${k} » inconnu`); }); if (!num(a.vitesse, 0.3, 1) || !num(a.adresse, 0.3, 1) || !num(a.avance, 0, 400)) E.push(`${w}.adversaires[${j}]: vitesse et adresse de 0,3 à 1, avance de 0 à 400`); });
+        if (Array.isArray(c.adversaires) && !c.adversaires.length && !c.temps) E.push(`${w}: seul sur la piste, un temps à battre`); });
+      const CO = D.COURSE || {}; Object.keys(CO).forEach(k => { if (!['voiture', 'moto', 'podium', 'plafond'].includes(k)) E.push(`D.COURSE: champ « ${k} » inconnu — aucune mise, aucun enjeu`); });
+      if (!Array.isArray(CO.podium) || CO.podium.some(v => !num(v, 0, 1))) E.push('D.COURSE.podium: des parts de la prime, de 0 à 1'); if (!(Number.isInteger(CO.plafond) && CO.plafond >= 0)) E.push('D.COURSE.plafond: un entier positif ou nul');
+      Object.keys((D.CITE && D.CITE.zones) || {}).forEach(k => { const z = D.CITE.zones[k]; if (!(D.CITE.rodent || {})[k]) E.push(`D.CITE.zones ${k}: une zone pour une chimère de D.CITE.rodent`); if (!Array.isArray(z) || !z.length || z.some(n => typeof n !== 'string')) E.push(`D.CITE.zones ${k}: une liste de cases`); });
     }
 
     function checkSaga(s, E, W) {
@@ -155,6 +195,7 @@
         const w = `héros ${id}`;
         if (h.stratege !== undefined && h.stratege !== true) E.push(`${w}: « stratege » vaut true ou s'omet`);
         req(h, 'name', 'string', w); req(h, 'arabic', 'string', w); garde(h.name, w); (h.skills || []).concat(h.limit || []).forEach(k => garde(k && k.name, w));
+        pari(h.name, w, E); (h.skills || []).concat(h.limit || []).forEach(k => pari(k && k.name, w, E));   // 2.27 : ni un héros ni ce qu'il fait
         if (!D.ROLES[h.role]) E.push(`${w}: role « ${h.role} » invalide (${Object.keys(D.ROLES).join('|')})`);
         if (!D.ELEMENTS[h.el]) E.push(`${w}: el « ${h.el} » invalide`);
         if (req(h, 'look', 'object', w)) { ['robe', 'head'].forEach(k => req(h.look, k, 'string', w + '.look')); checkLook(h.look, w); }
@@ -214,6 +255,7 @@
         ['seul', 'question'].forEach(k => { if (typeof Q[k] !== 'string' || !Q[k].trim()) E.push(`cite.${k}: texte manquant`); });
         liste('rappels', 3, 10); liste('yunus', 6, 8);
         ['rappels', 'yunus'].forEach(k => (Q[k] || []).forEach((t, i) => { if (/[«»]|Coran|\d+:\d+/.test(String(t))) E.push(`cite.${k}[${i}]: ni verset ni parole citée (un texte de fiction)`); garde(t, `cite.${k}`); }));
+        verifierCourse(Q.course, E);
       }
 
       (s.codex || []).forEach(c => {
@@ -338,7 +380,7 @@
                 if (typeof o[1] !== 'string' || !Array.isArray(o[2]) || o[2].length < 2 || o[2].length > 4) { E.push(`${wo}: ${o[0]}(prompt, [2–4 options])`); break; }
                 if (o[0] === 'choice' && o[2].filter(c => c.ok === true).length !== 1) E.push(`${wo}: choice exige exactement une option ok:true`);
                 o[2].forEach((c, j) => {
-                  if (typeof c.t !== 'string') E.push(`${wo}: option ${j} sans texte « t »`);
+                  if (typeof c.t !== 'string') E.push(`${wo}: option ${j} sans texte « t »`); else pari(c.t, `${wo}: option ${j}`, E);
                   if (o[0] === 'choice' && !c.ok && (!Array.isArray(c.r) || !c.r.length)) E.push(`${wo}: option fausse ${j} doit avoir une réponse r:[...] qui explique`);
                   if (c.need !== undefined && (o[0] !== 'ask' || !codexIds.has(c.need))) E.push(`${wo}: option ${j} : need « ${c.need} » invalide (réservé à ask, id de codex)`);
                   if (c.r) checkOps(c.r, `${wo}.opt${j}`);
@@ -413,7 +455,7 @@
                   if (!Array.isArray(r.opts) || r.opts.length < 2 || r.opts.length > 4) { E.push(`${wo}: manche ${ri} : 2 à 4 options`); return; }
                   let m = -9, mf = -9, mn = 9;
                   r.opts.forEach((x, xi) => {
-                    if (typeof x.t !== 'string' || typeof x.r !== 'string') E.push(`${wo}: manche ${ri} option ${xi} : « t » et « r » (réplique) requis`);
+                    if (typeof x.t !== 'string' || typeof x.r !== 'string') E.push(`${wo}: manche ${ri} option ${xi} : « t » et « r » (réplique) requis`); else pari(x.t, `${wo}: manche ${ri} option ${xi}`, E);
                     if (typeof x.v !== 'number' || x.v < -2 || x.v > 3) E.push(`${wo}: manche ${ri} option ${xi} : v entre -2 et 3`);
                     if (!D.ELEMENTS[x.el] || x.el === 'fer') E.push(`${wo}: manche ${ri} option ${xi} : el doit être une Lumière`);
                     if (x.need !== undefined && !(String(x.need).indexOf('/') > 0 ? savoirConnu(x.need) : codexIds.has(x.need))) E.push(`${wo}: manche ${ri} option ${xi} : need « ${x.need} » absent du codex`);
@@ -516,7 +558,7 @@
     function verifierObjets(objets, pieces) {
       const E = [], PARTS = ['hp', 'sp', 'revive'], CLES = ['name', 'desc', 'hp', 'sp', 'revive', 'cleanse', 'niyya', 'target', 'vivre', 'paquet'];
       const SACRE = /allah|dieu|proph|bén[ie]|sacr|saint|relique|talisman|amulette|miracl|\bor\b|doré|soie|zamzam|coran|mushaf|verset|sourate|baraka|ruqya|\banges?\b/i;
-      const mots = (id, o) => { const txt = (o.name || '') + ' ' + (o.desc || ''); if (SACRE.test(txt)) E.push(`${id}: un objet ne reçoit ni nom divin, ni vertu, ni rien de sacré changé en pouvoir (exigences 8, 15 et 17)`); if (NOM_INTERDIT.test(txt)) E.push(`${id}: ni Iblîs, ni démon, ni djinn dans le nom ou la description d'un objet (exigence 18)`); };
+      const mots = (id, o) => { const txt = (o.name || '') + ' ' + (o.desc || ''); pari(o.name, id, E); if (SACRE.test(txt)) E.push(`${id}: un objet ne reçoit ni nom divin, ni vertu, ni rien de sacré changé en pouvoir (exigences 8, 15 et 17)`); if (NOM_INTERDIT.test(txt)) E.push(`${id}: ni Iblîs, ni démon, ni djinn dans le nom ou la description d'un objet (exigence 18)`); };
       Object.keys(objets || {}).forEach(id => { const o = objets[id];
         Object.keys(o).forEach(k => { if (!CLES.includes(k)) E.push(`${id}: clé « ${k} » inconnue (name, desc, hp, sp, revive, cleanse, niyya, target, vivre)`); });
         mots(id, o);
@@ -603,19 +645,22 @@
       demon: new RegExp(`إبليس|شيطان|شياط[يى]ن|${SANS_AR}${PROCLITIQUES}(?:جن|جان|جنّ|جني|جنية|عفريت|عفاريت|مارد|مردة|غول|غيلان)${APRES_AR}`),
       divin: new RegExp(`${SANS_AR}(?:و|ف|ب)?(?:الله|لله|إله|الإله|الرب|الرحمن|الرحيم)${APRES_AR}`),
       sacre: /الله|إله|مقدّ?س|مبار[كك]|برك[ةه]|معجز|كرام[ةه]|تميم|حرز|تعويذ|رقي[ةه]|ذهب|حرير|قرآن|مصحف|سورة|زمزم|ملا[ئك]|نبيّ?|رسول/,
-      verset: ['﴿', '﴾'], say: 330, nar: 360
+      verset: ['﴿', '﴾'], say: 330, nar: 360,
+      pari: /رهان|مراهن|[تأنيو]راهن|راهن\s*على|قمار|يقامر|مقامر|الميسر|يانصيب|كازينو/   // (« الراهن », le présent, et « ميسّر », facile, passent)
     },
     en: {
       demon: /\b(iblis|satan|shaitans?|shaytans?|shayatin|devils?|demons?|djinns?|jinns?|jinni|genies?|ifrits?|ghouls?|fiends?)\b/i,
       divin: /\b(allah|god|gods|lord)\b/i,
       sacre: /\b(allah|god|lord|prophet|blessed|sacred|holy|saint(ly)?|relics?|talismans?|amulets?|miracles?|miraculous|gold|golden|gilded|silk|silken|zamzam|qur'?an|koran|mushaf|verses?|surah?|baraka|ruqya|angels?)\b/i,
-      verset: ['“', '”'], say: 330, nar: 360
+      verset: ['“', '”'], say: 330, nar: 360,
+      pari: /\b(bet|bets|betting|wager|wagers|wagering|gamble|gambles|gambling|stake|stakes|odds|lottery|lotteries|casino|jackpot)\b/i
     },
     ja: {
       demon: /イブリース|サタン|シャイターン|悪魔|魔王|魔神|悪霊|鬼|妖怪|ジン(?![ァ-ヴー])|ジャーン|イフリート/,
       divin: /アッラー|(?<!精)神(?!経)|主よ|創造主/,
       sacre: /アッラー|(?<!精)神(?!経)|預言者|祝福|聖|遺物|護符|お守り|魔除け|奇跡|黄金|金色|金箔|金糸|金銀|絹|ザムザム|クルアーン|コーラン|啓典|章句|天使/,
-      verset: ['「', '」'], say: 110, nar: 125
+      verset: ['「', '」'], say: 110, nar: 125,
+      pari: /賭|ギャンブル|宝くじ|カジノ|博打/
     }
   };
   const EFFECTIF = /[0-9٠-٩۰-۹０-９]|百|千|万|億|مئة|مائة|ألف|آلاف|\b(hundreds?|thousands?|dozens?)\b/i;
@@ -624,6 +669,8 @@
   const NUMEROS = s => (CHIFFRES(s).match(/\d+/g) || []).join(' ');
   // le genre d'un emplacement, d'après son chemin (langue.js : casesSaga, casesDefs)
   function genreDe(ou) {
+    // 2.27 (D216) : une réponse offerte au joueur — un choix, une question, un pourparler, un menu de la course (cite.course), une phrase du code de la course
+    if (/<(choice|ask)>2\[\d+\]\.t$|opts\[\d+\]\.t$|^cite\.course\.(offre|monter|pasMaintenant|encoreQ|encore|uneAutreFois|organisateur\.choix|circuits\[\d+\]\.(nom|dit))$|^circuit\.js$/.test(ou)) return 'option';
     if (/attributs\.[^.]+\.verset$|secours\.verset$/.test(ou)) return 'verset';
     if (/attributs\.[^.]+\.ref$|secours\.ref$/.test(ou)) return 'ref';
     if (/bataille\.rangs\[\d+\]\.name$|^D\.RANGS\.[^.]+\.name$/.test(ou)) return 'rang';
@@ -647,6 +694,7 @@
       if (g === 'rang' && EFFECTIF.test(t)) erreurs.push(`${w}: « ${t} » — aucun effectif dans le nom d'un rang (exigence 19)`);
       if (g === 'verset') { const v = t.trim(); if (!(v.startsWith(R.verset[0]) && v.endsWith(R.verset[1]))) erreurs.push(`${w}: un verset se cite entre ${R.verset[0]} ${R.verset[1]} (exigence 7)`); }
       if (g === 'ref' && NUMEROS(t).indexOf(NUMEROS(c.fr).split(' ').slice(0, 2).join(' ')) !== 0 && NUMEROS(t) !== NUMEROS(c.fr)) erreurs.push(`${w}: la référence ne porte pas les numéros de la française (${NUMEROS(c.fr)})`);
+      if (g === 'option' && R.pari.test(t)) erreurs.push(`${w}: « ${t.slice(0, 60)} » — aucun pari ni jeu de hasard ne se joue : rien de ce qu'on offre au joueur ne propose de parier (le pari n'est qu'une chimère)`);
       if ((g === 'say' || g === 'nar') && t.length > R[g]) avis.push(`${w}: ${g === 'say' ? 'réplique' : 'narration'} longue (${t.length} signes, ${R[g]} au plus)`); });
     return { erreurs, avis };
   }

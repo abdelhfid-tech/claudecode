@@ -63,7 +63,9 @@
     halte: { nom: 'La halte', geste: true }, source: { nom: 'Retrouver une source' }, equipement: { nom: 'S’équiper' }, etoiles: { nom: 'S’orienter aux étoiles', geste: true },
     frappe: { nom: 'Frapper ce qui rôde' }, postures: { nom: 'Prendre une figure' },
     // 2.23 (D212) : les quartiers de la Cité, où l'on remonte à tout moment — un simple geste, dit par Maître Yûnus à la première arrivée
-    cite: { nom: 'Revenir dans la Cité', geste: true }
+    cite: { nom: 'Revenir dans la Cité', geste: true },
+    // 2.27 (D216) : derrière Sâlim, sur sa moto, au premier passage au circuit ; il resert à la première course (circuit.js)
+    virages: { nom: 'Prendre les virages' }
   };
 
   /* 2.23 (D212) — les quartiers de la Cité-Miroir. Demande du décideur, 21 novembre : « il y trouve beaucoup d'activités mais
@@ -75,8 +77,52 @@
      du parvis elles se posent. Le trafic (trafic.js) : `voitures`, sur la boucle des avenues ; `course`, sur le circuit ; `vitesse`
      et `circuit`, en points par seconde ; `arret`, la distance (en points) à laquelle une voiture s'arrête devant quelqu'un.
      Nombres proposés par l'agent, à valider. */
-  D.CITE = { rodent: { egoisme: 1, materialisme: 1, plaisir: 1, indifference: 1 }, nombre: 3, vue: 6, pas: 0.45, loin: 12,
-    voitures: 6, course: 3, vitesse: 58, circuit: 120, arret: 20 };
+  D.CITE = { rodent: { egoisme: 1, materialisme: 1, plaisir: 1, indifference: 1, pari: 1 }, nombre: 3, vue: 6, pas: 0.45, loin: 12,
+    voitures: 6, course: 3, vitesse: 58, circuit: 120, arret: 20,
+    // 2.27 (D216) : une chimère qui rôde ailleurs que dans les rues — « Le Pari », parmi les parieurs de la tribune (rodeurs.js :
+    // elle y est posée à chaque arrivée, et n'en sort pas)
+    zones: { pari: ['qgradin'] } };
+
+  /* 2.27 (D216) — « Sâlim et la course ». Demandes du décideur, 21 novembre : « des courses de voitures » ; « Les activités de
+     la cité miroir sont omniprésents des le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la
+     saga » ; « Les courses de voitures sont de plus en plus difficiles avec des circuits » ; « Un ami vient en moto et demande à
+     Idriss de monter derrière lui pour sa première course ». Aucun nombre dans un récit : tout est ici (circuit.js les lit).
+     Un tracé est un polygone fermé, en points d'une toile de 1100 × 740 : chaque sommet [x, y, r] est un virage, arrondi au
+     rayon r (un congé entre les deux droites) ; on court dans l'ordre des sommets. `large` : la demi-largeur de la chaussée ;
+     `tours` ; `temps` : le temps à battre, en secondes (0 : aucun) ; `depart` : l'arête au milieu de laquelle se tire la ligne
+     de départ ; `nuit` ; `viaduc` : l'arête qui passe en hauteur, de `de` à `a` (parts de sa droite) ; `prime` : ce que verse
+     l'organisateur au premier ; `adversaires` : la part de la vitesse de pointe (`vitesse`) et de l'adhérence (`adresse`) que
+     chacun prend, et son avance sur la grille (`avance`, en points). Un circuit est gagné à la première place — et, s'il a un
+     temps à battre, sous ce temps ; il s'ouvre quand le précédent est gagné ; un circuit gagné se rejoue.
+     D.COURSE : la voiture (pointe, accélération, lâcher, frottement, freinage, braquage, adhérence, hors de la chaussée, barrière, rebond), la moto de
+     Sâlim et son tracé, la part de la prime aux deuxième et troisième places, le plafond des primes par visite.
+     Aucune mise, nulle part : on ne paie pas pour courir, on ne gagne que la prime de l'organisateur (regles.js le vérifie).
+     Nombres proposés par l'agent, réglés par des courses jouées par le jeu lui-même (le circuit 1 se gagne au premier essai,
+     le 5 demande de l'adresse), à valider. */
+  D.CIRCUITS = [
+    { id: 'avenues', trace: [[140, 140, 90], [960, 140, 90], [960, 580, 90], [140, 580, 90]], large: 38, tours: 2, temps: 52, depart: 3, prime: 6,
+      adversaires: [] },
+    { id: 'places', trace: [[140, 140, 60], [620, 140, 60], [620, 330, 50], [960, 330, 60], [960, 600, 60], [420, 600, 60], [420, 450, 50], [140, 450, 60]], large: 32, tours: 3, temps: 0, depart: 7, prime: 10,
+      adversaires: [{ vitesse: 0.8, adresse: 0.7, avance: 60 }, { vitesse: 0.83, adresse: 0.72, avance: 36 }, { vitesse: 0.86, adresse: 0.7, avance: 12 }] },
+    { id: 'chicane', trace: [[140, 140, 42], [500, 140, 22], [540, 200, 22], [620, 200, 22], [660, 140, 22], [980, 140, 40], [980, 600, 40], [700, 600, 35], [700, 440, 35], [480, 440, 35], [480, 600, 35], [140, 600, 42]], large: 27, tours: 3, temps: 0, depart: 11, prime: 15,
+      adversaires: [{ vitesse: 0.88, adresse: 0.82, avance: 60 }, { vitesse: 0.9, adresse: 0.84, avance: 36 }, { vitesse: 0.92, adresse: 0.85, avance: 12 }] },
+    { id: 'viaduc', trace: [[300, 140, 60], [120, 260, 60], [120, 460, 60], [300, 580, 60], [760, 140, 60], [940, 260, 60], [940, 460, 60], [760, 580, 60]], large: 26, tours: 3, temps: 57, depart: 5, prime: 22,
+      viaduc: { arete: 7, de: 0.28, a: 0.72 }, adversaires: [{ vitesse: 0.91, adresse: 0.86, avance: 140 }] },
+    { id: 'tours', trace: [[140, 120, 34], [560, 120, 30], [560, 260, 26], [720, 260, 26], [720, 120, 30], [980, 120, 34], [980, 360, 30], [820, 360, 26], [820, 500, 28], [980, 500, 32],
+      [980, 620, 32], [560, 620, 30], [560, 460, 28], [380, 460, 28], [380, 620, 30], [140, 620, 34], [140, 400, 30], [260, 400, 28], [260, 260, 28], [140, 260, 30]], large: 22, tours: 2, temps: 0, depart: 0, prime: 30, nuit: true,
+      adversaires: [{ vitesse: 0.93, adresse: 0.88, avance: 60 }, { vitesse: 0.94, adresse: 0.89, avance: 36 }, { vitesse: 0.95, adresse: 0.9, avance: 12 }] }
+  ];
+  D.COURSE = {
+    // `frotte` : ce que perd une voiture qu'on fait tourner plus vite que son adhérence ne le permet ; `frein` : le freinage des
+    // adversaires (le joueur n'a que le lâcher et le frottement)
+    voiture: { vmax: 150, accel: 85, lache: 90, frotte: 120, frein: 220, braquage: 3.4, adherence: 300, horsPiste: 0.5, barriere: 6, rebond: 0.6 },
+    // la moto de Sâlim : il pilote ; Idris se penche. Bien penché (le joystick, ou les flèches, vers l'intérieur du virage, à
+    // `angle` degrés près), elle garde sa vitesse de virage ; mal penché, elle ralentit (`mal`), sans chute ni blessure.
+    // `annonce` : à combien de points avant un virage le signe paraît ; `bien` : la part du virage qu'il faut tenir penché.
+    moto: { trace: [[160, 160, 60], [600, 160, 55], [600, 330, 50], [880, 330, 60], [880, 580, 60], [460, 580, 55], [460, 440, 45], [160, 440, 60]], large: 30, depart: 7,
+      vmax: 118, adherence: 230, accel: 70, frein: 150, mal: 0.6, angle: 65, annonce: 46, bien: 0.5 },
+    podium: [1, 0.4, 0.2], plafond: 60
+  };
 
   // 2.19 — les parades du combat (demande du décideur, 20 novembre : « Rajoute une parade "esquive" » ; « Rajoute aussi une
   // parade "fuire" pour quitter le combat même si on sera poursuivi il faudra courir pour échapper au monstre »). Nombres

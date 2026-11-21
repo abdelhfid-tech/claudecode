@@ -343,11 +343,11 @@
       if (head) { const hd = typeof head === 'object' ? head : { html: head }, e = I.el('div', 'phead' + (hd.cls ? ' ' + hd.cls : ''), hd.html); e.dir = I.langue.sens(e.textContent); box.appendChild(e); }
       const pr = typeof prompt === 'object' ? I.el('div', 'prompt ' + (prompt.cls || ''), prompt.html) : I.el('div', 'prompt', I.fmt(prompt)); pr.dir = I.langue.sens(pr.textContent); box.appendChild(pr); box.scrollTop = 0;
       let idx = 0; const btns = [];
-      const locked = o => o.need !== undefined && !known(o.need);
+      const locked = o => (o.need !== undefined && !known(o.need)) || !!o.ferme;   // 2.27 : `ferme` — une réponse qui se montre, scellée (un circuit, circuit.js)
       const sel = i => { idx = (i + btns.length) % btns.length; btns.forEach((b, j) => b.classList.toggle('sel', j === idx)); };
       const ne = performance.now(); // un menu n'accepte rien pendant un tiers de seconde : le toucher qui vient de faire avancer le texte ne répond pas à la place du joueur
       const done = i => { if (!I.debug.auto && performance.now() - ne < 350) return; if (locked(options[i])) { I.audio.sfx('dark'); return; } I.input.pop(h); box.hidden = true; box.onscroll = null; I.audio.sfx('ok'); res(i); };
-      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? lockLabel(o) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ ' + I.t('savoir') + '</span>' : '')); b.type = 'button'; b.dir = I.langue.sens(b.textContent); b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
+      options.forEach((o, i) => { const el = o.el ? `<i class="el" style="color:${D.ELEMENTS[o.el].color}">${D.ELEMENTS[o.el].glyph}</i> ` : ''; const b = I.el('button', 'opt' + (locked(o) ? ' locked' : ''), locked(o) ? (o.ferme ? (o.html || I.fmt(o.t)) : lockLabel(o)) : el + (o.html || I.fmt(o.t)) + (o.need !== undefined ? ' <span class="kn">✧ ' + I.t('savoir') + '</span>' : '')); b.type = 'button'; b.dir = I.langue.sens(b.textContent); b.onclick = e => { e.stopPropagation(); done(i); }; b.onmouseenter = () => sel(i); btns.push(b); box.appendChild(b); });
       sel(Math.max(0, options.findIndex(o => !locked(o)))); lisible(box); ajuster(box); repere(box);
       const vue = () => { if (btns[idx].scrollIntoView) btns[idx].scrollIntoView({ block: 'nearest' }); }; // une longue liste suit la sélection
       // 2.x — B (ou Échap) : la réponse marquée « retour » (« Retour », « Plus tard », « Annuler »…), s'il y en a une ; devant un

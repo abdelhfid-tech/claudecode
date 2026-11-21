@@ -162,6 +162,13 @@ ISNAD.registerSaga({
         { w: 1, name: 'Plus tard, peut-être', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }],
       taunts: ['Ça ne te regarde pas.'],
       desc: 'Passer à côté de quelqu’un comme à côté d’un mur. Elle ne blesse personne : elle laisse chacun seul. Rattachée à l’Insouciance, elle cède à la miséricorde et au courage.' },
+    // 2.27 (D216) — dans la tribune du circuit, parmi les parieurs (D.CITE.zones) : le pari n'est qu'une chimère ; aucun pari ne
+    // se joue dans le jeu. Rattaché à l'Avidité. Texte de l'agent, à valider.
+    pari: { racine: 'avidite', name: 'Le Pari', art: 'wisp', hue: 95, scale: 1, lvl: 0, tier: 'minion', weak: ['sabr', 'adl'], veils: 2,
+      skills: [{ w: 3, name: 'La prochaine sera la bonne', target: 'foe', el: 'fer', pow: 0.9, anim: 'dark' }, { w: 1, name: 'Presque gagné', target: 'foe', fx: [{ st: 'baisse' }], anim: 'glyph' },
+        { w: 1, name: 'Se refaire', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }],
+      taunts: ['Encore une fois, et tu rattrapes tout.'],
+      desc: 'Croire que le hasard rendra ce que le travail n’a pas donné, et revenir pour reprendre ce qu’on a perdu. Il ne promet jamais que la fois suivante. Rattaché à l’Avidité, il cède à la patience et à la justice.' },
     agregor: { racine: ['avidite', 'orgueil', 'ostentation', 'avarice', 'insouciance', 'envie', 'colere'], name: "L'AGRÉGOR", art: 'idol', hue: 285, scale: 3, lvl: 11, tier: 'boss', weak: ['sidq', 'adl', 'shajaa', 'rahma', 'ilm', 'sabr'], veils: 7,
       skills: [
         { w: 3, name: 'Mille regards', target: 'foes', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'wave' },
@@ -204,6 +211,7 @@ ISNAD.registerSaga({
     { id: 'enfant', cat: 'Noosphère', title: 'L’enfant du parvis', text: 'Il est là chaque soir, sous le grand écran, avec une question. Il ne lâche jamais la deuxième. Idris a commencé par lui répondre ; il a fini par l’attendre. On répond de ceux à qui l’on a commencé de répondre : c’est aussi cela, transmettre. Personnage de fiction.' },
     { id: 'quartiers', cat: 'Lieu', title: 'Les quartiers de la Cité', text: 'Au-dessus des Archives basses, la Cité-Miroir ne dort jamais : des voitures qui brillent, des salles de jeux, des vitrines, un circuit, une grande roue, un écran grand comme une façade. On y trouve tout, sauf quelqu’un à qui parler. Idris y remonte quand il veut ; Maître Yûnus l’y attend, sur le parvis. Un lieu de fiction, comme toute la Cité-Miroir.' },
     { id: 'nul_ne_voit', cat: 'Noosphère', title: 'Ce que nul ne voit', text: 'Dans les quartiers, Idris est seul à voir certaines chimères : l’Égoïsme, le Matérialisme, le Plaisir immédiat, l’Indifférence. On les dit parfois « idées noires modernes » ; ce sont des chimères, faites de ce que beaucoup désirent ensemble, et elles se combattent. Les idées noires, elles, pèsent sur une seule personne : on leur répond par la parole. Images du jeu, comme toutes les chimères.' },
+    { id: 'le_pari', cat: 'Noosphère', title: 'Le Pari', text: 'Dans la tribune du circuit, certains ne regardent pas la course : ils regardent ce qu’ils y ont engagé. Idris y voit une chimère que personne d’autre ne voit, Le Pari, faite de l’attente de gagner sans rien faire. Dans le jeu, aucun pari ne se joue : on court pour la course, l’organisateur verse une prime à qui gagne, et rien de ce qu’on a ne se met en jeu. Une image du jeu, comme toutes les chimères.' },
     { id: 'avertissement', cat: 'Parole', title: 'Avertissement', text: 'ISNAD est une fiction inspirée de sources historiques. Les dialogues sont une dramatisation ; seules les paroles en carton, avec leur source, sont des citations rapportées. Le Prophète ﷺ n’est jamais représenté, et aucun Compagnon n’a de visage : un voile de lumière en tient lieu. Toute erreur est celle des auteurs : vérifiez auprès des sources et des savants.' }
   ],
 
@@ -231,7 +239,57 @@ ISNAD.registerSaga({
       'Ne réponds pas au bruit par plus de bruit. Prie, reprends souffle, et reviens transmettre.',
       'Chaque maillon de la Chaîne a d’abord écouté. Qui transmet sans avoir écouté ne transmet que sa propre voix.',
       'On ne convainc pas une ville entière. On transmet à un seul, qui transmettra à un autre. C’est cela, une chaîne.'
-    ]
+    ],
+    /* 2.27 (D216) — Sâlim et la course (src/core/circuit.js) : son arrivée au circuit, le tour de moto, ce qu'il dit ensuite ;
+       l'organisateur et ses cinq circuits ; le podium ; les teintes des adversaires. Sâlim n'est pas un Compagnon. Avant
+       l'étape III de la découverte de l'Agrégor (2.25), aucun texte ne le nomme : au circuit, Sâlim dit « les écrans », et ne le
+       nomme jamais. Aucune mise, aucun pari : la prime est celle de l'organisateur. Rien de sentimental. Textes de l'agent, à
+       valider. */
+    course: {
+      arrivee: {
+        salim: ['Tu regardes la piste comme quelqu’un qui voudrait y monter. Je me trompe ?',
+          'Je m’appelle Sâlim. Le jour, je fabrique ce qu’on regarde sur les écrans ; le soir, je viens ici regarder la route. Monte derrière moi : ta première course, c’est moi qui la pilote.'],
+        idris: 'Je ne fais que passer. Je n’ai jamais couru.'
+      },
+      offre: 'Monter derrière Sâlim ?', monter: 'Monter derrière Sâlim', pasMaintenant: 'Pas maintenant',
+      refus: 'Comme tu veux. Je passe souvent par ici, le soir. La moto reste garée là.',
+      revoir: 'Alors, ce tour ? La moto n’attend que toi.',
+      plusTard: 'Pas ce soir : tu as la tête ailleurs. Repasse, je serai là.',
+      depart: 'Accroche-toi. Je tiens le guidon ; toi, tu te penches.',
+      descendu: 'On s’arrête là. On refera un tour quand tu voudras.',
+      fins: ['Tu as pris chaque virage comme il faut. On dirait que tu as fait ça toute ta vie.',
+        'Pas mal, pour une première fois. Les virages, ça s’apprend en les prenant.',
+        'On est arrivés, c’est l’essentiel. La prochaine fois, penche-toi avec moi : la moto te suivra.'],
+      apres: ['L’organisateur, là, devant les stands, fait courir cinq circuits, du plus simple au plus serré. Chacun s’ouvre quand on a gagné le précédent.',
+        'Il verse une prime à qui gagne. Personne ne mise rien pour courir : on court, c’est tout.'],
+      salim: ['Ici, personne ne me demande ce que je fabrique. On regarde la route, c’est tout.',
+        'Un virage, ça ne se force pas. On le prend à sa vitesse, ou il te prend la tienne.',
+        'Les gens de la tribune ne regardent pas la course. Ils regardent leurs écrans, et ce qu’ils y ont engagé.',
+        'Le jour, je fais défiler des choses que personne ne se rappelle le soir. Ici, au moins, je me rappelle chaque virage.',
+        'Un conseil pour les circuits : lâche l’accélérateur avant le virage, pas dedans.'],
+      encoreQ: 'Un tour derrière Sâlim ?', encore: 'Refaire un tour derrière Sâlim', uneAutreFois: 'Une autre fois',
+      organisateur: {
+        avant: 'Tu veux courir ? Fais d’abord un tour avec Sâlim : il t’apprendra à prendre un virage.',
+        accueil: ['Cinq circuits, du plus simple au plus serré. Le premier se court seul, contre la montre.',
+          'La piste est libre. La prime est pour qui gagne : elle vient de moi, et personne ne mise rien.',
+          'Tu reviens courir ? Un circuit gagné se rejoue.'],
+        choix: 'Quel circuit ?'
+      },
+      circuits: [
+        { nom: 'La boucle des avenues', dit: 'large, une boucle simple, seul contre la montre' },
+        { nom: 'Les places', dit: 'plus de virages, trois voitures' },
+        { nom: 'La chicane', dit: 'des virages serrés, une chicane, des adversaires plus vifs' },
+        { nom: 'Le viaduc', dit: 'des voies qui se croisent, un temps à battre, un adversaire en tête' },
+        { nom: 'La nuit des tours', dit: 'le plus long et le plus serré, de nuit' }
+      ],
+      couleurs: ['Nacre', 'Bleu de nuit', 'Carmin', 'Émeraude', 'Sable', 'Ébène', 'Argent', 'Corail', 'Turquoise'],
+      podium: {
+        gagne: 'Tu montes sur la plus haute marche. L’organisateur te serre la main.',
+        podium: 'Une marche du podium. L’organisateur salue ta course.',
+        perdu: 'Pas cette fois. La piste reste là : on peut la recourir.',
+        plafond: 'Ce soir, l’organisateur a versé tout ce qu’il verse en une soirée : la prime reviendra à ta prochaine visite.'
+      }
+    }
   },
 
   chapters: [
@@ -330,7 +388,14 @@ ISNAD.registerSaga({
       ],
       objectives: [
         { text: 'Un homme attend dans la rue : lui parler', talk: 'salim_n', then: [
-          ['say', 'salim_n', 'Tu es l’archiviste ? Je m’appelle Sâlim. J’ai passé dix ans à nourrir l’Agrégor. Je sais où est son cœur, et je ne veux plus le servir.'],
+          // 2.27 (D216) : si Idris a couru avec Sâlim (le moteur pose _2084_salim), des retrouvailles ; sinon, la rencontre de toujours
+          ['if', '_2084_salim', [
+            ['say', 'salim_n', 'Idris ! Mon passager des virages. Alors l’archiviste, c’était toi.'],
+            ['say', 'idris', 'Sâlim. Tu disais fabriquer ce qu’on regarde sur les écrans.'],
+            ['say', 'salim_n', 'Je ne disais pas tout. J’ai passé dix ans à nourrir l’Agrégor. Je sais où est son cœur, et je ne veux plus le servir.']
+          ], [
+            ['say', 'salim_n', 'Tu es l’archiviste ? Je m’appelle Sâlim. J’ai passé dix ans à nourrir l’Agrégor. Je sais où est son cœur, et je ne veux plus le servir.']
+          ]],
           ['say', 'idris', 'Pourquoi maintenant ?'],
           ['say', 'salim_n', 'Mon fils m’a demandé ce que je fabriquais. Je n’ai pas su répondre sans mentir.'],
           ['hide', 'salim_n'], ['join', 'salim'],
@@ -958,7 +1023,14 @@ ISNAD.registerSaga({
         { id: 'q_spectatrice', name: 'Une spectatrice', at: ['tribune', 5, 1], pose: 'assis', look: { kind: 'femme', robe: '#3a7a7a', head: '#245050', cloak: '#4a8a8a' }, talk: [['say', 'q_spectatrice', 'Tout le monde regarde la même course. Chacun la regarde seul.']] },
         { id: 'q_mecano', name: 'Un mécanicien', at: ['circuit', 0, -1], pose: 'accable', look: { kind: 'citadin', robe: '#3a5a3a', head: '#243a24', manteau: 'aucun' }, talk: [['say', 'q_mecano', 'Je prépare des voitures toute la journée. Personne ne me demande comment je vais.']] },
         { id: 'q_voisine', name: 'Une passante', at: ['parvis', -6, 6], pose: 'triste', look: { kind: 'femme', robe: '#7a4a5a', head: '#4e2e3a', cloak: '#8a5a6a' }, talk: [['say', 'q_voisine', 'Mon téléphone sait tout de moi. Mes voisins ne savent pas mon nom.']] },
-        { id: 'q_livreur', name: 'Un livreur', at: ['parvis', 6, 4], pose: 'accable', look: { kind: 'citadin', robe: '#c86a2a', head: '#7a3e18', cloak: '#d87a3a', coiffe: 'calotte' }, talk: [['say', 'q_livreur', 'Je livre des paquets à des portes qui ne s’ouvrent pas.'], ['say', 'q_livreur', 'On me laisse un pourboire, jamais un mot.']] }
+        { id: 'q_livreur', name: 'Un livreur', at: ['parvis', 6, 4], pose: 'accable', look: { kind: 'citadin', robe: '#c86a2a', head: '#7a3e18', cloak: '#d87a3a', coiffe: 'calotte' }, talk: [['say', 'q_livreur', 'Je livre des paquets à des portes qui ne s’ouvrent pas.'], ['say', 'q_livreur', 'On me laisse un pourboire, jamais un mot.']] },
+        // 2.27 (D216) — le circuit : Sâlim (il paraît quand il arrive en moto, circuit.js), l'organisateur et ses cinq circuits ;
+        // dans la tribune, des parieurs, chacun seul devant son écran (aucun ne propose rien à Idris ; Le Pari rôde parmi eux)
+        { id: 'salim_q', name: 'Sâlim', hero: 'salim', at: ['circuit', -1, -2], hidden: true, talk: [['say', 'salim_q', 'La moto est là.']] },
+        { id: 'q_organisateur', name: 'L’organisateur', at: ['circuit', 1, 0], face: 'left', look: { kind: 'citadin', robe: '#2a4a6a', head: '#1a2a3a', cloak: '#3a5a7a' }, talk: [['say', 'q_organisateur', 'La piste est libre.']] },
+        { id: 'q_parieur', name: 'Un parieur', at: ['tribune', -3, 1], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#5a4a3a', head: '#3a2e22', cloak: '#6a5a4a' }, talk: [['say', 'q_parieur', 'Je ne regarde pas la course. Je regarde les chiffres sur mon écran.'], ['say', 'q_parieur', 'Ils montent, ils descendent. Moi aussi.']] },
+        { id: 'q_parieuse', name: 'Une parieuse', at: ['tribune', 2, 0], face: 'up', pose: 'triste', look: { kind: 'femme', robe: '#5a6a4a', head: '#3a4630', cloak: '#6a7a5a' }, talk: [['say', 'q_parieuse', 'Je me dis que la prochaine fois, je rattraperai tout. Je me le dis chaque soir.']] },
+        { id: 'q_parieur2', name: 'Un parieur', at: ['tribune', 7, 1], face: 'up', pose: 'accable', look: { kind: 'citadin', robe: '#4a3a5a', head: '#2e2438', cloak: '#5a4a6a' }, talk: [['say', 'q_parieur2', 'Ce que j’ai perdu, je n’ose le dire à personne. Alors je reviens, seul.']] }
       ],
       intro: [
         ['title', 'Les quartiers de la Cité', 'An 1507 de l’Hégire · Cité-Miroir'],

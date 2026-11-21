@@ -554,12 +554,88 @@
   function net(cv) { if ((cv.hd || 1) > 1) return; const c = cv.getContext('2d'), a = c.getImageData(0, 0, cv.width, cv.height), d = a.data;
     for (let i = 3; i < d.length; i += 4) d[i] = d[i] < 110 ? 0 : 255; c.putImageData(a, 0, 0); }
   G.voitureNet = net;
+  /* 2.27 (D216) — la moto de Sâlim, vue de côté (vers la droite) : deux roues, un cadre sombre, un réservoir de sa teinte, une
+     selle, une fourche ; un phare, un feu. Ni marque, ni logo, ni plaque, ni chiffre. */
+  function motoProfil(c, T) {
+    const X = x => 22 + x, Y = y => 28 - y, rw = 4.4;
+    c.fillStyle = '#3a3e48'; c.fillRect(X(-13), Y(6.4), 11, 1.4); c.fillStyle = '#8a909c'; c.fillRect(X(-13), Y(6.4), 11, 0.5);   // l'échappement
+    c.strokeStyle = '#1c1a22'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(X(-12), Y(rw)); c.lineTo(X(-3), Y(7.5)); c.lineTo(X(4), Y(9)); c.stroke();   // le bras oscillant, le cadre
+    c.fillStyle = '#2a2830'; c.fillRect(X(-4), Y(9.5), 8, 5); c.fillStyle = '#5a5e68'; c.fillRect(X(-3.5), Y(9), 7, 0.75); c.fillRect(X(-3.5), Y(6.5), 7, 0.5);   // le moteur
+    const g = c.createLinearGradient(0, Y(14), 0, Y(9)); g.addColorStop(0, T.l); g.addColorStop(0.5, T.b); g.addColorStop(1, T.o);
+    c.fillStyle = g; c.beginPath(); c.moveTo(X(-1), Y(9.5)); c.lineTo(X(8.5), Y(10)); c.quadraticCurveTo(X(9), Y(13.6), X(5), Y(14)); c.lineTo(X(0), Y(13.2)); c.closePath(); c.fill();   // le réservoir
+    c.fillStyle = 'rgba(255,255,255,.4)'; c.fillRect(X(1), Y(13.3), 5, 0.5);
+    c.fillStyle = '#1e1c26'; c.beginPath(); c.moveTo(X(-11), Y(11.2)); c.lineTo(X(-0.5), Y(12.4)); c.lineTo(X(-0.5), Y(10.6)); c.lineTo(X(-10.5), Y(10)); c.closePath(); c.fill();   // la selle
+    c.fillStyle = T.b; c.beginPath(); c.moveTo(X(-14.5), Y(12)); c.lineTo(X(-10.5), Y(11.4)); c.lineTo(X(-10), Y(9.6)); c.lineTo(X(-14), Y(10.4)); c.closePath(); c.fill();   // la poupe
+    c.fillStyle = '#ff2e50'; c.fillRect(X(-15), Y(11.6), 1.2, 1.3);
+    c.strokeStyle = '#b8bec8'; c.lineWidth = 1.1; c.beginPath(); c.moveTo(X(12.5), Y(rw)); c.lineTo(X(8.5), Y(15.2)); c.stroke();   // la fourche
+    c.strokeStyle = '#2a2830'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(X(8.5), Y(15.2)); c.lineTo(X(5.5), Y(16.4)); c.stroke(); c.fillStyle = '#2a2830'; c.fillRect(X(6.5), Y(18), 0.6, 2.2); c.fillRect(X(5.8), Y(18.6), 2, 0.9);   // le guidon, le rétroviseur
+    c.fillStyle = '#fff6dc'; c.beginPath(); c.arc(X(10.6), Y(13.2), 1.4, 0, 6.3); c.fill(); c.fillStyle = 'rgba(255,246,220,.5)'; c.fillRect(X(11.8), Y(13.6), 0.8, 0.8);   // le phare
+    c.fillStyle = T.o; c.beginPath(); c.moveTo(X(10), Y(9)); c.quadraticCurveTo(X(13.5), Y(9.6), X(15.5), Y(7.2)); c.lineTo(X(14.5), Y(6.8)); c.quadraticCurveTo(X(12.5), Y(8.4), X(9.8), Y(8)); c.closePath(); c.fill();   // le garde-boue
+    roue(c, X(-12), Y(rw), rw); roue(c, X(12.5), Y(rw), rw);
+  }
+  // de face (elle vient vers nous) ou de dos
+  function motoFace(c, T, dos) {
+    const X = x => 22 + x, Y = y => 28 - y;
+    c.fillStyle = '#121218'; c.beginPath(); c.ellipse(X(0), Y(4.4), 1.9, 4.4, 0, 0, 6.3); c.fill();
+    const g = c.createLinearGradient(0, Y(15), 0, Y(9)); g.addColorStop(0, T.l); g.addColorStop(1, T.o); c.fillStyle = g; c.beginPath(); c.ellipse(X(0), Y(11.5), 3.6, 3.2, 0, 0, 6.3); c.fill();
+    c.fillStyle = '#2a2830'; c.fillRect(X(-3), Y(9), 6, 3);
+    if (dos) { c.fillStyle = '#1e1c26'; c.fillRect(X(-2.4), Y(14.4), 4.8, 2); c.fillStyle = '#ff2e50'; c.fillRect(X(-1.6), Y(10.6), 3.2, 1.2); }
+    else { c.fillStyle = '#b8bec8'; c.fillRect(X(-2.2), Y(12), 0.8, 6); c.fillRect(X(1.4), Y(12), 0.8, 6); c.fillStyle = '#fff6dc'; c.beginPath(); c.arc(X(0), Y(12.2), 1.6, 0, 6.3); c.fill(); }
+    c.fillStyle = '#2a2830'; c.fillRect(X(-7), Y(16.2), 14, 0.9); c.fillRect(X(-7.5), Y(18.4), 1.4, 2.6); c.fillRect(X(6.1), Y(18.4), 1.4, 2.6);   // le guidon, les rétroviseurs
+  }
+  /* 2.27 (D216) — vus de dessus, pour la course (circuit.js) : une voiture de course et la moto de Sâlim, ses deux passagers,
+     le nez à droite, dans une toile de 28 × 28 (le centre à 14, 14). Vitres fumées ; une bande de couleur, sans chiffre ni
+     signe ; ni marque, ni logo, ni plaque. Vus de dessus, Sâlim et Idris ne montrent que le haut de leur tête et leurs
+     épaules. Le moteur les tourne (G.dessus : trente-deux caps, gardés). */
+  function voitureDessus(c, T, m) {
+    const rr = (x, y, w, h, rad) => { c.beginPath(); c.moveTo(x + rad, y); c.lineTo(x + w - rad, y); c.quadraticCurveTo(x + w, y, x + w, y + rad); c.lineTo(x + w, y + h - rad); c.quadraticCurveTo(x + w, y + h, x + w - rad, y + h); c.lineTo(x + rad, y + h); c.quadraticCurveTo(x, y + h, x, y + h - rad); c.lineTo(x, y + rad); c.quadraticCurveTo(x, y, x + rad, y); c.closePath(); };
+    c.fillStyle = '#121218'; [[6, 7.6], [18, 7.6], [6, 18.6], [18, 18.6]].forEach(([x, y]) => { rr(x, y, 4.6, 1.8, 0.7); c.fill(); });   // les roues
+    const g = c.createLinearGradient(0, 9, 0, 19); g.addColorStop(0, T.o); g.addColorStop(0.3, T.b); g.addColorStop(0.5, T.l); g.addColorStop(0.7, T.b); g.addColorStop(1, T.o);
+    c.fillStyle = g; rr(3.5, 9, 21, 10, 3.2); c.fill();
+    c.fillStyle = vitre(c, 9.5, 18.5); c.beginPath(); c.moveTo(13, 10.4); c.lineTo(16.6, 11); c.lineTo(16.6, 17); c.lineTo(13, 17.6); c.closePath(); c.fill();   // le pare-brise
+    c.fillStyle = T.o; rr(8.5, 10.4, 4.6, 7.2, 1.2); c.fill(); c.fillStyle = 'rgba(255,255,255,.18)'; c.fillRect(9, 10.8, 3.6, 0.5);   // le toit
+    c.fillStyle = vitre(c, 10.4, 17.6); c.fillRect(6.6, 10.9, 1.9, 6.2);   // la lunette
+    c.fillStyle = T.o; c.fillRect(15, 8.2, 1.4, 1); c.fillRect(15, 18.8, 1.4, 1);   // les rétroviseurs
+    c.fillStyle = '#fff6dc'; c.fillRect(23.4, 10.2, 1.2, 1.6); c.fillRect(23.4, 16.2, 1.2, 1.6);
+    c.fillStyle = '#ff2e50'; c.fillRect(3.4, 10.2, 1, 1.6); c.fillRect(3.4, 16.2, 1, 1.6);
+    if (m === 'course') { c.fillStyle = 'rgba(255,255,255,.8)'; c.fillRect(17, 13.5, 6.5, 1); c.fillRect(4.5, 13.5, 2, 1);   // une bande de couleur, sans chiffre ni signe
+      c.fillStyle = T.o; c.fillRect(2.2, 8.4, 1.6, 11.2); c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(2.2, 8.4, 0.5, 11.2); }   // l'aileron
+  }
+  function motoDessus(c, T, salim, idris, penche) {
+    const dy = (penche || 0) * 1.1;
+    c.fillStyle = '#121218'; c.beginPath(); c.ellipse(22.2, 14, 2.6, 0.95, 0, 0, 6.3); c.fill(); c.beginPath(); c.ellipse(6.4, 14, 2.6, 1, 0, 0, 6.3); c.fill();   // les roues
+    const g = c.createLinearGradient(0, 12, 0, 16); g.addColorStop(0, T.o); g.addColorStop(0.5, T.l); g.addColorStop(1, T.o); c.fillStyle = g; c.beginPath(); c.ellipse(15, 14, 4.6, 1.9, 0, 0, 6.3); c.fill();   // le réservoir
+    c.fillStyle = '#1e1c26'; c.fillRect(7, 12.9, 6, 2.2); c.fillStyle = T.b; c.fillRect(4.6, 13.1, 2.6, 1.8);
+    c.strokeStyle = '#3a3e48'; c.lineWidth = 0.8; c.beginPath(); c.moveTo(19.4, 10.2); c.lineTo(19.4, 17.8); c.stroke(); c.fillStyle = '#1c1a22'; c.fillRect(19, 9.4, 0.9, 1.4); c.fillRect(19, 17.2, 0.9, 1.4);   // le guidon
+    c.fillStyle = '#fff6dc'; c.fillRect(23.6, 13.4, 0.9, 1.2); c.fillStyle = '#ff2e50'; c.fillRect(4, 13.5, 0.7, 1);
+    // Idris derrière, Sâlim devant : leurs épaules, le haut de leur tête (rien d'autre ne se voit d'en haut)
+    const corps = (x, L) => { c.fillStyle = L.cloak || L.robe || '#3a3a48'; c.beginPath(); c.ellipse(x, 14 + dy, 2.3, 3.8, 0, 0, 6.3); c.fill(); c.fillStyle = L.robe || '#3a3a48'; c.beginPath(); c.ellipse(x + 0.6, 14 + dy, 1.6, 3, 0, 0, 6.3); c.fill();
+      c.fillStyle = L.head || '#2a2030'; c.beginPath(); c.arc(x + 0.4, 14 + dy, 1.9, 0, 6.3); c.fill(); c.fillStyle = 'rgba(255,255,255,.16)'; c.beginPath(); c.arc(x, 13.3 + dy, 0.8, 0, 6.3); c.fill(); };
+    if (idris) corps(10.6, idris);
+    if (salim) { c.fillStyle = salim.robe || '#5a2f3a'; c.fillRect(15.4, 11.3 + dy, 3.6, 0.9); c.fillRect(15.4, 15.8 + dy, 3.6, 0.9); corps(14.4, salim); }   // ses bras vers le guidon
+  }
+  const dcache = {};
+  // une image vue de dessus, tournée : genre 'voiture' (o : { m, c }) ou 'moto' (o : { c, salim, idris, penche }) ; k : le cap, de 0 à 31
+  G.dessus = function (genre, o, k) {
+    const key = genre + JSON.stringify(o) + '|' + k + '|' + G.D + (G.lisse ? 'l' : ''); if (dcache[key]) return dcache[key];
+    const base = dcache[genre + JSON.stringify(o)] || (dcache[genre + JSON.stringify(o)] = (() => { const cv = G.toile(28, 28), c = cv.getContext('2d'), T = G.TEINTES[(o.c | 0) % G.TEINTES.length];
+      if (genre === 'moto') motoDessus(c, T, o.salim, o.idris, o.penche); else voitureDessus(c, T, o.m); return cv; })());
+    const cv = G.toile(28, 28), c = cv.getContext('2d'); c.imageSmoothingEnabled = true; c.translate(14, 14); c.rotate(k * Math.PI / 16); c.drawImage(base, -14, -14); net(cv);
+    return (dcache[key] = cv);
+  };
+  G.surDefinition.push(() => { Object.keys(dcache).forEach(k => { delete dcache[k]; }); });
 
   Object.assign(OBJ, {
     // une voiture (garée sur la carte, ou qui roule : trafic.js) ; o.m : le modèle, o.c : la teinte, o.d : 'd', 'g', 'b', 'h'
     qvoiture: { w: 44, h: 30, fw: 32, fh: 8, draw(c, r, o) { o = o || {}; const M = G.MODELES[o.m] || G.MODELES.berline, T = G.TEINTES[(o.c | 0) % G.TEINTES.length];
       if (o.d === 'b' || o.d === 'h') face(c, M, T, o.d === 'h');
       else { if (o.d === 'g') { c.save(); c.translate(44, 0); c.scale(-1, 1); profil(c, M, T); c.restore(); } else profil(c, M, T); }
+      net(c.canvas); } },
+    // 2.27 (D216) — la moto de Sâlim : une moto inventée par le jeu, sans marque, sans logo, sans plaque ; o.c : la teinte, o.d :
+    // 'd', 'g', 'b', 'h' (comme une voiture). Le point d'appui est le milieu du sol, à (22, 28).
+    qmoto: { w: 44, h: 30, fw: 30, fh: 6, draw(c, r, o) { o = o || {}; const T = G.TEINTES[(o.c | 0) % G.TEINTES.length];
+      if (o.d === 'b' || o.d === 'h') motoFace(c, T, o.d === 'h');
+      else { if (o.d === 'g') { c.save(); c.translate(44, 0); c.scale(-1, 1); motoProfil(c, T); c.restore(); } else motoProfil(c, T); }
       net(c.canvas); } },
     // une borne d'arcade : un caisson sombre, un bandeau qui luit sans un mot, un écran aux formes abstraites, deux boutons
     qborne: { w: 16, h: 32, fw: 6, fh: 3, draw(c, r, o) { const col = (o && o.color) || '#ff4fd8', alt = (o && o.alt) || '#39e6ff';

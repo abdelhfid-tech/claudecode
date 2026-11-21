@@ -45,9 +45,10 @@
     W.roster = {}; W.saga = null; await W.startChapter('idris', ri); return true;
   };
   // au début d'une visite (world.js, startChapter) : ce qui rôde se tire de nouveau ; rien de la visite d'avant
-  C.neuf = function (F) { Object.keys(F).forEach(k => { if (k === '_rues' || k.indexOf('_rue_') === 0) delete F[k]; }); };
+  C.neuf = function (F) { Object.keys(F).forEach(k => { if (k === '_rues' || k.indexOf('_rue_') === 0 || k === '_primes') delete F[k]; }); };   // (2.27 : et les primes de la visite d'avant — circuit.js)
   // l'ouverture faite : la première fois, Maître Yûnus dit qu'on peut revenir ici (la leçon de l'outil « cite »)
   C.ouvre = async function (cp) {
+    if (I.circuit) I.circuit.ouvre(cp); // 2.27 : Sâlim est au circuit s'il est déjà venu, sa moto garée (circuit.js)
     const e = C.etat(); if (cp || e.lecon) return;
     const t = ((I.sagas.coeur || {}).lecons || {}).cite, y = yunus(); if (!t || !y) return;
     let dire = false; const donne = I.lecons ? I.lecons.proposer('cite', () => { dire = true; }) : (dire = true);
@@ -89,7 +90,8 @@
     await I.ui.showChain(I.perso.dire(I.t('Idris est revenu aux Archives basses. La Chaîne tourne dans la pénombre.'))); return S.fade('in', 300);
   };
   // la première fois qu'une chimère des rues approche : personne d'autre ne la voit (rodeurs.js)
-  C.vue = function () { const e = C.etat(); if (e.vue) return; e.vue = true; I.save.store(); const t = textes().seul; if (t) S.toast(I.fmt(I.esc(t)), 6000); C.journal.push({ quoi: 'seul' });
+  C.vue = function (f) { if (f && f.group && f.group[0] === 'pari' && W.saga && W.saga.id === 'idris') I.ui.unlockCodex('le_pari');   // 2.27 : la fiche « Le Pari », la première fois qu'on le voit
+    const e = C.etat(); if (e.vue) return; e.vue = true; I.save.store(); const t = textes().seul; if (t) S.toast(I.fmt(I.esc(t)), 6000); C.journal.push({ quoi: 'seul' });
     if (W.saga && W.saga.id === 'idris') I.ui.unlockCodex('nul_ne_voit'); };   // (le feuillet « Ce que nul ne voit » : des chimères, et non des idées noires)
   // après un combat avec une chimère des rues (rodeurs.js, R.contactRue) : la prière rappelée, puis revoir Maître Yûnus, ou plus tard
   C.apres = async function (f, res) {

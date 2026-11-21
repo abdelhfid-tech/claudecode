@@ -25,10 +25,11 @@
   // une séquence s'achève : les leçons déjà lues quittent le fil (2.x, D189)
   L.sequence = function () { const d = etat(); if (d) d.seq = (d.seq | 0) + 1; L._t = 0; if (S.filRetire) S.filRetire(); };
   // peut-on donner un outil maintenant ?
-  L.pret = function () {
-    const d = etat(); if (!d) return true; if (d.donne === d.seq) return false;
+  // (plus : la séquence d'après — 2.27, circuit.js : Sâlim ne vient que si l'outil des virages pourra être donné en montant)
+  L.pret = function (plus) {
+    const d = etat(); if (!d) return true; const seq = d.seq + (plus | 0); if (d.donne === seq) return false;
     const der = d.dernier; if (!der) return true; const o = D.OUTILS[der] || {};
-    return !!o.geste || (d.re[der] | 0) > 0 || d.seq - (d.recus[der] | 0) >= L.PATIENCE;
+    return !!o.geste || (d.re[der] | 0) > 0 || seq - (d.recus[der] | 0) >= L.PATIENCE;
   };
   L.recevoir = function (id) { const d = etat(); if (!d || d.recus[id] !== undefined) return false; d.recus[id] = d.seq; d.dernier = id; d.donne = d.seq; L.journal.push({ id, seq: d.seq }); return true; };
   // le besoin se présente : l'outil est-il donné ? (hors de ce mode : la leçon se dit, comme avant)

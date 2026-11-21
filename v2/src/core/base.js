@@ -109,10 +109,12 @@
     emit,
     // l'écouteur du dessus est-il celui du monde ? (la manette : en exploration, le joystick fait marcher ; ailleurs, il choisit)
     auMonde() { const f = stack[stack.length - 1]; return !!(f && f.monde); },
-    clearHeld() { held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; },
+    clearHeld() { held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; I.input.aTenu = false; I.input.joyAngle = null; },
     maj: false, course: false, // Maj tenue ; le joystick avec B tenu (ui.js, courir — 2.17) : l'un ou l'autre fait courir
+    // 2.27 (D216) : A tenu (le bouton A, ou Entrée, Espace, Z, E) accélère la voiture d'une course ; le joystick y donne aussi son cap (circuit.js)
+    aTenu: false, joyAngle: null,
     // secours : on ne garde que l'écouteur du monde (le premier posé), les autres appartenaient à une suite interrompue
-    mark() { return stack.length; }, trim(n) { if (stack.length > n) stack.length = Math.max(1, n); }, reset() { stack.length = Math.min(stack.length, 1); held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; },
+    mark() { return stack.length; }, trim(n) { if (stack.length > n) stack.length = Math.max(1, n); }, reset() { stack.length = Math.min(stack.length, 1); held.up = held.down = held.left = held.right = false; I.input.maj = I.input.course = false; I.input.aTenu = false; I.input.joyAngle = null; },
     // attend une action OU un délai ; l'écouteur est toujours retiré (sinon il avalerait les touches suivantes)
     waitTimed(actions, ms, delay) {
       return new Promise(res => {
@@ -132,11 +134,12 @@
     const a = KEY[e.code]; if (!a) return;
     if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
     e.preventDefault();
+    if (a === 'ok') I.input.aTenu = true;   // 2.27 : A tenu (circuit.js)
     if (a in held) { held[a] = true; if (e.repeat) { emit(a); return; } }
     else if (e.repeat) return;
     emit(a);
   });
-  window.addEventListener('keyup', e => { const a = KEY[e.code]; if (a && a in held) held[a] = false; });
+  window.addEventListener('keyup', e => { const a = KEY[e.code]; if (a && a in held) held[a] = false; if (a === 'ok') I.input.aTenu = false; });
   window.addEventListener('blur', () => I.input.clearHeld());
   // 2.16 — Maj tenue fait courir. Elle est suivie à part : ce n'est l'action d'aucune touche (Maj + Entrée valide toujours,
   // Maj + flèche marche… en courant). Toute autre touche dit aussi si Maj est tenue (une Maj lâchée hors de la page).
@@ -151,7 +154,7 @@
   function fresh() {
     return { v: FORMAT, profil: {}, paquets: {}, started: false, prologue: false, epilogue: false, lights: [], sagas: {}, heroes: {},
       items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, gear: {}, equip: {}, gearInit: {}, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
-      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 }, cite: {} };
+      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 }, cite: { course: { salim: 0, gagnes: [], temps: [], primes: 0 } } };
   }
   // La partie se garde toute seule, à chaque point de reprise (AKEY) : fermer la page ne fait rien perdre. Les trois
   // emplacements de la mosquée restent, pour qui veut garder une copie. Les options, elles, se gardent à part.
@@ -166,6 +169,8 @@
     if (p.v !== FORMAT) return null;
     if (!estObjet(p.profil)) p.profil = {}; if (!estObjet(p.paquets)) p.paquets = {};
     if (p.cite === undefined) p.cite = {}; // 2.23 (D212) : les quartiers de la Cité (cite.js) — absent des parties d'avant ; le format reste le 2
+    // 2.27 (D216) : Sâlim et la course (circuit.js) — ce qu'a fait Sâlim, les circuits gagnés, le meilleur temps de chacun ; le format reste le 2
+    if (estObjet(p.cite) && p.cite.course === undefined) p.cite = Object.assign({}, p.cite, { course: { salim: 0, gagnes: [], temps: [], primes: 0 } });
     return p;
   }
   // Ce qui, dans une partie venue d'ailleurs, n'a pas la forme attendue. Un champ absent prendra sa valeur de départ ; un
@@ -189,7 +194,13 @@
     if (d.retours !== undefined && !naturel(d.retours)) E.push('retours');
     objet('rebonds'); objet('lecons'); // 2.x : `lecons` — les outils reçus (lecons.js), dans une partie commencée par « Nouvelle partie »
     // 2.23 (D212) : les quartiers de la Cité — des comptes (arrivées, rappels, répliques de Maître Yûnus) et deux marques
-    if (objet('cite')) { const q = d.cite; ['arrivees', 'rappels', 'yunus'].forEach(k => { if (q[k] !== undefined && !naturel(q[k])) E.push('cite.' + k); }); ['vue', 'lecon'].forEach(k => { if (q[k] !== undefined && typeof q[k] !== 'boolean') E.push('cite.' + k); }); }
+    if (objet('cite')) { const q = d.cite; ['arrivees', 'rappels', 'yunus'].forEach(k => { if (q[k] !== undefined && !naturel(q[k])) E.push('cite.' + k); }); ['vue', 'lecon'].forEach(k => { if (q[k] !== undefined && typeof q[k] !== 'boolean') E.push('cite.' + k); });
+      // 2.27 (D216) : la course — salim (0 : jamais venu, 1 : venu, 2 : Idris est monté derrière lui), les circuits gagnés, les meilleurs temps (en millièmes), des comptes
+      if (q.course !== undefined) { const c = q.course, n = (D.CIRCUITS || []).length; if (!estObjet(c)) E.push('cite.course'); else {
+        if (c.salim !== undefined && !(Number.isInteger(c.salim) && c.salim >= 0 && c.salim <= 2)) E.push('cite.course.salim');
+        if (c.gagnes !== undefined && (!Array.isArray(c.gagnes) || c.gagnes.length > n || c.gagnes.some(g => g !== null && typeof g !== 'boolean'))) E.push('cite.course.gagnes');
+        if (c.temps !== undefined && (!Array.isArray(c.temps) || c.temps.length > n || c.temps.some(t => t !== null && !naturel(t)))) E.push('cite.course.temps');
+        ['primes', 'parle', 'courses'].forEach(k => { if (c[k] !== undefined && !naturel(c[k])) E.push('cite.course.' + k); }); } } }
     if (objet('postures')) Object.keys(d.postures).forEach(k => { if (!D.POSTURES || !D.POSTURES[d.postures[k]]) E.push('postures.' + k); }); // 2.x : la posture prise par chacun (absente : celle de son tempérament)
     return E;
   }
@@ -559,11 +570,34 @@
 
   A.stopBeat = function () { A.pendingRhythm = null; if (A.rhythm) { clearInterval(A.rhythm.timer); A.rhythm = null; } };
 
+  /* 2.27 (D216) — le bruit des moteurs (circuit.js : la moto de Sâlim, les voitures d'une course). Synthétisé, sans voix ni
+     musique : deux oscillateurs en dents de scie et en carré, une octave l'un sous l'autre, un souffle filtré, un filtre qui
+     s'ouvre avec le régime ; une seconde voix, plus basse et plus douce, pour ceux qui roulent tout près. Sur le bus des
+     bruitages (coupé avec le son), jamais sur celui de la musique. A.regime(k, autres) : le régime (0 à 1) de celui qui mène,
+     et la présence des autres (0 à 1). */
+  A.moteur = function (on) {
+    if (!A.ctx) return; const c = A.ctx, t = c.currentTime;
+    if (!on) { const m = A._moteur; A._moteur = null; if (m) { m.g.gain.cancelScheduledValues(t); m.g.gain.setTargetAtTime(0, t, 0.08); setTimeout(() => { try { m.stop(); } catch (e) { /* déjà arrêté */ } }, 600); } return; }
+    if (A._moteur) return;
+    const g = c.createGain(), lp = c.createBiquadFilter(); g.gain.value = 0; lp.type = 'lowpass'; lp.frequency.value = 400; lp.Q.value = 2; lp.connect(g); g.connect(A.master);
+    const o1 = c.createOscillator(), o2 = c.createOscillator(); o1.type = 'sawtooth'; o2.type = 'square'; o1.frequency.value = 46; o2.frequency.value = 23; const g2 = c.createGain(); g2.gain.value = 0.5; o1.connect(lp); o2.connect(g2); g2.connect(lp);
+    const n = noiseSrc(true), bp = c.createBiquadFilter(), gn = c.createGain(); bp.type = 'bandpass'; bp.frequency.value = 700; bp.Q.value = 0.8; gn.gain.value = 0.25; n.connect(bp); bp.connect(gn); gn.connect(lp);
+    const ga = c.createGain(), la = c.createBiquadFilter(), o3 = c.createOscillator(); ga.gain.value = 0; la.type = 'lowpass'; la.frequency.value = 300; o3.type = 'sawtooth'; o3.frequency.value = 38; o3.connect(la); la.connect(ga); ga.connect(A.master);
+    [o1, o2, o3].forEach(o => o.start(t)); n.start(t, Math.random());
+    A._moteur = { g, lp, o1, o2, o3, ga, la, bp, stop() { [o1, o2, o3].forEach(o => o.stop()); n.stop(); [g, ga].forEach(x => x.disconnect()); } };
+  };
+  A.regime = function (k, autres) {
+    const m = A._moteur; if (!m || !A.ctx) return; const t = A.ctx.currentTime, r = Math.max(0, Math.min(1, k || 0)), o = Math.max(0, Math.min(1, autres || 0));
+    m.o1.frequency.setTargetAtTime(44 + 96 * r, t, 0.06); m.o2.frequency.setTargetAtTime(22 + 48 * r, t, 0.06); m.lp.frequency.setTargetAtTime(320 + 1700 * r, t, 0.08); m.bp.frequency.setTargetAtTime(600 + 1400 * r, t, 0.1);
+    m.g.gain.setTargetAtTime(A.on ? 0.05 + 0.09 * r : 0, t, 0.08);
+    m.o3.frequency.setTargetAtTime(40 + 80 * o, t, 0.1); m.la.frequency.setTargetAtTime(260 + 900 * o, t, 0.1); m.ga.gain.setTargetAtTime(A.on ? 0.07 * o : 0, t, 0.12);
+  };
+
   // Le son ne doit jamais arrêter le jeu. Sur un appareil qui refuse une opération sonore, l'appel devient sans effet,
   // l'incident est retenu une fois (page Diagnostic). Une piste qui ne démarre pas se tait un moment, puis la veille la
   // relance : rien ne coupe plus la musique pour toute la séance, et un bruitage en échec ne la regarde pas.
   A.fails = 0;
-  ['unlock', 'setOn', 'sfx', 'beat', 'stopBeat', 'music', 'setMusic', 'scene', 'back', 'pump', 'dum', 'tek'].forEach(k => {
+  ['unlock', 'setOn', 'sfx', 'beat', 'stopBeat', 'music', 'setMusic', 'scene', 'back', 'pump', 'dum', 'tek', 'moteur', 'regime'].forEach(k => {
     const fn = A[k]; if (typeof fn !== 'function') return;
     A[k] = function () {
       try { return fn.apply(A, arguments); }

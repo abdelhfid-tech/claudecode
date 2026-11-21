@@ -899,3 +899,31 @@ html:not(.lum215) #chain, html:not(.lum215) #menu { background: linear-gradient(
 html:not(.lum215) body.portrait { background: linear-gradient(180deg, #3d2c20 0%, #2c2019 45%, #1e1613 100%); }
 html:not(.lum215) body.portrait[data-theme="roman"] { background: linear-gradient(180deg, #3c2832 0%, #2a1c26 45%, #1c131a 100%); }
 html:not(.lum215) body.portrait[data-theme="cyber"] { background: linear-gradient(180deg, #43204f 0%, #321a44 40%, #3c1c34 75%, #2a1522 100%); }
+
+/* ---------- 2.27 (D216) : la course (circuit.js) — le chrono et le tour, le classement, le signe, le compte à rebours, le bilan ----------
+   En largeur, en haut et à gauche de l'image (la manette tient les deux coins du bas ; le plan est dans le coin du haut à droite,
+   peint sur l'image) ; le signe et le bilan au pied de l'image, entre les deux zones de la manette. En hauteur, sous l'image,
+   au-dessus de la bande de la manette. Rien ne s'y touche : on joue au joystick, à A et à B. */
+#course { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+#course .tableau { position: absolute; left: 2%; top: 3%; padding: .25em .7em .3em; background: rgba(8, 7, 18, .62); border: 1px solid var(--line); border-radius: .4em; font-family: var(--f-mono); color: var(--sand); text-shadow: 0 1px 2px #000; max-width: 46%; }
+#course .chrono b { font-size: 1.3em; color: var(--gold); letter-spacing: .04em; } #course .chrono b.titre { font-size: 1em; letter-spacing: 0; }
+#course .tour { font-size: .78em; color: var(--sand); }
+#course .rangs { position: absolute; left: 2%; top: calc(3% + 3.9em); margin: 0; padding: .25em .6em; list-style: none; background: rgba(8, 7, 18, .55); border-radius: .4em; font-size: .78em; color: var(--sand); }
+#course .rangs:empty { display: none; }
+#course .rangs li { white-space: nowrap; } #course .rangs li.moi { color: var(--gold); font-weight: 700; }
+#course .rangs i { display: inline-block; width: .8em; height: .8em; border-radius: 50%; margin-right: .4em; vertical-align: -.05em; border: 1px solid rgba(255, 255, 255, .6); }
+#course .signe { position: absolute; left: 10%; right: 10%; bottom: 4%; text-align: center; font-size: .86em; color: var(--sand); text-shadow: 0 1px 3px #000, 0 0 10px rgba(0, 0, 0, .9); }
+#course .signe:empty { display: none; }
+#course .signe .mal { color: #ffe08a; font-weight: 700; } #course .signe .bien { color: #7dffb0; font-weight: 700; }
+#course .compte { position: absolute; left: 0; right: 0; top: 34%; text-align: center; font-family: var(--f-display); font-size: 3.2em; color: var(--gold); text-shadow: 0 2px 6px #000, 0 0 24px rgba(255, 200, 120, .6); }
+#course .bilan { position: absolute; left: 12%; right: 12%; bottom: 4%; max-height: 62%; overflow-y: auto; padding: .5em 1em .6em; background: rgba(10, 9, 22, .9); border: 1px solid var(--line); border-radius: 3px; text-align: center; color: var(--sand); pointer-events: auto; }
+#course .bilan h3 { margin: 0 0 .25em; font-family: var(--f-display); color: var(--gold); letter-spacing: .08em; font-size: 1.05em; }
+#course .bilan p { margin: .2em 0; } #course .bilan .prime { color: #7dffb0; font-weight: 700; } #course .bilan .suite { margin-top: .3em; color: var(--gold); font-family: var(--f-mono); }
+#course.fini .tableau, #course.fini .rangs, #course.fini .signe { display: none; }
+body.immersif.manette #course .signe, body.immersif.manette #course .bilan { left: max(10%, var(--pad-g, 0px)); right: max(10%, var(--pad-d, 0px)); }
+body.portrait #course .tableau { top: calc(100% + 10px); left: 10px; max-width: 58%; }
+body.portrait #course .rangs { top: calc(100% + 10px); left: auto; right: 10px; }
+body.portrait #course .signe { top: calc(100% + 10px + 4.4em); bottom: auto; left: 10px; right: 10px; }
+body.portrait #course .bilan { top: calc(100% + 10px); bottom: auto; left: 8px; right: 8px; max-height: calc(100dvh - 100% - var(--pad-bas, 0px) - 24px); }
+body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px); }
+.opt .gagne { color: #7dffb0; }

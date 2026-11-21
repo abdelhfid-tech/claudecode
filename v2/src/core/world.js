@@ -232,6 +232,7 @@
     if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); I.mal.ouvre(); }
     if (!cp && I.cite && I.cite.refuge(ch)) I.cite.neuf(S.flags); // 2.23 : chaque arrivée dans les quartiers est neuve (cite.js)
     if (saga.frame && !saga.veillees && (Number.isInteger(ch.retour) || ch.visite) && I.ui.drapeaux2084) I.ui.drapeaux2084(S.flags); // 2.x : l'état de 2084, pour un retour ou une visite
+    if (saga.frame && !saga.veillees && I.circuit) I.circuit.drapeaux(S.flags); // 2.27 : Idris a-t-il couru avec Sâlim ? (le dernier maillon le lit : _2084_salim)
     I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
     W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: n.face !== undefined && G.DIRS[n.face] !== undefined ? G.DIRS[n.face] : 0, sheet: G.planche(look), aura: def ? (lueur(def.look) || '#ffe9a8') : (look.kind === 'compagnon' ? (lueur(look) || '#ffe9a8') : null) }); });
@@ -371,6 +372,7 @@
       const dx = p.x - best.x, dy = p.y - best.y; best.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0);
       const o = W.cur();
       if (o && o.talk === best.id) { if (I.cite && I.cite.parle(best)) return; return W.complete(); } // 2.23 : Maître Yûnus, dans les quartiers, demande où aller (cite.js)
+      if (I.circuit && I.circuit.parle(best)) return; // 2.27 : Sâlim et l'organisateur, au circuit des quartiers (circuit.js)
       if (best.talk) { I.audio.sfx('blip'); await S.run(best.talk); }
       return;
     }
@@ -445,6 +447,7 @@
     } else { W.dest = null; if (!p.scripted) p.moving = false; p.court = false; }
     W.npcs.forEach(n => { if (n.pas) avancerPas(n, dt); }); // le pas de côté va jusqu'au bout, même si un récit commence
     if (I.trafic) I.trafic.tic(dt); // 2.23 : les voitures des quartiers roulent, et s'arrêtent devant qui se tient sur leur voie
+    if (can && I.circuit) I.circuit.tic(dt); // 2.27 : au premier passage au circuit, Sâlim arrive en moto (circuit.js)
     W.updateCam();
   };
 

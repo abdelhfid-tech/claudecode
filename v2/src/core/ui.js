@@ -822,7 +822,8 @@
   U.veille = function (now) {
     const box = $('#secours'), fade = +($('#fade').style.opacity || 0);
     const attend = !$('#dialog').hidden || !$('#choice').hidden || !$('#card').hidden || !!document.querySelector('.screen:not([hidden])') ||
-      (I.battle.active && ($('#battle .cmd').childElementCount > 0 || !$('#battle .banner').hidden || $('#floaters').childElementCount > 0));
+      (I.battle.active && ($('#battle .cmd').childElementCount > 0 || !$('#battle .banner').hidden || $('#floaters').childElementCount > 0)) ||
+      enCourse();   // 2.27 : une course se joue (circuit.js)
     const libre = I.scene === W && !S.busy && !W.lock && fade < 0.5;
     if (libre || attend || I.debug.auto || !I.save.data.started) { figeDepuis = 0; if (!box.hidden) box.hidden = true; return; }
     if (!figeDepuis) figeDepuis = now;
@@ -833,6 +834,7 @@
     $('#secours').hidden = true; figeDepuis = 0;
     I.errors.push({ t: Date.now(), msg: 'reprise demandée par le joueur', st: '', n: 1 });
     try { I.battle.abort(W); } catch (e) { /* le combat n'était pas ouvert */ }
+    try { if (I.circuit) I.circuit.abandon(); } catch (e) { /* aucune course n'était ouverte */ }
     S.depth = 0; W.lock = false; W._autoBusy = false; U.menuOpen = false; S.hideDialog(); $('#choice').hidden = true; document.body.classList.remove('in-dialog', 'in-screen', 'in-build', 'en-carton');
     const c = $('#card'); c.classList.remove('on'); c.hidden = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
     I.input.reset(); const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0; document.body.classList.remove('noir');
@@ -945,7 +947,8 @@
        les cartons gardent leur fond sur tout l'écran et posent leur contenu entre les deux (--pad-cote).
      Masquée au choix du joueur (« Manette tactile »), elle ne prend plus aucune place. Ses mesures viennent de la manette
      elle-même (sa place ne dépend pas de la scène) : la marge du système (encoche) est comprise. */
-  const PANNEAU = 276;   // en hauteur, la place que le panneau du combat demande sous la scène, serré, marges comprises (points)
+  const PANNEAU = 276;
+  const enCourse = () => !!(I.circuit && I.circuit.scene && I.scene === I.circuit.scene);   // 2.27 (D216) : une course, ou le tour de moto   // en hauteur, la place que le panneau du combat demande sous la scène, serré, marges comprises (points)
   function padPlace(portrait) {
     const B = document.body, on = B.classList.contains('touch') && !B.classList.contains('sansjoy'); let bas = 0, cote = 0, zone = null;
     if (on) { const r = q => $(q).getBoundingClientRect(), j = r('#pad .joy'), a = r('#pad .a'), b = r('#pad .b'), vw = window.innerWidth, vh = window.innerHeight;
@@ -971,7 +974,7 @@
     // scène prend toute la largeur de l'écran ; sur un écran plus large que 16:9, l'image la remplit et ne montre qu'une
     // partie de sa hauteur (U.coupe ; la vue suit le héros de haut en bas) — toute sa largeur, et pas de bandes noires.
     // Le combat garde son cadrage : toute l'image, aussi grande que l'écran le permet.
-    const zoom = portrait && (I.scene === W || I.battle.active);
+    const zoom = portrait && (I.scene === W || I.battle.active || enCourse());   // 2.27 : la course aussi (circuit.js)
     let w, h, ch = 0;
     if (zoom) { w = aw; h = Math.round(Math.max(Math.min(aw, ah * 0.47, I.battle.active && P.bas ? ah - P.bas - PANNEAU : 1e9), aw * 9 / 16)); }
     else if (immersif && !I.battle.active) { w = aw; const hp = Math.round(aw * 9 / 16); h = Math.min(ah, hp); if (hp > h + 1) ch = hp; }
@@ -1033,7 +1036,7 @@
     if (e.target && e.target.closest && e.target.closest('[data-plein]')) return; pleinTente = true; U.pleinEcran(true); };
   ['fullscreenchange', 'webkitfullscreenchange'].forEach(n => document.addEventListener(n, () => { if (!enPlein()) { try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (x) { /* rien */ } } }));
   // en exploration, le joystick fait marcher (l'écouteur du dessus est celui du monde) ; ailleurs, il choisit
-  const marche = () => I.input.auMonde() && I.scene === W && !U.menuOpen && !I.battle.active;
+  const marche = () => (I.input.auMonde() && I.scene === W && !U.menuOpen && !I.battle.active) || !!(I.circuit && I.circuit.mene && I.circuit.mene());   // 2.27 : pendant une course, il mène (circuit.js)
   U.padMarche = marche;
   function pad() {
     // 2.x — le joystick du pouce gauche (demande du décideur, 19 novembre : « un joystick transparent pour le pouce gauche » ;
@@ -1052,11 +1055,12 @@
     U.padCourir = courir;
     const stopRep = () => { clearTimeout(rep); rep = 0; repD = null; };
     const repeter = d => { stopRep(); repD = d; const t = ms => { rep = setTimeout(() => { if (repD !== d || !I.input.held[d] || marche()) return stopRep(); I.input.emit(d); t(160); }, ms); }; t(420); };
-    const lacher = () => { jid = null; stopRep(); if (bou) bou.style.transform = ''; joy.classList.remove('down', 'court'); I.input.course = false; DIRS.forEach(d => { I.input.held[d] = false; }); };
+    const lacher = () => { jid = null; stopRep(); if (bou) bou.style.transform = ''; joy.classList.remove('down', 'court'); I.input.course = false; I.input.joyAngle = null; DIRS.forEach(d => { I.input.held[d] = false; }); };
     const viser = e => { const r = joy.getBoundingClientRect(), R = r.width / 2, dx = e.clientX - (r.left + R), dy = e.clientY - (r.top + R), L = Math.hypot(dx, dy), k = L > R * 0.58 ? R * 0.58 / L : 1;
       if (bou) bou.style.transform = `translate(${(dx * k).toFixed(1)}px, ${(dy * k).toFixed(1)}px)`;
       courir();
       const nv ={ up: false, down: false, left: false, right: false }, va = marche();
+      I.input.joyAngle = va && L > R * 0.22 && I.circuit && I.circuit.mene && I.circuit.mene() ? Math.atan2(dy, dx) : null;   // 2.27 : le cap que l'on donne à la voiture (circuit.js)
       if (L > R * 0.22) { const ang = Math.atan2(dy, dx) * 180 / Math.PI;
         if (va) { const s8 = Math.round(ang / 45); // de -4 à 4 : 0 à droite, 2 en bas, -2 en haut, ±4 à gauche
           nv.right = s8 >= -1 && s8 <= 1; nv.down = s8 >= 1 && s8 <= 3; nv.left = s8 >= 3 || s8 <= -3; nv.up = s8 >= -3 && s8 <= -1; }
@@ -1069,6 +1073,7 @@
       ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(n => joy.addEventListener(n, e => { if (e.pointerId === jid) lacher(); })); }
     const tap = (sel, a) => { const b = $(sel); b.addEventListener('pointerdown', e => { e.preventDefault(); b.classList.add('down'); I.input.emit(a); }); ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => b.addEventListener(n, () => b.classList.remove('down'))); };
     tap('#pad .a', 'ok');
+    { const a = $('#pad .a'); a.addEventListener('pointerdown', () => { I.input.aTenu = true; }); ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => a.addEventListener(n, () => { I.input.aTenu = false; })); }   // 2.27 : A tenu accélère (circuit.js)
     // B : « retour » au premier appui (frapper, ou revenir d'un cran) ; tenu, il fait courir tant que le joystick est poussé
     { const b = $('#pad .b'); b.addEventListener('pointerdown', e => { e.preventDefault(); b.classList.add('down'); bTenu = true; I.input.emit('retour'); courir(); });
       ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => b.addEventListener(n, () => { b.classList.remove('down'); bTenu = false; courir(); })); }
@@ -1079,7 +1084,7 @@
   /* 2.x — la manette ne recouvre jamais rien : si une page ne peut pas lui laisser la place (un texte qui déborde de sa
      place, sur un tout petit écran), elle s'y efface (body.pad-efface, sans rien changer à la mise en page) plutôt que de
      recouvrir quoi que ce soit, et revient dès que la place est libre. Regardé six fois par seconde. */
-  const SOUS_PAD = '#dialog, #dialog2, #choice, #battle .panel, #buildbar, #hud .obj, #hud .enig, #toasts.montre, #card, .screen, #secours';
+  const SOUS_PAD = '#dialog, #dialog2, #choice, #battle .panel, #buildbar, #hud .obj, #hud .enig, #toasts.montre, #card, .screen, #secours, #course .tableau, #course .rangs, #course .signe, #course .bilan';
   U.padRecouvre = function () {
     const pads = [...document.querySelectorAll('#pad .joy, #pad .a, #pad .b')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0), l = [];
     if (!pads.length) return l;
@@ -1176,7 +1181,7 @@
       I.audio.pump(); // la musique avance aussi à chaque image
       const dt = Math.min(0.05, (now - last) / 1000); last = now; const sc = I.scene;
       if (sc) { try {
-        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active)) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW) || (sc === W) !== !!U._sceneW || (document.body.classList.contains('immersif') && I.battle.active !== !!U._combat)) { U.zoomW = sc === W; layout(); }
+        if ((document.body.classList.contains('portrait') && (sc === W || I.battle.active || enCourse())) !== !!U.zoom || (U.zoom && (sc === W) !== U.zoomW) || (sc === W) !== !!U._sceneW || (document.body.classList.contains('immersif') && I.battle.active !== !!U._combat)) { U.zoomW = sc === W; layout(); }
         if (I.debug.walk && sc === W) { for (let i = 0; i < 40 && I.scene === W; i++) { if (!S.busy && !W.lock) { if (I.debug.walk === 'tap') W.tapStep(); else W.walkStep(); } W.update(1 / 60); } I.input.clearHeld(); }
         else { U.pointerTick(now); if (sc.update) sc.update(dt); }
         G.present(dt, sc.render(dt) || {});

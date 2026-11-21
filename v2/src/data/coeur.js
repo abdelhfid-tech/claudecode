@@ -72,7 +72,9 @@ ISNAD.registerSaga({
     garde: 'Nouveau — se protéger : *Garde* amortit un coup et rend un point de *Niyya*, *Esquive* tente de l’éviter, *Fuir* quitte une rencontre. Avec ◂ ▸, on dépense jusqu’à trois points de Niyya pour frapper plus fort.',
     objets: 'Nouveau — *Objets*. La besace sert aussi en combat.',
     // 2.23 (D212) : dite par Maître Yûnus, à la première arrivée dans les quartiers de la Cité (cite.js)
-    cite: 'Ici, tu peux revenir quand tu veux, Idris : *Revenir en 2084*, à la halte, ou *La Cité-Miroir*, au pied de la Chaîne. Je t’attendrai sur le parvis.'
+    cite: 'Ici, tu peux revenir quand tu veux, Idris : *Revenir en 2084*, à la halte, ou *La Cité-Miroir*, au pied de la Chaîne. Je t’attendrai sur le parvis.',
+    // 2.27 (D216) : dite par Sâlim, au moment de monter derrière lui (circuit.js)
+    virages: { clavier: 'Dans chaque virage, la *flèche* vers l’intérieur du virage : tu te penches avec moi. Bien penché, on garde la vitesse.', doigt: 'Dans chaque virage, le *joystick* vers l’intérieur du virage : tu te penches avec moi. Bien penché, on garde la vitesse.' }
   },
 
   /* ----- 2.x : les postures — trois manières de se tenir devant l'épreuve (textes proposés par l'agent, à valider) ----- */
