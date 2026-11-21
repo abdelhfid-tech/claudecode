@@ -116,6 +116,20 @@
   // coiffe de mailles : un capuchon d'anneaux (I i en damier), taillé sur la capuche
   { const mail = rows => rows.map((r, y) => r.split('').map((m, x) => 'Ttu'.indexOf(m) >= 0 ? ((x + y) % 2 ? 'I' : 'i') : m).join(''));
     HEADS.coiffe_mailles = { d: mail(HEADS.capuche.d), l: mail(HEADS.capuche.l), u: mail(HEADS.capuche.u) }; }
+  // 2.26 (D215) — le khimâr des femmes : l'étoffe suit la tête (ni pointe ni enroulement), couvre le front, les oreilles et le
+  // cou, encadre le visage, puis tombe sur les épaules et la poitrine (de dos, sur le haut du dos) — ses lignes au-delà de
+  // la onzième descendent sur le corps (COUVRE)
+  HEADS.khimar = {
+    d: ['................', '................', '.....tTTTtu.....', '....tTTTTTtu....', '...tTTTTTTttu...', '...TTtvVVvttu...',
+        '...TtvVVVVvtu...', '...TtVVVVVVtu...', '...TtVVVVVVtu...', '...TtvVVVVvuu...', '...tTtvVVvtuu...',
+        '..tTTTttttTTtu..', '..TTTTtTTtTTtu..', '..TTTtTTTTtTuu..', '..tTTtTTTTtTuu..', '....uttTTttu....'],
+    l: ['................', '................', '.....tTTTTt.....', '....tTTTTTTtu...', '...tTTTTTTtttu..', '...vVVVtTTtttu..',
+        '...VVVVVtTtttu..', '...VVVVVtTttuu..', '...VVVVvtTttuu..', '...vVVVvttttuu..', '....vVvtttttu...',
+        '...tTTTtttttu...', '..tTTTTtTTttu...', '..TTTTtTTTttu...', '..tTTtTTTtuu....', '...uttTtu.......'],
+    u: ['................', '................', '.....tTTTTt.....', '....tTTTTTtu....', '...tTTTTTTttu...', '...TTTTTTTttu...',
+        '...TTTTTTTttu...', '...TTTTTTTttu...', '...TTTTTTTtuu...', '...tTTTTTTtuu...', '...tTTTTTTtuu...',
+        '..tTTTTTTTtttu..', '..TTTTTTTTTTtu..', '..TTTtTTTTtTuu..', '..tTTtTTTTtTuu..', '...uTTTTTTttu...', '.....uttttu.....']
+  };
 
   /* ---------- gabarits : corps ----------
      R r buste · S s jupe · L l bas de jupe (jambes si la tenue est courte) · M entre-jambes · Z ourlet
@@ -194,8 +208,18 @@
     // de 2084 (la Cité-Miroir) : la capuche et l'habit court de la ville, sans le néon (précision du décideur : « les autres
     // habitants de la Cité-Miroir ne doivent pas ressembler à Idris »)
     citadin: { coiffe: 'capuche', court: true, sombre: true, cite: true },
-    bedouin: { coiffe: 'keffieh', drape: true, trim: '#3a2a20' } // gens des tribus : la couleur du cordon et du galon (look.trim) dit le clan
+    bedouin: { coiffe: 'keffieh', drape: true, trim: '#3a2a20' }, // gens des tribus : la couleur du cordon et du galon (look.trim) dit le clan
+    // 2.26 (D215 ; le décideur, 21 novembre : « elles doivent ressembler à des femmes (pudiques) » ; « Visage découvert ») —
+    // toute femme de fiction : le khimâr, une étoffe qui couvre les cheveux, les oreilles, le cou et les épaules, encadre le
+    // visage et tombe sur la poitrine ; une robe longue et ample jusqu'aux pieds, sans ceinture, les manches jusqu'aux
+    // poignets ; des couleurs unies, sans galon doré. Le visage reste découvert (visage()), jamais de barbe. Le moteur pose la
+    // tenue (kindOf) : un récit écrit le type et les couleurs, rien d'autre
+    femme: { coiffe: 'khimar', femme: true }
   };
+  // la tenue des femmes, que le récit ne change pas : ni une autre coiffe, ni une robe courte, ni ceinture, motif, armure ou écharpe
+  const TENUE_FEMME = { coiffe: 'khimar', court: false, motif: undefined, armure: undefined, cuirasse: false, echarpe: false, chale: false };
+  // les coiffes qui couvrent aussi les épaules et la poitrine (2.26) : à genoux comme debout, et jamais sur une main
+  const COUVRE = { khimar: true };
 
   // les gens sans nom ne se ressemblent pas tous : coiffe et manteau choisis d'après leurs couleurs, toujours les mêmes pour un même personnage
   const VARIE = [['imama', 'long'], ['calotte', 'aucun'], ['imama_queue', 'long'], ['imama_large', 'epaule'], ['imama_haute', 'aucun'], ['calotte', 'epaule']];
@@ -209,6 +233,7 @@
     if (K.troupe && look.sel !== undefined && !look.coiffe && !look.item) { const v = TROUPES[K.troupe][look.sel % TROUPES[K.troupe].length]; K.coiffe = v[0]; K.item = v[1]; if (v[2]) { K.armure = v[2]; K.cuirasse = false; } }
     if (K.varie && !look.coiffe && !look.manteau) { const v = VARIE[I.hash((look.robe || '') + (look.head || '') + (look.cloak || '')) % VARIE.length]; K.coiffe = v[0]; K.manteau = v[1]; }
     ['coiffe', 'item', 'manteau', 'motif', 'echarpe', 'court', 'cuirasse', 'chale', 'armure'].forEach(k => { if (look[k] !== undefined) K[k] = look[k]; });
+    if (K.femme) Object.assign(K, TENUE_FEMME);   // 2.26 (D215) : la tenue des femmes, quoi que porte la description
     if (look.rawi && look.kind === 'cyber') K.passeur = true;   // 2.18 : Idris « le passeur », dessiné comme les autres (le grand personnage ; le petit ne change pas)
     return K;
   }
@@ -236,7 +261,7 @@
   const INK = '#150f1d';
   function palette(look, K) {
     const robe = look.robe || '#8a7355', head = look.head || (K.coiffe === 'litham' ? (look.veil || '#1f2f55') : K.coiffe === 'capuche' ? robe : '#e6dcc4');
-    const cloak = look.cloak || G.shade(robe, 0.68), trim = look.trim || (look.aura ? vivid(look.aura) : K.trim || mix(cloak, '#d9b45a', 0.5));
+    const cloak = look.cloak || G.shade(robe, 0.68), trim = look.trim || (look.aura ? vivid(look.aura) : K.trim || (K.femme ? mix(cloak, '#2a1c3a', 0.35) : mix(cloak, '#d9b45a', 0.5)));   // la tenue des femmes (D215) : le bas de la robe, d'un ton plus sombre de l'étoffe — rien de doré
     const [T, t, u] = ramp(K.neon || K.cite ? mix(head, '#6272a4', 0.3) : head), [R, r] = ramp(robe), q = ramp(robe)[2], [C, c, k] = ramp(cloak), A = mix(trim, '#ffffff', 0.12), a = mix(trim, '#20143a', 0.42);
     const legs = look.legs || '#4a3d32', [L, l, z] = K.court ? ramp(legs) : [R, r, q];
     const p = { T, t, u, R, r, S: R, s: r, C, c, k, A, a, N: mix(head, '#ffffff', 0.3), F: '#7a5433', f: '#46301e',
@@ -347,6 +372,7 @@
         g[y][x] = K.armure === 'mailles' ? ((x + y) % 2 ? 'I' : 'i') : K.armure === 'lamelles' ? ((y - b0) % 2 ? 'i' : (x % 2 ? 'I' : 'i')) : K.armure === 'cuir' ? ((m === 'R' || m === 'S') ? 'W' : 'w') : ((x + y) % 3 === 0 ? 'r' : m); } }
     if (K.echarpe && !kneel) { const pts = key === 'd' ? [[5, 0], [6, 0], [6, 1], [7, 1], [7, 2], [8, 2], [8, 3], [9, 3]] : key === 'l' ? [[4, 1], [5, 1], [5, 2], [6, 2], [6, 3]] : [];
       pts.forEach(([x, dy]) => { if ('RrSs'.indexOf(g[b0 + dy][x]) >= 0) g[b0 + dy][x] = 'A'; }); }
+    if (K.femme) for (let y = b0; y < H; y++) for (let x = 0; x < W; x++) { if (g[y][x] === 'A') g[y][x] = 'R'; else if (g[y][x] === 'a') g[y][x] = 'r'; }   // 2.26 (D215) : la robe sans ceinture, la taille non marquée
     // attributs tenus ou portés (un ou plusieurs)
     const hip = b0 + 5;
     for (const it of [].concat(K.item || [], (look.porte || []).filter(o => RAWI_OBJETS.indexOf(o) < 0))) { // look.porte (2.x) : l'objet que le joueur donne à son râwî — l'équipement ne le lit pas ; les siens (D193) se dessinent plus bas, à chaque taille
@@ -386,8 +412,9 @@
     // tête (11 lignes), inclinée ou abaissée selon la pose
     const head = HEADS[K.coiffe] || HEADS.imama, hrows = head[key] || head.d, h0 = (kneel ? b0 - 11 : petit) + hy, hx = hy && key === 'l' ? -1 : 0;
     {
-    const nt = neonTete(K, hrows, 1);   // le bandeau du râwî sous le turban et le chèche : ses néons (D193)
-    for (let j = 0; j < 11; j++) for (let x = 0; x < W; x++) put(x + hx, h0 + j, nt ? nt(j, x, hrows[j][x]) : hrows[j][x]);
+    const nt = neonTete(K, hrows, 1), couvre = COUVRE[K.coiffe];   // le bandeau du râwî sous le turban et le chèche : ses néons (D193)
+    // (une coiffe qui couvre aussi les épaules, 2.26 : ses lignes au-delà de la onzième descendent sur le corps, jamais sur une main)
+    for (let j = 0; j < hrows.length; j++) for (let x = 0; x < W; x++) { if (couvre && j >= 11 && (g[h0 + j] || [])[x + hx] === 'N') continue; put(x + hx, h0 + j, nt ? nt(j, x, hrows[j][x]) : hrows[j][x]); }
     if (K.coiffe === 'imama_queue' && !kneel) { // le pan du turban retombe sur l'épaule (de dos : entre les épaules)
       if (key === 'd') { put(13 + hx, h0 + 11, 't'); put(13 + hx, h0 + 12, 'u'); } else if (key === 'l') { put(13 + hx, h0 + 11, 't'); put(12 + hx, h0 + 12, 'u'); }
       else { put(7, h0 + 11, 'T'); put(8, h0 + 11, 't'); put(7, h0 + 12, 't'); put(8, h0 + 12, 'u'); put(7, h0 + 13, 'u'); } }
@@ -961,6 +988,23 @@
       l: h.concat(['........TTuuuuuTTTTTTttu........', '.........vVVVVvuTTtTTTtu........', '........vVVVVVVuTTTtTTttu.......', '........VVVVVVVuTTtTTTttu.......', '........VVVVVVVuTTTTtTtuu.......', '........VVVVVVVuTtTTTttuu.......',
         '........vVVVVVvuTTTtTTtuu.......', '.........vVVVVvuTTtTTttuu.......', '..........vVVvuuTtTTTtuuu.......', '............tuuTTTtTtuuu........', '............tuTTtTTTtuuu........', '...........tTuTTTtTTtuuu........',
         '...........TtuTtTTTttuu.........']) }); }
+  // 2.26 (D215) — le khimâr : l'étoffe suit le crâne (ni pointe, ni enroulement, ni bandeau), couvre le front, les oreilles et
+  // le cou, serre l'ovale du visage, se ferme sous le menton, puis tombe sur les épaules et la poitrine, plus bas au milieu
+  // (au-delà de la vingtième ligne, sur le corps : COUVRE) ; de profil, le visage au-devant, l'étoffe de la tempe à la nuque
+  tete('khimar', {
+    d: [VIDE, VIDE, VIDE, '.............tTTTtu.............', '...........tTHTTTTttu...........',
+      '..........tTHTTTTTTttu..........', '.........tTHTTTTTTTTttu.........', '.........TTTTTTTTTTTttu.........', '.........TTTttttttttTtu.........', '.........TTtuvVVVVvutuu.........',
+      '.........TTtvVVVVVVvtuu.........', '.........TTtVVVVVVVVtuu.........', '.........TTtVVVVVVVVtuu.........', '.........TTtVVVVVVVVtuu.........', '.........TTtVVVVVVVVtuu.........',
+      '.........TTtvVVVVVVvtuu.........', '.........tTTtvVVVVvttuu.........', '..........tTTtvVVvtttu..........', '........tTTTTTTttttTTTtu........', '......tTTTTTTTTTTTTTTTTTtu......',
+      '.....tTTTTtTTTTTTTTTTtTTTtu.....', '....tTTTTtTTTTTTTTTTTTtTTTtu....', '....TTTTtTTTTTTTTTTTTTTtTTuu....', '.....TTTtTTTTTTTTTTTTTTtTuu.....', '......uTTtTTTTTTTTTTTTtTuu......',
+      '.......uttTTTTTTTTTTTTtuu.......', '.........uutTTTTTTTTtuu.........', '...........uutTTTTtuu...........'],
+    l: [VIDE, VIDE, VIDE, '............tTTTTTtu............', '..........tTHTTTTTTttu..........',
+      '.........tTHTTTTTTTTttu.........', '........tTHTTTTTTTTTTttu........', '........TTTTTTTTTTTTTttu........', '........TTTttttTTTTTTttu........', '........vVVVVvtTTTTTTttu........',
+      '........VVVVVVvtTTTTTttu........', '........VVVVVVVtTTTTTttu........', '........VVVVVVVtTTTTTttu........', '........VVVVVVVtTTTTTttu........', '........VVVVVVvtTTTTttuu........',
+      '........vVVVVVvtTTTTttuu........', '.........vVVVVvttTTTttuu........', '..........vVVvttTTTtttuu........', '.........utTTTTTTTTTttu.........', '........tTTTTTTtTTTTTttu........',
+      '.......tTTTTTTtTTTTTTttuu.......', '.......TTTTTTtTTTTTTTttuu.......', '.......TTTTTtTTTTTTTtttuu.......', '.......uTTTTtTTTTTTttuu.........', '.......uTTTtTTTTTtuu............',
+      '.......utTTtTTTtu...............', '........uttTtu..................']
+  });
   /* ---------- les têtes, de dos ----------
      Pas de voile : de dos, on ne voit que l'étoffe ou le fer. Les turbans partagent la nuque ; les casques, le camail. */
   { const dos = (nom, rows) => { const t = voileUni(gabarit('tête ' + nom + '.u', rows, 20)); if (t) throw new Error('tête native ' + nom + '.u : ' + t); if (rows.some(r => /[Vv]/.test(r))) throw new Error('tête native ' + nom + '.u : un voile, de dos'); TETES[nom].u = rows; };
@@ -986,7 +1030,14 @@
     dos('keffieh', TETES.keffieh.d.slice(0, 6).concat(['........tTTTtTTTTTTtTTtu........', '........TTTTTTTtTTTTTTtu........', '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........',
       '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........', '........TTtTTTTtTTTTtTtu........', '.......tTTtTTTTtTTTTtTTtu.......',
       '.......TTTtTTTTtTTTTtTTtu.......', '......tTTTtTTTTtTTTTtTTTtu......', '......TTTTtTTTTtTTTTtTTTtu......', '.......tTTTtTTTtTTTtTTTtu.......', '.........tTTtTTtTTtTTtu.........', '...........tTtTtTtTtu...........',
-      '.............tTtTtu.............', '...............tu...............'])); }
+      '.............tTtTtu.............', '...............tu...............']));
+    // le khimâr, de dos : l'étoffe seule, une couture au milieu, qui tombe sur le haut du dos (2.26)
+    dos('khimar', [VIDE, VIDE, VIDE, '.............tTTTtu.............', '...........tTHTTTTttu...........',
+      '..........tTHTTTTTTttu..........', '.........tTTTTTTTTTTttu.........', '.........TTTTTTTTTTTttu.........', '.........TTTTTTTTTTTttu.........', '.........TTTTTTTTTTTttu.........',
+      '.........TTTTTTTTTTTttu.........', '.........TTTTTTTTTTTttu.........', '.........TTTTTTTTTTTttu.........', '.........TTTTTTTTTTTttu.........', '.........TTTTTTTTTTTttu.........',
+      '.........TTTTTTTTTTttuu.........', '.........tTTTTTTTTTttuu.........', '.........tTTTTTTTTTttuu.........', '........tTTTTTTTTTTTTttu........', '......tTTTTTTTTTTTTTTTTttu......',
+      '.....tTTTTTtTTTTTTTTTtTTttu.....', '....tTTTTtTTTTTTTTTTTtTTTttu....', '....TTTTTtTTTTTTTTTTTtTTTtuu....', '....TTTTtTTTTTTTTTTTTTtTTtuu....', '.....uTTTtTTTTTTTTTTTtTTtuu.....',
+      '......uTTtTTTTTTTTTTTtTtuu......', '........uttTTTTTTTTTttuu........', '..........uttTTTTTTtuu..........', '............uuttttuu............']); }
   Object.keys(HEADS).forEach(c => { if (!TETES[c] || !TETES[c].d || !TETES[c].l || !TETES[c].u) throw new Error('coiffe sans tête native : ' + c); });
 
   /* ---------- Idris « le passeur » (2.18 ; décision du décideur, 19 novembre) ----------
@@ -1112,6 +1163,8 @@
     if (K.chale && !kneel) for (let y = cou; y < cou + 4; y++) for (let x = 0; x < W2; x++) if ('Cck'.indexOf(L[y][x]) >= 0) L[y][x] = (x + y) % 3 ? 'T' : 't';
     if (K.drape && !kneel) for (let y = cou; y < cou + 4; y++) for (let x = 0; x < W2; x++) if ((x <= 10 || x >= 21) && 'Cck'.indexOf(L[y][x]) >= 0) L[y][x] = y < cou + 2 ? 't' : 'u'; // l'étoffe de tête retombe sur les épaules
     if (K.raies) [3, 6, 9].forEach(dy => { for (let x = 0; x < W2; x++) if ('RrCc'.indexOf(L[cou + dy][x]) >= 0) L[cou + dy][x] = 'T'; });
+    // 2.26 (D215) : la robe sans ceinture, d'une seule étoffe du col à l'ourlet — le modelé ne marque pas la taille
+    if (K.femme) for (let y = cou; y < H2; y++) for (let x = 0; x < W2; x++) { const m = L[y][x]; if (m === 'A' || m === 'R') L[y][x] = 'S'; else if (m === 'a' || m === 'r') L[y][x] = 's'; }
     if (K.neon && K.passeur) habitIdris(L, K, key, cou, kneel, A);   // Idris : le néon en deux lignes, la ceinture, la besace, la carrure
     else if (K.neon) { const x = key === 'd' ? 15 : key === 'l' ? 11 : -1; if (x >= 0) for (let y = cou + 3; y < cou + 10; y++) if ('RrSsIiWw'.indexOf(L[y][x]) >= 0) L[y][x] = 'Y'; /* sur le buste seulement : une manche qui passe devant le cache */
       for (let y = cou + 10; y < cou + 12; y++) for (let x2 = 0; x2 < W2; x2++) if ('Aa'.indexOf(L[y][x2]) >= 0) L[y][x2] = 'y'; }
@@ -1128,8 +1181,9 @@
     // la tête, inclinée ou abaissée selon la pose ; le cimier suit le sommet du casque
     const y0 = cou - 18 + 2 * hy + (Gt ? Gt.tete[1] : 0), x0 = (hy && key === 'l' ? -2 : 0) + (Gt ? Gt.tete[0] : 0), pose1 = (x, y, m) => { if (x < 0 || x >= W2 || y < 0 || y >= H2) hors++; else { L[y][x] = m; am[y][x] = 0; fin[y][x] = K.passeur && 'VvN4'.indexOf(m) < 0 ? 0 : 1;   /* la tête d'Idris prend le modelé du corps (le cou du passeur, 4, à plat) */
       if (sans) { sans.L[y][x] = m; sans.am[y][x] = 0; sans.fin[y][x] = estPasseur(look, K) ? fin[y][x] : 1; tm[y][x] = 1; } } };   /* la lanterne à la main, la tête du passeur garde le même modelé */
-    const nt = neonTete(K, tt, 2);   // le bandeau du râwî sous le turban et le chèche : ses néons (D193)
-    for (let j = 0; j < (kneel ? 20 : tt.length); j++) for (let x = 0; x < W2; x++) if (tt[j][x] !== '.') pose1(x + x0, y0 + j, nt ? nt(j, x, tt[j][x]) : tt[j][x]); // à genoux, le pan du turban ne descend pas
+    const nt = neonTete(K, tt, 2), couvre = COUVRE[nom];   // le bandeau du râwî sous le turban et le chèche : ses néons (D193)
+    // à genoux, le pan du turban ne descend pas ; une coiffe qui couvre les épaules (2.26) y descend, et jamais sur une main
+    for (let j = 0; j < (kneel && !couvre ? 20 : tt.length); j++) for (let x = 0; x < W2; x++) if (tt[j][x] !== '.') { if (couvre && j >= 18 && (L[y0 + j] || [])[x + x0] === 'N') continue; pose1(x + x0, y0 + j, nt ? nt(j, x, tt[j][x]) : tt[j][x]); }
     if (A && A.apres) A.apres.forEach(([x, y, m]) => { const Y = bT + y; if (Y >= 0 && Y < H2 && L[Y][x] !== 'V' && L[Y][x] !== 'v') pose1(x, Y, m); });   // une attitude : la main devant la tête, jamais sur le voile
     if (K.cimier) { const xs = key === 'l' ? [10, 21] : [14, 17]; for (let x = xs[0]; x <= xs[1]; x++) { let y = 0; while (y < tt.length && tt[y][x] === '.') y++; if (y < tt.length) for (let dy = 1; dy <= 2; dy++) pose1(x + x0, y0 + Math.max(dy - 1, y - dy), 'X'); } }
     if (dir === 2) [L, am, fin].concat(sans ? [sans.L, sans.am, sans.fin, tm] : []).forEach(t => t.forEach(row => row.reverse()));
@@ -1235,10 +1289,14 @@
         else if (m === '.' && avant) { L[y][x] = '.'; fin[y][x] = 0; }
         else avant = false; } });
   }
+  // l'âge, d'après le type : 0 enfant · 1 adulte · 1,5 grisonnant · 2 âgé
+  const ageDe = (look, h) => { const kd = look.kind || 'homme'; return kd === 'enfant' ? 0 : kd === 'ancien' ? 2 : (kd === 'savant' || kd === 'moine') ? ((h >>> 3) % 2 ? 2 : 1.5) : 1; };
+  // la barbe : 0 glabre · 1 courte · 2 pleine (le râwî : glabre, sauf choix) — jamais chez un enfant, ni chez une femme (2.26, D215)
+  const barbeDe = (look, K, h, age) => age === 0 || K.femme ? 0 : age >= 2 ? 2 : age === 1 && [0, 1, 2].indexOf(look.barbe) >= 0 ? look.barbe : look.rawi ? RAWI_BARBE : [2, 1, 2, 0, 1, 2][(h >>> 7) % 6];
   function visage(look, K, dir, pose, s, x0, x1, y0, y1, L) {
     if (K.lit || look.sansVisage || dir === 3 || x1 < x0) return null;
     const h = signe(look);
-    const kd = look.kind || 'homme', age = kd === 'enfant' ? 0 : kd === 'ancien' ? 2 : (kd === 'savant' || kd === 'moine') ? ((h >>> 3) % 2 ? 2 : 1.5) : 1; // 0 enfant · 1 adulte · 1,5 grisonnant · 2 âgé
+    const age = ageDe(look, h);
     let peau = look.teint || TEINTS[h % TEINTS.length]; if (K.sombre && !K.passeur) peau = mix(peau, '#1c1430', 0.34);            // sous une capuche, le visage est dans l'ombre
     // 2.x — le râwî composé (D.RAWI) : un teint plus sombre que tous les TEINTS garde le blanc de l'œil jusque sur le
     // personnage de 32 × 48 (sinon l'œil s'y perd) ; la même ombre pour tous, pour que la gamme reste dans l'ordre
@@ -1246,7 +1304,7 @@
     const ombre = mix(peau, '#3a1e30', 0.30), nuit = mix(peau, '#221632', 0.5), clair = mix(peau, '#fff1d6', 0.28);
     const adulte = age === 1;                                                                                          // la barbe et le poil choisis (look.barbe, look.poil) : pour un adulte seulement — l'âge vient du type
     const poil = age >= 2 ? '#ece7dc' : age > 1 ? '#aaa296' : (adulte && typeof look.poil === 'string' && look.poil) || POILS[(h >>> 5) % POILS.length], poilO = mix(poil, '#20143a', 0.4);
-    const barbe = age === 0 ? 0 : age >= 2 ? 2 : adulte && [0, 1, 2].indexOf(look.barbe) >= 0 ? look.barbe : look.rawi ? RAWI_BARBE : [2, 1, 2, 0, 1, 2][(h >>> 7) % 6];  // 0 : glabre · 1 : courte · 2 : pleine (le râwî : glabre, sauf choix)
+    const barbe = barbeDe(look, K, h, age);
     const oeil = '#1b1420', blanc = mix('#fbf3e2', peau, 0.15), levre = mix(peau, '#6a2420', 0.5), sourcil = mix(peau, age >= 1.5 ? '#8a8378' : poil, 0.7);
     const w = x1 - x0 + 1, hh = y1 - y0 + 1, fente = hh < 5 * s, profil = dir === 1 || dir === 2, clos = pose === 'prie' || pose === 'accable';
     const P = estPasseur(look, K) && !fente;                                                                          // le passeur, sous sa capuche
@@ -1309,6 +1367,7 @@
   }
   G.teint = look => { const K = kindOf(look); if (K.lit || look.sansVisage) return null; return look.teint || TEINTS[signe(look) % TEINTS.length]; };
   G.aVisage = look => !(kindOf(look).lit || look.sansVisage); // un Compagnon n'en a pas, ni ceux que le jeu laisse sans visage
+  G.barbe = look => { const K = kindOf(look); if (K.lit || look.sansVisage) return null; const h = signe(look); return barbeDe(look, K, h, ageDe(look, h)); };   // pour les contrôles : la barbe que visage() peindrait (0 : aucune)
   // le visage que le moteur tire d'une apparence d'adulte (sa marque) : le teint, la barbe, le poil — pour le râwî composé (perso.js)
   G.traits = look => { const h = signe(look); return { teint: TEINTS[h % TEINTS.length], barbe: look.rawi ? RAWI_BARBE : [2, 1, 2, 0, 1, 2][(h >>> 7) % 6], poil: POILS[(h >>> 5) % POILS.length] }; };   // le râwî : glabre (décision du décideur)
   /* ---------- le rendu doux (choix du décideur : « applique ce rendu partout ») ----------
@@ -1513,7 +1572,7 @@
   };
   // 2.x — pour les contrôles (silhouettes.js) : ce que le moteur tire d'une apparence — la coiffe, la coupe, la longueur de la
   // robe, le néon (la marque du râwî) — et la grille des matières du petit personnage (16 × 24 : une lettre par point)
-  G.allure = look => { const K = kindOf(look); return { coiffe: HEADS[K.coiffe] ? K.coiffe : 'imama', manteau: K.manteau || 'long', court: !!K.court, neon: !!K.neon }; };
+  G.allure = look => { const K = kindOf(look); return { coiffe: HEADS[K.coiffe] ? K.coiffe : 'imama', manteau: K.manteau || 'long', court: !!K.court, neon: !!K.neon, femme: !!K.femme }; };
   G.petiteGrille = (look, dir, frame, pose) => grid(look, dir || 0, frame || 0, pose).g.map(l => l.join(''));
   G.KINDS = KINDS; G.COIFFES = Object.keys(HEADS); G.RAWI_OBJETS = RAWI_OBJETS.slice();
   // une coiffe montre-t-elle un liseré, à une taille ou une autre (le bandeau d'un turban, de la calotte ; le chèche, de dos,

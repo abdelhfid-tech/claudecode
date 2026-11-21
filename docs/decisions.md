@@ -1932,6 +1932,27 @@ pages privées de son compte.
   raccourcir certains textes ? La liste française (fichier, chapitre, clé, pages, début) est écrite par le contrôle dans
   `v2/.smoke/longueurs/pages-fr-360x640.txt` (et `pages-fr-390x844.txt`, vide aujourd'hui) ; l'agent n'en raccourcit aucun.
   Les shorts qui filment une réplique s'écriront plus lentement : à refaire avec les autres, plus tard.
+- [ ] **D215. Les femmes du jeu, vêtues pudiquement, le visage découvert (version 2.26 ; demande du décideur, 21 novembre)
+  — le dessin, à valider sur captures.** « Attention s'il y a des femmes (spectatrice etc) elles doivent ressembler à des
+  femmes (pudiques) » ; à la question du visage : « Visage découvert ». *Qui.* Les seules femmes du jeu sont six passantes
+  de fiction des quartiers de la Cité (`c_quartiers`, 2.23, D212) : une joueuse, une cliente, une passante, une promeneuse,
+  une spectatrice (assise dans la tribune), une passante du parvis. Elles portaient la capuche ou le manteau des citadins :
+  on ne les distinguait pas des hommes. Aucune autre (sagas, veillées, contenu commun, paquet d'essai, promotion) ; aucune
+  femme n'est ajoutée (D49 tient toujours), aucun texte ne change. *Ce qui a changé.* Un type nouveau, `femme`, dont le
+  moteur pose la tenue, quoi que dise la description : le **khimâr** (une coiffe nouvelle, `khimar`, dessinée dans les deux
+  tailles et les trois vues) — l'étoffe suit le crâne, couvre le front, les oreilles et le cou, serre l'ovale du visage, se
+  ferme sous le menton et tombe sur les épaules et la poitrine (de dos, sur le haut du dos ; de profil et de dos, l'étoffe
+  seule), à genoux comme debout, sans jamais couvrir une main ; une **robe longue et ample** jusqu'aux pieds, sans ceinture
+  (la taille n'est pas marquée), les manches jusqu'aux poignets, le manteau du récit par-dessus ; le bas de la robe d'un
+  ton plus sombre de l'étoffe, rien de doré, ni bijou, ni motif, ni inscription. Le **visage découvert**, peint comme celui
+  de tous (un teint et des yeux tirés des couleurs du personnage), **jamais de barbe** (`barbeDe()`). Les couleurs que le
+  récit donnait à chacune restent. Le khimâr n'est pas une coiffe qu'un récit ou le râwî puisse prendre ; un récit écrit
+  `kind: 'femme'` et des couleurs, et le validateur refuse sur une femme une coiffe, une robe courte, un motif, une
+  armure, une cuirasse, une écharpe ou un châle. Règle pour la suite dans `AGENTS.md` ; `v2/docs/architecture.md`,
+  « Les personnages » et « Les visages ». Contrôle : `silhouettes.js`, « la tenue des femmes », et leur ressemblance au
+  râwî et aux Compagnons. *À valider* : le dessin du khimâr et de la robe (hauteur du khimâr sur la poitrine, sa
+  largeur sur les épaules), jugé sur les captures (390 × 844 et 844 × 390, les trois réglages) ; le mot « khimâr » dans le
+  code et les documents (le jeu ne l'écrit nulle part) ; les couleurs, laissées telles que la 2.23 les avait données.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

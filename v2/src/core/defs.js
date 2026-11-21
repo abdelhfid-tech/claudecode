@@ -141,7 +141,12 @@
   D.TEMPS = { recul: 0.3, niyya: 1, serenite: 10, perdu: 0.25, garde: 0.5, rodent: { sawfa: 1, lahw: 1, long_espoir: 0.35 } };
   D.FX_TEMPS = ['recul', 'baisse', 'perdu'];
 
-  D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber', 'savant', 'marchand', 'berbere', 'bedouin', 'citadin'];
+  D.NPC_KINDS = ['homme', 'ancien', 'soldat', 'romain', 'perse', 'moine', 'enfant', 'compagnon', 'marin', 'cyber', 'savant', 'marchand', 'berbere', 'bedouin', 'citadin', 'femme'];
+  // 2.26 (D215 ; le décideur, 21 novembre : « Attention s'il y a des femmes (spectatrice etc) elles doivent ressembler à des
+  // femmes (pudiques) » ; « Visage découvert ») — femme : toute femme de fiction. Le moteur lui pose sa tenue (sprites.js :
+  // le khimâr, la robe longue et ample sans ceinture, le visage découvert, jamais de barbe) ; un récit n'écrit que le type
+  // et les couleurs (et, s'il le veut, le manteau) : ni coiffe, ni robe courte, ni motif, armure, cuirasse, écharpe ou châle
+  D.TENUE_FEMME = ['coiffe', 'court', 'motif', 'armure', 'cuirasse', 'echarpe', 'chale'];
   // 2.x (D193) — les gens de 2084 : le râwî (cyber : lui seul porte la bande et la ceinture de néon, sa marque) et les autres
   // habitants de la Cité-Miroir (citadin : la même ville, sans la marque). Ni casque ni tunique de départ, et la silhouette garde
   // sa coiffe au combat (gear.js) ; le meneur a la lueur de 2084 (world.js)

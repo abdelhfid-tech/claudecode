@@ -1292,7 +1292,9 @@ sprite agrandi deux fois.
   pan d'un turban, le camail d'une capuche ou d'une coiffe de mailles, le voile d'un chèche, les pans de l'étoffe du
   désert). Une tête ne doit jamais être plus large que les épaules à hauteur du visage : c'est ce qui faisait, le
   16 novembre, des « têtes d'extraterrestres » (D151). Les mailles d'une tête s'écrivent « # » : `mailler()` choisit
-  l'anneau clair ou sombre selon sa place.
+  l'anneau clair ou sombre selon sa place. Le khimâr des femmes (2.26, D215) descend plus bas, sur les épaules et la
+  poitrine — dans le petit personnage aussi, au-delà de sa onzième ligne — ; à genoux comme debout, et jamais sur une
+  main (`COUVRE`).
 - De dos (lot B2) : le corps a les mêmes colonnes que de face, `C` en haut puis `B` — le pan du dos : la couleur du
   manteau ; sans manteau, la robe ; en tenue courte, les jambes. Les têtes de dos n'ont pas de voile : une nuque d'étoffe
   enroulée sous les turbans, le camail sous les casques. `grand(…, 2)` retrace le tout en 64 × 96 (voir « La définition
@@ -1311,7 +1313,7 @@ d'un bandeau de deux et d'un tour de visage de dix, que les turbans partagent (`
 leur camail. **Ajouter une pose** : ses lignes dans `POSES` et dans `ALLURES`, à partir du corps au repos (`varie()`).
 
 `node v2/tools/silhouettes.js` le vérifie sur tout ce que le jeu peut dessiner — les héros, les gens, les rangs, les
-tenues du râwî, les quatorze coiffes sous chaque manteau, les variantes d'équipement :
+tenues du râwî, les quinze coiffes sous chaque manteau (le khimâr, sur une femme), les variantes d'équipement :
 
 1. les petits sprites sont ceux relevés avant ce travail (`tools/essais/silhouettes.json`) : sinon « ÉCART » ;
 2. l'interrupteur rend le grand sprite d'avant, à l'identique : sinon « ÉCART » ;
@@ -1382,6 +1384,18 @@ visage » (D165, exigence 2).*
   (« Le râwî composé »).
 - **Où.** Sur le grand personnage, dans les trois dessins. Les petits personnages (16 × 24, le dessin d'origine sur les
   cartes) restent ceux de la 1.32 : personne n'y a de visage.
+- **Les femmes** (2.26, D215 ; le décideur, 21 novembre : « elles doivent ressembler à des femmes (pudiques) » ; « Visage
+  découvert »). Toute femme de fiction est du type `femme` : le moteur lui pose la tenue des femmes (`KINDS.femme`,
+  `TENUE_FEMME`, que la description ne change pas) — le khimâr (`khimar`, dans `HEADS` et `TETES`, trois vues ; il suit le
+  crâne, couvre le front, les oreilles et le cou, serre l'ovale du visage, tombe sur les épaules et la poitrine, sur le
+  haut du dos ; de dos, l'étoffe seule) et la robe longue et ample, sans ceinture (les lettres `A a` et `R r` du corps y
+  deviennent `S s` : une seule étoffe du col à l'ourlet, la taille non marquée), le bas de la robe d'un ton plus sombre
+  de l'étoffe, jamais doré. Le visage y est peint comme celui de tous, découvert ; `barbeDe()` ne donne jamais de barbe à
+  une femme (`G.barbe`, pour les contrôles). Le khimâr n'est pas dans `D.COIFFES` : seul ce type le porte ; le râwî ne le
+  prend pas. Un récit écrit `kind: 'femme'` et ses couleurs, rien d'autre de la tenue (`regles.js`, `D.TENUE_FEMME`).
+  Contrôle : `silhouettes.js`, « la tenue des femmes » (les six passantes des quartiers sont de ce type ; khimâr, robe
+  longue, ni ceinture ni galon dans aucune image, un visage, aucune barbe) et leur ressemblance au râwî (toutes ses
+  compositions) et aux Compagnons, sous 0,85.
 
 ### Le mouvement
 

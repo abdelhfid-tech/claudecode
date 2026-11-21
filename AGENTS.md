@@ -24,8 +24,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   réimporte à l'identique), `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
   se gardent), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel ; aucun
   Compagnon ne porte un trait dans son voile, de face, de profil, de dos, dans ses pas, ses poses, ses gestes de
-  frappe ni dans son tracé fin ; les autres personnages ont un visage de face et de profil, rien de dos :
-  « SILHOUETTES CONFORMES »), `node v2/tools/dedales.js` (les labyrinthes de la noosphère : dix mille tirages par
+  frappe ni dans son tracé fin ; les autres personnages ont un visage de face et de profil, rien de dos ; chaque femme
+  porte le khimâr et la robe longue, sans ceinture ni barbe : « SILHOUETTES CONFORMES »), `node v2/tools/dedales.js` (les labyrinthes de la noosphère : dix mille tirages par
   profondeur, chaque lieu présent, du bon côté, relié aux autres ; chaque plan a sa pièce interdite, bien posée, et reste
   case pour case celui d'avant elle : « DÉDALES CONFORMES »), `node v2/tools/descente.js`
   (dans le jeu : le labyrinthe d'un chapitre, son chrono, la remontée, la reprise ; la descente du râwî et ses quatre
@@ -106,6 +106,19 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   jamais (type `compagnon`), ni ceux de `D.SANS_VISAGE` (`defs.js`, par récit, sous le nom exact que le récit leur
   donne). Ajouter un personnage d'histoire à un récit, c'est se demander s'il y entre. `v2/docs/architecture.md`,
   « Les visages ». Contrôle : `silhouettes.js`.
+- Dans la 2.x (2.26, D215 ; le décideur, 21 novembre : « Attention s'il y a des femmes (spectatrice etc) elles doivent
+  ressembler à des femmes (pudiques) » ; sur le visage : « Visage découvert »), **toute femme de fiction du jeu porte la
+  tenue des femmes** : le khimâr, qui couvre les cheveux, les oreilles, le cou et les épaules, encadre le visage et tombe
+  sur la poitrine (de dos et de profil, l'étoffe seule) ; une robe longue et ample jusqu'aux pieds, sans ceinture, les
+  manches jusqu'aux poignets ; des couleurs unies, rien de doré, ni bijou, ni motif, ni inscription ; le visage découvert,
+  jamais de barbe. Le moteur la pose : le type `femme` (`D.NPC_KINDS` ; `KINDS.femme` et `TENUE_FEMME`, dans `sprites.js`),
+  la coiffe `khimar` (`HEADS`, `TETES` ; elle descend sur les épaules, à genoux aussi, jamais sur une main : `COUVRE`), que
+  ce type seul porte — elle n'est pas dans `D.COIFFES` : ni un récit ni le râwî ne la prennent — et `barbeDe()`, qui ne
+  donne jamais de barbe à une femme. Un récit écrit `kind: 'femme'` et des couleurs (le manteau s'il le veut), rien
+  d'autre : `regles.js` refuse sur elle une coiffe, une robe courte, un motif, une armure, une cuirasse, une écharpe, un
+  châle (`D.TENUE_FEMME`). Les femmes du jeu sont aujourd'hui les six passantes des quartiers (`c_quartiers`). Contrôle :
+  `silhouettes.js` (« la tenue des femmes » ; leur ressemblance au râwî et aux Compagnons). Le dessin est à valider sur
+  captures.
 - Dans la 2.x, la Cité-Miroir est une « ville de verre » (D206, décision du décideur du 19 novembre) : le vieux quartier de
   pierre, ses tours à vent trapues et ses claustras au pied de tours de verre, un viaduc, une crique ; au crépuscule (sa
   scène vers 29 à 30 de luminance), la vue y regarde plus haut que celui qui mène (`env.regard`, `W.regard`). La ville qui

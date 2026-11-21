@@ -62,7 +62,9 @@ const V2 = path.join(__dirname, '..'), FICHE = path.join(__dirname, 'essais', 's
 const url = 'file://' + path.resolve(V2, process.env.JEU || 'index.html'); // JEU=../index.html : le même contrôle sur la version légère
 const mode = process.argv[2] || '';
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); };
-const COIFFES = ['imama', 'imama_haute', 'imama_large', 'imama_queue', 'calotte', 'casque', 'casque_turban', 'casque_cuir', 'casque_bandes', 'coiffe_mailles', 'capuche', 'tiare', 'litham', 'keffieh'];
+const COIFFES = ['imama', 'imama_haute', 'imama_large', 'imama_queue', 'calotte', 'casque', 'casque_turban', 'casque_cuir', 'casque_bandes', 'coiffe_mailles', 'capuche', 'tiare', 'litham', 'keffieh', 'khimar'];
+// 2.26 (D215) — les femmes du jeu (les passantes des quartiers, c_quartiers) : chacune porte la tenue des femmes (type « femme »)
+const FEMMES = ['idris/q_joueuse', 'idris/q_cliente', 'idris/q_passante', 'idris/q_promeneuse', 'idris/q_spectatrice', 'idris/q_voisine'];
 
 /* ---------- dans la page : l'inventaire de ce que le jeu peut dessiner ---------- */
 const INVENTAIRE = COIFFES => {
@@ -115,7 +117,7 @@ const INVENTAIRE = COIFFES => {
     if (k === 'soldat' || k === 'romain') for (let i = 0; i < 7; i++) pose('types', k + ' ' + i, { kind: k, robe: '#6a5a40', head: '#e2d8c2', sel: i }); });
   // toutes les coiffes, sous chaque manteau ; puis les motifs et les étoffes
   const neutre = { kind: 'homme', robe: '#8a7355', head: '#e6dcc4', cloak: '#5a4632' };
-  COIFFES.forEach(c => ['aucun', 'epaule', 'long', 'ample'].forEach(m => pose('coiffes', c + ' · ' + m, Object.assign({}, neutre, { coiffe: c, manteau: m }))));
+  COIFFES.forEach(c => ['aucun', 'epaule', 'long', 'ample'].forEach(m => pose('coiffes', c + ' · ' + m, Object.assign({}, neutre, c === 'khimar' ? { kind: 'femme' } : {}, { coiffe: c, manteau: m }))));   // le khimâr : sur une femme (D215)
   [{ motif: 'rayures' }, { motif: 'bandes', manteau: 'ample' }, { echarpe: true }, { chale: true }, { court: true }, { court: true, manteau: 'aucun' }, { cuirasse: true }].forEach((v, i) =>
     pose('étoffes', Object.keys(v).join('+'), Object.assign({}, neutre, { coiffe: 'imama', manteau: 'long' }, v)));
   // l'équipement, tel que gear.js le pose sur une silhouette : coiffe, armure, objets tenus
@@ -454,7 +456,14 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
       habitants.concat(compagnons).forEach(q => { const k = cle(q.look), mes = comps.filter(c => c.cle === k); if (!mes.length) return; const im = VUES.map(v => vue(q.look, v));
         mes.forEach(c => { if (!c.im) c.im = VUES.map(v => vue(c.L, v)); paires++; im.forEach((x, n) => { const s = S(c.im[n], x), ou = ['face', 'profil', '', 'dos'][VUES[n][0]] + ', ' + (VUES[n][1] === 1 ? '16 × 24' : '32 × 48');
           if (s > max.s) max = { s, qui: q.nom, dit: c.dit, ou }; if (s >= 0.85) trop.push(`${q.nom} et « ${c.dit} » (${ou}) : ${s.toFixed(2)}`); }); }); });
-      return { faux, sans, avec, comps: comps.length, habitants: habitants.length, compagnons: compagnons.length, paires, max: { s: max.s, qui: max.qui, dit: max.dit, ou: max.ou }, trop };
+      // 2.26 (D215) — les femmes ne ressemblent ni à une composition du râwî (quelle qu'en soit la coiffe), ni à un Compagnon
+      let maxF = { s: 0 }, pairesF = 0; const tropF = [], femmes = liste.filter(q => (q.groupe === 'héros' || q.groupe === 'gens') && G.allure(q.look).femme);
+      femmes.forEach(q => { const im = VUES.map(v => vue(q.look, v));
+        comps.map(c => ({ dit: '« ' + c.dit + ' »', o: c, L: c.L })).concat(compagnons.map(x => ({ dit: x.nom, o: x, L: x.look }))).forEach(a => { if (!a.o.im) a.o.im = VUES.map(v => vue(a.L, v)); pairesF++;
+          im.forEach((x, n) => { const s = S(a.o.im[n], x), ou = ['face', 'profil', '', 'dos'][VUES[n][0]] + ', ' + (VUES[n][1] === 1 ? '16 × 24' : '32 × 48');
+            if (s > maxF.s) maxF = { s, qui: q.nom, dit: a.dit, ou }; if (s >= 0.85) tropF.push(`${q.nom} et ${a.dit} (${ou}) : ${s.toFixed(2)}`); }); }); });
+      return { faux, sans, avec, comps: comps.length, habitants: habitants.length, compagnons: compagnons.length, paires, max: { s: max.s, qui: max.qui, dit: max.dit, ou: max.ou }, trop,
+        femmes: femmes.length, pairesF, maxF: { s: maxF.s, qui: maxF.qui, dit: maxF.dit, ou: maxF.ou }, tropF };
     }, inv.map(q => ({ groupe: q.groupe, nom: q.nom, look: q.look })));
     await page.context().close();
     if (!Mq) ko('ABSENT gfx.allure ou gfx.petiteGrille : ce moteur ne dit pas qui porte la marque du râwî');
@@ -463,7 +472,34 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
       else ok(`la marque du râwî : la bande et la ceinture de néon ne sont qu'à lui — ${Mq.sans} silhouettes du jeu n'en ont pas un point (16 × 24, 32 × 48 et 64 × 96, dans les quatre vues), et ses ${Mq.avec} silhouettes (ses ensembles, ses compositions, son équipement) les portent, en petit, en grand et dans le tracé fin`);
       if (Mq.trop.length) { Mq.trop.slice(0, 10).forEach(f => ko('ÉCART il ressemble à un autre : ' + f)); if (Mq.trop.length > 10) console.log(`   … et ${Mq.trop.length - 10} autre(s)`); }
       else ok(`personne ne ressemble au râwî : ses ${Mq.comps} compositions (les six ensembles, puis chaque coiffe, coupe, longueur, écharpe et étoffe), même sans leur néon, face aux ${Mq.habitants} habitants de 2084 et de la Citadelle et aux ${Mq.compagnons} Compagnons de même coiffe et de même longueur de robe (${Mq.paires} paires, de face, de profil et de dos, en 16 × 24 et en 32 × 48) : au plus ${Mq.max.s.toFixed(2)} — ${Mq.max.qui} et « ${Mq.max.dit} » (${Mq.max.ou}) —, sous le seuil de 0,85`);
+      if (Mq.tropF.length) { Mq.tropF.slice(0, 10).forEach(f => ko('ÉCART une femme ressemble au râwî ou à un Compagnon : ' + f)); if (Mq.tropF.length > 10) console.log(`   … et ${Mq.tropF.length - 10} autre(s)`); }
+      else if (Mq.femmes) ok(`les femmes ne ressemblent ni au râwî ni à un Compagnon : ${Mq.femmes} femmes des récits face aux ${Mq.comps} compositions du râwî (toutes coiffes) et aux ${Mq.compagnons} Compagnons (${Mq.pairesF} paires, de face, de profil et de dos, en 16 × 24 et en 32 × 48) : au plus ${Mq.maxF.s.toFixed(2)} — ${Mq.maxF.qui} et ${Mq.maxF.dit} (${Mq.maxF.ou}) —, sous le seuil de 0,85`);
     }
+    // 8. la tenue des femmes (2.26, D215 ; le décideur, 21 novembre : « elles doivent ressembler à des femmes (pudiques) » ; « Visage
+    // découvert ») : les femmes du jeu (FEMMES) sont du type « femme » ; chaque femme — elles, le type, le khimâr sous chaque manteau —
+    // porte le khimâr et la robe longue, sans ceinture (aucune lettre A ou a, en 16 × 24, en 32 × 48 ni dans le tracé fin, dans les
+    // quatre vues, ses pas, son souffle et ses attitudes), a un visage, jamais de barbe ; et le khimâr ne coiffe qu'une femme
+    page = await ouvrir();
+    const Fm = await page.evaluate(([liste, six]) => {
+      const G = window.ISNAD.gfx; if (!G.allure || !G.barbe) return null;
+      const faux = [], femmes = liste.filter(q => G.allure(q.look).femme), noms = new Set(femmes.map(q => q.nom)); let images = 0;
+      six.forEach(n => { if (!liste.some(q => q.nom === n)) faux.push(n + ' : absente du jeu'); else if (!noms.has(n)) faux.push(n + ' : ne porte pas la tenue des femmes (type « femme »)'); });
+      liste.forEach(q => { if (!G.allure(q.look).femme && G.allure(q.look).coiffe === 'khimar') faux.push(q.nom + ' : le khimâr sur qui n’est pas une femme'); });
+      femmes.forEach(q => { const L = q.look, A = G.allure(L);
+        if (A.coiffe !== 'khimar') faux.push(q.nom + ' : la coiffe « ' + A.coiffe + ' », et non le khimâr');
+        if (A.court) faux.push(q.nom + ' : une robe courte');
+        if (G.barbe(L) !== 0) faux.push(q.nom + ' : une barbe');
+        if (!G.aVisage(L)) faux.push(q.nom + ' : sans visage (il reste découvert)');
+        // (le souffle est l'image du repos, remontée d'un point par grand() : ses lettres sont celles du repos)
+        [0, 1, 2, 3].forEach(d => [[0], [1], [2], [0, 'triste'], [0, 'assis'], [0, 'accable']].forEach(([f, p]) => { images++;
+          const g = [G.petiteGrille(L, d, f, p).join(''), G.charGrille(L, d, f, p).lignes.join(''), G.charGrille(L, d, f, p, 2).lignes.join('')];
+          if (g.some(s => /[Aa]/.test(s))) faux.push(q.nom + ' · ' + ['face', 'profil gauche', 'profil droit', 'dos'][d] + (p ? ' · ' + p : ' · image ' + f) + ' : une ceinture ou un galon (A, a)'); })); });
+      return { faux, femmes: femmes.length, images };
+    }, [inv.map(q => ({ groupe: q.groupe, nom: q.nom, look: q.look })), FEMMES]);
+    await page.context().close();
+    if (!Fm) ko('ABSENT gfx.allure ou gfx.barbe : ce moteur ne dit pas qui porte la tenue des femmes');
+    else if (Fm.faux.length) { Fm.faux.slice(0, 10).forEach(f => ko('ÉCART ' + f)); if (Fm.faux.length > 10) console.log(`   … et ${Fm.faux.length - 10} autre(s)`); }
+    else ok(`la tenue des femmes : les ${FEMMES.length} femmes des récits sont du type « femme » ; ${Fm.femmes} silhouettes de femme portent le khimâr et la robe longue, sans ceinture ni galon (${Fm.images} images × 16 × 24, 32 × 48 et le tracé fin), ont un visage et aucune barbe ; le khimâr ne coiffe personne d’autre`);
   }
   if (errors.length) ko(`ÉCART erreur console : ${[...new Set(errors)].slice(0, 3).join(' | ').slice(0, 400)}`);
   /* ---------- redessin : le nouveau dessin validé devient la référence ---------- */
