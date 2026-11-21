@@ -324,6 +324,7 @@
 {"k":"p9c2lh.j","fr":"Frapper ce qui rôde","t":"ضرب ما يحوم","ou":"D.OUTILS.frappe.nom"},
 {"k":"swug9t.i","fr":"Prendre une figure","t":"اتّخاذ موقف","ou":"D.OUTILS.postures.nom"},
 {"k":"1j25kz4.k","fr":"Revenir dans la Cité","t":"العودة إلى المدينة","ou":"D.OUTILS.cite.nom"},
+{"k":"17aebt0.j","fr":"Prendre les virages","t":"أخذ المنعطفات","ou":"D.OUTILS.virages.nom"},
 {"k":"9uq88z.8","fr":"Le héros","t":"الإقدام","ou":"D.POSTURES.heros.nom"},
 {"k":"1wug937.8","fr":"en héros","t":"بإقدام","ou":"D.POSTURES.heros.court"},
 {"k":"dh5qb2.7","fr":"Le sage","t":"البصيرة","ou":"D.POSTURES.sage.nom"},

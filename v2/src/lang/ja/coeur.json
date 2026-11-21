@@ -364,6 +364,8 @@
 {"k":"2hbbnp.5t","fr":"Nouveau — se protéger : *Garde* amortit un coup et rend un point de *Niyya*, *Esquive* tente de l’éviter, *Fuir* quitte une rencontre. Avec ◂ ▸, on dépense jusqu’à trois points de Niyya pour frapper plus fort.","t":"ここから身を守る技が使えます。*守り*は攻撃をやわらげ、*ニーヤ*が1戻ります。*かわす*は攻撃をよけようとし、*逃げる*は出会った戦いから抜けます。◂ ▸ でニーヤを最大3まで使うと、より強く打てます。","ou":"lecons.garde","note":"2.19 (combat) : écrit par l’agent, à relire"},
 {"k":"1a51w1j.1f","fr":"Nouveau — *Objets*. La besace sert aussi en combat.","t":"ここから*持ち物*が使えます。旅袋は戦いでも役に立ちます。","ou":"lecons.objets"},
 {"k":"1letof2.43","fr":"Ici, tu peux revenir quand tu veux, Idris : *Revenir en 2084*, à la halte, ou *La Cité-Miroir*, au pied de la Chaîne. Je t’attendrai sur le parvis.","t":"ここへは、いつでも戻ってこられるぞ、イドリース。休息の*2084年へ戻る*か、伝承の鎖の下の*鏡の街*からだ。広場で待っている。","ou":"lecons.cite"},
+{"k":"1p8wjmv.3a","fr":"Dans chaque virage, la *flèche* vers l’intérieur du virage : tu te penches avec moi. Bien penché, on garde la vitesse.","t":"カーブのたびに、カーブの内側へ*矢印キー*。おれといっしょに体を傾けるんだ。うまく傾ければ、スピードは落ちない。","ou":"lecons.virages.clavier"},
+{"k":"1thsp49.3c","fr":"Dans chaque virage, le *joystick* vers l’intérieur du virage : tu te penches avec moi. Bien penché, on garde la vitesse.","t":"カーブのたびに、カーブの内側へ*スティック*。おれといっしょに体を傾けるんだ。うまく傾ければ、スピードは落ちない。","ou":"lecons.virages.doigt"},
 {"k":"1jo954q.m","fr":"Au sortir de la prière","t":"礼拝を終えて","ou":"portes.priere.titre"},
 {"k":"1hgjxuu.20","fr":"La prière est dite. Le cœur est calme, et la noosphère est toute proche.","t":"礼拝は終わった。心は静まり、精神圏はすぐそばにある。","ou":"portes.priere.invite"},
 {"k":"17czzf6.d","fr":"Dans le dhikr","t":"ズィクルのうちに","ou":"portes.dhikr.titre"},

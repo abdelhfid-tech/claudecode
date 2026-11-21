@@ -324,6 +324,7 @@
 {"k":"p9c2lh.j","fr":"Frapper ce qui rôde","t":"Striking What Prowls","ou":"D.OUTILS.frappe.nom"},
 {"k":"swug9t.i","fr":"Prendre une figure","t":"Taking a Stance","ou":"D.OUTILS.postures.nom","note":"D184 : Prendre une figure ; l'anglais garde stance (glossaire § 2.8)"},
 {"k":"1j25kz4.k","fr":"Revenir dans la Cité","t":"Return to the City","ou":"D.OUTILS.cite.nom"},
+{"k":"17aebt0.j","fr":"Prendre les virages","t":"Taking the Bends","ou":"D.OUTILS.virages.nom"},
 {"k":"9uq88z.8","fr":"Le héros","t":"The Hero","ou":"D.POSTURES.heros.nom"},
 {"k":"1wug937.8","fr":"en héros","t":"Hero’s stance","ou":"D.POSTURES.heros.court","note":"D184 : « en héros » ; la manière prise, pas un titre (exigence 24)"},
 {"k":"dh5qb2.7","fr":"Le sage","t":"The Sage","ou":"D.POSTURES.sage.nom"},

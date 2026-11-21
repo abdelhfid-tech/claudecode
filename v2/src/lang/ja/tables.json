@@ -324,6 +324,7 @@
 {"k":"p9c2lh.j","fr":"Frapper ce qui rôde","t":"さまようものを打つ","ou":"D.OUTILS.frappe.nom"},
 {"k":"swug9t.i","fr":"Prendre une figure","t":"姿勢をとる","ou":"D.OUTILS.postures.nom"},
 {"k":"1j25kz4.k","fr":"Revenir dans la Cité","t":"街へ戻る","ou":"D.OUTILS.cite.nom"},
+{"k":"17aebt0.j","fr":"Prendre les virages","t":"カーブを曲がる","ou":"D.OUTILS.virages.nom"},
 {"k":"9uq88z.8","fr":"Le héros","t":"英雄","ou":"D.POSTURES.heros.nom"},
 {"k":"1wug937.8","fr":"en héros","t":"英雄の姿勢","ou":"D.POSTURES.heros.court"},
 {"k":"dh5qb2.7","fr":"Le sage","t":"賢者","ou":"D.POSTURES.sage.nom"},

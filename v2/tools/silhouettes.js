@@ -64,7 +64,7 @@ const mode = process.argv[2] || '';
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); };
 const COIFFES = ['imama', 'imama_haute', 'imama_large', 'imama_queue', 'calotte', 'casque', 'casque_turban', 'casque_cuir', 'casque_bandes', 'coiffe_mailles', 'capuche', 'tiare', 'litham', 'keffieh', 'khimar'];
 // 2.26 (D215) — les femmes du jeu (les passantes des quartiers, c_quartiers) : chacune porte la tenue des femmes (type « femme »)
-const FEMMES = ['idris/q_joueuse', 'idris/q_cliente', 'idris/q_passante', 'idris/q_promeneuse', 'idris/q_spectatrice', 'idris/q_voisine'];
+const FEMMES = ['idris/q_joueuse', 'idris/q_cliente', 'idris/q_passante', 'idris/q_promeneuse', 'idris/q_spectatrice', 'idris/q_voisine', 'idris/q_parieuse'];   // (2.27 : la parieuse de la tribune)
 
 /* ---------- dans la page : l'inventaire de ce que le jeu peut dessiner ---------- */
 const INVENTAIRE = COIFFES => {
