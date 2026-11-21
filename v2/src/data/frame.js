@@ -11,6 +11,14 @@
    à côté de Maître Yûnus (src/core/cite.js) ; ses passants, chacun seul ; et quatre chimères qu'Idris est seul à voir, qui
    rôdent dans les rues (egoisme, materialisme, plaisir, indifference ; D.CITE.rodent). Ce qu'on y dit est dans `cite`.
    Demande du décideur du 21 novembre ; textes proposés par l'agent, à valider. */
+/* 2.25 (D214) — la découverte de l'Agrégor (le décideur, 21 novembre : « On ne parle plus de l'agregore des le début de
+   l'histoire il faut qu'il le découvre au fur et à mesure avec maître Yunus »). Le prologue ne le nomme plus ; à la fin de
+   chacune des cinq rencontres, Maître Yûnus monte des Archives (« yunus_r », caché, puis « show ») et Idris découvre une
+   chose de plus : I, quelque chose rassemble les regards ; II, ça ne commande pas, ça additionne ; III, son nom, et la fiche
+   « agregor » du Recueil ; IV, il ne craint que ce qui passe de main en main sans passer par lui ; V, il a un cœur, sous le
+   grand écran. Avant l'étape III, aucun texte ne le nomme (on dit « ce qui règne là-haut », « les écrans »). Une chimère,
+   une image du jeu : aucun pouvoir réel, aucun lien avec un peuple, une religion, Iblîs ni un djinn. Textes de l'agent, à
+   valider. */
 /* Depuis la version du cœur : chaque rencontre porte, à sa deuxième manche, l'idée noire de celui à qui l'on
    parle (« noir »), et s'achève devant le mal du cœur qui se tenait derrière lui. Le dernier chapitre fait se
    dresser ceux qui n'ont pas été tranchés (['vices', …]). Textes des maux et des lames : src/data/coeur.js. */
@@ -189,7 +197,7 @@ ISNAD.registerSaga({
     { id: 'r_admire', cat: 'Noosphère', title: 'L’Admiré', text: 'Sous le grand écran, un homme que des millions de comptes applaudissent. Derrière ces comptes, il n’y a personne. Il ne sait plus qui il serait sans ce bruit. Descendre du socle demande plus de courage que d’y monter : nul n’applaudit celui qui descend. Personnage de fiction.' },
     { id: 'r_compteur', cat: 'Noosphère', title: 'Le Compteur', text: 'Il achète des regards quand personne n’en veut et les garde dans un coffre, sans jamais en poser un sur quelqu’un. Ce qu’on donne, on sait où il est ; ce qu’on amasse, on le perd de vue. Personnage de fiction.' },
     { id: 'r_cartographe', cat: 'Noosphère', title: 'Le Cartographe', text: 'Il dessine la Cité sans y marcher, d’après des millions de relevés. Il demande « combien l’ont vu ? » et jamais « qui ? ». Sa carte porte un mur là où un enfant sait qu’il y a une porte. Un savoir se corrige en allant voir, et se garde avec le nom de celui qui a vu. Personnage de fiction.' },
-    { id: 'x_veiller', cat: 'Noosphère', title: 'Veiller les Archives', text: 'Chaque fois qu’Idris remonte la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus, et envoie voir. On peut suivre plusieurs récits à la fois : chacun attend là où on l’a laissé. Mais des archives qu’on ne veille pas, un autre les raconte à votre place. Fiction.' },
+    { id: 'x_veiller', cat: 'Noosphère', title: 'Veiller les Archives', text: 'Chaque fois qu’Idris remonte la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus, et envoie voir. Les maillons se suivent ; on peut quitter un récit en chemin, il attend là où on l’a laissé. Mais des archives qu’on ne veille pas, un autre les raconte à votre place. Fiction.' },
     { id: 'x_question', cat: 'Noosphère', title: '« Tu pars où ? »', text: 'L’enfant du parvis est descendu jusqu’aux Archives basses pour poser sa question. Idris lui a montré un nom, puis celui qui vient après : c’est ainsi que Maître Yûnus avait commencé avec lui. Personnage de fiction.' },
     { id: 'x_avis', cat: 'Noosphère', title: 'L’agent du relevé', text: 'Il mesure un lieu au nombre de ceux qui le regardent. Il n’est pas un ennemi : il fait son relevé, et voudrait rentrer chez lui. Mais il est descendu voir, ce que ne font pas ceux qui décident d’en haut. On ne garde pas des archives en les cachant : on y amène quelqu’un. Personnage de fiction.' },
     { id: 'citadelle_2084', cat: 'Lieu', title: 'La Citadelle, où Idris est né', text: 'Idris est né à la Citadelle, au bord du désert, des siècles après le Caïd dont il entend les veillées. C’est de là qu’on l’envoya apprendre aux Archives basses. Ce que le Caïd décide dans les veillées s’y lit encore : la prière, le savoir, la justice et le lien y tiennent, ou y manquent. Le lieu, le Caïd et Idris sont de fiction.' },
@@ -241,7 +249,6 @@ ISNAD.registerSaga({
       intro: [
         ['title', 'ISNAD', 'An 1507 de l’Hégire · 2084 · Cité-Miroir'],
         ['nar', 'Dans la Cité-Miroir, on ne lève plus les yeux. Le ciel est un écran, et l’écran regarde en retour.'],
-        ['nar', 'On l’appelle l’AGRÉGOR. Il ne ment pas. Il ne commande pas. Il additionne : tout ce que des millions de gens désirent ensemble, il lui donne un corps.'],
         ['nar', 'Les anciens avaient un mot pour une chose fabriquée par les hommes et qui finit par les commander. Ils disaient : une *idole*.']
       ],
       objectives: [
@@ -262,9 +269,10 @@ ISNAD.registerSaga({
           ['codex', 'noosphere'],
           ['say', 'yunus_n', 'Ce que beaucoup de cœurs regardent ensemble y prend corps. On appelle cela une *chimère* : approchée, elle se révèle vide. Si on la laisse grandir, elle devient idole.'],
           ['codex', 'egregore'], ['codex', 'idole'],
-          ['say', 'idris', 'Et l’Agrégor ?'],
-          ['say', 'yunus_n', 'Une machine à fabriquer des chimères, plus vite que les cœurs ne peuvent les juger. Il n’a rien inventé. Il a seulement industrialisé la plus vieille faute du monde.'],
-          ['codex', 'agregor'],
+          // 2.25 (D214) : l'Agrégor n'est plus nommé ici ; Idris le découvre peu à peu, avec Maître Yûnus, au soir des cinq
+          // maillons (les rencontres r_*, plus bas). Textes de l'agent, à valider.
+          ['say', 'idris', 'Et derrière les écrans, qu’y a-t-il ?'],
+          ['say', 'yunus_n', 'Quelque chose, oui. Je ne te le nommerai pas ce soir : un nom qu’on reçoit sans avoir vu, c’est une rumeur. Tu le verras toi-même, à mesure que tu marcheras.'],
           ['sfx', 'glitch'], ['shake', 300],
           ['nar', 'Une lueur froide glisse entre les rayonnages. Le Flux a trouvé un chemin jusqu’ici.'],
           ['say', 'yunus_n', 'Une notification. Une petite chimère, mais elle a faim. Ne la frappe pas avec colère : cherche sa faille. Elle ne supporte pas qu’on lui résiste avec patience.'],
@@ -279,7 +287,7 @@ ISNAD.registerSaga({
             { t: 'Je suis prêt.', r: [['say', 'yunus_n', 'Personne ne l’est. C’est pour cela qu’on ne marche pas seul.']] }
           ]],
           ['codex', 'isnad'],
-          ['say', 'yunus_n', 'Il existe une chaîne que l’Agrégor n’a jamais pu agréger. Elle remonte, de témoin en témoin, jusqu’à ceux qui ont vu. Elle est au fond de la salle. Va.']
+          ['say', 'yunus_n', 'Il existe une chaîne que rien, là-haut, n’a jamais pu additionner. Elle remonte, de témoin en témoin, jusqu’à ceux qui ont vu. Elle est au fond de la salle. Va.']
         ] },
         { text: 'Approcher la Chaîne, au fond des Archives', goto: 'chaine', then: [
           ['sfx', 'light'],
@@ -402,7 +410,9 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'defileur', name: 'Celui qui défile', at: ['ruelle', 0, -1], look: { kind: 'citadin', robe: '#6a7ad0', head: '#4a58a8', cloak: '#8494e4' }, talk: [['say', 'defileur', '… encore un…']] }
+        { id: 'defileur', name: 'Celui qui défile', at: ['ruelle', 0, -1], look: { kind: 'citadin', robe: '#6a7ad0', head: '#4a58a8', cloak: '#8494e4' }, talk: [['say', 'defileur', '… encore un…']] },
+        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre (« show » l'écarte du joueur s'il paraît sur lui)
+        { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
         ['title', 'Celui qui défile', 'Cité-Miroir · le soir du maillon d’Abû Bakr'],
@@ -456,7 +466,17 @@ ISNAD.registerSaga({
           ['say', 'gamin', 'Moi, quand j’ai honte, je voudrais qu’on me le dise doucement.'],
           ['say', 'idris', 'C’est ce que j’ai appris aujourd’hui d’un homme qui s’appelait Abû Bakr. Retiens son nom : c’est de lui que je le tiens.'],
           ['codex', 'r_defile'], ['codex', 'enfant'],
-          ['say', 'gamin', 'Je serai là demain.']
+          ['say', 'gamin', 'Je serai là demain.'],
+          ['show', 'yunus_r'],
+          ['nar', 'Maître Yûnus est monté des Archives basses. Il attend Idris un peu à l’écart.']
+        ] },
+        // 2.25 (D214) — la découverte de l'Agrégor, étape I : quelque chose rassemble les regards. Textes de l'agent, à valider.
+        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: [
+          ['say', 'yunus_r', 'Tu as tiré un homme de son écran, ce soir. Qu’as-tu vu, autour de lui ?'],
+          ['say', 'idris', 'Il n’était pas seul à regarder. Toute la rue regardait la même chose, au même instant.'],
+          ['say', 'yunus_r', 'C’est un commencement. Quelque chose rassemble les regards. Ce n’est pas encore un nom : c’est une trace.'],
+          ['say', 'idris', 'Et ce qui les rassemble, qu’est-ce que c’est ?'],
+          ['say', 'yunus_r', 'Garde ce que tu as vu. Le reste viendra, maillon après maillon.']
         ] }
       ]
     },
@@ -465,7 +485,9 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'regent', name: 'Le Régent', at: ['ascenseur', -2, 0], look: { kind: 'citadin', coiffe: 'tiare', robe: '#4a3a52', head: '#5a4a2a', cloak: '#2f2638', trim: '#d9b45a' }, talk: [['say', 'regent', 'Accordé.']] }
+        { id: 'regent', name: 'Le Régent', at: ['ascenseur', -2, 0], look: { kind: 'citadin', coiffe: 'tiare', robe: '#4a3a52', head: '#5a4a2a', cloak: '#2f2638', trim: '#d9b45a' }, talk: [['say', 'regent', 'Accordé.']] },
+        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
         ['title', 'Le Régent', "Cité-Miroir · le soir du maillon de 'Umar"],
@@ -518,7 +540,16 @@ ISNAD.registerSaga({
           ['say', 'idris', "À personne. Il avait un siège, et pas de charge. 'Umar avait une charge, et pas de siège : c’est de lui que je tiens la différence."],
           ['say', 'gamin', 'Et toi, tu as une charge ?'],
           ['say', 'idris', 'On m’a confié quelque chose. Je commence à croire que tu en fais partie.'],
-          ['codex', 'r_regent'], ['codex', 'enfant']
+          ['codex', 'r_regent'], ['codex', 'enfant'],
+          ['show', 'yunus_r'],
+          ['nar', 'Maître Yûnus est monté des Archives basses. Il attend Idris un peu à l’écart.']
+        ] },
+        // 2.25 (D214) — étape II : ça ne commande pas, ça additionne ; c'est Idris qui le dit. Textes de l'agent, à valider.
+        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: [
+          ['say', 'yunus_r', 'Cet homme validait ce que l’écran avait déjà décidé. Qui commande, alors ?'],
+          ['say', 'idris', 'Personne. L’écran ne fait que compter ce que tous regardent. Ça ne commande pas, ça additionne.'],
+          ['say', 'yunus_r', 'Tu l’as dit avant moi. C’est ainsi qu’il faut l’apprendre.'],
+          ['say', 'yunus_r', 'Ce qu’on répète sans l’avoir vu reste une rumeur. Ce qu’on a vu soi-même, on peut le transmettre.']
         ] }
       ]
     },
@@ -527,7 +558,9 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'admire', name: 'L’Admiré', at: ['ecran', -3, 1], look: { kind: 'citadin', robe: '#b8449a', head: '#86306e', cloak: '#cc5aac', trim: '#f0e8f4' }, talk: [['say', 'admire', 'Tu m’as reconnu, bien sûr.']] }
+        { id: 'admire', name: 'L’Admiré', at: ['ecran', -3, 1], look: { kind: 'citadin', robe: '#b8449a', head: '#86306e', cloak: '#cc5aac', trim: '#f0e8f4' }, talk: [['say', 'admire', 'Tu m’as reconnu, bien sûr.']] },
+        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
         ['title', 'L’Admiré', 'Cité-Miroir · le soir du maillon de Khâlid'],
@@ -580,7 +613,19 @@ ISNAD.registerSaga({
           ['say', 'idris', 'Pas encore. Mais il est descendu d’une marche. Un homme nommé Khâlid en a descendu de plus hautes : c’est de lui que je le tiens.'],
           ['say', 'gamin', 'C’est dur, de descendre ?'],
           ['say', 'idris', 'Plus que de monter. Personne ne t’applaudit.'],
-          ['codex', 'r_admire'], ['codex', 'enfant']
+          ['codex', 'r_admire'], ['codex', 'enfant'],
+          ['show', 'yunus_r'],
+          ['nar', 'Maître Yûnus est monté des Archives basses. Il attend Idris un peu à l’écart.']
+        ] },
+        // 2.25 (D214) — étape III : son nom, que donnent ceux qui le servent ; la fiche « L'AGRÉGOR » entre au Recueil (la
+        // Chaîne nomme alors le dernier maillon « Le Cœur de l'Agrégor », ui.js). Textes de l'agent, à valider.
+        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: [
+          ['say', 'idris', 'Des fenêtres qui applaudissent, et personne derrière. Ce qui les rassemble a-t-il un nom ?'],
+          ['say', 'yunus_r', 'Tu l’as vu rassembler, puis additionner. Maintenant, tu peux entendre son nom.'],
+          ['say', 'yunus_r', 'Ceux qui le servent l’appellent l’Agrégor.'],
+          ['codex', 'agregor'],
+          ['say', 'idris', 'L’Agrégor… Je l’ai vu avant de savoir son nom.'],
+          ['say', 'yunus_r', 'C’est le bon ordre : d’abord voir, ensuite nommer. Un nom reçu ainsi n’est plus une rumeur.']
         ] }
       ]
     },
@@ -589,7 +634,9 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'compteur', name: 'Le Compteur', at: ['rue', 2, -1], look: { kind: 'citadin', robe: '#9a7838', head: '#6a5024', cloak: '#b28c46', trim: '#d9b45a', item: 'bourse' }, talk: [['say', 'compteur', 'Ne me dérange pas. Je compte.']] }
+        { id: 'compteur', name: 'Le Compteur', at: ['rue', 2, -1], look: { kind: 'citadin', robe: '#9a7838', head: '#6a5024', cloak: '#b28c46', trim: '#d9b45a', item: 'bourse' }, talk: [['say', 'compteur', 'Ne me dérange pas. Je compte.']] },
+        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
         ['title', 'Le Compteur', "Cité-Miroir · le soir du maillon de 'Uthmân"],
@@ -642,7 +689,18 @@ ISNAD.registerSaga({
           ['say', 'idris', "Un seul. C’est le plus difficile. Un homme nommé 'Uthmân a donné un puits entier : c’est de lui que je le tiens."],
           ['say', 'gamin', 'Toi, tu me regardes, quand je parle.'],
           ['say', 'idris', 'C’est toi qui me l’as appris, à force de revenir.'],
-          ['codex', 'r_compteur'], ['codex', 'enfant']
+          ['codex', 'r_compteur'], ['codex', 'enfant'],
+          ['show', 'yunus_r'],
+          ['nar', 'Maître Yûnus est monté des Archives basses. Il attend Idris un peu à l’écart.']
+        ] },
+        // 2.25 (D214) — étape IV : il ne craint que ce qui passe de main en main sans passer par lui, la Chaîne. Textes de
+        // l'agent, à valider.
+        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: [
+          ['say', 'yunus_r', 'Le Compteur a posé un regard sur un passant. Un seul. L’Agrégor ne l’a pas compté.'],
+          ['say', 'idris', 'Il compte tout ce qu’on regarde. Que craint-il, alors ?'],
+          ['say', 'yunus_r', 'Une seule chose : ce qui passe de main en main sans passer par lui.'],
+          ['say', 'idris', 'La Chaîne. D’un homme à un autre, avec le nom de celui qui l’a porté.'],
+          ['say', 'yunus_r', 'Oui. Il additionne tout ce qu’on lui montre. Ce qu’on se transmet de main en main, il ne le voit pas passer.']
         ] }
       ]
     },
@@ -651,7 +709,9 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'citadin', robe: '#3a9a8a', head: '#267264', cloak: '#52b2a0', trim: '#34507a', item: 'feuillets' }, talk: [['say', 'carto', 'Combien l’ont vu ?']] }
+        { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'citadin', robe: '#3a9a8a', head: '#267264', cloak: '#52b2a0', trim: '#34507a', item: 'feuillets' }, talk: [['say', 'carto', 'Combien l’ont vu ?']] },
+        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
         ['title', 'Le Cartographe', "Cité-Miroir · le soir du maillon de 'Alî"],
@@ -704,7 +764,17 @@ ISNAD.registerSaga({
           ['say', 'idris', 'Il y est. Il a écrit en marge de sa carte : « d’après l’enfant de la rue ».'],
           ['say', 'gamin', 'Moi, sur une carte !'],
           ['say', 'idris', "C’est ainsi qu’une chose vraie se garde : avec le nom de celui qui l’a vue. Chez 'Alî, j’ai appris à poser la question avant de juger."],
-          ['codex', 'r_cartographe'], ['codex', 'enfant']
+          ['codex', 'r_cartographe'], ['codex', 'enfant'],
+          ['show', 'yunus_r'],
+          ['nar', 'Maître Yûnus est monté des Archives basses. Il attend Idris un peu à l’écart.']
+        ] },
+        // 2.25 (D214) — étape V : il a un cœur, sous le grand écran ; quelqu'un qui l'a servi viendra le montrer (le dernier
+        // maillon, e1, le fait paraître : il n'est pas nommé ici). Textes de l'agent, à valider.
+        { text: 'Rejoindre Maître Yûnus, un peu à l’écart', talk: 'yunus_r', then: [
+          ['say', 'idris', 'Le Cartographe additionnait des relevés sans aller voir. L’Agrégor fait de même : il additionne, et ne voit rien.'],
+          ['say', 'yunus_r', 'Alors va voir à sa place. Il a un cœur, Idris, sous le grand écran.'],
+          ['say', 'idris', 'Comment le trouverai-je ?'],
+          ['say', 'yunus_r', 'Pas seul. Quelqu’un qui l’a servi viendra te le montrer. Ceux qui en reviennent savent le chemin.']
         ] }
       ]
     },
@@ -728,8 +798,10 @@ ISNAD.registerSaga({
           ['sfx', 'glitch'], ['hide', 'yunus_x'], ['join', 'yunus'],
           ['battle', { group: ['notif', 'notif', 'notif'], bg: 'cite', intro: 'Trois notifications entre les rayonnages. Elles ne supportent pas qu’on leur résiste avec patience.' }],
           ['leave', 'yunus'], ['show', 'yunus_x'],
-          ['say', 'yunus_x', 'Elles ne t’ont pas trouvé, toi. Elles ont trouvé que tu n’étais pas là-haut. Pour l’Agrégor, c’est déjà une faute.'],
-          ['say', 'yunus_x', 'Tu peux suivre plusieurs traces à la fois. Les transmetteurs n’apprenaient pas d’un seul maître : ils allaient de ville en ville, et gardaient chaque chaîne à part.'],
+          // 2.25 (D214) : ce retour peut venir avant que l'Agrégor soit nommé (étape III) ; et les maillons se suivent (D211).
+          // Textes de l'agent, à valider.
+          ['say', 'yunus_x', 'Elles ne t’ont pas trouvé, toi. Elles ont trouvé que tu n’étais pas là-haut. Pour ce qui règne là-haut, c’est déjà une faute.'],
+          ['say', 'yunus_x', 'Les maillons se suivent, l’un après l’autre. Mais tu peux laisser une trace en chemin : elle t’attendra là où tu l’as quittée.'],
           ['say', 'yunus_x', 'Mais reviens. Des archives qu’on ne veille pas, un autre les raconte à ta place.'],
           ['codex', 'x_veiller']
         ] },

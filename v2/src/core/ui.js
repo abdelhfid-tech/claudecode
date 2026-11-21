@@ -413,7 +413,9 @@
     titreLivre(un); un.sagas.forEach(maillon);
     const fr = I.sagas.idris;
     if (fr) {
-      const b = I.el('button', 'link' + (allDone ? '' : ' locked'), `<span class="seal" style="background-image:url(${G.sealURL('إسناد', '#39e6ff')})"></span><span class="lt"><span class="ord">${I.t('DERNIER MAILLON · 1507 H · 2084')}</span><h3>${I.esc(I.perso.dit())}</h3><span class="ep">${I.t('Le Cœur de l’Agrégor')} <small>· ${I.t('2084')}</small></span><span class="tl">${allDone ? I.t('Rapporter les {nombre} Lumières à la Cité-Miroir.', { nombre: nb, n: un.sagas.length }) : I.t('Scellé tant que les {nombre} Lumières ne sont pas réunies.', { nombre: nb, n: un.sagas.length })}</span><span class="stt${sv.epilogue ? ' done' : ''}">${sv.epilogue ? I.t('Chaîne transmise') : allDone ? I.t('Ouvert') : I.t('{faits} / {n} Lumières', { faits: un.sagas.filter(fait).length, n: un.sagas.length })}</span></span>`);
+      // 2.25 (D214) : l'Agrégor ne se nomme qu'une fois sa fiche reçue (au soir du maillon III, frame.js, r_khalid)
+      const nomme = sv.codex.includes('idris/agregor') || sv.epilogue, ep = nomme ? I.t('Le Cœur de l’Agrégor') : I.t('Ce qui se cache derrière les écrans');
+      const b = I.el('button', 'link' + (allDone ? '' : ' locked'), `<span class="seal" style="background-image:url(${G.sealURL('إسناد', '#39e6ff')})"></span><span class="lt"><span class="ord">${I.t('DERNIER MAILLON · 1507 H · 2084')}</span><h3>${I.esc(I.perso.dit())}</h3><span class="ep">${ep} <small>· ${I.t('2084')}</small></span><span class="tl">${allDone ? I.t('Rapporter les {nombre} Lumières à la Cité-Miroir.', { nombre: nb, n: un.sagas.length }) : I.t('Scellé tant que les {nombre} Lumières ne sont pas réunies.', { nombre: nb, n: un.sagas.length })}</span><span class="stt${sv.epilogue ? ' done' : ''}">${sv.epilogue ? I.t('Chaîne transmise') : allDone ? I.t('Ouvert') : I.t('{faits} / {n} Lumières', { faits: un.sagas.filter(fait).length, n: un.sagas.length })}</span></span>`);
       b.type = 'button'; b.style.setProperty('--c', '#39e6ff'); b.disabled = !allDone && !I.debug.all;
       tapable(b, dernier);
       box.appendChild(b); btns.push(b);

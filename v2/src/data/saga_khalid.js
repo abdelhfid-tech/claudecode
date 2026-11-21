@@ -36,7 +36,8 @@ ISNAD.registerSaga({
     ['codex', 'mort_khalid'],
     ['nar', "Les villes qu'il avait prises par un écrit étaient encore debout, et leurs portes ouvertes. Celles-là ne chantent pas son nom. Elles vivent : c'est une louange qui ne fabrique pas d'idole."],
     ['mus', 'espoir'],
-    ['nar', "Idris rouvre les yeux dans les Archives basses. Sur tous les écrans de la Cité-Miroir, l'Agrégor dresse ses colosses du jour. Il sait maintenant comment on les fend : non en frappant plus fort, mais en refusant le socle."],
+    // 2.25 (D214) : l'Agrégor n'est nommé qu'au soir de ce maillon (frame.js, r_khalid) ; ici, « les écrans ». Texte de l'agent, à valider.
+    ['nar', "Idris rouvre les yeux dans les Archives basses. Partout dans la Cité-Miroir, les écrans dressent leurs colosses du jour. Il sait maintenant comment on les fend : non en frappant plus fort, mais en refusant le socle."],
     ['nar', "Le courage n'est pas seulement de dégainer. C'est de rengainer quand la vérité l'exige. Une Lumière s'allume sur la Chaîne."],
     ['sfx', 'light'],
     ['light', 'shajaa']
@@ -266,8 +267,9 @@ ISNAD.registerSaga({
       src: 'at-Tabarî, Târîkh' },
     { id: 'idole_soif', cat: 'Noosphère', title: 'Le Mirage et la Soif',
       text: "Chimères du désespoir. Le Mirage naît quand toute une armée regarde la même eau qui n'existe pas ; la Soif, quand chacun compte en silence les gorgées qui restent. Ils ne tuent pas : ils persuadent de s'asseoir. On les brise par la patience et le courage, en continuant de marcher vers une source qu'on ne voit pas encore." },
+    // 2.25 (D214) : « les écrans » plutôt que l'Agrégor, que ce feuillet précède (texte de l'agent, à valider)
     { id: 'idole_nombre', cat: 'Noosphère', title: 'La Peur du Nombre',
-      text: "Idole faite de décomptes. Elle se nourrit de chaque regard qui dénombre l'adversaire et de chaque bouche qui répète le total. Elle fait croire que l'issue est une soustraction. Une parole vraie la fend : « Les armées ne sont nombreuses que par la victoire. » Dans la Cité-Miroir, l'Agrégor lui donne d'autres noms : audience, score, majorité." },
+      text: "Idole faite de décomptes. Elle se nourrit de chaque regard qui dénombre l'adversaire et de chaque bouche qui répète le total. Elle fait croire que l'issue est une soustraction. Une parole vraie la fend : « Les armées ne sont nombreuses que par la victoire. » Dans la Cité-Miroir, les écrans lui donnent d'autres noms : audience, score, majorité." },
     { id: 'idole_heros', cat: 'Noosphère', title: "L'Idole du Héros",
       text: "La plus subtile des chimères : elle prend la silhouette d'un homme de bien. Chaque « avec lui, on ne perd jamais » lui ajoute une couche d'or. Elle ne demande pas qu'on renie Allah ; seulement qu'on oublie de Le nommer. Le fer ne l'entame pas, car elle est faite de victoires. Elle se brise quand le héros lui-même refuse le socle. Le Laurier, louange des poètes, est sa couronne." },
     /* ── v2 : pactes, savoirs, fiction signalée ── */
