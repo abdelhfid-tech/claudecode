@@ -17,11 +17,22 @@
    - Quel que soit l'avancement (le décideur, 21 novembre) : « Revenir en 2084 », depuis la halte de chacun des cinq récits et
      d'une veillée, aucun maillon achevé, mène aux quartiers ; au niveau 1, seul, dans une partie neuve, chaque chimère des rues
      se vainc à la seule touche A (Frapper), sans défaite, et l'on peut en fuir.
-   Usage : node v2/tools/cite.js [dossier de captures] [avancement]      « CITÉ CONFORME », sinon « ÉCART », « BLOQUÉ », « INACCESSIBLE »,
-   « COINCÉ », « ABSENT » ; code de sortie 1. */
+   - 2.27 (D216), Sâlim et la course : au premier passage au circuit, Sâlim arrive en moto ; on monte derrière lui (la leçon de
+     l'outil « virages », dite par lui) ; la moto menée au joystick (en hauteur) et au clavier (en largeur), Idris se penchant
+     vers l'intérieur de chaque virage ; sans se pencher, elle ralentit. L'organisateur : avant le tour de moto, rien ; après,
+     les cinq circuits, chacun scellé tant que le précédent n'est pas gagné, puis ouvert ; chacun plus long ou plus serré que
+     le précédent. La course menée jusqu'à l'arrivée (le premier circuit par les vrais boutons, joystick et A, ou flèches et
+     Entrée ; les suivants par le pilote d'essai), la prime versée, plafonnée par visite ; la pause (B), « Reprendre » (B), et
+     « Quitter la course », qui ne compte rien. Aucune mise offerte : aucune réponse, aucun mot de la course ne propose de
+     parier. La manette ne recouvre ni le chrono, ni le classement, ni le signe, ni le bilan. Le Pari rôde dans la tribune,
+     parmi les parieurs ; sa fiche. Le dernier maillon : des retrouvailles si Idris a couru avec Sâlim, la rencontre de
+     toujours sinon. La partie garde la course, à l'identique. Captures : la moto et Sâlim à côté d'Idris, la course, le podium
+     et la prime, la tribune et Le Pari, le circuit scellé ; la moto dans les trois dessins.
+   Usage : node v2/tools/cite.js [dossier de captures] [avancement|niveau1|course]      « CITÉ CONFORME », sinon « ÉCART », « BLOQUÉ »,
+   « INACCESSIBLE », « COINCÉ », « ABSENT » ; code de sortie 1. (« course » : la seule partie 15, en hauteur et en largeur) */
 const path = require('path'), fs = require('fs');
 const { chromium, devices } = require('playwright');
-const out = process.argv[2] || path.join(__dirname, '../.smoke/cite'), SEUL = process.argv[3] === 'avancement' || process.argv[3] === 'niveau1', NIV1 = process.argv[3] === 'niveau1'; // « avancement » : les seules parties 13 et 14 ; « niveau1 » : la seule partie 14
+const out = process.argv[2] || path.join(__dirname, '../.smoke/cite'), COURSE = process.argv[3] === 'course', SEUL = process.argv[3] === 'avancement' || process.argv[3] === 'niveau1' || COURSE, NIV1 = process.argv[3] === 'niveau1' || COURSE; // « avancement » : les seules parties 13 et 14 ; « niveau1 » : la seule partie 14 ; « course » : la seule partie 15
 fs.mkdirSync(out, { recursive: true });
 const url = 'file://' + path.join(__dirname, '../index.html');
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); }, si = (c, bien, mal, mot) => c ? ok(bien) : ko((mot || 'ÉCART') + ' ' + (mal || bien));
@@ -108,7 +119,8 @@ async function avancer(p, n = 120) {
     const T = await telephone(browser, w, h), P = T.p, E = (fn, a) => P.evaluate(fn, a);
     // ---------- 1. une partie, le prologue joué, Abû Bakr entamé ; par l'écran-titre (« Continuer ») ----------
     // (en hauteur, le premier retour en 2084 est dû : « Ce qui est descendu » se joue d'abord ; en largeur, les retours sont joués)
-    await E(haut => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; if (!haut) sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true }; I.save.auto('essai'); }, haut);
+    // (2.27 : Sâlim est déjà passé — sa moto garée, l'organisateur ouvert — ; sa venue est éprouvée à la partie 15)
+    await E(haut => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.cite.course.salim = 2; if (!haut) sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true }; I.save.auto('essai'); }, haut);
     await P.reload(); await P.waitForTimeout(1600); await preparer(P);
     {
       const b = await E(() => { const x = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (x) x.click(); return !!x; });
@@ -311,7 +323,7 @@ async function avancer(p, n = 120) {
   // ---------- 12. le dessin des voitures, à côté des personnages, sur un téléphone, dans les trois réglages ----------
   for (const [qs, nomD] of SEUL ? [] : [['', 'fin'], ['?def=2l', 'fin-adouci'], ['?def=1', 'origine']]) {
     const T = await telephone(browser, 390, 844, qs), P = T.p, E = (fn, a) => P.evaluate(fn, a);
-    await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; I.save.auto('essai'); });
+    await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.cite.course.salim = 2; I.save.auto('essai'); });
     await P.reload(); await P.waitForTimeout(1600); await preparer(P);
     await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
     await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
@@ -324,6 +336,16 @@ async function avancer(p, n = 120) {
     await E(() => { const W = window.ISNAD.world, n = W.npcs.find(x => x.id === 'q_passante'); window.__t.poser(n.x + 20, n.y); W.player.dir = 1; }); await P.waitForTimeout(400);
     await P.screenshot({ path: path.join(out, `passant-triste-${nomD}-390x844.png`) });
     si(vu, `le dessin « ${nomD} » : une voiture qui passe et des voitures garées, à côté des personnages (captures)`, `le dessin « ${nomD} » : aucune voiture n’est passée dans l’image`);
+    // 2.27 : la moto de Sâlim, garée, Sâlim et Idris à côté ; puis vue de dessus, Sâlim et Idris dessus, dans un virage
+    await E(() => { const W = window.ISNAD.world, s = W.npcs.find(x => x.id === 'salim_q'); window.__t.poser(s.x + 20, s.y + 2); W.player.dir = 1; }); await P.waitForTimeout(400);
+    await P.screenshot({ path: path.join(out, `moto-dessin-${nomD}-390x844.png`) });
+    await E(() => { const I = window.ISNAD; I.debug.pilote = {}; I.circuit.balade(false); });
+    let mo = false; for (let i = 0; i < 60 && !mo; i++) { mo = await E(() => { const K = window.ISNAD.circuit.K; return !!K && K.mode === 'course' && !!K.signe && K.bienPenche; }); if (!mo) { if (await E(() => window.__t.visible('#dialog'))) { await E(() => window.__t.lu()); await P.keyboard.press('Enter'); } await P.waitForTimeout(250); } }
+    await P.waitForTimeout(150); await P.screenshot({ path: path.join(out, `moto-dessus-${nomD}-390x844.png`) });
+    await E(() => { window.ISNAD.debug.accelCourse = 6; }); await E(() => window.__t.attendre(() => !window.ISNAD.circuit.K, 40000));
+    for (let i = 0; i < 20; i++) { if (!(await E(() => window.__t.visible('#dialog')))) break; await E(() => window.__t.lu()); await P.keyboard.press('Enter'); await P.waitForTimeout(200); }
+    await E(() => { window.ISNAD.debug.pilote = null; window.ISNAD.debug.accelCourse = 0; });
+    si(mo, `le dessin « ${nomD} » : la moto de Sâlim garée, à côté de lui et d’Idris, puis vue de dessus dans un virage (captures)`, `le dessin « ${nomD} » : le tour de moto ne s’est pas montré`, 'ABSENT');
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => nomD + ' · ' + e)); await T.ctx.close();
   }
   // ---------- 13. quel que soit l'avancement (le décideur, 21 novembre : « Les activités de la cité miroir sont omniprésents dès
@@ -351,7 +373,7 @@ async function avancer(p, n = 120) {
   }
   // ---------- 14. au niveau 1, seul : chaque chimère des rues se vainc à la seule touche A (Frapper, sur la cible désignée
   //               d'emblée), dans une partie neuve qui n'a reçu que ses premiers outils ; et l'on peut en fuir ----------
-  {
+  if (!COURSE) {
     const T = await telephone(browser, 390, 844), P = T.p, E = (fn, a) => P.evaluate(fn, a);
     await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true };
       I.lecons.ouvrir(); ['marcher', 'parler', 'aide', 'halte'].forEach(id => { I.lecons.recevoir(id); I.lecons.sequence(); }); I.save.auto('essai'); });
@@ -415,8 +437,227 @@ async function avancer(p, n = 120) {
     } else ko(`BLOQUÉ au niveau 1 : la chimère de la fuite n’ouvre pas de combat : ${JSON.stringify(await etatRue())}`);
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'niveau 1 · ' + e)); await T.ctx.close();
   }
+  // ---------- 15. 2.27 (D216) : Sâlim et la course, en hauteur (le joystick) et en largeur (le clavier) ----------
+  for (const [w, h] of (!SEUL || COURSE) ? [[390, 844], [844, 390]].filter(([w, h]) => !process.env.ORIENT || (process.env.ORIENT === 'haut') === (h > w)) : []) {   // (ORIENT=haut|large : une seule)
+    const nom = w + '×' + h, haut = h > w, mode = haut ? 'joy' : 'clavier', T = await telephone(browser, w, h), P = T.p, E = (fn, a) => P.evaluate(fn, a);
+    const PARI = /(^|[^a-zà-ÿ])(pari|paris|parier|parie|parions|pariez|parié|mise|mises|miser|misez|misé|enjeux?|loteries?|casino|jeux? de hasard|double ou rien|cotes?|gager)(?![a-zà-ÿ])/i;
+    // une partie neuve (« Nouvelle partie ») qui n'a reçu que ses premiers outils : Sâlim y dira la leçon des virages
+    await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true };
+      I.lecons.ouvrir(); ['marcher', 'parler', 'aide', 'halte'].forEach(id => { I.lecons.recevoir(id); I.lecons.sequence(); }); I.save.auto('essai'); });
+    await P.reload(); await P.waitForTimeout(1600); await preparer(P);
+    await E(() => { const I = window.ISNAD, T = window.__t;
+      T.offerts = []; { const om = I.script.menuPick; I.script.menuPick = function (q, opts) { T.offerts.push({ q: typeof q === 'string' ? q : '', opts: (opts || []).map(o => (o.t || String(o.html || '').replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim()) }); return om.apply(this, arguments); }; }
+      // mener par les vrais boutons : le joystick et A (pointeurs), ou les flèches et Entrée (clavier) ; le cap et A, c'est le pilote d'essai qui les choisit
+      T.mener = (mode, o) => { const CI = I.circuit, joy = document.querySelector('#pad .joy'), A = document.querySelector('#pad .a'); let aBas = false, jBas = false; const tenues = new Set(); T._mene = true; T.menes = { images: 0 };
+        const pt = (el, type, x, y, id) => el.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: id, pointerType: 'touch', isPrimary: id === 7, clientX: x || 0, clientY: y || 0 }));
+        const cle = (code, bas) => window.dispatchEvent(new KeyboardEvent(bas ? 'keydown' : 'keyup', { code, bubbles: true, cancelable: true }));
+        const lacher = () => { if (jBas) { pt(joy, 'pointerup', 0, 0, 7); jBas = false; } if (aBas) { if (mode === 'joy') pt(A, 'pointerup', 0, 0, 8); else cle('Enter', false); aBas = false; } tenues.forEach(k => cle(k, false)); tenues.clear(); };
+        const pas = () => { const K = CI.K; if (!T._mene || !K || K.mode === 'arrivee' || K.mode === 'podium') { lacher(); T._mene = false; return; }
+          let cap = null, gaz = false; if (!K.pause && (K.mode === 'course' || K.mode === 'compte')) { const d = K.moto ? CI.piloteMoto(K, o || {}) : CI.pilote(K, o || { adresse: 0.95 }); cap = d.cap; gaz = !!d.gaz; }
+          if (mode === 'joy') { if (cap === null) { if (jBas) { pt(joy, 'pointerup', 0, 0, 7); jBas = false; } } else { const r = joy.getBoundingClientRect(), R = r.width / 2, x = r.left + R + Math.cos(cap) * R * 0.8, y = r.top + R + Math.sin(cap) * R * 0.8; pt(joy, jBas ? 'pointermove' : 'pointerdown', x, y, 7); jBas = true; }
+            if (gaz !== aBas) { pt(A, gaz ? 'pointerdown' : 'pointerup', 0, 0, 8); aBas = gaz; } }
+          else { const veut = new Set(); if (cap !== null) { const s8 = Math.round(cap / (Math.PI / 4)), dx = Math.round(Math.cos(s8 * Math.PI / 4)), dy = Math.round(Math.sin(s8 * Math.PI / 4)); if (dx > 0) veut.add('ArrowRight'); if (dx < 0) veut.add('ArrowLeft'); if (dy > 0) veut.add('ArrowDown'); if (dy < 0) veut.add('ArrowUp'); }
+            ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].forEach(k => { if (veut.has(k) && !tenues.has(k)) { cle(k, true); tenues.add(k); } else if (!veut.has(k) && tenues.has(k)) { cle(k, false); tenues.delete(k); } });
+            if (gaz !== aBas) { cle('Enter', gaz); aBas = gaz; } }
+          T.menes.images++; requestAnimationFrame(pas); };
+        requestAnimationFrame(pas); };
+      // la manette recouvre-t-elle ce qui s'écrit sur la course ?
+      T.recouvreCourse = () => { const pads = [...document.querySelectorAll('#pad .joy, #pad .a, #pad .b')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0), L = [];
+        document.querySelectorAll('#course .tableau, #course .rangs, #course .signe, #course .bilan').forEach(e => { if (e.hidden || getComputedStyle(e).display === 'none') return; const r = e.getBoundingClientRect(); if (r.width < 1 || r.height < 1) return;
+          if (pads.some(p => r.left < p.right - 1 && r.right > p.left + 1 && r.top < p.bottom - 1 && r.bottom > p.top + 1)) L.push(e.className); });
+        return { L, efface: document.body.classList.contains('pad-efface'), sous: I.ui.padRecouvre() }; };
+      T.textesCourse = () => (document.querySelector('#course') || {}).textContent || '';
+      T.menu = () => T.choix();
+    });
+    // lire ce qui se dit, jusqu'à ce que la course commence (ou qu'un choix s'ouvre)
+    const jusquACourse = async () => { for (let i = 0; i < 200; i++) { const e = await E(() => { const I = window.ISNAD, K = I.circuit.K; if (K && I.scene === I.circuit.scene) return 'course'; if (window.__t.visible('#choice')) return 'choix'; return window.__t.visible('#dialog') ? 'lire' : ''; });
+        if (e === 'course' || e === 'choix') return e; if (e === 'lire') { await E(() => window.__t.lu()); await P.keyboard.press('Enter'); } await P.waitForTimeout(150); } return 'bloque'; };
+    const finCourse = ms => E(ms => window.__t.attendre(() => { const K = window.ISNAD.circuit.K; return !K || K.mode === 'podium'; }, ms), ms);
+    const auMonde = async () => { for (let i = 0; i < 160; i++) { const e = await E(() => { const I = window.ISNAD; return !I.circuit.K && I.scene === I.world ? (window.__t.calme() ? 'calme' : window.__t.visible('#choice') ? 'choix' : window.__t.visible('#dialog') ? 'lire' : '') : I.circuit.K && I.circuit.K.mode === 'podium' ? 'podium' : ''; });
+        if (e === 'calme' || e === 'choix') return e; if (e === 'lire' || e === 'podium') { if (e === 'lire') await E(() => window.__t.lu()); await P.keyboard.press('Enter'); } await P.waitForTimeout(170); } return 'bloque'; };
+    await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
+    await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
+    await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); });
+    const la = await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 15000)); await avancer(P);
+    if (!la) { ko(`BLOQUÉ ${nom} · la partie neuve n’arrive pas dans les quartiers`); toutesErreurs = toutesErreurs.concat(T.errors); await T.ctx.close(); continue; }
+    await E(() => window.__t.endormir());
+    // a. avant le tour de moto : l'organisateur ne fait pas courir (on lui parle hors du passage de Sâlim)
+    {
+      const r = await E(async () => { const I = window.ISNAD, W = I.world, o = W.npcs.find(n => n.id === 'q_organisateur'); window.__t.poser(o.x + 20, o.y); W.player.dir = 1; return { salim: I.save.data.cite.course.salim, vu: !W.npcs.find(n => n.id === 'salim_q').hidden }; });
+      await P.waitForTimeout(250); await P.keyboard.press('Enter'); await P.waitForTimeout(300);
+      const d = await E(() => window.__t.lu()), Tx = await E(() => window.ISNAD.sagas.idris.cite.course.organisateur.avant); await avancer(P);
+      const menu = await E(() => window.__t.offerts.length);
+      si(r.salim === 0 && !r.vu && d.indexOf(Tx.slice(0, 30)) >= 0 && !menu, `${nom} · avant le tour de moto, Sâlim n’est pas là et l’organisateur dit : « ${d.slice(0, 60)}… » (aucun circuit)`, `${nom} · l’organisateur avant Sâlim : ${JSON.stringify({ r, d, menu })}`);
+    }
+    // b. on marche vers le circuit (le clavier) : Sâlim arrive en moto
+    {
+      await E(() => { const W = window.ISNAD.world, s = W.spotPx('circuit'); window.__t.poser(s[0] + 70, s[1] - 26); });
+      const d = await E(() => { const W = window.ISNAD.world, s = W.spotPx('circuit'); return window.__t.marcher(s[0], s[1] - 18, 15000); });
+      const vient = await E(() => window.__t.attendre(() => window.ISNAD.circuit.journal.some(j => j.quoi === 'arrivee'), 8000));
+      await E(() => window.__t.attendre(() => !window.ISNAD.world.npcs.find(n => n.id === 'salim_q').hidden, 8000)); await P.waitForTimeout(500);
+      await P.screenshot({ path: path.join(out, `salim-moto-${w}x${h}.png`) });
+      const e = await E(() => { const I = window.ISNAD, W = I.world, s = W.npcs.find(n => n.id === 'salim_q'), m = I.trafic.garees.find(v => v.m === 'moto'), p = W.player; return { salim: !!s && !s.hidden, d: s ? Math.round(Math.hypot(s.x - p.x, s.y - p.y)) : -1, moto: !!m && !m.roule, dm: m ? Math.round(Math.hypot(m.x - p.x, m.y - p.y)) : -1, dans: m ? (() => { const f = I.trafic.pied(m); return f[0] < p.x + 4 && p.x - 4 < f[2] && f[1] < p.y && p.y - 5 < f[3]; })() : false }; });
+      si(vient && e.salim && e.moto && e.d < 90 && e.dm < 110 && !e.dans, `${nom} · au premier passage au circuit, Sâlim arrive en moto : il est à ${e.d} points d’Idris, sa moto garée à ${e.dm} points, hors de son chemin`, `${nom} · l’arrivée de Sâlim : ${JSON.stringify({ d, vient, e })}`, 'ABSENT');
+      const r = await avancer(P); const c = await E(() => window.__t.choix());
+      si(r === 'choix' && c && c.opts.length === 2 && /Monter derrière Sâlim/.test(c.opts[0]) && /Pas maintenant/.test(c.opts[1]), `${nom} · « ${c && c.prompt} » : ${c && c.opts.join(' / ')}`, `${nom} · l’offre de Sâlim : ${JSON.stringify({ r, c })}`);
+      await P.screenshot({ path: path.join(out, `salim-offre-${w}x${h}.png`) });
+      await P.waitForTimeout(420); await P.keyboard.press('Enter');   // (une liste n'accepte rien pendant un tiers de seconde)
+    }
+    // c. la leçon de l'outil « virages », dite par Sâlim ; puis le tour de moto, par les vrais boutons (joystick, ou flèches)
+    {
+      const lecon = await E(() => window.__t.attendre(() => window.ISNAD.circuit.journal.some(j => j.quoi === 'lecon'), 8000));
+      const d = await E(() => window.__t.lu()), L = await E(() => { const t = window.ISNAD.sagas.coeur.lecons.virages; return [t.doigt, t.clavier]; });
+      const recu = await E(() => window.ISNAD.lecons.recu('virages'));
+      si(lecon && recu && L.some(t => d.indexOf(t.replace(/\*/g, '').slice(0, 24)) >= 0), `${nom} · Sâlim dit la leçon de l’outil « Prendre les virages » : « ${d.slice(0, 70)}… »`, `${nom} · la leçon des virages : ${JSON.stringify({ lecon, recu, d })}`);
+      const rr = await jusquACourse();
+      if (rr !== 'course') ko(`BLOQUÉ ${nom} · le tour de moto ne commence pas (${rr})`);
+      else {
+        await E(m => window.__t.mener(m, {}), mode);
+        await E(() => window.__t.attendre(() => { const K = window.ISNAD.circuit.K; return K && K.mode === 'course' && K.signe && K.bienPenche; }, 20000));
+        await P.waitForTimeout(120); await P.screenshot({ path: path.join(out, `moto-penche-${w}x${h}.png`) });
+        const rc = await E(() => window.__t.recouvreCourse());
+        await E(() => window.__t.attendre(() => window.ISNAD.circuit.journal.some(x => x.quoi === 'balade'), 70000));
+        const b = await E(() => { const j = window.ISNAD.circuit.journal.filter(x => x.quoi === 'balade').pop(); return j || null; }), men = await E(() => window.__t.menes);
+        si(b && b.bien >= b.total - 1 && men.images > 60, `${nom} · la moto menée ${mode === 'joy' ? 'au joystick' : 'aux flèches'} : ${b && b.bien} virages sur ${b && b.total} bien pris, en se penchant vers l’intérieur`, `${nom} · le tour de moto : ${JSON.stringify({ b, men })}`);
+        si(!rc.L.length && !rc.efface, `${nom} · pendant le tour, la manette ne recouvre ni le tableau ni le signe`, `${nom} · la manette sur la course : ${JSON.stringify(rc)}`, 'RECOUVERT');
+        const r2 = await auMonde(); const e = await E(() => ({ salim: window.ISNAD.save.data.cite.course.salim, dits: window.ISNAD.circuit.journal.map(j => j.quoi).join(',') }));
+        si(r2 === 'calme' && e.salim === 2, `${nom} · le tour fini, Sâlim parle de l’organisateur et de ses cinq circuits ; la partie garde que Sâlim a emmené Idris`, `${nom} · après le tour : ${JSON.stringify({ r2, e })}`);
+      }
+    }
+    // d. en hauteur : un second tour, sans se pencher — la moto ralentit (sans chute ni blessure)
+    if (haut) {
+      await E(() => { const W = window.ISNAD.world, s = W.npcs.find(n => n.id === 'salim_q'); window.__t.poser(s.x + 18, s.y); W.player.dir = 1; }); await P.waitForTimeout(250); await P.keyboard.press('Enter');
+      const r = await avancer(P); const c = await E(() => window.__t.choix());
+      if (r === 'choix' && c && /Refaire un tour/.test(c.opts[0])) { await P.waitForTimeout(420); await P.keyboard.press('Enter'); const rr = await jusquACourse();
+        if (rr === 'course') await E(() => window.__t.attendre(() => window.ISNAD.circuit.journal.filter(x => x.quoi === 'balade').length >= 2, 70000));
+        const L = await E(() => window.ISNAD.circuit.journal.filter(x => x.quoi === 'balade'));
+        const t = await E(() => window.ISNAD.circuit.journal.filter(x => x.quoi === 'partez' && x.moto).length);
+        si(L.length >= 2 && L[1].bien === 0 && t >= 2, `${nom} · un second tour, sans se pencher : aucun virage bien pris, la moto ralentit à chacun (et rien d’autre)`, `${nom} · le second tour : ${JSON.stringify(L)} ${JSON.stringify(await E(() => { const I = window.ISNAD, K = I.circuit.K; return K ? { t: K.t, prog: K.prog, v: K.v, pause: K.pause, mode: K.mode, held: I.input.held, joy: I.input.joyAngle, a: I.input.aTenu, pil: I.debug.pilote, acc: I.debug.accelCourse, scene: I.scene === I.circuit.scene } : null; }))}`);
+        await auMonde();
+      } else ko(`ÉCART ${nom} · Sâlim ne propose pas de refaire un tour : ${JSON.stringify({ r, c })}`);
+    }
+    // e. les circuits : l'organisateur ; le premier ouvert, les autres scellés ; chacun plus long ou plus serré que le précédent
+    const etatCourse = () => E(() => { const I = window.ISNAD, W = I.world, S = I.script; return { scene: I.scene === W ? 'monde' : I.scene === I.circuit.scene ? 'course' : '?', K: I.circuit.K && I.circuit.K.mode, busy: S.busy, depth: S.depth, lock: W.lock, occupe: I.circuit.occupe, dialogue: window.__t.dialogue().slice(0, 50), choix: window.__t.visible('#choice'), j: I.circuit.journal.slice(-3) }; });
+    const organisateur = async () => { await auMonde(); await E(() => { const I = window.ISNAD, W = I.world, o = W.npcs.find(n => n.id === 'q_organisateur'); window.__t.poser(o.x + 20, o.y); W.player.dir = 1; }); await P.waitForTimeout(250); await P.keyboard.press('Enter'); const r = await avancer(P);
+      const c = await E(() => { const c = window.__t.choix(); if (!c) return null; c.fermes = [...document.querySelectorAll('#choice .opt')].map(b => b.classList.contains('locked')); return c; }); return { r, c, etat: c ? null : await etatCourse() }; };
+    const choisir = async i => { await P.waitForTimeout(420); for (let k = 0; k < i; k++) { await P.keyboard.press('ArrowDown'); await P.waitForTimeout(110); } await P.keyboard.press('Enter'); };
+    {
+      const m = await organisateur(), c = m.c;
+      const ok1 = c && c.opts.length === 6 && !c.fermes[0] && c.fermes.slice(1, 5).every(Boolean) && c.opts.slice(1, 5).every(o => /Scellé/.test(o));
+      si(ok1, `${nom} · l’organisateur : « ${c && c.prompt} » — le premier circuit ouvert, les quatre autres scellés (« ${c && c.opts[1].slice(0, 50)}… »)`, `${nom} · le menu des circuits : ${JSON.stringify(m)}`, 'ÉCART');
+      await P.screenshot({ path: path.join(out, `circuits-scelles-${w}x${h}.png`) });
+      await choisir(1); await P.waitForTimeout(500);   // un circuit scellé : rien ne s'ouvre
+      const encore = await E(() => window.__t.visible('#choice') && !window.ISNAD.circuit.K);
+      si(encore, `${nom} · un circuit scellé, choisi, ne s’ouvre pas`, `${nom} · un circuit scellé s’est ouvert`);
+      await P.keyboard.press('ArrowUp'); await P.waitForTimeout(420); await P.keyboard.press('Enter');
+      const geo = await E(() => { const I = window.ISNAD, D = I.D; return D.CIRCUITS.map(d => { const tr = I.circuit.geometrie(d); return { L: Math.round(tr.L), tours: d.tours, total: Math.round(tr.L * d.tours), hw: d.large, r: Math.min(...d.trace.map(p => p[2])), adv: d.adversaires.length, temps: d.temps, nuit: !!d.nuit, viaduc: !!d.viaduc }; }); });
+      const croit = geo.every((g, i) => !i || g.L > geo[i - 1].L || g.total > geo[i - 1].total || g.hw < geo[i - 1].hw || g.r < geo[i - 1].r);
+      si(croit && geo[0].adv === 0 && geo[0].temps > 0 && geo[3].viaduc && geo[3].temps > 0 && geo[4].nuit, `${nom} · cinq circuits, chacun plus long ou plus serré que le précédent : ${geo.map((g, i) => `${i + 1}. ${g.L} pts × ${g.tours}, demi-largeur ${g.hw}, rayon ${g.r}${g.adv ? ', ' + g.adv + ' adversaire' + (g.adv > 1 ? 's' : '') : ''}${g.temps ? ', à battre' : ''}${g.viaduc ? ', viaduc' : ''}${g.nuit ? ', de nuit' : ''}`).join(' · ')}`, `${nom} · les circuits : ${JSON.stringify(geo)}`);
+    }
+    // f. le premier circuit, par les vrais boutons, jusqu'à l'arrivée ; la prime ; le circuit suivant s'ouvre
+    const d0 = await E(() => window.ISNAD.trade.dirhams());
+    {
+      const rr = await jusquACourse();
+      if (rr !== 'course') ko(`BLOQUÉ ${nom} · la course du premier circuit ne commence pas (${rr})`);
+      else {
+        await E(() => window.__t.attendre(() => window.ISNAD.circuit.K && window.ISNAD.circuit.K.mode === 'compte', 4000)); await P.waitForTimeout(700);
+        await P.screenshot({ path: path.join(out, `course-depart-${w}x${h}.png`) });
+        await E(m => window.__t.mener(m, { adresse: 0.92 }), mode);
+        await E(() => window.__t.attendre(() => { const K = window.ISNAD.circuit.K; return K && K.mode === 'course' && K.t > 6; }, 20000));
+        const rc = await E(() => window.__t.recouvreCourse()); await P.screenshot({ path: path.join(out, `course-1-${w}x${h}.png`) });
+        const fin = await finCourse(120000); await P.waitForTimeout(700); await P.screenshot({ path: path.join(out, `podium-1-${w}x${h}.png`) });
+        const b = await E(() => ({ bilan: window.__t.textesCourse(), j: window.ISNAD.circuit.journal.filter(x => x.quoi === 'arrivee').pop(), rc: window.__t.recouvreCourse(), men: window.__t.menes }));
+        si(fin && b.j && b.j.gagne && b.j.prime > 0 && /prime/.test(b.bilan) && b.men.images > 100, `${nom} · le premier circuit mené ${mode === 'joy' ? 'au joystick et à A' : 'aux flèches et à Entrée'} jusqu’à l’arrivée : ${b.j && b.j.temps && b.j.temps.toFixed(1)} s, gagné ; « ${(b.bilan.match(/L’organisateur te remet[^.]*\./) || [''])[0]} »`, `${nom} · le premier circuit : ${JSON.stringify(b)}`, 'BLOQUÉ');
+        si(!rc.L.length && !rc.efface && !b.rc.L.length && !b.rc.efface, `${nom} · la manette ne recouvre ni le chrono, ni le tour, ni le bilan`, `${nom} · la manette sur la course : ${JSON.stringify([rc, b.rc])}`, 'RECOUVERT');
+        si(!PARI.test(b.bilan), `${nom} · le bilan de la course ne parle d’aucune mise`, `${nom} · une mise dans le bilan : ${b.bilan}`, 'ÉCART');
+        await auMonde();
+      }
+    }
+    const d1 = await E(() => window.ISNAD.trade.dirhams()), D0 = await E(() => window.ISNAD.D.CIRCUITS[0].prime);
+    si(d1 - d0 === D0, `${nom} · l’organisateur verse ${d1 - d0} dirhams (de ${d0} à ${d1}) — la prime du premier circuit`, `${nom} · la prime : ${d0} → ${d1}, attendu + ${D0}`);
+    // g. la pause : B, « Reprendre » (B) ; puis « Quitter la course », qui ne compte rien
+    {
+      const m = await organisateur(); if (!m.c) ko(`BLOQUÉ ${nom} · l’organisateur ne propose plus rien : ${JSON.stringify(m)}`);
+      await choisir(0); const rr = await jusquACourse();
+      if (rr === 'course') {
+        await E(() => window.__t.attendre(() => window.ISNAD.circuit.K && window.ISNAD.circuit.K.mode === 'course', 6000)); await P.waitForTimeout(300);
+        const avant = await E(() => ({ courses: window.ISNAD.save.data.cite.course.courses, d: window.ISNAD.trade.dirhams() }));
+        if (haut) await E(() => { const b = document.querySelector('#pad .b'); b.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 9, pointerType: 'touch' })); b.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 9, pointerType: 'touch' })); });
+        else await P.keyboard.press('Escape');
+        await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 4000)); await P.waitForTimeout(400);
+        const c = await E(() => window.__t.choix()), t0 = await E(() => window.ISNAD.circuit.K.t);
+        await P.screenshot({ path: path.join(out, `course-pause-${w}x${h}.png`) });
+        await E(() => window.ISNAD.input.emit('retour')); await P.waitForTimeout(700);
+        const repris = await E(t0 => ({ choix: window.__t.visible('#choice'), pause: window.ISNAD.circuit.K.pause, avance: window.ISNAD.circuit.K.t > t0 }), t0);
+        si(c && /pause/.test(c.prompt) && c.opts.length === 2 && /Reprendre/.test(c.opts[0]) && /Quitter la course/.test(c.opts[1]) && !repris.choix && !repris.pause && repris.avance, `${nom} · ${haut ? 'B' : 'Échap'} : « ${c && c.prompt} » ${c && c.opts.join(' / ')} ; B revient d’un cran : la course reprend`, `${nom} · la pause : ${JSON.stringify({ c, repris })}`);
+        await E(() => window.ISNAD.input.emit('retour')); await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 4000)); await P.waitForTimeout(400); await choisir(1);
+        const parti = await E(() => window.__t.attendre(() => !window.ISNAD.circuit.K && window.ISNAD.scene === window.ISNAD.world, 8000));
+        const apres = await E(() => ({ courses: window.ISNAD.save.data.cite.course.courses, d: window.ISNAD.trade.dirhams() }));
+        si(parti && apres.courses === avant.courses && apres.d === avant.d, `${nom} · « Quitter la course » : retour aux quartiers ; rien n’est compté, rien n’est versé`, `${nom} · quitter la course : ${JSON.stringify({ parti, avant, apres })}`, 'BLOQUÉ');
+        await avancer(P);
+      } else ko(`BLOQUÉ ${nom} · la course de la pause ne commence pas (${rr})`);
+    }
+    // h. les circuits 2 à 5 : chacun s'ouvre quand le précédent est gagné ; le pilote d'essai les court (plus vite que l'horloge)
+    {
+      const vus = [];
+      for (let n = 1; n < 5; n++) {
+        const m = await organisateur(), c = m.c;
+        const ouvert = c && !c.fermes[n] && c.fermes.slice(n + 1, 5).every(Boolean);
+        if (!ouvert) { ko(`ÉCART ${nom} · le circuit ${n + 1} n’est pas ouvert, ou le suivant ne reste pas scellé : ${JSON.stringify(c)}`); await E(() => window.ISNAD.input.emit('retour')); break; }
+        await choisir(n); const rr = await jusquACourse(); if (rr !== 'course') { ko(`BLOQUÉ ${nom} · le circuit ${n + 1} ne commence pas`); break; }
+        await E(() => { window.ISNAD.debug.pilote = { adresse: 0.98, regard: 0.22 }; window.ISNAD.debug.accelCourse = 3; });
+        if (n === 1 || n === 4) { await E(() => window.__t.attendre(() => { const K = window.ISNAD.circuit.K; return K && K.mode === 'course' && K.t > 9; }, 30000)); await P.screenshot({ path: path.join(out, `course-${n + 1}-${w}x${h}.png`) });
+          const rc = await E(() => window.__t.recouvreCourse()); si(!rc.L.length && !rc.efface, `${nom} · circuit ${n + 1} : la manette ne recouvre ni le chrono ni le classement`, `${nom} · la manette sur le circuit ${n + 1} : ${JSON.stringify(rc)}`, 'RECOUVERT'); }
+        if (n === 3) { await E(() => window.__t.attendre(() => { const I = window.ISNAD, K = I.circuit.K; return K && K.voitures.some(v => I.circuit.niveau(K, v)); }, 60000)); await P.screenshot({ path: path.join(out, `course-viaduc-${w}x${h}.png`) }); }
+        const fin = await finCourse(150000); await P.waitForTimeout(500); if (n === 4) await P.screenshot({ path: path.join(out, `podium-5-${w}x${h}.png`) });
+        const j = await E(() => window.ISNAD.circuit.journal.filter(x => x.quoi === 'arrivee').pop()), bil = await E(() => window.__t.textesCourse());
+        await E(() => { window.ISNAD.debug.pilote = null; window.ISNAD.debug.accelCourse = 0; });
+        vus.push({ n: n + 1, gagne: !!(j && j.gagne), rang: j && j.rang, prime: j && j.prime, plafond: /prochaine visite/.test(bil), mise: PARI.test(bil) });
+        await auMonde();
+      }
+      const e = await E(() => ({ g: window.ISNAD.save.data.cite.course.gagnes, primes: window.ISNAD.script.flags._primes, d: window.ISNAD.trade.dirhams(), P: window.ISNAD.D.COURSE.plafond }));
+      si(vus.length === 4 && vus.every(v => v.gagne && !v.mise) && e.g.length === 5 && e.g.every(Boolean), `${nom} · les circuits 2 à 5, ouverts l’un après l’autre, gagnés par le pilote d’essai (${vus.map(v => v.n + ' : place ' + v.rang).join(', ')})`, `${nom} · les circuits 2 à 5 : ${JSON.stringify({ vus, e })}`);
+      si(e.primes === e.P && vus.some(v => v.plafond), `${nom} · les primes de la visite plafonnées à ${e.P} dirhams (versé : ${e.primes}) ; le bilan le dit`, `${nom} · le plafond : ${JSON.stringify({ vus, e })}`);
+    }
+    // i. aucune mise offerte : ni dans une réponse, ni dans une question, de toute la visite
+    {
+      const of = await E(() => window.__t.offerts);
+      const fautes = of.filter(m => PARI.test(m.q) || m.opts.some(o => PARI.test(o)));
+      si(of.length >= 8 && !fautes.length, `${nom} · ${of.length} listes de choix offertes au circuit (Sâlim, l’organisateur, la pause) : aucune ne propose de parier ni de miser`, `${nom} · une mise offerte : ${JSON.stringify(fautes)}`, 'ÉCART');
+    }
+    // j. la tribune : des parieurs, chacun seul devant son écran, et Le Pari parmi eux ; sa fiche
+    {
+      const r = await E(async () => { const I = window.ISNAD, W = I.world, T = window.__t; I.rodeurs.poserRues(); const f = W.foes.find(x => x.rue && !x.done && x.group[0] === 'pari'); if (!f) return null;
+        const cas = W.map.g0(f.x, f.y), ps = W.npcs.filter(n => /^q_parieu/.test(n.id)).map(n => ({ id: n.id, pose: n.pose, kind: n.sheet && n.sheet.look && n.sheet.look.kind, cas: W.map.g0(n.x, n.y) }));
+        f.cx = null; T.poser(f.x + 44, f.y + 2); W.player.dir = 1; return { cas, ps, x: Math.round(f.x), y: Math.round(f.y) }; });
+      await P.waitForTimeout(350); await P.screenshot({ path: path.join(out, `tribune-pari-${w}x${h}.png`) });
+      const vu = await E(() => window.__t.attendre(() => window.ISNAD.save.data.codex.includes('idris/le_pari') || window.ISNAD.battle.active, 8000));
+      const fiche = await E(() => window.ISNAD.save.data.codex.includes('idris/le_pari'));
+      si(r && r.cas === 'qgradin' && r.ps.length === 3 && r.ps.every(p => p.cas === 'qgradin' && ['assis', 'triste', 'accable'].includes(p.pose)) && r.ps.some(p => p.kind === 'femme') && fiche, `${nom} · la tribune : ${r && r.ps.length} parieurs, chacun seul (${r && r.ps.map(p => p.pose).join(', ')}), une femme parmi eux ; Le Pari rôde sur les gradins, et sa fiche entre au Recueil`, `${nom} · la tribune : ${JSON.stringify({ r, vu, fiche })}`, 'ABSENT');
+      await E(() => { const W = window.ISNAD.world; W.foes.forEach(f => { if (f.rue) f.done = true; }); });
+      if (await E(() => window.ISNAD.battle.active)) { await E(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 20; }); await E(() => window.__t.attendre(() => !window.ISNAD.battle.active, 60000)); }
+      await avancer(P, 40); if (await E(() => window.__t.visible('#choice'))) { await E(() => window.ISNAD.input.emit('retour')); await avancer(P, 30); }
+    }
+    // k. la partie garde la course, s'exporte et se réimporte à l'identique
+    {
+      const r = await E(() => { const I = window.ISNAD, c0 = JSON.stringify(I.save.data.cite), t = I.save.exporter(), l = I.save.lireTexte(t); if (!l.ok) return { ok: false, e: l.erreur };
+        const ab = JSON.parse(t); ab.partie.cite.course = { salim: 7 }; const l2 = I.save.lireTexte(JSON.stringify(ab)); return { ok: true, c0, c1: JSON.stringify(l.partie.cite), refus: !l2.ok }; });
+      const c = r.ok ? JSON.parse(r.c0).course : {};
+      si(r.ok && r.c0 === r.c1 && c.salim === 2 && c.gagnes.length === 5 && c.temps.filter(Boolean).length === 5 && r.refus, `${nom} · la partie garde la course (${JSON.stringify(c)}), l’exporte à l’identique, refuse une course abîmée`, `${nom} · la partie et la course : ${JSON.stringify(r)}`);
+    }
+    // l. le dernier maillon (en hauteur) : des retrouvailles, puisqu'Idris a couru avec Sâlim ; la rencontre de toujours, sinon
+    if (haut) {
+      const ligne = async avec => E(async avec => { const I = window.ISNAD, W = I.world, S = I.script, T = window.__t, dits = [];
+        I.save.data.cite.course.salim = avec ? 2 : 0; const or = S.run; S.run = function (ops) { (ops || []).forEach(o => { if (Array.isArray(o) && o[0] === 'say') dits.push(o[2]); if (Array.isArray(o) && o[0] === 'if') dits.push('si ' + o[1] + ' : ' + !!S.flags[o[1]]); }); return or.apply(this, arguments); };
+        document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); W.roster = {}; W.saga = null; const ci = I.sagas.idris.chapters.findIndex(c => c.id === 'e1'); W.startChapter('idris', ci);
+        await T.jusqua(1); S.run = or; I.debug.auto = false; return dits.filter(d => /archiviste|passager|^si _2084_salim/.test(d)); }, avec);
+      const a = await ligne(true), b = await ligne(false);
+      si(a.some(d => /si _2084_salim : true/.test(d)) && a.some(d => /Mon passager des virages/.test(d)) && b.some(d => /si _2084_salim : false/.test(d)) && b.some(d => /^Tu es l’archiviste \? Je m’appelle Sâlim/.test(d)), `le dernier maillon : Idris a couru avec Sâlim — « ${(a.find(d => /passager/.test(d)) || '').slice(0, 50)}… » ; sinon, la rencontre de toujours — « ${(b.find(d => /archiviste/.test(d)) || '').slice(0, 50)}… »`, `le dernier maillon, les retrouvailles : ${JSON.stringify({ a, b })}`);
+    }
+    toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'course ' + nom + ' · ' + e)); await T.ctx.close();
+  }
   if (toutesErreurs.length) { anomalies++; console.log('--- ERREURS ---'); [...new Set(toutesErreurs)].slice(0, 12).forEach(e => console.log(e)); }
-  console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ CITÉ CONFORME — les quartiers, en hauteur et en largeur : l’arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel (captures dans ${path.relative(path.join(__dirname, '..'), out)})`);
+  console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ CITÉ CONFORME — les quartiers, en hauteur et en largeur : l’arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel ; Sâlim et sa moto, les cinq circuits, la prime, aucune mise (captures dans ${path.relative(path.join(__dirname, '..'), out)})`);
   await browser.close();
   process.exit(anomalies ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });
