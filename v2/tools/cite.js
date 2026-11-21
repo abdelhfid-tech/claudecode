@@ -14,11 +14,14 @@
      combat, d'où l'on peut fuir ; après le combat, la prière est rappelée, puis « Revoir Maître Yûnus » / « Plus tard » :
      B et « Plus tard » ne font rien ; oui mène à côté de Maître Yûnus, qui dit une réplique du rôle de râwî.
    - La partie garde `cite`, s'exporte et se réimporte à l'identique ; aucune erreur console.
-   Usage : node v2/tools/cite.js [dossier de captures]      « CITÉ CONFORME », sinon « ÉCART », « BLOQUÉ », « INACCESSIBLE »,
+   - Quel que soit l'avancement (le décideur, 21 novembre) : « Revenir en 2084 », depuis la halte de chacun des cinq récits et
+     d'une veillée, aucun maillon achevé, mène aux quartiers ; au niveau 1, seul, dans une partie neuve, chaque chimère des rues
+     se vainc à la seule touche A (Frapper), sans défaite, et l'on peut en fuir.
+   Usage : node v2/tools/cite.js [dossier de captures] [avancement]      « CITÉ CONFORME », sinon « ÉCART », « BLOQUÉ », « INACCESSIBLE »,
    « COINCÉ », « ABSENT » ; code de sortie 1. */
 const path = require('path'), fs = require('fs');
 const { chromium, devices } = require('playwright');
-const out = process.argv[2] || path.join(__dirname, '../.smoke/cite');
+const out = process.argv[2] || path.join(__dirname, '../.smoke/cite'), SEUL = process.argv[3] === 'avancement'; // « avancement » : les seules parties 13 et 14
 fs.mkdirSync(out, { recursive: true });
 const url = 'file://' + path.join(__dirname, '../index.html');
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); }, si = (c, bien, mal, mot) => c ? ok(bien) : ko((mot || 'ÉCART') + ' ' + (mal || bien));
@@ -100,7 +103,7 @@ async function avancer(p, n = 120) {
 
 (async () => {
   const browser = await chromium.launch(); let toutesErreurs = [];
-  for (const [w, h] of [[390, 844], [844, 390]]) {
+  for (const [w, h] of SEUL ? [] : [[390, 844], [844, 390]]) {
     const nom = w + '×' + h, haut = h > w;
     const T = await telephone(browser, w, h), P = T.p, E = (fn, a) => P.evaluate(fn, a);
     // ---------- 1. une partie, le prologue joué, Abû Bakr entamé ; par l'écran-titre (« Continuer ») ----------
@@ -299,14 +302,14 @@ async function avancer(p, n = 120) {
     await T.ctx.close();
   }
   // ---------- 11. avant le prologue, la Chaîne n'offre pas les quartiers ----------
-  {
+  if (!SEUL) {
     const T = await telephone(browser, 390, 844), E = (fn, a) => T.p.evaluate(fn, a);
     const r = await E(() => { const I = window.ISNAD; I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.ui.showChain(); return new Promise(res => setTimeout(() => res(window.__t.piedNoms()), 500)); });
     si(!r.includes('La Cité-Miroir'), 'avant le prologue, la Chaîne n’offre pas « La Cité-Miroir »', 'avant le prologue, la Chaîne offre déjà les quartiers : ' + JSON.stringify(r));
     toutesErreurs = toutesErreurs.concat(T.errors); await T.ctx.close();
   }
   // ---------- 12. le dessin des voitures, à côté des personnages, sur un téléphone, dans les trois réglages ----------
-  for (const [qs, nomD] of [['', 'fin'], ['?def=2l', 'fin-adouci'], ['?def=1', 'origine']]) {
+  for (const [qs, nomD] of SEUL ? [] : [['', 'fin'], ['?def=2l', 'fin-adouci'], ['?def=1', 'origine']]) {
     const T = await telephone(browser, 390, 844, qs), P = T.p, E = (fn, a) => P.evaluate(fn, a);
     await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; I.save.auto('essai'); });
     await P.reload(); await P.waitForTimeout(1600); await preparer(P);
@@ -322,6 +325,78 @@ async function avancer(p, n = 120) {
     await P.screenshot({ path: path.join(out, `passant-triste-${nomD}-390x844.png`) });
     si(vu, `le dessin « ${nomD} » : une voiture qui passe et des voitures garées, à côté des personnages (captures)`, `le dessin « ${nomD} » : aucune voiture n’est passée dans l’image`);
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => nomD + ' · ' + e)); await T.ctx.close();
+  }
+  // ---------- 13. quel que soit l'avancement (le décideur, 21 novembre : « Les activités de la cité miroir sont omniprésents dès
+  //               le début […] quelque soit l'avancement dans la saga ») : « Revenir en 2084 », depuis la halte de chacun des cinq
+  //               récits et d'une veillée, aucun maillon achevé, mène aux quartiers, à côté de Maître Yûnus ----------
+  // (les maillons se suivent sur la Chaîne, D211 : l'outil ouvre lui-même chaque récit à son premier chapitre ; ce qu'il éprouve,
+  // c'est la halte de ce récit, par son vrai bouton)
+  {
+    const T = await telephone(browser, 390, 844), P = T.p, E = (fn, a) => P.evaluate(fn, a);
+    await E(() => { const I = window.ISNAD; I.speed = 40; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true }; });
+    const vus = [];
+    for (const [sid, nomR] of [['abubakr', 'Abû Bakr'], ['umar', '’Umar'], ['khalid', 'Khâlid'], ['uthman', '’Uthmân'], ['ali', '’Alî'], ['caid', 'la première veillée']]) {
+      const joue = await E(async sid => { const I = window.ISNAD, W = I.world, T = window.__t; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset();
+        W.roster = {}; W.saga = null; W.startChapter(sid, 0); return T.jusqua(1); }, sid);
+      const noms = await E(() => window.__t.halte());
+      const cite = await E(() => { const b = [...document.querySelectorAll('#menu .side button')].find(x => x.textContent.trim() === 'Revenir en 2084'); if (!b) return null; b.click(); return (document.querySelector('#menu .pane') || {}).textContent || ''; });
+      if (!joue || cite === null) { ko(`INACCESSIBLE ${nomR} : la halte n’offre pas « Revenir en 2084 » (${JSON.stringify({ joue, noms })})`); continue; }
+      const la = await E(() => window.__t.attendre(() => window.ISNAD.world.ch && window.ISNAD.world.ch.id === 'c_quartiers' && window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 30000));
+      const r = await avancer(P), e = await E(() => ({ pres: window.__t.pres(), faits: Object.keys(window.ISNAD.save.data.sagas).filter(k => window.ISNAD.save.data.sagas[k].done), cps: Object.keys(window.ISNAD.save.data.cps || {}) }));
+      if (la && r === 'calme' && e.pres > 0 && e.pres < 40 && !e.faits.length) vus.push(nomR);
+      else ko(`BLOQUÉ ${nomR} : « Revenir en 2084 » ne mène pas aux quartiers, à côté de Maître Yûnus : ${JSON.stringify({ la, r, e })}`);
+    }
+    si(vus.length === 6, `« Revenir en 2084 », depuis la halte de chaque récit (${vus.join(', ')}), aucun maillon achevé : les quartiers, à côté de Maître Yûnus`, `« Revenir en 2084 » n’a mené aux quartiers que depuis : ${vus.join(', ')}`, 'INACCESSIBLE');
+    toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'avancement · ' + e)); await T.ctx.close();
+  }
+  // ---------- 14. au niveau 1, seul : chaque chimère des rues se vainc à la seule touche A (Frapper, sur la cible désignée
+  //               d'emblée), dans une partie neuve qui n'a reçu que ses premiers outils ; et l'on peut en fuir ----------
+  {
+    const T = await telephone(browser, 390, 844), P = T.p, E = (fn, a) => P.evaluate(fn, a);
+    await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true };
+      I.lecons.ouvrir(); ['marcher', 'parler', 'aide', 'halte'].forEach(id => { I.lecons.recevoir(id); I.lecons.sequence(); }); I.save.auto('essai'); });
+    await P.reload(); await P.waitForTimeout(1600); await preparer(P);
+    await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
+    await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
+    const va = await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); return !!b; });
+    const la = va && await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 15000)); await avancer(P);
+    if (!la) ko('BLOQUÉ au niveau 1 : la partie neuve n’arrive pas dans les quartiers par « La Cité-Miroir »');
+    await E(() => { const I = window.ISNAD, W = I.world, h = W.hero('idris'), T = window.__t; h.lvl = 1; h.xp = 0; T.endormir(); T.defaites = 0;
+      const oc = I.script.card; I.script.card = function (cls) { if (cls === 'defeat') T.defaites++; return oc.apply(this, arguments); };
+      const ob = I.battle.start; I.battle.start = async function () { const r = await ob.apply(this, arguments); T.res = r; return r; }; });
+    // une chimère des rues, d'un nom donné, posée tout contre Idris : son contact ouvre le combat (rodeurs.js, ticRues)
+    const rejoindre = id => E(id => { const I = window.ISNAD, W = I.world, f0 = W.foes.find(f => f.rue), T = window.__t; W.healAll(); T.res = null; T.defaites = 0;
+      W.foes.push(Object.assign({}, f0, { id: 'essai_' + id + '_' + W.foes.length, group: [id], cle: null, done: false, enCombat: false, placed: true, x: W.player.x + 8, y: W.player.y }));
+      return T.attendre(() => I.battle.active, 8000); }, id);
+    const bilan = [];
+    for (const id of await E(() => Object.keys(window.ISNAD.D.CITE.rodent))) {
+      if (!(await rejoindre(id))) { ko(`BLOQUÉ au niveau 1 : la chimère « ${id} » n’ouvre pas de combat`); continue; }
+      await P.waitForTimeout(600);
+      const niv = await E(() => { const C = window.ISNAD.battle.contexte(); return C ? C.all.filter(e => e.side === 'foe').map(e => e.lvl) : []; });
+      const t0 = Date.now();   // A, encore et encore : la commande du dessus (Frapper) s'arme, puis agit sur la cible désignée
+      while (Date.now() - t0 < 180000 && await E(() => window.ISNAD.battle.active)) { await P.keyboard.press('Enter'); await P.waitForTimeout(260); }
+      const r = await avancer(P); if (r === 'choix') { await P.waitForTimeout(400); await P.keyboard.press('Escape'); await P.waitForTimeout(300); }   // le rappel ; « Plus tard » (B)
+      const b = await E(() => { const I = window.ISNAD, L = I.battle.last || {}, T = window.__t; return { res: T.res, defaites: T.defaites, tours: L.turns, pv: Math.round((L.minHp === undefined ? 1 : L.minHp) * 100), lvl: I.world.hero('idris').lvl, groupe: I.world.party.join('+') }; });
+      b.id = id; b.niv = niv; bilan.push(b);
+      si(b.res === 'win' && b.defaites === 0 && niv.length && niv.every(n => n === 1) && b.groupe === 'idris',
+        `au niveau 1, seul, à la seule touche A : « ${id} » (niveau ${niv.join('/')}) vaincue en ${b.tours} tours, Constance au plus bas ${b.pv} %, sans défaite`,
+        `au niveau 1, seul : « ${id} » — ${JSON.stringify(b)}`);
+      await E(() => { const I = window.ISNAD, W = I.world, h = W.hero('idris'); h.lvl = 1; h.xp = 0; window.__t.endormir(); });   // (la victoire a pu le faire monter : on le remet au niveau 1)
+    }
+    // la fuite, au niveau 1 : « Fuir » (l'outil « Se protéger » reçu), par son vrai bouton ; la chimère poursuit
+    await E(() => { window.ISNAD.lecons.recevoir('garde'); window.ISNAD.lecons.sequence(); });
+    if (await rejoindre('egoisme')) {
+      // les commandes du premier tour (un mot qui attend, en bas — la leçon de l'outil — se passe d'un A, comme le ferait le joueur)
+      let vu = false; for (let i = 0; i < 120 && !vu; i++) { const r = await E(() => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); if (b && !b.hidden && b.classList.contains('attend')) return 'attend'; return c && c.querySelector('.mlist.main .mi') && !c.querySelector('.mhint') && b.hidden ? 'cmd' : ''; });
+        if (r === 'cmd') { await P.waitForTimeout(350); vu = true; } else { if (r === 'attend') await P.keyboard.press('Enter'); await P.waitForTimeout(150); } }
+      const clic = vu && await E(() => { const b = [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].find(x => !x.hidden && /Fuir/.test(x.textContent)); if (b) b.click(); return !!b; });
+      const fini = clic && await E(() => window.__t.attendre(() => !window.ISNAD.battle.active, 20000));
+      const r = await avancer(P); if (r === 'choix') { await P.waitForTimeout(400); await P.keyboard.press('Escape'); await P.waitForTimeout(300); }
+      const f = await E(() => ({ res: window.__t.res, carte: window.ISNAD.world.map && window.ISNAD.world.map.id, poursuit: window.ISNAD.world.foes.some(f => f.rue && !f.done && window.ISNAD.rodeurs.poursuit(f)) }));
+      si(fini && f.res === 'fuite' && f.carte === 'quartiers', `au niveau 1, « Fuir » quitte le combat : Idris est rendu aux quartiers${f.poursuit ? ', la chimère à ses trousses' : ''}`, `au niveau 1, la fuite : ${JSON.stringify({ vu, clic, fini, f })}`, 'INACCESSIBLE');
+      await E(() => window.__t.endormir());
+    } else ko('BLOQUÉ au niveau 1 : la chimère de la fuite n’ouvre pas de combat');
+    toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'niveau 1 · ' + e)); await T.ctx.close();
   }
   if (toutesErreurs.length) { anomalies++; console.log('--- ERREURS ---'); [...new Set(toutesErreurs)].slice(0, 12).forEach(e => console.log(e)); }
   console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ CITÉ CONFORME — les quartiers, en hauteur et en largeur : l’arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel (captures dans ${path.relative(path.join(__dirname, '..'), out)})`);

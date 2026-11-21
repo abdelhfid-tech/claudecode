@@ -1855,7 +1855,10 @@ pages privées de son compte.
   (lot 2) fait la ville, le refuge, les passants, les voitures, les chimères et le rappel ; le lot suivant rendra les
   activités jouables (la course sur cinq circuits, la borne d'arcade, l'étal de la galerie, s'asseoir devant l'écran, la
   grande roue). `v2/docs/architecture.md`, « Les quartiers de la Cité-Miroir » ; `AGENTS.md`. Contrôle : `node v2/tools/cite.js`
-  (« CITÉ CONFORME ») ; `retours.js` traverse désormais les quartiers.
+  (« CITÉ CONFORME ») ; `retours.js` traverse désormais les quartiers. Puis, le même jour : « Les activités de la cité miroir
+  sont omniprésents dès le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » — les
+  quartiers s'ouvrent dès le prologue joué, quel que soit le maillon en cours, et les chimères des rues, de palier `minion`,
+  prennent le niveau de celui qui mène : `cite.js` les fait vaincre au niveau 1, Idris seul, à la seule touche A, et en fuir.
   *Ce que l'agent a fait.* Une carte neuve, **les quartiers de la Cité** (`quartiers`, 64 × 46 cases ; `maps.js`), au
   crépuscule validé de la Cité-Miroir (D206), dont la rue (`cite`) ne change pas d'une case : la galerie marchande et ses
   vitrines (des formes), la salle de jeux et ses bornes, une boucle d'avenues, le parvis et l'ascenseur des Archives basses,

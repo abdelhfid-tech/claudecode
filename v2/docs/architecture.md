@@ -811,6 +811,12 @@ activités (salle de jeux, galerie marchande, écran géant, parc et manèges). 
   sans une idée noire, une chimère au travers d'un passant, deux combats, le rappel, « Plus tard » (B) et « Revoir Maître
   Yûnus », « Reprendre le récit » à l'identique, la halte et la Chaîne, la partie ; puis le dessin des voitures dans les trois
   réglages. `retours.js` traverse désormais les quartiers à chaque retour et regagne la Chaîne par Maître Yûnus.
+- **Quel que soit l'avancement** (le décideur, 21 novembre : « Les activités de la cité miroir sont omniprésents dès le début et
+  peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga ») : les quartiers s'ouvrent dès le prologue joué,
+  sans autre condition — « La Cité-Miroir » au pied de la Chaîne, « Revenir en 2084 » depuis la halte de tout récit et de toute
+  veillée (`I.cite.offert` ne lit que le prologue). Les chimères des rues sont du palier `minion` et prennent le niveau de celui qui
+  mène (`lvl: 0`) : au niveau 1, Idris seul les vainc en trois tours à la seule touche A, sans défaite, et peut en fuir dès qu'il a
+  l'outil « Se protéger ». `cite.js` l'éprouve (parties 13 et 14 ; `node v2/tools/cite.js <dossier> avancement` : elles seules).
 
 ### L'image agrandie, les textes sur un téléphone
 
