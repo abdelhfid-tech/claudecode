@@ -215,7 +215,9 @@ const url = 'file://' + path.join(out, 'index.html');
     if (ch.livres.length < 2) ko('ÉCART la Chaîne ne montre qu’un livre');
     else if (JSON.stringify(R.debut.ordre) !== JSON.stringify(attendu)) ko(`ÉCART ordre de la Chaîne : ${R.debut.ordre.join(' · ')} — attendu : ${attendu.join(' · ')}`);
     else ok(`la Chaîne range ${ch.livres.length} livres : ${R.debut.titres.join(' | ')}`);
-    if (JSON.stringify(R.debut.scelles) !== '["Idris"]') ko(`ÉCART au début, sont scellés : ${R.debut.scelles.join(', ') || 'aucun'} — attendu : le dernier maillon seulement`);
+    // 2.22 (D211) : les maillons se suivent — au début, dans chaque livre, tout maillon après le premier est scellé, et le dernier maillon
+    const scellesDebut = []; ch.livres.forEach(L => { L.noms.slice(1).forEach(n => scellesDebut.push(n)); if (L.n === 1) scellesDebut.push('Idris'); });
+    if (JSON.stringify(R.debut.scelles) !== JSON.stringify(scellesDebut)) ko(`ÉCART au début, sont scellés : ${R.debut.scelles.join(', ') || 'aucun'} — attendu : ${scellesDebut.join(', ')} (dans chaque livre, les maillons après le premier, et le dernier maillon)`);
     else if (R.livre1.scelles.length || !/dernier maillon/.test(R.livre1.bouton)) ko(`ÉCART les ${ch.nBase} maillons du livre I achevés, le dernier maillon reste scellé (« ${R.livre1.bouton} ») : une saga ajoutée bloque la fin du jeu de base`);
     else if (!/du livre [IVX]+ : /.test(R.transmise.bouton)) ko(`ÉCART la Chaîne transmise, le bouton ne propose pas le maillon d'un autre livre : « ${R.transmise.bouton} »`);
     else ok(`le dernier maillon s'ouvre dès que les ${ch.nBase} maillons du livre I sont achevés (« ${R.livre1.bouton} ») ; ensuite : « ${R.transmise.bouton} »`);
