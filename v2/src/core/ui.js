@@ -131,6 +131,7 @@
       mk(I.t('Luminosité : {nom}', { nom: lumNom() }), b => { lumSuivante(); b.textContent = I.t('Luminosité : {nom}', { nom: lumNom() }); });
       mk(G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'), b => { G.low = !G.low; G._slow = 0; sv.opts.low = G.low; I.save.store(); G.resize(); b.textContent = G.low ? I.t('Rendu : 2D simple') : I.t('Rendu : rétro-HD'); });
       mk(I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }), b => { U.tzSuivant(); b.textContent = I.t('Texte : {taille}', { taille: I.t(U.TZ[U.tz()][0]) }); });
+      mk(I.t('Vitesse du texte : {vitesse}', { vitesse: vitesseNom() }), b => { vitesseSuivante(); b.textContent = I.t('Vitesse du texte : {vitesse}', { vitesse: vitesseNom() }); });   // 2.24 (D213)
       mk(I.t('Image : {zoom}', { zoom: zoomNom() }), b => { U.zoomSuivant(); b.textContent = I.t('Image : {zoom}', { zoom: zoomNom() }); });
       mk(I.t('Plein écran'), () => U.pleinEcran()).dataset.plein = '';   // (2.18 : entrer, ou sortir ; en largeur, l'écran y reste en largeur)
       // 2.x : la langue secondaire (sous chaque réplique, la même chose dans une autre langue), avec ce qu'elle est
@@ -575,6 +576,8 @@
         { label: I.t('Aide du jeu'), fn: aide, show: () => '<h3>' + I.t('Aide du jeu') + '</h3><p>' + I.t('Les règles, thème par thème : {themes}.', { themes: U.AIDE.map(a => I.t(a[0]).toLowerCase()).join(', ') }) + '</p>' });
       items.push({ cat: I.t('Réglages') },
         toggle(I.t('Texte'), () => I.t(U.TZ[U.tz()][0]), U.tzSuivant, I.t('Taille des caractères dans les dialogues, les menus et les combats.')),
+        // 2.24 (D213) : la vitesse à laquelle s'écrivent les répliques ; une longue réplique se lit en pages
+        toggle(I.t('Vitesse du texte'), vitesseNom, vitesseSuivante, I.t('La vitesse à laquelle s’écrivent les répliques et les narrations : lente, posée ou vive. Un toucher sur le texte, A ou Entrée l’écrit d’un coup. Une réplique trop longue pour l’écran se lit en pages : ▸ mène à la suivante.')),
         toggle(I.t('Image'), zoomNom, U.zoomSuivant, I.t('Agrandit l’image pendant l’exploration : on voit moins loin, mais en plus grand. Sur l’image elle-même : deux doigts qui s’écartent, la molette, ou le bouton « × » en haut de la scène.')),
         toggle(I.t('Manette tactile'), () => o.joy !== false ? I.t('affichée') : I.t('masquée'), () => { o.joy = o.joy === false; U.applyOpts(); }, I.t('Sur un écran tactile, comme sur une console de poche : le joystick sous le pouce gauche pour se déplacer et choisir ; A pour parler, agir et valider ; B pour frapper et revenir en arrière, sous le pouce droit — tenu avec le joystick, B fait courir. On peut aussi toucher directement la scène et les boutons.')),
         // 2.18 : le plein écran d'un écran tactile tenu en largeur — seulement là où le navigateur le permet
@@ -876,6 +879,9 @@
   // la luminosité (2.18) : clair (d'office), moyen, sombre (la lumière de la 2.15) — gardée avec les autres réglages
   const lumNom = () => I.t((G.LUMINOSITES.find(d => d[0] === G.lumNom) || G.LUMINOSITES[0])[1]);
   const lumSuivante = () => { const i = G.LUMINOSITES.findIndex(d => d[0] === G.lumNom), n = G.LUMINOSITES[(i + 1) % G.LUMINOSITES.length][0]; G.luminosite(n); I.save.data.opts.lum = n; I.save.store(); };
+  // la vitesse du texte (2.24, D213) : lente, posée (d'office), vive — gardée avec les autres réglages, jamais dans la partie
+  const vitesseNom = () => I.t(S.vitesse()[1]);
+  const vitesseSuivante = () => { const i = S.VITESSES.indexOf(S.vitesse()), n = S.VITESSES[(i + 1) % S.VITESSES.length][0]; I.save.data.opts.vitesse = n; I.save.store(); };
   /* ----- l'agrandissement de l'image (2.x) -----
      Demande du décideur : sur un téléphone, les personnages sont trop petits — « il faut pouvoir zoomer dans l'image ».
      Pendant l'exploration, l'image s'agrandit de U.zf (1 à 3) autour de celui qui mène : on en voit moins, en plus grand.
@@ -977,6 +983,7 @@
     document.body.classList.toggle('zoom', zoom && w / U.base < G.PW - 0.5);   // « zoom » : l'image rognée d'un écran en hauteur (pas l'agrandissement voulu)
     document.body.classList.toggle('agrandi', U.Z > 1.01);
     G.resize();
+    if (S.recaler) S.recaler();   // 2.24 : une page qui ne tiendrait plus dans l'écran tourné défile, plutôt que d'être coupée
     if (S.placer2) S.placer2(true);   // 2.x : la seconde bulle suit la boîte de dialogue (elle ne paraît qu'avec une langue secondaire)
   }
   // 2.x — la manette tactile, comme sur une console de poche (demande du décideur, 19 novembre : « jouer sur le téléphone

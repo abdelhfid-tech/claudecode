@@ -101,21 +101,119 @@
   if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => { if (!$('#dialog2').hidden) S.placer2(true); });
   // (fin : la lecture s'achève — l'en-tête peut revenir ; entre deux répliques, il reste retiré)
   const cacher2 = fin => { const d2 = $('#dialog2'); if (d2 && !d2.hidden) d2.hidden = true; if (fin && document.body.classList.contains('avec2')) document.body.classList.remove('avec2'); };
-  // un carton qui porte la langue secondaire tient dans l'écran : ses caractères se resserrent, jamais sous dix points
+  // un carton tient dans l'écran : ses caractères se resserrent, cran par cran, jamais sous dix points ; au-delà, il défile
+  // (2.24, D213 : tout carton, qu'il porte ou non la langue secondaire ; un carton qui tient ne change pas d'un point)
   function tenirCarton(c) {
-    c.style.removeProperty('--k2'); if (!c.querySelector('.l2')) return;
+    c.style.removeProperty('--k2'); c.classList.remove('defile'); if (c.classList.contains('credits')) return;
     const mini = () => Math.min(...[...c.querySelectorAll('*')].filter(e => e.childNodes.length && [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())).map(e => parseFloat(getComputedStyle(e).fontSize)));
-    let ok = 1; for (const f of [0.94, 0.88, 0.82, 0.76]) { if (c.scrollHeight <= c.clientHeight + 2) return; c.style.setProperty('--k2', f); if (mini() < 10) { c.style.setProperty('--k2', ok); return; } ok = f; }
+    // (le contenu, centré, tient s'il laisse au moins une petite marge en haut et en bas : douze points, ou sa marge propre)
+    const tient = () => { const k = [...c.children]; if (!k.length) return true; const rs = k.map(e => e.getBoundingClientRect()).filter(r => r.height > 0), m = Math.min(12, parseFloat(getComputedStyle(c).paddingTop) || 0);
+      return !rs.length || Math.max(...rs.map(r => r.bottom)) - Math.min(...rs.map(r => r.top)) + 2 * m <= c.clientHeight + 1; };
+    let ok = 1; for (const f of [0.94, 0.88, 0.82, 0.76, 0.7]) { if (tient()) return; c.style.setProperty('--k2', f); if (mini() < 10) { c.style.setProperty('--k2', ok); break; } ok = f; }
+    if (!tient()) c.classList.add('defile');
   }
+  S.tenirCarton = tenirCarton;
 
-  /* ----- boîte de dialogue ----- */
-  let typing = null;
-  // o (facultatif) : { nom } le nom qui parle, imposé (le verdict de la Chaîne) ; { html } le texte est déjà du balisage
-  // (une phrase du moteur, jamais un texte de récit) ; { duree } la ligne passe d'elle-même après ce temps, ou d'un toucher ;
-  // 2.x : { src: [objet, champ] } d'où vient le texte (pour la langue secondaire) ; { l2 } le second texte, déjà dit
-  async function showLine(kind, sp, text, o) {
-    o = o || {};
-    const t2 = L2() ? (o.l2 !== undefined ? o.l2 : I.langue.second(text, o.src && o.src[0], o.src && o.src[1])) : null; cacher2();
+  /* ----- 2.24 · la vitesse du texte, et les pages d'une longue réplique (D213) -----
+     Le décideur, 21 novembre : « il faut aller moins vite dans l'écriture et vérifier la longueur des textes car parfois ils
+     ne s'affichent pas entièrement dans l'écran sous l'image du jeu ».
+     - La vitesse : un réglage de l'appareil (opts.vitesse, jamais dans la partie), trois crans — « lente », « posée » (d'office,
+       pour tous) et « vive », celle d'avant la 2.24 (un pas de I.langue.avance toutes les 22 ms). Lente et posée se comptent en
+       millisecondes par signe pesé (I.langue.poids : un signe japonais en vaut 2,2 ; un texte vocalisé ne compte pas ses
+       signes) ; l'arabe s'écrit toujours mot à mot, ses lettres liées et leurs signes ensemble. Un toucher, A ou Entrée
+       écrit la page d'un coup, comme avant.
+     - Les pages : une réplique, une narration ou une ligne du moteur tient entière dans sa zone (S.zone) — en hauteur, entre
+       le bas de l'image et la bande de la manette (le bas de l'écran si elle est masquée) ; en largeur et au bureau, au plus
+       S.HAUT_MAX de la hauteur de la scène, pour que celui qui parle, que la vue garde au milieu, reste visible. Si elle ne
+       tient pas, ses caractères se resserrent, cran par cran, jamais sous dix points ni sous la taille « normal » ; sinon,
+       elle se partage en pages, à sa taille entière, coupées entre deux phrases — puis, pour une phrase qui ne tiendrait pas
+       seule, entre deux membres, puis entre deux mots, jamais au milieu d'un mot —, l'italique refermé au bas d'une page et
+       rouvert en haut de la suivante. Chaque page s'écrit à son tour ; « ▸ » (« ◂ » de droite à gauche) invite à la
+       suivante. Le texte ne change pas d'un signe : ce n'est qu'une façon de l'afficher. La seconde bulle de la langue
+       secondaire paraît, en entier, quand la dernière page est écrite. */
+  S.VITESSES = [['lente', I.T('lente'), 60], ['posee', I.T('posée'), 40], ['vive', I.T('vive'), 0]];
+  S.vitesse = () => { const o = (I.save && I.save.data && I.save.data.opts) || {}; return S.VITESSES.find(v => v[0] === o.vitesse) || S.VITESSES[1]; };
+  S.HAUT_MAX = 0.4;
+  // la zone d'une réplique : la hauteur que la boîte peut prendre (max), et si elle est sous l'image (portrait)
+  S.zone = function () {
+    const B = document.body, box = $('#dialog'), vh = window.innerHeight || document.documentElement.clientHeight;
+    if (B.classList.contains('portrait')) { const pb = B.classList.contains('manette') ? (I.ui && I.ui.padBas) || 0 : 0; return { portrait: true, max: Math.max(40, Math.floor(vh - (pb || 8) - box.getBoundingClientRect().top)) }; }
+    return { portrait: false, max: Math.max(40, Math.floor($('#stage').getBoundingClientRect().height * S.HAUT_MAX)) };
+  };
+  const ESP = /[\s\u00a0\u202f]/, FIN = /[.!?…。！？؟]/, MEMBRE = /[,;:—–、，،؛]/, CJK = /[\u3000-\u30ff\u3400-\u9fff\uff00-\uffef]/;
+  const FERMANT = /[»”’)\]」』）〕】〉》]/, OUVRANT = /[«“‘(\[「『（〔【〈《]/, NE_COMMENCE_PAS = /[:;!?»”’)\]%]/;
+  const FERME_JA = /[、。，．！？」』）〕】〉》ー々ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮヵヶ]/;
+  // l'italique ouvert avant chaque signe (*…*) ; dans un texte balisé, ce qui est dans une balise ou une entité
+  function lecture0(t, html) {
+    const n = t.length, it = new Array(n + 1), bal = new Array(n).fill(false); let ouv = false;
+    for (let i = 0; i < n; i++) { it[i] = ouv; if (!html && t[i] === '*') ouv = !ouv; } it[n] = ouv;
+    if (html) for (let i = 0; i < n; i++) { if (t[i] === '<') { const j = t.indexOf('>', i); if (j < 0) break; for (let k = i; k <= j; k++) bal[k] = true; i = j; } else if (t[i] === '&') { const j = t.indexOf(';', i); if (j > i && j - i < 10) { for (let k = i; k <= j; k++) bal[k] = true; i = j; } } }
+    return { it, bal };
+  }
+  // les endroits où l'on peut couper (l'indice où commence la page suivante) et leur rang : 1 entre deux phrases, 2 entre
+  // deux membres de phrase, 3 entre deux mots (en japonais, entre deux signes qui peuvent se séparer)
+  function coupes(t, html) {
+    const n = t.length, { it, bal } = lecture0(t, html), C = new Map(), mettre = (i, r) => { if (i > 0 && i < n && (!C.has(i) || C.get(i) > r)) C.set(i, r); };
+    // après une fin de phrase ou de membre : ce qui la ferme (guillemet, parenthèse, italique, balise fermante), puis l'espace
+    const apres = j => { let k = j + 1; for (;;) { let m = k; while (m < n && ESP.test(t[m])) m++;
+      if (m < n && (FERMANT.test(t[m]) || (t[m] === '*' && it[m]))) { k = m + 1; continue; }
+      if (html && t.startsWith('</', m)) { const e = t.indexOf('>', m); if (e > 0) { k = e + 1; continue; } } return k; } };
+    for (let j = 0; j < n; j++) {
+      if (bal[j]) continue; const c = t[j], fin = FIN.test(c), membre = !fin && MEMBRE.test(c);
+      if (fin || membre) { const k = apres(j); if (k < n && (ESP.test(t[k]) || CJK.test(c) || CJK.test(t[k]))) { let s = k; while (s < n && ESP.test(t[s])) s++; if (s < n && !NE_COMMENCE_PAS.test(t[s])) mettre(s, fin ? 1 : 2); } }
+      if (ESP.test(c) && j + 1 < n && !ESP.test(t[j + 1]) && !NE_COMMENCE_PAS.test(t[j + 1])) { let p = j; while (p > 0 && ESP.test(t[p])) p--; if (!OUVRANT.test(t[p])) mettre(j + 1, 3); }
+      if (j > 0 && CJK.test(c) && CJK.test(t[j - 1]) && !FERME_JA.test(c) && !OUVRANT.test(t[j - 1])) mettre(j, 3);
+    }
+    return [...C].map(([i, r]) => ({ i, r })).sort((a, b) => a.i - b.i);
+  }
+  // les balises ouvertes avant l'indice e d'un texte balisé
+  const pile = (t, e) => { const P = [], re = /<(\/?)([a-z0-9]+)\b[^>]*?(\/?)>/gi; let m;
+    while ((m = re.exec(t)) && m.index < e) { const nom = m[2].toLowerCase(); if (m[3] || /^(br|img|hr|wbr)$/.test(nom)) continue;
+      if (m[1]) { const k = P.map(x => x.nom).lastIndexOf(nom); if (k >= 0) P.splice(k, 1); } else P.push({ nom, ouvre: m[0] }); }
+    return P; };
+  // la page [s, e) d'un texte : ses espaces ôtées aux bords, l'italique (ou les balises) refermé et rouvert à la coupe
+  function morceau(t, s, e, html, it) {
+    let p = t.slice(s, e).replace(/^[\s\u00a0\u202f]+|[\s\u00a0\u202f]+$/g, '');
+    if (!html) { if (it[s]) p = '*' + p; if (e < t.length && it[e]) p += '*'; return p.replace(/\*[\s\u00a0\u202f]*\*/g, ''); }
+    return pile(t, s).map(x => x.ouvre).join('') + p + pile(t, e).reverse().map(x => '</' + x.nom + '>').join('');
+  }
+  // une réplique, dans la boîte déjà posée : ses pages (le texte source de chacune, au format du texte), le resserrement de
+  // ses caractères (k), sa zone (max), les coupes (indices du texte). La boîte en garde le resserrement.
+  // (La seconde bulle, elle, garde sa place d'avant : sous la boîte, ou jusqu'au bas de l'écran, la manette s'effaçant le
+  // temps de la lire ; elle se resserre, puis défile — placer2, tenir2. Elle porte le texte entier : la boîte n'en est pas
+  // repaginée, pour que l'on compare une réplique à sa seconde langue.)
+  function paginer(text, o) {
+    const box = $('#dialog'), tx = $('#dialog .text'), html = !!o.html, rendu = p => (html ? p : I.fmt(p));
+    box.style.removeProperty('--kd'); box.style.minHeight = ''; tx.style.maxHeight = ''; tx.classList.remove('defile');
+    const Z = S.zone(), tient = (h, max) => { tx.innerHTML = h; return box.offsetHeight <= max + 0.5; };
+    tx.innerHTML = ''; if (box.offsetHeight > Z.max) box.style.minHeight = Z.max + 'px';   // une toute petite zone : la boîte vide n'en sort pas
+    const R = { pages: [text], k: 1, max: Z.max, coupes: [] };
+    if (tient(rendu(text), Z.max)) return R;
+    // d'abord, les caractères se resserrent, cran par cran : jamais sous dix points, ni sous la taille « normal »
+    const tz = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tz')) || 1, base = parseFloat(getComputedStyle(tx).fontSize) || 16, mini = Math.max(10 / base, Math.min(1, 1 / tz));
+    for (const f of [0.94, 0.88, 0.82, 0.76, 0.7].filter(v => v > mini + 0.01).concat(mini < 0.99 ? [mini] : [])) { box.style.setProperty('--kd', f.toFixed(3)); if (tient(rendu(text), Z.max)) { R.k = +f.toFixed(3); return R; } }
+    box.style.removeProperty('--kd');
+    // puis, des pages, à la taille entière : de chaque début de page, la coupe la plus lointaine qui tient, du meilleur rang
+    // possible (entre deux phrases, sinon deux membres, sinon deux mots). Une page qu'une coupe entre deux phrases laisserait
+    // à moins de 60 % remplie (une phrase courte, puis une longue) va plutôt jusqu'à la fin d'un membre de la phrase suivante.
+    const C = coupes(text, html), { it } = lecture0(text, html), n = text.length; R.pages = [];
+    tx.innerHTML = rendu(text); const cadre = box.offsetHeight - tx.offsetHeight, plein = () => tx.offsetHeight / Math.max(1, Z.max - cadre);   // (le texte entier déborde : la boîte suit son texte, sans sa hauteur minimale)
+    const loin = (r, s) => { const L = C.filter(c => c.r <= r && c.i > s); let lo = 0, hi = L.length - 1, best = -1;
+      while (lo <= hi) { const m = (lo + hi) >> 1; if (tient(rendu(morceau(text, s, L[m].i, html, it)), Z.max)) { best = m; lo = m + 1; } else hi = m - 1; }
+      return best >= 0 ? L[best].i : -1; };
+    let s = 0; while (s < n && ESP.test(text[s])) s++;
+    for (let garde = 0; garde < 400; garde++) {
+      const reste = morceau(text, s, n, html, it); if (tient(rendu(reste), Z.max) || !C.some(c => c.i > s)) { R.pages.push(reste); break; }
+      let cut = loin(1, s);
+      if (cut >= 0) { tient(rendu(morceau(text, s, cut, html, it)), Z.max); if (plein() < 0.6) { const c2 = loin(2, s); if (c2 > cut) cut = c2; } }
+      else { cut = loin(2, s); if (cut < 0) cut = loin(3, s); }
+      if (cut < 0) cut = C.find(c => c.i > s).i;   // pas même un mot : le premier, seul (la boîte défilera plutôt que de couper)
+      R.pages.push(morceau(text, s, cut, html, it)); R.coupes.push(cut); s = cut;
+    }
+    return R;
+  }
+  // la boîte de dialogue posée pour une ligne : sa sorte, son sceau, la silhouette et le nom de qui parle, la marque
+  function poser(kind, sp, o) {
     const box = $('#dialog'); box.hidden = false; box.className = kind;
     document.body.classList.add('in-dialog');
     $('#dialog .seal').style.backgroundImage = sp ? `url(${sp.seal})` : 'none';
@@ -124,25 +222,62 @@
     const nm = $('#dialog .name'); nm.textContent = sp ? sp.name : (o.nom || (I.world.saga && I.world.saga.narrator) || I.t('La Chaîne')); nm.style.color = sp ? sp.color : '#ffe08a';
     nm.dir = I.langue.sens(nm.textContent); // chaque ligne prend le sens de sa langue (la scène, elle, reste de gauche à droite)
     if (marques.length) { clearTimeout(marqueT); const m = I.el('span', 'marque', marques.splice(0).join(' · ')); m.dir = I.langue.sens(m.textContent); nm.appendChild(m); }
-    const tx = $('#dialog .text'); const html = o.html ? text : I.fmt(text); tx.dir = I.langue.sens(text);
-    // effet machine à écrire sur le texte brut, puis rendu complet
-    const plain = (o.html ? text.replace(/<[^>]*>/g, '') : text).replace(/\*/g, ''); let i = 0, done = false;
-    tx.textContent = '';
-    $('#dialog .next').style.visibility = 'hidden';
-    const fast = I.speed > 3;
-    await new Promise(res => {
-      const finish = () => { if (done) return; done = true; clearInterval(typing); I.input.pop(h); tx.innerHTML = html; if (t2) montrer2(kind, t2, o.html); res(); };   // 2.x : la seconde bulle, en entier, quand la première est écrite
+    return box;
+  }
+  // les pages d'une ligne, telles que showLine les écrirait (pour v2/tools/longueurs.js) : la boîte est posée, rien ne s'écrit
+  S.pages = function (kind, sp, text, o) { o = o || {}; poser(kind, sp, o); $('#dialog .text').dir = I.langue.sens(text); return paginer(text, o); };
+  // l'écran a changé pendant qu'une page se lit (le téléphone tourné) : si elle ne tient plus, son texte défile plutôt que
+  // d'être coupé (la ligne suivante se repagine d'elle-même)
+  S.recaler = function () {
+    const box = $('#dialog'), tx = $('#dialog .text'); if (!box || box.hidden) return;
+    tx.style.maxHeight = ''; tx.classList.remove('defile'); const Z = S.zone(), d = box.offsetHeight - Z.max;
+    if (d > 1) { tx.style.maxHeight = Math.max(24, tx.clientHeight - d) + 'px'; tx.classList.add('defile'); }
+  };
+  // ce qui s'écrit d'un coup, à la vitesse lente ou posée : un signe (deux pour une paire de substitution) ; en arabe, un mot
+  const unite = (t, i) => (I.langue.lang === 'ar' ? I.langue.avance(t, i) : Math.min(t.length, i + (/[\ud800-\udbff]/.test(t[i] || '') ? 2 : 1)));
+
+  /* ----- boîte de dialogue ----- */
+  let typing = null;
+  // une page qui s'écrit, puis son rendu complet ; apres : ce qui suit la dernière page (la seconde bulle)
+  function ecrire(tx, html, apres) {
+    const V = S.vitesse(), ms = V[2], t0 = performance.now(), d = document.createElement('div'); d.innerHTML = html; const plain = d.textContent;
+    tx.textContent = ''; $('#dialog .next').style.visibility = 'hidden';
+    return new Promise(res => {
+      let i = 0, done = false, son = 0;
+      const finish = () => { if (done) return; done = true; clearInterval(typing); I.input.pop(h); tx.innerHTML = html; S.recaler(); if (apres) apres(); res(); };
       const h = I.input.push(a => { if (a === 'ok' || a === 'cancel') finish(); return true; });
-      if (fast) return finish();
-      let tick = 0;
-      typing = setInterval(() => { i = I.langue.avance(plain, i); tx.textContent = plain.slice(0, i); if (++tick % 3 === 0) I.audio.sfx('step'); if (i >= plain.length) finish(); }, 22);
+      if (I.speed > 3) return finish();
+      typing = setInterval(() => {
+        const avant = i, now = performance.now();
+        if (!ms) i = I.langue.avance(plain, i);
+        else { const cible = (now - t0) / ms; for (let j = unite(plain, i); i < plain.length && I.langue.poids(plain.slice(0, j)) <= cible; j = unite(plain, i)) i = j; }
+        if (i !== avant) { tx.textContent = plain.slice(0, i); if (now - son >= 64) { son = now; I.audio.sfx('step'); } }
+        if (i >= plain.length) finish();
+      }, 22);
     });
-    $('#dialog .next').style.visibility = 'visible'; lisible(box);
-    await I.sleep(60);
-    if (I.debug.auto) await I.sleep(30); else if (o.duree) await I.input.waitTimed(['ok', 'cancel'], o.duree + (t2 ? S.lecture2(t2) : 0), 0); else await I.input.wait(['ok', 'cancel']);
-    I.audio.sfx('blip');
+  }
+  // o (facultatif) : { nom } le nom qui parle, imposé (le verdict de la Chaîne) ; { html } le texte est déjà du balisage
+  // (une phrase du moteur, jamais un texte de récit) ; { duree } la ligne passe d'elle-même après ce temps, ou d'un toucher ;
+  // 2.x : { src: [objet, champ] } d'où vient le texte (pour la langue secondaire) ; { l2 } le second texte, déjà dit
+  async function showLine(kind, sp, text, o) {
+    o = o || {};
+    const t2 = L2() ? (o.l2 !== undefined ? o.l2 : I.langue.second(text, o.src && o.src[0], o.src && o.src[1])) : null; cacher2();
+    const box = poser(kind, sp, o), tx = $('#dialog .text'), nx = $('#dialog .next'); tx.dir = I.langue.sens(text);
+    // 2.24 : la ligne, en pages qui tiennent dans l'écran ; chacune s'écrit (effet machine à écrire), puis se lit
+    const P = paginer(text, o), n = P.pages.length;
+    for (let p = 0; p < n; p++) {
+      const fin = p === n - 1, html = o.html ? P.pages[p] : I.fmt(P.pages[p]);
+      await ecrire(tx, html, fin && t2 ? () => montrer2(kind, t2, o.html) : null);   // 2.x : la seconde bulle, en entier, quand la dernière page est écrite
+      nx.textContent = fin ? '▼' : (I.langue.dir() === 'rtl' ? '◂' : '▸'); nx.style.visibility = 'visible'; lisible(box);
+      await I.sleep(60);
+      // (une ligne à durée garde son temps de lecture, page par page)
+      const duree = o.duree ? (n > 1 ? S.lecture(html) : o.duree) + (fin && t2 ? S.lecture2(t2) : 0) : 0;
+      if (I.debug.auto) await I.sleep(30); else if (duree) await I.input.waitTimed(['ok', 'cancel'], duree, 0); else await I.input.wait(['ok', 'cancel']);
+      I.audio.sfx('blip');
+    }
   }
   S.showLine = showLine;
+  S.montrer2 = montrer2;
   S.hideDialog = function () { marqueAuFil(); $('#dialog').hidden = true; cacher2(true); document.body.classList.remove('in-dialog'); if (S.depth === 0 && I.world) I.world.focus = null; };
   // le temps de lire une ligne du moteur : 1,2 s, plus 45 ms par signe pesé (le japonais dit plus en moins de signes)
   S.lecture = html => I.clamp(1200 + 45 * I.langue.poids(String(html).replace(/<[^>]*>/g, '')), 1800, 5000);
@@ -157,7 +292,8 @@
     marqueAuFil();
     const c = $('#card'); c.className = cls; c.innerHTML = html; c.hidden = false;
     document.body.classList.add('en-carton'); // l'en-tête et le fil se masquent le temps du carton (en hauteur, ils transparaissaient dessous)
-    if (L2() && c.querySelector('.l2')) { c.classList.add('avec2'); tenirCarton(c); if (auto) auto += S.lecture2(c.querySelector('.l2').textContent); }   // 2.x : la langue secondaire tient dans l'écran, et le carton reste le temps de la lire
+    if (L2() && c.querySelector('.l2')) { c.classList.add('avec2'); if (auto) auto += S.lecture2(c.querySelector('.l2').textContent); }   // 2.x : le carton reste le temps de lire la langue secondaire
+    tenirCarton(c);   // 2.24 : tout carton tient dans l'écran (D213)
     void c.offsetWidth; c.classList.add('on'); lisible(c);
     try {
       if (I.debug.auto) await I.sleep(60);
@@ -167,6 +303,17 @@
     } finally { if (c.hidden || !c.classList.contains('on')) document.body.classList.remove('en-carton'); }
   }
   S.card = card;
+  // le balisage d'un carton du récit : une parole citée et sa source (quote), un titre et sa date (title) — avec, sous son
+  // texte, la langue secondaire (2.24 : à part, pour que v2/tools/longueurs.js éprouve les cartons tels qu'ils se montrent)
+  S.carton = function (op) {
+    const a = op[1], b = op[2];
+    if (op[0] === 'quote') { const sans = q => q.replace(/^«\s*/, '').replace(/\s*»$/, ''), a2 = L2() ? I.langue.second(a, op, 1) : null, b2 = a2 ? I.langue.second(b, op, 2) : null;
+      return `<div class="orn">❖</div><blockquote>${I.fmt(sans(a))}</blockquote><cite>${I.fmt(b)}</cite>${a2 ? bloc2(`<blockquote>${I.fmt(sans(a2))}</blockquote>${b2 ? `<cite>${I.fmt(b2)}</cite>` : ''}`) : ''}<div class="hint">▼</div>`; }
+    const a2 = L2() ? I.langue.second(a, op, 1) : null, b2 = a2 && b ? I.langue.second(b, op, 2) : null;
+    return `<h1>${I.fmt(a)}</h1>${b ? `<p>${I.fmt(b)}</p>` : ''}<div class="rule"></div>${a2 ? bloc2(`<h2>${I.fmt(a2)}</h2>${b2 ? `<p>${I.fmt(b2)}</p>` : ''}`) : ''}`;
+  };
+  // le carton qui ouvre un pourparler (prie : la prière a été tenue)
+  S.cartonPourparler = (P, prie) => `<p class="small">${I.t('Pourparler')}</p><h1>${I.fmt(P.title)}</h1><p>${I.fmt(P.intro)}</p>${prie ? '<p class="small">' + I.t('Sérénité de la prière : +1 de confiance') + '</p>' : ''}<div class="rule"></div><div class="hint">▼</div>`;
 
   /* ----- choix ----- */
   const cid = id => id.indexOf('/') > 0 ? id : I.world.saga.id + '/' + id; // « saga/id » : un savoir appris ailleurs
@@ -226,7 +373,7 @@
     // 2.x (D189, lot 2) : l'en-tête tient en deux lignes — le titre et la manche, puis la confiance ; le nom de
     // l'interlocuteur n'y est plus, puisqu'il vient de parler, et sa question tient lieu d'invite
     const head = r => ({ cls: 'court manche', html: `<span class="seal" style="background-image:url(${sp.seal})"></span><span class="pt"><b>${I.esc(P.title)}</b><small>${I.t('manche {manche} / {total}', { manche: r + 1, total: n })}</small></span><span class="trust">${I.t('Confiance')} <span class="pips">${pips()}</span></span>` });
-    await card('title parley', `<p class="small">${I.t('Pourparler')}</p><h1>${I.fmt(P.title)}</h1><p>${I.fmt(P.intro)}</p>${S.flags._prayed ? '<p class="small">' + I.t('Sérénité de la prière : +1 de confiance') + '</p>' : ''}<div class="rule"></div><div class="hint">▼</div>`);
+    await card('title parley', S.cartonPourparler(P, S.flags._prayed));
     for (let r = 0; r < n; r++) {
       const R = P.rounds[r];
       await showLine('say', sp, R.say, { src: [R, 'say'] }); S.hideDialog();
@@ -377,10 +524,8 @@
       case 'say': W.focus = (W.npcs && W.map && W.npcs.find(n => n.id === a && !n.hidden && n.map === W.map.id && n.placed)) || null; await showLine('say', speaker(a), b, { src: [op, 2] }); break;
       case 'nar': W.focus = null; await showLine('nar', null, a, { src: [op, 1] }); break;
       // 2.x : un carton du récit porte, sous son texte, la langue secondaire (la parole et sa source ; le titre et sa date)
-      case 'quote': { S.hideDialog(); I.audio.sfx('light'); const sans = q => q.replace(/^«\s*/, '').replace(/\s*»$/, ''), a2 = L2() ? I.langue.second(a, op, 1) : null, b2 = a2 ? I.langue.second(b, op, 2) : null;
-        await card('quote', `<div class="orn">❖</div><blockquote>${I.fmt(sans(a))}</blockquote><cite>${I.fmt(b)}</cite>${a2 ? bloc2(`<blockquote>${I.fmt(sans(a2))}</blockquote>${b2 ? `<cite>${I.fmt(b2)}</cite>` : ''}`) : ''}<div class="hint">▼</div>`); break; }
-      case 'title': { S.hideDialog(); I.audio.sfx('roll'); const a2 = L2() ? I.langue.second(a, op, 1) : null, b2 = a2 && b ? I.langue.second(b, op, 2) : null;
-        await card('title', `<h1>${I.fmt(a)}</h1>${b ? `<p>${I.fmt(b)}</p>` : ''}<div class="rule"></div>${a2 ? bloc2(`<h2>${I.fmt(a2)}</h2>${b2 ? `<p>${I.fmt(b2)}</p>` : ''}`) : ''}`, 3000); break; }
+      case 'quote': { S.hideDialog(); I.audio.sfx('light'); await card('quote', S.carton(op)); break; }
+      case 'title': { S.hideDialog(); I.audio.sfx('roll'); await card('title', S.carton(op), 3000); break; }
       case 'choice': {
         S.hideDialog();
         let opts = b.slice(), first = true; const sv = I.save.data;

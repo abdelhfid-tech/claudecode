@@ -63,11 +63,13 @@ body[data-theme="cyber"] #dialog { border-radius: 0; clip-path: polygon(0 0, cal
 body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::after { display: none; }
 #dialog .seal { position: absolute; left: .9em; top: 50%; width: 4.6em; height: 4.6em; margin-top: -2.3em; background-size: cover; border-radius: 50%; filter: drop-shadow(0 0 8px rgba(233, 200, 119, .35)); }
 #dialog .name { font-family: var(--f-display); font-weight: 700; letter-spacing: .07em; font-size: .88em; margin-bottom: .15em; }
-#dialog .text { font-size: 1em; color: var(--sand); min-height: 2.7em; }
+#dialog .text { font-size: calc(1em * var(--kd, 1)); color: var(--sand); min-height: 2.7em; }
+/* 2.24 (D213) : une page qui ne tient plus (l'écran a tourné pendant qu'on la lit) défile plutôt que d'être coupée */
+#dialog .text.defile { overflow-y: auto; overscroll-behavior: contain; }
 #dialog .next { position: absolute; right: .9em; bottom: .35em; color: var(--acc); font-size: .7em; animation: bob 1s infinite; }
 #dialog.nar { padding-left: 1.6em; padding-right: 1.6em; text-align: center; background: linear-gradient(180deg, rgba(8, 7, 18, .78), rgba(8, 7, 18, .92)); }
 #dialog.nar .name { font-size: .66em; letter-spacing: .3em; text-transform: uppercase; color: var(--dim) !important; }
-#dialog.nar .text { font-style: italic; font-size: 1.04em; color: #f7ecd2; }
+#dialog.nar .text { font-style: italic; font-size: calc(1.04em * var(--kd, 1)); color: #f7ecd2; }
 @keyframes bob { 50% { transform: translateY(.25em); } }
 
 /* ---------- choix ---------- */
@@ -80,7 +82,10 @@ body[data-theme="cyber"] #dialog::before, body[data-theme="cyber"] #dialog::afte
 #choice .opt.sel { border-left-color: var(--acc); border-color: var(--line); background: var(--panel2); transform: translateX(.5em); color: #fff; }
 
 /* ---------- cartons ---------- */
-#card { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6vh max(24px, 8vw); background: radial-gradient(ellipse at center, rgba(8, 7, 18, .82), rgba(4, 3, 10, .96)); opacity: 0; transition: opacity .28s; z-index: 45; cursor: pointer; font-size: calc(clamp(16.5px, 2.3vmin + 7.5px, 26px) * var(--tz, 1)); }
+#card { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6vh max(24px, 8vw); background: radial-gradient(ellipse at center, rgba(8, 7, 18, .82), rgba(4, 3, 10, .96)); opacity: 0; transition: opacity .28s; z-index: 45; cursor: pointer; font-size: calc(clamp(16.5px, 2.3vmin + 7.5px, 26px) * var(--tz, 1) * var(--k2, 1)); }
+/* 2.24 (D213) : un carton se resserre pour tenir (script.js, tenirCarton : --k2, jamais sous dix points) ; s'il ne tient
+   toujours pas, il défile, son haut d'abord */
+#card.defile { justify-content: flex-start; justify-content: safe center; overflow-y: auto; }
 #card.on { opacity: 1; }
 #card h1 { font-family: var(--f-display); font-weight: 700; letter-spacing: .14em; font-size: 2em; margin: .1em 0; color: var(--gold); text-wrap: balance; text-shadow: 0 0 30px rgba(233, 200, 119, .35); }
 #card p { margin: .3em 0; max-width: 34em; }
@@ -453,7 +458,7 @@ body.batir #pleinbtn { right: calc(2% + 13em); } body.descente.batir #pleinbtn {
 body.portrait { padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
 body.portrait #ui { font-size: calc(16.5px * var(--tz, 1)); }
 body.portrait #dialog { top: calc(100% + 10px); bottom: auto; left: 6px; right: 6px; min-height: 8.5em; padding-left: 5.4em; }
-body.portrait #dialog .text { font-size: 1.04em; line-height: 1.4; }
+body.portrait #dialog .text { font-size: calc(1.04em * var(--kd, 1)); line-height: 1.4; }
 body.portrait #dialog .seal { width: 3.8em; height: 3.8em; margin-top: -1.9em; left: .7em; }
 body.portrait #dialog.nar { padding-left: 1.2em; }
 body.portrait #choice { top: calc(100% + 10px); transform: translateX(-50%); width: calc(100% - 12px); max-height: calc(100vh - 100% - 30px - var(--pad-bas, 0px)); max-height: calc(100dvh - 100% - 30px - var(--pad-bas, 0px)); }

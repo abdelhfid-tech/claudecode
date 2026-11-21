@@ -947,7 +947,8 @@ un carton du récit ou une ligne du fil la même chose dans une autre langue —
   (`#card.title.parley p:not(.small)`) ; les titres de lieu (`#card.title p`) et les surtitres de trois mots au plus
   (« POURPARLER », « UNE IDÉE NOIRE ») ne changent pas.
 - **Le nom d'une narration** ne descend pas sous 10,5 points sur un écran tactile, en largeur non plus.
-- **Le relevé des longueurs** (`node v2/tools/longueurs.js [langue…]`) : un rapport, jamais un blocage. Il rend chaque
+- **Le relevé des longueurs** (`node v2/tools/longueurs.js releve [langue…]` depuis la 2.24, qui fait de `longueurs.js`
+  un contrôle : « La vitesse du texte et les pages d'une réplique ») : un rapport, jamais un blocage. Il rend chaque
   texte de l'interface qui passe par le fil (les annonces et les marques lues dans le code, les leçons, les consignes
   du labyrinthe) dans le fil lui-même, en 390 × 844, texte « grand », dans les quatre langues, et écrit « À REPRENDRE »
   quand une annonce dépasse une ligne ou une leçon une phrase ; il ouvre les deux menus par le vrai récit, en 390 × 844
@@ -976,6 +977,79 @@ un carton du récit ou une ligne du fil la même chose dans une autre langue —
   les annonces, et ne filment ni un acte de la Chaîne, ni une leçon, ni « Que faire ? », ni la halte, ni le menu d'une
   idée noire. La démo jouable et le livret court suivent au prochain assemblage (`jouable.js essai`, `livret.js`) : dans
   la démo, la leçon « frapper ce qui rôde » et les annonces du labyrinthe passent de l'image au fil.
+
+## La vitesse du texte et les pages d'une réplique (2.24, D213)
+
+Le décideur, 21 novembre : « Aussi il faut aller moins vite dans l'écriture et vérifier la longueur des textes car parfois
+ils ne s'affichent pas entièrement dans l'écran sous l'image du jeu ». Tout est dans `src/core/script.js` (`showLine`, et ce
+qui le précède) ; les réglages dans `src/core/ui.js` ; le contrôle est `tools/longueurs.js`.
+
+- **La vitesse du texte.** Un réglage de l'appareil, comme la luminosité : `opts.vitesse`, gardé avec les autres réglages
+  (`isnad2.opts`), jamais dans la partie (l'export l'ignore). Trois crans (`S.VITESSES`) : « lente » (60 ms par signe),
+  « posée » (40 ms, le cran d'office — pour tous, y compris le joueur qui a déjà des réglages : sans `opts.vitesse`, c'est
+  « posée ») et « vive » (celle d'avant la 2.24 : un pas de `I.langue.avance` toutes les 22 ms, soit deux signes latins,
+  un signe japonais ou un mot arabe). Lente et posée se comptent en millisecondes par **signe pesé** (`I.langue.poids`) :
+  un signe japonais en vaut 2,2 (posée : 88 ms par signe, 11 signes par seconde ; le français, 25 signes par seconde, à peu
+  près le pas d'une lecture à voix basse), et un texte vocalisé ne compte pas ses signes. L'écriture suit l'horloge, non le
+  nombre de battements : une minuterie bridée ne la ralentit pas davantage. Un signe à la fois (deux pour une paire de
+  substitution) ; en arabe — vocalisé ou non —, un mot à la fois, comme avant : ses lettres liées et leurs signes ensemble.
+  Un toucher sur la boîte, A ou Entrée écrit la page d'un coup ; le bruit de plume suit les signes, au plus un toutes les
+  64 ms. Réglages : la halte (« Vitesse du texte », sous « Texte », avec son aide) et l'écran-titre (« Vitesse du texte :
+  posée »). Ce n'est pas un outil de la progression : aucune leçon. Les tests (`I.speed > 3`) écrivent toujours d'un coup.
+- **La zone d'une réplique** (`S.zone`). En hauteur, la boîte est sous l'image (`top: calc(100% + 10px)`) : elle s'arrête à
+  8 points au-dessus de la bande de la manette (`I.ui.padBas`), ou du bas de l'écran si la manette est masquée. En largeur
+  et au bureau, elle reste ancrée au pied de la scène et ne monte pas au-delà de `S.HAUT_MAX` de la hauteur de la scène
+  (40 %, proposition de l'agent, à valider) : la vue garde celui qui parle au milieu de l'image, au-dessus de la boîte ; en
+  immersif, la boîte s'arrête entre les deux zones de la manette, comme avant (`--pad-g`, `--pad-d`). Une zone plus petite
+  que la hauteur minimale de la boîte (un tout petit écran) la lui impose.
+- **Resserrer, puis paginer** (`paginer`). Si le texte entier ne tient pas, ses caractères se resserrent d'abord, cran par
+  cran (`--kd` sur la boîte : 0,94, 0,88, 0,82…), jamais sous dix points ni sous la taille « normal » du réglage « Texte » —
+  au doigt, « grand » se resserre donc d'un septième au plus ; au bureau, en « normal », rien ne se resserre. S'il ne tient
+  toujours pas, il se partage en **pages**, à sa taille entière : de chaque début de page, la coupe la plus lointaine qui
+  tient, du meilleur rang possible — entre deux phrases (`. ! ? …`, `؟`, `。！？`, et ce qui les ferme : guillemet,
+  parenthèse, italique), sinon entre deux membres (`, ; : —`, `،` `؛`, `、`), sinon entre deux mots (en japonais, entre deux
+  signes, jamais devant `、。」` ni après `「`) ; jamais au milieu d'un mot, jamais devant un « : » ni un « » » français.
+  Une page qu'une coupe entre deux phrases laisserait à moins de 60 % remplie va plutôt jusqu'à la fin d'un membre de la
+  phrase suivante. L'italique `*…*` ouvert à une coupe se referme au bas de la page et se rouvre en haut de la suivante
+  (une ligne du moteur, déjà balisée, referme et rouvre ses balises). Le texte ne change pas d'un signe : ce n'est qu'une
+  façon de l'afficher, et les pages bout à bout le redonnent, signe pour signe.
+- **Lire page par page.** Chaque page s'écrit à son tour ; « ▸ » (« ◂ » de droite à gauche) invite à la suivante, « ▼ »
+  reste celui de la dernière ; A, Entrée ou un toucher y passe, comme d'une réplique à l'autre. Une ligne à durée (le
+  verdict de la Chaîne) garde son temps de lecture, page par page (`S.lecture`). La seconde bulle de la langue secondaire
+  paraît, entière, quand la dernière page est écrite, et garde sa place d'avant (`placer2`, `tenir2` : sous la boîte, ou
+  jusqu'au bas de l'écran, la manette s'effaçant le temps de la lire ; resserrée jusqu'à dix points, puis elle défile) ;
+  la boîte n'est pas repaginée pour elle, pour que l'on compare une réplique entière à sa seconde langue.
+- **L'écran qui tourne pendant une lecture** (`S.recaler`, appelé par la mise en page) : une page qui ne tient plus défile
+  dans sa boîte plutôt que d'être coupée ; la ligne suivante se repagine d'elle-même.
+- **Les cartons.** Tout carton (`#card`) tient dans l'écran (`tenirCarton`, qui ne servait qu'aux cartons de la langue
+  secondaire) : son contenu, centré, doit laisser une petite marge en haut et en bas (douze points, ou sa marge propre) ;
+  sinon ses caractères se resserrent, cran par cran, jamais sous dix points pour le plus petit de ses textes ; sinon il
+  défile, son haut d'abord (`#card.defile`). Un carton qui tient ne change pas d'un point. Le balisage des cartons du
+  récit est à part, pour que le contrôle les éprouve tels qu'ils se montrent : `S.carton` (une parole citée et sa source,
+  un titre et sa date), `S.cartonPourparler`, `I.mal.carton` (une idée noire), `I.valeurs.carton` (un attribut et son
+  verset), `I.battle.cartonSecours`.
+- **Le contrôle** (`node v2/tools/longueurs.js [langue…] [écran…] [fr-ar | sans2]` → « LONGUEURS CONFORMES » ; « DÉBORDE »
+  sinon). Dans le jeu assemblé, mis dans un lieu où le joueur a la main (en hauteur, l'image y est la plus grande), chaque
+  texte qui passe par la boîte de dialogue — répliques et narrations de chaque récit, où qu'elles soient rangées ; manches
+  de pourparler et leurs réponses ; la parole qui suit une idée noire ; ce que l'on entend en répondant à une idée noire ;
+  les lignes du moteur qui passent par `showLine`, lues dans son code (verdicts, raid d'une caravane, veillées) — est mis
+  en pages par `S.pages`, la fonction même de `showLine`, puis chaque page est posée et mesurée par la vraie mise en page :
+  dans sa zone, mesurée à part (sous l'image et au-dessus de la manette ; au plus `S.HAUT_MAX` de la scène, dans la scène,
+  hors de la manette), son texte — glyphes compris — dans la boîte, sa police pas sous dix points au doigt, aucun mot coupé
+  entre deux pages, l'italique fermé, et les pages bout à bout redonnent le texte, signe pour signe et italique pour
+  italique (en japonais, sans espace ajoutée). Avec une langue secondaire (fr-ar), la seconde bulle de la dernière page :
+  dans l'écran, hors de la boîte, jamais sous dix points, et elle défile plutôt que d'être coupée. Chaque carton du récit
+  est posé et tenu. Par défaut : fr, ar, arv, en, ja sur 390 × 844, 844 × 390, 360 × 640 et 1280 × 720, puis fr-ar sur les
+  quatre écrans ; un **témoin** (fr, 360 × 640, la mise en pages débranchée) doit déborder, sinon « TÉMOIN MUET ». Il écrit
+  dans `.smoke/longueurs/` `pages.json` et, pour le décideur, `pages-fr-390x844.txt` et `pages-fr-360x640.txt` : les textes
+  français qui demandent plus d'une page en hauteur (fichier, récit et chapitre, clé, pages, signes, début). L'agent n'en
+  raccourcit aucun (exigence 25) : le décideur dit s'il faut le faire. Le relevé de la 2.12 (le fil et les deux menus)
+  reste là, sous `releve`.
+- **Ce qu'on a mesuré** (21 novembre, texte « grand » d'office au doigt) : sur 390 × 844, en largeur et au bureau, aucun
+  texte, dans aucune langue, ne demande plus d'une page (quelques-uns se resserrent : 5 en français, 14 en japonais) ; sur
+  le petit téléphone (360 × 640), 56 textes français en demandent deux ou trois (65 en anglais, 128 en japonais, 1 en
+  arabe, 12 en arabe vocalisé). Les téléphones dont le navigateur montre ses barres ont moins de hauteur que 844 points :
+  c'est là que les textes ne tenaient pas.
 
 ## Les labyrinthes de la noosphère : `src/core/dedale.js`
 
@@ -1730,14 +1804,16 @@ node v2/tools/smoke.js suiveurs      # « SUIVEURS CONFORMES » (2.16) : seize p
 node v2/tools/doigt.js [loin [844x390]]
 node v2/tools/son.js
 node v2/tools/bataille.js [mesures]
-node v2/tools/longueurs.js [langue…]  # « LONGUEURS RELEVÉES » : le relevé des longueurs, un rapport sans blocage (D189)
+node v2/tools/longueurs.js [langue…] [écran…] [fr-ar|sans2]   # « LONGUEURS CONFORMES » (2.24) : chaque page d'une réplique et chaque carton entiers dans leur place
+node v2/tools/longueurs.js releve [langue…]  # « LONGUEURS RELEVÉES » : le relevé des longueurs de la 2.12, un rapport sans blocage (D189)
 node v2/tools/bilingue.js [fr-ar …] [390x844 844x390]   # « BILINGUE CONFORME » : la langue secondaire, sous chaque réplique et chaque carton, au doigt
 ```
 
-**Règle de la 2.x.** Celle d'`AGENTS.md`, avec douze contrôles de plus à chaque changement du moteur ou des règles —
+**Règle de la 2.x.** Celle d'`AGENTS.md`, avec treize contrôles de plus à chaque changement du moteur ou des règles —
 `paquet.js`, `partie.js`, `personnage.js`, `silhouettes.js`, `dedales.js`, `descente.js`,
-`retours.js`, `progression.js`, `loupe.js`, `bilingue.js`, `partage.js` et `manette.js` ; la liste, et ce que chacun doit
+`retours.js`, `progression.js`, `loupe.js`, `bilingue.js`, `partage.js`, `manette.js` et `longueurs.js` ; la liste, et ce que chacun doit
 afficher, est dans `AGENTS.md`. Aucun ne doit finir sur « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE »,
 « TRAIT » ni « ÉCART » ; depuis la 2.16, ni sur « SUPERPOSÉ », « COINCÉ » ou « PNJ EN TRAVERS » ; depuis la manette partout,
 ni sur « RECOUVERT » (la manette tactile sur un texte ou un élément touchable — en hauteur, aussi sur l'image ; en largeur,
-depuis la 2.18, elle est posée sur l'image).
+depuis la 2.18, elle est posée sur l'image) ; depuis la 2.24, ni sur « DÉBORDE » (une page d'une réplique ou un carton hors
+de sa place).

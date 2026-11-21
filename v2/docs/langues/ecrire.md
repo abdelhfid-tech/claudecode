@@ -46,10 +46,14 @@ La liste à remplir est `v2/src/lang/<langue>/<fichier>.json`, une entrée par l
   caractères).
 - **Une annonce** (une ligne du fil, 2.12 · D189) dit un fait, en une ligne de téléphone : environ 56 signes en
   anglais, 60 en arabe, 22 en japonais. Ce sont des repères : c'est la ligne mesurée à l'écran qui compte
-  (`node v2/tools/longueurs.js`, qui écrit « À REPRENDRE » sans rien bloquer). L'explication va à la leçon, à l'aide ou
-  au Recueil. Des annonces nées ensemble se joignent par « · » : chacune reste une phrase entière, jamais faite de
-  morceaux. Une leçon : un outil, un geste, le signe du bouton (☰, ?, ◂ ▸), en une phrase. Les récits ne sont pas
+  (`node v2/tools/longueurs.js releve`, qui écrit « À REPRENDRE » sans rien bloquer). L'explication va à la leçon, à
+  l'aide ou au Recueil. Des annonces nées ensemble se joignent par « · » : chacune reste une phrase entière, jamais faite
+  de morceaux. Une leçon : un outil, un geste, le signe du bouton (☰, ?, ◂ ▸), en une phrase. Les récits ne sont pas
   soumis à ces longueurs : un texte de récit trop long pour un téléphone est signalé au décideur, jamais raccourci.
+  Depuis la 2.24 (D213), une réplique trop longue pour l'écran se resserre, puis se lit en pages, coupées entre deux
+  phrases (`. ! ? …`, `؟`, `。！？`), sinon entre deux membres (`, ; :`, `،` `؛`, `、`) : une phrase qui se coupe bien
+  — ses fins de phrase marquées — se lit mieux en pages. `node v2/tools/longueurs.js` l'éprouve dans chaque langue
+  (« LONGUEURS CONFORMES »).
 - Aucun `<` ni `>` hors des balises du français ; aucune description physique de personne (exigence 2) ; aucun nom de
   démon ou de djinn pour un ennemi, aucun Nom divin dans une compétence ou un objet (exigences 6, 8, 18) — `regles.js`
   le vérifie dans chaque langue.

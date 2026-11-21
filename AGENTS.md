@@ -19,7 +19,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
 - **Les chemins.** La suite de ce document se lit dans `v2/` : `src/…`, `tools/…`, `index.html`, `dist/…` y désignent
   `v2/src/…`, `v2/tools/…`, etc. `AGENTS.md`, `README.md`, `docs/`, `promo/` et `archive/` sont à la racine. Ce qui est
   propre à la 2.x est écrit dans `v2/docs/`.
-- La 2.x a douze contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
+- La 2.x a treize contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
   réimporte à l'identique), `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
   se gardent), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel ; aucun
@@ -44,13 +44,17 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   « BILINGUE CONFORME »), `node v2/tools/partage.js` (partager sa progression : le bouton, absent avant tout maillon puis
   touché sur la Chaîne et dans la halte ; l'image, carrée et verticale, et son texte, dans les quatre langues — le nom,
   les maillons, la réserve, l'adresse, et aucun mot des œuvres, du cœur ni des Valeurs ; le partage et ses replis :
-  « PARTAGE CONFORME ») et `node v2/tools/manette.js` (la manette tactile partout, au doigt et avec ses seuls boutons, en
+  « PARTAGE CONFORME »), `node v2/tools/manette.js` (la manette tactile partout, au doigt et avec ses seuls boutons, en
   hauteur, en largeur, sur un petit téléphone et sur une tablette en largeur : l'écran-titre, la halte menée au joystick,
   A qui entre, B qui revient et la referme, un dialogue, une liste de choix, un carton, le combat et sa cible, B qui
   n'ouvre pas la halte et frappe ce qui rôde ; à chaque état, la manette ne recouvre ni un texte ni un bouton (ni, en
   hauteur, l'image) et la sélection se voit ; en largeur, le grand écran, la manette translucide sur l'image, le plein
-  écran là où il sert et rien de cassé là où il est refusé : « MANETTE CONFORME ») : aucun
-  « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART », « RECOUVERT ». Le grand personnage (32 × 48) a ses propres
+  écran là où il sert et rien de cassé là où il est refusé : « MANETTE CONFORME ») et `node v2/tools/longueurs.js` (2.24 :
+  chaque réplique, narration et ligne du moteur qui passe par la boîte de dialogue, et chaque carton du récit, dans les cinq
+  langues — l'arabe vocalisé compris —, sur 390 × 844, 844 × 390, 360 × 640 et 1280 × 720, puis avec l'arabe en langue
+  secondaire : chaque page entière dans sa place, aucune police sous dix points au doigt, aucun mot coupé, l'italique
+  fermé, les pages bout à bout redonnent le texte ; un témoin sans pages doit déborder : « LONGUEURS CONFORMES ») : aucun
+  « REFUS », « BLOQUÉ », « ABSENT », « INACCESSIBLE », « INVISIBLE », « TRAIT », « ÉCART », « RECOUVERT », « DÉBORDE ». Le grand personnage (32 × 48) a ses propres
   gabarits, dessinés d'après les modèles du décideur : `v2/docs/architecture.md`, « Les personnages ». Les textes de la 2.0
   disent « Idris » : on n'y écrit jamais le nom d'un joueur, c'est `v2/src/core/perso.js` qui le pose à l'affichage. Une partie de la 2.0 a
   un format (2) et une fonction de mise à jour (`migrer`, dans `v2/src/core/base.js`) : on ne change jamais ce format
@@ -193,6 +197,27 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   (`D.TEMPS.rodent`). Ce n'est pas un outil de la progression : aucune leçon. Les termes arabes viennent de l'*Ihyâ'*
   (`v2/docs/langues/ar.md`, § 2.5). `v2/docs/architecture.md`, « Le temps volé ». Un changement de ces effets repasse le
   validateur, `smoke.js auto`, `loupe.js`, `descente.js` et `progression.js`.
+- Dans la 2.x (2.24, D213 ; le décideur, 21 novembre : « il faut aller moins vite dans l'écriture et vérifier la longueur
+  des textes car parfois ils ne s'affichent pas entièrement dans l'écran sous l'image du jeu »), le texte s'écrit moins
+  vite et aucun texte n'est coupé. **La vitesse du texte** : un réglage de l'appareil (`opts.vitesse`, Réglages de la halte
+  et de l'écran-titre, jamais dans la partie), trois crans — « lente », « posée » (d'office, pour tous, y compris qui a
+  déjà des réglages) et « vive » (celle d'avant : un pas de `I.langue.avance` toutes les 22 ms) ; lente et posée se
+  comptent en millisecondes par signe pesé (`S.VITESSES` : 60 et 40 ; `I.langue.poids` — un signe japonais en vaut 2,2, un
+  texte vocalisé ne compte pas ses signes) ; l'arabe s'écrit mot à mot ; un toucher, A ou Entrée écrit la page d'un coup.
+  **Les pages d'une réplique** : une réplique, une narration ou une ligne du moteur tient entière dans sa zone (`S.zone`) —
+  en hauteur, entre le bas de l'image et la bande de la manette (le bas de l'écran si elle est masquée) ; en largeur et au
+  bureau, au plus `S.HAUT_MAX` (40 %) de la scène, entre les deux zones de la manette en immersif. Sinon, ses caractères se
+  resserrent, cran par cran, jamais sous dix points ni sous la taille « normal » (`--kd`) ; sinon, elle se partage en pages
+  (`S.pages`), à sa taille entière, coupées entre deux phrases (puis entre deux membres, puis entre deux mots, jamais au
+  milieu d'un mot ; en japonais, jamais devant 、。」), l'italique `*…*` refermé et rouvert ; chaque page s'écrit à son
+  tour, « ▸ » (« ◂ » en arabe) invite à la suivante, A ou un toucher y passe. Le texte ne change pas d'un signe. La seconde
+  bulle de la langue secondaire paraît, entière, à la dernière page ; une ligne à durée garde son temps par page. Tout
+  carton (`#card`) tient dans l'écran : il se resserre (`tenirCarton`, jamais sous dix points), sinon il défile. Ce n'est
+  pas un outil de la progression : aucune leçon. Les nombres (vitesses, 40 %) sont des propositions de l'agent, à valider.
+  Les textes trop longs se signalent au décideur, jamais raccourcis par l'agent : `longueurs.js` en écrit la liste
+  (`.smoke/longueurs/`). `v2/docs/architecture.md`, « La vitesse du texte et les pages d'une réplique ». Contrôle :
+  `node v2/tools/longueurs.js` (« LONGUEURS CONFORMES » ; « DÉBORDE »). Tout changement de la boîte de dialogue, des
+  cartons, de la mise en page ou d'un texte long repasse `longueurs.js`, puis `bilingue.js`, `manette.js` et `loupe.js`.
 - **Les langues** (demande du décideur, 18 novembre ; exigence 25). La 2.x existe en français, en arabe, en anglais et
   en japonais. Le français reste la langue des récits, des tables et du code ; les autres langues sont écrites à la
   source (`v2/docs/langues/ecrire.md`) et rangées, texte par texte, sous la clé de leur texte français, dans
@@ -308,6 +333,8 @@ node v2/tools/loupe.js [messages]   # 2.x : sur un téléphone — l'image agran
 node v2/tools/manette.js            # 2.x : la manette tactile partout — A choisit, B revient en arrière, le joystick choisit ; elle ne recouvre rien, la sélection se voit
 node v2/tools/bilingue.js [fr-ar …] # 2.x : la langue secondaire — douze couples, en hauteur et en largeur, le prologue au doigt (captures dans .smoke/bilingue)
 node v2/tools/partage.js            # 2.x : partager sa progression — le bouton, l'image (1080 × 1080, 1080 × 1920), le texte, les replis, quatre langues (images dans .smoke/partage/)
+node v2/tools/longueurs.js [langue…] [écran…] [fr-ar|sans2]   # 2.24 : aucun texte coupé — chaque page d'une réplique et chaque carton, cinq langues, quatre écrans, avec et sans langue secondaire — « LONGUEURS CONFORMES » (listes pour le décideur dans .smoke/longueurs/)
+node v2/tools/longueurs.js releve [langue…]   # le relevé de la 2.12 : le fil et les deux menus — « LONGUEURS RELEVÉES », un rapport sans blocage
 node v2/tools/shorts.js [NN] [brouillon]  # 2.x : les shorts — le jeu filmé image par image (promo/shorts/NN-nom.js → promo/shorts/films/, non versionnés)
 node v2/tools/shorts.js fin [NN]    # 2.x : un short livré (promo/shorts/films/livres/) reçoit le plan final du soutien, sans être refilmé ni réencodé
 node v2/tools/galerie.js            # 2.x : la page qui montre les films avec leur texte (promo/shorts/galerie/, non versionnée)
@@ -327,7 +354,9 @@ qui allonge le combat de plus de 20 % ou lui ajoute une défaite), sans « MUSIQ
 pas dans le pied d'un PNJ ou d'un coffre, ou un lieu se charge avec quelqu'un à moins de 9 points de lui), sans « COINCÉ »
 (le joueur de test, à pied ou au doigt, n'arrive pas à son objectif et y est porté), sans « SOMBRE » (la scène ou celui
 qui mène, plus sombres que la lumière validée ne le permet), sans « PNJ EN TRAVERS » (la case d'un PNJ
-ou d'un coffre, rendue pleine, coupe un lieu nommé, et aucun pas de côté ne rouvre le passage), sans « RECOUVERT » (un message
+ou d'un coffre, rendue pleine, coupe un lieu nommé, et aucun pas de côté ne rouvre le passage), sans « DÉBORDE » (une page
+d'une réplique ou un carton hors de sa place, sous dix points, un mot coupé : toute modification de la boîte de dialogue, des
+cartons ou de la mise en page repasse `longueurs.js`), sans « RECOUVERT » (un message
 du combat posé sur un personnage, une chimère, son nom, sa jauge de voiles, la frise des tours ou le champ ; ou la manette
 tactile sur un texte ou un élément touchable — et, en hauteur, sur l'image ; en largeur, depuis la 2.18, elle est posée
 sur l'image, qui peut passer dessous : toute modification des entrées ou de la mise en page repasse
