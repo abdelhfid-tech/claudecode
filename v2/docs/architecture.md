@@ -1449,7 +1449,8 @@ sans écran. Trois effets (`D.FX` : `recul`, `baisse`, `perdu` ; `D.FX_TEMPS`), 
   poids (`w`) : voir D210.
 - **La famille de la ghafla** est rattachée à l'Insouciance par sa racine (`racine: 'insouciance'`, le champ qui rattache
   déjà le Sommeil et le Flux) et faible devant la Patience et le Savoir (`sabr`, `ilm` ajoutés à ses failles) :
-  l'Insouciance (inchangée), le Mirage (Khâlid, l'aîné), le Sommeil (les veillées), le Défilement (2084) ; et cinq
+  l'Insouciance (inchangée), le Mirage (Khâlid, l'aîné), le Sommeil (les veillées ; sa description nomme ses quatre
+  failles depuis la 2.21), le Défilement et le Flux (2084 ; le Flux avait déjà la racine et les deux failles) ; et cinq
   nouvelles — Plus tard et Le Bruit de fond en 2084 (`frame.js`, dans la noosphère du dernier maillon : `f1`, `f2`),
   Sawfa, Le Long Espoir et Le Vain Divertissement au temps des Compagnons (`coeur.js`, niveau calé sur le groupe). Des
   formes déjà déclarées, abstraites : une tour d'anneaux (Plus tard), une vague (Le Bruit de fond), une lueur (Sawfa), des lentilles (Le Long Espoir), une nuée (Le Vain Divertissement).

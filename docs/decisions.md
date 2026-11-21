@@ -1830,6 +1830,11 @@ pages privées de son compte.
   formes et les couleurs ; une relecture des textes arabes, anglais et japonais ; les shorts 5 et 11 (des labyrinthes : ce
   qui y rôde a changé de tirage) seraient à refaire avec les autres ; la démo jouable, qui commence par le prologue, montre
   une Notification qui a désormais quatre attaques de plus.
+  *Textes validés par le décideur le 21 novembre (« Ok »)* : les noms et descriptions des cinq chimères, les trois mots
+  d'état, « لاحقًا », « سوف », « من فصيلة الغفلة », les choix de l'agent (la Garde à moitié, aucune leçon, les poids à 1).
+  Suites (2.21) : la description du Sommeil nomme ses quatre failles ; le Flux, qui portait déjà la racine de
+  l'Insouciance et les failles de la famille, est compté dans son tableau. Les shorts 5, 8 et 11 et la démo seront refaits
+  une seule fois, plus tard, quand ces scènes auront fini de changer (le décideur : « Plus tard »).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

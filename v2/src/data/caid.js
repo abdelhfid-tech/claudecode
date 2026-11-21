@@ -80,7 +80,7 @@ ISNAD.registerSaga({
       ],
       phases: [{ at: 0.5, say: 'À quoi bon savoir ? Punis le petit, et que chacun retourne à son lit.', fx: [{ st: 'def', v: 1 }] }],
       taunts: ['Demain. Tout cela peut attendre demain.'],
-      desc: "Le désir de toute une ville de ne pas savoir ce qui se vend sur son rempart. Il ne veut de mal à personne : il veut seulement qu'on le laisse. La Justice et le Courage le déchirent." },
+      desc: "Le désir de toute une ville de ne pas savoir ce qui se vend sur son rempart. Il ne veut de mal à personne : il veut seulement qu'on le laisse. La Justice, le Courage, la Patience et le Savoir le déchirent." },
     tambour: { racine: 'ostentation', name: 'Le Tambour', art: 'banner', hue: 8, scale: 3, lvl: 6, tier: 'boss', weak: ['sabr', 'rahma'], immune: ['fer'], veils: 5,
       skills: [
         { w: 3, name: 'Roulement', target: 'foes', el: 'fer', pow: 0.85, anim: 'wave' },
@@ -378,7 +378,7 @@ ISNAD.registerSaga({
               ['say', 'meksa', "Alors garde ta porte du sud toi-même. Mes lances rentrent chez elles."],
               ['pillar', 'lien', -1],
               ['nar', "Il est parti, et la citadelle entière a retenu son souffle. Puis j'ai senti monter des maisons une pensée douce et lourde : à quoi bon savoir ? Qu'on punisse le petit, et qu'on dorme."],
-              ['battle', { group: ['sommeil', 'dispense'], bg: 'ville', boss: true, intro: "Le Sommeil : le désir de toute une ville de ne pas savoir. La Justice et le Courage le déchirent." }],
+              ['battle', { group: ['sommeil', 'dispense'], bg: 'ville', boss: true, intro: "Le Sommeil : le désir de toute une ville de ne pas savoir. La Justice, le Courage, la Patience et le Savoir le déchirent." }],
               ['nar', "La torpeur s'est déchirée. On a pris Udad à la poterne, une bourse à la ceinture. Mais la porte du sud est restée nue jusqu'à la moisson, et j'y ai monté la garde plus d'une nuit."]
             ]
           }]
