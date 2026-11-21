@@ -1899,6 +1899,39 @@ pages privées de son compte.
   le décideur dira s'il les veut plus grandes, plus brillantes ; la place de la tribune (on la voit de dos) ; les noms et
   les failles des chimères ; une relecture de l'arabe, de l'anglais et du japonais ; la course jouable, la borne, l'étal,
   l'écran et la grande roue (lot suivant) ; les shorts et la démo, qui ne montrent pas encore les quartiers.
+- [ ] **D213. La vitesse du texte, et les pages d'une réplique (version 2.24 ; demande du décideur, 21 novembre) — à
+  valider par le décideur.** « Aussi il faut aller moins vite dans l'écriture et vérifier la longueur des textes car
+  parfois ils ne s'affichent pas entièrement dans l'écran sous l'image du jeu ». *Ce qui a changé.* Le texte s'écrit moins
+  vite : un réglage « Vitesse du texte » (halte et écran-titre ; un réglage de l'appareil, jamais dans la partie), trois
+  crans, « lente », « posée » (d'office, pour tous, y compris les joueurs qui ont déjà des réglages) et « vive » (la
+  vitesse d'avant). Aucun texte n'est plus coupé : en hauteur, une réplique, une narration ou une ligne du moteur s'arrête
+  au-dessus de la manette ; si elle ne tient pas, ses caractères se resserrent un peu, puis elle se lit en pages, coupées
+  entre deux phrases (ou deux membres de phrase), jamais au milieu d'un mot, « ▸ » invitant à la suivante. Le texte ne
+  change pas d'un signe. Tout carton se resserre de même pour tenir dans l'écran (jamais sous dix points). Un contrôle,
+  `v2/tools/longueurs.js` (« LONGUEURS CONFORMES »), éprouve chaque texte et chaque carton dans les cinq langues, sur quatre
+  écrans, avec et sans langue secondaire. `v2/docs/architecture.md`, « La vitesse du texte et les pages d'une réplique ».
+  *Les nombres, à valider* : « posée » **40 ms par signe** (25 signes par seconde en français), « lente » **60 ms** (17 par
+  seconde), « vive » le pas d'avant (22 ms pour deux signes latins, un signe japonais ou un mot arabe) ; un signe japonais
+  compte pour 2,2 (posée : 11 signes par seconde), comme pour le temps de lecture des annonces ; l'arabe s'écrit mot à mot,
+  vocalisé ou non, comme avant. En largeur et au bureau, la boîte de dialogue monte **au plus à 40 % de la hauteur de la
+  scène** (celui qui parle reste au-dessus, au milieu de l'image) ; en hauteur, jusqu'à 8 points au-dessus de la manette.
+  Le resserrement : jamais sous dix points, ni sous la taille « normal » du réglage « Texte » ; une page qu'une coupe entre
+  deux phrases laisserait à moins de 60 % remplie va jusqu'à la fin d'un membre de la phrase suivante.
+  *Ce que l'agent a choisi* : les pages sont à la taille entière du texte (le resserrement ne sert qu'à éviter une page de
+  plus) ; la seconde bulle de la langue secondaire garde sa place d'avant et porte le texte entier, sous la dernière page ;
+  « ◂ » au lieu de « ▸ » en arabe (de droite à gauche) ; « Vitesse du texte » sous « Texte » dans les Réglages ; l'aide :
+  « La vitesse à laquelle s'écrivent les répliques et les narrations : lente, posée ou vive. Un toucher sur le texte, A ou
+  Entrée l'écrit d'un coup. Une réplique trop longue pour l'écran se lit en pages : ▸ mène à la suivante. » ; en arabe
+  « سرعة النصّ » (« بطيئة »، « متأنّية »، « سريعة »), en anglais « Text speed » (« slow », « steady », « quick »), en japonais
+  « 文字の速さ » (« ゆっくり », « ふつう », « はやい »), écrits à la source par l'agent, à relire. Aucune leçon : ce n'est pas un
+  outil de la progression.
+  *Ce qu'on a mesuré* (texte « grand », celui d'office au doigt) : sur 390 × 844, en largeur et au bureau, aucun texte ne
+  demande plus d'une page, dans aucune langue ; sur un petit téléphone (360 × 640), 56 textes français en demandent deux
+  ou trois (65 en anglais, 128 en japonais, 1 en arabe, 12 en arabe vocalisé). Les téléphones dont le navigateur montre
+  ses barres ont moins de hauteur que 844 points : c'est là que les textes ne tenaient pas. *À trancher* : faut-il
+  raccourcir certains textes ? La liste française (fichier, chapitre, clé, pages, début) est écrite par le contrôle dans
+  `v2/.smoke/longueurs/pages-fr-360x640.txt` (et `pages-fr-390x844.txt`, vide aujourd'hui) ; l'agent n'en raccourcit aucun.
+  Les shorts qui filment une réplique s'écriront plus lentement : à refaire avec les autres, plus tard.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

@@ -1,23 +1,234 @@
 #!/usr/bin/env node
-/* ISNAD 2.x — le relevé des longueurs (D189, « un texte à la fois » ; v2/docs/propositions-texte.md, § 2.3 et 2.6).
-   Un rapport, jamais un blocage : il dit ce qui serait à reprendre dans les textes de l'interface, et liste pour le
-   décideur les textes des récits trop longs pour un téléphone — l'agent ne les raccourcit jamais (exigence 25).
-   1. Les textes de l'interface qui passent par le fil (les annonces du moteur, les marques, les leçons, les consignes du
-      labyrinthe), rendus dans le fil lui-même, dans les quatre langues, sur un téléphone de 390 points tenu en hauteur,
-      texte « grand » : « À REPRENDRE » quand une annonce dépasse une ligne, ou qu'une leçon dépasse une phrase.
-   2. Les deux menus — les manières de répondre à une idée noire, la liste d'un pourparler —, ouverts par le vrai récit
-      (« Le Fort des Oliviers »), en 390 × 844 et en 360 × 560, dans les quatre langues : où finit la liste, combien de
-      réponses se voient entières, s'il faut défiler (avec son repère). Le menu d'une idée noire en japonais, qui coupait
-      sa troisième manière en 390 × 844 avant la 2.12, est un cas suivi.
-   3. Les répliques et narrations des récits qui dépassent six lignes dans la boîte de dialogue en 390 × 844 : seulement
-      listées.
-   Usage : node v2/tools/longueurs.js [langue…]   → « LONGUEURS RELEVÉES » ; le détail dans .smoke/longueurs/longueurs.json */
+/* ISNAD 2.x — les longueurs : aucun texte coupé (2.24, D213), et le relevé des longueurs (D189).
+
+   Le décideur, 21 novembre : « il faut aller moins vite dans l'écriture et vérifier la longueur des textes car parfois ils ne
+   s'affichent pas entièrement dans l'écran sous l'image du jeu ».
+
+   node v2/tools/longueurs.js [langue…] [écran…] [fr-ar | sans2]   → « LONGUEURS CONFORMES » ; « DÉBORDE » sinon (code 1)
+     Le contrôle. Dans le jeu assemblé, mis dans un lieu comme le joueur l'a (la boîte de dialogue y est la plus serrée),
+     chaque texte qui passe par la boîte de dialogue — les répliques et les narrations de chaque récit (où qu'elles soient :
+     un objectif, un personnage, une réponse de choix ou de « ask », l'issue d'un pourparler), les manches d'un pourparler
+     et leurs réponses, la parole qui suit une idée noire, ce que l'on répond à une idée noire (dit, oui, non), les lignes
+     du moteur qui passent par showLine (les verdicts de la Chaîne, le raid d'une caravane, les veillées), lues dans son
+     code — est mis en pages par la fonction même dont showLine se sert (ISNAD.script.pages), puis chaque page est posée
+     dans la boîte et mesurée par la vraie mise en page : elle tient entière dans sa zone (en hauteur, sous l'image et
+     au-dessus de la manette ; en largeur et au bureau, au plus ISNAD.script.HAUT_MAX de la scène, dans la scène, hors de la
+     manette), son texte ne sort pas de la boîte, sa police n'est pas sous dix points sur un écran tactile, aucun mot n'est
+     coupé entre deux pages, l'italique y est fermé, et les pages mises bout à bout redonnent le texte entier, signe pour
+     signe et italique pour italique. Avec une langue secondaire, la seconde bulle de la dernière page est posée aussi :
+     dans l'écran, hors de la boîte, jamais sous dix points, et elle défile si elle ne tient pas (jamais coupée). Chaque
+     carton du récit (un titre, une parole citée et sa source, l'ouverture d'un pourparler, une idée noire, un attribut et
+     son verset, le secours et son verset) est posé dans #card et tenu par ISNAD.script.tenirCarton : il tient dans l'écran,
+     hors de la manette, sans police sous dix points.
+     Par défaut : fr, ar, arv (l'arabe vocalisé), en, ja ; 390x844, 844x390, 360x640 (un petit téléphone), 1280x720 (le
+     bureau) ; puis le couple fr-ar (le français, et l'arabe en langue secondaire) sur les quatre écrans.
+     Il écrit dans .smoke/longueurs/ : pages.json (tout), et pages-fr-390x844.txt — les textes français qui demandent plus
+     d'une page en hauteur sur 390 × 844 (fichier, chapitre, clé, nombre de pages, début du texte), pour le décideur, qui
+     dira s'il faut en raccourcir ; l'agent n'en raccourcit aucun (exigence 25). De même pour le petit téléphone.
+
+   node v2/tools/longueurs.js releve [langue…]   → « LONGUEURS RELEVÉES » (le relevé de la 2.12, un rapport sans blocage)
+     1. Les textes de l'interface qui passent par le fil (les annonces du moteur, les marques, les leçons, les consignes du
+        labyrinthe), rendus dans le fil lui-même, dans les quatre langues, sur un téléphone de 390 points tenu en hauteur,
+        texte « grand » : « À REPRENDRE » quand une annonce dépasse une ligne, ou qu'une leçon dépasse une phrase.
+     2. Les deux menus — les manières de répondre à une idée noire, la liste d'un pourparler —, ouverts par le vrai récit
+        (« Le Fort des Oliviers »), en 390 × 844 et en 360 × 560, dans les quatre langues : où finit la liste, combien de
+        réponses se voient entières, s'il faut défiler (avec son repère). Le menu d'une idée noire en japonais, qui coupait
+        sa troisième manière en 390 × 844 avant la 2.12, est un cas suivi.
+     3. Les répliques et narrations des récits qui dépassent six lignes dans la boîte de dialogue en 390 × 844 : seulement
+        listées (depuis la 2.24, elles se lisent en pages : le contrôle ci-dessus les éprouve).
+     Le détail dans .smoke/longueurs/longueurs.json. */
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const { chromium, devices } = require('playwright');
 const V2 = path.join(__dirname, '..'), out = path.join(V2, '.smoke/longueurs'), URL = 'file://' + path.join(V2, 'index.html');
-const LANGUES = process.argv.slice(2).filter(a => /^(fr|ar|en|ja)$/.test(a)); if (!LANGUES.length) LANGUES.push('fr', 'ar', 'en', 'ja');
 fs.mkdirSync(out, { recursive: true });
 
+// le jeu, ouvert dans une langue, sur un écran ; puis le chapitre 3 de Khâlid, posé comme le font loupe.js et manette.js : l'IA
+// de test un quart de seconde, puis on passe à la main ce qui reste à lire, jusqu'à ce que le joueur ait la main dans le lieu
+// (en hauteur, l'image y est la plus grande : la boîte de dialogue, sous elle, y a le moins de place)
+async function ouvrirJeu(browser, l, vp, l2) {
+  const tactile = vp.width < 1000 || vp.height > vp.width;
+  const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 1, hasTouch: tactile, isMobile: tactile, userAgent: tactile ? devices['iPhone 13'].userAgent : undefined });
+  const p = await ctx.newPage(), errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
+  const q = [l !== 'fr' ? 'lang=' + l : '', l2 ? 'lang2=' + l2 : ''].filter(Boolean).join('&');
+  await p.goto(URL + (q ? '?' + q : '')); await p.waitForTimeout(2000); p.__errs = errs; return p;
+}
+async function chapitre(p) {
+  await p.evaluate(() => { const I = window.ISNAD; I.audio.setOn(false); I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset();
+    I.debug.auto = true; I.speed = 30; I.world.roster = {}; I.world.saga = null; I.world.startChapter('khalid', 2); setTimeout(() => { I.debug.auto = false; I.speed = 1; }, 250); });
+  await p.waitForTimeout(1800);
+  for (let i = 0; i < 200; i++) { const e = await p.evaluate(() => { const I = window.ISNAD, W = I.world, q = s => document.querySelector(s); if (W.excursion && !I.script.busy) I.rodeurs.finir('issue');
+      return { libre: I.scene === W && !!W.map && !I.script.busy && !W.lock && !W.excursion && q('#choice').hidden && q('#dialog').hidden && q('#card').hidden, choix: !q('#choice').hidden, lire: !q('#dialog').hidden || !q('#card').hidden || I.battle.active }; });
+    if (e.libre) break; if (e.choix) await p.evaluate(() => { const o = document.querySelectorAll('#choice .opt:not(.locked)'); if (o.length) o[o.length - 1].click(); }); else if (e.lire) await p.keyboard.press('Enter'); await p.waitForTimeout(180); }
+  await p.evaluate(() => { window.ISNAD.script.filVide(); }); await p.waitForTimeout(500);
+}
+
+/* ---------- les lignes du moteur qui passent par la boîte de dialogue, lues dans son code ----------
+   ['nar', …], ['say', qui, …] et ['title', …] écrits dans un script du moteur, avec leurs I.t('…') ; et les verdicts de la
+   Chaîne (verdict(I.T('…')), du balisage). Chaque littéral est une phrase entière (src/core/langue.js). */
+function lignesDuCode() {
+  const L = [], LIT = /\bI\.(?:t|T)\(\s*('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*")/g, lits = s => { const r = []; let m; LIT.lastIndex = 0; while ((m = LIT.exec(s))) r.push(vm.runInNewContext(m[1])); return r; };
+  // la fin d'une expression (son crochet fermant), et ses éléments séparés par les virgules du premier niveau
+  const elements = (code, i) => { const el = []; let prof = 0, q = null, d = i + 1;
+    for (let k = i + 1; k < code.length; k++) { const c = code[k];
+      if (q) { if (c === '\\') k++; else if (c === q) q = null; continue; }
+      if (c === "'" || c === '"' || c === '`') q = c; else if ('([{'.includes(c)) prof++; else if (')]}'.includes(c)) { if (!prof) { el.push(code.slice(d, k)); return el; } prof--; } else if (c === ',' && !prof) { el.push(code.slice(d, k)); d = k + 1; } }
+    return el; };
+  fs.readdirSync(path.join(V2, 'src/core')).filter(f => /\.js$/.test(f)).forEach(f => {
+    const code = fs.readFileSync(path.join(V2, 'src/core', f), 'utf8'), re = /\[\s*'(nar|say|title)'\s*,/g; let m;
+    while ((m = re.exec(code))) { const el = elements(code, m.index); if (el.length < 2) continue;
+      if (m[1] === 'title') { const a = lits(el[1]), b = el[2] ? lits(el[2]) : []; if (a.length) L.push({ carton: 'title', a: a[0], b: b[0] || null, ou: f }); continue; }
+      const nom = m[1] === 'say' ? lits(el[1])[0] || null : null; lits(el[m[1] === 'say' ? 2 : 1] || '').forEach(fr => L.push({ kind: m[1], fr, nom, ou: f })); }
+    const V = /\bverdict\(\s*I\.T\(\s*('(?:[^'\\\n]|\\.)*')/g; while ((m = V.exec(code))) L.push({ kind: 'nar', fr: vm.runInNewContext(m[1]), html: true, verdict: true, ou: f });
+  });
+  return L;
+}
+
+/* ---------- côté page : le contrôle d'un écran, d'une langue ---------- */
+const CONTROLE = ({ LIGNES, liste, temoin }) => {
+  const I = window.ISNAD, D = I.D, S = I.script, L = I.langue, G = I.gfx, $ = s => document.querySelector(s), B = document.body, tactile = B.classList.contains('touch');
+  const box = $('#dialog'), tx = $('#dialog .text'), nx = $('#dialog .next'), st = $('#stage'), vh = innerHeight, vw = innerWidth, sr = st.getBoundingClientRect(), portrait = B.classList.contains('portrait');
+  const ESP = /[\s\u00a0\u202f]/, CJK = /[\u3000-\u30ff\u3400-\u9fff\uff00-\uffef]/, LETTRE = /[\p{L}\p{M}\p{N}]/u;
+  // la manette, telle qu'elle est posée (même effacée le temps d'une lecture, sa place compte)
+  const PADS = B.classList.contains('manette') ? [...document.querySelectorAll('#pad .joy, #pad .a, #pad .b')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0) : [];
+  const padHaut = PADS.length ? Math.min(...PADS.map(r => r.top)) : vh;
+  const croise = (a, b) => a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1;
+  const fic = s => (s.commun ? 'coeur.js' : s.veillees ? 'caid.js' : s.frame ? 'frame.js' : 'saga_' + s.id + '.js');
+  const sceau = G.sealURL('', '#c8b48a');
+  // qui parle : un héros du récit, un personnage d'un de ses chapitres, un héros d'un autre récit, sinon le nom tel qu'il est écrit
+  const nomDe = (s, who) => { if (typeof who !== 'string') return '…'; if (s.heroes && s.heroes[who]) return s.heroes[who].name;
+    for (const ch of s.chapters || []) { const n = (ch.npcs || []).find(x => x.id === who); if (n) return n.name || (n.hero && s.heroes[n.hero] ? s.heroes[n.hero].name : who); }
+    for (const s2 of Object.values(I.sagas)) if (s2.heroes && s2.heroes[who]) return s2.heroes[who].name; return who; };
+  // le chapitre d'un texte (pour le retrouver), par l'objet où il est rangé
+  const ou = new Map();
+  /* 1. les textes */
+  const T = [], C = [], vus = new Set(), OPS = { say: v => v.length >= 3 && typeof v[1] === 'string' && typeof v[2] === 'string', nar: v => typeof v[1] === 'string', quote: v => typeof v[1] === 'string' && typeof v[2] === 'string', title: v => typeof v[1] === 'string', parley: v => !!v[1] && Array.isArray(v[1].rounds) };
+  const dire = x => { const k = x.kind + '|' + x.nom + '|' + x.t; if (!x.t || vus.has(k)) return; vus.add(k); T.push(x); };
+  const parcourir = (v, fn, vu, ch) => { if (!v || typeof v !== 'object' || vu.has(v)) return; vu.add(v);
+    if (Array.isArray(v)) { if (typeof v[0] === 'string' && OPS[v[0]] && OPS[v[0]](v)) fn(v, ch); v.forEach(x => parcourir(x, fn, vu, ch)); }
+    else Object.keys(v).forEach(k => parcourir(v[k], fn, vu, v.objectives && v.id ? v.id : ch)); };
+  Object.values(I.sagas).forEach(s => {
+    const f = fic(s), nar = s.narrator || I.t('La Chaîne');
+    parcourir(s, (op, ch) => { const lieu = s.id + (ch ? '/' + ch : '');
+      if (op[0] === 'say') dire({ kind: 'say', nom: nomDe(s, op[1]), t: op[2], src: [op, 2], fic: f, lieu });
+      else if (op[0] === 'nar') dire({ kind: 'nar', nom: nar, t: op[1], src: [op, 1], fic: f, lieu });
+      else if (op[0] === 'quote' || op[0] === 'title') C.push({ cls: op[0], html: () => S.carton(op), fic: f, lieu, t: op[1] });
+      else if (op[0] === 'parley') { const P = op[1], qui = nomDe(s, P.with);
+        C.push({ cls: 'title parley', html: () => S.cartonPourparler(P, true), fic: f, lieu, t: P.title || '' });
+        P.rounds.forEach(R => { if (typeof R.say === 'string') dire({ kind: 'say', nom: qui, t: R.say, src: [R, 'say'], fic: f, lieu });
+          (R.opts || []).forEach(o => { if (typeof o.r === 'string') dire({ kind: 'say', nom: qui, t: o.r, src: [o, 'r'], fic: f, lieu }); });
+          const N = R.noir; if (N) { if (typeof N.after === 'string') dire({ kind: 'say', nom: qui, t: N.after, src: [N, 'after'], fic: f, lieu }); if (N.name && N.intro && N.group) C.push({ cls: 'title parley noir', html: () => I.mal.carton(N, s), fic: f, lieu, t: N.name }); } }); } }, new Set(), null);
+    // ce que dit une idée noire, et ce que l'on entend quand on lui répond (mal.js) : elle parle par la bouche de qui la porte
+    Object.keys(s.enemies || {}).forEach(id => { const X = s.enemies[id].parole; if (!X) return; const lieu = s.id + '/' + id;
+      (X.dit || []).forEach((t, k) => dire({ kind: 'say', nom: s.enemies[id].name, t, src: [X.dit, k], fic: f, lieu }));
+      (X.oui || []).forEach((t, k) => dire({ kind: 'nar', nom: nar, t, src: [X.oui, k], fic: f, lieu }));
+      Object.keys(X.non || {}).forEach(k => dire({ kind: 'nar', nom: nar, t: X.non[k], src: [X.non, k], fic: f, lieu })); });
+  });
+  // les lignes du moteur : leurs champs reçoivent un nom de longueur ordinaire
+  const champs = new Proxy({}, { get: (o, k) => (k === 'n' ? 2 : 'Khâlid ibn al-Walîd') });
+  LIGNES.forEach(x => { if (x.carton) { const a = I.t(x.a, champs), b = x.b ? I.t(x.b, champs) : null; C.push({ cls: 'title', html: () => S.carton(['title', a, b]), fic: x.ou, lieu: 'moteur', t: a }); return; }
+    const t = I.t(x.fr, champs), t2 = L.l2() ? L.tDans(L.l2(), x.fr, champs) : null;
+    dire({ kind: x.kind, nom: x.nom ? I.t(x.nom) : I.t('La Chaîne'), t, html: !!x.html, t2fixe: t2, fr: x.fr, fic: x.ou, lieu: 'moteur' }); });
+  // les cartons du contenu commun : chaque attribut et son verset, le secours et le sien
+  const coeur = I.sagas.coeur || {};
+  Object.keys(coeur.attributs || {}).forEach(v => C.push({ cls: 'pray attribut', html: () => I.valeurs.carton(v), fic: 'coeur.js', lieu: 'attributs/' + v, t: coeur.attributs[v].nom }));
+  if (coeur.secours && coeur.secours.verset) C.push({ cls: 'pray secours', html: () => I.battle.cartonSecours(coeur.secours), fic: 'coeur.js', lieu: 'secours', t: coeur.secours.titre || '' });
+
+  // le témoin : la mise en pages débranchée (chaque texte en une page, à sa taille), comme avant la 2.24 — il doit déborder
+  const vrai = S.pages; if (temoin) S.pages = (k, sp, t, o) => { const R = vrai(k, sp, t, o); box.style.removeProperty('--kd'); box.style.minHeight = ''; return { pages: [t], k: 1, max: R.max, coupes: [] }; };
+  /* 2. chaque texte, page par page */
+  // ce que le joueur lit, signe par signe, avec ce qui l'enveloppe (l'italique, le gras) ; les espaces fondues en une
+  const trace = html => { const d = document.createElement('div'); d.innerHTML = html; const r = [], w = document.createTreeWalker(d, NodeFilter.SHOW_TEXT); let n;
+    while ((n = w.nextNode())) { const tg = []; for (let e = n.parentNode; e && e !== d; e = e.parentNode) tg.push(e.nodeName); for (const ch of n.data) { if (ESP.test(ch)) { if (r.length && r[r.length - 1] !== ' ') r.push(' '); } else r.push(ch + '\u0001' + tg.join('/')); } }
+    while (r[0] === ' ') r.shift(); while (r[r.length - 1] === ' ') r.pop(); return r; };
+  const res = { textes: 0, plusieurs: 0, maxPages: 1, resserres: 0, fautes: [], liste: [], l2: { bulles: 0, defile: 0, sousManette: 0, minPolice2: 99 }, minPolice: 99, cartons: 0, cartonsResserres: 0, cartonsMin: 99, plusLong: null };
+  const faute = (x, quoi) => res.fautes.push({ fic: x.fic, lieu: x.lieu, debut: String(x.t).replace(/<[^>]*>/g, '').slice(0, 70), quoi });
+  for (const x of T) {
+    const html = !!x.html, rendu = p => (html ? p : I.fmt(p)), sp = x.kind === 'say' ? { name: x.nom, seal: sceau, color: '#c8b48a', fig: null } : null;
+    const t2 = L.l2() ? (x.t2fixe !== undefined ? x.t2fixe : L.second(x.t, x.src[0], x.src[1])) : null;
+    const R = S.pages(x.kind, sp, x.t, { nom: sp ? undefined : x.nom, html }, t2); res.textes++;
+    const n = R.pages.length; if (n > 1) res.plusieurs++; if (n > res.maxPages) res.maxPages = n; if (R.k < 1) res.resserres++;
+    if (n > 1 || R.k < 1) { const fr = x.fr || L.origine(x.src[0], x.src[1]) || L.source(x.t) || x.t; res.liste.push({ fic: x.fic, lieu: x.lieu, cle: L.cle(fr), pages: n, k: R.k, signes: x.t.length, debut: String(x.t).replace(/<[^>]*>/g, '').slice(0, 90) }); }
+    if (!res.plusLong || n > res.plusLong.pages || (n === res.plusLong.pages && x.t.length > res.plusLong.signes)) res.plusLong = { pages: n, signes: x.t.length, kind: x.kind, nom: x.nom, fic: x.fic, lieu: x.lieu, debut: x.t.slice(0, 60) };
+    R.pages.forEach((pg, i) => {
+      const fin = i === n - 1; tx.innerHTML = rendu(pg); nx.textContent = fin ? '▼' : '▸'; nx.style.visibility = 'visible'; S.recaler();
+      const b = box.getBoundingClientRect(), f = parseFloat(getComputedStyle(tx).fontSize); res.minPolice = Math.min(res.minPolice, f);
+      const ici = q => faute(x, `page ${i + 1}/${n} : ${q}`);
+      if (portrait) { if (b.top < sr.bottom - 1) ici('sur l’image'); if (b.bottom > padHaut + 0.5) ici(`sous la manette (bas ${Math.round(b.bottom)}, manette ${Math.round(padHaut)})`); if (b.bottom > vh + 0.5) ici('sous le bas de l’écran'); }
+      else { if (b.height > sr.height * S.HAUT_MAX + 1) ici(`plus haute que la zone (${Math.round(b.height)} sur ${Math.round(sr.height * S.HAUT_MAX)})`); if (b.top < Math.max(0, sr.top) - 1 || b.bottom > Math.min(vh, sr.bottom) + 1) ici('hors de la scène'); if (PADS.some(r => croise(b, r))) ici('sous la manette'); }
+      if (b.left < -0.5 || b.right > vw + 0.5) ici('hors de l’écran, de côté');
+      // (le texte tel qu'il s'écrit, ses glyphes compris : l'arabe et ses signes dépassent un peu sa ligne, sans sortir de la boîte)
+      { const g = document.createRange(); g.selectNodeContents(tx); const q = g.getBoundingClientRect(); if (tx.classList.contains('defile') || (q.height && (q.top < b.top - 0.5 || q.bottom > b.bottom + 0.5 || q.left < b.left - 0.5 || q.right > b.right + 0.5))) ici('le texte sort de la boîte'); }
+      if (tactile && f < 9.95) ici(`police de ${f.toFixed(1)} points`);
+      if (!html && ((pg.match(/\*/g) || []).length % 2)) ici('italique ouvert');
+      if (!html && tx.textContent.includes('*')) ici('un astérisque se lit');
+      if (fin && t2) { S.montrer2(x.kind, t2, html); const d2 = $('#dialog2'), r2 = d2.getBoundingClientRect(), f2 = parseFloat(getComputedStyle(d2.querySelector('.text')).fontSize); res.l2.bulles++; res.l2.minPolice2 = Math.min(res.l2.minPolice2, f2);
+        if (r2.top < -0.5 || r2.bottom > vh + 0.5) ici('la seconde bulle sort de l’écran'); if (croise(r2, b)) ici('la seconde bulle couvre la boîte');
+        if (tactile && f2 < 9.95) ici(`seconde bulle à ${f2.toFixed(1)} points`); if (d2.scrollHeight > d2.clientHeight + 2) { if (d2.classList.contains('defile')) res.l2.defile++; else ici('la seconde bulle est coupée'); }
+        if (PADS.some(r => croise(r2, r))) res.l2.sousManette++;
+        d2.hidden = true; B.classList.remove('avec2'); }
+    });
+    // aucun mot coupé entre deux pages, et les pages bout à bout redonnent le texte
+    R.coupes.forEach(c => { const a = x.t[c - 1] || '', z = x.t[c] || ''; if (LETTRE.test(a) && LETTRE.test(z) && !(CJK.test(a) && CJK.test(z))) faute(x, `un mot coupé : « ${x.t.slice(Math.max(0, c - 14), c)}|${x.t.slice(c, c + 14)} »`); });
+    // (entre deux pages, l'espace du texte s'il y en avait une ; en japonais, aucune)
+    if (n > 1) { const avant = trace(rendu(x.t)).join('\u0002'), apres = R.pages.map((pg, i) => (i && ESP.test(x.t[R.coupes[i - 1] - 1] || '') ? ' \u0002' : '') + trace(rendu(pg)).join('\u0002')).join('\u0002'); if (avant !== apres) faute(x, 'les pages ne redonnent pas le texte'); }
+  }
+  S.hideDialog(); tx.innerHTML = ''; box.style.removeProperty('--kd'); box.style.minHeight = '';
+
+  /* 3. les cartons */
+  const card = $('#card');
+  for (const y of C) {
+    card.className = y.cls; card.innerHTML = y.html(); card.hidden = false; B.classList.add('en-carton'); if (L.l2() && card.querySelector('.l2')) card.classList.add('avec2');
+    S.tenirCarton(card); res.cartons++;
+    const k = parseFloat(card.style.getPropertyValue('--k2')) || 1; if (k < 1) res.cartonsResserres++;
+    // ce que le carton montre : l'étendue de ses blocs, qui doit rester dans le carton (et l'écran), hors de la manette
+    const r = card.getBoundingClientRect(), rs = [...card.children].map(e => e.getBoundingClientRect()).filter(q => q.height > 0), contenu = rs.length ? { left: Math.min(...rs.map(q => q.left)), right: Math.max(...rs.map(q => q.right)), top: Math.min(...rs.map(q => q.top)), bottom: Math.max(...rs.map(q => q.bottom)) } : { left: 0, right: 0, top: 0, bottom: 0 };
+    const textes = [...card.querySelectorAll('*')].filter(e => [...e.childNodes].some(c => c.nodeType === 3 && c.textContent.trim())), mini = Math.min(...textes.map(e => parseFloat(getComputedStyle(e).fontSize))); res.cartonsMin = Math.min(res.cartonsMin, mini);
+    const ici = q => faute({ fic: y.fic, lieu: y.lieu, t: 'carton ' + y.cls + ' : ' + y.t }, q);
+    if (card.classList.contains('defile') || contenu.top < Math.max(0, r.top) - 0.5 || contenu.bottom > Math.min(vh, r.bottom) + 0.5) ici('le carton ne tient pas dans l’écran');
+    if (tactile && mini < 9.95) ici(`une police de ${mini.toFixed(1)} points`);
+    if (PADS.some(p => croise(contenu, p))) ici('le carton est sous la manette');
+    card.hidden = true; card.className = ''; card.innerHTML = ''; card.style.removeProperty('--k2'); B.classList.remove('en-carton');
+  }
+  S.pages = vrai; if (!liste) res.liste = res.liste.length;
+  return res;
+};
+
+async function controle(args) {
+  const LANGUES = args.filter(a => /^(fr|ar|arv|en|ja)$/.test(a)), ECRANS = args.filter(a => /^\d+x\d+$/.test(a)), seul2 = args.includes('fr-ar'), sans2 = args.includes('sans2');
+  if (!LANGUES.length) LANGUES.push('fr', 'ar', 'arv', 'en', 'ja'); if (!ECRANS.length) ECRANS.push('390x844', '844x390', '360x640', '1280x720');
+  const passes = []; if (!seul2) LANGUES.forEach(l => ECRANS.forEach(e => passes.push({ l, e }))); if (!sans2) ECRANS.forEach(e => passes.push({ l: 'fr', e, l2: 'ar' }));
+  const LIGNES = lignesDuCode(), browser = await chromium.launch(), rapport = {}; let deborde = 0, erreurs = 0;
+  for (const P of passes) {
+    const [w, h] = P.e.split('x').map(Number), nom = P.l + (P.l2 ? '-' + P.l2 : '') + ' ' + P.e, t0 = Date.now();
+    const p = await ouvrirJeu(browser, P.l, { width: w, height: h }, P.l2); await chapitre(p);
+    const r = await p.evaluate(CONTROLE, { LIGNES, liste: true }); rapport[nom] = r;
+    const libre = r.l2.bulles ? ` ; ${r.l2.bulles} secondes bulles (${r.l2.defile} défilent, ${r.l2.sousManette} gagnent la bande de la manette, qui s'efface le temps de les lire ; police ${r.l2.minPolice2.toFixed(1)} points au moins)` : '';
+    console.log(`${nom} · ${r.textes} textes : ${r.plusieurs} en plusieurs pages (au plus ${r.maxPages}), ${r.resserres} resserrés ; police ${r.minPolice.toFixed(1)} points au moins${libre} · ${r.cartons} cartons, ${r.cartonsResserres} resserrés (police ${r.cartonsMin.toFixed(1)} points au moins) · ${((Date.now() - t0) / 1000).toFixed(0)} s`);
+    r.fautes.slice(0, 12).forEach(f => console.log(`  DÉBORDE ${nom} · ${f.fic} ${f.lieu} — ${f.quoi} — « ${f.debut}… »`)); if (r.fautes.length > 12) console.log(`  DÉBORDE ${nom} · … et ${r.fautes.length - 12} autres (pages.json)`);
+    deborde += r.fautes.length;
+    if (p.__errs.length) { erreurs += p.__errs.length; console.log('  ERREUR console : ' + [...new Set(p.__errs)].slice(0, 3).join(' | ')); }
+    await p.context().close();
+  }
+  // le témoin : sur le petit téléphone, la mise en pages débranchée doit faire déborder des textes (sinon, le contrôle ne voit rien)
+  let muet = false;
+  { const p = await ouvrirJeu(browser, 'fr', { width: 360, height: 640 }); await chapitre(p); const r = await p.evaluate(CONTROLE, { LIGNES, liste: false, temoin: true });
+    muet = !r.fautes.length; console.log(`témoin (fr 360x640, sans pages ni resserrement) : ${r.fautes.length} débord(s) relevé(s)${muet ? ' — TÉMOIN MUET : le contrôle ne voit pas un texte qui déborde' : ', comme il se doit'}`); await p.context().close(); }
+  await browser.close();
+  fs.writeFileSync(path.join(out, 'pages.json'), JSON.stringify(rapport, null, 1));
+  // pour le décideur : les textes français qui demandent plus d'une page (en hauteur, sur 390 × 844 et sur le petit téléphone)
+  const listes = [];
+  [['390x844', 'pages-fr-390x844.txt'], ['360x640', 'pages-fr-360x640.txt']].forEach(([e, f]) => { const r = rapport['fr ' + e]; if (!r) return;
+    const L = r.liste.filter(x => x.pages > 1).sort((a, b) => b.pages - a.pages || b.signes - a.signes);
+    fs.writeFileSync(path.join(out, f), `# ISNAD 2.24 · textes français qui demandent plus d'une page dans la boîte de dialogue, téléphone tenu en hauteur (${e}), texte « grand »\n# ${L.length} texte(s) — fichier · lieu (récit/chapitre) · clé · pages · signes · début du texte\n` + L.map(x => [x.fic, x.lieu, x.cle, x.pages + ' pages', x.signes + ' signes', x.debut].join('\t')).join('\n') + '\n');
+    listes.push(`${path.relative(path.join(V2, '..'), path.join(out, f))} (${L.length})`); });
+  const plus = Object.keys(rapport).filter(k => / 390x844$/.test(k)).map(k => `${k.split(' ')[0]} ${rapport[k].plusieurs}`).join(', ');
+  if (plus) console.log(`en plusieurs pages, en hauteur sur 390 × 844 : ${plus}`);
+  if (listes.length) console.log('listes pour le décideur : ' + listes.join(', '));
+  if (deborde || erreurs || muet) { console.log(`✗ DÉBORDE — ${deborde} page(s) ou carton(s) hors de leur place${erreurs ? `, ${erreurs} erreur(s) console` : ''}${muet ? ', le témoin muet' : ''} (détail : ${path.relative(path.join(V2, '..'), path.join(out, 'pages.json'))})`); process.exit(1); }
+  console.log(`✓ LONGUEURS CONFORMES — ${passes.length} passes, chaque page et chaque carton entiers dans leur place (détail : ${path.relative(path.join(V2, '..'), path.join(out, 'pages.json'))})`);
+}
+
+/* ---------- le relevé de la 2.12 (releve) ---------- */
 /* ---------- les annonces et les marques du moteur, lues dans son code : chaque I.t('…') d'un S.toast(…) ou d'un S.marque(…) ---------- */
 function annoncesDuCode() {
   const L = new Map(), lit = /\bI\.t\(\s*('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*")/g;
@@ -38,7 +249,7 @@ const PAGE = () => {
   window.__phrases = t => String(t).replace(/<[^>]+>/g, '').replace(/\*/g, '').split(/(?<=[.!?…。！？؟])\s*/).map(x => x.trim()).filter(x => /[\p{L}]/u.test(x)).length;
 };
 
-(async () => {
+async function releve(LANGUES) {
   const browser = await chromium.launch(), rapport = { annonces: {}, menus: {}, recits: {} }, ANN = annoncesDuCode(); let reprendre = 0;
   const ouvrir = async (l, vp) => { const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 1, hasTouch: true, isMobile: true, userAgent: devices['iPhone 13'].userAgent }); const p = await ctx.newPage();
     const errs = []; p.on('pageerror', e => errs.push(e.message)); await p.goto(URL + (l === 'fr' ? '' : '?lang=' + l)); await p.waitForTimeout(2000); await p.evaluate(PAGE); p.__errs = errs; return p; };
@@ -113,4 +324,7 @@ const PAGE = () => {
   fs.writeFileSync(path.join(out, 'longueurs.json'), JSON.stringify(rapport, null, 1));
   await browser.close();
   console.log(`✓ LONGUEURS RELEVÉES — ${reprendre} point(s) à reprendre, sans blocage (détail : ${path.relative(path.join(V2, '..'), path.join(out, 'longueurs.json'))})`);
-})().catch(e => { console.error(e); process.exit(1); });
+}
+
+const args = process.argv.slice(2);
+(args[0] === 'releve' ? releve((() => { const l = args.slice(1).filter(a => /^(fr|ar|en|ja)$/.test(a)); return l.length ? l : ['fr', 'ar', 'en', 'ja']; })()) : controle(args)).catch(e => { console.error(e); process.exit(1); });

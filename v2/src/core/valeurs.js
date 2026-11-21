@@ -56,10 +56,15 @@
     const A = T('attributs')[v]; if (!A) return;
     I.oeuvres.learn('attributs'); if (I.debug.auto) return;
     I.audio.sfx('light');
+    await S.card('pray attribut', V.carton(v));
+  };
+  // son carton (2.24 : à part, pour que v2/tools/longueurs.js l'éprouve tel qu'il se montre)
+  V.carton = function (v) {
+    const A = T('attributs')[v]; if (!A) return '';
     // 2.x : le verset et sa référence, dans la langue secondaire, sous ceux de la langue du jeu (tels que chaque langue les relève)
     const l2 = I.langue.l2(), v2 = l2 ? I.langue.second(A.verset, A, 'verset') : null, r2 = v2 ? I.langue.second(A.ref, A, 'ref') : null;
     const bloc = v2 ? S.bloc2(`<p>${I.esc(v2)}</p>${r2 ? `<p class="small">${I.langue.tDans(l2, '{ref}, traduction du sens', { ref: I.esc(r2) }, true) || I.esc(r2)}</p>` : ''}`) : '';
-    await S.card('pray attribut', `<div class="orn">◌</div><p class="small">${I.t('Un attribut divin à reconnaître')}</p><h1>${I.esc(A.nom)}</h1><p class="sens">${I.esc(A.sens)}</p><p>${I.esc(A.verset)}</p><p class="small">${I.t('{ref}, traduction du sens', { ref: I.esc(A.ref) })}</p>${bloc}<p class="mot">${I.esc(A.mot)}</p><div class="hint">▼</div>`);
+    return `<div class="orn">◌</div><p class="small">${I.t('Un attribut divin à reconnaître')}</p><h1>${I.esc(A.nom)}</h1><p class="sens">${I.esc(A.sens)}</p><p>${I.esc(A.verset)}</p><p class="small">${I.t('{ref}, traduction du sens', { ref: I.esc(A.ref) })}</p>${bloc}<p class="mot">${I.esc(A.mot)}</p><div class="hint">▼</div>`;
   };
 
   /* ================= la page de la halte ================= */

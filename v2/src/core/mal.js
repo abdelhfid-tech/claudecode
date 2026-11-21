@@ -73,10 +73,12 @@
 
   /* ----- l'idée noire : on lui répond, par la parole, la pédagogie, la bienveillance ----- */
   M.estIdee = N => !!(N && Array.isArray(N.group) && N.group.length && N.group.every(id => (defDe(W.saga, id) || {}).idee));
+  // le carton qui présente une idée noire (2.24 : à part, pour que v2/tools/longueurs.js l'éprouve tel qu'il se montre)
+  M.carton = (N, saga) => `<img class="idee" alt="" src="${M.url(N.group[0], saga)}"><p class="small">${I.t('Une idée noire')}</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">${I.t('On ne la combat pas : on lui répond. Par la parole, la pédagogie, la bienveillance.')}</p><div class="rule"></div><div class="hint">▼</div>`;
   M.dissiper = async function (N, P) {
     const id = N.group[0], e = defDe(W.saga, id), X = e.parole, sv = I.save.data; let fautes = 0;
     I.oeuvres.learn('idees_noires'); M.apprendre(['echelle']);
-    await S.card('title parley noir', `<img class="idee" alt="" src="${M.url(id)}"><p class="small">${I.t('Une idée noire')}</p><h1>${I.fmt(N.name)}</h1><p>${I.fmt(N.intro)}</p><p class="small">${I.t('On ne la combat pas : on lui répond. Par la parole, la pédagogie, la bienveillance.')}</p><div class="rule"></div><div class="hint">▼</div>`);
+    await S.card('title parley noir', M.carton(N));
     for (let k = 0; k < X.voies.length; k++) {
       await S.run([['say', P.with, X.dit[k]]]); S.hideDialog();
       let reste = Object.keys(D.VOIES);
