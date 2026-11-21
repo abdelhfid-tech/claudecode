@@ -1054,7 +1054,19 @@ l'idole d'un chapitre est un **صنم**. Aucun ne porte un nom de la liste du §
 | La Carte sans chemin | **خريطةٌ بلا طريق** | |
 | Plus tard (2.20, famille de la ghafla) | **لاحقًا** | le mot de l'interface (« ذكّرني لاحقًا ») ; au temps des Compagnons, la même chimère est **سوف** (§ 2.5, « La famille de la ghafla »). |
 | Le Bruit de fond (2.20, famille de la ghafla) | **الضجيجُ الخلفيّ** | le « bruit de fond » de l'arabe moderne. |
+| L'Égoïsme (2.23, D212 ; racine : l'Orgueil) | **الأنانية** | l'usage moderne : « الأنانية مأخوذة من الكلمة "أنا" ويقصد بها حب الذات والأَثَرَة للنفس وهي عكس الإيثار » (Usâma Yahyâ, « الأنانية وحب الذات في الإسلام », mawdoo3.com, lu le 21 novembre 2026) ; WP-ar *أنانية*. L'*Ihyâ'* ne dit pas الأنانية (mot moderne) : il nomme son contraire, الإيثار (36 emplois, t. 2 p. 173 : « ومن ثمار هذه الرتبة الإيثار بالنفس »). |
+| Le Matérialisme (2.23 ; l'Avidité) | **المادّية** | l'usage moderne, au sens moral et non philosophique : « فالمادية أصبحت رؤية مُستبطنة في الحياة، وصار الاستهلاك هو أبرز تجلياتها » (Mustafâ 'Âshûr, « أنا استهلك إذن أنا موجود »، IslamOnline, lu le 21 novembre 2026). |
+| Le Plaisir immédiat (2.23 ; l'Insouciance, famille de la ghafla) | **اللذّة العاجلة** | *Ihyâ'*, t. 1 p. 86 (كتاب العلم، الباب السابع في العقل، « بيان حقيقة العقل وأقسامه ») : « ويقمع الشهوة الداعية إلى اللذة العاجلة ويقهرها » ; t. 4 p. 427 : « حب العاجلة والميل إليها » (texte entier, corpus OpenITI, Shamela 9472, comme au § 2.5). Aucun verset : le jeu ne cite rien ; le mot du Coran « تحبّون العاجلة » n'est pas repris. |
+| L'Indifférence (2.23 ; l'Insouciance) | **اللامبالاة** | l'usage moderne : WP-ar *لا مبالاة* : « حسب علم النفس هي حالة وجدانية سلوكية، معناها أن يتصرف المرء بلا اهتمام في شؤون حياته » (lu le 21 novembre 2026) ; le jeu l'écrit en un mot, avec l'article (اللامبالاة), comme la presse. |
 | L'AGRÉGOR (idole finale) | **المُجمِّع** | **à valider** : « l'agrégateur » (مُجمِّع الأخبار en arabe moderne) ; le recueil peut dire « مُجمِّع الخيالات ». Pas de translittération (أغريغور). D183 : l'Agrégor garde son nom en français, celui du niveau au-dessus des chimères ; l'arabe garde **المُجمِّع**. |
+
+**Les quartiers de la Cité** (2.23, D212 ; arabe moderne, § 1.1) : les lieux — **أحياء المدينة** (les quartiers), **الرواق
+التجاري** (la galerie marchande ; « رواق » : la galerie couverte), **صالة الألعاب**, **حلبة السباق**, **المدرّج** (la
+tribune), **المنتزه**, **العجلة الدوّارة** (la grande roue) ; la ligne de la première chimère vue, **لا يراه أحدٌ غيرك** ;
+« Revoir Maître Yûnus » : **العودة إلى الشيخ يونس**, et sa question **أتعود إلى الشيخ يونس؟** ; « idées noires modernes »,
+dans le feuillet, **الخواطر السود الحديثة** (le terme du § 2.3, et non un mot nouveau). Les quatre chimères sont au
+féminin (الأنانية، المادّية، اللذّة العاجلة، اللامبالاة) : leurs descriptions et la ligne « {nom} se dresse devant toi »
+(**تعترض {nom} طريقك**) le suivent. *À valider*, avec le reste des textes de D212.
 
 **Le Caïd** (arabe classique)
 

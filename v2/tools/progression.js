@@ -8,6 +8,7 @@
       rencontre ; devant une idole, rien ne manque (sauf Fuir, qui n'y est jamais) ; la halte ne montre une page que
       lorsque son système a été rencontré ; la partie exportée garde ce qui a été appris.
    B. Une partie d'avant (sans `lecons`) : tout est là d'emblée, comme toujours.
+   D. (2.23) Les quartiers de la Cité : l'outil « cite », dit par Maître Yûnus à la première arrivée, une seule fois.
    C. Les postures : chacun a d'abord celle de son tempérament ; une autre s'ouvre au niveau 4 (la leçon se dit ce
       jour-là, la page paraît) ; on en change par les boutons de la halte ; leurs effets se lisent dans le combat ; la
       partie les garde, et refuse une posture inconnue.
@@ -196,6 +197,22 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     // la partie : gardée, relue ; une posture inconnue est refusée
     const g = await p.evaluate(() => { const I = window.ISNAD, t = I.save.exporter(), r = I.save.lireTexte(t), o = JSON.parse(t); o.partie.postures['khalid:khalid'] = 'roi'; const r2 = I.save.lireTexte(JSON.stringify(o)); return { ok: r.ok, postures: r.ok && JSON.stringify(r.partie.postures), refus: !r2.ok && r2.erreur }; });
     si(g.ok && /"khalid:khalid":"sage"/.test(g.postures || '') && g.refus, `la partie exportée garde les postures prises ; une posture inconnue est refusée (« ${g.refus} »)`, `la partie : ${JSON.stringify(g)}`);
+    await p.context().close();
+  }
+
+  /* ---------- D. 2.23 (D212) : les quartiers de la Cité — l'outil « cite », dit par Maître Yûnus à la première arrivée ---------- */
+  {
+    const p = await ouvrir(), T = outils(p);
+    const arriver = async () => { await p.evaluate(() => { const I = window.ISNAD; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); window.__dits.length = 0; I.cite.arriver(); });
+      await p.waitForTimeout(1500); for (let i = 0; i < 80 && !(await T.main()); i++) { await T.entree(); await p.waitForTimeout(160); } await p.waitForTimeout(300); };
+    // une partie neuve, le prologue joué : on y a appris à marcher et à parler
+    await p.evaluate(() => { const I = window.ISNAD; I.save.reset(); I.save.data.started = true; I.save.data.prologue = true; I.lecons.ouvrir(); const d = I.save.data.lecons; d.recus = { marcher: 0, parler: 1 }; d.re = { marcher: 1, parler: 1 }; d.dernier = 'parler'; d.seq = 4; d.donne = 1; });
+    await arriver();
+    const a = await p.evaluate(() => { const I = window.ISNAD; return { ch: I.world.ch && I.world.ch.id, recu: I.save.data.lecons.recus.cite, journal: I.lecons.journal.map(j => j.id), dit: I.cite.journal.filter(j => j.quoi === 'lecon').length, toasts: window.__dits.map(x => x.t).filter(t => /revenir quand tu veux/.test(t)) }; });
+    si(a.ch === 'c_quartiers' && a.recu !== undefined && a.journal.join() === 'cite' && a.dit === 1 && !a.toasts.length, 'les quartiers de la Cité, la première fois : Maître Yûnus dit qu’on peut y revenir — un seul outil (« cite »), dit par lui, aucune ligne de plus en marge', `la première arrivée : ${JSON.stringify(a)}`);
+    await arriver();
+    const b = await p.evaluate(() => { const I = window.ISNAD; return { dit: I.cite.journal.filter(j => j.quoi === 'lecon').length, journal: I.lecons.journal.map(j => j.id) }; });
+    si(b.dit === 1 && b.journal.join() === 'cite', 'à l’arrivée suivante, la leçon ne se redit pas', `l’arrivée suivante : ${JSON.stringify(b)}`);
     await p.context().close();
   }
 

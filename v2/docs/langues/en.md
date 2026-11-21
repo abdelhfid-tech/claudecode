@@ -1050,6 +1050,7 @@ religion ni une personne (exigence 6). Les familles d'images restent des famille
 | uthman | La Rumeur *[idole]* | **Rumor** | |
 | idris | Plus tard (2.20) | **Later** | Famille de la ghafla (D210) : le bouton des rappels qu'on repousse. |
 | idris | Le Bruit de fond (2.20) | **Background Noise** | Famille de la ghafla. |
+| idris | L'Égoïsme · Le Matérialisme · Le Plaisir immédiat · L'Indifférence (2.23, D212) | **Selfishness** · **Materialism** · **Instant Gratification** · **Indifference** | Les « idées noires modernes » des quartiers, qu'Idris est seul à voir : des chimères (*chimeras*), jamais des *dark notions* (le feuillet les dit « *modern dark notions* » entre guillemets). *Instant gratification* : l'expression courante de l'anglais pour « tout, tout de suite ». Les quartiers : *the City Quarters* ; galerie marchande *Shopping Arcade*, salle de jeux *Arcade*, circuit *Racetrack*, tribune *Grandstand*, grande roue *Ferris Wheel* ; « Revoir Maître Yûnus » *See Master Yunus again*. À valider. |
 | coeur | Sawfa (2.20) | **Sawfa** | « later » ; *al-taswif* (putting off), al-Ghazâlî, *Ihyâ'*, livre de la Repentance (ar.md, § 2.5). |
 | coeur | Le Long Espoir (2.20) | **Long Hope** | *tul al-amal*, rendu mot à mot ; aucune traduction anglaise publiée n'a été relue en ligne pour ce terme (à vérifier). |
 | coeur | Le Vain Divertissement (2.20) | **Idle Pastime** | *al-lahw* ; pas *Vanity* (sens de l'Ecclésiaste, § 1.9). |

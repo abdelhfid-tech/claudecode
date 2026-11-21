@@ -176,7 +176,8 @@
         req(e, 'name', 'string', w);
         if (!D.ART.includes(e.art)) E.push(`${w}: art « ${e.art} » invalide (${D.ART.join('|')})`);
         if (!D.TIERS.includes(e.tier)) E.push(`${w}: tier « ${e.tier} » invalide`);
-        if (typeof e.lvl !== 'number' || e.lvl < (commun ? 0 : 1) || e.lvl > 12) E.push(`${w}: lvl ${commun ? '0 (calé sur le groupe) à 12' : '1–12'}`);
+        // (2.23 : une chimère de l'histoire-cadre peut, comme celles du contenu commun, caler son niveau sur le groupe — lvl 0)
+        { const cale = commun || (s.frame && !s.veillees); if (typeof e.lvl !== 'number' || e.lvl < (cale ? 0 : 1) || e.lvl > 12) E.push(`${w}: lvl ${cale ? '0 (calé sur le groupe) à 12' : '1–12'}`); }
         if (typeof e.hue !== 'number') E.push(`${w}: hue (0–360) manquant`);
         if (!Array.isArray(e.weak) || e.weak.length < 1) E.push(`${w}: weak[] manquant (au moins 1)`);
         (e.weak || []).concat(e.immune || []).forEach(x => { if (!D.ELEMENTS[x]) E.push(`${w}: élément « ${x} » invalide`); });
@@ -194,6 +195,23 @@
         if (e.idee !== undefined && !(commun && D.NOIRS.includes(id) && e.idee === true)) E.push(`${w}: « idee » est réservé aux cinq idées noires du contenu commun (D.NOIRS)`);
         garde(e.name, w); (e.skills || []).forEach(k => garde(k && k.name, w)); (e.taunts || []).forEach(t => garde(t, w + ' (réplique)'));
         (e.phases || []).forEach(p => { garde(p.say, w + ' (phase)'); (p.addSkills || []).forEach(k => garde(k && k.name, w)); });
+      }
+
+      // 2.23 (D212) — les quartiers de la Cité : ce qui rôde dans leurs rues (D.CITE.rodent) est fait de petites chimères de
+      // l'histoire-cadre, jamais d'une idée noire (D.NOIRS : elles pèsent sur une personne, on leur répond par la parole ;
+      // exigences 16, 18, 22), ni d'un mal du cœur, ni d'une idole ; et ce qu'on y dit (`cite`) est de la fiction : ni verset, ni
+      // parole citée
+      if (s.frame && !s.veillees && (s.chapters || []).some(c => c && c.visite === 'quartiers')) {
+        Object.keys((D.CITE && D.CITE.rodent) || {}).forEach(k => { const e = propres[k], w = `D.CITE.rodent ${k}`;
+          if (D.NOIRS.includes(k) || (e && e.idee)) { E.push(`${w}: une idée noire ne rôde pas dans les rues des quartiers`); return; }
+          if (!e) { E.push(`${w}: chimère inconnue de l'histoire-cadre`); return; }
+          if (e.tier !== 'minion' || e.vice) E.push(`${w}: seulement de petites chimères (tier « minion »), ni mal du cœur ni idole`);
+          if (e.racine !== undefined && [].concat(e.racine).some(r => D.NOIRS.includes(r))) E.push(`${w}: sa racine est une idée noire`);
+          if (!(typeof D.CITE.rodent[k] === 'number' && D.CITE.rodent[k] > 0)) E.push(`${w}: un poids > 0`); });
+        const Q = s.cite || {}, liste = (k, a, b) => { if (!Array.isArray(Q[k]) || Q[k].length < a || Q[k].length > b || Q[k].some(t => typeof t !== 'string' || !t.trim())) E.push(`cite.${k}: de ${a} à ${b} textes`); };
+        ['seul', 'question'].forEach(k => { if (typeof Q[k] !== 'string' || !Q[k].trim()) E.push(`cite.${k}: texte manquant`); });
+        liste('rappels', 3, 10); liste('yunus', 6, 8);
+        ['rappels', 'yunus'].forEach(k => (Q[k] || []).forEach((t, i) => { if (/[«»]|Coran|\d+:\d+/.test(String(t))) E.push(`cite.${k}[${i}]: ni verset ni parole citée (un texte de fiction)`); garde(t, `cite.${k}`); }));
       }
 
       (s.codex || []).forEach(c => {
@@ -272,6 +290,9 @@
           if (npcIds.has(n.id)) E.push(`${wn}: id en double`); npcIds.add(n.id);
           npcMap[n.id] = n.map || c.map;
           checkAt(n.at, n.map || c.map, wn);
+          // 2.23 : un PNJ peut se tourner (face) et prendre une attitude (pose) dès qu'il paraît
+          if (n.face !== undefined && !['down', 'left', 'right', 'up'].includes(n.face)) E.push(`${wn}: « face » vaut down, left, right ou up`);
+          if (n.pose !== undefined && !D.POSES.includes(n.pose)) E.push(`${wn}: pose « ${n.pose} » inconnue (${D.POSES.join('|')})`);
           if (!n.hero) {
             if (!n.look || typeof n.look !== 'object') E.push(`${wn}: « look » manquant (ou hero:'id')`);
             else { if (n.look.kind && !D.NPC_KINDS.includes(n.look.kind)) E.push(`${wn}: look.kind « ${n.look.kind} » invalide`); checkLook(n.look, wn); }

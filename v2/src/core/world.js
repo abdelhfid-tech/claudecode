@@ -58,7 +58,7 @@
   // `parLeRecit` : la prière est une étape d'un objectif en cours. Elle repose le groupe, mais ne prend pas de point de
   // reprise : écrit à ce moment-là, il ferait rejouer l'objectif depuis un lieu où il ne peut plus s'accomplir.
   W.pray = async function (moment, parLeRecit) {
-    const env = W.map ? W.map.env : {}, m = moment || ({ dawn: 'fajr', day: 'dhuhr', dusk: 'maghrib', night: 'isha' })[env.time] || 'isha';
+    const env = W.map ? W.map.env : {}, m = moment || env.moment || ({ dawn: 'fajr', day: 'dhuhr', dusk: 'maghrib', night: 'isha' })[env.time] || 'isha'; // (2.23 : un lieu peut dire son moment — les quartiers, au couchant)
     S.depth++;
     try {
       S.hideDialog(); W.emote('groupe', 'prie'); await I.sleep(I.debug.auto ? 10 : 700); await S.fade('out', 600); I.audio.sfx('light');
@@ -90,6 +90,7 @@
     document.body.dataset.theme = (D.gabarit(id) || {}).theme || 'orient'; // le thème de l'interface suit le gabarit du lieu
     $('#ui').style.setProperty('--mini', (W.map.mini ? ((27 + W.map.h + 6) / G.PH * 100).toFixed(1) : '14') + '%'); // les annonces s'empilent sous la mini-carte
     if (I.rodeurs) I.rodeurs.arme(); // un labyrinthe de la noosphère arme son chrono
+    if (I.trafic) I.trafic.arme(); // 2.23 : les quartiers de la Cité ont leurs voitures (trafic.js)
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
   // la définition du dessin a changé : la carte et les planches de marche se refont, rien d'autre ne bouge
@@ -229,10 +230,11 @@
     const sp = I.save.data.sagas[sagaId] || (I.save.data.sagas[sagaId] = { ch: 0, done: false, flags: {} });
     S.flags = cp ? (cp.flags || {}) : Object.assign({}, sp.flags || {});
     if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); I.mal.ouvre(); }
+    if (!cp && I.cite && I.cite.refuge(ch)) I.cite.neuf(S.flags); // 2.23 : chaque arrivée dans les quartiers est neuve (cite.js)
     if (saga.frame && !saga.veillees && (Number.isInteger(ch.retour) || ch.visite) && I.ui.drapeaux2084) I.ui.drapeaux2084(S.flags); // 2.x : l'état de 2084, pour un retour ou une visite
     I.oeuvres.syncFlags();
     W.party = (cp ? cp.party : ch.party).slice(); W.party.forEach(id => W.ensureLevel(W.hero(id))); W.healAll(); W.refreshSheets();
-    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: 0, sheet: G.planche(look), aura: def ? (lueur(def.look) || '#ffe9a8') : (look.kind === 'compagnon' ? (lueur(look) || '#ffe9a8') : null) }); });
+    W.npcs = (ch.npcs || []).map(n => { const def = n.hero && saga.heroes[n.hero]; const look = def ? lookOf(def) : Object.assign({ kind: 'homme', robe: '#8a7355', head: '#e6dcc4' }, n.look); if (!def && (look.kind === 'soldat' || look.kind === 'romain') && !look.item && !look.coiffe) look.sel = I.hash(n.id || n.name || '') % 97; return Object.assign({}, n, { map: n.map || ch.map, hidden: !!n.hidden, placed: false, dir: n.face !== undefined && G.DIRS[n.face] !== undefined ? G.DIRS[n.face] : 0, sheet: G.planche(look), aura: def ? (lueur(def.look) || '#ffe9a8') : (look.kind === 'compagnon' ? (lueur(look) || '#ffe9a8') : null) }); });
     W.foes = (ch.foes || []).map(f => Object.assign({}, f, { map: f.map || ch.map, done: false, placed: false, ph: Math.random() * 6 }));
     W.chests = (ch.chests || []).map(c => Object.assign({}, c, { map: c.map || ch.map, open: false, placed: false }));
     W.objIndex = cp ? cp.obj : 0;
@@ -261,6 +263,7 @@
       // l'équipement : le joueur de test s'habille au mieux ; le joueur est prévenu quand la réserve tient mieux que ce qu'il porte
       if (I.debug.auto) I.gear.bestAll(); else if (!cp) { if (appr) I.lecons.chapitre(); else if (I.gear.better()) S.toast(I.t('La réserve tient de quoi mieux équiper ce groupe : <b>Halte</b>, puis <b>Équipement</b>.'), 7000); }
       if (!cp && I.postures) I.postures.veille(); // une posture s'ouvre à quelqu'un du groupe : on le dit, une fois
+      if (I.cite && I.cite.ici()) await I.cite.ouvre(cp); // 2.23 : dans les quartiers, Maître Yûnus dit, la première fois, qu'on peut y revenir
       await W.advance();
     } finally { S.depth--; S.hideDialog(); }
   };
@@ -280,7 +283,8 @@
      récits que l'on a quittés en chemin (cps) : un par saga de la Chaîne, un par chapitre de l'histoire-cadre ou des
      veillées. Quitter un récit range son point ; le rouvrir le reprend. Champ absent des parties d'avant : le format reste le 2. */
   W.cleReprise = function (c) { const s = I.sagas[c.saga]; return s && s.frame ? c.saga + ':' + c.ci : c.saga; };
-  W.ranger = function () { const sv = I.save.data, c = sv.cp; if (!c) return null; c.t = Date.now(); (sv.cps = sv.cps || {})[W.cleReprise(c)] = c; sv.cp = null; return c; };
+  W.ranger = function () { const sv = I.save.data, c = sv.cp; if (!c) return null; if (I.cite && I.cite.estPoint(c)) { sv.cp = null; return null; } // 2.23 : le refuge des quartiers n'est jamais rangé parmi les récits quittés (cite.js)
+    c.t = Date.now(); (sv.cps = sv.cps || {})[W.cleReprise(c)] = c; sv.cp = null; return c; };
   // le point de reprise de ce récit, s'il en a un : il redevient le point courant (celui d'un autre récit est rangé)
   W.reprise = function (sagaId, ci) {
     const sv = I.save.data, k = W.cleReprise({ saga: sagaId, ci });
@@ -288,7 +292,7 @@
     const c = sv.cps && sv.cps[k]; if (!c) return null;
     W.ranger(); delete sv.cps[k]; sv.cp = c; return c;
   };
-  W.rangees = function () { const sv = I.save.data; return Object.keys(sv.cps || {}).map(k => sv.cps[k]).filter(c => c && I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci]).sort((x, y) => (y.t || 0) - (x.t || 0)); };
+  W.rangees = function () { const sv = I.save.data; return Object.keys(sv.cps || {}).map(k => sv.cps[k]).filter(c => c && I.sagas[c.saga] && (I.sagas[c.saga].chapters || [])[c.ci] && !(I.cite && I.cite.estPoint(c))).sort((x, y) => (y.t || 0) - (x.t || 0)); };
   W.checkpoint = function () {
     if (W.excursion) return; // pendant la descente du râwî, le point de reprise reste celui d'avant
     { const sv = I.save.data, k = W.cleReprise({ saga: W.saga.id, ci: W.ci }); if (sv.cp && W.cleReprise(sv.cp) !== k) W.ranger(); if (sv.cps && sv.cps[k]) delete sv.cps[k]; } // le point d'un autre récit est rangé, jamais écrasé
@@ -366,7 +370,7 @@
     if (best) {
       const dx = p.x - best.x, dy = p.y - best.y; best.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0);
       const o = W.cur();
-      if (o && o.talk === best.id) return W.complete();
+      if (o && o.talk === best.id) { if (I.cite && I.cite.parle(best)) return; return W.complete(); } // 2.23 : Maître Yûnus, dans les quartiers, demande où aller (cite.js)
       if (best.talk) { I.audio.sfx('blip'); await S.run(best.talk); }
       return;
     }
@@ -440,6 +444,7 @@
       }
     } else { W.dest = null; if (!p.scripted) p.moving = false; p.court = false; }
     W.npcs.forEach(n => { if (n.pas) avancerPas(n, dt); }); // le pas de côté va jusqu'au bout, même si un récit commence
+    if (I.trafic) I.trafic.tic(dt); // 2.23 : les voitures des quartiers roulent, et s'arrêtent devant qui se tient sur leur voie
     W.updateCam();
   };
 
@@ -454,7 +459,7 @@
   const touche = (e, x, y) => Math.abs(x - e.x) < 9 && y - e.y > -4 && y - e.y < 6;
   W.corps = corps; W.touche = touche; // pour les outils de contrôle (« SUPERPOSÉ », « PNJ EN TRAVERS »)
   function heurte(x0, y0, x1, y1, L) { for (const e of L || corps()) if (touche(e, x1, y1) && (!touche(e, x0, y0) || Math.hypot(x1 - e.x, y1 - e.y) < Math.hypot(x0 - e.x, y0 - e.y))) return e; return null; }
-  function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) { if (I.rodeurs && W.map.env.dedale) I.rodeurs.heurte(nx, ny); return false; } const e = heurte(p.x, p.y, nx, ny); if (e) { W._heurte = e; return false; } p.x = nx; p.y = ny; return true; } // 2.x : buter sur la porte interdite la fait parler d'elle (rodeurs.js)
+  function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) { if (I.rodeurs && W.map.env.dedale) I.rodeurs.heurte(nx, ny); return false; } if (I.trafic && I.trafic.bloque(p.x, p.y, nx, ny)) return false; /* 2.23 : on n'entre pas dans une voiture (trafic.js) */ const e = heurte(p.x, p.y, nx, ny); if (e) { W._heurte = e; return false; } p.x = nx; p.y = ny; return true; } // 2.x : buter sur la porte interdite la fait parler d'elle (rodeurs.js)
   // le joueur posé sur quelqu'un (une partie d'avant, un récit) : la case libre la plus proche
   W.degager = function () { const p = W.player; if (!W.map || !corps().some(e => touche(e, p.x, p.y))) return false; const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; } return true; };
   // un PNJ qui paraît (« show ») là où se tient le joueur — il y était posé, caché — prend la case libre la plus proche
@@ -488,7 +493,8 @@
     const m = W.map, p = from || W.player, w = m.w, sx = I.clamp(Math.floor(p.x / T), 0, w - 1), sy = I.clamp(Math.floor((p.y - 2) / T), 0, m.h - 1), ex = I.clamp(Math.floor(x1 / T), 0, w - 1), ey = I.clamp(Math.floor((y1 - 2) / T), 0, m.h - 1);
     const s = sy * w + sx, e0 = ey * w + ex, prev = new Int32Array(w * m.h).fill(-1), q = new Int32Array(w * m.h); let qh = 0, qt = 0, best = s, bd = 1e9, plein = null;
     if (!sansCorps) { plein = new Uint8Array(w * m.h); const met = e => { if (e === p) return; const i = Math.floor((e.y - 2) / T) * w + Math.floor(e.x / T); if (i >= 0 && i < plein.length && i !== s && i !== e0) plein[i] = 1; };
-      corps().forEach(met); if (p !== W.player) met(W.player); }
+      corps().forEach(met); if (p !== W.player) met(W.player);
+      if (I.trafic) I.trafic.cases().forEach(i => { if (i >= 0 && i < plein.length && i !== s && i !== e0) plein[i] = 1; }); } // 2.23 : une voiture se contourne (trafic.js)
     prev[s] = s; q[qt++] = s;
     while (qh < qt) {
       const i = q[qh++], x = i % w, y = (i - x) / w, d = (x - ex) * (x - ex) + (y - ey) * (y - ey);
@@ -599,7 +605,8 @@
   // n'y a pas d'autre passage, il va droit (celui qu'il pousse fera un pas de côté)
   W.pathTo = function (x0, y0, x1, y1, sansCorps) {
     const m = W.map, sx = Math.floor(x0 / 16), sy = Math.floor((y0 - 2) / 16), ex = Math.floor(x1 / 16), ey = Math.floor((y1 - 2) / 16);
-    const plein = new Uint8Array(m.w * m.h); if (!sansCorps) corps().forEach(e => { const i = Math.floor((e.y - 2) / 16) * m.w + Math.floor(e.x / 16); if (i >= 0 && i < plein.length && i !== sy * m.w + sx && i !== ey * m.w + ex) plein[i] = 1; });
+    const plein = new Uint8Array(m.w * m.h); if (!sansCorps) { corps().forEach(e => { const i = Math.floor((e.y - 2) / 16) * m.w + Math.floor(e.x / 16); if (i >= 0 && i < plein.length && i !== sy * m.w + sx && i !== ey * m.w + ex) plein[i] = 1; });
+      if (I.trafic) I.trafic.cases().forEach(i => { if (i >= 0 && i < plein.length && i !== sy * m.w + sx && i !== ey * m.w + ex) plein[i] = 1; }); } // 2.23 : une voiture se contourne
     const prev = new Int32Array(m.w * m.h).fill(-1), q = [sy * m.w + sx]; prev[sy * m.w + sx] = sy * m.w + sx; let end = -1;
     while (q.length) { const i = q.shift(), x = i % m.w, y = (i - x) / m.w; if (Math.abs(x - ex) + Math.abs(y - ey) <= 1) { end = i; break; }
       for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= m.w || ny >= m.h) continue; const j = ny * m.w + nx; if (prev[j] >= 0 || m.solid[j] || plein[j]) continue; prev[j] = i; q.push(j); } }
@@ -730,6 +737,7 @@
     W.npcs.forEach(n => { if (!n.hidden && n.map === m.id && n.placed) list.push({ y: n.y, n }); });
     W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) list.push({ y: f.y, f }); });
     W.chests.forEach(ch => { if (ch.map === m.id && ch.placed) list.push({ y: ch.y, ch }); });
+    if (I.trafic) I.trafic.lister(list, cx, cy); // 2.23 : les voitures qui roulent
     for (let i = W.party.length - 1; i >= 1; i--) { const tr = W.suiveur(i); if (tr) list.push({ y: tr[1] - 0.1, fol: i, tr }); }
     list.push({ y: W.player.y, p: true });
     const bete = W.saga.frame && I.oeuvres.animal(), btr = bete && W.suiveur(0, W.party.length * ECART + 8);
@@ -741,6 +749,7 @@
       if (e.o) { const o = e.o; c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2) - cx, o.y - o.h + 1 - cy); if (o.anim) { const an = G.OBJ[o.type].animer; if (an) an(c, o.x - cx, o.y - cy, t, o); else drawFlame(c, o.x - cx, o.y - cy - (o.type === 'brazier' ? 10 : 3), t + o.seed, o.type === 'fire'); } if (G.OBJ[o.type].herd) I.build.herd(c, o, o.x - cx, o.y - cy, t); }
       else if (e.n) { const n = e.n; if (n.ph === undefined) n.ph = (I.hash((n.id || n.name || '') + '|' + (n.map || '')) >>> 0) % 628 / 100; /* chacun respire à son rythme */ drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t + n.ph, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
       else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]] || I.common.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = f.sonne > 0 ? 0.4 + Math.sin(t * 22) * 0.12 : 0.85 + (Math.sin(t * 5 + f.ph) + 1) * 0.06; /* 2.16 : un plancher de 0,85 — encore un peu de transparence : ce n'est pas une personne (exigence 6) */ c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; if (f.rodeur && (f.voiles > 0 || f.tenue > 0) && (f.meute || f.tenue !== undefined)) { const nv = Math.ceil(f.meute ? f.voiles : f.tenue); c.fillStyle = f.sonne > 0 ? '#fff3c8' : `hsl(${d.hue},90%,78%)`; for (let i = 0; i < nv; i++) c.fillRect(Math.round(f.x - cx - nv * 2 + i * 4 + 1), Math.round(f.y - cy - s - 7 + bob), 2, 2); } /* ce qui rôde : ses voiles, et le tremblement de qui vient d'être frappé */ lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
+      else if (e.car) I.trafic.dessiner(c, e.car, cx, cy, t, lights);
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
       else if (e.bete) { const tr = e.tr, im = I.oeuvres.bete(e.bete, true), bx = Math.round(tr[0] - cx), by = Math.round(tr[1] - cy - im.height - 1 + Math.sin(t * 3) * 1.2); if (tr[2] === 2) { c.save(); c.translate(bx, 0); c.scale(-1, 1); c.drawImage(im, -Math.round(im.width / 2), by); c.restore(); } else c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 24, color: (I.sagas.coeur.animaux[e.bete] || {}).couleur || '#ffe9a8', a: 0.7 }); }
       else if (e.fol) { const tr = e.tr, mv = W.player.moving, pf = (W.player.parcours || 0) - e.fol * ECART, sh = W.sheets[e.fol]; if (mv && W.player.court) { const su = W._suit || (W._suit = {}); poudre(su[e.fol] || (su[e.fol] = {}), sh, tr[0], tr[1], tr[2], pf); } drawChar(c, sh, tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null), null, W.player.court, pf); /* les suiveurs courent quand le meneur court : la même foulée, à leur place sur son chemin */ lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (lueur(W.saga.heroes[W.party[e.fol]].look) || '#ffe9a8'), a: 0.4 }); }

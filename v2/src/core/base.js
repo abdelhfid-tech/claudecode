@@ -151,7 +151,7 @@
   function fresh() {
     return { v: FORMAT, profil: {}, paquets: {}, started: false, prologue: false, epilogue: false, lights: [], sagas: {}, heroes: {},
       items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, gear: {}, equip: {}, gearInit: {}, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
-      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 } };
+      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 }, cite: {} };
   }
   // La partie se garde toute seule, à chaque point de reprise (AKEY) : fermer la page ne fait rien perdre. Les trois
   // emplacements de la mosquée restent, pour qui veut garder une copie. Les options, elles, se gardent à part.
@@ -165,6 +165,7 @@
     const p = Object.assign({}, d); if (p.v === 1) p.v = 2;
     if (p.v !== FORMAT) return null;
     if (!estObjet(p.profil)) p.profil = {}; if (!estObjet(p.paquets)) p.paquets = {};
+    if (p.cite === undefined) p.cite = {}; // 2.23 (D212) : les quartiers de la Cité (cite.js) — absent des parties d'avant ; le format reste le 2
     return p;
   }
   // Ce qui, dans une partie venue d'ailleurs, n'a pas la forme attendue. Un champ absent prendra sa valeur de départ ; un
@@ -187,6 +188,8 @@
     if (objet('cps')) Object.keys(d.cps).forEach(k => { if (!reprise(d.cps[k])) E.push('cps.' + k); });
     if (d.retours !== undefined && !naturel(d.retours)) E.push('retours');
     objet('rebonds'); objet('lecons'); // 2.x : `lecons` — les outils reçus (lecons.js), dans une partie commencée par « Nouvelle partie »
+    // 2.23 (D212) : les quartiers de la Cité — des comptes (arrivées, rappels, répliques de Maître Yûnus) et deux marques
+    if (objet('cite')) { const q = d.cite; ['arrivees', 'rappels', 'yunus'].forEach(k => { if (q[k] !== undefined && !naturel(q[k])) E.push('cite.' + k); }); ['vue', 'lecon'].forEach(k => { if (q[k] !== undefined && typeof q[k] !== 'boolean') E.push('cite.' + k); }); }
     if (objet('postures')) Object.keys(d.postures).forEach(k => { if (!D.POSTURES || !D.POSTURES[d.postures[k]]) E.push('postures.' + k); }); // 2.x : la posture prise par chacun (absente : celle de son tempérament)
     return E;
   }

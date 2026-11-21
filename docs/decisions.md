@@ -1843,6 +1843,59 @@ pages privées de son compte.
   on ne mène plus deux récits des Compagnons de front. La phrase d'en-tête de la Chaîne change : « Chaque maillon est un
   témoin. La Chaîne se lit du premier au dernier : chacun s'ouvre quand celui d'avant est achevé. » (texte de l'agent,
   à valider). `v2/docs/architecture.md`, « Mener plusieurs récits » ; contrôle : `retours.js`.
+- [x] **D212. La Cité-Miroir et le refuge de 2084 (version 2.23 ; demandée par le décideur le 21 novembre).** « Je veux que
+  tu améliores la cité miroir avec des belles voitures, des jeux en tous genres, des activités, des courses de voitures, la
+  possibilité de remonter à la cité miroir à chaque moment à côté de Maître Yunus, il y trouve beaucoup d'activités mais
+  tout le monde est triste et seul, personne ne voit les idées noires modernes : égoïsme, matérialisme, plaisir immédiat,
+  etc. Chaque rencontre ou combat avec une idée noire qu'il est seul à voir lui rappelle la prière et lui propose de revoir
+  maître Yunus qui lui rappelle son rôle de rawi. » Ses réponses : les « idées noires modernes » sont **des chimères à
+  combattre** (les cinq idées noires de `D.NOIRS` restent des voix qu'on apaise par la parole : exigences 16, 18 et 22
+  inchangées) ; une course jouable avec une **prime** de l'organisateur et **aucune mise** (le pari sera une chimère que l'on
+  combat : lot suivant) ; quatre activités : salle de jeux vidéo, galerie marchande, écran géant, parc et manèges. Ce lot-ci
+  (lot 2) fait la ville, le refuge, les passants, les voitures, les chimères et le rappel ; le lot suivant rendra les
+  activités jouables (la course sur cinq circuits, la borne d'arcade, l'étal de la galerie, s'asseoir devant l'écran, la
+  grande roue). `v2/docs/architecture.md`, « Les quartiers de la Cité-Miroir » ; `AGENTS.md`. Contrôle : `node v2/tools/cite.js`
+  (« CITÉ CONFORME ») ; `retours.js` traverse désormais les quartiers.
+  *Ce que l'agent a fait.* Une carte neuve, **les quartiers de la Cité** (`quartiers`, 64 × 46 cases ; `maps.js`), au
+  crépuscule validé de la Cité-Miroir (D206), dont la rue (`cite`) ne change pas d'une case : la galerie marchande et ses
+  vitrines (des formes), la salle de jeux et ses bornes, une boucle d'avenues, le parvis et l'ascenseur des Archives basses,
+  la place du grand écran (des couleurs qui coulent), un coin calme derrière une haie (une natte au sol, deux dattiers, un
+  banc), le parc (une grande roue, des chaises volantes, des tasses, qui tournent à vide), le circuit (sa piste, sa tribune,
+  ses stands). Des **voitures** dessinées par le jeu (cinq modèles inventés, neuf teintes, sans marque, sans logo, sans
+  plaque, vitres fumées), garées (deux cases chacune) ou qui roulent (`trafic.js` : elles s'arrêtent devant qui se tient sur
+  leur voie, ne traversent personne ; on n'entre pas dans une voiture ; un chemin les contourne), et trois voitures de course
+  sur le circuit, derrière la barrière. **Le refuge** : un chapitre de l'histoire-cadre, `c_quartiers`, marqué
+  `visite: 'quartiers'` (le validateur veut que `visite` nomme la carte du chapitre ; la demande disait « visite: 'cite' »)
+  — sobre, comme la Citadelle ; on y arrive par « Revenir en 2084 » une fois joués les retours dus (et au sortir d'un retour),
+  et par « La Cité-Miroir » au pied de la Chaîne, dès le prologue joué ; chaque arrivée est neuve, au parvis, à côté de
+  Maître Yûnus ; Maître Yûnus dit une réplique, puis offre « Reprendre le récit » (exactement à sa place), « La Chaîne, aux
+  Archives basses » et « Rester dans la Cité » ; la halte du refuge offre les deux sorties ; le point de reprise du refuge
+  n'est jamais rangé parmi les récits quittés. **Quinze passants** de fiction, chacun seul. **Quatre chimères** (`frame.js`)
+  qu'Idris est seul à voir — l'Égoïsme (racine l'Orgueil), le Matérialisme (l'Avidité), le Plaisir immédiat (l'Insouciance,
+  famille de la ghafla), l'Indifférence (l'Insouciance) —, qui rôdent dans les rues (`rodeurs.js`), passent au travers des
+  passants, et dont le contact ouvre un combat d'où l'on peut fuir ; leur niveau se cale sur celui qui mène (`lvl: 0`, que le
+  validateur admet désormais pour l'histoire-cadre, comme pour le contenu commun) ; elles ne rôdent pas dans les labyrinthes
+  de 2084 ; aucune idée noire ne rôde dans les rues (`regles.js` le vérifie). **Le rappel** après chaque combat : une ligne,
+  puis « Revoir Maître Yûnus » / « Plus tard » (B). **La leçon** : l'outil `cite` (« Revenir dans la Cité », un geste), dit
+  par Maître Yûnus à la première arrivée. **La partie** garde `cite` (des comptes ; le format reste le 2). Les PNJ d'un
+  chapitre peuvent désormais porter `pose` et `face` (le validateur les contrôle). Les textes nouveaux sont écrits à la source
+  en arabe (et vocalisés), en anglais et en japonais (105 textes par langue) ; les termes arabes des chimères ont été lus en
+  ligne : الأنانية (l'usage moderne, mawdoo3 ; WP-ar), المادّية (IslamOnline), اللذّة العاجلة (*Ihyâ'*, t. 1 p. 86, corpus
+  OpenITI), اللامبالاة (WP-ar) — `v2/docs/langues/ar.md`, § 3.6 ; aucun verset.
+  *Les nombres* (`D.CITE`, **à valider**) : trois chimères par arrivée, à douze cases au moins du parvis, qui prennent en
+  chasse à six cases, à 45 % de la marche ; six voitures à 58 points par seconde (± 15 %), qui s'arrêtent à vingt points
+  devant quelqu'un ; trois voitures de course à 120 points par seconde ; deux voiles par chimère ; leurs attaques ordinaires
+  pèsent 3, celles du temps volé 1 (comme en D210).
+  *Textes proposés, à valider* : les noms et descriptions des quatre chimères, leurs attaques et leurs répliques ; les
+  répliques des quinze passants ; les six lignes du rappel ; la question « Revoir Maître Yûnus ? » ; les huit répliques de
+  Maître Yûnus sur le rôle de râwî, et « Je suis là, Idris. », « Va, Idris. La Chaîne t'attend. » ; la leçon (« Ici, tu peux
+  revenir quand tu veux, Idris : *Revenir en 2084*, à la halte, ou *La Cité-Miroir*, au pied de la Chaîne. Je t'attendrai sur
+  le parvis. ») ; « Personne d'autre ne la voit. » ; les deux feuillets du Recueil (« Les quartiers de la Cité », « Ce que nul
+  ne voit ») ; l'ouverture du chapitre ; l'objectif ; les libellés des sorties.
+  *Reste à voir* : le dessin des voitures et des manèges, jugé sur des captures (390 × 844, 844 × 390, les trois réglages) —
+  le décideur dira s'il les veut plus grandes, plus brillantes ; la place de la tribune (on la voit de dos) ; les noms et
+  les failles des chimères ; une relecture de l'arabe, de l'anglais et du japonais ; la course jouable, la borne, l'étal,
+  l'écran et la grande roue (lot suivant) ; les shorts et la démo, qui ne montrent pas encore les quartiers.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et
