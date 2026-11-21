@@ -2008,6 +2008,56 @@ pages privées de son compte.
   la passante du parvis se tient, depuis la 2.23, derrière un dattier en bac, qui la cache en partie ; sa place n'a pas
   été changée. Les nouvelles silhouettes ne sont pas relevées dans les fiches de `silhouettes.js` (elles y paraissent
   « nouvelles, sans empreinte ») : on les relèvera une fois le dessin validé (`relever-nouveaux`).
+- [ ] **D216. Sâlim et la course : la moto, cinq circuits, la prime de l'organisateur, aucune mise (version 2.27 ; demandes du
+  décideur, 21 novembre) — choix, textes, nombres et dessin de l'agent, à valider.** « améliore la cité miroir avec des belles
+  voitures, des jeux en tous genres, des activités, des courses de voitures » ; « Les activités de la cité miroir sont
+  omniprésents des le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » ; « Les courses de
+  voitures sont de plus en plus difficiles avec des circuits » ; « Un ami vient en moto et demande à Idriss de monter derrière
+  lui pour sa première course » ; l'ami est Sâlim (« Sâlim, l'ami des courses »), et le joueur se penche dans les virages ; une
+  vraie course jouable, avec de l'argent à gagner — une prime de l'organisateur ; aucune mise (le maysir) : les parieurs sont
+  dans la tribune, et leur chimère, « Le Pari », Idris la voit et la combat. *Ce qui a été fait* (`v2/src/core/circuit.js`,
+  `v2/docs/architecture.md`, « Sâlim et la course ») : au premier passage au circuit des quartiers (dès le prologue joué, quel
+  que soit le maillon), Sâlim arrive en moto, se gare sur le trottoir et propose : « Monter derrière Sâlim ? » ; il dit la
+  leçon d'un outil nouveau, « Prendre les virages » (« Dans chaque virage, le joystick vers l'intérieur du virage : tu te
+  penches avec moi. Bien penché, on garde la vitesse. ») ; il pilote, Idris se penche (le joystick ou les flèches vers
+  l'intérieur, à 65° près) : bien penché, la moto garde sa vitesse ; mal penché, elle ralentit (à 60 %), sans chute ni
+  blessure. Puis l'organisateur fait courir cinq circuits, vus de dessus, sur des tracés faits des rues du quartier (dalles,
+  toits de verre, jardins, places, lampadaires ; aucun signe, aucune marque, personne ajouté au décor) : *La boucle des
+  avenues* (large, une boucle simple, seul contre la montre), *Les places* (huit virages, trois voitures), *La chicane* (des
+  virages serrés, une chicane, des adversaires plus vifs), *Le viaduc* (un huit dont une branche passe en hauteur, un temps à
+  battre, un adversaire en tête), *La nuit des tours* (le plus long et le plus serré, de nuit). Chacun s'ouvre quand le
+  précédent est gagné ; un circuit gagné se rejoue. On oriente au joystick ou aux flèches, A tenu accélère, B met en pause
+  (« Reprendre » / « Quitter la course ») ; la barrière retient ; aucun accident. La prime : des dirhams, versés au podium par
+  l'organisateur. Dans la tribune, trois parieurs de fiction, chacun seul devant son écran (dont une femme, type `femme`,
+  D215) ; Le Pari rôde sur les gradins, et seulement là ; on le combat ; sa fiche entre au Recueil. Le dernier maillon : si
+  Idris a couru avec Sâlim, la rencontre de la rue devient des retrouvailles (« Idris ! Mon passager des virages. Alors
+  l'archiviste, c'était toi. » — « Sâlim. Tu disais fabriquer ce qu'on regarde sur les écrans. » — « Je ne disais pas tout.
+  J'ai passé dix ans à nourrir l'Agrégor… ») ; sinon, la rencontre de toujours ; l'étape V de la 2.25 ne change pas. Le bruit
+  des moteurs est synthétisé, sans voix ni musique. *La règle* (écrite dans `AGENTS.md`) : **aucun pari ni jeu de hasard ne se
+  joue ; le pari n'est qu'une chimère** ; on ne paie jamais pour courir. `regles.js` la vérifie d'une manière simple : aucune
+  réponse offerte au joueur (un choix, une question, un pourparler, un menu de la course, une phrase du code de la course dans
+  chaque langue) ni aucun nom de héros, de vertu, d'objet ou de pièce ne porte les mots du pari (une liste par langue :
+  pari, miser, mise, enjeu, cote, loterie, casino, jeu de hasard… ; *bet, wager, gamble, stake, odds, lottery…* ; رهان، قمار،
+  الميسر، يانصيب… ; 賭, ギャンブル, 宝くじ…) ; les tables de la course n'ont que leurs champs déclarés (ni mise, ni enjeu, ni
+  cote, ni droit d'entrée) et une prime positive ou nulle. Le Pari, un parieur, un texte qui dit qu'on ne mise rien : rien de
+  cela n'est offert, rien n'est refusé. *Les nombres* (`D.CIRCUITS`, `D.COURSE`) : la voiture, 150 points par seconde en
+  pointe, une adhérence de 300 (un virage de rayon r se prend à √(300 r) : 94 points par seconde au rayon 30) ; les
+  adversaires du circuit 2 à 80–86 % de la pointe et 70–72 % de l'adhérence, du 3 à 88–92 % et 82–85 %, du 4 (un seul, parti
+  140 points devant) à 91 % et 86 %, du 5 à 93–95 % et 88–90 % ; à battre : 52 s (circuit 1), 57 s (circuit 4) ; la prime :
+  6, 10, 15, 22, 30 dirhams au premier, 40 % au deuxième, 20 % au troisième, 60 dirhams au plus par visite ; la moto, 118
+  points par seconde, une adhérence de 230. Réglés par des courses jouées par le moteur (dix par pilote d'essai) : le circuit 1
+  se gagne par tous, même un pilote maladroit qui touche les barrières (au plus 49,4 s) ; le 2 dès un pilote moyen ; le 3 et
+  le 4 dès un bon ; le 5, un bon une fois sur deux, un expert toujours. *Ce que l'agent a choisi* : la vue de dessus et une
+  conduite « on pointe, elle tourne » (plutôt que gauche-droite, qui s'inverse quand la voiture descend l'écran) ; aucune
+  touche de frein (A lâché, le frottement des pneus) ; les adversaires nommés par la teinte de leur voiture (Carmin, Émeraude,
+  Corail, Sable) ; Sâlim ne vient pas, dans une partie neuve, si l'outil des virages ne peut pas encore être donné (il viendra
+  à un passage suivant) ; il propose ensuite de « refaire un tour » ; ses textes au circuit ne nomment jamais l'Agrégor (il
+  dit « les écrans », « ce qu'on regarde ») ; un texte de Sâlim et un de l'organisateur disent que personne ne mise rien. Les
+  textes sont écrits à la source en arabe (et vocalisés), en anglais et en japonais. *À valider* : le dessin (la moto vue de
+  côté et de dessus, les voitures vues de dessus, les tracés, le podium) sur les captures (390 × 844, 844 × 390, les trois
+  réglages) ; les textes (Sâlim, l'organisateur, les parieurs, Le Pari, la fiche, les retrouvailles) ; les nombres ; la liste
+  des mots du pari ; la place de Sâlim (ce qu'il dit de son travail avant le dernier maillon). *Reste à voir* : aucune
+  course n'est encore filmée pour la promotion ; la difficulté est réglée sur des pilotes d'essai, pas sur des joueurs.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

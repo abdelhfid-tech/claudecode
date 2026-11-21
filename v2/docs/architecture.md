@@ -862,6 +862,110 @@ activités (salle de jeux, galerie marchande, écran géant, parc et manèges). 
   mène (`lvl: 0`) : au niveau 1, Idris seul les vainc en trois tours à la seule touche A, sans défaite, et peut en fuir dès qu'il a
   l'outil « Se protéger ». `cite.js` l'éprouve (parties 13 et 14 ; `node v2/tools/cite.js <dossier> avancement` : elles seules).
 
+### Sâlim et la course : la moto, cinq circuits, la prime (2.27, D216)
+
+*Le décideur, 21 novembre : « des courses de voitures » ; « Les activités de la cité miroir sont omniprésents des le début et
+peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » ; « Les courses de voitures sont de plus en plus
+difficiles avec des circuits » ; « Un ami vient en moto et demande à Idriss de monter derrière lui pour sa première course » —
+Sâlim, « l'ami des courses ». Une vraie course, une prime de l'organisateur ; aucune mise (le maysir) : les parieurs sont dans
+la tribune, et leur chimère, « Le Pari », Idris la voit et la combat. Choix, textes, nombres et dessin de l'agent, à valider.*
+
+- **Le module** : `src/core/circuit.js` (`I.circuit`, après `cite.js` dans `tools/build.js`). Sa première moitié ne touche pas
+  à la page — la géométrie d'un tracé, la conduite, les adversaires, la moto, le pilote d'essai — et se charge sous Node : on
+  y règle les nombres par des courses jouées par le moteur lui-même. La seconde : la peinture des tracés, la scène, le
+  tableau, Sâlim, l'organisateur, la partie.
+- **Sâlim arrive** (`CI.tic`, depuis `W.update` ; `CI.salimVient`) : au premier passage au circuit des quartiers (à 46 points
+  de l'entrée des stands), quel que soit le maillon en cours, dès le prologue joué. Sa moto vient par l'avenue du sud — les
+  voitures l'attendent (`TR.gele`) — et se gare sur le trottoir (`TR.garees` : un corps comme celui d'une voiture ; jamais sur
+  Idris) ; Sâlim (`salim_q`, le héros `salim` de l'histoire-cadre : il n'est pas un Compagnon, il a son visage) en descend,
+  dit deux répliques (Idris une), et propose : « Monter derrière Sâlim ? » — « Monter derrière Sâlim » / « Pas maintenant »
+  (B). Non : il reste, sa moto garée ; on peut lui reparler. Le joueur de test du moteur ne le fait pas venir. Dans une partie
+  neuve, il ne vient que si l'outil des virages pourra être donné en montant (`I.lecons.pret(1)`) : sinon, le besoin se
+  représentera.
+- **Le tour de moto** (`CI.balade`) : la leçon de l'outil `virages` (« Prendre les virages », `D.OUTILS`), dite par Sâlim au
+  moment de monter (`I.lecons.proposer`, après `I.lecons.sequence` : un tour est une séquence, comme un combat ; texte au
+  doigt ou au clavier, `coeur.js`, `lecons.virages`). Puis la course, vue de dessus (la scène `CI.scene`) : Sâlim pilote sur
+  ses rails ; à chaque virage, des chevrons paraissent `D.COURSE.moto.annonce` points avant lui, du côté de l'intérieur ; au
+  joystick (son cap, `I.input.joyAngle`) ou aux flèches (huit directions), Idris se penche vers l'intérieur, à
+  `D.COURSE.moto.angle` degrés près. Bien penché, la moto garde sa vitesse de virage (√(adhérence × rayon)) ; mal penché, elle
+  ralentit (`mal`) — sans chute ni blessure ; le tableau dit « Penche-toi vers l'intérieur du virage » ou « Bien penché ». Un
+  virage tenu penché la moitié de son arc est « bien pris » ; Sâlim le commente à l'arrivée ; au premier tour, il parle de
+  l'organisateur et de ses cinq circuits. Un tour se refait (Sâlim : « Refaire un tour derrière Sâlim ») ; l'outil a resservi.
+- **Les circuits** (`D.CIRCUITS`, `defs.js` ; aucun nombre dans un récit) : un tracé est un polygone fermé dans une toile de
+  1100 × 740 points, chaque sommet `[x, y, r]` arrondi au rayon `r` (`CI.geometrie` : un congé tangent aux deux droites,
+  échantillonné tous les trois points ; cap, courbure, abscisse) ; `large`, la demi-largeur ; `tours` ; `temps`, le temps à
+  battre ; `depart`, l'arête de la ligne ; `prime` ; `adversaires` (`vitesse`, `adresse`, `avance` sur la grille). 1. *La boucle
+  des avenues* (2 365 points, deux tours, demi-largeur 38, seul, 52 s à battre) ; 2. *Les places* (huit virages, trois tours,
+  32, trois voitures) ; 3. *La chicane* (virages de rayon 22 à 42, une chicane, 27, adversaires plus vifs) ; 4. *Le viaduc* (un
+  huit dont une branche passe en hauteur au-dessus de l'autre, 26, 57 s à battre et un adversaire parti 140 points devant) ;
+  5. *La nuit des tours* (3 585 points, vingt virages de rayon 26 à 34, 22, de nuit, trois adversaires au mieux). Chacun
+  s'ouvre quand le précédent est gagné (`CI.ouvert`) ; un circuit gagné se rejoue. Gagné : à la première place, et sous le
+  temps à battre s'il en a un.
+- **La conduite** (`CI.avancer`, `D.COURSE.voiture`) : on oriente la voiture (le joystick, ou les flèches : elle tourne vers où
+  on la pointe) ; elle tourne d'au plus `braquage`, et d'au plus `adherence / vitesse` (à grande vitesse, un virage serré ne
+  se prend pas) ; vouloir tourner bien plus qu'elle ne peut la fait frotter (`frotte`) ; A tenu accélère (`accel`, jusqu'à
+  `vmax`), lâché elle ralentit (`lache`) ; hors de la chaussée, pas plus de `horsPiste` ; la barrière retient (`barriere` points
+  au-delà du bord) : on y glisse, plus lentement (`rebond`) — jamais d'accident. Les adversaires suivent le tracé
+  (`rails`) : leur vitesse de pointe (`vitesse`), leur vitesse de virage (√(adhérence × `adresse` × rayon)), le freinage
+  (`frein`), une voie ; derrière un autre, ils ralentissent, puis passent de l'autre côté ; la voie libre, ils reprennent le
+  milieu, en file. Les corps : le joueur s'écarte d'une voiture, celui qui rattrape l'autre ralentit ; au viaduc, deux niveaux
+  ne se touchent pas (`CI.niveau`). La position sur le tracé se cherche autour de la dernière connue (`CI.projeter`) : au
+  croisement du viaduc, on reste sur sa branche. Les tours se comptent à la ligne ; le classement, à l'arrivée puis à
+  l'avance.
+- **La scène** (`CI.scene` ; `rouler`) : la vue de dessus, une caméra qui suit, un peu en avant, au milieu de ce qu'on voit
+  (`G.view`). La toile d'un tracé (`CI.peindre`, gardée par circuit et par dessin) : les dalles du quartier (`cdalle`), des
+  îlots — toits de verre (des caissons, aucun signe), jardins (`qgazon`), places (`qparvis`) et leurs dattiers vus d'en haut —,
+  les trottoirs, une barrière claire, la chaussée et son grain, ses lignes, ses vibreurs aux virages serrés, la ligne de départ
+  en damier, des gradins vides ; des lampadaires et leur lumière ; de nuit, tout s'assombrit, sauf les fenêtres et les lampes.
+  Le viaduc : l'ombre de son tablier au sol, ses piles, son tablier peint à part, posé sur ceux qui passent dessous. Les
+  voitures et la moto vues de dessus (`gfx.js`, `G.dessus` : trente-deux caps gardés ; vitres fumées, une bande sans chiffre ni
+  signe, ni marque, ni logo, ni plaque ; d'en haut, Sâlim et Idris ne montrent que le haut de leur tête et leurs épaules). Un
+  plan dans le coin du haut à droite. Le compte à rebours (trois, deux, un, « Partez ! »), le nom du circuit et les commandes
+  pendant ce temps. **B** (ou Échap) : « La course est en pause. » — « Reprendre » (B) / « Quitter la course » (« Descendre
+  de la moto ») ; rien n'est compté. Le joystick y mène comme en exploration (`U.padMarche`, `CI.mene`), A tenu accélère
+  (`I.input.aTenu` : le bouton A, ou Entrée, Espace, Z, E).
+- **Le tableau** (`#course`, `page.html`, `style.css`) : le chrono, le tour, le temps à battre ; le classement (Idris, et les
+  adversaires sous le nom de leur teinte : `cite.course.couleurs`) ; le signe ; le compte à rebours ; le bilan. En hauteur,
+  sous l'image, au-dessus de la bande de la manette ; en largeur, en haut et à gauche de l'image (la manette tient les deux
+  coins du bas), le bilan au pied de l'image, entre ses deux zones. La manette ne les recouvre jamais (`SOUS_PAD`,
+  `U.padRecouvre`) ; le garde-fou (`U.veille`) sait qu'une course se joue.
+- **Le podium et la prime** (`arrivee2`, `bilan`) : trois marches, les voitures dessus (vues de côté, `qvoiture`), Idris sur la
+  sienne, l'organisateur à côté ; le bilan : la place (ou, seul, sous ou au-dessus du temps à battre), le temps, le record, la
+  prime — « L'organisateur te remet la prime : {n} dirhams. » —, ce qui s'ouvre. La prime : les dirhams de l'équipement
+  (`I.trade.dirhams`), versés par l'organisateur au premier (`prime`, croissante avec le circuit : 6, 10, 15, 22, 30), une part
+  aux deuxième et troisième (`D.COURSE.podium`), dans la limite de `D.COURSE.plafond` (60) par visite (`S.flags._primes`, remis
+  à zéro à chaque arrivée par `I.cite.neuf`) ; au-delà, le bilan le dit. **On ne paie jamais pour courir.**
+- **Aucune mise, nulle part** : aucun bouton, aucun choix, aucun texte ne propose de parier ; le pari n'est qu'une chimère.
+  Dans la tribune, trois parieurs de fiction (`q_parieur`, `q_parieuse` — une femme, type `femme`, D215 —, `q_parieur2`), chacun
+  seul devant son écran (`assis`, `triste`, `accable`) ; parmi eux rôde **Le Pari** (`pari`, `frame.js` : une petite chimère de
+  l'histoire-cadre, racine l'Avidité, faible devant la Patience et la Justice), dans `D.CITE.rodent`, posé à chaque arrivée
+  sur les gradins et qui n'en sort pas (`D.CITE.zones`, `rodeurs.js` : `rueOk(x, y, f)`, son propre champ de chasse) ; on le
+  combat comme les chimères des rues (le rappel de la prière suit) ; vu la première fois, sa fiche entre au Recueil
+  (`le_pari`). `regles.js` le vérifie (`PARI`, `verifierCourse`, `LANG.*.pari`) : aucune réponse offerte au joueur — un choix,
+  une question, un pourparler, un menu de la course (`cite.course`), une phrase de `circuit.js` dans chaque langue — ni aucun
+  nom de héros, de vertu, d'objet ou de pièce ne porte les mots du pari, en français, en arabe, en anglais et en japonais ;
+  `D.CIRCUITS` et `D.COURSE` n'ont que leurs champs déclarés (ni mise, ni enjeu, ni cote, ni droit d'entrée), une prime
+  entière positive ou nulle.
+- **L'Agrégor** (2.25) : le circuit s'ouvre avant l'étape III ; aucun texte du circuit ne le nomme (`verifierCourse` le
+  refuse) : Sâlim dit « les écrans », ce qu'il fabrique, sobrement.
+- **Le dernier maillon** (`e1`) : si Idris a couru avec Sâlim (`_2084_salim`, posé par le moteur à l'ouverture de tout
+  chapitre de l'histoire-cadre, `CI.drapeaux`), la rencontre de la rue devient des retrouvailles (« Idris ! Mon passager des
+  virages. Alors l'archiviste, c'était toi. ») ; sinon, la rencontre de toujours. L'étape V de la 2.25 ne change pas d'un mot.
+- **Le son** (`base.js`, `A.moteur`, `A.regime`) : le bruit des moteurs, synthétisé — deux oscillateurs (dents de scie et
+  carré), un souffle filtré, un filtre qui s'ouvre avec le régime ; une seconde voix pour ceux qui roulent tout près. Sur le
+  bus des bruitages (coupé avec le son), jamais sur celui de la musique ; aucune voix (exigence 9).
+- **La partie** garde `cite.course` : `{ salim, gagnes, temps, primes, parle, courses }` — ce qu'a fait Sâlim (0, 1, 2), les
+  circuits gagnés, le meilleur temps de chacun (en millièmes), des comptes. Valeur de départ dans `migrer` et dans une partie
+  neuve ; `controler` refuse une course abîmée ; le format reste le 2.
+- **Le réglage** : des courses jouées par le moteur hors du navigateur, par des pilotes d'essai plus ou moins adroits
+  (`CI.pilote` : la part de l'adhérence qu'il ose, un écart lent de la main, un temps de réaction ; il dépasse par le côté).
+  Dix courses par pilote : le circuit 1 se gagne par tous, même par un maladroit qui touche les barrières (47,6 s au plus
+  49,4 ; à battre 52) ; le 2 dès un pilote « moyen » ; le 3 et le 4 dès un « bon » ; le 5, un « bon » une fois sur deux, un
+  « expert » toujours. Le tour de moto : 18,9 s bien penché, 23,4 s sans se pencher.
+- **Le contrôle** : `node v2/tools/cite.js` (partie 15 ; `… course` : elle seule ; `ORIENT=haut|large` : une seule
+  orientation), par les vrais boutons, en 390 × 844 (le joystick et A) et en 844 × 390 (les flèches et Entrée) — voir l'en-tête
+  du contrôle. La partie 12 montre la moto dans les trois dessins, garée puis vue de dessus.
+
 ### L'image agrandie, les textes sur un téléphone
 
 *Demande du décideur, le 16 novembre : « les personnages et les textes sont trop petits dans mon téléphone, il faut

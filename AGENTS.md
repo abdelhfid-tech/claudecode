@@ -116,7 +116,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   ce type seul porte — elle n'est pas dans `D.COIFFES` : ni un récit ni le râwî ne la prennent — et `barbeDe()`, qui ne
   donne jamais de barbe à une femme. Un récit écrit `kind: 'femme'` et des couleurs (le manteau s'il le veut), rien
   d'autre : `regles.js` refuse sur elle une coiffe, une robe courte, un motif, une armure, une cuirasse, une écharpe, un
-  châle (`D.TENUE_FEMME`). Les femmes du jeu sont aujourd'hui les six passantes des quartiers (`c_quartiers`). Contrôle :
+  châle (`D.TENUE_FEMME`). Les femmes du jeu sont aujourd'hui les six passantes et la parieuse de la tribune des quartiers (`c_quartiers`). Contrôle :
   `silhouettes.js` (« la tenue des femmes » ; leur ressemblance au râwî et aux Compagnons). Le dessin est à valider sur
   captures.
 - Dans la 2.x, la Cité-Miroir est une « ville de verre » (D206, décision du décideur du 19 novembre) : le vieux quartier de
@@ -156,6 +156,37 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   « cite » (« Revenir dans la Cité ») se dit par Maître Yûnus à la première arrivée (`I.lecons.proposer`). La partie garde
   `cite` (des comptes ; valeur de départ dans `migrer`, le format reste le 2). `v2/docs/architecture.md`, « Les quartiers
   de la Cité-Miroir ». Contrôle : `node v2/tools/cite.js` (« CITÉ CONFORME ») ; un changement du refuge repasse aussi `retours.js`.
+- Dans la 2.x (2.27, D216 ; le décideur, 21 novembre : « des courses de voitures » ; « Les activités de la cité miroir sont
+  omniprésents des le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » ; « Les courses de
+  voitures sont de plus en plus difficiles avec des circuits » ; « Un ami vient en moto et demande à Idriss de monter derrière
+  lui pour sa première course » ; choix, textes, nombres et dessin de l'agent, à valider), **Sâlim et la course**
+  (`v2/src/core/circuit.js`). **Sâlim**, « l'ami des courses » (le héros `salim` de l'histoire-cadre, le PNJ `salim_q` des
+  quartiers : il n'est pas un Compagnon, il a son visage), arrive en moto au premier passage au circuit des quartiers, quel
+  que soit le maillon en cours, dès le prologue joué, et propose à Idris de monter derrière lui ; Sâlim pilote, Idris se
+  penche dans chaque virage (le joystick ou les flèches vers l'intérieur) : bien penché, la moto garde sa vitesse ; mal
+  penché, elle ralentit — sans chute ni blessure. C'est la leçon de l'outil `virages` (« Prendre les virages », `D.OUTILS`),
+  dite par Sâlim au moment de monter (`I.lecons.proposer`), jamais au début d'un chapitre ; elle resert à la première course.
+  La moto est inventée et dessinée par le jeu (`gfx.js`, `qmoto`, `G.dessus`) : ni marque, ni logo, ni plaque. **Cinq
+  circuits** (`D.CIRCUITS`, `defs.js` : tracé, tours, temps à battre, adversaires, leur vitesse et leur adresse — aucun nombre
+  dans un récit ; `D.COURSE` : la voiture, la moto, le podium, le plafond) : on les court seul, en voiture, vue de dessus, sur
+  des tracés faits des rues du quartier ; chacun s'ouvre quand le précédent est gagné ; un circuit gagné se rejoue ; de plus
+  en plus longs ou serrés (le cinquième, de nuit). On oriente au joystick ou aux flèches, A tenu accélère, B met en pause puis
+  offre « Quitter la course » (B revient d'un cran) ; la barrière retient, aucun accident. **La prime** : des dirhams (ceux de
+  l'équipement), versés par l'organisateur au podium, croissants avec le circuit, plafonnés par visite. **Aucun pari ni jeu de
+  hasard ne se joue ; le pari n'est qu'une chimère** : on ne paie jamais pour courir ; aucun bouton, aucun choix, aucun texte
+  ne propose de parier ou de miser ; les parieurs sont des passants de fiction de la tribune, chacun seul devant son écran, et
+  leur chimère, **« Le Pari »** (`pari`, racine l'Avidité, `D.CITE.rodent`), rôde parmi eux, sur les gradins seulement
+  (`D.CITE.zones`), qu'Idris voit et combat. `regles.js` le vérifie : aucune réponse offerte au joueur (choix, question,
+  pourparler, menu de la course, phrase de `circuit.js`) ni aucun nom de héros, de vertu, d'objet ou de pièce ne porte les
+  mots du pari, dans chacune des quatre langues ; `D.CIRCUITS` et `D.COURSE` n'ont que leurs champs déclarés (ni mise, ni
+  enjeu, ni cote, ni droit d'entrée) et une prime positive ou nulle. Le circuit s'ouvre avant l'étape III de la découverte de
+  l'Agrégor (2.25) : aucun de ses textes ne le nomme (le validateur le refuse) ; Sâlim dit « les écrans ». Le dernier maillon
+  (`e1`) lit `_2084_salim` (posé par le moteur : Idris a couru avec Sâlim) : des retrouvailles, sinon la rencontre de
+  toujours ; l'étape V de la 2.25 ne change pas. Le bruit des moteurs est synthétisé (`base.js`, `A.moteur`), sans voix ni
+  musique. La partie garde `cite.course` (ce qu'a fait Sâlim, les circuits gagnés, le meilleur temps de chacun, des comptes ;
+  valeur de départ dans `migrer`, le format reste le 2). `v2/docs/architecture.md`, « Sâlim et la course ». Contrôle :
+  `node v2/tools/cite.js` (« CITÉ CONFORME » ; partie 15 ; `… course` : elle seule) ; un changement de la course repasse
+  aussi `manette.js`, `loupe.js`, `partie.js`, `son.js` et `progression.js`.
 - Dans la 2.x, le corps a ses attitudes (D205 : `D.ATTITUDES`, dans `D.POSES`) ; un Compagnon les prend avec retenue — la
   joie ne lève pas les bras au-dessus de la tête, le rire se limite aux épaules, la colère reste un corps tendu — et c'est
   le moteur qui choisit (`retenue()`) : un récit écrit l'attitude, jamais sa forme. Les mimiques seulement pour qui a un
@@ -352,6 +383,7 @@ toute considération de jeu.
 | `docs/schema-saga.md`, `docs/schema-v2.md` | contrat de données et bible narrative | à relire avant d'écrire du contenu |
 | `archive/v1.32/` | la 1.32 archivée : son jeu, ses outils, son livret et ses planches | on n'y touche plus (`archive/v1.32/LISEZ-MOI.md`) |
 | `v2/tools/promotion.js` | l'adresse, la devise, la réserve et le soutien de la promotion (2.x) | le seul endroit où elles s'écrivent ; lu par `shorts.js`, `galerie.js`, `jouable.js`, `livret.js` ; ce que le jeu en reprend pour partager sa progression (`JEU`) est posé dans la page par `build.js` (`window.ISNAD_PROMO`), et relevé pour les langues par `langues.js` (`JEU_DIT`) |
+| `src/core/circuit.js` | Sâlim et la course (2.27, D216) : la moto de Sâlim et le tour derrière lui, les cinq circuits vus de dessus, leurs adversaires, la prime de l'organisateur, le podium | les tracés et les nombres dans `defs.js` (`D.CIRCUITS`, `D.COURSE`), les textes dans `frame.js` (`cite.course`), la moto et les voitures vues de dessus dans `gfx.js` ; sa moitié « géométrie et conduite » se charge sous Node (le réglage) ; aucune mise, nulle part (`regles.js`) |
 | `src/core/cite.js`, `src/core/trafic.js` | les quartiers de la Cité (2.23, D212) : le refuge de 2084 à côté de Maître Yûnus, ses sorties, le rappel après une chimère moderne ; les voitures qui roulent et s'arrêtent, celles du circuit | la carte est dans `maps.js` (`quartiers()`), les voitures dessinées dans `gfx.js`, ce qui rôde dans `rodeurs.js` (`env.rues`), les textes dans `frame.js` (`cite`) |
 | `src/core/partage.js` | partager sa progression (2.x) : l'image que le jeu dessine (1080 × 1080 ou 1080 × 1920), son texte, `navigator.share` et son repli | le récit seulement : ni œuvres, ni cœur, ni Valeurs, ni descente, ni combats ; le bouton paraît au premier maillon achevé, sans leçon ; `v2/docs/architecture.md`, « Partager sa progression » |
 | `promo/shorts/NN-nom.js`, `promo/shorts/_saga.js`, `promo/shorts/legendes.md` | les scénarios des shorts (2.x), la base commune des cinq shorts de saga, et leurs textes d'accompagnement | un scénario dit où aller dans le jeu, quoi faire, quelles phrases poser ; un short de saga ne donne que des clés et des fragments (le lieu, la parole, l'idole) ; les films (`films/`), la galerie et les plans d'ambiance (`plans-ia/`) ne sont pas versionnés |
@@ -389,7 +421,7 @@ node v2/tools/course.js             # 2.x : la course — vitesse, pied d'appui 
 node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère et leur pièce interdite, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] [0,3,5] : une planche)
 node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe, la pièce interdite
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
-node v2/tools/cite.js [dossier]     # 2.23 : les quartiers de la Cité — l'arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel ; captures — « CITÉ CONFORME »
+node v2/tools/cite.js [dossier] [course]   # 2.23 et 2.27 : Sâlim et sa moto, les cinq circuits, la prime, aucune mise (« course » : cette partie seule) ; les quartiers de la Cité — l'arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel ; captures — « CITÉ CONFORME »
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
 node v2/tools/loupe.js [messages]   # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles, les messages du combat en bas (« messages » : eux seuls)
 node v2/tools/manette.js            # 2.x : la manette tactile partout — A choisit, B revient en arrière, le joystick choisit ; elle ne recouvre rien, la sélection se voit
