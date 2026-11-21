@@ -50,7 +50,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const cap = n => page.screenshot({ path: path.join(out, n + '.png') });
 
   // ---------- 1. une partie neuve, le prologue derrière soi ; deux sagas entamées, quittées par la halte ----------
-  await ev(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.ui.showChain(); });
+  await ev(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); I.ui.showChain(); });
   await page.waitForTimeout(400);
   const c0 = await ev(() => window.__t.chaine());
   if (c0.pied.includes('La Citadelle')) ko('ÉCART « La Citadelle » est offerte avant toute veillée'); else ok('avant toute veillée, la Chaîne n’offre pas la Citadelle (' + c0.pied.length + ' boutons au pied)');
@@ -106,7 +106,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     if (!sc || !sc.scelle || !/Scellé tant que le maillon I /.test(sc.etat + ' ') || !sc.chaine || sc.saga === 'umar') ko('ÉCART ’Umar s’ouvre alors qu’Abû Bakr n’est pas achevé : ' + JSON.stringify(sc));
     else ok(`les maillons se suivent : ’Umar est scellé (« ${sc.etat} ») et le toucher n’ouvre rien`); }
   // une partie d'avant, où l'on menait deux récits de front : le scellé ne s'appliquait pas (I.debug.all le lève ici)
-  await ev(() => { window.ISNAD.debug.all = true; window.ISNAD.ui.showChain(); }); await page.waitForTimeout(300);
+  await ev(() => { window.ISNAD.debug.all = true; window.ISNAD.input.reset(); window.ISNAD.ui.showChain(); }); await page.waitForTimeout(300); // (la Chaîne redessinée par l'outil : son ancien écouteur ne reste pas dessous)
   const ouvU = await ouvrir("'Umar", 1); await ev(() => { window.ISNAD.debug.all = false; });
   if (!ouvU) ko('BLOQUÉ la saga de ’Umar n’atteint pas son premier objectif');
   const B = await ev(() => window.__t.etat());
@@ -130,7 +130,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const abime = await ev(() => { const I = window.ISNAD, o = JSON.parse(I.save.exporter()); o.partie.cps.abubakr = { saga: 3 }; return I.save.lireTexte(JSON.stringify(o)); });
   if (abime.ok) ko('ÉCART une partie dont un récit rangé est abîmé est acceptée'); else ok('une partie dont un récit rangé est abîmé est refusée (« ' + abime.erreur + ' »)');
   // « Continuer », depuis l'écran-titre, quand on est en 2084 : la Chaîne, pas un chapitre
-  await ev(() => { const I = window.ISNAD; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.save.readAuto(); I.ui.resume(); }); await page.waitForTimeout(500);
+  await ev(() => { const I = window.ISNAD; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); I.save.readAuto(); I.ui.resume(); }); await page.waitForTimeout(500);
   if (!(await ev(() => window.__t.visible('#chain')))) ko('ÉCART « Continuer », en 2084, ne rouvre pas la Chaîne'); else ok('« Continuer », quand on est en 2084, rouvre la Chaîne');
 
   // ---------- 3. chaque récit se reprend là où on l'a laissé ----------
@@ -157,7 +157,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   if (s6.rebonds.join() !== 'x_avis,x_descendu,x_enfant' || s6.cps.join() !== 'abubakr,umar') ko('ÉCART état de la partie après six retours : ' + JSON.stringify(s6)); else ok(`après six retours : trois événements notés, deux récits toujours rangés, ${s6.codex.length} feuillets au Recueil`);
 
   // ---------- 4. la Citadelle, où Idris est né : ouverte dès la première veillée entendue ----------
-  await ev(() => { const I = window.ISNAD; I.save.data.veillees.abubakr = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.ui.showChain(); }); await page.waitForTimeout(300);
+  await ev(() => { const I = window.ISNAD; I.save.data.veillees.abubakr = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); I.ui.showChain(); }); await page.waitForTimeout(300);
   for (let k = 1; k <= 2; k++) {
     const la = await ev(() => { const b = window.__t.pied('La Citadelle'); if (!b) return false; window.ISNAD.debug.auto = true; b.click(); return true; });
     if (!la) { ko('INACCESSIBLE après une veillée, la Chaîne n’offre pas « La Citadelle »'); break; }
@@ -178,12 +178,12 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const s8 = await ev(() => { const sv = window.ISNAD.save.data; return { ch: sv.sagas.abubakr.ch, cps: Object.keys(sv.cps || {}).sort(), cp: sv.cp && [sv.cp.saga, sv.cp.ci] }; });
   if (!suite || s8.ch !== 1 || s8.cps.join() !== 'umar' || !s8.cp || s8.cp[0] !== 'abubakr') ko('ÉCART le chapitre repris ne mène pas au suivant : ' + JSON.stringify({ suite, s8 })); else ok('le chapitre repris se termine et ouvre le suivant ; ’Umar attend toujours, rangé');
   // une partie d'avant (un seul point de reprise, resté courant devant la Chaîne) : ouvrir un autre récit ne l'écrase plus
-  const ancien = await ev(async () => { const I = window.ISNAD, W = I.world, T = window.__t, sv = I.save.data; W.checkpoint(); const garde = JSON.stringify([sv.cp.saga, sv.cp.ci, sv.cp.obj]); document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); delete sv.cps.umar; sv.sagas.umar = { ch: 0, done: false, flags: {} };
+  const ancien = await ev(async () => { const I = window.ISNAD, W = I.world, T = window.__t, sv = I.save.data; W.checkpoint(); const garde = JSON.stringify([sv.cp.saga, sv.cp.ci, sv.cp.obj]); document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); delete sv.cps.umar; sv.sagas.umar = { ch: 0, done: false, flags: {} };
     I.debug.all = true; await I.ui.showChain(); I.debug.auto = true; T.toucher(T.maillon("'Umar")); I.debug.all = false; const okk = await T.jusqua(1); const a = sv.cps && sv.cps.abubakr; return { okk, garde, range: a ? JSON.stringify([a.saga, a.ci, a.obj]) : null, cp: sv.cp && sv.cp.saga }; });
   if (!ancien.okk || ancien.range !== ancien.garde || ancien.cp !== 'umar') ko('ÉCART un point de reprise resté courant est écrasé par un autre récit : ' + JSON.stringify(ancien)); else ok('une partie d’avant (un point de reprise resté courant) : ouvrir un autre récit le range au lieu de l’écraser');
 
   // ---------- 6. une veillée quittée en chemin attend elle aussi : la Chaîne la reprend ----------
-  { const v0 = await ev(async () => { const I = window.ISNAD, W = I.world, T = window.__t; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); W.roster = {}; W.saga = null; I.debug.auto = true; W.startChapter('caid', 0); const okk = await T.jusqua(1); return Object.assign({ okk }, T.etat()); });
+  { const v0 = await ev(async () => { const I = window.ISNAD, W = I.world, T = window.__t; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); W.roster = {}; W.saga = null; I.debug.auto = true; W.startChapter('caid', 0); const okk = await T.jusqua(1); return Object.assign({ okk }, T.etat()); });
     const rv = await revenir();
     const cv = await ev(() => ({ bouton: window.__t.chaine().bouton, cps: Object.keys(window.ISNAD.save.data.cps || {}).sort() }));
     if (!v0.okk || rv === null || !cv.cps.includes('caid:0') || !/^▶ Reprendre : la veillée/.test(cv.bouton)) ko('ÉCART une veillée quittée en chemin n’est pas rangée ou pas offerte : ' + JSON.stringify({ v0: [v0.okk, v0.saga, v0.obj], rv, cv }));
