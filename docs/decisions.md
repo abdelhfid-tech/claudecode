@@ -1946,13 +1946,16 @@ pages privées de son compte.
   (la taille n'est pas marquée), les manches jusqu'aux poignets, le manteau du récit par-dessus ; le bas de la robe d'un
   ton plus sombre de l'étoffe, rien de doré, ni bijou, ni motif, ni inscription. Le **visage découvert**, peint comme celui
   de tous (un teint et des yeux tirés des couleurs du personnage), **jamais de barbe** (`barbeDe()`). Les couleurs que le
-  récit donnait à chacune restent. Le khimâr n'est pas une coiffe qu'un récit ou le râwî puisse prendre ; un récit écrit
+  récit donnait à chacune restent, sauf celles de la joueuse, la plus vive (un rose violacé), un peu ternies. Le khimâr n'est pas une coiffe qu'un récit ou le râwî puisse prendre ; un récit écrit
   `kind: 'femme'` et des couleurs, et le validateur refuse sur une femme une coiffe, une robe courte, un motif, une
   armure, une cuirasse, une écharpe ou un châle. Règle pour la suite dans `AGENTS.md` ; `v2/docs/architecture.md`,
   « Les personnages » et « Les visages ». Contrôle : `silhouettes.js`, « la tenue des femmes », et leur ressemblance au
   râwî et aux Compagnons. *À valider* : le dessin du khimâr et de la robe (hauteur du khimâr sur la poitrine, sa
   largeur sur les épaules), jugé sur les captures (390 × 844 et 844 × 390, les trois réglages) ; le mot « khimâr » dans le
-  code et les documents (le jeu ne l'écrit nulle part) ; les couleurs, laissées telles que la 2.23 les avait données.
+  code et les documents (le jeu ne l'écrit nulle part) ; les couleurs (celles de la 2.23, la joueuse ternie). *À voir* :
+  la passante du parvis se tient, depuis la 2.23, derrière un dattier en bac, qui la cache en partie ; sa place n'a pas
+  été changée. Les nouvelles silhouettes ne sont pas relevées dans les fiches de `silhouettes.js` (elles y paraissent
+  « nouvelles, sans empreinte ») : on les relèvera une fois le dessin validé (`relever-nouveaux`).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

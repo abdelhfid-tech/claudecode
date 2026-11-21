@@ -319,7 +319,8 @@ reste celui d'avant), leur coupe vaut le long manteau (`perso.base`), et le gran
 Idris »). La bande et la ceinture de néon (`Y`, `y`) ne sont qu'à lui : elles viennent du type `cyber`, que seul le râwî
 porte ; les autres habitants de 2084 — Sâlim, les passants, l'employé, celui qui défile, le Régent, l'Admiré, le Compteur,
 le Cartographe, l'agent du relevé — sont du type `citadin` (`sprites.js`) : la capuche et l'habit court de la ville, la
-même teinte de 2084 sur la coiffe, sans le néon. `D.DE_2084` dit les deux types de 2084 : ni casque ni tunique de départ,
+même teinte de 2084 sur la coiffe, sans le néon ; les passantes des quartiers, du type `femme` (2.26, D215 : « Les
+visages »). `D.DE_2084` dit les deux types de 2084 : ni casque ni tunique de départ,
 la coiffe gardée au combat (`gear.js`), la lueur de 2084 pour le meneur (`world.js`). Sept d'entre eux portaient les étoffes
 mêmes du râwî, sous sa capuche et sa coupe : ils ont reçu des couleurs à eux, loin des sept étoffes ; deux liserés aux
 couleurs de ses néons (l'Admiré, le Cartographe) ont changé ; le Régent garde la tiare. Et la capuche ne prend pas la robe
