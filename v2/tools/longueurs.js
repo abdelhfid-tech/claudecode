@@ -11,7 +11,8 @@
      et leurs réponses, la parole qui suit une idée noire, ce que l'on répond à une idée noire (dit, oui, non), les lignes
      du moteur qui passent par showLine (les verdicts de la Chaîne, le raid d'une caravane, les veillées), lues dans son
      code, celles qu'il dit dans les quartiers de la Cité (la table `cite` de l'histoire-cadre : Maître Yûnus, et depuis la
-     2.27 Sâlim et l'organisateur) et la leçon des virages — est mis en pages par la fonction même dont showLine se sert (ISNAD.script.pages), puis chaque page est posée
+     2.27 Sâlim et l'organisateur ; depuis la 2.28, les lignes des activités : le refus sans prime, l'étal, un record, la pensée
+     d'Idris devant l'écran, sur la grande roue et après un manège) et la leçon des virages — est mis en pages par la fonction même dont showLine se sert (ISNAD.script.pages), puis chaque page est posée
      dans la boîte et mesurée par la vraie mise en page : elle tient entière dans sa zone (en hauteur, sous l'image et
      au-dessus de la manette ; en largeur et au bureau, au plus ISNAD.script.HAUT_MAX de la scène, dans la scène, hors de la
      manette), son texte ne sort pas de la boîte, sa police n'est pas sous dix points sur un écran tactile, aucun mot n'est

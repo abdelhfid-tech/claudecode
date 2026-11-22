@@ -968,6 +968,120 @@ la tribune, et leur chimère, « Le Pari », Idris la voit et la combat. Choix, 
   l'organisateur, et la leçon des virages, passent par la boîte de dialogue : `longueurs.js` les met en pages et les mesure
   avec celles de la table `cite` (Maître Yûnus, la pensée d'Idris), dans les cinq langues et sur les quatre écrans.
 
+### Les activités des quartiers : la borne, l'étal, l'écran, la roue et les manèges (2.28, D217)
+
+*Le décideur, 21 et 22 novembre : « des jeux en tous genres, des activités […] il y trouve beaucoup d'activités mais tout le
+monde est triste et seul » ; « Les activités de la cité miroir sont omniprésents des le début et peuvent faire l'objet de jeux
+légers quelque soit l'avancement dans la saga » ; « il faut qu'idriss puisse "faire les activités" en les payant dans les
+quartiers : manèges etc ». Choix, textes, nombres et dessin de l'agent, à valider.*
+
+- **Le module** : `src/core/activites.js` (`I.activites`, après `circuit.js` dans `tools/build.js`). Sa première moitié — le
+  jeu de la borne et son joueur d'essai — ne touche pas à la page. Les nombres sont dans `defs.js` (`D.ACTIVITES`, `D.BORNE`),
+  les textes dans `frame.js` (`cite.activites`) et `coeur.js` (`lecons`), le dessin des manèges dans `gfx.js` (`passager`).
+- **Où** (`AC.zones`) : la borne du milieu (la quatrième de la rangée, `BORNE_X`) ; la vitrine du milieu de la galerie (le lieu
+  `galerie`) ; les bancs de la place, face à l'écran (un banc où quelqu'un se tient déjà ne s'offre pas) ; la grande roue (son
+  pied, le lieu `roue`), les chaises volantes, les tasses. Chacune a sa zone, où A agit (`AC.agir`, depuis `W.interact`, après
+  les personnages et les coffres) et où la bulle paraît au-dessus d'Idris (`AC.aPortee`) ; touchée du doigt (`AC.touche`, depuis
+  `W.tap`), Idris s'y rend et agit. Le joueur de test du moteur les ignore.
+- **Payer** (`payer`, `AC.bourse`) : le prix d'une partie ou d'un tour (`D.ACTIVITES.*.prix`) se paie avec les **primes du
+  circuit** — `cite.course.primes` (ce que l'organisateur a versé) moins `cite.activites.depenses` (ce qui a été dépensé ici),
+  dans la limite des dirhams d'Idris (`I.trade.dirhams`). Un menu dit le prix et la somme : « Payer » / « Plus tard » (B,
+  `retour: true`). Quand elle manque : tant qu'aucune prime n'a été versée, une ligne le dit, une fois par page (`sansPrime`) ;
+  sinon « Il te manque des dirhams. » ; rien n'est avancé. Une activité qu'on paie ne rapporte rien (ni dirhams, ni lot, ni
+  objet) ; la course reste gratuite.
+- **La borne, « Les lueurs »** (`AC.nouvellePartie`, `AC.avancer`, `D.BORNE`) : une arène de 300 × 200 unités ; la lueur d'Idris
+  va où on la pousse (le joystick : son cap, `I.input.joyAngle` ; les flèches : huit directions), A (Entrée) lui donne un élan
+  (`elan` fois plus vite pendant `elanDuree`, puis `elanRepos`) ; des lueurs entrent par les bords et traversent, de plus en plus
+  vite et serrées (`cadence`, `vives`) ; des ombres aussi, plus lentes (`cadenceOmbres`, `lentes`). Rassembler une lueur
+  (`prise`) l'ajoute à la chaîne, qui tourne autour d'Idris ; une lueur vaut un point de plus toutes les `palier` lueurs de
+  chaîne (cinq au plus) ; une ombre touchée (`ombre`) défait la chaîne, puis rien ne la touche un instant (`choc`). 45
+  secondes. Le tirage est le même à chaque partie (une graine fixe) : seule l'adresse fait le score. La scène (`AC.scene`,
+  `jouer`) : l'écran de la borne au milieu de ce qu'on voit (`arene` : en hauteur toute l'image, le tableau est dessous ; en
+  largeur entre le tableau du haut et le signe du bas, entre les deux zones de la manette), son caisson sans un mot ; le tableau
+  (`#course`, la classe `borne` : le temps qui reste, le score et le record, le signe — les commandes pendant le compte à
+  rebours, la chaîne, une ombre touchée —, le bilan). B (Échap) : « La partie est en pause. » — « Reprendre » (B) / « Quitter la
+  partie » (rien n'est compté). Le joystick y mène comme en exploration (`U.padMarche`, `AC.mene`) ; le garde-fou sait qu'une
+  partie se joue (`U.veille`, `U.secours` : `AC.abandon`). Un nouveau record : la pensée d'Idris (`record`). Le joueur d'essai
+  (`AC.pilote`) vise la lueur qu'il rejoint le plus vite et s'écarte des ombres et des bords ; `I.debug.piloteBorne`,
+  `I.debug.accelBorne` pour les contrôles.
+- **L'étal de la galerie** (`AC.etal`) : personne derrière (« on choisit, on paie à l'écran ») ; les pièces de
+  `D.GEAR_SHOPS.quartiers` (sept objets ordinaires du jeu), à leur prix (`D.GEAR_PRIX`), avec leurs effets et pour qui elles
+  vont mieux (comme la boutique d'un comptoir, `trade.js`) ; achetée, une pièce rejoint la réserve (`I.gear.receive` : on
+  demande qui la porte si elle va mieux à quelqu'un) ; trop chère, refusée. `regles.js` accepte cet étal sans comptoir (le lieu de
+  `D.ACTIVITES.etal`).
+- **L'écran géant** (`AC.asseoir`) : près d'un banc libre, A — Idris se pose devant le banc, tourné vers l'écran, dans l'attitude
+  `assis` (`W.emote`) ; son dessin descend de quelques points (`W.player.dy`), le dossier du banc passe devant lui ; la vue
+  monte un peu, pour montrer l'écran au-dessus de lui (`AC.regard`, dans `W.regard` : ses pieds aux trois quarts de la vue au
+  plus, au-dessus de la boussole) ; sa pensée (`ecran`, l'une après l'autre). B (ou Échap) le relève (`AC.onInput`, depuis
+  `W.onInput`), un pas aussi, un combat aussi (`AC.tic`). C'est libre.
+- **La grande roue et les manèges** (`AC.tour`, `rouler`) : un tour se joue en vue. La place d'Idris — la nacelle la plus basse,
+  la chaise ou la tasse de devant — y vient doucement ; il disparaît du sol (`W.passager`) et paraît dedans (`gfx.js`,
+  `passager` : la tête et les épaules ; `o.passager` sur l'objet de la carte) ; le manège tourne (`o.angle` ; après, `o.decal`,
+  pour qu'il reprenne sans à-coup). La grande roue : un tour complet ; la vue suit la nacelle jusqu'en haut (`AC.vue`, le milieu
+  voulu de la vue, dans `W.regard`), puis lève les yeux jusqu'au haut de la Cité, la pensée d'Idris là-haut (`roue`), puis revient
+  à la nacelle, qui redescend. Les chaises volantes : trois tours, les chaises s'écartent (`envol`) ; les tasses : deux tours, les
+  tasses tournent sur elles-mêmes. Après un tour de manège, la pensée d'Idris (`maneges`). Rien d'autre ne bouge sur la carte.
+- **La progression** (`essayer`) : un outil par activité (`D.OUTILS` : `borne`, `etal`, `ecran`, `manege` — la roue et les deux
+  manèges ; l'écran et les manèges sont de simples gestes), dit au premier essai (`I.lecons.proposer`, après `I.lecons.sequence`)
+  dans le fil (`I.lecons.dit`) ; si la progression ne peut pas encore le donner (`I.lecons.pret(1)`), l'activité attend, et une
+  ligne le dit (`attend`). Chaque essai suivant est une séquence, et l'outil y resert (`I.lecons.reemploi`, à la fin de la partie,
+  de la visite de l'étal, du tour, ou en s'asseyant). Hors de la progression (une partie d'avant), la leçon se dit une fois
+  (`cite.activites.essais`). Payer n'est pas une leçon.
+- **La partie** garde `cite.activites` : `{ borne: { record, parties }, tours: { roue, chaises, tasses }, ecran, achats,
+  depenses, essais: { borne, etal, ecran, manege } }` — des comptes. Valeur de départ dans `migrer` et dans une partie neuve ;
+  `controler` refuse des activités abîmées ; le format reste le 2.
+- **Les règles** (`regles.js`, `verifierActivites`) : `D.ACTIVITES` n'a que `outil`, `lieu`, `prix`, `duree` (ni gain, ni prime,
+  ni lot, ni mise, ni enjeu, ni cote) et un prix est un entier de 1 à 50 ; `D.BORNE` n'a que ses champs, une partie dure une
+  minute au plus ; les textes de `cite.activites` ne portent ni nombre, ni verset, ni parole citée, ni Iblîs, ni l'Agrégor (elles
+  s'ouvrent dès le prologue), ni les mots du pari ; les phrases d'`activites.js` et de `cite.activites` sont des réponses
+  offertes, contrôlées dans chaque langue (`genreDe`).
+- **Le contrôle** : `node v2/tools/cite.js` (partie 16 ; `… activites` : elle seule), par les vrais boutons, en 390 × 844 (la
+  manette) et en 844 × 390 (le clavier), puis une partie neuve (la progression). Les pensées et les lignes des activités passent
+  par la boîte de dialogue : `longueurs.js` les mesure avec celles de la table `cite`.
+
+### La rue et l'ascenseur : entrer à pied dans les quartiers, remonter des Archives basses (2.28, D218)
+
+*Le décideur, 22 novembre : « Dans la 2.28 je veux pouvoir accéder à la "cité vivante" sans devoir rencontrer maître Yunus
+directement dans la suite du premier monde en franchissant la rue par exemple » ; « Pendant le prologue » ; « Meme dans le
+sous-sol on doit pouvoir être libre de remonter ». Choix de l'agent, à valider.*
+
+- **Le module** : `src/core/passages.js` (`I.passages`, après `activites.js`). Quatre passages (`P.PASSAGES`), chacun avec sa
+  zone (où se tenir), sa direction (vers où marcher ou se tourner) et ce qu'il fait : on passe en marchant vers le bord dans la
+  zone — ou en poussant contre lui —, après en être sorti une fois depuis l'arrivée (`P.arme` : on n'y repart pas en y
+  arrivant), ou par A tourné vers lui (`P.agir`, depuis `W.interact`) ; la bulle paraît au-dessus d'Idris (`P.aPortee`). Jamais
+  quand une scène se joue (`S.busy`, `W.lock`), ni dans un menu, un combat, une descente ; le joueur de test du moteur (`auto`,
+  à pied, au doigt) ne passe jamais.
+- **Où** : l'histoire-cadre seulement — le prologue, les rencontres (`r_*`), les retours (`x_*`), le refuge —, ni les sagas, ni
+  les veillées, ni le dernier maillon (`fin` : il se joue d'une traite, Sâlim y retrouve Idris dans la rue, la Cité s'y éteint).
+- **La rue, vers les quartiers** (`P.traverser`) : sur la carte `cite`, au bout de la rue, à l'est, après l'ascenseur (le lieu
+  `traverse`, posé après le tirage des caisses : aucune case ne change). Idris recule d'un pas, le chapitre prend son point de
+  reprise là, puis `I.cite.arriver` ouvre le refuge (`C.parRue`) : son ouverture range le chapitre parmi les récits quittés
+  (`W.checkpoint`, `W.ranger`). `C.depart` (appelé par `W.startChapter`, après la pose des personnages) fait entrer Idris par
+  l'entrée de la rue des quartiers (le lieu `traverse`, au nord-ouest : le trottoir du nord continue par trois cases ouvertes
+  dans le mur de l'ouest, peintes ouvertes) et non au parvis ; Maître Yûnus n'y est pas (il est caché) ; le récit d'ouverture lit
+  `_2084_rue` (« Idris traverse la rue. ») ; l'objectif s'écrit « … la rue ramène à la Cité-Miroir » (`C.objectif`, dans
+  `W.hud`). Ce qui rôde se pose loin d'Idris là où il arrive (`rodeurs.js`).
+- **La rue, retour** (`P.revenir`) : dans le refuge, le même bord, vers l'ouest : le récit quitté le plus récent qui attend sur
+  la carte de la Cité-Miroir (`P.recitRue`) reprend exactement (`C.quitter`, `U.reprendre`), Idris tourné vers l'ouest, au bout
+  de la rue. S'il n'y en a pas (on est monté par l'ascenseur, depuis la Chaîne ou un récit des Compagnons), une ligne le dit
+  et rien ne se passe. La halte du refuge offre aussi « Reprendre le récit ».
+- **L'ascenseur** (`P.remonter`, `P.descendre`) : aux Archives basses, l'ouverture du bas (le lieu `entree`) remonte Idris à la
+  Cité-Miroir, au pied de l'ascenseur (le lieu `ascenseur`) ; c'est le même chapitre (`W.loadMap`), rien n'est rangé ; où il
+  était en bas est gardé (`S.flags._ascenseur`, avec le point de reprise : la rue et une page refermée ne le perdent pas) ;
+  tant qu'il est en haut, si l'objectif est en bas, la flèche montre la porte de l'ascenseur (`P.cible`, dans `W.target`) ; la
+  porte, ou A devant elle, le ramène aux Archives, là où il était. Pendant le prologue et les retours.
+- **La progression** : aucun outil de plus (c'est marcher). Arrivé par la rue, rien n'est dit de plus : la leçon de l'outil
+  « cite », que dit Maître Yûnus, attend une arrivée à côté de lui (`C.ouvre`). Pendant le prologue (`prologue` non joué) :
+  aucune chimère ne rôde dans les rues (`rodeurs.js` : Maître Yûnus n'a pas encore ouvert les yeux d'Idris sur la noosphère) ;
+  la halte du refuge et Maître Yûnus n'offrent pas la Chaîne, qui ne s'est pas encore ouverte. Après un combat des rues, sans
+  Maître Yûnus, la prière est rappelée et rien n'est proposé (`C.apres`). « Revenir en 2084 » et « La Cité-Miroir » de la Chaîne
+  ne changent pas (`C.offert` : le parvis, à côté de Maître Yûnus).
+- **La partie** ne garde rien de plus : le point de reprise de chaque chapitre, comme toujours.
+- **Le contrôle** : `node v2/tools/cite.js` (partie 17 ; `… passages` : elle seule), au doigt en 390 × 844 (des touchers sur la
+  scène, au bord de la rue, sur l'ouverture des Archives, sur la porte de l'ascenseur) et au clavier en 844 × 390 ; puis
+  `retours.js`, `progression.js`, `doigt.js`, `doigt.js loin 844x390`, `smoke.js walk` et `tap` (les joueurs de test ne passent
+  jamais).
+
 ### L'image agrandie, les textes sur un téléphone
 
 *Demande du décideur, le 16 novembre : « les personnages et les textes sont trop petits dans mon téléphone, il faut

@@ -187,6 +187,47 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   valeur de départ dans `migrer`, le format reste le 2). `v2/docs/architecture.md`, « Sâlim et la course ». Contrôle :
   `node v2/tools/cite.js` (« CITÉ CONFORME » ; partie 15 ; `… course` : elle seule) ; un changement de la course repasse
   aussi `manette.js`, `loupe.js`, `partie.js`, `son.js` et `progression.js`.
+- Dans la 2.x (2.28, D217 ; le décideur, 21 et 22 novembre : « des jeux en tous genres, des activités » ; « Les activités de la
+  cité miroir sont omniprésents des le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » ;
+  « il faut qu'idriss puisse "faire les activités" en les payant dans les quartiers : manèges etc » ; choix, textes, nombres et
+  dessin de l'agent, à valider), **les activités des quartiers** (`v2/src/core/activites.js`), dès que Idris peut y venir, quel
+  que soit le maillon : **la borne** du milieu de la salle de jeux (les autres restent du décor) se joue — *Les lueurs*, un jeu
+  d'adresse inventé par le jeu (ni copie, ni nom, ni allure d'un autre) : le joystick ou les flèches mènent une lueur, A lui
+  donne un élan, on rassemble les lueurs, on évite les ombres ; une minute au plus (`D.BORNE`), le même tirage à chaque partie
+  (seule l'adresse fait le score), le meilleur score gardé ; B met en pause puis offre de quitter (B revient d'un cran).
+  **L'étal de la galerie**, sans vendeur, vend des pièces ordinaires (`D.GEAR_SHOPS.quartiers`, `D.GEAR_PRIX` ; exigence 17) ;
+  un achat trop cher se refuse sobrement. **L'écran géant** : près d'un banc libre, Idris s'assied (`assis`) et regarde des
+  formes qui coulent (aucune lettre, marque, logo, personne, animal, symbole ni édifice religieux) ; sa pensée dit la solitude
+  des autres ; B ou un pas le relève ; c'est libre. **La grande roue, les chaises volantes et les tasses** (dessinées par le
+  jeu : ni marque, ni lettre, ni figure d'animal ni de personne, rien de doré) : un tour se joue en vue, Idris dans sa nacelle,
+  sa chaise ou sa tasse ; la grande roue lève la vue sur toute la Cité (`W.regard`) puis la repose ; rien d'autre ne bouge ;
+  personne n'est ajouté. **Payer** (`D.ACTIVITES` : les prix, jamais dans un récit) : un menu dit le prix et la somme —
+  « Payer » / « Plus tard » (`retour: true`) ; on paie avec les primes du circuit (ce que l'organisateur a versé, moins ce qui a
+  été dépensé dans les quartiers, dans la limite des dirhams d'Idris) ; quand elles manquent, un refus sobre, rien d'avancé ;
+  aucun dirham n'est donné sans raison. **La règle anti-pari reste entière** : on ne paie jamais pour courir ; une activité
+  qu'on paie ne rapporte rien (ni dirhams, ni lot, ni objet : la borne ne donne que son score) ; aucun hasard ne décide de ce
+  qu'on reçoit ; `regles.js` le vérifie (`D.ACTIVITES` et `D.BORNE` n'ont que leurs champs déclarés, chaque prix est un entier
+  positif, aucun texte des activités ne porte les mots du pari ni ne nomme l'Agrégor, dans les quatre langues). Un outil par
+  activité (`borne`, `etal`, `ecran`, `manege`, `D.OUTILS`), dit au premier essai par `I.lecons.proposer` ; si la progression
+  ne peut pas encore le donner, l'activité attend ; payer n'est pas une leçon. La partie garde `cite.activites` (des comptes ;
+  valeur de départ dans `migrer`, le format reste le 2). `v2/docs/architecture.md`, « Les activités des quartiers ».
+  Contrôle : `node v2/tools/cite.js` (« CITÉ CONFORME » ; partie 16 ; `… activites` : elle seule).
+- Dans la 2.x (2.28, D218 ; le décideur, 22 novembre : « Dans la 2.28 je veux pouvoir accéder à la "cité vivante" sans devoir
+  rencontrer maître Yunus directement dans la suite du premier monde en franchissant la rue par exemple » ; « Pendant le
+  prologue » ; « Meme dans le sous-sol on doit pouvoir être libre de remonter » ; la « cité vivante » est le mot du décideur pour
+  les quartiers de la Cité-Miroir, qui gardent leur nom ; choix de l'agent, à valider), **la rue et l'ascenseur**
+  (`v2/src/core/passages.js`) : sur la carte `cite`, au bout de la rue, à l'est (le lieu `traverse` ; la carte `cite` et son
+  masque n'ont pas changé d'une case), Idris passe à pied dans les quartiers, par leur entrée de rue (le lieu `traverse`, au
+  nord-ouest), loin du parvis, où Maître Yûnus n'est pas ; le chapitre quitté (le prologue, une rencontre, un retour) se range
+  parmi les récits quittés (`W.ranger`, `cps`) et retraverser le reprend exactement, du même côté de la rue ; le refuge ne se
+  range jamais (`C.estPoint`). Aux Archives basses, sortir par l'ouverture du bas (ou A devant elle) remonte Idris à la
+  Cité-Miroir, au pied de l'ascenseur, dans le même chapitre (rien n'est rangé ; l'objectif reste en bas et la flèche montre
+  l'ascenseur) ; la porte de l'ascenseur le ramène là où il était. Pas dans le dernier maillon, ni dans les sagas, ni dans les
+  veillées, ni pendant une scène ; le joueur de test du moteur ne passe jamais ; aucun outil de plus. « Revenir en 2084 » et
+  « La Cité-Miroir » de la Chaîne ne changent pas (D212). Pendant le prologue, aucune chimère ne rôde dans les rues, la halte
+  des quartiers n'offre pas la Chaîne, et la leçon « cite » attend une arrivée à côté de Maître Yûnus. `v2/docs/architecture.md`,
+  « La rue et l'ascenseur ». Contrôle : `node v2/tools/cite.js` (partie 17 ; `… passages` : elle seule) ; un changement des
+  passages repasse aussi `retours.js`, `progression.js`, `doigt.js`, `doigt.js loin 844x390`, `smoke.js walk` et `tap`.
 - Dans la 2.x, le corps a ses attitudes (D205 : `D.ATTITUDES`, dans `D.POSES`) ; un Compagnon les prend avec retenue — la
   joie ne lève pas les bras au-dessus de la tête, le rire se limite aux épaules, la colère reste un corps tendu — et c'est
   le moteur qui choisit (`retenue()`) : un récit écrit l'attitude, jamais sa forme. Les mimiques seulement pour qui a un
@@ -384,6 +425,8 @@ toute considération de jeu.
 | `archive/v1.32/` | la 1.32 archivée : son jeu, ses outils, son livret et ses planches | on n'y touche plus (`archive/v1.32/LISEZ-MOI.md`) |
 | `v2/tools/promotion.js` | l'adresse, la devise, la réserve et le soutien de la promotion (2.x) | le seul endroit où elles s'écrivent ; lu par `shorts.js`, `galerie.js`, `jouable.js`, `livret.js` ; ce que le jeu en reprend pour partager sa progression (`JEU`) est posé dans la page par `build.js` (`window.ISNAD_PROMO`), et relevé pour les langues par `langues.js` (`JEU_DIT`) |
 | `src/core/circuit.js` | Sâlim et la course (2.27, D216) : la moto de Sâlim et le tour derrière lui, les cinq circuits vus de dessus, leurs adversaires, la prime de l'organisateur, le podium | les tracés et les nombres dans `defs.js` (`D.CIRCUITS`, `D.COURSE`), les textes dans `frame.js` (`cite.course`), la moto et les voitures vues de dessus dans `gfx.js` ; sa moitié « géométrie et conduite » se charge sous Node (le réglage) ; aucune mise, nulle part (`regles.js`) |
+| `src/core/activites.js` | les activités des quartiers (2.28, D217) : la borne « Les lueurs », l'étal de la galerie, l'écran géant, la grande roue et les manèges, payés avec les primes du circuit | les prix et les nombres dans `defs.js` (`D.ACTIVITES`, `D.BORNE`), les textes dans `frame.js` (`cite.activites`) et `coeur.js` (`lecons`), Idris sur un manège dans `gfx.js` (`passager`) ; sa moitié « jeu de la borne » se charge sous Node ; rien ne s'y gagne (`regles.js`) |
+| `src/core/passages.js` | la rue et l'ascenseur (2.28, D218) : de la Cité-Miroir aux quartiers à pied, des Archives basses à la Cité-Miroir | les lieux `traverse` (`maps.js`), l'arrivée par la rue dans `cite.js` (`C.depart`) ; jamais dans les sagas, les veillées ni le dernier maillon |
 | `src/core/cite.js`, `src/core/trafic.js` | les quartiers de la Cité (2.23, D212) : le refuge de 2084 à côté de Maître Yûnus, ses sorties, le rappel après une chimère moderne ; les voitures qui roulent et s'arrêtent, celles du circuit | la carte est dans `maps.js` (`quartiers()`), les voitures dessinées dans `gfx.js`, ce qui rôde dans `rodeurs.js` (`env.rues`), les textes dans `frame.js` (`cite`) |
 | `src/core/partage.js` | partager sa progression (2.x) : l'image que le jeu dessine (1080 × 1080 ou 1080 × 1920), son texte, `navigator.share` et son repli | le récit seulement : ni œuvres, ni cœur, ni Valeurs, ni descente, ni combats ; le bouton paraît au premier maillon achevé, sans leçon ; `v2/docs/architecture.md`, « Partager sa progression » |
 | `promo/shorts/NN-nom.js`, `promo/shorts/_saga.js`, `promo/shorts/legendes.md` | les scénarios des shorts (2.x), la base commune des cinq shorts de saga, et leurs textes d'accompagnement | un scénario dit où aller dans le jeu, quoi faire, quelles phrases poser ; un short de saga ne donne que des clés et des fragments (le lieu, la parole, l'idole) ; les films (`films/`), la galerie et les plans d'ambiance (`plans-ia/`) ne sont pas versionnés |
@@ -421,7 +464,7 @@ node v2/tools/course.js             # 2.x : la course — vitesse, pied d'appui 
 node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère et leur pièce interdite, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] [0,3,5] : une planche)
 node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe, la pièce interdite
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
-node v2/tools/cite.js [dossier] [course]   # 2.23 et 2.27 : Sâlim et sa moto, les cinq circuits, la prime, aucune mise (« course » : cette partie seule) ; les quartiers de la Cité — l'arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel ; captures — « CITÉ CONFORME »
+node v2/tools/cite.js [dossier] [course|activites|passages]   # 2.23, 2.27 et 2.28 : Sâlim et sa moto, les cinq circuits, la prime, aucune mise (« course » : cette partie seule) ; les activités payées avec les primes — la borne, l'étal, l'écran, la roue et les manèges (« activites ») ; la rue et l'ascenseur (« passages ») ; les quartiers de la Cité — l'arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel ; captures — « CITÉ CONFORME »
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
 node v2/tools/loupe.js [messages]   # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles, les messages du combat en bas (« messages » : eux seuls)
 node v2/tools/manette.js            # 2.x : la manette tactile partout — A choisit, B revient en arrière, le joystick choisit ; elle ne recouvre rien, la sélection se voit
