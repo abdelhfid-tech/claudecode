@@ -354,6 +354,10 @@ function monter(scn, video, wav, duree, sortie) {
   const r = spawnSync('ffmpeg', ['-v', 'info', '-i', wav, '-af', 'volumedetect', '-f', 'null', '-'], { encoding: 'utf8' }), m = /max_volume: (-?[\d.]+) dB/.exec(r.stderr || ''), gain = m ? Math.min(30, -3 - parseFloat(m[1])) : 0;
   ffmpeg(['-i', video, '-i', wav, '-af', `volume=${gain.toFixed(1)}dB,afade=t=out:st=${Math.max(0, duree - 0.6).toFixed(2)}:d=0.6,alimiter=limit=0.89`, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-t', duree.toFixed(3), '-movflags', '+faststart', sortie]);
 }
+// la première image d'un film : sa luminance moyenne (0 à 255). Elle doit arrêter le pouce (le décideur, 22 novembre : « La
+// première image doit être prenante on doit s'arrêter de scroller ») : pleine et lumineuse, jamais un noir ni un fondu.
+const PREMIERE_MIN = 40;
+function premiere(film) { const r = spawnSync('ffmpeg', ['-hide_banner', '-v', 'info', '-i', film, '-frames:v', '1', '-vf', 'signalstats,metadata=print:key=lavfi.signalstats.YAVG', '-f', 'null', '-'], { encoding: 'utf8' }), m = /YAVG=([\d.]+)/.exec(r.stderr || ''); return m ? parseFloat(m[1]) : null; }
 function planche(film, duree, sortie, n) { n = n || 12; const col = 6, pas = duree / n;
   ffmpeg(['-i', film, '-vf', `fps=1/${pas.toFixed(4)}:start_time=${(pas / 2).toFixed(3)}:round=down,scale=300:-1,tile=${col}x${Math.ceil(n / col)}:padding=6:color=0x06050d`, '-frames:v', '1', '-q:v', '3', sortie]); }
 
@@ -458,6 +462,9 @@ if (require.main === module) (async () => {
     const bon = v.width === 1080 && v.height === 1920 && v.r_frame_rate === IPS + '/1' && (!scn.rythme || !!a);
     if (!bon) anomalies++;
     if (s.erreurs.length) { anomalies++; console.log('  ✗ erreurs : ' + [...new Set(s.erreurs)].slice(0, 4).join(' | ').slice(0, 500)); }
+    const y0 = premiere(sortie);
+    if (y0 === null || y0 < PREMIERE_MIN) { anomalies++; console.log(`  ✗ PREMIÈRE IMAGE SOMBRE : luminance ${y0 === null ? 'illisible' : y0.toFixed(0)} (au moins ${PREMIERE_MIN}) — un short s'ouvre sur une image pleine, lumineuse et en mouvement, l'accroche lisible, sans noir ni fondu`); }
+    else console.log(`  première image : luminance ${y0.toFixed(0)} (au moins ${PREMIERE_MIN})`);
     console.log(`  ${bon ? '✓' : '✗'} ${path.relative(RACINE, sortie)} — ${v.width} × ${v.height}, ${v.r_frame_rate} i/s, ${total.toFixed(1)} s${fin && fin.duree ? ' (dont le plan final : ' + SOUTIEN_SEC + ' s)' : ''}, ${a ? 'son ' + a.codec_name : 'sans son'}, ${(fs.statSync(sortie).size / 1e6).toFixed(1)} Mo · filmé en ${((Date.now() - t0) / 1000).toFixed(0)} s`);
     if (s.marques.length) console.log('  repères : ' + s.marques.map(m => m[0] + ' ' + m[1] + ' s').join(' · '));
     if (s.journal.length) console.log('  répliques du jeu : ' + s.journal.map(j => '« ' + j.slice(0, 70) + (j.length > 70 ? '…' : '') + ' »').join(' · '));

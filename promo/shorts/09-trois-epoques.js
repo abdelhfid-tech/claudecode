@@ -6,7 +6,10 @@
    romaine de Qinnasrîn, un combat au tour par tour, et la Chaîne qui défile. Les lieux, les personnages et le combat sont ceux du jeu.
    Les légendes sont celles des films livrés (09, et 03 pour le combat) : aucune phrase nouvelle.
    Le son : des percussions seules (D176), qui montent d'une époque à l'autre ; le grand tambour marque chaque passage.
-   30 secondes avec le plan du soutien (25,2 s de film, puis 4,8 s). */
+   30 secondes avec le plan du soutien (25,2 s de film, puis 4,8 s).
+   La première image arrête le pouce (le décideur, 22 novembre : « La première image doit être prenante on doit s'arrêter de
+   scroller » ; son choix : « Le passage déjà ouvert ») : on tombe au milieu d'un passage, la lueur se déchire sur le désert
+   de la Traversée au crépuscule, Khâlid marche déjà, et l'accroche est entière dès l'image 1 — ni noir, ni fondu. */
 const T = 0.3;                                                       // un demi-temps à 100 à la noire : neuf images
 const pas = (m, n) => m.repeat(Math.ceil(n / m.length)).slice(0, n);  // un motif, tenu pendant n pas (un pas : un quart de temps)
 const PASSE = 0.45;                                                  // un passage d'une époque à l'autre, en secondes
@@ -14,7 +17,7 @@ const Z = 1.5;                                                       // l'image 
 module.exports = {
   titre: '« Trois époques, une seule chaîne »', bpm: 100, graine: 1508,
   rythme: [
-    { a: 'b.......t...T.T.' },                                                               // l'accroche, sur la Chaîne (8 T)
+    { a: 'b.T.T...b...T.T.' },                                                               // l'accroche, dans le passage déjà ouvert (8 T)
     { a: 'b.......t.......D...T.T.' },                                                       // 2084 (12 T)
     { a: 'b.....t.D...t...D.T.T.T.', b: '....r.......r.......r...' },                        // la Citadelle (12 T)
     { a: 'b.T...T.D...T...D.T.T.TT', b: pas('r...', 24) },                                   // 632 – 661 : le groupe en route (12 T)
@@ -30,17 +33,22 @@ module.exports = {
       if (!W._curDuJeu) { W._curDuJeu = W.cur; W.cur = function () { const c = W._curDuJeu.apply(this, arguments); return c && c.goto ? Object.assign({}, c, { goto: null }) : c; }; }
       const p = W.resolve(l, W.map.id, W.player); if (p && !isNaN(p[0])) W.goTo(p[0], p[1], { quiet: true }); return !!p; }, lieu);
 
-    /* 1 — l'accroche, sur l'écran de la Chaîne */
-    await s.cadre('ecran'); await s.ev(() => { window.ISNAD.ui.showChain(); }); await s.avancer(700);
-    // sous l'accroche, le fond d'encre de l'outil (le calque du plan du soutien) : la Chaîne reste visible en transparence,
-    // l'accroche se lit seule (le voile « ombre », un dégradé, ne fonce presque pas le milieu de l'image)
-    await s.ev(() => window.__film.rampe('fond', 0.85, 0));
-    await s.legende('Trois époques,<br>une seule chaîne', { y: 210, style: 'accroche', taille: 36, duree: 8 * T - PASSE, dans: 0.12 });
-    await s.defiler('#chain', 420, 8 * T);
+    /* 1 — l'accroche : on tombe au milieu d'un passage, sur le désert de la Traversée au crépuscule (la route du short 14 :
+       de la caravane vers les dunes). Dès l'image 1 : la lueur à 0,75, le désert doré dessous, Khâlid qui marche, l'accroche
+       entière ; puis la lueur se déchire (1,1 s) et l'image revient de × 2,9 à × 1,6. */
+    await s.chapitre('khalid', 0, { obj: 4 }); await s.cadre('carre'); await s.propre({ cible: false });
+    await s.ev(() => { const W = window.ISNAD.world;
+      if (!W._curDuJeu) { W._curDuJeu = W.cur; W.cur = function () { const c = W._curDuJeu.apply(this, arguments); return c && c.goto ? Object.assign({}, c, { goto: null }) : c; }; }
+      W.goTo(264, 189, { quiet: true }); });
+    await s.avancer(200);                                                // il est déjà en marche à la première image
+    await s.ev(() => window.__film.rampe('lueur', 0.75, 0));
+    await s.arrivee(1.6, 1.1);
+    await s.legende('Trois époques,<br>une seule chaîne', { style: 'accroche', taille: 34, duree: 8 * T - PASSE + 0.05, dans: -0.05, fi: 0.01, dy: 0 });
     await jusquauPassage(8 * T);
+    await s.ev(() => window.ISNAD.world.stop());
 
     /* 2 — 2084, la Cité-Miroir */
-    s.marque('2084'); await s.ev(() => window.__film.rampe('fond', 0, 0));   // la lueur couvre encore l'image : le fond d'encre s'en va sans se voir
+    s.marque('2084');
     await s.chapitre('idris', 0, { obj: 0, lieu: ['ecran', -8, 2] }); await s.cadre('carre'); await s.propre({ cible: false });
     await s.arrivee(Z, 0.5);
     await s.legende('2084 · la Cité-Miroir', { style: 'titre', duree: 12 * T - PASSE - 0.1, dans: 0.2 });

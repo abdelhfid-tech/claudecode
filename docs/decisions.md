@@ -2152,6 +2152,13 @@ pages privées de son compte.
   passage. Il dure 30 secondes, plan du soutien compris (le 9 livré en durait 24). *À valider* : le passage (sa couleur, sa
   durée de 0,45 s, la plongée de l'image) ; l'ordre des plans et le combat ; puis les quinze autres shorts, chacun avec la
   part de cette ambiance qui lui va ; puis la démo et le livret court, une seule fois.
+  *La première image (le décideur, 22 novembre, après le pilote).* « La première image doit être prenante on doit s'arrêter
+  de scroller ». À la question de l'image : « Le passage déjà ouvert » ; de l'accroche : « « Trois époques, une seule
+  chaîne » ». Le 9 s'ouvre donc au milieu d'un passage : la lueur se déchire sur le désert de la Traversée au crépuscule,
+  Khâlid marche déjà, l'accroche est entière dès l'image 1 et le grand tambour frappe avec elle ; la Chaîne ne paraît plus
+  qu'à la fin. La règle vaut pour tous les shorts : une image pleine, lumineuse et en mouvement, l'accroche lisible dès la
+  première image, ni noir ni fondu ; `v2/tools/shorts.js` mesure la luminance de la première image et compte « PREMIÈRE
+  IMAGE SOMBRE » sous 40 (sur 255 ; le seuil est une proposition de l'agent).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

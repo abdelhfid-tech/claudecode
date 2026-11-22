@@ -382,7 +382,10 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   livret (`promo/livret-2x/`). Règles : tout ce qu'on montre vient du jeu — une réplique se demande par un fragment
   (`s.dire`), elle n'est jamais retapée ; les phrases ajoutées sont des propositions, à valider par le décideur ; un plan
   d'ambiance généré par IA ne montre jamais une personne, un animal, un texte ni un lieu saint, et n'entre ni dans le jeu
-  ni dans le dépôt ; chaque short dure 30 secondes, plan du soutien compris (décideur, 19 novembre), et l'on ne les
+  ni dans le dépôt ; chaque short dure 30 secondes, plan du soutien compris (décideur, 19 novembre), et s'ouvre sur une image pleine,
+  lumineuse et en mouvement, l'accroche lisible dès la première image, sans noir ni fondu (décideur, 22 novembre : « La
+  première image doit être prenante on doit s'arrêter de scroller » ; `shorts.js` le contrôle : « PREMIÈRE IMAGE SOMBRE »),
+  et l'on ne les
   refait qu'une fois Idris redessiné (« Tu change le personnage avant de refaire le short et le livret ») ; le son d'un short est fait de percussions seules (exigence 9 ; une musique a été essayée deux fois,
   puis écartée par le décideur) ; aucun support ne nomme les auteurs des exigences 14 et 24 ; la réserve de la décision
   39 reste sur chaque support ; chaque short finit sur le plan du soutien et le livret court sur sa page (« Une
