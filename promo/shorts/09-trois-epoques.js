@@ -1,51 +1,83 @@
 /* Short 9 — « Trois époques, une seule chaîne » : 2084 (la Cité-Miroir), la Citadelle du Caïd, les années 632 – 661.
-   Les légendes sont des propositions, à valider par le décideur. */
+   Refait le 22 novembre, pilote des shorts refaits (D219 ; le décideur : « je veux retrouver l'ambiance » d'un grand JRPG
+   16 bits — le voyage dans le temps, le groupe en route, le combat au tour par tour, un souffle qui monte ; pas forcément
+   tout dans le même short). Celui-ci est le voyage dans le temps : chaque époque s'ouvre par un passage, une lueur du
+   montage (s.passage, s.arrivee : rien du jeu n'est changé) ; puis le groupe de Khâlid en route dans le camp du Yarmoûk,
+   un combat au tour par tour, et la Chaîne qui défile. Les lieux, les personnages et le combat sont ceux du jeu.
+   Les légendes sont celles des films livrés (09, et 03 pour le combat) : aucune phrase nouvelle.
+   Le son : des percussions seules (D176), qui montent d'une époque à l'autre ; le grand tambour marque chaque passage.
+   30 secondes avec le plan du soutien (25,2 s de film, puis 4,8 s). */
 const T = 0.3;                                                       // un demi-temps à 100 à la noire : neuf images
-const pas = (m, n) => m.repeat(Math.ceil(n / m.length)).slice(0, n);
+const pas = (m, n) => m.repeat(Math.ceil(n / m.length)).slice(0, n);  // un motif, tenu pendant n pas (un pas : un quart de temps)
+const PASSE = 0.45;                                                  // un passage d'une époque à l'autre, en secondes
+const Z = 1.5;                                                       // l'image d'un lieu, agrandie comme sur un téléphone
 module.exports = {
   titre: '« Trois époques, une seule chaîne »', bpm: 100, graine: 1508,
   rythme: [
-    { a: 'b...............' },                                                         // l'accroche
-    { a: pas('D.......t.......', 22) },                                                // 2084
-    { a: pas('D.....t.D...t...', 22), b: pas('....r.......r...', 22) },                // la Citadelle
-    { a: pas('D.T...T.D...T...', 22), b: pas('r...r...r...r...', 22) },                // 632 – 661
-    { a: pas('D.T.t.T.D.t.T.T.', 22), b: pas('r.r.r.r.r.r.r.r.', 22) },                // la Chaîne
-    { a: 'b.......D...............', b: 'r.......................' }                    // le carton final
+    { a: 'b.......t...T.T.' },                                                               // l'accroche, sur la Chaîne (8 T)
+    { a: 'b.......t.......D...T.T.' },                                                       // 2084 (12 T)
+    { a: 'b.....t.D...t...D.T.T.T.', b: '....r.......r.......r...' },                        // la Citadelle (12 T)
+    { a: 'b.T...T.D...T...D.T.T.TT', b: pas('r...', 24) },                                   // 632 – 661 : le groupe en route (12 T)
+    { a: pas('D.TtD.T.D.TtT.T.', 28), b: pas('r.r.', 28) },                                  // le combat (14 T)
+    { a: 'b.T.t.T.D.t.T.T.D.TT', b: pas('r.', 20) },                                         // la Chaîne (10 T)
+    { a: 'b.......D' + '.'.repeat(23), b: 'r' + '.'.repeat(31) }                              // le carton final (16 T)
   ],
   async film(s) {
-    /* l'accroche, sur l'écran de la Chaîne */
+    // la fin d'un plan : il est filmé jusqu'au passage, puis la lueur monte (et l'image plonge, dans un lieu)
+    const jusquauPassage = async sec => { await s.tourner(sec - PASSE); await s.passage(PASSE, 2.7); };
+    // marcher vers un lieu nommé de la carte : le jeu trouve le chemin ; l'objectif « aller à tel endroit » ne se déclenche pas
+    const marcher = lieu => s.ev(l => { const W = window.ISNAD.world;
+      if (!W._curDuJeu) { W._curDuJeu = W.cur; W.cur = function () { const c = W._curDuJeu.apply(this, arguments); return c && c.goto ? Object.assign({}, c, { goto: null }) : c; }; }
+      const p = W.resolve(l, W.map.id, W.player); if (p && !isNaN(p[0])) W.goTo(p[0], p[1], { quiet: true }); return !!p; }, lieu);
+
+    /* 1 — l'accroche, sur l'écran de la Chaîne */
     await s.cadre('ecran'); await s.ev(() => { window.ISNAD.ui.showChain(); }); await s.avancer(700);
     await s.ombre(0.72, 0);
-    await s.legende('Trois époques,<br>une seule chaîne', { y: 210, style: 'accroche', taille: 36, duree: 8 * T - 0.1, dans: 0.12 });
-    await s.defiler('#chain', 420, 8 * T + 0.3);
-    await s.tourner(8 * T);
-    /* 2084 — la Cité-Miroir */
-    s.marque('2084'); await s.ombre(0, 0); await s.noir(1, 0);
-    await s.chapitre('idris', 0, { obj: 0, lieu: ['ecran', -8, 2] }); await s.cadre('carre'); await s.propre({ cible: false }); await s.zoom(1.5);
-    await s.noir(0, 0.2);
-    await s.legende('2084 · la Cité-Miroir', { style: 'titre', duree: 11 * T - 0.15, dans: 0.1 });
-    await s.legende('Un archiviste remonte la Chaîne.', { marge: 58, duree: 11 * T - 0.3, dans: 0.3 });
-    await s.tenir('ArrowRight'); await s.tourner(11 * T); await s.lacher('ArrowRight');
-    /* la Citadelle, au bord du désert : les veillées du Caïd */
-    s.marque('citadelle'); await s.noir(1, 0);
-    await s.chapitre('caid', 0, { obj: 1 }); await s.cadre('carre'); await s.zoom(1.5);
-    await s.noir(0, 0.2);
-    await s.legende('La Citadelle, au bord du désert', { style: 'titre', duree: 11 * T - 0.15, dans: 0.1 });
-    await s.legende('Un Caïd lit ces vies, à la veillée.', { marge: 82, duree: 11 * T - 0.3, dans: 0.3 });
-    await s.tenir('ArrowDown'); await s.tourner(11 * T); await s.lacher('ArrowDown');
-    /* 632 – 661 : les Compagnons */
-    s.marque('632'); await s.noir(1, 0);
-    await s.chapitre('khalid', 0, { obj: 4 }); await s.cadre('carre'); await s.zoom(1.5);
-    await s.noir(0, 0.2);
-    await s.legende('632 – 661', { style: 'titre', duree: 11 * T - 0.15, dans: 0.1 });
-    await s.legende('Cinq Compagnons, cinq sagas.', { marge: 58, duree: 11 * T - 0.3, dans: 0.3 });
-    await s.tenir('ArrowRight'); await s.tourner(11 * T); await s.lacher('ArrowRight');
-    /* la Chaîne : on passe d'un maillon à l'autre */
-    s.marque('chaine'); await s.noir(1, 0);
+    await s.legende('Trois époques,<br>une seule chaîne', { y: 210, style: 'accroche', taille: 36, duree: 8 * T - PASSE, dans: 0.12 });
+    await s.defiler('#chain', 420, 8 * T);
+    await jusquauPassage(8 * T);
+
+    /* 2 — 2084, la Cité-Miroir */
+    s.marque('2084'); await s.ombre(0, 0);
+    await s.chapitre('idris', 0, { obj: 0, lieu: ['ecran', -8, 2] }); await s.cadre('carre'); await s.propre({ cible: false });
+    await s.arrivee(Z, 0.5);
+    await s.legende('2084 · la Cité-Miroir', { style: 'titre', duree: 12 * T - PASSE - 0.1, dans: 0.2 });
+    await s.legende('Un archiviste remonte la Chaîne.', { marge: 58, duree: 12 * T - PASSE - 0.25, dans: 0.4 });
+    await s.tenir('ArrowRight'); await jusquauPassage(12 * T); await s.lacher('ArrowRight');
+
+    /* 3 — la Citadelle, au bord du désert : les veillées du Caïd */
+    s.marque('citadelle');
+    await s.chapitre('caid', 0, { obj: 1 }); await s.cadre('carre'); await s.propre({ cible: false });
+    await s.arrivee(Z, 0.5);
+    await s.legende('La Citadelle, au bord du désert', { style: 'titre', duree: 12 * T - PASSE - 0.1, dans: 0.2 });
+    await s.legende('Un Caïd lit ces vies, à la veillée.', { marge: 82, duree: 12 * T - PASSE - 0.25, dans: 0.4 });
+    await s.tenir('ArrowDown'); await jusquauPassage(12 * T); await s.lacher('ArrowDown');
+
+    /* 4 — 632 – 661 : Khâlid et les siens en route, dans le camp du Yarmoûk, à la nuit */
+    s.marque('632');
+    await s.chapitre('khalid', 1, { obj: 0 }); await s.cadre('carre'); await s.propre({ cible: false });
+    await s.arrivee(Z, 0.5);
+    await marcher('feu');
+    await s.legende('632 – 661', { style: 'titre', duree: 12 * T - PASSE - 0.1, dans: 0.2 });
+    await s.legende('Cinq Compagnons, cinq sagas.', { marge: 58, duree: 12 * T - PASSE - 0.25, dans: 0.4 });
+    await jusquauPassage(12 * T);
+    await s.ev(() => window.ISNAD.world.stop());
+
+    /* 5 — le combat, au tour par tour : la frise des tours, les commandes, le groupe qui joue seul */
+    s.marque('combat');
+    await s.chapitre('khalid', 2, { obj: 0 }); await s.cadre('ecran'); await s.propre({ rangees: true, cible: false });
+    await s.combat(['echo', 'echo'], { fond: 'romaine', attente: 500 });
+    await s.arrivee(0, 0.5);
+    await s.legende('On n’y combat jamais<br>des personnes.', { zone: 'sur', style: 'titre', taille: 24, duree: 14 * T - PASSE - 0.2, dans: 0.35 });
+    await s.auto(true); await s.touche('Enter'); await s.tourner(2 * T); await s.touche('Enter');   // « Frapper », puis la cible : ensuite le groupe joue seul
+    await jusquauPassage(12 * T);
+
+    /* 6 — la Chaîne : on passe d'un maillon à l'autre */
+    s.marque('chaine');
     await s.neuf(); await s.cadre('ecran'); await s.ev(() => { window.ISNAD.ui.showChain(); }); await s.avancer(700); await s.ev(() => { document.querySelector('#chain').scrollTop = 250; });
-    await s.noir(0, 0.2);
-    await s.defiler('#chain', 1500, 11 * T);
-    await s.tourner(11 * T);
-    await s.carton(12 * T);
+    await s.arrivee(0, 0.4);
+    await s.defiler('#chain', 1500, 10 * T);
+    await s.tourner(10 * T);
+    await s.carton(16 * T - 0.2);
   }
 };

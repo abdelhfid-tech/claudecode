@@ -2135,6 +2135,23 @@ pages privées de son compte.
   vocalisés), en anglais et en japonais. *À valider* : le côté de la rue (l'est, après l'ascenseur) et l'entrée des quartiers
   (le nord-ouest) ; l'absence de Maître Yûnus quand on arrive à pied ; le dernier maillon fermé ; l'absence de chimères pendant
   le prologue ; les captures (390 × 844, 844 × 390).
+- [ ] **D219. Les shorts refaits dans l'ambiance d'un grand JRPG 16 bits ; le short 9 en pilote (demande du décideur,
+  22 novembre) — à valider sur le film.** « Go pour les short je veux retrouver l'ambiance de chrono trigger » ; à la
+  question du son : « Percussions seules » ; de ce qui fait cette ambiance : « Le voyage dans le temps, Le groupe en route,
+  Les combats au tour par tour, Le souffle épique, Tout ça pas forcément dans le même short » ; du périmètre : « Un short
+  pilote d'abord ». *La règle.* Le jeu cité n'est nommé qu'ici (comme l'exigence 14 pour le conte) : aucun support ne le
+  nomme, et l'on n'en reprend ni musique, ni image, ni personnage, ni lieu, ni nom — seulement une ambiance, faite avec ce
+  que le jeu a déjà. Le son reste fait de percussions seules (D169, D176). *Ce qui a été fait.* L'outil des shorts reçoit un
+  passage d'une époque à l'autre, un effet de montage (`v2/tools/shorts.js`, `s.passage`, `s.arrivee`) : une lueur — un
+  cœur blanc, de l'or, du violet, sans forme ni symbole — monte et couvre l'image, qui plonge vers celui qui mène ; on
+  arrive dans l'époque suivante d'un peu plus près, et la lueur retombe. Rien du jeu n'est changé. Le short 9, « Trois
+  époques, une seule chaîne », est refait autour du voyage dans le temps : la Chaîne ; 2084, la Cité-Miroir ; la Citadelle ;
+  Khâlid, al-Qa'qâ' et Dirâr en route dans le camp du Yarmoûk, à la nuit ; un combat au tour par tour (deux Échos, la frise
+  et les commandes à l'écran) ; la Chaîne qui défile ; le carton. Ses légendes sont celles des films livrés (le 9, et le 3
+  pour le combat) : aucune phrase nouvelle. Les percussions montent d'une époque à l'autre, le grand tambour sur chaque
+  passage. Il dure 30 secondes, plan du soutien compris (le 9 livré en durait 24). *À valider* : le passage (sa couleur, sa
+  durée de 0,45 s, la plongée de l'image) ; l'ordre des plans et le combat ; puis les quinze autres shorts, chacun avec la
+  part de cette ambiance qui lui va ; puis la démo et le livret court, une seule fois.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

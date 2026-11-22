@@ -64,6 +64,7 @@ body.f-titre #title .vmenu, body.f-titre #title .foot, body.f-titre #title .coin
 #film-ombre { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6, 5, 13, .55), rgba(6, 5, 13, .1) 30%, rgba(6, 5, 13, .1) 60%, rgba(6, 5, 13, .7)); opacity: 0; }
 #film-noir { position: absolute; inset: 0; background: #000; opacity: 0; }
 #film-fond { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 42%, #191433, #0b0918 55%, #06050d); opacity: 0; }
+#film-lueur { position: absolute; inset: 0; background: radial-gradient(circle at 50% 28%, #fffaf0 0, #fff1cf 16%, #e9c877 36%, #7d63c8 66%, #1a1236 100%); opacity: 0; }
 .film-leg.soutien { font-size: 21px; line-height: 1.4; color: #f3e7cc; }
 .film-leg.soutien b { display: block; font-family: "Cinzel", "Times New Roman", serif; font-weight: 700; font-size: 1.08em; letter-spacing: .04em; color: #e9c877; }
 .film-leg.logo img { display: block; width: 320px; height: auto; margin: 0 auto; }
@@ -85,7 +86,7 @@ body.f-titre #title .vmenu, body.f-titre #title .foot, body.f-titre #title .coin
 function installer() {
   const I = window.ISNAD, W = I.world, $ = q => document.querySelector(q);
   const hote = document.createElement('div'); hote.id = 'film';
-  hote.innerHTML = '<img id="film-ia" alt="" hidden><div id="film-ombre"></div><div id="film-fond"></div><div id="film-legendes"></div><div id="film-noir"></div>';
+  hote.innerHTML = '<img id="film-ia" alt="" hidden><div id="film-ombre"></div><div id="film-fond"></div><div id="film-lueur"></div><div id="film-legendes"></div><div id="film-noir"></div>';
   document.body.appendChild(hote);
   const borne = (v, a, b) => Math.max(a, Math.min(b, v)), doux = x => x * x * (3 - 2 * x), sansApo = s => String(s).replace(/[’']/g, "'");
   const F = window.__film = { t: 0, calques: [], rampes: {}, ia: null, n: 0 };
@@ -112,7 +113,7 @@ function installer() {
   F.pas = async t => { F.t = t; F.n++; F.anims();
     F.calques = F.calques.filter(c => { if (t > c.t1 + 0.05) { c.el.remove(); return false; }
       const a = doux(borne((t - c.t0) / c.fi, 0, 1)) * doux(borne((c.t1 - t) / c.fo, 0, 1)); c.el.style.opacity = a.toFixed(3); c.el.style.transform = 'translateY(' + ((1 - doux(borne((t - c.t0) / c.fi, 0, 1))) * c.dy).toFixed(2) + 'px)'; return true; });
-    $('#film-noir').style.opacity = valeur('noir').toFixed(3); $('#film-ombre').style.opacity = valeur('ombre').toFixed(3); $('#film-fond').style.opacity = valeur('fond').toFixed(3);
+    $('#film-noir').style.opacity = valeur('noir').toFixed(3); $('#film-ombre').style.opacity = valeur('ombre').toFixed(3); $('#film-fond').style.opacity = valeur('fond').toFixed(3); $('#film-lueur').style.opacity = valeur('lueur').toFixed(3);
     if (F.rampes.zoom && F.rampes.zoom.d) { const z = valeur('zoom'); I.ui.zoomer(z, false); }
     if (F.defile) { const q = F.defile, k = doux(borne((t - q.t0) / q.d, 0, 1)); q.el.scrollTop = q.de + (q.vers - q.de) * k; if (k >= 1) F.defile = null; }
     F.doigts = (F.doigts || []).filter(q => { const k = (t - q.t0) / q.d; if (k >= 1) { q.el.remove(); return false; } const x = q.x0 + (q.x1 - q.x0) * doux(borne(k, 0, 1)), y = q.y0 + (q.y1 - q.y0) * doux(borne(k, 0, 1)); q.el.style.left = x + 'px'; q.el.style.top = y + 'px'; q.el.style.opacity = (k < 0 ? 0 : Math.min(1, k * 8) * Math.min(1, (1 - k) * 4)).toFixed(3); q.el.style.transform = 'scale(' + (q.tap ? 0.7 + 0.5 * borne(k, 0, 1) : 1).toFixed(3) + ')'; return true; });
@@ -161,7 +162,7 @@ class Plateau {
   dit(m) { console.log('  · ' + m); }
   async ouvrir() {
     fs.mkdirSync(FILMS, { recursive: true }); fs.mkdirSync(PRISES, { recursive: true });
-    this.browser = await chromium.launch(); this.voiles = { noir: 0, ombre: 0 }; this._cadre = 'ecran';
+    this.browser = await chromium.launch(); this.voiles = { noir: 0, ombre: 0, lueur: 0 }; this._cadre = 'ecran';
     await this.neuf();
     if (this.sansFilm) return;
     // le film : les images vont droit à l'encodeur
@@ -184,7 +185,7 @@ class Plateau {
     await p.evaluate(installer);
     await p.evaluate(() => Promise.all(['700 30px Cinzel', '500 20px Cinzel', '400 20px Alegreya', 'italic 400 20px Alegreya', '700 20px Alegreya', '500 20px "Reem Kufi"', '700 20px "Reem Kufi"', '400 20px Amiri', '400 14px "Share Tech Mono"'].map(f => document.fonts.load(f).catch(() => {}))));
     if (!FIGE) { const t0 = await p.evaluate(() => Date.now()); await p.clock.pauseAt(new Date(t0 + 64)); }
-    await this.ev(([g, v, t]) => { const I = window.ISNAD, F = window.__film; F.graine(g); F.t = t; I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => e.hidden = true); document.body.classList.remove('in-screen'); I.input.reset(); I.setScene(I.ui.blank); F.rampe('noir', v.noir, 0); F.rampe('ombre', v.ombre, 0); document.querySelector('#film-noir').style.opacity = v.noir; },
+    await this.ev(([g, v, t]) => { const I = window.ISNAD, F = window.__film; F.graine(g); F.t = t; I.save.reset(); I.save.data.started = true; document.querySelectorAll('.screen').forEach(e => e.hidden = true); document.body.classList.remove('in-screen'); I.input.reset(); I.setScene(I.ui.blank); F.rampe('noir', v.noir, 0); F.rampe('ombre', v.ombre, 0); F.rampe('lueur', v.lueur || 0, 0); document.querySelector('#film-noir').style.opacity = v.noir; document.querySelector('#film-lueur').style.opacity = v.lueur || 0; },
       [this.scn.graine || 632, this.voiles, this.t]);
     await this.cadre(this._cadre); await this.propre();
   }
@@ -283,6 +284,14 @@ class Plateau {
   effacer() { return this.ev(() => window.__film.effacer()); }
   noir(v, sec) { this.voiles.noir = v; return this.ev(([v, d]) => window.__film.rampe('noir', v, d), [v, sec || 0]); }
   ombre(v, sec) { this.voiles.ombre = v; return this.ev(([v, d]) => window.__film.rampe('ombre', v, d), [v, sec || 0]); }
+  // le passage d'une époque à l'autre (un effet de montage, rien du jeu) : une lueur monte et couvre l'image ; dans un lieu,
+  // l'image plonge vers celui qui mène (jusqu'à × z). Il est filmé : `sec` secondes. Puis arrivee() : on arrive dans l'époque
+  // suivante — la lueur retombe, et l'image, partie de plus près, revient à × z.
+  async passage(sec, z) { this.voiles.lueur = 1;
+    await this.ev(([d, z]) => { const F = window.__film, I = window.ISNAD; F.rampe('lueur', 1, d); if (z && I.scene === I.world) { F.rampes.zoom = F.rampes.zoom || { v: I.ui.zf }; F.rampe('zoom', z, d); } }, [sec, z || 0]);
+    await this.tourner(sec); }
+  arrivee(z, sec) { this.voiles.lueur = 0; return this.ev(([z, d]) => { const F = window.__film, I = window.ISNAD; F.rampe('lueur', 0, d);
+    if (z && I.scene === I.world) { const z0 = Math.min(3, z * 1.8); F.rampes.zoom = { v: z0, vers: z0, d: 0 }; I.ui.zoomer(z0, false); F.rampe('zoom', z, d * 1.4); } }, [z || 0, sec || 0.5]); }
   // un plan d'ambiance (promo/shorts/plans-ia/<nom>.mp4), en plein cadre pendant `sec` secondes ; `fondu` : il se dissout dans le jeu
   async plan(nom, sec, o) { o = o || {}; const src = path.join(PLANS, nom + '.mp4'); if (!fs.existsSync(src)) { this.dit('plan d’ambiance absent (' + nom + ') : le short s’ouvre sur le jeu'); return false; }
     const dos = path.join(PRISES, 'plan-' + nom); if (!fs.existsSync(path.join(dos, '0001.jpg'))) { fs.mkdirSync(dos, { recursive: true }); const r = spawnSync('ffmpeg', ['-v', 'error', '-y', '-ss', String(o.de || 0), '-i', src, '-vf', `fps=${IPS},scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,crop=1080:1920`, '-q:v', '2', path.join(dos, '%04d.jpg')]); if (r.status) { this.dit('! plan illisible : ' + nom); return false; } }
