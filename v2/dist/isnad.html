@@ -997,7 +997,7 @@ body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.28 · 2026-11-22 07:18 UTC · 80ba25e+";
+window.ISNAD_VERSION = "2.28 · 2026-11-22 08:31 UTC · 088f480+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -14420,11 +14420,15 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       W.stop(); I.input.clearHeld();
       if (!essayer('ecran')) return;
       const p = W.player, a = AC.etat(); p.x = z.px; p.y = z.py; p.dir = 3; W.resetTrail(); W.emote('hero', 'assis'); p.dy = 7; AC.assis = { x: p.x, y: p.y };
+      // (sur un téléphone en hauteur, la vue agrandie ne tient pas l'écran et Idris ensemble : le temps qu'il est assis, l'image
+      // revient à × 1 — rien n'est gardé ; debout, il retrouve l'agrandissement d'avant)
+      if (G.view.h < 200 && I.ui.zoomer && I.ui.zf > 1) { AC._zoom = I.ui.zf; I.ui.zoomer(1, false); }
       a.ecran = (a.ecran | 0) + 1; I.save.store(); AC.journal.push({ quoi: 'assis', x: z.px }); finEssai('ecran');
       await ligne(lire(textes().ecran, a.ecran));
     } finally { AC.occupe = false; }
   };
-  AC.relever = function () { if (!AC.assis) return; AC.assis = null; W.emote('hero', null); W.player.dy = 0; AC.journal.push({ quoi: 'releve' }); };
+  AC.relever = function () { if (!AC.assis) return; AC.assis = null; W.emote('hero', null); W.player.dy = 0; AC.journal.push({ quoi: 'releve' });
+    if (AC._zoom) { const z = AC._zoom; AC._zoom = null; I.ui.zoomer(z, false); I.ui._zVif = false; } };
   // B (ou Échap) relève Idris (world.js, W.onInput) ; A ne fait rien tant qu'il est assis
   AC.onInput = function (a) { if (!AC.assis) return false; if (a === 'frappe' || a === 'cancel' || a === 'menu') { AC.relever(); return true; } return a === 'ok'; };
   // à chaque image (world.js) : un pas, un combat ou un récit qui l'emmène ailleurs le relèvent

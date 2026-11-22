@@ -331,11 +331,15 @@
       W.stop(); I.input.clearHeld();
       if (!essayer('ecran')) return;
       const p = W.player, a = AC.etat(); p.x = z.px; p.y = z.py; p.dir = 3; W.resetTrail(); W.emote('hero', 'assis'); p.dy = 7; AC.assis = { x: p.x, y: p.y };
+      // (sur un téléphone en hauteur, la vue agrandie ne tient pas l'écran et Idris ensemble : le temps qu'il est assis, l'image
+      // revient à × 1 — rien n'est gardé ; debout, il retrouve l'agrandissement d'avant)
+      if (G.view.h < 200 && I.ui.zoomer && I.ui.zf > 1) { AC._zoom = I.ui.zf; I.ui.zoomer(1, false); }
       a.ecran = (a.ecran | 0) + 1; I.save.store(); AC.journal.push({ quoi: 'assis', x: z.px }); finEssai('ecran');
       await ligne(lire(textes().ecran, a.ecran));
     } finally { AC.occupe = false; }
   };
-  AC.relever = function () { if (!AC.assis) return; AC.assis = null; W.emote('hero', null); W.player.dy = 0; AC.journal.push({ quoi: 'releve' }); };
+  AC.relever = function () { if (!AC.assis) return; AC.assis = null; W.emote('hero', null); W.player.dy = 0; AC.journal.push({ quoi: 'releve' });
+    if (AC._zoom) { const z = AC._zoom; AC._zoom = null; I.ui.zoomer(z, false); I.ui._zVif = false; } };
   // B (ou Échap) relève Idris (world.js, W.onInput) ; A ne fait rien tant qu'il est assis
   AC.onInput = function (a) { if (!AC.assis) return false; if (a === 'frappe' || a === 'cancel' || a === 'menu') { AC.relever(); return true; } return a === 'ok'; };
   // à chaque image (world.js) : un pas, un combat ou un récit qui l'emmène ailleurs le relèvent
