@@ -541,6 +541,9 @@
     // en largeur, le classement se pose sous le chrono, quelle que soit la taille du texte
     const tab = box.querySelector('.tableau'), rg = box.querySelector('.rangs'), haut = !tab || document.body.classList.contains('portrait') ? '' : (tab.offsetTop + tab.offsetHeight + 6) + 'px';
     if (rg && rg.style.top !== haut) rg.style.top = haut;
+    // en hauteur, le signe (le nom du circuit, les commandes) se pose sous le chrono et sous le classement, quelle que soit leur hauteur
+    const sg = box.querySelector('.signe'), sous = tab && document.body.classList.contains('portrait') ? (Math.max(tab.offsetTop + tab.offsetHeight, rg && rg.offsetHeight ? rg.offsetTop + rg.offsetHeight : 0) + 8) + 'px' : '';
+    if (sg && sg.style.top !== sous) sg.style.top = sous;
   }
 
   // le garde-fou (ui.js, U.secours) : la course en cours s'arrête, rien n'est compté
@@ -550,8 +553,9 @@
     const prev = I.scene, mark = I.input.mark(), box = $('#course'), T = textes(); let res = null;
     K.mode = 'compte'; K.compte = K.moto ? 1.9 : 3.2; K.pause = false; CI.K = K; box.classList.toggle('moto', !!K.moto);
     const arrive = new Promise(r => { K.resoudre = r; });
-    const pause = async () => { if (K.pause) return; K.pause = true; I.input.clearHeld(); CI.journal.push({ quoi: 'pause' });
-      const i = await S.menuPick(I.t('La course est en pause.'), [{ t: I.t('Reprendre'), retour: true }, { t: K.moto ? I.t('Descendre de la moto') : I.t('Quitter la course') }]);
+    // en pause, le compte à rebours et le signe s'effacent sous la liste (en hauteur, le chrono et le classement aussi : style.css)
+    const pause = async () => { if (K.pause) return; K.pause = true; I.input.clearHeld(); CI.journal.push({ quoi: 'pause' }); box.classList.add('pause');
+      let i = 0; try { i = await S.menuPick(I.t('La course est en pause.'), [{ t: I.t('Reprendre'), retour: true }, { t: K.moto ? I.t('Descendre de la moto') : I.t('Quitter la course') }]); } finally { box.classList.remove('pause'); }
       K.pause = false; if (i === 1 && K.resoudre) { CI.journal.push({ quoi: 'quitte' }); const f = K.resoudre; K.resoudre = null; f({ quitte: true }); } };
     K.enPause = pause;
     const h = I.input.push(a => { if ((a === 'cancel' || a === 'menu' || a === 'frappe') && (K.mode === 'course' || K.mode === 'compte')) pause(); else if (a === 'ok' && K.attente) K.attente(); return true; });
@@ -570,7 +574,7 @@
     } finally {
       I.input.pop(h); I.input.trim(mark); I.audio.moteur(false);
       try { await S.fade('out', 220); } catch (e) { /* le fondu ne doit pas retenir la sortie */ }
-      box.hidden = true; box.classList.remove('fini', 'moto'); box.querySelector('.bilan').hidden = true; document.body.classList.remove('en-course'); CI.K = null; I.input.clearHeld(); I.input.aTenu = false; I.input.joyAngle = null;
+      box.hidden = true; box.classList.remove('fini', 'moto', 'pause'); box.querySelector('.bilan').hidden = true; document.body.classList.remove('en-course'); CI.K = null; I.input.clearHeld(); I.input.aTenu = false; I.input.joyAngle = null;
       I.setScene(prev === CI.scene ? W : prev); G.clearParts();
       if (W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; W.hud(); W.stop(); W.updateCam(true); }
       I.audio.back();

@@ -920,6 +920,7 @@ html:not(.lum215) body.portrait[data-theme="cyber"] { background: linear-gradien
 #course .bilan h3 { margin: 0 0 .25em; font-family: var(--f-display); color: var(--gold); letter-spacing: .08em; font-size: 1.05em; }
 #course .bilan p { margin: .2em 0; } #course .bilan .prime { color: #7dffb0; font-weight: 700; } #course .bilan .suite { margin-top: .3em; color: var(--gold); font-family: var(--f-mono); }
 #course.fini .tableau, #course.fini .rangs, #course.fini .signe { display: none; }
+#course.pause .compte, #course.pause .signe, body.portrait #course.pause .tableau, body.portrait #course.pause .rangs { visibility: hidden; }
 body.immersif.manette #course .signe, body.immersif.manette #course .bilan { left: max(10%, var(--pad-g, 0px)); right: max(10%, var(--pad-d, 0px)); }
 body.portrait #course .tableau { top: calc(100% + 10px); left: 10px; max-width: 58%; }
 body.portrait #course.moto .tableau { max-width: calc(100% - 20px); }
