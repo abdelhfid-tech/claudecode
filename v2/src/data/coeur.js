@@ -74,7 +74,12 @@ ISNAD.registerSaga({
     // 2.23 (D212) : dite par Maître Yûnus, à la première arrivée dans les quartiers de la Cité (cite.js)
     cite: 'Ici, tu peux revenir quand tu veux, Idris : *Revenir en 2084*, à la halte, ou *La Cité-Miroir*, au pied de la Chaîne. Je t’attendrai sur le parvis.',
     // 2.27 (D216) : dite par Sâlim, au moment de monter derrière lui (circuit.js)
-    virages: { clavier: 'Dans chaque virage, la *flèche* vers l’intérieur du virage : tu te penches avec moi. Bien penché, on garde la vitesse.', doigt: 'Dans chaque virage, le *joystick* vers l’intérieur du virage : tu te penches avec moi. Bien penché, on garde la vitesse.' }
+    virages: { clavier: 'Dans chaque virage, la *flèche* vers l’intérieur du virage : tu te penches avec moi. Bien penché, on garde la vitesse.', doigt: 'Dans chaque virage, le *joystick* vers l’intérieur du virage : tu te penches avec moi. Bien penché, on garde la vitesse.' },
+    // 2.28 (D217) : les activités des quartiers, chacune à son premier essai (activites.js) ; payer se dit dans le menu, pas ici
+    borne: { clavier: 'À la borne, les *flèches* mènent ta lueur et *Entrée* lui donne un élan : rassemble les lueurs, évite les ombres.', doigt: 'À la borne, le *joystick* mène ta lueur et *A* lui donne un élan : rassemble les lueurs, évite les ombres.' },
+    etal: 'À l’étal de la galerie, choisis une pièce : elle rejoint la réserve, et l’on te demande qui la porte.',
+    ecran: { clavier: 'Assis devant l’écran, tu regardes. *Échap* ou un pas : te relever.', doigt: 'Assis devant l’écran, tu regardes. *B* ou un pas : te relever.' },
+    manege: { clavier: 'Devant la grande roue ou un manège du parc, *Entrée* : un tour. On monte, il tourne, on redescend.', doigt: 'Devant la grande roue ou un manège du parc, *A* : un tour. On monte, il tourne, on redescend.' }
   },
 
   /* ----- 2.x : les postures — trois manières de se tenir devant l'épreuve (textes proposés par l'agent, à valider) ----- */

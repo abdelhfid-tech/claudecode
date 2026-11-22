@@ -192,6 +192,8 @@
      aucune case ne bouge. → de combien de points la vue monte (0 sans regard). */
   W.leve = false;
   W.regard = function () {
+    const ac = I.activites && I.activites.regard ? I.activites.regard() : 0;   // 2.28 (D217) : la grande roue, l'écran géant (activites.js)
+    if (ac) return ac;
     const e = W.map && W.map.env, rg = e && e.regard, V = G.view; if (!rg) return 0;
     const lv = e.leve && (W.leve || (I.maps.eteinte && e.time === 'cite' && S.busy)), enHaut = document.body.classList.contains('portrait');
     const y = W.player.y, haut0 = y - V.h / 2 - 10, voulu = lv ? Math.max(e.leve[0], y - e.leve[1] * V.h) : Math.max(rg[0], y - (enHaut ? rg[1] : rg[2]) * V.h);
@@ -244,12 +246,14 @@
       (cp.chests || []).forEach(i => { if (W.chests[i]) W.chests[i].open = true; });
       W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s) { n.hidden = !!s.h; } });
     }
+    const depart = !cp && I.cite && I.cite.depart ? I.cite.depart(ch) : null;   // 2.28 (D218) : arrivé à pied par la rue, Idris entre dans les quartiers par l'entrée de la rue (cite.js)
     S.depth++;
     try { await S.fade('out', 300); } finally { S.depth--; }
     I.setScene(W);
     W.player.dir = 0; // avant le chargement : les siens sont semés derrière lui (W.resetTrail)
     W.leve = !cp;   // 2.18 : pendant l'ouverture, la vue lève les yeux (W.regard : la Cité-Miroir)
-    W.loadMap(cp ? cp.map : ch.map, cp ? cp.opts : (ch.opts || {}), cp ? cp.pos : ch.start);
+    W.loadMap(cp ? cp.map : ch.map, cp ? cp.opts : (ch.opts || {}), cp ? cp.pos : (depart || ch.start));
+    if (depart) W.player.dir = 2;
     if (cp) { W.npcs.forEach(n => { const s = cp.npcs && cp.npcs[n.id]; if (s && s.x !== undefined && n.map === W.map.id) { n.x = s.x; n.y = s.y; n.placed = true; n.placedMap = W.map.id; } }); if (W.degager()) W.resetTrail(); }
     W.hud(); $('#hud').hidden = false;
     S.depth++; W.lock = false; // verrouille le déplacement pendant l'ouverture
@@ -275,7 +279,7 @@
     $('#hud .sub').textContent = (W.ch ? W.ch.sub : '') + (tm ? '  ·  ◠ ' + tm : '');
     const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="${I.t('Dirhams')}"><i>◎</i>${I.trade.dirhams()}</span>` : '') + `<span title="${I.t('Provision du cœur')}" class="zad"><i>♥</i>${I.oeuvres.zad()}${I.oeuvres.fasting() ? ' <i>☾</i>' + I.t('jeûne') : ''}</span>`;
     const en = I.oeuvres.enigme(); $('#hud .enig').hidden = !en; if (en) $('#hud .enig').textContent = I.t('Énigme : {signe}', { signe: en.signe });
-    $('#hud .obj').textContent = (o && o.text ? o.text : '') + (o && o.build ? I.build.objectiveText(o.build) : '');
+    $('#hud .obj').textContent = ((o && I.cite && I.cite.objectif && I.cite.objectif(o)) || (o && o.text ? o.text : '')) + (o && o.build ? I.build.objectiveText(o.build) : '');   // (2.28 : dans les quartiers, arrivé par la rue, Maître Yûnus n'est pas là — cite.js)
     $('#hud .obj').hidden = !(o && o.text);
     ['.chap', '.sub', '.obj', '.enig'].forEach(k => { const e = $('#hud ' + k); e.dir = I.langue.sens(e.textContent); }); // 2.x : chaque ligne prend le sens de sa langue
     if (S.filPlace) S.filPlace(); // en hauteur, le fil se pose sous l'en-tête (D189)
@@ -378,6 +382,8 @@
     }
     const c = who && W.chests.includes(who) && !who.open && Math.hypot(who.x - p.x, who.y - p.y) < 30 ? who : W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast(I.t('Un feuillet. Tu le lis lentement.')); await S.run([['codex', c.codex]]); } else await S.run([['give', c.gear || c.item, c.n || 1]]); W.checkpoint(); return; }
+    if (I.passages && I.passages.agir()) return; // 2.28 (D218) : l'ascenseur des Archives basses, le bout de la rue (passages.js)
+    if (I.activites && I.activites.agir()) return; // 2.28 (D217) : la borne, l'étal, un banc devant l'écran, la grande roue et les manèges (activites.js)
     if (I.rodeurs && I.rodeurs.faceAPorte()) { I.rodeurs.direPorte(); return; } // 2.x : la porte interdite — elle ne s'ouvre pas, on en parle
     if (W.nearPrayer()) {
       await I.oeuvres.natte();
@@ -401,6 +407,7 @@
   W.onInput = function (a) {
     if (I.scene !== W || S.busy || W.lock) return false;
     if (W.excursion) { if (a === 'ok') { if (I.rodeurs.aFrapper() || !I.rodeurs.faceAPorte()) { if (!I.rodeurs.attendre()) I.rodeurs.frappe(); } else I.rodeurs.direPorte(); } else if (a === 'frappe') I.rodeurs.frappe(); else if (a === 'build' || a === 'help' || a === 'prev' || a === 'menu' || a === 'cancel') S.toast(I.rodeurs.texte('pasDeHalte'), 2600); return true; } // la descente du râwî se fait d'une traite
+    if (I.activites && I.activites.onInput(a)) return true; // 2.28 (D217) : assis devant l'écran, B se relève (activites.js)
     if (a === 'build') { I.build.set(!I.build.on); return true; }
     if (I.build.on) { if (a === 'ok') { I.build.place(); return true; } if (a === 'cancel' || a === 'frappe') { I.build.set(false); return true; } /* B, en bâtissant : on cesse de bâtir */ if (a === 'prev') { I.build.cycle(-1); return true; } if (a === 'next') { I.build.cycle(1); return true; } }
     if (a === 'ok') { W.stop(); if (I.rodeurs && I.rodeurs.aFrapper()) I.rodeurs.frappe(); else if (I.rodeurs && I.rodeurs.faceAPorte()) I.rodeurs.direPorte(); else W.interact(); return true; } // 2.x : dans un labyrinthe, quand quelque chose rôde à portée, « Valider » frappe ; devant la porte interdite, il la désigne
@@ -448,6 +455,8 @@
     W.npcs.forEach(n => { if (n.pas) avancerPas(n, dt); }); // le pas de côté va jusqu'au bout, même si un récit commence
     if (I.trafic) I.trafic.tic(dt); // 2.23 : les voitures des quartiers roulent, et s'arrêtent devant qui se tient sur leur voie
     if (can && I.circuit) I.circuit.tic(dt); // 2.27 : au premier passage au circuit, Sâlim arrive en moto (circuit.js)
+    if (can && I.passages) I.passages.tic(dt); // 2.28 (D218) : la rue et l'ascenseur, à pied (passages.js)
+    if (I.activites) I.activites.tic(dt, can); // 2.28 (D217) : assis devant l'écran, un pas le relève (activites.js)
     W.updateCam();
   };
 
@@ -587,6 +596,8 @@
     if (mat) { W.goTo(mat[0] * T + 8, mat[1] * T + 13, { stop: 7, then() { W.interact(); } }); return true; }
     const cs = m.spots.comptoir;
     if (cs && I.trade && W.saga && (!W.saga.frame || W.saga.veillees) && Math.hypot(cs[0] * T + 8 - wx, cs[1] * T + 9 - wy) < 15) { W.goTo(cs[0] * T + 8, cs[1] * T + 13, { stop: 24, then() { W.interact(); } }); return true; }
+    // 2.28 (D217) : toucher une activité des quartiers (la borne, l'étal, un banc, la roue, un manège) : Idris s'y rend, et agit
+    { const ac = I.activites && I.activites.touche ? I.activites.touche(wx, wy) : null; if (ac) { W.goTo(ac.x, ac.y, { stop: 4, then() { p.dir = ac.dir; W.interact(); } }); return true; } }
     // 2.x, dans le labyrinthe d'un chapitre : toucher le vide en direction de l'objectif, c'est demander d'y être conduit (la même
     // aide que « M'y conduire ») — sans quoi, au doigt, on irait buter au fond de l'impasse la plus proche de l'objectif
     if (m.env.dedale && !W.excursion && W.solidAt(wx, wy)) { const tg = W.target(); if (tg) { const ax = wx - p.x, ay = wy - p.y, bx = tg.gx - p.x, by = tg.gy - p.y, na = Math.hypot(ax, ay), nb = Math.hypot(bx, by);
@@ -666,6 +677,7 @@
   W.target = function () {
     if (W.excursion) return I.rodeurs.cible();
     const o = W.cur(); if (!o) return null;
+    { const pc = I.passages && I.passages.cible ? I.passages.cible(o) : null; if (pc) return pc; } // 2.28 (D218) : remonté des Archives basses, l'objectif resté en bas — la flèche montre l'ascenseur
     if (o.goto) { const s = W.spotPx(o.goto); return s && { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto' }; }
     if (o.build) { const st = o.build.site && I.build.sites()[o.build.site]; return st && st.map === W.map.id ? { x: (st.x + st.w / 2) * T, y: (st.y + st.h / 2) * T, gx: (st.x + st.w / 2) * T, gy: (st.y + st.h) * T + 8, kind: 'goto', site: true } : null; }
     if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); return n && !n.hidden && n.map === W.map.id && n.placed ? { x: n.x, y: n.y - 26, gx: n.x, gy: n.y, kind: 'talk', ent: n } : null; }
@@ -742,7 +754,7 @@
     W.chests.forEach(ch => { if (ch.map === m.id && ch.placed) list.push({ y: ch.y, ch }); });
     if (I.trafic) I.trafic.lister(list, cx, cy); // 2.23 : les voitures qui roulent
     for (let i = W.party.length - 1; i >= 1; i--) { const tr = W.suiveur(i); if (tr) list.push({ y: tr[1] - 0.1, fol: i, tr }); }
-    list.push({ y: W.player.y, p: true });
+    if (!W.passager) list.push({ y: W.player.y, p: true }); // (2.28 : sur un manège, Idris est dans sa nacelle, sa chaise ou sa tasse — gfx.js)
     const bete = W.saga.frame && I.oeuvres.animal(), btr = bete && W.suiveur(0, W.party.length * ECART + 8);
     if (btr) list.push({ y: btr[1] - 0.2, bete, tr: btr }); // figure du ciel : seulement dans la fiction (Cité-Miroir, Citadelle)
     list.sort((a, b) => a.y - b.y);
@@ -761,7 +773,7 @@
         const rg = I.rodeurs && I.rodeurs.geste, tau = rg ? W.t - rg.t : -1, gt = rg && D.GEAR_TYPES[rg.type];   // celui qui mène frappe : l'élan, le coup, l'arme en main (s'il repart, le geste s'efface après le coup)
         const frappe = rg && tau >= 0 && tau < (p.moving ? G.FRAPPE.elan + G.FRAPPE.balai : G.dureeFrappe) ? { anim: (gt && gt.anim) || 'geste', port: (rg.port !== undefined ? rg.port : gt && gt.port) || null, tau } : null;
         if (p.moving && p.court) poudre(p, W.sheets[0], p.x, p.y, p.dir, p.parcours || 0);
-        drawChar(c, W.sheets[0], p.x - cx, p.y - cy, p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe, p.court, p.parcours || 0); const lk = W.saga.heroes[W.party[0]].look; if (D.DE_2084.indexOf(lk.kind) < 0) lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push(G.lum === 215 ? { x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 } : { x: p.x - cx, y: p.y - cy - 12, r: 34, color: '#ffe2c4', a: 0.55 }); } /* 2.17 : en 2084, un halo plus large et chaud, qui ne bleuit plus ses couleurs */
+        drawChar(c, W.sheets[0], p.x - cx, p.y - cy + (p.dy || 0), p.dir, p.moving, t, null, W.pose[0] || (rg && tau >= 0 && tau < 0.2 ? 'resolu' : null) || (I.oeuvres.afflicted(W.party[0]) && !S.busy && W.t % 9 > 6.5 ? 'accable' : null), frappe, p.court, p.parcours || 0); const lk = W.saga.heroes[W.party[0]].look; if (D.DE_2084.indexOf(lk.kind) < 0) lights.push({ x: p.x - cx, y: p.y - cy - 14, r: 30, color: lueur(lk) || '#ffe9a8', a: 0.6 }); else lights.push(G.lum === 215 ? { x: p.x - cx, y: p.y - cy - 12, r: 22, color: '#39e6ff', a: 0.35 } : { x: p.x - cx, y: p.y - cy - 12, r: 34, color: '#ffe2c4', a: 0.55 }); } /* 2.17 : en 2084, un halo plus large et chaud, qui ne bleuit plus ses couleurs */
     }
     // marqueurs au-dessus des cibles + flèche de bord d'écran
     if (tg) {
@@ -780,6 +792,7 @@
       if (!best) { const ch = W.chests.find(ch => !ch.open && ch.map === m.id && ch.placed && Math.hypot(ch.x - px, ch.y - py) < 18); if (ch) best = { x: ch.x, y: ch.y + 12 }; }
       if (!best && (W.nearPrayer() || (I.trade && I.trade.near()))) best = { x: p.x, y: p.y + 6 };
       if (!best && I.rodeurs && m.env.dedale && I.rodeurs.faceAPorte()) best = { x: p.x, y: p.y + 6 }; // la porte interdite : on peut la désigner (la bulle au-dessus de celui qui mène, comme sur la natte)
+      if (!best && ((I.passages && I.passages.aPortee()) || (I.activites && I.activites.aPortee()))) best = { x: p.x, y: p.y + 6 }; // 2.28 : un passage, une activité des quartiers
       if (best && !(tg && tg.kind === 'talk' && Math.abs(tg.x - best.x) < 2)) { const bx = Math.round(best.x - cx), by = Math.round(best.y - cy - 34 + Math.sin(t * 5) * 1.5); c.fillStyle = '#1a1420'; c.fillRect(bx - 7, by - 1, 14, 9); c.fillStyle = '#fff6dc'; c.fillRect(bx - 6, by, 12, 7); c.fillRect(bx - 1, by + 7, 2, 2); c.fillStyle = '#1a1420'; c.fillRect(bx - 4, by + 3, 2, 2); c.fillRect(bx - 1, by + 3, 2, 2); c.fillRect(bx + 2, by + 3, 2, 2); }
     }
     for (const pp of W.prayerPts()) { const px2 = pp[0] * T + 8 - cx, py2 = pp[1] * T + 8 - cy; if (px2 > -30 && py2 > -30 && px2 < G.PW + 30 && py2 < G.PH + 30) {

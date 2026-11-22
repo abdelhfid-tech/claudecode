@@ -289,6 +289,30 @@ ISNAD.registerSaga({
         perdu: 'Pas cette fois. La piste reste là : on peut la recourir.',
         plafond: 'Ce soir, l’organisateur a versé tout ce qu’il verse en une soirée : la prime reviendra à ta prochaine visite.'
       }
+    },
+    /* 2.28 (D217) — les activités des quartiers (src/core/activites.js) : quand la progression fait attendre une activité ; le
+       premier refus, tant qu'aucune prime n'a été versée ; l'étal, la première fois ; un record à la borne ; la pensée d'Idris
+       assis devant l'écran, en haut de la grande roue, après un tour de manège (l'une après l'autre). Tout le monde y est seul ;
+       rien ne s'y gagne. Aucun nombre, aucun verset, aucune parole citée, aucun nom de l'Agrégor (les activités s'ouvrent dès le
+       prologue). Textes de l'agent, à valider. */
+    activites: {
+      attend: 'Idris a encore la tête ailleurs. Il y reviendra.',
+      sansPrime: 'Ici, tout se paie avec les primes du circuit, et Idris n’en a encore aucune. L’organisateur en verse une à qui gagne une course.',
+      etal: 'Personne derrière l’étal : on choisit, on paie à l’écran, et la vitrine s’ouvre.',
+      record: 'Un record, et personne pour le voir. Idris repense au joueur d’à côté.',
+      ecran: [
+        'Une dizaine de personnes regardent le même écran. Aucune ne regarde sa voisine.',
+        'Les couleurs coulent l’une dans l’autre. Autour d’Idris, chacun les regarde pour soi.',
+        'Tout le monde est assis ensemble, et chacun est seul. Idris pense au vieil homme : autrefois, sur cette place, on se saluait.'
+      ],
+      roue: [
+        'D’en haut, la Cité n’est qu’une seule lumière. D’en bas, chacun y est seul.',
+        'Idris voit les voitures, les vitrines, le circuit. De si haut, on ne voit personne se parler.'
+      ],
+      maneges: {
+        chaises: ['Le manège ralentit. En bas, l’enfant du parc fait signe ; Idris lui répond.'],
+        tasses: ['Les tasses s’arrêtent, et le parc avec elles. Idris a ri, et personne ne l’a entendu.']
+      }
     }
   },
 
@@ -1032,12 +1056,15 @@ ISNAD.registerSaga({
         { id: 'q_parieuse', name: 'Une parieuse', at: ['tribune', 2, 0], face: 'up', pose: 'triste', look: { kind: 'femme', robe: '#5a6a4a', head: '#3a4630', cloak: '#6a7a5a' }, talk: [['say', 'q_parieuse', 'Je me dis que la prochaine fois, je rattraperai tout. Je me le dis chaque soir.']] },
         { id: 'q_parieur2', name: 'Un parieur', at: ['tribune', 7, 1], face: 'up', pose: 'accable', look: { kind: 'citadin', robe: '#8a3a5a', head: '#5a2238', cloak: '#9a4a6a' }, talk: [['say', 'q_parieur2', 'Ce que j’ai perdu, je n’ose le dire à personne. Alors je reviens, seul.']] }
       ],
+      // 2.28 (D218) : arrivé à pied par la rue (`_2084_rue`, posé par le moteur : cite.js), Idris entre par l'entrée de la rue ;
+      // Maître Yûnus n'est pas monté avec lui
       intro: [
-        ['title', 'Les quartiers de la Cité', 'An 1507 de l’Hégire · Cité-Miroir'],
-        ['if', '_2084_cite', [['nar', 'L’ascenseur remonte des Archives basses. Maître Yûnus attend sur le parvis.']],
-          [['nar', 'L’ascenseur remonte des Archives basses jusqu’aux quartiers de la Cité-Miroir. Maître Yûnus est monté avec Idris.'],
-            ['nar', 'Des voitures qui brillent, des jeux partout, des vitrines, un écran grand comme une façade. Et, au milieu de tout cela, chacun seul.'],
-            ['codex', 'quartiers']]]
+        ['if', '_2084_rue', [['nar', 'Idris traverse la rue. De l’autre côté de l’avenue s’ouvrent les quartiers de la Cité-Miroir : des vitrines, des jeux, des manèges, et chacun seul.'], ['codex', 'quartiers']],
+          [['title', 'Les quartiers de la Cité', 'An 1507 de l’Hégire · Cité-Miroir'],
+            ['if', '_2084_cite', [['nar', 'L’ascenseur remonte des Archives basses. Maître Yûnus attend sur le parvis.']],
+              [['nar', 'L’ascenseur remonte des Archives basses jusqu’aux quartiers de la Cité-Miroir. Maître Yûnus est monté avec Idris.'],
+                ['nar', 'Des voitures qui brillent, des jeux partout, des vitrines, un écran grand comme une façade. Et, au milieu de tout cela, chacun seul.'],
+                ['codex', 'quartiers']]]]]
       ],
       objectives: [
         { text: 'Te promener dans les quartiers · Maître Yûnus attend au parvis', talk: 'yunus_c', then: [['say', 'yunus_c', 'Va, Idris. La Chaîne t’attend.']] }

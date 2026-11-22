@@ -65,7 +65,11 @@
     // 2.23 (D212) : les quartiers de la Cité, où l'on remonte à tout moment — un simple geste, dit par Maître Yûnus à la première arrivée
     cite: { nom: 'Revenir dans la Cité', geste: true },
     // 2.27 (D216) : derrière Sâlim, sur sa moto, au premier passage au circuit ; il resert à la première course (circuit.js)
-    virages: { nom: 'Prendre les virages' }
+    virages: { nom: 'Prendre les virages' },
+    // 2.28 (D217) : les activités des quartiers (activites.js), chacune dite au premier essai ; l'écran géant et les manèges
+    // sont de simples gestes. Payer ne s'apprend pas : le prix se dit dans le menu.
+    borne: { nom: 'Jouer à la borne' }, etal: { nom: 'L’étal de la galerie' },
+    ecran: { nom: 'S’asseoir devant l’écran', geste: true }, manege: { nom: 'Monter dans un manège', geste: true }
   };
 
   /* 2.23 (D212) — les quartiers de la Cité-Miroir. Demande du décideur, 21 novembre : « il y trouve beaucoup d'activités mais
@@ -123,6 +127,35 @@
       vmax: 118, adherence: 230, accel: 70, frein: 150, mal: 0.6, angle: 65, annonce: 46, bien: 0.5 },
     podium: [1, 0.4, 0.2], plafond: 60
   };
+
+  /* 2.28 (D217) — les activités des quartiers (activites.js). Demandes du décideur, 21 et 22 novembre : « des jeux en tous
+     genres, des activités » ; « Les activités de la cité miroir sont omniprésents des le début et peuvent faire l'objet de jeux
+     légers quelque soit l'avancement dans la saga » ; « il faut qu'idriss puisse "faire les activités" en les payant dans les
+     quartiers : manèges etc ». Aucun nombre dans un récit : tout est ici.
+     D.ACTIVITES : ce qui se fait dans les quartiers — l'outil qu'on y apprend (D.OUTILS), le lieu (b.spot de la carte), le prix
+     d'une partie ou d'un tour (en dirhams, ceux des primes de l'organisateur des courses ; absent : c'est libre), la durée d'un
+     tour (en secondes). Une activité qu'on paie ne rapporte rien — ni dirhams, ni lot, ni objet : la borne ne donne que son
+     score — et aucun hasard ne décide de rien (regles.js : les champs déclarés, et rien d'autre ; un prix entier, positif).
+     On ne paie jamais pour courir : la course n'y est pas. L'étal de la galerie vend des pièces ordinaires (D.GEAR_SHOPS,
+     D.GEAR_PRIX), payées de la même bourse.
+     D.BORNE : le jeu de la borne, « Les lueurs » — un jeu d'adresse inventé par le jeu. Une arène de `arene` unités ; la durée
+     d'une partie ; la vitesse de la lueur d'Idris (unités par seconde), son élan (A : `elan` fois plus vite pendant
+     `elanDuree`, puis `elanRepos` de repos) ; le rayon où l'on rassemble une lueur (`prise`), celui d'une ombre (`ombre`) et le
+     temps où l'on ne craint rien après l'avoir touchée (`choc`) ; l'intervalle entre deux lueurs (`cadence`, du début à la
+     fin) et entre deux ombres (`cadenceOmbres`) ; la vitesse de ce qui passe (`lentes`, `vives` : du début à la fin) ; une
+     lueur de plus au score toutes les `palier` lueurs rassemblées sans toucher d'ombre (cinq au plus par lueur). Le tirage est le même à chaque
+     partie (une graine fixe) : seule l'adresse fait le score.
+     Nombres proposés par l'agent : une course gagnée (le premier circuit, 6 dirhams) paie trois tours ; à valider. */
+  D.ACTIVITES = {
+    borne:   { outil: 'borne', lieu: 'jeux', prix: 2 },
+    roue:    { outil: 'manege', lieu: 'roue', prix: 3, duree: 18 },
+    chaises: { outil: 'manege', lieu: 'parc', prix: 2, duree: 11 },
+    tasses:  { outil: 'manege', lieu: 'parc', prix: 2, duree: 10 },
+    ecran:   { outil: 'ecran', lieu: 'ecran' },
+    etal:    { outil: 'etal', lieu: 'galerie' }
+  };
+  D.BORNE = { arene: [300, 200], duree: 45, vitesse: 115, elan: 2.4, elanDuree: 0.24, elanRepos: 0.9, prise: 10, ombre: 11, choc: 0.9,
+    cadence: [0.9, 0.5], cadenceOmbres: [3.2, 1.5], lentes: [34, 52], vives: [60, 95], palier: 5 };
 
   // 2.19 — les parades du combat (demande du décideur, 20 novembre : « Rajoute une parade "esquive" » ; « Rajoute aussi une
   // parade "fuire" pour quitter le combat même si on sera poursuivi il faudra courir pour échapper au monstre »). Nombres
@@ -219,10 +252,12 @@
     navire:    { nom: 'Navire',          theme: 'orient', dehors: false, piste: 'mer',       spots: ['poupe', 'pont', 'mat', 'proue', 'passerelle', 'pont2', 'priere'] },
     noos:      { nom: 'Noosphère',       theme: 'cyber',  dehors: false, piste: 'noos',      spots: ['seuil', 'noeud1', 'noeud2', 'noeud3', 'faille', 'miroir', 'coeur'] },
     citadelle: { nom: 'Citadelle',       theme: 'orient', dehors: true,  piste: 'citadelle', spots: ['porte', 'cour', 'puits', 'remparts', 'tour', 'salle', 'mosquee', 'priere', 'ecole', 'souk', 'jardin', 'greniers', 'palmeraie', 'poterne', 'comptoir'] },
-    cite:      { nom: 'Cité-Miroir',     theme: 'cyber',  dehors: false, piste: 'cite',      spots: ['rue', 'ecran', 'ruelle', 'ascenseur', 'parvis'] },
+    // 2.28 (D218) : « traverse », au bout de la rue (à l'est), d'où l'on passe à pied dans les quartiers (passages.js)
+    cite:      { nom: 'Cité-Miroir',     theme: 'cyber',  dehors: false, piste: 'cite',      spots: ['rue', 'ecran', 'ruelle', 'ascenseur', 'parvis', 'traverse'] },
     // 2.23 (D212) — les quartiers de la Cité-Miroir : la même ville de verre, ses voitures, ses activités, et ceux qui s'y
-    // promènent seuls ; le refuge d'Idris en 2084 (frame.js, visite « quartiers »), à côté de Maître Yûnus
-    quartiers: { nom: 'Quartiers de la Cité', theme: 'cyber', dehors: false, piste: 'cite',   spots: ['parvis', 'priere', 'galerie', 'jeux', 'ecran', 'circuit', 'tribune', 'parc', 'roue'] },
+    // promènent seuls ; le refuge d'Idris en 2084 (frame.js, visite « quartiers »), à côté de Maître Yûnus. 2.28 (D218) :
+    // « traverse », l'entrée de la rue, au nord-ouest, par où l'on arrive à pied de la Cité-Miroir et par où l'on y retourne
+    quartiers: { nom: 'Quartiers de la Cité', theme: 'cyber', dehors: false, piste: 'cite',   spots: ['parvis', 'priere', 'galerie', 'jeux', 'ecran', 'circuit', 'tribune', 'parc', 'roue', 'traverse'] },
     archives:  { nom: 'Archives basses', theme: 'cyber',  dehors: false, piste: 'chaine',    spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] }
   };
   // un lieu : son nom, son gabarit, les lieux nommés de ce gabarit, et ce qui lui est propre (variante, piste, noms)
@@ -256,7 +291,8 @@
     seuil: 'Seuil', noeud1: 'Nœud', noeud2: 'Nœud', noeud3: 'Nœud', faille: 'Faille', miroir: 'Miroir', coeur: 'Cœur',
     cour: 'Cour', tour: 'Tour', salle: 'Grande salle', mosquee: 'Mosquée', greniers: 'Greniers', poterne: 'Poterne',
     rue: 'Rue', ecran: 'Grand écran', ruelle: 'Ruelle', ascenseur: 'Ascenseur', parvis: 'Parvis', rayonnages: 'Rayonnages', bureau: 'Bureau', chaine: 'La Chaîne',
-    galerie: 'Galerie marchande', jeux: 'Salle de jeux', circuit: 'Circuit', tribune: 'Tribune', parc: 'Parc', roue: 'Grande roue'
+    galerie: 'Galerie marchande', jeux: 'Salle de jeux', circuit: 'Circuit', tribune: 'Tribune', parc: 'Parc', roue: 'Grande roue',
+    traverse: 'Traverser la rue'
   };
 
   // tenue d'un personnage (look) : coiffes, manteaux, motifs, attributs portés — dessin dans sprites.js
@@ -385,7 +421,9 @@
     camp:      ['epee_yemen', 'epee_inde', 'lance_khatt', 'lance_samhari', 'arc_nab', 'dague', 'rondache', 'bouclier_ferre', 'casque_cuir', 'coiffe_mailles', 'casque_fer', 'gilet_cuir', 'matelassee', 'cotte'],
     romaine:   ['epee_inde', 'masse_fer', 'dague', 'ecritoire', 'grand_bouclier', 'bouclier_ferre', 'tablette', 'lampe', 'casque_bandes', 'casque_fer', 'tunique_lin', 'lamelles', 'matelassee'],
     koufa:     ['epee_inde', 'epee_mashrafi', 'arc_double', 'dague_fine', 'baton_ferre', 'ecritoire', 'calame_fin', 'rondache', 'tablette', 'lampe', 'calotte_double', 'casque_turban', 'manteau_raye', 'cotte', 'cotte_saluqi'],
-    citadelle: ['epee_yemen', 'lance_samhari', 'massue', 'baton_ferre', 'houlette', 'calame_encrier', 'rondache', 'bouclier_lamt', 'lampe', 'cheche', 'casque_fer', 'burnous', 'matelassee', 'cotte']
+    citadelle: ['epee_yemen', 'lance_samhari', 'massue', 'baton_ferre', 'houlette', 'calame_encrier', 'rondache', 'bouclier_lamt', 'lampe', 'cheche', 'casque_fer', 'burnous', 'matelassee', 'cotte'],
+    // 2.28 (D217) : l'étal de la galerie des quartiers (activites.js) — des pièces ordinaires, payées avec les primes du circuit
+    quartiers: ['baton_marche', 'gourde', 'calotte', 'tunique_lin', 'manteau_laine', 'tablette', 'lampe']
   };
 
   // Opérations de script autorisées : nom -> [min args, max args]

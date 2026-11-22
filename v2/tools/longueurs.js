@@ -139,6 +139,11 @@ const CONTROLE = ({ LIGNES, liste, temoin }) => {
     if (K.organisateur) ['avant', 'accueil'].forEach(k => lignes('q_organisateur', K.organisateur, k, 'course/organisateur/' + k));
     const V = ((I.sagas.coeur || {}).lecons || {}).virages;
     if (V && typeof V === 'object') ['clavier', 'doigt'].forEach(k => lignes('salim', V, k, 'lecons/virages'));
+    // 2.28 (D217) : les activités des quartiers (activites.js) — le premier refus, l'étal, un record à la borne, la pensée d'Idris
+    // devant l'écran, en haut de la grande roue, après un tour de manège : des narrations, dans la boîte de dialogue
+    const A = X.activites || {};
+    ['sansPrime', 'etal', 'record', 'ecran', 'roue'].forEach(k => lignes(null, A, k, 'activites/' + k));
+    ['chaises', 'tasses'].forEach(k => lignes(null, A.maneges || {}, k, 'activites/maneges/' + k));
   }
   // les lignes du moteur : leurs champs reçoivent un nom de longueur ordinaire
   const champs = new Proxy({}, { get: (o, k) => (k === 'n' ? 2 : 'Khâlid ibn al-Walîd') });

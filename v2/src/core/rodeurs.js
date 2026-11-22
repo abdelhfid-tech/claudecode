@@ -405,6 +405,9 @@
   function poserRues() {
     W.foes = (W.foes || []).filter(f => !f.rue);
     const m = W.map, E = m && m.env && m.env.rues, T = 16, C = D.CITE || {}; if (!E || W.excursion || !W.saga || I.debug.sansMeutes) return;
+    // 2.28 (D218) : arrivé par la rue pendant le prologue, Idris ne les voit pas encore — Maître Yûnus ne lui a pas encore ouvert
+    // les yeux sur la noosphère (le prologue, aux Archives basses)
+    if (!I.save.data.prologue) return;
     const RC = C.rodent || {}, Z = C.zones || {}, E0 = W.saga.enemies || {}, bons = Object.keys(RC).filter(k => E0[k] && !E0[k].idee && !E0[k].vice && D.NOIRS.indexOf(k) < 0 && E0[k].tier === 'minion'), ids = bons.filter(k => !Z[k]);
     if (!bons.length) return;
     if (!S.flags._rues) S.flags._rues = 1 + Math.floor(Math.random() * 1e9);
@@ -416,7 +419,8 @@
       W.foes.push({ id: 'ruez' + j, group: [k], map: m.id, rodeur: true, rue: true, zone: Z[k], cle, done: false, placed: true, x: c[0] * T + 8, y: c[1] * T + 8, cx: null, ph: 5 + j, v: R.MARCHE * (C.pas || 0.45), vue: C.vue || 6 }); });
     if (!ids.length) return;
     const depart = W.spotPx('parvis') || [W.player.x, W.player.y], libres = [], spots = Object.keys(m.spots).map(k => m.spots[k]);
-    for (let y = 1; y < m.h - 1; y++) for (let x = 1; x < m.w - 1; x++) if (rueOk(x, y) && Math.hypot(x * T + 8 - depart[0], y * T + 8 - depart[1]) > (C.loin || 12) * T && spots.every(q => Math.hypot(q[0] - x, q[1] - y) > 3)) libres.push([x, y]);
+    // (2.28 : loin du parvis, et loin d'Idris là où il arrive — par la rue, il entre au nord-ouest)
+    for (let y = 1; y < m.h - 1; y++) for (let x = 1; x < m.w - 1; x++) if (rueOk(x, y) && Math.hypot(x * T + 8 - depart[0], y * T + 8 - depart[1]) > (C.loin || 12) * T && Math.hypot(x * T + 8 - W.player.x, y * T + 8 - W.player.y) > (C.loin || 12) * T && spots.every(q => Math.hypot(q[0] - x, q[1] - y) > 3)) libres.push([x, y]);
     const pris = [];
     for (let i = 0; i < (C.nombre | 0) && libres.length; i++) {
       let c = null; for (let e = 0; e < 40 && !c; e++) { const q = libres[Math.floor(r() * libres.length)]; if (pris.every(o => Math.hypot(o[0] - q[0], o[1] - q[1]) > 10)) c = q; }
