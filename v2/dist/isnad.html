@@ -997,7 +997,7 @@ body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.28 · 2026-11-22 06:09 UTC · b22fac0+";
+window.ISNAD_VERSION = "2.28 · 2026-11-22 07:18 UTC · 80ba25e+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -14202,7 +14202,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     if (b) Z.push({ id: 'borne', x0: b.x - 18, x1: b.x + 18, y0: b.y + 4, y1: b.y + 38, px: b.x, py: b.y + 20, dir: 3, rect: [b.x - 8, b.y - 31, 16, 32] });
     if (g) Z.push({ id: 'etal', x0: g[0] - 22, x1: g[0] + 22, y0: g[1] - 25, y1: g[1] + 9, px: g[0], py: g[1] - 14, dir: 3, rect: [g[0] - 22, g[1] - 60, 44, 32] });
     W.map.objs.filter(o => o.type === 'qbanc' && Math.floor(o.y / 16) === BANCS_Y && o.x > 380 && o.x < 660).forEach(o => { const sx = o.x, sy = o.y - 18;
-      if (W.npcs.some(n => !n.hidden && n.placed && n.map === W.map.id && Math.hypot(n.x - sx, n.y - sy) < 14)) return;   // un banc où quelqu'un se tient déjà
+      if (W.npcs.some(n => !n.hidden && n.placed && n.map === W.map.id && Math.hypot(n.x - sx, n.y - sy) < 20)) return;   // un banc où quelqu'un se tient déjà
       Z.push({ id: 'banc', x0: sx - 12, x1: sx + 12, y0: sy - 12, y1: sy + 12, px: sx, py: sy, dir: 3, rect: [o.x - 12, o.y - 13, 24, 14], banc: o }); });
     if (r) Z.push({ id: 'roue', x0: r.x - 18, x1: r.x + 18, y0: r.y + 2, y1: r.y + 26, px: r.x, py: r.y + 14, dir: 3, rect: [r.x - 50, r.y - 120, 100, 120] });
     if (ch) Z.push({ id: 'chaises', x0: ch.x - 42, x1: ch.x + 42, y0: ch.y - 26, y1: ch.y + 20, px: ch.x + 32, py: ch.y - 2, dir: 1, rect: [ch.x - 32, ch.y - 64, 64, 64] });
@@ -14434,7 +14434,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   };
   // la vue (world.js, W.regard) : assis, elle montre l'écran au-dessus de lui ; sur la grande roue, elle monte sur toute la Cité
   // (AC.vue : le milieu voulu de la vue, en points de la carte, pendant un tour de grande roue)
-  AC.regard = function () { if (typeof AC.vue === 'number') return Math.max(0, W.player.y - 10 - AC.vue); if (AC.assis) return 96; return 0; };
+  // (assis : ses pieds aux trois quarts de la vue au plus — au-dessus de la boussole, en hauteur —, l'écran au-dessus de lui)
+  AC.regard = function () { if (typeof AC.vue === 'number') return Math.max(0, W.player.y - 10 - AC.vue); if (AC.assis) return Math.max(0, G.view.h * 0.22 - 10); return 0; };
 
   /* ================= la grande roue et les manèges : un tour, en vue ================= */
   const ecart = (a, b) => { let d = (a - b) % TAU; if (d > Math.PI) d -= TAU; else if (d < -Math.PI) d += TAU; return d; };
