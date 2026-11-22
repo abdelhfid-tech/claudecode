@@ -2,8 +2,8 @@
    Refait le 22 novembre, pilote des shorts refaits (D219 ; le décideur : « je veux retrouver l'ambiance » d'un grand JRPG
    16 bits — le voyage dans le temps, le groupe en route, le combat au tour par tour, un souffle qui monte ; pas forcément
    tout dans le même short). Celui-ci est le voyage dans le temps : chaque époque s'ouvre par un passage, une lueur du
-   montage (s.passage, s.arrivee : rien du jeu n'est changé) ; puis le groupe de Khâlid en route dans le camp du Yarmoûk,
-   un combat au tour par tour, et la Chaîne qui défile. Les lieux, les personnages et le combat sont ceux du jeu.
+   montage (s.passage, s.arrivee : rien du jeu n'est changé) ; puis le groupe de Khâlid en route, en plein jour, dans la cité
+   romaine de Qinnasrîn, un combat au tour par tour, et la Chaîne qui défile. Les lieux, les personnages et le combat sont ceux du jeu.
    Les légendes sont celles des films livrés (09, et 03 pour le combat) : aucune phrase nouvelle.
    Le son : des percussions seules (D176), qui montent d'une époque à l'autre ; le grand tambour marque chaque passage.
    30 secondes avec le plan du soutien (25,2 s de film, puis 4,8 s). */
@@ -32,7 +32,7 @@ module.exports = {
 
     /* 1 — l'accroche, sur l'écran de la Chaîne */
     await s.cadre('ecran'); await s.ev(() => { window.ISNAD.ui.showChain(); }); await s.avancer(700);
-    await s.ombre(0.72, 0);
+    await s.ombre(0.9, 0);                                           // la Chaîne, très assombrie : l'accroche se lit seule
     await s.legende('Trois époques,<br>une seule chaîne', { y: 210, style: 'accroche', taille: 36, duree: 8 * T - PASSE, dans: 0.12 });
     await s.defiler('#chain', 420, 8 * T);
     await jusquauPassage(8 * T);
@@ -53,11 +53,11 @@ module.exports = {
     await s.legende('Un Caïd lit ces vies, à la veillée.', { marge: 82, duree: 12 * T - PASSE - 0.25, dans: 0.4 });
     await s.tenir('ArrowDown'); await jusquauPassage(12 * T); await s.lacher('ArrowDown');
 
-    /* 4 — 632 – 661 : Khâlid et les siens en route, dans le camp du Yarmoûk, à la nuit */
+    /* 4 — 632 – 661 : Khâlid et les siens en route, en plein jour, du palais vers le forum (loin des chimères de la carte) */
     s.marque('632');
-    await s.chapitre('khalid', 1, { obj: 0 }); await s.cadre('carre'); await s.propre({ cible: false });
+    await s.chapitre('khalid', 2, { obj: 0 }); await s.cadre('carre'); await s.propre({ cible: false });
     await s.arrivee(Z, 0.5);
-    await marcher('feu');
+    await marcher('forum');
     await s.legende('632 – 661', { style: 'titre', duree: 12 * T - PASSE - 0.1, dans: 0.2 });
     await s.legende('Cinq Compagnons, cinq sagas.', { marge: 58, duree: 12 * T - PASSE - 0.25, dans: 0.4 });
     await jusquauPassage(12 * T);
@@ -68,7 +68,8 @@ module.exports = {
     await s.chapitre('khalid', 2, { obj: 0 }); await s.cadre('ecran'); await s.propre({ rangees: true, cible: false });
     await s.combat(['echo', 'echo'], { fond: 'romaine', attente: 500 });
     await s.arrivee(0, 0.5);
-    await s.legende('On n’y combat jamais<br>des personnes.', { zone: 'sur', style: 'titre', taille: 24, duree: 14 * T - PASSE - 0.2, dans: 0.35 });
+    // la légende sur le sol de l'arène, sous les figures : ni sur les noms des chimères, ni sur la frise des tours
+    await s.legende('On n’y combat jamais<br>des personnes.', { y: 224, style: 'titre', taille: 22, duree: 14 * T - PASSE - 0.2, dans: 0.35 });
     await s.auto(true); await s.touche('Enter'); await s.tourner(2 * T); await s.touche('Enter');   // « Frapper », puis la cible : ensuite le groupe joue seul
     await jusquauPassage(12 * T);
 
