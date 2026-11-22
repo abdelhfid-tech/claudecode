@@ -73,6 +73,33 @@ version 5 portait les lots D1 et D2 (commit `bba7c3d`), la version 4 les lots C1
 lots N1 à N4 était la version 3 (commit `125f0a2`). Dans l'Artifact, « Enregistrer le fichier » (export de la partie) ne
 fait rien — la visionneuse refuse les téléchargements — ; « Copier le texte » fonctionne.*
 
+## Demandes en attente
+
+*Gardées pour une prochaine version : rien n'en est commencé. Chacune se reprend quand le décideur le demande.*
+
+### Les idées noires doublées après une descente sans prière
+
+*Demande du décideur, 22 novembre : « la noosphere ajoute des idées noires et des chimères autant que de prières
+manquées », puis « Ou entre deux passages à la noosphere s'il n'y a pas eu de prière le nombre d'idées noires double »
+et « Bref fais au plus simple ». Mise en attente le même jour : « Ne lance pas la 2.29, garde la demande dans la backlog
+pour une prochaine version ».*
+
+La règle retenue, la plus simple :
+- dans la descente d'Idris seulement, jamais dans le labyrinthe d'un récit ;
+- si Idris n'a prié nulle part dans le jeu depuis la fin de sa descente précédente, chaque idée noire encore debout y
+  vient deux fois ;
+- jamais plus du double, aucun cumul ; la première descente n'est pas doublée, ni une descente par la porte de la
+  prière ;
+- une phrase sobre à l'entrée, proposée : « Ce qu'Idris a laissé passer l'attend en bas. » (dans chaque langue, l'arabe
+  vocalisé compris ; à valider) ;
+- rien d'autre ne change : ni les chimères, ni le chrono, ni les combats.
+
+Le moment venu : la descente dans `rodeurs.js` ; une seule valeur de plus dans la partie (avoir prié depuis la dernière
+descente ; sa valeur de départ dans `migrer`, le format reste le 2) ; la décision, avec les mots du décideur, notée comme
+une exception voulue par lui aux exigences 15 et 23, sans les réécrire ; une puce dans `AGENTS.md`, une section dans
+`architecture.md` ; les contrôles `descente.js`, `dedales.js`, `partie.js`, `progression.js`, `smoke.js auto`,
+`langues.js`, `voyelles.js` et `longueurs.js`, puis toute la batterie.
+
 ## Contexte
 
 Le décideur prépare la suite du jeu et pose une règle nette :
