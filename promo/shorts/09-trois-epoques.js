@@ -32,13 +32,15 @@ module.exports = {
 
     /* 1 — l'accroche, sur l'écran de la Chaîne */
     await s.cadre('ecran'); await s.ev(() => { window.ISNAD.ui.showChain(); }); await s.avancer(700);
-    await s.ombre(0.9, 0);                                           // la Chaîne, très assombrie : l'accroche se lit seule
+    // sous l'accroche, le fond d'encre de l'outil (le calque du plan du soutien) : la Chaîne reste visible en transparence,
+    // l'accroche se lit seule (le voile « ombre », un dégradé, ne fonce presque pas le milieu de l'image)
+    await s.ev(() => window.__film.rampe('fond', 0.85, 0));
     await s.legende('Trois époques,<br>une seule chaîne', { y: 210, style: 'accroche', taille: 36, duree: 8 * T - PASSE, dans: 0.12 });
     await s.defiler('#chain', 420, 8 * T);
     await jusquauPassage(8 * T);
 
     /* 2 — 2084, la Cité-Miroir */
-    s.marque('2084'); await s.ombre(0, 0);
+    s.marque('2084'); await s.ev(() => window.__film.rampe('fond', 0, 0));   // la lueur couvre encore l'image : le fond d'encre s'en va sans se voir
     await s.chapitre('idris', 0, { obj: 0, lieu: ['ecran', -8, 2] }); await s.cadre('carre'); await s.propre({ cible: false });
     await s.arrivee(Z, 0.5);
     await s.legende('2084 · la Cité-Miroir', { style: 'titre', duree: 12 * T - PASSE - 0.1, dans: 0.2 });

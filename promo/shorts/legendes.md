@@ -105,7 +105,7 @@ d'une idole.
 
 ## 9 — « Trois époques, une seule chaîne »
 
-`09-trois-epoques.mp4` · 24 s
+`09-trois-epoques.mp4` · 30 s
 
 **Titre.** Trois époques, une seule chaîne
 
