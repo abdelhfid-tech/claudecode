@@ -964,7 +964,9 @@ la tribune, et leur chimère, « Le Pari », Idris la voit et la combat. Choix, 
   « expert » toujours. Le tour de moto : 18,9 s bien penché, 23,4 s sans se pencher.
 - **Le contrôle** : `node v2/tools/cite.js` (partie 15 ; `… course` : elle seule ; `ORIENT=haut|large` : une seule
   orientation), par les vrais boutons, en 390 × 844 (le joystick et A) et en 844 × 390 (les flèches et Entrée) — voir l'en-tête
-  du contrôle. La partie 12 montre la moto dans les trois dessins, garée puis vue de dessus.
+  du contrôle. La partie 12 montre la moto dans les trois dessins, garée puis vue de dessus. Les répliques de Sâlim et de
+  l'organisateur, et la leçon des virages, passent par la boîte de dialogue : `longueurs.js` les met en pages et les mesure
+  avec celles de la table `cite` (Maître Yûnus, la pensée d'Idris), dans les cinq langues et sur les quatre écrans.
 
 ### L'image agrandie, les textes sur un téléphone
 

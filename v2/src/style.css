@@ -907,7 +907,7 @@ html:not(.lum215) body.portrait[data-theme="cyber"] { background: linear-gradien
 #course { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
 #course .tableau { position: absolute; left: 2%; top: 3%; padding: .25em .7em .3em; background: rgba(8, 7, 18, .62); border: 1px solid var(--line); border-radius: .4em; font-family: var(--f-mono); color: var(--sand); text-shadow: 0 1px 2px #000; max-width: 46%; }
 #course .chrono b { font-size: 1.3em; color: var(--gold); letter-spacing: .04em; } #course .chrono b.titre { font-size: 1em; letter-spacing: 0; }
-#course .tour { font-size: .78em; color: var(--sand); }
+#course .tour { font-size: .78em; color: var(--sand); } #course .tour span { white-space: nowrap; }
 #course .rangs { position: absolute; left: 2%; top: calc(3% + 3.9em); margin: 0; padding: .25em .6em; list-style: none; background: rgba(8, 7, 18, .55); border-radius: .4em; font-size: .78em; color: var(--sand); }
 #course .rangs:empty { display: none; }
 #course .rangs li { white-space: nowrap; } #course .rangs li.moi { color: var(--gold); font-weight: 700; }
@@ -922,6 +922,7 @@ html:not(.lum215) body.portrait[data-theme="cyber"] { background: linear-gradien
 #course.fini .tableau, #course.fini .rangs, #course.fini .signe { display: none; }
 body.immersif.manette #course .signe, body.immersif.manette #course .bilan { left: max(10%, var(--pad-g, 0px)); right: max(10%, var(--pad-d, 0px)); }
 body.portrait #course .tableau { top: calc(100% + 10px); left: 10px; max-width: 58%; }
+body.portrait #course.moto .tableau { max-width: calc(100% - 20px); }
 body.portrait #course .rangs { top: calc(100% + 10px); left: auto; right: 10px; }
 body.portrait #course .signe { top: calc(100% + 10px + 4.4em); bottom: auto; left: 10px; right: 10px; }
 body.portrait #course .bilan { top: calc(100% + 10px); bottom: auto; left: 8px; right: 8px; max-height: calc(100dvh - 100% - var(--pad-bas, 0px) - 24px); }

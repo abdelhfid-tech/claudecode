@@ -10,7 +10,8 @@
      un objectif, un personnage, une réponse de choix ou de « ask », l'issue d'un pourparler), les manches d'un pourparler
      et leurs réponses, la parole qui suit une idée noire, ce que l'on répond à une idée noire (dit, oui, non), les lignes
      du moteur qui passent par showLine (les verdicts de la Chaîne, le raid d'une caravane, les veillées), lues dans son
-     code — est mis en pages par la fonction même dont showLine se sert (ISNAD.script.pages), puis chaque page est posée
+     code, celles qu'il dit dans les quartiers de la Cité (la table `cite` de l'histoire-cadre : Maître Yûnus, et depuis la
+     2.27 Sâlim et l'organisateur) et la leçon des virages — est mis en pages par la fonction même dont showLine se sert (ISNAD.script.pages), puis chaque page est posée
      dans la boîte et mesurée par la vraie mise en page : elle tient entière dans sa zone (en hauteur, sous l'image et
      au-dessus de la manette ; en largeur et au bureau, au plus ISNAD.script.HAUT_MAX de la scène, dans la scène, hors de la
      manette), son texte ne sort pas de la boîte, sa police n'est pas sous dix points sur un écran tactile, aucun mot n'est
@@ -123,6 +124,22 @@ const CONTROLE = ({ LIGNES, liste, temoin }) => {
       (X.oui || []).forEach((t, k) => dire({ kind: 'nar', nom: nar, t, src: [X.oui, k], fic: f, lieu }));
       Object.keys(X.non || {}).forEach(k => dire({ kind: 'nar', nom: nar, t: X.non[k], src: [X.non, k], fic: f, lieu })); });
   });
+  /* les lignes que le moteur dit dans les quartiers de la Cité (cite.js et, depuis la 2.27, circuit.js), rangées dans la table
+     `cite` de l'histoire-cadre : la pensée d'Idris, Maître Yûnus, Sâlim et l'organisateur ; et la leçon des virages, que
+     Sâlim dit dans la boîte de dialogue. Les questions et les réponses d'un menu n'y passent pas. */
+  const cadre = Object.values(I.sagas).find(s => s.frame && s.cite);
+  if (cadre) {
+    const X = cadre.cite, K = X.course || {}, f = fic(cadre), nar = cadre.narrator || I.t('La Chaîne');
+    const lignes = (qui, o, k, lieu) => { const v = o && o[k];
+      if (typeof v === 'string') dire({ kind: qui ? 'say' : 'nar', nom: qui ? nomDe(cadre, qui) : nar, t: v, src: [o, k], fic: f, lieu: 'cite/' + lieu });
+      else if (Array.isArray(v)) v.forEach((t, i) => lignes(qui, v, i, lieu + '/' + i)); };
+    lignes(null, X, 'rappels', 'rappels'); lignes('yunus', X, 'yunus', 'yunus');
+    if (K.arrivee) { lignes('salim', K.arrivee, 'salim', 'course/arrivee'); lignes('idris', K.arrivee, 'idris', 'course/arrivee'); }
+    ['refus', 'revoir', 'plusTard', 'depart', 'descendu', 'fins', 'apres', 'salim'].forEach(k => lignes('salim', K, k, 'course/' + k));
+    if (K.organisateur) ['avant', 'accueil'].forEach(k => lignes('q_organisateur', K.organisateur, k, 'course/organisateur/' + k));
+    const V = ((I.sagas.coeur || {}).lecons || {}).virages;
+    if (V && typeof V === 'object') ['clavier', 'doigt'].forEach(k => lignes('salim', V, k, 'lecons/virages'));
+  }
   // les lignes du moteur : leurs champs reçoivent un nom de longueur ordinaire
   const champs = new Proxy({}, { get: (o, k) => (k === 'n' ? 2 : 'Khâlid ibn al-Walîd') });
   LIGNES.forEach(x => { if (x.carton) { const a = I.t(x.a, champs), b = x.b ? I.t(x.b, champs) : null; C.push({ cls: 'title', html: () => S.carton(['title', a, b]), fic: x.ou, lieu: 'moteur', t: a }); return; }

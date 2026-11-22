@@ -947,8 +947,8 @@
        les cartons gardent leur fond sur tout l'écran et posent leur contenu entre les deux (--pad-cote).
      Masquée au choix du joueur (« Manette tactile »), elle ne prend plus aucune place. Ses mesures viennent de la manette
      elle-même (sa place ne dépend pas de la scène) : la marge du système (encoche) est comprise. */
-  const PANNEAU = 276;
-  const enCourse = () => !!(I.circuit && I.circuit.scene && I.scene === I.circuit.scene);   // 2.27 (D216) : une course, ou le tour de moto   // en hauteur, la place que le panneau du combat demande sous la scène, serré, marges comprises (points)
+  const PANNEAU = 276;   // en hauteur, la place que le panneau du combat demande sous la scène, serré, marges comprises (points)
+  const enCourse = () => !!(I.circuit && I.circuit.scene && I.scene === I.circuit.scene);   // 2.27 (D216) : une course, ou le tour de moto
   function padPlace(portrait) {
     const B = document.body, on = B.classList.contains('touch') && !B.classList.contains('sansjoy'); let bas = 0, cote = 0, zone = null;
     if (on) { const r = q => $(q).getBoundingClientRect(), j = r('#pad .joy'), a = r('#pad .a'), b = r('#pad .b'), vw = window.innerWidth, vh = window.innerHeight;

@@ -911,7 +911,7 @@ html:not(.lum215) body.portrait[data-theme="cyber"] { background: linear-gradien
 #course { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
 #course .tableau { position: absolute; left: 2%; top: 3%; padding: .25em .7em .3em; background: rgba(8, 7, 18, .62); border: 1px solid var(--line); border-radius: .4em; font-family: var(--f-mono); color: var(--sand); text-shadow: 0 1px 2px #000; max-width: 46%; }
 #course .chrono b { font-size: 1.3em; color: var(--gold); letter-spacing: .04em; } #course .chrono b.titre { font-size: 1em; letter-spacing: 0; }
-#course .tour { font-size: .78em; color: var(--sand); }
+#course .tour { font-size: .78em; color: var(--sand); } #course .tour span { white-space: nowrap; }
 #course .rangs { position: absolute; left: 2%; top: calc(3% + 3.9em); margin: 0; padding: .25em .6em; list-style: none; background: rgba(8, 7, 18, .55); border-radius: .4em; font-size: .78em; color: var(--sand); }
 #course .rangs:empty { display: none; }
 #course .rangs li { white-space: nowrap; } #course .rangs li.moi { color: var(--gold); font-weight: 700; }
@@ -926,6 +926,7 @@ html:not(.lum215) body.portrait[data-theme="cyber"] { background: linear-gradien
 #course.fini .tableau, #course.fini .rangs, #course.fini .signe { display: none; }
 body.immersif.manette #course .signe, body.immersif.manette #course .bilan { left: max(10%, var(--pad-g, 0px)); right: max(10%, var(--pad-d, 0px)); }
 body.portrait #course .tableau { top: calc(100% + 10px); left: 10px; max-width: 58%; }
+body.portrait #course.moto .tableau { max-width: calc(100% - 20px); }
 body.portrait #course .rangs { top: calc(100% + 10px); left: auto; right: 10px; }
 body.portrait #course .signe { top: calc(100% + 10px + 4.4em); bottom: auto; left: 10px; right: 10px; }
 body.portrait #course .bilan { top: calc(100% + 10px); bottom: auto; left: 8px; right: 8px; max-height: calc(100dvh - 100% - var(--pad-bas, 0px) - 24px); }
@@ -995,7 +996,7 @@ body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.27 · 2026-11-21 23:11 UTC · 11f9222+";
+window.ISNAD_VERSION = "2.27 · 2026-11-22 01:35 UTC · d907d6d+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -12838,8 +12839,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
        les cartons gardent leur fond sur tout l'écran et posent leur contenu entre les deux (--pad-cote).
      Masquée au choix du joueur (« Manette tactile »), elle ne prend plus aucune place. Ses mesures viennent de la manette
      elle-même (sa place ne dépend pas de la scène) : la marge du système (encoche) est comprise. */
-  const PANNEAU = 276;
-  const enCourse = () => !!(I.circuit && I.circuit.scene && I.scene === I.circuit.scene);   // 2.27 (D216) : une course, ou le tour de moto   // en hauteur, la place que le panneau du combat demande sous la scène, serré, marges comprises (points)
+  const PANNEAU = 276;   // en hauteur, la place que le panneau du combat demande sous la scène, serré, marges comprises (points)
+  const enCourse = () => !!(I.circuit && I.circuit.scene && I.scene === I.circuit.scene);   // 2.27 (D216) : une course, ou le tour de moto
   function padPlace(portrait) {
     const B = document.body, on = B.classList.contains('touch') && !B.classList.contains('sansjoy'); let bas = 0, cote = 0, zone = null;
     if (on) { const r = q => $(q).getBoundingClientRect(), j = r('#pad .joy'), a = r('#pad .a'), b = r('#pad .b'), vw = window.innerWidth, vh = window.innerHeight;
@@ -13863,15 +13864,18 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     const box = $('#course'); if (!K || !box) return; const set = (sel, html) => { const e = box.querySelector(sel); if (e && e._h !== html) { e._h = html; e.innerHTML = html; e.dir = I.langue.sens(e.textContent); } };
     const T = textes();
     if (K.moto) { set('.chrono', `<b class="titre">${I.esc(I.t('Derrière Sâlim'))}</b>`); const bien = K.virages.filter(v => v.fait && v.bien).length;
-      set('.tour', I.esc(I.t('Virages bien pris : {n} sur {total}', { n: bien, total: K.virages.length }))); set('.rangs', '');
+      set('.tour', `<span>${I.esc(I.t('Virages bien pris : {n} sur {total}', { n: bien, total: K.virages.length }))}</span>`); set('.rangs', '');
       set('.signe', K.mode === 'compte' ? I.esc(tactile() ? I.t('Sâlim pilote · le joystick vers l’intérieur du virage : se pencher · B : pause') : I.t('Sâlim pilote · la flèche vers l’intérieur du virage : se pencher · Échap : pause'))
         : K.malPenche ? `<span class="mal">${I.esc(I.t('Penche-toi vers l’intérieur du virage'))}</span>` : K.bienPenche ? `<span class="bien">${I.esc(I.t('Bien penché'))}</span>` : ''); }
     else { const tps = K.joueur.fin || K.t, nom = ((T.circuits || [])[K.n] || {}).nom || '', tour = I.t('tour {n} sur {total}', { n: borne(K.joueur.tour + 1, 1, K.tours), total: K.tours });
       set('.chrono', `<b>${chrono(tps)}</b>`);
-      set('.tour', I.esc(K.def.temps ? tour + ' · ' + I.t('à battre : {temps}', { temps: chrono(K.def.temps) }) : tour));
+      set('.tour', `<span>${I.esc(tour)}</span>` + (K.def.temps ? ` · <span>${I.esc(I.t('à battre : {temps}', { temps: chrono(K.def.temps) }))}</span>` : ''));
       const cl = CI.classement(K); set('.rangs', cl.length > 1 ? cl.map((v, i) => `<li${v.joueur ? ' class="moi"' : ''}><i style="background:${G.TEINTES[v.teinte].b}"></i>${i + 1} · ${I.esc(v.joueur ? I.perso.dit() : ((T.couleurs || [])[v.teinte] || ''))}</li>`).join('') : '');
       set('.signe', K.mode === 'compte' ? `<b>${I.esc(nom)}</b><br>` + I.esc(tactile() ? I.t('Joystick : orienter · A tenu : accélérer · B : pause') : I.t('Flèches : orienter · Entrée ou Espace tenue : accélérer · Échap : pause')) : ''); }
     set('.compte', K.mode === 'compte' ? (Math.ceil(K.compte) > 0 ? String(Math.ceil(K.compte)) : I.esc(I.t('Partez !'))) : K.mode === 'course' && K.t < 0.8 ? I.esc(I.t('Partez !')) : '');
+    // en largeur, le classement se pose sous le chrono, quelle que soit la taille du texte
+    const tab = box.querySelector('.tableau'), rg = box.querySelector('.rangs'), haut = !tab || document.body.classList.contains('portrait') ? '' : (tab.offsetTop + tab.offsetHeight + 6) + 'px';
+    if (rg && rg.style.top !== haut) rg.style.top = haut;
   }
 
   // le garde-fou (ui.js, U.secours) : la course en cours s'arrête, rien n'est compté
@@ -13879,7 +13883,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   /* ----- mener une course (ou le tour de moto) : la scène, la pause, l'arrivée, le podium ----- */
   async function rouler(K) {
     const prev = I.scene, mark = I.input.mark(), box = $('#course'), T = textes(); let res = null;
-    K.mode = 'compte'; K.compte = K.moto ? 1.9 : 3.2; K.pause = false; CI.K = K;
+    K.mode = 'compte'; K.compte = K.moto ? 1.9 : 3.2; K.pause = false; CI.K = K; box.classList.toggle('moto', !!K.moto);
     const arrive = new Promise(r => { K.resoudre = r; });
     const pause = async () => { if (K.pause) return; K.pause = true; I.input.clearHeld(); CI.journal.push({ quoi: 'pause' });
       const i = await S.menuPick(I.t('La course est en pause.'), [{ t: I.t('Reprendre'), retour: true }, { t: K.moto ? I.t('Descendre de la moto') : I.t('Quitter la course') }]);
@@ -13901,7 +13905,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     } finally {
       I.input.pop(h); I.input.trim(mark); I.audio.moteur(false);
       try { await S.fade('out', 220); } catch (e) { /* le fondu ne doit pas retenir la sortie */ }
-      box.hidden = true; box.classList.remove('fini'); box.querySelector('.bilan').hidden = true; document.body.classList.remove('en-course'); CI.K = null; I.input.clearHeld(); I.input.aTenu = false; I.input.joyAngle = null;
+      box.hidden = true; box.classList.remove('fini', 'moto'); box.querySelector('.bilan').hidden = true; document.body.classList.remove('en-course'); CI.K = null; I.input.clearHeld(); I.input.aTenu = false; I.input.joyAngle = null;
       I.setScene(prev === CI.scene ? W : prev); G.clearParts();
       if (W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; W.hud(); W.stop(); W.updateCam(true); }
       I.audio.back();
@@ -15227,10 +15231,10 @@ ISNAD.registerSaga({
         // 2.27 (D216) — le circuit : Sâlim (il paraît quand il arrive en moto, circuit.js), l'organisateur et ses cinq circuits ;
         // dans la tribune, des parieurs, chacun seul devant son écran (aucun ne propose rien à Idris ; Le Pari rôde parmi eux)
         { id: 'salim_q', name: 'Sâlim', hero: 'salim', at: ['circuit', -1, -2], hidden: true, talk: [['say', 'salim_q', 'La moto est là.']] },
-        { id: 'q_organisateur', name: 'L’organisateur', at: ['circuit', 2, -2], face: 'left', look: { kind: 'citadin', robe: '#2a4a6a', head: '#1a2a3a', cloak: '#3a5a7a' }, talk: [['say', 'q_organisateur', 'La piste est libre.']] },
-        { id: 'q_parieur', name: 'Un parieur', at: ['tribune', -3, 1], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#5a4a3a', head: '#3a2e22', cloak: '#6a5a4a' }, talk: [['say', 'q_parieur', 'Je ne regarde pas la course. Je regarde les chiffres sur mon écran.'], ['say', 'q_parieur', 'Ils montent, ils descendent. Moi aussi.']] },
+        { id: 'q_organisateur', name: 'L’organisateur', at: ['circuit', 2, -2], face: 'left', look: { kind: 'citadin', robe: '#3a7aa8', head: '#24506e', cloak: '#4a8ab8' }, talk: [['say', 'q_organisateur', 'La piste est libre.']] },
+        { id: 'q_parieur', name: 'Un parieur', at: ['tribune', -3, 1], face: 'up', pose: 'assis', look: { kind: 'citadin', robe: '#9a6a2a', head: '#5e4018', cloak: '#aa7a3a' }, talk: [['say', 'q_parieur', 'Je ne regarde pas la course. Je regarde les chiffres sur mon écran.'], ['say', 'q_parieur', 'Ils montent, ils descendent. Moi aussi.']] },
         { id: 'q_parieuse', name: 'Une parieuse', at: ['tribune', 2, 0], face: 'up', pose: 'triste', look: { kind: 'femme', robe: '#5a6a4a', head: '#3a4630', cloak: '#6a7a5a' }, talk: [['say', 'q_parieuse', 'Je me dis que la prochaine fois, je rattraperai tout. Je me le dis chaque soir.']] },
-        { id: 'q_parieur2', name: 'Un parieur', at: ['tribune', 7, 1], face: 'up', pose: 'accable', look: { kind: 'citadin', robe: '#4a3a5a', head: '#2e2438', cloak: '#5a4a6a' }, talk: [['say', 'q_parieur2', 'Ce que j’ai perdu, je n’ose le dire à personne. Alors je reviens, seul.']] }
+        { id: 'q_parieur2', name: 'Un parieur', at: ['tribune', 7, 1], face: 'up', pose: 'accable', look: { kind: 'citadin', robe: '#8a3a5a', head: '#5a2238', cloak: '#9a4a6a' }, talk: [['say', 'q_parieur2', 'Ce que j’ai perdu, je n’ose le dire à personne. Alors je reviens, seul.']] }
       ],
       intro: [
         ['title', 'Les quartiers de la Cité', 'An 1507 de l’Hégire · Cité-Miroir'],

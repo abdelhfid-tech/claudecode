@@ -529,15 +529,18 @@
     const box = $('#course'); if (!K || !box) return; const set = (sel, html) => { const e = box.querySelector(sel); if (e && e._h !== html) { e._h = html; e.innerHTML = html; e.dir = I.langue.sens(e.textContent); } };
     const T = textes();
     if (K.moto) { set('.chrono', `<b class="titre">${I.esc(I.t('Derrière Sâlim'))}</b>`); const bien = K.virages.filter(v => v.fait && v.bien).length;
-      set('.tour', I.esc(I.t('Virages bien pris : {n} sur {total}', { n: bien, total: K.virages.length }))); set('.rangs', '');
+      set('.tour', `<span>${I.esc(I.t('Virages bien pris : {n} sur {total}', { n: bien, total: K.virages.length }))}</span>`); set('.rangs', '');
       set('.signe', K.mode === 'compte' ? I.esc(tactile() ? I.t('Sâlim pilote · le joystick vers l’intérieur du virage : se pencher · B : pause') : I.t('Sâlim pilote · la flèche vers l’intérieur du virage : se pencher · Échap : pause'))
         : K.malPenche ? `<span class="mal">${I.esc(I.t('Penche-toi vers l’intérieur du virage'))}</span>` : K.bienPenche ? `<span class="bien">${I.esc(I.t('Bien penché'))}</span>` : ''); }
     else { const tps = K.joueur.fin || K.t, nom = ((T.circuits || [])[K.n] || {}).nom || '', tour = I.t('tour {n} sur {total}', { n: borne(K.joueur.tour + 1, 1, K.tours), total: K.tours });
       set('.chrono', `<b>${chrono(tps)}</b>`);
-      set('.tour', I.esc(K.def.temps ? tour + ' · ' + I.t('à battre : {temps}', { temps: chrono(K.def.temps) }) : tour));
+      set('.tour', `<span>${I.esc(tour)}</span>` + (K.def.temps ? ` · <span>${I.esc(I.t('à battre : {temps}', { temps: chrono(K.def.temps) }))}</span>` : ''));
       const cl = CI.classement(K); set('.rangs', cl.length > 1 ? cl.map((v, i) => `<li${v.joueur ? ' class="moi"' : ''}><i style="background:${G.TEINTES[v.teinte].b}"></i>${i + 1} · ${I.esc(v.joueur ? I.perso.dit() : ((T.couleurs || [])[v.teinte] || ''))}</li>`).join('') : '');
       set('.signe', K.mode === 'compte' ? `<b>${I.esc(nom)}</b><br>` + I.esc(tactile() ? I.t('Joystick : orienter · A tenu : accélérer · B : pause') : I.t('Flèches : orienter · Entrée ou Espace tenue : accélérer · Échap : pause')) : ''); }
     set('.compte', K.mode === 'compte' ? (Math.ceil(K.compte) > 0 ? String(Math.ceil(K.compte)) : I.esc(I.t('Partez !'))) : K.mode === 'course' && K.t < 0.8 ? I.esc(I.t('Partez !')) : '');
+    // en largeur, le classement se pose sous le chrono, quelle que soit la taille du texte
+    const tab = box.querySelector('.tableau'), rg = box.querySelector('.rangs'), haut = !tab || document.body.classList.contains('portrait') ? '' : (tab.offsetTop + tab.offsetHeight + 6) + 'px';
+    if (rg && rg.style.top !== haut) rg.style.top = haut;
   }
 
   // le garde-fou (ui.js, U.secours) : la course en cours s'arrête, rien n'est compté
@@ -545,7 +548,7 @@
   /* ----- mener une course (ou le tour de moto) : la scène, la pause, l'arrivée, le podium ----- */
   async function rouler(K) {
     const prev = I.scene, mark = I.input.mark(), box = $('#course'), T = textes(); let res = null;
-    K.mode = 'compte'; K.compte = K.moto ? 1.9 : 3.2; K.pause = false; CI.K = K;
+    K.mode = 'compte'; K.compte = K.moto ? 1.9 : 3.2; K.pause = false; CI.K = K; box.classList.toggle('moto', !!K.moto);
     const arrive = new Promise(r => { K.resoudre = r; });
     const pause = async () => { if (K.pause) return; K.pause = true; I.input.clearHeld(); CI.journal.push({ quoi: 'pause' });
       const i = await S.menuPick(I.t('La course est en pause.'), [{ t: I.t('Reprendre'), retour: true }, { t: K.moto ? I.t('Descendre de la moto') : I.t('Quitter la course') }]);
@@ -567,7 +570,7 @@
     } finally {
       I.input.pop(h); I.input.trim(mark); I.audio.moteur(false);
       try { await S.fade('out', 220); } catch (e) { /* le fondu ne doit pas retenir la sortie */ }
-      box.hidden = true; box.classList.remove('fini'); box.querySelector('.bilan').hidden = true; document.body.classList.remove('en-course'); CI.K = null; I.input.clearHeld(); I.input.aTenu = false; I.input.joyAngle = null;
+      box.hidden = true; box.classList.remove('fini', 'moto'); box.querySelector('.bilan').hidden = true; document.body.classList.remove('en-course'); CI.K = null; I.input.clearHeld(); I.input.aTenu = false; I.input.joyAngle = null;
       I.setScene(prev === CI.scene ? W : prev); G.clearParts();
       if (W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; W.hud(); W.stop(); W.updateCam(true); }
       I.audio.back();
