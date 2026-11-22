@@ -33,16 +33,17 @@ module.exports = {
       if (!W._curDuJeu) { W._curDuJeu = W.cur; W.cur = function () { const c = W._curDuJeu.apply(this, arguments); return c && c.goto ? Object.assign({}, c, { goto: null }) : c; }; }
       const p = W.resolve(l, W.map.id, W.player); if (p && !isNaN(p[0])) W.goTo(p[0], p[1], { quiet: true }); return !!p; }, lieu);
 
-    /* 1 — l'accroche : on tombe au milieu d'un passage, sur le désert de la Traversée au crépuscule (la route du short 14 :
-       de la caravane vers les dunes). Dès l'image 1 : la lueur à 0,75, le désert doré dessous, Khâlid qui marche, l'accroche
-       entière ; puis la lueur se déchire (1,1 s) et l'image revient de × 2,9 à × 1,6. */
+    /* 1 — l'accroche : on tombe au milieu d'un passage, sur le désert de la Traversée au crépuscule, à la caravane. Dès
+       l'image 1 : la lueur à 0,55 (le désert doré et les rouges passent au travers), Khâlid qui marche vers nous, entre les
+       tentes, l'accroche entière ; puis la lueur se déchire (1,1 s) et l'image revient de × 3 à × 2,1 — la caravane reste
+       dans l'image. */
     await s.chapitre('khalid', 0, { obj: 4 }); await s.cadre('carre'); await s.propre({ cible: false });
     await s.ev(() => { const W = window.ISNAD.world;
       if (!W._curDuJeu) { W._curDuJeu = W.cur; W.cur = function () { const c = W._curDuJeu.apply(this, arguments); return c && c.goto ? Object.assign({}, c, { goto: null }) : c; }; }
-      W.goTo(264, 189, { quiet: true }); });
+      const p = W.player; W.goTo(p.x - 30, p.y + 80, { quiet: true }); });
     await s.avancer(200);                                                // il est déjà en marche à la première image
-    await s.ev(() => window.__film.rampe('lueur', 0.75, 0));
-    await s.arrivee(1.6, 1.1);
+    await s.ev(() => window.__film.rampe('lueur', 0.55, 0));
+    await s.arrivee(2.1, 1.1);
     await s.legende('Trois époques,<br>une seule chaîne', { style: 'accroche', taille: 34, duree: 8 * T - PASSE + 0.05, dans: -0.05, fi: 0.01, dy: 0 });
     await jusquauPassage(8 * T);
     await s.ev(() => window.ISNAD.world.stop());
