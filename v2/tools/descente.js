@@ -425,7 +425,9 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
 
     // E1. ce qui rôde sur les ponts d'un labyrinthe
     await nouveau(); await p.evaluate(async () => { await window.ISNAD.script.run([['map', 'noos', 'seuil', { hue: 210 }]]); }); await calme();
-    const m0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = I.rodeurs.rodent()[0]; if (!f) return null; W.player.x = f.x + 3; W.player.y = f.y; W.dest = null; return f.id; });
+    // les autres s'écartent : c'est la poursuite de celle-ci qu'on éprouve (une autre, croisée en fuyant, ouvrirait un combat
+    // ordinaire, comme elle le doit — et la poursuite ne se lirait plus)
+    const m0 = await p.evaluate(() => { const I = window.ISNAD, W = I.world, f = I.rodeurs.rodent()[0]; if (!f) return null; I.rodeurs.rodent().forEach(g => { if (g !== f) g.placed = false; }); W.player.x = f.x + 3; W.player.y = f.y; W.dest = null; return f.id; });
     if (!m0) ko('la fuite : rien ne rôde dans le labyrinthe');
     else {
       const c1 = await commandes(), n1 = await noms(), r1 = await fuir(), a1 = await apres(m0);
