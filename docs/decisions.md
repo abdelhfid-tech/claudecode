@@ -1843,7 +1843,7 @@ pages privées de son compte.
   on ne mène plus deux récits des Compagnons de front. La phrase d'en-tête de la Chaîne change : « Chaque maillon est un
   témoin. La Chaîne se lit du premier au dernier : chacun s'ouvre quand celui d'avant est achevé. » (texte de l'agent,
   à valider). `v2/docs/architecture.md`, « Mener plusieurs récits » ; contrôle : `retours.js`.
-- [x] **D212. La Cité-Miroir et le refuge de 2084 (version 2.23 ; demandée par le décideur le 21 novembre).** « Je veux que
+- [x] **D212. La Cité-Miroir et le refuge de 2084 (version 2.23 ; demandée par le décideur le 21 novembre).** *Validée par le décideur le 22 novembre, sur la page de validation : « Je suis ok avec tes propositions sur la page de validation ». Les textes, les nombres, le dessin et les choix ci-dessous sont retenus tels quels.* « Je veux que
   tu améliores la cité miroir avec des belles voitures, des jeux en tous genres, des activités, des courses de voitures, la
   possibilité de remonter à la cité miroir à chaque moment à côté de Maître Yunus, il y trouve beaucoup d'activités mais
   tout le monde est triste et seul, personne ne voit les idées noires modernes : égoïsme, matérialisme, plaisir immédiat,
@@ -1899,8 +1899,8 @@ pages privées de son compte.
   le décideur dira s'il les veut plus grandes, plus brillantes ; la place de la tribune (on la voit de dos) ; les noms et
   les failles des chimères ; une relecture de l'arabe, de l'anglais et du japonais ; la course jouable, la borne, l'étal,
   l'écran et la grande roue (lot suivant) ; les shorts et la démo, qui ne montrent pas encore les quartiers.
-- [ ] **D213. La vitesse du texte, et les pages d'une réplique (version 2.24 ; demande du décideur, 21 novembre) — à
-  valider par le décideur.** « Aussi il faut aller moins vite dans l'écriture et vérifier la longueur des textes car
+- [x] **D213. La vitesse du texte, et les pages d'une réplique (version 2.24 ; demande du décideur, 21 novembre) — à
+  valider par le décideur.** *Validée par le décideur le 22 novembre, sur la page de validation : « Je suis ok avec tes propositions sur la page de validation ». Les textes, les nombres, le dessin et les choix ci-dessous sont retenus tels quels.* « Aussi il faut aller moins vite dans l'écriture et vérifier la longueur des textes car
   parfois ils ne s'affichent pas entièrement dans l'écran sous l'image du jeu ». *Ce qui a changé.* Le texte s'écrit moins
   vite : un réglage « Vitesse du texte » (halte et écran-titre ; un réglage de l'appareil, jamais dans la partie), trois
   crans, « lente », « posée » (d'office, pour tous, y compris les joueurs qui ont déjà des réglages) et « vive » (la
@@ -1932,8 +1932,8 @@ pages privées de son compte.
   raccourcir certains textes ? La liste française (fichier, chapitre, clé, pages, début) est écrite par le contrôle dans
   `v2/.smoke/longueurs/pages-fr-360x640.txt` (et `pages-fr-390x844.txt`, vide aujourd'hui) ; l'agent n'en raccourcit aucun.
   Les shorts qui filment une réplique s'écriront plus lentement : à refaire avec les autres, plus tard.
-- [ ] **D214. La découverte de l'Agrégor, avec Maître Yûnus (version 2.25 ; demande du décideur, 21 novembre) — textes à
-  valider par le décideur.** « On ne parle plus de l'agregore des le début de l'histoire il faut qu'il le découvre au fur et
+- [x] **D214. La découverte de l'Agrégor, avec Maître Yûnus (version 2.25 ; demande du décideur, 21 novembre) — textes à
+  valider par le décideur.** *Validée par le décideur le 22 novembre, sur la page de validation : « Je suis ok avec tes propositions sur la page de validation ». Les textes, les nombres, le dessin et les choix ci-dessous sont retenus tels quels.* « On ne parle plus de l'agregore des le début de l'histoire il faut qu'il le découvre au fur et
   à mesure avec maître Yunus ». Le plan lui a été proposé (le prologue sans l'Agrégor, une étape par maillon achevé, les
   retouches) ; il n'y a rien changé. *Ce qui a changé.* **Le prologue** ne le nomme plus : la narration d'ouverture « On
   l'appelle l'AGRÉGOR… », la question d'Idris « Et l'Agrégor ? », la réponse de Maître Yûnus et la fiche du Recueil sont
@@ -1984,8 +1984,8 @@ pages privées de son compte.
   « 03-chaine » du livret (la Chaîne d'une partie neuve, défilée de 262 points) montrent le titre du dernier maillon, qui a
   changé ; aucun fragment de réplique (`s.dire`) des shorts, de la démo
   ou du livret ne touche un texte changé. À refaire avec les autres, plus tard.
-- [ ] **D215. Les femmes du jeu, vêtues pudiquement, le visage découvert (version 2.26 ; demande du décideur, 21 novembre)
-  — le dessin, à valider sur captures.** « Attention s'il y a des femmes (spectatrice etc) elles doivent ressembler à des
+- [x] **D215. Les femmes du jeu, vêtues pudiquement, le visage découvert (version 2.26 ; demande du décideur, 21 novembre)
+  — le dessin, à valider sur captures.** *Validée par le décideur le 22 novembre, sur la page de validation : « Je suis ok avec tes propositions sur la page de validation ». Les textes, les nombres, le dessin et les choix ci-dessous sont retenus tels quels.* « Attention s'il y a des femmes (spectatrice etc) elles doivent ressembler à des
   femmes (pudiques) » ; à la question du visage : « Visage découvert ». *Qui.* Les seules femmes du jeu sont six passantes
   de fiction des quartiers de la Cité (`c_quartiers`, 2.23, D212) : une joueuse, une cliente, une passante, une promeneuse,
   une spectatrice (assise dans la tribune), une passante du parvis. Elles portaient la capuche ou le manteau des citadins :
@@ -2008,8 +2008,8 @@ pages privées de son compte.
   la passante du parvis se tient, depuis la 2.23, derrière un dattier en bac, qui la cache en partie ; sa place n'a pas
   été changée. Les nouvelles silhouettes ne sont pas relevées dans les fiches de `silhouettes.js` (elles y paraissent
   « nouvelles, sans empreinte ») : on les relèvera une fois le dessin validé (`relever-nouveaux`).
-- [ ] **D216. Sâlim et la course : la moto, cinq circuits, la prime de l'organisateur, aucune mise (version 2.27 ; demandes du
-  décideur, 21 novembre) — choix, textes, nombres et dessin de l'agent, à valider.** « améliore la cité miroir avec des belles
+- [x] **D216. Sâlim et la course : la moto, cinq circuits, la prime de l'organisateur, aucune mise (version 2.27 ; demandes du
+  décideur, 21 novembre) — choix, textes, nombres et dessin de l'agent, à valider.** *Validée par le décideur le 22 novembre, sur la page de validation : « Je suis ok avec tes propositions sur la page de validation ». Les textes, les nombres, le dessin et les choix ci-dessous sont retenus tels quels.* « améliore la cité miroir avec des belles
   voitures, des jeux en tous genres, des activités, des courses de voitures » ; « Les activités de la cité miroir sont
   omniprésents des le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » ; « Les courses de
   voitures sont de plus en plus difficiles avec des circuits » ; « Un ami vient en moto et demande à Idriss de monter derrière
@@ -2058,9 +2058,9 @@ pages privées de son compte.
   réglages) ; les textes (Sâlim, l'organisateur, les parieurs, Le Pari, la fiche, les retrouvailles) ; les nombres ; la liste
   des mots du pari ; la place de Sâlim (ce qu'il dit de son travail avant le dernier maillon). *Reste à voir* : aucune
   course n'est encore filmée pour la promotion ; la difficulté est réglée sur des pilotes d'essai, pas sur des joueurs.
-- [ ] **D217. Les activités des quartiers : la borne, l'étal de la galerie, l'écran géant, la grande roue et les manèges,
+- [x] **D217. Les activités des quartiers : la borne, l'étal de la galerie, l'écran géant, la grande roue et les manèges,
   payés avec les primes du circuit (version 2.28 ; demandes du décideur, 21 et 22 novembre) — choix, textes, nombres et dessin
-  de l'agent, à valider.** « améliore la cité miroir avec des belles voitures, des jeux en tous genres, des activités […] il y
+  de l'agent, à valider.** *Validée par le décideur le 22 novembre, sur la page de validation : « Je suis ok avec tes propositions sur la page de validation ». Les textes, les nombres, le dessin et les choix ci-dessous sont retenus tels quels.* « améliore la cité miroir avec des belles voitures, des jeux en tous genres, des activités […] il y
   trouve beaucoup d'activités mais tout le monde est triste et seul » ; « Les activités de la cité miroir sont omniprésents des
   le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » ; puis, le 22 novembre : « Aussi il
   faut qu'idriss puisse "faire les activités" en les payant dans les quartiers : manèges etc ». La 2.27 avait fait la course ;
@@ -2104,8 +2104,8 @@ pages privées de son compte.
   d'Idris sur les manèges et assis devant l'écran, sur les captures (390 × 844, 844 × 390, les trois réglages) ; les textes ;
   les prix et la « bourse des primes » ; les sept pièces de l'étal (des objets de l'époque des récits, vendus en 2084) ; la
   gratuité de l'écran.
-- [ ] **D218. Entrer à pied dans les quartiers par la rue, dès le prologue ; remonter librement des Archives basses (version
-  2.28 ; demandes du décideur, 22 novembre) — choix de l'agent, à valider.** « Dans la 2.28 je veux pouvoir accéder à la "cité
+- [x] **D218. Entrer à pied dans les quartiers par la rue, dès le prologue ; remonter librement des Archives basses (version
+  2.28 ; demandes du décideur, 22 novembre) — choix de l'agent, à valider.** *Validée par le décideur le 22 novembre, sur la page de validation : « Je suis ok avec tes propositions sur la page de validation ». Les textes, les nombres, le dessin et les choix ci-dessous sont retenus tels quels.* « Dans la 2.28 je veux pouvoir accéder à la "cité
   vivante" sans devoir rencontrer maître Yunus directement dans la suite du premier monde en franchissant la rue par exemple » ;
   à la question « à partir de quand ? » : « Pendant le prologue » ; puis : « Meme dans le sous-sol on doit pouvoir être libre de
   remonter ». La « cité vivante », ce sont les quartiers de la Cité-Miroir (le nom ne change pas) ; le « sous-sol », les

@@ -117,8 +117,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   donne jamais de barbe à une femme. Un récit écrit `kind: 'femme'` et des couleurs (le manteau s'il le veut), rien
   d'autre : `regles.js` refuse sur elle une coiffe, une robe courte, un motif, une armure, une cuirasse, une écharpe, un
   châle (`D.TENUE_FEMME`). Les femmes du jeu sont aujourd'hui les six passantes et la parieuse de la tribune des quartiers (`c_quartiers`). Contrôle :
-  `silhouettes.js` (« la tenue des femmes » ; leur ressemblance au râwî et aux Compagnons). Le dessin est à valider sur
-  captures.
+  `silhouettes.js` (« la tenue des femmes » ; leur ressemblance au râwî et aux Compagnons). Le dessin, jugé sur
+  captures, est validé par le décideur (22 novembre).
 - Dans la 2.x, la Cité-Miroir est une « ville de verre » (D206, décision du décideur du 19 novembre) : le vieux quartier de
   pierre, ses tours à vent trapues et ses claustras au pied de tours de verre, un viaduc, une crique ; au crépuscule (sa
   scène vers 29 à 30 de luminance), la vue y regarde plus haut que celui qui mène (`env.regard`, `W.regard`). La ville qui
@@ -130,7 +130,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   miroir à chaque moment à côté de Maître Yunus, il y trouve beaucoup d'activités mais tout le monde est triste et seul,
   personne ne voit les idées noires modernes […] Chaque rencontre ou combat avec une idée noire qu'il est seul à voir lui
   rappelle la prière et lui propose de revoir maître Yunus qui lui rappelle son rôle de rawi » ; choix, nombres et textes de
-  l'agent, à valider). **Les quartiers de la Cité** (`quartiers`, `maps.js`, `quartiers()`, `peindreQuartiers()`) : la même
+  l'agent, validés par le décideur le 22 novembre). **Les quartiers de la Cité** (`quartiers`, `maps.js`, `quartiers()`, `peindreQuartiers()`) : la même
   ville de verre au même crépuscule, une boucle d'avenues, la galerie marchande, la salle de jeux, la place du grand écran,
   le parc et sa grande roue, le circuit et sa tribune, et derrière une haie un coin calme où une natte est posée au sol ; la
   carte `cite` et son masque n'ont pas changé d'une case. Les règles de D206 y valent toutes (aucune ville réelle, aucun
@@ -159,7 +159,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
 - Dans la 2.x (2.27, D216 ; le décideur, 21 novembre : « des courses de voitures » ; « Les activités de la cité miroir sont
   omniprésents des le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » ; « Les courses de
   voitures sont de plus en plus difficiles avec des circuits » ; « Un ami vient en moto et demande à Idriss de monter derrière
-  lui pour sa première course » ; choix, textes, nombres et dessin de l'agent, à valider), **Sâlim et la course**
+  lui pour sa première course » ; choix, textes, nombres et dessin de l'agent, validés par le décideur le 22 novembre), **Sâlim et la course**
   (`v2/src/core/circuit.js`). **Sâlim**, « l'ami des courses » (le héros `salim` de l'histoire-cadre, le PNJ `salim_q` des
   quartiers : il n'est pas un Compagnon, il a son visage), arrive en moto au premier passage au circuit des quartiers, quel
   que soit le maillon en cours, dès le prologue joué, et propose à Idris de monter derrière lui ; Sâlim pilote, Idris se
@@ -190,7 +190,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
 - Dans la 2.x (2.28, D217 ; le décideur, 21 et 22 novembre : « des jeux en tous genres, des activités » ; « Les activités de la
   cité miroir sont omniprésents des le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » ;
   « il faut qu'idriss puisse "faire les activités" en les payant dans les quartiers : manèges etc » ; choix, textes, nombres et
-  dessin de l'agent, à valider), **les activités des quartiers** (`v2/src/core/activites.js`), dès que Idris peut y venir, quel
+  dessin de l'agent, validés par le décideur le 22 novembre), **les activités des quartiers** (`v2/src/core/activites.js`), dès que Idris peut y venir, quel
   que soit le maillon : **la borne** du milieu de la salle de jeux (les autres restent du décor) se joue — *Les lueurs*, un jeu
   d'adresse inventé par le jeu (ni copie, ni nom, ni allure d'un autre) : le joystick ou les flèches mènent une lueur, A lui
   donne un élan, on rassemble les lueurs, on évite les ombres ; une minute au plus (`D.BORNE`), le même tirage à chaque partie
@@ -215,7 +215,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
 - Dans la 2.x (2.28, D218 ; le décideur, 22 novembre : « Dans la 2.28 je veux pouvoir accéder à la "cité vivante" sans devoir
   rencontrer maître Yunus directement dans la suite du premier monde en franchissant la rue par exemple » ; « Pendant le
   prologue » ; « Meme dans le sous-sol on doit pouvoir être libre de remonter » ; la « cité vivante » est le mot du décideur pour
-  les quartiers de la Cité-Miroir, qui gardent leur nom ; choix de l'agent, à valider), **la rue et l'ascenseur**
+  les quartiers de la Cité-Miroir, qui gardent leur nom ; choix de l'agent, validés par le décideur le 22 novembre), **la rue et l'ascenseur**
   (`v2/src/core/passages.js`) : sur la carte `cite`, au bout de la rue, à l'est (le lieu `traverse` ; la carte `cite` et son
   masque n'ont pas changé d'une case), Idris passe à pied dans les quartiers, par leur entrée de rue (le lieu `traverse`, au
   nord-ouest), loin du parvis, où Maître Yûnus n'est pas ; le chapitre quitté (le prologue, une rencontre, un retour) se range
@@ -329,7 +329,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   tour, « ▸ » (« ◂ » en arabe) invite à la suivante, A ou un toucher y passe. Le texte ne change pas d'un signe. La seconde
   bulle de la langue secondaire paraît, entière, à la dernière page ; une ligne à durée garde son temps par page. Tout
   carton (`#card`) tient dans l'écran : il se resserre (`tenirCarton`, jamais sous dix points), sinon il défile. Ce n'est
-  pas un outil de la progression : aucune leçon. Les nombres (vitesses, 40 %) sont des propositions de l'agent, à valider.
+  pas un outil de la progression : aucune leçon. Les nombres (vitesses, 40 %), proposés par l'agent, sont validés par le décideur (22 novembre).
   Les textes trop longs se signalent au décideur, jamais raccourcis par l'agent : `longueurs.js` en écrit la liste
   (`.smoke/longueurs/`). `v2/docs/architecture.md`, « La vitesse du texte et les pages d'une réplique ». Contrôle :
   `node v2/tools/longueurs.js` (« LONGUEURS CONFORMES » ; « DÉBORDE »). Tout changement de la boîte de dialogue, des
@@ -347,7 +347,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   maillon s'appelle « Ce qui se cache derrière les écrans » tant que la fiche `idris/agregor` n'est pas reçue (`ui.js`),
   « Le Cœur de l'Agrégor » ensuite (une partie d'avant, qui l'a reçue au prologue, garde ce titre). Un texte qui nomme
   l'Agrégor ne paraît qu'après l'étape III (sagas IV et V, dernier maillon). Une chimère, une image du jeu : aucun pouvoir
-  réel, aucun lien avec un peuple, une religion, Iblîs ni un djinn (exigences 6, 10, 16, 18). Textes de l'agent, à valider.
+  réel, aucun lien avec un peuple, une religion, Iblîs ni un djinn (exigences 6, 10, 16, 18). Textes de l'agent, validés par le décideur le 22 novembre.
   `v2/docs/architecture.md`, « La découverte de l'Agrégor ». Un changement de ces étapes repasse le validateur,
   `smoke.js auto`, `retours.js`, `progression.js` et `longueurs.js`.
 - **Les langues** (demande du décideur, 18 novembre ; exigence 25). La 2.x existe en français, en arabe, en anglais et

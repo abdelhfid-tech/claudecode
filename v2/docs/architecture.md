@@ -785,7 +785,7 @@ trouve beaucoup d'activités mais tout le monde est triste et seul, personne ne 
 matérialisme, plaisir immédiat, etc. Chaque rencontre ou combat avec une idée noire qu'il est seul à voir lui rappelle la
 prière et lui propose de revoir maître Yunus qui lui rappelle son rôle de rawi. » Ses réponses : les « idées noires
 modernes » sont des chimères à combattre ; une course jouable avec une prime et aucune mise (lot suivant) ; quatre
-activités (salle de jeux, galerie marchande, écran géant, parc et manèges). Choix, nombres et textes de l'agent, à valider.*
+activités (salle de jeux, galerie marchande, écran géant, parc et manèges). Choix, nombres et textes de l'agent, validés par le décideur le 22 novembre.*
 
 - **La carte** (`D.GABARITS.quartiers`, `D.MAPS.quartiers` ; `maps.js`, `quartiers()`, `peindreQuartiers()`, `M.QUARTIERS`) :
   64 × 46 cases, la même ville de verre au même crépuscule que la rue de la Cité (la même ambiance, le même ciel-écran sans
@@ -846,7 +846,7 @@ activités (salle de jeux, galerie marchande, écran géant, parc et manèges). 
   l'on peut le recevoir (`I.lecons.proposer`) ; il resservira à l'arrivée suivante (`I.lecons.reemploi`).
 - **La partie** garde `cite` : `{ arrivees, rappels, yunus, vue, lecon }` (des comptes et deux marques). Valeur de départ
   dans `migrer` (et dans une partie neuve) ; `controler` refuse un compte abîmé ; le format reste le 2.
-- **Les nombres** (`D.CITE`, à valider) : trois chimères par arrivée, à douze cases du parvis au moins, qui prennent en
+- **Les nombres** (`D.CITE`, validés par le décideur le 22 novembre) : trois chimères par arrivée, à douze cases du parvis au moins, qui prennent en
   chasse à six cases, à 45 % de la marche ; six voitures à 58 points par seconde (± 15 %), qui s'arrêtent à vingt points
   devant quelqu'un ; trois voitures de course à 120 points par seconde.
 - **Le contrôle** : `node v2/tools/cite.js` (« CITÉ CONFORME »), par les vrais boutons, en 390 × 844 et 844 × 390 : l'arrivée
@@ -868,7 +868,7 @@ activités (salle de jeux, galerie marchande, écran géant, parc et manèges). 
 peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » ; « Les courses de voitures sont de plus en plus
 difficiles avec des circuits » ; « Un ami vient en moto et demande à Idriss de monter derrière lui pour sa première course » —
 Sâlim, « l'ami des courses ». Une vraie course, une prime de l'organisateur ; aucune mise (le maysir) : les parieurs sont dans
-la tribune, et leur chimère, « Le Pari », Idris la voit et la combat. Choix, textes, nombres et dessin de l'agent, à valider.*
+la tribune, et leur chimère, « Le Pari », Idris la voit et la combat. Choix, textes, nombres et dessin de l'agent, validés par le décideur le 22 novembre.*
 
 - **Le module** : `src/core/circuit.js` (`I.circuit`, après `cite.js` dans `tools/build.js`). Sa première moitié ne touche pas
   à la page — la géométrie d'un tracé, la conduite, les adversaires, la moto, le pilote d'essai — et se charge sous Node : on
@@ -973,7 +973,7 @@ la tribune, et leur chimère, « Le Pari », Idris la voit et la combat. Choix, 
 *Le décideur, 21 et 22 novembre : « des jeux en tous genres, des activités […] il y trouve beaucoup d'activités mais tout le
 monde est triste et seul » ; « Les activités de la cité miroir sont omniprésents des le début et peuvent faire l'objet de jeux
 légers quelque soit l'avancement dans la saga » ; « il faut qu'idriss puisse "faire les activités" en les payant dans les
-quartiers : manèges etc ». Choix, textes, nombres et dessin de l'agent, à valider.*
+quartiers : manèges etc ». Choix, textes, nombres et dessin de l'agent, validés par le décideur le 22 novembre.*
 
 - **Le module** : `src/core/activites.js` (`I.activites`, après `circuit.js` dans `tools/build.js`). Sa première moitié — le
   jeu de la borne et son joueur d'essai — ne touche pas à la page. Les nombres sont dans `defs.js` (`D.ACTIVITES`, `D.BORNE`),
@@ -1043,7 +1043,7 @@ quartiers : manèges etc ». Choix, textes, nombres et dessin de l'agent, à val
 
 *Le décideur, 22 novembre : « Dans la 2.28 je veux pouvoir accéder à la "cité vivante" sans devoir rencontrer maître Yunus
 directement dans la suite du premier monde en franchissant la rue par exemple » ; « Pendant le prologue » ; « Meme dans le
-sous-sol on doit pouvoir être libre de remonter ». Choix de l'agent, à valider.*
+sous-sol on doit pouvoir être libre de remonter ». Choix de l'agent, validés par le décideur le 22 novembre.*
 
 - **Le module** : `src/core/passages.js` (`I.passages`, après `activites.js`). Quatre passages (`P.PASSAGES`), chacun avec sa
   zone (où se tenir), sa direction (vers où marcher ou se tourner) et ce qu'il fait : on passe en marchant vers le bord dans la
@@ -1348,7 +1348,7 @@ qui le précède) ; les réglages dans `src/core/ui.js` ; le contrôle est `tool
 - **La zone d'une réplique** (`S.zone`). En hauteur, la boîte est sous l'image (`top: calc(100% + 10px)`) : elle s'arrête à
   8 points au-dessus de la bande de la manette (`I.ui.padBas`), ou du bas de l'écran si la manette est masquée. En largeur
   et au bureau, elle reste ancrée au pied de la scène et ne monte pas au-delà de `S.HAUT_MAX` de la hauteur de la scène
-  (40 %, proposition de l'agent, à valider) : la vue garde celui qui parle au milieu de l'image, au-dessus de la boîte ; en
+  (40 %, proposition de l'agent, validée par le décideur le 22 novembre) : la vue garde celui qui parle au milieu de l'image, au-dessus de la boîte ; en
   immersif, la boîte s'arrête entre les deux zones de la manette, comme avant (`--pad-g`, `--pad-d`). Une zone plus petite
   que la hauteur minimale de la boîte (un tout petit écran) la lui impose.
 - **Resserrer, puis paginer** (`paginer`). Si le texte entier ne tient pas, ses caractères se resserrent d'abord, cran par
