@@ -2058,6 +2058,83 @@ pages privées de son compte.
   réglages) ; les textes (Sâlim, l'organisateur, les parieurs, Le Pari, la fiche, les retrouvailles) ; les nombres ; la liste
   des mots du pari ; la place de Sâlim (ce qu'il dit de son travail avant le dernier maillon). *Reste à voir* : aucune
   course n'est encore filmée pour la promotion ; la difficulté est réglée sur des pilotes d'essai, pas sur des joueurs.
+- [ ] **D217. Les activités des quartiers : la borne, l'étal de la galerie, l'écran géant, la grande roue et les manèges,
+  payés avec les primes du circuit (version 2.28 ; demandes du décideur, 21 et 22 novembre) — choix, textes, nombres et dessin
+  de l'agent, à valider.** « améliore la cité miroir avec des belles voitures, des jeux en tous genres, des activités […] il y
+  trouve beaucoup d'activités mais tout le monde est triste et seul » ; « Les activités de la cité miroir sont omniprésents des
+  le début et peuvent faire l'objet de jeux légers quelque soit l'avancement dans la saga » ; puis, le 22 novembre : « Aussi il
+  faut qu'idriss puisse "faire les activités" en les payant dans les quartiers : manèges etc ». La 2.27 avait fait la course ;
+  la 2.28 fait le reste. *Ce qui a été fait* (`v2/src/core/activites.js`, `v2/docs/architecture.md`, « Les activités des
+  quartiers ») : **la borne** (la quatrième de la rangée de la salle de jeux ; les autres restent du décor) se joue —
+  *Les lueurs*, un jeu d'adresse inventé par le jeu, ni copié ni nommé d'après un autre : le joystick (ou les flèches) mène une
+  lueur dans l'écran de la borne, A (Entrée) lui donne un élan ; on rassemble les lueurs qui passent, on évite les ombres (une
+  ombre touchée défait la chaîne, rien de plus) ; 45 secondes ; le tirage est le même à chaque partie (une graine fixe : aucun
+  hasard, seule l'adresse) ; on garde le meilleur score ; B met en pause (« Reprendre » / « Quitter la partie »). **L'étal de
+  la galerie** (devant la vitrine du milieu, personne derrière : « on choisit, on paie à l'écran ») vend sept pièces ordinaires
+  du jeu (bâton de marche, gourde de cuir, calotte de feutre, tunique de lin, manteau de laine, tablette de bois, lampe de
+  veille), à leur prix (`D.GEAR_PRIX`) ; un achat trop cher se refuse (« Il te manque des dirhams. »). **L'écran géant** : près
+  d'un banc libre de la place, A — Idris s'assied (« assis »), face à l'écran, qui montre des formes qui coulent ; une ligne,
+  sa pensée, dit la solitude des autres ; B ou un pas le relève ; c'est libre (*choix de l'agent* : s'asseoir devant un écran
+  public ne se paie pas). **La grande roue et deux manèges** déjà dessinés par le jeu dans le parc (les chaises volantes, les
+  tasses ; ni marque, ni lettre, ni figure d'animal ni de personne, rien de doré) : un tour se joue en vue — Idris monte (sa
+  nacelle, sa chaise, sa tasse : la tête et les épaules), le manège tourne, il redescend ; la grande roue : la vue suit la
+  nacelle, puis lève les yeux jusqu'au haut de la Cité, la pensée d'Idris là-haut, puis redescend ; rien d'autre ne bouge.
+  **Payer** : un menu dit le prix et la somme (« Un tour de grande roue : 3 dirhams. Tes primes du circuit : 12 dirhams. ») —
+  « Payer » / « Plus tard » (B) ; quand elle manque, un refus sobre, rien n'est avancé. *Choix de l'agent* : on paie avec les
+  **primes du circuit** — ce que l'organisateur a versé, moins ce qui a déjà été dépensé dans les quartiers, dans la limite des
+  dirhams d'Idris (la bourse de l'équipement, commune avec les récits) ; aucun dirham n'est donné sans raison ; tant qu'aucune
+  prime n'a été versée, le premier refus le dit : « Ici, tout se paie avec les primes du circuit, et Idris n'en a encore aucune.
+  L'organisateur en verse une à qui gagne une course. » Le tour de moto derrière Sâlim reste gratuit et ne paie rien ; la course
+  reste gratuite (ni droit d'entrée, ni mise). **La règle anti-pari reste entière** : une activité qu'on paie ne rapporte rien
+  (ni dirhams, ni lot, ni objet ; la borne ne donne que son score) ; aucun hasard ne décide de ce qu'on reçoit ; `regles.js` le
+  vérifie (`D.ACTIVITES` et `D.BORNE` n'ont que leurs champs déclarés — ni gain, ni prime, ni lot, ni mise, ni enjeu, ni cote ;
+  chaque prix est un entier positif ; aucun texte des activités ne porte les mots du pari, dans les quatre langues ; aucun ne
+  nomme l'Agrégor). **La progression** : un outil par activité (`borne` « Jouer à la borne », `etal` « L'étal de la galerie »,
+  `ecran` « S'asseoir devant l'écran », `manege` « Monter dans un manège » — la roue et les deux manèges), dit au premier essai
+  par `I.lecons.proposer` ; si la progression ne peut pas encore le donner, l'activité attend (« Idris a encore la tête
+  ailleurs. Il y reviendra. ») ; chaque essai suivant est une séquence où l'outil resert ; payer n'est pas une leçon.
+  *Les nombres* (`D.ACTIVITES`, `D.BORNE`) : la borne, 2 dirhams la partie ; la grande roue, 3 dirhams (18 s) ; les chaises
+  volantes, 2 (11 s) ; les tasses, 2 (10 s) — le premier circuit gagné (6 dirhams) paie trois tours, les deux premiers (16) en
+  paient sept ou huit ; l'étal, de 8 à 50 dirhams ; *Les lueurs* : 45 s, une lueur toutes les 0,9 à 0,5 s, une ombre toutes
+  les 3,2 à 1,5 s, une lueur de plus au score toutes les cinq rassemblées sans ombre, cinq au plus par lueur (un joueur d'essai
+  fait de 100 à 230). *Ce que l'agent a choisi aussi* : personne n'est ajouté (l'étal n'a pas de vendeur) ; les pensées d'Idris
+  reprennent les passants déjà là (le joueur et son record, le vieil homme, l'enfant du manège, qui fait signe ; Idris lui
+  répond) ; la ligne d'un nouveau record : « Un record, et personne pour le voir. » Les textes sont écrits à la source en arabe
+  (et vocalisés), en anglais et en japonais. *À valider* : le jeu de la borne (son principe, son nom, sa durée) ; le dessin
+  d'Idris sur les manèges et assis devant l'écran, sur les captures (390 × 844, 844 × 390, les trois réglages) ; les textes ;
+  les prix et la « bourse des primes » ; les sept pièces de l'étal (des objets de l'époque des récits, vendus en 2084) ; la
+  gratuité de l'écran.
+- [ ] **D218. Entrer à pied dans les quartiers par la rue, dès le prologue ; remonter librement des Archives basses (version
+  2.28 ; demandes du décideur, 22 novembre) — choix de l'agent, à valider.** « Dans la 2.28 je veux pouvoir accéder à la "cité
+  vivante" sans devoir rencontrer maître Yunus directement dans la suite du premier monde en franchissant la rue par exemple » ;
+  à la question « à partir de quand ? » : « Pendant le prologue » ; puis : « Meme dans le sous-sol on doit pouvoir être libre de
+  remonter ». La « cité vivante », ce sont les quartiers de la Cité-Miroir (le nom ne change pas) ; le « sous-sol », les
+  Archives basses. *Ce qui a été fait* (`v2/src/core/passages.js`, `v2/docs/architecture.md`, « La rue et l'ascenseur ») :
+  **la rue** — sur la carte de la Cité-Miroir, au bout de la rue, à l'est, après l'ascenseur (un lieu nouveau, « Traverser la
+  rue » ; aucune case ne change, les caisses tombent aux mêmes places), Idris passe à pied dans les quartiers, en marchant vers
+  le bord ou par A tourné vers lui ; il y entre par l'entrée de la rue, au nord-ouest (le trottoir du nord continue par une
+  ouverture du mur de l'ouest : trois cases ouvertes dans les quartiers), loin du parvis ; Maître Yûnus n'y est pas (il n'est
+  pas monté avec lui ; pendant le prologue, Idris ne l'a pas encore rencontré) ; une ligne le dit : « Idris traverse la rue. De
+  l'autre côté de l'avenue s'ouvrent les quartiers de la Cité-Miroir : des vitrines, des jeux, des manèges, et chacun seul. » ;
+  l'objectif s'écrit « Te promener dans les quartiers · la rue ramène à la Cité-Miroir ». Le chapitre quitté (le prologue, une
+  rencontre, un retour remonté à la Cité-Miroir) est rangé parmi les récits quittés ; retraverser (le même bord, vers l'ouest) le
+  reprend exactement — objectif, drapeaux, du même côté de la rue. « Revenir en 2084 » et « La Cité-Miroir » de la Chaîne ne
+  changent pas (le parvis, à côté de Maître Yûnus). **L'ascenseur** — aux Archives basses, sortir par l'ouverture du bas, ou A
+  devant elle, remonte Idris à la Cité-Miroir, au pied de l'ascenseur ; c'est le même chapitre (rien n'est rangé), son objectif
+  reste en bas et la flèche montre l'ascenseur ; de là, la rue mène aux quartiers s'il le veut ; marcher vers la porte de
+  l'ascenseur, ou A devant elle, le ramène aux Archives, là où il était. *Choix de l'agent* : la rue s'ouvre dans le prologue,
+  les rencontres et les retours (une fois remonté à la Cité-Miroir : les retours se jouent aux Archives) ; **pas dans le dernier
+  maillon**, qui se joue d'une traite (Sâlim y retrouve Idris dans la rue et la Cité s'y éteint : passer dans les quartiers, où
+  Sâlim attend au circuit, ferait deux Sâlim) ; ni dans les sagas, ni dans les veillées ; jamais quand une scène se joue. Aucun
+  outil de plus : c'est marcher. **La progression** pendant le prologue : arrivé par la rue, rien n'est dit de plus (la leçon
+  de l'outil « cite », que dit Maître Yûnus, attend une arrivée à côté de lui) ; les activités et Sâlim y sont dès qu'Idris
+  peut y venir, et leur leçon attend que la progression puisse la donner ; pendant le prologue, aucune chimère ne rôde dans les
+  rues (Maître Yûnus n'a pas encore ouvert les yeux d'Idris sur la noosphère), et la halte des quartiers n'offre pas la Chaîne,
+  qui ne s'est pas encore ouverte ; après un combat des rues, arrivé par la rue, la prière est rappelée et rien n'est proposé
+  (Maître Yûnus n'est pas là). Les joueurs de test du moteur ne passent jamais. Les textes sont écrits à la source en arabe (et
+  vocalisés), en anglais et en japonais. *À valider* : le côté de la rue (l'est, après l'ascenseur) et l'entrée des quartiers
+  (le nord-ouest) ; l'absence de Maître Yûnus quand on arrive à pied ; le dernier maillon fermé ; l'absence de chimères pendant
+  le prologue ; les captures (390 × 844, 844 × 390).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

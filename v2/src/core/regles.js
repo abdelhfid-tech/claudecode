@@ -54,7 +54,9 @@
         if (g.corps && !D.ARMURES.includes(g.corps)) E.push(`${id}: corps « ${g.corps} » inconnu`);
         if (!Array.isArray(g.c) || g.c.length !== 2 || g.c.some(c => !/^#[0-9a-f]{6}$/i.test(c))) E.push(`${id}: c attend deux couleurs #rrggbb`); });
       Object.keys(D.GEAR_TYPES).forEach(t => { const T = D.GEAR_TYPES[t]; if (T.port && !D.PORTES.includes(T.port)) E.push(`type ${t}: port inconnu`); if (T.anim && !['slash', 'thrust', 'arrow', 'smash'].includes(T.anim)) E.push(`type ${t}: anim inconnue`); });
-      Object.keys(D.GEAR_SHOPS).forEach(m => { if (!D.MAPS[m] || !D.MAPS[m].spots.includes('comptoir')) E.push(`boutique « ${m} » : carte sans comptoir`); D.GEAR_SHOPS[m].forEach(id => { if (!D.GEAR[id]) E.push(`boutique ${m}: pièce « ${id} » inconnue`); }); });
+      // (2.28, D217 : l'étal de la galerie des quartiers se tient au lieu que dit D.ACTIVITES.etal, et non à un comptoir)
+      const etal = m => m === 'quartiers' && D.ACTIVITES && D.ACTIVITES.etal && D.MAPS[m] && D.MAPS[m].spots.includes(D.ACTIVITES.etal.lieu);
+      Object.keys(D.GEAR_SHOPS).forEach(m => { if (!D.MAPS[m] || !(D.MAPS[m].spots.includes('comptoir') || etal(m))) E.push(`boutique « ${m} » : carte sans comptoir`); D.GEAR_SHOPS[m].forEach(id => { if (!D.GEAR[id]) E.push(`boutique ${m}: pièce « ${id} » inconnue`); }); });
       Object.keys(D.ROLES).forEach(r => Object.keys(D.SLOTS).forEach(s => { if (!Object.keys(D.GEAR).some(id => D.GEAR_TYPES[D.GEAR[id].t].slot === s && (D.GEAR[id].roles || D.GEAR_TYPES[D.GEAR[id].t].roles).includes(r))) E.push(`aucune pièce pour le rôle ${r} à l'emplacement ${s}`); }));
       return E; }
 
@@ -112,6 +114,30 @@
       const CO = D.COURSE || {}; Object.keys(CO).forEach(k => { if (!['voiture', 'moto', 'podium', 'plafond'].includes(k)) E.push(`D.COURSE: champ « ${k} » inconnu — aucune mise, aucun enjeu`); });
       if (!Array.isArray(CO.podium) || CO.podium.some(v => !num(v, 0, 1))) E.push('D.COURSE.podium: des parts de la prime, de 0 à 1'); if (!(Number.isInteger(CO.plafond) && CO.plafond >= 0)) E.push('D.COURSE.plafond: un entier positif ou nul');
       Object.keys((D.CITE && D.CITE.zones) || {}).forEach(k => { const z = D.CITE.zones[k]; if (!(D.CITE.rodent || {})[k]) E.push(`D.CITE.zones ${k}: une zone pour une chimère de D.CITE.rodent`); if (!Array.isArray(z) || !z.length || z.some(n => typeof n !== 'string')) E.push(`D.CITE.zones ${k}: une liste de cases`); });
+    }
+
+    /* 2.28 (D217) — les activités des quartiers : ce qu'on y dit (cite.activites), et leurs tables (D.ACTIVITES, D.BORNE). Elles
+       s'ouvrent dès le prologue, avant l'étape III de la découverte de l'Agrégor (2.25) : aucun de leurs textes ne le nomme.
+       Aucun nombre dans un récit. Une activité qu'on paie ne rapporte rien, aucun hasard ne décide de rien, on ne paie jamais pour
+       courir : les tables n'ont que leurs champs déclarés (ni gain, ni prime, ni lot, ni mise, ni enjeu, ni cote) ; un prix est un
+       entier positif ; rien de ce qui s'y dit ne porte les mots du pari. */
+    function verifierActivites(A, E) {
+      const txt = (v, w) => { if (typeof v !== 'string' || !v.trim()) { E.push(`cite.activites.${w}: texte manquant`); return; } if (/agr[ée]gor/i.test(v)) E.push(`cite.activites.${w}: les activités s'ouvrent avant que l'Agrégor soit nommé (2.25) : aucun de leurs textes ne le nomme`); if (/\d/.test(v)) E.push(`cite.activites.${w}: aucun nombre dans un récit (D.ACTIVITES, D.BORNE)`); if (NOM_INTERDIT.test(v)) E.push(`cite.activites.${w}: ni Iblîs, ni démon, ni djinn`); if (/[«»]|Coran|\d+:\d+/.test(v)) E.push(`cite.activites.${w}: ni verset ni parole citée (un texte de fiction)`); pari(v, `cite.activites.${w}`, E); };
+      const liste = (v, w, a, b) => { if (!Array.isArray(v) || v.length < a || v.length > b) { E.push(`cite.activites.${w}: de ${a} à ${b} textes`); return; } v.forEach((t, i) => txt(t, `${w}[${i}]`)); };
+      if (!A || typeof A !== 'object') { E.push('cite.activites: manquant (les activités des quartiers, D217)'); return; }
+      ['attend', 'sansPrime', 'etal', 'record'].forEach(k => txt(A[k], k)); liste(A.ecran, 'ecran', 2, 6); liste(A.roue, 'roue', 1, 4);
+      const M = A.maneges || {}; liste(M.chaises, 'maneges.chaises', 1, 4); liste(M.tasses, 'maneges.tasses', 1, 4);
+      const AL = ['outil', 'lieu', 'prix', 'duree'], BL = ['arene', 'duree', 'vitesse', 'elan', 'elanDuree', 'elanRepos', 'prise', 'ombre', 'choc', 'cadence', 'cadenceOmbres', 'lentes', 'vives', 'palier'], GAIN = /gain|prime|lot|recompense|récompense|mise|enjeu|cote|bourse|dirham/i;
+      const spots = (D.MAPS.quartiers || { spots: [] }).spots, num = (v, a, b) => typeof v === 'number' && isFinite(v) && v >= a && v <= b;
+      Object.keys(D.ACTIVITES || {}).forEach(id => { const x = D.ACTIVITES[id], w = `D.ACTIVITES.${id}`;
+        Object.keys(x).forEach(k => { if (GAIN.test(k)) E.push(`${w}: « ${k} » — une activité qu'on paie ne rapporte rien (ni dirhams, ni lot, ni objet)`); else if (!AL.includes(k)) E.push(`${w}: champ « ${k} » inconnu (${AL.join(', ')})`); });
+        if (!D.OUTILS[x.outil]) E.push(`${w}: outil « ${x.outil} » inconnu (D.OUTILS)`); if (!spots.includes(x.lieu)) E.push(`${w}: lieu « ${x.lieu} » inconnu des quartiers`);
+        if (x.prix !== undefined && !(Number.isInteger(x.prix) && x.prix >= 1 && x.prix <= 50)) E.push(`${w}: un prix est un entier positif (de 1 à 50 dirhams)`);
+        if (x.duree !== undefined && !num(x.duree, 3, 60)) E.push(`${w}: une durée de 3 à 60 secondes`); });
+      if (D.ACTIVITES && D.ACTIVITES.etal && D.ACTIVITES.etal.prix !== undefined) E.push('D.ACTIVITES.etal: l\'étal vend au prix de chaque pièce (D.GEAR_PRIX)');
+      const B = D.BORNE || {}; Object.keys(B).forEach(k => { if (!BL.includes(k)) E.push(`D.BORNE: champ « ${k} » inconnu — la borne ne donne que son score`); });
+      BL.forEach(k => { const v = B[k], ok = Array.isArray(v) ? v.length === 2 && v.every(n => num(n, 0.01, 1000)) : num(v, 0.01, 1000); if (!ok) E.push(`D.BORNE.${k}: un nombre positif (ou deux)`); });
+      if (num(B.duree, 0, 1000) && B.duree > 60) E.push('D.BORNE.duree: une partie dure une minute au plus');
     }
 
     function checkSaga(s, E, W) {
@@ -256,6 +282,7 @@
         liste('rappels', 3, 10); liste('yunus', 6, 8);
         ['rappels', 'yunus'].forEach(k => (Q[k] || []).forEach((t, i) => { if (/[«»]|Coran|\d+:\d+/.test(String(t))) E.push(`cite.${k}[${i}]: ni verset ni parole citée (un texte de fiction)`); garde(t, `cite.${k}`); }));
         verifierCourse(Q.course, E);
+        verifierActivites(Q.activites, E);   // 2.28 (D217)
       }
 
       (s.codex || []).forEach(c => {
@@ -670,7 +697,8 @@
   // le genre d'un emplacement, d'après son chemin (langue.js : casesSaga, casesDefs)
   function genreDe(ou) {
     // 2.27 (D216) : une réponse offerte au joueur — un choix, une question, un pourparler, un menu de la course (cite.course), une phrase du code de la course
-    if (/<(choice|ask)>2\[\d+\]\.t$|opts\[\d+\]\.t$|^cite\.course\.(offre|monter|pasMaintenant|encoreQ|encore|uneAutreFois|organisateur\.choix|circuits\[\d+\]\.(nom|dit))$|^circuit\.js$/.test(ou)) return 'option';
+    // (2.28, D217 : et ce que disent les activités des quartiers — leurs menus et leurs phrases, activites.js — et leurs lignes)
+    if (/<(choice|ask)>2\[\d+\]\.t$|opts\[\d+\]\.t$|^cite\.course\.(offre|monter|pasMaintenant|encoreQ|encore|uneAutreFois|organisateur\.choix|circuits\[\d+\]\.(nom|dit))$|^circuit\.js$|^activites\.js$|^cite\.activites\./.test(ou)) return 'option';
     if (/attributs\.[^.]+\.verset$|secours\.verset$/.test(ou)) return 'verset';
     if (/attributs\.[^.]+\.ref$|secours\.ref$/.test(ou)) return 'ref';
     if (/bataille\.rangs\[\d+\]\.name$|^D\.RANGS\.[^.]+\.name$/.test(ou)) return 'rang';

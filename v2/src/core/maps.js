@@ -426,6 +426,9 @@
     if (!v15) for (let x = 2; x < 60; x += 6) b.light(x, 12, 34, x % 12 === 2 && !et ? '#7fe8ff' : '#ffd080', 0.08);
     b.spot('parvis', 4, 13); b.spot('rue', 16, 13); b.spot('ecran', 30, 11); b.spot('ruelle', 44, 14); b.spot('ascenseur', 56, 10);
     b.scatter('ccaisse', 5, 2, 9, 56, 8);
+    // 2.28 (D218) : au bout de la rue, à l'est, on passe à pied dans les quartiers (passages.js). Posé après le tirage des
+    // caisses (un lieu en réserve les cases voisines) : elles tombent aux mêmes cases, et aucune case ne change
+    b.spot('traverse', 59, 14);
     // après le tirage : ce qui ne bloque rien (posé sur des cases déjà pleines, ou au ras du sol) — dattiers du quai, barques,
     // un boutre, les jets du miroir d'eau (chacun sa lueur bleue), les rames du métro
     [6, 13, 26, 35, 52, 58].forEach(x => { b.obj('cpalmier', x, 17); b.light(x, 17, 54, '#ffb46a', 0.08); });
@@ -676,6 +679,8 @@
     const b = new MB(id, 64, 46, 'cdalle', o, graine), v15 = G.lum === 215, T2 = 16;
     // le bâti du nord (tours, façades) et les bords de la carte
     b.fill(0, 0, 64, 8, 'qbat', true); b.fill(0, 0, 1, 46, 'qbat', true); b.fill(63, 0, 1, 46, 'qbat', true); b.fill(0, 45, 64, 1, 'qhaie', true);
+    // 2.28 (D218) : au nord-ouest, le trottoir continue vers la rue de la Cité-Miroir — l'entrée de la rue (passages.js)
+    b.fill(0, 8, 1, 3, 'cdalle', false);
     // la galerie marchande : un passage couvert, ses vitrines au fond ; la salle de jeux, ouverte sur la rue
     b.fill(8, 6, 20, 2, 'qparvis', false); b.fill(38, 5, 12, 3, 'qsalle', false);
     // les avenues : une boucle à sens unique (vers l'ouest au nord, vers l'est au sud)
@@ -690,7 +695,7 @@
     b.fill(31, 34, 32, 11, 'qpiste', true); b.fill(35, 34, 20, 2, 'qgradin', false); b.fill(32, 34, 3, 2, 'cdalle', false); b.fill(29, 34, 2, 11, 'cdalle', false);
     // les lieux nommés
     b.spot('parvis', 12, 19); b.spot('galerie', 17, 7); b.spot('jeux', 44, 7); b.spot('ecran', 32, 21); b.spot('priere', 51, 24);
-    b.spot('parc', 15, 37); b.spot('roue', 8, 43); b.spot('circuit', 33, 35); b.spot('tribune', 45, 34);
+    b.spot('parc', 15, 37); b.spot('roue', 8, 43); b.spot('circuit', 33, 35); b.spot('tribune', 45, 34); b.spot('traverse', 2, 9);
     // les lampadaires (la lumière tombe à leur pied)
     const lampe = (x, y, col) => { b.obj('qlampe', x, y); b.light(x, y - 1, v15 ? 64 : 54, col, 0.08); (b.lampes || (b.lampes = [])).push([x * T2 + 11, y * T2 + 15, col]); };
     [6, 13, 20, 27, 34, 41, 48, 55].forEach((x, i) => lampe(x, 10, i % 3 ? '#ffd9a0' : '#ffc0e0'));
@@ -817,7 +822,9 @@
     rect('#4a3c48', 880, 544, 128, 32); rect('#a8874e', 880, 544, 128, 0.75); for (let x = 884; x < 1004; x += 20) { rect('#2a2230', x, 552, 16, 22); for (let y = 554; y < 574; y += 2.5) rect('#3a3040', x + 1, y, 14, 0.75); rect('rgba(255,220,170,.25)', x, 551, 16, 0.75); }
     rect('#4a3c48', 496, 544, 16, 32); rect('#a8874e', 496, 544, 16, 0.75);
     // les bords de la carte : des murs de verre sombre
-    [[0, 16], [1008, 16]].forEach(([x, w]) => { c.fillStyle = grad(0, 128, 0, 736, [[0, '#2a2038'], [1, '#1a1428']]); c.fillRect(x, 128, w, 592); rect('rgba(236,192,112,.25)', x + (x ? 0 : 15.5), 128, 0.5, 592); });
+    // (2.28, D218 : à l'ouest, le mur s'ouvre au niveau du trottoir du nord — la rue de la Cité-Miroir continue par là)
+    [[0, 16, 176], [1008, 16, 128]].forEach(([x, w, y0]) => { c.fillStyle = grad(0, 128, 0, 736, [[0, '#2a2038'], [1, '#1a1428']]); c.fillRect(x, y0, w, 720 - y0); rect('rgba(236,192,112,.25)', x + (x ? 0 : 15.5), y0, 0.5, 720 - y0); });
+    rect('rgba(236,192,112,.35)', 0, 175.5, 16, 0.75); c.fillStyle = grad(0, 0, 16, 0, [[0, 'rgba(20,12,30,.5)'], [1, 'rgba(20,12,30,0)']]); c.fillRect(0, 128, 16, 48);
     /* --- la flaque de lumière au pied des lampadaires --- */
     (b.lampes || []).forEach(([px, py, col]) => { c.save(); c.translate(px, py); c.scale(1, 0.4); const g = c.createRadialGradient(0, 0, 2, 0, 0, 26); g.addColorStop(0, rgba(col, 0.26)); g.addColorStop(0.5, rgba(col, 0.1)); g.addColorStop(1, rgba(col, 0)); c.fillStyle = g; c.fillRect(-26, -26, 52, 52); c.restore(); });
     // l'ombre franche au pied des façades du nord

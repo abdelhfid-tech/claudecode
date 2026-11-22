@@ -28,13 +28,31 @@
      parmi les parieurs ; sa fiche. Le dernier maillon : des retrouvailles si Idris a couru avec Sâlim, la rencontre de
      toujours sinon. La partie garde la course, à l'identique. Captures : la moto et Sâlim à côté d'Idris, la course, le podium
      et la prime, la tribune et Le Pari, le circuit scellé ; la moto dans les trois dessins.
-   Usage : node v2/tools/cite.js [dossier de captures] [avancement|niveau1|course]      « CITÉ CONFORME », sinon « ÉCART », « BLOQUÉ »,
-   « INACCESSIBLE », « COINCÉ », « ABSENT » ; code de sortie 1. (« course » : la seule partie 15, en hauteur et en largeur) */
+   - 2.28 (D217), les activités (partie 16) : une partie d'avant, puis une partie neuve. La grande roue, les chaises volantes, les
+     tasses : le menu dit le prix et la somme (« Payer » / « Plus tard », B) ; sans prime, un refus sobre, rien d'avancé ; avec la
+     prime, le tour payé, les dirhams débités et gardés ; la roue lève la vue jusqu'au haut de la Cité puis la repose, rien
+     d'autre ne bouge ; Idris sur son manège. L'écran géant : assis (« assis »), relevé par B, puis par un pas. L'étal : un achat
+     payé avec la prime, un achat trop cher refusé. La borne « Les lueurs », par les vrais boutons (le joystick et A, ou les
+     flèches et Entrée) : un score, le meilleur gardé et relu après un rechargement, la pause (B, « Reprendre » par B), « Quitter
+     la partie » qui ne compte rien ; la manette ne recouvre ni le tableau ni le bilan. La course reste gratuite. Aucune mise
+     offerte nulle part. La partie garde les activités, à l'identique. Dans une partie neuve : chaque leçon dite une seule fois, au
+     premier essai ; une activité attend quand la progression ne peut pas encore la donner.
+   - 2.28 (D218), la rue et l'ascenseur (partie 17) : au milieu du prologue, la rue traversée au doigt (en hauteur) et au clavier
+     (en largeur), dans les deux sens ; Idris entre dans les quartiers loin du parvis, Maître Yûnus n'y est pas, aucune leçon de
+     plus ; le prologue rangé, puis repris exactement (chapitre, objectif, drapeaux, du même côté de la rue). Aux Archives basses,
+     l'ascenseur remonte (en sortant par l'ouverture, ou au doigt), la flèche montre l'ascenseur, la rue mène aux quartiers et en
+     revient, l'ascenseur redescend là où Idris était — le même chapitre, rien de rangé ; pendant un retour (« x_descendu ») aussi ;
+     une rencontre (« r_abubakr ») ouvre la rue ; le dernier maillon ne l'ouvre pas ; le joueur de test du moteur ne passe jamais.
+   Usage : node v2/tools/cite.js [dossier de captures] [avancement|niveau1|course|activites|passages]      « CITÉ CONFORME », sinon « ÉCART », « BLOQUÉ »,
+   « INACCESSIBLE », « COINCÉ », « ABSENT » ; code de sortie 1. (« course » : la seule partie 15, en hauteur et en largeur ; « activites » : la
+   seule partie 16 ; « passages » : la seule partie 17) */
 const path = require('path'), fs = require('fs');
 const { chromium, devices } = require('playwright');
-const out = process.argv[2] || path.join(__dirname, '../.smoke/cite'), COURSE = process.argv[3] === 'course', SEUL = process.argv[3] === 'avancement' || process.argv[3] === 'niveau1' || COURSE, NIV1 = process.argv[3] === 'niveau1' || COURSE; // « avancement » : les seules parties 13 et 14 ; « niveau1 » : la seule partie 14 ; « course » : la seule partie 15
+const ACTI = process.argv[3] === 'activites', PASS = process.argv[3] === 'passages';
+const out = process.argv[2] || path.join(__dirname, '../.smoke/cite'), COURSE = process.argv[3] === 'course', SEUL = process.argv[3] === 'avancement' || process.argv[3] === 'niveau1' || COURSE || ACTI || PASS, NIV1 = process.argv[3] === 'niveau1' || COURSE || ACTI || PASS; // « avancement » : les seules parties 13 et 14 ; « niveau1 » : la seule partie 14 ; « course » : la seule partie 15 ; « activites », « passages » : la 16, la 17
 fs.mkdirSync(out, { recursive: true });
 const url = 'file://' + path.join(__dirname, '../index.html');
+const orient = ([w, h]) => !process.env.ORIENT || (process.env.ORIENT === 'haut') === (h > w);   // (ORIENT=haut|large : une seule orientation)
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); }, si = (c, bien, mal, mot) => c ? ok(bien) : ko((mot || 'ÉCART') + ' ' + (mal || bien));
 
 async function telephone(browser, w, h, qs) {
@@ -373,7 +391,7 @@ async function avancer(p, n = 120) {
   }
   // ---------- 14. au niveau 1, seul : chaque chimère des rues se vainc à la seule touche A (Frapper, sur la cible désignée
   //               d'emblée), dans une partie neuve qui n'a reçu que ses premiers outils ; et l'on peut en fuir ----------
-  if (!COURSE) {
+  if (!COURSE && !ACTI && !PASS) {
     const T = await telephone(browser, 390, 844), P = T.p, E = (fn, a) => P.evaluate(fn, a);
     await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true };
       I.lecons.ouvrir(); ['marcher', 'parler', 'aide', 'halte'].forEach(id => { I.lecons.recevoir(id); I.lecons.sequence(); }); I.save.auto('essai'); });
@@ -438,9 +456,9 @@ async function avancer(p, n = 120) {
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'niveau 1 · ' + e)); await T.ctx.close();
   }
   // ---------- 15. 2.27 (D216) : Sâlim et la course, en hauteur (le joystick) et en largeur (le clavier) ----------
-  for (const [w, h] of (!SEUL || COURSE) ? [[390, 844], [844, 390]].filter(([w, h]) => !process.env.ORIENT || (process.env.ORIENT === 'haut') === (h > w)) : []) {   // (ORIENT=haut|large : une seule)
+  for (const [w, h] of (!SEUL || COURSE) ? [[390, 844], [844, 390]].filter(orient) : []) {   // (ORIENT=haut|large : une seule)
     const nom = w + '×' + h, haut = h > w, mode = haut ? 'joy' : 'clavier', T = await telephone(browser, w, h), P = T.p, E = (fn, a) => P.evaluate(fn, a);
-    const PARI = /(^|[^a-zà-ÿ])(pari|paris|parier|parie|parions|pariez|parié|mise|mises|miser|misez|misé|enjeux?|loteries?|casino|jeux? de hasard|double ou rien|cotes?|gager)(?![a-zà-ÿ])/i;
+    const PARI =/(^|[^a-zà-ÿ])(pari|paris|parier|parie|parions|pariez|parié|mise|mises|miser|misez|misé|enjeux?|loteries?|casino|jeux? de hasard|double ou rien|cotes?|gager)(?![a-zà-ÿ])/i;
     // une partie neuve (« Nouvelle partie ») qui n'a reçu que ses premiers outils : Sâlim y dira la leçon des virages
     await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true };
       I.lecons.ouvrir(); ['marcher', 'parler', 'aide', 'halte'].forEach(id => { I.lecons.recevoir(id); I.lecons.sequence(); }); I.save.auto('essai'); });
@@ -655,6 +673,276 @@ async function avancer(p, n = 120) {
       si(a.some(d => /si _2084_salim : true/.test(d)) && a.some(d => /Mon passager des virages/.test(d)) && b.some(d => /si _2084_salim : false/.test(d)) && b.some(d => /^Tu es l’archiviste \? Je m’appelle Sâlim/.test(d)), `le dernier maillon : Idris a couru avec Sâlim — « ${(a.find(d => /passager/.test(d)) || '').slice(0, 50)}… » ; sinon, la rencontre de toujours — « ${(b.find(d => /archiviste/.test(d)) || '').slice(0, 50)}… »`, `le dernier maillon, les retrouvailles : ${JSON.stringify({ a, b })}`);
     }
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'course ' + nom + ' · ' + e)); await T.ctx.close();
+  }
+  // ---------- 16. 2.28 (D217) : les activités des quartiers, payées avec les primes du circuit ----------
+  const PARI2 = /(^|[^a-zà-ÿ])(pari|paris|parier|parie|parions|pariez|parié|mise|mises|miser|misez|misé|enjeux?|loteries?|casino|jeux? de hasard|double ou rien|cotes?|gager)(?![a-zà-ÿ])/i;
+  // les aides de la partie 16 et de la 17, dans la page
+  const aides = P => P.evaluate(() => { const I = window.ISNAD, T = window.__t;
+    T.offerts = []; { const om = I.script.menuPick; I.script.menuPick = function (q, opts) { T.offerts.push({ q: typeof q === 'string' ? q : '', opts: (opts || []).map(o => (o.t || String(o.html || '').replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim()) }); return om.apply(this, arguments); }; }
+    // un bouton de la manette, par un vrai toucher (pointeurs)
+    T.bouton = sel => { const b = document.querySelector('#pad ' + sel); b.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerId: 11, pointerType: 'touch' })); b.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true, pointerId: 11, pointerType: 'touch' })); };
+    // le joystick poussé dans une direction (un angle), puis lâché
+    T.joy = (cap, ms) => new Promise(res => { const j = document.querySelector('#pad .joy'), r = j.getBoundingClientRect(), R = r.width / 2, x = r.left + R + Math.cos(cap) * R * 0.8, y = r.top + R + Math.sin(cap) * R * 0.8, pt = (t, X, Y) => j.dispatchEvent(new PointerEvent(t, { bubbles: true, cancelable: true, pointerId: 7, pointerType: 'touch', isPrimary: true, clientX: X, clientY: Y }));
+      pt('pointerdown', x, y); setTimeout(() => { pt('pointerup', x, y); res(); }, ms); });
+    // la borne menée par les vrais boutons : le joystick et A (pointeurs), ou les flèches et Entrée (clavier) ; le cap et l'élan, c'est le joueur d'essai qui les choisit
+    T.menerBorne = mode => { const AC = I.activites, joy = document.querySelector('#pad .joy'), A = document.querySelector('#pad .a'); let jBas = false; const tenues = new Set(); T._borne = true; T.borneMenee = { images: 0, elans: 0 };
+      const pt = (el, type, x, y, id) => el.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: id, pointerType: 'touch', isPrimary: id === 7, clientX: x || 0, clientY: y || 0 }));
+      const cle = (code, bas) => window.dispatchEvent(new KeyboardEvent(bas ? 'keydown' : 'keyup', { code, bubbles: true, cancelable: true }));
+      const lacher = () => { if (jBas) { pt(joy, 'pointerup', 0, 0, 7); jBas = false; } tenues.forEach(k => cle(k, false)); tenues.clear(); };
+      const pas = () => { const K = AC.K; if (!T._borne || !K || K.mode === 'fin' || K.mode === 'bilan') { lacher(); T._borne = false; return; }
+        let cap = null, elan = false; if (!K.pause && K.mode === 'jeu') { const d = AC.pilote(K, {}); cap = d.cap; elan = d.elan; }
+        if (mode === 'joy') { if (cap === null) { if (jBas) { pt(joy, 'pointerup', 0, 0, 7); jBas = false; } } else { const r = joy.getBoundingClientRect(), R = r.width / 2; pt(joy, jBas ? 'pointermove' : 'pointerdown', r.left + R + Math.cos(cap) * R * 0.8, r.top + R + Math.sin(cap) * R * 0.8, 7); jBas = true; }
+          if (elan) { pt(A, 'pointerdown', 0, 0, 8); pt(A, 'pointerup', 0, 0, 8); T.borneMenee.elans++; } }
+        else { const veut = new Set(); if (cap !== null) { const s8 = Math.round(cap / (Math.PI / 4)), dx = Math.round(Math.cos(s8 * Math.PI / 4)), dy = Math.round(Math.sin(s8 * Math.PI / 4)); if (dx > 0) veut.add('ArrowRight'); if (dx < 0) veut.add('ArrowLeft'); if (dy > 0) veut.add('ArrowDown'); if (dy < 0) veut.add('ArrowUp'); }
+          ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].forEach(k => { if (veut.has(k) && !tenues.has(k)) { cle(k, true); tenues.add(k); } else if (!veut.has(k) && tenues.has(k)) { cle(k, false); tenues.delete(k); } });
+          if (elan) { cle('Enter', true); cle('Enter', false); T.borneMenee.elans++; } }
+        T.borneMenee.images++; requestAnimationFrame(pas); };
+      requestAnimationFrame(pas); };
+    T.recouvreBorne = () => { const pads = [...document.querySelectorAll('#pad .joy, #pad .a, #pad .b')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0), L = [];
+      document.querySelectorAll('#course .tableau, #course .signe, #course .bilan').forEach(e => { if (e.hidden || getComputedStyle(e).display === 'none') return; const r = e.getBoundingClientRect(); if (r.width < 1 || r.height < 1) return;
+        if (pads.some(p => r.left < p.right - 1 && r.right > p.left + 1 && r.top < p.bottom - 1 && r.bottom > p.top + 1)) L.push(e.className); });
+      return { L, efface: document.body.classList.contains('pad-efface') }; };
+    T.ac = () => JSON.parse(JSON.stringify(I.save.data.cite.activites || {}));
+    T.zone = id => { const z = I.activites.zones().find(z => z.id === id); if (!z) return false; T.poser(z.px, z.py); I.world.player.dir = z.dir; return true; };
+  });
+  for (const [w, h] of (!SEUL || ACTI) ? [[390, 844], [844, 390]].filter(orient) : []) {
+    const nom = w + '×' + h, haut = h > w, mode = haut ? 'joy' : 'clavier', T = await telephone(browser, w, h), P = T.p, E = (fn, a) => P.evaluate(fn, a);
+    // une partie d'avant (sans la progression) : le prologue joué, Sâlim venu ; aucune prime encore
+    await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true }; sv.cite.course.salim = 2; I.trade.dirhams(0); I.save.auto('essai'); });
+    await P.reload(); await P.waitForTimeout(1600); await preparer(P); await aides(P);
+    await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
+    await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
+    await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); });
+    const la = await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 15000)); await avancer(P);
+    if (!la) { ko(`BLOQUÉ ${nom} · les activités : la partie n’arrive pas dans les quartiers`); toutesErreurs = toutesErreurs.concat(T.errors); await T.ctx.close(); continue; }
+    await E(() => window.__t.endormir());
+    const A = async () => { if (haut) await E(() => window.__t.bouton('.a')); else await P.keyboard.press('Enter'); };
+    const B = async () => { if (haut) await E(() => window.__t.bouton('.b')); else await P.keyboard.press('Escape'); };
+    const choixVu = async () => { await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 6000)); await P.waitForTimeout(430); return E(() => window.__t.choix()); };
+    const dits = () => E(() => window.ISNAD.activites.journal.map(j => j.quoi + (j.id ? ':' + j.id : j.outil ? ':' + j.outil : '')));
+    const T0 = await E(() => window.ISNAD.sagas.idris.cite.activites), L0 = await E(() => window.ISNAD.sagas.coeur.lecons), tact = await E(() => document.body.classList.contains('touch'));   // (un téléphone, en hauteur comme en largeur : la leçon au doigt)
+    // a. la grande roue, sans prime : le menu dit le prix et la somme ; « Payer » se refuse sobrement, rien n'est avancé
+    {
+      const d0 = await E(() => window.ISNAD.trade.dirhams());
+      await E(() => window.__t.zone('roue')); await P.waitForTimeout(250); await A();
+      const c = await choixVu(); await P.screenshot({ path: path.join(out, `activite-payer-roue-${w}x${h}.png`) });
+      const lecon = await E(() => window.__t.toasts.join(' | '));
+      await A(); const r = await avancer(P, 40), dl = await E(() => window.ISNAD.activites.journal.slice(-3));
+      const e = await E(() => ({ d: window.ISNAD.trade.dirhams(), a: window.__t.ac() }));
+      const L = L0.manege[tact ? 'doigt' : 'clavier'].replace(/\*/g, '').slice(0, 30);
+      si(c && /Un tour de grande roue : 3 dirhams/.test(c.prompt) && /Tes primes du circuit : 0 dirham/.test(c.prompt) && c.opts.join('/') === 'Payer/Plus tard' && lecon.indexOf(L) >= 0 && e.d === d0 && (e.a.depenses | 0) === 0 && !(e.a.tours || {}).roue && dl.some(j => j.quoi === 'refus'),
+        `${nom} · la grande roue sans prime : « ${c && c.prompt} » — ${c && c.opts.join(' / ')} ; la leçon des manèges dite ; « Payer » refusé (« ${T0.sansPrime.slice(0, 50)}… »), rien d’avancé (${e.d} dirhams)`, `${nom} · la roue sans prime : ${JSON.stringify({ c, lecon, r, dl, e })}`);
+    }
+    // l'organisateur a versé des primes (comme après des courses gagnées)
+    await E(() => { const I = window.ISNAD; I.save.data.cite.course.primes = 30; I.trade.dirhams(30); I.save.store(); });
+    // b. la grande roue : un tour payé, la vue monte jusqu'au haut de la Cité puis redescend ; rien d'autre ne bouge
+    {
+      const avant = await E(() => { const W = window.ISNAD.world; return { d: window.ISNAD.trade.dirhams(), npcs: JSON.stringify(W.npcs.map(n => [n.id, Math.round(n.x), Math.round(n.y), !!n.hidden])), objs: W.map.objs.length, cam: Math.round(W.cam.y + window.ISNAD.gfx.view.y) }; });
+      await E(() => window.__t.zone('roue')); await P.waitForTimeout(250); const pos = await E(() => [Math.round(window.ISNAD.world.player.x), Math.round(window.ISNAD.world.player.y)]);
+      await A(); await choixVu(); await A();
+      const haut1 = await E(() => window.__t.attendre(() => window.ISNAD.activites.journal.some(j => j.quoi === 'en-haut'), 30000));
+      await P.waitForTimeout(500); const vue = await E(() => ({ cam: Math.round(window.ISNAD.world.cam.y + window.ISNAD.gfx.view.y), dans: !!window.ISNAD.world.passager, nacelle: !!(window.ISNAD.world.map.objs.find(o => o.type === 'qroue') || {}).passager }));
+      await P.screenshot({ path: path.join(out, `activite-roue-haut-${w}x${h}.png`) });
+      await avancer(P, 60); await E(() => window.__t.attendre(() => window.__t.calme() && !window.ISNAD.activites.occupe, 30000)); await P.waitForTimeout(800);
+      const apres = await E(() => { const W = window.ISNAD.world; return { d: window.ISNAD.trade.dirhams(), npcs: JSON.stringify(W.npcs.map(n => [n.id, Math.round(n.x), Math.round(n.y), !!n.hidden])), objs: W.map.objs.length, cam: Math.round(W.cam.y + window.ISNAD.gfx.view.y), pos: [Math.round(W.player.x), Math.round(W.player.y)], dans: !!W.passager, a: window.__t.ac() }; });
+      si(haut1 && vue.cam < 20 && vue.dans && vue.nacelle && avant.d - apres.d === 3 && apres.a.tours.roue === 1 && apres.a.depenses === 3 && apres.npcs === avant.npcs && apres.objs === avant.objs && apres.pos[0] === pos[0] && apres.pos[1] === pos[1] && !apres.dans && Math.abs(apres.cam - avant.cam) < 400,
+        `${nom} · un tour de grande roue payé (3 dirhams, de ${avant.d} à ${apres.d}) : Idris dans sa nacelle, la vue monte jusqu’au haut de la Cité (${vue.cam} points), puis redescend ; personne ni rien d’autre n’a bougé`, `${nom} · la grande roue : ${JSON.stringify({ haut1, vue, avant: { d: avant.d, cam: avant.cam }, apres: { d: apres.d, cam: apres.cam, pos: apres.pos, dans: apres.dans, a: apres.a }, pos, memes: apres.npcs === avant.npcs })}`);
+    }
+    // c. les chaises volantes (et, en hauteur, les tasses) : un tour, en vue, Idris sur son siège
+    for (const id of haut ? ['chaises', 'tasses'] : ['chaises']) {
+      const d0 = await E(() => window.ISNAD.trade.dirhams());
+      await E(id => window.__t.zone(id), id); await P.waitForTimeout(250); await A(); const c = await choixVu(); await A();
+      await E(() => window.__t.attendre(() => window.ISNAD.world.passager, 8000)); await P.waitForTimeout(1800);
+      const vu = await E(() => !!window.ISNAD.world.passager); await P.screenshot({ path: path.join(out, `activite-${id}-${w}x${h}.png`) });
+      await E(id => window.__t.attendre(() => window.ISNAD.activites.journal.some(j => j.quoi === 'tour' && j.id === id), 30000), id); await avancer(P, 30);
+      const e = await E(() => ({ d: window.ISNAD.trade.dirhams(), a: window.__t.ac() }));
+      si(vu && d0 - e.d === 2 && e.a.tours[id] === 1 && c && /2 dirhams/.test(c.prompt), `${nom} · un tour de ${id === 'chaises' ? 'chaises volantes' : 'tasses'} payé (2 dirhams), Idris sur son siège ; puis la pensée d’Idris`, `${nom} · ${id} : ${JSON.stringify({ vu, d0, e, c })}`);
+    }
+    // d. l'écran géant : assis, puis B le relève ; assis de nouveau, puis un pas
+    {
+      await E(() => window.__t.zone('banc')); await P.waitForTimeout(250); await A();
+      await E(() => window.__t.attendre(() => window.ISNAD.activites.journal.some(j => j.quoi === 'assis'), 6000)); const ligne = await E(() => window.__t.lu()); await P.keyboard.press('Enter'); await avancer(P, 20); await P.waitForTimeout(300);
+      const a1 = await E(() => ({ pose: window.ISNAD.world.pose[0], assis: !!window.ISNAD.activites.assis, dir: window.ISNAD.world.player.dir }));
+      await P.screenshot({ path: path.join(out, `activite-ecran-${w}x${h}.png`) });
+      await B(); await P.waitForTimeout(300); const a2 = await E(() => ({ pose: window.ISNAD.world.pose[0] || null, assis: !!window.ISNAD.activites.assis, carte: window.ISNAD.world.map.id, menu: window.ISNAD.ui.menuOpen }));
+      await A(); await E(() => window.__t.attendre(() => window.ISNAD.activites.assis, 6000)); await avancer(P, 20); await P.waitForTimeout(300);
+      if (haut) await E(() => window.__t.joy(Math.PI / 2, 350)); else { await P.keyboard.down('ArrowDown'); await P.waitForTimeout(350); await P.keyboard.up('ArrowDown'); }
+      await P.waitForTimeout(300); const a3 = await E(() => ({ pose: window.ISNAD.world.pose[0] || null, assis: !!window.ISNAD.activites.assis, ecran: window.__t.ac().ecran }));
+      si(a1.pose === 'assis' && a1.assis && a1.dir === 3 && T0.ecran.some(t => ligne.indexOf(t.slice(0, 25)) >= 0) && !a2.assis && !a2.pose && !a2.menu && !a3.assis && !a3.pose && a3.ecran === 2,
+        `${nom} · l’écran géant : Idris s’assied (« assis »), face à l’écran (« ${ligne.slice(0, 50)}… »), ${haut ? 'B' : 'Échap'} le relève ; assis de nouveau, un pas le relève`, `${nom} · l’écran : ${JSON.stringify({ a1, ligne, a2, a3 })}`);
+    }
+    // e. l'étal de la galerie : un achat payé avec la prime ; un achat trop cher, refusé
+    {
+      const d0 = await E(() => window.ISNAD.trade.dirhams());
+      await E(() => window.__t.zone('etal')); await P.waitForTimeout(250); await A();
+      const prem = await E(() => window.__t.attendre(() => window.__t.visible('#dialog'), 4000) && window.__t.lu()); await P.keyboard.press('Enter');
+      let c = await choixVu(); await P.screenshot({ path: path.join(out, `activite-etal-${w}x${h}.png`) });
+      // (la pièce achetée rejoint la réserve ; si elle va mieux à quelqu'un, on demande qui la porte — B : à la réserve)
+      await A(); await P.waitForTimeout(900); await E(() => window.__t.attendre(() => window.__t.visible('#choice') && /Qui la porte|étal/.test(document.querySelector('#choice').textContent), 6000)); await P.waitForTimeout(430);
+      const porte = await E(() => window.__t.choix()); if (porte && /Qui la porte/.test(porte.prompt)) { await B(); c = await choixVu(); } else c = porte;
+      const e1 = await E(() => ({ d: window.ISNAD.trade.dirhams(), baton: window.ISNAD.save.data.gear.baton_marche | 0, porte: ((window.ISNAD.save.data.equip['idris:idris'] || {}).md) || null, a: window.__t.ac() }));
+      for (let i = 0; i < 6; i++) { await P.keyboard.press('ArrowDown'); await P.waitForTimeout(120); }
+      const n0 = await E(() => window.__t.toasts.length); await P.keyboard.press('Enter'); await P.waitForTimeout(700);
+      const e2 = await E(n0 => ({ d: window.ISNAD.trade.dirhams(), lampe: window.ISNAD.save.data.gear.lampe | 0, refus: window.__t.toasts.slice(n0).some(t => /Il te manque des dirhams/.test(t)), choix: window.__t.visible('#choice') }), n0);
+      await B(); await avancer(P, 20);
+      si(prem && prem.indexOf(T0.etal.slice(0, 20)) >= 0 && c && c.opts.length === 8 && /Bâton de marche · 8 dirhams/.test(c.opts[0]) && d0 - e1.d === 8 && (e1.baton >= 1 || e1.porte === 'baton_marche') && e1.a.achats === 1 && e2.d === e1.d && !e2.lampe && e2.refus && e2.choix,
+        `${nom} · l’étal : « ${prem.slice(0, 40)}… » ; le bâton de marche payé avec la prime (8 dirhams, de ${d0} à ${e1.d}) ; la lampe de veille (50) refusée — « Il te manque des dirhams. », rien de débité`, `${nom} · l’étal : ${JSON.stringify({ prem, c, porte, e1, e2 })}`);
+    }
+    // f. la borne « Les lueurs », par les vrais boutons ; la pause ; le meilleur score gardé
+    {
+      await E(() => window.__t.zone('borne')); await P.waitForTimeout(250); await A(); const c = await choixVu();
+      const lecon = await E(() => window.__t.toasts.join(' | ')), LB = L0.borne[tact ? 'doigt' : 'clavier'].replace(/\*/g, '').slice(0, 30);
+      await A(); await E(() => window.__t.attendre(() => window.ISNAD.activites.K && window.ISNAD.activites.K.mode === 'compte', 6000)); await P.waitForTimeout(600);
+      await P.screenshot({ path: path.join(out, `borne-depart-${w}x${h}.png`) });
+      await E(m => window.__t.menerBorne(m), mode);
+      await E(() => window.__t.attendre(() => { const K = window.ISNAD.activites.K; return K && K.mode === 'jeu' && K.t > 7; }, 20000));
+      const rc = await E(() => window.__t.recouvreBorne()); await P.screenshot({ path: path.join(out, `borne-jeu-${w}x${h}.png`) });
+      // la pause : B (ou Échap) ; B revient d'un cran ; la partie reprend
+      await B(); await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 4000)); await P.waitForTimeout(430);
+      const pc = await E(() => window.__t.choix()), t0 = await E(() => window.ISNAD.activites.K.t); await P.screenshot({ path: path.join(out, `borne-pause-${w}x${h}.png`) });
+      await E(() => window.ISNAD.input.emit('retour')); await P.waitForTimeout(700);
+      const repris = await E(t0 => ({ choix: window.__t.visible('#choice'), pause: window.ISNAD.activites.K.pause, avance: window.ISNAD.activites.K.t > t0 }), t0);
+      await E(m => { if (!window.__t._borne) window.__t.menerBorne(m); window.ISNAD.debug.accelBorne = 5; }, mode);
+      const fini = await E(() => window.__t.attendre(() => !document.querySelector('#course .bilan').hidden, 60000)); await P.waitForTimeout(600);
+      const b = await E(() => ({ bilan: document.querySelector('#course .bilan').textContent, j: window.ISNAD.activites.journal.filter(x => x.quoi === 'partie').pop(), rc: window.__t.recouvreBorne(), men: window.__t.borneMenee, a: window.__t.ac() }));
+      await P.screenshot({ path: path.join(out, `borne-bilan-${w}x${h}.png`) });
+      await E(() => { window.ISNAD.debug.accelBorne = 0; }); await A(); await avancer(P, 30);
+      si(c && /Une partie à la borne : 2 dirhams/.test(c.prompt) && lecon.indexOf(LB) >= 0, `${nom} · la borne : « ${c && c.prompt} » ; la leçon de la borne dite (« ${LB}… »)`, `${nom} · la borne, le menu et la leçon : ${JSON.stringify({ c, lecon })}`);
+      si(fini && b.j && b.j.score > 0 && b.j.prises > 0 && b.men.images > 100 && b.men.elans > 0 && b.a.borne.record === b.j.score && b.a.borne.parties === 1 && /Score/.test(b.bilan) && !PARI2.test(b.bilan),
+        `${nom} · « Les lueurs » menées ${haut ? 'au joystick et à A' : 'aux flèches et à Entrée'} : score ${b.j && b.j.score} (${b.j && b.j.prises} lueurs, ${b.j && b.j.elans} élans, plus longue chaîne ${b.j && b.j.meilleure}), le meilleur gardé`, `${nom} · la borne : ${JSON.stringify(b)}`, 'BLOQUÉ');
+      si(pc && /La partie est en pause/.test(pc.prompt) && pc.opts.join('/') === 'Reprendre/Quitter la partie' && !repris.choix && !repris.pause && repris.avance, `${nom} · ${haut ? 'B' : 'Échap'} : « ${pc && pc.prompt} » ${pc && pc.opts.join(' / ')} ; B revient d’un cran, la partie reprend`, `${nom} · la pause de la borne : ${JSON.stringify({ pc, repris })}`);
+      si(!rc.L.length && !rc.efface && !b.rc.L.length && !b.rc.efface, `${nom} · la manette ne recouvre ni le tableau de la borne, ni son signe, ni son bilan`, `${nom} · la manette sur la borne : ${JSON.stringify([rc, b.rc])}`, 'RECOUVERT');
+      // « Quitter la partie » : rien n'est compté (la partie payée reste payée)
+      await E(() => window.__t.zone('borne')); await P.waitForTimeout(250); await A(); await choixVu(); await A();
+      await E(() => window.__t.attendre(() => window.ISNAD.activites.K && window.ISNAD.activites.K.mode === 'jeu', 8000)); await B(); await choixVu(); await P.keyboard.press('ArrowDown'); await P.waitForTimeout(120); await P.keyboard.press('Enter');
+      const q = await E(() => window.__t.attendre(() => !window.ISNAD.activites.K && window.ISNAD.scene === window.ISNAD.world, 8000)); await avancer(P, 20);
+      const a2 = await E(() => window.__t.ac());
+      si(q && a2.borne.parties === 1 && a2.borne.record === b.a.borne.record, `${nom} · « Quitter la partie » : retour à la salle de jeux ; rien n’est compté, le record reste ${a2.borne.record}`, `${nom} · quitter la borne : ${JSON.stringify({ q, a2 })}`);
+    }
+    // g. la course reste gratuite : on la commence et on la quitte, rien n'est débité, rien n'est versé
+    {
+      const d0 = await E(() => ({ d: window.ISNAD.trade.dirhams(), dep: window.__t.ac().depenses }));
+      await E(() => { const W = window.ISNAD.world, o = W.npcs.find(n => n.id === 'q_organisateur'); window.__t.poser(o.x + 20, o.y); W.player.dir = 1; }); await P.waitForTimeout(250); await A(); await avancer(P);
+      const c = await choixVu(); await A();
+      await E(() => window.__t.attendre(() => window.ISNAD.circuit.K && window.ISNAD.circuit.K.mode === 'course', 10000)); await B(); await choixVu(); await P.keyboard.press('ArrowDown'); await P.waitForTimeout(120); await P.keyboard.press('Enter');
+      await E(() => window.__t.attendre(() => !window.ISNAD.circuit.K && window.ISNAD.scene === window.ISNAD.world, 8000)); await avancer(P, 20);
+      const d1 = await E(() => ({ d: window.ISNAD.trade.dirhams(), dep: window.__t.ac().depenses }));
+      si(d1.d === d0.d && d1.dep === d0.dep && c && !c.opts.some(o => /Payer|dirham/.test(o)), `${nom} · la course reste gratuite : commencée puis quittée, ni débit ni prime (${d1.d} dirhams) ; l’organisateur ne demande rien`, `${nom} · la course gratuite : ${JSON.stringify({ d0, d1, c })}`);
+    }
+    // h. aucune mise offerte ; la partie garde les activités, à l'identique, et refuse un compte abîmé ; le record relu après un rechargement
+    {
+      const of = await E(() => window.__t.offerts), fautes = of.filter(m => PARI2.test(m.q) || m.opts.some(o => PARI2.test(o)));
+      si(of.length >= 8 && !fautes.length, `${nom} · ${of.length} listes offertes (payer, la borne, l’étal, la course) : aucune ne propose de parier ni de miser`, `${nom} · une mise offerte : ${JSON.stringify(fautes)}`, 'ÉCART');
+      const r = await E(() => { const I = window.ISNAD, c0 = JSON.stringify(I.save.data.cite.activites), t = I.save.exporter(), l = I.save.lireTexte(t); if (!l.ok) return { ok: false, e: l.erreur };
+        const ab = JSON.parse(t); ab.partie.cite.activites.borne.record = -1; const l2 = I.save.lireTexte(JSON.stringify(ab)); I.save.auto('essai'); return { ok: true, c0, c1: JSON.stringify(l.partie.cite.activites), refus: !l2.ok }; });
+      await P.reload(); await P.waitForTimeout(1600);
+      const rec = await E(() => { const I = window.ISNAD; I.save.readAuto(); return (I.save.data.cite.activites || {}).borne; });
+      const a = r.ok ? JSON.parse(r.c0) : {};
+      si(r.ok && r.c0 === r.c1 && r.refus && rec && rec.record === a.borne.record && a.borne.record > 0, `${nom} · la partie garde les activités (${r.c0}), les exporte à l’identique, refuse un record abîmé ; après un rechargement, le record de la borne est toujours ${rec && rec.record}`, `${nom} · la partie et les activités : ${JSON.stringify({ r, rec })}`);
+    }
+    toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'activités ' + nom + ' · ' + e)); await T.ctx.close();
+  }
+  // ---------- 16 bis. dans une partie neuve : chaque leçon dite une seule fois, au premier essai ; une activité attend son tour ----------
+  if (!SEUL || ACTI) {
+    const T = await telephone(browser, 390, 844), P = T.p, E = (fn, a) => P.evaluate(fn, a), nom = '390×844';
+    await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true }; sv.cite.course.salim = 2; sv.cite.course.primes = 30; I.trade.dirhams(0); I.trade.dirhams(30);
+      I.lecons.ouvrir(); ['marcher', 'parler', 'aide', 'halte'].forEach(id => { I.lecons.recevoir(id); I.lecons.sequence(); }); I.save.auto('essai'); });
+    await P.reload(); await P.waitForTimeout(1600); await preparer(P); await aides(P);
+    await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
+    await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
+    await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); });
+    await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 15000)); await avancer(P); await E(() => window.__t.endormir());
+    const A = () => E(() => window.__t.bouton('.a')), B = () => E(() => window.__t.bouton('.b'));
+    const essai = async id => { await E(id => window.__t.zone(id), id); await P.waitForTimeout(250); await A(); await P.waitForTimeout(700); };
+    const lecons = () => E(() => ({ j: window.ISNAD.lecons.journal.map(x => x.id), a: window.ISNAD.activites.journal.filter(x => x.quoi === 'lecon' || x.quoi === 'attend').map(x => x.quoi + ':' + x.outil) }));
+    await essai('borne'); const c1 = await E(() => window.__t.choix()); await B(); await avancer(P, 10);
+    const l1 = await lecons();
+    await essai('etal'); const l2 = await lecons(); const attend = await E(() => window.__t.toasts.some(t => /la tête ailleurs/.test(t))); await avancer(P, 10);
+    // la borne de nouveau : une partie, menée par le joueur d'essai ; l'outil a resservi
+    await essai('borne'); await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 4000)); await P.waitForTimeout(430); await A();
+    await E(() => window.__t.attendre(() => window.ISNAD.activites.K && window.ISNAD.activites.K.mode === 'jeu', 8000)); await E(() => { window.ISNAD.debug.piloteBorne = {}; window.ISNAD.debug.accelBorne = 8; });
+    await E(() => window.__t.attendre(() => !document.querySelector('#course .bilan').hidden, 60000)); await E(() => { window.ISNAD.debug.piloteBorne = null; window.ISNAD.debug.accelBorne = 0; }); await P.waitForTimeout(600); await A(); await avancer(P, 30);
+    const re = await E(() => window.ISNAD.save.data.lecons.re.borne | 0);
+    await essai('etal'); await avancer(P, 10); await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 4000)); await P.waitForTimeout(430); await B(); await avancer(P, 10);
+    const l3 = await lecons();
+    await essai('etal'); await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 4000)); await P.waitForTimeout(430); await B(); await avancer(P, 10);
+    const l4 = await lecons();
+    si(c1 && /borne/.test(c1.prompt) && l1.a.join() === 'lecon:borne' && l1.j.slice(-1)[0] === 'borne' && l2.a.join() === 'lecon:borne,attend:etal' && attend && re >= 1 && l3.a.filter(x => x === 'lecon:etal').length === 1 && l3.j.slice(-1)[0] === 'etal' && l4.a.filter(x => /^lecon/.test(x)).length === 2 && l4.j.join() === l3.j.join(),
+      `${nom} · partie neuve : la leçon de la borne au premier essai ; l’étal attend (« ${(await E(() => window.ISNAD.sagas.idris.cite.activites.attend))} ») tant que la borne n’a pas resservi ; une partie jouée, l’étal donne sa leçon ; à l’essai suivant, rien ne se redit (outils : ${l4.j.join(', ')})`, `${nom} · la progression des activités : ${JSON.stringify({ c1, l1, l2, attend, re, l3, l4 })}`);
+    toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'activités (partie neuve) · ' + e)); await T.ctx.close();
+  }
+  // ---------- 17. 2.28 (D218) : la rue et l'ascenseur, au doigt (en hauteur) et au clavier (en largeur) ----------
+  for (const [w, h] of (!SEUL || PASS) ? [[390, 844], [844, 390]].filter(orient) : []) {
+    const nom = w + '×' + h, haut = h > w, T = await telephone(browser, w, h), P = T.p, E = (fn, a) => P.evaluate(fn, a);
+    await aides(P);
+    // une partie neuve (« Nouvelle partie ») : le prologue, au premier objectif
+    await E(() => { const I = window.ISNAD; I.save.reset(); I.save.data.started = true; I.lecons.ouvrir(); document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset(); I.world.roster = {}; I.world.saga = null; I.world.startChapter('idris', 0); });
+    await P.waitForTimeout(1200); await avancer(P);
+    // aller jusqu'à un point au bord, au doigt (des touchers sur la scène, vers lui) ou au clavier (marcher, puis pousser vers le bord)
+    // (au doigt : on touche le bord lui-même, là où il se voit sur la scène — tout près du bord de l'écran, mais sur la scène)
+    await E(() => { const I = window.ISNAD, W = I.world, G = I.gfx; window.__t.brut = (wx, wy) => { const c = document.querySelector('#cv').getBoundingClientRect(); return [(wx - Math.round(W.cam.x)) / G.PW * c.width + c.left, (wy - Math.round(W.cam.y)) / G.PH * c.height + c.top]; }; });
+    const versBord = async (x, y, touche, carte) => { const ici = () => E(() => window.ISNAD.world.map && window.ISNAD.world.map.id);
+      if (haut) { for (let i = 0; i < 12; i++) { if ((await ici()) !== carte) return true; const pt = await E(([x, y]) => window.__t.calme() ? window.__t.brut(x, y) : null, [x, y]); if (pt) await P.touchscreen.tap(pt[0], pt[1]); await P.waitForTimeout(1200); } }
+      else { await E(([x, y]) => window.__t.marcher(x, y, 20000), [x + (touche === 'ArrowRight' ? -24 : touche === 'ArrowLeft' ? 24 : 0), y + (touche === 'ArrowDown' ? -14 : touche === 'ArrowUp' ? 14 : 0)]); await P.keyboard.down(touche); for (let i = 0; i < 20 && (await ici()) === carte; i++) await P.waitForTimeout(150); await P.keyboard.up(touche); }
+      for (let i = 0; i < 20 && (await ici()) === carte; i++) await P.waitForTimeout(200); return (await ici()) !== carte; };
+    const etat = () => E(() => { const I = window.ISNAD, W = I.world, s = I.save.data; return Object.assign(window.__t.etat(), { cps: Object.keys(s.cps || {}), asc: !!I.script.flags._ascenseur, recus: Object.keys((s.lecons || {}).recus || {}), lj: I.lecons.journal.map(x => x.id).join(), yunus: (W.npcs.find(n => n.hero === 'yunus') || {}).hidden, cible: W.target() && !!W.target().passage }); });
+    // a. la rue, au milieu du prologue : vers les quartiers (Idris posé au bout de la rue, là où il ne passe par aucun objectif)
+    await E(() => { window.__t.poser(890, 237); window.ISNAD.world.player.dir = 2; }); await P.waitForTimeout(400);
+    const e0 = await etat();
+    const passe = await versBord(952, 237, 'ArrowRight', 'cite'); await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 12000)); await avancer(P);
+    const e1 = await etat(), loin = await E(() => { const W = window.ISNAD.world, s = W.spotPx('parvis'), t = W.spotPx('traverse'); return { parvis: Math.round(Math.hypot(W.player.x - s[0], W.player.y - s[1])), entree: Math.round(Math.hypot(W.player.x - t[0], W.player.y - t[1])), obj: document.querySelector('#hud .obj').textContent }; });
+    await P.screenshot({ path: path.join(out, `rue-quartiers-${w}x${h}.png`) });
+    const halte = await E(() => { const n = window.__t.halte(); return n; }); await E(() => window.ISNAD.input.emit('retour')); await P.waitForTimeout(400); await E(() => { if (window.ISNAD.ui.menuOpen) window.ISNAD.input.emit('retour'); }); await P.waitForTimeout(300);
+    si(passe && e1.ch === 'c_quartiers' && e1.carte === 'quartiers' && loin.entree < 30 && loin.parvis > 200 && e1.yunus === true && e1.cps.includes('idris:0') && !e1.recus.includes('cite') && e1.lj === e0.lj && /la rue ramène/.test(loin.obj) && halte.includes('Reprendre le récit') && !halte.includes('La Chaîne'),
+      `${nom} · au milieu du prologue, la rue traversée ${haut ? 'au doigt' : 'au clavier'} : Idris entre dans les quartiers par l’entrée de la rue, à ${loin.parvis} points du parvis ; Maître Yûnus n’y est pas, aucune leçon de plus ; le prologue est rangé ; la halte offre « Reprendre le récit », pas la Chaîne`, `${nom} · la rue, aller : ${JSON.stringify({ passe, e0, e1, loin, halte })}`, 'INACCESSIBLE');
+    // b. retraverser : le prologue reprend exactement, du même côté de la rue
+    const revient = await versBord(5, 157, 'ArrowLeft', 'quartiers'); await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'cite' && window.__t.calme(), 12000)); await avancer(P);
+    const e2 = await etat(); await P.screenshot({ path: path.join(out, `rue-retour-${w}x${h}.png`) });
+    si(revient && e2.ch === 'p1' && e2.obj === e0.obj && e2.drapeaux === e0.drapeaux && e2.x > 900 && Math.abs(e2.y - 237) < 40 && !e2.cps.length && e2.lj === e0.lj,
+      `${nom} · retraversée : le prologue reprend à son objectif (${e2.obj}), ses drapeaux intacts, au bout de la rue (${e2.x}, ${e2.y})`, `${nom} · la rue, retour : ${JSON.stringify({ revient, e0, e2 })}`, 'BLOQUÉ');
+    // c. le prologue jusqu'aux Archives basses (le joueur de test du moteur), puis l'ascenseur remonte
+    await E(() => window.__t.jusqua(2)); await avancer(P);
+    const e3 = await etat();
+    if (haut) { await E(() => window.__t.poser(272, 352)); await P.waitForTimeout(200); }
+    const monte = await versBord(272, 380, 'ArrowDown', 'archives'); await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'cite' && window.__t.calme(), 10000)); await P.waitForTimeout(400);
+    const e4 = await etat(), dAsc = await E(() => { const W = window.ISNAD.world, s = W.spotPx('ascenseur'); return Math.round(Math.hypot(W.player.x - s[0], W.player.y - s[1])); });
+    await P.screenshot({ path: path.join(out, `ascenseur-cite-${w}x${h}.png`) });
+    si(monte && e3.carte === 'archives' && e4.carte === 'cite' && e4.ch === 'p1' && e4.obj === e3.obj && dAsc < 20 && e4.asc && e4.cible && !e4.cps.length,
+      `${nom} · aux Archives basses, l’ascenseur remonte ${haut ? 'au doigt' : 'en sortant par l’ouverture'} : la Cité-Miroir, au pied de l’ascenseur ; le même chapitre (objectif ${e4.obj}), rien de rangé ; la flèche montre l’ascenseur`, `${nom} · l’ascenseur, montée : ${JSON.stringify({ monte, e3, e4, dAsc })}`, 'INACCESSIBLE');
+    // d. de là, la rue vers les quartiers, et retour ; puis l'ascenseur redescend là où Idris était
+    await E(() => window.__t.poser(890, 237)); await P.waitForTimeout(300);
+    const p2 = await versBord(952, 237, 'ArrowRight', 'cite'); await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers' && window.__t.calme(), 12000)); await avancer(P);
+    const e5 = await etat();
+    const r2 = await versBord(5, 157, 'ArrowLeft', 'quartiers'); await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'cite' && window.__t.calme(), 12000)); await avancer(P);
+    const e6 = await etat();
+    let descend;
+    if (haut) { await E(() => window.__t.poser(904, 200)); await P.waitForTimeout(400); for (let i = 0; i < 8; i++) { if (await E(() => window.ISNAD.world.map.id === 'archives')) break; const pt = await E(() => window.__t.calme() ? window.__t.brut(904, 138) : null); if (pt) await P.touchscreen.tap(pt[0], pt[1]); await P.waitForTimeout(1500); } descend = await E(() => window.ISNAD.world.map.id === 'archives'); }
+    else descend = await versBord(904, 150, 'ArrowUp', 'cite');
+    await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'archives' && window.__t.calme(), 10000)); await P.waitForTimeout(400);
+    const e7 = await etat(); await P.screenshot({ path: path.join(out, `ascenseur-archives-${w}x${h}.png`) });
+    si(p2 && e5.carte === 'quartiers' && e5.cps.includes('idris:0') && r2 && e6.carte === 'cite' && e6.obj === e3.obj && e6.asc && descend && e7.carte === 'archives' && e7.obj === e3.obj && !e7.asc && Math.abs(e7.x - 272) < 8 && e7.y <= 356 && e7.y > 330,
+      `${nom} · remonté, la rue mène aux quartiers et en revient (le prologue rangé, puis repris) ; l’ascenseur redescend ${haut ? 'au doigt' : 'au clavier'}, aux Archives, là où Idris était (${e7.x}, ${e7.y}), objectif ${e7.obj}`, `${nom} · l’ascenseur et la rue : ${JSON.stringify({ p2, e5, r2, e6, descend, e7 })}`, 'BLOQUÉ');
+    // e. (en largeur) un retour (« x_descendu »), une rencontre (« r_abubakr »), le dernier maillon, le joueur de test
+    if (!haut) {
+      const ouvrir = ci => E(ci => { const I = window.ISNAD, W = I.world; I.save.data.prologue = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('idris', ci); }, ci);
+      await ouvrir(7); await P.waitForTimeout(1000); await avancer(P);
+      const x0 = await etat(), m1 = await versBord(272, 381, 'ArrowDown', 'archives'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'cite' && window.__t.calme(), 10000));
+      const x1 = await etat(), m2 = await versBord(904, 150, 'ArrowUp', 'cite'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'archives' && window.__t.calme(), 10000));
+      const x2 = await etat();
+      si(m1 && m2 && x0.ch === 'x_descendu' && x1.ch === 'x_descendu' && x1.carte === 'cite' && x1.obj === x0.obj && x2.carte === 'archives' && x2.obj === x0.obj, `${nom} · pendant un retour (« x_descendu ») : l’ascenseur remonte à la Cité-Miroir puis redescend, le même retour, à son objectif`, `${nom} · le retour : ${JSON.stringify({ m1, m2, x0, x1, x2 })}`, 'BLOQUÉ');
+      await ouvrir(2); await P.waitForTimeout(1000); await avancer(P);
+      const r0 = await etat(), t1 = await versBord(950, 237, 'ArrowRight', 'cite'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'quartiers' && window.__t.calme(), 12000)); await avancer(P);
+      const t2 = await versBord(4, 157, 'ArrowLeft', 'quartiers'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'cite' && window.__t.calme(), 12000)); await avancer(P);
+      const r1 = await etat();
+      si(t1 && t2 && r0.ch === 'r_abubakr' && r1.ch === 'r_abubakr' && r1.obj === r0.obj, `${nom} · pendant une rencontre (« r_abubakr ») : la rue mène aux quartiers et en revient, la rencontre reprend à son objectif`, `${nom} · la rencontre : ${JSON.stringify({ t1, t2, r0, r1 })}`, 'BLOQUÉ');
+      await ouvrir(1); await P.waitForTimeout(1000); await avancer(P);
+      await E(() => window.__t.poser(948, 237)); await P.keyboard.down('ArrowRight'); await P.waitForTimeout(800); await P.keyboard.up('ArrowRight'); await P.waitForTimeout(500);
+      const f1 = await etat();
+      await E(() => { window.ISNAD.debug.walk = true; window.__t.poser(940, 237); }); await P.keyboard.down('ArrowRight'); await P.waitForTimeout(800); await P.keyboard.up('ArrowRight'); await P.waitForTimeout(500);
+      const f2 = await etat(); await E(() => { window.ISNAD.debug.walk = false; });
+      si(f1.ch === 'e1' && f1.carte === 'cite' && f2.carte === 'cite', `${nom} · le dernier maillon, d’une traite : la rue ne s’y ouvre pas ; le joueur de test du moteur ne passe jamais`, `${nom} · le dernier maillon : ${JSON.stringify({ f1, f2 })}`, 'ÉCART');
+    }
+    toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'passages ' + nom + ' · ' + e)); await T.ctx.close();
   }
   if (toutesErreurs.length) { anomalies++; console.log('--- ERREURS ---'); [...new Set(toutesErreurs)].slice(0, 12).forEach(e => console.log(e)); }
   console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ CITÉ CONFORME — les quartiers, en hauteur et en largeur : l’arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel ; Sâlim et sa moto, les cinq circuits, la prime, aucune mise (captures dans ${path.relative(path.join(__dirname, '..'), out)})`);

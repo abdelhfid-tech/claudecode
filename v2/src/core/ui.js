@@ -608,7 +608,7 @@
       // 2.23 (D212) : dans les quartiers de la Cité, la halte offre ce qu'offre Maître Yûnus — reprendre le récit quitté, ou la Chaîne
       if (inWorld && !W.excursion && I.cite && I.cite.ici()) { const c = I.cite.recit(); items.push({ cat: I.t('Partir') });
         if (c) items.push({ label: I.t('Reprendre le récit'), fn() { close(); I.cite.versRecit(); }, show: () => `<h3>${I.t('Reprendre le récit')}</h3><p>${I.cite.reprendreDit(c)}</p><p>${I.t('Le récit reprend exactement là où tu l’as laissé.')}</p>` });
-        items.push({ label: I.t('La Chaîne'), fn() { close(); I.cite.versChaine(); }, show: () => `<h3>${I.t('La Chaîne')}</h3><p>${I.t('Idris redescend aux Archives basses, devant la Chaîne. Les quartiers restent là : tu y reviens quand tu veux.')}</p>` }); }
+        if (I.save.data.prologue) items.push({ label: I.t('La Chaîne'), fn() { close(); I.cite.versChaine(); }, show: () => `<h3>${I.t('La Chaîne')}</h3><p>${I.t('Idris redescend aux Archives basses, devant la Chaîne. Les quartiers restent là : tu y reviens quand tu veux.')}</p>` }); }   // (2.28 : arrivé par la rue pendant le prologue, la Chaîne ne s'est pas encore ouverte)
       else if (inWorld && !W.excursion) { const ailleurs = !!(W.saga && (!W.saga.frame || W.saga.veillees)), nom = ailleurs ? I.t('Revenir en 2084') : I.t('Retour à la Chaîne'), cite = ailleurs && I.cite && I.cite.offert();
         items.push({ cat: I.t('Partir') }, { label: nom, fn() { W.checkpoint(); close(); U.partir(ailleurs); },
           show: () => `<h3>${nom}</h3><p>${cite ? I.t('Le râwî remonte dans les quartiers de la Cité-Miroir, à côté de Maître Yûnus. Ce récit reste où tu le laisses : tu le reprendras là, même après en avoir suivi un autre.') : ailleurs ? I.t('Le râwî rouvre les yeux aux Archives basses, devant la Chaîne. Ce récit reste où tu le laisses : tu le reprendras là, même après en avoir suivi un autre.') : I.t('Tu reprendras ce chapitre là où tu l’as laissé.')} ${I.t('La partie se garde toute seule, même si tu fermes la page.')}</p>${ailleurs ? '<p class="src">' + I.t('La Cité-Miroir ne t’attend pas : il peut s’y être passé quelque chose.') + '</p>' : ''}` }); }
@@ -835,6 +835,7 @@
     I.errors.push({ t: Date.now(), msg: 'reprise demandée par le joueur', st: '', n: 1 });
     try { I.battle.abort(W); } catch (e) { /* le combat n'était pas ouvert */ }
     try { if (I.circuit) I.circuit.abandon(); } catch (e) { /* aucune course n'était ouverte */ }
+    try { if (I.activites) I.activites.abandon(); } catch (e) { /* aucune partie de borne n'était ouverte */ }
     S.depth = 0; W.lock = false; W._autoBusy = false; U.menuOpen = false; S.hideDialog(); $('#choice').hidden = true; document.body.classList.remove('in-dialog', 'in-screen', 'in-build', 'en-carton');
     const c = $('#card'); c.classList.remove('on'); c.hidden = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
     I.input.reset(); const f = $('#fade'); f.style.transition = 'opacity .3s ease'; f.style.opacity = 0; document.body.classList.remove('noir');
@@ -948,7 +949,7 @@
      Masquée au choix du joueur (« Manette tactile »), elle ne prend plus aucune place. Ses mesures viennent de la manette
      elle-même (sa place ne dépend pas de la scène) : la marge du système (encoche) est comprise. */
   const PANNEAU = 276;   // en hauteur, la place que le panneau du combat demande sous la scène, serré, marges comprises (points)
-  const enCourse = () => !!(I.circuit && I.circuit.scene && I.scene === I.circuit.scene);   // 2.27 (D216) : une course, ou le tour de moto
+  const enCourse = () => !!(I.circuit && I.circuit.scene && I.scene === I.circuit.scene) || !!(I.activites && I.activites.scene && I.scene === I.activites.scene);   // 2.27 (D216) : une course, ou le tour de moto ; 2.28 (D217) : une partie à la borne
   function padPlace(portrait) {
     const B = document.body, on = B.classList.contains('touch') && !B.classList.contains('sansjoy'); let bas = 0, cote = 0, zone = null;
     if (on) { const r = q => $(q).getBoundingClientRect(), j = r('#pad .joy'), a = r('#pad .a'), b = r('#pad .b'), vw = window.innerWidth, vh = window.innerHeight;
@@ -1036,7 +1037,8 @@
     if (e.target && e.target.closest && e.target.closest('[data-plein]')) return; pleinTente = true; U.pleinEcran(true); };
   ['fullscreenchange', 'webkitfullscreenchange'].forEach(n => document.addEventListener(n, () => { if (!enPlein()) { try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (x) { /* rien */ } } }));
   // en exploration, le joystick fait marcher (l'écouteur du dessus est celui du monde) ; ailleurs, il choisit
-  const marche = () => (I.input.auMonde() && I.scene === W && !U.menuOpen && !I.battle.active) || !!(I.circuit && I.circuit.mene && I.circuit.mene());   // 2.27 : pendant une course, il mène (circuit.js)
+  const mene = () => !!(I.circuit && I.circuit.mene && I.circuit.mene()) || !!(I.activites && I.activites.mene && I.activites.mene());   // 2.27 : une course (circuit.js) ; 2.28 : la borne (activites.js)
+  const marche = () => (I.input.auMonde() && I.scene === W && !U.menuOpen && !I.battle.active) || mene();   // pendant une course ou une partie de borne, il mène
   U.padMarche = marche;
   function pad() {
     // 2.x — le joystick du pouce gauche (demande du décideur, 19 novembre : « un joystick transparent pour le pouce gauche » ;
@@ -1060,7 +1062,7 @@
       if (bou) bou.style.transform = `translate(${(dx * k).toFixed(1)}px, ${(dy * k).toFixed(1)}px)`;
       courir();
       const nv ={ up: false, down: false, left: false, right: false }, va = marche();
-      I.input.joyAngle = va && L > R * 0.22 && I.circuit && I.circuit.mene && I.circuit.mene() ? Math.atan2(dy, dx) : null;   // 2.27 : le cap que l'on donne à la voiture (circuit.js)
+      I.input.joyAngle = va && L > R * 0.22 && mene() ? Math.atan2(dy, dx) : null;   // 2.27 : le cap que l'on donne à la voiture (circuit.js) ; 2.28 : à la lueur de la borne (activites.js)
       if (L > R * 0.22) { const ang = Math.atan2(dy, dx) * 180 / Math.PI;
         if (va) { const s8 = Math.round(ang / 45); // de -4 à 4 : 0 à droite, 2 en bas, -2 en haut, ±4 à gauche
           nv.right = s8 >= -1 && s8 <= 1; nv.down = s8 >= 1 && s8 <= 3; nv.left = s8 >= 3 || s8 <= -3; nv.up = s8 >= -3 && s8 <= -1; }

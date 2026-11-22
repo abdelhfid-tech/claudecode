@@ -614,6 +614,23 @@
     if (idris) corps(10.6, idris);
     if (salim) { c.fillStyle = salim.robe || '#5a2f3a'; c.fillRect(15.4, 11.3 + dy, 3.6, 0.9); c.fillRect(15.4, 15.8 + dy, 3.6, 0.9); corps(14.4, salim); }   // ses bras vers le guidon
   }
+  /* 2.28 (D217) — Idris sur un manège (activites.js) : P = { sheet (sa planche de marche), k (sa nacelle, sa chaise ou sa tasse) }.
+     De face, la tête et les épaules seulement (la nacelle et la tasse le cachent jusqu'à la taille ; sur sa chaise, jusqu'aux
+     genoux) ; plus petit que sur la carte, à la mesure du manège. Personne d'autre ne monte. */
+  function passager(c, P, gx, gy, col, genre) {
+    const sh = P.sheet; if (!sh) return;
+    if (genre === 'nacelle') {
+      c.fillStyle = '#e8dcc8'; c.fillRect(gx - 0.25, gy, 0.5, 2.5);
+      c.fillStyle = shade(col, 0.5); c.beginPath(); c.ellipse(gx, gy + 7.2, 6.4, 5.6, 0, 0, 6.3); c.fill();   // le fond de la nacelle
+      c.drawImage(sh, 0, 1, 16, 13, gx - 6, gy + 1.2, 12, 9.75);
+      c.fillStyle = col; c.beginPath(); c.moveTo(gx - 6.4, gy + 7.6); c.lineTo(gx + 6.4, gy + 7.6); c.quadraticCurveTo(gx + 5.6, gy + 13, gx, gy + 13); c.quadraticCurveTo(gx - 5.6, gy + 13, gx - 6.4, gy + 7.6); c.closePath(); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.4)'; c.fillRect(gx - 5.8, gy + 7.6, 11.6, 0.6); c.fillStyle = 'rgba(255,240,200,.95)'; c.fillRect(gx - 0.6, gy - 0.6, 1.2, 1.2);
+    } else if (genre === 'chaise') {
+      c.drawImage(sh, 0, 1, 16, 17, gx - 5.6, gy - 14.5, 11.2, 11.9);
+      c.fillStyle = col; c.fillRect(gx - 3, gy - 3, 6, 1.4); c.fillRect(gx - 3, gy - 3, 1, 3.6); c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(gx - 3, gy - 3, 6, 0.4);
+    } else c.drawImage(sh, 0, 1, 16, 12, gx - 5.6, gy - 7.6, 11.2, 8.4);
+  }
+  G.passager = passager;
   const dcache = {};
   // une image vue de dessus, tournée : genre 'voiture' (o : { m, c }) ou 'moto' (o : { c, salim, idris, penche }) ; k : le cap, de 0 à 31
   G.dessus = function (genre, o, k) {
@@ -665,10 +682,13 @@
       c.strokeStyle = '#d8c8b0'; c.lineWidth = 2; c.beginPath(); c.moveTo(hx - 26, 122); c.lineTo(hx, hy); c.lineTo(hx + 26, 122); c.stroke();
       c.strokeStyle = '#8a7a68'; c.lineWidth = 1; c.beginPath(); c.moveTo(hx - 17, 100); c.lineTo(hx + 17, 100); c.stroke();
       Rc(c, '#5a4a52', hx - 30, 119, 60, 4); Rc(c, '#8a7a80', hx - 30, 119, 60, 0.75); Rc(c, '#3a2e36', hx - 6, 112, 12, 8); Rc(c, '#ffd27a', hx - 3, 114, 6, 4); },
-      animer(c, x, y, t) { const hx = x, hy = y - 66, R0 = 44, n = 12, a0 = t * 0.12;
+      // (2.28, D217 : o.angle, pendant un tour ; o.decal, après, pour que la roue reprenne sans à-coup ; o.passager : Idris
+      // dans sa nacelle — activites.js)
+      animer(c, x, y, t, o) { const hx = x, hy = y - 66, R0 = 44, n = 12, a0 = o && o.angle !== undefined ? o.angle : t * 0.12 + ((o && o.decal) || 0), P = o && o.passager;
         c.strokeStyle = 'rgba(240,220,200,.8)'; c.lineWidth = 1; c.beginPath(); c.arc(hx, hy, R0, 0, 6.3); c.stroke(); c.strokeStyle = 'rgba(240,220,200,.45)'; c.beginPath(); c.arc(hx, hy, R0 - 5, 0, 6.3); c.stroke();
         c.strokeStyle = 'rgba(230,210,190,.5)'; c.lineWidth = 0.5; c.beginPath(); for (let k = 0; k < n; k++) { const a = a0 + k * 6.2832 / n; c.moveTo(hx, hy); c.lineTo(hx + Math.cos(a) * R0, hy + Math.sin(a) * R0); } c.stroke();
         for (let k = 0; k < n; k++) { const a = a0 + k * 6.2832 / n, gx = hx + Math.cos(a) * R0, gy = hy + Math.sin(a) * R0, col = ['#ff6a8a', '#39c6ff', '#ffd84a', '#7dffb0'][k % 4];
+          if (P && P.k === k) { passager(c, P, gx, gy, col, 'nacelle'); continue; }
           c.fillStyle = '#e8dcc8'; c.fillRect(gx - 0.25, gy, 0.5, 2.5); c.fillStyle = col; c.beginPath(); c.ellipse(gx, gy + 5.5, 3.6, 3.2, 0, 0, 6.3); c.fill();
           c.fillStyle = 'rgba(20,24,44,.75)'; c.fillRect(gx - 2.4, gy + 3.8, 4.8, 2.2); c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(gx - 2.4, gy + 3.8, 1.2, 0.5);
           c.fillStyle = (Math.floor(t * 2) + k) % 3 ? 'rgba(255,240,200,.9)' : 'rgba(255,240,200,.35)'; c.fillRect(gx - 0.6, gy - 0.6, 1.2, 1.2); }
@@ -676,21 +696,26 @@
     // les chaises volantes : un mât, une couronne qui tourne, des chaises vides au bout de leurs chaînes
     qmanege: { w: 70, h: 66, fw: 40, fh: 6, anim: true, draw(c) { c.fillStyle = '#5a4a5a'; c.beginPath(); c.ellipse(35, 61, 30, 5, 0, 0, 6.3); c.fill(); c.fillStyle = '#8a7a86'; c.beginPath(); c.ellipse(35, 60, 28, 4.2, 0, 0, 6.3); c.fill();
       c.fillStyle = '#c8a868'; c.beginPath(); c.ellipse(35, 59.5, 6, 1.6, 0, 0, 6.3); c.fill(); },
-      animer(c, x, y, t) { const top = y - 56, a0 = t * 0.9, n = 10, R0 = 25, chaise = (a, devant) => { const sx = Math.cos(a), sy = Math.sin(a); if ((sy > 0) !== devant) return;
+      animer(c, x, y, t, o) { const top = y - 56, a0 = o && o.angle !== undefined ? o.angle : t * 0.9 + ((o && o.decal) || 0), n = 10, P = o && o.passager, R0 = 25 + (P ? (P.envol || 0) * 6 : 0), chaise = (a, devant, k) => { const sx = Math.cos(a), sy = Math.sin(a); if ((sy > 0) !== devant) return;
           const ax = x + sx * 13, ay = top + 4 + sy * 3, cx2 = x + sx * R0, cy2 = top + 26 + sy * 7.5;
           c.strokeStyle = 'rgba(220,210,200,.7)'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(ax, ay); c.lineTo(cx2, cy2 - 3); c.stroke();
-          c.fillStyle = ['#ff6a8a', '#39c6ff', '#ffd84a', '#7dffb0', '#c49bff'][Math.floor(((a % 6.2832) + 6.2832) % 6.2832 / 6.2832 * n) % 5]; c.fillRect(cx2 - 2, cy2 - 3, 4, 1.4); c.fillRect(cx2 - 2, cy2 - 3, 1, 3.6); };
-        for (let k = 0; k < n; k++) chaise(a0 + k * 6.2832 / n, false);
+          const col = ['#ff6a8a', '#39c6ff', '#ffd84a', '#7dffb0', '#c49bff'][Math.floor(((a % 6.2832) + 6.2832) % 6.2832 / 6.2832 * n) % 5];
+          if (P && P.k === k) { passager(c, P, cx2, cy2, col, 'chaise', sx); return; }   // (2.28 : Idris sur sa chaise — activites.js)
+          c.fillStyle = col; c.fillRect(cx2 - 2, cy2 - 3, 4, 1.4); c.fillRect(cx2 - 2, cy2 - 3, 1, 3.6); };
+        for (let k = 0; k < n; k++) chaise(a0 + k * 6.2832 / n, false, k);
         c.fillStyle = '#d8c8b0'; c.fillRect(x - 1.5, top + 4, 3, 50); c.fillStyle = 'rgba(255,255,255,.4)'; c.fillRect(x - 1.5, top + 4, 0.75, 50);
         for (let k = 0; k < 8; k++) { const a = a0 + k * 0.7854, s = Math.cos(a); c.fillStyle = k % 2 ? '#e84a6a' : '#f4e8d8'; c.beginPath(); c.moveTo(x, top - 6); c.lineTo(x + Math.cos(a) * 16, top + 4 + Math.sin(a) * 3.5); c.lineTo(x + Math.cos(a + 0.7854) * 16, top + 4 + Math.sin(a + 0.7854) * 3.5); c.closePath(); if (s > -2) c.fill(); }
         c.fillStyle = '#ffd27a'; c.beginPath(); c.arc(x, top - 6, 1.6, 0, 6.3); c.fill();
-        for (let k = 0; k < n; k++) chaise(a0 + k * 6.2832 / n, true); } },
+        for (let k = 0; k < n; k++) chaise(a0 + k * 6.2832 / n, true, k); } },
     // les tasses : un plateau qui tourne, quatre tasses vides qui tournent sur elles-mêmes
     qtasses: { w: 60, h: 30, fw: 40, fh: 6, anim: true, draw(c) { c.fillStyle = '#4a3e4e'; c.beginPath(); c.ellipse(30, 24, 28, 5.5, 0, 0, 6.3); c.fill(); c.fillStyle = '#7a6a80'; c.beginPath(); c.ellipse(30, 23, 26, 4.6, 0, 0, 6.3); c.fill(); },
-      animer(c, x, y, t) { const L = [0, 1, 2, 3].map(k => { const a = t * 0.6 + k * 1.5708; return { a, sx: x + Math.cos(a) * 15, sy: y - 7 + Math.sin(a) * 3.2, k }; }).sort((p, q) => p.sy - q.sy);
-        L.forEach(q => { const col = ['#ff6a8a', '#39c6ff', '#ffd84a', '#7dffb0'][q.k], w = 6 + Math.abs(Math.sin(t * 2.2 + q.k)) * 1.2;
+      animer(c, x, y, t, o) { const a0 = o && o.angle !== undefined ? o.angle : t * 0.6 + ((o && o.decal) || 0), P = o && o.passager, L = [0, 1, 2, 3].map(k => { const a = a0 + k * 1.5708; return { a, sx: x + Math.cos(a) * 15, sy: y - 7 + Math.sin(a) * 3.2, k }; }).sort((p, q) => p.sy - q.sy);
+        L.forEach(q => { const col = ['#ff6a8a', '#39c6ff', '#ffd84a', '#7dffb0'][q.k], w = 6 + Math.abs(Math.sin((P && P.tasse !== undefined ? P.tasse : t * 2.2) + q.k)) * 1.2;
+          if (P && P.k === q.k) { c.fillStyle = shade(col, 0.45); c.beginPath(); c.ellipse(q.sx, q.sy - 5, w, 1.6, 0, 0, 6.3); c.fill(); passager(c, P, q.sx, q.sy - 5, col, 'tasse'); }   // (2.28 : Idris assis dans sa tasse — activites.js)
           c.fillStyle = shade(col, 0.6); c.beginPath(); c.ellipse(q.sx, q.sy, w, 2, 0, 0, 6.3); c.fill(); c.fillStyle = col; c.beginPath(); c.moveTo(q.sx - w, q.sy - 5); c.lineTo(q.sx + w, q.sy - 5); c.lineTo(q.sx + w * 0.75, q.sy); c.lineTo(q.sx - w * 0.75, q.sy); c.closePath(); c.fill();
-          c.fillStyle = shade(col, 0.45); c.beginPath(); c.ellipse(q.sx, q.sy - 5, w, 1.6, 0, 0, 6.3); c.fill(); c.fillStyle = 'rgba(255,255,255,.45)'; c.fillRect(q.sx - w + 1, q.sy - 4, 1, 3); }); } },
+          if (P && P.k === q.k) { c.fillStyle = shade(col, 0.45); c.beginPath(); c.ellipse(q.sx, q.sy - 5, w, 1.6, 0, 0, 3.1416); c.fill(); }   // (occupée : seule la moitié de devant du rebord passe sur lui)
+          else { c.fillStyle = shade(col, 0.45); c.beginPath(); c.ellipse(q.sx, q.sy - 5, w, 1.6, 0, 0, 6.3); c.fill(); }
+          c.fillStyle = 'rgba(255,255,255,.45)'; c.fillRect(q.sx - w + 1, q.sy - 4, 1, 3); }); } },
     // un banc de rue : deux pieds de métal, des lattes de bois
     qbanc: { w: 24, h: 13, fw: 16, fh: 4, draw(c) { Rc(c, '#2e2a34', 3, 7, 1.5, 5); Rc(c, '#2e2a34', 19.5, 7, 1.5, 5); Rc(c, '#8a6040', 1, 1, 22, 2); Rc(c, '#a87a52', 1, 1, 22, 0.5); Rc(c, '#7a5236', 1, 5, 22, 2.5); Rc(c, '#9a6a46', 1, 5, 22, 0.5); Rc(c, '#3a3440', 2, 3, 1, 2); Rc(c, '#3a3440', 21, 3, 1, 2); } },
     // un lampadaire : un fût mince, un bras courbe, une tête qui éclaire vers le sol

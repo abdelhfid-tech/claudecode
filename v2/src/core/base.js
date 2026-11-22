@@ -154,8 +154,10 @@
   function fresh() {
     return { v: FORMAT, profil: {}, paquets: {}, started: false, prologue: false, epilogue: false, lights: [], sagas: {}, heroes: {},
       items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, gear: {}, equip: {}, gearInit: {}, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
-      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 }, cite: { course: { salim: 0, gagnes: [], temps: [], primes: 0 } } };
+      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 }, cite: { course: { salim: 0, gagnes: [], temps: [], primes: 0 }, activites: activitesNeuves() } };
   }
+  // 2.28 (D217) : les activités des quartiers (activites.js) — le record de la borne, des comptes, ce qui a été dépensé ici
+  function activitesNeuves() { return { borne: { record: 0, parties: 0 }, tours: {}, ecran: 0, achats: 0, depenses: 0, essais: {} }; }
   // La partie se garde toute seule, à chaque point de reprise (AKEY) : fermer la page ne fait rien perdre. Les trois
   // emplacements de la mosquée restent, pour qui veut garder une copie. Les options, elles, se gardent à part.
   // La 2.0 a ses propres clés : elle ne lit ni n'écrit jamais celles de la 1.31 (isnad.auto.v1, isnad.slot.N, isnad.opts.v1).
@@ -171,6 +173,8 @@
     if (p.cite === undefined) p.cite = {}; // 2.23 (D212) : les quartiers de la Cité (cite.js) — absent des parties d'avant ; le format reste le 2
     // 2.27 (D216) : Sâlim et la course (circuit.js) — ce qu'a fait Sâlim, les circuits gagnés, le meilleur temps de chacun ; le format reste le 2
     if (estObjet(p.cite) && p.cite.course === undefined) p.cite = Object.assign({}, p.cite, { course: { salim: 0, gagnes: [], temps: [], primes: 0 } });
+    // 2.28 (D217) : les activités des quartiers (activites.js) — le format reste le 2
+    if (estObjet(p.cite) && p.cite.activites === undefined) p.cite = Object.assign({}, p.cite, { activites: activitesNeuves() });
     return p;
   }
   // Ce qui, dans une partie venue d'ailleurs, n'a pas la forme attendue. Un champ absent prendra sa valeur de départ ; un
@@ -200,7 +204,12 @@
         if (c.salim !== undefined && !(Number.isInteger(c.salim) && c.salim >= 0 && c.salim <= 2)) E.push('cite.course.salim');
         if (c.gagnes !== undefined && (!Array.isArray(c.gagnes) || c.gagnes.length > n || c.gagnes.some(g => g !== null && typeof g !== 'boolean'))) E.push('cite.course.gagnes');
         if (c.temps !== undefined && (!Array.isArray(c.temps) || c.temps.length > n || c.temps.some(t => t !== null && !naturel(t)))) E.push('cite.course.temps');
-        ['primes', 'parle', 'courses'].forEach(k => { if (c[k] !== undefined && !naturel(c[k])) E.push('cite.course.' + k); }); } } }
+        ['primes', 'parle', 'courses'].forEach(k => { if (c[k] !== undefined && !naturel(c[k])) E.push('cite.course.' + k); }); } }
+      // 2.28 (D217) : les activités — le record et les parties de la borne, les tours de chaque manège, des comptes, les essais de chaque outil
+      if (q.activites !== undefined) { const a = q.activites; if (!estObjet(a)) E.push('cite.activites'); else {
+        if (a.borne !== undefined && (!estObjet(a.borne) || ['record', 'parties'].some(k => a.borne[k] !== undefined && !naturel(a.borne[k])))) E.push('cite.activites.borne');
+        ['tours', 'essais'].forEach(k => { if (a[k] !== undefined && (!estObjet(a[k]) || Object.keys(a[k]).some(j => !naturel(a[k][j])))) E.push('cite.activites.' + k); });
+        ['ecran', 'achats', 'depenses'].forEach(k => { if (a[k] !== undefined && !naturel(a[k])) E.push('cite.activites.' + k); }); } } }
     if (objet('postures')) Object.keys(d.postures).forEach(k => { if (!D.POSTURES || !D.POSTURES[d.postures[k]]) E.push('postures.' + k); }); // 2.x : la posture prise par chacun (absente : celle de son tempérament)
     return E;
   }
