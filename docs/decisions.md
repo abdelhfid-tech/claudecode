@@ -2210,10 +2210,13 @@ pages privées de son compte.
   douze villes, leurs dates et leurs icônes (al-Hîra en camp, comme le plan le prévoyait ; le Yarmoûk, un lieu où l'on ne
   revient que depuis son récit) ; « Jérusalem » pour le nom de la ville (le récit dit « Îliyâ' » ; en arabe, « بيت المقدس ») ;
   l'année et l'époque de chaque chapitre (la première année d'un récit qui en couvre plusieurs : u3 « An 17–23 H » n'a pas
-  Fustât ; k2 « An 13 ou 15 H » n'a pas Bassora) ; La Mecque visitée sans mosquée (le décideur a dit « des rues, un marché, des
+  Fustât ; k2 « An 13 ou 15 H » n'a pas Bassora) ; La Mecque visitée sans mosquée (l'option choisie par le décideur parlait « des rues, un marché, des
   passants » : il n'y a pas encore de passants — la vie des villes viendra s'il la veut) ; la natte sobre et l'absence de
   descente dans une visite ; les textes (la leçon, « Entrer : … », « Revenir : … », « Les routes », « La route », les époques) ;
-  les captures (390 × 844, 844 × 390, dans les trois dessins). Contrôle : `node v2/tools/monde.js` (« MONDE CONFORME »).
+  les captures (390 × 844, 844 × 390, dans les trois dessins). Contrôle : `node v2/tools/monde.js` (« MONDE CONFORME »). *Relu à l'intégration (23 novembre)* :
+  les sommets des reliefs, d'abord des triangles parfaits qui se lisaient comme des pyramides, sont devenus des massifs de roche
+  irréguliers ; la cour de la natte de La Mecque n'a de mur qu'au nord et à l'est, ouverte sur la grand-rue ; les commentaires du
+  code ne nomment pas les jeux cités par le décideur.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et
