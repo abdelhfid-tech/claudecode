@@ -2159,6 +2159,10 @@ pages privées de son compte.
   qu'à la fin. La règle vaut pour tous les shorts : une image pleine, lumineuse et en mouvement, l'accroche lisible dès la
   première image, ni noir ni fondu ; `v2/tools/shorts.js` mesure la luminance de la première image et compte « PREMIÈRE
   IMAGE SOMBRE » sous 40 (sur 255 ; le seuil est une proposition de l'agent).
+  *La Chaîne, tous les maillons ouverts (le décideur, 23 novembre).* « Je veux que les sagas soient débloqués dans l'image
+  qui montre les différentes sagas. Tu peux débloquer les sagas dans le [short] si c'est plus simple. » Dans les shorts, la
+  Chaîne montre chaque maillon « à ouvrir », sans « Scellé » ni cadenas : l'interrupteur de test du jeu (`I.debug.all`,
+  `ui.js`) est posé dans la page du film seulement. Le jeu ne change pas : les maillons s'y suivent toujours (D211).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

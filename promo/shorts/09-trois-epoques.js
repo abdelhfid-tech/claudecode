@@ -86,7 +86,10 @@ module.exports = {
 
     /* 6 — la Chaîne : on passe d'un maillon à l'autre */
     s.marque('chaine');
-    await s.neuf(); await s.cadre('ecran'); await s.ev(() => { window.ISNAD.ui.showChain(); }); await s.avancer(700); await s.ev(() => { document.querySelector('#chain').scrollTop = 250; });
+    // tous les maillons ouverts (le décideur, 23 novembre : « Je veux que les sagas soient débloqués dans l'image qui montre
+    // les différentes sagas ») : l'interrupteur de test du jeu (I.debug.all, ui.js), posé dans cette page du film seulement ;
+    // le jeu garde ses maillons qui se suivent (D211)
+    await s.neuf(); await s.cadre('ecran'); await s.ev(() => { window.ISNAD.debug.all = true; window.ISNAD.ui.showChain(); }); await s.avancer(700); await s.ev(() => { document.querySelector('#chain').scrollTop = 250; });
     await s.arrivee(0, 0.4);
     await s.defiler('#chain', 1500, 10 * T);
     await s.tourner(10 * T);
