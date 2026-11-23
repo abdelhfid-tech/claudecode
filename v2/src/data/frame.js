@@ -224,8 +224,8 @@ ISNAD.registerSaga({
     rappels: [
       'Idris reprend son souffle. Au milieu de tout ce bruit, il pense à la prière, qui range les cœurs côte à côte.',
       'Ils sont si nombreux, et chacun si seul. Idris se souvient qu’il y a une heure pour s’arrêter, et prier.',
-      'Ce qui reste, après la chimère, c’est le besoin de se poser : une natte, un moment, la prière.',
-      'Idris pense à la natte du coin calme. La prière ne chasse rien ; elle remet chaque chose à sa place.',
+      'Ce qui reste, après la chimère, c’est le besoin de se poser : un tapis, un moment, la prière.',
+      'Idris pense au tapis du coin calme. La prière ne chasse rien ; elle remet chaque chose à sa place.',
       'Le vacarme reprend. Idris se dit que la prière a ses heures, et que l’une d’elles est peut-être venue.',
       'Il a été seul à la voir. Il n’est pas seul pour autant : il y a la prière, et il y a la Chaîne.'
     ],
@@ -343,7 +343,7 @@ ISNAD.registerSaga({
         { text: 'Descendre aux Archives basses (au bout de la rue)', goto: 'ascenseur', then: [
           ['sfx', 'door'], ['map', 'archives', 'entree'],
           ['nar', 'Quarante étages sous la rue, là où le Flux ne descend pas : les Archives basses.'],
-          ['nar', 'Dans un angle, une natte tournée vers La Mecque. Ici comme dans chaque mosquée de la Chaîne, on peut prier : le groupe s’y *repose*. La partie, elle, se garde toute seule.']
+          ['nar', 'Dans un angle, un tapis tourné vers La Mecque. Ici comme dans chaque mosquée de la Chaîne, on peut prier : le groupe s’y *repose*. La partie, elle, se garde toute seule.']
         ] },
         { text: 'Parler à Maître Yûnus', talk: 'yunus_n', then: [
           ['say', 'yunus_n', 'Te voilà, Idris. Assieds-toi. Ce soir, je te remets ce qu’on m’a remis.'],

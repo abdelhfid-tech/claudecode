@@ -289,7 +289,7 @@
 {"k":"28yz4p.w","fr":"Un tronc dressé, comme à Médine.","t":"جذعٌ منصوب، كما في المدينة.","ou":"D.PIECES.pilier.desc"},
 {"k":"t6gbxy.e","fr":"Niche de qibla","t":"المِحراب","ou":"D.PIECES.mihrab.name"},
 {"k":"13p2wwc.y","fr":"Indique la direction de La Mecque.","t":"يدلّ على جهة مكّة.","ou":"D.PIECES.mihrab.desc"},
-{"k":"5g6124.f","fr":"Natte de prière","t":"حصير الصلاة","ou":"D.PIECES.natte.name"},
+{"k":"ajzkxp.f","fr":"Tapis de prière","t":"سجّادة الصلاة","ou":"D.PIECES.natte.name"},
 {"k":"1rcff9e.1o","fr":"Dans une mosquée achevée, on y prie et le groupe s’y repose.","t":"في المسجد إذا اكتمل، يُصلّى عليه ويستريح الركب.","ou":"D.PIECES.natte.desc"},
 {"k":"13fbkh2.5","fr":"Tapis","t":"بِساط","ou":"D.PIECES.tapis.name"},
 {"k":"u20fld.p","fr":"Laine tissée, à losanges.","t":"صوفٌ منسوج، بنقش المُعيَّنات.","ou":"D.PIECES.tapis.desc"},

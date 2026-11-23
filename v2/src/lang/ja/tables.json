@@ -289,7 +289,7 @@
 {"k":"28yz4p.w","fr":"Un tronc dressé, comme à Médine.","t":"マディーナと同じく、幹を立てた柱。","ou":"D.PIECES.pilier.desc"},
 {"k":"t6gbxy.e","fr":"Niche de qibla","t":"ミフラーブ","ou":"D.PIECES.mihrab.name"},
 {"k":"13p2wwc.y","fr":"Indique la direction de La Mecque.","t":"マッカの方角を示す、壁のくぼみ。","ou":"D.PIECES.mihrab.desc"},
-{"k":"5g6124.f","fr":"Natte de prière","t":"礼拝用のむしろ","ou":"D.PIECES.natte.name"},
+{"k":"ajzkxp.f","fr":"Tapis de prière","t":"礼拝用の絨毯","ou":"D.PIECES.natte.name"},
 {"k":"1rcff9e.1o","fr":"Dans une mosquée achevée, on y prie et le groupe s’y repose.","t":"完成したモスクでは、ここで礼拝し、一行が休めます。","ou":"D.PIECES.natte.desc"},
 {"k":"13fbkh2.5","fr":"Tapis","t":"絨毯","ou":"D.PIECES.tapis.name"},
 {"k":"u20fld.p","fr":"Laine tissée, à losanges.","t":"菱形模様に織った羊毛。","ou":"D.PIECES.tapis.desc"},

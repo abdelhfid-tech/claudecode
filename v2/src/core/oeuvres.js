@@ -113,10 +113,10 @@
       let premiere = false; if (!st().vuNatte && !I.debug.auto) { st().vuNatte = true; O.learn('oeuvres'); premiere = true; }
       while (true) {
         const d = st(), left = MAX_JOUR - O.dayCount();
-        const titre = { html: I.t('Une natte tournée vers La Mecque, au cœur de l’étoile.') + (premiere ? '<small>' + I.t('On y prie, et le groupe s’y repose. On y accomplit aussi les œuvres du jour : chacune nourrit la provision du cœur (♥), que les grandes épreuves consomment.') + '</small>' : '') };
+        const titre = { html: I.t('Un tapis tourné vers La Mecque, au cœur de l’étoile.') + (premiere ? '<small>' + I.t('On y prie, et le groupe s’y repose. On y accomplit aussi les œuvres du jour : chacune nourrit la provision du cœur (♥), que les grandes épreuves consomment.') + '</small>' : '') };
         const songe = ((C0().portes || {}).sommeil || {}).menu || I.t('S’endormir');
         if (O.sobre()) { // de passage : on prie, on se repose, on garde une copie — les œuvres se comptent dans les récits
-          const j = I.debug.auto ? 2 : await S.menuPick({ html: I.t('Une natte tournée vers La Mecque.') + '<small>' + I.t('De passage, on y prie et l’on s’y repose : les œuvres se comptent dans les récits.') + '</small>' }, [{ t: I.t('Prier et se reposer : Constance et Souffle à 100 %, le groupe retrouve sa sérénité') }, { t: I.t('Garder une copie de la partie (elle se sauvegarde déjà toute seule)') }, { t: I.t('Plus tard'), retour: true }]);
+          const j = I.debug.auto ? 2 : await S.menuPick({ html: I.t('Un tapis tourné vers La Mecque.') + '<small>' + I.t('De passage, on y prie et l’on s’y repose : les œuvres se comptent dans les récits.') + '</small>' }, [{ t: I.t('Prier et se reposer : Constance et Souffle à 100 %, le groupe retrouve sa sérénité') }, { t: I.t('Garder une copie de la partie (elle se sauvegarde déjà toute seule)') }, { t: I.t('Plus tard'), retour: true }]);
           if (j === 0) await W.pray(); else if (j === 1) await I.ui.saveMenu();
           return;
         }
@@ -306,7 +306,7 @@
   O.paneOeuvres = function () {
     const d = st(), T = C0().oeuvres, L = C0().lames, E = C0().enemies;
     let h = '<h3>' + I.t('Œuvres et lames') + '</h3><p>' + I.t('Provision du cœur : <b>♥ {zad} / {max}</b>. Chaque œuvre y ajoute ; une idole en demande de 1 à 3 selon son enracinement, un mal du cœur 3. Qui s’y présente sans provision combat le cœur lourd.', { zad: d.zad, max: MAX_ZAD }) + '</p>' +
-      '<p class="src">' + I.t('Les œuvres s’accomplissent sur la natte d’une mosquée : trois par chapitre au plus, la prière en sus.') + (O.fasting() ? ' ' + I.t('<b>Jeûne en cours</b> : les vivres attendent le soir.') : '') + '</p>';
+      '<p class="src">' + I.t('Les œuvres s’accomplissent sur le tapis d’une mosquée : trois par chapitre au plus, la prière en sus.') + (O.fasting() ? ' ' + I.t('<b>Jeûne en cours</b> : les vivres attendent le soir.') : '') + '</p>';
     h += '<div class="lames">' + Object.keys(D.VICES).map(v => { const V = D.VICES[v], n = O.count(V.oeuvre), ok = !!d.lames[v], stt = d.vices[v];
       return '<div class="lm' + (ok ? ' ok' : '') + '"><img alt="" src="' + O.lameURL(v) + '"><div><b style="color:' + (ok ? L[v].couleur : 'inherit') + '">' + I.esc(L[v].name) + '</b> <small>' + I.esc(L[v].ar) + '</small><br><small>' + I.t('{oeuvre} {n} / {sur} · contre {min_mal}', { oeuvre: I.esc(T[V.oeuvre].court), n: Math.min(n, V.need), sur: V.need, min_mal: I.esc(bas(E[v].name)), mal: I.esc(E[v].name) }) + (stt === 'tranche' ? ' — ' + (e_(v) ? I.t('<b>tranchée</b>') : I.t('<b>tranché</b>')) : stt === 'repousse' ? ' — ' + (e_(v) ? I.t('repoussée') : I.t('repoussé')) : '') + '</small></div></div>'; }).join('') + '</div>';
     return h + '<p class="src">' + I.t('Les lames sont une image : une vertu pratiquée, qui tranche le mal contraire. Ce ne sont pas des reliques.') + '</p>';

@@ -134,7 +134,7 @@ l'histoire-cadre marqué `retour: n` dont le tour est venu (`rebonds` note ceux 
 Chaîne (la Citadelle, dès qu'une veillée a été entendue) et se rejoue. À l'ouverture d'un retour ou d'une visite, le
 moteur pose l'état de 2084 en drapeaux (`U.drapeaux2084` : `_2084_veillee_<saga>`, `_2084_maillon_<saga>`,
 `_2084_pilier_<pilier>`, `_2084_debout` / `_2084_tient` / `_2084_lezarde`, `_2084_en_route`). Ces chapitres se rejouant,
-`oeuvres.sobre()` y ferme les œuvres (la natte ne sert qu'au repos) et `valeurs.porte` n'y ouvre pas de descente.
+`oeuvres.sobre()` y ferme les œuvres (le tapis ne sert qu'au repos) et `valeurs.porte` n'y ouvre pas de descente.
 Champs nouveaux de la partie, tous facultatifs : `cps`, `retours`, `rebonds` — **le format reste le 2**, `controler` les
 vérifie, `assainir` écarte un récit rangé dont le contenu manque. `node v2/tools/retours.js` joue le tout par les vrais
 boutons : « RETOURS CONFORMES ».
@@ -565,7 +565,7 @@ et dans chacune de ses pages, sur les écrans (titre, Chaîne, « Ton personnage
 | un dialogue, une narration | finir la ligne, puis passer à la suivante | de même (comme Échap) | — |
 | un carton (titre, parole citée, secours, victoire, défaite, la fin) | passer | passer | — |
 | une liste de choix (pourparler, question du récit, idée noire) | choisir la réponse sélectionnée | rien | monter, descendre |
-| une liste qui a son « retour » (natte, comptoir, eau, copie, « Que faire ? », descente proposée…) | choisir | prendre la réponse « retour » | monter, descendre |
+| une liste qui a son « retour » (tapis, comptoir, eau, copie, « Que faire ? », descente proposée…) | choisir | prendre la réponse « retour » | monter, descendre |
 | la halte | entrer dans la page sélectionnée | la refermer : retour au jeu | la case voisine (en hauteur, deux colonnes) |
 | une page de la halte (Carte, Équipement, une pièce, Figures, Recueil, Aide, Valeurs, Les degrés du mal…) | choisir | revenir d'un cran | la case voisine |
 | la préparation d'une bataille | choisir | rien : on ne recule pas, la seule sortie est « Déclarer la bataille » | la case voisine |
@@ -795,7 +795,7 @@ activités (salle de jeux, galerie marchande, écran géant, parc et manèges). 
   en cercles et en vagues). Une boucle d'avenues à sens unique. Au milieu, le parvis et l'ascenseur qui remonte des Archives
   basses (`qkiosque`), la place du grand écran (`qecran` : des nappes de couleur qui coulent, aucun mot, aucun signe,
   aucune marque, aucun visage), l'immeuble de l'est, et derrière une haie basse le coin calme : du gravier, deux dattiers,
-  un banc, une natte posée au sol (`mat`, le lieu `priere`) — ni édifice, ni symbole. Au sud, le parc (la grande roue,
+  un banc, un tapis posé au sol (`mat`, le lieu `priere`) — ni édifice, ni symbole. Au sud, le parc (la grande roue,
   `qroue`, et deux manèges, `qmanege` et `qtasses`, qui tournent à vide) et le circuit (sa piste en ovale derrière une
   barrière, ses vibreurs, la ligne de départ en damier, la tribune, `qgradin`, et les stands, portes closes). Lieux nommés :
   `parvis`, `priere`, `galerie`, `jeux`, `ecran`, `circuit`, `tribune`, `parc`, `roue` (`D.LIEUX`). La carte `cite` et son
@@ -813,7 +813,7 @@ activités (salle de jeux, galerie marchande, écran géant, parc et manèges). 
   son couloir, derrière la barrière. Ce n'est pas un corps de `W.corps` : une voiture tient deux cases et bouge ; la règle
   est la même (on peut toujours s'en écarter, personne n'est posé dans une voiture). Rien n'en est gardé dans la partie.
 - **Le refuge** : le chapitre de l'histoire-cadre `c_quartiers` (`visite: 'quartiers'` — le validateur veut que `visite`
-  nomme la carte du chapitre —, donc sobre : `O.sobre()`, aucune œuvre comptée, aucune descente ; la natte du coin calme
+  nomme la carte du chapitre —, donc sobre : `O.sobre()`, aucune œuvre comptée, aucune descente ; le tapis du coin calme
   sert à prier et se reposer). On y arrive (`I.cite.arriver`) par « Revenir en 2084 » (`U.partir` : une fois joués les
   retours dus, et aussi au sortir d'un retour, `U.afterSaga`) et par le bouton « La Cité-Miroir » du pied de la Chaîne
   (dès le prologue joué) ; chaque arrivée est neuve, au parvis, à côté de Maître Yûnus. Parler à Maître Yûnus
@@ -1124,12 +1124,12 @@ dessin de l'agent, à valider. Les rencontres sur la route (les chimères, les b
   Idris tourné vers la ville, les personnages à leur place ; l'objectif et les drapeaux n'ont pas bougé.
 - **Les visites** (`Mo.entrer`, une autre ville de l'époque) : sa carte (`visite_…`, D.MAPS, `visite: true`) — Médine et Koufa
   sous la graine de leur récit, mais sans personnage ni objectif ; La Mecque, la variante `mecque` de la ville d'Arabie (ni
-  mosquée, ni Haram, ni Kaaba, rien qui les évoque : des maisons, un petit marché, une cour bordée d'un mur de terre (au nord et à l'est) où la natte
-  est posée) ; Tâ'if, la ville d'Arabie ; Bassora, la variante `fleuve` (le fleuve à l'est) ; Fustât, la variante `nil` (le
+  mosquée, ni Haram, ni Kaaba, rien qui les évoque : des maisons, un petit marché, une cour bordée d'un mur de terre (au nord et à l'est) où le tapis
+  est posé) ; Tâ'if, la ville d'Arabie ; Bassora, la variante `fleuve` (le fleuve à l'est) ; Fustât, la variante `nil` (le
   fleuve à l'ouest) ; Damas, Homs, Qinnasrîn, Jérusalem, la cité romaine, sans les enseignes de Rûm à sa porte ni à son
   palais (sous le califat) ; al-Hîra, le camp. On y entre par la porte du côté
   d'où l'on vient ; un carton dit le nom de la ville et l'époque du chapitre (`depuis.epoque`). Le comptoir tient les étals
-  d'un lieu du jeu (`D.GEAR_SHOPS`) ; la natte y est sobre (`O.sobre` : on prie et l'on se repose, les œuvres se comptent dans
+  d'un lieu du jeu (`D.GEAR_SHOPS`) ; le tapis y est sobre (`O.sobre` : on prie et l'on se repose, les œuvres se comptent dans
   les récits, on ne descend pas dans la noosphère) ; on n'y bâtit pas (`Bd.outdoor`) ; rien n'y rôde. On en ressort par sa
   porte, vers la carte du monde, à côté de la ville. Un lieu (la vallée du Yarmoûk) n'a pas de visite : on n'y revient que
   depuis son récit.
@@ -1156,7 +1156,7 @@ dessin de l'agent, à valider. Les rencontres sur la route (les chimères, les b
   l'agent, à valider.
 - **Le contrôle** : `node v2/tools/monde.js` (« MONDE CONFORME ») — la géographie (chaque ville à une case de son point, quatre
   distances à 10 % du grand cercle, tout relié, aucune route en mer), les dates, les portes là où `depuis` les met et nulle part
-  ailleurs, chaque visite (comptoir et natte reliés ; La Mecque sans mosquée), puis en 390 × 844 au doigt et en 844 × 390 au
+  ailleurs, chaque visite (comptoir et tapis reliés ; La Mecque sans mosquée), puis en 390 × 844 au doigt et en 844 × 390 au
   clavier : Médine → la route → La Mecque → la route → Médine, la partie exportée sur la route et réimportée ; chaque chapitre à
   portes et chaque ville de passage ; le joueur de test du moteur ; les captures dans les trois dessins. Un changement de la
   carte du monde, des portes ou des visites repasse `monde.js`, puis `cite.js passages`, `retours.js`, `progression.js`,

@@ -121,7 +121,7 @@
   /* ---------- Ville arabe : Médine, et ses variantes « fleuve » (Koufa, Bassora), « nil » (Fustât) et « mecque » ----------
      2.29 (D220) : « nil », le fleuve à l'ouest (la ville n'est pas retournée) ; « mecque », la visite sobre de La Mecque — ni
      mosquée, ni Haram, ni Kaaba, rien qui les évoque : au cœur de la ville, des maisons de part et d'autre de la grand-rue, un
-     petit marché, et une cour bordée d'un mur de terre au nord et à l'est, où la natte est posée. Médine et Koufa ne changent pas d'une case. */
+     petit marché, et une cour bordée d'un mur de terre au nord et à l'est, où le tapis est posé. Médine et Koufa ne changent pas d'une case. */
   function ville(id, o, L, graine) {
     const v = L && L.variante, fleuve = v === 'fleuve' || v === 'nil', mecque = v === 'mecque', b = new MB(id, 60, 46, 'sand', o, graine); b.mirror = v === 'fleuve';
     // chemins
@@ -681,7 +681,7 @@
      ville de verre que la rue de la Cité (cite(), plus haut, qui ne change pas d'une case), au même crépuscule, vue d'un peu
      plus haut : au nord, la galerie marchande et ses vitrines, la salle de jeux ouverte sur la rue, des tours de verre ; une
      boucle d'avenues à sens unique, où roulent les voitures (trafic.js) ; au milieu, le parvis et l'ascenseur qui remonte des
-     Archives basses, la place du grand écran, et, derrière une haie basse, un coin calme où une natte est posée au sol ; au
+     Archives basses, la place du grand écran, et, derrière une haie basse, un coin calme où un tapis est posé au sol ; au
      sud, le parc, sa grande roue et ses manèges qui tournent à vide, et le circuit, sa tribune et ses voitures de course.
      Aucune ville réelle, aucun monument copié, aucune lettre, aucune marque, aucun logo, aucun édifice ni symbole religieux :
      les vitrines montrent des formes, l'écran des couleurs qui coulent, les néons des courbes. Les voitures garées tiennent
@@ -814,7 +814,7 @@
     rect('#4a3a46', E0, 224, E1 - E0, 80); rect('#5e4c58', E0, 224, E1 - E0, 2); rect('#a8874e', E0, 224, E1 - E0, 0.75);
     for (let y = 232; y < 300; y += 18) { rect('#3a2c38', E0 + 2, y + 12, E1 - E0 - 4, 1.5); for (let x = E0 + 8; x < E1 - 12; x += 20) { const allume = r() < 0.55; rect('#2a2030', x, y, 12, 11); rect(allume ? '#ffcf8a' : '#3a3450', x + 1, y + 1, 10, 9); if (allume) rect('rgba(255,255,255,.25)', x + 1, y + 1, 10, 1); rect('#2a2030', x + 5.75, y + 1, 0.5, 9); } }
     rect('#2a1a30', 800, 284, 32, 20); c.fillStyle = grad(0, 286, 0, 304, [[0, '#ffdca0'], [1, '#d07a44']]); c.fillRect(802, 286, 28, 18);
-    /* --- le coin calme : une bordure de pierre au pied de la haie, des pas japonais vers la natte --- */
+    /* --- le coin calme : une bordure de pierre au pied de la haie, des pas japonais vers le tapis --- */
     rect('rgba(40,30,24,.3)', 736, 336, 176, 1.5);
     [[740, 376], [756, 382], [772, 380], [788, 386], [804, 388]].forEach(([x, y]) => { c.fillStyle = 'rgba(200,184,160,.5)'; c.beginPath(); c.ellipse(x, y, 5, 2.6, 0, 0, 6.3); c.fill(); });
     /* --- le parc : des massifs de fleurs, des bordures --- */

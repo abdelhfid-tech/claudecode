@@ -266,7 +266,7 @@
     monde:     { nom: 'Carte du monde',  theme: 'orient', dehors: false, piste: 'desert',    reserve: true, spots: ['medine', 'mecque', 'taif', 'quds', 'damas', 'homs', 'qinnasrin', 'yarmouk', 'hira', 'bassora', 'koufa', 'fustat'] }
   };
   // 2.29 (D220) : deux variantes de plus pour la ville d'Arabie — « mecque » (la visite sobre de La Mecque : ni mosquée, ni
-  // Haram, ni Kaaba ; le cœur de la ville fait de maisons et d'un souk, la natte dans une cour) et « nil » (Fustât : le fleuve
+  // Haram, ni Kaaba ; le cœur de la ville fait de maisons et d'un souk, le tapis dans une cour) et « nil » (Fustât : le fleuve
   // à l'ouest, la ville n'est pas retournée)
   D.GABARITS.ville.variantes = ['fleuve', 'mecque', 'nil'];
   // un lieu : son nom, son gabarit, les lieux nommés de ce gabarit, et ce qui lui est propre (variante, piste, noms)
@@ -688,7 +688,7 @@
     sol:       { name: 'Dallage étoilé', cost: { pise: 1 }, tile: 'zsand', group: 'Mosquée', desc: 'Dallage géométrique.' },
     pilier:    { name: 'Pilier de palmier', cost: { palme: 1 }, obj: 'trunkcol', solid: true, group: 'Mosquée', desc: 'Un tronc dressé, comme à Médine.' },
     mihrab:    { name: 'Niche de qibla', cost: { pise: 2, pierre: 1 }, tile: 'mihrab', solid: true, group: 'Mosquée', desc: 'Indique la direction de La Mecque.' },
-    natte:     { name: 'Natte de prière', cost: { palme: 1 }, obj: 'mat', group: 'Mosquée', desc: 'Dans une mosquée achevée, on y prie et le groupe s’y repose.' },
+    natte:     { name: 'Tapis de prière', cost: { palme: 1 }, obj: 'mat', group: 'Mosquée', desc: 'Dans une mosquée achevée, on y prie et le groupe s’y repose.' },
     tapis:     { name: 'Tapis', cost: { laine: 1 }, obj: 'rug', group: 'Mosquée', desc: 'Laine tissée, à losanges.' },
     lanterne:  { name: 'Lanterne', cost: { pierre: 1 }, obj: 'lantern', solid: true, light: true, group: 'Mosquée', desc: 'Éclaire la nuit.' },
     rosace:    { name: 'Rosace', cost: { pierre: 2 }, decal: true, group: 'Mosquée', desc: 'Étoile à huit branches tracée au sol.' }

@@ -132,7 +132,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   rappelle la prière et lui propose de revoir maître Yunus qui lui rappelle son rôle de rawi » ; choix, nombres et textes de
   l'agent, validés par le décideur le 22 novembre). **Les quartiers de la Cité** (`quartiers`, `maps.js`, `quartiers()`, `peindreQuartiers()`) : la même
   ville de verre au même crépuscule, une boucle d'avenues, la galerie marchande, la salle de jeux, la place du grand écran,
-  le parc et sa grande roue, le circuit et sa tribune, et derrière une haie un coin calme où une natte est posée au sol ; la
+  le parc et sa grande roue, le circuit et sa tribune, et derrière une haie un coin calme où un tapis est posé au sol ; la
   carte `cite` et son masque n'ont pas changé d'une case. Les règles de D206 y valent toutes (aucune ville réelle, aucun
   monument copié, aucune lettre, aucune marque ni logo, aucun édifice ni symbole religieux). **Les voitures** sont dessinées
   par le jeu (`gfx.js`, `G.MODELES`, `G.TEINTES` : des modèles inventés, sans marque, sans logo, sans plaque, vitres
@@ -238,7 +238,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   dans l'histoire-cadre, les veillées, le dernier maillon, ni sur la mer, la noosphère, une route, ni à Dhû l-Qassa, Harûrâ',
   Nahrawân (`regles.js` le vérifie) ; c'est le schéma de l'ascenseur (le même chapitre, `S.flags._monde`) ; revenir à la ville
   du récit rend la porte, l'objectif, les drapeaux et les personnages. Les autres villes de l'époque se visitent (`visite_…`,
-  sans personnage ni objectif ; un carton : le nom et l'époque ; un comptoir et une natte sobre ; on n'y bâtit pas ; rien n'y
+  sans personnage ni objectif ; un carton : le nom et l'époque ; un comptoir et un tapis sobre ; on n'y bâtit pas ; rien n'y
   rôde) ; **La Mecque n'a ni mosquée, ni Haram, ni Kaaba, et rien ne les évoque** (la variante `mecque`) ; aucune icône ne porte
   d'enseigne, de lettre ni d'édifice religieux. L'outil « route » est dit à la première sortie. Le format de la partie reste le 2.
   Les cartes existantes ne changent pas d'une case. `v2/docs/architecture.md`, « La carte du monde ». Contrôle :

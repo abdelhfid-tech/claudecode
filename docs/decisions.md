@@ -2187,10 +2187,10 @@ pages privées de son compte.
   On sort en marchant vers le bord, ou par A ; c'est le même chapitre (rien n'est rangé) : Idris paraît à côté de sa ville, la
   flèche la montre, et y revenir le rend à la porte, l'objectif, les drapeaux et les personnages inchangés ; une partie quittée
   sur la route s'y rouvre. **Les visites** : les autres villes de l'époque — Médine et Koufa telles qu'en leurs récits, sans
-  personne ; La Mecque sans mosquée, ni Haram, ni Kaaba (des maisons, un petit marché, une cour où la natte est posée) ; Tâ'if,
+  personne ; La Mecque sans mosquée, ni Haram, ni Kaaba (des maisons, un petit marché, une cour où le tapis est posé) ; Tâ'if,
   Bassora (le fleuve à l'est), Fustât (le Nil à l'ouest), Jérusalem, Damas, Homs, Qinnasrîn (une cité de pierre, sans les
   enseignes de Rûm à sa porte), al-Hîra (un camp) ; un carton dit le nom de la ville et l'époque du chapitre ; un comptoir (les étals d'un lieu du jeu : rien de nouveau
-  à vendre) et une natte, où l'on prie et se repose sans que les œuvres se comptent et sans descente ; on n'y bâtit pas ; rien
+  à vendre) et un tapis, où l'on prie et se repose sans que les œuvres se comptent et sans descente ; on n'y bâtit pas ; rien
   n'y rôde. **La progression** : l'outil « La route », un simple geste, dit à la première sortie : « Par la porte, la route
   mène aux autres villes. Revenir à celle du récit le reprend là où tu l'as laissé. » **Les dates** : Bassora dès 14 H, Koufa
   dès 17 H, Fustât dès 21 H ; chaque chapitre a son année (la première de son sous-titre ; al-Hîra, dans « La Traversée »,
@@ -2211,12 +2211,25 @@ pages privées de son compte.
   revient que depuis son récit) ; « Jérusalem » pour le nom de la ville (le récit dit « Îliyâ' » ; en arabe, « بيت المقدس ») ;
   l'année et l'époque de chaque chapitre (la première année d'un récit qui en couvre plusieurs : u3 « An 17–23 H » n'a pas
   Fustât ; k2 « An 13 ou 15 H » n'a pas Bassora) ; La Mecque visitée sans mosquée (l'option choisie par le décideur parlait « des rues, un marché, des
-  passants » : il n'y a pas encore de passants — la vie des villes viendra s'il la veut) ; la natte sobre et l'absence de
+  passants » : il n'y a pas encore de passants — la vie des villes viendra s'il la veut) ; le tapis sobre et l'absence de
   descente dans une visite ; les textes (la leçon, « Entrer : … », « Revenir : … », « Les routes », « La route », les époques) ;
   les captures (390 × 844, 844 × 390, dans les trois dessins). Contrôle : `node v2/tools/monde.js` (« MONDE CONFORME »). *Relu à l'intégration (23 novembre)* :
   les sommets des reliefs, d'abord des triangles parfaits qui se lisaient comme des pyramides, sont devenus des massifs de roche
-  irréguliers ; la cour de la natte de La Mecque n'a de mur qu'au nord et à l'est, ouverte sur la grand-rue ; les commentaires du
+  irréguliers ; la cour du tapis de La Mecque n'a de mur qu'au nord et à l'est, ouverte sur la grand-rue ; les commentaires du
   code ne nomment pas les jeux cités par le décideur.
+- [ ] **D221. Le tapis, et non la natte (version 2.29 ; décision du décideur, 23 novembre) — les phrases réécrites sont de
+  l'agent, à valider.** Le décideur : « Pourquoi tu parles de natte c'est un tapis? », puis « Oui tapis c'est mieux ». Le lieu
+  où l'on prie, se repose et accomplit les œuvres s'appelle désormais **le tapis** : « Un tapis tourné vers La Mecque », « Tapis
+  de prière » (la pièce de « Bâtir »), « le tapis d'une mosquée », « sur le tapis », la Carte et sa légende (« tapis : prière,
+  repos, œuvres »), l'aide, le refuge de 2084 (« un tapis, un moment, la prière » ; « Idris pense au tapis du coin calme »), la
+  mosquée de Dhû l-Qassa (« une niche, un tapis ») — vingt-trois textes. Dans les autres langues, le même objet : سجّادة (au
+  féminin : les accords suivent ; vocalisée سَجَّادَة), *prayer rug* / *rug*, 絨毯. *Restent « natte »*, parce qu'ils ne parlent
+  pas du lieu de prière du jeu mais d'un objet du récit : la natte sur laquelle dormait 'Umar (« Lui dormait sur une natte », « Le
+  Trône et la Natte », « J'ai une natte dans une mosquée », « La natte est à sa place », « la natte est restée », « On déroule
+  les nattes », « brillent sur la natte »), celle du malade de la visite (« Un malade, une natte, une cruche d'eau ») et celle
+  des blessés de la veillée (« sur la même natte »). Le dessin ne change pas : un tapis tressé, uni, couleur paille, sans motif
+  ni inscription — dans les mosquées des récits, au VIIᵉ siècle, pas de tapis de laine à motifs. Les noms du code (`natte`,
+  `mat`, `O.natte`) ne changent pas.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

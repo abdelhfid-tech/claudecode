@@ -509,7 +509,7 @@
           if (!heroes[en.who] || !(c.party || []).includes(en.who)) E.push(`${we}: « who » doit être un héros du groupe de ce chapitre`);
           if (!s.frame) E.push(`${we}: une énigme ne touche qu'un personnage de fiction (histoire-cadre ou veillées), jamais un Compagnon`);
           if (!D.OEUVRES.includes(en.cure) || en.cure === 'hajj') E.push(`${we}: cure « ${en.cure} » doit être une œuvre (${D.OEUVRES.filter(k => k !== 'hajj').join('|')})`);
-          if (!D.MAPS[c.map].spots.includes('priere')) E.push(`${we}: la carte ${c.map} n'a pas de natte où accomplir l'œuvre`);
+          if (!D.MAPS[c.map].spots.includes('priere')) E.push(`${we}: la carte ${c.map} n'a pas de tapis où accomplir l'œuvre`);
           { const save = state.map; if (en.intro) checkOps(en.intro, `${we}.intro`); if (en.solved) checkOps(en.solved, `${we}.solved`); state.map = save; }
         }
         if (!Array.isArray(c.objectives) || !c.objectives.length) E.push(`${w}: objectives[] manquant`);

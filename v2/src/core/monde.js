@@ -16,7 +16,7 @@
      chapitre à la porte : l'objectif, les drapeaux et les personnages n'ont pas bougé.
    - Les visites : marcher sur une autre ville (ou A, tout près) y entre — « Entrer : Damas » se lit au-dessus d'elle. Sa carte
      (D.MAPS, visite_…) n'a ni personnage ni objectif ; un carton dit son nom et l'époque du chapitre ; un comptoir (les étals
-     d'un lieu du jeu) et une natte, où l'on prie et se repose sans que les œuvres se comptent (oeuvres.js, O.sobre) — on n'y
+     d'un lieu du jeu) et un tapis, où l'on prie et se repose sans que les œuvres se comptent (oeuvres.js, O.sobre) — on n'y
      descend pas dans la noosphère. On en ressort par sa porte, vers la carte du monde. Rien n'y rôde. La Mecque : ni mosquée,
      ni Haram, ni Kaaba (maps.js, la variante « mecque »).
    - La progression (lecons.js) : l'outil « route », un simple geste, dit à la première sortie (I.lecons.proposer) ; si la

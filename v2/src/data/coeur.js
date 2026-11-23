@@ -20,7 +20,7 @@ ISNAD.registerSaga({
   /* ----- les œuvres : ce que le joueur lit quand il en accomplit une ----- */
   oeuvres: {
     priere: { name: 'La prière', court: 'Prière', glyph: '◠',
-      desc: 'Sur la natte d’une mosquée. Le groupe se repose et retrouve sa sérénité. La première prière d’un chapitre nourrit la provision.' },
+      desc: 'Sur le tapis d’une mosquée. Le groupe se repose et retrouve sa sérénité. La première prière d’un chapitre nourrit la provision.' },
     dhikr: { name: 'Le dhikr', court: 'Dhikr', glyph: '∴', menu: 'Le dhikr, après la prière',
       desc: 'Le rappel, à voix basse, après la prière. Apaise : la Sérénité monte.',
       lignes: ['Ils restèrent assis après la prière. Chacun redisait à voix basse les mots du rappel, sans se presser. Quand ils se levèrent, rien n’avait changé autour d’eux, et tout pesait moins.',

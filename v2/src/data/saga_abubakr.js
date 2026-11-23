@@ -797,7 +797,7 @@ ISNAD.registerSaga({
           ['site', { id: 'dhulqassa', name: 'La mosquée de Dhû l-Qassa', at: ['feu', 5, 1], w: 9, h: 7, need: { mur: 10, sol: 8, pilier: 2, mihrab: 1, natte: 1 }, give: { pise: 24, palme: 6, pierre: 4 } }]
         ] },
         { text: "Fonder la mosquée de Dhû l-Qassa, dans l'enclos tracé au sol", build: { site: 'dhulqassa' }, then: [
-          ['nar', "Dix blocs de terre, deux troncs, une niche, une natte. Ce n'est presque rien, et c'est assez : ceux qui partent sauront où revenir."]
+          ['nar', "Dix blocs de terre, deux troncs, une niche, un tapis. Ce n'est presque rien, et c'est assez : ceux qui partent sauront où revenir."]
         ] },
         { text: "Regarder partir les colonnes depuis le tertre", goto: 'tertre', then: [
           ['nar', "Onze colonnes s'enfoncent dans onze directions. Parmi ceux qui prendront la route du Yamâma : Zayd, le frère de 'Umar ; Sâlim, l'affranchi qui porte le Coran dans sa poitrine ; al-Barâ' ibn Mâlik. Des récitateurs par centaines."],

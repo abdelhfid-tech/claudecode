@@ -87,7 +87,7 @@
       li(ok, I.t('Les hommes'), h); }
     // le groupe
     { let ok = true; const h = hs.map(x => { const st = I.calc.of(x), bas = x.hp < st.hp * 0.6 || x.sp < st.sp * 0.4; if (bas) ok = false; return `${I.t('{nom} · niveau {n} · Constance {hp}/{hpmax} · Souffle {sp}/{spmax}', { nom: I.esc(x.def.name), n: x.lvl, hp: Math.ceil(x.hp), hpmax: st.hp, sp: x.sp, spmax: st.sp })}${x.hp <= 0 ? ' <em>' + I.t('(éprouvé)') + '</em>' : bas ? ' <em>' + I.t('(entamé)') + '</em>' : ''}`; }).join('<br>');
-      li(ok, I.t('Le groupe'), h + (ok ? '' : '<br><small>' + I.t('Le groupe n’est pas reposé : une natte, ou la besace, l’aurait remis.') + '</small>')); }
+      li(ok, I.t('Le groupe'), h + (ok ? '' : '<br><small>' + I.t('Le groupe n’est pas reposé : un tapis, ou la besace, l’aurait remis.') + '</small>')); }
     // armes, boucliers, casques, cuirasses
     { let vides = 0, dispo = 0; const h = hs.map(x => { const eq = Gr.of(x); return I.t('{nom} : {pieces}', { nom: I.esc(x.def.name), pieces: Gr.SLOTS.map(s => { const id = eq[s]; if (id) return Gr.img(id) + ' ' + I.esc(D.GEAR[id].name); vides++; if (Gr.reserve(s).some(g => Gr.can(x.def, g))) dispo++; return `<span class="rien">${I.t('{place_min} : rien', { place_min: D.SLOTS[s].toLowerCase(), place: D.SLOTS[s] })}</span>`; }).join(' · ') }); }).join('<br>');
       li(!dispo, I.t('Armes, boucliers, casques, cuirasses'), h + (dispo ? `<br><em>${I.t('{n} emplacement vide alors que la réserve a de quoi.¦{n} emplacements vides alors que la réserve a de quoi.', { n: dispo })}</em> <small>${I.t('« Équiper au mieux » s’en charge.')}</small>` : vides ? '<br><small>' + I.t('La réserve n’a rien de plus pour eux : les coffres et les comptoirs la remplissent.') + '</small>' : '')); }
@@ -101,7 +101,7 @@
       li(ks.length > 0, I.t('La besace'), ks.length ? ks.map(k => `${I.esc(D.ITEMS[k].name)} ×${it[k]}`).join(' · ') : '<em>' + I.t('Vide.') + '</em> <small>' + I.t('Les coffres et les comptoirs la remplissent.') + '</small>'); }
     // le cœur
     { const w = I.oeuvres.weight(opts), z = I.oeuvres.zad(), prie = !!S.flags._prayed;
-      li(z >= w && prie, I.t('Le cœur'), I.t('Provision ♥ {z} · l’épreuve en demande {w}.', { z, w }) + ' ' + (z >= w ? I.t('Le cœur est prêt.') : `<em>${I.t('Il en manquera {n} : le cœur sera lourd.', { n: w - z })}</em> <small>${I.t('Les œuvres du jour, sur la natte, nourrissent la provision.')}</small>`) +
+      li(z >= w && prie, I.t('Le cœur'), I.t('Provision ♥ {z} · l’épreuve en demande {w}.', { z, w }) + ' ' + (z >= w ? I.t('Le cœur est prêt.') : `<em>${I.t('Il en manquera {n} : le cœur sera lourd.', { n: w - z })}</em> <small>${I.t('Les œuvres du jour, sur le tapis, nourrissent la provision.')}</small>`) +
         '<br>' + (prie ? I.t('Le râwî est passé par la prière dans ce chapitre.') : '<em>' + I.t('Le râwî n’est pas encore passé par la prière dans ce chapitre.') + '</em>') + R.motSecours(prie)); }
     const manque = L.filter(x => x.indexOf('class="manque"') > 0).length;
     return `<h3>${I.esc(E.name)}</h3><p class="src">${I.t('Bataille déclarée · enracinement {traits}', { traits: I.mal.traits(I.mal.niveau()) })}</p><ul class="prepa">${L.join('')}</ul>` +
