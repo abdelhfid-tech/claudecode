@@ -2163,8 +2163,8 @@ pages privées de son compte.
   qui montre les différentes sagas. Tu peux débloquer les sagas dans le [short] si c'est plus simple. » Dans les shorts, la
   Chaîne montre chaque maillon « à ouvrir », sans « Scellé » ni cadenas : l'interrupteur de test du jeu (`I.debug.all`,
   `ui.js`) est posé dans la page du film seulement. Le jeu ne change pas : les maillons s'y suivent toujours (D211).
-- [ ] **D220. La carte du monde : sortir d'une ville par sa porte, la route, les villes où il ne se passe rien (version 2.29 ;
-  demande du décideur, 23 novembre) — choix, coordonnées, textes et dessin de l'agent, à valider.** « C'est coûteux d'ajouter
+- [x] **D220. La carte du monde : sortir d'une ville par sa porte, la route, les villes où il ne se passe rien (version 2.29 ;
+  demande du décideur, 23 novembre) — choix, coordonnées, textes et dessin de l'agent, à valider.** *Validée par le décideur le 23 novembre : « Ok pour tes propositions ». Les choix, les coordonnées, les textes et le dessin ci-dessous sont retenus tels quels.* « C'est coûteux d'ajouter
   un "meta-monde" […] ou on accéderait aux autres villes via le désert avec une carte réaliste qui rend accès aux villes prévue
   dans la saga et les autres saga même s'il ne s'y passe rien ? […] Comme dans final fantasy ou chrono trigger une carte
   global ou les points d'intérêt sont accessibles en sortant de chaque ville par sa porte. » Ses choix : **les villes** — celles
@@ -2217,8 +2217,8 @@ pages privées de son compte.
   les sommets des reliefs, d'abord des triangles parfaits qui se lisaient comme des pyramides, sont devenus des massifs de roche
   irréguliers ; la cour du tapis de La Mecque n'a de mur qu'au nord et à l'est, ouverte sur la grand-rue ; les commentaires du
   code ne nomment pas les jeux cités par le décideur.
-- [ ] **D221. Le tapis, et non la natte (version 2.29 ; décision du décideur, 23 novembre) — les phrases réécrites sont de
-  l'agent, à valider.** Le décideur : « Pourquoi tu parles de natte c'est un tapis? », puis « Oui tapis c'est mieux ». Le lieu
+- [x] **D221. Le tapis, et non la natte (version 2.29 ; décision du décideur, 23 novembre) — les phrases réécrites sont de
+  l'agent, à valider.** *Validée par le décideur le 23 novembre : « Ok pour tes propositions ». Les phrases réécrites ci-dessous sont retenues telles quelles.* Le décideur : « Pourquoi tu parles de natte c'est un tapis? », puis « Oui tapis c'est mieux ». Le lieu
   où l'on prie, se repose et accomplit les œuvres s'appelle désormais **le tapis** : « Un tapis tourné vers La Mecque », « Tapis
   de prière » (la pièce de « Bâtir »), « le tapis d'une mosquée », « sur le tapis », la Carte et sa légende (« tapis : prière,
   repos, œuvres »), l'aide, le refuge de 2084 (« un tapis, un moment, la prière » ; « Idris pense au tapis du coin calme »), la
@@ -2230,6 +2230,97 @@ pages privées de son compte.
   des blessés de la veillée (« sur la même natte »). Le dessin ne change pas : un tapis tressé, uni, couleur paille, sans motif
   ni inscription — dans les mosquées des récits, au VIIᵉ siècle, pas de tapis de laine à motifs. Les noms du code (`natte`,
   `mat`, `O.natte`) ne changent pas.
+- [ ] **D222. Les rencontres de la route : les chimères du désert, les brigands, le voyageur désespéré (version 2.30 ;
+  demandes du décideur, 23 novembre) — nombres, textes et choix de l'agent, à valider ; le nom « L'Abandon » et la zone sans
+  rencontre autour de La Mecque, validés.** En demandant la carte du monde (D220), le 23 novembre : « Ça permettrait aussi de
+  croiser des brigands et des monstres dans le déserts et se faire de l'argent. » Son choix pour les brigands : la parole
+  d'abord, puis leur chimère, « La Razzia ». Puis, le même jour : « Ok mais je veux qu'un moment il rencontre le désespoir ».
+  Il lui a été dit que sur la carte du monde ce sont les Compagnons du récit qui marchent, et non Idris ; que le jeu ne prête
+  jamais le désespoir à un Compagnon ; et que le Désespoir est déjà l'une des cinq idées noires. Il a choisi « La parole, puis
+  sa chimère » : « Sur la route, un voyageur de fiction assis dans le sable, perdu ou dépouillé : le Désespoir parle en lui, et
+  l'on y répond par la parole, la pédagogie ou la bienveillance. S'il n'est pas apaisé, la chimère qui le tient se lève et l'on
+  se bat. C'est le même schéma que les brigands. » ; et « Parfois, à chaque traversée » : « Une rencontre possible à chaque
+  traversée du désert, plus rare près des routes et des puits. » Enfin, le 23 novembre, sur les propositions de la 2.29 et de
+  la 2.30 : « Ok pour tes propositions » — ce qui valide le nom « L'Abandon », aucune rencontre à moins de trois cases de La
+  Mecque (une soixantaine de kilomètres), et le point 7 de la page de la 2.29 : les étendards de la porte du nord retirés des
+  villes visitées. *Ce qui a été fait* (`v2/src/core/monde.js`, « les rencontres de la route » ; `v2/src/core/rodeurs.js` ;
+  `v2/src/core/trade.js` ; `v2/src/data/coeur.js`, `route` et `abandon` ; `D.MONDE.rencontres` ; `v2/docs/architecture.md`,
+  « Les rencontres de la route ») : **la traversée** va de la sortie par une porte à l'entrée dans une ville ; ses comptes (sa
+  graine, les cases passées, les chimères vaincues, les brigands croisés, le voyageur posé) vivent dans les drapeaux du chapitre
+  (`S.flags._monde.tr`) — le format de la partie reste le 2. **Rien autour des villes ni de La Mecque** : à deux cases d'une
+  ville ou moins, à trois cases de La Mecque ou moins, ni chimère, ni combat, ni brigands, ni voyageur ; rien dans une ville
+  visitée. **Les chimères du désert** : le mécanisme des rues des quartiers (D212), réglé pour la carte du monde — les petites
+  chimères de la saga du chapitre (ni idée noire, ni chimère dont la racine en est une, ni mal du cœur, ni idole d'un
+  chapitre), sur le sable, les dunes et la steppe, plus nombreuses loin des routes ; leur contact ouvre un combat dont on peut
+  fuir (elles poursuivent) ; vaincue, une chimère ne revient pas de la traversée. **Les brigands** : loin des routes, une
+  embuscade au plus par traversée ; elle lance le récit de la route pillée (`Tr.raid`) — la parole avec leur chef, puis La
+  Razzia —, sans ce qui suppose une caravane. **Le voyageur** : une fois par traversée, peut-être, un homme de fiction, sans
+  nom (« Un voyageur »), assis et accablé dans le désert, loin des villes ; il a un visage (il n'est pas un Compagnon), une
+  tenue de route aux couleurs de sable, rien qui dise un peuple ; A devant lui ouvre un pourparler de trois manches, dont la
+  deuxième porte le Désespoir (deux voiles : on lui répond par la bienveillance, puis par la pédagogie, comme partout) ;
+  apaisé, il se relève, dit une ligne et reprend la route ; sinon, L'Abandon se lève derrière lui et l'on se bat contre elle,
+  jamais contre lui ; on peut la fuir (elle poursuit, puis revient près de lui) ; vaincue, elle le libère. *Choix de l'agent,
+  à valider.* **Les nombres** (`D.MONDE.rencontres`) : rien à deux cases d'une ville ou moins, à trois de La Mecque ou moins ;
+  « loin des routes » : à trois cases d'une route ou plus ; dix chimères à chaque arrivée sur la route, posées de huit à
+  vingt-huit cases de la ville d'où l'on part (et à huit cases au moins de celui qui mène), à six cases l'une de l'autre, une
+  case près d'une route pesant 0,3 (une case loin pèse 1), une vue de cinq cases, une allure de 0,45 fois la marche, et jamais
+  à douze cases de La Mecque ou moins (ni posées, ni en chemin, ni en poursuite : on n'en voit aucune depuis elle — une marge
+  de l'agent, au-delà des trois cases validées) ; les brigands, une chance sur vingt à chaque case où l'on entre loin des
+  routes, pas avant la quatrième case de la traversée ; le voyageur, une chance de 0,35 une fois par traversée, à la sixième
+  case passée dans le désert à quatre cases au moins des villes, 0,4 fois moindre à moins de trois cases d'une route ou à
+  moins de deux cases d'un point d'eau (une oasis, un fleuve, une terre verte) ; il s'assied à quatre cases devant celui qui
+  mène. **Les brigands, sans caravane** : ni les hommes qui rentrent à pied, ni le caravanier, ni les renforts (personne n'est
+  appelé sur une piste loin de tout : la parole se gagne sans eux, au plus haut), ni la part de chacun (ceux qui ont été
+  dépouillés ne sont pas là), ni mise à rendre ; avant la parole : « Au détour d’une dune, des hommes armés barrent la piste.
+  Derrière eux, des bêtes chargées de ballots qui ne sont pas à eux : d’autres voyageurs sont passés par ici avant vous. » ;
+  après : « Les ballots iront à la ville la plus proche, où ceux qui les ont perdus viendront les reprendre. Les pillards
+  suivent jusqu’au juge : ce n’est pas à celui qui passe de dire la peine. La piste, elle, est rouverte. » ; la parole, La
+  Razzia et la promesse rapportée (« On rapporte cette promesse… ») ne changent pas ; La Razzia reçoit sa racine,
+  l'Avidité (`avidite`) ; les brigands n'ont ni tribu ni peuple. **Rien ne s'y gagne hors de l'ordinaire** : l'expérience d'une
+  parole ou d'un combat, les dirhams d'une victoire ; sur la route, rien de ce qui se dit ne touche au récit — ni l'enracinement
+  de l'idole du chapitre, ni ses piliers (la parole gagnée avec les brigands ne noue plus le lien), ni le compte des pourparlers
+  (le compagnon de lumière qui vient après le cinquième). **La progression** : aucun outil ne dit le pourparler ni l'idée
+  noire — on y entre en parlant ; tant que l'outil « parler » n'est pas reçu, ni brigands ni voyageur (la rencontre attend) ;
+  aucun message de plus, aucun outil de plus. **L'Abandon** (`coeur.js`, `abandon`) : une chimère commune, de racine le
+  Désespoir (`noir_desespoir`), faible devant la Patience et la Miséricorde, de palier `elite`, calée sur le groupe ; ses
+  attaques : « Poser le fardeau », « Le sable qui retient » ; à mi-combat : « Il était bien, assis. Pourquoi le faire lever ? » ;
+  sa raillerie : « Ici, au moins, on ne marche plus. » ; sa description : « Une chimère du désespoir, sur les pistes du désert.
+  Elle ne frappe pas celui qu’elle tient : elle le persuade de s’asseoir, puis de ne plus se relever. Elle cède à la patience et
+  à la miséricorde. » En arabe, **الاستكانة** (« se laisser abattre » ; le mot, de mémoire, que le Coran nie de ceux qui ne cédèrent pas —
+  3:146, référence non vérifiée : à valider), en anglais *Giving Up*, en japonais あきらめ. **Le pourparler** (« Un homme assis dans le sable » ; « Il ne marche
+  plus. Sa bête est partie avec son eau et tout ce qu’il portait ; il s’est assis à l’écart de la piste, et il ne lève pas les
+  yeux. ») : I. « Passez votre chemin. Il n’y a plus rien à faire pour moi. » — « S’asseoir près de lui, sans rien dire
+  d’abord » (Miséricorde, +2 : « Tu t’assieds… Personne ne s’était arrêté. ») · « Lui tendre une outre, et attendre qu’il ait
+  bu » (Patience, +1 : « Merci. Je ne pensais plus boire avant la nuit. ») · « Lui dire de se lever : la piste n’attend pas »
+  (Courage, −1 : « La piste… Elle ne m’a pas attendu, moi. ») ; II. « J’ai perdu la piste, et ma bête avec elle. Tout ce que
+  j’avais était sur son dos. » — le Désespoir (« Il ne cherche plus de porte : il attend que le sable décide pour lui. » ; ses
+  deux répliques et ses réponses sont celles de l'idée noire, `coeur.js` ; puis : « Une chose, dis-tu… Laquelle ? ») —
+  « Lui montrer où passe la piste : à une demi-journée d’ici, des caravanes la suivent » (Savoir, +2 : « Une demi-journée… Je
+  la croyais au bout du monde. ») · « Lui proposer de marcher avec vous jusqu’à la piste » (Miséricorde, +2 : « Avec vous ? Je
+  vous ralentirai… Mais je ne serai plus seul. ») · « Lui dire que sa bête sera peut-être retrouvée » (Justice, 0 : « Peut-être.
+  On dit cela, d’habitude, quand il n’y a plus rien à dire. ») ; III. « Et si je n’arrive pas ? » — « Lui dire qu’on ne lui
+  demande pas d’arriver ce soir : seulement de se lever » (Patience, +3 : « Me lever. Cela, je peux le faire. ») · « Lui dire,
+  sans détour, que la route est longue, mais que d’autres la font chaque jour » (Véracité, +1 : « D’autres… Oui. Il en passe,
+  des caravanes. ») · « Lui promettre qu’il arrivera » (Courage, −1 : « Tu n’en sais rien. Ne me promets pas ce que tu ne sais
+  pas. ») ; cinq de confiance pour l'apaiser. Apaisé : « Je vais jusqu’à la piste. Après, on verra. » — « Il se relève, secoue
+  le sable de son manteau, et reprend la route. » Non apaisé : « Il détourne les yeux et se tait. Derrière lui, le sable se
+  soulève et prend forme : ce qui le tient ne veut pas le laisser partir. » ; le combat s'ouvre sur « L’Abandon ne le lâche
+  pas. » ; revenu près de lui, la chimère toujours levée : « Il n’a pas bougé. Ce qui le tient non plus. » ; elle vaincue :
+  « C’est plus léger, tout à coup. Je crois que je peux marcher. » — « Il se relève et reprend la route, vers la piste. » Le
+  combat d'une chimère du désert s'ouvre sur « {nom} vous barre la piste. » ; le bandeau d'une ville visitée dit son époque et
+  son nom (« An 11 H · 632 · La Mecque »). Des textes de fiction : ni verset, ni parole attestée, ni formule, ni promesse d'un
+  pouvoir ; ce sont les Compagnons qui répondent, et aucun ne dit ni ne laisse entendre qu'un Compagnon désespère ; aucun ne
+  nomme l'Agrégor ni ne porte les mots du pari (`regles.js` le vérifie, dans les quatre langues). Ils sont écrits à la source
+  en arabe (et vocalisés), en anglais et en japonais. **Deux défauts de la 2.29** : sur la Carte de la halte, aucun nom n'en
+  chevauche plus un autre (celui qui mène garde sa place, puis la ville du récit ; chaque ville à la sienne si elle est libre,
+  sinon au plus près) ; le bandeau d'une ville visitée dit son nom. **Les étendards** (point 7, validé) : retirés de toutes les
+  villes visitées — La Mecque, Tâ'if, Bassora, Fustât, les visites de Médine et de Koufa (les deux de la porte du nord) et
+  al-Hîra (ceux du camp) ; tirés comme avant puis retirés, si bien que le reste de la ville ne change pas d'une case ; les
+  cartes des récits gardent les leurs. *À valider* : les nombres ; la marge de douze cases des chimères autour de La Mecque ;
+  les brigands sans caravane (ce qui a été retiré et les deux lignes nouvelles ; les piliers que la parole ne touche plus sur
+  la route) ; l'outil « parler » pour la rencontre qui attend ; les textes du voyageur et de L'Abandon, dans les quatre langues
+  (en arabe, الاستكانة) ; les captures (`.smoke/monde`, 390 × 844 et 844 × 390). Contrôle : `node v2/tools/monde.js` (partie 5 ;
+  « MONDE CONFORME »).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

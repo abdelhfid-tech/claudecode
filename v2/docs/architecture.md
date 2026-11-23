@@ -1090,7 +1090,8 @@ d'intérêt sont accessibles en sortant de chaque ville par sa porte. » (Les je
 `docs/decisions.md`, D220 : rien n'en est repris.) Ses choix : les
 villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ; La Mecque, une visite sobre (le Haram et la Kaaba jamais
 dessinés ; ni combat ni chimère) ; une ville n'apparaît qu'à partir de l'époque où elle existe. Choix, coordonnées, textes et
-dessin de l'agent, à valider. Les rencontres sur la route (les chimères, les brigands) sont pour la 2.30.*
+dessin de l'agent, validés par le décideur le 23 novembre (« Ok pour tes propositions »). Les rencontres sur la route (les
+chimères, les brigands, le voyageur) sont venues avec la 2.30 : « Les rencontres de la route », plus bas.*
 
 - **Les données** : `D.MONDE` (`src/core/defs.js`) — la projection, les douze villes (latitude, longitude, année de fondation,
   `genre` ville ou lieu, `icone`, la `carte` de la visite, la `rive` d'une ville au bord d'un fleuve), les côtes (`terres`), les
@@ -1127,7 +1128,10 @@ dessin de l'agent, à valider. Les rencontres sur la route (les chimères, les b
   mosquée, ni Haram, ni Kaaba, rien qui les évoque : des maisons, un petit marché, une cour bordée d'un mur de terre (au nord et à l'est) où le tapis
   est posé) ; Tâ'if, la ville d'Arabie ; Bassora, la variante `fleuve` (le fleuve à l'est) ; Fustât, la variante `nil` (le
   fleuve à l'ouest) ; Damas, Homs, Qinnasrîn, Jérusalem, la cité romaine, sans les enseignes de Rûm à sa porte ni à son
-  palais (sous le califat) ; al-Hîra, le camp. On y entre par la porte du côté
+  palais (sous le califat) ; al-Hîra, le camp. 2.30 (D222, validé) : aucune visite n'a d'étendard — ni les deux de la porte du
+  nord, venus du dessin de Médine, ni ceux du camp ; ils sont tirés comme avant puis retirés (`MB.finish`, `sansEtendards`), si
+  bien que le reste de la ville ne change pas d'une case et que leur case redevient son sol ; les cartes des récits gardent les
+  leurs. On y entre par la porte du côté
   d'où l'on vient ; un carton dit le nom de la ville et l'époque du chapitre (`depuis.epoque`). Le comptoir tient les étals
   d'un lieu du jeu (`D.GEAR_SHOPS`) ; le tapis y est sobre (`O.sobre` : on prie et l'on se repose, les œuvres se comptent dans
   les récits, on ne descend pas dans la noosphère) ; on n'y bâtit pas (`Bd.outdoor`) ; rien n'y rôde. On en ressort par sa
@@ -1162,6 +1166,79 @@ dessin de l'agent, à valider. Les rencontres sur la route (les chimères, les b
   carte du monde, des portes ou des visites repasse `monde.js`, puis `cite.js passages`, `retours.js`, `progression.js`,
   `partie.js`, `doigt.js`, `smoke.js walk` et `tap`. Les cartes existantes ne changent pas d'une case (le générateur `ville`
   garde Médine et Koufa tels quels ; `M.build` passe `graine` au générateur).
+
+### Les rencontres de la route : les chimères du désert, les brigands, le voyageur (2.30, D222)
+
+*Le décideur, 23 novembre, en demandant la carte du monde : « Ça permettrait aussi de croiser des brigands et des monstres dans le
+déserts et se faire de l'argent » (pour les brigands : la parole d'abord, puis leur chimère, « La Razzia ») ; puis : « Ok mais je
+veux qu'un moment il rencontre le désespoir » — « La parole, puis sa chimère » (« Sur la route, un voyageur de fiction assis dans
+le sable, perdu ou dépouillé : le Désespoir parle en lui, et l'on y répond par la parole, la pédagogie ou la bienveillance. S'il
+n'est pas apaisé, la chimère qui le tient se lève et l'on se bat. C'est le même schéma que les brigands. ») et « Parfois, à chaque
+traversée » (« Une rencontre possible à chaque traversée du désert, plus rare près des routes et des puits. »). « Ok pour tes
+propositions » valide le nom « L'Abandon » et la zone sans rencontre autour de La Mecque ; nombres, textes et le reste des choix
+de l'agent, à valider.*
+
+- **Les données** : `D.MONDE.rencontres` (`src/core/defs.js`) — `villes`, `mecque`, `route` (des cases) ; `chimeres` (`nombre`,
+  `rayon`, `loin`, `ecart`, `vue`, `pas`, `pres`, `mecque`) ; `brigands` (`chance`, `apres`) ; `voyageur` (`chance`, `pres`, `eau`,
+  `apres`, `loin`, `devant`). Des entiers (des cases, un nombre) ou des parts de 0 à 1 (une chance, une allure, un poids), rien
+  d'autre (`regles.js`). Les textes : `coeur.js`, `route` (le voyageur, les brigands) et `abandon` (la chimère du voyageur).
+- **La traversée** (`src/core/monde.js`, `Mo.traversee`) : de la sortie par une porte (`Mo.sortir`, qui en ouvre une neuve) à
+  l'entrée dans une ville. Ses comptes vivent dans `S.flags._monde.tr` : `n`, `g` (la graine des chimères), `c` (la case d'où l'on
+  part), `pas` (les cases passées), `ici`, `vaincues`, `brig`, `tire`, `voy` ({ x, y, etat : assis, tenu, libre, parti }). Ils
+  partent avec `_monde` au retour à la ville du récit ; une partie de la 2.29 quittée sur la route commence là sa traversée. Le
+  format reste le 2.
+- **Ce que la carte sait d'elle-même** (`champs`, calculé une fois par carte) : la distance de chaque case à une route
+  (`m.pistes`, les cases des routes, posées par `monde()` dans `maps.js`) et à un point d'eau (l'herbe, l'eau, un pont : une
+  oasis, un fleuve, une terre verte), en cases, la diagonale pour une ; `interdit` (à `villes` cases d'une ville ou d'un lieu ou
+  moins, à `mecque` cases de La Mecque ou moins : `Mo.interdit`, `Mo.interditCase`) ; `ferme` (l'interdit, et, pour les seules
+  chimères, à `chimeres.mecque` cases de La Mecque ou moins : `Mo.fermeAuxChimeres`).
+- **Les chimères du désert** : le mécanisme des rues (`rodeurs.js`) — `env.rues` (`{ cases: sable, dunes, steppe, desert:
+  true }`, posé par `monde()`), `poserRues` et `ticRues`, réglés par `Mo.rodent` (les quartiers par `rues()`, `D.CITE`) : qui
+  rôde (`D.rodeDehors` : une chimère `minion` de la saga du chapitre, ni idée noire, ni chimère dont la racine en est une, ni mal
+  du cœur ; ni idole d'un chapitre), combien, à quelle distance de la ville d'où l'on part (`c`) et de celui qui mène, à quel
+  écart, et le poids de chaque case (loin des routes : 1 ; près : `pres`). `rueOk` refuse les cases fermées ; une chimère ne
+  touche pas le groupe quand celui-ci se tient dans l'interdit. Le contact : `R.combatDehors` (un combat de rencontre, `fuite`,
+  le décor du désert, « {nom} vous barre la piste. »), puis `Mo.apres` ; vaincue, elle entre dans `vaincues` et ne revient pas
+  de la traversée ; fuie, elle poursuit (`R.fuir`).
+- **Les brigands** (`Mo.tic`, à chaque case où l'on entre) : dans le désert, hors de l'interdit, à `route` cases d'une route ou
+  plus, à partir de la `apres`-ième case, une chance par case ; une fois au plus (`brig`). `Mo.embuscade` lance `Tr.raid({
+  embuscade: true })` (`trade.js`) : les lignes de `route.brigands` (`avant`, `apres`) remplacent ce qui suppose une caravane
+  (les hommes qui rentrent à pied, le caravanier, les renforts, la part de chacun, la mise rendue) ; la parole, La Razzia (sa
+  racine : `avidite`) et la promesse rapportée ne changent pas ; sans renforts, la parole se gagne au plus haut.
+- **Le voyageur** (`Mo.tic`) : une fois par traversée (`tire`), à la `apres`-ième case passée dans le désert à `loin` cases des
+  villes au moins, une chance — `pres` fois moindre près d'une route ou d'un point d'eau ; `poserVoyageur` l'assied à `devant`
+  cases devant celui qui mène (dans le désert, hors de l'interdit, loin des villes, hors de la route s'il se peut). C'est un
+  PNJ du moteur (`_voyageur`, `route: true`, « Un voyageur ») : un homme (`homme`), un visage (sprites.js), une tenue de route
+  aux couleurs de sable, l'attitude `accable` ; `Mo.arme` (à chaque chargement, depuis `W.loadMap`) le rassied là où il était.
+  A devant lui (`W.interact` → `Mo.parle` → `Mo.voyageur`) : `route.voyageur.parle` (le pourparler ; sa deuxième manche porte
+  le Désespoir, `noir_desespoir` : on lui répond, `mal.js`) ; apaisé, il se relève (`emote`), dit sa ligne, puis s'éloigne de
+  quelques pas et sort de la vue (`reprendre`) ; sinon (`_voyageur_tenu`), L'Abandon se lève derrière lui (`lever` : `garde`,
+  elle ne s'éloigne de lui que pour poursuivre, puis y revient) et le combat s'ouvre (`R.combatDehors`, « L’Abandon ne le lâche
+  pas. ») ; on peut fuir ; revenu près de lui, `route.voyageur.encore`, puis le combat ; vaincue (`vaincues.voy`, état
+  `libre`), `route.voyageur.libere`, et il reprend la route.
+- **Rien ne s'y gagne hors de l'ordinaire** : sur la route et dans une ville de passage (`Mo.dehors`), une parole ne touche ni à
+  l'enracinement de l'idole du chapitre (`M.note`), ni aux piliers (`W.pillar`), ni au compte des pourparlers et au compagnon
+  de lumière qui vient après le cinquième (`runParley`) ; restent l'expérience d'une parole ou d'un combat et les dirhams d'une
+  victoire.
+- **La progression** : aucun outil ne dit le pourparler ni l'idée noire ; tant que l'outil « parler » n'est pas reçu (`Mo.pret`),
+  ni brigands ni voyageur — la rencontre attend ; aucun message, aucun outil de plus. Le joueur de test du moteur ne sort
+  jamais (`P.main`).
+- **Deux défauts de la 2.29** : la Carte de la halte (`ui.js`, `ecarter`) — sur la carte du monde, celui qui mène garde sa
+  place, puis la ville du récit, puis chaque ville à la sienne si elle est libre, sinon au plus près (au-dessus, au-dessous, à
+  côté, en biais), jamais hors de la carte : aucun nom n'en chevauche un autre ; le bandeau d'une ville visitée (`Mo.sousTitre`,
+  dans `W.hud`) : « {epoque} · {ville} », l'époque du chapitre et le nom de la ville visitée.
+- **Les règles** (`regles.js`) : `verifierRoute` (le pourparler du voyageur, une seule manche du Désespoir, le drapeau qui fait
+  lever la chimère, ses lignes ; la chimère : racine `noir_desespoir`, faible devant ce qui défait le Désespoir, ni idée noire,
+  ni mal du cœur, ni idole ; les textes : ni Agrégor, ni pari, ni nombre, ni verset, ni nom de démon) ; `verifierMonde`
+  (`D.MONDE.rencontres`, ses champs, ses nombres, au moins trois cases autour de La Mecque et deux autour des villes ; aucune idée
+  noire que `D.rodeDehors` laisserait rôder) ; `verifierLangue` (les textes de `route` et de `monde.js` : ni l'Agrégor, ni les
+  mots du pari, dans chaque langue).
+- **Le contrôle** : `node v2/tools/monde.js`, partie 5 (en hauteur et en largeur ; `PARTIES=5`) — deux cents tirages de
+  chimères (aucune près d'une ville ni à douze cases de La Mecque, plus denses loin des routes, aucune idée noire) ; une
+  chimère combattue, une autre fuie ; les brigands (la parole gagnée, puis manquée et La Razzia ; rien de la caravane ; une
+  fois au plus) ; le voyageur (apaisé ; puis L'Abandon, vaincue) ; la rencontre qui attend ; La Mecque, les chances forcées ; la
+  Carte sans chevauchement ; le bandeau. Dans les parties 1 à 4, `I.debug.rencontres` éteint les rencontres. Un changement des
+  rencontres repasse aussi `cite.js passages` (le mécanisme des rues), `progression.js`, `smoke.js auto`, `walk` et `tap`.
 
 ### L'image agrandie, les textes sur un téléphone
 

@@ -231,7 +231,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
 - Dans la 2.x (2.29, D220 ; le décideur, 23 novembre : « une carte global ou les points d'intérêt sont accessibles en sortant de
   chaque ville par sa porte » ; ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ; La Mecque,
   une visite sobre ; une ville n'apparaît qu'à partir de l'époque où elle existe ; choix, coordonnées, textes et dessin de
-  l'agent, à valider), **la carte du monde** (`D.MONDE`, `defs.js` ; `monde`, `maps.js` ; `v2/src/core/monde.js`) : de la vallée
+  l'agent, validés par le décideur le 23 novembre), **la carte du monde** (`D.MONDE`, `defs.js` ; `monde`, `maps.js` ; `v2/src/core/monde.js`) : de la vallée
   du Nil au fond du golfe, dessinée par le jeu d'après les coordonnées relevées (les sources sont dans `v2/docs/architecture.md`) ;
   aucun nombre dans un récit. Dans les chapitres de `D.MONDE.depuis` seulement, sur leur carte, à partir de leur objectif, on
   sort par la porte de la ville (au nord et au sud de la ville d'Arabie, au sud de la cité romaine, à l'ouest du camp) — jamais
@@ -239,11 +239,44 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   Nahrawân (`regles.js` le vérifie) ; c'est le schéma de l'ascenseur (le même chapitre, `S.flags._monde`) ; revenir à la ville
   du récit rend la porte, l'objectif, les drapeaux et les personnages. Les autres villes de l'époque se visitent (`visite_…`,
   sans personnage ni objectif ; un carton : le nom et l'époque ; un comptoir et un tapis sobre ; on n'y bâtit pas ; rien n'y
-  rôde) ; **La Mecque n'a ni mosquée, ni Haram, ni Kaaba, et rien ne les évoque** (la variante `mecque`) ; aucune icône ne porte
+  rôde ; depuis la 2.30, aucun étendard — ni ceux de la porte du nord, ni ceux du camp —, les cartes des récits gardant les
+  leurs) ; **La Mecque n'a ni mosquée, ni Haram, ni Kaaba, et rien ne les évoque** (la variante `mecque`) ; aucune icône ne porte
   d'enseigne, de lettre ni d'édifice religieux. L'outil « route » est dit à la première sortie. Le format de la partie reste le 2.
   Les cartes existantes ne changent pas d'une case. `v2/docs/architecture.md`, « La carte du monde ». Contrôle :
   `node v2/tools/monde.js` (« MONDE CONFORME ») ; un changement de la carte, des portes ou des visites repasse aussi
   `cite.js passages`, `retours.js`, `progression.js`, `partie.js`, `doigt.js`, `smoke.js walk` et `tap`.
+- Dans la 2.x (2.30, D222 ; le décideur, 23 novembre : « Ça permettrait aussi de croiser des brigands et des monstres dans le
+  déserts et se faire de l'argent » — pour les brigands, la parole d'abord, puis leur chimère, « La Razzia » ; « Ok mais je veux
+  qu'un moment il rencontre le désespoir » — « La parole, puis sa chimère », « Parfois, à chaque traversée » ; « Ok pour tes
+  propositions » pour le nom « L'Abandon » et aucune rencontre à moins de trois cases de La Mecque ; nombres, textes et le reste
+  des choix de l'agent, à valider), **les rencontres de la route** (`v2/src/core/monde.js`, « les rencontres de la route » ;
+  `rodeurs.js` ; `trade.js` ; `coeur.js`, `route` et `abandon` ; `D.MONDE.rencontres`). Une traversée va de la sortie par une
+  porte à l'entrée dans une ville ; ses comptes vivent dans les drapeaux du chapitre (`S.flags._monde.tr`), le format reste le 2.
+  **Rien autour des villes ni de La Mecque** : à deux cases d'une ville ou moins, à trois cases de La Mecque ou moins — un
+  territoire sacré —, ni chimère, ni combat, ni brigands, ni voyageur (`Mo.interdit`), et une chimère ne va jamais à douze
+  cases de La Mecque ou moins (on n'en voit aucune depuis elle) ; rien dans une ville visitée. **Les chimères du désert** : le
+  mécanisme des rues des quartiers (`poserRues`, `env.rues`, réglé par `Mo.rodent`) — les petites chimères de la saga du chapitre
+  (`D.rodeDehors` : ni idée noire, ni chimère dont la racine en est une, ni mal du cœur ; ni idole d'un chapitre), sur le sable,
+  les dunes et la steppe, plus nombreuses loin des routes ; leur contact ouvre un combat dont on peut fuir (`D.FUITE`) ; aucune
+  autre récompense que celle d'une victoire. **Les brigands** : loin des routes, une embuscade au plus par traversée, qui lance
+  `Tr.raid` avec `embuscade` — la parole avec le chef, puis La Razzia (racine : `avidite`) —, sans ce qui suppose une caravane
+  (ni caravanier, ni renforts, ni part à servir, ni mise à rendre) ; des gens de fiction, sans tribu ni peuple. **Le voyageur** :
+  une fois par traversée, peut-être, un homme de fiction sans nom (« Un voyageur »), assis et accablé (`accable`) dans le désert,
+  loin des villes, avec un visage ; A devant lui ouvre un pourparler dont une manche porte le Désespoir (`noir_desespoir`, on
+  lui répond) ; apaisé, il se relève et reprend la route ; sinon, **L'Abandon** (`abandon`, une chimère commune de racine
+  `noir_desespoir`, faible devant la Patience et la Miséricorde) se lève, et l'on se bat contre elle, jamais contre lui ; on peut
+  la fuir ; vaincue, elle le libère. Ce sont les Compagnons qui lui répondent : aucun texte ne dit ni ne laisse entendre qu'un
+  Compagnon désespère ; ni verset, ni parole attestée, ni formule, ni promesse d'un pouvoir (exigences 7, 13, 15, 16 et 22). Sur
+  la route, rien de ce qui se dit ne touche au récit — ni l'enracinement de l'idole du chapitre, ni ses piliers, ni le compte
+  des pourparlers. Tant que l'outil « parler » n'est pas reçu, ni brigands ni voyageur (la rencontre attend) ; aucun outil, aucun
+  message de plus. Le joueur de test du moteur ne sort jamais. `regles.js` vérifie : `D.MONDE.rencontres` n'a que ses champs
+  (des entiers, ou des parts de 0 à 1), au moins trois cases autour de La Mecque, aucune idée noire qui rôde, la racine de
+  L'Abandon, les textes des rencontres (`route`, et ce que dit `monde.js`) — ni l'Agrégor (la carte vient avant l'étape III), ni
+  les mots du pari, ni verset, ni nombre, dans les quatre langues. Aussi : la Carte de la halte du monde sans nom qui en
+  chevauche un autre, et le bandeau d'une ville visitée qui dit son nom (`Mo.sousTitre`, `I.t('{epoque} · {ville}')`).
+  `v2/docs/architecture.md`, « Les rencontres de la route ». Contrôle : `node v2/tools/monde.js` (partie 5 ; « MONDE
+  CONFORME ») ; un changement des rencontres repasse aussi `cite.js passages` (les rues des quartiers partagent le mécanisme),
+  `progression.js`, `smoke.js auto`, `walk` et `tap`.
 - Dans la 2.x, le corps a ses attitudes (D205 : `D.ATTITUDES`, dans `D.POSES`) ; un Compagnon les prend avec retenue — la
   joie ne lève pas les bras au-dessus de la tête, le rire se limite aux épaules, la colère reste un corps tendu — et c'est
   le moteur qui choisit (`retenue()`) : un récit écrit l'attitude, jamais sa forme. Les mimiques seulement pour qui a un
@@ -446,7 +479,7 @@ toute considération de jeu.
 | `src/core/circuit.js` | Sâlim et la course (2.27, D216) : la moto de Sâlim et le tour derrière lui, les cinq circuits vus de dessus, leurs adversaires, la prime de l'organisateur, le podium | les tracés et les nombres dans `defs.js` (`D.CIRCUITS`, `D.COURSE`), les textes dans `frame.js` (`cite.course`), la moto et les voitures vues de dessus dans `gfx.js` ; sa moitié « géométrie et conduite » se charge sous Node (le réglage) ; aucune mise, nulle part (`regles.js`) |
 | `src/core/activites.js` | les activités des quartiers (2.28, D217) : la borne « Les lueurs », l'étal de la galerie, l'écran géant, la grande roue et les manèges, payés avec les primes du circuit | les prix et les nombres dans `defs.js` (`D.ACTIVITES`, `D.BORNE`), les textes dans `frame.js` (`cite.activites`) et `coeur.js` (`lecons`), Idris sur un manège dans `gfx.js` (`passager`) ; sa moitié « jeu de la borne » se charge sous Node ; rien ne s'y gagne (`regles.js`) |
 | `src/core/passages.js` | la rue et l'ascenseur (2.28, D218) : de la Cité-Miroir aux quartiers à pied, des Archives basses à la Cité-Miroir | les lieux `traverse` (`maps.js`), l'arrivée par la rue dans `cite.js` (`C.depart`) ; jamais dans les sagas, les veillées ni le dernier maillon |
-| `src/core/monde.js` | la carte du monde (2.29, D220) : les portes des villes des récits, la route, le retour, les visites | les villes, les côtes, les fleuves, les reliefs, les routes et les portes de chaque chapitre dans `defs.js` (`D.MONDE`), la carte dans `maps.js` (`monde`), les icônes dans `gfx.js` ; ses passages s'inscrivent dans `passages.js` (`P.ajouter`) ; jamais dans l'histoire-cadre, les veillées ni le dernier maillon |
+| `src/core/monde.js` | la carte du monde (2.29, D220) : les portes des villes des récits, la route, le retour, les visites ; les rencontres de la route (2.30, D222) : les chimères du désert, les brigands, le voyageur | les villes, les côtes, les fleuves, les reliefs, les routes et les portes de chaque chapitre dans `defs.js` (`D.MONDE`), la carte dans `maps.js` (`monde`), les icônes dans `gfx.js` ; ses passages s'inscrivent dans `passages.js` (`P.ajouter`) ; jamais dans l'histoire-cadre, les veillées ni le dernier maillon |
 | `src/core/cite.js`, `src/core/trafic.js` | les quartiers de la Cité (2.23, D212) : le refuge de 2084 à côté de Maître Yûnus, ses sorties, le rappel après une chimère moderne ; les voitures qui roulent et s'arrêtent, celles du circuit | la carte est dans `maps.js` (`quartiers()`), les voitures dessinées dans `gfx.js`, ce qui rôde dans `rodeurs.js` (`env.rues`), les textes dans `frame.js` (`cite`) |
 | `src/core/partage.js` | partager sa progression (2.x) : l'image que le jeu dessine (1080 × 1080 ou 1080 × 1920), son texte, `navigator.share` et son repli | le récit seulement : ni œuvres, ni cœur, ni Valeurs, ni descente, ni combats ; le bouton paraît au premier maillon achevé, sans leçon ; `v2/docs/architecture.md`, « Partager sa progression » |
 | `promo/shorts/NN-nom.js`, `promo/shorts/_saga.js`, `promo/shorts/legendes.md` | les scénarios des shorts (2.x), la base commune des cinq shorts de saga, et leurs textes d'accompagnement | un scénario dit où aller dans le jeu, quoi faire, quelles phrases poser ; un short de saga ne donne que des clés et des fragments (le lieu, la parole, l'idole) ; les films (`films/`), la galerie et les plans d'ambiance (`plans-ia/`) ne sont pas versionnés |
@@ -485,7 +518,7 @@ node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère et 
 node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe, la pièce interdite
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
 node v2/tools/cite.js [dossier] [course|activites|passages]   # 2.23, 2.27 et 2.28 : Sâlim et sa moto, les cinq circuits, la prime, aucune mise (« course » : cette partie seule) ; les activités payées avec les primes — la borne, l'étal, l'écran, la roue et les manèges (« activites ») ; la rue et l'ascenseur (« passages ») ; les quartiers de la Cité — l'arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel ; captures — « CITÉ CONFORME »
-node v2/tools/monde.js [dossier]    # 2.29 : la carte du monde — les villes à leur place et à leur époque, les portes des récits et elles seules, la route et le retour, les visites, La Mecque sans mosquée — « MONDE CONFORME »
+node v2/tools/monde.js [dossier]    # 2.29 et 2.30 : la carte du monde — les villes à leur place et à leur époque, les portes des récits et elles seules, la route et le retour, les visites (sans étendards), La Mecque sans mosquée ; les rencontres de la route (les chimères du désert, les brigands, le voyageur), rien autour de La Mecque — « MONDE CONFORME »
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
 node v2/tools/loupe.js [messages]   # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles, les messages du combat en bas (« messages » : eux seuls)
 node v2/tools/manette.js            # 2.x : la manette tactile partout — A choisit, B revient en arrière, le joystick choisit ; elle ne recouvre rien, la sélection se voit
