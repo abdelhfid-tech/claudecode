@@ -292,6 +292,8 @@
 {"k":"7okf68.d","fr":"derrière elle","t":"その背後に","ou":"mal.js"},
 {"k":"ahbsyg.1c","fr":"Le mal du cœur : par l’œuvre, qui forge sa lame.","t":"心の悪徳には善行で。善行がその刃を鍛える。","ou":"mal.js"},
 {"k":"104p7p5.17","fr":"Aucune idole rencontrée ici pour l’instant.","t":"ここではまだ偶像に出会っていません。","ou":"mal.js"},
+{"k":"1atn7oi.h","fr":"Revenir : {ville}","t":"{ville}へ戻る","ou":"monde.js"},
+{"k":"1iu0xl3.g","fr":"Entrer : {ville}","t":"{ville}に入る","ou":"monde.js"},
 {"k":"mrcxdd.v","fr":"Énigme du cœur : <b>{titre}</b>","t":"心の謎：<b>{titre}</b>","ou":"oeuvres.js"},
 {"k":"1ui3s6n.5","fr":"Œuvre","t":"善行","ou":"oeuvres.js"},
 {"k":"hivkzn.c","fr":"indisponible","t":"できない","ou":"oeuvres.js"},

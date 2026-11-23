@@ -153,7 +153,8 @@
     MATS: { '*': { name: 1 } }, PIECES: { '*': { name: 1, desc: 1, group: 1 } },
     RANGS: { '*': COMPETENCE }, ORDRES: { '*': COMPETENCE }, MANOEUVRES: { '*': COMPETENCE },
     OUTILS: { '*': { nom: 1 } }, POSTURES: { '*': { nom: 1, court: 1 } }, VOIES: { '*': { name: 1, de: 1 } },
-    STARS: [{ name: 1, fr: 1 }], TENUES: [{ nom: 1 }]
+    STARS: [{ name: 1, fr: 1 }], TENUES: [{ nom: 1 }],
+    MONDE: { depuis: { '*': { epoque: 1 } } }   // 2.29 (D220) : l'époque d'un chapitre, que dit le carton d'une ville visitée
   };
 
   function selon(o, k, f, vu, ou) {

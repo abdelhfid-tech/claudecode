@@ -41,7 +41,7 @@
   /* ----- le chapitre : une journée ----- */
   O.newChapter = function () { Object.keys(S.flags).forEach(k => { if (k.indexOf('_o_') === 0 || k.indexOf('_noir_') === 0) delete S.flags[k]; }); }; // une idée noire dissipée dans la descente rôde de nouveau au chapitre suivant
   // 2.x : une visite ou un retour en 2084 se rejouent à volonté — on s'y repose, mais aucune œuvre n'y est comptée
-  O.sobre = () => !!(W.ch && (W.ch.visite || Number.isInteger(W.ch.retour)));
+  O.sobre = () => !!(W.ch && (W.ch.visite || Number.isInteger(W.ch.retour))) || !!(I.monde && I.monde.dehors());   // (2.29 : sur la route et dans une ville de passage aussi — monde.js)
   O.enigme = function () { const e = W.ch && W.ch.enigme; return e && !st().enigmes[e.id] ? e : null; };
   O.afflicted = id => { const e = O.enigme(); return !!(e && e.who === id); };
   O.openChapter = async function () {

@@ -868,6 +868,7 @@
     const p = W.player, sc = U.scale || 1, cx = Math.round(W.cam.x) + G.view.x, cy = Math.round(W.cam.y) + G.view.y, tg = W.target(), list = [], m = W.map; // ce que l'on voit de l'image : rogné en hauteur d'écran, agrandi si le joueur l'a voulu
     if (p.moving) still = now;
     W.npcs.forEach(n => { if (n.hidden || n.map !== m.id || !n.placed) return; const d = Math.hypot(n.x - p.x, n.y - p.y), cible = !!(tg && tg.ent === n); if (d < 60 || (cible && d < 150)) list.push({ k: 'n' + n.id, t: n.name, x: n.x, y: n.y - bulle(n.pose), d: cible ? -1 : d, c: n.aura || '#f3e7cc' }); });
+    if (I.monde) I.monde.etiquettes(list);   // 2.29 (D220) : sur la carte du monde, le nom des villes proches, et « Entrer : … » tout près (monde.js)
     list.sort((a, b) => a.d - b.d); list.length = Math.min(list.length, 5);
     // 2.18 — le décideur, 20 novembre : « garde les noms de tout le monde sauf Idris » : le râwî, que mène le joueur, n'a pas
     // d'étiquette ; les siens et les gens du lieu gardent la leur
@@ -879,10 +880,12 @@
     // 2.x (D189) : les étiquettes se posent par la fenêtre visible (G.view, U.scale), puis dans l'ordre — la cible, les plus
     // proches, celui qui mène, puis les siens ; une étiquette qui en recouvrirait une autre ne s'affiche pas (au départ d'un
     // chapitre, les noms du groupe ne s'empilent plus)
+    // 2.29 : le nom d'une ville (monde.js, bord) ne passe pas sous les boutons de la scène ni sous la boussole
+    const boutons = list.some(e => e.bord) ? (() => { const s = stg.getBoundingClientRect(); return ['#menubtn', '#helpbtn', '#zoombtn', '#compass'].map(k => $(k)).filter(e => e && !e.hidden).map(e => e.getBoundingClientRect()).filter(q => q.width).map(q => [q.left - s.left, q.top - s.top, q.right - s.left, q.bottom - s.top]); })() : [];
     list.forEach(e => { const x = (e.x - cx) * sc, y = (e.y - cy - 25) * sc; if (x < 8 || x > w - 8 || y < 4 || y > hh - 4) return; seen[e.k] = 1;
       let el = box.querySelector('[data-k="' + e.k + '"]'); if (!el) { el = I.el('span', 'nom', I.esc(e.t)); el.dataset.k = e.k; el.style.setProperty('--c', e.c); box.appendChild(el); }
       el.style.left = x.toFixed(1) + 'px'; el.style.top = y.toFixed(1) + 'px';
-      const lw = el.offsetWidth, lh = el.offsetHeight, r = [x - lw / 2, y - lh, x + lw / 2, y], dessus = poses.some(q => r[0] < q[2] + 2 && r[2] > q[0] - 2 && r[1] < q[3] + 1 && r[3] > q[1] - 1);
+      const lw = el.offsetWidth, lh = el.offsetHeight, r = [x - lw / 2, y - lh, x + lw / 2, y], sur = q => r[0] < q[2] + 2 && r[2] > q[0] - 2 && r[1] < q[3] + 1 && r[3] > q[1] - 1, dessus = poses.some(sur) || (!!e.bord && boutons.some(sur));
       el.classList.toggle('cache', dessus); if (!dessus) poses.push(r); });
     [...box.children].forEach(el => { if (!seen[el.dataset.k]) el.remove(); });
   };

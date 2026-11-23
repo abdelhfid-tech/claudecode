@@ -607,9 +607,52 @@
       return E;
     }
 
+    /* 2.29 (D220) — la carte du monde (D.MONDE) : des villes connues, chacune à sa place dans la carte, son année de fondation
+       entière, sa visite dans D.MAPS (une ville de passage) ; La Mecque visitée sans mosquée ni école de mosquée (la variante
+       « mecque » : ni Haram ni Kaaba) ; des portes seulement dans les chapitres des récits (ni l'histoire-cadre, ni les veillées,
+       ni le dernier maillon), sur une carte que le chapitre emploie et dont le gabarit a une porte, à partir d'un objectif qui
+       existe, vers une ville qui existe l'année du chapitre ; des routes faites de villes et de points ; aucun mot du pari. */
+    function verifierMonde(sagas, E) {
+      const M = D.MONDE, V = M.villes || {}, w = 'D.MONDE', ent = (v, a, b) => Number.isInteger(v) && v >= a && v <= b, pt = q => Array.isArray(q) && q.length === 2 && typeof q[0] === 'number' && typeof q[1] === 'number' && q[0] >= M.lat[0] - 1 && q[0] <= M.lat[1] + 1 && q[1] >= M.lon[0] - 1 && q[1] <= M.lon[1] + 1;
+      if (!Array.isArray(M.cases) || !ent(M.cases[0], 32, 128) || !ent(M.cases[1], 32, 128)) E.push(`${w}.cases : de 32 à 128 cases de côté (la toile d'un téléphone)`);
+      const spots = ((D.GABARITS.monde || {}).spots) || [];
+      Object.keys(V).forEach(id => { const v = V[id], wv = `${w}.villes.${id}`;
+        if (typeof v.lat !== 'number' || typeof v.lon !== 'number' || v.lat < M.lat[0] || v.lat > M.lat[1] || v.lon < M.lon[0] || v.lon > M.lon[1]) E.push(`${wv} : latitude et longitude dans la carte`);
+        if (!(v.fondee === null || ent(v.fondee, 1, 60))) E.push(`${wv} : fondee est une année entière de l'hégire, ou null (toujours)`);
+        if (!['ville', 'lieu'].includes(v.genre)) E.push(`${wv} : genre « ville » ou « lieu »`);
+        if (!['arabe', 'sham', 'camp'].includes(v.icone)) E.push(`${wv} : icone « arabe », « sham » ou « camp »`);
+        if (v.genre === 'ville' && !(D.MAPS[v.carte] && D.MAPS[v.carte].visite)) E.push(`${wv} : sa visite (carte) est un lieu de D.MAPS marqué « visite »`);
+        if (v.genre === 'lieu' && v.carte !== null) E.push(`${wv} : un lieu n'a pas de visite (carte: null)`);
+        if (v.rive !== undefined && ![-1, 1].includes(v.rive)) E.push(`${wv} : rive -1 (ouest) ou 1 (est)`);
+        if (typeof D.LIEUX[id] !== 'string') E.push(`${wv} : son nom manque dans D.LIEUX`);
+        if (!spots.includes(id)) E.push(`${wv} : absente des lieux nommés du gabarit « monde »`); });
+      { const m = V.mecque, L = m && D.MAPS[m.carte]; if (!m) E.push(`${w}.villes.mecque : La Mecque est l'une des villes du décideur`);
+        else if (!L || L.variante !== 'mecque' || L.spots.some(s => /mosquee|ecole/.test(s))) E.push(`${w}.villes.mecque : La Mecque se visite sans mosquée ni Haram ni Kaaba (ville, variante « mecque », aucun lieu de mosquée)`); }
+      (M.routes || []).forEach((R, i) => { if (!Array.isArray(R) || R.length < 2 || R.some(e => !(typeof e === 'string' ? V[e] : pt(e)))) E.push(`${w}.routes[${i}] : des étapes, une ville connue ou [lat, lon]`); });
+      ['terres'].forEach(k => (M[k] || []).forEach((L, i) => { if (!Array.isArray(L) || L.length < 3 || L.some(q => !pt(q))) E.push(`${w}.${k}[${i}] : un polygone de [lat, lon]`); }));
+      const ch = {}; sagas.forEach(s => (s.chapters || []).forEach(c => { if (c && c.id) ch[c.id] = { s, c }; }));
+      const cartes = c => { const l = new Set([c.map]); (function va(v) { if (Array.isArray(v)) { if (v[0] === 'map' && typeof v[1] === 'string') l.add(v[1]); v.forEach(va); } else if (v && typeof v === 'object') Object.keys(v).forEach(k => va(v[k])); })(c); return l; };
+      Object.keys(M.depuis || {}).forEach(id => { const d = M.depuis[id], x = ch[id], wd = `${w}.depuis.${id}`;
+        if (!x) { E.push(`${wd} : aucun chapitre ne porte cet identifiant`); return; }
+        if (x.s.frame || x.s.veillees || x.s.commun) E.push(`${wd} : aucune porte dans l'histoire-cadre ni dans les veillées`);
+        if (x.c.fin) E.push(`${wd} : aucune porte dans le dernier maillon`);
+        if (!ent(d.an, 1, 60)) E.push(`${wd} : an, une année entière de l'hégire`);
+        if (typeof d.epoque !== 'string' || !d.epoque.trim()) E.push(`${wd} : epoque, ce que dit le carton d'une ville visitée`); else pari(d.epoque, wd, E);
+        if (!Array.isArray(d.portes) || !d.portes.length) { E.push(`${wd} : portes, au moins une`); return; }
+        const emploie = cartes(x.c), n = (x.c.objectives || []).length;
+        d.portes.forEach((p, i) => { const wp = `${wd}.portes[${i}]`, L = D.MAPS[p.carte];
+          if (!L) { E.push(`${wp} : carte « ${p.carte} » inconnue`); return; }
+          if (!(M.gabarits || []).includes(L.gabarit) || L.visite) E.push(`${wp} : une porte se tient dans une ville d'un récit (${(M.gabarits || []).join(', ')}) — ni une route, ni la mer, ni la noosphère`);
+          if (!emploie.has(p.carte)) E.push(`${wp} : le chapitre n'emploie pas la carte « ${p.carte} »`);
+          if (!(Number.isInteger(p.des) && p.des >= 0 && p.des < n)) E.push(`${wp} : des, un objectif du chapitre (0 à ${n - 1})`);
+          if (!V[p.ville]) E.push(`${wp} : ville « ${p.ville} » inconnue`);
+          else if (V[p.ville].fondee && ent(d.an, 1, 60) && V[p.ville].fondee > d.an) E.push(`${wp} : ${p.ville} n'existe pas encore en l'an ${d.an}`); }); });
+    }
+
     // ce qu'une saga seule ne peut pas dire : les renvois entre sagas (« after ») et l'ordre sur la Chaîne
     function verifierEnsemble(sagas) {
       const E = [], jouables = sagas.filter(s => !s.commun && !s.frame), ids = new Set(jouables.map(s => s.id)), vus = {};
+      if (D.MONDE) verifierMonde(sagas, E);   // 2.29 (D220)
       sagas.forEach(s => (s.chapters || []).forEach(c => { if (c.after !== undefined && !ids.has(c.after)) E.push(`${s.id}/${c.id}: « after: ${c.after} » ne désigne aucune saga`); }));
       jouables.forEach(s => { const L = s.livre === undefined ? 1 : s.livre;
         if (!(Number.isInteger(L) && L >= 1)) { E.push(`saga ${s.id}: « livre » doit être un entier à partir de 1`); return; }

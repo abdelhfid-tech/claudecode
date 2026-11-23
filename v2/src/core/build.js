@@ -4,7 +4,7 @@
   const I = window.ISNAD, G = I.gfx, D = I.D, S = I.script, W = I.world, $ = I.$, T = 16;
   const Bd = I.build = { on: false, sel: 'tranchee' };
   // on bâtit à ciel ouvert : c'est le gabarit du lieu qui le dit (D.GABARITS)
-  Bd.outdoor = id => !!(D.gabarit(id) || {}).dehors;
+  Bd.outdoor = id => !!(D.gabarit(id) || {}).dehors && !(D.MAPS[id] || {}).visite;   // (2.29 : on ne bâtit pas dans une ville de passage)
   const WATER = { well: 1, fountain: 1, basin: 1, spring: 1 };
 
   /* ----- réserves ----- */

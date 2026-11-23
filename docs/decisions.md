@@ -2163,6 +2163,57 @@ pages privées de son compte.
   qui montre les différentes sagas. Tu peux débloquer les sagas dans le [short] si c'est plus simple. » Dans les shorts, la
   Chaîne montre chaque maillon « à ouvrir », sans « Scellé » ni cadenas : l'interrupteur de test du jeu (`I.debug.all`,
   `ui.js`) est posé dans la page du film seulement. Le jeu ne change pas : les maillons s'y suivent toujours (D211).
+- [ ] **D220. La carte du monde : sortir d'une ville par sa porte, la route, les villes où il ne se passe rien (version 2.29 ;
+  demande du décideur, 23 novembre) — choix, coordonnées, textes et dessin de l'agent, à valider.** « C'est coûteux d'ajouter
+  un "meta-monde" […] ou on accéderait aux autres villes via le désert avec une carte réaliste qui rend accès aux villes prévue
+  dans la saga et les autres saga même s'il ne s'y passe rien ? […] Comme dans final fantasy ou chrono trigger une carte
+  global ou les points d'intérêt sont accessibles en sortant de chaque ville par sa porte. » Ses choix : **les villes** — celles
+  des sagas (Médine, Koufa, Damas, Homs, Qinnasrîn, al-Hîra, le Yarmoûk), La Mecque et Tâ'if, Jérusalem (al-Quds, Îliyâ'),
+  Bassora et Fustât ; **La Mecque**, une visite sobre — des rues, un marché, des passants ; le Haram et la Kaaba jamais
+  dessinés ; ni combat ni chimère dans la ville ; **les dates** — une ville n'apparaît qu'à partir de l'époque où elle existe ;
+  **les brigands** — la parole d'abord, puis leur chimère, « La Razzia » (pour la 2.30). Les jeux cités ne sont nommés qu'ici :
+  rien n'en est repris (ni carte, ni musique, ni dessin, ni nom). *Ce qui a été fait* (`v2/src/core/defs.js`, `D.MONDE` ;
+  `v2/src/core/maps.js`, `monde` ; `v2/src/core/monde.js` ; `v2/docs/architecture.md`, « La carte du monde ») : **la carte** —
+  de 30 à 49° E et de 20 à 37° N (de la vallée du Nil au fond du golfe, de Qinnasrîn à Tâ'if), 96 × 96 cases d'une vingtaine
+  de kilomètres, dessinée par le jeu : la mer, les côtes, le Nil et son delta, l'Euphrate, le Tigre, le Chatt al-Arab, le
+  Jourdain, la mer Morte, le Hedjaz, les monts du Liban et de l'Anti-Liban, le Sinaï, le pied du Zagros, le Nafoud et la
+  Samâwa, la steppe du Shâm et de la Jazîra, les terres vertes (le delta, le Sawâd, la côte du Levant, la Ghûta) et les oasis,
+  les routes (la route de Badr, celle de Tabûk vers le Shâm, la Via Maris, la route de l'Irak, la traversée de la Samâwa), un
+  pont où elles franchissent un fleuve, un col dans la montagne ; trois icônes de ville (une ville d'Arabie, une ville du Shâm,
+  un camp), sans enseigne, sans lettre, sans édifice religieux — La Mecque est une ville comme les autres sur la carte. **Les
+  portes** : dans quinze chapitres des récits (Médine, Jérusalem, al-Hîra, le Yarmoûk, Qinnasrîn puis Homs, Koufa), au nord et
+  au sud de la ville, au sud de la cité romaine, à l'ouest du camp ; ni la Samâwa ni la route d'Îliyâ' (elles sont déjà la
+  route), ni la mer, ni la noosphère, ni Dhû l-Qassa, Harûrâ', Nahrawân, ni l'histoire-cadre, les veillées, le dernier maillon.
+  On sort en marchant vers le bord, ou par A ; c'est le même chapitre (rien n'est rangé) : Idris paraît à côté de sa ville, la
+  flèche la montre, et y revenir le rend à la porte, l'objectif, les drapeaux et les personnages inchangés ; une partie quittée
+  sur la route s'y rouvre. **Les visites** : les autres villes de l'époque — Médine et Koufa telles qu'en leurs récits, sans
+  personne ; La Mecque sans mosquée, ni Haram, ni Kaaba (des maisons, un petit marché, une cour où la natte est posée) ; Tâ'if,
+  Bassora (le fleuve à l'est), Fustât (le Nil à l'ouest), Jérusalem, Damas, Homs, Qinnasrîn (une cité de pierre, sans les
+  enseignes de Rûm à sa porte), al-Hîra (un camp) ; un carton dit le nom de la ville et l'époque du chapitre ; un comptoir (les étals d'un lieu du jeu : rien de nouveau
+  à vendre) et une natte, où l'on prie et se repose sans que les œuvres se comptent et sans descente ; on n'y bâtit pas ; rien
+  n'y rôde. **La progression** : l'outil « La route », un simple geste, dit à la première sortie : « Par la porte, la route
+  mène aux autres villes. Revenir à celle du récit le reprend là où tu l'as laissé. » **Les dates** : Bassora dès 14 H, Koufa
+  dès 17 H, Fustât dès 21 H ; chaque chapitre a son année (la première de son sous-titre ; al-Hîra, dans « La Traversée »,
+  l'an 12) et son époque (celle de son sous-titre ; al-Hîra, « An 12 H · 633 »). *Les coordonnées* sont celles des pages de
+  référence (relevées le 23 novembre, au centième de degré ; `v2/docs/architecture.md`) — elles diffèrent à peine des valeurs
+  prévues : Tâ'if 21,28 / 40,41 (prévu 21,27 / 40,42), al-Hîra 31,98 / 44,39 (prévu 44,45), le Yarmoûk 32,81 / 35,95 (prévu
+  32,78 / 35,93 ; la page marque ces coordonnées comme douteuses), Bassora 30,52 (prévu 30,51), Fustât 30,01 / 31,24 (prévu
+  30,00 / 31,23) ; aucune ne change de case. Les côtes, les fleuves et les lacs viennent de Natural Earth (domaine public),
+  simplifiés ; les reliefs, les déserts, les steppes, les terres vertes, les oasis et les routes sont un tracé de l'agent.
+  Koufa et al-Hîra, à six kilomètres l'une de l'autre, s'écartent chacune d'une case (Koufa au nord) ; Koufa, al-Hîra et
+  Bassora se posent sur la rive ouest de leur fleuve, Fustât sur la rive est du Nil. *Les noms dans les langues* : les formes
+  reçues des récits (مكة, الطائف, بيت المقدس, دمشق, حِمص, قِنَّسرين, وادي اليرموك, الحِيرة, البصرة, الكوفة, فسطاط مصر ; Mecca,
+  Ta’if, Jerusalem, Damascus… ; マッカ, ターイフ, エルサレム…). *À valider* : la carte, sur sa planche (le tracé des côtes
+  d'aujourd'hui ; le fond du golfe, plus au nord au VIIᵉ siècle ; les reliefs, les déserts et les routes de l'agent) ; la
+  source des côtes, des fleuves et des lacs (Natural Earth, des données publiques réduites à quelques centaines de points
+  dans `defs.js` : le jeu ne charge rien, mais c'est une donnée venue d'ailleurs — l'agent propose, le décideur décide) ; les
+  douze villes, leurs dates et leurs icônes (al-Hîra en camp, comme le plan le prévoyait ; le Yarmoûk, un lieu où l'on ne
+  revient que depuis son récit) ; « Jérusalem » pour le nom de la ville (le récit dit « Îliyâ' » ; en arabe, « بيت المقدس ») ;
+  l'année et l'époque de chaque chapitre (la première année d'un récit qui en couvre plusieurs : u3 « An 17–23 H » n'a pas
+  Fustât ; k2 « An 13 ou 15 H » n'a pas Bassora) ; La Mecque visitée sans mosquée (le décideur a dit « des rues, un marché, des
+  passants » : il n'y a pas encore de passants — la vie des villes viendra s'il la veut) ; la natte sobre et l'absence de
+  descente dans une visite ; les textes (la leçon, « Entrer : … », « Revenir : … », « Les routes », « La route », les époques) ;
+  les captures (390 × 844, 844 × 390, dans les trois dessins). Contrôle : `node v2/tools/monde.js` (« MONDE CONFORME »).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

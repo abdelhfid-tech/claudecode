@@ -17,7 +17,7 @@ for (let i = 0; i < args.length; i++) {
 }
 if (avec.length && !vers) { console.error('--avec demande --vers : un assemblage d’essai ne remplace jamais le jeu livré'); process.exit(2); }
 
-const core = ['defs', 'regles', 'dedale', 'langue', 'base', 'perso', 'gfx', 'sprites', 'maps', 'script', 'world', 'build', 'trade', 'oeuvres', 'lecons', 'gear', 'mal', 'valeurs', 'postures', 'rangs', 'battle', 'rodeurs', 'ui', 'trafic', 'cite', 'circuit', 'activites', 'passages', 'partage'].map(n => `src/core/${n}.js`);
+const core = ['defs', 'regles', 'dedale', 'langue', 'base', 'perso', 'gfx', 'sprites', 'maps', 'script', 'world', 'build', 'trade', 'oeuvres', 'lecons', 'gear', 'mal', 'valeurs', 'postures', 'rangs', 'battle', 'rodeurs', 'ui', 'trafic', 'cite', 'circuit', 'activites', 'passages', 'monde', 'partage'].map(n => `src/core/${n}.js`);
 const data = ['src/data/frame.js', 'src/data/music.js', 'src/data/caid.js', 'src/data/coeur.js'].filter(f => fs.existsSync(path.join(root, f))).concat(fs.readdirSync(path.join(root, 'src/data')).filter(f => /^saga_.*\.js$/.test(f)).sort().map(f => 'src/data/' + f));
 // les paquets : ceux du dépôt, dans l'ordre de leurs noms, puis ceux de l'essai. Un paquet est de la donnée : il entre tel quel.
 const DOSSIER = path.join(root, 'paquets');
@@ -30,7 +30,7 @@ const poser = f => { const p = JSON.parse(fs.readFileSync(f, 'utf8'));
 // « + » : des sources ont changé depuis ce commit (les fichiers générés ne comptent pas)
 let rev = ''; try { const sh = c => require('child_process').execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); rev = sh('git rev-parse --short HEAD') + (sh('git status --porcelain -- src tools paquets') ? '+' : ''); } catch (e) { /* hors dépôt */ }
 // le numéro de la 2.x : il avance d'un centième à chaque enregistrement qui change le jeu (AGENTS.md ; docs/decisions.md, D181)
-const NUMERO = '2.28';
+const NUMERO = '2.29';
 const version = NUMERO + (vers ? ' · essai' : '') + ' · ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC' + (rev ? ' · ' + rev : '');
 // les langues (src/lang/<langue>/<fichier>.json) : chaque texte est rangé sous la clé de son texte français (src/core/langue.js).
 // Un texte laissé vide n'entre pas : le jeu dira le français à cet endroit, et v2/tools/langues.js le signale.

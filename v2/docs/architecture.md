@@ -1082,6 +1082,87 @@ sous-sol on doit pouvoir être libre de remonter ». Choix de l'agent, validés 
   `retours.js`, `progression.js`, `doigt.js`, `doigt.js loin 844x390`, `smoke.js walk` et `tap` (les joueurs de test ne passent
   jamais).
 
+### La carte du monde : les portes des villes, la route, les visites (2.29, D220)
+
+*Le décideur, 23 novembre : « un "meta-monde" […] ou on accéderait aux autres villes via le désert avec une carte réaliste qui
+rend accès aux villes prévue dans la saga et les autres saga même s'il ne s'y passe rien […] une carte global ou les points
+d'intérêt sont accessibles en sortant de chaque ville par sa porte. » (Les jeux qu'il cite ne sont nommés que dans
+`docs/decisions.md`, D220 : rien n'en est repris.) Ses choix : les
+villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ; La Mecque, une visite sobre (le Haram et la Kaaba jamais
+dessinés ; ni combat ni chimère) ; une ville n'apparaît qu'à partir de l'époque où elle existe. Choix, coordonnées, textes et
+dessin de l'agent, à valider. Les rencontres sur la route (les chimères, les brigands) sont pour la 2.30.*
+
+- **Les données** : `D.MONDE` (`src/core/defs.js`) — la projection, les douze villes (latitude, longitude, année de fondation,
+  `genre` ville ou lieu, `icone`, la `carte` de la visite, la `rive` d'une ville au bord d'un fleuve), les côtes (`terres`), les
+  fleuves, les lacs, les reliefs, les déserts, les steppes, les terres vertes, les oasis, les routes, les gabarits qui ont des
+  portes et, par chapitre, `depuis` (son année, son époque, ses portes). Aucun nombre dans un récit.
+- **La carte** : `monde()` (`src/core/maps.js`), 96 × 96 cases (une toile de 1 536 points de côté ; 3 072 en dessin fin, soit
+  9,4 Mpx, sous la limite des téléphones), longitude 30 à 49° E, latitude 20 à 37° N, équirectangulaire corrigée à 28,5° N :
+  une case fait 19,7 km du nord au sud. `M.projeter`, `M.kmCase`, `M.casesVilles` (la case de chaque ville : celle de son
+  point ; Koufa et al-Hîra, à six kilomètres l'une de l'autre, s'écartent chacune d'une case ; une ville au bord d'un fleuve se
+  pose sur sa rive), `M.existe` (une ville de l'époque). La mer et l'eau sont pleines, le relief aussi (`mont`) ; la steppe
+  (`steppe`), les dunes, l'herbe se marchent ; une route franchit un fleuve sur un pont et une crête par un col ; jamais dans la
+  mer (`m.horsTerre`). Le sol est le même à toute heure et à toute époque (sa propre graine) ; seules les villes de l'époque
+  (`opts.an`) ont leur icône et leur lieu nommé. Se peignent par-dessus les cases, sans rien changer à ce qui se marche (`b.peint`) :
+  l'écume des côtes, les sommets (plus grands qu'une case), les ponts, les croissants des dunes, les palmiers des oasis, les
+  pistes. Pas de petite carte au coin (`b.sansMini`). Les icônes (`gfx.js`, `ville_arabe`, `ville_sham`, `ville_camp`) : sans
+  empreinte au sol, sans enseigne, sans lettre, sans édifice religieux. La Carte de la halte la dessine à sa taille logique
+  (`W.carte` : une seconde toile fine serait de trop sur un téléphone).
+- **Les portes** (`src/core/monde.js`, `I.monde`, inscrit dans `passages.js` par `P.ajouter`) : la ville d'Arabie au nord et au
+  sud (`porte_nord`, `porte_sud`), la cité romaine au sud (sous `porte`), le camp à l'ouest (devant `entree`) — au bord de la
+  carte, sur la largeur de la porte ; on sort en marchant vers le bord ou par A tourné vers lui (les gardes de `passages.js` :
+  Idris a la main ; le joueur de test du moteur ne sort jamais). Seulement dans un chapitre de `D.MONDE.depuis`, sur sa carte,
+  à partir de son objectif (`Mo.porte`) ; jamais dans l'histoire-cadre, les veillées, le dernier maillon, ni sur la mer, la
+  noosphère, une route (le désert), ni à Dhû l-Qassa, Harûrâ', Nahrawân (`regles.js` le vérifie).
+- **Sortir** (`Mo.sortir`) : le schéma de l'ascenseur — le même chapitre, rien de rangé ; `S.flags._monde` garde la ville du
+  récit et le retour (la carte, ses réglages, la place d'Idris un pas en deçà de la porte, son regard, celle des personnages) ;
+  la carte du monde se charge à l'heure du chapitre (`Mo.opts`), Idris à côté de la ville, du côté de la porte, sur une case
+  reliée à elle (`aCote`) ; le point de reprise est pris là. La flèche montre la ville du récit (`Mo.cible`, par `P.cible`,
+  dans `W.target`) ; au-dessus des villes proches, leur nom, et tout près « Entrer : … » ou « Revenir : … » (`Mo.etiquettes`,
+  dans `U.noms`, jamais sous un bouton de la scène) ; la bulle de passage paraît au-dessus d'Idris.
+- **Revenir** (`Mo.entrer`, la ville du récit) : marcher sur elle, ou A tout près : la carte du chapitre se recharge à la porte,
+  Idris tourné vers la ville, les personnages à leur place ; l'objectif et les drapeaux n'ont pas bougé.
+- **Les visites** (`Mo.entrer`, une autre ville de l'époque) : sa carte (`visite_…`, D.MAPS, `visite: true`) — Médine et Koufa
+  sous la graine de leur récit, mais sans personnage ni objectif ; La Mecque, la variante `mecque` de la ville d'Arabie (ni
+  mosquée, ni Haram, ni Kaaba, rien qui les évoque : des maisons, un petit marché, une cour fermée d'un mur de terre où la natte
+  est posée) ; Tâ'if, la ville d'Arabie ; Bassora, la variante `fleuve` (le fleuve à l'est) ; Fustât, la variante `nil` (le
+  fleuve à l'ouest) ; Damas, Homs, Qinnasrîn, Jérusalem, la cité romaine, sans les enseignes de Rûm à sa porte ni à son
+  palais (sous le califat) ; al-Hîra, le camp. On y entre par la porte du côté
+  d'où l'on vient ; un carton dit le nom de la ville et l'époque du chapitre (`depuis.epoque`). Le comptoir tient les étals
+  d'un lieu du jeu (`D.GEAR_SHOPS`) ; la natte y est sobre (`O.sobre` : on prie et l'on se repose, les œuvres se comptent dans
+  les récits, on ne descend pas dans la noosphère) ; on n'y bâtit pas (`Bd.outdoor`) ; rien n'y rôde. On en ressort par sa
+  porte, vers la carte du monde, à côté de la ville. Un lieu (la vallée du Yarmoûk) n'a pas de visite : on n'y revient que
+  depuis son récit.
+- **La progression** : l'outil « route » (« La route », un simple geste), dit à la première sortie (`I.lecons.proposer`,
+  « Par la porte, la route mène aux autres villes. Revenir à celle du récit le reprend là où tu l'as laissé. ») ; tant que la
+  progression ne peut pas le donner, la porte attend ; revenir à la ville du récit est son réemploi. Une partie d'avant entend
+  la leçon une fois (`I.save.data._route`).
+- **La partie** : rien de plus que les drapeaux du chapitre (`_monde`), gardés avec son point de reprise ; une partie quittée
+  sur la route ou dans une visite s'y rouvre ; un chapitre neuf commence dans sa ville (`W.startChapter`). Le format reste le 2.
+- **Les sources des villes** (relevées le 23 novembre ; arrondies au centième de degré) :
+  Médine 24,47 N 39,61 E (<https://en.wikipedia.org/wiki/Medina>) ; La Mecque 21,42 N 39,82 E
+  (<https://en.wikipedia.org/wiki/Mecca>) ; Tâ'if 21,28 N 40,41 E (<https://en.wikipedia.org/wiki/Taif>) ; Jérusalem 31,78 N
+  35,23 E (<https://en.wikipedia.org/wiki/Jerusalem>) ; Damas 33,51 N 36,31 E (<https://en.wikipedia.org/wiki/Damascus>) ; Homs
+  34,73 N 36,71 E (<https://en.wikipedia.org/wiki/Homs>) ; Qinnasrîn 35,99 N 37,04 E (<https://en.wikipedia.org/wiki/Qinnasrin>) ;
+  la vallée du Yarmoûk 32,81 N 35,95 E (<https://en.wikipedia.org/wiki/Battle_of_the_Yarmuk> — coordonnées marquées
+  « douteuses » sur la page) ; al-Hîra 31,98 N 44,39 E (<https://en.wikipedia.org/wiki/Al-Hira>) ; Bassora 30,52 N 47,81 E,
+  fondée en 14 H, « وقيل 15 » (<https://en.wikipedia.org/wiki/Basra> : 636 ; <https://ar.wikipedia.org/wiki/البصرة> : « سنة 14
+  وقيل 15هـ ») ; Koufa 32,03 N 44,40 E, fondée en 17 H (<https://en.wikipedia.org/wiki/Kufa> : « 638 CE (17 AH) ») ; Fustât
+  30,01 N 31,24 E, fondée en 21 H (<https://en.wikipedia.org/wiki/Fustat> : 641, après la chute d'Alexandrie en septembre 641 ;
+  <https://ar.wikipedia.org/wiki/الفسطاط> : la mosquée de 'Amr, 21 H). Les côtes, les fleuves et les lacs : Natural Earth,
+  1:50 000 000 (`ne_50m_land`, `ne_50m_rivers_lake_centerlines`, `ne_50m_lakes`, domaine public), coupés à la fenêtre et
+  simplifiés à moins d'une case — les côtes d'aujourd'hui ; les canaux modernes (Suez, Ismaïlia) et les lacs de barrage (Nasser,
+  Tharthar, Razzaza) écartés. Les reliefs, les déserts, les steppes, les terres vertes, les oasis et les routes : un tracé de
+  l'agent, à valider.
+- **Le contrôle** : `node v2/tools/monde.js` (« MONDE CONFORME ») — la géographie (chaque ville à une case de son point, quatre
+  distances à 10 % du grand cercle, tout relié, aucune route en mer), les dates, les portes là où `depuis` les met et nulle part
+  ailleurs, chaque visite (comptoir et natte reliés ; La Mecque sans mosquée), puis en 390 × 844 au doigt et en 844 × 390 au
+  clavier : Médine → la route → La Mecque → la route → Médine, la partie exportée sur la route et réimportée ; chaque chapitre à
+  portes et chaque ville de passage ; le joueur de test du moteur ; les captures dans les trois dessins. Un changement de la
+  carte du monde, des portes ou des visites repasse `monde.js`, puis `cite.js passages`, `retours.js`, `progression.js`,
+  `partie.js`, `doigt.js`, `smoke.js walk` et `tap`. Les cartes existantes ne changent pas d'une case (le générateur `ville`
+  garde Médine et Koufa tels quels ; `M.build` passe `graine` au générateur).
+
 ### L'image agrandie, les textes sur un téléphone
 
 *Demande du décideur, le 16 novembre : « les personnages et les textes sont trop petits dans mon téléphone, il faut

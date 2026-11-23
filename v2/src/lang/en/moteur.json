@@ -292,6 +292,8 @@
 {"k":"7okf68.d","fr":"derrière elle","t":"behind it","ou":"mal.js"},
 {"k":"ahbsyg.1c","fr":"Le mal du cœur : par l’œuvre, qui forge sa lame.","t":"The ailment of the heart: through the deed that forges its blade.","ou":"mal.js"},
 {"k":"104p7p5.17","fr":"Aucune idole rencontrée ici pour l’instant.","t":"No idol met here so far.","ou":"mal.js"},
+{"k":"1atn7oi.h","fr":"Revenir : {ville}","t":"Back to {ville}","ou":"monde.js"},
+{"k":"1iu0xl3.g","fr":"Entrer : {ville}","t":"Enter: {ville}","ou":"monde.js"},
 {"k":"mrcxdd.v","fr":"Énigme du cœur : <b>{titre}</b>","t":"Riddle of the heart: <b>{titre}</b>","ou":"oeuvres.js"},
 {"k":"1ui3s6n.5","fr":"Œuvre","t":"Deed","ou":"oeuvres.js"},
 {"k":"hivkzn.c","fr":"indisponible","t":"unavailable","ou":"oeuvres.js"},

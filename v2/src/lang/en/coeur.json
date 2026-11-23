@@ -373,6 +373,7 @@
 {"k":"biu8ib.1q","fr":"Assis devant l’écran, tu regardes. *B* ou un pas : te relever.","t":"Seated before the screen, you watch. *B* or a step: get up.","ou":"lecons.ecran.doigt"},
 {"k":"154oipm.2q","fr":"Devant la grande roue ou un manège du parc, *Entrée* : un tour. On monte, il tourne, on redescend.","t":"In front of the Ferris wheel or a ride in the park, *Enter*: one turn. You get on, it turns, you get off.","ou":"lecons.manege.clavier"},
 {"k":"10vu47m.2l","fr":"Devant la grande roue ou un manège du parc, *A* : un tour. On monte, il tourne, on redescend.","t":"In front of the Ferris wheel or a ride in the park, *A*: one turn. You get on, it turns, you get off.","ou":"lecons.manege.doigt"},
+{"k":"11bjrj8.2w","fr":"Par la porte, la route mène aux autres villes. Revenir à celle du récit le reprend là où tu l’as laissé.","t":"Through the gate, the road leads to the other cities. Going back to the story’s city picks it up where you left it.","ou":"lecons.route"},
 {"k":"1jo954q.m","fr":"Au sortir de la prière","t":"After the Prayer","ou":"portes.priere.titre"},
 {"k":"1hgjxuu.20","fr":"La prière est dite. Le cœur est calme, et la noosphère est toute proche.","t":"The prayer is said. The heart is calm, and the noosphere is very near.","ou":"portes.priere.invite"},
 {"k":"17czzf6.d","fr":"Dans le dhikr","t":"In Dhikr","ou":"portes.dhikr.titre"},

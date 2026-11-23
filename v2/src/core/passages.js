@@ -42,6 +42,10 @@
       dans: p => { const s = W.spotPx('ascenseur'); return !!s && Math.abs(p.x - s[0]) <= 12 && p.y <= s[1] - 16; }, devant: p => { const s = W.spotPx('ascenseur'); return !!s && Math.abs(p.x - s[0]) <= 14 && p.y <= s[1] - 6; }, fn: () => P.descendre() }
   ];
   P.PASSAGES = PASSAGES;
+  // 2.29 (D220) : un autre module inscrit ses passages ici (monde.js : les portes des villes, la carte du monde) plutôt que de
+  // refaire P.tic et P.agir. Une entrée sans `dir` (null) se prend dans tous les sens ; `cible(o)`, si elle est là, dit où la
+  // flèche montre, l'objectif restant ailleurs (W.target).
+  P.ajouter = function (x) { PASSAGES.push(x); return x; };
   const ouverts = () => (W.map && W.saga ? PASSAGES.filter(x => x.ok()) : []);
   // marcher vers le bord, dans la zone, après en être sorti une fois (on n'y repart pas en y arrivant) ; buter contre le bord
   // en poussant vers lui compte aussi (on n'y bouge plus)
@@ -49,14 +53,15 @@
   P.tic = function () {
     if (!W.map) return; if (P.carte !== W.map) { P.carte = W.map; P.arme = false; }
     const p = W.player, x = ouverts().find(z => z.dans(p)); if (!x) { P.arme = true; return; }
-    if (!P.arme || !main() || p.dir !== x.dir || !(p.moving || I.input.held[POUSSE[x.dir]])) return;
+    if (!P.arme || !main() || (x.dir != null && p.dir !== x.dir) || !(p.moving || (x.dir != null ? I.input.held[POUSSE[x.dir]] : POUSSE.some(k => I.input.held[k])))) return;
     P.arme = false; P.journal.push({ quoi: 'pas', id: x.id }); x.fn();
   };
-  const devant = () => { if (!main()) return null; const p = W.player; return ouverts().find(z => p.dir === z.dir && z.devant(p)) || null; };
+  const devant = () => { if (!main()) return null; const p = W.player; return ouverts().find(z => (z.dir == null || p.dir === z.dir) && z.devant(p)) || null; };
   P.aPortee = () => !!devant();
   P.agir = function () { const x = devant(); if (!x) return false; P.journal.push({ quoi: 'a', id: x.id }); x.fn(); return true; };
   // remonté des Archives basses, l'objectif resté en bas : la flèche montre la porte de l'ascenseur (world.js, W.target)
   P.cible = function (o) {
+    for (const x of PASSAGES) if (x.cible) { const r = x.cible(o); if (r) return r; }   // (2.29 : la carte du monde, une ville visitée — monde.js)
     if (!o || !W.map || W.map.id !== 'cite' || !S.flags._ascenseur) return null;
     const ici = o.goto ? !!W.map.spots[Array.isArray(o.goto) ? o.goto[0] : o.goto] : o.talk ? W.npcs.some(n => n.id === o.talk && n.map === 'cite') : o.foe ? W.foes.some(f => f.id === o.foe && f.map === 'cite') : true;
     if (ici) return null;

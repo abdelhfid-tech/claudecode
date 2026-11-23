@@ -79,7 +79,9 @@ ISNAD.registerSaga({
     borne: { clavier: 'À la borne, les *flèches* mènent ta lueur et *Entrée* lui donne un élan : rassemble les lueurs, évite les ombres.', doigt: 'À la borne, le *joystick* mène ta lueur et *A* lui donne un élan : rassemble les lueurs, évite les ombres.' },
     etal: 'À l’étal de la galerie, choisis une pièce : elle rejoint la réserve, et l’on te demande qui la porte.',
     ecran: { clavier: 'Assis devant l’écran, tu regardes. *Échap* ou un pas : te relever.', doigt: 'Assis devant l’écran, tu regardes. *B* ou un pas : te relever.' },
-    manege: { clavier: 'Devant la grande roue ou un manège du parc, *Entrée* : un tour. On monte, il tourne, on redescend.', doigt: 'Devant la grande roue ou un manège du parc, *A* : un tour. On monte, il tourne, on redescend.' }
+    manege: { clavier: 'Devant la grande roue ou un manège du parc, *Entrée* : un tour. On monte, il tourne, on redescend.', doigt: 'Devant la grande roue ou un manège du parc, *A* : un tour. On monte, il tourne, on redescend.' },
+    // 2.29 (D220) : à la première sortie par la porte d'une ville, sur la carte du monde (monde.js)
+    route: 'Par la porte, la route mène aux autres villes. Revenir à celle du récit le reprend là où tu l’as laissé.'
   },
 
   /* ----- 2.x : les postures — trois manières de se tenir devant l'épreuve (textes proposés par l'agent, à valider) ----- */

@@ -238,8 +238,15 @@
     qbat(c) { R(c, '#2a2038', 0, 0, 16, 16); },
     qpiste(c) { R(c, '#2a2834', 0, 0, 16, 16); }
   });
+  /* 2.29 (D220) — la carte du monde (maps.js, monde) : une case pour une vingtaine de kilomètres. La steppe (de l'herbe sèche
+     sur la terre claire) ; le relief, plein : un sol de pierre, ses sommets (plus grands qu'une case) se peignent avec la carte. */
+  Object.assign(TILE, {
+    steppe(c, r) { speck(c, r, ['#c2b27a', '#b6a66d', '#cdbd86', '#aa9b61'], 24); for (let i = 0; i < 6; i++) { const x = Math.floor(r() * 15), y = 1 + Math.floor(r() * 13); R(c, '#8f8c4e', x, y, 1, 2); if (r() < 0.6) R(c, '#a9a65e', x + 1, y + 1, 1, 1); } },
+    // (le sol pierreux du relief ; ses sommets, plus grands qu'une case, se peignent avec la carte : maps.js, monde)
+    mont(c, r) { speck(c, r, ['#d2b276', '#c7a66c', '#d9bb80', '#b8986a'], 26); for (let i = 0; i < 5; i++) R(c, '#9c825f', Math.floor(r() * 14), Math.floor(r() * 14), 2, 1); }
+  });
   const SANS_GRAIN = new Set(['dark', 'void', 'nfloor', 'nabri', 'npont', 'nbridge', 'neonline', 'mosaic', 'zellij', 'glaze', 'carpet', 'cgrille', 'ctour', 'cride', 'qbat', 'qpiste', 'qsalle', 'qgradin']); // lumière, vide et carreaux vernis restent nets
-  const SOLID = new Set(['bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull', 'ctour', 'cfacade', 'ccrique', 'cgrille', 'cquai', 'ceau', 'qbat', 'qpiste', 'qhaie']);
+  const SOLID = new Set(['mont', 'bwall', 'gwall', 'mihrab', 'water', 'sea', 'wall', 'roof', 'roofedge', 'window', 'thatch', 'rwall', 'rroof', 'rroofedge', 'pwall', 'cwall', 'croof', 'void', 'dark', 'hull', 'ctour', 'cfacade', 'ccrique', 'cgrille', 'cquai', 'ceau', 'qbat', 'qpiste', 'qhaie']);
   // une eau peinte qui bouge : la case qu'on pose par-dessus, image après image (maps.js, finish)
   G.ANIME = { ccrique: 'cride' };
   G.isSolidTile = n => SOLID.has(n);
@@ -731,6 +738,31 @@
       Rc(c, 'rgba(255,224,170,.7)', 14, 22, 16, 32); Rc(c, '#9a7c4c', 21.75, 22, 0.5, 32); Rc(c, 'rgba(255,255,255,.25)', 8, 10, 2, 42); Rc(c, 'rgba(255,255,255,.15)', 32, 10, 1, 42);
       [6, 14, 30, 37.5].forEach(x => Rc(c, '#9a7c4c', x, 8, 0.75, 46)); Rc(c, '#9a7c4c', 6, 30, 32, 0.5);
       Rc(c, '#2a2030', 2, 3, 40, 6); Rc(c, '#b89a64', 2, 3, 40, 0.75); Rc(c, '#ffd890', 18, 6, 8, 1.5); } }
+  });
+  /* 2.29 (D220) — les villes de la carte du monde (maps.js, monde), dessinées par le jeu : une ville d'Arabie (des maisons de
+     terre à toit plat dans un mur bas, des palmiers), une ville du Shâm (un mur de pierre crénelé, deux tours carrées, des toits
+     de tuiles), un camp (des tentes). Aucune enseigne, aucune lettre, aucun signe, aucun édifice religieux — ni coupole, ni
+     minaret, ni clocher : La Mecque est une ville comme les autres. Sans empreinte au sol : on marche dessus pour y entrer. */
+  const petitPalmier = (c, x, y) => { R(c, '#7a5530', x, y, 1, 7); R(c, '#3f7631', x - 3, y - 1, 7, 1); R(c, '#4f8a3c', x - 2, y - 2, 5, 1); R(c, '#3f7631', x - 3, y, 1, 2); R(c, '#3f7631', x + 3, y, 1, 2); R(c, '#2f5c26', x - 1, y - 3, 3, 1); };
+  const maisonTerre = (c, x, y, w, toit, face) => { R(c, '#e3c493', x, y, w, toit); R(c, '#f0d6a8', x, y, w, 1); R(c, '#b0875a', x, y + toit, w, face); R(c, '#97714a', x, y + toit, w, 1); R(c, '#4a3220', x + Math.floor(w / 2) - 1, y + toit + face - 3, 2, 3); if (w >= 7) R(c, '#5d4630', x + 1, y + toit + 1, 1, 1); };
+  Object.assign(OBJ, {
+    ville_arabe: { w: 40, h: 30, fw: 0, fh: 0, draw(c) {
+      c.fillStyle = 'rgba(30,20,40,.28)'; c.beginPath(); c.ellipse(20, 27, 18, 3.5, 0, 0, 6.3); c.fill();
+      petitPalmier(c, 4, 14); petitPalmier(c, 36, 12);
+      R(c, '#d9b37f', 6, 8, 28, 2); R(c, '#c49a65', 6, 8, 2, 17); R(c, '#c49a65', 32, 8, 2, 17);
+      maisonTerre(c, 9, 7, 8, 5, 4); maisonTerre(c, 18, 5, 7, 6, 5); maisonTerre(c, 26, 9, 6, 4, 4); maisonTerre(c, 10, 14, 9, 3, 4); maisonTerre(c, 22, 15, 8, 3, 4);
+      R(c, '#b98f5c', 6, 22, 28, 5); R(c, '#dcb886', 6, 21, 28, 1); R(c, '#9e774b', 6, 26, 28, 1); R(c, '#4a3220', 18, 23, 4, 4); petitPalmier(c, 3, 21); } },
+    ville_sham: { w: 40, h: 32, fw: 0, fh: 0, draw(c) {
+      c.fillStyle = 'rgba(30,20,40,.28)'; c.beginPath(); c.ellipse(20, 29, 18, 3.5, 0, 0, 6.3); c.fill();
+      R(c, '#e2d6bb', 10, 10, 20, 2); R(c, '#b85a3e', 12, 11, 7, 5); R(c, '#8e3b26', 12, 13, 7, 1); R(c, '#a4472f', 21, 8, 7, 8); R(c, '#8e3b26', 21, 11, 7, 1); R(c, '#e6dcc4', 21, 8, 7, 1);
+      const tour = x => { R(c, '#cbbd9f', x, 6, 8, 22); R(c, '#e2d6bb', x, 6, 8, 2); [0, 3, 6].forEach(d => R(c, '#cbbd9f', x + d, 4, 2, 2)); R(c, '#a89a7c', x + 7, 8, 1, 20); R(c, '#2a2026', x + 3, 11, 2, 4); R(c, '#2a2026', x + 3, 19, 2, 3); };
+      tour(2); tour(30);
+      R(c, '#c4b597', 10, 18, 20, 10); R(c, '#d8cbb0', 10, 17, 20, 1); for (let x = 10; x < 30; x += 3) R(c, '#d8cbb0', x, 15, 2, 2); R(c, '#a89a7c', 10, 27, 20, 1);
+      R(c, '#2a2026', 18, 22, 4, 6); R(c, '#2a2026', 19, 21, 2, 1); } },
+    ville_camp: { w: 40, h: 26, fw: 0, fh: 0, draw(c) {
+      c.fillStyle = 'rgba(30,20,40,.25)'; c.beginPath(); c.ellipse(20, 23, 18, 3, 0, 0, 6.3); c.fill();
+      const tente = (x, b, w, h, col) => { const dk = shade(col, 0.72); c.fillStyle = col; c.beginPath(); c.moveTo(x, b); c.lineTo(x + w / 2, b - h); c.lineTo(x + w, b); c.fill(); c.fillStyle = dk; c.beginPath(); c.moveTo(x + w / 2, b - h); c.lineTo(x + w, b); c.lineTo(x + w * 0.62, b); c.fill(); c.fillStyle = '#2a1c14'; c.beginPath(); c.moveTo(x + w * 0.4, b); c.lineTo(x + w / 2, b - h * 0.45); c.lineTo(x + w * 0.6, b); c.fill(); R(c, '#6b4a2e', x + w / 2 - 0.5, b - h - 2, 1, 3); };
+      tente(14, 14, 16, 12, '#e6dcc4'); tente(2, 22, 16, 13, '#d8c8a8'); tente(22, 23, 16, 14, '#cdb892'); } }
   });
   G.OBJ = OBJ;
   const ocache = {}, ecache = {};

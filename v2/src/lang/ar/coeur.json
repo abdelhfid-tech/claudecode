@@ -373,6 +373,7 @@
 {"k":"biu8ib.1q","fr":"Assis devant l’écran, tu regardes. *B* ou un pas : te relever.","t":"جالسًا أمام الشاشة، تشاهد. *B* أو خطوة: تنهض.","ou":"lecons.ecran.doigt"},
 {"k":"154oipm.2q","fr":"Devant la grande roue ou un manège du parc, *Entrée* : un tour. On monte, il tourne, on redescend.","t":"أمام العجلة الدوّارة أو لعبة في المنتزه، *Enter*: دورة. تركب، فتدور، ثم تنزل.","ou":"lecons.manege.clavier"},
 {"k":"10vu47m.2l","fr":"Devant la grande roue ou un manège du parc, *A* : un tour. On monte, il tourne, on redescend.","t":"أمام العجلة الدوّارة أو لعبة في المنتزه، *A*: دورة. تركب، فتدور، ثم تنزل.","ou":"lecons.manege.doigt"},
+{"k":"11bjrj8.2w","fr":"Par la porte, la route mène aux autres villes. Revenir à celle du récit le reprend là où tu l’as laissé.","t":"من الباب يمضي بك الطريق إلى المدن الأخرى. فإذا عدتَ إلى مدينة الحكاية استأنفتَها من حيث تركتَها.","ou":"lecons.route"},
 {"k":"1jo954q.m","fr":"Au sortir de la prière","t":"عَقِبَ الصلاة","ou":"portes.priere.titre"},
 {"k":"1hgjxuu.20","fr":"La prière est dite. Le cœur est calme, et la noosphère est toute proche.","t":"أُدّيت الصلاة. القلب ساكن، وعالم الأفكار قريبٌ جدًّا.","ou":"portes.priere.invite"},
 {"k":"17czzf6.d","fr":"Dans le dhikr","t":"في الذِّكر","ou":"portes.dhikr.titre"},

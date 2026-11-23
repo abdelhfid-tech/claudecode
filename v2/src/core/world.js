@@ -231,7 +231,7 @@
     I.maps.eteinte = false; // la Cité-Miroir se rallume à chaque chapitre (elle ne s'éteint qu'à la fin : battle.js)
     const sp = I.save.data.sagas[sagaId] || (I.save.data.sagas[sagaId] = { ch: 0, done: false, flags: {} });
     S.flags = cp ? (cp.flags || {}) : Object.assign({}, sp.flags || {});
-    if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; I.oeuvres.newChapter(); I.mal.ouvre(); }
+    if (!cp) { delete S.flags._prayed; delete S.flags._prayPillar; delete S.flags._monde; I.oeuvres.newChapter(); I.mal.ouvre(); }   // (2.29 : un chapitre neuf commence dans sa ville — monde.js)
     if (!cp && I.cite && I.cite.refuge(ch)) I.cite.neuf(S.flags); // 2.23 : chaque arrivée dans les quartiers est neuve (cite.js)
     if (saga.frame && !saga.veillees && (Number.isInteger(ch.retour) || ch.visite) && I.ui.drapeaux2084) I.ui.drapeaux2084(S.flags); // 2.x : l'état de 2084, pour un retour ou une visite
     if (saga.frame && !saga.veillees && I.circuit) I.circuit.drapeaux(S.flags); // 2.27 : Idris a-t-il couru avec Sâlim ? (le dernier maillon le lit : _2084_salim)
@@ -668,7 +668,7 @@
     else done();
   };
   W.carte = function () {
-    const m = W.map, cv = G.toile(m.w * T, m.h * T), c = cv.getContext('2d');
+    const m = W.map, cv = G.toile(m.w * T, m.h * T, m.w * m.h > 6000 ? 1 : undefined), c = cv.getContext('2d');   // (2.29 : la carte du monde, à la taille logique — une seconde toile fine de 3 072 points de côté serait de trop sur un téléphone)
     c.drawImage(m.canvas, 0, 0);
     m.objs.slice().sort((a, b) => a.y - b.y).forEach(o => { try { c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2), o.y - o.h + 1); } catch (e) { /* objet sans dessin */ } });
     return cv;

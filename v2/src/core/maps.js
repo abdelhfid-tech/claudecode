@@ -50,7 +50,7 @@
     // chemin, le chemin sur le sable) déborde sur l'autre d'une frange irrégulière. Le sol reste le même case par case :
     // seule l'image change.
     lisieres(c) {
-      const RANG = { sand: 0, dune: 1, path: 2, grass: 3 }, w = this.w, h = this.h, g = this.g, hue = this.hue;
+      const RANG = { sand: 0, dune: 1, steppe: 1.5, path: 2, grass: 3 }, w = this.w, h = this.h, g = this.g, hue = this.hue;   // (2.29 : la steppe de la carte du monde, entre le sable et le chemin)
       const at = (x, y) => (x < 0 || y < 0 || x >= w || y >= h) ? -1 : (RANG[g[y * w + x]] === undefined ? -1 : RANG[g[y * w + x]]);
       const br = k => { const n = Math.sin(k * 12.9898) * 43758.5453; return n - Math.floor(n); }, vague = (u, k) => { const a = Math.floor(u / 3), f = u / 3 - a, s = f * f * (3 - 2 * f); return (br(a * 7.13 + k) * (1 - s) + br((a + 1) * 7.13 + k) * s); };
       for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const r0 = at(x, y); if (r0 < 0) continue; const v = (x * 7 + y * 13 + ((x * y) % 5)) % 4, X = x * T, Y = y * T;
@@ -80,9 +80,9 @@
       (this.decals || []).forEach(d => drawRosette(c, d));
       // ombres portées au pied des bâtiments
       (this.shadows || []).forEach(sh => { const g = c.createLinearGradient(0, sh[1] * T, 0, sh[1] * T + 9); g.addColorStop(0, 'rgba(30,18,44,.42)'); g.addColorStop(1, 'rgba(30,18,44,0)'); c.fillStyle = g; c.fillRect(sh[0] * T + 3, sh[1] * T, sh[2] * T, 9); });
-      // mini-carte : 1 pixel par case
-      const mini = G.mk(this.w, this.h), mc = mini.getContext('2d');
-      for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) { const n = this.g[y * this.w + x], so = this.solid[y * this.w + x]; mc.fillStyle = (n === 'water' || n === 'sea' || n === 'ccrique' || n === 'ceau') ? 'rgba(70,150,200,.75)' : n === 'void' ? 'rgba(8,8,30,.5)' : so ? 'rgba(20,14,30,.8)' : (n === 'path' || n === 'stone' || n === 'nbridge' || n === 'wood' || n === 'marble' || n === 'mosaic' || n === 'carpet') ? 'rgba(240,225,190,.75)' : n === 'npont' ? 'rgba(150,190,255,.7)' : n === 'nabri' ? 'rgba(255,230,170,.85)' : n === 'qroute' ? 'rgba(120,110,150,.7)' : (n === 'qgazon' || n === 'qallee') ? 'rgba(90,140,80,.7)' : n === 'qjardin' ? 'rgba(255,230,170,.7)' : 'rgba(200,180,140,.5)'; mc.fillRect(x, y, 1, 1); }
+      // mini-carte : 1 pixel par case (2.29 : la carte du monde n'en a pas — la carte, c'est elle)
+      const mini = this.sansMini ? null : G.mk(this.w, this.h), mc = mini && mini.getContext('2d');
+      if (mini) for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) { const n = this.g[y * this.w + x], so = this.solid[y * this.w + x]; mc.fillStyle = (n === 'water' || n === 'sea' || n === 'ccrique' || n === 'ceau') ? 'rgba(70,150,200,.75)' : n === 'void' ? 'rgba(8,8,30,.5)' : n === 'mont' ? 'rgba(110,84,58,.85)' : n === 'steppe' ? 'rgba(170,160,100,.6)' : so ? 'rgba(20,14,30,.8)' : (n === 'path' || n === 'stone' || n === 'nbridge' || n === 'wood' || n === 'marble' || n === 'mosaic' || n === 'carpet') ? 'rgba(240,225,190,.75)' : n === 'npont' ? 'rgba(150,190,255,.7)' : n === 'nabri' ? 'rgba(255,230,170,.85)' : n === 'qroute' ? 'rgba(120,110,150,.7)' : (n === 'qgazon' || n === 'qallee') ? 'rgba(90,140,80,.7)' : n === 'qjardin' ? 'rgba(255,230,170,.7)' : 'rgba(200,180,140,.5)'; mc.fillRect(x, y, 1, 1); }
       // objets plats (nattes, sources) cuits dans le sol
       this.objs.filter(o => o.flat).forEach(o => c.drawImage(G.obj(o.type, o.opt, o.seed), Math.round(o.x - o.w / 2), o.y - o.h + 1));
       // ombres portées douces sous les objets
@@ -118,13 +118,24 @@
   };
   function envFor(time, extra) { return Object.assign({ time: time || 'day', clouds: time !== 'night' }, (G.lum === 215 ? TIME_215 : TIME_217)[time || 'day'], extra || {}); }
 
-  /* ---------- Ville arabe : Médine, et sa variante « fleuve » (Koufa) ---------- */
+  /* ---------- Ville arabe : Médine, et ses variantes « fleuve » (Koufa, Bassora), « nil » (Fustât) et « mecque » ----------
+     2.29 (D220) : « nil », le fleuve à l'ouest (la ville n'est pas retournée) ; « mecque », la visite sobre de La Mecque — ni
+     mosquée, ni Haram, ni Kaaba, rien qui les évoque : au cœur de la ville, des maisons de part et d'autre de la grand-rue, un
+     petit marché, et une cour fermée d'un mur de terre où la natte est posée. Médine et Koufa ne changent pas d'une case. */
   function ville(id, o, L, graine) {
-    const fleuve = !!L && L.variante === 'fleuve', b = new MB(id, 60, 46, 'sand', o, graine); b.mirror = fleuve;
+    const v = L && L.variante, fleuve = v === 'fleuve' || v === 'nil', mecque = v === 'mecque', b = new MB(id, 60, 46, 'sand', o, graine); b.mirror = v === 'fleuve';
     // chemins
     b.road(29, 0, 29, 45, 'path', 3); b.road(2, 24, 57, 24, 'path', 3); b.road(12, 24, 12, 38, 'path', 2); b.road(46, 24, 46, 38, 'path', 2); b.road(16, 12, 29, 12, 'path', 2);
     // place pavée
     b.fill(23, 21, 15, 8, 'stone');
+    if (mecque) {
+      // des maisons de part et d'autre de la grand-rue ; entre elles, un petit marché ; à l'est, la cour de la natte
+      b.house(21, 5, 7, 6); b.house(33, 5, 7, 6);
+      ['#8e5a2a', '#2f6f8f', '#a53c33'].forEach((col, i) => b.obj('stall', 19 + i * 4, 16, { color: col })); b.obj('jar', 18, 18); b.obj('sack', 22, 18); b.obj('crate', 26, 18);
+      b.fill(33, 12, 7, 6, 'path', false); b.ring(33, 12, 7, 6, 'wall'); b.set(36, 17, 'path', false); b.set(35, 17, 'path', false);
+      b.obj('mat', 36, 14); b.obj('lamp', 34, 14); b.obj('jar', 38, 13); b.light(34, 13, 50, '#ffc878', 0.12);
+      b.spot('priere', 36, 15); b.light(36, 15, 60, '#fff0c0', 0.05);
+    } else {
     // mosquée : enceinte de pisé, cour ouverte, colonnes de troncs de palmier
     b.fill(21, 5, 19, 14, 'path'); b.ring(21, 5, 19, 14, 'gwall');
     b.fill(22, 6, 17, 6, fleuve ? 'zellij' : 'zsand', false); b.ring(22, 12, 17, 6, fleuve ? 'zellij' : 'zsand', false);
@@ -136,6 +147,7 @@
     b.obj('lantern', 23, 16); b.obj('lantern', 37, 16); b.obj('lantern', 23, 7); b.light(23, 6, 50, '#ffc878', 0.12); b.light(23, 15, 60, '#ffc878', 0.12); b.light(37, 15, 60, '#ffc878', 0.12); b.light(30, 9, 80, '#ffd9a0', 0.05);
     b.spot('mosquee_cour', 30, 12); b.spot('mosquee_porte', 30, 20);
     b.spot('priere', 30, 15); b.light(30, 15, 70, '#fff0c0', 0.05); b.obj('shelf', 35, 16); b.obj('mat', 34, 17); b.spot('ecole', 33, 17);
+    }
     b.spot('place', 30, 25);
     b.obj('well', 25, 23); b.spot('puits', 25, 25);
     // halle (Saqîfa / tribunal) : auvent de palmes sur piliers, à l'ouest
@@ -220,7 +232,9 @@
     const RS = { roof: 'rroof', edge: 'rroofedge', wall: 'rwall', door: 'rdoor', windowTile: 'rwall' };
     // remparts sud + porte
     b.fill(0, 42, 64, 3, 'rwall', true); b.fill(0, 41, 64, 1, 'rroofedge', true); b.fill(30, 41, 4, 4, 'stone', false); b.set(29, 43, 'arch', true); b.set(34, 43, 'arch', true);
-    b.spot('porte', 31, 43); b.obj('aquila', 28, 40); b.obj('aquila', 35, 40);
+    // (2.29 : une ville de passage, sous le califat, n'a plus les enseignes de Rûm à sa porte ni à son palais)
+    const rum = !(L && L.visite);
+    b.spot('porte', 31, 43); if (rum) { b.obj('aquila', 28, 40); b.obj('aquila', 35, 40); }
     // cardo à colonnades
     b.fill(30, 12, 4, 30, 'stone'); for (let y = 15; y < 40; y += 3) { b.obj('column', 29, y); b.obj('column', 34, y); }
     b.spot('cardo', 31, 34);
@@ -232,7 +246,7 @@
     // basilique (nord-est)
     b.house(44, 4, 12, 9, Object.assign({}, RS, { door: 'arch' })); b.obj('column', 47, 14); b.obj('column', 53, 14); b.fill(46, 13, 9, 3, 'stone'); b.spot('basilique', 50, 15); b.light(50, 12, 60, '#ffd9a0', 0.1);
     // palais du gouverneur (nord-ouest)
-    b.house(8, 4, 12, 9, RS); b.obj('column', 11, 14); b.obj('column', 17, 14); b.fill(10, 13, 9, 3, 'stone'); b.obj('aquila', 9, 14); b.spot('palais', 14, 15);
+    b.house(8, 4, 12, 9, RS); b.obj('column', 11, 14); b.obj('column', 17, 14); b.fill(10, 13, 9, 3, 'stone'); if (rum) b.obj('aquila', 9, 14); b.spot('palais', 14, 15);
     // îlots d'habitation
     [[4, 20, 7, 5], [12, 21, 7, 5], [4, 29, 8, 5], [45, 19, 7, 5], [54, 20, 7, 5], [20, 32, 7, 5], [37, 32, 7, 5], [54, 28, 7, 5]].forEach(h => b.house(h[0], h[1], h[2], h[3], RS));
     // jardin
@@ -845,8 +859,113 @@
     return b.finish({ time: 'archives', ambient: '#6a66a0', grade: ['#ffb45a', 0.14], particles: 'dust', rate: 5, bg: 'cite', rays: { a: 0.05, color: '#ffe0a0' }, lightA: 1, bloom: 0.26, music: 'chaine' });
   }
 
+  /* ---------- 2.29 (D220) — la carte du monde ----------
+     D.MONDE, projeté : de la longitude et de la latitude à la case, équirectangulaire, corrigée au parallèle de D.MONDE.
+     La terre et la mer (la mer ne se marche pas), la steppe, les déserts, les terres vertes, les oasis, les reliefs (des cases
+     pleines), les lacs et les fleuves (de l'eau : pleine, sauf là où une route la franchit sur un pont), les routes (un col
+     là où elles passent une crête). Les villes : une icône dessinée par le jeu (gfx.js : ville_arabe, ville_sham, ville_camp —
+     ni enseigne, ni lettre, ni édifice religieux), un lieu nommé (son identifiant : D.LIEUX le dit). Une ville qui n'existe
+     pas encore l'année du chapitre (opts.an, D.MONDE.villes[…].fondee) n'est ni dessinée ni nommée ; le sol, lui, ne change
+     jamais : la même carte case pour case, à toute heure et à toute époque (sa propre graine). Pas de petite carte au coin :
+     la carte, c'est elle. */
+  const PROJ = () => { const P = D.MONDE, H0 = P.cases[1], k = H0 / (P.lat[1] - P.lat[0]), kx = k * Math.cos(P.parallele * Math.PI / 180), lon0 = (P.lon[0] + P.lon[1]) / 2;
+    return { k, x: lon => P.cases[0] / 2 + (lon - lon0) * kx, y: lat => (P.lat[1] - lat) * k }; };
+  // (lat, lon) → [x, y], en cases (fractionnaires)
+  M.projeter = (lat, lon) => { const p = PROJ(); return [p.x(lon), p.y(lat)]; };
+  // ce que mesure une case, du nord au sud (rayon moyen de la Terre : 6 371 km)
+  M.kmCase = () => 6371 * Math.PI / 180 / PROJ().k;
+  // la case de chaque ville : celle de son point ; deux villes à moins de deux cases l'une de l'autre (Koufa et al-Hîra, à six
+  // kilomètres) s'écartent chacune d'une case, le long de ce qui les sépare — toujours à une case de leur point
+  M.casesVilles = function () {
+    const V = D.MONDE.villes, ids = Object.keys(V), pr = {}, t = {};
+    ids.forEach(id => { pr[id] = M.projeter(V[id].lat, V[id].lon); t[id] = [Math.floor(pr[id][0]) + (V[id].rive || 0), Math.floor(pr[id][1])]; });   // (une ville au bord d'un fleuve : sur sa rive)
+    ids.forEach((a, i) => ids.slice(i + 1).forEach(c => { const A = t[a], B = t[c]; if (Math.max(Math.abs(A[0] - B[0]), Math.abs(A[1] - B[1])) >= 2) return;
+      const dx = pr[c][0] - pr[a][0], dy = pr[c][1] - pr[a][1], k = Math.abs(dy) >= Math.abs(dx) ? 1 : 0, s = (k ? dy : dx) >= 0 ? 1 : -1;
+      A[k] = Math.floor(pr[a][k]) - s; B[k] = Math.floor(pr[c][k]) + s; }));
+    return t;
+  };
+  M.existe = (id, an) => { const v = D.MONDE.villes[id]; return !!v && (v.fondee === null || v.fondee === undefined || an === undefined || an === null || an >= v.fondee); };
+  function monde(id, o) {
+    const P = D.MONDE, W0 = P.cases[0], H0 = P.cases[1], b = new MB(id, W0, H0, 'sea', o);
+    b.r = I.rng(I.hash('monde')); b.sansMini = true;   // la même carte à toute heure et à toute époque
+    const pr = PROJ(), pt = q => [pr.x(q[1]), pr.y(q[0])], g = b.g, at = (x, y) => (x < 0 || y < 0 || x >= W0 || y >= H0) ? null : g[y * W0 + x];
+    const villes = M.casesVilles(), etape = e => typeof e === 'string' ? [villes[e][0] + 0.5, villes[e][1] + 0.5] : pt(e);
+    // un polygone (en cases) : les cases dont le centre est dedans (fin : dont un quart au moins touche — un lac plus étroit
+    // qu'une case, la mer Morte, garde sa forme)
+    const poly = (L, fn, fin) => { const q = L.map(pt), xs = q.map(p => p[0]), ys = q.map(p => p[1]), x0 = Math.max(0, Math.floor(Math.min(...xs))), x1 = Math.min(W0 - 1, Math.ceil(Math.max(...xs))), y0 = Math.max(0, Math.floor(Math.min(...ys))), y1 = Math.min(H0 - 1, Math.ceil(Math.max(...ys)));
+      const dedans = (cx, cy) => { let d = false; for (let i = 0, j = q.length - 1; i < q.length; j = i++) { const a = q[i], c = q[j]; if ((a[1] > cy) !== (c[1] > cy) && cx < (c[0] - a[0]) * (cy - a[1]) / (c[1] - a[1]) + a[0]) d = !d; } return d; };
+      for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (fin ? [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75], [0.5, 0.5]].some(([i, j]) => dedans(x + i, y + j)) : dedans(x + 0.5, y + 0.5)) fn(x, y); };
+    // un ruban (une crête, un cordon de dunes) : les cases à moins de « large » cases du tracé
+    const ruban = (L, large, fn) => { const q = L.map(pt); for (let i = 1; i < q.length; i++) { const a = q[i - 1], c = q[i], dx = c[0] - a[0], dy = c[1] - a[1], n = dx * dx + dy * dy;
+      for (let y = Math.max(0, Math.floor(Math.min(a[1], c[1]) - large - 1)); y <= Math.min(H0 - 1, Math.ceil(Math.max(a[1], c[1]) + large + 1)); y++) for (let x = Math.max(0, Math.floor(Math.min(a[0], c[0]) - large - 1)); x <= Math.min(W0 - 1, Math.ceil(Math.max(a[0], c[0]) + large + 1)); x++) {
+        const px = x + 0.5, py = y + 0.5, t = n ? Math.max(0, Math.min(1, ((px - a[0]) * dx + (py - a[1]) * dy) / n)) : 0; if (Math.hypot(px - a[0] - t * dx, py - a[1] - t * dy) <= large) fn(x, y); } } };
+    // un trait d'une case (un fleuve, une route), sans pas en diagonale : ce qui le longe ne passe pas entre deux cases
+    const trait = (Q, fn) => { let pX = null, pY = null; for (let i = 1; i < Q.length; i++) { const a = Q[i - 1], c = Q[i], n = Math.max(1, Math.ceil(Math.hypot(c[0] - a[0], c[1] - a[1]) * 4));
+      for (let s = 0; s <= n; s++) { const x = Math.floor(a[0] + (c[0] - a[0]) * s / n), y = Math.floor(a[1] + (c[1] - a[1]) * s / n); if (x === pX && y === pY) continue;
+        if (pX !== null && x !== pX && y !== pY) fn(x, pY); fn(x, y); pX = x; pY = y; } } };
+    const pose = (x, y, t) => { if (x >= 0 && y >= 0 && x < W0 && y < H0) b.set(x, y, t); };
+    const terre = (x, y) => { const n = at(x, y); return !!n && n !== 'sea' && n !== 'water'; };
+    // la terre et la mer
+    P.terres.forEach(L => poly(L, (x, y) => pose(x, y, 'sand')));
+    // la steppe, les déserts, les terres vertes, les oasis (sur la terre seulement)
+    const sur = (sols, t) => (x, y) => { if (sols.includes(at(x, y))) pose(x, y, t); };
+    Object.keys(P.steppes).forEach(k => poly(P.steppes[k], sur(['sand'], 'steppe')));
+    Object.keys(P.deserts).forEach(k => { const d = P.deserts[k], f = sur(['sand', 'steppe'], 'dune'), part = d.part, g2 = part ? (x, y) => { if (b.r() < part) f(x, y); } : f;
+      if (Array.isArray(d)) poly(d, f); else if (d.trace) ruban(d.trace, d.large, g2); else poly(d.zone, g2); });
+    Object.keys(P.vertes).forEach(k => poly(P.vertes[k], sur(['sand', 'steppe', 'dune'], 'grass')));
+    const palmes = [];   // les oasis : de l'herbe, et des palmiers peints par-dessus
+    P.oasis.forEach(([la, lo, r]) => { const c = pt([la, lo]), R = r * pr.k; for (let y = Math.floor(c[1] - R); y <= Math.ceil(c[1] + R); y++) for (let x = Math.floor(c[0] - R); x <= Math.ceil(c[0] + R); x++) if (Math.hypot(x + 0.5 - c[0], y + 0.5 - c[1]) <= Math.max(0.75, R) && terre(x, y)) { pose(x, y, 'grass'); palmes.push([x, y]); } });
+    // les reliefs
+    Object.keys(P.reliefs).forEach(k => ruban(P.reliefs[k].trace, P.reliefs[k].large, (x, y) => { if (terre(x, y)) pose(x, y, 'mont'); }));
+    // les lacs, puis les fleuves ; leurs rives verdissent
+    Object.keys(P.lacs).forEach(k => poly(P.lacs[k], (x, y) => { if (terre(x, y)) pose(x, y, 'water'); }, true));
+    const eau = [];
+    Object.keys(P.fleuves).forEach(k => P.fleuves[k].forEach(L => trait(L.map(pt), (x, y) => { if (terre(x, y)) { pose(x, y, 'water'); eau.push([x, y]); } })));
+    eau.forEach(([x, y]) => { for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) if (['sand', 'steppe', 'dune'].includes(at(x + i, y + j))) pose(x + i, y + j, 'grass'); });
+    // les routes : un pont sur l'eau, un col dans la montagne ; jamais dans la mer (le contrôle le vérifie : monde.js). Le sol
+    // ne change pas ailleurs : la piste se peint par-dessus, d'un trait (une case fait vingt kilomètres)
+    b.horsTerre = [];
+    const traces = P.routes.map(R => R.map(etape));
+    traces.forEach(Q => trait(Q, (x, y) => { const n = at(x, y); if (!n) return; if (n === 'sea') { b.horsTerre.push([x, y]); return; } if (n === 'water') b.set(x, y, 'wood', false); else if (n === 'mont') pose(x, y, 'sand'); }));
+    // chaque ville sur la terre ferme, et ses abords libres de relief (le fleuve, lui, passe à côté : la ville est sur sa rive)
+    Object.keys(villes).forEach(v => { const [x, y] = villes[v]; [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([i, j]) => { const n = at(x + i, y + j); if (n && G.isSolidTile(n) && (!(i || j) || n === 'mont')) pose(x + i, y + j, 'sand'); }); });
+    // ce qui se peint d'un tenant, par-dessus les cases (sans rien changer à ce qui se marche) : l'écume le long des côtes, les
+    // sommets des reliefs (plus grands qu'une case : ils se chevauchent en chaînes), les pistes
+    b.peint = c => {
+      const f = G.D > 1 ? 0.5 : 1;
+      for (let y = 0; y < H0; y++) for (let x = 0; x < W0; x++) { if (at(x, y) !== 'sea') continue; const X = x * T, Y = y * T;
+        [[0, -1], [0, 1], [-1, 0], [1, 0]].forEach(([i, j]) => { const n = at(x + i, y + j); if (!n || n === 'sea') return; c.fillStyle = 'rgba(236,244,250,.6)'; c.fillRect(i > 0 ? X + T - f * 2 : X, j > 0 ? Y + T - f * 2 : Y, i ? f * 2 : T, j ? f * 2 : T);
+          c.fillStyle = 'rgba(160,205,225,.35)'; c.fillRect(i > 0 ? X + T - f * 5 : i < 0 ? X + f * 2 : X, j > 0 ? Y + T - f * 5 : j < 0 ? Y + f * 2 : Y, i ? f * 3 : T, j ? f * 3 : T); }); }
+      const br = k => { const n = Math.sin(k * 12.9898) * 43758.5453; return n - Math.floor(n); };
+      for (let y = 0; y < H0; y++) for (let x = 0; x < W0; x++) { if (at(x, y) !== 'mont') continue; const k = x * 131 + y * 71;
+        [[0.3, 0], [0.75, 1]].forEach(([dx, s]) => { if (s && br(k + 5) < 0.45) return; const w = 15 + br(k + s * 3) * 9, h = 10 + br(k + 7 + s) * 8, cx = x * T + T * dx + (br(k + 11 + s) - 0.5) * 6 + (s ? 0 : 4), b0 = y * T + 13 + s * 3;
+          c.fillStyle = '#8c765a'; c.beginPath(); c.moveTo(cx - w / 2, b0); c.lineTo(cx, b0 - h); c.lineTo(cx + w / 2, b0); c.closePath(); c.fill();
+          c.fillStyle = '#b39a76'; c.beginPath(); c.moveTo(cx - w / 2, b0); c.lineTo(cx, b0 - h); c.lineTo(cx - w * 0.08, b0); c.closePath(); c.fill();
+          c.fillStyle = '#6a5640'; c.beginPath(); c.moveTo(cx + w * 0.06, b0); c.lineTo(cx, b0 - h); c.lineTo(cx + w / 2, b0); c.closePath(); c.fill();
+          c.fillStyle = '#d6c09a'; c.beginPath(); c.moveTo(cx - 2.5, b0 - h + 3.5); c.lineTo(cx, b0 - h); c.lineTo(cx + 1, b0 - h + 1.5); c.closePath(); c.fill();
+          c.fillStyle = 'rgba(70,52,36,.35)'; c.fillRect(cx - w / 2, b0 - f, w, f); }); }
+      // les ponts : l'eau dessous, un tablier de planches en travers du fleuve, ses deux garde-corps
+      for (let y = 0; y < H0; y++) for (let x = 0; x < W0; x++) { if (at(x, y) !== 'wood') continue; const X = x * T, Y = y * T, mouille = n => n === 'water' || n === 'wood', long = mouille(at(x - 1, y)) || mouille(at(x + 1, y)), v = (x * 7 + y * 13 + ((x * y) % 5)) % 4;
+        c.drawImage(G.tile('water', v, 0), X, Y); c.fillStyle = '#8b6a45'; if (long) { c.fillRect(X + 4, Y, 8, T); c.fillStyle = '#5d4329'; for (let k = 1; k < 8; k++) c.fillRect(X + 4, Y + k * 2, 8, f); c.fillRect(X + 3, Y, f * 2, T); c.fillRect(X + 12, Y, f * 2, T); }
+        else { c.fillRect(X, Y + 4, T, 8); c.fillStyle = '#5d4329'; for (let k = 1; k < 8; k++) c.fillRect(X + k * 2, Y + 4, f, 8); c.fillRect(X, Y + 3, T, f * 2); c.fillRect(X, Y + 12, T, f * 2); } }
+      // les dunes : des croissants de sable, leur crête au soleil (le Nafoud, rouge, plus rouge)
+      for (let y = 0; y < H0; y++) for (let x = 0; x < W0; x++) { if (at(x, y) !== 'dune') continue; const k = x * 37 + y * 113, X = x * T + 4 + br(k) * 8, Y = y * T + 5 + br(k + 1) * 7, w = 5 + br(k + 2) * 4;
+        c.fillStyle = 'rgba(176,112,58,.32)'; c.beginPath(); c.ellipse(X, Y + 1.5, w, 2.2, 0, 0, Math.PI); c.fill(); c.strokeStyle = 'rgba(250,226,176,.7)'; c.lineWidth = f * 1.5; c.beginPath(); c.ellipse(X, Y + 1, w, 2.5, 0, Math.PI * 1.05, Math.PI * 1.95); c.stroke(); }
+      palmes.forEach(([x, y]) => { const k = x * 53 + y * 29; [[3 + br(k) * 4, 6 + br(k + 1) * 3], [9 + br(k + 2) * 4, 10 + br(k + 3) * 3]].forEach(([dx, dy]) => { const X = x * T + dx, Y = y * T + dy;
+        c.fillStyle = 'rgba(30,40,20,.25)'; c.fillRect(X - 1, Y + 4, 3, f); c.fillStyle = '#7a5530'; c.fillRect(X, Y, f * 2, 4.5); c.fillStyle = '#3f7631'; c.fillRect(X - 2.5, Y - 1, 6, f * 2); c.fillStyle = '#4f8a3c'; c.fillRect(X - 1.5, Y - 2, 4, f * 2); c.fillRect(X - 3, Y, f * 2, 1.5); c.fillRect(X + 3, Y, f * 2, 1.5); }); });
+      c.save(); c.lineJoin = 'round'; c.lineCap = 'round';
+      [['rgba(120,86,52,.55)', 3.2], ['rgba(222,196,146,.8)', 1.2]].forEach(([col, lw]) => { c.strokeStyle = col; c.lineWidth = lw; traces.forEach(Q => { c.beginPath(); Q.forEach((q, i) => { const X = q[0] * T, Y = q[1] * T; if (i) c.lineTo(X, Y); else c.moveTo(X, Y); }); c.stroke(); }); });
+      c.restore();
+    };
+    // les villes de l'époque : leur icône, leur lieu nommé, une lumière le soir
+    Object.keys(villes).forEach(v => { if (!M.existe(v, o.an)) return; const [x, y] = villes[v], V = P.villes[v];
+      b.obj('ville_' + V.icone, x, y); b.spot(v, x, y); b.light(x, y - 1, 46, '#ffc878', 0.1); });
+    const t = o.time || 'day', m = b.finish(envFor(t, { particles: 'sand', rate: t === 'night' ? 2 : 6, bg: 'desert', music: t === 'night' ? 'nuit' : 'desert' }));
+    m.horsTerre = b.horsTerre; m.an = o.an; return m;
+  }
+
   M.drawRosette = drawRosette;
-  const GEN = { ville, desert, camp, romaine, palais, navire, noos, citadelle, cite, quartiers, archives };
+  const GEN = { ville, desert, camp, romaine, palais, navire, noos, citadelle, cite, quartiers, archives, monde };
   // Tous les lieux nommés d'une carte se rejoignent-ils à pied ? Même parcours que les tests (cases libres voisines).
   function libre(m, s) {
     for (let rad = 0; rad < 9; rad++) for (let dy = -rad; dy <= rad; dy++) for (let dx = -rad; dx <= rad; dx++) {
@@ -869,7 +988,7 @@
     opts = opts || {};
     const L = D.MAPS[id], gen = L && GEN[L.gabarit];
     if (!gen) return noos('noos', opts);
-    let m = gen(id, opts, L);
+    let m = gen(id, opts, L, L.graine);   // 2.29 : une visite de Médine ou de Koufa tire la ville de son récit (D.MAPS, graine)
     if (L.paquet) for (let k = 1; k <= 12 && !M.relie(m); k++) m = gen(id, opts, L, id + '~' + k);
     if (L.piste && m.env.music === D.GABARITS[L.gabarit].piste) m.env.music = L.piste;
     return m;

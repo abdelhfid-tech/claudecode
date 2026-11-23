@@ -69,7 +69,9 @@
     // 2.28 (D217) : les activités des quartiers (activites.js), chacune dite au premier essai ; l'écran géant et les manèges
     // sont de simples gestes. Payer ne s'apprend pas : le prix se dit dans le menu.
     borne: { nom: 'Jouer à la borne' }, etal: { nom: 'L’étal de la galerie' },
-    ecran: { nom: 'S’asseoir devant l’écran', geste: true }, manege: { nom: 'Monter dans un manège', geste: true }
+    ecran: { nom: 'S’asseoir devant l’écran', geste: true }, manege: { nom: 'Monter dans un manège', geste: true },
+    // 2.29 (D220) : par la porte d'une ville, la route et les autres villes (monde.js) — un simple geste, dit à la première sortie
+    route: { nom: 'La route', geste: true }
   };
 
   /* 2.23 (D212) — les quartiers de la Cité-Miroir. Demande du décideur, 21 novembre : « il y trouve beaucoup d'activités mais
@@ -258,8 +260,15 @@
     // promènent seuls ; le refuge d'Idris en 2084 (frame.js, visite « quartiers »), à côté de Maître Yûnus. 2.28 (D218) :
     // « traverse », l'entrée de la rue, au nord-ouest, par où l'on arrive à pied de la Cité-Miroir et par où l'on y retourne
     quartiers: { nom: 'Quartiers de la Cité', theme: 'cyber', dehors: false, piste: 'cite',   spots: ['parvis', 'priere', 'galerie', 'jeux', 'ecran', 'circuit', 'tribune', 'parc', 'roue', 'traverse'] },
-    archives:  { nom: 'Archives basses', theme: 'cyber',  dehors: false, piste: 'chaine',    spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] }
+    archives:  { nom: 'Archives basses', theme: 'cyber',  dehors: false, piste: 'chaine',    spots: ['entree', 'rayonnages', 'bureau', 'chaine', 'priere'] },
+    // 2.29 (D220) — la carte du monde : les villes de D.MONDE, chacune un lieu nommé (son identifiant) ; réservée au jeu (un
+    // paquet n'y bâtit pas de lieu)
+    monde:     { nom: 'Carte du monde',  theme: 'orient', dehors: false, piste: 'desert',    reserve: true, spots: ['medine', 'mecque', 'taif', 'quds', 'damas', 'homs', 'qinnasrin', 'yarmouk', 'hira', 'bassora', 'koufa', 'fustat'] }
   };
+  // 2.29 (D220) : deux variantes de plus pour la ville d'Arabie — « mecque » (la visite sobre de La Mecque : ni mosquée, ni
+  // Haram, ni Kaaba ; le cœur de la ville fait de maisons et d'un souk, la natte dans une cour) et « nil » (Fustât : le fleuve
+  // à l'ouest, la ville n'est pas retournée)
+  D.GABARITS.ville.variantes = ['fleuve', 'mecque', 'nil'];
   // un lieu : son nom, son gabarit, les lieux nommés de ce gabarit, et ce qui lui est propre (variante, piste, noms)
   D.lieu = function (label, gabarit, propre) { const L = { label, gabarit, spots: D.GABARITS[gabarit].spots }; Object.keys(propre || {}).forEach(k => { if (propre[k] !== undefined) L[k] = propre[k]; }); return L; };
   // (lit les tables de l'objet sur lequel on l'appelle : D dans le jeu, une copie pendant le contrôle d'un paquet)
@@ -276,7 +285,154 @@
     citadelle: D.lieu('La Citadelle', 'citadelle'),
     cite:      D.lieu('Cité-Miroir', 'cite'),
     quartiers: D.lieu('Les quartiers de la Cité', 'quartiers'),
-    archives:  D.lieu('Archives basses', 'archives')
+    archives:  D.lieu('Archives basses', 'archives'),
+    // 2.29 (D220) — la carte du monde, et les villes où l'on passe sans qu'un récit s'y joue (les visites). Médine et Koufa s'y
+    // visitent sous la graine de leurs récits (la même ville, case pour case), mais sous un autre identifiant : aucun
+    // personnage, aucun objectif d'un chapitre ne s'y trouve. `visite` : une ville de passage — on n'y bâtit pas (build.js), on
+    // y prie et l'on s'y repose sans que les œuvres se comptent (oeuvres.js, O.sobre).
+    monde:             D.lieu('Les routes', 'monde'),
+    visite_medine:     D.lieu('Médine', 'ville', { graine: 'medine', visite: true }),
+    visite_koufa:      D.lieu('Koufa', 'ville', { variante: 'fleuve', graine: 'koufa', visite: true }),
+    visite_mecque:     D.lieu('La Mecque', 'ville', { variante: 'mecque', visite: true, spots: VILLE.filter(s => !/^mosquee|^ecole$/.test(s)) }),   // ni mosquée, ni école de mosquée
+    visite_taif:       D.lieu('Tâ’if', 'ville', { visite: true }),
+    visite_bassora:    D.lieu('Bassora', 'ville', { variante: 'fleuve', visite: true }),
+    visite_fustat:     D.lieu('Fustât', 'ville', { variante: 'nil', visite: true }),
+    visite_quds:       D.lieu('Jérusalem', 'romaine', { visite: true }),
+    visite_damas:      D.lieu('Damas', 'romaine', { visite: true }),
+    visite_homs:       D.lieu('Homs', 'romaine', { visite: true }),
+    visite_qinnasrin:  D.lieu('Qinnasrîn', 'romaine', { visite: true }),
+    visite_hira:       D.lieu('Al-Hîra', 'camp', { visite: true })
+  };
+
+  /* 2.29 (D220) — la carte du monde. Demande du décideur, 23 novembre : « un "meta-monde" […] ou on accéderait aux autres villes
+     via le désert avec une carte réaliste qui rend accès aux villes prévue dans la saga et les autres saga même s'il ne s'y
+     passe rien […] Comme dans final fantasy ou chrono trigger une carte global ou les points d'intérêt sont accessibles en
+     sortant de chaque ville par sa porte. » Ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ;
+     La Mecque, une visite sobre (des rues, un marché ; le Haram et la Kaaba jamais dessinés ; ni combat ni chimère) ; une ville
+     n'apparaît qu'à partir de l'époque où elle existe. Tout est ici, en latitude et longitude : la carte (maps.js, monde) le
+     projette ; monde.js ouvre les portes. Aucun nombre dans un récit.
+     - projection : de `lon` à `lon` (est), de `lat` à `lat` (nord), équirectangulaire, corrigée au parallèle `parallele` ;
+       `cases` : la taille de la carte (une case pour une vingtaine de kilomètres).
+     - villes : latitude, longitude (relevées sur une page de référence : v2/docs/architecture.md, « La carte du monde ») ;
+       `fondee` : l'année (hégire) depuis laquelle elle existe (null : toujours) ; `genre` : « ville » (on y entre) ou « lieu »
+       (un repère, où l'on ne revient que depuis son récit) ; `icone` : « arabe » (murs de terre, palmiers), « sham » (pierre,
+       tours) ou « camp » (tentes) ; `carte` : la carte de la visite (D.MAPS ; null pour un lieu) ; `rive` : la ville bâtie au bord
+       d'un fleuve est sur sa rive ouest (-1 : Koufa, al-Hîra, Bassora) ou est (1 : Fustât) — sur la carte, elle se pose d'une case
+       de ce côté, pour que le fleuve passe à côté d'elle (à une case de son point, toujours).
+     - terres, fleuves, lacs : les côtes, le Nil (et les deux bras du delta), l'Euphrate, le Tigre, le Chatt al-Arab, le Jourdain,
+       la mer Morte et le lac de Tibériade, d'après Natural Earth (1:50 000 000, domaine public), simplifiés à moins d'une case ;
+       les côtes d'aujourd'hui (le fond du golfe était plus au nord au VIIᵉ siècle : à valider).
+     - reliefs (des crêtes, `large` : leur demi-largeur en cases), deserts (des polygones de dunes, des rubans de `large` cases, ou
+       une `zone` où les dunes ne prennent qu'une `part` des cases), steppes,
+       vertes (polygones), oasis ([lat, lon, rayon en degrés]) et routes (des étapes : une ville, ou [lat, lon]) : un tracé
+       schématique de l'agent, d'après les cartes de relief et les routes connues (la route de Badr, de Tabûk, la Via Maris, la
+       route de l'Irak). Une route franchit un fleuve sur un pont, une crête par un col.
+     - depuis : par chapitre d'un récit, l'année où il se joue (`an` : sa première, celle qui décide des villes qui existent), son
+       époque telle que le carton d'une visite la dit (`epoque`), et ses portes — la carte qui en a une (`carte`), à partir de
+       quel objectif (`des` : la porte vaut jusqu'à la suivante de la même carte), et la ville qu'elle est (`ville`). Rien
+       d'autre n'a de porte : ni la Samâwa ni la route d'Îliyâ', qui sont déjà la route, ni la mer, ni la noosphère, ni Dhû
+       l-Qassa, Harûrâ' et Nahrawân ; ni l'histoire-cadre, ni les veillées, ni le dernier maillon (regles.js le vérifie).
+     - gabarits : ceux dont une carte peut avoir une porte (au nord et au sud de la ville d'Arabie, au sud de la cité romaine, à
+       l'ouest du camp). */
+  D.MONDE = {
+    lon: [30, 49], lat: [20, 37], parallele: 28.5, cases: [96, 96],
+    villes: {
+      medine:    { lat: 24.47, lon: 39.61, fondee: null, genre: 'ville', icone: 'arabe', carte: 'visite_medine' },
+      mecque:    { lat: 21.42, lon: 39.82, fondee: null, genre: 'ville', icone: 'arabe', carte: 'visite_mecque' },
+      taif:      { lat: 21.28, lon: 40.41, fondee: null, genre: 'ville', icone: 'arabe', carte: 'visite_taif' },
+      quds:      { lat: 31.78, lon: 35.23, fondee: null, genre: 'ville', icone: 'sham', carte: 'visite_quds' },
+      damas:     { lat: 33.51, lon: 36.31, fondee: null, genre: 'ville', icone: 'sham', carte: 'visite_damas' },
+      homs:      { lat: 34.73, lon: 36.71, fondee: null, genre: 'ville', icone: 'sham', carte: 'visite_homs' },
+      qinnasrin: { lat: 35.99, lon: 37.04, fondee: null, genre: 'ville', icone: 'sham', carte: 'visite_qinnasrin' },
+      yarmouk:   { lat: 32.81, lon: 35.95, fondee: null, genre: 'lieu', icone: 'camp', carte: null },
+      hira:      { lat: 31.98, lon: 44.39, fondee: null, genre: 'ville', icone: 'camp', carte: 'visite_hira', rive: -1 },
+      bassora:   { lat: 30.52, lon: 47.81, fondee: 14, genre: 'ville', icone: 'arabe', carte: 'visite_bassora', rive: -1 },
+      koufa:     { lat: 32.03, lon: 44.40, fondee: 17, genre: 'ville', icone: 'arabe', carte: 'visite_koufa', rive: -1 },
+      fustat:    { lat: 30.01, lon: 31.24, fondee: 21, genre: 'ville', icone: 'arabe', carte: 'visite_fustat', rive: 1 }
+    },
+    terres: [
+      [[35.59, 34.46], [35.29, 33.94], [35.2, 33.91], [34.99, 34.05], [34.97, 33.7], [34.75, 33.41], [34.67, 33.06], [34.57, 33.01], [34.73, 32.45], [34.95, 32.32], [35.08, 32.3], [35.18, 32.88], [35.39, 32.94], [35.35, 33.61], [35.66, 34.56]],
+      [[25.38, 36.9], [25.6, 36.53], [25.69, 36.53], [25.41, 36.95]],
+      [[29.62, 48.28], [29.61, 48.18], [29.8, 48.08], [29.98, 48.18], [29.78, 48.35]],
+      [[37.6, 49.6], [30.05, 49.6], [30.31, 49.05], [30.37, 49], [30.41, 49.25], [30.51, 49], [30.45, 49.04], [30.33, 48.89], [30.12, 48.92], [30.04, 48.83], [29.94, 48.45], [30.04, 48.14], [30.01, 47.98], [29.57, 48.14], [29.62, 47.97], [29.39, 47.72], [29.36, 48.05], [28.98, 48.18], [27.9, 48.81], [27.72, 48.8], [27.49, 49.24], [27.44, 49.18], [27.31, 49.28], [27.08, 49.6], [19.4, 49.6], [19.4, 40.96], [19.76, 40.76], [20.27, 40.08], [20.39, 39.73], [20.97, 39.28], [21.31, 39.09], [21.52, 39.15], [21.88, 38.99], [22.39, 39.1], [22.59, 39.06], [23.71, 38.46], [24.19, 37.92], [24.29, 37.54], [24.82, 37.18], [24.96, 37.27], [25.29, 37.15], [25.64, 36.92], [25.75, 36.76], [26.04, 36.68], [26.1, 36.52], [26.59, 36.25], [28.03, 35.18], [28.13, 34.72], [28.06, 34.63], [28.51, 34.78], [29.56, 34.97], [29.27, 34.74], [28.02, 34.4], [27.76, 34.22], [28.05, 33.76], [28.57, 33.25], [28.98, 33.13], [29.52, 32.72], [29.97, 32.57], [29.93, 32.47], [29.63, 32.36], [29.32, 32.6], [28.93, 32.66], [28.21, 33.2], [27.9, 33.55], [27.61, 33.55], [27.18, 33.85], [26.65, 33.96], [25.69, 34.57], [24.48, 35.19], [23.94, 35.78], [23.92, 35.54], [23.78, 35.5], [23.44, 35.52], [22.95, 35.7], [22.74, 35.91], [22.63, 36.23], [22.02, 36.87], [21.59, 36.93], [21.11, 37.26], [21.04, 37.26], [21.1, 37.15], [20.98, 37.14], [19.4, 37.29], [19.4, 29.4], [30.92, 29.4], [31.23, 29.93], [31.26, 30.22], [31.46, 30.4], [31.57, 30.92], [31.42, 30.56], [31.46, 31], [31.6, 31.08], [31.46, 31.52], [31.54, 31.89], [31.34, 32.14], [31.48, 31.89], [31.29, 31.77], [31.22, 32.01], [31.09, 32.1], [31.2, 32.28], [31.29, 32.22], [31.07, 32.6], [31.17, 33.13], [31.08, 33.19], [31.13, 33.67], [31.3, 34.18], [31.9, 34.68], [33.08, 35.11], [34.03, 35.61], [34.25, 35.65], [34.55, 35.98], [34.95, 35.89], [35.42, 35.9], [35.57, 35.76], [36, 35.96], [36.31, 35.81], [36.66, 36.19], [36.81, 36.18], [36.91, 36.05], [36.58, 35.39], [36.82, 34.7], [36.18, 33.69], [36.04, 32.79], [36.18, 32.38], [36.54, 32.02], [36.8, 31.35], [36.87, 30.64], [36.27, 30.45], [36.31, 30.23], [36.16, 29.69], [36.24, 29.4], [37.6, 29.4]]
+    ],
+    fleuves: {
+      euphrate: [[[37.59, 38.61], [37.49, 38.44], [37.38, 37.92], [37.29, 37.85], [37.12, 37.86], [37, 37.99], [36.84, 38.03], [36.56, 38.27], [36.34, 38.18], [36.07, 38.08], [35.95, 38.25], [35.86, 38.56], [35.91, 38.92], [35.88, 39.23], [35.68, 39.83], [35.47, 40], [35.23, 40.38], [35.02, 40.47], [34.58, 40.93], [34.43, 40.99],
+        [34.39, 41.18], [34.51, 41.83], [34.45, 41.99], [34.3, 42.12], [34.33, 42.37], [34.11, 42.38], [33.87, 42.56], [33.87, 42.73], [33.75, 42.72], [33.58, 42.88], [33.38, 43.65], [33.05, 44.12], [32.83, 44.25], [32.5, 44.26], [31.65, 44.55], [31.48, 44.77], [31.31, 45.47], [31.23, 45.54], [31.09, 46.12], [30.9, 46.48], [30.97, 47.47]]],
+      tigre: [[[37.56, 41.85], [37.44, 41.88], [37.32, 42.23], [37.06, 42.38], [36.83, 42.56], [36.69, 42.9], [36.54, 42.77], [36.33, 43.17], [36.21, 43.26], [35.95, 43.35], [35.47, 43.26], [35.01, 43.57], [34.96, 43.54], [34.19, 43.85], [34.1, 43.96], [33.97, 44.4], [33.74, 44.42], [33.53, 44.31], [33.29, 44.4], [33.02, 44.67], [32.78, 45.22], [32.6, 45.38], [32.5, 45.81], [32.63, 46.14], [32.44, 46.69], [32.15, 46.71], [31.92, 46.94], [31.83, 47.14], [31.46, 47.36], [31.29, 47.43], [31, 47.44]]],
+      chatt: [[[30.97, 47.47], [30.75, 47.7], [30.51, 47.84], [30.46, 48.07], [30.29, 48.33], [30.04, 48.43], [29.96, 48.55]]],
+      nil: [[[19.47, 30.46], [19.82, 30.35], [19.97, 30.58], [20.21, 30.59], [20.33, 30.54], [20.42, 30.37], [20.62, 30.32], [20.77, 30.37], [20.9, 30.58], [21.18, 30.7], [21.4, 30.97], [21.61, 31.09], [22.09, 31.4], [22.7, 32.04], [22.73, 32.14], [22.65, 32.33], [22.81, 32.58], [23.33, 32.91], [23.99, 32.88],
+        [24.77, 32.92], [25.04, 32.87], [25.35, 32.54], [25.57, 32.49], [25.88, 32.76], [26.13, 32.73], [26.16, 32.68], [26.08, 32.23], [26.17, 32.15], [26.2, 32.02], [27.06, 31.34], [27.5, 30.87], [27.99, 30.86], [28.23, 30.74], [28.79, 30.9], [29.28, 31.22], [29.78, 31.29], [30.12, 31.24]],
+        [[30.12, 31.24], [30.15, 31.16], [30.32, 31.08], [30.62, 31.25], [30.93, 31.24], [31.13, 31.42], [31.28, 31.67], [31.53, 31.84]], [[30.12, 31.24], [30.35, 30.85], [31.01, 30.75], [31.17, 30.57], [31.46, 30.4]]],
+      jourdain: [[[33.6, 35.86], [33.43, 35.7], [33.24, 35.62], [32.9, 35.6], [32.72, 35.58], [31.77, 35.56]]]
+    },
+    lacs: {
+      mer_morte: [[31.72, 35.59], [31.36, 35.55], [31.33, 35.52], [31.33, 35.42], [31.62, 35.42], [31.71, 35.46], [31.76, 35.52], [31.77, 35.56]],
+      tiberiade: [[32.78, 35.63], [32.72, 35.58], [32.75, 35.55], [32.8, 35.53], [32.89, 35.57], [32.88, 35.62]]
+    },
+    reliefs: {
+      hedjaz: { large: 1.5, trace: [[29.3, 35.35], [28.4, 35.85], [27.4, 36.45], [26.4, 37.25], [25.4, 38.05], [24.6, 38.75], [23.8, 39.25], [23.0, 39.7], [22.2, 40.05], [21.6, 40.18], [21.3, 40.27], [21.0, 40.38], [20.5, 40.6], [20.0, 40.95], [19.4, 41.3]] },
+      sharat: { large: 1, trace: [[29.6, 35.38], [30.3, 35.5], [31.0, 35.66], [31.45, 35.72]] },
+      liban: { large: 0.8, trace: [[33.35, 35.55], [33.9, 35.85], [34.45, 36.15]] },
+      antiliban: { large: 0.8, trace: [[33.3, 35.8], [33.7, 36.1], [34.2, 36.45]] },
+      ansariya: { large: 0.8, trace: [[34.95, 36.2], [35.6, 36.15], [36.0, 36.35]] },
+      sinai: { large: 1.4, trace: [[29.05, 33.45], [28.55, 33.95], [28.2, 34.25]] },
+      zagros: { large: 1.8, trace: [[37.6, 43.2], [37.0, 43.6], [36.6, 44.3], [35.8, 45.3], [35.0, 45.9], [34.0, 46.3], [33.2, 46.8], [32.4, 47.7], [31.6, 48.6], [31.0, 49.6]] }
+    },
+    deserts: {
+      nafoud: [[29.6, 39.6], [29.45, 41.3], [29.0, 43.0], [28.2, 43.6], [27.6, 42.6], [27.5, 40.8], [27.75, 39.3], [28.6, 38.8]],
+      dahna: { large: 0.7, trace: [[28.2, 43.6], [26.5, 44.8], [25.0, 46.4], [23.5, 47.3], [22.4, 47.6]] },
+      rub: [[22.6, 49.6], [22.3, 47.5], [21.2, 46.3], [20.0, 45.6], [19.4, 45.6], [19.4, 49.6]],
+      samawa: { part: 0.3, zone: [[32.8, 39.6], [32.9, 41.6], [32.0, 42.6], [30.8, 43.2], [30.3, 42.0], [30.9, 40.2], [31.8, 39.3]] }   // un désert de cailloux : des dunes éparses (part : une case sur trois)
+    },
+    steppes: {
+      badiya: [[36.4, 37.4], [36.0, 38.4], [35.2, 39.6], [34.3, 40.9], [33.6, 40.6], [33.0, 39.0], [32.6, 37.6], [32.3, 36.6], [33.0, 36.6], [33.8, 36.9], [34.7, 37.0], [35.6, 37.2]],
+      hawran: [[33.2, 35.9], [33.0, 36.6], [32.3, 36.7], [31.2, 36.1], [30.4, 35.9], [30.4, 35.62], [31.2, 35.75], [32.3, 35.82], [33.0, 35.82]],
+      jazira: [[37.6, 38.5], [37.6, 42.6], [36.3, 43.1], [35.0, 42.6], [34.8, 41.2], [35.6, 39.8], [36.5, 38.8]]
+    },
+    vertes: {
+      delta: [[31.6, 29.9], [31.6, 32.4], [31.0, 32.4], [30.6, 32.0], [30.1, 31.3], [30.2, 30.9], [30.6, 30.2], [31.0, 29.9]],
+      sawad: [[33.6, 43.6], [33.3, 44.6], [32.6, 45.3], [31.8, 46.3], [31.1, 47.2], [30.6, 47.9], [30.35, 47.7], [30.9, 46.4], [31.5, 45.3], [31.9, 44.5], [32.4, 43.9], [33.1, 43.5]],
+      levant: [[31.2, 34.2], [31.6, 34.5], [32.4, 34.85], [33.1, 35.1], [33.8, 35.4], [34.6, 35.9], [35.5, 35.85], [36.2, 35.9], [36.6, 36.2], [36.4, 36.6], [35.6, 36.4], [34.9, 36.4], [34.0, 36.0], [33.3, 35.7], [32.6, 35.45], [31.9, 35.2], [31.3, 34.9]],
+      cilicie: [[37.6, 29.4], [37.6, 36.9], [36.6, 36.9], [36.6, 36.2], [36.8, 35.5], [36.3, 34.0], [36.3, 32.6], [36.7, 31.5], [36.9, 30.5], [36.9, 29.4]],
+      ghouta: [[33.75, 36.35], [33.6, 36.7], [33.35, 36.6], [33.4, 36.25]],
+      oronte: [[35.5, 36.45], [35.4, 36.9], [34.6, 36.85], [34.6, 36.5]],
+      alep: [[36.3, 36.9], [36.3, 37.4], [35.8, 37.4], [35.8, 36.85]]
+    },
+    oasis: [[24.47, 39.61, 0.2], [25.70, 39.29, 0.14], [27.63, 38.55, 0.14], [28.38, 36.57, 0.12], [29.81, 39.87, 0.14], [26.62, 37.92, 0.12], [21.28, 40.41, 0.16],
+      [27.12, 42.50, 0.1], [24.15, 47.30, 0.18], [34.56, 38.27, 0.12], [32.57, 43.49, 0.12], [29.30, 30.80, 0.2]],
+    routes: [
+      ['medine', [23.78, 38.79], [22.75, 39.25], 'mecque'],
+      ['mecque', 'taif'],
+      ['medine', [26.62, 37.92], [28.38, 36.57], [30.19, 35.73], [31.95, 35.93], [32.52, 36.48], 'damas'],
+      [[31.95, 35.93], [32.08, 35.78], [32.08, 35.36], 'quds'],
+      ['quds', [32.22, 35.26], [32.50, 35.42], [32.52, 35.72], 'yarmouk', [33.07, 36.18], 'damas'],
+      ['damas', 'homs', [35.13, 36.75], 'qinnasrin'],
+      ['quds', [31.40, 34.60], [30.98, 33.80], [30.85, 32.45], [30.42, 31.56], 'fustat'],
+      [[30.19, 35.73], [29.62, 35.02], [29.90, 33.75], [30.05, 32.45], 'fustat'],
+      ['medine', [25.30, 40.90], [27.12, 42.50], [28.90, 43.40], [30.60, 44.10], [31.70, 44.10], 'hira', 'koufa'],
+      ['hira', [31.25, 44.32], [31.00, 45.30], [30.75, 46.20], [30.45, 47.30], 'bassora'],
+      ['hira', [32.57, 43.49], [33.05, 40.60], [34.56, 38.27], [34.23, 37.24], 'damas'],
+      [[34.56, 38.27], 'homs']
+    ],
+    gabarits: ['ville', 'romaine', 'camp'],
+    depuis: {
+      ab1: { an: 11, epoque: 'An 11 H · 632', portes: [{ carte: 'medine', des: 0, ville: 'medine' }] },
+      ab2: { an: 11, epoque: 'An 11 H · 632', portes: [{ carte: 'medine', des: 0, ville: 'medine' }] },
+      ab3: { an: 11, epoque: 'An 11–12 H · 632–633', portes: [{ carte: 'medine', des: 5, ville: 'medine' }] },
+      u1:  { an: 18, epoque: 'An 18 H · 639', portes: [{ carte: 'medine', des: 0, ville: 'medine' }] },
+      u2:  { an: 16, epoque: 'An 16 H · 637', portes: [{ carte: 'romaine', des: 3, ville: 'quds' }] },
+      u3:  { an: 17, epoque: 'An 17–23 H · 638–644', portes: [{ carte: 'medine', des: 0, ville: 'medine' }] },
+      k1:  { an: 12, epoque: 'An 12 H · 633', portes: [{ carte: 'camp', des: 0, ville: 'hira' }] },
+      k2:  { an: 13, epoque: 'An 13 ou 15 H · 634–636', portes: [{ carte: 'camp', des: 0, ville: 'yarmouk' }] },
+      k3:  { an: 17, epoque: 'An 17 H · 638', portes: [{ carte: 'romaine', des: 0, ville: 'qinnasrin' }, { carte: 'romaine', des: 3, ville: 'homs' }] },
+      ut1: { an: 30, epoque: 'Vers l’an 30 H · 650', portes: [{ carte: 'medine', des: 0, ville: 'medine' }] },
+      ut2: { an: 28, epoque: 'An 28–34 H · 649–655', portes: [{ carte: 'medine', des: 0, ville: 'medine' }] },
+      ut3: { an: 35, epoque: 'An 35 H · 656', portes: [{ carte: 'medine', des: 0, ville: 'medine' }] },
+      a1:  { an: 36, epoque: 'An 36 H · 657', portes: [{ carte: 'koufa', des: 0, ville: 'koufa' }] },
+      a2:  { an: 37, epoque: 'An 37 H · 658', portes: [{ carte: 'koufa', des: 0, ville: 'koufa' }] },
+      a3:  { an: 38, epoque: 'An 38–40 H · 658–661', portes: [{ carte: 'koufa', des: 6, ville: 'koufa' }] }
+    }
   };
 
   // noms des lieux, pour la carte de la halte (null : lieu technique, non affiché)
@@ -292,7 +448,10 @@
     cour: 'Cour', tour: 'Tour', salle: 'Grande salle', mosquee: 'Mosquée', greniers: 'Greniers', poterne: 'Poterne',
     rue: 'Rue', ecran: 'Grand écran', ruelle: 'Ruelle', ascenseur: 'Ascenseur', parvis: 'Parvis', rayonnages: 'Rayonnages', bureau: 'Bureau', chaine: 'La Chaîne',
     galerie: 'Galerie marchande', jeux: 'Salle de jeux', circuit: 'Circuit', tribune: 'Tribune', parc: 'Parc', roue: 'Grande roue',
-    traverse: 'Traverser la rue'
+    traverse: 'Traverser la rue',
+    // 2.29 (D220) : les villes de la carte du monde (D.MONDE)
+    medine: 'Médine', mecque: 'La Mecque', taif: 'Tâ’if', quds: 'Jérusalem', damas: 'Damas', homs: 'Homs', qinnasrin: 'Qinnasrîn',
+    yarmouk: 'Vallée du Yarmoûk', hira: 'Al-Hîra', bassora: 'Bassora', koufa: 'Koufa', fustat: 'Fustât'
   };
 
   // tenue d'un personnage (look) : coiffes, manteaux, motifs, attributs portés — dessin dans sprites.js
@@ -425,6 +584,9 @@
     // 2.28 (D217) : l'étal de la galerie des quartiers (activites.js) — des pièces ordinaires, payées avec les primes du circuit
     quartiers: ['baton_marche', 'gourde', 'calotte', 'tunique_lin', 'manteau_laine', 'tablette', 'lampe']
   };
+  // 2.29 (D220) : le comptoir d'une ville visitée tient les artisans d'un lieu du jeu (les mêmes listes : rien de nouveau à vendre)
+  Object.entries({ visite_medine: 'medine', visite_mecque: 'medine', visite_taif: 'medine', visite_koufa: 'koufa', visite_bassora: 'koufa', visite_fustat: 'koufa',
+    visite_quds: 'romaine', visite_damas: 'romaine', visite_homs: 'romaine', visite_qinnasrin: 'romaine', visite_hira: 'camp' }).forEach(([v, m]) => { D.GEAR_SHOPS[v] = D.GEAR_SHOPS[m].slice(); });
 
   // Opérations de script autorisées : nom -> [min args, max args]
   D.OPS = {
@@ -689,6 +851,7 @@
       // les lieux : un gabarit connu, un nom
       table('lieux', (id, l, w) => { if (!idOk(id, w)) return; if (T.MAPS[id]) R.push(`${w} : le lieu « ${id} » existe déjà`);
         const g = T.GABARITS[l.gabarit]; if (!g) { R.push(`${w} : gabarit « ${l.gabarit} » inconnu (${Object.keys(T.GABARITS).join(', ')})`); return; }
+        if (g.reserve) { R.push(`${w} : le gabarit « ${l.gabarit} » est réservé au jeu`); return; }   // 2.29 : la carte du monde
         Object.keys(l).forEach(k => { if (!['gabarit', 'nom', 'variante', 'piste', 'noms'].includes(k)) R.push(`${w} : clé « ${k} » inconnue (gabarit, nom, variante, piste, noms)`); });
         if (!texte(l.nom, 40)) R.push(`${w} : nom manquant (40 signes au plus)`);
         if (l.variante !== undefined && !(g.variantes || []).includes(l.variante)) R.push(`${w} : variante « ${l.variante} » inconnue pour ce gabarit (${(g.variantes || []).join(', ') || 'aucune'})`);
