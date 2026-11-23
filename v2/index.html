@@ -1005,7 +1005,7 @@ body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.29 · 2026-11-23 18:50 UTC · 54faf53";
+window.ISNAD_VERSION = "2.29 · 2026-11-23 18:57 UTC · 836322b";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -1316,8 +1316,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
 
   /* 2.29 (D220) — la carte du monde. Demande du décideur, 23 novembre : « un "meta-monde" […] ou on accéderait aux autres villes
      via le désert avec une carte réaliste qui rend accès aux villes prévue dans la saga et les autres saga même s'il ne s'y
-     passe rien […] Comme dans final fantasy ou chrono trigger une carte global ou les points d'intérêt sont accessibles en
-     sortant de chaque ville par sa porte. » Ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ;
+     passe rien […] une carte global ou les points d'intérêt sont accessibles en sortant de chaque ville par sa porte. » Ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ;
      La Mecque, une visite sobre (des rues, un marché ; le Haram et la Kaaba jamais dessinés ; ni combat ni chimère) ; une ville
      n'apparaît qu'à partir de l'époque où elle existe. Tout est ici, en latitude et longitude : la carte (maps.js, monde) le
      projette ; monde.js ouvre les portes. Aucun nombre dans un récit.
@@ -6746,7 +6745,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   /* ---------- Ville arabe : Médine, et ses variantes « fleuve » (Koufa, Bassora), « nil » (Fustât) et « mecque » ----------
      2.29 (D220) : « nil », le fleuve à l'ouest (la ville n'est pas retournée) ; « mecque », la visite sobre de La Mecque — ni
      mosquée, ni Haram, ni Kaaba, rien qui les évoque : au cœur de la ville, des maisons de part et d'autre de la grand-rue, un
-     petit marché, et une cour fermée d'un mur de terre où la natte est posée. Médine et Koufa ne changent pas d'une case. */
+     petit marché, et une cour bordée d'un mur de terre au nord et à l'est, où la natte est posée. Médine et Koufa ne changent pas d'une case. */
   function ville(id, o, L, graine) {
     const v = L && L.variante, fleuve = v === 'fleuve' || v === 'nil', mecque = v === 'mecque', b = new MB(id, 60, 46, 'sand', o, graine); b.mirror = v === 'fleuve';
     // chemins
@@ -6757,7 +6756,9 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       // des maisons de part et d'autre de la grand-rue ; entre elles, un petit marché ; à l'est, la cour de la natte
       b.house(21, 5, 7, 6); b.house(33, 5, 7, 6);
       ['#8e5a2a', '#2f6f8f', '#a53c33'].forEach((col, i) => b.obj('stall', 19 + i * 4, 16, { color: col })); b.obj('jar', 18, 18); b.obj('sack', 22, 18); b.obj('crate', 26, 18);
-      b.fill(33, 12, 7, 6, 'path', false); b.ring(33, 12, 7, 6, 'wall'); b.set(36, 17, 'path', false); b.set(35, 17, 'path', false);
+      // (la cour n'a de mur qu'au nord et à l'est : ouverte sur la grand-rue et au sud, on n'y reste jamais pris en touchant
+      // l'écran vers la porte du nord)
+      b.fill(33, 12, 7, 6, 'path', false); for (let x = 33; x < 40; x++) b.set(x, 12, 'wall', true); for (let y = 13; y < 18; y++) b.set(39, y, 'wall', true);
       b.obj('mat', 36, 14); b.obj('lamp', 34, 14); b.obj('jar', 38, 13); b.light(34, 13, 50, '#ffc878', 0.12);
       b.spot('priere', 36, 15); b.light(36, 15, 60, '#fff0c0', 0.05);
     } else {
@@ -7562,13 +7563,25 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
         [[0, -1], [0, 1], [-1, 0], [1, 0]].forEach(([i, j]) => { const n = at(x + i, y + j); if (!n || n === 'sea') return; c.fillStyle = 'rgba(236,244,250,.6)'; c.fillRect(i > 0 ? X + T - f * 2 : X, j > 0 ? Y + T - f * 2 : Y, i ? f * 2 : T, j ? f * 2 : T);
           c.fillStyle = 'rgba(160,205,225,.35)'; c.fillRect(i > 0 ? X + T - f * 5 : i < 0 ? X + f * 2 : X, j > 0 ? Y + T - f * 5 : j < 0 ? Y + f * 2 : Y, i ? f * 3 : T, j ? f * 3 : T); }); }
       const br = k => { const n = Math.sin(k * 12.9898) * 43758.5453; return n - Math.floor(n); };
+      // un massif de roche (et non une pyramide) : une crête irrégulière — deux épaulements, un sommet décentré, un second
+      // plus bas de part ou d'autre —, le versant au soleil à gauche d'une arête brisée, l'autre dans l'ombre, des ravines
+      const poly = (Q, col) => { c.fillStyle = col; c.beginPath(); Q.forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); c.closePath(); c.fill(); };
+      const massif = (cx, b0, w, h, k) => {
+        const L = cx - w / 2, Rx = cx + w / 2, sx = cx + (br(k) - 0.5) * w * 0.28, cote = br(k + 1) < 0.5 ? -1 : 1, s2x = sx + cote * w * (0.24 + br(k + 2) * 0.08), h2 = h * (0.5 + br(k + 3) * 0.18);
+        const pic = [sx, b0 - h], pic2 = [s2x, b0 - h2], col = [(sx + s2x) / 2, b0 - h2 * (0.68 + br(k + 4) * 0.1)];
+        const g1 = [L + w * (0.12 + br(k + 5) * 0.06), b0 - h * (0.2 + br(k + 6) * 0.12)], d1 = [Rx - w * (0.1 + br(k + 7) * 0.06), b0 - h * (0.16 + br(k + 8) * 0.12)];
+        const crete = cote < 0 ? [g1, pic2, col, pic, d1] : [g1, pic, col, pic2, d1], i0 = crete.indexOf(pic);
+        const arete = [pic, [sx + w * 0.05, b0 - h * 0.62], [sx - w * 0.04, b0 - h * 0.34], [sx + w * 0.03, b0]];
+        poly([[L, b0], ...crete, [Rx, b0]], '#9a805e');
+        poly([[L, b0], ...crete.slice(0, i0 + 1), ...arete.slice(1)], '#c4a77d');
+        poly([...arete, [Rx, b0], ...crete.slice(i0 + 1).reverse()].reverse(), '#6c5640');
+        c.strokeStyle = 'rgba(78,58,38,.55)'; c.lineWidth = f; c.beginPath(); c.moveTo(pic2[0], pic2[1]); c.lineTo(pic2[0] - cote * w * 0.03, b0 - h2 * 0.45); c.lineTo(pic2[0] + cote * w * 0.02, b0 - 1);
+        c.moveTo(g1[0] + w * 0.08, g1[1] + 1); c.lineTo(g1[0] + w * 0.11, b0 - 1); c.stroke();
+        c.fillStyle = 'rgba(70,52,36,.35)'; c.fillRect(L, b0 - f, w, f);
+      };
       for (let y = 0; y < H0; y++) for (let x = 0; x < W0; x++) { if (at(x, y) !== 'mont') continue; const k = x * 131 + y * 71;
-        [[0.3, 0], [0.75, 1]].forEach(([dx, s]) => { if (s && br(k + 5) < 0.45) return; const w = 15 + br(k + s * 3) * 9, h = 10 + br(k + 7 + s) * 8, cx = x * T + T * dx + (br(k + 11 + s) - 0.5) * 6 + (s ? 0 : 4), b0 = y * T + 13 + s * 3;
-          c.fillStyle = '#8c765a'; c.beginPath(); c.moveTo(cx - w / 2, b0); c.lineTo(cx, b0 - h); c.lineTo(cx + w / 2, b0); c.closePath(); c.fill();
-          c.fillStyle = '#b39a76'; c.beginPath(); c.moveTo(cx - w / 2, b0); c.lineTo(cx, b0 - h); c.lineTo(cx - w * 0.08, b0); c.closePath(); c.fill();
-          c.fillStyle = '#6a5640'; c.beginPath(); c.moveTo(cx + w * 0.06, b0); c.lineTo(cx, b0 - h); c.lineTo(cx + w / 2, b0); c.closePath(); c.fill();
-          c.fillStyle = '#d6c09a'; c.beginPath(); c.moveTo(cx - 2.5, b0 - h + 3.5); c.lineTo(cx, b0 - h); c.lineTo(cx + 1, b0 - h + 1.5); c.closePath(); c.fill();
-          c.fillStyle = 'rgba(70,52,36,.35)'; c.fillRect(cx - w / 2, b0 - f, w, f); }); }
+        [[0.3, 0], [0.75, 1]].forEach(([dx, s]) => { if (s && br(k + 5) < 0.45) return; const w = 18 + br(k + s * 3) * 9, h = 8 + br(k + 7 + s) * 6, cx = x * T + T * dx + (br(k + 11 + s) - 0.5) * 6 + (s ? 0 : 4), b0 = y * T + 13 + s * 3;
+          massif(cx, b0, w, h, k * 3 + s * 17); }); }
       // les ponts : l'eau dessous, un tablier de planches en travers du fleuve, ses deux garde-corps
       for (let y = 0; y < H0; y++) for (let x = 0; x < W0; x++) { if (at(x, y) !== 'wood') continue; const X = x * T, Y = y * T, mouille = n => n === 'water' || n === 'wood', long = mouille(at(x - 1, y)) || mouille(at(x + 1, y)), v = (x * 7 + y * 13 + ((x * y) % 5)) % 4;
         c.drawImage(G.tile('water', v, 0), X, Y); c.fillStyle = '#8b6a45'; if (long) { c.fillRect(X + 4, Y, 8, T); c.fillStyle = '#5d4329'; for (let k = 1; k < 8; k++) c.fillRect(X + 4, Y + k * 2, 8, f); c.fillRect(X + 3, Y, f * 2, T); c.fillRect(X + 12, Y, f * 2, T); }
@@ -14976,9 +14989,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
 /* ==== src/core/monde.js ==== */
 /* ISNAD 2.29 (D220) — la carte du monde : sortir d'une ville par sa porte, prendre la route, entrer dans une autre ville, revenir.
    Demande du décideur, 23 novembre : « un "meta-monde" […] ou on accéderait aux autres villes via le désert avec une carte
-   réaliste qui rend accès aux villes prévue dans la saga et les autres saga même s'il ne s'y passe rien […] Comme dans final
-   fantasy ou chrono trigger une carte global ou les points d'intérêt sont accessibles en sortant de chaque ville par sa
-   porte. » Ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ; La Mecque, une visite sobre ;
+   réaliste qui rend accès aux villes prévue dans la saga et les autres saga même s'il ne s'y passe rien […] une carte global
+   ou les points d'intérêt sont accessibles en sortant de chaque ville par sa porte. » Ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ; La Mecque, une visite sobre ;
    une ville n'apparaît qu'à partir de l'époque où elle existe. Les données sont dans defs.js (D.MONDE), la carte dans maps.js
    (monde), le dessin des villes dans gfx.js.
    - Les portes : dans un chapitre d'un récit, sur la carte que D.MONDE.depuis lui donne, à partir de son objectif — la ville
