@@ -2286,8 +2286,9 @@ pages privées de son compte.
   attaques : « Poser le fardeau », « Le sable qui retient » ; à mi-combat : « Il était bien, assis. Pourquoi le faire lever ? » ;
   sa raillerie : « Ici, au moins, on ne marche plus. » ; sa description : « Une chimère du désespoir, sur les pistes du désert.
   Elle ne frappe pas celui qu’elle tient : elle le persuade de s’asseoir, puis de ne plus se relever. Elle cède à la patience et
-  à la miséricorde. » En arabe, **الاستكانة** (« se laisser abattre » ; le mot, de mémoire, que le Coran nie de ceux qui ne cédèrent pas —
-  3:146, référence non vérifiée : à valider), en anglais *Giving Up*, en japonais あきらめ. **Le pourparler** (« Un homme assis dans le sable » ; « Il ne marche
+  à la miséricorde. » En arabe, **الاستكانة** (« se laisser abattre » ; le Coran nie ce verbe de ceux qui ne cédèrent pas —
+  « وَمَا ٱسْتَكَانُوا۟ », 3:146, vérifié le 23 novembre sur le texte uthmânî ; *Saheeh International* : « nor did they weaken
+  or submit » ; le jeu ne cite pas le verset, il ne prend que le mot : à valider), en anglais *Giving Up*, en japonais あきらめ. **Le pourparler** (« Un homme assis dans le sable » ; « Il ne marche
   plus. Sa bête est partie avec son eau et tout ce qu’il portait ; il s’est assis à l’écart de la piste, et il ne lève pas les
   yeux. ») : I. « Passez votre chemin. Il n’y a plus rien à faire pour moi. » — « S’asseoir près de lui, sans rien dire
   d’abord » (Miséricorde, +2 : « Tu t’assieds… Personne ne s’était arrêté. ») · « Lui tendre une outre, et attendre qu’il ait
