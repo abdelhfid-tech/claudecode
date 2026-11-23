@@ -1124,7 +1124,7 @@ dessin de l'agent, à valider. Les rencontres sur la route (les chimères, les b
   Idris tourné vers la ville, les personnages à leur place ; l'objectif et les drapeaux n'ont pas bougé.
 - **Les visites** (`Mo.entrer`, une autre ville de l'époque) : sa carte (`visite_…`, D.MAPS, `visite: true`) — Médine et Koufa
   sous la graine de leur récit, mais sans personnage ni objectif ; La Mecque, la variante `mecque` de la ville d'Arabie (ni
-  mosquée, ni Haram, ni Kaaba, rien qui les évoque : des maisons, un petit marché, une cour fermée d'un mur de terre où la natte
+  mosquée, ni Haram, ni Kaaba, rien qui les évoque : des maisons, un petit marché, une cour bordée d'un mur de terre (au nord et à l'est) où la natte
   est posée) ; Tâ'if, la ville d'Arabie ; Bassora, la variante `fleuve` (le fleuve à l'est) ; Fustât, la variante `nil` (le
   fleuve à l'ouest) ; Damas, Homs, Qinnasrîn, Jérusalem, la cité romaine, sans les enseignes de Rûm à sa porte ni à son
   palais (sous le califat) ; al-Hîra, le camp. On y entre par la porte du côté

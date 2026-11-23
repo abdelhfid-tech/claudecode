@@ -1,8 +1,7 @@
 /* ISNAD 2.29 (D220) — la carte du monde : sortir d'une ville par sa porte, prendre la route, entrer dans une autre ville, revenir.
    Demande du décideur, 23 novembre : « un "meta-monde" […] ou on accéderait aux autres villes via le désert avec une carte
-   réaliste qui rend accès aux villes prévue dans la saga et les autres saga même s'il ne s'y passe rien […] Comme dans final
-   fantasy ou chrono trigger une carte global ou les points d'intérêt sont accessibles en sortant de chaque ville par sa
-   porte. » Ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ; La Mecque, une visite sobre ;
+   réaliste qui rend accès aux villes prévue dans la saga et les autres saga même s'il ne s'y passe rien […] une carte global
+   ou les points d'intérêt sont accessibles en sortant de chaque ville par sa porte. » Ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ; La Mecque, une visite sobre ;
    une ville n'apparaît qu'à partir de l'époque où elle existe. Les données sont dans defs.js (D.MONDE), la carte dans maps.js
    (monde), le dessin des villes dans gfx.js.
    - Les portes : dans un chapitre d'un récit, sur la carte que D.MONDE.depuis lui donne, à partir de son objectif — la ville

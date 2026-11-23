@@ -306,8 +306,7 @@
 
   /* 2.29 (D220) — la carte du monde. Demande du décideur, 23 novembre : « un "meta-monde" […] ou on accéderait aux autres villes
      via le désert avec une carte réaliste qui rend accès aux villes prévue dans la saga et les autres saga même s'il ne s'y
-     passe rien […] Comme dans final fantasy ou chrono trigger une carte global ou les points d'intérêt sont accessibles en
-     sortant de chaque ville par sa porte. » Ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ;
+     passe rien […] une carte global ou les points d'intérêt sont accessibles en sortant de chaque ville par sa porte. » Ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ;
      La Mecque, une visite sobre (des rues, un marché ; le Haram et la Kaaba jamais dessinés ; ni combat ni chimère) ; une ville
      n'apparaît qu'à partir de l'époque où elle existe. Tout est ici, en latitude et longitude : la carte (maps.js, monde) le
      projette ; monde.js ouvre les portes. Aucun nombre dans un récit.
