@@ -183,7 +183,8 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
     si(natte && natte.opts.length === 3 && /De passage/.test(natte.q), `${nom} · la natte de La Mecque : prier et se reposer, garder une copie, plus tard — de passage, les œuvres se comptent dans les récits ; aucune descente`, `${nom} · la natte : ${JSON.stringify(natte)}`);
     // ressortir par la porte par où l'on est entré (le nord), puis revenir à Médine
     const porteN = await E(() => { const W = window.ISNAD.world, s = W.spotPx(W.player.y < W.map.h * 8 ? 'porte_nord' : 'porte_sud'); return [s[0], s[1] < W.map.h * 8 ? 3 : W.map.h * 16 - 3, s[1] < W.map.h * 8 ? 'ArrowUp' : 'ArrowDown']; });
-    await E(() => { const W = window.ISNAD.world, s = W.map.spots.priere; window.__t.poser(s[0] * 16 + 8, (s[1] + 3) * 16 + 13, 3); });
+    // (depuis la place, sur la grand-rue : juste sous la natte, un toucher vers la porte tombait sur elle, et Idris allait à la natte)
+    await E(() => { const W = window.ISNAD.world, s = W.map.spots.place || W.map.spots.priere; window.__t.poser(s[0] * 16 + 8, s[1] * 16 + 13, 3); });
     const ressorti = await versBord(porteN[0], porteN[1], porteN[2], 'visite_mecque');
     const e3 = await E(() => { const W = window.ISNAD.world, s = W.map.spots.mecque; return Object.assign(window.__t.etat(), { pres: s ? Math.round(Math.hypot(W.player.x - (s[0] * 16 + 8), W.player.y - (s[1] * 16 + 13))) : -1 }); });
     si(ressorti && e3.carte === 'monde' && e3.pres < 90 && e3.monde && !e3.monde.visite && e3.cible && e3.cible.passage, `${nom} · ressorti de La Mecque par sa porte : sur la route, à ${e3.pres} points de la ville ; la flèche montre toujours Médine`, `${nom} · sortie de La Mecque : ${JSON.stringify({ ressorti, e3 })}`, 'BLOQUÉ');
