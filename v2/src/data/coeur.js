@@ -263,7 +263,71 @@ ISNAD.registerSaga({
           pedagogie: 'Tu lui montres un chemin, et il ne lève pas les yeux. Il faut d’abord quelqu’un près de lui ; les chemins viennent après.',
           bienveillance: 'Tu restes, et il t’en sait gré. Mais rester ne suffit plus : il demande ce qu’il peut faire, et il lui faut un premier pas, un seul.' },
         oui: ['Il ne répond pas. Mais il ne te demande pas de partir.', 'Une chose. Il peut faire une chose. Le reste attendra demain.'] },
-      desc: 'Une idée noire : croire qu’aucune porte ne reste. On lui répond en restant là, puis en montrant un seul pas.' }
+      desc: 'Une idée noire : croire qu’aucune porte ne reste. On lui répond en restant là, puis en montrant un seul pas.' },
+
+    /* ----- 2.30 (D222) : la chimère du voyageur désespéré, sur la carte du monde (monde.js, route.voyageur). Son nom est
+       validé par le décideur (23 novembre : « Ok pour tes propositions ») ; le reste est à valider. Commune
+       à toutes les sagas, rattachée au Désespoir (racine) et faible comme lui devant la Patience et la Miséricorde ; le
+       moteur calcule ses forces. Elle tient un voyageur de fiction, jamais un Compagnon : on la combat, jamais lui
+       (exigence 6). Une image : aucun visage, aucun symbole. ----- */
+    abandon: { racine: 'noir_desespoir', name: 'L’Abandon', art: 'wave', hue: 36, scale: 2, lvl: 0, tier: 'elite', weak: ['sabr', 'rahma'], veils: 2,
+      skills: [
+        { w: 3, name: 'Poser le fardeau', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'spd', v: -1, chance: 0.35 }], anim: 'dark' },
+        { w: 2, name: 'Le sable qui retient', target: 'foes', el: 'ilm', pow: 0.6, fx: [{ st: 'atk', v: -1, chance: 0.25 }], anim: 'wave' }
+      ],
+      phases: [{ at: 0.5, say: 'Il était bien, assis. Pourquoi le faire lever ?', fx: [{ st: 'atk', v: 1 }] }],
+      taunts: ['Ici, au moins, on ne marche plus.'],
+      desc: 'Une chimère du désespoir, sur les pistes du désert. Elle ne frappe pas celui qu’elle tient : elle le persuade de s’asseoir, puis de ne plus se relever. Elle cède à la patience et à la miséricorde.' }
+  },
+
+  /* ----- 2.30 (D222) : les rencontres de la route, sur la carte du monde (monde.js ; trade.js pour les brigands). Des textes de
+     fiction, proposés par l'agent, à valider : ni verset, ni parole attestée, ni formule, ni promesse d'un pouvoir (exigences
+     7, 13 et 15). Ce sont les Compagnons du récit qui répondent ; aucun texte ne dit ni ne laisse entendre qu'un Compagnon
+     désespère (exigences 15, 16 et 22). Les gens rencontrés sont de fiction, sans nom, sans tribu ni peuple (exigences 6 et
+     10). La carte du monde vient avant l'étape III de la découverte de l'Agrégor : aucun ne le nomme. ----- */
+  route: {
+    // le voyageur assis dans le sable : le Désespoir parle en lui ; s'il n'est pas apaisé, la chimère qui le tient se lève
+    // (`_voyageur_tenu` : le moteur la fait lever, puis l'on se bat contre elle)
+    voyageur: {
+      chimere: 'abandon',
+      parle: [
+        ['parley', {
+          with: '_voyageur', title: 'Un homme assis dans le sable',
+          intro: 'Il ne marche plus. Sa bête est partie avec son eau et tout ce qu’il portait ; il s’est assis à l’écart de la piste, et il ne lève pas les yeux.',
+          goal: 5,
+          rounds: [
+            { say: 'Passez votre chemin. Il n’y a plus rien à faire pour moi.', opts: [
+              { t: 'S’asseoir près de lui, sans rien dire d’abord', el: 'rahma', v: 2, r: 'Tu t’assieds… Personne ne s’était arrêté.' },
+              { t: 'Lui tendre une outre, et attendre qu’il ait bu', el: 'sabr', v: 1, r: 'Merci. Je ne pensais plus boire avant la nuit.' },
+              { t: 'Lui dire de se lever : la piste n’attend pas', el: 'shajaa', v: -1, r: 'La piste… Elle ne m’a pas attendu, moi.' }
+            ] },
+            { say: 'J’ai perdu la piste, et ma bête avec elle. Tout ce que j’avais était sur son dos.',
+              noir: { name: 'Le Désespoir', group: ['noir_desespoir'], intro: 'Il ne cherche plus de porte : il attend que le sable décide pour lui.', after: 'Une chose, dis-tu… Laquelle ?' },
+              opts: [
+                { t: 'Lui montrer où passe la piste : à une demi-journée d’ici, des caravanes la suivent', el: 'ilm', v: 2, r: 'Une demi-journée… Je la croyais au bout du monde.' },
+                { t: 'Lui proposer de marcher avec vous jusqu’à la piste', el: 'rahma', v: 2, r: 'Avec vous ? Je vous ralentirai… Mais je ne serai plus seul.' },
+                { t: 'Lui dire que sa bête sera peut-être retrouvée', el: 'adl', v: 0, r: 'Peut-être. On dit cela, d’habitude, quand il n’y a plus rien à dire.' }
+              ] },
+            { say: 'Et si je n’arrive pas ?', opts: [
+              { t: 'Lui dire qu’on ne lui demande pas d’arriver ce soir : seulement de se lever', el: 'sabr', v: 3, r: 'Me lever. Cela, je peux le faire.' },
+              { t: 'Lui dire, sans détour, que la route est longue, mais que d’autres la font chaque jour', el: 'sidq', v: 1, r: 'D’autres… Oui. Il en passe, des caravanes.' },
+              { t: 'Lui promettre qu’il arrivera', el: 'shajaa', v: -1, r: 'Tu n’en sais rien. Ne me promets pas ce que tu ne sais pas.' }
+            ] }
+          ],
+          win: [['emote', '_voyageur', null], ['say', '_voyageur', 'Je vais jusqu’à la piste. Après, on verra.'], ['nar', 'Il se relève, secoue le sable de son manteau, et reprend la route.']],
+          lose: [['nar', 'Il détourne les yeux et se tait. Derrière lui, le sable se soulève et prend forme : ce qui le tient ne veut pas le laisser partir.'], ['flag', '_voyageur_tenu']]
+        }]
+      ],
+      // revenu près de lui, la chimère toujours levée
+      encore: [['nar', 'Il n’a pas bougé. Ce qui le tient non plus.']],
+      // la chimère vaincue : il se relève
+      libere: [['emote', '_voyageur', null], ['say', '_voyageur', 'C’est plus léger, tout à coup. Je crois que je peux marcher.'], ['nar', 'Il se relève et reprend la route, vers la piste.']]
+    },
+    // les brigands (trade.js, Tr.raid, `embuscade`) : ce qui se dit avant la parole avec leur chef, et après
+    brigands: {
+      avant: [['nar', 'Au détour d’une dune, des hommes armés barrent la piste. Derrière eux, des bêtes chargées de ballots qui ne sont pas à eux : d’autres voyageurs sont passés par ici avant vous.']],
+      apres: [['nar', 'Les ballots iront à la ville la plus proche, où ceux qui les ont perdus viendront les reprendre. Les pillards suivent jusqu’au juge : ce n’est pas à celui qui passe de dire la peine. La piste, elle, est rouverte.']]
+    }
   },
 
   /* ----- l'organigramme du mal : une lecture, pas une démonologie (exigence 18, proposée). Deux étages : ce qui est

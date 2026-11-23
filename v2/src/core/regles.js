@@ -140,6 +140,59 @@
       if (num(B.duree, 0, 1000) && B.duree > 60) E.push('D.BORNE.duree: une partie dure une minute au plus');
     }
 
+    /* 2.30 (D222) — les rencontres de la route (coeur.js, `route` ; monde.js, trade.js). Le voyageur : un pourparler de trois à
+       cinq manches avec lui (« _voyageur »), dont une seule porte une idée noire, le Désespoir, à qui l'on répond ; s'il n'est
+       pas apaisé, la chimère qui le tient se lève (« _voyageur_tenu ») — une chimère du contenu commun, de racine le Désespoir,
+       faible devant ce qui le défait, ni idée noire, ni mal du cœur, ni idole. Ce qui se dit autour, et avant et après la parole
+       avec les brigands : quelques lignes. Tout est de la fiction : ni verset, ni parole citée, ni nombre, ni nom de démon ;
+       la carte du monde vient avant l'étape III de la découverte de l'Agrégor (2.25) : aucun texte ne le nomme ; et rien ne
+       porte les mots du pari. */
+    function verifierRoute(Rt, propres, E) {
+      const w = 'route', VOY = '_voyageur', txt = (v, ou) => { if (typeof v !== 'string' || !v.trim()) { E.push(`${ou}: texte manquant`); return; }
+        if (/agr[ée]gor/i.test(v)) E.push(`${ou}: la carte du monde vient avant que l'Agrégor soit nommé (2.25) : aucun texte des rencontres ne le nomme`);
+        if (/\d/.test(v)) E.push(`${ou}: aucun nombre dans un texte des rencontres (D.MONDE.rencontres)`);
+        if (/[«»]|Coran|\d+:\d+/.test(v)) E.push(`${ou}: ni verset ni parole citée (un texte de fiction)`);
+        if (NOM_INTERDIT.test(v)) E.push(`${ou}: ni Iblîs, ni démon, ni djinn`); pari(v, ou, E); };
+      // quelques lignes : nar, say (le voyageur, ou un nom en toutes lettres), emote (le voyageur), et le drapeau qui fait lever la chimère
+      const lignes = (ops, ou, permis) => { if (!Array.isArray(ops) || !ops.length) { E.push(`${ou}: des lignes (un tableau d'opérations)`); return; }
+        ops.forEach((o, i) => { const wo = `${ou}[${i}]`; if (!Array.isArray(o) || !permis.includes(o[0])) { E.push(`${wo}: seules ${permis.join('|')} sont permises ici`); return; }
+          if (o[0] === 'nar') txt(o[1], wo); else if (o[0] === 'say') { if (typeof o[1] !== 'string' || (o[1] !== VOY && /^[a-z0-9_]+$/.test(o[1]))) E.push(`${wo}: say(« ${VOY} » ou un nom, texte)`); else if (o[1] !== VOY) txt(o[1], wo); txt(o[2], wo); }
+          else if (o[0] === 'emote') { if (o[1] !== VOY || !(o[2] === null || D.POSES.includes(o[2]))) E.push(`${wo}: emote(« ${VOY} », une pose de D.POSES ou null)`); }
+          else if (o[0] === 'flag') { if (o[1] !== '_voyageur_tenu' || o.length > 2) E.push(`${wo}: seul le drapeau « _voyageur_tenu » (la chimère se lève)`); } }); };
+      if (!Rt || typeof Rt !== 'object') { E.push(`${w}: manquant (les rencontres de la route, D222)`); return; }
+      Object.keys(Rt).forEach(k => { if (!['voyageur', 'brigands'].includes(k)) E.push(`${w}: « ${k} » inconnu (voyageur, brigands)`); });
+      const V = Rt.voyageur || {}, B = Rt.brigands || {}, ch = propres[V.chimere], dz = propres.noir_desespoir || {};
+      Object.keys(V).forEach(k => { if (!['chimere', 'parle', 'encore', 'libere'].includes(k)) E.push(`${w}.voyageur: « ${k} » inconnu (chimere, parle, encore, libere)`); });
+      // la chimère qui tient le voyageur
+      if (!ch) E.push(`${w}.voyageur.chimere: « ${V.chimere} » n'est pas une chimère du contenu commun`);
+      else { if (ch.racine !== 'noir_desespoir') E.push(`${w}.voyageur.chimere: sa racine est le Désespoir (« noir_desespoir »)`);
+        if (ch.idee || D.NOIRS.includes(V.chimere) || ch.vice || ch.tier === 'boss') E.push(`${w}.voyageur.chimere: une chimère, ni idée noire, ni mal du cœur, ni idole`);
+        if ((dz.weak || []).some(x => !(ch.weak || []).includes(x))) E.push(`${w}.voyageur.chimere: faible devant ce qui défait le Désespoir (${(dz.weak || []).join(', ')})`); }
+      // le pourparler
+      const P = Array.isArray(V.parle) && V.parle.length === 1 && Array.isArray(V.parle[0]) && V.parle[0][0] === 'parley' ? V.parle[0][1] || {} : null, wp = `${w}.voyageur.parle`;
+      if (!P) E.push(`${wp}: un seul pourparler (['parley', { … }])`);
+      else {
+        if (P.with !== VOY) E.push(`${wp}: le pourparler se tient avec le voyageur (« ${VOY} »)`); txt(P.title, `${wp}.title`); txt(P.intro, `${wp}.intro`);
+        if (!Array.isArray(P.rounds) || P.rounds.length < 3 || P.rounds.length > 5) E.push(`${wp}: de 3 à 5 manches`);
+        else { let max = 0, min = 0; const noirs = P.rounds.filter(r => r && r.noir);
+          if (noirs.length !== 1 || JSON.stringify((noirs[0].noir || {}).group) !== JSON.stringify(['noir_desespoir'])) E.push(`${wp}: une manche, une seule, porte l'idée noire du Désespoir (noir.group: ['noir_desespoir'])`);
+          P.rounds.forEach((r, ri) => { const wr = `${wp}.rounds[${ri}]`; txt(r.say, wr + '.say'); let m = -9, mn = 9;
+            if (r.noir) { txt(r.noir.name, wr + '.noir.name'); txt(r.noir.intro, wr + '.noir.intro'); if (r.noir.after !== undefined) txt(r.noir.after, wr + '.noir.after'); if (r.noir.v !== undefined) E.push(`${wr}.noir: pas de « v » (une idée noire répondue vaut un point de confiance)`); }
+            if (!Array.isArray(r.opts) || r.opts.length < 2 || r.opts.length > 4) { E.push(`${wr}: 2 à 4 réponses`); return; }
+            r.opts.forEach((x, xi) => { const wx = `${wr}.opts[${xi}]`; txt(x.t, wx + '.t'); txt(x.r, wx + '.r');
+              if (!(typeof x.v === 'number' && x.v >= -2 && x.v <= 3)) E.push(`${wx}: v entre -2 et 3`); if (!D.ELEMENTS[x.el] || x.el === 'fer') E.push(`${wx}: el doit être une Lumière`);
+              if (x.need !== undefined || x.ok !== undefined) E.push(`${wx}: ni « need » ni « ok » sur la route`); m = Math.max(m, x.v); mn = Math.min(mn, x.v); });
+            max += m + (r.noir ? 1 : 0); min += mn + (r.noir ? 1 : 0); });
+          if (typeof P.goal !== 'number' || P.goal > max || P.goal <= min) E.push(`${wp}: goal ${P.goal} entre ${min + 1} et ${max} (atteignable, jamais acquis d'avance)`); }
+        lignes(P.win, `${wp}.win`, ['nar', 'say', 'emote']); lignes(P.lose, `${wp}.lose`, ['nar', 'say', 'emote', 'flag']);
+        if (!(P.lose || []).some(o => Array.isArray(o) && o[0] === 'flag' && o[1] === '_voyageur_tenu')) E.push(`${wp}.lose: le drapeau « _voyageur_tenu » (la chimère qui le tient se lève)`);
+        if ((P.win || []).some(o => Array.isArray(o) && o[0] === 'flag')) E.push(`${wp}.win: apaisé, il se relève : aucun drapeau`);
+        Object.keys(P).forEach(k => { if (!['with', 'title', 'intro', 'goal', 'rounds', 'win', 'lose'].includes(k)) E.push(`${wp}: « ${k} » inconnu`); }); }
+      lignes(V.encore, `${w}.voyageur.encore`, ['nar', 'say', 'emote']); lignes(V.libere, `${w}.voyageur.libere`, ['nar', 'say', 'emote']);
+      Object.keys(B).forEach(k => { if (!['avant', 'apres'].includes(k)) E.push(`${w}.brigands: « ${k} » inconnu (avant, apres)`); });
+      lignes(B.avant, `${w}.brigands.avant`, ['nar', 'say']); lignes(B.apres, `${w}.brigands.apres`, ['nar', 'say']);
+    }
+
     function checkSaga(s, E, W) {
       const req = (o, k, t, where) => {
         if (o[k] === undefined || o[k] === null) { E.push(`${where}: champ « ${k} » manquant`); return false; }
@@ -170,6 +223,7 @@
         Object.keys(s.valeurs || {}).concat(Object.keys(s.attributs || {})).forEach(k => { if (!D.VICES[k]) E.push(`valeurs/attributs: « ${k} » n'est pas un mal du cœur (${vices.join('|')})`); });
         if (s.portes) ['priere', 'dhikr', 'sommeil'].forEach(k => { const P = s.portes[k]; if (!P) E.push(`portes.${k}: manque`); else { txt(P, 'titre', `portes.${k}`); txt(P, 'invite', `portes.${k}`); } });
         if (s.secours) ['titre', 'bandeau', 'verset', 'ref', 'mot'].forEach(k => txt(s.secours, k, 'secours'));
+        if (s.route !== undefined) verifierRoute(s.route, s.enemies || {}, E);   // 2.30 (D222)
       }
       const heroes = s.heroes || {}, propres = s.enemies || {}, enemies = Object.assign({}, commun ? {} : ennemisCommuns(), propres);
       Object.keys(propres).forEach(k => { if (!commun && ennemisCommuns()[k]) E.push(`ennemi ${k}: ce nom est déjà celui d'un égrégore commun (src/data/coeur.js)`); });
@@ -630,6 +684,34 @@
         else if (!L || L.variante !== 'mecque' || L.spots.some(s => /mosquee|ecole/.test(s))) E.push(`${w}.villes.mecque : La Mecque se visite sans mosquée ni Haram ni Kaaba (ville, variante « mecque », aucun lieu de mosquée)`); }
       (M.routes || []).forEach((R, i) => { if (!Array.isArray(R) || R.length < 2 || R.some(e => !(typeof e === 'string' ? V[e] : pt(e)))) E.push(`${w}.routes[${i}] : des étapes, une ville connue ou [lat, lon]`); });
       ['terres'].forEach(k => (M[k] || []).forEach((L, i) => { if (!Array.isArray(L) || L.length < 3 || L.some(q => !pt(q))) E.push(`${w}.${k}[${i}] : un polygone de [lat, lon]`); }));
+      /* 2.30 (D222) — les rencontres de la route : leurs champs déclarés et rien d'autre, chacun un entier (des cases, un nombre)
+         ou une part de 0 à 1 (une chance, une allure, un poids) ; aucune rencontre d'aucune sorte à moins de trois cases de La
+         Mecque (« Ok pour tes propositions », le décideur, 23 novembre), ni à moins de deux d'une ville ; aucune idée noire ne
+         rôde sur la carte du monde (exigences 16, 18 et 22) : ce qui y rôde, ce sont les petites chimères des récits
+         (D.rodeDehors), et cette règle écarte les cinq idées noires du contenu commun et ce qui en porte la racine. */
+      { const Rg = M.rencontres, wr = `${w}.rencontres`, CH = { villes: 1, mecque: 1, route: 1, chimeres: ['nombre', 'rayon', 'loin', 'ecart', 'vue', 'pas', 'pres', 'mecque'], brigands: ['chance', 'apres'], voyageur: ['chance', 'pres', 'eau', 'apres', 'loin', 'devant'] };
+        const PART = ['chimeres.pas', 'chimeres.pres', 'brigands.chance', 'voyageur.chance', 'voyageur.pres'], nb = (v, k) => { const ok = PART.includes(k) ? typeof v === 'number' && isFinite(v) && v >= 0 && v <= 1 : Number.isInteger(v) && v >= 0 && v <= 96; if (!ok) E.push(`${wr}.${k} : ${PART.includes(k) ? 'une part de 0 à 1 (une chance, une allure, un poids)' : 'un entier de 0 à 96 (des cases, un nombre)'}`); };
+        if (!Rg || typeof Rg !== 'object') E.push(`${wr} : manquant (les rencontres de la route, D222)`);
+        else {
+          Object.keys(Rg).forEach(k => { if (!CH[k]) E.push(`${wr} : champ « ${k} » inconnu (${Object.keys(CH).join(', ')})`); });
+          Object.keys(CH).forEach(k => { if (CH[k] === 1) { nb(Rg[k], k); return; } const o = Rg[k]; if (!o || typeof o !== 'object' || Array.isArray(o)) { E.push(`${wr}.${k} : manquant`); return; }
+            Object.keys(o).forEach(x => { if (!CH[k].includes(x)) E.push(`${wr}.${k} : champ « ${x} » inconnu (${CH[k].join(', ')}) — rien d'autre que ce qui se croise`); });
+            CH[k].forEach(x => nb(o[x], k + '.' + x)); });
+          if (!(Number.isInteger(Rg.mecque) && Rg.mecque >= 3)) E.push(`${wr}.mecque : au moins trois cases — aucune rencontre d'aucune sorte près de La Mecque, un territoire sacré`);
+          if (!(Number.isInteger(Rg.villes) && Rg.villes >= 2)) E.push(`${wr}.villes : au moins deux cases — rien près d'une ville`);
+          if (Rg.voyageur && !(Rg.voyageur.loin >= Rg.villes)) E.push(`${wr}.voyageur.loin : le voyageur s'assied loin des villes (au moins villes)`);
+          if (Rg.chimeres && !(Rg.chimeres.loin >= Rg.mecque && Rg.chimeres.rayon > Rg.chimeres.loin)) E.push(`${wr}.chimeres : loin ≥ mecque, rayon > loin`);
+          if (Rg.chimeres && !(Rg.chimeres.mecque >= Rg.mecque)) E.push(`${wr}.chimeres.mecque : une chimère reste au moins aussi loin de La Mecque que toute rencontre`);
+          if (!V.mecque) E.push(`${wr} : La Mecque manque à D.MONDE.villes — la zone sans rencontre ne se tracerait pas`);
+        }
+        const communs = (sagas.find(s => s.commun) || {}).enemies || {};
+        if (typeof D.rodeDehors !== 'function') E.push('D.rodeDehors : manquant (ce qui peut rôder sur la carte du monde)');
+        else {
+          D.NOIRS.forEach(n => { if (D.rodeDehors(n, communs[n] || { tier: 'minion', idee: true })) E.push(`D.rodeDehors : l'idée noire « ${n} » rôderait sur la carte du monde`); });
+          Object.keys(communs).forEach(k => { const e = communs[k]; if ((e.idee || [].concat(e.racine || []).some(r => D.NOIRS.includes(r))) && D.rodeDehors(k, e)) E.push(`D.rodeDehors : « ${k} » (une idée noire, ou sa racine) rôderait sur la carte du monde`); });
+          const ch = {}; Object.keys(M.depuis || {}).forEach(id => { ch[id] = 1; });
+          sagas.filter(s => !s.commun && !s.frame && (s.chapters || []).some(c => ch[c.id])).forEach(s => Object.keys(s.enemies || {}).forEach(k => { const e = s.enemies[k]; if (D.rodeDehors(k, e) && (D.NOIRS.includes(k) || e.idee)) E.push(`${s.id}: « ${k} » — une idée noire ne rôde pas sur la carte du monde`); }));
+        } }
       const ch = {}; sagas.forEach(s => (s.chapters || []).forEach(c => { if (c && c.id) ch[c.id] = { s, c }; }));
       const cartes = c => { const l = new Set([c.map]); (function va(v) { if (Array.isArray(v)) { if (v[0] === 'map' && typeof v[1] === 'string') l.add(v[1]); v.forEach(va); } else if (v && typeof v === 'object') Object.keys(v).forEach(k => va(v[k])); })(c); return l; };
       Object.keys(M.depuis || {}).forEach(id => { const d = M.depuis[id], x = ch[id], wd = `${w}.depuis.${id}`;
@@ -716,21 +798,24 @@
       divin: new RegExp(`${SANS_AR}(?:و|ف|ب)?(?:الله|لله|إله|الإله|الرب|الرحمن|الرحيم)${APRES_AR}`),
       sacre: /الله|إله|مقدّ?س|مبار[كك]|برك[ةه]|معجز|كرام[ةه]|تميم|حرز|تعويذ|رقي[ةه]|ذهب|حرير|قرآن|مصحف|سورة|زمزم|ملا[ئك]|نبيّ?|رسول/,
       verset: ['﴿', '﴾'], say: 330, nar: 360,
-      pari: /رهان|مراهن|[تأنيو]راهن|راهن\s*على|قمار|يقامر|مقامر|الميسر|يانصيب|كازينو/   // (« الراهن », le présent, et « ميسّر », facile, passent)
+      pari: /رهان|مراهن|[تأنيو]راهن|راهن\s*على|قمار|يقامر|مقامر|الميسر|يانصيب|كازينو/,   // (« الراهن », le présent, et « ميسّر », facile, passent)
+      agregor: /المجمع|مجمع الخيالات/   // (lu sans ses voyelles : « المُجمِّع », ar.md, § 3.6)
     },
     en: {
       demon: /\b(iblis|satan|shaitans?|shaytans?|shayatin|devils?|demons?|djinns?|jinns?|jinni|genies?|ifrits?|ghouls?|fiends?)\b/i,
       divin: /\b(allah|god|gods|lord)\b/i,
       sacre: /\b(allah|god|lord|prophet|blessed|sacred|holy|saint(ly)?|relics?|talismans?|amulets?|miracles?|miraculous|gold|golden|gilded|silk|silken|zamzam|qur'?an|koran|mushaf|verses?|surah?|baraka|ruqya|angels?)\b/i,
       verset: ['“', '”'], say: 330, nar: 360,
-      pari: /\b(bet|bets|betting|wager|wagers|wagering|gamble|gambles|gambling|stake|stakes|odds|lottery|lotteries|casino|jackpot)\b/i
+      pari: /\b(bet|bets|betting|wager|wagers|wagering|gamble|gambles|gambling|stake|stakes|odds|lottery|lotteries|casino|jackpot)\b/i,
+      agregor: /\baggregor\b/i
     },
     ja: {
       demon: /イブリース|サタン|シャイターン|悪魔|魔王|魔神|悪霊|鬼|妖怪|ジン(?![ァ-ヴー])|ジャーン|イフリート/,
       divin: /アッラー|(?<!精)神(?!経)|主よ|創造主/,
       sacre: /アッラー|(?<!精)神(?!経)|預言者|祝福|聖|遺物|護符|お守り|魔除け|奇跡|黄金|金色|金箔|金糸|金銀|絹|ザムザム|クルアーン|コーラン|啓典|章句|天使/,
       verset: ['「', '」'], say: 110, nar: 125,
-      pari: /賭|ギャンブル|宝くじ|カジノ|博打/
+      pari: /賭|ギャンブル|宝くじ|カジノ|博打/,
+      agregor: /アグレゴール/
     }
   };
   const EFFECTIF = /[0-9٠-٩۰-۹０-９]|百|千|万|億|مئة|مائة|ألف|آلاف|\b(hundreds?|thousands?|dozens?)\b/i;
@@ -766,6 +851,8 @@
       if (g === 'verset') { const v = t.trim(); if (!(v.startsWith(R.verset[0]) && v.endsWith(R.verset[1]))) erreurs.push(`${w}: un verset se cite entre ${R.verset[0]} ${R.verset[1]} (exigence 7)`); }
       if (g === 'ref' && NUMEROS(t).indexOf(NUMEROS(c.fr).split(' ').slice(0, 2).join(' ')) !== 0 && NUMEROS(t) !== NUMEROS(c.fr)) erreurs.push(`${w}: la référence ne porte pas les numéros de la française (${NUMEROS(c.fr)})`);
       if (g === 'option' && R.pari.test(t)) erreurs.push(`${w}: « ${t.slice(0, 60)} » — aucun pari ni jeu de hasard ne se joue : rien de ce qu'on offre au joueur ne propose de parier (le pari n'est qu'une chimère)`);
+      // 2.30 (D222) : les rencontres de la route (coeur.js, route ; les phrases de monde.js) — ni l'Agrégor, ni le pari
+      if (/^route\.|^monde\.js$/.test(c.ou)) { const nu = t.replace(/[\u064B-\u0652\u0670]/g, ''); if (R.agregor && R.agregor.test(nu)) erreurs.push(`${w}: la carte du monde vient avant que l'Agrégor soit nommé (2.25) : aucun texte des rencontres ne le nomme`); if (g !== 'option' && R.pari.test(nu)) erreurs.push(`${w}: « ${t.slice(0, 60)} » — aucun texte des rencontres ne porte les mots du pari`); }
       if ((g === 'say' || g === 'nar') && t.length > R[g]) avis.push(`${w}: ${g === 'say' ? 'réplique' : 'narration'} longue (${t.length} signes, ${R[g]} au plus)`); });
     return { erreurs, avis };
   }

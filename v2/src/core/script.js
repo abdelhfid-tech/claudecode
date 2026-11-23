@@ -395,13 +395,16 @@
       S.marque(o.v > 0 ? I.t('<b>Confiance +{v}</b>', { v: o.v }) : o.v < 0 ? I.t('<b>Confiance {v}</b> — il se ferme', { v: o.v }) : I.t('Il ne bouge pas.')); I.audio.sfx(o.v > 0 ? 'light' : o.v < 0 ? 'dark' : 'blip');
       await showLine('say', sp, o.r, { src: [o, 'r'] });
     }
-    S.hideDialog(); sv.parley.total++;
+    // 2.30 (D222) : sur la route (monde.js), une parole ne compte pas parmi les pourparlers du récit — ni dans leur compte, ni
+    // pour le compagnon de lumière qui vient après le cinquième (oeuvres.js, O.rally), ni pour l'idole du chapitre (mal.js)
+    const dehors = !!(I.monde && I.monde.dehors());
+    S.hideDialog(); if (!dehors) sv.parley.total++;
     const ok = conf >= P.goal;
     I.mal.note('p', P.title, ok ? -1 : 1); // la parole qui porte déracine l'idée ; la parole manquée la laisse s'enfoncer
     if (ok) {
-      sv.parley.won++; I.audio.sfx('roll'); G.flash('#ffe08a');
+      if (!dehors) sv.parley.won++; I.audio.sfx('roll'); G.flash('#ffe08a');
       const xp = P.xp || Math.round(22 + 12 * W.hero(W.party[0]).lvl), lines = I.battle.grantXP(xp);
-      await I.oeuvres.rally();
+      if (!dehors) await I.oeuvres.rally();
       await card('victory', `<p class="small">${I.t('Pourparler · {titre}', { titre: I.esc(P.title) })}</p><h1>${I.t('La parole a suffi')}</h1><ul><li>${I.t('Confiance : <b>{conf} / {but}</b>', { conf, but: P.goal })}</li><li>${I.t('Expérience : <b>+{xp}</b>', { xp })}</li>${lines.join('')}</ul><div class="hint">▼</div>`);
       await S.run(P.win);
     } else {

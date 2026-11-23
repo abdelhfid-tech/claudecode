@@ -6,7 +6,8 @@
 
   /* Égrégores des routes, communs à toutes les sagas (niveau calé sur celui du groupe). */
   I.common = { enemies: {
-    razzia: { name: I.T('La Razzia'), art: 'blade', hue: 16, scale: 2, lvl: 0, tier: 'elite', weak: ['adl', 'sabr'], veils: 3,
+    // 2.30 (D222) : sa racine, l'Avidité (l'organigramme du mal : prendre parce qu'on le peut)
+    razzia: { racine: 'avidite', name: I.T('La Razzia'), art: 'blade', hue: 16, scale: 2, lvl: 0, tier: 'elite', weak: ['adl', 'sabr'], veils: 3,
       skills: [{ w: 3, name: I.T('Coup de main'), target: 'foe', el: 'fer', pow: 1.3, anim: 'slash' }, { w: 2, name: I.T('Prendre parce qu’on le peut'), target: 'foes', el: 'fer', pow: 0.75, fx: [{ st: 'def', v: -1, chance: 0.4 }], anim: 'dark' }],
       phases: [{ at: 0.5, say: I.T('La route est à qui la tient. Qui viendra me la reprendre ?'), fx: [{ st: 'atk', v: 1 }] }],
       desc: I.T('La vieille coutume du pillage, érigée en honneur : prendre parce qu’on le peut. Elle se nourrit des routes où nul ne vient. La justice et la patience la désarment.') },
@@ -139,18 +140,24 @@
     s._raided = 1; await Tr.raid({ loss: car.cost, name: car.name });
   };
 
-  /* ================= une route pillée : lever des renforts, parler d'abord, rendre justice ================= */
+  /* ================= une route pillée : lever des renforts, parler d'abord, rendre justice =================
+     2.30 (D222) — `embuscade` : sur la carte du monde, des brigands barrent la piste (monde.js). Le même récit, la parole avec
+     le chef puis La Razzia, sans ce qui suppose une caravane : il n'y en a pas. Ni les hommes qui rentrent à pied, ni le
+     caravanier, ni les renforts (personne n'est appelé sur une piste loin de tout : la parole se gagne sans eux, au plus haut),
+     ni la part de chacun (ceux qui ont été dépouillés ne sont pas là), ni mise à rendre. Ce qui se dit avant et après la parole
+     est de la fiction, dans coeur.js (route.brigands). */
   Tr.raid = async function (o) {
-    o = o || {}; const v = W.saga.veillees, gd = Tr.guard(), R = gd.renforts, mine = o.loss > 0;
+    o = o || {}; const v = W.saga.veillees, emb = !!o.embuscade, gd = Tr.guard(), R = emb ? 0 : gd.renforts, mine = o.loss > 0, RB = emb ? (((I.sagas.coeur || {}).route || {}).brigands || {}) : null;
     S.flags._r1 = R >= 1; S.flags._r2 = R >= 2;
     const who1 = gd.camels ? I.t('Les méharistes de tes enclos') : I.t('Ceux que tes pactes ont liés'), who2 = I.t('Les hommes du voisinage, levés à ton appel');
     const ops = [
       ['mus', 'conseil'],
-      ['nar', v ? I.t('Des chameliers rentrent à pied, sans leurs bêtes. La caravane a été prise à deux jours de marche, entre deux puits.') : I.t('Des hommes rentrent à pied, sans leurs bêtes. La caravane a été pillée sur la piste : en ces mois de trouble, des bandes tiennent les routes.')],
-      ['say', I.t('Un caravanier'), I.t('Ils ne nous ont pas tués. Ils ont dit que la route était à eux désormais, et que nul ne viendrait la leur reprendre.')],
+      ...(emb ? (RB.avant || []) : [
+        ['nar', v ? I.t('Des chameliers rentrent à pied, sans leurs bêtes. La caravane a été prise à deux jours de marche, entre deux puits.') : I.t('Des hommes rentrent à pied, sans leurs bêtes. La caravane a été pillée sur la piste : en ces mois de trouble, des bandes tiennent les routes.')],
+        ['say', I.t('Un caravanier'), I.t('Ils ne nous ont pas tués. Ils ont dit que la route était à eux désormais, et que nul ne viendrait la leur reprendre.')]]),
       ['nar', v ? I.t('Mon père disait : « Une cité se juge à ses routes. Là où le marchand voyage sans crainte, le prince peut dormir. »') : I.t("On rapporte cette promesse : un jour, le voyageur irait de San'â' au Hadramawt sans craindre autre chose qu’Allah, et le loup pour ses brebis. Une route sûre est le visage de la justice.")],
       ['lore', 'routes_sures'],
-      ['nar', R >= 2 ? I.t('Tu n’iras pas seul. {premiers} se mettent en selle ; {voisins_min} suivent. On lit le ciel : cap sur {etoile}.', { premiers: who1, voisins_min: who2.toLowerCase(), voisins: who2, etoile: Tr.starText(D.STARS[7]) }) : R === 1 ? I.t('Peu répondent, mais ils répondent : {premiers_min}. On lit le ciel : cap sur {etoile}.', { premiers_min: who1.toLowerCase(), premiers: who1, etoile: Tr.starText(D.STARS[7]) }) : I.t('Tu appelles des renforts. Nul ne vient : tu n’as noué ni pacte ni caravane de garde. Tu iras avec les tiens, sous al-Jady.')],
+      ...(emb ? [] : [['nar', R >= 2 ? I.t('Tu n’iras pas seul. {premiers} se mettent en selle ; {voisins_min} suivent. On lit le ciel : cap sur {etoile}.', { premiers: who1, voisins_min: who2.toLowerCase(), voisins: who2, etoile: Tr.starText(D.STARS[7]) }) : R === 1 ? I.t('Peu répondent, mais ils répondent : {premiers_min}. On lit le ciel : cap sur {etoile}.', { premiers_min: who1.toLowerCase(), premiers: who1, etoile: Tr.starText(D.STARS[7]) }) : I.t('Tu appelles des renforts. Nul ne vient : tu n’as noué ni pacte ni caravane de garde. Tu iras avec les tiens, sous al-Jady.')]]),
       ['parley', {
         with: I.t('Le chef des pillards'), title: I.t('Rendre ce qui fut pris'),
         intro: I.t('Il a faim, il a des hommes à nourrir, et la coutume de ses pères lui dit que prendre est un honneur. Il écoute d’autant mieux que tu n’es pas venu seul.'),
@@ -174,12 +181,13 @@
           ['battle', { group: ['razzia', 'butin', 'peur_route'], bg: 'desert', boss: false, intro: I.t('La Razzia : prendre parce qu’on le peut. Elle ne négocie pas.'), allies: [{ flag: '_r1', name: who1 }, { flag: '_r2', name: who2 }] }],
           ['nar', I.t('L’idole tombée, il ne reste que des hommes fatigués, et des ballots qu’ils n’osent plus regarder. Ils posent les armes.')]]
       }],
+      ...(emb ? (RB.apres || []) : [
       ['nar', I.t('Ce qui fut pris est rassemblé. Tout n’y est pas : une part a déjà été mangée, une autre perdue dans la fuite.')],
       ['ask', I.t('Ce qui reste ne couvre pas toutes les pertes. Qui est servi d’abord ?'), [
         { t: I.t('Les petits porteurs, qui n’avaient que cela.'), r: [['pillar', 'justice', 1], ['flag', '_raid_part', 'peu'], ['nar', I.t('Ils repartent avec leur charge entière. Tu reprends ce qui reste.')]] },
         { t: I.t('Chacun à proportion de ce qu’il a perdu.'), r: [['pillar', 'justice', 1], ['flag', '_raid_part', 'part'], ['nar', I.t('On pèse, on compte, on partage. Nul n’a tout, nul n’est oublié.')]] },
         { t: mine ? I.t('Ma propre mise d’abord : c’est moi qui ai mené la poursuite.') : I.t('Ceux qui ont mené la poursuite d’abord.'), r: [['pillar', 'justice', -1], ['flag', '_raid_part', 'tout'], ['nar', I.t('Tu es servi le premier. Les autres attendent, et se taisent. C’est un silence dont on se souvient.')]] }]],
-      ['nar', I.t('Les pillards sont remis au juge : ce n’est pas à celui qui poursuit de dire la peine. La route, elle, est rouverte.')],
+      ['nar', I.t('Les pillards sont remis au juge : ce n’est pas à celui qui poursuit de dire la peine. La route, elle, est rouverte.')]]),
       ['lore', 'razzia']
     ];
     await S.run(ops);

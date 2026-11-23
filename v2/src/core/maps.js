@@ -66,6 +66,11 @@
       }
     }
     finish(env) {
+      // 2.30 (D222 ; le décideur, 23 novembre : « Ok pour tes propositions ») — une ville de passage (une visite) n'a pas
+      // d'étendards : ceux de la porte du nord venaient du dessin de Médine (et ceux du camp, de celui des récits). Ils ont été
+      // tirés comme avant — le reste de la ville ne change pas d'une case —, ils sont retirés ici, et leur case redevient ce
+      // qu'est son sol. Les cartes des récits gardent les leurs.
+      if (this.sansEtendards) this.objs = this.objs.filter(o => { if (o.type !== 'banner') return true; const x = (o.x - 8) / T, y = (o.y - 15) / T, i = y * this.w + x; if (Number.isInteger(x) && x >= 0 && y >= 0 && x < this.w && y < this.h) this.solid[i] = G.isSolidTile(this.g[i]) ? 1 : 0; return false; });
       const cv = G.toile(this.w * T, this.h * T), c = cv.getContext('2d'); const anim = [];
       for (let y = 0; y < this.h; y++) for (let x = 0; x < this.w; x++) {
         const n = this.g[y * this.w + x], v = (x * 7 + y * 13 + ((x * y) % 5)) % 4;
@@ -124,6 +129,7 @@
      petit marché, et une cour bordée d'un mur de terre au nord et à l'est, où le tapis est posé. Médine et Koufa ne changent pas d'une case. */
   function ville(id, o, L, graine) {
     const v = L && L.variante, fleuve = v === 'fleuve' || v === 'nil', mecque = v === 'mecque', b = new MB(id, 60, 46, 'sand', o, graine); b.mirror = v === 'fleuve';
+    b.sansEtendards = !!(L && L.visite);   // 2.30 : une visite n'a pas les étendards de la porte du nord (MB.finish)
     // chemins
     b.road(29, 0, 29, 45, 'path', 3); b.road(2, 24, 57, 24, 'path', 3); b.road(12, 24, 12, 38, 'path', 2); b.road(46, 24, 46, 38, 'path', 2); b.road(16, 12, 29, 12, 'path', 2);
     // place pavée
@@ -208,6 +214,7 @@
   /* ---------- Camp militaire ---------- */
   function camp(id, o, L, graine) {
     const b = new MB(id, 52, 38, 'sand', o, graine);
+    b.sansEtendards = !!(L && L.visite);   // 2.30 : al-Hîra visitée n'a pas les étendards du camp des récits (MB.finish)
     b.road(0, 19, 51, 19, 'path', 3); b.road(25, 8, 25, 30, 'path', 3);
     b.spot('entree', 4, 20);
     b.obj('bigtent', 26, 9, { color: '#e6dcc4', trim: '#2f6f4f' }); b.spot('tente_chef', 26, 12); b.obj('banner', 22, 10, { color: '#1e1e1e' }); b.obj('banner', 30, 10, { color: '#f1ece2', trim: '#1e1e1e' });
@@ -231,6 +238,7 @@
   /* ---------- Cité romaine (Damas, Jérusalem, Homs) ---------- */
   function romaine(id, o, L, graine) {
     const b = new MB(id, 64, 46, 'path', o, graine);
+    b.sansEtendards = !!(L && L.visite);   // 2.30 : aucune visite n'a d'étendard (MB.finish)
     const RS = { roof: 'rroof', edge: 'rroofedge', wall: 'rwall', door: 'rdoor', windowTile: 'rwall' };
     // remparts sud + porte
     b.fill(0, 42, 64, 3, 'rwall', true); b.fill(0, 41, 64, 1, 'rroofedge', true); b.fill(30, 41, 4, 4, 'stone', false); b.set(29, 43, 'arch', true); b.set(34, 43, 'arch', true);
@@ -927,8 +935,8 @@
     // les routes : un pont sur l'eau, un col dans la montagne ; jamais dans la mer (le contrôle le vérifie : monde.js). Le sol
     // ne change pas ailleurs : la piste se peint par-dessus, d'un trait (une case fait vingt kilomètres)
     b.horsTerre = [];
-    const traces = P.routes.map(R => R.map(etape));
-    traces.forEach(Q => trait(Q, (x, y) => { const n = at(x, y); if (!n) return; if (n === 'sea') { b.horsTerre.push([x, y]); return; } if (n === 'water') b.set(x, y, 'wood', false); else if (n === 'mont') pose(x, y, 'sand'); }));
+    const traces = P.routes.map(R => R.map(etape)), pistes = new Uint8Array(W0 * H0);   // (2.30 : les cases des routes — monde.js y compte ce qui est « loin des routes »)
+    traces.forEach(Q => trait(Q, (x, y) => { const n = at(x, y); if (!n) return; if (n === 'sea') { b.horsTerre.push([x, y]); return; } pistes[y * W0 + x] = 1; if (n === 'water') b.set(x, y, 'wood', false); else if (n === 'mont') pose(x, y, 'sand'); }));
     // chaque ville sur la terre ferme, et ses abords libres de relief (le fleuve, lui, passe à côté : la ville est sur sa rive)
     Object.keys(villes).forEach(v => { const [x, y] = villes[v]; [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([i, j]) => { const n = at(x + i, y + j); if (n && G.isSolidTile(n) && (!(i || j) || n === 'mont')) pose(x + i, y + j, 'sand'); }); });
     // ce qui se peint d'un tenant, par-dessus les cases (sans rien changer à ce qui se marche) : l'écume le long des côtes, les
@@ -974,8 +982,10 @@
     // les villes de l'époque : leur icône, leur lieu nommé, une lumière le soir
     Object.keys(villes).forEach(v => { if (!M.existe(v, o.an)) return; const [x, y] = villes[v], V = P.villes[v];
       b.obj('ville_' + V.icone, x, y); b.spot(v, x, y); b.light(x, y - 1, 46, '#ffc878', 0.1); });
-    const t = o.time || 'day', m = b.finish(envFor(t, { particles: 'sand', rate: t === 'night' ? 2 : 6, bg: 'desert', music: t === 'night' ? 'nuit' : 'desert' }));
-    m.horsTerre = b.horsTerre; m.an = o.an; return m;
+    // 2.30 (D222) : ce qui rôde sur la route va par le sable, les dunes et la steppe (rodeurs.js, env.rues ; monde.js : jamais
+    // près d'une ville ni de La Mecque). Rien ne change à ce qui se marche.
+    const t = o.time || 'day', m = b.finish(envFor(t, { particles: 'sand', rate: t === 'night' ? 2 : 6, bg: 'desert', music: t === 'night' ? 'nuit' : 'desert', rues: { cases: ['sand', 'dune', 'steppe'], desert: true } }));
+    m.horsTerre = b.horsTerre; m.an = o.an; m.pistes = pistes; return m;
   }
 
   M.drawRosette = drawRosette;

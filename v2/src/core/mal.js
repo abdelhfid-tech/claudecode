@@ -51,8 +51,9 @@
   M.ouvre = function () { if (W.saga && W.ch) delete st().ev[clef(W.saga, W.ch)]; };
   // Un événement du chapitre en cours : pourparler ('p'), idée noire ('n'), choix de fidélité ('c'). `d` vaut −1, 0 ou +1.
   // Jamais une œuvre ni une prière (exigences 13 et 15) : seule la parole déracine.
+  // (2.30, D222 : sur la route et dans une ville de passage, rien de ce qui se dit ne touche à l'idole du chapitre — monde.js)
   M.note = function (sorte, nom, d) {
-    if (!W.saga || !W.ch || !M.idole(W.saga, W.ch)) return;
+    if (!W.saga || !W.ch || !M.idole(W.saga, W.ch) || (I.monde && I.monde.dehors())) return;
     const k = clef(W.saga, W.ch), ev = st().ev[k] || (st().ev[k] = {}), avant = M.niveau();
     ev[sorte + I.hash(String(nom).split('|').map(x => I.langue.fr(x)).join('|'))] = d;   // l'empreinte se prend sur le texte français : la même dans toutes les langues
     const apres = M.niveau(); if (apres === avant) return;

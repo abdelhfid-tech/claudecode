@@ -39,6 +39,7 @@
     return sp.pil || (sp.pil = { priere: 0, savoir: 0, justice: 0, lien: 0 });
   };
   W.pillar = function (name, d) {
+    if (I.monde && I.monde.dehors()) return;   // 2.30 (D222) : sur la route, rien ne bâtit ni n'ébranle les piliers du récit (monde.js)
     const P = W.pillars(), def = D.PILLARS[name]; if (!def) return; const was = P[name] || 0;
     P[name] = I.clamp(was + d, 0, 5); W.hud();
     if (P[name] !== was) { S.toast(`${I.t('Pilier · <b>{nom}</b>', { nom: def.name })} ${d > 0 ? '▲' : '▼'} <span class="pl">${def.glyph} ${P[name]}</span>`, 2800); I.audio.sfx(d > 0 ? 'light' : 'dark'); }
@@ -91,6 +92,7 @@
     $('#ui').style.setProperty('--mini', (W.map.mini ? ((27 + W.map.h + 6) / G.PH * 100).toFixed(1) : '14') + '%'); // les annonces s'empilent sous la mini-carte
     if (I.rodeurs) I.rodeurs.arme(); // un labyrinthe de la noosphère arme son chrono
     if (I.trafic) I.trafic.arme(); // 2.23 : les quartiers de la Cité ont leurs voitures (trafic.js)
+    if (I.monde) I.monde.arme(); // 2.30 (D222) : sur la route, le voyageur de la traversée, s'il y en a un (monde.js)
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
   // la définition du dessin a changé : la carte et les planches de marche se refont, rien d'autre ne bouge
@@ -276,7 +278,7 @@
     const o = W.cur();
     $('#hud .chap').textContent = W.ch ? W.ch.title : '';
     const tm = W.map && ({ dawn: I.t('Fajr'), day: I.t('Dhuhr'), dusk: I.t('Maghrib'), night: I.t("'Ishâ") })[W.map.env.time];
-    $('#hud .sub').textContent = (W.ch ? W.ch.sub : '') + (tm ? '  ·  ◠ ' + tm : '');
+    $('#hud .sub').textContent = ((I.monde && I.monde.sousTitre()) || (W.ch ? W.ch.sub : '')) + (tm ? '  ·  ◠ ' + tm : '');   // (2.30 : dans une ville de passage, son nom — monde.js)
     const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="${I.t('Dirhams')}"><i>◎</i>${I.trade.dirhams()}</span>` : '') + `<span title="${I.t('Provision du cœur')}" class="zad"><i>♥</i>${I.oeuvres.zad()}${I.oeuvres.fasting() ? ' <i>☾</i>' + I.t('jeûne') : ''}</span>`;
     const en = I.oeuvres.enigme(); $('#hud .enig').hidden = !en; if (en) $('#hud .enig').textContent = I.t('Énigme : {signe}', { signe: en.signe });
     $('#hud .obj').textContent = ((o && I.cite && I.cite.objectif && I.cite.objectif(o)) || (o && o.text ? o.text : '')) + (o && o.build ? I.build.objectiveText(o.build) : '');   // (2.28 : dans les quartiers, arrivé par la rue, Maître Yûnus n'est pas là — cite.js)
@@ -377,6 +379,7 @@
       const o = W.cur();
       if (o && o.talk === best.id) { if (I.cite && I.cite.parle(best)) return; return W.complete(); } // 2.23 : Maître Yûnus, dans les quartiers, demande où aller (cite.js)
       if (I.circuit && I.circuit.parle(best)) return; // 2.27 : Sâlim et l'organisateur, au circuit des quartiers (circuit.js)
+      if (I.monde && I.monde.parle(best)) return; // 2.30 (D222) : le voyageur assis dans le sable, sur la route (monde.js)
       if (best.talk) { I.audio.sfx('blip'); await S.run(best.talk); }
       return;
     }
@@ -456,6 +459,7 @@
     if (I.trafic) I.trafic.tic(dt); // 2.23 : les voitures des quartiers roulent, et s'arrêtent devant qui se tient sur leur voie
     if (can && I.circuit) I.circuit.tic(dt); // 2.27 : au premier passage au circuit, Sâlim arrive en moto (circuit.js)
     if (can && I.passages) I.passages.tic(dt); // 2.28 (D218) : la rue et l'ascenseur, à pied (passages.js)
+    if (can && I.monde) I.monde.tic(dt); // 2.30 (D222) : les brigands, le voyageur, sur la route (monde.js)
     if (I.activites) I.activites.tic(dt, can); // 2.28 (D217) : assis devant l'écran, un pas le relève (activites.js)
     W.updateCam();
   };

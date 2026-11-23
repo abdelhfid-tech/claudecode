@@ -183,6 +183,7 @@
     Object.keys(SAGA).forEach(c => selon(saga, c, SAGA[c], unique, c));
     (saga.chapters || []).forEach((ch, i) => scripts(ch, unique, 'chapters[' + i + ']', new Set()));
     ['intro', 'outro'].forEach(c => scripts(saga[c], unique, c, new Set()));   // l'ouverture et la clôture d'un récit sont des scripts
+    if (saga.route) scripts(saga.route, unique, 'route', new Set());   // 2.30 (D222) : les rencontres de la route (coeur.js), des scripts aussi
   }
   function casesDefs(D, vu) { Object.keys(DEFS).forEach(c => selon(D, c, DEFS[c], vu, 'D.' + c)); }
 

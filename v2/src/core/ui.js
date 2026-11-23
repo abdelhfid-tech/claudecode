@@ -619,7 +619,7 @@
     const carteHTML = () => {
       const m = W.map, tg = W.target(), sagaCh = W.saga.chapters, pct = (v, n) => (v / n * 100).toFixed(2) + '%';
       const noms = Object.assign({}, D.LIEUX, D.MAPS[m.id].noms || {}); // un lieu peut nommer ses lieux à sa façon
-      const lieux = Object.keys(m.spots).filter(k => noms[k]).map(k => '<span class="lieu" style="left:' + pct(m.spots[k][0] + 0.5, m.w) + ';top:' + pct(m.spots[k][1] + 0.5, m.h) + '">' + I.esc(noms[k]) + '</span>').join('');
+      const lieux = Object.keys(m.spots).filter(k => noms[k]).map(k => '<span class="lieu" data-lieu="' + k + '" style="left:' + pct(m.spots[k][0] + 0.5, m.w) + ';top:' + pct(m.spots[k][1] + 0.5, m.h) + '">' + I.esc(noms[k]) + '</span>').join('');
       return '<h3>' + I.esc(D.MAPS[m.id].label) + '</h3><p class="src">' + I.esc(W.ch.sub) + '</p>' +
         '<div class="carte" style="aspect-ratio:' + m.w + '/' + m.h + ';max-width:min(100%, calc(58vh * ' + (m.w / m.h).toFixed(3) + '))"><canvas></canvas>' + lieux + '<span class="ici" style="left:' + pct(W.player.x, m.w * 16) + ';top:' + pct(W.player.y - 8, m.h * 16) + '">' + I.esc(W.saga.heroes[W.party[0]].name) + '</span></div>' +
         '<p class="legende"><i class="k1"></i> ' + I.t('toi') + ' <i class="k2"></i> ' + (tg ? I.t('objectif') : I.t('objectif (ailleurs, ou sans lieu)')) + (W.prayerPts().length ? ' <i class="k3"></i> ' + I.t('tapis : prière, repos, œuvres') : '') + (m.spots.comptoir ? ' <i class="k4"></i> ' + I.t('comptoir : boutique d’équipement, caravanes') : '') + '</p>' +
@@ -637,6 +637,23 @@
         c.drawImage(pi.img, pi.ox, pi.oy, pi.img.width / h, pi.img.height / h); halo(x, y, 9 * k); I.rodeurs.signe(c, x, y, 7 * k); }
       if (tg) { halo(tg.gx, tg.gy - 6, 11 * k); star(tg.gx, tg.gy - 6, 9.5 * k, '#ffe08a', 4); }
       const p = W.player; halo(p.x, p.y - 8, 9 * k); c.fillStyle = '#ffffff'; c.beginPath(); c.arc(p.x, p.y - 8, 6 * k, 0, 6.3); c.fill(); c.fillStyle = '#ff7a5c'; c.beginPath(); c.arc(p.x, p.y - 8, 3.2 * k, 0, 6.3); c.fill();
+      if (m.id === 'monde') ecarter(pane);
+    };
+    /* 2.30 (D222) — sur la Carte du monde, aucun nom n'en chevauche un autre (en 2.29, Koufa recouvrait al-Hîra, à six
+       kilomètres, et le nom de celui qui mène cachait Damas). Celui qui mène garde sa place ; puis la ville du récit ; puis
+       chaque ville, à sa place si elle est libre, sinon au plus près — au-dessus, au-dessous, à côté, en biais —, jamais hors
+       de la carte. Les noms restent où le jeu les a écrits : seule leur place bouge. */
+    const ecarter = pane => {
+      const box = pane.querySelector('.carte'); if (!box) return; const B = box.getBoundingClientRect(); if (!B.width) return;
+      const pris = [], sur = r => pris.some(q => r.left < q.right + 1 && r.right > q.left - 1 && r.top < q.bottom + 1 && r.bottom > q.top - 1), F = I.script.flags._monde;
+      const ici = box.querySelector('.ici'); if (ici) pris.push(ici.getBoundingClientRect());
+      const L = [...box.querySelectorAll('.lieu')].sort((a, b) => (b.dataset.lieu === (F && F.ville)) - (a.dataset.lieu === (F && F.ville)));
+      L.forEach(e => { e.style.transform = ''; const r0 = e.getBoundingClientRect(), w = r0.width + 2, h = r0.height + 1, essais = [[0, 0]];
+        for (let n = 1; n <= 6; n++) [[0, -n * h], [0, n * h], [n * w / 2, 0], [-n * w / 2, 0], [n * w / 2, -n * h], [-n * w / 2, -n * h], [n * w / 2, n * h], [-n * w / 2, n * h]].forEach(q => essais.push(q));
+        for (const [dx, dy] of essais) { const r = { left: r0.left + dx, right: r0.right + dx, top: r0.top + dy, bottom: r0.bottom + dy };
+          if (r.left < B.left || r.right > B.right || r.top < B.top || r.bottom > B.bottom || sur(r)) continue;
+          if (dx || dy) e.style.transform = `translate(calc(-50% + ${dx.toFixed(1)}px), calc(-50% + ${dy.toFixed(1)}px))`; pris.push(r); return; }
+        pris.push(r0); });   // (nulle part : à sa place — sur la carte du monde, il y a toujours la place)
     };
     const carte = () => {
       const back = mode === 'carte' ? close : root;

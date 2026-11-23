@@ -26,6 +26,7 @@
   const T = 16;
   const cadre = () => !!(W.saga && W.saga.id === 'idris' && W.saga.frame && !W.saga.veillees && W.ch && !W.ch.fin);
   const main = () => I.scene === W && !!W.map && !S.busy && !W.lock && !(I.ui && I.ui.menuOpen) && !I.battle.active && !W.excursion && !I.debug.auto && !I.debug.walk && !P.occupe && !(I.activites && (I.activites.occupe || I.activites.assis));
+  P.main = main;   // (2.30 : les rencontres de la route ont les mêmes gardes — monde.js)
   const refuge = () => !!(I.cite && I.cite.ici());
   // le récit quitté par la rue, qui attend sur la carte de la Cité-Miroir (le plus récent)
   P.recitRue = () => W.rangees().find(c => { const ch = c.saga === 'idris' && I.sagas.idris.chapters[c.ci]; return !!ch && c.map === 'cite' && !ch.fin && !(I.cite && I.cite.refuge(ch)); }) || null;

@@ -22,7 +22,9 @@
    - La progression (lecons.js) : l'outil « route », un simple geste, dit à la première sortie (I.lecons.proposer) ; si la
      progression ne peut pas encore le donner, la porte attend. Revenir à la ville du récit est son réemploi.
    - La partie : rien de plus que les drapeaux du chapitre, gardés avec son point de reprise ; le format reste le 2. Une partie
-     d'avant (sans `lecons`) entend la leçon une fois (I.save.data._route). */
+     d'avant (sans `lecons`) entend la leçon une fois (I.save.data._route).
+   - 2.30 (D222) : le bandeau d'une ville visitée dit son nom (Mo.sousTitre) ; et les rencontres de la route — les chimères du
+     désert, les brigands, le voyageur —, plus bas. Une ville visitée n'a pas d'étendard (maps.js, MB.finish). */
 (function () {
   'use strict';
   const I = window.ISNAD, D = I.D, W = I.world, S = I.script, P = I.passages, T = 16;
@@ -109,7 +111,9 @@
       Mo.journal.push({ quoi: 'sort', ville, visite, bord: nom, ch: W.ch.id, obj: W.objIndex });
       I.audio.sfx('door'); await S.fade('out', 300);
       delete S.flags._monde.visite;
-      W.player.dir = DIR[nom]; W.loadMap(MONDE, Mo.opts(), ville); aCote(ville, nom); W.checkpoint();
+      // 2.30 (D222) : une traversée commence — ses comptes, neufs (plus bas, « les rencontres de la route »)
+      S.flags._monde.tr = neuve(((S.flags._monde.tr || {}).n | 0) + 1);
+      W.player.dir = DIR[nom]; W.loadMap(MONDE, Mo.opts(), ville); aCote(ville, nom); W.hud(); W.checkpoint();
       await S.fade('in', 300);
       if (dire && I.lecons) I.lecons.dit('route');
     } finally { S.depth--; P.occupe = false; }
@@ -126,19 +130,204 @@
         const r = F.retour; delete S.flags._monde;
         W.player.dir = r.dir; W.loadMap(r.map, r.opts || {}, r.pos);
         W.npcs.forEach(n => { const q = r.npcs && r.npcs[n.id]; if (q && n.map === r.map) { n.x = q[0]; n.y = q[1]; n.placed = true; n.placedMap = r.map; } });
-        if (W.degager()) W.resetTrail(); W.updateCam(true); W.checkpoint();
+        if (W.degager()) W.resetTrail(); W.updateCam(true); W.hud(); W.checkpoint();
         Mo.journal.push({ quoi: 'revient', ville, ch: W.ch.id, obj: W.objIndex });
         if (I.lecons) I.lecons.reemploi('route');
         await S.fade('in', 300);
       } else {
         const g = (D.MAPS[V.carte] || {}).gabarit, spot = g === 'romaine' ? 'porte' : g === 'camp' ? 'entree' : nord ? 'porte_nord' : 'porte_sud';
         F.visite = ville; W.player.dir = g === 'romaine' ? 3 : g === 'camp' ? 2 : nord ? 0 : 3;
-        W.loadMap(V.carte, { time: Mo.opts().time }, spot); W.checkpoint();
+        W.loadMap(V.carte, { time: Mo.opts().time }, spot); W.hud(); W.checkpoint();   // (2.30 : le bandeau dit la ville visitée — Mo.sousTitre)
         Mo.journal.push({ quoi: 'visite', ville, ch: W.ch.id, obj: W.objIndex });
         await S.fade('in', 300);
         const c2 = Mo.chapitre(); I.audio.sfx('roll');
         await S.card('title', `<h1>${I.esc(D.LIEUX[ville] || ville)}</h1>${c2 && c2.epoque ? `<p>${I.esc(c2.epoque)}</p>` : ''}<div class="rule"></div>`, 3000);
       }
     } finally { S.depth--; P.occupe = false; S.hideDialog(); }
+  };
+  // le bandeau du chapitre, dans une ville de passage : son époque et le nom de la ville visitée (null ailleurs : le sous-titre
+  // du chapitre) — 2.30 : à La Mecque, on lisait encore « An 11 H · 632 · Médine »
+  Mo.sousTitre = function () { if (!Mo.enVisite()) return null; const c = Mo.chapitre(), v = S.flags._monde.visite; return c && c.epoque ? I.t('{epoque} · {ville}', { epoque: c.epoque, ville: D.LIEUX[v] || v }) : null; };
+
+  /* ================= 2.30 (D222) — les rencontres de la route =================
+     Le décideur, 23 novembre, en demandant la carte du monde : « Ça permettrait aussi de croiser des brigands et des monstres
+     dans le déserts et se faire de l'argent » (pour les brigands : la parole d'abord, puis leur chimère, « La Razzia ») ; puis :
+     « Ok mais je veux qu'un moment il rencontre le désespoir » (« La parole, puis sa chimère » ; « Parfois, à chaque
+     traversée »). Les nombres sont dans D.MONDE.rencontres, les textes dans coeur.js (route) ; rien d'autre ne s'écrit ici.
+     - La traversée va de la sortie par une porte à l'entrée dans une ville. Ses comptes vivent dans les drapeaux du chapitre
+       (S.flags._monde.tr : son numéro, sa graine, les cases passées, les chimères vaincues, les brigands croisés, le voyageur
+       posé) ; ils partent avec eux quand on revient à la ville du récit. Le format de la partie reste le 2.
+     - Rien près des villes ni de La Mecque (Mo.interdit) : à deux cases d'une ville ou moins, à trois cases de La Mecque ou
+       moins — un territoire sacré —, ni chimère, ni combat, ni rencontre d'aucune sorte. Rien dans une ville de passage.
+     - Les chimères du désert : le mécanisme des rues (rodeurs.js, poserRues, env.rues), réglé ici (Mo.rodent).
+     - Les brigands : loin des routes, une embuscade au plus par traversée (trade.js, Tr.raid, `embuscade`).
+     - Le voyageur : une fois par traversée, peut-être, un voyageur de fiction est assis dans le sable, accablé. A devant lui
+       ouvre un pourparler où le Désespoir parle en lui (une idée noire : on lui répond, par la parole, la pédagogie ou la
+       bienveillance) ; apaisé, il se relève et reprend la route ; sinon, la chimère qui le tient (coeur.js,
+       route.voyageur.chimere) se lève, et l'on se bat contre elle, jamais contre lui ; on peut la fuir ; vaincue, elle le
+       libère. Ce sont les Compagnons qui lui répondent : aucun texte ne leur prête le désespoir.
+     - Sur la route, rien de ce qui se dit ne touche au récit : ni l'idole du chapitre (mal.js), ni ses piliers (world.js), ni
+       le compte de ses pourparlers (script.js). Rien ne s'y gagne hors de l'ordinaire : l'expérience d'une parole ou d'un
+       combat, les dirhams d'une victoire.
+     - La progression (lecons.js) : aucun outil ne dit le pourparler ni l'idée noire ; on y entre en parlant. Tant que l'outil
+       « parler » n'est pas reçu, ni brigands ni voyageur : la rencontre attend. Aucun message de plus, aucun outil de plus.
+     - Le joueur de test du moteur ne sort jamais : rien de cela ne lui arrive (passages.js, P.main). */
+  const VOY = '_voyageur', DESERT = ['sand', 'dune', 'steppe'];
+  const RG = () => D.MONDE.rencontres || {};
+  const route = () => ((I.sagas.coeur || {}).route) || {};
+  // (un outil de contrôle peut forcer une chance, ou le nombre de chimères : I.debug.rencontres = { brigands, voyageur, chimeres })
+  const dbg = (k, v) => { const d = I.debug.rencontres; return d && typeof d[k] === 'number' ? d[k] : v; };
+  const neuve = n => ({ n: n || 1, g: 1 + Math.floor(Math.random() * 1e9), pas: 0 });
+  // la traversée en cours (une partie de la 2.29 quittée sur la route n'en avait pas : elle commence là)
+  const trav = () => { const F = Mo.dehors() && S.flags._monde; if (!F) return null; return F.tr || (F.tr = neuve(1)); };
+  Mo.traversee = trav;
+  const cas = (px, py) => [Math.floor(px / T), Math.floor(py / T)];
+  const cheb = (a, b) => Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]));
+  // la distance, en cases (la diagonale pour une), de chaque case à la plus proche de celles que `src` désigne (255 au plus)
+  function distances(m, src) {
+    const w = m.w, h = m.h, d = new Uint8Array(w * h).fill(255); for (let i = 0; i < w * h; i++) if (src(i)) d[i] = 0;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = y * w + x; let v = d[i]; if (x > 0) v = Math.min(v, d[i - 1] + 1); if (y > 0) { v = Math.min(v, d[i - w] + 1); if (x > 0) v = Math.min(v, d[i - w - 1] + 1); if (x < w - 1) v = Math.min(v, d[i - w + 1] + 1); } d[i] = v; }
+    for (let y = h - 1; y >= 0; y--) for (let x = w - 1; x >= 0; x--) { const i = y * w + x; let v = d[i]; if (x < w - 1) v = Math.min(v, d[i + 1] + 1); if (y < h - 1) { v = Math.min(v, d[i + w] + 1); if (x < w - 1) v = Math.min(v, d[i + w + 1] + 1); if (x > 0) v = Math.min(v, d[i + w - 1] + 1); } d[i] = v; }
+    return d;
+  }
+  // ce que la carte du monde sait d'elle-même, une fois pour toutes : la distance aux routes et aux points d'eau (une oasis, un
+  // fleuve, une terre verte), et les cases où rien ne se croise (autour des villes de l'époque, et de La Mecque)
+  function champs(m) {
+    if (m._champs) return m._champs;
+    const w = m.w, R0 = RG(), sol = i => m.g0((i % w) * T + 8, Math.floor(i / w) * T + 8), lieux = Object.keys(m.spots).map(k => [k, m.spots[k]]), interdit = new Uint8Array(w * m.h);
+    const carre = (s, r, M) => { for (let y = s[1] - r; y <= s[1] + r; y++) for (let x = s[0] - r; x <= s[0] + r; x++) if (x >= 0 && y >= 0 && x < w && y < m.h) M[y * w + x] = 1; };
+    lieux.forEach(([k, s]) => carre(s, k === 'mecque' ? R0.mecque : R0.villes, interdit));
+    // les chimères, plus loin encore de La Mecque : on ne les voit pas depuis elle (chimeres.mecque)
+    const ferme = interdit.slice(); if (m.spots.mecque) carre(m.spots.mecque, (R0.chimeres || {}).mecque | 0, ferme);
+    return (m._champs = { route: distances(m, i => !!(m.pistes && m.pistes[i])), eau: distances(m, i => ['grass', 'water', 'wood'].indexOf(sol(i)) >= 0), interdit, ferme, lieux: lieux.map(q => q[1]) });
+  }
+  Mo.champs = () => (W.map && W.map.id === MONDE ? champs(W.map) : null);
+  // rien ne se croise ici (une case ; un point de la carte)
+  Mo.interditCase = (x, y) => { const m = W.map; if (!m || m.id !== MONDE) return false; if (x < 0 || y < 0 || x >= m.w || y >= m.h) return true; return !!champs(m).interdit[y * m.w + x]; };
+  Mo.interdit = (px, py) => { const c = cas(px, py); return Mo.interditCase(c[0], c[1]); };
+  // une chimère n'y va pas (rodeurs.js, rueOk) : là où rien ne se croise, et à douze cases de La Mecque ou moins
+  Mo.fermeAuxChimeres = (x, y) => { const m = W.map; if (!m || m.id !== MONDE) return false; if (x < 0 || y < 0 || x >= m.w || y >= m.h) return true; return !!champs(m).ferme[y * m.w + x]; };
+  const loinRoute = (x, y) => champs(W.map).route[y * W.map.w + x];
+  const loinEau = (x, y) => champs(W.map).eau[y * W.map.w + x];
+  const loinVilles = (x, y) => champs(W.map).lieux.reduce((d, s) => Math.min(d, cheb(s, [x, y])), 999);
+  const desert = (x, y) => { const m = W.map; return x >= 0 && y >= 0 && x < m.w && y < m.h && !m.solid[y * m.w + x] && DESERT.indexOf(m.g0(x * T + 8, y * T + 8)) >= 0; };
+  // la rencontre peut-elle venir ? (dans une partie neuve, pas avant l'outil « parler » : on y entre en parlant)
+  const pret = () => !I.lecons || !I.lecons.actif() || I.lecons.recu('parler');
+  Mo.pret = pret;
+
+  /* ----- les chimères du désert : les réglages de rodeurs.js ----- */
+  Mo.rodent = function () {
+    const tr = trav(); if (!tr || !Mo.surRoute()) return null;
+    const R0 = RG(), C = R0.chimeres || {}, E0 = W.saga.enemies || {}, idoles = new Set();
+    (W.saga.chapters || []).forEach(ch => I.mal.lignee(W.saga, ch).idoles.forEach(id => idoles.add(id)));   // ni l'idole d'un chapitre
+    if (!tr.c) tr.c = cas(W.player.x, W.player.y);   // la ville d'où l'on part : elles se posent autour d'elle, et à l'écart
+    const c = tr.c, p = cas(W.player.x, W.player.y);
+    return { qui: Object.keys(E0).filter(k => D.rodeDehors(k, E0[k]) && !idoles.has(k)), poids: () => 1, zones: {},
+      nombre: dbg('chimeres', C.nombre | 0), vue: C.vue, pas: C.pas, ecart: C.ecart, sel: 'desert/', graine: () => tr.g,
+      vaincue: k => !!(tr.vaincues && tr.vaincues[k]), vaincre: k => Mo.vaincre(k),
+      libre: (x, y) => { const d = cheb([x, y], c); return d >= C.loin && d <= C.rayon && cheb([x, y], p) >= C.loin; },
+      poidsCase: (x, y) => (loinRoute(x, y) >= R0.route ? 1 : C.pres) };
+  };
+  // une chimère de la traversée est vaincue : elle ne revient pas avant la traversée suivante (celle qui tenait le voyageur le libère)
+  Mo.vaincre = function (cle) { const tr = trav(); if (!tr) return; (tr.vaincues || (tr.vaincues = {}))[cle] = 1; if (cle === 'voy' && tr.voy) tr.voy.etat = 'libre'; };
+
+  /* ----- à chaque case : les brigands, le voyageur ----- */
+  Mo.tic = function () {
+    if (Mo.occupe || !Mo.surRoute() || !P.main || !P.main() || (I.rodeurs && I.rodeurs.fuite)) return;   // (une chimère poursuit : rien d'autre)
+    const tr = trav(); if (!tr) return; const c = cas(W.player.x, W.player.y), k = c[0] + ',' + c[1];
+    if (tr.ici === k) return; tr.ici = k; tr.pas = (tr.pas | 0) + 1;
+    // près d'une ville ou de La Mecque, hors du sable, des dunes et de la steppe : rien ; sans l'outil « parler » : la rencontre attend
+    if (!desert(c[0], c[1]) || Mo.interditCase(c[0], c[1]) || !pret()) return;
+    const R0 = RG(), B = R0.brigands || {}, V = R0.voyageur || {};
+    if (!tr.brig && tr.pas >= B.apres && loinRoute(c[0], c[1]) >= R0.route && Math.random() < dbg('brigands', B.chance)) { tr.brig = 1; Mo.embuscade(); return; }
+    if (!tr.voy && !tr.tire && tr.pas >= V.apres && loinVilles(c[0], c[1]) >= V.loin) {
+      tr.tire = 1; const pres = loinRoute(c[0], c[1]) < R0.route || loinEau(c[0], c[1]) < V.eau;   // une seule fois par traversée
+      if (Math.random() < dbg('voyageur', V.chance * (pres ? V.pres : 1))) poserVoyageur();
+    }
+  };
+
+  /* ----- les brigands : une embuscade, la parole avec le chef, puis La Razzia (trade.js) ----- */
+  Mo.embuscade = async function () {
+    if (Mo.occupe) return; Mo.occupe = true; S.depth++;
+    try { W.stop(); I.input.clearHeld(); const c = cas(W.player.x, W.player.y); Mo.journal.push({ quoi: 'brigands', x: c[0], y: c[1], n: (trav() || {}).n }); I.audio.sfx('dark');
+      await I.trade.raid({ embuscade: true }); W.checkpoint(); }
+    finally { S.depth--; Mo.occupe = false; S.hideDialog(); }
+  };
+
+  /* ----- le voyageur ----- */
+  // un homme de fiction, sans nom (« Un voyageur ») : il a un visage, puisqu'il n'est pas un Compagnon (sprites.js) ; une tenue de
+  // route, des couleurs de sable, rien qui dise un peuple ni une tribu
+  const LOOK = { kind: 'homme', robe: '#8c7558', head: '#ddd2bb', cloak: '#6c5a44', manteau: 'long' };
+  function pnj(v) { return { id: VOY, name: I.t('Un voyageur'), map: MONDE, route: true, hidden: false, placed: true, placedMap: MONDE, x: v.x, y: v.y, dir: 0, pose: 'accable', sheet: I.gfx.planche(LOOK), aura: null }; }
+  // il s'assied devant celui qui mène, à quelques cases : dans le désert, loin des villes, hors de la route s'il se peut
+  function poserVoyageur() {
+    const tr = trav(), p = W.player, V = RG().voyageur || {}, m = W.map, c = cas(p.x, p.y), bx = c[0] + [0, -1, 1, 0][p.dir] * V.devant, by = c[1] + [1, 0, 0, -1][p.dir] * V.devant;
+    let best = null;
+    for (let r = 0; r <= 3; r++) for (let j = -r; j <= r; j++) for (let i = -r; i <= r; i++) { if (Math.max(Math.abs(i), Math.abs(j)) !== r) continue; const x = bx + i, y = by + j;
+      if (!desert(x, y) || Mo.interditCase(x, y) || loinVilles(x, y) < V.loin || cheb([x, y], c) < 3) continue;
+      if (W.foes.some(f => !f.done && f.map === m.id && f.placed && cheb(cas(f.x, f.y), [x, y]) <= 1)) continue;
+      if (![[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => desert(x + a, y + b))) continue;
+      const e = (loinRoute(x, y) ? 0 : 2) + Math.hypot(i, j) * 0.25; if (!best || e < best.e) best = { x, y, e }; }
+    if (!best) { Mo.journal.push({ quoi: 'voyageur', etat: 'sans-place' }); return false; }
+    tr.voy = { x: best.x * T + 8, y: best.y * T + 13, etat: 'assis' };
+    W.npcs = W.npcs.filter(n => !n.route); W.npcs.push(pnj(tr.voy));
+    Mo.journal.push({ quoi: 'voyageur', etat: 'pose', x: best.x, y: best.y, n: tr.n });
+    return true;
+  }
+  // la chimère qui le tient se lève, juste derrière lui ; elle ne s'en éloigne pas (rodeurs.js : `garde`), sauf pour poursuivre
+  function lever(n) {
+    const R0 = route().voyageur || {}, id = R0.chimere, def = id && I.common && I.common.enemies[id]; if (!def) return null;
+    W.foes = W.foes.filter(f => f.cle !== 'voy');
+    const R = I.rodeurs, cx = Math.floor(n.x / T), cy = Math.floor((n.y - 2) / T), C = RG().chimeres || {};
+    const q = [[cx, cy - 1], [cx + 1, cy], [cx - 1, cy], [cx, cy + 1]].find(([x, y]) => R.rueOk(x, y)) || [cx, cy], x = q[0] * T + 8, y = q[1] * T + 8;
+    const f = { id: 'voyageur_chimere', group: [id], map: MONDE, rodeur: true, rue: true, desert: true, voyageur: true, garde: true, cle: 'voy', done: false, placed: true, x, y, x0: x, y0: y, cx: null, ph: 1.3, v: R.MARCHE * C.pas, vue: C.vue, intro: I.t('{nom} ne le lâche pas.', { nom: def.name }) };
+    W.foes.push(f); return f;
+  }
+  // il se relève, et reprend la route : quelques pas à l'écart de celui qui mène, puis il s'éloigne hors de la vue
+  async function reprendre(n) {
+    const tr = trav(); if (tr && tr.voy) tr.voy.etat = 'parti';
+    n.pose = null; const c = cas(n.x, n.y - 2), p = W.player; let best = null;
+    for (let j = -4; j <= 4; j++) for (let i = -4; i <= 4; i++) { const x = c[0] + i, y = c[1] + j; if (Math.max(Math.abs(i), Math.abs(j)) < 3 || !desert(x, y)) continue; const d = Math.hypot(x * T + 8 - p.x, y * T + 13 - p.y); if (!best || d > best.d) best = { x, y, d }; }
+    if (best) await W.walkTo(n, best.x * T + 8, best.y * T + 13);
+    n.hidden = true; W.npcs = W.npcs.filter(q => q !== n); Mo.journal.push({ quoi: 'voyageur', etat: 'parti' });
+    if (W.saga && !I.debug.auto) W.checkpoint();
+  }
+  // à chaque chargement d'un lieu : le voyageur de la traversée, assis là où il était (et, s'il est encore tenu, sa chimère)
+  Mo.arme = function () {
+    if (W.npcs.some(n => n.route)) W.npcs = W.npcs.filter(n => !n.route);
+    if (!W.map || W.map.id !== MONDE || !Mo.surRoute()) return;
+    const tr = trav(), v = tr && tr.voy; if (!v || v.etat === 'parti' || v.etat === 'libre') return;
+    const n = pnj(v); W.npcs.push(n);
+    if (v.etat === 'tenu' && !(tr.vaincues && tr.vaincues.voy)) lever(n);
+  };
+  // A devant lui (world.js, W.interact)
+  Mo.parle = function (n) { if (!n || n.id !== VOY || !n.route) return false; if (!Mo.occupe) Mo.voyageur(n); return true; };
+  Mo.voyageur = async function (n) {
+    const tr = trav(), v = tr && tr.voy, R0 = route().voyageur || {}; if (!v || Mo.occupe || v.etat === 'parti' || v.etat === 'libre') return;
+    Mo.occupe = true; S.depth++; let f = null, res = null;
+    try {
+      W.stop(); I.input.clearHeld();
+      if (v.etat === 'assis') {
+        // le pourparler : le Désespoir parle en lui ; « _voyageur_tenu », s'il n'est pas apaisé (coeur.js, route.voyageur.parle)
+        Mo.journal.push({ quoi: 'voyageur', etat: 'parle' }); delete S.flags._voyageur_tenu;
+        await S.run(R0.parle || []); S.hideDialog();
+        const tenu = !!S.flags._voyageur_tenu; delete S.flags._voyageur_tenu;
+        if (!tenu) { Mo.journal.push({ quoi: 'voyageur', etat: 'apaise' }); await reprendre(n); return; }
+        v.etat = 'tenu'; f = lever(n); W.checkpoint();
+      } else { await S.run(R0.encore || []); S.hideDialog(); f = W.foes.find(q => q.cle === 'voy' && !q.done) || lever(n); }
+      if (!f) return;
+      Mo.journal.push({ quoi: 'voyageur', etat: 'combat' });
+      res = await I.rodeurs.combatDehors(f);   // contre la chimère qui le tient, jamais contre lui
+      Mo.journal.push({ quoi: 'voyageur', etat: res });
+    } finally { S.depth--; Mo.occupe = false; S.hideDialog(); }
+    if (res) await Mo.apres(f, res);
+  };
+  // après un combat sur la route (rodeurs.js) : la chimère qui tenait le voyageur, vaincue, le libère ; rien d'autre n'est dit
+  Mo.apres = async function (f, res) {
+    if (!f || !f.voyageur || res !== 'win') return;
+    const n = W.npcs.find(x => x.id === VOY && x.route); if (!n) return;
+    Mo.occupe = true; S.depth++;
+    try { await S.run((route().voyageur || {}).libere || []); S.hideDialog(); await reprendre(n); }
+    finally { S.depth--; Mo.occupe = false; S.hideDialog(); }
   };
 })();

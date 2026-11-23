@@ -332,7 +332,27 @@
        d'autre n'a de porte : ni la Samâwa ni la route d'Îliyâ', qui sont déjà la route, ni la mer, ni la noosphère, ni Dhû
        l-Qassa, Harûrâ' et Nahrawân ; ni l'histoire-cadre, ni les veillées, ni le dernier maillon (regles.js le vérifie).
      - gabarits : ceux dont une carte peut avoir une porte (au nord et au sud de la ville d'Arabie, au sud de la cité romaine, à
-       l'ouest du camp). */
+       l'ouest du camp).
+     - rencontres (2.30, D222 ; le décideur, 23 novembre : « croiser des brigands et des monstres dans le déserts et se faire
+       de l'argent » ; « je veux qu'un moment il rencontre le désespoir ») : ce qui se croise sur la route (monde.js,
+       rodeurs.js). Des entiers (des cases, un nombre) ou des parts de 0 à 1 (une chance, une allure, un poids), rien d'autre
+       (regles.js). Une « traversée » va de la sortie par une porte à l'entrée dans une ville. Les distances se comptent en
+       cases, de case à case, la diagonale comptant pour une.
+       · villes, mecque : à deux cases d'une ville (ou d'un lieu) ou moins, à trois cases de La Mecque ou moins — un territoire
+         sacré —, rien : ni chimère, ni combat, ni brigands, ni voyageur ; route : à trois cases d'une route ou plus, on est
+         « loin des routes ».
+       · chimeres : les petites chimères (tier « minion ») de la saga du chapitre, sur le sable, les dunes et la steppe ;
+         `nombre` à chaque arrivée sur la route, posées de `loin` à `rayon` cases de la ville d'où l'on part (et à `loin` cases
+         au moins de celui qui mène), à `ecart` cases l'une de l'autre ; une case près d'une route pèse `pres` (une case loin
+         pèse 1) : elles sont plus nombreuses loin des routes. `vue` : à combien de cases elles prennent en chasse ; `pas` :
+         leur allure, en part de la marche. Leur contact ouvre un combat dont on peut fuir (D.FUITE). `mecque` : elles ne vont
+         jamais à douze cases de La Mecque ou moins (ni posées, ni en chemin, ni en poursuite) — on ne les voit pas depuis elle.
+       · brigands : à chaque case où l'on entre loin des routes, une chance sur vingt (`chance`), pas avant la `apres`-ième
+         case de la traversée ; une embuscade au plus par traversée (trade.js, Tr.raid : la parole avec le chef, puis La Razzia).
+       · voyageur : une fois par traversée, à la `apres`-ième case passée dans le désert à `loin` cases au moins des villes, une
+         chance (`chance`), moindre (`pres` fois) à moins de trois cases d'une route ou à moins de `eau` cases d'un point d'eau
+         (une oasis, un fleuve, une terre verte) ; il s'assied à `devant` cases devant celui qui mène.
+       Nombres proposés par l'agent, à valider. */
   D.MONDE = {
     lon: [30, 49], lat: [20, 37], parallele: 28.5, cases: [96, 96],
     villes: {
@@ -415,6 +435,13 @@
       [[34.56, 38.27], 'homs']
     ],
     gabarits: ['ville', 'romaine', 'camp'],
+    // 2.30 (D222) : ce qui se croise sur la route (le commentaire ci-dessus)
+    rencontres: {
+      villes: 2, mecque: 3, route: 3,
+      chimeres: { nombre: 10, rayon: 28, loin: 8, ecart: 6, vue: 5, pas: 0.45, pres: 0.3, mecque: 12 },
+      brigands: { chance: 0.05, apres: 4 },
+      voyageur: { chance: 0.35, pres: 0.4, eau: 2, apres: 6, loin: 4, devant: 4 }
+    },
     depuis: {
       ab1: { an: 11, epoque: 'An 11 H · 632', portes: [{ carte: 'medine', des: 0, ville: 'medine' }] },
       ab2: { an: 11, epoque: 'An 11 H · 632', portes: [{ carte: 'medine', des: 0, ville: 'medine' }] },
@@ -616,6 +643,10 @@
   // elles font les douze racines qu'une idole peut redire (`racine`, dans les fichiers de saga). Textes : src/data/coeur.js.
   D.NOIRS = ['noir_honte', 'noir_peur', 'noir_soupcon', 'noir_rancune', 'noir_desespoir'];
   D.RACINES = Object.keys(D.VICES).concat(D.NOIRS);
+  // 2.30 (D222) — ce qui peut rôder dans le désert de la carte du monde (monde.js, rodeurs.js) : une petite chimère, jamais une
+  // idée noire (exigences 16, 18 et 22 : elles pèsent sur une personne, on leur répond par la parole), ni une chimère dont la
+  // racine en est une, ni un mal du cœur. Le moteur et le validateur lisent la même règle.
+  D.rodeDehors = function (id, e) { return !!e && e.tier === 'minion' && !e.idee && !e.vice && this.NOIRS.indexOf(id) < 0 && ![].concat(e.racine || []).some(r => this.NOIRS.indexOf(r) >= 0); };
   // Les trois manières de répondre à une idée noire (décision du décideur : la parole, la pédagogie, la bienveillance).
   D.VOIES = {
     parole:        { name: 'Dire vrai', de: 'la parole' },

@@ -146,7 +146,8 @@
   // 2.23 (D212) : dans les quartiers de la Cité, ce qui rôde va par les rues — les trottoirs, les places, les avenues (env.rues) ;
   // jamais dans le parc, le coin calme, la tribune ni la salle de jeux
   // (2.27 : une chimère qui a sa zone — « Le Pari », dans la tribune, D.CITE.zones — ne va que par les cases de sa zone)
-  function rueOk(x, y, f) { const m = W.map, E = m && m.env && m.env.rues; if (!E || x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; return ((f && f.zone) || E.cases).indexOf(m.g0(x * 16 + 8, y * 16 + 8)) >= 0; }
+  // (2.30 : sur la carte du monde, le sable, les dunes et la steppe — jamais à deux cases d'une ville, ni à douze de La Mecque, monde.js)
+  function rueOk(x, y, f) { const m = W.map, E = m && m.env && m.env.rues; if (!E || x < 0 || y < 0 || x >= m.w || y >= m.h || m.solid[y * m.w + x]) return false; if (E.desert && (!I.monde || I.monde.fermeAuxChimeres(x, y))) return false; return ((f && f.zone) || E.cases).indexOf(m.g0(x * 16 + 8, y * 16 + 8)) >= 0; }
   R.rueOk = rueOk;
   // un rôdeur avance de case en case : il erre, et prend en chasse quand le râwî est à portée ; il n'entre jamais dans un abri
   function avance(f, dt, champ) {
@@ -394,39 +395,62 @@
     if (res === 'fuite') R.fuir(f);
   };
 
-  /* ----- 2.23 (D212) : ce qui rôde dans les rues des quartiers de la Cité ----- *
+  /* ----- 2.23 (D212) : ce qui rôde dans les rues des quartiers de la Cité ; 2.30 (D222) : et dans le désert de la carte du monde ----- *
      Demande du décideur, 21 novembre : « personne ne voit les idées noires modernes : égoïsme, matérialisme, plaisir immédiat ».
      Ce sont des chimères (frame.js), qu'Idris est seul à voir : elles vont par les rues (rueOk), passent au travers des passants,
      qui ne les voient pas, et les voitures non plus (trafic.js) ; à six cases, elles prennent en chasse celui qui mène ; leur
      contact ouvre un combat ordinaire, d'où l'on peut fuir. Après le combat, la prière est rappelée (cite.js, C.apres). On ne
      les frappe pas en marchant : ce n'est pas un labyrinthe. Aucune des cinq idées noires (D.NOIRS) n'y rôde (regles.js le
      vérifie, et le moteur les écarte encore ici). Elles se tirent de nouveau à chaque arrivée (S.flags._rues, la graine de
-     la visite) ; vaincue, une chimère ne revient pas de la visite. Les nombres sont dans D.CITE. */
-  function poserRues() {
-    W.foes = (W.foes || []).filter(f => !f.rue);
-    const m = W.map, E = m && m.env && m.env.rues, T = 16, C = D.CITE || {}; if (!E || W.excursion || !W.saga || I.debug.sansMeutes) return;
+     la visite) ; vaincue, une chimère ne revient pas de la visite. Les nombres sont dans D.CITE.
+     2.30 (D222 ; le décideur, 23 novembre : « croiser des brigands et des monstres dans le déserts et se faire de l'argent ») :
+     le même mécanisme, sur la carte du monde (env.rues.desert) — les petites chimères de la saga du chapitre (D.rodeDehors),
+     sur le sable, les dunes et la steppe, plus nombreuses loin des routes ; jamais près d'une ville ni de La Mecque, ni dans
+     une visite. Ses réglages viennent de monde.js (Mo.rodent : D.MONDE.rencontres), ses comptes vivent dans la traversée
+     (S.flags._monde) ; après le combat, rien n'est dit de plus (monde.js, Mo.apres). Les réglages, d'un lieu à l'autre :
+     `qui` (les chimères), `poids(id)`, `zones`, `nombre`, `vue`, `pas`, `ecart` (en cases), `sel` et `graine()` (le tirage),
+     `vaincue(cle)` et `vaincre(cle)`, `libre(x, y)` (une case où l'on peut en poser une), `poidsCase(x, y)` (s'il y en a :
+     une case pèse plus ou moins). */
+  // les réglages des rues des quartiers (D.CITE)
+  function rues(m) {
     // 2.28 (D218) : arrivé par la rue pendant le prologue, Idris ne les voit pas encore — Maître Yûnus ne lui a pas encore ouvert
     // les yeux sur la noosphère (le prologue, aux Archives basses)
-    if (!I.save.data.prologue) return;
-    const RC = C.rodent || {}, Z = C.zones || {}, E0 = W.saga.enemies || {}, bons = Object.keys(RC).filter(k => E0[k] && !E0[k].idee && !E0[k].vice && D.NOIRS.indexOf(k) < 0 && E0[k].tier === 'minion'), ids = bons.filter(k => !Z[k]);
+    if (!I.save.data.prologue) return null;
+    const C = D.CITE || {}, RC = C.rodent || {}, E0 = W.saga.enemies || {}, T = 16, loin = (C.loin || 12) * T;
+    const depart = W.spotPx('parvis') || [W.player.x, W.player.y], spots = Object.keys(m.spots).map(k => m.spots[k]);
+    return { qui: Object.keys(RC).filter(k => E0[k] && !E0[k].idee && !E0[k].vice && D.NOIRS.indexOf(k) < 0 && E0[k].tier === 'minion'), poids: k => RC[k], zones: C.zones || {},
+      nombre: C.nombre | 0, vue: C.vue || 6, pas: C.pas || 0.45, ecart: 10, sel: 'rues/',
+      graine: () => S.flags._rues || (S.flags._rues = 1 + Math.floor(Math.random() * 1e9)), vaincue: cle => !!S.flags[cle], vaincre: cle => { S.flags[cle] = true; },
+      // (2.28 : loin du parvis, et loin d'Idris là où il arrive — par la rue, il entre au nord-ouest)
+      libre: (x, y) => Math.hypot(x * T + 8 - depart[0], y * T + 8 - depart[1]) > loin && Math.hypot(x * T + 8 - W.player.x, y * T + 8 - W.player.y) > loin && spots.every(q => Math.hypot(q[0] - x, q[1] - y) > 3) };
+  }
+  // ce qui rôde dehors, et ses réglages (null : rien)
+  const dehors = () => { const m = W.map, E = m && m.env && m.env.rues; return !E ? null : E.desert ? (I.monde && I.monde.rodent ? I.monde.rodent() : null) : rues(m); };
+  R.dehors = dehors;
+  function poserRues() {
+    W.foes = (W.foes || []).filter(f => !f.rue);
+    const m = W.map, E = m && m.env && m.env.rues, T = 16; if (!E || W.excursion || !W.saga || I.debug.sansMeutes) return;
+    const C = dehors(); if (!C) return;
+    const Z = C.zones || {}, bons = C.qui, ids = bons.filter(k => !Z[k]), desert = !!E.desert;
     if (!bons.length) return;
-    if (!S.flags._rues) S.flags._rues = 1 + Math.floor(Math.random() * 1e9);
-    const g = S.flags._rues, r = I.rng(I.hash('rues/' + g)), poids = ids.reduce((a, k) => a + RC[k], 0), tirer = x => { let v = x * poids; for (const k of ids) { v -= RC[k]; if (v < 0) return k; } return ids[ids.length - 1]; };
+    const g = C.graine(), r = I.rng(I.hash(C.sel + g)), poids = ids.reduce((a, k) => a + C.poids(k), 0), tirer = x => { let v = x * poids; for (const k of ids) { v -= C.poids(k); if (v < 0) return k; } return ids[ids.length - 1]; };
     // 2.27 (D216) : celles qui ont leur zone (« Le Pari », parmi les parieurs de la tribune) y sont posées, une chacune, et n'en sortent pas
-    bons.filter(k => Z[k]).forEach((k, j) => { const cle = '_rue_' + g + '_z' + j; if (S.flags[cle]) return; const L = [];
+    bons.filter(k => Z[k]).forEach((k, j) => { const cle = '_rue_' + g + '_z' + j; if (C.vaincue(cle)) return; const L = [];
       for (let y = 1; y < m.h - 1; y++) for (let x = 1; x < m.w - 1; x++) if (!m.solid[y * m.w + x] && Z[k].indexOf(m.g0(x * T + 8, y * T + 8)) >= 0 && !W.npcs.some(n => !n.hidden && n.placed && Math.floor(n.x / T) === x && Math.floor(n.y / T) === y)) L.push([x, y]);
       if (!L.length) return; const c = L[Math.floor(r() * L.length)];
-      W.foes.push({ id: 'ruez' + j, group: [k], map: m.id, rodeur: true, rue: true, zone: Z[k], cle, done: false, placed: true, x: c[0] * T + 8, y: c[1] * T + 8, cx: null, ph: 5 + j, v: R.MARCHE * (C.pas || 0.45), vue: C.vue || 6 }); });
+      W.foes.push({ id: 'ruez' + j, group: [k], map: m.id, rodeur: true, rue: true, zone: Z[k], cle, done: false, placed: true, x: c[0] * T + 8, y: c[1] * T + 8, cx: null, ph: 5 + j, v: R.MARCHE * C.pas, vue: C.vue }); });
     if (!ids.length) return;
-    const depart = W.spotPx('parvis') || [W.player.x, W.player.y], libres = [], spots = Object.keys(m.spots).map(k => m.spots[k]);
-    // (2.28 : loin du parvis, et loin d'Idris là où il arrive — par la rue, il entre au nord-ouest)
-    for (let y = 1; y < m.h - 1; y++) for (let x = 1; x < m.w - 1; x++) if (rueOk(x, y) && Math.hypot(x * T + 8 - depart[0], y * T + 8 - depart[1]) > (C.loin || 12) * T && Math.hypot(x * T + 8 - W.player.x, y * T + 8 - W.player.y) > (C.loin || 12) * T && spots.every(q => Math.hypot(q[0] - x, q[1] - y) > 3)) libres.push([x, y]);
+    const libres = [];
+    for (let y = 1; y < m.h - 1; y++) for (let x = 1; x < m.w - 1; x++) if (rueOk(x, y) && C.libre(x, y)) libres.push([x, y]);
+    // une case au hasard parmi les libres ; dans le désert, chacune selon son poids (loin des routes, elle pèse davantage)
+    const cumul = C.poidsCase ? (() => { let t = 0; return libres.map(q => (t += C.poidsCase(q[0], q[1]))); })() : null;
+    const tire = () => { if (!cumul) return libres[Math.floor(r() * libres.length)]; const v = r() * cumul[cumul.length - 1]; let a = 0, b = cumul.length - 1; while (a < b) { const c = (a + b) >> 1; if (cumul[c] > v) b = c; else a = c + 1; } return libres[a]; };
     const pris = [];
     for (let i = 0; i < (C.nombre | 0) && libres.length; i++) {
-      let c = null; for (let e = 0; e < 40 && !c; e++) { const q = libres[Math.floor(r() * libres.length)]; if (pris.every(o => Math.hypot(o[0] - q[0], o[1] - q[1]) > 10)) c = q; }
+      let c = null; for (let e = 0; e < 40 && !c; e++) { const q = tire(); if (pris.every(o => Math.hypot(o[0] - q[0], o[1] - q[1]) > C.ecart)) c = q; }
       if (!c) break; pris.push(c);
-      const id = tirer(r()), cle = '_rue_' + g + '_' + i; if (S.flags[cle]) continue; // vaincue : elle ne revient pas de la visite
-      W.foes.push({ id: 'rue' + i, group: [id], map: m.id, rodeur: true, rue: true, cle, done: false, placed: true, x: c[0] * T + 8, y: c[1] * T + 8, cx: null, ph: i * 2.3, v: R.MARCHE * (C.pas || 0.45), vue: C.vue || 6 });
+      const id = tirer(r()), cle = '_rue_' + g + '_' + i; if (C.vaincue(cle)) continue; // vaincue : elle ne revient pas de la visite (ni de la traversée)
+      W.foes.push({ id: 'rue' + i, group: [id], map: m.id, rodeur: true, rue: true, desert, cle, done: false, placed: true, x: c[0] * T + 8, y: c[1] * T + 8, cx: null, ph: i * 2.3, v: R.MARCHE * C.pas, vue: C.vue });
     }
   }
   R.poserRues = poserRues;
@@ -437,22 +461,34 @@
   function ticRues(dt) {
     const m = W.map, L = W.foes.filter(f => f.rue && !f.done && f.placed && f.map === m.id); if (!L.length) return;
     const p = W.player, T = 16;
+    // 2.30 : sur la route, à deux cases d'une ville ou à trois de La Mecque, rien ne touche le groupe (monde.js)
+    const abri = !!(m.env.rues.desert && I.monde && I.monde.interdit(p.x, p.y));
     R._champT = (R._champT || 0) - dt; if (R._champT <= 0 || !R._champR) { R._champR = champRue(p); R._champZ = {}; R._champT = 0.25; }
     for (const f of L) {
       const ch = f.zone ? (R._champZ[f.id] || (R._champZ[f.id] = champRue(p, f))) : R._champR;   // (2.27 : celle qui a sa zone chasse par sa zone)
-      if (R.poursuit(f)) { if (f.sonne > 0) continue; } else avance(f, dt, ch); // celle que l'on a fuie : ticFuite la mène
+      if (R.poursuit(f)) { if (f.sonne > 0) continue; } else if (!f.garde) avance(f, dt, ch); // celle que l'on a fuie : ticFuite la mène (2.30 : celle qui tient le voyageur reste près de lui)
       const dist = Math.hypot(f.x - p.x, f.y - p.y);
-      if (dist < (f.vue || 6) * T && I.cite) I.cite.vue(f);
-      if (dist < 14 && !R.intouchable()) return R.contactRue(f);
+      if (!f.desert && dist < (f.vue || 6) * T && I.cite) I.cite.vue(f);
+      if (dist < 14 && !R.intouchable() && !abri) return R.contactRue(f);
     }
   }
-  // une chimère des rues a rejoint Idris : un combat ordinaire, d'où l'on peut fuir ; puis le rappel de la prière (cite.js)
-  R.contactRue = async function (f) {
-    if (f.enCombat || S.busy || W.lock) return; f.enCombat = true; W.stop(); S.depth++; let res = 'win';
-    try { res = await I.battle.start({ group: f.group, bg: W.map.env.bg, fuite: true, intro: I.t('{nom} se dresse devant toi.', { nom: (defDe(f.group[0]) || {}).name || '' }) }); if (res !== 'fuite') { f.done = true; if (f.cle) S.flags[f.cle] = true; W.checkpoint(); } }
+  // le combat d'une chimère du dehors, d'où l'on peut fuir (la chimère poursuit alors) → 'win' ou 'fuite'
+  async function combatDehors(f) {
+    f.enCombat = true; W.stop(); S.depth++; let res = 'win';
+    const nom = (defDe(f.group[0]) || {}).name || '', intro = f.intro || (f.desert ? I.t('{nom} vous barre la piste.', { nom }) : I.t('{nom} se dresse devant toi.', { nom }));
+    try { res = await I.battle.start({ group: f.group, bg: W.map.env.bg, fuite: true, intro }); if (res !== 'fuite') { f.done = true; if (f.cle) { if (f.desert && I.monde) I.monde.vaincre(f.cle); else S.flags[f.cle] = true; } W.checkpoint(); } }
     finally { S.depth--; f.enCombat = false; }
     if (res === 'fuite') R.fuir(f);
-    if (I.cite) await I.cite.apres(f, res);
+    return res;
+  }
+  R.combatDehors = combatDehors;
+  // une chimère des rues a rejoint Idris : un combat ordinaire, d'où l'on peut fuir ; puis le rappel de la prière (cite.js) — ou,
+  // sur la route, ce que monde.js en dit (le voyageur que tenait la chimère se relève)
+  R.contactRue = async function (f) {
+    if (f.enCombat || S.busy || W.lock) return;
+    const res = await combatDehors(f);
+    if (f.desert) { if (I.monde) await I.monde.apres(f, res); }
+    else if (I.cite) await I.cite.apres(f, res);
   };
 
   /* ================= la fuite (2.19) =================
@@ -474,7 +510,7 @@
   R.fuir = function (f) {
     if (!f || f.done || !W.map) return;
     R.finFuite();
-    R.fuite = { f, t: 0, hors: 0, maison: f.rodeur ? null : [f.x0 !== undefined ? f.x0 : f.x, f.y0 !== undefined ? f.y0 : f.y] };
+    R.fuite = { f, t: 0, hors: 0, maison: f.rodeur && !f.garde ? null : [f.x0 !== undefined ? f.x0 : f.x, f.y0 !== undefined ? f.y0 : f.y] };   // (2.30 : celle qui tient le voyageur revient près de lui)
     f.chasse = true; f.retour = null; f.cx = null; f.sonne = 0; f.pousse = null; f._champ = null; R.fuites = (R.fuites || 0) + 1;
     // celui qui n'a jamais couru apprend comment : au doigt, ou au clavier
     if (!W.aCouru && !I.debug.auto) S.toast(document.body.classList.contains('touch') ? I.t('La chimère vous poursuit : pour courir, tiens B en poussant le joystick.') : I.t('La chimère vous poursuit : pour courir, tiens Maj en marchant.'), 6000);
