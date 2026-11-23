@@ -6,16 +6,16 @@
       Koufa absente des chapitres de la saga I et présente dans ceux de la saga V, Fustât absente avant 21 H, Bassora avant 14 H,
       chaque chapitre sa carte du monde. Les portes : ouvertes exactement dans les chapitres de D.MONDE.depuis, sur leur carte, à
       partir de leur objectif — et nulle part ailleurs (2084, les veillées, la mer, la noosphère, le dernier maillon, les routes,
-      Dhû l-Qassa, Harûrâ', Nahrawân). Les visites : chacune se bâtit, son comptoir et sa natte se rejoignent à pied ; La Mecque
+      Dhû l-Qassa, Harûrâ', Nahrawân). Les visites : chacune se bâtit, son comptoir et son tapis se rejoignent à pied ; La Mecque
       sans mosquée (ni lieu, ni mur, ni mihrab, ni minbar, ni colonnes, ni cour carrelée).
    2. En hauteur (390 × 844), au doigt, puis en largeur (844 × 390), au clavier : le premier chapitre d'Abû Bakr (Médine) ;
       sortir par la porte du sud (la leçon « La route », une fois) ; la carte du monde, Idris à côté de Médine, la flèche vers
       elle, « Revenir : Médine » au-dessus d'elle ; à pied jusqu'à La Mecque (« Entrer : La Mecque ») ; la visite (son carton :
-      le nom et l'époque) ; ni mosquée ni chimère ; la natte, sobre (ni œuvres comptées, ni descente) ; ressortir par sa porte ;
+      le nom et l'époque) ; ni mosquée ni chimère ; le tapis, sobre (ni œuvres comptées, ni descente) ; ressortir par sa porte ;
       revenir à Médine : le même objectif, les mêmes drapeaux, les mêmes personnages, à la porte. En largeur, une partie
       exportée sur la carte du monde se réimporte (par les vrais boutons) et s'y rouvre.
    3. (En largeur) chaque chapitre de D.MONDE.depuis : sorti par sa porte, Idris est à côté de sa ville, et y revient à son
-      objectif ; chaque ville de passage se visite (sa carte, son comptoir, sa natte) et l'on en ressort. Le joueur de test du
+      objectif ; chaque ville de passage se visite (sa carte, son comptoir, son tapis) et l'on en ressort. Le joueur de test du
       moteur (auto, à pied, au doigt) ne sort jamais.
    Usage : node v2/tools/monde.js [dossier de captures]       « MONDE CONFORME », sinon « ÉCART », « BLOQUÉ », « INACCESSIBLE »,
    « ABSENT » ; code de sortie 1. Captures (deviceScaleFactor 2) : la carte du monde entière, chaque ville, une sortie, une
@@ -115,7 +115,7 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
           if (ouv.length && !att || !ouv.length && att) r.fautes.push(`${sid}/${c.id} obj ${o} sur ${mid} : ${ouv.join('+') || 'aucune'}`); if (ouv.length) r.portes.push(`${c.id}/${mid}`); } }); }); });
       W.saga = sv.saga; W.ch = sv.ch; W.ci = sv.ci; W.objIndex = sv.obj; W.map = sv.map; S.flags = sv.flags; I.scene = sv.scene;
       r.portes = [...new Set(r.portes)];
-      // les visites : chacune se bâtit, son comptoir et sa natte, reliés ; La Mecque sans mosquée
+      // les visites : chacune se bâtit, son comptoir et son tapis, reliés ; La Mecque sans mosquée
       r.visites = Object.keys(V).filter(id => V[id].carte).map(id => { const mv = M.build(V[id].carte, { time: 'day' }), tuiles = new Set(); for (let y = 0; y < mv.h; y++) for (let x = 0; x < mv.w; x++) tuiles.add(mv.g0(x * 16 + 1, y * 16 + 1));
         return { id, carte: V[id].carte, relie: M.relie(mv), comptoir: !!mv.spots.comptoir, priere: !!mv.spots.priere, mosquee: Object.keys(mv.spots).filter(k => /mosquee|ecole/.test(k)).concat(mv.objs.filter(o => ['minbar', 'basin'].includes(o.type)).map(o => o.type)).concat(['gwall', 'mihrab', 'zsand', 'zellij'].filter(t => tuiles.has(t))), foes: W.foes.filter(f => f.map === V[id].carte).length, boutique: (D.GEAR_SHOPS[V[id].carte] || []).length }; });
       return r;
@@ -129,7 +129,7 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
       `les dates : Koufa absente des chapitres de la saga I (${dI.map(d => d.ch).join(', ')}), présente dans ceux de la saga V ; Fustât absente avant 21 H (${dF.map(d => d.ch + ' ' + d.an).join(', ')}) ; Bassora avant 14 H ; chaque carte d'époque reliée`, `dates : ${JSON.stringify(g.dates)}`);
     si(!g.fautes.length, `les portes : ouvertes exactement là où D.MONDE.depuis les met (${g.portes.join(', ')}) — nulle part ailleurs (2084, veillées, mer, noosphère, dernier maillon, routes, Dhû l-Qassa, Harûrâ', Nahrawân)`, `portes : ${g.fautes.slice(0, 12).join(' · ')}`);
     const vis = g.visites;
-    si(vis.every(v => v.relie && v.comptoir && v.priere && v.boutique > 0 && !v.foes), `les visites : ${vis.map(v => v.carte).join(', ')} — chacune se bâtit, son comptoir (une boutique) et sa natte se rejoignent à pied, aucune chimère`, `visites : ${JSON.stringify(vis)}`, 'INACCESSIBLE');
+    si(vis.every(v => v.relie && v.comptoir && v.priere && v.boutique > 0 && !v.foes), `les visites : ${vis.map(v => v.carte).join(', ')} — chacune se bâtit, son comptoir (une boutique) et son tapis se rejoignent à pied, aucune chimère`, `visites : ${JSON.stringify(vis)}`, 'INACCESSIBLE');
     const mq = vis.find(v => v.id === 'mecque'), autres = vis.filter(v => v.id !== 'mecque' && v.carte !== 'visite_hira' && !/visite_(quds|damas|homs|qinnasrin)/.test(v.carte));
     si(mq && !mq.mosquee.length && autres.every(v => v.mosquee.length), 'La Mecque : ni mosquée, ni école de mosquée, ni mur ni carreaux de mosquée, ni mihrab, ni minbar — les autres villes d’Arabie gardent la leur', `La Mecque : ${JSON.stringify(mq)}`);
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'géographie · ' + e)); await T.ctx.close();
@@ -175,15 +175,16 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
     const e2 = await E(() => { const I = window.ISNAD, W = I.world, T = window.__t, s = W.map.spots; return Object.assign(T.etat(), { carton: T.cartons[T.cartons.length - 1] || '', mosquee: Object.keys(s).filter(k => /mosquee|ecole/.test(k)), comptoir: !!s.comptoir && W.reach(W.player.x, W.player.y, s.comptoir[0] * 16 + 8, s.comptoir[1] * 16 + 13), priere: !!s.priere && W.reach(W.player.x, W.player.y, s.priere[0] * 16 + 8, s.priere[1] * 16 + 13), foes: W.foes.filter(f => f.map === W.map.id && !f.done).length, rodeurs: W.foes.filter(f => f.rodeur && f.map === W.map.id).length }); });
     await capture(P, `mecque-${w}x${h}`, `${nom} · La Mecque, une visite sobre`);
     si(e2.carte === 'visite_mecque' && /La Mecque/.test(e2.carton) && /An 11 H/.test(e2.carton) && noms2.some(t => /Entrer : La Mecque/.test(t)) && !e2.mosquee.length && e2.comptoir && e2.priere && !e2.foes && !e2.rodeurs && e2.obj === e0.obj && e2.monde && e2.monde.visite === 'mecque' && e2.cp === 'visite_mecque',
-      `${nom} · à pied jusqu'à La Mecque (« ${noms2.find(t => /Entrer/.test(t))} ») : la visite — le carton « ${e2.carton} » ; ni mosquée ni chimère ; le comptoir et la natte se rejoignent ; le même chapitre`, `${nom} · La Mecque : ${JSON.stringify({ noms2, e2 })}`, 'INACCESSIBLE');
-    // la natte, sobre : prier et se reposer, sans œuvres ni descente
+      `${nom} · à pied jusqu'à La Mecque (« ${noms2.find(t => /Entrer/.test(t))} ») : la visite — le carton « ${e2.carton} » ; ni mosquée ni chimère ; le comptoir et le tapis se rejoignent ; le même chapitre`, `${nom} · La Mecque : ${JSON.stringify({ noms2, e2 })}`, 'INACCESSIBLE');
+    // le tapis, sobre : prier et se reposer, sans œuvres ni descente
     await E(() => { const W = window.ISNAD.world, s = W.map.spots.priere; window.__t.poser(s[0] * 16 + 8, s[1] * 16 + 13, 0); window.__t.offerts = []; });
+    await P.waitForTimeout(600); await capture(P, `mecque-tapis-${w}x${h}`, `${nom} · La Mecque : la cour du tapis`);
     await P.keyboard.press('Enter'); await P.waitForTimeout(700);
-    const natte = await E(() => window.__t.offerts.slice(-1)[0] || null); await E(() => window.ISNAD.input.emit('retour')); await P.waitForTimeout(400); await avancer(P);
-    si(natte && natte.opts.length === 3 && /De passage/.test(natte.q), `${nom} · la natte de La Mecque : prier et se reposer, garder une copie, plus tard — de passage, les œuvres se comptent dans les récits ; aucune descente`, `${nom} · la natte : ${JSON.stringify(natte)}`);
+    const tapis = await E(() => window.__t.offerts.slice(-1)[0] || null); await E(() => window.ISNAD.input.emit('retour')); await P.waitForTimeout(400); await avancer(P);
+    si(tapis && tapis.opts.length === 3 && /De passage/.test(tapis.q), `${nom} · le tapis de La Mecque : prier et se reposer, garder une copie, plus tard — de passage, les œuvres se comptent dans les récits ; aucune descente`, `${nom} · le tapis : ${JSON.stringify(tapis)}`);
     // ressortir par la porte par où l'on est entré (le nord), puis revenir à Médine
     const porteN = await E(() => { const W = window.ISNAD.world, s = W.spotPx(W.player.y < W.map.h * 8 ? 'porte_nord' : 'porte_sud'); return [s[0], s[1] < W.map.h * 8 ? 3 : W.map.h * 16 - 3, s[1] < W.map.h * 8 ? 'ArrowUp' : 'ArrowDown']; });
-    // (depuis la place, sur la grand-rue : juste sous la natte, un toucher vers la porte tombait sur elle, et Idris allait à la natte)
+    // (depuis la place, sur la grand-rue : juste sous le tapis, un toucher vers la porte tombait sur lui, et Idris allait au tapis)
     await E(() => { const W = window.ISNAD.world, s = W.map.spots.place || W.map.spots.priere; window.__t.poser(s[0] * 16 + 8, s[1] * 16 + 13, 3); });
     const ressorti = await versBord(porteN[0], porteN[1], porteN[2], 'visite_mecque');
     const e3 = await E(() => { const W = window.ISNAD.world, s = W.map.spots.mecque; return Object.assign(window.__t.etat(), { pres: s ? Math.round(Math.hypot(W.player.x - (s[0] * 16 + 8), W.player.y - (s[1] * 16 + 13))) : -1 }); });
@@ -270,7 +271,7 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
       const bon = e.carte === carte && e.comptoir && e.priere && r.carte === 'monde' && r.monde && r.monde.ville === 'koufa';
       (bon ? vus : rates).push(v + (bon ? '' : ' ' + JSON.stringify({ e, r })));
     }
-    si(!rates.length, `chaque ville de passage se visite (sa carte, son comptoir, sa natte) et l'on en ressort par sa porte : ${vus.join(', ')}`, `visites : ${rates.join(' · ')}`, 'INACCESSIBLE');
+    si(!rates.length, `chaque ville de passage se visite (sa carte, son comptoir, son tapis) et l'on en ressort par sa porte : ${vus.join(', ')}`, `visites : ${rates.join(' · ')}`, 'INACCESSIBLE');
     // le joueur de test du moteur ne sort jamais : à pied (walk) et au doigt (tap) — et le joueur automatique
     const jamais = [];
     for (const mode of ['walk', 'auto']) {
