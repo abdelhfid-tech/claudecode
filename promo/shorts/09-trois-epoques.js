@@ -91,7 +91,7 @@ module.exports = {
     // le jeu garde ses maillons qui se suivent (D211)
     await s.neuf(); await s.cadre('ecran'); await s.ev(() => { window.ISNAD.debug.all = true; window.ISNAD.ui.showChain(); }); await s.avancer(700); await s.ev(() => { document.querySelector('#chain').scrollTop = 250; });
     await s.arrivee(0, 0.4);
-    await s.defiler('#chain', 1500, 10 * T);
+    await s.defiler('#chain', 1120, 10 * T);                         // jusqu'au maillon V : le dernier maillon (celui d'Idris, scellé jusqu'aux cinq Lumières) reste hors de l'image
     await s.tourner(10 * T);
     await s.carton(16 * T - 0.2);
   }
