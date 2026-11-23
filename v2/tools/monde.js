@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-/* ISNAD 2.29 (D220) — la carte du monde, les portes, les visites : le contrôle, par les vrais boutons, sur un téléphone.
+/* ISNAD 2.29 (D220) et 2.30 (D222) — la carte du monde, les portes, les visites, les rencontres de la route : le contrôle, par
+   les vrais boutons, sur un téléphone.
    1. La géographie (hors du jeu, dans la page) : chaque ville à sa place projetée, à une case près (D.MONDE, maps.js) ; les
       distances Médine–La Mecque, Médine–Damas, Koufa–Bassora, Damas–Jérusalem à 10 % près de la distance réelle (le grand
       cercle) ; toutes les villes reliées à pied (M.relie) ; aucune route dans la mer ; pas de petite carte au coin. Les dates :
@@ -7,7 +8,8 @@
       chaque chapitre sa carte du monde. Les portes : ouvertes exactement dans les chapitres de D.MONDE.depuis, sur leur carte, à
       partir de leur objectif — et nulle part ailleurs (2084, les veillées, la mer, la noosphère, le dernier maillon, les routes,
       Dhû l-Qassa, Harûrâ', Nahrawân). Les visites : chacune se bâtit, son comptoir et son tapis se rejoignent à pied ; La Mecque
-      sans mosquée (ni lieu, ni mur, ni mihrab, ni minbar, ni colonnes, ni cour carrelée).
+      sans mosquée (ni lieu, ni mur, ni mihrab, ni minbar, ni colonnes, ni cour carrelée). 2.30 : aucune visite n'a d'étendard,
+      la visite de Médine est Médine case pour case (hors des deux cases de ses étendards), et Médine garde les siens.
    2. En hauteur (390 × 844), au doigt, puis en largeur (844 × 390), au clavier : le premier chapitre d'Abû Bakr (Médine) ;
       sortir par la porte du sud (la leçon « La route », une fois) ; la carte du monde, Idris à côté de Médine, la flèche vers
       elle, « Revenir : Médine » au-dessus d'elle ; à pied jusqu'à La Mecque (« Entrer : La Mecque ») ; la visite (son carton :
@@ -17,6 +19,17 @@
    3. (En largeur) chaque chapitre de D.MONDE.depuis : sorti par sa porte, Idris est à côté de sa ville, et y revient à son
       objectif ; chaque ville de passage se visite (sa carte, son comptoir, son tapis) et l'on en ressort. Le joueur de test du
       moteur (auto, à pied, au doigt) ne sort jamais.
+   (Dans les parties 1 à 4, rien ne se croise sur la route : I.debug.rencontres les éteint.)
+   5. 2.30 (D222) — les rencontres de la route, en hauteur (390 × 844) et en largeur (844 × 390) : les chimères du désert (sur le
+      sable, les dunes et la steppe ; jamais à deux cases d'une ville ni à trois de La Mecque, sur cent tirages autour de Médine
+      et de La Mecque ; plus nombreuses loin des routes ; aucune idée noire) ; une chimère rencontrée, combattue et vaincue,
+      puis une autre, fuie par le vrai bouton « Fuir » (elle poursuit) ; les brigands — l'embuscade loin des routes, la parole
+      avec le chef (gagnée en hauteur ; manquée en largeur, puis La Razzia, vaincue), sans rien de la caravane, une fois au plus
+      par traversée, sans toucher aux piliers ni au compte des pourparlers ; le voyageur — assis et accablé dans le désert, loin
+      des villes, il a un visage ; apaisé (en hauteur), il se relève et reprend la route ; non apaisé (en largeur), L'Abandon se
+      lève, on la combat, vaincue elle le libère ; la rencontre qui attend tant que l'outil « parler » n'est pas reçu ; La Mecque,
+      chances forcées : rien autour d'elle ; la Carte de la halte, sans nom qui en chevauche un autre (près de Damas, près de
+      Koufa et d'al-Hîra) ; le bandeau d'une ville visitée (« … · La Mecque »). Captures dans le dossier.
    Usage : node v2/tools/monde.js [dossier de captures]       « MONDE CONFORME », sinon « ÉCART », « BLOQUÉ », « INACCESSIBLE »,
    « ABSENT » ; code de sortie 1. Captures (deviceScaleFactor 2) : la carte du monde entière, chaque ville, une sortie, une
    visite, La Mecque, en hauteur et en largeur, dans les trois dessins (fin, fin et adouci, d'origine), et leur planche. */
@@ -26,7 +39,7 @@ const out = process.argv[2] || path.join(__dirname, '../.smoke/monde');
 fs.mkdirSync(out, { recursive: true });
 const url = 'file://' + path.join(__dirname, '../index.html');
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); }, si = (c, bien, mal, mot) => c ? ok(bien) : ko((mot || 'ÉCART') + ' ' + (mal || bien));
-const captures = [], PARTIES = process.env.PARTIES || '1234', ORIENT = process.env.ORIENT || '';   // (PARTIES=2, ORIENT=haut|large : une partie, une orientation)
+const captures = [], PARTIES = process.env.PARTIES || '12345', ORIENT = process.env.ORIENT || '';   // (PARTIES=2, ORIENT=haut|large : une partie, une orientation)
 
 async function telephone(browser, w, h, qs) {
   const touch = h > w;
@@ -40,10 +53,23 @@ async function preparer(p) {
   await p.evaluate(() => {
     const I = window.ISNAD, W = I.world, S = I.script, q = s => document.querySelector(s);
     I.audio.setOn(false); I.debug.noOeuvres = true;
+    I.debug.rencontres = { chimeres: 0, brigands: 0, voyageur: 0 };   // 2.30 : rien ne se croise sur la route, sauf dans la partie 5
     const T = window.__t = { toasts: [], cartons: [] };
     new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1) T.toasts.push((n.textContent || '').trim()); }))).observe(q('#toasts'), { childList: true });
     { const oc = S.card; S.card = function (cls, html) { T.cartons.push(String(html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()); return oc.apply(this, arguments); }; }
-    T.offerts = []; { const om = S.menuPick; S.menuPick = function (qq, opts) { T.offerts.push({ q: typeof qq === 'string' ? qq : String((qq && qq.html) || '').replace(/<[^>]*>/g, ' '), opts: (opts || []).map(o => (o.t || '').replace(/\s+/g, ' ').trim()) }); return om.apply(this, arguments); }; }
+    T.offerts = []; T.menus = []; { const om = S.menuPick; S.menuPick = function (qq, opts) { T.offerts.push({ q: typeof qq === 'string' ? qq : String((qq && qq.html) || '').replace(/<[^>]*>/g, ' '), opts: (opts || []).map(o => (o.t || '').replace(/\s+/g, ' ').trim()) });
+      T.menus.push({ q: typeof qq === 'string' ? qq : String((qq && qq.html) || '').replace(/<[^>]*>/g, ' '), opts: (opts || []).map(o => ({ v: o.v, ok: !!o.ok, t: String(o.t || o.html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 90) })) }); return om.apply(this, arguments); }; }
+    // (2.30 : le pourparler qui se joue — ses manches disent la valeur de chaque réponse, dans l'ordre où elles s'affichent)
+    { const orun = S.run; S.run = function (ops) { (function va(v) { if (!Array.isArray(v)) return; if (v[0] === 'parley' && v[1] && v[1].rounds) T.parley = v[1]; else v.forEach(va); })(ops); return orun.apply(this, arguments); }; }
+    T.combats = []; { const ob = I.battle.start; I.battle.start = function (o) { T.combats.push({ group: (o.group || []).join('+'), fuite: !!o.fuite, bg: o.bg }); return ob.apply(this, arguments); }; }
+    // 2.30 : marcher tout droit, case par case, jusqu'à n cases ou jusqu'à ce que quelque chose se passe
+    T.avancer = async (dir, n, ms) => { const h = I.input.held, t0 = performance.now(), cell = () => Math.floor(W.player.x / 16) + ',' + Math.floor(W.player.y / 16); let c0 = cell(), k = 0;
+      while (performance.now() - t0 < (ms || 20000) && k < n) { if (S.busy || W.lock || I.battle.active || I.monde.occupe || W.npcs.some(x => x.route)) break; h.up = h.down = h.left = h.right = false; h[dir] = true; await new Promise(r => requestAnimationFrame(r)); const c = cell(); if (c !== c0) { c0 = c; k++; } }
+      h.up = h.down = h.left = h.right = false; return { k, occupe: !!(S.busy || I.battle.active || I.monde.occupe) }; };
+    // 2.30 : une rangée de n cases du désert, loin des routes (quatre cases) et des villes (six cases), la plus proche d'une case
+    T.rangee = (n, depuis) => { const m = W.map, C = I.monde.champs(), bon = (x, y) => x > 0 && y > 0 && x < m.w - 1 && y < m.h - 1 && !m.solid[y * m.w + x] && ['sand', 'dune', 'steppe'].includes(m.g0(x * 16 + 8, y * 16 + 8)) && C.route[y * m.w + x] >= 4 && C.eau[y * m.w + x] >= 3 && !C.interdit[y * m.w + x] && C.lieux.every(s => Math.max(Math.abs(s[0] - x), Math.abs(s[1] - y)) >= 6);
+      let best = null; for (let y = 2; y < m.h - 2; y++) for (let x = 2; x < m.w - n - 2; x++) { let b = true; for (let k = 0; k < n && b; k++) b = bon(x + k, y) && bon(x + k, y - 1) && bon(x + k, y + 1); if (!b) continue; const d = Math.hypot(x - depuis[0], y - depuis[1]); if (!best || d < best.d) best = { x, y, d }; }
+      return best; };
     T.visible = s => { const e = q(s); return !!e && !e.hidden; };
     T.attendre = (cond, ms) => new Promise(res => { const t0 = Date.now(), iv = setInterval(() => { let v = false; try { v = cond(); } catch (e) { v = false; } if (v) { clearInterval(iv); res(true); } else if (Date.now() - t0 > (ms || 60000)) { clearInterval(iv); res(false); } }, 50); });
     T.calme = () => I.scene === W && !!W.map && !S.busy && !W.lock && !I.battle.active && !I.ui.menuOpen && !(I.passages && I.passages.occupe);
@@ -117,7 +143,14 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
       r.portes = [...new Set(r.portes)];
       // les visites : chacune se bâtit, son comptoir et son tapis, reliés ; La Mecque sans mosquée
       r.visites = Object.keys(V).filter(id => V[id].carte).map(id => { const mv = M.build(V[id].carte, { time: 'day' }), tuiles = new Set(); for (let y = 0; y < mv.h; y++) for (let x = 0; x < mv.w; x++) tuiles.add(mv.g0(x * 16 + 1, y * 16 + 1));
-        return { id, carte: V[id].carte, relie: M.relie(mv), comptoir: !!mv.spots.comptoir, priere: !!mv.spots.priere, mosquee: Object.keys(mv.spots).filter(k => /mosquee|ecole/.test(k)).concat(mv.objs.filter(o => ['minbar', 'basin'].includes(o.type)).map(o => o.type)).concat(['gwall', 'mihrab', 'zsand', 'zellij'].filter(t => tuiles.has(t))), foes: W.foes.filter(f => f.map === V[id].carte).length, boutique: (D.GEAR_SHOPS[V[id].carte] || []).length }; });
+        return { id, carte: V[id].carte, relie: M.relie(mv), comptoir: !!mv.spots.comptoir, priere: !!mv.spots.priere, mosquee: Object.keys(mv.spots).filter(k => /mosquee|ecole/.test(k)).concat(mv.objs.filter(o => ['minbar', 'basin'].includes(o.type)).map(o => o.type)).concat(['gwall', 'mihrab', 'zsand', 'zellij'].filter(t => tuiles.has(t))), foes: W.foes.filter(f => f.map === V[id].carte).length, boutique: (D.GEAR_SHOPS[V[id].carte] || []).length, etendards: mv.objs.filter(o => o.type === 'banner').length }; });
+      // 2.30 : les étendards — aucune visite n'en a ; Médine garde les siens ; la visite de Médine (et celle de Koufa) est sa ville,
+      // case pour case, hors des cases de ses étendards, et ses autres objets sont les mêmes
+      r.etendards = ['medine', 'koufa', 'camp', 'romaine'].map(id => ({ id, n: M.build(id, { time: 'day' }).objs.filter(o => o.type === 'banner').length }));
+      r.memes = [['medine', 'visite_medine'], ['koufa', 'visite_koufa']].map(([a, b]) => { const A = M.build(a, { time: 'day' }), B = M.build(b, { time: 'day' }), ban = new Set(A.objs.filter(o => o.type === 'banner').map(o => Math.floor(o.x / 16) + ',' + Math.floor((o.y - 15) / 16)));
+        let tuiles = 0, pleines = 0; for (let y = 0; y < A.h; y++) for (let x = 0; x < A.w; x++) { if (A.g0(x * 16 + 8, y * 16 + 8) !== B.g0(x * 16 + 8, y * 16 + 8)) tuiles++; if (!ban.has(x + ',' + y) && A.solid[y * A.w + x] !== B.solid[y * A.w + x]) pleines++; }
+        const cle = o => o.type + '@' + o.x + ',' + o.y, oa = A.objs.filter(o => o.type !== 'banner').map(cle).sort().join(' '), ob = B.objs.map(cle).sort().join(' ');
+        return { a, b, tuiles, pleines, objets: oa === ob, liberees: [...ban].filter(k => { const [x, y] = k.split(',').map(Number); return !B.solid[y * B.w + x]; }).length, etendards: ban.size }; });
       return r;
     });
     si(g.mini === false && g.taille[0] === 96 && g.taille[1] === 96, `la carte du monde : ${g.taille[0]} × ${g.taille[1]} cases, une toile de ${g.taille[2]} × ${g.taille[3]} points en dessin fin (${(g.taille[2] * g.taille[3] / 1e6).toFixed(1)} Mpx), sans petite carte au coin`, `la carte du monde : ${JSON.stringify(g.taille)}, petite carte ${g.mini}`);
@@ -132,6 +165,10 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
     si(vis.every(v => v.relie && v.comptoir && v.priere && v.boutique > 0 && !v.foes), `les visites : ${vis.map(v => v.carte).join(', ')} — chacune se bâtit, son comptoir (une boutique) et son tapis se rejoignent à pied, aucune chimère`, `visites : ${JSON.stringify(vis)}`, 'INACCESSIBLE');
     const mq = vis.find(v => v.id === 'mecque'), autres = vis.filter(v => v.id !== 'mecque' && v.carte !== 'visite_hira' && !/visite_(quds|damas|homs|qinnasrin)/.test(v.carte));
     si(mq && !mq.mosquee.length && autres.every(v => v.mosquee.length), 'La Mecque : ni mosquée, ni école de mosquée, ni mur ni carreaux de mosquée, ni mihrab, ni minbar — les autres villes d’Arabie gardent la leur', `La Mecque : ${JSON.stringify(mq)}`);
+    const et = g.etendards, med = et.find(e => e.id === 'medine');
+    si(vis.every(v => v.etendards === 0) && med && med.n === 2 && g.memes.every(q => !q.tuiles && !q.pleines && q.objets && q.liberees === q.etendards),
+      `les étendards (2.30) : aucune visite n'en a (${vis.map(v => v.carte + ' ' + v.etendards).join(', ')}) ; les cartes des récits gardent les leurs (${et.map(e => e.id + ' ' + e.n).join(', ')}) ; les visites de Médine et de Koufa sont leur ville case pour case, les mêmes objets, hors des ${g.memes.map(q => q.etendards).join(' et ')} cases de leurs étendards, rendues au sol`,
+      `les étendards : ${JSON.stringify({ visites: vis.map(v => [v.carte, v.etendards]), et, memes: g.memes })}`);
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'géographie · ' + e)); await T.ctx.close();
   }
 
@@ -285,6 +322,208 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'chapitres · ' + e)); await T.ctx.close();
   }
 
+  /* ---------- 5. 2.30 (D222) : les rencontres de la route ---------- */
+  // mener ce qui se dit jusqu'au calme : un carton, une réplique se passent d'un A (Entrée) ; un choix se fait au vrai bouton,
+  // selon `choix` (« meilleur » : la réponse qui donne le plus de confiance, « pire » : le moins ; devant une idée noire, la
+  // manière qui porte) ; un combat, l'IA de test le mène, ou l'on fuit par le vrai bouton « Fuir » (`combat` : 'fuir')
+  async function mener(P, choix, combat, ms = 150000) {
+    const t0 = Date.now(), vu = { combats: 0, choix: [], fui: false, lignes: [] };
+    while (Date.now() - t0 < ms) {
+      const e = await P.evaluate(() => { const T = window.__t, I = window.ISNAD; if (I.battle.active) return 'combat'; if (T.visible('#choice')) return 'choix'; if (T.visible('#dialog') || (T.visible('#card') && document.querySelector('#card').classList.contains('on'))) return 'lire'; return T.calme() && !I.monde.occupe ? 'calme' : ''; });
+      if (e === 'calme') { await P.waitForTimeout(400); if (await P.evaluate(() => window.__t.calme() && !window.ISNAD.monde.occupe && !window.ISNAD.battle.active && !window.__t.visible('#dialog'))) return vu; continue; }
+      if (e === 'lire') { const l = await P.evaluate(() => window.__t.lu()); if (l) vu.lignes.push(l); await P.keyboard.press('Enter'); await P.waitForTimeout(160); continue; }
+      if (e === 'choix') {
+        await P.waitForTimeout(450);
+        const i = await P.evaluate(c => { const T = window.__t, q = document.querySelector('#choice .prompt'), pt = q ? q.textContent : '', R = T.parley && T.parley.rounds.find(r => pt.indexOf(r.say) >= 0), M = T.menus[T.menus.length - 1];
+          const o = R ? R.opts.map(x => ({ v: x.v })) : M ? M.opts : null; if (!o) return 0; if (o.some(x => x.ok)) return o.findIndex(x => x.ok); if (o.some(x => typeof x.v === 'number')) { let b = 0; o.forEach((x, j) => { if (c === 'pire' ? x.v < o[b].v : x.v > o[b].v) b = j; }); return b; } return 0; }, choix);
+        vu.choix.push(i); await P.evaluate(i => { const b = document.querySelectorAll('#choice .opt')[i]; if (b) b.click(); }, i); await P.waitForTimeout(350); continue; }
+      if (e === 'combat') {
+        vu.combats++;
+        if (combat === 'fuir' && !vu.fui) {
+          let pret = false; for (let k = 0; k < 160 && !pret; k++) { const r = await P.evaluate(() => { const c = document.querySelector('#battle .cmd'), b = document.querySelector('#battle .banner'); if (b && !b.hidden && b.classList.contains('attend')) return 'attend'; return c && c.querySelector('.mlist.main .mi') && !c.querySelector('.mhint') && b.hidden ? 'cmd' : ''; });
+            if (r === 'cmd') { await P.waitForTimeout(350); pret = true; } else { if (r === 'attend') await P.keyboard.press('Enter'); await P.waitForTimeout(150); } }
+          vu.fui = pret && await P.evaluate(() => { const b = [...document.querySelectorAll('#battle .cmd .mlist.main .mi')].find(x => !x.hidden && /Fuir/.test(x.textContent)); if (b) b.click(); return !!b; });
+          await P.evaluate(() => window.__t.attendre(() => !window.ISNAD.battle.active, 20000)); return vu; }   // (aussitôt : la chimère fuie poursuit)
+        await P.evaluate(() => { const I = window.ISNAD; I.debug.auto = true; I.world._autoBusy = true; I.speed = 20; });
+        await P.evaluate(() => window.__t.attendre(() => !window.ISNAD.battle.active, 150000));
+        await P.evaluate(() => { const I = window.ISNAD; I.debug.auto = false; I.world._autoBusy = false; I.speed = 1; }); continue; }
+      await P.waitForTimeout(120);
+    }
+    vu.bloque = true; return vu;
+  }
+  // un chapitre repris sur la route (un point de reprise sur la carte du monde) : sorti par la porte du sud de sa ville
+  const surRoute = (E, sid, ville, an, depuis) => E(([sid, ville, an, depuis]) => { const I = window.ISNAD, W = I.world, sg = I.sagas[sid], ch = sg.chapters[0], T = window.__t; I.input.reset(); W.roster = {}; W.saga = null; T.menus = []; T.combats = []; I.monde.journal = [];
+    const s = I.maps.casesVilles()[depuis || ville]; return W.startChapter(sid, 0, { saga: sid, ci: 0, obj: 0, map: 'monde', opts: { time: 'day', an }, pos: [s[0] * 16 + 8, (s[1] + 2) * 16 + 13], party: ch.party.slice(), npcs: {}, foes: [], chests: [], flags: { _monde: { ville, retour: { map: ville, opts: { time: 'day' }, pos: [470, 690], dir: 3, npcs: {} } } } }); }, [sid, ville, an, depuis]);
+  for (const [w, h] of PARTIES.includes('5') ? [[390, 844], [844, 390]].filter(([w, h]) => !ORIENT || (ORIENT === 'haut') === (h > w)) : []) {
+    const nom = w + '×' + h, haut = h > w, T = await telephone(browser, w, h), P = T.p, E = (fn, a) => P.evaluate(fn, a);
+    await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv._route = 1; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); });
+    const rencontres = o => E(o => { window.ISNAD.debug.rencontres = o; }, o);
+
+    // 5a. les chimères du désert : où elles se posent (cent tirages autour de Médine, cent autour de La Mecque), et rien près
+    // d'une ville ni de La Mecque ; plus nombreuses loin des routes ; aucune idée noire
+    if (!haut) {
+      await rencontres({ brigands: 0, voyageur: 0 }); await surRoute(E, 'abubakr', 'medine', 11); await P.waitForTimeout(1200); await avancer(P);
+      const t = await E(() => { const I = window.ISNAD, W = I.world, S = I.script, D = I.D, m = W.map, Ch = I.monde.champs(), R0 = D.MONDE.rencontres, tr = I.monde.traversee(), r = { n: 0, mal: [], loin: 0, pres: 0, groupes: new Set(), noirs: 0, desert: true };
+        const cheb = (a, b) => Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1])), lieux = Object.keys(m.spots).map(k => [k, m.spots[k]]);
+        const eligibles = { loin: 0, pres: 0 };
+        const loinDe = (k, c) => k === 'mecque' ? R0.chimeres.mecque : R0.villes;   // (les chimères : à douze cases de La Mecque ou moins, jamais)
+        r.malOk = 0; for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) if (I.rodeurs.rueOk(x, y) && lieux.some(([k, s]) => cheb(s, [x, y]) <= loinDe(k))) r.malOk++;   // (une case où l'on pourrait rôder, près d'une ville)
+        const c0 = tr.c;
+        [['medine'], ['mecque']].forEach(([v]) => { const s = m.spots[v];
+          tr.c = s.slice(); { const C = I.monde.rodent(); for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) if (I.rodeurs.rueOk(x, y) && C.libre(x, y)) eligibles[Ch.route[y * m.w + x] >= R0.route ? 'loin' : 'pres'] += 100; }
+          for (let k = 0; k < 100; k++) { tr.g = 1000 + k; tr.c = s.slice(); delete tr.vaincues; I.rodeurs.poserRues();
+            W.foes.filter(f => f.rue).forEach(f => { r.n++; const c = [Math.floor(f.x / 16), Math.floor(f.y / 16)], sol = m.g0(f.x, f.y); r.groupes.add(f.group[0]); if (D.NOIRS.includes(f.group[0]) || (I.common.enemies[f.group[0]] || {}).idee) r.noirs++;
+              if (!['sand', 'dune', 'steppe'].includes(sol)) r.desert = false;
+              lieux.forEach(([k2, q]) => { const d = cheb(q, c); if (d <= loinDe(k2)) r.mal.push(k2 + ':' + d); });
+              r[Ch.route[c[1] * m.w + c[0]] >= R0.route ? 'loin' : 'pres']++; }); } });
+        tr.c = c0; tr.g = 7; I.rodeurs.poserRues();
+        r.groupes = [...r.groupes]; r.densite = +((r.loin / eligibles.loin) / Math.max(1e-9, r.pres / eligibles.pres)).toFixed(2); r.eligibles = eligibles; r.mecque = R0.chimeres.mecque; r.villes = R0.villes; return r; });
+      si(t.n > 400 && !t.mal.length && !t.malOk && t.desert && !t.noirs && t.densite > 1.5,
+        `les chimères du désert : ${t.n} posées en deux cents tirages (autour de Médine et de La Mecque) — sur le sable, les dunes et la steppe, aucune à ${t.villes} cases d'une ville ou moins ni à ${t.mecque} de La Mecque ou moins (et aucune case où rôder n'y est), ${t.densite} fois plus denses loin des routes ; ${t.groupes.join(', ')} — aucune idée noire`,
+        `les chimères du désert : ${JSON.stringify(t)}`);
+      // elles vont et viennent trois secondes : jamais hors du désert, jamais près d'une ville
+      await P.waitForTimeout(3000);
+      const mv = await E(() => { const I = window.ISNAD, W = I.world, m = W.map; return W.foes.filter(f => f.rue && !f.done).map(f => { const x = Math.floor(f.x / 16), y = Math.floor(f.y / 16); return { ok: I.rodeurs.rueOk(x, y) && !I.monde.interditCase(x, y), sol: m.g0(f.x, f.y) }; }); });
+      si(mv.length && mv.every(q => q.ok), `${nom} · trois secondes plus tard, les ${mv.length} chimères n'ont quitté ni le désert ni ses abords permis`, `${nom} · leur ronde : ${JSON.stringify(mv)}`);
+    }
+
+    // 5b. une chimère rencontrée, combattue et vaincue ; puis une autre, fuie par le vrai bouton
+    {
+      await rencontres({ brigands: 0, voyageur: 0 }); await surRoute(E, 'abubakr', 'medine', 11); await P.waitForTimeout(1200); await avancer(P);
+      const rangee = await E(() => { const W = window.ISNAD.world, p = W.player; return window.__t.rangee(8, [Math.floor(p.x / 16), Math.floor(p.y / 16)]); });
+      // une chimère du désert, la plus proche, vient tout contre celui qui mène, posé dans le désert loin des villes
+      const amener = () => E(rg => { const I = window.ISNAD, W = I.world, T = window.__t; W.healAll(); T.poser(rg.x * 16 + 8, rg.y * 16 + 13, 2); const f = W.foes.filter(q => q.rue && !q.done && !q.voyageur).sort((a, b) => Math.hypot(a.x - W.player.x, a.y - W.player.y) - Math.hypot(b.x - W.player.x, b.y - W.player.y))[0]; if (!f) return null;
+        f.x = W.player.x + 10; f.y = W.player.y - 5; f.cx = null; return T.attendre(() => I.battle.active, 8000).then(v => v ? f.id : null); }, rangee);
+      const id1 = rangee && await amener(); if (id1) { await P.waitForTimeout(900); await capture(P, `rencontre-chimere-${w}x${h}`, `${nom} · une chimère du désert, rencontrée`); }
+      const c1 = id1 ? await mener(P, 'meilleur', 'gagner') : null;
+      const e1 = await E(id => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.id === id), tr = I.monde.traversee(); return { done: !!(f && f.done), vaincue: !!(f && tr && tr.vaincues && tr.vaincues[f.cle]), combats: window.__t.combats.slice(), carte: W.map.id, dirhams: I.trade.dirhams() }; }, id1);
+      si(id1 && c1 && !c1.bloque && e1.done && e1.vaincue && e1.combats.length === 1 && e1.combats[0].fuite && e1.combats[0].bg === 'desert' && e1.carte === 'monde',
+        `${nom} · une chimère du désert (${e1.combats[0] && e1.combats[0].group}) : son contact ouvre un combat de rencontre (on peut fuir, le décor du désert), mené et gagné ; vaincue, elle ne revient pas de la traversée`, `${nom} · la chimère : ${JSON.stringify({ id1, c1, e1 })}`, 'BLOQUÉ');
+      const id2 = await amener(); const c2 = id2 ? await mener(P, 'meilleur', 'fuir', 30000) : null;
+      await E(() => window.__t.attendre(() => !!window.ISNAD.rodeurs.fuite, 4000));   // (la fuite se dit une fois le combat refermé)
+      const e2 = await E(id => { const I = window.ISNAD, W = I.world, f = W.foes.find(q => q.id === id); return { poursuit: !!(f && I.rodeurs.poursuit(f)), fuite: !!I.rodeurs.fuite, done: !!(f && f.done), carte: W.map.id }; }, id2);
+      si(id2 && c2 && c2.fui && !e2.done && e2.carte === 'monde' && e2.poursuit, `${nom} · une autre, fuie par le vrai bouton « Fuir » : le combat se referme, la chimère poursuit celui qui mène`, `${nom} · la fuite : ${JSON.stringify({ id2, c2, e2 })}`, 'INACCESSIBLE');
+      await E(id => { const I = window.ISNAD; I.rodeurs.finFuite(); I.world.foes.forEach(f => { if (f.rue) f.done = true; }); }, id2);
+    }
+
+    // 5c. les brigands : loin des routes, une embuscade ; la parole avec le chef (gagnée en hauteur, manquée en largeur — puis La
+    // Razzia) ; rien de la caravane ; une fois au plus par traversée ; ni les piliers ni le compte des pourparlers ne bougent
+    {
+      await rencontres({ chimeres: 0, voyageur: 0, brigands: 1 }); await surRoute(E, 'abubakr', 'medine', 11); await P.waitForTimeout(1200); await avancer(P);
+      const avant = await E(() => { const I = window.ISNAD, W = I.world; return { piliers: JSON.stringify(W.pillars()), parley: JSON.stringify(I.save.data.parley || {}), dirhams: I.trade.dirhams() }; });
+      const rg = await E(() => { const W = window.ISNAD.world, p = W.player; return window.__t.rangee(14, [Math.floor(p.x / 16), Math.floor(p.y / 16)]); });
+      await E(rg => window.__t.poser(rg.x * 16 + 8, rg.y * 16 + 13, 2), rg);
+      const pas1 = await E(() => window.__t.avancer('right', 12, 15000));
+      await P.waitForTimeout(1200); if (pas1.occupe) await capture(P, `rencontre-brigands-${w}x${h}`, `${nom} · l'embuscade des brigands`);
+      const c = await mener(P, haut ? 'meilleur' : 'pire', 'gagner');
+      const pas2 = await E(() => window.__t.avancer('left', 10, 12000));   // (loin des routes encore, la chance forcée : rien de plus)
+      const b = await E(() => { const I = window.ISNAD, W = I.world, T = window.__t, tr = I.monde.traversee(); return { journal: I.monde.journal.filter(j => j.quoi === 'brigands').length, brig: tr && tr.brig, cartons: T.cartons.join(' | ').slice(-1200), combats: T.combats.slice(), piliers: JSON.stringify(W.pillars()), parley: JSON.stringify(I.save.data.parley || {}), dirhams: I.trade.dirhams(), carte: W.map.id,
+        caravane: T.menus.some(m => /servi d’abord/.test(m.q)) }; });
+      const txt = (await E(() => window.__t.toasts.concat(window.__t.cartons).join(' '))) + ' ' + c.lignes.join(' ');
+      const parole = haut ? !b.combats.length : b.combats.some(x => /razzia/.test(x.group) && !x.fuite);
+      si(pas1.occupe && !c.bloque && b.journal === 1 && b.brig && parole && !b.caravane && !/Un caravanier|La caravane a été pillée/.test(txt) && b.piliers === avant.piliers && b.parley === avant.parley && b.carte === 'monde' && (haut || b.dirhams > avant.dirhams),
+        `${nom} · les brigands : une embuscade loin des routes (après ${pas1.k} cases), la parole avec leur chef ${haut ? 'gagnée — ils posent les armes, sans combat' : 'manquée — puis La Razzia, ses chimères, vaincues (' + (b.dirhams - avant.dirhams) + ' dirhams trouvés)'} ; rien de la caravane (ni caravanier, ni part à servir) ; ${pas2.k} cases encore loin des routes : aucune autre — une au plus par traversée ; ni les piliers ni le compte des pourparlers ne bougent`,
+        `${nom} · les brigands : ${JSON.stringify({ pas1, c: Object.assign({}, c, { lignes: c.lignes.slice(0, 4) }), pas2, b, avant })}`, 'BLOQUÉ');
+      if (haut) console.log('    (les lignes de l’embuscade) ' + c.lignes.slice(0, 3).map(l => '« ' + l.slice(0, 90) + ' »').join(' · '));
+    }
+
+    // 5d. le voyageur : assis et accablé dans le désert, loin des villes ; apaisé (en hauteur) il se relève et reprend la route ;
+    // non apaisé (en largeur) L'Abandon se lève, on la combat, vaincue elle le libère
+    {
+      await rencontres({ chimeres: 0, brigands: 0, voyageur: 1 }); await surRoute(E, 'abubakr', 'medine', 11); await P.waitForTimeout(1200); await avancer(P);
+      const avant = await E(() => { const I = window.ISNAD; return { piliers: JSON.stringify(I.world.pillars()), parley: JSON.stringify(I.save.data.parley || {}), mal: JSON.stringify((I.save.data.mal || {}).ev || {}) }; });
+      const rg = await E(() => { const W = window.ISNAD.world, p = W.player; return window.__t.rangee(14, [Math.floor(p.x / 16), Math.floor(p.y / 16)]); });
+      await E(rg => window.__t.poser(rg.x * 16 + 8, rg.y * 16 + 13, 2), rg);
+      const pas = await E(() => window.__t.avancer('right', 12, 15000));
+      const v0 = await E(() => { const I = window.ISNAD, W = I.world, D = I.D, m = W.map, n = W.npcs.find(x => x.id === '_voyageur'); if (!n) return null; const c = [Math.floor(n.x / 16), Math.floor(n.y / 16)], Ch = I.monde.champs();
+        return { pose: n.pose, sol: m.g0(n.x, n.y), interdit: I.monde.interditCase(c[0], c[1]), villes: Ch.lieux.reduce((d, s) => Math.min(d, Math.max(Math.abs(s[0] - c[0]), Math.abs(s[1] - c[1]))), 99), visage: !D.sansVisage(n.name, 'abubakr') && n.sheet.look && n.sheet.look.kind !== 'compagnon', nom: n.name, x: Math.round(n.x), y: Math.round(n.y) }; });
+      await P.waitForTimeout(700); if (v0) await capture(P, `rencontre-voyageur-${w}x${h}`, `${nom} · un voyageur assis dans le sable`);
+      si(v0 && v0.pose === 'accable' && ['sand', 'dune', 'steppe'].includes(v0.sol) && !v0.interdit && v0.villes >= 4 && v0.visage && v0.nom === 'Un voyageur',
+        `${nom} · le voyageur : « ${v0 && v0.nom} », posé après ${pas.k} cases, assis et accablé (${v0 && v0.pose}) dans le désert (${v0 && v0.sol}), à ${v0 && v0.villes} cases de la ville la plus proche ; il a un visage (un homme, pas un Compagnon)`, `${nom} · le voyageur : ${JSON.stringify({ pas, v0 })}`, 'ABSENT');
+      // lui parler : au doigt, le toucher ; au clavier, aller à côté de lui, tourné vers lui, et A (Entrée)
+      if (v0) {
+        if (haut) { for (let i = 0; i < 6 && !(await E(() => window.ISNAD.monde.occupe)); i++) { const pt = await E(v => window.__t.calme() ? window.__t.brut(v.x, v.y - 12) : null, v0); if (pt) await P.touchscreen.tap(pt[0], pt[1]); await P.waitForTimeout(1200); } }
+        else { await E(v => window.__t.marcher(v.x - 20, v.y, 8000), v0); await E(() => { window.ISNAD.world.player.dir = 2; }); await P.keyboard.press('Enter'); await P.waitForTimeout(800); }
+      }
+      const parle = await E(() => window.ISNAD.monde.journal.some(j => j.quoi === 'voyageur' && j.etat === 'parle'));
+      if (parle) await capture(P, `voyageur-pourparler-${w}x${h}`, `${nom} · le pourparler avec le voyageur`);
+      const c = parle ? await mener(P, haut ? 'meilleur' : 'pire', 'gagner') : { bloque: true };
+      await P.waitForTimeout(1500);
+      const v1 = await E(() => { const I = window.ISNAD, W = I.world, T = window.__t, J = I.monde.journal.filter(j => j.quoi === 'voyageur').map(j => j.etat), tr = I.monde.traversee();
+        return { journal: J, combats: T.combats.slice(), noir: T.menus.some(m => m.opts.some(o => o.ok)), reste: W.npcs.some(n => n.id === '_voyageur'), etat: tr && tr.voy && tr.voy.etat, chimere: W.foes.filter(f => f.voyageur).map(f => f.group[0] + (f.done ? ' vaincue' : '')),
+          piliers: JSON.stringify(W.pillars()), parley: JSON.stringify(I.save.data.parley || {}), mal: JSON.stringify((I.save.data.mal || {}).ev || {}), dits: T.toasts.concat(T.cartons).join(' ') }; });
+      const dialogue = await E(() => (document.querySelector('#dialog .text') || {}).textContent || '');
+      const bon = haut ? (v1.journal.join(',') === 'pose,parle,apaise,parti' && !v1.combats.length)
+        : (v1.journal.join(',') === 'pose,parle,combat,win,parti' && v1.combats.length === 1 && v1.combats[0].group === 'abandon' && v1.combats[0].fuite && v1.chimere.join() === 'abandon vaincue');
+      si(parle && !c.bloque && bon && v1.noir && !v1.reste && v1.etat === 'parti' && v1.piliers === avant.piliers && v1.parley === avant.parley && v1.mal === avant.mal,
+        haut ? `${nom} · lui parler (au doigt) : le pourparler, le Désespoir qui parle en lui — on lui répond, par la parole, la pédagogie ou la bienveillance ; apaisé, il se relève et reprend la route, sans combat ; rien ne touche au récit (piliers, pourparlers, idole)`
+          : `${nom} · lui parler (A) : le pourparler, le Désespoir répondu ; la parole n'a pas suffi : L'Abandon se lève, un combat d'où l'on peut fuir, contre elle seule, gagné ; vaincue, elle le libère — il se relève et reprend la route ; rien ne touche au récit`,
+        `${nom} · le voyageur : ${JSON.stringify({ parle, c: Object.assign({}, c, { lignes: c.lignes.slice(-6) }), v1: Object.assign({}, v1, { dits: v1.dits.slice(-400) }), dialogue, avant })}`, 'BLOQUÉ');
+      { const L = c.lignes || []; si(L.some(l => haut ? /Je vais jusqu’à la piste/.test(l) : /C’est plus léger/.test(l)) && L.some(l => /À quoi bon/.test(l)), `${nom} · ce qu'il dit : « ${(L.find(l => /À quoi bon/.test(l)) || '').slice(0, 60)} » (le Désespoir parle en lui), puis « ${(L.find(l => /Je vais jusqu’à|C’est plus léger/.test(l)) || '').slice(0, 70)} »`, `${nom} · les lignes du voyageur : ${JSON.stringify(L.slice(-12))}`); }
+    }
+
+    // 5e. la rencontre attend tant que l'outil « parler » n'est pas reçu (une partie neuve) ; puis elle vient
+    if (!haut) {
+      await rencontres({ chimeres: 0, brigands: 1, voyageur: 0 }); await surRoute(E, 'abubakr', 'medine', 11); await P.waitForTimeout(1200); await avancer(P);
+      await E(() => { const I = window.ISNAD; I.lecons.ouvrir(); ['marcher', 'aide', 'halte', 'route'].forEach(id => { I.lecons.recevoir(id); I.lecons.sequence(); }); I.monde.journal = []; });
+      const rg = await E(() => { const W = window.ISNAD.world, p = W.player; return window.__t.rangee(14, [Math.floor(p.x / 16), Math.floor(p.y / 16)]); });
+      await E(rg => window.__t.poser(rg.x * 16 + 8, rg.y * 16 + 13, 2), rg);
+      const n0 = await E(() => window.__t.toasts.length), a = await E(() => window.__t.avancer('right', 10, 12000)), j1 = await E(() => window.ISNAD.monde.journal.length), n1 = await E(() => window.__t.toasts.length);
+      await E(() => { const I = window.ISNAD; I.lecons.recevoir('parler'); });
+      const b = await E(() => window.__t.avancer('left', 10, 12000)); const j2 = await E(() => window.ISNAD.monde.journal.filter(j => j.quoi === 'brigands').length);
+      if (b.occupe) await mener(P, 'meilleur', 'gagner');
+      await E(() => { delete window.ISNAD.save.data.lecons; });
+      si(a.k >= 8 && !a.occupe && !j1 && n1 === n0 && b.occupe && j2 === 1, `${nom} · une partie neuve sans l'outil « parler » : ${a.k} cases loin des routes, la chance forcée, et rien — la rencontre attend ; l'outil reçu, elle vient (les brigands, à la ${b.k + 1}ᵉ case) ; aucun message de plus`,
+        `${nom} · la rencontre qui attend : ${JSON.stringify({ a, j1, n0, n1, b, j2 })}`);
+    }
+
+    // 5f. La Mecque : sorti de sa visite, les chances forcées et trente chimères à poser — rien autour d'elle
+    {
+      await rencontres({ chimeres: 30, brigands: 1, voyageur: 1 });
+      await surRoute(E, 'abubakr', 'medine', 11, 'mecque'); await P.waitForTimeout(1200); await avancer(P);
+      const z = await E(async () => { const I = window.ISNAD, W = I.world, m = W.map, s = m.spots.mecque, R0 = I.D.MONDE.rencontres, T = window.__t, cheb = (a, b) => Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]));
+        // tout autour de La Mecque, dans sa zone : on y marche, case après case
+        const vues = []; for (let j = -R0.mecque; j <= R0.mecque; j++) for (let i = -R0.mecque; i <= R0.mecque; i++) { const x = s[0] + i, y = s[1] + j; if (m.solid[y * m.w + x]) continue; vues.push([x, y]); }
+        for (const [x, y] of vues) { T.poser(x * 16 + 8, y * 16 + 13, 0); await new Promise(r => setTimeout(r, 40)); }
+        const pres = W.foes.filter(f => f.rue && !f.done && cheb([Math.floor(f.x / 16), Math.floor(f.y / 16)], s) <= R0.chimeres.mecque).length;
+        return { cases: vues.length, journal: I.monde.journal.filter(j => j.quoi !== 'sort').length, combat: I.battle.active, pres, chimeres: W.foes.filter(f => f.rue && !f.done).length, voyageur: W.npcs.some(n => n.route) }; });
+      await E(() => { const W = window.ISNAD.world, s = W.map.spots.mecque; window.__t.poser(s[0] * 16 + 8, (s[1] + 2) * 16 + 13, 0); }); await P.waitForTimeout(900);
+      await capture(P, `mecque-sans-rencontre-${w}x${h}`, `${nom} · autour de La Mecque, les chances forcées : rien`);
+      si(z.cases > 30 && !z.journal && !z.combat && !z.pres && !z.voyageur && z.chimeres > 0, `${nom} · La Mecque : ${z.cases} cases de sa zone parcourues, les chances forcées, ${z.chimeres} chimères posées ailleurs sur la route — ni chimère à douze cases d'elle ou moins (on n'en voit aucune depuis elle), ni combat, ni brigands, ni voyageur`, `${nom} · autour de La Mecque : ${JSON.stringify(z)}`);
+    }
+
+    // 5g. la Carte de la halte : aucun nom n'en chevauche un autre (près de Damas, près de Koufa et d'al-Hîra : un chapitre d'Alî)
+    {
+      await rencontres({ chimeres: 0, brigands: 0, voyageur: 0 });
+      const vues = [];
+      for (const [v, dx, dy] of [['damas', 0, 1], ['koufa', 1, 0], ['hira', 0, 1]]) {
+        await surRoute(E, 'ali', 'koufa', 36); await P.waitForTimeout(1000); await avancer(P);
+        await E(([v, dx, dy]) => { const W = window.ISNAD.world, s = W.map.spots[v]; window.__t.poser((s[0] + dx) * 16 + 8, (s[1] + dy) * 16 + 13, 0); }, [v, dx, dy]);
+        await E(() => window.ISNAD.ui.pause('carte')); await P.waitForTimeout(1200);
+        const r = await E(() => { const L = [...document.querySelectorAll('#menu .carte .lieu, #menu .carte .ici')].filter(e => e.offsetWidth).map(e => ({ t: e.textContent, r: e.getBoundingClientRect() })), sur = [];
+          for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) { const a = L[i].r, b = L[j].r; if (a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top) sur.push(L[i].t + ' / ' + L[j].t); }
+          const B = document.querySelector('#menu .carte').getBoundingClientRect(), dehors = L.filter(q => q.r.left < B.left - 0.5 || q.r.right > B.right + 0.5 || q.r.top < B.top - 0.5 || q.r.bottom > B.bottom + 0.5).map(q => q.t);
+          return { n: L.length, sur, dehors, noms: L.map(q => q.t) }; });
+        if (v !== 'hira') await capture(P, `carte-halte-noms-${v}-${w}x${h}`, `${nom} · la Carte de la halte, près de ${v}`);
+        vues.push(Object.assign({ v }, r));
+        await E(() => window.ISNAD.input.emit('retour')); await P.waitForTimeout(500); await avancer(P);
+      }
+      si(vues.every(q => q.n >= 8 && !q.sur.length && !q.dehors.length), `${nom} · la Carte de la halte : ${vues.map(q => q.n + ' noms près de ' + q.v).join(', ')} — aucun n'en chevauche un autre (Koufa et al-Hîra, celui qui mène et Damas), aucun hors de la carte`,
+        `${nom} · la Carte : ${JSON.stringify(vues)}`);
+    }
+
+    // 5h. le bandeau d'une ville visitée : son nom, et non celui de la ville du récit
+    {
+      await rencontres({ chimeres: 0, brigands: 0, voyageur: 0 }); await surRoute(E, 'abubakr', 'medine', 11, 'mecque'); await P.waitForTimeout(1200); await avancer(P);
+      const sur = await E(() => document.querySelector('#hud .sub').textContent);
+      await E(() => window.ISNAD.monde.entrer('mecque')); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'visite_mecque', 8000)); await P.waitForTimeout(900); await avancer(P);
+      const dans = await E(() => document.querySelector('#hud .sub').textContent);
+      await capture(P, `bandeau-mecque-${w}x${h}`, `${nom} · le bandeau, à La Mecque`);
+      si(/La Mecque/.test(dans) && !/Médine/.test(dans) && /An 11 H/.test(dans) && /Médine/.test(sur), `${nom} · le bandeau d'une ville visitée : « ${dans.trim()} » (sur la route : « ${sur.trim()} »)`, `${nom} · le bandeau : ${JSON.stringify({ sur, dans })}`);
+    }
+    toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'rencontres ' + nom + ' · ' + e)); await T.ctx.close();
+  }
+
   /* ---------- 4. les captures : la carte entière, chaque ville, dans les trois dessins, en hauteur et en largeur ---------- */
   for (const [dessin, qs] of PARTIES.includes('4') ? [['fin', ''], ['adouci', ''], ['origine', '?def=1']] : []) {
     for (const [w, h] of [[390, 844], [844, 390]]) {
@@ -313,7 +552,7 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
     await p.waitForTimeout(1500); const f = path.join(out, 'planche.png'); await p.screenshot({ path: f, fullPage: true }); await ctx.close(); console.log('    planche : ' + f); }
 
   if (toutesErreurs.length) { anomalies++; console.log('--- ERREURS ---'); [...new Set(toutesErreurs)].slice(0, 12).forEach(e => console.log(e)); }
-  console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ MONDE CONFORME — la carte du monde, ses villes et leurs dates, les portes des récits et elles seules, la route et le retour, les visites et La Mecque sobre, en hauteur au doigt et en largeur au clavier (captures dans ${out})`);
+  console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ MONDE CONFORME — la carte du monde, ses villes et leurs dates, les portes des récits et elles seules, la route et le retour, les visites (sans étendards) et La Mecque sobre ; les rencontres de la route — les chimères du désert, les brigands, le voyageur —, rien autour de La Mecque, la Carte sans noms qui se chevauchent, le bandeau des villes visitées ; en hauteur au doigt et en largeur au clavier (captures dans ${out})`);
   await browser.close();
   process.exit(anomalies ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });
