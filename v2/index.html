@@ -1005,7 +1005,7 @@ body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.32 · 2026-11-24 12:06 UTC · 901f87b+";
+window.ISNAD_VERSION = "2.32 · 2026-11-24 12:20 UTC · 54fffb6+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -11184,7 +11184,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   /* ================= mise en place ================= */
   const FOE_POS = { 1: [[112, 146]], 2: [[80, 126], [154, 150]], 3: [[62, 122], [140, 128], [100, 156]], 4: [[54, 120], [128, 116], [86, 154], [164, 152]] };
   const HERO_POS = [[270, 120], [306, 132], [342, 144]];
-  const TEMOIN_POS = [[14, 104], [32, 112], [12, 124], [34, 132]];   // 2.32 : les témoins, à gauche, derrière les chimères (hors de la manette)
+  const TEMOIN_POS = [[184, 80], [198, 74], [212, 82], [226, 76]];   // 2.32 : les témoins, au fond, entre les chimères et les nôtres (hors de leurs places et de la manette)
   // écran en hauteur : la fenêtre visible est plus étroite, les deux camps se rapprochent du centre
   const bx = x => G.view.w < G.PW ? Math.round(G.PW / 2 + (x - G.PW / 2) * I.clamp((G.view.w - 20) / 350, 0.5, 1)) : x;
   // 2.16 — en hauteur, les héros se resserrent autour du centre de leur groupe, et non du centre de l'écran : resserrés comme
@@ -11268,7 +11268,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     (opts.heros || W.party).forEach((x, i) => C.all.push(mkHero(x, i)));
     const nH = C.all.length; opts.group.forEach((id, i) => C.all.push(mkFoe(id, i, opts.group.length, nH)));
     // 2.32 (D224 ; le décideur, 24 novembre : « il faut quand même que le combat soit visuellement justifié ») — `temoins` : des
-    // hommes de fiction (les pillards que La Razzia tient) se tiennent à l'écart, au bord de la scène, derrière les chimères.
+    // hommes de fiction (les pillards que La Razzia tient) se tiennent à l'écart, au fond de la scène, entre les deux camps.
     // Ils ne sont pas du combat : jamais dans C.all, aucune cible (exigence 6 : on ne frappe jamais un homme).
     C.temoins = (opts.temoins || []).slice(0, TEMOIN_POS.length).map((look, i) => ({ look, x0: TEMOIN_POS[i][0], y: TEMOIN_POS[i][1], ph: i * 1.7 }));
     C.all.forEach(e => { e.ct = 1000 / eff(e, 'spd') * (0.6 + Math.random() * 0.4) * (e.side === 'foe' ? 1.15 : 1) * (e.gear && e.gear.prime ? 0.55 : 1); });
@@ -11968,9 +11968,9 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       if (C.champ && C.champ.vue) return I.rangs.dessine(C, c, t); // le champ de bataille, le temps d'un ordre ou d'un pas
       if (C.bg.couches) { c.drawImage(C.bg.couches.arr, 0, 0); rames(c, t); c.drawImage(C.bg.couches.av, 0, 0); } else { c.drawImage(C.bg, 0, 0); drawGrid(c, C.hue, t); } // la Cité : ses rames passent, ses joints ne défilent pas
       if (C.champ) I.rangs.masse(C, c, t); // nos rangs, derrière le groupe
-      // 2.32 (D224) : les témoins, à l'écart, tournés vers le combat — immobiles, un souffle seulement ; ombrés, plus loin que lui
+      // 2.32 (D224) : les témoins, à l'écart, au fond de la scène, de face — immobiles, un souffle seulement
       (C.temoins || []).forEach(m => { const x = bx(m.x0), y = m.y; c.fillStyle = 'rgba(0,0,0,.3)'; c.beginPath(); c.ellipse(x, y + 1, 10, 3, 0, 0, 6.3); c.fill();
-        c.globalAlpha = 0.92; c.drawImage(G.figure(m.look, 2, 0, null), x - 16, y - 46 + (Math.sin(t * 1.6 + m.ph) > 0.6 ? -1 : 0)); c.globalAlpha = 1; });
+        c.globalAlpha = 0.92; c.drawImage(G.figure(m.look, 0, 0, null), x - 16, y - 46 + (Math.sin(t * 1.6 + m.ph) > 0.6 ? -1 : 0)); c.globalAlpha = 1; });
       const list = C.all.slice().sort((a, b) => a.y - b.y);
       for (const e of list) {
         const jx = e.shake > 0 ? (Math.random() - 0.5) * 4 : 0;

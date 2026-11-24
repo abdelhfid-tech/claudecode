@@ -486,7 +486,7 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
       await E(rg => window.__t.poser(rg.x * 16 + 8, rg.y * 16 + 13, 2), rg);
       const n0 = await E(() => window.__t.toasts.length), a = await E(() => window.__t.avancer('right', 10, 12000)), j1 = await E(() => window.ISNAD.monde.journal.length), n1 = await E(() => window.__t.toasts.length);
       await E(() => { const I = window.ISNAD; I.lecons.recevoir('parler'); });
-      const b = await E(() => window.__t.avancer('left', 10, 12000)); const j2 = await E(() => window.ISNAD.monde.journal.filter(j => j.quoi === 'brigands').length);
+      const b = await E(() => window.__t.avancer('left', 10, 12000)); const j2 = await E(() => window.ISNAD.monde.journal.filter(j => j.quoi === 'brigands' && !j.etat).length);   // (2.32 : les étapes de l'embuscade se notent à part, avec leur état)
       if (b.occupe) await mener(P, 'meilleur', 'gagner');
       await E(() => { delete window.ISNAD.save.data.lecons; });
       si(a.k >= 8 && !a.occupe && !j1 && n1 === n0 && b.occupe && j2 === 1, `${nom} · une partie neuve sans l'outil « parler » : ${a.k} cases loin des routes, la chance forcée, et rien — la rencontre attend ; l'outil reçu, elle vient (les brigands, à la ${b.k + 1}ᵉ case) ; aucun message de plus`,
