@@ -41,10 +41,9 @@ module.exports = {
     await jouer(12 * T);
     /* 2084 : les chimères modernes vont par les rues des quartiers ; elles passent au travers des passants, qui ne les voient pas */
     s.marque('rues');
+    await s.neuf();   // une page neuve (le combat d'avant est refermé), puis le prologue posé comme joué : sans lui, les chimères ne rôdent pas
     const ciQ = await s.ev(() => { window.ISNAD.save.data.prologue = true; return window.ISNAD.sagas.idris.chapters.findIndex(c => c.id === 'c_quartiers'); });
-    await s.ev(() => { window.ISNAD.save.data.prologue = true; });
     await s.chapitre('idris', ciQ, { obj: 0, carte: 'quartiers', lieu: 'parvis' }); await s.cadre('carre'); await s.propre({ cible: false }); await s.zoom(1.2);
-    await s.ev(() => { window.ISNAD.save.data.prologue = true; });
     // Idris à sept cases d'une chimère, en diagonale (au-delà de sa vue : elle ne le prend pas en chasse), sur une case libre
     const vue = await s.ev(() => { const I = window.ISNAD, W = I.world, P = W.player, L = (I.rodeurs.rodent ? I.rodeurs.rodent() : W.foes.filter(f => f.rodeur && f.placed)) || [];
       for (const f of L) for (const [dx, dy] of [[-80, -80], [80, -80], [-80, 80], [80, 80], [-100, -40], [100, 40]]) { const x = f.x + dx, y = f.y + dy; if (W.solidAt(x, y) || W.solidAt(x, y - 6)) continue;
