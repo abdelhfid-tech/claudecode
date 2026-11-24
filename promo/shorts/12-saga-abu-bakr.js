@@ -4,5 +4,5 @@ module.exports = require('./_saga.js')({
   recit: 'abubakr', titre: 'La saga d’Abû Bakr', graine: 632,
   lieu: [0, { obj: 1 }, [[488, 365]]],                       // de la porte sud vers la mosquée, par la grand-rue
   parole: ["S'il l'a dit, il a dit vrai", 14],
-  moment: { ci: 1, cp: { obj: 3, lieu: 'place' }, obj: 3, vers: 'porte_nord' },   // au crépuscule, avec l'armée d'Usâma, vers la porte nord
+  moment: { ci: 1, cp: { obj: 3, lieu: ['porte_nord', 0, 84] }, obj: 3, vers: 'porte_nord', zoom: 1.2 },   // au crépuscule, avec l'armée d'Usâma, vers la porte nord
 });

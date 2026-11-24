@@ -21,7 +21,8 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 // o : { recit, titre, graine, lieu: [chapitre, point de passage, route — les points du lieu où marcher, l'un après l'autre],
 //       phrase: durée en T (16 par défaut), parole: [fragment, durée en T],
 //       moment: { ci, cp: point de passage, obj: l'objectif dont le texte sert de légende, et l'un de : vers: un lieu où marcher,
-//                 pnj: celui à qui parler (la réplique est celle du jeu), monde: le bord par où sortir sur la route du monde } }
+//                 pnj: celui à qui parler (la réplique est celle du jeu), monde: le bord par où sortir sur la route du monde ;
+//                 zoom (1,5 par défaut) } }
 module.exports = function saga(o) {
   const phrase = o.phrase || 16, parole = o.parole[1];
   return {
@@ -46,7 +47,7 @@ module.exports = function saga(o) {
       let etape = await marcher(0); await s.avancer(200);
       const h = await s.ouverture(esc(r.nom), { z: 1.8, sec: 1.1, duree: 8 * T - PASSE + 0.05, legende: { y: 246, taille: 33 } });   // sous le Compagnon, qui reste visible
       await s.legende((LE[r.lumiere] || 'la') + ' ' + esc(r.lumiere) + ' · ' + esc(r.annees.split(' · ').pop()), { y: Math.round(h.bottom) + 12, style: 'titre', taille: 19, duree: 8 * T - PASSE - 0.1, dans: 0.15, fi: 0.2 });
-      await jusquauPassage(8 * T, 2.6);
+      await s.tourner(8 * T);   // (le même lieu : pas de passage entre l'accroche et la phrase)
 
       /* 2 — la phrase de la saga ; le groupe marche, d'un point du lieu au suivant */
       s.marque('phrase');
@@ -78,7 +79,7 @@ module.exports = function saga(o) {
         await s.chapitre(o.recit, M.ci, M.cp); await s.cadre('carre'); await s.propre({ cible: false }); await sansGoto();
         if (M.vers) await s.ev(l => { const W = window.ISNAD.world, p = W.resolve(l, W.map.id, W.player); if (p && !isNaN(p[0])) W.goTo(p[0], p[1], { quiet: true }); }, M.vers);
       }
-      await s.zoom(1.5); await s.arrivee(1.5, 0.5);
+      const z = M.zoom || 1.5; await s.zoom(z); await s.arrivee(z, 0.5);
       const but = await s.ev(([r, ci, k]) => ((window.ISNAD.sagas[r].chapters[ci].objectives || [])[k] || {}).text || '', [o.recit, M.ci, M.obj]);
       if (!but) s.dit('! objectif sans texte : ' + M.ci + '/' + M.obj);
       await s.legende(esc(but), { zone: 'sur', style: 'titre', taille: 19, duree: 18 * T - 0.3, dans: 0.3 });   // sur l'image : dessous, la boîte de dialogue du jeu
