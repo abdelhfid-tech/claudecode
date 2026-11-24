@@ -549,7 +549,7 @@
     p.moving = moved > 0.01; p.court = p.moving && !!d.course; p.parcours = (p.parcours || 0) + moved;
     if (p.moving) { pushTrail(); pas(dt); }
     // buter sur quelqu'un qui va faire un pas de côté n'est pas être coincé (sauf s'il n'a pu s'écarter)
-    const pousse = W._heurte && W.npcs.includes(W._heurte) && !(W._heurte._coince > W.t - 1.5);
+    const pousse = (W._heurte && W.npcs.includes(W._heurte) && !(W._heurte._coince > W.t - 1.5)) || (I.gens && I.gens.bute > W.t - 0.2);
     if (moved < sp * 0.3 && !pousse) { if (++d.stall > 14) { if (d.raw) return arrive(); d.raw = true; d.stall = 0; d.path = W.route(d.x, d.y); } } else d.stall = 0;
   }
   // le bruit des pas : cinq par seconde en marchant ; en courant, un à chaque appui (la foulée : G.FOULEE × 4 points de chemin)

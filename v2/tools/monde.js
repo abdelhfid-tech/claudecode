@@ -342,7 +342,20 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
       await E(() => { const I = window.ISNAD, W = I.world, sg = I.sagas.abubakr, ch = sg.chapters[0]; I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('abubakr', 0, { saga: 'abubakr', ci: 0, obj: 0, map: 'medine', opts: {}, pos: [488, 690], party: ch.party.slice(), npcs: {}, foes: [], chests: [], flags: {} }); });
       await P.waitForTimeout(1200); await avancer(P);
       if (mode === 'walk') { const rc = await E(() => { const I = window.ISNAD, W = I.world; return { carte: W.map.id, gens: W.npcs.filter(n => n.gens).length, betes: I.gens.duLieu().length }; });
-        si(rc.carte === 'medine' && !rc.gens && rc.betes >= 3, `2.33 · dans une ville des récits (${rc.carte}) : ${rc.betes} bêtes, aucun des gens du lieu (rien n'est ajouté aux scènes de l'histoire)`, `la ville du récit : ${JSON.stringify(rc)}`, 'ÉCART'); }
+        si(rc.carte === 'medine' && !rc.gens && rc.betes >= 3, `2.33 · dans une ville des récits (${rc.carte}) : ${rc.betes} bêtes, aucun des gens du lieu (rien n'est ajouté aux scènes de l'histoire)`, `la ville du récit : ${JSON.stringify(rc)}`, 'ÉCART');
+        // une bête ne bloque jamais un chemin : droit devant Idris, elle s'écarte de côté ; sans place pour s'écarter, elle le laisse passer
+        const bt = await E(async () => { const I = window.ISNAD, W = I.world, P = W.player, h = I.input.held, out = [];
+          const libre = (x, y) => !W.solidAt(x, y) && !W.solidAt(x - 5, y - 3) && !W.solidAt(x + 5, y - 3);
+          let o = null; for (let r = 0; r < 240 && !o; r += 8) for (let dx = -r; dx <= r && !o; dx += 8) for (const dy of [-r, r]) { const x = P.x + dx, y = P.y + dy; let ok = true; for (let k = 0; k <= 72; k += 4) if (!libre(x + k, y)) { ok = false; break; }
+            if (ok && !o && !W.npcs.some(n => !n.hidden && Math.hypot(n.x - x - 36, n.y - y) < 60) && !I.gens.duLieu().some(b => Math.hypot(b.x - x - 36, b.y - y) < 60)) o = [x, y]; }
+          if (!o) return null;
+          for (const coince of [false, true]) { const b = I.gens.duLieu()[0], m0 = b.maison;
+            window.__t.poser(o[0], o[1], 2); b.x = o[0] + 14; b.y = o[1]; b.but = null; b.fuit = false; b.cede = 0; b.maison = coince ? [b.x + 4000, b.y] : [b.x, b.y];
+            h.right = true; await new Promise(r => setTimeout(r, 1600)); h.right = false;
+            out.push({ coince, avance: Math.round(P.x - o[0]), ecart: Math.round(Math.abs(b.y - o[1])), cede: b.cede > 0 }); b.maison = m0; }
+          return out; });
+        const btBon = bt && bt.every(r => r.avance >= 30) && !bt[0].cede && bt[0].ecart >= 6 && bt[1].cede;
+        si(btBon, `2.33 · une bête droit devant Idris ne lui barre pas la route : elle s'écarte de côté (${bt && bt[0].ecart} points), et sans place pour s'écarter, elle le laisse passer (${bt && bt[1].avance} points parcourus)`, `une bête sur le chemin : ${JSON.stringify(bt)}`, 'BLOQUÉ'); }
       await E(mode => { const I = window.ISNAD, W = I.world; I.debug[mode] = true; if (mode === 'auto') W._autoBusy = true; window.__t.poser(488, 722, 0); }, mode);
       await P.keyboard.down('ArrowDown'); await P.waitForTimeout(900); await P.keyboard.up('ArrowDown');
       jamais.push(await E(mode => { const I = window.ISNAD, W = I.world, r = W.map.id; I.debug[mode] = false; W._autoBusy = false; return mode + ':' + r; }, mode));

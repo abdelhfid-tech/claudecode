@@ -1210,9 +1210,14 @@ visitées ». Textes, nombres et dessin de l'agent, à valider.*
 - **Les bêtes** (`Gn.betes`, `lieu: true`) sont dessinées de profil (`gfx.js`, `b_chevre`, `b_mouton`, `b_ane`, `b_poule`,
   `b_chameau` ; `o.c`, la robe ; `o.f`, la foulée). Elles paissent autour de leur place (`D.BETES[espèce].rayon`), en ligne
   droite, loin des lieux gardés, et s'arrêtent quand celui qui mène est à `arret` points. Elles ont un corps pour lui : il
-  bute sur elles (`Gn.bloque`, dans `tryMove`), et celle qu'il pousse s'écarte (`nouveauBut(b, true)`, plus vite). Elles ne
-  sont pas dans `W.corps()` (les sondes du récit ne les comptent pas : elles ne restent jamais en travers). Un mur bâti sur
-  l'une d'elles la renvoie à sa place.
+  bute sur elles (`Gn.bloque`, dans `tryMove`), et celle qu'il pousse s'écarte (`nouveauBut(b, true)`, plus vite) : de côté
+  d'abord, hors de son chemin, sinon devant lui, jusqu'à trente points au-delà de son rayon. **Une bête ne bloque jamais un
+  chemin** : sans place pour s'écarter, ou si elle fuit devant lui plus d'une seconde sans dégager le passage, elle le laisse
+  passer deux secondes (`b.cede`) ; et buter sur une bête qui s'écarte n'est pas être coincé (`Gn.bute`, dans le pas de
+  `W.goTo`). Corrigé avant la publication de la 2.33 : le joueur de test au doigt était resté derrière une bête qui fuyait
+  devant lui, dans une rue de Médine (« COINCÉ ») ; `monde.js` le contrôle (une bête droit devant Idris, avec et sans place
+  pour s'écarter). Elles ne sont pas dans `W.corps()` (les sondes du récit ne les comptent pas : elles ne restent jamais en
+  travers). Un mur bâti sur l'une d'elles la renvoie à sa place.
 
 ### L'entraide et le bâtir simple (2.33, D226)
 

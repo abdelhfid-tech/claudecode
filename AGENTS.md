@@ -294,7 +294,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   chacun avec son visage, des couleurs d'une palette par région (jamais d'un peuple ni d'une religion : exigence 10) ; certains
   vont et viennent ; A devant l'un d'eux, une ligne de sa journée (ni fait d'histoire, ni formule, ni verset) ; et des bêtes
   (chèvres, moutons, un âne, des poules, le chameau) qui paissent, s'arrêtent quand Idris approche et s'écartent s'il les
-  pousse (`Gn.bloque`, dans `tryMove`). Dans les villes des récits, les bêtes seulement : rien n'est ajouté aux scènes de
+  pousse (`Gn.bloque`, dans `tryMove`) ; sans place pour s'écarter, elles le laissent passer : une bête ne bloque jamais un
+  chemin. Dans les villes des récits, les bêtes seulement : rien n'est ajouté aux scènes de
   l'histoire. Personne à `D.GENS.marge` cases ou moins d'une porte, du comptoir ou du tapis (`D.GENS.garde`). Tout se repose
   au chargement d'un lieu, aux mêmes places ; rien n'entre dans la partie (`gens`, hors du point de reprise). `regles.js`
   vérifie les tables (champs, types — jamais un Compagnon ni un type de 2084 —, lieux du gabarit). Contrôle :

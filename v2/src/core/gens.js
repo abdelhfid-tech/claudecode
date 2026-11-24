@@ -92,9 +92,10 @@
   function nouveauBut(b, fuir) {
     const B = D.BETES[b.esp] || {}, R = (B.rayon || 1) * T, p = W().player, w = W();
     for (let k = 0; k < 10; k++) {
-      let x, y; if (fuir) { const a = Math.atan2(b.y - p.y, b.x - p.x) + (Math.random() - 0.5) * 1.4, d = 14 + Math.random() * 10; x = b.x + Math.cos(a) * d; y = b.y + Math.sin(a) * d; }
+      // poussée, elle s'écarte : de côté d'abord (hors du chemin de celui qui mène), sinon devant lui
+      let x, y; if (fuir) { const cote = k < 6 ? (k % 2 ? 1 : -1) * Math.PI / 2 : 0, a = Math.atan2(b.y - p.y, b.x - p.x) + cote + (Math.random() - 0.5) * (k < 6 ? 0.6 : 1.4), d = 14 + Math.random() * 10; x = b.x + Math.cos(a) * d; y = b.y + Math.sin(a) * d; }
       else { x = b.maison[0] + (Math.random() * 2 - 1) * R; y = b.maison[1] + (Math.random() * 2 - 1) * R * 0.7; }
-      if (Math.hypot(x - b.maison[0], y - b.maison[1]) > R + 18 || Math.hypot(x - p.x, y - p.y) < 18 || !loinDesGardes(x, y) || !ligneLibre(b.x, b.y, x, y)) continue;
+      if (Math.hypot(x - b.maison[0], y - b.maison[1]) > R + (fuir ? 30 : 18) || Math.hypot(x - p.x, y - p.y) < 18 || !loinDesGardes(x, y) || !ligneLibre(b.x, b.y, x, y)) continue;
       if (I.entraide && I.entraide.dans(x, y)) continue;   // (jamais sur le chantier d'une demande)
       if (w.npcs.some(n => !n.hidden && n.placed && n.map === b.map && Math.abs(n.x - x) < 10 && Math.abs(n.y - y) < 8)) continue;
       b.but = [x, y]; b.vite = fuir ? 1.6 : 1; return true; }
@@ -138,9 +139,17 @@
   };
   // celui qui mène bute sur une bête : elle ne se traverse pas ; poussée, elle s'écarte (world.js, tryMove)
   const pied = (b, x, y) => Math.abs(x - b.x) < (b.esp === 'poule' ? 5 : b.esp === 'chameau' || b.esp === 'ane' ? 9 : 7) && y - b.y > -3 && y - b.y < 4;
+  // Une bête qui n'a pas la place de s'écarter, ou qui fuit devant lui sans dégager le passage, le laisse passer un
+  // instant (b.cede) : une bête ne bloque jamais un chemin. Gn.bute : l'instant du dernier heurt (world.js : buter sur une
+  // bête qui s'écarte n'est pas être coincé).
   Gn.bloque = function (x0, y0, x1, y1) {
+    const t = W().t;
     for (const b of Gn.betes) { if (!b.lieu || !Gn.ici(b)) continue;
-      if (pied(b, x1, y1) && (!pied(b, x0, y0) || Math.hypot(x1 - b.x, y1 - b.y) < Math.hypot(x0 - b.x, y0 - b.y))) { if (!b.fuit) { b.fuit = true; if (!nouveauBut(b, true)) b.fuit = false; } return true; } }
+      if (pied(b, x1, y1) && (!pied(b, x0, y0) || Math.hypot(x1 - b.x, y1 - b.y) < Math.hypot(x0 - b.x, y0 - b.y))) {
+        if (b.cede > t) continue;
+        if (!b.fuit) { b.fuit = true; b.bute = t; if (!nouveauBut(b, true)) { b.fuit = false; b.cede = t + 2; continue; } }
+        else if (t - b.bute > 1.2) { b.cede = t + 2; continue; }
+        Gn.bute = t; return true; } }
     return false;
   };
   // pour les contrôles : les bêtes du lieu
