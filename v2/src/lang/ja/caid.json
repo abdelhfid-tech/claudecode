@@ -54,7 +54,7 @@
 {"k":"8kg2m8.c","fr":"Chuchotement","t":"ひそひそ声","ou":"enemies.chuchot.name"},
 {"k":"xtrcs5.4q","fr":"Ce qui se dit à mi-voix dans une maison où l'on cache une mort. Il n'a pas de corps : il n'a que la voix de ceux qui le répètent. Une parole dite à voix haute le dissipe.","t":"死を隠している家で、声をひそめて語られるもの。体を持たない。あるのは、それを繰り返す者たちの声だけだ。声に出して言われた言葉ひとつで消え去る。","ou":"enemies.chuchot.desc"},
 {"k":"1tqgehn.i","fr":"Il dort seulement.","t":"眠っておられるだけだ。","ou":"enemies.chuchot.taunts[0]"},
-{"k":"xr9x93.15","fr":"Qui te l’a dit ? Personne. Tout le monde.","t":"誰から聞いた？誰からでもない。みんなからだ。","ou":"enemies.chuchot.taunts[1]","note":"relecture 3 (langue) : « Qui te l'a dit ? Personne. Tout le monde. » : les trois répliques tournées sur le même から, comme le français les tourne sur le même mot."},
+{"k":"25t2sk.1h","fr":"De qui tiens-tu cela ? De personne. De tout le monde.","t":"それを誰から聞いた？誰からでもない。みんなからだ。","ou":"enemies.chuchot.taunts[1]","note":"24 novembre, le décideur : « De qui tiens-tu cela ? » au lieu de « Qui te l’a dit ? » — 「それを誰から聞いたのか」, comme la règle du Recueil ; la seconde question ne change pas ; le japonais garde 「誰から聞いたのか」, qui demande déjà de qui on le tient ; relecture 3 (langue) : « Qui te l'a dit ? Personne. Tout le monde. » : les trois répliques tournées sur le même から, comme le français les tourne sur le même mot."},
 {"k":"v2uewa.f","fr":"« On dit que… »","t":"「人の話では……」","ou":"enemies.chuchot.skills[0].name"},
 {"k":"1uovo4v.l","fr":"Veillée de commérages","t":"噂話の夜","ou":"enemies.chuchot.skills[1].name"},
 {"k":"7wswfv.f","fr":"L'Ombre du Père","t":"父の影","ou":"enemies.ombre_pere.name"},

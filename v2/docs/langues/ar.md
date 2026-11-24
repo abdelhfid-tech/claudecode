@@ -1209,7 +1209,7 @@ contenu commun (`coeur`) ou une suite le reprend tel quel.
 | Français | Arabe fixé | Où / pourquoi |
 |---|---|---|
 | « La chaîne vacille. » ; « Ce n'est pas ce qui fut rapporté. » ; « c'est ce qui fut rapporté » | **تهتزّ السلسلة.** ; **ليس هذا ما رُوي.** ; **هذا ما رُوي** | phrase verbale, comme les chroniques (§ 1.1) ; le bandeau du moteur s'aligne sur les récits (« <b>تهتزّ السلسلة…</b> ») |
-| « Qui te l'a dit ? » ; « Et lui, de qui le tenait-il ? » ; « De qui tiens-tu cela ? » ; « d'après » (les anneaux de la Chaîne) ; « Untel m'a rapporté, d'après untel » | **«مَن حدّثك؟»** ; **«وهو، عمّن أخذه؟»** ; **«عمّن أخذتَ هذا؟»** ; **«عن»** ; **«حدّثني فلانٌ، عن فلانٍ»** | « حدّث » est le verbe de la transmission (« حدّثنا ») : la même question dans le récit de ‘Uthmân, le récit-cadre et les veillées |
+| « Qui te l'a dit ? » (plus dans le jeu depuis le 24 novembre : « De qui tiens-tu cela ? ») ; « Et lui, de qui le tenait-il ? » ; « De qui tiens-tu cela ? » ; « d'après » (les anneaux de la Chaîne) ; « Untel m'a rapporté, d'après untel » | **«مَن حدّثك؟»** ; **«وهو، عمّن أخذه؟»** ; **«عمّن أخذتَ هذا؟»** ; **«عن»** ; **«حدّثني فلانٌ، عن فلانٍ»** | « حدّث » est le verbe de la transmission (« حدّثنا ») : la même question dans le récit de ‘Uthmân, le récit-cadre et les veillées |
 | « l'envers (du lieu, de la ville, du camp, du désert…) » ; « la noosphère de X » | **الوجه الآخر لـ…** ; **عالم الأفكار في / عند X** | le terme de D185 gardé entier |
 | « en face » (le camp, la flotte d'en face) | **بإزاء** (« بإزائنا »، « الذين بإزائنا ») | le mot des chroniques ; « الجهة الأخرى / المقابلة » calquait « l'autre côté » |
 | « tout le monde (le sait, le répète) » | **الناس كلّهم** | « الكلّ » avec l'article est un tour d'aujourd'hui : il ne reste que dans la langue de 2084 |
@@ -1371,8 +1371,9 @@ son verset tiré du registre, si un récit le demande un jour.
       (cinq répliques corrigées : Abû ‘Ubayda, al-Hubâb, Usâma, Qays, ‘Alî) ; « القائد » réservé au Caïd ; « الرقيب »
       jamais seul ; « بإزاء » pour « en face » ; « الناس كلّهم » pour « tout le monde » ; le point hors des guillemets
       d'une parole enchâssée ;
-    - « Qui te l'a dit ? » est partout « مَن حدّثك؟ », jusque dans la bouche d'une chimère des veillées (le Chuchotement)
-      et du vieil homme de la Cité-Miroir ;
+    - « Qui te l'a dit ? » était partout « مَن حدّثك؟ », jusque dans la bouche d'une chimère des veillées (le Chuchotement)
+      et du vieil homme de la Cité-Miroir ; le 24 novembre, le décideur l'a remplacé en français par « De qui tiens-tu
+      cela ? », qui est partout « عمّن أخذتَ هذا؟ » (la ligne de la Chaîne, plus haut) ;
     - **deux choix laissés tels quels, à trancher** : « condamner » se dit « قضى على » dans le récit de ‘Umar (« أدان est
       le mot du tribunal d'aujourd'hui ») mais « الإدانة / مُدان » dans le récit de ‘Alî (le Juge sans miséricorde : « لا
       يعرف إلا الإدانة », « الكلُّ مُدان ») — l'un ou l'autre pour les deux ? ; « phrase » se dit « جملة » dans les veillées

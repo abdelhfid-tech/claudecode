@@ -27,7 +27,7 @@ ISNAD.registerSaga({
     ['nar', "La première : un Livre au tracé unique, entre toutes les mains. La seconde : l'exemple d'un homme qui tenait le pouvoir et préféra le perdre, et la vie avec, plutôt que d'ouvrir la guerre entre les siens."],
     ['quote', "« On ne s'enquérait pas de la chaîne des transmetteurs. Puis, quand survint la discorde, on dit : Nommez-nous vos hommes. »", "Muhammad ibn Sîrîn — rapporté par Muslim, introduction au Sahîh"],
     ['codex', 'nommez'],
-    ['nar', "Idris, entends-tu ? C'est de cette blessure qu'est née la Chaîne que tu remontes. À la Rumeur qui dit « on dit », les transmetteurs ont répondu : qui te l'a dit ? Et de qui le tenait-il ?"],
+    ['nar', "Idris, entends-tu ? C'est de cette blessure qu'est née la Chaîne que tu remontes. À la Rumeur qui dit « on dit », les transmetteurs ont répondu : de qui tiens-tu cela ? Et de qui le tenait-il ?"],
     ['nar', "Le Flux de la Cité-Miroir n'est pas autre chose. Tu ne le feras pas taire en criant plus fort que lui. Tu le briseras comme eux : en vérifiant — et en refusant de haïr sur parole."],
     ['mus', 'espoir'], ['sfx', 'light'],
     ['title', 'Lumière retrouvée', 'Rahma — la Miséricorde'],
@@ -253,7 +253,7 @@ ISNAD.registerSaga({
     { id: 'nommez', cat: 'Parole', title: '« Nommez-nous vos hommes »',
       text: "« Si un pervers vous apporte une nouvelle, voyez bien clair… » (Coran 49:6, traduction du sens) : le verset fonde une discipline, ne rien transmettre sans avoir vérifié. Après la discorde, rapporte Ibn Sîrîn, on cessa de recevoir une parole sans demander sa chaîne : « Nommez-nous vos hommes. » La science de l'isnâd est la réponse des transmetteurs à la Rumeur : pour chaque parole, qui l'a dite, et qui l'a entendue de lui.",
       src: 'Coran 49:6 ; Muslim, introduction au Sahîh' },
-    { id: 'tabayyun', cat: 'Parole', title: "« Qui te l'a dit ? »",
+    { id: 'tabayyun', cat: 'Parole', title: "« De qui tiens-tu cela ? »",
       text: "La règle tient en deux questions : de qui tiens-tu cela ? et lui, de qui le tenait-il ? Le Coran commande de voir clair avant d'agir sur une nouvelle (49:6, traduction du sens). Une parole dont on ne peut nommer le porteur n'est pas reçue. Plus tard, Ibn Sîrîn dira : « Cette science est religion : regardez de qui vous prenez votre religion. » La Rumeur vit de ce que personne ne pose la question.",
       src: 'Coran 49:6 ; Muslim, introduction au Sahîh' },
     { id: 'sept_modes', cat: 'Parole', title: 'Les sept modes de récitation',
@@ -272,7 +272,7 @@ ISNAD.registerSaga({
       text: "On rapporte que 'Uthmân reçut les mécontents venus d'Égypte et répondit à chacun de leurs reproches. Sur les pâturages réservés : ils l'étaient pour les chameaux de l'aumône, comme au temps de 'Umar, et s'étaient étendus avec les troupeaux. Sur les exemplaires retirés : le Livre est un, et l'on avait craint la discorde. Ce qui était fondé, il promit de le redresser. Les récits disent qu'ils repartirent satisfaits ; les historiens divergent sur les détails.",
       src: 'at-Tabarî, Târîkh (an 35 H) ; Ibn Kathîr, al-Bidâya wa-n-Nihâya' },
     { id: 'akhbar_n', cat: 'Noosphère', title: 'Abû l-Akhbâr (personnage de fiction)',
-      text: "Scribe de garnison et porteur de lettres, inventé pour ce récit : « le père des nouvelles » est un sobriquet. Il ne ment presque jamais. Il arrondit, ajoute un mot, tait une réserve, et dit toujours : « je ne fais que répéter ». Il n'est pas la Rumeur : il en est la petite bouche. Une seule question le désarme : qui te l'a dit ?" },
+      text: "Scribe de garnison et porteur de lettres, inventé pour ce récit : « le père des nouvelles » est un sobriquet. Il ne ment presque jamais. Il arrondit, ajoute un mot, tait une réserve, et dit toujours : « je ne fais que répéter ». Il n'est pas la Rumeur : il en est la petite bouche. Une seule question le désarme : de qui tiens-tu cela ?" },
     { id: 'babel_n', cat: 'Noosphère', title: 'Babel',
       text: "Chimère de la discorde des lectures. Elle naît quand une chose vraie, reçue par plusieurs voies, devient un motif de se préférer à l'autre. Elle se nourrit d'une seule phrase : « Ma lecture vaut mieux que la tienne. » Elle est défaite par le Savoir, qui compare et vérifie, et par la Véracité, qui renonce à avoir raison seule." },
     { id: 'abime_n', cat: 'Noosphère', title: "L'Abîme",
@@ -374,7 +374,7 @@ ISNAD.registerSaga({
                 ] },
               { say: "Abû l-Akhbâr, à mi-voix : « On dit que ceux du Shâm traitent ceux d'Irak d'ignorants. Je ne fais que répéter… »",
                 opts: [
-                  { t: "« Qui te l'a dit, Abû l-Akhbâr ? Et lui, de qui le tenait-il ? »", el: 'sidq', v: 3, need: 'tabayyun',
+                  { t: "« De qui tiens-tu cela, Abû l-Akhbâr ? Et lui, de qui le tenait-il ? »", el: 'sidq', v: 3, need: 'tabayyun',
                     r: "Il cherche un nom, puis un autre. La chaîne casse au premier maillon ; les deux colonnes l'ont vue casser." },
                   { t: "Se tourner vers les deux hommes : « L'avez-vous entendu vous-mêmes ? »", el: 'sabr', v: 1,
                     r: "« Non. » — « Moi non plus. » La phrase retombe, à moitié." },
@@ -476,7 +476,7 @@ ISNAD.registerSaga({
           ] },
         { id: 'maitre', name: 'Un maître du cercle', at: 'ecole', look: { kind: 'savant', robe: '#e8e2d2', head: '#f4efe2' },
           talk: [
-            ['say', 'maitre', "La leçon du jour tient en une question : « Qui te l'a dit ? » Puis une seconde : « Et lui, de qui le tenait-il ? » Une nouvelle dont on ne peut nommer le porteur, on ne la reçoit pas."],
+            ['say', 'maitre', "La leçon du jour tient en une question : « De qui tiens-tu cela ? » Puis une seconde : « Et lui, de qui le tenait-il ? » Une nouvelle dont on ne peut nommer le porteur, on ne la reçoit pas."],
             ['codex', 'tabayyun'],
             ['say', 'maitre', "Le Livre le commande : si l'on vous apporte une nouvelle, voyez clair avant d'agir."]
           ] },
@@ -689,7 +689,7 @@ ISNAD.registerSaga({
           talk: [['say', 'ancien3', "Ce puits me rappelle Rûma. On vendait son eau, autrefois. Il l'a acheté et nous l'a donné. Je n'ai jamais payé une gorgée."]] },
         { id: 'maitre', name: 'Un maître du cercle', at: 'ecole', look: { kind: 'savant', robe: '#e8e2d2', head: '#f4efe2' },
           talk: [
-            ['say', 'maitre', "On vient au cercle me demander si les lettres disent vrai. Je réponds par deux questions : qui te l'a dit ? et lui, de qui le tenait-il ?"],
+            ['say', 'maitre', "On vient au cercle me demander si les lettres disent vrai. Je réponds par deux questions : de qui tiens-tu cela ? et lui, de qui le tenait-il ?"],
             ['codex', 'tabayyun'],
             ['say', 'maitre', "Personne, ces jours-ci, n'a su me répondre jusqu'au second nom."]
           ] },

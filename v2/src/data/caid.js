@@ -56,7 +56,7 @@ ISNAD.registerSaga({
     chuchot: { name: 'Chuchotement', art: 'wisp', hue: 265, scale: 1, lvl: 3, tier: 'minion', weak: ['sidq', 'sabr'], veils: 2,
       skills: [{ w: 2, name: '« On dit que… »', target: 'foe', el: 'ilm', pow: 0.9, fx: [{ st: 'doute', turns: 1, chance: 0.25 }], anim: 'dark' },
         { w: 1, name: 'Veillée de commérages', target: 'foes', fx: [{ st: 'recul' }], anim: 'wave' }],   // 2.20 : le temps volé (D.TEMPS, D210)
-      taunts: ['Il dort seulement.', 'Qui te l’a dit ? Personne. Tout le monde.'],
+      taunts: ['Il dort seulement.', 'De qui tiens-tu cela ? De personne. De tout le monde.'],
       desc: "Ce qui se dit à mi-voix dans une maison où l'on cache une mort. Il n'a pas de corps : il n'a que la voix de ceux qui le répètent. Une parole dite à voix haute le dissipe." },
     ombre_pere: { racine: 'noir_peur', name: "L'Ombre du Père", art: 'throne', hue: 35, scale: 2, lvl: 4, tier: 'elite', weak: ['sidq', 'sabr'], veils: 4,
       skills: [

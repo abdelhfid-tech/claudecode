@@ -1,4 +1,4 @@
-/* Short 1 — « Qui te l’a dit ? » : la prémisse. 2084, la Cité-Miroir ; les Archives basses ; la Chaîne ; Médine, juin 632.
+/* Short 1 — « De qui tiens-tu cela ? » (le décideur, 24 novembre, au lieu de « Qui te l’a dit ? ») : la prémisse. 2084, la Cité-Miroir ; les Archives basses ; la Chaîne ; Médine, juin 632.
    Les répliques sont celles du jeu, dites par le jeu. Les légendes sont des propositions, à valider par le décideur.
    Refait le 24 novembre dans l'ambiance de D219 (le voyage dans le temps) : le plan d'ambiance gardé (le choix du décideur,
    24 novembre : « Garder les plans IA »), l'accroche entière dès l'image 1 (s.ouverture, sans lueur) ; un passage des rues
@@ -7,7 +7,7 @@ const PASSE = 0.45;                                                  // un passa
 const T = 0.3;                                                       // un demi-temps à 100 à la noire : neuf images
 const pas = (m, n) => m.repeat(Math.ceil(n / m.length)).slice(0, n);  // un motif, tenu pendant n pas (un pas : un quart de temps)
 module.exports = {
-  titre: '« Qui te l’a dit ? »', bpm: 100, graine: 632,
+  titre: '« De qui tiens-tu cela ? »', bpm: 100, graine: 632,
   // percussions seules, une section par plan — D dum, T tek, t tek léger, r cymbalettes, b grand tambour
   rythme: [
     { a: 'b...............' },                                                                                   // 1 · l'accroche
@@ -23,7 +23,7 @@ module.exports = {
     await s.cadre('carre'); await s.propre({ cible: false }); await s.zoom(1.5);
     const ia = await s.plan('cave', 8 * T, { fondu: 0.4 });
     // l'accroche entière dès l'image 1 : sur le plan d'ambiance ; sans lui, au milieu d'un passage, sur la ruelle de 2084
-    await s.ouverture('Qui te l’a dit ?', ia ? { lueur: 0, duree: 8 * T - 0.1, legende: { y: 236, taille: 40 } } : { z: 1.5, duree: 8 * T - 0.1, legende: { y: 150, taille: 40 } });
+    await s.ouverture('De qui tiens-tu<br>cela ?', ia ? { lueur: 0, duree: 8 * T - 0.1, legende: { y: 236, taille: 40 } } : { z: 1.5, duree: 8 * T - 0.1, legende: { y: 150, taille: 40 } });
     await s.tourner(8 * T);
     /* 2 — 2084 : un vieil homme, dans une ruelle de la Cité-Miroir */
     s.marque('2084');

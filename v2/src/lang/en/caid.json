@@ -54,7 +54,7 @@
 {"k":"8kg2m8.c","fr":"Chuchotement","t":"Hushed Talk","ou":"enemies.chuchot.name"},
 {"k":"xtrcs5.4q","fr":"Ce qui se dit à mi-voix dans une maison où l'on cache une mort. Il n'a pas de corps : il n'a que la voix de ceux qui le répètent. Une parole dite à voix haute le dissipe.","t":"What is said under the breath in a house where a death is being hidden. It has no body: it has only the voices of those who repeat it. A word spoken aloud dissipates it.","ou":"enemies.chuchot.desc"},
 {"k":"1tqgehn.i","fr":"Il dort seulement.","t":"He is only sleeping.","ou":"enemies.chuchot.taunts[0]"},
-{"k":"xr9x93.15","fr":"Qui te l’a dit ? Personne. Tout le monde.","t":"Who told you? No one. Everyone.","ou":"enemies.chuchot.taunts[1]"},
+{"k":"25t2sk.1h","fr":"De qui tiens-tu cela ? De personne. De tout le monde.","t":"From whom do you have this? From no one. From everyone.","ou":"enemies.chuchot.taunts[1]","note":"24 novembre, le décideur : « De qui tiens-tu cela ? » au lieu de « Qui te l’a dit ? » — « From whom do you have this? », sur le patron de « from whom did he have it? »"},
 {"k":"v2uewa.f","fr":"« On dit que… »","t":"“They say…”","ou":"enemies.chuchot.skills[0].name","note":"lexique commun : compétence du Chuchotement (Hushed Talk) et du Ouï-dire (Hearsay) ; guillemets anglais (§ 1.7)"},
 {"k":"1uovo4v.l","fr":"Veillée de commérages","t":"An Evening of Gossip","ou":"enemies.chuchot.skills[1].name"},
 {"k":"7wswfv.f","fr":"L'Ombre du Père","t":"The Father’s Shadow","ou":"enemies.ombre_pere.name"},

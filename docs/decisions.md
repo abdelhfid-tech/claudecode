@@ -2446,6 +2446,18 @@ pages privées de son compte.
   passant : la carte entière s'ouvre un instant après le toucher (le clic qu'émet le téléphone tombait sur « ◂ Retour » et la
   refermait, en hauteur, aussi pour la petite carte des villes), et les annonces se posent sous la petite carte telle qu'elle
   est à l'écran. Contrôle : `node v2/tools/monde.js` (la petite carte de la route, touchée en hauteur, cliquée en largeur).
+- [x] **D228. « De qui tiens-tu cela ? » au lieu de « Qui te l'a dit ? » (version 2.35 ; le décideur, 24 novembre).** Le
+  décideur, en regardant le short 1 : « Autrefois on aurait dit "quelle est ta source?" Plutôt que "qui te l'a dit" ». L'agent
+  a rappelé que la parole d'Ibn Sîrîn que le jeu cite (« Nommez-nous vos hommes », introduction du Sahîh de Muslim, relevée
+  dans `v2/docs/sources/`) demande des personnes plutôt qu'une « source » au sens d'un document ; son choix : « « De qui
+  tiens-tu cela ? » partout ». Changé : le vieil homme de la Cité-Miroir (« Autrefois on demandait : « De qui tiens-tu cela ? »
+  Maintenant on demande : « Combien l'ont vu ? » »), dans le récit de 'Uthmân la narration du chapitre, le titre de la fiche
+  `tabayyun` du Recueil, la fiche d'Abû l-Akhbâr, la réponse du pourparler, les deux leçons du maître, et le Chuchotement des
+  veillées (« De qui tiens-tu cela ? De personne. De tout le monde. » — la réponse suit la question). La règle du Recueil et
+  le récit-cadre disaient déjà « de qui tiens-tu cela ? ». Les trois langues prennent la forme que leurs glossaires donnaient
+  déjà à cette question : « From whom do you have this? », « عمّن أخذتَ هذا؟ » (et sa forme vocalisée),
+  「それを誰から聞いたのか」 ; la seconde question (« Et lui, de qui le tenait-il ? ») ne change pas. Le short 1 prend le même
+  titre et la même accroche ; le livret court reprendra la phrase du vieil homme à sa prochaine édition.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

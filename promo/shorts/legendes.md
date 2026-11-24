@@ -30,13 +30,13 @@ Mots-clés proposés, à choisir selon le réseau : `#ISNAD` `#jeuvideo` `#jeude
 lampe et des rouleaux ; un désert à l'aube). Les réseaux demandent de le signaler à la publication. Tout le reste est le
 jeu lui-même, filmé image par image.
 
-## 1 — « Qui te l'a dit ? »
+## 1 — « De qui tiens-tu cela ? »
 
 `01-qui-te-la-dit.mp4` · 30 s
 
-**Titre.** « Qui te l'a dit ? »
+**Titre.** « De qui tiens-tu cela ? »
 
-**Description.** En 2084, on ne demande plus « Qui te l'a dit ? », mais « Combien l'ont vu ? ». Sous la ville, un
+**Description.** En 2084, on ne demande plus « De qui tiens-tu cela ? », mais « Combien l'ont vu ? ». Sous la ville, un
 archiviste retrouve une chaîne de témoins. Elle commence à Médine, en juin 632.
 
 ## 2 — « Cinq sagas, cinq Lumières »
