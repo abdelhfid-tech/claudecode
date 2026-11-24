@@ -22,7 +22,7 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 //       phrase: durée en T (16 par défaut), parole: [fragment, durée en T],
 //       moment: { ci, cp: point de passage, obj: l'objectif dont le texte sert de légende, et l'un de : vers: un lieu où marcher,
 //                 pnj: celui à qui parler (la réplique est celle du jeu), monde: le bord par où sortir sur la route du monde ;
-//                 zoom (1,5 par défaut) } }
+//                 zoom (1,5 par défaut), scene: true (le récit joue la scène de l'objectif atteint) } }
 module.exports = function saga(o) {
   const phrase = o.phrase || 16, parole = o.parole[1];
   return {
@@ -76,14 +76,18 @@ module.exports = function saga(o) {
         if (!await s.ev(() => window.__film.surLaPiste(16))) s.dit('! aucune piste devant le groupe');
         await s.avancer(250);
       } else {
-        await s.chapitre(o.recit, M.ci, M.cp); await s.cadre('carre'); await s.propre({ cible: false }); await sansGoto();
+        await s.chapitre(o.recit, M.ci, M.cp); await s.cadre('carre'); await s.propre({ cible: false });
+        await sansGoto();   // l'arrivée ne déclenche rien d'elle-même : la scène (M.scene) se joue au moment choisi, plus bas
         if (M.vers) await s.ev(l => { const W = window.ISNAD.world, p = W.resolve(l, W.map.id, W.player); if (p && !isNaN(p[0])) W.goTo(p[0], p[1], { quiet: true }); }, M.vers);
       }
       const z = M.zoom || 1.5; await s.zoom(z); await s.arrivee(z, 0.5);
       const but = await s.ev(([r, ci, k]) => ((window.ISNAD.sagas[r].chapters[ci].objectives || [])[k] || {}).text || '', [o.recit, M.ci, M.obj]);
       if (!but) s.dit('! objectif sans texte : ' + M.ci + '/' + M.obj);
-      await s.legende(esc(but), { zone: 'sur', style: 'titre', taille: 19, duree: 18 * T - 0.3, dans: 0.3 });   // sur l'image : dessous, la boîte de dialogue du jeu
+      // sur l'image quand une réplique s'écrit dessous, dans la boîte de dialogue du jeu ; sinon, sous l'image
+      await s.legende(esc(but), Object.assign({ style: 'titre', taille: 19, duree: 18 * T - 0.3, dans: 0.3 }, M.pnj || M.scene ? { zone: 'sur' } : {}));
       if (M.pnj) { await s.tourner(2 * T); await s.toucherPnj(M.pnj); await s.tourner(16 * T); }
+      // la scène que le récit joue quand l'objectif est atteint (ses répliques, sa narration), comme le jeu la joue
+      else if (M.scene) { await s.tourner(3 * T); await s.ev(() => { const W = window.ISNAD.world; W.stop(); W.complete(); }); await s.tourner(15 * T); }
       else await s.tourner(18 * T);
       await s.carton(12 * T);
     }
