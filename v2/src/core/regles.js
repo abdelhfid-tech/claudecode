@@ -125,7 +125,7 @@
       const txt = (v, w) => { if (typeof v !== 'string' || !v.trim()) { E.push(`cite.activites.${w}: texte manquant`); return; } if (/agr[ée]gor/i.test(v)) E.push(`cite.activites.${w}: les activités s'ouvrent avant que l'Agrégor soit nommé (2.25) : aucun de leurs textes ne le nomme`); if (/\d/.test(v)) E.push(`cite.activites.${w}: aucun nombre dans un récit (D.ACTIVITES, D.BORNE)`); if (NOM_INTERDIT.test(v)) E.push(`cite.activites.${w}: ni Iblîs, ni démon, ni djinn`); if (/[«»]|Coran|\d+:\d+/.test(v)) E.push(`cite.activites.${w}: ni verset ni parole citée (un texte de fiction)`); pari(v, `cite.activites.${w}`, E); };
       const liste = (v, w, a, b) => { if (!Array.isArray(v) || v.length < a || v.length > b) { E.push(`cite.activites.${w}: de ${a} à ${b} textes`); return; } v.forEach((t, i) => txt(t, `${w}[${i}]`)); };
       if (!A || typeof A !== 'object') { E.push('cite.activites: manquant (les activités des quartiers, D217)'); return; }
-      ['attend', 'sansPrime', 'etal', 'record'].forEach(k => txt(A[k], k)); liste(A.ecran, 'ecran', 2, 6); liste(A.roue, 'roue', 1, 4);
+      ['attend', 'manque', 'etal', 'record'].forEach(k => txt(A[k], k)); liste(A.ecran, 'ecran', 2, 6); liste(A.roue, 'roue', 1, 4);
       const M = A.maneges || {}; liste(M.chaises, 'maneges.chaises', 1, 4); liste(M.tasses, 'maneges.tasses', 1, 4);
       const AL = ['outil', 'lieu', 'prix', 'duree'], BL = ['arene', 'duree', 'vitesse', 'elan', 'elanDuree', 'elanRepos', 'prise', 'ombre', 'choc', 'cadence', 'cadenceOmbres', 'lentes', 'vives', 'palier'], GAIN = /gain|prime|lot|recompense|récompense|mise|enjeu|cote|bourse|dirham/i;
       const spots = (D.MAPS.quartiers || { spots: [] }).spots, num = (v, a, b) => typeof v === 'number' && isFinite(v) && v >= a && v <= b;

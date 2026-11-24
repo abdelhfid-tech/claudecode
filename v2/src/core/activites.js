@@ -15,9 +15,10 @@
    - La grande roue, les chaises volantes, les tasses (le parc ; dessinées par le jeu, gfx.js) : un tour se joue en vue. Idris
      monte (sa nacelle, sa chaise, sa tasse), le manège tourne, il redescend. La grande roue lève la vue sur toute la Cité
      (W.regard), puis la repose ; rien d'autre ne bouge sur la carte.
-   - Payer (D.ACTIVITES : le prix d'une partie ou d'un tour) : avec les primes du circuit — ce que l'organisateur des courses a
-     versé, moins ce qui a déjà été dépensé dans les quartiers (AC.bourse), dans la limite des dirhams d'Idris. Un menu dit le
-     prix et la somme : « Payer », ou « Plus tard » (B). Quand elle manque, un refus sobre ; rien n'est avancé. Une activité
+   - Payer (D.ACTIVITES : le prix d'une partie ou d'un tour) : avec la bourse d'Idris (AC.bourse) — tous ses dirhams, ceux des
+     récits comme les primes du circuit (2.31, D223 ; le décideur, 24 novembre : « une seule bourse partout utilisable aussi
+     dans les quartiers de la cité miroir » ; en 2.28, D217, on ne payait qu'avec les primes). Un menu dit le prix et la
+     somme : « Payer », ou « Plus tard » (B). Quand elle manque, un refus sobre ; rien n'est avancé. Une activité
      qu'on paie ne rapporte rien : ni dirhams, ni lot, ni objet (la borne ne donne que son score) ; aucun hasard ne décide de
      rien ; on ne paie jamais pour courir (regles.js).
    - La progression (lecons.js) : un outil par activité (D.OUTILS : borne, etal, ecran, manege), dit au premier essai par
@@ -96,10 +97,12 @@
     if (!a.borne || typeof a.borne !== 'object' || Array.isArray(a.borne)) a.borne = { record: 0, parties: 0 };
     ['tours', 'essais'].forEach(k => { if (!a[k] || typeof a[k] !== 'object' || Array.isArray(a[k])) a[k] = {}; }); return a; };
   const lu = () => { const c = I.save.data.cite && I.save.data.cite.activites; return c && typeof c === 'object' ? c : {}; };
-  // la bourse des quartiers : ce que l'organisateur des courses a versé, moins ce qui a été dépensé ici, dans la limite des dirhams d'Idris
+  // la bourse d'Idris : tous ses dirhams, ceux des récits comme les primes du circuit (2.31, D223 : une seule bourse partout) ;
+  // ce que l'organisateur a versé et ce qui a été dépensé ici restent des comptes, rien n'y est plafonné
   AC.primes = () => (((I.save.data.cite || {}).course || {}).primes) | 0;
-  AC.bourse = () => Math.max(0, Math.min(I.trade.dirhams(), AC.primes() - (lu().depenses | 0)));
-  function depenser(n) { const a = AC.etat(); I.trade.dirhams(-n); a.depenses = (a.depenses | 0) + n; I.save.store(); }
+  AC.depenses = () => lu().depenses | 0;
+  AC.bourse = () => I.trade.dirhams();
+  function depenser(n) { const a = AC.etat(); I.trade.dirhams(-n); a.depenses = (a.depenses | 0) + n; I.save.store(); if (W.map) W.hud(); }   // (2.31 : le bandeau dit la bourse)
 
   /* ----- où sont les activités (en points de la carte des quartiers) -----
      La borne du milieu (la quatrième de la rangée) ; la vitrine du milieu de la galerie (le lieu « galerie ») ; les bancs de la
@@ -154,7 +157,7 @@
     chaises: p => I.t('Un tour de chaises volantes : {prix} dirhams.', { prix: p }),
     tasses: p => I.t('Un tour de tasses : {prix} dirhams.', { prix: p })
   };
-  AC.question = id => PRIX[id]((D.ACTIVITES[id] || {}).prix | 0) + ' ' + I.t('Tes primes du circuit : {n} dirham.¦Tes primes du circuit : {n} dirhams.', { n: AC.bourse() });
+  AC.question = id => PRIX[id]((D.ACTIVITES[id] || {}).prix | 0) + ' ' + I.t('Ta bourse : {n} dirham.¦Ta bourse : {n} dirhams.', { n: AC.bourse() });
   async function payer(id) {
     const prix = (D.ACTIVITES[id] || {}).prix | 0; if (!prix) return true;
     S.hideDialog(); const k = await S.menuPick(AC.question(id), [{ t: I.t('Payer') }, { t: I.t('Plus tard'), retour: true }]);
@@ -163,10 +166,11 @@
     if (AC.bourse() < prix) { await refus(); AC.journal.push({ quoi: 'refus', id }); return false; }
     depenser(prix); I.audio.sfx('blip'); AC.journal.push({ quoi: 'paye', id, prix }); return true;
   }
-  // tant qu'aucune prime n'a été versée : une ligne, la première fois, dit d'où vient l'argent des quartiers
+  // la bourse ne suffit pas : la première fois, une ligne dit d'où vient l'argent d'Idris (2.31 : les récits et le circuit) ;
+  // ensuite, un refus sobre
   async function refus() {
-    I.audio.sfx('dark'); const t = textes().sansPrime;
-    if (!AC.primes() && t && !AC._sansPrimeDit) { AC._sansPrimeDit = true; S.depth++; try { await S.run([['nar', t]]); } finally { S.depth--; S.hideDialog(); } return; }
+    I.audio.sfx('dark'); const t = textes().manque;
+    if (t && !AC._manqueDit) { AC._manqueDit = true; S.depth++; try { await S.run([['nar', t]]); } finally { S.depth--; S.hideDialog(); } return; }
     S.toast(I.t('Il te manque des dirhams.'), 2200);
   }
   const ligne = async t => { if (!t) return; S.depth++; try { await S.run([['nar', t]]); } finally { S.depth--; S.hideDialog(); } };
@@ -313,7 +317,7 @@
       for (;;) {
         const n = AC.bourse(), o = shop.map(id => { const g = D.GEAR[id], p = Gr.prix(id), qui = heroes.filter(h => mieux(h, id));
           return { html: `${Gr.img(id)} ${n < p ? I.t('<b>{nom}</b> · {prix} dirhams (trop cher)', { nom: I.esc(g.name), prix: p }) : I.t('<b>{nom}</b> · {prix} dirhams', { nom: I.esc(g.name), prix: p })}<br><small>${Gr.effets(g)}${qui.length ? ' · ' + I.t('mieux pour {noms}', { noms: qui.map(h => I.esc(h.def.name)).join(', ') }) : ''}</small>` }; }).concat([{ t: I.t('Retour'), retour: true }]);
-        const j = await S.menuPick(I.t('L’étal de la galerie · tes primes du circuit : {n} dirham¦L’étal de la galerie · tes primes du circuit : {n} dirhams', { n }), o);
+        const j = await S.menuPick(I.t('L’étal de la galerie · ta bourse : {n} dirham¦L’étal de la galerie · ta bourse : {n} dirhams', { n }), o);
         if (j >= shop.length) break;
         const id = shop[j], p = Gr.prix(id);
         if (AC.bourse() < p) { await refus(); AC.journal.push({ quoi: 'refus', id }); continue; }

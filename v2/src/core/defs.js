@@ -135,7 +135,7 @@
      légers quelque soit l'avancement dans la saga » ; « il faut qu'idriss puisse "faire les activités" en les payant dans les
      quartiers : manèges etc ». Aucun nombre dans un récit : tout est ici.
      D.ACTIVITES : ce qui se fait dans les quartiers — l'outil qu'on y apprend (D.OUTILS), le lieu (b.spot de la carte), le prix
-     d'une partie ou d'un tour (en dirhams, ceux des primes de l'organisateur des courses ; absent : c'est libre), la durée d'un
+     d'une partie ou d'un tour (en dirhams, pris dans la bourse d'Idris — 2.31, D223 : une seule bourse partout ; absent : c'est libre), la durée d'un
      tour (en secondes). Une activité qu'on paie ne rapporte rien — ni dirhams, ni lot, ni objet : la borne ne donne que son
      score — et aucun hasard ne décide de rien (regles.js : les champs déclarés, et rien d'autre ; un prix entier, positif).
      On ne paie jamais pour courir : la course n'y est pas. L'étal de la galerie vend des pièces ordinaires (D.GEAR_SHOPS,
@@ -607,7 +607,7 @@
     romaine:   ['epee_inde', 'masse_fer', 'dague', 'ecritoire', 'grand_bouclier', 'bouclier_ferre', 'tablette', 'lampe', 'casque_bandes', 'casque_fer', 'tunique_lin', 'lamelles', 'matelassee'],
     koufa:     ['epee_inde', 'epee_mashrafi', 'arc_double', 'dague_fine', 'baton_ferre', 'ecritoire', 'calame_fin', 'rondache', 'tablette', 'lampe', 'calotte_double', 'casque_turban', 'manteau_raye', 'cotte', 'cotte_saluqi'],
     citadelle: ['epee_yemen', 'lance_samhari', 'massue', 'baton_ferre', 'houlette', 'calame_encrier', 'rondache', 'bouclier_lamt', 'lampe', 'cheche', 'casque_fer', 'burnous', 'matelassee', 'cotte'],
-    // 2.28 (D217) : l'étal de la galerie des quartiers (activites.js) — des pièces ordinaires, payées avec les primes du circuit
+    // 2.28 (D217) : l'étal de la galerie des quartiers (activites.js) — des pièces ordinaires, payées avec la bourse d'Idris (2.31, D223)
     quartiers: ['baton_marche', 'gourde', 'calotte', 'tunique_lin', 'manteau_laine', 'tablette', 'lampe']
   };
   // 2.29 (D220) : le comptoir d'une ville visitée tient les artisans d'un lieu du jeu (les mêmes listes : rien de nouveau à vendre)

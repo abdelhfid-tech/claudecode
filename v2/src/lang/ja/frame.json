@@ -352,7 +352,7 @@
 {"k":"1bs9z2d.1k","fr":"Pas cette fois. La piste reste là : on peut la recourir.","t":"今回はだめだった。コースはここにある。また走ればいい。","ou":"cite.course.podium.perdu"},
 {"k":"3zigko.31","fr":"Ce soir, l’organisateur a versé tout ce qu’il verse en une soirée : la prime reviendra à ta prochaine visite.","t":"今夜、主催者は一晩に出す分をすべて出した。賞金は、次に来たときにまた出る。","ou":"cite.course.podium.plafond"},
 {"k":"1p67my8.1c","fr":"Idris a encore la tête ailleurs. Il y reviendra.","t":"イドリースの心は、まだほかのところにある。また来よう。","ou":"cite.activites.attend"},
-{"k":"19isfy3.3k","fr":"Ici, tout se paie avec les primes du circuit, et Idris n’en a encore aucune. L’organisateur en verse une à qui gagne une course.","t":"ここでは何でも、サーキットの賞金で払う。イドリースには、それがまだ少しもない。主催者は、レースに勝った者に賞金を出す。","ou":"cite.activites.sansPrime"},
+{"k":"17obnv6.32","fr":"Il manque des dirhams à Idris. Il en gagne dans les récits, et l’organisateur en verse à qui gagne une course.","t":"イドリースのディルハムが足りない。物語の中で稼げるし、主催者もレースに勝った者に払ってくれる。","ou":"cite.activites.manque"},
 {"k":"2rtj5x.28","fr":"Personne derrière l’étal : on choisit, on paie à l’écran, et la vitrine s’ouvre.","t":"売り台の向こうには、誰もいない。選んで、画面で払えば、ショーケースが開く。","ou":"cite.activites.etal"},
 {"k":"l24823.1y","fr":"Un record, et personne pour le voir. Idris repense au joueur d’à côté.","t":"自己ベスト。でも、見ている人は誰もいない。イドリースは、隣の台で遊んでいた人のことを思い出す。","ou":"cite.activites.record"},
 {"k":"nute0z.27","fr":"Une dizaine de personnes regardent le même écran. Aucune ne regarde sa voisine.","t":"十人ほどが、同じ画面を見ている。隣の人を見る者は、ひとりもいない。","ou":"cite.activites.ecran.0"},

@@ -143,7 +143,7 @@ const CONTROLE = ({ LIGNES, liste, temoin }) => {
     // 2.28 (D217) : les activités des quartiers (activites.js) — le premier refus, l'étal, un record à la borne, la pensée d'Idris
     // devant l'écran, en haut de la grande roue, après un tour de manège : des narrations, dans la boîte de dialogue
     const A = X.activites || {};
-    ['sansPrime', 'etal', 'record', 'ecran', 'roue'].forEach(k => lignes(null, A, k, 'activites/' + k));
+    ['manque', 'etal', 'record', 'ecran', 'roue'].forEach(k => lignes(null, A, k, 'activites/' + k));
     ['chaises', 'tasses'].forEach(k => lignes(null, A.maneges || {}, k, 'activites/maneges/' + k));
   }
   // les lignes du moteur : leurs champs reçoivent un nom de longueur ordinaire

@@ -352,7 +352,7 @@
 {"k":"1bs9z2d.1k","fr":"Pas cette fois. La piste reste là : on peut la recourir.","t":"ليس هذه المرّة. الحلبة باقية: يمكنك أن تعيد السباق.","ou":"cite.course.podium.perdu"},
 {"k":"3zigko.31","fr":"Ce soir, l’organisateur a versé tout ce qu’il verse en une soirée : la prime reviendra à ta prochaine visite.","t":"الليلة دفع المنظّم كلّ ما يدفعه في أمسية: ستعود الجائزة في زيارتك القادمة.","ou":"cite.course.podium.plafond"},
 {"k":"1p67my8.1c","fr":"Idris a encore la tête ailleurs. Il y reviendra.","t":"ما زال إدريس مشغول البال بغير هذا. سيعود إليه لاحقًا.","ou":"cite.activites.attend"},
-{"k":"19isfy3.3k","fr":"Ici, tout se paie avec les primes du circuit, et Idris n’en a encore aucune. L’organisateur en verse une à qui gagne une course.","t":"هنا يُدفع ثمن كلّ شيء من جوائز حلبة السباق، وليس عند إدريس منها شيء بعد. يدفع المنظّم جائزةً لمن يفوز بسباق.","ou":"cite.activites.sansPrime"},
+{"k":"17obnv6.32","fr":"Il manque des dirhams à Idris. Il en gagne dans les récits, et l’organisateur en verse à qui gagne une course.","t":"ليس مع إدريس ما يكفي من الدراهم. يكسبها في الحكايات، ويدفع منها المنظّم لمن يفوز بسباق.","ou":"cite.activites.manque"},
 {"k":"2rtj5x.28","fr":"Personne derrière l’étal : on choisit, on paie à l’écran, et la vitrine s’ouvre.","t":"لا أحد خلف البسطة: تختار، وتدفع عند الشاشة، فتنفتح الواجهة.","ou":"cite.activites.etal"},
 {"k":"l24823.1y","fr":"Un record, et personne pour le voir. Idris repense au joueur d’à côté.","t":"رقمٌ قياسيّ، ولا أحد ليراه. يتذكّر إدريس اللاعبَ الذي كان بجانبه.","ou":"cite.activites.record"},
 {"k":"nute0z.27","fr":"Une dizaine de personnes regardent le même écran. Aucune ne regarde sa voisine.","t":"نحو عشرة أشخاص ينظرون إلى الشاشة نفسها، ولا ينظر أحدٌ منهم إلى جاره.","ou":"cite.activites.ecran.0"},

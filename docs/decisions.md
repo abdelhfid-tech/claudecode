@@ -2322,6 +2322,21 @@ pages privées de son compte.
   la route) ; l'outil « parler » pour la rencontre qui attend ; les textes du voyageur et de L'Abandon, dans les quatre langues
   (en arabe, الاستكانة) ; les captures (`.smoke/monde`, 390 × 844 et 844 × 390). Contrôle : `node v2/tools/monde.js` (partie 5 ;
   « MONDE CONFORME »).
+- [ ] **D223. Une seule bourse partout, quartiers de la Cité-Miroir compris (version 2.31 ; demande du décideur, 24 novembre)
+  — texte de l'agent, à valider.** Le décideur : « l'argent et les objets gagné dans les sagas sont bien dans les poches
+  d'idriss? » Il lui a été répondu que le jeu n'a qu'une réserve pour toute la partie (les dirhams, la besace, l'équipement),
+  mais que dans les quartiers on ne dépensait que les primes du circuit (D217) et que le bandeau de 2084 ne montrait pas les
+  dirhams. Son choix : « Une seule bourse partout », puis : « une seule bourse partout utilisable aussi dans les quartiers de
+  la cité miroir ». *Ce qui a été fait* (amende D217 pour le paiement) : dans les quartiers, la borne, les manèges et l'étal
+  de la galerie se paient avec la bourse d'Idris, tous ses dirhams, ceux des récits comme les primes du circuit
+  (`v2/src/core/activites.js`, `AC.bourse`) ; le menu dit « Ta bourse : N dirhams », l'étal « L’étal de la galerie · ta
+  bourse : N dirhams » ; le bandeau de 2084 dit la bourse, comme dans les récits (`world.js`) ; la page de l'équipement dit
+  « Dans les quartiers, l’étal de la galerie en vend, payées avec la bourse d’Idris. » Quand la bourse manque, la première
+  fois, une ligne (à valider) : « Il manque des dirhams à Idris. Il en gagne dans les récits, et l’organisateur en verse à
+  qui gagne une course. » ; ensuite le refus sobre de toujours. Rien d'autre ne change : la prime de l'organisateur et son
+  plafond, la règle anti-pari (on ne paie jamais pour courir, une activité payée ne rapporte rien, aucun hasard). Les textes
+  sont écrits à la source en arabe (et vocalisés), en anglais et en japonais. Contrôle : `node v2/tools/cite.js activites`
+  (un tour de grande roue payé avec les dirhams des récits, sans aucune prime ; le bandeau qui dit la bourse).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

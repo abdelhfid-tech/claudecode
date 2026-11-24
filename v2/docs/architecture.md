@@ -983,11 +983,13 @@ quartiers : manèges etc ». Choix, textes, nombres et dessin de l'agent, valid�
   pied, le lieu `roue`), les chaises volantes, les tasses. Chacune a sa zone, où A agit (`AC.agir`, depuis `W.interact`, après
   les personnages et les coffres) et où la bulle paraît au-dessus d'Idris (`AC.aPortee`) ; touchée du doigt (`AC.touche`, depuis
   `W.tap`), Idris s'y rend et agit. Le joueur de test du moteur les ignore.
-- **Payer** (`payer`, `AC.bourse`) : le prix d'une partie ou d'un tour (`D.ACTIVITES.*.prix`) se paie avec les **primes du
-  circuit** — `cite.course.primes` (ce que l'organisateur a versé) moins `cite.activites.depenses` (ce qui a été dépensé ici),
-  dans la limite des dirhams d'Idris (`I.trade.dirhams`). Un menu dit le prix et la somme : « Payer » / « Plus tard » (B,
-  `retour: true`). Quand elle manque : tant qu'aucune prime n'a été versée, une ligne le dit, une fois par page (`sansPrime`) ;
-  sinon « Il te manque des dirhams. » ; rien n'est avancé. Une activité qu'on paie ne rapporte rien (ni dirhams, ni lot, ni
+- **Payer** (`payer`, `AC.bourse`) : le prix d'une partie ou d'un tour (`D.ACTIVITES.*.prix`) se paie avec **la bourse
+  d'Idris** — tous ses dirhams (`I.trade.dirhams`), ceux des récits comme les primes du circuit : une seule bourse partout
+  (2.31, D223 ; en 2.28, on ne payait qu'avec les primes). `cite.course.primes` (ce que l'organisateur a versé) et
+  `cite.activites.depenses` (ce qui a été dépensé ici) restent des comptes ; rien n'y est plafonné. Le bandeau dit la bourse,
+  en 2084 comme dans les récits (`world.js`, `W.hud`). Un menu dit le prix et la somme : « Payer » / « Plus tard » (B,
+  `retour: true`). Quand elle manque : la première fois, une ligne dit d'où vient l'argent d'Idris (`manque`, une fois par
+  page) ; ensuite « Il te manque des dirhams. » ; rien n'est avancé. Une activité qu'on paie ne rapporte rien (ni dirhams, ni lot, ni
   objet) ; la course reste gratuite.
 - **La borne, « Les lueurs »** (`AC.nouvellePartie`, `AC.avancer`, `D.BORNE`) : une arène de 300 × 200 unités ; la lueur d'Idris
   va où on la pousse (le joystick : son cap, `I.input.joyAngle` ; les flèches : huit directions), A (Entrée) lui donne un élan

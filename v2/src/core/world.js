@@ -279,7 +279,7 @@
     $('#hud .chap').textContent = W.ch ? W.ch.title : '';
     const tm = W.map && ({ dawn: I.t('Fajr'), day: I.t('Dhuhr'), dusk: I.t('Maghrib'), night: I.t("'Ishâ") })[W.map.env.time];
     $('#hud .sub').textContent = ((I.monde && I.monde.sousTitre()) || (W.ch ? W.ch.sub : '')) + (tm ? '  ·  ◠ ' + tm : '');   // (2.30 : dans une ville de passage, son nom — monde.js)
-    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga && (!W.saga.frame || W.saga.veillees) ? `<span title="${I.t('Dirhams')}"><i>◎</i>${I.trade.dirhams()}</span>` : '') + `<span title="${I.t('Provision du cœur')}" class="zad"><i>♥</i>${I.oeuvres.zad()}${I.oeuvres.fasting() ? ' <i>☾</i>' + I.t('jeûne') : ''}</span>`;
+    const P = W.pillars(); $('#hud .pil').innerHTML = Object.keys(D.PILLARS).map(k => `<span title="${D.PILLARS[k].name}"><i>${D.PILLARS[k].glyph}</i>${P[k] || 0}</span>`).join('') + (I.trade && W.saga ? `<span title="${I.t('Dirhams')}"><i>◎</i>${I.trade.dirhams()}</span>` : '') + `<span title="${I.t('Provision du cœur')}" class="zad"><i>♥</i>${I.oeuvres.zad()}${I.oeuvres.fasting() ? ' <i>☾</i>' + I.t('jeûne') : ''}</span>`;
     const en = I.oeuvres.enigme(); $('#hud .enig').hidden = !en; if (en) $('#hud .enig').textContent = I.t('Énigme : {signe}', { signe: en.signe });
     $('#hud .obj').textContent = ((o && I.cite && I.cite.objectif && I.cite.objectif(o)) || (o && o.text ? o.text : '')) + (o && o.build ? I.build.objectiveText(o.build) : '');   // (2.28 : dans les quartiers, arrivé par la rue, Maître Yûnus n'est pas là — cite.js)
     $('#hud .obj').hidden = !(o && o.text);

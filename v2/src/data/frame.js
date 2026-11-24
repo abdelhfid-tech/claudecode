@@ -297,7 +297,7 @@ ISNAD.registerSaga({
        prologue). Textes de l'agent, à valider. */
     activites: {
       attend: 'Idris a encore la tête ailleurs. Il y reviendra.',
-      sansPrime: 'Ici, tout se paie avec les primes du circuit, et Idris n’en a encore aucune. L’organisateur en verse une à qui gagne une course.',
+      manque: 'Il manque des dirhams à Idris. Il en gagne dans les récits, et l’organisateur en verse à qui gagne une course.',   // (2.31, D223 : une seule bourse partout ; à valider)
       etal: 'Personne derrière l’étal : on choisit, on paie à l’écran, et la vitrine s’ouvre.',
       record: 'Un record, et personne pour le voir. Idris repense au joueur d’à côté.',
       ecran: [

@@ -674,7 +674,7 @@ async function avancer(p, n = 120) {
     }
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'course ' + nom + ' · ' + e)); await T.ctx.close();
   }
-  // ---------- 16. 2.28 (D217) : les activités des quartiers, payées avec les primes du circuit ----------
+  // ---------- 16. 2.28 (D217) : les activités des quartiers, payées avec la bourse d'Idris (2.31, D223 : une seule bourse partout) ----------
   const PARI2 = /(^|[^a-zà-ÿ])(pari|paris|parier|parie|parions|pariez|parié|mise|mises|miser|misez|misé|enjeux?|loteries?|casino|jeux? de hasard|double ou rien|cotes?|gager)(?![a-zà-ÿ])/i;
   // les aides de la partie 16 et de la 17, dans la page
   const aides = P => P.evaluate(() => { const I = window.ISNAD, T = window.__t;
@@ -707,8 +707,8 @@ async function avancer(p, n = 120) {
   });
   for (const [w, h] of (!SEUL || ACTI) ? [[390, 844], [844, 390]].filter(orient) : []) {
     const nom = w + '×' + h, haut = h > w, mode = haut ? 'joy' : 'clavier', T = await telephone(browser, w, h), P = T.p, E = (fn, a) => P.evaluate(fn, a);
-    // une partie d'avant (sans la progression) : le prologue joué, Sâlim venu ; aucune prime encore
-    await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true }; sv.cite.course.salim = 2; I.trade.dirhams(0); I.save.auto('essai'); });
+    // une partie d'avant (sans la progression) : le prologue joué, Sâlim venu ; la bourse vide, aucune prime
+    await E(() => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true }; sv.cite.course.salim = 2; sv.dirhams = 0; I.save.auto('essai'); });
     await P.reload(); await P.waitForTimeout(1600); await preparer(P); await aides(P);
     await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
     await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
@@ -721,7 +721,8 @@ async function avancer(p, n = 120) {
     const choixVu = async () => { await E(() => window.__t.attendre(() => window.__t.visible('#choice'), 6000)); await P.waitForTimeout(430); return E(() => window.__t.choix()); };
     const dits = () => E(() => window.ISNAD.activites.journal.map(j => j.quoi + (j.id ? ':' + j.id : j.outil ? ':' + j.outil : '')));
     const T0 = await E(() => window.ISNAD.sagas.idris.cite.activites), L0 = await E(() => window.ISNAD.sagas.coeur.lecons), tact = await E(() => document.body.classList.contains('touch'));   // (un téléphone, en hauteur comme en largeur : la leçon au doigt)
-    // a. la grande roue, sans prime : le menu dit le prix et la somme ; « Payer » se refuse sobrement, rien n'est avancé
+    // a. la grande roue, la bourse vide : le menu dit le prix et la somme ; « Payer » se refuse (la première fois, une ligne dit
+    //    d'où vient l'argent d'Idris), rien n'est avancé
     {
       const d0 = await E(() => window.ISNAD.trade.dirhams());
       await E(() => window.__t.zone('roue')); await P.waitForTimeout(250); await A();
@@ -730,23 +731,23 @@ async function avancer(p, n = 120) {
       await A(); const r = await avancer(P, 40), dl = await E(() => window.ISNAD.activites.journal.slice(-3));
       const e = await E(() => ({ d: window.ISNAD.trade.dirhams(), a: window.__t.ac() }));
       const L = L0.manege[tact ? 'doigt' : 'clavier'].replace(/\*/g, '').slice(0, 30);
-      si(c && /Un tour de grande roue : 3 dirhams/.test(c.prompt) && /Tes primes du circuit : 0 dirham/.test(c.prompt) && c.opts.join('/') === 'Payer/Plus tard' && lecon.indexOf(L) >= 0 && e.d === d0 && (e.a.depenses | 0) === 0 && !(e.a.tours || {}).roue && dl.some(j => j.quoi === 'refus'),
-        `${nom} · la grande roue sans prime : « ${c && c.prompt} » — ${c && c.opts.join(' / ')} ; la leçon des manèges dite ; « Payer » refusé (« ${T0.sansPrime.slice(0, 50)}… »), rien d’avancé (${e.d} dirhams)`, `${nom} · la roue sans prime : ${JSON.stringify({ c, lecon, r, dl, e })}`);
+      si(c && /Un tour de grande roue : 3 dirhams/.test(c.prompt) && /Ta bourse : 0 dirham/.test(c.prompt) && c.opts.join('/') === 'Payer/Plus tard' && lecon.indexOf(L) >= 0 && e.d === d0 && (e.a.depenses | 0) === 0 && !(e.a.tours || {}).roue && dl.some(j => j.quoi === 'refus'),
+        `${nom} · la grande roue, la bourse vide : « ${c && c.prompt} » — ${c && c.opts.join(' / ')} ; la leçon des manèges dite ; « Payer » refusé (« ${T0.manque.slice(0, 50)}… »), rien d’avancé (${e.d} dirhams)`, `${nom} · la roue, la bourse vide : ${JSON.stringify({ c, lecon, r, dl, e })}`);
     }
-    // l'organisateur a versé des primes (comme après des courses gagnées)
-    await E(() => { const I = window.ISNAD; I.save.data.cite.course.primes = 30; I.trade.dirhams(30); I.save.store(); });
+    // 2.31 (D223) : des dirhams gagnés dans les récits, sans aucune prime du circuit — la même bourse paie dans les quartiers
+    await E(() => { const I = window.ISNAD; I.trade.dirhams(30); I.save.store(); });
     // b. la grande roue : un tour payé, la vue monte jusqu'au haut de la Cité puis redescend ; rien d'autre ne bouge
     {
-      const avant = await E(() => { const W = window.ISNAD.world; return { d: window.ISNAD.trade.dirhams(), npcs: JSON.stringify(W.npcs.map(n => [n.id, Math.round(n.x), Math.round(n.y), !!n.hidden])), objs: W.map.objs.length, cam: Math.round(W.cam.y + window.ISNAD.gfx.view.y) }; });
+      const avant = await E(() => { const W = window.ISNAD.world; return { p: window.ISNAD.activites.primes(), d: window.ISNAD.trade.dirhams(), npcs: JSON.stringify(W.npcs.map(n => [n.id, Math.round(n.x), Math.round(n.y), !!n.hidden])), objs: W.map.objs.length, cam: Math.round(W.cam.y + window.ISNAD.gfx.view.y) }; });
       await E(() => window.__t.zone('roue')); await P.waitForTimeout(250); const pos = await E(() => [Math.round(window.ISNAD.world.player.x), Math.round(window.ISNAD.world.player.y)]);
       await A(); await choixVu(); await A();
       const haut1 = await E(() => window.__t.attendre(() => window.ISNAD.activites.journal.some(j => j.quoi === 'en-haut'), 30000));
       await P.waitForTimeout(500); const vue = await E(() => ({ cam: Math.round(window.ISNAD.world.cam.y + window.ISNAD.gfx.view.y), dans: !!window.ISNAD.world.passager, nacelle: !!(window.ISNAD.world.map.objs.find(o => o.type === 'qroue') || {}).passager }));
       await P.screenshot({ path: path.join(out, `activite-roue-haut-${w}x${h}.png`) });
       await avancer(P, 60); await E(() => window.__t.attendre(() => window.__t.calme() && !window.ISNAD.activites.occupe, 30000)); await P.waitForTimeout(800);
-      const apres = await E(() => { const W = window.ISNAD.world; return { d: window.ISNAD.trade.dirhams(), npcs: JSON.stringify(W.npcs.map(n => [n.id, Math.round(n.x), Math.round(n.y), !!n.hidden])), objs: W.map.objs.length, cam: Math.round(W.cam.y + window.ISNAD.gfx.view.y), pos: [Math.round(W.player.x), Math.round(W.player.y)], dans: !!W.passager, a: window.__t.ac() }; });
-      si(haut1 && vue.cam < 20 && vue.dans && vue.nacelle && avant.d - apres.d === 3 && apres.a.tours.roue === 1 && apres.a.depenses === 3 && apres.npcs === avant.npcs && apres.objs === avant.objs && apres.pos[0] === pos[0] && apres.pos[1] === pos[1] && !apres.dans && Math.abs(apres.cam - avant.cam) < 400,
-        `${nom} · un tour de grande roue payé (3 dirhams, de ${avant.d} à ${apres.d}) : Idris dans sa nacelle, la vue monte jusqu’au haut de la Cité (${vue.cam} points), puis redescend ; personne ni rien d’autre n’a bougé`, `${nom} · la grande roue : ${JSON.stringify({ haut1, vue, avant: { d: avant.d, cam: avant.cam }, apres: { d: apres.d, cam: apres.cam, pos: apres.pos, dans: apres.dans, a: apres.a }, pos, memes: apres.npcs === avant.npcs })}`);
+      const apres = await E(() => { const W = window.ISNAD.world, s = [...document.querySelectorAll('#hud .pil span')].find(x => (x.querySelector('i') || {}).textContent === '◎'); return { bandeau: s ? s.textContent : null, d: window.ISNAD.trade.dirhams(), npcs: JSON.stringify(W.npcs.map(n => [n.id, Math.round(n.x), Math.round(n.y), !!n.hidden])), objs: W.map.objs.length, cam: Math.round(W.cam.y + window.ISNAD.gfx.view.y), pos: [Math.round(W.player.x), Math.round(W.player.y)], dans: !!W.passager, a: window.__t.ac() }; });
+      si(avant.p === 0 && apres.bandeau === '◎' + apres.d && haut1 && vue.cam < 20 && vue.dans && vue.nacelle && avant.d - apres.d === 3 && apres.a.tours.roue === 1 && apres.a.depenses === 3 && apres.npcs === avant.npcs && apres.objs === avant.objs && apres.pos[0] === pos[0] && apres.pos[1] === pos[1] && !apres.dans && Math.abs(apres.cam - avant.cam) < 400,
+        `${nom} · un tour de grande roue payé avec les dirhams des récits, sans aucune prime (3 dirhams, de ${avant.d} à ${apres.d} ; le bandeau dit « ${apres.bandeau} ») : Idris dans sa nacelle, la vue monte jusqu’au haut de la Cité (${vue.cam} points), puis redescend ; personne ni rien d’autre n’a bougé`, `${nom} · la grande roue : ${JSON.stringify({ haut1, vue, avant: { p: avant.p, d: avant.d, cam: avant.cam }, apres: { bandeau: apres.bandeau, d: apres.d, cam: apres.cam, pos: apres.pos, dans: apres.dans, a: apres.a }, pos, memes: apres.npcs === avant.npcs })}`);
     }
     // c. les chaises volantes (et, en hauteur, les tasses) : un tour, en vue, Idris sur son siège
     for (const id of haut ? ['chaises', 'tasses'] : ['chaises']) {
