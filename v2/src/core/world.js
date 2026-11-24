@@ -827,6 +827,7 @@
       if (I.rodeurs && m.env.dedale && I.rodeurs.porteVue()) { const pi = I.rodeurs.interdite(); I.rodeurs.signe(c, mx + (pi.porte[0] + 0.5) * q, my + (pi.porte[1] + 0.5) * q, 2.2 * q); } // 2.x : la porte interdite, vue de près
       c.fillStyle = Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a'; c.fillRect(mx + (Math.floor(W.player.x / T) - 1) * q, my + (Math.floor(W.player.y / T) - 1) * q, 3 * q, 3 * q);
     } else if (!(!S.busy && I.monde && I.monde.miniCarte && I.monde.miniCarte(c, t, tg))) W.miniRect = null;   // 2.33 : sur la route, la petite carte du pays (monde.js)
+    if (I.monde && I.monde.nomsTic) I.monde.nomsTic(t); // 2.33 : les noms de la petite carte de la route, seulement quand elle est là
     // 2.33 : les annonces se posent sous la petite carte telle qu'elle est à l'écran (l'image peut déborder de l'écran, en largeur)
     if (W.miniRect && (!W._miniT || t - W._miniT > 0.5)) { W._miniT = t; const cr = $('#cv').getBoundingClientRect(), ur = $('#ui').getBoundingClientRect(), r = W.miniRect;
       if (cr.height && ur.height) { const bas = cr.top + (r[1] + r[3]) / G.PH * cr.height - ur.top, v = Math.max(14, Math.min(70, bas / ur.height * 100 + 1.5)).toFixed(1) + '%'; if (v !== W._miniV) { W._miniV = v; $('#ui').style.setProperty('--mini', v); } } }

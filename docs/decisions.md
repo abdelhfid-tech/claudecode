@@ -2416,7 +2416,8 @@ pages privées de son compte.
   `Mo.miniCarte`) : sur la route, dans le coin, comme celle des villes, une petite carte du pays autour d'Idris (vingt-cinq cases
   de côté : la mer, les fleuves, le sable, la steppe, les montagnes, les routes), les villes proches avec leur nom (sans qu'un
   nom en chevauche un autre ; une ville juste hors du cadre, une encoche au bord et son nom dedans), la ville du récit en
-  premier, Idris au centre ; la toucher ouvre la carte entière (la Carte de la halte) : Idris et le nom de chaque ville. En
+  premier, Idris au centre ; les noms sont écrits par-dessus l'image, dans la police du jeu, comme les étiquettes de la scène
+  (le décideur : « Pourquoi cette police degeulzsse dans la carte ? » — dessinés dans l'image agrandie, ils étaient flous) ; la toucher ouvre la carte entière (la Carte de la halte) : Idris et le nom de chaque ville. En
   passant : la carte entière s'ouvre un instant après le toucher (le clic qu'émet le téléphone tombait sur « ◂ Retour » et la
   refermait, en hauteur, aussi pour la petite carte des villes), et les annonces se posent sous la petite carte telle qu'elle
   est à l'écran. Contrôle : `node v2/tools/monde.js` (la petite carte de la route, touchée en hauteur, cliquée en largeur).

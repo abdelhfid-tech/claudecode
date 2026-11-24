@@ -1178,8 +1178,9 @@ carte + carte entière » ; rien dans les villes.*
   la carte du monde : un fond tiré une fois de la carte (une couleur par sol, `COUL` ; les cases des routes, plus claires), dont
   on montre `2 × Mo.RAYON + 1` cases de côté autour de celui qui mène, à 2,4 points par case (moins quand l'image est agrandie,
   comme la petite carte d'une ville), au même coin. Les villes de `D.MONDE.villes` présentes sur la carte : un carré d'or (la
-  ville du récit plus claire) et leur nom, placé à droite, à gauche, au-dessus ou au-dessous, là où il ne chevauche ni un autre
-  nom ni Idris ; une ville un peu hors du cadre (à moins de 2,2 rayons) : une encoche au bord et son nom dedans. L'objectif
+  ville du récit plus claire) et leur nom — écrit par-dessus l'image, dans un calque de la page (`#minicarte-noms`, `Mo.nomsMaj`,
+  comme les étiquettes de la scène : dessiné dans l'image agrandie, il était flou) —, placé à droite, à gauche, au-dessus ou
+  au-dessous, là où il ne chevauche ni un autre nom ni Idris ; une ville un peu hors du cadre (à moins de 2,2 rayons) : une encoche au bord et son nom dedans. L'objectif
   clignote ; Idris, au centre.
 - `W.miniRect` : la toucher ouvre la Carte de la halte (`I.ui.pause('carte')`), un instant après (380 ms) — le clic qu'émet un
   téléphone après le toucher tombait sur « ◂ Retour », en haut à gauche en hauteur, et la refermait (cela valait aussi pour la

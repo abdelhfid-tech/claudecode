@@ -224,37 +224,45 @@
     const sx = Math.max(0, x0), sy = Math.max(0, y0), ex = Math.min(m.w, x0 + n), ey = Math.min(m.h, y0 + n);
     if (ex > sx && ey > sy) c.drawImage(fondMonde(m), sx, sy, ex - sx, ey - sy, mx + (sx - x0) * k, my + (sy - y0) * k, (ex - sx) * k, (ey - sy) * k);
     c.globalAlpha = 1;
-    // les villes : un carré d'or, et leur nom, sans qu'un nom en chevauche un autre (celle du récit d'abord, puis la plus proche) ;
-    // une ville un peu hors du cadre : une encoche au bord, et son nom au plus près, dedans
-    const noms = Object.assign({}, D.LIEUX, (D.MAPS[MONDE] || {}).noms || {}), F = S.flags._monde, fs = Math.max(6.5, 7.5 * q), pris = [{ x: mx + Mo.RAYON * k - 3 * q, y: my + Mo.RAYON * k - 3 * q, w: k + 6 * q, h: k + 6 * q }];   // (la place d'Idris d'abord : aucun nom dessus)
-    c.font = `700 ${fs}px "Alegreya", "Amiri", serif`; c.textBaseline = 'middle'; c.lineJoin = 'round';
-    const libre = r => r.x >= mx + 1 && r.y >= my + 1 && r.x + r.w <= mx + mw - 1 && r.y + r.h <= my + mh - 1 && !pris.some(o => r.x < o.x + o.w && r.x + r.w > o.x && r.y < o.y + o.h && r.y + r.h > o.y);
-    const ecrire = (nom, tx, ty) => { c.strokeStyle = 'rgba(16,10,22,.85)'; c.lineWidth = 2.2 * q; c.strokeText(nom, tx, ty); c.fillStyle = '#fff6dc'; c.fillText(nom, tx, ty); };
+    // les villes : un carré d'or (la ville du récit plus claire) ; une ville un peu hors du cadre, une encoche au bord. Leurs noms
+    // s'écrivent par-dessus l'image, dans la police du jeu (Mo.nomsMaj : un calque de la page, #minicarte-noms)
+    const F = S.flags._monde, villes = [];
     Object.keys(D.MONDE.villes).filter(id => m.spots[id]).map(id => ({ id, s: m.spots[id], d: Math.hypot(m.spots[id][0] - px, m.spots[id][1] - py) }))
       .filter(v => v.d <= Mo.RAYON * 2.2).sort((a, b) => ((F && b.id === F.ville) - (F && a.id === F.ville)) || a.d - b.d).forEach(v => {
-        const X = mx + (v.s[0] - x0 + 0.5) * k, Y = my + (v.s[1] - y0 + 0.5) * k, dedans = X >= mx && X <= mx + mw && Y >= my && Y <= my + mh;
-        const nom = noms[v.id] || v.id, w = c.measureText(nom).width, h = fs + 1;
-        if (dedans) {
-          c.fillStyle = '#1a1420'; c.fillRect(X - 2.2 * q, Y - 2.2 * q, 4.4 * q, 4.4 * q); c.fillStyle = F && v.id === F.ville ? '#ffe08a' : '#e9c877'; c.fillRect(X - 1.5 * q, Y - 1.5 * q, 3 * q, 3 * q);
-          pris.push({ x: X - 2.5 * q, y: Y - 2.5 * q, w: 5 * q, h: 5 * q });
-          const essais = [[X + 4 * q, Y], [X - 4 * q - w, Y], [X - w / 2, Y - h * 0.9], [X - w / 2, Y + h * 0.9]];
-          for (const [tx, ty] of essais) { const r = { x: tx - 1, y: ty - h / 2, w: w + 2, h }; if (libre(r)) { pris.push(r); ecrire(nom, tx, ty); break; } }
-        } else {
-          // l'encoche au bord, dans la direction de la ville ; le nom tout contre, dedans
-          const bx = Math.max(mx + 1.5 * q, Math.min(mx + mw - 1.5 * q, X)), by = Math.max(my + 1.5 * q, Math.min(my + mh - 1.5 * q, Y));
-          c.fillStyle = '#e9c877'; c.beginPath(); c.arc(bx, by, 1.8 * q, 0, 6.3); c.fill();
-          const tx = Math.max(mx + 3 * q, Math.min(mx + mw - w - 3 * q, bx - w / 2)), ty = Math.max(my + h / 2 + 2 * q, Math.min(my + mh - h / 2 - 2 * q, by + (by > my + mh / 2 ? -h * 0.75 : h * 0.75)));
-          const r = { x: tx - 1, y: ty - h / 2, w: w + 2, h }; if (libre(r)) { pris.push(r); c.globalAlpha = 0.85; ecrire(nom, tx, ty); c.globalAlpha = 1; }
-        }
+        const X = mx + (v.s[0] - x0 + 0.5) * k, Y = my + (v.s[1] - y0 + 0.5) * k, dedans = X >= mx && X <= mx + mw && Y >= my && Y <= my + mh, recit = !!(F && v.id === F.ville);
+        if (dedans) { c.fillStyle = '#1a1420'; c.fillRect(X - 2.2 * q, Y - 2.2 * q, 4.4 * q, 4.4 * q); c.fillStyle = recit ? '#ffe08a' : '#e9c877'; c.fillRect(X - 1.5 * q, Y - 1.5 * q, 3 * q, 3 * q); villes.push({ id: v.id, x: X, y: Y, dedans, recit }); }
+        else { const bx = Math.max(mx + 1.5 * q, Math.min(mx + mw - 1.5 * q, X)), by = Math.max(my + 1.5 * q, Math.min(my + mh - 1.5 * q, Y)); c.fillStyle = '#e9c877'; c.beginPath(); c.arc(bx, by, 1.8 * q, 0, 6.3); c.fill(); villes.push({ id: v.id, x: bx, y: by, dedans, recit }); }
       });
+    Mo._mini = { t, rect: [mx, my, mw, mh], ici: [mx + (Mo.RAYON + 0.5) * k, my + (Mo.RAYON + 0.5) * k], villes, cle: px + ',' + py + ',' + mx.toFixed(1) + ',' + my.toFixed(1) + ',' + mw.toFixed(1) };
     // l'objectif (la ville du récit), puis celui qui mène, au centre
     if (tg && Math.floor(t * 3) % 2) { const X = mx + (tg.gx / T - x0) * k, Y = my + (tg.gy / T - y0) * k; c.strokeStyle = '#ffe08a'; c.lineWidth = q; c.strokeRect(X - 3 * q, Y - 3 * q, 6 * q, 6 * q); }
     c.fillStyle = '#1a1420'; c.fillRect(mx + Mo.RAYON * k - 0.5 * q, my + Mo.RAYON * k - 0.5 * q, k + q, k + q);
     c.fillStyle = Math.floor(t * 4) % 2 ? '#ffffff' : '#ff7a5c'; c.fillRect(mx + Mo.RAYON * k, my + Mo.RAYON * k, k, k);
     c.restore();
     c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = q; c.strokeRect(mx - 1.5 * q, my - 1.5 * q, mw + 3 * q, mh + 3 * q);
+    Mo.nomsMaj(t);
     return true;
   };
+  // les noms de la petite carte, en points de la page : chacun à droite, à gauche, au-dessus ou au-dessous de sa ville, là où il ne
+  // chevauche ni un autre nom ni Idris, et jamais hors du cadre ; refaits quand la petite carte bouge (au plus dix fois par seconde)
+  let calque = null, nomsCle = '', nomsT = 0;
+  const lieuNom = id => (Object.assign({}, D.LIEUX, (D.MAPS[MONDE] || {}).noms || {}))[id] || id;
+  Mo.nomsMaj = function (t) {
+    const M = Mo._mini; calque = calque || document.getElementById('minicarte-noms'); if (!M || !calque) return;
+    calque.hidden = false; const cle = M.cle + '|' + I.langue.code(); if (cle === nomsCle && t - nomsT < 1) return; if (t - nomsT < 0.1) return; nomsCle = cle; nomsT = t;
+    const cv = document.getElementById('cv'), cr = cv.getBoundingClientRect(), ur = calque.getBoundingClientRect(); if (!cr.width || !ur.width) return;
+    const sx = cr.width / G.PW, sy = cr.height / G.PH, X = x => cr.left - ur.left + x * sx, Y = y => cr.top - ur.top + y * sy;
+    const R = { x0: X(M.rect[0]) + 1, y0: Y(M.rect[1]) + 1, x1: X(M.rect[0] + M.rect[2]) - 1, y1: Y(M.rect[1] + M.rect[3]) - 1 }, ix = X(M.ici[0]), iy = Y(M.ici[1]);
+    const pris = [{ x: ix - 5, y: iy - 5, w: 10, h: 10 }], libre = r => r.x >= R.x0 && r.y >= R.y0 && r.x + r.w <= R.x1 && r.y + r.h <= R.y1 && !pris.some(o => r.x < o.x + o.w && r.x + r.w > o.x && r.y < o.y + o.h && r.y + r.h > o.y);
+    while (calque.children.length < M.villes.length) calque.appendChild(document.createElement('span'));
+    [...calque.children].forEach((e, i) => { const v = M.villes[i]; if (!v) { e.hidden = true; return; } e.hidden = false; e.textContent = lieuNom(v.id); e.className = (v.recit ? 'recit' : '') + (v.dedans ? '' : ' dehors'); e.style.visibility = 'hidden'; });
+    M.villes.forEach((v, i) => { const e = calque.children[i], w = e.offsetWidth, h = e.offsetHeight, x = X(v.x), y = Y(v.y), d = 5;
+      if (v.dedans) pris.push({ x: x - 3, y: y - 3, w: 6, h: 6 });
+      const essais = v.dedans ? [[x + d, y], [x - d - w, y], [x - w / 2, y - h * 0.8], [x - w / 2, y + h * 0.8]] : [[Math.max(R.x0, Math.min(R.x1 - w, x - w / 2)), Math.max(R.y0 + h / 2, Math.min(R.y1 - h / 2, y + (y > (R.y0 + R.y1) / 2 ? -h * 0.8 : h * 0.8)))]];
+      for (const [lx, ly] of essais) { const r = { x: lx, y: ly - h / 2, w, h }; if (libre(r)) { pris.push(r); e.style.left = lx.toFixed(1) + 'px'; e.style.top = ly.toFixed(1) + 'px'; e.style.visibility = 'visible'; break; } } });
+  };
+  // ailleurs que sur la route (ou pendant un récit) : pas de noms (world.js, après le rendu de la petite carte)
+  Mo.nomsTic = function (t) { calque = calque || document.getElementById('minicarte-noms'); if (calque && !calque.hidden && (!Mo._mini || Mo._mini.t !== t)) { calque.hidden = true; nomsCle = ''; } };
   // rien ne se croise ici (une case ; un point de la carte)
   Mo.interditCase = (x, y) => { const m = W.map; if (!m || m.id !== MONDE) return false; if (x < 0 || y < 0 || x >= m.w || y >= m.h) return true; return !!champs(m).interdit[y * m.w + x]; };
   Mo.interdit = (px, py) => { const c = cas(px, py); return Mo.interditCase(c[0], c[1]); };

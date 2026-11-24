@@ -510,6 +510,11 @@ body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
 
 /* ---------- qui est qui, et où : noms au-dessus des personnages, silhouette de celui qui parle, carte ---------- */
 #noms { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3; }
+/* 2.33 (D227) : les noms des villes sur la petite carte de la route — écrits par-dessus l'image, nets, dans la police du jeu
+   (dessinés dans l'image, agrandie deux ou trois fois, ils étaient flous et pâteux) */
+#minicarte-noms { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3; }
+#minicarte-noms span { position: absolute; transform: translateY(-50%); padding: 0 .3em .04em; font-size: max(.56em, 10.5px); line-height: 1.2; white-space: nowrap; color: #fff6dc; background: rgba(8, 7, 18, .7); border-radius: 2px; text-shadow: 0 1px 2px #000; }
+#minicarte-noms span.recit { color: #ffe08a; } #minicarte-noms span.dehors { opacity: .82; font-style: italic; }
 .nom { position: absolute; transform: translate(-50%, -100%); padding: .02em .5em .08em; font-size: .6em; line-height: 1.25; white-space: nowrap; color: #fff6dc; background: rgba(8, 7, 18, .74); border-bottom: 1px solid var(--c, var(--gold)); border-radius: 2px; text-shadow: 0 1px 2px #000; animation: nomin .25s ease; }
 @keyframes nomin { from { opacity: 0; } }
 body.portrait .nom { font-size: .66em; }
