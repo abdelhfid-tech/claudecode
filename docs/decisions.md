@@ -2230,9 +2230,9 @@ pages privées de son compte.
   des blessés de la veillée (« sur la même natte »). Le dessin ne change pas : un tapis tressé, uni, couleur paille, sans motif
   ni inscription — dans les mosquées des récits, au VIIᵉ siècle, pas de tapis de laine à motifs. Les noms du code (`natte`,
   `mat`, `O.natte`) ne changent pas.
-- [ ] **D222. Les rencontres de la route : les chimères du désert, les brigands, le voyageur désespéré (version 2.30 ;
+- [x] **D222. Les rencontres de la route : les chimères du désert, les brigands, le voyageur désespéré (version 2.30 ;
   demandes du décideur, 23 novembre) — nombres, textes et choix de l'agent, à valider ; le nom « L'Abandon » et la zone sans
-  rencontre autour de La Mecque, validés.** En demandant la carte du monde (D220), le 23 novembre : « Ça permettrait aussi de
+  rencontre autour de La Mecque, validés.** *Validée par le décideur le 24 novembre : « Considère tes propositions comme validées on refera une relecture globale ». Les choix, les nombres, les textes et le dessin ci-dessous sont retenus tels quels, en attendant la relecture globale.* En demandant la carte du monde (D220), le 23 novembre : « Ça permettrait aussi de
   croiser des brigands et des monstres dans le déserts et se faire de l'argent. » Son choix pour les brigands : la parole
   d'abord, puis leur chimère, « La Razzia ». Puis, le même jour : « Ok mais je veux qu'un moment il rencontre le désespoir ».
   Il lui a été dit que sur la carte du monde ce sont les Compagnons du récit qui marchent, et non Idris ; que le jeu ne prête
@@ -2322,8 +2322,8 @@ pages privées de son compte.
   la route) ; l'outil « parler » pour la rencontre qui attend ; les textes du voyageur et de L'Abandon, dans les quatre langues
   (en arabe, الاستكانة) ; les captures (`.smoke/monde`, 390 × 844 et 844 × 390). Contrôle : `node v2/tools/monde.js` (partie 5 ;
   « MONDE CONFORME »).
-- [ ] **D223. Une seule bourse partout, quartiers de la Cité-Miroir compris (version 2.31 ; demande du décideur, 24 novembre)
-  — texte de l'agent, à valider.** Le décideur : « l'argent et les objets gagné dans les sagas sont bien dans les poches
+- [x] **D223. Une seule bourse partout, quartiers de la Cité-Miroir compris (version 2.31 ; demande du décideur, 24 novembre)
+  — texte de l'agent, à valider.** *Validée par le décideur le 24 novembre : « Considère tes propositions comme validées on refera une relecture globale ». Les choix, les nombres, les textes et le dessin ci-dessous sont retenus tels quels, en attendant la relecture globale.* Le décideur : « l'argent et les objets gagné dans les sagas sont bien dans les poches
   d'idriss? » Il lui a été répondu que le jeu n'a qu'une réserve pour toute la partie (les dirhams, la besace, l'équipement),
   mais que dans les quartiers on ne dépensait que les primes du circuit (D217) et que le bandeau de 2084 ne montrait pas les
   dirhams. Son choix : « Une seule bourse partout », puis : « une seule bourse partout utilisable aussi dans les quartiers de
@@ -2337,8 +2337,8 @@ pages privées de son compte.
   plafond, la règle anti-pari (on ne paie jamais pour courir, une activité payée ne rapporte rien, aucun hasard). Les textes
   sont écrits à la source en arabe (et vocalisés), en anglais et en japonais. Contrôle : `node v2/tools/cite.js activites`
   (un tour de grande roue payé avec les dirhams des récits, sans aucune prime ; le bandeau qui dit la bourse).
-- [ ] **D224. L'esquive se voit au coup ; les pillards se voient (version 2.32 ; demandes du décideur, 24 novembre) — texte
-  de l'agent, à valider.** Le décideur : « l'esquive doit être appliquée au moment de recevoir le coup pas au moment où on
+- [x] **D224. L'esquive se voit au coup ; les pillards se voient (version 2.32 ; demandes du décideur, 24 novembre) — texte
+  de l'agent, à valider.** *Validée par le décideur le 24 novembre : « Considère tes propositions comme validées on refera une relecture globale ». Les choix, les nombres, les textes et le dessin ci-dessous sont retenus tels quels, en attendant la relecture globale.* Le décideur : « l'esquive doit être appliquée au moment de recevoir le coup pas au moment où on
   sélectionne l'esquive » ; « On ne voit pas les pillards il faut quand même que le combat soit visuellement justifiée » (ce
   qui tranche le point 9 de la 2.30). Ses choix : « Commande, effet au coup » ; « À l'écart dans le combat ». *L'esquive*
   (`v2/src/core/battle.js`) : on la choisit à son tour, comme avant, et le tirage ne change pas (`D.ESQUIVE`) ; au choix, rien
@@ -2357,8 +2357,8 @@ pages privées de son compte.
   « Un pillard » (écrit à la source dans les trois langues). Contrôles : `manette.js` (l'esquive : rien au choix, le pas au
   coup), `monde.js` (5c : les pillards paraissent, le chef et sa silhouette, La Razzia qui se lève, les témoins du combat,
   leur départ).
-- [ ] **D225. Des gens et des bêtes dans les villes (version 2.33 ; demande du décideur, 24 novembre) — texte de l'agent, à
-  valider ; amende D220 (« sans personnage »).** Le décideur : « rajoute quelques personnes crédibles et quelques animaux dans
+- [x] **D225. Des gens et des bêtes dans les villes (version 2.33 ; demande du décideur, 24 novembre) — texte de l'agent, à
+  valider ; amende D220 (« sans personnage »).** *Validée par le décideur le 24 novembre : « Considère tes propositions comme validées on refera une relecture globale ». Les choix, les nombres, les textes et le dessin ci-dessous sont retenus tels quels, en attendant la relecture globale.* Le décideur : « rajoute quelques personnes crédibles et quelques animaux dans
   les villes ». Son choix : « Villes visitées » (des gens, des bêtes et, à la 2.34, des demandes d'aide dans les villes qu'on
   visite depuis la carte du monde ; dans les villes des récits, des bêtes seulement ; à La Mecque, des gens et des bêtes, aucun
   chantier). *Ce qui a été fait* (`v2/src/core/gens.js`, `D.GENS` et `D.BETES` dans `defs.js`, les bêtes dessinées dans
@@ -2379,8 +2379,8 @@ pages privées de son compte.
   mêmes places. Les textes sont écrits à la source en arabe (et vocalisés), en anglais et en japonais ; « Un vieil homme » et «
   Un passant » reprennent les noms déjà écrits dans la Cité-Miroir. Contrôle : `node v2/tools/monde.js` (dans chaque ville
   visitée, les gens et les bêtes, leur visage, leur place ; l'un d'eux parle ; à Médine du récit, les bêtes seulement).
-- [ ] **D226. Aider les gens du lieu à bâtir ; récolter ; bâtir simplement (version 2.33 ; demandes du décideur, 24 novembre)
-  — texte de l'agent, à valider ; amende D220 (« on n'y bâtit pas »).** Le décideur : « la possibilité de les aider d'une
+- [x] **D226. Aider les gens du lieu à bâtir ; récolter ; bâtir simplement (version 2.33 ; demandes du décideur, 24 novembre)
+  — texte de l'agent, à valider ; amende D220 (« on n'y bâtit pas »).** *Validée par le décideur le 24 novembre : « Considère tes propositions comme validées on refera une relecture globale ». Les choix, les nombres, les textes et le dessin ci-dessous sont retenus tels quels, en attendant la relecture globale.* Le décideur : « la possibilité de les aider d'une
   manière ou d'une autre avec la construction de puit, de mur, d'enclos, de mosquée etc. » ; « verifie que toutes les missions
   de construction soient simples et bien expliquées dans l'aide. On n'est pas tous abreuvés à Minecraft » ; « Idriss reçoit de
   l'argent à chaque construction pour son aide » ; « il faut pouvoir récupérer du bois ou des matériaux quelque part non? ». Son
@@ -2407,8 +2407,8 @@ pages privées de son compte.
   » réécrite en quatre gestes (récolter, ouvrir Bâtir, poser sur le pointillé, achever) ; « Que faire ? » le redit. Le mode
   Bâtir ne s'ouvre plus dans l'histoire-cadre. La partie garde `entraide` (par ville ; valeur de départ dans `migrer`) ; le
   format reste le 2. Contrôle : `node v2/tools/batir.js` (« BÂTIR CONFORME »).
-- [ ] **D227. La prière est « faite » ; une petite carte sur la route (version 2.33 ; demandes du décideur, 24 novembre) — texte
-  de l'agent, à valider.** Le décideur : « La prière est faite. Pas dite! » ; « ajoute une carte pour se situer dans le désert
+- [x] **D227. La prière est « faite » ; une petite carte sur la route (version 2.33 ; demandes du décideur, 24 novembre) — texte
+  de l'agent, à valider.** *Validée par le décideur le 24 novembre : « Considère tes propositions comme validées on refera une relecture globale ». Les choix, les nombres, les textes et le dessin ci-dessous sont retenus tels quels, en attendant la relecture globale.* Le décideur : « La prière est faite. Pas dite! » ; « ajoute une carte pour se situer dans le désert
   et les différentes villes ». Ses choix : « Petite carte + carte entière » ; dans les villes, rien ne change (« Non, la route
   seulement »). *La prière* : à la porte de la noosphère, « La prière est dite. » devient « La prière est faite. » (`coeur.js`,
   `portes.priere.invite`) ; l'anglais devient « The prayer is done. » ; l'arabe (« أُدّيت الصلاة ») et le japonais (« 礼拝は終わった »)

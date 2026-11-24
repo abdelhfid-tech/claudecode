@@ -253,7 +253,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   déserts et se faire de l'argent » — pour les brigands, la parole d'abord, puis leur chimère, « La Razzia » ; « Ok mais je veux
   qu'un moment il rencontre le désespoir » — « La parole, puis sa chimère », « Parfois, à chaque traversée » ; « Ok pour tes
   propositions » pour le nom « L'Abandon » et aucune rencontre à moins de trois cases de La Mecque ; nombres, textes et le reste
-  des choix de l'agent, à valider), **les rencontres de la route** (`v2/src/core/monde.js`, « les rencontres de la route » ;
+  des choix de l'agent, validés par le décideur le 24 novembre), **les rencontres de la route** (`v2/src/core/monde.js`, « les rencontres de la route » ;
   `rodeurs.js` ; `trade.js` ; `coeur.js`, `route` et `abandon` ; `D.MONDE.rencontres`). Une traversée va de la sortie par une
   porte à l'entrée dans une ville ; ses comptes vivent dans les drapeaux du chapitre (`S.flags._monde.tr`), le format reste le 2.
   **Rien autour des villes ni de La Mecque** : à deux cases d'une ville ou moins, à trois cases de La Mecque ou moins — un
@@ -288,7 +288,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   CONFORME ») ; un changement des rencontres repasse aussi `cite.js passages` (les rues des quartiers partagent le mécanisme),
   `progression.js`, `smoke.js auto`, `walk` et `tap`.
 - Dans la 2.x (2.33, D225 ; le décideur, 24 novembre : « rajoute quelques personnes crédibles et quelques animaux dans les
-  villes » ; son choix : « Villes visitées » ; textes, nombres et dessin de l'agent, à valider), **les gens du lieu et leurs
+  villes » ; son choix : « Villes visitées » ; textes, nombres et dessin de l'agent, validés par le décideur le 24 novembre), **les gens du lieu et leurs
   bêtes** (`v2/src/core/gens.js` ; `D.GENS`, `D.BETES`, `defs.js` ; les bêtes `b_<espèce>`, `gfx.js`) : dans chaque ville
   qu'on visite depuis la carte du monde, La Mecque comprise, sept gens du lieu — des hommes et un garçon de fiction, sans nom,
   chacun avec son visage, des couleurs d'une palette par région (jamais d'un peuple ni d'une religion : exigence 10) ; certains
@@ -303,8 +303,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
 - Dans la 2.x (2.33, D226 ; le décideur, 24 novembre : « la possibilité de les aider d'une manière ou d'une autre avec la
   construction de puit, de mur, d'enclos, de mosquée etc. » ; « verifie que toutes les missions de construction soient simples
   et bien expliquées dans l'aide. On n'est pas tous abreuvés à Minecraft » ; « Idriss reçoit de l'argent à chaque construction
-  pour son aide » ; « il faut pouvoir récupérer du bois ou des matériaux quelque part non? » ; nombres et textes de l'agent, à
-  valider), **l'entraide et le bâtir simple** (`v2/src/core/entraide.js`, `D.ENTRAIDE` ; `build.js`) : dans chaque ville visitée
+  pour son aide » ; « il faut pouvoir récupérer du bois ou des matériaux quelque part non? » ; nombres et textes de l'agent,
+  validés par le décideur le 24 novembre), **l'entraide et le bâtir simple** (`v2/src/core/entraide.js`, `D.ENTRAIDE` ; `build.js`) : dans chaque ville visitée
   sauf La Mecque, l'un des gens du lieu demande de l'aide (un « ! »), une demande à la fois, chacune une fois par partie — puits,
   enclos, mur, palmiers et champ, petite mosquée de quartier (seulement dans les villes de `D.ENTRAIDE.mosquee` : murs de pisé,
   piliers, une niche ; ni minaret, ni coupole, ni inscription ; ni lieu de prière ni point de sauvegarde) ; il fournit une part
