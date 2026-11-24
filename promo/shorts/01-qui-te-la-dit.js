@@ -36,7 +36,7 @@ module.exports = {
     await s.arrivee(1.7, 0.5);
     await s.legende('Sous la ville : les Archives basses', { zone: 'sur', style: 'titre', duree: 1.9, dans: 0.05 });
     const ch = await s.ev(() => { const W = window.ISNAD.world; return W.resolve('chaine', W.map.id, W.player); });
-    await s.toucherMonde(ch[0], ch[1]); await s.zoom(1.2, 4.5);
+    await s.ev(c => { window.ISNAD.world.goTo(c[0], c[1]); }, ch); await s.zoom(1.2, 4.5);   // (le jeu l'y mène : le premier toucher après le chargement d'un lieu peut se perdre)
     await s.tourner(22 * T);
     /* 4 — le carton du jeu : « Médine … juin 632 » */
     s.marque('medine-carton');
@@ -53,6 +53,6 @@ module.exports = {
     await s.tenir('ArrowUp'); await s.tourner(6 * T); await s.lacher('ArrowUp');
     /* 6 — le carton final */
     s.marque('carton');
-    await s.carton(12 * T);
+    await s.carton(12 * T - 0.2);   // (le carton s'ouvre sur 0,2 s de noir : 30 secondes en tout)
   }
 };

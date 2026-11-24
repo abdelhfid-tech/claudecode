@@ -151,6 +151,9 @@ function installer() {
   F.occupe = () => I.script.busy || !!I.battle.active || !!W.lock;
   // l'étoile qui montre l'objectif au bord de l'image, et le losange au-dessus de lui : on peut les retirer d'un plan
   const cible0 = W.target; W.target = function () { return F.sansCible ? null : cible0.apply(this, arguments); };
+  // les figures (le héros, le sage, le saint : exigence 24, non validée) restent hors champ (D172) : dans la page du film, le jeu
+  // ne les tient pas pour offertes — ni « en sage » dans le panneau des commandes, ni rien de ce qu'elles commandent
+  if (I.postures && I.postures.offertes) { const po = I.postures.offertes; I.postures.offertes = function () { return F.figures ? po.apply(this, arguments) : false; }; }
   // la petite carte de la route (2.33) suit le plan des villes : hors champ sauf si le plan la garde (propre({ carte: true }))
   if (I.monde && I.monde.miniCarte) { const mc = I.monde.miniCarte; I.monde.miniCarte = function () { return F.sansCarte ? false : mc.apply(this, arguments); }; }
   // la route du monde, le temps d'une prise : aucune rencontre (ni chimère, ni brigands, ni voyageur) ne coupe la marche du groupe

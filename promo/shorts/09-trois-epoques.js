@@ -93,6 +93,6 @@ module.exports = {
     await s.arrivee(0, 0.4);
     await s.defiler('#chain', 1120, 10 * T);                         // jusqu'au maillon V : le dernier maillon (celui d'Idris, scellé jusqu'aux cinq Lumières) reste hors de l'image
     await s.tourner(10 * T);
-    await s.carton(16 * T - 0.2);
+    await s.carton(16 * T - 0.3);
   }
 };
