@@ -480,7 +480,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   d'ambiance généré par IA ne montre jamais une personne, un animal, un texte ni un lieu saint, et n'entre ni dans le jeu
   ni dans le dépôt ; chaque short dure 30 secondes, plan du soutien compris (décideur, 19 novembre), et s'ouvre sur une image pleine,
   lumineuse et en mouvement, l'accroche lisible dès la première image, sans noir ni fondu (décideur, 22 novembre : « La
-  première image doit être prenante on doit s'arrêter de scroller » ; `shorts.js` le contrôle : « PREMIÈRE IMAGE SOMBRE »),
+  première image doit être prenante on doit s'arrêter de scroller » ; `shorts.js` le contrôle : « PREMIÈRE IMAGE SOMBRE », « ACCROCHE TARDIVE » — l'accroche entière dès l'image 1, `s.ouverture` — et « DURÉE » au-delà de 30 secondes ; au combat, les rangées du groupe restent hors champ, D172),
   et l'on ne les
   refait qu'une fois Idris redessiné (« Tu change le personnage avant de refaire le short et le livret ») ; le son d'un short est fait de percussions seules (exigence 9 ; une musique a été essayée deux fois,
   puis écartée par le décideur) ; aucun support ne nomme les auteurs des exigences 14 et 24 ; la réserve de la décision

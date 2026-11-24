@@ -127,7 +127,8 @@ function installer() {
   F.cadre = (haut, app) => { const st = document.documentElement.style; st.setProperty('--film-haut', haut + 'px'); st.setProperty('--film-app', app + 'px'); window.dispatchEvent(new Event('resize')); const r = $('#stage').getBoundingClientRect(); return [r.top, r.height]; };
   F.propre = o => { const b = document.body.classList; ['boutons', 'annonces', 'boussole', 'hud', 'noms'].forEach(k => b.toggle('f-' + k, !o[k])); F.sansCible = o.cible === false;
     b.toggle('f-pad', !!o.pad); b.toggle('f-rangees', !o.rangees); b.toggle('f-panneau', o.panneau === false); b.toggle('f-bandeau', o.bandeau === false);
-    const m = W.map; if (m) { if (!o.carte) { if (m.mini) m._mini = m.mini; m.mini = null; } else if (m._mini) { m.mini = m._mini; m._mini = null; } } };
+    const m = W.map; if (m) { if (!o.carte) { if (m.mini) m._mini = m.mini; m.mini = null; } else if (m._mini) { m.mini = m._mini; m._mini = null; } }
+    F.sansCarte = !o.carte; };   // (la petite carte de la route aussi : monde.js, Mo.miniCarte, plus bas)
   // une réplique du jeu, retrouvée par un fragment : ['say' | 'nar' | 'quote' | 'title', …] tel que le récit l'écrit
   F.trouver = (saga, frag) => { const vu = new Set(), but = sansApo(frag); let r = null;
     (function f(o) { if (r || !o || typeof o !== 'object' || vu.has(o)) return; vu.add(o);
@@ -150,6 +151,17 @@ function installer() {
   F.occupe = () => I.script.busy || !!I.battle.active || !!W.lock;
   // l'étoile qui montre l'objectif au bord de l'image, et le losange au-dessus de lui : on peut les retirer d'un plan
   const cible0 = W.target; W.target = function () { return F.sansCible ? null : cible0.apply(this, arguments); };
+  // la petite carte de la route (2.33) suit le plan des villes : hors champ sauf si le plan la garde (propre({ carte: true }))
+  if (I.monde && I.monde.miniCarte) { const mc = I.monde.miniCarte; I.monde.miniCarte = function () { return F.sansCarte ? false : mc.apply(this, arguments); }; }
+  // la route du monde, le temps d'une prise : aucune rencontre (ni chimère, ni brigands, ni voyageur) ne coupe la marche du groupe
+  F.route = nom => { I.debug.rencontres = { chimeres: 0, brigands: 0, voyageur: 0 }; I.save.data._route = 1; F.routeFaite = false; I.monde.sortir(nom).then(() => { F.routeFaite = true; }); };
+  // sur la route, un point de la piste à `n` cases de celui qui mène, en s'éloignant de la ville : on y marche
+  F.surLaPiste = n => { const m = W.map, c = I.monde.champs(); if (!c) return null; const T = 16, P = W.player, x0 = Math.floor(P.x / T), y0 = Math.floor((P.y - 3) / T);
+    const piste = (x, y) => x > 0 && y > 0 && x < m.w - 1 && y < m.h - 1 && !m.solid[y * m.w + x] && c.route[y * m.w + x] <= 1;
+    const vu = new Map([[x0 + ',' + y0, 0]]), q = [[x0, y0]]; let best = null;
+    for (let i = 0; i < q.length; i++) { const [x, y] = q[i], d = vu.get(x + ',' + y); if (d >= n) { if (!best || Math.hypot(x - x0, y - y0) > best.e) best = { x, y, e: Math.hypot(x - x0, y - y0) }; continue; }
+      [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([a, b]) => { const k = (x + a) + ',' + (y + b); if (!vu.has(k) && piste(x + a, y + b)) { vu.set(k, d + 1); q.push([x + a, y + b]); } }); }
+    if (!best) return null; W.goTo(best.x * T + 8, best.y * T + 13, { quiet: true }); return [best.x, best.y]; };
   F.ecran = (wx, wy) => { const U = I.ui, G = I.gfx, st = $('#stage').getBoundingClientRect(); return [st.left + (wx - G.cale(W.cam.x) - G.view.x) * U.scale, st.top + (wy - G.cale(W.cam.y) - G.view.y) * U.scale]; };
   I.audio.setOn(false);
   return true;
@@ -196,6 +208,8 @@ class Plateau {
   async image() {
     await this.p.clock.runFor(this.pasJeu || PAS);
     await this.p.evaluate(t => window.__film.pas(t), this.t);
+    // la première image : l'accroche doit y être entière (D219) — on relève l'opacité de la légende la plus visible
+    if (this.n === 0) this.accroche0 = await this.p.evaluate(() => Math.max(0, ...[...document.querySelectorAll('.film-leg')].map(e => +e.style.opacity || 0)));
     if (this.ff) { const buf = await this.p.screenshot({ type: 'png' }); if (!this.ff.stdin.write(buf)) await new Promise(r => this.ff.stdin.once('drain', r)); }
     this.n++;
   }
@@ -253,6 +267,13 @@ class Plateau {
     await this.ev(([g, o]) => { window.ISNAD.battle.start({ group: g, bg: o.fond || 'noos', boss: !!o.idole, sansReprise: true }); }, [groupe, o]);
     if (o.idole) { await this.jusqua(() => !!document.querySelector('.screen:not([hidden]) button, #choice:not([hidden]) .opt'), null, 8000); await this.avancer(300); await this.touche('Enter'); }
     await this.jusqua(() => !!document.querySelector('#battle .cmd .mi'), null, 30000); await this.avancer(o.attente === undefined ? 400 : o.attente); }
+  // un combat au tour par tour, filmé comme on le joue : chaque fois que le menu du héros est là depuis `lire` secondes, Entrée —
+  // la commande (Frapper, la première, s'arme), puis Entrée de nouveau, qui agit sur la cible désignée d'emblée (2.19) ; les
+  // chimères jouent leur tour entre deux. Le panneau des commandes reste à l'image, et l'on voit choisir.
+  async tourParTour(sec, lire) { lire = lire || 0.55; let vu = null;
+    await this.ev(() => { const I = window.ISNAD; I.debug.auto = false; I.speed = 1; });
+    await this.tourner(sec, async t => { const menu = await this.ev(() => !!document.querySelector('#battle .cmd .mi:not(.off):not([hidden])'));
+      if (!menu) { vu = null; return; } if (vu === null) vu = t; if (t - vu >= lire) { await this.touche('Enter'); vu = null; } }); }
   // le combat se joue tout seul (comme le joueur de test), à l'allure normale : de l'action, sans menu qui attend
   auto(on) { return this.ev(on => { const I = window.ISNAD; I.debug.auto = !!on; I.speed = 1; }, on !== false); }
   defiler(sel, vers, sec) { return this.ev(([s, v, d]) => window.__film.defiler(s, v, d), [sel, vers, sec]); }
@@ -292,6 +313,13 @@ class Plateau {
     await this.tourner(sec); }
   arrivee(z, sec) { this.voiles.lueur = 0; return this.ev(([z, d]) => { const F = window.__film, I = window.ISNAD; F.rampe('lueur', 0, d);
     if (z && I.scene === I.world) { const z0 = Math.min(3, z * 1.8); F.rampes.zoom = { v: z0, vers: z0, d: 0 }; I.ui.zoomer(z0, false); F.rampe('zoom', z, d * 1.4); } }, [z || 0, sec || 0.5]); }
+  // l'ouverture d'un short (D219 ; le décideur, 22 novembre : « La première image doit être prenante on doit s'arrêter de
+  // scroller ») : on tombe au milieu d'un passage — la lueur déjà ouverte (o.lueur, 0,55) se déchire en o.sec secondes et
+  // l'image revient à × o.z — et l'accroche est entière dès l'image 1. Sans lueur (o.lueur: 0 : un plan d'ambiance ouvre le
+  // short), l'accroche seule. Le grand tambour de la première mesure (rythme) frappe avec elle.
+  async ouverture(html, o) { o = o || {};
+    if (o.lueur !== 0) { this.voiles.lueur = o.lueur || 0.55; await this.ev(v => window.__film.rampe('lueur', v, 0), this.voiles.lueur); await this.arrivee(o.z === undefined ? 2.1 : o.z, o.sec || 1.1); }
+    return this.legende(html, Object.assign({ style: 'accroche', taille: 34, dy: 0 }, o.legende || {}, { dans: -0.05, fi: 0.01, duree: o.duree || 2.4 })); }
   // un plan d'ambiance (promo/shorts/plans-ia/<nom>.mp4), en plein cadre pendant `sec` secondes ; `fondu` : il se dissout dans le jeu
   async plan(nom, sec, o) { o = o || {}; const src = path.join(PLANS, nom + '.mp4'); if (!fs.existsSync(src)) { this.dit('plan d’ambiance absent (' + nom + ') : le short s’ouvre sur le jeu'); return false; }
     const dos = path.join(PRISES, 'plan-' + nom); if (!fs.existsSync(path.join(dos, '0001.jpg'))) { fs.mkdirSync(dos, { recursive: true }); const r = spawnSync('ffmpeg', ['-v', 'error', '-y', '-ss', String(o.de || 0), '-i', src, '-vf', `fps=${IPS},scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,crop=1080:1920`, '-q:v', '2', path.join(dos, '%04d.jpg')]); if (r.status) { this.dit('! plan illisible : ' + nom); return false; } }
@@ -357,6 +385,7 @@ function monter(scn, video, wav, duree, sortie) {
 // la première image d'un film : sa luminance moyenne (0 à 255). Elle doit arrêter le pouce (le décideur, 22 novembre : « La
 // première image doit être prenante on doit s'arrêter de scroller ») : pleine et lumineuse, jamais un noir ni un fondu.
 const PREMIERE_MIN = 40;
+const DUREE_MAX = 30;   // un short, plan du soutien compris (le décideur, 19 novembre ; D219)
 function premiere(film) { const r = spawnSync('ffmpeg', ['-hide_banner', '-v', 'info', '-i', film, '-frames:v', '1', '-vf', 'signalstats,metadata=print:key=lavfi.signalstats.YAVG', '-f', 'null', '-'], { encoding: 'utf8' }), m = /YAVG=([\d.]+)/.exec(r.stderr || ''); return m ? parseFloat(m[1]) : null; }
 function planche(film, duree, sortie, n) { n = n || 12; const col = 6, pas = duree / n;
   ffmpeg(['-i', film, '-vf', `fps=1/${pas.toFixed(4)}:start_time=${(pas / 2).toFixed(3)}:round=down,scale=300:-1,tile=${col}x${Math.ceil(n / col)}:padding=6:color=0x06050d`, '-frames:v', '1', '-q:v', '3', sortie]); }
@@ -465,6 +494,10 @@ if (require.main === module) (async () => {
     const y0 = premiere(sortie);
     if (y0 === null || y0 < PREMIERE_MIN) { anomalies++; console.log(`  ✗ PREMIÈRE IMAGE SOMBRE : luminance ${y0 === null ? 'illisible' : y0.toFixed(0)} (au moins ${PREMIERE_MIN}) — un short s'ouvre sur une image pleine, lumineuse et en mouvement, l'accroche lisible, sans noir ni fondu`); }
     else console.log(`  première image : luminance ${y0.toFixed(0)} (au moins ${PREMIERE_MIN})`);
+    // l'accroche, entière dès l'image 1 ; la durée, plan du soutien compris (D219 : 30 secondes)
+    if (!(s.accroche0 >= 0.95)) { anomalies++; console.log(`  ✗ ACCROCHE TARDIVE : à la première image, la légende la plus visible est à ${((s.accroche0 || 0) * 100).toFixed(0)} % — l'accroche est entière dès l'image 1`); }
+    else console.log('  accroche entière dès la première image');
+    if (total > DUREE_MAX + 0.05) { anomalies++; console.log(`  ✗ DURÉE : ${total.toFixed(1)} s, plan du soutien compris (au plus ${DUREE_MAX} s)`); }
     console.log(`  ${bon ? '✓' : '✗'} ${path.relative(RACINE, sortie)} — ${v.width} × ${v.height}, ${v.r_frame_rate} i/s, ${total.toFixed(1)} s${fin && fin.duree ? ' (dont le plan final : ' + SOUTIEN_SEC + ' s)' : ''}, ${a ? 'son ' + a.codec_name : 'sans son'}, ${(fs.statSync(sortie).size / 1e6).toFixed(1)} Mo · filmé en ${((Date.now() - t0) / 1000).toFixed(0)} s`);
     if (s.marques.length) console.log('  repères : ' + s.marques.map(m => m[0] + ' ' + m[1] + ' s').join(' · '));
     if (s.journal.length) console.log('  répliques du jeu : ' + s.journal.map(j => '« ' + j.slice(0, 70) + (j.length > 70 ? '…' : '') + ' »').join(' · '));

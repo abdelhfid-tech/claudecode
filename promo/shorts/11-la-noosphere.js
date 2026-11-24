@@ -5,8 +5,13 @@
    porte pourrait être mal compris (exigences 13 et 15). Le râwî descend seul : aucun Compagnon n'est dans le labyrinthe.
    Tout ce qu'on lit vient du jeu : la réplique est demandée par un fragment, les deux cartons sont ceux du jeu, la règle
    est lue dans ses textes (ISNAD.rodeurs.texte). Seul le titre de l'accroche est ajouté.
-   Les choix — la porte, l'issue plutôt que l'abri, la durée — ont été approuvés avec le plan (docs/decisions.md, D177). */
+   Les choix — la porte, l'issue plutôt que l'abri, la durée — ont été approuvés avec le plan (docs/decisions.md, D177).
+   Refait le 24 novembre dans l'ambiance de D219 : on tombe au milieu d'un passage (une lueur du montage : rien du jeu n'est
+   changé), dans le labyrinthe, l'accroche entière dès l'image 1 (s.ouverture) ; un passage d'un plan à l'autre, à la place
+   des noirs ; ramené à 30 secondes, plan du soutien compris — la réplique de Maître Yûnus, à la vitesse « vive » du jeu (un
+   réglage de l'appareil, posé dans la page du film), tient en 4,8 secondes au lieu de 8,4. */
 const T = 0.3;                                                       // un demi-temps à 100 à la noire : neuf images
+const PASSE = 0.45;                                                  // un passage, en secondes
 const pas = (m, n) => m.repeat(Math.ceil(n / m.length)).slice(0, n);  // un motif, tenu pendant n pas (un pas : un quart de temps)
 
 /* Le labyrinthe de ce film est toujours le même : sa graine et sa profondeur sont fixées. Ce qui y rôde, en revanche, erre
@@ -56,12 +61,12 @@ async function tient(s, quoi) {
 module.exports = {
   titre: '« La noosphère »', bpm: 100, graine: 2084,
   rythme: [
-    { a: 'b...............' },                                                         // 1 · l'accroche
-    { a: pas('D.......t.......', 56) },                                                // 2 · ce qu'en dit Maître Yûnus
+    { a: 'b.T.T...b...T.T.' },                                                         // 1 · l'accroche, dans le passage déjà ouvert
+    { a: 'b' + pas('.......t.......D', 31) },                                          // 2 · ce qu'en dit Maître Yûnus (le grand tambour : le passage)
     { a: 'b.......t.......' },                                                         // 3 · le seuil : « tu y descends »
-    { a: pas('D.t.t.t.D.t.t.t.', 30), b: pas('..r...r...r...r.', 30) },                // 4 · le labyrinthe
+    { a: 'b' + pas('.t.t.t.D.t.t.t.D', 29), b: pas('..r...r...r...r.', 30) },          // 4 · le labyrinthe
     { a: pas('D.T.D.T.D.T.T.T.', 18), b: pas('r.r.r.r.r.r.r.r.', 18) },                //     ce qui rôde, frappé
-    { a: pas('D.....t.D...t...', 30), b: pas('....r.......r...', 30) },                // 5 · l'issue
+    { a: 'b' + pas('.....t.D...t...D', 29), b: pas('....r.......r...', 30) },          // 5 · l'issue
     { a: 'b.......D...............', b: 'r.......................' }                    // 6 · le carton final
   ],
   async film(s) {
@@ -71,29 +76,30 @@ module.exports = {
     await seuil(s); await entrer(s);
     await poser(s, COULOIR_DU_MILIEU.rawi, { noir_honte: COULOIR_DU_MILIEU.pres, avidite: AU_LOIN[0], orgueil: AU_LOIN[1] });
     await s.propre({ cible: false }); await s.zoom(1.3);   // en hauteur, la scène carrée montre 216 points du lieu : à 1,3, ce qui rôde à quatre cases est dans l'image
-    await s.ombre(0.38, 0);
-    await s.legende('La noosphère', { y: 96, style: 'accroche', taille: 38, duree: 8 * T - 0.1, dans: 0.12 });
-    s.ralenti(0.5); await s.tourner(8 * T, frapper); s.ralenti(1);
+    await s.ouverture('La noosphère', { z: 1.3, sec: 1.1, duree: 8 * T - PASSE - 0.05, legende: { y: 96, taille: 38 } });
+    s.ralenti(0.5); await s.tourner(8 * T - PASSE, frapper); s.ralenti(1);
     await tient(s, 'l’accroche');
+    await s.passage(PASSE, 2.4);
     /* 2 — ce qu'elle est : la réplique de Maître Yûnus, aux Archives basses */
-    s.marque('yunus'); await s.noir(1, 0); await s.ombre(0, 0);
+    s.marque('yunus');
     await s.neuf();
     await s.chapitre('idris', 0, { carte: 'archives', lieu: ['bureau', 2, 1], obj: 3 }); await s.cadre({ haut: 0, scene: 232 }); await s.propre({ cible: false }); await s.zoom(1.8);   // une scène moins haute : la réplique, longue, tient au-dessus de ce que les applications recouvrent
-    await s.noir(0, 0.2);
+    await s.ev(() => { window.ISNAD.save.data.opts.vitesse = 'vive'; });   // la vitesse « vive » du jeu (Réglages) : la réplique s'écrit en 4,8 secondes
+    await s.arrivee(1.8, 0.5);
     await s.dire('idris', "Tu sais ce qu'est la");
-    await s.zoom(2.3, 7.6);
-    await s.tourner(28 * T);
+    await s.zoom(2.3, 4.4);
+    await s.tourner(16 * T - PASSE); await s.passage(PASSE, 2.6);
     /* 3 — le seuil : le carton du jeu, « en songe » */
-    s.marque('seuil'); await s.noir(1, 0);
+    s.marque('seuil');
     await seuil(s);
-    await s.noir(0, 0.15);
-    await s.tourner(8 * T);
+    await s.arrivee(0, 0.4);
+    await s.tourner(8 * T - PASSE); await s.passage(PASSE, 0);
     /* 4 — le labyrinthe : la règle, telle que le jeu la donne ; le râwî prend le chemin de l'issue */
-    await s.noir(1, 0); await entrer(s);
+    await entrer(s);
     await poser(s, null, { noir_honte: AU_LOIN[2], avidite: AU_LOIN[1], orgueil: AU_LOIN[3] });
     const regle = await s.ev(() => window.ISNAD.rodeurs.texte('regle')); s.journal.push(regle);
     await s.propre({ cible: false, carte: true }); await s.zoom(1);
-    s.marque('labyrinthe'); await s.noir(0, 0.2);
+    s.marque('labyrinthe'); await s.arrivee(1, 0.5);
     await s.legende(regle, { marge: 16, taille: 19, duree: 24 * T - 0.2, dans: 0.1 });
     await s.ev(() => { const W = window.ISNAD.world, q = W.spotPx('issue'); W.goTo(q[0], q[1], { quiet: true }); });
     await s.zoom(1.5, 3);
@@ -103,16 +109,17 @@ module.exports = {
     s.marque('rode');
     await poser(s, COULOIR_DU_HAUT.rawi, { orgueil: COULOIR_DU_HAUT.pres, noir_honte: AU_LOIN[0], avidite: AU_LOIN[1] });
     await s.zoom(1.9); await s.avancer(32);
-    s.ralenti(0.5); await s.tourner(9 * T, frapper); s.ralenti(1);
+    s.ralenti(0.5); await s.tourner(9 * T - PASSE, frapper); s.ralenti(1);
     await tient(s, 'la frappe');
+    await s.passage(PASSE, 2.6);
     /* 5 — l'issue : quelques pas, et le carton du jeu */
-    s.marque('issue'); await s.noir(1, 0);
+    s.marque('issue');
     const ou = await s.ev(() => { const I = window.ISNAD, W = I.world, P = W.player, q = W.spotPx('issue'); W.stop();
       for (const d of [88, 96, 80, 104, 72, 62]) for (const k of [4, 3, 5, 2, 6, 1, 7, 0]) { const a = k * Math.PI / 4, x = q[0] + Math.cos(a) * d, y = q[1] + Math.sin(a) * d; if (W.solidAt(x, y) || W.solidAt(x, y - 6)) continue;
         P.x = x; P.y = y; P.dir = Math.abs(q[0] - x) > Math.abs(q[1] - y) ? (q[0] < x ? 1 : 2) : (q[1] < y ? 3 : 0); W.trail = []; for (let i = 0; i < 64; i++) W.trail.push([P.x, P.y, P.dir]); W.updateCam(true); W.goTo(q[0], q[1], { quiet: true }); return [Math.round(x), Math.round(y), d]; }
       return null; });
     s.dit('à quelques pas de l’issue : ' + JSON.stringify(ou));
-    await s.propre({ cible: true }); await s.zoom(1.5); await s.noir(0, 0.2);
+    await s.propre({ cible: true }); await s.zoom(1.5); await s.arrivee(1.5, 0.5);
     await s.tourner(15 * T);
     await s.carton(12 * T);
   }

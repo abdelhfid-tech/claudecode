@@ -4,6 +4,8 @@
 module.exports = require('./_saga.js')({
   recit: 'uthman', titre: 'La saga de ‘Uthmân', graine: 644,
   lieu: [1, { obj: 2, carte: 'navire', lieu: 'pont2', opts: {} }, [[440, 189], [296, 205], [150, 203]]], phrase: 18,   // d'un pont à l'autre, par la passerelle
+  monde: [1, { obj: 0, carte: 'medine', lieu: 'porte_sud', opts: {} }, 'sud'],   // de Médine, sur la piste
   parole: ['Te plairait-il de tuer tous les gens', 26],
-  idole: 'rumeur'
+  idole: 'rumeur',
+  combat: { groupe: ['uthman', 'zayd', 'hudhayfa'], niv: 9 }
 });

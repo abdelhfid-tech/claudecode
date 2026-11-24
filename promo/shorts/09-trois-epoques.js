@@ -9,7 +9,8 @@
    30 secondes avec le plan du soutien (25,2 s de film, puis 4,8 s).
    La première image arrête le pouce (le décideur, 22 novembre : « La première image doit être prenante on doit s'arrêter de
    scroller » ; son choix : « Le passage déjà ouvert ») : on tombe au milieu d'un passage, la lueur se déchire sur le désert
-   de la Traversée au crépuscule, Khâlid marche déjà, et l'accroche est entière dès l'image 1 — ni noir, ni fondu. */
+   de la Traversée au crépuscule, Khâlid marche déjà, et l'accroche est entière dès l'image 1 — ni noir, ni fondu
+   (s.ouverture, la même pour tous les shorts depuis le 24 novembre). Au combat, les rangées du groupe restent hors champ (D172). */
 const T = 0.3;                                                       // un demi-temps à 100 à la noire : neuf images
 const pas = (m, n) => m.repeat(Math.ceil(n / m.length)).slice(0, n);  // un motif, tenu pendant n pas (un pas : un quart de temps)
 const PASSE = 0.45;                                                  // un passage d'une époque à l'autre, en secondes
@@ -42,9 +43,7 @@ module.exports = {
       if (!W._curDuJeu) { W._curDuJeu = W.cur; W.cur = function () { const c = W._curDuJeu.apply(this, arguments); return c && c.goto ? Object.assign({}, c, { goto: null }) : c; }; }
       const p = W.player; W.goTo(p.x - 30, p.y + 80, { quiet: true }); });
     await s.avancer(200);                                                // il est déjà en marche à la première image
-    await s.ev(() => window.__film.rampe('lueur', 0.55, 0));
-    await s.arrivee(2.1, 1.1);
-    await s.legende('Trois époques,<br>une seule chaîne', { style: 'accroche', taille: 34, duree: 8 * T - PASSE + 0.05, dans: -0.05, fi: 0.01, dy: 0 });
+    await s.ouverture('Trois époques,<br>une seule chaîne', { z: 2.1, sec: 1.1, duree: 8 * T - PASSE + 0.05 });   // la lueur à 0,55 qui se déchire, l'accroche entière dès l'image 1
     await jusquauPassage(8 * T);
     await s.ev(() => window.ISNAD.world.stop());
 
@@ -76,7 +75,8 @@ module.exports = {
 
     /* 5 — le combat, au tour par tour : la frise des tours, les commandes, le groupe qui joue seul */
     s.marque('combat');
-    await s.chapitre('khalid', 2, { obj: 0 }); await s.cadre('ecran'); await s.propre({ rangees: true, cible: false });
+    // les rangées du groupe restent hors champ (D172 : les mots des figures, exigence 24, ne sont pas montrés)
+    await s.chapitre('khalid', 2, { obj: 0 }); await s.cadre('ecran'); await s.propre({ cible: false });
     await s.combat(['echo', 'echo'], { fond: 'romaine', attente: 500 });
     await s.arrivee(0, 0.5);
     // la légende sur le sol de l'arène, sous les figures : ni sur les noms des chimères, ni sur la frise des tours

@@ -3,6 +3,8 @@
 module.exports = require('./_saga.js')({
   recit: 'abubakr', titre: 'La saga d’Abû Bakr', graine: 632,
   lieu: [0, { obj: 1 }, [[488, 365]]],                       // de la porte sud vers la mosquée, par la grand-rue
+  monde: [0, { obj: 1, lieu: 'porte_sud' }, 'sud'],                 // sorti par la porte du sud, sur la piste
   parole: ["S'il l'a dit, il a dit vrai", 14],
-  idole: 'clan'
+  idole: 'clan',
+  combat: { groupe: ['abubakr', 'abuubayda', 'umar'], niv: 3 }
 });

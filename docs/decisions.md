@@ -2146,7 +2146,7 @@ pages privées de son compte.
   cœur blanc, de l'or, du violet, sans forme ni symbole — monte et couvre l'image, qui plonge vers celui qui mène ; on
   arrive dans l'époque suivante d'un peu plus près, et la lueur retombe. Rien du jeu n'est changé. Le short 9, « Trois
   époques, une seule chaîne », est refait autour du voyage dans le temps : la Chaîne ; 2084, la Cité-Miroir ; la Citadelle ;
-  Khâlid, al-Qa'qâ' et Dirâr en route dans le camp du Yarmoûk, à la nuit ; un combat au tour par tour (deux Échos, la frise
+  Khâlid, al-Qa'qâ' et Dirâr en route dans la cité romaine de Qinnasrîn, en plein jour (d'abord le camp du Yarmoûk, à la nuit) ; un combat au tour par tour (deux Échos, la frise
   et les commandes à l'écran) ; la Chaîne qui défile ; le carton. Ses légendes sont celles des films livrés (le 9, et le 3
   pour le combat) : aucune phrase nouvelle. Les percussions montent d'une époque à l'autre, le grand tambour sur chaque
   passage. Il dure 30 secondes, plan du soutien compris (le 9 livré en durait 24). *À valider* : le passage (sa couleur, sa
@@ -2163,6 +2163,22 @@ pages privées de son compte.
   qui montre les différentes sagas. Tu peux débloquer les sagas dans le [short] si c'est plus simple. » Dans les shorts, la
   Chaîne montre chaque maillon « à ouvrir », sans « Scellé » ni cadenas : l'interrupteur de test du jeu (`I.debug.all`,
   `ui.js`) est posé dans la page du film seulement. Le jeu ne change pas : les maillons s'y suivent toujours (D211).
+  *Les quinze autres (le décideur, 24 novembre : « Refaire les shorts (D219) » ; pour les shorts 1 et 2, « Garder les plans IA »).*
+  Chacun prend la part de l'ambiance qui lui va, avec ce que le jeu a déjà, et rien du jeu n'est changé.
+  **Les règles communes.**
+  - L'ouverture est celle du 9 (`s.ouverture`) : on tombe au milieu d'un passage, en mouvement, l'accroche entière dès l'image 1 et le grand tambour avec elle. Les shorts 1 et 2 gardent leur plan d'ambiance, sans lueur, l'accroche posée dessus.
+  - Un passage à chaque changement de lieu ou d'époque, à la place des noirs, et le grand tambour à chaque arrivée.
+  - Le combat se joue commande par commande (`s.tourParTour` : le menu, « Frapper », la cible, le coup), l'arène en grand et les commandes juste dessous. Le groupe est celui que le récit aligne contre l'idole, au niveau qu'y atteint le parcours automatique (`smoke.js auto`), pour qu'aucun héros ne tombe à l'image.
+  - Les rangées du groupe et la parole de l'idole restent hors champ (D172). Le 9 est refilmé pour s'y conformer : il les montrait.
+  **Ce qui change dans les shorts.**
+  - Les cinq shorts de saga (`_saga.js`) mettent le groupe en route : sorti par la porte de sa ville, il marche sur la piste de la carte du monde (2.29). Aucune rencontre ne coupe la prise (`I.debug.rencontres`, dans la page du film seulement), et la petite carte est hors champ.
+  - Le 7 montre le bâtir de la 2.33 (la tranchée en pointillés, touchée, posée) et la route avec sa petite carte.
+  - Le 10 est refilmé avec la manette A et B d'aujourd'hui.
+  - Le 11 est ramené à 30 secondes : la réplique de Maître Yûnus s'écrit à la vitesse « vive » du jeu (un réglage de l'appareil, posé dans la page du film).
+  - Aucune phrase nouvelle.
+  **Les contrôles** (`v2/tools/shorts.js`) : « DURÉE » au-delà de 30 secondes, plan du soutien compris ; « ACCROCHE TARDIVE » si l'accroche n'est pas entière à l'image 1 ; « PREMIÈRE IMAGE SOMBRE », comme avant.
+  Les films livrés (`promo/shorts/films/livres/`) ne sont pas touchés.
+  *À valider sur les films* : la galerie privée « Seize shorts ISNAD ». Puis la démo et le livret court, une seule fois.
 - [x] **D220. La carte du monde : sortir d'une ville par sa porte, la route, les villes où il ne se passe rien (version 2.29 ;
   demande du décideur, 23 novembre) — choix, coordonnées, textes et dessin de l'agent, à valider.** *Validée par le décideur le 23 novembre : « Ok pour tes propositions ». Les choix, les coordonnées, les textes et le dessin ci-dessous sont retenus tels quels.* « C'est coûteux d'ajouter
   un "meta-monde" […] ou on accéderait aux autres villes via le désert avec une carte réaliste qui rend accès aux villes prévue

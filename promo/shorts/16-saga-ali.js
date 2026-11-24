@@ -3,6 +3,8 @@
 module.exports = require('./_saga.js')({
   recit: 'ali', titre: 'La saga de ‘Alî', graine: 656,
   lieu: [0, { obj: 1 }, [[472, 413], [760, 420]]], phrase: 18,   // de la cour de la mosquée à la place, puis vers la halle
+  monde: [0, { obj: 1, lieu: 'porte_sud' }, 'sud'],                 // sorti de Koufa par le sud
   parole: ['Parole de vérité par laquelle on vise le faux', 16],
-  idole: 'slogan'
+  idole: 'slogan',
+  combat: { groupe: ['ali', 'ibnabbas', 'qays'], niv: 6 }
 });
