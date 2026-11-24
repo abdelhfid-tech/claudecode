@@ -23,7 +23,7 @@ module.exports = {
     await s.cadre('carre'); await s.propre({ cible: false }); await s.zoom(1.5);
     const ia = await s.plan('cave', 8 * T, { fondu: 0.4 });
     // l'accroche entière dès l'image 1 : sur le plan d'ambiance ; sans lui, au milieu d'un passage, sur la ruelle de 2084
-    await s.ouverture('De qui tiens-tu<br>cela ?', ia ? { lueur: 0, duree: 8 * T - 0.1, legende: { y: 236, taille: 40 } } : { z: 1.5, duree: 8 * T - 0.1, legende: { y: 150, taille: 40 } });
+    await s.ouverture('De qui<br>tiens-tu cela ?', ia ? { lueur: 0, duree: 8 * T - 0.1, legende: { y: 214, taille: 36 } } : { z: 1.5, duree: 8 * T - 0.1, legende: { y: 150, taille: 36 } });
     await s.tourner(8 * T);
     /* 2 — 2084 : un vieil homme, dans une ruelle de la Cité-Miroir */
     s.marque('2084');
