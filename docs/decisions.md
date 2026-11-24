@@ -2416,7 +2416,7 @@ pages privées de son compte.
   `Mo.miniCarte`) : sur la route, dans le coin, comme celle des villes, une petite carte du pays autour d'Idris (vingt-cinq cases
   de côté : la mer, les fleuves, le sable, la steppe, les montagnes, les routes), les villes proches avec leur nom (sans qu'un
   nom en chevauche un autre ; une ville juste hors du cadre, une encoche au bord et son nom dedans), la ville du récit en
-  premier, Idris au centre ; les noms sont écrits par-dessus l'image, dans la police du jeu, comme les étiquettes de la scène
+  premier, celui qui mène au centre (Idris, ou le Compagnon qui mène le récit) ; les noms sont écrits par-dessus l'image, dans la police du jeu, comme les étiquettes de la scène
   (le décideur : « Pourquoi cette police degeulzsse dans la carte ? » — dessinés dans l'image agrandie, ils étaient flous ;
   puis « mets une police normal » : les noms des deux cartes, petite et entière, sont dans la police ordinaire du téléphone,
   droite, sans empattement) ; la toucher ouvre la carte entière (la Carte de la halte) : Idris et le nom de chaque ville. En

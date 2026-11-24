@@ -245,7 +245,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   leurs) ; **La Mecque n'a ni mosquée, ni Haram, ni Kaaba, et rien ne les évoque** (la variante `mecque`) ; aucune icône ne porte
   d'enseigne, de lettre ni d'édifice religieux. L'outil « route » est dit à la première sortie. Le format de la partie reste le 2. Depuis la 2.33 (D227 ; le décideur, 24 novembre : « ajoute une carte pour se situer
   dans le désert et les différentes villes »), sur la route, une petite carte du pays dans le coin (`Mo.miniCarte` : les
-  villes proches et leur nom, Idris au centre) ; la toucher ouvre la carte entière.
+  villes proches et leur nom, celui qui mène au centre) ; la toucher ouvre la carte entière.
   Les cartes existantes ne changent pas d'une case. `v2/docs/architecture.md`, « La carte du monde ». Contrôle :
   `node v2/tools/monde.js` (« MONDE CONFORME ») ; un changement de la carte, des portes ou des visites repasse aussi
   `cite.js passages`, `retours.js`, `progression.js`, `partie.js`, `doigt.js`, `smoke.js walk` et `tap`.
