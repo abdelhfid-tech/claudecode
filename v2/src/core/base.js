@@ -154,7 +154,7 @@
   function fresh() {
     return { v: FORMAT, profil: {}, paquets: {}, started: false, prologue: false, epilogue: false, lights: [], sagas: {}, heroes: {},
       items: { dattes: 3, eau: 1, musc: 1, lait: 1 }, gear: {}, equip: {}, gearInit: {}, codex: [], isnad: { ok: 0, total: 0 }, cp: null,
-      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 }, cite: { course: { salim: 0, gagnes: [], temps: [], primes: 0 }, activites: activitesNeuves() } };
+      opts: { sound: true, music: true, low: false }, citadel: { priere: 1, savoir: 1, justice: 1, lien: 1 }, veillees: {}, rencontres: {}, parley: { won: 0, total: 0 }, cite: { course: { salim: 0, gagnes: [], temps: [], primes: 0 }, activites: activitesNeuves() }, entraide: {} };
   }
   // 2.28 (D217) : les activités des quartiers (activites.js) — le record de la borne, des comptes, ce qui a été dépensé ici
   function activitesNeuves() { return { borne: { record: 0, parties: 0 }, tours: {}, ecran: 0, achats: 0, depenses: 0, essais: {} }; }
