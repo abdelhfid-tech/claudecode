@@ -93,6 +93,7 @@
     if (I.rodeurs) I.rodeurs.arme(); // un labyrinthe de la noosphère arme son chrono
     if (I.trafic) I.trafic.arme(); // 2.23 : les quartiers de la Cité ont leurs voitures (trafic.js)
     if (I.gens) I.gens.arme(); // 2.32 : les bêtes d'une carte (gens.js) ; celles d'une rencontre de la route ne restent pas
+    if (I.entraide) I.entraide.arme(); // 2.33 (D226) : la réserve d'une ville visitée qui demande de l'aide (entraide.js)
     if (I.monde) I.monde.arme(); // 2.30 (D222) : sur la route, le voyageur de la traversée, s'il y en a un (monde.js)
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
@@ -304,7 +305,7 @@
   W.checkpoint = function () {
     if (W.excursion) return; // pendant la descente du râwî, le point de reprise reste celui d'avant
     { const sv = I.save.data, k = W.cleReprise({ saga: W.saga.id, ci: W.ci }); if (sv.cp && W.cleReprise(sv.cp) !== k) W.ranger(); if (sv.cps && sv.cps[k]) delete sv.cps[k]; } // le point d'un autre récit est rangé, jamais écrasé
-    const npcs = {}; W.npcs.forEach(n => { npcs[n.id] = { h: n.hidden ? 1 : 0, x: n.placed && n.map === W.map.id ? Math.round(n.x) : undefined, y: n.placed && n.map === W.map.id ? Math.round(n.y) : undefined }; });
+    const npcs = {}; W.npcs.forEach(n => { if (n.gens || n.pillard) return; /* 2.33 : les gens du lieu ne sont d'aucun récit */ npcs[n.id] = { h: n.hidden ? 1 : 0, x: n.placed && n.map === W.map.id ? Math.round(n.x) : undefined, y: n.placed && n.map === W.map.id ? Math.round(n.y) : undefined }; });
     I.save.data.cp = { saga: W.saga.id, ci: W.ci, obj: W.objIndex, map: W.map.id, opts: W.mapOpts, pos: [Math.round(W.player.x), Math.round(W.player.y)], party: W.party.slice(), npcs, foes: W.foes.filter(f => f.done).map(f => f.id), chests: W.chests.map((c, i) => c.open ? i : -1).filter(i => i >= 0), flags: S.flags };
     W.persistHeroes(); I.save.store();
     { const lead = W.party.length ? W.hero(W.party[0]) : null; const ok = I.save.auto(lead ? I.t('{saga} · {chapitre} · niv. {niv}', { saga: W.saga.name, chapitre: W.ch.title, niv: lead.lvl }) : I.t('{saga} · {chapitre}', { saga: W.saga.name, chapitre: W.ch.title })); W.unsaved = 0;
@@ -381,6 +382,7 @@
       if (o && o.talk === best.id) { if (I.cite && I.cite.parle(best)) return; return W.complete(); } // 2.23 : Maître Yûnus, dans les quartiers, demande où aller (cite.js)
       if (I.circuit && I.circuit.parle(best)) return; // 2.27 : Sâlim et l'organisateur, au circuit des quartiers (circuit.js)
       if (I.monde && I.monde.parle(best)) return; // 2.30 (D222) : le voyageur assis dans le sable, sur la route (monde.js)
+      if (I.gens && I.gens.parle(best)) return; // 2.33 (D225) : les gens du lieu, dans une ville visitée (gens.js)
       if (best.talk) { I.audio.sfx('blip'); await S.run(best.talk); }
       return;
     }
@@ -477,7 +479,7 @@
   const touche = (e, x, y) => Math.abs(x - e.x) < 9 && y - e.y > -4 && y - e.y < 6;
   W.corps = corps; W.touche = touche; // pour les outils de contrôle (« SUPERPOSÉ », « PNJ EN TRAVERS »)
   function heurte(x0, y0, x1, y1, L) { for (const e of L || corps()) if (touche(e, x1, y1) && (!touche(e, x0, y0) || Math.hypot(x1 - e.x, y1 - e.y) < Math.hypot(x0 - e.x, y0 - e.y))) return e; return null; }
-  function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) { if (I.rodeurs && W.map.env.dedale) I.rodeurs.heurte(nx, ny); return false; } if (I.trafic && I.trafic.bloque(p.x, p.y, nx, ny)) return false; /* 2.23 : on n'entre pas dans une voiture (trafic.js) */ const e = heurte(p.x, p.y, nx, ny); if (e) { W._heurte = e; return false; } p.x = nx; p.y = ny; return true; } // 2.x : buter sur la porte interdite la fait parler d'elle (rodeurs.js)
+  function tryMove(mx, my) { const p = W.player, nx = p.x + mx, ny = p.y + my; if (!boxFree(nx, ny)) { if (I.rodeurs && W.map.env.dedale) I.rodeurs.heurte(nx, ny); return false; } if (I.trafic && I.trafic.bloque(p.x, p.y, nx, ny)) return false; /* 2.23 : on n'entre pas dans une voiture (trafic.js) */ if (I.gens && I.gens.bloque(p.x, p.y, nx, ny)) return false; /* 2.33 : une bête ne se traverse pas ; poussée, elle s'écarte (gens.js) */ const e = heurte(p.x, p.y, nx, ny); if (e) { W._heurte = e; return false; } p.x = nx; p.y = ny; return true; } // 2.x : buter sur la porte interdite la fait parler d'elle (rodeurs.js)
   // le joueur posé sur quelqu'un (une partie d'avant, un récit) : la case libre la plus proche
   W.degager = function () { const p = W.player; if (!W.map || !corps().some(e => touche(e, p.x, p.y))) return false; const q = W.resolve([null, 0, 0], W.map.id, p, [Math.floor(p.x / T), Math.floor((p.y - 2) / T)]); if (q) { p.x = q[0]; p.y = q[1]; } return true; };
   // un PNJ qui paraît (« show ») là où se tient le joueur — il y était posé, caché — prend la case libre la plus proche
@@ -602,6 +604,8 @@
     if (mat) { W.goTo(mat[0] * T + 8, mat[1] * T + 13, { stop: 7, then() { W.interact(); } }); return true; }
     const cs = m.spots.comptoir;
     if (cs && I.trade && W.saga && (!W.saga.frame || W.saga.veillees) && Math.hypot(cs[0] * T + 8 - wx, cs[1] * T + 9 - wy) < 15) { W.goTo(cs[0] * T + 8, cs[1] * T + 13, { stop: 24, then() { W.interact(); } }); return true; }
+    // 2.33 (D226) : toucher ce qui se récolte (un tas de la réserve, un palmier, un rocher, un puits), quand un chantier attend : Idris s'y rend, et récolte
+    { const rc = I.build && I.build.recoltable ? I.build.recoltable(wx, wy) : null; if (rc) { W.goTo(rc.x, rc.y, { stop: 16, then() { face(rc.ox, rc.oy); if (!S.busy) I.build.gather(); } }); return true; } }
     // 2.28 (D217) : toucher une activité des quartiers (la borne, l'étal, un banc, la roue, un manège) : Idris s'y rend, et agit
     { const ac = I.activites && I.activites.touche ? I.activites.touche(wx, wy) : null; if (ac) { W.goTo(ac.x, ac.y, { stop: 4, then() { p.dir = ac.dir; W.interact(); } }); return true; } }
     // 2.x, dans le labyrinthe d'un chapitre : toucher le vide en direction de l'objectif, c'est demander d'y être conduit (la même

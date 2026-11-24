@@ -731,10 +731,50 @@
           else if (V[p.ville].fondee && ent(d.an, 1, 60) && V[p.ville].fondee > d.an) E.push(`${wp} : ${p.ville} n'existe pas encore en l'an ${d.an}`); }); });
     }
 
+    // 2.33 (D225) — les gens du lieu et leurs bêtes : leurs tables n'ont que leurs champs ; chaque type est un type connu (jamais
+    // un Compagnon) ; chaque place est un lieu du gabarit ; une bête est une espèce dessinée ; ni Compagnon ni personnage du récit
+    function verifierGens(E) {
+      const Gs = D.GENS, B = D.BETES, w = 'D.GENS', seul = (o, cles, ou) => Object.keys(o || {}).forEach(k => { if (cles.indexOf(k) < 0) E.push(`${ou} : champ « ${k} » inconnu (${cles.join(', ')})`); });
+      seul(Gs, ['marge', 'garde', 'regions', 'palettes', 'roles', 'ancres', 'betes'], w);
+      if (!(Number.isInteger(Gs.marge) && Gs.marge >= 1)) E.push(`${w}.marge : un entier, au moins 1`);
+      Object.keys(B || {}).forEach(k => { seul(B[k], ['vit', 'rayon', 'arret', 'robes'], 'D.BETES.' + k); if (!(B[k].vit > 0 && B[k].rayon >= 0 && B[k].arret > 0)) E.push(`D.BETES.${k} : allure, rayon et arrêt positifs`); if (!Array.isArray(B[k].robes) || !B[k].robes.length || B[k].robes.some(c => !/^#[0-9a-f]{6}$/i.test(c))) E.push(`D.BETES.${k} : des robes, des couleurs unies (#rrggbb)`); });
+      Object.keys(Gs.roles || {}).forEach(k => { const R = Gs.roles[k]; seul(R, ['kind', 'item', 'manteau', 'pose'], `${w}.roles.${k}`);
+        if (D.NPC_KINDS.indexOf(R.kind) < 0 || R.kind === 'compagnon' || D.DE_2084.indexOf(R.kind) >= 0) E.push(`${w}.roles.${k} : type « ${R.kind} » (un type du jeu, ni Compagnon ni de 2084)`);
+        if (R.pose && D.POSES.indexOf(R.pose) < 0) E.push(`${w}.roles.${k} : pose « ${R.pose} » inconnue`); if (R.manteau && D.MANTEAUX.indexOf(R.manteau) < 0) E.push(`${w}.roles.${k} : manteau « ${R.manteau} » inconnu`); });
+      Object.keys(Gs.regions || {}).forEach(id => { if (!D.MAPS[id] || !D.MAPS[id].visite) E.push(`${w}.regions : « ${id} » n'est pas une ville qu'on visite`); if (!(Gs.palettes || {})[Gs.regions[id]]) E.push(`${w}.regions.${id} : palette « ${Gs.regions[id]} » inconnue`); });
+      Object.keys(Gs.palettes || {}).forEach(k => (Gs.palettes[k] || []).forEach((c, i) => { if (!Array.isArray(c) || c.length !== 3 || c.some(x => !/^#[0-9a-f]{6}$/i.test(x))) E.push(`${w}.palettes.${k}[${i}] : [robe, coiffe, manteau], trois couleurs unies`); }));
+      const lieux = g => ((D.GABARITS[g] || {}).spots || []);
+      Object.keys(Gs.ancres || {}).forEach(g => { if (!D.GABARITS[g]) { E.push(`${w}.ancres : gabarit « ${g} » inconnu`); return; }
+        Object.keys(Gs.ancres[g]).forEach(r => { const a = Gs.ancres[g][r]; if (!Gs.roles[r]) E.push(`${w}.ancres.${g} : rôle « ${r} » inconnu`);
+          [a, a[3]].filter(Boolean).forEach(q => { if (lieux(g).indexOf(q[0]) < 0) E.push(`${w}.ancres.${g}.${r} : « ${q[0]} » n'est pas un lieu du gabarit`); if (Gs.garde.indexOf(q[0]) >= 0) E.push(`${w}.ancres.${g}.${r} : jamais à une porte, au comptoir ni au tapis (« ${q[0]} »)`); }); }); });
+      Object.keys(Gs.betes || {}).forEach(g => (Gs.betes[g] || []).forEach((q, i) => { if (!B[q[0]]) E.push(`${w}.betes.${g}[${i}] : espèce « ${q[0]} » inconnue`); if (lieux(g).indexOf(q[1]) < 0) E.push(`${w}.betes.${g}[${i}] : « ${q[1]} » n'est pas un lieu du gabarit`); if (Gs.garde.indexOf(q[1]) >= 0) E.push(`${w}.betes.${g}[${i}] : jamais à une porte, au comptoir ni au tapis`); }));
+    }
+
+    // 2.33 (D226) — l'entraide : ses tables n'ont que leurs champs ; jamais à La Mecque ; la petite mosquée de quartier seulement
+    // dans les villes de `mosquee` ; chaque plan tient dans son rectangle, avec des pièces déclarées ; une paie entière et positive
+    // (une aide payée, jamais une mise ni un hasard) ; ce qu'on fournit, des matériaux déclarés
+    function verifierEntraide(E) {
+      const X = D.ENTRAIDE, w = 'D.ENTRAIDE', seul = (o, cles, ou) => Object.keys(o || {}).forEach(k => { if (cles.indexOf(k) < 0) E.push(`${ou} : champ « ${k} » inconnu (${cles.join(', ')})`); });
+      seul(X, ['villes', 'mosquee', 'demandes', 'reserve'], w);
+      Object.keys(X.villes || {}).forEach(id => { if (!D.MAPS[id] || !D.MAPS[id].visite) E.push(`${w}.villes : « ${id} » n'est pas une ville qu'on visite`); if (/mecque/.test(id)) E.push(`${w}.villes : jamais à La Mecque`);
+        (X.villes[id] || []).forEach(d => { if (!(X.demandes || {})[d]) E.push(`${w}.villes.${id} : demande « ${d} » inconnue`); if (d === 'mosquee' && (X.mosquee || []).indexOf(id) < 0) E.push(`${w}.villes.${id} : la petite mosquée de quartier n'est pas pour cette ville`); }); });
+      (X.mosquee || []).forEach(id => { if (/mecque/.test(id)) E.push(`${w}.mosquee : jamais à La Mecque`); });
+      Object.keys(X.demandes || {}).forEach(d => { const Q = X.demandes[d], ou = `${w}.demandes.${d}`; seul(Q, ['qui', 'w', 'h', 'plan', 'fournit', 'paie', 'eau'], ou);
+        if (!(D.GENS && D.GENS.roles[Q.qui])) E.push(`${ou} : « ${Q.qui} » n'est pas un rôle des gens du lieu`);
+        if (!(Number.isInteger(Q.paie) && Q.paie > 0)) E.push(`${ou} : la paie, un entier positif de dirhams`);
+        if (!(Number.isInteger(Q.w) && Q.w >= 1 && Number.isInteger(Q.h) && Q.h >= 1)) E.push(`${ou} : w et h, des entiers positifs`);
+        (Q.plan || []).forEach((q, i) => { if (!D.PIECES[q[2]]) E.push(`${ou}.plan[${i}] : pièce « ${q[2]} » inconnue`); if (!(q[0] >= 0 && q[0] < Q.w && q[1] >= 0 && q[1] < Q.h)) E.push(`${ou}.plan[${i}] : hors du rectangle`); });
+        if (!(Q.plan || []).length) E.push(`${ou} : un plan, au moins une pièce`);
+        Object.keys(Q.fournit || {}).forEach(k => { if (!D.MATS[k]) E.push(`${ou}.fournit : matériau « ${k} » inconnu`); else if (!(Number.isInteger(Q.fournit[k]) && Q.fournit[k] > 0)) E.push(`${ou}.fournit.${k} : un entier positif`); }); });
+      Object.keys(X.reserve || {}).forEach(t => Object.keys(X.reserve[t]).forEach(k => { if (!D.MATS[k]) E.push(`${w}.reserve.${t} : matériau « ${k} » inconnu`); }));
+    }
+
     // ce qu'une saga seule ne peut pas dire : les renvois entre sagas (« after ») et l'ordre sur la Chaîne
     function verifierEnsemble(sagas) {
       const E = [], jouables = sagas.filter(s => !s.commun && !s.frame), ids = new Set(jouables.map(s => s.id)), vus = {};
       if (D.MONDE) verifierMonde(sagas, E);   // 2.29 (D220)
+      if (D.GENS) verifierGens(E);   // 2.33 (D225)
+      if (D.ENTRAIDE) verifierEntraide(E);   // 2.33 (D226)
       sagas.forEach(s => (s.chapters || []).forEach(c => { if (c.after !== undefined && !ids.has(c.after)) E.push(`${s.id}/${c.id}: « after: ${c.after} » ne désigne aucune saga`); }));
       jouables.forEach(s => { const L = s.livre === undefined ? 1 : s.livre;
         if (!(Number.isInteger(L) && L >= 1)) { E.push(`saga ${s.id}: « livre » doit être un entier à partir de 1`); return; }

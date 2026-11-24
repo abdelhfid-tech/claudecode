@@ -309,6 +309,30 @@
       R(c, S, 5, 11, 2, 5);
       if (o.charge) { R(c, '#6f4a30', 9, 8, 11, 3); R(c, '#cdb68c', 6, 9, 6, 6); R(c, '#a8916a', 6, 11, 6, 1); R(c, '#c2a97c', 17, 9, 6, 6); R(c, '#a08a62', 17, 12, 6, 1); R(c, '#6b5537', 9, 9, 1, 6); R(c, '#6b5537', 20, 9, 1, 6); }
     } },
+    // 2.34 (D226) — la réserve d'une ville visitée (entraide.js) : un tas de troncs de palmier (du bois), un tas de pierres
+    troncs: { w: 26, h: 14, fw: 22, fh: 6, draw(c) { [[2, 8, '#8a6238'], [6, 4, '#7a5530'], [10, 8, '#94683c'], [4, 0, '#86603a']].forEach(q => { R(c, q[2], q[0], q[1] + 2, 18, 4); R(c, '#6e4c2a', q[0], q[1] + 5, 18, 1); for (let x = q[0] + 2; x < q[0] + 18; x += 4) R(c, '#a57a48', x, q[1] + 3, 1, 1); c.fillStyle = '#c9a06a'; c.beginPath(); c.ellipse(q[0] + 18, q[1] + 4, 2, 2, 0, 0, 6.3); c.fill(); R(c, '#8a6238', q[0] + 18, q[1] + 4, 1, 1); }); } },
+    tas_pierres: { w: 22, h: 13, fw: 18, fh: 6, draw(c) { [[2, 6, 6, 5, '#9a9184'], [8, 7, 7, 5, '#8a8174'], [14, 6, 6, 5, '#a39a8c'], [5, 2, 6, 5, '#b0a798'], [11, 2, 6, 5, '#948b7e'], [8, -1, 5, 4, '#a8a092']].forEach(q => { c.fillStyle = q[4]; c.beginPath(); c.ellipse(q[0] + q[2] / 2, q[1] + 1 + q[3] / 2, q[2] / 2, q[3] / 2, 0, 0, 6.3); c.fill(); R(c, '#c8c0b2', q[0] + 1, q[1] + 2, 2, 1); }); } },
+    // 2.33 (D225) — les bêtes des villes : o.c, la robe (une couleur unie) ; o.f, la foulée
+    b_chevre: { w: 18, h: 15, fw: 0, fh: 0, draw(c, r, o) { o = o || {}; const f = o.f | 0, s = [[0, 0], [1, -1], [0, 0], [-1, 1]][f], B = o.c || '#8a6d50', S = '#4a3a2c';
+      R(c, S, 4 + s[1], 10, 1, 5); R(c, S, 11 + s[0], 10, 1, 5); R(c, B, 6 + s[0], 10, 1, 5); R(c, B, 13 + s[1], 10, 1, 5);
+      c.fillStyle = B; c.beginPath(); c.ellipse(9, 8, 6, 3.5, 0, 0, 6.3); c.fill(); R(c, B, 13, 4, 2, 5); R(c, B, 14, 3, 4, 3); R(c, S, 17, 4, 1, 1); R(c, '#2a2018', 15, 4, 1, 1);
+      R(c, '#5a4a38', 14, 1, 1, 2); R(c, '#5a4a38', 13, 0, 1, 1); R(c, B, 13, 4, 1, 1); R(c, S, 3, 5, 1, 2); R(c, S, 16, 6, 1, 1);
+    } },
+    b_mouton: { w: 18, h: 14, fw: 0, fh: 0, draw(c, r, o) { o = o || {}; const f = o.f | 0, s = [[0, 0], [1, -1], [0, 0], [-1, 1]][f], B = o.c || '#e6dcc6', T0 = '#3a2f28';
+      R(c, T0, 5 + s[1], 10, 1, 4); R(c, T0, 12 + s[0], 10, 1, 4); R(c, T0, 7 + s[0], 10, 1, 4); R(c, T0, 14 + s[1], 10, 1, 4);
+      c.fillStyle = B; c.beginPath(); c.ellipse(9, 7, 7, 4, 0, 0, 6.3); c.fill(); c.fillStyle = 'rgba(0,0,0,.08)'; [[5, 6], [8, 5], [11, 7], [7, 9], [12, 9]].forEach(q => c.fillRect(q[0], q[1], 1, 1));
+      R(c, T0, 15, 5, 3, 3); R(c, T0, 14, 4, 1, 2); R(c, '#d8cdb4', 16, 6, 1, 1);
+    } },
+    b_ane: { w: 24, h: 20, fw: 0, fh: 0, draw(c, r, o) { o = o || {}; const f = o.f | 0, s = [[0, 0], [1, -1], [0, 0], [-1, 1]][f], B = o.c || '#8b8178', S = '#5e554d';
+      R(c, S, 6 + s[1], 13, 2, 7); R(c, S, 15 + s[0], 13, 2, 7); R(c, B, 8 + s[0], 13, 2, 7); R(c, B, 17 + s[1], 13, 2, 7);
+      c.fillStyle = B; c.beginPath(); c.ellipse(12, 11, 8, 4, 0, 0, 6.3); c.fill(); R(c, '#cfc6bb', 9, 13, 7, 1);
+      c.beginPath(); c.moveTo(17, 10); c.lineTo(20, 10); c.lineTo(22, 4); c.lineTo(19, 4); c.fill(); R(c, B, 19, 4, 5, 4); R(c, '#cfc6bb', 22, 6, 2, 2); R(c, '#2a2420', 21, 5, 1, 1);
+      R(c, S, 19, 0, 1, 4); R(c, S, 21, 1, 1, 3); R(c, '#3a332e', 17, 4, 2, 6); R(c, S, 3, 10, 1, 5);
+    } },
+    b_poule: { w: 11, h: 10, fw: 0, fh: 0, draw(c, r, o) { o = o || {}; const f = o.f | 0, B = o.c || '#c9763a';
+      R(c, '#d9a54a', 4 + (f === 1 ? 1 : 0), 8, 1, 2); R(c, '#d9a54a', 6 - (f === 3 ? 1 : 0), 8, 1, 2);
+      c.fillStyle = B; c.beginPath(); c.ellipse(5, 6, 3.5, 2.5, 0, 0, 6.3); c.fill(); R(c, '#5a3a22', 1, 3, 2, 3); R(c, B, 7, 2, 2, 3); R(c, '#c23a2a', 7, 1, 2, 1); R(c, '#e0a23a', 9, 3, 1, 1); R(c, '#1e1612', 8, 3, 1, 1);
+    } },
     mast: { w: 44, h: 70, fw: 6, fh: 4, draw(c) { R(c, '#6b4a2e', 21, 0, 3, 70); R(c, '#8b6a45', 21, 0, 1, 70); R(c, '#6b4a2e', 2, 8, 40, 2); c.fillStyle = '#e9e2d0'; c.beginPath(); c.moveTo(3, 10); c.lineTo(41, 10); c.quadraticCurveTo(44, 30, 38, 44); c.lineTo(6, 44); c.quadraticCurveTo(0, 30, 3, 10); c.fill(); c.fillStyle = '#cfc4a8'; for (let x = 8; x < 40; x += 7) c.fillRect(x, 11, 1, 33); R(c, '#2f6f4f', 24, 1, 8, 4); } },
     chain: { w: 16, h: 8, fw: 0, fh: 0, draw(c) { c.strokeStyle = '#555c66'; c.lineWidth = 1; for (let i = 0; i < 3; i++) { c.strokeRect(1.5 + i * 5, 2.5, 4, 3); } } },
     throne: { w: 28, h: 38, fw: 24, fh: 8, draw(c) { R(c, '#7a5a1e', 4, 0, 20, 30); R(c, '#d9b45a', 6, 2, 16, 26); R(c, '#8e2f2a', 8, 6, 12, 18); R(c, '#e7d9a8', 12, 0, 4, 3); R(c, '#d9b45a', 2, 22, 5, 14); R(c, '#d9b45a', 21, 22, 5, 14); R(c, '#a53c33', 7, 24, 14, 6); R(c, '#7a5a1e', 4, 30, 20, 8); R(c, '#2d6e8e', 13, 9, 2, 2); } },

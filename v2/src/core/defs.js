@@ -71,7 +71,10 @@
     borne: { nom: 'Jouer à la borne' }, etal: { nom: 'L’étal de la galerie' },
     ecran: { nom: 'S’asseoir devant l’écran', geste: true }, manege: { nom: 'Monter dans un manège', geste: true },
     // 2.29 (D220) : par la porte d'une ville, la route et les autres villes (monde.js) — un simple geste, dit à la première sortie
-    route: { nom: 'La route', geste: true }
+    route: { nom: 'La route', geste: true },
+    // 2.34 (D226 ; le décideur, 24 novembre : « vérifie que toutes les missions de construction soient simples et bien expliquées
+    // dans l'aide ») : bâtir, dit au premier chantier ouvert (le plan en pointillés) ; récolter, au premier matériau qui manque
+    batir: { nom: 'Bâtir' }, recolter: { nom: 'Récolter', geste: true }
   };
 
   /* 2.23 (D212) — les quartiers de la Cité-Miroir. Demande du décideur, 21 novembre : « il y trouve beaucoup d'activités mais
@@ -171,6 +174,75 @@
   // on la distance. Elle renonce quand celui qui mène a couru `souffle` secondes sans être rejoint, quand il est à `lache`
   // cases, ou hors d'atteinte `hors` secondes durant (dans une salle où elle n'entre pas, dans un abri).
   D.FUITE = { grace: 1.5, reprise: 0.6, vitesse: 92, lache: 8, souffle: 2.5, hors: 2 };
+  // 2.34 (D226 ; le décideur, 24 novembre : « la possibilité de les aider d'une manière ou d'une autre avec la construction de
+  // puit, de mur, d'enclos, de mosquée etc. » ; « Idriss reçoit de l'argent à chaque construction pour son aide » ; « il faut
+  // pouvoir récupérer du bois ou des matériaux quelque part non? ») — l'entraide (entraide.js). `villes` : dans chaque ville
+  // visitée (jamais La Mecque), les demandes, une à la fois, dans l'ordre, chacune une seule fois par partie. `demandes` : qui
+  // demande (un rôle des gens du lieu), le plan (des pièces de D.PIECES, chacune à sa case, dans un rectangle `w` × `h`), ce qu'il
+  // fournit (des matériaux), la paie (des dirhams, à l'achèvement : jamais un hasard, jamais une mise), `eau` (le chantier se
+  // tient près de l'eau). La petite mosquée de quartier — murs de pisé, piliers de palmier, une niche ; ni minaret, ni coupole,
+  // ni inscription — seulement dans les villes de `mosquee`. `reserve` : ce que donne chaque tas, une fois par arrivée.
+  // Nombres de l'agent, à valider.
+  D.ENTRAIDE = {
+    villes: { visite_medine: ['puits', 'enclos', 'mosquee'], visite_taif: ['enclos', 'mur', 'mosquee'], visite_koufa: ['mur', 'puits', 'mosquee'],
+      visite_bassora: ['puits', 'oasis', 'mosquee'], visite_fustat: ['oasis', 'enclos', 'mosquee'], visite_quds: ['puits', 'enclos', 'mur'],
+      visite_damas: ['mur', 'oasis', 'enclos'], visite_homs: ['puits', 'enclos', 'mur'], visite_qinnasrin: ['enclos', 'mur', 'oasis'], visite_hira: ['puits', 'enclos', 'mur'] },
+    mosquee: ['visite_medine', 'visite_taif', 'visite_koufa', 'visite_bassora', 'visite_fustat'],
+    demandes: {
+      puits: { qui: 'porteur', w: 3, h: 3, plan: [[1, 1, 'puits']], fournit: { pierre: 2 }, paie: 8 },
+      enclos: { qui: 'berger', w: 3, h: 3, plan: [[1, 1, 'enclos']], fournit: { palme: 1 }, paie: 6 },
+      mur: { qui: 'artisan', w: 4, h: 1, plan: [[0, 0, 'mur'], [1, 0, 'mur'], [2, 0, 'mur'], [3, 0, 'mur']], fournit: { pise: 2 }, paie: 6 },
+      oasis: { qui: 'marchand', w: 5, h: 3, eau: true, plan: [[0, 0, 'palmier'], [2, 0, 'palmier'], [4, 0, 'palmier'], [2, 2, 'champ']], fournit: { grain: 1, eau: 2 }, paie: 8 },
+      mosquee: { qui: 'ancien', w: 5, h: 4, plan: [[0, 0, 'mur'], [1, 0, 'mur'], [2, 0, 'mihrab'], [3, 0, 'mur'], [4, 0, 'mur'], [0, 1, 'mur'], [1, 1, 'pilier'], [2, 1, 'natte'], [3, 1, 'pilier'], [4, 1, 'mur'],
+        [0, 2, 'mur'], [1, 2, 'sol'], [2, 2, 'sol'], [3, 2, 'sol'], [4, 2, 'mur']], fournit: { pise: 10, palme: 2 }, paie: 12 }
+    },
+    reserve: { troncs: { palme: 2 }, tas_pierres: { pierre: 2 } }
+  };
+  // 2.33 (D225 ; le décideur, 24 novembre : « rajoute quelques personnes crédibles et quelques animaux dans les villes » ; son
+  // choix : « Villes visitées ») — les gens du lieu et leurs bêtes (gens.js). Les bêtes sont dessinées par le jeu (gfx.js,
+  // `b_<espèce>`) : leur allure (points par seconde), le rayon où elles paissent autour de leur place (en cases), la distance où
+  // elles s'arrêtent devant celui qui mène (en points), leurs robes (des couleurs unies). Nombres de l'agent, à valider.
+  D.BETES = {
+    chameau: { vit: 20, rayon: 1, arret: 26, robes: ['#b08a55'] },
+    chevre: { vit: 16, rayon: 2, arret: 22, robes: ['#8a6d50', '#c9b79a', '#3d342c', '#6b5440'] },
+    mouton: { vit: 12, rayon: 2, arret: 22, robes: ['#e6dcc6', '#d8cbb0'] },
+    ane: { vit: 12, rayon: 1, arret: 24, robes: ['#8b8178', '#6f665e'] },
+    poule: { vit: 18, rayon: 2, arret: 16, robes: ['#c9763a', '#ece6da', '#8a5a34'] }
+  };
+  // Les gens du lieu : des hommes et un garçon de fiction, sans nom, dans les villes qu'on visite (La Mecque comprise) ; dans les
+  // villes des récits, les bêtes seulement. Chacun a un visage (sprites.js) ; ses couleurs viennent d'une palette par région, des
+  // couleurs de tous les jours (jamais d'un peuple ni d'une religion : exigence 10). `roles` : le type et ce qu'il tient ; ce
+  // qu'il est et ce qu'il dit sont dans gens.js (I.t). `ancres` : par gabarit, où se tient chacun (un lieu de la carte et un
+  // décalage en cases) et, pour qui va et vient, une seconde place. `betes` : par gabarit, où paissent les bêtes (l'espèce, un
+  // lieu, un décalage), dans les visites comme dans les récits. Jamais à `marge` cases ou moins d'un lieu de `garde`.
+  D.GENS = {
+    marge: 2, garde: ['porte_nord', 'porte_sud', 'porte', 'entree', 'comptoir', 'priere'],
+    regions: { visite_medine: 'arabie', visite_mecque: 'arabie', visite_taif: 'arabie', visite_quds: 'syrie', visite_damas: 'syrie', visite_homs: 'syrie',
+      visite_qinnasrin: 'syrie', visite_hira: 'irak', visite_bassora: 'irak', visite_koufa: 'irak', visite_fustat: 'egypte' },
+    palettes: {   // [robe, coiffe, manteau]
+      arabie: [['#e6dcc6', '#f1ead8', '#8a6d50'], ['#c9b79a', '#e9e2d0', '#6b5440'], ['#a8916a', '#ddd2bb', '#5a4a38'], ['#d8cbb0', '#ffffff', '#7a6448']],
+      irak: [['#7d6a52', '#d9cfb8', '#4f4232'], ['#5f6f7a', '#e2dccb', '#3e4a52'], ['#8a7a5a', '#c9bfa6', '#5a4c36'], ['#6e5a48', '#efe8d6', '#463a2e']],
+      syrie: [['#8e7a5e', '#d8ccb4', '#5c4c38'], ['#6a7458', '#e6dfcc', '#46503a'], ['#9a8466', '#cfc4aa', '#625240'], ['#7a6a5e', '#ece4d2', '#4c4038']],
+      egypte: [['#ece6d6', '#f6f1e4', '#a8946c'], ['#d9d0bc', '#ffffff', '#8a7a5a'], ['#c8bea8', '#efe9da', '#7a6a50'], ['#e2d8c2', '#f1ead8', '#96825e']]
+    },
+    roles: {
+      porteur: { kind: 'homme', manteau: 'aucun' }, marchand: { kind: 'marchand' }, artisan: { kind: 'homme', pose: 'assis' },
+      ancien: { kind: 'ancien', pose: 'assis' }, berger: { kind: 'homme', item: 'baton' }, garcon: { kind: 'enfant' }, passant: { kind: 'homme' }
+    },
+    ancres: {
+      ville: { porteur: ['puits', 2, 0, ['place', -3, 2]], marchand: ['souk', -1, 2], artisan: ['halle', 3, 2], ancien: ['maison', 2, 1], berger: ['palmeraie', -3, 1],
+        garcon: ['place', 3, 2, ['place', 6, 2]], passant: ['place', -6, -1, ['maison', 4, 4]] },
+      romaine: { porteur: ['fontaine', 2, 1, ['forum', -3, 2]], marchand: ['marche', -3, 0], artisan: ['quartier', 2, 2], ancien: ['forum', -4, 2], berger: ['jardin', 2, 0],
+        garcon: ['forum', 3, 2, ['forum', 6, 3]], passant: ['cardo', 0, -2, ['forum', 0, 3]] },
+      camp: { porteur: ['feu', 2, 1, ['tentes', 2, 3]], marchand: ['tentes', -2, 3], artisan: ['tentes', 3, -1], ancien: ['feu', -2, 1], berger: ['enclos', 3, -1],
+        garcon: ['feu', 3, 3, ['feu', 6, 3]], passant: ['lignes', -3, 0, ['lignes', -8, 0]] }
+    },
+    betes: {
+      ville: [['chevre', 'enclos', -2, 0], ['chevre', 'enclos', 1, 1], ['chevre', 'enclos', -1, 2], ['mouton', 'palmeraie', -1, 2], ['mouton', 'palmeraie', 1, 2], ['ane', 'souk', -4, 3], ['poule', 'place', 4, 3], ['poule', 'place', 6, 3]],
+      romaine: [['ane', 'marche', -4, 1], ['chevre', 'jardin', 1, 1], ['mouton', 'jardin', -1, 2], ['poule', 'forum', 4, 3], ['poule', 'forum', 5, 2]],
+      camp: [['chevre', 'enclos', 1, 1], ['chevre', 'enclos', -1, 2], ['ane', 'tentes', 4, 2]]
+    }
+  };
 
   // 2.x — les postures : trois manières de se tenir devant l'épreuve. Des pourcentages, rien d'autre ; aucune n'est au-dessus
   // d'une autre. Le tempérament vient du rôle ; les deux autres postures s'ouvrent aux niveaux de D.POSTURE_NIVEAUX.
@@ -704,7 +776,7 @@
 
   // v3 — bâtir : matériaux et pièces. Une pièce se pose case par case, devant soi.
   D.MATS = {
-    eau: { name: 'Eau', g: '≈' }, pise: { name: 'Pisé', g: '▦' }, palme: { name: 'Palme', g: '‡' },
+    eau: { name: 'Eau', g: '≈' }, pise: { name: 'Pisé', g: '▦' }, palme: { name: 'Bois de palmier', g: '‡' },   // 2.34 (D226) : « palme » se dit « bois de palmier » — le décideur cherchait le bois
     pierre: { name: 'Pierre', g: '◆' }, grain: { name: 'Grain', g: '∴' }, laine: { name: 'Laine', g: '≋' }
   };
   D.PIECES = {

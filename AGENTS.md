@@ -240,7 +240,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   dans l'histoire-cadre, les veillées, le dernier maillon, ni sur la mer, la noosphère, une route, ni à Dhû l-Qassa, Harûrâ',
   Nahrawân (`regles.js` le vérifie) ; c'est le schéma de l'ascenseur (le même chapitre, `S.flags._monde`) ; revenir à la ville
   du récit rend la porte, l'objectif, les drapeaux et les personnages. Les autres villes de l'époque se visitent (`visite_…`,
-  sans personnage ni objectif ; un carton : le nom et l'époque ; un comptoir et un tapis sobre ; on n'y bâtit pas ; rien n'y
+  sans personnage du récit (depuis la 2.33, D225 : des gens du lieu et leurs bêtes) ni objectif ; un carton : le nom et l'époque ; un comptoir et un tapis sobre ; on n'y bâtit pas (depuis la 2.33, D226 : sauf le chantier d'une demande des gens du lieu) ; rien n'y
   rôde ; depuis la 2.30, aucun étendard — ni ceux de la porte du nord, ni ceux du camp —, les cartes des récits gardant les
   leurs) ; **La Mecque n'a ni mosquée, ni Haram, ni Kaaba, et rien ne les évoque** (la variante `mecque`) ; aucune icône ne porte
   d'enseigne, de lettre ni d'édifice religieux. L'outil « route » est dit à la première sortie. Le format de la partie reste le 2.
@@ -285,6 +285,38 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   `v2/docs/architecture.md`, « Les rencontres de la route ». Contrôle : `node v2/tools/monde.js` (partie 5 ; « MONDE
   CONFORME ») ; un changement des rencontres repasse aussi `cite.js passages` (les rues des quartiers partagent le mécanisme),
   `progression.js`, `smoke.js auto`, `walk` et `tap`.
+- Dans la 2.x (2.33, D225 ; le décideur, 24 novembre : « rajoute quelques personnes crédibles et quelques animaux dans les
+  villes » ; son choix : « Villes visitées » ; textes, nombres et dessin de l'agent, à valider), **les gens du lieu et leurs
+  bêtes** (`v2/src/core/gens.js` ; `D.GENS`, `D.BETES`, `defs.js` ; les bêtes `b_<espèce>`, `gfx.js`) : dans chaque ville
+  qu'on visite depuis la carte du monde, La Mecque comprise, sept gens du lieu — des hommes et un garçon de fiction, sans nom,
+  chacun avec son visage, des couleurs d'une palette par région (jamais d'un peuple ni d'une religion : exigence 10) ; certains
+  vont et viennent ; A devant l'un d'eux, une ligne de sa journée (ni fait d'histoire, ni formule, ni verset) ; et des bêtes
+  (chèvres, moutons, un âne, des poules, le chameau) qui paissent, s'arrêtent quand Idris approche et s'écartent s'il les
+  pousse (`Gn.bloque`, dans `tryMove`). Dans les villes des récits, les bêtes seulement : rien n'est ajouté aux scènes de
+  l'histoire. Personne à `D.GENS.marge` cases ou moins d'une porte, du comptoir ou du tapis (`D.GENS.garde`). Tout se repose
+  au chargement d'un lieu, aux mêmes places ; rien n'entre dans la partie (`gens`, hors du point de reprise). `regles.js`
+  vérifie les tables (champs, types — jamais un Compagnon ni un type de 2084 —, lieux du gabarit). Contrôle :
+  `node v2/tools/monde.js` ; un changement des gens ou des bêtes repasse aussi `smoke.js walk` et `tap`, et `doigt.js loin 844x390`.
+- Dans la 2.x (2.33, D226 ; le décideur, 24 novembre : « la possibilité de les aider d'une manière ou d'une autre avec la
+  construction de puit, de mur, d'enclos, de mosquée etc. » ; « verifie que toutes les missions de construction soient simples
+  et bien expliquées dans l'aide. On n'est pas tous abreuvés à Minecraft » ; « Idriss reçoit de l'argent à chaque construction
+  pour son aide » ; « il faut pouvoir récupérer du bois ou des matériaux quelque part non? » ; nombres et textes de l'agent, à
+  valider), **l'entraide et le bâtir simple** (`v2/src/core/entraide.js`, `D.ENTRAIDE` ; `build.js`) : dans chaque ville visitée
+  sauf La Mecque, l'un des gens du lieu demande de l'aide (un « ! »), une demande à la fois, chacune une fois par partie — puits,
+  enclos, mur, palmiers et champ, petite mosquée de quartier (seulement dans les villes de `D.ENTRAIDE.mosquee` : murs de pisé,
+  piliers, une niche ; ni minaret, ni coupole, ni inscription ; ni lieu de prière ni point de sauvegarde) ; il fournit une part
+  des matériaux, le chantier se trace à côté de lui sans fermer aucun passage, et il paie l'aide à l'achèvement (`paie`, par la
+  bourse d'Idris ; jamais un hasard ni une mise). Ce qui est bâti dans une ville visitée y reste (`visite:<carte>`). Dans les
+  récits, aucune paie : les Compagnons y bâtissent. Chaque pièce attendue est en pointillés à sa case (`Bd.plans`,
+  `Bd.fantome` ; le plan d'un chantier de récit est tracé par le moteur, `Bd.planDe`) : on la touche, ou A devant elle, et elle
+  se pose ; la barre, en groupes, ne montre dans un chantier que ses pièces et leur compte. Récolter : « bois de palmier » (la
+  clé `palme`), la réserve de chaque ville (`troncs`, `tas_pierres`, `D.ENTRAIDE.reserve`), toucher ce qui se récolte quand un
+  chantier attend (`Bd.recoltable`), ce qui manque dit et montré d'une flèche. Deux outils, `batir` et `recolter`
+  (`D.OUTILS`, leçons dans `coeur.js`), dits quand le besoin se présente. La page d'aide « Bâtir » tient en quatre gestes. La
+  partie garde `entraide` (valeur de départ dans `migrer`, le format reste le 2). `regles.js` vérifie `D.ENTRAIDE` (champs,
+  jamais La Mecque, la mosquée de quartier à sa place, des plans dans leur rectangle, une paie entière et positive). Contrôle :
+  `node v2/tools/batir.js` (« BÂTIR CONFORME ») ; un changement de Bâtir repasse aussi `smoke.js auto`, `walk` et `tap`
+  (Abû Bakr bâtit), `progression.js`, `partie.js` et `manette.js`.
 - Dans la 2.x, le corps a ses attitudes (D205 : `D.ATTITUDES`, dans `D.POSES`) ; un Compagnon les prend avec retenue — la
   joie ne lève pas les bras au-dessus de la tête, le rire se limite aux épaules, la colère reste un corps tendu — et c'est
   le moteur qui choisit (`retenue()`) : un récit écrit l'attitude, jamais sa forme. Les mimiques seulement pour qui a un

@@ -638,6 +638,10 @@ body.in-build #buildbtn { background: var(--acc); color: #0b0a14; }
 .pc .ic { width: 2.2em; height: 2.2em; background-size: contain; background-repeat: no-repeat; background-position: center; image-rendering: pixelated; display: grid; place-items: center; color: var(--red); font-size: 1em; }
 .pc.sel { border-color: var(--gold); background: rgba(233, 200, 119, .18); color: #fff; } .pc.poor { opacity: .45; }
 #buildbar .info { color: var(--sand); min-height: 1.3em; } #buildbar .info em { color: var(--dim); }
+/* 2.33 (D226) : les pièces par groupes ; dans un chantier, leur compte, et celles qui sont finies, effacées */
+#buildbar .pieces .grp { align-self: center; flex: 0 0 auto; color: var(--dim); font-size: .8em; text-transform: uppercase; letter-spacing: .06em; padding: 0 .2em 0 .5em; border-left: 1px solid var(--line); }
+#buildbar .pieces .grp:first-of-type { border-left: 0; padding-left: 0; }
+#buildbar .pc .cpt { color: var(--acc); font-family: var(--f-mono); font-weight: normal; } #buildbar .pc.fini { opacity: .45; }
 #buildbar .keys { color: var(--dim); font-size: .86em; } body.touch #buildbar .keys { display: none; }
 body.portrait #buildbar { top: calc(100% + 8px); bottom: auto; left: 0; right: 0; font-size: 12px; }
 body.in-build #pad .dpad, body.in-build #pad .ab { opacity: .9; }

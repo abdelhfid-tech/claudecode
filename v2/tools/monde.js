@@ -290,7 +290,7 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
     await P.keyboard.down('ArrowDown'); for (let i = 0; i < 20 && (await E(() => window.ISNAD.world.map.id)) !== 'monde'; i++) await P.waitForTimeout(150); await P.keyboard.up('ArrowDown');
     await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'monde' && window.__t.calme(), 6000));
     const villes = await E(() => { const D = window.ISNAD.D; return Object.keys(D.MONDE.villes).filter(v => D.MONDE.villes[v].carte && v !== 'koufa'); });
-    const vus = [], rates = [];
+    const vus = [], rates = [], peuples = []; let parle = null;
     for (const v of villes) {
       if ((await E(() => window.ISNAD.world.map.id)) !== 'monde') { rates.push(v + ' (pas sur la route)'); continue; }
       await E(v => { const W = window.ISNAD.world, q = W.resolve([v, 0, 2], 'monde', W.player); window.__t.poser(q[0], q[1], 3); }, v); await P.waitForTimeout(200);
@@ -300,6 +300,19 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
       if (['mecque', 'damas', 'fustat', 'hira', 'quds'].includes(v)) await capture(P, `visite-${v}-844x390`, `la visite de ${v}`);
       await avancer(P);
       const e = await E(() => { const W = window.ISNAD.world, s = W.map.spots, T = window.__t; return Object.assign(T.etat(), { comptoir: !!s.comptoir && W.reach(W.player.x, W.player.y, s.comptoir[0] * 16 + 8, s.comptoir[1] * 16 + 13), priere: !!s.priere && W.reach(W.player.x, W.player.y, s.priere[0] * 16 + 8, s.priere[1] * 16 + 13) }); });
+      // 2.33 (D225) : les gens du lieu et leurs bêtes — chacun avec son visage, aucun près d'une porte, du comptoir ou du tapis,
+      // aucune ligne qui touche au pari, à l'Agrégor ni à un verset ; au premier passage, l'un d'eux parle (A devant lui)
+      const gn = await E(() => { const I = window.ISNAD, W = I.world, D = I.D, m = W.map, G0 = D.GENS, gens = W.npcs.filter(n => n.gens && n.map === m.id && !n.hidden), betes = I.gens.duLieu(), cheb = (a, c) => Math.max(Math.abs(a[0] - c[0]), Math.abs(a[1] - c[1])), cas = q => [Math.floor(q.x / 16), Math.floor((q.y - 2) / 16)];
+        const pres = gens.concat(betes).filter(q => G0.garde.some(k => m.spots[k] && cheb(m.spots[k], cas(q)) <= G0.marge)).map(q => q.name || q.esp);
+        const sansVisage = gens.filter(n => !n.sheet || !n.sheet.look || n.sheet.look.kind === 'compagnon' || D.sansVisage(n.name, W.saga.id)).map(n => n.name);
+        const lignes = gens.map(n => I.t(I.gens.ROLES[n.role].dit)), interdits = lignes.filter(l => /Agr[ée]gor|\bpari|\bmise\b|parier|verset|Coran/i.test(l));
+        return { gens: gens.length, betes: betes.length, especes: [...new Set(betes.map(q => q.esp))].join('+'), pres, sansVisage, interdits, marchent: gens.filter(n => n.va).length }; });
+      peuples.push(Object.assign({ v }, gn));
+      if (!parle) { const n0 = await E(() => { const W = window.ISNAD.world, n = W.npcs.find(q => q.gens && !q.va && !q.hidden && q.map === W.map.id); return n ? { x: n.x, y: n.y, nom: n.name } : null; });
+        if (n0) { await E(n => window.__t.marcher(n.x, n.y + 18, 8000), n0); await E(() => { window.ISNAD.world.player.dir = 3; }); await P.keyboard.press('Enter'); await P.waitForTimeout(900);
+          parle = await E(n => { const nm = document.querySelector('#dialog .name'), f = document.querySelector('#dialog .fig'), tx = document.querySelector('#dialog .text'); return { nom: nm && nm.textContent, attendu: n.nom, fig: !!(f && !f.hidden && f.getAttribute('src')), texte: (tx && tx.textContent || '').slice(0, 60) }; }, n0);
+          if (parle.nom === parle.attendu) await capture(P, `visite-${v}-gens-844x390`, `la visite de ${v} : l'un des gens du lieu parle`);
+          for (let i = 0; i < 6 && (await E(() => !document.querySelector('#dialog').hidden)); i++) { await P.keyboard.press('Enter'); await P.waitForTimeout(400); } } }
       // ressortir : par la porte la plus proche
       const b = await E(() => { const W = window.ISNAD.world, g = window.ISNAD.D.MAPS[W.map.id].gabarit, m = W.map; if (g === 'camp') { const s = W.spotPx('entree'); return { x: 17, y: s[1], k: 'ArrowLeft' }; } if (g === 'romaine') { const s = W.spotPx('porte'); return { x: s[0], y: m.h * 16 - 17, k: 'ArrowDown' }; } const s = W.spotPx(W.player.y < m.h * 8 ? 'porte_nord' : 'porte_sud'); return s[1] < m.h * 8 ? { x: s[0], y: 17, k: 'ArrowUp' } : { x: s[0], y: m.h * 16 - 17, k: 'ArrowDown' }; });
       await E(b => window.__t.marcher(b.x, b.y, 15000), b); await P.keyboard.down(b.k); for (let i = 0; i < 20 && (await E(() => window.ISNAD.world.map.id)) !== 'monde'; i++) await P.waitForTimeout(150); await P.keyboard.up(b.k);
@@ -309,11 +322,17 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
       (bon ? vus : rates).push(v + (bon ? '' : ' ' + JSON.stringify({ e, r })));
     }
     si(!rates.length, `chaque ville de passage se visite (sa carte, son comptoir, son tapis) et l'on en ressort par sa porte : ${vus.join(', ')}`, `visites : ${rates.join(' · ')}`, 'INACCESSIBLE');
+    { const mal = peuples.filter(q => q.gens < 5 || q.betes < 3 || q.pres.length || q.sansVisage.length || q.interdits.length);
+      si(!mal.length && peuples.length === villes.length, `2.33 · les gens du lieu et leurs bêtes, dans chaque ville visitée : ${peuples.map(q => `${q.v} ${q.gens} gens (${q.marchent} vont et viennent), ${q.betes} bêtes (${q.especes})`).join(' · ')} — chacun avec son visage, aucun à une porte, au comptoir ni au tapis`,
+        `les gens du lieu : ${JSON.stringify(mal)}`, 'ABSENT'); }
+    si(parle && parle.nom === parle.attendu && parle.fig && parle.texte.length > 10, `2.33 · A devant l'un d'eux : « ${parle && parle.nom} » parle, sa silhouette dans la boîte — « ${parle && parle.texte}… »`, `la parole des gens du lieu : ${JSON.stringify(parle)}`, 'INACCESSIBLE');
     // le joueur de test du moteur ne sort jamais : à pied (walk) et au doigt (tap) — et le joueur automatique
     const jamais = [];
     for (const mode of ['walk', 'auto']) {
       await E(() => { const I = window.ISNAD, W = I.world, sg = I.sagas.abubakr, ch = sg.chapters[0]; I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('abubakr', 0, { saga: 'abubakr', ci: 0, obj: 0, map: 'medine', opts: {}, pos: [488, 690], party: ch.party.slice(), npcs: {}, foes: [], chests: [], flags: {} }); });
       await P.waitForTimeout(1200); await avancer(P);
+      if (mode === 'walk') { const rc = await E(() => { const I = window.ISNAD, W = I.world; return { carte: W.map.id, gens: W.npcs.filter(n => n.gens).length, betes: I.gens.duLieu().length }; });
+        si(rc.carte === 'medine' && !rc.gens && rc.betes >= 3, `2.33 · dans une ville des récits (${rc.carte}) : ${rc.betes} bêtes, aucun des gens du lieu (rien n'est ajouté aux scènes de l'histoire)`, `la ville du récit : ${JSON.stringify(rc)}`, 'ÉCART'); }
       await E(mode => { const I = window.ISNAD, W = I.world; I.debug[mode] = true; if (mode === 'auto') W._autoBusy = true; window.__t.poser(488, 722, 0); }, mode);
       await P.keyboard.down('ArrowDown'); await P.waitForTimeout(900); await P.keyboard.up('ArrowDown');
       jamais.push(await E(mode => { const I = window.ISNAD, W = I.world, r = W.map.id; I.debug[mode] = false; W._autoBusy = false; return mode + ':' + r; }, mode));

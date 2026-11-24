@@ -1169,6 +1169,67 @@ chimères, les brigands, le voyageur) sont venues avec la 2.30 : « Les rencontr
   `partie.js`, `doigt.js`, `smoke.js walk` et `tap`. Les cartes existantes ne changent pas d'une case (le générateur `ville`
   garde Médine et Koufa tels quels ; `M.build` passe `graine` au générateur).
 
+### Les gens du lieu et leurs bêtes (2.33, D225)
+
+*Le décideur, 24 novembre : « rajoute quelques personnes crédibles et quelques animaux dans les villes » ; son choix : « Villes
+visitées ». Textes, nombres et dessin de l'agent, à valider.*
+
+- **Où.** `gens.js` peuple un lieu à son chargement (`Gn.arme`, appelé par `W.loadMap`, avant `Mo.arme`) quand son gabarit a
+  des places dans `D.GENS.ancres` (`ville`, `romaine`, `camp`) et que le récit n'est pas l'histoire-cadre : dans une ville
+  visitée (`D.MAPS[id].visite`), les gens et les bêtes ; dans une ville d'un récit, les bêtes seulement. Tout ce qui était
+  posé (`b.lieu`, `n.gens`) est retiré d'abord ; une graine fixe (le lieu) redonne les mêmes places et les mêmes robes.
+- **Les places.** `D.GENS.ancres[gabarit][rôle]` : un lieu de la carte et un décalage en cases, et pour qui va et vient une
+  seconde place ; `D.GENS.betes[gabarit]` : l'espèce, un lieu, un décalage. `caseLibre` cherche autour (jusqu'à trois ou
+  quatre cases) une case praticable, sans objet, à plus de `D.GENS.marge` cases des lieux de `D.GENS.garde` (portes,
+  comptoir, tapis), loin de celui qui mène, des autres gens et des PNJ du récit.
+- **Les gens** sont des PNJ (`W.npcs`, `gens: true`, `_gens_<rôle>`) : un corps, le pas de côté, un visage (sprites.js) ;
+  leur allure vient du rôle (`D.GENS.roles` : le type, ce qu'il tient, sa pose) et d'une palette par région
+  (`D.GENS.regions`, `D.GENS.palettes` : robe, coiffe, manteau). Ce qu'ils sont et ce qu'ils disent est dans `gens.js`
+  (`ROLES`, `I.T`), écrit à la source dans chaque langue. `Gn.parle` (depuis `W.interact`) leur fait dire leur ligne. Qui a
+  une seconde place va et vient (`allerVenir` : le chemin des cases, `W.chemin`, à 26 points par seconde ; il attend qu'on
+  lui laisse le passage, puis fait demi-tour ; rien pendant un récit). Le point de reprise ne les garde pas.
+- **Les bêtes** (`Gn.betes`, `lieu: true`) sont dessinées de profil (`gfx.js`, `b_chevre`, `b_mouton`, `b_ane`, `b_poule`,
+  `b_chameau` ; `o.c`, la robe ; `o.f`, la foulée). Elles paissent autour de leur place (`D.BETES[espèce].rayon`), en ligne
+  droite, loin des lieux gardés, et s'arrêtent quand celui qui mène est à `arret` points. Elles ont un corps pour lui : il
+  bute sur elles (`Gn.bloque`, dans `tryMove`), et celle qu'il pousse s'écarte (`nouveauBut(b, true)`, plus vite). Elles ne
+  sont pas dans `W.corps()` (les sondes du récit ne les comptent pas : elles ne restent jamais en travers). Un mur bâti sur
+  l'une d'elles la renvoie à sa place.
+
+### L'entraide et le bâtir simple (2.33, D226)
+
+*Le décideur, 24 novembre : « la possibilité de les aider d'une manière ou d'une autre avec la construction de puit, de mur,
+d'enclos, de mosquée etc. » ; « verifie que toutes les missions de construction soient simples et bien expliquées dans l'aide.
+On n'est pas tous abreuvés à Minecraft » ; « Idriss reçoit de l'argent à chaque construction pour son aide » ; « il faut pouvoir
+récupérer du bois ou des matériaux quelque part non? ». Nombres et textes de l'agent, à valider.*
+
+- **Les demandes** (`entraide.js`, `D.ENTRAIDE`). `villes` : par ville visitée (jamais La Mecque), la liste des demandes, prises
+  dans l'ordre (`entraide[carte].k`, dans la partie). `demandes` : qui demande (un rôle de `D.GENS.roles`), le rectangle (`w`,
+  `h`) et le plan (une pièce de `D.PIECES` par case), ce qu'il fournit, la paie, `eau` (près de l'eau). Le demandeur est le gens
+  du lieu de ce rôle (sinon le premier qui se tient à sa place) ; un « ! » flotte au-dessus de lui (`E.render`), « … » tant que
+  son chantier est ouvert. `E.parle` (depuis `Gn.parle`) : sa demande, « Aider » / « Plus tard » ; `E.ouvrir` trace le chantier
+  (`E.placer` : à côté de lui, sur des cases libres, à plus de `D.GENS.marge` cases des lieux gardés, près de l'eau s'il le faut,
+  sans fermer aucun passage — `passages`, le remplissage d'avant et d'après) et donne ce qu'il fournit. `E.apres` (depuis
+  `Bd.after`) : toutes les pièces posées, il remercie, la paie passe par `I.trade.dirhams`, la demande suivante s'ouvre.
+- **Ce qui est bâti dans une ville visitée** se garde sous `visite:<carte>` (`cle`, `build.js`) : d'un récit à l'autre, et hors
+  des rendements d'un récit (`Bd.yields` ne compte que ce qui est bâti dans le récit). Dans une ville visitée, on ne bâtit que le
+  chantier d'une demande, chaque pièce à sa case (`Bd.can`) ; `Bd.outdoor` ne l'ouvre que là. Le mode Bâtir ne s'ouvre jamais
+  dans l'histoire-cadre (hors des veillées).
+- **La réserve** (`poserReserve`) : à la première arrivée, un tas de troncs et un tas de pierres posés près du puits (`ville`),
+  de la fontaine (`romaine`) ou du feu (`camp`), sur des cases libres qui ne ferment aucun passage ; chacun redonne à chaque
+  arrivée (`D.ENTRAIDE.reserve`). `Bd.gather` les connaît (`o.reserve`).
+- **Les plans** (`Bd.plans`) : celui d'un chantier de récit (`Bd.planDe`, tracé par le moteur, toujours le même : la niche au
+  milieu du mur du haut, les murs le long du bord sauf une porte de trois cases au milieu du bas, le tapis sous la niche, les
+  piliers en symétrie, le reste dedans ; seulement sur des cases libres), celui d'une demande, et, pour un objectif « bâtir n
+  pièces », des cases devant celui qui mène (`Bd.planPiece`). `Bd.fantome(x, y)` : la pièce qui manque à cette case. `Bd.place`
+  pose la pièce en pointillés quelle que soit celle qui est choisie ; au doigt, toucher la case suffit (world.js). Un chantier de
+  récit s'achève toujours au compte (`Bd.progress`) : le plan est une aide, pas une contrainte.
+- **Ce qui manque** : `Bd.can` dit quoi et où le trouver (`OU`) ; `montrerSource` pose une flèche au-dessus du plus proche
+  (`Bd.fleche`, neuf secondes) et propose la leçon « Récolter ». Quand un chantier attend, une lueur au-dessus de ce qui se
+  récolte, à moins de 56 points, et toucher l'un d'eux y mène Idris, qui récolte (`Bd.recoltable`).
+- **La barre** : en groupes (`D.PIECES[...].group`) ; dans un chantier, seulement ses pièces, avec leur compte, et le geste
+  (« Touche une pièce en pointillés pour la poser. »). **La leçon « Bâtir »** se dit au premier chantier ouvert (`Bd.openSite`,
+  `E.ouvrir`), **« Récolter »** au premier matériau qui manque.
+
 ### Les rencontres de la route : les chimères du désert, les brigands, le voyageur (2.30, D222)
 
 *Le décideur, 23 novembre, en demandant la carte du monde : « Ça permettrait aussi de croiser des brigands et des monstres dans le

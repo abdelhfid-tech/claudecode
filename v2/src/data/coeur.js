@@ -81,7 +81,10 @@ ISNAD.registerSaga({
     ecran: { clavier: 'Assis devant l’écran, tu regardes. *Échap* ou un pas : te relever.', doigt: 'Assis devant l’écran, tu regardes. *B* ou un pas : te relever.' },
     manege: { clavier: 'Devant la grande roue ou un manège du parc, *Entrée* : un tour. On monte, il tourne, on redescend.', doigt: 'Devant la grande roue ou un manège du parc, *A* : un tour. On monte, il tourne, on redescend.' },
     // 2.29 (D220) : à la première sortie par la porte d'une ville, sur la carte du monde (monde.js)
-    route: 'Par la porte, la route mène aux autres villes. Revenir à celle du récit le reprend là où tu l’as laissé.'
+    route: 'Par la porte, la route mène aux autres villes. Revenir à celle du récit le reprend là où tu l’as laissé.',
+    // 2.33 (D226) : au premier chantier ouvert (bâtir), puis au premier matériau qui manque (récolter) — build.js
+    batir: { clavier: 'Un chantier est tracé en pointillés. *B* ouvre *Bâtir* : place-toi devant une pièce en pointillés et appuie sur *Entrée* pour la poser. S’il manque un matériau, on te dit où le trouver.', doigt: 'Un chantier est tracé en pointillés. Le bouton *▦* ouvre *Bâtir* : touche une pièce en pointillés pour la poser. S’il manque un matériau, on te dit où le trouver.' },
+    recolter: { clavier: 'Il manque un matériau : la flèche montre où le trouver. Devant un tas de troncs ou un palmier, *Entrée* : du *bois*. Un tas de pierres ou un rocher : de la *pierre*. Un puits : de l’*eau*, qui pétrie donne du *pisé*.', doigt: 'Il manque un matériau : la flèche montre où le trouver. Touche un tas de troncs ou un palmier : du *bois*. Un tas de pierres ou un rocher : de la *pierre*. Un puits : de l’*eau*, qui pétrie donne du *pisé*.' }
   },
 
   /* ----- 2.x : les postures — trois manières de se tenir devant l'épreuve (textes proposés par l'agent, à valider) ----- */

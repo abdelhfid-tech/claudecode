@@ -2357,6 +2357,56 @@ pages privées de son compte.
   « Un pillard » (écrit à la source dans les trois langues). Contrôles : `manette.js` (l'esquive : rien au choix, le pas au
   coup), `monde.js` (5c : les pillards paraissent, le chef et sa silhouette, La Razzia qui se lève, les témoins du combat,
   leur départ).
+- [ ] **D225. Des gens et des bêtes dans les villes (version 2.33 ; demande du décideur, 24 novembre) — texte de l'agent, à
+  valider ; amende D220 (« sans personnage »).** Le décideur : « rajoute quelques personnes crédibles et quelques animaux dans
+  les villes ». Son choix : « Villes visitées » (des gens, des bêtes et, à la 2.34, des demandes d'aide dans les villes qu'on
+  visite depuis la carte du monde ; dans les villes des récits, des bêtes seulement ; à La Mecque, des gens et des bêtes, aucun
+  chantier). *Ce qui a été fait* (`v2/src/core/gens.js`, `D.GENS` et `D.BETES` dans `defs.js`, les bêtes dessinées dans
+  `gfx.js`) : dans chaque ville visitée, sept gens du lieu — un porteur d'eau, un marchand, un artisan assis à l'ouvrage, un
+  vieil homme assis à l'ombre, un berger, un garçon, un passant —, des hommes et un garçon de fiction, sans nom, chacun avec son
+  visage ; des couleurs de tous les jours, d'une palette par région (Arabie, Irak, Syrie, Égypte), jamais d'un peuple ni d'une
+  religion ; deux ou trois vont et viennent lentement d'une place à l'autre et attendent qu'on leur laisse le passage ; A devant
+  l'un d'eux, il dit une ligne de sa journée (textes de l'agent, à valider : « La première outre est toujours la plus lourde.
+  Après, les bras s'habituent. » ; « Des dattes, de l'orge, du cuir tanné. Le prix se discute ; la qualité, non. » ; « Une
+  couture après l'autre. Une sandale bien cousue tient une saison de route. » ; « À mon âge, on regarde passer la journée à
+  l'ombre. Elle passe moins vite qu'on ne croit. » ; « Mes bêtes connaissent le chemin mieux que moi. Je les suis plus que je ne
+  les mène. » ; « Elle s'échappe toujours par le même coin ! Un jour, je l'attraperai. » ; « Je me hâte : je veux être rentré
+  avant la grosse chaleur. »), ni fait d'histoire, ni formule, ni verset. Des bêtes dessinées par le jeu (chèvres, moutons, un
+  âne, des poules ; les chameaux de toujours), de couleurs unies, qui paissent autour de leur place, s'arrêtent quand Idris
+  approche et s'écartent s'il les pousse (on ne les traverse pas) ; dans les villes des récits (Médine, Koufa, le camp, la cité
+  romaine), les bêtes seulement, pas de poules au camp. Personne ni aucune bête à deux cases ou moins d'une porte, du comptoir
+  ou du tapis de prière. Rien de cela n'est d'un récit ni n'entre dans la partie : tout se repose au chargement d'un lieu, aux
+  mêmes places. Les textes sont écrits à la source en arabe (et vocalisés), en anglais et en japonais ; « Un vieil homme » et «
+  Un passant » reprennent les noms déjà écrits dans la Cité-Miroir. Contrôle : `node v2/tools/monde.js` (dans chaque ville
+  visitée, les gens et les bêtes, leur visage, leur place ; l'un d'eux parle ; à Médine du récit, les bêtes seulement).
+- [ ] **D226. Aider les gens du lieu à bâtir ; récolter ; bâtir simplement (version 2.33 ; demandes du décideur, 24 novembre)
+  — texte de l'agent, à valider ; amende D220 (« on n'y bâtit pas »).** Le décideur : « la possibilité de les aider d'une
+  manière ou d'une autre avec la construction de puit, de mur, d'enclos, de mosquée etc. » ; « verifie que toutes les missions
+  de construction soient simples et bien expliquées dans l'aide. On n'est pas tous abreuvés à Minecraft » ; « Idriss reçoit de
+  l'argent à chaque construction pour son aide » ; « il faut pouvoir récupérer du bois ou des matériaux quelque part non? ». Son
+  choix : « Villes visitées ». *L'entraide* (`v2/src/core/entraide.js`, `D.ENTRAIDE`) : dans chaque ville visitée sauf La
+  Mecque, l'un des gens du lieu demande de l'aide (un « ! » au-dessus de lui), une demande à la fois, chacune une seule fois par
+  partie : un puits (le porteur d'eau ; il fournit 2 pierres ; paie 8 dirhams), un enclos à chèvres (le berger ; 1 bois ; 6), un
+  mur de pisé contre le sable (l'artisan ; 2 briques ; 6), trois palmiers et un champ près de l'eau (le marchand ; du grain et 2
+  eaux ; 8), une petite mosquée de quartier (le vieil homme ; 10 briques et 2 bois ; 12) — murs de pisé, deux piliers de
+  palmier, une niche, un tapis, un dallage ; ni minaret, ni coupole, ni inscription ; seulement à Médine, Tâ'if, Koufa, Bassora
+  et Fustât ; jamais donnée pour la grande mosquée d'une ville, ni lieu de prière ni point de sauvegarde du jeu. Nombres et
+  textes de l'agent, à valider (les demandes, les remerciements : « … Prends ceci, pour ton aide. »). « Aider » trace le chantier
+  à côté de lui, sans fermer aucun passage ; achevé, il remercie et paie l'aide par la bourse d'Idris (jamais un hasard, jamais
+  une mise). Ce qui est bâti reste dans la ville, d'un récit à l'autre. Dans les récits, aucune paie : ce sont les Compagnons qui
+  y bâtissent. *Récolter* : le matériau « palme » s'appelle désormais « bois de palmier » ; chaque ville qui demande de l'aide
+  a sa réserve, près du puits (un tas de troncs : 2 bois ; un tas de pierres : 2 pierres ; une fois par venue) ; au doigt,
+  toucher ce qui se récolte y mène Idris, qui récolte (quand un chantier attend) ; quand il manque un matériau, on dit lequel et
+  où le trouver, et une flèche montre le plus proche ; une lueur au-dessus de ce qui se récolte, tout près. *Simple et expliqué*
+  : chaque pièce attendue est dessinée en pointillés à sa case — on la touche, ou A devant elle, et elle se pose, sans la
+  choisir ; le chantier de Dhû l-Qassa reçoit son plan, tracé par le moteur (la niche au milieu du mur du haut, les murs le long
+  du bord, une porte de trois cases, le tapis sous la niche, les piliers en symétrie, le dallage dedans), sans changer ce qu'il
+  demande ; un objectif « bâtir n pièces » montre ses cases en pointillés ; la barre de Bâtir range les pièces par groupes, et
+  dans un chantier ne montre que ses pièces, avec leur compte (« Mur 3/8 ») ; deux outils de la progression, dits quand le
+  besoin se présente : « Bâtir » (au premier chantier) et « Récolter » (au premier matériau qui manque) ; la page d'aide « Bâtir
+  » réécrite en quatre gestes (récolter, ouvrir Bâtir, poser sur le pointillé, achever) ; « Que faire ? » le redit. Le mode
+  Bâtir ne s'ouvre plus dans l'histoire-cadre. La partie garde `entraide` (par ville ; valeur de départ dans `migrer`) ; le
+  format reste le 2. Contrôle : `node v2/tools/batir.js` (« BÂTIR CONFORME »).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

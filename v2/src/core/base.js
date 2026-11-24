@@ -171,6 +171,7 @@
     if (p.v !== FORMAT) return null;
     if (!estObjet(p.profil)) p.profil = {}; if (!estObjet(p.paquets)) p.paquets = {};
     if (p.cite === undefined) p.cite = {}; // 2.23 (D212) : les quartiers de la Cité (cite.js) — absent des parties d'avant ; le format reste le 2
+    if (p.entraide === undefined) p.entraide = {}; // 2.33 (D226) : l'entraide des villes visitées (entraide.js) — par ville, la demande en cours ; le format reste le 2
     // 2.27 (D216) : Sâlim et la course (circuit.js) — ce qu'a fait Sâlim, les circuits gagnés, le meilleur temps de chacun ; le format reste le 2
     if (estObjet(p.cite) && p.cite.course === undefined) p.cite = Object.assign({}, p.cite, { course: { salim: 0, gagnes: [], temps: [], primes: 0 } });
     // 2.28 (D217) : les activités des quartiers (activites.js) — le format reste le 2
