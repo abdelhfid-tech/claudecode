@@ -11,15 +11,17 @@ l'Institut, sur les percussions du film. Les films tels qu'ils ont d'abord été
 `promo/shorts/films/livres/`.
 
 Les shorts 1 à 10 présentent le jeu ; le 11 dit ce qu'est la noosphère ; les shorts 12 à 16 présentent chacun une
-saga — le Compagnon, la phrase de sa saga, une parole avec sa source, l'idole qu'on y combat. Dans ces cinq-là, tout ce
-qu'on lit à l'image vient du jeu.
+saga — le Compagnon, la phrase de sa saga, une parole avec sa source, puis un moment de la saga, légendé par l'objectif
+tel que le jeu l'écrit. Dans ces cinq-là, tout ce qu'on lit à l'image vient du jeu. Refaits le 24 novembre (D219) : chaque
+short s'ouvre au milieu d'un passage, l'accroche lisible dès la première image ; les combats ne restent que dans les
+shorts 3, 6, 8 et 9, un seul chaque fois (le décideur : « Diversifie les angles de présentation du jeu ! »).
 
 ## À joindre à chaque publication
 
 > ISNAD — Chroniques des Compagnons. Un jeu de rôle au tour par tour, en pixel art éclairé. Dans le navigateur, sans
 > installation : www.isnad-game.org
 >
-> Version de travail : la relecture historique et religieuse par un spécialiste reste à faire.
+> Version bêta. La relecture historique et religieuse par un spécialiste reste à faire.
 
 Mots-clés proposés, à choisir selon le réseau : `#ISNAD` `#jeuvideo` `#jeuderole` `#JRPG` `#pixelart` `#jeuindependant`
 `#histoire` `#histoiredelislam` `#Compagnons`
@@ -140,11 +142,11 @@ ne montre pas) ; le carton de l'issue est celui du jeu, avec sa ligne « Le râw
 
 **Titre.** Abû Bakr as-Siddîq — la Véracité
 
-**Description.** Médine, 632. Le jour où tout pouvait se défaire, un homme doux a dit le vrai. En face de lui, pas des
-hommes : une idole, le Clan.
+**Description.** Médine, 632. Le jour où tout pouvait se défaire, un homme doux a dit le vrai. Devenu calife, il part
+encore au marché avec ses étoffes.
 
 *À valider de près : la parole citée (« S'il l'a dit, il a dit vrai. » — Abû Bakr, rapporté par Ibn Hishâm, as-Sîra),
-telle que le jeu l'affiche ; et la phrase par laquelle le jeu annonce l'idole — ici, c'est l'idole qui parle.*
+telle que le jeu l'affiche ; et la scène du marché, où 'Umar l'arrête, telle que le récit la joue.*
 
 ## 13 — 'Umar, la Justice
 
@@ -152,8 +154,8 @@ telle que le jeu l'affiche ; et la phrase par laquelle le jeu annonce l'idole �
 
 **Titre.** 'Umar ibn al-Khattâb — la Justice
 
-**Description.** Deux empires tombèrent sous son califat. Lui dormait sur une natte — et, la nuit, il faisait sa ronde.
-En face de lui, une idole : l'Accapareur, la peur de manquer.
+**Description.** Deux empires tombèrent sous son califat. Lui dormait sur une natte — et, la nuit, il faisait sa ronde,
+et portait lui-même la farine à une famille qui avait faim.
 
 *À valider de près : la parole citée (« Porteras-tu mon fardeau à ma place, au Jour de la Résurrection ? » — récit
 d'Aslam, at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya), telle que le jeu l'affiche.*
@@ -164,8 +166,8 @@ d'Aslam, at-Tabarî, Târîkh ; Ibn Kathîr, al-Bidâya), telle que le jeu l'aff
 
 **Titre.** Khâlid ibn al-Walîd — le Courage
 
-**Description.** Il n'a jamais perdu une bataille. Il lui reste à vaincre sa propre statue : l'Idole du Héros. Le fer ne
-l'entame pas.
+**Description.** Il n'a jamais perdu une bataille. Il lui reste à vaincre sa propre statue. Le voici en route avec les
+siens, vers la lisière du désert.
 
 *À valider de près : la parole citée (« Ce jour est l'un des jours d'Allah : il n'y sied ni vanité ni injustice. Rendez
 votre combat sincère, et ne cherchez par vos œuvres qu'Allah. » — Khâlid, au conseil des émirs, at-Tabarî, Târîkh),
@@ -177,13 +179,13 @@ telle que le jeu l'affiche.*
 
 **Titre.** 'Uthmân ibn 'Affân — la Miséricorde
 
-**Description.** Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui. En face,
-une idole : la Rumeur. Mille bouches, pas un témoin.
+**Description.** Il donna sans compter — et, assiégé, refusa qu'une seule goutte de sang fût versée pour lui. Le voici
+à la halle, où les scribes sont réunis.
 
 *À valider de près : la parole citée vient du siège de sa maison (« Te plairait-il de tuer tous les gens, et moi avec
 eux ? Par Allah, si tu tues un seul homme, c'est comme si tu avais tué tous les gens. » — 'Uthmân à Abû Hurayra, Ibn
-Sa'd, Tabaqât). L'épisode est délicat : le film ne montre que son refus du sang, et l'ennemi est la Rumeur, jamais des
-hommes. Rechange prêt : la parole de Hudhayfa sur le Livre (al-Bukhârî) et l'idole « Babel ».*
+Sa'd, Tabaqât). L'épisode est délicat : le film ne montre que son refus du sang ; aucun combat. Rechange prêt : la parole
+de Hudhayfa sur le Livre (al-Bukhârî).*
 
 ## 16 — 'Alî, le Savoir
 
@@ -191,8 +193,8 @@ hommes. Rechange prêt : la parole de Hudhayfa sur le Livre (al-Bukhârî) et l'
 
 **Titre.** 'Alî ibn Abî Tâlib — le Savoir
 
-**Description.** Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour. En face, une idole :
-le Slogan — une parole vraie, par laquelle on vise le faux.
+**Description.** Face à ceux qui l'ont condamné au nom du Livre, il refuse de condamner à son tour. Commandeur des croyants,
+il se présente lui-même devant le juge Shurayh.
 
 *À valider de près : la parole citée (« Parole de vérité par laquelle on vise le faux. » — 'Alî ibn Abî Tâlib, Muslim),
-telle que le jeu l'affiche ; et la phrase par laquelle le jeu annonce l'idole — ici, c'est l'idole qui parle.*
+telle que le jeu l'affiche ; et la scène devant le juge Shurayh, telle que le récit la joue.*
