@@ -100,9 +100,17 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
   const aller = lieu => p.evaluate(l => { const W = window.ISNAD.world, s = W.spotPx(l); W.player.x = s[0]; W.player.y = s[1]; W.dest = null; }, lieu);
   // les idées noires qui attendent derrière la porte interdite sortent toutes, tout de suite (chacune est ensuite posée plus
   // loin, là où une autre aurait rôdé : les épreuves qui suivent les cherchent sur les ponts)
-  const sortirToutes = () => p.evaluate(() => { const I = window.ISNAD, W = I.world, E = W.excursion, R = I.rodeurs, s0 = W.spotPx('seuil'), loin = W.map.env.dedale.loin; if (!E) return 0; let n = 0;
-    const x0 = W.player.x, y0 = W.player.y; W.player.x = s0[0]; W.player.y = s0[1];
-    W.foes.filter(f => f.sortie !== undefined && !f.placed && !f.done).forEach((f, i) => { E.t = Math.max(E.t, f.sortie); R.sortir(E); if (f.placed) { n++; const c = loin[(i * 3 + 1) % loin.length]; f.x = c[0] * 16 + 16; f.y = c[1] * 16 + 16; f.cx = null; } });
+  // (2.30 : une idée noire attend tant que quelqu'un se tient devant la porte — rodeurs.js, sortir ; le contrôle fait comme le
+  // joueur qui attendrait : celui qui mène loin de la porte, ce qui rôde devant la sortie écarté, puis l'on réessaie)
+  const sortirToutes = () => p.evaluate(() => { const I = window.ISNAD, W = I.world, E = W.excursion, R = I.rodeurs, s0 = W.spotPx('seuil'), D0 = W.map.env.dedale, loin = D0.loin, q = D0.interdite; if (!E) return 0; let n = 0;
+    const x0 = W.player.x, y0 = W.player.y, ex = q ? q.devant[0] * 16 + 8 : -1e9, ey = q ? q.devant[1] * 16 + 8 : -1e9;
+    const loinPorte = loin.filter(c => Math.hypot(c[0] * 16 + 16 - ex, c[1] * 16 + 16 - ey) > 96), ici = Math.hypot(s0[0] - ex, s0[1] - ey) > 96 ? s0 : loinPorte.length ? [loinPorte[0][0] * 16 + 16, loinPorte[0][1] * 16 + 16] : s0;
+    W.player.x = ici[0]; W.player.y = ici[1];
+    W.foes.filter(f => f.sortie !== undefined && !f.placed && !f.done).forEach((f, i) => {
+      for (let essai = 0; essai < 4 && !f.placed; essai++) {
+        W.foes.forEach((g, j) => { if (g !== f && g.rodeur && g.placed && !g.done && Math.hypot(g.x - ex, g.y - ey) < 24 && loinPorte.length) { const c = loinPorte[(j * 5 + essai) % loinPorte.length]; g.x = c[0] * 16 + 16; g.y = c[1] * 16 + 16; g.cx = null; } });
+        E.t = Math.max(E.t, f.sortie); R.sortir(E); }
+      if (f.placed) { n++; const c = loin[(i * 3 + 1) % loin.length]; f.x = c[0] * 16 + 16; f.y = c[1] * 16 + 16; f.cx = null; } });
     W.player.x = x0; W.player.y = y0; return n; });
   const e0 = await etat();
   // l'entrée, puis l'issue
@@ -146,7 +154,12 @@ let ecarts = 0; const ok = m => console.log('OK  ' + m), ko = m => { ecarts++; c
   // lame forgée et accompagné : on fait face — une idée noire, puis un mal du cœur
   await p.evaluate(() => { const I = window.ISNAD, d = I.save.data, v = Object.keys(I.D.VICES)[0], a = I.D.ANIMAUX[0]; d.lames = d.lames || {}; d.lames[v] = true; d.animaux = d.animaux || {}; d.animaux[a] = true; d.animal = a; window.__v = v; });
   await descendre('sommeil'); await sortirToutes();
-  const face = async quoi => { const r = await p.evaluate(q => { const I = window.ISNAD, W = I.world, f = W.foes.find(x => x.rodeur && x.placed && !x.done && (q === 'noir' ? I.D.NOIRS.includes(x.group[0]) : x.group[0] === window.__v)); if (!f) return { absent: true };
+  const face = async quoi => { if (quoi === 'noir') for (let k = 0; k < 3 && await p.evaluate(() => { const I = window.ISNAD; return !I.world.foes.some(x => x.rodeur && x.placed && !x.done && I.D.NOIRS.includes(x.group[0])); }); k++) { await sortirToutes(); await p.waitForTimeout(300); }
+    const r = await p.evaluate(q => { const I = window.ISNAD, W = I.world, f = W.foes.find(x => x.rodeur && x.placed && !x.done && (q === 'noir' ? I.D.NOIRS.includes(x.group[0]) : x.group[0] === window.__v)); if (!f) return { absent: true, excursion: !!W.excursion, combat: I.battle.active, rodent: W.foes.filter(x => x.rodeur).map(x => [x.group[0], x.sortie !== undefined ? 'porte' : '', x.placed ? 'dehors' : 'dedans', x.done ? 'fini' : ''].filter(Boolean).join(' ')) };
+      // (les autres, qui rôdent, sont écartés pour l'épreuve : celui qu'on affronte ici, et lui seul — sinon un autre, tout près,
+      // rattrape le groupe juste après le combat et la descente s'achève)
+      const L = W.map.env.dedale.loin, far = L.filter(c => Math.hypot(c[0] * 16 + 16 - f.x, c[1] * 16 + 16 - f.y) > 240);
+      W.foes.forEach((g, j) => { if (g !== f && g.rodeur && g.placed && !g.done && Math.hypot(g.x - f.x, g.y - f.y) < 240 && far.length) { const c = far[j % far.length]; g.x = c[0] * 16 + 16; g.y = c[1] * 16 + 16; g.cx = null; } });
       const peut = I.rodeurs.peutFaireFace(f.group[0]); W.player.x = f.x + 4; W.player.y = f.y; return { id: f.group[0], peut }; }, quoi);
     if (r.absent) return r; for (let i = 0; i < 40 && !(await p.evaluate(() => window.ISNAD.battle.active)); i++) await p.waitForTimeout(150);
     await p.evaluate(() => { window.ISNAD.debug.auto = true; window.ISNAD.speed = 30; }); await p.waitForTimeout(600);
