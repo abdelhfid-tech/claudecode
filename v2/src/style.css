@@ -514,7 +514,11 @@ body.portrait.zoom .plate { transform: translate(-50%, -100%) scale(.92); }
    (dessinés dans l'image, agrandie deux ou trois fois, ils étaient flous et pâteux) */
 #minicarte-noms { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3; }
 #minicarte-noms span { position: absolute; transform: translateY(-50%); padding: 0 .3em .04em; font-size: max(.56em, 10.5px); line-height: 1.2; white-space: nowrap; color: #fff6dc; background: rgba(8, 7, 18, .7); border-radius: 2px; text-shadow: 0 1px 2px #000; }
-#minicarte-noms span.recit { color: #ffe08a; } #minicarte-noms span.dehors { opacity: .82; font-style: italic; }
+#minicarte-noms span.recit { color: #ffe08a; } #minicarte-noms span.dehors { opacity: .8; }
+/* 2.33 (le décideur, 24 novembre : « mets une police normal ») : les noms des cartes — la petite carte de la route et la carte
+   entière — dans la police ordinaire du téléphone, droite, sans empattement */
+:root { --f-carte: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Hiragino Sans", "Noto Sans JP", "Noto Sans Arabic", sans-serif; }
+#minicarte-noms span, .carte .lieu, .carte .ici { font-family: var(--f-carte); font-style: normal; letter-spacing: 0; text-shadow: none; }
 .nom { position: absolute; transform: translate(-50%, -100%); padding: .02em .5em .08em; font-size: .6em; line-height: 1.25; white-space: nowrap; color: #fff6dc; background: rgba(8, 7, 18, .74); border-bottom: 1px solid var(--c, var(--gold)); border-radius: 2px; text-shadow: 0 1px 2px #000; animation: nomin .25s ease; }
 @keyframes nomin { from { opacity: 0; } }
 body.portrait .nom { font-size: .66em; }
