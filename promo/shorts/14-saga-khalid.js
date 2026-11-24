@@ -4,5 +4,5 @@ module.exports = require('./_saga.js')({
   recit: 'khalid', titre: 'La saga de Khâlid', graine: 636,
   lieu: [0, { obj: 4 }, [[264, 189]]],                       // de la caravane vers les dunes
   parole: ["Ce jour est l'un des jours d'Allah", 28],
-  moment: { ci: 0, cp: { obj: 4, carte: 'camp', lieu: 'entree' }, obj: 3, monde: 'ouest' },   // le groupe en route : sorti du camp, sur la piste
+  moment: { ci: 0, cp: { obj: 4, carte: 'camp', lieu: 'entree', groupe: ['khalid', 'qaqa', 'dirar'] }, obj: 3, monde: 'ouest' },   // le groupe en route : sorti du camp, sur la piste
 });
