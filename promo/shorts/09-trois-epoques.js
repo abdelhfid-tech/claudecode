@@ -75,14 +75,14 @@ module.exports = {
 
     /* 5 — le combat, au tour par tour : la frise des tours, les commandes, le groupe qui joue seul */
     s.marque('combat');
-    // les rangées du groupe restent hors champ (D172 : les mots des figures, exigence 24, ne sont pas montrés)
-    await s.chapitre('khalid', 2, { obj: 0 }); await s.cadre('ecran'); await s.propre({ cible: false });
+    // l'arène en grand, les commandes juste dessous ; les rangées du groupe restent hors champ (D172 : les mots des figures,
+    // exigence 24, ne sont pas montrés) ; joué comme on le joue, commande par commande (s.tourParTour)
+    await s.chapitre('khalid', 2, { obj: 0 }); await s.cadre('carre'); await s.propre({ cible: false });
     await s.combat(['echo', 'echo'], { fond: 'romaine', attente: 500 });
     await s.arrivee(0, 0.5);
     // la légende sur le sol de l'arène, sous les figures : ni sur les noms des chimères, ni sur la frise des tours
-    await s.legende('On n’y combat jamais<br>des personnes.', { y: 224, style: 'titre', taille: 22, duree: 14 * T - PASSE - 0.2, dans: 0.35 });
-    await s.auto(true); await s.touche('Enter'); await s.tourner(2 * T); await s.touche('Enter');   // « Frapper », puis la cible : ensuite le groupe joue seul
-    await jusquauPassage(12 * T);
+    await s.legende('On n’y combat jamais<br>des personnes.', { y: 286, style: 'titre', taille: 21, duree: 14 * T - PASSE - 0.2, dans: 0.35 });
+    await s.tourParTour(14 * T - PASSE); await s.passage(PASSE, 0);
 
     /* 6 — la Chaîne : on passe d'un maillon à l'autre */
     s.marque('chaine');

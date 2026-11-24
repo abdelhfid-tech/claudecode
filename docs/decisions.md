@@ -2171,7 +2171,14 @@ pages privées de son compte.
   - Le combat se joue commande par commande (`s.tourParTour` : le menu, « Frapper », la cible, le coup), l'arène en grand et les commandes juste dessous. Le groupe est celui que le récit aligne contre l'idole, au niveau qu'y atteint le parcours automatique (`smoke.js auto`), pour qu'aucun héros ne tombe à l'image.
   - Les rangées du groupe et la parole de l'idole restent hors champ (D172). Le 9 est refilmé pour s'y conformer : il les montrait.
   **Ce qui change dans les shorts.**
-  - Les cinq shorts de saga (`_saga.js`) mettent le groupe en route : sorti par la porte de sa ville, il marche sur la piste de la carte du monde (2.29). Aucune rencontre ne coupe la prise (`I.debug.rencontres`, dans la page du film seulement), et la petite carte est hors champ.
+  - **Des angles divers** (le décideur, 24 novembre, devant les brouillons : « Pourquoi autant d'images de asabiya ? Diversifie les angles de présentation du jeu ! »). Le combat d'idole, qui fermait chacun des cinq shorts de saga, n'y est plus ; les combats ne restent que là où ils sont le sujet (3, 6, 8, 9), un seul par short. Chaque short de saga a son moment, légendé par l'objectif tel que le jeu l'écrit :
+    - Abû Bakr : au crépuscule, vers la porte nord avec l'armée d'Usâma ;
+    - 'Umar : la nuit, la farine portée à la famille ;
+    - Khâlid : le groupe en route, sorti du camp, sur la piste de la carte du monde (2.29), sans rencontre le temps de la prise (`I.debug.rencontres`, dans la page du film seulement) ;
+    - 'Uthmân : vers la halle, où les scribes sont réunis ;
+    - 'Alî : devant le juge Shurayh.
+  - Le 3 ne garde qu'un combat, le Trône vide. Puis les chimères modernes dans les rues des quartiers de 2084, qu'Idris est seul à voir (2.23) ; le prologue est posé comme joué dans la page du film.
+  - La route du monde ne paraît que dans le 7 et le 14.
   - Le 7 montre le bâtir de la 2.33 (la tranchée en pointillés, touchée, posée) et la route avec sa petite carte.
   - Le 10 est refilmé avec la manette A et B d'aujourd'hui.
   - Le 11 est ramené à 30 secondes : la réplique de Maître Yûnus s'écrit à la vitesse « vive » du jeu (un réglage de l'appareil, posé dans la page du film).
