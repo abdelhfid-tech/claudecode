@@ -242,7 +242,7 @@ class Plateau {
   async chapitre(saga, ci, cp) {
     if (await this.ev(() => window.__film.occupe() || !!document.querySelector('.screen:not([hidden])') || !document.querySelector('#card').hidden)) await this.neuf();   // le plan d'avant a laissé quelque chose en cours : on repart d'une page neuve
     await this.ev(([saga, ci, cp]) => { const I = window.ISNAD, W = I.world, ch = I.sagas[saga].chapters[ci]; I.debug.auto = false; I.speed = 1; W.roster = {}; W.saga = null; window.__film.arret = null;
-      const pt = cp ? { party: cp.groupe || ch.party, obj: cp.obj || 0, flags: cp.drapeaux || {}, map: cp.carte || ch.map, opts: cp.opts || ch.opts || {}, pos: cp.lieu || ch.start, foes: cp.vaincus || [], chests: [], npcs: {} } : undefined;
+      const pt = cp ? { party: cp.groupe || ch.party, obj: cp.obj || 0, flags: cp.drapeaux || {}, map: cp.carte || ch.map, opts: cp.opts || ch.opts || {}, pos: cp.lieu || ch.start, foes: cp.vaincus || [], chests: [], npcs: cp.npcs || {} } : undefined;   // cp.npcs : { id: { h: false } } montre un personnage que le récit n'a pas encore montré
       if (!pt) window.__film.jusqua('true');   // depuis l'ouverture : le jeu passe les cartons tout seul et s'arrête au premier repos
       I.speed = 30; window.__film.pret = false; W.startChapter(saga, ci, pt).then(() => { window.__film.pret = true; }); }, [saga, ci, cp || null]);
     await this.jusqua(cp ? () => window.__film.pret : () => window.__film.arrete, null, 60000); await this.ev(() => { const I = window.ISNAD; I.debug.auto = false; I.speed = 1; window.__film.arret = null; }); await this.avancer(200);
