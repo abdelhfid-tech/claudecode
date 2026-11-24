@@ -114,6 +114,7 @@
   // un homme qui va et vient : d'une place à l'autre par le chemin des cases, lentement ; il attend qu'on lui laisse le passage
   function allerVenir(n, dt) {
     const v = n.va, w = W(), p = w.player; if (n.pas || n.scripted || I.script.busy) { n.moving = false; return; }
+    if (I.entraide && I.entraide.demandeur() === n) { n.moving = false; return; }   // (celui qui demande de l'aide attend, sur place)
     if (v.attente > 0) { v.attente -= dt; n.moving = false; return; }
     if (!v.pts) { const but = v.vers ? v.b : v.a, pts = w.chemin(n, but[0], but[1]); v.pts = pts.slice(1); v.k = 0; if (!v.pts.length) { v.vers = 1 - v.vers; v.attente = 3; v.pts = null; return; } }
     const q = v.pts[v.k], dx = q[0] - n.x, dy = q[1] - n.y, d = Math.hypot(dx, dy) || 1, pas = 26 * dt;

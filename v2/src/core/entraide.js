@@ -82,7 +82,7 @@
   E.parle = function (n) {
     const id = E.ville(); if (!id || !n || !n.gens) return false;
     const ch = E.chantier(id);
-    if (ch) { if (E.demandeur() !== n) return false; (async () => { I.audio.sfx('blip'); await S.run([['say', n.id, I.t(ENCORE, { reste: E.reste(ch).map(q => q[1] + ' ' + D.PIECES[q[0]].name.toLowerCase()).join(I.t(', ')) })]]); })(); return true; }
+    if (ch) { if (E.demandeur() !== n) return false; (async () => { I.audio.sfx('blip'); await S.run([['say', n.id, I.t(ENCORE, { reste: E.reste(ch).map(q => D.PIECES[q[0]].name + ' ×' + q[1]).join(I.t(', ')) })]]); })(); return true; }
     const d = E.demande(id); if (!d || E.demandeur() !== n) return false;
     (async () => {
       S.depth++;
@@ -100,14 +100,21 @@
   // trouver où le tracer : à côté du demandeur, sur des cases libres, loin des portes, du comptoir et du tapis ; près de l'eau
   // s'il le faut ; sans fermer aucun passage
   E.placer = function (m, d, n) {
-    const Dd = D.ENTRAIDE.demandes[d], c0 = [Math.floor(n.x / T), Math.floor((n.y - 3) / T)], p = W().player, pj = [Math.floor(p.x / T), Math.floor((p.y - 3) / T)];
+    const Dd = D.ENTRAIDE.demandes[d], cn = [Math.floor(n.x / T), Math.floor((n.y - 3) / T)];
+    // près de lui ; et, pour ce qui demande de l'eau, près d'un puits ou d'une fontaine de la ville (du plus proche au plus loin)
+    const centres = [cn]; if (Dd.eau) m.objs.filter(o => ['well', 'fountain', 'basin'].indexOf(o.type) >= 0).map(o => [Math.floor(o.x / T), Math.floor((o.y - 3) / T)]).sort((a, b) => cheb(a, cn) - cheb(b, cn)).forEach(c => centres.push(c));
+    for (const c0 of centres) { const q = placerPres(m, Dd, c0, cn); if (q) return q; }
+    return null;
+  };
+  function placerPres(m, Dd, c0, cn) {
+    const p = W().player, pj = [Math.floor(p.x / T), Math.floor((p.y - 3) / T)];
     const cands = [];
     for (let r = 1; r <= 8; r++) for (let j = -r - Dd.h; j <= r; j++) for (let i = -r - Dd.w; i <= r; i++) {
       const x0 = c0[0] + i, y0 = c0[1] + j; let ok = true;
       for (let y = y0 - 1; y <= y0 + Dd.h && ok; y++) for (let x = x0 - 1; x <= x0 + Dd.w && ok; x++) {   // le rectangle, et une case autour : libres
         const dedans = x >= x0 && x < x0 + Dd.w && y >= y0 && y < y0 + Dd.h;
         if (dedans ? !libreBati(m, x, y) : (x < 1 || y < 1 || x >= m.w - 1 || y >= m.h - 1 || m.solid[y * m.w + x])) ok = false;
-        if ((x === c0[0] && y === c0[1]) || (dedans && x === pj[0] && y === pj[1])) ok = false; }
+        if ((x === cn[0] && y === cn[1]) || (dedans && x === pj[0] && y === pj[1])) ok = false; }
       if (!ok) continue;
       const plan = Dd.plan.map(q => [x0 + q[0], y0 + q[1], q[2]]);
       if (Dd.eau && !plan.every(q => !D.PIECES[q[2]].near || I.build.eauPres(q[0], q[1]))) continue;
@@ -116,15 +123,17 @@
       if (cands.length > 40) break;
     }
     cands.sort((a, b) => a.e - b.e); return cands[0] || null;
-  };
+  }
   E.ouvrir = function (id, d, n) {
     const m = W().map, Dd = D.ENTRAIDE.demandes[d], q = E.placer(m, d, n), e = E.de(id);
     if (!q) { E.journal.push({ quoi: 'chantier', etat: 'sans-place', d, id }); S.toast(I.t('Il n’y a pas la place ici : reviens plus tard.'), 2600); return false; }
     e.ouvert = { d, map: id, x: q.x0, y: q.y0, w: Dd.w, h: Dd.h, plan: q.plan, name: I.t(TX[d].nom), qui: n.role, fait: false };
     Object.keys(Dd.fournit || {}).forEach(k => I.build.give(k, Dd.fournit[k], true));
     E.journal.push({ quoi: 'chantier', etat: 'ouvert', d, id, x: q.x0, y: q.y0 });
-    I.audio.sfx('ok'); S.toast(I.t('Chantier ouvert : <b>{nom}</b>. Il t’a donné : {dons}.', { nom: I.esc(e.ouvert.name), dons: Object.keys(Dd.fournit || {}).map(k => Dd.fournit[k] + ' ' + D.MATS[k].name.toLowerCase()).join(I.t(', ')) || I.t('rien') }), 4600);
+    I.audio.sfx('ok'); S.toast(I.t('Chantier ouvert : <b>{nom}</b>. Il t’a donné : {dons}.', { nom: I.esc(e.ouvert.name), dons: Object.keys(Dd.fournit || {}).map(k => D.MATS[k].name + ' ×' + Dd.fournit[k]).join(I.t(', ')) || I.t('rien') }), 4600);
     I.build.leconBatir();
+    // tracé loin de celui qui mène (près de l'eau) : une flèche le montre
+    { const p = W().player, cx = (q.x0 + Dd.w / 2) * T, cy = (q.y0 + Dd.h / 2) * T; if (Math.hypot(cx - p.x, cy - p.y) > 6 * T) I.build.fleche = { x: cx, y: q.y0 * T, t: W().t + 9 }; }
     W().checkpoint(); return true;
   };
   // ce qui reste à poser : [[pièce, combien]]

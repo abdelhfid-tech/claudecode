@@ -36,6 +36,10 @@ async function telephone(browser, w, h) {
     T.brut = (wx, wy) => { const G = I.gfx, c = q('#cv').getBoundingClientRect(), x = (wx - Math.round(W.cam.x)) / G.PW * c.width + c.left, y = (wy - Math.round(W.cam.y)) / G.PH * c.height + c.top; return [x, y]; };
     T.centre = s => { const e = q(s); if (!e || e.hidden) return null; const r = e.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
     T.bouton = t => { const b = [...document.querySelectorAll('#choice button')].find(x => x.textContent.trim().startsWith(t)); if (!b) return null; b.scrollIntoView({ block: 'nearest' }); const r = b.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+    // ce point de la carte se voit-il à l'écran ? sinon, Idris s'en approche d'abord (comme un joueur qui marche jusque-là)
+    T.voir = (wx, wy) => { const v = I.gfx.view, cx = Math.round(W.cam.x), cy = Math.round(W.cam.y), sx = wx - cx, sy = wy - cy; if (sx > v.x + 24 && sx < v.x + v.w - 24 && sy > v.y + 30 && sy < v.y + v.h - 30) return false;
+      const m = W.map; let best = null; for (let dy = 2; dy <= 4; dy++) for (const dx of [0, -1, 1, -2, 2]) { const x = wx + dx * 16, y = wy + dy * 16; if (!W.solidAt(x, y) && !W.solidAt(x - 4, y - 3) && !W.solidAt(x + 4, y - 3)) { best = [x, y]; break; } if (best) break; }
+      if (best) T.poser(best[0], best[1], 3); return true; };
     T.poser = (x, y, dir) => { W.player.x = x; W.player.y = y; if (dir !== undefined) W.player.dir = dir; W.dest = null; W.stop(); W.resetTrail(); W.updateCam(true); };
   });
   return { ctx, p, errors };
@@ -45,11 +49,14 @@ async function telephone(browser, w, h) {
   const browser = await chromium.launch(); let toutesErreurs = [];
   const E = (P, fn, a) => P.evaluate(fn, a);
   const toucher = async (P, xy) => { if (xy) await P.touchscreen.tap(xy[0], xy[1]); await P.waitForTimeout(250); };
+  // toucher un point de la carte (après s'en être approché s'il ne se voit pas)
+  const toucherCarte = async (P, wx, wy) => { if (await E(P, ([x, y]) => window.__t.voir(x, y), [wx, wy])) await P.waitForTimeout(400); await toucher(P, await E(P, ([x, y]) => window.__t.brut(x, y), [wx, wy])); };
   // la ville visitée, chargée comme le fait la porte (monde.js) : le récit d'Alî, au premier chapitre, à la porte de la ville
   const visiter = async (P, carte) => {
-    await E(P, () => { const I = window.ISNAD, W = I.world; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset();
-      I.debug.auto = true; I.speed = 30; W.roster = {}; W.saga = null; W.startChapter('ali', 0); setTimeout(() => { I.debug.auto = false; I.speed = 1; }, 300); });
-    await P.waitForTimeout(2500);
+    // (repris d'un point de reprise, comme une partie qu'on continue : l'ouverture du récit ne se rejoue pas)
+    await E(P, () => { const I = window.ISNAD, W = I.world, ch = I.sagas.ali.chapters[0]; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); document.body.classList.remove('in-screen'); I.input.reset();
+      W.roster = {}; W.saga = null; W.startChapter('ali', 0, { saga: 'ali', ci: 0, obj: 0, map: 'koufa', opts: {}, pos: [470, 600], party: ch.party.slice(), npcs: {}, foes: [], chests: [], flags: {} }); });
+    await E(P, () => window.__t.attendre(() => { const I = window.ISNAD; return I.scene === I.world && !!I.world.saga && !I.script.busy && !I.world.lock; }, 15000)); await P.waitForTimeout(400);
     await E(P, ([carte, PORTE]) => { const I = window.ISNAD, W = I.world, g = I.D.MAPS[carte].gabarit; I.input.reset(); I.script.hideDialog(); W.loadMap(carte, { time: 'day' }, PORTE[g]); W.hud(); W.checkpoint(); }, [carte, PORTE]);
     await E(P, () => window.__t.attendre(() => window.__t.calme(), 8000)); await P.waitForTimeout(500);
   };
@@ -63,8 +70,8 @@ async function telephone(browser, w, h) {
   // accepter la demande : toucher celui qui demande, lire, « Aider »
   const accepter = async (P, carte) => {
     const s = await etat(P, carte); if (!s.qui) return { s, lu: [], aide: false };
-    await toucher(P, await E(P, q => window.__t.brut(q.x, q.y - 12), s.qui));
-    await E(P, () => window.__t.attendre(() => window.__t.visible('#dialog') || window.__t.visible('#choice'), 8000));
+    for (let k = 0; k < 4; k++) { await toucherCarte(P, s.qui.x, s.qui.y - 12);   // (le premier toucher après l'arrivée peut se perdre : on retouche)
+      if (await E(P, () => window.__t.attendre(() => window.__t.visible('#dialog') || window.__t.visible('#choice'), 4000))) break; }
     const lu = await lire(P); await E(P, () => window.__t.attendre(() => window.__t.visible('#choice'), 4000));
     const b = await E(P, () => window.__t.bouton('Aider')); await toucher(P, b);
     await E(P, () => window.__t.attendre(() => window.__t.calme(), 6000)); await P.waitForTimeout(300);
@@ -79,7 +86,7 @@ async function telephone(browser, w, h) {
       const g = await E(P, carte => { const I = window.ISNAD, ch = I.entraide.chantier(carte); if (!ch) return null; const bati = I.build.peek(carte) || [], q = ch.plan.find(q => !bati.some(b => b.x === q[0] && b.y === q[1])); return q ? { x: q[0], y: q[1], t: q[2] } : null; }, carte);
       if (!g) break; const n0 = (await etat(P, carte)).bati;
       if (!(await E(P, () => window.ISNAD.build.on))) await ouvrirBatir(P);
-      await toucher(P, await E(P, g => window.__t.brut(g.x * 16 + 8, g.y * 16 + 9), g));
+      await toucherCarte(P, g.x * 16 + 8, g.y * 16 + 9);
       const okp = await E(P, n0 => window.__t.attendre(() => ((window.ISNAD.build.peek(window.ISNAD.world.map.id) || []).length > n0) || !window.ISNAD.entraide.chantier(window.ISNAD.world.map.id), 7000), n0);
       if (okp) poses++; else { rates.push(g); break; }
       await E(P, () => window.__t.attendre(() => !window.ISNAD.script.busy, 6000));
@@ -99,14 +106,14 @@ async function telephone(browser, w, h) {
     await ouvrirBatir(P); const b1 = await barre(P); await P.screenshot({ path: path.join(out, 'medine-chantier-puits-390x844.png') });
     si(b1.length === 1 && /Puits/.test(b1[0]) && /0\/1/.test(b1[0]), `la barre de Bâtir ne montre que la pièce du chantier, avec son compte (« ${b1.join(' · ')} »)`, `la barre : ${JSON.stringify(b1)}`);
     const n0 = (await etat(P, carte)).toasts;
-    const g1 = await E(P, carte => { const ch = window.ISNAD.entraide.chantier(carte), q = ch.plan[0]; return window.__t.brut(q[0] * 16 + 8, q[1] * 16 + 9); }, carte); await toucher(P, g1); await P.waitForTimeout(900);
+    const g1 = await E(P, carte => { const ch = window.ISNAD.entraide.chantier(carte), q = ch && ch.plan[0]; return q ? [q[0] * 16 + 8, q[1] * 16 + 9] : null; }, carte); if (g1) await toucherCarte(P, g1[0], g1[1]); await P.waitForTimeout(900);
     const m1 = await E(P, () => ({ toasts: window.__t.toasts.slice(-4).join(' | '), fleche: !!window.ISNAD.build.fleche }));
     si(/Il te manque/.test(m1.toasts) && /tas de pierres/.test(m1.toasts) && m1.fleche, `il manque deux pierres : on le dit, et où les trouver (« ${m1.toasts.slice(0, 150)} ») ; une flèche montre le tas de pierres`, `ce qui manque : ${JSON.stringify(m1)}`, 'ABSENT');
     await P.screenshot({ path: path.join(out, 'medine-manque-390x844.png') });
     // récolter : toucher le tas de pierres (le mode Bâtir refermé)
     await fermerBatir(P);
     const tas = await E(P, () => { const o = window.ISNAD.world.map.objs.find(o => o.type === 'tas_pierres'); return o ? { x: o.x, y: o.y } : null; });
-    if (tas) await toucher(P, await E(P, o => window.__t.brut(o.x, o.y - 6), tas));
+    if (tas) await toucherCarte(P, tas.x, tas.y - 6);
     await E(P, () => window.__t.attendre(() => window.ISNAD.build.mats().pierre >= 4, 9000));
     const s2 = await etat(P, carte);
     si(tas && s2.mats.pierre >= 4, `récolter : toucher le tas de pierres de la réserve — Idris s’y rend, et en tire deux pierres (${s2.mats.pierre} en tout)`, `la réserve : ${JSON.stringify({ tas, s2 })}`, 'INACCESSIBLE');
@@ -117,7 +124,7 @@ async function telephone(browser, w, h) {
     const a2 = await accepter(P, carte), s4 = await etat(P, carte);
     await fermerBatir(P);
     const tr = await E(P, () => { const o = window.ISNAD.world.map.objs.find(o => o.type === 'troncs'); return o ? { x: o.x, y: o.y } : null; });
-    if (tr) await toucher(P, await E(P, o => window.__t.brut(o.x, o.y - 6), tr));
+    if (tr) await toucherCarte(P, tr.x, tr.y - 6);
     await E(P, () => window.__t.attendre(() => window.ISNAD.build.mats().palme >= 3, 9000));
     const d1 = (await etat(P, carte)).dirhams, p2 = await poserTout(P, carte, 3); await lire(P); await E(P, () => window.__t.attendre(() => window.__t.calme(), 5000)); const s5 = await etat(P, carte);
     si(a2.s.qui && a2.s.qui.role === 'berger' && s4.chantier && s4.chantier.d === 'enclos' && p2.poses === 1 && s5.k === 2 && s5.dirhams - d1 === 6, `l’enclos : le berger demande à son tour ; le bois de palmier, tiré du tas de troncs en le touchant ; posé, +${s5.dirhams - d1} dirhams`, `l’enclos : ${JSON.stringify({ a2, s4, p2, s5 })}`, 'BLOQUÉ');
@@ -126,10 +133,11 @@ async function telephone(browser, w, h) {
     await E(P, () => { const B = window.ISNAD.build; B.give('palme', 1, true); B.give('pierre', 1, true); });
     await fermerBatir(P);
     const pu = await E(P, () => { const W = window.ISNAD.world, o = W.map.objs.find(o => o.type === 'well'); return o ? { x: o.x, y: o.y } : null; });
-    for (const choix of ['Puiser', 'Pétrir']) { if (pu) await toucher(P, await E(P, o => window.__t.brut(o.x, o.y - 6), pu)); await E(P, () => window.__t.attendre(() => window.__t.visible('#choice'), 8000)); await toucher(P, await E(P, t => window.__t.bouton(t), choix)); await E(P, () => window.__t.attendre(() => window.__t.calme(), 5000)); await P.waitForTimeout(300); }
+    for (const choix of ['Puiser', 'Pétrir']) { if (pu) await toucherCarte(P, pu.x, pu.y - 6); await E(P, () => window.__t.attendre(() => window.__t.visible('#choice'), 8000)); await toucher(P, await E(P, t => window.__t.bouton(t), choix)); await E(P, () => window.__t.attendre(() => window.__t.calme(), 5000)); await P.waitForTimeout(300); }
     const s7 = await etat(P, carte);
     si(a3.s.qui && a3.s.qui.role === 'ancien' && s6.chantier && s6.chantier.d === 'mosquee' && s6.chantier.n === 15 && s7.mats.pise >= 13, `la petite mosquée de quartier : le vieil homme demande ; quinze pièces en pointillés ; le pisé pétri au puits, en le touchant (puiser, puis pétrir : ${s7.mats.pise} briques)`, `la mosquée, avant : ${JSON.stringify({ a3, s6, s7 })}`, 'BLOQUÉ');
-    await ouvrirBatir(P); await P.screenshot({ path: path.join(out, 'medine-chantier-mosquee-390x844.png') });
+    await E(P, carte => { const W = window.ISNAD.world, ch = window.ISNAD.entraide.chantier(carte); if (ch) window.__t.poser(ch.x * 16 + 40, (ch.y + ch.h + 1) * 16 + 13, 3); }, carte); await P.waitForTimeout(500);
+    await ouvrirBatir(P); await P.waitForTimeout(400); await P.screenshot({ path: path.join(out, 'medine-chantier-mosquee-390x844.png') });
     const d2 = s7.dirhams, p3 = await poserTout(P, carte, 20); await P.screenshot({ path: path.join(out, 'medine-mosquee-batie-390x844.png') }); await lire(P); await E(P, () => window.__t.attendre(() => window.__t.calme(), 5000)); const s8 = await etat(P, carte);
     si(p3.poses === 15 && s8.k === 3 && s8.dirhams - d2 === 12 && !s8.demande && !s8.qui, `les quinze pièces posées en les touchant ; +${s8.dirhams - d2} dirhams ; plus personne ne demande à Médine`, `la mosquée : ${JSON.stringify({ p3, s8 })}`, 'BLOQUÉ');
     await recharger(P, carte); const s9 = await etat(P, carte);
@@ -148,6 +156,7 @@ async function telephone(browser, w, h) {
       await visiter(P, carte);
       const a = await accepter(P, carte), s = await etat(P, carte);
       if (s.chantier) await E(P, carte => { const I = window.ISNAD, ch = I.entraide.chantier(carte), c = {}; ch.plan.forEach(q => { const k = I.D.PIECES[q[2]].cost; Object.keys(k).forEach(m => { c[m] = (c[m] || 0) + k[m]; }); }); const M = I.build.mats(); Object.keys(c).forEach(m => { if ((M[m] || 0) < c[m]) I.build.give(m, c[m] - (M[m] || 0), true); }); }, carte);
+      if (carte === 'visite_fustat' && s.chantier) { await E(P, carte => { const ch = window.ISNAD.entraide.chantier(carte); window.__t.poser(ch.x * 16 + 40, (ch.y + ch.h + 1) * 16 + 13, 3); }, carte); await ouvrirBatir(P); await P.waitForTimeout(500); await P.screenshot({ path: path.join(out, 'fustat-plan-oasis-844x390.png') }); }
       const d0 = (await etat(P, carte)).dirhams, p = await poserTout(P, carte, 20); await lire(P); await E(P, () => window.__t.attendre(() => window.__t.calme(), 5000)); const s2 = await etat(P, carte);
       const paie = a.s.demande ? await E(P, d => window.ISNAD.D.ENTRAIDE.demandes[d].paie, a.s.demande) : 0;
       if (['visite_damas', 'visite_hira', 'visite_fustat'].includes(carte)) await P.screenshot({ path: path.join(out, `${carte}-844x390.png`) });
