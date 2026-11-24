@@ -373,7 +373,7 @@ ISNAD.registerSaga({
   // Les portes de la noosphère (décision du décideur) : la prière, le dhikr, le sommeil. On y descend pour faire face à ses
   // maux du cœur. C'est le combat du râwî, personnage de fiction, seul : jamais celui d'un Compagnon (exigences 15 et 16).
   portes: {
-    priere:  { titre: 'Au sortir de la prière', invite: 'La prière est dite. Le cœur est calme, et la noosphère est toute proche.' },
+    priere:  { titre: 'Au sortir de la prière', invite: 'La prière est faite. Le cœur est calme, et la noosphère est toute proche.' },
     dhikr:   { titre: 'Dans le dhikr', invite: 'Tout s’est tu, sauf le souvenir. La noosphère est toute proche.' },
     sommeil: { titre: 'En songe', invite: 'Le sommeil vient. Entre veille et songe, la noosphère est toute proche.', menu: 'S’endormir : un songe peut ouvrir la noosphère' },
     question: 'Le râwî peut y descendre, pour faire face à ce qui pèse sur lui. C’est sa descente, jamais celle d’un Compagnon.',

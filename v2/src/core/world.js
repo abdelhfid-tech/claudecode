@@ -89,7 +89,7 @@
     if (spot) { const p = Array.isArray(spot) && typeof spot[0] === 'number' ? spot : W.resolve(spot, id, W.player); W.player.x = p[0]; W.player.y = p[1]; }
     W.degager(); W.resetTrail(); W.tint = null; W.pose = []; W.dest = null; W.focus = null; W._way = null; W.updateCam(true);
     document.body.dataset.theme = (D.gabarit(id) || {}).theme || 'orient'; // le thème de l'interface suit le gabarit du lieu
-    $('#ui').style.setProperty('--mini', (W.map.mini ? ((27 + W.map.h + 6) / G.PH * 100).toFixed(1) : '14') + '%'); // les annonces s'empilent sous la mini-carte
+    $('#ui').style.setProperty('--mini', (W.map.mini ? ((27 + W.map.h + 6) / G.PH * 100).toFixed(1) : W.map.id === 'monde' ? ((27 + 25 * 2.4 + 6) / G.PH * 100).toFixed(1) : '14') + '%'); // les annonces s'empilent sous la mini-carte (2.33 : et sous celle de la route)
     if (I.rodeurs) I.rodeurs.arme(); // un labyrinthe de la noosphère arme son chrono
     if (I.trafic) I.trafic.arme(); // 2.23 : les quartiers de la Cité ont leurs voitures (trafic.js)
     if (I.gens) I.gens.arme(); // 2.32 : les bêtes d'une carte (gens.js) ; celles d'une rencontre de la route ne restent pas
@@ -583,7 +583,7 @@
   function toucher(wx, wy) { if (W.excursion && I.rodeurs.touche(wx, wy)) return;
     if (I.scene !== W || S.busy || W.lock || I.ui.menuOpen || I.debug.auto || I.debug.walk) return false;
     const p = W.player, m = W.map, here = e => !e.hidden && e.map === m.id && e.placed;
-    { const r = W.miniRect, sx = wx - Math.round(W.cam.x), sy = wy - Math.round(W.cam.y); if (r && sx >= r[0] && sx <= r[0] + r[2] && sy >= r[1] && sy <= r[1] + r[3]) { W.stop(); I.ui.pause('carte'); return true; } }
+    { const r = W.miniRect, sx = wx - Math.round(W.cam.x), sy = wy - Math.round(W.cam.y); if (r && sx >= r[0] && sx <= r[0] + r[2] && sy >= r[1] && sy <= r[1] + r[3]) { W.stop(); setTimeout(() => { if (I.scene === W && !S.busy && !I.ui.menuOpen) I.ui.pause('carte'); }, 380); return true; } } // (2.33 : un instant après — le clic qu'émet le téléphone après le toucher tomberait sur « ◂ Retour » et refermerait la carte)
     // 2.x : toucher ce qui rôde, c'est le frapper (rodeurs.js) — avant la porte interdite, qu'une figure peut recouvrir
     if (I.rodeurs && !(I.build && I.build.on) && I.rodeurs.viseDu(wx, wy)) return true;
     if (I.rodeurs && I.rodeurs.toucherPorte(wx, wy)) return true; // 2.x : toucher la porte interdite (ou sa pièce), c'est la désigner
@@ -826,7 +826,10 @@
       W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) { c.fillStyle = '#ff6a8a'; c.fillRect(mx + Math.floor(f.x / T) * q, my + Math.floor(f.y / T) * q, q, q); } });
       if (I.rodeurs && m.env.dedale && I.rodeurs.porteVue()) { const pi = I.rodeurs.interdite(); I.rodeurs.signe(c, mx + (pi.porte[0] + 0.5) * q, my + (pi.porte[1] + 0.5) * q, 2.2 * q); } // 2.x : la porte interdite, vue de près
       c.fillStyle = Math.floor(t * 4) % 2 ? '#fff' : '#ffe08a'; c.fillRect(mx + (Math.floor(W.player.x / T) - 1) * q, my + (Math.floor(W.player.y / T) - 1) * q, 3 * q, 3 * q);
-    } else W.miniRect = null;
+    } else if (!(!S.busy && I.monde && I.monde.miniCarte && I.monde.miniCarte(c, t, tg))) W.miniRect = null;   // 2.33 : sur la route, la petite carte du pays (monde.js)
+    // 2.33 : les annonces se posent sous la petite carte telle qu'elle est à l'écran (l'image peut déborder de l'écran, en largeur)
+    if (W.miniRect && (!W._miniT || t - W._miniT > 0.5)) { W._miniT = t; const cr = $('#cv').getBoundingClientRect(), ur = $('#ui').getBoundingClientRect(), r = W.miniRect;
+      if (cr.height && ur.height) { const bas = cr.top + (r[1] + r[3]) / G.PH * cr.height - ur.top, v = Math.max(14, Math.min(70, bas / ur.height * 100 + 1.5)).toFixed(1) + '%'; if (v !== W._miniV) { W._miniV = v; $('#ui').style.setProperty('--mini', v); } } }
     return { ambient: env.ambient, lights, grade: env.grade, rays: env.rays, scan: env.scan, bloom: env.bloom, tint: W.tint, clouds: env.clouds ? { x: cx, y: cy } : null, etalon: env.etalon };
   };
 })();

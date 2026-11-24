@@ -153,7 +153,7 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
         return { a, b, tuiles, pleines, objets: oa === ob, liberees: [...ban].filter(k => { const [x, y] = k.split(',').map(Number); return !B.solid[y * B.w + x]; }).length, etendards: ban.size }; });
       return r;
     });
-    si(g.mini === false && g.taille[0] === 96 && g.taille[1] === 96, `la carte du monde : ${g.taille[0]} × ${g.taille[1]} cases, une toile de ${g.taille[2]} × ${g.taille[3]} points en dessin fin (${(g.taille[2] * g.taille[3] / 1e6).toFixed(1)} Mpx), sans petite carte au coin`, `la carte du monde : ${JSON.stringify(g.taille)}, petite carte ${g.mini}`);
+    si(g.mini === false && g.taille[0] === 96 && g.taille[1] === 96, `la carte du monde : ${g.taille[0]} × ${g.taille[1]} cases, une toile de ${g.taille[2]} × ${g.taille[3]} points en dessin fin (${(g.taille[2] * g.taille[3] / 1e6).toFixed(1)} Mpx) ; sa petite carte n'est pas celle d'une ville (2.33 : celle de la route, plus bas)`, `la carte du monde : ${JSON.stringify(g.taille)}, petite carte ${g.mini}`);
     si(!g.absentes.length && g.places.every(q => q.ecart <= 1), `chaque ville à sa place projetée, à une case près : ${g.places.map(q => q.id + ' [' + q.s.join(',') + ']').join(' · ')}`, `places : ${JSON.stringify(g.places)} absentes ${g.absentes}`, 'ABSENT');
     si(g.distances.every(d => Math.abs(d.ecart) <= 10), `les distances, à 10 % près du grand cercle : ${g.distances.map(d => `${d.a}–${d.b} ${d.carte} km (réel ${d.vrai}, ${d.ecart > 0 ? '+' : ''}${d.ecart} %)`).join(' · ')}`, `distances : ${JSON.stringify(g.distances)}`);
     si(g.relie && g.hors === 0, 'toutes les villes se rejoignent à pied ; aucune route dans la mer', `reliées : ${g.relie}, routes dans la mer : ${g.hors}`, 'INACCESSIBLE');
@@ -194,6 +194,16 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
     await capture(P, `sortie-${w}x${h}`, `${nom} · sorti de Médine par la porte du sud`);
     si(sorti && e1.carte === 'monde' && e1.monde && e1.monde.ville === 'medine' && e1.obj === e0.obj && e1.pres > 16 && e1.pres < 90 && e1.sud && e1.cp === 'monde' && e1.cible && e1.cible.passage && e1.lecon === 1 && (haut || e1.recue) && e1.sobre && noms1.some(t => /Médine/.test(t)),
       `${nom} · sorti par la porte du sud ${haut ? 'au doigt' : 'au clavier'} : la carte du monde, Idris à ${e1.pres} points de Médine, au sud ; le même chapitre (objectif ${e1.obj}), le point de reprise pris sur la route ; la flèche montre Médine ; la leçon « La route » dite${haut ? '' : ' (l’outil donné)'} ; « ${noms1.find(t => /Médine/.test(t))} »`, `${nom} · la sortie : ${JSON.stringify({ sorti, e0, e1, noms1 })}`, 'BLOQUÉ');
+    // 2.33 (le décideur, 24 novembre : « ajoute une carte pour se situer dans le désert et les différentes villes ») : sur la
+    // route, la petite carte du pays, dans le coin ; la toucher (au doigt) ou la cliquer ouvre la carte entière, avec les villes
+    { await P.waitForTimeout(600); const r = await E(() => { const I = window.ISNAD, W = I.world, G = I.gfx, R = W.miniRect, c = document.querySelector('#cv').getBoundingClientRect(); return R ? { pt: [(R[0] + R[2] / 2) / G.PW * c.width + c.left, (R[1] + R[3] / 2) / G.PH * c.height + c.top], w: Math.round(R[2]) } : null; });
+      if (r) { if (haut) await P.touchscreen.tap(r.pt[0], r.pt[1]); else await P.mouse.click(r.pt[0], r.pt[1]); }
+      await E(() => window.__t.attendre(() => !document.querySelector('#menu').hidden, 3000)); await P.waitForTimeout(400);
+      const carte = await E(() => ({ menu: !document.querySelector('#menu').hidden, lieux: [...document.querySelectorAll('#menu .carte .lieu')].map(e => e.textContent), ici: !!document.querySelector('#menu .carte .ici') }));
+      if (carte.menu) await capture(P, `carte-route-${w}x${h}`, `${nom} · la petite carte de la route, touchée : la carte entière`);
+      si(r && carte.menu && carte.ici && carte.lieux.includes('Médine') && carte.lieux.length >= 6, `${nom} · 2.33 : sur la route, une petite carte du pays dans le coin (${r && r.w} points) ; ${haut ? 'touchée' : 'cliquée'}, la carte entière s'ouvre — Idris, et ${carte.lieux.length} villes nommées`, `la petite carte de la route : ${JSON.stringify({ r, carte })}`, 'ABSENT');
+      await E(() => { const I = window.ISNAD; if (I.ui.menuOpen) I.ui.resume ? I.ui.resume() : I.input.emit('cancel'); }); await P.waitForTimeout(400);
+      for (let i = 0; i < 3 && (await E(() => window.ISNAD.ui.menuOpen)); i++) { await P.keyboard.press('Escape'); await P.waitForTimeout(300); } }
     // en largeur : la partie exportée ici
     if (!haut) exporte = await E(() => window.ISNAD.save.exporter());
     // jusqu'à La Mecque, à pied

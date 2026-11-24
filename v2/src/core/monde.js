@@ -27,7 +27,7 @@
      désert, les brigands, le voyageur —, plus bas. Une ville visitée n'a pas d'étendard (maps.js, MB.finish). */
 (function () {
   'use strict';
-  const I = window.ISNAD, D = I.D, W = I.world, S = I.script, P = I.passages, T = 16;
+  const I = window.ISNAD, D = I.D, W = I.world, S = I.script, P = I.passages, G = I.gfx, T = 16;
   const Mo = I.monde = { journal: [] };
   const MONDE = 'monde';
   const recit = () => !!(W.saga && !W.saga.frame && !W.saga.veillees && W.ch && !W.ch.fin);
@@ -202,6 +202,59 @@
     return (m._champs = { route: distances(m, i => !!(m.pistes && m.pistes[i])), eau: distances(m, i => ['grass', 'water', 'wood'].indexOf(sol(i)) >= 0), interdit, ferme, lieux: lieux.map(q => q[1]) });
   }
   Mo.champs = () => (W.map && W.map.id === MONDE ? champs(W.map) : null);
+
+  /* ----- 2.33 (le décideur, 24 novembre : « ajoute une carte pour se situer dans le désert et les différentes villes » ; son
+     choix : « Petite carte + carte entière ») — sur la route, une petite carte dans le coin, comme celle des villes : le pays
+     autour de celui qui mène (la mer, les fleuves, le sable, la steppe, les montagnes), les routes, les villes proches et leur
+     nom, l'objectif ; la toucher ouvre la carte entière (la Carte de la halte, world.js : W.miniRect). Rien dans les villes. ----- */
+  const COUL = { sea: '#2c5f7c', water: '#4189aa', sand: '#d9b97c', dune: '#c8a160', steppe: '#a8a56b', grass: '#7f9a55', mont: '#86705a' };
+  let fond = null;
+  const fondMonde = m => { if (fond && fond.m === m) return fond.cv; const cv = G.mk(m.w, m.h), c = cv.getContext('2d'), R = champs(m).route;
+    for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) { const n = m.g0(x * T + 8, y * T + 8); c.fillStyle = R[y * m.w + x] === 0 && n !== 'sea' ? '#f3e6c4' : (COUL[n] || '#c8a160'); c.fillRect(x, y, 1, 1); }
+    fond = { m, cv }; return cv; };
+  Mo.RAYON = 12;   // la petite carte montre vingt-cinq cases de côté (une case : une vingtaine de kilomètres)
+  Mo.miniCarte = function (c, t, tg) {
+    const m = W.map; if (!m || m.id !== MONDE) return false;
+    const V = G.view, Zm = (I.ui && I.ui.Z) || 1, haut = I.ui && I.ui.zoom, q = Math.min(1, (haut ? 1.25 : 1) / Zm), n = Mo.RAYON * 2 + 1, k = 2.4 * q, mw = n * k, mh = n * k, crop = V.w < G.PW || V.h < G.PH;
+    const mx = !crop ? G.PW - mw - 8 : haut ? V.x + 5 / Zm : V.x + V.w - mw - 8 / Zm, my = !crop ? 27 : V.y + (haut ? 5 : 27) / Zm, b2 = 2 * q;
+    const p = W.player, px = Math.floor(p.x / T), py = Math.floor(p.y / T), x0 = px - Mo.RAYON, y0 = py - Mo.RAYON;
+    W.miniRect = [mx - b2, my - b2, mw + 2 * b2, mh + 2 * b2];
+    c.save(); c.globalAlpha = 0.9; c.fillStyle = 'rgba(8,6,16,.6)'; c.fillRect(mx - b2, my - b2, mw + 2 * b2, mh + 2 * b2);
+    c.beginPath(); c.rect(mx, my, mw, mh); c.clip(); c.fillStyle = COUL.sea; c.fillRect(mx, my, mw, mh); c.imageSmoothingEnabled = false;
+    const sx = Math.max(0, x0), sy = Math.max(0, y0), ex = Math.min(m.w, x0 + n), ey = Math.min(m.h, y0 + n);
+    if (ex > sx && ey > sy) c.drawImage(fondMonde(m), sx, sy, ex - sx, ey - sy, mx + (sx - x0) * k, my + (sy - y0) * k, (ex - sx) * k, (ey - sy) * k);
+    c.globalAlpha = 1;
+    // les villes : un carré d'or, et leur nom, sans qu'un nom en chevauche un autre (celle du récit d'abord, puis la plus proche) ;
+    // une ville un peu hors du cadre : une encoche au bord, et son nom au plus près, dedans
+    const noms = Object.assign({}, D.LIEUX, (D.MAPS[MONDE] || {}).noms || {}), F = S.flags._monde, fs = Math.max(6.5, 7.5 * q), pris = [{ x: mx + Mo.RAYON * k - 3 * q, y: my + Mo.RAYON * k - 3 * q, w: k + 6 * q, h: k + 6 * q }];   // (la place d'Idris d'abord : aucun nom dessus)
+    c.font = `700 ${fs}px "Alegreya", "Amiri", serif`; c.textBaseline = 'middle'; c.lineJoin = 'round';
+    const libre = r => r.x >= mx + 1 && r.y >= my + 1 && r.x + r.w <= mx + mw - 1 && r.y + r.h <= my + mh - 1 && !pris.some(o => r.x < o.x + o.w && r.x + r.w > o.x && r.y < o.y + o.h && r.y + r.h > o.y);
+    const ecrire = (nom, tx, ty) => { c.strokeStyle = 'rgba(16,10,22,.85)'; c.lineWidth = 2.2 * q; c.strokeText(nom, tx, ty); c.fillStyle = '#fff6dc'; c.fillText(nom, tx, ty); };
+    Object.keys(D.MONDE.villes).filter(id => m.spots[id]).map(id => ({ id, s: m.spots[id], d: Math.hypot(m.spots[id][0] - px, m.spots[id][1] - py) }))
+      .filter(v => v.d <= Mo.RAYON * 2.2).sort((a, b) => ((F && b.id === F.ville) - (F && a.id === F.ville)) || a.d - b.d).forEach(v => {
+        const X = mx + (v.s[0] - x0 + 0.5) * k, Y = my + (v.s[1] - y0 + 0.5) * k, dedans = X >= mx && X <= mx + mw && Y >= my && Y <= my + mh;
+        const nom = noms[v.id] || v.id, w = c.measureText(nom).width, h = fs + 1;
+        if (dedans) {
+          c.fillStyle = '#1a1420'; c.fillRect(X - 2.2 * q, Y - 2.2 * q, 4.4 * q, 4.4 * q); c.fillStyle = F && v.id === F.ville ? '#ffe08a' : '#e9c877'; c.fillRect(X - 1.5 * q, Y - 1.5 * q, 3 * q, 3 * q);
+          pris.push({ x: X - 2.5 * q, y: Y - 2.5 * q, w: 5 * q, h: 5 * q });
+          const essais = [[X + 4 * q, Y], [X - 4 * q - w, Y], [X - w / 2, Y - h * 0.9], [X - w / 2, Y + h * 0.9]];
+          for (const [tx, ty] of essais) { const r = { x: tx - 1, y: ty - h / 2, w: w + 2, h }; if (libre(r)) { pris.push(r); ecrire(nom, tx, ty); break; } }
+        } else {
+          // l'encoche au bord, dans la direction de la ville ; le nom tout contre, dedans
+          const bx = Math.max(mx + 1.5 * q, Math.min(mx + mw - 1.5 * q, X)), by = Math.max(my + 1.5 * q, Math.min(my + mh - 1.5 * q, Y));
+          c.fillStyle = '#e9c877'; c.beginPath(); c.arc(bx, by, 1.8 * q, 0, 6.3); c.fill();
+          const tx = Math.max(mx + 3 * q, Math.min(mx + mw - w - 3 * q, bx - w / 2)), ty = Math.max(my + h / 2 + 2 * q, Math.min(my + mh - h / 2 - 2 * q, by + (by > my + mh / 2 ? -h * 0.75 : h * 0.75)));
+          const r = { x: tx - 1, y: ty - h / 2, w: w + 2, h }; if (libre(r)) { pris.push(r); c.globalAlpha = 0.85; ecrire(nom, tx, ty); c.globalAlpha = 1; }
+        }
+      });
+    // l'objectif (la ville du récit), puis celui qui mène, au centre
+    if (tg && Math.floor(t * 3) % 2) { const X = mx + (tg.gx / T - x0) * k, Y = my + (tg.gy / T - y0) * k; c.strokeStyle = '#ffe08a'; c.lineWidth = q; c.strokeRect(X - 3 * q, Y - 3 * q, 6 * q, 6 * q); }
+    c.fillStyle = '#1a1420'; c.fillRect(mx + Mo.RAYON * k - 0.5 * q, my + Mo.RAYON * k - 0.5 * q, k + q, k + q);
+    c.fillStyle = Math.floor(t * 4) % 2 ? '#ffffff' : '#ff7a5c'; c.fillRect(mx + Mo.RAYON * k, my + Mo.RAYON * k, k, k);
+    c.restore();
+    c.strokeStyle = 'rgba(233,200,119,.6)'; c.lineWidth = q; c.strokeRect(mx - 1.5 * q, my - 1.5 * q, mw + 3 * q, mh + 3 * q);
+    return true;
+  };
   // rien ne se croise ici (une case ; un point de la carte)
   Mo.interditCase = (x, y) => { const m = W.map; if (!m || m.id !== MONDE) return false; if (x < 0 || y < 0 || x >= m.w || y >= m.h) return true; return !!champs(m).interdit[y * m.w + x]; };
   Mo.interdit = (px, py) => { const c = cas(px, py); return Mo.interditCase(c[0], c[1]); };

@@ -2407,6 +2407,19 @@ pages privées de son compte.
   » réécrite en quatre gestes (récolter, ouvrir Bâtir, poser sur le pointillé, achever) ; « Que faire ? » le redit. Le mode
   Bâtir ne s'ouvre plus dans l'histoire-cadre. La partie garde `entraide` (par ville ; valeur de départ dans `migrer`) ; le
   format reste le 2. Contrôle : `node v2/tools/batir.js` (« BÂTIR CONFORME »).
+- [ ] **D227. La prière est « faite » ; une petite carte sur la route (version 2.33 ; demandes du décideur, 24 novembre) — texte
+  de l'agent, à valider.** Le décideur : « La prière est faite. Pas dite! » ; « ajoute une carte pour se situer dans le désert
+  et les différentes villes ». Ses choix : « Petite carte + carte entière » ; dans les villes, rien ne change (« Non, la route
+  seulement »). *La prière* : à la porte de la noosphère, « La prière est dite. » devient « La prière est faite. » (`coeur.js`,
+  `portes.priere.invite`) ; l'anglais devient « The prayer is done. » ; l'arabe (« أُدّيت الصلاة ») et le japonais (« 礼拝は終わった »)
+  disaient déjà qu'elle est accomplie. C'était la seule phrase du jeu qui disait la prière « dite ». *La carte* (`monde.js`,
+  `Mo.miniCarte`) : sur la route, dans le coin, comme celle des villes, une petite carte du pays autour d'Idris (vingt-cinq cases
+  de côté : la mer, les fleuves, le sable, la steppe, les montagnes, les routes), les villes proches avec leur nom (sans qu'un
+  nom en chevauche un autre ; une ville juste hors du cadre, une encoche au bord et son nom dedans), la ville du récit en
+  premier, Idris au centre ; la toucher ouvre la carte entière (la Carte de la halte) : Idris et le nom de chaque ville. En
+  passant : la carte entière s'ouvre un instant après le toucher (le clic qu'émet le téléphone tombait sur « ◂ Retour » et la
+  refermait, en hauteur, aussi pour la petite carte des villes), et les annonces se posent sous la petite carte telle qu'elle
+  est à l'écran. Contrôle : `node v2/tools/monde.js` (la petite carte de la route, touchée en hauteur, cliquée en largeur).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

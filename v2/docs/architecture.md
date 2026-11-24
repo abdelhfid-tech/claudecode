@@ -1169,6 +1169,24 @@ chimères, les brigands, le voyageur) sont venues avec la 2.30 : « Les rencontr
   `partie.js`, `doigt.js`, `smoke.js walk` et `tap`. Les cartes existantes ne changent pas d'une case (le générateur `ville`
   garde Médine et Koufa tels quels ; `M.build` passe `graine` au générateur).
 
+### La petite carte de la route (2.33, D227)
+
+*Le décideur, 24 novembre : « ajoute une carte pour se situer dans le désert et les différentes villes » ; son choix : « Petite
+carte + carte entière » ; rien dans les villes.*
+
+- `Mo.miniCarte(c, t, tg)` (monde.js), appelée par le rendu du monde à la place de la petite carte d'une ville quand le lieu est
+  la carte du monde : un fond tiré une fois de la carte (une couleur par sol, `COUL` ; les cases des routes, plus claires), dont
+  on montre `2 × Mo.RAYON + 1` cases de côté autour de celui qui mène, à 2,4 points par case (moins quand l'image est agrandie,
+  comme la petite carte d'une ville), au même coin. Les villes de `D.MONDE.villes` présentes sur la carte : un carré d'or (la
+  ville du récit plus claire) et leur nom, placé à droite, à gauche, au-dessus ou au-dessous, là où il ne chevauche ni un autre
+  nom ni Idris ; une ville un peu hors du cadre (à moins de 2,2 rayons) : une encoche au bord et son nom dedans. L'objectif
+  clignote ; Idris, au centre.
+- `W.miniRect` : la toucher ouvre la Carte de la halte (`I.ui.pause('carte')`), un instant après (380 ms) — le clic qu'émet un
+  téléphone après le toucher tombait sur « ◂ Retour », en haut à gauche en hauteur, et la refermait (cela valait aussi pour la
+  petite carte d'une ville).
+- Les annonces (`#toasts`) se posent sous la petite carte telle qu'elle est à l'écran (`--mini`, recalculé deux fois par
+  seconde d'après `W.miniRect` et la place de l'image) : en largeur, l'image déborde de l'écran.
+
 ### Les gens du lieu et leurs bêtes (2.33, D225)
 
 *Le décideur, 24 novembre : « rajoute quelques personnes crédibles et quelques animaux dans les villes » ; son choix : « Villes
