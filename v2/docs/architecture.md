@@ -594,6 +594,13 @@ d'elle-même (la marge du système, une encoche, est comprise), et elle passe au
   `U.padRecouvre` — pour un écran ou un carton, c'est son contenu, entre ses marges intérieures, qui compte) plutôt que de
   recouvrir quoi que ce soit, et revient dès que la place est libre. Masquée au choix du joueur (Réglages, « Manette
   tactile », `opts.joy`), elle n'est plus là du tout et ne garde aucune place.
+- **une annonce ne la fait pas s'effacer** (2.34 ; le décideur, 24 novembre : « On perd le joystick parfois en paysage sur
+  iPhone ») : en largeur, une annonce (`#toasts`) qui toucherait la manette — posée sous la petite carte de la route (la
+  2.33 la descend jusqu'à 70 % de la scène), ou sur un iPhone que la barre de Safari raccourcit (844 × 340) — se pose entre
+  ses deux zones (`#toasts.evite`, `U.padEvite`, regardé dès qu'elle paraît et six fois par seconde ; ôté quand le fil se
+  tait). Avant, la manette s'effaçait toute, joystick compris, le temps de la lire, et un pouce qui le tenait le perdait
+  (une page qui devient invisible perd le toucher). Contrôle : `manette.js`, « la route du monde, une annonce sous la petite
+  carte », en largeur et sous la barre du navigateur.
 
 **Courir** (2.16 ; demande du décideur, 19 novembre : « il faut que les personnages puissent courir » ; 2.17 : « pour
 éviter tout mismatch, réserver le joystick + B pour courir ») : B tenu pendant que le joystick est poussé fait courir
@@ -1186,7 +1193,8 @@ carte + carte entière » ; rien dans les villes.*
   téléphone après le toucher tombait sur « ◂ Retour », en haut à gauche en hauteur, et la refermait (cela valait aussi pour la
   petite carte d'une ville).
 - Les annonces (`#toasts`) se posent sous la petite carte telle qu'elle est à l'écran (`--mini`, recalculé deux fois par
-  seconde d'après `W.miniRect` et la place de l'image) : en largeur, l'image déborde de l'écran.
+  seconde d'après `W.miniRect` et la place de l'image) : en largeur, l'image déborde de l'écran. Si elles descendent ainsi
+  jusqu'à la manette, elles se posent entre ses deux zones (2.34 : « La manette tactile », plus haut).
 
 ### Les gens du lieu et leurs bêtes (2.33, D225)
 

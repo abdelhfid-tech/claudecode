@@ -31,7 +31,8 @@ const fs = require('fs'), path = require('path');
 const { chromium, devices } = require('playwright');
 const V2 = path.join(__dirname, '..'), out = path.join(V2, '.smoke/manette'), url = 'file://' + path.resolve(V2, process.env.JEU || 'index.html');
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = (mot, m) => { anomalies++; console.log(mot + ' ' + m); }, dit = (v, mot, m) => (v ? ok(m) : ko(mot, m));
-const TELEPHONES = [['en hauteur', 'haut', 390, 844], ['en largeur', 'large', 844, 390], ['petit téléphone', 'petit', 360, 640], ['tablette en largeur', 'tablette', 1024, 768]];
+// (2.34 : un iPhone en largeur, sous la barre de Safari — la fenêtre n'a plus que 340 points de haut)
+const TELEPHONES = [['en hauteur', 'haut', 390, 844], ['en largeur', 'large', 844, 390], ['en largeur sous la barre du navigateur', 'safari', 844, 340], ['petit téléphone', 'petit', 360, 640], ['tablette en largeur', 'tablette', 1024, 768]];
 
 /* dans la page : ce que la manette recouvre — tout élément visible qui porte du texte ou qui se touche, et l'image de la
    scène ; rogné par ce qui le fait défiler, et seulement s'il est bien dessus (ce qu'un écran couvre ne compte pas).
@@ -335,6 +336,32 @@ async function contraste([b64, sel]) {
         const vit = await p.evaluate(() => window.ISNAD.D.FUITE.vitesse);
         dit(n8.includes('Fuir') && !g.combat && g.poursuit && v && v.court && v.v > vit, 'ÉCART', `${nom} · fuir ce qui rôde : « Fuir » touché rend la carte, la chimère poursuit ; B tenu avec le joystick, on court (${v ? v.v.toFixed(0) : '?'} points par seconde, elle ${vit})${g.poursuit ? '' : ' — ' + JSON.stringify({ n8, g, v })}`);
         await p.evaluate(() => { const I = window.ISNAD; I.rodeurs.finFuite(); if (I.battle.active) I.battle.abort(I.world); }); }
+    }
+    /* 8 ter. (2.34 ; le décideur, 24 novembre : « On perd le joystick parfois en paysage sur iPhone ») — en largeur, sur la
+       route du monde, une annonce paraît sous la petite carte pendant que le pouce tient le joystick : la manette reste là,
+       ne recouvre rien (l'annonce se pose entre ses deux zones), le joystick est toujours tenu et le groupe marche toujours */
+    if (await p.evaluate(() => document.body.classList.contains('immersif'))) {
+      await p.evaluate(async () => { const I = window.ISNAD, W = I.world; if (I.battle.active) I.battle.abort(W); I.save.reset(); I.save.data.started = true; I.save.data.prologue = true; I.input.reset(); I.debug.rencontres = { chimeres: 0, brigands: 0, voyageur: 0 };
+        W.roster = {}; W.saga = null; await W.startChapter('khalid', 0, { party: ['khalid', 'qaqa', 'dirar'], obj: 4, flags: {}, map: 'camp', opts: {}, pos: 'entree', foes: [], chests: [], npcs: {} });
+        await new Promise(r => setTimeout(r, 600)); await I.monde.sortir('ouest'); });
+      await p.waitForTimeout(1200); await calme(); await p.waitForTimeout(600);
+      const route = await p.evaluate(() => window.ISNAD.world.map.id === 'monde' && window.ISNAD.monde.surRoute());
+      const dg = await p.evaluate(() => { const W = window.ISNAD.world, P = W.player, ok = (x, y) => !(W.solidAt(x - 4, y - 5) || W.solidAt(x + 4, y - 5) || W.solidAt(x - 4, y) || W.solidAt(x + 4, y));
+        return [[1, 0], [-1, 0], [0, 1], [0, -1]].map(v => { let k = 0; while (k < 200 && ok(P.x + v[0] * k, P.y + v[1] * k)) k += 2; return { v, n: k }; }).sort((a, b) => b.n - a.n)[0]; });
+      const c = await centre('#pad .joy');
+      if (!route || !c) ko('INACCESSIBLE', `${nom} · la route du monde : ${route ? 'le joystick n’est pas là' : 'la route ne s’ouvre pas'}`);
+      else { const pouce = k => ({ x: c.x + dg.v[0] * c.r * k, y: c.y + dg.v[1] * c.r * k, id: 7 });
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [pouce(0)] }); await p.waitForTimeout(30);
+        for (let i = 1; i <= 3; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [pouce(0.6 * i / 3)] }); await p.waitForTimeout(20); }
+        await p.waitForTimeout(150);
+        await p.evaluate(() => window.ISNAD.script.toast('Une annonce de deux lignes, sous la petite carte de la route : elle ne doit jamais faire disparaître la manette.', { urgent: true }));
+        await p.waitForTimeout(350); const lire = () => p.evaluate(() => { const W = window.ISNAD.world; return [W.player.x, W.player.y, W.t]; }), a = await lire(); await p.waitForTimeout(300); const z = await lire();
+        const e = await p.evaluate(() => ({ montre: document.getElementById('toasts').classList.contains('montre'), efface: document.body.classList.contains('pad-efface'), tenu: document.querySelector('#pad .joy').classList.contains('down'), sous: (window.ISNAD.ui.padSous || []).join(', ') }));
+        await shot('route-annonce');
+        const v = Math.hypot(z[0] - a[0], z[1] - a[1]) / Math.max(0.01, z[2] - a[2]);
+        dit(e.montre && !e.efface && e.tenu && v > 30, 'INACCESSIBLE', `${nom} · la route du monde, une annonce sous la petite carte : la manette reste (${e.efface ? 'effacée — ' + e.sous : 'là'}), le joystick tenu (${e.tenu}), le groupe marche (${v.toFixed(0)} points par seconde)`);
+        await rien('la route du monde, une annonce sous la petite carte');
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await p.waitForTimeout(200); }
     }
     await ctx.close();
   }

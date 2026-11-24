@@ -45,11 +45,14 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   touché sur la Chaîne et dans la halte ; l'image, carrée et verticale, et son texte, dans les quatre langues — le nom,
   les maillons, la réserve, l'adresse, et aucun mot des œuvres, du cœur ni des Valeurs ; le partage et ses replis :
   « PARTAGE CONFORME »), `node v2/tools/manette.js` (la manette tactile partout, au doigt et avec ses seuls boutons, en
-  hauteur, en largeur, sur un petit téléphone et sur une tablette en largeur : l'écran-titre, la halte menée au joystick,
+  hauteur, en largeur, en largeur sous la barre du navigateur (844 × 340, 2.34), sur un petit téléphone et sur une tablette
+  en largeur : l'écran-titre, la halte menée au joystick,
   A qui entre, B qui revient et la referme, un dialogue, une liste de choix, un carton, le combat et sa cible, B qui
   n'ouvre pas la halte et frappe ce qui rôde ; à chaque état, la manette ne recouvre ni un texte ni un bouton (ni, en
   hauteur, l'image) et la sélection se voit ; en largeur, le grand écran, la manette translucide sur l'image, le plein
-  écran là où il sert et rien de cassé là où il est refusé : « MANETTE CONFORME ») et `node v2/tools/longueurs.js` (2.24 :
+  écran là où il sert et rien de cassé là où il est refusé ; sur la route du monde, une annonce sous la petite carte, le
+  joystick tenu : la manette reste, rien n'est recouvert, le groupe marche (2.34) : « MANETTE CONFORME ») et
+  `node v2/tools/longueurs.js` (2.24 :
   chaque réplique, narration et ligne du moteur qui passe par la boîte de dialogue, et chaque carton du récit, dans les cinq
   langues — l'arabe vocalisé compris —, sur 390 × 844, 844 × 390, 360 × 640 et 1280 × 720, puis avec l'arabe en langue
   secondaire : chaque page entière dans sa place, aucune police sous dix points au doigt, aucun mot coupé, l'italique

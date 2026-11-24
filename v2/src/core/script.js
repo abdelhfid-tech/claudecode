@@ -471,6 +471,7 @@
     const box = $('#toasts'); [...box.children].forEach(e => { e.hidden = true; e.classList.remove('joint'); });
     g.items.forEach((x, i) => { x.el.hidden = false; x.el.classList.toggle('joint', i > 0); });
     box.dir = g.items[0].el.dir; box.classList.toggle('lecon', !!g.lecon); box.classList.add('montre');
+    if (I.ui && I.ui.padEvite) I.ui.padEvite();   // 2.34 : en largeur, elle ne descend pas jusqu'à la manette (ui.js)
   }
   // le groupe suivant : la règle d'une descente d'abord (elle se retire au premier pas) ; puis la plus ancienne annonce qui
   // attend, avec celles nées dans la même demi-seconde, si la ligne tient ; puis une leçon, qui reste jusqu'au geste

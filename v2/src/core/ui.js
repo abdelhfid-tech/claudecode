@@ -1107,8 +1107,22 @@
      place, sur un tout petit écran), elle s'y efface (body.pad-efface, sans rien changer à la mise en page) plutôt que de
      recouvrir quoi que ce soit, et revient dès que la place est libre. Regardé six fois par seconde. */
   const SOUS_PAD = '#dialog, #dialog2, #choice, #battle .panel, #buildbar, #hud .obj, #hud .enig, #toasts.montre, #card, .screen, #secours, #course .tableau, #course .rangs, #course .signe, #course .bilan';
+  const padRects = () => [...document.querySelectorAll('#pad .joy, #pad .a, #pad .b')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0);
+  /* 2.34 — le décideur, 24 novembre : « On perd le joystick parfois en paysage sur iPhone ». Une annonce se pose sous la
+     petite carte (--mini, world.js) : sur la route du monde, ou sur un téléphone que la barre du navigateur raccourcit (un
+     iPhone en largeur, 844 × 340), elle descendait jusqu'à A et B, et la manette s'effaçait toute, joystick compris, le temps
+     de la lire — un pouce qui le tenait le perdait. En largeur, une annonce qui toucherait la manette se pose désormais entre
+     ses deux zones (#toasts.evite, style.css) : la manette ne recouvre toujours rien, et ne s'efface plus pour elle. Regardé
+     dès qu'une annonce paraît (script.js, montrer) et six fois par seconde ; ôté quand le fil se tait. */
+  U.padEvite = function () {
+    const t = $('#toasts'), B = document.body; if (!t) return;
+    if (!t.classList.contains('montre') || !B.classList.contains('immersif') || !B.classList.contains('manette')) { if (t.classList.contains('evite')) t.classList.remove('evite'); return; }
+    if (t.classList.contains('evite')) return;
+    const r = t.getBoundingClientRect(); if (r.width < 1 || r.height < 1) return;   // (sa place seule : pendant son fondu, elle est déjà là)
+    if (padRects().some(p => r.left < p.right - 1 && r.right > p.left + 1 && r.top < p.bottom - 1 && r.bottom > p.top + 1)) t.classList.add('evite');
+  };
   U.padRecouvre = function () {
-    const pads = [...document.querySelectorAll('#pad .joy, #pad .a, #pad .b')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0), l = [];
+    const pads = padRects(), l = [];
     if (!pads.length) return l;
     document.querySelectorAll(SOUS_PAD).forEach(e => { if (e.hidden || e.closest('[hidden]')) return; const st = getComputedStyle(e); if (st.display === 'none' || st.visibility === 'hidden' || +st.opacity < 0.05) return;
       let r = e.getBoundingClientRect(); if (r.width < 1 || r.height < 1) return;
@@ -1121,7 +1135,7 @@
      une liste de choix fermée (menuPick) ne l'ôte pas, et une marche de récit, plus longue depuis la 2.16, laissait alors
      l'écran du bas vide. Ni réplique ni choix à l'écran : la classe tombe, la manette et l'objectif reviennent. */
   const gardeDialogue = () => { const B = document.body; if (B.classList.contains('in-dialog') && $('#dialog').hidden && $('#choice').hidden) B.classList.remove('in-dialog'); };
-  const padVeille = () => { const B = document.body; if (!B.classList.contains('manette')) { if (B.classList.contains('pad-efface')) B.classList.remove('pad-efface'); U.padSous = []; return; }
+  const padVeille = () => { const B = document.body; U.padEvite(); if (!B.classList.contains('manette')) { if (B.classList.contains('pad-efface')) B.classList.remove('pad-efface'); U.padSous = []; return; }
     const sous = U.padRecouvre(); B.classList.toggle('pad-efface', sous.length > 0); U.padSous = sous; };
   /* ----- toucher la scène : aller là, suivre le doigt ; pendant un dialogue, valider ----- */
   let ptr = null;

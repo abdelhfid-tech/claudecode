@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="ISNAD — JRPG rétro-HD en cinq sagas : les Compagnons après la mort du Prophète ﷺ.">
-<title>ISNAD 2.33</title>
+<title>ISNAD 2.34</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400&family=Amiri&family=Cinzel:wght@500;700&family=Reem+Kufi:wght@500;700&family=Share+Tech+Mono&family=Noto+Naskh+Arabic:wght@400;700&family=Amiri+Quran&family=Noto+Serif+JP:wght@400;700&display=swap">
 <style>
@@ -61,6 +61,9 @@ body.batir #zoombtn { right: calc(2% + 10.05em); } body.descente.batir #zoombtn 
 #toasts { position: absolute; right: 2%; top: var(--mini, 14%); max-width: min(25em, 46%); padding: .32em .8em; background: var(--panel); border-right: 2px solid var(--acc); font-size: .82em; line-height: 1.32; text-align: start; pointer-events: none; z-index: 30; visibility: hidden; opacity: 0; transition: opacity .25s; }
 #toasts.montre { visibility: visible; opacity: 1; }
 #toasts.lecon { border-right-color: #c49bff; } /* une leçon : un outil, un geste */
+/* 2.34 — en largeur, une annonce qui toucherait la manette (sous la petite carte de la route, sur un écran que la barre du
+   navigateur raccourcit) se pose entre ses deux zones, au lieu de la faire s'effacer (ui.js, U.padEvite) */
+body.immersif #toasts.evite { right: calc(var(--pad-d, 0px) + 8px); max-width: min(25em, 46%, calc(100% - var(--pad-g, 0px) - var(--pad-d, 0px) - 16px)); }
 .toast { display: inline; }
 .toast.joint::before { content: " · "; color: var(--dim); }
 .toast b { color: var(--acc); }
@@ -1019,7 +1022,7 @@ body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.33 · 2026-11-24 17:19 UTC · c0c0c10";
+window.ISNAD_VERSION = "2.34 · 2026-11-24 20:57 UTC · 620c4c9+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -8397,6 +8400,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     const box = $('#toasts'); [...box.children].forEach(e => { e.hidden = true; e.classList.remove('joint'); });
     g.items.forEach((x, i) => { x.el.hidden = false; x.el.classList.toggle('joint', i > 0); });
     box.dir = g.items[0].el.dir; box.classList.toggle('lecon', !!g.lecon); box.classList.add('montre');
+    if (I.ui && I.ui.padEvite) I.ui.padEvite();   // 2.34 : en largeur, elle ne descend pas jusqu'à la manette (ui.js)
   }
   // le groupe suivant : la règle d'une descente d'abord (elle se retire au premier pas) ; puis la plus ancienne annonce qui
   // attend, avec celles nées dans la même demi-seconde, si la ligne tient ; puis une leçon, qui reste jusqu'au geste
@@ -13996,8 +14000,22 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
      place, sur un tout petit écran), elle s'y efface (body.pad-efface, sans rien changer à la mise en page) plutôt que de
      recouvrir quoi que ce soit, et revient dès que la place est libre. Regardé six fois par seconde. */
   const SOUS_PAD = '#dialog, #dialog2, #choice, #battle .panel, #buildbar, #hud .obj, #hud .enig, #toasts.montre, #card, .screen, #secours, #course .tableau, #course .rangs, #course .signe, #course .bilan';
+  const padRects = () => [...document.querySelectorAll('#pad .joy, #pad .a, #pad .b')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0);
+  /* 2.34 — le décideur, 24 novembre : « On perd le joystick parfois en paysage sur iPhone ». Une annonce se pose sous la
+     petite carte (--mini, world.js) : sur la route du monde, ou sur un téléphone que la barre du navigateur raccourcit (un
+     iPhone en largeur, 844 × 340), elle descendait jusqu'à A et B, et la manette s'effaçait toute, joystick compris, le temps
+     de la lire — un pouce qui le tenait le perdait. En largeur, une annonce qui toucherait la manette se pose désormais entre
+     ses deux zones (#toasts.evite, style.css) : la manette ne recouvre toujours rien, et ne s'efface plus pour elle. Regardé
+     dès qu'une annonce paraît (script.js, montrer) et six fois par seconde ; ôté quand le fil se tait. */
+  U.padEvite = function () {
+    const t = $('#toasts'), B = document.body; if (!t) return;
+    if (!t.classList.contains('montre') || !B.classList.contains('immersif') || !B.classList.contains('manette')) { if (t.classList.contains('evite')) t.classList.remove('evite'); return; }
+    if (t.classList.contains('evite')) return;
+    const r = t.getBoundingClientRect(); if (r.width < 1 || r.height < 1) return;   // (sa place seule : pendant son fondu, elle est déjà là)
+    if (padRects().some(p => r.left < p.right - 1 && r.right > p.left + 1 && r.top < p.bottom - 1 && r.bottom > p.top + 1)) t.classList.add('evite');
+  };
   U.padRecouvre = function () {
-    const pads = [...document.querySelectorAll('#pad .joy, #pad .a, #pad .b')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0), l = [];
+    const pads = padRects(), l = [];
     if (!pads.length) return l;
     document.querySelectorAll(SOUS_PAD).forEach(e => { if (e.hidden || e.closest('[hidden]')) return; const st = getComputedStyle(e); if (st.display === 'none' || st.visibility === 'hidden' || +st.opacity < 0.05) return;
       let r = e.getBoundingClientRect(); if (r.width < 1 || r.height < 1) return;
@@ -14010,7 +14028,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
      une liste de choix fermée (menuPick) ne l'ôte pas, et une marche de récit, plus longue depuis la 2.16, laissait alors
      l'écran du bas vide. Ni réplique ni choix à l'écran : la classe tombe, la manette et l'objectif reviennent. */
   const gardeDialogue = () => { const B = document.body; if (B.classList.contains('in-dialog') && $('#dialog').hidden && $('#choice').hidden) B.classList.remove('in-dialog'); };
-  const padVeille = () => { const B = document.body; if (!B.classList.contains('manette')) { if (B.classList.contains('pad-efface')) B.classList.remove('pad-efface'); U.padSous = []; return; }
+  const padVeille = () => { const B = document.body; U.padEvite(); if (!B.classList.contains('manette')) { if (B.classList.contains('pad-efface')) B.classList.remove('pad-efface'); U.padSous = []; return; }
     const sous = U.padRecouvre(); B.classList.toggle('pad-efface', sous.length > 0); U.padSous = sous; };
   /* ----- toucher la scène : aller là, suivre le doigt ; pendant un dialogue, valider ----- */
   let ptr = null;

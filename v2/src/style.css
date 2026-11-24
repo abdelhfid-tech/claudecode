@@ -51,6 +51,9 @@ body.batir #zoombtn { right: calc(2% + 10.05em); } body.descente.batir #zoombtn 
 #toasts { position: absolute; right: 2%; top: var(--mini, 14%); max-width: min(25em, 46%); padding: .32em .8em; background: var(--panel); border-right: 2px solid var(--acc); font-size: .82em; line-height: 1.32; text-align: start; pointer-events: none; z-index: 30; visibility: hidden; opacity: 0; transition: opacity .25s; }
 #toasts.montre { visibility: visible; opacity: 1; }
 #toasts.lecon { border-right-color: #c49bff; } /* une leçon : un outil, un geste */
+/* 2.34 — en largeur, une annonce qui toucherait la manette (sous la petite carte de la route, sur un écran que la barre du
+   navigateur raccourcit) se pose entre ses deux zones, au lieu de la faire s'effacer (ui.js, U.padEvite) */
+body.immersif #toasts.evite { right: calc(var(--pad-d, 0px) + 8px); max-width: min(25em, 46%, calc(100% - var(--pad-g, 0px) - var(--pad-d, 0px) - 16px)); }
 .toast { display: inline; }
 .toast.joint::before { content: " · "; color: var(--dim); }
 .toast b { color: var(--acc); }
