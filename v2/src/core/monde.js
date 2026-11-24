@@ -247,12 +247,71 @@
   };
 
   /* ----- les brigands : une embuscade, la parole avec le chef, puis La Razzia (trade.js) ----- */
+  // 2.32 (D224 ; le décideur, 24 novembre : « On ne voit pas les pillards il faut quand même que le combat soit visuellement
+  // justifié ») : ils paraissent — quatre hommes qui barrent la piste devant celui qui mène, leurs deux chameaux chargés derrière
+  // eux ; le chef parle avec son visage ; la parole perdue, La Razzia se lève du milieu d'eux, puis le combat, où ils se tiennent à
+  // l'écart (battle.js, `temoins`) ; à la fin, ils baissent les armes et s'en vont avec les bêtes. Sans place pour eux (une rive,
+  // un relief), l'embuscade reste dite par le texte, comme en 2.30.
   Mo.embuscade = async function () {
-    if (Mo.occupe) return; Mo.occupe = true; S.depth++;
+    if (Mo.occupe) return; Mo.occupe = true; S.depth++; let bande = null;
     try { W.stop(); I.input.clearHeld(); const c = cas(W.player.x, W.player.y); Mo.journal.push({ quoi: 'brigands', x: c[0], y: c[1], n: (trav() || {}).n }); I.audio.sfx('dark');
-      await I.trade.raid({ embuscade: true }); W.checkpoint(); }
-    finally { S.depth--; Mo.occupe = false; S.hideDialog(); }
+      bande = await poserPillards();
+      await I.trade.raid({ embuscade: true, chef: bande ? CHEF : null, lever: bande ? () => leverRazzia(bande) : null, apaises: bande ? lutte => baisser(bande, lutte) : null });
+      if (bande) await partirPillards(bande);
+      W.checkpoint(); }
+    finally { if (bande) oterPillards(bande); S.depth--; Mo.occupe = false; S.hideDialog(); }
   };
+
+  /* ----- 2.32 : les pillards qu'on voit ----- */
+  const CHEF = '_pillards_chef';
+  const versDir = (dx, dy) => Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : (dy < 0 ? 3 : 0);
+  const libreIci = (x, y) => { const m = W.map; if (x < 8 || y < 8 || x > m.w * T - 8 || y > m.h * T - 8) return false; const k = cas(x, y); return desert(k[0], k[1]) && !W.solidAt(x - 5, y - 3) && !W.solidAt(x + 5, y - 3) && !W.solidAt(x, y); };
+  // où ils se tiennent : en arc, à trois cases devant (puis sur un autre côté, s'il le faut) ; d'où ils viennent : cinq cases plus loin
+  function placesPillards() {
+    const p = W.player, dirs = [p.dir].concat([0, 1, 2, 3].filter(d => d !== p.dir));
+    for (const d of dirs) {
+      const fx = [0, -1, 1, 0][d], fy = [1, 0, 0, -1][d], lx = -fy, ly = fx, pt = (av, lat) => [p.x + fx * av + lx * lat, p.y + fy * av + ly * lat];
+      const H0 = [[40, 0], [48, -22], [48, 22], [58, -8]], B0 = [[80, -14], [84, 14]], fin = H0.map(q => pt(q[0], q[1])), betes = B0.map(q => pt(q[0], q[1]));
+      if (!fin.concat(betes).every(q => libreIci(q[0], q[1]))) continue;
+      // d'où ils viennent : le plus loin possible sur la même ligne (70, 45 ou 20 points de plus), sinon ils sont déjà là
+      for (const k of [70, 45, 20, 0]) { const dep = H0.map(q => pt(q[0] + k, q[1])), depB = B0.map(q => pt(q[0] + k, q[1]));
+        if (dep.concat(depB).every(q => libreIci(q[0], q[1]))) return { fin, dep, betes, depB, face: versDir(-fx, -fy) }; }
+    }
+    return null;
+  }
+  async function poserPillards() {
+    if (!I.gens || I.debug.auto) return null;   // (le joueur de test du moteur ne sort jamais ; s'il le faisait, rien ne paraîtrait)
+    const L = placesPillards(); if (!L) { Mo.journal.push({ quoi: 'brigands', etat: 'sans-place' }); return null; }
+    const P0 = I.trade.PILLARDS, hommes = P0.map((look, i) => ({ id: i ? '_pillard_' + i : CHEF, name: i ? I.t('Un pillard') : I.t('Le chef des pillards'), map: MONDE, route: true, pillard: true, hidden: false, placed: true, placedMap: MONDE,
+      x: L.dep[i][0], y: L.dep[i][1], dir: L.face, pose: null, sheet: I.gfx.planche(look), aura: null }));
+    W.npcs = W.npcs.filter(n => !n.pillard); hommes.forEach(n => W.npcs.push(n));
+    const betes = L.depB.map((q, i) => I.gens.ajouter({ esp: 'chameau', map: MONDE, x: q[0], y: q[1], charge: true, route: true, pillards: true, vit: 0.9 }));
+    Mo.journal.push({ quoi: 'brigands', etat: 'paraissent', hommes: hommes.length, betes: betes.length });
+    await Promise.all(hommes.map((n, i) => W.walkTo(n, L.fin[i][0], L.fin[i][1])).concat(betes.map((b, i) => I.gens.aller(b, L.betes[i][0], L.betes[i][1]))));
+    hommes.forEach(n => { n.dir = versDir(W.player.x - n.x, W.player.y - n.y); n.moving = false; });
+    W.player.dir = versDir(hommes[0].x - W.player.x, hommes[0].y - W.player.y);
+    await I.sleep(250);
+    return { hommes, betes, L, razzia: null };
+  }
+  // la parole perdue : La Razzia se lève du milieu d'eux — une image, qu'on ne touche pas — puis le combat s'ouvre
+  async function leverRazzia(B) {
+    const c = B.hommes.reduce((a, n) => [a[0] + n.x / B.hommes.length, a[1] + n.y / B.hommes.length], [0, 0]);
+    B.hommes.forEach(n => { n.pose = 'colere'; });
+    B.razzia = I.gens.lever('razzia', MONDE, c[0], c[1] + 6); I.audio.sfx('dark'); Mo.journal.push({ quoi: 'brigands', etat: 'razzia' });
+    await I.sleep(1300);
+    I.gens.retirer(b => b === B.razzia); B.razzia = null;
+  }
+  // la chimère vaincue : des hommes fatigués, qui posent les armes (la parole gagnée : le chef ne baisse pas la tête — coeur.js)
+  function baisser(B, lutte) { B.hommes.forEach(n => { n.pose = lutte ? 'triste' : null; }); Mo.journal.push({ quoi: 'brigands', etat: lutte ? 'baissent' : 'rendent' }); }
+  // ils s'en vont avec les bêtes, à l'opposé de celui qui mène, et sortent de la vue
+  async function partirPillards(B) {
+    const p = W.player, L = B.L, loin = (q, k) => [q[0] + (q[0] - p.x) * k, q[1] + (q[1] - p.y) * k];
+    B.hommes.forEach(n => { n.pose = null; });
+    await Promise.all(B.hommes.map((n, i) => { const q = loin(L.fin[i], 1.6); return libreIci(q[0], q[1]) ? W.walkTo(n, q[0], q[1]) : W.walkTo(n, L.dep[i][0], L.dep[i][1]); })
+      .concat(B.betes.map((b, i) => I.gens.aller(b, L.depB[i][0], L.depB[i][1]))));
+    Mo.journal.push({ quoi: 'brigands', etat: 'partis' });
+  }
+  function oterPillards(B) { W.npcs = W.npcs.filter(n => !n.pillard); I.gens.retirer(b => b.pillards || b === B.razzia); }
 
   /* ----- le voyageur ----- */
   // un homme de fiction, sans nom (« Un voyageur ») : il a un visage, puisqu'il n'est pas un Compagnon (sprites.js) ; une tenue de

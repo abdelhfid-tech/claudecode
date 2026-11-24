@@ -61,7 +61,7 @@ async function preparer(p) {
       T.menus.push({ q: typeof qq === 'string' ? qq : String((qq && qq.html) || '').replace(/<[^>]*>/g, ' '), opts: (opts || []).map(o => ({ v: o.v, ok: !!o.ok, t: String(o.t || o.html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 90) })) }); return om.apply(this, arguments); }; }
     // (2.30 : le pourparler qui se joue — ses manches disent la valeur de chaque réponse, dans l'ordre où elles s'affichent)
     { const orun = S.run; S.run = function (ops) { (function va(v) { if (!Array.isArray(v)) return; if (v[0] === 'parley' && v[1] && v[1].rounds) T.parley = v[1]; else v.forEach(va); })(ops); return orun.apply(this, arguments); }; }
-    T.combats = []; { const ob = I.battle.start; I.battle.start = function (o) { T.combats.push({ group: (o.group || []).join('+'), fuite: !!o.fuite, bg: o.bg }); return ob.apply(this, arguments); }; }
+    T.combats = []; { const ob = I.battle.start; I.battle.start = function (o) { T.combats.push({ group: (o.group || []).join('+'), fuite: !!o.fuite, bg: o.bg, temoins: (o.temoins || []).length, cibles: null }); setTimeout(() => { const C = I.battle.contexte(); if (C && T.combats.length) T.combats[T.combats.length - 1].cibles = C.all.filter(e => e.side === 'foe').map(e => e.def && e.def.name).join('+'); }, 400); return ob.apply(this, arguments); }; }
     // 2.30 : marcher tout droit, case par case, jusqu'à n cases ou jusqu'à ce que quelque chose se passe
     T.avancer = async (dir, n, ms) => { const h = I.input.held, t0 = performance.now(), cell = () => Math.floor(W.player.x / 16) + ',' + Math.floor(W.player.y / 16); let c0 = cell(), k = 0;
       while (performance.now() - t0 < (ms || 20000) && k < n) { if (S.busy || W.lock || I.battle.active || I.monde.occupe || W.npcs.some(x => x.route)) break; h.up = h.down = h.left = h.right = false; h[dir] = true; await new Promise(r => requestAnimationFrame(r)); const c = cell(); if (c !== c0) { c0 = c; k++; } }
@@ -413,17 +413,33 @@ const capture = async (P, nom, quoi) => { const f = path.join(out, nom + '.png')
       const avant = await E(() => { const I = window.ISNAD, W = I.world; return { piliers: JSON.stringify(W.pillars()), parley: JSON.stringify(I.save.data.parley || {}), dirhams: I.trade.dirhams() }; });
       const rg = await E(() => { const W = window.ISNAD.world, p = W.player; return window.__t.rangee(14, [Math.floor(p.x / 16), Math.floor(p.y / 16)]); });
       await E(rg => window.__t.poser(rg.x * 16 + 8, rg.y * 16 + 13, 2), rg);
+      // 2.32 (D224) : on les voit — quatre hommes devant celui qui mène, le chef avec son visage, deux chameaux chargés ; la parole
+      // avec le chef montre sa silhouette ; la parole perdue, La Razzia se lève du milieu d'eux ; au combat, ils sont à l'écart
+      await E(() => { window.__chefFig = 0; window.__razzia = 0; clearInterval(window.__veilleP); window.__veilleP = setInterval(() => { const I = window.ISNAD, nm = document.querySelector('#dialog .name'), f = document.querySelector('#dialog .fig');
+        if (nm && /chef des pillards/i.test(nm.textContent) && f && !f.hidden && f.getAttribute('src')) window.__chefFig++; if (I.gens && I.gens.betes.some(b => b.chimere === 'razzia')) window.__razzia++; }, 80); });
       const pas1 = await E(() => window.__t.avancer('right', 12, 15000));
-      await P.waitForTimeout(1200); if (pas1.occupe) await capture(P, `rencontre-brigands-${w}x${h}`, `${nom} · l'embuscade des brigands`);
+      await E(() => window.__t.attendre(() => window.ISNAD.monde.journal.some(j => j.etat === 'paraissent' || j.etat === 'sans-place'), 8000));
+      await P.waitForTimeout(900);
+      const vus = await E(() => { const I = window.ISNAD, W = I.world, D = I.D, p = W.player, H = W.npcs.filter(n => n.pillard), chef = H.find(n => n.id === '_pillards_chef');
+        return { hommes: H.length, chef: !!chef, visage: !!chef && chef.sheet.look.kind !== 'compagnon' && !D.sansVisage(chef.name, W.saga.id) && chef.sheet.look.coiffe === 'litham', loin: H.map(n => Math.round(Math.hypot(n.x - p.x, n.y - p.y))),
+          betes: I.gens.betes.filter(b => b.pillards && b.esp === 'chameau' && b.charge).length, cibles: W.foes.filter(f => !f.done && f.map === W.map.id && H.some(n => Math.hypot(n.x - f.x, n.y - f.y) < 4)).length }; });
+      if (pas1.occupe) await capture(P, `rencontre-brigands-${w}x${h}`, `${nom} · l'embuscade des brigands : on les voit`);
+      si(vus.hommes === 4 && vus.chef && vus.visage && vus.betes === 2 && !vus.cibles && vus.loin.every(d => d > 24 && d < 90),
+        `${nom} · les pillards paraissent : ${vus.hommes} hommes à ${vus.loin.join(', ')} points, le chef avec son visage (les yeux sous le chèche), ${vus.betes} chameaux chargés ; aucun n'est une chimère`, `${nom} · les pillards : ${JSON.stringify(vus)}`, 'ABSENT');
       const c = await mener(P, haut ? 'meilleur' : 'pire', 'gagner');
+      const apres = await E(() => { clearInterval(window.__veilleP); const I = window.ISNAD; return { chefFig: window.__chefFig, razzia: window.__razzia, restent: I.world.npcs.filter(n => n.pillard).length + I.gens.betes.filter(b => b.pillards || b.chimere).length, etats: I.monde.journal.filter(j => j.quoi === 'brigands' && j.etat).map(j => j.etat).join(',') }; });
       const pas2 = await E(() => window.__t.avancer('left', 10, 12000));   // (loin des routes encore, la chance forcée : rien de plus)
-      const b = await E(() => { const I = window.ISNAD, W = I.world, T = window.__t, tr = I.monde.traversee(); return { journal: I.monde.journal.filter(j => j.quoi === 'brigands').length, brig: tr && tr.brig, cartons: T.cartons.join(' | ').slice(-1200), combats: T.combats.slice(), piliers: JSON.stringify(W.pillars()), parley: JSON.stringify(I.save.data.parley || {}), dirhams: I.trade.dirhams(), carte: W.map.id,
+      const b = await E(() => { const I = window.ISNAD, W = I.world, T = window.__t, tr = I.monde.traversee(); return { journal: I.monde.journal.filter(j => j.quoi === 'brigands' && !j.etat).length, brig: tr && tr.brig, cartons: T.cartons.join(' | ').slice(-1200), combats: T.combats.slice(), piliers: JSON.stringify(W.pillars()), parley: JSON.stringify(I.save.data.parley || {}), dirhams: I.trade.dirhams(), carte: W.map.id,
         caravane: T.menus.some(m => /servi d’abord/.test(m.q)) }; });
       const txt = (await E(() => window.__t.toasts.concat(window.__t.cartons).join(' '))) + ' ' + c.lignes.join(' ');
       const parole = haut ? !b.combats.length : b.combats.some(x => /razzia/.test(x.group) && !x.fuite);
       si(pas1.occupe && !c.bloque && b.journal === 1 && b.brig && parole && !b.caravane && !/Un caravanier|La caravane a été pillée/.test(txt) && b.piliers === avant.piliers && b.parley === avant.parley && b.carte === 'monde' && (haut || b.dirhams > avant.dirhams),
         `${nom} · les brigands : une embuscade loin des routes (après ${pas1.k} cases), la parole avec leur chef ${haut ? 'gagnée — ils posent les armes, sans combat' : 'manquée — puis La Razzia, ses chimères, vaincues (' + (b.dirhams - avant.dirhams) + ' dirhams trouvés)'} ; rien de la caravane (ni caravanier, ni part à servir) ; ${pas2.k} cases encore loin des routes : aucune autre — une au plus par traversée ; ni les piliers ni le compte des pourparlers ne bougent`,
         `${nom} · les brigands : ${JSON.stringify({ pas1, c: Object.assign({}, c, { lignes: c.lignes.slice(0, 4) }), pas2, b, avant })}`, 'BLOQUÉ');
+      const rz = b.combats.find(x => /razzia/.test(x.group)) || {};
+      si(apres.chefFig > 0 && !apres.restent && (haut ? apres.etats === 'paraissent,rendent,partis' && !apres.razzia : apres.etats === 'paraissent,razzia,baissent,partis' && apres.razzia > 0 && rz.temoins === 4 && !/pillard/i.test(rz.cibles || '')),
+        `${nom} · la parole avec le chef, sa silhouette dans la boîte de dialogue ; ${haut ? 'gagnée : ils rendent, puis s’en vont avec les bêtes' : 'perdue : La Razzia se lève du milieu d’eux, puis le combat, les quatre pillards à l’écart (cibles : ' + rz.cibles + ') ; ils posent les armes et s’en vont'}`,
+        `${nom} · les pillards, ensuite : ${JSON.stringify({ apres, rz })}`, 'ABSENT');
       if (haut) console.log('    (les lignes de l’embuscade) ' + c.lignes.slice(0, 3).map(l => '« ' + l.slice(0, 90) + ' »').join(' · '));
     }
 

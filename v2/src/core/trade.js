@@ -146,10 +146,21 @@
      caravanier, ni les renforts (personne n'est appelé sur une piste loin de tout : la parole se gagne sans eux, au plus haut),
      ni la part de chacun (ceux qui ont été dépouillés ne sont pas là), ni mise à rendre. Ce qui se dit avant et après la parole
      est de la fiction, dans coeur.js (route.brigands). */
+  // 2.32 (D224) — les pillards qu'on voit : quatre hommes de fiction, le chef d'abord. Le visage sous le chèche (les yeux seuls,
+  // sprites.js), des couleurs de terre, une arme ordinaire en main ; ni tribu, ni peuple, ni étendard, ni or. Sur la carte du
+  // monde (monde.js) et, pendant le combat contre La Razzia, à l'écart (battle.js, `temoins`) : jamais une cible.
+  Tr.PILLARDS = [
+    { kind: 'homme', coiffe: 'litham', manteau: 'long', robe: '#6e5a40', head: '#3a3026', cloak: '#54442f', item: 'sabre' },
+    { kind: 'homme', coiffe: 'litham', manteau: 'aucun', robe: '#7d6849', head: '#463a2c', cloak: '#5f4d36', item: 'lance' },
+    { kind: 'homme', coiffe: 'litham', manteau: 'epaule', robe: '#8a7553', head: '#2f2923', cloak: '#665238', item: 'baton' },
+    { kind: 'homme', coiffe: 'litham', manteau: 'aucun', robe: '#5f4f3a', head: '#4f4231', cloak: '#4a3c2b', item: 'lance' }];
   Tr.raid = async function (o) {
     o = o || {}; const v = W.saga.veillees, emb = !!o.embuscade, gd = Tr.guard(), R = emb ? 0 : gd.renforts, mine = o.loss > 0, RB = emb ? (((I.sagas.coeur || {}).route || {}).brigands || {}) : null;
     S.flags._r1 = R >= 1; S.flags._r2 = R >= 2;
     const who1 = gd.camels ? I.t('Les méharistes de tes enclos') : I.t('Ceux que tes pactes ont liés'), who2 = I.t('Les hommes du voisinage, levés à ton appel');
+    // le combat contre La Razzia : les pillards à l'écart (2.32), et ce qui reste quand elle tombe
+    const lutte = [['battle', { group: ['razzia', 'butin', 'peur_route'], bg: 'desert', boss: false, intro: I.t('La Razzia : prendre parce qu’on le peut. Elle ne négocie pas.'), allies: [{ flag: '_r1', name: who1 }, { flag: '_r2', name: who2 }], temoins: Tr.PILLARDS }],
+      ['nar', I.t('L’idole tombée, il ne reste que des hommes fatigués, et des ballots qu’ils n’osent plus regarder. Ils posent les armes.')]];
     const ops = [
       ['mus', 'conseil'],
       ...(emb ? (RB.avant || []) : [
@@ -159,7 +170,7 @@
       ['lore', 'routes_sures'],
       ...(emb ? [] : [['nar', R >= 2 ? I.t('Tu n’iras pas seul. {premiers} se mettent en selle ; {voisins_min} suivent. On lit le ciel : cap sur {etoile}.', { premiers: who1, voisins_min: who2.toLowerCase(), voisins: who2, etoile: Tr.starText(D.STARS[7]) }) : R === 1 ? I.t('Peu répondent, mais ils répondent : {premiers_min}. On lit le ciel : cap sur {etoile}.', { premiers_min: who1.toLowerCase(), premiers: who1, etoile: Tr.starText(D.STARS[7]) }) : I.t('Tu appelles des renforts. Nul ne vient : tu n’as noué ni pacte ni caravane de garde. Tu iras avec les tiens, sous al-Jady.')]]),
       ['parley', {
-        with: I.t('Le chef des pillards'), title: I.t('Rendre ce qui fut pris'),
+        with: o.chef || I.t('Le chef des pillards'), title: I.t('Rendre ce qui fut pris'),   // 2.32 : sur la route, le chef est là (monde.js), avec son visage
         intro: I.t('Il a faim, il a des hommes à nourrir, et la coutume de ses pères lui dit que prendre est un honneur. Il écoute d’autant mieux que tu n’es pas venu seul.'),
         goal: R >= 2 ? 4 : R === 1 ? 5 : 6,
         rounds: [
@@ -178,19 +189,26 @@
         ],
         win: [['nar', I.t('Il fait décharger les bêtes une à une, devant ses hommes, sans baisser la tête. Personne ne rit.')], ['flag', '_raid_paix'], ['pillar', 'lien', 1]],
         lose: [['nar', I.t('Il crache dans le sable. Derrière lui, dans l’envers de la piste, la vieille coutume se dresse, et il lui obéit plus qu’à sa raison.')],
-          ['battle', { group: ['razzia', 'butin', 'peur_route'], bg: 'desert', boss: false, intro: I.t('La Razzia : prendre parce qu’on le peut. Elle ne négocie pas.'), allies: [{ flag: '_r1', name: who1 }, { flag: '_r2', name: who2 }] }],
-          ['nar', I.t('L’idole tombée, il ne reste que des hommes fatigués, et des ballots qu’ils n’osent plus regarder. Ils posent les armes.')]]
+          ...(emb ? [['flag', '_raid_lutte']] : lutte)]   // 2.32 : sur la route, La Razzia se lève d'abord sous les yeux (monde.js), puis le combat
       }],
-      ...(emb ? (RB.apres || []) : [
+      ...(emb ? [] : [
       ['nar', I.t('Ce qui fut pris est rassemblé. Tout n’y est pas : une part a déjà été mangée, une autre perdue dans la fuite.')],
       ['ask', I.t('Ce qui reste ne couvre pas toutes les pertes. Qui est servi d’abord ?'), [
         { t: I.t('Les petits porteurs, qui n’avaient que cela.'), r: [['pillar', 'justice', 1], ['flag', '_raid_part', 'peu'], ['nar', I.t('Ils repartent avec leur charge entière. Tu reprends ce qui reste.')]] },
         { t: I.t('Chacun à proportion de ce qu’il a perdu.'), r: [['pillar', 'justice', 1], ['flag', '_raid_part', 'part'], ['nar', I.t('On pèse, on compte, on partage. Nul n’a tout, nul n’est oublié.')]] },
         { t: mine ? I.t('Ma propre mise d’abord : c’est moi qui ai mené la poursuite.') : I.t('Ceux qui ont mené la poursuite d’abord.'), r: [['pillar', 'justice', -1], ['flag', '_raid_part', 'tout'], ['nar', I.t('Tu es servi le premier. Les autres attendent, et se taisent. C’est un silence dont on se souvient.')]] }]],
       ['nar', I.t('Les pillards sont remis au juge : ce n’est pas à celui qui poursuit de dire la peine. La route, elle, est rouverte.')]]),
-      ['lore', 'razzia']
+      ...(emb ? [] : [['lore', 'razzia']])
     ];
     await S.run(ops);
+    // 2.32 (D224) — sur la route : la parole perdue, La Razzia se lève du milieu des pillards (o.lever, monde.js), puis le combat ;
+    // ensuite ce que coeur.js fait dire (route.brigands.apres)
+    if (emb) {
+      const lutteIci = !!S.flags._raid_lutte; delete S.flags._raid_lutte;
+      if (lutteIci) { if (o.lever) await o.lever(); await S.run(lutte); }
+      if (o.apaises) o.apaises(lutteIci);
+      await S.run([...(RB.apres || []), ['lore', 'razzia']]);
+    }
     if (mine) { const part = S.flags._raid_part, back = Math.round(o.loss * (part === 'tout' ? 1 : part === 'part' ? 0.7 : 0.5)); Tr.dirhams(back); S.toast(I.t('Tu retrouves <b>{n} dirhams</b> de ta mise de {mise}.', { n: back, mise: o.loss }), 4200); }
     delete S.flags._r1; delete S.flags._r2; delete S.flags._raid_part;
     const env = W.map && W.map.env; if (env && I.scene === W) I.audio.scene(env.music || 'silence'); else I.audio.back();

@@ -265,14 +265,20 @@ async function contraste([b64, sel]) {
         await p.evaluate(() => { const I = window.ISNAD, W = I.world, E = W.saga.enemies, id = Object.keys(E).find(k => E[k].tier === 'minion' && !E[k].racine); window.__fl = []; window.__rnd = Math.random; window.__foeEsq = 0;
           new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1) window.__fl.push(n.textContent); }))).observe(document.querySelector('#floaters'), { childList: true });
           window.__fini = false; I.battle.start({ group: [id], bg: 'desert', heros: [W.hero(W.party[0])] }).then(() => { window.__fini = true; }); const C = I.battle.contexte(); C.all.forEach(e => { if (e.side === 'foe') { e.skills = []; e.max.hp *= 8; e.hp = e.max.hp; } });
-          window.__veille = setInterval(() => { const c = I.battle.contexte(); if (c && c.all.some(e => e.side === 'foe' && e.st.esquive)) window.__foeEsq++; }, 50); });
+          window.__oxMax = 0; window.__veille = setInterval(() => { const c = I.battle.contexte(); if (c && c.all.some(e => e.side === 'foe' && e.st.esquive)) window.__foeEsq++; const h = c && c.all.find(e => e.side === 'hero'); if (h) window.__oxMax = Math.max(window.__oxMax, Math.abs(h.ox || 0)); }, 20); });
         for (let i = 0; i < 40 && !(await p.evaluate(() => window.ISNAD.battle.active)); i++) await p.waitForTimeout(150); // (le combat s'ouvre après son fondu)
         const hero = () => p.evaluate(() => { const C = window.ISNAD.battle.contexte(), h = C && C.all.find(e => e.side === 'hero'); return h ? { hp: Math.round(h.hp), esquive: !!h.st.esquive, esquives: C.esquives | 0 } : null; });
         const essai = async (tirage, n) => { const L = []; for (let k = 0; k < n; k++) { if (!(await tour())) break; const h0 = await hero(); await p.evaluate(t => { Math.random = () => t; }, tirage); await toucherMi('Esquive'); const pose = await hero(); L.push({ h0, pose }); if (!(await tour())) break; L[L.length - 1].h1 = await hero(); await p.evaluate(() => { Math.random = window.__rnd; }); if (L[L.length - 1].h1.esquives > h0.esquives || L[L.length - 1].h1.hp < h0.hp) break; } await p.evaluate(() => { Math.random = window.__rnd; }); return L; };
-        const ok1 = await essai(0.01, 3), d1 = ok1[ok1.length - 1] || {}, vu = await p.evaluate(() => window.__fl.slice());
+        await p.evaluate(() => { window.__oxMax = 0; window.__fl.length = 0; });
+        const ok1 = await essai(0.01, 3), d1 = ok1[ok1.length - 1] || {}, vu = await p.evaluate(() => window.__fl.slice()), ox1 = await p.evaluate(() => window.__oxMax);
         await p.waitForTimeout(100);
         dit(d1.h1 && d1.h1.esquives > d1.h0.esquives && d1.h1.hp === d1.h0.hp && !d1.h1.esquive && vu.some(t => /Esquivé/.test(t)), 'ÉCART', `${nom} · l'esquive, le tirage réussi : le coup passe à côté (« Esquivé », Constance ${d1.h0 && d1.h0.hp} → ${d1.h1 && d1.h1.hp}), et l'esquive tombe à son tour suivant`);
-        const ok2 = await essai(0.9, 3), d2 = ok2[ok2.length - 1] || {};
+        // 2.32 (D224) : l'esquive se voit au coup, et seulement là — au choix, ni mot « Esquive » sur la scène ni pas de côté ;
+        // au coup esquivé, « Esquivé » et un pas de côté ; au coup qui porte, le corps n'a pas bougé
+        dit(!vu.some(t => t.trim() === 'Esquive') && ox1 >= 12, 'ÉCART', `${nom} · l'esquive au coup : au choix, rien sur la scène ; au coup, « Esquivé » et un pas de côté (${ox1.toFixed(0)} points)`);
+        await p.evaluate(() => { window.__oxMax = 0; window.__fl.length = 0; });
+        const ok2 = await essai(0.9, 3), d2 = ok2[ok2.length - 1] || {}, vu2 = await p.evaluate(() => window.__fl.slice()), ox2 = await p.evaluate(() => window.__oxMax);
+        dit(!vu2.some(t => t.trim() === 'Esquive') && ox2 < 1, 'ÉCART', `${nom} · l'esquive manquée : au choix comme au coup, le corps ne s'écarte pas (${ox2.toFixed(1)} point), aucun mot « Esquive »`);
         dit(d2.h1 && d2.h1.esquives === d2.h0.esquives && d2.h1.hp < d2.h0.hp && !d2.h1.esquive, 'ÉCART', `${nom} · l'esquive, le tirage manqué : le coup porte (Constance ${d2.h0 && d2.h0.hp} → ${d2.h1 && d2.h1.hp})`);
         const fe = await p.evaluate(() => { clearInterval(window.__veille); return window.__foeEsq; });
         dit(!fe, 'ÉCART', `${nom} · l'esquive : une chimère n'esquive jamais (${fe} relevé(s))`);

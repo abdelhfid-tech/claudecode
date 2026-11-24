@@ -299,6 +299,16 @@
     sack: { w: 12, h: 10, fw: 10, fh: 4, draw(c) { c.fillStyle = '#c8b48a'; c.beginPath(); c.ellipse(6, 6, 5, 4, 0, 0, 6.3); c.fill(); R(c, '#a8946c', 5, 0, 2, 3); R(c, '#dccaa2', 3, 4, 2, 2); } },
     crate: { w: 12, h: 12, fw: 12, fh: 6, draw(c) { R(c, '#8b6a45', 0, 0, 12, 12); R(c, '#6a4d30', 0, 0, 12, 1); R(c, '#6a4d30', 0, 11, 12, 1); R(c, '#6a4d30', 0, 0, 1, 12); R(c, '#6a4d30', 11, 0, 1, 12); R(c, '#a8845a', 2, 5, 8, 1); } },
     camel: { w: 30, h: 20, fw: 24, fh: 6, draw(c) { c.fillStyle = '#b08a55'; c.beginPath(); c.ellipse(15, 13, 11, 5, 0, 0, 6.3); c.fill(); c.beginPath(); c.ellipse(13, 8, 4, 4, 0, 0, 6.3); c.fill(); R(c, '#b08a55', 23, 3, 3, 9); R(c, '#b08a55', 24, 1, 5, 3); R(c, '#8e6d40', 6, 16, 18, 3); R(c, '#9e2b25', 9, 6, 8, 3); R(c, '#d9b45a', 9, 9, 8, 1); } },
+    // 2.32 — les bêtes qui marchent (gens.js) : de profil, tournées vers la droite (le moteur les retourne) ; o.f, la foulée (0 à 3) ;
+    // o.charge, des ballots unis sur une couverture unie (ni motif, ni lettre, ni or). Jamais posées sur une carte : fw/fh à 0.
+    b_chameau: { w: 32, h: 25, fw: 0, fh: 0, draw(c, r, o) { o = o || {}; const f = o.f | 0, s = [[0, 0], [1, -1], [0, 0], [-1, 1]][f], B = '#b08a55', S = '#8e6d40', L = '#c4a06a';
+      R(c, S, 9 + s[1], 15, 2, 9); R(c, S, 21 + s[0], 15, 2, 9); R(c, '#a07c4a', 12 + s[0], 15, 2, 9); R(c, '#a07c4a', 24 + s[1], 15, 2, 9); // les jambes : loin, plus sombres
+      c.fillStyle = B; c.beginPath(); c.ellipse(16, 13, 10, 5, 0, 0, 6.3); c.fill(); c.beginPath(); c.ellipse(14, 8, 5, 4.5, 0, 0, 6.3); c.fill();
+      c.fillStyle = '#9c7848'; c.beginPath(); c.ellipse(16, 16, 8, 2, 0, 0, 6.3); c.fill(); R(c, L, 10, 6, 6, 1);
+      c.fillStyle = B; c.beginPath(); c.moveTo(23, 12); c.lineTo(26, 12); c.lineTo(29, 4); c.lineTo(26, 3); c.fill(); R(c, B, 26, 2, 5, 3); R(c, '#a07c4a', 30, 3, 2, 2); R(c, S, 26, 1, 1, 1); R(c, '#2a1c14', 28, 3, 1, 1);
+      R(c, S, 5, 11, 2, 5);
+      if (o.charge) { R(c, '#6f4a30', 9, 8, 11, 3); R(c, '#cdb68c', 6, 9, 6, 6); R(c, '#a8916a', 6, 11, 6, 1); R(c, '#c2a97c', 17, 9, 6, 6); R(c, '#a08a62', 17, 12, 6, 1); R(c, '#6b5537', 9, 9, 1, 6); R(c, '#6b5537', 20, 9, 1, 6); }
+    } },
     mast: { w: 44, h: 70, fw: 6, fh: 4, draw(c) { R(c, '#6b4a2e', 21, 0, 3, 70); R(c, '#8b6a45', 21, 0, 1, 70); R(c, '#6b4a2e', 2, 8, 40, 2); c.fillStyle = '#e9e2d0'; c.beginPath(); c.moveTo(3, 10); c.lineTo(41, 10); c.quadraticCurveTo(44, 30, 38, 44); c.lineTo(6, 44); c.quadraticCurveTo(0, 30, 3, 10); c.fill(); c.fillStyle = '#cfc4a8'; for (let x = 8; x < 40; x += 7) c.fillRect(x, 11, 1, 33); R(c, '#2f6f4f', 24, 1, 8, 4); } },
     chain: { w: 16, h: 8, fw: 0, fh: 0, draw(c) { c.strokeStyle = '#555c66'; c.lineWidth = 1; for (let i = 0; i < 3; i++) { c.strokeRect(1.5 + i * 5, 2.5, 4, 3); } } },
     throne: { w: 28, h: 38, fw: 24, fh: 8, draw(c) { R(c, '#7a5a1e', 4, 0, 20, 30); R(c, '#d9b45a', 6, 2, 16, 26); R(c, '#8e2f2a', 8, 6, 12, 18); R(c, '#e7d9a8', 12, 0, 4, 3); R(c, '#d9b45a', 2, 22, 5, 14); R(c, '#d9b45a', 21, 22, 5, 14); R(c, '#a53c33', 7, 24, 14, 6); R(c, '#7a5a1e', 4, 30, 20, 8); R(c, '#2d6e8e', 13, 9, 2, 2); } },

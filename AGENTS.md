@@ -262,7 +262,13 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   les dunes et la steppe, plus nombreuses loin des routes ; leur contact ouvre un combat dont on peut fuir (`D.FUITE`) ; aucune
   autre récompense que celle d'une victoire. **Les brigands** : loin des routes, une embuscade au plus par traversée, qui lance
   `Tr.raid` avec `embuscade` — la parole avec le chef, puis La Razzia (racine : `avidite`) —, sans ce qui suppose une caravane
-  (ni caravanier, ni renforts, ni part à servir, ni mise à rendre) ; des gens de fiction, sans tribu ni peuple. **Le voyageur** :
+  (ni caravanier, ni renforts, ni part à servir, ni mise à rendre) ; des gens de fiction, sans tribu ni peuple. Depuis la 2.32 (D224 ; le décideur, 24 novembre : « On ne voit pas les
+  pillards il faut quand même que le combat soit visuellement justifiée » ; « À l'écart dans le combat »), **on les voit** :
+  quatre hommes arrivent en marchant et barrent la piste (`Mo.embuscade`, `poserPillards`), le visage sous le chèche, une arme
+  ordinaire, des couleurs de terre (`Tr.PILLARDS`), deux chameaux chargés derrière eux (`gens.js`, `b_chameau`) ; le chef
+  (`_pillards_chef`) parle avec sa silhouette ; la parole perdue, La Razzia se lève du milieu d'eux (une image, `I.gens.lever`),
+  puis le combat, où ils se tiennent à l'écart, au bord de la scène (`temoins`, `battle.js`) : jamais dans `C.all`, jamais une
+  cible ; à la fin, ils s'en vont avec les bêtes. Sans place pour eux, l'embuscade reste dite par le texte. **Le voyageur** :
   une fois par traversée, peut-être, un homme de fiction sans nom (« Un voyageur »), assis et accablé (`accable`) dans le désert,
   loin des villes, avec un visage ; A devant lui ouvre un pourparler dont une manche porte le Désespoir (`noir_desespoir`, on
   lui répond) ; apaisé, il se relève et reprend la route ; sinon, **L'Abandon** (`abandon`, une chimère commune de racine
@@ -351,7 +357,11 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   la cible désignée d'emblée — la dernière visée par le groupe ; chaque pas du combat a son « ◂ Retour », et B revient d'un
   cran ; l'Esquive (`D.ESQUIVE`) et Fuir rejoignent la Garde (l'outil « Se protéger ») ; Fuir, d'un combat de rencontre
   seulement (`opts.fuite`), rend la carte, et la chimère poursuit : à pied elle rattrape, en courant on la distance
-  (`D.FUITE`, `rodeurs.js`) ; Éclairer est la première des Vertus. Nombres et textes de l'agent, à valider (D208).
+  (`D.FUITE`, `rodeurs.js`) ; Éclairer est la première des Vertus. Nombres et textes de l'agent, à valider (D208). Depuis la 2.32 (D224 ; le décideur, 24 novembre : « l'esquive doit être
+  appliquée au moment de recevoir le coup pas au moment où on sélectionne l'esquive » ; son choix : « Commande, effet au
+  coup »), l'esquive se choisit comme avant et son tirage ne change pas, mais rien ne paraît sur la scène au choix (l'ordre
+  se lit sur la rangée) : elle se voit au coup, quand la chimère arrive au bout de son élan — un pas de côté, le coup dans le
+  vide, « Esquivé » (`esquiver`, `battle.js`).
   `v2/docs/architecture.md`, « Les commandes du combat ». Contrôles : `manette.js`, `doigt.js`, `descente.js`, `progression.js`.
 - Dans la 2.x (2.20), le temps volé et la famille de la ghafla (proposition validée par le décideur le 20 novembre, « Oui » ;
   D210) : des attaques de chimères qui prennent du temps plutôt que de la Constance — le tour recule, la Niyya baisse, le

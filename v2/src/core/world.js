@@ -92,6 +92,7 @@
     $('#ui').style.setProperty('--mini', (W.map.mini ? ((27 + W.map.h + 6) / G.PH * 100).toFixed(1) : '14') + '%'); // les annonces s'empilent sous la mini-carte
     if (I.rodeurs) I.rodeurs.arme(); // un labyrinthe de la noosphère arme son chrono
     if (I.trafic) I.trafic.arme(); // 2.23 : les quartiers de la Cité ont leurs voitures (trafic.js)
+    if (I.gens) I.gens.arme(); // 2.32 : les bêtes d'une carte (gens.js) ; celles d'une rencontre de la route ne restent pas
     if (I.monde) I.monde.arme(); // 2.30 (D222) : sur la route, le voyageur de la traversée, s'il y en a un (monde.js)
   };
   W.uncache = function () { delete mapCache[W.mapKey]; };
@@ -457,6 +458,7 @@
     } else { W.dest = null; if (!p.scripted) p.moving = false; p.court = false; }
     W.npcs.forEach(n => { if (n.pas) avancerPas(n, dt); }); // le pas de côté va jusqu'au bout, même si un récit commence
     if (I.trafic) I.trafic.tic(dt); // 2.23 : les voitures des quartiers roulent, et s'arrêtent devant qui se tient sur leur voie
+    if (I.gens) I.gens.maj(dt); // 2.32 : les bêtes qui marchent (gens.js)
     if (can && I.circuit) I.circuit.tic(dt); // 2.27 : au premier passage au circuit, Sâlim arrive en moto (circuit.js)
     if (can && I.passages) I.passages.tic(dt); // 2.28 (D218) : la rue et l'ascenseur, à pied (passages.js)
     if (can && I.monde) I.monde.tic(dt); // 2.30 (D222) : les brigands, le voyageur, sur la route (monde.js)
@@ -757,6 +759,7 @@
     W.foes.forEach(f => { if (!f.done && f.map === m.id && f.placed) list.push({ y: f.y, f }); });
     W.chests.forEach(ch => { if (ch.map === m.id && ch.placed) list.push({ y: ch.y, ch }); });
     if (I.trafic) I.trafic.lister(list, cx, cy); // 2.23 : les voitures qui roulent
+    if (I.gens) I.gens.lister(list, cx, cy); // 2.32 : les bêtes qui marchent
     for (let i = W.party.length - 1; i >= 1; i--) { const tr = W.suiveur(i); if (tr) list.push({ y: tr[1] - 0.1, fol: i, tr }); }
     if (!W.passager) list.push({ y: W.player.y, p: true }); // (2.28 : sur un manège, Idris est dans sa nacelle, sa chaise ou sa tasse — gfx.js)
     const bete = W.saga.frame && I.oeuvres.animal(), btr = bete && W.suiveur(0, W.party.length * ECART + 8);
@@ -769,6 +772,7 @@
       else if (e.n) { const n = e.n; if (n.ph === undefined) n.ph = (I.hash((n.id || n.name || '') + '|' + (n.map || '')) >>> 0) % 628 / 100; /* chacun respire à son rythme */ drawChar(c, n.sheet, n.x - cx, n.y - cy, n.dir, n.moving, t + n.ph, n.aura, n.pose); if (n.aura) lights.push({ x: n.x - cx, y: n.y - cy - 14, r: 26, color: n.aura, a: 0.5 }); }
       else if (e.f) { const f = e.f, d = W.saga.enemies[f.group[0]] || I.common.enemies[f.group[0]], spr = G.enemy(d.art, d.hue, 1, 0), bob = Math.sin(t * 2.4 + f.ph) * 2.5, s = f.boss ? 34 : 26; c.fillStyle = 'rgba(20,12,30,.3)'; c.beginPath(); c.ellipse(f.x - cx, f.y - cy + 1, 8, 3, 0, 0, 6.3); c.fill(); c.globalAlpha = f.sonne > 0 ? 0.4 + Math.sin(t * 22) * 0.12 : 0.85 + (Math.sin(t * 5 + f.ph) + 1) * 0.06; /* 2.16 : un plancher de 0,85 — encore un peu de transparence : ce n'est pas une personne (exigence 6) */ c.drawImage(spr, f.x - cx - s / 2, f.y - cy - s - 3 + bob, s, s); c.globalAlpha = 1; if (f.rodeur && (f.voiles > 0 || f.tenue > 0) && (f.meute || f.tenue !== undefined)) { const nv = Math.ceil(f.meute ? f.voiles : f.tenue); c.fillStyle = f.sonne > 0 ? '#fff3c8' : `hsl(${d.hue},90%,78%)`; for (let i = 0; i < nv; i++) c.fillRect(Math.round(f.x - cx - nv * 2 + i * 4 + 1), Math.round(f.y - cy - s - 7 + bob), 2, 2); } /* ce qui rôde : ses voiles, et le tremblement de qui vient d'être frappé */ lights.push({ x: f.x - cx, y: f.y - cy - 14, r: 40, color: `hsl(${d.hue},90%,60%)`, a: 0.8 }); if (Math.random() < 0.15) G.spawn({ x: f.x - cx + (Math.random() - 0.5) * 16, y: f.y - cy - 8, vy: -14, vx: (Math.random() - 0.5) * 8, life: 1, size: 0.8, color: `hsl(${d.hue},100%,70%)`, type: 'glyph' }); }
       else if (e.car) I.trafic.dessiner(c, e.car, cx, cy, t, lights);
+      else if (e.gb) I.gens.dessiner(c, e.gb, cx, cy, t, lights);
       else if (e.ch) { const ch = e.ch; c.drawImage(G.obj('chest', { open: ch.open }), Math.round(ch.x) - 7 - cx, Math.round(ch.y) - 11 - cy); if (!ch.open) lights.push({ x: ch.x - cx, y: ch.y - cy - 6, r: 18, color: '#ffe08a', a: 0.5 }); }
       else if (e.bete) { const tr = e.tr, im = I.oeuvres.bete(e.bete, true), bx = Math.round(tr[0] - cx), by = Math.round(tr[1] - cy - im.height - 1 + Math.sin(t * 3) * 1.2); if (tr[2] === 2) { c.save(); c.translate(bx, 0); c.scale(-1, 1); c.drawImage(im, -Math.round(im.width / 2), by); c.restore(); } else c.drawImage(im, bx - Math.round(im.width / 2), by); c.globalAlpha = 1; lights.push({ x: bx, y: by + 6, r: 24, color: (I.sagas.coeur.animaux[e.bete] || {}).couleur || '#ffe9a8', a: 0.7 }); }
       else if (e.fol) { const tr = e.tr, mv = W.player.moving, pf = (W.player.parcours || 0) - e.fol * ECART, sh = W.sheets[e.fol]; if (mv && W.player.court) { const su = W._suit || (W._suit = {}); poudre(su[e.fol] || (su[e.fol] = {}), sh, tr[0], tr[1], tr[2], pf); } drawChar(c, sh, tr[0] - cx, tr[1] - cy, tr[2], mv, t + e.fol * 0.13, null, W.pose[e.fol] || (I.oeuvres.afflicted(W.party[e.fol]) ? 'accable' : null), null, W.player.court, pf); /* les suiveurs courent quand le meneur court : la même foulée, à leur place sur son chemin */ lights.push({ x: tr[0] - cx, y: tr[1] - cy - 14, r: 22, color: (lueur(W.saga.heroes[W.party[e.fol]].look) || '#ffe9a8'), a: 0.4 }); }

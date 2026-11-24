@@ -1207,6 +1207,21 @@ de l'agent, à valider.*
   embuscade: true })` (`trade.js`) : les lignes de `route.brigands` (`avant`, `apres`) remplacent ce qui suppose une caravane
   (les hommes qui rentrent à pied, le caravanier, les renforts, la part de chacun, la mise rendue) ; la parole, La Razzia (sa
   racine : `avidite`) et la promesse rapportée ne changent pas ; sans renforts, la parole se gagne au plus haut.
+- **Les pillards qu'on voit** (2.32, D224 ; le décideur, 24 novembre : « On ne voit pas les pillards il faut quand même que
+  le combat soit visuellement justifiée »). `Mo.embuscade` les pose avant la parole (`poserPillards`) : quatre hommes
+  (`Tr.PILLARDS`, `trade.js` : le chef d'abord — un sabre ; puis deux lances et un bâton ; le chèche, `litham`, qui ne laisse
+  voir que les yeux ; des couleurs de terre, ni or ni motif) arrivent en marchant (`W.walkTo`) et se tiennent en arc à trois
+  cases devant celui qui mène (`placesPillards` : sur sa ligne, sinon sur un autre côté ; ils viennent de plus loin sur la même
+  ligne si le sable le permet) ; deux chameaux chargés (`gens.js`, `b_chameau`, `charge`) s'arrêtent derrière eux. Le chef est
+  un PNJ (`_pillards_chef`) : `Tr.raid` lui donne la parole par son identifiant (`o.chef`), et `speaker()` sa silhouette. Sur la
+  route, la parole perdue ne lance plus le combat d'elle-même (`_raid_lutte`) : `o.lever` (`leverRazzia`) fait se lever La
+  Razzia du milieu d'eux — une image (`I.gens.lever`), qu'on ne touche pas, effacée quand le combat s'ouvre — puis le combat,
+  avec `temoins` : les quatre à l'écart, au bord gauche de la scène, derrière les chimères (`battle.js`, `TEMOIN_POS`), dessinés
+  de profil, tournés vers le combat, rangés dans `B.boites()` (le bandeau s'en écarte) et jamais dans `C.all` (aucune cible :
+  exigence 6). Ensuite `o.apaises` : vaincue la chimère, ils posent les armes (`triste`) ; la parole gagnée, le chef ne baisse
+  pas la tête. Puis `route.brigands.apres`, et ils s'en vont avec les bêtes (`partirPillards`) ; une carte qu'on charge les
+  retire (`route`). Le pillage d'une caravane dans un récit (`['raid']`) passe aussi `temoins` à son combat, sans rien poser
+  sur la carte du récit. Sans place pour eux, rien ne paraît, comme en 2.30 (`sans-place`, dans `Mo.journal`).
 - **Le voyageur** (`Mo.tic`) : une fois par traversée (`tire`), à la `apres`-ième case passée dans le désert à `loin` cases des
   villes au moins, une chance — `pres` fois moindre près d'une route ou d'un point d'eau ; `poserVoyageur` l'assied à `devant`
   cases devant celui qui mène (dans le désert, hors de l'interdit, loin des villes, hors de la route s'il se peut). C'est un
@@ -2008,6 +2023,11 @@ même si on sera poursuivi il faudra courir pour échapper au monstre. Éclairer
 - **L'Esquive** (`D.ESQUIVE`, `e.st.esquive`, `STN.esquive`). Jusqu'à son prochain tour, un coup d'une chimère porté sur
   lui seul passe à côté une fois sur deux, un coup porté sur tout le groupe une fois sur quatre (nombres de l'agent, à
   valider) : ni dégâts, ni les effets (`fx`) de ce coup-là pour lui ; « Esquivé », et un pas de côté, loin des chimères.
+  Depuis la 2.32 (D224 ; le décideur, 24 novembre : « l'esquive doit être appliquée au moment de recevoir le coup pas au
+  moment où on sélectionne l'esquive » ; « Commande, effet au coup ») : au choix, rien ne paraît sur la scène — ni mot qui
+  flotte, ni pas, ni traits derrière le héros ; l'ordre se lit sur sa rangée (« Esquive ») ; au coup, quand la chimère arrive
+  au bout de son élan, `esquiver` : le pas de côté (16 points), le coup qui tombe dans le vide là où il se tenait (son effet
+  dessiné à sa place première), « Esquivé », le bruit de l'air. Une attaque sans dégâts s'esquive au même instant.
   Un pari, quand la Garde est une certitude (elle divise les dégâts par deux, rend un point de Niyya et 8 de Sérénité) :
   l'Esquive ne rend pas de Niyya, et 4 de Sérénité. Un mouvement du corps, rien d'autre (exigence 17). Une chimère
   n'esquive jamais ; le joueur de test (`autoCmd`) ne s'en sert pas, pour que `bataille.js mesures` reste comparable.

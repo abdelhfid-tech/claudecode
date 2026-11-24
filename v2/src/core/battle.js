@@ -151,6 +151,7 @@
   /* ================= mise en place ================= */
   const FOE_POS = { 1: [[112, 146]], 2: [[80, 126], [154, 150]], 3: [[62, 122], [140, 128], [100, 156]], 4: [[54, 120], [128, 116], [86, 154], [164, 152]] };
   const HERO_POS = [[270, 120], [306, 132], [342, 144]];
+  const TEMOIN_POS = [[14, 104], [32, 112], [12, 124], [34, 132]];   // 2.32 : les témoins, à gauche, derrière les chimères (hors de la manette)
   // écran en hauteur : la fenêtre visible est plus étroite, les deux camps se rapprochent du centre
   const bx = x => G.view.w < G.PW ? Math.round(G.PW / 2 + (x - G.PW / 2) * I.clamp((G.view.w - 20) / 350, 0.5, 1)) : x;
   // 2.16 — en hauteur, les héros se resserrent autour du centre de leur groupe, et non du centre de l'écran : resserrés comme
@@ -233,6 +234,10 @@
     chef = opts.heros ? opts.heros[0] : null; // `heros` : un groupe prêté pour ce combat-là (le râwî seul, dans la noosphère intérieure)
     (opts.heros || W.party).forEach((x, i) => C.all.push(mkHero(x, i)));
     const nH = C.all.length; opts.group.forEach((id, i) => C.all.push(mkFoe(id, i, opts.group.length, nH)));
+    // 2.32 (D224 ; le décideur, 24 novembre : « il faut quand même que le combat soit visuellement justifié ») — `temoins` : des
+    // hommes de fiction (les pillards que La Razzia tient) se tiennent à l'écart, au bord de la scène, derrière les chimères.
+    // Ils ne sont pas du combat : jamais dans C.all, aucune cible (exigence 6 : on ne frappe jamais un homme).
+    C.temoins = (opts.temoins || []).slice(0, TEMOIN_POS.length).map((look, i) => ({ look, x0: TEMOIN_POS[i][0], y: TEMOIN_POS[i][1], ph: i * 1.7 }));
     C.all.forEach(e => { e.ct = 1000 / eff(e, 'spd') * (0.6 + Math.random() * 0.4) * (e.side === 'foe' ? 1.15 : 1) * (e.gear && e.gear.prime ? 0.55 : 1); });
     if (first) { I.audio.sfx('glitch'); G.flash('#fff'); await S.fade('out', 220); }
     I.setScene(B.scene); B.active = true; G.clearParts(); G.amb = { kind: 'noos', rate: 5, hue, n: 0 };
@@ -602,7 +607,10 @@
     if (cmd.type === 'guard') { e.st.garde = 1; e.niyya = Math.min(5, e.niyya + 1); e.sakina = Math.min(100, e.sakina + 8); fx('guard', e, e.color); floater(e, I.t('Garde'), 'info'); I.audio.sfx('tek'); await I.sleep(420); return; }
     // 2.19 — l'esquive : un mouvement du corps, rien d'autre (exigence 17) ; jusqu'à son prochain tour, un coup peut passer à
     // côté de lui (D.ESQUIVE). Un pari, quand la garde est une certitude : ni Niyya, un peu de Sérénité.
-    if (cmd.type === 'esquive') { e.st.esquive = 1; e.sakina = Math.min(100, e.sakina + 4); floater(e, I.t('Esquive'), 'info'); I.audio.sfx('move'); await tween(e, 'ox', 6, 90); await tween(e, 'ox', 0, 160); await I.sleep(200); return; }
+    // 2.32 (D224 ; le décideur, 24 novembre : « l'esquive doit être appliquée au moment de recevoir le coup pas au moment où
+    // on sélectionne l'esquive ») : au choix, rien ne paraît sur la scène — l'ordre pris se lit sur sa rangée (« Esquive ») ;
+    // l'esquive se voit au coup, et seulement là (plus bas, `esquiver`).
+    if (cmd.type === 'esquive') { e.st.esquive = 1; e.sakina = Math.min(100, e.sakina + 4); await I.sleep(260); return; }
     // 2.19 — la fuite : le mot en bas (2.17), les nôtres s'éloignent, et le combat se referme (run, partir)
     if (cmd.type === 'fuite') {
       banner(I.t('Vous fuyez. {nom} vous poursuit : courez !', { nom: I.esc(C.nom0 || '') }), 1700, false, 'speech foe'); I.audio.sfx('roll');
@@ -632,12 +640,14 @@
     // voit quand le coup arrive : « Esquivé », un pas de côté, loin des chimères.
     const evites = !hero && (sk.target === 'foe' || sk.target === 'foes') ? targets.filter(t => t.side === 'hero' && t.st.esquive && Math.random() < ((D.ESQUIVE || {})[sk.target === 'foe' && targets.length === 1 ? 'seul' : 'groupe'] || 0)) : [];
     if (evites.length) targets = targets.filter(t => !evites.includes(t));
-    const esquiver = () => { evites.splice(0).forEach(t => { floater(t, I.t('Esquivé'), 'buff'); C.esquives = (C.esquives || 0) + 1; tween(t, 'ox', 14, 110).then(() => tween(t, 'ox', 0, 300)); }); };
+    // 2.32 (D224) : au moment où la chimère arrive au bout de son élan, celui qui esquive s'écarte d'un pas, et le coup tombe
+    // dans le vide, là où il se tenait — « Esquivé », le bruit de l'air.
+    const esquiver = () => { const n = evites.length; evites.splice(0).forEach(t => { floater(t, I.t('Esquivé'), 'buff'); C.esquives = (C.esquives || 0) + 1; fx(sk.anim || (sk.el === 'fer' ? 'slash' : 'dark'), { x: t.x, ox: 0, y: t.y, size: t.size, side: t.side }, col, e); tween(t, 'ox', 16, 90).then(() => I.sleep(260)).then(() => tween(t, 'ox', 0, 260)); }); if (n) I.audio.sfx('move'); };
     if (sk.pow) {
       for (let hI = 0; hI < hits; hI++) {
         targets = targets.filter(t => t.alive); if (!targets.length && !evites.length) break;
         if (geste) { e.geste = Object.assign({ t0: performance.now() }, geste); await I.sleep((G.FRAPPE.elan + G.FRAPPE.balai * 0.5) * 1000); } // le coup porte au milieu du balai
-        if (evites.length) { esquiver(); I.audio.sfx('move'); if (!targets.length) { await I.sleep(300); break; } }
+        if (evites.length) { esquiver(); if (!targets.length) { await I.sleep(300); break; } }
         if (!targets.length) break;
         for (const t of targets) strike(e, t, sk, mult, col);
         I.audio.sfx(sk.el === 'fer' ? (hero ? 'slash' : 'hit') : hero ? 'light' : 'dark');
@@ -873,6 +883,7 @@
     if (C.champ && C.champ.vue) { const k = I.rangs.cadre(C.champ); return [{ qui: 'champ', x: k.x, y: k.y, w: k.w, h: k.h }]; }
     const L = C.all.filter(e => e.side === 'hero' || (e.alive && e.fade > 0)).map(e => e.side === 'foe' ? { qui: e.name, camp: 'foe', x: e.x + e.ox - e.size / 2, y: e.y - e.size - 9, w: e.size, h: e.size + 6 } : { qui: e.name, camp: 'hero', x: e.x + e.ox - 16, y: e.y - 46, w: 32, h: 50 });
     if (C.bete) { const h0 = C.all.find(e => e.side === 'hero'), im = I.oeuvres.bete(C.bete); if (h0 && im) L.push({ qui: 'bete', x: h0.x + 26 - im.width / 2, y: h0.y - 60, w: im.width, h: im.height + 4 }); }
+    (C.temoins || []).forEach((m, i) => L.push({ qui: 'temoin' + i, camp: 'temoin', x: bx(m.x0) - 16, y: m.y - 46, w: 32, h: 50 })); // 2.32 : les témoins (aucun n'est une cible)
     return L;
   }
   B.boites = boites;
@@ -924,6 +935,9 @@
       if (C.champ && C.champ.vue) return I.rangs.dessine(C, c, t); // le champ de bataille, le temps d'un ordre ou d'un pas
       if (C.bg.couches) { c.drawImage(C.bg.couches.arr, 0, 0); rames(c, t); c.drawImage(C.bg.couches.av, 0, 0); } else { c.drawImage(C.bg, 0, 0); drawGrid(c, C.hue, t); } // la Cité : ses rames passent, ses joints ne défilent pas
       if (C.champ) I.rangs.masse(C, c, t); // nos rangs, derrière le groupe
+      // 2.32 (D224) : les témoins, à l'écart, tournés vers le combat — immobiles, un souffle seulement ; ombrés, plus loin que lui
+      (C.temoins || []).forEach(m => { const x = bx(m.x0), y = m.y; c.fillStyle = 'rgba(0,0,0,.3)'; c.beginPath(); c.ellipse(x, y + 1, 10, 3, 0, 0, 6.3); c.fill();
+        c.globalAlpha = 0.92; c.drawImage(G.figure(m.look, 2, 0, null), x - 16, y - 46 + (Math.sin(t * 1.6 + m.ph) > 0.6 ? -1 : 0)); c.globalAlpha = 1; });
       const list = C.all.slice().sort((a, b) => a.y - b.y);
       for (const e of list) {
         const jx = e.shake > 0 ? (Math.random() - 0.5) * 4 : 0;
@@ -952,7 +966,6 @@
             c.drawImage(img, x - 16, y - 46 + bob);
             if (e.flash > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, e.flash) * 0.8; c.drawImage(img, x - 16, y - 46 + bob); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; }
             if (e.st.garde) { c.strokeStyle = e.color; c.lineWidth = 1; c.beginPath(); c.ellipse(x - 14, y - 24, 4, 20, 0, 0, 6.3); c.stroke(); }
-            if (e.st.esquive) { const o2 = Math.sin(t * 6 + e.x) > 0 ? 1 : 0; c.fillStyle = 'rgba(207,214,255,.6)'; [[-31, 4], [-24, 6], [-17, 4]].forEach(q => c.fillRect(x + 12 + o2, y + q[0], q[1], 1)); } // 2.19 : à l'esquive, le corps prêt à s'écarter
             lights.push({ x, y: y - 26, r: act ? 46 : 32, color: e.color, a: act ? 0.9 : 0.5 });
             if (G.D > 1 && look.rayon && e.alive) lights.push({ x: x - 3, y: y - 38, r: 15, color: look.rayon, a: 0.55 }); // son visage rayonne de la couleur qui lui est propre
             if (e.sakina >= 100 && Math.random() < 0.3) G.spawn({ x: x + (Math.random() - 0.5) * 18, y: y - 4, vy: -30, life: 0.9, size: 0.8, color: e.color, type: 'mote' });

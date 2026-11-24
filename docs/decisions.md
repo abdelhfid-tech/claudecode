@@ -2337,6 +2337,26 @@ pages privées de son compte.
   plafond, la règle anti-pari (on ne paie jamais pour courir, une activité payée ne rapporte rien, aucun hasard). Les textes
   sont écrits à la source en arabe (et vocalisés), en anglais et en japonais. Contrôle : `node v2/tools/cite.js activites`
   (un tour de grande roue payé avec les dirhams des récits, sans aucune prime ; le bandeau qui dit la bourse).
+- [ ] **D224. L'esquive se voit au coup ; les pillards se voient (version 2.32 ; demandes du décideur, 24 novembre) — texte
+  de l'agent, à valider.** Le décideur : « l'esquive doit être appliquée au moment de recevoir le coup pas au moment où on
+  sélectionne l'esquive » ; « On ne voit pas les pillards il faut quand même que le combat soit visuellement justifiée » (ce
+  qui tranche le point 9 de la 2.30). Ses choix : « Commande, effet au coup » ; « À l'écart dans le combat ». *L'esquive*
+  (`v2/src/core/battle.js`) : on la choisit à son tour, comme avant, et le tirage ne change pas (`D.ESQUIVE`) ; au choix, rien
+  ne paraît plus sur la scène (ni le mot « Esquive » qui flotte, ni le petit pas de côté, ni les traits derrière le héros) —
+  l'ordre pris se lit sur sa rangée ; l'esquive se voit au coup et seulement là : quand la chimère arrive au bout de son élan,
+  celui qui esquive s'écarte d'un pas, le coup tombe dans le vide là où il se tenait, « Esquivé ». *Les pillards*
+  (`v2/src/core/monde.js`, `trade.js`, `gens.js`) : à l'embuscade de la route, quatre hommes de fiction arrivent en marchant et
+  barrent la piste devant Idris, deux chameaux chargés de ballots derrière eux (dessinés par le jeu, des ballots unis, ni
+  motif, ni lettre, ni or) ; le visage sous le chèche (les yeux seuls), des couleurs de terre, une arme ordinaire (un sabre,
+  deux lances, un bâton) ; ni tribu, ni peuple, ni étendard. Le chef parle avec sa silhouette dans la boîte de dialogue. La
+  parole gagnée, il rend sans baisser la tête, et ils s'en vont avec les bêtes. La parole perdue, La Razzia se lève du milieu
+  d'eux, sous les yeux, puis le combat s'ouvre : les quatre se tiennent à l'écart, au bord gauche de la scène, derrière les
+  chimères, immobiles, jamais une cible (exigence 6 : `temoins`, hors de `C.all`) ; vaincue la chimère, ils posent les armes
+  et s'en vont. Le pillage d'une caravane dans un récit (`['raid']`) montre aussi les pillards à l'écart pendant le combat,
+  rien sur la carte du récit. Sans place pour eux, l'embuscade reste dite par le texte. Aucun texte ne change, sauf un nom :
+  « Un pillard » (écrit à la source dans les trois langues). Contrôles : `manette.js` (l'esquive : rien au choix, le pas au
+  coup), `monde.js` (5c : les pillards paraissent, le chef et sa silhouette, La Razzia qui se lève, les témoins du combat,
+  leur départ).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et
