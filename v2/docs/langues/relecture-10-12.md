@@ -87,3 +87,28 @@ qui est certain.
 - **Cases B, C, E gardées** : sur la page privée de validation, avant et après ; rien ne change sans le oui du décideur.
 - **Case D** : signalée au décideur, à part.
 - Puis les contrôles (`AGENTS.md`), et un nouveau numéro de version à chaque enregistrement qui change le jeu.
+
+## L'essai (25 novembre) : le prologue et la saga d'Abû Bakr
+
+649 textes par langue, en deux lots (`essai-1`, `essai-2`) ; un lecteur puis un contre-lecteur par lot.
+
+| Langue | Points relevés | Gardés | Fautes corrigées (A) | Réécritures proposées (B, C, E) | Signalés sans proposition | Histoire (D) |
+|---|---|---|---|---|---|---|
+| Français | 35 | 26 | 3 | 16 | 3 | 4 |
+| Arabe (et sa forme vocalisée) | 22 | 19 | 3, dont une de la forme vocalisée seule | 8 | 7 | 1 |
+| Anglais | 17 | 14 | 1 | 8 | 5, dont une faute dans une parole du registre | 0 |
+
+- **Ce qui est appliqué** : les sept fautes sûres (2.38 pour le français, 2.39 pour l'arabe et l'anglais).
+- **Ce qui attend le décideur** : tout le reste, sur la page privée de validation — une fiche par point, le français
+  au-dessus de chaque fiche arabe ou anglaise, un oui ou un non, un mot pour l'agent. Rien ne change sans son oui.
+- **Ce que l'essai apprend.**
+  - Le récit se lit bien dans les trois langues ; les lecteurs butent surtout sur les mots du jeu (en arabe :
+    « ثُلمة », « تهتك حُجُبه », « مَنَعة »), sur le Recueil, qui garde les mots des chroniques, et sur les cartons de
+    paroles citées, dont la ligne de source ne dit pas toujours qui parle (en arabe et en anglais).
+  - Les paroles citées gardent les défauts de l'édition lue (une voyelle, une abréviation, une coquille de la
+    traduction publiée) : on ne les corrige pas, on les signale, et c'est le registre des sources qui se corrige d'abord.
+  - Un contre-lecteur fait tomber environ un point sur cinq : une convention prise pour une faute, un choix du
+    glossaire, un point déjà devant le décideur.
+- **Le coût réel** : 1,3 million de jetons pour le français, 2,2 millions pour l'arabe et l'anglais ensemble (consignes
+  allégées : chercher dans le glossaire au lieu de le lire en entier). Le reste du jeu, neuf lots par langue, ne part
+  qu'après l'accord du décideur.
