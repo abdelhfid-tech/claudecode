@@ -2548,6 +2548,17 @@ pages privées de son compte.
   jeu (« عمر » est refusé en français, « Umar » en arabe). « جان » (Jean) reste un prénom. Une partie d'avant dont le râwî
   porterait un de ces noms se charge sans refus et reprend « Idris », comme pour un nom latin refusé. Preuve :
   `personnage.js` (sept noms de plus acceptés, dix-huit de plus refusés). Exigences 6, 8 et 18.
+- [x] **D236. Une musique plus rock pendant les activités des quartiers (version 2.45 ; le décideur, 25 novembre).** « Non
+  stop fais moi juste une musique plus rock lors des activités des quartiers ». (Le « non stop » abandonne la relecture
+  « dans le style du conte » demandée juste avant : rien n'en a été lancé.) Une piste nouvelle, `rock` (`music.js` : mi
+  mineur, 160 à la noire, guitare saturée en accords de quinte, basse en croches, batterie, un chant pentatonique en trois
+  parties), composée pour le jeu, sans voix ni thème repris (exigence 9), et un timbre nouveau, `crunch` (`base.js`,
+  `D.WAVES`). Elle joue pendant la borne de la salle de jeux, pendant un tour de grande roue, de chaises volantes ou de
+  tasses, et pendant les courses (le tour en moto avec Sâlim, les cinq circuits), par-dessus le moteur ; en sortant, la
+  musique du lieu revient. Elle ne joue ni en marchant dans les quartiers, ni devant l'écran géant, ni à l'étal (choix de
+  l'agent, à valider). Tempo, saturation et volumes sont de l'agent : à juger à l'oreille par le décideur. Preuve :
+  `cite.js` (la piste voulue pendant chaque activité, puis celle du lieu). Cela remplace, pour la course, « sans voix ni
+  musique » (D216).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

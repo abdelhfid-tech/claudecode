@@ -264,6 +264,8 @@
     if (sg && sg.style.top !== sous) sg.style.top = sous;
   }
   AC.abandon = function () { const K = AC.K; if (!K) return; if (K.resoudre) { const f = K.resoudre; K.resoudre = null; f({ quitte: true }); } if (K.attente) K.attente(true); };
+  // (2.45, D236) la piste des activités : pendant la borne et un tour de manège ; en sortant, la musique du lieu revient
+  const rock = () => { if (D.TRACKS.includes('rock')) I.audio.music('rock'); };
   async function jouer(K) {
     const prev = I.scene, mark = I.input.mark(), box = $('#course'); let res = null;
     K.mode = 'compte'; K.compte = 2.6; K.pause = false; AC.K = K; box.classList.add('borne');
@@ -276,7 +278,7 @@
     try {
       await S.fade('out', 240);
       I.setScene(AC.scene); $('#hud').hidden = true; box.querySelector('.bilan').hidden = true; box.hidden = false; hud(K);
-      G.clearParts(); G.amb = { kind: 'brume', rate: 0, n: 0 };
+      G.clearParts(); G.amb = { kind: 'brume', rate: 0, n: 0 }; rock();
       await S.fade('in', 240);
       const f = await fin;
       if (f.quitte) res = { quitte: true };
@@ -293,6 +295,7 @@
       box.hidden = true; box.classList.remove('fini', 'borne', 'pause'); box.querySelector('.bilan').hidden = true; AC.K = null; I.input.clearHeld(); I.input.aTenu = false; I.input.joyAngle = null;
       I.setScene(prev === AC.scene ? W : prev); G.clearParts();
       if (W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; W.hud(); W.stop(); W.updateCam(true); }
+      I.audio.back();
       try { await S.fade('in', 260); } catch (e) { /* idem */ }
     }
     return res;
@@ -369,12 +372,12 @@
       W.stop(); I.input.clearHeld();
       if (!essayer(A.outil)) return;
       if (!(await payer(id))) return;
-      S.hideDialog(); AC.journal.push({ quoi: 'monte', id });
+      S.hideDialog(); AC.journal.push({ quoi: 'monte', id }); rock();
       await rouler(id, o, M, A.duree || 10);
       fait = true; const a = AC.etat(); a.tours[id] = (a.tours[id] | 0) + 1; I.save.store(); finEssai(A.outil);
       AC.journal.push({ quoi: 'tour', id });
       if (id !== 'roue') await ligne(lire((textes().maneges || {})[id], a.tours[id]));
-    } finally { S.depth--; S.hideDialog(); AC.occupe = false; AC.vue = null; W.passager = false; if (o) { if (o.angle !== undefined) { o.decal = o.angle - W.t * M.vit; delete o.angle; } delete o.passager; } }
+    } finally { I.audio.back(); S.depth--; S.hideDialog(); AC.occupe = false; AC.vue = null; W.passager = false; if (o) { if (o.angle !== undefined) { o.decal = o.angle - W.t * M.vit; delete o.angle; } delete o.passager; } }
     if (fait) W.checkpoint();
   };
   async function rouler(id, o, M, duree) {

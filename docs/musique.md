@@ -102,6 +102,7 @@ Les pistes marquées ◆ portent la couleur arabo-andalouse.
 | `espoir` | ré majeur, puis fa majeur | 96 | Le thème s'ouvre : flûte seule, puis une tierce plus haut avec cuivres, cordes et harpe. |
 | `lame` | ré, quartes et quintes à nu | 80 | Une lame se forge : choral de cuivres, enclume ; la tierce majeure n'arrive qu'au dernier accord. Huit mesures. |
 | `rencontre` | la majeur | 84 | Un soir de 2084 : la boîte à musique pose la question et reste sur la dominante, le roseau répond ; sous-dominante mineure. |
+| `rock` | mi mineur | 160 | Les activités des quartiers (2.45, D236) : guitare saturée en accords de quinte (étouffés et syncopés, puis en croches droites), basse en croches, batterie ; le chant sur la gamme pentatonique, trois parties de huit mesures (A, B, A'). La tonalité de `cite`, pour passer de l'une à l'autre sans heurt. Joue pendant la borne, un tour de manège et les courses ; en sortant, `I.audio.back()` rend la musique du lieu. |
 
 ## Format
 
@@ -124,6 +125,11 @@ de la carte de victoire ; posé pendant que `victoire` joue, il veut dire « on 
 d'avant reprend dès la fin de la fanfare, ou aussitôt si la boucle douce a commencé.
 
 ## Timbres : ce qui a changé
+
+- **`crunch` (2.45, D236)** : la guitare saturée de la piste `rock`. Deux dents de scie désaccordées, écrêtées par une
+  courbe en tangente hyperbolique (`ecrete`, `base.js`), puis un passe-bas qui tient lieu de haut-parleur. Son niveau
+  propre (`LEVEL.crunch`) et les volumes de la piste sont réglés par `tools/mesure-musique.js` : `rock` sort au niveau
+  moyen de `cite` (−20,8 dB). Aucun timbre vocal (exigence 9).
 
 - **Tables d'ondes.** Chaque timbre a un spectre fixe, comme un échantillon de console ; l'éclat de
   l'attaque est une seconde couche vite éteinte. Plus aucun filtre balayé note par note.

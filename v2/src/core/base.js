@@ -426,7 +426,9 @@
     return (c[key] = c.createPeriodicWave(re, im));
   }
   // niveau propre à chaque timbre : à `vol` égal, les timbres sonnent à peu près aussi fort (réglé par la mesure, docs/musique.md)
-  const LEVEL = { pulse: 0.87, square: 0.59, triangle: 0.8, sine: 0.66, saw: 0.67, bass: 0.89, contra: 0.9, pluck: 0.9, harp: 1.03, bell: 1.06, flute: 0.92, strings: 0.49, pad: 0.55, brass: 0.71, timp: 1.3 };
+  const LEVEL = { pulse: 0.87, square: 0.59, triangle: 0.8, sine: 0.66, saw: 0.67, bass: 0.89, contra: 0.9, pluck: 0.9, harp: 1.03, bell: 1.06, flute: 0.92, strings: 0.49, pad: 0.55, brass: 0.71, timp: 1.3, crunch: 0.66 };
+  // (2.45, D236) l'écrêtage de la guitare saturée : une courbe en tangente hyperbolique, calculée une fois par contexte
+  function ecrete(c) { if (c._ecrete) return c._ecrete; const n = 1024, k = new Float32Array(n); for (let i = 0; i < n; i++) k[i] = Math.tanh(2.6 * (i / (n - 1) * 2 - 1)); return (c._ecrete = k); }
   function hit(c, out, t, vol, hz, dur, type, q) {
     const n = c.createBufferSource(), g = c.createGain(), f = c.createBiquadFilter(); n.buffer = noiseBuf(c);
     f.type = type || 'bandpass'; f.frequency.value = hz; f.Q.value = q || 1.2;
@@ -453,6 +455,10 @@
       case 'square': o.type = 'square'; ads(0.008, 0.08, 0.72); vib = 0.004; break;
       case 'sine': o.type = 'sine'; ads(0.02); break;
       case 'saw': o.type = 'sawtooth'; src = lp(Math.min(3400, 1500 + f)); o.connect(src); ads(0.012); vib = 0.005; break;
+      case 'crunch': {                              // guitare saturée (2.45) : deux dents de scie désaccordées, écrêtées, puis le haut-parleur (un passe-bas)
+        o.type = 'sawtooth'; o.detune.value = -5; const pre = c.createGain(), sh = c.createWaveShaper(); pre.gain.value = 1.6; sh.curve = ecrete(c); sh.oversample = '2x';
+        o.connect(pre); osc2('sawtooth', 1, 6).connect(pre); pre.connect(sh); src = lp(Math.min(4200, 2000 + f * 2.5)); sh.connect(src); ads(0.004, 0.1, 0.82); rel = 0.05; vib = 0.004; break;
+      }
       case 'bass': o.setPeriodicWave(table(c, 'bass')); snap('sawtooth', 0.5, 0.07); ads(0.005, 0.12, 0.7); rel = 0.05; break;
       case 'contra': o.setPeriodicWave(table(c, 'contra')); snap('oud', 0.35, 0.05); ads(0.006, 0.3, 0.6); rel = 0.1; break;
       case 'pluck': o.setPeriodicWave(table(c, 'oud')); snap('sawtooth', 0.45, 0.06); decay(0.09, Math.min(dur + 0.3, 1.1), Math.min(dur + 0.45, 1.25)); break;

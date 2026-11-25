@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="ISNAD — JRPG rétro-HD en cinq sagas : les Compagnons après la mort du Prophète ﷺ.">
-<title>ISNAD 2.44</title>
+<title>ISNAD 2.45</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400&family=Amiri&family=Cinzel:wght@500;700&family=Reem+Kufi:wght@500;700&family=Share+Tech+Mono&family=Noto+Naskh+Arabic:wght@400;700&family=Amiri+Quran&display=swap">
 <style>
@@ -993,7 +993,7 @@ body.touch #course .tour, body.touch #course .rangs { font-size: max(.78em, 11px
 <div id="fade"></div>
 <div id="secours" hidden><p data-t>Le jeu semble arrêté.</p><button type="button" data-t>Reprendre au dernier objectif</button><small></small></div>
 <script>
-window.ISNAD_VERSION = "2.44 · 2026-11-25 19:49 UTC · 0d898ac+";
+window.ISNAD_VERSION = "2.45 · 2026-11-25 21:40 UTC · a4cd7d7+";
 window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","ADRESSE":"www.isnad-game.org","RESERVE":"Version bêta. La relecture historique et religieuse par un spécialiste reste à faire."};
 /* ==== src/core/defs.js ==== */
 /* ISNAD — définitions partagées (navigateur + validateur node). Source de vérité du schéma de données. */
@@ -1798,8 +1798,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
   // v2 — piliers de la Citadelle, moments de prière, pistes musicales
   D.PILLARS = { priere: { name: 'Prière', glyph: '◠' }, savoir: { name: 'Savoir', glyph: '✧' }, justice: { name: 'Justice', glyph: '⚖' }, lien: { name: 'Lien', glyph: '∞' } };
   D.PRAYERS = { fajr: 'Fajr · l’aube', dhuhr: 'Dhuhr · le midi', asr: "'Asr · l’après-midi", maghrib: 'Maghrib · le couchant', isha: "'Ishâ · la nuit" };
-  D.TRACKS = ['titre', 'chaine', 'medine', 'nuit', 'desert', 'camp', 'rome', 'palais', 'mer', 'noos', 'cite', 'citadelle', 'combat', 'boss', 'vice', 'victoire', 'deuil', 'espoir', 'conseil', 'lame', 'rencontre', 'silence'];
-  D.WAVES = ['pulse', 'square', 'triangle', 'saw', 'sine', 'pluck', 'harp', 'flute', 'strings', 'pad', 'brass', 'bass', 'contra', 'bell', 'timp', 'drums'];
+  D.TRACKS = ['titre', 'chaine', 'medine', 'nuit', 'desert', 'camp', 'rome', 'palais', 'mer', 'noos', 'cite', 'citadelle', 'combat', 'boss', 'vice', 'victoire', 'deuil', 'espoir', 'conseil', 'lame', 'rencontre', 'rock', 'silence'];
+  D.WAVES = ['pulse', 'square', 'triangle', 'saw', 'sine', 'pluck', 'harp', 'flute', 'strings', 'pad', 'brass', 'bass', 'contra', 'bell', 'timp', 'crunch', 'drums'];
 
   // poses des personnages : l'émotion se lit dans le corps — et, pour qui a un visage (pas un Compagnon), aussi sur son
   // visage (dessin : sprites.js). Les six d'avant, puis les attitudes de la 2.18 (D.ATTITUDES ; décision du décideur, 19
@@ -3861,7 +3861,9 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     return (c[key] = c.createPeriodicWave(re, im));
   }
   // niveau propre à chaque timbre : à `vol` égal, les timbres sonnent à peu près aussi fort (réglé par la mesure, docs/musique.md)
-  const LEVEL = { pulse: 0.87, square: 0.59, triangle: 0.8, sine: 0.66, saw: 0.67, bass: 0.89, contra: 0.9, pluck: 0.9, harp: 1.03, bell: 1.06, flute: 0.92, strings: 0.49, pad: 0.55, brass: 0.71, timp: 1.3 };
+  const LEVEL = { pulse: 0.87, square: 0.59, triangle: 0.8, sine: 0.66, saw: 0.67, bass: 0.89, contra: 0.9, pluck: 0.9, harp: 1.03, bell: 1.06, flute: 0.92, strings: 0.49, pad: 0.55, brass: 0.71, timp: 1.3, crunch: 0.66 };
+  // (2.45, D236) l'écrêtage de la guitare saturée : une courbe en tangente hyperbolique, calculée une fois par contexte
+  function ecrete(c) { if (c._ecrete) return c._ecrete; const n = 1024, k = new Float32Array(n); for (let i = 0; i < n; i++) k[i] = Math.tanh(2.6 * (i / (n - 1) * 2 - 1)); return (c._ecrete = k); }
   function hit(c, out, t, vol, hz, dur, type, q) {
     const n = c.createBufferSource(), g = c.createGain(), f = c.createBiquadFilter(); n.buffer = noiseBuf(c);
     f.type = type || 'bandpass'; f.frequency.value = hz; f.Q.value = q || 1.2;
@@ -3888,6 +3890,10 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       case 'square': o.type = 'square'; ads(0.008, 0.08, 0.72); vib = 0.004; break;
       case 'sine': o.type = 'sine'; ads(0.02); break;
       case 'saw': o.type = 'sawtooth'; src = lp(Math.min(3400, 1500 + f)); o.connect(src); ads(0.012); vib = 0.005; break;
+      case 'crunch': {                              // guitare saturée (2.45) : deux dents de scie désaccordées, écrêtées, puis le haut-parleur (un passe-bas)
+        o.type = 'sawtooth'; o.detune.value = -5; const pre = c.createGain(), sh = c.createWaveShaper(); pre.gain.value = 1.6; sh.curve = ecrete(c); sh.oversample = '2x';
+        o.connect(pre); osc2('sawtooth', 1, 6).connect(pre); pre.connect(sh); src = lp(Math.min(4200, 2000 + f * 2.5)); sh.connect(src); ads(0.004, 0.1, 0.82); rel = 0.05; vib = 0.004; break;
+      }
       case 'bass': o.setPeriodicWave(table(c, 'bass')); snap('sawtooth', 0.5, 0.07); ads(0.005, 0.12, 0.7); rel = 0.05; break;
       case 'contra': o.setPeriodicWave(table(c, 'contra')); snap('oud', 0.35, 0.05); ads(0.006, 0.3, 0.6); rel = 0.1; break;
       case 'pluck': o.setPeriodicWave(table(c, 'oud')); snap('sawtooth', 0.45, 0.06); decay(0.09, Math.min(dur + 0.3, 1.1), Math.min(dur + 0.45, 1.25)); break;
@@ -14794,6 +14800,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       await S.fade('out', 260);
       I.setScene(CI.scene); $('#hud').hidden = true; document.body.classList.add('en-course'); box.querySelector('.bilan').hidden = true; box.hidden = false; K.cam = null; hud(K);
       G.clearParts(); G.amb = { kind: K.def.nuit ? 'dust' : 'brume', rate: 3, n: 0 }; I.audio.moteur(true);
+      if (D.TRACKS.includes('rock')) I.audio.music('rock');   // (2.45, D236) la piste des activités, par-dessus le moteur ; I.audio.back() la rend au lieu
       await S.fade('in', 260);
       const fin = await arrive;
       if (fin.quitte) res = { quitte: true };
@@ -15106,6 +15113,8 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     if (sg && sg.style.top !== sous) sg.style.top = sous;
   }
   AC.abandon = function () { const K = AC.K; if (!K) return; if (K.resoudre) { const f = K.resoudre; K.resoudre = null; f({ quitte: true }); } if (K.attente) K.attente(true); };
+  // (2.45, D236) la piste des activités : pendant la borne et un tour de manège ; en sortant, la musique du lieu revient
+  const rock = () => { if (D.TRACKS.includes('rock')) I.audio.music('rock'); };
   async function jouer(K) {
     const prev = I.scene, mark = I.input.mark(), box = $('#course'); let res = null;
     K.mode = 'compte'; K.compte = 2.6; K.pause = false; AC.K = K; box.classList.add('borne');
@@ -15118,7 +15127,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
     try {
       await S.fade('out', 240);
       I.setScene(AC.scene); $('#hud').hidden = true; box.querySelector('.bilan').hidden = true; box.hidden = false; hud(K);
-      G.clearParts(); G.amb = { kind: 'brume', rate: 0, n: 0 };
+      G.clearParts(); G.amb = { kind: 'brume', rate: 0, n: 0 }; rock();
       await S.fade('in', 240);
       const f = await fin;
       if (f.quitte) res = { quitte: true };
@@ -15135,6 +15144,7 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       box.hidden = true; box.classList.remove('fini', 'borne', 'pause'); box.querySelector('.bilan').hidden = true; AC.K = null; I.input.clearHeld(); I.input.aTenu = false; I.input.joyAngle = null;
       I.setScene(prev === AC.scene ? W : prev); G.clearParts();
       if (W.map) { const env = W.map.env; G.amb = { kind: env.particles, rate: env.rate, hue: env.hue, n: 0 }; $('#hud').hidden = false; W.hud(); W.stop(); W.updateCam(true); }
+      I.audio.back();
       try { await S.fade('in', 260); } catch (e) { /* idem */ }
     }
     return res;
@@ -15211,12 +15221,12 @@ window.ISNAD_PROMO = {"NOM":"ISNAD","SOUS_TITRE":"Chroniques des Compagnons","AD
       W.stop(); I.input.clearHeld();
       if (!essayer(A.outil)) return;
       if (!(await payer(id))) return;
-      S.hideDialog(); AC.journal.push({ quoi: 'monte', id });
+      S.hideDialog(); AC.journal.push({ quoi: 'monte', id }); rock();
       await rouler(id, o, M, A.duree || 10);
       fait = true; const a = AC.etat(); a.tours[id] = (a.tours[id] | 0) + 1; I.save.store(); finEssai(A.outil);
       AC.journal.push({ quoi: 'tour', id });
       if (id !== 'roue') await ligne(lire((textes().maneges || {})[id], a.tours[id]));
-    } finally { S.depth--; S.hideDialog(); AC.occupe = false; AC.vue = null; W.passager = false; if (o) { if (o.angle !== undefined) { o.decal = o.angle - W.t * M.vit; delete o.angle; } delete o.passager; } }
+    } finally { I.audio.back(); S.depth--; S.hideDialog(); AC.occupe = false; AC.vue = null; W.passager = false; if (o) { if (o.angle !== undefined) { o.decal = o.angle - W.t * M.vit; delete o.angle; } delete o.passager; } }
     if (fait) W.checkpoint();
   };
   async function rouler(id, o, M, duree) {
@@ -17978,6 +17988,34 @@ ISNAD.registerSaga({
       { wave: 'pad', vol: 0.27, pan: 0.2, notes: B(4, ...pads(p.replace('AM7', 'A').replace(/DM7/g, 'D'), 4, 'E3')) },
       { wave: 'triangle', vol: 0.3, notes: B(4, ...acc(p, 4, 'D2', { 4: '0/2.5 0/.5 0/1' })) },
       { wave: 'drums', vol: 0.36, notes: B(4, ...N('-/1 h/1 -/1 h/1', 16)) }
+    ] });
+  })();
+
+  /* ---------- rock : mi mineur — les activités des quartiers (2.45, D236). Guitare saturée en accords de quinte, basse en
+     croches, batterie ; le chant sur la gamme pentatonique, trois parties de huit mesures (A, B, A'). Composé pour le jeu :
+     ni thème repris, ni voix. La tonalité est celle de `cite`, pour que l'on passe de l'une à l'autre sans heurt. ---------- */
+  (function () {
+    const Q = { E: 'E3+B3+E4', G: 'G3+D4+G4', A: 'A3+E4+A4', C: 'C4+G4+C5', D: 'D4+A4+D5', B: 'B3+F#4+B4' };   // la quinte et l'octave, sans tierce
+    const LOW = { E: ['E2', 'E3'], G: ['G2', 'G3'], A: ['A2', 'A3'], C: ['C3', 'C4'], D: ['D3', 'D4'], B: ['B2', 'B3'] };
+    const pA = 'E E G A E E C D', pB = 'A A C D E G D B';
+    const chug = c => `${c}/.5 ${c}/.5 ${c}/.25 -/.25 ${c}/.5 ${c}/.5 ${c}/.5 -/.25 ${c}/.25 ${c}/.5`;   // étouffé, syncopé
+    const droit = c => N(`${c}/.5`, 8).join(' ');                                                         // huit croches droites
+    const riff = (p, f) => p.split(' ').map(k => f(Q[k]));
+    const basse = p => p.split(' ').map(k => { const r = LOW[k][0], o = LOW[k][1]; return `${r}/.5 ${r}/.5 ${r}/.5 ${r}/.5 ${r}/.5 ${r}/.5 ${o}/.5 ${r}/.5`; });
+    const kit = 'k+h/.5 h/.5 s+h/.5 h/.5 k+h/.5 k+h/.5 s+h/.5 h/.5', crash = 'k+c/.5 h/.5 s+h/.5 h/.5 k+h/.5 k+h/.5 s+h/.5 h/.5',
+      fill = 'k+h/.5 h/.5 s+h/.5 h/.5 s/.25 s/.25 m/.25 m/.25 s/.25 m/.25 m/.25 k/.25';
+    const tour = [crash, kit, kit, kit, kit, kit, kit, fill];
+    R('rock', { bpm: 160, beats: 96, voices: [
+      { wave: 'crunch', vol: 0.4, pan: 0.2, notes: B(4,
+        '-/4', '-/2 B4/.5 D5/.5 E5/1', 'G5/1.5 E5/.5 D5/1 B4/1', 'A4/.5 B4/.5 D5/1 E5/2',
+        '-/1 E5/.5 G5/.5 A5/1 G5/.5 E5/.5', 'D5/.5 E5/.5 G5/1 E5/2', 'C5/.5 E5/.5 G5/1 E5/.5 C5/.5 E5/1', 'D5/1 F#5/1 A5/1 B5/1',
+        'A5/.5 A5/.5 C6/1 A5/.5 G5/.5 E5/1', 'A5/.5 G5/.5 E5/.5 D5/.5 E5/2', 'G5/.5 G5/.5 C6/1 G5/.5 E5/.5 C5/1', 'D5/.5 F#5/.5 A5/1 D6/2',
+        'E6/1 D6/.5 B5/.5 G5/1 E5/1', 'G5/.5 B5/.5 D6/1 B5/.5 G5/.5 D5/1', 'A5/.5 F#5/.5 D5/.5 F#5/.5 A5/1 D6/1', 'B5/1 F#5/1 B4/.5 D#5/.5 F#5/.5 B5/.5',
+        'E5/.5 G5/.5 B5/1 A5/.5 G5/.5 E5/1', 'D5/.5 E5/.5 G5/.5 A5/.5 B5/2', 'G5/1 B5/.5 D6/.5 B5/1 G5/1', 'A5/.5 C6/.5 E6/1 C6/.5 A5/.5 E5/1',
+        'E5/.5 E5/.5 G5/.5 E5/.5 B5/1 G5/1', 'E6/1.5 D6/.5 B5/1 G5/1', 'C6/.5 B5/.5 G5/.5 E5/.5 C5/1 E5/1', 'D5/.5 F#5/.5 A5/.5 D6/.5 D6/1 B5/1') },
+      { wave: 'crunch', vol: 0.38, pan: -0.25, notes: B(4, ...riff(pA, chug), ...riff(pB, droit), ...riff(pA, chug)) },
+      { wave: 'bass', vol: 0.44, notes: B(4, ...basse(pA), ...basse(pB), ...basse(pA)) },
+      { wave: 'drums', vol: 0.46, notes: B(4, ...tour, ...tour, ...tour) }
     ] });
   })();
 })();

@@ -563,6 +563,7 @@
       await S.fade('out', 260);
       I.setScene(CI.scene); $('#hud').hidden = true; document.body.classList.add('en-course'); box.querySelector('.bilan').hidden = true; box.hidden = false; K.cam = null; hud(K);
       G.clearParts(); G.amb = { kind: K.def.nuit ? 'dust' : 'brume', rate: 3, n: 0 }; I.audio.moteur(true);
+      if (D.TRACKS.includes('rock')) I.audio.music('rock');   // (2.45, D236) la piste des activités, par-dessus le moteur ; I.audio.back() la rend au lieu
       await S.fade('in', 260);
       const fin = await arrive;
       if (fin.quitte) res = { quitte: true };

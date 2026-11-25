@@ -186,8 +186,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   enjeu, ni cote, ni droit d'entrée) et une prime positive ou nulle. Le circuit s'ouvre avant l'étape III de la découverte de
   l'Agrégor (2.25) : aucun de ses textes ne le nomme (le validateur le refuse) ; Sâlim dit « les écrans ». Le dernier maillon
   (`e1`) lit `_2084_salim` (posé par le moteur : Idris a couru avec Sâlim) : des retrouvailles, sinon la rencontre de
-  toujours ; l'étape V de la 2.25 ne change pas. Le bruit des moteurs est synthétisé (`base.js`, `A.moteur`), sans voix ni
-  musique. La partie garde `cite.course` (ce qu'a fait Sâlim, les circuits gagnés, le meilleur temps de chacun, des comptes ;
+  toujours ; l'étape V de la 2.25 ne change pas. Le bruit des moteurs est synthétisé (`base.js`, `A.moteur`), sans voix ;
+  depuis la 2.45 (D236), la piste `rock` joue pendant la course, la borne et les manèges, puis rend la musique du lieu. La partie garde `cite.course` (ce qu'a fait Sâlim, les circuits gagnés, le meilleur temps de chacun, des comptes ;
   valeur de départ dans `migrer`, le format reste le 2). `v2/docs/architecture.md`, « Sâlim et la course ». Contrôle :
   `node v2/tools/cite.js` (« CITÉ CONFORME » ; partie 15 ; `… course` : elle seule) ; un changement de la course repasse
   aussi `manette.js`, `loupe.js`, `partie.js`, `son.js` et `progression.js`.

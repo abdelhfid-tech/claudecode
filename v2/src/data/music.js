@@ -475,4 +475,32 @@
       { wave: 'drums', vol: 0.36, notes: B(4, ...N('-/1 h/1 -/1 h/1', 16)) }
     ] });
   })();
+
+  /* ---------- rock : mi mineur — les activités des quartiers (2.45, D236). Guitare saturée en accords de quinte, basse en
+     croches, batterie ; le chant sur la gamme pentatonique, trois parties de huit mesures (A, B, A'). Composé pour le jeu :
+     ni thème repris, ni voix. La tonalité est celle de `cite`, pour que l'on passe de l'une à l'autre sans heurt. ---------- */
+  (function () {
+    const Q = { E: 'E3+B3+E4', G: 'G3+D4+G4', A: 'A3+E4+A4', C: 'C4+G4+C5', D: 'D4+A4+D5', B: 'B3+F#4+B4' };   // la quinte et l'octave, sans tierce
+    const LOW = { E: ['E2', 'E3'], G: ['G2', 'G3'], A: ['A2', 'A3'], C: ['C3', 'C4'], D: ['D3', 'D4'], B: ['B2', 'B3'] };
+    const pA = 'E E G A E E C D', pB = 'A A C D E G D B';
+    const chug = c => `${c}/.5 ${c}/.5 ${c}/.25 -/.25 ${c}/.5 ${c}/.5 ${c}/.5 -/.25 ${c}/.25 ${c}/.5`;   // étouffé, syncopé
+    const droit = c => N(`${c}/.5`, 8).join(' ');                                                         // huit croches droites
+    const riff = (p, f) => p.split(' ').map(k => f(Q[k]));
+    const basse = p => p.split(' ').map(k => { const r = LOW[k][0], o = LOW[k][1]; return `${r}/.5 ${r}/.5 ${r}/.5 ${r}/.5 ${r}/.5 ${r}/.5 ${o}/.5 ${r}/.5`; });
+    const kit = 'k+h/.5 h/.5 s+h/.5 h/.5 k+h/.5 k+h/.5 s+h/.5 h/.5', crash = 'k+c/.5 h/.5 s+h/.5 h/.5 k+h/.5 k+h/.5 s+h/.5 h/.5',
+      fill = 'k+h/.5 h/.5 s+h/.5 h/.5 s/.25 s/.25 m/.25 m/.25 s/.25 m/.25 m/.25 k/.25';
+    const tour = [crash, kit, kit, kit, kit, kit, kit, fill];
+    R('rock', { bpm: 160, beats: 96, voices: [
+      { wave: 'crunch', vol: 0.4, pan: 0.2, notes: B(4,
+        '-/4', '-/2 B4/.5 D5/.5 E5/1', 'G5/1.5 E5/.5 D5/1 B4/1', 'A4/.5 B4/.5 D5/1 E5/2',
+        '-/1 E5/.5 G5/.5 A5/1 G5/.5 E5/.5', 'D5/.5 E5/.5 G5/1 E5/2', 'C5/.5 E5/.5 G5/1 E5/.5 C5/.5 E5/1', 'D5/1 F#5/1 A5/1 B5/1',
+        'A5/.5 A5/.5 C6/1 A5/.5 G5/.5 E5/1', 'A5/.5 G5/.5 E5/.5 D5/.5 E5/2', 'G5/.5 G5/.5 C6/1 G5/.5 E5/.5 C5/1', 'D5/.5 F#5/.5 A5/1 D6/2',
+        'E6/1 D6/.5 B5/.5 G5/1 E5/1', 'G5/.5 B5/.5 D6/1 B5/.5 G5/.5 D5/1', 'A5/.5 F#5/.5 D5/.5 F#5/.5 A5/1 D6/1', 'B5/1 F#5/1 B4/.5 D#5/.5 F#5/.5 B5/.5',
+        'E5/.5 G5/.5 B5/1 A5/.5 G5/.5 E5/1', 'D5/.5 E5/.5 G5/.5 A5/.5 B5/2', 'G5/1 B5/.5 D6/.5 B5/1 G5/1', 'A5/.5 C6/.5 E6/1 C6/.5 A5/.5 E5/1',
+        'E5/.5 E5/.5 G5/.5 E5/.5 B5/1 G5/1', 'E6/1.5 D6/.5 B5/1 G5/1', 'C6/.5 B5/.5 G5/.5 E5/.5 C5/1 E5/1', 'D5/.5 F#5/.5 A5/.5 D6/.5 D6/1 B5/1') },
+      { wave: 'crunch', vol: 0.38, pan: -0.25, notes: B(4, ...riff(pA, chug), ...riff(pB, droit), ...riff(pA, chug)) },
+      { wave: 'bass', vol: 0.44, notes: B(4, ...basse(pA), ...basse(pB), ...basse(pA)) },
+      { wave: 'drums', vol: 0.46, notes: B(4, ...tour, ...tour, ...tour) }
+    ] });
+  })();
 })();

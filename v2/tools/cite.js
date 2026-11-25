@@ -584,11 +584,13 @@ async function avancer(p, n = 120) {
         await E(() => window.__t.attendre(() => { const K = window.ISNAD.circuit.K; return K && K.mode === 'course' && K.t > 6; }, 20000));
         const rc = await E(() => window.__t.recouvreCourse()); await P.screenshot({ path: path.join(out, `course-1-${w}x${h}.png`) });
         const fin = await finCourse(120000); await P.waitForTimeout(700); await P.screenshot({ path: path.join(out, `podium-1-${w}x${h}.png`) });
-        const b = await E(() => ({ bilan: window.__t.textesCourse(), j: window.ISNAD.circuit.journal.filter(x => x.quoi === 'arrivee').pop(), rc: window.__t.recouvreCourse(), men: window.__t.menes }));
+        const b = await E(() => ({ bilan: window.__t.textesCourse(), j: window.ISNAD.circuit.journal.filter(x => x.quoi === 'arrivee').pop(), rc: window.__t.recouvreCourse(), men: window.__t.menes, piste: window.ISNAD.audio.wantTrack }));
         si(fin && b.j && b.j.gagne && b.j.prime > 0 && /prime/.test(b.bilan) && b.men.images > 100, `${nom} · le premier circuit mené ${mode === 'joy' ? 'au joystick et à A' : 'aux flèches et à Entrée'} jusqu’à l’arrivée : ${b.j && b.j.temps && b.j.temps.toFixed(1)} s, gagné ; « ${(b.bilan.match(/L’organisateur te remet[^.]*\./) || [''])[0]} »`, `${nom} · le premier circuit : ${JSON.stringify(b)}`, 'BLOQUÉ');
         si(!rc.L.length && !rc.efface && !b.rc.L.length && !b.rc.efface, `${nom} · la manette ne recouvre ni le chrono, ni le tour, ni le bilan`, `${nom} · la manette sur la course : ${JSON.stringify([rc, b.rc])}`, 'RECOUVERT');
         si(!PARI.test(b.bilan), `${nom} · le bilan de la course ne parle d’aucune mise`, `${nom} · une mise dans le bilan : ${b.bilan}`, 'ÉCART');
         await auMonde();
+        { const m = await E(() => ({ v: window.ISNAD.audio.wantTrack, l: window.ISNAD.audio.place }));   // (2.45, D236)
+          si(b.piste === 'rock' && m.v === m.l && m.l === 'cite', `${nom} · pendant la course, la piste « rock » ; revenu dans les quartiers, celle du lieu (« ${m.l} »)`, `${nom} · la musique de la course : ${JSON.stringify({ course: b.piste, apres: m })}`, 'MUSIQUE'); }
       }
     }
     const d1 = await E(() => window.ISNAD.trade.dirhams()), D0 = await E(() => window.ISNAD.D.CIRCUITS[0].prime);
@@ -754,9 +756,10 @@ async function avancer(p, n = 120) {
       const d0 = await E(() => window.ISNAD.trade.dirhams());
       await E(id => window.__t.zone(id), id); await P.waitForTimeout(250); await A(); const c = await choixVu(); await A();
       await E(() => window.__t.attendre(() => window.ISNAD.world.passager, 8000)); await P.waitForTimeout(1800);
-      const vu = await E(() => !!window.ISNAD.world.passager); await P.screenshot({ path: path.join(out, `activite-${id}-${w}x${h}.png`) });
+      const vu = await E(() => !!window.ISNAD.world.passager), pisteTour = await E(() => window.ISNAD.audio.wantTrack); await P.screenshot({ path: path.join(out, `activite-${id}-${w}x${h}.png`) });
       await E(id => window.__t.attendre(() => window.ISNAD.activites.journal.some(j => j.quoi === 'tour' && j.id === id), 30000), id); await avancer(P, 30);
-      const e = await E(() => ({ d: window.ISNAD.trade.dirhams(), a: window.__t.ac() }));
+      const e = await E(() => ({ d: window.ISNAD.trade.dirhams(), a: window.__t.ac(), v: window.ISNAD.audio.wantTrack, l: window.ISNAD.audio.place }));
+      si(pisteTour === 'rock' && e.v === e.l && e.l === 'cite', `${nom} · pendant le tour de ${id}, la piste « rock » ; descendu, celle du lieu (« ${e.l} »)`, `${nom} · la musique du tour de ${id} : ${JSON.stringify({ tour: pisteTour, apres: [e.v, e.l] })}`, 'MUSIQUE');   // (2.45, D236)
       si(vu && d0 - e.d === 2 && e.a.tours[id] === 1 && c && /2 dirhams/.test(c.prompt), `${nom} · un tour de ${id === 'chaises' ? 'chaises volantes' : 'tasses'} payé (2 dirhams), Idris sur son siège ; puis la pensée d’Idris`, `${nom} · ${id} : ${JSON.stringify({ vu, d0, e, c })}`);
     }
     // d. l'écran géant : assis, puis B le relève ; assis de nouveau, puis un pas
@@ -805,9 +808,11 @@ async function avancer(p, n = 120) {
       const repris = await E(t0 => ({ choix: window.__t.visible('#choice'), pause: window.ISNAD.activites.K.pause, avance: window.ISNAD.activites.K.t > t0 }), t0);
       await E(m => { if (!window.__t._borne) window.__t.menerBorne(m); window.ISNAD.debug.accelBorne = 5; }, mode);
       const fini = await E(() => window.__t.attendre(() => !document.querySelector('#course .bilan').hidden, 60000)); await P.waitForTimeout(600);
-      const b = await E(() => ({ bilan: document.querySelector('#course .bilan').textContent, j: window.ISNAD.activites.journal.filter(x => x.quoi === 'partie').pop(), rc: window.__t.recouvreBorne(), men: window.__t.borneMenee, a: window.__t.ac() }));
+      const b = await E(() => ({ bilan: document.querySelector('#course .bilan').textContent, j: window.ISNAD.activites.journal.filter(x => x.quoi === 'partie').pop(), rc: window.__t.recouvreBorne(), men: window.__t.borneMenee, a: window.__t.ac(), piste: window.ISNAD.audio.wantTrack }));
       await P.screenshot({ path: path.join(out, `borne-bilan-${w}x${h}.png`) });
       await E(() => { window.ISNAD.debug.accelBorne = 0; }); await A(); await avancer(P, 30);
+      { const m = await E(() => ({ v: window.ISNAD.audio.wantTrack, l: window.ISNAD.audio.place }));   // (2.45, D236)
+        si(b.piste === 'rock' && m.v === m.l && m.l === 'cite', `${nom} · pendant la borne, la piste « rock » ; la partie finie, celle du lieu (« ${m.l} »)`, `${nom} · la musique de la borne : ${JSON.stringify({ borne: b.piste, apres: m })}`, 'MUSIQUE'); }
       si(c && /Une partie à la borne : 2 dirhams/.test(c.prompt) && lecon.indexOf(LB) >= 0, `${nom} · la borne : « ${c && c.prompt} » ; la leçon de la borne dite (« ${LB}… »)`, `${nom} · la borne, le menu et la leçon : ${JSON.stringify({ c, lecon })}`);
       si(fini && b.j && b.j.score > 0 && b.j.prises > 0 && b.men.images > 100 && b.men.elans > 0 && b.a.borne.record === b.j.score && b.a.borne.parties === 1 && /Score/.test(b.bilan) && !PARI2.test(b.bilan),
         `${nom} · « Les lueurs » menées ${haut ? 'au joystick et à A' : 'aux flèches et à Entrée'} : score ${b.j && b.j.score} (${b.j && b.j.prises} lueurs, ${b.j && b.j.elans} élans, plus longue chaîne ${b.j && b.j.meilleure}), le meilleur gardé`, `${nom} · la borne : ${JSON.stringify(b)}`, 'BLOQUÉ');
