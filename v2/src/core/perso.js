@@ -34,28 +34,38 @@
   // sans accents, sans majuscules, apostrophes et traits d'union ramenés à une espace : « 'Abd ar-Rahmân » → « abd ar rahman »
   const plat = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[’'`ʿʾ‘\-\s]+/g, ' ').trim();
   P.propre = s => String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
+  // (2.44, D235) les mêmes gardes en écriture arabe : sans voyelles ni tatwîl, les ligatures défaites (« ﷲ »), les formes de
+  // l'alif, du yâ' et du tâ' ramenées à une seule — « اللّٰه », « أبو بكر », « مُحَمَّد » se lisent comme « الله », « ابو بكر », « محمد »
+  const platAr = s => String(s).normalize('NFKC').replace(/[\u064B-\u065F\u0670\u0640\u06D6-\u06ED]/g, '').replace(/[أإآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/[’'`ʿʾ‘\-\s]+/g, ' ').trim();
   const LETTRES = /^[\p{L}\p{M}’'ʿʾ\- ]+$/u, DEBUT = /^[\p{L}’'ʿʾ]/u;
   // le Nom divin employé seul (porté avec « 'Abd », c'est un prénom que l'on donne : il passe)
   const DIVIN = ['allah', 'dieu', 'le seigneur', 'seigneur', 'rabb', 'ar rabb', 'ilah', 'al ilah', 'god', 'ar rahman', 'al rahman', 'ar rahim', 'al quddus', 'as samad', 'al khaliq', 'ar razzaq', 'al ahad', 'al qayyum', 'al malik al mulk'];
+  const DIVIN_AR = ['الله', 'اله', 'الاله', 'رب', 'الرب', 'الرحمن', 'الرحيم', 'القدوس', 'الصمد', 'الخالق', 'الرزاق', 'الاحد', 'القيوم', 'مالك الملك'];   // porté avec « عبد », il passe
   // exigences 6 et 18 : la même garde que pour les combattants et les personnages
   const INTERDIT = /(^|[^a-zà-ÿ])(ibl[iî]s|satan|sh?a[iy]t[aâ]ne?s?|chayt[aâ]ne?s?|diables?|d[ée]mons?|d?jinns?)(?![a-zà-ÿ])/i;
+  const INTERDIT_AR = /(^| )(ال)?(ابليس|شيطان|شياطين|جن|جني|جنيه)( |$)/;   // sur le nom mis à plat (« جان », un prénom, passe)
   // (Proposé par l'agent, à confirmer par le décideur.) Dans ce jeu, ce nom ne désigne que le Prophète ﷺ, qui n'est jamais mis en scène.
   const RESERVE = ['muhammad', 'mohammad', 'mohammed', 'mohamed', 'muhammed', 'mouhammad', 'mouhamed', 'mahomet', 'mohamad', 'muhamad'];
+  const RESERVE_AR = ['محمد'];
   // les noms des héros et des maillons du jeu : un râwî qui s'appellerait comme eux brouillerait les dialogues
   // (l'histoire-cadre porte le nom du râwî lui-même, et son héros « idris » aussi : ceux-là ne comptent pas)
-  P.prisParLeJeu = function () { const L = {}; Object.keys(I.sagas).forEach(sid => { const s = I.sagas[sid], cadre = !!s.frame && !s.veillees;
-      if (!s.commun && !cadre) L[plat(s.name)] = 1; Object.keys(s.heroes || {}).forEach(h => { if (!(cadre && h === 'idris')) L[plat(s.heroes[h].name)] = 1; }); }); delete L['']; return L; };
+  // (2.44, D235 : le nom tel que chaque langue l'écrit — en lettres latines comme en arabe —, quelle que soit la langue du jeu)
+  P.prisParLeJeu = function () { const L = {}, G = I.langue;
+    const noter = nom => { if (typeof nom !== 'string' || !nom) return; const fr = G && G.fr ? G.fr(nom) : nom;
+      [nom, fr].concat(G && G.dans ? ['ar', 'en'].map(l => G.dans(l, fr)) : []).forEach(x => { if (typeof x === 'string' && x) { L[plat(x)] = 1; L[platAr(x)] = 1; } }); };
+    Object.keys(I.sagas).forEach(sid => { const s = I.sagas[sid], cadre = !!s.frame && !s.veillees;
+      if (!s.commun && !cadre) noter(s.name); Object.keys(s.heroes || {}).forEach(h => { if (!(cadre && h === 'idris')) noter(s.heroes[h].name); }); }); delete L['']; return L; };
   // → '' si le nom convient, sinon la raison, dite au joueur
   P.refus = function (brut) {
-    const nom = P.propre(brut), p = plat(nom);
+    const nom = P.propre(brut), p = plat(nom), a = platAr(nom);
     if (!nom) return I.t('Il lui faut un nom.');
     if (nom.length > MAX) return I.t('Seize signes au plus.');
     if (!LETTRES.test(nom) || !DEBUT.test(nom) || !p) return I.t('Des lettres seulement, avec au besoin une espace, une apostrophe ou un trait d’union.');
     if (nom === NOM) return '';
-    if (DIVIN.includes(p)) return I.t("Ce Nom n’appartient qu’à Allah. Porté avec « 'Abd », il devient un prénom.");
-    if (INTERDIT.test(nom) || INTERDIT.test(p)) return I.t('Ce nom ne se porte pas ici.');
-    if (RESERVE.includes(p)) return I.t('Dans ce jeu, ce nom ne désigne que le Prophète ﷺ : le râwî en porte un autre.');
-    if (P.prisParLeJeu()[p]) return I.t('Un personnage du jeu porte déjà ce nom : les dialogues s’y perdraient.');
+    if (DIVIN.includes(p) || DIVIN_AR.includes(a)) return I.t("Ce Nom n’appartient qu’à Allah. Porté avec « 'Abd », il devient un prénom.");
+    if (INTERDIT.test(nom) || INTERDIT.test(p) || INTERDIT_AR.test(a)) return I.t('Ce nom ne se porte pas ici.');
+    if (RESERVE.includes(p) || RESERVE_AR.includes(a)) return I.t('Dans ce jeu, ce nom ne désigne que le Prophète ﷺ : le râwî en porte un autre.');
+    const pris = P.prisParLeJeu(); if (pris[p] || pris[a]) return I.t('Un personnage du jeu porte déjà ce nom : les dialogues s’y perdraient.');
     return '';
   };
 

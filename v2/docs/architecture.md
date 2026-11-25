@@ -246,6 +246,13 @@ Une partie d'avant qui portait un ensemble ou des pièces (`profil.tenue`, `prof
 champs ne sont plus lus, le nom est gardé. `D.RAWI` reste dans `defs.js` parce que le dessin du râwî le lit ; ce n'est
 plus un choix. Contrôles : `personnage.js`, `partie.js`, `silhouettes.js` (le râwî sous sa seule apparence).
 
+**Les noms que l'on ne prend pas (2.44, D235).** `P.refus(nom)` rend la raison d'un refus, ou rien. Les mêmes gardes
+valent en lettres latines (`plat`) et en écriture arabe (`platAr` : sans voyelles ni tatwîl, la ligature « ﷲ » défaite,
+les formes de l'alif ramenées à une seule) : le Nom divin employé seul (`DIVIN`, `DIVIN_AR` ; porté avec « 'Abd » ou
+« عبد », il passe), les noms d'Iblîs et des djinns (`INTERDIT`, `INTERDIT_AR`), le nom réservé au Prophète ﷺ (`RESERVE`,
+`RESERVE_AR`), et les noms des héros et des maillons (`P.prisParLeJeu`), tels que chaque langue les écrit et quelle que
+soit la langue du jeu. Ajouter une langue, c'est donner sa mise à plat et ses listes. Contrôle : `personnage.js`.
+
 *Ce qui suit décrit le personnage du joueur tel qu'il était jusqu'à la 2.36 ; seul ce qui touche le nom vaut encore.*
 
 Le joueur donnait un nom et une tenue au **râwî** — le héros de l'histoire-cadre, personnage de fiction — et, depuis la

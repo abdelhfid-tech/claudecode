@@ -128,10 +128,14 @@ const place = e => { const P = e.place, F = [], cx = r => (r[0] + r[2]) / 2, ava
 
   /* ---------- 1. les noms ---------- */
   let page = await ouvrir();
-  const PASSENT = ['Idris', 'Khalil', 'Elyas', '’Imrân', 'Hamza', 'Abd al-Karîm', '’Abd Allah', 'Zayd', 'Nûr ad-Dîn', 'Yacine', 'Jean-Luc', 'Sélim', 'إلياس', 'Ibrâhîm', 'Mûsâ'];
+  const PASSENT = ['Idris', 'Khalil', 'Elyas', '’Imrân', 'Hamza', 'Abd al-Karîm', '’Abd Allah', 'Zayd', 'Nûr ad-Dîn', 'Yacine', 'Jean-Luc', 'Sélim', 'إلياس', 'Ibrâhîm', 'Mûsâ',
+    'خليل', 'عبد الله', 'عبدالله', 'عبد الكريم', 'عمرو', 'جان لوك', 'نور الدين'];   // (2.44, D235) en écriture arabe : le Nom porté avec « عبد » passe, « جان » est un prénom
   const REFUSES = [['', 'faut un nom'], ['   ', 'faut un nom'], ['Abdelkader ben Ali', 'Seize'], ['Khalil2', 'lettres'], ['<b>x</b>', 'lettres'], ['Idris*', 'lettres'], ['K@lil', 'lettres'], ['-Khalil', 'lettres'],
     ['Allah', 'qu’à Allah'], ['allâh', 'qu’à Allah'], ['Ar-Rahmân', 'qu’à Allah'], ['Dieu', 'qu’à Allah'], ['Iblîs', 'ne se porte pas'], ['Le Djinn', 'ne se porte pas'], ['Shaytân', 'ne se porte pas'],
-    ['Muhammad', 'Prophète'], ['Mohamed', 'Prophète'], ['’Umar', 'personnage du jeu'], ['Umar', 'personnage du jeu'], ['Khâlid', 'personnage du jeu'], ['Abû Bakr', 'personnage du jeu'], ['ali', 'personnage du jeu'], ['’Uthmân', 'personnage du jeu'], ['Abd ar-Rahmân', 'personnage du jeu']];
+    ['Muhammad', 'Prophète'], ['Mohamed', 'Prophète'], ['’Umar', 'personnage du jeu'], ['Umar', 'personnage du jeu'], ['Khâlid', 'personnage du jeu'], ['Abû Bakr', 'personnage du jeu'], ['ali', 'personnage du jeu'], ['’Uthmân', 'personnage du jeu'], ['Abd ar-Rahmân', 'personnage du jeu'],
+    // (2.44, D235) les mêmes refus en écriture arabe, avec ou sans voyelles, la ligature comprise
+    ['الله', 'qu’à Allah'], ['اللّٰه', 'qu’à Allah'], ['ﷲ', 'qu’à Allah'], ['الرحمن', 'qu’à Allah'], ['الرب', 'qu’à Allah'], ['إبليس', 'ne se porte pas'], ['الشيطان', 'ne se porte pas'], ['الجنّ', 'ne se porte pas'],
+    ['محمد', 'Prophète'], ['مُحَمَّد', 'Prophète'], ['أبو بكر', 'personnage du jeu'], ['ابو بكر', 'personnage du jeu'], ['عمر', 'personnage du jeu'], ['عُمَر', 'personnage du jeu'], ['خالد', 'personnage du jeu'], ['عثمان', 'personnage du jeu'], ['علي', 'personnage du jeu'], ['عبد الرحمن', 'personnage du jeu']];
   const noms = await page.evaluate(([P, R]) => { const X = window.ISNAD.perso; return { passent: P.map(n => [n, X.refus(n)]), refuses: R.map(([n, r]) => [n, r, X.refus(n)]), pris: Object.keys(X.prisParLeJeu()).length }; }, [PASSENT, REFUSES]);
   const mauvais = noms.passent.filter(x => x[1]).map(x => `« ${x[0]} » refusé (${x[1]})`).concat(noms.refuses.filter(x => !x[2]).map(x => `« ${x[0]} » accepté`), noms.refuses.filter(x => x[2] && !x[2].includes(x[1])).map(x => `« ${x[0]} » refusé sans la bonne raison (${x[2]})`));
   if (mauvais.length) mauvais.forEach(m => ko('ÉCART nom : ' + m)); else ok(`${PASSENT.length} noms acceptés (${PASSENT.slice(1, 8).join(', ')}…) ; ${REFUSES.length} refusés, chacun pour sa raison : vide, trop long, autre chose que des lettres, le Nom divin seul, un nom interdit, le nom du Prophète ﷺ, un des ${noms.pris} noms que le jeu porte déjà`);

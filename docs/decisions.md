@@ -2538,6 +2538,16 @@ pages privées de son compte.
   ceux qui restent » (`saga_khalid.js`), « Faire la prière du couchant, puis décider comment aller à la foule »
   (`caid.js`). L'arabe et l'anglais disaient déjà « aller à », « rejoindre », « faire la prière » : ils sont reposés tels
   quels, la forme vocalisée avec eux. Aucune parole citée, aucun fait n'est touché.
+- [x] **D235. Le nom du râwî : les mêmes refus en écriture arabe (version 2.44 ; plan accepté le 25 novembre).** Le jeu
+  refusait pour le râwî le Nom divin employé seul, les noms d'Iblîs et des djinns, « Muhammad » et les noms des héros du
+  jeu, mais seulement en lettres latines : « الله », « إبليس », « محمد », « أبو بكر » passaient. Les mêmes gardes valent
+  maintenant dans les deux écritures, avec les mêmes messages (`v2/src/core/perso.js`, `P.refus`) : le nom est mis à plat
+  (sans voyelles ni tatwîl, la ligature « ﷲ » défaite, les formes de l'alif ramenées à une seule), puis comparé au Nom
+  divin (« الله », « الرحمن », « الرب »… — porté avec « عبد », il passe, comme « 'Abd Allah »), à « إبليس », « شيطان »,
+  « جنّ » et leurs formes, à « محمد », et aux noms des héros tels que chaque langue les écrit, quelle que soit la langue du
+  jeu (« عمر » est refusé en français, « Umar » en arabe). « جان » (Jean) reste un prénom. Une partie d'avant dont le râwî
+  porterait un de ces noms se charge sans refus et reprend « Idris », comme pour un nom latin refusé. Preuve :
+  `personnage.js` (sept noms de plus acceptés, dix-huit de plus refusés). Exigences 6, 8 et 18.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et
