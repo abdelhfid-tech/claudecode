@@ -2527,6 +2527,17 @@ pages privées de son compte.
   arabe : « كم مشاهدةً حصد؟ » ; en anglais : “How many views did it get?” (propositions de l'agent, acceptées avec le plan).
   La légende du short 01 et le gabarit du livret court suivent ; le film livré du short 01, lui, montre l'ancienne phrase :
   il est à refaire avec les autres (D219).
+- [x] **D234. Les tournures sœurs de ce que le décideur a accepté (version 2.43 ; plan accepté le 25 novembre).** Après son
+  « oui » à « Aller jusqu'à la Saqîfa » (pour « Gagner », qu'un enfant lit « remporter ») et à « Ils font la prière de
+  l'aube » (pour « Ils prient l'aube »), les mêmes tournures sont alignées là où elles restaient, en français seulement :
+  huit objectifs — « Aller jusqu'à la porte de la mosquée » (`saga_abubakr.js`), « Aller jusqu'à la halle où l'on tient le
+  dîwân » (`saga_umar.js`), « Rejoindre les lignes avant l'aube » (`saga_khalid.js`), « Aller jusqu'à la porte nord, où un
+  cavalier arrive du front », « Aller jusqu'à la passerelle, où l'effroi se rassemble », « Aller jusqu'au souk, où l'on
+  colporte des lettres » (`saga_uthman.js`), « Aller jusqu'à la porte nord, vers Harûrâ' » (`saga_ali.js`), « Aller jusqu'à
+  la mosquée avant l'aube (Bahrâm veille à l'école) » (`caid.js`) — et deux prières : « il fait la prière de l'aube avec
+  ceux qui restent » (`saga_khalid.js`), « Faire la prière du couchant, puis décider comment aller à la foule »
+  (`caid.js`). L'arabe et l'anglais disaient déjà « aller à », « rejoindre », « faire la prière » : ils sont reposés tels
+  quels, la forme vocalisée avec eux. Aucune parole citée, aucun fait n'est touché.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

@@ -916,7 +916,7 @@ ISNAD.registerSaga({
           ['say', 'aslam', "Ils se reforment. Leur source n'est pas ici."],
           ['say', 'umar', "Non. Allons sous la halle : c'est là qu'on tient le registre de ce qui revient à chacun."]
         ] },
-        { text: "Gagner la halle où l'on tient le dîwân", goto: 'halle', then: [
+        { text: "Aller jusqu'à la halle où l'on tient le dîwân", goto: 'halle', then: [
           ['nar', "Le dîwân : le registre où 'Umar a fait inscrire, nom par nom, la part de chacun — les proches du Prophète ﷺ en tête, et les siens à leur rang."],
           ['codex', 'diwan'], ['pillar', 'savoir', 1],
           ['say', 'hazim', "Commandeur des croyants ! Tout est inscrit, tout est pesé. Si chacun servait comme toi, on se passerait de registres. Permets que j'écrive ton nom en tête : ce ne serait que justice."],

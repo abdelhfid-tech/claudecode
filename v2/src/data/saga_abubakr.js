@@ -368,7 +368,7 @@ ISNAD.registerSaga({
           ['battle', { group: ['murmure', 'murmure'], bg: 'ville', intro: "« Tout est fini… » Les murmures du deuil se referment sur vous." }],
           ['nar', "Les murmures se défont. Mais plus loin, vers la mosquée, quelque chose de bien plus grand s'amasse."]
         ] },
-        { text: "Gagner la porte de la mosquée", goto: 'mosquee_porte', then: [
+        { text: "Aller jusqu'à la porte de la mosquée", goto: 'mosquee_porte', then: [
           ['nar', "Devant la mosquée, la foule. Au milieu d'elle, 'Umar, debout, la voix brisée, jurant à qui veut l'entendre."],
           ['quote', "Le Messager d'Allah ﷺ n'est pas mort ! Il est allé vers son Seigneur, comme y alla Mûsâ fils de 'Imrân, qui s'absenta quarante nuits puis revint aux siens.", "'Umar ibn al-Khattâb, ce jour-là — Ibn Hishâm, as-Sîra"],
           ['nar', "Abû Bakr ne dit rien à personne. Il traverse la foule et entre dans la demeure. On l'entend dire, à travers ses larmes :"],

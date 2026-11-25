@@ -196,7 +196,7 @@ ISNAD.registerSaga({
           ['say', 'capitaine_n', "Maître Bahrâm veille à l'école. Ton père ne tranchait rien de grave sans l'avoir entendu. Mais l'aube n'attendra pas : je monte avec toi à la mosquée."],
           ['hide', 'capitaine_n'], ['join', 'capitaine']
         ] },
-        { text: "Gagner la mosquée avant l'aube (Bahrâm veille à l'école)", goto: 'mosquee', then: [
+        { text: "Aller jusqu'à la mosquée avant l'aube (Bahrâm veille à l'école)", goto: 'mosquee', then: [
           ['map', 'citadelle', 'mosquee', { time: 'dawn' }],
           ['nar', "L'aube monte derrière les palmes. Dans la cour de la mosquée les hommes se rangent, et personne encore ne sait pourquoi le Caïd n'est pas au premier rang."],
           ['pray', 'fajr'],
@@ -613,7 +613,7 @@ ISNAD.registerSaga({
           ['nar', "Mais ceux qui avaient vu étaient trente, et ceux qui arrivaient par les ruelles étaient trois cents, avec des outres vides et une phrase toute faite. À leur tête, Amezyan le puisatier, un homme honnête : c'est ce qui rendait la chose grave."],
           ['say', 'capitaine', "Le soir tombe, seigneur. Si tu veux leur parler, c'est maintenant ou c'est à la lueur des torches. Et je n'aime pas les torches."]
         ] },
-        { text: "Prier le couchant, puis décider comment aller à la foule", goto: 'mosquee', then: [
+        { text: "Faire la prière du couchant, puis décider comment aller à la foule", goto: 'mosquee', then: [
           ['pray', 'maghrib'],
           ['nar', "J'ai prié au couchant, avec dans le dos le bruit de la foule. J'ai demandé de ne pas haïr ceux qui se trompaient : c'est plus difficile que de ne pas haïr ceux qui mentent."],
           ['ask', "Comment le Caïd va-t-il au-devant de la foule ?", [

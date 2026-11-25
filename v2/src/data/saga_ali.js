@@ -574,7 +574,7 @@ ISNAD.registerSaga({
           ['codex', 'qays_bio'],
           ['say', 'ibnabbas', "Avant Harûrâ', je passerai par le cercle d'étude et par la mosquée. On ne plaide bien que ce dont on sait d'où on le tient."]
         ] },
-        { text: "Gagner la porte nord, vers Harûrâ'", goto: 'porte_nord', then: [
+        { text: "Aller jusqu'à la porte nord, vers Harûrâ'", goto: 'porte_nord', then: [
           ['say', 'ibnabbas', "Commandeur des croyants, retarde un peu la prière de midi. Je vais aller parler à ces gens."],
           ['say', 'ali', "Je crains pour toi."],
           ['say', 'ibnabbas', "Ne crains rien. On me sait de bon caractère, et je ne fais de mal à personne."],

@@ -189,7 +189,7 @@
 {"k":"8v6g35.m","fr":"An 11 H · 632 · Médine","t":"سنة 11 هـ · 632 م · المدينة","ou":"chapters[0].sub","note":"décideur, 19 novembre : chiffres occidentaux partout"},
 {"k":"98bfal.12","fr":"Rejoindre Abû 'Ubayda près de la porte","t":"اللحاق بأبي عبيدة عند الباب","ou":"chapters[0].objectives[0].text"},
 {"k":"i463f2.x","fr":"Traverser Médine jusqu'à la place","t":"عبور المدينة إلى الرَّحَبة","ou":"chapters[0].objectives[1].text"},
-{"k":"1u5nydb.t","fr":"Gagner la porte de la mosquée","t":"بلوغ باب المسجد","ou":"chapters[0].objectives[2].text"},
+{"k":"1thb5fe.10","fr":"Aller jusqu'à la porte de la mosquée","t":"بلوغ باب المسجد","ou":"chapters[0].objectives[2].text","note":"D234 (25 novembre) : le français aligné sur ce que le décideur a accepté (« Aller jusqu'à… », « faire la prière de… ») ; ce texte le disait déjà"},
 {"k":"utz7y0.12","fr":"Noosphère : affronter le Déni, au cœur","t":"عالم الأفكار: مواجهة الإنكار، في القلب","ou":"chapters[0].objectives[3].text"},
 {"k":"1i4qewc.d","fr":"Relever 'Umar","t":"إنهاض عمر","ou":"chapters[0].objectives[4].text"},
 {"k":"ul9ecr.13","fr":"Aller jusqu'à la Saqîfa des Banû Sâ'ida","t":"بلوغ سقيفة بني ساعدة","ou":"chapters[0].objectives[5].text","note":"relecture 4 (joueur de 10 à 12 ans) : le français précisé (décideur, 25 novembre) ; ce texte le disait déjà"},

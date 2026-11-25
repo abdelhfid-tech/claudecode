@@ -240,7 +240,7 @@
 {"k":"g7issd.18","fr":"Entendre la plainte portée devant la mosquée","t":"الاستماع إلى الشكوى أمام المسجد","ou":"chapters[2].objectives[1].text"},
 {"k":"jzial8.18","fr":"Recevoir le convoi d'al-Madâ'in sur la place","t":"استقبال قافلة المدائن في الرحبة","ou":"chapters[2].objectives[2].text"},
 {"k":"ws1hl.y","fr":"Disperser les Reflets d'or au souk","t":"تبديد بريق الذهب في السوق","ou":"chapters[2].objectives[3].text"},
-{"k":"1pxi8o.12","fr":"Gagner la halle où l'on tient le dîwân","t":"المضيّ إلى السقيفة حيث يُحفظ الديوان","ou":"chapters[2].objectives[4].text"},
+{"k":"14qqoaz.19","fr":"Aller jusqu'à la halle où l'on tient le dîwân","t":"المضيّ إلى السقيفة حيث يُحفظ الديوان","ou":"chapters[2].objectives[4].text","note":"D234 (25 novembre) : le français aligné sur ce que le décideur a accepté (« Aller jusqu'à… », « faire la prière de… ») ; ce texte le disait déjà"},
 {"k":"xg2h03.1a","fr":"Faire tomber la Couronne suspendue dans la nef","t":"إسقاط التاج المعلَّق في البهو","ou":"chapters[2].objectives[5].text"},
 {"k":"nqnxgt.m","fr":"Marcher jusqu'au trône","t":"المسير إلى سرير المُلك","ou":"chapters[2].objectives[6].text"},
 {"k":"1920aia.b","fr":"Al-Hurmuzân","t":"الهُرمُزان","ou":"chapters[2].npcs[0].name"},

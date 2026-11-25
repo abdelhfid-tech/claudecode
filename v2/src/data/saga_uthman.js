@@ -333,7 +333,7 @@ ISNAD.registerSaga({
         ['nar', "'Uthmân sort de chez lui. On dit qu'un cavalier approche de la porte nord, couvert de la poussière des frontières."]
       ],
       objectives: [
-        { text: 'Gagner la porte nord, où un cavalier arrive du front', goto: 'porte_nord', then: [
+        { text: "Aller jusqu'à la porte nord, où un cavalier arrive du front", goto: 'porte_nord', then: [
           ['show', 'hudhayfa'],
           ['say', 'hudhayfa', "Commandeur des croyants. Je reviens des marches d'Arménie et d'Azerbaïdjan. J'y ai vu une chose qui m'a ôté le sommeil."],
           ['say', 'uthman', "Parle, Hudhayfa. Tu n'es pas homme à t'alarmer pour peu."],
@@ -631,7 +631,7 @@ ISNAD.registerSaga({
           ['pray', 'fajr'],
           ['nar', "Dans la noosphère, la peur n'attend pas le matin. Elle monte par les dalots, blanche et froide, et se rassemble près de la passerelle."]
         ] },
-        { text: "Gagner la passerelle, où l'effroi se rassemble", goto: 'passerelle', then: [
+        { text: "Aller jusqu'à la passerelle, où l'effroi se rassemble", goto: 'passerelle', then: [
           ['say', 'Un jeune rameur', "Je ne sens plus mes mains. Personne ne m'a forcé à venir. Alors pourquoi ai-je si peur ?"],
           ['nar', "La réponse ne vient d'aucune bouche. Elle est dans l'ordre du calife : le rameur est venu libre. Sa peur lui appartient ; il peut la regarder en face."],
           ['battle', { group: ['ecume', 'ecume'], bg: 'mer', intro: "L'effroi gagne les ponts." }],
@@ -716,7 +716,7 @@ ISNAD.registerSaga({
         ['nar', "'Uthmân a plus de quatre-vingts ans. Il sort de la mosquée avec Zayd. Du souk monte une rumeur — au sens propre."]
       ],
       objectives: [
-        { text: "Gagner le souk, où l'on colporte des lettres", goto: 'souk', then: [
+        { text: "Aller jusqu'au souk, où l'on colporte des lettres", goto: 'souk', then: [
           ['say', 'colp1', "On dit qu'il a tout donné aux siens. Je le tiens d'un homme sûr, qui le tenait d'un autre."],
           ['say', 'colp2', "Et moi, on m'a dit qu'il n'a rien donné à personne. C'est encore pire."],
           ['say', 'zayd', "Ils disent le contraire l'un de l'autre, et ils sont d'accord."],

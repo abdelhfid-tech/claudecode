@@ -641,7 +641,7 @@ ISNAD.registerSaga({
           ['hide', 'courrier'],
           ['nar', "Cette nuit-là, Khâlid commande une armée qui n'est déjà plus la sienne. Nul ne le sait que lui, le courrier — et Celui à qui rien n'échappe."]
         ] },
-        { text: "Gagner les lignes avant l'aube", goto: 'lignes', then: [
+        { text: "Rejoindre les lignes avant l'aube", goto: 'lignes', then: [
           ['nar', "Avant le jour, chaque émir range les siens pour la prière. Khâlid prie dans le rang, l'épaule contre celle d'un homme dont il ne sait pas le nom."],
           ['pray', 'fajr'],
           ['sfx', 'roll'],
@@ -871,7 +871,7 @@ ISNAD.registerSaga({
           ['map', 'romaine', 'porte', { time: 'dawn' }],
           ['hide', 'poete'], ['hide', 'soldat'], ['hide', 'estafette'], ['hide', 'ancien_bourg'], ['hide', 'scribe'], ['hide', 'ghalib'],
           ['mus', 'espoir'],
-          ['nar', "Avant de monter en selle, il prie l'aube avec ceux qui restent. Personne ne l'acclame ; quelqu'un lui tient son étrier."],
+          ['nar', "Avant de monter en selle, il fait la prière de l'aube avec ceux qui restent. Personne ne l'acclame ; quelqu'un lui tient son étrier."],
           ['pray', 'fajr'],
           ['nar', "Khâlid prend la route de Médine. 'Umar l'y reçoit, examine ses comptes, et le trouve intègre. Puis le Calife écrit aux provinces."],
           ['quote', "Je n'ai pas destitué Khâlid par mécontentement ni pour trahison ; mais les gens ont été éblouis par lui, et j'ai craint qu'ils ne s'en remettent à lui. J'ai voulu qu'ils sachent que c'est Allah qui agit.", "'Umar ibn al-Khattâb, lettre aux provinces — at-Tabarî, Târîkh"]
