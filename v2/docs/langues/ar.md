@@ -1569,7 +1569,8 @@ précédentes fixent déjà n'est pas repris. Une ligne par hésitation, avec le
   l'introduction de la rencontre), comme dans les récits de Khâlid et de 'Umar. Dit d'un homme, « النزول عن القاعدة »
   peut évoquer aujourd'hui le nom d'une organisation armée. « المنصّة » serait sans équivoque, mais il faudrait changer
   les trois récits d'un bloc. (langue)
-- « كم واحدًا رآه؟ » (cinq textes) est proche du parler ; « كم شخصًا رآه؟ » serait plus soutenu. (langue)
+- *(D233, 25 novembre : la phrase est devenue « Combien ça a fait de vues ? », en arabe « كم مشاهدةً حصد؟ » — « مشاهدات » est le
+  mot des réseaux pour « vues ». La remarque d'avant portait sur « كم واحدًا رآه؟ », proche du parler.)* (langue)
 - « تُعرَف المدينة بطرقها » (le père du Caïd, moteur et feuillet « La route sûre ») garde « المدينة » au sens général ;
   pour écarter toute lecture « Médine », changer le moteur et le feuillet ensemble. (langue)
 - « rallumer » (« سيُوقدونني غدًا », « غدًا يُوقده آخرون ») ne rend pas le « re- » du français. (langue)

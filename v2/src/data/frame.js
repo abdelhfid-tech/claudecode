@@ -136,7 +136,7 @@ ISNAD.registerSaga({
     carte_vide: { name: 'La Carte sans chemin', art: 'lens', hue: 160, scale: 2, lvl: 7, tier: 'elite', weak: ['ilm', 'sabr'], veils: 3,
       skills: [{ w: 3, name: 'Relevé', target: 'foe', el: 'ilm', pow: 1.0, fx: [{ st: 'spd', v: -1, chance: 0.3 }], anim: 'glyph' },
         { w: 1, name: 'Itinéraire recalculé', target: 'foe', fx: [{ st: 'recul' }], anim: 'wave' }],
-      taunts: ['Combien l’ont vu ?'],
+      taunts: ['Combien ça a fait de vues ?'],
       desc: 'Un savoir fait d’additions, que personne n’est allé vérifier. Il sait tout et n’a rien vu. Il cède quand on lui demande de qui il le tient.' },
     // 2.23 (D212) — les « idées noires modernes » des quartiers (le décideur, 21 novembre : « égoïsme, matérialisme, plaisir
     // immédiat ») : des chimères qu'Idris est seul à voir, qui rôdent dans les rues (rodeurs.js, D.CITE.rodent) et se
@@ -203,7 +203,7 @@ ISNAD.registerSaga({
     { id: 'r_regent', cat: 'Noosphère', title: 'Le Régent', text: 'Il tient un tampon au pied d’une tour vide et accorde ce que l’écran a déjà décidé. Il n’a personne à commander, donc personne dont répondre. Il confond le siège et la charge : on peut avoir l’un sans l’autre, et c’est la charge qui fait dormir en paix. Personnage de fiction.' },
     { id: 'r_admire', cat: 'Noosphère', title: 'L’Admiré', text: 'Sous le grand écran, un homme que des millions de comptes applaudissent. Derrière ces comptes, il n’y a personne. Il ne sait plus qui il serait sans ce bruit. Descendre du socle demande plus de courage que d’y monter : nul n’applaudit celui qui descend. Personnage de fiction.' },
     { id: 'r_compteur', cat: 'Noosphère', title: 'Le Compteur', text: 'Il achète des regards quand personne n’en veut et les garde dans un coffre, sans jamais en poser un sur quelqu’un. Ce qu’on donne, on sait où il est ; ce qu’on amasse, on le perd de vue. Personnage de fiction.' },
-    { id: 'r_cartographe', cat: 'Noosphère', title: 'Le Cartographe', text: 'Il dessine la Cité sans y marcher, d’après des millions de relevés. Il demande « combien l’ont vu ? » et jamais « qui ? ». Sa carte porte un mur là où un enfant sait qu’il y a une porte. Un savoir se corrige en allant voir, et se garde avec le nom de celui qui a vu. Personnage de fiction.' },
+    { id: 'r_cartographe', cat: 'Noosphère', title: 'Le Cartographe', text: 'Il dessine la Cité sans y marcher, d’après des millions de relevés. Il demande « combien ça a fait de vues ? » et jamais « qui ? ». Sa carte porte un mur là où un enfant sait qu’il y a une porte. Un savoir se corrige en allant voir, et se garde avec le nom de celui qui a vu. Personnage de fiction.' },
     { id: 'x_veiller', cat: 'Noosphère', title: 'Veiller les Archives', text: 'Chaque fois qu’Idris remonte la Chaîne, là-haut, un écran s’aperçoit qu’on ne le regarde plus, et envoie voir. Les maillons se suivent ; on peut quitter un récit en chemin, il attend là où on l’a laissé. Mais des archives qu’on ne veille pas, un autre les raconte à votre place. Fiction.' },
     { id: 'x_question', cat: 'Noosphère', title: '« Tu pars où ? »', text: 'L’enfant du parvis est descendu jusqu’aux Archives basses pour poser sa question. Idris lui a montré un nom, puis celui qui vient après : c’est ainsi que Maître Yûnus avait commencé avec lui. Personnage de fiction.' },
     { id: 'x_avis', cat: 'Noosphère', title: 'L’agent du relevé', text: 'Il mesure un lieu au nombre de ceux qui le regardent. Il n’est pas un ennemi : il fait son relevé, et voudrait rentrer chez lui. Mais il est descendu voir, ce que ne font pas ceux qui décident d’en haut. On ne garde pas des archives en les cachant : on y amène quelqu’un. Personnage de fiction.' },
@@ -323,7 +323,7 @@ ISNAD.registerSaga({
       npcs: [
         { id: 'passant1', name: 'Passant', at: ['rue', 0, -1], look: { kind: 'citadin', robe: '#a0523c', head: '#7a3a2a', cloak: '#b8664a' }, talk: [['say', 'passant1', 'Tu as vu la tendance de midi ? Non ? Alors de quoi veux-tu qu’on parle ?']] },
         { id: 'passant2', name: 'Employé', at: ['ecran', -3, 2], look: { kind: 'citadin', robe: '#808a4a', head: '#5a6232', cloak: '#9aa45c' }, talk: [['say', 'passant2', 'Mon score a baissé de trois points. Je ne sais pas ce que j’ai fait. Je ne sais jamais.']] },
-        { id: 'vieux', name: 'Vieil homme', at: ['ruelle', 0, -1], look: { kind: 'ancien', robe: '#4a4038', head: '#bdb6a8' }, talk: [['say', 'vieux', 'Autrefois on demandait : « De qui tiens-tu cela ? » Maintenant on demande : « Combien l’ont vu ? »']] },
+        { id: 'vieux', name: 'Vieil homme', at: ['ruelle', 0, -1], look: { kind: 'ancien', robe: '#4a4038', head: '#bdb6a8' }, talk: [['say', 'vieux', 'Autrefois on demandait : « De qui tiens-tu cela ? » Maintenant on demande : « Combien ça a fait de vues ? »']] },
         { id: 'gamin', name: 'Enfant', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Monsieur, c’est vrai qu’avant le ciel était noir, la nuit, avec des étoiles ?']] },
         { id: 'yunus_n', name: 'Maître Yûnus', hero: 'yunus', map: 'archives', at: 'bureau', talk: [['say', 'yunus_n', 'La Chaîne t’attend au fond de la salle, Idris.']] }
       ],
@@ -798,7 +798,7 @@ ISNAD.registerSaga({
       map: 'cite', start: 'parvis', party: ['idris'],
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
-        { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'citadin', robe: '#3a9a8a', head: '#267264', cloak: '#52b2a0', trim: '#34507a', item: 'feuillets' }, talk: [['say', 'carto', 'Combien l’ont vu ?']] },
+        { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'citadin', robe: '#3a9a8a', head: '#267264', cloak: '#52b2a0', trim: '#34507a', item: 'feuillets' }, talk: [['say', 'carto', 'Combien ça a fait de vues ?']] },
         // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
         { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
@@ -815,7 +815,7 @@ ISNAD.registerSaga({
           ['say', 'gamin', 'Oui. Mais il a mis un mur là où il y a une porte.']
         ] },
         { text: 'Trouver l’homme à la carte, au bout de la rue', talk: 'carto', then: [
-          ['say', 'carto', 'Un marcheur ! Parfait. Dis-moi ce que tu as vu, je le reporterai. Combien l’ont vu avec toi ?'],
+          ['say', 'carto', 'Un marcheur ! Parfait. Dis-moi ce que tu as vu, je le reporterai. Combien ça a fait de vues ?'],
           ['say', 'idris', 'Tu ne demandes pas qui ?'],
           ['say', 'carto', 'Qui ? Non. Combien. Ce qu’un seul a vu n’existe pas. Ce qu’un million a vu est certain.'],
           ['parley', {

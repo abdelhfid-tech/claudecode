@@ -30,7 +30,7 @@ const poser = f => { const p = JSON.parse(fs.readFileSync(f, 'utf8'));
 // « + » : des sources ont changé depuis ce commit (les fichiers générés ne comptent pas)
 let rev = ''; try { const sh = c => require('child_process').execSync(c, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); rev = sh('git rev-parse --short HEAD') + (sh('git status --porcelain -- src tools paquets') ? '+' : ''); } catch (e) { /* hors dépôt */ }
 // le numéro de la 2.x : il avance d'un centième à chaque enregistrement qui change le jeu (AGENTS.md ; docs/decisions.md, D181)
-const NUMERO = '2.41';
+const NUMERO = '2.42';
 const version = NUMERO + (vers ? ' · essai' : '') + ' · ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC' + (rev ? ' · ' + rev : '');
 // les langues (src/lang/<langue>/<fichier>.json) : chaque texte est rangé sous la clé de son texte français (src/core/langue.js).
 // Un texte laissé vide n'entre pas : le jeu dira le français à cet endroit, et v2/tools/langues.js le signale.

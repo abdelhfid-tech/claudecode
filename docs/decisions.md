@@ -2517,6 +2517,16 @@ pages privées de son compte.
     scénario suit le nouveau texte, le film est à refaire avec les autres (D219). Deux tournures sœurs n'étaient pas sur la
     fiche et n'ont pas été touchées : « prier l'aube » (`saga_khalid.js`) et « Prier le couchant » (`caid.js`) ; de même
     les huit autres objectifs en « Gagner … ».
+- [x] **D233. « Combien ça a fait de vues ? » (version 2.42 ; le décideur, 25 novembre).** « Aussi dans les échanges c'est pas
+  "combien l'ont vu ?" C'est "combien ça a fait de vues ?" » ; et : « je fais une critique du nombre de vues sur les réseaux
+  sociaux versus la fiabilité des personnes qui transmettent (la quantité versus la qualité) ». La question de 2084 change
+  partout où elle est posée (`frame.js`), comme « De qui tiens-tu cela ? » avant elle (D228) : le vieil homme du prologue
+  (« Autrefois on demandait : « De qui tiens-tu cela ? » Maintenant on demande : « Combien ça a fait de vues ? » ») ; le
+  Cartographe, quand on lui parle, et la raillerie de sa chimère ; sa scène (« Dis-moi ce que tu as vu, je le reporterai.
+  Combien ça a fait de vues ? ») ; sa fiche du Recueil. La suite de sa scène ne change pas (« Qui ? Non. Combien. »). En
+  arabe : « كم مشاهدةً حصد؟ » ; en anglais : “How many views did it get?” (propositions de l'agent, acceptées avec le plan).
+  La légende du short 01 et le gabarit du livret court suivent ; le film livré du short 01, lui, montre l'ancienne phrase :
+  il est à refaire avec les autres (D219).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

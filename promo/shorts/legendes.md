@@ -36,7 +36,7 @@ jeu lui-même, filmé image par image.
 
 **Titre.** « De qui tiens-tu cela ? »
 
-**Description.** En 2084, on ne demande plus « De qui tiens-tu cela ? », mais « Combien l'ont vu ? ». Sous la ville, un
+**Description.** En 2084, on ne demande plus « De qui tiens-tu cela ? », mais « Combien ça a fait de vues ? ». Sous la ville, un
 archiviste retrouve une chaîne de témoins. Elle commence à Médine, en juin 632.
 
 ## 2 — « Cinq sagas, cinq Lumières »
