@@ -241,7 +241,7 @@
         ['robe', 'head', 'cloak', 'aura', 'trim', 'legs'].forEach(k => { if (l[k] !== undefined && !/^#[0-9a-fA-F]{6}$/.test(l[k])) E.push(`${where}: look.${k} doit être une couleur #rrggbb`); });
         // 2.x — le visage vient des couleurs du personnage lui-même : un récit n'écrit ni teint ni trait (exigences 2 et 10) ;
         // le néon et l'objet porté sont ceux que le joueur donne à son râwî (perso.js, D.RAWI) ; rawi, la marque que le moteur pose sur lui (perso.js)
-        ['teint', 'barbe', 'poil', 'visage', 'neon', 'porte', 'rawi'].forEach(k => { if (l[k] !== undefined) E.push(`${where}: look.${k} est réservé au râwî que compose le joueur : un récit ne l'écrit pas`); });
+        ['teint', 'barbe', 'poil', 'visage', 'neon', 'porte', 'rawi'].forEach(k => { if (l[k] !== undefined) E.push(`${where}: look.${k} est réservé au râwî : un récit ne l'écrit pas`); });
         // 2.26 (D215) — une femme porte la tenue que le moteur lui pose (le khimâr, la robe longue sans ceinture) : le récit n'en écrit rien
         if (l.kind === 'femme') (D.TENUE_FEMME || []).forEach(k => { if (l[k] !== undefined) E.push(`${where}: look.${k} — la tenue d'une femme (le khimâr, la robe longue) est posée par le moteur : un récit n'écrit que le type et les couleurs (D215)`); });
       };
