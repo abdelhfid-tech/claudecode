@@ -3,7 +3,7 @@
    par langue […] dans la peau d'un joueur de 10-12 ans passionné de rpg qui maîtrise la langue en question ainsi que
    l'histoire des compagnons »).
    Cet outil ne relit rien : il prépare ce que lisent les relecteurs, et pose ce qu'ils ont corrigé.
-   Usage : node v2/tools/relecture.js feuilles [lot…]   écrit v2/.smoke/relecture/<langue>/<lot>.json pour fr, ar, en, ja :
+   Usage : node v2/tools/relecture.js feuilles [lot…]   écrit v2/.smoke/relecture/<langue>/<lot>.json pour fr, ar, en :
                                                          les textes du lot dans l'ordre où on les joue — { k, ou, qui, fr, t }
                                                          (en arabe, tv : la forme vocalisée ; « intouchable » : une parole
                                                          citée ou sa source ; « a_revoir » : le français a changé depuis)
@@ -12,7 +12,7 @@
    « essai-2 » (ses chapitres 2 et 3, ses chimères) ; puis un lot par fichier du jeu (« saga_umar », « frame », « caid »,
    « coeur », « tables », « moteur »…).
    Les cinq cases du relecteur, ce qu'il ne touche jamais et la marche à suivre sont dans v2/docs/langues/relecture-10-12.md.
-   Poser une correction : node v2/tools/langues.js poser <langue> <fichier> <écrit.json> (arabe, anglais, japonais), puis
+   Poser une correction : node v2/tools/langues.js poser <langue> <fichier> <écrit.json> (arabe, anglais), puis
    node v2/tools/voyelles.js poser <fichier> <travail.json> ; le français se corrige dans v2/src/data/ ou v2/src/core/. */
 const fs = require('fs'), path = require('path');
 const V2 = path.join(__dirname, '..'), LANG = path.join(V2, 'src/lang'), OUT = path.join(V2, '.smoke/relecture');
@@ -43,6 +43,6 @@ const cmd = process.argv[2], noms = process.argv.slice(3);
 if (cmd === 'lots') { Object.keys(LOTS).forEach(n => { const L = lot(n, 'fr'); console.log(`${n} : ${L.length} textes, ${L.reduce((s, x) => s + x.fr.length, 0)} signes`); }); }
 else if (cmd === 'feuilles') {
   (noms.length ? noms : ['essai-1', 'essai-2']).forEach(n => { if (!LOTS[n]) { console.log('✗ lot inconnu : ' + n); process.exitCode = 1; return; }
-    ['fr', 'ar', 'en', 'ja'].forEach(l => { const L = lot(n, l), p = path.join(OUT, l, n + '.json'); fs.mkdirSync(path.dirname(p), { recursive: true });
+    ['fr', 'ar', 'en'].forEach(l => { const L = lot(n, l), p = path.join(OUT, l, n + '.json'); fs.mkdirSync(path.dirname(p), { recursive: true });
       fs.writeFileSync(p, '[\n' + L.map(x => JSON.stringify(x)).join(',\n') + '\n]\n'); console.log(`✓ ${path.relative(V2, p)} — ${L.length} textes`); }); });
 } else { console.log('Usage : node v2/tools/relecture.js feuilles [lot…] | lots'); process.exitCode = 1; }

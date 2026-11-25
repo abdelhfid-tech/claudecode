@@ -2458,6 +2458,25 @@ pages privées de son compte.
   déjà à cette question : « From whom do you have this? », « عمّن أخذتَ هذا؟ » (et sa forme vocalisée),
   「それを誰から聞いたのか」 ; la seconde question (« Et lui, de qui le tenait-il ? ») ne change pas. Le short 1 prend le même
   titre et la même accroche ; le livret court reprendra la phrase du vieil homme à sa prochaine édition.
+- [x] **D229. La relecture du joueur de 10 à 12 ans, langue par langue (le décideur, 25 novembre).** « Je veux d'abord une
+  relecture / correction langue par langue par fable dans la peau d'un joueur de 10-12 ans passionné de rpg qui maîtrise la
+  langue en question ainsi que l'histoire des compagnons ». Ses choix : « Fautes + ce qui bloque » (le ton des récits et des
+  veillées reste) ; « Le sûr appliqué, le reste à valider » (les fautes corrigées tout de suite ; les réécritures sur une page
+  privée, acceptées ou refusées point par point ; un fait d'histoire, une parole citée, un verset ne sont jamais corrigés,
+  seulement signalés) ; « Un essai d'abord » (le prologue et la saga d'Abû Bakr) ; « Agents Fable en parallèle » (un lecteur
+  par lot, puis un contre-lecteur qui cherche à faire tomber chaque point). La consigne : `v2/docs/langues/relecture-10-12.md` ;
+  les feuilles de lecture : `node v2/tools/relecture.js feuilles`. Elle passe avant l'empaquetage pour les stores.
+- [x] **D230. Le japonais est retiré du jeu (version 2.36 ; le décideur, 25 novembre).** La relecture (D229) a compté, contre
+  les 1 026 kanji de l'école primaire (KANJIDIC2, niveaux 1 à 6), que 3 651 textes japonais sur 6 453 (56 %) emploient au
+  moins un kanji qu'un enfant de 10 à 12 ans n'a pas appris (74 % au-delà de la quatrième année ; 660 kanji différents).
+  L'agent a présenté le choix : des furigana (un changement du moteur) ou une réécriture en kana. Le décideur : « Tu peux
+  supprimer le japonais dans ce cas ». Fait : `ja` sort de `LANGUES`, `ORDRE` et `CHOIX` (`langue.js`), la police Noto Serif
+  JP du lien des polices ; les dix fichiers de textes et le glossaire sont archivés dans `archive/v2-japonais/` (à jour du
+  français de la 2.35), avec la marche à suivre pour le remettre ; un appareil qui avait choisi le japonais revient au
+  français ; les contrôles passent à trois langues (`bilingue.js` : six couples ; `longueurs.js` : quatre langues avec
+  l'arabe vocalisé ; `partage.js`, `batir.js`). Le moteur garde ce qui sert une langue sans espaces, et `regles.js` ses
+  règles en japonais : rien de cela ne se voit. **L'exigence 25 nomme encore le japonais** (et la traduction de Ryoichi
+  Mita) : l'agent ne l'a pas réécrite ; sa formulation revient au décideur.
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

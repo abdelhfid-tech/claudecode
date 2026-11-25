@@ -2241,6 +2241,15 @@ l'assemblage que toute la batterie a joué.
 *Demande du décideur, 18 novembre : l'arabe, l'anglais et le japonais, « en reprenant les concepts à la source dans la
 littérature de la langue elle-même et non en faisant des traductions du français » (exigence 25).*
 
+**Depuis la 2.36 (D230), le jeu existe en français, en arabe et en anglais.** Le décideur, 25 novembre : « Tu peux
+supprimer le japonais dans ce cas » — la relecture du joueur de 10 à 12 ans (D229) a compté que 56 % des textes japonais
+emploient un kanji qu'on n'apprend pas à l'école primaire. Ses textes et son glossaire sont archivés
+(`archive/v2-japonais/`, avec la marche à suivre pour le remettre). `ja` est sorti de `LANGUES`, `ORDRE` et `CHOIX`
+(`langue.js`) et la police Noto Serif JP du lien des polices ; un appareil qui l'avait choisi revient au français
+(`L.connue`). Ce que ce document dit du japonais, ici et plus haut, décrit ce que le moteur sait encore faire pour une
+langue sans espaces (l'écriture signe à signe, le poids d'un signe, la coupe des lignes et des pages, les guillemets) :
+plus rien de cela ne se voit dans le jeu.
+
 - **Le français ne bouge pas.** Il reste la langue des récits (`src/data/`), des tables (`defs.js`) et du code. Le jeu
   s'ouvre en français, et s'y comporte comme avant.
 - **`src/core/langue.js`** se charge avant le socle (et sous Node, pour les outils).

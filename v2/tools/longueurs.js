@@ -22,7 +22,7 @@
      carton du récit (un titre, une parole citée et sa source, l'ouverture d'un pourparler, une idée noire, un attribut et
      son verset, le secours et son verset) est posé dans #card et tenu par ISNAD.script.tenirCarton : il tient dans l'écran,
      hors de la manette, sans police sous dix points.
-     Par défaut : fr, ar, arv (l'arabe vocalisé), en, ja ; 390x844, 844x390, 360x640 (un petit téléphone), 1280x720 (le
+     Par défaut : fr, ar, arv (l'arabe vocalisé), en ; 390x844, 844x390, 360x640 (un petit téléphone), 1280x720 (le
      bureau) ; puis le couple fr-ar (le français, et l'arabe en langue secondaire) sur les quatre écrans.
      Il écrit dans .smoke/longueurs/ : pages.json (tout), et pages-fr-390x844.txt — les textes français qui demandent plus
      d'une page en hauteur sur 390 × 844 (fichier, chapitre, clé, nombre de pages, début du texte), pour le décideur, qui
@@ -217,8 +217,8 @@ const CONTROLE = ({ LIGNES, liste, temoin }) => {
 };
 
 async function controle(args) {
-  const LANGUES = args.filter(a => /^(fr|ar|arv|en|ja)$/.test(a)), ECRANS = args.filter(a => /^\d+x\d+$/.test(a)), seul2 = args.includes('fr-ar'), sans2 = args.includes('sans2');
-  if (!LANGUES.length) LANGUES.push('fr', 'ar', 'arv', 'en', 'ja'); if (!ECRANS.length) ECRANS.push('390x844', '844x390', '360x640', '1280x720');
+  const LANGUES = args.filter(a => /^(fr|ar|arv|en)$/.test(a)), ECRANS = args.filter(a => /^\d+x\d+$/.test(a)), seul2 = args.includes('fr-ar'), sans2 = args.includes('sans2');
+  if (!LANGUES.length) LANGUES.push('fr', 'ar', 'arv', 'en');   // (2.36, D230 : le japonais est retiré du jeu) if (!ECRANS.length) ECRANS.push('390x844', '844x390', '360x640', '1280x720');
   const passes = []; if (!seul2) LANGUES.forEach(l => ECRANS.forEach(e => passes.push({ l, e }))); if (!sans2) ECRANS.forEach(e => passes.push({ l: 'fr', e, l2: 'ar' }));
   const LIGNES = lignesDuCode(), browser = await chromium.launch(), rapport = {}; let deborde = 0, erreurs = 0;
   for (const P of passes) {
@@ -350,4 +350,4 @@ async function releve(LANGUES) {
 }
 
 const args = process.argv.slice(2);
-(args[0] === 'releve' ? releve((() => { const l = args.slice(1).filter(a => /^(fr|ar|en|ja)$/.test(a)); return l.length ? l : ['fr', 'ar', 'en', 'ja']; })()) : controle(args)).catch(e => { console.error(e); process.exit(1); });
+(args[0] === 'releve' ? releve((() => { const l = args.slice(1).filter(a => /^(fr|ar|en)$/.test(a)); return l.length ? l : ['fr', 'ar', 'en']; })()) : controle(args)).catch(e => { console.error(e); process.exit(1); });

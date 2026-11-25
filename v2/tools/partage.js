@@ -27,7 +27,7 @@ const PROMO = require('./promotion.js');
 fs.mkdirSync(out, { recursive: true });
 let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalies++; console.log(m); };
 const si = (c, bien, mal) => (c ? ok(bien) : ko(mal));
-const LANGUES = ['fr', 'ar', 'en', 'ja'];
+const LANGUES = ['fr', 'ar', 'en'];   // (2.36, D230 : le japonais est retiré du jeu)
 // ce que le texte ne dit jamais, mot à mot, dans chaque langue (en plus des noms que le jeu donne lui-même : plus bas)
 const INTERDITS = {
   fr: /pri[èe]re|dhikr|je[ûu]ne|aum[ôo]ne|p[èe]lerinage|provision|\blames?\b|id[ée]es? noires?|maux du c|mal du c|\bvaleurs?\b|attributs?|descente|noosph|victoire|vaincu|combat|bataille|\bh[ée]ros\b|\bsaint\b|\bsage\b|figure|Allah|\bDieu\b|pilier|pourparler/i,

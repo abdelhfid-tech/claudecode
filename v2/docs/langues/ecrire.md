@@ -2,6 +2,9 @@
 
 *Consigne de rédaction (2.x). Elle vaut pour l'agent qui écrit et pour celui qui relit.*
 
+*Depuis la 2.36 (D230), le japonais est retiré du jeu : ses textes et son glossaire sont dans `archive/v2-japonais/`. Ce
+que cette consigne en dit vaudrait de nouveau s'il revenait.*
+
 Le jeu est écrit en français. Les trois autres langues ne sont **pas des traductions du français** (demande du
 décideur, 18 novembre) : chacune raconte les mêmes événements, dans le même ordre, avec les mêmes sources et les mêmes
 exigences de respect, **dans les mots de sa propre littérature**. Chaque texte est rangé sous la clé de son texte

@@ -171,10 +171,10 @@ async function telephone(browser, w, h) {
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => '844×390 · ' + e)); await T.ctx.close();
   }
 
-  /* ---------- 3. Les textes, dans les quatre langues ---------- */
+  /* ---------- 3. Les textes, dans chaque langue ---------- */
   {
     const T = await telephone(browser, 844, 390), P = T.p, interdits = [];
-    for (const lang of ['fr', 'ar', 'en', 'ja']) {
+    for (const lang of ['fr', 'ar', 'en']) {
       const L = await E(P, lang => { const I = window.ISNAD; if (I.langue.choisir) I.langue.choisir(lang); else I.langue.lang = lang; const out = []; Object.values(I.entraide.TX).forEach(x => ['nom', 'dit', 'merci'].forEach(k => out.push(I.t(x[k])))); Object.values(I.gens.ROLES).forEach(x => ['nom', 'dit'].forEach(k => out.push(I.t(x[k])))); return out; }, lang);
       L.forEach(t => { if (/Agr[ée]gor|\bpari|\bmise\b|parier|verset|Coran|bet\b|gambl|wager|賭|رهان|قمار|آية/i.test(t)) interdits.push(lang + ' : ' + t.slice(0, 60)); });
     }

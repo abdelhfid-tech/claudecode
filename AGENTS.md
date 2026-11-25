@@ -38,11 +38,11 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   hauteur et en largeur : l'image s'agrandit — d'office, en écartant deux doigts, par le bouton —, le toucher tombe
   juste, les étiquettes restent sur leurs personnages, le combat garde son cadrage et chaque héros y a sa place, aucun texte n'est sous dix points ;
   les messages du combat se posent en bas, sur personne, en français et en arabe ; la scène et celui qui mène ne
-  retombent pas dans le sombre : « LOUPE CONFORME »), `node v2/tools/bilingue.js` (la langue secondaire, pour chacun des douze couples de langues, en
+  retombent pas dans le sombre : « LOUPE CONFORME »), `node v2/tools/bilingue.js` (la langue secondaire, pour chacun des six couples de langues, en
   hauteur et en largeur : choisie par le vrai bouton et gardée ; le prologue au doigt, chaque réplique et chaque carton du
   récit avec sa seconde bulle, dans la bonne langue et le bon sens, lisible, sans débordement ; sans elle, rien ne paraît :
   « BILINGUE CONFORME »), `node v2/tools/partage.js` (partager sa progression : le bouton, absent avant tout maillon puis
-  touché sur la Chaîne et dans la halte ; l'image, carrée et verticale, et son texte, dans les quatre langues — le nom,
+  touché sur la Chaîne et dans la halte ; l'image, carrée et verticale, et son texte, dans chaque langue — le nom,
   les maillons, la réserve, l'adresse, et aucun mot des œuvres, du cœur ni des Valeurs ; le partage et ses replis :
   « PARTAGE CONFORME »), `node v2/tools/manette.js` (la manette tactile partout, au doigt et avec ses seuls boutons, en
   hauteur, en largeur, en largeur sous la barre du navigateur (844 × 340, 2.34), sur un petit téléphone et sur une tablette
@@ -53,7 +53,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   écran là où il sert et rien de cassé là où il est refusé ; sur la route du monde, une annonce sous la petite carte, le
   joystick tenu : la manette reste, rien n'est recouvert, le groupe marche (2.34) : « MANETTE CONFORME ») et
   `node v2/tools/longueurs.js` (2.24 :
-  chaque réplique, narration et ligne du moteur qui passe par la boîte de dialogue, et chaque carton du récit, dans les cinq
+  chaque réplique, narration et ligne du moteur qui passe par la boîte de dialogue, et chaque carton du récit, dans les quatre
   langues — l'arabe vocalisé compris —, sur 390 × 844, 844 × 390, 360 × 640 et 1280 × 720, puis avec l'arabe en langue
   secondaire : chaque page entière dans sa place, aucune police sous dix points au doigt, aucun mot coupé, l'italique
   fermé, les pages bout à bout redonnent le texte ; un témoin sans pages doit déborder : « LONGUEURS CONFORMES ») : aucun
@@ -181,7 +181,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   leur chimère, **« Le Pari »** (`pari`, racine l'Avidité, `D.CITE.rodent`), rôde parmi eux, sur les gradins seulement
   (`D.CITE.zones`), qu'Idris voit et combat. `regles.js` le vérifie : aucune réponse offerte au joueur (choix, question,
   pourparler, menu de la course, phrase de `circuit.js`) ni aucun nom de héros, de vertu, d'objet ou de pièce ne porte les
-  mots du pari, dans chacune des quatre langues ; `D.CIRCUITS` et `D.COURSE` n'ont que leurs champs déclarés (ni mise, ni
+  mots du pari, dans chaque langue ; `D.CIRCUITS` et `D.COURSE` n'ont que leurs champs déclarés (ni mise, ni
   enjeu, ni cote, ni droit d'entrée) et une prime positive ou nulle. Le circuit s'ouvre avant l'étape III de la découverte de
   l'Agrégor (2.25) : aucun de ses textes ne le nomme (le validateur le refuse) ; Sâlim dit « les écrans ». Le dernier maillon
   (`e1`) lit `_2084_salim` (posé par le moteur : Idris a couru avec Sâlim) : des retrouvailles, sinon la rencontre de
@@ -212,7 +212,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   aucun dirham n'est donné sans raison. **La règle anti-pari reste entière** : on ne paie jamais pour courir ; une activité
   qu'on paie ne rapporte rien (ni dirhams, ni lot, ni objet : la borne ne donne que son score) ; aucun hasard ne décide de ce
   qu'on reçoit ; `regles.js` le vérifie (`D.ACTIVITES` et `D.BORNE` n'ont que leurs champs déclarés, chaque prix est un entier
-  positif, aucun texte des activités ne porte les mots du pari ni ne nomme l'Agrégor, dans les quatre langues). Un outil par
+  positif, aucun texte des activités ne porte les mots du pari ni ne nomme l'Agrégor, dans chaque langue). Un outil par
   activité (`borne`, `etal`, `ecran`, `manege`, `D.OUTILS`), dit au premier essai par `I.lecons.proposer` ; si la progression
   ne peut pas encore le donner, l'activité attend ; payer n'est pas une leçon. La partie garde `cite.activites` (des comptes ;
   valeur de départ dans `migrer`, le format reste le 2). `v2/docs/architecture.md`, « Les activités des quartiers ».
@@ -285,7 +285,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   message de plus. Le joueur de test du moteur ne sort jamais. `regles.js` vérifie : `D.MONDE.rencontres` n'a que ses champs
   (des entiers, ou des parts de 0 à 1), au moins trois cases autour de La Mecque, aucune idée noire qui rôde, la racine de
   L'Abandon, les textes des rencontres (`route`, et ce que dit `monde.js`) — ni l'Agrégor (la carte vient avant l'étape III), ni
-  les mots du pari, ni verset, ni nombre, dans les quatre langues. Aussi : la Carte de la halte du monde sans nom qui en
+  les mots du pari, ni verset, ni nombre, dans chaque langue. Aussi : la Carte de la halte du monde sans nom qui en
   chevauche un autre, et le bandeau d'une ville visitée qui dit son nom (`Mo.sousTitre`, `I.t('{epoque} · {ville}')`).
   `v2/docs/architecture.md`, « Les rencontres de la route ». Contrôle : `node v2/tools/monde.js` (partie 5 ; « MONDE
   CONFORME ») ; un changement des rencontres repasse aussi `cite.js passages` (les rues des quartiers partagent le mécanisme),
@@ -449,8 +449,12 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   réel, aucun lien avec un peuple, une religion, Iblîs ni un djinn (exigences 6, 10, 16, 18). Textes de l'agent, validés par le décideur le 22 novembre.
   `v2/docs/architecture.md`, « La découverte de l'Agrégor ». Un changement de ces étapes repasse le validateur,
   `smoke.js auto`, `retours.js`, `progression.js` et `longueurs.js`.
-- **Les langues** (demande du décideur, 18 novembre ; exigence 25). La 2.x existe en français, en arabe, en anglais et
-  en japonais. Le français reste la langue des récits, des tables et du code ; les autres langues sont écrites à la
+- **Les langues** (demande du décideur, 18 novembre ; exigence 25). La 2.x existe en français, en arabe et en anglais.
+  **Le japonais est retiré du jeu depuis la 2.36** (D230 ; le décideur, 25 novembre : « Tu peux supprimer le japonais dans
+  ce cas » — plus de la moitié de ses textes emploient des kanji qu'un enfant de 10 à 12 ans ne lit pas) : ses textes et
+  son glossaire sont archivés dans `archive/v2-japonais/` (`LISEZ-MOI.md` dit comment le remettre) ; le moteur garde ce
+  qui sert une langue sans espaces, et un appareil qui l'avait choisi revient au français. L'exigence 25 le nomme
+  encore : sa formulation revient au décideur. Le français reste la langue des récits, des tables et du code ; les autres langues sont écrites à la
   source (`v2/docs/langues/ecrire.md`) et rangées, texte par texte, sous la clé de leur texte français, dans
   `v2/src/lang/<langue>/<fichier>.json`. `v2/src/core/langue.js` les pose sur place, comme `perso.js` le nom du joueur.
   Dans le code, un texte du joueur passe par `I.t('Une phrase entière, avec ses {champs}', { champs })` — jamais une
@@ -572,9 +576,9 @@ node v2/tools/monde.js [dossier]    # 2.29 et 2.30 : la carte du monde — les v
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
 node v2/tools/loupe.js [messages]   # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles, les messages du combat en bas (« messages » : eux seuls)
 node v2/tools/manette.js            # 2.x : la manette tactile partout — A choisit, B revient en arrière, le joystick choisit ; elle ne recouvre rien, la sélection se voit
-node v2/tools/bilingue.js [fr-ar …] # 2.x : la langue secondaire — douze couples, en hauteur et en largeur, le prologue au doigt (captures dans .smoke/bilingue)
-node v2/tools/partage.js            # 2.x : partager sa progression — le bouton, l'image (1080 × 1080, 1080 × 1920), le texte, les replis, quatre langues (images dans .smoke/partage/)
-node v2/tools/longueurs.js [langue…] [écran…] [fr-ar|sans2]   # 2.24 : aucun texte coupé — chaque page d'une réplique et chaque carton, cinq langues, quatre écrans, avec et sans langue secondaire — « LONGUEURS CONFORMES » (listes pour le décideur dans .smoke/longueurs/)
+node v2/tools/bilingue.js [fr-ar …] # 2.x : la langue secondaire — six couples, en hauteur et en largeur, le prologue au doigt (captures dans .smoke/bilingue)
+node v2/tools/partage.js            # 2.x : partager sa progression — le bouton, l'image (1080 × 1080, 1080 × 1920), le texte, les replis, dans chaque langue (images dans .smoke/partage/)
+node v2/tools/longueurs.js [langue…] [écran…] [fr-ar|sans2]   # 2.24 : aucun texte coupé — chaque page d'une réplique et chaque carton, quatre langues (l'arabe vocalisé compris), quatre écrans, avec et sans langue secondaire — « LONGUEURS CONFORMES » (listes pour le décideur dans .smoke/longueurs/)
 node v2/tools/longueurs.js releve [langue…]   # le relevé de la 2.12 : le fil et les deux menus — « LONGUEURS RELEVÉES », un rapport sans blocage
 node v2/tools/shorts.js [NN] [brouillon]  # 2.x : les shorts — le jeu filmé image par image (promo/shorts/NN-nom.js → promo/shorts/films/, non versionnés)
 node v2/tools/shorts.js fin [NN]    # 2.x : un short livré (promo/shorts/films/livres/) reçoit le plan final du soutien, sans être refilmé ni réencodé

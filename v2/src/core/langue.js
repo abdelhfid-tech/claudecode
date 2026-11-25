@@ -1,4 +1,5 @@
-/* ISNAD 2.x — la langue : le français, l'arabe, l'anglais, le japonais.
+/* ISNAD 2.x — la langue : le français, l'arabe, l'anglais (2.36, D230 : le japonais est retiré du jeu, ses textes
+   archivés dans archive/v2-japonais/ ; ce qui sert une langue sans espaces entre les mots reste dans le moteur).
    Le jeu est écrit en français, et le français ne bouge pas : c'est la langue des fichiers de récit, des tables du moteur
    et des phrases du code. Les trois autres langues ne sont pas des traductions du français — chacune est écrite à la
    source (v2/docs/sources/, v2/docs/langues/) — mais chaque texte y est RANGÉ sous la clé de son texte français, pour que
@@ -49,7 +50,8 @@
    avec toutes leurs voyelles). Ce n'est pas une langue de plus : une VARIANTE de l'arabe, qui en partage tout (le sens,
    les polices, les formes selon le nombre, chaque texte et chaque règle). L.lang et L.lang2 restent 'ar' ; L.voy et
    L.voy2 disent si la variante est choisie, pour le jeu ou pour la seconde bulle. Ce que le joueur choisit, et ce que
-   garde l'appareil (opts.lang, opts.lang2, ?lang=…), c'est un CHOIX : 'fr', 'ar', 'arv', 'en', 'ja' (L.code(), L.code2()).
+   garde l'appareil (opts.lang, opts.lang2, ?lang=…), c'est un CHOIX : 'fr', 'ar', 'arv', 'en' (L.code(), L.code2()) ; un choix
+   que le jeu n'offre plus (le japonais, gardé par un appareil) revient au français (L.connue).
    Les formes vocalisées sont rangées à part, sous la même clé (src/lang/ar/voyelles/, v2/tools/voyelles.js) : une forme
    n'est montrée que si elle suit encore son texte — mêmes lettres, et chaque signe qu'il porte déjà (fidele) ; sinon, le
    texte tel qu'il est écrit. Sans la variante, rien ne change d'un signe. */
@@ -58,17 +60,16 @@
   const LANGUES = {
     fr: { nom: 'Français', dir: 'ltr', rawi: 'Idris' },
     ar: { nom: 'العربية', dir: 'rtl', rawi: 'إدريس' },
-    en: { nom: 'English', dir: 'ltr', rawi: 'Idris' },
-    ja: { nom: '日本語', dir: 'ltr', rawi: 'イドリース' }
+    en: { nom: 'English', dir: 'ltr', rawi: 'Idris' }
   };
-  const ORDRE = ['fr', 'ar', 'en', 'ja'];
+  const ORDRE = ['fr', 'ar', 'en'];
   const SEP = '¦';
   // les variantes : un choix offert au joueur, qui prend tout d'une langue sauf la forme de certains textes
   // (son nom, le même dans toutes les langues de l'écran comme « العربية » : le mot lui-même, avec ses voyelles — décideur,
   // 20 novembre : « al arabiya avec les voyelles sur le mot » ; là où il faut des mots, une aide ou un lecteur d'écran,
   // l'interface dit « arabe vocalisé » dans sa langue)
   const VARIANTES = { arv: { base: 'ar', nom: 'العَرَبِيَّة', voyelles: true } };
-  const CHOIX = ['fr', 'ar', 'arv', 'en', 'ja'];
+  const CHOIX = ['fr', 'ar', 'arv', 'en'];
   const base = c => (VARIANTES[c] ? VARIANTES[c].base : c);
   const nomDe = c => (VARIANTES[c] ? VARIANTES[c].nom : LANGUES[c] ? LANGUES[c].nom : String(c || ''));
   /* ---------- la vocalisation ----------
