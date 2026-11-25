@@ -218,8 +218,11 @@ const CONTROLE = ({ LIGNES, liste, temoin }) => {
 
 async function controle(args) {
   const LANGUES = args.filter(a => /^(fr|ar|arv|en)$/.test(a)), ECRANS = args.filter(a => /^\d+x\d+$/.test(a)), seul2 = args.includes('fr-ar'), sans2 = args.includes('sans2');
-  if (!LANGUES.length) LANGUES.push('fr', 'ar', 'arv', 'en');   // (2.36, D230 : le japonais est retiré du jeu) if (!ECRANS.length) ECRANS.push('390x844', '844x390', '360x640', '1280x720');
+  if (!LANGUES.length) LANGUES.push('fr', 'ar', 'arv', 'en');   // (2.36, D230 : le japonais est retiré du jeu)
+  if (!ECRANS.length) ECRANS.push('390x844', '844x390', '360x640', '1280x720');
   const passes = []; if (!seul2) LANGUES.forEach(l => ECRANS.forEach(e => passes.push({ l, e }))); if (!sans2) ECRANS.forEach(e => passes.push({ l: 'fr', e, l2: 'ar' }));
+  // (2.39) un contrôle qui ne mesure rien n'est pas conforme : de la 2.36 à la 2.38, un commentaire avalait la liste des écrans
+  if (!passes.length) { console.log('✗ LONGUEURS : aucune passe à jouer (ni langue, ni écran) — rien n’a été mesuré'); process.exit(1); }
   const LIGNES = lignesDuCode(), browser = await chromium.launch(), rapport = {}; let deborde = 0, erreurs = 0;
   for (const P of passes) {
     const [w, h] = P.e.split('x').map(Number), nom = P.l + (P.l2 ? '-' + P.l2 : '') + ' ' + P.e, t0 = Date.now();

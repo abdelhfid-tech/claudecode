@@ -409,7 +409,7 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
         const x = (c[0] * 0.4124 + c[1] * 0.3576 + c[2] * 0.1805) / 0.95047, y = c[0] * 0.2126 + c[1] * 0.7152 + c[2] * 0.0722, z = (c[0] * 0.0193 + c[1] * 0.1192 + c[2] * 0.9505) / 1.08883;
         const f = t => t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116; return [116 * f(y) - 16, 500 * (f(x) - f(y)), 200 * (f(y) - f(z))]; };
       const hex = (d, o) => '#' + [d[o], d[o + 1], d[o + 2]].map(v => v.toString(16).padStart(2, '0')).join('');
-      const NEONS = new Set(['#39e6ff', '#ff4fd8'].concat(...Object.values(R.neons)));
+      const NEONS = new Set(['#39e6ff', '#ff4fd8'].concat(...Object.values((D.RAWI && D.RAWI.neons) || {})));   // (2.37 : D.RAWI n'est plus un choix, le dessin le lit encore)
       const image = (cv, w, h, y0) => { const d = cv.getContext('2d').getImageData(0, y0 || 0, w, h).data, pts = []; for (let i = 0; i < w * h; i++) { const o = i * 4; pts.push(d[o + 3] > 200 ? { l: lab(hex(d, o)), neon: NEONS.has(hex(d, o)) } : null); } return pts; };
       const VUES = [[0, 1], [1, 1], [3, 1], [0, 2], [1, 2], [3, 2]];   // [direction, taille] : 1 → 16 × 24, 2 → 32 × 48
       const vue = (L, [d, e]) => e === 1 ? image(G.charSheet(L), 16, 24, d * 24) : (g => image(g, g.width, g.height))(G.charGrand(L, d, 0));
