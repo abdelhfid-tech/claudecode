@@ -1,6 +1,7 @@
 # Le japonais de la 2.x, archivé
 
-*Retiré du jeu à la version 2.36 (D230 ; le décideur, 25 novembre : « Tu peux supprimer le japonais dans ce cas »).*
+*Retiré du jeu à la version 2.36 (D230 ; le décideur, 25 novembre : « Tu peux supprimer le japonais dans ce cas », puis
+« Pour l'instant » : un retrait, pas un abandon).*
 
 ## Pourquoi
 

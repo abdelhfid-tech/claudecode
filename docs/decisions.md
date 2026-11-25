@@ -2470,7 +2470,8 @@ pages privées de son compte.
   les 1 026 kanji de l'école primaire (KANJIDIC2, niveaux 1 à 6), que 3 651 textes japonais sur 6 453 (56 %) emploient au
   moins un kanji qu'un enfant de 10 à 12 ans n'a pas appris (74 % au-delà de la quatrième année ; 660 kanji différents).
   L'agent a présenté le choix : des furigana (un changement du moteur) ou une réécriture en kana. Le décideur : « Tu peux
-  supprimer le japonais dans ce cas ». Fait : `ja` sort de `LANGUES`, `ORDRE` et `CHOIX` (`langue.js`), la police Noto Serif
+  supprimer le japonais dans ce cas », puis : « Pour l'instant » — c'est un retrait, pas un abandon : rien n'est détruit, et
+  la question des kanji reste à trancher le jour où il revient. Fait : `ja` sort de `LANGUES`, `ORDRE` et `CHOIX` (`langue.js`), la police Noto Serif
   JP du lien des polices ; les dix fichiers de textes et le glossaire sont archivés dans `archive/v2-japonais/` (à jour du
   français de la 2.35), avec la marche à suivre pour le remettre ; un appareil qui avait choisi le japonais revient au
   français ; les contrôles passent à trois langues (`bilingue.js` : six couples ; `longueurs.js` : quatre langues avec
