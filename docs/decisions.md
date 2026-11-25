@@ -2505,8 +2505,14 @@ pages privées de son compte.
     l'anglais dix (cinq la disaient déjà) ; la forme vocalisée suit l'arabe.
   - **L'arabe, ses six « oui »** : « ثُلمته، موضع ضعفه » ; « أنفذ أبو بكر الجيش » ; « ولا يمثّلوا بأحد … من اعتزلوا في الصوامع
     وشأنهم » ; « تراجعت صفوف المؤمنين … عشيرةً عشيرة » ; « إنها استراحةٌ » ; « ولا تؤدّي الزكاة بعد اليوم ».
-  - **Ce qui attend toujours sa réponse** : deux réécritures arabes, huit anglaises, les quinze points signalés sans
-    proposition (des paroles citées, des mots du glossaire) et les cinq points d'histoire.
+  - **Puis, le même jour : « Applique tes propositions par défaut » (version 2.41).** Les dix réécritures restées sans
+    réponse sont appliquées telles que la page les proposait. Arabe : « أنت لا تستعجلني » (un constat, non un ordre) ;
+    « قِرَبًا منفوخةً » (des outres, et non « أنحاءً »). Anglais : « when he spoke » (pour « took the floor ») ; « serving his
+    own interests » ; « asks a twenty-year-old commander for permission » ; « Build the mosque of Dhu al-Qassa » ;
+    « in the hearts of our men » et « from the hearts of men » (pour « breasts ») ; « A camel’s tying rope… » ; « a rallying
+    cry has joined the swarm ». Le français ne change pas.
+  - **Ce qui attend toujours sa réponse** : les quinze points signalés sans proposition (des paroles citées, des mots du
+    glossaire) et les cinq points d'histoire — il n'y a là rien à appliquer par défaut.
   - **Ce que cela laisse derrière** : le short 01 livré montre encore « Elle commence au jour le plus sombre » ; son
     scénario suit le nouveau texte, le film est à refaire avec les autres (D219). Deux tournures sœurs n'étaient pas sur la
     fiche et n'ont pas été touchées : « prier l'aube » (`saga_khalid.js`) et « Prier le couchant » (`caid.js`) ; de même
