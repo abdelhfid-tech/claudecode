@@ -82,37 +82,10 @@ const INVENTAIRE = COIFFES => {
   });
   Object.values(D.RANGS || {}).forEach(T => pose('rangs', T.name, Object.assign({ kind: 'soldat', robe: '#8a7355', head: '#cdbf9f' }, T.look)));
   (D.TENUES || []).forEach(t => pose('tenues', t.id, Object.assign({ kind: 'compagnon' }, t.look)));
-  // 2.x — le râwî tel que le jeu le montre : sous chaque ensemble, son visage gardé (perso.look) ; puis, s'il se compose
-  // (D.RAWI), chaque valeur de chaque pièce posée sur Idris, et des compositions entières, sur plusieurs ensembles
+  // 2.x — le râwî tel que le jeu le montre. 2.37 (D231) : il n'a plus qu'une apparence, celle de toujours — ni ensemble
+  // ni composition à inventorier
   const X = I.perso;
-  if (X && X.look) (D.TENUES || []).forEach(t => pose('râwî', 'ensemble ' + t.id, Object.assign({ kind: 'compagnon' }, X.look(t))));
-  if (X && X.composer && X.neutraliser && D.RAWI) {
-    const R = D.RAWI, T = id => D.TENUES.find(t => t.id === id) || D.TENUES[0];
-    const c = (compo, tid) => Object.assign({ kind: 'compagnon' }, X.composer(T(tid), X.neutraliser(T(tid), compo)));
-    Object.keys(R.teints).forEach(k => pose('râwî', 'teint ' + k, c({ teint: k })));
-    R.barbes.forEach(n => pose('râwî', 'barbe ' + n, c({ barbe: n })));
-    Object.keys(R.poils).forEach(k => pose('râwî', 'poil ' + k, c({ poil: k })));
-    R.coiffes.forEach(v => pose('râwî', 'coiffe ' + v, c({ coiffe: v })));
-    R.manteaux.forEach(v => pose('râwî', 'manteau ' + v, c({ manteau: v })));
-    [true, false].forEach(v => { pose('râwî', 'robe longue ' + v, c({ longue: v })); pose('râwî', 'écharpe ' + v, c({ echarpe: v })); });
-    Object.keys(R.etoffes).forEach(k => pose('râwî', 'étoffe ' + k, c({ etoffe: k })));
-    Object.keys(R.neons).forEach(k => pose('râwî', 'néon ' + k, c({ neon: k })));
-    R.objets.forEach(o => pose('râwî', 'objet ' + o, c({ objet: o })));
-    // 2.x (D193) — chaque coiffe sous chaque coupe (ce qu'elle refuse cède : la même silhouette n'entre qu'une fois), chaque objet
-    // sous chaque coiffe, et sur l'ensemble qui fait céder l'étoffe claire
-    R.coiffes.forEach(co => { R.manteaux.forEach(m => pose('râwî', 'coiffe ' + co + ' · ' + m, c({ coiffe: co, manteau: m })));
-      R.objets.forEach(o => pose('râwî', 'coiffe ' + co + ' · ' + o, c({ coiffe: co, objet: o }))); pose('râwî', 'lettre · coiffe ' + co, c({ coiffe: co }, 'lettre')); });
-    // le teint le plus clair et le plus sombre sous chaque ensemble ; puis des compositions entières
-    D.TENUES.forEach(t => { const ks = Object.keys(R.teints); [ks[0], ks[ks.length - 1]].forEach(k => pose('râwî', t.id + ' · teint ' + k, c({ teint: k }, t.id))); });
-    [[{ teint: 't7', barbe: 2, poil: 'p3', coiffe: 'calotte', manteau: 'ample', longue: true, echarpe: true, etoffe: 'e7', neon: 'n2', objet: 'besace' }, 'archives'],
-      [{ teint: 't1', barbe: 0, manteau: 'epaule', etoffe: 'e4', neon: 'n4' }, 'ruelle'],
-      [{ teint: 't5', poil: 'p1', coiffe: 'capuche', longue: true, etoffe: 'e3', neon: 'n5', objet: 'lanterne' }, 'lettre'],
-      [{ teint: 't6', barbe: 2, echarpe: false, manteau: 'long', neon: 'n3' }, 'copiste'],
-      [{ teint: 't4', barbe: 1, coiffe: 'imama_haute', manteau: 'ample', longue: true, etoffe: 'e2', neon: 'n1', objet: 'lanterne' }, 'encre'],
-      [{ teint: 't2', barbe: 2, poil: 'p3', coiffe: 'litham', manteau: 'aucun', echarpe: true, etoffe: 'e5', objet: 'besace' }, 'veilleur'],
-      [{ teint: 't7', barbe: 0, coiffe: 'imama_haute', echarpe: true, etoffe: 'e7', neon: 'n3', objet: 'besace' }, 'ruelle'],
-      [{ teint: 't1', poil: 'p1', coiffe: 'litham', longue: true, etoffe: 'e6', neon: 'n5', objet: 'lanterne' }, 'lettre']].forEach(([k, tid], i) => pose('râwî', 'composition ' + (i + 1) + ' · ' + tid, c(k, tid)));
-  }
+  if (X && X.look) pose('râwî', 'tenue de toujours', Object.assign({ kind: 'compagnon' }, X.look()));
   Object.keys(G.KINDS).forEach(k => { pose('types', k, { kind: k, robe: '#8a7355', head: '#e6dcc4' });
     if (k === 'soldat' || k === 'romain') for (let i = 0; i < 7; i++) pose('types', k + ' ' + i, { kind: k, robe: '#6a5a40', head: '#e2d8c2', sel: i }); });
   // toutes les coiffes, sous chaque manteau ; puis les motifs et les étoffes
@@ -421,7 +394,7 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     // 7. la marque du râwî (D193 ; le décideur : « les autres habitants de la Cité-Miroir ne doivent pas ressembler à Idris »)
     page = await ouvrir();
     const Mq = await page.evaluate(liste => {
-      const I = window.ISNAD, G = I.gfx, D = I.D, X = I.perso, R = D.RAWI; if (!G.allure || !G.petiteGrille || !X || !X.composer || !R) return null;
+      const I = window.ISNAD, G = I.gfx, D = I.D, X = I.perso; if (!G.allure || !G.petiteGrille || !X || !X.look) return null;
       const faux = [], rawi = L => L.kind === 'cyber', vues4 = [0, 1, 2, 3];
       // la marque : des cases Y (la bande) et y (la ceinture) dans les grilles — petit personnage, 32 × 48, tracé fin
       const grilles = L => vues4.map(d => G.petiteGrille(L, d, 0).join('')).concat(vues4.map(d => G.charGrille(L, d, 0, null, 1).lignes.join('')), [G.charGrille(L, 0, 0, null, 2).lignes.join('')]);
@@ -442,13 +415,10 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
       const vue = (L, [d, e]) => e === 1 ? image(G.charSheet(L), 16, 24, d * 24) : (g => image(g, g.width, g.height))(G.charGrand(L, d, 0));
       const S = (a, b) => { let u = 0, n = 0; for (let i = 0; i < a.length; i++) { const p = a[i], q = b[i], pa = p && !p.neon, qb = q && !q.neon; if (!pa && !qb) continue; u++;
         if (pa && qb && (p.l[0] - q.l[0]) ** 2 + (p.l[1] - q.l[1]) ** 2 + (p.l[2] - q.l[2]) ** 2 < 144) n++; } return u ? n / u : 0; };
-      // les compositions du râwî : les six ensembles, puis chaque coiffe, coupe, longueur, écharpe et étoffe sur sa tenue de toujours
-      const t0 = D.TENUES[0], comps = [], vc = new Set(), cle = L => { const A = G.allure(L); return A.coiffe + '/' + A.court; };
+      // l'apparence du râwî : une seule depuis la 2.37 (D231) — sa tenue de toujours (avant : six ensembles et leurs compositions)
+      const comps = [], vc = new Set(), cle = L => { const A = G.allure(L); return A.coiffe + '/' + A.court; };
       const ajoute = (L, dit) => { const k = JSON.stringify(L); if (vc.has(k)) return; vc.add(k); comps.push({ dit, cle: cle(L), L, im: null }); };
-      D.TENUES.forEach(t => ajoute(Object.assign({ kind: 'compagnon' }, X.look(t)), 'ensemble ' + t.id));
-      R.coiffes.forEach(co => R.manteaux.forEach(ma => [false, true].forEach(lo => [false, true].forEach(ec => Object.keys(R.etoffes).forEach(et => {
-        const c = X.neutraliser(t0, { coiffe: co, manteau: ma, longue: lo, echarpe: ec, etoffe: et }), L = Object.assign({ kind: 'compagnon' }, X.composer(t0, c));
-        ajoute(L, [L.coiffe || 'capuche', L.manteau || 'long', L.court === false ? 'robe longue' : 'robe courte', L.echarpe ? 'écharpe' : '', c.etoffe || 'e1'].filter(Boolean).join(' ')); })))));
+      ajoute(Object.assign({ kind: 'compagnon' }, X.look()), 'tenue de toujours');
       // les habitants de 2084 et de la Citadelle (frame.js, caid.js), et les Compagnons de tous les récits
       const habitants = liste.filter(q => (q.groupe === 'héros' || q.groupe === 'gens') && !rawi(q.look) && /^(idris|caid)\//.test(q.nom));
       const compagnons = liste.filter(q => (q.groupe === 'héros' || q.groupe === 'gens') && !rawi(q.look) && !/^(idris|caid)\//.test(q.nom) && (q.look.kind || 'compagnon') === 'compagnon');
@@ -469,11 +439,11 @@ const PLANCHE = async ({ cases, k, cols, titre }) => {
     if (!Mq) ko('ABSENT gfx.allure ou gfx.petiteGrille : ce moteur ne dit pas qui porte la marque du râwî');
     else {
       if (Mq.faux.length) { Mq.faux.slice(0, 10).forEach(f => ko('ÉCART ' + f)); if (Mq.faux.length > 10) console.log(`   … et ${Mq.faux.length - 10} autre(s)`); }
-      else ok(`la marque du râwî : la bande et la ceinture de néon ne sont qu'à lui — ${Mq.sans} silhouettes du jeu n'en ont pas un point (16 × 24, 32 × 48 et 64 × 96, dans les quatre vues), et ses ${Mq.avec} silhouettes (ses ensembles, ses compositions, son équipement) les portent, en petit, en grand et dans le tracé fin`);
+      else ok(`la marque du râwî : la bande et la ceinture de néon ne sont qu'à lui — ${Mq.sans} silhouettes du jeu n'en ont pas un point (16 × 24, 32 × 48 et 64 × 96, dans les quatre vues), et ses ${Mq.avec} silhouettes (sa tenue de toujours, son équipement) les portent, en petit, en grand et dans le tracé fin`);
       if (Mq.trop.length) { Mq.trop.slice(0, 10).forEach(f => ko('ÉCART il ressemble à un autre : ' + f)); if (Mq.trop.length > 10) console.log(`   … et ${Mq.trop.length - 10} autre(s)`); }
-      else ok(`personne ne ressemble au râwî : ses ${Mq.comps} compositions (les six ensembles, puis chaque coiffe, coupe, longueur, écharpe et étoffe), même sans leur néon, face aux ${Mq.habitants} habitants de 2084 et de la Citadelle et aux ${Mq.compagnons} Compagnons de même coiffe et de même longueur de robe (${Mq.paires} paires, de face, de profil et de dos, en 16 × 24 et en 32 × 48) : au plus ${Mq.max.s.toFixed(2)} — ${Mq.max.qui} et « ${Mq.max.dit} » (${Mq.max.ou}) —, sous le seuil de 0,85`);
+      else ok(`personne ne ressemble au râwî : sa tenue de toujours (${Mq.comps} apparence, depuis la 2.37), même sans son néon, face aux ${Mq.habitants} habitants de 2084 et de la Citadelle et aux ${Mq.compagnons} Compagnons de même coiffe et de même longueur de robe (${Mq.paires} paires, de face, de profil et de dos, en 16 × 24 et en 32 × 48) : au plus ${Mq.max.s.toFixed(2)} — ${Mq.max.qui} et « ${Mq.max.dit} » (${Mq.max.ou}) —, sous le seuil de 0,85`);
       if (Mq.tropF.length) { Mq.tropF.slice(0, 10).forEach(f => ko('ÉCART une femme ressemble au râwî ou à un Compagnon : ' + f)); if (Mq.tropF.length > 10) console.log(`   … et ${Mq.tropF.length - 10} autre(s)`); }
-      else if (Mq.femmes) ok(`les femmes ne ressemblent ni au râwî ni à un Compagnon : ${Mq.femmes} femmes des récits face aux ${Mq.comps} compositions du râwî (toutes coiffes) et aux ${Mq.compagnons} Compagnons (${Mq.pairesF} paires, de face, de profil et de dos, en 16 × 24 et en 32 × 48) : au plus ${Mq.maxF.s.toFixed(2)} — ${Mq.maxF.qui} et ${Mq.maxF.dit} (${Mq.maxF.ou}) —, sous le seuil de 0,85`);
+      else if (Mq.femmes) ok(`les femmes ne ressemblent ni au râwî ni à un Compagnon : ${Mq.femmes} femmes des récits face au râwî (${Mq.comps} apparence) et aux ${Mq.compagnons} Compagnons (${Mq.pairesF} paires, de face, de profil et de dos, en 16 × 24 et en 32 × 48) : au plus ${Mq.maxF.s.toFixed(2)} — ${Mq.maxF.qui} et ${Mq.maxF.dit} (${Mq.maxF.ou}) —, sous le seuil de 0,85`);
     }
     // 8. la tenue des femmes (2.26, D215 ; le décideur, 21 novembre : « elles doivent ressembler à des femmes (pudiques) » ; « Visage
     // découvert ») : les femmes du jeu (FEMMES) sont du type « femme » ; chaque femme — elles, le type, le khimâr sous chaque manteau —

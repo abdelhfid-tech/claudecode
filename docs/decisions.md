@@ -2478,6 +2478,16 @@ pages privées de son compte.
   l'arabe vocalisé ; `partage.js`, `batir.js`). Le moteur garde ce qui sert une langue sans espaces, et `regles.js` ses
   règles en japonais : rien de cela ne se voit. **L'exigence 25 nomme encore le japonais** (et la traduction de Ryoichi
   Mita) : l'agent ne l'a pas réécrite ; sa formulation revient au décideur.
+- [x] **D231. Plus d'options pour le personnage : le modèle par défaut (version 2.37 ; le décideur, 25 novembre).** « Tu peux
+  aussi supprimer les options pour le garçons (couleurs barbe moustache etc) garde le modèle par défaut ». Le râwî n'a plus
+  qu'une apparence, celle d'Idris « le passeur » (D204). L'écran « Ton personnage » ne garde que son aperçu (de face, de
+  profil, tel que la carte le montre), son nom et le bouton : plus d'ensembles, de teint, de barbe ni de poil, de coiffe, de
+  longueur, d'étoffe, de néon, d'objet, ni ↺ ni dé. **Le nom se choisit toujours** (le décideur n'en a rien dit : l'agent l'a
+  gardé). Une partie d'avant qui portait un ensemble ou des pièces se charge sans refus : ces champs ne sont plus lus, le
+  nom est gardé, le format reste le 2. `D.TENUES` n'a plus qu'une entrée ; `perso.js` perd la composition ; vingt-deux
+  textes (les noms des ensembles, les mots des options) sortent du jeu et de ses langues ; `D.RAWI` reste, pour le dessin.
+  En largeur, l'aperçu prend la gauche de l'écran, le nom et le bouton la droite. Contrôles accordés : `personnage.js`,
+  `partie.js`, `silhouettes.js`, `partage.js`. Cela remplace D193 (le râwî composé) et le choix de l'ensemble (lot 1.5).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

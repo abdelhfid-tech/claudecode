@@ -251,7 +251,7 @@ body.touch #battle .cmd .mback { padding: .32em 1em; }
 #perso { background: linear-gradient(180deg, rgba(7, 6, 13, .95), rgba(10, 8, 24, .98)); padding-top: max(10px, 2.2vh); padding-bottom: 0; }
 #perso header { text-align: center; margin-bottom: .3em; flex: none; }
 #perso h2 { font-family: var(--f-display); letter-spacing: .2em; font-size: 1.3em; line-height: 1.25; margin: 0; color: var(--gold); }
-#perso .corps { width: min(100%, 27em); flex: 1 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(150px, 1fr) auto auto; grid-template-areas: "saisie" "pv" "col" "bas"; gap: 8px; }
+#perso .corps { width: min(100%, 27em); flex: 1 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(150px, 1fr) auto; grid-template-areas: "saisie" "pv" "bas"; gap: 8px; }
 #perso .pv-saisie { grid-area: saisie; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 #perso .pv { grid-area: pv; position: relative; min-height: 0; container-type: size; display: flex; align-items: center; justify-content: center; padding: 6px 4px; background: radial-gradient(circle at 50% 42%, rgba(57, 230, 255, .13), rgba(10, 8, 20, .7)); border: 1px solid var(--line); overflow: hidden; }
 /* la figure de face, et celle de profil un peu plus petite derrière elle : aussi grandes que la place le permet */
@@ -261,62 +261,33 @@ body.touch #battle .cmd .mback { padding: .32em 1em; }
 #perso .pv-fig img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 50% 100%; image-rendering: pixelated; transition: transform .22s ease; }
 #perso .pv.proche .pv-fig img { transform: scale(2.4); }
 #perso .pv-carte { position: absolute; top: 6px; inset-inline-end: 8px; width: 32px; height: 48px; image-rendering: pixelated; pointer-events: none; }
-#perso .pv-rond { flex: none; width: 48px; height: 48px; padding: 0; border-radius: 50%; display: grid; place-items: center; color: var(--gold); background: rgba(10, 8, 20, .82); border: 1px solid rgba(233, 200, 119, .4); }
-#perso .pv-rond svg { width: 24px; height: 24px; fill: currentColor; }
-#perso .pv-col { grid-area: col; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 #perso .pv-nom { display: flex; gap: 6px; }
 #perso .pv-nom input { flex: 1 1 auto; min-width: 0; width: 0; height: 44px; padding: 0 .7em; background: rgba(4, 3, 10, .8); color: #fff; border: 1px solid rgba(233, 200, 119, .4); font: 1.05em var(--f-body); }
 #perso .pv-nom input:focus { outline: 2px solid var(--acc); outline-offset: 1px; }
 #perso .pv-nom button, #perso .pv-bas button { height: 44px; padding: 0 1em; background: rgba(10, 8, 20, .72); border: 1px solid rgba(233, 200, 119, .25); font-family: var(--f-display); letter-spacing: .1em; font-size: .84em; white-space: nowrap; }
 #perso .pv-note { margin: 0; font-size: .86em; color: #ff9a8a; } #perso .pv-note:empty { display: none; }
-#perso .pv-rangee { display: flex; justify-content: center; align-items: flex-end; gap: 4px; }
-#perso .pv-groupe { display: flex; align-items: flex-end; gap: 4px; }
-#perso .pv-sep { width: 1px; align-self: stretch; background: var(--line); margin: 0 4px; }
-#perso .pv-c { flex: none; width: 44px; height: 44px; padding: 0; display: grid; place-items: center; overflow: hidden; border-radius: 8px; border: 1px solid rgba(255, 255, 255, .16); background-color: rgba(10, 8, 20, .72); color: var(--dim); }
-#perso .pv-c img { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
-#perso .pv-c svg { width: 24px; height: 24px; }
-#perso .pv-fig44 { height: 66px; } #perso .pv-grande { width: 52px; height: 78px; }
-#perso .pv-tete img, #perso .pv-objet img { width: 40px; height: 40px; object-fit: contain; }
-#perso .pv-pastille { border-radius: 50%; border: 2px solid rgba(255, 255, 255, .2); }
-#perso .pv-c.choisie { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
-#perso .pv-c.retouche { box-shadow: none; outline: 2px dashed var(--gold); outline-offset: 1px; }
-#perso .pv-c:disabled { opacity: .25; cursor: default; }
-#perso .pv-onglets { display: flex; justify-content: center; gap: 6px; }
-#perso .pv-onglet { height: 44px; min-width: 44px; padding: 0 6px; display: flex; align-items: center; gap: 6px; border-radius: 22px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(10, 8, 20, .72); }
-#perso .pv-onglet .ico { flex: none; width: 30px; height: 30px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background-color: rgba(4, 3, 10, .6); color: var(--dim); }
-#perso .pv-onglet .ico img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
-#perso .pv-onglet .ico svg { width: 20px; height: 20px; }
-#perso .pv-onglet .mot { display: none; font-family: var(--f-display); letter-spacing: .08em; font-size: .82em; white-space: nowrap; }
-#perso .pv-onglet.choisie { border-color: var(--gold); background: rgba(233, 200, 119, .14); padding-inline-end: 12px; color: #fff; }
-#perso .pv-onglet.choisie .mot { display: inline; }
-#perso .pv-panneau { display: flex; flex-direction: column; gap: 8px; }
-#perso button.sel, #perso .pv-c.retouche.sel { outline: 2px solid #fff; outline-offset: 2px; box-shadow: 0 0 14px rgba(233, 200, 119, .4); }
+#perso button.sel { outline: 2px solid #fff; outline-offset: 2px; box-shadow: 0 0 14px rgba(233, 200, 119, .4); }
 #perso .pv-bas { grid-area: bas; display: flex; gap: 8px; position: sticky; bottom: 0; z-index: 1; padding: 4px 0 max(10px, 2vh); background: linear-gradient(180deg, rgba(10, 8, 24, 0), rgba(10, 8, 24, .97) 30%); }
-#perso .pv-bas button { height: 48px; } #perso .pv-bas .pv-rond { padding: 0; }
+#perso .pv-bas button { height: 48px; }
 #perso .pv-bas .fort { flex: 1 1 auto; border-color: var(--gold); color: #1a1420; background: linear-gradient(180deg, #ffe9a8, #e9c877); }
 #perso .pv-bas button:disabled { opacity: .4; }
-body.fin #perso .pv-fig img, body.fin #perso .pv-vig img, body.fin #perso .pv-onglet .ico img { image-rendering: auto; } /* en dessin fin, la figure a deux fois plus de points : on la réduit en douceur */
+body.fin #perso .pv-fig img { image-rendering: auto; } /* en dessin fin, la figure a deux fois plus de points : on la réduit en douceur */
 #perso .pv-bas .fort, #perso .pv-bas button:last-child { min-width: 0; }
-@media (max-width: 379px) { #perso .pv-c { width: 42px; height: 42px; } #perso .pv-fig44 { height: 63px; } #perso .pv-grande { width: 50px; height: 75px; } #perso .pv-rangee, #perso .pv-groupe { gap: 3px; }
-  #perso .pv-bas { gap: 6px; } #perso .pv-bas .pv-rond { width: 44px; height: 44px; } #perso .pv-bas button:not(.pv-rond), #perso .pv-nom button { padding: 0 .7em; letter-spacing: .04em; } }
-/* un écran très étroit (320 de large) : sept cases tiennent encore sur une ligne */
-@media (max-width: 339px) { #perso .pv-c { width: 38px; height: 38px; } #perso .pv-fig44 { width: 40px; height: 60px; } #perso .pv-grande { width: 46px; height: 69px; } #perso .pv-tete img, #perso .pv-objet img { width: 34px; height: 34px; } }
-/* un écran bas : des vignettes un peu plus courtes, pour que tout tienne sans défiler */
-@media (max-height: 600px) { #perso .pv-fig44 { height: 60px; } #perso .pv-grande { width: 48px; height: 72px; } #perso .corps { gap: 6px; grid-template-rows: auto minmax(110px, 1fr) auto auto; } #perso .pv-col, #perso .pv-panneau { gap: 6px; } }
-/* en largeur : l'aperçu et les boutons à gauche ; le nom, les ensembles, les onglets et les rangées à droite. La colonne
-   de droite n'a besoin que de sept cases de large (340 points) : sur un téléphone étroit (640 × 360, 667 × 375), elle
-   s'y tient, pour laisser leur place à l'aperçu et aux boutons */
-body:not(.portrait) #perso .corps { width: min(100%, 50em); grid-template-columns: minmax(0, 1fr) minmax(0, clamp(340px, 100vw - 330px, 22.5em)); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "pv saisie" "pv col" "bas col"; column-gap: 14px; row-gap: 6px; }
-body:not(.portrait) #perso .pv-col { justify-content: flex-start; }
+@media (max-width: 379px) { #perso .pv-bas { gap: 6px; } #perso .pv-bas button, #perso .pv-nom button { padding: 0 .7em; letter-spacing: .04em; } }
+/* un écran bas : l'aperçu se raccourcit, pour que tout tienne sans défiler */
+@media (max-height: 600px) { #perso .corps { gap: 6px; grid-template-rows: auto minmax(110px, 1fr) auto; } }
+/* en largeur (2.37, D231 : plus d'options) : l'aperçu à gauche, sur toute la hauteur ; à droite, le nom en haut et le
+   bouton en bas */
+body:not(.portrait) #perso .corps { width: min(100%, 50em); grid-template-columns: minmax(0, 1fr) minmax(0, clamp(260px, 44%, 22.5em)); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "pv saisie" "pv ." "pv bas"; column-gap: 14px; row-gap: 6px; }
 /* les boutons du bas vont à la ligne plutôt que de se tasser : aucun mot n'est coupé ; si l'écran défile, ils restent sous le pouce */
 body:not(.portrait) #perso .pv-bas { flex-wrap: wrap; padding-bottom: max(10px, 2vh); }
-body:not(.portrait) #perso .pv-bas button:not(.pv-rond) { flex: 1 0 auto; min-width: auto; }
+body:not(.portrait) #perso .pv-bas button { flex: 1 0 auto; min-width: auto; }
 /* un téléphone en largeur : des boutons plus serrés, pour qu'ils tiennent sur une ligne quand la place le permet */
-@media (orientation: landscape) and (max-height: 500px) { body:not(.portrait) #perso .pv-bas { gap: 6px; } body:not(.portrait) #perso .pv-bas .pv-rond { width: 44px; height: 44px; }
-  body:not(.portrait) #perso .pv-bas button:not(.pv-rond), body:not(.portrait) #perso .pv-nom button { padding: 0 .7em; letter-spacing: .04em; } }
+@media (orientation: landscape) and (max-height: 500px) { body:not(.portrait) #perso .pv-bas { gap: 6px; }
+  body:not(.portrait) #perso .pv-bas button, body:not(.portrait) #perso .pv-nom button { padding: 0 .7em; letter-spacing: .04em; } }
 @media (orientation: landscape) and (max-height: 480px) { #perso header { margin-bottom: .15em; } #perso h2 { font-size: 1.1em; } }
-/* un téléphone très bas, en largeur (568 × 320) : des vignettes plus courtes, pour que l'habit tienne sans défiler */
-@media (orientation: landscape) and (max-height: 340px) { #perso { padding-top: 6px; } #perso .pv-fig44 { height: 52px; } #perso .pv-grande { width: 44px; height: 60px; } }
+/* un téléphone très bas, en largeur (568 × 320) */
+@media (orientation: landscape) and (max-height: 340px) { #perso { padding-top: 6px; } }
 #menu .pane .perso-vue { display: flex; gap: .8em; margin: .4em 0; } #menu .pane .perso-vue img { width: 4.6em; height: 6.9em; image-rendering: pixelated; }
 body.fin #menu .pane .perso-vue img { image-rendering: auto; }
 /* « Ta partie » : exporter, importer */

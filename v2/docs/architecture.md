@@ -237,9 +237,20 @@ autre.
 
 ## Le personnage du joueur : `src/core/perso.js`
 
-Le joueur donne un nom et une tenue au **râwî** — le héros de l'histoire-cadre, personnage de fiction — et, depuis la
-2.x, compose son apparence pièce par pièce (« Le râwî composé », plus bas). Les Compagnons gardent leur nom et leur
-silhouette. Le choix est dans la partie : `profil: { nom, tenue, compo }` (`compo` est facultatif).
+**Depuis la 2.37 (D231), le joueur ne donne plus qu'un nom au râwî.** Le décideur, 25 novembre : « supprimer les options
+pour le garçon (couleurs, barbe, moustache, etc.) ; garde le modèle par défaut ». Le râwî n'a qu'une apparence, celle de
+`D.TENUES[0]` (Idris « le passeur », D204) : l'écran « Ton personnage » montre son aperçu, son nom et un bouton — ni
+ensemble, ni teint, ni barbe, ni coiffe, ni étoffe, ni néon, ni objet, ni tirage au hasard. `perso.js` n'a plus que
+`P.profil()` (`{ nom, tenue }`, la tenue de toujours), `P.look()`, `P.choisir(nom)` et ce qui pose le nom dans les textes.
+Une partie d'avant qui portait un ensemble ou des pièces (`profil.tenue`, `profil.compo`) se charge sans refus : ces
+champs ne sont plus lus, le nom est gardé. `D.RAWI` reste dans `defs.js` parce que le dessin du râwî le lit ; ce n'est
+plus un choix. Contrôles : `personnage.js`, `partie.js`, `silhouettes.js` (le râwî sous sa seule apparence).
+
+*Ce qui suit décrit le personnage du joueur tel qu'il était jusqu'à la 2.36 ; seul ce qui touche le nom vaut encore.*
+
+Le joueur donnait un nom et une tenue au **râwî** — le héros de l'histoire-cadre, personnage de fiction — et, depuis la
+2.x, composait son apparence pièce par pièce (« Le râwî composé », plus bas). Les Compagnons gardent leur nom et leur
+silhouette. Le choix était dans la partie : `profil: { nom, tenue, compo }` (`compo` est facultatif).
 
 **Les textes ne changent pas.** Ils disent « Idris », en 2.0 comme en 1.32. Quand une saga est posée, `perso.js` relève
 chaque phrase qui nomme le râwî (29 dans le jeu de base) ; quand le profil change, ces phrases-là sont redites à partir
@@ -275,7 +286,9 @@ ne pas brouiller les dialogues. Un nom n'étant fait que de lettres, il ne peut 
 même sous chaque tenue — `perso.look(tenue)` garde la marque de la tenue de toujours (`look.visage`). Avec un autre nom,
 le sceau du râwî ne porte plus son nom en arabe : il montre l'étoile à huit branches, seule.
 
-### Le râwî composé (2.x)
+### Le râwî composé (2.x) — retiré à la 2.37 (D231)
+
+*Retiré du jeu : cette partie est gardée pour mémoire, et pour le jour où un choix reviendrait.*
 
 *Demande du décideur, le 18 novembre : « configurer le personnage d'Idris — couleur de peau, habits, accessoires…
 je veux le permettre à l'utilisateur ». Les palettes sont validées (D193) ; le décideur y a retiré les feuillets au profit

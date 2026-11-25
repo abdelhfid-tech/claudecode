@@ -819,15 +819,15 @@
      sprites.js dessine déjà. La première est sa tenue de toujours, à l'identique. Une tenue ne change que l'étoffe, la
      coupe et la couleur : le visage du râwî (2.x : il en a un, comme tout personnage de fiction) reste le même sous
      chacune. Le nom, lui, est contrôlé par perso.js. */
+  // 2.37 (D231) : une seule apparence, celle de toujours — on ne choisit plus d'ensemble (les cinq autres sont retirés ; une
+  // partie qui en portait un revient à celui-ci, perso.js)
   D.TENUES = [
-    { id: 'archives', nom: 'Manteau des Archives', look: { kind: 'cyber', robe: '#2a3048', head: '#1c2030', cloak: '#39424f' } },
-    { id: 'encre',    nom: 'Capuche d’encre',      look: { kind: 'cyber', robe: '#1d2b36', head: '#131d26', cloak: '#2b4656', trim: '#39e6ff' } },
-    { id: 'ruelle',   nom: 'Veste de la ruelle',   look: { kind: 'cyber', robe: '#3b2c4a', head: '#251a31', cloak: '#4e3b60', manteau: 'aucun', trim: '#ff4fd8' } },
-    { id: 'copiste',  nom: 'Écharpe du copiste',   look: { kind: 'cyber', robe: '#2d3b34', head: '#1d2722', cloak: '#3f4e45', echarpe: true, trim: '#7dffb0' } },
-    { id: 'veilleur', nom: 'Manteau du veilleur',  look: { kind: 'cyber', robe: '#3b3027', head: '#2a221b', cloak: '#57473a', manteau: 'ample', trim: '#ffe08a' } },
-    { id: 'lettre',   nom: 'Calotte du lettré',    look: { kind: 'cyber', coiffe: 'calotte', robe: '#27344a', head: '#d8d2c4', cloak: '#3f4f66', manteau: 'epaule', trim: '#39e6ff' } }
+    { id: 'archives', nom: 'Manteau des Archives', look: { kind: 'cyber', robe: '#2a3048', head: '#1c2030', cloak: '#39424f' } }
   ];
-  /* ---------- Le râwî composé (2.x) ----------
+  /* ---------- Le râwî composé (2.x) — retiré du jeu à la 2.37 (D231) ----------
+     Le joueur ne compose plus son râwî : ces tables ne sont plus des choix. Elles restent parce que le dessin du râwî
+     les lit (sprites.js : l'étoffe e1 et ses couleurs de dessin, le poil p2, les néons et les objets que le moteur sait
+     poser). Ce qui suit décrit ce qu'elles étaient.
      Ce que le joueur change à son râwî, pièce par pièce, par-dessus l'ensemble qu'il a pris (D.TENUES) : le teint, la
      barbe et son poil ; la coiffe, la coupe, la longueur de la robe ; l'étoffe et le néon ; un objet porté. Rien que ce
      que sprites.js dessine déjà. Des identifiants neutres, des couleurs sans nom : aucun choix ne se dit en mots, aucun ne

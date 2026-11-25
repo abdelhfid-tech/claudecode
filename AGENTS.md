@@ -21,8 +21,9 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   propre à la 2.x est écrit dans `v2/docs/`.
 - La 2.x a treize contrôles de plus, à repasser avec les autres à chaque changement de son moteur ou de ses règles :
   `node v2/tools/paquet.js` (un paquet s'ajoute sans code), `node v2/tools/partie.js` (une partie s'exporte et se
-  réimporte à l'identique), `node v2/tools/personnage.js` (le nom et la tenue du râwî se choisissent, se jouent et
-  se gardent), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel ; aucun
+  réimporte à l'identique), `node v2/tools/personnage.js` (le nom du râwî se choisit, se joue et se garde ; depuis la 2.37, D231,
+  le râwî n'a plus qu'une apparence — celle de toujours — et l'écran « Ton personnage » n'offre aucune option : ni ensemble,
+  ni teint, ni barbe, ni coiffe, ni étoffe, ni objet ; une partie d'avant qui en portait se charge sans refus), `node v2/tools/silhouettes.js` (les petits personnages des cartes n'ont pas changé d'un pixel ; aucun
   Compagnon ne porte un trait dans son voile, de face, de profil, de dos, dans ses pas, ses poses, ses gestes de
   frappe ni dans son tracé fin ; les autres personnages ont un visage de face et de profil, rien de dos ; chaque femme
   porte le khimâr et la robe longue, sans ceinture ni barbe : « SILHOUETTES CONFORMES »), `node v2/tools/dedales.js` (les labyrinthes de la noosphère : dix mille tirages par
@@ -565,7 +566,7 @@ node v2/tools/bataille.js mesures      # chaque combat d'idole qui a des rangs, 
 node v2/tools/smoke.js shots           # captures bureau et mobile dans .smoke/
 node v2/tools/paquet.js [fichier]   # 2.0 : éprouve un paquet (par défaut le paquet d'essai), hors du jeu puis dans un jeu assemblé à part
 node v2/tools/partie.js             # 2.0 : la partie du joueur, exportée par les vrais boutons, effacée, réimportée à l'identique
-node v2/tools/personnage.js         # 2.0 : le nom et la tenue du râwî, choisis par les vrais boutons, joués sur tout le prologue, gardés
+node v2/tools/personnage.js         # 2.0 : le nom du râwî, choisi par les vrais boutons, joué sur tout le prologue, gardé ; 2.37 : aucune option d'apparence
 node v2/tools/silhouettes.js        # 2.0 : les personnages — petits sprites inchangés, voiles sans trait, une tête native par coiffe (planches : … planches [modèles.png])
 node v2/tools/course.js             # 2.x : la course — vitesse, pied d'appui qui ne glisse pas (60 et 120 Hz), suiveurs, rien en main (… images <dossier> : planche et films)
 node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère et leur pièce interdite, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] [0,3,5] : une planche)

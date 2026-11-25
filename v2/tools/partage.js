@@ -107,7 +107,7 @@ const INTERDITS = {
     const cache = () => document.querySelectorAll('.screen').forEach(e => { e.hidden = true; });
     for (const id of ['abubakr', 'umar']) { cache(); W.roster = {}; W.saga = null; I.ui.startSaga(I.sagas[id]); if (!await window.__chaine()) return { ok: false, ou: id }; }
     I.debug.auto = false; I.speed = 1; const sv = I.save.data;
-    const refus = I.perso.choisir('Khalil', 'encre', { teint: 't6', barbe: 2, poil: 'p3', coiffe: 'calotte', manteau: 'epaule', longue: true, echarpe: true, etoffe: 'e7', neon: 'n4', objet: 'lanterne' }); I.save.store(); I.save.auto('La Chaîne');
+    const refus = I.perso.choisir('Khalil'); I.save.store(); I.save.auto('La Chaîne');
     return { ok: !refus, ou: refus || '', maillons: I.save.maillons(), lumieres: sv.lights.slice(), isnad: sv.isnad, texte: I.save.exporter() }; });
   if (!joue.ok || joue.maillons.length !== 2) { ko(`BLOQUÉ la partie avancée ne se joue pas (${joue.ou || JSON.stringify(joue.maillons)})`); await browser.close(); process.exit(1); }
   ok(`une partie avancée : le prologue, puis ${joue.maillons.join(' et ')} achevés par le joueur automatique (Lumières ${joue.lumieres.join(', ')} ; fidélité ${joue.isnad.ok} / ${joue.isnad.total}) ; le râwî s’appelle Khalil`);
