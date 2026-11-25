@@ -101,6 +101,8 @@ qui est certain.
 - **Ce qui est appliqué** : les sept fautes sûres (2.38 pour le français, 2.39 pour l'arabe et l'anglais).
 - **Ce qui attend le décideur** : tout le reste, sur la page privée de validation — une fiche par point, le français
   au-dessus de chaque fiche arabe ou anglaise, un oui ou un non, un mot pour l'agent. Rien ne change sans son oui.
+- **Ses premières réponses (25 novembre, D232)** : quinze « oui » et un « non » en français, six « oui » en arabe,
+  appliqués dans la 2.40 ; l'arabe, sa forme vocalisée et l'anglais suivent chaque texte français changé.
 - **Ce que l'essai apprend.**
   - Le récit se lit bien dans les trois langues ; les lecteurs butent surtout sur les mots du jeu (en arabe :
     « ثُلمة », « تهتك حُجُبه », « مَنَعة »), sur le Recueil, qui garde les mots des chroniques, et sur les cartons de

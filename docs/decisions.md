@@ -2488,6 +2488,29 @@ pages privées de son compte.
   textes (les noms des ensembles, les mots des options) sortent du jeu et de ses langues ; `D.RAWI` reste, pour le dessin.
   En largeur, l'aperçu prend la gauche de l'écran, le nom et le bouton la droite. Contrôles accordés : `personnage.js`,
   `partie.js`, `silhouettes.js`, `partage.js`. Cela remplace D193 (le râwî composé) et le choix de l'ensemble (lot 1.5).
+- [x] **D232. Les réponses du décideur sur la page de validation de la relecture (version 2.40 ; le décideur, 25 novembre).**
+  « Applique tout à partir de ce que j'ai dej répondu ». Sur la page privée de la relecture (D229), il avait répondu à
+  vingt-deux fiches : en français, quinze « oui » et un « non » ; en arabe, six « oui ». Les « oui » sont appliqués, rien
+  d'autre.
+  - **Le français** (`frame.js`, `saga_abubakr.js`) : la consigne du premier combat (« Dans les Vertus, choisis « Éclairer » :
+    Idris frappe alors avec sa Patience. ») ; « La Chaîne commence au jour le plus sombre » ; l'objectif « Aller jusqu'à la
+    Saqîfa des Banû Sâ'ida » ; le « Porteur de nouvelles » (il s'appelait « Messager ») ; « Faire taire 'Umar d'autorité, ce
+    n'est pas ce qui fut rapporté » ; « Tous trois poursuivent pourtant leur route » ; « c'est Abû Bakr qui s'avance pour
+    diriger la prière » ; « la peste d'Emmaüs ('Amwâs) » ; le feuillet du discours d'investiture, en phrases plus courtes ;
+    « (le bouton ▦, ou la touche B du clavier) » ; « Ce n'est pas ce qui fut rapporté. » en tête de la réponse sur Usâma ;
+    « Les mots sont à toi » ; « Ils font la prière de l'aube » ; « on saura que, de Médine, il vient quelqu'un » ;
+    « Musaylima imitait la cadence de la Révélation ». Aucune parole citée, aucun fait n'est touché.
+  - **Le « non »** : « Les Ansâr et les Muhâjirûn réunis » reste tel quel.
+  - **L'arabe et l'anglais suivent** chaque texte français changé : l'arabe en récrit huit (sept disaient déjà la chose),
+    l'anglais dix (cinq la disaient déjà) ; la forme vocalisée suit l'arabe.
+  - **L'arabe, ses six « oui »** : « ثُلمته، موضع ضعفه » ; « أنفذ أبو بكر الجيش » ; « ولا يمثّلوا بأحد … من اعتزلوا في الصوامع
+    وشأنهم » ; « تراجعت صفوف المؤمنين … عشيرةً عشيرة » ; « إنها استراحةٌ » ; « ولا تؤدّي الزكاة بعد اليوم ».
+  - **Ce qui attend toujours sa réponse** : deux réécritures arabes, huit anglaises, les quinze points signalés sans
+    proposition (des paroles citées, des mots du glossaire) et les cinq points d'histoire.
+  - **Ce que cela laisse derrière** : le short 01 livré montre encore « Elle commence au jour le plus sombre » ; son
+    scénario suit le nouveau texte, le film est à refaire avec les autres (D219). Deux tournures sœurs n'étaient pas sur la
+    fiche et n'ont pas été touchées : « prier l'aube » (`saga_khalid.js`) et « Prier le couchant » (`caid.js`) ; de même
+    les huit autres objectifs en « Gagner … ».
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

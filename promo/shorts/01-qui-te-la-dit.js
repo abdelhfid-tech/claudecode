@@ -40,7 +40,7 @@ module.exports = {
     await s.tourner(22 * T);
     /* 4 — le carton du jeu : « Médine … juin 632 » */
     s.marque('medine-carton');
-    await s.jusquaReplique('Elle commence au jour'); await s.touche('Enter'); await s.avancer(760);
+    await s.jusquaReplique('commence au jour le plus sombre'); await s.touche('Enter'); await s.avancer(760);
     await s.tourner(10 * T - PASSE); await s.passage(PASSE, 0);
     /* 5 — Médine : Abû Bakr entre par le sud ; un voile de lumière tient lieu de visage aux Compagnons */
     s.marque('medine');

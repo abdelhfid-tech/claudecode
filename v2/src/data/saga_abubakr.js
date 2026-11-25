@@ -240,7 +240,7 @@ ISNAD.registerSaga({
       text: "'Umar ibn al-Khattâb, des Banû 'Adî de Quraysh. Sa conversion donna de l'assurance aux croyants de La Mecque. Homme de droiture et de franc-parler, il fut le premier à prêter allégeance à Abû Bakr à la Saqîfa, puis son plus proche conseiller. Abû Bakr le désigna pour lui succéder en l'an 13. Sa saga est le deuxième maillon de la Chaîne. Qu'Allah l'agrée.",
       src: "Ibn Sa'd, at-Tabaqât ; al-Bukhârî" },
     { id: 'abuubayda_bio', cat: 'Biographie', title: "Abû 'Ubayda ibn al-Jarrâh",
-      text: "'Âmir ibn 'Abdallâh ibn al-Jarrâh, de Quraysh, l'un des dix à qui le Paradis fut annoncé. Le Messager d'Allah ﷺ dit de lui : « Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda ibn al-Jarrâh. » Présent à la Saqîfa avec Abû Bakr et 'Umar, il commandera plus tard les armées du Shâm et mourra de la peste d'Emmaüs en l'an 18. Qu'Allah l'agrée.",
+      text: "'Âmir ibn 'Abdallâh ibn al-Jarrâh, de Quraysh, l'un des dix à qui le Paradis fut annoncé. Le Messager d'Allah ﷺ dit de lui : « Chaque communauté a son homme de confiance, et l'homme de confiance de cette communauté est Abû 'Ubayda ibn al-Jarrâh. » Présent à la Saqîfa avec Abû Bakr et 'Umar, il commandera plus tard les armées du Shâm et mourra de la peste d'Emmaüs ('Amwâs) en l'an 18. Qu'Allah l'agrée.",
       src: "al-Bukhârî ; Muslim ; Ibn Sa'd, at-Tabaqât" },
     { id: 'jour_sombre', cat: 'Événement', title: "La mort du Messager d'Allah ﷺ",
       text: "Le lundi 12 Rabî' al-Awwal de l'an 11 de l'Hégire (juin 632), le Messager d'Allah ﷺ meurt à Médine après quelques jours de fièvre. La ville est frappée de stupeur ; 'Umar lui-même refuse d'abord d'y croire. Abû Bakr, revenu d'as-Sunh, rappelle aux gens qu'ils adorent Allah, le Vivant qui ne meurt pas, et récite le verset 3:144. Pour la première fois, la communauté doit tenir sans lui.",
@@ -253,7 +253,7 @@ ISNAD.registerSaga({
     { id: 'asabiyya', cat: 'Noosphère', title: "Al-'Asabiyya — le Clan",
       text: "L'esprit de corps tribal : « mon frère contre mon cousin, mon cousin et moi contre l'étranger ». Avant l'islam, il tenait lieu de loi aux Arabes. Dans la noosphère, c'est un nœud d'étendards qui se resserre dès qu'on dit « nous » contre « vous ». La justice le dénoue, la miséricorde le désarme, et le savoir des lignées — où Abû Bakr excellait — lui retire ses prestiges : tous descendent d'un même père." },
     { id: 'investiture', cat: 'Parole', title: "Le discours d'investiture",
-      text: "Au lendemain de la Saqîfa, Abû Bakr s'adresse aux croyants dans la mosquée. Il déclare n'être pas le meilleur d'entre eux, demande à être aidé s'il agit bien et redressé s'il agit mal, pose que le faible est fort auprès de lui jusqu'à ce que son droit lui soit rendu, et borne l'obéissance qu'on lui doit à sa propre obéissance à Allah et à Son Messager. C'est le premier texte politique de l'islam après la Révélation.",
+      text: "Au lendemain de la Saqîfa, Abû Bakr s'adresse aux croyants dans la mosquée. Il déclare n'être pas le meilleur d'entre eux, et demande à être aidé s'il agit bien et redressé s'il agit mal. Auprès de lui, dit-il, le faible est fort jusqu'à ce que son droit lui soit rendu ; et l'on ne lui doit obéissance que tant qu'il obéit lui-même à Allah et à Son Messager. C'est le premier texte politique de l'islam après la Révélation.",
       src: "Ibn Hishâm, as-Sîra (d'après Ibn Ishâq)" },
     { id: 'usama', cat: 'Événement', title: "L'armée d'Usâma",
       text: "Peu avant sa mort, le Messager d'Allah ﷺ avait confié une armée à Usâma ibn Zayd, âgé d'une vingtaine d'années, pour marcher vers les confins du Shâm (la Syrie d'aujourd'hui et ses voisins). Malgré le soulèvement des tribus et l'avis de plusieurs Compagnons, Abû Bakr maintient l'expédition et refuse de remplacer son jeune chef. Il l'accompagne à pied jusqu'à al-Jurf. L'armée revient sauve après une quarantaine de jours ; sa seule sortie dissuade bien des tribus.",
@@ -321,7 +321,7 @@ ISNAD.registerSaga({
           talk: [['say', 'ancien', "Dix ans qu'il vivait parmi nous. Dix ans, et cette ville qui s'appelait Yathrib est devenue « la Ville » tout court. Que serons-nous, demain ?"]] },
         { id: 'enfant', name: 'Un enfant', at: ['puits', 1, 0], look: { kind: 'enfant', robe: '#8a7a60', head: '#e6dcc8' },
           talk: [['say', 'enfant', "Pourquoi tout le monde pleure ? Même les grands, même les forts…"]] },
-        { id: 'messager', name: 'Messager', at: 'mosquee_porte', hidden: true, look: { kind: 'homme', robe: '#5d6b58', head: '#e2d8c4' } },
+        { id: 'messager', name: 'Porteur de nouvelles', at: 'mosquee_porte', hidden: true, look: { kind: 'homme', robe: '#5d6b58', head: '#e2d8c4' } },
         { id: 'hubab', name: "Al-Hubâb ibn al-Mundhir", at: ['halle', -1, 1], look: { kind: 'compagnon', robe: '#5b6b4f', head: '#ece4d0', aura: '#bfe6a8' },
           talk: [['say', 'hubab', "Nous avons ouvert nos maisons et nos palmeraies. Qui veillera sur les Ansâr, à présent ?"]] },
         { id: 'bashir', name: "Bashîr ibn Sa'd", at: ['halle', 1, 1], look: { kind: 'compagnon', robe: '#6a5f4a', head: '#efe7d4', aura: '#ffe9a8' },
@@ -379,7 +379,7 @@ ISNAD.registerSaga({
             { t: "Laisser dire : ce peuple a besoin d'espoir, la vérité attendra demain.", r: [
               ['nar', "Un espoir bâti sur un déni est une idole qui commence : demain, on aurait adoré une absence. Ce n'est pas ce qui fut rapporté."] ] },
             { t: "Faire taire 'Umar d'autorité et disperser la foule.", r: [
-              ['nar', "Il dit seulement : « Doucement, toi qui jures. » Il ne contraignit personne ; il parla, et les gens vinrent à lui. Ce n'est pas ce qui fut rapporté."] ] },
+              ['nar', "Il dit seulement : « Doucement, toi qui jures. » Il ne contraignit personne ; il parla, et les gens vinrent à lui. Faire taire 'Umar d'autorité, ce n'est pas ce qui fut rapporté."] ] },
             { t: "Se lever, et dire la vérité telle qu'elle est.", ok: true, r: [
               ['say', 'abubakr', "Doucement, toi qui jures."],
               ['nar', "'Umar ne s'interrompt pas. Alors Abû Bakr se tourne vers les gens. Et les gens, un à un, se tournent vers lui."] ] }
@@ -412,9 +412,9 @@ ISNAD.registerSaga({
           ['nar', "Râwî, avant de parler à des hommes, apprends d'où ils viennent : près de la mosquée, un maître d'école enseigne les lignées. Et l'heure de la prière approche ; qui s'y arrête parle ensuite plus juste."],
           ['hide', 'messager']
         ] },
-        { text: "Gagner la Saqîfa des Banû Sâ'ida", goto: 'halle', then: [
+        { text: "Aller jusqu'à la Saqîfa des Banû Sâ'ida", goto: 'halle', then: [
           ['hide', 'thamir'],
-          ['nar', "En chemin, deux hommes de bien parmi les Ansâr leur conseillent de régler l'affaire entre Émigrés. Ils poursuivent pourtant : c'est en face que l'on parle à des frères."],
+          ['nar', "En chemin, deux hommes de bien parmi les Ansâr leur conseillent de régler l'affaire entre Émigrés. Tous trois poursuivent pourtant leur route : c'est en face que l'on parle à des frères."],
           ['nar', "Sous l'auvent, les Ansâr sont assemblés. Eux qui ont tout donné — leurs maisons, leurs palmeraies, leur sang — craignent ce que demain fera d'eux."],
           ['say', 'Un orateur des Ansâr', "Nous sommes les Auxiliaires d'Allah et le bataillon de l'islam. Et vous, Émigrés, vous êtes venus à nous comme une poignée d'hommes."],
           ['say', 'hubab', "Un émir parmi nous, et un émir parmi vous !"],
@@ -484,7 +484,7 @@ ISNAD.registerSaga({
           ['nar', "Le lendemain. La mosquée est pleine : tous viennent prêter allégeance. Abû Bakr n'a pas dormi. Il n'a jamais voulu de cette charge, et il sait ce qu'elle pèse."]
         ] },
         { text: "Prendre la parole devant les croyants", goto: 'mosquee_cour', then: [
-          ['nar', "L'aube. Comme chaque jour depuis que le Messager d'Allah ﷺ l'avait ordonné durant sa maladie, c'est lui qui s'avance pour diriger la prière. Les rangs se serrent derrière lui, épaule contre épaule."],
+          ['nar', "L'aube. Comme chaque jour depuis que le Messager d'Allah ﷺ l'avait ordonné durant sa maladie, c'est Abû Bakr qui s'avance pour diriger la prière. Les rangs se serrent derrière lui, épaule contre épaule."],
           ['pray', 'fajr'],
           ['codex', 'imamat'],
           ['quote', "Ô gens ! J'ai été placé à votre tête, et je ne suis pas le meilleur d'entre vous. Si j'agis bien, aidez-moi ; si j'agis mal, redressez-moi. La véracité est un dépôt, et le mensonge une trahison.", "Abû Bakr, discours d'investiture — Ibn Hishâm, as-Sîra"],
@@ -561,7 +561,7 @@ ISNAD.registerSaga({
           ['say', 'abuubayda', "Viens. Nous te fixerons sur le Trésor la part d'un homme parmi les Émigrés : ni la plus haute, ni la plus basse."],
           ['nar', "Ainsi fut fixée la subsistance du premier calife : de quoi vivre, un vêtement pour l'été, un vêtement pour l'hiver. Ibn Sa'd l'a consigné."],
           ['hide', 'umar'], ['hide', 'abuubayda'], ['join', 'umar'], ['join', 'abuubayda'],
-          ['nar', "Râwî : ce que les sources montrent de leurs mains, tu peux le refaire des tiennes. Ouvre le mode *Bâtir* (touche B, ou le bouton ▦), choisis une pièce, pose-la devant toi."],
+          ['nar', "Râwî : ce que les sources montrent de leurs mains, tu peux le refaire des tiennes. Ouvre le mode *Bâtir* (le bouton ▦, ou la touche B du clavier), choisis une pièce, pose-la devant toi."],
           ['mat', 'palme', 4],
           ['nar', "Au bout du souk, les ballots d'une caravane. On y vend, on y achète, et l'on y confie une cargaison pour le Yémen ou pour le Shâm : c'est de ce commerce qu'il vivait."],
           ['lore', 'caravanes']
@@ -579,7 +579,7 @@ ISNAD.registerSaga({
             { t: "Retenir l'armée : Médine d'abord, le Shâm attendra.", r: [
               ['nar', "Défaire par prudence le dernier ordre laissé en suspens ? La peur aurait alors commandé à la place du Messager ﷺ. Ce n'est pas ce qui fut rapporté."] ] },
             { t: "La laisser partir, mais sous un chef plus âgé et plus aguerri.", r: [
-              ['nar', "Il répondit, dit-on : « Le Messager d'Allah ﷺ l'a nommé, et tu voudrais que je le destitue ? » Ce n'est pas ce qui fut rapporté."] ] },
+              ['nar', "Ce n'est pas ce qui fut rapporté. Il répondit, dit-on : « Le Messager d'Allah ﷺ l'a nommé, et tu voudrais que je le destitue ? »"] ] },
             { t: "Envoyer l'armée, telle que le Messager d'Allah ﷺ l'a ordonnée.", ok: true, r: [
               ['quote', "Par Celui qui tient mon âme dans Sa main, si je pensais que les fauves allaient m'emporter, j'enverrais l'armée d'Usâma comme l'a ordonné le Messager d'Allah ﷺ, dussé-je rester seul dans la cité.", "Abû Bakr — at-Tabarî, Târîkh"] ] }
           ]],
@@ -620,7 +620,7 @@ ISNAD.registerSaga({
           ['nar', "Le soleil touche les palmiers ; l'heure du Maghrib est proche. Qui veut parler juste aux hommes s'adresse d'abord à son Seigneur."]
         ] },
         { text: "Parler au cheikh des Banû Rimth, près du puits", talk: 'dirgham', then: [
-          ['nar', "Râwî : le principe, le calife l'a dit, et il n'en retranchera rien. Mais pour ce cheikh-là, les sources n'ont gardé aucun mot. Ils sont à toi ; s'ils sont mauvais, ils seront de toi, non de lui."],
+          ['nar', "Râwî : le principe, le calife l'a dit, et il n'en retranchera rien. Mais pour ce cheikh-là, les sources n'ont gardé aucun mot. Les mots sont à toi ; s'ils sont mauvais, ils seront de toi, non de lui."],
           ['mus', 'conseil'],
           ['parley', {
             with: 'dirgham',
@@ -705,7 +705,7 @@ ISNAD.registerSaga({
             ['battle', { group: ['reniement', 'reniement', 'reniement', 'mot_clan'], bg: 'desert', intro: "« Rentrons chez nos pères. » La nuée fond sur vous. Nul ne garde la piste de l'est : un mot d'ordre s'y est joint.", allies: [{ flag: 'fosse_medine', name: 'Médine gardée par son fossé' }] }]
           ]],
           ['nar', "À l'aube, la piste est libre. Mais le refus lui-même n'est pas brisé : il a une source, et elle n'est pas faite de sable."],
-          ['nar', "Ils prient l'aube sur le sable encore froid, les montures entravées derrière eux."],
+          ['nar', "Ils font la prière de l'aube sur le sable encore froid, les montures entravées derrière eux."],
           ['pray', 'fajr']
         ] },
         { text: "Trouver la source du refus, dans les ruines", goto: 'ruines', then: [
@@ -817,7 +817,7 @@ ISNAD.registerSaga({
         { auto: true, then: [
           ['nar', "Cette nuit-là, des hommes frappent à la porte nord. Une caravane de Médine, partie pour le Shâm, a été arrêtée sur la piste."],
           ['raid'],
-          ['nar', "Avant l'aube, la piste du nord est rouverte. Tant que le Menteur tient le Yamâma, d'autres bandes se lèveront ; mais on saura, de Médine, qu'il vient quelqu'un."]
+          ['nar', "Avant l'aube, la piste du nord est rouverte. Tant que le Menteur tient le Yamâma, d'autres bandes se lèveront ; mais on saura que, de Médine, il vient quelqu'un."]
         ] },
         { text: "Recevoir l'envoyé de Najrân, sur la place", talk: 'najran', then: [
           ['mus', 'conseil'],
@@ -841,7 +841,7 @@ ISNAD.registerSaga({
           ['nar', "La noosphère du Yamâma. Des rimes creuses flottent comme des feuilles mortes. Tout y ressemble au vrai. Rien ne l'est."]
         ] },
         { text: "Noosphère : briser les fausses rimes", foe: 'f_k1', then: [
-          ['nar', "Les rimes se taisent. Il imitait la cadence de la Révélation, sans rien avoir à dire. Derrière elles se dresse un mur : celui d'un jardin."]
+          ['nar', "Les rimes se taisent. Musaylima imitait la cadence de la Révélation, sans rien avoir à dire. Derrière elles se dresse un mur : celui d'un jardin."]
         ] },
         { text: "Noosphère : franchir le mur du Jardin", goto: 'noeud3', then: [
           ['nar', "Au Yamâma, les Banû Hanîfa se sont retranchés dans un verger aux hauts murs. Al-Barâ' ibn Mâlik dit : « Jetez-moi par-dessus, sur vos boucliers. » Il retombe seul de l'autre côté, et ouvre la porte."],

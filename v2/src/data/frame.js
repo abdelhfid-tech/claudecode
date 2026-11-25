@@ -358,7 +358,7 @@ ISNAD.registerSaga({
           ['sfx', 'glitch'], ['shake', 300],
           ['nar', 'Une lueur froide glisse entre les rayonnages. Le Flux a trouvé un chemin jusqu’ici.'],
           ['say', 'yunus_n', 'Une notification. Une petite chimère, mais elle a faim. Ne la frappe pas avec colère : cherche sa faille. Elle ne supporte pas qu’on lui résiste avec patience.'],
-          ['battle', { group: ['notif'], bg: 'cite', intro: 'Frappe la faille pour retirer ses voiles ⛊. « Éclairer », dans les Vertus, porte la Patience d’Idris.' }],
+          ['battle', { group: ['notif'], bg: 'cite', intro: 'Frappe la faille pour retirer ses voiles ⛊. Dans les Vertus, choisis « Éclairer » : Idris frappe alors avec sa Patience.' }],
           ['say', 'yunus_n', 'Tu as vu ? On ne détruit pas une idole en la haïssant. On la *dévoile* : on montre qu’elle est vide.'],
           ['ask', 'Que demander à Maître Yûnus ?', [
             { t: 'Pourquoi les idoles reviennent-elles toujours ?', r: [['say', 'yunus_n', 'Parce que le cœur ne reste jamais vide. Ôte-lui ce qui est plus grand que lui, il se prosternera devant ce qui est plus petit : un clan, un chef, un chiffre.']] },
@@ -377,7 +377,7 @@ ISNAD.registerSaga({
           ['say', 'Maître Yûnus', 'Tu ne seras pas eux, Idris. Nul ne le peut. Tu marcheras dans la trace de leurs actes, tels que les transmetteurs les ont rapportés. Si tu t’en écartes, la chaîne vacillera et te ramènera.'],
           ['say', 'Maître Yûnus', 'Entre eux et toi, d’autres maillons. L’un d’eux fut un seigneur berbère, au bord du désert : le Caïd. Il lisait ces vies pour apprendre à tenir sa citadelle. Tu l’entendras, toi aussi.'],
           ['say', 'Maître Yûnus', 'Deux choses reviennent dans toutes ces vies, et tu les retrouveras partout : la prière, qui repose et rassemble, et le savoir, qui ouvre ce que la force ne peut ouvrir. Le sabre ne vient qu’après, quand la parole a tout essayé.'],
-          ['say', 'Maître Yûnus', 'Elle commence au jour le plus sombre. Le jour où tout aurait pu se défaire.'],
+          ['say', 'Maître Yûnus', 'La Chaîne commence au jour le plus sombre. Le jour où tout aurait pu se défaire.'],
           ['codex', 'lumieres'], ['codex', 'piliers'], ['codex', 'parole'],
           ['fade', 'out', 900], ['flash', '#fff3d0'],
           ['title', 'Médine', "12 Rabî' al-Awwal, an 11 de l’Hégire · juin 632"],
