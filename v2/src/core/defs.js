@@ -551,7 +551,7 @@
     poupe: 'Poupe', pont: 'Pont', mat: 'Mât', proue: 'Proue', passerelle: 'Passerelle', pont2: 'Entrepont',
     seuil: 'Seuil', noeud1: 'Nœud', noeud2: 'Nœud', noeud3: 'Nœud', faille: 'Faille', miroir: 'Miroir', coeur: 'Cœur',
     cour: 'Cour', tour: 'Tour', salle: 'Grande salle', mosquee: 'Mosquée', greniers: 'Greniers', poterne: 'Poterne',
-    rue: 'Rue', ecran: 'Grand écran', ruelle: 'Ruelle', ascenseur: 'Ascenseur', parvis: 'Parvis', rayonnages: 'Rayonnages', bureau: 'Bureau', chaine: 'La Chaîne',
+    rue: 'Rue', ecran: 'Grand écran', ruelle: 'Ruelle', ascenseur: 'Porte de la tour', parvis: 'Parvis', rayonnages: 'Rayonnages', bureau: 'Bureau', chaine: 'La Chaîne',
     galerie: 'Galerie marchande', jeux: 'Salle de jeux', circuit: 'Circuit', tribune: 'Tribune', parc: 'Parc', roue: 'Grande roue',
     traverse: 'Traverser la rue',
     // 2.29 (D220) : les villes de la carte du monde (D.MONDE)
@@ -829,7 +829,7 @@
   // 2.37 (D231) : une seule apparence, celle de toujours — on ne choisit plus d'ensemble (les cinq autres sont retirés ; une
   // partie qui en portait un revient à celui-ci, perso.js)
   D.TENUES = [
-    { id: 'archives', nom: 'Manteau des Archives', look: { kind: 'cyber', robe: '#2a3048', head: '#1c2030', cloak: '#39424f' } }
+    { id: 'archives', nom: 'Manteau du râwî', look: { kind: 'cyber', robe: '#2a3048', head: '#1c2030', cloak: '#39424f' } }
   ];
   /* ---------- Le râwî composé (2.x) — retiré du jeu à la 2.37 (D231) ----------
      Le joueur ne compose plus son râwî : ces tables ne sont plus des choix. Elles restent parce que le dessin du râwî

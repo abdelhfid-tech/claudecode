@@ -90,9 +90,9 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   await cap('1-abubakr-en-route');
   const r1 = await revenir();
   const s1 = await ev(() => { const sv = window.ISNAD.save.data; return { cp: sv.cp, cps: Object.keys(sv.cps || {}), a: sv.cps && sv.cps.abubakr, retours: sv.retours, rebonds: Object.keys(sv.rebonds || {}) }; });
-  if (r1 !== 'x_descendu') ko('ÉCART au premier retour en 2084, rien ne s’est passé (attendu : « Ce qui est descendu ») — joué : ' + JSON.stringify(r1));
+  if (r1 !== 'x_descendu') ko('ÉCART au premier retour en 2084, rien ne s’est passé (attendu : « Ce qui est entré ») — joué : ' + JSON.stringify(r1));
   else if (!s1.rebonds.includes('x_descendu')) ko('ÉCART le premier retour s’est joué sans être noté dans la partie');
-  else ok('premier retour en 2084 : « Ce qui est descendu » se joue jusqu’au bout (un combat), puis les quartiers, à côté de Maître Yûnus, et la Chaîne par lui');
+  else ok('premier retour en 2084 : « Ce qui est entré » se joue jusqu’au bout (un combat), puis les quartiers, à côté de Maître Yûnus, et la Chaîne par lui');
   if (s1.cp || !s1.a || s1.a.obj !== A.obj || s1.a.map !== A.carte) ko('ÉCART le récit quitté n’est pas rangé tel qu’on l’a laissé : ' + JSON.stringify({ cp: !!s1.cp, range: s1.a && [s1.a.obj, s1.a.map], attendu: [A.obj, A.carte] }));
   else ok(`Abû Bakr est rangé à l’objectif ${A.obj}, sur « ${A.carte} » ; la partie ne garde plus de point courant`);
   const c1 = await ev(() => window.__t.chaine()); await cap('2-chaine-un-recit-en-route');

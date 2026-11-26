@@ -136,7 +136,7 @@ async function avancer(p, n = 120) {
     const nom = w + '×' + h, haut = h > w;
     const T = await telephone(browser, w, h), P = T.p, E = (fn, a) => P.evaluate(fn, a);
     // ---------- 1. une partie, le prologue joué, Abû Bakr entamé ; par l'écran-titre (« Continuer ») ----------
-    // (en hauteur, le premier retour en 2084 est dû : « Ce qui est descendu » se joue d'abord ; en largeur, les retours sont joués)
+    // (en hauteur, le premier retour en 2084 est dû : « Ce qui est entré » se joue d'abord ; en largeur, les retours sont joués)
     // (2.27 : Sâlim est déjà passé — sa moto garée, l'organisateur ouvert — ; sa venue est éprouvée à la partie 15)
     await E(haut => { const I = window.ISNAD; I.save.reset(); const sv = I.save.data; sv.started = true; sv.prologue = true; sv.cite.course.salim = 2; if (!haut) sv.rebonds = { x_descendu: true, x_enfant: true, x_avis: true }; I.save.auto('essai'); }, haut);
     await P.reload(); await P.waitForTimeout(1600); await preparer(P);
@@ -161,7 +161,7 @@ async function avancer(p, n = 120) {
       const e = await E(() => ({ journal: window.__t.journal.slice(-3), etat: window.__t.etat(), pres: window.__t.pres(), lecon: window.ISNAD.cite.journal.some(j => j.quoi === 'lecon'), dits: window.ISNAD.cite.journal.map(j => j.quoi), cps: Object.keys(window.ISNAD.save.data.cps || {}) }));
       const attendu = haut ? ['x_descendu', 'c_quartiers'] : ['c_quartiers'];
       si(arrive && r === 'calme' && attendu.every(k => e.journal.includes(k)) && e.etat.carte === 'quartiers' && e.pres > 0 && e.pres < 40,
-        `${nom} · « Revenir en 2084 » : ${haut ? '« Ce qui est descendu » se joue d’abord (un retour dû), puis ' : ''}Idris paraît au parvis des quartiers, à ${e.pres} points de Maître Yûnus`,
+        `${nom} · « Revenir en 2084 » : ${haut ? '« Ce qui est entré » se joue d’abord (un retour dû), puis ' : ''}Idris paraît au parvis des quartiers, à ${e.pres} points de Maître Yûnus`,
         `${nom} · l’arrivée dans les quartiers : ${JSON.stringify(e)} (${r})`, 'BLOQUÉ');
       si(e.lecon && e.cps.includes('abubakr'), `${nom} · Maître Yûnus dit, la première fois, qu’on peut revenir ici (leçon « cite ») ; Abû Bakr est rangé`, `${nom} · la leçon ou le récit rangé : ${JSON.stringify(e)}`);
       await E(() => window.__t.endormir()); await P.waitForTimeout(400); await P.screenshot({ path: path.join(out, `arrivee-yunus-${w}x${h}.png`) });

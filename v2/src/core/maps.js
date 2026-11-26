@@ -688,8 +688,8 @@
      activités, des courses de voitures […] il y trouve beaucoup d'activités mais tout le monde est triste et seul ». La même
      ville de verre que la rue de la Cité (cite(), plus haut, qui ne change pas d'une case), au même crépuscule, vue d'un peu
      plus haut : au nord, la galerie marchande et ses vitrines, la salle de jeux ouverte sur la rue, des tours de verre ; une
-     boucle d'avenues à sens unique, où roulent les voitures (trafic.js) ; au milieu, le parvis et l'ascenseur qui remonte des
-     Archives basses, la place du grand écran, et, derrière une haie basse, un coin calme où un tapis est posé au sol ; au
+     boucle d'avenues à sens unique, où roulent les voitures (trafic.js) ; au milieu, le parvis et sa fontaine (2.47 : à l'est, la
+     ruelle abandonnée mène à la vieille mosquée), la place du grand écran, et, derrière une haie basse, un coin calme où un tapis est posé au sol ; au
      sud, le parc, sa grande roue et ses manèges qui tournent à vide, et le circuit, sa tribune et ses voitures de course.
      Aucune ville réelle, aucun monument copié, aucune lettre, aucune marque, aucun logo, aucun édifice ni symbole religieux :
      les vitrines montrent des formes, l'écran des couleurs qui coulent, les néons des courbes. Les voitures garées tiennent
@@ -706,7 +706,7 @@
     // 2.28 (D218) : au nord-ouest, le trottoir continue vers la rue de la Cité-Miroir — l'entrée de la rue (passages.js)
     b.fill(0, 8, 1, 3, 'cdalle', false);
     // 2.47 (D238) : au bord est, l'entrée de la ruelle abandonnée, qui mène à la vieille mosquée (passages.js)
-    b.fill(63, 20, 1, 3, 'cdalle', false);
+    b.fill(63, 20, 1, 3, 'cdalle', false); b.light(63, 21, 44, '#b8a8ff', 0.09);   // (une lueur froide au seuil, pour qu'on la voie)
     // la galerie marchande : un passage couvert, ses vitrines au fond ; la salle de jeux, ouverte sur la rue
     b.fill(8, 6, 20, 2, 'qparvis', false); b.fill(38, 5, 12, 3, 'qsalle', false);
     // les avenues : une boucle à sens unique (vers l'ouest au nord, vers l'est au sud)
@@ -721,7 +721,7 @@
     b.fill(31, 34, 32, 11, 'qpiste', true); b.fill(35, 34, 20, 2, 'qgradin', false); b.fill(32, 34, 3, 2, 'cdalle', false); b.fill(29, 34, 2, 11, 'cdalle', false);
     // les lieux nommés
     b.spot('parvis', 12, 19); b.spot('galerie', 17, 7); b.spot('jeux', 44, 7); b.spot('ecran', 32, 21); b.spot('priere', 51, 24);
-    b.spot('parc', 15, 37); b.spot('roue', 8, 43); b.spot('circuit', 33, 35); b.spot('tribune', 45, 34); b.spot('traverse', 2, 9); b.spot('ruelle', 61, 21);
+    b.spot('parc', 15, 37); b.spot('roue', 8, 43); b.spot('circuit', 33, 35); b.spot('tribune', 45, 34); b.spot('traverse', 2, 9); b.spot('ruelle', 62, 21);
     // les lampadaires (la lumière tombe à leur pied)
     const lampe = (x, y, col) => { b.obj('qlampe', x, y); b.light(x, y - 1, v15 ? 64 : 54, col, 0.08); (b.lampes || (b.lampes = [])).push([x * T2 + 11, y * T2 + 15, col]); };
     [6, 13, 20, 27, 34, 41, 48, 55].forEach((x, i) => lampe(x, 10, i % 3 ? '#ffd9a0' : '#ffc0e0'));
@@ -858,7 +858,6 @@
     c.fillStyle = grad(0, 320, 0, 334, [[0, 'rgba(40,16,36,.45)'], [1, 'rgba(40,16,36,0)']]); c.fillRect(384, 320, 256, 14); c.fillRect(688, 304, 256, 14);
   }
 
-  /* ---------- Archives basses ---------- */
   /* ---------- 2.47 (D238) — la vieille mosquée (elle prend la place des Archives basses et garde leur identifiant) ----------
      Le décideur, 26 novembre : « une mosquée finalement où se trouve le maître et les sagas ». Au bout de la ruelle
      abandonnée : une salle de prière sobre, ses tapis, deux rangées de colonnes, une niche nue dans le mur du fond, des

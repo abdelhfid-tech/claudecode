@@ -37,7 +37,7 @@ ISNAD.registerSaga({
     ['nar', "Les villes qu'il avait prises par un écrit étaient encore debout, et leurs portes ouvertes. Celles-là ne chantent pas son nom. Elles vivent : c'est une louange qui ne fabrique pas d'idole."],
     ['mus', 'espoir'],
     // 2.25 (D214) : l'Agrégor n'est nommé qu'au soir de ce maillon (frame.js, r_khalid) ; ici, « les écrans ». Texte de l'agent, à valider.
-    ['nar', "Idris rouvre les yeux dans les Archives basses. Partout dans la Cité-Miroir, les écrans dressent leurs colosses du jour. Il sait maintenant comment on les fend : non en frappant plus fort, mais en refusant le socle."],
+    ['nar', "Idris rouvre les yeux dans la vieille mosquée. Partout dans la Cité-Miroir, les écrans dressent leurs colosses du jour. Il sait maintenant comment on les fend : non en frappant plus fort, mais en refusant le socle."],
     ['nar', "Le courage n'est pas seulement de dégainer. C'est de rengainer quand la vérité l'exige. Une Lumière s'allume sur la Chaîne."],
     ['sfx', 'light'],
     ['light', 'shajaa']
