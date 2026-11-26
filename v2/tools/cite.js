@@ -910,9 +910,9 @@ async function avancer(p, n = 120) {
     const etat = () => E(() => { const I = window.ISNAD, W = I.world, s = I.save.data, y = W.npcs.find(n => n.hero === 'yunus'); return Object.assign(window.__t.etat(), { cps: Object.keys(s.cps || {}), recus: Object.keys((s.lecons || {}).recus || {}), lj: I.lecons.journal.map(x => x.id).join(), yunus: y ? y.map : null, cible: !!(W.target() || {}).passage, dit: (document.querySelector('#hud .obj') || {}).textContent || '' }); });
     // a. le prologue mène lui-même par le chemin de 2084 : la rue, les quartiers, la ruelle abandonnée, la vieille mosquée (le joueur
     //    de test du moteur, à pied) ; dans les quartiers, rien ne rôde encore ; aucun passage ne s'y prend, rien n'est rangé
-    await E(() => { const I = window.ISNAD, W = I.world, T = window.__t; T.cartes = []; T.rodeursVus = 0; const ol = W.loadMap; W.loadMap = function (id) { T.cartes.push(id); return ol.apply(this, arguments); };
+    await E(() => { const I = window.ISNAD, W = I.world, T = window.__t; T.cartes = []; T.rodeursVus = 0; const ol = W.loadMap; W.loadMap = function (id) { T.cartes.push(id); if (id === 'archives') I.debug.auto = false; return ol.apply(this, arguments); };   // (le joueur de test s'arrête à la porte de la mosquée)
       T.ivR = setInterval(() => { if (W.map && W.map.id === 'quartiers' && W.foes.some(f => f.rue && !f.done)) T.rodeursVus++; }, 200); I.debug.walk = true; });
-    const a = await E(() => window.__t.jusqua(4)); await avancer(P);
+    const a = await E(() => { const I = window.ISNAD, W = I.world; I.debug.auto = true; return window.__t.attendre(() => W.map && W.map.id === 'archives', 180000); }); await avancer(P);
     const e1 = await etat(), vu = await E(() => { const T = window.__t; clearInterval(T.ivR); window.ISNAD.debug.walk = false; return { cartes: T.cartes.join('>'), rodeurs: T.rodeursVus, passages: window.ISNAD.passages.journal.length }; });
     await P.screenshot({ path: path.join(out, `prologue-mosquee-${w}x${h}.png`) });
     si(a && e1.ch === 'p1' && e1.carte === 'archives' && e1.obj === 4 && /quartiers.*impasse.*archives/.test(vu.cartes) && !vu.rodeurs && !vu.passages && e1.yunus === 'archives' && !e1.cps.length,
@@ -920,7 +920,7 @@ async function avancer(p, n = 120) {
     // b. dans le prologue, la porte de la mosquée ne mène nulle part : Idris y reste, à son objectif
     await E(() => window.__t.poser(272, 352)); await P.waitForTimeout(300);
     const sort = await versBord(272, 382, 'ArrowDown', 'archives'), e2 = await etat();
-    si(!sort && e2.carte === 'archives' && e2.ch === 'p1' && e2.obj === 4, `${nom} · dans le prologue, la porte de la mosquée ne mène nulle part : Idris reste à son objectif`, `${nom} · la porte, dans le prologue : ${JSON.stringify({ sort, e2 })}`, 'ÉCART');
+    si(!sort && e2.carte === 'archives' && e2.ch === 'p1' && e2.obj === 4 && !(await E(() => window.ISNAD.battle.active)), `${nom} · dans le prologue, la porte de la mosquée ne mène nulle part : Idris reste à son objectif`, `${nom} · la porte, dans le prologue : ${JSON.stringify({ sort, e2 })}`, 'ÉCART');
     // c. le refuge (« La Cité-Miroir », au pied de la Chaîne) : la vieille mosquée, à côté de Maître Yûnus ; à pied, la porte, la
     //    ruelle, les quartiers ; puis la ruelle et la porte ramènent à la mosquée — le même chapitre, rien de rangé
     await E(() => { const I = window.ISNAD; I.save.data.prologue = true; I.ui.showChain(); }); await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
