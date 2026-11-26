@@ -391,7 +391,7 @@
     }
     const c = who && W.chests.includes(who) && !who.open && Math.hypot(who.x - p.x, who.y - p.y) < 30 ? who : W.chests.find(c => !c.open && c.map === W.map.id && c.placed && Math.hypot(c.x - px, c.y - py) < 18);
     if (c) { c.open = true; I.audio.sfx('door'); if (c.codex) { S.toast(I.t('Un feuillet. Tu le lis lentement.')); await S.run([['codex', c.codex]]); } else await S.run([['give', c.gear || c.item, c.n || 1]]); W.checkpoint(); return; }
-    if (I.passages && I.passages.agir()) return; // 2.28 (D218) : l'ascenseur des Archives basses, le bout de la rue (passages.js)
+    if (I.passages && I.passages.agir()) return; // 2.28 (D218), 2.47 (D238) : le bout de la rue, la ruelle, la porte de la mosquée (passages.js)
     if (I.activites && I.activites.agir()) return; // 2.28 (D217) : la borne, l'étal, un banc devant l'écran, la grande roue et les manèges (activites.js)
     if (I.rodeurs && I.rodeurs.faceAPorte()) { I.rodeurs.direPorte(); return; } // 2.x : la porte interdite — elle ne s'ouvre pas, on en parle
     if (W.nearPrayer()) {
@@ -465,7 +465,7 @@
     if (I.trafic) I.trafic.tic(dt); // 2.23 : les voitures des quartiers roulent, et s'arrêtent devant qui se tient sur leur voie
     if (I.gens) I.gens.maj(dt); // 2.32 : les bêtes qui marchent (gens.js)
     if (can && I.circuit) I.circuit.tic(dt); // 2.27 : au premier passage au circuit, Sâlim arrive en moto (circuit.js)
-    if (can && I.passages) I.passages.tic(dt); // 2.28 (D218) : la rue et l'ascenseur, à pied (passages.js)
+    if (can && I.passages) I.passages.tic(dt); // 2.28 (D218), 2.47 (D238) : la rue, la ruelle, la mosquée, à pied (passages.js)
     if (can && I.monde) I.monde.tic(dt); // 2.30 (D222) : les brigands, le voyageur, sur la route (monde.js)
     if (I.activites) I.activites.tic(dt, can); // 2.28 (D217) : assis devant l'écran, un pas le relève (activites.js)
     W.updateCam();
@@ -690,7 +690,7 @@
   W.target = function () {
     if (W.excursion) return I.rodeurs.cible();
     const o = W.cur(); if (!o) return null;
-    { const pc = I.passages && I.passages.cible ? I.passages.cible(o) : null; if (pc) return pc; } // 2.28 (D218) : remonté des Archives basses, l'objectif resté en bas — la flèche montre l'ascenseur
+    { const pc = I.passages && I.passages.cible ? I.passages.cible(o) : null; if (pc) return pc; } // 2.47 (D238) : dans le refuge, loin de Maître Yûnus — la flèche montre le chemin de la mosquée (passages.js)
     if (o.goto) { const s = W.spotPx(o.goto); return s && { x: s[0], y: s[1], gx: s[0], gy: s[1], kind: 'goto' }; }
     if (o.build) { const st = o.build.site && I.build.sites()[o.build.site]; return st && st.map === W.map.id ? { x: (st.x + st.w / 2) * T, y: (st.y + st.h / 2) * T, gx: (st.x + st.w / 2) * T, gy: (st.y + st.h) * T + 8, kind: 'goto', site: true } : null; }
     if (o.talk) { const n = W.npcs.find(n => n.id === o.talk); return n && !n.hidden && n.map === W.map.id && n.placed ? { x: n.x, y: n.y - 26, gx: n.x, gy: n.y, kind: 'talk', ent: n } : null; }

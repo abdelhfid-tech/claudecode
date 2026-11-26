@@ -9,7 +9,7 @@
      l'entrée) ; Koufa, retournée, suit son miroir. On sort en marchant vers le bord, ou par A, tourné vers lui (passages.js,
      P.ajouter : les mêmes gardes que la rue — Idris a la main, ni récit, ni combat, ni menu ; le joueur de test du moteur ne
      sort jamais). Jamais dans l'histoire-cadre, les veillées, le dernier maillon ; ni la mer, ni la noosphère, ni une route.
-   - Sortir, c'est le schéma de l'ascenseur (2.28) : le même chapitre, rien n'est rangé ; le point de retour (la carte, ses
+   - Sortir, c'est le schéma de l'ancien ascenseur (2.28 à 2.46) : le même chapitre, rien n'est rangé ; le point de retour (la carte, ses
      réglages, la place d'Idris un pas en deçà de la porte, celle des personnages) est gardé dans les drapeaux du chapitre
      (S.flags._monde), et le point de reprise est pris sur la carte du monde : une partie quittée là s'y rouvre. Idris paraît à
      côté de la ville du récit, du côté de la porte ; la flèche la montre. Y revenir (y marcher, ou A) recharge la carte du

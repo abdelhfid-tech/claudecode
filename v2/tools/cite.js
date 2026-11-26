@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* ISNAD 2.23 (D212) — les quartiers de la Cité-Miroir, par les vrais boutons, sur un téléphone, en hauteur et en largeur.
-   - « Revenir en 2084 » (la halte d'un récit) mène, une fois joués les retours dus (« retour: n »), au parvis des quartiers, à
+   - « Revenir en 2084 » (la halte d'un récit) mène, une fois joués les retours dus (« retour: n »), à la vieille mosquée (2.47), à
      côté de Maître Yûnus ; la première fois, il dit qu'on peut y revenir (la leçon de l'outil « cite »).
    - Parler à Maître Yûnus : une réplique du rôle de râwî, puis « Reprendre le récit », « La Chaîne », « Rester dans la Cité » ;
      B y répond « Rester » ; « Reprendre le récit » rend le joueur exactement à sa place (saga, chapitre, objectif, carte, point,
@@ -37,12 +37,12 @@
      la partie » qui ne compte rien ; la manette ne recouvre ni le tableau ni le bilan. La course reste gratuite. Aucune mise
      offerte nulle part. La partie garde les activités, à l'identique. Dans une partie neuve : chaque leçon dite une seule fois, au
      premier essai ; une activité attend quand la progression ne peut pas encore la donner.
-   - 2.28 (D218), la rue et l'ascenseur (partie 17) : au milieu du prologue, la rue traversée au doigt (en hauteur) et au clavier
-     (en largeur), dans les deux sens ; Idris entre dans les quartiers loin du parvis, Maître Yûnus n'y est pas, aucune leçon de
-     plus ; le prologue rangé, puis repris exactement (chapitre, objectif, drapeaux, du même côté de la rue). Aux Archives basses,
-     l'ascenseur remonte (en sortant par l'ouverture, ou au doigt), la flèche montre l'ascenseur, la rue mène aux quartiers et en
-     revient, l'ascenseur redescend là où Idris était — le même chapitre, rien de rangé ; pendant un retour (« x_descendu ») aussi ;
-     une rencontre (« r_abubakr ») ouvre la rue ; le dernier maillon ne l'ouvre pas ; le joueur de test du moteur ne passe jamais.
+   - 2.28 (D218), 2.47 (D238), la rue, la ruelle et la vieille mosquée (partie 17), au doigt (en hauteur) et au clavier (en largeur) :
+     le prologue mène Idris lui-même par la rue, les quartiers (où rien ne rôde encore) et la ruelle abandonnée jusqu'à la vieille
+     mosquée, sans passage ni récit rangé ; la porte de la mosquée ne s'y ouvre pas ; le refuge commence dans la mosquée, à côté de
+     Maître Yûnus : la porte mène à la ruelle, la ruelle aux quartiers (Maître Yûnus n'y est pas, la flèche montre le chemin), et
+     retour, le même chapitre ; un retour (« x_descendu ») quitté par la porte est rangé, puis repris par Maître Yûnus ; une
+     rencontre (« r_abubakr ») ouvre la rue ; le dernier maillon ne l'ouvre pas ; le joueur de test du moteur ne passe jamais.
    Usage : node v2/tools/cite.js [dossier de captures] [avancement|niveau1|course|activites|passages]      « CITÉ CONFORME », sinon « ÉCART », « BLOQUÉ »,
    « INACCESSIBLE », « COINCÉ », « ABSENT » ; code de sortie 1. (« course » : la seule partie 15, en hauteur et en largeur ; « activites » : la
    seule partie 16 ; « passages » : la seule partie 17) */
@@ -95,6 +95,14 @@ async function preparer(p) {
     T.dans = v => { const f = I.trafic.pied(v), p = W.player; return f[0] < p.x + 4 && p.x - 4 < f[2] && f[1] < p.y && p.y - 5 < f[3]; };
     T.poser = (x, y) => { W.player.x = x; W.player.y = y; W.dest = null; W.stop(); W.resetTrail(); W.updateCam(true); };
     T.endormir = () => { W.foes.forEach(f => { if (f.rue) f.done = true; }); };   // pour marcher sans être rejoint
+    // 2.47 (D238) : le refuge commence dans la vieille mosquée ; on va aux quartiers par sa porte, puis par la ruelle (les passages
+    // du jeu, pris tels quels — la partie 17 les éprouve au doigt et au clavier)
+    T.auxQuartiers = async () => { const f = id => I.passages.PASSAGES.find(x => x.id === id); await T.attendre(() => T.calme(), 20000);
+      if (W.map.id === 'archives') { await f('sortir').fn(); await T.attendre(() => W.map.id === 'impasse' && T.calme(), 10000); }
+      if (W.map.id === 'impasse') { await f('ruelle-retour').fn(); await T.attendre(() => W.map.id === 'quartiers' && T.calme(), 10000); }
+      return W.map.id === 'quartiers'; };
+    // un point de la carte, en points de l'écran (sans rien éviter : pour toucher un bord)
+    T.brut = (wx, wy) => { const c = q('#cv').getBoundingClientRect(), G = I.gfx; return [(wx - Math.round(W.cam.x)) / G.PW * c.width + c.left, (wy - Math.round(W.cam.y)) / G.PH * c.height + c.top]; };
     // marcher jusqu'à un point au clavier simulé (les flèches tenues), en suivant le chemin des cases, comme le joueur de test « à pied »
     T.marcher = async (x, y, ms) => { const p = W.player, h = I.input.held, t0 = performance.now(); let path = W.pathTo(p.x, p.y, x, y) || [], best = 1e9, calee = 0;
       while (performance.now() - t0 < ms) { const d = Math.hypot(x - p.x, y - p.y); if (d < 18) break;
@@ -119,6 +127,9 @@ async function preparer(p) {
       return null; };
   });
 }
+// 2.47 (D238) : le refuge ouvert (« La Cité-Miroir », « Revenir en 2084 ») : ses textes lus, puis de la mosquée aux quartiers
+async function refugeAuxQuartiers(P) { const la = await P.evaluate(() => window.__t.attendre(() => window.ISNAD.world.ch && window.ISNAD.world.ch.id === 'c_quartiers', 30000)); if (!la) return false;
+  await avancer(P); return P.evaluate(() => window.__t.auxQuartiers()); }
 // faire avancer ce qui se dit (dialogues, cartons) jusqu'à ce que le joueur ait la main, ou qu'un choix s'ouvre
 async function avancer(p, n = 120) {
   for (let i = 0; i < n; i++) {
@@ -150,7 +161,7 @@ async function avancer(p, n = 120) {
       si(await E(() => window.__t.jusqua(2)), `${nom} · Abû Bakr joué jusqu’à son deuxième objectif`, `${nom} · Abû Bakr n’atteint pas son deuxième objectif`, 'BLOQUÉ');
     }
     const A = await E(() => window.__t.etat());
-    // ---------- 2. « Revenir en 2084 » : (les retours dus,) puis les quartiers, à côté de Maître Yûnus ----------
+    // ---------- 2. « Revenir en 2084 » : (les retours dus,) puis la vieille mosquée, à côté de Maître Yûnus (2.47) ----------
     {
       const noms = await E(() => window.__t.halte());
       const offert = noms.includes('Revenir en 2084');
@@ -160,8 +171,8 @@ async function avancer(p, n = 120) {
       const r = await avancer(P);
       const e = await E(() => ({ journal: window.__t.journal.slice(-3), etat: window.__t.etat(), pres: window.__t.pres(), lecon: window.ISNAD.cite.journal.some(j => j.quoi === 'lecon'), dits: window.ISNAD.cite.journal.map(j => j.quoi), cps: Object.keys(window.ISNAD.save.data.cps || {}) }));
       const attendu = haut ? ['x_descendu', 'c_quartiers'] : ['c_quartiers'];
-      si(arrive && r === 'calme' && attendu.every(k => e.journal.includes(k)) && e.etat.carte === 'quartiers' && e.pres > 0 && e.pres < 40,
-        `${nom} · « Revenir en 2084 » : ${haut ? '« Ce qui est entré » se joue d’abord (un retour dû), puis ' : ''}Idris paraît au parvis des quartiers, à ${e.pres} points de Maître Yûnus`,
+      si(arrive && r === 'calme' && attendu.every(k => e.journal.includes(k)) && e.etat.carte === 'archives' && e.pres > 0 && e.pres < 40,
+        `${nom} · « Revenir en 2084 » : ${haut ? '« Ce qui est entré » se joue d’abord (un retour dû), puis ' : ''}Idris paraît dans la vieille mosquée, à ${e.pres} points de Maître Yûnus`,
         `${nom} · l’arrivée dans les quartiers : ${JSON.stringify(e)} (${r})`, 'BLOQUÉ');
       si(e.lecon && e.cps.includes('abubakr'), `${nom} · Maître Yûnus dit, la première fois, qu’on peut revenir ici (leçon « cite ») ; Abû Bakr est rangé`, `${nom} · la leçon ou le récit rangé : ${JSON.stringify(e)}`);
       await E(() => window.__t.endormir()); await P.waitForTimeout(400); await P.screenshot({ path: path.join(out, `arrivee-yunus-${w}x${h}.png`) });
@@ -177,6 +188,12 @@ async function avancer(p, n = 120) {
       await E(() => window.ISNAD.input.emit('retour')); await P.waitForTimeout(500);
       const apres = await E(() => ({ choix: window.__t.visible('#choice'), ch: window.ISNAD.world.ch.id, k: window.ISNAD.cite.journal.filter(j => j.quoi === 'menu').pop() }));
       si(!apres.choix && apres.ch === 'c_quartiers' && apres.k && apres.k.k === '', `${nom} · B répond « Rester dans la Cité » : rien ne change`, `${nom} · B devant Maître Yûnus : ${JSON.stringify(apres)}`);
+    }
+    // ---------- 3b. 2.47 (D238) : de la mosquée aux quartiers, par la porte puis la ruelle ; Maître Yûnus reste dans la mosquée ----------
+    {
+      const q = await E(() => window.__t.auxQuartiers()), e = await E(() => ({ carte: window.ISNAD.world.map.id, ch: window.ISNAD.world.ch.id, y: (window.__t.yunus() || {}).map, cible: !!(window.ISNAD.world.target() || {}).passage, obj: document.querySelector('#hud .obj').textContent }));
+      si(q && e.ch === 'c_quartiers' && e.y === 'archives' && /vieille mosquée/.test(e.obj), `${nom} · de la mosquée, la porte puis la ruelle mènent aux quartiers ; Maître Yûnus reste dans la mosquée ; l’objectif dit le chemin du retour`, `${nom} · vers les quartiers : ${JSON.stringify({ q, e })}`, 'BLOQUÉ');
+      await E(() => window.__t.endormir());
     }
     // ---------- 4. chaque lieu, à pied (en hauteur) et au doigt ----------
     {
@@ -311,15 +328,15 @@ async function avancer(p, n = 120) {
       si(ch && sv.cps.includes('abubakr') && !sv.cps.some(k => /^idris:/.test(k)) && !sv.cp, `${nom} · « La Chaîne », depuis la halte : la Chaîne s’ouvre ; Abû Bakr attend, rangé ; les quartiers ne le sont pas`, `${nom} · la Chaîne depuis la halte : ${JSON.stringify({ ch, sv })}`);
       await P.waitForTimeout(300); await P.screenshot({ path: path.join(out, `chaine-${w}x${h}.png`) });
       await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); });
-      const la = await E(() => window.__t.attendre(() => window.ISNAD.world.ch && window.ISNAD.world.ch.id === 'c_quartiers' && window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 15000)); await avancer(P);
+      const la = await E(() => window.__t.attendre(() => window.ISNAD.world.ch && window.ISNAD.world.ch.id === 'c_quartiers' && window.ISNAD.world.map && window.ISNAD.world.map.id === 'archives', 15000)); await avancer(P);
       const pres = await E(() => window.__t.pres());
-      si(la && pres > 0 && pres < 40, `${nom} · « La Cité-Miroir », au pied de la Chaîne : Idris paraît au parvis, à ${pres} points de Maître Yûnus`, `${nom} · la Cité-Miroir depuis la Chaîne : ${JSON.stringify({ la, pres })}`, 'BLOQUÉ');
+      si(la && pres > 0 && pres < 40, `${nom} · « La Cité-Miroir », au pied de la Chaîne : Idris paraît dans la vieille mosquée, à ${pres} points de Maître Yûnus`, `${nom} · la Cité-Miroir depuis la Chaîne : ${JSON.stringify({ la, pres })}`, 'BLOQUÉ');
       const m = await parler();
       const i = m.c ? m.c.opts.findIndex(o => /La Chaîne/.test(o)) : -1;
       for (let k = 0; k < i; k++) { await P.keyboard.press('ArrowDown'); await P.waitForTimeout(120); }
       await P.keyboard.press('Enter');
       const ch2 = await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 15000));
-      si(i >= 0 && ch2, `${nom} · Maître Yûnus : « La Chaîne, aux Archives basses » mène à la Chaîne`, `${nom} · la Chaîne par Maître Yûnus : ${JSON.stringify({ i, ch2, c: m.c })}`, 'BLOQUÉ');
+      si(i >= 0 && ch2, `${nom} · Maître Yûnus : « La Chaîne, au fond de la mosquée » mène à la Chaîne`, `${nom} · la Chaîne par Maître Yûnus : ${JSON.stringify({ i, ch2, c: m.c })}`, 'BLOQUÉ');
     }
     // ---------- 10. la partie garde `cite`, et voyage avec ----------
     {
@@ -346,7 +363,7 @@ async function avancer(p, n = 120) {
     await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
     await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
     await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); });
-    await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 15000)); await avancer(P);
+    await refugeAuxQuartiers(P);
     // sur le trottoir du nord, entre deux voitures garées, près d'un passant ; on attend qu'une voiture passe dans l'image
     await E(() => { window.__t.endormir(); window.__t.poser(19 * 16 + 8, 9 * 16 + 13); });
     const vu = await E(() => window.__t.attendre(() => window.ISNAD.trafic.voitures.some(v => Math.abs(v.x - 312) < 70 && v.y < 300), 30000));
@@ -381,12 +398,12 @@ async function avancer(p, n = 120) {
       const noms = await E(() => window.__t.halte());
       const cite = await E(() => { const b = [...document.querySelectorAll('#menu .side button')].find(x => x.textContent.trim() === 'Revenir en 2084'); if (!b) return null; b.click(); return (document.querySelector('#menu .pane') || {}).textContent || ''; });
       if (!joue || cite === null) { ko(`INACCESSIBLE ${nomR} : la halte n’offre pas « Revenir en 2084 » (${JSON.stringify({ joue, noms })})`); continue; }
-      const la = await E(() => window.__t.attendre(() => window.ISNAD.world.ch && window.ISNAD.world.ch.id === 'c_quartiers' && window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 30000));
+      const la = await E(() => window.__t.attendre(() => window.ISNAD.world.ch && window.ISNAD.world.ch.id === 'c_quartiers' && window.ISNAD.world.map && window.ISNAD.world.map.id === 'archives', 30000));
       const r = await avancer(P), e = await E(() => ({ pres: window.__t.pres(), faits: Object.keys(window.ISNAD.save.data.sagas).filter(k => window.ISNAD.save.data.sagas[k].done), cps: Object.keys(window.ISNAD.save.data.cps || {}) }));
       if (la && r === 'calme' && e.pres > 0 && e.pres < 40 && !e.faits.length) vus.push(nomR);
-      else ko(`BLOQUÉ ${nomR} : « Revenir en 2084 » ne mène pas aux quartiers, à côté de Maître Yûnus : ${JSON.stringify({ la, r, e })}`);
+      else ko(`BLOQUÉ ${nomR} : « Revenir en 2084 » ne mène pas à la vieille mosquée, à côté de Maître Yûnus : ${JSON.stringify({ la, r, e })}`);
     }
-    si(vus.length === 6, `« Revenir en 2084 », depuis la halte de chaque récit (${vus.join(', ')}), aucun maillon achevé : les quartiers, à côté de Maître Yûnus`, `« Revenir en 2084 » n’a mené aux quartiers que depuis : ${vus.join(', ')}`, 'INACCESSIBLE');
+    si(vus.length === 6, `« Revenir en 2084 », depuis la halte de chaque récit (${vus.join(', ')}), aucun maillon achevé : la vieille mosquée, à côté de Maître Yûnus`, `« Revenir en 2084 » n’a mené à la vieille mosquée que depuis : ${vus.join(', ')}`, 'INACCESSIBLE');
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'avancement · ' + e)); await T.ctx.close();
   }
   // ---------- 14. au niveau 1, seul : chaque chimère des rues se vainc à la seule touche A (Frapper, sur la cible désignée
@@ -399,7 +416,7 @@ async function avancer(p, n = 120) {
     await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
     await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
     const va = await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); return !!b; });
-    const la = va && await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 15000)); await avancer(P);
+    const la = va && await refugeAuxQuartiers(P);
     if (!la) ko('BLOQUÉ au niveau 1 : la partie neuve n’arrive pas dans les quartiers par « La Cité-Miroir »');
     await E(() => { const I = window.ISNAD, W = I.world, h = W.hero('idris'), T = window.__t; h.lvl = 1; h.xp = 0; T.endormir(); T.defaites = 0;
       const oc = I.script.card; I.script.card = function (cls) { if (cls === 'defeat') T.defaites++; return oc.apply(this, arguments); };
@@ -496,7 +513,7 @@ async function avancer(p, n = 120) {
     await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
     await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
     await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); });
-    const la = await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 15000)); await avancer(P);
+    const la = await refugeAuxQuartiers(P);
     if (!la) { ko(`BLOQUÉ ${nom} · la partie neuve n’arrive pas dans les quartiers`); toutesErreurs = toutesErreurs.concat(T.errors); await T.ctx.close(); continue; }
     await E(() => window.__t.endormir());
     // a. avant le tour de moto : l'organisateur ne fait pas courir (on lui parle hors du passage de Sâlim)
@@ -715,7 +732,7 @@ async function avancer(p, n = 120) {
     await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
     await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
     await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); });
-    const la = await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 15000)); await avancer(P);
+    const la = await refugeAuxQuartiers(P);
     if (!la) { ko(`BLOQUÉ ${nom} · les activités : la partie n’arrive pas dans les quartiers`); toutesErreurs = toutesErreurs.concat(T.errors); await T.ctx.close(); continue; }
     await E(() => window.__t.endormir());
     const A = async () => { if (haut) await E(() => window.__t.bouton('.a')); else await P.keyboard.press('Enter'); };
@@ -857,7 +874,7 @@ async function avancer(p, n = 120) {
     await E(() => { const b = [...document.querySelectorAll('#title .vmenu button')].find(b => /^Continuer/.test(b.textContent)); if (b) b.click(); });
     await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
     await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); });
-    await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 15000)); await avancer(P); await E(() => window.__t.endormir());
+    await refugeAuxQuartiers(P); await E(() => window.__t.endormir());
     const A = () => E(() => window.__t.bouton('.a')), B = () => E(() => window.__t.bouton('.b'));
     const essai = async id => { await E(id => window.__t.zone(id), id); await P.waitForTimeout(250); await A(); await P.waitForTimeout(700); };
     const lecons = () => E(() => ({ j: window.ISNAD.lecons.journal.map(x => x.id), a: window.ISNAD.activites.journal.filter(x => x.quoi === 'lecon' || x.quoi === 'attend').map(x => x.quoi + ':' + x.outil) }));
@@ -877,7 +894,7 @@ async function avancer(p, n = 120) {
       `${nom} · partie neuve : la leçon de la borne au premier essai ; l’étal attend (« ${(await E(() => window.ISNAD.sagas.idris.cite.activites.attend))} ») tant que la borne n’a pas resservi ; une partie jouée, l’étal donne sa leçon ; à l’essai suivant, rien ne se redit (outils : ${l4.j.join(', ')})`, `${nom} · la progression des activités : ${JSON.stringify({ c1, l1, l2, attend, re, l3, l4 })}`);
     toutesErreurs = toutesErreurs.concat(T.errors.map(e => 'activités (partie neuve) · ' + e)); await T.ctx.close();
   }
-  // ---------- 17. 2.28 (D218) : la rue et l'ascenseur, au doigt (en hauteur) et au clavier (en largeur) ----------
+  // ---------- 17. 2.28 (D218), 2.47 (D238) : la rue, la ruelle, la vieille mosquée — au doigt (en hauteur) et au clavier (en largeur) ----------
   for (const [w, h] of (!SEUL || PASS) ? [[390, 844], [844, 390]].filter(orient) : []) {
     const nom = w + '×' + h, haut = h > w, T = await telephone(browser, w, h), P = T.p, E = (fn, a) => P.evaluate(fn, a);
     await aides(P);
@@ -886,56 +903,60 @@ async function avancer(p, n = 120) {
     await P.waitForTimeout(1200); await avancer(P);
     // aller jusqu'à un point au bord, au doigt (des touchers sur la scène, vers lui) ou au clavier (marcher, puis pousser vers le bord)
     // (au doigt : on touche le bord lui-même, là où il se voit sur la scène — tout près du bord de l'écran, mais sur la scène)
-    await E(() => { const I = window.ISNAD, W = I.world, G = I.gfx; window.__t.brut = (wx, wy) => { const c = document.querySelector('#cv').getBoundingClientRect(); return [(wx - Math.round(W.cam.x)) / G.PW * c.width + c.left, (wy - Math.round(W.cam.y)) / G.PH * c.height + c.top]; }; });
     const versBord = async (x, y, touche, carte) => { const ici = () => E(() => window.ISNAD.world.map && window.ISNAD.world.map.id);
       if (haut) { for (let i = 0; i < 12; i++) { if ((await ici()) !== carte) return true; const pt = await E(([x, y]) => window.__t.calme() ? window.__t.brut(x, y) : null, [x, y]); if (pt) await P.touchscreen.tap(pt[0], pt[1]); await P.waitForTimeout(1200); } }
       else { await E(([x, y]) => window.__t.marcher(x, y, 20000), [x + (touche === 'ArrowRight' ? -24 : touche === 'ArrowLeft' ? 24 : 0), y + (touche === 'ArrowDown' ? -14 : touche === 'ArrowUp' ? 14 : 0)]); await P.keyboard.down(touche); for (let i = 0; i < 20 && (await ici()) === carte; i++) await P.waitForTimeout(150); await P.keyboard.up(touche); }
       for (let i = 0; i < 20 && (await ici()) === carte; i++) await P.waitForTimeout(200); return (await ici()) !== carte; };
-    const etat = () => E(() => { const I = window.ISNAD, W = I.world, s = I.save.data; return Object.assign(window.__t.etat(), { cps: Object.keys(s.cps || {}), asc: !!I.script.flags._ascenseur, recus: Object.keys((s.lecons || {}).recus || {}), lj: I.lecons.journal.map(x => x.id).join(), yunus: (W.npcs.find(n => n.hero === 'yunus') || {}).hidden, cible: W.target() && !!W.target().passage }); });
-    // a. la rue, au milieu du prologue : vers les quartiers (Idris posé au bout de la rue, là où il ne passe par aucun objectif)
-    await E(() => { window.__t.poser(890, 237); window.ISNAD.world.player.dir = 2; }); await P.waitForTimeout(400);
-    const e0 = await etat();
-    const passe = await versBord(952, 237, 'ArrowRight', 'cite'); await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers', 12000)); await avancer(P);
-    const e1 = await etat(), loin = await E(() => { const W = window.ISNAD.world, s = W.spotPx('parvis'), t = W.spotPx('traverse'); return { parvis: Math.round(Math.hypot(W.player.x - s[0], W.player.y - s[1])), entree: Math.round(Math.hypot(W.player.x - t[0], W.player.y - t[1])), obj: document.querySelector('#hud .obj').textContent }; });
-    await P.screenshot({ path: path.join(out, `rue-quartiers-${w}x${h}.png`) });
-    const halte = await E(() => { const n = window.__t.halte(); return n; }); await E(() => window.ISNAD.input.emit('retour')); await P.waitForTimeout(400); await E(() => { if (window.ISNAD.ui.menuOpen) window.ISNAD.input.emit('retour'); }); await P.waitForTimeout(300);
-    si(passe && e1.ch === 'c_quartiers' && e1.carte === 'quartiers' && loin.entree < 30 && loin.parvis > 200 && e1.yunus === true && e1.cps.includes('idris:0') && !e1.recus.includes('cite') && e1.lj === e0.lj && /la rue ramène/.test(loin.obj) && halte.includes('Reprendre le récit') && !halte.includes('La Chaîne'),
-      `${nom} · au milieu du prologue, la rue traversée ${haut ? 'au doigt' : 'au clavier'} : Idris entre dans les quartiers par l’entrée de la rue, à ${loin.parvis} points du parvis ; Maître Yûnus n’y est pas, aucune leçon de plus ; le prologue est rangé ; la halte offre « Reprendre le récit », pas la Chaîne`, `${nom} · la rue, aller : ${JSON.stringify({ passe, e0, e1, loin, halte })}`, 'INACCESSIBLE');
-    // b. retraverser : le prologue reprend exactement, du même côté de la rue
-    const revient = await versBord(5, 157, 'ArrowLeft', 'quartiers'); await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'cite' && window.__t.calme(), 12000)); await avancer(P);
-    const e2 = await etat(); await P.screenshot({ path: path.join(out, `rue-retour-${w}x${h}.png`) });
-    si(revient && e2.ch === 'p1' && e2.obj === e0.obj && e2.drapeaux === e0.drapeaux && e2.x > 900 && Math.abs(e2.y - 237) < 40 && !e2.cps.length && e2.lj === e0.lj,
-      `${nom} · retraversée : le prologue reprend à son objectif (${e2.obj}), ses drapeaux intacts, au bout de la rue (${e2.x}, ${e2.y})`, `${nom} · la rue, retour : ${JSON.stringify({ revient, e0, e2 })}`, 'BLOQUÉ');
-    // c. le prologue jusqu'aux Archives basses (le joueur de test du moteur), puis l'ascenseur remonte
-    await E(() => window.__t.jusqua(2)); await avancer(P);
-    const e3 = await etat();
-    if (haut) { await E(() => window.__t.poser(272, 352)); await P.waitForTimeout(200); }
-    const monte = await versBord(272, 380, 'ArrowDown', 'archives'); await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'cite' && window.__t.calme(), 10000)); await P.waitForTimeout(400);
-    const e4 = await etat(), dAsc = await E(() => { const W = window.ISNAD.world, s = W.spotPx('ascenseur'); return Math.round(Math.hypot(W.player.x - s[0], W.player.y - s[1])); });
-    await P.screenshot({ path: path.join(out, `ascenseur-cite-${w}x${h}.png`) });
-    si(monte && e3.carte === 'archives' && e4.carte === 'cite' && e4.ch === 'p1' && e4.obj === e3.obj && dAsc < 20 && e4.asc && e4.cible && !e4.cps.length,
-      `${nom} · aux Archives basses, l’ascenseur remonte ${haut ? 'au doigt' : 'en sortant par l’ouverture'} : la Cité-Miroir, au pied de l’ascenseur ; le même chapitre (objectif ${e4.obj}), rien de rangé ; la flèche montre l’ascenseur`, `${nom} · l’ascenseur, montée : ${JSON.stringify({ monte, e3, e4, dAsc })}`, 'INACCESSIBLE');
-    // d. de là, la rue vers les quartiers, et retour ; puis l'ascenseur redescend là où Idris était
-    await E(() => window.__t.poser(890, 237)); await P.waitForTimeout(300);
-    const p2 = await versBord(952, 237, 'ArrowRight', 'cite'); await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'quartiers' && window.__t.calme(), 12000)); await avancer(P);
-    const e5 = await etat();
-    const r2 = await versBord(5, 157, 'ArrowLeft', 'quartiers'); await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'cite' && window.__t.calme(), 12000)); await avancer(P);
-    const e6 = await etat();
-    let descend;
-    if (haut) { await E(() => window.__t.poser(904, 200)); await P.waitForTimeout(400); for (let i = 0; i < 8; i++) { if (await E(() => window.ISNAD.world.map.id === 'archives')) break; const pt = await E(() => window.__t.calme() ? window.__t.brut(904, 138) : null); if (pt) await P.touchscreen.tap(pt[0], pt[1]); await P.waitForTimeout(1500); } descend = await E(() => window.ISNAD.world.map.id === 'archives'); }
-    else descend = await versBord(904, 150, 'ArrowUp', 'cite');
-    await E(() => window.__t.attendre(() => window.ISNAD.world.map && window.ISNAD.world.map.id === 'archives' && window.__t.calme(), 10000)); await P.waitForTimeout(400);
-    const e7 = await etat(); await P.screenshot({ path: path.join(out, `ascenseur-archives-${w}x${h}.png`) });
-    si(p2 && e5.carte === 'quartiers' && e5.cps.includes('idris:0') && r2 && e6.carte === 'cite' && e6.obj === e3.obj && e6.asc && descend && e7.carte === 'archives' && e7.obj === e3.obj && !e7.asc && Math.abs(e7.x - 272) < 8 && e7.y <= 356 && e7.y > 330,
-      `${nom} · remonté, la rue mène aux quartiers et en revient (le prologue rangé, puis repris) ; l’ascenseur redescend ${haut ? 'au doigt' : 'au clavier'}, aux Archives, là où Idris était (${e7.x}, ${e7.y}), objectif ${e7.obj}`, `${nom} · l’ascenseur et la rue : ${JSON.stringify({ p2, e5, r2, e6, descend, e7 })}`, 'BLOQUÉ');
-    // e. (en largeur) un retour (« x_descendu »), une rencontre (« r_abubakr »), le dernier maillon, le joueur de test
+    const etat = () => E(() => { const I = window.ISNAD, W = I.world, s = I.save.data, y = W.npcs.find(n => n.hero === 'yunus'); return Object.assign(window.__t.etat(), { cps: Object.keys(s.cps || {}), recus: Object.keys((s.lecons || {}).recus || {}), lj: I.lecons.journal.map(x => x.id).join(), yunus: y ? y.map : null, cible: !!(W.target() || {}).passage, dit: (document.querySelector('#hud .obj') || {}).textContent || '' }); });
+    // a. le prologue mène lui-même par le chemin de 2084 : la rue, les quartiers, la ruelle abandonnée, la vieille mosquée (le joueur
+    //    de test du moteur, à pied) ; dans les quartiers, rien ne rôde encore ; aucun passage ne s'y prend, rien n'est rangé
+    await E(() => { const I = window.ISNAD, W = I.world, T = window.__t; T.cartes = []; T.rodeursVus = 0; const ol = W.loadMap; W.loadMap = function (id) { T.cartes.push(id); return ol.apply(this, arguments); };
+      T.ivR = setInterval(() => { if (W.map && W.map.id === 'quartiers' && W.foes.some(f => f.rue && !f.done)) T.rodeursVus++; }, 200); I.debug.walk = true; });
+    const a = await E(() => window.__t.jusqua(4)); await avancer(P);
+    const e1 = await etat(), vu = await E(() => { const T = window.__t; clearInterval(T.ivR); window.ISNAD.debug.walk = false; return { cartes: T.cartes.join('>'), rodeurs: T.rodeursVus, passages: window.ISNAD.passages.journal.length }; });
+    await P.screenshot({ path: path.join(out, `prologue-mosquee-${w}x${h}.png`) });
+    si(a && e1.ch === 'p1' && e1.carte === 'archives' && e1.obj === 4 && /quartiers.*impasse.*archives/.test(vu.cartes) && !vu.rodeurs && !vu.passages && e1.yunus === 'archives' && !e1.cps.length,
+      `${nom} · le prologue mène Idris par la rue, les quartiers et la ruelle jusqu’à la vieille mosquée et Maître Yûnus (${vu.cartes}) ; rien ne rôde encore dans les quartiers ; aucun passage, rien de rangé`, `${nom} · le prologue : ${JSON.stringify({ a, e1, vu })}`, 'BLOQUÉ');
+    // b. dans le prologue, la porte de la mosquée ne mène nulle part : Idris y reste, à son objectif
+    await E(() => window.__t.poser(272, 352)); await P.waitForTimeout(300);
+    const sort = await versBord(272, 382, 'ArrowDown', 'archives'), e2 = await etat();
+    si(!sort && e2.carte === 'archives' && e2.ch === 'p1' && e2.obj === 4, `${nom} · dans le prologue, la porte de la mosquée ne mène nulle part : Idris reste à son objectif`, `${nom} · la porte, dans le prologue : ${JSON.stringify({ sort, e2 })}`, 'ÉCART');
+    // c. le refuge (« La Cité-Miroir », au pied de la Chaîne) : la vieille mosquée, à côté de Maître Yûnus ; à pied, la porte, la
+    //    ruelle, les quartiers ; puis la ruelle et la porte ramènent à la mosquée — le même chapitre, rien de rangé
+    await E(() => { const I = window.ISNAD; I.save.data.prologue = true; I.ui.showChain(); }); await E(() => window.__t.attendre(() => window.__t.visible('#chain'), 8000));
+    await E(() => { const b = window.__t.pied('La Cité-Miroir'); if (b) b.click(); });
+    await E(() => window.__t.attendre(() => window.ISNAD.world.ch && window.ISNAD.world.ch.id === 'c_quartiers' && window.__t.calme(), 15000)); await avancer(P);
+    const r0 = await etat(), pres = await E(() => window.__t.pres());
+    const s1 = await versBord(272, 382, 'ArrowDown', 'archives'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'impasse' && window.__t.calme(), 10000)); await avancer(P);
+    const r1 = await etat(), dP = await E(() => { const W = window.ISNAD.world, s = W.spotPx('porte'); return Math.round(Math.hypot(W.player.x - s[0], W.player.y - s[1])); });
+    await P.screenshot({ path: path.join(out, `ruelle-${w}x${h}.png`) });
+    const s2 = await versBord(4, 120, 'ArrowLeft', 'impasse'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'quartiers' && window.__t.calme(), 10000)); await avancer(P); await E(() => window.__t.endormir());
+    const r2 = await etat(), dR = await E(() => { const W = window.ISNAD.world, s = W.spotPx('ruelle'); return Math.round(Math.hypot(W.player.x - s[0], W.player.y - s[1])); });
+    await P.screenshot({ path: path.join(out, `ruelle-quartiers-${w}x${h}.png`) });
+    const s3 = await versBord(1020, 344, 'ArrowRight', 'quartiers'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'impasse' && window.__t.calme(), 10000)); await avancer(P);
+    const r3 = await etat();
+    const s4 = await versBord(634, 120, 'ArrowRight', 'impasse'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'archives' && window.__t.calme(), 10000)); await avancer(P);
+    const r4 = await etat(), pres4 = await E(() => window.__t.pres());
+    await P.screenshot({ path: path.join(out, `mosquee-retour-${w}x${h}.png`) });
+    si(r0.ch === 'c_quartiers' && r0.carte === 'archives' && pres > 0 && pres < 40 && s1 && r1.carte === 'impasse' && dP < 30 && s2 && r2.carte === 'quartiers' && dR < 30 && r2.yunus === 'archives' && r2.cible && /vieille mosquée/.test(r2.dit)
+      && s3 && r3.carte === 'impasse' && s4 && r4.carte === 'archives' && pres4 > 0 && pres4 < 200 && [r1, r2, r3, r4].every(e => e.ch === 'c_quartiers') && ![r0, r1, r2, r3, r4].some(e => e.cps.includes('idris:11')),
+      `${nom} · le refuge : la vieille mosquée, à ${pres} points de Maître Yûnus ; ${haut ? 'au doigt' : 'au clavier'}, la porte mène à la ruelle, la ruelle aux quartiers (Maître Yûnus n’y est pas ; la flèche et l’objectif disent le chemin de la mosquée), puis la ruelle et la porte ramènent à la mosquée — le même chapitre, rien de rangé`,
+      `${nom} · le refuge à pied : ${JSON.stringify({ r0, pres, s1, r1, dP, s2, r2, dR, s3, r3, s4, r4, pres4 })}`, 'INACCESSIBLE');
+    // d. (en largeur) un retour (« x_descendu »), qui se joue dans la mosquée : sortir par la porte le range et ouvre le refuge dans la
+    //    ruelle ; revenu dans la mosquée, Maître Yûnus le reprend (« Reprendre le récit ») à son objectif ; puis une rencontre
+    //    (« r_abubakr »), le dernier maillon, le joueur de test
     if (!haut) {
       const ouvrir = ci => E(ci => { const I = window.ISNAD, W = I.world; I.save.data.prologue = true; document.querySelectorAll('.screen').forEach(e => { e.hidden = true; }); I.input.reset(); W.roster = {}; W.saga = null; W.startChapter('idris', ci); }, ci);
       await ouvrir(7); await P.waitForTimeout(1000); await avancer(P);
-      const x0 = await etat(), m1 = await versBord(272, 381, 'ArrowDown', 'archives'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'cite' && window.__t.calme(), 10000));
-      const x1 = await etat(), m2 = await versBord(904, 150, 'ArrowUp', 'cite'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'archives' && window.__t.calme(), 10000));
+      const x0 = await etat(), m1 = await versBord(272, 382, 'ArrowDown', 'archives'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'impasse' && window.__t.calme(), 12000)); await avancer(P);
+      const x1 = await etat(), m2 = await versBord(634, 120, 'ArrowRight', 'impasse'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'archives' && window.__t.calme(), 10000)); await avancer(P);
+      await E(() => { const W = window.ISNAD.world, y = window.__t.yunus(); window.__t.poser(y.x + 18, y.y); W.player.dir = 1; }); await P.waitForTimeout(250); await P.keyboard.press('Enter'); await P.waitForTimeout(200);
+      const rr = await avancer(P), c = await E(() => window.__t.choix());
+      if (rr === 'choix') { await P.waitForTimeout(400); await P.keyboard.press('Enter'); }
+      await E(() => window.__t.attendre(() => window.ISNAD.world.ch && window.ISNAD.world.ch.id === 'x_descendu' && window.__t.calme(), 20000)); await avancer(P);
       const x2 = await etat();
-      si(m1 && m2 && x0.ch === 'x_descendu' && x1.ch === 'x_descendu' && x1.carte === 'cite' && x1.obj === x0.obj && x2.carte === 'archives' && x2.obj === x0.obj, `${nom} · pendant un retour (« x_descendu ») : l’ascenseur remonte à la Cité-Miroir puis redescend, le même retour, à son objectif`, `${nom} · le retour : ${JSON.stringify({ m1, m2, x0, x1, x2 })}`, 'BLOQUÉ');
+      si(m1 && m2 && x0.ch === 'x_descendu' && x1.ch === 'c_quartiers' && x1.carte === 'impasse' && x1.cps.includes('idris:7') && c && /^Reprendre le récit/.test(c.opts[0]) && x2.ch === 'x_descendu' && x2.obj === x0.obj && x2.carte === 'archives',
+        `${nom} · pendant un retour (« x_descendu ») : la porte de la mosquée le range et ouvre le refuge dans la ruelle ; revenu, Maître Yûnus le reprend à son objectif (${x2.obj})`, `${nom} · le retour : ${JSON.stringify({ m1, m2, x0, x1, c, x2 })}`, 'BLOQUÉ');
       await ouvrir(2); await P.waitForTimeout(1000); await avancer(P);
       const r0 = await etat(), t1 = await versBord(950, 237, 'ArrowRight', 'cite'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'quartiers' && window.__t.calme(), 12000)); await avancer(P);
       const t2 = await versBord(4, 157, 'ArrowLeft', 'quartiers'); await E(() => window.__t.attendre(() => window.ISNAD.world.map.id === 'cite' && window.__t.calme(), 12000)); await avancer(P);

@@ -414,7 +414,7 @@
   // les réglages des rues des quartiers (D.CITE)
   function rues(m) {
     // 2.28 (D218) : arrivé par la rue pendant le prologue, Idris ne les voit pas encore — Maître Yûnus ne lui a pas encore ouvert
-    // les yeux sur la noosphère (le prologue, aux Archives basses)
+    // les yeux sur la noosphère (le prologue, dans la vieille mosquée — 2.47)
     if (!I.save.data.prologue) return null;
     const C = D.CITE || {}, RC = C.rodent || {}, E0 = W.saga.enemies || {}, T = 16, loin = (C.loin || 12) * T;
     const depart = W.spotPx('parvis') || [W.player.x, W.player.y], spots = Object.keys(m.spots).map(k => m.spots[k]);

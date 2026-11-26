@@ -144,8 +144,8 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   leur voie, ne traversent personne, et l'on n'entre pas dans une voiture (`TR.bloque`) ; sur le circuit, des voitures de
   course tournent derrière leur barrière (la course jouable est pour le lot suivant ; aucun pari, aucune mise). **Le
   refuge** est le chapitre de l'histoire-cadre `c_quartiers` (`visite: 'quartiers'`, donc sobre : aucune œuvre comptée,
-  aucune descente) : « Revenir en 2084 » y mène, une fois joués les retours dus, au parvis, à côté de Maître Yûnus ; « La
-  Cité-Miroir », au pied de la Chaîne, aussi, dès le prologue joué. Maître Yûnus (`cite.js`) dit une réplique du rôle de
+  aucune descente) : « Revenir en 2084 » y mène, une fois joués les retours dus, à côté de Maître Yûnus (au parvis jusqu'à la 2.46 ; depuis la
+  2.47, D238, dans la vieille mosquée) ; « La Cité-Miroir », au pied de la Chaîne, aussi, dès le prologue joué. Maître Yûnus (`cite.js`) dit une réplique du rôle de
   râwî, puis offre « Reprendre le récit » (le dernier récit quitté, repris exactement à sa place), « La Chaîne » et
   « Rester » ; la halte du refuge offre les deux sorties ; le point de reprise du refuge n'est jamais rangé parmi les récits
   quittés. **Les passants**, de fiction, ont chacun leur solitude (attitudes `triste`, `assis`, `accable`), sans couple ni
@@ -226,14 +226,33 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   masque n'ont pas changé d'une case), Idris passe à pied dans les quartiers, par leur entrée de rue (le lieu `traverse`, au
   nord-ouest), loin du parvis, où Maître Yûnus n'est pas ; le chapitre quitté (le prologue, une rencontre, un retour) se range
   parmi les récits quittés (`W.ranger`, `cps`) et retraverser le reprend exactement, du même côté de la rue ; le refuge ne se
-  range jamais (`C.estPoint`). Aux Archives basses, sortir par l'ouverture du bas (ou A devant elle) remonte Idris à la
-  Cité-Miroir, au pied de l'ascenseur, dans le même chapitre (rien n'est rangé ; l'objectif reste en bas et la flèche montre
-  l'ascenseur) ; la porte de l'ascenseur le ramène là où il était. Pas dans le dernier maillon, ni dans les sagas, ni dans les
+  range jamais (`C.estPoint`). L'ascenseur des Archives basses, qui faisait aussi partie de ce lot, n'existe plus depuis la
+  2.47 (D238, ci-dessous). Pas dans le dernier maillon, ni dans les sagas, ni dans les
   veillées, ni pendant une scène ; le joueur de test du moteur ne passe jamais ; aucun outil de plus. « Revenir en 2084 » et
-  « La Cité-Miroir » de la Chaîne ne changent pas (D212). Pendant le prologue, aucune chimère ne rôde dans les rues, la halte
-  des quartiers n'offre pas la Chaîne, et la leçon « cite » attend une arrivée à côté de Maître Yûnus. `v2/docs/architecture.md`,
+  « La Cité-Miroir » de la Chaîne ne changent pas (D212). Pendant le prologue, la rue ne se prend pas (depuis la 2.47, le
+  prologue y mène lui-même), aucune chimère ne rôde dans les rues, la halte des quartiers n'offre pas la Chaîne, et la leçon
+  « cite » attend une arrivée à côté de Maître Yûnus. `v2/docs/architecture.md`,
   « La rue et l'ascenseur ». Contrôle : `node v2/tools/cite.js` (partie 17 ; `… passages` : elle seule) ; un changement des
   passages repasse aussi `retours.js`, `progression.js`, `doigt.js`, `doigt.js loin 844x390`, `smoke.js walk` et `tap`.
+- Dans la 2.x (2.47, D238 ; le décideur, 26 novembre : « Je veux qu'idriss traverse les quartiers avant de [rejoindre] le maître
+  Yunus » ; « ruelle | quartiers du centre ville sans mosquée | autre ruelle sombre abandonnée qui mène à une mosquée finalement
+  où se trouve le maître et les sagas » ; « Plus d'ascenseur ça devient inutile on accède à la noosphere par la prière » ; au
+  retour en 2084 : « Dans la mosquée, près du maître » ; noms, textes et dessin de l'agent, à valider), **le chemin de 2084** :
+  la rue de la Cité-Miroir, les quartiers du centre (sans mosquée : D206 et D212 y valent toujours), la ruelle abandonnée
+  (`impasse`, `maps.js` : des murs aveugles, des fenêtres murées, des néons éteints sans lettre, un lampadaire qui clignote ;
+  rien n'y rôde, personne n'y est), et au bout la vieille mosquée (`archives` : la carte des Archives basses, redessinée, garde
+  son identifiant, et une partie d'avant se charge ; des tapis, des piliers, une niche nue, des lanternes, les livres de
+  Maître Yûnus, la Chaîne au fond, le tapis de la prière, qui ouvre la noosphère comme avant ; ni minaret, ni coupole, ni
+  inscription, ni Nom écrit). Il n'y a plus d'ascenseur : les deux qu'on voyait sont une porte de bronze close (au bout de la
+  rue) et une fontaine (sur le parvis), sans changer une case de leurs cartes. Le prologue mène Idris lui-même par ce chemin (ses
+  objectifs : la rue, les quartiers, la ruelle, la mosquée) ; aucun passage ne s'y prend, la porte de la mosquée ne s'y ouvre
+  pas. Le refuge (`c_quartiers`) commence dans la mosquée, à côté de Maître Yûnus : sa porte mène à la ruelle, la ruelle au bord
+  est des quartiers (le lieu `ruelle`), et retour — le même chapitre, une autre carte (`P.vers`, `passages.js`) ; loin de Maître
+  Yûnus, l'objectif dit le chemin et la flèche le montre (`P.cible`). Dans un autre chapitre qui se joue dans la mosquée (un
+  retour), la porte range ce chapitre (`P.sortir`) et ouvre le refuge dans la ruelle (`C.parRuelle`) ; Maître Yûnus le reprend.
+  Une partie d'avant laissée en haut de l'ancien ascenseur (`_ascenseur`) reprend dans la mosquée (`world.js`). Le format reste
+  le 2. `v2/docs/architecture.md`, « Le chemin de 2084 ». Contrôle : `node v2/tools/cite.js passages` (partie 17), puis
+  `retours.js`, `progression.js`, `doigt.js`, `doigt.js loin 844x390`, `smoke.js auto`, `walk` et `tap`.
 - Dans la 2.x (2.29, D220 ; le décideur, 23 novembre : « une carte global ou les points d'intérêt sont accessibles en sortant de
   chaque ville par sa porte » ; ses choix : les villes des sagas, La Mecque et Tâ'if, Jérusalem, Bassora et Fustât ; La Mecque,
   une visite sobre ; une ville n'apparaît qu'à partir de l'époque où elle existe ; choix, coordonnées, textes et dessin de
@@ -242,7 +261,7 @@ Le jeu en développement est la **2.x**, dans `v2/` : `v2/src/`, `v2/tools/`, `v
   aucun nombre dans un récit. Dans les chapitres de `D.MONDE.depuis` seulement, sur leur carte, à partir de leur objectif, on
   sort par la porte de la ville (au nord et au sud de la ville d'Arabie, au sud de la cité romaine, à l'ouest du camp) — jamais
   dans l'histoire-cadre, les veillées, le dernier maillon, ni sur la mer, la noosphère, une route, ni à Dhû l-Qassa, Harûrâ',
-  Nahrawân (`regles.js` le vérifie) ; c'est le schéma de l'ascenseur (le même chapitre, `S.flags._monde`) ; revenir à la ville
+  Nahrawân (`regles.js` le vérifie) ; c'est le schéma de l'ancien ascenseur de la 2.28 (le même chapitre, `S.flags._monde`) ; revenir à la ville
   du récit rend la porte, l'objectif, les drapeaux et les personnages. Les autres villes de l'époque se visitent (`visite_…`,
   sans personnage du récit (depuis la 2.33, D225 : des gens du lieu et leurs bêtes) ni objectif ; un carton : le nom et l'époque ; un comptoir et un tapis sobre ; on n'y bâtit pas (depuis la 2.33, D226 : sauf le chantier d'une demande des gens du lieu) ; rien n'y
   rôde ; depuis la 2.30, aucun étendard — ni ceux de la porte du nord, ni ceux du camp —, les cartes des récits gardant les
@@ -533,7 +552,7 @@ toute considération de jeu.
 | `v2/tools/promotion.js` | l'adresse, la devise, la réserve et le soutien de la promotion (2.x) | le seul endroit où elles s'écrivent ; lu par `shorts.js`, `galerie.js`, `jouable.js`, `livret.js` ; ce que le jeu en reprend pour partager sa progression (`JEU`) est posé dans la page par `build.js` (`window.ISNAD_PROMO`), et relevé pour les langues par `langues.js` (`JEU_DIT`) |
 | `src/core/circuit.js` | Sâlim et la course (2.27, D216) : la moto de Sâlim et le tour derrière lui, les cinq circuits vus de dessus, leurs adversaires, la prime de l'organisateur, le podium | les tracés et les nombres dans `defs.js` (`D.CIRCUITS`, `D.COURSE`), les textes dans `frame.js` (`cite.course`), la moto et les voitures vues de dessus dans `gfx.js` ; sa moitié « géométrie et conduite » se charge sous Node (le réglage) ; aucune mise, nulle part (`regles.js`) |
 | `src/core/activites.js` | les activités des quartiers (2.28, D217) : la borne « Les lueurs », l'étal de la galerie, l'écran géant, la grande roue et les manèges, payés avec la bourse d'Idris (2.31, D223) | les prix et les nombres dans `defs.js` (`D.ACTIVITES`, `D.BORNE`), les textes dans `frame.js` (`cite.activites`) et `coeur.js` (`lecons`), Idris sur un manège dans `gfx.js` (`passager`) ; sa moitié « jeu de la borne » se charge sous Node ; rien ne s'y gagne (`regles.js`) |
-| `src/core/passages.js` | la rue et l'ascenseur (2.28, D218) : de la Cité-Miroir aux quartiers à pied, des Archives basses à la Cité-Miroir | les lieux `traverse` (`maps.js`), l'arrivée par la rue dans `cite.js` (`C.depart`) ; jamais dans les sagas, les veillées ni le dernier maillon |
+| `src/core/passages.js` | la rue (2.28, D218) : de la Cité-Miroir aux quartiers à pied ; le chemin de 2084 (2.47, D238) : les quartiers, la ruelle abandonnée, la vieille mosquée, dans les deux sens | les lieux `traverse` (`maps.js`), l'arrivée par la rue dans `cite.js` (`C.depart`) ; jamais dans les sagas, les veillées ni le dernier maillon |
 | `src/core/monde.js` | la carte du monde (2.29, D220) : les portes des villes des récits, la route, le retour, les visites ; les rencontres de la route (2.30, D222) : les chimères du désert, les brigands, le voyageur | les villes, les côtes, les fleuves, les reliefs, les routes et les portes de chaque chapitre dans `defs.js` (`D.MONDE`), la carte dans `maps.js` (`monde`), les icônes dans `gfx.js` ; ses passages s'inscrivent dans `passages.js` (`P.ajouter`) ; jamais dans l'histoire-cadre, les veillées ni le dernier maillon |
 | `src/core/cite.js`, `src/core/trafic.js` | les quartiers de la Cité (2.23, D212) : le refuge de 2084 à côté de Maître Yûnus, ses sorties, le rappel après une chimère moderne ; les voitures qui roulent et s'arrêtent, celles du circuit | la carte est dans `maps.js` (`quartiers()`), les voitures dessinées dans `gfx.js`, ce qui rôde dans `rodeurs.js` (`env.rues`), les textes dans `frame.js` (`cite`) |
 | `src/core/partage.js` | partager sa progression (2.x) : l'image que le jeu dessine (1080 × 1080 ou 1080 × 1920), son texte, `navigator.share` et son repli | le récit seulement : ni œuvres, ni cœur, ni Valeurs, ni descente, ni combats ; le bouton paraît au premier maillon achevé, sans leçon ; `v2/docs/architecture.md`, « Partager sa progression » |
@@ -572,7 +591,7 @@ node v2/tools/course.js             # 2.x : la course — vitesse, pied d'appui 
 node v2/tools/dedales.js            # 2.x : les labyrinthes de la noosphère et leur pièce interdite, tirés hors du jeu (… 500 : essai rapide ; … planche [fichier.png] [0,3,5] : une planche)
 node v2/tools/descente.js           # 2.x : les mêmes, dans le jeu — un chapitre dans son labyrinthe, le chrono, la descente du râwî, ce qui rôde et la frappe, la pièce interdite
 node v2/tools/retours.js            # 2.x : deux récits menés de front, les retours en 2084, la Citadelle — par les vrais boutons
-node v2/tools/cite.js [dossier] [course|activites|passages]   # 2.23, 2.27 et 2.28 : Sâlim et sa moto, les cinq circuits, la prime, aucune mise (« course » : cette partie seule) ; les activités payées avec la bourse d'Idris (2.31) — la borne, l'étal, l'écran, la roue et les manèges (« activites ») ; la rue et l'ascenseur (« passages ») ; les quartiers de la Cité — l'arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel ; captures — « CITÉ CONFORME »
+node v2/tools/cite.js [dossier] [course|activites|passages]   # 2.23, 2.27 et 2.28 : Sâlim et sa moto, les cinq circuits, la prime, aucune mise (« course » : cette partie seule) ; les activités payées avec la bourse d'Idris (2.31) — la borne, l'étal, l'écran, la roue et les manèges (« activites ») ; la rue, la ruelle et la vieille mosquée (« passages ») ; les quartiers de la Cité — l'arrivée à côté de Maître Yûnus, ses sorties, chaque lieu à pied et au doigt, les voitures, ce qui rôde et le rappel ; captures — « CITÉ CONFORME »
 node v2/tools/monde.js [dossier]    # 2.29 et 2.30 : la carte du monde — les villes à leur place et à leur époque, les portes des récits et elles seules, la route et le retour, les visites (sans étendards), La Mecque sans mosquée ; les rencontres de la route (les chimères du désert, les brigands, le voyageur), rien autour de La Mecque — « MONDE CONFORME »
 node v2/tools/progression.js        # 2.x : une partie neuve apprend un outil à la fois ; les trois figures
 node v2/tools/loupe.js [messages]   # 2.x : sur un téléphone — l'image agrandie (pincer, bouton), le toucher juste, les textes lisibles, les messages du combat en bas (« messages » : eux seuls)

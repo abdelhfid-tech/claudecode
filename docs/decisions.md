@@ -2565,6 +2565,37 @@ pages privées de son compte.
   paraît aussitôt, avec la première phrase du prologue. La date et le lieu restent dans le bandeau du haut (« La
   Cité-Miroir », « An 1507 de l'Hégire · 2084 »). Les deux textes sortent des listes de l'arabe et de l'anglais, et leurs
   formes vocalisées avec eux. Le nom du jeu reste sur l'écran-titre.
+- [ ] **D238. Le chemin de 2084 : la rue, les quartiers, la ruelle abandonnée, la vieille mosquée ; plus d'ascenseur (version
+  2.47 ; le décideur, 26 novembre ; noms, textes et dessin de l'agent, à valider).** « Je veux qu'idriss traverse les quartiers
+  avant de [rejoindre] le maître Yunus » ; « ruelle | quartiers du centre ville sans mosquée | autre ruelle sombre abandonnée
+  qui mène à une mosquée finalement où se trouve le maître et les sagas » ; « Plus d'ascenseur ça devient inutile on accède à
+  la noosphere par la prière » ; au retour en 2084 : « Dans la mosquée, près du maître » (son choix, confirmé le même jour).
+  - **Le plan** : la rue de la Cité-Miroir → les quartiers du centre (sans mosquée : D206 et D212 y valent toujours) → la
+    ruelle abandonnée (un lieu nouveau, `impasse` : sombre, des fenêtres murées, des néons éteints sans lettre, un lampadaire
+    qui clignote ; rien n'y rôde, personne n'y est) → la vieille mosquée, au bout de la ruelle (les Archives basses
+    redessinées, qui gardent leur identifiant : des tapis, des piliers, une niche nue, des lanternes, les livres de Maître
+    Yûnus, la Chaîne des sagas au fond, le tapis de la prière qui ouvre la noosphère ; ni minaret, ni coupole, ni inscription,
+    ni Nom écrit). On marche de l'un à l'autre, dans les deux sens. Les deux ascenseurs sont devenus une porte de bronze
+    close et une fontaine, sans changer une case.
+  - **Le prologue** mène Idris par ce chemin : « Traverser la rue jusqu'aux quartiers », « Traverser les quartiers jusqu'à la
+    ruelle de l'est », « Suivre la ruelle jusqu'à la vieille mosquée », puis Maître Yûnus, le premier combat et la Chaîne.
+  - **Le retour en 2084** (« Revenir en 2084 », « La Cité-Miroir ») : dans la mosquée, à côté de Maître Yûnus ; de là, la
+    ruelle et les quartiers à pied. Un retour quitté par la porte de la mosquée est rangé ; Maître Yûnus le reprend. Une partie
+    d'avant laissée en haut de l'ascenseur reprend dans la mosquée.
+  - **Les textes réécrits** (propositions de l'agent, en français, en arabe — avec sa forme vocalisée — et en anglais ; aucun
+    fait d'histoire, aucune parole citée) : le prologue (quatre narrations et trois objectifs nouveaux, « Idris est *râwî* :
+    un transmetteur, l'élève de Maître Yûnus »), l'arrivée du refuge, les cinq rencontres (« Maître Yûnus est venu de la vieille
+    mosquée », « Idris sort de la vieille mosquée avec une Lumière… »), les trois retours (« Ce qui est entré », naguère « Ce
+    qui est descendu » ; l'enfant « a suivi la ruelle » ; l'agent du relevé : « Vieille mosquée, au fond de la ruelle est »),
+    la Citadelle (« envoyé apprendre auprès de Maître Yûnus »), le dernier maillon et la saga de Khâlid (« Dehors… », « dans la
+    vieille mosquée »), quatre fiches du Recueil (« Veiller la vieille mosquée », « « Tu pars où ? » », « L'agent du relevé »,
+    « Les quartiers de la Cité »), la leçon « cite » (« Je t'attendrai ici, près de mes livres »), six textes du moteur (la
+    Chaîne, la halte, l'aide « Mener plusieurs récits »), trois noms (« La ruelle abandonnée », « La vieille mosquée », la
+    « Porte de la tour ») et la tenue d'Idris (« Manteau du râwî », naguère « Manteau des Archives »).
+  - **À ton regard** : l'agent du relevé, qui mesure l'audience d'un lieu, pose désormais son avis de « réaffectation à
+    l'étude » contre la porte d'une mosquée (et non plus des Archives). Le récit le dit sans hostilité (« il n'est pas un
+    ennemi », « il est venu voir »), mais c'est à toi de dire si la scène te convient dans ce lieu.
+  - **Les shorts** qui montrent l'ascenseur ou les Archives seront à refaire avec les autres (en pause).
 - [ ] **Proposition de reformulation de l'exigence 2 (formulation de l'agent, à valider ; l'exigence elle-même n'est pas
   réécrite).** Après D205, on propose d'ajouter à l'exigence 2 : « L'émotion d'un Compagnon passe par l'attitude du corps
   et les bulles ; celle des autres peut aussi passer par le visage. » (aujourd'hui, l'exigence dit : « Le caractère et

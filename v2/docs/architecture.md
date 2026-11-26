@@ -819,8 +819,8 @@ activités (salle de jeux, galerie marchande, écran géant, parc et manèges). 
   astre, les mêmes tours à contre-jour). Au nord, la galerie marchande (un passage couvert ; ses vitrines montrent des
   formes — vêtements sur leurs cintres, boîtes, chaussures, un écran éteint —, ni lettre, ni marque, ni mannequin) et la
   salle de jeux, ouverte sur la rue (des bornes d'arcade, `qborne`, dont les écrans ne montrent que des formes ; des néons
-  en cercles et en vagues). Une boucle d'avenues à sens unique. Au milieu, le parvis et l'ascenseur qui remonte des Archives
-  basses (`qkiosque`), la place du grand écran (`qecran` : des nappes de couleur qui coulent, aucun mot, aucun signe,
+  en cercles et en vagues). Une boucle d'avenues à sens unique. Au milieu, le parvis et sa fontaine (jusqu'à la 2.46, l'ascenseur qui remontait des Archives
+  basses, `qkiosque`), la place du grand écran (`qecran` : des nappes de couleur qui coulent, aucun mot, aucun signe,
   aucune marque, aucun visage), l'immeuble de l'est, et derrière une haie basse le coin calme : du gravier, deux dattiers,
   un banc, un tapis posé au sol (`mat`, le lieu `priere`) — ni édifice, ni symbole. Au sud, le parc (la grande roue,
   `qroue`, et deux manèges, `qmanege` et `qtasses`, qui tournent à vide) et le circuit (sa piste en ovale derrière une
@@ -1094,11 +1094,7 @@ sous-sol on doit pouvoir être libre de remonter ». Choix de l'agent, validés 
   la carte de la Cité-Miroir (`P.recitRue`) reprend exactement (`C.quitter`, `U.reprendre`), Idris tourné vers l'ouest, au bout
   de la rue. S'il n'y en a pas (on est monté par l'ascenseur, depuis la Chaîne ou un récit des Compagnons), une ligne le dit
   et rien ne se passe. La halte du refuge offre aussi « Reprendre le récit ».
-- **L'ascenseur** (`P.remonter`, `P.descendre`) : aux Archives basses, l'ouverture du bas (le lieu `entree`) remonte Idris à la
-  Cité-Miroir, au pied de l'ascenseur (le lieu `ascenseur`) ; c'est le même chapitre (`W.loadMap`), rien n'est rangé ; où il
-  était en bas est gardé (`S.flags._ascenseur`, avec le point de reprise : la rue et une page refermée ne le perdent pas) ;
-  tant qu'il est en haut, si l'objectif est en bas, la flèche montre la porte de l'ascenseur (`P.cible`, dans `W.target`) ; la
-  porte, ou A devant elle, le ramène aux Archives, là où il était. Pendant le prologue et les retours.
+- **L'ascenseur** (2.28 à 2.46) : il n'existe plus depuis la 2.47 (D238 : « Le chemin de 2084 », ci-dessous).
 - **La progression** : aucun outil de plus (c'est marcher). Arrivé par la rue, rien n'est dit de plus : la leçon de l'outil
   « cite », que dit Maître Yûnus, attend une arrivée à côté de lui (`C.ouvre`). Pendant le prologue (`prologue` non joué) :
   aucune chimère ne rôde dans les rues (`rodeurs.js` : Maître Yûnus n'a pas encore ouvert les yeux d'Idris sur la noosphère) ;
@@ -1110,6 +1106,49 @@ sous-sol on doit pouvoir être libre de remonter ». Choix de l'agent, validés 
   scène, au bord de la rue, sur l'ouverture des Archives, sur la porte de l'ascenseur) et au clavier en 844 × 390 ; puis
   `retours.js`, `progression.js`, `doigt.js`, `doigt.js loin 844x390`, `smoke.js walk` et `tap` (les joueurs de test ne passent
   jamais).
+
+### Le chemin de 2084 : la rue, les quartiers, la ruelle abandonnée, la vieille mosquée (2.47, D238)
+
+*Le décideur, 26 novembre : « Je veux qu'idriss traverse les quartiers avant de [rejoindre] le maître Yunus » ; « ruelle |
+quartiers du centre ville sans mosquée | autre ruelle sombre abandonnée qui mène à une mosquée finalement où se trouve le maître
+et les sagas » ; « Plus d'ascenseur ça devient inutile on accède à la noosphere par la prière » ; au retour en 2084 : « Dans la
+mosquée, près du maître ». Noms, textes et dessin de l'agent, à valider.*
+
+```
+CITÉ-MIROIR (cite)  →  QUARTIERS (quartiers)  →  RUELLE ABANDONNÉE (impasse)  →  VIEILLE MOSQUÉE (archives)
+ la rue, « traverse »    bord est, « ruelle »       « quartiers » … « porte »       « entree » ; Maître Yûnus,
+                                                                                  la Chaîne, le tapis de la prière
+```
+
+- **Les lieux** (`maps.js`, `D.MAPS`, `D.LIEUX`) : la ruelle abandonnée (`impasse`, 44 × 13 : des murs aveugles `cmur`, des
+  fenêtres murées `cmure`, des néons éteints sans lettre, un lampadaire qui clignote, des caisses ; au bout, la façade de pierre
+  `cpierre` et la porte de bois de la mosquée, peinte avec sa lumière chaude ; la piste `silence` ; rien n'y rôde, personne n'y
+  est). La vieille mosquée (`archives`, 34 × 24 : l'identifiant des Archives basses est gardé, une partie d'avant se charge) :
+  des tapis, une niche nue (`mihrab`), des piliers, des lanternes, le seuil de zellige, les rayonnages et le bureau de Maître
+  Yûnus, la Chaîne au fond (`isnad`), le tapis de la prière (`priere`), qui ouvre la noosphère comme avant ; ni minaret, ni
+  coupole, ni inscription, ni Nom écrit. Les quartiers gardent D206 et D212 (aucun édifice religieux) : leur bord est s'ouvre
+  sur trois cases (la ruelle), éclairées d'une lueur froide. Les deux ascenseurs dessinés sont devenus une porte de bronze close
+  (au bout de la rue) et une fontaine (sur le parvis) ; aucune case des cartes `cite` et `quartiers` n'a changé de nature, sinon
+  les trois de l'ouverture est.
+- **Le prologue** (`p1`, `frame.js`) : ses objectifs mènent Idris par ce chemin (la rue jusqu'aux quartiers, les quartiers
+  jusqu'à la ruelle, la ruelle jusqu'à la mosquée : `['map', …]`), les passants des quartiers y sont (`PASSANTS_Q`) ; aucun
+  passage ne s'y prend (`passages.js`, `prologue()`), la porte de la mosquée ne s'y ouvre pas ; rien ne rôde (le prologue n'est
+  pas joué).
+- **Le refuge** (`c_quartiers`) commence dans la mosquée, à côté de Maître Yûnus (`map: 'archives'`, `start: 'entree'` ; ses
+  passants ont `map: 'quartiers'`) ; `regles.js` admet qu'une `visite` nomme une carte où le chapitre pose des personnages.
+  Passages du même chapitre, d'une carte à l'autre (`P.vers` : un fondu, `W.loadMap`, `W.checkpoint`) : la porte de la mosquée
+  (`sortir`) → la ruelle (`porte`) ; le bout ouest de la ruelle (`ruelle-retour`) → les quartiers (`ruelle`) ; le bord est des
+  quartiers (`ruelle`) → la ruelle (`quartiers`) ; la porte au bout de la ruelle (`mosquee`) → la mosquée (`entree`). Loin de
+  Maître Yûnus, l'objectif dit le chemin (`C.objectif`) et la flèche le montre (`P.cible` : le bord est des quartiers, puis la
+  porte). « Revoir Maître Yûnus » mène Idris jusqu'à la mosquée (`C.revoir`).
+- **Un autre chapitre dans la mosquée** (un retour, `x_*`) : la porte (`P.sortir`) le range parmi les récits quittés et ouvre le
+  refuge dans la ruelle (`C.parRuelle`, `C.depart` : `_2084_porte`) ; Maître Yûnus le reprend (« Reprendre le récit »).
+- **Une partie d'avant** laissée en haut de l'ancien ascenseur (`S.flags._ascenseur`) reprend dans la mosquée, à l'endroit gardé
+  (`world.js`, `W.startChapter`). Le format de la partie reste le 2.
+- **Le contrôle** : `node v2/tools/cite.js passages` (partie 17), au doigt en 390 × 844 et au clavier en 844 × 390 : le
+  prologue mené par le joueur de test (rue, quartiers, ruelle, mosquée, sans rien qui rôde ni passage) ; la porte fermée pendant
+  le prologue ; le refuge à pied dans les deux sens ; un retour rangé par la porte puis repris par Maître Yûnus. Ailleurs dans
+  `cite.js`, le refuge mène aux quartiers par ses passages (`T.auxQuartiers`).
 
 ### La carte du monde : les portes des villes, la route, les visites (2.29, D220)
 

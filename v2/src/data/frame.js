@@ -3,7 +3,7 @@
    veillée, Idris remonte dans la rue et rencontre un habitant enfermé dans une idole. Il le dénoue par la parole ;
    les meilleurs arguments demandent un savoir appris chez le Compagnon ou à la Citadelle (need: 'saga/id').
    Tout y est de fiction. Les types sont anciens ; les images et les phrases sont originales. */
-/* 2.x — trois retours (x_*, marqués « retour: n ») : ce qui s'est passé aux Archives basses pendant qu'Idris suivait un
+/* 2.x — trois retours (x_*, marqués « retour: n ») : ce qui s'est passé à la vieille mosquée (2.47 ; avant, les Archives basses) pendant qu'Idris suivait un
    récit, joué une fois quand il revient en 2084 pour la n-ième fois (ou plus tard). Et une visite (« visite: 'citadelle' ») :
    la Citadelle du Caïd, où Idris est né, ouverte depuis la Chaîne dès la première veillée entendue. Le moteur pose
    l'état de 2084 en drapeaux (_2084_*) : un récit les lit, il ne les écrit pas. Textes proposés par l'agent, à relire. */
@@ -13,7 +13,7 @@
    Demande du décideur du 21 novembre ; textes proposés par l'agent, à valider. */
 /* 2.25 (D214) — la découverte de l'Agrégor (le décideur, 21 novembre : « On ne parle plus de l'agregore des le début de
    l'histoire il faut qu'il le découvre au fur et à mesure avec maître Yunus »). Le prologue ne le nomme plus ; à la fin de
-   chacune des cinq rencontres, Maître Yûnus monte des Archives (« yunus_r », caché, puis « show ») et Idris découvre une
+   chacune des cinq rencontres, Maître Yûnus vient de la vieille mosquée (« yunus_r », caché, puis « show ») et Idris découvre une
    chose de plus : I, quelque chose rassemble les regards ; II, ça ne commande pas, ça additionne ; III, son nom, et la fiche
    « agregor » du Recueil ; IV, il ne craint que ce qui passe de main en main sans passer par lui ; V, il a un cœur, sous le
    grand écran. Avant l'étape III, aucun texte ne le nomme (on dit « ce qui règne là-haut », « les écrans »). Une chimère,
@@ -537,7 +537,7 @@ ISNAD.registerSaga({
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'defileur', name: 'Celui qui défile', at: ['ruelle', 0, -1], look: { kind: 'citadin', robe: '#6a7ad0', head: '#4a58a8', cloak: '#8494e4' }, talk: [['say', 'defileur', '… encore un…']] },
-        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre (« show » l'écarte du joueur s'il paraît sur lui)
+        // 2.25 (D214) : Maître Yûnus, venu de la vieille mosquée (2.47) à la fin de la rencontre (« show » l'écarte du joueur s'il paraît sur lui)
         { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
@@ -612,7 +612,7 @@ ISNAD.registerSaga({
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'regent', name: 'Le Régent', at: ['ascenseur', -2, 0], look: { kind: 'citadin', coiffe: 'tiare', robe: '#4a3a52', head: '#5a4a2a', cloak: '#2f2638', trim: '#d9b45a' }, talk: [['say', 'regent', 'Accordé.']] },
-        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        // 2.25 (D214) : Maître Yûnus, venu de la vieille mosquée (2.47) à la fin de la rencontre
         { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
@@ -685,7 +685,7 @@ ISNAD.registerSaga({
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'admire', name: 'L’Admiré', at: ['ecran', -3, 1], look: { kind: 'citadin', robe: '#b8449a', head: '#86306e', cloak: '#cc5aac', trim: '#f0e8f4' }, talk: [['say', 'admire', 'Tu m’as reconnu, bien sûr.']] },
-        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        // 2.25 (D214) : Maître Yûnus, venu de la vieille mosquée (2.47) à la fin de la rencontre
         { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
@@ -761,7 +761,7 @@ ISNAD.registerSaga({
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'compteur', name: 'Le Compteur', at: ['rue', 2, -1], look: { kind: 'citadin', robe: '#9a7838', head: '#6a5024', cloak: '#b28c46', trim: '#d9b45a', item: 'bourse' }, talk: [['say', 'compteur', 'Ne me dérange pas. Je compte.']] },
-        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        // 2.25 (D214) : Maître Yûnus, venu de la vieille mosquée (2.47) à la fin de la rencontre
         { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [
@@ -836,7 +836,7 @@ ISNAD.registerSaga({
       npcs: [
         { id: 'gamin', name: 'L’enfant du parvis', at: ['ecran', 3, 2], look: { kind: 'enfant', robe: '#3d5a6a', head: '#28343c' }, talk: [['say', 'gamin', 'Je suis là tous les soirs.']] },
         { id: 'carto', name: 'Le Cartographe', at: ['ascenseur', -2, 0], look: { kind: 'citadin', robe: '#3a9a8a', head: '#267264', cloak: '#52b2a0', trim: '#34507a', item: 'feuillets' }, talk: [['say', 'carto', 'Combien ça a fait de vues ?']] },
-        // 2.25 (D214) : Maître Yûnus, monté des Archives à la fin de la rencontre
+        // 2.25 (D214) : Maître Yûnus, venu de la vieille mosquée (2.47) à la fin de la rencontre
         { id: 'yunus_r', name: 'Maître Yûnus', hero: 'yunus', at: ['ecran', -2, 3], hidden: true }
       ],
       intro: [

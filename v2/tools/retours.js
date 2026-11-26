@@ -2,12 +2,12 @@
 /* ISNAD 2.x — mener plusieurs récits de front, revenir en 2084, et ce qui s'y passe.
    Le joueur peut à tout moment quitter un récit par la halte (« Revenir en 2084 ») : le récit est rangé là où il le
    laisse, et se reprend là, même après en avoir joué un autre. Au retour, il peut s'être passé quelque chose aux
-   Archives basses (chapitres « retour: n » de l'histoire-cadre) ; et la Citadelle, où Idris est né, s'ouvre depuis la
+   vieille mosquée (2.47 ; avant, les Archives basses) (chapitres « retour: n » de l'histoire-cadre) ; et la Citadelle, où Idris est né, s'ouvre depuis la
    Chaîne dès la première veillée entendue (chapitre « visite »).
    Cet outil le joue par les vrais boutons : deux sagas entamées et quittées, la partie exportée puis réimportée, chaque
    récit repris à son objectif et à sa place, les trois retours joués jusqu'au bout, la Citadelle visitée deux fois.
    2.23 (D212) : « Revenir en 2084 » mène, une fois joués les retours dus, aux quartiers de la Cité, à côté de Maître Yûnus ;
-   on regagne la Chaîne par lui (« La Chaîne, aux Archives basses »), par les vrais boutons. Le contrôle des quartiers
+   on regagne la Chaîne par lui (« La Chaîne, au fond de la mosquée »), par les vrais boutons. Le contrôle des quartiers
    eux-mêmes est cite.js.
    Usage : node tools/retours.js [dossier de captures]      code de sortie 1 au premier « ÉCART » ou « BLOQUÉ » */
 const path = require('path'), fs = require('fs');
@@ -72,7 +72,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     await avancer(); await ev(() => { window.ISNAD.world.foes.forEach(f => { if (f.rue) f.done = true; }); }); // (ce qui rôde dans les rues n'est pas l'objet de cet outil : cite.js)
     const pres = await ev(() => { const W = window.ISNAD.world, y = W.npcs.find(n => n.id === 'yunus_c'); return y ? Math.round(Math.hypot(y.x - W.player.x, y.y - W.player.y)) : -1; });
     if (!(pres > 0 && pres < 40)) ko(`ÉCART au retour, Idris n’est pas à côté de Maître Yûnus (${pres} points)`);
-    // la Chaîne, par Maître Yûnus : lui parler, puis « La Chaîne, aux Archives basses »
+    // la Chaîne, par Maître Yûnus : lui parler, puis « La Chaîne, au fond de la mosquée »
     await ev(() => { const W = window.ISNAD.world, y = W.npcs.find(n => n.id === 'yunus_c'); W.player.x = y.x + 18; W.player.y = y.y; W.player.dir = 1; W.stop(); W.resetTrail(); });
     await page.waitForTimeout(250); await page.keyboard.press('Enter'); await page.waitForTimeout(300);
     const c = await avancer(), opts = await ev(() => [...document.querySelectorAll('#choice .opt')].map(b => b.textContent.trim()));
@@ -113,7 +113,7 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   const mid = await ev(() => { const sv = window.ISNAD.save.data; return { cp: sv.cp && sv.cp.saga, cps: Object.keys(sv.cps || {}) }; });
   if (mid.cp !== 'umar' || !mid.cps.includes('abubakr')) ko('ÉCART en jouant ’Umar, le récit d’Abû Bakr n’est plus rangé : ' + JSON.stringify(mid)); else ok('en jouant ’Umar, le point de reprise d’Abû Bakr reste rangé à part');
   const r2 = await revenir();
-  if (r2) ko('ÉCART un retour s’est joué au deuxième retour (« ' + r2 + ' ») : le suivant n’est attendu qu’au troisième'); else ok('deuxième retour : rien ne se passe aux Archives ; les quartiers, puis la Chaîne par Maître Yûnus');
+  if (r2) ko('ÉCART un retour s’est joué au deuxième retour (« ' + r2 + ' ») : le suivant n’est attendu qu’au troisième'); else ok('deuxième retour : rien ne se passe à la vieille mosquée ; les quartiers, puis la Chaîne par Maître Yûnus');
   const c2 = await ev(() => window.__t.chaine()); await cap('3-chaine-deux-recits-en-route');
   const enRoute = c2.maillons.filter(m => /en route/.test(m.etat || '')).map(m => m.nom);
   if (enRoute.length !== 2 || !/’Umar|'Umar/.test(c2.bouton)) ko('ÉCART deux récits devraient être en route, le dernier quitté en tête : ' + JSON.stringify({ enRoute, bouton: c2.bouton })); else ok(`deux récits en route (${enRoute.join(', ')}) ; le dernier quitté passe devant : « ${c2.bouton} »`);

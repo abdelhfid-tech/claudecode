@@ -771,7 +771,7 @@
     qarbre: { w: 30, h: 46, fw: 8, fh: 4, draw(c, r) { Rc(c, '#4a3426', 14, 26, 3, 18); Rc(c, '#6a4c36', 14, 26, 0.75, 18);
       [[15, 19, 12, '#2c4428'], [9, 22, 7, '#2a4026'], [21, 22, 7.5, '#2a4026'], [15, 13, 9, '#355230'], [11, 16, 6, '#3c5a34'], [19, 15, 6.5, '#3c5a34']].forEach(([x, y, rr, col]) => { c.fillStyle = col; c.beginPath(); c.arc(x, y, rr, 0, 6.3); c.fill(); });
       c.fillStyle = 'rgba(255,200,150,.18)'; for (let i = 0; i < 14; i++) { const a = r() * 3.2 + 3.4, d = r() * 9; c.fillRect(13 + Math.cos(a) * d, 12 + Math.sin(a) * d, 1.5, 1); } } },
-    // l'ascenseur du parvis, qui remonte des Archives basses : une cage de verre au cadre de laiton, une cabine éclairée
+    // (jusqu'à la 2.46) l'ascenseur du parvis, qui remontait des Archives basses — il n'est plus posé (D238) : une cage de verre au cadre de laiton, une cabine éclairée
     qkiosque: { w: 44, h: 58, fw: 32, fh: 8, draw(c) { Rc(c, '#3a2e38', 3, 54, 38, 4); Rc(c, '#8a7056', 3, 54, 38, 0.75);
       const g = c.createLinearGradient(0, 8, 0, 54); g.addColorStop(0, 'rgba(120,150,200,.55)'); g.addColorStop(1, 'rgba(255,200,140,.6)'); Rc(c, g, 6, 8, 32, 46);
       Rc(c, 'rgba(255,224,170,.7)', 14, 22, 16, 32); Rc(c, '#9a7c4c', 21.75, 22, 0.5, 32); Rc(c, 'rgba(255,255,255,.25)', 8, 10, 2, 42); Rc(c, 'rgba(255,255,255,.15)', 32, 10, 1, 42);

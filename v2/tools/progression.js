@@ -47,12 +47,12 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
     await cap('A-1-premier-ecran');
     si(e0.lecons && e0.journal.length === 1 && e0.journal[0].id === 'marcher' && d0.length === 1 && /marcher|t’y rendre/.test(d0[0]) && !/parler|halte|que faire|Échap/i.test(d0[0]),
       `le premier écran : une seule leçon, « ${d0[0]} » — ni parler, ni halte, ni « que faire »`, `le premier écran : ${JSON.stringify({ lecons: !!e0.lecons, journal: e0.journal, dits: d0 })}`);
-    // deux lieux à atteindre : le premier avec la leçon, le second sans aide
+    // 2.47 (D238) : quatre lieux à atteindre (le grand écran, les quartiers, la ruelle, la vieille mosquée) : le premier avec la leçon, les autres sans aide
     const atteindre = async () => { const avant = (await T.etat()).obj; await p.evaluate(() => { const W = window.ISNAD.world, o = W.cur(), s = W.spotPx(o.goto); W.player.x = s[0]; W.player.y = s[1] + 4; W.dest = null; });
       for (let i = 0; i < 60 && (await T.etat()).obj === avant; i++) { await T.entree(); await p.waitForTimeout(150); } await calme(); };
-    await atteindre(); await atteindre();
+    await atteindre(); await atteindre(); await atteindre(); await atteindre();
     const e1 = await T.etat();
-    si(e1.obj === 2 && e1.lecons.re.marcher >= 1 && e1.journal.filter(j => j.id === 'marcher').length === 1, `marcher a resservi sans aide (${e1.lecons.re.marcher} fois) avant qu'un autre outil ne soit donné`, `après deux lieux atteints : ${JSON.stringify(e1)}`);
+    si(e1.obj === 4 && e1.lecons.re.marcher >= 1 && e1.journal.filter(j => j.id === 'marcher').length === 1, `marcher a resservi sans aide (${e1.lecons.re.marcher} fois) avant qu'un autre outil ne soit donné`, `après quatre lieux atteints : ${JSON.stringify(e1)}`);
     si(e1.sorte === 'talk' && e1.journal.some(j => j.id === 'parler') && e1.journal.find(j => j.id === 'parler').seq > e1.journal[0].seq, `« parler » ne vient qu'au moment de parler (séquence ${e1.journal.find(j => j.id === 'parler') ? e1.journal.find(j => j.id === 'parler').seq : '?'}), à part de « marcher » (séquence ${e1.journal[0].seq})`, `parler : ${JSON.stringify(e1.journal)}`);
     // parler à Maître Yûnus : le récit mène au premier combat
     await p.evaluate(() => { const I = window.ISNAD, W = I.world, n = W.npcs.find(q => q.id === W.cur().talk); W.player.x = n.x - 16; W.player.y = n.y; W.player.dir = 2; W.dest = null; }); await p.waitForTimeout(250); await p.keyboard.press('Enter');

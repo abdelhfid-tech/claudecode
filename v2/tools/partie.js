@@ -172,6 +172,19 @@ let anomalies = 0; const ok = m => console.log('OK  ' + m), ko = m => { anomalie
   else ok('une copie gardée abîmée sur l’appareil se relit sans trébucher : ce qui n’a pas de forme est écarté, la pièce inconnue va à la réserve, on reprend à la Chaîne');
   sansErreur('sur les emplacements'); await page.close();
 
+  // 2.47 (D238) : une partie d'avant laissée en haut de l'ancien ascenseur (au milieu du prologue, sur la Cité-Miroir, la place
+  // d'en bas gardée dans `_ascenseur`) : « Continuer » la reprend dans la vieille mosquée, à cette place, au même objectif
+  { const p = await ouvrir();
+    await p.evaluate(() => { const I = window.ISNAD, sv = I.save.data; I.save.reset(); sv.started = true;
+      sv.cp = { saga: 'idris', ci: 0, obj: 4, map: 'cite', opts: {}, pos: [904, 160], party: ['idris'], npcs: {}, foes: [], chests: [], flags: { _ascenseur: { x: 230, y: 300, opts: {} } } };
+      I.save.auto('essai'); });
+    await p.reload(); await p.waitForTimeout(1700);
+    await bouton(p, '#title .vmenu', 'Continuer').click(); await p.waitForTimeout(2500);
+    const e = await p.evaluate(() => { const W = window.ISNAD.world; return { ch: W.ch && W.ch.id, obj: W.objIndex, carte: W.map && W.map.id, x: Math.round(W.player.x), y: Math.round(W.player.y), asc: !!window.ISNAD.script.flags._ascenseur }; });
+    if (e.ch !== 'p1' || e.obj !== 4 || e.carte !== 'archives' || Math.abs(e.x - 230) > 12 || Math.abs(e.y - 300) > 12 || e.asc) ko(`ÉCART une partie d'avant, en haut de l'ancien ascenseur, ne reprend pas dans la mosquée : ${JSON.stringify(e)}`);
+    else ok(`une partie d'avant laissée en haut de l'ancien ascenseur reprend dans la vieille mosquée, là où Idris était en bas (${e.x}, ${e.y}), au même objectif`);
+    sansErreur('une partie d’avant, en haut de l’ascenseur'); await p.close(); }
+
   await browser.close(); if (fichier) { try { fs.unlinkSync(fichier); } catch (x) { /* déjà parti */ } }
   console.log(anomalies ? `✗ ${anomalies} anomalie(s)` : `✓ PARTIE : exportée, effacée, réimportée à l'identique — aucune anomalie (captures dans ${path.relative(process.cwd(), out)})`);
   process.exit(anomalies ? 1 : 0);

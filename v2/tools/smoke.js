@@ -158,7 +158,7 @@ const url = 'file://' + path.join(__dirname, '../index.html') + (process.env.LAN
       out.push(loin.length ? 'ÉCART après le chargement, un suiveur sous 8 points du meneur — ' + loin.join(' · ') : `OK  après le chargement de ${lieux} lieux de départ, chaque suiveur à 8 points au moins du meneur`);
       out.push(dessus.length ? 'SUPERPOSÉ au chargement — ' + dessus.join(' · ') : `OK  au chargement de ${lieux} lieux de départ, personne n'est posé sur le joueur`);
       // 3. la reprise au bureau de Maître Yûnus (personnage.js la fait aussi) : Idris n'est plus posé sur lui, et s'en écarte
-      await ouvrir('idris', 0, { saga: 'idris', ci: 0, obj: 1, map: 'archives', opts: {}, pos: 'bureau', party: ['idris'], npcs: {}, foes: [], chests: [], flags: {} });
+      await ouvrir('idris', 0, { saga: 'idris', ci: 0, obj: 4, map: 'archives', opts: {}, pos: 'bureau', party: ['idris'], npcs: {}, foes: [], chests: [], flags: {} });
       { const y = W.npcs.find(q => q.id === 'yunus_n'), P = W.player, d = Math.hypot(y.x - P.x, y.y - P.y); out.push(`${d >= 9 && !W.corps().some(e => W.touche(e, P.x, P.y)) ? 'OK ' : 'SUPERPOSÉ'} reprise au bureau : Idris à ${d.toFixed(1)} points de Maître Yûnus`); }
       // 4. les marches de récit, jouées pour de vrai et comme le jeu les joue. Le joueur se tient là où l'objectif le laisse
       // (sous celui à qui il vient de parler, au lieu où il devait aller ; au départ pour une ouverture), non sur la place du
